@@ -2,254 +2,129 @@ Return-Path: <SRS0=8dav=5Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13AD2C2D0EA
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 05:39:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 387A8C2BA1B
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 05:40:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C61BF20730
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 05:39:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 109E120730
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 05:40:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NGjPIN3p"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lLoEa84O"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726584AbgDHFjU (ORCPT
+        id S1726592AbgDHFkb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Apr 2020 01:39:20 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:39256 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725879AbgDHFjU (ORCPT
+        Wed, 8 Apr 2020 01:40:31 -0400
+Received: from mail-pj1-f67.google.com ([209.85.216.67]:52833 "EHLO
+        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725879AbgDHFkb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Apr 2020 01:39:20 -0400
-Received: by mail-wr1-f67.google.com with SMTP id p10so6312472wrt.6;
-        Tue, 07 Apr 2020 22:39:18 -0700 (PDT)
+        Wed, 8 Apr 2020 01:40:31 -0400
+Received: by mail-pj1-f67.google.com with SMTP id ng8so723686pjb.2;
+        Tue, 07 Apr 2020 22:40:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=Okc82vqS7N+cAm2fC1T1A+xd/pJAgTWbJlOtDSH21Rg=;
-        b=NGjPIN3pcaFl/PAoh+/QRIXJUQi67BRhQXiHheHL6FKEhBjcg638Yd5wqiN9Z9yzop
-         VLX4y+CU3TUGzKxd8u21ww8cA32q/2uUZi0Cb1Q8BljyD929VSo2RJhuzsIYGiZdPyjB
-         AsvH2uHEv5ygVlRkUV4j/sLvRQpwKXZg4ZLiJXe1mNE51phrSZiYTEkF9RXoZSI/Se5u
-         yFcRuXDwtrW75zBa3E30rmV0IP3CLT89nbijAfeh41UmSpnCjOF95CUO8S8pvom+6INC
-         kbu1Cj8SB3XQNOie8ZrjVMD2doQGnMkae6fol4+qmN3s7SYNyj/FEPmx+4bsWwMTZW4D
-         +4Bw==
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=g1prhrjKxEZds2TfTdybytV1XN9ZFJTSPhvDxSwKWbE=;
+        b=lLoEa84OH4TcHPRT1UimZUdQLc7+R6JFgPXWoCIIRTR2AyiT/OPSoK3ieDWDqzM8qx
+         lyCsqh2n5Zq2XflpC4bOHZ8iVDQrslNa1+/DzvMLAIWXtGMWlgcDE9ziykfEik9ddmBi
+         tyxXTYOkvFRPwBCL9z5pyp0iPfR1I3wurB47f21uuqJtHxLVwahEtgitfWWN7flMDjOZ
+         Safx8k04FtvoZcMhRSmyzx7z3Cwfou//CwYoXYZ07Wi8fW04reFQgw8Y0kGd+M/oglj0
+         CPxccDmDXnLlKNcHfvjbisMg0rXq9cG1uOMWcwhtmdlAZqu3MIuoskOTHuqaUL6yiZXb
+         664Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=Okc82vqS7N+cAm2fC1T1A+xd/pJAgTWbJlOtDSH21Rg=;
-        b=sfU4WmRnSk98h2eHeQiulXNQSUQb2wwHYjlcwjFS72CXI1jKeE4XC2Dd3kHbfx+A4x
-         gIIwsMQBcJQIAvwnyGzMh8Fs2m1idZfS7FgP814zV2MjewDRs9ISz0dhc1gKiQKzzYyz
-         qBDxsjvLP1+dHp6d6jUR8H6eJFNyDr87PoXtMPzjEJbSzHFfavaRHj2zAR1kkO+l0/A5
-         T0VAOzFNjdDSNBtu2Q9gEbtKCqc8fzniRN2lLI0pGsSS/f1Cj9b7rJSgZaGkbVE931Rl
-         +k4vLlHzb1LJ4VTrreuYa6HPrYV420kQnkE1aB/QLCP7hXRj/bqWq9BXUBSz1KdZyQmU
-         6atQ==
-X-Gm-Message-State: AGi0PuYFINnuZgxqBbziCfeCx2/RFd5bLuO51Pot68VqD/y+1EMxl7EH
-        kJvwjtncSOZ4B5t19lTr2T7jXiWUrXnWt99MWcw=
-X-Google-Smtp-Source: APiQypJITdWG6cr8CDIiyQl/5qm7RlFhsLVBSSSISjnWZ2rvwBgjWu9u8DR1q3ID4FGyCHEUXNbHgfHuDChal9IuBWM=
-X-Received: by 2002:a5d:4988:: with SMTP id r8mr6283912wrq.248.1586324357903;
- Tue, 07 Apr 2020 22:39:17 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=g1prhrjKxEZds2TfTdybytV1XN9ZFJTSPhvDxSwKWbE=;
+        b=dsl/KrW+Cw8tzF+oUPBZAQeSP7UmOI9wKRMXIC85CSCnjliMNYlo4kRSm8PxSGrdGV
+         BGSiwkmgPvEeFdjWFBcHQROPE4cxNz4D1p4b7WDzzo9klpUOwkWPK4BI2I7qPrFY4edW
+         yrhsR3vyZwHaEoM3oo4kcGg0jEK/oqs5Hl7cRElY00T8wFb9VKwga/r4owlRxlGT6k7z
+         7bNFM3DonHzJIs1lRmV60h1juYAjN+5RGf0EsgffGZERGjPHV4QUodW5D9gojs1tm+sL
+         yJ9MF9oGG5QvR9Gw0TiiYugF1+M40GMun1he05l1cZbNaoM4SHPffr4QqtczparVrIy8
+         El7g==
+X-Gm-Message-State: AGi0PuaCKwflXvVHlYqiPS9ONq2xa09XbnUU9J8c99nmneyy8y+1PcT8
+        go09WczEOFvOinBYnJUvufQ=
+X-Google-Smtp-Source: APiQypJp2wIHnlyEMM+6phi0GLCRMB+cJZqLMeiHhoqYBQwNHDoMx8FFoIJI/HdUYAVagNG142s6pA==
+X-Received: by 2002:a17:902:a5c6:: with SMTP id t6mr5265576plq.319.1586324430524;
+        Tue, 07 Apr 2020 22:40:30 -0700 (PDT)
+Received: from taoren-ubuntu-R90MNF91 (c-73-252-146-110.hsd1.ca.comcast.net. [73.252.146.110])
+        by smtp.gmail.com with ESMTPSA id d3sm15544077pfq.126.2020.04.07.22.40.29
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 07 Apr 2020 22:40:30 -0700 (PDT)
+Date:   Tue, 7 Apr 2020 22:40:23 -0700
+From:   Tao Ren <rentao.bupt@gmail.com>
+To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Cc:     Felipe Balbi <balbi@kernel.org>, linux-aspeed@lists.ozlabs.org,
+        Andrew Jeffery <andrew@aj.id.au>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        openbmc@lists.ozlabs.org, linux-usb@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Stephen Boyd <swboyd@chromium.org>,
+        Joel Stanley <joel@jms.id.au>, taoren@fb.com,
+        Chunfeng Yun <chunfeng.yun@mediatek.com>,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v3] usb: gadget: aspeed: improve vhub port irq handling
+Message-ID: <20200408054022.GA12469@taoren-ubuntu-R90MNF91>
+References: <20200315191430.12379-1-rentao.bupt@gmail.com>
+ <20200401215826.GA8248@taoren-ubuntu-R90MNF91>
+ <512d625e45ea953d722bb7ea73c3619730312284.camel@kernel.crashing.org>
+ <20200403064826.GA10866@taoren-ubuntu-R90MNF91>
+ <20200407060242.GA15050@taoren-ubuntu-R90MNF91>
+ <93ae433317a82de86ff5e9c8485563b78656b615.camel@kernel.crashing.org>
 MIME-Version: 1.0
-References: <20200406221604.18547-1-luke.r.nels@gmail.com>
-In-Reply-To: <20200406221604.18547-1-luke.r.nels@gmail.com>
-From:   =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn.topel@gmail.com>
-Date:   Wed, 8 Apr 2020 07:39:06 +0200
-Message-ID: <CAJ+HfNh=VDeXJQ3iYHDEXAd1xB_YPShnJyqsW4OmRE=VLAMuuw@mail.gmail.com>
-Subject: Re: [PATCH bpf] riscv, bpf: Fix offset range checking for auipc+jalr
- on RV64
-To:     Luke Nelson <lukenels@cs.washington.edu>
-Cc:     bpf <bpf@vger.kernel.org>, Xi Wang <xi.wang@gmail.com>,
-        Luke Nelson <luke.r.nels@gmail.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        Andrii Nakryiko <andriin@fb.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        KP Singh <kpsingh@chromium.org>,
-        Netdev <netdev@vger.kernel.org>, linux-riscv@lists.infradead.org,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <93ae433317a82de86ff5e9c8485563b78656b615.camel@kernel.crashing.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 7 Apr 2020 at 00:16, Luke Nelson <lukenels@cs.washington.edu> wrote=
-:
->
-> The existing code in emit_call on RV64 checks that the PC-relative offset
-> to the function fits in 32 bits before calling emit_jump_and_link to emit
-> an auipc+jalr pair. However, this check is incorrect because offsets in
-> the range [2^31 - 2^11, 2^31 - 1] cannot be encoded using auipc+jalr on
-> RV64 (see discussion [1]). The RISC-V spec has recently been updated
-> to reflect this fact [2, 3].
->
-> This patch fixes the problem by moving the check on the offset into
-> emit_jump_and_link and modifying it to the correct range of encodable
-> offsets, which is [-2^31 - 2^11, 2^31 - 2^11). This also enforces the
-> check on the offset to other uses of emit_jump_and_link (e.g., BPF_JA)
-> as well.
->
-> Currently, this bug is unlikely to be triggered, because the memory
-> region from which JITed images are allocated is close enough to kernel
-> text for the offsets to not become too large; and because the bounds on
-> BPF program size are small enough. This patch prevents this problem from
-> becoming an issue if either of these change.
->
-> [1]: https://groups.google.com/a/groups.riscv.org/forum/#!topic/isa-dev/b=
-wWFhBnnZFQ
-> [2]: https://github.com/riscv/riscv-isa-manual/commit/b1e42e09ac55116dbf9=
-de5e4fb326a5a90e4a993
-> [3]: https://github.com/riscv/riscv-isa-manual/commit/4c1b2066ebd2965a422=
-e41eb262d0a208a7fea07
->
+On Wed, Apr 08, 2020 at 09:36:16AM +1000, Benjamin Herrenschmidt wrote:
+> On Mon, 2020-04-06 at 23:02 -0700, Tao Ren wrote:
+> > I ran some testing on my ast2400 and ast2500 BMC and looks like the
+> > for() loop runs faster than for_each_set_bit_from() loop in my
+> > environment. I'm not sure if something needs to be revised in my test
+> > code, but please kindly share your suggestions:
+> > 
+> > I use get_cycles() to calculate execution time of 2 different loops, and
+> > ast_vhub_dev_irq() is replaced with barrier() to avoid "noise"; below
+> > are the results:
+> > 
+> >   - when downstream port number is 5 and only 1 irq bit is set, it takes
+> >     ~30 cycles to finish for_each_set_bit() loop, and 20-25 cycles to
+> >     finish the for() loop.
+> > 
+> >   - if downstream port number is 5 and all 5 bits are set, then
+> >     for_each_set_bit() loop takes ~50 cycles and for() loop takes ~25
+> >     cycles.
+> > 
+> >   - when I increase downsteam port number to 16 and set 1 irq bit, the
+> >     for_each_set_bit() loop takes ~30 cycles and for() loop takes 25
+> >     cycles. It's a little surprise to me because I thought for() loop
+> >     would cost 60+ cycles (3 times of the value when port number is 5).
+> > 
+> >   - if downstream port number is 16 and all irq status bits are set,
+> >     then for_each_set_bit() loop takes 60-70 cycles and for() loop takes
+> >     30+ cycles.
+> 
+> I suspect the CPU doesn't have an efficient find-zero-bit primitive,
+> check the generated asm. In that case I would go back to the simple for
+> loop.
+> 
+> Cheers,
+> Ben.
 
-Wow! Interesting! Thanks for fixing this!
+_find_next_bit_le() function is defined in arch/arm/lib/findbit.S. I'm
+looking at the code: will run more tests and send out patch v4 with
+simple for loop later.
 
-Too late to Ack, but still:
 
-Acked-by: Bj=C3=B6rn T=C3=B6pel <bjorn.topel@gmail.com>
+Cheers,
 
-> Signed-off-by: Luke Nelson <luke.r.nels@gmail.com>
-> ---
->  arch/riscv/net/bpf_jit_comp64.c | 49 +++++++++++++++++++++------------
->  1 file changed, 32 insertions(+), 17 deletions(-)
->
-> diff --git a/arch/riscv/net/bpf_jit_comp64.c b/arch/riscv/net/bpf_jit_com=
-p64.c
-> index cc1985d8750a..d208a9fd6c52 100644
-> --- a/arch/riscv/net/bpf_jit_comp64.c
-> +++ b/arch/riscv/net/bpf_jit_comp64.c
-> @@ -110,6 +110,16 @@ static bool is_32b_int(s64 val)
->         return -(1L << 31) <=3D val && val < (1L << 31);
->  }
->
-> +static bool in_auipc_jalr_range(s64 val)
-> +{
-> +       /*
-> +        * auipc+jalr can reach any signed PC-relative offset in the rang=
-e
-> +        * [-2^31 - 2^11, 2^31 - 2^11).
-> +        */
-> +       return (-(1L << 31) - (1L << 11)) <=3D val &&
-> +               val < ((1L << 31) - (1L << 11));
-> +}
-> +
->  static void emit_imm(u8 rd, s64 val, struct rv_jit_context *ctx)
->  {
->         /* Note that the immediate from the add is sign-extended,
-> @@ -380,20 +390,24 @@ static void emit_sext_32_rd(u8 *rd, struct rv_jit_c=
-ontext *ctx)
->         *rd =3D RV_REG_T2;
->  }
->
-> -static void emit_jump_and_link(u8 rd, s64 rvoff, bool force_jalr,
-> -                              struct rv_jit_context *ctx)
-> +static int emit_jump_and_link(u8 rd, s64 rvoff, bool force_jalr,
-> +                             struct rv_jit_context *ctx)
->  {
->         s64 upper, lower;
->
->         if (rvoff && is_21b_int(rvoff) && !force_jalr) {
->                 emit(rv_jal(rd, rvoff >> 1), ctx);
-> -               return;
-> +               return 0;
-> +       } else if (in_auipc_jalr_range(rvoff)) {
-> +               upper =3D (rvoff + (1 << 11)) >> 12;
-> +               lower =3D rvoff & 0xfff;
-> +               emit(rv_auipc(RV_REG_T1, upper), ctx);
-> +               emit(rv_jalr(rd, RV_REG_T1, lower), ctx);
-> +               return 0;
->         }
->
-> -       upper =3D (rvoff + (1 << 11)) >> 12;
-> -       lower =3D rvoff & 0xfff;
-> -       emit(rv_auipc(RV_REG_T1, upper), ctx);
-> -       emit(rv_jalr(rd, RV_REG_T1, lower), ctx);
-> +       pr_err("bpf-jit: target offset 0x%llx is out of range\n", rvoff);
-> +       return -ERANGE;
->  }
->
->  static bool is_signed_bpf_cond(u8 cond)
-> @@ -407,18 +421,16 @@ static int emit_call(bool fixed, u64 addr, struct r=
-v_jit_context *ctx)
->         s64 off =3D 0;
->         u64 ip;
->         u8 rd;
-> +       int ret;
->
->         if (addr && ctx->insns) {
->                 ip =3D (u64)(long)(ctx->insns + ctx->ninsns);
->                 off =3D addr - ip;
-> -               if (!is_32b_int(off)) {
-> -                       pr_err("bpf-jit: target call addr %pK is out of r=
-ange\n",
-> -                              (void *)addr);
-> -                       return -ERANGE;
-> -               }
->         }
->
-> -       emit_jump_and_link(RV_REG_RA, off, !fixed, ctx);
-> +       ret =3D emit_jump_and_link(RV_REG_RA, off, !fixed, ctx);
-> +       if (ret)
-> +               return ret;
->         rd =3D bpf_to_rv_reg(BPF_REG_0, ctx);
->         emit(rv_addi(rd, RV_REG_A0, 0), ctx);
->         return 0;
-> @@ -429,7 +441,7 @@ int bpf_jit_emit_insn(const struct bpf_insn *insn, st=
-ruct rv_jit_context *ctx,
->  {
->         bool is64 =3D BPF_CLASS(insn->code) =3D=3D BPF_ALU64 ||
->                     BPF_CLASS(insn->code) =3D=3D BPF_JMP;
-> -       int s, e, rvoff, i =3D insn - ctx->prog->insnsi;
-> +       int s, e, rvoff, ret, i =3D insn - ctx->prog->insnsi;
->         struct bpf_prog_aux *aux =3D ctx->prog->aux;
->         u8 rd =3D -1, rs =3D -1, code =3D insn->code;
->         s16 off =3D insn->off;
-> @@ -699,7 +711,9 @@ int bpf_jit_emit_insn(const struct bpf_insn *insn, st=
-ruct rv_jit_context *ctx,
->         /* JUMP off */
->         case BPF_JMP | BPF_JA:
->                 rvoff =3D rv_offset(i, off, ctx);
-> -               emit_jump_and_link(RV_REG_ZERO, rvoff, false, ctx);
-> +               ret =3D emit_jump_and_link(RV_REG_ZERO, rvoff, false, ctx=
-);
-> +               if (ret)
-> +                       return ret;
->                 break;
->
->         /* IF (dst COND src) JUMP off */
-> @@ -801,7 +815,6 @@ int bpf_jit_emit_insn(const struct bpf_insn *insn, st=
-ruct rv_jit_context *ctx,
->         case BPF_JMP | BPF_CALL:
->         {
->                 bool fixed;
-> -               int ret;
->                 u64 addr;
->
->                 mark_call(ctx);
-> @@ -826,7 +839,9 @@ int bpf_jit_emit_insn(const struct bpf_insn *insn, st=
-ruct rv_jit_context *ctx,
->                         break;
->
->                 rvoff =3D epilogue_offset(ctx);
-> -               emit_jump_and_link(RV_REG_ZERO, rvoff, false, ctx);
-> +               ret =3D emit_jump_and_link(RV_REG_ZERO, rvoff, false, ctx=
-);
-> +               if (ret)
-> +                       return ret;
->                 break;
->
->         /* dst =3D imm64 */
-> --
-> 2.17.1
->
+Tao
