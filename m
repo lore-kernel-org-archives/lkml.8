@@ -2,76 +2,113 @@ Return-Path: <SRS0=8dav=5Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CA98C2D0EA
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 16:19:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E98C7C2BA1A
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 16:19:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1A4742072F
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 16:19:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B6C1920784
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 16:19:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="tzaaxZmQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728195AbgDHQTK (ORCPT
+        id S1729406AbgDHQTR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Apr 2020 12:19:10 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:42502 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726876AbgDHQTJ (ORCPT
+        Wed, 8 Apr 2020 12:19:17 -0400
+Received: from mail27.static.mailgun.info ([104.130.122.27]:61978 "EHLO
+        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728200AbgDHQTR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Apr 2020 12:19:09 -0400
-Received: from 1.general.cascardo.us.vpn ([10.172.70.58] helo=localhost.localdomain)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <cascardo@canonical.com>)
-        id 1jMDPu-000857-4A; Wed, 08 Apr 2020 16:19:06 +0000
-From:   Thadeu Lima de Souza Cascardo <cascardo@canonical.com>
-To:     linux-sh@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, ysato@users.sourceforge.jp,
-        dalias@libc.org, cascardo@canonical.com
-Subject: [PATCH] arch: sh: configs: remove CONFIG_PCIEASPM_DEBUG
-Date:   Wed,  8 Apr 2020 13:18:46 -0300
-Message-Id: <20200408161846.30031-1-cascardo@canonical.com>
-X-Mailer: git-send-email 2.20.1
+        Wed, 8 Apr 2020 12:19:17 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1586362756; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=9qm8hDJTcDfjcVlKai6quTHvfy91QJtAPqo8V+4TU8w=; b=tzaaxZmQvEVuOq8OETHSWP9OeP2jAYzrAgyVAd+MIx0yaskocC59fWr+6A3T1ClJUeTjkGZe
+ g5Zk8zhyTMevpBOJKKMwx/TT+leDMxHJDS+TzuqRe1lycLw9GWKl1WIYpfsf++CVXx04Yjsu
+ yi3GvWTi/sRZte2MjeOGGRDw0Qw=
+X-Mailgun-Sending-Ip: 104.130.122.27
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e8df97f.7fd356b94458-smtp-out-n02;
+ Wed, 08 Apr 2020 16:19:11 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 65F9DC433BA; Wed,  8 Apr 2020 16:19:11 +0000 (UTC)
+Received: from [10.226.58.28] (i-global254.qualcomm.com [199.106.103.254])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: jhugo)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 9358AC433D2;
+        Wed,  8 Apr 2020 16:19:10 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 9358AC433D2
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=jhugo@codeaurora.org
+Subject: Re: [PATCH v2 2/5] bus: mhi: core: Make sure to powerdown if
+ mhi_sync_power_up fails
+To:     hemantk@codeaurora.org
+Cc:     manivannan.sadhasivam@linaro.org, linux-arm-msm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-msm-owner@vger.kernel.org
+References: <1586278230-29565-1-git-send-email-jhugo@codeaurora.org>
+ <1586278230-29565-3-git-send-email-jhugo@codeaurora.org>
+ <7249d9608f41e4528c87c2b1c464d615@codeaurora.org>
+From:   Jeffrey Hugo <jhugo@codeaurora.org>
+Message-ID: <88f9b443-4a1f-918b-297c-203909d8e219@codeaurora.org>
+Date:   Wed, 8 Apr 2020 10:19:09 -0600
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.2
 MIME-Version: 1.0
+In-Reply-To: <7249d9608f41e4528c87c2b1c464d615@codeaurora.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This option has been removed, so remove any leftover from defconfigs.
+On 4/7/2020 7:34 PM, hemantk@codeaurora.org wrote:
+> On 2020-04-07 09:50, Jeffrey Hugo wrote:
+>> Powerdown is necessary if mhi_sync_power_up fails due to a timeout, to
+>> clean up the resources.  Otherwise a BUG could be triggered when
+>> attempting to clean up MSIs because the IRQ is still active from a
+>> request_irq().
+>>
+>> Signed-off-by: Jeffrey Hugo <jhugo@codeaurora.org>
+>> ---
+>>  drivers/bus/mhi/core/pm.c | 6 +++++-
+>>  1 file changed, 5 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/bus/mhi/core/pm.c b/drivers/bus/mhi/core/pm.c
+>> index 3285c9e..fbffc6b 100644
+>> --- a/drivers/bus/mhi/core/pm.c
+>> +++ b/drivers/bus/mhi/core/pm.c
+>> @@ -922,7 +922,11 @@ int mhi_sync_power_up(struct mhi_controller 
+>> *mhi_cntrl)
+>>                 MHI_PM_IN_ERROR_STATE(mhi_cntrl->pm_state),
+>>                 msecs_to_jiffies(mhi_cntrl->timeout_ms));
+>>
+>> -    return (MHI_IN_MISSION_MODE(mhi_cntrl->ee)) ? 0 : -EIO;
+>> +    ret = (MHI_IN_MISSION_MODE(mhi_cntrl->ee)) ? 0 : -EIO;
+> 
+> Does it make sense to return -ETIMEDOUT instead of -EIO if device fails 
+> to move to mission mode?
+> Controller can use this info as mhi_async_power_up() would not return 
+> -ETIMEDOUT.
 
-Signed-off-by: Thadeu Lima de Souza Cascardo <cascardo@canonical.com>
----
- arch/sh/configs/sdk7786_defconfig | 1 -
- arch/sh/configs/urquell_defconfig | 1 -
- 2 files changed, 2 deletions(-)
+It seems sensible to change this to ETIMEDOUT.  I'll queue that up for V3.
 
-diff --git a/arch/sh/configs/sdk7786_defconfig b/arch/sh/configs/sdk7786_defconfig
-index 7fa116b436c3..3eaf5bbf5959 100644
---- a/arch/sh/configs/sdk7786_defconfig
-+++ b/arch/sh/configs/sdk7786_defconfig
-@@ -75,7 +75,6 @@ CONFIG_CMDLINE="console=ttySC1,115200 earlyprintk=sh-sci.1,115200 root=/dev/sda1
- CONFIG_PCI=y
- CONFIG_PCIEPORTBUS=y
- CONFIG_PCIEAER_INJECT=y
--CONFIG_PCIEASPM_DEBUG=y
- CONFIG_CORE_DUMP_DEFAULT_ELF_HEADERS=y
- CONFIG_BINFMT_MISC=y
- CONFIG_PM=y
-diff --git a/arch/sh/configs/urquell_defconfig b/arch/sh/configs/urquell_defconfig
-index cb2f56468fe0..c981d5b7e68c 100644
---- a/arch/sh/configs/urquell_defconfig
-+++ b/arch/sh/configs/urquell_defconfig
-@@ -33,7 +33,6 @@ CONFIG_KEXEC=y
- CONFIG_SECCOMP=y
- CONFIG_PCI=y
- CONFIG_PCIEPORTBUS=y
--CONFIG_PCIEASPM_DEBUG=y
- CONFIG_PCI_DEBUG=y
- CONFIG_BINFMT_MISC=y
- CONFIG_PM=y
+> 
+>> +    if (ret)
+>> +        mhi_power_down(mhi_cntrl, false);
+>> +
+>> +    return ret;
+>>  }
+>>  EXPORT_SYMBOL(mhi_sync_power_up);
+
+
 -- 
-2.20.1
-
+Jeffrey Hugo
+Qualcomm Technologies, Inc. is a member of the
+Code Aurora Forum, a Linux Foundation Collaborative Project.
