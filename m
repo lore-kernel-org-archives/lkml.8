@@ -5,64 +5,64 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86DD7C2D0F4
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 21:34:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57CECC2D0F4
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 21:34:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 567BA2082D
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 21:34:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1DC322082D
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 21:34:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="n5xzq+jD"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="t31m+68I"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730769AbgDHVeI (ORCPT
+        id S1730782AbgDHVeL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Apr 2020 17:34:08 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:35776 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730739AbgDHVeG (ORCPT
+        Wed, 8 Apr 2020 17:34:11 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:41614 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730725AbgDHVeI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Apr 2020 17:34:06 -0400
-Received: by mail-lj1-f196.google.com with SMTP id k21so9335072ljh.2
-        for <linux-kernel@vger.kernel.org>; Wed, 08 Apr 2020 14:34:05 -0700 (PDT)
+        Wed, 8 Apr 2020 17:34:08 -0400
+Received: by mail-lj1-f194.google.com with SMTP id n17so9266089lji.8
+        for <linux-kernel@vger.kernel.org>; Wed, 08 Apr 2020 14:34:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=ZmtMLRatZyABHiSvc9LC9XLFnfSECfJ6FOVkP/fee/c=;
-        b=n5xzq+jDqSU/R2czdhnEmBJs1a6WCKd3RUwOfSvFFcJ/OrtE69/SCmXefoP+Z6Dq9q
-         7ZS3sphirpZb0ZoYJMN0UHaJkzddznQ4DGCfssvT7Cec3VwsYv447cxATz/pPyK4KchP
-         rrPSMTLBqxgDiDOU39ErRVsZ1PAjmDWVgIBude4FjexcFOAQFNp18Mrco8+JLdb6Jyqh
-         +lBbg+OZhTCXbpFdGBcz5gJSuyUiYpsn8Hnhb6dZYfA41PbJWYVd/zUuR5x/3M5CkagY
-         xlIpdkeQGKZkJqHsx6IE3nuRK8gExqcDigP7bTiKCojU+bt1pxVcBwsWX1zufYlNKuEa
-         JxtA==
+        bh=Mt9OBIj0ykBafNH/9trvGlSeMEJzqQmkZCMhh/GB4oU=;
+        b=t31m+68I3U983sirf6zcS6e9xeVWoUaxTp9krnrbio2KDHZgVrxIe7uqLphilktHFp
+         MDx7Az0j+gxYhyBpKNXOp8Hro+V700/mS+ZDDkuVx63BrbFJvFe/hllVStC81XRcfPxM
+         jNfIu8ewZKQbxq0la02ESkd7HPjGJepHLioqqkhi7ebGAvJhTaOpZJ10dTG/DVKpWVwf
+         0AqLpPgggy9xqRHuGe8vJSGuAk1AxZJORxF4iKgmytx+oDE2X7ubCnyxKl8Ag5J6hv9a
+         i0Turjc0XfnaDZIepqUsut6p/CwiC9OlZ2UnhUNuPJ4BcSqD61k2Ile6WKCnaX3SeZij
+         upWQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=ZmtMLRatZyABHiSvc9LC9XLFnfSECfJ6FOVkP/fee/c=;
-        b=JkkcpLdz/G9tb7EibMTaSFCMm56SlERYQYh4Rp/zn9p/94P93fcO4HgJlqfnzoMAbM
-         nEPHiLhTAQ+qiO7Uh93mcv4y+UzNBnT3hPGK5mQhwA9skw7yI1fs1hdnG78Ww080n9Dp
-         89g8IkYO+wRKH2rYlH8MHQugR3Vp5or51xRY6iBTfnF82Ss5K0TIVzJ7/T06jdDKl32g
-         lgrwLzbsdtdeq5Bzj1vdRoPjgjAkGl9iShKkn1Wo5/CytnN9vRVbIACR5mNEQjBZ1ii0
-         ZF8afFkR0uCI1/eMJ0oVGh8D25xqExsU8eCF9Jg+CF0R7xW8LNVPyGDCNX5yO5KOnDwF
-         80fw==
-X-Gm-Message-State: AGi0PuZ7YzCn2g6pLrX7cSdWOzcroRnTHzsele1w6ozCrHTW4T1WWyla
-        L/SPtkNeQ+mdVQlOsuaBrIrgXQ==
-X-Google-Smtp-Source: APiQypKIHx32aNL9j4vusR14vRnUwl6c9YL9LAAD4MO+elshP0otTpQEXAou1ldf8vpiu01UaHqjFA==
-X-Received: by 2002:a05:651c:2c7:: with SMTP id f7mr6207367ljo.152.1586381644715;
-        Wed, 08 Apr 2020 14:34:04 -0700 (PDT)
+        bh=Mt9OBIj0ykBafNH/9trvGlSeMEJzqQmkZCMhh/GB4oU=;
+        b=bxznbnlo8XtpIHe3tjZvbhE1l10H15w+lSPxdZ3S2WPeSavyhkIWLpka5O/WDMh2kq
+         aSaUyPR0vZrOPFrDD29B4gNajKQABps3vzy999rN+UsZQmFTqxy0ifCNVsPv10VvU9nQ
+         JPg/UmCNCq6M3TLKS8uZX7KRWEhd1U7U2RLGdMw1+kyLVuDhcxdma03rxbtCp8pKsBH0
+         2TY0MYI/scUWEA5lzrK3gYCkqroURLnx7IEr2HRGOIZSekrrFMLY1oTM2Q3DE2D3kEfR
+         34F0YMRLV6nkNWQv2W7cdA/JwbTw7jkCibjolnYNfbW670TfynW9sI1rbqJ7UGVCyKOh
+         ZU9w==
+X-Gm-Message-State: AGi0PuYi/nHYnzQaLnzPAOOSnpiwO4yXErZwnS7f9+nNy5jy+Wp+tJ0q
+        i+rxAYBruQY0tk2UpxBRA7lzDg==
+X-Google-Smtp-Source: APiQypLFbtG20kBPRjrMvbSnxkPIJuRxVgxuATQnnRzzI6NprTKvBrrkBcaA+fi4G4LdQEEFQ/QWSg==
+X-Received: by 2002:a2e:8e3a:: with SMTP id r26mr6347426ljk.233.1586381645983;
+        Wed, 08 Apr 2020 14:34:05 -0700 (PDT)
 Received: from localhost.localdomain (212-5-158-138.ip.btc-net.bg. [212.5.158.138])
-        by smtp.gmail.com with ESMTPSA id t6sm15746688lfb.55.2020.04.08.14.34.02
+        by smtp.gmail.com with ESMTPSA id t6sm15746688lfb.55.2020.04.08.14.34.04
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 08 Apr 2020 14:34:04 -0700 (PDT)
+        Wed, 08 Apr 2020 14:34:05 -0700 (PDT)
 From:   Stanimir Varbanov <stanimir.varbanov@linaro.org>
 To:     linux-media@vger.kernel.org, linux-arm-msm@vger.kernel.org,
         linux-kernel@vger.kernel.org
 Cc:     Vikash Garodia <vgarodia@codeaurora.org>,
         Stanimir Varbanov <stanimir.varbanov@linaro.org>
-Subject: [PATCH 3/7] venus: core: Constify codec frequency data array
-Date:   Thu,  9 Apr 2020 00:33:26 +0300
-Message-Id: <20200408213330.27665-4-stanimir.varbanov@linaro.org>
+Subject: [PATCH 4/7] venus: helpers: Done buffers per queue type
+Date:   Thu,  9 Apr 2020 00:33:27 +0300
+Message-Id: <20200408213330.27665-5-stanimir.varbanov@linaro.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200408213330.27665-1-stanimir.varbanov@linaro.org>
 References: <20200408213330.27665-1-stanimir.varbanov@linaro.org>
@@ -71,26 +71,117 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The array is not changed in the code, so make it const.
+Currently calling venus_helper_buffers_done() will return buffers to
+user for both capture and output queues in the same call. This is
+wrong because both queues are really separate and calling
+stop_streaming on one queue shouldn't return buffers for the other.
+Solve this by add a new queue type argument and fix the clients of
+the helper function.
 
 Signed-off-by: Stanimir Varbanov <stanimir.varbanov@linaro.org>
 ---
- drivers/media/platform/qcom/venus/core.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/media/platform/qcom/venus/helpers.c | 18 ++++++++++++------
+ drivers/media/platform/qcom/venus/helpers.h |  2 +-
+ drivers/media/platform/qcom/venus/vdec.c    |  5 ++---
+ drivers/media/platform/qcom/venus/venc.c    |  2 +-
+ 4 files changed, 16 insertions(+), 11 deletions(-)
 
-diff --git a/drivers/media/platform/qcom/venus/core.c b/drivers/media/platform/qcom/venus/core.c
-index afd76bcd9978..203c6538044f 100644
---- a/drivers/media/platform/qcom/venus/core.c
-+++ b/drivers/media/platform/qcom/venus/core.c
-@@ -456,7 +456,7 @@ static const struct freq_tbl sdm845_freq_table[] = {
- 	{  244800, 100000000 },	/* 1920x1080@30 */
- };
+diff --git a/drivers/media/platform/qcom/venus/helpers.c b/drivers/media/platform/qcom/venus/helpers.c
+index bcc603804041..0143af7822b2 100644
+--- a/drivers/media/platform/qcom/venus/helpers.c
++++ b/drivers/media/platform/qcom/venus/helpers.c
+@@ -1129,15 +1129,18 @@ void venus_helper_vb2_buf_queue(struct vb2_buffer *vb)
+ }
+ EXPORT_SYMBOL_GPL(venus_helper_vb2_buf_queue);
  
--static struct codec_freq_data sdm845_codec_freq_data[] =  {
-+static const struct codec_freq_data sdm845_codec_freq_data[] =  {
- 	{ V4L2_PIX_FMT_H264, VIDC_SESSION_TYPE_ENC, 675, 10 },
- 	{ V4L2_PIX_FMT_HEVC, VIDC_SESSION_TYPE_ENC, 675, 10 },
- 	{ V4L2_PIX_FMT_VP8, VIDC_SESSION_TYPE_ENC, 675, 10 },
+-void venus_helper_buffers_done(struct venus_inst *inst,
++void venus_helper_buffers_done(struct venus_inst *inst, unsigned int type,
+ 			       enum vb2_buffer_state state)
+ {
+ 	struct vb2_v4l2_buffer *buf;
+ 
+-	while ((buf = v4l2_m2m_src_buf_remove(inst->m2m_ctx)))
+-		v4l2_m2m_buf_done(buf, state);
+-	while ((buf = v4l2_m2m_dst_buf_remove(inst->m2m_ctx)))
+-		v4l2_m2m_buf_done(buf, state);
++	if (type == V4L2_BUF_TYPE_VIDEO_OUTPUT_MPLANE) {
++		while ((buf = v4l2_m2m_src_buf_remove(inst->m2m_ctx)))
++			v4l2_m2m_buf_done(buf, state);
++	} else if (type == V4L2_BUF_TYPE_VIDEO_CAPTURE_MPLANE) {
++		while ((buf = v4l2_m2m_dst_buf_remove(inst->m2m_ctx)))
++			v4l2_m2m_buf_done(buf, state);
++	}
+ }
+ EXPORT_SYMBOL_GPL(venus_helper_buffers_done);
+ 
+@@ -1168,7 +1171,10 @@ void venus_helper_vb2_stop_streaming(struct vb2_queue *q)
+ 		INIT_LIST_HEAD(&inst->registeredbufs);
+ 	}
+ 
+-	venus_helper_buffers_done(inst, VB2_BUF_STATE_ERROR);
++	venus_helper_buffers_done(inst, V4L2_BUF_TYPE_VIDEO_OUTPUT_MPLANE,
++				  VB2_BUF_STATE_ERROR);
++	venus_helper_buffers_done(inst, V4L2_BUF_TYPE_VIDEO_CAPTURE_MPLANE,
++				  VB2_BUF_STATE_ERROR);
+ 
+ 	if (q->type == V4L2_BUF_TYPE_VIDEO_OUTPUT_MPLANE)
+ 		inst->streamon_out = 0;
+diff --git a/drivers/media/platform/qcom/venus/helpers.h b/drivers/media/platform/qcom/venus/helpers.h
+index b64875564064..8fbbda12a4fe 100644
+--- a/drivers/media/platform/qcom/venus/helpers.h
++++ b/drivers/media/platform/qcom/venus/helpers.h
+@@ -14,7 +14,7 @@ struct venus_core;
+ bool venus_helper_check_codec(struct venus_inst *inst, u32 v4l2_pixfmt);
+ struct vb2_v4l2_buffer *venus_helper_find_buf(struct venus_inst *inst,
+ 					      unsigned int type, u32 idx);
+-void venus_helper_buffers_done(struct venus_inst *inst,
++void venus_helper_buffers_done(struct venus_inst *inst, unsigned int type,
+ 			       enum vb2_buffer_state state);
+ int venus_helper_vb2_buf_init(struct vb2_buffer *vb);
+ int venus_helper_vb2_buf_prepare(struct vb2_buffer *vb);
+diff --git a/drivers/media/platform/qcom/venus/vdec.c b/drivers/media/platform/qcom/venus/vdec.c
+index e8e1ecf7cf4a..7d093accbd59 100644
+--- a/drivers/media/platform/qcom/venus/vdec.c
++++ b/drivers/media/platform/qcom/venus/vdec.c
+@@ -1044,7 +1044,7 @@ static int vdec_start_streaming(struct vb2_queue *q, unsigned int count)
+ put_power:
+ 	vdec_pm_put(inst, false);
+ error:
+-	venus_helper_buffers_done(inst, VB2_BUF_STATE_QUEUED);
++	venus_helper_buffers_done(inst, q->type, VB2_BUF_STATE_QUEUED);
+ 	mutex_unlock(&inst->lock);
+ 	return ret;
+ }
+@@ -1071,7 +1071,6 @@ static int vdec_stop_capture(struct venus_inst *inst)
+ 		break;
+ 	case VENUS_DEC_STATE_DRC:
+ 		ret = hfi_session_flush(inst, HFI_FLUSH_OUTPUT);
+-		vdec_cancel_dst_buffers(inst);
+ 		inst->codec_state = VENUS_DEC_STATE_CAPTURE_SETUP;
+ 		INIT_LIST_HEAD(&inst->registeredbufs);
+ 		venus_helper_free_dpb_bufs(inst);
+@@ -1117,7 +1116,7 @@ static void vdec_stop_streaming(struct vb2_queue *q)
+ 	else
+ 		ret = vdec_stop_output(inst);
+ 
+-	venus_helper_buffers_done(inst, VB2_BUF_STATE_ERROR);
++	venus_helper_buffers_done(inst, q->type, VB2_BUF_STATE_ERROR);
+ 
+ 	if (ret)
+ 		goto unlock;
+diff --git a/drivers/media/platform/qcom/venus/venc.c b/drivers/media/platform/qcom/venus/venc.c
+index 9981a2a27c90..3d8431dc14c4 100644
+--- a/drivers/media/platform/qcom/venus/venc.c
++++ b/drivers/media/platform/qcom/venus/venc.c
+@@ -1018,7 +1018,7 @@ static int venc_start_streaming(struct vb2_queue *q, unsigned int count)
+ deinit_sess:
+ 	hfi_session_deinit(inst);
+ bufs_done:
+-	venus_helper_buffers_done(inst, VB2_BUF_STATE_QUEUED);
++	venus_helper_buffers_done(inst, q->type, VB2_BUF_STATE_QUEUED);
+ 	if (q->type == V4L2_BUF_TYPE_VIDEO_OUTPUT_MPLANE)
+ 		inst->streamon_out = 0;
+ 	else
 -- 
 2.17.1
 
