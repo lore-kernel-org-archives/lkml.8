@@ -2,251 +2,318 @@ Return-Path: <SRS0=8dav=5Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F40AC2BA2B
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 13:29:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D247C2BA2B
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 13:29:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E5EFC2076D
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 13:29:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4DE402074F
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 13:29:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="SPQZ1YBb"
+	dkim=pass (2048-bit key) header.d=shutemov-name.20150623.gappssmtp.com header.i=@shutemov-name.20150623.gappssmtp.com header.b="s0lXNt5w"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728255AbgDHN3e (ORCPT
+        id S1729163AbgDHN3u (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Apr 2020 09:29:34 -0400
-Received: from mail27.static.mailgun.info ([104.130.122.27]:28241 "EHLO
-        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727049AbgDHN3d (ORCPT
+        Wed, 8 Apr 2020 09:29:50 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:36439 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727049AbgDHN3t (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Apr 2020 09:29:33 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1586352572; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=zndax/ZRa+8YWitnJh99eSODrTXpUmFx1mf/Y4u5m50=; b=SPQZ1YBb+4yXHOb6a/MavOmqGLrKerec+eZXEV/kWXtVDkEk+6z+m7xTDoggkulKmgCEYZqM
- /sxxUCjnRUkIc4TyS2Qq4i8Z5xBURNFJeSThoPNSwGZsVZZRshPbPSJVJkrwtQJ13ycBIf9Q
- yVvEccfx7gudcrBjYdmS2/uip4o=
-X-Mailgun-Sending-Ip: 104.130.122.27
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e8dd1b0.7f40baedc688-smtp-out-n02;
- Wed, 08 Apr 2020 13:29:20 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 2BEDAC43637; Wed,  8 Apr 2020 13:29:20 +0000 (UTC)
-Received: from [192.168.43.137] (unknown [106.213.202.231])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: mkshah)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 514CDC43636;
-        Wed,  8 Apr 2020 13:29:13 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 514CDC43636
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=mkshah@codeaurora.org
-Subject: Re: [PATCH v3 09/10] drivers: qcom: rpmh-rsc: Caller handles
- tcs_invalidate() exclusivity
-To:     Douglas Anderson <dianders@chromium.org>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     mka@chromium.org, Lina Iyer <ilina@codeaurora.org>,
-        Rajendra Nayak <rnayak@codeaurora.org>, swboyd@chromium.org,
-        evgreen@chromium.org, linux-arm-msm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20200407235024.260460-1-dianders@chromium.org>
- <20200407164915.v3.9.I07c1f70e0e8f2dc0004bd38970b4e258acdc773e@changeid>
-From:   Maulik Shah <mkshah@codeaurora.org>
-Message-ID: <6b141a7a-8347-d1a2-b115-5baf0b788820@codeaurora.org>
-Date:   Wed, 8 Apr 2020 18:59:10 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Wed, 8 Apr 2020 09:29:49 -0400
+Received: by mail-lj1-f194.google.com with SMTP id b1so7653169ljp.3
+        for <linux-kernel@vger.kernel.org>; Wed, 08 Apr 2020 06:29:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=shutemov-name.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=+a+KJKLxTiLy61T642wkVgAExZQNV9YRYU5ggZvNNkw=;
+        b=s0lXNt5wJUI6ElsuHm1pL6IGsQaGzq16SW7sPWVMYeue7eUikJUklhzyGAMJEPA5RR
+         /E9Semkw39eZJAZbZDpPK+wpgMGbZwuTMtYmFfxJCsnbpe+hGAAI1i/IiRvCT24zJ5PF
+         khCElZGPQYr4kcB42RjiJAWzFVZZ1YK40uA4kkNEWxXHovaZ+q5iNoN9eFcWgFVE0v2Y
+         tM11kAeYKHfQ9G8f0ckutj0Oe8aVXkVGMwMWR5FlUgK96pnfq4CgGL//VsBAXBRNuOzu
+         MXz6BiU/Zv2+PsWA+1i+gp85a/R+muCH7VlKgM/Mi3uFIILjLDTJmwA3BMDC6m6dgmLM
+         nfdg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=+a+KJKLxTiLy61T642wkVgAExZQNV9YRYU5ggZvNNkw=;
+        b=ZiYIJoRGcMz/nJarexZLVD8+/m4oUrfgEhNwDXQ9GJBQw9lRG4VTXQf7/l5y9P2Fe4
+         BU6cbRhyKcIlq6QG0qFdjUoifIduD2WvJfxb8PZO49gkPlBFWCqGqBwrHADzvPuKVimR
+         Grw7EzKwIsE1qGHCjNiI4Csg0gMjOk3N7S6Pfou/pXIf0zFBUOTkc/Gq2hPHUnTeO0xi
+         oDz5z1F22K0JnOb9YjeSHaJ/6GNI53jVfVGXpx7F8eFkUXO862T1nuGdZ8Zb6QwjPHIb
+         9eflGjfQxQcbHriitrJWshps7iYPGnu2ROKM38bZutLI8Egge4RylrcAtr3qTeL+KMpi
+         ae/A==
+X-Gm-Message-State: AGi0PuYa3JfUVfFVFf2AyW46Q5VIam7y0lk2hANNtN4/oqKoTQxftDRE
+        xo1PlEWrwPslZWa9tMLLVexpUe6iKrY=
+X-Google-Smtp-Source: APiQypIqQ4iAfPBrtr2fuadsLh8/meZtFI7YpCKPlTJXHUCo//xx7cjPCCEm4ouJKLc8D3G7sneMNQ==
+X-Received: by 2002:a2e:8719:: with SMTP id m25mr5029959lji.76.1586352585406;
+        Wed, 08 Apr 2020 06:29:45 -0700 (PDT)
+Received: from box.localdomain ([86.57.175.117])
+        by smtp.gmail.com with ESMTPSA id k4sm14917472lfo.47.2020.04.08.06.29.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 08 Apr 2020 06:29:44 -0700 (PDT)
+Received: by box.localdomain (Postfix, from userid 1000)
+        id 81508101C47; Wed,  8 Apr 2020 16:29:48 +0300 (+03)
+Date:   Wed, 8 Apr 2020 16:29:48 +0300
+From:   "Kirill A. Shutemov" <kirill@shutemov.name>
+To:     Yang Shi <yang.shi@linux.alibaba.com>
+Cc:     akpm@linux-foundation.org, Andrea Arcangeli <aarcange@redhat.com>,
+        Zi Yan <ziy@nvidia.com>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+Subject: Re: [PATCHv2 6/8] khugepaged: Allow to collapse PTE-mapped compound
+ pages
+Message-ID: <20200408132948.axaz3ytquoulaazp@box>
+References: <20200403112928.19742-1-kirill.shutemov@linux.intel.com>
+ <20200403112928.19742-7-kirill.shutemov@linux.intel.com>
+ <10820b6f-f15a-1768-3aca-d0f464185b5e@linux.alibaba.com>
 MIME-Version: 1.0
-In-Reply-To: <20200407164915.v3.9.I07c1f70e0e8f2dc0004bd38970b4e258acdc773e@changeid>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-GB
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <10820b6f-f15a-1768-3aca-d0f464185b5e@linux.alibaba.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Mon, Apr 06, 2020 at 02:29:35PM -0700, Yang Shi wrote:
+> 
+> 
+> On 4/3/20 4:29 AM, Kirill A. Shutemov wrote:
+> > We can collapse PTE-mapped compound pages. We only need to avoid
+> > handling them more than once: lock/unlock page only once if it's present
+> > in the PMD range multiple times as it handled on compound level. The
+> > same goes for LRU isolation and putback.
+> > 
+> > Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
+> > ---
+> >   mm/khugepaged.c | 103 ++++++++++++++++++++++++++++++++----------------
+> >   1 file changed, 68 insertions(+), 35 deletions(-)
+> > 
+> > diff --git a/mm/khugepaged.c b/mm/khugepaged.c
+> > index 1e7e6543ebca..49e56e4e30d1 100644
+> > --- a/mm/khugepaged.c
+> > +++ b/mm/khugepaged.c
+> > @@ -515,23 +515,37 @@ void __khugepaged_exit(struct mm_struct *mm)
+> >   static void release_pte_page(struct page *page)
+> >   {
+> > -	dec_node_page_state(page, NR_ISOLATED_ANON + page_is_file_cache(page));
+> > +	mod_node_page_state(page_pgdat(page),
+> > +			NR_ISOLATED_ANON + page_is_file_cache(page),
+> > +			-compound_nr(page));
+> >   	unlock_page(page);
+> >   	putback_lru_page(page);
+> >   }
+> > -static void release_pte_pages(pte_t *pte, pte_t *_pte)
+> > +static void release_pte_pages(pte_t *pte, pte_t *_pte,
+> > +		struct list_head *compound_pagelist)
+> >   {
+> > +	struct page *page, *tmp;
+> > +
+> >   	while (--_pte >= pte) {
+> >   		pte_t pteval = *_pte;
+> > -		if (!pte_none(pteval) && !is_zero_pfn(pte_pfn(pteval)))
+> > -			release_pte_page(pte_page(pteval));
+> > +
+> > +		page = pte_page(pteval);
+> > +		if (!pte_none(pteval) && !is_zero_pfn(pte_pfn(pteval)) &&
+> > +				!PageCompound(page))
+> > +			release_pte_page(page);
+> > +	}
+> > +
+> > +	list_for_each_entry_safe(page, tmp, compound_pagelist, lru) {
+> > +		list_del(&page->lru);
+> > +		release_pte_page(page);
+> >   	}
+> >   }
+> >   static int __collapse_huge_page_isolate(struct vm_area_struct *vma,
+> >   					unsigned long address,
+> > -					pte_t *pte)
+> > +					pte_t *pte,
+> > +					struct list_head *compound_pagelist)
+> >   {
+> >   	struct page *page = NULL;
+> >   	pte_t *_pte;
+> > @@ -561,13 +575,21 @@ static int __collapse_huge_page_isolate(struct vm_area_struct *vma,
+> >   			goto out;
+> >   		}
+> > -		/* TODO: teach khugepaged to collapse THP mapped with pte */
+> > +		VM_BUG_ON_PAGE(!PageAnon(page), page);
+> > +
+> >   		if (PageCompound(page)) {
+> > -			result = SCAN_PAGE_COMPOUND;
+> > -			goto out;
+> > -		}
+> > +			struct page *p;
+> > +			page = compound_head(page);
+> > -		VM_BUG_ON_PAGE(!PageAnon(page), page);
+> > +			/*
+> > +			 * Check if we have dealt with the compound page
+> > +			 * already
+> > +			 */
+> > +			list_for_each_entry(p, compound_pagelist, lru) {
+> > +				if (page == p)
+> > +					goto next;
+> > +			}
+> > +		}
+> >   		/*
+> >   		 * We can do it before isolate_lru_page because the
+> > @@ -597,19 +619,15 @@ static int __collapse_huge_page_isolate(struct vm_area_struct *vma,
+> >   			result = SCAN_PAGE_COUNT;
+> >   			goto out;
+> >   		}
+> > -		if (pte_write(pteval)) {
+> > -			writable = true;
+> > -		} else {
+> > -			if (PageSwapCache(page) &&
+> > -			    !reuse_swap_page(page, NULL)) {
+> > -				unlock_page(page);
+> > -				result = SCAN_SWAP_CACHE_PAGE;
+> > -				goto out;
+> > -			}
+> > +		if (!pte_write(pteval) && PageSwapCache(page) &&
+> > +				!reuse_swap_page(page, NULL)) {
+> >   			/*
+> > -			 * Page is not in the swap cache. It can be collapsed
+> > -			 * into a THP.
+> > +			 * Page is in the swap cache and cannot be re-used.
+> > +			 * It cannot be collapsed into a THP.
+> >   			 */
+> > +			unlock_page(page);
+> > +			result = SCAN_SWAP_CACHE_PAGE;
+> > +			goto out;
+> >   		}
+> >   		/*
+> > @@ -621,16 +639,23 @@ static int __collapse_huge_page_isolate(struct vm_area_struct *vma,
+> >   			result = SCAN_DEL_PAGE_LRU;
+> >   			goto out;
+> >   		}
+> > -		inc_node_page_state(page,
+> > -				NR_ISOLATED_ANON + page_is_file_cache(page));
+> > +		mod_node_page_state(page_pgdat(page),
+> > +				NR_ISOLATED_ANON + page_is_file_cache(page),
+> > +				compound_nr(page));
+> >   		VM_BUG_ON_PAGE(!PageLocked(page), page);
+> >   		VM_BUG_ON_PAGE(PageLRU(page), page);
+> > +		if (PageCompound(page))
+> > +			list_add_tail(&page->lru, compound_pagelist);
+> > +next:
+> >   		/* There should be enough young pte to collapse the page */
+> >   		if (pte_young(pteval) ||
+> >   		    page_is_young(page) || PageReferenced(page) ||
+> >   		    mmu_notifier_test_young(vma->vm_mm, address))
+> >   			referenced++;
+> > +
+> > +		if (pte_write(pteval))
+> > +			writable = true;
+> >   	}
+> >   	if (likely(writable)) {
+> >   		if (likely(referenced)) {
+> > @@ -644,7 +669,7 @@ static int __collapse_huge_page_isolate(struct vm_area_struct *vma,
+> >   	}
+> >   out:
+> > -	release_pte_pages(pte, _pte);
+> > +	release_pte_pages(pte, _pte, compound_pagelist);
+> >   	trace_mm_collapse_huge_page_isolate(page, none_or_zero,
+> >   					    referenced, writable, result);
+> >   	return 0;
+> > @@ -653,13 +678,14 @@ static int __collapse_huge_page_isolate(struct vm_area_struct *vma,
+> >   static void __collapse_huge_page_copy(pte_t *pte, struct page *page,
+> >   				      struct vm_area_struct *vma,
+> >   				      unsigned long address,
+> > -				      spinlock_t *ptl)
+> > +				      spinlock_t *ptl,
+> > +				      struct list_head *compound_pagelist)
+> >   {
+> > +	struct page *src_page, *tmp;
+> >   	pte_t *_pte;
+> >   	for (_pte = pte; _pte < pte + HPAGE_PMD_NR;
+> >   				_pte++, page++, address += PAGE_SIZE) {
+> >   		pte_t pteval = *_pte;
+> > -		struct page *src_page;
+> >   		if (pte_none(pteval) || is_zero_pfn(pte_pfn(pteval))) {
+> >   			clear_user_highpage(page, address);
+> > @@ -679,7 +705,6 @@ static void __collapse_huge_page_copy(pte_t *pte, struct page *page,
+> >   		} else {
+> >   			src_page = pte_page(pteval);
+> >   			copy_user_highpage(page, src_page, address, vma);
+> > -			release_pte_page(src_page);
+> >   			/*
+> >   			 * ptl mostly unnecessary, but preempt has to
+> >   			 * be disabled to update the per-cpu stats
+> > @@ -693,9 +718,18 @@ static void __collapse_huge_page_copy(pte_t *pte, struct page *page,
+> >   			pte_clear(vma->vm_mm, address, _pte);
+> >   			page_remove_rmap(src_page, false);
+> >   			spin_unlock(ptl);
+> > -			free_page_and_swap_cache(src_page);
+> > +			if (!PageCompound(src_page)) {
+> > +				release_pte_page(src_page);
+> > +				free_page_and_swap_cache(src_page);
+> > +			}
+> >   		}
+> >   	}
+> > +
+> > +	list_for_each_entry_safe(src_page, tmp, compound_pagelist, lru) {
+> > +		list_del(&src_page->lru);
+> > +		release_pte_page(src_page);
+> > +		free_page_and_swap_cache(src_page);
+> > +	}
+> 
+> It looks this may mess up the PTE-mapped THP's refcount if it has multiple
+> PTE-mapped subpages since put_page() is not called for every PTE-mapped
+> subpages.
 
-On 4/8/2020 5:20 AM, Douglas Anderson wrote:
-> Auditing tcs_invalidate() made me worried.  Specifically I saw that it
-> used spin_lock(), not spin_lock_irqsave().  That always worries me
-> unless I can trace for sure that I'm in the interrupt handler or that
-> someone else already disabled interrupts.
->
-> Looking more at it, there is actually no reason for these locks
-> anyway.  Specifically the only reason you'd ever call
-> rpmh_rsc_invalidate() is if you cared that the sleep/wake TCSes were
-> empty.  That means that they need to continue to be empty even after
-> rpmh_rsc_invalidate() returns.  The only way that can happen is if the
-> caller already has done something to keep all other RPMH users out.
-> It should be noted that even though the caller is only worried about
-> making sleep/wake TCSes empty, they also need to worry about stopping
-> active-only transfers if they need to handle the case where
-> active-only transfers might borrow the wake TCS.
->
-> At the moment rpmh_rsc_invalidate() is only called in PM code from the
-> last CPU.  If that later changes the caller will still need to solve
-> the above problems themselves, so these locks will never be useful.
->
-> Continuing to audit tcs_invalidate(), I found a bug.  The function
-> didn't properly check for a borrowed TCS if we hadn't recently written
-> anything into the TCS.  Specifically, if we've never written to the
-> WAKE_TCS (or we've flushed it recently) then tcs->slots is empty.
-> We'll early-out and we'll never call tcs_is_free().
->
-> I thought about fixing this bug by either deleting the early check for
-> bitmap_empty() or possibly only doing it if we knew we weren't on a
-> TCS that could be borrowed.  However, I think it's better to just
-> delete the checks.
->
-> As argued above it's up to the caller to make sure that all other
-> users of RPMH are quiet before tcs_invalidate() is called.  Since
-> callers need to handle the zero-active-TCS case anyway that means they
-> need to make sure that make sure the active-only transfers are quiet
+Good catch!
 
-make sure is twice, can you please drop once.
+I *think* something like this should fix the issue (untested):
 
-need to make sure that the active-only.....
-
-other than this.
-
-Reviewed-by: Maulik Shah <mkshah@codeaurora.org>
-Tested-by: Maulik Shah <mkshah@codeaurora.org>
-
-Thanks,
-Maulik
-
-> before calling too.  The one way tcs_invalidate() gets called today is
-> through rpmh_rsc_cpu_pm_callback() which calls
-> rpmh_rsc_ctrlr_is_busy() to handle this.  When we have another path to
-> get to tcs_invalidate() it will also need to come up with something
-> similar and it won't need this extra check either.  If we later find
-> some code path that actually needs this check back in (and somehow
-> manages to be race free) we can always add it back in.
->
-> Signed-off-by: Douglas Anderson <dianders@chromium.org>
-> ---
->
-> Changes in v3:
-> - Replaced ("irqsave()...") + ("...never -EBUSY") w/ ("Caller handles...")
->
-> Changes in v2: None
->
->   drivers/soc/qcom/rpmh-internal.h |  2 +-
->   drivers/soc/qcom/rpmh-rsc.c      | 38 +++++++++++---------------------
->   drivers/soc/qcom/rpmh.c          |  5 +----
->   3 files changed, 15 insertions(+), 30 deletions(-)
->
-> diff --git a/drivers/soc/qcom/rpmh-internal.h b/drivers/soc/qcom/rpmh-internal.h
-> index f06350cbc9a2..dba8510c0669 100644
-> --- a/drivers/soc/qcom/rpmh-internal.h
-> +++ b/drivers/soc/qcom/rpmh-internal.h
-> @@ -132,7 +132,7 @@ struct rsc_drv {
->   int rpmh_rsc_send_data(struct rsc_drv *drv, const struct tcs_request *msg);
->   int rpmh_rsc_write_ctrl_data(struct rsc_drv *drv,
->   			     const struct tcs_request *msg);
-> -int rpmh_rsc_invalidate(struct rsc_drv *drv);
-> +void rpmh_rsc_invalidate(struct rsc_drv *drv);
->   
->   void rpmh_tx_done(const struct tcs_request *msg, int r);
->   int rpmh_flush(struct rpmh_ctrlr *ctrlr);
-> diff --git a/drivers/soc/qcom/rpmh-rsc.c b/drivers/soc/qcom/rpmh-rsc.c
-> index 10c026b2e1bc..a3b015196f15 100644
-> --- a/drivers/soc/qcom/rpmh-rsc.c
-> +++ b/drivers/soc/qcom/rpmh-rsc.c
-> @@ -198,50 +198,38 @@ static bool tcs_is_free(struct rsc_drv *drv, int tcs_id)
->    * This will clear the "slots" variable of the given tcs_group and also
->    * tell the hardware to forget about all entries.
->    *
-> - * Return: 0 if no problem, or -EAGAIN if the caller should try again in a
-> - *         bit. Caller should make sure to enable interrupts between tries.
-> + * The caller must ensure that no other RPMH actions are happening when this
-> + * function is called, since otherwise the device may immediately become
-> + * used again even before this function exits.
->    */
-> -static int tcs_invalidate(struct rsc_drv *drv, int type)
-> +static void tcs_invalidate(struct rsc_drv *drv, int type)
->   {
->   	int m;
->   	struct tcs_group *tcs = &drv->tcs[type];
->   
-> -	spin_lock(&tcs->lock);
-> -	if (bitmap_empty(tcs->slots, MAX_TCS_SLOTS)) {
-> -		spin_unlock(&tcs->lock);
-> -		return 0;
-> -	}
-> +	/* Caller ensures nobody else is running so no lock */
-> +	if (bitmap_empty(tcs->slots, MAX_TCS_SLOTS))
-> +		return;
->   
->   	for (m = tcs->offset; m < tcs->offset + tcs->num_tcs; m++) {
-> -		if (!tcs_is_free(drv, m)) {
-> -			spin_unlock(&tcs->lock);
-> -			return -EAGAIN;
-> -		}
->   		write_tcs_reg_sync(drv, RSC_DRV_CMD_ENABLE, m, 0);
->   		write_tcs_reg_sync(drv, RSC_DRV_CMD_WAIT_FOR_CMPL, m, 0);
->   	}
->   	bitmap_zero(tcs->slots, MAX_TCS_SLOTS);
-> -	spin_unlock(&tcs->lock);
-> -
-> -	return 0;
->   }
->   
->   /**
->    * rpmh_rsc_invalidate() - Invalidate sleep and wake TCSes.
->    * @drv: The RSC controller.
->    *
-> - * Return: 0 if no problem, or -EAGAIN if the caller should try again in a
-> - *         bit. Caller should make sure to enable interrupts between tries.
-> + * The caller must ensure that no other RPMH actions are happening when this
-> + * function is called, since otherwise the device may immediately become
-> + * used again even before this function exits.
->    */
-> -int rpmh_rsc_invalidate(struct rsc_drv *drv)
-> +void rpmh_rsc_invalidate(struct rsc_drv *drv)
->   {
-> -	int ret;
-> -
-> -	ret = tcs_invalidate(drv, SLEEP_TCS);
-> -	if (!ret)
-> -		ret = tcs_invalidate(drv, WAKE_TCS);
-> -
-> -	return ret;
-> +	tcs_invalidate(drv, SLEEP_TCS);
-> +	tcs_invalidate(drv, WAKE_TCS);
->   }
->   
->   /**
-> diff --git a/drivers/soc/qcom/rpmh.c b/drivers/soc/qcom/rpmh.c
-> index 88f88015ef03..02171c192aa1 100644
-> --- a/drivers/soc/qcom/rpmh.c
-> +++ b/drivers/soc/qcom/rpmh.c
-> @@ -439,7 +439,6 @@ static int send_single(struct rpmh_ctrlr *ctrlr, enum rpmh_state state,
->    *
->    * Return:
->    * * 0          - Success
-> - * * -EAGAIN    - Retry again
->    * * Error code - Otherwise
->    */
->   int rpmh_flush(struct rpmh_ctrlr *ctrlr)
-> @@ -453,9 +452,7 @@ int rpmh_flush(struct rpmh_ctrlr *ctrlr)
->   	}
->   
->   	/* Invalidate the TCSes first to avoid stale data */
-> -	ret = rpmh_rsc_invalidate(ctrlr_to_drv(ctrlr));
-> -	if (ret)
-> -		return ret;
-> +	rpmh_rsc_invalidate(ctrlr_to_drv(ctrlr));
->   
->   	/* First flush the cached batch requests */
->   	ret = flush_batch(ctrlr);
-
+diff --git a/mm/khugepaged.c b/mm/khugepaged.c
+index bfb6155f1d69..9a96f9bff798 100644
+--- a/mm/khugepaged.c
++++ b/mm/khugepaged.c
+@@ -570,6 +570,7 @@ static void release_pte_pages(pte_t *pte, pte_t *_pte,
+ 	list_for_each_entry_safe(page, tmp, compound_pagelist, lru) {
+ 		list_del(&page->lru);
+ 		release_pte_page(page);
++		put_page(page);
+ 	}
+ }
+ 
+@@ -682,8 +683,10 @@ static int __collapse_huge_page_isolate(struct vm_area_struct *vma,
+ 		VM_BUG_ON_PAGE(!PageLocked(page), page);
+ 		VM_BUG_ON_PAGE(PageLRU(page), page);
+ 
+-		if (PageCompound(page))
++		if (PageCompound(page)) {
+ 			list_add_tail(&page->lru, compound_pagelist);
++			get_page(page);
++		}
+ next:
+ 		/* There should be enough young pte to collapse the page */
+ 		if (pte_young(pteval) ||
+@@ -742,6 +745,8 @@ static void __collapse_huge_page_copy(pte_t *pte, struct page *page,
+ 		} else {
+ 			src_page = pte_page(pteval);
+ 			copy_user_highpage(page, src_page, address, vma);
++			if (!PageCompound(src_page))
++				release_pte_page(src_page);
+ 			/*
+ 			 * ptl mostly unnecessary, but preempt has to
+ 			 * be disabled to update the per-cpu stats
+@@ -755,10 +760,7 @@ static void __collapse_huge_page_copy(pte_t *pte, struct page *page,
+ 			pte_clear(vma->vm_mm, address, _pte);
+ 			page_remove_rmap(src_page, false);
+ 			spin_unlock(ptl);
+-			if (!PageCompound(src_page)) {
+-				release_pte_page(src_page);
+-				free_page_and_swap_cache(src_page);
+-			}
++			free_page_and_swap_cache(src_page);
+ 		}
+ 	}
+ 
 -- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
+ Kirill A. Shutemov
