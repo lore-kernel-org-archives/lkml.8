@@ -2,130 +2,174 @@ Return-Path: <SRS0=8dav=5Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9947FC2BA2B
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 10:28:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20920C2BA80
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 10:28:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 760CB20768
+	by mail.kernel.org (Postfix) with ESMTP id EAC5A20768
 	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 10:28:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="KA4+i1+d"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728129AbgDHK2R (ORCPT
+        id S1728176AbgDHK2R (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Wed, 8 Apr 2020 06:28:17 -0400
-Received: from mail-il1-f200.google.com ([209.85.166.200]:53970 "EHLO
-        mail-il1-f200.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727982AbgDHK2Q (ORCPT
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:37664 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728099AbgDHK2R (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Apr 2020 06:28:16 -0400
-Received: by mail-il1-f200.google.com with SMTP id a15so6236468ilh.20
-        for <linux-kernel@vger.kernel.org>; Wed, 08 Apr 2020 03:28:15 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=UfZi/Vr4kO5/IMcq6GWR9ww1EyoQ0i7NEwranC9/flA=;
-        b=OZOauAZCAab8Pa/5Y3pSr7P0LIZEIGmMZrzTnJyafbeBzJ2aGf/JeyfExkMahMPIxw
-         dsfLYmUwsTf2apnGfwfm9kCWNLE1mIGi6CpjXRt8/b0iWMMYas+1zIZF4iSJiw0JBSz6
-         LqjcAC2pmpn6fFyEw9XrL3ShSE6gZ7x45vtXiH+yYpRAvTPzLXeMymK/1WELLgUZ+vjt
-         l8EnxpvV2BlQO7Q8FGj8ClDce/l1Uyd0kuLdAV7YCZeXAX0PFBuwG2TUp0PrEZkbJdA+
-         ivGeDiyQLlTKFGDVJwYQ8TCei1iEvO3XNjrOcNjxta7cfyaV5s6WUbukAv7acCgPC17B
-         ouqg==
-X-Gm-Message-State: AGi0PuaFo5MCxpNGpQ9rTZJAfk0uKGo5g6OxS13sDAJHYevENniN2VX3
-        NHHbPCmbKOGaTliFMuOrW/waBMZppulEWM+rMOzrQMieWudG
-X-Google-Smtp-Source: APiQypLUIn6OyV0pjdvSPlMJE340RXW1Q8tHyAumQy2et5hDfRvhTu430FDvnyXYZ5Le+LeUxWhXGzJ2gzC7Ng233i3GtoVmCnu9
+        Wed, 8 Apr 2020 06:28:17 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1586341695;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=EC/D1f86N5vzsKE44T+7aeogRJCUDLjHigmziVHut9I=;
+        b=KA4+i1+dkewsQ02CHXNDydg0TiWld8bvHdvUady9wgqykpwR9w7MfelLAHoc+Xe6Ggz7zb
+        mTdU4a5IYOd5S2Fydwzzm7qZ4XrrMFgpsPmOzbK9677ci3/owMcdlDs9VJXiyS6SP7Hquz
+        zQtfAacBmFMaMtuOISZiayG4JyL/nqE=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-381-KVkFh0gbOm2Hxe1TEk_Ytw-1; Wed, 08 Apr 2020 06:28:13 -0400
+X-MC-Unique: KVkFh0gbOm2Hxe1TEk_Ytw-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 1ECA7801E5E;
+        Wed,  8 Apr 2020 10:28:11 +0000 (UTC)
+Received: from [10.36.115.53] (ovpn-115-53.ams2.redhat.com [10.36.115.53])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 7591C5D9CD;
+        Wed,  8 Apr 2020 10:28:00 +0000 (UTC)
+Subject: Re: [PATCH v1 5/8] vfio/type1: Report 1st-level/stage-1 format to
+ userspace
+To:     "Liu, Yi L" <yi.l.liu@intel.com>,
+        Jean-Philippe Brucker <jean-philippe@linaro.org>
+Cc:     "alex.williamson@redhat.com" <alex.williamson@redhat.com>,
+        "Tian, Kevin" <kevin.tian@intel.com>,
+        "jacob.jun.pan@linux.intel.com" <jacob.jun.pan@linux.intel.com>,
+        "joro@8bytes.org" <joro@8bytes.org>,
+        "Raj, Ashok" <ashok.raj@intel.com>,
+        "Tian, Jun J" <jun.j.tian@intel.com>,
+        "Sun, Yi Y" <yi.y.sun@intel.com>,
+        "peterx@redhat.com" <peterx@redhat.com>,
+        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Wu, Hao" <hao.wu@intel.com>
+References: <1584880325-10561-1-git-send-email-yi.l.liu@intel.com>
+ <1584880325-10561-6-git-send-email-yi.l.liu@intel.com>
+ <cb68e9ab-77b0-7e97-a661-4836962041d9@redhat.com>
+ <A2975661238FB949B60364EF0F2C25743A21DB4E@SHSMSX104.ccr.corp.intel.com>
+ <b47891b1-ece6-c263-9c07-07c09c7d3752@redhat.com>
+ <20200403082305.GA1269501@myrica>
+ <A2975661238FB949B60364EF0F2C25743A2249DF@SHSMSX104.ccr.corp.intel.com>
+From:   Auger Eric <eric.auger@redhat.com>
+Message-ID: <acf8c809-8d29-92d6-2445-3a94fc8b82fd@redhat.com>
+Date:   Wed, 8 Apr 2020 12:27:58 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.4.0
 MIME-Version: 1.0
-X-Received: by 2002:a92:d0d:: with SMTP id 13mr7408236iln.170.1586341695143;
- Wed, 08 Apr 2020 03:28:15 -0700 (PDT)
-Date:   Wed, 08 Apr 2020 03:28:15 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000003b42f305a2c4f5e9@google.com>
-Subject: WARNING: bad unlock balance in get_user_pages_unlocked
-From:   syzbot <syzbot+291a90a202a1a4a7b0c1@syzkaller.appspotmail.com>
-To:     akpm@linux-foundation.org, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <A2975661238FB949B60364EF0F2C25743A2249DF@SHSMSX104.ccr.corp.intel.com>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+Hi Yi,
 
-syzbot found the following crash on:
+On 4/7/20 11:43 AM, Liu, Yi L wrote:
+> Hi Jean,
+> 
+>> From: Jean-Philippe Brucker <jean-philippe@linaro.org>
+>> Sent: Friday, April 3, 2020 4:23 PM
+>> To: Auger Eric <eric.auger@redhat.com>
+>> userspace
+>>
+>> On Wed, Apr 01, 2020 at 03:01:12PM +0200, Auger Eric wrote:
+>>>>>>  	header = vfio_info_cap_add(caps, sizeof(*nesting_cap),
+>>>>>>  				   VFIO_IOMMU_TYPE1_INFO_CAP_NESTING, 1);
+>> @@ -2254,6 +2309,7
+>>>>>> @@ static int vfio_iommu_info_add_nesting_cap(struct
+>>>>> vfio_iommu *iommu,
+>>>>>>  		/* nesting iommu type supports PASID requests (alloc/free) */
+>>>>>>  		nesting_cap->nesting_capabilities |= VFIO_IOMMU_PASID_REQS;
+>>>>> What is the meaning for ARM?
+>>>>
+>>>> I think it's just a software capability exposed to userspace, on
+>>>> userspace side, it has a choice to use it or not. :-) The reason
+>>>> define it and report it in cap nesting is that I'd like to make the
+>>>> pasid alloc/free be available just for IOMMU with type
+>>>> VFIO_IOMMU_TYPE1_NESTING. Please feel free tell me if it is not good
+>>>> for ARM. We can find a proper way to report the availability.
+>>>
+>>> Well it is more a question for jean-Philippe. Do we have a system wide
+>>> PASID allocation on ARM?
+>>
+>> We don't, the PASID spaces are per-VM on Arm, so this function should consult the
+>> IOMMU driver before setting flags. As you said on patch 3, nested doesn't
+>> necessarily imply PASID support. The SMMUv2 does not support PASID but does
+>> support nesting stages 1 and 2 for the IOVA space.
+>> SMMUv3 support of PASID depends on HW capabilities. So I think this needs to be
+>> finer grained:
+>>
+>> Does the container support:
+>> * VFIO_IOMMU_PASID_REQUEST?
+>>   -> Yes for VT-d 3
+>>   -> No for Arm SMMU
+>> * VFIO_IOMMU_{,UN}BIND_GUEST_PGTBL?
+>>   -> Yes for VT-d 3
+>>   -> Sometimes for SMMUv2
+>>   -> No for SMMUv3 (if we go with BIND_PASID_TABLE, which is simpler due to
+>>      PASID tables being in GPA space.)
+>> * VFIO_IOMMU_BIND_PASID_TABLE?
+>>   -> No for VT-d
+>>   -> Sometimes for SMMUv3
+>>
+>> Any bind support implies VFIO_IOMMU_CACHE_INVALIDATE support.
+> 
+> good summary. do you expect to see any 
+> 
+>>
+>>>>>> +	nesting_cap->stage1_formats = formats;
+>>>>> as spotted by Kevin, since a single format is supported, rename
+>>>>
+>>>> ok, I was believing it may be possible on ARM or so. :-) will rename
+>>>> it.
+>>
+>> Yes I don't think an u32 is going to cut it for Arm :( We need to describe all sorts of
+>> capabilities for page and PASID tables (granules, GPA size, ASID/PASID size, HW
+>> access/dirty, etc etc.) Just saying "Arm stage-1 format" wouldn't mean much. I
+>> guess we could have a secondary vendor capability for these?
+> 
+> Actually, I'm wondering if we can define some formats to stands for a set of
+> capabilities. e.g. VTD_STAGE1_FORMAT_V1 which may indicates the 1st level
+> page table related caps (aw, a/d, SRE, EA and etc.). And vIOMMU can parse
+> the capabilities.
 
-HEAD commit:    bef7b2a7 Merge tag 'devicetree-for-5.7' of git://git.kerne..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=1507d2e7e00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=91b674b8f0368e69
-dashboard link: https://syzkaller.appspot.com/bug?extid=291a90a202a1a4a7b0c1
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+But eventually do we really need all those capability getters? I mean
+can't we simply rely on the actual call to VFIO_IOMMU_BIND_GUEST_PGTBL()
+to detect any mismatch? Definitively the error handling may be heavier
+on userspace but can't we manage. My fear is we end up with an overly
+complex series. This capability getter may be interesting if we can
+switch to a fallback implementation but here I guess we don't have any
+fallback. With smmuv3 nested stage we don't have any fallback solution
+either. For the versions, it is different because the userspace shall be
+able to adapt (or not) to the max version supported by the kernel.
 
-Unfortunately, I don't have any reproducer for this crash yet.
+Thanks
 
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+291a90a202a1a4a7b0c1@syzkaller.appspotmail.com
+Eric
+> 
+> Regards,
+> Yi Liu
+> 
 
-=====================================
-WARNING: bad unlock balance detected!
-5.6.0-syzkaller #0 Not tainted
--------------------------------------
-syz-executor.2/13432 is trying to release lock (&mm->mmap_sem) at:
-[<ffffffff819f2464>] get_user_pages_unlocked+0x4a4/0x610 mm/gup.c:2032
-but there are no more locks to release!
-
-other info that might help us debug this:
-no locks held by syz-executor.2/13432.
-
-stack backtrace:
-CPU: 0 PID: 13432 Comm: syz-executor.2 Not tainted 5.6.0-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x188/0x20d lib/dump_stack.c:118
- __lock_release kernel/locking/lockdep.c:4633 [inline]
- lock_release+0x586/0x800 kernel/locking/lockdep.c:4941
- up_read+0x79/0x750 kernel/locking/rwsem.c:1573
- get_user_pages_unlocked+0x4a4/0x610 mm/gup.c:2032
- __gup_longterm_unlocked mm/gup.c:2735 [inline]
- internal_get_user_pages_fast+0x44a/0x4e0 mm/gup.c:2776
- get_user_pages_fast+0x49/0x70 mm/gup.c:2824
- iov_iter_get_pages+0x29f/0x10c0 lib/iov_iter.c:1322
- __bio_iov_iter_get_pages block/bio.c:989 [inline]
- bio_iov_iter_get_pages+0x1c6/0xa50 block/bio.c:1045
- __blkdev_direct_IO fs/block_dev.c:387 [inline]
- blkdev_direct_IO+0x991/0x1360 fs/block_dev.c:477
- generic_file_read_iter+0x30a/0x2b10 mm/filemap.c:2276
- blkdev_read_iter+0x11b/0x180 fs/block_dev.c:2053
- call_read_iter include/linux/fs.h:1901 [inline]
- aio_read+0x258/0x3b0 fs/aio.c:1543
- __io_submit_one fs/aio.c:1829 [inline]
- io_submit_one+0xff9/0x2ec0 fs/aio.c:1878
- __do_sys_io_submit fs/aio.c:1937 [inline]
- __se_sys_io_submit fs/aio.c:1907 [inline]
- __x64_sys_io_submit+0x1bd/0x540 fs/aio.c:1907
- do_syscall_64+0xf6/0x7d0 arch/x86/entry/common.c:295
- entry_SYSCALL_64_after_hwframe+0x49/0xb3
-RIP: 0033:0x45c849
-Code: ad b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 7b b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007fd221794c78 EFLAGS: 00000246 ORIG_RAX: 00000000000000d1
-RAX: ffffffffffffffda RBX: 00007fd2217956d4 RCX: 000000000045c849
-RDX: 00000000200000c0 RSI: 0000000000000008 RDI: 00007fd221774000
-RBP: 000000000076bf00 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 00000000ffffffff
-R13: 00000000000001f9 R14: 00000000004c422b R15: 000000000076bf0c
-------------[ cut here ]------------
-DEBUG_RWSEMS_WARN_ON(tmp < 0): count = 0xffffffffffffff00, magic = 0xffff8880959003f8, owner = 0x1, curr 0xffff88804e98c340, list empty
-WARNING: CPU: 1 PID: 13432 at kernel/locking/rwsem.c:1435 __up_read kernel/locking/rwsem.c:1435 [inline]
-WARNING: CPU: 1 PID: 13432 at kernel/locking/rwsem.c:1435 up_read+0x5f9/0x750 kernel/locking/rwsem.c:1574
-
-
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
