@@ -2,88 +2,95 @@ Return-Path: <SRS0=8dav=5Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1F3FC2D0EA
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 14:31:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7A9CC2BA16
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 14:37:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 89BC421556
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 14:31:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586356276;
-	bh=tdUriesX2lwl8y1Yv0Uys2nb8BK6YfXv8InWY36V8uI=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:List-ID:From;
-	b=q0OK8tBVqS+3VBuy+jTWeYj9kYY+nBJVT3eqvTXI437RU9+6L8vWjo8m9uNxD6CLO
-	 6fiGVk2JeioSdOiQDlYoWB5vpfSw5fzu8tlLjaxLxdEAH/eryH/OH+558/N6NTi5gc
-	 gvDsL/4+sy+BOBNOLGfF13hOq0eElv0ROPmvLc9M=
+	by mail.kernel.org (Postfix) with ESMTP id 7C691206F5
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 14:37:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728970AbgDHObN (ORCPT
+        id S1728565AbgDHOhL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Apr 2020 10:31:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49122 "EHLO mail.kernel.org"
+        Wed, 8 Apr 2020 10:37:11 -0400
+Received: from 8bytes.org ([81.169.241.247]:58590 "EHLO theia.8bytes.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728908AbgDHObM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Apr 2020 10:31:12 -0400
-Received: from tleilax.poochiereds.net (68-20-15-154.lightspeed.rlghnc.sbcglobal.net [68.20.15.154])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7191F20B1F;
-        Wed,  8 Apr 2020 14:31:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586356272;
-        bh=tdUriesX2lwl8y1Yv0Uys2nb8BK6YfXv8InWY36V8uI=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=tmMzdEbWKbrVqIOCaJYZwfP9Wovaf2rqvxkxUssc4w0XcmFoUuI2BaUfOjZlXPlD2
-         gGYXo03sfm9rlHanGavJW7T+pVCtGNBQnlkKN7cr5Wih4JsIrn32HmcK0lSHVFMZTD
-         s3cUx73dpmBx4kwyBIgZ4YXTg4DDWGSWn/RQsc0Y=
-Message-ID: <c0942c61c37e3f79dcc88ddba94d65aca2ca9a2c.camel@kernel.org>
-Subject: Re: [PATCH v2 0/2] ceph: support cross-quota-tree renames
-From:   Jeff Layton <jlayton@kernel.org>
-To:     Luis Henriques <lhenriques@suse.com>, Sage Weil <sage@redhat.com>,
-        Ilya Dryomov <idryomov@gmail.com>,
-        Gregory Farnum <gfarnum@redhat.com>,
-        Zheng Yan <zyan@redhat.com>
-Cc:     Frank Schilder <frans@dtu.dk>, ceph-devel@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Date:   Wed, 08 Apr 2020 10:31:10 -0400
-In-Reply-To: <20200407103020.22588-1-lhenriques@suse.com>
-References: <20200407103020.22588-1-lhenriques@suse.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.34.4 (3.34.4-1.fc31) 
+        id S1726605AbgDHOhL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Apr 2020 10:37:11 -0400
+Received: by theia.8bytes.org (Postfix, from userid 1000)
+        id 3E3B4387; Wed,  8 Apr 2020 16:37:09 +0200 (CEST)
+Date:   Wed, 8 Apr 2020 16:37:07 +0200
+From:   Joerg Roedel <joro@8bytes.org>
+To:     Robin Murphy <robin.murphy@arm.com>
+Cc:     Will Deacon <will@kernel.org>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Kukjin Kim <kgene@kernel.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Rob Clark <robdclark@gmail.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Jean-Philippe Brucker <jean-philippe@linaro.org>,
+        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
+        linux-samsung-soc@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-mediatek@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, linux-s390@vger.kernel.org,
+        linux-tegra@vger.kernel.org,
+        virtualization@lists.linux-foundation.org,
+        Joerg Roedel <jroedel@suse.de>
+Subject: Re: [RFC PATCH 17/34] iommu/arm-smmu: Store device instead of group
+ in arm_smmu_s2cr
+Message-ID: <20200408143707.GK3103@8bytes.org>
+References: <20200407183742.4344-1-joro@8bytes.org>
+ <20200407183742.4344-18-joro@8bytes.org>
+ <98c10a41-d223-e375-9742-b6471c3dc33c@arm.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <98c10a41-d223-e375-9742-b6471c3dc33c@arm.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2020-04-07 at 11:30 +0100, Luis Henriques wrote:
-> Hi!
-> 
-> The following patches will make the cephfs kernel client behave the same
-> way as the fuse client when doing renames across different quota realms.
-> 
-> Changes since v1:
-> 
-> - Dropped 'old == new' check in ceph_quota_check_rename() and added back
->   optimization in ceph_rename(), to only check realms if old_dir and
->   new_dir are different.
-> 
-> Luis Henriques (2):
->   ceph: normalize 'delta' parameter usage in check_quota_exceeded
->   ceph: allow rename operation under different quota realms
-> 
->  fs/ceph/dir.c   |  9 +++----
->  fs/ceph/quota.c | 62 +++++++++++++++++++++++++++++++++++++++++++++----
->  fs/ceph/super.h |  3 ++-
->  3 files changed, 65 insertions(+), 9 deletions(-)
-> 
+Hi Robin,
 
-Looks good. Merged into ceph-client/testing.
+thanks for looking into this.
 
-Thanks!
--- 
-Jeff Layton <jlayton@kernel.org>
+On Wed, Apr 08, 2020 at 01:09:40PM +0100, Robin Murphy wrote:
+> For a hot-pluggable bus where logical devices may share Stream IDs (like
+> fsl-mc), this could happen:
+> 
+>   create device A
+>   iommu_probe_device(A)
+>     iommu_device_group(A) -> alloc group X
+>   create device B
+>   iommu_probe_device(B)
+>     iommu_device_group(A) -> lookup returns group X
+>   ...
+>   iommu_remove_device(A)
+>   delete device A
+>   create device C
+>   iommu_probe_device(C)
+>     iommu_device_group(C) -> use-after-free of A
+> 
+> Preserving the logical behaviour here would probably look *something* like
+> the mangled diff below, but I haven't thought it through 100%.
+
+Yeah, I think you are right. How about just moving the loop which sets
+s2crs[idx].group to arm_smmu_device_group()? In that case I can drop
+this patch and leave the group pointer in place.
+
+Regards,
+
+	Joerg
 
