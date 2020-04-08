@@ -2,27 +2,27 @@ Return-Path: <SRS0=8dav=5Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6621C2BA1A
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 20:27:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A60BBC2BA1B
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 20:27:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B0D8D20753
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 20:27:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 83B9720753
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 20:27:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730437AbgDHU1s (ORCPT
+        id S1730527AbgDHU1w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Apr 2020 16:27:48 -0400
-Received: from mout.kundenserver.de ([212.227.126.135]:44477 "EHLO
+        Wed, 8 Apr 2020 16:27:52 -0400
+Received: from mout.kundenserver.de ([212.227.126.187]:51203 "EHLO
         mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729333AbgDHU1r (ORCPT
+        with ESMTP id S1730438AbgDHU1u (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Apr 2020 16:27:47 -0400
+        Wed, 8 Apr 2020 16:27:50 -0400
 Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
  (mreue010 [212.227.15.129]) with ESMTPA (Nemesis) id
- 1MfHUx-1ip88a1CpP-00gqlq; Wed, 08 Apr 2020 22:27:19 +0200
+ 1M1HqM-1jJXCV1zju-002p3H; Wed, 08 Apr 2020 22:27:21 +0200
 From:   Arnd Bergmann <arnd@arndb.de>
 To:     linux-kernel@vger.kernel.org,
         Masahiro Yamada <masahiroy@kernel.org>,
@@ -40,90 +40,92 @@ Cc:     Arnd Bergmann <arnd@arndb.de>, Andrzej Hajda <a.hajda@samsung.com>,
         Leon Romanovsky <leon@kernel.org>,
         dri-devel@lists.freedesktop.org, linux-renesas-soc@vger.kernel.org,
         netdev@vger.kernel.org, linux-rdma@vger.kernel.org
-Subject: [RFC 0/6] Regressions for "imply" behavior change
-Date:   Wed,  8 Apr 2020 22:27:05 +0200
-Message-Id: <20200408202711.1198966-1-arnd@arndb.de>
+Subject: [RFC 4/6] drm/bridge/sii8620: fix extcon dependency
+Date:   Wed,  8 Apr 2020 22:27:09 +0200
+Message-Id: <20200408202711.1198966-5-arnd@arndb.de>
 X-Mailer: git-send-email 2.26.0
+In-Reply-To: <20200408202711.1198966-1-arnd@arndb.de>
+References: <20200408202711.1198966-1-arnd@arndb.de>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:zEzMmRw2UXFx9zU6fPxN+W5wPcFHDncLQsBY9LbEA0w9eEN1eTu
- cnzjMxpU5zxrYcnwqTeAc+Ps/JyboCntYRrUtWKxjMYWqJF44Bf4LOvKsA+DX4gzPI+FQub
- UxxzljbycF32PPMrcW97pI811kKuSvXVrKpXAN9hfhlEgzbQUJJE8q6o5AYNdaJE9WYW8la
- uMsnELmKxIjuKo2Mnf2bQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:TWdcwFoldyI=:NS8I92rXicAb2aGhAXYXT3
- zbu3I6qgkDuIzvNKKVw06vL7+R2l1nBDjNBPVo4DXwjxE1dDTAneGOxdoT5CVDnn4eNCkUou8
- 6Az6Tq087nNHF5iiZJ5NolfFLRiBg10jtfZpBPmyUYiiQ9nDM9r0009G8AlF/+gNfRDMdGYmT
- gncDh39Bmz4VBL0nbCXN8K4kbJvwlwcv4Kj4eG9drYgmTiY1vZUyJv/AuXA4XCNCormt00fx5
- 9Oq6GtnUnI+129u0nx1Wp1h3HQB9jJZtzBXuT9j2tovNUV+kBiVgSEkj4WDrgXLS1zgwr/Ow2
- WiWNzvjnzFTNkbB5Y9ryeW/LPIPcwGv2dtdp3QAGmfU4PcXa7Dev17vdxjeIUPVCBmi9MsSI5
- xm9PAlIZvzWXRbiKHvHneEsJWxOi+O+qR7xJ7ye+HHpxo2mZ2pR4AMLsUcXYPXjpFdHjLnQTb
- T2uKH3neFx1H+Xhd2dpxj6RNntKe9b8VtYXK7willY8/WWs5Gjm/4BnvoXwNhCGvcRK+G8c2g
- AfNqVvEauy+AtxH7EB4rhNOlTfiiDMzzvsnxXLA/tphh2HzFV7CH+dL3Bmsf+Eil28ld6XI6O
- XkdDmCbVfn6BI9nC3AoP2pgyEWcgyVDIDSQi4GfDGlPEW+161trruvSc7uPKPJPvDs2D1pI/E
- 4pJdhI2vcfHaqYkK8JeAaYRQI/S6rwMtUkWtzofxhzqwtFJL7mPA0Dw9wiMHnMp0nThfJ42aC
- Bl32WLzx9ELKvgw6hv0t68fHB9/Xxv9NrCK19O899oeawmWtm8L/3N2BMfWZDVQGBvffLxnm8
- abBAJx3W3JbM74GshlW7uydgO/5lfqdEXGppl/fRbmlNs5hWcI=
+X-Provags-ID: V03:K1:vV8vEqFFzBxDwbCUpevBksXzEnRG+4YylcxGZKW7vX+9eMNUg1m
+ GTSrbKOi6FlzzBUHGBDpQR3uJHzbcRVL29ejotroODkZe9OPHSlxi90k/mXcQ4EwBxDqz+S
+ fwAOPMaKXUvZqrRoIeRpqd1CCyTHjbL5K4harE/L5KNprHiRjOcSxfYcjG43V5CQGDOrMdP
+ 0Zvp6NP7uN5f0uBgGxXEA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:MptYX3yueAQ=:b885v6hNqw1kQDiue/weO6
+ uP+3VRcZwHepB7aNKzqTfmN4RuwxLKcd3Ykn79jFhPBxl2wZfHWApXes3mbeDb/x1w+Vf3eXo
+ q9YEc9yKSSVlxROHdqCSWcymhLpZ2EDGCdvQbKoMGTtFXTirZiv2DAe3FnAWFufrzLccql5PD
+ EHa10ti3QaaWQoWarrhnR+u9A33uYjAF35zBqi6jQol9OPXkKAlO5yJcEcD0jpkfo6GS81i5y
+ kH+gPTPYH30Wr9WocW6L91lXSvOaqKNE3BzcyPFgUPkKZdEFM+dMi8tZl2HxIwzJA1XqcwFfi
+ XrfEV0cIYSe2KcZozeoabmYbdGj6q/22WC5AsKTZZgalFOuOBF8wVGKu/2wC6RLZ9COX/CFeu
+ 6W+gTiE6JSfyRpDVXLFq+HnzULwdyNoAEb9aJf3iXX2AjYYvaqyB/lzs4IWSfLtkGFp9HDRzt
+ AqgANzoPqYHUQkhSHCS2jpi3VNEU1z3mj98JfTwXmrM5v9LhzBIuTMdDAgqLXUSCEdq7RhW3T
+ XvOf7th7/rXNolz9+AOIiILyM7J3arHbaIfZhe23PnMVjW1r8ySVflQqck+e0e0zycDo0T/Bx
+ YtLQLGldhMoefh+6y6apc8rGbDJpRnerakstMgLD3Xg4C3JBpOoFEMmWSTc0KwSjScvTdVbFZ
+ N2d5HtbEJry0CQNPtNudp2FRAzOMVvxY6G+Tz19wbIEno35Y6FxB+s2evGed0xWIVvhi7fdjc
+ QFRA5cQBDSRwNMPrqLXlIjX5+A+SX8eaXTCT/FampsaxQeRsv7tSnCQm+OMw67CNp7QNJOZOs
+ HS8WJIHYn7I0p4NzUPVc9S0+juW29sTv81JFrBTxLetf8xRiNA=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi everyone,
+Using 'imply' does not work here, it still cause the same build
+failure:
 
-I've just restarted doing randconfig builds on top of mainline Linux and
-found a couple of regressions with missing dependency from the recent
-change in the "imply" keyword in Kconfig, presumably these two patches:
+arm-linux-gnueabi-ld: drivers/gpu/drm/bridge/sil-sii8620.o: in function `sii8620_remove':
+sil-sii8620.c:(.text+0x1b8): undefined reference to `extcon_unregister_notifier'
+arm-linux-gnueabi-ld: drivers/gpu/drm/bridge/sil-sii8620.o: in function `sii8620_probe':
+sil-sii8620.c:(.text+0x27e8): undefined reference to `extcon_find_edev_by_node'
+arm-linux-gnueabi-ld: sil-sii8620.c:(.text+0x2870): undefined reference to `extcon_register_notifier'
+arm-linux-gnueabi-ld: drivers/gpu/drm/bridge/sil-sii8620.o: in function `sii8620_extcon_work':
+sil-sii8620.c:(.text+0x2908): undefined reference to `extcon_get_state'
 
-3a9dd3ecb207 kconfig: make 'imply' obey the direct dependency
-def2fbffe62c kconfig: allow symbols implied by y to become m
+I tried the usual 'depends on EXTCON || !EXTCON' logic, but that caused
+a circular Kconfig dependency. Using IS_REACHABLE() is ugly but works.
 
-I have created workarounds for the Kconfig files, which now stop using
-imply and do something else in each case. I don't know whether there was
-a bug in the kconfig changes that has led to allowing configurations that
-were not meant to be legal even with the new semantics, or if the Kconfig
-files have simply become incorrect now and the tool works as expected.
+Fixes: 7a109673899b ("drm/bridge/sii8620: add Kconfig dependency on extcon")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+---
+ drivers/gpu/drm/bridge/Kconfig       | 1 -
+ drivers/gpu/drm/bridge/sil-sii8620.c | 5 +++--
+ 2 files changed, 3 insertions(+), 3 deletions(-)
 
-Please have a look at the cases I found, and what you think we should
-do about them. I assume there are a couple more like these, the six
-regressions here are what I found in the first 1000 randconfig builds
-on the kernel.
-
-       Arnd
-
-Arnd Bergmann (6):
-  thunder: select PTP driver if possible
-  net/mlx5e: fix VXLAN dependency
-  LiquidIO VF: add dependency for PTP_1588_CLOCK
-  drm/bridge/sii8620: fix extcon dependency
-  drm/rcar-du: fix selection of CMM driver
-  drm/rcar-du: fix lvds dependency
-
- drivers/gpu/drm/bridge/Kconfig                  | 1 -
- drivers/gpu/drm/bridge/sil-sii8620.c            | 5 +++--
- drivers/gpu/drm/rcar-du/Kconfig                 | 7 ++-----
- drivers/net/ethernet/cavium/Kconfig             | 4 ++--
- drivers/net/ethernet/mellanox/mlx5/core/Kconfig | 2 +-
- 5 files changed, 8 insertions(+), 11 deletions(-)
-
-
-Cc: Andrzej Hajda <a.hajda@samsung.com>
-Cc: Neil Armstrong <narmstrong@baylibre.com>
-Cc: Laurent Pinchart <Laurent.pinchart@ideasonboard.com>
-Cc: Jonas Karlman <jonas@kwiboo.se>
-Cc: Jernej Skrabec <jernej.skrabec@siol.net>
-Cc: David Airlie <airlied@linux.ie>
-Cc: Daniel Vetter <daniel@ffwll.ch>
-Cc: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
-Cc: "David S. Miller" <davem@davemloft.net>
-Cc: Saeed Mahameed <saeedm@mellanox.com>
-Cc: Leon Romanovsky <leon@kernel.org>
-Cc: dri-devel@lists.freedesktop.org
-Cc: linux-kernel@vger.kernel.org
-Cc: linux-renesas-soc@vger.kernel.org
-Cc: netdev@vger.kernel.org
-Cc: linux-rdma@vger.kernel.org
-
-
+diff --git a/drivers/gpu/drm/bridge/Kconfig b/drivers/gpu/drm/bridge/Kconfig
+index aaed2347ace9..78e5ba06acff 100644
+--- a/drivers/gpu/drm/bridge/Kconfig
++++ b/drivers/gpu/drm/bridge/Kconfig
+@@ -90,7 +90,6 @@ config DRM_SIL_SII8620
+ 	tristate "Silicon Image SII8620 HDMI/MHL bridge"
+ 	depends on OF
+ 	select DRM_KMS_HELPER
+-	imply EXTCON
+ 	depends on RC_CORE || !RC_CORE
+ 	help
+ 	  Silicon Image SII8620 HDMI/MHL bridge chip driver.
+diff --git a/drivers/gpu/drm/bridge/sil-sii8620.c b/drivers/gpu/drm/bridge/sil-sii8620.c
+index 92acd336aa89..94b6c38e6855 100644
+--- a/drivers/gpu/drm/bridge/sil-sii8620.c
++++ b/drivers/gpu/drm/bridge/sil-sii8620.c
+@@ -2330,7 +2330,8 @@ static int sii8620_probe(struct i2c_client *client,
+ 	if (ret)
+ 		return ret;
+ 
+-	ret = sii8620_extcon_init(ctx);
++	if (IS_REACHABLE(CONFIG_EXTCON))
++		ret = sii8620_extcon_init(ctx);
+ 	if (ret < 0) {
+ 		dev_err(ctx->dev, "failed to initialize EXTCON\n");
+ 		return ret;
+@@ -2352,7 +2353,7 @@ static int sii8620_remove(struct i2c_client *client)
+ {
+ 	struct sii8620 *ctx = i2c_get_clientdata(client);
+ 
+-	if (ctx->extcon) {
++	if (IS_REACHABLE(CONFIG_EXTCON) && ctx->extcon) {
+ 		extcon_unregister_notifier(ctx->extcon, EXTCON_DISP_MHL,
+ 					   &ctx->extcon_nb);
+ 		flush_work(&ctx->extcon_wq);
 -- 
 2.26.0
 
