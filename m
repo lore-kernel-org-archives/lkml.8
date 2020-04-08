@@ -2,265 +2,207 @@ Return-Path: <SRS0=8dav=5Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2CDAC2BA1A
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 12:01:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE456C2BA1A
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 12:01:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B217E20747
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 12:01:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7D56C20747
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 12:01:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="fZvvhthr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728714AbgDHMBt (ORCPT
+        id S1729006AbgDHMBz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Apr 2020 08:01:49 -0400
-Received: from mout-p-102.mailbox.org ([80.241.56.152]:21864 "EHLO
-        mout-p-102.mailbox.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727851AbgDHMBH (ORCPT
+        Wed, 8 Apr 2020 08:01:55 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:49974 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728171AbgDHMAv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Apr 2020 08:01:07 -0400
-Received: from smtp2.mailbox.org (smtp2.mailbox.org [IPv6:2001:67c:2050:105:465:1:2:0])
-        (using TLSv1.2 with cipher ECDHE-RSA-CHACHA20-POLY1305 (256/256 bits))
-        (No client certificate requested)
-        by mout-p-102.mailbox.org (Postfix) with ESMTPS id 48y2t74TPKzKmdH;
-        Wed,  8 Apr 2020 14:01:03 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at heinlein-support.de
-Received: from smtp2.mailbox.org ([80.241.60.241])
-        by spamfilter04.heinlein-hosting.de (spamfilter04.heinlein-hosting.de [80.241.56.122]) (amavisd-new, port 10030)
-        with ESMTP id JMljsTy5xozk; Wed,  8 Apr 2020 14:00:59 +0200 (CEST)
-Date:   Wed, 8 Apr 2020 22:00:40 +1000
-From:   Aleksa Sarai <cyphar@cyphar.com>
-To:     Josh Triplett <josh@joshtriplett.org>
-Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        io-uring@vger.kernel.org, linux-arch@vger.kernel.org,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Arnd Bergmann <arnd@arndb.de>, Jens Axboe <axboe@kernel.dk>
-Subject: Re: [PATCH v3 1/3] fs: Support setting a minimum fd for "lowest
- available fd" allocation
-Message-ID: <20200408120040.mtkqmymfazrv3lqk@yavin.dot.cyphar.com>
-References: <cover.1586321767.git.josh@joshtriplett.org>
- <90bf6fd43343ca862e7f61b0834baf2bdbd0e24c.1586321767.git.josh@joshtriplett.org>
+        Wed, 8 Apr 2020 08:00:51 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
+        :Reply-To:Content-Type:Content-ID:Content-Description;
+        bh=kdPXICt3ToIhxT0a97HmUqVQTUwvVQRxLdzdeoL86lM=; b=fZvvhthrevXdiqyl40zG/tdMD0
+        d74Ir6bz9f/dsugmohA4kuydR4xiOtmsMKvGtcZ5yxa+3Qh06v/LfObaQofY0Aock1pIT7kiFjyHN
+        QrVUchXeO3nvLSR9xwOZiMjM6kzP7dLHOZOMKwe3pWiJfedFC1r+GI8GxmyJ5Uhs1lA9wOXxk0j6n
+        uMIrjyfAAFL6fQaKtg/qhYLK2PeQVSGJEWxgcstoCT64Ooe5MnLef4vvFOIN1UV/QAMQ2WQ1sJefg
+        ihHf5FH1NZojwU5iKEaUi+NfuvFlNydjB9MBnsILibd+PkbNAUVQ/Xzwlod6KP4a00rrT1ExXNtA1
+        SPK7ZQoQ==;
+Received: from [2001:4bb8:180:5765:65b6:f11e:f109:b151] (helo=localhost)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jM9Ng-0005Da-9c; Wed, 08 Apr 2020 12:00:32 +0000
+From:   Christoph Hellwig <hch@lst.de>
+To:     Andrew Morton <akpm@linux-foundation.org>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Wei Liu <wei.liu@kernel.org>, x86@kernel.org,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Laura Abbott <labbott@redhat.com>,
+        Sumit Semwal <sumit.semwal@linaro.org>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Minchan Kim <minchan@kernel.org>,
+        Nitin Gupta <ngupta@vflare.org>
+Cc:     Robin Murphy <robin.murphy@arm.com>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        Peter Zijlstra <peterz@infradead.org>,
+        linuxppc-dev@lists.ozlabs.org, linux-hyperv@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org,
+        linux-arch@vger.kernel.org, linux-mm@kvack.org,
+        iommu@lists.linux-foundation.org,
+        linux-arm-kernel@lists.infradead.org, linux-s390@vger.kernel.org,
+        bpf@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 17/28] mm: remove the prot argument from vm_map_ram
+Date:   Wed,  8 Apr 2020 13:59:15 +0200
+Message-Id: <20200408115926.1467567-18-hch@lst.de>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200408115926.1467567-1-hch@lst.de>
+References: <20200408115926.1467567-1-hch@lst.de>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="ds6ea26cc6xch3fv"
-Content-Disposition: inline
-In-Reply-To: <90bf6fd43343ca862e7f61b0834baf2bdbd0e24c.1586321767.git.josh@joshtriplett.org>
-X-Rspamd-Queue-Id: F39C7178F
-X-Rspamd-Score: -7.27 / 15.00 / 15.00
+Content-Transfer-Encoding: 8bit
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+This is always GFP_KERNEL - for long term mappings with other properties
+vmap should be used.
 
---ds6ea26cc6xch3fv
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Signed-off-by: Christoph Hellwig <hch@lst.de>
+---
+ drivers/gpu/drm/i915/gem/selftests/mock_dmabuf.c   | 2 +-
+ drivers/media/common/videobuf2/videobuf2-dma-sg.c  | 3 +--
+ drivers/media/common/videobuf2/videobuf2-vmalloc.c | 3 +--
+ fs/erofs/decompressor.c                            | 2 +-
+ fs/xfs/xfs_buf.c                                   | 2 +-
+ include/linux/vmalloc.h                            | 3 +--
+ mm/nommu.c                                         | 2 +-
+ mm/vmalloc.c                                       | 4 ++--
+ 8 files changed, 9 insertions(+), 12 deletions(-)
 
-On 2020-04-07, Josh Triplett <josh@joshtriplett.org> wrote:
-> Some applications want to prevent the usual "lowest available fd"
-> allocation from allocating certain file descriptors. For instance, they
-> may want to prevent allocation of a closed fd 0, 1, or 2 other than via
-> dup2/dup3, or reserve some low file descriptors for other purposes.
->=20
-> Add a prctl to increase the minimum fd and return the previous minimum.
->=20
-> System calls that allocate a specific file descriptor, such as
-> dup2/dup3, ignore this minimum.
->=20
-> exec resets the minimum fd, to prevent one program from interfering with
-> another program's expectations about fd allocation.
+diff --git a/drivers/gpu/drm/i915/gem/selftests/mock_dmabuf.c b/drivers/gpu/drm/i915/gem/selftests/mock_dmabuf.c
+index 9272bef57092..debaf7b18ab5 100644
+--- a/drivers/gpu/drm/i915/gem/selftests/mock_dmabuf.c
++++ b/drivers/gpu/drm/i915/gem/selftests/mock_dmabuf.c
+@@ -66,7 +66,7 @@ static void *mock_dmabuf_vmap(struct dma_buf *dma_buf)
+ {
+ 	struct mock_dmabuf *mock = to_mock(dma_buf);
+ 
+-	return vm_map_ram(mock->pages, mock->npages, 0, PAGE_KERNEL);
++	return vm_map_ram(mock->pages, mock->npages, 0);
+ }
+ 
+ static void mock_dmabuf_vunmap(struct dma_buf *dma_buf, void *vaddr)
+diff --git a/drivers/media/common/videobuf2/videobuf2-dma-sg.c b/drivers/media/common/videobuf2/videobuf2-dma-sg.c
+index 6db60e9d5183..92072a08af25 100644
+--- a/drivers/media/common/videobuf2/videobuf2-dma-sg.c
++++ b/drivers/media/common/videobuf2/videobuf2-dma-sg.c
+@@ -309,8 +309,7 @@ static void *vb2_dma_sg_vaddr(void *buf_priv)
+ 		if (buf->db_attach)
+ 			buf->vaddr = dma_buf_vmap(buf->db_attach->dmabuf);
+ 		else
+-			buf->vaddr = vm_map_ram(buf->pages,
+-					buf->num_pages, -1, PAGE_KERNEL);
++			buf->vaddr = vm_map_ram(buf->pages, buf->num_pages, -1);
+ 	}
+ 
+ 	/* add offset in case userptr is not page-aligned */
+diff --git a/drivers/media/common/videobuf2/videobuf2-vmalloc.c b/drivers/media/common/videobuf2/videobuf2-vmalloc.c
+index 1a4f0ca87c7c..c66fda4a65e4 100644
+--- a/drivers/media/common/videobuf2/videobuf2-vmalloc.c
++++ b/drivers/media/common/videobuf2/videobuf2-vmalloc.c
+@@ -107,8 +107,7 @@ static void *vb2_vmalloc_get_userptr(struct device *dev, unsigned long vaddr,
+ 		buf->vaddr = (__force void *)
+ 			ioremap(__pfn_to_phys(nums[0]), size + offset);
+ 	} else {
+-		buf->vaddr = vm_map_ram(frame_vector_pages(vec), n_pages, -1,
+-					PAGE_KERNEL);
++		buf->vaddr = vm_map_ram(frame_vector_pages(vec), n_pages, -1);
+ 	}
+ 
+ 	if (!buf->vaddr)
+diff --git a/fs/erofs/decompressor.c b/fs/erofs/decompressor.c
+index 5d2d81940679..7628816f2453 100644
+--- a/fs/erofs/decompressor.c
++++ b/fs/erofs/decompressor.c
+@@ -274,7 +274,7 @@ static int z_erofs_decompress_generic(struct z_erofs_decompress_req *rq,
+ 
+ 	i = 0;
+ 	while (1) {
+-		dst = vm_map_ram(rq->out, nrpages_out, -1, PAGE_KERNEL);
++		dst = vm_map_ram(rq->out, nrpages_out, -1);
+ 
+ 		/* retry two more times (totally 3 times) */
+ 		if (dst || ++i >= 3)
+diff --git a/fs/xfs/xfs_buf.c b/fs/xfs/xfs_buf.c
+index f880141a2268..940af9da6db1 100644
+--- a/fs/xfs/xfs_buf.c
++++ b/fs/xfs/xfs_buf.c
+@@ -474,7 +474,7 @@ _xfs_buf_map_pages(
+ 		nofs_flag = memalloc_nofs_save();
+ 		do {
+ 			bp->b_addr = vm_map_ram(bp->b_pages, bp->b_page_count,
+-						-1, PAGE_KERNEL);
++						-1);
+ 			if (bp->b_addr)
+ 				break;
+ 			vm_unmap_aliases();
+diff --git a/include/linux/vmalloc.h b/include/linux/vmalloc.h
+index 15ffbd8e8e65..9273b1a91ca5 100644
+--- a/include/linux/vmalloc.h
++++ b/include/linux/vmalloc.h
+@@ -88,8 +88,7 @@ struct vmap_area {
+  *	Highlevel APIs for driver use
+  */
+ extern void vm_unmap_ram(const void *mem, unsigned int count);
+-extern void *vm_map_ram(struct page **pages, unsigned int count,
+-				int node, pgprot_t prot);
++extern void *vm_map_ram(struct page **pages, unsigned int count, int node);
+ extern void vm_unmap_aliases(void);
+ 
+ #ifdef CONFIG_MMU
+diff --git a/mm/nommu.c b/mm/nommu.c
+index 318df4e236c9..4f07b7ef0297 100644
+--- a/mm/nommu.c
++++ b/mm/nommu.c
+@@ -351,7 +351,7 @@ void vunmap(const void *addr)
+ }
+ EXPORT_SYMBOL(vunmap);
+ 
+-void *vm_map_ram(struct page **pages, unsigned int count, int node, pgprot_t prot)
++void *vm_map_ram(struct page **pages, unsigned int count, int node)
+ {
+ 	BUG();
+ 	return NULL;
+diff --git a/mm/vmalloc.c b/mm/vmalloc.c
+index 258220b203f1..7356b3f07bd8 100644
+--- a/mm/vmalloc.c
++++ b/mm/vmalloc.c
+@@ -1834,7 +1834,7 @@ EXPORT_SYMBOL(vm_unmap_ram);
+  *
+  * Returns: a pointer to the address that has been mapped, or %NULL on failure
+  */
+-void *vm_map_ram(struct page **pages, unsigned int count, int node, pgprot_t prot)
++void *vm_map_ram(struct page **pages, unsigned int count, int node)
+ {
+ 	unsigned long size = (unsigned long)count << PAGE_SHIFT;
+ 	unsigned long addr;
+@@ -1858,7 +1858,7 @@ void *vm_map_ram(struct page **pages, unsigned int count, int node, pgprot_t pro
+ 
+ 	kasan_unpoison_vmalloc(mem, size);
+ 
+-	if (map_kernel_range(addr, size, prot, pages) < 0) {
++	if (map_kernel_range(addr, size, PAGE_KERNEL, pages) < 0) {
+ 		vm_unmap_ram(mem, count);
+ 		return NULL;
+ 	}
+-- 
+2.25.1
 
-Why is it implemented as an "increase the value" interface? It feels
-like this is meant to avoid some kind of security trap (with a library
-reducing the value) but it means that if you want to temporarily raise
-the minimum fd number it's not possible (without re-exec()ing yourself,
-which is hardly a fun thing to do).
-
-Then again, this might've been discussed before and I missed it...
-
-> Test program:
->=20
->     #include <err.h>
->     #include <fcntl.h>
->     #include <stdio.h>
->     #include <sys/prctl.h>
->=20
->     int main(int argc, char *argv[])
->     {
->         if (prctl(PR_INCREASE_MIN_FD, 100, 0, 0, 0) < 0)
->             err(1, "prctl");
->         int fd =3D open("/dev/null", O_RDONLY);
->         if (fd < 0)
->             err(1, "open");
->         printf("%d\n", fd); // prints 100
->         return 0;
->     }
->=20
-> Signed-off-by: Josh Triplett <josh@joshtriplett.org>
-> ---
->  fs/file.c                  | 23 +++++++++++++++++------
->  include/linux/fdtable.h    |  1 +
->  include/linux/file.h       |  1 +
->  include/uapi/linux/prctl.h |  3 +++
->  kernel/sys.c               |  5 +++++
->  5 files changed, 27 insertions(+), 6 deletions(-)
->=20
-> diff --git a/fs/file.c b/fs/file.c
-> index c8a4e4c86e55..ba06140d89af 100644
-> --- a/fs/file.c
-> +++ b/fs/file.c
-> @@ -286,7 +286,6 @@ struct files_struct *dup_fd(struct files_struct *oldf=
-, int *errorp)
->  	spin_lock_init(&newf->file_lock);
->  	newf->resize_in_progress =3D false;
->  	init_waitqueue_head(&newf->resize_wait);
-> -	newf->next_fd =3D 0;
->  	new_fdt =3D &newf->fdtab;
->  	new_fdt->max_fds =3D NR_OPEN_DEFAULT;
->  	new_fdt->close_on_exec =3D newf->close_on_exec_init;
-> @@ -295,6 +294,7 @@ struct files_struct *dup_fd(struct files_struct *oldf=
-, int *errorp)
->  	new_fdt->fd =3D &newf->fd_array[0];
-> =20
->  	spin_lock(&oldf->file_lock);
-> +	newf->next_fd =3D newf->min_fd =3D oldf->min_fd;
->  	old_fdt =3D files_fdtable(oldf);
->  	open_files =3D count_open_files(old_fdt);
-> =20
-> @@ -487,9 +487,7 @@ int __alloc_fd(struct files_struct *files,
->  	spin_lock(&files->file_lock);
->  repeat:
->  	fdt =3D files_fdtable(files);
-> -	fd =3D start;
-> -	if (fd < files->next_fd)
-> -		fd =3D files->next_fd;
-> +	fd =3D max3(start, files->min_fd, files->next_fd);
-> =20
->  	if (fd < fdt->max_fds)
->  		fd =3D find_next_fd(fdt, fd);
-> @@ -514,7 +512,7 @@ int __alloc_fd(struct files_struct *files,
->  		goto repeat;
-> =20
->  	if (start <=3D files->next_fd)
-> -		files->next_fd =3D fd + 1;
-> +		files->next_fd =3D max(fd + 1, files->min_fd);
-> =20
->  	__set_open_fd(fd, fdt);
->  	if (flags & O_CLOEXEC)
-> @@ -555,7 +553,7 @@ static void __put_unused_fd(struct files_struct *file=
-s, unsigned int fd)
->  {
->  	struct fdtable *fdt =3D files_fdtable(files);
->  	__clear_open_fd(fd, fdt);
-> -	if (fd < files->next_fd)
-> +	if (fd < files->next_fd && fd >=3D files->min_fd)
->  		files->next_fd =3D fd;
->  }
-> =20
-> @@ -684,6 +682,7 @@ void do_close_on_exec(struct files_struct *files)
-> =20
->  	/* exec unshares first */
->  	spin_lock(&files->file_lock);
-> +	files->min_fd =3D 0;
->  	for (i =3D 0; ; i++) {
->  		unsigned long set;
->  		unsigned fd =3D i * BITS_PER_LONG;
-> @@ -865,6 +864,18 @@ bool get_close_on_exec(unsigned int fd)
->  	return res;
->  }
-> =20
-> +unsigned int increase_min_fd(unsigned int num)
-> +{
-> +	struct files_struct *files =3D current->files;
-> +	unsigned int old_min_fd;
-> +
-> +	spin_lock(&files->file_lock);
-> +	old_min_fd =3D files->min_fd;
-> +	files->min_fd +=3D num;
-> +	spin_unlock(&files->file_lock);
-> +	return old_min_fd;
-> +}
-> +
->  static int do_dup2(struct files_struct *files,
->  	struct file *file, unsigned fd, unsigned flags)
->  __releases(&files->file_lock)
-> diff --git a/include/linux/fdtable.h b/include/linux/fdtable.h
-> index f07c55ea0c22..d1980443d8b3 100644
-> --- a/include/linux/fdtable.h
-> +++ b/include/linux/fdtable.h
-> @@ -60,6 +60,7 @@ struct files_struct {
->     */
->  	spinlock_t file_lock ____cacheline_aligned_in_smp;
->  	unsigned int next_fd;
-> +	unsigned int min_fd; /* min for "lowest available fd" allocation */
->  	unsigned long close_on_exec_init[1];
->  	unsigned long open_fds_init[1];
->  	unsigned long full_fds_bits_init[1];
-> diff --git a/include/linux/file.h b/include/linux/file.h
-> index 142d102f285e..b67986f818d2 100644
-> --- a/include/linux/file.h
-> +++ b/include/linux/file.h
-> @@ -88,6 +88,7 @@ extern bool get_close_on_exec(unsigned int fd);
->  extern int __get_unused_fd_flags(unsigned flags, unsigned long nofile);
->  extern int get_unused_fd_flags(unsigned flags);
->  extern void put_unused_fd(unsigned int fd);
-> +extern unsigned int increase_min_fd(unsigned int num);
-> =20
->  extern void fd_install(unsigned int fd, struct file *file);
-> =20
-> diff --git a/include/uapi/linux/prctl.h b/include/uapi/linux/prctl.h
-> index 07b4f8131e36..916327272d21 100644
-> --- a/include/uapi/linux/prctl.h
-> +++ b/include/uapi/linux/prctl.h
-> @@ -238,4 +238,7 @@ struct prctl_mm_map {
->  #define PR_SET_IO_FLUSHER		57
->  #define PR_GET_IO_FLUSHER		58
-> =20
-> +/* Increase minimum file descriptor for "lowest available fd" allocation=
- */
-> +#define PR_INCREASE_MIN_FD		59
-> +
->  #endif /* _LINUX_PRCTL_H */
-> diff --git a/kernel/sys.c b/kernel/sys.c
-> index d325f3ab624a..daa0ce43cecc 100644
-> --- a/kernel/sys.c
-> +++ b/kernel/sys.c
-> @@ -2514,6 +2514,11 @@ SYSCALL_DEFINE5(prctl, int, option, unsigned long,=
- arg2, unsigned long, arg3,
-> =20
->  		error =3D (current->flags & PR_IO_FLUSHER) =3D=3D PR_IO_FLUSHER;
->  		break;
-> +	case PR_INCREASE_MIN_FD:
-> +		if (arg3 || arg4 || arg5)
-> +			return -EINVAL;
-> +		error =3D increase_min_fd((unsigned int)arg2);
-> +		break;
->  	default:
->  		error =3D -EINVAL;
->  		break;
-> --=20
-> 2.26.0
->=20
-
-
---=20
-Aleksa Sarai
-Senior Software Engineer (Containers)
-SUSE Linux GmbH
-<https://www.cyphar.com/>
-
---ds6ea26cc6xch3fv
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQSxZm6dtfE8gxLLfYqdlLljIbnQEgUCXo282wAKCRCdlLljIbnQ
-Erv6AP92+InVSN/fAcGC4fMQvLY3+Y+CWC4jEQleGa+Nske6fgEA9FGpiJkLNedH
-c/1zMZ/W9gr5n+kMEquw+xMVdw5PSQQ=
-=R7U+
------END PGP SIGNATURE-----
-
---ds6ea26cc6xch3fv--
