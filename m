@@ -2,184 +2,180 @@ Return-Path: <SRS0=8dav=5Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BCE66C2D0F4
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 18:14:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2A59C2D0F4
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 18:17:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 977DB20730
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 18:14:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7D08920730
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 18:17:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dhkOjge1"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="NCEXKNJh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730670AbgDHSO5 (ORCPT
+        id S1729689AbgDHSRI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Apr 2020 14:14:57 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:51040 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730638AbgDHSOw (ORCPT
+        Wed, 8 Apr 2020 14:17:08 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:33821 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729567AbgDHSRI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Apr 2020 14:14:52 -0400
-Received: by mail-wm1-f68.google.com with SMTP id x25so428479wmc.0;
-        Wed, 08 Apr 2020 11:14:51 -0700 (PDT)
+        Wed, 8 Apr 2020 14:17:08 -0400
+Received: by mail-pg1-f195.google.com with SMTP id l14so3700362pgb.1
+        for <linux-kernel@vger.kernel.org>; Wed, 08 Apr 2020 11:17:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=tx9SuZa4528oyKjVq2QW+3pFwATH8j8hfUgow6U+cVs=;
-        b=dhkOjge1FOcNsiNiZF2yeHjcKsn4vGpV93bOHiT/h3SjgPdPSzjSjrD54wPMXx2E6h
-         te9kAcvQiAdjBV53ViIchEPlDwIGqJmJSQ3fH5ydAeCWSqo5egqg64phJEbq4HFAv2be
-         39JuQ9ZS0f92uL1tnV7DMN217ElC1G5cauToJ16nIh2mpuF1ych9lkgHB5SXnaNnVLIJ
-         wD1nDLpcGG43drwcmelbnS1aD6q4Fb1V3G8WBdp3XP9EEnKJICIaFFy57xzJQbcA3bLU
-         Mn6HHoN5FZCA5DJUtzXGVSQ9sU74pQvH1nn8z7tgixjN8KVf2Fvho/p0FNKAkMnKaKJm
-         AVJw==
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=a7Kz6mupJHO9uOskSzYFD2yj0NLryLLhKvsjgUXMfWM=;
+        b=NCEXKNJhRxnEORMffaLeSM7hn4vYQLeaUg1opXivarf9d+xzMXNVLT0//eVHktufn/
+         4rJCRiQmWatDn81aUZ8CVl0Z4thlAeVPtPG2fmWgK5RvZrzbNlxKt15BA4ndLduQuV8U
+         71bcRyK5Wa+ThI2e1dJWIJt1ZVYyaRulAcPjg=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=tx9SuZa4528oyKjVq2QW+3pFwATH8j8hfUgow6U+cVs=;
-        b=SBpdB/DCOJ3tLOFMFitoQ+ez1OH4yO1uUwwMsmEawiJRfj99SkULJhcJXhEJiznrcz
-         8Z9Rg8h+kpBFAHEmB1mr79+ks0MXcfeK/nSEe227cWDR6FngHaaAlyUzWNj6HuDNMviE
-         9m8nKikuSsHb6E7raLgFN5ypauISzvwNLptGnd4VjGDcawfPxW37y/h88MvBnS9VwDJP
-         a7b9DFD8+33wxhSS+/DqN7ZemPrYW0ux2X0hjBvakra09VtHYziVcMGezZ1xgsDNCu6I
-         UYNI90M/Pc8I74BGhWbZA3Rf3+QF6gnl0x97nvqdcWgwUtO6CKV/RZNw2SVxYmxVQze+
-         aTyQ==
-X-Gm-Message-State: AGi0PuYrBt8yRdjzp7MpxqlW5PR7mMsTK4QLmUBtKZsNRyBkOoDRl3jK
-        Bcc5c0jKJ0xIAgdrmcS9Lism7ZSeD70=
-X-Google-Smtp-Source: APiQypJ+5IcVPxKY76g09B/HutFLGxlHrHOTeMAmfTQAHNbQddhk2Nx6W7SDc63sGFl/ijyZphTz4A==
-X-Received: by 2002:a1c:1f96:: with SMTP id f144mr5660370wmf.114.1586369689891;
-        Wed, 08 Apr 2020 11:14:49 -0700 (PDT)
-Received: from stbsrv-and-01.and.broadcom.net ([192.19.231.250])
-        by smtp.gmail.com with ESMTPSA id n124sm441700wma.11.2020.04.08.11.14.47
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=a7Kz6mupJHO9uOskSzYFD2yj0NLryLLhKvsjgUXMfWM=;
+        b=W300Cgat97xZUfgjAR2SzyGs8p17IzxT/Lk43hn1z4DsXDDr6O9OjFX8yDlegIBB3K
+         urjou32tZcLgsTRIeAz+LclcBSYGESvj8BUrR/Trwqb48LsjJ+gA8fs+rwghsHYl974P
+         BjAaJ4aANu6CUy1mnbxunAV9ffNSCI8NS4+ficfisbDVcgu2iN2EX9oB2DSeAkPFhN3J
+         G4URM56qN4djz/0oK6Ri2ClRBbbJhgs3owDsOQ9Ab5e9FYn56m8s3bnYp3BNDiiG35ev
+         ewtgUnnF1ZkVPAeyWRDBGvt0NggXjddsi6cnN5QowAF8IOZZKWgMQ4LcqAUoBUJBcBrR
+         WAag==
+X-Gm-Message-State: AGi0PubJhIMwYIdCFTcPqtbzJb9n7a+y5cckn0kaVjETBAoSVm8yLbu3
+        DTzL3V4hp4qgO2zOtc+3bsOODHMf6WXbAA==
+X-Google-Smtp-Source: APiQypJDyp06l9KBPJGBpRcCRj84HscljaDKmf4SvHLRx1+0H29vlnGcHZvn9U5KebfBiKEbTJhObg==
+X-Received: by 2002:aa7:8649:: with SMTP id a9mr8904357pfo.138.1586369826566;
+        Wed, 08 Apr 2020 11:17:06 -0700 (PDT)
+Received: from mathewk1.lan ([161.97.192.125])
+        by smtp.gmail.com with ESMTPSA id e27sm1347074pfl.219.2020.04.08.11.17.05
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 08 Apr 2020 11:14:49 -0700 (PDT)
-From:   Al Cooper <alcooperx@gmail.com>
+        Wed, 08 Apr 2020 11:17:05 -0700 (PDT)
+From:   Mathew King <mathewk@chromium.org>
 To:     linux-kernel@vger.kernel.org
-Cc:     Al Cooper <alcooperx@gmail.com>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        bcm-kernel-feedback-list@broadcom.com, devicetree@vger.kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        =?UTF-8?q?Jonathan=20Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        linux-usb@vger.kernel.org, Mathias Nyman <mathias.nyman@intel.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: [PATCH v3 4/4] usb: host: Add ability to build new Broadcom STB USB drivers
-Date:   Wed,  8 Apr 2020 14:14:06 -0400
-Message-Id: <20200408181406.40389-5-alcooperx@gmail.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200408181406.40389-1-alcooperx@gmail.com>
-References: <20200408181406.40389-1-alcooperx@gmail.com>
+Cc:     Jett Rink <jettrink@chromium.org>,
+        Benson Leung <bleung@chromium.org>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Guenter Roeck <groeck@chromium.org>,
+        Mathew King <mathewk@chromium.org>
+Subject: [PATCH 1/2] platform/chrome: skip old cros_ec responses
+Date:   Wed,  8 Apr 2020 12:16:37 -0600
+Message-Id: <20200408181638.184559-1-mathewk@chromium.org>
+X-Mailer: git-send-email 2.26.0.292.g33ef6b2f38-goog
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add the build system changes needed to get the Broadcom STB XHCI,
-EHCI and OHCI functionality working. The OHCI support does not
-require anything unique to Broadcom so the standard ohci-platform
-driver is being used. The link order for XHCI was changed in the
-Makefile because of the way STB XHCI, EHCI and OHCI controllers
-share a port which requires that the XHCI driver be initialized
-first. Also update MAINTAINERS.
+From: Jett Rink <jettrink@chromium.org>
 
-Signed-off-by: Al Cooper <alcooperx@gmail.com>
+The ISHTP layer can give us old responses that we already gave up on. We
+do not want to interpret these old responses as the current response we
+are waiting for.
+
+Signed-off-by: Jett Rink <jettrink@chromium.org>
+Signed-off-by: Mathew King <mathewk@chromium.org>
 ---
- MAINTAINERS               |  8 ++++++++
- drivers/usb/host/Kconfig  | 16 ++++++++++++++++
- drivers/usb/host/Makefile | 16 ++++++++++------
- 3 files changed, 34 insertions(+), 6 deletions(-)
+ drivers/platform/chrome/cros_ec_ishtp.c | 32 ++++++++++++++++++-------
+ 1 file changed, 23 insertions(+), 9 deletions(-)
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 534a8dc4f84a..f6e8ebc8ccfd 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -3477,6 +3477,14 @@ S:	Supported
- F:	drivers/i2c/busses/i2c-brcmstb.c
- F:	Documentation/devicetree/bindings/i2c/brcm,brcmstb-i2c.yaml
+diff --git a/drivers/platform/chrome/cros_ec_ishtp.c b/drivers/platform/chrome/cros_ec_ishtp.c
+index 93a71e93a2f1..6f90deb5cf55 100644
+--- a/drivers/platform/chrome/cros_ec_ishtp.c
++++ b/drivers/platform/chrome/cros_ec_ishtp.c
+@@ -48,7 +48,8 @@ static const guid_t cros_ish_guid =
+ struct header {
+ 	u8 channel;
+ 	u8 status;
+-	u8 reserved[2];
++	u8 id;
++	u8 reserved;
+ } __packed;
  
-+BROADCOM BRCMSTB USB EHCI DRIVER
-+M:	Al Cooper <alcooperx@gmail.com>
-+L:	linux-usb@vger.kernel.org
-+L:	bcm-kernel-feedback-list@broadcom.com
-+S:	Maintained
-+F:	drivers/usb/host/ehci-brcm.*
-+F:	Documentation/devicetree/bindings/usb/brcm,bcm7445-ehci.yaml
+ struct cros_ish_out_msg {
+@@ -90,6 +91,7 @@ static DECLARE_RWSEM(init_lock);
+  * data exceeds this value, we log an error.
+  * @size: Actual size of data received from firmware.
+  * @error: 0 for success, negative error code for a failure in process_recv().
++ * @expected_id: Expected id for response that we are waiting on.
+  * @received: Set to true on receiving a valid firmware	response to host command
+  * @wait_queue: Wait queue for host to wait for firmware response.
+  */
+@@ -98,6 +100,7 @@ struct response_info {
+ 	size_t max_size;
+ 	size_t size;
+ 	int error;
++	u8 expected_id;
+ 	bool received;
+ 	wait_queue_head_t wait_queue;
+ };
+@@ -162,6 +165,7 @@ static int ish_send(struct ishtp_cl_data *client_data,
+ 		    u8 *out_msg, size_t out_size,
+ 		    u8 *in_msg, size_t in_size)
+ {
++	static u8 current_id;
+ 	int rv;
+ 	struct header *out_hdr = (struct header *)out_msg;
+ 	struct ishtp_cl *cros_ish_cl = client_data->cros_ish_cl;
+@@ -174,8 +178,11 @@ static int ish_send(struct ishtp_cl_data *client_data,
+ 	client_data->response.data = in_msg;
+ 	client_data->response.max_size = in_size;
+ 	client_data->response.error = 0;
++	client_data->response.expected_id = ++current_id;
+ 	client_data->response.received = false;
+ 
++	out_hdr->id = client_data->response.expected_id;
 +
- BROADCOM BRCMSTB USB2 and USB3 PHY DRIVER
- M:	Al Cooper <alcooperx@gmail.com>
- L:	linux-kernel@vger.kernel.org
-diff --git a/drivers/usb/host/Kconfig b/drivers/usb/host/Kconfig
-index 55bdfdf11e4c..7d58fd66e412 100644
---- a/drivers/usb/host/Kconfig
-+++ b/drivers/usb/host/Kconfig
-@@ -97,6 +97,22 @@ config USB_XHCI_TEGRA
+ 	rv = ishtp_cl_send(cros_ish_cl, out_msg, out_size);
+ 	if (rv) {
+ 		dev_err(cl_data_to_dev(client_data),
+@@ -249,17 +256,23 @@ static void process_recv(struct ishtp_cl *cros_ish_cl,
  
- endif # USB_XHCI_HCD
+ 	switch (in_msg->hdr.channel) {
+ 	case CROS_EC_COMMAND:
+-		/* Sanity check */
+-		if (!client_data->response.data) {
++		if (client_data->response.received) {
+ 			dev_err(dev,
+-				"Receiving buffer is null. Should be allocated by calling function\n");
+-			client_data->response.error = -EINVAL;
+-			goto error_wake_up;
++				"Previous firmware message not yet processed\n");
++			goto end_error;
+ 		}
  
-+config USB_EHCI_BRCMSTB
-+       tristate
+-		if (client_data->response.received) {
++		if (client_data->response.expected_id != in_msg->hdr.id) {
+ 			dev_err(dev,
+-				"Previous firmware message not yet processed\n");
++				"Dropping old response id %d\n",
++				in_msg->hdr.id);
++			goto end_error;
++		}
 +
-+config USB_BRCMSTB
-+	tristate "Broadcom STB USB support"
-+	depends on (ARCH_BRCMSTB && PHY_BRCM_USB) || COMPILE_TEST
-+	select USB_OHCI_HCD_PLATFORM if USB_OHCI_HCD
-+	select USB_EHCI_BRCMSTB if USB_EHCI_HCD
-+	select USB_XHCI_PLATFORM if USB_XHCI_HCD
-+	help
-+	  Say Y to enable support for XHCI, EHCI and OHCI host controllers
-+	  found in Broadcom STB SoC's.
++		/* Sanity check */
++		if (!client_data->response.data) {
++			dev_err(dev,
++				"Receiving buffer is null. Should be allocated by calling function\n");
+ 			client_data->response.error = -EINVAL;
+ 			goto error_wake_up;
+ 		}
+@@ -289,9 +302,10 @@ static void process_recv(struct ishtp_cl *cros_ish_cl,
+ 		memcpy(client_data->response.data,
+ 		       rb_in_proc->buffer.data, data_len);
+ 
++error_wake_up:
+ 		/* Set flag before waking up the caller */
+ 		client_data->response.received = true;
+-error_wake_up:
 +
-+	  Disabling this will keep the controllers and corresponding
-+	  PHYs powered down.
-+
- config USB_EHCI_HCD
- 	tristate "EHCI HCD (USB 2.0) support"
- 	depends on HAS_DMA && HAS_IOMEM
-diff --git a/drivers/usb/host/Makefile b/drivers/usb/host/Makefile
-index b191361257cc..85fa6ace552a 100644
---- a/drivers/usb/host/Makefile
-+++ b/drivers/usb/host/Makefile
-@@ -37,6 +37,15 @@ endif
+ 		/* Wake the calling thread */
+ 		wake_up_interruptible(&client_data->response.wait_queue);
  
- obj-$(CONFIG_USB_PCI)	+= pci-quirks.o
- 
-+# NOTE: BRCMSTB systems require that xhci driver be linked before the
-+# ehci/ohci drivers.
-+obj-$(CONFIG_USB_XHCI_HCD)	+= xhci-hcd.o
-+obj-$(CONFIG_USB_XHCI_PCI)	+= xhci-pci.o
-+obj-$(CONFIG_USB_XHCI_PLATFORM) += xhci-plat-hcd.o
-+obj-$(CONFIG_USB_XHCI_HISTB)	+= xhci-histb.o
-+obj-$(CONFIG_USB_XHCI_MTK)	+= xhci-mtk.o
-+obj-$(CONFIG_USB_XHCI_TEGRA)	+= xhci-tegra.o
-+
- obj-$(CONFIG_USB_EHCI_HCD)	+= ehci-hcd.o
- obj-$(CONFIG_USB_EHCI_PCI)	+= ehci-pci.o
- obj-$(CONFIG_USB_EHCI_HCD_PLATFORM)	+= ehci-platform.o
-@@ -49,6 +58,7 @@ obj-$(CONFIG_USB_EHCI_HCD_STI)	+= ehci-st.o
- obj-$(CONFIG_USB_EHCI_EXYNOS)	+= ehci-exynos.o
- obj-$(CONFIG_USB_EHCI_HCD_AT91) += ehci-atmel.o
- obj-$(CONFIG_USB_EHCI_TEGRA)	+= ehci-tegra.o
-+obj-$(CONFIG_USB_EHCI_BRCMSTB)	+= ehci-brcm.o
- 
- obj-$(CONFIG_USB_OXU210HP_HCD)	+= oxu210hp-hcd.o
- obj-$(CONFIG_USB_ISP116X_HCD)	+= isp116x-hcd.o
-@@ -69,12 +79,6 @@ obj-$(CONFIG_USB_OHCI_HCD_DAVINCI)	+= ohci-da8xx.o
- 
- obj-$(CONFIG_USB_UHCI_HCD)	+= uhci-hcd.o
- obj-$(CONFIG_USB_FHCI_HCD)	+= fhci.o
--obj-$(CONFIG_USB_XHCI_HCD)	+= xhci-hcd.o
--obj-$(CONFIG_USB_XHCI_PCI)	+= xhci-pci.o
--obj-$(CONFIG_USB_XHCI_PLATFORM) += xhci-plat-hcd.o
--obj-$(CONFIG_USB_XHCI_HISTB)	+= xhci-histb.o
--obj-$(CONFIG_USB_XHCI_MTK)	+= xhci-mtk.o
--obj-$(CONFIG_USB_XHCI_TEGRA)	+= xhci-tegra.o
- obj-$(CONFIG_USB_SL811_HCD)	+= sl811-hcd.o
- obj-$(CONFIG_USB_SL811_CS)	+= sl811_cs.o
- obj-$(CONFIG_USB_U132_HCD)	+= u132-hcd.o
 -- 
-2.17.1
+2.26.0.292.g33ef6b2f38-goog
 
