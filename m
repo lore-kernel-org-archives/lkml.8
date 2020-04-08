@@ -2,191 +2,127 @@ Return-Path: <SRS0=8dav=5Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1A47C2BA1A
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 11:41:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82ADCC2BA1A
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 11:42:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8E0E520787
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 11:41:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586346061;
-	bh=igLuiZn52qB1kj2vKxCTjSGs9/VNYNbdH6sNTlgRisY=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=OhR6HZFF1x0bQuFUGHCtJ3Uxme4iNyPnTORBAApDcdtZUxKOLreRAwUAE4tYMITus
-	 3N+IWw6/+uPKU+617pR6hK2y9aYE+eN+2rnR/xTixpJFMDq1+GgKSb837x83o1X6Zv
-	 NmezyPoPTOoUCb2yinIU0isl9HNDsq+N0x6fJgrg=
+	by mail.kernel.org (Postfix) with ESMTP id 53FA220787
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 11:42:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=flygoat.com header.i=jiaxun.yang@flygoat.com header.b="OF6Nt3iy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728618AbgDHLlA (ORCPT
+        id S1728621AbgDHLmH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Apr 2020 07:41:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37534 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728497AbgDHLlA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Apr 2020 07:41:00 -0400
-Received: from coco.lan (ip5f5ad4d8.dynamic.kabel-deutschland.de [95.90.212.216])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 759AF20747;
-        Wed,  8 Apr 2020 11:40:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586346059;
-        bh=igLuiZn52qB1kj2vKxCTjSGs9/VNYNbdH6sNTlgRisY=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=lNMtsoG3BeTIbawLBoa0nrrwd0el6dj9ixd/wEe67LD2atI1u1lEiKmTJiKJA0hjV
-         FXR8cQCs+m+ksv+uue55PKV997wAUH/UarzRCS6hVK+lXwWdeotoHeiFSlypmHOYoN
-         dm4usj1My3oZ7OaxsoqH8jwAufqemuBwo1R1j8fs=
-Date:   Wed, 8 Apr 2020 13:40:48 +0200
-From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-To:     Michael Ellerman <mpe@ellerman.id.au>
-Cc:     Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Paul Mackerras <paulus@samba.org>,
-        Madhuparna Bhowmik <madhuparnabhowmik04@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Ricardo Ribalda Delgado <ribalda@kernel.org>,
-        Luca Ceresoli <luca@lucaceresoli.net>,
-        dmaengine@vger.kernel.org, Matthias Maennich <maennich@google.com>,
-        Harry Wei <harryxiyou@gmail.com>, x86@kernel.org,
-        ecryptfs@vger.kernel.org, Jakub Kicinski <kuba@kernel.org>,
-        target-devel@vger.kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Johannes Berg <johannes.berg@intel.com>,
-        Jacopo Mondi <jacopo@jmondi.org>,
-        Tyler Hicks <code@tyhicks.com>, Vinod Koul <vkoul@kernel.org>,
-        Alex Shi <alex.shi@linux.alibaba.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, linux-scsi@vger.kernel.org,
-        netdev@vger.kernel.org,
+        Wed, 8 Apr 2020 07:42:07 -0400
+Received: from sender3-op-o12.zoho.com.cn ([124.251.121.243]:17823 "EHLO
+        sender3-op-o12.zoho.com.cn" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728454AbgDHLmG (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Apr 2020 07:42:06 -0400
+ARC-Seal: i=1; a=rsa-sha256; t=1586345987; cv=none; 
+        d=zoho.com.cn; s=zohoarc; 
+        b=fCtkhLymfD9CHEpnp/e36RIN0jp2eO9Q8YObQQ/hH3SPpeBTRAcB2w0x8PufvgkObUGSuIxOFACGQGHz/d4vPPu3O6PIgtxjEa/NxAkrAqj2LASYI71j/p2L8461Gd/sa9+NW7hG24JS9IsE/uWh0vZLUOXt4rXI11IFyDvIw68=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zoho.com.cn; s=zohoarc; 
+        t=1586345987; h=Content-Type:Content-Transfer-Encoding:Cc:Date:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:To; 
+        bh=kAfR+MEcWmH1pn2XtI1ye2XkXpLmPO99yHe8dszIBGg=; 
+        b=Rsfiow0S0UN13KV9WUZgibfvDOgZwcEwq5+ATIFJAjfcizvjDCcYKoBQhAtPch4r+k2MHkSiAod3fAfhkMRJ8kaj0b3vHrJUvWWSjEuLMfPa2IjHt1XyZeV/CMRLci4te3vJlZR/t0b/6jxUVNjTK1EAfNzRW4D32EOiCImxh74=
+ARC-Authentication-Results: i=1; mx.zoho.com.cn;
+        dkim=pass  header.i=flygoat.com;
+        spf=pass  smtp.mailfrom=jiaxun.yang@flygoat.com;
+        dmarc=pass header.from=<jiaxun.yang@flygoat.com> header.from=<jiaxun.yang@flygoat.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1586345987;
+        s=mail; d=flygoat.com; i=jiaxun.yang@flygoat.com;
+        h=From:To:Cc:Message-ID:Subject:Date:In-Reply-To:References:MIME-Version:Content-Transfer-Encoding:Content-Type;
+        bh=kAfR+MEcWmH1pn2XtI1ye2XkXpLmPO99yHe8dszIBGg=;
+        b=OF6Nt3iysk9nvLjDkbzL1V/4j51ZIbNOjrBnD6TQz0lvX8Ni+b2paJOFRYT8DgMy
+        fdyXF8NMzzGOFz7jusgTzL2gl3LfGcc7dp0eWeY6oxoAJ+AuOZSrAQWatyBY+cY7noZ
+        8MCjqyP5TKgGzhclvzOGUpofOHFHj+D9vGhHqmME=
+Received: from localhost.localdomain (39.155.141.144 [39.155.141.144]) by mx.zoho.com.cn
+        with SMTPS id 1586345984855887.2159695647649; Wed, 8 Apr 2020 19:39:44 +0800 (CST)
+From:   Jiaxun Yang <jiaxun.yang@flygoat.com>
+To:     linux-mips@vger.kernel.org
+Cc:     Jiaxun Yang <jiaxun.yang@flygoat.com>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Huacai Chen <chenhc@lemote.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Robert Richter <rric@kernel.org>,
+        Sudeep Holla <sudeep.holla@arm.com>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linuxppc-dev@lists.ozlabs.org, Borislav Petkov <bp@alien8.de>
-Subject: Re: [PATCH v2 0/2] Don't generate thousands of new warnings when
- building docs
-Message-ID: <20200408134048.5329427d@coco.lan>
-In-Reply-To: <87lfn8klf4.fsf@mpe.ellerman.id.au>
-References: <cover.1584716446.git.mchehab+huawei@kernel.org>
-        <87lfn8klf4.fsf@mpe.ellerman.id.au>
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>,
+        Paul Burton <paulburton@kernel.org>,
+        Allison Randal <allison@lohutok.net>,
+        Enrico Weigelt <info@metux.net>,
+        Vladimir Kondratiev <vladimir.kondratiev@intel.com>,
+        Alexios Zavras <alexios.zavras@intel.com>,
+        Richard Fontana <rfontana@redhat.com>,
+        Paul Cercueil <paul@crapouillou.net>,
+        Zhou Yanjie <zhouyanjie@zoho.com>,
+        =?UTF-8?q?=E5=91=A8=E7=90=B0=E6=9D=B0=20=28Zhou=20Yanjie=29?= 
+        <zhouyanjie@wanyeetech.com>, YunQiang Su <syq@debian.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        Matt Redfearn <matt.redfearn@mips.com>,
+        Steve Winslow <swinslow@gmail.com>,
+        Peter Xu <peterx@redhat.com>,
+        afzal mohammed <afzal.mohd.ma@gmail.com>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Kamal Dasu <kdasu.kdev@gmail.com>,
+        Oleksij Rempel <linux@rempel-privat.de>,
+        linux-kernel@vger.kernel.org,
+        bcm-kernel-feedback-list@broadcom.com, oprofile-list@lists.sf.net
+Message-ID: <20200408113505.2528103-5-jiaxun.yang@flygoat.com>
+Subject: [PATCH 04/12] arch_topology: Reset all cpus in reset_cpu_topology
+Date:   Wed,  8 Apr 2020 19:34:14 +0800
+X-Mailer: git-send-email 2.26.0.rc2
+In-Reply-To: <20200408113505.2528103-1-jiaxun.yang@flygoat.com>
+References: <20200408113505.2528103-1-jiaxun.yang@flygoat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: quoted-printable
+X-ZohoCNMailClient: External
+Content-Type: text/plain; charset=utf8
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Tue, 07 Apr 2020 13:46:23 +1000
-Michael Ellerman <mpe@ellerman.id.au> escreveu:
+For MIPS platform, when topology isn't probed by DeviceTree,
+possible_cpu might be empty when calling init_cpu_topology,
+that may result cpu_topology not fully reseted for all CPUs.
+So here we can reset all cpus instead of possible cpus.
 
-> Mauro Carvalho Chehab <mchehab+huawei@kernel.org> writes:
-> > This small series address a regression caused by a new patch at
-> > docs-next (and at linux-next).
-> >
+Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
+---
+ drivers/base/arch_topology.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-...
+diff --git a/drivers/base/arch_topology.c b/drivers/base/arch_topology.c
+index 9c2405d08dae..3398b7ac7dfb 100644
+--- a/drivers/base/arch_topology.c
++++ b/drivers/base/arch_topology.c
+@@ -542,7 +542,7 @@ void __init reset_cpu_topology(void)
+ {
+ =09unsigned int cpu;
+=20
+-=09for_each_possible_cpu(cpu) {
++=09for (cpu =3D 0; cpu < NR_CPUS; cpu++) {
+ =09=09struct cpu_topology *cpu_topo =3D &cpu_topology[cpu];
+=20
+ =09=09cpu_topo->thread_id =3D -1;
+--=20
+2.26.0.rc2
 
-> > This solves almost all problems we have. Still, there are a few places
-> > where we have two chapters at the same document with the
-> > same name. The first patch addresses this problem.  
-> 
-> I'm still seeing a lot of warnings. Am I doing something wrong?
-> 
-> cheers
-> 
-> /linux/Documentation/powerpc/cxl.rst:406: WARNING: duplicate label powerpc/cxl:open, other instance in /linux/Documentation/powerpc/cxl.rst
-...
-> /linux/Documentation/powerpc/syscall64-abi.rst:86: WARNING: duplicate label powerpc/syscall64-abi:parameters and return value, other instance in /linux/Documentation/powerpc/syscall64-abi.rst
-...
-> /linux/Documentation/powerpc/ultravisor.rst:339: WARNING: duplicate label powerpc/ultravisor:syntax, other instance in /linux/Documentation/powerpc/ultravisor.rst
-...
-
-I can't reproduce your issue here at linux-next (+ my pending doc patches).
-
-So, I can only provide you some hints.
-
-If you see the logs you posted, all of them are related to duplicated
-labels inside the same file.
-
--
-
-The new Sphinx module we're using (sphinx.ext.autosectionlabel) generates
-references for two levels, within the same document file (after this patch).
-
-
-Looking at the first document (at linux-next version), it has:
-
-1) A first level document title:
-
-   Coherent Accelerator Interface (CXL)
-
-2) Several second level titles:
-
-   Introduction
-   Hardware overview
-   AFU Modes
-   MMIO space
-   Interrupts
-   Work Element Descriptor (WED)
-   User API
-   Sysfs Class
-   Udev rules
-
-Right now, there's no duplication, but if someone adds, for example, 
-another first-level or second-level title called "Interrupts", then 
-the file will produce a duplicated label and Sphinx will warn.
-
-The same would happen if someone adds another title (either first
-level or second level) called "Coherent Accelerator Interface (CXL)",
-as this will conflict with the document title.
-
--
-
-Now, if the title "Coherent Accelerator Interface (CXL)" got removed,
-then "Introduction".."Udev rules" will become first level titles.
-
-Then, the sections at the "User API": "open", "ioctl"... will become
-second level titles and it will produce lots of warnings.
-
--
-
-That's said, IMHO, this document needs section titles for the two
-sections under "User API". Adding it would allow removing the document
-title. See enclosed.
-
-Thanks,
-Mauro
-
-powerpc: docs: cxl.rst: mark two section titles as such
-
-The User API chapter contains two sub-chapters. Mark them as
-such.
-
-Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-
-
-diff --git a/Documentation/powerpc/cxl.rst b/Documentation/powerpc/cxl.rst
-index 920546d81326..d2d77057610e 100644
---- a/Documentation/powerpc/cxl.rst
-+++ b/Documentation/powerpc/cxl.rst
-@@ -133,6 +133,7 @@ User API
- ========
- 
- 1. AFU character devices
-+^^^^^^^^^^^^^^^^^^^^^^^^
- 
-     For AFUs operating in AFU directed mode, two character device
-     files will be created. /dev/cxl/afu0.0m will correspond to a
-@@ -395,6 +396,7 @@ read
- 
- 
- 2. Card character device (powerVM guest only)
-+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
- 
-     In a powerVM guest, an extra character device is created for the
-     card. The device is only used to write (flash) a new image on the
 
