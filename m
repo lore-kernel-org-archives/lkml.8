@@ -6,127 +6,103 @@ X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D63DC2D0F4
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 18:01:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03627C2D0F4
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 18:01:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1D72A2075E
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 18:01:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DA0EA2075E
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 18:01:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729623AbgDHSBn (ORCPT
+        id S1729892AbgDHSBu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Apr 2020 14:01:43 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:53826 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726780AbgDHSBm (ORCPT
+        Wed, 8 Apr 2020 14:01:50 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:50275 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726780AbgDHSBu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Apr 2020 14:01:42 -0400
-Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 038HXC6Z075944;
-        Wed, 8 Apr 2020 14:01:09 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 309210cugm-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 08 Apr 2020 14:01:08 -0400
-Received: from m0098413.ppops.net (m0098413.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 038HnJg0123775;
-        Wed, 8 Apr 2020 14:01:08 -0400
-Received: from ppma04wdc.us.ibm.com (1a.90.2fa9.ip4.static.sl-reverse.com [169.47.144.26])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 309210cug7-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 08 Apr 2020 14:01:08 -0400
-Received: from pps.filterd (ppma04wdc.us.ibm.com [127.0.0.1])
-        by ppma04wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 038I17Fo005697;
-        Wed, 8 Apr 2020 18:01:07 GMT
-Received: from b01cxnp22033.gho.pok.ibm.com (b01cxnp22033.gho.pok.ibm.com [9.57.198.23])
-        by ppma04wdc.us.ibm.com with ESMTP id 3091mdxxva-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 08 Apr 2020 18:01:07 +0000
-Received: from b01ledav006.gho.pok.ibm.com (b01ledav006.gho.pok.ibm.com [9.57.199.111])
-        by b01cxnp22033.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 038I17E052756932
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 8 Apr 2020 18:01:07 GMT
-Received: from b01ledav006.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 4A011AC065;
-        Wed,  8 Apr 2020 18:01:07 +0000 (GMT)
-Received: from b01ledav006.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id A00ADAC05B;
-        Wed,  8 Apr 2020 18:00:56 +0000 (GMT)
-Received: from LeoBras (unknown [9.85.164.111])
-        by b01ledav006.gho.pok.ibm.com (Postfix) with ESMTP;
-        Wed,  8 Apr 2020 18:00:55 +0000 (GMT)
-Message-ID: <08fd515f1e0925a9d640dffd6a97c3ddbcd0cf18.camel@linux.ibm.com>
-Subject: Re: [PATCH v3 1/1] ppc/crash: Reset spinlocks during crash
-From:   Leonardo Bras <leonardo@linux.ibm.com>
-To:     Michael Ellerman <mpe@ellerman.id.au>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Alexios Zavras <alexios.zavras@intel.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Enrico Weigelt <info@metux.net>,
-        Paul Mackerras <paulus@samba.org>, peterz@infradead.org,
-        Thomas Gleixner <tglx@linutronix.de>
-Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-Date:   Wed, 08 Apr 2020 15:00:33 -0300
-In-Reply-To: <87v9majhh2.fsf@mpe.ellerman.id.au>
-References: <20200401000020.590447-1-leonardo@linux.ibm.com>
-         <871rp6t9di.fsf@mpe.ellerman.id.au>
-         <02e74be19534ab1db2f16a0c89ecb164e380c12a.camel@linux.ibm.com>
-         <1585895551.7o9oa0ey62.astroid@bobo.none>
-         <fb98f346a4d6a9d689ae64dae33cbd45d2f8b0df.camel@linux.ibm.com>
-         <87v9majhh2.fsf@mpe.ellerman.id.au>
-Content-Type: multipart/signed; micalg="pgp-sha256";
-        protocol="application/pgp-signature"; boundary="=-dPAT5Uf265gBn5bk+UIE"
-User-Agent: Evolution 3.34.4 (3.34.4-1.fc31) 
+        Wed, 8 Apr 2020 14:01:50 -0400
+Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1jMF17-0002Uv-PU; Wed, 08 Apr 2020 20:01:38 +0200
+Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
+        id EE86010069D; Wed,  8 Apr 2020 20:01:36 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     Andy Lutomirski <luto@amacapital.net>,
+        Vivek Goyal <vgoyal@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
+        kvm list <kvm@vger.kernel.org>, stable <stable@vger.kernel.org>
+Subject: Re: [PATCH v2] x86/kvm: Disable KVM_ASYNC_PF_SEND_ALWAYS
+In-Reply-To: <ce28e893-2ed0-ea6f-6c36-b08bb0d814f2@redhat.com>
+References: <20200407172140.GB64635@redhat.com> <772A564B-3268-49F4-9AEA-CDA648F6131F@amacapital.net> <87eeszjbe6.fsf@nanos.tec.linutronix.de> <ce81c95f-8674-4012-f307-8f32d0e386c2@redhat.com> <874ktukhku.fsf@nanos.tec.linutronix.de> <274f3d14-08ac-e5cc-0b23-e6e0274796c8@redhat.com> <20200408153413.GA11322@linux.intel.com> <ce28e893-2ed0-ea6f-6c36-b08bb0d814f2@redhat.com>
+Date:   Wed, 08 Apr 2020 20:01:36 +0200
+Message-ID: <87d08hc0vz.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
- definitions=2020-04-07_10:2020-04-07,2020-04-07 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 spamscore=0
- mlxscore=0 impostorscore=0 suspectscore=0 adultscore=0 malwarescore=0
- lowpriorityscore=0 phishscore=0 priorityscore=1501 mlxlogscore=999
- bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2004080129
+Content-Type: text/plain
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Paolo Bonzini <pbonzini@redhat.com> writes:
+> On 08/04/20 17:34, Sean Christopherson wrote:
+>> On Wed, Apr 08, 2020 at 10:23:58AM +0200, Paolo Bonzini wrote:
+>>> Page-not-present async page faults are almost a perfect match for the
+>>> hardware use of #VE (and it might even be possible to let the processor
+>>> deliver the exceptions).
+>> 
+>> My "async" page fault knowledge is limited, but if the desired behavior is
+>> to reflect a fault into the guest for select EPT Violations, then yes,
+>> enabling EPT Violation #VEs in hardware is doable.  The big gotcha is that
+>> KVM needs to set the suppress #VE bit for all EPTEs when allocating a new
+>> MMU page, otherwise not-present faults on zero-initialized EPTEs will get
+>> reflected.
+>> 
+>> Attached a patch that does the prep work in the MMU.  The VMX usage would be:
+>> 
+>> 	kvm_mmu_set_spte_init_value(VMX_EPT_SUPPRESS_VE_BIT);
+>> 
+>> when EPT Violation #VEs are enabled.  It's 64-bit only as it uses stosq to
+>> initialize EPTEs.  32-bit could also be supported by doing memcpy() from
+>> a static page.
+>
+> The complication is that (at least according to the current ABI) we
+> would not want #VE to kick if the guest currently has IF=0 (and possibly
+> CPL=0).  But the ABI is not set in stone, and anyway the #VE protocol is
+> a decent one and worth using as a base for whatever PV protocol we design.
 
---=-dPAT5Uf265gBn5bk+UIE
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Forget the current pf async semantics (or the lack of). You really want
+to start from scratch and igore the whole thing.
 
-On Wed, 2020-04-08 at 22:21 +1000, Michael Ellerman wrote:
-> We should be able to just allocate the rtas_args on the stack, it's only
-> ~80 odd bytes. And then we can use rtas_call_unlocked() which doesn't
-> take the global lock.
+The charm of #VE is that the hardware can inject it and it's not nesting
+until the guest cleared the second word in the VE information area. If
+that word is not 0 then you get a regular vmexit where you suspend the
+vcpu until the nested problem is solved.
 
-At this point, would it be a problem using kmalloc?=20
+So you really don't worry about the guest CPU state at all. The guest
+side #VE handler has to decide what it wants from the host depending on
+it's internal state:
 
-Best regards,
+     - Suspend me and resume once the EPT fail is solved
 
---=-dPAT5Uf265gBn5bk+UIE
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
+     - Let me park the failing task and tell me once you resolved the
+       problem.
 
------BEGIN PGP SIGNATURE-----
+That's pretty straight forward and avoids the whole nonsense which the
+current mess contains. It completely avoids the allocation stuff as well
+as you need to use a PV page where the guest copies the VE information
+to.
 
-iQIzBAABCAAdFiEEMdeUgIzgjf6YmUyOlQYWtz9SttQFAl6OEUEACgkQlQYWtz9S
-ttRQYBAAjA9TrNO0aSybcGBUbLI3D/xxV/K5oX2uvgUE80/JxGaCtDT09vhBmu1L
-zf0fNtV1m6+DtbMQWeXeAexvSR5Roz1QCkYW8HEndnoavaDHn5InmBPi1iLXe3h0
-1ANo9fyO0HhwNUI9I42OnnH/cKrIRsvtLHxLvLkT2oM4kFlOzfR981dR1ACDVR6M
-FAo1e0Dt85utw+yVvJFfWfY/Ys9H7eTrtowSRqW6GrZ2nKuWW8sgxGPuuuSv84Tn
-KDjMAEqaSw/JR5QEQkMfK8FzFy7h+ra8uhoA+Uasjz6tX4H142baUqjdj0n/hfXC
-KrJ+FuU+AHzmKoUsgP2zeT29F2Zu6ZsmjcctKSvcsHT3/hCrzp2iha0EyV1+A+oF
-v1s7JBEGu1smnq/6Cilw6+MLS7uktbjZQSvWbCuk+Brt9UX8dxVbPSdy3jVeao51
-Dfds2Bz66ECsPZ56OCDmfUmpsQFmFhjCBL/O7BDI5yqf65b1R2KMUp2ozJUfGTIv
-Q8QdzdsY1RE9ED0Rcr4+zOiQWQLXwLcarsrF1DIuD58Bml8+8HpF07I9PHhs/QFh
-VN7wgWQh23m1sVjiMGRdMt4ofR8ZBcUCV+iP2RQewrKWFU4bPoJvai2g9YwlMPZE
-T4UXnRfKeuNxqktKeA02LZBTMPumazdoe/jdUy5v/clZtdC6KCM=
-=2bkq
------END PGP SIGNATURE-----
+The notification that a problem has been resolved needs to go through a
+separate vector which still has the IF=1 requirement obviously.
 
---=-dPAT5Uf265gBn5bk+UIE--
+Thanks,
 
+        tglx
