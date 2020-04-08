@@ -2,152 +2,238 @@ Return-Path: <SRS0=8dav=5Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6737C2D0EA
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 11:40:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76129C2BA2B
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 11:40:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 71BB220747
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 11:40:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4052B20747
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 11:40:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=flygoat.com header.i=jiaxun.yang@flygoat.com header.b="IDHJUT/w"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728584AbgDHLkS (ORCPT
+        id S1728599AbgDHLk2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Apr 2020 07:40:18 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:4158 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728520AbgDHLkR (ORCPT
+        Wed, 8 Apr 2020 07:40:28 -0400
+Received: from sender3-op-o12.zoho.com.cn ([124.251.121.243]:17888 "EHLO
+        sender3-op-o12.zoho.com.cn" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728495AbgDHLk1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Apr 2020 07:40:17 -0400
-Received: from pps.filterd (m0098414.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 038BYO43052202
-        for <linux-kernel@vger.kernel.org>; Wed, 8 Apr 2020 07:40:16 -0400
-Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 30920sshu8-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Wed, 08 Apr 2020 07:40:16 -0400
-Received: from localhost
-        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <borntraeger@de.ibm.com>;
-        Wed, 8 Apr 2020 12:39:55 +0100
-Received: from b06cxnps4076.portsmouth.uk.ibm.com (9.149.109.198)
-        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Wed, 8 Apr 2020 12:39:52 +0100
-Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
-        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 038BeA0834472178
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 8 Apr 2020 11:40:10 GMT
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 05877AE04D;
-        Wed,  8 Apr 2020 11:40:10 +0000 (GMT)
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 7A0E5AE045;
-        Wed,  8 Apr 2020 11:40:09 +0000 (GMT)
-Received: from oc7455500831.ibm.com (unknown [9.145.153.96])
-        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Wed,  8 Apr 2020 11:40:09 +0000 (GMT)
-Subject: Re: [PATCH 2/2] KVM: s390: Return last valid slot if approx index is
- out-of-bounds
-To:     Paolo Bonzini <pbonzini@redhat.com>,
-        Claudio Imbrenda <imbrenda@linux.ibm.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     Janosch Frank <frankja@linux.ibm.com>,
-        David Hildenbrand <david@redhat.com>,
-        Cornelia Huck <cohuck@redhat.com>, kvm@vger.kernel.org,
+        Wed, 8 Apr 2020 07:40:27 -0400
+ARC-Seal: i=1; a=rsa-sha256; t=1586345893; cv=none; 
+        d=zoho.com.cn; s=zohoarc; 
+        b=Efq+gcQEx2H8GOEA7ZDZc25+XeLXL3Woz/M2wraA/a1emfVJmXFdm8QIMVJ02bTub1vN3kZY7OhFJSobxwg9MU1C1OWqT3YoKZmNzBy2IXgUvTILgwySxE+9g/ROFGYhKdqaGixO3bisWX9rVDV0OCM65gOpuhysAY708o4rDtg=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zoho.com.cn; s=zohoarc; 
+        t=1586345893; h=Content-Type:Content-Transfer-Encoding:Cc:Date:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:To; 
+        bh=lgd7A/vb6X/W8mGRRVs75qEfCfZlypVe17eEG7WjjtQ=; 
+        b=phiiC2xxlUbQsIdex4LxON7hhmNBXvWFYLq7Ux6Vdq2jYdpoInoYteZljbanq9fh5WdtDGwgrTkQTaBxSfg8Tz9yx3vcMGFyqVW/Os2Tw3p5ZgiGSub62+2sioRyJSL2vVFaWu2fRE5sRZ8L1X3TkRjivBOfirxozqX4HQjeg3U=
+ARC-Authentication-Results: i=1; mx.zoho.com.cn;
+        dkim=pass  header.i=flygoat.com;
+        spf=pass  smtp.mailfrom=jiaxun.yang@flygoat.com;
+        dmarc=pass header.from=<jiaxun.yang@flygoat.com> header.from=<jiaxun.yang@flygoat.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1586345893;
+        s=mail; d=flygoat.com; i=jiaxun.yang@flygoat.com;
+        h=From:To:Cc:Message-ID:Subject:Date:In-Reply-To:References:MIME-Version:Content-Transfer-Encoding:Content-Type;
+        bh=lgd7A/vb6X/W8mGRRVs75qEfCfZlypVe17eEG7WjjtQ=;
+        b=IDHJUT/wkvueUgNmyasLLeWZXB6hPcb2zjUOvUgKOZjCX+2AZWljd8Zu4s+F69Xn
+        QmemEuQkGQXe0M2ukIn+YdMWUFNOyEQvBoROE//MGwuFHuzOVwe9xzhwbkblmFzdkmU
+        dNCNQ2K2mGk65bnRAWfCumAuVD2J8uz0zfmW5olg=
+Received: from localhost.localdomain (39.155.141.144 [39.155.141.144]) by mx.zoho.com.cn
+        with SMTPS id 1586345891015636.0638866174513; Wed, 8 Apr 2020 19:38:11 +0800 (CST)
+From:   Jiaxun Yang <jiaxun.yang@flygoat.com>
+To:     linux-mips@vger.kernel.org
+Cc:     Jiaxun Yang <jiaxun.yang@flygoat.com>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Huacai Chen <chenhc@lemote.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Robert Richter <rric@kernel.org>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>,
+        Paul Burton <paulburton@kernel.org>,
+        Allison Randal <allison@lohutok.net>,
+        Enrico Weigelt <info@metux.net>,
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        Vladimir Kondratiev <vladimir.kondratiev@intel.com>,
+        Richard Fontana <rfontana@redhat.com>,
+        Paul Cercueil <paul@crapouillou.net>,
+        Zhou Yanjie <zhouyanjie@zoho.com>,
+        =?UTF-8?q?=E5=91=A8=E7=90=B0=E6=9D=B0=20=28Zhou=20Yanjie=29?= 
+        <zhouyanjie@wanyeetech.com>, YunQiang Su <syq@debian.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        Matt Redfearn <matt.redfearn@mips.com>,
+        Steve Winslow <swinslow@gmail.com>,
+        Alexios Zavras <alexios.zavras@intel.com>,
+        afzal mohammed <afzal.mohd.ma@gmail.com>,
+        Peter Xu <peterx@redhat.com>,
+        Oleksij Rempel <linux@rempel-privat.de>,
+        Kamal Dasu <kdasu.kdev@gmail.com>,
         linux-kernel@vger.kernel.org,
-        syzbot+d889b59b2bb87d4047a2@syzkaller.appspotmail.com
-References: <20200408064059.8957-1-sean.j.christopherson@intel.com>
- <20200408064059.8957-3-sean.j.christopherson@intel.com>
- <20200408122138.71493308@p-imbrenda>
- <40b325c7-ca24-3513-b2fa-1e9397c9e353@redhat.com>
-From:   Christian Borntraeger <borntraeger@de.ibm.com>
-Autocrypt: addr=borntraeger@de.ibm.com; prefer-encrypt=mutual; keydata=
- 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
- nS4h0HDFPrrp1C2EMVYIQrMokWvlFZbCpsdYbBI=
-Date:   Wed, 8 Apr 2020 13:40:09 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        bcm-kernel-feedback-list@broadcom.com, oprofile-list@lists.sf.net
+Message-ID: <20200408113505.2528103-3-jiaxun.yang@flygoat.com>
+Subject: [PATCH 02/12] MIPS: prom: Add helper to parse CPU node in dt
+Date:   Wed,  8 Apr 2020 19:34:12 +0800
+X-Mailer: git-send-email 2.26.0.rc2
+In-Reply-To: <20200408113505.2528103-1-jiaxun.yang@flygoat.com>
+References: <20200408113505.2528103-1-jiaxun.yang@flygoat.com>
 MIME-Version: 1.0
-In-Reply-To: <40b325c7-ca24-3513-b2fa-1e9397c9e353@redhat.com>
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-x-cbid: 20040811-0008-0000-0000-0000036CD0B1
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 20040811-0009-0000-0000-00004A8E6DD3
-Message-Id: <875ba09c-eb1b-1cdd-f198-0bfbdb607d4b@de.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
- definitions=2020-04-07_10:2020-04-07,2020-04-07 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0
- impostorscore=0 mlxscore=0 malwarescore=0 phishscore=0 priorityscore=1501
- adultscore=0 lowpriorityscore=0 spamscore=0 bulkscore=0 clxscore=1015
- mlxlogscore=999 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2004080093
+Content-Transfer-Encoding: quoted-printable
+X-ZohoCNMailClient: External
+Content-Type: text/plain; charset=utf8
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Mostly identical with arm one. The only difference is that we allow
+to mark a CPU Node as status =3D "disabled" in dt, which means the core
+is physicaly present, but not possible for the kernel. It will occupy
+a bit in cpumask as well.
 
-On 08.04.20 13:33, Paolo Bonzini wrote:
-> On 08/04/20 12:21, Claudio Imbrenda wrote:
->> on s390 memory always starts at 0; you can't even boot a system missing
->> the first pages of physical memory, so this means this situation would
->> never happen in practice. 
->>
->> of course, a malicious userspace program could create an (unbootable) VM
->> and trigger this bug, so the patch itself makes sense.
->>
->> Reviewed-by: Claudio Imbrenda <imbrenda@linux.ibm.com>
-> 
-> What about using KVM just for isolation and not just to run a full-blown
-> OS (that is, you might even only have the guest run in problem state)?
-> Would that be feasible on s390?
+Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
+---
+ arch/mips/include/asm/prom.h |  2 +
+ arch/mips/kernel/prom.c      | 96 ++++++++++++++++++++++++++++++++++++
+ 2 files changed, 98 insertions(+)
 
-You always need 2 prefix pages. Otherwise the SIE instruction refuses to start.
-By default this starts as address 0. You might be also to set the prefix register
-to something else adn then this could maybe work. 
+diff --git a/arch/mips/include/asm/prom.h b/arch/mips/include/asm/prom.h
+index c42e07671934..1ec46e09dc8b 100644
+--- a/arch/mips/include/asm/prom.h
++++ b/arch/mips/include/asm/prom.h
+@@ -19,9 +19,11 @@ struct boot_param_header;
+=20
+ extern void __dt_setup_arch(void *bph);
+ extern int __dt_register_buses(const char *bus0, const char *bus1);
++extern void mips_dt_init_cpu_maps(void);
+=20
+ #else /* CONFIG_OF */
+ static inline void device_tree_init(void) { }
++static inline void mips_dt_init_cpu_maps(void) { }
+ #endif /* CONFIG_OF */
+=20
+ extern char *mips_get_machine_name(void);
+diff --git a/arch/mips/kernel/prom.c b/arch/mips/kernel/prom.c
+index 9e50dc8df2f6..ebeb22ffa76a 100644
+--- a/arch/mips/kernel/prom.c
++++ b/arch/mips/kernel/prom.c
+@@ -89,4 +89,100 @@ int __init __dt_register_buses(const char *bus0, const =
+char *bus1)
+ =09return 0;
+ }
+=20
++void __init mips_dt_init_cpu_maps(void)
++{
++=09struct device_node *cpu, *cpus;
++=09u32 i, j, cpuidx =3D 1;
++=09u32 cpunum;
++=09u32 tmp_map[NR_CPUS] =3D { [0 ... NR_CPUS-1] =3D U32_MAX };
++=09bool cpu_possible[NR_CPUS] =3D { [0 ... NR_CPUS-1] =3D false };
++=09bool bootcpu_valid =3D false;
++
++=09cpus =3D of_find_node_by_path("/cpus");
++=09if (!cpus)
++=09=09return;
++
++=09if (cpu_has_mips_r2_r6)
++=09=09cpunum =3D get_ebase_cpunum();
++=09else
++=09=09cpunum =3D 0; /* For legacy system we assume boot from CPU 0 */
++
++=09for_each_of_cpu_node(cpu) {
++=09=09u32 hwid;
++
++=09=09pr_debug(" * %pOF...\n", cpu);
++=09=09/*
++=09=09 * A device tree containing CPU nodes with missing "reg"
++=09=09 * properties is considered invalid to build the
++=09=09 * cpu_logical_map.
++=09=09 */
++
++=09=09if (of_property_read_u32(cpu, "reg", &hwid)) {
++=09=09=09pr_debug(" * %pOF missing reg property\n", cpu);
++=09=09=09of_node_put(cpu);
++=09=09=09return;
++=09=09}
++
++=09=09/*
++=09=09 * Duplicate hwid are a recipe for disaster.
++=09=09 * Scan all initialized entries and check for
++=09=09 * duplicates. If any is found just bail out.
++=09=09 */
++=09=09for (j =3D 0; j < cpuidx; j++)
++=09=09=09if (WARN(tmp_map[j] =3D=3D hwid,
++=09=09=09=09 "Duplicate /cpu reg properties in the DT\n")) {
++=09=09=09=09of_node_put(cpu);
++=09=09=09=09return;
++=09=09=09}
++
++=09=09/*
++=09=09 * Build a stashed array of hwid values. Numbering scheme
++=09=09 * requires that if detected the boot CPU must be assigned
++=09=09 * logical id 0. Other CPUs get sequential indexes starting
++=09=09 * from 1. If a CPU node with a reg property matching the
++=09=09 * boot CPU hwid is detected, this is recorded so that the
++=09=09 * logical map built from DT is validated.
++=09=09 */
++=09=09if (hwid =3D=3D cpunum) {
++=09=09=09i =3D 0;
++=09=09=09if (of_device_is_available(cpu))
++=09=09=09=09bootcpu_valid =3D true;
++=09=09} else {
++=09=09=09i =3D cpuidx++;
++=09=09}
++
++=09=09if (WARN(cpuidx > nr_cpu_ids, "DT /cpu %u nodes greater than "
++=09=09=09=09=09=09   "max cores %u, capping them\n",
++=09=09=09=09=09=09   cpuidx, nr_cpu_ids)) {
++=09=09=09cpuidx =3D nr_cpu_ids;
++=09=09=09of_node_put(cpu);
++=09=09=09break;
++=09=09}
++
++=09=09tmp_map[i] =3D hwid;
++
++=09=09if (of_device_is_available(cpu))
++=09=09=09cpu_possible[i] =3D true;
++=09}
++
++=09if (!bootcpu_valid) {
++=09=09pr_warn("DT missing boot CPU, fall back to default cpu_logical_map\n=
+");
++=09=09return;
++=09}
++
++=09init_cpu_possible(cpu_none_mask);
++=09init_cpu_present(cpu_none_mask);
++
++=09for (i =3D 0; i < cpuidx; i++) {
++=09=09set_cpu_possible(i, cpu_possible[i]);
++=09=09cpu_logical_map(i) =3D tmp_map[i];
++=09=09pr_debug("cpu logical map 0x%x\n", cpu_logical_map(i));
++=09}
++}
++
++bool arch_match_cpu_phys_id(int cpu, u64 phys_id)
++{
++=09return phys_id =3D=3D cpu_logical_map(cpu);
++}
++
+ #endif
+--=20
+2.26.0.rc2
+
 
