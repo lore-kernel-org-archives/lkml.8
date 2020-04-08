@@ -2,93 +2,153 @@ Return-Path: <SRS0=8dav=5Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B136BC2D0F4
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 16:31:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CAC12C2BA1A
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 16:33:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8E52D20769
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 16:31:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AEAE420769
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 16:33:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728083AbgDHQbA (ORCPT
+        id S1728588AbgDHQdr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Apr 2020 12:31:00 -0400
-Received: from foss.arm.com ([217.140.110.172]:41190 "EHLO foss.arm.com"
+        Wed, 8 Apr 2020 12:33:47 -0400
+Received: from mga09.intel.com ([134.134.136.24]:35544 "EHLO mga09.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726774AbgDHQbA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Apr 2020 12:31:00 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9057F30E;
-        Wed,  8 Apr 2020 09:30:59 -0700 (PDT)
-Received: from [192.168.1.19] (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 27A4A3F52E;
-        Wed,  8 Apr 2020 09:30:55 -0700 (PDT)
-Subject: Re: [PATCH 1/4] sched/topology: Store root domain CPU capacity sum
-To:     Vincent Guittot <vincent.guittot@linaro.org>
-Cc:     Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Luca Abeni <luca.abeni@santannapisa.it>,
-        Daniel Bristot de Oliveira <bristot@redhat.com>,
-        Wei Wang <wvw@google.com>, Quentin Perret <qperret@google.com>,
-        Alessio Balsini <balsini@google.com>,
-        Pavan Kondeti <pkondeti@codeaurora.org>,
-        Patrick Bellasi <patrick.bellasi@matbug.net>,
-        Morten Rasmussen <morten.rasmussen@arm.com>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Qais Yousef <qais.yousef@arm.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-References: <20200408095012.3819-1-dietmar.eggemann@arm.com>
- <20200408095012.3819-2-dietmar.eggemann@arm.com>
- <CAKfTPtC4_+dTddLdoFMdzUvsXwWyi3bUOXcg9kstC8RzZS_a+A@mail.gmail.com>
-From:   Dietmar Eggemann <dietmar.eggemann@arm.com>
-Message-ID: <42cc3878-4c57-96ba-3ebd-1b4d4ef87fae@arm.com>
-Date:   Wed, 8 Apr 2020 18:30:54 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        id S1728256AbgDHQdr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Apr 2020 12:33:47 -0400
+IronPort-SDR: m6LtU2YSPzrddw+ltPjjGpzkG3IdWooFKH3Z5cYV3UKyf3gocsDWW7JQWTPQmwRwmGHfwwdDCT
+ hivXqKraG8RQ==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Apr 2020 09:33:41 -0700
+IronPort-SDR: kmUWphvJTjDL7orliCSGhw8YRA2jl9tI378l2AIMgVhiG8eqBMGDgr5id/vz2PRewwbev8BkwY
+ T716XmLtoX6Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,359,1580803200"; 
+   d="scan'208";a="398252361"
+Received: from otc-nc-03.jf.intel.com (HELO otc-nc-03) ([10.54.39.25])
+  by orsmga004.jf.intel.com with ESMTP; 08 Apr 2020 09:33:41 -0700
+Date:   Wed, 8 Apr 2020 09:33:40 -0700
+From:   "Raj, Ashok" <ashok.raj@intel.com>
+To:     Alex Williamson <alex.williamson@redhat.com>
+Cc:     "Tian, Kevin" <kevin.tian@intel.com>,
+        "Liu, Yi L" <yi.l.liu@intel.com>,
+        "eric.auger@redhat.com" <eric.auger@redhat.com>,
+        "jacob.jun.pan@linux.intel.com" <jacob.jun.pan@linux.intel.com>,
+        "joro@8bytes.org" <joro@8bytes.org>,
+        "Tian, Jun J" <jun.j.tian@intel.com>,
+        "Sun, Yi Y" <yi.y.sun@intel.com>,
+        "jean-philippe@linaro.org" <jean-philippe@linaro.org>,
+        "peterx@redhat.com" <peterx@redhat.com>,
+        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Wu, Hao" <hao.wu@intel.com>, Bjorn Helgaas <bhelgaas@google.com>,
+        Don Dutile <ddutile@redhat.com>,
+        Ashok Raj <ashok.raj@intel.com>
+Subject: Re: [PATCH v1 2/2] vfio/pci: Emulate PASID/PRI capability for VFs
+Message-ID: <20200408163340.GA10902@otc-nc-03>
+References: <1584880394-11184-1-git-send-email-yi.l.liu@intel.com>
+ <1584880394-11184-3-git-send-email-yi.l.liu@intel.com>
+ <20200402165954.48d941ee@w520.home>
+ <A2975661238FB949B60364EF0F2C25743A2204FE@SHSMSX104.ccr.corp.intel.com>
+ <20200403112545.6c115ba3@w520.home>
+ <AADFC41AFE54684AB9EE6CBC0274A5D19D80E13D@SHSMSX104.ccr.corp.intel.com>
+ <20200407095801.648b1371@w520.home>
+ <20200408040021.GS67127@otc-nc-03>
+ <20200408101940.3459943d@w520.home>
 MIME-Version: 1.0
-In-Reply-To: <CAKfTPtC4_+dTddLdoFMdzUvsXwWyi3bUOXcg9kstC8RzZS_a+A@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200408101940.3459943d@w520.home>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 08.04.20 14:29, Vincent Guittot wrote:
-> On Wed, 8 Apr 2020 at 11:50, Dietmar Eggemann <dietmar.eggemann@arm.com> wrote:
+Hi Alex
 
-[...]
-
->>  /**
->> diff --git a/kernel/sched/topology.c b/kernel/sched/topology.c
->> index 8344757bba6e..74b0c0fa4b1b 100644
->> --- a/kernel/sched/topology.c
->> +++ b/kernel/sched/topology.c
->> @@ -2052,12 +2052,17 @@ build_sched_domains(const struct cpumask *cpu_map, struct sched_domain_attr *att
->>         /* Attach the domains */
->>         rcu_read_lock();
->>         for_each_cpu(i, cpu_map) {
->> +               unsigned long cap = arch_scale_cpu_capacity(i);
+On Wed, Apr 08, 2020 at 10:19:40AM -0600, Alex Williamson wrote:
+> On Tue, 7 Apr 2020 21:00:21 -0700
+> "Raj, Ashok" <ashok.raj@intel.com> wrote:
 > 
-> Why do you replace the use of rq->cpu_capacity_orig by
-> arch_scale_cpu_capacity(i) ?
-> There is nothing about this change in the commit message
+> > Hi Alex
+> > 
+> > + Bjorn
+> 
+>  + Don
+> 
+> > FWIW I can't understand why PCI SIG went different ways with ATS, 
+> > where its enumerated on PF and VF. But for PASID and PRI its only
+> > in PF. 
+> > 
+> > I'm checking with our internal SIG reps to followup on that.
+> > 
+> > On Tue, Apr 07, 2020 at 09:58:01AM -0600, Alex Williamson wrote:
+> > > > Is there vendor guarantee that hidden registers will locate at the
+> > > > same offset between PF and VF config space?   
+> > > 
+> > > I'm not sure if the spec really precludes hidden registers, but the
+> > > fact that these registers are explicitly outside of the capability
+> > > chain implies they're only intended for device specific use, so I'd say
+> > > there are no guarantees about anything related to these registers.  
+> > 
+> > As you had suggested in the other thread, we could consider
+> > using the same offset as in PF, but even that's a better guess
+> > still not reliable.
+> > 
+> > The other option is to maybe extend driver ops in the PF to expose
+> > where the offsets should be. Sort of adding the quirk in the 
+> > implementation. 
+> > 
+> > I'm not sure how prevalent are PASID and PRI in VF devices. If SIG is resisting 
+> > making VF's first class citizen, we might ask them to add some verbiage
+> > to suggest leave the same offsets as PF open to help emulation software.
+> 
+> Even if we know where to expose these capabilities on the VF, it's not
+> clear to me how we can actually virtualize the capability itself.  If
+> the spec defines, for example, an enable bit as r/w then software that
+> interacts with that register expects the bit is settable.  There's no
+> protocol for "try to set the bit and re-read it to see if the hardware
+> accepted it".  Therefore a capability with a fixed enable bit
+> representing the state of the PF, not settable by the VF, is
+> disingenuous to the spec.
+> 
+> If what we're trying to do is expose that PASID and PRI are enabled on
+> the PF to a VF driver, maybe duplicating the PF capabilities on the VF
+> without the ability to control it is not the right approach.  Maybe we
+> need new capabilities exposing these as slave features that cannot be
+> controlled?  We could define our own vendor capability for this, but of
 
-True. And I can change this back.
+The other option is to say, VFIO would never emulate these
+fake capablities. If exposing a VF with PASID/PRI is required
+the PF driver would simply wrap it into a VDCM like model which we do
+today for Scalable IOV devices. So PF handles all aspects of this
+interface.
 
-It seems though that the solution is not sufficient because of the
-'rd->span &nsub cpu_active_mask' issue discussed under patch 2/4.
+I also like the suggestion you propose, maybe an offset where these
+capabilities are exposed to VF's. Maybe have an architected DEVCAPx
+which exposes these RO capabilities. No control, and the 
+offset should be preserved by the SIG, so VMM can have a safe place
+to stash them.
 
-But this remind me of another question I have.
+> course we have both the where to put it in config space issue, as well
+> as the issue of trying to push an ad-hoc standard.  vfio could expose
+> these as device features rather than emulating capabilities, but that
+> still leaves a big gap between vfio in the hypervisor and the driver in
+> the guest VM.  That might still help push the responsibility and policy
+> for how to expose it to the VM as a userspace problem though.
+> 
+> I agree though, I don't know why the SIG would preclude implementing
+> per VF control of these features.  Thanks,
 
-Currently we use arch_scale_cpu_capacity() more often (16 times) than
-capacity_orig_of()/rq->cpu_capacity_orig .
+Even if we ask SIG for clarification, it might affect today's devices
+So might not be useful to solve our current situation.
 
-What's hindering us to remove rq->cpu_capacity_orig and the code around
-it and solely rely on arch_scale_cpu_capacity()? I mean the arch
-implementation should be fast.
+Ashok
+
