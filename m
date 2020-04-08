@@ -2,94 +2,98 @@ Return-Path: <SRS0=8dav=5Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8A86C2D0EA
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 15:49:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6115C2BA1B
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 15:49:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A183420730
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 15:49:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B65E9206F5
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 15:49:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586360946;
-	bh=flQ66rWLqLJ9tP/xDtQuASEFxj/jeRx5dEzURVCNupI=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qM7p5PzMia2Et1vKUolPg8KJdmL8uUg3D8mFirHluOlMouGLvtAzN5ogHSDRfirGf
-	 nOkrlch/Id2VlZuAAIMW7GrOF4fCVtfim9OBQv8jf9IU6NgTrVoAXTRFAghnRijAlg
-	 Sdn1ENlk+HgWZ05D0a7wfLzfcOXUuhstWZh7lOt0=
+	s=default; t=1586360969;
+	bh=ye2CgUYCSqFysyTcMZGbUC3+b/DeIcyAgFxFOsM0mDI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=V7G9I1xZqXBDTTd43+YVFSiULYS+CdbG1ovzliQnFsD0OGL1LTfDcwRmYkQkGXA0m
+	 efnpqvpx3Dj3ES4YsJUVzmP1b74eD/08ZiLNo2i8dsuYqo9bWF9IT16yaF3rp7yk8+
+	 iU16K2ehYFlT2nKfjjfebONTtTRTNRyviwD3eGq4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730043AbgDHPtF (ORCPT
+        id S1729841AbgDHPt2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Apr 2020 11:49:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49170 "EHLO mail.kernel.org"
+        Wed, 8 Apr 2020 11:49:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52904 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729613AbgDHPqc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Apr 2020 11:46:32 -0400
-Received: from mail.kernel.org (ip5f5ad4d8.dynamic.kabel-deutschland.de [95.90.212.216])
+        id S1729502AbgDHPt2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Apr 2020 11:49:28 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3BEAB20CC7;
-        Wed,  8 Apr 2020 15:46:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 52A8B206F5;
+        Wed,  8 Apr 2020 15:49:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586360791;
-        bh=flQ66rWLqLJ9tP/xDtQuASEFxj/jeRx5dEzURVCNupI=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=oylMwXQehr6LhXuN7aSCVnMUbaptl4gcCyVf+NipEOdJtnPhjzTZfXWDwu1xhNG3w
-         7hRjV3p1+sz5vrH+0J+mzqyGqcc44yn2vIhte4WJSG0ZWIsrpHBt8OjmsRId7LhfJb
-         mBH4eqmulUYXG1kH8dGRgHiiDqTa4EWhnlErkPBw=
-Received: from mchehab by mail.kernel.org with local (Exim 4.92.3)
-        (envelope-from <mchehab@kernel.org>)
-        id 1jMCuL-000cAv-DN; Wed, 08 Apr 2020 17:46:29 +0200
-From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
-Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        s=default; t=1586360967;
+        bh=ye2CgUYCSqFysyTcMZGbUC3+b/DeIcyAgFxFOsM0mDI=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=mBRoO4V7hIW80h+FrLth1k9gnfo/pigAPcZkkT5ZkTjJbS8GgTj635UeaXBKpoXkP
+         EnXOzlCBUzPJySgR4/NX0KLXzf6+30jxMlD0nH7UIdoZUM/6xk632X5drsRdaSKcFe
+         eQzK8/WJfZ6i/fXXdMjly0Kr6XblN6tODkkMxf38=
+Date:   Wed, 8 Apr 2020 16:49:25 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Cc:     Linux Doc Mailing List <linux-doc@vger.kernel.org>,
         linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Darren Hart <dvhart@infradead.org>
-Subject: [PATCH 09/35] futex: get rid of a kernel-docs build warning
-Date:   Wed,  8 Apr 2020 17:46:01 +0200
-Message-Id: <ad0a38ef26455ef71e9d1267eda7afa629686c6e.1586359676.git.mchehab+huawei@kernel.org>
-X-Mailer: git-send-email 2.25.2
-In-Reply-To: <cover.1586359676.git.mchehab+huawei@kernel.org>
+        linux-spi@vger.kernel.org
+Subject: Re: [PATCH 21/35] docs: spi: spi.h: fix a doc building warning
+Message-ID: <20200408154925.GA5177@sirena.org.uk>
 References: <cover.1586359676.git.mchehab+huawei@kernel.org>
+ <d62f3f3536c0da2062bad87524fb184ad5a9a5f2.1586359676.git.mchehab+huawei@kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="Nq2Wo0NMKNjxTN9z"
+Content-Disposition: inline
+In-Reply-To: <d62f3f3536c0da2062bad87524fb184ad5a9a5f2.1586359676.git.mchehab+huawei@kernel.org>
+X-Cookie: Sank heaven for leetle curls.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Adjust whitespaces and blank lines in order to get rid of this:
 
-	./kernel/futex.c:491: WARNING: Definition list ends without a blank line; unexpected unindent.
+--Nq2Wo0NMKNjxTN9z
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
----
- kernel/futex.c | 3 +++
- 1 file changed, 3 insertions(+)
+On Wed, Apr 08, 2020 at 05:46:13PM +0200, Mauro Carvalho Chehab wrote:
+> We need to add a blank line to avoid this warning:
+>=20
+> 	./include/linux/spi/spi.h:401: WARNING: Unexpected indentation.
 
-diff --git a/kernel/futex.c b/kernel/futex.c
-index b59532862bc0..b4b9f960b610 100644
---- a/kernel/futex.c
-+++ b/kernel/futex.c
-@@ -486,10 +486,13 @@ static u64 get_inode_sequence_number(struct inode *inode)
-  * The key words are stored in @key on success.
-  *
-  * For shared mappings (when @fshared), the key is:
-+ *
-  *   ( inode->i_sequence, page->index, offset_within_page )
-+ *
-  * [ also see get_inode_sequence_number() ]
-  *
-  * For private mappings (or when !@fshared), the key is:
-+ *
-  *   ( current->mm, address, 0 )
-  *
-  * This allows (cross process, where applicable) identification of the futex
--- 
-2.25.2
+>   * @transfer_one: transfer a single spi_transfer.
+> + *
+>   *                  - return 0 if the transfer is finished,
+>   *                  - return 1 if the transfer is still in progress. When
+>   *                    the driver is finished with this transfer it must
 
+Are you sure this is a sensible fix?  The following lines should be part
+of the documentation for transfer_one, will that be the case after your
+change?
+
+--Nq2Wo0NMKNjxTN9z
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl6N8oQACgkQJNaLcl1U
+h9ADFAf/fx8bDo5MrqjuRdoyjFCwBxM7HE0VHxtW2VKIbiMPUe21gNoyjVDF4ObX
+shR/3FATGwbGRc8dSdaAQXnV7Lmjqjdbfgkt35XgWvmRxjeSWdFd2BM2WxutVzJr
+/mOTN/gKM+8K3mgBxR+UOEoVI0WSNZGdx0pQZu1HGdsqKk3iQuWUzjonPiGpG/T8
+e+ueC+FhaC7QDMwGXXpxP0FtRzLiOP95pAy03o1dYpWnf6ORiuwjl8Dz6sDzZpSa
+N/RdEt23t/JFi1V96D5LsGh+TdjoTl8hPt1L68AbGIBSRSmhpt0+7aFQ+wpmWBSJ
+HBqe97rqeLS2mxqM8cwp8CjoKvKy0Q==
+=h6Sg
+-----END PGP SIGNATURE-----
+
+--Nq2Wo0NMKNjxTN9z--
