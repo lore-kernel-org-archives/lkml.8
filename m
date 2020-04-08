@@ -2,160 +2,95 @@ Return-Path: <SRS0=8dav=5Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1BCCC2D0EA
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 14:04:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6ABDBC2BA80
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 14:07:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9C3102074F
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 14:04:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4154020787
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 14:07:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1586354822;
+	bh=mwQWgzVnM1Gk3FCn6bt7z1/0O75c4sfpqBfxxPs/al0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Iqn/YRViJ3X2DPAJMf+PjGQNmtmxyDMDww2lDxL05BwJQBVHMAweAE6bue9wuwNC4
+	 /+qLdIcdDtuOH3Cx+otORuhKjdGUxme+iNyDITeREo0EIG35Z7320g9LnIX1QIj11D
+	 0MVuBToE5sFMqwHHgU1TJ0gvjGYcN5UcRSiQ3vLw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728093AbgDHOEj (ORCPT
+        id S1728240AbgDHOHB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Apr 2020 10:04:39 -0400
-Received: from mga12.intel.com ([192.55.52.136]:63159 "EHLO mga12.intel.com"
+        Wed, 8 Apr 2020 10:07:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42994 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727226AbgDHOEj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Apr 2020 10:04:39 -0400
-IronPort-SDR: ecllaeKuKeJ5Wf5oNQbl+rUibCNEJTI3Hcc1hY7kyeDqs94SHx1TMry0AmAAsfPhkAAoGx/P87
- rRLq0OBS9IdQ==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Apr 2020 07:04:38 -0700
-IronPort-SDR: F5PeZg8HmvVGsgLU55iJsKW/mN7EmYTPufY+rj4qeCcpWRhxqG+2eO0o5VKnDLfDWPG82JUlVD
- Yy/UOTi1h4sQ==
-X-IronPort-AV: E=Sophos;i="5.72,358,1580803200"; 
-   d="scan'208";a="425144596"
-Received: from likexu-mobl1.ccr.corp.intel.com (HELO [10.249.174.149]) ([10.249.174.149])
-  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Apr 2020 07:04:36 -0700
-Subject: Re: [PATCH v2] KVM: x86/pmu: Reduce counter period change overhead
- and delay the effective time
-From:   Like Xu <like.xu@linux.intel.com>
-To:     pbonzini@redhat.com
-Cc:     ehankland@google.com, jmattson@google.com, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, wanpengli@tencent.com
-References: <20200317075315.70933-1-like.xu@linux.intel.com>
- <20200317081458.88714-1-like.xu@linux.intel.com>
- <1528e1b4-3dee-161b-9463-57471263b5a8@linux.intel.com>
-Organization: Intel OTC
-Message-ID: <6a57b701-99a2-3917-3879-bc8141dca9d4@linux.intel.com>
-Date:   Wed, 8 Apr 2020 22:04:34 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        id S1728159AbgDHOHA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Apr 2020 10:07:00 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id AD26D20780;
+        Wed,  8 Apr 2020 14:06:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1586354820;
+        bh=mwQWgzVnM1Gk3FCn6bt7z1/0O75c4sfpqBfxxPs/al0=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Gh7bxstm1xQxcj6Pf/epMrYu3OflWzvm5XzwmHvdoWuHVaZrCDtMitxeuZTT5im+L
+         8ntbEZpPrf/BJgbl+SZHwn3dy4pcYd9O8Zqyvweblvr/Q0Ndbw7FDB5ypNHT7CObXT
+         vQTJ87Osa66oVYrL/5pWmbpjesQ87Sz/FMHCyFsc=
+Date:   Wed, 8 Apr 2020 16:06:58 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Naresh Kamboju <naresh.kamboju@linaro.org>
+Cc:     open list <linux-kernel@vger.kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
+        Ben Hutchings <ben.hutchings@codethink.co.uk>,
+        lkft-triage@lists.linaro.org,
+        linux- stable <stable@vger.kernel.org>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>
+Subject: Re: [PATCH 5.6 00/30] 5.6.3-rc2 review
+Message-ID: <20200408140658.GA1251074@kroah.com>
+References: <20200407154752.006506420@linuxfoundation.org>
+ <CA+G9fYsyETNoV58oyrBtb2o_vyFi1MPUNkZ9uUZK6uRCg5OK5w@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <1528e1b4-3dee-161b-9463-57471263b5a8@linux.intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <CA+G9fYsyETNoV58oyrBtb2o_vyFi1MPUNkZ9uUZK6uRCg5OK5w@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Paolo,
-
-Could you please take a look at this patch?
-If there is anything needs to be improved, please let me know.
-
-Thanks,
-Like Xu
-
-On 2020/3/26 20:47, Like Xu wrote:
-> Anyone to help review this change?
+On Wed, Apr 08, 2020 at 03:16:45PM +0530, Naresh Kamboju wrote:
+> On Tue, 7 Apr 2020 at 22:09, Greg Kroah-Hartman
+> <gregkh@linuxfoundation.org> wrote:
+> >
+> > This is the start of the stable review cycle for the 5.6.3 release.
+> > There are 30 patches in this series, all will be posted as a response
+> > to this one.  If anyone has any issues with these being applied, please
+> > let me know.
+> >
+> > Responses should be made by Thu, 09 Apr 2020 15:46:32 +0000.
+> > Anything received after that time might be too late.
+> >
+> > The whole patch series can be found in one patch at:
+> >         https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.6.3-rc2.gz
+> > or in the git tree and branch at:
+> >         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.6.y
+> > and the diffstat can be found below.
+> >
+> > thanks,
+> >
+> > greg k-h
 > 
-> Thanks,
-> Like Xu
-> 
-> On 2020/3/17 16:14, Like Xu wrote:
->> The cost of perf_event_period() is unstable, and when the guest samples
->> multiple events, the overhead increases dramatically (5378 ns on E5-2699).
->>
->> For a non-running counter, the effective time of the new period is when
->> its corresponding enable bit is enabled. Calling perf_event_period()
->> in advance is superfluous. For a running counter, it's safe to delay the
->> effective time until the KVM_REQ_PMU event is handled. If there are
->> multiple perf_event_period() calls before handling KVM_REQ_PMU,
->> it helps to reduce the total cost.
->>
->> Signed-off-by: Like Xu <like.xu@linux.intel.com>
->> ---
->>   arch/x86/kvm/pmu.c           | 11 -----------
->>   arch/x86/kvm/pmu.h           | 11 +++++++++++
->>   arch/x86/kvm/vmx/pmu_intel.c | 10 ++++------
->>   3 files changed, 15 insertions(+), 17 deletions(-)
->>
->> diff --git a/arch/x86/kvm/pmu.c b/arch/x86/kvm/pmu.c
->> index d1f8ca57d354..527a8bb85080 100644
->> --- a/arch/x86/kvm/pmu.c
->> +++ b/arch/x86/kvm/pmu.c
->> @@ -437,17 +437,6 @@ void kvm_pmu_init(struct kvm_vcpu *vcpu)
->>       kvm_pmu_refresh(vcpu);
->>   }
->> -static inline bool pmc_speculative_in_use(struct kvm_pmc *pmc)
->> -{
->> -    struct kvm_pmu *pmu = pmc_to_pmu(pmc);
->> -
->> -    if (pmc_is_fixed(pmc))
->> -        return fixed_ctrl_field(pmu->fixed_ctr_ctrl,
->> -            pmc->idx - INTEL_PMC_IDX_FIXED) & 0x3;
->> -
->> -    return pmc->eventsel & ARCH_PERFMON_EVENTSEL_ENABLE;
->> -}
->> -
->>   /* Release perf_events for vPMCs that have been unused for a full time 
->> slice.  */
->>   void kvm_pmu_cleanup(struct kvm_vcpu *vcpu)
->>   {
->> diff --git a/arch/x86/kvm/pmu.h b/arch/x86/kvm/pmu.h
->> index d7da2b9e0755..cd112e825d2c 100644
->> --- a/arch/x86/kvm/pmu.h
->> +++ b/arch/x86/kvm/pmu.h
->> @@ -138,6 +138,17 @@ static inline u64 get_sample_period(struct kvm_pmc 
->> *pmc, u64 counter_value)
->>       return sample_period;
->>   }
->> +static inline bool pmc_speculative_in_use(struct kvm_pmc *pmc)
->> +{
->> +    struct kvm_pmu *pmu = pmc_to_pmu(pmc);
->> +
->> +    if (pmc_is_fixed(pmc))
->> +        return fixed_ctrl_field(pmu->fixed_ctr_ctrl,
->> +            pmc->idx - INTEL_PMC_IDX_FIXED) & 0x3;
->> +
->> +    return pmc->eventsel & ARCH_PERFMON_EVENTSEL_ENABLE;
->> +}
->> +
->>   void reprogram_gp_counter(struct kvm_pmc *pmc, u64 eventsel);
->>   void reprogram_fixed_counter(struct kvm_pmc *pmc, u8 ctrl, int fixed_idx);
->>   void reprogram_counter(struct kvm_pmu *pmu, int pmc_idx);
->> diff --git a/arch/x86/kvm/vmx/pmu_intel.c b/arch/x86/kvm/vmx/pmu_intel.c
->> index 7c857737b438..20f654a0c09b 100644
->> --- a/arch/x86/kvm/vmx/pmu_intel.c
->> +++ b/arch/x86/kvm/vmx/pmu_intel.c
->> @@ -263,15 +263,13 @@ static int intel_pmu_set_msr(struct kvm_vcpu *vcpu, 
->> struct msr_data *msr_info)
->>               if (!msr_info->host_initiated)
->>                   data = (s64)(s32)data;
->>               pmc->counter += data - pmc_read_counter(pmc);
->> -            if (pmc->perf_event)
->> -                perf_event_period(pmc->perf_event,
->> -                          get_sample_period(pmc, data));
->> +            if (pmc_speculative_in_use(pmc))
->> +                kvm_make_request(KVM_REQ_PMU, vcpu);
->>               return 0;
->>           } else if ((pmc = get_fixed_pmc(pmu, msr))) {
->>               pmc->counter += data - pmc_read_counter(pmc);
->> -            if (pmc->perf_event)
->> -                perf_event_period(pmc->perf_event,
->> -                          get_sample_period(pmc, data));
->> +            if (pmc_speculative_in_use(pmc))
->> +                kvm_make_request(KVM_REQ_PMU, vcpu);
->>               return 0;
->>           } else if ((pmc = get_gp_pmc(pmu, msr, MSR_P6_EVNTSEL0))) {
->>               if (data == pmc->eventsel)
->>
-> 
+> Results from Linaro’s test farm.
+> No regressions on arm64, arm, x86_64, and i386.
 
+Thanks for testing all of these and letting me know.
+
+greg k-h
