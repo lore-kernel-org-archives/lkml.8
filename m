@@ -2,135 +2,128 @@ Return-Path: <SRS0=8dav=5Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DA68C2D0F4
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 20:24:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6621C2BA1A
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 20:27:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F042A20BED
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 20:24:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="XoxkBf1b"
+	by mail.kernel.org (Postfix) with ESMTP id B0D8D20753
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 20:27:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730359AbgDHUYm (ORCPT
+        id S1730437AbgDHU1s (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Apr 2020 16:24:42 -0400
-Received: from pandora.armlinux.org.uk ([78.32.30.218]:33390 "EHLO
-        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729044AbgDHUYm (ORCPT
+        Wed, 8 Apr 2020 16:27:48 -0400
+Received: from mout.kundenserver.de ([212.227.126.135]:44477 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729333AbgDHU1r (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Apr 2020 16:24:42 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=FCin5CxUiqOa42dOBAJeAv8hLhn4PzxcsTEw9e4NZJY=; b=XoxkBf1bGxRc+ttmmvia5OvZE
-        oitOH2Yx9geESlq3nazl+qwL1Zcf4HXXYRApOnK0i4z8MNlEFJt2LTp+u/ERpFq03tgqzs7llZQap
-        cVk83dH1h6HRrumDZSkAtJgvPqQO66fXqOIcB5Q68w3pPPEHI5k5ZEcghDm8DVCHT54DCGxe1o8cq
-        jhfarDU/C7T60Vf4T11sKFZNZK7YgjCb1UE/pU1wXm2MVZAQfHzfqTjeRG0bPOtHHOVKntwYNr9Ol
-        qAA9d4r8PbrRWrO7nUwQQpmj1vzZlPyOv45WxEnHXV7WODgTgGxs3J/xXOsefCD0EU2J8SlMI7rnw
-        DLBHbG05g==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:47442)
-        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.90_1)
-        (envelope-from <linux@armlinux.org.uk>)
-        id 1jMHFO-0008KP-0G; Wed, 08 Apr 2020 21:24:30 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
-        (envelope-from <linux@shell.armlinux.org.uk>)
-        id 1jMHFF-00027f-Jb; Wed, 08 Apr 2020 21:24:21 +0100
-Date:   Wed, 8 Apr 2020 21:24:21 +0100
-From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
-To:     Arnd Bergmann <arnd@arndb.de>
-List-Id: <soc.lore.kernel.org>
-Cc:     soc@kernel.org, Roy Pledge <Roy.Pledge@nxp.com>,
-        Li Yang <leoyang.li@nxp.com>,
-        Youri Querry <youri.querry_1@nxp.com>,
-        Ioana Ciornei <ioana.ciornei@nxp.com>,
-        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH] soc: fsl: dpio: avoid stack usage warning
-Message-ID: <20200408202421.GU25745@shell.armlinux.org.uk>
-References: <20200408185834.434784-1-arnd@arndb.de>
+        Wed, 8 Apr 2020 16:27:47 -0400
+Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
+ (mreue010 [212.227.15.129]) with ESMTPA (Nemesis) id
+ 1MfHUx-1ip88a1CpP-00gqlq; Wed, 08 Apr 2020 22:27:19 +0200
+From:   Arnd Bergmann <arnd@arndb.de>
+To:     linux-kernel@vger.kernel.org,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Nicolas Pitre <nico@fluxnic.net>
+Cc:     Arnd Bergmann <arnd@arndb.de>, Andrzej Hajda <a.hajda@samsung.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Saeed Mahameed <saeedm@mellanox.com>,
+        Leon Romanovsky <leon@kernel.org>,
+        dri-devel@lists.freedesktop.org, linux-renesas-soc@vger.kernel.org,
+        netdev@vger.kernel.org, linux-rdma@vger.kernel.org
+Subject: [RFC 0/6] Regressions for "imply" behavior change
+Date:   Wed,  8 Apr 2020 22:27:05 +0200
+Message-Id: <20200408202711.1198966-1-arnd@arndb.de>
+X-Mailer: git-send-email 2.26.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200408185834.434784-1-arnd@arndb.de>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
+X-Provags-ID: V03:K1:zEzMmRw2UXFx9zU6fPxN+W5wPcFHDncLQsBY9LbEA0w9eEN1eTu
+ cnzjMxpU5zxrYcnwqTeAc+Ps/JyboCntYRrUtWKxjMYWqJF44Bf4LOvKsA+DX4gzPI+FQub
+ UxxzljbycF32PPMrcW97pI811kKuSvXVrKpXAN9hfhlEgzbQUJJE8q6o5AYNdaJE9WYW8la
+ uMsnELmKxIjuKo2Mnf2bQ==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:TWdcwFoldyI=:NS8I92rXicAb2aGhAXYXT3
+ zbu3I6qgkDuIzvNKKVw06vL7+R2l1nBDjNBPVo4DXwjxE1dDTAneGOxdoT5CVDnn4eNCkUou8
+ 6Az6Tq087nNHF5iiZJ5NolfFLRiBg10jtfZpBPmyUYiiQ9nDM9r0009G8AlF/+gNfRDMdGYmT
+ gncDh39Bmz4VBL0nbCXN8K4kbJvwlwcv4Kj4eG9drYgmTiY1vZUyJv/AuXA4XCNCormt00fx5
+ 9Oq6GtnUnI+129u0nx1Wp1h3HQB9jJZtzBXuT9j2tovNUV+kBiVgSEkj4WDrgXLS1zgwr/Ow2
+ WiWNzvjnzFTNkbB5Y9ryeW/LPIPcwGv2dtdp3QAGmfU4PcXa7Dev17vdxjeIUPVCBmi9MsSI5
+ xm9PAlIZvzWXRbiKHvHneEsJWxOi+O+qR7xJ7ye+HHpxo2mZ2pR4AMLsUcXYPXjpFdHjLnQTb
+ T2uKH3neFx1H+Xhd2dpxj6RNntKe9b8VtYXK7willY8/WWs5Gjm/4BnvoXwNhCGvcRK+G8c2g
+ AfNqVvEauy+AtxH7EB4rhNOlTfiiDMzzvsnxXLA/tphh2HzFV7CH+dL3Bmsf+Eil28ld6XI6O
+ XkdDmCbVfn6BI9nC3AoP2pgyEWcgyVDIDSQi4GfDGlPEW+161trruvSc7uPKPJPvDs2D1pI/E
+ 4pJdhI2vcfHaqYkK8JeAaYRQI/S6rwMtUkWtzofxhzqwtFJL7mPA0Dw9wiMHnMp0nThfJ42aC
+ Bl32WLzx9ELKvgw6hv0t68fHB9/Xxv9NrCK19O899oeawmWtm8L/3N2BMfWZDVQGBvffLxnm8
+ abBAJx3W3JbM74GshlW7uydgO/5lfqdEXGppl/fRbmlNs5hWcI=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 08, 2020 at 08:58:16PM +0200, Arnd Bergmann wrote:
-> A 1024 byte variable on the stack will warn on any 32-bit architecture
-> during compile-testing, and is generally a bad idea anyway:
-> 
-> fsl/dpio/dpio-service.c: In function 'dpaa2_io_service_enqueue_multiple_desc_fq':
-> fsl/dpio/dpio-service.c:495:1: error: the frame size of 1032 bytes is larger than 1024 bytes [-Werror=frame-larger-than=]
-> 
-> There are currently no callers of this function, so I cannot tell whether
-> dynamic memory allocation is allowed once callers are added. Change
-> it to kcalloc for now, if anyone gets a warning about calling this in
-> atomic context after they start using it, they can fix it later.
-> 
-> Fixes: 9d98809711ae ("soc: fsl: dpio: Adding QMAN multiple enqueue interface")
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-> ---
->  drivers/soc/fsl/dpio/dpio-service.c | 18 +++++++++++++-----
->  1 file changed, 13 insertions(+), 5 deletions(-)
-> 
-> diff --git a/drivers/soc/fsl/dpio/dpio-service.c b/drivers/soc/fsl/dpio/dpio-service.c
-> index cd4f6410e8c2..ff0ef8cbdbff 100644
-> --- a/drivers/soc/fsl/dpio/dpio-service.c
-> +++ b/drivers/soc/fsl/dpio/dpio-service.c
-> @@ -478,12 +478,17 @@ int dpaa2_io_service_enqueue_multiple_desc_fq(struct dpaa2_io *d,
->  				const struct dpaa2_fd *fd,
->  				int nb)
->  {
-> -	int i;
-> -	struct qbman_eq_desc ed[32];
-> +	struct qbman_eq_desc *ed = kcalloc(sizeof(struct qbman_eq_desc), 32, GFP_KERNEL);
+Hi everyone,
 
-I think you need to rearrange this to be more compliant with the coding
-style.
+I've just restarted doing randconfig builds on top of mainline Linux and
+found a couple of regressions with missing dependency from the recent
+change in the "imply" keyword in Kconfig, presumably these two patches:
 
-> +	int i, ret;
-> +
-> +	if (!ed)
-> +		return -ENOMEM;
->  
->  	d = service_select(d);
-> -	if (!d)
-> -		return -ENODEV;
-> +	if (!d) {
-> +		ret = -ENODEV;
-> +		goto out;
-> +	}
->  
->  	for (i = 0; i < nb; i++) {
->  		qbman_eq_desc_clear(&ed[i]);
-> @@ -491,7 +496,10 @@ int dpaa2_io_service_enqueue_multiple_desc_fq(struct dpaa2_io *d,
->  		qbman_eq_desc_set_fq(&ed[i], fqid[i]);
->  	}
->  
-> -	return qbman_swp_enqueue_multiple_desc(d->swp, &ed[0], fd, nb);
-> +	ret = qbman_swp_enqueue_multiple_desc(d->swp, &ed[0], fd, nb);
-> +out:
-> +	kfree(ed);
-> +	return ret;
->  }
->  EXPORT_SYMBOL(dpaa2_io_service_enqueue_multiple_desc_fq);
->  
-> -- 
-> 2.26.0
-> 
-> 
+3a9dd3ecb207 kconfig: make 'imply' obey the direct dependency
+def2fbffe62c kconfig: allow symbols implied by y to become m
+
+I have created workarounds for the Kconfig files, which now stop using
+imply and do something else in each case. I don't know whether there was
+a bug in the kconfig changes that has led to allowing configurations that
+were not meant to be legal even with the new semantics, or if the Kconfig
+files have simply become incorrect now and the tool works as expected.
+
+Please have a look at the cases I found, and what you think we should
+do about them. I assume there are a couple more like these, the six
+regressions here are what I found in the first 1000 randconfig builds
+on the kernel.
+
+       Arnd
+
+Arnd Bergmann (6):
+  thunder: select PTP driver if possible
+  net/mlx5e: fix VXLAN dependency
+  LiquidIO VF: add dependency for PTP_1588_CLOCK
+  drm/bridge/sii8620: fix extcon dependency
+  drm/rcar-du: fix selection of CMM driver
+  drm/rcar-du: fix lvds dependency
+
+ drivers/gpu/drm/bridge/Kconfig                  | 1 -
+ drivers/gpu/drm/bridge/sil-sii8620.c            | 5 +++--
+ drivers/gpu/drm/rcar-du/Kconfig                 | 7 ++-----
+ drivers/net/ethernet/cavium/Kconfig             | 4 ++--
+ drivers/net/ethernet/mellanox/mlx5/core/Kconfig | 2 +-
+ 5 files changed, 8 insertions(+), 11 deletions(-)
+
+
+Cc: Andrzej Hajda <a.hajda@samsung.com>
+Cc: Neil Armstrong <narmstrong@baylibre.com>
+Cc: Laurent Pinchart <Laurent.pinchart@ideasonboard.com>
+Cc: Jonas Karlman <jonas@kwiboo.se>
+Cc: Jernej Skrabec <jernej.skrabec@siol.net>
+Cc: David Airlie <airlied@linux.ie>
+Cc: Daniel Vetter <daniel@ffwll.ch>
+Cc: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
+Cc: "David S. Miller" <davem@davemloft.net>
+Cc: Saeed Mahameed <saeedm@mellanox.com>
+Cc: Leon Romanovsky <leon@kernel.org>
+Cc: dri-devel@lists.freedesktop.org
+Cc: linux-kernel@vger.kernel.org
+Cc: linux-renesas-soc@vger.kernel.org
+Cc: netdev@vger.kernel.org
+Cc: linux-rdma@vger.kernel.org
+
 
 -- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line in suburbia: sync at 10.2Mbps down 587kbps up
+2.26.0
+
