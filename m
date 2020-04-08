@@ -2,199 +2,131 @@ Return-Path: <SRS0=8dav=5Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 583D3C2D0F4
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 18:10:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DE0DC2D0F4
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 18:12:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2D1232075E
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 18:10:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 320DD2075E
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 18:12:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=cs.washington.edu header.i=@cs.washington.edu header.b="Ism6ahYT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729604AbgDHSKZ (ORCPT
+        id S1730601AbgDHSMz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Apr 2020 14:10:25 -0400
-Received: from ivanoab7.miniserver.com ([37.128.132.42]:39328 "EHLO
-        www.kot-begemot.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726780AbgDHSKY (ORCPT
+        Wed, 8 Apr 2020 14:12:55 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:45243 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726780AbgDHSMz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Apr 2020 14:10:24 -0400
-Received: from tun252.jain.kot-begemot.co.uk ([192.168.18.6] helo=jain.kot-begemot.co.uk)
-        by www.kot-begemot.co.uk with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <anton.ivanov@cambridgegreys.com>)
-        id 1jMF9W-0002xJ-23; Wed, 08 Apr 2020 18:10:18 +0000
-Received: from sleer.kot-begemot.co.uk ([192.168.3.72])
-        by jain.kot-begemot.co.uk with esmtps (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.92)
-        (envelope-from <anton.ivanov@cambridgegreys.com>)
-        id 1jMF9T-0005u5-SG; Wed, 08 Apr 2020 19:10:17 +0100
-Subject: Re: [PATCH] um: add a generic "fd" vector transport
-To:     =?UTF-8?Q?Marc-Andr=c3=a9_Lureau?= <marcandre.lureau@redhat.com>
-Cc:     linux-um <linux-um@lists.infradead.org>,
-        joerd.simons@collabora.co.uk, richard@nod.at, jdike@addtoit.com,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        alex.dewar@gmx.co.uk
-References: <20200407202853.1791218-1-marcandre.lureau@redhat.com>
- <8a6dced2-886f-f8bd-aff9-3793f418cb0e@cambridgegreys.com>
- <CAMxuvaz17pVzSQ--y1_zXNFeM-MkH8L8ayiM34eCN0OkEF21WQ@mail.gmail.com>
-From:   Anton Ivanov <anton.ivanov@cambridgegreys.com>
-Organization: Cambridge Greys
-Message-ID: <c0e66bcd-7c13-31db-f347-1a3e9fac2b79@cambridgegreys.com>
-Date:   Wed, 8 Apr 2020 19:10:15 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
-MIME-Version: 1.0
-In-Reply-To: <CAMxuvaz17pVzSQ--y1_zXNFeM-MkH8L8ayiM34eCN0OkEF21WQ@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Clacks-Overhead: GNU Terry Pratchett
+        Wed, 8 Apr 2020 14:12:55 -0400
+Received: by mail-pg1-f196.google.com with SMTP id 128so1061779pge.12
+        for <linux-kernel@vger.kernel.org>; Wed, 08 Apr 2020 11:12:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cs.washington.edu; s=goo201206;
+        h=from:to:cc:subject:date:message-id;
+        bh=E+fjfxRHSsIlS4yIOdyfHZC/ljktt0WCvaJtbmUNwoo=;
+        b=Ism6ahYTJhW5k4WOAc7eXKD5UlKcHFqYuDe3MLavAJ8laJI05WhzzBXuq3wURZERbG
+         ul6sGaYkLMeDnLYGKyM3tPBIg90jOSNbsNSlyKCGeRshZHc545Qnic2cQONOr4K8jg7e
+         u8MZg2nGjhcSxqlULmBlhNu+bhmVu5bQnCBoo=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=E+fjfxRHSsIlS4yIOdyfHZC/ljktt0WCvaJtbmUNwoo=;
+        b=DYtqiDFzJDpviQjGPr+ChUN/lYB17B7ArAD+c+jDHlni6hZnboRGbP4OvtSQ3HRwtC
+         CtBIUAZFiWNRajm0ouEZqqe8Ci+wFcwNq66WjssQ7zx1lSnExR6nyIqb6CUs9xKPwxOs
+         KkYKMBkvhZPuSq8C3Jp7Zql8olGRoFhqu6xxmldStgPlboo94oV5Yu2chIUBCjq7c02H
+         E8l3PO2QFP8aPZd/pKl99dAfzDtw6D060OB9BTzR7QMwrSmIbM0fAqLA/oa79JW+evG/
+         S6/0XfWg1TfjNqy3Wh7P7Wab3xVbt2E6tgWqwuXH+Z6BplmwndF665Q2MmRv6aX5DfQ9
+         bxeQ==
+X-Gm-Message-State: AGi0Pub1fB00+KHgUUxXfJjVNEXff1f17n4VQtg/fz8Kc3dbxGSFtvBG
+        snfjYtHbdYVDtGoAX8fkbbMShQ==
+X-Google-Smtp-Source: APiQypKU16iVofstluSj0s0+NWi5Ig6G1hkZ3yqoxw816RcFYad9JRg8OlR8yQQ5aFZjb5WEC2rGtg==
+X-Received: by 2002:a63:770d:: with SMTP id s13mr8197474pgc.5.1586369573527;
+        Wed, 08 Apr 2020 11:12:53 -0700 (PDT)
+Received: from localhost.localdomain (c-73-53-94-119.hsd1.wa.comcast.net. [73.53.94.119])
+        by smtp.gmail.com with ESMTPSA id y9sm17706525pfo.135.2020.04.08.11.12.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 08 Apr 2020 11:12:51 -0700 (PDT)
+From:   Luke Nelson <lukenels@cs.washington.edu>
+X-Google-Original-From: Luke Nelson <luke.r.nels@gmail.com>
+To:     bpf@vger.kernel.org
+Cc:     Luke Nelson <luke.r.nels@gmail.com>, Xi Wang <xi.wang@gmail.com>,
+        Shubham Bansal <illusionist.neo@gmail.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        Andrii Nakryiko <andriin@fb.com>,
+        John Fastabend <john.fastabend@gmail.com>,
+        KP Singh <kpsingh@chromium.org>,
+        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH bpf] arm: bpf: Fix bugs with ALU64 {RSH, ARSH} BPF_K shift by 0
+Date:   Wed,  8 Apr 2020 18:12:29 +0000
+Message-Id: <20200408181229.10909-1-luke.r.nels@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 08/04/2020 18:07, Marc-André Lureau wrote:
-> Hi
-> 
-> On Tue, Apr 7, 2020 at 11:02 PM Anton Ivanov
-> <anton.ivanov@cambridgegreys.com> wrote:
->>
->> On 07/04/2020 21:28, Marc-André Lureau wrote:
->>> Learn to take a pre-opened file-descriptor for vector IO.
->>>
->>> Instead of teaching the driver to open a FD in multiple ways, it can
->>> rely on management layer to do it on its behalf. For example, this
->>> allows inheriting a preconfigured device fd or a simple socketpair()
->>> setup, without further arguments, privileges or system access by UML.
->>>
->>> Signed-off-by: Marc-André Lureau <marcandre.lureau@redhat.com>
->>> ---
->>>    arch/um/drivers/vector_user.c | 59 +++++++++++++++++++++++++++++++++++
->>>    1 file changed, 59 insertions(+)
->>>
->>> diff --git a/arch/um/drivers/vector_user.c b/arch/um/drivers/vector_user.c
->>> index 29fae0456ade..45c1550dbb37 100644
->>> --- a/arch/um/drivers/vector_user.c
->>> +++ b/arch/um/drivers/vector_user.c
->>> @@ -29,6 +29,7 @@
->>>    #include <netdb.h>
->>>    #include <stdlib.h>
->>>    #include <os.h>
->>> +#include <limits.h>
->>>    #include <um_malloc.h>
->>>    #include "vector_user.h"
->>>
->>> @@ -42,6 +43,9 @@
->>>    #define TRANS_RAW "raw"
->>>    #define TRANS_RAW_LEN strlen(TRANS_RAW)
->>>
->>> +#define TRANS_FD "fd"
->>> +#define TRANS_FD_LEN strlen(TRANS_FD)
->>> +
->>>    #define VNET_HDR_FAIL "could not enable vnet headers on fd %d"
->>>    #define TUN_GET_F_FAIL "tapraw: TUNGETFEATURES failed: %s"
->>>    #define L2TPV3_BIND_FAIL "l2tpv3_open : could not bind socket err=%i"
->>> @@ -347,6 +351,59 @@ static struct vector_fds *user_init_unix_fds(struct arglist *ifspec, int id)
->>>        return NULL;
->>>    }
->>>
->>> +static int strtofd(const char *nptr)
->>> +{
->>> +     long fd;
->>> +     char *endptr;
->>> +
->>> +     if (nptr == NULL)
->>> +             return -1;
->>> +
->>> +     errno = 0;
->>> +     fd = strtol(nptr, &endptr, 10);
->>> +     if (nptr == endptr ||
->>> +             errno != 0 ||
->>> +             *endptr != '\0' ||
->>> +             fd < 0 ||
->>> +             fd > INT_MAX) {
->>> +             return -1;
->>> +     }
->>> +     return fd;
->>> +}
->>> +
->>> +static struct vector_fds *user_init_fd_fds(struct arglist *ifspec)
->>> +{
->>> +     int fd = -1;
->>> +     char *fdarg = NULL;
->>> +     struct vector_fds *result = NULL;
->>> +
->>> +     fdarg = uml_vector_fetch_arg(ifspec, "fd");
->>> +     fd = strtofd(fdarg);
->>> +     if (fd == -1) {
->>> +             printk(UM_KERN_ERR "fd open: bad or missing fd argument");
->>> +             goto fd_cleanup;
->>> +     }
->>> +
->>> +     result = uml_kmalloc(sizeof(struct vector_fds), UM_GFP_KERNEL);
->>> +     if (result == NULL) {
->>> +             printk(UM_KERN_ERR "fd open: allocation failed");
->>> +             goto fd_cleanup;
->>> +     }
->>> +
->>> +     result->rx_fd = fd;
->>> +     result->tx_fd = fd;
->>> +     result->remote_addr_size = 0;
->>> +     result->remote_addr = NULL;
->>> +     return result;
->>> +
->>> +fd_cleanup:
->>> +     if (fd >= 0)
->>> +             os_close_file(fd);
->>> +     if (result != NULL)
->>> +             kfree(result);
->>> +     return NULL;
->>> +}
->>> +
->>>    static struct vector_fds *user_init_raw_fds(struct arglist *ifspec)
->>>    {
->>>        int rxfd = -1, txfd = -1;
->>> @@ -578,6 +635,8 @@ struct vector_fds *uml_vector_user_open(
->>>                return user_init_socket_fds(parsed, ID_L2TPV3);
->>>        if (strncmp(transport, TRANS_BESS, TRANS_BESS_LEN) == 0)
->>>                return user_init_unix_fds(parsed, ID_BESS);
->>> +     if (strncmp(transport, TRANS_FD, TRANS_FD_LEN) == 0)
->>> +             return user_init_fd_fds(parsed);
->>>        return NULL;
->>>    }
->>>
->>>
->>
->> We should also control enable/disable of recv/sendmmsg as an option here.
->>
->> It can be made generic and be fed into get_transport_options() in
->> vector_kern.c as an override.
-> 
-> So actually, there seems to be a way to do that already:
-> 
-> vec0:transport=fd,fd=N,vec=0
+The current arm BPF JIT does not correctly compile RSH or ARSH when the
+immediate shift amount is 0. This causes the "rsh64 by 0 imm" and "arsh64
+by 0 imm" BPF selftests to hang the kernel by reaching an instruction
+the verifier determines to be unreachable.
 
-I have forgotten about it (it's been a while since I wrote the drivers).
+The root cause is in how immediate right shifts are encoded on arm.
+For LSR and ASR (logical and arithmetic right shift), a bit-pattern
+of 00000 in the immediate encodes a shift amount of 32. When the BPF
+immediate is 0, the generated code shifts by 32 instead of the expected
+behavior (a no-op).
 
-I will update the docs.
+This patch fixes the bugs by adding an additional check if the BPF
+immediate is 0. After the change, the above mentioned BPF selftests pass.
 
-In that case the patch looks good to go, I will ack it shortly.
+Fixes: 39c13c204bb11 ("arm: eBPF JIT compiler")
+Co-developed-by: Xi Wang <xi.wang@gmail.com>
+Signed-off-by: Xi Wang <xi.wang@gmail.com>
+Signed-off-by: Luke Nelson <luke.r.nels@gmail.com>
+---
+ arch/arm/net/bpf_jit_32.c | 12 ++++++++++--
+ 1 file changed, 10 insertions(+), 2 deletions(-)
 
-> 
->>
->> --
->> Anton R. Ivanov
->> Cambridgegreys Limited. Registered in England. Company Number 10273661
->> https://www.cambridgegreys.com/
->>
-> 
-> 
-
-
+diff --git a/arch/arm/net/bpf_jit_32.c b/arch/arm/net/bpf_jit_32.c
+index cc29869d12a3..d124f78e20ac 100644
+--- a/arch/arm/net/bpf_jit_32.c
++++ b/arch/arm/net/bpf_jit_32.c
+@@ -929,7 +929,11 @@ static inline void emit_a32_rsh_i64(const s8 dst[],
+ 	rd = arm_bpf_get_reg64(dst, tmp, ctx);
+ 
+ 	/* Do LSR operation */
+-	if (val < 32) {
++	if (val == 0) {
++		/* An immediate value of 0 encodes a shift amount of 32
++		 * for LSR. To shift by 0, don't do anything.
++		 */
++	} else if (val < 32) {
+ 		emit(ARM_MOV_SI(tmp2[1], rd[1], SRTYPE_LSR, val), ctx);
+ 		emit(ARM_ORR_SI(rd[1], tmp2[1], rd[0], SRTYPE_ASL, 32 - val), ctx);
+ 		emit(ARM_MOV_SI(rd[0], rd[0], SRTYPE_LSR, val), ctx);
+@@ -955,7 +959,11 @@ static inline void emit_a32_arsh_i64(const s8 dst[],
+ 	rd = arm_bpf_get_reg64(dst, tmp, ctx);
+ 
+ 	/* Do ARSH operation */
+-	if (val < 32) {
++	if (val == 0) {
++		/* An immediate value of 0 encodes a shift amount of 32
++		 * for ASR. To shift by 0, don't do anything.
++		 */
++	} else if (val < 32) {
+ 		emit(ARM_MOV_SI(tmp2[1], rd[1], SRTYPE_LSR, val), ctx);
+ 		emit(ARM_ORR_SI(rd[1], tmp2[1], rd[0], SRTYPE_ASL, 32 - val), ctx);
+ 		emit(ARM_MOV_SI(rd[0], rd[0], SRTYPE_ASR, val), ctx);
 -- 
-Anton R. Ivanov
-Cambridgegreys Limited. Registered in England. Company Number 10273661
-https://www.cambridgegreys.com/
+2.17.1
+
