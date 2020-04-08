@@ -2,148 +2,158 @@ Return-Path: <SRS0=8dav=5Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B954C2D0EA
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 07:57:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05A4BC2D0EA
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 08:00:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E5B3720747
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 07:57:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="M8FsO9ur"
+	by mail.kernel.org (Postfix) with ESMTP id CBFCF20730
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 08:00:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727641AbgDHH5i (ORCPT
+        id S1726636AbgDHIA1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Apr 2020 03:57:38 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:40358 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727308AbgDHH5T (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Apr 2020 03:57:19 -0400
-Received: by mail-pl1-f193.google.com with SMTP id h11so2231500plk.7
-        for <linux-kernel@vger.kernel.org>; Wed, 08 Apr 2020 00:57:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=1qkEQ73ghM61/BXRvlDJEs7SEg6hkPYIpkfLFdxJqkM=;
-        b=M8FsO9urOLYfx+qNB72XqLl5IeK3k1rkWGB2QMaKDxaZ3GMZ9TkmwxK2X106mzWTZc
-         h6SfGPemIf+TGa9RC0VllenRql97VDhVTSgiLjT7uRcU/sIo1L09xxkH4TJZbbTOdany
-         KvIdpvhuZ7aZu4Hew/CRlD3Nu11OQ1e8+YCp1KVzmmD0In0eppM5yJwdWx6d1xyfhEF5
-         F7/KOZyVklGrHaTKN3apLnV+MT57NiaA9GWFMExs7czk8HzYqQxKqRwOpymkHHiB4R0b
-         e94SlP/mbS0WGfoYQTh6cOJPSe609uoPJPYWGWI5B03/10hz2Cwb363yMLe7BTSN9DRM
-         yFGg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=1qkEQ73ghM61/BXRvlDJEs7SEg6hkPYIpkfLFdxJqkM=;
-        b=l9toXUVKUwkArgkem4ZgEbEeAh3bY6eoe3KnxRbBD/a2xSQMuiqT3bq2IgS6Cj0byh
-         t9T1wd9FQq7nQDZs9c+sn6XbPgrDPCMutVxoT3ECEg9DI/EpvKqem5VceF7P+QUFfnw1
-         VISKNyZS3EmnOQ5C1FnE02TTq9s5CCumOGmKDCVEVciYL7KsXB+0SMxFUhpcGJ60+G67
-         h542Y0euQ+OZYcT6ztFpBOVoE5HoYbAc9fME+7bk7Zq0xQu9Cnc6ElH2Yn6K4Xm+tezi
-         RREKl8pjoIX3U4hQnPwHfxIaC1BBhGGChpa36/3AQ4QTHC/KBXNUi8Xpb1cVmGPuh64z
-         HMgQ==
-X-Gm-Message-State: AGi0PuaR+vCQd8x0usTyHazc5hFmMy9IHtW1vNqZVfP19gNNCi8yQx1V
-        edfEfgpHWvaTEnECF+pgjc8PHA==
-X-Google-Smtp-Source: APiQypIIXeNxjIMGSbVinBL4trNwBKG9qqUy1Cb/noizBIcTE9mvQcsmUXs8oVjWTimn72tJBLN8Cw==
-X-Received: by 2002:a17:90a:33d1:: with SMTP id n75mr3776658pjb.167.1586332638821;
-        Wed, 08 Apr 2020 00:57:18 -0700 (PDT)
-Received: from hsinchu02.internal.sifive.com (114-34-229-221.HINET-IP.hinet.net. [114.34.229.221])
-        by smtp.gmail.com with ESMTPSA id d85sm485599pfd.157.2020.04.08.00.57.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 08 Apr 2020 00:57:18 -0700 (PDT)
-From:   Zong Li <zong.li@sifive.com>
-To:     palmer@dabbelt.com, paul.walmsley@sifive.com,
-        aou@eecs.berkeley.edu, mhiramat@kernel.org,
-        linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc:     Zong Li <zong.li@sifive.com>,
-        Palmer Dabbelt <palmerdabbelt@google.com>
-Subject: [PATCH v5 5/9] riscv: add ARCH_HAS_SET_DIRECT_MAP support
-Date:   Wed,  8 Apr 2020 15:57:00 +0800
-Message-Id: <357ebe77f7f676dcc7e828436275ec096fd61a96.1586332296.git.zong.li@sifive.com>
-X-Mailer: git-send-email 2.26.0
-In-Reply-To: <cover.1586332296.git.zong.li@sifive.com>
-References: <cover.1586332296.git.zong.li@sifive.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Wed, 8 Apr 2020 04:00:27 -0400
+Received: from mx1.tq-group.com ([62.157.118.193]:52846 "EHLO mx1.tq-group.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726436AbgDHIA1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Apr 2020 04:00:27 -0400
+IronPort-SDR: YZ3oCIIvSezQ2JQprv7PkJSs9xhG+L0gPhn9WtA0MQyxSDcZ6+F/4jpqa7BgGMytfNKrCbfwAk
+ 8gIP04eZuU4tKjreNARONRLOIWlO2jbspw5GTuOMpGYrHAkF0mGmELcJwBSzv8XjItRx7Pgaxi
+ sK+x+Vi22sANcyhu24se/k8ql97mxsakPYO9kasYLJlPgwiSNVe2moN5AeXt+Ww+ZL4OZut4FV
+ HnofLVnBSZlwBzrQFyRUqtCiYHEtFmXBiQiKXTx+28MiB9VDDV9XVToYhQk9QvActXuzTLTh2D
+ IHU=
+X-IronPort-AV: E=Sophos;i="5.72,357,1580770800"; 
+   d="scan'208";a="11741655"
+Received: from unknown (HELO tq-pgp-pr1.tq-net.de) ([192.168.6.15])
+  by mx1-pgp.tq-group.com with ESMTP; 08 Apr 2020 10:00:25 +0200
+Received: from mx1.tq-group.com ([192.168.6.7])
+  by tq-pgp-pr1.tq-net.de (PGP Universal service);
+  Wed, 08 Apr 2020 10:00:25 +0200
+X-PGP-Universal: processed;
+        by tq-pgp-pr1.tq-net.de on Wed, 08 Apr 2020 10:00:25 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=tq-group.com; i=@tq-group.com; q=dns/txt; s=key1;
+  t=1586332825; x=1617868825;
+  h=message-id:subject:from:to:cc:date:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=FM8vvwRPjqfacbSYX2A3Kn495wuAJwFwLmZF56RyzZk=;
+  b=SSGl/fKBLQ6zBBQzssjXcmB8EQF14VS/VENDmMtuGFzSGZuNELWw3417
+   yr3jV7iUp2tQzDe8hr0iv6V21FDw2B2iXIfjIC6YCT6V49C6JsVi1fHRy
+   JQqyBpJPEvCz8SciMnYRFa3lmdH7SaozPUKqr6P6Yb8S3Ltws0xSsOrWQ
+   FkhfSfxe7rjx73M9YxhFob/R8haRAMlRW6MnOiaI+qCPP8Yh56cpds8Aq
+   Tq+E2HyJ91HUgh2e5xcs3/KGKaihaajhPpGhRyIMLdWs2qToQNF3GJYi+
+   SdthFoR12clqj7+uZfpkTpJfB/x0AxPZy99R6Fgh7XFVrYQFeEbU+3qco
+   w==;
+IronPort-SDR: /L+9vGxeIt5Jv2JplrvfzXRWrsT3Va/pLkDE2tePs1EG/Nah9lvKTPFzxS4rpn+Gf/xHBXJrQV
+ tlbj0T7TD5gHwaro9S6UskRPxmQjgiqhquyEsTMc5bSYgu/7GZcqgsH9k8CSERDXBrTqew5h7P
+ drrI19g/n1WMkP+YhI4SNyLI/wpQ2KUeFcyNXwtduqFROa25ugR4KcEt2+vJOYe0lZapCq92vF
+ prZo/8yA1uTeHVU8TunxvTjncXrc75jSs831Zy7E/7fPJlsLukofq2Rxmvff3KHyojmn3sr/wA
+ Z7E=
+X-IronPort-AV: E=Sophos;i="5.72,357,1580770800"; 
+   d="scan'208";a="11741654"
+Received: from vtuxmail01.tq-net.de ([10.115.0.20])
+  by mx1.tq-group.com with ESMTP; 08 Apr 2020 10:00:25 +0200
+Received: from schifferm-ubuntu4.tq-net.de (schifferm-ubuntu4.tq-net.de [10.117.49.26])
+        by vtuxmail01.tq-net.de (Postfix) with ESMTPA id 45945280065;
+        Wed,  8 Apr 2020 10:00:39 +0200 (CEST)
+Message-ID: <405fa9612b52ee9a7c550d2ac5a2df86acb223c1.camel@ew.tq-group.com>
+Subject: Re: (EXT) Re: (EXT) Re: [PATCH 1/4] pwm: pca9685: remove unused
+ duty_cycle struct element
+From:   Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
+To:     Sven Van Asbroeck <thesven73@gmail.com>
+Cc:     Uwe =?ISO-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        linux-pwm@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Clemens Gruber <clemens.gruber@pqgruber.com>
+Date:   Wed, 08 Apr 2020 10:00:22 +0200
+In-Reply-To: <3ec5c2bd67cd714f86178a1e7143cd247759aaf8.camel@ew.tq-group.com>
+References: <20200226135229.24929-1-matthias.schiffer@ew.tq-group.com>
+         <20200226151034.7i3h5blmrwre2yzg@pengutronix.de>
+         <32ec35c2b3da119dd2c7bc09742796a0d8a9607e.camel@ew.tq-group.com>
+         <CAGngYiUinGeppRdnsWvX4DBLVcHFBSGWamUKdTC+rTY3kpFWcQ@mail.gmail.com>
+         <3ec5c2bd67cd714f86178a1e7143cd247759aaf8.camel@ew.tq-group.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add set_direct_map_*() functions for setting the direct map alias for
-the page to its default permissions and to an invalid state that cannot
-be cached in a TLB. (See d253ca0c ("x86/mm/cpa: Add set_direct_map_*()
-functions")) Add a similar implementation for RISC-V.
+On Tue, 2020-04-07 at 16:46 +0200, Matthias Schiffer wrote:
+> On Fri, 2020-04-03 at 19:47 -0400, Sven Van Asbroeck wrote:
+> > On Wed, Feb 26, 2020 at 12:04 PM Matthias Schiffer
+> > <matthias.schiffer@ew.tq-group.com> wrote:
+> > > 
+> > > >  - Is this racy somehow (i.e. can it happen that when going
+> > > > from
+> > > >    duty_cycle/period = 1000/5000 to duty_cycle/period =
+> > > > 4000/10000
+> > > > the
+> > > >    output is 1000/10000 (or 4000/5000) for one cycle)?
+> > > 
+> > > It currently is racy. It should be possible to fix that either by
+> > > updating all 4 registers in a single I2C write, or by using the
+> > > "update
+> > > on ACK" mode which requires all 4 registers to be updated before
+> > > the
+> > > new setting is applied (I'm not sure if this mode would require
+> > > using a
+> > > single I2C write as well though).
+> > 
+> > Matthias, did you verify experimentally that changing the period is
+> > racy?
+> > 
+> > Looking at the datasheet and driver code, it shouldn't be. This is
+> > because
+> > the OFF time is set as a proportion of the counter range. When the
+> > period
+> > changes from 5000 to 10000, then 5000*20%/5000 and 10000*20%/10000
+> > will result in the same 20% ratio (disregarding rounding errors).
+> > 
+> > This is documented at the beginning of the driver:
+> > 
+> 
+> 
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/pwm/pwm-pca9685.c?h=v5.6#n25
+> > 
+> > Should we move that comment to pwm_config(), so future versions of
+> > ourselves won't overlook it?
+> 
+> You are right, this results in the same ratio - the absolute on/off
+> times may be wrong for a moment though when the period is changed.
+> 
+> In the attached image, I have changed the period, but kept the
+> absolute
+> duty cycle fixed (note: this is in inverted mode, so the duty cycle
+> controls the low time). It can be seen that after a too long high
+> time
+> (chip is in sleep mode) one period with too long low time follows
+> (new
+> period, old relative duty cycle), before the counter is reprogrammed
+> to
+> match the previous absolute duty cycle.
+> 
+> I don't care too much about the details of the behaviour, as I only
+> control LEDs using this chip and don't need to change the period
+> after
+> initial setup, but we should accurately document the shortcomings of
+> the hardware and the driver (when we have decided how to fix some of
+> the driver issues).
+> 
+> Matthias
 
-Signed-off-by: Zong Li <zong.li@sifive.com>
-Reviewed-by: Palmer Dabbelt <palmerdabbelt@google.com>
----
- arch/riscv/Kconfig                  |  1 +
- arch/riscv/include/asm/set_memory.h |  3 +++
- arch/riscv/mm/pageattr.c            | 24 ++++++++++++++++++++++++
- 3 files changed, 28 insertions(+)
+And another kind of race condition that should be possible, although I
+haven't seen it in practice:
 
-diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
-index 9044e0dd95ea..a94d0f064d9c 100644
---- a/arch/riscv/Kconfig
-+++ b/arch/riscv/Kconfig
-@@ -59,6 +59,7 @@ config RISCV
- 	select HAVE_EBPF_JIT if 64BIT
- 	select EDAC_SUPPORT
- 	select ARCH_HAS_GIGANTIC_PAGE
-+	select ARCH_HAS_SET_DIRECT_MAP
- 	select ARCH_HAS_SET_MEMORY
- 	select ARCH_WANT_HUGE_PMD_SHARE if 64BIT
- 	select SPARSEMEM_STATIC if 32BIT
-diff --git a/arch/riscv/include/asm/set_memory.h b/arch/riscv/include/asm/set_memory.h
-index 79a810f0f38b..620d81c372d9 100644
---- a/arch/riscv/include/asm/set_memory.h
-+++ b/arch/riscv/include/asm/set_memory.h
-@@ -21,4 +21,7 @@ static inline int set_memory_x(unsigned long addr, int numpages) { return 0; }
- static inline int set_memory_nx(unsigned long addr, int numpages) { return 0; }
- #endif
- 
-+int set_direct_map_invalid_noflush(struct page *page);
-+int set_direct_map_default_noflush(struct page *page);
-+
- #endif /* _ASM_RISCV_SET_MEMORY_H */
-diff --git a/arch/riscv/mm/pageattr.c b/arch/riscv/mm/pageattr.c
-index fcd59ef2835b..7be6cd67e2ef 100644
---- a/arch/riscv/mm/pageattr.c
-+++ b/arch/riscv/mm/pageattr.c
-@@ -148,3 +148,27 @@ int set_memory_nx(unsigned long addr, int numpages)
- {
- 	return __set_memory(addr, numpages, __pgprot(0), __pgprot(_PAGE_EXEC));
- }
-+
-+int set_direct_map_invalid_noflush(struct page *page)
-+{
-+	unsigned long start = (unsigned long)page_address(page);
-+	unsigned long end = start + PAGE_SIZE;
-+	struct pageattr_masks masks = {
-+		.set_mask = __pgprot(0),
-+		.clear_mask = __pgprot(_PAGE_PRESENT)
-+	};
-+
-+	return walk_page_range(&init_mm, start, end, &pageattr_ops, &masks);
-+}
-+
-+int set_direct_map_default_noflush(struct page *page)
-+{
-+	unsigned long start = (unsigned long)page_address(page);
-+	unsigned long end = start + PAGE_SIZE;
-+	struct pageattr_masks masks = {
-+		.set_mask = PAGE_KERNEL,
-+		.clear_mask = __pgprot(0)
-+	};
-+
-+	return walk_page_range(&init_mm, start, end, &pageattr_ops, &masks);
-+}
--- 
-2.26.0
+High and low bits of the OFF counter currently aren't programmed
+atomically, so with unlucky timing we get a cycle using new lower 8
+bits with old upper 4 bits of the duty cycle.
+
 
