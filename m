@@ -2,110 +2,108 @@ Return-Path: <SRS0=8dav=5Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97701C2BA16
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 07:49:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D6FAC2D0EA
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 07:50:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 66618206C0
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 07:49:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586332169;
-	bh=LFSPRKgmR8auwK03bWcZlzXa6g+J6cxGqFZeIyDLWBs=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=MhyJfM1/838wkVYqVLqzc+lAQBLOcxZA2GyIk7z0f3rp3gGIhTgA3+hgyM5w6PK7o
-	 ccrUSSEk2vx3D8Jy5yceEzH6c2rdEtBLCzNjJMqxdE0ZOeQ/8//zl2+JMCo2vf7ez2
-	 iZOk9t6HfLFICcm40W1J9N8r8oha0OmgCwPR3LXE=
+	by mail.kernel.org (Postfix) with ESMTP id 1A92620747
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 07:50:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727069AbgDHHt2 (ORCPT
+        id S1726909AbgDHHuv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Apr 2020 03:49:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55722 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726366AbgDHHt1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Apr 2020 03:49:27 -0400
-Received: from mail-io1-f54.google.com (mail-io1-f54.google.com [209.85.166.54])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 300B720857;
-        Wed,  8 Apr 2020 07:49:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586332167;
-        bh=LFSPRKgmR8auwK03bWcZlzXa6g+J6cxGqFZeIyDLWBs=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=M4A3XfdLzGoCqjFphZs46oHKHPvNRNyaxBpA9xZOfsoCACHV49gh3cMPEQj0HjuuH
-         K5KQp0P7ZX1Za5RsThorpN36rb8kGaUgiaq32dYWGNm/PIEGD7Xe4ymWpTMGYbdsuu
-         gSRBrZ2r52eMPpBPRm9gCBQCDV5PL1qvhKb/3sxc=
-Received: by mail-io1-f54.google.com with SMTP id b12so6153064ion.8;
-        Wed, 08 Apr 2020 00:49:27 -0700 (PDT)
-X-Gm-Message-State: AGi0PuZtXrHE6BJHRoT5TAyDCbab9LHXjcCi6fR3Oyja3IP1Pcug2yr4
-        jZpkLKZnZ/b6PHrWjviDRaWZR8QSdflqXaKQBb4=
-X-Google-Smtp-Source: APiQypJAwEiSBhRkO0KExJ3QXtqZu8DVb4U6xjsYMWHvwGiy5FHwkV4VytajI+cifcoP5E+rtFqkmv24wXCBpeMiAEI=
-X-Received: by 2002:a6b:f413:: with SMTP id i19mr5867611iog.203.1586332166519;
- Wed, 08 Apr 2020 00:49:26 -0700 (PDT)
-MIME-Version: 1.0
-References: <CAMj1kXEUkJ1XJ9OTsijeq8tNNYC00bXqEV44OMtX5ugo9WoLKA@mail.gmail.com>
- <20200406180614.429454-1-nivedita@alum.mit.edu> <20200408074334.GA21886@dhcp-128-65.nay.redhat.com>
-In-Reply-To: <20200408074334.GA21886@dhcp-128-65.nay.redhat.com>
-From:   Ard Biesheuvel <ardb@kernel.org>
-Date:   Wed, 8 Apr 2020 09:49:15 +0200
-X-Gmail-Original-Message-ID: <CAMj1kXGPOZ6zWtgGScLy0ECrTtf1yhngDTNE1chW-MQw3XQp9Q@mail.gmail.com>
-Message-ID: <CAMj1kXGPOZ6zWtgGScLy0ECrTtf1yhngDTNE1chW-MQw3XQp9Q@mail.gmail.com>
-Subject: Re: [PATCH 1/2] efi/x86: Move efi stub globals from .bss to .data
-To:     Dave Young <dyoung@redhat.com>, pjones@redhat.com,
-        daniel.kiper@oracle.com, Leif Lindholm <leif@nuviainc.com>
-Cc:     Arvind Sankar <nivedita@alum.mit.edu>,
-        Borislav Petkov <bp@alien8.de>, Sergey Shatunov <me@prok.pw>,
-        hpa@zytor.com,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        mingo@redhat.com, Thomas Gleixner <tglx@linutronix.de>,
-        x86@kernel.org, linux-efi <linux-efi@vger.kernel.org>,
-        initramfs@vger.kernel.org,
-        Donovan Tremura <neurognostic@protonmail.ch>,
-        Harald Hoyer <harald@hoyer.xyz>
+        Wed, 8 Apr 2020 03:50:51 -0400
+Received: from m177129.mail.qiye.163.com ([123.58.177.129]:21499 "EHLO
+        m177129.mail.qiye.163.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726366AbgDHHuv (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Apr 2020 03:50:51 -0400
+X-Greylist: delayed 465 seconds by postgrey-1.27 at vger.kernel.org; Wed, 08 Apr 2020 03:50:45 EDT
+Received: from vivo.com (wm-2.qy.internal [127.0.0.1])
+        by m177129.mail.qiye.163.com (Hmail) with ESMTP id 909115C3299;
+        Wed,  8 Apr 2020 15:42:53 +0800 (CST)
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: base64
+Message-ID: <ADsAIgAICMOkBsTG35M4NqqB.1.1586331773574.Hmail.tao.li@vivo.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Felipe Balbi <balbi@kernel.org>,
+        =?UTF-8?Q?Micha=C5=82_Miros=C5=82aw?= <mirq-linux@rere.qmqm.pl>,
+        Sergey Organov <sorganov@gmail.com>, linux-usb@vger.kernel.org,
+        linux-kernel@vger.kernel.org, wenhu.wang@vivo.com
+Subject: =?UTF-8?B?UmU6UmU6IFtQQVRDSF0gdXNiOiBnYWRnZXQ6IHNlcmlhbDogRml4ZWQgS0FTQU4gbnVsbC1wdHItZGVyZWYgaW4gdHR5X3dha2V1cA==?=
+X-Priority: 3
+X-Mailer: HMail Webmail Server V2.0 Copyright (c) 2016-163.com
+X-Originating-IP: 58.251.74.226
+MIME-Version: 1.0
+Received: from tao.li@vivo.com( [58.251.74.226) ] by ajax-webmail ( [127.0.0.1] ) ; Wed, 8 Apr 2020 15:42:53 +0800 (GMT+08:00)
+From:   =?UTF-8?B?5p2O5qGD?= <tao.li@vivo.com>
+Date:   Wed, 8 Apr 2020 15:42:53 +0800 (GMT+08:00)
+X-HM-Spam-Status: e1kfGhgUHx5ZQUtXWQgYFAkeWUFZTlVMQkJLS0tJTUhJSk9KSllXWShZQU
+        hPN1dZLVlBSVdZCQ4XHghZQVk1NCk2OjckKS43PlkG
+X-HM-Sender-Digest: e1kMHhlZQQ8JDh5XWRIfHhUPWUFZRzo*CDoyHDoyODY0EDkILzxITjZP
+        NQoKOVVKVUpOQ01ISEpMTE1MSUJVMxYaEhdVDxoUVRcSOw0SDRRVGBQWRVlXWRILWUFZTkNVSU5K
+        VUxPVUlJTVlXWQgBWUFOQklLNwY+
+X-HM-Tid: 0a7158bdea9e6447kurs909115c3299
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-(add Peter, Leif and Daniel)
-
-On Wed, 8 Apr 2020 at 09:43, Dave Young <dyoung@redhat.com> wrote:
->
-> On 04/06/20 at 02:06pm, Arvind Sankar wrote:
-> > Commit
-> >
-> >   3ee372ccce4d ("x86/boot/compressed/64: Remove .bss/.pgtable from
-> >   bzImage")
-> >
-> > removed the .bss section from the bzImage.
-> >
-> > However, while a PE loader is required to zero-initialize the .bss
-> > section before calling the PE entry point, the EFI handover protocol
-> > does not currently document any requirement that .bss be initialized by
-> > the bootloader prior to calling the handover entry.
-> >
-> > When systemd-boot is used to boot a unified kernel image [1], the image
-> > is constructed by embedding the bzImage as a .linux section in a PE
-> > executable that contains a small stub loader from systemd together with
-> > additional sections and potentially an initrd. As the .bss section
-> > within the bzImage is no longer explicitly present as part of the file,
-> > it is not initialized before calling the EFI handover entry.
-> > Furthermore, as the size of the embedded .linux section is only the size
-> > of the bzImage file itself, the .bss section's memory may not even have
-> > been allocated.
->
-> I did not follow up the old report, maybe I missed something. But not
-> sure why only systemd-boot is mentioned here.  I also have similar issue
-> with early efi failure.  With these two patches applied, it works well
-> then.
->
-> BTW, I use Fedora 31 + Grub2
->
-
-OK, so I take it this means that GRUB's PE/COFF loader does not
-zero-initialize BSS either? Does it honor the image size in memory if
-it exceeds the file size?
+RnJvbTogR3JlZyBLcm9haC1IYXJ0bWFuIDxncmVna2hAbGludXhmb3VuZGF0aW9uLm9yZz4KRGF0
+ZTogMjAyMC0wMy0xOCAxODoxMjo0MApUbzogIExpIFRhbyA8dGFvLmxpQHZpdm8uY29tPgpDYzog
+IEZlbGlwZSBCYWxiaSA8YmFsYmlAa2VybmVsLm9yZz4sIk1pY2hhxYIgTWlyb3PFgmF3IiA8bWly
+cS1saW51eEByZXJlLnFtcW0ucGw+LFNlcmdleSBPcmdhbm92IDxzb3JnYW5vdkBnbWFpbC5jb20+
+LGxpbnV4LXVzYkB2Z2VyLmtlcm5lbC5vcmcsbGludXgta2VybmVsQHZnZXIua2VybmVsLm9yZyx3
+ZW5odS53YW5nQHZpdm8uY29tClN1YmplY3Q6IFJlOiBbUEFUQ0hdIHVzYjogZ2FkZ2V0OiBzZXJp
+YWw6IEZpeGVkIEtBU0FOIG51bGwtcHRyLWRlcmVmIGluIHR0eV93YWtldXA+T24gV2VkLCBNYXIg
+MTgsIDIwMjAgYXQgMTA6NTY6MDFBTSArMDgwMCwgTGkgVGFvIHdyb3RlOgo+PiBUaGUgcG9ydC0+
+cG9ydC50dHkgbWF5YmUgcmVzZXQgYXMgTlVMTCwgSWYgZ3NfY2xvc2UoKSB3YXMgaW52b2tlZAo+
+PiB1bmV4cGVjdGVkbHkgZHVyaW5nIHJ1bm5pbmcgZ3NlcmlhbF9jb25uZWN0KCkuCj4+IAo+PiBC
+VUc6IEtBU0FOOiBudWxsLXB0ci1kZXJlZiBpbiB0dHlfd2FrZXVwKzB4MWMvMHg4NAo+PiBDYWxs
+IHRyYWNlOgo+PiBbPDAwMDAwMDAwOTVjM2M4Mzc+XSBkdW1wX2JhY2t0cmFjZSsweDAvMHg2ZDQK
+Pj4gWzwwMDAwMDAwMDQ3NzI2YmI4Pl0gc2hvd19zdGFjaysweDE4LzB4MjAKPj4gWzwwMDAwMDAw
+MGJlZGI0YzFlPl0gLS1kdW1wX3N0YWNrKzB4MjAvMHgyOAo+PiBbPDAwMDAwMDAwNzIyZjJlMmE+
+XSBkdW1wX3N0YWNrKzB4ODQvMHhiMAo+PiBbPDAwMDAwMDAwMzI1NjgzZDQ+XSBrYXNhbl9yZXBv
+cnRfZXJyb3IrMHgxNzgvMHgxZTQKPj4gWzwwMDAwMDAwMDUzMDc5OTk4Pl0ga2FzYW5fcmVwb3J0
+X2Vycm9yKzB4MC8weDFlNAo+PiBbPDAwMDAwMDAwYjZkMzNhZmE+XSAtLWFzYW5fbG9hZDgrMHgx
+NTAvMHgxNWMKPj4gWzwwMDAwMDAwMDE4ODc0NWI4Pl0gdHR5X3dha2V1cCsweDFjLzB4ODQKPj4g
+WzwwMDAwMDAwMDY0ZjZkZDIxPl0gZ3Nfc3RhcnRfaW8rMHhkMC8weDExYwo+PiBbPDAwMDAwMDAw
+NjNkNjdiNmM+XSBnc2VyaWFsX2Nvbm5lY3QrMHgxNWMvMHgxYjAKPj4gWzwwMDAwMDAwMGZhZjdj
+MGY5Pl0gZG1fc2V0X2FsdCsweGE4LzB4MTkwCj4+IFs8MDAwMDAwMDA4ZGViMTkwOT5dIGNvbXBv
+c2l0ZV9zZXR1cCsweGRlNC8weDFlZGMKPj4gWzwwMDAwMDAwMDc5MmVlMTZkPl0gYW5kcm9pZF9z
+ZXR1cCsweDIxMC8weDI5NAo+PiBbPDAwMDAwMDAwYWIzMmVmMzA+XSBkd2MzX2VwMF9kZWxlZ2F0
+ZV9yZXErMHg0OC8weDY4Cj4+IFs8MDAwMDAwMDA1NGUyNmZkMj5dIGR3YzNfZXAwX2ludGVycnVw
+dCsweGYyYy8weDE2ZmMKPj4gWzwwMDAwMDAwMDUwY2IyMjYyPl0gZHdjM19pbnRlcnJ1cHQrMHg0
+NjQvMHgxZjQ0Cj4+IFs8MDAwMDAwMDBmZGNhYTZlOT5dIC0taGFuZGxlX2lycV9ldmVudF9wZXJj
+cHUrMHgxODQvMHgzOTgKPj4gWzwwMDAwMDAwMDNiMjRmZjU2Pl0gaGFuZGxlX2lycV9ldmVudF9w
+ZXJjcHUrMHhhMC8weDEzNAo+PiBbPDAwMDAwMDAwYWVkZGE1ZWU+XSBoYW5kbGVfaXJxX2V2ZW50
+KzB4NjAvMHhhMAo+PiBbPDAwMDAwMDAwNWY1MWE1NzA+XSBoYW5kbGVfZmFzdGVvaV9pcnErMHgy
+M2MvMHgzMWMKPj4gWzwwMDAwMDAwMDhkYjI2MDhkPl0gZ2VuZXJpY19oYW5kbGVfaXJxKzB4NzAv
+MHhhNAo+PiBbPDAwMDAwMDAwMDk4NjgzZmM+XSAtLWhhbmRsZV9kb21haW5faXJxKzB4ODQvMHhl
+MAo+PiBbPDAwMDAwMDAwOGVkMjNiNDY+XSBnaWNfaGFuZGxlX2lycSsweDk4LzB4YjgKPj4gCj4+
+IFNpZ25lZC1vZmYtYnk6IExpIFRhbyA8dGFvLmxpQHZpdm8uY29tPgo+PiAtLS0KPj4gIGRyaXZl
+cnMvdXNiL2dhZGdldC9mdW5jdGlvbi91X3NlcmlhbC5jIHwgMyArKy0KPj4gIDEgZmlsZSBjaGFu
+Z2VkLCAyIGluc2VydGlvbnMoKyksIDEgZGVsZXRpb24oLSkKPj4gCj4+IGRpZmYgLS1naXQgYS9k
+cml2ZXJzL3VzYi9nYWRnZXQvZnVuY3Rpb24vdV9zZXJpYWwuYyBiL2RyaXZlcnMvdXNiL2dhZGdl
+dC9mdW5jdGlvbi91X3NlcmlhbC5jCj4+IGluZGV4IDgxNjdkMzc5ZTExNS4uM2MxMDlhOGY5ZWM0
+IDEwMDY0NAo+PiAtLS0gYS9kcml2ZXJzL3VzYi9nYWRnZXQvZnVuY3Rpb24vdV9zZXJpYWwuYwo+
+PiArKysgYi9kcml2ZXJzL3VzYi9nYWRnZXQvZnVuY3Rpb24vdV9zZXJpYWwuYwo+PiBAQCAtNTY1
+LDcgKzU2NSw4IEBAIHN0YXRpYyBpbnQgZ3Nfc3RhcnRfaW8oc3RydWN0IGdzX3BvcnQgKnBvcnQp
+Cj4+ICAJCWdzX3N0YXJ0X3R4KHBvcnQpOwo+PiAgCQkvKiBVbmJsb2NrIGFueSBwZW5kaW5nIHdy
+aXRlcyBpbnRvIG91ciBjaXJjdWxhciBidWZmZXIsIGluIGNhc2UKPj4gIAkJICogd2UgZGlkbid0
+IGluIGdzX3N0YXJ0X3R4KCkgKi8KPj4gLQkJdHR5X3dha2V1cChwb3J0LT5wb3J0LnR0eSk7Cj4+
+ICsJCWlmIChwb3J0LT5wb3J0LnR0eSkKPj4gKwkJCXR0eV93YWtldXAocG9ydC0+cG9ydC50dHkp
+Owo+Cj5XaGF0IHByZXZlbnRzIHBvcnQudHR5IGZyb20gYmVpbmcgc2V0IHRvIE5VTEwgYmV0d2Vl
+biB0aGUgY2hlY2sgYW5kIHRoZQo+Y2FsbCB0byB0dHlfd2FrZXVwPwo+Cj5TaG91bGRuJ3QgZ3Nf
+Y2xvc2UoKSBhbmQgZ3NlcmlhbF9jb25uZWN0KCkgaGF2ZSBzb21lIHNvcnQgb2YgbG9ja2luZyB0
+bwo+cHJldmVudCB0aGlzPwo+CkkgZW5jb3VudGVyZWQgdGhpcyBpc3N1ZSBvbiBTYW1zdW5nIEVY
+WU5PUzk4MCBwbGF0Zm9ybSwgTWF5YmUgdGhpcyBpcyBwbGF0Zm9ybSBzcGVjaWZpYyBpc3N1ZS4K
+VGhlIFVTQiBpbnRlcnJ1cHQgaGFuZGxlciBnb3QgcG9ydF9sb2NrIG9uIENQVSAwIGluIGdzZXJp
+YWxfY29ubmVjdCB3aGlsZSBnc19jbG9zZSBpcyB3YWl0aW5nIGZvciAKdGhpcyBsb2NrIG9uIENQ
+VSAxLiAgQnV0IHRoaXMgcG9ydF9sb2NrIHdpbGwgdW5sb2NrIGluIGdzX3N0YXJ0X2lvLS0+Z3Nf
+c3RhcnRfcnggdGVtcG9yYXJpbHksIFRoaXMgcmFjZQpjb25kaXRpb24gbWF5IGNhdXNlIHBvcnQu
+dHR5IHNldCBhcyBOVUxMLgoKZ3JlZyBrLWgsIERvIHlvdSBoYXZlIHNvbWUgZ29vZCBzdWdnZXN0
+aW9ucz8KCj50aGFua3MsCj4KPmdyZWcgay1oCgoKDQoNCg==
