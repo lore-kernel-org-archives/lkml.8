@@ -2,116 +2,134 @@ Return-Path: <SRS0=8dav=5Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C231C2D0F4
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 21:40:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B835C2BA2B
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 21:45:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D9F0F206C0
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 21:40:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2ECAB2074F
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 21:45:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=pqgruber.com header.i=@pqgruber.com header.b="k/0qDYpo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729446AbgDHVkX (ORCPT
+        id S1729555AbgDHVpa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Apr 2020 17:40:23 -0400
-Received: from mga14.intel.com ([192.55.52.115]:53957 "EHLO mga14.intel.com"
+        Wed, 8 Apr 2020 17:45:30 -0400
+Received: from mail.pqgruber.com ([52.59.78.55]:44858 "EHLO mail.pqgruber.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726754AbgDHVkW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Apr 2020 17:40:22 -0400
-IronPort-SDR: 7AvUkrLPiruJhOLZBUQqa4yZuJRrF/4rfQvaXQDu1nRJhhQkHT5TsVC9SQNT9lWdtpO3aj2Xdq
- 1AKbG7B97VoA==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Apr 2020 14:40:22 -0700
-IronPort-SDR: pYdRjkkvnYKqR4RRN9bB4ujXTKh2yqdoD4DbNL9tB4f1o3M41wKAu8z4s3NLX39ETcUbE18tHG
- RFOFLuimfqqA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,360,1580803200"; 
-   d="scan'208";a="251690961"
-Received: from pknguyen-mobl.amr.corp.intel.com (HELO localhost.localdomain) ([10.255.228.194])
-  by orsmga003.jf.intel.com with ESMTP; 08 Apr 2020 14:40:21 -0700
-From:   sathyanarayanan.kuppuswamy@linux.intel.com
-To:     gregkh@linuxfoundation.org, rafael@kernel.org
-Cc:     linux-kernel@vger.kernel.org
-Subject: [PATCH v1 1/1] drivers: base: Fix NULL pointer exception in __platform_driver_probe()
-Date:   Wed,  8 Apr 2020 14:40:03 -0700
-Message-Id: <20200408214003.3356-1-sathyanarayanan.kuppuswamy@linux.intel.com>
-X-Mailer: git-send-email 2.17.1
+        id S1726754AbgDHVpa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Apr 2020 17:45:30 -0400
+Received: from workstation.tuxnet (213-47-165-233.cable.dynamic.surfer.at [213.47.165.233])
+        by mail.pqgruber.com (Postfix) with ESMTPSA id D4D19C72B3E;
+        Wed,  8 Apr 2020 23:45:27 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=pqgruber.com;
+        s=mail; t=1586382328;
+        bh=/Xfxr6bQ0YUHTVcrSQ5u+QRzIamIw5VqJzOKJ0VgNNU=;
+        h=From:To:Cc:Subject:Date:From;
+        b=k/0qDYpotiovTl+xpRajQ9esKeqgReP0BjkNmbwAasfOY0GzIsXwv2wMkoEvZcZIa
+         fZYXBZIE8zZ3x/IXsPy8WBeXz/dCz4QwPnP25vbnvde5ETHg3UbR0YdlVXhdSZP8qJ
+         nqkHJu02YexlKmteRSlFpgB0nnWW8YFhuMcQ0q5I=
+From:   Clemens Gruber <clemens.gruber@pqgruber.com>
+To:     netdev@vger.kernel.org
+Cc:     Russell King <linux@armlinux.org.uk>, Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        linux-kernel@vger.kernel.org,
+        Clemens Gruber <clemens.gruber@pqgruber.com>,
+        stable@vger.kernel.org
+Subject: [PATCH] net: phy: marvell: Fix pause frame negotiation
+Date:   Wed,  8 Apr 2020 23:43:26 +0200
+Message-Id: <20200408214326.934440-1-clemens.gruber@pqgruber.com>
+X-Mailer: git-send-email 2.26.0
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+The negotiation of flow control / pause frame modes was broken since
+commit fcf1f59afc67 ("net: phy: marvell: rearrange to use
+genphy_read_lpa()") moved the setting of phydev->duplex below the
+phy_resolve_aneg_pause call. Due to a check of DUPLEX_FULL in that
+function, phydev->pause was no longer set.
 
-If platform bus driver registration is failed then, accessing
-platform bus spin lock (&drv->driver.bus->p->klist_drivers.k_lock)
-in __platform_driver_probe() without verifying the return value
-__platform_driver_register() can lead to NULL pointer exception.
+Fix it by moving the parsing of the status variable before the blocks
+dealing with the pause frames.
 
-So check the return value before attempting the spin lock.
-
-One such example is below:
-
-For a custom usecase, I have intentionally failed the platform bus
-registration and I expected all the platform device/driver
-registrations to fail gracefully. But I came across this panic
-issue.
-
-[    1.331067] BUG: kernel NULL pointer dereference, address: 00000000000000c8
-[    1.331118] #PF: supervisor write access in kernel mode
-[    1.331163] #PF: error_code(0x0002) - not-present page
-[    1.331208] PGD 0 P4D 0
-[    1.331233] Oops: 0002 [#1] PREEMPT SMP
-[    1.331268] CPU: 3 PID: 1 Comm: swapper/0 Tainted: G        W         5.6.0-00049-g670d35fb0144 #165
-[    1.331341] Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 0.0.0 02/06/2015
-[    1.331406] RIP: 0010:_raw_spin_lock+0x15/0x30
-[    1.331588] RSP: 0000:ffffc9000001be70 EFLAGS: 00010246
-[    1.331632] RAX: 0000000000000000 RBX: 00000000000000c8 RCX: 0000000000000001
-[    1.331696] RDX: 0000000000000001 RSI: 0000000000000092 RDI: 0000000000000000
-[    1.331754] RBP: 00000000ffffffed R08: 0000000000000501 R09: 0000000000000001
-[    1.331817] R10: ffff88817abcc520 R11: 0000000000000670 R12: 00000000ffffffed
-[    1.331881] R13: ffffffff82dbc268 R14: ffffffff832f070a R15: 0000000000000000
-[    1.331945] FS:  0000000000000000(0000) GS:ffff88817bd80000(0000) knlGS:0000000000000000
-[    1.332008] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[    1.332062] CR2: 00000000000000c8 CR3: 000000000681e001 CR4: 00000000003606e0
-[    1.332126] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-[    1.332189] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-[    1.332252] Call Trace:
-[    1.332281]  __platform_driver_probe+0x92/0xee
-[    1.332323]  ? rtc_dev_init+0x2b/0x2b
-[    1.332358]  cmos_init+0x37/0x67
-[    1.332396]  do_one_initcall+0x7d/0x168
-[    1.332428]  kernel_init_freeable+0x16c/0x1c9
-[    1.332473]  ? rest_init+0xc0/0xc0
-[    1.332508]  kernel_init+0x5/0x100
-[    1.332543]  ret_from_fork+0x1f/0x30
-[    1.332579] CR2: 00000000000000c8
-[    1.332616] ---[ end trace 3bd87f12e9010b87 ]---
-[    1.333549] note: swapper/0[1] exited with preempt_count 1
-[    1.333592] Kernel panic - not syncing: Attempted to kill init! exitcode=0x00000009
-[    1.333736] Kernel Offset: disabled
-
-Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+Fixes: fcf1f59afc67 ("net: phy: marvell: rearrange to use genphy_read_lpa()")
+Cc: stable@vger.kernel.org # v5.6+
+Signed-off-by: Clemens Gruber <clemens.gruber@pqgruber.com>
 ---
- drivers/base/platform.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/net/phy/marvell.c | 44 +++++++++++++++++++--------------------
+ 1 file changed, 22 insertions(+), 22 deletions(-)
 
-diff --git a/drivers/base/platform.c b/drivers/base/platform.c
-index b5ce7b085795..3e75c4893789 100644
---- a/drivers/base/platform.c
-+++ b/drivers/base/platform.c
-@@ -830,6 +830,8 @@ int __init_or_module __platform_driver_probe(struct platform_driver *drv,
- 	/* temporary section violation during probe() */
- 	drv->probe = probe;
- 	retval = code = __platform_driver_register(drv, module);
-+	if (retval)
-+		return retval;
+diff --git a/drivers/net/phy/marvell.c b/drivers/net/phy/marvell.c
+index 4714ca0e0d4b..02cde4c0668c 100644
+--- a/drivers/net/phy/marvell.c
++++ b/drivers/net/phy/marvell.c
+@@ -1263,6 +1263,28 @@ static int marvell_read_status_page_an(struct phy_device *phydev,
+ 	int lpa;
+ 	int err;
  
- 	/*
- 	 * Fixup that section violation, being paranoid about code scanning
++	if (!(status & MII_M1011_PHY_STATUS_RESOLVED))
++		return 0;
++
++	if (status & MII_M1011_PHY_STATUS_FULLDUPLEX)
++		phydev->duplex = DUPLEX_FULL;
++	else
++		phydev->duplex = DUPLEX_HALF;
++
++	switch (status & MII_M1011_PHY_STATUS_SPD_MASK) {
++	case MII_M1011_PHY_STATUS_1000:
++		phydev->speed = SPEED_1000;
++		break;
++
++	case MII_M1011_PHY_STATUS_100:
++		phydev->speed = SPEED_100;
++		break;
++
++	default:
++		phydev->speed = SPEED_10;
++		break;
++	}
++
+ 	if (!fiber) {
+ 		err = genphy_read_lpa(phydev);
+ 		if (err < 0)
+@@ -1291,28 +1313,6 @@ static int marvell_read_status_page_an(struct phy_device *phydev,
+ 		}
+ 	}
+ 
+-	if (!(status & MII_M1011_PHY_STATUS_RESOLVED))
+-		return 0;
+-
+-	if (status & MII_M1011_PHY_STATUS_FULLDUPLEX)
+-		phydev->duplex = DUPLEX_FULL;
+-	else
+-		phydev->duplex = DUPLEX_HALF;
+-
+-	switch (status & MII_M1011_PHY_STATUS_SPD_MASK) {
+-	case MII_M1011_PHY_STATUS_1000:
+-		phydev->speed = SPEED_1000;
+-		break;
+-
+-	case MII_M1011_PHY_STATUS_100:
+-		phydev->speed = SPEED_100;
+-		break;
+-
+-	default:
+-		phydev->speed = SPEED_10;
+-		break;
+-	}
+-
+ 	return 0;
+ }
+ 
 -- 
-2.17.1
+2.26.0
 
