@@ -5,168 +5,487 @@ X-Spam-Level:
 X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CE97C2BB54
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 02:18:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DEA95C2BB54
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 02:21:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 563B8206BE
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 02:18:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9FFC4206C0
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 02:21:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="H72fQuUm"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nDeXuUJj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726530AbgDHCSZ (ORCPT
+        id S1726477AbgDHCVO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 22:18:25 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:44022 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726437AbgDHCSZ (ORCPT
+        Tue, 7 Apr 2020 22:21:14 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:38985 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726416AbgDHCVN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Apr 2020 22:18:25 -0400
-Received: by mail-lj1-f196.google.com with SMTP id g27so5873639ljn.10;
-        Tue, 07 Apr 2020 19:18:23 -0700 (PDT)
+        Tue, 7 Apr 2020 22:21:13 -0400
+Received: by mail-lj1-f195.google.com with SMTP id i20so5921638ljn.6;
+        Tue, 07 Apr 2020 19:21:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=0ZmuuQDmjbfThkdVucOfg24uF/F+xF9tJ0Uct4xLzGQ=;
-        b=H72fQuUm75SvElYdkSlzbhcZxlQJHc4OJevS7TZo2KD0sTUEYhlo6P21yL0HsMkfX6
-         qIRlSd21OjZC3eVl+YQPdVyGTHBwEpUqaX9P3nQD+q1Hbfxz9VZZOwPJSONFg6wss2gn
-         Te01XcGaibNrTcCoPA8qPVwGmBZpQ0gh1sKG6j3xF9OEYYc2zbwpNWsWwxZv1iK0ajtA
-         TZroX86w9dQQhGYfkPAdKydkexY+T/40MsEJRbdW9BtziKI5+FEavXQfr9ZRvBkomgmy
-         CajReVDUnhlDAP2y1qwvm/KC8Sou1PQV5T6O/qgR6azkV71PiQXfkcG5Htdnudv36+ku
-         L1yQ==
+        bh=c9tJXKSaSvAg2aNU995Bis9/lqNTvI6i/00yR38r7sQ=;
+        b=nDeXuUJjG9EF3yd0xIdKUFQc7QGg2f1GGYSUiGpaxN5g4clGcKAtfb2Rjpj0Nt/TYk
+         LbL43P2whw0PAd+cYg+CgfdSEwkPxy1prnofKo387C/yNR3OU6nqUzBzjJur6h4ZuNrl
+         ig6ZBwmd+n9UZL+CRY4OeVcyPFckZgF/soasWVFvl1i3YqkLcB2IFvOCx9MJ3Vh7FWSJ
+         4V3Wlz/H03uXDgOam4jLAd5f1idI3YKqT2s5+jzffLNbw78lG41ZE9QtuFXtowJA55fR
+         Rz9QiNywbTcrhMqky7JPwz3cH534wWmunNfydOyMGqDFJefCX3N7sDBH9F3XTjI/rf0K
+         7Gaw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=0ZmuuQDmjbfThkdVucOfg24uF/F+xF9tJ0Uct4xLzGQ=;
-        b=bbi8kUwcsw22lLFXKq5uSbJRcPA/JAJFOJvgkhmRK5s9JK9TqGFcVcWV1D3WrRP/iR
-         QwWKlLMyqHWhDLWORxIcfLbLL7ovfAI+JfINGPgTLzf9lqfqBZ4NmqFa4xJkmfuEK15P
-         5jw7ymeB6ItpX7lukkzRh9Q0tbOj7wA0S0BQG+zBjMjyMVGyP8Bd50wB6AncI/OyZbee
-         yDAxDdKigciFNSFM18M8FmTAyVaM/XG56gw1e7CWCcLGSLsYy7NwG2yRAESC9tegwsjZ
-         ApoCSY+PftwOFXneORc3hcRwR9ZulPPl6/s9EutQ1Q/yqGUnUvsxxrKw3GziGefuwyRS
-         fVmA==
-X-Gm-Message-State: AGi0PuZGwybt1QCdSagwYsoWbGyXwquACOs4SdVLR0yFm5OzYroiLo83
-        845IdqGfWYEgIS6C+oXgUgXCbbhnxfcE4/4jqV8=
-X-Google-Smtp-Source: APiQypL7SQxveWDJmbOkj2JVO8+lLQOKdZsrqeYIgluaVFBvztmLXBMag8SValmexT6+EWcnGWh88JaMdRezOeKomOk=
-X-Received: by 2002:a2e:8105:: with SMTP id d5mr3382375ljg.196.1586312302315;
- Tue, 07 Apr 2020 19:18:22 -0700 (PDT)
+        bh=c9tJXKSaSvAg2aNU995Bis9/lqNTvI6i/00yR38r7sQ=;
+        b=Kgctva0vuCjszA1mLZ6jQk810rX9dW8/zV+Lr8C1AGN+EDDXhjUsuT+yCpuPtkiWhS
+         /Qh/IpTsb903jRsxsSeBjMhMeeOFSSFoZqFqrMUidNL5I39aCcrIvASZQQ/n9CYQV5dQ
+         iX2S5ZfGC7hbRgS1r6m1hTv9m8UWh3+bgWT++24j1eUx+76PJSaUJu3o1Iz6X+plGVEt
+         BiTrv8byH6W7mW36Lc2OCAskxoneKrXf5ur/tDDmksARr05DwIIw9Jj+qYfx/ysUsTgm
+         D/EhSBLY3LoB79wBJSgP76mA8B4ZX3x2PIIhCTFLMu9MilYyK9N2Yinl9aFdIJ4jcV8s
+         s2jg==
+X-Gm-Message-State: AGi0PuaP1QeBGfgk16W3MbQ/IpkU05/UI8i3xke7U/wtdeRZfrmD7LDt
+        yi05eg4PYcgYxB4fHsd/oZEdHcj3okWWaHRfusk=
+X-Google-Smtp-Source: APiQypLUMdV9I4IJO5t2LZhJCpU+t4vDl4MtZOoa7siGFv6rzKB2RD+EOfPtlPBdQBPizwF8fhKIPGqfxZqp1kovx7M=
+X-Received: by 2002:a2e:8105:: with SMTP id d5mr3387423ljg.196.1586312467420;
+ Tue, 07 Apr 2020 19:21:07 -0700 (PDT)
 MIME-Version: 1.0
-References: <cover.1585896945.git.baolin.wang7@gmail.com> <04c25ff9f9b17d41d734c498e4be61dee745bb30.1585896945.git.baolin.wang7@gmail.com>
- <5a55947b-e920-4515-49cf-163f6d539421@intel.com> <CADBw62qXyQCO5s+8Ytg2VCn5tEXS6dPQarQW1mHWJMJm+jUiXQ@mail.gmail.com>
- <5cc006fe-e5f5-b9bf-bb01-c425d943783c@intel.com>
-In-Reply-To: <5cc006fe-e5f5-b9bf-bb01-c425d943783c@intel.com>
+References: <49020c8b96410f023707777750125cfd680c904d.1585720483.git.baolin.wang7@gmail.com>
+ <0aa0f67a2de6f0a1f012cf6358b356537341af72.1585720483.git.baolin.wang7@gmail.com>
+In-Reply-To: <0aa0f67a2de6f0a1f012cf6358b356537341af72.1585720483.git.baolin.wang7@gmail.com>
 From:   Baolin Wang <baolin.wang7@gmail.com>
-Date:   Wed, 8 Apr 2020 10:18:11 +0800
-Message-ID: <CADBw62qp0=4iq5yZNQzB7jCd0LCa4Jy7Xi7ErBpuDcj10DSdxQ@mail.gmail.com>
-Subject: Re: [PATCH v4 1/3] mmc: host: Introduce the request_atomic() for the host
-To:     Adrian Hunter <adrian.hunter@intel.com>
-Cc:     Ulf Hansson <ulf.hansson@linaro.org>,
-        Orson Zhai <orsonzhai@gmail.com>,
+Date:   Wed, 8 Apr 2020 10:20:56 +0800
+Message-ID: <CADBw62rUvJZzTa2QxgSGz95JnDDZt5eV8bppSmpaDmrRnaRopQ@mail.gmail.com>
+Subject: Re: [PATCH v3 2/2] mailbox: sprd: Add Spreadtrum mailbox driver
+To:     robh+dt@kernel.org, mark.rutland@arm.com, jassisinghbrar@gmail.com
+Cc:     Orson Zhai <orsonzhai@gmail.com>,
         Chunyan Zhang <zhang.lyra@gmail.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        linux-mmc <linux-mmc@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
+        devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 7, 2020 at 6:15 PM Adrian Hunter <adrian.hunter@intel.com> wrote:
->
-> On 7/04/20 10:21 am, Baolin Wang wrote:
-> > On Tue, Apr 7, 2020 at 2:38 PM Adrian Hunter <adrian.hunter@intel.com> wrote:
-> >>
-> >> On 3/04/20 10:05 am, Baolin Wang wrote:
-> >>> The SD host controller can process one request in the atomic context if
-> >>> the card is nonremovable, which means we can submit next request in the
-> >>> irq hard handler when using the MMC host software queue to reduce the
-> >>> latency. Thus this patch adds a new API request_atomic() for the host
-> >>> controller, as well as adding support for host software queue to submit
-> >>> a request by the new request_atomic() API.
-> >>>
-> >>> Moreover there is an unusual case that the card is busy when trying to
-> >>> send a command, and we can not polling the card status in interrupt
-> >>> context by using request_atomic() to dispatch requests. Thus we should
-> >>> queue a work to try again in the non-atomic context in case the host
-> >>> releases the busy signal later.
-> >>>
-> >>> Suggested-by: Adrian Hunter <adrian.hunter@intel.com>
-> >>> Signed-off-by: Baolin Wang <baolin.wang7@gmail.com>
-> >>
-> >>
-> >> One minor point below, otherwise:
-> >>
-> >> Acked-by: Adrian Hunter <adrian.hunter@intel.com>
-> >>
-> >>> ---
-> >>>  drivers/mmc/host/mmc_hsq.c | 29 ++++++++++++++++++++++++++++-
-> >>>  drivers/mmc/host/mmc_hsq.h |  1 +
-> >>>  include/linux/mmc/host.h   |  3 +++
-> >>>  3 files changed, 32 insertions(+), 1 deletion(-)
-> >>>
-> >>> diff --git a/drivers/mmc/host/mmc_hsq.c b/drivers/mmc/host/mmc_hsq.c
-> >>> index b90b2c9..a57f802 100644
-> >>> --- a/drivers/mmc/host/mmc_hsq.c
-> >>> +++ b/drivers/mmc/host/mmc_hsq.c
-> >>> @@ -16,11 +16,20 @@
-> >>>  #define HSQ_NUM_SLOTS        64
-> >>>  #define HSQ_INVALID_TAG      HSQ_NUM_SLOTS
-> >>>
-> >>> +static void mmc_hsq_retry_handler(struct work_struct *work)
-> >>> +{
-> >>> +     struct mmc_hsq *hsq = container_of(work, struct mmc_hsq, retry_work);
-> >>> +     struct mmc_host *mmc = hsq->mmc;
-> >>> +
-> >>> +     mmc->ops->request(mmc, hsq->mrq);
-> >>> +}
-> >>> +
-> >>>  static void mmc_hsq_pump_requests(struct mmc_hsq *hsq)
-> >>>  {
-> >>>       struct mmc_host *mmc = hsq->mmc;
-> >>>       struct hsq_slot *slot;
-> >>>       unsigned long flags;
-> >>> +     int ret = 0;
-> >>>
-> >>>       spin_lock_irqsave(&hsq->lock, flags);
-> >>>
-> >>> @@ -42,7 +51,24 @@ static void mmc_hsq_pump_requests(struct mmc_hsq *hsq)
-> >>>
-> >>>       spin_unlock_irqrestore(&hsq->lock, flags);
-> >>>
-> >>> -     mmc->ops->request(mmc, hsq->mrq);
-> >>> +     if (mmc->ops->request_atomic)
-> >>> +             ret = mmc->ops->request_atomic(mmc, hsq->mrq);
-> >>> +     else
-> >>> +             mmc->ops->request(mmc, hsq->mrq);
-> >>> +
-> >>> +     /*
-> >>> +      * If returning BUSY from request_atomic(), which means the card
-> >>> +      * may be busy now, and we should change to non-atomic context to
-> >>> +      * try again for this unusual case, to avoid time-consuming operations
-> >>> +      * in the atomic context.
-> >>> +      *
-> >>> +      * Note: we just give a warning for other error cases, since the host
-> >>> +      * driver will handle them.
-> >>> +      */
-> >>> +     if (ret == -EBUSY)
-> >>> +             schedule_work(&hsq->retry_work);
-> >>> +     else
-> >>> +             WARN_ON_ONCE(ret && ret != -EBUSY);
-> >>
-> >> 'ret != -EBUSY' is redundant because it is always true in the 'else' clause.
-> >
-> > Ah, Yes, thanks for pointing this out and I will fix it ine next version.
-> >
-> > By the way, could you help to review patch 2 and 3 in this patch set? Thanks.
-> >
->
-> I'd like to handle the inhibit wait differently.  I will make some patches
-> for that and send them out.
+Hi Jassi,
 
-OK, great. I'd like to test them. Thanks.
+On Wed, Apr 1, 2020 at 1:57 PM Baolin Wang <baolin.wang7@gmail.com> wrote:
+>
+> From: Baolin Wang <baolin.wang@unisoc.com>
+>
+> The Spreadtrum mailbox controller supports 8 channels to communicate
+> with MCUs, and it contains 2 different parts: inbox and outbox, which
+> are used to send and receive messages by IRQ mode.
+>
+> Signed-off-by: Baolin Wang <baolin.wang@unisoc.com>
+> Signed-off-by: Baolin Wang <baolin.wang7@gmail.com>
+
+Do you have any comments for this patch? Thanks.
+
+> ---
+> Changes from v2:
+>  - None.
+>
+> Changes from v1:
+>  - None
+> ---
+>  drivers/mailbox/Kconfig        |   8 +
+>  drivers/mailbox/Makefile       |   2 +
+>  drivers/mailbox/sprd-mailbox.c | 350 +++++++++++++++++++++++++++++++++++++++++
+>  3 files changed, 360 insertions(+)
+>  create mode 100644 drivers/mailbox/sprd-mailbox.c
+>
+> diff --git a/drivers/mailbox/Kconfig b/drivers/mailbox/Kconfig
+> index ab4eb75..a33eaab 100644
+> --- a/drivers/mailbox/Kconfig
+> +++ b/drivers/mailbox/Kconfig
+> @@ -227,4 +227,12 @@ config ZYNQMP_IPI_MBOX
+>           message to the IPI buffer and will access the IPI control
+>           registers to kick the other processor or enquire status.
+>
+> +config SPRD_MBOX
+> +       tristate "Spreadtrum Mailbox"
+> +       depends on ARCH_SPRD || COMPILE_TEST
+> +       help
+> +         Mailbox driver implementation for the Spreadtrum platform. It is used
+> +         to send message between application processors and MCU. Say Y here if
+> +         you want to build the Spreatrum mailbox controller driver.
+> +
+>  endif
+> diff --git a/drivers/mailbox/Makefile b/drivers/mailbox/Makefile
+> index c22fad6..0f47b6b 100644
+> --- a/drivers/mailbox/Makefile
+> +++ b/drivers/mailbox/Makefile
+> @@ -48,3 +48,5 @@ obj-$(CONFIG_STM32_IPCC)      += stm32-ipcc.o
+>  obj-$(CONFIG_MTK_CMDQ_MBOX)    += mtk-cmdq-mailbox.o
+>
+>  obj-$(CONFIG_ZYNQMP_IPI_MBOX)  += zynqmp-ipi-mailbox.o
+> +
+> +obj-$(CONFIG_SPRD_MBOX)                += sprd-mailbox.o
+> diff --git a/drivers/mailbox/sprd-mailbox.c b/drivers/mailbox/sprd-mailbox.c
+> new file mode 100644
+> index 0000000..58e5388
+> --- /dev/null
+> +++ b/drivers/mailbox/sprd-mailbox.c
+> @@ -0,0 +1,350 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +/*
+> + * Spreadtrum mailbox driver
+> + *
+> + * Copyright (c) 2020 Spreadtrum Communications Inc.
+> + */
+> +
+> +#include <linux/err.h>
+> +#include <linux/interrupt.h>
+> +#include <linux/io.h>
+> +#include <linux/mailbox_controller.h>
+> +#include <linux/module.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/clk.h>
+> +
+> +#define SPRD_MBOX_ID           0x0
+> +#define SPRD_MBOX_MSG_LOW      0x4
+> +#define SPRD_MBOX_MSG_HIGH     0x8
+> +#define SPRD_MBOX_TRIGGER      0xc
+> +#define SPRD_MBOX_FIFO_RST     0x10
+> +#define SPRD_MBOX_FIFO_STS     0x14
+> +#define SPRD_MBOX_IRQ_STS      0x18
+> +#define SPRD_MBOX_IRQ_MSK      0x1c
+> +#define SPRD_MBOX_LOCK         0x20
+> +#define SPRD_MBOX_FIFO_DEPTH   0x24
+> +
+> +/* Bit and mask definiation for inbox's SPRD_MBOX_FIFO_STS register */
+> +#define SPRD_INBOX_FIFO_DELIVER_MASK           GENMASK(23, 16)
+> +#define SPRD_INBOX_FIFO_OVERLOW_MASK           GENMASK(15, 8)
+> +#define SPRD_INBOX_FIFO_DELIVER_SHIFT          16
+> +#define SPRD_INBOX_FIFO_BUSY_MASK              GENMASK(7, 0)
+> +
+> +/* Bit and mask definiation for SPRD_MBOX_IRQ_STS register */
+> +#define SPRD_MBOX_IRQ_CLR                      BIT(0)
+> +
+> +/* Bit and mask definiation for outbox's SPRD_MBOX_FIFO_STS register */
+> +#define SPRD_OUTBOX_FIFO_FULL                  BIT(0)
+> +#define SPRD_OUTBOX_FIFO_WR_SHIFT              16
+> +#define SPRD_OUTBOX_FIFO_RD_SHIFT              24
+> +#define SPRD_OUTBOX_FIFO_POS_MASK              GENMASK(7, 0)
+> +
+> +/* Bit and mask definiation for inbox's SPRD_MBOX_IRQ_MSK register */
+> +#define SPRD_INBOX_FIFO_BLOCK_IRQ              BIT(0)
+> +#define SPRD_INBOX_FIFO_OVERFLOW_IRQ           BIT(1)
+> +#define SPRD_INBOX_FIFO_DELIVER_IRQ            BIT(2)
+> +#define SPRD_INBOX_FIFO_IRQ_MASK               GENMASK(2, 0)
+> +
+> +/* Bit and mask definiation for outbox's SPRD_MBOX_IRQ_MSK register */
+> +#define SPRD_OUTBOX_FIFO_NOT_EMPTY_IRQ         BIT(0)
+> +#define SPRD_OUTBOX_FIFO_IRQ_MASK              GENMASK(4, 0)
+> +
+> +#define SPRD_MBOX_CHAN_MAX                     8
+> +
+> +struct sprd_mbox_chan {
+> +       u8                      id;
+> +       struct mbox_chan        *chan;
+> +};
+> +
+> +struct sprd_mbox_priv {
+> +       struct mbox_controller  mbox;
+> +       struct device           *dev;
+> +       void __iomem            *inbox_base;
+> +       void __iomem            *outbox_base;
+> +       struct clk              *clk;
+> +       u32                     outbox_fifo_depth;
+> +
+> +       struct sprd_mbox_chan   mchan[SPRD_MBOX_CHAN_MAX];
+> +       struct mbox_chan        chan[SPRD_MBOX_CHAN_MAX];
+> +};
+> +
+> +static struct sprd_mbox_priv *to_sprd_mbox_priv(struct mbox_controller *mbox)
+> +{
+> +       return container_of(mbox, struct sprd_mbox_priv, mbox);
+> +}
+> +
+> +static u32 sprd_mbox_get_fifo_len(struct sprd_mbox_priv *priv, u32 fifo_sts)
+> +{
+> +       u32 wr_pos = (fifo_sts >> SPRD_OUTBOX_FIFO_WR_SHIFT) &
+> +               SPRD_OUTBOX_FIFO_POS_MASK;
+> +       u32 rd_pos = (fifo_sts >> SPRD_OUTBOX_FIFO_RD_SHIFT) &
+> +               SPRD_OUTBOX_FIFO_POS_MASK;
+> +       u32 fifo_len;
+> +
+> +       /*
+> +        * If the read pointer is equal with write pointer, which means the fifo
+> +        * is full or empty.
+> +        */
+> +       if (wr_pos == rd_pos) {
+> +               if (fifo_sts & SPRD_OUTBOX_FIFO_FULL)
+> +                       fifo_len = priv->outbox_fifo_depth;
+> +               else
+> +                       fifo_len = 0;
+> +       } else if (wr_pos > rd_pos) {
+> +               fifo_len = wr_pos - rd_pos;
+> +       } else {
+> +               fifo_len = priv->outbox_fifo_depth - rd_pos + wr_pos;
+> +       }
+> +
+> +       return fifo_len;
+> +}
+> +
+> +static irqreturn_t sprd_mbox_outbox_isr(int irq, void *data)
+> +{
+> +       struct sprd_mbox_priv *priv = data;
+> +       struct sprd_mbox_chan *mchan;
+> +       u32 fifo_sts, fifo_len, msg[2];
+> +       int i, id;
+> +
+> +       fifo_sts = readl(priv->outbox_base + SPRD_MBOX_FIFO_STS);
+> +
+> +       fifo_len = sprd_mbox_get_fifo_len(priv, fifo_sts);
+> +       if (!fifo_len) {
+> +               dev_warn_ratelimited(priv->dev, "spurious outbox interrupt\n");
+> +               return IRQ_NONE;
+> +       }
+> +
+> +       for (i = 0; i < fifo_len; i++) {
+> +               msg[0] = readl(priv->outbox_base + SPRD_MBOX_MSG_LOW);
+> +               msg[1] = readl(priv->outbox_base + SPRD_MBOX_MSG_HIGH);
+> +               id = readl(priv->outbox_base + SPRD_MBOX_ID);
+> +
+> +               mchan = &priv->mchan[id];
+> +               mbox_chan_received_data(mchan->chan, (void *)msg);
+> +
+> +               /* Trigger to update outbox FIFO pointer */
+> +               writel(0x1, priv->outbox_base + SPRD_MBOX_TRIGGER);
+> +       }
+> +
+> +       /* Clear irq status after reading all message. */
+> +       writel(SPRD_MBOX_IRQ_CLR, priv->outbox_base + SPRD_MBOX_IRQ_STS);
+> +
+> +       return IRQ_HANDLED;
+> +}
+> +
+> +static irqreturn_t sprd_mbox_inbox_isr(int irq, void *data)
+> +{
+> +       struct sprd_mbox_priv *priv = data;
+> +       struct sprd_mbox_chan *mchan;
+> +       u32 fifo_sts, send_sts, id;
+> +
+> +       fifo_sts = readl(priv->inbox_base + SPRD_MBOX_FIFO_STS);
+> +
+> +       /* Get the inbox data delivery status */
+> +       send_sts = (fifo_sts & SPRD_INBOX_FIFO_DELIVER_MASK) >>
+> +               SPRD_INBOX_FIFO_DELIVER_SHIFT;
+> +       if (!send_sts) {
+> +               dev_warn_ratelimited(priv->dev, "spurious inbox interrupt\n");
+> +               return IRQ_NONE;
+> +       }
+> +
+> +       while (send_sts) {
+> +               id = __ffs(send_sts);
+> +               send_sts &= (send_sts - 1);
+> +
+> +               mchan = &priv->mchan[id];
+> +               mbox_chan_txdone(mchan->chan, 0);
+> +       }
+> +
+> +       /* Clear FIFO delivery and overflow status */
+> +       writel(fifo_sts &
+> +              (SPRD_INBOX_FIFO_DELIVER_MASK | SPRD_INBOX_FIFO_OVERLOW_MASK),
+> +              priv->inbox_base + SPRD_MBOX_FIFO_RST);
+> +
+> +       /* Clear irq status */
+> +       writel(SPRD_MBOX_IRQ_CLR, priv->inbox_base + SPRD_MBOX_IRQ_STS);
+> +
+> +       return IRQ_HANDLED;
+> +}
+> +
+> +static int sprd_mbox_send_data(struct mbox_chan *chan, void *msg)
+> +{
+> +       struct sprd_mbox_priv *priv = to_sprd_mbox_priv(chan->mbox);
+> +       struct sprd_mbox_chan *mchan = chan->con_priv;
+> +       u32 *data = msg, busy;
+> +
+> +       /*
+> +        * Check if current channel is busy or not, and we can not send data
+> +        * if current channel is busy.
+> +        */
+> +       busy = readl(priv->inbox_base + SPRD_MBOX_FIFO_STS) &
+> +               SPRD_INBOX_FIFO_BUSY_MASK;
+> +       if (busy & BIT(mchan->id)) {
+> +               dev_err(priv->dev, "Channel %d is busy\n", mchan->id);
+> +               return -EBUSY;
+> +       }
+> +
+> +       /* Write data into inbox FIFO, and only support 8 bytes every time */
+> +       writel(data[0], priv->inbox_base + SPRD_MBOX_MSG_LOW);
+> +       writel(data[1], priv->inbox_base + SPRD_MBOX_MSG_HIGH);
+> +
+> +       /* Set target core id */
+> +       writel(mchan->id, priv->inbox_base + SPRD_MBOX_ID);
+> +
+> +       /* Trigger remote request */
+> +       writel(0x1, priv->inbox_base + SPRD_MBOX_TRIGGER);
+> +
+> +       return 0;
+> +}
+> +
+> +static int sprd_mbox_startup(struct mbox_chan *chan)
+> +{
+> +       struct sprd_mbox_priv *priv = to_sprd_mbox_priv(chan->mbox);
+> +       u32 val;
+> +
+> +       /* Select outbox FIFO mode and reset the outbox FIFO status */
+> +       writel(0x0, priv->outbox_base + SPRD_MBOX_FIFO_RST);
+> +
+> +       /* Enable inbox FIFO overflow and delivery interrupt */
+> +       val = readl(priv->inbox_base + SPRD_MBOX_IRQ_MSK);
+> +       val &= ~(SPRD_INBOX_FIFO_OVERFLOW_IRQ | SPRD_INBOX_FIFO_DELIVER_IRQ);
+> +       writel(val, priv->inbox_base + SPRD_MBOX_IRQ_MSK);
+> +
+> +       /* Enable outbox FIFO not empty interrupt */
+> +       val = readl(priv->outbox_base + SPRD_MBOX_IRQ_MSK);
+> +       val &= ~SPRD_OUTBOX_FIFO_NOT_EMPTY_IRQ;
+> +       writel(val, priv->outbox_base + SPRD_MBOX_IRQ_MSK);
+> +
+> +       return 0;
+> +}
+> +
+> +static void sprd_mbox_shutdown(struct mbox_chan *chan)
+> +{
+> +       struct sprd_mbox_priv *priv = to_sprd_mbox_priv(chan->mbox);
+> +
+> +       /* Disable inbox & outbox interrupt */
+> +       writel(SPRD_INBOX_FIFO_IRQ_MASK, priv->inbox_base + SPRD_MBOX_IRQ_MSK);
+> +       writel(SPRD_OUTBOX_FIFO_IRQ_MASK, priv->outbox_base + SPRD_MBOX_IRQ_MSK);
+> +}
+> +
+> +static const struct mbox_chan_ops sprd_mbox_ops = {
+> +       .send_data    = sprd_mbox_send_data,
+> +       .startup      = sprd_mbox_startup,
+> +       .shutdown     = sprd_mbox_shutdown,
+> +};
+> +
+> +static void sprd_mbox_disable(void *data)
+> +{
+> +       struct sprd_mbox_priv *priv = data;
+> +
+> +       clk_disable_unprepare(priv->clk);
+> +}
+> +
+> +static int sprd_mbox_probe(struct platform_device *pdev)
+> +{
+> +       struct device *dev = &pdev->dev;
+> +       struct sprd_mbox_priv *priv;
+> +       int i, ret, inbox_irq, outbox_irq;
+> +
+> +       priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
+> +       if (!priv)
+> +               return -ENOMEM;
+> +
+> +       priv->dev = dev;
+> +
+> +       /*
+> +        * The Spreadtrum mailbox uses an inbox to send messages to the target
+> +        * core, and uses an outbox to receive messages from other cores.
+> +        *
+> +        * Thus the mailbox controller supplies 2 different register addresses
+> +        * and IRQ numbers for inbox and outbox.
+> +        */
+> +       priv->inbox_base = devm_platform_ioremap_resource(pdev, 0);
+> +       if (IS_ERR(priv->inbox_base))
+> +               return PTR_ERR(priv->inbox_base);
+> +
+> +       priv->outbox_base = devm_platform_ioremap_resource(pdev, 1);
+> +       if (IS_ERR(priv->outbox_base))
+> +               return PTR_ERR(priv->outbox_base);
+> +
+> +       priv->clk = devm_clk_get(dev, "enable");
+> +       if (IS_ERR(priv->clk)) {
+> +               dev_err(dev, "failed to get mailbox clock\n");
+> +               return PTR_ERR(priv->clk);
+> +       }
+> +
+> +       ret = clk_prepare_enable(priv->clk);
+> +       if (ret)
+> +               return ret;
+> +
+> +       ret = devm_add_action_or_reset(dev, sprd_mbox_disable, priv);
+> +       if (ret) {
+> +               dev_err(dev, "failed to add mailbox disable action\n");
+> +               return ret;
+> +       }
+> +
+> +       inbox_irq = platform_get_irq(pdev, 0);
+> +       if (inbox_irq < 0)
+> +               return inbox_irq;
+> +
+> +       ret = devm_request_irq(dev, inbox_irq, sprd_mbox_inbox_isr,
+> +                              IRQF_NO_SUSPEND, dev_name(dev), priv);
+> +       if (ret) {
+> +               dev_err(dev, "failed to request inbox IRQ: %d\n", ret);
+> +               return ret;
+> +       }
+> +
+> +       outbox_irq = platform_get_irq(pdev, 1);
+> +       if (outbox_irq < 0)
+> +               return outbox_irq;
+> +
+> +       ret = devm_request_irq(dev, outbox_irq, sprd_mbox_outbox_isr,
+> +                              IRQF_NO_SUSPEND, dev_name(dev), priv);
+> +       if (ret) {
+> +               dev_err(dev, "failed to request outbox IRQ: %d\n", ret);
+> +               return ret;
+> +       }
+> +
+> +       /* Get the default outbox FIFO depth */
+> +       priv->outbox_fifo_depth =
+> +               readl(priv->outbox_base + SPRD_MBOX_FIFO_DEPTH) + 1;
+> +       priv->mbox.dev = dev;
+> +       priv->mbox.chans = &priv->chan[0];
+> +       priv->mbox.num_chans = SPRD_MBOX_CHAN_MAX;
+> +       priv->mbox.ops = &sprd_mbox_ops;
+> +       priv->mbox.txdone_irq = true;
+> +
+> +       for (i = 0; i < SPRD_MBOX_CHAN_MAX; i++) {
+> +               priv->chan[i].con_priv = &priv->mchan[i];
+> +
+> +               priv->mchan[i].chan = &priv->chan[i];
+> +               priv->mchan[i].id = i;
+> +       }
+> +
+> +       ret = devm_mbox_controller_register(dev, &priv->mbox);
+> +       if (ret) {
+> +               dev_err(dev, "failed to register mailbox: %d\n", ret);
+> +               return ret;
+> +       }
+> +
+> +       return 0;
+> +}
+> +
+> +static const struct of_device_id sprd_mbox_of_match[] = {
+> +       { .compatible = "sprd,sc9860-mailbox", },
+> +       { },
+> +};
+> +MODULE_DEVICE_TABLE(of, sprd_mbox_of_match);
+> +
+> +static struct platform_driver sprd_mbox_driver = {
+> +       .driver = {
+> +               .name = "sprd-mailbox",
+> +               .of_match_table = sprd_mbox_of_match,
+> +       },
+> +       .probe  = sprd_mbox_probe,
+> +};
+> +module_platform_driver(sprd_mbox_driver);
+> +
+> +MODULE_AUTHOR("Baolin Wang <baolin.wang@unisoc.com>");
+> +MODULE_DESCRIPTION("Spreadtrum mailbox driver");
+> +MODULE_LICENSE("GPL v2");
+> --
+> 1.9.1
+>
+
 
 -- 
 Baolin Wang
