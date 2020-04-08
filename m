@@ -2,152 +2,163 @@ Return-Path: <SRS0=8dav=5Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F024C2BA1A
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 17:00:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E2BFC2BA1A
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 17:01:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E226C20753
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 17:00:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5E95420771
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 17:01:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="tZ2Tw77+"
+	dkim=pass (1024-bit key) header.d=Sony.onmicrosoft.com header.i=@Sony.onmicrosoft.com header.b="VuC13j7X"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730491AbgDHRAM (ORCPT
+        id S1730493AbgDHRBY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Apr 2020 13:00:12 -0400
-Received: from mail-dm6nam10on2083.outbound.protection.outlook.com ([40.107.93.83]:2273
-        "EHLO NAM10-DM6-obe.outbound.protection.outlook.com"
+        Wed, 8 Apr 2020 13:01:24 -0400
+Received: from mail-eopbgr680120.outbound.protection.outlook.com ([40.107.68.120]:29060
+        "EHLO NAM04-BN3-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726550AbgDHRAL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Apr 2020 13:00:11 -0400
+        id S1726550AbgDHRBY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Apr 2020 13:01:24 -0400
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=fBbOk/oxugbz6xyIHNS4a6RPfjP8UDDan1W+02qWrzluBh28FsPXqr5ookFQnJCU+7ZKYPabtjjJageO2KQqSn8ue/rAHC9svbxjRXjaYAdJBF1EHRGeESvHcnOrN4wxcgvcnGa9fMeCQBk9QQFZ5O3aeXhb2CtPqIy6iIFgY0YyLougJxCN3TFd6Pg3LsskWb+sQEmy9J/2mZIxkgB2Yv9c160d7cUBaCh5lfI4MHIb4rn4w0idArpUyQOnPOssYqPSLpZb1cq51JvQ0lm37tXZ4kaXf5/qXUbdC32sXWXi8BX90aF7mYv3GHdKwwC9IXR59P5rVUccjfNnIFFVnA==
+ b=N8msTDaCwqgj8/z1wTo6zTgchc9jsTwrYRevY5zmvQcYZ6G/ZFonVMKV439Qj5tIupZu4J3Der+rqdVLLDh2N6Z7tQp9cmfwsMVLZYUb19mCJPeNxO/2qP03cksORyu6h8LzWLUvG/dvGAYvOP5J/75gnlUfRpQfXAGEG9etYcml1NCraUlQ68meLQjW+reYAf4zQxhFojQxB51b9omBGmuoo0JGaJ6S5sx5J2P2qrNZAPwL/sCguTc33JHcpXE724sg8jVU1DuWfPF3VwsRUdnmBPJ7OvHUE576taqv1yBKsE9/7X5kD/Em6hnxryYWZDDn9KIqj/kWIKWa35m4fg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=4UMtaqoJlOxNwPgl4JcQHv4ZJ8R5FrtPCLp9J5Nskic=;
- b=De7eoTH8p6BQz2Vw8cC70ko4r0sSksjB0SDxUKCXBKtiJzqXK+flEkqxHT45PkWb96DQ2vsDFmvo532NeeqR7Xur/4zxnl1bZVZSUiu3o0fmASQUzT92o8lRNPFiXSeHsVvLBHWxNrvk25/mz4cOSZt2B6ly3Xip8vZaGoEqg/qPoHd4cUEWbEhw9Uot/BGWUuNjvAD23auCCkwBihqDPMMJcS84QTAxBZ872ApZqYLXeWKfDoB4XxI7YT7HzHfU1TdoWXJiZcXxzbXssyCTgPxi2p32uF3G1uDyYQRyxoWgjb2UbVraiFudulmHZnh+ERWYUl3baD6ZXK+WuedIcw==
+ bh=G0ipXFG+hsotlA1ggq0sTO2n4IpjtmKdzNbJH3lowvU=;
+ b=EKx90jpJlbCQ68G6LhuFTcqB7a1/ys9DahrzEepVxGWsMU5yGE+8sUNB9JuAQS3iNhviwYO7qa3lX/3vv8AYOjfPKPBIUzvuKna533YcbVfD2WA0tI950HxRfMnouO4qJT79pYa0GN1oU8UxIO/LA8LAjrgtfK/qBMIw+oTPtSVDhs8lx7pwPtmxFy7YJhiWEsFLfPWliiYIK3DJBi7PA3E3ioNBl6y+hMRJdkTgxhvhBMEbJu4yJHwcYozO31wZwtcR8gloeCOjMziNxRQ5E5eN6HPm3CsLiNngGFQtu46WwFvnFCRivSyvaotaPZ0OZ2srvWsXAczPkpYGPLyuWg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
+ smtp.mailfrom=sony.com; dmarc=pass action=none header.from=sony.com;
+ dkim=pass header.d=sony.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Sony.onmicrosoft.com;
+ s=selector2-Sony-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=4UMtaqoJlOxNwPgl4JcQHv4ZJ8R5FrtPCLp9J5Nskic=;
- b=tZ2Tw77+eLUvueld24qiT5hUNA3PI6shIASzje5/cZ+q8Rj2hnPLX6eU/71Ud6fDUwP/cf/02WihAdSr2mu65J1KsB/KakFDD/UO/WiGYvs3gkUWzXy/XyCCEOOp9JqVdAHuv+HfwyKFoNtrNuN97GMLVy7JeV7LW98/iqf51T4=
-Authentication-Results: spf=none (sender IP is )
- smtp.mailfrom=Thomas.Lendacky@amd.com; 
-Received: from DM6PR12MB3163.namprd12.prod.outlook.com (2603:10b6:5:15e::26)
- by DM6PR12MB2985.namprd12.prod.outlook.com (2603:10b6:5:116::18) with
+ bh=G0ipXFG+hsotlA1ggq0sTO2n4IpjtmKdzNbJH3lowvU=;
+ b=VuC13j7XyRjnevXHbl1zJffQqgkiGuXECJZ4YTNvM8fplf8N5bikl0vGPtHResGaReIpyv7XAomCH7Ih/xxKRJGQsgSU7SSTbNCihewoonTBZTdJwImmWvcJsTbDkXjN3EtZxwH/kS9wUq9MBhxBR4oXOop7/PiAWJr6OpPg3uY=
+Received: from MWHPR13MB0895.namprd13.prod.outlook.com (2603:10b6:300:2::27)
+ by MWHPR13MB1838.namprd13.prod.outlook.com (2603:10b6:300:132::8) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2878.15; Wed, 8 Apr
- 2020 17:00:07 +0000
-Received: from DM6PR12MB3163.namprd12.prod.outlook.com
- ([fe80::f0f9:a88f:f840:2733]) by DM6PR12MB3163.namprd12.prod.outlook.com
- ([fe80::f0f9:a88f:f840:2733%7]) with mapi id 15.20.2878.022; Wed, 8 Apr 2020
- 17:00:07 +0000
-Subject: Re: [PATCH] crypto: ccp -- don't "select" CONFIG_DMADEVICES
-To:     Arnd Bergmann <arnd@arndb.de>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S. Miller" <davem@davemloft.net>
-Cc:     Ard Biesheuvel <ardb@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Eric Biggers <ebiggers@google.com>,
-        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200408162652.3987688-1-arnd@arndb.de>
-From:   Tom Lendacky <thomas.lendacky@amd.com>
-Message-ID: <dade39d2-db11-1830-eda0-d39b40f6c3aa@amd.com>
-Date:   Wed, 8 Apr 2020 12:00:05 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
-In-Reply-To: <20200408162652.3987688-1-arnd@arndb.de>
-Content-Type: text/plain; charset=utf-8; format=flowed
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2900.12; Wed, 8 Apr
+ 2020 17:01:20 +0000
+Received: from MWHPR13MB0895.namprd13.prod.outlook.com
+ ([fe80::7c:8ba0:7659:de57]) by MWHPR13MB0895.namprd13.prod.outlook.com
+ ([fe80::7c:8ba0:7659:de57%7]) with mapi id 15.20.2900.012; Wed, 8 Apr 2020
+ 17:01:20 +0000
+From:   "Bird, Tim" <Tim.Bird@sony.com>
+To:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        Linux Doc Mailing List <linux-doc@vger.kernel.org>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Markus Heiser <markus.heiser@darmarit.de>
+Subject: RE: [PATCH 1/6] scripts: sphinx-pre-install: improve distro detection
+ check
+Thread-Topic: [PATCH 1/6] scripts: sphinx-pre-install: improve distro
+ detection check
+Thread-Index: AQHWDb5iIjm0kAhwrECaQ7vbPFdNK6hvcodA
+Date:   Wed, 8 Apr 2020 17:01:20 +0000
+Message-ID: <MWHPR13MB08950C5CC92A0C0FE0532AFAFDC00@MWHPR13MB0895.namprd13.prod.outlook.com>
+References: <cover.1586361086.git.mchehab+huawei@kernel.org>
+ <2f22c8a80a4740176fabdee0d0cd23dbe7395b03.1586361086.git.mchehab+huawei@kernel.org>
+In-Reply-To: <2f22c8a80a4740176fabdee0d0cd23dbe7395b03.1586361086.git.mchehab+huawei@kernel.org>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SN2PR01CA0046.prod.exchangelabs.com (2603:10b6:800::14) To
- DM6PR12MB3163.namprd12.prod.outlook.com (2603:10b6:5:15e::26)
-MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from office-linux.texastahm.com (67.79.209.213) by SN2PR01CA0046.prod.exchangelabs.com (2603:10b6:800::14) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2900.15 via Frontend Transport; Wed, 8 Apr 2020 17:00:06 +0000
-X-Originating-IP: [67.79.209.213]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: dc99dd38-47b6-4d1e-5e39-08d7dbde4a71
-X-MS-TrafficTypeDiagnostic: DM6PR12MB2985:
-X-Microsoft-Antispam-PRVS: <DM6PR12MB29855D3FB2C7927BBA0396ADECC00@DM6PR12MB2985.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:7219;
-X-Forefront-PRVS: 0367A50BB1
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR12MB3163.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10009020)(4636009)(136003)(366004)(376002)(346002)(396003)(39860400002)(81156014)(316002)(52116002)(6512007)(26005)(2906002)(54906003)(66556008)(66476007)(110136005)(66946007)(6506007)(53546011)(31686004)(478600001)(4326008)(8676002)(956004)(2616005)(16526019)(86362001)(81166007)(8936002)(186003)(36756003)(31696002)(6486002)(5660300002);DIR:OUT;SFP:1101;
-Received-SPF: None (protection.outlook.com: amd.com does not designate
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Tim.Bird@sony.com; 
+x-originating-ip: [160.33.66.122]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 6d77e18d-3675-4ea5-5bb6-08d7dbde7623
+x-ms-traffictypediagnostic: MWHPR13MB1838:
+x-microsoft-antispam-prvs: <MWHPR13MB1838F2D0266BE78F912AF166FDC00@MWHPR13MB1838.namprd13.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:1060;
+x-forefront-prvs: 0367A50BB1
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MWHPR13MB0895.namprd13.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10019020)(4636009)(366004)(396003)(136003)(346002)(39860400002)(376002)(55016002)(66556008)(66476007)(66946007)(4326008)(186003)(71200400001)(64756008)(66446008)(478600001)(81156014)(5660300002)(52536014)(316002)(76116006)(7696005)(2906002)(86362001)(6506007)(54906003)(110136005)(26005)(81166007)(9686003)(8936002)(33656002)(8676002);DIR:OUT;SFP:1102;
+received-spf: None (protection.outlook.com: sony.com does not designate
  permitted sender hosts)
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: ANm3uqECoOYQLIig2GteQfyJCXfBwTkw6obFZdyQ7+MjOGgwWNbKtoEt4DIjF5YKAEzKh5dZBZxnMM4ZsMM7egPl4YBA8qyh7h2eKgpQzYQqQ+NqYDNnOjQc2HoLuZBIkfZPMSvCdhdElkMDT2JTd//DDjIlTfEu3KIkvP0APXh6B1uDJdSPLR6Naojnm4IQYiNTv+GK6H4KXvQZmnvD1GuYtsbKY4Dpdtb1hn4KkVsFf2/qMfH3CL1cMLHF+4ThtVVsAD4Rd59pFpitO4vdF3eridPp9bRbus1hnpCf6aimzPuxiqzqPbBL6M8oxh/Uj7jLjxKE4MaHNjmih7xSGh8RD4uKgh+unfMNAfOcs+vso4aKNrBsfi+SEkPv7nLXy2jQ8kMx4lO9Ojyav6DtbxDoakk5n/DGZa8G9HQlqQ3eu9tMmJw+iafyuy2ul5DC
-X-MS-Exchange-AntiSpam-MessageData: 36lbM3KH+CimP+w9Fk/A8SZ94vJrV98HSh6/P0qTn67at5mJ2N55b0qk6bz5W9BQqPCOHRmmjW8ZfCf+Tb5K1XfPAFf0ziC2ifWqqr8JMO/rYFs/fBxk0i7UIvFZN3GZ92Uzd2Lf5lEEg03aLikqZA==
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: dc99dd38-47b6-4d1e-5e39-08d7dbde4a71
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 Apr 2020 17:00:07.5510
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: 7A8Vo4vT1vb/9EN4B/bxwvjJL1MLU2eYiFv0ehMuzpV3k/XEXyAsZCFjIDKpZUutwTYt/rMi9Z93LMc7Y05aabI4KYjbrhHZdxG2kFDZrIBCigPu8SsErn+yweFCRZfdULUtxAzC6zU+Ocfvei1u/MbWXK380hIJuxjiMOfItKA0LaCPeRsFI5WQ2HVpKk8t6PllKcuYU0hkjqpr9o8z0vX5Q928j9AwXJfctnnv/aH2OJOBrPzI/3rFdxEPqQ3URuWLAOOOyq80ffdz0HJg3Fkt+4FSTn/K3UiKFxcOiYu5OD6fb6BIAk3Eejnqsg3VRyEpC3J7kRbV7LeDm6d6CIbN7J8v32EAbj38SkXzEMDz360oy91/mA5UKRgidD68d3YGbP/DDj2Srz+w1TBeAJ8d19owkIadlYoGAjzI1d+AQeKmmuIqleLFXFNBbUGg
+x-ms-exchange-antispam-messagedata: KNqU3ozymJkWKoMVdueqsai0dkWDbYpAPuYNI1jd0yureebe6rvlCuWjXSPoJd7lgwGpSl91ieSNWllznE+71RrigTl4T1bnDYbhTFEXf93ow950XBakWS1sJFMerhuoUinbu7tDEtXnQNIwvpVh2g==
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: sony.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 6d77e18d-3675-4ea5-5bb6-08d7dbde7623
+X-MS-Exchange-CrossTenant-originalarrivaltime: 08 Apr 2020 17:01:20.5037
  (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: KEFLaAcoUfaYajHQqxBw8N/8JnUTwpRicftqlkoUXWjZ3GCHHozd6k2zahVtl65r4gFGPRt4Ue4PhvNCw95jhQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB2985
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 66c65d8a-9158-4521-a2d8-664963db48e4
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 7z3LLFwKM5aPleDHVJ4frcXBw4InjDDvWb+TgpaYQusDW6iKBiubAGEq8sc8VINekhRnEkS8gsWGGrcOb6jzmA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR13MB1838
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/8/20 11:26 AM, Arnd Bergmann wrote:
-> DMADEVICES is the top-level option for the slave DMA
-> subsystem, and should not be selected by device drivers,
-> as this can cause circular dependencies such as:
-> 
-> drivers/net/ethernet/freescale/Kconfig:6:error: recursive dependency detected!
-> drivers/net/ethernet/freescale/Kconfig:6:	symbol NET_VENDOR_FREESCALE depends on PPC_BESTCOMM
-> drivers/dma/bestcomm/Kconfig:6:	symbol PPC_BESTCOMM depends on DMADEVICES
-> drivers/dma/Kconfig:6:	symbol DMADEVICES is selected by CRYPTO_DEV_SP_CCP
-> drivers/crypto/ccp/Kconfig:10:	symbol CRYPTO_DEV_SP_CCP depends on CRYPTO
-> crypto/Kconfig:16:	symbol CRYPTO is selected by LIBCRC32C
-> lib/Kconfig:222:	symbol LIBCRC32C is selected by LIQUIDIO
-> drivers/net/ethernet/cavium/Kconfig:65:	symbol LIQUIDIO depends on PTP_1588_CLOCK
-> drivers/ptp/Kconfig:8:	symbol PTP_1588_CLOCK is implied by FEC
-> drivers/net/ethernet/freescale/Kconfig:23:	symbol FEC depends on NET_VENDOR_FREESCALE
-> 
-> The LIQUIDIO driver causing this problem is addressed in a
-> separate patch, but this change is needed to prevent it from
-> happening again.
-> 
-> Using "depends on DMADEVICES" is what we do for all other
-> implementations of slave DMA controllers as well.
-> 
-> Fixes: b3c2fee5d66b ("crypto: ccp - Ensure all dependencies are specified")
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 
-Acked-by: Tom Lendacky <thomas.lendacky@amd.com>
 
+> -----Original Message-----
+> From: Mauro Carvalho Chehab <mchehab@kernel.org> On Behalf Of Mauro Carva=
+lho Chehab
+>=20
+> The Arch-linux detection is hit by catting /etc/issue, whose
+> contents is (nowadays):
+>=20
+> 	Arch Linux \r (\l)
+>=20
+> It sounds a little ackward to print such string, so,
+> instead, let's use the /etc/os-release file, with exists
+> on lots of distributions and should provide a more reliable
+> result.
+>=20
+> We'll keep the old tests before it, in order to avoid possible
+> regressions with the other distros, although the new way should
+> probably work on all the currently supported distributions.
+>=20
+> Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 > ---
->   drivers/crypto/ccp/Kconfig | 3 +--
->   1 file changed, 1 insertion(+), 2 deletions(-)
-> 
-> diff --git a/drivers/crypto/ccp/Kconfig b/drivers/crypto/ccp/Kconfig
-> index e0a8bd15aa74..32268e239bf1 100644
-> --- a/drivers/crypto/ccp/Kconfig
-> +++ b/drivers/crypto/ccp/Kconfig
-> @@ -10,10 +10,9 @@ config CRYPTO_DEV_CCP_DD
->   config CRYPTO_DEV_SP_CCP
->   	bool "Cryptographic Coprocessor device"
->   	default y
-> -	depends on CRYPTO_DEV_CCP_DD
-> +	depends on CRYPTO_DEV_CCP_DD && DMADEVICES
->   	select HW_RANDOM
->   	select DMA_ENGINE
-> -	select DMADEVICES
->   	select CRYPTO_SHA1
->   	select CRYPTO_SHA256
->   	help
-> 
+>  scripts/sphinx-pre-install | 18 ++++++++++++++++++
+>  1 file changed, 18 insertions(+)
+>=20
+> diff --git a/scripts/sphinx-pre-install b/scripts/sphinx-pre-install
+> index fa3fb05cd54b..c2071a1c69ea 100755
+> --- a/scripts/sphinx-pre-install
+> +++ b/scripts/sphinx-pre-install
+> @@ -780,6 +780,24 @@ $system_release =3D catcheck("/etc/system-release") =
+if !$system_release;
+>  $system_release =3D catcheck("/etc/redhat-release") if !$system_release;
+>  $system_release =3D catcheck("/etc/lsb-release") if !$system_release;
+>  $system_release =3D catcheck("/etc/gentoo-release") if !$system_release;
+> +
+> +# This seems more common than LSB those days
+should 'those' be 'these'?
+
+> +if (!$system_release) {
+> +	my %os_var;
+> +	if (open IN, "cat /etc/os-release|") {
+> +		while (<IN>) {
+> +			if (m/^([\w\d\_]+)=3D\"?([^\"]*)\"?\n/) {
+> +				$os_var{$1}=3D$2;
+> +			}
+> +		}
+> +		$system_release =3D $os_var{"NAME"};
+> +		if (defined($os_var{"VERSION_ID"})) {
+> +			$system_release .=3D " " . $os_var{"VERSION_ID"} if (defined($os_var{=
+"VERSION_ID"}));
+> +		} else {
+> +			$system_release .=3D " " . $os_var{"VERSION"};
+> +		}
+> +	}
+> +}
+>  $system_release =3D catcheck("/etc/issue") if !$system_release;
+>  $system_release =3D~ s/\s+$//;
+>=20
+> --
+> 2.25.2
+
