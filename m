@@ -6,90 +6,106 @@ X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AA06C2BA1B
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 20:18:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 544ABC2BA1A
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 20:19:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F0864206C0
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 20:18:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 31DDB206C0
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 20:19:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729766AbgDHUSK (ORCPT
+        id S1729805AbgDHUTZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Apr 2020 16:18:10 -0400
-Received: from asavdk4.altibox.net ([109.247.116.15]:47342 "EHLO
-        asavdk4.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726891AbgDHUSJ (ORCPT
+        Wed, 8 Apr 2020 16:19:25 -0400
+Received: from smtp08.smtpout.orange.fr ([80.12.242.130]:19921 "EHLO
+        smtp.smtpout.orange.fr" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726891AbgDHUTY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Apr 2020 16:18:09 -0400
-Received: from ravnborg.org (unknown [158.248.194.18])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by asavdk4.altibox.net (Postfix) with ESMTPS id B564B804E6;
-        Wed,  8 Apr 2020 22:18:03 +0200 (CEST)
-Date:   Wed, 8 Apr 2020 22:18:02 +0200
-From:   Sam Ravnborg <sam@ravnborg.org>
-To:     David Lu <david.lu@bitland.com.cn>
-Cc:     Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org,
-        David Airlie <airlied@linux.ie>, linux-kernel@vger.kernel.org,
-        Rob Herring <robh+dt@kernel.org>, jungle.chiang@bitland.com.cn,
-        Thierry Reding <thierry.reding@gmail.com>,
-        dri-devel@lists.freedesktop.org
-Subject: Re: [PATCH] dt-bindings: boe, tv101wum-n16: Add compatible for boe
- tv105wum-nw0.
-Message-ID: <20200408201802.GB612@ravnborg.org>
-References: <20200324094525.4758-1-david.lu@bitland.com.cn>
+        Wed, 8 Apr 2020 16:19:24 -0400
+Received: from [192.168.42.210] ([93.22.134.86])
+        by mwinf5d68 with ME
+        id QLKH220081s0W2503LKHT1; Wed, 08 Apr 2020 22:19:18 +0200
+X-ME-Helo: [192.168.42.210]
+X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
+X-ME-Date: Wed, 08 Apr 2020 22:19:18 +0200
+X-ME-IP: 93.22.134.86
+Subject: Re: [PATCH] checkpatch: check for missing \n at the end of logging
+ message
+To:     Joe Perches <joe@perches.com>, apw@canonical.com
+Cc:     linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
+References: <20200407204908.10420-1-christophe.jaillet@wanadoo.fr>
+ <437746b14735ecef311720ad41d5b237209e9674.camel@perches.com>
+From:   Marion & Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Message-ID: <48f32229-068d-cc62-b6df-03cdc11b99a4@wanadoo.fr>
+Date:   Wed, 8 Apr 2020 22:19:17 +0200
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200324094525.4758-1-david.lu@bitland.com.cn>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-CMAE-Score: 0
-X-CMAE-Analysis: v=2.3 cv=XpTUx2N9 c=1 sm=1 tr=0
-        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
-        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=iKCrp2iyAAAA:8
-        a=e5mUnYsNAAAA:8 a=KSWG7gIH_8gM9piVvoQA:9 a=CjuIK1q_8ugA:10
-        a=6dnM-gFdnRAg0d82BWIM:22 a=Vxmtnl_E_bksehYqCbjh:22
+In-Reply-To: <437746b14735ecef311720ad41d5b237209e9674.camel@perches.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi David.
 
-On Tue, Mar 24, 2020 at 05:45:25PM +0800, David Lu wrote:
-> Add bindings documentation for BOE TV105WUM-NW0 10.5" WUXGA TFT LCD
-> panel.
-> 
-> Signed-off-by: David Lu <david.lu@bitland.com.cn>
-> Change-Id: I450c0e52aae080728d4794bdffc50bb0d2f39f40
+Le 08/04/2020 à 02:33, Joe Perches a écrit :
+> On Tue, 2020-04-07 at 22:49 +0200, Christophe JAILLET wrote:
+>> Strings logged with pr_xxx and dev_xxx often lack a trailing '\n'.
+>> Introduce new tests to try to catch them early.
+>>
+>> Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+>> ---
+>> This is more a PoC for now.
+>>
+>> Regex could be improved, merged, ...
+>> We could also check for surrounding pr_cont...
+>>
+>> This patch is based on idea from [1]. coccinelle spots too many places
+>> where \n are missing (~ 2800 with the heuristic I've used).
+>> Fixing them would be painful.
+>> I instead propose to teach checkpatch.pl about it to try to spot cases
+>> early and avoid introducing new cases.
+>>
+>> [1]: https://marc.info/?l=kernel-janitors&m=158619533629657&w=4
+>> ---
+>>   scripts/checkpatch.pl | 10 ++++++++++
+>>   1 file changed, 10 insertions(+)
+>>
+>> diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
+>> index c392ab8ea12e..792804bd6ad9 100755
+>> --- a/scripts/checkpatch.pl
+>> +++ b/scripts/checkpatch.pl
+>> @@ -5676,6 +5676,16 @@ sub process {
+>>   			}
+>>   		}
+>>   
+>> +# check for missing \n at the end of logging function
+>> +		if ($line =~ /\bpr_(emerg|alert|crit|err|warning|warn|notice|info|debug|dbg)\s*\("([^"]*(?<!\\n))"/) {
+>> +			WARN("MISSING NL",
+>> +			     "Possible missing '\\n' at the end of a log message\n" . $hereprev);
+>> +		}
+>> +		if ($line =~ /\bdev_(emerg|alert|crit|err|warning|warn|notice|info|debug|dbg)\s*\([^,]*,\s*"([^"]*(?<!\\n))"/) {
+>> +			WARN("MISSING NL",
+>> +			     "Possible missing '\\n' at the end of a log message\n" . $hereprev);
+>> +		}
+> This can't work as string is masked to "XXX"
 
-I dropped the Change-Id while applying.
-Applied to drm-misc-next and pushed out.
+Ok. I wasn't aware of that.
 
-	Sam
+I tested the regex with regex101.org and only tested with patches that 
+trigger the checkpatch.pl test, and it worked fine for me.
+I didn't test with string with trailing \n, that should NOT trigger the 
+test. I should have! :(
 
-> ---
->  .../devicetree/bindings/display/panel/boe,tv101wum-nl6.yaml     | 2 ++
->  1 file changed, 2 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/display/panel/boe,tv101wum-nl6.yaml b/Documentation/devicetree/bindings/display/panel/boe,tv101wum-nl6.yaml
-> index 740213459134..7f5df5851017 100644
-> --- a/Documentation/devicetree/bindings/display/panel/boe,tv101wum-nl6.yaml
-> +++ b/Documentation/devicetree/bindings/display/panel/boe,tv101wum-nl6.yaml
-> @@ -24,6 +24,8 @@ properties:
->        - boe,tv101wum-n53
->          # AUO B101UAN08.3 10.1" WUXGA TFT LCD panel
->        - auo,b101uan08.3
-> +        # BOE TV105WUM-NW0 10.5" WUXGA TFT LCD panel
-> +      - boe,tv105wum-nw0
->  
->    reg:
->      description: the virtual channel number of a DSI peripheral
-> -- 
-> 2.24.1
-> 
-> 
-> 
-> _______________________________________________
-> dri-devel mailing list
-> dri-devel@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/dri-devel
+> This is probably better using $stat and checking if a "XX" format
+> string exists as 1st or 2nd arg and adding an extraction
+> from the $rawline equivalent and checking that.
+>
+> Also this test should probably using $logFunctions and check
+> if the initial block is one of the known functions that
+> use a newline termination (pr_|dev_|netdev_|wiphy_)
+
+Agreed but your perl and regex is much more fluent than mine. ;-)
+
+CJ
