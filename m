@@ -2,205 +2,190 @@ Return-Path: <SRS0=8dav=5Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5780C2BA1B
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 08:51:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D716C2D0EA
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 08:52:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 84E8A2074F
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 08:51:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=mm-sol.com header.i=@mm-sol.com header.b="SEEreytG"
+	by mail.kernel.org (Postfix) with ESMTP id 3D04320771
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 08:52:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727699AbgDHIvG (ORCPT
+        id S1727705AbgDHIwK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Apr 2020 04:51:06 -0400
-Received: from ns.mm-sol.com ([37.157.136.199]:45651 "EHLO extserv.mm-sol.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725932AbgDHIvG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Apr 2020 04:51:06 -0400
-Received: from [192.168.1.4] (212-5-158-69.ip.btc-net.bg [212.5.158.69])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by extserv.mm-sol.com (Postfix) with ESMTPSA id 078BDCFB8;
-        Wed,  8 Apr 2020 11:50:52 +0300 (EEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=mm-sol.com; s=201706;
-        t=1586335864; bh=VsRNvYY2aCX7GlVZfB9vp15tXVfvLLyJwZKlanf72FU=;
-        h=From:Subject:To:Cc:Date:From;
-        b=SEEreytGGNLKm2VerkE5dEZMxsabpBhgvByd/Qlztg+oqXN5uEUSsO78WMPYr0rNn
-         M4F/ut9YDHtc4aQymGDE92zJaBTuS9J3McV5e5mWsbzu0xT3MP1bldDPf+ikxcdcEE
-         sCB07IehTgoc8ka43ugHz1vn6TkKZEKVa5bTsmvmTypPxup+g+sVAzM3yy6oCpEVGv
-         JM8XOqcpztU1GD2kzv2j/FFlh7R1NRPjuII+nXdNPX4pDk3w0QXK3Z0ecjKzPz2Qrq
-         LOmBFAqcYCCCspuVpdUZ7quE9A/IIua483RwbU7inFJVu9PuOVxC/j4UaEbN1GLvry
-         d7WW4Pqueda2g==
-From:   Stanimir Varbanov <svarbanov@mm-sol.com>
-Subject: Re: [PATCH v2 07/10] PCIe: qcom: fix init problem with missing PARF
- programming
-To:     Ansuel Smith <ansuelsmth@gmail.com>, Andy Gross <agross@kernel.org>
-Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Andrew Murray <amurray@thegoodpenguin.co.uk>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200402121148.1767-1-ansuelsmth@gmail.com>
- <20200402121148.1767-8-ansuelsmth@gmail.com>
-Message-ID: <fea9cfd1-2bc7-0141-444e-9c781877ad02@mm-sol.com>
-Date:   Wed, 8 Apr 2020 11:50:43 +0300
+        Wed, 8 Apr 2020 04:52:10 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:55916 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726795AbgDHIwJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Apr 2020 04:52:09 -0400
+Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0388YkB6107935
+        for <linux-kernel@vger.kernel.org>; Wed, 8 Apr 2020 04:52:08 -0400
+Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 30920w5a8a-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Wed, 08 Apr 2020 04:52:07 -0400
+Received: from localhost
+        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <borntraeger@de.ibm.com>;
+        Wed, 8 Apr 2020 09:51:53 +0100
+Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
+        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Wed, 8 Apr 2020 09:51:49 +0100
+Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
+        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 0388q1b517957062
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 8 Apr 2020 08:52:01 GMT
+Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 134F152052;
+        Wed,  8 Apr 2020 08:52:01 +0000 (GMT)
+Received: from oc7455500831.ibm.com (unknown [9.145.153.96])
+        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id 29EFE52057;
+        Wed,  8 Apr 2020 08:52:00 +0000 (GMT)
+Subject: Re: [RFC][Qusetion] the value of cleared_(ptes|pmds|puds|p4ds) in
+ struct mmu_gather
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Zhenyu Ye <yezhenyu2@huawei.com>
+Cc:     npiggin@gmail.com, will.deacon@arm.com, mingo@kernel.org,
+        torvalds@linux-foundation.org, Vasily Gorbik <gor@linux.ibm.com>,
+        akpm@linux-foundation.org, luto@kernel.org, bp@alien8.de,
+        Marc Zyngier <maz@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-arch@vger.kernel.org, arm@kernel.org, xiexiangyou@huawei.com,
+        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
+        linux-s390 <linux-s390@vger.kernel.org>
+References: <fbb00ac0-9104-8d25-f225-7b3d1b17a01f@huawei.com>
+ <20200330121654.GL20696@hirez.programming.kicks-ass.net>
+From:   Christian Borntraeger <borntraeger@de.ibm.com>
+Autocrypt: addr=borntraeger@de.ibm.com; prefer-encrypt=mutual; keydata=
+ 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
+ nS4h0HDFPrrp1C2EMVYIQrMokWvlFZbCpsdYbBI=
+Date:   Wed, 8 Apr 2020 10:51:59 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-In-Reply-To: <20200402121148.1767-8-ansuelsmth@gmail.com>
+In-Reply-To: <20200330121654.GL20696@hirez.programming.kicks-ass.net>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+x-cbid: 20040808-0012-0000-0000-000003A08D20
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 20040808-0013-0000-0000-000021DDB182
+Message-Id: <68affa6e-44cd-37e3-cdfc-8eec31c4097e@de.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
+ definitions=2020-04-07_10:2020-04-07,2020-04-07 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 adultscore=0
+ impostorscore=0 spamscore=0 priorityscore=1501 bulkscore=0 malwarescore=0
+ lowpriorityscore=0 mlxlogscore=890 mlxscore=0 clxscore=1015 suspectscore=2
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
+ definitions=main-2004080065
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Ansuel,
+Sorry, just saw that now..
 
-Please fix the patch subject for all patches in the series per Bjorn H.
-request.
+On 30.03.20 14:16, Peter Zijlstra wrote:
+> On Sat, Mar 28, 2020 at 12:30:50PM +0800, Zhenyu Ye wrote:
+>> Hi all,
+>>
+>> commit a6d60245 "Track which levels of the page tables have been cleared"
+>> added cleared_(ptes|pmds|puds|p4ds) in struct mmu_gather, and the values
+>> of them are set in some places. For example:
+>>
+>> In include/asm-generic/tlb.h, pte_free_tlb() set the tlb->cleared_pmds:
+>> ---8<---
+>> #ifndef pte_free_tlb
+>> #define pte_free_tlb(tlb, ptep, address)			\
+>> 	do {							\
+>> 		__tlb_adjust_range(tlb, address, PAGE_SIZE);	\
+>> 		tlb->freed_tables = 1;				\
+>> 		tlb->cleared_pmds = 1;				\
+>> 		__pte_free_tlb(tlb, ptep, address);		\
+>> 	} while (0)
+>> #endif
+>> ---8<---
+>>
+>>
+>> However, in arch/s390/include/asm/tlb.h, pte_free_tlb() set the tlb->cleared_ptes:
+>> ---8<---
+>> static inline void pte_free_tlb(struct mmu_gather *tlb, pgtable_t pte,
+>>                                 unsigned long address)
+>> {
+>> 	__tlb_adjust_range(tlb, address, PAGE_SIZE);
+>> 	tlb->mm->context.flush_mm = 1;
+>> 	tlb->freed_tables = 1;
+>> 	tlb->cleared_ptes = 1;
+>> 	/*
+>> 	 * page_table_free_rcu takes care of the allocation bit masks
+>> 	 * of the 2K table fragments in the 4K page table page,
+>> 	 * then calls tlb_remove_table.
+>> 	 */
+>> 	page_table_free_rcu(tlb, (unsigned long *) pte, address);
+>> }
+>> ---8<---
 
-PCI: qcom: Fix init problem with missing PARF programming
+adding Gerald and Vasily. Gerald can you have a look?
 
-Also the patch subject is misleading to me. Actually you change few phy
-parameters: Tx De-Emphasis, Tx Swing and Rx equalization. On the other
-side I guess those parameters are board specific and I'm not sure how
-this change will reflect on apq8064 boards.
-
-On 4/2/20 3:11 PM, Ansuel Smith wrote:
-> PARF programming was missing and this cause initilizzation problem on
-> some ipq806x based device (Netgear R7800 for example). This cause a
-> total lock of the system on kernel load.
+>>
+>>
+>> In my view, the cleared_(ptes|pmds|puds) and (pte|pmd|pud)_free_tlb
+>> correspond one-to-one.  So we should set cleared_ptes in pte_free_tlb(),
+>> then use it when needed.
 > 
-> Fixes: 82a82383 PCI: qcom: Add Qualcomm PCIe controller driver
-> Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
-> ---
->  drivers/pci/controller/dwc/pcie-qcom.c | 48 +++++++++++++++++++++-----
->  1 file changed, 39 insertions(+), 9 deletions(-)
+> So pte_free_tlb() clears a table of PTE entries, or a PMD level entity,
+> also see free_pte_range(). So the generic code makes sense to me. The
+> PTE level invalidations will have happened on tlb_remove_tlb_entry().
 > 
-> diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
-> index 211a1aa7d0f1..77b1ab7e23a3 100644
-> --- a/drivers/pci/controller/dwc/pcie-qcom.c
-> +++ b/drivers/pci/controller/dwc/pcie-qcom.c
-> @@ -46,6 +46,9 @@
->  
->  #define PCIE20_PARF_PHY_CTRL			0x40
->  #define PCIE20_PARF_PHY_REFCLK			0x4C
-> +#define REF_SSP_EN				BIT(16)
-> +#define REF_USE_PAD				BIT(12)
-
-Could you rename this to:
-
-PHY_REFCLK_SSP_EN
-PHY_REFCLK_USE_PAD
-
-> +
->  #define PCIE20_PARF_DBI_BASE_ADDR		0x168
->  #define PCIE20_PARF_SLV_ADDR_SPACE_SIZE		0x16C
->  #define PCIE20_PARF_MHI_CLOCK_RESET_CTRL	0x174
-> @@ -77,6 +80,18 @@
->  #define DBI_RO_WR_EN				1
->  
->  #define PERST_DELAY_US				1000
-> +/* PARF registers */
-> +#define PCIE20_PARF_PCS_DEEMPH			0x34
-> +#define PCS_DEEMPH_TX_DEEMPH_GEN1(x)		(x << 16)
-> +#define PCS_DEEMPH_TX_DEEMPH_GEN2_3_5DB(x)	(x << 8)
-> +#define PCS_DEEMPH_TX_DEEMPH_GEN2_6DB(x)	(x << 0)
-> +
-> +#define PCIE20_PARF_PCS_SWING			0x38
-> +#define PCS_SWING_TX_SWING_FULL(x)		(x << 8)
-> +#define PCS_SWING_TX_SWING_LOW(x)		(x << 0)
-> +
-> +#define PCIE20_PARF_CONFIG_BITS		0x50
-> +#define PHY_RX0_EQ(x)				(x << 24)
->  
->  #define PCIE20_v3_PARF_SLV_ADDR_SPACE_SIZE	0x358
->  #define SLV_ADDR_SPACE_SZ			0x10000000
-> @@ -184,6 +199,16 @@ struct qcom_pcie {
->  
->  #define to_qcom_pcie(x)		dev_get_drvdata((x)->dev)
->  
-> +static inline void qcom_clear_and_set_dword(void __iomem *addr,
-
-drop 'inline' the compiler is smart enough to decide.
-
-> +				 u32 clear_mask, u32 set_mask)
-> +{
-> +	u32 val = readl(addr);
-> +
-> +	val &= ~clear_mask;
-> +	val |= set_mask;
-> +	writel(val, addr);
-> +}
-> +
-
-If you add such function you should introduce it in a separate patch and
-use it in the whole driver where it is applicable. After that we can see
-what is the benefit of it.
-
->  static void qcom_ep_reset_assert(struct qcom_pcie *pcie)
->  {
->  	gpiod_set_value_cansleep(pcie->reset, 1);
-> @@ -304,7 +329,6 @@ static int qcom_pcie_init_2_1_0(struct qcom_pcie *pcie)
->  	struct qcom_pcie_resources_2_1_0 *res = &pcie->res.v2_1_0;
->  	struct dw_pcie *pci = pcie->pci;
->  	struct device *dev = pci->dev;
-> -	u32 val;
->  	int ret;
->  
->  	ret = regulator_bulk_enable(ARRAY_SIZE(res->supplies), res->supplies);
-> @@ -355,15 +379,21 @@ static int qcom_pcie_init_2_1_0(struct qcom_pcie *pcie)
->  		goto err_deassert_ahb;
->  	}
->  
-> -	/* enable PCIe clocks and resets */
-> -	val = readl(pcie->parf + PCIE20_PARF_PHY_CTRL);
-> -	val &= ~BIT(0);
-> -	writel(val, pcie->parf + PCIE20_PARF_PHY_CTRL);
-> +	qcom_clear_and_set_dword(pcie->parf + PCIE20_PARF_PHY_CTRL, BIT(0), 0);
-
-please keep the comment.
-
-> +
-> +	/* PARF programming */
-
-pointless comment, please drop it.
-
-> +	writel(PCS_DEEMPH_TX_DEEMPH_GEN1(0x18) |
-> +	       PCS_DEEMPH_TX_DEEMPH_GEN2_3_5DB(0x18) |
-> +	       PCS_DEEMPH_TX_DEEMPH_GEN2_6DB(0x22),
-> +	       pcie->parf + PCIE20_PARF_PCS_DEEMPH);
-> +	writel(PCS_SWING_TX_SWING_FULL(0x78) |
-> +	       PCS_SWING_TX_SWING_LOW(0x78),
-> +	       pcie->parf + PCIE20_PARF_PCS_SWING);
-> +	writel(PHY_RX0_EQ(0x4), pcie->parf + PCIE20_PARF_CONFIG_BITS);
->  
-> -	/* enable external reference clock */
-> -	val = readl(pcie->parf + PCIE20_PARF_PHY_REFCLK);
-> -	val |= BIT(16);
-> -	writel(val, pcie->parf + PCIE20_PARF_PHY_REFCLK);
-> +	/* enable reference clock */
-
-Why you dropped 'external' ?
-
-> +	qcom_clear_and_set_dword(pcie->parf + PCIE20_PARF_PHY_REFCLK,
-> +		      REF_USE_PAD, REF_SSP_EN);
->  
->  	ret = reset_control_deassert(res->phy_reset);
->  	if (ret) {
+>> I'm very confused about this. Which is wrong? Or is there something
+>> I understand wrong?
+> 
+> I agree the s390 case is puzzling, Martin does s390 need a PTE level
+> invalidate for removing a PTE table or was this a mistake?
 > 
 
--- 
-regards,
-Stan
