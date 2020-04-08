@@ -2,124 +2,121 @@ Return-Path: <SRS0=8dav=5Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78BC9C2BA2B
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 13:13:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 873CDC2D0EA
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 13:17:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2E144206F7
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 13:13:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 439FA2072A
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 13:17:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fTBMY2BU"
+	dkim=pass (1024-bit key) header.d=yandex.ru header.i=@yandex.ru header.b="klGqDbBm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728495AbgDHNN5 (ORCPT
+        id S1729054AbgDHNRN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Apr 2020 09:13:57 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:34167 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726709AbgDHNN5 (ORCPT
+        Wed, 8 Apr 2020 09:17:13 -0400
+Received: from forward101j.mail.yandex.net ([5.45.198.241]:41158 "EHLO
+        forward101j.mail.yandex.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728484AbgDHNRN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Apr 2020 09:13:57 -0400
-Received: by mail-io1-f65.google.com with SMTP id f3so1368ioj.1;
-        Wed, 08 Apr 2020 06:13:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=8nD34K5pjnKrhNZ/IDFX0q8TbRjSUPEDKUV8DiV88EM=;
-        b=fTBMY2BUApkworc3vB/SEq2Tj2Ebry8B29xg6eiIaBN0kfm7DSk1BzZ4/iP1l9XOHq
-         zSc23vODTSVFwtfd9Zw4RB763HLpGeNzPSOwPC8zX2JQl4eUmdnePV+34+Kc0m4PWh+k
-         rcDEH1GOvygS8953k9AjW7xx+PpVNwzCBKXDRyomHgsK9peCbjiU0rq1lVE4O5tLw0Za
-         KprMRiVP5dREID+UMAvzKVAY0kFzgINYjQhLgoEmCxnlBpN2qY8yQ0HDKmItOOu3YyT7
-         vBScu63QYN/qc5wUT30O7j/DXuxdJpTr+RdLZFfMqOcM7MwMP4FdCuJBeJesaFCVkoT1
-         itqg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=8nD34K5pjnKrhNZ/IDFX0q8TbRjSUPEDKUV8DiV88EM=;
-        b=kdq7WkQb0OywRIShDLsyJouPXHdm2OBJnjK/tZAZHY5repKglqyi74Lf3HM6E9L/At
-         +AqylYSqMhsJ3yYOxgaNCftIivL5ggDrUnOyUJIpm4CJL08Cz02Aj4E7wbZktN80s+Nj
-         9WZU+X5svC6UYMql8tiSDCNo46KApw1ruP1l58cgyK0IxGECchzXUZqwk/Px8lChE82U
-         OAIihkAyEDrrCFPdOPtAKpNCPIfi3PsrrchA58arEdoyVEfgaekASdzDqySetE7/XsqL
-         INYdIyQi9P559wBv6jBHKo64gHcC9uM9DvJ+ZKonlPLPCrJ7Xn85j68UlfyNMAnLyqd5
-         rx0g==
-X-Gm-Message-State: AGi0PuZOBQ3DTM1hQ7mfV7wzWaF6OuzuCft2+GMNmFjEIHITO2FyC3AV
-        PEq+PTUEjLFizbGjfIEYSPVLsSWtAlaYsiygTRI=
-X-Google-Smtp-Source: APiQypKe/jG/Ygr7L5LC6TETf4HSCl2G7Zz2PbD1bznu/pDr8JB9qbVFTLFFJ9NDoQA/XxfMFeD356DZa5k9dnCEDpc=
-X-Received: by 2002:a02:ccf4:: with SMTP id l20mr1046213jaq.28.1586351636019;
- Wed, 08 Apr 2020 06:13:56 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200327204711.10614-1-alcooperx@gmail.com> <20200327204711.10614-2-alcooperx@gmail.com>
- <20200330154006.GA21478@bogus> <7e980e08-bc4c-aad5-fce0-0133e4e479f8@gmail.com>
-In-Reply-To: <7e980e08-bc4c-aad5-fce0-0133e4e479f8@gmail.com>
-From:   Alan Cooper <alcooperx@gmail.com>
-Date:   Wed, 8 Apr 2020 09:13:45 -0400
-Message-ID: <CAOGqxeWuP5c2VtA5qHertbwzKrBjEA2Bo4ds_H+vqQ=h_zABEg@mail.gmail.com>
-Subject: Re: [PATCH v2 1/4] dt-bindings: Add Broadcom STB USB support
-To:     Florian Fainelli <f.fainelli@gmail.com>
-Cc:     Rob Herring <robh@kernel.org>,
-        ": Linux Kernel Mailing List" <linux-kernel@vger.kernel.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>,
-        Chunfeng Yun <chunfeng.yun@mediatek.com>,
-        DTML <devicetree@vger.kernel.org>,
+        Wed, 8 Apr 2020 09:17:13 -0400
+Received: from forward101q.mail.yandex.net (forward101q.mail.yandex.net [IPv6:2a02:6b8:c0e:4b:0:640:4012:bb98])
+        by forward101j.mail.yandex.net (Yandex) with ESMTP id 2B0DD1BE259D;
+        Wed,  8 Apr 2020 16:17:10 +0300 (MSK)
+Received: from mxback7q.mail.yandex.net (mxback7q.mail.yandex.net [IPv6:2a02:6b8:c0e:41:0:640:cbbf:d618])
+        by forward101q.mail.yandex.net (Yandex) with ESMTP id 28170CF40007;
+        Wed,  8 Apr 2020 16:17:10 +0300 (MSK)
+Received: from vla4-2e76570dd7f5.qloud-c.yandex.net (vla4-2e76570dd7f5.qloud-c.yandex.net [2a02:6b8:c17:c8b:0:640:2e76:570d])
+        by mxback7q.mail.yandex.net (mxback/Yandex) with ESMTP id yyyfb7s1NS-H9x026fN;
+        Wed, 08 Apr 2020 16:17:10 +0300
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex.ru; s=mail; t=1586351830;
+        bh=QICxSrOBFKEqCY/3Lc54+2QUvUNhDgqEpKodDF5z+hw=;
+        h=In-Reply-To:Cc:To:From:Subject:References:Date:Message-ID;
+        b=klGqDbBm6qFEA4IeFtQ84Wdke69SIVV36iC8bADRA9wueDhM1yAC6GowbEsiw/Ccb
+         eD7P8wYUAbVkt8SD0Ry6rrhgZhsn9a7ophx/VaVEnPY2fzFDovdajeslBa6DIjrC14
+         /0H3hJj0cVH66M5f+algGkygYfGXK+76FPieq+Nk=
+Authentication-Results: mxback7q.mail.yandex.net; dkim=pass header.i=@yandex.ru
+Received: by vla4-2e76570dd7f5.qloud-c.yandex.net (smtp/Yandex) with ESMTPSA id omL8cJmw5C-H8WaEfNU;
+        Wed, 08 Apr 2020 16:17:08 +0300
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (Client certificate not present)
+Message-ID: <e6140ec9728e5695bbd99270f1ed6b60aab8cf48.camel@yandex.ru>
+Subject: Re: [PATCH] virtio: virtio_console: add missing
+ MODULE_DEVICE_TABLE() for rproc serial
+From:   Alexander Lobakin <bloodyreaper@yandex.ru>
+To:     Amit Shah <amit@kernel.org>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        =?UTF-8?Q?Jonathan_Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        USB list <linux-usb@vger.kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Mathias Nyman <mathias.nyman@intel.com>
+        Sjur Brandeland <sjur.brandeland@stericsson.com>,
+        Rusty Russell <rusty@rustcorp.com.au>,
+        virtualization@lists.linux-foundation.org, stable@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Date:   Wed, 08 Apr 2020 16:17:07 +0300
+In-Reply-To: <f09bacf3029edfc7f90097f7fc6e41176ddd4873.camel@kernel.org>
+References: <20200310110538.19254-1-alobakin@dlink.ru>
+         <f09bacf3029edfc7f90097f7fc6e41176ddd4873.camel@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.36.1 
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Sending again in plain text.
+On Wed, 2020-03-11 at 15:53 +0100, Amit Shah wrote:
+> On Tue, 2020-03-10 at 14:05 +0300, Alexander Lobakin wrote:
+> > rproc_serial_id_table lacks an exposure to module devicetable, so
+> > when remoteproc firmware requests VIRTIO_ID_RPROC_SERIAL, no uevent
+> > is generated and no module autoloading occurs.
+> > Add missing MODULE_DEVICE_TABLE() annotation and move the existing
+> > one for VIRTIO_ID_CONSOLE right to the table itself.
+> > 
+> > Fixes: 1b6370463e88 ("virtio_console: Add support for remoteproc
+> > serial")
+> > Cc: <stable@vger.kernel.org> # v3.8+
+> > Signed-off-by: Alexander Lobakin <alobakin@dlink.ru>
+> 
+> Reviewed-by: Amit Shah <amit@kernel.org>
 
-On Tue, Apr 7, 2020 at 4:28 PM Florian Fainelli <f.fainelli@gmail.com> wrote:
->
-> On 3/30/2020 8:40 AM, Rob Herring wrote:
-> > On Fri, 27 Mar 2020 16:47:08 -0400, Al Cooper wrote:
-> >> Add DT bindings for Broadcom STB USB EHCI and XHCI drivers.
-> >>
-> >> NOTE: The OHCI driver is not included because it uses the generic
-> >>       platform driver.
-> >>
-> >> Signed-off-by: Al Cooper <alcooperx@gmail.com>
-> >> ---
-> >>  .../bindings/usb/brcm,bcm7445-ehci.yaml       | 61 +++++++++++++++++++
-> >>  .../devicetree/bindings/usb/usb-xhci.txt      |  1 +
-> >>  2 files changed, 62 insertions(+)
-> >>  create mode 100644 Documentation/devicetree/bindings/usb/brcm,bcm7445-ehci.yaml
-> >>
-> >
-> > My bot found errors running 'make dt_binding_check' on your patch:
-> >
-> > /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/usb/brcm,bcm7445-ehci.example.dt.yaml: ehci@f0b00300: 'interrupt-names' does not match any of the regexes: 'pinctrl-[0-9]+'
->
-> This warning does not seem to be legitimate, the 'interrupt-names'
-> property is a valid one, where do we update the schema such that it
-> knows about it?
+Thank you! Well, who will take this into his tree?
 
-It looks like I need to specify it in the specification portion of my
-file if I want it in the example, like I did for "clock-names" and
-"phy-names".
-Since the driver always get the interrupt by index, I'm going to
-remove "interrupt-names" from the example.
+> Thanks,
+> 
+> > ---
+> >  drivers/char/virtio_console.c | 3 ++-
+> >  1 file changed, 2 insertions(+), 1 deletion(-)
+> > 
+> > diff --git a/drivers/char/virtio_console.c
+> > b/drivers/char/virtio_console.c
+> > index 4df9b40d6342..7e1bc0f580a2 100644
+> > --- a/drivers/char/virtio_console.c
+> > +++ b/drivers/char/virtio_console.c
+> > @@ -2116,6 +2116,7 @@ static struct virtio_device_id id_table[] = {
+> >  	{ VIRTIO_ID_CONSOLE, VIRTIO_DEV_ANY_ID },
+> >  	{ 0 },
+> >  };
+> > +MODULE_DEVICE_TABLE(virtio, id_table);
+> >  
+> >  static unsigned int features[] = {
+> >  	VIRTIO_CONSOLE_F_SIZE,
+> > @@ -2128,6 +2129,7 @@ static struct virtio_device_id
+> > rproc_serial_id_table[] = {
+> >  #endif
+> >  	{ 0 },
+> >  };
+> > +MODULE_DEVICE_TABLE(virtio, rproc_serial_id_table);
+> >  
+> >  static unsigned int rproc_serial_features[] = {
+> >  };
+> > @@ -2280,6 +2282,5 @@ static void __exit fini(void)
+> >  module_init(init);
+> >  module_exit(fini);
+> >  
+> > -MODULE_DEVICE_TABLE(virtio, id_table);
+> >  MODULE_DESCRIPTION("Virtio console driver");
+> >  MODULE_LICENSE("GPL");
 
-Al
-
->
-> > /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/usb/brcm,bcm7445-ehci.example.dt.yaml: ehci@f0b00300: $nodename:0: 'ehci@f0b00300' does not match '^usb(@.*)?'
->
-> This one is a legitimate one and should be fixed.
-> --
-> Florian
->
->
