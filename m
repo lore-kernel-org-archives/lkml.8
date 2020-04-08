@@ -2,90 +2,101 @@ Return-Path: <SRS0=8dav=5Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91CD8C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 23:58:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23449C2BA2B
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 23:58:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 713A420820
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 23:58:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 00CFA20787
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 23:58:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726579AbgDHX6P (ORCPT
+        id S1726610AbgDHX6k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Apr 2020 19:58:15 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:53208 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726510AbgDHX6O (ORCPT
+        Wed, 8 Apr 2020 19:58:40 -0400
+Received: from mail104.syd.optusnet.com.au ([211.29.132.246]:59055 "EHLO
+        mail104.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726582AbgDHX6k (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Apr 2020 19:58:14 -0400
-Received: from 1.general.cascardo.us.vpn ([10.172.70.58] helo=localhost.localdomain)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <cascardo@canonical.com>)
-        id 1jMKaC-0001Kx-Ef; Wed, 08 Apr 2020 23:58:12 +0000
-From:   Thadeu Lima de Souza Cascardo <cascardo@canonical.com>
-To:     bpf@vger.kernel.org
-Cc:     netdev@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        linux-kernel@vger.kernel.org, keescook@chromium.org,
-        luto@amacapital.net, wad@chromium.org, shuah@kernel.org
-Subject: [PATCH] selftests/seccomp: allow clock_nanosleep instead of nanosleep
-Date:   Wed,  8 Apr 2020 20:57:53 -0300
-Message-Id: <20200408235753.8566-1-cascardo@canonical.com>
-X-Mailer: git-send-email 2.20.1
+        Wed, 8 Apr 2020 19:58:40 -0400
+Received: from dread.disaster.area (pa49-180-167-53.pa.nsw.optusnet.com.au [49.180.167.53])
+        by mail104.syd.optusnet.com.au (Postfix) with ESMTPS id D79627EC8C5;
+        Thu,  9 Apr 2020 09:58:37 +1000 (AEST)
+Received: from dave by dread.disaster.area with local (Exim 4.92.3)
+        (envelope-from <david@fromorbit.com>)
+        id 1jMKaa-0005sK-6b; Thu, 09 Apr 2020 09:58:36 +1000
+Date:   Thu, 9 Apr 2020 09:58:36 +1000
+From:   Dave Chinner <david@fromorbit.com>
+To:     Dan Williams <dan.j.williams@intel.com>
+Cc:     Ira Weiny <ira.weiny@intel.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Christoph Hellwig <hch@lst.de>,
+        "Theodore Y. Ts'o" <tytso@mit.edu>, Jan Kara <jack@suse.cz>,
+        Jeff Moyer <jmoyer@redhat.com>,
+        linux-ext4 <linux-ext4@vger.kernel.org>,
+        linux-xfs <linux-xfs@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>
+Subject: Re: [PATCH V6 6/8] fs/xfs: Combine xfs_diflags_to_linux() and
+ xfs_diflags_to_iflags()
+Message-ID: <20200408235836.GQ24067@dread.disaster.area>
+References: <20200407182958.568475-1-ira.weiny@intel.com>
+ <20200407182958.568475-7-ira.weiny@intel.com>
+ <20200408020827.GI24067@dread.disaster.area>
+ <20200408170923.GC569068@iweiny-DESK2.sc.intel.com>
+ <20200408210236.GK24067@dread.disaster.area>
+ <CAPcyv4gLvMSA9BypvWbYtv3xsK8o4+db3kvxBozUGAjr_sDDFQ@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAPcyv4gLvMSA9BypvWbYtv3xsK8o4+db3kvxBozUGAjr_sDDFQ@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Optus-CM-Score: 0
+X-Optus-CM-Analysis: v=2.3 cv=W5xGqiek c=1 sm=1 tr=0
+        a=2xmR08VVv0jSFCMMkhec0Q==:117 a=2xmR08VVv0jSFCMMkhec0Q==:17
+        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=cl8xLZFz6L8A:10
+        a=7-415B0cAAAA:8 a=g6yMfty2fWIsApY3Z_YA:9 a=CjuIK1q_8ugA:10
+        a=biEYGPWJfzWAr4FL6Ov7:22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-glibc 2.31 calls clock_nanosleep when its nanosleep function is used. So
-the restart_syscall fails after that. In order to deal with it, we trace
-clock_nanosleep and nanosleep. Then we check for either.
+On Wed, Apr 08, 2020 at 02:28:30PM -0700, Dan Williams wrote:
+> On Wed, Apr 8, 2020 at 2:02 PM Dave Chinner <david@fromorbit.com> wrote:
+> > THis leads to an obvious conclusion: if we never clear the in memory
+> > S_DAX flag, we can actually clear the on-disk flag safely, so that
+> > next time the inode cycles into memory it won't be using DAX. IOWs,
+> > admins can stop the applications, clear the DAX flag and drop
+> > caches. This should result in the inode being recycled and when the
+> > app is restarted it will run without DAX. No ned for deleting files,
+> > copying large data sets, etc just to turn off an inode flag.
+> 
+> Makes sense, but is that sufficient? I recall you saying there might
+> be a multitude of other reasons that the inode is not evicted, not the
+> least of which is races [1]. Does this need another flag, lets call it
+> "dax toggle" to track the "I requested the inode to clear the flag,
+> but on cache-flush + restart the inode never got evicted" case.
 
-This works just fine on systems with both glibc 2.30 and glibc 2.31,
-whereas it failed before on a system with glibc 2.31.
+You mean something like XFS_IDONTCACHE?
 
-Signed-off-by: Thadeu Lima de Souza Cascardo <cascardo@canonical.com>
----
- tools/testing/selftests/seccomp/seccomp_bpf.c | 14 ++++++++------
- 1 file changed, 8 insertions(+), 6 deletions(-)
+i.e. the functionality already exists in XFS to selectively evict an
+inode from cache when the last reference to it is dropped rather
+than let it go to the LRUs and hang around in memory.
 
-diff --git a/tools/testing/selftests/seccomp/seccomp_bpf.c b/tools/testing/selftests/seccomp/seccomp_bpf.c
-index 89fb3e0b552e..c0aa46ce14f6 100644
---- a/tools/testing/selftests/seccomp/seccomp_bpf.c
-+++ b/tools/testing/selftests/seccomp/seccomp_bpf.c
-@@ -2803,12 +2803,13 @@ TEST(syscall_restart)
- 			 offsetof(struct seccomp_data, nr)),
- 
- #ifdef __NR_sigreturn
--		BPF_JUMP(BPF_JMP|BPF_JEQ|BPF_K, __NR_sigreturn, 6, 0),
-+		BPF_JUMP(BPF_JMP|BPF_JEQ|BPF_K, __NR_sigreturn, 7, 0),
- #endif
--		BPF_JUMP(BPF_JMP|BPF_JEQ|BPF_K, __NR_read, 5, 0),
--		BPF_JUMP(BPF_JMP|BPF_JEQ|BPF_K, __NR_exit, 4, 0),
--		BPF_JUMP(BPF_JMP|BPF_JEQ|BPF_K, __NR_rt_sigreturn, 3, 0),
--		BPF_JUMP(BPF_JMP|BPF_JEQ|BPF_K, __NR_nanosleep, 4, 0),
-+		BPF_JUMP(BPF_JMP|BPF_JEQ|BPF_K, __NR_read, 6, 0),
-+		BPF_JUMP(BPF_JMP|BPF_JEQ|BPF_K, __NR_exit, 5, 0),
-+		BPF_JUMP(BPF_JMP|BPF_JEQ|BPF_K, __NR_rt_sigreturn, 4, 0),
-+		BPF_JUMP(BPF_JMP|BPF_JEQ|BPF_K, __NR_nanosleep, 5, 0),
-+		BPF_JUMP(BPF_JMP|BPF_JEQ|BPF_K, __NR_clock_nanosleep, 4, 0),
- 		BPF_JUMP(BPF_JMP|BPF_JEQ|BPF_K, __NR_restart_syscall, 4, 0),
- 
- 		/* Allow __NR_write for easy logging. */
-@@ -2895,7 +2896,8 @@ TEST(syscall_restart)
- 	ASSERT_EQ(PTRACE_EVENT_SECCOMP, (status >> 16));
- 	ASSERT_EQ(0, ptrace(PTRACE_GETEVENTMSG, child_pid, NULL, &msg));
- 	ASSERT_EQ(0x100, msg);
--	EXPECT_EQ(__NR_nanosleep, get_syscall(_metadata, child_pid));
-+	ret = get_syscall(_metadata, child_pid);
-+	EXPECT_TRUE(ret == __NR_nanosleep || ret == __NR_clock_nanosleep);
- 
- 	/* Might as well check siginfo for sanity while we're here. */
- 	ASSERT_EQ(0, ptrace(PTRACE_GETSIGINFO, child_pid, NULL, &info));
+That flag can be set when changing the on disk DAX flag, and we can
+tweak how it works so new cache hits don't clear it (as happens
+now). Hence the only thing that can prevent eviction are active
+references.
+
+That means we'll still need to stop the application and drop_caches,
+because we need to close all the files and purge the dentries that
+hold references to the inode before it can be evicted.
+
+Cheers,
+
+Dave.
 -- 
-2.20.1
-
+Dave Chinner
+david@fromorbit.com
