@@ -2,150 +2,259 @@ Return-Path: <SRS0=8dav=5Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3226DC2BA1B
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 07:45:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA683C2D0EA
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 07:46:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 14CE92074F
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 07:45:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7CC0C20747
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 07:46:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727140AbgDHHpF (ORCPT
+        id S1727187AbgDHHqu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Apr 2020 03:45:05 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:52813 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726366AbgDHHpE (ORCPT
+        Wed, 8 Apr 2020 03:46:50 -0400
+Received: from mx06.melco.co.jp ([192.218.140.146]:38222 "EHLO
+        mx06.melco.co.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726366AbgDHHqu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Apr 2020 03:45:04 -0400
-Received: from ip5f5bd698.dynamic.kabel-deutschland.de ([95.91.214.152] helo=wittgenstein)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <christian.brauner@ubuntu.com>)
-        id 1jM5OO-0007fN-PD; Wed, 08 Apr 2020 07:45:00 +0000
-Date:   Wed, 8 Apr 2020 09:44:59 +0200
-From:   Christian Brauner <christian.brauner@ubuntu.com>
-To:     "Michael Kerrisk (man-pages)" <mtk.manpages@gmail.com>
-Cc:     Sargun Dhillon <sargun@sargun.me>,
-        linux-man <linux-man@vger.kernel.org>,
-        Linux API <linux-api@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Tycho Andersen <tycho@tycho.ws>, Jann Horn <jannh@google.com>,
-        Aleksa Sarai <cyphar@cyphar.com>,
-        Christian Brauner <christian@brauner.io>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Alexander Viro <viro@zeniv.linux.org.uk>, jld@mozilla.com,
-        Arnd Bergmann <arnd@arndb.de>,
-        Florian Weimer <fweimer@redhat.com>, gpascutto@mozilla.com,
-        ealvarez@mozilla.com
-Subject: Re: [RESEND] RFC: pidfd_getfd(2) manual page
-Message-ID: <20200408074459.q3njmvizjge7timg@wittgenstein>
-References: <d6be97d1-38a5-bf43-7c80-7c952a5a44a3@gmail.com>
+        Wed, 8 Apr 2020 03:46:50 -0400
+Received: from mr06.melco.co.jp (mr06 [133.141.98.164])
+        by mx06.melco.co.jp (Postfix) with ESMTP id 82F093A41E6;
+        Wed,  8 Apr 2020 16:46:46 +0900 (JST)
+Received: from mr06.melco.co.jp (unknown [127.0.0.1])
+        by mr06.imss (Postfix) with ESMTP id 48xxDk2KZSzRkCm;
+        Wed,  8 Apr 2020 16:46:46 +0900 (JST)
+Received: from mf03_second.melco.co.jp (unknown [192.168.20.183])
+        by mr06.melco.co.jp (Postfix) with ESMTP id 48xxDk21Y5zRkCj;
+        Wed,  8 Apr 2020 16:46:46 +0900 (JST)
+Received: from mf03.melco.co.jp (unknown [133.141.98.183])
+        by mf03_second.melco.co.jp (Postfix) with ESMTP id 48xxDk1w6WzRkD1;
+        Wed,  8 Apr 2020 16:46:46 +0900 (JST)
+Received: from tux532.tad.melco.co.jp (unknown [133.141.243.226])
+        by mf03.melco.co.jp (Postfix) with ESMTP id 48xxDk0gYfzRkBx;
+        Wed,  8 Apr 2020 16:46:46 +0900 (JST)
+Received:  from tux532.tad.melco.co.jp
+        by tux532.tad.melco.co.jp (unknown) with ESMTP id 0387kj5l032297;
+        Wed, 8 Apr 2020 16:46:45 +0900
+Received: from tux390.tad.melco.co.jp (tux390.tad.melco.co.jp [127.0.0.1])
+        by postfix.imss70 (Postfix) with ESMTP id C6F8317E07A;
+        Wed,  8 Apr 2020 16:46:45 +0900 (JST)
+Received: from tux554.tad.melco.co.jp (tadpost1.tad.melco.co.jp [10.168.7.223])
+        by tux390.tad.melco.co.jp (Postfix) with ESMTP id BA9DD17E079;
+        Wed,  8 Apr 2020 16:46:45 +0900 (JST)
+Received: from tux554.tad.melco.co.jp
+        by tux554.tad.melco.co.jp (unknown) with ESMTP id 0387kjUx005469;
+        Wed, 8 Apr 2020 16:46:45 +0900
+From:   Tetsuhiro Kohada <Kohada.Tetsuhiro@dc.MitsubishiElectric.co.jp>
+To:     Kohada.Tetsuhiro@dc.MitsubishiElectric.co.jp
+Cc:     Mori.Takahiro@ab.MitsubishiElectric.co.jp,
+        motai.hirotaka@aj.mitsubishielectric.co.jp,
+        Namjae Jeon <namjae.jeon@samsung.com>,
+        Sungjong Seo <sj1557.seo@samsung.com>,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v2] exfat: replace 'time_ms' with 'time_10ms'
+Date:   Wed,  8 Apr 2020 16:46:10 +0900
+Message-Id: <20200408074610.35591-1-Kohada.Tetsuhiro@dc.MitsubishiElectric.co.jp>
+X-Mailer: git-send-email 2.25.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <d6be97d1-38a5-bf43-7c80-7c952a5a44a3@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 07, 2020 at 08:49:35PM +0200, Michael Kerrisk (man-pages) wrote:
-> [No response on my mail of a week ago, so I try again; the page
-> text is unchanged since the draft sent out on 31 March]
+Replace "time_ms"  with "time_10ms" in the file directory entry structure
+and related functions.
 
-Sorry for the delay.
+The unit of create_time_ms/modify_time_ms in File Directory Entry are
+not 'milli-second', but 'centi-second'.
 
-> 
-> Hello Sargun et al.
-> 
-> I've taken a shot at writing a manual page for pidfd_getfd().
-> I would be happy to receive comments, suggestions for
-> improvements, etc. The text is as follows (the groff source 
-> is at the foot of this mail):
+The reason for using 10ms instead of cs for the names is that the exfat
+specification defines it as Create10msIncrement/LastModified10msIncrement.
 
-Thanks for that! Really appreciated. Just a few nits below.
+Signed-off-by: Tetsuhiro Kohada <Kohada.Tetsuhiro@dc.MitsubishiElectric.co.jp>
+---
+Changes in v2:
+- fix spelling mistakes in commit-log.
 
-> 
-> NAME
->        pidfd_getfd  -  obtain  a  duplicate  of  another  process's  file
->        descriptor
-> 
-> SYNOPSIS
->        int pidfd_getfd(int pidfd, int targetfd, unsigned int flags);
-> 
-> DESCRIPTION
->        The pidfd_getfd() system call allocates a new file  descriptor  in
->        the  calling  process.  This new file descriptor is a duplicate of
->        an existing file descriptor, targetfd, in the process referred  to
->        by the PID file descriptor pidfd.
-> 
->        The  duplicate  file  descriptor  refers  to  the  same  open file
->        description (see open(2)) as the original file descriptor  in  the
->        process referred to by pidfd.  The two file descriptors thus share
->        file status flags and file offset.  Furthermore, operations on the
->        underlying  file  object  (for  example, assigning an address to a
->        socket object using bind(2)) can be equally be performed  via  the
+ fs/exfat/dir.c       |  8 ++++----
+ fs/exfat/exfat_fs.h  |  4 ++--
+ fs/exfat/exfat_raw.h |  4 ++--
+ fs/exfat/file.c      |  2 +-
+ fs/exfat/inode.c     |  4 ++--
+ fs/exfat/misc.c      | 18 +++++++++---------
+ fs/exfat/namei.c     |  4 ++--
+ 7 files changed, 22 insertions(+), 22 deletions(-)
 
-s/can be equally be performed/can be equally performed
-?
+diff --git a/fs/exfat/dir.c b/fs/exfat/dir.c
+index 4b91afb0f0..cacc53ff11 100644
+--- a/fs/exfat/dir.c
++++ b/fs/exfat/dir.c
+@@ -137,12 +137,12 @@ static int exfat_readdir(struct inode *inode, struct exfat_dir_entry *dir_entry)
+ 					ep->dentry.file.create_tz,
+ 					ep->dentry.file.create_time,
+ 					ep->dentry.file.create_date,
+-					ep->dentry.file.create_time_ms);
++					ep->dentry.file.create_time_10ms);
+ 			exfat_get_entry_time(sbi, &dir_entry->mtime,
+ 					ep->dentry.file.modify_tz,
+ 					ep->dentry.file.modify_time,
+ 					ep->dentry.file.modify_date,
+-					ep->dentry.file.modify_time_ms);
++					ep->dentry.file.modify_time_10ms);
+ 			exfat_get_entry_time(sbi, &dir_entry->atime,
+ 					ep->dentry.file.access_tz,
+ 					ep->dentry.file.access_time,
+@@ -461,12 +461,12 @@ int exfat_init_dir_entry(struct inode *inode, struct exfat_chain *p_dir,
+ 			&ep->dentry.file.create_tz,
+ 			&ep->dentry.file.create_time,
+ 			&ep->dentry.file.create_date,
+-			&ep->dentry.file.create_time_ms);
++			&ep->dentry.file.create_time_10ms);
+ 	exfat_set_entry_time(sbi, &ts,
+ 			&ep->dentry.file.modify_tz,
+ 			&ep->dentry.file.modify_time,
+ 			&ep->dentry.file.modify_date,
+-			&ep->dentry.file.modify_time_ms);
++			&ep->dentry.file.modify_time_10ms);
+ 	exfat_set_entry_time(sbi, &ts,
+ 			&ep->dentry.file.access_tz,
+ 			&ep->dentry.file.access_time,
+diff --git a/fs/exfat/exfat_fs.h b/fs/exfat/exfat_fs.h
+index 67d4e46fb8..6d357e9f5b 100644
+--- a/fs/exfat/exfat_fs.h
++++ b/fs/exfat/exfat_fs.h
+@@ -506,9 +506,9 @@ void __exfat_fs_error(struct super_block *sb, int report, const char *fmt, ...)
+ void exfat_msg(struct super_block *sb, const char *lv, const char *fmt, ...)
+ 		__printf(3, 4) __cold;
+ void exfat_get_entry_time(struct exfat_sb_info *sbi, struct timespec64 *ts,
+-		u8 tz, __le16 time, __le16 date, u8 time_ms);
++		u8 tz, __le16 time, __le16 date, u8 time_10ms);
+ void exfat_set_entry_time(struct exfat_sb_info *sbi, struct timespec64 *ts,
+-		u8 *tz, __le16 *time, __le16 *date, u8 *time_ms);
++		u8 *tz, __le16 *time, __le16 *date, u8 *time_10ms);
+ unsigned short exfat_calc_chksum_2byte(void *data, int len,
+ 		unsigned short chksum, int type);
+ void exfat_update_bh(struct super_block *sb, struct buffer_head *bh, int sync);
+diff --git a/fs/exfat/exfat_raw.h b/fs/exfat/exfat_raw.h
+index 2a841010e6..be0e362422 100644
+--- a/fs/exfat/exfat_raw.h
++++ b/fs/exfat/exfat_raw.h
+@@ -136,8 +136,8 @@ struct exfat_dentry {
+ 			__le16 modify_date;
+ 			__le16 access_time;
+ 			__le16 access_date;
+-			__u8 create_time_ms;
+-			__u8 modify_time_ms;
++			__u8 create_time_10ms;
++			__u8 modify_time_10ms;
+ 			__u8 create_tz;
+ 			__u8 modify_tz;
+ 			__u8 access_tz;
+diff --git a/fs/exfat/file.c b/fs/exfat/file.c
+index 483f683757..a986f1eeef 100644
+--- a/fs/exfat/file.c
++++ b/fs/exfat/file.c
+@@ -165,7 +165,7 @@ int __exfat_truncate(struct inode *inode, loff_t new_size)
+ 				&ep->dentry.file.modify_tz,
+ 				&ep->dentry.file.modify_time,
+ 				&ep->dentry.file.modify_date,
+-				&ep->dentry.file.modify_time_ms);
++				&ep->dentry.file.modify_time_10ms);
+ 		ep->dentry.file.attr = cpu_to_le16(ei->attr);
+ 
+ 		/* File size should be zero if there is no cluster allocated */
+diff --git a/fs/exfat/inode.c b/fs/exfat/inode.c
+index 06887492f5..59b50dfbdd 100644
+--- a/fs/exfat/inode.c
++++ b/fs/exfat/inode.c
+@@ -56,12 +56,12 @@ static int __exfat_write_inode(struct inode *inode, int sync)
+ 			&ep->dentry.file.create_tz,
+ 			&ep->dentry.file.create_time,
+ 			&ep->dentry.file.create_date,
+-			&ep->dentry.file.create_time_ms);
++			&ep->dentry.file.create_time_10ms);
+ 	exfat_set_entry_time(sbi, &inode->i_mtime,
+ 			&ep->dentry.file.modify_tz,
+ 			&ep->dentry.file.modify_time,
+ 			&ep->dentry.file.modify_date,
+-			&ep->dentry.file.modify_time_ms);
++			&ep->dentry.file.modify_time_10ms);
+ 	exfat_set_entry_time(sbi, &inode->i_atime,
+ 			&ep->dentry.file.access_tz,
+ 			&ep->dentry.file.access_time,
+diff --git a/fs/exfat/misc.c b/fs/exfat/misc.c
+index 14a3300848..8b39c8176a 100644
+--- a/fs/exfat/misc.c
++++ b/fs/exfat/misc.c
+@@ -75,7 +75,7 @@ static void exfat_adjust_tz(struct timespec64 *ts, u8 tz_off)
+ 
+ /* Convert a EXFAT time/date pair to a UNIX date (seconds since 1 1 70). */
+ void exfat_get_entry_time(struct exfat_sb_info *sbi, struct timespec64 *ts,
+-		u8 tz, __le16 time, __le16 date, u8 time_ms)
++		u8 tz, __le16 time, __le16 date, u8 time_10ms)
+ {
+ 	u16 t = le16_to_cpu(time);
+ 	u16 d = le16_to_cpu(date);
+@@ -84,10 +84,10 @@ void exfat_get_entry_time(struct exfat_sb_info *sbi, struct timespec64 *ts,
+ 			      t >> 11, (t >> 5) & 0x003F, (t & 0x001F) << 1);
+ 
+ 
+-	/* time_ms field represent 0 ~ 199(1990 ms) */
+-	if (time_ms) {
+-		ts->tv_sec += time_ms / 100;
+-		ts->tv_nsec = (time_ms % 100) * 10 * NSEC_PER_MSEC;
++	/* time_10ms field represent 0 ~ 199cs(1990 ms) */
++	if (time_10ms) {
++		ts->tv_sec += (time_10ms * 10) / 1000;
++		ts->tv_nsec = (time_10ms * 10) % 1000 * NSEC_PER_MSEC;
+ 	}
+ 
+ 	if (tz & EXFAT_TZ_VALID)
+@@ -100,7 +100,7 @@ void exfat_get_entry_time(struct exfat_sb_info *sbi, struct timespec64 *ts,
+ 
+ /* Convert linear UNIX date to a EXFAT time/date pair. */
+ void exfat_set_entry_time(struct exfat_sb_info *sbi, struct timespec64 *ts,
+-		u8 *tz, __le16 *time, __le16 *date, u8 *time_ms)
++		u8 *tz, __le16 *time, __le16 *date, u8 *time_10ms)
+ {
+ 	struct tm tm;
+ 	u16 t, d;
+@@ -112,9 +112,9 @@ void exfat_set_entry_time(struct exfat_sb_info *sbi, struct timespec64 *ts,
+ 	*time = cpu_to_le16(t);
+ 	*date = cpu_to_le16(d);
+ 
+-	/* time_ms field represent 0 ~ 199(1990 ms) */
+-	if (time_ms)
+-		*time_ms = (tm.tm_sec & 1) * 100 +
++	/* time_10ms field represent 0 ~ 199cs(1990 ms) */
++	if (time_10ms)
++		*time_10ms = (tm.tm_sec & 1) * 100 +
+ 			ts->tv_nsec / (10 * NSEC_PER_MSEC);
+ 
+ 	/*
+diff --git a/fs/exfat/namei.c b/fs/exfat/namei.c
+index a8681d91f5..90d8273cd8 100644
+--- a/fs/exfat/namei.c
++++ b/fs/exfat/namei.c
+@@ -698,12 +698,12 @@ static int exfat_find(struct inode *dir, struct qstr *qname,
+ 				ep->dentry.file.create_tz,
+ 				ep->dentry.file.create_time,
+ 				ep->dentry.file.create_date,
+-				ep->dentry.file.create_time_ms);
++				ep->dentry.file.create_time_10ms);
+ 		exfat_get_entry_time(sbi, &info->mtime,
+ 				ep->dentry.file.modify_tz,
+ 				ep->dentry.file.modify_time,
+ 				ep->dentry.file.modify_date,
+-				ep->dentry.file.modify_time_ms);
++				ep->dentry.file.modify_time_10ms);
+ 		exfat_get_entry_time(sbi, &info->atime,
+ 				ep->dentry.file.access_tz,
+ 				ep->dentry.file.access_time,
+-- 
+2.25.0
 
->        duplicate file descriptor.
-> 
->        The  close-on-exec  flag  (FD_CLOEXEC; see fcntl(2)) is set on the
->        file descriptor returned by pidfd_getfd().
-> 
->        The flags argument is reserved for future use.  Currently, it must
->        be specified as 0.
-> 
->        Permission  to duplicate another process's file descriptor is gov‐
->        erned by a ptrace access mode  PTRACE_MODE_ATTACH_REALCREDS  check
->        (see ptrace(2)).
-> 
-> RETURN VALUE
->        On  success,  pidfd_getfd() returns a nonnegative file descriptor.
-
-Imho, this makes it sound like there are negative file descriptor
-numbers. But as a non-native speaker that might just be a subtle
-misreading on my part. Maybe just like open() just mention:
-"On success, pidfd_getfd() returns a file descriptor."
-
->        On error, -1 is returned and errno is set to indicate the cause of
->        the error.
-> 
-> ERRORS
->        EBADF  pidfd is not a valid PID file descriptor.
-> 
->        EBADF  targetfd  is  not  an  open  file descriptor in the process
->               referred to by pidfd.
-> 
->        EINVAL flags is not 0.
-> 
->        EMFILE The per-process limit on the number of open  file  descrip‐
->               tors has been reached (see the description of RLIMIT_NOFILE
->               in getrlimit(2)).
-> 
->        ENFILE The system-wide limit on the total number of open files has
->               been reached.
-> 
->        ESRCH  The  process  referred to by pidfd does not exist (i.e., it
->               has terminated and been waited on).
-
-EPERM	The calling process did not have PTRACE_MODE_ATTACH_REALCREDS
-	permissions (see ptrace(2)) over the process referred to by
-	pidfd.
-
-Technically, there should also be a disclaimer that other errno values
-are possible because of LSM denials, e.g. selinux could return EACCES or
-any other errno code in their file_receive() hook. But I'm not whether we
-generally do this. In any case, I would find it useful as a developer.
-
-(Is there actually a place where all LSMs are forced to record their
-errno returns for their security hooks for each syscall they hook into and
-that's visible to userspace? Because that'd be really useful...)
-
-Christian
