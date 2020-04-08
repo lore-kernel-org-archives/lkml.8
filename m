@@ -2,235 +2,143 @@ Return-Path: <SRS0=8dav=5Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UPPERCASE_50_75,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69A2BC2BA1B
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 20:41:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86CC5C2BA2B
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 20:47:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 363AD206F7
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 20:41:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 51A222075E
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 20:47:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HEMX7DFk"
+	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="fvZT/yIX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729772AbgDHUlX (ORCPT
+        id S1728827AbgDHUr1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Apr 2020 16:41:23 -0400
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:45719 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729148AbgDHUlM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Apr 2020 16:41:12 -0400
-Received: by mail-lf1-f67.google.com with SMTP id f8so6178053lfe.12;
-        Wed, 08 Apr 2020 13:41:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=fiPLo7L7o5X3XMTpFhfcFXYBuEPLy7YCy7cOsYfZsCQ=;
-        b=HEMX7DFkwIUIOCjFojR26SSvaWwE1IXCm4PvhD/mO+4f+XTiQho3ipYvy8qkJu/+X8
-         UQ131ozajkQsNhqU2ZM/MnkFvGYRgKYfR/WQjLzdqO5yPl/i5qY9GfV4h3pee+JX4nTn
-         4z1CKWr6fjM9/t2XPT3QzfpcpHyLYqGjoNOeJW8Sp+McENVjwujx2aDBxf5TTUdTl8oi
-         x51v9UZsB6kbTzAt1USXdavPIVWfwSQemIXgpUFQxzSGj2WUuZIizqGCcTmtdowcxiqK
-         ObZzTqfeIBWN7Oo3il+MJrlJK0t8N6xMtVxl+3POHVRQkyfUbGiS/fzpC33WF140W1gQ
-         U5ew==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=fiPLo7L7o5X3XMTpFhfcFXYBuEPLy7YCy7cOsYfZsCQ=;
-        b=OMF8fVhNff+3TDv4BYiSuJF6UBxDuy4RVSAiJi451NRtxV4Los6Em9kRaqXTAaUw9j
-         giIh1kEhT6qwdNGIB7RLsAjfzZ6WzVH25oXKkjnzcczCq+MUaFM32QEwOdk+7ME2VvC4
-         eRiWmomFc9cpLRP72gVf7cqEeJREbFThpXQEAt0OdjBQy41Zru+EJeLpsZgr+Dqjfl/7
-         I+Mhtb0hyQFEe5uftEFmAkvyonWyew/GVbVwstGw2vmJIe2U3ywCQoC1rsMz6c227i9Y
-         OdLep1JqCaKMYOjuZTmhBdJruyVQ649uOT7gGwkEgYljDexg3r5z6oaMmYkjoHqzrvuF
-         BOaA==
-X-Gm-Message-State: AGi0PuabChsi0dT89CAiC4VPocWKPrjr1gOWZutRzk+UhLkP36BrKkKr
-        bU9zj9uz59Op4RPotQAFgd0=
-X-Google-Smtp-Source: APiQypIEcMpVq/6zkrDHZungyqrgS3b2nYnZfFHqfSGs3p0LQZkA9n+LGlpNjL0YDGP4XGsjZuGmZg==
-X-Received: by 2002:a05:6512:79:: with SMTP id i25mr5707058lfo.87.1586378470683;
-        Wed, 08 Apr 2020 13:41:10 -0700 (PDT)
-Received: from localhost.localdomain (ppp91-78-208-152.pppoe.mtu-net.ru. [91.78.208.152])
-        by smtp.gmail.com with ESMTPSA id p14sm13189727lfe.87.2020.04.08.13.41.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 08 Apr 2020 13:41:10 -0700 (PDT)
-From:   Dmitry Osipenko <digetx@gmail.com>
-To:     Rob Herring <robh+dt@kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        =?UTF-8?q?Micha=C5=82=20Miros=C5=82aw?= <mirq-linux@rere.qmqm.pl>,
-        David Heidelberg <david@ixit.cz>,
-        Peter Geis <pgwipeout@gmail.com>,
-        Stephen Warren <swarren@wwwdotorg.org>,
-        Nicolas Chauvet <kwizart@gmail.com>,
-        =?UTF-8?q?Pedro=20=C3=82ngelo?= <pangelo@void.io>,
-        Matt Merhar <mattmerhar@protonmail.com>
-Cc:     linux-tegra@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v3 6/6] ARM: tegra_defconfig: Enable options useful for Nexus 7 and Acer A500
-Date:   Wed,  8 Apr 2020 23:39:45 +0300
-Message-Id: <20200408203945.10329-7-digetx@gmail.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200408203945.10329-1-digetx@gmail.com>
-References: <20200408203945.10329-1-digetx@gmail.com>
+        Wed, 8 Apr 2020 16:47:27 -0400
+Received: from mail-eopbgr60046.outbound.protection.outlook.com ([40.107.6.46]:5760
+        "EHLO EUR04-DB3-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726709AbgDHUr1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Apr 2020 16:47:27 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=RLJnWv7YBGOzbcEiZ3US+9pNKWA9v5oc+afMp4IRDfpmX0YbuzwMFRUvuoVrZaB/jIFVpGySmEPghW897cAavCV+uR/kD96BjuUaZKcvtK8HIKANnT/b2IatQZtGGJGPDYH3oe4cL3P4a2+DKaJR1GJgrgATPgsqSvTo6vsWd/f8bLRZ9bQSJZHBb2G9AaQoN+r0Sq9OfJO7MA1dxc4x/NvgcU7EfbkO9nCVFAB3U0g056qHLeCQceiYOKp1kp93L5kqNthqwbnKcbnZb44de4djxZR7oe8UUDv4l3x4EJI5U6h1hFguSp+V21/Wsn2V7WogIQGR4AC/IKiOVxJnbQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=/5C2yrNFG1WpZbEBstEvGGHWPgYE4xOPefqieHv/qqI=;
+ b=FiDasvSyk755xMxOj94hEACjLoeqa/gfk/pn73YGszr6AlBVM7pPrqy7Wrmx0ibEPOvBEp7YKdtY8XSzy5W7zduAFOLGGXqjzFCWDEwPSlQliLGonCWZAnk+KsL33eT3oAS7fAWfzfFOJGMIQFtrm+ibK+7QjoRlcQ6iHSnZ2uLnMW6hOry74nvWBZniAeHzV7M5Iswxnwnc6Me6/rkOb1FgQY5MtoDPbSG6+oYdHtSLGjalySjJ0/UsXWMvfUZDs+DLWOTRkwvPBTZOTZCQyRcUOXjPNPmtTjkbcnJpa7T1duSGBGj+KFdIB/c4PKTqOvvjRYReXu7l8mxVNOtbjQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=mellanox.com; dmarc=pass action=none header.from=mellanox.com;
+ dkim=pass header.d=mellanox.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=/5C2yrNFG1WpZbEBstEvGGHWPgYE4xOPefqieHv/qqI=;
+ b=fvZT/yIXivexpIdFxNjT+lYbKJ+w215zk/0PAzxghqri7jyhCI/UJCFnVP5olHdYswtxJ3U5NC/fEodGAxSgpaq6jdZ/q8bJJ1QXUl2XnoQBqmwmrvt3tJJ/h4wwBVzuhNI6w2EpXYmXcFSr11Elwkmws+roa9o9FCiwf3XoOeE=
+Received: from VI1PR05MB5102.eurprd05.prod.outlook.com (2603:10a6:803:5e::23)
+ by VI1PR05MB4829.eurprd05.prod.outlook.com (2603:10a6:803:54::19) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2900.15; Wed, 8 Apr
+ 2020 20:46:42 +0000
+Received: from VI1PR05MB5102.eurprd05.prod.outlook.com
+ ([fe80::9d19:a564:b84e:7c19]) by VI1PR05MB5102.eurprd05.prod.outlook.com
+ ([fe80::9d19:a564:b84e:7c19%7]) with mapi id 15.20.2878.021; Wed, 8 Apr 2020
+ 20:46:42 +0000
+From:   Saeed Mahameed <saeedm@mellanox.com>
+To:     "nico@fluxnic.net" <nico@fluxnic.net>,
+        "arnd@arndb.de" <arnd@arndb.de>
+CC:     "narmstrong@baylibre.com" <narmstrong@baylibre.com>,
+        "masahiroy@kernel.org" <masahiroy@kernel.org>,
+        "Laurent.pinchart@ideasonboard.com" 
+        <Laurent.pinchart@ideasonboard.com>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "daniel@ffwll.ch" <daniel@ffwll.ch>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-renesas-soc@vger.kernel.org" 
+        <linux-renesas-soc@vger.kernel.org>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
+        "kieran.bingham+renesas@ideasonboard.com" 
+        <kieran.bingham+renesas@ideasonboard.com>,
+        "leon@kernel.org" <leon@kernel.org>,
+        "a.hajda@samsung.com" <a.hajda@samsung.com>,
+        "jonas@kwiboo.se" <jonas@kwiboo.se>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "airlied@linux.ie" <airlied@linux.ie>,
+        "jernej.skrabec@siol.net" <jernej.skrabec@siol.net>
+Subject: Re: [RFC 0/6] Regressions for "imply" behavior change
+Thread-Topic: [RFC 0/6] Regressions for "imply" behavior change
+Thread-Index: AQHWDeQiJzc7TgrcN0yUMWAEU5j98qhvr4mAgAACMYA=
+Date:   Wed, 8 Apr 2020 20:46:42 +0000
+Message-ID: <79428caffc83f8ba3c13caf628ae6f207f88286a.camel@mellanox.com>
+References: <20200408202711.1198966-1-arnd@arndb.de>
+         <nycvar.YSQ.7.76.2004081633260.2671@knanqh.ubzr>
+In-Reply-To: <nycvar.YSQ.7.76.2004081633260.2671@knanqh.ubzr>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+user-agent: Evolution 3.34.4 (3.34.4-1.fc31) 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=saeedm@mellanox.com; 
+x-originating-ip: [73.15.39.150]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 0c20c379-dbc1-4ff4-cc3f-08d7dbfdf1ae
+x-ms-traffictypediagnostic: VI1PR05MB4829:
+x-microsoft-antispam-prvs: <VI1PR05MB48294E62909A79321DEB36BBBEC00@VI1PR05MB4829.eurprd05.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8882;
+x-forefront-prvs: 0367A50BB1
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VI1PR05MB5102.eurprd05.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10009020)(4636009)(136003)(396003)(376002)(366004)(39850400004)(346002)(6486002)(478600001)(54906003)(316002)(110136005)(2906002)(36756003)(81166007)(71200400001)(7416002)(76116006)(66946007)(26005)(66476007)(186003)(66556008)(86362001)(6506007)(8676002)(64756008)(66446008)(8936002)(91956017)(81156014)(6512007)(2616005)(5660300002)(4326008);DIR:OUT;SFP:1101;
+received-spf: None (protection.outlook.com: mellanox.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: C3OxCh9PzqF3nbMk6II8OXXgDlGAq2501afsEgNr/Asnf7ENsi332tMgPuFvRETQUDgp06rGC6YXct3vio+AUvJhi55CHEHxc3gPL5J0+CpATwXfhm/W/SwrZAW7NYTxioVokxY+hlX1OokIowEwXqc3Zi7Bg8mwO9aQtIMBVM/TazsG4PlK9pWweG1rLbKE4NQpTPA6j4SwbqD0mHY7w4GJLNwVs3qTL3reuynK8vCkKL7+SwZE5BZBDuEwsUCFsZ/dAw43SzNOKPZ2+BnMUw8NjPsGdWpr+QPgkFRAVw64HtvJeh9jsbXlOnOjc7s76qdu3JaFJN+GQNhgFrzrSp19SDxzfwV5nj2MmumciC/EYDRwD2lXYaeZuVXcbr7TrEr06I6D3D4cLsMOosHJoIsF6Byjphjenoq7WfGR81RaWBVrr0oT19tmQxNU6YNw
+x-ms-exchange-antispam-messagedata: UOTu1HCc3sT3i8reD5vJWzI19IJqLLaUI4ppva5vSLUnxJ08XkQh7b53tpIYaBruTs3ugJtIg9ostoc6N72TQu0flAIpF/Ag9WnXokSOXaPnteM53ymsqwu7MQO+UqdBq6+9GNT0yEzJIcFUbnqtkQ==
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <9250023C58FAD442A0D72B84739931B2@eurprd05.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-OriginatorOrg: Mellanox.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 0c20c379-dbc1-4ff4-cc3f-08d7dbfdf1ae
+X-MS-Exchange-CrossTenant-originalarrivaltime: 08 Apr 2020 20:46:42.2748
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: Gddj1rWCHyfxyo9YMTU0DL9Zg8ZYngW0vpmaCBi+iABJrAqVa7/dCBp/FVZJ/u8TxNqDG0fNuIAf3vSbD5KZ9Q==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR05MB4829
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Enable several drivers for hardware that is found on Nexus 7 and Acer A500
-tablet devices. Please note that some drivers may require firmware files
-extracted from original Android image.
-
-Link: https://github.com/digetx/linux-firmware
-Link: https://github.com/digetx/alsa-ucm-conf
-Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
----
- arch/arm/configs/tegra_defconfig | 38 ++++++++++++++++++++++++++++++++
- 1 file changed, 38 insertions(+)
-
-diff --git a/arch/arm/configs/tegra_defconfig b/arch/arm/configs/tegra_defconfig
-index 0029259a6bf5..6644cbc7ab4f 100644
---- a/arch/arm/configs/tegra_defconfig
-+++ b/arch/arm/configs/tegra_defconfig
-@@ -63,11 +63,17 @@ CONFIG_BT_RFCOMM=y
- CONFIG_BT_BNEP=y
- CONFIG_BT_HIDP=y
- CONFIG_BT_HCIBTUSB=m
-+CONFIG_BT_HCIUART=y
-+CONFIG_BT_HCIUART_BCM=y
- CONFIG_CFG80211=y
- CONFIG_MAC80211=y
- CONFIG_RFKILL=y
- CONFIG_RFKILL_INPUT=y
- CONFIG_RFKILL_GPIO=y
-+CONFIG_NFC=y
-+CONFIG_NFC_HCI=y
-+CONFIG_NFC_SHDLC=y
-+CONFIG_NFC_PN544_I2C=y
- CONFIG_PCI=y
- CONFIG_PCIEPORTBUS=y
- CONFIG_PCI_MSI=y
-@@ -106,20 +112,24 @@ CONFIG_INPUT_JOYDEV=y
- CONFIG_INPUT_EVDEV=y
- CONFIG_KEYBOARD_GPIO=y
- CONFIG_KEYBOARD_TEGRA=y
-+CONFIG_KEYBOARD_CAP11XX=y
- CONFIG_KEYBOARD_CROS_EC=y
- CONFIG_MOUSE_PS2_ELANTECH=y
- CONFIG_INPUT_TOUCHSCREEN=y
- CONFIG_TOUCHSCREEN_ATMEL_MXT=y
-+CONFIG_TOUCHSCREEN_ELAN=y
- CONFIG_TOUCHSCREEN_WM97XX=y
- # CONFIG_TOUCHSCREEN_WM9705 is not set
- # CONFIG_TOUCHSCREEN_WM9713 is not set
- CONFIG_TOUCHSCREEN_STMPE=y
- CONFIG_INPUT_MISC=y
-+CONFIG_INPUT_GPIO_VIBRA=y
- # CONFIG_LEGACY_PTYS is not set
- CONFIG_SERIAL_8250=y
- CONFIG_SERIAL_8250_CONSOLE=y
- CONFIG_SERIAL_OF_PLATFORM=y
- CONFIG_SERIAL_TEGRA=y
-+CONFIG_SERIAL_DEV_BUS=y
- # CONFIG_HW_RANDOM is not set
- # CONFIG_I2C_COMPAT is not set
- CONFIG_I2C_CHARDEV=y
-@@ -135,6 +145,7 @@ CONFIG_PINCTRL_PALMAS=y
- CONFIG_GPIO_SYSFS=y
- CONFIG_GPIO_PCA953X=y
- CONFIG_GPIO_PCA953X_IRQ=y
-+CONFIG_GPIO_MAX77620=y
- CONFIG_GPIO_PALMAS=y
- CONFIG_GPIO_TPS6586X=y
- CONFIG_GPIO_TPS65910=y
-@@ -142,13 +153,21 @@ CONFIG_POWER_RESET=y
- CONFIG_POWER_RESET_AS3722=y
- CONFIG_POWER_RESET_GPIO=y
- CONFIG_BATTERY_SBS=y
-+CONFIG_BATTERY_BQ27XXX=y
-+CONFIG_CHARGER_GPIO=y
-+CONFIG_CHARGER_SMB347=y
- CONFIG_CHARGER_TPS65090=y
- CONFIG_SENSORS_LM90=y
- CONFIG_SENSORS_LM95245=y
-+CONFIG_THERMAL=y
-+CONFIG_THERMAL_STATISTICS=y
-+CONFIG_CPU_THERMAL=y
- CONFIG_WATCHDOG=y
-+CONFIG_MAX77620_WATCHDOG=y
- CONFIG_TEGRA_WATCHDOG=y
- CONFIG_MFD_AS3722=y
- CONFIG_MFD_CROS_EC=y
-+CONFIG_MFD_MAX77620=y
- CONFIG_MFD_MAX8907=y
- CONFIG_MFD_STMPE=y
- CONFIG_MFD_PALMAS=y
-@@ -159,6 +178,7 @@ CONFIG_REGULATOR=y
- CONFIG_REGULATOR_FIXED_VOLTAGE=y
- CONFIG_REGULATOR_AS3722=y
- CONFIG_REGULATOR_GPIO=y
-+CONFIG_REGULATOR_MAX77620=y
- CONFIG_REGULATOR_MAX8907=y
- CONFIG_REGULATOR_PALMAS=y
- CONFIG_REGULATOR_TPS51632=y
-@@ -174,7 +194,10 @@ CONFIG_USB_GSPCA=y
- CONFIG_DRM=y
- CONFIG_DRM_NOUVEAU=m
- CONFIG_DRM_TEGRA=y
-+CONFIG_DRM_TEGRA_STAGING=y
-+CONFIG_DRM_PANEL_LVDS=y
- CONFIG_DRM_PANEL_SIMPLE=y
-+CONFIG_DRM_LVDS_CODEC=y
- # CONFIG_LCD_CLASS_DEVICE is not set
- CONFIG_BACKLIGHT_CLASS_DEVICE=y
- # CONFIG_BACKLIGHT_GENERIC is not set
-@@ -238,6 +261,7 @@ CONFIG_RTC_CLASS=y
- CONFIG_RTC_DRV_AS3722=y
- CONFIG_RTC_DRV_DS1307=y
- CONFIG_RTC_DRV_MAX8907=y
-+CONFIG_RTC_DRV_MAX77686=y
- CONFIG_RTC_DRV_PALMAS=y
- CONFIG_RTC_DRV_TPS6586X=y
- CONFIG_RTC_DRV_TPS65910=y
-@@ -259,11 +283,18 @@ CONFIG_ARCH_TEGRA_2x_SOC=y
- CONFIG_ARCH_TEGRA_3x_SOC=y
- CONFIG_ARCH_TEGRA_114_SOC=y
- CONFIG_ARCH_TEGRA_124_SOC=y
-+CONFIG_PM_DEVFREQ=y
-+CONFIG_ARM_TEGRA_DEVFREQ=y
-+CONFIG_ARM_TEGRA20_DEVFREQ=y
- CONFIG_MEMORY=y
- CONFIG_IIO=y
-+CONFIG_KXCJK1013=y
- CONFIG_MPU3050_I2C=y
-+CONFIG_INV_MPU6050_I2C=y
-+CONFIG_AL3010=y
- CONFIG_SENSORS_ISL29018=y
- CONFIG_SENSORS_ISL29028=y
-+CONFIG_AK8974=y
- CONFIG_AK8975=y
- CONFIG_PWM=y
- CONFIG_PWM_TEGRA=y
-@@ -283,6 +314,13 @@ CONFIG_TMPFS_POSIX_ACL=y
- CONFIG_SQUASHFS=y
- CONFIG_SQUASHFS_LZO=y
- CONFIG_SQUASHFS_XZ=y
-+CONFIG_PSTORE=y
-+CONFIG_PSTORE_LZO_COMPRESS=y
-+CONFIG_PSTORE_LZ4_COMPRESS=y
-+CONFIG_PSTORE_LZ4HC_COMPRESS=y
-+CONFIG_PSTORE_842_COMPRESS=y
-+CONFIG_PSTORE_CONSOLE=y
-+CONFIG_PSTORE_RAM=y
- CONFIG_NFS_FS=y
- CONFIG_NFS_V4=y
- CONFIG_ROOT_NFS=y
--- 
-2.25.1
-
+T24gV2VkLCAyMDIwLTA0LTA4IGF0IDE2OjM4IC0wNDAwLCBOaWNvbGFzIFBpdHJlIHdyb3RlOg0K
+PiBPbiBXZWQsIDggQXByIDIwMjAsIEFybmQgQmVyZ21hbm4gd3JvdGU6DQo+IA0KPiA+IEhpIGV2
+ZXJ5b25lLA0KPiA+IA0KPiA+IEkndmUganVzdCByZXN0YXJ0ZWQgZG9pbmcgcmFuZGNvbmZpZyBi
+dWlsZHMgb24gdG9wIG9mIG1haW5saW5lDQo+ID4gTGludXggYW5kDQo+ID4gZm91bmQgYSBjb3Vw
+bGUgb2YgcmVncmVzc2lvbnMgd2l0aCBtaXNzaW5nIGRlcGVuZGVuY3kgZnJvbSB0aGUNCj4gPiBy
+ZWNlbnQNCj4gPiBjaGFuZ2UgaW4gdGhlICJpbXBseSIga2V5d29yZCBpbiBLY29uZmlnLCBwcmVz
+dW1hYmx5IHRoZXNlIHR3bw0KPiA+IHBhdGNoZXM6DQo+ID4gDQo+ID4gM2E5ZGQzZWNiMjA3IGtj
+b25maWc6IG1ha2UgJ2ltcGx5JyBvYmV5IHRoZSBkaXJlY3QgZGVwZW5kZW5jeQ0KPiA+IGRlZjJm
+YmZmZTYyYyBrY29uZmlnOiBhbGxvdyBzeW1ib2xzIGltcGxpZWQgYnkgeSB0byBiZWNvbWUgbQ0K
+PiA+IA0KPiA+IEkgaGF2ZSBjcmVhdGVkIHdvcmthcm91bmRzIGZvciB0aGUgS2NvbmZpZyBmaWxl
+cywgd2hpY2ggbm93IHN0b3ANCj4gPiB1c2luZw0KPiA+IGltcGx5IGFuZCBkbyBzb21ldGhpbmcg
+ZWxzZSBpbiBlYWNoIGNhc2UuIEkgZG9uJ3Qga25vdyB3aGV0aGVyDQo+ID4gdGhlcmUgd2FzDQo+
+ID4gYSBidWcgaW4gdGhlIGtjb25maWcgY2hhbmdlcyB0aGF0IGhhcyBsZWQgdG8gYWxsb3dpbmcN
+Cj4gPiBjb25maWd1cmF0aW9ucyB0aGF0DQo+ID4gd2VyZSBub3QgbWVhbnQgdG8gYmUgbGVnYWwg
+ZXZlbiB3aXRoIHRoZSBuZXcgc2VtYW50aWNzLCBvciBpZiB0aGUNCj4gPiBLY29uZmlnDQo+ID4g
+ZmlsZXMgaGF2ZSBzaW1wbHkgYmVjb21lIGluY29ycmVjdCBub3cgYW5kIHRoZSB0b29sIHdvcmtz
+IGFzDQo+ID4gZXhwZWN0ZWQuDQo+IA0KPiBJbiBtb3N0IGNhc2VzIGl0IGlzIHRoZSBjb2RlIHRo
+YXQgaGFzIHRvIGJlIGZpeGVkLiBJdCB0eXBpY2FsbHkgZG9lczoNCj4gDQo+IAlpZiAoSVNfRU5B
+QkxFRChDT05GSUdfRk9PKSkNCj4gCQlmb29faW5pdCgpOw0KPiANCj4gV2hlcmUgaXQgc2hvdWxk
+IHJhdGhlciBkbzoNCj4gDQo+IAlpZiAoSVNfUkVBQ0hBQkxFKENPTkZJR19GT08pKQ0KPiAJCWZv
+b19pbml0KCk7DQo+IA0KPiBBIGNvdXBsZSBvZiBzdWNoIHBhdGNoZXMgaGF2ZSBiZWVuIHByb2R1
+Y2VkIGFuZCBxdWV1ZWQgaW4gdGhlaXIgDQo+IHJlc3BlY3RpdmUgdHJlZXMgYWxyZWFkeS4NCj4g
+DQo+IA0KDQpZZXMgaSBoYXZlIGEgcGF0Y2ggaW4gbWx4NS1uZXQgYnJhbmNoIGNvbnZlcnRpbmcg
+SVNfRU5BQkxFRCB0bw0KSVNfUkVBQ0hBQkxFIGluIG1seDUsIGkgd2lsbCBwb3N0IGl0IHRvZGF5
+Lg0KDQpUaGFua3MsDQpTYWVlZC4NCg0K
