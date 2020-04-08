@@ -2,178 +2,102 @@ Return-Path: <SRS0=8dav=5Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00A51C2D0EA
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 12:12:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10D98C2D0EA
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 12:13:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C45192051A
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 12:12:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9F94B2051A
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 12:13:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UER6qfih"
+	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="CvHc61oW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728072AbgDHMMV (ORCPT
+        id S1728180AbgDHMNW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Apr 2020 08:12:21 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:40133 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726521AbgDHMMU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Apr 2020 08:12:20 -0400
-Received: by mail-wr1-f67.google.com with SMTP id s8so7517434wrt.7;
-        Wed, 08 Apr 2020 05:12:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=4oBWtnB+AHmz4Nj8u6gcWza06OmPrpkuIS2H9Ro5sVM=;
-        b=UER6qfihxL/25HM0sbCl8NoXGLpvoBaJhn0C/a7sOYGwN++t+U4nxnJ36Ghcrvuh9J
-         Liy8Flxrt05qSGhbcVeX76xpyinM76Mi0dTOY4f0NZnJBgbdpvPB2/7m5ldkgYF91Kqg
-         0npcwqWIgZlZxaWjxZD24HsJaQFNQitnoY4aI7+dgZfjGh3JMGeJA7SiVMpktB0aKJku
-         8n1ba2CqrWLO84S/nWTQXJxhZk1ixAaZhg0v3DRq231yzK15b8X9avmxfYlKvV5UtMte
-         42yktEv5oGdX73iMQMKJ3oEmmLgqsexd0dkq8uRZSgkSJ97uShcxbHxZoxBOvsC9l1RH
-         5pjg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=4oBWtnB+AHmz4Nj8u6gcWza06OmPrpkuIS2H9Ro5sVM=;
-        b=BW8YPKqM64mhpOQDqKQJqv93rN8it5LADvIbI9986kSuWT16UcULR/xEr9Eqf/GR7T
-         FyRUN3uzltICyQInCgfQgGqsVW1nigUerBVgpE28X6LFgIBYKrpUwOumYVba3WlyLliT
-         RIT3OHtd89zINUnzp+yVzI8DGO7fvuTtH662NTkmnz3SEAnwWn7RUW7UY9xPW95WXOqd
-         b4nerSaFNyn++tj5cMDCKEUMoCns5ssioTejBO/g4n2WgG+q1EfRjjWSZSciiRfiOK4i
-         5ybF/GaMMSjNVoTLZ5Sj4S3QNVLAs6QZvmbnzIoNm2Mt7JZ8ZmbuMGzgsesjLYKqEyA7
-         uNGA==
-X-Gm-Message-State: AGi0PuY/4fTJFx2AOD+LNU+5rLHy7OepB3673jCLazHdJpl9ePDUEAXZ
-        4JBNorpD+2qIPjhIHdS2gU7sQPL4IZrniNdhVC4=
-X-Google-Smtp-Source: APiQypL6mZfbVeqX2oW9O9VwevxlZXhVbfN7PwXL+V8tturb6+tilG9IrnX56wB1IKgk5BIy1aYEzPOwOkoazqTjSA4=
-X-Received: by 2002:adf:b6ab:: with SMTP id j43mr8243098wre.109.1586347937671;
- Wed, 08 Apr 2020 05:12:17 -0700 (PDT)
+        Wed, 8 Apr 2020 08:13:22 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:39413 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726521AbgDHMNW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Apr 2020 08:13:22 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 48y38J2kyXz9sRN;
+        Wed,  8 Apr 2020 22:13:20 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ellerman.id.au;
+        s=201909; t=1586348000;
+        bh=ubGzeXSiVoqtebhTvEZLZD3GVQ6q7AW2piVuB1gAlBA=;
+        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+        b=CvHc61oW7tA7kZxZgTKRkrr72INdmtZmz5b2cWNfwTinUYYVcvgEHtnajpTiQwaWq
+         RInLrTI9uvKzzCpougdbGohfsJjFL9K0UTwXHMbirkCHbfkqJOa8/JN++5teOhXBSi
+         ecCRcm7DO8/gqeCaTulSq2i7bmpwZknTMxVoPQIiP0lShZubxMLu2lijoJj9lqco4o
+         Y6W0UUEPlPu/GwkcXy4vdaYBunXvXJAF3QG/zXFcmdTK/HY2RGbe2nq+WKeqIZdQAu
+         btwyGBcmhkxv9hZHS09dfisn+s8WtiOaESPca0aijOPTVwdEucrjnZ1wDkEHrqXuiy
+         L/LyM6dfCLxpg==
+From:   Michael Ellerman <mpe@ellerman.id.au>
+To:     Leonardo Bras <leonardo@linux.ibm.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Enrico Weigelt <info@metux.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Allison Randal <allison@lohutok.net>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        Leonardo Bras <leonardo@linux.ibm.com>,
+        Nicholas Piggin <npiggin@gmail.com>
+Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/1] powerpc/crash: Use NMI context for printk after crashing other CPUs
+In-Reply-To: <20200406174058.686436-1-leonardo@linux.ibm.com>
+References: <20200406174058.686436-1-leonardo@linux.ibm.com>
+Date:   Wed, 08 Apr 2020 22:13:31 +1000
+Message-ID: <87y2r6jhuc.fsf@mpe.ellerman.id.au>
 MIME-Version: 1.0
-References: <20200407213058.62870-1-hdegoede@redhat.com>
-In-Reply-To: <20200407213058.62870-1-hdegoede@redhat.com>
-From:   Maxim Mikityanskiy <maxtram95@gmail.com>
-Date:   Wed, 8 Apr 2020 15:11:51 +0300
-Message-ID: <CAKErNvqM9ax8RB+Hm0e70a_uk_Ok3KfSQDmy0q9jKFaAQM3Fsg@mail.gmail.com>
-Subject: Re: [PATCH] platform/x86: intel_int0002_vgpio: Only bind to the
- INT0002 dev when using s2idle
-To:     Hans de Goede <hdegoede@redhat.com>
-Cc:     Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        Platform Driver <platform-driver-x86@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "5 . 3+" <stable@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 8, 2020 at 12:31 AM Hans de Goede <hdegoede@redhat.com> wrote:
+Leonardo Bras <leonardo@linux.ibm.com> writes:
+> Currently, if printk lock (logbuf_lock) is held by other thread during
+> crash, there is a chance of deadlocking the crash on next printk, and
+> blocking a possibly desired kdump.
 >
-> Commit 871f1f2bcb01 ("platform/x86: intel_int0002_vgpio: Only implement
-> irq_set_wake on Bay Trail") stopped passing irq_set_wake requests on to
-> the parents IRQ because this was breaking suspend (causing immediate
-> wakeups) on an Asus E202SA.
+> After sending IPI to all other CPUs, make printk enter in NMI context,
+> as it will use per-cpu buffers to store the message, and avoid locking
+> logbuf_lock.
 >
-> This workaround for this issue is mostly fine, on most Cherry Trail
-> devices where we need the INT0002 device for wakeups by e.g. USB kbds,
-> the parent IRQ is shared with the ACPI SCI and that is marked as wakeup
-> anyways.
->
-> But not on all devices, specifically on a Medion Akoya E1239T there is
-> no SCI at all, and because the irq_set_wake request is not passed on to
-> the parent IRQ, wake up by the builtin USB kbd does not work here.
->
-> So the workaround for the Asus E202SA immediate wake problem is causing
-> problems elsewhere; and in hindsight it is not the correct fix,
-> the Asus E202SA uses Airmont CPU cores, but this does not mean it is a
-> Cherry Trail based device, Brasswell uses Airmont CPU cores too and this
-> actually is a Braswell device.
->
-> Most (all?) Braswell devices use classic S3 mode suspend rather then
-> s2idle suspend and in this case directly dealing with PME events as
-> the INT0002 driver does likely is not the best idea, so that this is
-> causing issues is not surprising.
->
-> Replace the workaround of not passing irq_set_wake requests on to the
-> parents IRQ, by not binding to the INT0002 device when s2idle is not used=
-.
-> This fixes USB kbd wakeups not working on some Cherry Trail devices,
-> while still avoiding mucking with the wakeup flags on the Asus E202SA
-> (and other Brasswell devices).
-
-I tested this patch over kernel 5.6.2 on Asus E202SA and didn't notice
-any regressions. Wakeup by opening lid, by pressing a button on
-keyboard, by USB keyboard =E2=80=94 all seem to work fine. So, if appropria=
-te:
-
-Tested-by: Maxim Mikityanskiy <maxtram95@gmail.com>
-
-I have a question though. After your patch this driver will basically
-be a no-op on my laptop. Does it mean I don't even need it in the
-first place? What about the IRQ storm this driver is meant to deal
-with =E2=80=94 does it never happen on Braswell? What are the reproduction
-steps to verify my hardware is not affected? I have that INT0002
-device, so I'm worried it may cause issues if not bound to the driver.
-
-> Cc: Maxim Mikityanskiy <maxtram95@gmail.com>
-> Cc: 5.3+ <stable@vger.kernel.org> # 5.3+
-> Fixes: 871f1f2bcb01 ("platform/x86: intel_int0002_vgpio: Only implement i=
-rq_set_wake on Bay Trail")
-> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+> Signed-off-by: Leonardo Bras <leonardo@linux.ibm.com>
 > ---
->  drivers/platform/x86/intel_int0002_vgpio.c | 18 +++++-------------
->  1 file changed, 5 insertions(+), 13 deletions(-)
+>  arch/powerpc/kexec/crash.c | 1 +
+>  1 file changed, 1 insertion(+)
 >
-> diff --git a/drivers/platform/x86/intel_int0002_vgpio.c b/drivers/platfor=
-m/x86/intel_int0002_vgpio.c
-> index 55f088f535e2..e8bec72d3823 100644
-> --- a/drivers/platform/x86/intel_int0002_vgpio.c
-> +++ b/drivers/platform/x86/intel_int0002_vgpio.c
-> @@ -143,21 +143,9 @@ static struct irq_chip int0002_byt_irqchip =3D {
->         .irq_set_wake           =3D int0002_irq_set_wake,
->  };
->
-> -static struct irq_chip int0002_cht_irqchip =3D {
-> -       .name                   =3D DRV_NAME,
-> -       .irq_ack                =3D int0002_irq_ack,
-> -       .irq_mask               =3D int0002_irq_mask,
-> -       .irq_unmask             =3D int0002_irq_unmask,
-> -       /*
-> -        * No set_wake, on CHT the IRQ is typically shared with the ACPI =
-SCI
-> -        * and we don't want to mess with the ACPI SCI irq settings.
-> -        */
-> -       .flags                  =3D IRQCHIP_SKIP_SET_WAKE,
-> -};
-> -
->  static const struct x86_cpu_id int0002_cpu_ids[] =3D {
->         INTEL_CPU_FAM6(ATOM_SILVERMONT, int0002_byt_irqchip),   /* Valley=
-view, Bay Trail  */
-> -       INTEL_CPU_FAM6(ATOM_AIRMONT, int0002_cht_irqchip),      /* Braswe=
-ll, Cherry Trail */
-> +       INTEL_CPU_FAM6(ATOM_AIRMONT, int0002_byt_irqchip),      /* Braswe=
-ll, Cherry Trail */
->         {}
->  };
->
-> @@ -181,6 +169,10 @@ static int int0002_probe(struct platform_device *pde=
-v)
->         if (!cpu_id)
->                 return -ENODEV;
->
-> +       /* We only need to directly deal with PMEs when using s2idle */
-> +       if (!pm_suspend_default_s2idle())
-> +               return -ENODEV;
-> +
->         irq =3D platform_get_irq(pdev, 0);
->         if (irq < 0)
->                 return irq;
-> --
-> 2.26.0
->
+> diff --git a/arch/powerpc/kexec/crash.c b/arch/powerpc/kexec/crash.c
+> index d488311efab1..9b73e3991bf4 100644
+> --- a/arch/powerpc/kexec/crash.c
+> +++ b/arch/powerpc/kexec/crash.c
+> @@ -115,6 +115,7 @@ static void crash_kexec_prepare_cpus(int cpu)
+
+Added context:
+
+	printk(KERN_EMERG "Sending IPI to other CPUs\n");
+
+	if (crash_wake_offline)
+		ncpus = num_present_cpus() - 1;
+
+>  
+>  	crash_send_ipi(crash_ipi_callback);
+>  	smp_wmb();
+> +	printk_nmi_enter();
+  
+Why did you decide to put it there, rather than at the start of
+default_machine_crash_shutdown() like I did?
+
+The printk() above could have already deadlocked if another CPU is stuck
+with the logbuf lock held.
+
+cheers
