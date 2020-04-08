@@ -2,102 +2,228 @@ Return-Path: <SRS0=8dav=5Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27F12C2D0EA
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 14:49:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08DABC2BA16
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 14:49:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E3A9D20747
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 14:49:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="YOq7ZrDs"
+	by mail.kernel.org (Postfix) with ESMTP id BAA9620747
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 14:49:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1586357371;
+	bh=7JEb8l6efcy9qtD8hsFyu8199RYVj+RFbZx+OLxXjPw=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=ajfyPfqJ5JsDeIktYd1ide6AQ3PPHnFk4SDpgynYfmIOyqnEpCALrkiLT8gOTMII3
+	 0FUBFICpwoIMFB2SJIyGmqAkHDH2lS1A0zhTof/sM5niouNlai9GTQ3dr04YSo4as6
+	 aRelifaOub6DBoPE9UcwZbfNw6m+lfwQwjxU9hbE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729106AbgDHOt1 (ORCPT
+        id S1729141AbgDHOta (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Apr 2020 10:49:27 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:44718 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728367AbgDHOt1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Apr 2020 10:49:27 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Transfer-Encoding
-        :Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
-        Sender:Reply-To:Content-ID:Content-Description;
-        bh=N8ykcQQ3SOpdB5xsAT3pwV11DGg8xQH7SevAPGdtwTg=; b=YOq7ZrDsmTyGEBcCI6BSDKkjsL
-        I0uT/nJsD58Z+VHPMPAHi0wRyC61w6xXBMjcZFL/2mAsz2fbtr2mmjek7SrHTS63SneNCwGwzHyPL
-        S6MegKRHQ/nk/fGNaJ8Yz3jQF01jD37BeyYMXiT7eN6emnX4N2gqwsKwlbXITRiIhFb2j8OdeEA6i
-        EFM6XQ1O24xEkXwi2ZPKN/MNkvCJD42WZQ91uLBB3Kz9N8eWpkQrZbjuPLmlGMfjS+qjHTXkSzn8v
-        TUIi2+UWQ5UwjS0BvK/up5CVJDBsoMmz8NqwVB+LGs7/FnCAsL8VncXNigzzuY1EjQvss6OMnwXmk
-        pkaGs/vw==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jMC0r-00044L-OE; Wed, 08 Apr 2020 14:49:09 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        Wed, 8 Apr 2020 10:49:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55906 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729044AbgDHOt2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Apr 2020 10:49:28 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 4BFC5305FB6;
-        Wed,  8 Apr 2020 16:49:07 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 3E3F52BA90A66; Wed,  8 Apr 2020 16:49:07 +0200 (CEST)
-Date:   Wed, 8 Apr 2020 16:49:07 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     =?iso-8859-1?Q?J=FCrgen_Gro=DF?= <jgross@suse.com>
-Cc:     Ankur Arora <ankur.a.arora@oracle.com>,
-        linux-kernel@vger.kernel.org, x86@kernel.org, hpa@zytor.com,
-        jpoimboe@redhat.com, namit@vmware.com, mhiramat@kernel.org,
-        bp@alien8.de, vkuznets@redhat.com, pbonzini@redhat.com,
-        boris.ostrovsky@oracle.com, mihai.carabas@oracle.com,
-        kvm@vger.kernel.org, xen-devel@lists.xenproject.org,
-        virtualization@lists.linux-foundation.org
-Subject: Re: [RFC PATCH 00/26] Runtime paravirt patching
-Message-ID: <20200408144907.GL20730@hirez.programming.kicks-ass.net>
-References: <20200408050323.4237-1-ankur.a.arora@oracle.com>
- <20200408120856.GY20713@hirez.programming.kicks-ass.net>
- <bcf8206d-5a41-4e6b-1832-75ba1d6367e4@suse.com>
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8E23B20678;
+        Wed,  8 Apr 2020 14:49:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1586357367;
+        bh=7JEb8l6efcy9qtD8hsFyu8199RYVj+RFbZx+OLxXjPw=;
+        h=Date:From:To:Cc:Subject:From;
+        b=WKKX70GLG33+JcDd0rgBIlII9gfnRpKh50SbdGYb/F04+yC4X3kvxBcpfe3jDssLC
+         lyMm9QpY3qBR/1BzT7TyTRVQWZJh2DjWP3TAM7lmZnaAxdK1bhVbBo1XGSB/OPBXe1
+         QqYsOb00eRYCtLvD4HR/duVFLsPBRtogwgNuxops=
+Date:   Wed, 8 Apr 2020 16:49:24 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        torvalds@linux-foundation.org, stable@vger.kernel.org
+Cc:     lwn@lwn.net, Jiri Slaby <jslaby@suse.cz>
+Subject: Linux 5.6.3
+Message-ID: <20200408144924.GA1254356@kroah.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="/9DWx/yDrRhgMJTb"
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <bcf8206d-5a41-4e6b-1832-75ba1d6367e4@suse.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 08, 2020 at 03:33:52PM +0200, Jürgen Groß wrote:
-> On 08.04.20 14:08, Peter Zijlstra wrote:
-> > On Tue, Apr 07, 2020 at 10:02:57PM -0700, Ankur Arora wrote:
-> > > Mechanism: the patching itself is done using stop_machine(). That is
-> > > not ideal -- text_poke_stop_machine() was replaced with INT3+emulation
-> > > via text_poke_bp(), but I'm using this to address two issues:
-> > >   1) emulation in text_poke() can only easily handle a small set
-> > >   of instructions and this is problematic for inlined pv-ops (and see
-> > >   a possible alternatives use-case below.)
-> > >   2) paravirt patching might have inter-dependendent ops (ex.
-> > >   lock.queued_lock_slowpath, lock.queued_lock_unlock are paired and
-> > >   need to be updated atomically.)
-> > 
-> > And then you hope that the spinlock state transfers.. That is that both
-> > implementations agree what an unlocked spinlock looks like.
-> > 
-> > Suppose the native one was a ticket spinlock, where unlocked means 'head
-> > == tail' while the paravirt one is a test-and-set spinlock, where
-> > unlocked means 'val == 0'.
-> > 
-> > That just happens to not be the case now, but it was for a fair while.
-> 
-> Sure? This would mean that before spinlock-pvops are being set no lock
-> is allowed to be used in the kernel, because this would block the boot
-> time transition of the lock variant to use.
 
-Hurm.. true. I suppose I completely forgot how paravirt spinlocks looked
-before it got rewritten.
+--/9DWx/yDrRhgMJTb
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> Another problem I'm seeing is that runtime pvops patching would rely on
-> the fact that stop_machine() isn't guarded by a spinlock.
+I'm announcing the release of the 5.6.3 kernel.
 
-It can't be, stop_machine() relies on scheduling. But yes, that another
-variation of 'stuff uses spinlocks'.
+All users of the 5.6 kernel series must upgrade.
+
+The updated 5.6.y git tree can be found at:
+	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable.git linu=
+x-5.6.y
+and can be browsed at the normal kernel.org git web browser:
+	https://git.kernel.org/?p=3Dlinux/kernel/git/stable/linux-stable.git;a=3Ds=
+ummary
+
+thanks,
+
+greg k-h
+
+------------
+
+ Makefile                                                |    2=20
+ drivers/extcon/extcon-axp288.c                          |   32 ++++++++
+ drivers/gpu/drm/bridge/analogix/analogix-anx6345.c      |    4 -
+ drivers/gpu/drm/i915/display/intel_display.c            |    4 -
+ drivers/md/dm.c                                         |    5 -
+ drivers/misc/cardreader/rts5227.c                       |    1=20
+ drivers/misc/mei/hw-me-regs.h                           |    2=20
+ drivers/misc/mei/pci-me.c                               |    2=20
+ drivers/misc/pci_endpoint_test.c                        |   14 ++-
+ drivers/net/dsa/microchip/Kconfig                       |    1=20
+ drivers/net/ethernet/cadence/macb_main.c                |    3=20
+ drivers/net/wireless/broadcom/brcm80211/brcmfmac/sdio.c |    2=20
+ drivers/nvmem/core.c                                    |    1=20
+ drivers/nvmem/nvmem-sysfs.c                             |    6 +
+ drivers/nvmem/sprd-efuse.c                              |    2=20
+ drivers/pci/pci-sysfs.c                                 |    6 +
+ drivers/power/supply/axp288_charger.c                   |   57 +++++++++++=
+++++-
+ drivers/soc/mediatek/mtk-cmdq-helper.c                  |    1=20
+ include/uapi/linux/coresight-stm.h                      |    6 +
+ include/uapi/sound/asoc.h                               |    1=20
+ kernel/padata.c                                         |    2=20
+ lib/test_xarray.c                                       |   18 +++++
+ lib/xarray.c                                            |    3=20
+ mm/mempolicy.c                                          |    6 +
+ net/core/skbuff.c                                       |    1=20
+ net/ipv4/fib_trie.c                                     |    3=20
+ net/ipv4/ip_tunnel.c                                    |    6 -
+ net/ipv4/udp_offload.c                                  |    1=20
+ net/sctp/ipv6.c                                         |   20 +++--
+ net/sctp/protocol.c                                     |   28 +++++--
+ net/sctp/socket.c                                       |   31 ++++++--
+ sound/pci/hda/patch_ca0132.c                            |    1=20
+ tools/perf/util/setup.py                                |    2=20
+ 33 files changed, 225 insertions(+), 49 deletions(-)
+
+Alexander Usyskin (1):
+      mei: me: add cedar fork device ids
+
+Arnaldo Carvalho de Melo (1):
+      perf python: Fix clang detection to strip out options passed in $CC
+
+Bibby Hsieh (1):
+      soc: mediatek: knows_txdone needs to be set in Mediatek CMDQ helper
+
+Codrin Ciubotariu (2):
+      net: dsa: ksz: Select KSZ protocol tag
+      net: macb: Fix handling of fixed-link node
+
+Daniel Jordan (1):
+      padata: fix uninitialized return value in padata_replace()
+
+Eugene Syromiatnikov (1):
+      coresight: do not use the BIT() macro in the UAPI header
+
+Florian Westphal (1):
+      net: fix fraglist segmentation reference count leak
+
+Freeman Liu (1):
+      nvmem: sprd: Fix the block lock operation
+
+Geoffrey Allott (1):
+      ALSA: hda/ca0132 - Add Recon3Di quirk to handle integrated sound on E=
+VGA X99 Classified motherboard
+
+Greg Kroah-Hartman (1):
+      Linux 5.6.3
+
+Guenter Roeck (1):
+      brcmfmac: abort and release host after error
+
+Hans de Goede (2):
+      extcon: axp288: Add wakeup support
+      power: supply: axp288_charger: Add special handling for HP Pavilion x=
+2 10
+
+Kelsey Skunberg (1):
+      PCI: sysfs: Revert "rescan" file renames
+
+Khouloud Touil (1):
+      nvmem: release the write-protect pin
+
+Kishon Vijay Abraham I (2):
+      misc: pci_endpoint_test: Fix to support > 10 pci-endpoint-test devices
+      misc: pci_endpoint_test: Avoid using module parameter to determine ir=
+qtype
+
+Marcelo Ricardo Leitner (1):
+      sctp: fix possibly using a bad saddr with a given dst
+
+Matthew Wilcox (Oracle) (1):
+      XArray: Fix xa_find_next for large multi-index entries
+
+Mike Snitzer (1):
+      Revert "dm: always call blk_queue_split() in dm_process_bio()"
+
+Nicholas Johnson (1):
+      nvmem: check for NULL reg_read and reg_write before dereferencing
+
+Qian Cai (1):
+      ipv4: fix a RCU-list lock in fib_triestat_seq_show
+
+Qiujun Huang (1):
+      sctp: fix refcount bug in sctp_wfree
+
+Randy Dunlap (1):
+      mm: mempolicy: require at least one nodeid for MPOL_PREFERRED
+
+Takashi Iwai (1):
+      Revert "ALSA: uapi: Drop asound.h inclusion from asoc.h"
+
+Torsten Duwe (1):
+      drm/bridge: analogix-anx6345: Avoid duplicate -supply suffix
+
+Uma Shankar (1):
+      drm/i915/display: Fix mode private_flags comparison at atomic_check
+
+William Dauchy (1):
+      net, ip_tunnel: fix interface lookup with no key
+
+Xin Long (1):
+      udp: initialize is_flist with 0 in udp_gro_receive
+
+YueHaibing (1):
+      misc: rtsx: set correct pcr_ops for rts522A
+
+
+--/9DWx/yDrRhgMJTb
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEEZH8oZUiU471FcZm+ONu9yGCSaT4FAl6N5HQACgkQONu9yGCS
+aT62mQ/9FTsqrOt5EncNzybBQCOgfAJQDoAnPl/yG8U5sT7ldM70wIu4cfv0FDvr
+VtXMk/BOW5koYHgXm99Jd6mpR3Lg6L50IDMaGsT8QUZKR1H5UcyStCK9Dp44XpS8
+TkmZsX9a+ctiFWycoP4r8NIpRbEpMWL3z9uyR2sMdVLGOv2PANU8iJMm1SsbyY5n
+/4Ag3rXs258HeeLavQNhKNy/iVf19KGDzP+oIA1+OU/T2jGS6I0UayaVT8IZxPPR
+GV1HtkOXIRvDGNKs9Y88aEOuldoP+F+jLky7Qm80+Hsz84ezxrmc/7uVXp8E8Tgg
+6HD9du6efTNhb8QVvCwgV7he8p00pfbIaK/b9fqacfs55DWAU4Aq00tPO8R7inU1
+C6zVnAdUQMv9ijDH0YRhGkB1mLFq2UBnAJ7Gf2J+v909aLJNm8zpx/g8Lldpxd+Z
+dVJCsDXe+9NRIpdnPFOsRmc/D45WFbBFDJUg6D+yFaYWVBAYTrxOs0AbAsXWziNX
+xs5TIhxGUaDzaFT+AgBS/9lLyVASpsyZSDJxEOT/vyGAWMcBhRiLojruIP7R7o/0
+TYIAxblUVFFRQ0bntIb6NlbOJ3wrk6chvq/FBf2ldDvVAQ87vZEUfz9jnYin4Ps7
+X6Ct5+WoaYirh3AWmF48kctz/cydHMi8/4viJYsoJz8agRmiXw8=
+=4iYp
+-----END PGP SIGNATURE-----
+
+--/9DWx/yDrRhgMJTb--
