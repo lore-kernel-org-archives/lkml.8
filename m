@@ -2,172 +2,568 @@ Return-Path: <SRS0=8dav=5Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73C63C2D0EA
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 05:35:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CFC7C2D0EA
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 05:37:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3EC6E20730
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 05:35:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4B89820730
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 05:37:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Xnn4RHbR"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="IfjX6XOx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726545AbgDHFfl (ORCPT
+        id S1726552AbgDHFhV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Apr 2020 01:35:41 -0400
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:21775 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726345AbgDHFfl (ORCPT
+        Wed, 8 Apr 2020 01:37:21 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:42517 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726146AbgDHFhV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Apr 2020 01:35:41 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1586324140;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=DKKitWhcmQp3vV4NVp+aFS/cFmyiwETlBaGYg7qvVcg=;
-        b=Xnn4RHbRS3oZ9HSOE2kWM/gXtOcnxrSPJuzjlQumnqMYy5rKyO1WglO1LEQTQaFch3tTVO
-        lEGm1y6Jhakq2T8JqkqN0XO0OkRkP+Gd2XTk8xgLk3cGLHZ90VXUoZ7z9nP+7ETfU1Ea0i
-        H0xyfVDShZVLC5jp7i5TZKFoDPh7HOY=
-Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
- [209.85.128.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-181-KVTf7G1cO_q7TRiC3MLF6Q-1; Wed, 08 Apr 2020 01:35:38 -0400
-X-MC-Unique: KVTf7G1cO_q7TRiC3MLF6Q-1
-Received: by mail-wm1-f71.google.com with SMTP id p18so1819363wmk.9
-        for <linux-kernel@vger.kernel.org>; Tue, 07 Apr 2020 22:35:38 -0700 (PDT)
+        Wed, 8 Apr 2020 01:37:21 -0400
+Received: by mail-pf1-f195.google.com with SMTP id 22so1901445pfa.9
+        for <linux-kernel@vger.kernel.org>; Tue, 07 Apr 2020 22:37:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Epo5v9IAsNyrWXXuKm0++uC4UUEbgZdLjV3Ty3YoxJU=;
+        b=IfjX6XOxcMjkJh7poV+5msLZ+sy06Q4fVAO+D+LM/EeCdtMgrQBk1QHFSnTx+/O25k
+         UPP+UvY/eYe9D/TaXaJYMWkMNOEq+ZK7W/l1AAWNJqI60+sfaDQ0YB8VG7Db2pJd+h3f
+         0LyPBPMHN1qcAxx2w4iRzU2ucwU0tPZlGYjuo=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=DKKitWhcmQp3vV4NVp+aFS/cFmyiwETlBaGYg7qvVcg=;
-        b=lKoyXRXY8Parttx/4B3wpOswhe4rUAlFPnZ5r3TNCeVJnZEsQN5qCUyF35S0zN1Xys
-         hZcfGHtw+nJ9ZO93hFWkiTsocmpnVFr9t1O9nX3K103NrkH/vnSMOooBu9DiWKWgCyOv
-         f/n5mLo9mCvWCVnSB8RKwxWI7866BSfXi77qLpsxCOelXRb26RaNksnjJJ3C2SHWi7Zk
-         B0dkIli5yWGR5iS5BTu7NHVJ1TDcctCHa4uIGwOfiv2TqENdq/kfwicqA1X7EDx2WR2H
-         qiQFURRigK/ckHS5RQKdpVGXzOV8wB4nNSXa4z7XT/r7QohAbZ3tNaVtQuTKxh9qC8vK
-         2iXQ==
-X-Gm-Message-State: AGi0PuYJj6Qw9/bGGjCvWZbuVO2KPjHxbvzBYgcT4veCjm/nZ4o3GI4g
-        orLzwy7DX0kjk7kF2CkgNmgjdSQCTpY+EtxHcYJJMvhgUnXXWAVRkJdZlRlMc0j9oQGALryf9ET
-        hTFGzC+fTkgqBFVfK0gxPbaJL
-X-Received: by 2002:a5d:51cf:: with SMTP id n15mr5925794wrv.195.1586324137171;
-        Tue, 07 Apr 2020 22:35:37 -0700 (PDT)
-X-Google-Smtp-Source: APiQypKVQ6jZnquj60J3lHFYTbd2lZIBqpDJo2lkuyyEwCh61W49kQbylHv8LwYeofyA5MUiATbDSA==
-X-Received: by 2002:a5d:51cf:: with SMTP id n15mr5925770wrv.195.1586324136872;
-        Tue, 07 Apr 2020 22:35:36 -0700 (PDT)
-Received: from x1.bristot.me ([87.19.200.153])
-        by smtp.gmail.com with ESMTPSA id a12sm5179399wmj.22.2020.04.07.22.35.35
+        bh=Epo5v9IAsNyrWXXuKm0++uC4UUEbgZdLjV3Ty3YoxJU=;
+        b=b+il0N9H37xHvxz1bPXszncbWFAGPXhRT5wjsZ2WjWieEaJGUyErEGecFYF6gUZyzg
+         y1lT6q5EhIAtKUIkGv8hkCmFv1jhQd0TzQHGCcX6D3Y4ygZ8lRPzbUwMnZQSOyrvmtK9
+         nibPmeQRdUM6EHO95HeXZ8ii5HViaPu2wAi9htgqrEUdiw6KXs10oDrG1Qa4KRYjFKL/
+         7hWpZzu0IXub6Pml11zbhRl8gY2DwoI/ppZ85+Zkf7vDJSGTud0ewmsTwn7P/LjEVjLH
+         iv6brrAPMH5XBFnYtJfAFHfbDBT6kBouShVS2nSijQdIxLHd0i4znRQbBRsePwNy/wx+
+         clhw==
+X-Gm-Message-State: AGi0Pubb0aNJ4uiLStA4M32hppXnlQe5MA7tyVFYN0qEbHh9qGYzBk8G
+        rPy561jJsag937bctJ5gNBvJyw==
+X-Google-Smtp-Source: APiQypICHST6/KEafkS6nipm5Z5kd5XQT1bQ/gfKbUfdHettcTiTVaom2DmM7O/xrvgQYOjJB9nJAg==
+X-Received: by 2002:a62:a116:: with SMTP id b22mr6259324pff.122.1586324238958;
+        Tue, 07 Apr 2020 22:37:18 -0700 (PDT)
+Received: from localhost ([2620:15c:202:1:4cc0:7eee:97c9:3c1a])
+        by smtp.gmail.com with ESMTPSA id s27sm14976971pgn.90.2020.04.07.22.37.18
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 07 Apr 2020 22:35:36 -0700 (PDT)
-Subject: Re: [RFC PATCH 2/3] docs: scheduler: Add scheduler overview
- documentation
-To:     Jonathan Corbet <corbet@lwn.net>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        John Mathew <john.mathew@unikie.com>,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        mingo@redhat.com, juri.lelli@redhat.com,
-        vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
-        rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de,
-        tsbogend@alpha.franken.de, lukas.bulwahn@gmail.com, x86@kernel.org,
-        linux-mips@vger.kernel.org, tglx@linutronix.de,
-        mostafa.chamanara@basemark.com
-References: <20200401100029.1445-1-john.mathew@unikie.com>
- <20200401100029.1445-3-john.mathew@unikie.com>
- <20200401103520.GA20713@hirez.programming.kicks-ass.net>
- <9614b346-a848-3e01-eea7-6237b759dad6@redhat.com>
- <20200407134028.44d0d16a@lwn.net>
-From:   Daniel Bristot de Oliveira <bristot@redhat.com>
-Message-ID: <20358dfa-4216-9e84-79a6-b34accbc4280@redhat.com>
-Date:   Wed, 8 Apr 2020 07:35:34 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Tue, 07 Apr 2020 22:37:18 -0700 (PDT)
+From:   Gwendal Grignou <gwendal@chromium.org>
+To:     bleung@chromium.org, vilhelm.gray@gmail.com,
+        enric.balletbo@collabora.com, ic23@kernel.org, groeck@chromium.org
+Cc:     linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org,
+        Gwendal Grignou <gwendal@chromium.org>
+Subject: [PATCH] drivers: counter: Add Cros EC Sync counter
+Date:   Tue,  7 Apr 2020 22:36:55 -0700
+Message-Id: <20200408053655.99957-1-gwendal@chromium.org>
+X-Mailer: git-send-email 2.26.0.110.g2183baf09c-goog
 MIME-Version: 1.0
-In-Reply-To: <20200407134028.44d0d16a@lwn.net>
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/7/20 9:40 PM, Jonathan Corbet wrote:
-> On Wed, 1 Apr 2020 13:47:04 +0200
-> Daniel Bristot de Oliveira <bristot@redhat.com> wrote:
-> 
->>> And that is a prime example of why I hates RST, it pretty much mandates
->>> you view this with something other than a text editor.  
->> The good thing about the dot format is that we can convert it to many other
->> formats, including text:
->>
->> [bristot@x1 ~]$ cat sched_transition.dot | graph-easy 
->>
->>                        *
->>
->>                        |
->>                        | task
->>                        | forks
->>                        v
->>                      +------------------------------------+
->>                      |              TASK_NEW              |
->>                      |           (Ready to run)           |
->>                      +------------------------------------+
->>                        |
->>                        |
->>                        v
->> + - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -+
->> '                                     int                                            '
->> '                                                                                    '
->> '                    +------------------------------------+                          '
->> '                    |            TASK_RUNNING            |                          '
->> '   +--------------> |           (Ready to run)           | <--+                     '
->> '   |                +------------------------------------+    |                     '
->> '   |                  |                                       |                     '
->> '   |                  | schedule() calls context_switch()     | task is pre-empted  '
->> '   |                  v                                       |                     '
->> '   |                +------------------------------------+    |                     '
->> '   |                |            TASK_RUNNING            |    |                     '
->> '   |                |             (Running)              | ---+                     '
->> '   | event occurred +------------------------------------+                          '
->> '   |                  |                                                             '
->> '   |                  |                                      - - - - - - - - - - - -+
->> '   |                  |                                    '
->> '   |                  | task needs to wait for event       '
->> '   |                  v                                    '
->> '   |                +------------------------------------+ '
->> '   |                |         TASK_INTERRUPTIBLE         | '
->> '   |                |        TASK_UNINTERRUPTIBLE        | '
->> '   +--------------- |           TASK_WAKEKILL            | '
->> '                    +------------------------------------+ '
->> '                                                           '
->> + - - - - - - - - - - - - - - - - - - - - - - - - - - - - - +
->>                        |
->>                        | task exits via do_exit()
->>                        v
->>                      +------------------------------------+
->>                      |             TASK_DEAD              |
->>                      |            EXIT_ZOMBIE             |
->>                      +------------------------------------+
->>
->>
->> Is there a way to also add this representation, while hiding it
->> when using a graphical reader?
-> Better, honestly, to just put the ascii art into the doc as a literal
-> block.  I don't see any real reason to embed Dot stuff unless there's
-> really no alternative.
+When the camera vsync pin is connected to the embedded controller (EC) of
+a chromebook, the EC reports a sensor with a counter that increases
+at each GPIO rising edge.
 
-I agree.
+The sensor is presented using the counter subsystem.
+In addition, it is also presented via the IIO subsystem with a timestamp,
+allowing synchronisation with sensors connected to the same EC, for
+image stabilisation or augmented reality applications.
 
-I think that their idea was focused on a media that could translate the
-"source-code in .dot" into a graphical representation, which is good. But that
-is not the case for this file and its audience.
+To enable the counter:
+via counter ABI:
+echo "rising edge" > counterX/count0/signal_action
+via iio ABI
+echo 1 > iio:deviceY/en
 
-But, maybe, it would be nice to have the .dot somewhere (not in the document, I
-agree) as a "source code" for future updates.
+To disable the counter:
+via counter ABI:
+echo "none" > counterX/count0/signal_action
+via iio ABI
+echo 0 > iio:deviceY/en
 
--- Daniel
+To read the current counter value:
+via counter ABI:
+cat counterX/count0/count
+via iio ABI
+cat iio:deviceY/in_count_raw
+We can also read the value through the IIO buffer:
+echo 1 > iio:deviceY/scan_elements/in_timestamp_en
+echo 1 > iio:deviceY/scan_elements/in_count_en
+echo 1 > iio:deviceY/buffer/enable
+
+and each time to counter increase, the following binary blob
+will be appended to dev/iio:deviceY:
+000f 0000 0000 0000 dc66 816c 0071 0000
+ \   <-- padding -> <-- timestamp ---->
+  count
+
+Signed-off-by: Gwendal Grignou <gwendal@chromium.org>
+---
+An initial version of the driver was presented few month ago at
+https://patchwork.kernel.org/patch/11037009/
+
+ drivers/counter/Kconfig                       |  11 +
+ drivers/counter/Makefile                      |   1 +
+ drivers/counter/cros_ec_sync.c                | 342 ++++++++++++++++++
+ .../cros_ec_sensors/cros_ec_sensors_core.c    |  15 +
+ drivers/platform/chrome/cros_ec_sensorhub.c   |   3 +
+ .../linux/iio/common/cros_ec_sensors_core.h   |   4 +-
+ 6 files changed, 375 insertions(+), 1 deletion(-)
+ create mode 100644 drivers/counter/cros_ec_sync.c
+
+diff --git a/drivers/counter/Kconfig b/drivers/counter/Kconfig
+index c80fa76bb5311..18fde918ff40b 100644
+--- a/drivers/counter/Kconfig
++++ b/drivers/counter/Kconfig
+@@ -29,6 +29,17 @@ config 104_QUAD_8
+ 	  The base port addresses for the devices may be configured via the base
+ 	  array module parameter.
+ 
++config CROS_EC_SYNC
++	tristate "ChromeOS EC Counter driver"
++	depends on IIO_CROS_EC_SENSORS_CORE
++	help
++	  Module to handle synchronisation sensor presented by the ChromeOS EC
++	  Sensor hub.
++	  Synchronisation sensor sends event to the host when the camera
++	  take a picture. It allows synchronisation with other MEMS sensor,
++	  like gyroscope for image statbilization or augmented reality
++	  application (AR).
++
+ config STM32_TIMER_CNT
+ 	tristate "STM32 Timer encoder counter driver"
+ 	depends on MFD_STM32_TIMERS || COMPILE_TEST
+diff --git a/drivers/counter/Makefile b/drivers/counter/Makefile
+index 55142d1f4c436..98378fca50ad6 100644
+--- a/drivers/counter/Makefile
++++ b/drivers/counter/Makefile
+@@ -6,6 +6,7 @@
+ obj-$(CONFIG_COUNTER) += counter.o
+ 
+ obj-$(CONFIG_104_QUAD_8)	+= 104-quad-8.o
++obj-$(CONFIG_CROS_EC_SYNC)	+= cros_ec_sync.o
+ obj-$(CONFIG_STM32_TIMER_CNT)	+= stm32-timer-cnt.o
+ obj-$(CONFIG_STM32_LPTIMER_CNT)	+= stm32-lptimer-cnt.o
+ obj-$(CONFIG_TI_EQEP)		+= ti-eqep.o
+diff --git a/drivers/counter/cros_ec_sync.c b/drivers/counter/cros_ec_sync.c
+new file mode 100644
+index 0000000000000..94b3ababab4bd
+--- /dev/null
++++ b/drivers/counter/cros_ec_sync.c
+@@ -0,0 +1,342 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Driver for synchronisation sensor behind CrOS EC.
++ *
++ * Copyright 2020 Google, Inc
++ *
++ * This software is licensed under the terms of the GNU General Public
++ * License version 2, as published by the Free Software Foundation, and
++ * may be copied, distributed, and modified under those terms.
++ *
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU General Public License for more details.
++ *
++ * This driver uses the cros-ec interface to communicate with the Chrome OS
++ * EC about counter sensors. Counters are presented through
++ * iio sysfs.
++ */
++
++#include <linux/counter.h>
++#include <linux/device.h>
++#include <linux/iio/buffer.h>
++#include <linux/iio/common/cros_ec_sensors_core.h>
++#include <linux/iio/iio.h>
++#include <linux/kernel.h>
++#include <linux/module.h>
++#include <linux/platform_data/cros_ec_commands.h>
++#include <linux/platform_data/cros_ec_proto.h>
++#include <linux/platform_device.h>
++#include <linux/slab.h>
++
++/*
++ * One channel for counter, the other for timestamp.
++ */
++#define MAX_CHANNELS (1 + 1)
++
++/**
++ * struct cros_ec_sync_state - device structure
++ *
++ * @core: common structure for all cros_ec sensor.
++ *        Must be at the beggining.
++ * @channels: presented iio channels(2).
++ * @counter: counter data structure.
++ */
++struct cros_ec_sync_state {
++	struct cros_ec_sensors_core_state core;
++	struct iio_chan_spec channels[MAX_CHANNELS];
++	struct counter_device counter;
++};
++
++/**
++ * cros_ec_sync_get_enable() - Check if the counter is enabled.
++ *
++ * @st:     core cros_ec sensor
++ * @val:    status: 0: disabled, 1 enabled.
++ *
++ * Return: 0 on success, -errno on failure.
++ */
++static int cros_ec_sync_get_enable(struct cros_ec_sensors_core_state *st,
++				   int *val)
++{
++	int ret;
++
++	mutex_lock(&st->cmd_lock);
++	st->param.cmd = MOTIONSENSE_CMD_SENSOR_ODR;
++	st->param.sensor_odr.data = EC_MOTION_SENSE_NO_VALUE;
++
++	ret = cros_ec_motion_send_host_cmd(st, 0);
++	mutex_unlock(&st->cmd_lock);
++	if (ret)
++		return ret;
++
++	*val = !!st->resp->sensor_odr.ret;
++	return 0;
++}
++
++/**
++ * cros_ec_sync_set_enable() - Allow the counter to count.
++ *
++ * When enable, the counter will increase for each VSYNC rising edge
++ * and will produce an event in the iio buffer, if enabled.
++ *
++ * @st:     core cros_ec sensor
++ * @val:    0: disable, 1 enable.
++ *
++ * Return: 0 on success, -errno on failure.
++ */
++static int cros_ec_sync_set_enable(struct cros_ec_sensors_core_state *st,
++				   int val)
++{
++	int ret;
++
++	mutex_lock(&st->cmd_lock);
++	st->param.cmd = MOTIONSENSE_CMD_SENSOR_ODR;
++	st->param.sensor_odr.data = val;
++	st->param.sensor_odr.roundup = 1;
++
++	ret = cros_ec_motion_send_host_cmd(st, 0);
++	mutex_unlock(&st->cmd_lock);
++	return ret;
++}
++
++static int cros_ec_sync_iio_read(struct iio_dev *indio_dev,
++				 struct iio_chan_spec const *chan,
++				 int *val, int *val2, long mask)
++{
++	struct cros_ec_sensors_core_state *st = iio_priv(indio_dev);
++	u16 data;
++	int ret;
++	int idx = chan->scan_index;
++
++	switch (mask) {
++	case IIO_CHAN_INFO_RAW:
++		mutex_lock(&st->cmd_lock);
++		ret = cros_ec_sensors_read_cmd(indio_dev, 1 << idx, &data);
++		mutex_unlock(&st->cmd_lock);
++		if (ret < 0)
++			break;
++		ret = IIO_VAL_INT;
++		*val = data;
++		break;
++	case IIO_CHAN_INFO_ENABLE:
++		ret = cros_ec_sync_get_enable(st, val);
++		if (ret < 0)
++			break;
++		ret = IIO_VAL_INT;
++		break;
++	default:
++		ret = -EINVAL;
++		break;
++	}
++	mutex_unlock(&st->cmd_lock);
++	return ret;
++}
++
++static int cros_ec_sync_iio_write(struct iio_dev *indio_dev,
++				  struct iio_chan_spec const *chan,
++				  int val, int val2, long mask)
++{
++	struct cros_ec_sensors_core_state *st = iio_priv(indio_dev);
++
++	switch (mask) {
++	case IIO_CHAN_INFO_ENABLE:
++		if (val < 0 || val > 1)
++			return -EINVAL;
++
++		return cros_ec_sync_set_enable(st, val);
++
++	default:
++		return -EINVAL;
++	}
++}
++
++static const struct iio_info cros_ec_sync_info = {
++	.read_raw = &cros_ec_sync_iio_read,
++	.write_raw = &cros_ec_sync_iio_write,
++};
++
++/* The counter can only increase, so only one function present. */
++static enum counter_count_function cros_ec_sync_functions[] = {
++	COUNTER_COUNT_FUNCTION_INCREASE,
++};
++
++/* 2 synapse actions allowed: count for each rising edge, or not. */
++static enum counter_synapse_action cros_ec_sync_synapse_actions[] = {
++	COUNTER_SYNAPSE_ACTION_NONE,
++	COUNTER_SYNAPSE_ACTION_RISING_EDGE,
++};
++
++static int cros_ec_sync_read_count(struct counter_device *counter,
++				   struct counter_count *count,
++				   unsigned long *val)
++{
++	struct cros_ec_sensors_core_state *st = counter->priv;
++	u16 raw;
++	int ret;
++
++	mutex_lock(&st->cmd_lock);
++	ret = cros_ec_sensors_read_cmd(iio_priv_to_dev(st), 1, &raw);
++	mutex_unlock(&st->cmd_lock);
++	if (ret)
++		return ret;
++
++	*val = raw;
++	return 0;
++}
++
++static int cros_ec_sync_function_get(struct counter_device *counter,
++				     struct counter_count *count,
++				     size_t *function)
++{
++	*function = 0;
++	return 0;
++}
++
++static int cros_ec_sync_action_get(struct counter_device *counter,
++				   struct counter_count *count,
++				   struct counter_synapse *synapse,
++				   size_t *action)
++{
++	struct cros_ec_sensors_core_state *st = counter->priv;
++	int ret;
++	int raw;
++
++	ret = cros_ec_sync_get_enable(st, &raw);
++	if (ret)
++		return ret;
++
++	*action = !!raw;
++	return 0;
++}
++
++static int cros_ec_sync_action_set(struct counter_device *counter,
++				   struct counter_count *count,
++				   struct counter_synapse *synapse,
++				   size_t action)
++{
++	struct cros_ec_sensors_core_state *st = counter->priv;
++
++	return cros_ec_sync_set_enable(st, action);
++}
++
++static const struct counter_ops cros_ec_sync_ops = {
++	.count_read = cros_ec_sync_read_count,
++	.function_get = cros_ec_sync_function_get,
++	.action_get = cros_ec_sync_action_get,
++	.action_set = cros_ec_sync_action_set,
++};
++
++static struct counter_signal cros_ec_sync_signals[] = {
++	{
++		.id = 0,
++		.name = "vsync"
++	}
++};
++
++static struct counter_synapse cros_ec_sync_synapses[] = {
++	{
++		.actions_list = cros_ec_sync_synapse_actions,
++		.num_actions = ARRAY_SIZE(cros_ec_sync_synapse_actions),
++		.signal = cros_ec_sync_signals
++	}
++};
++
++static struct counter_count cros_ec_sync_counts[] = {
++	{
++		.id = 0,
++		.name = "vsync",
++		.functions_list = cros_ec_sync_functions,
++		.num_functions = ARRAY_SIZE(cros_ec_sync_functions),
++		.synapses = cros_ec_sync_synapses,
++		.num_synapses = ARRAY_SIZE(cros_ec_sync_synapses),
++	}
++};
++
++static int cros_ec_sync_probe(struct platform_device *pdev)
++{
++	struct device *dev = &pdev->dev;
++	struct iio_dev *indio_dev;
++	struct cros_ec_sync_state *state;
++	struct iio_chan_spec *channel;
++	int ret;
++
++	indio_dev = devm_iio_device_alloc(dev, sizeof(*state));
++	if (!indio_dev)
++		return -ENOMEM;
++
++	ret = cros_ec_sensors_core_init(pdev, indio_dev, true,
++					cros_ec_sensors_capture,
++					cros_ec_sensors_push_data);
++	if (ret)
++		return ret;
++
++	indio_dev->info = &cros_ec_sync_info;
++	state = iio_priv(indio_dev);
++
++	/* Initialize IIO device */
++	channel = state->channels;
++
++	/* Counter channel */
++	channel->type = IIO_COUNT;
++	channel->info_mask_separate = BIT(IIO_CHAN_INFO_RAW);
++	channel->info_mask_shared_by_all = BIT(IIO_CHAN_INFO_ENABLE);
++	channel->scan_type.realbits = CROS_EC_SENSOR_BITS;
++	channel->scan_type.storagebits = CROS_EC_SENSOR_BITS;
++	channel->scan_type.shift = 0;
++	channel->scan_index = 0;
++	channel->ext_info = cros_ec_sensors_limited_info;
++	channel->scan_type.sign = 'u';
++
++	/* Timestamp channel */
++	channel++;
++	channel->type = IIO_TIMESTAMP;
++	channel->channel = -1;
++	channel->scan_index = 1;
++	channel->scan_type.sign = 's';
++	channel->scan_type.realbits = 64;
++	channel->scan_type.storagebits = 64;
++
++	indio_dev->channels = state->channels;
++	indio_dev->num_channels = MAX_CHANNELS;
++
++	state->core.read_ec_sensors_data = cros_ec_sensors_read_cmd;
++
++	/* Initialize Counter device */
++	state->counter.name = dev_name(&pdev->dev);
++	state->counter.parent = &pdev->dev;
++	state->counter.ops = &cros_ec_sync_ops;
++	state->counter.counts = cros_ec_sync_counts;
++	state->counter.num_counts = ARRAY_SIZE(cros_ec_sync_counts);
++	state->counter.signals = cros_ec_sync_signals;
++	state->counter.num_signals = ARRAY_SIZE(cros_ec_sync_signals);
++	state->counter.priv = state;
++
++	ret = devm_iio_device_register(dev, indio_dev);
++	if (ret)
++		return ret;
++
++	return devm_counter_register(dev, &state->counter);
++}
++
++static const struct platform_device_id cros_ec_sync_ids[] = {
++	{
++		.name = "cros-ec-sync",
++	},
++	{ /* sentinel */ }
++};
++MODULE_DEVICE_TABLE(platform, cros_ec_sync_ids);
++
++static struct platform_driver cros_ec_sync_platform_driver = {
++	.driver = {
++		.name	= "cros-ec-sync",
++	},
++	.probe		= cros_ec_sync_probe,
++	.id_table	= cros_ec_sync_ids,
++};
++module_platform_driver(cros_ec_sync_platform_driver);
++
++MODULE_AUTHOR("Gwendal Grignou <gwendal@chromium.org>");
++MODULE_DESCRIPTION("ChromeOS EC synchronisation sensor driver");
++MODULE_LICENSE("GPL v2");
+diff --git a/drivers/iio/common/cros_ec_sensors/cros_ec_sensors_core.c b/drivers/iio/common/cros_ec_sensors/cros_ec_sensors_core.c
+index c831915ca7e56..3a15094616710 100644
+--- a/drivers/iio/common/cros_ec_sensors/cros_ec_sensors_core.c
++++ b/drivers/iio/common/cros_ec_sensors/cros_ec_sensors_core.c
+@@ -31,6 +31,7 @@
+ static char *cros_ec_loc[] = {
+ 	[MOTIONSENSE_LOC_BASE] = "base",
+ 	[MOTIONSENSE_LOC_LID] = "lid",
++	[MOTIONSENSE_LOC_CAMERA] = "camera",
+ 	[MOTIONSENSE_LOC_MAX] = "unknown",
+ };
+ 
+@@ -467,6 +468,20 @@ const struct iio_chan_spec_ext_info cros_ec_sensors_ext_info[] = {
+ };
+ EXPORT_SYMBOL_GPL(cros_ec_sensors_ext_info);
+ 
++const struct iio_chan_spec_ext_info cros_ec_sensors_limited_info[] = {
++	{
++		.name = "id",
++		.shared = IIO_SHARED_BY_ALL,
++		.read = cros_ec_sensors_id
++	},
++	{
++		.name = "location",
++		.shared = IIO_SHARED_BY_ALL,
++		.read = cros_ec_sensors_loc
++	},
++	{ },
++};
++EXPORT_SYMBOL_GPL(cros_ec_sensors_limited_info);
+ /**
+  * cros_ec_sensors_idx_to_reg - convert index into offset in shared memory
+  * @st:		pointer to state information for device
+diff --git a/drivers/platform/chrome/cros_ec_sensorhub.c b/drivers/platform/chrome/cros_ec_sensorhub.c
+index b7f2c00db5e1e..e4ae0868d1e06 100644
+--- a/drivers/platform/chrome/cros_ec_sensorhub.c
++++ b/drivers/platform/chrome/cros_ec_sensorhub.c
+@@ -106,6 +106,9 @@ static int cros_ec_sensorhub_register(struct device *dev,
+ 		case MOTIONSENSE_TYPE_ACTIVITY:
+ 			name = "cros-ec-activity";
+ 			break;
++		case MOTIONSENSE_TYPE_SYNC:
++			name = "cros-ec-sync";
++			break;
+ 		default:
+ 			dev_warn(dev, "unknown type %d\n",
+ 				 sensorhub->resp->info.type);
+diff --git a/include/linux/iio/common/cros_ec_sensors_core.h b/include/linux/iio/common/cros_ec_sensors_core.h
+index 7bc961defa87e..e416b28cf24c7 100644
+--- a/include/linux/iio/common/cros_ec_sensors_core.h
++++ b/include/linux/iio/common/cros_ec_sensors_core.h
+@@ -114,7 +114,9 @@ int cros_ec_sensors_core_write(struct cros_ec_sensors_core_state *st,
+ 			       struct iio_chan_spec const *chan,
+ 			       int val, int val2, long mask);
+ 
+-/* List of extended channel specification for all sensors */
++/* List of extended channel specification for all sensors. */
++extern const struct iio_chan_spec_ext_info cros_ec_sensors_limited_info[];
++/* Add calibration to set above. */
+ extern const struct iio_chan_spec_ext_info cros_ec_sensors_ext_info[];
+ extern const struct attribute *cros_ec_sensor_fifo_attributes[];
+ 
+-- 
+2.26.0.110.g2183baf09c-goog
 
