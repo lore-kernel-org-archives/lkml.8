@@ -2,140 +2,157 @@ Return-Path: <SRS0=8dav=5Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3A35C2BB54
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 02:00:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38430C2D0EC
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 02:01:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 89A0420748
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 02:00:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="Sp8McM5W"
+	by mail.kernel.org (Postfix) with ESMTP id 0687F2074F
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 02:01:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1586311285;
+	bh=QFmgRRYScngDWN/BRZ4rGh+aJPvUq10rRqBozbwbslg=;
+	h=Date:From:To:Subject:List-ID:From;
+	b=dF3U/gDWXGF6dLqF+nZtrbSfNAwz+AqCJAL1AyW1kTDsbGd0K52Hk1jeVJDUeSRy4
+	 x95Tozu94atekdrXAFvZWVDv4cYQggt1Y1DqzfHT+KTh2sXoPcXkjXGZ+HN1FchhWr
+	 razIGRQD8Vx/FrdfRA7eol5Ga8J+A8UI23OcSyQY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726650AbgDHCAb (ORCPT
+        id S1726527AbgDHCBY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 22:00:31 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:49851 "EHLO ozlabs.org"
+        Tue, 7 Apr 2020 22:01:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54532 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726559AbgDHCAb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Apr 2020 22:00:31 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        id S1726420AbgDHCBY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Apr 2020 22:01:24 -0400
+Received: from localhost.localdomain (c-71-198-47-131.hsd1.ca.comcast.net [71.198.47.131])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 48xnY73rRRz9sSj;
-        Wed,  8 Apr 2020 12:00:27 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1586311227;
-        bh=xvqCi+cIJ3wlVON3+hV0bMtvtjfy8ATYcnMOBtdsJQI=;
-        h=Date:From:To:Cc:Subject:From;
-        b=Sp8McM5WmxQEtZ0ffSXobTcnrIhy/tovsmPsr5Dw/YIAvHmhw69XjtFZQprIGH0rW
-         UYphmqTmjVEBEzyK3iWalJrkUNgChRHK3eSN7ht3QZs/i2zSyxte2RP0ywvslWJGnw
-         z6E8sJVPNn+795s6d7mEVMQAsjUA6gZP/Srkd1BEqOGkoD8sHnisvOiw3vvVtRFS+/
-         TdmhpgB+w9C52Yz/r0pmoVAQDjGKnewBbaL5DXDndx5nRtm3ICPAW9KDv/iH+XTmnD
-         UfGkUhszI6cExaDNEuxA2fHrP4OnOSc9REWGS4Xf9FupK4SCLMQvY7ERlpy+TFFwhY
-         2AQBEDTWEpzaA==
-Date:   Wed, 8 Apr 2020 12:00:25 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Kees Cook <keescook@google.com>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "=?UTF-8?B?RnLDqWTDqXJpYw==?= Pierret (fepitre)" 
-        <frederic.pierret@qubes-os.org>,
-        Masahiro Yamada <masahiroy@kernel.org>
-Subject: linux-next: manual merge of the kspp tree with Linus' tree
-Message-ID: <20200408120025.71355911@canb.auug.org.au>
-MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/2R1KTHrTBVXl_qm2lu5Ut2y";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+        by mail.kernel.org (Postfix) with ESMTPSA id 9A42320730;
+        Wed,  8 Apr 2020 02:01:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1586311282;
+        bh=QFmgRRYScngDWN/BRZ4rGh+aJPvUq10rRqBozbwbslg=;
+        h=Date:From:To:Subject:From;
+        b=XXkeiu290GJjRbYf+xpsGlDenUPCrS7GgFmj2TduI0qwK+UyKLLnMp/DxsgNx8bpn
+         qvbjXr/pA8C3oVKOrj9DRXJs/bb3yIRUvknOjSXvW5tzurV/6THzpJDsCFNlvcb/Xp
+         o/KEddqMa1yX2A3kHrTgtBlEy4/wYGHEvqbXXWhA=
+Date:   Tue, 07 Apr 2020 19:01:21 -0700
+From:   akpm@linux-foundation.org
+To:     bp@alien8.de, geert@linux-m68k.org, haren@us.ibm.com,
+        joe@perches.com, johannes@sipsolutions.net, keescook@chromium.org,
+        linux-kernel@vger.kernel.org, mingo@redhat.com,
+        mm-commits@vger.kernel.org, rikard.falkeborn@gmail.com,
+        tglx@linutronix.de, yamada.masahiro@socionext.com
+Subject:  [merged]
+ linux-bitsh-add-compile-time-sanity-check-of-genmask-inputs.patch removed
+ from -mm tree
+Message-ID: <20200408020121.INZFbuTGR%akpm@linux-foundation.org>
+User-Agent: s-nail v14.8.16
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/2R1KTHrTBVXl_qm2lu5Ut2y
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
 
-Hi all,
+The patch titled
+     Subject: linux/bits.h: add compile time sanity check of GENMASK inputs
+has been removed from the -mm tree.  Its filename was
+     linux-bitsh-add-compile-time-sanity-check-of-genmask-inputs.patch
 
-Today's linux-next merge of the kspp tree got a conflict in:
+This patch was dropped because it was merged into mainline or a subsystem tree
 
-  scripts/gcc-plugins/Makefile
+------------------------------------------------------
+From: Rikard Falkeborn <rikard.falkeborn@gmail.com>
+Subject: linux/bits.h: add compile time sanity check of GENMASK inputs
 
-between commits:
+GENMASK() and GENMASK_ULL() are supposed to be called with the high bit as
+the first argument and the low bit as the second argument.  Mixing them
+will return a mask with zero bits set.
 
-  735aab1e008b ("kbuild: add -Wall to KBUILD_HOSTCXXFLAGS")
+Recent commits show getting this wrong is not uncommon, see e.g.  commit
+aa4c0c9091b0 ("net: stmmac: Fix misuses of GENMASK macro") and commit
+9bdd7bb3a844 ("clocksource/drivers/npcm: Fix misuse of GENMASK macro").
 
-from Linus' tree and commit:
+To prevent such mistakes from appearing again, add compile time sanity
+checking to the arguments of GENMASK() and GENMASK_ULL().  If both
+arguments are known at compile time, and the low bit is higher than the
+high bit, break the build to detect the mistake immediately.
 
-  dda632f1bc6d ("gcc-common.h: Update for GCC 10")
-  8d1951750084 ("gcc-plugins: drop support for GCC <=3D 4.7")
+Since GENMASK() is used in declarations, BUILD_BUG_ON_ZERO() must be used
+instead of BUILD_BUG_ON().
 
-from the kspp tree.
+__builtin_constant_p does not evaluate is argument, it only checks if it
+is a constant or not at compile time, and __builtin_choose_expr does not
+evaluate the expression that is not chosen.  Therefore, GENMASK(x++, 0)
+does only evaluate x++ once.
 
-I fixed it up (see below) and can carry the fix as necessary. This
-is now fixed as far as linux-next is concerned, but any non trivial
-conflicts should be mentioned to your upstream maintainer when your tree
-is submitted for merging.  You may also want to consider cooperating
-with the maintainer of the conflicting tree to minimise any particularly
-complex conflicts.
+Commit 95b980d62d52 ("linux/bits.h: make BIT(), GENMASK(), and friends
+available in assembly") made the macros in linux/bits.h available in
+assembly.  Since BUILD_BUG_OR_ZERO() is not asm compatible, disable the
+checks if the file is included in an asm file.
 
---=20
-Cheers,
-Stephen Rothwell
+Due to bugs in GCC versions before 4.9 [0], disable the check if building
+with a too old GCC compiler.
 
-diff --cc scripts/gcc-plugins/Makefile
-index f22858b2c3d6,1d0b9382e759..000000000000
---- a/scripts/gcc-plugins/Makefile
-+++ b/scripts/gcc-plugins/Makefile
-@@@ -1,9 -1,19 +1,10 @@@
-  # SPDX-License-Identifier: GPL-2.0
- -PLUGINCC :=3D $(CONFIG_PLUGIN_HOSTCC:"%"=3D%)
-  GCC_PLUGINS_DIR :=3D $(shell $(CC) -print-file-name=3Dplugin)
- =20
- -ifeq ($(PLUGINCC),$(HOSTCC))
- -  HOSTLIBS :=3D hostlibs
- -  HOST_EXTRACFLAGS +=3D -I$(GCC_PLUGINS_DIR)/include -I$(src) -std=3Dgnu9=
-9 -ggdb
- -  export HOST_EXTRACFLAGS
- -else
- -  HOSTLIBS :=3D hostcxxlibs
- -  HOST_EXTRACXXFLAGS +=3D -I$(GCC_PLUGINS_DIR)/include -I$(src) -std=3Dgn=
-u++98 -fno-rtti
- -  HOST_EXTRACXXFLAGS +=3D -fno-exceptions -fasynchronous-unwind-tables -g=
-gdb
- -  HOST_EXTRACXXFLAGS +=3D -Wno-narrowing -Wno-unused-variable
- -  HOST_EXTRACXXFLAGS +=3D -Wno-format-diag
- -  export HOST_EXTRACXXFLAGS
- -endif
- +HOST_EXTRACXXFLAGS +=3D -I$(GCC_PLUGINS_DIR)/include -I$(src) -std=3Dgnu+=
-+98 -fno-rtti
- +HOST_EXTRACXXFLAGS +=3D -fno-exceptions -fasynchronous-unwind-tables -ggdb
- +HOST_EXTRACXXFLAGS +=3D -Wno-narrowing -Wno-unused-variable -Wno-c++11-co=
-mpat
-++HOST_EXTRACXXFLAGS +=3D -Wno-format-diag
- =20
-  $(obj)/randomize_layout_plugin.o: $(objtree)/$(obj)/randomize_layout_seed=
-.h
-  quiet_cmd_create_randomize_layout_seed =3D GENSEED $@
+[0]: https://gcc.gnu.org/bugzilla/show_bug.cgi?id=19449
 
---Sig_/2R1KTHrTBVXl_qm2lu5Ut2y
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
+Link: http://lkml.kernel.org/r/20200308193954.2372399-1-rikard.falkeborn@gmail.com
+Signed-off-by: Rikard Falkeborn <rikard.falkeborn@gmail.com>
+Reviewed-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+Reviewed-by: Kees Cook <keescook@chromium.org>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Haren Myneni <haren@us.ibm.com>
+Cc: Joe Perches <joe@perches.com>
+Cc: Johannes Berg <johannes@sipsolutions.net>
+Cc: lkml <linux-kernel@vger.kernel.org>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+---
 
------BEGIN PGP SIGNATURE-----
+ include/linux/bits.h |   22 ++++++++++++++++++++--
+ 1 file changed, 20 insertions(+), 2 deletions(-)
 
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl6NMDkACgkQAVBC80lX
-0Gz9bgf+I02E38X9bu15NZyxK/Bta9eYafJ/6yzKyqlZlrqu8W0DP7MNqS4kyxWN
-eawVwxHfZEp6FmI7bcFZS1sxRnye9EtKAEzsPHAxx8LEttZQ9zau4eS+ZpPFqeyc
-j4yAPKdx7l7VJWchyZjXj9BKYgerASwYA2EuXylZPu7009fOeMGFm4e4jY6ZXBKT
-7qKrFjDcscn7AnLNr2HYh+VPVsiTcdsZOBUJcCxrat5k+14UVWeDIC7riuYUFqvt
-rQU4bpeE4TX9xwNedfKoTNwZUVcGfkHuzM3loDOSX6lXolOQvvTnqhqT6I09+Q/I
-HVViqU7dQwi3XEqiH2w6vAlied+zTA==
-=+K/0
------END PGP SIGNATURE-----
+--- a/include/linux/bits.h~linux-bitsh-add-compile-time-sanity-check-of-genmask-inputs
++++ a/include/linux/bits.h
+@@ -18,12 +18,30 @@
+  * position @h. For example
+  * GENMASK_ULL(39, 21) gives us the 64bit vector 0x000000ffffe00000.
+  */
+-#define GENMASK(h, l) \
++#if !defined(__ASSEMBLY__) && \
++	(!defined(CONFIG_CC_IS_GCC) || CONFIG_GCC_VERSION >= 49000)
++#include <linux/build_bug.h>
++#define GENMASK_INPUT_CHECK(h, l) \
++	(BUILD_BUG_ON_ZERO(__builtin_choose_expr( \
++		__builtin_constant_p((l) > (h)), (l) > (h), 0)))
++#else
++/*
++ * BUILD_BUG_ON_ZERO is not available in h files included from asm files,
++ * disable the input check if that is the case.
++ */
++#define GENMASK_INPUT_CHECK(h, l) 0
++#endif
++
++#define __GENMASK(h, l) \
+ 	(((~UL(0)) - (UL(1) << (l)) + 1) & \
+ 	 (~UL(0) >> (BITS_PER_LONG - 1 - (h))))
++#define GENMASK(h, l) \
++	(GENMASK_INPUT_CHECK(h, l) + __GENMASK(h, l))
+ 
+-#define GENMASK_ULL(h, l) \
++#define __GENMASK_ULL(h, l) \
+ 	(((~ULL(0)) - (ULL(1) << (l)) + 1) & \
+ 	 (~ULL(0) >> (BITS_PER_LONG_LONG - 1 - (h))))
++#define GENMASK_ULL(h, l) \
++	(GENMASK_INPUT_CHECK(h, l) + __GENMASK_ULL(h, l))
+ 
+ #endif	/* __LINUX_BITS_H */
+_
 
---Sig_/2R1KTHrTBVXl_qm2lu5Ut2y--
+Patches currently in -mm which might be from rikard.falkeborn@gmail.com are
+
+
