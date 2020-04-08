@@ -5,43 +5,43 @@ X-Spam-Level:
 X-Spam-Status: No, score=-11.8 required=3.0
 	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 192EDC2BA1A
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 12:20:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 118B3C2BA1A
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 12:20:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E86E72076D
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 12:20:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D338A2076D
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 12:20:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728435AbgDHMUf (ORCPT
+        id S1727980AbgDHMUj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Apr 2020 08:20:35 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:49650 "EHLO
+        Wed, 8 Apr 2020 08:20:39 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:49648 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728290AbgDHMUc (ORCPT
+        with ESMTP id S1727126AbgDHMUc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 8 Apr 2020 08:20:32 -0400
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1jM9gx-00065k-7K; Wed, 08 Apr 2020 14:20:27 +0200
+        id 1jM9gt-00062n-Fp; Wed, 08 Apr 2020 14:20:23 +0200
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id D8D7F1C0131;
-        Wed,  8 Apr 2020 14:20:26 +0200 (CEST)
-Date:   Wed, 08 Apr 2020 12:20:26 -0000
-From:   "tip-bot2 for Valentin Schneider" <tip-bot2@linutronix.de>
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id E2D0F1C04D7;
+        Wed,  8 Apr 2020 14:20:22 +0200 (CEST)
+Date:   Wed, 08 Apr 2020 12:20:22 -0000
+From:   "tip-bot2 for Peter Zijlstra" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: sched/urgent] sched/fair: Align rq->avg_idle and rq->avg_scan_cost
-Cc:     Valentin Schneider <valentin.schneider@arm.com>,
+Subject: [tip: perf/urgent] perf/core: Fix event cgroup tracking
+Cc:     <stable@vger.kernel.org>, Song Liu <songliubraving@fb.com>,
         "Peter Zijlstra (Intel)" <peterz@infradead.org>,
         Ingo Molnar <mingo@kernel.org>, x86 <x86@kernel.org>,
         LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200330090127.16294-1-valentin.schneider@arm.com>
-References: <20200330090127.16294-1-valentin.schneider@arm.com>
+In-Reply-To: <20200318193337.GB20760@hirez.programming.kicks-ass.net>
+References: <20200318193337.GB20760@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-Message-ID: <158634842647.28353.14472807491323595156.tip-bot2@tip-bot2>
+Message-ID: <158634842257.28353.14335300348077819307.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -55,127 +55,215 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the sched/urgent branch of tip:
+The following commit has been merged into the perf/urgent branch of tip:
 
-Commit-ID:     d76343c6b2b79f5e89c392bc9ce9dabc4c9e90cb
-Gitweb:        https://git.kernel.org/tip/d76343c6b2b79f5e89c392bc9ce9dabc4c9e90cb
-Author:        Valentin Schneider <valentin.schneider@arm.com>
-AuthorDate:    Mon, 30 Mar 2020 10:01:27 +01:00
+Commit-ID:     33238c50451596be86db1505ab65fee5172844d0
+Gitweb:        https://git.kernel.org/tip/33238c50451596be86db1505ab65fee5172844d0
+Author:        Peter Zijlstra <peterz@infradead.org>
+AuthorDate:    Wed, 18 Mar 2020 20:33:37 +01:00
 Committer:     Ingo Molnar <mingo@kernel.org>
-CommitterDate: Wed, 08 Apr 2020 11:35:18 +02:00
+CommitterDate: Wed, 08 Apr 2020 11:33:44 +02:00
 
-sched/fair: Align rq->avg_idle and rq->avg_scan_cost
+perf/core: Fix event cgroup tracking
 
-sched/core.c uses update_avg() for rq->avg_idle and sched/fair.c uses an
-open-coded version (with the exact same decay factor) for
-rq->avg_scan_cost. On top of that, select_idle_cpu() expects to be able to
-compare these two fields.
+Song reports that installing cgroup events is broken since:
 
-The only difference between the two is that rq->avg_scan_cost is computed
-using a pure division rather than a shift. Turns out it actually matters,
-first of all because the shifted value can be negative, and the standard
-has this to say about it:
+  db0503e4f675 ("perf/core: Optimize perf_install_in_event()")
 
-  """
-  The result of E1 >> E2 is E1 right-shifted E2 bit positions. [...] If E1
-  has a signed type and a negative value, the resulting value is
-  implementation-defined.
-  """
+The problem being that cgroup events try to track cpuctx->cgrp even
+for disabled events, which is pointless and actively harmful since the
+above commit. Rework the code to have explicit enable/disable hooks
+for cgroup events, such that we can limit cgroup tracking to active
+events.
 
-Not only this, but (arithmetic) right shifting a negative value (using 2's
-complement) is *not* equivalent to dividing it by the corresponding power
-of 2. Let's look at a few examples:
+More specifically, since the above commit disabled events are no
+longer added to their context from the 'right' CPU, and we can't
+access things like the current cgroup for a remote CPU.
 
-  -4      -> 0xF..FC
-  -4 >> 3 -> 0xF..FF == -1 != -4 / 8
-
-  -8      -> 0xF..F8
-  -8 >> 3 -> 0xF..FF == -1 == -8 / 8
-
-  -9      -> 0xF..F7
-  -9 >> 3 -> 0xF..FE == -2 != -9 / 8
-
-Make update_avg() use a division, and export it to the private scheduler
-header to reuse it where relevant. Note that this still lets compilers use
-a shift here, but should prevent any unwanted surprise. The disassembly of
-select_idle_cpu() remains unchanged on arm64, and ttwu_do_wakeup() gains 2
-instructions; the diff sort of looks like this:
-
-  - sub x1, x1, x0
-  + subs x1, x1, x0 // set condition codes
-  + add x0, x1, #0x7
-  + csel x0, x0, x1, mi // x0 = x1 < 0 ? x0 : x1
-    add x0, x3, x0, asr #3
-
-which does the right thing (i.e. gives us the expected result while still
-using an arithmetic shift)
-
-Signed-off-by: Valentin Schneider <valentin.schneider@arm.com>
+Cc: <stable@vger.kernel.org> # v5.5+
+Fixes: db0503e4f675 ("perf/core: Optimize perf_install_in_event()")
+Reported-by: Song Liu <songliubraving@fb.com>
+Tested-by: Song Liu <songliubraving@fb.com>
+Reviewed-by: Song Liu <songliubraving@fb.com>
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Link: https://lkml.kernel.org/r/20200330090127.16294-1-valentin.schneider@arm.com
+Link: https://lkml.kernel.org/r/20200318193337.GB20760@hirez.programming.kicks-ass.net
 ---
- kernel/sched/core.c  | 6 ------
- kernel/sched/fair.c  | 7 ++-----
- kernel/sched/sched.h | 6 ++++++
- 3 files changed, 8 insertions(+), 11 deletions(-)
+ kernel/events/core.c | 70 ++++++++++++++++++++++++++-----------------
+ 1 file changed, 43 insertions(+), 27 deletions(-)
 
-diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-index a2694ba..f6b329b 100644
---- a/kernel/sched/core.c
-+++ b/kernel/sched/core.c
-@@ -2119,12 +2119,6 @@ int select_task_rq(struct task_struct *p, int cpu, int sd_flags, int wake_flags)
- 	return cpu;
+diff --git a/kernel/events/core.c b/kernel/events/core.c
+index 55e4441..7afd0b5 100644
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -983,16 +983,10 @@ perf_cgroup_set_shadow_time(struct perf_event *event, u64 now)
+ 	event->shadow_ctx_time = now - t->timestamp;
  }
  
--static void update_avg(u64 *avg, u64 sample)
--{
--	s64 diff = sample - *avg;
--	*avg += diff >> 3;
--}
--
- void sched_set_stop_task(int cpu, struct task_struct *stop)
+-/*
+- * Update cpuctx->cgrp so that it is set when first cgroup event is added and
+- * cleared when last cgroup event is removed.
+- */
+ static inline void
+-list_update_cgroup_event(struct perf_event *event,
+-			 struct perf_event_context *ctx, bool add)
++perf_cgroup_event_enable(struct perf_event *event, struct perf_event_context *ctx)
  {
- 	struct sched_param param = { .sched_priority = MAX_RT_PRIO - 1 };
-diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-index 1ea3ddd..fb025e9 100644
---- a/kernel/sched/fair.c
-+++ b/kernel/sched/fair.c
-@@ -6080,8 +6080,7 @@ static int select_idle_cpu(struct task_struct *p, struct sched_domain *sd, int t
- 	struct cpumask *cpus = this_cpu_cpumask_var_ptr(select_idle_mask);
- 	struct sched_domain *this_sd;
- 	u64 avg_cost, avg_idle;
--	u64 time, cost;
--	s64 delta;
-+	u64 time;
- 	int this = smp_processor_id();
- 	int cpu, nr = INT_MAX;
+ 	struct perf_cpu_context *cpuctx;
+-	struct list_head *cpuctx_entry;
  
-@@ -6119,9 +6118,7 @@ static int select_idle_cpu(struct task_struct *p, struct sched_domain *sd, int t
+ 	if (!is_cgroup_event(event))
+ 		return;
+@@ -1009,28 +1003,41 @@ list_update_cgroup_event(struct perf_event *event,
+ 	 * because if the first would mismatch, the second would not try again
+ 	 * and we would leave cpuctx->cgrp unset.
+ 	 */
+-	if (add && !cpuctx->cgrp) {
++	if (ctx->is_active && !cpuctx->cgrp) {
+ 		struct perf_cgroup *cgrp = perf_cgroup_from_task(current, ctx);
+ 
+ 		if (cgroup_is_descendant(cgrp->css.cgroup, event->cgrp->css.cgroup))
+ 			cpuctx->cgrp = cgrp;
  	}
  
- 	time = cpu_clock(this) - time;
--	cost = this_sd->avg_scan_cost;
--	delta = (s64)(time - cost) / 8;
--	this_sd->avg_scan_cost += delta;
-+	update_avg(&this_sd->avg_scan_cost, time);
- 
- 	return cpu;
- }
-diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
-index 0f616bf..cd00814 100644
---- a/kernel/sched/sched.h
-+++ b/kernel/sched/sched.h
-@@ -195,6 +195,12 @@ static inline int task_has_dl_policy(struct task_struct *p)
- 
- #define cap_scale(v, s) ((v)*(s) >> SCHED_CAPACITY_SHIFT)
- 
-+static inline void update_avg(u64 *avg, u64 sample)
-+{
-+	s64 diff = sample - *avg;
-+	*avg += diff / 8;
+-	if (add && ctx->nr_cgroups++)
++	if (ctx->nr_cgroups++)
+ 		return;
+-	else if (!add && --ctx->nr_cgroups)
++
++	list_add(&cpuctx->cgrp_cpuctx_entry,
++			per_cpu_ptr(&cgrp_cpuctx_list, event->cpu));
 +}
 +
++static inline void
++perf_cgroup_event_disable(struct perf_event *event, struct perf_event_context *ctx)
++{
++	struct perf_cpu_context *cpuctx;
++
++	if (!is_cgroup_event(event))
+ 		return;
+ 
+-	/* no cgroup running */
+-	if (!add)
++	/*
++	 * Because cgroup events are always per-cpu events,
++	 * @ctx == &cpuctx->ctx.
++	 */
++	cpuctx = container_of(ctx, struct perf_cpu_context, ctx);
++
++	if (--ctx->nr_cgroups)
++		return;
++
++	if (ctx->is_active && cpuctx->cgrp)
+ 		cpuctx->cgrp = NULL;
+ 
+-	cpuctx_entry = &cpuctx->cgrp_cpuctx_entry;
+-	if (add)
+-		list_add(cpuctx_entry,
+-			 per_cpu_ptr(&cgrp_cpuctx_list, event->cpu));
+-	else
+-		list_del(cpuctx_entry);
++	list_del(&cpuctx->cgrp_cpuctx_entry);
+ }
+ 
+ #else /* !CONFIG_CGROUP_PERF */
+@@ -1096,11 +1103,14 @@ static inline u64 perf_cgroup_event_time(struct perf_event *event)
+ }
+ 
+ static inline void
+-list_update_cgroup_event(struct perf_event *event,
+-			 struct perf_event_context *ctx, bool add)
++perf_cgroup_event_enable(struct perf_event *event, struct perf_event_context *ctx)
+ {
+ }
+ 
++static inline void
++perf_cgroup_event_disable(struct perf_event *event, struct perf_event_context *ctx)
++{
++}
+ #endif
+ 
  /*
-  * !! For sched_setattr_nocheck() (kernel) only !!
-  *
+@@ -1791,13 +1801,14 @@ list_add_event(struct perf_event *event, struct perf_event_context *ctx)
+ 		add_event_to_groups(event, ctx);
+ 	}
+ 
+-	list_update_cgroup_event(event, ctx, true);
+-
+ 	list_add_rcu(&event->event_entry, &ctx->event_list);
+ 	ctx->nr_events++;
+ 	if (event->attr.inherit_stat)
+ 		ctx->nr_stat++;
+ 
++	if (event->state > PERF_EVENT_STATE_OFF)
++		perf_cgroup_event_enable(event, ctx);
++
+ 	ctx->generation++;
+ }
+ 
+@@ -1976,8 +1987,6 @@ list_del_event(struct perf_event *event, struct perf_event_context *ctx)
+ 
+ 	event->attach_state &= ~PERF_ATTACH_CONTEXT;
+ 
+-	list_update_cgroup_event(event, ctx, false);
+-
+ 	ctx->nr_events--;
+ 	if (event->attr.inherit_stat)
+ 		ctx->nr_stat--;
+@@ -1994,8 +2003,10 @@ list_del_event(struct perf_event *event, struct perf_event_context *ctx)
+ 	 * of error state is by explicit re-enabling
+ 	 * of the event
+ 	 */
+-	if (event->state > PERF_EVENT_STATE_OFF)
++	if (event->state > PERF_EVENT_STATE_OFF) {
++		perf_cgroup_event_disable(event, ctx);
+ 		perf_event_set_state(event, PERF_EVENT_STATE_OFF);
++	}
+ 
+ 	ctx->generation++;
+ }
+@@ -2226,6 +2237,7 @@ event_sched_out(struct perf_event *event,
+ 
+ 	if (READ_ONCE(event->pending_disable) >= 0) {
+ 		WRITE_ONCE(event->pending_disable, -1);
++		perf_cgroup_event_disable(event, ctx);
+ 		state = PERF_EVENT_STATE_OFF;
+ 	}
+ 	perf_event_set_state(event, state);
+@@ -2363,6 +2375,7 @@ static void __perf_event_disable(struct perf_event *event,
+ 		event_sched_out(event, cpuctx, ctx);
+ 
+ 	perf_event_set_state(event, PERF_EVENT_STATE_OFF);
++	perf_cgroup_event_disable(event, ctx);
+ }
+ 
+ /*
+@@ -2746,7 +2759,7 @@ static int  __perf_install_in_context(void *info)
+ 	}
+ 
+ #ifdef CONFIG_CGROUP_PERF
+-	if (is_cgroup_event(event)) {
++	if (event->state > PERF_EVENT_STATE_OFF && is_cgroup_event(event)) {
+ 		/*
+ 		 * If the current cgroup doesn't match the event's
+ 		 * cgroup, we should not try to schedule it.
+@@ -2906,6 +2919,7 @@ static void __perf_event_enable(struct perf_event *event,
+ 		ctx_sched_out(ctx, cpuctx, EVENT_TIME);
+ 
+ 	perf_event_set_state(event, PERF_EVENT_STATE_INACTIVE);
++	perf_cgroup_event_enable(event, ctx);
+ 
+ 	if (!ctx->is_active)
+ 		return;
+@@ -3616,8 +3630,10 @@ static int merge_sched_in(struct perf_event *event, void *data)
+ 	}
+ 
+ 	if (event->state == PERF_EVENT_STATE_INACTIVE) {
+-		if (event->attr.pinned)
++		if (event->attr.pinned) {
++			perf_cgroup_event_disable(event, ctx);
+ 			perf_event_set_state(event, PERF_EVENT_STATE_ERROR);
++		}
+ 
+ 		*can_add_hw = 0;
+ 		ctx->rotate_necessary = 1;
