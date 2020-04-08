@@ -2,97 +2,171 @@ Return-Path: <SRS0=8dav=5Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DCFE7C2D0F4
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 17:10:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BAAEC2D0F4
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 17:10:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BA13D20768
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 17:10:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 33C2720771
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 17:10:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="JlEGM/DO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730519AbgDHRKQ (ORCPT
+        id S1730528AbgDHRKn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Apr 2020 13:10:16 -0400
-Received: from mx2.suse.de ([195.135.220.15]:51446 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726663AbgDHRKQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Apr 2020 13:10:16 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id A1977ABF5;
-        Wed,  8 Apr 2020 17:10:14 +0000 (UTC)
-From:   Daniel Wagner <dwagner@suse.de>
-To:     linux-scsi@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, Daniel Wagner <dwagner@suse.de>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>
-Subject: [PATCH] scsi: core: Rate limit "rejecting I/O" messages
-Date:   Wed,  8 Apr 2020 19:10:12 +0200
-Message-Id: <20200408171012.76890-1-dwagner@suse.de>
-X-Mailer: git-send-email 2.16.4
+        Wed, 8 Apr 2020 13:10:43 -0400
+Received: from mail-io1-f65.google.com ([209.85.166.65]:41785 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726663AbgDHRKn (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Apr 2020 13:10:43 -0400
+Received: by mail-io1-f65.google.com with SMTP id b12so842701ion.8
+        for <linux-kernel@vger.kernel.org>; Wed, 08 Apr 2020 10:10:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=EVMc1OHJHB8VvA0TWlbmWmPavYiZYAI6v/n+zzq1Wf0=;
+        b=JlEGM/DOa4q8siqwVYUAftU8gmZWjOLtOYJEE+Bp5LCO4tlR1jInMjHa136elkQI5X
+         fM45YgN4JD3Wm3RtLmMIac1umB86TBoz7VTMsdvJzqdYMKwkFn6ta31nyfuRuxYniSow
+         reddZXCDRqSsCYkcqfJA8aQ7XAHdHC0hXldCo=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=EVMc1OHJHB8VvA0TWlbmWmPavYiZYAI6v/n+zzq1Wf0=;
+        b=pZj7tWEOzhE06PbfyB7EGP3Dk5C9eBNvE+cnbK45ie1ZqlMgzTK3cruX01O+dpGuEx
+         lnTPh7RnB55ekAQsexnax4ZgTavjlbdUv13EqjjLG496TNM6yVab6OuCvg5vVbwq/KpW
+         ItjsqiEy9doOeN+DryI6yr6vTtEq6jc/Yxr5IC7Pug6sWnyDUO33SZAQvye90aDze/j6
+         9snrpTLjRWz+a5Lhp37mCi/BFD4wx9lUoW5I19U096I2DL7HAV6DHwytsESBvtt0dOVJ
+         B90vKAYbstBt6AvI2gqpcYak0sLdR4M2mFW8tAxsstCXQ60Fy5UojJZ+Dw8+ZonnW5Cl
+         q0Hg==
+X-Gm-Message-State: AGi0PuZ2mtC0J4I1JhmsLiJgt4A7Od5jBh4BCVGtu2ObkU/IKDptzHnA
+        WbxL5wwP3kAEKr4zKEJBlR7c5UJ5AMQhII4JoKXaYQ==
+X-Google-Smtp-Source: APiQypJJEoOGQVIJXcXfMbzaBXaiK4IXHxoudhmAmL2UMkWJOUiQXKhncget2FEh09Lc9nSdPCYNibmpUlv56cYFUCg=
+X-Received: by 2002:a02:cac4:: with SMTP id f4mr7518997jap.51.1586365841562;
+ Wed, 08 Apr 2020 10:10:41 -0700 (PDT)
+MIME-Version: 1.0
+References: <cover.1566563833.git.fabien.lahoudere@collabora.com>
+ <d985a8a811996148e8cda78b9fe47bb87b884b56.1566563833.git.fabien.lahoudere@collabora.com>
+ <20190826095612.7455cb05@archlinux> <8abbe9360938ab851d16c2c1494ba56034775823.camel@collabora.com>
+ <6b50bdff184e6af664b7a61e0a8a2cddc5718f0a.camel@collabora.com>
+ <20191110151408.GB3984@icarus> <20191111114955.00001031@huawei.com> <20191112011618.GA62259@icarus>
+In-Reply-To: <20191112011618.GA62259@icarus>
+From:   Gwendal Grignou <gwendal@chromium.org>
+Date:   Wed, 8 Apr 2020 10:10:28 -0700
+Message-ID: <CAPUE2uvDiAfE68uCzWdTN3T2L_PR3JPeyGWDrc5ToLieEpGH1A@mail.gmail.com>
+Subject: Re: [PATCH v2 1/1] counter: cros_ec: Add synchronization sensor
+To:     William Breathitt Gray <vilhelm.gray@gmail.com>
+Cc:     Jonathan Cameron <jonathan.cameron@huawei.com>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Fabien Lahoudere <fabien.lahoudere@collabora.com>,
+        Enrico Granata <egranata@chromium.org>,
+        Collabora kernel ML <kernel@collabora.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Benson Leung <bleung@chromium.org>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Guenter Roeck <groeck@chromium.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Lee Jones <lee.jones@linaro.org>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Nick Vaccaro <nvaccaro@chromium.org>,
+        linux-iio <linux-iio@vger.kernel.org>, linux-doc@vger.kernel.org,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Prevent excessive logging by rate limiting the "rejecting I/O"
-messages. For example in setups where remote syslog is used the link
-is saturated by those messages when a storage controller/disk
-misbehaves.
+I resend a counter driver for the EC at
+https://patchwork.kernel.org/patch/11479437/
 
-Cc: "James E.J. Bottomley" <jejb@linux.ibm.com>
-Cc: "Martin K. Petersen" <martin.petersen@oracle.com>
-Signed-off-by: Daniel Wagner <dwagner@suse.de>
----
- drivers/scsi/scsi_lib.c    |  4 ++--
- include/scsi/scsi_device.h | 10 ++++++++++
- 2 files changed, 12 insertions(+), 2 deletions(-)
+I tried a timestamp only IIO sensor, but this is not allowed, as the
+timestamp channel is very specific: no extended parameters can be
+added.
+I did not add a COUNTER_COUNT_TALLY type, as a newer function
+COUNTER_COUNT_FUNCTION_INCREASE, fits the counter better.
+I am still using IIO_COUNT (inspired by the st counter driver) to
+gather the event in real time on the iio side.
 
-diff --git a/drivers/scsi/scsi_lib.c b/drivers/scsi/scsi_lib.c
-index 47835c4b4ee0..01c35c58c6f3 100644
---- a/drivers/scsi/scsi_lib.c
-+++ b/drivers/scsi/scsi_lib.c
-@@ -1217,7 +1217,7 @@ scsi_prep_state_check(struct scsi_device *sdev, struct request *req)
- 		 */
- 		if (!sdev->offline_already) {
- 			sdev->offline_already = true;
--			sdev_printk(KERN_ERR, sdev,
-+			sdev_printk_ratelimited(KERN_ERR, sdev,
- 				    "rejecting I/O to offline device\n");
- 		}
- 		return BLK_STS_IOERR;
-@@ -1226,7 +1226,7 @@ scsi_prep_state_check(struct scsi_device *sdev, struct request *req)
- 		 * If the device is fully deleted, we refuse to
- 		 * process any commands as well.
- 		 */
--		sdev_printk(KERN_ERR, sdev,
-+		sdev_printk_ratelimited(KERN_ERR, sdev,
- 			    "rejecting I/O to dead device\n");
- 		return BLK_STS_IOERR;
- 	case SDEV_BLOCK:
-diff --git a/include/scsi/scsi_device.h b/include/scsi/scsi_device.h
-index c3cba2aaf934..8be40b0e1b8f 100644
---- a/include/scsi/scsi_device.h
-+++ b/include/scsi/scsi_device.h
-@@ -257,6 +257,16 @@ sdev_prefix_printk(const char *, const struct scsi_device *, const char *,
- #define sdev_printk(l, sdev, fmt, a...)				\
- 	sdev_prefix_printk(l, sdev, NULL, fmt, ##a)
- 
-+#define sdev_printk_ratelimited(l, sdev, fmt, a...)			\
-+({									\
-+	static DEFINE_RATELIMIT_STATE(_rs,				\
-+				      DEFAULT_RATELIMIT_INTERVAL,	\
-+				      DEFAULT_RATELIMIT_BURST);		\
-+									\
-+	if (__ratelimit(&_rs))						\
-+		sdev_prefix_printk(l, sdev, NULL, fmt, ##a);		\
-+})
-+
- __printf(3, 4) void
- scmd_printk(const char *, const struct scsi_cmnd *, const char *, ...);
- 
--- 
-2.16.4
+Gwendal.
 
+
+On Mon, Nov 11, 2019 at 5:16 PM William Breathitt Gray
+<vilhelm.gray@gmail.com> wrote:
+>
+> On Mon, Nov 11, 2019 at 11:49:55AM +0000, Jonathan Cameron wrote:
+> > On Sun, 10 Nov 2019 10:14:08 -0500
+> > William Breathitt Gray <vilhelm.gray@gmail.com> wrote:
+> >
+> > > On Tue, Sep 24, 2019 at 04:20:51PM +0200, Fabien Lahoudere wrote:
+> > > > Hi all,
+> > > >
+> > > > After some discussions and investigation, the timestamp is very
+> > > > important for that sync driver.
+> > > > Google team uses that timestamp to compare with gyroscope timestamp.
+> > > >
+> > > > So the important data is timestamp and counter value is useless.
+> > > > Just the event of counter increment is important to get a timestamp.
+> > > >
+> > > > In that case, my idea was to just use an IIO driver with a single
+> > > > channel with IIO_TIMESTAMP. We discuss this here and it seems
+> > > > controversial.
+> > > >
+> > > > So my question to Jonathan is if we have a timestamp coming from the EC
+> > > > itself, can we consider this timestamp as a good IIO driver?
+> > > >
+> > > > Any other idea is welcome, however Google team would like to manage
+> > > > only IIO drivers if possible.
+> > > >
+> > > > Thanks
+> > >
+> > > Jonathan,
+> > >
+> > > Should the the timestamp from the EC be introduced as an IIO driver
+> > > using IIO_TIMESTAMP?
+> >
+> > It is is a rather odd driver but I suppose it would be fine with lots
+> > of clear docs on why it is how it is...
+> >
+> > >
+> > > Since there is no corresponding EC Counter driver in the baseline right
+> > > now we don't have a conflict yet. If the EC timestamp is introduced as
+> > > an IIO driver then we should make any future EC Counter driver mutually
+> > > exclusive with the IIO driver in order to prevent any memory space
+> > > conflict. At that point we may deprecate the IIO driver and move the
+> > > timestamp functionality to the corresponding Counter driver.
+> >
+> > That route does become somewhat of a mess so I suspect we'd have to have
+> > a single driver supporting both userspace interfaces.  If you are happy
+> > that we'd be adding a bit of legacy to support for ever then we can go
+> > that way.
+>
+> Generally I'd prefer all components of a device to be supported, but
+> if this is as Fabien suggests that due to the nature of this particular
+> device the counter value is of no interest, then a Counter driver is of
+> little practical use here. In this particular case, it seems better to
+> restrict the driver support to just the timestamp functionality that
+> will be used, rather than introduce extra code to expose values that
+> will likely be ignored and risk adding code to the kernel that becomes
+> unmaintained due to lack of exposure or interest.
+>
+> William Breathitt Gray
+>
+> >
+> > >
+> > > That's assuming someone is interested in the Count component enough to
+> > > implement an EC Counter driver; otherwise, the IIO driver will serve
+> > > just fine if timestamp is the only data desired from this device.
+> > >
+> > > William Breathitt Gray
+> >
+> >
