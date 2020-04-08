@@ -2,181 +2,117 @@ Return-Path: <SRS0=8dav=5Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26761C2D0EA
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 06:00:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FC49C2D0EA
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 06:00:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EF3A220692
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 06:00:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FjVCjF+N"
+	by mail.kernel.org (Postfix) with ESMTP id 7DA5B20692
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 06:00:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726716AbgDHGAM (ORCPT
+        id S1726721AbgDHGA0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Apr 2020 02:00:12 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:39305 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726680AbgDHGAC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Apr 2020 02:00:02 -0400
-Received: by mail-wm1-f68.google.com with SMTP id y24so41680wma.4;
-        Tue, 07 Apr 2020 23:00:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:subject:date:message-id:in-reply-to:references:mime-version
-         :content-transfer-encoding;
-        bh=0GRl9hplB7dTuIb/0RMEadqZcZYJpa7Pjh6TqfFWfDU=;
-        b=FjVCjF+Nc3E3GqeQBjQVVimZ9W4DU7MXFg46Slo9lJplg8Z0AByeiHQqASYgEITYRq
-         BZtckQbgItEKZ/bvDP8bGqmli8nVl5SdZ1Wuu6zlUCDx5EJ7l/hIXMFNodngFSk5Qiyj
-         xz6KJjJoKkUo1mf5q/q1boP+xbrASOzfg/NX1MX7yCrKPNTHA6+2lsdEVKrb8VjBNGn1
-         ArcWtQNmvvlvueNffxEQJY0APE+aAk+PrIGuEUVUYNBjwqLlwJ3xdWUpc26lsuTQWWpF
-         Dynoiv/cTI62jq7dt+X2OXADN4KEE1cIBH773r956hUreupyhbmTmrIDsIpEDUoqPV18
-         PfwQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=0GRl9hplB7dTuIb/0RMEadqZcZYJpa7Pjh6TqfFWfDU=;
-        b=pGrSvpp6z9cEgxkizX1dvGoUE0HRvmZwmtaP6naFfdkmM27gSjuYp28SAJwh7CrJ+6
-         /37V2HMNgdnmRjZAXh7Gom0VEridHcT9PBjMigWUXDAe3v7lRudJHjetqlB5hcsw8Y/b
-         4nWY12XExEKeymXsbKe9nPAyE61CH3xtqY1EPgJzNjCA5K8t+S3xgBF9oZ51zuM06jmS
-         B1Inx+vIqbvVTZ7eQ+ECO4FabzqxQG2VTQoyOT82U3r8DoBueTCgeq+MfS2QrEOO9xaP
-         4SN3rnNMa43b6AuEzJV5zoQ2Lb+FbqsZ95qxU7FsW9dc1Du346Df5vordtcQ9acnGrXV
-         zT/Q==
-X-Gm-Message-State: AGi0PuYQskirmRc6015/UInWfbUD6gWYnEn3JfZ/bf3Y95/3TOLdcJzQ
-        qQ7qXxDhSWD2RD2zsUl9Ui5uIMQp
-X-Google-Smtp-Source: APiQypI+3fa52zGMHOwuiUaGH9naPnYkrzfOeWCAM055EPTdsu3GXBF3z/24bg0SQ2T4fK/z3lcmDA==
-X-Received: by 2002:a05:600c:22d6:: with SMTP id 22mr2817761wmg.121.1586325600426;
-        Tue, 07 Apr 2020 23:00:00 -0700 (PDT)
-Received: from localhost.localdomain ([109.126.129.227])
-        by smtp.gmail.com with ESMTPSA id b15sm33454986wru.70.2020.04.07.22.59.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 07 Apr 2020 23:00:00 -0700 (PDT)
-From:   Pavel Begunkov <asml.silence@gmail.com>
-To:     Jens Axboe <axboe@kernel.dk>, io-uring@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 3/4] io_uring: remove req init from io_get_req()
-Date:   Wed,  8 Apr 2020 08:58:45 +0300
-Message-Id: <c30d8b27f0cf836dbb3be6079a3e4e2c37c7f726.1586325467.git.asml.silence@gmail.com>
-X-Mailer: git-send-email 2.24.0
-In-Reply-To: <cover.1586325467.git.asml.silence@gmail.com>
-References: <cover.1586325467.git.asml.silence@gmail.com>
+        Wed, 8 Apr 2020 02:00:26 -0400
+Received: from gecko.sbs.de ([194.138.37.40]:42883 "EHLO gecko.sbs.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725440AbgDHGA0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Apr 2020 02:00:26 -0400
+Received: from mail2.sbs.de (mail2.sbs.de [192.129.41.66])
+        by gecko.sbs.de (8.15.2/8.15.2) with ESMTPS id 0385x3BM017885
+        (version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 8 Apr 2020 07:59:03 +0200
+Received: from [167.87.145.84] ([167.87.145.84])
+        by mail2.sbs.de (8.15.2/8.15.2) with ESMTP id 0385wr4o028544;
+        Wed, 8 Apr 2020 07:58:54 +0200
+Subject: Re: [PATCH 4/4] x86,module: Detect CRn and DRn manipulation
+To:     Steven Rostedt <rostedt@goodmis.org>,
+        Peter Zijlstra <peterz@infradead.org>
+Cc:     tglx@linutronix.de, linux-kernel@vger.kernel.org,
+        hch@infradead.org, sean.j.christopherson@intel.com,
+        mingo@redhat.com, bp@alien8.de, hpa@zytor.com, x86@kernel.org,
+        kenny@panix.com, jeyu@kernel.org, rasmus.villemoes@prevas.dk,
+        pbonzini@redhat.com, fenghua.yu@intel.com, xiaoyao.li@intel.com,
+        nadav.amit@gmail.com, thellstrom@vmware.com, tony.luck@intel.com,
+        gregkh@linuxfoundation.org, jannh@google.com,
+        keescook@chromium.org, David.Laight@aculab.com,
+        dcovelli@vmware.com, mhiramat@kernel.org,
+        Wolfgang Mauerer <wolfgang.mauerer@oth-regensburg.de>
+References: <20200407110236.930134290@infradead.org>
+ <20200407111007.429362016@infradead.org>
+ <20200407174824.5e97a597@gandalf.local.home>
+From:   Jan Kiszka <jan.kiszka@siemens.com>
+Message-ID: <137fe245-69f3-080e-5f2b-207cd218f199@siemens.com>
+Date:   Wed, 8 Apr 2020 07:58:53 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200407174824.5e97a597@gandalf.local.home>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-io_get_req() do two different things: io_kiocb allocation and
-initialisation. Move init part out of it and rename into
-io_alloc_req(). It's simpler this way and also have better data
-locality.
+On 07.04.20 23:48, Steven Rostedt wrote:
+> On Tue, 07 Apr 2020 13:02:40 +0200
+> Peter Zijlstra <peterz@infradead.org> wrote:
+> 
+>> Since we now have infrastructure to analyze module text, disallow
+>> modules that write to CRn and DRn registers.
+>>
+>> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+>> ---
+>>   arch/x86/kernel/module.c |   21 +++++++++++++++++++++
+>>   1 file changed, 21 insertions(+)
+>>
+>> --- a/arch/x86/kernel/module.c
+>> +++ b/arch/x86/kernel/module.c
+>> @@ -266,6 +266,22 @@ static bool insn_is_vmx(struct insn *ins
+>>   	return false;
+>>   }
+>>   
+>> +static bool insn_is_mov_CRn(struct insn *insn)
+>> +{
+>> +	if (insn->opcode.bytes[0] == 0x0f && insn->opcode.bytes[1] == 0x22)
+>> +		return true;
+>> +
+>> +	return false;
+>> +}
+>> +
+>> +static bool insn_is_mov_DRn(struct insn *insn)
+>> +{
+>> +	if (insn->opcode.bytes[0] == 0x0f && insn->opcode.bytes[1] == 0x23)
+>> +		return true;
+>> +
+>> +	return false;
+>> +}
+>> +
+>>   static int decode_module(struct module *mod, void *text, void *text_end, bool sld_safe)
+>>   {
+>>   	bool allow_vmx = sld_safe || !split_lock_enabled();
+>> @@ -285,6 +301,11 @@ static int decode_module(struct module *
+>>   			return -ENOEXEC;
+>>   		}
+>>   
+>> +		if (insn_is_mov_CRn(&insn) || insn_is_mov_DRn(&insn)) {
+>> +			pr_err("Module writes to CRn or DRn, please use the proper accessors: %s\n", mod->name);
+>> +			return -ENOEXEC;
+>> +		}
+> 
+> Hmm, wont this break jailhouse?
 
-Signed-off-by: Pavel Begunkov <asml.silence@gmail.com>
----
- fs/io_uring.c | 53 ++++++++++++++++++++++++++-------------------------
- 1 file changed, 27 insertions(+), 26 deletions(-)
+Yes, possibly. We load the hypervisor binary via request_firmware into 
+executable memory and then jump into it. So most of the "suspicious" 
+code is there - except two cr4_init_shadow() calls to propagate the 
+non-transparent update of VMXE into that shadow. We could hide that CR4 
+flag, but that could mislead root Linux to try to use VMX while in jail.
 
-diff --git a/fs/io_uring.c b/fs/io_uring.c
-index 9c3e920e789f..072e002f1184 100644
---- a/fs/io_uring.c
-+++ b/fs/io_uring.c
-@@ -1293,8 +1293,8 @@ static struct io_kiocb *io_get_fallback_req(struct io_ring_ctx *ctx)
- 	return NULL;
- }
- 
--static struct io_kiocb *io_get_req(struct io_ring_ctx *ctx,
--				   struct io_submit_state *state)
-+static struct io_kiocb *io_alloc_req(struct io_ring_ctx *ctx,
-+				     struct io_submit_state *state)
- {
- 	gfp_t gfp = GFP_KERNEL | __GFP_NOWARN;
- 	struct io_kiocb *req;
-@@ -1327,22 +1327,9 @@ static struct io_kiocb *io_get_req(struct io_ring_ctx *ctx,
- 		req = state->reqs[state->free_reqs];
- 	}
- 
--got_it:
--	req->io = NULL;
--	req->file = NULL;
--	req->ctx = ctx;
--	req->flags = 0;
--	/* one is dropped after submission, the other at completion */
--	refcount_set(&req->refs, 2);
--	req->task = NULL;
--	req->result = 0;
--	INIT_IO_WORK(&req->work, io_wq_submit_work);
- 	return req;
- fallback:
--	req = io_get_fallback_req(ctx);
--	if (req)
--		goto got_it;
--	return NULL;
-+	return io_get_fallback_req(ctx);
- }
- 
- static inline void io_put_file(struct io_kiocb *req, struct file *file,
-@@ -5801,6 +5788,28 @@ static inline void io_consume_sqe(struct io_ring_ctx *ctx)
- 	ctx->cached_sq_head++;
- }
- 
-+static void io_init_req(struct io_ring_ctx *ctx, struct io_kiocb *req,
-+			const struct io_uring_sqe *sqe)
-+{
-+	/*
-+	 * All io need record the previous position, if LINK vs DARIN,
-+	 * it can be used to mark the position of the first IO in the
-+	 * link list.
-+	 */
-+	req->sequence = ctx->cached_sq_head;
-+	req->opcode = READ_ONCE(sqe->opcode);
-+	req->user_data = READ_ONCE(sqe->user_data);
-+	req->io = NULL;
-+	req->file = NULL;
-+	req->ctx = ctx;
-+	req->flags = 0;
-+	/* one is dropped after submission, the other at completion */
-+	refcount_set(&req->refs, 2);
-+	req->task = NULL;
-+	req->result = 0;
-+	INIT_IO_WORK(&req->work, io_wq_submit_work);
-+}
-+
- static int io_submit_sqes(struct io_ring_ctx *ctx, unsigned int nr,
- 			  struct file *ring_file, int ring_fd,
- 			  struct mm_struct **mm, bool async)
-@@ -5841,23 +5850,15 @@ static int io_submit_sqes(struct io_ring_ctx *ctx, unsigned int nr,
- 			io_consume_sqe(ctx);
- 			break;
- 		}
--		req = io_get_req(ctx, statep);
-+		req = io_alloc_req(ctx, statep);
- 		if (unlikely(!req)) {
- 			if (!submitted)
- 				submitted = -EAGAIN;
- 			break;
- 		}
- 
--		/*
--		 * All io need record the previous position, if LINK vs DARIN,
--		 * it can be used to mark the position of the first IO in the
--		 * link list.
--		 */
--		req->sequence = ctx->cached_sq_head;
--		req->opcode = READ_ONCE(sqe->opcode);
--		req->user_data = READ_ONCE(sqe->user_data);
-+		io_init_req(ctx, req, sqe);
- 		io_consume_sqe(ctx);
--
- 		/* will complete beyond this point, count as submitted */
- 		submitted++;
- 
+Jan
+
 -- 
-2.24.0
-
+Siemens AG, Corporate Technology, CT RDA IOT SES-DE
+Corporate Competence Center Embedded Linux
