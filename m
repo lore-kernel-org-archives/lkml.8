@@ -2,232 +2,124 @@ Return-Path: <SRS0=8dav=5Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6014DC2BA2B
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 13:11:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78BC9C2BA2B
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 13:13:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2CADE20780
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 13:11:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2E144206F7
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 13:13:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="zRpDOg2k"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fTBMY2BU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729121AbgDHNLH (ORCPT
+        id S1728495AbgDHNN5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Apr 2020 09:11:07 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:44190 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729066AbgDHNKw (ORCPT
+        Wed, 8 Apr 2020 09:13:57 -0400
+Received: from mail-io1-f65.google.com ([209.85.166.65]:34167 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726709AbgDHNN5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Apr 2020 09:10:52 -0400
-Received: by mail-wr1-f68.google.com with SMTP id c15so7708116wro.11
-        for <linux-kernel@vger.kernel.org>; Wed, 08 Apr 2020 06:10:50 -0700 (PDT)
+        Wed, 8 Apr 2020 09:13:57 -0400
+Received: by mail-io1-f65.google.com with SMTP id f3so1368ioj.1;
+        Wed, 08 Apr 2020 06:13:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=obuHiJ7084xLsI7nA8kFM9id9M8y90Fq0uWuJodV6eM=;
-        b=zRpDOg2kCRpS2XrqM/rxkPss6quxnK/Q3m+TXbMd8OqPBShaw0PMZB8KBgGa8jSaL/
-         7bKe0lPWSKYrm3QZxrrUXVmyT/1YrPcvuQJuGJwIU3U/cRtN8+lvWVMe7Qxa1JGRE4DM
-         Pl1a0YmxgqNykLqKogP0YqTUUup2VK8cYwsZMtw3KPYmpUXMITclhbDjEDgPLFyQKMRR
-         uTf21XTCL6BukVxPV/w79zked5DKzVmu5LHdJbsMo5W95XgBEAUGLsX1Fn09+qsY16GW
-         k6DMRdnbsOFDWUXs9UpptmotPVrKNX6YWJ/4V4ihEjHy4+fpdZ1xxBseZQkegLCk3DP4
-         nrxA==
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=8nD34K5pjnKrhNZ/IDFX0q8TbRjSUPEDKUV8DiV88EM=;
+        b=fTBMY2BUApkworc3vB/SEq2Tj2Ebry8B29xg6eiIaBN0kfm7DSk1BzZ4/iP1l9XOHq
+         zSc23vODTSVFwtfd9Zw4RB763HLpGeNzPSOwPC8zX2JQl4eUmdnePV+34+Kc0m4PWh+k
+         rcDEH1GOvygS8953k9AjW7xx+PpVNwzCBKXDRyomHgsK9peCbjiU0rq1lVE4O5tLw0Za
+         KprMRiVP5dREID+UMAvzKVAY0kFzgINYjQhLgoEmCxnlBpN2qY8yQ0HDKmItOOu3YyT7
+         vBScu63QYN/qc5wUT30O7j/DXuxdJpTr+RdLZFfMqOcM7MwMP4FdCuJBeJesaFCVkoT1
+         itqg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=obuHiJ7084xLsI7nA8kFM9id9M8y90Fq0uWuJodV6eM=;
-        b=Uzw3PLbHH4+q5FqNFUwJCHf7kLpKnK7r1coC0M7HlnyV7oY1AwT6/tsh923TgW7lat
-         SPwQb8Tw+ZH2Y/kyl/caoF69PFexi79H1S6/M69kOnGttRqs1OV0XVbezY7IqR97awro
-         LDCpENRdByq+YKHkdzJBm0/nPhmqI8NYPPUO+JmMBb60kc038Vvbq8p7sHyyZjRtUWKD
-         IY7/WktxnqKKuw+/fkUTQ/Gd2bnE1wQQgjOxj/WmU4oS3Ilb7X/bP2iEIVIMTEu+jMrJ
-         Flt/zS1vAW2Z5ncldE5jSFyeLGzZjfXB8cRVXEs43/6867A1ZLt4iFjSvMZkBdM8tlwT
-         DL5w==
-X-Gm-Message-State: AGi0PuYDEo5NDTLMqw6NXYV7gdTsSD5JTnmLGK2FMXVf3ErAWHa6w833
-        jBe5lNRoTo8qBWqXLTHXN7iEXg==
-X-Google-Smtp-Source: APiQypLlRqe1vxdnbeesA/18275cB5NgKIQ/LqbHzPm4GlATdf7ZYGiIdlh3Pr/n9yCWR5fPyF2SWg==
-X-Received: by 2002:a5d:4d87:: with SMTP id b7mr8112164wru.36.1586351450054;
-        Wed, 08 Apr 2020 06:10:50 -0700 (PDT)
-Received: from localhost.localdomain ([37.120.50.78])
-        by smtp.gmail.com with ESMTPSA id f4sm18428044wrp.80.2020.04.08.06.10.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 08 Apr 2020 06:10:49 -0700 (PDT)
-From:   Robert Foss <robert.foss@linaro.org>
-To:     agross@kernel.org, bjorn.andersson@linaro.org, robh+dt@kernel.org,
-        catalin.marinas@arm.com, will@kernel.org, shawnguo@kernel.org,
-        leoyang.li@nxp.com, Anson.Huang@nxp.com, olof@lixom.net,
-        leonard.crestez@nxp.com, geert+renesas@glider.be,
-        marcin.juszkiewicz@linaro.org, valentin.schneider@arm.com,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        Loic Poulain <loic.poulain@linaro.org>,
-        Luca Weiss <luca@z3ntu.xyz>
-Cc:     Robert Foss <robert.foss@linaro.org>
-Subject: [PATCH v4 3/6] arm64: dts: sdm845: Add i2c-qcom-cci node
-Date:   Wed,  8 Apr 2020 15:09:56 +0200
-Message-Id: <20200408130959.2717409-4-robert.foss@linaro.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200408130959.2717409-1-robert.foss@linaro.org>
-References: <20200408130959.2717409-1-robert.foss@linaro.org>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=8nD34K5pjnKrhNZ/IDFX0q8TbRjSUPEDKUV8DiV88EM=;
+        b=kdq7WkQb0OywRIShDLsyJouPXHdm2OBJnjK/tZAZHY5repKglqyi74Lf3HM6E9L/At
+         +AqylYSqMhsJ3yYOxgaNCftIivL5ggDrUnOyUJIpm4CJL08Cz02Aj4E7wbZktN80s+Nj
+         9WZU+X5svC6UYMql8tiSDCNo46KApw1ruP1l58cgyK0IxGECchzXUZqwk/Px8lChE82U
+         OAIihkAyEDrrCFPdOPtAKpNCPIfi3PsrrchA58arEdoyVEfgaekASdzDqySetE7/XsqL
+         INYdIyQi9P559wBv6jBHKo64gHcC9uM9DvJ+ZKonlPLPCrJ7Xn85j68UlfyNMAnLyqd5
+         rx0g==
+X-Gm-Message-State: AGi0PuZOBQ3DTM1hQ7mfV7wzWaF6OuzuCft2+GMNmFjEIHITO2FyC3AV
+        PEq+PTUEjLFizbGjfIEYSPVLsSWtAlaYsiygTRI=
+X-Google-Smtp-Source: APiQypKe/jG/Ygr7L5LC6TETf4HSCl2G7Zz2PbD1bznu/pDr8JB9qbVFTLFFJ9NDoQA/XxfMFeD356DZa5k9dnCEDpc=
+X-Received: by 2002:a02:ccf4:: with SMTP id l20mr1046213jaq.28.1586351636019;
+ Wed, 08 Apr 2020 06:13:56 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20200327204711.10614-1-alcooperx@gmail.com> <20200327204711.10614-2-alcooperx@gmail.com>
+ <20200330154006.GA21478@bogus> <7e980e08-bc4c-aad5-fce0-0133e4e479f8@gmail.com>
+In-Reply-To: <7e980e08-bc4c-aad5-fce0-0133e4e479f8@gmail.com>
+From:   Alan Cooper <alcooperx@gmail.com>
+Date:   Wed, 8 Apr 2020 09:13:45 -0400
+Message-ID: <CAOGqxeWuP5c2VtA5qHertbwzKrBjEA2Bo4ds_H+vqQ=h_zABEg@mail.gmail.com>
+Subject: Re: [PATCH v2 1/4] dt-bindings: Add Broadcom STB USB support
+To:     Florian Fainelli <f.fainelli@gmail.com>
+Cc:     Rob Herring <robh@kernel.org>,
+        ": Linux Kernel Mailing List" <linux-kernel@vger.kernel.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>,
+        Chunfeng Yun <chunfeng.yun@mediatek.com>,
+        DTML <devicetree@vger.kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        =?UTF-8?Q?Jonathan_Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        USB list <linux-usb@vger.kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Mathias Nyman <mathias.nyman@intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The sdm845 SOC ships with a CCI controller, which
-has two CCI/I2C buses.
+Sending again in plain text.
 
-Signed-off-by: Robert Foss <robert.foss@linaro.org>
-Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
----
+On Tue, Apr 7, 2020 at 4:28 PM Florian Fainelli <f.fainelli@gmail.com> wrote:
+>
+> On 3/30/2020 8:40 AM, Rob Herring wrote:
+> > On Fri, 27 Mar 2020 16:47:08 -0400, Al Cooper wrote:
+> >> Add DT bindings for Broadcom STB USB EHCI and XHCI drivers.
+> >>
+> >> NOTE: The OHCI driver is not included because it uses the generic
+> >>       platform driver.
+> >>
+> >> Signed-off-by: Al Cooper <alcooperx@gmail.com>
+> >> ---
+> >>  .../bindings/usb/brcm,bcm7445-ehci.yaml       | 61 +++++++++++++++++++
+> >>  .../devicetree/bindings/usb/usb-xhci.txt      |  1 +
+> >>  2 files changed, 62 insertions(+)
+> >>  create mode 100644 Documentation/devicetree/bindings/usb/brcm,bcm7445-ehci.yaml
+> >>
+> >
+> > My bot found errors running 'make dt_binding_check' on your patch:
+> >
+> > /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/usb/brcm,bcm7445-ehci.example.dt.yaml: ehci@f0b00300: 'interrupt-names' does not match any of the regexes: 'pinctrl-[0-9]+'
+>
+> This warning does not seem to be legitimate, the 'interrupt-names'
+> property is a valid one, where do we update the schema such that it
+> knows about it?
 
-Changes since v1:
- - Pad addresses to 8 bytes
- - Sort clock_camcc by address
- - Change cciX pinctrl node names
- - Remove pinmux/pinconf nodes from pinctrl nodes
- - Remove clk suffix from CCI node clock-names
- - Give CCI i2c-bus nodes labels
+It looks like I need to specify it in the specification portion of my
+file if I want it in the example, like I did for "clock-names" and
+"phy-names".
+Since the driver always get the interrupt by index, I'm going to
+remove "interrupt-names" from the example.
 
- arch/arm64/boot/dts/qcom/sdm845-db845c.dts |  4 +
- arch/arm64/boot/dts/qcom/sdm845.dtsi       | 92 ++++++++++++++++++++++
- 2 files changed, 96 insertions(+)
+Al
 
-diff --git a/arch/arm64/boot/dts/qcom/sdm845-db845c.dts b/arch/arm64/boot/dts/qcom/sdm845-db845c.dts
-index a2e05926b429..8644a2f6095a 100644
---- a/arch/arm64/boot/dts/qcom/sdm845-db845c.dts
-+++ b/arch/arm64/boot/dts/qcom/sdm845-db845c.dts
-@@ -866,3 +866,7 @@ pinconf-rx {
- 		bias-pull-up;
- 	};
- };
-+
-+&cci {
-+	status = "ok";
-+};
-diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-index 8f926b5234d4..f3eb1dc11ac6 100644
---- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-@@ -5,6 +5,7 @@
-  * Copyright (c) 2018, The Linux Foundation. All rights reserved.
-  */
- 
-+#include <dt-bindings/clock/qcom,camcc-sdm845.h>
- #include <dt-bindings/clock/qcom,dispcc-sdm845.h>
- #include <dt-bindings/clock/qcom,gcc-sdm845.h>
- #include <dt-bindings/clock/qcom,gpucc-sdm845.h>
-@@ -1813,6 +1814,42 @@ tlmm: pinctrl@3400000 {
- 			gpio-ranges = <&tlmm 0 0 150>;
- 			wakeup-parent = <&pdc_intc>;
- 
-+			cci0_default: cci0-default {
-+				/* SDA, SCL */
-+				pins = "gpio17", "gpio18";
-+				function = "cci_i2c";
-+
-+				bias-pull-up;
-+				drive-strength = <2>; /* 2 mA */
-+			};
-+
-+			cci0_sleep: cci0-sleep {
-+				/* SDA, SCL */
-+				pins = "gpio17", "gpio18";
-+				function = "cci_i2c";
-+
-+				drive-strength = <2>; /* 2 mA */
-+				bias-pull-down;
-+			};
-+
-+			cci1_default: cci1-default {
-+				/* SDA, SCL */
-+				pins = "gpio19", "gpio20";
-+				function = "cci_i2c";
-+
-+				bias-pull-up;
-+				drive-strength = <2>; /* 2 mA */
-+			};
-+
-+			cci1_sleep: cci1-sleep {
-+				/* SDA, SCL */
-+				pins = "gpio19", "gpio20";
-+				function = "cci_i2c";
-+
-+				drive-strength = <2>; /* 2 mA */
-+				bias-pull-down;
-+			};
-+
- 			qspi_clk: qspi-clk {
- 				pinmux {
- 					pins = "gpio95";
-@@ -3194,6 +3231,61 @@ videocc: clock-controller@ab00000 {
- 			#reset-cells = <1>;
- 		};
- 
-+		cci: cci@ac4a000 {
-+			compatible = "qcom,sdm845-cci";
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+
-+			reg = <0 0x0ac4a000 0 0x4000>;
-+			interrupts = <GIC_SPI 460 IRQ_TYPE_EDGE_RISING>;
-+			power-domains = <&clock_camcc TITAN_TOP_GDSC>;
-+
-+			clocks = <&clock_camcc CAM_CC_CAMNOC_AXI_CLK>,
-+				<&clock_camcc CAM_CC_SOC_AHB_CLK>,
-+				<&clock_camcc CAM_CC_SLOW_AHB_CLK_SRC>,
-+				<&clock_camcc CAM_CC_CPAS_AHB_CLK>,
-+				<&clock_camcc CAM_CC_CCI_CLK>,
-+				<&clock_camcc CAM_CC_CCI_CLK_SRC>;
-+			clock-names = "camnoc_axi",
-+				"soc_ahb",
-+				"slow_ahb_src",
-+				"cpas_ahb",
-+				"cci",
-+				"cci_src";
-+
-+			assigned-clocks = <&clock_camcc CAM_CC_CAMNOC_AXI_CLK>,
-+				<&clock_camcc CAM_CC_CCI_CLK>;
-+			assigned-clock-rates = <80000000>, <37500000>;
-+
-+			pinctrl-names = "default", "sleep";
-+			pinctrl-0 = <&cci0_default &cci1_default>;
-+			pinctrl-1 = <&cci0_sleep &cci1_sleep>;
-+
-+			status = "disabled";
-+
-+			cci_i2c0: i2c-bus@0 {
-+				reg = <0>;
-+				clock-frequency = <1000000>;
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+			};
-+
-+			cci_i2c1: i2c-bus@1 {
-+				reg = <1>;
-+				clock-frequency = <1000000>;
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+			};
-+		};
-+
-+		clock_camcc: clock-controller@ad00000 {
-+			compatible = "qcom,sdm845-camcc";
-+			reg = <0 0x0ad00000 0 0x10000>;
-+			#clock-cells = <1>;
-+			#reset-cells = <1>;
-+			#power-domain-cells = <1>;
-+		};
-+
- 		mdss: mdss@ae00000 {
- 			compatible = "qcom,sdm845-mdss";
- 			reg = <0 0x0ae00000 0 0x1000>;
--- 
-2.25.1
-
+>
+> > /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/usb/brcm,bcm7445-ehci.example.dt.yaml: ehci@f0b00300: $nodename:0: 'ehci@f0b00300' does not match '^usb(@.*)?'
+>
+> This one is a legitimate one and should be fixed.
+> --
+> Florian
+>
+>
