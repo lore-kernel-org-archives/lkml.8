@@ -7,52 +7,52 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25F2DC2D0EA
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 15:10:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86775C2D0EA
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 15:11:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EB18220747
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 15:10:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 448C320747
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 15:11:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="aL8VsGju"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="RVJkQ7hr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729396AbgDHPKy (ORCPT
+        id S1729407AbgDHPLP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Apr 2020 11:10:54 -0400
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:45199 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728844AbgDHPKy (ORCPT
+        Wed, 8 Apr 2020 11:11:15 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:33520 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728309AbgDHPLO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Apr 2020 11:10:54 -0400
-Received: by mail-oi1-f194.google.com with SMTP id l22so196121oii.12
-        for <linux-kernel@vger.kernel.org>; Wed, 08 Apr 2020 08:10:53 -0700 (PDT)
+        Wed, 8 Apr 2020 11:11:14 -0400
+Received: by mail-io1-f66.google.com with SMTP id o127so420876iof.0
+        for <linux-kernel@vger.kernel.org>; Wed, 08 Apr 2020 08:11:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=99bGb9kPLJIKPGAYnWeUQM+upQBOmhTKAuXfLDA02as=;
-        b=aL8VsGjuULtKfOLQ4xJAOYPOZmY0Fm4LmPDtmN2EaK+l6PCc9odZkH+cahGM56TX7V
-         RRRVicea4VeZOdbhSkDKFRCH58KpGUJ7CNOXzRWeuJNXr7aH2Mg1BkRpLSkVcDhAuWap
-         3QS1w5M7oxl5CLQ+/jYNLGia4XietUIz9CYHU=
+        bh=V7jm6LpOOba6AShtQDS9c6sItWuCS66vjofoe5YuiE4=;
+        b=RVJkQ7hrtx/hJqp9SyS8a/6H90Yi26GUw3MAk2MsBz2Po5NpDAosNRaETNYCYW5o0w
+         ykePsQQP91ugsXr2roLsaXUNJ0W2CuDK3R8H+PuKPcxuI0oVH3csLak7G3gnyrb24oIE
+         BAaIhmv6eZuom8joh7i06yEvMXG2iAlXlcDbo=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=99bGb9kPLJIKPGAYnWeUQM+upQBOmhTKAuXfLDA02as=;
-        b=gdpS0N7zdXdUDNa9k0ycGkNflb5qF7EH6eM468SunAM9+MR2exP57eIwzCSqP2tTCO
-         kB8aIXTFWYV6mrpZa9y0yDgu1msm3ZoGDZWA6PNVxk/+KMvpICXMo/lLOc9Ts5WuMULd
-         RS+J0rStZ7yBBH38LxoihaEyAEEYnf80i0tyxdYT7ng1ArUOZBfjLfipfPvahx1wY3j8
-         4UFwhU/RnVlZETGMULmnCa86D8AmisdEnDnPvHrsfeblLBmgSMKVRZ/mbfIonM8CtUOg
-         eLYWsWwyhdWOoLWfY+Wcs0O02bgtYQmgFa1MJQZqc+P8b1LefK5OYKHyU8/xkc1IkiTi
-         pNeA==
-X-Gm-Message-State: AGi0PuYziwJ+ChMHsNT+Pw0qlvaUaPHC1/ME6cP6xpNFcSI5tQSIJAd2
-        gIL8yqq2m2rixkhlqSr+zXs3UC3v91eqbA==
-X-Google-Smtp-Source: APiQypLwTROlMgk5kYCTxCFF56//DDLXDI3u7/I38vnrWOWWHtwiZKkjylcUiWynghi29M6bg7W1mQ==
-X-Received: by 2002:a17:90a:178e:: with SMTP id q14mr208304pja.132.1586358273435;
-        Wed, 08 Apr 2020 08:04:33 -0700 (PDT)
+        bh=V7jm6LpOOba6AShtQDS9c6sItWuCS66vjofoe5YuiE4=;
+        b=YQpeoYptZAVKh0XlgCV2FiZJ7TR2HZasS2Qh20yu0HizLlYaepWip+0/d1C2BKkA0s
+         Nb/1ZnXI/YPI76AzVEQz6idlgjHGMoo40O3qJSKu/oOElGRxOgQhMn0R2GxY2OVApmhT
+         z7sLqjJGundsCzgdCzMy+6RZhMdpE9czeS0qVeP/WKYQsMVCSV0jf3VyafN+9vINz4+R
+         z2HRg+OWFBEOk3rwQsvSE7ae/+15qUvfLNJtc8OPpfVS7DPHpLv4IifFPWq/KBe2dcm3
+         tPLJ/tMdsx38VG1RnCmCX/+Ui1OeP27EO6crJYBedS7sb1UWv89SYJVj8xSWIVoYGVpX
+         bWpw==
+X-Gm-Message-State: AGi0PuatfOZa4wyIlMeJoudc73aKKd7s/V0RA7ONr39gSFXpm4HyMpJj
+        tQkyBCakl3niQ56kKhUiIZDWRfGD789U5A==
+X-Google-Smtp-Source: APiQypIz1G9cPCJpf4iXpx7RsV38wvJ0SkqcWHSSgCLSAaQfpBIOel67MdUS8T7gg/yBEMN2Opta/w==
+X-Received: by 2002:a63:e10f:: with SMTP id z15mr7474924pgh.88.1586358277236;
+        Wed, 08 Apr 2020 08:04:37 -0700 (PDT)
 Received: from tictac2.mtv.corp.google.com ([2620:15c:202:1:24fa:e766:52c9:e3b2])
-        by smtp.gmail.com with ESMTPSA id d85sm1468083pfd.157.2020.04.08.08.04.32
+        by smtp.gmail.com with ESMTPSA id d85sm1468083pfd.157.2020.04.08.08.04.36
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 08 Apr 2020 08:04:32 -0700 (PDT)
+        Wed, 08 Apr 2020 08:04:36 -0700 (PDT)
 From:   Douglas Anderson <dianders@chromium.org>
 To:     axboe@kernel.dk, jejb@linux.ibm.com, martin.petersen@oracle.com
 Cc:     paolo.valente@linaro.org, groeck@chromium.org,
@@ -60,15 +60,10 @@ Cc:     paolo.valente@linaro.org, groeck@chromium.org,
         linux-scsi@vger.kernel.org, linux-block@vger.kernel.org,
         Ming Lei <ming.lei@redhat.com>, sqazi@google.com,
         Douglas Anderson <dianders@chromium.org>,
-        =?UTF-8?q?Andr=C3=A9=20Almeida?= <andrealmeid@collabora.com>,
-        Bart Van Assche <bvanassche@acm.org>,
-        Damien Le Moal <damien.lemoal@wdc.com>,
-        John Garry <john.garry@huawei.com>,
-        Pavel Begunkov <asml.silence@gmail.com>,
-        Sagi Grimberg <sagi@grimberg.me>, linux-kernel@vger.kernel.org
-Subject: [PATCH v4 2/4] blk-mq: Add blk_mq_delay_run_hw_queues() API call
-Date:   Wed,  8 Apr 2020 08:04:00 -0700
-Message-Id: <20200408080255.v4.2.I4c665d70212a5b33e103fec4d5019a59b4c05577@changeid>
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v4 4/4] Revert "scsi: core: run queue if SCSI device queue isn't ready and queue is idle"
+Date:   Wed,  8 Apr 2020 08:04:02 -0700
+Message-Id: <20200408080255.v4.4.I630e6ca4cdcf9ab13ea899274745f9e3174eb12b@changeid>
 X-Mailer: git-send-email 2.26.0.292.g33ef6b2f38-goog
 In-Reply-To: <20200408150402.21208-1-dianders@chromium.org>
 References: <20200408150402.21208-1-dianders@chromium.org>
@@ -79,70 +74,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We have:
-* blk_mq_run_hw_queue()
-* blk_mq_delay_run_hw_queue()
-* blk_mq_run_hw_queues()
+This reverts commit 7e70aa789d4a0c89dbfbd2c8a974a4df717475ec.
 
-...but not blk_mq_delay_run_hw_queues(), presumably because nobody
-needed it before now.  Since we need it for a later patch in this
-series, add it.
+Now that we have the patches ("blk-mq: In blk_mq_dispatch_rq_list()
+"no budget" is a reason to kick") and ("blk-mq: Rerun dispatching in
+the case of budget contention") we should no longer need the fix in
+the SCSI code.  Revert it, resolving conflicts with other patches that
+have touched this code.
+
+With this revert (and the two new patches) I can run the script that
+was in commit 7e70aa789d4a ("scsi: core: run queue if SCSI device
+queue isn't ready and queue is idle") in a loop with no failure.  If I
+do this revert without the two new patches I can easily get a failure.
 
 Signed-off-by: Douglas Anderson <dianders@chromium.org>
 ---
+I don't know for sure that we can revert this patch, but in the very
+least the original test case now passes.  If there is any question
+about this, we can just drop this patch.
 
 Changes in v4: None
 Changes in v3:
-- ("blk-mq: Add blk_mq_delay_run_hw_queues() API call") new for v3
+- ("Revert "scsi: core: run queue...") new for v3.
 
 Changes in v2: None
 
- block/blk-mq.c         | 19 +++++++++++++++++++
- include/linux/blk-mq.h |  1 +
- 2 files changed, 20 insertions(+)
+ drivers/scsi/scsi_lib.c | 7 +------
+ 1 file changed, 1 insertion(+), 6 deletions(-)
 
-diff --git a/block/blk-mq.c b/block/blk-mq.c
-index 2cd8d2b49ff4..ea0cd970a3ff 100644
---- a/block/blk-mq.c
-+++ b/block/blk-mq.c
-@@ -1537,6 +1537,25 @@ void blk_mq_run_hw_queues(struct request_queue *q, bool async)
- }
- EXPORT_SYMBOL(blk_mq_run_hw_queues);
+diff --git a/drivers/scsi/scsi_lib.c b/drivers/scsi/scsi_lib.c
+index 610ee41fa54c..b9e28ea76cc0 100644
+--- a/drivers/scsi/scsi_lib.c
++++ b/drivers/scsi/scsi_lib.c
+@@ -1632,12 +1632,7 @@ static bool scsi_mq_get_budget(struct blk_mq_hw_ctx *hctx)
+ 	struct request_queue *q = hctx->queue;
+ 	struct scsi_device *sdev = q->queuedata;
  
-+/**
-+ * blk_mq_delay_run_hw_queues - Run all hardware queues asynchronously.
-+ * @q: Pointer to the request queue to run.
-+ * @msecs: Microseconds of delay to wait before running the queues.
-+ */
-+void blk_mq_delay_run_hw_queues(struct request_queue *q, unsigned long msecs)
-+{
-+	struct blk_mq_hw_ctx *hctx;
-+	int i;
-+
-+	queue_for_each_hw_ctx(q, hctx, i) {
-+		if (blk_mq_hctx_stopped(hctx))
-+			continue;
-+
-+		blk_mq_delay_run_hw_queue(hctx, msecs);
-+	}
-+}
-+EXPORT_SYMBOL(blk_mq_delay_run_hw_queues);
-+
- /**
-  * blk_mq_queue_stopped() - check whether one or more hctxs have been stopped
-  * @q: request queue.
-diff --git a/include/linux/blk-mq.h b/include/linux/blk-mq.h
-index 11cfd6470b1a..405f8c196517 100644
---- a/include/linux/blk-mq.h
-+++ b/include/linux/blk-mq.h
-@@ -503,6 +503,7 @@ void blk_mq_unquiesce_queue(struct request_queue *q);
- void blk_mq_delay_run_hw_queue(struct blk_mq_hw_ctx *hctx, unsigned long msecs);
- void blk_mq_run_hw_queue(struct blk_mq_hw_ctx *hctx, bool async);
- void blk_mq_run_hw_queues(struct request_queue *q, bool async);
-+void blk_mq_delay_run_hw_queues(struct request_queue *q, unsigned long msecs);
- void blk_mq_tagset_busy_iter(struct blk_mq_tag_set *tagset,
- 		busy_tag_iter_fn *fn, void *priv);
- void blk_mq_tagset_wait_completed_request(struct blk_mq_tag_set *tagset);
+-	if (scsi_dev_queue_ready(q, sdev))
+-		return true;
+-
+-	if (atomic_read(&sdev->device_busy) == 0 && !scsi_device_blocked(sdev))
+-		blk_mq_delay_run_hw_queue(hctx, SCSI_QUEUE_DELAY);
+-	return false;
++	return scsi_dev_queue_ready(q, sdev);
+ }
+ 
+ static blk_status_t scsi_queue_rq(struct blk_mq_hw_ctx *hctx,
 -- 
 2.26.0.292.g33ef6b2f38-goog
 
