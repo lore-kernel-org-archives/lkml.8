@@ -2,104 +2,165 @@ Return-Path: <SRS0=8dav=5Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DB35C2D0F4
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 22:47:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D0BCC2BA16
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 22:56:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6241E20730
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 22:47:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5A4D420730
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 22:56:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726546AbgDHWrS convert rfc822-to-8bit (ORCPT
+        id S1726527AbgDHW4T (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Apr 2020 18:47:18 -0400
-Received: from mail-il1-f196.google.com ([209.85.166.196]:33593 "EHLO
-        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726469AbgDHWrR (ORCPT
+        Wed, 8 Apr 2020 18:56:19 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:8440 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726467AbgDHW4S (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Apr 2020 18:47:17 -0400
-Received: by mail-il1-f196.google.com with SMTP id k29so8436725ilg.0;
-        Wed, 08 Apr 2020 15:47:15 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=fu64UL2/aZUHV4DT2tomeskLOh/+k23UcYzbE4vOhe4=;
-        b=GmD1N8zqZdEorCYyjLOEUWJ+xWOO1kNSmUb0NytBxE9J3s5dUCE7MdvkO7CFk+HzRP
-         +F6ljkeZe4Tcrv35qnkTlD1qy+WUE7Z2EHOqnekoGT1Pbh87GFpPKq4n2ZeQ28O6iegQ
-         TngMnoItqDgnJuDpskNGTNhgDd5K8h9AUf3mOY8c8JFyPdFcB9xR4hja/iTWK4CS4kn6
-         n3Qglx83JbWxETkkYo3w02PQfzOUgJ8PJ1xrFsvJgJ+edjW21/EV1EY52azCTFy/atKK
-         6CyR2yk2RwRabwIYxBuGgNeVdSgfAFih0cqjz3Ry/vALrAlJjkgKCYK5Fbvuj5Dz6PgH
-         xelw==
-X-Gm-Message-State: AGi0PuYBuC3EKQHfmVflW+XZxE7uckjZHXFiyr8zMtfbmDKAHh2upMwh
-        NoC6AaWuXc9QPQ3/r7Z9aFsEacl4lpY=
-X-Google-Smtp-Source: APiQypLUjGz27KNN63XlEdZMTx8EOenkma3QyyoO0RV6oEfkyq6nlOiY3ezwWvxa3PYNEOj2ilmrJQ==
-X-Received: by 2002:a92:4896:: with SMTP id j22mr9734688ilg.158.1586386035106;
-        Wed, 08 Apr 2020 15:47:15 -0700 (PDT)
-Received: from mail-io1-f44.google.com (mail-io1-f44.google.com. [209.85.166.44])
-        by smtp.gmail.com with ESMTPSA id s69sm8577714ill.73.2020.04.08.15.47.14
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 08 Apr 2020 15:47:14 -0700 (PDT)
-Received: by mail-io1-f44.google.com with SMTP id n10so1907505iom.3;
-        Wed, 08 Apr 2020 15:47:14 -0700 (PDT)
-X-Received: by 2002:a5d:91cc:: with SMTP id k12mr9210587ior.198.1586386034462;
- Wed, 08 Apr 2020 15:47:14 -0700 (PDT)
-MIME-Version: 1.0
-References: <36341bb1-1e00-5eb1-d032-60dcc614ddaf@web.de>
-In-Reply-To: <36341bb1-1e00-5eb1-d032-60dcc614ddaf@web.de>
-From:   Li Yang <leoyang.li@nxp.com>
-Date:   Wed, 8 Apr 2020 17:47:03 -0500
-X-Gmail-Original-Message-ID: <CADRPPNRe=YxwjCOYbEjKg4LCOx2suK5WxZp17NJhTm76szdU0w@mail.gmail.com>
-Message-ID: <CADRPPNRe=YxwjCOYbEjKg4LCOx2suK5WxZp17NJhTm76szdU0w@mail.gmail.com>
-Subject: Re: usb: gadget: fsl_udc_core: Checking for a failed
- platform_get_irq() call in fsl_udc_probe()
-To:     Markus Elfring <Markus.Elfring@web.de>
-Cc:     linux-usb@vger.kernel.org,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        Felipe Balbi <balbi@kernel.org>,
-        Tang Bin <tangbin@cmss.chinamobile.com>,
+        Wed, 8 Apr 2020 18:56:18 -0400
+Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 038MZ1Gw088883;
+        Wed, 8 Apr 2020 18:55:41 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 309mdtcfju-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 08 Apr 2020 18:55:41 -0400
+Received: from m0098420.ppops.net (m0098420.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 038MbX6U099422;
+        Wed, 8 Apr 2020 18:55:41 -0400
+Received: from ppma02dal.us.ibm.com (a.bd.3ea9.ip4.static.sl-reverse.com [169.62.189.10])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 309mdtcfjq-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 08 Apr 2020 18:55:41 -0400
+Received: from pps.filterd (ppma02dal.us.ibm.com [127.0.0.1])
+        by ppma02dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 038MqWQr026954;
+        Wed, 8 Apr 2020 22:55:40 GMT
+Received: from b01cxnp22036.gho.pok.ibm.com (b01cxnp22036.gho.pok.ibm.com [9.57.198.26])
+        by ppma02dal.us.ibm.com with ESMTP id 3091mdts86-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 08 Apr 2020 22:55:40 +0000
+Received: from b01ledav004.gho.pok.ibm.com (b01ledav004.gho.pok.ibm.com [9.57.199.109])
+        by b01cxnp22036.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 038MtdZh29884876
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 8 Apr 2020 22:55:39 GMT
+Received: from b01ledav004.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id DAE3D112062;
+        Wed,  8 Apr 2020 22:55:39 +0000 (GMT)
+Received: from b01ledav004.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id A3268112061;
+        Wed,  8 Apr 2020 22:55:29 +0000 (GMT)
+Received: from LeoBras (unknown [9.85.164.111])
+        by b01ledav004.gho.pok.ibm.com (Postfix) with ESMTP;
+        Wed,  8 Apr 2020 22:55:29 +0000 (GMT)
+Message-ID: <49614a1c3fba382d2a7bca0574015438dd50b843.camel@linux.ibm.com>
+Subject: Re: [PATCH v3 1/1] ppc/crash: Reset spinlocks during crash
+From:   Leonardo Bras <leonardo@linux.ibm.com>
+To:     Michael Ellerman <mpe@ellerman.id.au>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Alexios Zavras <alexios.zavras@intel.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        kernel-janitors@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
+        Enrico Weigelt <info@metux.net>,
+        Paul Mackerras <paulus@samba.org>, peterz@infradead.org,
+        Thomas Gleixner <tglx@linutronix.de>
+Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Date:   Wed, 08 Apr 2020 19:55:19 -0300
+In-Reply-To: <87v9majhh2.fsf@mpe.ellerman.id.au>
+References: <20200401000020.590447-1-leonardo@linux.ibm.com>
+         <871rp6t9di.fsf@mpe.ellerman.id.au>
+         <02e74be19534ab1db2f16a0c89ecb164e380c12a.camel@linux.ibm.com>
+         <1585895551.7o9oa0ey62.astroid@bobo.none>
+         <fb98f346a4d6a9d689ae64dae33cbd45d2f8b0df.camel@linux.ibm.com>
+         <87v9majhh2.fsf@mpe.ellerman.id.au>
+Content-Type: multipart/signed; micalg="pgp-sha256";
+        protocol="application/pgp-signature"; boundary="=-rW4zuZR8MtcT2HNBtaaN"
+User-Agent: Evolution 3.34.4 (3.34.4-1.fc31) 
+MIME-Version: 1.0
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
+ definitions=2020-04-08_09:2020-04-07,2020-04-08 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 mlxlogscore=957
+ clxscore=1015 mlxscore=0 impostorscore=0 adultscore=0 phishscore=0
+ suspectscore=0 malwarescore=0 priorityscore=1501 spamscore=0
+ lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2004080152
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 8, 2020 at 9:19 AM Markus Elfring <Markus.Elfring@web.de> wrote:
->
-> Hello,
->
-> I have taken another look at the implementation of the function “fsl_udc_probe”.
-> A software analysis approach points the following source code out for
-> further development considerations.
-> https://elixir.bootlin.com/linux/v5.6.2/source/drivers/usb/gadget/udc/fsl_udc_core.c#L2443
-> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/usb/gadget/udc/fsl_udc_core.c?id=f5e94d10e4c468357019e5c28d48499f677b284f#n2442
->
->         udc_controller->irq = platform_get_irq(pdev, 0);
->         if (!udc_controller->irq) {
->                 ret = -ENODEV;
->                 goto err_iounmap;
->         }
->
->
-> The software documentation is providing the following information
-> for the used programming interface.
-> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/base/platform.c?id=f5e94d10e4c468357019e5c28d48499f677b284f#n221
-> https://elixir.bootlin.com/linux/v5.6.2/source/drivers/base/platform.c#L202
->
-> “…
->  * Return: IRQ number on success, negative error number on failure.
-> …”
->
-> Would you like to reconsider the shown condition check?
 
-Thanks for the finding.  This is truly a software issue that need to
-be fixed.  Would you submit a patch for it or you want us to fix it?
+--=-rW4zuZR8MtcT2HNBtaaN
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Regards,
-Leo
+On Wed, 2020-04-08 at 22:21 +1000, Michael Ellerman wrote:
+[...]
+> > According with LoPAR, for both of these rtas-calls, we have:
+> >=20
+> > For the PowerPC External Interrupt option: The call must be reentrant
+> > to the number of processors on the platform.
+> > For the PowerPC External Interrupt option: The argument call buffer for
+> > each simultaneous call must be physically unique.
+>=20
+> Oh well spotted. Where is that in the doc?
+>=20
+> > Which I think means this rtas-calls can be done simultaneously.
+>=20
+> I think so too. I'll read PAPR in the morning and make sure.
+>=20
+> > Would it mean that busting the rtas.lock for these calls would be safe?
+>=20
+> What would be better is to make those specific calls not take the global
+> RTAS lock to begin with.
+>=20
+> We should be able to just allocate the rtas_args on the stack, it's only
+> ~80 odd bytes. And then we can use rtas_call_unlocked() which doesn't
+> take the global lock.
+
+Hello Michael,
+
+I did the simplest possible version of this change:
+http://patchwork.ozlabs.org/patch/1268371/
+
+Where I create a rtas_call_reentrant(), and replace rtas_call() for
+that in all the possible calls of "ibm,int-on", "ibm,int-off",ibm,get-
+xive" and  "ibm,set-xive".
+
+At first, I was planning on creating a function that tells if the
+requested token is one of above, before automatically choosing between
+the common and reentrant versions. But it seemed like unnecessary
+overhead, since the current calls are very few and very straight.=20
+
+What do you think on this?
+
+Best regards,
+Leonardo Bras
+
+--=-rW4zuZR8MtcT2HNBtaaN
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEMdeUgIzgjf6YmUyOlQYWtz9SttQFAl6OVlcACgkQlQYWtz9S
+ttTSNxAA2WHqbEvJ/q09rkldKj1jNwGATvtXn1UHGLMxi6baM0un8mwQGGA9rRk2
+mYCS9d5t6SUFax/0dOd3k4jMZJL9EYLvArqakuNgt+HINbholuBjDR6hRMHSOOxq
+YfIw0UQgsRlpIqM4qAUEr6c117sArf+PMMIKUSsN80JlVuQPMqZbGboBS9P70bjA
+26tjVVBWBE1D05+QXrW3nh/bMgCoJ/wPujv8cFhrFEtlnxvQiA2kesnlSKn/Ijx/
+Ne5xRD+erktHo88YXQ306BFBR4aCKE1pdcgtA5R+IaR5LPxAb0duqHbbKjBstAtc
+J2hTn74nURuRvQAZ+T5G2dVFtu/9yJwwh1p0zQU1G04m6emyn5w4e5JKc00Kk6jC
+vsYlt51nH2RJiKomGCw9GVwtEx9gU52dYaAKVzT5rvqUlRjPu/diDdF24mQ74zUd
++8oOMfbdnbU84CkXfD4LMe0RPJURgDuHdSOteos1ycYwL6kAKZb1CGiE/uJqWyPn
+tnUReM4W+RWgQb4BjMRjhoYZciw5j/Vhim9s22G3tZGhOA4tYu2x/5UYWKgjg1zl
+UtAbKTbM2U/bmD/+RzEQA5ZbWvR+qkeLsCd2MNFfFs8ZRkUQlIzumXWOoPhLxh1C
+nJ3ePZ65jEvdW0EXxpSwV4NwyRbxMOEEiHYvLuEgerU2wLbbR7E=
+=y/4S
+-----END PGP SIGNATURE-----
+
+--=-rW4zuZR8MtcT2HNBtaaN--
+
