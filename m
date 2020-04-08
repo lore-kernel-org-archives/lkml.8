@@ -2,95 +2,130 @@ Return-Path: <SRS0=8dav=5Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FEBCC2BA1A
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 15:54:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CCFEC2BA1B
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 15:54:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 41937206F5
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 15:54:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DB5EE206F5
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 15:54:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="AVoQ5g/u"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729832AbgDHPyI (ORCPT
+        id S1729848AbgDHPyo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Apr 2020 11:54:08 -0400
-Received: from mout.kundenserver.de ([212.227.17.10]:49277 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729566AbgDHPyH (ORCPT
+        Wed, 8 Apr 2020 11:54:44 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:20623 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1729632AbgDHPyo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Apr 2020 11:54:07 -0400
-Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
- (mreue106 [212.227.15.145]) with ESMTPA (Nemesis) id
- 1MXYEr-1jns7o1mmd-00YvPf; Wed, 08 Apr 2020 17:54:03 +0200
-From:   Arnd Bergmann <arnd@arndb.de>
-To:     Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] clk: asm9260: fix __clk_hw_register_fixed_rate_with_accuracy typo
-Date:   Wed,  8 Apr 2020 17:53:43 +0200
-Message-Id: <20200408155402.2138446-1-arnd@arndb.de>
-X-Mailer: git-send-email 2.26.0
+        Wed, 8 Apr 2020 11:54:44 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1586361283;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=0jL6OKsl/vevfcCXL5hEg1wpfnw6jRaU0IgVB/aka5A=;
+        b=AVoQ5g/ueJVlFkBs5fPBxag2RIvz9SMLV0y9rh+Pl6vtR6FGYnr85IPnnYmD/3cJXvCwzr
+        UQWp2kDRzoGnTkc/ZxxG7GgwBbdqhFIT7jhgcflMw0WSrffrvZSYaPaDZHcD6kkhnB0mPf
+        3p/37/Q5Sa6csJ+OQ0VnshPCYOhejzk=
+Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
+ [209.85.221.69]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-99-x531gaW5NPeoWRiWgTB1xg-1; Wed, 08 Apr 2020 11:54:39 -0400
+X-MC-Unique: x531gaW5NPeoWRiWgTB1xg-1
+Received: by mail-wr1-f69.google.com with SMTP id q9so4404211wrw.22
+        for <linux-kernel@vger.kernel.org>; Wed, 08 Apr 2020 08:54:39 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=0jL6OKsl/vevfcCXL5hEg1wpfnw6jRaU0IgVB/aka5A=;
+        b=Ifv5bxRn3JU5ljPt3aJ3AFkEk8DfMyTB/qZ1nli68QrrYtcBES7LXD60CAoOA749pe
+         2/Z0Arpy8ar4CEijjq0rQea+zoAPb9poAurof0k08w3BsfyMNBNaZHDNQDZoZnboUuG9
+         IcASDeB6zgEmFIL9D7S/MyVZEsd8iK+tHMDgqalKKo2ZqOu3jsUyinHLBNwXXPoO7nnx
+         No1ZwZvsFHzzFbxXrVOJ1TmuiOMatukWFlHD4ntAmea/Qdu7tmA0jH3crrQtjWcwiJWa
+         qIX2olsk1u3sz+fTXYmUUb3+WgXC7vNU9U0kHKlQLls86paz7f4s0C9q7ilYmSNaEbbo
+         OqQw==
+X-Gm-Message-State: AGi0PuaTqNsXLfX/wCZ/I+Cc/TBGJArEC2ttHu38664j75Eic+X2IMT7
+        RKUDXo6ahWFbIBzS4DoVT2lniLYJY5gkplyIlSmagPJj/Y1kNkOToJoxNkuamD7CikZWh/Qj7ux
+        Ft4+IJVGFveYYKARyE0Mzm50w
+X-Received: by 2002:a7b:ce81:: with SMTP id q1mr5719265wmj.156.1586361278158;
+        Wed, 08 Apr 2020 08:54:38 -0700 (PDT)
+X-Google-Smtp-Source: APiQypJT6MzUUAi0MLdhAAZpBiuYK6o2gfpFrbxz3473qX+5EK7JCJ7DwjwpPhSkpGBI/UrWHw25Mg==
+X-Received: by 2002:a7b:ce81:: with SMTP id q1mr5719247wmj.156.1586361277827;
+        Wed, 08 Apr 2020 08:54:37 -0700 (PDT)
+Received: from vitty.brq.redhat.com (g-server-2.ign.cz. [91.219.240.2])
+        by smtp.gmail.com with ESMTPSA id u17sm41238777wra.63.2020.04.08.08.54.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 08 Apr 2020 08:54:36 -0700 (PDT)
+From:   Vitaly Kuznetsov <vkuznets@redhat.com>
+To:     Olaf Hering <olaf@aepfle.de>
+Cc:     "K. Y. Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Wei Liu <wei.liu@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Michael Kelley <mikelley@microsoft.com>
+Subject: Re: [PATCH v1] x86: hyperv: report value of misc_features
+In-Reply-To: <20200407172739.31371-1-olaf@aepfle.de>
+References: <20200407172739.31371-1-olaf@aepfle.de>
+Date:   Wed, 08 Apr 2020 17:54:35 +0200
+Message-ID: <874ktu2csk.fsf@vitty.brq.redhat.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:TilCS4/VbuvG1KlVdP8CC9XcCXl56DTAeZrXFyWtCRJQJbt3WQY
- vL1y7YQYEAAEDItmxZwDm1hXg0BmmuqZRGqZ4m8wZ5SK0YYxn9p/oQc8ChpBQEsm0NTEpht
- UGK5R7q3GcdWN6iNhlwUrBMzGBCYmY34XVELclaI0VWqLnD10cpoxJvsIhIHVTXl7VVZSJC
- EvMK3h9sJ8jqoLMGHsRmA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:oBHlDLZYRwo=:dNKCojhrR5uxAPhnQyNh0S
- 5Vet3C2JOoi9r5zsd+vx8DicDLfqbkS1NUR0I7NMIWz6yagR1dWAbOZVJ6Lg8koGbQCHc34EU
- VcehZAHy1RucDAPRs+i7KVUtiPME6o2w6sgasZWA7mMznt3/gEROYbguGHMXVE7yVspnEjbX1
- UZc1kexz1lYuN0dwDEulAfq/H2Ceknc8XW7aGeRkX7WmTTn/L/znhNA4Gpr/Jf9jgWODLUM1v
- 0ew9uvvy2WV5WAhADSd7GMPdZYEUByx9yem32RKeYp3A9M4hFuuQ/rKhJXhe7Ch1/MGSwqGcb
- ea2hAKsEjLG3NnkYrUqUqtmURl9DCxvPhS5lpVnPP/8o3FhagjSgEi/2LCTignL+fOEo8NVZw
- UqH7TJPHesiMO4a060dqTatQp0c2OFEt5c0labJqWKXqdUxj4UUt7h//e+o1zYnZLXhBw9OE1
- 8A02Vh3KHqP5qKFDJFsIJ0vFGAO5Mwt6J3IT57lBgbAbScBAAHZCghgl4/ipi6iPEYxN/XRXj
- qsDteNiDDDMdF0RPtDiJgOdDOvmSCKk/mHvvHTnUZK9QXr2K1JZtXZVw0QVV8suYswqRhrfX+
- 94ZB25cbszWZ8VkS1hB28bm5O0wkpfgBZDCvGR6CkZ6S7NiNUDFD8IL/qKtD5klpew5oeo4/T
- z83euCQOUov2rUyYpzmAxUxWnSKTJqMYsLFFvy+Uie9pdFzXZBf0szyx8JZIb70Q0+srnv8EZ
- pD+Ii+lOtvDIG5EZKg8jKGONIdQzvEtRt/qzGYEdLl+MBlltTIHqXPWgRgpIBOzQwinUL/FxR
- wYKFNaBLxR33rI5/X0w04H+zaYg78DiXMjqhZGkdPvlEOdo6Go=
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The __clk_hw_register_fixed_rate_with_accuracy() function (with two '_')
-does not exist, and apparently never did:
+Olaf Hering <olaf@aepfle.de> writes:
 
-drivers/clk/clk-asm9260.c: In function 'asm9260_acc_init':
-drivers/clk/clk-asm9260.c:279:7: error: implicit declaration of function '__clk_hw_register_fixed_rate_with_accuracy'; did you mean 'clk_hw_register_fixed_rate_with_accuracy'? [-Werror=implicit-function-declaration]
-  279 |  hw = __clk_hw_register_fixed_rate_with_accuracy(NULL, NULL, pll_clk,
-      |       ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-      |       clk_hw_register_fixed_rate_with_accuracy
-drivers/clk/clk-asm9260.c:279:5: error: assignment to 'struct clk_hw *' from 'int' makes pointer from integer without a cast [-Werror=int-conversion]
-  279 |  hw = __clk_hw_register_fixed_rate_with_accuracy(NULL, NULL, pll_clk,
-      |     ^
+> A few kernel features depend on ms_hyperv.misc_features, but unlike its
+> siblings ->features and ->hints, the value was never reported during boot.
+>
+> Signed-off-by: Olaf Hering <olaf@aepfle.de>
+> ---
+>  arch/x86/kernel/cpu/mshyperv.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+>
+> diff --git a/arch/x86/kernel/cpu/mshyperv.c b/arch/x86/kernel/cpu/mshyperv.c
+> index caa032ce3fe3..53706fb56433 100644
+> --- a/arch/x86/kernel/cpu/mshyperv.c
+> +++ b/arch/x86/kernel/cpu/mshyperv.c
+> @@ -227,8 +227,8 @@ static void __init ms_hyperv_init_platform(void)
+>  	ms_hyperv.misc_features = cpuid_edx(HYPERV_CPUID_FEATURES);
+>  	ms_hyperv.hints    = cpuid_eax(HYPERV_CPUID_ENLIGHTMENT_INFO);
+>  
+> -	pr_info("Hyper-V: features 0x%x, hints 0x%x\n",
+> -		ms_hyperv.features, ms_hyperv.hints);
+> +	pr_info("Hyper-V: features 0x%x, hints 0x%x, misc 0x%x\n",
+> +		ms_hyperv.features, ms_hyperv.hints, ms_hyperv.misc_features);
 
-From what I can tell, __clk_hw_register_fixed_rate() is the correct
-API here, so use that instead.
+Several spare thoughts:
 
-Fixes: 728e3096741a ("clk: asm9260: Use parent accuracy in fixed rate clk")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
----
- drivers/clk/clk-asm9260.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+I'm always struggling to remember what is what here as these names don't
+correspond to TLFS, could we maybe come up with better naming, e.g.
 
-diff --git a/drivers/clk/clk-asm9260.c b/drivers/clk/clk-asm9260.c
-index 536b59aabd2c..bacebd457e6f 100644
---- a/drivers/clk/clk-asm9260.c
-+++ b/drivers/clk/clk-asm9260.c
-@@ -276,7 +276,7 @@ static void __init asm9260_acc_init(struct device_node *np)
- 
- 	/* TODO: Convert to DT parent scheme */
- 	ref_clk = of_clk_get_parent_name(np, 0);
--	hw = __clk_hw_register_fixed_rate_with_accuracy(NULL, NULL, pll_clk,
-+	hw = __clk_hw_register_fixed_rate(NULL, NULL, pll_clk,
- 			ref_clk, NULL, NULL, 0, rate, 0,
- 			CLK_FIXED_RATE_PARENT_ACCURACY);
- 
+"Features.EAX", "Features.EDX", "Recommendations.EAX",...
+
+On the other hand, there is more, e.g. nested virtualization
+features. How is it useful for all users to see this in dmesg every
+time? If we need it for development purposes, we can always run 'cpuid'
+so maybe let's drop this altogether or print only with pr_debug? 
+
+(Honestly: no strong opinion here, deferring to Microsoft folks).
+
+>  
+>  	ms_hyperv.max_vp_index = cpuid_eax(HYPERV_CPUID_IMPLEMENT_LIMITS);
+>  	ms_hyperv.max_lp_index = cpuid_ebx(HYPERV_CPUID_IMPLEMENT_LIMITS);
+>
+
 -- 
-2.26.0
+Vitaly
 
