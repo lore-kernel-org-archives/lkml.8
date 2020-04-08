@@ -6,34 +6,34 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E50AC2BA1A
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 16:09:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44FA3C2BA1B
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 16:09:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F177D206F5
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 16:09:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 260F1206F5
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 16:09:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730241AbgDHQJi (ORCPT
+        id S1730256AbgDHQJp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Apr 2020 12:09:38 -0400
-Received: from mga14.intel.com ([192.55.52.115]:25663 "EHLO mga14.intel.com"
+        Wed, 8 Apr 2020 12:09:45 -0400
+Received: from mga02.intel.com ([134.134.136.20]:63811 "EHLO mga02.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730191AbgDHQJb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Apr 2020 12:09:31 -0400
-IronPort-SDR: 4sr+lDj9e8L9d9pyuf6VCuhKeUwcg61Fkk6CiHOUaGc1fVAeZo7eeQ8khGcKd7brsXhwsZldRg
- lI9OsqdL6rsQ==
+        id S1730200AbgDHQJe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Apr 2020 12:09:34 -0400
+IronPort-SDR: ixUddFKgbwTcsXRwhJplwu5HXP23mBuWMunR7hAlegQJ6TOGHnTrlAZAfd0f3Yp2Vb161d3ytO
+ lgJKsx7GvPWw==
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Apr 2020 09:09:31 -0700
-IronPort-SDR: TjA+ciCjEebbP61BDavfwtxOOiIohUJ+M1KKjf1Vg1wm76UFFko+STHBvYiJL5I/8s4Lv760+3
- SJz20DewCbcw==
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Apr 2020 09:09:31 -0700
+IronPort-SDR: X/HwM5LlHlyOMs2ZwnEBQI1g1sURXg95Cz1kNUHKE4pTeHyE2gsYBm1Jb2ZJFw0kGUfV8vIE1A
+ 2Qb9l2bdmzfA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.72,359,1580803200"; 
-   d="scan'208";a="361882381"
+   d="scan'208";a="398246243"
 Received: from black.fi.intel.com ([10.237.72.28])
-  by fmsmga001.fm.intel.com with ESMTP; 08 Apr 2020 09:09:26 -0700
+  by orsmga004.jf.intel.com with ESMTP; 08 Apr 2020 09:09:29 -0700
 Received: by black.fi.intel.com (Postfix, from userid 1003)
-        id 7B61A1FD; Wed,  8 Apr 2020 19:09:25 +0300 (EEST)
+        id AA5FE981; Wed,  8 Apr 2020 19:09:25 +0300 (EEST)
 From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         linux-kernel@vger.kernel.org,
@@ -44,101 +44,102 @@ To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         platform-driver-x86@vger.kernel.org,
         Darren Hart <dvhart@infradead.org>
 Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: [PATCH v1 2/6] software node: Allow register and unregister software node groups
-Date:   Wed,  8 Apr 2020 19:09:02 +0300
-Message-Id: <20200408160905.12101-3-andriy.shevchenko@linux.intel.com>
+Subject: [PATCH v1 6/6] platform/x86: intel_cht_int33fe: Fix spelling issues
+Date:   Wed,  8 Apr 2020 19:09:06 +0300
+Message-Id: <20200408160905.12101-7-andriy.shevchenko@linux.intel.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200408160905.12101-1-andriy.shevchenko@linux.intel.com>
 References: <20200408160905.12101-1-andriy.shevchenko@linux.intel.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Sometimes it's more convenient to register a set of individual software nodes
-grouped together. Add couple of functions for that.
+Fix spelling issues over the comments in the code.
 
 Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 ---
- drivers/base/swnode.c    | 48 ++++++++++++++++++++++++++++++++++++++++
- include/linux/property.h |  3 +++
- 2 files changed, 51 insertions(+)
+ .../platform/x86/intel_cht_int33fe_typec.c    | 20 +++++++++----------
+ 1 file changed, 10 insertions(+), 10 deletions(-)
 
-diff --git a/drivers/base/swnode.c b/drivers/base/swnode.c
-index de8d3543e8fe..2079937ddb51 100644
---- a/drivers/base/swnode.c
-+++ b/drivers/base/swnode.c
-@@ -726,6 +726,54 @@ void software_node_unregister_nodes(const struct software_node *nodes)
- }
- EXPORT_SYMBOL_GPL(software_node_unregister_nodes);
+diff --git a/drivers/platform/x86/intel_cht_int33fe_typec.c b/drivers/platform/x86/intel_cht_int33fe_typec.c
+index e89defb33067..48638d1c56e5 100644
+--- a/drivers/platform/x86/intel_cht_int33fe_typec.c
++++ b/drivers/platform/x86/intel_cht_int33fe_typec.c
+@@ -6,14 +6,14 @@
+  *
+  * Some Intel Cherry Trail based device which ship with Windows 10, have
+  * this weird INT33FE ACPI device with a CRS table with 4 I2cSerialBusV2
+- * resources, for 4 different chips attached to various i2c busses:
+- * 1. The Whiskey Cove pmic, which is also described by the INT34D3 ACPI device
++ * resources, for 4 different chips attached to various I²C buses:
++ * 1. The Whiskey Cove PMIC, which is also described by the INT34D3 ACPI device
+  * 2. Maxim MAX17047 Fuel Gauge Controller
+  * 3. FUSB302 USB Type-C Controller
+  * 4. PI3USB30532 USB switch
+  *
+  * So this driver is a stub / pseudo driver whose only purpose is to
+- * instantiate i2c-clients for chips 2 - 4, so that standard i2c drivers
++ * instantiate I²C clients for chips 2 - 4, so that standard I²C drivers
+  * for these chips can bind to the them.
+  */
  
-+/**
-+ * software_node_register_node_group - Register a group of software nodes
-+ * @node_group: NULL terminated array of software node pointers to be registered
-+ *
-+ * Register multiple software nodes at once.
-+ */
-+int software_node_register_node_group(const struct software_node **node_group)
-+{
-+	unsigned int i;
-+	int ret;
-+
-+	if (!node_group)
-+		return 0;
-+
-+	for (i = 0; node_group[i]; i++) {
-+		ret = software_node_register(node_group[i]);
-+		if (ret) {
-+			software_node_unregister_node_group(node_group);
-+			return ret;
-+		}
-+	}
-+
-+	return 0;
-+}
-+EXPORT_SYMBOL_GPL(software_node_register_node_group);
-+
-+/**
-+ * software_node_unregister_node_group - Unregister a group of software nodes
-+ * @node_group: NULL terminated array of software node pointers to be unregistered
-+ *
-+ * Unregister multiple software nodes at once.
-+ */
-+void software_node_unregister_node_group(const struct software_node **node_group)
-+{
-+	struct swnode *swnode;
-+	unsigned int i;
-+
-+	if (!node_group)
-+		return;
-+
-+	for (i = 0; node_group[i]; i++) {
-+		swnode = software_node_to_swnode(node_group[i]);
-+		if (swnode)
-+			fwnode_remove_software_node(&swnode->fwnode);
-+	}
-+}
-+EXPORT_SYMBOL_GPL(software_node_unregister_node_group);
-+
- /**
-  * software_node_register - Register static software node
-  * @node: The software node to be registered
-diff --git a/include/linux/property.h b/include/linux/property.h
-index d86de017c689..c7b5f3db36aa 100644
---- a/include/linux/property.h
-+++ b/include/linux/property.h
-@@ -440,6 +440,9 @@ software_node_find_by_name(const struct software_node *parent,
- int software_node_register_nodes(const struct software_node *nodes);
- void software_node_unregister_nodes(const struct software_node *nodes);
+@@ -29,11 +29,11 @@
+ #include "intel_cht_int33fe_common.h"
  
-+int software_node_register_node_group(const struct software_node **node_group);
-+void software_node_unregister_node_group(const struct software_node **node_group);
-+
- int software_node_register(const struct software_node *node);
+ /*
+- * Grrr I severly dislike buggy BIOS-es. At least one BIOS enumerates
++ * Grrr, I severely dislike buggy BIOS-es. At least one BIOS enumerates
+  * the max17047 both through the INT33FE ACPI device (it is right there
+  * in the resources table) as well as through a separate MAX17047 device.
+  *
+- * These helpers are used to work around this by checking if an i2c-client
++ * These helpers are used to work around this by checking if an I²C client
+  * for the max17047 has already been registered.
+  */
+ static int cht_int33fe_check_for_max17047(struct device *dev, void *data)
+@@ -235,9 +235,9 @@ cht_int33fe_register_max17047(struct device *dev, struct cht_int33fe_data *data)
  
- int software_node_notify(struct device *dev, unsigned long action);
+ 	i2c_for_each_dev(&max17047, cht_int33fe_check_for_max17047);
+ 	if (max17047) {
+-		/* Pre-existing i2c-client for the max17047, add device-props */
++		/* Pre-existing I²C client for the max17047, add device properties */
+ 		set_secondary_fwnode(&max17047->dev, fwnode);
+-		/* And re-probe to get the new device-props applied. */
++		/* And re-probe to get the new device properties applied */
+ 		ret = device_reprobe(&max17047->dev);
+ 		if (ret)
+ 			dev_warn(dev, "Reprobing max17047 error: %d\n", ret);
+@@ -272,7 +272,7 @@ int cht_int33fe_typec_probe(struct cht_int33fe_data *data)
+ 	 *    must be registered before the fusb302 is instantiated, otherwise
+ 	 *    it will end up with a dummy-regulator.
+ 	 * Note "cht_wc_usb_typec_vbus" comes from the regulator_init_data
+-	 * which is defined in i2c-cht-wc.c from where the bq24292i i2c-client
++	 * which is defined in i2c-cht-wc.c from where the bq24292i I²C client
+ 	 * gets instantiated. We use regulator_get_optional here so that we
+ 	 * don't end up getting a dummy-regulator ourselves.
+ 	 */
+@@ -283,7 +283,7 @@ int cht_int33fe_typec_probe(struct cht_int33fe_data *data)
+ 	}
+ 	regulator_put(regulator);
+ 
+-	/* The FUSB302 uses the irq at index 1 and is the only irq user */
++	/* The FUSB302 uses the IRQ at index 1 and is the only IRQ user */
+ 	fusb302_irq = acpi_dev_gpio_irq_get(ACPI_COMPANION(dev), 1);
+ 	if (fusb302_irq < 0) {
+ 		if (fusb302_irq != -EPROBE_DEFER)
+@@ -295,7 +295,7 @@ int cht_int33fe_typec_probe(struct cht_int33fe_data *data)
+ 	if (ret)
+ 		return ret;
+ 
+-	/* Work around BIOS bug, see comment on cht_int33fe_check_for_max17047 */
++	/* Work around BIOS bug, see comment on cht_int33fe_check_for_max17047() */
+ 	ret = cht_int33fe_register_max17047(dev, data);
+ 	if (ret)
+ 		goto out_remove_nodes;
 -- 
 2.25.1
 
