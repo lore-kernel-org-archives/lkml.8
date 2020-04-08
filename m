@@ -2,198 +2,212 @@ Return-Path: <SRS0=8dav=5Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7ECB9C2BA80
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 08:15:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9130EC2D0EA
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 08:17:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 57F4620730
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 08:15:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 70B6020730
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 08:17:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727015AbgDHIPx (ORCPT
+        id S1727009AbgDHIRd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Apr 2020 04:15:53 -0400
-Received: from server-x.ipv4.hkg02.ds.network ([27.111.83.178]:41316 "EHLO
-        mail.gtsys.com.hk" rhost-flags-OK-FAIL-OK-OK) by vger.kernel.org
-        with ESMTP id S1726345AbgDHIPw (ORCPT
+        Wed, 8 Apr 2020 04:17:33 -0400
+Received: from m177134.mail.qiye.163.com ([123.58.177.134]:43385 "EHLO
+        m177134.mail.qiye.163.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726345AbgDHIRd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Apr 2020 04:15:52 -0400
-X-Greylist: delayed 364 seconds by postgrey-1.27 at vger.kernel.org; Wed, 08 Apr 2020 04:15:50 EDT
-Received: from localhost (localhost [127.0.0.1])
-        by mail.gtsys.com.hk (Postfix) with ESMTP id 73A3E200C81B;
-        Wed,  8 Apr 2020 16:09:45 +0800 (HKT)
-X-Virus-Scanned: Debian amavisd-new at gtsys.com.hk
-Received: from mail.gtsys.com.hk ([127.0.0.1])
-        by localhost (mail.gtsys.com.hk [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id TKxPGT4tbOR3; Wed,  8 Apr 2020 16:09:45 +0800 (HKT)
-Received: from s01.gtsys.com.hk (unknown [10.128.4.2])
-        by mail.gtsys.com.hk (Postfix) with ESMTP id 4DD4D200C7FA;
-        Wed,  8 Apr 2020 16:09:45 +0800 (HKT)
-Received: from armhf2.gtsys.com.hk (unknown [10.128.4.15])
-        by s01.gtsys.com.hk (Postfix) with ESMTP id 415F4C01F8A;
-        Wed,  8 Apr 2020 16:09:45 +0800 (HKT)
-Received: by armhf2.gtsys.com.hk (Postfix, from userid 1000)
-        id 1658F201602; Wed,  8 Apr 2020 16:09:45 +0800 (HKT)
-From:   Chris Ruehl <chris.ruehl@gtsys.com.hk>
-Cc:     Chris Ruehl <chris.ruehl@gtsys.com.hk>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Alexandru Ardelean <alexandru.ardelean@analog.com>,
-        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Alexandru Tachici <alexandru.tachici@analog.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Stefan Popa <stefan.popa@analog.com>,
+        Wed, 8 Apr 2020 04:17:33 -0400
+Received: from ubuntu.localdomain (unknown [58.251.74.227])
+        by m17618.mail.qiye.163.com (Hmail) with ESMTPA id 0E0564E23AD;
+        Wed,  8 Apr 2020 16:17:20 +0800 (CST)
+From:   Wang Wenhu <wenhu.wang@vivo.com>
+To:     akpm@linux-foundation.org, "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Richard Fontana <rfontana@redhat.com>,
-        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 1/2] iio: DAC extension for ltc2634-12/10/8
-Date:   Wed,  8 Apr 2020 16:03:29 +0800
-Message-Id: <20200408080338.11080-1-chris.ruehl@gtsys.com.hk>
-X-Mailer: git-send-email 2.20.1
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To:     unlisted-recipients:; (no To-header on input)
+        Carl Huang <cjhuang@codeaurora.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Nicholas Mc Guire <hofrat@osadl.org>,
+        Thomas Gleixner <tglx@linutronix.de>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     kernel@vivo.com, Wang Wenhu <wenhu.wang@vivo.com>
+Subject: [PATCH] net: qrtr: support qrtr service and lookup route
+Date:   Wed,  8 Apr 2020 01:16:54 -0700
+Message-Id: <20200408081657.5876-1-wenhu.wang@vivo.com>
+X-Mailer: git-send-email 2.17.1
+X-HM-Spam-Status: e1kfGhgUHx5ZQUlXWQgYFAkeWUFZTVVPQ05LS0tKSEhOSk9PWVdZKFlBSE
+        83V1ktWUFJV1kJDhceCFlBWTU0KTY6NyQpLjc#WQY+
+X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6NCo6EAw*Fzg6GhAjNS08HAEQ
+        EylPCxdVSlVKTkNNSEhIQ09JTEhPVTMWGhIXVQweFRMOVQwaFRw7DRINFFUYFBZFWVdZEgtZQVlO
+        Q1VJTkpVTE9VSUlMWVdZCAFZQU1DTk83Bg++
+X-HM-Tid: 0a7158dd749d9376kuws0e0564e23ad
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch add support for Analog Devices (Linear Technology)
-LTC26234 Quad 12-/10-/8-Bit Rail-to-Rail DAC.
-The SPI functionality based on them from LTC2632 therefor
-add the definitions only and update the Kconfig.
+QSR implements maintenance of qrtr services and lookups. It would
+be helpful for developers to work with QRTR without the none-opensource
+user-space implementation part of IPC Router.
 
-Signed-off-by: Chris Ruehl <chris.ruehl@gtsys.com.hk>
+As we know, the extremely important point of IPC Router is the support
+of services form different nodes. But QRTR was pushed into mainline
+without route process support of services, and the router port process
+is implemented in user-space as none-opensource codes, which is an
+great unconvenience for developers.
+
+QSR also implements a interface via chardev and a set of sysfs class
+files for the communication and debugging in user-space. We can get
+service and lookup entries conveniently via sysfs file in /sys/class/qsr/.
+Currently add-server, del-server, add-lookup and del-lookup control
+packatets are processed and enhancements could be taken easily upon
+currently implementation.
+
+Signed-off-by: Wang Wenhu <wenhu.wang@vivo.com>
 ---
- drivers/iio/dac/Kconfig   |  6 ++--
- drivers/iio/dac/ltc2632.c | 61 +++++++++++++++++++++++++++++++++++++++
- 2 files changed, 64 insertions(+), 3 deletions(-)
+ net/qrtr/qrtr.c |  3 ++-
+ net/qrtr/qsr.c  | 47 +++++++++++++++++++++++------------------------
+ 2 files changed, 25 insertions(+), 25 deletions(-)
 
-diff --git a/drivers/iio/dac/Kconfig b/drivers/iio/dac/Kconfig
-index 93744011b63f..e14c9b14c4de 100644
---- a/drivers/iio/dac/Kconfig
-+++ b/drivers/iio/dac/Kconfig
-@@ -279,12 +279,12 @@ config LTC1660
- 	  module will be called ltc1660.
+diff --git a/net/qrtr/qrtr.c b/net/qrtr/qrtr.c
+index 38f25d3c1c39..267f7d6c746f 100644
+--- a/net/qrtr/qrtr.c
++++ b/net/qrtr/qrtr.c
+@@ -158,7 +158,8 @@ static int qrtr_bcast_enqueue(struct qrtr_node *node, struct sk_buff *skb,
+ static struct qrtr_sock *qrtr_port_lookup(int port);
+ static void qrtr_port_put(struct qrtr_sock *ipc);
  
- config LTC2632
--	tristate "Linear Technology LTC2632-12/10/8 and LTC2636-12/10/8 DAC spi driver"
-+	tristate "Linear Technology LTC2632,LTC2634,LTC2636-12/10/8 DAC spi driver"
- 	depends on SPI
- 	help
- 	  Say yes here to build support for Linear Technology
--	  LTC2632-12, LTC2632-10, LTC2632-8, LTC2636-12, LTC2636-10 and
--	  LTC2636-8 converters (DAC).
-+	  LTC2632, LTC2634 and LTC2636 DAC resolution 12/10/8 bit
-+	  low 0-2.5V and high 0-4,096V range converters.
+-unsigned int get_qrtr_local_nid(void) {
++unsigned int get_qrtr_local_nid(void)
++{
+ 	return qrtr_local_nid;
+ }
  
- 	  To compile this driver as a module, choose M here: the
- 	  module will be called ltc2632.
-diff --git a/drivers/iio/dac/ltc2632.c b/drivers/iio/dac/ltc2632.c
-index 7adc91056aa1..e939d7f81014 100644
---- a/drivers/iio/dac/ltc2632.c
-+++ b/drivers/iio/dac/ltc2632.c
-@@ -24,6 +24,7 @@
- /**
-  * struct ltc2632_chip_info - chip specific information
-  * @channels:		channel spec for the DAC
-+ * @num_channels:	DAC channel count of the chip
-  * @vref_mv:		internal reference voltage
-  */
- struct ltc2632_chip_info {
-@@ -53,6 +54,12 @@ enum ltc2632_supported_device_ids {
- 	ID_LTC2632H12,
- 	ID_LTC2632H10,
- 	ID_LTC2632H8,
-+	ID_LTC2634L12,
-+	ID_LTC2634L10,
-+	ID_LTC2634L8,
-+	ID_LTC2634H12,
-+	ID_LTC2634H10,
-+	ID_LTC2634H8,
- 	ID_LTC2636L12,
- 	ID_LTC2636L10,
- 	ID_LTC2636L8,
-@@ -235,6 +242,36 @@ static const struct ltc2632_chip_info ltc2632_chip_info_tbl[] = {
- 		.num_channels	= 2,
- 		.vref_mv	= 4096,
- 	},
-+	[ID_LTC2634L12] = {
-+		.channels	= ltc2632x12_channels,
-+		.num_channels	= 4,
-+		.vref_mv	= 2500,
-+	},
-+	[ID_LTC2634L10] = {
-+		.channels	= ltc2632x10_channels,
-+		.num_channels	= 4,
-+		.vref_mv	= 2500,
-+	},
-+	[ID_LTC2634L8] =  {
-+		.channels	= ltc2632x8_channels,
-+		.num_channels	= 4,
-+		.vref_mv	= 2500,
-+	},
-+	[ID_LTC2634H12] = {
-+		.channels	= ltc2632x12_channels,
-+		.num_channels	= 4,
-+		.vref_mv	= 4096,
-+	},
-+	[ID_LTC2634H10] = {
-+		.channels	= ltc2632x10_channels,
-+		.num_channels	= 4,
-+		.vref_mv	= 4096,
-+	},
-+	[ID_LTC2634H8] =  {
-+		.channels	= ltc2632x8_channels,
-+		.num_channels	= 4,
-+		.vref_mv	= 4096,
-+	},
- 	[ID_LTC2636L12] = {
- 		.channels	= ltc2632x12_channels,
- 		.num_channels	= 8,
-@@ -356,6 +393,12 @@ static const struct spi_device_id ltc2632_id[] = {
- 	{ "ltc2632-h12", (kernel_ulong_t)&ltc2632_chip_info_tbl[ID_LTC2632H12] },
- 	{ "ltc2632-h10", (kernel_ulong_t)&ltc2632_chip_info_tbl[ID_LTC2632H10] },
- 	{ "ltc2632-h8", (kernel_ulong_t)&ltc2632_chip_info_tbl[ID_LTC2632H8] },
-+	{ "ltc2634-l12", (kernel_ulong_t)&ltc2632_chip_info_tbl[ID_LTC2634L12] },
-+	{ "ltc2634-l10", (kernel_ulong_t)&ltc2632_chip_info_tbl[ID_LTC2634L10] },
-+	{ "ltc2634-l8", (kernel_ulong_t)&ltc2632_chip_info_tbl[ID_LTC2634L8] },
-+	{ "ltc2634-h12", (kernel_ulong_t)&ltc2632_chip_info_tbl[ID_LTC2634H12] },
-+	{ "ltc2634-h10", (kernel_ulong_t)&ltc2632_chip_info_tbl[ID_LTC2634H10] },
-+	{ "ltc2634-h8", (kernel_ulong_t)&ltc2632_chip_info_tbl[ID_LTC2634H8] },
- 	{ "ltc2636-l12", (kernel_ulong_t)&ltc2632_chip_info_tbl[ID_LTC2636L12] },
- 	{ "ltc2636-l10", (kernel_ulong_t)&ltc2632_chip_info_tbl[ID_LTC2636L10] },
- 	{ "ltc2636-l8", (kernel_ulong_t)&ltc2632_chip_info_tbl[ID_LTC2636L8] },
-@@ -385,6 +428,24 @@ static const struct of_device_id ltc2632_of_match[] = {
- 	}, {
- 		.compatible = "lltc,ltc2632-h8",
- 		.data = &ltc2632_chip_info_tbl[ID_LTC2632H8]
-+	}, {
-+		.compatible = "lltc,ltc2634-l12",
-+		.data = &ltc2632_chip_info_tbl[ID_LTC2634L12]
-+	}, {
-+		.compatible = "lltc,ltc2634-l10",
-+		.data = &ltc2632_chip_info_tbl[ID_LTC2634L10]
-+	}, {
-+		.compatible = "lltc,ltc2634-l8",
-+		.data = &ltc2632_chip_info_tbl[ID_LTC2634L8]
-+	}, {
-+		.compatible = "lltc,ltc2634-h12",
-+		.data = &ltc2632_chip_info_tbl[ID_LTC2634H12]
-+	}, {
-+		.compatible = "lltc,ltc2634-h10",
-+		.data = &ltc2632_chip_info_tbl[ID_LTC2634H10]
-+	}, {
-+		.compatible = "lltc,ltc2634-h8",
-+		.data = &ltc2632_chip_info_tbl[ID_LTC2634H8]
- 	}, {
- 		.compatible = "lltc,ltc2636-l12",
- 		.data = &ltc2632_chip_info_tbl[ID_LTC2636L12]
+diff --git a/net/qrtr/qsr.c b/net/qrtr/qsr.c
+index 3dd43d4e301f..27fcb51a624a 100644
+--- a/net/qrtr/qsr.c
++++ b/net/qrtr/qsr.c
+@@ -91,10 +91,7 @@ struct qsr {
+ 
+ struct qsr_ops {
+ 	int (*new_server)(struct qsr_info *svc);
+-
+-	int (*new_lookup)(struct qsr_info *svc,
+-				u32 node,
+-				u32 port);
++	int (*new_lookup)(struct qsr_info *svc, u32 node, u32 port);
+ };
+ 
+ static int qsr_major;
+@@ -112,7 +109,7 @@ static int qsr_new_server(struct qsr_info *new)
+ 
+ 	list_for_each_entry(lookup, &qsr->lookups, list) {
+ 		if (lookup->service == new->service &&
+-				lookup->instance == new->instance) {
++			lookup->instance == new->instance) {
+ 			ret = ops->new_lookup(new,
+ 							lookup->client.node,
+ 							lookup->client.port);
+@@ -127,9 +124,7 @@ static int qsr_new_server(struct qsr_info *new)
+ 	return 0;
+ }
+ 
+-static int qsr_new_lookup(struct qsr_info *svc,
+-				u32 node,
+-				u32 port)
++static int qsr_new_lookup(struct qsr_info *svc, u32 node, u32 port)
+ {
+ 	struct qrtr_ctrl_pkt pkt;
+ 	struct sockaddr_qrtr sq;
+@@ -180,7 +175,7 @@ static void qsr_recv_new_server(u32 service,
+ 	list_for_each_entry(temp, &qsr->services, list) {
+ 		if (temp->service == service && temp->instance == instance) {
+ 			pr_err("Error server exists, service:0x%x instance:0x%x",
+-							service, instance);
++				   service, instance);
+ 			return;
+ 		}
+ 	}
+@@ -230,9 +225,9 @@ static void qsr_recv_new_lookup(u32 service,
+ 
+ 	list_for_each_entry(temp, &qsr->lookups, list) {
+ 		if (temp->service == service &&
+-				temp->instance == instance &&
+-				temp->client.node == node &&
+-				temp->client.port == port) {
++			temp->instance == instance &&
++			temp->client.node == node &&
++			temp->client.port == port) {
+ 			pr_err("Error lookup exists, service:0x%x instance:0x%x node:%d port:%d",
+ 						service, instance, node, port);
+ 			return;
+@@ -299,28 +294,28 @@ static void qsr_recv_ctrl_pkt(struct sockaddr_qrtr *sq,
+ 	switch (le32_to_cpu(pkt->cmd)) {
+ 	case QRTR_TYPE_NEW_SERVER:
+ 		qsr_recv_new_server(le32_to_cpu(pkt->server.service),
+-				    le32_to_cpu(pkt->server.instance),
++					le32_to_cpu(pkt->server.instance),
+ 				    le32_to_cpu(pkt->server.node),
+ 				    le32_to_cpu(pkt->server.port));
+ 		break;
+ 
+ 	case QRTR_TYPE_NEW_LOOKUP:
+ 		qsr_recv_new_lookup(le32_to_cpu(pkt->server.service),
+-				    le32_to_cpu(pkt->server.instance),
+-				    sq->sq_node,
+-				    sq->sq_port);
++					le32_to_cpu(pkt->server.instance),
++					sq->sq_node,
++					sq->sq_port);
+ 		break;
+ 
+ 	case QRTR_TYPE_DEL_SERVER:
+ 		qsr_recv_del_server(le32_to_cpu(pkt->server.service),
+-				    le32_to_cpu(pkt->server.instance));
++					le32_to_cpu(pkt->server.instance));
+ 		break;
+ 
+ 	case QRTR_TYPE_DEL_LOOKUP:
+ 		qsr_recv_del_lookup(le32_to_cpu(pkt->server.service),
+-				    le32_to_cpu(pkt->server.instance),
+-				    sq->sq_node,
+-				    sq->sq_port);
++					le32_to_cpu(pkt->server.instance),
++					sq->sq_node,
++					sq->sq_port);
+ 		break;
+ 	}
+ }
+@@ -386,8 +381,10 @@ static ssize_t lookups_show(struct device *dev,
+ 	mutex_lock(&qsr->qsr_lock);
+ 	list_for_each_entry(lookup, &qsr->lookups, list) {
+ 		ret += sprintf(buf, "service:0x%04x instance:0x%04x   node:%04d port:%04d\n",
+-				lookup->service, lookup->instance,
+-				lookup->server.node, lookup->server.port);
++					lookup->service,
++					lookup->instance,
++					lookup->server.node,
++					lookup->server.port);
+ 	}
+ 	mutex_unlock(&qsr->qsr_lock);
+ 
+@@ -404,8 +401,10 @@ static ssize_t services_show(struct device *dev,
+ 	mutex_lock(&qsr->qsr_lock);
+ 	list_for_each_entry(svc, &qsr->services, list) {
+ 		ret += sprintf(buf, "service:0x%04x instance:0x%04x  node:%04d port:%04d\n",
+-				svc->service, svc->instance,
+-				svc->server.node, svc->server.port);
++					svc->service,
++					svc->instance,
++					svc->server.node,
++					svc->server.port);
+ 	}
+ 	mutex_unlock(&qsr->qsr_lock);
+ 
 -- 
-2.20.1
+2.17.1
 
