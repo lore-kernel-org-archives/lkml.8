@@ -2,59 +2,100 @@ Return-Path: <SRS0=8dav=5Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 183D4C2D0EC
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 01:31:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39552C2BB54
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 01:34:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E5276206F7
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 01:31:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 108572063A
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 01:34:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="Pvpf7CZV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726520AbgDHBbo (ORCPT
+        id S1726510AbgDHBeU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 21:31:44 -0400
-Received: from shards.monkeyblade.net ([23.128.96.9]:44326 "EHLO
-        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726420AbgDHBbn (ORCPT
+        Tue, 7 Apr 2020 21:34:20 -0400
+Received: from mail27.static.mailgun.info ([104.130.122.27]:60797 "EHLO
+        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726420AbgDHBeT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Apr 2020 21:31:43 -0400
-Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id DFB651210A3E3;
-        Tue,  7 Apr 2020 18:31:42 -0700 (PDT)
-Date:   Tue, 07 Apr 2020 18:31:42 -0700 (PDT)
-Message-Id: <20200407.183142.390281754035873578.davem@davemloft.net>
-To:     khlebnikov@yandex-team.ru
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kuba@kernel.org, zeil@yandex-team.ru, tedheadster@gmail.com
-Subject: Re: [PATCH] net: revert default NAPI poll timeout to 2 jiffies
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <158617317267.1170.12944758673162826206.stgit@buzz>
-References: <158617317267.1170.12944758673162826206.stgit@buzz>
-X-Mailer: Mew version 6.8 on Emacs 26.1
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
+        Tue, 7 Apr 2020 21:34:19 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1586309659; h=Message-ID: References: In-Reply-To: Subject:
+ Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Sender; bh=XoOYi2TV+UeP2kOoRrpUAk9Ku3EzZ9BU0fhtMfFP28s=;
+ b=Pvpf7CZVEMApbiorlvaY+4vDU7H11aMv5kzGWZoi54RqlQH8ndO6FXfsEmeyH4tNQBo5ENc1
+ Nr9kfpsM6j7tYVgKa89kHBif2+NfR6fAENTJ3yB9tu+FSPhv+cNCFERzP7rdq/JN8ayIcygs
+ yNxhJhb/D0hHEo1GXS6ht9Jvxoc=
+X-Mailgun-Sending-Ip: 104.130.122.27
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e8d2a0f.7f5cd5569340-smtp-out-n02;
+ Wed, 08 Apr 2020 01:34:07 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 5D7ACC433D2; Wed,  8 Apr 2020 01:34:06 +0000 (UTC)
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: hemantk)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id C3AD1C433F2;
+        Wed,  8 Apr 2020 01:34:05 +0000 (UTC)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
 Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Tue, 07 Apr 2020 18:31:43 -0700 (PDT)
+Date:   Tue, 07 Apr 2020 18:34:05 -0700
+From:   hemantk@codeaurora.org
+To:     Jeffrey Hugo <jhugo@codeaurora.org>
+Cc:     manivannan.sadhasivam@linaro.org, linux-arm-msm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-msm-owner@vger.kernel.org
+Subject: Re: [PATCH v2 2/5] bus: mhi: core: Make sure to powerdown if
+ mhi_sync_power_up fails
+In-Reply-To: <1586278230-29565-3-git-send-email-jhugo@codeaurora.org>
+References: <1586278230-29565-1-git-send-email-jhugo@codeaurora.org>
+ <1586278230-29565-3-git-send-email-jhugo@codeaurora.org>
+Message-ID: <7249d9608f41e4528c87c2b1c464d615@codeaurora.org>
+X-Sender: hemantk@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
-Date: Mon, 06 Apr 2020 14:39:32 +0300
-
-> For HZ < 1000 timeout 2000us rounds up to 1 jiffy but expires randomly
-> because next timer interrupt could come shortly after starting softirq.
+On 2020-04-07 09:50, Jeffrey Hugo wrote:
+> Powerdown is necessary if mhi_sync_power_up fails due to a timeout, to
+> clean up the resources.  Otherwise a BUG could be triggered when
+> attempting to clean up MSIs because the IRQ is still active from a
+> request_irq().
 > 
-> For commonly used CONFIG_HZ=1000 nothing changes.
+> Signed-off-by: Jeffrey Hugo <jhugo@codeaurora.org>
+> ---
+>  drivers/bus/mhi/core/pm.c | 6 +++++-
+>  1 file changed, 5 insertions(+), 1 deletion(-)
 > 
-> Fixes: 7acf8a1e8a28 ("Replace 2 jiffies with sysctl netdev_budget_usecs to enable softirq tuning")
-> Reported-by: Dmitry Yakunin <zeil@yandex-team.ru>
-> Signed-off-by: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+> diff --git a/drivers/bus/mhi/core/pm.c b/drivers/bus/mhi/core/pm.c
+> index 3285c9e..fbffc6b 100644
+> --- a/drivers/bus/mhi/core/pm.c
+> +++ b/drivers/bus/mhi/core/pm.c
+> @@ -922,7 +922,11 @@ int mhi_sync_power_up(struct mhi_controller 
+> *mhi_cntrl)
+>  			   MHI_PM_IN_ERROR_STATE(mhi_cntrl->pm_state),
+>  			   msecs_to_jiffies(mhi_cntrl->timeout_ms));
+> 
+> -	return (MHI_IN_MISSION_MODE(mhi_cntrl->ee)) ? 0 : -EIO;
+> +	ret = (MHI_IN_MISSION_MODE(mhi_cntrl->ee)) ? 0 : -EIO;
 
-Applied, thank you.
+Does it make sense to return -ETIMEDOUT instead of -EIO if device fails 
+to move to mission mode?
+Controller can use this info as mhi_async_power_up() would not return 
+-ETIMEDOUT.
+
+> +	if (ret)
+> +		mhi_power_down(mhi_cntrl, false);
+> +
+> +	return ret;
+>  }
+>  EXPORT_SYMBOL(mhi_sync_power_up);
