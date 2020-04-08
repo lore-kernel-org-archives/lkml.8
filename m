@@ -2,220 +2,135 @@ Return-Path: <SRS0=8dav=5Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57C73C2D0EA
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 13:56:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B349C2D0EA
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 14:04:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2A65420692
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 13:56:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CEAB52051A
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 14:04:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="kV/HOgs3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727699AbgDHN43 (ORCPT
+        id S1727913AbgDHOET (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Apr 2020 09:56:29 -0400
-Received: from mga12.intel.com ([192.55.52.136]:62331 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726663AbgDHN43 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Apr 2020 09:56:29 -0400
-IronPort-SDR: 2dPekf3pj2q0oRwW18OJ941CZjHc/lmCDGCKs7YGDjveQteaQb3enmRC4UeC33S/M0NjG4LOHQ
- Y2TSekEZoe+A==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Apr 2020 06:56:29 -0700
-IronPort-SDR: 6T27AKxi9WqlYaZn+NUIyFxt0s1YdajtB3TlU333E1f8p+8NwQD2HREi3vlEwTCoIYInkl0giA
- FseFDgKw02+w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,358,1580803200"; 
-   d="scan'208";a="244043287"
-Received: from sqa-gate.sh.intel.com (HELO clx-ap-likexu.tsp.org) ([10.239.48.212])
-  by fmsmga008.fm.intel.com with ESMTP; 08 Apr 2020 06:56:26 -0700
-From:   Like Xu <like.xu@linux.intel.com>
-To:     Paolo Bonzini <pbonzini@redhat.com>,
-        Andi Kleen <ak@linux.intel.com>
-Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Like Xu <like.xu@linux.intel.com>
-Subject: [PATCH] KVM: x86/pmu: Support full width counting
-Date:   Wed,  8 Apr 2020 21:53:25 +0800
-Message-Id: <20200408135325.3160-1-like.xu@linux.intel.com>
-X-Mailer: git-send-email 2.21.1
+        Wed, 8 Apr 2020 10:04:19 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:42796 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727226AbgDHOET (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Apr 2020 10:04:19 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 038Dw6X1087445;
+        Wed, 8 Apr 2020 14:03:57 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : from : to :
+ cc : references : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2020-01-29;
+ bh=hWI6KSBJwhLBPRk58QK/JNaKG+agLjuCHca2NgnWmtI=;
+ b=kV/HOgs3XEXgeSot3ajlmAUJGkvf3xT/Zf0t0BerQVQ+0s3KEm4tg6TqPsmpSsIM0HVC
+ 8JLJLnIh9Ei1/mnO1hwoXtdDpRxW/VgHTGWrBRBV4qj42oq76/Y3QmGZYYIIX8OiIuyE
+ jRlCdbZ3T7UmIeorA85EY3U/d5MfnDxRtbac6yC1ABt03qaXTzQMKnGRbBz1YJKqdoaZ
+ rKPO3yOavaIewE3vuLsWs+JgBNhsRafqdjPHFqnc16+maF5GJ3A2+o/JTFsA4XKpE/+J
+ fZnnZs0UB4cSIU6EHZA+3I2mA8CKrz/l4nt9VUW64JXsae6DqQMWAkOnR52glrD/EnrA sw== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by userp2130.oracle.com with ESMTP id 3091m3br14-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 08 Apr 2020 14:03:57 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 038DuYkf107015;
+        Wed, 8 Apr 2020 14:01:57 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by userp3020.oracle.com with ESMTP id 3099v92rv8-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 08 Apr 2020 14:01:55 +0000
+Received: from abhmp0002.oracle.com (abhmp0002.oracle.com [141.146.116.8])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 038E1qLg002863;
+        Wed, 8 Apr 2020 14:01:53 GMT
+Received: from linux-1.home (/92.157.90.160)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Wed, 08 Apr 2020 07:01:52 -0700
+Subject: Re: [PATCH V2 5/9] objtool: Add support for intra-function calls
+From:   Alexandre Chartre <alexandre.chartre@oracle.com>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     x86@kernel.org, linux-kernel@vger.kernel.org, jpoimboe@redhat.com,
+        jthierry@redhat.com, tglx@linutronix.de
+References: <20200407073142.20659-1-alexandre.chartre@oracle.com>
+ <20200407073142.20659-6-alexandre.chartre@oracle.com>
+ <20200407130729.GZ20730@hirez.programming.kicks-ass.net>
+ <40b19a8e-ae5e-623e-fb3f-261f9fec2ea5@oracle.com>
+Message-ID: <7ba6d4c9-c1dc-fa83-2ade-b7d3fba9e7fb@oracle.com>
+Date:   Wed, 8 Apr 2020 16:06:18 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.0
 MIME-Version: 1.0
+In-Reply-To: <40b19a8e-ae5e-623e-fb3f-261f9fec2ea5@oracle.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9584 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 adultscore=0 mlxscore=0
+ mlxlogscore=999 bulkscore=0 spamscore=0 phishscore=0 suspectscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
+ definitions=main-2004080116
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9584 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 adultscore=0
+ impostorscore=0 malwarescore=0 lowpriorityscore=0 mlxlogscore=999
+ priorityscore=1501 clxscore=1015 bulkscore=0 phishscore=0 mlxscore=0
+ suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2004080116
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Intel CPUs have a new alternative MSR range (starting from MSR_IA32_PMC0)
-for GP counters that allows writing the full counter width. Enable this
-range from a new capability bit (IA32_PERF_CAPABILITIES.FW_WRITE[bit 13]).
 
-The perf driver queries CPUID to get the counter width, and sign extends
-the counter values as needed. The traditional MSRs always limit to 32bit,
-even though the counter internally is larger (usually 48 bits).
 
-When the new capability is set, use the alternative range which do not
-have these restrictions. This lowers the overhead of perf stat slightly
-because it has to do less interrupts to accumulate the counter value.
+On 4/7/20 3:28 PM, Alexandre Chartre wrote:
+> 
+> On 4/7/20 3:07 PM, Peter Zijlstra wrote:
+>> On Tue, Apr 07, 2020 at 09:31:38AM +0200, Alexandre Chartre wrote:
+>>
+>>> index a62e032863a8..7ee1561bf7ad 100644
+>>> --- a/tools/objtool/arch/x86/decode.c
+>>> +++ b/tools/objtool/arch/x86/decode.c
+>>> @@ -497,3 +497,15 @@ void arch_initial_func_cfi_state(struct cfi_state *state)
+>>>       state->regs[16].base = CFI_CFA;
+>>>       state->regs[16].offset = -8;
+>>>   }
+>>> +
+>>> +
+>>> +void arch_configure_intra_function_call(struct stack_op *op)
+>>> +{
+>>> +    /*
+>>> +     * For the impact on the stack, make an intra-function
+>>> +     * call behaves like a push of an immediate value (the
+>>> +     * return address).
+>>> +     */
+>>> +    op->src.type = OP_SRC_CONST;
+>>> +    op->dest.type = OP_DEST_PUSH;
+>>> +}
+>>
+>> An alternative is to always set up stack ops for CALL/RET on decode, but
+>> conditionally run update_insn_state() for them.
+>>
+>> Not sure that makes more logical sense, but the patch would be simpler I
+>> think.
+> 
+> Right, this would avoid adding a new arch dependent function and the patch
+> will be simpler. This probably makes sense as the stack impact is the same
+> for all calls (but objtool will use it only for intra-function calls).
+> 
 
-Signed-off-by: Like Xu <like.xu@linux.intel.com>
----
- arch/x86/include/asm/kvm_host.h |  1 +
- arch/x86/kvm/vmx/capabilities.h | 15 +++++++++++++
- arch/x86/kvm/vmx/pmu_intel.c    | 38 +++++++++++++++++++++++++++------
- arch/x86/kvm/vmx/vmx.c          |  2 ++
- 4 files changed, 50 insertions(+), 6 deletions(-)
+Actually the processing of the ret instruction is more complicated than I
+anticipated with intra-function calls, and so my implementation is not
+complete at the moment.
 
-diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
-index 42a2d0d3984a..1c2e3e79490b 100644
---- a/arch/x86/include/asm/kvm_host.h
-+++ b/arch/x86/include/asm/kvm_host.h
-@@ -481,6 +481,7 @@ struct kvm_pmu {
- 	u64 counter_bitmask[2];
- 	u64 global_ctrl_mask;
- 	u64 global_ovf_ctrl_mask;
-+	u64 perf_capabilities;
- 	u64 reserved_bits;
- 	u8 version;
- 	struct kvm_pmc gp_counters[INTEL_PMC_MAX_GENERIC];
-diff --git a/arch/x86/kvm/vmx/capabilities.h b/arch/x86/kvm/vmx/capabilities.h
-index 8903475f751e..3624568633bd 100644
---- a/arch/x86/kvm/vmx/capabilities.h
-+++ b/arch/x86/kvm/vmx/capabilities.h
-@@ -367,4 +367,19 @@ static inline bool vmx_pt_mode_is_host_guest(void)
- 	return pt_mode == PT_MODE_HOST_GUEST;
- }
- 
-+#define PMU_CAP_FW_WRITE	(1ULL << 13)
-+
-+static inline u64 vmx_supported_perf_capabilities(void)
-+{
-+	u64 perf_cap = 0;
-+
-+	if (boot_cpu_has(X86_FEATURE_PDCM))
-+		rdmsrl(MSR_IA32_PERF_CAPABILITIES, perf_cap);
-+
-+	/* Currently, KVM only support Full-Width Writes. */
-+	perf_cap &= PMU_CAP_FW_WRITE;
-+
-+	return perf_cap;
-+}
-+
- #endif /* __KVM_X86_VMX_CAPS_H */
-diff --git a/arch/x86/kvm/vmx/pmu_intel.c b/arch/x86/kvm/vmx/pmu_intel.c
-index 7c857737b438..99563d1ec854 100644
---- a/arch/x86/kvm/vmx/pmu_intel.c
-+++ b/arch/x86/kvm/vmx/pmu_intel.c
-@@ -150,6 +150,12 @@ static struct kvm_pmc *intel_rdpmc_ecx_to_pmc(struct kvm_vcpu *vcpu,
- 	return &counters[array_index_nospec(idx, num_counters)];
- }
- 
-+static inline bool full_width_writes_is_enabled(struct kvm_pmu *pmu)
-+{
-+	return (vmx_supported_perf_capabilities() & PMU_CAP_FW_WRITE) &&
-+		(pmu->perf_capabilities & PMU_CAP_FW_WRITE);
-+}
-+
- static bool intel_is_valid_msr(struct kvm_vcpu *vcpu, u32 msr)
- {
- 	struct kvm_pmu *pmu = vcpu_to_pmu(vcpu);
-@@ -162,10 +168,15 @@ static bool intel_is_valid_msr(struct kvm_vcpu *vcpu, u32 msr)
- 	case MSR_CORE_PERF_GLOBAL_OVF_CTRL:
- 		ret = pmu->version > 1;
- 		break;
-+	case MSR_IA32_PERF_CAPABILITIES:
-+		ret = guest_cpuid_has(vcpu, X86_FEATURE_PDCM);
-+		break;
- 	default:
- 		ret = get_gp_pmc(pmu, msr, MSR_IA32_PERFCTR0) ||
- 			get_gp_pmc(pmu, msr, MSR_P6_EVNTSEL0) ||
--			get_fixed_pmc(pmu, msr);
-+			get_fixed_pmc(pmu, msr) ||
-+			(get_gp_pmc(pmu, msr, MSR_IA32_PMC0) &&
-+				full_width_writes_is_enabled(pmu));
- 		break;
- 	}
- 
-@@ -202,8 +213,12 @@ static int intel_pmu_get_msr(struct kvm_vcpu *vcpu, u32 msr, u64 *data)
- 	case MSR_CORE_PERF_GLOBAL_OVF_CTRL:
- 		*data = pmu->global_ovf_ctrl;
- 		return 0;
-+	case MSR_IA32_PERF_CAPABILITIES:
-+		*data = pmu->perf_capabilities;
-+		return 0;
- 	default:
--		if ((pmc = get_gp_pmc(pmu, msr, MSR_IA32_PERFCTR0))) {
-+		if ((pmc = get_gp_pmc(pmu, msr, MSR_IA32_PERFCTR0))
-+			|| (pmc = get_gp_pmc(pmu, msr, MSR_IA32_PMC0))) {
- 			u64 val = pmc_read_counter(pmc);
- 			*data = val & pmu->counter_bitmask[KVM_PMC_GP];
- 			return 0;
-@@ -258,9 +273,13 @@ static int intel_pmu_set_msr(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
- 			return 0;
- 		}
- 		break;
-+	case MSR_IA32_PERF_CAPABILITIES:
-+		return 1; /* RO MSR */
- 	default:
--		if ((pmc = get_gp_pmc(pmu, msr, MSR_IA32_PERFCTR0))) {
--			if (!msr_info->host_initiated)
-+		if ((pmc = get_gp_pmc(pmu, msr, MSR_IA32_PERFCTR0))
-+			|| (pmc = get_gp_pmc(pmu, msr, MSR_IA32_PMC0))) {
-+			if (!msr_info->host_initiated &&
-+				!full_width_writes_is_enabled(pmu))
- 				data = (s64)(s32)data;
- 			pmc->counter += data - pmc_read_counter(pmc);
- 			if (pmc->perf_event)
-@@ -303,15 +322,18 @@ static void intel_pmu_refresh(struct kvm_vcpu *vcpu)
- 
- 	entry = kvm_find_cpuid_entry(vcpu, 0xa, 0);
- 	if (!entry)
--		return;
-+		goto end;
- 	eax.full = entry->eax;
- 	edx.full = entry->edx;
- 
- 	pmu->version = eax.split.version_id;
- 	if (!pmu->version)
--		return;
-+		goto end;
- 
- 	perf_get_x86_pmu_capability(&x86_pmu);
-+	pmu->perf_capabilities = vmx_supported_perf_capabilities();
-+	if (!pmu->perf_capabilities)
-+		guest_cpuid_clear(vcpu, X86_FEATURE_PDCM);
- 
- 	pmu->nr_arch_gp_counters = min_t(int, eax.split.num_counters,
- 					 x86_pmu.num_counters_gp);
-@@ -351,6 +373,10 @@ static void intel_pmu_refresh(struct kvm_vcpu *vcpu)
- 		INTEL_PMC_MAX_GENERIC, pmu->nr_arch_fixed_counters);
- 
- 	nested_vmx_pmu_entry_exit_ctls_update(vcpu);
-+	return;
-+
-+end:
-+	guest_cpuid_clear(vcpu, X86_FEATURE_PDCM);
- }
- 
- static void intel_pmu_init(struct kvm_vcpu *vcpu)
-diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-index 4f844257a72d..abc0f15a4de5 100644
---- a/arch/x86/kvm/vmx/vmx.c
-+++ b/arch/x86/kvm/vmx/vmx.c
-@@ -7112,6 +7112,8 @@ static __init void vmx_set_cpu_caps(void)
- 		kvm_cpu_cap_check_and_set(X86_FEATURE_INVPCID);
- 	if (vmx_pt_mode_is_host_guest())
- 		kvm_cpu_cap_check_and_set(X86_FEATURE_INTEL_PT);
-+	if (vmx_supported_perf_capabilities())
-+		kvm_cpu_cap_check_and_set(X86_FEATURE_PDCM);
- 
- 	/* PKU is not yet implemented for shadow paging. */
- 	if (enable_ept && boot_cpu_has(X86_FEATURE_OSPKE))
--- 
-2.21.1
+The issue is to correctly handle how the ret is going to behave depending how
+the stack (or register on arm) is modified before the ret. Adjusting the stack
+offset makes the stack state correct, but objtool still needs to correctly
+figure out where the ret is going to return and where the code flow continues.
 
+alex.
