@@ -2,254 +2,249 @@ Return-Path: <SRS0=8dav=5Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ACDB2C2BA16
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 05:59:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15162C2D0EA
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 05:59:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 78699206C0
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 05:59:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C869220692
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 05:59:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="hEmTMlb4"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="vBE9zAGE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726595AbgDHF7D (ORCPT
+        id S1726616AbgDHF7c (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Apr 2020 01:59:03 -0400
-Received: from mail-ua1-f67.google.com ([209.85.222.67]:35957 "EHLO
-        mail-ua1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726494AbgDHF7D (ORCPT
+        Wed, 8 Apr 2020 01:59:32 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:50412 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725932AbgDHF7c (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Apr 2020 01:59:03 -0400
-Received: by mail-ua1-f67.google.com with SMTP id m15so2271735uao.3
-        for <linux-kernel@vger.kernel.org>; Tue, 07 Apr 2020 22:59:00 -0700 (PDT)
+        Wed, 8 Apr 2020 01:59:32 -0400
+Received: by mail-wm1-f68.google.com with SMTP id x25so3889083wmc.0;
+        Tue, 07 Apr 2020 22:59:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
+        d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=JuRf6yJbWtYxlK9MiLbnHNoPgySrKime7soo03XHwg8=;
-        b=hEmTMlb4G0P+2aogFyGWc7pbqPwOB9J/CxeELOvBgHigymKo71VkQZw/1AwPY8mWut
-         hwlP4KtfBta/VQNebJf0HYnPZQVMVG+j5hXWeIOv+KLCeReFxuiDGM5foKGDa6dufKMS
-         yCVPYX7Cm/1qWuKhZsuJ9KARUZM1CExEo8TFU=
+        bh=cgR7uqdaJ50QZEIrE0fJfx3G07O03Ia9KRHu35QfCnk=;
+        b=vBE9zAGEMfzVYHubGJcrtsDaQo7Moejx0vsU1jgdJXySP4D9dirzA000xPpmi0/0iJ
+         pwX4pUy2JIDc0rWcKljF3iY4S7JEQRMcZQHCja8Y+NQecsStD6M8+13hI8OOkYzGz8P6
+         bFaNV651cIKtzAHT3y0R4b3Cm6D5FTB4EBqy6AfL3AFnFQ/jNluZzz+m50enoiaCbK++
+         jZw3tqViVon0O7PUm9FntAcleG3QnhyjTTilbp/FTkbwJz/1p4sbuQxKs8xaph9GQvRx
+         motOHHrUBj8MIXXZ4368ZRKFJH19ZtVrOmtCmRTILpgqQpAiEWNtZsrdYq0Je6T2WObn
+         z1ug==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=JuRf6yJbWtYxlK9MiLbnHNoPgySrKime7soo03XHwg8=;
-        b=d0f9tZDY2sL+i7WAM0XUzhOOeYAlv5XINKiZktXQbgUWHbLOb0aVO8nzB6vTNJ0ksS
-         Cdd/BSc6EFy/rfssZwdcHZuFTNTiVjwMOW6PgAwN/3sAKfECzX1qSDw3OpeDB+EKOG4k
-         IuYHBam8DeuEI6sBxvsDbZUWl3Gxtjpn2FDTNhoOl6em9En7P/L4shn/pPPcTFt5ucfO
-         3Av0nAZ66RVHaIUenV8w+XtajtSzpqEKLpb5qPOdHgvbqsjmo9E7xy5yadHzRA7KxMxu
-         JhzMqg9ZDZsA8jdsmcSjx9CujN6XpaUfl39Ly9Yfq754m9YDWpDEK9I+W4bOeYYNGmIN
-         2yvA==
-X-Gm-Message-State: AGi0PuYp9RHSD/5QXdnW+Cy0RQLdtttBDaJzkrZrVBbKgH6GRh5oFewv
-        T0LF0CamGeww967ThaEBFoQBPSrf4k8cULdqlmvGXA==
-X-Google-Smtp-Source: APiQypKMQ51JKxh8oiu6lK7kqI3wqi5K92W9MpE8rI9SPxjpQoT14gqiJBH6/yay/Jqgt97yU6ykLrh500/nJv1Ksio=
-X-Received: by 2002:a9f:3770:: with SMTP id a45mr4294126uae.117.1586325539503;
- Tue, 07 Apr 2020 22:58:59 -0700 (PDT)
+        bh=cgR7uqdaJ50QZEIrE0fJfx3G07O03Ia9KRHu35QfCnk=;
+        b=I84kudqu8x2u6jk2JSdCDcbDW/VmXtwymqorJ14kbJ91eeb+EIZ1NhmryR5XgMYyd4
+         SV4E5alU0W0o+D5VgrZEIiZvaqpdHuTzgGumn4N7UVDYg5AuOWKOPBG2EWop/maGoFUn
+         V4961IFv12bQE+/yVqxXvBaEmB7GPsMy5+QCj7IBepYswMaDMAqFc0pwX7opnqLsPPE8
+         XJEXXsdTLKJpRcAfEuTfZSfD21RKf1+9q8rI8lH6+oEHTQqMNAQCS9aNVwo18Iz/DHSe
+         ft+TjPM0t2ssYq9ioCqaePomK3u2Q6+0vlqgYRT7vNSKXXSi/diO1y20Anl0qJemAsF0
+         C0qg==
+X-Gm-Message-State: AGi0PuYH9q/r299yhMyTVUujF+3JFT/w9fyd4e3cxTsT4EFVmxnG7bTE
+        Mj3cQOHoQp8zKp5QPR6C7g0DrAAo+YQyk52+BbI=
+X-Google-Smtp-Source: APiQypLDXmBrSTPTsGbzeouiuElQtjRy7iy4LVc4QJ4HUfGC8Am6BH7nKrOZnVbga2iYlB7nqI+2TpQYlGscEnyDH+o=
+X-Received: by 2002:a1c:5fc4:: with SMTP id t187mr2952706wmb.181.1586325568230;
+ Tue, 07 Apr 2020 22:59:28 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200107070154.1574-1-roger.lu@mediatek.com> <20200107070154.1574-2-roger.lu@mediatek.com>
- <20200108203829.GA18987@bogus> <CANMq1KBu-gFy701BgFcjEwyhV9GgCCU2mkT9c8LviOJKBF30UA@mail.gmail.com>
- <CAL_JsqLnVEhvAh_8DfGWRZa+MdPRpXc9sWEQ6-3HQAeUfvkOSg@mail.gmail.com>
- <1581406566.14120.46.camel@mtksdaap41> <CANMq1KBVs7ZucNu9pTxXGZ0__E6tyxd1+mm2Zui81G=xQNtShA@mail.gmail.com>
-In-Reply-To: <CANMq1KBVs7ZucNu9pTxXGZ0__E6tyxd1+mm2Zui81G=xQNtShA@mail.gmail.com>
-From:   Nicolas Boichat <drinkcat@chromium.org>
-Date:   Wed, 8 Apr 2020 13:58:48 +0800
-Message-ID: <CANMq1KBcV_7O-_XQxk+6LTWywVoPW1U5BjYRG=-ojih9DOK-Wg@mail.gmail.com>
-Subject: Re: [PATCH v6 1/3] dt-bindings: soc: add mtk svs dt-bindings
-To:     Roger Lu <roger.lu@mediatek.com>
-Cc:     Rob Herring <robh@kernel.org>, Kevin Hilman <khilman@kernel.org>,
-        Nicolas Boichat <drinkcat@google.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        =?UTF-8?B?RmFuIENoZW4gKOmZs+WHoSk=?= <fan.chen@mediatek.com>,
-        =?UTF-8?B?SGVucnlDIENoZW4gKOmZs+W7uuixqik=?= 
-        <HenryC.Chen@mediatek.com>,
-        =?UTF-8?B?WVQgTGVlICjmnY7ku7Dlk7Ip?= <yt.lee@mediatek.com>,
-        =?UTF-8?B?WGlhb3FpbmcgTGl1ICjliJjmmZPluoYp?= 
-        <Xiaoqing.Liu@mediatek.com>,
-        =?UTF-8?B?Q2hhcmxlcyBZYW5nICjmpYrkuo7pgLIp?= 
-        <Charles.Yang@mediatek.com>,
-        =?UTF-8?B?QW5ndXMgTGluICjmnpfnkZvosaop?= <Angus.Lin@mediatek.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Nishanth Menon <nm@ti.com>,
-        Devicetree List <devicetree@vger.kernel.org>,
-        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        "open list:THERMAL" <linux-pm@vger.kernel.org>,
-        James Liao <jamesjj.liao@mediatek.com>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>
+References: <20200407023512.GA25005@ubuntu> <20200407030504.GX23230@ZenIV.linux.org.uk>
+ <20200407031318.GY23230@ZenIV.linux.org.uk> <CAM7-yPQas7hvTVLa4U80t0Em0HgLCk2whLQa4O3uff5J3OYiAA@mail.gmail.com>
+ <20200407040354.GZ23230@ZenIV.linux.org.uk> <CAM7-yPRaQsNgZKjru40nM1N_u8HVLVKmJCAzu20DcPL=jzKjWQ@mail.gmail.com>
+ <20200407182609.GA23230@ZenIV.linux.org.uk>
+In-Reply-To: <20200407182609.GA23230@ZenIV.linux.org.uk>
+From:   Yun Levi <ppbuk5246@gmail.com>
+Date:   Wed, 8 Apr 2020 14:59:17 +0900
+Message-ID: <CAM7-yPS_xh54H9M7B8-tAmPM4+w0VgnruJhK509upsDgZvcNhg@mail.gmail.com>
+Subject: Re: [PATCH] netns: dangling pointer on netns bind mount point.
+To:     Al Viro <viro@zeniv.linux.org.uk>
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Guillaume Nault <gnault@redhat.com>,
+        Nicolas Dichtel <nicolas.dichtel@6wind.com>,
+        Eric Dumazet <edumazet@google.com>,
+        Li RongQing <lirongqing@baidu.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Johannes Berg <johannes.berg@intel.com>,
+        David Howells <dhowells@redhat.com>, daniel@iogearbox.net,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 27, 2020 at 11:55 AM Nicolas Boichat <drinkcat@chromium.org> wrote:
->
-> Hi Rob,
->
-> On Tue, Feb 11, 2020 at 3:36 PM Roger Lu <roger.lu@mediatek.com> wrote:
-> >
-> > Hi Rob & Nicolas,
-> >
-> > Sorry for the late reply.
-> >
-> > On Mon, 2020-01-13 at 23:50 +0800, Rob Herring wrote:
-> > > On Mon, Jan 13, 2020 at 12:44 AM Nicolas Boichat <drinkcat@chromium.org> wrote:
-> > > >
-> > > > On Thu, Jan 9, 2020 at 4:38 AM Rob Herring <robh@kernel.org> wrote:
-> > > > >
-> > > > > On Tue, Jan 07, 2020 at 03:01:52PM +0800, Roger Lu wrote:
-> > > > > > Document the binding for enabling mtk svs on MediaTek SoC.
-> > > > > >
-> > > > > > Signed-off-by: Roger Lu <roger.lu@mediatek.com>
-> > > > > > ---
-> > > > > >  .../devicetree/bindings/power/mtk-svs.txt     | 76 +++++++++++++++++++
-> > > > > >  1 file changed, 76 insertions(+)
-> > > > > >  create mode 100644 Documentation/devicetree/bindings/power/mtk-svs.txt
-> > > > > >
-> > > > > > diff --git a/Documentation/devicetree/bindings/power/mtk-svs.txt b/Documentation/devicetree/bindings/power/mtk-svs.txt
-> > > > > > new file mode 100644
-> > > > > > index 000000000000..9a3e81b9e1d2
-> > > > > > --- /dev/null
-> > > > > > +++ b/Documentation/devicetree/bindings/power/mtk-svs.txt
-> > > > > > @@ -0,0 +1,76 @@
-> > > > > > +* Mediatek Smart Voltage Scaling (MTK SVS)
-> > > > > > +
-> > > > > > +This describes the device tree binding for the MTK SVS controller (bank)
-> > > > > > +which helps provide the optimized CPU/GPU/CCI voltages. This device also
-> > > > > > +needs thermal data to calculate thermal slope for accurately compensate
-> > > > > > +the voltages when temperature change.
-> > > > > > +
-> > > > > > +Required properties:
-> > > > > > +- compatible:
-> > > > > > +  - "mediatek,mt8183-svs" : For MT8183 family of SoCs
-> > > > > > +- reg: Address range of the MTK SVS controller.
-> > > > > > +- interrupts: IRQ for the MTK SVS controller.
-> > > > > > +- clocks, clock-names: Clocks needed for the svs hardware. required
-> > > > > > +                       clocks are:
-> > > > > > +                    "main": Main clock for svs controller to work.
-> > > > > > +- nvmem-cells: Phandle to the calibration data provided by a nvmem device.
-> > > > > > +- nvmem-cell-names: Should be "svs-calibration-data" and "calibration-data"
-> > > > > > +
-> > > > > > +Subnodes:
-> > > > > > +- svs-cpu-little: SVS bank device node of little CPU
-> > > > > > +  compatible: "mediatek,mt8183-svs-cpu-little"
-> > > > > > +  operating-points-v2: OPP table hooked by SVS little CPU bank.
-> > > > > > +                    SVS will optimze this OPP table voltage part.
-> > > > > > +  vcpu-little-supply: PMIC buck of little CPU
-> > > > > > +- svs-cpu-big: SVS bank device node of big CPU
-> > > > > > +  compatible: "mediatek,mt8183-svs-cpu-big"
-> > > > > > +  operating-points-v2: OPP table hooked by SVS big CPU bank.
-> > > > > > +                    SVS will optimze this OPP table voltage part.
-> > > > > > +  vcpu-big-supply: PMIC buck of big CPU
-> > > > > > +- svs-cci: SVS bank device node of CCI
-> > > > > > +  compatible: "mediatek,mt8183-svs-cci"
-> > > > > > +  operating-points-v2: OPP table hooked by SVS CCI bank.
-> > > > > > +                    SVS will optimze this OPP table voltage part.
-> > > > > > +  vcci-supply: PMIC buck of CCI
-> > > > > > +- svs-gpu: SVS bank device node of GPU
-> > > > > > +  compatible: "mediatek,mt8183-svs-gpu"
-> > > > > > +  operating-points-v2: OPP table hooked by SVS GPU bank.
-> > > > > > +                    SVS will optimze this OPP table voltage part.
-> > > > > > +  vgpu-supply: PMIC buck of GPU
-> > > > > > +
-> > > > > > +Example:
-> > > > > > +
-> > > > > > +     svs: svs@1100b000 {
-> > > > > > +             compatible = "mediatek,mt8183-svs";
-> > > > > > +             reg = <0 0x1100b000 0 0x1000>;
-> > > > > > +             interrupts = <GIC_SPI 127 IRQ_TYPE_LEVEL_LOW>;
-> > > > > > +             clocks = <&infracfg CLK_INFRA_THERM>;
-> > > > > > +             clock-names = "main_clk";
-> > > > > > +             nvmem-cells = <&svs_calibration>, <&thermal_calibration>;
-> > > > > > +             nvmem-cell-names = "svs-calibration-data", "calibration-data";
-> > > > > > +
-> > > > > > +             svs_cpu_little: svs-cpu-little {
-> > > > > > +                     compatible = "mediatek,mt8183-svs-cpu-little";
-> > > > > > +                     operating-points-v2 = <&cluster0_opp>;
-> > > > > > +                     vcpu-little-supply = <&mt6358_vproc12_reg>;
-> > > > > > +             };
-> > > > >
-> > > > > I don't think this is a good binding. This information already exists
-> > > > > elsewhere in the DT, so your driver should just look in those nodes.
-> > > > > For example the regulator can be in the cpu nodes or the OPP table
-> > > > > itself.
-> > > >
-> > > > Roger, if that helps, without changing any other binding, on 8183,
-> > > > basically you could have:
-> > > >  - svs-cpu-little: Add a handle to &cpu0 and get the regulator/opp
-> > > > table from it.
-> > > >  - svs-cpu-big: Handle to &cpu4
-> > >
-> > > Why do you need those? Use the compatible of the cpus to determine big
-> > > and little cores. Or there's the cpu capacity property that could be
-> > > used instead.
-> > >
-> > > >  - svs-cci: Handle to &cci
-> > >
-> > > Is there more than 1 CCI? Just retrieve the node by the compatible.
-> > > There's no need to have nodes that simply serve as a collection of
-> > > data for some driver.
-> > >
-> > > >  - svs-gpu: Handle to &gpu (BTW, it is expected that SVS would only
-> > > > apply to vgpu/mali regulator, and not vsram regulator?)
-> >
-> > svs-gpu depends on vgpu power on for init (don't care vgpu_sram). After
-> > svs-gpu init is done, it doesn't need vgpu power on anymore. (vgpu can
-> > be turned off)
-> >
-> > Please allows me to introduce more about what svs-gpu device needs.
-> > 1. It needs gpu opp table from "gpu node" and gpu_core2 power-domains
-> > from "gpu_core2 node". When svs-gpu has those resources, it turns on
-> > gpu_core2 power-domain for svs-gpu-hw to have power (for calculating)
-> > and svs-gpu-sw will update gpu opp table voltages' part.
-> > 2. Therefore, if I retrieve gpu-related node from phandle or compatible,
-> > it means svs-gpu device in driver needs to attach two different gpu
-> > nodes for attaining gpu opp table and gpu_core2 power-domains. I think
-> > this architecture of svs-gpu confuses maintainer why it attaches two
-> > different nodes instead of having a device to describe what it needs.
->
-> > 3. Is it acceptable to have a Linux device attaching two different
-> > nodes? If yes, could you guide us some APIs for one device to attach two
-> > nodes? I don't know how to implement it. Thanks.
->
-> I'm also trying to understand how that would work. The way the code
-> works now (https://chromium.googlesource.com/chromiumos/third_party/kernel/+/refs/heads/chromeos-4.19/drivers/power/avs/mtk_svs.c#1388):
->
-> The SVS driver creates a platform device for each sub-node, find the
-> sub-node that matches the compatible (pdev->dev.of_node):
-> for_each_child_of_node(svs->dev->of_node, np) {
->   if (of_device_is_compatible(np, svsb->of_compatible)) {
->     pdev->dev.of_node = np;
->     break;
->   }
-> }
->
-> Then, thanks to that, the 2 functions dev_pm_opp_of_add_table and
-> devm_regulator_get_optional "just work", as the get the opp table and
-> regulator from the device tree node.
->
-> So what you suggest is basically something like this:
-> pdev->dev.of_node = of_find_compatible_node(NULL, NULL, "mediatek,mt8183-cci");
->
-> I came up with a (very dirty) prototype here:
-> https://chromium-review.googlesource.com/c/chromiumos/third_party/kernel/+/2076718
-> ... and it doesn't really work
-> (https://gist.github.com/drinkcat/61e50eedbdc301d418c9cee3ee5b6b06, I
-> think the kernel is probing more than it should, like the DMA mask
-> errors should not happen...)
->
-> Before I dig further... I have the same concern as Roger, is it ok to
-> have 2 devices bound to the same device tree node/compatible? My
-> understanding was also that it's not.
+Thank you for great comments. Thanks to you I understand what i missed.
 
-Rob: It seems like this conversation died here. Do you have any
-suggestions for the above?
+I try to generate problem on mainline But, as you explained that
+situation isn't happen,
 
-Thanks,
+Maybe my other things which I made generate some problem (freeing
+network namespace..)
+
+Thanks for great answering and sharing.
+
+If I meet the situation, at that time I'll share. Thank you very much!
+
+P.S. If I have a question, Could I ask via e-mail like this?
+
+On Wed, Apr 8, 2020 at 3:26 AM Al Viro <viro@zeniv.linux.org.uk> wrote:
+>
+> On Tue, Apr 07, 2020 at 09:53:29PM +0900, Yun Levi wrote:
+> > BTW, It's my question.
+> >
+> > >Look: we call ns_get_path(), which calls ns_get_path_cb(), which
+> > >calls the callback passed to it (ns_get_path_task(), in this case),
+> > >which grabs a reference to ns.  Then we pass that reference to
+> > >__ns_get_path().
+> > >
+> > >__ns_get_path() looks for dentry stashed in ns.  If there is one
+> > >and it's still alive, we grab a reference to that dentry and drop
+> > >the reference to ns - no new inodes had been created, so no new
+> > >namespace references have appeared.  Existing inode is pinned
+> > >by dentry and dentry is pinned by _dentry_ reference we've got.
+> >
+> > actually ns_get_path is called in unshare(2).
+>
+> Yes, it does.  Via perf_event_namespaces(), which does
+>         perf_fill_ns_link_info(&ns_link_info[NET_NS_INDEX],
+>                                task, &netns_operations);
+> and there we have
+>         error = ns_get_path(&ns_path, task, ns_ops);
+>         if (!error) {
+>                 ns_inode = ns_path.dentry->d_inode;
+>                 ns_link_info->dev = new_encode_dev(ns_inode->i_sb->s_dev);
+>                 ns_link_info->ino = ns_inode->i_ino;
+>                 path_put(&ns_path);
+>         }
+> See that path_put()?  Dentry reference is dropped by it.
+>
+> > and it makes new dentry and
+> > inode in __ns_get_path finally (Cuz it create new network namespace)
+> >
+> > In that case, when I mount with --bind option to this proc/self/ns/net, it
+> > only increase dentry refcount on do_loopback->clone_mnt finally (not call
+> > netns_operation->get)
+> > That means it's not increase previous created network namespace reference
+> > count but only increase reference count of _dentry_
+> >
+> > In that situation, If I exit the child process it definitely frees the
+> > net_namespace previous created at the same time it decrease net_namespace's
+> > refcnt in exit_task_namespace().
+> > It means it's possible that bind mount point can hold the dentry with inode
+> > having net_namespace's dangling pointer in another process.
+> > In above situation, parent who know that binded mount point calls setns(2)
+> > then it sets the net_namespace which is refered by the inode of the dentry
+> > increased by do_loopback.
+> > That makes set the net_namespace which was freed already.
+>
+> How?  Netns reference in inode contributes to netns refcount.  And it's held
+> for as long as the _inode_ has positive refcount - we only drop it from
+> the inode destructor, *NOT* every time we drop a reference to inode.
+> In the similar fashion, the inode reference in dentry contributes to inode
+> refcount.  And again, that inode reference won't be dropped until the _last_
+> reference to dentry gets dropped.
+>
+> Incrementing refcount of dentry is enough to pin the inode and thus the
+> netns the inode refers to.  It's a very common pattern with refcounting;
+> a useful way of thinking about it is to consider the refcount of e.g.
+> inode as sum of several components, one of them being "number of struct
+> dentry instances with ->d_inode pointing to our inode".  And look at e.g.
+> __ns_get_path() like this:
+>         rcu_read_lock();
+>         d = atomic_long_read(&ns->stashed);
+>         if (!d)
+>                 goto slow;
+>         dentry = (struct dentry *)d;
+>         if (!lockref_get_not_dead(&dentry->d_lockref))
+>                 goto slow;
+> other_count(dentry) got incremented by 1.
+>         rcu_read_unlock();
+>         ns->ops->put(ns);
+> other_count(ns) decremented by 1.
+> got_it:
+>         path->mnt = mntget(mnt);
+>         path->dentry = dentry;
+> path added to paths(dentry), other_count(dentry) decremented by 1 (getting
+> it back to the original value).
+>         return 0;
+> slow:
+>         rcu_read_unlock();
+>         inode = new_inode_pseudo(mnt->mnt_sb);
+>         if (!inode) {
+>                 ns->ops->put(ns);
+> subtract 1 from other_count(ns)
+>                 return -ENOMEM;
+>         }
+> dentries(inode) = empty
+> other_count(inode) = 1
+>         ....
+>         inode->i_private = ns;
+> add inode to inodes(ns), subtract 1 from other_count(ns); the total
+> is unchanged.
+>         dentry = d_alloc_anon(mnt->mnt_sb);
+>         if (!dentry) {
+>                 iput(inode);
+> subtract 1 from other_count(inode).  Since now all components of
+> inode refcount are zero, inode gets destroyed.  Destructor calls
+> nsfs_evict_inode(), which removes the inode from inodes(ns).
+> The total effect: inode is destroyed, inodes(ns) is back to what
+> it used to be and other_count(ns) is left decremented by 1 compared
+> to what we used to have.  IOW, the balance is the same as if inode
+> allocation would've failed.
+>                 return -ENOMEM;
+>         }
+> other_count(dentry) = 1
+>         d_instantiate(dentry, inode);
+> add dentry to dentries(inode), subtract 1 from other_count(inode).
+> The total is unchanged.  Now other_count(inode) is 0 and dentries(inode)
+> is {dentry}.
+>         d = atomic_long_cmpxchg(&ns->stashed, 0, (unsigned long)dentry);
+>         if (d) {
+> somebody else has gotten there first
+>                 d_delete(dentry);       /* make sure ->d_prune() does nothing */
+>                 dput(dentry);
+> subtract 1 from other_count(dentry) (which will drive it to 0).  Since
+> no other references exist, dentry gets destroyed.  Destructor will
+> remove dentry from dentries(inode) and since other_count(inode) is already
+> zero, trigger destruction of inode.  That, in turn, will remove inode
+> from inodes(ns).  Total effect: dentry is destroyed, inode is destroyed,
+> inodes(ns) is back to what it used to be, other_count(ns) is left decremented
+> by 1 compared to what we used to have.
+>                 cpu_relax();
+>                 return -EAGAIN;
+>         }
+>         goto got_it;
+> got_it:
+>         path->mnt = mntget(mnt);
+>         path->dentry = dentry;
+> add path to paths(dentry), subtract 1 from other_count(dentry).  At that
+> point other_count(dentry) is back to 0, ditto for other_count(inode) and
+> other_count(ns) is left decremented by 1 compared to what it used to be.
+> inode is added to inodes(ns), dentry - to dentries(inode) and path - to
+> paths(dentry).
+>         return 0;
+> and we are done.
+>
+> In all cases the total effect is the same as far as "other" counts go:
+> other_count(ns) is down by 1 and that's the only change in other_count()
+> of *ANY* objects.  Of course we do not keep track of the sets explicitly;
+> it would cost too much and we only interested in the sum of their sizes
+> anyway.  What we actually store is the sum, so operations like "transfer
+> the reference from one component to another" are not immediately obvious
+> to be refcounting ones - the sum is unchanged.  Conceptually, though,
+> they are refcounting operations.
+>         Up to d_instantiate() we are holding a reference to inode;
+> after that we are *not* - it has been transferred to dentry.  That's
+> why on subsequent failure exits we do not call iput() - the inode
+> reference is not ours to discard anymore.
+>         In the same way, up to inode->i_private = ns; we are holding
+> a reference to ns.  After that we are not - it's been transferred to
+> inode.  From that point on it's not ours to discard; it will be
+> dropped when inode gets destroyed, whenever that happens.
