@@ -2,78 +2,74 @@ Return-Path: <SRS0=8dav=5Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62279C2BB54
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 01:40:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0AA0C2D0EC
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 01:40:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 36C9020747
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 01:40:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C5DAA206F7
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 01:40:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="WDFsVUMZ"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Vgc92owQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726609AbgDHBkU (ORCPT
+        id S1726591AbgDHBkU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Tue, 7 Apr 2020 21:40:20 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:23415 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726417AbgDHBkU (ORCPT
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:55126 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726484AbgDHBkT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Apr 2020 21:40:20 -0400
+        Tue, 7 Apr 2020 21:40:19 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1586310018;
+        s=mimecast20190719; t=1586310019;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=7b3hN2sSbkSm2D93h3QJ554a9zb0gmfcgA7NY6J8BVs=;
-        b=WDFsVUMZ5B67/BNddzXFOD0Ywuv+GyOf9xqeSrhY//XXLxgpeVp/Uco/R/bkuBzeI8DGYa
-        EwtnqBp9lizFNBfualesKuzIfFAINSOajMxcY98bUIjJ+ZvlUQPXAt+FoouEAhehlqcMMi
-        ToayLY1MFyIohggAMEyaAwb/N92suFs=
-Received: from mail-qt1-f198.google.com (mail-qt1-f198.google.com
- [209.85.160.198]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-7-PA3XN0rTO0CLDRyS_XR0Fg-1; Tue, 07 Apr 2020 21:40:17 -0400
-X-MC-Unique: PA3XN0rTO0CLDRyS_XR0Fg-1
-Received: by mail-qt1-f198.google.com with SMTP id f56so4951241qte.18
-        for <linux-kernel@vger.kernel.org>; Tue, 07 Apr 2020 18:40:16 -0700 (PDT)
+         content-transfer-encoding:content-transfer-encoding;
+        bh=wl5DI6kAtUJ8k2YGULEZuXgrxTBuaptiox8B/l3QktI=;
+        b=Vgc92owQgkP61Su6rb7lnRwfQwRpKp6MqFRbbvBVYPAxcMq5IAoAUwj1zXvrR11URSJxYO
+        lRlcTTlcB8Hr4/EVgbuc8Vyn8DEpPcXVY98/NdBYxBDkUtnu4T1DxPSSW7ppOygCV1vfaU
+        Yqkdoc0iRE+2AD+WDcTXpsxNQzj9k5A=
+Received: from mail-qv1-f70.google.com (mail-qv1-f70.google.com
+ [209.85.219.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-217-rtbdM2eJOfamBZauj_cL9Q-1; Tue, 07 Apr 2020 21:40:15 -0400
+X-MC-Unique: rtbdM2eJOfamBZauj_cL9Q-1
+Received: by mail-qv1-f70.google.com with SMTP id z14so4839448qvk.2
+        for <linux-kernel@vger.kernel.org>; Tue, 07 Apr 2020 18:40:15 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=7b3hN2sSbkSm2D93h3QJ554a9zb0gmfcgA7NY6J8BVs=;
-        b=YwfSJpkj9jxYqQYklAnDMkEtp8ZxI1/P1bSpWPQh3EeVtNZeWv69YzZxuQf4+xPD87
-         XyxEc0cBef3F5XvOasHtJ6HCgij9Ts1r0EWHMOBMlKTEodrNvNz3s5SBZSedAaMDrx8i
-         MbjgYm0tG/9gqVgwHDHnIDFcvkUx5El9LJhB1cZylnHwo1aX6b6rF+C1BmMa3NGsDAe5
-         bdzEgNBbz1NCajMXS4usX9wh44dHxUFrb4dnLFK/kwZwztPt3j62UeHyKfvNMprH9qwB
-         Tl+O+rKHQQ3xuZ2S5PLYFNr9Z8g6yOZ350t/qg6BGpqg4aKJ/0phBaqTKhOXbH/YMM5p
-         2uyw==
-X-Gm-Message-State: AGi0PuYC7XzDiEC2PWRmzkQ/3l8o5q0+GsHHDako49z5d0C7UkBGJtQI
-        9ntpamxRC9XQfrjyycCDFZF0aAijen33ozNaYB4rvV/SHYfKNtZ7Jj+iPL/1GMasYyDTWgwYxAr
-        DVeowg92PXobFMpLZl9Aoa9+F
-X-Received: by 2002:ac8:27a9:: with SMTP id w38mr5008091qtw.112.1586310016214;
-        Tue, 07 Apr 2020 18:40:16 -0700 (PDT)
-X-Google-Smtp-Source: APiQypKiDdfbU3ZlDmMw5zsuDQ3egIlmUEykfE0Bx/gD1U+WuGauQrVFK6YiY93u5z4zZQ9aM9zH4A==
-X-Received: by 2002:ac8:27a9:: with SMTP id w38mr5008079qtw.112.1586310015979;
-        Tue, 07 Apr 2020 18:40:15 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=wl5DI6kAtUJ8k2YGULEZuXgrxTBuaptiox8B/l3QktI=;
+        b=CM4vs8PHjt+KdlNj61iLJq/KOiC8twkJ2qPetT75/Ora8ZvMp7EElC8nsyqzfeqcJz
+         c2WE1xGgWaGx4DYd7cynN5QGr8cuKf5zgZxC3BWqBNF6UtnipX1/lzGSmnH3siYXcqal
+         Awp2dyFLHgaPGvdKAj+FG+Vh6v5b01S6HogQz0SsvUwDfy5cR6q9PLEY26aGn4zPBcJC
+         cMdfNsK2Y7ET2ThnkTWAI0OsIyG6zs15cfbBQUJqSpJoIhjm6JhTOrBYVhurAT5Gf5ry
+         Esad1EU9K3xTiGWbt9VdEcqg01MgkHNUsLaHQyf+3m/Ocmz4qVWoR94VjyedBI05dafv
+         Xxwg==
+X-Gm-Message-State: AGi0PuZhyokT2V/V9+C2YUSSEqSV5z7hGI5vhy8RiFkQE867/NzFvX1R
+        MySWIqnRrLveB1DbXqlrdS83BsR4lCKGk8tRGTj0ykuyp4tRKx+VHglEL5An9jJpdW+4gItKVU8
+        KpDbju4iumxcU0VY4WC6atQGY
+X-Received: by 2002:a05:620a:7eb:: with SMTP id k11mr5218335qkk.282.1586310013173;
+        Tue, 07 Apr 2020 18:40:13 -0700 (PDT)
+X-Google-Smtp-Source: APiQypIck+cZdT2RczXl/himnTKPJmXhgzUtYHMHz0sOupASHZtDDvsQBExfkfjpVMjfuSSjvpLSWQ==
+X-Received: by 2002:a05:620a:7eb:: with SMTP id k11mr5218325qkk.282.1586310012967;
+        Tue, 07 Apr 2020 18:40:12 -0700 (PDT)
 Received: from xz-x1.hitronhub.home ([2607:9880:19c0:32::3])
-        by smtp.gmail.com with ESMTPSA id a186sm18438740qkg.2.2020.04.07.18.40.14
+        by smtp.gmail.com with ESMTPSA id g10sm18665035qkb.9.2020.04.07.18.40.11
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 07 Apr 2020 18:40:15 -0700 (PDT)
+        Tue, 07 Apr 2020 18:40:12 -0700 (PDT)
 From:   Peter Xu <peterx@redhat.com>
 To:     linux-kernel@vger.kernel.org,
         Linus Torvalds <torvalds@linux-foundation.org>,
         linux-mm@kvack.org
-Cc:     Andrew Morton <akpm@linux-foundation.org>, peterx@redhat.com,
-        syzbot+693dc11fcb53120b5559@syzkaller.appspotmail.com
-Subject: [PATCH 1/2] mm/mempolicy: Allow lookup_node() to handle fatal signal
-Date:   Tue,  7 Apr 2020 21:40:09 -0400
-Message-Id: <20200408014010.80428-2-peterx@redhat.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>, peterx@redhat.com
+Subject: [PATCH 0/2] mm: Two small fixes for recent syzbot reports
+Date:   Tue,  7 Apr 2020 21:40:08 -0400
+Message-Id: <20200408014010.80428-1-peterx@redhat.com>
 X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20200408014010.80428-1-peterx@redhat.com>
-References: <20200408014010.80428-1-peterx@redhat.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -81,44 +77,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-lookup_node() uses gup to pin the page and get node information.  It
-checks against ret>=0 assuming the page will be filled in.  However
-it's also possible that gup will return zero, for example, when the
-thread is quickly killed with a fatal signal.  Teach lookup_node() to
-gracefully return an error -EFAULT if it happens.
+The two patches should fix below syzbot reports:
 
-Meanwhile, initialize "page" to NULL to avoid potential risk of
-exploiting the pointer.
+  BUG: unable to handle kernel paging request in kernel_get_mempolicy
+  https://lore.kernel.org/lkml/0000000000002b25f105a2a3434d@google.com/
 
-Reported-by: syzbot+693dc11fcb53120b5559@syzkaller.appspotmail.com
-Fixes: 4426e945df58 ("mm/gup: allow VM_FAULT_RETRY for multiple times")
-Signed-off-by: Peter Xu <peterx@redhat.com>
----
+  WARNING: bad unlock balance in __get_user_pages_remote
+  https://lore.kernel.org/lkml/00000000000005c65d05a2b90e70@google.com/
+
+Note that the 1st patch also applied two extra small changes comparing
+to when posted on the list in that: (1) it squashed an "interupt"
+spelling error that Andrew has pointed out when picked up, and (2) it
+also initializes the "page" pointer to NULL.  But I'm fairly confident
+it shouldn't affect the correctness of the patch.
+
+The 2nd patch is exactly the patch posted previously.
+
+Thanks,
+
+Peter Xu (2):
+  mm/mempolicy: Allow lookup_node() to handle fatal signal
+  mm/gup: Mark lock taken only after a successful retake
+
+ mm/gup.c       | 2 +-
  mm/mempolicy.c | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+ 2 files changed, 6 insertions(+), 3 deletions(-)
 
-diff --git a/mm/mempolicy.c b/mm/mempolicy.c
-index 5fb427aed612..c7ca6a808fb1 100644
---- a/mm/mempolicy.c
-+++ b/mm/mempolicy.c
-@@ -897,12 +897,15 @@ static void get_policy_nodemask(struct mempolicy *p, nodemask_t *nodes)
- 
- static int lookup_node(struct mm_struct *mm, unsigned long addr)
- {
--	struct page *p;
-+	struct page *p = NULL;
- 	int err;
- 
- 	int locked = 1;
- 	err = get_user_pages_locked(addr & PAGE_MASK, 1, 0, &p, &locked);
--	if (err >= 0) {
-+	if (err == 0) {
-+		/* E.g. GUP interrupted by fatal signal */
-+		err = -EFAULT;
-+	} else if (err > 0) {
- 		err = page_to_nid(p);
- 		put_page(p);
- 	}
 -- 
 2.24.1
 
