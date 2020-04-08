@@ -2,171 +2,178 @@ Return-Path: <SRS0=8dav=5Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 786CFC2BA2B
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 12:09:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00A51C2D0EA
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 12:12:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 51BE22074F
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 12:09:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C45192051A
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 12:12:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UER6qfih"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728022AbgDHMJs (ORCPT
+        id S1728072AbgDHMMV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Apr 2020 08:09:48 -0400
-Received: from foss.arm.com ([217.140.110.172]:37864 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727896AbgDHMJs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Apr 2020 08:09:48 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5703C31B;
-        Wed,  8 Apr 2020 05:09:47 -0700 (PDT)
-Received: from [10.57.55.221] (unknown [10.57.55.221])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id AA7BA3F73D;
-        Wed,  8 Apr 2020 05:09:43 -0700 (PDT)
-Subject: Re: [RFC PATCH 17/34] iommu/arm-smmu: Store device instead of group
- in arm_smmu_s2cr
-To:     Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Kukjin Kim <kgene@kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Rob Clark <robdclark@gmail.com>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Jean-Philippe Brucker <jean-philippe@linaro.org>
-Cc:     iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
-        linux-samsung-soc@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-mediatek@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, linux-s390@vger.kernel.org,
-        linux-tegra@vger.kernel.org,
-        virtualization@lists.linux-foundation.org,
-        Joerg Roedel <jroedel@suse.de>
-References: <20200407183742.4344-1-joro@8bytes.org>
- <20200407183742.4344-18-joro@8bytes.org>
-From:   Robin Murphy <robin.murphy@arm.com>
-Message-ID: <98c10a41-d223-e375-9742-b6471c3dc33c@arm.com>
-Date:   Wed, 8 Apr 2020 13:09:40 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Wed, 8 Apr 2020 08:12:21 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:40133 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726521AbgDHMMU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Apr 2020 08:12:20 -0400
+Received: by mail-wr1-f67.google.com with SMTP id s8so7517434wrt.7;
+        Wed, 08 Apr 2020 05:12:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=4oBWtnB+AHmz4Nj8u6gcWza06OmPrpkuIS2H9Ro5sVM=;
+        b=UER6qfihxL/25HM0sbCl8NoXGLpvoBaJhn0C/a7sOYGwN++t+U4nxnJ36Ghcrvuh9J
+         Liy8Flxrt05qSGhbcVeX76xpyinM76Mi0dTOY4f0NZnJBgbdpvPB2/7m5ldkgYF91Kqg
+         0npcwqWIgZlZxaWjxZD24HsJaQFNQitnoY4aI7+dgZfjGh3JMGeJA7SiVMpktB0aKJku
+         8n1ba2CqrWLO84S/nWTQXJxhZk1ixAaZhg0v3DRq231yzK15b8X9avmxfYlKvV5UtMte
+         42yktEv5oGdX73iMQMKJ3oEmmLgqsexd0dkq8uRZSgkSJ97uShcxbHxZoxBOvsC9l1RH
+         5pjg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=4oBWtnB+AHmz4Nj8u6gcWza06OmPrpkuIS2H9Ro5sVM=;
+        b=BW8YPKqM64mhpOQDqKQJqv93rN8it5LADvIbI9986kSuWT16UcULR/xEr9Eqf/GR7T
+         FyRUN3uzltICyQInCgfQgGqsVW1nigUerBVgpE28X6LFgIBYKrpUwOumYVba3WlyLliT
+         RIT3OHtd89zINUnzp+yVzI8DGO7fvuTtH662NTkmnz3SEAnwWn7RUW7UY9xPW95WXOqd
+         b4nerSaFNyn++tj5cMDCKEUMoCns5ssioTejBO/g4n2WgG+q1EfRjjWSZSciiRfiOK4i
+         5ybF/GaMMSjNVoTLZ5Sj4S3QNVLAs6QZvmbnzIoNm2Mt7JZ8ZmbuMGzgsesjLYKqEyA7
+         uNGA==
+X-Gm-Message-State: AGi0PuY/4fTJFx2AOD+LNU+5rLHy7OepB3673jCLazHdJpl9ePDUEAXZ
+        4JBNorpD+2qIPjhIHdS2gU7sQPL4IZrniNdhVC4=
+X-Google-Smtp-Source: APiQypL6mZfbVeqX2oW9O9VwevxlZXhVbfN7PwXL+V8tturb6+tilG9IrnX56wB1IKgk5BIy1aYEzPOwOkoazqTjSA4=
+X-Received: by 2002:adf:b6ab:: with SMTP id j43mr8243098wre.109.1586347937671;
+ Wed, 08 Apr 2020 05:12:17 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200407183742.4344-18-joro@8bytes.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+References: <20200407213058.62870-1-hdegoede@redhat.com>
+In-Reply-To: <20200407213058.62870-1-hdegoede@redhat.com>
+From:   Maxim Mikityanskiy <maxtram95@gmail.com>
+Date:   Wed, 8 Apr 2020 15:11:51 +0300
+Message-ID: <CAKErNvqM9ax8RB+Hm0e70a_uk_Ok3KfSQDmy0q9jKFaAQM3Fsg@mail.gmail.com>
+Subject: Re: [PATCH] platform/x86: intel_int0002_vgpio: Only bind to the
+ INT0002 dev when using s2idle
+To:     Hans de Goede <hdegoede@redhat.com>
+Cc:     Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        Platform Driver <platform-driver-x86@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "5 . 3+" <stable@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-04-07 7:37 pm, Joerg Roedel wrote:
-> From: Joerg Roedel <jroedel@suse.de>
-> 
-> This is required to convert the arm-smmu driver to the
-> probe/release_device() interface.
-> 
-> Signed-off-by: Joerg Roedel <jroedel@suse.de>
+On Wed, Apr 8, 2020 at 12:31 AM Hans de Goede <hdegoede@redhat.com> wrote:
+>
+> Commit 871f1f2bcb01 ("platform/x86: intel_int0002_vgpio: Only implement
+> irq_set_wake on Bay Trail") stopped passing irq_set_wake requests on to
+> the parents IRQ because this was breaking suspend (causing immediate
+> wakeups) on an Asus E202SA.
+>
+> This workaround for this issue is mostly fine, on most Cherry Trail
+> devices where we need the INT0002 device for wakeups by e.g. USB kbds,
+> the parent IRQ is shared with the ACPI SCI and that is marked as wakeup
+> anyways.
+>
+> But not on all devices, specifically on a Medion Akoya E1239T there is
+> no SCI at all, and because the irq_set_wake request is not passed on to
+> the parent IRQ, wake up by the builtin USB kbd does not work here.
+>
+> So the workaround for the Asus E202SA immediate wake problem is causing
+> problems elsewhere; and in hindsight it is not the correct fix,
+> the Asus E202SA uses Airmont CPU cores, but this does not mean it is a
+> Cherry Trail based device, Brasswell uses Airmont CPU cores too and this
+> actually is a Braswell device.
+>
+> Most (all?) Braswell devices use classic S3 mode suspend rather then
+> s2idle suspend and in this case directly dealing with PME events as
+> the INT0002 driver does likely is not the best idea, so that this is
+> causing issues is not surprising.
+>
+> Replace the workaround of not passing irq_set_wake requests on to the
+> parents IRQ, by not binding to the INT0002 device when s2idle is not used=
+.
+> This fixes USB kbd wakeups not working on some Cherry Trail devices,
+> while still avoiding mucking with the wakeup flags on the Asus E202SA
+> (and other Brasswell devices).
+
+I tested this patch over kernel 5.6.2 on Asus E202SA and didn't notice
+any regressions. Wakeup by opening lid, by pressing a button on
+keyboard, by USB keyboard =E2=80=94 all seem to work fine. So, if appropria=
+te:
+
+Tested-by: Maxim Mikityanskiy <maxtram95@gmail.com>
+
+I have a question though. After your patch this driver will basically
+be a no-op on my laptop. Does it mean I don't even need it in the
+first place? What about the IRQ storm this driver is meant to deal
+with =E2=80=94 does it never happen on Braswell? What are the reproduction
+steps to verify my hardware is not affected? I have that INT0002
+device, so I'm worried it may cause issues if not bound to the driver.
+
+> Cc: Maxim Mikityanskiy <maxtram95@gmail.com>
+> Cc: 5.3+ <stable@vger.kernel.org> # 5.3+
+> Fixes: 871f1f2bcb01 ("platform/x86: intel_int0002_vgpio: Only implement i=
+rq_set_wake on Bay Trail")
+> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
 > ---
->   drivers/iommu/arm-smmu.c | 14 +++++++++-----
->   1 file changed, 9 insertions(+), 5 deletions(-)
-> 
-> diff --git a/drivers/iommu/arm-smmu.c b/drivers/iommu/arm-smmu.c
-> index a6a5796e9c41..3493501d8b2c 100644
-> --- a/drivers/iommu/arm-smmu.c
-> +++ b/drivers/iommu/arm-smmu.c
-> @@ -69,7 +69,7 @@ MODULE_PARM_DESC(disable_bypass,
->   	"Disable bypass streams such that incoming transactions from devices that are not attached to an iommu domain will report an abort back to the device and will not be allowed to pass through the SMMU.");
->   
->   struct arm_smmu_s2cr {
-> -	struct iommu_group		*group;
-> +	struct device			*dev;
->   	int				count;
->   	enum arm_smmu_s2cr_type		type;
->   	enum arm_smmu_s2cr_privcfg	privcfg;
-> @@ -1100,7 +1100,7 @@ static int arm_smmu_master_alloc_smes(struct device *dev)
->   	/* It worked! Now, poke the actual hardware */
->   	for_each_cfg_sme(cfg, fwspec, i, idx) {
->   		arm_smmu_write_sme(smmu, idx);
-> -		smmu->s2crs[idx].group = group;
-> +		smmu->s2crs[idx].dev = dev;
->   	}
->   
->   	mutex_unlock(&smmu->stream_map_mutex);
-> @@ -1495,11 +1495,15 @@ static struct iommu_group *arm_smmu_device_group(struct device *dev)
->   	int i, idx;
->   
->   	for_each_cfg_sme(cfg, fwspec, i, idx) {
-> -		if (group && smmu->s2crs[idx].group &&
-> -		    group != smmu->s2crs[idx].group)
-> +		struct iommu_group *idx_grp = NULL;
+>  drivers/platform/x86/intel_int0002_vgpio.c | 18 +++++-------------
+>  1 file changed, 5 insertions(+), 13 deletions(-)
+>
+> diff --git a/drivers/platform/x86/intel_int0002_vgpio.c b/drivers/platfor=
+m/x86/intel_int0002_vgpio.c
+> index 55f088f535e2..e8bec72d3823 100644
+> --- a/drivers/platform/x86/intel_int0002_vgpio.c
+> +++ b/drivers/platform/x86/intel_int0002_vgpio.c
+> @@ -143,21 +143,9 @@ static struct irq_chip int0002_byt_irqchip =3D {
+>         .irq_set_wake           =3D int0002_irq_set_wake,
+>  };
+>
+> -static struct irq_chip int0002_cht_irqchip =3D {
+> -       .name                   =3D DRV_NAME,
+> -       .irq_ack                =3D int0002_irq_ack,
+> -       .irq_mask               =3D int0002_irq_mask,
+> -       .irq_unmask             =3D int0002_irq_unmask,
+> -       /*
+> -        * No set_wake, on CHT the IRQ is typically shared with the ACPI =
+SCI
+> -        * and we don't want to mess with the ACPI SCI irq settings.
+> -        */
+> -       .flags                  =3D IRQCHIP_SKIP_SET_WAKE,
+> -};
+> -
+>  static const struct x86_cpu_id int0002_cpu_ids[] =3D {
+>         INTEL_CPU_FAM6(ATOM_SILVERMONT, int0002_byt_irqchip),   /* Valley=
+view, Bay Trail  */
+> -       INTEL_CPU_FAM6(ATOM_AIRMONT, int0002_cht_irqchip),      /* Braswe=
+ll, Cherry Trail */
+> +       INTEL_CPU_FAM6(ATOM_AIRMONT, int0002_byt_irqchip),      /* Braswe=
+ll, Cherry Trail */
+>         {}
+>  };
+>
+> @@ -181,6 +169,10 @@ static int int0002_probe(struct platform_device *pde=
+v)
+>         if (!cpu_id)
+>                 return -ENODEV;
+>
+> +       /* We only need to directly deal with PMEs when using s2idle */
+> +       if (!pm_suspend_default_s2idle())
+> +               return -ENODEV;
 > +
-> +		if (smmu->s2crs[idx].dev)
-> +			idx_grp = smmu->s2crs[idx].dev->iommu_group;
-
-For a hot-pluggable bus where logical devices may share Stream IDs (like 
-fsl-mc), this could happen:
-
-   create device A
-   iommu_probe_device(A)
-     iommu_device_group(A) -> alloc group X
-   create device B
-   iommu_probe_device(B)
-     iommu_device_group(A) -> lookup returns group X
-   ...
-   iommu_remove_device(A)
-   delete device A
-   create device C
-   iommu_probe_device(C)
-     iommu_device_group(C) -> use-after-free of A
-
-Preserving the logical behaviour here would probably look *something* 
-like the mangled diff below, but I haven't thought it through 100%.
-
-Robin.
-
------>8-----
-diff --git a/drivers/iommu/arm-smmu.c b/drivers/iommu/arm-smmu.c
-index 16c4b87af42b..e88612ee47fe 100644
---- a/drivers/iommu/arm-smmu.c
-+++ b/drivers/iommu/arm-smmu.c
-@@ -1100,10 +1100,8 @@ static int arm_smmu_master_alloc_smes(struct 
-device *dev)
-         iommu_group_put(group);
-
-         /* It worked! Now, poke the actual hardware */
--       for_each_cfg_sme(fwspec, i, idx) {
-+       for_each_cfg_sme(fwspec, i, idx)
-                 arm_smmu_write_sme(smmu, idx);
--               smmu->s2crs[idx].group = group;
--       }
-
-         mutex_unlock(&smmu->stream_map_mutex);
-         return 0;
-@@ -1500,15 +1498,17 @@ static struct iommu_group 
-*arm_smmu_device_group(struct device *dev)
-         }
-
-         if (group)
--               return iommu_group_ref_get(group);
--
--       if (dev_is_pci(dev))
-+               iommu_group_ref_get(group);
-+       else if (dev_is_pci(dev))
-                 group = pci_device_group(dev);
-         else if (dev_is_fsl_mc(dev))
-                 group = fsl_mc_device_group(dev);
-         else
-                 group = generic_device_group(dev);
-
-+       for_each_cfg_sme(fwspec, i, idx)
-+               smmu->s2crs[idx].group = group;
-+
-         return group;
-  }
+>         irq =3D platform_get_irq(pdev, 0);
+>         if (irq < 0)
+>                 return irq;
+> --
+> 2.26.0
+>
