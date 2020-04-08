@@ -2,79 +2,88 @@ Return-Path: <SRS0=8dav=5Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 928DAC2D0EA
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 11:58:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F38AC2BA2B
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 11:59:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6FAE320780
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 11:58:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2909720747
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 11:59:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="QxIpR9Yc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728016AbgDHL6k (ORCPT
+        id S1728645AbgDHL7x (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Apr 2020 07:58:40 -0400
-Received: from cmccmta3.chinamobile.com ([221.176.66.81]:52343 "EHLO
-        cmccmta3.chinamobile.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726345AbgDHL6k (ORCPT
+        Wed, 8 Apr 2020 07:59:53 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:45930 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726594AbgDHL7w (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Apr 2020 07:58:40 -0400
-Received: from spf.mail.chinamobile.com (unknown[172.16.121.19]) by rmmx-syy-dmz-app11-12011 (RichMail) with SMTP id 2eeb5e8dbc5e212-d237d; Wed, 08 Apr 2020 19:58:23 +0800 (CST)
-X-RM-TRANSID: 2eeb5e8dbc5e212-d237d
-X-RM-TagInfo: emlType=0                                       
-X-RM-SPAM-FLAG: 00000000
-Received: from localhost.localdomain (unknown[112.25.154.146])
-        by rmsmtp-syy-appsvr10-12010 (RichMail) with SMTP id 2eea5e8dbc5c9b8-08603;
-        Wed, 08 Apr 2020 19:58:23 +0800 (CST)
-X-RM-TRANSID: 2eea5e8dbc5c9b8-08603
-From:   Tang Bin <tangbin@cmss.chinamobile.com>
-To:     minyard@acm.org, arnd@arndb.de, gregkh@linuxfoundation.org
-Cc:     openipmi-developer@lists.sourceforge.net,
-        linux-kernel@vger.kernel.org,
-        Tang Bin <tangbin@cmss.chinamobile.com>
-Subject: [PATCH v3]ipmi:bt-bmc:Avoid unnecessary judgement
-Date:   Wed,  8 Apr 2020 19:59:58 +0800
-Message-Id: <20200408115958.2848-1-tangbin@cmss.chinamobile.com>
-X-Mailer: git-send-email 2.20.1.windows.1
+        Wed, 8 Apr 2020 07:59:52 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        MIME-Version:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:
+        Content-ID:Content-Description:In-Reply-To:References;
+        bh=D4AVwc5A5TrYE1qiofwcyRs9OblgHBTIRND69C8WOt0=; b=QxIpR9YcW4zlQv0D1PVx1O4w+e
+        6AoH6P9DiQVnTVyvjUFva7uacxcWbVMzi8tT0sThE3M71M9cEiBynkFmchCvGJciEPmeo3/uQvlYR
+        wtFUjR78EFF5ZyjMMkVUsanIFNIoeODac3xPuGtXF4l5LbiIBWKxhIDjLLLc1Q/GLriiDWQze3R+Q
+        HzQxNu0emx30OMndXqf/TY05OZsMHUiUKaWMhp5bxRFdmw1Sri71kup0Kj2ZHNawF6DygdV6PDlKu
+        t+Fxg7riz+HXeU7gVyNlLyFQTkfoS6xNo8kPMIJc0+vSNMB1EinNIuq4wvueXomTQU22Nkr4yCLgo
+        zR0nVTaA==;
+Received: from [2001:4bb8:180:5765:65b6:f11e:f109:b151] (helo=localhost)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jM9Mf-0001Xh-5a; Wed, 08 Apr 2020 11:59:29 +0000
+From:   Christoph Hellwig <hch@lst.de>
+To:     Andrew Morton <akpm@linux-foundation.org>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Wei Liu <wei.liu@kernel.org>, x86@kernel.org,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Laura Abbott <labbott@redhat.com>,
+        Sumit Semwal <sumit.semwal@linaro.org>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Minchan Kim <minchan@kernel.org>,
+        Nitin Gupta <ngupta@vflare.org>
+Cc:     Robin Murphy <robin.murphy@arm.com>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        Peter Zijlstra <peterz@infradead.org>,
+        linuxppc-dev@lists.ozlabs.org, linux-hyperv@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org,
+        linux-arch@vger.kernel.org, linux-mm@kvack.org,
+        iommu@lists.linux-foundation.org,
+        linux-arm-kernel@lists.infradead.org, linux-s390@vger.kernel.org,
+        bpf@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: decruft the vmalloc API
+Date:   Wed,  8 Apr 2020 13:58:58 +0200
+Message-Id: <20200408115926.1467567-1-hch@lst.de>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-bt_bmc_probe() is only called with an openfirmware platform device.
-Therefore there is no need to check that the passed in device is NULL or
-that it has an openfirmware node.
+Hi all,
 
-Signed-off-by: Tang Bin <tangbin@cmss.chinamobile.com>
----
-Changes from v2:
- - improve the commit message.
+Peter noticed that with some dumb luck you can toast the kernel address
+space with exported vmalloc symbols.
 
-Changes from v1:
- - improve the commit message.
----
- drivers/char/ipmi/bt-bmc.c | 3 ---
- 1 file changed, 3 deletions(-)
+I used this as an opportunity to decruft the vmalloc.c API and make it
+much more systematic.  This also removes any chance to create vmalloc
+mappings outside the designated areas or using executable permissions
+from modules.  Besides that it removes more than 300 lines of code.
 
-diff --git a/drivers/char/ipmi/bt-bmc.c b/drivers/char/ipmi/bt-bmc.c
-index d36aeacb2..890ad55aa 100644
---- a/drivers/char/ipmi/bt-bmc.c
-+++ b/drivers/char/ipmi/bt-bmc.c
-@@ -430,9 +430,6 @@ static int bt_bmc_probe(struct platform_device *pdev)
- 	struct device *dev;
- 	int rc;
- 
--	if (!pdev || !pdev->dev.of_node)
--		return -ENODEV;
--
- 	dev = &pdev->dev;
- 	dev_info(dev, "Found bt bmc device\n");
- 
--- 
-2.20.1.windows.1
+A git tree is also available here:
 
+    git://git.infradead.org/users/hch/misc.git sanitize-vmalloc-api
 
+Gitweb:
 
+    http://git.infradead.org/users/hch/misc.git/shortlog/refs/heads/sanitize-vmalloc-api
