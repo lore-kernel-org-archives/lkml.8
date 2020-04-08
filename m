@@ -2,96 +2,157 @@ Return-Path: <SRS0=8dav=5Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 149B7C2D0EA
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 14:13:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7803C2D0EA
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 14:16:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C77532082F
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 14:13:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A2221206F5
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 14:16:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="aAXfCd9M"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728250AbgDHONT (ORCPT
+        id S1728310AbgDHOQB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Apr 2020 10:13:19 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:49924 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726550AbgDHONT (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Apr 2020 10:13:19 -0400
-Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1jMBRr-0007Ob-HA; Wed, 08 Apr 2020 16:12:59 +0200
-Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
-        id A83CE10069D; Wed,  8 Apr 2020 16:12:58 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Ankur Arora <ankur.a.arora@oracle.com>,
-        linux-kernel@vger.kernel.org, x86@kernel.org
-Cc:     peterz@infradead.org, hpa@zytor.com, jpoimboe@redhat.com,
-        namit@vmware.com, mhiramat@kernel.org, jgross@suse.com,
-        bp@alien8.de, vkuznets@redhat.com, pbonzini@redhat.com,
-        boris.ostrovsky@oracle.com, mihai.carabas@oracle.com,
-        kvm@vger.kernel.org, xen-devel@lists.xenproject.org,
-        virtualization@lists.linux-foundation.org,
-        Ankur Arora <ankur.a.arora@oracle.com>
-Subject: Re: [RFC PATCH 00/26] Runtime paravirt patching
-In-Reply-To: <20200408050323.4237-1-ankur.a.arora@oracle.com>
-References: <20200408050323.4237-1-ankur.a.arora@oracle.com>
-Date:   Wed, 08 Apr 2020 16:12:58 +0200
-Message-ID: <87k12qawwl.fsf@nanos.tec.linutronix.de>
+        Wed, 8 Apr 2020 10:16:01 -0400
+Received: from mout.web.de ([212.227.15.3]:41699 "EHLO mout.web.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728251AbgDHOQB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Apr 2020 10:16:01 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
+        s=dbaedf251592; t=1586355341;
+        bh=85sfTPl91r42gPzKHwrYVTni8G8W4+JolWotW+5GcBw=;
+        h=X-UI-Sender-Class:To:From:Subject:Cc:Date;
+        b=aAXfCd9MHdnjK+TFa7IiUFlywgg3EFwKRU6rY6XS7WJg8mz6tS9PNlBGlwpEhuZwf
+         zoLDCKAIXmjYb+6tx0FbhpMCAViKJrGqNqLBZ1fJbE9NnVZYA8ELF+1QplRlsox/Z6
+         kZ9Jlh9KXTfw7vqk5avIV2irYKfWrbdld/AXtvls=
+X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
+Received: from [192.168.1.3] ([78.48.170.28]) by smtp.web.de (mrweb004
+ [213.165.67.108]) with ESMTPSA (Nemesis) id 0MDjw6-1jWdl520YI-00HABm; Wed, 08
+ Apr 2020 16:15:41 +0200
+To:     linux-usb@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+From:   Markus Elfring <Markus.Elfring@web.de>
+Subject: usb: gadget: fsl_udc_core: Checking for a failed platform_get_irq()
+ call in fsl_udc_probe()
+Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
+ 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 FEE=
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        kernel-janitors@vger.kernel.org, Felipe Balbi <balbi@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Li Yang <leoyang.li@nxp.com>,
+        Tang Bin <tangbin@cmss.chinamobile.com>
+Message-ID: <36341bb1-1e00-5eb1-d032-60dcc614ddaf@web.de>
+Date:   Wed, 8 Apr 2020 16:15:38 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:xMLNsMDMoExXtk8amTMSXj6iXJlTM2/l7c0JjHImfUB5Tv8qxJI
+ gt7yljcivfjY6Rft8MkIsFGyPR52oX6eE4hjr020W46qjBXAuY5Bx0L6ynVeEetQDdJ6ieI
+ Nlicjda5qjNSizJvf0ZF1ISlGIHw2MwGckWV1nArvBiZH5F9lNT27RudR5x2Bvvayb+5FBr
+ 67AYCBZ51eHYtjG9T226w==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:z4R07IFe6KU=:lG/PZ3d0D5fuq6qVUuouyQ
+ KIuNlRzaPHNPSXthjxSGzkMyuB4CttKZ4cnESESigle8l/VAOYKNNX8S/qMN3b0CQvybknQAS
+ vdhE3DvNhtfl3dIbZ5xUivz8bALNGdsLEtsCgqCkxb5VPr5uxRVXhEXrkrwf7WZN8KGRJCRTG
+ MZf3MuUBIu6XRX8yls7rzE3VltjmJwxpvicEZZZEbcbTdlzKdJtsBH84n6SDVaKOEoJDtoLPE
+ wn5KuLEOxq4D8eXngxuG35f9WnqVav0XlRgQN2VIAxEDTcCqGZDE+uLFOnlsim6sQlQirTlHQ
+ NAwY8TszyzzuGGnPnU4V/3ewtNP9oKPtm6eZDDoLlhwBBYGTBD16MudXc6MzoQW1cFziiixAn
+ usckauUWljv1qulmN8NxA8uXlmnjacJVyERUg0cJIwaoLrO8dMTtpy6yw0XMMXuoWxh6ciN6V
+ sbOQhoUmllQTxMv6fIxSw376tUPjPuBm0LGsJ550UfuVZI83aCd9YZ5sMcYq7KXSyqjexMcty
+ l0ctWGeIKmTzhz1W0XHMCeyTgDscQ6KOYSsC1Bl62/2bK4jRd6Ionb7eMlnmkRWD1FAY/A+hu
+ +C4bN+4++gT/aZ3BC+FD5KfCGyq9xyeuzKRgESyCXQf2F82IJ2+HsaA8eDYaFKkADVebD/4Zv
+ XeCEuc6+csuSMazCv5pO0FDBWdhpKawz40sL9X4japr9X8+cZhSFGsfdfuc4c6eNKYSS12MJm
+ jl2XOpB+pnZjhELB5wwVPuZwnoZ1G/iXRJzfnaG6h56hnRlhEJt+ywwEmlLD+m2lGC/8ApV4A
+ ZlT3ShSyw+roEsOlqxptnkrAzxIzyrqGtwqIOwT/KKGG7HSAlJtmgSYI6bszIoDCZ2UKDK+wp
+ DZg9+pvX8sWRTHjCAf1OaIOaNNIh0BR/0VfHa1UngZoFB0uq+VVYmPt118jEek60S5Lpe8G/t
+ yzgK6j3JhL6ttDDMGDMICWw0wdVrr4kWQoFXEzi2XRB2D9zWmIQlwOHhNTtL+/3cow4F9DAAn
+ KGr2Gup6g1lW6Na88dqWrgU68hss4f+PcIfGD3Kji5mB14p5Ko+PmGTL/l5C8gMasbbJAb34n
+ 0SlxOL/2nAFJ2i2T5lQLCa6fM90BJ6kFOyq0TUouu/LAKYEodyoVndALnsITbuZd+XYE9nCqB
+ SonsifY+g8Gwv+etoJRfYtTkjJeRzUgvVMEd7UtWAhpqjccJwwlwOtM6tpOxIWVhcQnhMgYdu
+ 0J6eITdNmhSpECsE0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Ankur Arora <ankur.a.arora@oracle.com> writes:
-> A KVM host (or another hypervisor) might advertise paravirtualized
-> features and optimization hints (ex KVM_HINTS_REALTIME) which might
-> become stale over the lifetime of the guest. For instance, the
-> host might go from being undersubscribed to being oversubscribed
-> (or the other way round) and it would make sense for the guest
-> switch pv-ops based on that.
+Hello,
 
-If your host changes his advertised behaviour then you want to fix the
-host setup or find a competent admin.
+I have taken another look at the implementation of the function =E2=80=9Cf=
+sl_udc_probe=E2=80=9D.
+A software analysis approach points the following source code out for
+further development considerations.
+https://elixir.bootlin.com/linux/v5.6.2/source/drivers/usb/gadget/udc/fsl_=
+udc_core.c#L2443
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/dr=
+ivers/usb/gadget/udc/fsl_udc_core.c?id=3Df5e94d10e4c468357019e5c28d48499f6=
+77b284f#n2442
 
-> This lockorture splat that I saw on the guest while testing this is
-> indicative of the problem:
->
->   [ 1136.461522] watchdog: BUG: soft lockup - CPU#8 stuck for 22s! [lock_torture_wr:12865]
->   [ 1136.461542] CPU: 8 PID: 12865 Comm: lock_torture_wr Tainted: G W L 5.4.0-rc7+ #77
->   [ 1136.461546] RIP: 0010:native_queued_spin_lock_slowpath+0x15/0x220
->
-> (Caused by an oversubscribed host but using mismatched native pv_lock_ops
-> on the gues.)
+ 	udc_controller->irq =3D platform_get_irq(pdev, 0);
+ 	if (!udc_controller->irq) {
+ 		ret =3D -ENODEV;
+ 		goto err_iounmap;
+ 	}
 
-And this illustrates what? The fact that you used a misconfigured setup.
 
-> This series addresses the problem by doing paravirt switching at
-> runtime.
+The software documentation is providing the following information
+for the used programming interface.
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/dr=
+ivers/base/platform.c?id=3Df5e94d10e4c468357019e5c28d48499f677b284f#n221
+https://elixir.bootlin.com/linux/v5.6.2/source/drivers/base/platform.c#L20=
+2
 
-You're not addressing the problem. Your fixing the symptom, which is
-wrong to begin with.
+=E2=80=9C=E2=80=A6
+ * Return: IRQ number on success, negative error number on failure.
+=E2=80=A6=E2=80=9D
 
-> The alternative use-case is a runtime version of apply_alternatives()
-> (not posted with this patch-set) that can be used for some safe subset
-> of X86_FEATUREs. This could be useful in conjunction with the ongoing
-> late microcode loading work that Mihai Carabas and others have been
-> working on.
+Would you like to reconsider the shown condition check?
 
-This has been discussed to death before and there is no safe subset as
-long as this hasn't been resolved:
-
-  https://lore.kernel.org/lkml/alpine.DEB.2.21.1909062237580.1902@nanos.tec.linutronix.de/
-
-Thanks,
-
-        tglx
+Regards,
+Markus
