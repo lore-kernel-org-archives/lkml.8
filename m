@@ -2,113 +2,156 @@ Return-Path: <SRS0=8dav=5Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E98C7C2BA1A
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 16:19:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C15AC2BA1B
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 16:19:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B6C1920784
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 16:19:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E8FB120784
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 16:19:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="tzaaxZmQ"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="CcR4lzy6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729406AbgDHQTR (ORCPT
+        id S1730234AbgDHQTz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Apr 2020 12:19:17 -0400
-Received: from mail27.static.mailgun.info ([104.130.122.27]:61978 "EHLO
-        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728200AbgDHQTR (ORCPT
+        Wed, 8 Apr 2020 12:19:55 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:56749 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1730103AbgDHQTy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Apr 2020 12:19:17 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1586362756; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=9qm8hDJTcDfjcVlKai6quTHvfy91QJtAPqo8V+4TU8w=; b=tzaaxZmQvEVuOq8OETHSWP9OeP2jAYzrAgyVAd+MIx0yaskocC59fWr+6A3T1ClJUeTjkGZe
- g5Zk8zhyTMevpBOJKKMwx/TT+leDMxHJDS+TzuqRe1lycLw9GWKl1WIYpfsf++CVXx04Yjsu
- yi3GvWTi/sRZte2MjeOGGRDw0Qw=
-X-Mailgun-Sending-Ip: 104.130.122.27
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e8df97f.7fd356b94458-smtp-out-n02;
- Wed, 08 Apr 2020 16:19:11 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 65F9DC433BA; Wed,  8 Apr 2020 16:19:11 +0000 (UTC)
-Received: from [10.226.58.28] (i-global254.qualcomm.com [199.106.103.254])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        Wed, 8 Apr 2020 12:19:54 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1586362793;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=kCxevzibCCjQEpgBkSWFcYxtyHB47IcQu6B4P94oXGg=;
+        b=CcR4lzy61VsJ8rCT8ntnvBN/ud+RdbNT6ppHfnd8shD4jVwUKmU+IkzrZaMnllqabeTntd
+        xjzQoW+k2yjfX6Q8gUtPbGMATK++7xJvVhF1fVfW5uyvcZflvmsLtH4AhFmlFkwH4zskUE
+        WKLmOYVba3hlhGtNrMDrBYCIAiNjD3w=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-221-Fa7EIChmMjmVgdJqDf3j1A-1; Wed, 08 Apr 2020 12:19:49 -0400
+X-MC-Unique: Fa7EIChmMjmVgdJqDf3j1A-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        (Authenticated sender: jhugo)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 9358AC433D2;
-        Wed,  8 Apr 2020 16:19:10 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 9358AC433D2
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=jhugo@codeaurora.org
-Subject: Re: [PATCH v2 2/5] bus: mhi: core: Make sure to powerdown if
- mhi_sync_power_up fails
-To:     hemantk@codeaurora.org
-Cc:     manivannan.sadhasivam@linaro.org, linux-arm-msm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-msm-owner@vger.kernel.org
-References: <1586278230-29565-1-git-send-email-jhugo@codeaurora.org>
- <1586278230-29565-3-git-send-email-jhugo@codeaurora.org>
- <7249d9608f41e4528c87c2b1c464d615@codeaurora.org>
-From:   Jeffrey Hugo <jhugo@codeaurora.org>
-Message-ID: <88f9b443-4a1f-918b-297c-203909d8e219@codeaurora.org>
-Date:   Wed, 8 Apr 2020 10:19:09 -0600
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.2
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id C1246801E53;
+        Wed,  8 Apr 2020 16:19:47 +0000 (UTC)
+Received: from w520.home (ovpn-112-162.phx2.redhat.com [10.3.112.162])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 2A90B5C1C6;
+        Wed,  8 Apr 2020 16:19:41 +0000 (UTC)
+Date:   Wed, 8 Apr 2020 10:19:40 -0600
+From:   Alex Williamson <alex.williamson@redhat.com>
+To:     "Raj, Ashok" <ashok.raj@intel.com>
+Cc:     "Tian, Kevin" <kevin.tian@intel.com>,
+        "Liu, Yi L" <yi.l.liu@intel.com>,
+        "eric.auger@redhat.com" <eric.auger@redhat.com>,
+        "jacob.jun.pan@linux.intel.com" <jacob.jun.pan@linux.intel.com>,
+        "joro@8bytes.org" <joro@8bytes.org>,
+        "Tian, Jun J" <jun.j.tian@intel.com>,
+        "Sun, Yi Y" <yi.y.sun@intel.com>,
+        "jean-philippe@linaro.org" <jean-philippe@linaro.org>,
+        "peterx@redhat.com" <peterx@redhat.com>,
+        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Wu, Hao" <hao.wu@intel.com>, Bjorn Helgaas <bhelgaas@google.com>,
+        Don Dutile <ddutile@redhat.com>
+Subject: Re: [PATCH v1 2/2] vfio/pci: Emulate PASID/PRI capability for VFs
+Message-ID: <20200408101940.3459943d@w520.home>
+In-Reply-To: <20200408040021.GS67127@otc-nc-03>
+References: <1584880394-11184-1-git-send-email-yi.l.liu@intel.com>
+        <1584880394-11184-3-git-send-email-yi.l.liu@intel.com>
+        <20200402165954.48d941ee@w520.home>
+        <A2975661238FB949B60364EF0F2C25743A2204FE@SHSMSX104.ccr.corp.intel.com>
+        <20200403112545.6c115ba3@w520.home>
+        <AADFC41AFE54684AB9EE6CBC0274A5D19D80E13D@SHSMSX104.ccr.corp.intel.com>
+        <20200407095801.648b1371@w520.home>
+        <20200408040021.GS67127@otc-nc-03>
 MIME-Version: 1.0
-In-Reply-To: <7249d9608f41e4528c87c2b1c464d615@codeaurora.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/7/2020 7:34 PM, hemantk@codeaurora.org wrote:
-> On 2020-04-07 09:50, Jeffrey Hugo wrote:
->> Powerdown is necessary if mhi_sync_power_up fails due to a timeout, to
->> clean up the resources.  Otherwise a BUG could be triggered when
->> attempting to clean up MSIs because the IRQ is still active from a
->> request_irq().
->>
->> Signed-off-by: Jeffrey Hugo <jhugo@codeaurora.org>
->> ---
->>  drivers/bus/mhi/core/pm.c | 6 +++++-
->>  1 file changed, 5 insertions(+), 1 deletion(-)
->>
->> diff --git a/drivers/bus/mhi/core/pm.c b/drivers/bus/mhi/core/pm.c
->> index 3285c9e..fbffc6b 100644
->> --- a/drivers/bus/mhi/core/pm.c
->> +++ b/drivers/bus/mhi/core/pm.c
->> @@ -922,7 +922,11 @@ int mhi_sync_power_up(struct mhi_controller 
->> *mhi_cntrl)
->>                 MHI_PM_IN_ERROR_STATE(mhi_cntrl->pm_state),
->>                 msecs_to_jiffies(mhi_cntrl->timeout_ms));
->>
->> -    return (MHI_IN_MISSION_MODE(mhi_cntrl->ee)) ? 0 : -EIO;
->> +    ret = (MHI_IN_MISSION_MODE(mhi_cntrl->ee)) ? 0 : -EIO;
+On Tue, 7 Apr 2020 21:00:21 -0700
+"Raj, Ashok" <ashok.raj@intel.com> wrote:
+
+> Hi Alex
 > 
-> Does it make sense to return -ETIMEDOUT instead of -EIO if device fails 
-> to move to mission mode?
-> Controller can use this info as mhi_async_power_up() would not return 
-> -ETIMEDOUT.
+> + Bjorn
 
-It seems sensible to change this to ETIMEDOUT.  I'll queue that up for V3.
+ + Don
 
+> FWIW I can't understand why PCI SIG went different ways with ATS, 
+> where its enumerated on PF and VF. But for PASID and PRI its only
+> in PF. 
 > 
->> +    if (ret)
->> +        mhi_power_down(mhi_cntrl, false);
->> +
->> +    return ret;
->>  }
->>  EXPORT_SYMBOL(mhi_sync_power_up);
+> I'm checking with our internal SIG reps to followup on that.
+> 
+> On Tue, Apr 07, 2020 at 09:58:01AM -0600, Alex Williamson wrote:
+> > > Is there vendor guarantee that hidden registers will locate at the
+> > > same offset between PF and VF config space?   
+> > 
+> > I'm not sure if the spec really precludes hidden registers, but the
+> > fact that these registers are explicitly outside of the capability
+> > chain implies they're only intended for device specific use, so I'd say
+> > there are no guarantees about anything related to these registers.  
+> 
+> As you had suggested in the other thread, we could consider
+> using the same offset as in PF, but even that's a better guess
+> still not reliable.
+> 
+> The other option is to maybe extend driver ops in the PF to expose
+> where the offsets should be. Sort of adding the quirk in the 
+> implementation. 
+> 
+> I'm not sure how prevalent are PASID and PRI in VF devices. If SIG is resisting 
+> making VF's first class citizen, we might ask them to add some verbiage
+> to suggest leave the same offsets as PF open to help emulation software.
 
+Even if we know where to expose these capabilities on the VF, it's not
+clear to me how we can actually virtualize the capability itself.  If
+the spec defines, for example, an enable bit as r/w then software that
+interacts with that register expects the bit is settable.  There's no
+protocol for "try to set the bit and re-read it to see if the hardware
+accepted it".  Therefore a capability with a fixed enable bit
+representing the state of the PF, not settable by the VF, is
+disingenuous to the spec.
 
--- 
-Jeffrey Hugo
-Qualcomm Technologies, Inc. is a member of the
-Code Aurora Forum, a Linux Foundation Collaborative Project.
+If what we're trying to do is expose that PASID and PRI are enabled on
+the PF to a VF driver, maybe duplicating the PF capabilities on the VF
+without the ability to control it is not the right approach.  Maybe we
+need new capabilities exposing these as slave features that cannot be
+controlled?  We could define our own vendor capability for this, but of
+course we have both the where to put it in config space issue, as well
+as the issue of trying to push an ad-hoc standard.  vfio could expose
+these as device features rather than emulating capabilities, but that
+still leaves a big gap between vfio in the hypervisor and the driver in
+the guest VM.  That might still help push the responsibility and policy
+for how to expose it to the VM as a userspace problem though.
+
+I agree though, I don't know why the SIG would preclude implementing
+per VF control of these features.  Thanks,
+
+Alex
+
+> > FWIW, vfio started out being more strict about restricting config space
+> > access to defined capabilities, until...
+> > 
+> > commit a7d1ea1c11b33bda2691f3294b4d735ed635535a
+> > Author: Alex Williamson <alex.williamson@redhat.com>
+> > Date:   Mon Apr 1 09:04:12 2013 -0600
+> >   
+> 
+> Cheers,
+> Ashok
+> 
+
