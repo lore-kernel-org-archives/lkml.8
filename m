@@ -2,133 +2,207 @@ Return-Path: <SRS0=8dav=5Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04CA1C2D0EA
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 09:01:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1CCFC2D0EA
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 09:02:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D69BE20768
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 09:01:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 668EF20768
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 09:02:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="sa3H+P6B"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727302AbgDHJBQ (ORCPT
+        id S1727641AbgDHJCu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Apr 2020 05:01:16 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:12624 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726663AbgDHJBP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Apr 2020 05:01:15 -0400
-Received: from DGGEMS412-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 58A6D33585B02A6E0622;
-        Wed,  8 Apr 2020 17:01:09 +0800 (CST)
-Received: from [127.0.0.1] (10.173.220.25) by DGGEMS412-HUB.china.huawei.com
- (10.3.19.212) with Microsoft SMTP Server id 14.3.487.0; Wed, 8 Apr 2020
- 17:01:01 +0800
-Subject: Re: [RFC PATCH v5 4/8] mm: tlb: Pass struct mmu_gather to
- flush_pmd_tlb_range
-From:   Zhenyu Ye <yezhenyu2@huawei.com>
-To:     Peter Zijlstra <peterz@infradead.org>
-CC:     <mark.rutland@arm.com>, <will@kernel.org>,
-        <catalin.marinas@arm.com>, <aneesh.kumar@linux.ibm.com>,
-        <akpm@linux-foundation.org>, <npiggin@gmail.com>, <arnd@arndb.de>,
-        <rostedt@goodmis.org>, <maz@kernel.org>, <suzuki.poulose@arm.com>,
-        <tglx@linutronix.de>, <yuzhao@google.com>, <Dave.Martin@arm.com>,
-        <steven.price@arm.com>, <broonie@kernel.org>,
-        <guohanjun@huawei.com>, <corbet@lwn.net>, <vgupta@synopsys.com>,
-        <tony.luck@intel.com>, <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <linux-arch@vger.kernel.org>,
-        <linux-mm@kvack.org>, <arm@kernel.org>, <xiexiangyou@huawei.com>,
-        <prime.zeng@hisilicon.com>, <zhangshaokun@hisilicon.com>,
-        <kuhn.chenqun@huawei.com>
-References: <20200331142927.1237-1-yezhenyu2@huawei.com>
- <20200331142927.1237-5-yezhenyu2@huawei.com>
- <20200331151331.GS20730@hirez.programming.kicks-ass.net>
- <fe12101e-8efe-22ad-0258-e6aeafc798cc@huawei.com>
- <20200401122004.GE20713@hirez.programming.kicks-ass.net>
- <53675fb9-21c7-5309-07b8-1bbc1e775f9b@huawei.com>
- <20200402163849.GM20713@hirez.programming.kicks-ass.net>
- <d512b28f-99d3-5a26-d189-2ebac7a412c7@huawei.com>
-Message-ID: <1770a141-3c97-94df-eac9-2d1f537516b1@huawei.com>
-Date:   Wed, 8 Apr 2020 17:00:58 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.0
+        Wed, 8 Apr 2020 05:02:50 -0400
+Received: from smtp-fw-9102.amazon.com ([207.171.184.29]:39808 "EHLO
+        smtp-fw-9102.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726846AbgDHJCu (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Apr 2020 05:02:50 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1586336569; x=1617872569;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version;
+  bh=e5bUYjWbScbzjft6TEIZiCZRtgYcyyX63Xluh9NgdRM=;
+  b=sa3H+P6BiPyoEDoYpnYEyRpglr28XA4GHBMR9exfOegcTlOXwE1iZ93t
+   pSrjX+rtE1HHrjmxAlvhhGu6Of/pP9TwlUxd9jhMiyGbyBSLo3Lozs/Xc
+   VEctFVYTnas/lV1AnPDcdS5JsGXS8jMMI1ml3yWGC3fpcXxK0YCfTR/Hm
+   U=;
+IronPort-SDR: Qdq/WKgx+3/4KMPZauL9lu9cgebFhIPEsvD2PmfT9O2ur/M2RKK9iZUY2YmRXFmthaqLeslJLG
+ fsqlZDZgJdFw==
+X-IronPort-AV: E=Sophos;i="5.72,357,1580774400"; 
+   d="scan'208";a="35938265"
+Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-2a-22cc717f.us-west-2.amazon.com) ([10.47.23.38])
+  by smtp-border-fw-out-9102.sea19.amazon.com with ESMTP; 08 Apr 2020 09:02:47 +0000
+Received: from EX13MTAUWA001.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan3.pdx.amazon.com [10.170.41.166])
+        by email-inbound-relay-2a-22cc717f.us-west-2.amazon.com (Postfix) with ESMTPS id 3AB0DA18E5;
+        Wed,  8 Apr 2020 09:02:47 +0000 (UTC)
+Received: from EX13D01UWA002.ant.amazon.com (10.43.160.74) by
+ EX13MTAUWA001.ant.amazon.com (10.43.160.58) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Wed, 8 Apr 2020 09:02:46 +0000
+Received: from EX13MTAUEA002.ant.amazon.com (10.43.61.77) by
+ EX13d01UWA002.ant.amazon.com (10.43.160.74) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Wed, 8 Apr 2020 09:02:45 +0000
+Received: from localhost (10.85.0.235) by mail-relay.amazon.com (10.43.61.169)
+ with Microsoft SMTP Server id 15.0.1497.2 via Frontend Transport; Wed, 8 Apr
+ 2020 09:02:44 +0000
+From:   Balbir Singh <sblbir@amazon.com>
+To:     <tglx@linutronix.de>, <linux-kernel@vger.kernel.org>
+CC:     <jpoimboe@redhat.com>, <tony.luck@intel.com>,
+        <keescook@chromium.org>, <benh@kernel.crashing.org>,
+        <x86@kernel.org>, <dave.hansen@intel.com>,
+        "Balbir Singh" <sblbir@amazon.com>
+Subject: [PATCH v3 1/5] arch/x86/kvm: Refactor l1d flush lifecycle management
+Date:   Wed, 8 Apr 2020 19:02:25 +1000
+Message-ID: <20200408090229.16467-2-sblbir@amazon.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200408090229.16467-1-sblbir@amazon.com>
+References: <20200408090229.16467-1-sblbir@amazon.com>
 MIME-Version: 1.0
-In-Reply-To: <d512b28f-99d3-5a26-d189-2ebac7a412c7@huawei.com>
-Content-Type: text/plain; charset="gbk"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.173.220.25]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Peter,
+Split out the allocation and free routines to be used in a follow
+up set of patches (to reuse for L1D flushing).
 
-On 2020/4/3 13:14, Zhenyu Ye wrote:
-> Hi Peter,
-> 
-> On 2020/4/3 0:38, Peter Zijlstra wrote:
->> On Thu, Apr 02, 2020 at 07:24:04PM +0800, Zhenyu Ye wrote:
->>> Thanks for your detailed explanation.  I notice that you used
->>> `tlb_end_vma` replace `flush_tlb_range`, which will call `tlb_flush`,
->>> then finally call `flush_tlb_range` in generic code.  However, some
->>> architectures define tlb_end_vma|tlb_flush|flush_tlb_range themselves,
->>> so this may cause problems.
->>>
->>> For example, in s390, it defines:
->>>
->>> #define tlb_end_vma(tlb, vma)			do { } while (0)
->>>
->>> And it doesn't define it's own flush_pmd_tlb_range().  So there will be
->>> a mistake if we changed flush_pmd_tlb_range() using tlb_end_vma().
->>>
->>> Is this really a problem or something I understand wrong ?
->>
->> If tlb_end_vma() is a no-op, then tlb_finish_mmu() will do:
->> tlb_flush_mmu() -> tlb_flush_mmu_tlbonly() -> tlb_flush()
->>
->> And s390 has tlb_flush().
->>
->> If tlb_end_vma() is not a no-op and it calls tlb_flush_mmu_tlbonly(),
->> then tlb_finish_mmu()'s invocation of tlb_flush_mmu_tlbonly() will
->> terniate early due o no flags set.
->>
->> IOW, it should all just work.
->>
->>
->> FYI the whole tlb_{start,end}_vma() thing is a only needed when the
->> architecture doesn't implement tlb_flush() and instead default to using
->> flush_tlb_range(), at which point we need to provide a 'fake' vma.
->>
->> At the time I audited all architectures and they only look at VM_EXEC
->> (to do $I invalidation) and VM_HUGETLB (for pmd level invalidations),
->> but I forgot which architectures that were.
-> 
-> Many architectures, such as alpha, arc, arm and so on.
-> I really understand why you hate making vma->vm_flags more important for
-> tlbi :).
-> 
->> But that is all legacy code; eventually we'll get all archs a native
->> tlb_flush() and this can go away.
->>
-> 
-> Thanks for your reply.  Currently, to enable the TTL feature, extending
-> the flush_*tlb_range() may be more convenient.
-> I will send a formal PATCH soon.
-> 
-> Thanks,
-> Zhenyu
-> 
+Signed-off-by: Balbir Singh <sblbir@amazon.com>
+Reviewed-by: Kees Cook <keescook@chromium.org>
+---
+ arch/x86/include/asm/cacheflush.h |  3 +++
+ arch/x86/kernel/Makefile          |  1 +
+ arch/x86/kernel/l1d_flush.c       | 36 +++++++++++++++++++++++++++++++
+ arch/x86/kvm/vmx/vmx.c            | 25 +++------------------
+ 4 files changed, 43 insertions(+), 22 deletions(-)
+ create mode 100644 arch/x86/kernel/l1d_flush.c
 
-I had sent [PATCH v1] a few days ago[1].  Do you have time to review
-my changes?  Are those changes appropriate?
-
-Waiting for your suggestion.
-
-[1] https://lore.kernel.org/linux-arm-kernel/20200403090048.938-1-yezhenyu2@huawei.com/
-
-Thanks,
-Zhenyu
+diff --git a/arch/x86/include/asm/cacheflush.h b/arch/x86/include/asm/cacheflush.h
+index 63feaf2a5f93..6419a4cef0e8 100644
+--- a/arch/x86/include/asm/cacheflush.h
++++ b/arch/x86/include/asm/cacheflush.h
+@@ -6,6 +6,9 @@
+ #include <asm-generic/cacheflush.h>
+ #include <asm/special_insns.h>
+ 
++#define L1D_CACHE_ORDER 4
+ void clflush_cache_range(void *addr, unsigned int size);
++void *alloc_l1d_flush_pages(void);
++void cleanup_l1d_flush_pages(void *l1d_flush_pages);
+ 
+ #endif /* _ASM_X86_CACHEFLUSH_H */
+diff --git a/arch/x86/kernel/Makefile b/arch/x86/kernel/Makefile
+index d6d61c4455fa..48f443e6c2de 100644
+--- a/arch/x86/kernel/Makefile
++++ b/arch/x86/kernel/Makefile
+@@ -160,3 +160,4 @@ ifeq ($(CONFIG_X86_64),y)
+ endif
+ 
+ obj-$(CONFIG_IMA_SECURE_AND_OR_TRUSTED_BOOT)	+= ima_arch.o
++obj-y						+= l1d_flush.o
+diff --git a/arch/x86/kernel/l1d_flush.c b/arch/x86/kernel/l1d_flush.c
+new file mode 100644
+index 000000000000..05f375c33423
+--- /dev/null
++++ b/arch/x86/kernel/l1d_flush.c
+@@ -0,0 +1,36 @@
++#include <linux/mm.h>
++#include <asm/cacheflush.h>
++
++void *alloc_l1d_flush_pages(void)
++{
++	struct page *page;
++	void *l1d_flush_pages = NULL;
++	int i;
++
++	/*
++	 * This allocation for l1d_flush_pages is not tied to a VM/task's
++	 * lifetime and so should not be charged to a memcg.
++	 */
++	page = alloc_pages(GFP_KERNEL, L1D_CACHE_ORDER);
++	if (!page)
++		return NULL;
++	l1d_flush_pages = page_address(page);
++
++	/*
++	 * Initialize each page with a different pattern in
++	 * order to protect against KSM in the nested
++	 * virtualization case.
++	 */
++	for (i = 0; i < 1u << L1D_CACHE_ORDER; ++i) {
++		memset(l1d_flush_pages + i * PAGE_SIZE, i + 1,
++				PAGE_SIZE);
++	}
++	return l1d_flush_pages;
++}
++EXPORT_SYMBOL_GPL(alloc_l1d_flush_pages);
++
++void cleanup_l1d_flush_pages(void *l1d_flush_pages)
++{
++	free_pages((unsigned long)l1d_flush_pages, L1D_CACHE_ORDER);
++}
++EXPORT_SYMBOL_GPL(cleanup_l1d_flush_pages);
+diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+index 91749f1254e8..f40c30f9b4d8 100644
+--- a/arch/x86/kvm/vmx/vmx.c
++++ b/arch/x86/kvm/vmx/vmx.c
+@@ -203,14 +203,10 @@ static const struct {
+ 	[VMENTER_L1D_FLUSH_NOT_REQUIRED] = {"not required", false},
+ };
+ 
+-#define L1D_CACHE_ORDER 4
+ static void *vmx_l1d_flush_pages;
+ 
+ static int vmx_setup_l1d_flush(enum vmx_l1d_flush_state l1tf)
+ {
+-	struct page *page;
+-	unsigned int i;
+-
+ 	if (!boot_cpu_has_bug(X86_BUG_L1TF)) {
+ 		l1tf_vmx_mitigation = VMENTER_L1D_FLUSH_NOT_REQUIRED;
+ 		return 0;
+@@ -253,24 +249,9 @@ static int vmx_setup_l1d_flush(enum vmx_l1d_flush_state l1tf)
+ 
+ 	if (l1tf != VMENTER_L1D_FLUSH_NEVER && !vmx_l1d_flush_pages &&
+ 	    !boot_cpu_has(X86_FEATURE_FLUSH_L1D)) {
+-		/*
+-		 * This allocation for vmx_l1d_flush_pages is not tied to a VM
+-		 * lifetime and so should not be charged to a memcg.
+-		 */
+-		page = alloc_pages(GFP_KERNEL, L1D_CACHE_ORDER);
+-		if (!page)
++		vmx_l1d_flush_pages = alloc_l1d_flush_pages();
++		if (!vmx_l1d_flush_pages)
+ 			return -ENOMEM;
+-		vmx_l1d_flush_pages = page_address(page);
+-
+-		/*
+-		 * Initialize each page with a different pattern in
+-		 * order to protect against KSM in the nested
+-		 * virtualization case.
+-		 */
+-		for (i = 0; i < 1u << L1D_CACHE_ORDER; ++i) {
+-			memset(vmx_l1d_flush_pages + i * PAGE_SIZE, i + 1,
+-			       PAGE_SIZE);
+-		}
+ 	}
+ 
+ 	l1tf_vmx_mitigation = l1tf;
+@@ -7999,7 +7980,7 @@ static struct kvm_x86_init_ops vmx_init_ops __initdata = {
+ static void vmx_cleanup_l1d_flush(void)
+ {
+ 	if (vmx_l1d_flush_pages) {
+-		free_pages((unsigned long)vmx_l1d_flush_pages, L1D_CACHE_ORDER);
++		cleanup_l1d_flush_pages(vmx_l1d_flush_pages);
+ 		vmx_l1d_flush_pages = NULL;
+ 	}
+ 	/* Restore state so sysfs ignores VMX */
+-- 
+2.17.1
 
