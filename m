@@ -2,222 +2,120 @@ Return-Path: <SRS0=8dav=5Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4736CC2BA1A
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 09:14:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12767C2BA1A
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 09:20:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 25C4720747
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 09:14:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D0EA520936
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 09:20:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727847AbgDHJOy (ORCPT
+        id S1727749AbgDHJUy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Apr 2020 05:14:54 -0400
-Received: from laurent.telenet-ops.be ([195.130.137.89]:54016 "EHLO
-        laurent.telenet-ops.be" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727486AbgDHJOx (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Apr 2020 05:14:53 -0400
-Received: from ramsan ([84.195.182.253])
-        by laurent.telenet-ops.be with bizsmtp
-        id Q9Es2200B5USYZQ019Eso7; Wed, 08 Apr 2020 11:14:52 +0200
-Received: from rox.of.borg ([192.168.97.57])
-        by ramsan with esmtp (Exim 4.90_1)
-        (envelope-from <geert@linux-m68k.org>)
-        id 1jM6nM-0002rm-5u; Wed, 08 Apr 2020 11:14:52 +0200
-Received: from geert by rox.of.borg with local (Exim 4.90_1)
-        (envelope-from <geert@linux-m68k.org>)
-        id 1jM6nM-0006jb-2q; Wed, 08 Apr 2020 11:14:52 +0200
-From:   Geert Uytterhoeven <geert+renesas@glider.be>
-To:     Rob Herring <robh+dt@kernel.org>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>
-Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-renesas-soc@vger.kernel.org,
-        Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH] dt-bindings: timer: renesas: tmu: Convert to json-schema
-Date:   Wed,  8 Apr 2020 11:14:51 +0200
-Message-Id: <20200408091451.25845-1-geert+renesas@glider.be>
-X-Mailer: git-send-email 2.17.1
+        Wed, 8 Apr 2020 05:20:54 -0400
+Received: from lhrrgout.huawei.com ([185.176.76.210]:2639 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726980AbgDHJUx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Apr 2020 05:20:53 -0400
+Received: from lhreml720-chm.china.huawei.com (unknown [172.18.7.107])
+        by Forcepoint Email with ESMTP id E7677CFDC49A649A2E59;
+        Wed,  8 Apr 2020 10:20:51 +0100 (IST)
+Received: from lhreml715-chm.china.huawei.com (10.201.108.66) by
+ lhreml720-chm.china.huawei.com (10.201.108.71) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1913.5; Wed, 8 Apr 2020 10:20:51 +0100
+Received: from lhreml715-chm.china.huawei.com ([10.201.108.66]) by
+ lhreml715-chm.china.huawei.com ([10.201.108.66]) with mapi id 15.01.1913.007;
+ Wed, 8 Apr 2020 10:20:51 +0100
+From:   Shiju Jose <shiju.jose@huawei.com>
+To:     Borislav Petkov <bp@alien8.de>
+CC:     "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "rjw@rjwysocki.net" <rjw@rjwysocki.net>,
+        "helgaas@kernel.org" <helgaas@kernel.org>,
+        "lenb@kernel.org" <lenb@kernel.org>,
+        "james.morse@arm.com" <james.morse@arm.com>,
+        "tony.luck@intel.com" <tony.luck@intel.com>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "zhangliguang@linux.alibaba.com" <zhangliguang@linux.alibaba.com>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        Linuxarm <linuxarm@huawei.com>,
+        Jonathan Cameron <jonathan.cameron@huawei.com>,
+        tanxiaofei <tanxiaofei@huawei.com>,
+        yangyicong <yangyicong@huawei.com>
+Subject: RE: [PATCH v6 1/2] ACPI / APEI: Add support to notify the vendor
+ specific HW errors
+Thread-Topic: [PATCH v6 1/2] ACPI / APEI: Add support to notify the vendor
+ specific HW errors
+Thread-Index: AQHWAsR+4nldebv71E6VKNN8PAfzw6hcw70AgAQRUuCAABIOgIAAEy5wgAAhnICAACCLgIABJWuAgAya7lA=
+Date:   Wed, 8 Apr 2020 09:20:51 +0000
+Message-ID: <26f99f46a3e045889b96b147207905e6@huawei.com>
+References: <ShijuJose> <20200325164223.650-1-shiju.jose@huawei.com>
+ <20200325164223.650-2-shiju.jose@huawei.com> <20200327182214.GD8015@zn.tnic>
+ <b180618fb6cb477ea7185979c11c5868@huawei.com>
+ <20200330103353.GC16242@zn.tnic>
+ <ee79588ee82445dcb76f1fe6c1082fb8@huawei.com>
+ <20200330134249.GF16242@zn.tnic>
+ <613133075a174454a88312448b9b333c@huawei.com>
+ <20200331090929.GB29131@zn.tnic>
+In-Reply-To: <20200331090929.GB29131@zn.tnic>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.47.86.201]
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Convert the Renesas R-Mobile/R-Car Timer Unit (TMU) Device Tree binding
-documentation to json-schema.
-
-Document missing properties.
-Update the example to match reality.
-
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
----
- .../devicetree/bindings/timer/renesas,tmu.txt | 49 ----------
- .../bindings/timer/renesas,tmu.yaml           | 97 +++++++++++++++++++
- 2 files changed, 97 insertions(+), 49 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/timer/renesas,tmu.txt
- create mode 100644 Documentation/devicetree/bindings/timer/renesas,tmu.yaml
-
-diff --git a/Documentation/devicetree/bindings/timer/renesas,tmu.txt b/Documentation/devicetree/bindings/timer/renesas,tmu.txt
-deleted file mode 100644
-index 29159f4e65abece9..0000000000000000
---- a/Documentation/devicetree/bindings/timer/renesas,tmu.txt
-+++ /dev/null
-@@ -1,49 +0,0 @@
--* Renesas R-Mobile/R-Car Timer Unit (TMU)
--
--The TMU is a 32-bit timer/counter with configurable clock inputs and
--programmable compare match.
--
--Channels share hardware resources but their counter and compare match value
--are independent. The TMU hardware supports up to three channels.
--
--Required Properties:
--
--  - compatible: must contain one or more of the following:
--    - "renesas,tmu-r8a7740" for the r8a7740 TMU
--    - "renesas,tmu-r8a774a1" for the r8a774A1 TMU
--    - "renesas,tmu-r8a774b1" for the r8a774B1 TMU
--    - "renesas,tmu-r8a774c0" for the r8a774C0 TMU
--    - "renesas,tmu-r8a7778" for the r8a7778 TMU
--    - "renesas,tmu-r8a7779" for the r8a7779 TMU
--    - "renesas,tmu-r8a77970" for the r8a77970 TMU
--    - "renesas,tmu-r8a77980" for the r8a77980 TMU
--    - "renesas,tmu" for any TMU.
--      This is a fallback for the above renesas,tmu-* entries
--
--  - reg: base address and length of the registers block for the timer module.
--
--  - interrupts: interrupt-specifier for the timer, one per channel.
--
--  - clocks: a list of phandle + clock-specifier pairs, one for each entry
--    in clock-names.
--  - clock-names: must contain "fck" for the functional clock.
--
--Optional Properties:
--
--  - #renesas,channels: number of channels implemented by the timer, must be 2
--    or 3 (if not specified the value defaults to 3).
--
--
--Example: R8A7779 (R-Car H1) TMU0 node
--
--	tmu0: timer@ffd80000 {
--		compatible = "renesas,tmu-r8a7779", "renesas,tmu";
--		reg = <0xffd80000 0x30>;
--		interrupts = <0 32 IRQ_TYPE_LEVEL_HIGH>,
--			     <0 33 IRQ_TYPE_LEVEL_HIGH>,
--			     <0 34 IRQ_TYPE_LEVEL_HIGH>;
--		clocks = <&mstp0_clks R8A7779_CLK_TMU0>;
--		clock-names = "fck";
--
--		#renesas,channels = <3>;
--	};
-diff --git a/Documentation/devicetree/bindings/timer/renesas,tmu.yaml b/Documentation/devicetree/bindings/timer/renesas,tmu.yaml
-new file mode 100644
-index 0000000000000000..3cae4298feb43db3
---- /dev/null
-+++ b/Documentation/devicetree/bindings/timer/renesas,tmu.yaml
-@@ -0,0 +1,97 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/timer/renesas,tmu.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Renesas R-Mobile/R-Car Timer Unit (TMU)
-+
-+maintainers:
-+  - Geert Uytterhoeven <geert+renesas@glider.be>
-+  - Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
-+
-+description:
-+  The TMU is a 32-bit timer/counter with configurable clock inputs and
-+  programmable compare match.
-+
-+  Channels share hardware resources but their counter and compare match value
-+  are independent. The TMU hardware supports up to three channels.
-+
-+properties:
-+  compatible:
-+    items:
-+      - enum:
-+          - renesas,tmu-r8a7740  # R-Mobile A1
-+          - renesas,tmu-r8a774a1 # RZ/G2M
-+          - renesas,tmu-r8a774b1 # RZ/G2N
-+          - renesas,tmu-r8a774c0 # RZ/G2E
-+          - renesas,tmu-r8a7778  # R-Car M1A
-+          - renesas,tmu-r8a7779  # R-Car H1
-+          - renesas,tmu-r8a77970 # R-Car V3M
-+          - renesas,tmu-r8a77980 # R-Car V3H
-+      - const: renesas,tmu
-+
-+  reg:
-+    maxItems: 1
-+
-+  interrupts:
-+    minItems: 2
-+    maxItems: 3
-+
-+  clocks:
-+    maxItems: 1
-+
-+  clock-names:
-+    const: fck
-+
-+  power-domains:
-+    maxItems: 1
-+
-+  resets:
-+    maxItems: 1
-+
-+  '#renesas,channels':
-+    allOf:
-+      - $ref: /schemas/types.yaml#/definitions/uint32
-+      - enum: [ 2, 3 ]
-+      - default: 3
-+    description:
-+      Number of channels implemented by the timer.
-+
-+required:
-+  - compatible
-+  - reg
-+  - interrupts
-+  - clocks
-+  - clock-names
-+  - power-domains
-+
-+if:
-+  not:
-+    properties:
-+      compatible:
-+        contains:
-+          enum:
-+            - renesas,tmu-r8a7740
-+            - renesas,tmu-r8a7778
-+            - renesas,tmu-r8a7779
-+then:
-+  required:
-+    - resets
-+
-+examples:
-+  - |
-+    #include <dt-bindings/clock/r8a7779-clock.h>
-+    #include <dt-bindings/interrupt-controller/arm-gic.h>
-+    #include <dt-bindings/power/r8a7779-sysc.h>
-+    tmu0: timer@ffd80000 {
-+            compatible = "renesas,tmu-r8a7779", "renesas,tmu";
-+            reg = <0xffd80000 0x30>;
-+            interrupts = <GIC_SPI 32 IRQ_TYPE_LEVEL_HIGH>,
-+                         <GIC_SPI 33 IRQ_TYPE_LEVEL_HIGH>,
-+                         <GIC_SPI 34 IRQ_TYPE_LEVEL_HIGH>;
-+            clocks = <&mstp0_clks R8A7779_CLK_TMU0>;
-+            clock-names = "fck";
-+            power-domains = <&sysc R8A7779_PD_ALWAYS_ON>;
-+            #renesas,channels = <3>;
-+    };
--- 
-2.17.1
-
+SGkgQm9yaXMsDQoNCj4tLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPkZyb206IEJvcmlzbGF2
+IFBldGtvdiBbbWFpbHRvOmJwQGFsaWVuOC5kZV0NCj5TZW50OiAzMSBNYXJjaCAyMDIwIDEwOjA5
+DQo+VG86IFNoaWp1IEpvc2UgPHNoaWp1Lmpvc2VAaHVhd2VpLmNvbT4NCj5DYzogbGludXgtYWNw
+aUB2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LXBjaUB2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LQ0KPmtl
+cm5lbEB2Z2VyLmtlcm5lbC5vcmc7IHJqd0Byand5c29ja2kubmV0OyBoZWxnYWFzQGtlcm5lbC5v
+cmc7DQo+bGVuYkBrZXJuZWwub3JnOyBqYW1lcy5tb3JzZUBhcm0uY29tOyB0b255Lmx1Y2tAaW50
+ZWwuY29tOw0KPmdyZWdraEBsaW51eGZvdW5kYXRpb24ub3JnOyB6aGFuZ2xpZ3VhbmdAbGludXgu
+YWxpYmFiYS5jb207DQo+dGdseEBsaW51dHJvbml4LmRlOyBMaW51eGFybSA8bGludXhhcm1AaHVh
+d2VpLmNvbT47IEpvbmF0aGFuIENhbWVyb24NCj48am9uYXRoYW4uY2FtZXJvbkBodWF3ZWkuY29t
+PjsgdGFueGlhb2ZlaSA8dGFueGlhb2ZlaUBodWF3ZWkuY29tPjsNCj55YW5neWljb25nIDx5YW5n
+eWljb25nQGh1YXdlaS5jb20+DQo+U3ViamVjdDogUmU6IFtQQVRDSCB2NiAxLzJdIEFDUEkgLyBB
+UEVJOiBBZGQgc3VwcG9ydCB0byBub3RpZnkgdGhlIHZlbmRvcg0KPnNwZWNpZmljIEhXIGVycm9y
+cw0KPg0KPk9uIE1vbiwgTWFyIDMwLCAyMDIwIGF0IDAzOjQ0OjI5UE0gKzAwMDAsIFNoaWp1IEpv
+c2Ugd3JvdGU6DQo+PiAxLiByYXNkYWVtb24gbmVlZCBub3QgdG8gcHJpbnQgdGhlIHZlbmRvciBl
+cnJvciBkYXRhIHJlcG9ydGVkIGJ5IHRoZQ0KPmZpcm13YXJlIGlmIHRoZQ0KPj4gICAgIGtlcm5l
+bCBkcml2ZXIgYWxyZWFkeSBwcmludCB0aG9zZSBpbmZvcm1hdGlvbi4gSW4gdGhpcyBjYXNlIHJh
+c2RhZW1vbiB3aWxsDQo+b25seSBuZWVkIHRvIHN0b3JlDQo+PiAgICAgdGhlIGRlY29kZWQgdmVu
+ZG9yIGVycm9yIGRhdGEgdG8gdGhlIFNRTCBkYXRhYmFzZS4NCj4NCj5XZWxsLCB0aGVyZSdzIGEg
+cHJvYmxlbSB3aXRoIHRoaXM6DQo+DQo+cmFzZGFlbW9uIHByaW50aW5nICE9IGtlcm5lbCBkcml2
+ZXIgcHJpbnRpbmcNCj4NCj5CZWNhdXNlIHByaW50aW5nIGluIGRtZXNnIHdvdWxkIG5lZWQgcGVv
+cGxlIHRvIGdvIGdyZXAgZG1lc2cuDQo+DQo+UHJpbnRpbmcgdGhyb3VnaCByYXNkYWVtb24gb3Ig
+YW55IHVzZXJzcGFjZSBhZ2VudCwgT1RPSCwgaXMgYSBsb3QgbW9yZQ0KPmZsZXhpYmxlIHdydCBh
+bmFseXppbmcgYW5kIGNvbGxlY3RpbmcgdGhvc2UgZXJyb3IgcmVjb3Jkcy4gRXNwZWNpYWxseSBp
+ZiB5b3UgYXJlIGENCj5kYXRhIGNlbnRlciBhZG1pbiBhbmQgeW91IHdhbnQgdG8gY29sbGVjdCBh
+bGwgeW91ciBlcnJvcg0KPnJlY29yZHM6IGdyZXBwaW5nIGRtZXNnIHNpbXBseSBkb2Vzbid0IHNj
+YWxlIHZlcnN1cyBhbGwgdGhlIHJhc2RhZW1vbg0KPmFnZW50cyByZXBvcnRpbmcgdG8gYSBjZW50
+cmFsbGl6ZWQgbG9jYXRpb24uDQpPay4NCkkgcG9zdGVkIFY3IG9mIHRoaXMgc2VyaWVzLiAgDQoi
+W3Y3IFBBVENIIDAvNl0gQUNQSSAvIEFQRUk6IEFkZCBzdXBwb3J0IHRvIG5vdGlmeSBub24tZmF0
+YWwgSFcgZXJyb3JzIg0KDQo+DQo+PiAyLiBJZiB0aGUgdmVuZG9yIGtlcm5lbCBkcml2ZXIgd2Fu
+dCB0byByZXBvcnQgZXh0cmEgZXJyb3IgaW5mb3JtYXRpb24NCj50aHJvdWdoDQo+PiAgICAgdGhl
+IHZlbmRvciBzcGVjaWZpYyBkYXRhICh0aG91Z2ggcHJlc2VudGx5IHdlIGRvIG5vdCBoYXZlIGFu
+eSBzdWNoIHVzZQ0KPmNhc2UpIGZvciB0aGUgcmFzZGFtb24gdG8gbG9nLg0KPj4gICAgIEkgdGhp
+bmsgdGhlIGVycm9yIGhhbmRsZWQgc3RhdHVzIHVzZWZ1bCB0byBpbmRpY2F0ZSB0aGF0IHRoZSBr
+ZXJuZWwgZHJpdmVyDQo+aGFzIGZpbGxlZCB0aGUgZXh0cmEgaW5mb3JtYXRpb24gYW5kDQo+PiAg
+ICAgcmFzZGFlbW9uIHRvIGRlY29kZSBhbmQgbG9nIHRoZW0gYWZ0ZXIgZXh0cmEgZGF0YSBzcGVj
+aWZpYyB2YWxpZGl0eQ0KPmNoZWNrLg0KPg0KPlRoZSBrZXJuZWwgZHJpdmVyIGNhbiByZXBvcnQg
+dGhhdCBleHRyYSBpbmZvcm1hdGlvbiB3aXRob3V0IHRoZSBrZXJuZWwgc2F5aW5nDQo+dGhhdCB0
+aGUgZXJyb3Igd2FzIGhhbmRsZWQuDQo+DQo+U28gSSBzdGlsbCBzZWUgbm8gc2Vuc2UgZm9yIHRo
+ZSBrZXJuZWwgdG8gdGVsbCB1c2Vyc3BhY2UgZXhwbGljaXRseSB0aGF0IGl0IGhhbmRsZWQNCj50
+aGUgZXJyb3IuIFRoZXJlIG1pZ2h0IGJlIGEgdmFsaWQgcmVhc29uLCB0aG91Z2gsIG9mIHdoaWNo
+IEkgY2Fubm90IHRoaW5rIG9mDQo+cmlnaHQgbm93Lg0KT2suDQoNCj4NCj5UaHguDQo+DQo+LS0N
+Cj5SZWdhcmRzL0dydXNzLA0KPiAgICBCb3Jpcy4NCj4NCj5odHRwczovL3Blb3BsZS5rZXJuZWwu
+b3JnL3RnbHgvbm90ZXMtYWJvdXQtbmV0aXF1ZXR0ZQ0KDQpUaGFua3MsDQpTaGlqdQ0K
