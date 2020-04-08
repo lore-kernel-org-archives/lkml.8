@@ -2,97 +2,310 @@ Return-Path: <SRS0=8dav=5Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 476FAC2D0EA
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 16:20:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E221C2BA1B
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 16:22:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1EACB2082F
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 16:20:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586362848;
-	bh=FvEMB9hEQ08qb6F1rpCNlzPRwlyB2qFUs3E/QV2Pm6U=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=OgKYYMvgQcBw0G3cAO+FYYYeCIXiOjZ4zIq2oo4cMlniRy7knE0LamfFLPTYXQlFs
-	 pIOtXTq7vEZqL9LqLt1gwKnt/IaEaPuw7JqG5Tm8EkNbKj0CWXzvRY5gZAfwbIaY7k
-	 v89Pg5dWXiUc5Fb0523VxZB4A4THx2FPXMBfcTgE=
+	by mail.kernel.org (Postfix) with ESMTP id 6731520784
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 16:22:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="C1mvJ/tH";
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="PrXmRgO3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730175AbgDHQUr (ORCPT
+        id S1730265AbgDHQWY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Apr 2020 12:20:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38610 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729860AbgDHQUq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Apr 2020 12:20:46 -0400
-Received: from linux-8ccs.fritz.box (p3EE2C7AC.dip0.t-ipconnect.de [62.226.199.172])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Wed, 8 Apr 2020 12:22:24 -0400
+Received: from smtprelay-out1.synopsys.com ([149.117.73.133]:39174 "EHLO
+        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728473AbgDHQWX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Apr 2020 12:22:23 -0400
+Received: from mailhost.synopsys.com (badc-mailhost2.synopsys.com [10.192.0.18])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1C1CE20784;
-        Wed,  8 Apr 2020 16:20:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586362846;
-        bh=FvEMB9hEQ08qb6F1rpCNlzPRwlyB2qFUs3E/QV2Pm6U=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=LsSBeAnKb8zrghoxl6Ny9D8ifQxNl8stUXIqv+/mZQUUN/FhrgYgBXUke4zhScEzw
-         R8i75p1iC+HFGPf+zGSYsk4JQbNPqWe/dCgEzyOmUHc2/eVpMn9kkUbjOkY74RrsUb
-         fbt/9Y+suV4HMaVamZIb/zb/ZxvZC/pqwCgCtY54=
-Date:   Wed, 8 Apr 2020 18:20:42 +0200
-From:   Jessica Yu <jeyu@kernel.org>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-        keescook@chromium.org, Josh Poimboeuf <jpoimboe@redhat.com>,
-        Miroslav Benes <mbenes@suse.cz>
-Subject: Re: [PATCH v2] module: Harden STRICT_MODULE_RWX
-Message-ID: <20200408162041.GA18334@linux-8ccs.fritz.box>
-References: <20200403171303.GK20760@hirez.programming.kicks-ass.net>
- <20200408153249.GA26619@linux-8ccs>
- <20200408155719.GQ20730@hirez.programming.kicks-ass.net>
+        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 741B040676;
+        Wed,  8 Apr 2020 16:22:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
+        t=1586362942; bh=l9sBrvrvegRKI9SUcUF/EwgfFTINGmPIkIT0DDuwJCw=;
+        h=From:To:CC:Subject:Date:References:In-Reply-To:From;
+        b=C1mvJ/tHmANfHFcqhGvEddkcsG5+fHSlnGMlOlXxRkG6g7ilfF2Tn+xXu7Iv36gf9
+         LiRKDVRxfLyK8ZUYSmeajVMFnhhCxIsPxoIdJgLTjpOdgfCvVNIbfRrhq/OziET4ou
+         soLfi+rxWTte6RlksAdo5Dl1I2QQEohN/1DpWHhiwsqSUI6gW1nWwDofVIYEEnHe/i
+         FlrBmU1k0CDFSzu+Hit7EKgGcfJitZsTZnj/bZeR/vgyLzGjaXSnJ7FY9qSnT/Mc73
+         AgVy+OQ+Cft1j9EJcPGOf+TlY+itgE87CYgFrAjWVdRy9OAlC/yFJ8KcyDCle8IpEe
+         1aHYH+gx1zYvQ==
+Received: from US01WEHTC3.internal.synopsys.com (us01wehtc3.internal.synopsys.com [10.15.84.232])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mailhost.synopsys.com (Postfix) with ESMTPS id 10A12A006B;
+        Wed,  8 Apr 2020 16:22:17 +0000 (UTC)
+Received: from us01hybrid1.internal.synopsys.com (10.200.27.51) by
+ US01WEHTC3.internal.synopsys.com (10.15.84.232) with Microsoft SMTP Server
+ (TLS) id 14.3.408.0; Wed, 8 Apr 2020 09:22:17 -0700
+Received: from NAM11-BN8-obe.outbound.protection.outlook.com (10.202.3.67) by
+ mrs.synopsys.com (10.200.27.51) with Microsoft SMTP Server (TLS) id
+ 14.3.408.0; Wed, 8 Apr 2020 09:22:17 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=D2JWZWK/ovm6s9Jbyc72aRYGEEBBABlrb592fj/KvgrG5rGTjIZOJ17AuhMcjPRiK+eHoWbfeTECpc4x+sKEG+I7q3lAT55tUgQJGyVV4wFAS/gb3TFfaFvh4HBIvSEV59srrZ/P2gWY2RTaQ6S+gZggl/koODiIa26yD40zSuCe2006RSx8PhRYViRZDqZfUw70OyA8yJMP4pHLcKGwiTViZQSDpYwi9veQo+vcZgu3F67GZ02Ob5C/gSyqaZjk4y8vJfq1yLWJ7d5GRmmh6yEUt+AUF6SdxW5ru4OpXFFGcrjHxj3TNpx/cH09UnKL/Q5EQcCkuY1xAQGpe9D2zA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=HqEyPD3Zuf5UDS0a4jJPqSwDkuUp9+ePd4R3LGkqm/A=;
+ b=QMal0Y1+A++X659UxogEEMqhRH72brojgHFoQTs8H/VQFTMexGCNHHjxzwP53gPe3t3EcHHzVZUruUu5AZ1m3G+XS1K3r5wLsXjyiGcXWV3lgV2sfLbSsYluHQ0AsGWtwyyFPsSqtojaGW4V84Y4y0iYUlVdBLC+enoVjGmDoEOzcUnyHdhGa/aOiipxZ181sADchsgG5xxfuJnRtmPXiPZe87Bgu/K8mhFgo+SYXSaqxiY0guiOszZyiFrZnp0B2qvmZ+oJwjbMy6RqYgQXcOsm6ec/3YARe/UotaFctUAjfLDAjiCwlUGk/srQU7lPzeW5/+cNHo0iqSTqKDMEBA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=synopsys.com; dmarc=pass action=none header.from=synopsys.com;
+ dkim=pass header.d=synopsys.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=synopsys.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=HqEyPD3Zuf5UDS0a4jJPqSwDkuUp9+ePd4R3LGkqm/A=;
+ b=PrXmRgO35/s0ktKBhP1Tn50X+lWxrnT5/vRiJzItRkxi6VmhxUy9Ve7RCAfF+qfFd5fRRq0UeKxR5zgek7lrn3AGYG3pj+1W5nWxEVVfR/MkZqO0Q8ZgZU5Tr5NalcY0srNxKRrRVGqDweNgkYH4C/Dk8uu2TmfI5jXH5CNEZSQ=
+Received: from CH2PR12MB3782.namprd12.prod.outlook.com (2603:10b6:610:23::28)
+ by CH2PR12MB4327.namprd12.prod.outlook.com (2603:10b6:610:7d::13) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2900.15; Wed, 8 Apr
+ 2020 16:22:15 +0000
+Received: from CH2PR12MB3782.namprd12.prod.outlook.com
+ ([fe80::98c8:5bfd:ae23:37cf]) by CH2PR12MB3782.namprd12.prod.outlook.com
+ ([fe80::98c8:5bfd:ae23:37cf%7]) with mapi id 15.20.2878.022; Wed, 8 Apr 2020
+ 16:22:15 +0000
+From:   Angelo Ribeiro <Angelo.Ribeiro@synopsys.com>
+To:     Sam Ravnborg <sam@ravnborg.org>
+CC:     "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "maarten.lankhorst@linux.intel.com" 
+        <maarten.lankhorst@linux.intel.com>,
+        "mripard@kernel.org" <mripard@kernel.org>,
+        "airlied@linux.ie" <airlied@linux.ie>,
+        "daniel@ffwll.ch" <daniel@ffwll.ch>,
+        Gustavo Pimentel <Gustavo.Pimentel@synopsys.com>,
+        Joao Pinto <Joao.Pinto@synopsys.com>
+Subject: RE: [PATCH v2 3/4] drm: ipk: Add extensions for DW MIPI DSI Host
+ driver
+Thread-Topic: [PATCH v2 3/4] drm: ipk: Add extensions for DW MIPI DSI Host
+ driver
+Thread-Index: AQHWDBbMvXG/yV0ow0quQOwBbF95eaht8kqAgAF258A=
+Date:   Wed, 8 Apr 2020 16:22:15 +0000
+Message-ID: <CH2PR12MB37826C649EB8C3065722F032CBC00@CH2PR12MB3782.namprd12.prod.outlook.com>
+References: <cover.1586174459.git.angelo.ribeiro@synopsys.com>
+ <8b63a8390bbc0e81d01540648da7e6b03b8577fa.1586174459.git.angelo.ribeiro@synopsys.com>
+ <20200407175159.GB6356@ravnborg.org>
+In-Reply-To: <20200407175159.GB6356@ravnborg.org>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-dg-ref: =?us-ascii?Q?PG1ldGE+PGF0IG5tPSJib2R5LnR4dCIgcD0iYzpcdXNlcnNcYW5nZWxvclxh?=
+ =?us-ascii?Q?cHBkYXRhXHJvYW1pbmdcMDlkODQ5YjYtMzJkMy00YTQwLTg1ZWUtNmI4NGJh?=
+ =?us-ascii?Q?MjllMzViXG1zZ3NcbXNnLTE5YjZmODk4LTc5YjUtMTFlYS05ZDcwLWZjNzc3?=
+ =?us-ascii?Q?NGVlZGMyZVxhbWUtdGVzdFwxOWI2Zjg5OS03OWI1LTExZWEtOWQ3MC1mYzc3?=
+ =?us-ascii?Q?NzRlZWRjMmVib2R5LnR4dCIgc3o9IjMzMjAiIHQ9IjEzMjMwODM2NTMzMDI1?=
+ =?us-ascii?Q?MjI3NyIgaD0ia0JrTWF4bURQanNRM1dxd0VVMUg2K2pNYjRrPSIgaWQ9IiIg?=
+ =?us-ascii?Q?Ymw9IjAiIGJvPSIxIiBjaT0iY0FBQUFFUkhVMVJTUlVGTkNnVUFBQlFKQUFE?=
+ =?us-ascii?Q?MWdWTGN3UTNXQVMxbEcvL3lrQ1JzTFdVYi8vS1FKR3dPQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUhBQUFBQ2tDQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUVBQVFBQkFBQUFveW5uNlFBQUFBQUFBQUFBQUFBQUFKNEFBQUJtQUdrQWJn?=
+ =?us-ascii?Q?QmhBRzRBWXdCbEFGOEFjQUJzQUdFQWJnQnVBR2tBYmdCbkFGOEFkd0JoQUhR?=
+ =?us-ascii?Q?QVpRQnlBRzBBWVFCeUFHc0FBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?RUFBQUFBQUFBQUFnQUFBQUFBbmdBQUFHWUFid0IxQUc0QVpBQnlBSGtBWHdC?=
+ =?us-ascii?Q?d0FHRUFjZ0IwQUc0QVpRQnlBSE1BWHdCbkFHWUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQVFBQUFBQUFBQUFDQUFB?=
+ =?us-ascii?Q?QUFBQ2VBQUFBWmdCdkFIVUFiZ0JrQUhJQWVRQmZBSEFBWVFCeUFIUUFiZ0Js?=
+ =?us-ascii?Q?QUhJQWN3QmZBSE1BWVFCdEFITUFkUUJ1QUdjQVh3QmpBRzhBYmdCbUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUJBQUFBQUFBQUFBSUFBQUFBQUo0QUFBQm1BRzhB?=
+ =?us-ascii?Q?ZFFCdUFHUUFjZ0I1QUY4QWNBQmhBSElBZEFCdUFHVUFjZ0J6QUY4QWN3QmhB?=
+ =?us-ascii?Q?RzBBY3dCMUFHNEFad0JmQUhJQVpRQnpBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFFQUFBQUFBQUFBQWdBQUFBQUFuZ0FBQUdZQWJ3QjFBRzRBWkFCeUFIa0FY?=
+ =?us-ascii?Q?d0J3QUdFQWNnQjBBRzRBWlFCeUFITUFYd0J6QUcwQWFRQmpBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBUUFBQUFBQUFBQUNB?=
+ =?us-ascii?Q?QUFBQUFDZUFBQUFaZ0J2QUhVQWJnQmtBSElBZVFCZkFIQUFZUUJ5QUhRQWJn?=
+ =?us-ascii?Q?QmxBSElBY3dCZkFITUFkQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQkFBQUFBQUFBQUFJQUFBQUFBSjRBQUFCbUFH?=
+ =?us-ascii?Q?OEFkUUJ1QUdRQWNnQjVBRjhBY0FCaEFISUFkQUJ1QUdVQWNnQnpBRjhBZEFC?=
+ =?us-ascii?Q?ekFHMEFZd0FBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUVBQUFBQUFBQUFBZ0FBQUFBQW5nQUFBR1lBYndCMUFHNEFaQUJ5QUhr?=
+ =?us-ascii?Q?QVh3QndBR0VBY2dCMEFHNEFaUUJ5QUhNQVh3QjFBRzBBWXdBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFRQUFBQUFBQUFB?=
+ =?us-ascii?Q?Q0FBQUFBQUNlQUFBQVp3QjBBSE1BWHdCd0FISUFid0JrQUhVQVl3QjBBRjhB?=
+ =?us-ascii?Q?ZEFCeUFHRUFhUUJ1QUdrQWJnQm5BQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFCQUFBQUFBQUFBQUlBQUFBQUFKNEFBQUJ6?=
+ =?us-ascii?Q?QUdFQWJBQmxBSE1BWHdCaEFHTUFZd0J2QUhVQWJnQjBBRjhBY0FCc0FHRUFi?=
+ =?us-ascii?Q?Z0FBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBRUFBQUFBQUFBQUFnQUFBQUFBbmdBQUFITUFZUUJzQUdVQWN3QmZB?=
+ =?us-ascii?Q?SEVBZFFCdkFIUUFaUUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQVFBQUFBQUFB?=
+ =?us-ascii?Q?QUFDQUFBQUFBQ2VBQUFBY3dCdUFIQUFjd0JmQUd3QWFRQmpBR1VBYmdCekFH?=
+ =?us-ascii?Q?VUFYd0IwQUdVQWNnQnRBRjhBTVFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUJBQUFBQUFBQUFBSUFBQUFBQUo0QUFB?=
+ =?us-ascii?Q?QnpBRzRBY0FCekFGOEFiQUJwQUdNQVpRQnVBSE1BWlFCZkFIUUFaUUJ5QUcw?=
+ =?us-ascii?Q?QVh3QnpBSFFBZFFCa0FHVUFiZ0IwQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFFQUFBQUFBQUFBQWdBQUFBQUFuZ0FBQUhZQVp3QmZBR3NBWlFC?=
+ =?us-ascii?Q?NUFIY0Fid0J5QUdRQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBUUFBQUFB?=
+ =?us-ascii?Q?QUFBQUNBQUFBQUFBPSIvPjwvbWV0YT4=3D?=
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=angelor@synopsys.com; 
+x-originating-ip: [95.136.124.74]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 87c72ef6-a2d9-49da-4ae0-08d7dbd90062
+x-ms-traffictypediagnostic: CH2PR12MB4327:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <CH2PR12MB4327FCE0C1C59A8CE50AEE27CBC00@CH2PR12MB4327.namprd12.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:7219;
+x-forefront-prvs: 0367A50BB1
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH2PR12MB3782.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10019020)(366004)(396003)(376002)(346002)(39860400002)(136003)(316002)(186003)(2906002)(6506007)(54906003)(26005)(7696005)(71200400001)(8676002)(55016002)(9686003)(86362001)(107886003)(81166007)(4326008)(81156014)(52536014)(5660300002)(6916009)(8936002)(33656002)(478600001)(76116006)(66446008)(66946007)(66476007)(66556008)(64756008);DIR:OUT;SFP:1102;
+received-spf: None (protection.outlook.com: synopsys.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: 0jRsTazwNf210tGFYj9ztlumMo83wI81HfgALBhREtc583LyTnRcunPdoda50b+2jaX7OePIY0RO5MOjp9P4Wwj2V6YrRJomkVs10Re4RL2ZxILT2hJyzja7fQXfQn1ZfsARvPBlVi5VrNA9ld7mUup0prPYREvNNukwUaiJHuNi3Mpm3izVJGip0vIk4WYlp52Cieen0AADCHQO2/+5X0ShunaARqeUB0LanBD1n7u3atTpVafrcDU4rVinA4h1c/e8m4DUoC3kzMXNWieJtA3ks01/OE1usg+Eaag4EIV83HPSu++OFBDQ1w47sYpRZwNhqv+kig+GwWqwDkiJ++GSA2Lel5O7kknW4vgeBxZlsRfG2LO/O1p7ImCARMexQYpuma18nAtx8vS0zqVVAQZdMaMF5wmbe83+WrMRzAhO/OYWgPuzg1oR4pcbLKLL
+x-ms-exchange-antispam-messagedata: ztahJxkxdK73meqkCZdmQXMuI9PyabA+sgwjkR5WYNdymaFeqKOc7IyVaOjAZUBPRMHL6UcdgKJqZILN0vls7MP2vrYWPcfYneyOTU72VbGWoxcK/Uf25LplJpzgjklpqGiB+vG5GizTAm1o2SxSFg==
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <20200408155719.GQ20730@hirez.programming.kicks-ass.net>
-X-OS:   Linux linux-8ccs 4.12.14-lp150.12.61-default x86_64
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 87c72ef6-a2d9-49da-4ae0-08d7dbd90062
+X-MS-Exchange-CrossTenant-originalarrivaltime: 08 Apr 2020 16:22:15.4803
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: c33c9f88-1eb7-4099-9700-16013fd9e8aa
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: JpFdtwi70z1ODfXF17mPbyHuflaZHc2HQrSKy42bV2Na8ZUzD/PFFflc9Su07Y6wy4QtD5vO5tO55+8g1d+INw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR12MB4327
+X-OriginatorOrg: synopsys.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-+++ Peter Zijlstra [08/04/20 17:57 +0200]:
-[..snip..]
->> Just to clarify, did we want to enforce this only when
->> CONFIG_STRICT_MODULE_RWX=y?  Because here it's still in the
->> CONFIG_ARCH_HAS_STRICT_MODULE_RWX block.
->>
->> Unfortunately, when we add module_enforce_rwx_sections() in the
->> CONFIG_STRICT_MODULE_RWX block, we'll need two empty stubs, one for
->> !CONFIG_ARCH_HAS_STRICT_MODULE_RWX and one for !CONFIG_STRICT_MODULE_RWX.
->>
->> This is because the CONFIG_STRICT_MODULE_RWX block is currently nested
->> within ARCH_HAS_STRICT_MODULE_RWX :/
->
->Yeah, so the primary reason it's under that ARCH_HAS thing is indeed the
->mess and the extra stub required (I'm a lazy sod at times).
+Hi Sam,
 
-Heh :-)
+Thanks for your revision=20
 
->I then rationalized this decision to myself that having it under
->ARCH_HAS give a more consistent module loading behaviour.
->
->But I really don't care too much, my most my .config's have
->CONFIG_MODULE=n, and the ones that do not very much have the STRICT_RWX
->set.
->
->Put it where you think it's best.
+Angelo
 
-I don't really mind either way, but my gut tells me I should just move
-that hunk under STRICT_MODULE_RWX just to be consistent with STRICT
-vs. non STRICT semantics. No need to respin, I'll rebase after I queue
-the other patch.
+From: Sam Ravnborg <sam@ravnborg.org>
+Date: Tue, Apr 07, 2020 at 18:51:59
 
-Thanks!
+> Hi Angelo.
+>=20
+> One nit below.
+>=20
+> 	Sam
+>=20
+> On Mon, Apr 06, 2020 at 03:24:13PM +0200, Angelo Ribeiro wrote:
+> > Add Synopsys DesignWare IPK specific extensions for Synopsys DesignWare
+> > MIPI DSI Host driver.
+> >=20
+> > Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>
+> > Cc: Maxime Ripard <mripard@kernel.org>
+> > Cc: David Airlie <airlied@linux.ie>
+> > Cc: Daniel Vetter <daniel@ffwll.ch>
+> > Cc: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
+> > Cc: Joao Pinto <jpinto@synopsys.com>
+> > Signed-off-by: Angelo Ribeiro <angelo.ribeiro@synopsys.com>
+> > ---
+> >  drivers/gpu/drm/ipk/Kconfig           |   9 +
+> >  drivers/gpu/drm/ipk/Makefile          |   2 +
+> >  drivers/gpu/drm/ipk/dw-mipi-dsi-ipk.c | 556 ++++++++++++++++++++++++++=
+++++++++
+> >  3 files changed, 567 insertions(+)
+> >  create mode 100644 drivers/gpu/drm/ipk/dw-mipi-dsi-ipk.c
+> >=20
+> > diff --git a/drivers/gpu/drm/ipk/Kconfig b/drivers/gpu/drm/ipk/Kconfig
+> > index 1f87444..49819e5 100644
+> > --- a/drivers/gpu/drm/ipk/Kconfig
+> > +++ b/drivers/gpu/drm/ipk/Kconfig
+> > @@ -11,3 +11,12 @@ config DRM_IPK
+> >  	  Enable support for the Synopsys DesignWare DRM DSI.
+> >  	  To compile this driver as a module, choose M here: the module
+> >  	  will be called ipk-drm.
+> > +
+> > +config DRM_IPK_DSI
+> > +	tristate "Synopsys DesignWare IPK specific extensions for MIPI DSI"
+> > +	depends on DRM_IPK
+> > +	select DRM_DW_MIPI_DSI
+> > +	help
+> > +	  Choose this option for Synopsys DesignWare IPK MIPI DSI support.
+> > +	  To compile this driver as a module, choose M here: the module
+> > +	  will be called dw-mipi-dsi-ipk.
+> > diff --git a/drivers/gpu/drm/ipk/Makefile b/drivers/gpu/drm/ipk/Makefil=
+e
+> > index 51d2774..c80503f 100644
+> > --- a/drivers/gpu/drm/ipk/Makefile
+> > +++ b/drivers/gpu/drm/ipk/Makefile
+> > @@ -4,3 +4,5 @@ ipk-drm-y :=3D \
+> >  	dw-vpg.o
+> > =20
+> >  obj-$(CONFIG_DRM_IPK) +=3D ipk-drm.o
+> > +
+> > +obj-$(CONFIG_DRM_IPK_DSI) +=3D dw-mipi-dsi-ipk.o
+> > diff --git a/drivers/gpu/drm/ipk/dw-mipi-dsi-ipk.c b/drivers/gpu/drm/ip=
+k/dw-mipi-dsi-ipk.c
+> > new file mode 100644
+> > index 0000000..070eccb
+> > --- /dev/null
+> > +++ b/drivers/gpu/drm/ipk/dw-mipi-dsi-ipk.c
+> > @@ -0,0 +1,556 @@
+> > +// SPDX-License-Identifier: GPL-2.0
+> > +/*
+> > + * Copyright (c) 2019-2020 Synopsys, Inc. and/or its affiliates.
+> > + * Synopsys DesignWare MIPI DSI solution driver
+> > + *
+> > + * Author: Angelo Ribeiro <angelo.ribeiro@synopsys.com>
+> > + * Author: Luis Oliveira <luis.oliveira@synopsys.com>
+> > + */
+> > +
+> > +#include <linux/clk.h>
+> > +#include <linux/iopoll.h>
+> > +#include <linux/module.h>
+> > +#include <drm/drm_mipi_dsi.h>
+> > +#include <drm/bridge/dw_mipi_dsi.h>
+> > +#include <video/mipi_display.h>
+> > +#include <linux/of.h>
+> > +#include <linux/platform_device.h>
+> > +
+> > +#include <drm/drm_crtc.h>
+> > +#include <drm/drm_device.h>
+> > +#include <drm/drm_print.h>
+> Same rant as in previous mail about include file.
+>=20
+>=20
+> Rest of the driver looked good while quickly browsing the code.
+>=20
+> 	Sam
 
-Jessica
 
