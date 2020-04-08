@@ -2,108 +2,131 @@ Return-Path: <SRS0=8dav=5Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D6FAC2D0EA
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 07:50:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FF9DC2D0EA
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 07:57:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1A92620747
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 07:50:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A2AE120747
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 07:57:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="hsIE8Vof"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726909AbgDHHuv (ORCPT
+        id S1726933AbgDHH5K (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Apr 2020 03:50:51 -0400
-Received: from m177129.mail.qiye.163.com ([123.58.177.129]:21499 "EHLO
-        m177129.mail.qiye.163.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726366AbgDHHuv (ORCPT
+        Wed, 8 Apr 2020 03:57:10 -0400
+Received: from mail-pj1-f65.google.com ([209.85.216.65]:55179 "EHLO
+        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726650AbgDHH5K (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Apr 2020 03:50:51 -0400
-X-Greylist: delayed 465 seconds by postgrey-1.27 at vger.kernel.org; Wed, 08 Apr 2020 03:50:45 EDT
-Received: from vivo.com (wm-2.qy.internal [127.0.0.1])
-        by m177129.mail.qiye.163.com (Hmail) with ESMTP id 909115C3299;
-        Wed,  8 Apr 2020 15:42:53 +0800 (CST)
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: base64
-Message-ID: <ADsAIgAICMOkBsTG35M4NqqB.1.1586331773574.Hmail.tao.li@vivo.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Felipe Balbi <balbi@kernel.org>,
-        =?UTF-8?Q?Micha=C5=82_Miros=C5=82aw?= <mirq-linux@rere.qmqm.pl>,
-        Sergey Organov <sorganov@gmail.com>, linux-usb@vger.kernel.org,
-        linux-kernel@vger.kernel.org, wenhu.wang@vivo.com
-Subject: =?UTF-8?B?UmU6UmU6IFtQQVRDSF0gdXNiOiBnYWRnZXQ6IHNlcmlhbDogRml4ZWQgS0FTQU4gbnVsbC1wdHItZGVyZWYgaW4gdHR5X3dha2V1cA==?=
-X-Priority: 3
-X-Mailer: HMail Webmail Server V2.0 Copyright (c) 2016-163.com
-X-Originating-IP: 58.251.74.226
+        Wed, 8 Apr 2020 03:57:10 -0400
+Received: by mail-pj1-f65.google.com with SMTP id np9so842712pjb.4
+        for <linux-kernel@vger.kernel.org>; Wed, 08 Apr 2020 00:57:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=sifive.com; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=R5l9yaDnHPviFSInTMtO+H9cjGUVnhLTSkCrNG5sx0k=;
+        b=hsIE8Vof28DJJncFl3vY8jPdw0T1oKCjs5IiYyxl69aiOHSiFTj0bX1wenWPJ3kJRJ
+         iIj07JLR0wgA6ZytV1SzqwxkatW3ZHpuqQIIFgLjLm9YXf1otQUmRJfab1OAWw59S6p2
+         RgWZljcud7M27JOTSdcvfdaQd+QNYcK78ifndNxpxIe7UmfEP2abrFi0CblVWumtA3Fe
+         bxHimMyQBCPLy92QZtfcnT6uyM6JDpXPllxJlmdPPfzmrKECAIIsIFelasO0muZUKILY
+         TA0QJ0589Dv1hXf2bIXA4h4y3D99sHzzLVQa4oS+//ptAKKDuPF7i7l9DbG2rMNzjz7C
+         jTyQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=R5l9yaDnHPviFSInTMtO+H9cjGUVnhLTSkCrNG5sx0k=;
+        b=S92SAaF67DGcpiRNDS3FezNfnCHLNpN3HRRHknj5Nt3nF4QTCYVMkgRkewZ7h/oQaU
+         7x5N0q2wI8ZGwjK9H8iBDV9/tQgAbD+FubC67r0UDK55a49dhNVM5OUAdLPN4QLd8UWB
+         jC6rU/sn+MB3ShNAosIbnGkS2vTL3RTN2dQM5uK8TbwZcRPMbETjJYw/EbUFdARTmOp0
+         b6sOYspoYm0ztv0kK6GwLCJsOUKA20R9tnSmTgBRxmlWIrP64+YEODB23k9Of+n80WDV
+         0KDcnZFIMrYUWdPXxqcNsRTPWWn2CVTA01ZSw0OeF1qRqnvvYZn6QH372TT4775gzvh9
+         QJhA==
+X-Gm-Message-State: AGi0PuZnreaaUMrvbiQ/D84UlltKb5gzqCHfs6x6w/SE1bc/yLr5UpoV
+        JcesrzvZoZ/9QAnZ2Zwrb4Y1gQ==
+X-Google-Smtp-Source: APiQypIdPE+cKH1o87dImXX8C4kNxwaWuMVEsYtc+353GjjJ1cP5svGrxcEtvT6nMOrjhFMmd8aMUA==
+X-Received: by 2002:a17:902:8e84:: with SMTP id bg4mr5738299plb.50.1586332629297;
+        Wed, 08 Apr 2020 00:57:09 -0700 (PDT)
+Received: from hsinchu02.internal.sifive.com (114-34-229-221.HINET-IP.hinet.net. [114.34.229.221])
+        by smtp.gmail.com with ESMTPSA id d85sm485599pfd.157.2020.04.08.00.57.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 08 Apr 2020 00:57:08 -0700 (PDT)
+From:   Zong Li <zong.li@sifive.com>
+To:     palmer@dabbelt.com, paul.walmsley@sifive.com,
+        aou@eecs.berkeley.edu, mhiramat@kernel.org,
+        linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc:     Zong Li <zong.li@sifive.com>
+Subject: [PATCH v5 0/9] Support strict kernel memory permissions for security
+Date:   Wed,  8 Apr 2020 15:56:55 +0800
+Message-Id: <cover.1586332296.git.zong.li@sifive.com>
+X-Mailer: git-send-email 2.26.0
 MIME-Version: 1.0
-Received: from tao.li@vivo.com( [58.251.74.226) ] by ajax-webmail ( [127.0.0.1] ) ; Wed, 8 Apr 2020 15:42:53 +0800 (GMT+08:00)
-From:   =?UTF-8?B?5p2O5qGD?= <tao.li@vivo.com>
-Date:   Wed, 8 Apr 2020 15:42:53 +0800 (GMT+08:00)
-X-HM-Spam-Status: e1kfGhgUHx5ZQUtXWQgYFAkeWUFZTlVMQkJLS0tJTUhJSk9KSllXWShZQU
-        hPN1dZLVlBSVdZCQ4XHghZQVk1NCk2OjckKS43PlkG
-X-HM-Sender-Digest: e1kMHhlZQQ8JDh5XWRIfHhUPWUFZRzo*CDoyHDoyODY0EDkILzxITjZP
-        NQoKOVVKVUpOQ01ISEpMTE1MSUJVMxYaEhdVDxoUVRcSOw0SDRRVGBQWRVlXWRILWUFZTkNVSU5K
-        VUxPVUlJTVlXWQgBWUFOQklLNwY+
-X-HM-Tid: 0a7158bdea9e6447kurs909115c3299
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-RnJvbTogR3JlZyBLcm9haC1IYXJ0bWFuIDxncmVna2hAbGludXhmb3VuZGF0aW9uLm9yZz4KRGF0
-ZTogMjAyMC0wMy0xOCAxODoxMjo0MApUbzogIExpIFRhbyA8dGFvLmxpQHZpdm8uY29tPgpDYzog
-IEZlbGlwZSBCYWxiaSA8YmFsYmlAa2VybmVsLm9yZz4sIk1pY2hhxYIgTWlyb3PFgmF3IiA8bWly
-cS1saW51eEByZXJlLnFtcW0ucGw+LFNlcmdleSBPcmdhbm92IDxzb3JnYW5vdkBnbWFpbC5jb20+
-LGxpbnV4LXVzYkB2Z2VyLmtlcm5lbC5vcmcsbGludXgta2VybmVsQHZnZXIua2VybmVsLm9yZyx3
-ZW5odS53YW5nQHZpdm8uY29tClN1YmplY3Q6IFJlOiBbUEFUQ0hdIHVzYjogZ2FkZ2V0OiBzZXJp
-YWw6IEZpeGVkIEtBU0FOIG51bGwtcHRyLWRlcmVmIGluIHR0eV93YWtldXA+T24gV2VkLCBNYXIg
-MTgsIDIwMjAgYXQgMTA6NTY6MDFBTSArMDgwMCwgTGkgVGFvIHdyb3RlOgo+PiBUaGUgcG9ydC0+
-cG9ydC50dHkgbWF5YmUgcmVzZXQgYXMgTlVMTCwgSWYgZ3NfY2xvc2UoKSB3YXMgaW52b2tlZAo+
-PiB1bmV4cGVjdGVkbHkgZHVyaW5nIHJ1bm5pbmcgZ3NlcmlhbF9jb25uZWN0KCkuCj4+IAo+PiBC
-VUc6IEtBU0FOOiBudWxsLXB0ci1kZXJlZiBpbiB0dHlfd2FrZXVwKzB4MWMvMHg4NAo+PiBDYWxs
-IHRyYWNlOgo+PiBbPDAwMDAwMDAwOTVjM2M4Mzc+XSBkdW1wX2JhY2t0cmFjZSsweDAvMHg2ZDQK
-Pj4gWzwwMDAwMDAwMDQ3NzI2YmI4Pl0gc2hvd19zdGFjaysweDE4LzB4MjAKPj4gWzwwMDAwMDAw
-MGJlZGI0YzFlPl0gLS1kdW1wX3N0YWNrKzB4MjAvMHgyOAo+PiBbPDAwMDAwMDAwNzIyZjJlMmE+
-XSBkdW1wX3N0YWNrKzB4ODQvMHhiMAo+PiBbPDAwMDAwMDAwMzI1NjgzZDQ+XSBrYXNhbl9yZXBv
-cnRfZXJyb3IrMHgxNzgvMHgxZTQKPj4gWzwwMDAwMDAwMDUzMDc5OTk4Pl0ga2FzYW5fcmVwb3J0
-X2Vycm9yKzB4MC8weDFlNAo+PiBbPDAwMDAwMDAwYjZkMzNhZmE+XSAtLWFzYW5fbG9hZDgrMHgx
-NTAvMHgxNWMKPj4gWzwwMDAwMDAwMDE4ODc0NWI4Pl0gdHR5X3dha2V1cCsweDFjLzB4ODQKPj4g
-WzwwMDAwMDAwMDY0ZjZkZDIxPl0gZ3Nfc3RhcnRfaW8rMHhkMC8weDExYwo+PiBbPDAwMDAwMDAw
-NjNkNjdiNmM+XSBnc2VyaWFsX2Nvbm5lY3QrMHgxNWMvMHgxYjAKPj4gWzwwMDAwMDAwMGZhZjdj
-MGY5Pl0gZG1fc2V0X2FsdCsweGE4LzB4MTkwCj4+IFs8MDAwMDAwMDA4ZGViMTkwOT5dIGNvbXBv
-c2l0ZV9zZXR1cCsweGRlNC8weDFlZGMKPj4gWzwwMDAwMDAwMDc5MmVlMTZkPl0gYW5kcm9pZF9z
-ZXR1cCsweDIxMC8weDI5NAo+PiBbPDAwMDAwMDAwYWIzMmVmMzA+XSBkd2MzX2VwMF9kZWxlZ2F0
-ZV9yZXErMHg0OC8weDY4Cj4+IFs8MDAwMDAwMDA1NGUyNmZkMj5dIGR3YzNfZXAwX2ludGVycnVw
-dCsweGYyYy8weDE2ZmMKPj4gWzwwMDAwMDAwMDUwY2IyMjYyPl0gZHdjM19pbnRlcnJ1cHQrMHg0
-NjQvMHgxZjQ0Cj4+IFs8MDAwMDAwMDBmZGNhYTZlOT5dIC0taGFuZGxlX2lycV9ldmVudF9wZXJj
-cHUrMHgxODQvMHgzOTgKPj4gWzwwMDAwMDAwMDNiMjRmZjU2Pl0gaGFuZGxlX2lycV9ldmVudF9w
-ZXJjcHUrMHhhMC8weDEzNAo+PiBbPDAwMDAwMDAwYWVkZGE1ZWU+XSBoYW5kbGVfaXJxX2V2ZW50
-KzB4NjAvMHhhMAo+PiBbPDAwMDAwMDAwNWY1MWE1NzA+XSBoYW5kbGVfZmFzdGVvaV9pcnErMHgy
-M2MvMHgzMWMKPj4gWzwwMDAwMDAwMDhkYjI2MDhkPl0gZ2VuZXJpY19oYW5kbGVfaXJxKzB4NzAv
-MHhhNAo+PiBbPDAwMDAwMDAwMDk4NjgzZmM+XSAtLWhhbmRsZV9kb21haW5faXJxKzB4ODQvMHhl
-MAo+PiBbPDAwMDAwMDAwOGVkMjNiNDY+XSBnaWNfaGFuZGxlX2lycSsweDk4LzB4YjgKPj4gCj4+
-IFNpZ25lZC1vZmYtYnk6IExpIFRhbyA8dGFvLmxpQHZpdm8uY29tPgo+PiAtLS0KPj4gIGRyaXZl
-cnMvdXNiL2dhZGdldC9mdW5jdGlvbi91X3NlcmlhbC5jIHwgMyArKy0KPj4gIDEgZmlsZSBjaGFu
-Z2VkLCAyIGluc2VydGlvbnMoKyksIDEgZGVsZXRpb24oLSkKPj4gCj4+IGRpZmYgLS1naXQgYS9k
-cml2ZXJzL3VzYi9nYWRnZXQvZnVuY3Rpb24vdV9zZXJpYWwuYyBiL2RyaXZlcnMvdXNiL2dhZGdl
-dC9mdW5jdGlvbi91X3NlcmlhbC5jCj4+IGluZGV4IDgxNjdkMzc5ZTExNS4uM2MxMDlhOGY5ZWM0
-IDEwMDY0NAo+PiAtLS0gYS9kcml2ZXJzL3VzYi9nYWRnZXQvZnVuY3Rpb24vdV9zZXJpYWwuYwo+
-PiArKysgYi9kcml2ZXJzL3VzYi9nYWRnZXQvZnVuY3Rpb24vdV9zZXJpYWwuYwo+PiBAQCAtNTY1
-LDcgKzU2NSw4IEBAIHN0YXRpYyBpbnQgZ3Nfc3RhcnRfaW8oc3RydWN0IGdzX3BvcnQgKnBvcnQp
-Cj4+ICAJCWdzX3N0YXJ0X3R4KHBvcnQpOwo+PiAgCQkvKiBVbmJsb2NrIGFueSBwZW5kaW5nIHdy
-aXRlcyBpbnRvIG91ciBjaXJjdWxhciBidWZmZXIsIGluIGNhc2UKPj4gIAkJICogd2UgZGlkbid0
-IGluIGdzX3N0YXJ0X3R4KCkgKi8KPj4gLQkJdHR5X3dha2V1cChwb3J0LT5wb3J0LnR0eSk7Cj4+
-ICsJCWlmIChwb3J0LT5wb3J0LnR0eSkKPj4gKwkJCXR0eV93YWtldXAocG9ydC0+cG9ydC50dHkp
-Owo+Cj5XaGF0IHByZXZlbnRzIHBvcnQudHR5IGZyb20gYmVpbmcgc2V0IHRvIE5VTEwgYmV0d2Vl
-biB0aGUgY2hlY2sgYW5kIHRoZQo+Y2FsbCB0byB0dHlfd2FrZXVwPwo+Cj5TaG91bGRuJ3QgZ3Nf
-Y2xvc2UoKSBhbmQgZ3NlcmlhbF9jb25uZWN0KCkgaGF2ZSBzb21lIHNvcnQgb2YgbG9ja2luZyB0
-bwo+cHJldmVudCB0aGlzPwo+CkkgZW5jb3VudGVyZWQgdGhpcyBpc3N1ZSBvbiBTYW1zdW5nIEVY
-WU5PUzk4MCBwbGF0Zm9ybSwgTWF5YmUgdGhpcyBpcyBwbGF0Zm9ybSBzcGVjaWZpYyBpc3N1ZS4K
-VGhlIFVTQiBpbnRlcnJ1cHQgaGFuZGxlciBnb3QgcG9ydF9sb2NrIG9uIENQVSAwIGluIGdzZXJp
-YWxfY29ubmVjdCB3aGlsZSBnc19jbG9zZSBpcyB3YWl0aW5nIGZvciAKdGhpcyBsb2NrIG9uIENQ
-VSAxLiAgQnV0IHRoaXMgcG9ydF9sb2NrIHdpbGwgdW5sb2NrIGluIGdzX3N0YXJ0X2lvLS0+Z3Nf
-c3RhcnRfcnggdGVtcG9yYXJpbHksIFRoaXMgcmFjZQpjb25kaXRpb24gbWF5IGNhdXNlIHBvcnQu
-dHR5IHNldCBhcyBOVUxMLgoKZ3JlZyBrLWgsIERvIHlvdSBoYXZlIHNvbWUgZ29vZCBzdWdnZXN0
-aW9ucz8KCj50aGFua3MsCj4KPmdyZWcgay1oCgoKDQoNCg==
+The main purpose of this patch series is changing the kernel mapping permission
+, make sure that code is not writeable, data is not executable, and read-only
+data is neither writable nor executable.
+
+This patch series also supports the relevant implementations such as
+ARCH_HAS_SET_MEMORY, ARCH_HAS_SET_DIRECT_MAP,
+ARCH_SUPPORTS_DEBUG_PAGEALLOC and DEBUG_WX.
+
+Changes in v5:
+ - Add lockdep_assert_held and more comments for text_mutex.
+
+Changes in v4:
+ - Use NOKPROBE_SYMBOL instead of __kprobe annotation
+ - Use text_mutex instead of patch_lock
+ - Remove 'riscv_' prefix of function name
+
+Changes in v3:
+ - Fix build error on nommu configuration. We already support nommu on
+   RISC-V, so we should consider nommu case and test not only rv32/64,
+   but also nommu.
+
+Changes in v2:
+ - Use _data to specify the start of data section with write permission.
+ - Change ftrace patch text implementaion.
+ - Separate DEBUG_WX patch to another patchset.
+
+Zong Li (9):
+  riscv: add macro to get instruction length
+  riscv: introduce interfaces to patch kernel code
+  riscv: patch code by fixmap mapping
+  riscv: add ARCH_HAS_SET_MEMORY support
+  riscv: add ARCH_HAS_SET_DIRECT_MAP support
+  riscv: add ARCH_SUPPORTS_DEBUG_PAGEALLOC support
+  riscv: move exception table immediately after RO_DATA
+  riscv: add alignment for text, rodata and data sections
+  riscv: add STRICT_KERNEL_RWX support
+
+ arch/riscv/Kconfig                  |   6 +
+ arch/riscv/include/asm/bug.h        |   8 ++
+ arch/riscv/include/asm/fixmap.h     |   2 +
+ arch/riscv/include/asm/patch.h      |  12 ++
+ arch/riscv/include/asm/set_memory.h |  48 +++++++
+ arch/riscv/kernel/Makefile          |   4 +-
+ arch/riscv/kernel/ftrace.c          |  26 ++--
+ arch/riscv/kernel/patch.c           | 128 +++++++++++++++++++
+ arch/riscv/kernel/traps.c           |   3 +-
+ arch/riscv/kernel/vmlinux.lds.S     |  11 +-
+ arch/riscv/mm/Makefile              |   2 +-
+ arch/riscv/mm/init.c                |  44 +++++++
+ arch/riscv/mm/pageattr.c            | 187 ++++++++++++++++++++++++++++
+ 13 files changed, 466 insertions(+), 15 deletions(-)
+ create mode 100644 arch/riscv/include/asm/patch.h
+ create mode 100644 arch/riscv/include/asm/set_memory.h
+ create mode 100644 arch/riscv/kernel/patch.c
+ create mode 100644 arch/riscv/mm/pageattr.c
+
+-- 
+2.26.0
+
