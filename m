@@ -2,98 +2,149 @@ Return-Path: <SRS0=8dav=5Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 864B9C2BB54
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 00:05:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D970C2D0EC
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 00:05:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5F777206A1
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 00:05:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586304314;
-	bh=fRB8R33swTx2eyYH9iWmJjokUFqp36UDQSPo3F/mQiE=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=IzX3B8lGc8VKNuAS+ZeauiGiZafGxsiAQAjjpvi3hSHR5vgfXfCrnm06pJVye37Sr
-	 jBvG6THCKW3pBMxEnkITCNmCAI0f7cUQQ0UEcAjTOYau1l/z8Vy3PUcq+ByaECikXK
-	 hp9C7RPD8jWMWnc8CjdWDQgUStOXliWJdDBlwhMI=
+	by mail.kernel.org (Postfix) with ESMTP id 81B5D2054F
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 00:05:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726469AbgDHAFN (ORCPT
+        id S1726534AbgDHAFR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 20:05:13 -0400
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:32973 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726416AbgDHAFN (ORCPT
+        Tue, 7 Apr 2020 20:05:17 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:45468 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726416AbgDHAFQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Apr 2020 20:05:13 -0400
-Received: by mail-lf1-f67.google.com with SMTP id h6so3816628lfc.0
-        for <linux-kernel@vger.kernel.org>; Tue, 07 Apr 2020 17:05:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=xIrR6bYca0pm2GJAq9Eb2z2zbLCcWgcw1hONud88tGI=;
-        b=RfefjE1TimGEmBWEYxlaE/AiBpOVt1Uk0Drlf3I8ZJb0O4WXKbDzGGUcGLpSnOHEhp
-         FCgsojfCWzwQP3E/sr9GD1ZyDEtgqn2gZNFoAiBYjUII4mzIAx6gdwZd3XUkMTt7+tTZ
-         zq6O469mwpErQ5rkzqaJDD9339W+4V6tTVcUM=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=xIrR6bYca0pm2GJAq9Eb2z2zbLCcWgcw1hONud88tGI=;
-        b=iEyjBy8b1b2mOXKiMyZFLEEa8Kb0dyctjQlrwOYknFlppHxCMRs/2/Gf1IMCu9C7/O
-         Ws91ed/y77JgjHcKwlyMmOcybooKNUL6jNjvOB/7wPkv1Hn+RwlIYRVZsummAUDN45+D
-         OCFQ4QJV/ua1lYz1lcdxy0vStJCMlLe3Ke6R+4cI7jjNBwPytxKT0dqnvJCay51VdVKJ
-         9hCFhrFFE1HB4GXHMBMACrF36GR11T+sz6/sW/kA6p+5L/GCtlmQWCEDxdQnG2hEJTpO
-         h7t4kR6BT4xI1ckK5LVzKtv1hU8iUFyPK24n3G5V7WWzzJOF4kiDGNjcsYO/Y7TJB2Yo
-         7Y6g==
-X-Gm-Message-State: AGi0PuZlJg6JUYoBRqFHXygo52FihxI2yeJtpby0GipZkwhby/XM/Va2
-        ihTTf8P3WHymSjYBlJgVUJXK5cZxoNs=
-X-Google-Smtp-Source: APiQypIC+y1YKQL/0ft9zqcYVHd4MuWdnMAVNACStzh5urGxrEamu3VtkhPnsl/GZiEGMxnlZq+TQg==
-X-Received: by 2002:a19:f611:: with SMTP id x17mr2952541lfe.51.1586304309995;
-        Tue, 07 Apr 2020 17:05:09 -0700 (PDT)
-Received: from mail-lj1-f171.google.com (mail-lj1-f171.google.com. [209.85.208.171])
-        by smtp.gmail.com with ESMTPSA id w24sm12425464ljh.57.2020.04.07.17.05.08
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 07 Apr 2020 17:05:09 -0700 (PDT)
-Received: by mail-lj1-f171.google.com with SMTP id g27so5647714ljn.10
-        for <linux-kernel@vger.kernel.org>; Tue, 07 Apr 2020 17:05:08 -0700 (PDT)
-X-Received: by 2002:a2e:a58e:: with SMTP id m14mr3154247ljp.204.1586304308658;
- Tue, 07 Apr 2020 17:05:08 -0700 (PDT)
+        Tue, 7 Apr 2020 20:05:16 -0400
+Received: from [IPv6:2804:431:e7cc:377d:dcf4:aab0:a7bd:9880] (unknown [IPv6:2804:431:e7cc:377d:dcf4:aab0:a7bd:9880])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: koike)
+        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id 688EF284F73;
+        Wed,  8 Apr 2020 01:05:09 +0100 (BST)
+Subject: Re: [PATCH v2 0/3] media: add v4l2_pipeline_stream_{enable,disable}
+ helpers
+To:     =?UTF-8?Q?Niklas_S=c3=b6derlund?= <niklas.soderlund@ragnatech.se>
+Cc:     linux-media@vger.kernel.org, kernel@collabora.com,
+        linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org,
+        hans.verkuil@cisco.com, skhan@linuxfoundation.org,
+        mchehab@kernel.org
+References: <20200403213312.1863876-1-helen.koike@collabora.com>
+ <20200407193615.GG1716317@oden.dyn.berto.se>
+From:   Helen Koike <helen.koike@collabora.com>
+Message-ID: <4be824ea-61e2-4624-4880-fccb4ff804cd@collabora.com>
+Date:   Tue, 7 Apr 2020 21:05:03 -0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-References: <00000000000018a92305a2ba57e0@google.com> <20200407220837.GB66033@xz-x1>
-In-Reply-To: <20200407220837.GB66033@xz-x1>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Tue, 7 Apr 2020 17:04:52 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wjQJQM=V6CDPrU2FJVEi4zZsr8-w8a0We8tF5K66J_ZOw@mail.gmail.com>
-Message-ID: <CAHk-=wjQJQM=V6CDPrU2FJVEi4zZsr8-w8a0We8tF5K66J_ZOw@mail.gmail.com>
-Subject: Re: BUG: unable to handle kernel paging request in get_pfnblock_flags_mask
-To:     Peter Xu <peterx@redhat.com>
-Cc:     syzbot <syzbot+18638e81a805a2d96682@syzkaller.appspotmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Brian Geffon <bgeffon@google.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux-MM <linux-mm@kvack.org>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200407193615.GG1716317@oden.dyn.berto.se>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 7, 2020 at 3:08 PM Peter Xu <peterx@redhat.com> wrote:
->
-> Thanks; I think this is a dup of previous one too:
 
-Peter, since the two nasties are both fairly bad, would you mind
-sending me your two patches and I'll just apply them directly.
 
-I've seen them fly by, but I think they both happened inside the
-threads discussing the problem, and I'd much rather have the final
-patch sent to me explicitly (with confirmation that syzbot tested them
-- again I _think_ I saw that fly by too, but my mailbox is fairly
-chaotic..)
+On 4/7/20 4:36 PM, Niklas Söderlund wrote:
+> Hi Helen,
+> 
+> On 2020-04-03 18:33:09 -0300, Helen Koike wrote:
+>> Hi,
+>>
+>> Media drivers need to iterate through the pipeline and call .s_stream()
+>> callbacks in the subdevices.
+>>
+>> Instead of repeating code, add helpers for this.
+>>
+>> These helpers will go walk through the pipeline only visiting entities
+>> that participates in the stream, i.e. it follows links from sink to source
+>> (and not the opposite).
+>>
+>> Which means that in a topology like this https://bit.ly/3b2MxjI
+>> calling v4l2_pipeline_stream_enable() from rkisp1_mainpath won't call
+>> .s_stream(true) for rkisp1_resizer_selfpath.
+>>
+>> stream_count variable was added in v4l2_subdevice to handle nested calls
+>> to the helpers.
+>> This is useful when the driver allows streaming from more then one
+>> capture device sharing subdevices.
+>>
+>> This patch came from the error I was facing when multistreaming from
+>> rkisp1 driver, where stoping one capture would call s_stream(false) in
+>> the pipeline, causing a stall in the second capture device.
+>>
+>> Also, the vimc patch https://patchwork.kernel.org/patch/10948833/ won't
+>> be required with this patchset.
+>>
+>> This patchset was tested on rkisp1 and vimc drivers.
+> 
+> I'm just curious, with this series applied can I stream simultaneously 
+> on multiple video devises using vimc?
 
-             Linus
+No, this patch only removes the requirement of patch 1/3 in the series
+"vimc: Allow multiple capture devices to use the same sensor", since the counter
+is being added in the core, so it won't be required to add it for each subdevice.
+The other patches in that series are still required.
+
+
+Regards,
+Helen
+
+> 
+>>
+>> Other cleanup might be possible (but I won't add in this patchset as I
+>> don't have the hw to test):
+>> 	https://git.linuxtv.org/media_tree.git/tree/drivers/media/platform/qcom/camss/camss-video.c#n430
+>> 	https://git.linuxtv.org/media_tree.git/tree/drivers/media/platform/omap3isp/isp.c#n697
+>> 	https://git.linuxtv.org/media_tree.git/tree/drivers/media/platform/stm32/stm32-dcmi.c#n680
+>> 	https://git.linuxtv.org/media_tree.git/tree/drivers/media/platform/xilinx/xilinx-dma.c#n97
+>>
+>> Changes in V2:
+>> ====================
+>> The first version was calling the s_stream() callbacks from sensor to
+>> capture.
+>>
+>> This was generating errors in the Scarlet Chromebook, when the sensor
+>> was being enabled before the ISP.
+>>
+>> It make sense to enable subdevices from capture to sensor instead (which
+>> is what most drivers do already).
+>>
+>> This v2 drops the changes from mc-entity.c, and re-implement helpers in
+>> v4l2-common.c
+>>
+>> Overview of patches:
+>> ====================
+>>
+>> Path 1/3 adds the helpers in v4l2-common.c, allowing nested calls by
+>> adding stream_count in the subdevice struct.
+>>
+>> Patch 2/3 cleanup rkisp1 driver to use the helpers.
+>>
+>> Patch 3/3 cleanup vimc driver to use the helpers.
+>>
+>> Helen Koike (3):
+>>   media: v4l2-common: add helper functions to call s_stream() callbacks
+>>   media: staging: rkisp1: use v4l2_pipeline_stream_{enable,disable}
+>>     helpers
+>>   media: vimc: use v4l2_pipeline_stream_{enable,disable} helpers
+>>
+>>  drivers/media/platform/vimc/vimc-capture.c    |  28 +++--
+>>  drivers/media/platform/vimc/vimc-streamer.c   |  49 +-------
+>>  drivers/media/v4l2-core/v4l2-common.c         | 117 ++++++++++++++++++
+>>  drivers/staging/media/rkisp1/rkisp1-capture.c |  76 +-----------
+>>  include/media/v4l2-common.h                   |  28 +++++
+>>  include/media/v4l2-subdev.h                   |   2 +
+>>  6 files changed, 173 insertions(+), 127 deletions(-)
+>>
+>> -- 
+>> 2.26.0
+>>
+> 
