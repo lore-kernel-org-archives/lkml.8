@@ -2,84 +2,89 @@ Return-Path: <SRS0=8dav=5Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF619C2D0EA
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 11:12:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FCC7C2D0EA
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 11:13:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 685F620780
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 11:12:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 42AC32076D
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 11:13:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VC5psAUs"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="oteVl0ql"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728388AbgDHLMQ (ORCPT
+        id S1728391AbgDHLNf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Apr 2020 07:12:16 -0400
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:44834 "EHLO
-        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728100AbgDHLMQ (ORCPT
+        Wed, 8 Apr 2020 07:13:35 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:56996 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728100AbgDHLNf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Apr 2020 07:12:16 -0400
-Received: by mail-ed1-f67.google.com with SMTP id i16so8046953edy.11;
-        Wed, 08 Apr 2020 04:12:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:reply-to:from:date:message-id:subject:to:cc;
-        bh=y6GvbrxPWO38NZY2qniHG/bjP2NH5oiIBjc+DHthlNY=;
-        b=VC5psAUsa1U2CjvoshCFasg2IK8FzsljYRvZ/5QS60xwoyvFBFXQqmt8BkfUpV3HhM
-         wkeRFEaLVqKQIOoZDyHNzLICNc4pgkurJGaKqWSZfacFmPdK86yd+dxBZVQCpzJjJOcA
-         nPceEZnTYX6NJHBHq5pJAT/x9+LSQWopr7Q1En9TwCbD3g2D35OpQY+2TajCjUF+FN1e
-         1nx+MN0TVjZJqCRqNbYlmm5rP8MdMkc4y6G74Frt5V7HwMBNMWLyd3BYzC8p66tFBOa3
-         x+m/N/xyM5Zel3thnTh3qMXI0vUG6+MDW4TbGn4BkVcNFBi01WQ7mnKcOKPmwSSniwZC
-         8YFw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
-         :subject:to:cc;
-        bh=y6GvbrxPWO38NZY2qniHG/bjP2NH5oiIBjc+DHthlNY=;
-        b=KATwr8QcNWNVC17uOY0M097ufa1HW4BjNA/CHKemVGQ+B+B+QlCxpnEuI8oTsvM1sI
-         akkq+HccgM/gIK+0ceqsMikHRXbZsSBfEu6zhJED1nVa8BZ5cmkOqQlFsLFgC6p3VL1t
-         EN9t87EpXPYq1VLJkrcNMWLgSENaszTCZkODgDgP8pNvL0AeHrIGrIgeQJC97JB7wxx7
-         2yJV/b8pLVmIZxokEXdlRcEt0KJwOVssNbI6rUjfph8GBI2WtFgurP0+Iqygzc6cFVcr
-         1yP5CCHZ4FKYJlKDBEMs6IzJZW+BfAyzX9oRC5fTYWs2lz+jJaqbrn28igtS1A+EKvft
-         eAdA==
-X-Gm-Message-State: AGi0PuatYKpvWs2X0cbR1FJHA2ZSwgn35gQ0EbGMuFaCCYjJr2I33nzm
-        hCtTECG8UwX8vtJ/UnUzso9vRZEpwgHDERFmT90=
-X-Google-Smtp-Source: APiQypLakffEooTTK/wIZhPA1UXmX6ePrOgYPFpT6bdDI4nYEdoKNBKYdrg7FinZZVq0sJNuwRcasB3azLK159CjdFg=
-X-Received: by 2002:a05:6402:504:: with SMTP id m4mr6031207edv.367.1586344332475;
- Wed, 08 Apr 2020 04:12:12 -0700 (PDT)
+        Wed, 8 Apr 2020 07:13:35 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=owW3+5nk1emkhI4cOviK2xmpja0Eslb3d5NnNfm4ABY=; b=oteVl0qlOAfP5bhgb67Zr9x8Uc
+        bRuCew67l9BV+/JRZuTjgTOAHnBFS5SKoNK/HOyOWZ59WupxVuibCY5+05oGbheDiG5HWHmy8S4cY
+        +f2xrfMQsZOvUZYjTabyUzPGHWusJiCu9h6qxdvvNWt8LZz5G6NWmIgJo/wOSFsGaPB/EH1LWEyba
+        Uxs0oqH+RwuSDxacMYmzB3oEW+Nr+dQgn9MZPS9f+gEO3+8AdQmbcC07SK3Pp7nDys4oWPuoeuDtv
+        ySERjY/R8FKfZKJ7RXVPmUhhFomNX8N+JCj4eARuV9FGrPbDsyi2jNOaJLHBEZLyhuKvECYTaU5Ar
+        fS+QjguQ==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jM8e4-0005mx-Gs; Wed, 08 Apr 2020 11:13:24 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id E0E2E300130;
+        Wed,  8 Apr 2020 13:13:22 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 944032BA90A62; Wed,  8 Apr 2020 13:13:22 +0200 (CEST)
+Date:   Wed, 8 Apr 2020 13:13:22 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Ankur Arora <ankur.a.arora@oracle.com>
+Cc:     linux-kernel@vger.kernel.org, x86@kernel.org, hpa@zytor.com,
+        jpoimboe@redhat.com, namit@vmware.com, mhiramat@kernel.org,
+        jgross@suse.com, bp@alien8.de, vkuznets@redhat.com,
+        pbonzini@redhat.com, boris.ostrovsky@oracle.com,
+        mihai.carabas@oracle.com, kvm@vger.kernel.org,
+        xen-devel@lists.xenproject.org,
+        virtualization@lists.linux-foundation.org
+Subject: Re: [RFC PATCH 15/26] x86/alternatives: Non-emulated text poking
+Message-ID: <20200408111322.GU20713@hirez.programming.kicks-ass.net>
+References: <20200408050323.4237-1-ankur.a.arora@oracle.com>
+ <20200408050323.4237-16-ankur.a.arora@oracle.com>
 MIME-Version: 1.0
-Reply-To: mtk.manpages@gmail.com
-From:   "Michael Kerrisk (man-pages)" <mtk.manpages@gmail.com>
-Date:   Wed, 8 Apr 2020 13:12:01 +0200
-Message-ID: <CAKgNAkhL0zCj11LS9vfae872YVeRsxdz20sZWuXdi+UjH21=0g@mail.gmail.com>
-Subject: CLONE_INTO_CGROUP documentation?
-To:     Christian Brauner <christian.brauner@ubuntu.com>
-Cc:     Oleg Nesterov <oleg@redhat.com>,
-        Linux API <linux-api@vger.kernel.org>,
-        linux-man <linux-man@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>, Tejun Heo <tj@kernel.org>,
-        "open list:CONTROL GROUP (CGROUP)" <cgroups@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200408050323.4237-16-ankur.a.arora@oracle.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Christian,
+On Tue, Apr 07, 2020 at 10:03:12PM -0700, Ankur Arora wrote:
+> +static void __maybe_unused sync_one(void)
+> +{
+> +	/*
+> +	 * We might be executing in NMI context, and so cannot use
+> +	 * IRET as a synchronizing instruction.
+> +	 *
+> +	 * We could use native_write_cr2() but that is not guaranteed
+> +	 * to work on Xen-PV -- it is emulated by Xen and might not
+> +	 * execute an iret (or similar synchronizing instruction)
+> +	 * internally.
+> +	 *
+> +	 * cpuid() would trap as well. Unclear if that's a solution
+> +	 * either.
+> +	 */
+> +	if (in_nmi())
+> +		cpuid_eax(1);
+> +	else
+> +		sync_core();
+> +}
 
-I see that CLONE_INTO_CGROUP has been merged? WOuld you be able to
-send a man-pages patch documenting this please?
-
-Thanks,
-
-Michael
-
-
---
-Michael Kerrisk
-Linux man-pages maintainer; http://www.kernel.org/doc/man-pages/
-Linux/UNIX System Programming Training: http://man7.org/training/
+That's not thinking staight; what do you think the INT3 does when it
+happens inside an NMI ?
