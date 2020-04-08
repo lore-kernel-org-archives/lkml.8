@@ -2,163 +2,93 @@ Return-Path: <SRS0=8dav=5Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D789C2BA1A
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 16:28:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B136BC2D0F4
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 16:31:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DE7F620784
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 16:28:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ZjU7ucIt"
+	by mail.kernel.org (Postfix) with ESMTP id 8E52D20769
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 16:31:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730324AbgDHQ2H (ORCPT
+        id S1728083AbgDHQbA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Apr 2020 12:28:07 -0400
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:42378 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726846AbgDHQ2F (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Apr 2020 12:28:05 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1586363284;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=E/L4ALyvrKq9jt7009jD8vn4VfcLT3lIG5y3VVV2B/M=;
-        b=ZjU7ucItGpBo3N00IKtG0cHIqSxG+m83wJa6eieQYoERxh/avptxrx2OI8tfZAToD4gBJx
-        mCzXejt1ppTFDypfd/m9Mu+GWeY8+jHbvx/RsOVP/Hud+981Azmp0NymVyqIxvdQemU5eO
-        4/MweIb5DE9bvkgBmP6IdV7kuBeFIWk=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-140--NMhJJ6tPLq1BtIPxvulPQ-1; Wed, 08 Apr 2020 12:28:00 -0400
-X-MC-Unique: -NMhJJ6tPLq1BtIPxvulPQ-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id BFECDDB60;
-        Wed,  8 Apr 2020 16:27:58 +0000 (UTC)
-Received: from gondolin (ovpn-113-103.ams2.redhat.com [10.36.113.103])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 240DF5DA7C;
-        Wed,  8 Apr 2020 16:27:52 +0000 (UTC)
-Date:   Wed, 8 Apr 2020 18:27:50 +0200
-From:   Cornelia Huck <cohuck@redhat.com>
-To:     Tony Krowiak <akrowiak@linux.ibm.com>
-Cc:     linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org, freude@linux.ibm.com, borntraeger@de.ibm.com,
-        mjrosato@linux.ibm.com, pmorel@linux.ibm.com, pasic@linux.ibm.com,
-        alex.williamson@redhat.com, kwankhede@nvidia.com,
-        jjherne@linux.ibm.com, fiuczy@linux.ibm.com
-Subject: Re: [PATCH v7 01/15] s390/vfio-ap: store queue struct in hash table
- for quick access
-Message-ID: <20200408182750.6d9443f6.cohuck@redhat.com>
-In-Reply-To: <e0d56b61-749a-3646-18e7-47bb5c8ca862@linux.ibm.com>
-References: <20200407192015.19887-1-akrowiak@linux.ibm.com>
-        <20200407192015.19887-2-akrowiak@linux.ibm.com>
-        <20200408124801.2d61bc5b.cohuck@redhat.com>
-        <e0d56b61-749a-3646-18e7-47bb5c8ca862@linux.ibm.com>
-Organization: Red Hat GmbH
+        Wed, 8 Apr 2020 12:31:00 -0400
+Received: from foss.arm.com ([217.140.110.172]:41190 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726774AbgDHQbA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Apr 2020 12:31:00 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9057F30E;
+        Wed,  8 Apr 2020 09:30:59 -0700 (PDT)
+Received: from [192.168.1.19] (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 27A4A3F52E;
+        Wed,  8 Apr 2020 09:30:55 -0700 (PDT)
+Subject: Re: [PATCH 1/4] sched/topology: Store root domain CPU capacity sum
+To:     Vincent Guittot <vincent.guittot@linaro.org>
+Cc:     Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Luca Abeni <luca.abeni@santannapisa.it>,
+        Daniel Bristot de Oliveira <bristot@redhat.com>,
+        Wei Wang <wvw@google.com>, Quentin Perret <qperret@google.com>,
+        Alessio Balsini <balsini@google.com>,
+        Pavan Kondeti <pkondeti@codeaurora.org>,
+        Patrick Bellasi <patrick.bellasi@matbug.net>,
+        Morten Rasmussen <morten.rasmussen@arm.com>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Qais Yousef <qais.yousef@arm.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+References: <20200408095012.3819-1-dietmar.eggemann@arm.com>
+ <20200408095012.3819-2-dietmar.eggemann@arm.com>
+ <CAKfTPtC4_+dTddLdoFMdzUvsXwWyi3bUOXcg9kstC8RzZS_a+A@mail.gmail.com>
+From:   Dietmar Eggemann <dietmar.eggemann@arm.com>
+Message-ID: <42cc3878-4c57-96ba-3ebd-1b4d4ef87fae@arm.com>
+Date:   Wed, 8 Apr 2020 18:30:54 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+In-Reply-To: <CAKfTPtC4_+dTddLdoFMdzUvsXwWyi3bUOXcg9kstC8RzZS_a+A@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 8 Apr 2020 11:38:07 -0400
-Tony Krowiak <akrowiak@linux.ibm.com> wrote:
+On 08.04.20 14:29, Vincent Guittot wrote:
+> On Wed, 8 Apr 2020 at 11:50, Dietmar Eggemann <dietmar.eggemann@arm.com> wrote:
 
-> On 4/8/20 6:48 AM, Cornelia Huck wrote:
-> > On Tue,  7 Apr 2020 15:20:01 -0400
-> > Tony Krowiak <akrowiak@linux.ibm.com> wrote:
-> > =20
-> >> Rather than looping over potentially 65535 objects, let's store the
-> >> structures for caching information about queue devices bound to the
-> >> vfio_ap device driver in a hash table keyed by APQN. =20
-> > This also looks like a nice code simplification.
-> > =20
-> >> Signed-off-by: Tony Krowiak <akrowiak@linux.ibm.com>
-> >> ---
-> >>   drivers/s390/crypto/vfio_ap_drv.c     | 28 +++------
-> >>   drivers/s390/crypto/vfio_ap_ops.c     | 90 ++++++++++++++-----------=
---
-> >>   drivers/s390/crypto/vfio_ap_private.h | 10 ++-
-> >>   3 files changed, 60 insertions(+), 68 deletions(-)
-> >> =20
-> > (...)
+[...]
 
-> >> - */
-> >> -static struct vfio_ap_queue *vfio_ap_get_queue(
-> >> -					struct ap_matrix_mdev *matrix_mdev,
-> >> -					int apqn)
-> >> +struct vfio_ap_queue *vfio_ap_get_queue(unsigned long apqn)
-> >>   {
-> >>   	struct vfio_ap_queue *q;
-> >> -	struct device *dev;
-> >> -
-> >> -	if (!test_bit_inv(AP_QID_CARD(apqn), matrix_mdev->matrix.apm))
-> >> -		return NULL;
-> >> -	if (!test_bit_inv(AP_QID_QUEUE(apqn), matrix_mdev->matrix.aqm))
-> >> -		return NULL; =20
-> > These were just optimizations and therefore can be dropped now? =20
->=20
-> The purpose of this function has changed from its previous incarnation.
-> This function was originally called from the handle_pqap() function and
-> served two purposes: It retrieved the struct vfio_ap_queue as driver data
-> and linked the matrix_mdev to the=C2=A0 vfio_ap_queue. The linking of the
-> matrix_mdev and the vfio_ap_queue are now done when queue devices
-> are probed and when adapters and domains are assigned; so now, the
-> handle_pqap() function calls this function to retrieve both the
-> vfio_ap_queue as well as the matrix_mdev to which it is linked.=20
-> Consequently,
-> the above code is no longer needed.
+>>  /**
+>> diff --git a/kernel/sched/topology.c b/kernel/sched/topology.c
+>> index 8344757bba6e..74b0c0fa4b1b 100644
+>> --- a/kernel/sched/topology.c
+>> +++ b/kernel/sched/topology.c
+>> @@ -2052,12 +2052,17 @@ build_sched_domains(const struct cpumask *cpu_map, struct sched_domain_attr *att
+>>         /* Attach the domains */
+>>         rcu_read_lock();
+>>         for_each_cpu(i, cpu_map) {
+>> +               unsigned long cap = arch_scale_cpu_capacity(i);
+> 
+> Why do you replace the use of rq->cpu_capacity_orig by
+> arch_scale_cpu_capacity(i) ?
+> There is nothing about this change in the commit message
 
-Thanks for the explanation, that makes sense.
+True. And I can change this back.
 
->=20
-> > =20
-> >> -
-> >> -	dev =3D driver_find_device(&matrix_dev->vfio_ap_drv->driver, NULL,
-> >> -				 &apqn, match_apqn);
-> >> -	if (!dev)
-> >> -		return NULL;
-> >> -	q =3D dev_get_drvdata(dev);
-> >> -	q->matrix_mdev =3D matrix_mdev;
-> >> -	put_device(dev);
-> >>  =20
-> >> -	return q;
-> >> +	hash_for_each_possible(matrix_dev->qtable, q, qnode, apqn) {
-> >> +		if (q && (apqn =3D=3D q->apqn))
-> >> +			return q;
-> >> +	} =20
-> > Do we need any serialization here? Previously, the driver core made
-> > sure we could get a reference only if the device was still registered;
-> > not sure if we need any further guarantees now. =20
->=20
-> The vfio_ap_queue structs are created when the queue device is
-> probed and removed when the queue device is removed.
+It seems though that the solution is not sufficient because of the
+'rd->span &nsub cpu_active_mask' issue discussed under patch 2/4.
 
-Ok, so anything further is not needed.
+But this remind me of another question I have.
 
->=20
-> > =20
-> >> +
-> >> +	return NULL;
-> >>   }
-> >>  =20
-> >>   /** =20
-> > (...)
-> > =20
->=20
+Currently we use arch_scale_cpu_capacity() more often (16 times) than
+capacity_orig_of()/rq->cpu_capacity_orig .
 
-Looks good to me, then. With vfio_ap_get_queue made static and the
-kerneldoc restored/updated:
-
-Reviewed-by: Cornelia Huck <cohuck@redhat.com>
-
+What's hindering us to remove rq->cpu_capacity_orig and the code around
+it and solely rely on arch_scale_cpu_capacity()? I mean the arch
+implementation should be fast.
