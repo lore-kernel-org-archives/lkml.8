@@ -2,30 +2,29 @@ Return-Path: <SRS0=8dav=5Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC420C2BA1A
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 15:22:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3590C2BA2B
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 15:22:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CDA66206C0
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 15:22:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A6731206F5
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 15:22:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729553AbgDHPWr (ORCPT
+        id S1729572AbgDHPWu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Apr 2020 11:22:47 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:39112 "EHLO
+        Wed, 8 Apr 2020 11:22:50 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:39143 "EHLO
         youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729508AbgDHPWo (ORCPT
+        with ESMTP id S1729540AbgDHPWs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Apr 2020 11:22:44 -0400
+        Wed, 8 Apr 2020 11:22:48 -0400
 Received: from ip5f5bd698.dynamic.kabel-deutschland.de ([95.91.214.152] helo=wittgenstein.fritz.box)
         by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
         (Exim 4.86_2)
         (envelope-from <christian.brauner@ubuntu.com>)
-        id 1jMCXF-0001BO-9W; Wed, 08 Apr 2020 15:22:37 +0000
+        id 1jMCXM-0001BO-Rr; Wed, 08 Apr 2020 15:22:44 +0000
 From:   Christian Brauner <christian.brauner@ubuntu.com>
 To:     Jens Axboe <axboe@kernel.dk>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -44,9 +43,9 @@ Cc:     Jonathan Corbet <corbet@lwn.net>, Serge Hallyn <serge@hallyn.com>,
         Dmitry Vyukov <dvyukov@google.com>,
         =?UTF-8?q?St=C3=A9phane=20Graber?= <stgraber@ubuntu.com>,
         linux-doc@vger.kernel.org, netdev@vger.kernel.org
-Subject: [PATCH 3/8] loop: use ns_capable for some loop operations
-Date:   Wed,  8 Apr 2020 17:21:46 +0200
-Message-Id: <20200408152151.5780-4-christian.brauner@ubuntu.com>
+Subject: [PATCH 8/8] loopfs: only show devices in their correct instance
+Date:   Wed,  8 Apr 2020 17:21:51 +0200
+Message-Id: <20200408152151.5780-9-christian.brauner@ubuntu.com>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200408152151.5780-1-christian.brauner@ubuntu.com>
 References: <20200408152151.5780-1-christian.brauner@ubuntu.com>
@@ -57,100 +56,78 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following  LOOP_GET_STATUS, LOOP_SET_STATUS, and LOOP_SET_BLOCK_SIZE
-operations are now allowed in non-initial namespaces. Most other
-operations were already possible before.
+Since loopfs devices belong to a loopfs instance they have no business
+polluting the host's devtmpfs mount and should not propagate out of the
+namespace they belong to.
 
 Cc: Jens Axboe <axboe@kernel.dk>
-Cc: Seth Forshee <seth.forshee@canonical.com>
-Cc: Tom Gundersen <teg@jklm.no>
-Cc: Tejun Heo <tj@kernel.org>
-Cc: Christian Kellner <ckellner@redhat.com>
 Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: "David S. Miller" <davem@davemloft.net>
-Cc: David Rheinsberg <david.rheinsberg@gmail.com>
-Cc: Dmitry Vyukov <dvyukov@google.com>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>
 Signed-off-by: Christian Brauner <christian.brauner@ubuntu.com>
 ---
- drivers/block/loop.c | 29 ++++++++++++++++++++++++-----
- 1 file changed, 24 insertions(+), 5 deletions(-)
+ drivers/base/devtmpfs.c | 4 ++--
+ drivers/block/loop.c    | 4 +++-
+ include/linux/device.h  | 3 +++
+ 3 files changed, 8 insertions(+), 3 deletions(-)
 
+diff --git a/drivers/base/devtmpfs.c b/drivers/base/devtmpfs.c
+index c9017e0584c0..77371ceb88fa 100644
+--- a/drivers/base/devtmpfs.c
++++ b/drivers/base/devtmpfs.c
+@@ -111,7 +111,7 @@ int devtmpfs_create_node(struct device *dev)
+ 	const char *tmp = NULL;
+ 	struct req req;
+ 
+-	if (!thread)
++	if (!thread || dev->no_devnode)
+ 		return 0;
+ 
+ 	req.mode = 0;
+@@ -138,7 +138,7 @@ int devtmpfs_delete_node(struct device *dev)
+ 	const char *tmp = NULL;
+ 	struct req req;
+ 
+-	if (!thread)
++	if (!thread || dev->no_devnode)
+ 		return 0;
+ 
+ 	req.name = device_get_devnode(dev, NULL, NULL, NULL, &tmp);
 diff --git a/drivers/block/loop.c b/drivers/block/loop.c
-index a7eda14be639..b1c3436d6e38 100644
+index 7a14fd3e4329..df75ca4ac040 100644
 --- a/drivers/block/loop.c
 +++ b/drivers/block/loop.c
-@@ -1294,6 +1294,25 @@ void loopfs_remove_locked(struct loop_device *lo)
- 	loop_remove(lo);
- 	mutex_unlock(&loop_ctl_mutex);
- }
-+
-+static bool loop_capable(const struct loop_device *lo, int cap)
-+{
-+	struct super_block *sb;
-+	struct user_namespace *ns;
-+
-+	sb = loopfs_i_sb(lo->lo_loopfs_i);
-+	if (sb)
-+		ns = sb->s_user_ns;
-+	else
-+		ns = &init_user_ns;
-+
-+	return ns_capable(ns, cap);
-+}
-+#else /* !CONFIG_BLK_DEV_LOOPFS */
-+static inline bool loop_capable(const struct loop_device *lo, int cap)
-+{
-+	return capable(cap);
-+}
- #endif /* CONFIG_BLK_DEV_LOOPFS */
+@@ -2155,8 +2155,10 @@ static int loop_add(struct loop_device **l, int i, struct inode *inode)
+ 	disk->queue		= lo->lo_queue;
+ 	sprintf(disk->disk_name, "loop%d", i);
+ #ifdef CONFIG_BLK_DEV_LOOPFS
+-	if (loopfs_i_sb(inode))
++	if (loopfs_i_sb(inode)) {
+ 		disk->user_ns = loopfs_i_sb(inode)->s_user_ns;
++		disk_to_dev(disk)->no_devnode = true;
++	}
+ #endif
  
- static int
-@@ -1310,7 +1329,7 @@ loop_set_status(struct loop_device *lo, const struct loop_info64 *info)
- 		return err;
- 	if (lo->lo_encrypt_key_size &&
- 	    !uid_eq(lo->lo_key_owner, uid) &&
--	    !capable(CAP_SYS_ADMIN)) {
-+	    !loop_capable(lo, CAP_SYS_ADMIN)) {
- 		err = -EPERM;
- 		goto out_unlock;
- 	}
-@@ -1441,7 +1460,7 @@ loop_get_status(struct loop_device *lo, struct loop_info64 *info)
- 	memcpy(info->lo_crypt_name, lo->lo_crypt_name, LO_NAME_SIZE);
- 	info->lo_encrypt_type =
- 		lo->lo_encryption ? lo->lo_encryption->number : 0;
--	if (lo->lo_encrypt_key_size && capable(CAP_SYS_ADMIN)) {
-+	if (lo->lo_encrypt_key_size && loop_capable(lo, CAP_SYS_ADMIN)) {
- 		info->lo_encrypt_key_size = lo->lo_encrypt_key_size;
- 		memcpy(info->lo_encrypt_key, lo->lo_encrypt_key,
- 		       lo->lo_encrypt_key_size);
-@@ -1665,7 +1684,7 @@ static int lo_ioctl(struct block_device *bdev, fmode_t mode,
- 		return loop_clr_fd(lo);
- 	case LOOP_SET_STATUS:
- 		err = -EPERM;
--		if ((mode & FMODE_WRITE) || capable(CAP_SYS_ADMIN)) {
-+		if ((mode & FMODE_WRITE) || loop_capable(lo, CAP_SYS_ADMIN)) {
- 			err = loop_set_status_old(lo,
- 					(struct loop_info __user *)arg);
- 		}
-@@ -1674,7 +1693,7 @@ static int lo_ioctl(struct block_device *bdev, fmode_t mode,
- 		return loop_get_status_old(lo, (struct loop_info __user *) arg);
- 	case LOOP_SET_STATUS64:
- 		err = -EPERM;
--		if ((mode & FMODE_WRITE) || capable(CAP_SYS_ADMIN)) {
-+		if ((mode & FMODE_WRITE) || loop_capable(lo, CAP_SYS_ADMIN)) {
- 			err = loop_set_status64(lo,
- 					(struct loop_info64 __user *) arg);
- 		}
-@@ -1684,7 +1703,7 @@ static int lo_ioctl(struct block_device *bdev, fmode_t mode,
- 	case LOOP_SET_CAPACITY:
- 	case LOOP_SET_DIRECT_IO:
- 	case LOOP_SET_BLOCK_SIZE:
--		if (!(mode & FMODE_WRITE) && !capable(CAP_SYS_ADMIN))
-+		if (!(mode & FMODE_WRITE) && !loop_capable(lo, CAP_SYS_ADMIN))
- 			return -EPERM;
- 		/* Fall through */
- 	default:
+ 	add_disk(disk);
+diff --git a/include/linux/device.h b/include/linux/device.h
+index fa04dfd22bbc..9fa438e3e4ca 100644
+--- a/include/linux/device.h
++++ b/include/linux/device.h
+@@ -525,6 +525,8 @@ struct dev_links_info {
+  *		  sync_state() callback.
+  * @dma_coherent: this particular device is dma coherent, even if the
+  *		architecture supports non-coherent devices.
++ * @no_devnode: whether device nodes associated with this device are kept out
++ *		of devtmpfs (e.g. due to separate filesystem)
+  *
+  * At the lowest level, every device in a Linux system is represented by an
+  * instance of struct device. The device structure contains the information
+@@ -625,6 +627,7 @@ struct device {
+     defined(CONFIG_ARCH_HAS_SYNC_DMA_FOR_CPU_ALL)
+ 	bool			dma_coherent:1;
+ #endif
++	bool			no_devnode:1;
+ };
+ 
+ static inline struct device *kobj_to_dev(struct kobject *kobj)
 -- 
 2.26.0
 
