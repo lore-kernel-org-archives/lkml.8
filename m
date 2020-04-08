@@ -2,123 +2,172 @@ Return-Path: <SRS0=8dav=5Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E91EC2BA1B
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 19:27:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC556C2D0F4
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 19:29:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 404D02072F
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 19:27:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B7A2420730
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 19:29:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="m8rt2Xhy"
+	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="yG0cOYot"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729960AbgDHT1P (ORCPT
+        id S1729980AbgDHT3c (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Apr 2020 15:27:15 -0400
-Received: from mail-qv1-f67.google.com ([209.85.219.67]:32870 "EHLO
-        mail-qv1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727717AbgDHT1P (ORCPT
+        Wed, 8 Apr 2020 15:29:32 -0400
+Received: from mail-ed1-f68.google.com ([209.85.208.68]:39188 "EHLO
+        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729668AbgDHT3c (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Apr 2020 15:27:15 -0400
-Received: by mail-qv1-f67.google.com with SMTP id p19so4310108qve.0;
-        Wed, 08 Apr 2020 12:27:14 -0700 (PDT)
+        Wed, 8 Apr 2020 15:29:32 -0400
+Received: by mail-ed1-f68.google.com with SMTP id a43so10196905edf.6
+        for <linux-kernel@vger.kernel.org>; Wed, 08 Apr 2020 12:29:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:from:to:cc:references:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=oJV+TvCO+VY9DO+jZTnnzXFI3BZ6Ed8DSfpwoOZDIjE=;
-        b=m8rt2XhycVFsFwCJs971W8tfd4kvUrZ1DGawZM4WWJZfOJO8ATmciRBkiNvxCt+Y22
-         HJvU6OGiO2GBAhyiU0BzCiVe9mEMTgcwAILdykWB+Ei6v9/dtVAreQ1QfwiSfJAYtbp5
-         Hp8jD05EUdJ3kkVb4JnT2lL/ckqY0xg1SF3ESxlBrFSgEDFcCl0ZgQ6WhR/zC6K2zl9U
-         4mQd1QA3rVBTN1cbIRxXZUOoDYW/nEIejkXcbjeMjbNXku8OXka6f5f20dyBv22kJbEd
-         eeKZTgU5UW9cnaFudA5TbukVoXfj8G9Vypqv0pFVmL3AvzfffHeaZZhztoyIqmz6LHm/
-         2zmg==
+        d=intel-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=2I+dB0B50ThXp7siibS6X0DXKO49NnaL82k0TLoeWMY=;
+        b=yG0cOYotYZuBAHkbHGXBv0uN7O2sOdDW9Xa72jt9GZNrxi33xcOgMzmAHf3YDnIa6i
+         +Vy532bm2PY05QTAe+unZbwW2F3j9potMZeBwAZHxs1gKyHunW4Tr30rO2hSp+26e4LV
+         RgOBQNLhdk9lS1geSwI0Ey12NZ8m5Ywwemz4WVgFHBNWslZJBkZsbU0exFoNu6DvElNA
+         sTT/It3byeFv8dJ3jdYGFLtxyEEa+anQeXaZMARoU2pUltGiLOqg8w37QTVtF9Cl3tCh
+         x7nOyTiVA8SCK3eA4wMZeGh+Ku20Fz7K4beH0a7Qp7x21GB1NgbfDjhIe7ZS4f731t9o
+         iikA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=oJV+TvCO+VY9DO+jZTnnzXFI3BZ6Ed8DSfpwoOZDIjE=;
-        b=UElA1umSQZj2RORnWYFR2XaVXpiRtVZMN/Nqz0mjKV9HZFLwFLszX1SQdt+cMEH92O
-         xNNcCr3n/DnHlqem+PWkih3M5OSU/tDQZ/1080/CG0hlS0HC9FJb0b4GVWcRk5R8M0ls
-         V5hyG0L8g+wtRYhWjt4o6iUjOwrIbDzItVpKr3RqX9IiwNGHzEBznAj85SI/j1m4O28Y
-         qkoXghMnUv56jntecA/+SaAJl0YWI5jYmPXBUA8/IX7WdF9GCyMhWdea5NWAr7kT+yrU
-         bBeDpUJ9EgMxoK+7qk6QVqsIWBawjxwbslnZa8mvLv5+ERTw4q0zBp+t9/oYBBC6G2lX
-         F+SA==
-X-Gm-Message-State: AGi0PuYlEZTTqj6KUlcLYkKCYOMUQNzJxqhLIj0V46nlsRlNWxAIsDW4
-        4R9JY2W9G7u4aI8gaPysvcQ=
-X-Google-Smtp-Source: APiQypJT1y2+pe84RYUVofBuROMqGUOExowdWQXdnWGTNSf3OUWv6Wa4vkyfGj3ws9+DFIgs9LK74w==
-X-Received: by 2002:ad4:5448:: with SMTP id h8mr9106996qvt.23.1586374033710;
-        Wed, 08 Apr 2020 12:27:13 -0700 (PDT)
-Received: from [192.168.1.46] (c-73-88-245-53.hsd1.tn.comcast.net. [73.88.245.53])
-        by smtp.gmail.com with ESMTPSA id a136sm20267507qkb.15.2020.04.08.12.27.12
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 08 Apr 2020 12:27:13 -0700 (PDT)
-Subject: Re: [PATCH] of: remove unneeded variable
-From:   Frank Rowand <frowand.list@gmail.com>
-To:     Ding Xiang <dingxiang@cmss.chinamobile.com>, robh+dt@kernel.org
-Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <1585562702-360-1-git-send-email-dingxiang@cmss.chinamobile.com>
- <92c6b7e9-4d55-a5c3-8c7f-5611edeb55c9@gmail.com>
-Message-ID: <94145488-c077-4b40-943f-f53f21f660c4@gmail.com>
-Date:   Wed, 8 Apr 2020 14:27:11 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=2I+dB0B50ThXp7siibS6X0DXKO49NnaL82k0TLoeWMY=;
+        b=Fth7DTmamIMEBl7aZ7rS61+3LSiq2Uqiforw6Vxfr/ttWnFGFTO9zyVERLgk56ZPOu
+         mHmsgbYnJYbRROWxnPILmFB0EjwdvylzryGflY4ghFTx8bwAaPFhmi8gB5Vb1ZmWyg0Y
+         laquuAvdzvSXRgQnEaAcK2jPPM/9SnpEUXKsXbmsdgm/ALWYGKE2tRaI2eGq2KKVoSg5
+         8m5djoCLElgSK/vnvq+sDSibwtXLddmS87em35T1N57MjDr+b6cuLWLj7dS1J1CKynOd
+         6N2b2huKrQLqdbjnji1rxPTDMQ4YFFIbjclhffIg1EU8BcHOEZaZTbNVwsMWTvjbU7+0
+         DtZg==
+X-Gm-Message-State: AGi0Pub5hn751MTJKlSVWBUb4+0h7DW/XjlSChY5NRZXOyx2wzgn/+YK
+        vgQkOxd82dXQ9mNFuHMhE2VrnqJ65B8ENMkyWFZqxA==
+X-Google-Smtp-Source: APiQypKh7MW2L6vpdFisNj8DwA8ikhEpPvrYzpnHu5MtT/bhd43a6I3U63RAoZ5wvMWEYIF3IRyyczq1bpXE+OzPmX4=
+X-Received: by 2002:a17:906:6987:: with SMTP id i7mr8255013ejr.12.1586374169369;
+ Wed, 08 Apr 2020 12:29:29 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <92c6b7e9-4d55-a5c3-8c7f-5611edeb55c9@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <alpine.LRH.2.02.2004071029270.8662@file01.intranet.prod.int.rdu2.redhat.com>
+ <CAPcyv4goJ2jbXNVZbMUKtRUominhuMhuTKrMh=fnhrfvC4jyjw@mail.gmail.com> <alpine.LRH.2.02.2004081439080.13932@file01.intranet.prod.int.rdu2.redhat.com>
+In-Reply-To: <alpine.LRH.2.02.2004081439080.13932@file01.intranet.prod.int.rdu2.redhat.com>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Wed, 8 Apr 2020 12:29:18 -0700
+Message-ID: <CAPcyv4grNHvyYEc4W6PkymhEJvLb17tXbC3JZdqvtFxmMZ8DCQ@mail.gmail.com>
+Subject: Re: [PATCH] memcpy_flushcache: use cache flusing for larger lengths
+To:     Mikulas Patocka <mpatocka@redhat.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Peter Zijlstra <peterz@infradead.org>, X86 ML <x86@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        device-mapper development <dm-devel@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/8/20 11:00 AM, Frank Rowand wrote:
-> On 3/30/20 5:05 AM, Ding Xiang wrote:
->> rc is unneeded, just return 0.
-> 
-> of: of_detach_node() remove unneeded local return variable
+On Wed, Apr 8, 2020 at 11:54 AM Mikulas Patocka <mpatocka@redhat.com> wrote:
+>
+>
+>
+> On Tue, 7 Apr 2020, Dan Williams wrote:
+>
+> > On Tue, Apr 7, 2020 at 8:02 AM Mikulas Patocka <mpatocka@redhat.com> wrote:
+> > >
+> > > [ resending this to x86 maintainers ]
+> > >
+> > > Hi
+> > >
+> > > I tested performance of various methods how to write to optane-based
+> > > persistent memory, and found out that non-temporal stores achieve
+> > > throughput 1.3 GB/s. 8 cached stores immediatelly followed by clflushopt
+> > > or clwb achieve throughput 1.6 GB/s.
+> > >
+> > > memcpy_flushcache uses non-temporal stores, I modified it to use cached
+> > > stores + clflushopt and it improved performance of the dm-writecache
+> > > target significantly:
+> > >
+> > > dm-writecache throughput:
+> > > (dd if=/dev/zero of=/dev/mapper/wc bs=64k oflag=direct)
+> > > writecache block size   512             1024            2048            4096
+> > > movnti                  496 MB/s        642 MB/s        725 MB/s        744 MB/s
+> > > clflushopt              373 MB/s        688 MB/s        1.1 GB/s        1.2 GB/s
+> > >
+> > > For block size 512, movnti works better, for larger block sizes,
+> > > clflushopt is better.
+> >
+> > This should use clwb instead of clflushopt, the clwb macri
+> > automatically converts back to clflushopt if clwb is not supported.
+>
+> But we want to invalidate cache, we do not expect CPU to access these data
+> anymore (it will be accessed by a DMA engine during writeback).
 
-never mind, this is not the subject line...  My mistake.
+The cluflushopt and clwb instructions should have identical overhead,
+but clwb wins on the rare chance the written data is needed again
+soon. If it is never needed again then the cost of dropping a clean
+cache line is the same as if the line was invalidated in the first
+instance. In both cases (clflushopt and clwb) the snoop traffic
+overhead is still paid whether the written-back line is still present
+in the cache or not.
 
--Frank
+>
+> > > I was also testing the novafs filesystem, it is not upstream, but it
+> > > benefitted from similar change in __memcpy_flushcache and
+> > > __copy_user_nocache:
+> > > write throughput on big files - movnti: 662 MB/s, clwb: 1323 MB/s
+> > > write throughput on small files - movnti: 621 MB/s, clwb: 1013 MB/s
+> > >
+> > >
+> > > I submit this patch for __memcpy_flushcache that improves dm-writecache
+> > > performance.
+> > >
+> > > Other ideas - should we introduce memcpy_to_pmem instead of modifying
+> > > memcpy_flushcache and move this logic there? Or should I modify the
+> > > dm-writecache target directly to use clflushopt with no change to the
+> > > architecture-specific code?
+> >
+> > This also needs to mention your analysis that showed that this can
+> > have negative cache pollution effects [1], so I'm not sure how to
+> > decide when to make the tradeoff. Once we have movdir64b the tradeoff
+> > equation changes yet again:
+> >
+> > [1]: https://lore.kernel.org/linux-nvdimm/alpine.LRH.2.02.2004010941310.23210@file01.intranet.prod.int.rdu2.redhat.com/
+>
+> I analyzed it some more. I have created this program that tests writecache
+> w.r.t. cache pollution:
+>
+> http://people.redhat.com/~mpatocka/testcases/pmem/misc/l1-test-2.c
+>
+> It fills the cache with a chain of random pointers and then walks these
+> pointers to evaluate cache pollution. Between the walks, it writes data to
+> the dm-writecache target.
+>
+> With the original kernel, the result is:
+> 8503 - 11366
+> real    0m7.985s
+> user    0m0.585s
+> sys     0m7.390s
+>
+> With dm-writecache hacked to use cached writes + clflushopt:
+> 8513 - 11379
+> real    0m5.045s
+> user    0m0.670s
+> sys     0m4.365s
+>
+> So, the hacked dm-writecache is significantly faster, while the cache
+> micro-benchmark doesn't show any more cache pollution.
 
-> 
->>
->> Signed-off-by: Ding Xiang <dingxiang@cmss.chinamobile.com>
->> ---
->>  drivers/of/dynamic.c | 3 +--
->>  1 file changed, 1 insertion(+), 2 deletions(-)
->>
->> diff --git a/drivers/of/dynamic.c b/drivers/of/dynamic.c
->> index 08fd823..fe64430 100644
->> --- a/drivers/of/dynamic.c
->> +++ b/drivers/of/dynamic.c
->> @@ -286,7 +286,6 @@ int of_detach_node(struct device_node *np)
->>  {
->>  	struct of_reconfig_data rd;
->>  	unsigned long flags;
->> -	int rc = 0;
->>  
->>  	memset(&rd, 0, sizeof(rd));
->>  	rd.dn = np;
->> @@ -301,7 +300,7 @@ int of_detach_node(struct device_node *np)
->>  
->>  	of_reconfig_notify(OF_RECONFIG_DETACH_NODE, &rd);
->>  
->> -	return rc;
->> +	return 0;
->>  }
->>  EXPORT_SYMBOL_GPL(of_detach_node);
->>  
->>
-> 
-> 
-> Reviewed-by: Frank Rowand <frank.rowand@sony.com>
-> 
+Nice. These are now the pmem numbers, or dram? Otherwise, what changed
+that was making nt-writes on pmem perform better compared to your
+previous test? I'm just trying to track the results.
 
+> That's for dm-writecache. Are there some other significant users of
+> memcpy_flushcache that need to be checked?
+
+The only other user is direct and dax-I/O to the pmem driver.
