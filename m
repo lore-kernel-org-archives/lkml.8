@@ -2,270 +2,253 @@ Return-Path: <SRS0=8dav=5Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E48EC2D0EA
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 09:45:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35D8DC2D0EA
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 09:47:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CCF792074F
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 09:45:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 027E62074F
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 09:47:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="JcHa2qdc"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="sBWm3XQ4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727915AbgDHJpb (ORCPT
+        id S1727934AbgDHJrD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Apr 2020 05:45:31 -0400
-Received: from mail.skyhub.de ([5.9.137.197]:37520 "EHLO mail.skyhub.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726345AbgDHJpb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Apr 2020 05:45:31 -0400
-Received: from zn.tnic (p200300EC2F0A9300FDE94558DB0629D0.dip0.t-ipconnect.de [IPv6:2003:ec:2f0a:9300:fde9:4558:db06:29d0])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 020E81EC0C89;
-        Wed,  8 Apr 2020 11:45:29 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1586339130;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:references;
-        bh=NZoFPElFRpFdYyVeMbyRXXC+sgo8u8TwoA+gn+mRgIk=;
-        b=JcHa2qdcDyD7o1xqkUqSykn8d/yFHAT2qyXV5Ac1iWKzhuis4RnljDiCGXqzd0tMzIYFUN
-        3Lrp5wN/J3sauwJdnD/E1LUnXl594hKWYeNdGOSPyDy0I5Cg8ia14dutgQFiinD9pifULb
-        wIIReKxn0PyY1a1/7mgvhKuoEl6nDHw=
-Date:   Wed, 8 Apr 2020 11:45:26 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     Luis Chamberlain <mcgrof@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     lkml <linux-kernel@vger.kernel.org>
-Subject: Export fw_get_builtin_firmware()?
-Message-ID: <20200408094526.GC24663@zn.tnic>
+        Wed, 8 Apr 2020 05:47:03 -0400
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:44057 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726901AbgDHJrC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Apr 2020 05:47:02 -0400
+Received: by mail-lf1-f67.google.com with SMTP id 131so4612178lfh.11
+        for <linux-kernel@vger.kernel.org>; Wed, 08 Apr 2020 02:46:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=5ZEqYs9/2BfZyzfJ6sBTN+E+rXFiv8U9jrRvKOm4ilk=;
+        b=sBWm3XQ4Lss/pwUc7B8y9xIWqsKxJE6a/T7kIzCSI9LSlVn7zrOu13ALFPcJ6JP/vu
+         fALqinhST1iGWyM5is18o0fxiU4P2On+X3Eo/R5LuMkFwe+4/eS0i1Xjhq1xjpAYdQ5g
+         NSkyT2Wu0j5bbd9gBzNFmwCfefLpFUkz01uQ5g6N4f5GGjO9jbowTxK+WU3KRuWopbiI
+         4zEFj2AYJjyuT8QraYEvA0fdCr74IbHnmHqATwt486RdHH0WHZlhpRSOGQzBjZNdjVpJ
+         Ei9sATQkcA1I/0RUK6wnw8gMs0zhsRc7hpS5yNMl5SNy0zlmx/CM40v6zlVQX8l6+rs0
+         fdwA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=5ZEqYs9/2BfZyzfJ6sBTN+E+rXFiv8U9jrRvKOm4ilk=;
+        b=t9A4IqK1IwcIneYjZ5HzAdthkGTMEfAd5Z74Ss5sPisQ1U8h4RnDPqjrtWmytKZ6AK
+         chVNh+EKQBZA1YGMDe60Wu9jrisRk6zG67K5UQFS/cDdM7QDtiBi/VSIbbSeoqEtRJ6Q
+         7B+lY++gkVhHanxGC16gaxrk1FXcbxWVW382fI35zf4sO6XYJBxSJBd/jlszbh0GvjO7
+         zfunsi4H4bFoK0z2lFqzdNUBqaaBiQ4ClB9qJwus9l0WPiF1dnD5acpHHyPGNvoEsMjX
+         D9y3cU2oyMLha+oxuQpBJRL9RztnbNY2JrHvpmiILqg7e+9VY0fM23TV3NwdnYyMKP47
+         X45A==
+X-Gm-Message-State: AGi0PuZYr1xDfOSPmnpGAdtCjADu5znAl4UGvYu0r8rfSk5FpgRCkFGl
+        I4BeVDwl9XJDKIoCxRpfiBAli82o0fgEKVTnHFsEGYnCHLA=
+X-Google-Smtp-Source: APiQypIOVx2GfdURM7yySr9VeO0nMTl+MBnuRLvhggtPUXEF/5iNmJZ7ogoUv6bICo+ytpbRpSOsPs65z50Usuhmh70=
+X-Received: by 2002:a19:c64b:: with SMTP id w72mr4031364lff.82.1586339217230;
+ Wed, 08 Apr 2020 02:46:57 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20200407154752.006506420@linuxfoundation.org>
+In-Reply-To: <20200407154752.006506420@linuxfoundation.org>
+From:   Naresh Kamboju <naresh.kamboju@linaro.org>
+Date:   Wed, 8 Apr 2020 15:16:45 +0530
+Message-ID: <CA+G9fYsyETNoV58oyrBtb2o_vyFi1MPUNkZ9uUZK6uRCg5OK5w@mail.gmail.com>
+Subject: Re: [PATCH 5.6 00/30] 5.6.3-rc2 review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     open list <linux-kernel@vger.kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
+        Ben Hutchings <ben.hutchings@codethink.co.uk>,
+        lkft-triage@lists.linaro.org,
+        linux- stable <stable@vger.kernel.org>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi guys,
+On Tue, 7 Apr 2020 at 22:09, Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
+>
+> This is the start of the stable review cycle for the 5.6.3 release.
+> There are 30 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+>
+> Responses should be made by Thu, 09 Apr 2020 15:46:32 +0000.
+> Anything received after that time might be too late.
+>
+> The whole patch series can be found in one patch at:
+>         https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-=
+5.6.3-rc2.gz
+> or in the git tree and branch at:
+>         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
+-rc.git linux-5.6.y
+> and the diffstat can be found below.
+>
+> thanks,
+>
+> greg k-h
 
-so I've come across this recently where the microcode loader
-has a trivial helper get_builtin_firmware() which scans through
-the builtin firmware to find microcode in there. Looking at
-fw_get_builtin_firmware(), that one does practically the same so how
-about I export it and have the microcode loader use it instead of
-homegrowing the same thing?
+Results from Linaro=E2=80=99s test farm.
+No regressions on arm64, arm, x86_64, and i386.
 
-IOW, something like this below?
+There are three kernel warnings on stable-rc 5.6 two of them are also
+present in Linus's tree.
+So these reported issues are not the release blockers.
+The Source of these warnings are reported while running kselftests.
 
-If you agree with the approach, I'll split it properly into patches,
-etc, of course.
+1) This warning reported on the mailing list and discussion is active.
+Warning reported on x86_64, i386, arm and arm64.
 
-Thx.
+[  346.741358] kselftest: Running tests in lib
+[  346.872415] test_printf: loaded.
+[  346.876442] BUG: kernel NULL pointer dereference, address: 00000000
+[  346.882703] #PF: supervisor read access in kernel mode
+[  346.887844] #PF: error_code(0x0000) - not-present page
+[  346.892990] *pde =3D 00000000
+[  346.895877] Oops: 0000 [#1] SMP
+[  346.899025] CPU: 1 PID: 6060 Comm: modprobe Tainted: G        W
+    5.6.3-rc2 #1
+[  346.906772] Hardware name: Supermicro SYS-5019S-ML/X11SSH-F, BIOS
+2.0b 07/27/2017
+[  346.914261] EIP: ida_free+0x61/0x130
 
----
-diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
-index 1edf788d301c..4a1918963564 100644
---- a/arch/x86/Kconfig
-+++ b/arch/x86/Kconfig
-@@ -1295,7 +1295,7 @@ config MICROCODE
- 	bool "CPU microcode loading support"
- 	default y
- 	depends on CPU_SUP_AMD || CPU_SUP_INTEL
--	select FW_LOADER
-+	depends on FW_LOADER=y
- 	---help---
- 	  If you say Y here, you will be able to update the microcode on
- 	  Intel and AMD processors. The Intel support is for the IA32 family,
-@@ -1317,7 +1317,6 @@ config MICROCODE_INTEL
- 	bool "Intel microcode loading support"
- 	depends on MICROCODE
- 	default MICROCODE
--	select FW_LOADER
- 	---help---
- 	  This options enables microcode patch loading support for Intel
- 	  processors.
-@@ -1329,7 +1328,6 @@ config MICROCODE_INTEL
- config MICROCODE_AMD
- 	bool "AMD microcode loading support"
- 	depends on MICROCODE
--	select FW_LOADER
- 	---help---
- 	  If you select this option, microcode patch loading support for AMD
- 	  processors will be enabled.
-diff --git a/arch/x86/include/asm/microcode.h b/arch/x86/include/asm/microcode.h
-index 2b7cc5397f80..4f10089f30de 100644
---- a/arch/x86/include/asm/microcode.h
-+++ b/arch/x86/include/asm/microcode.h
-@@ -131,15 +131,12 @@ int __init microcode_init(void);
- extern void __init load_ucode_bsp(void);
- extern void load_ucode_ap(void);
- void reload_early_microcode(void);
--extern bool get_builtin_firmware(struct cpio_data *cd, const char *name);
- extern bool initrd_gone;
- #else
- static inline int __init microcode_init(void)			{ return 0; };
- static inline void __init load_ucode_bsp(void)			{ }
- static inline void load_ucode_ap(void)				{ }
- static inline void reload_early_microcode(void)			{ }
--static inline bool
--get_builtin_firmware(struct cpio_data *cd, const char *name)	{ return false; }
- #endif
- 
- #endif /* _ASM_X86_MICROCODE_H */
-diff --git a/arch/x86/kernel/cpu/microcode/amd.c b/arch/x86/kernel/cpu/microcode/amd.c
-index 3f6b137ef4e6..498781162364 100644
---- a/arch/x86/kernel/cpu/microcode/amd.c
-+++ b/arch/x86/kernel/cpu/microcode/amd.c
-@@ -457,17 +457,23 @@ apply_microcode_early_amd(u32 cpuid_1_eax, void *ucode, size_t size, bool save_p
- 
- static bool get_builtin_microcode(struct cpio_data *cp, unsigned int family)
- {
--#ifdef CONFIG_X86_64
- 	char fw_name[36] = "amd-ucode/microcode_amd.bin";
-+	struct firmware fw;
-+
-+	if (IS_ENABLED(CONFIG_X86_32))
-+		return false;
- 
- 	if (family >= 0x15)
- 		snprintf(fw_name, sizeof(fw_name),
- 			 "amd-ucode/microcode_amd_fam%.2xh.bin", family);
- 
--	return get_builtin_firmware(cp, fw_name);
--#else
-+	if (fw_get_builtin_firmware(&fw, fw_name, NULL, 0)) {
-+		cp->size = fw.size;
-+		cp->data = (void *)fw.data;
-+		return true;
-+	}
-+
- 	return false;
--#endif
- }
- 
- static void __load_ucode_amd(unsigned int cpuid_1_eax, struct cpio_data *ret)
-diff --git a/arch/x86/kernel/cpu/microcode/core.c b/arch/x86/kernel/cpu/microcode/core.c
-index 7019d4b2df0c..d1c46d2aec12 100644
---- a/arch/x86/kernel/cpu/microcode/core.c
-+++ b/arch/x86/kernel/cpu/microcode/core.c
-@@ -140,25 +140,6 @@ static bool __init check_loader_disabled_bsp(void)
- 	return *res;
- }
- 
--extern struct builtin_fw __start_builtin_fw[];
--extern struct builtin_fw __end_builtin_fw[];
--
--bool get_builtin_firmware(struct cpio_data *cd, const char *name)
--{
--#ifdef CONFIG_FW_LOADER
--	struct builtin_fw *b_fw;
--
--	for (b_fw = __start_builtin_fw; b_fw != __end_builtin_fw; b_fw++) {
--		if (!strcmp(name, b_fw->name)) {
--			cd->size = b_fw->size;
--			cd->data = b_fw->data;
--			return true;
--		}
--	}
--#endif
--	return false;
--}
--
- void __init load_ucode_bsp(void)
- {
- 	unsigned int cpuid_1_eax;
-diff --git a/arch/x86/kernel/cpu/microcode/intel.c b/arch/x86/kernel/cpu/microcode/intel.c
-index 6a99535d7f37..360a1ff142dc 100644
---- a/arch/x86/kernel/cpu/microcode/intel.c
-+++ b/arch/x86/kernel/cpu/microcode/intel.c
-@@ -499,6 +499,7 @@ static void save_mc_for_early(u8 *mc, unsigned int size)
- static bool load_builtin_intel_microcode(struct cpio_data *cp)
- {
- 	unsigned int eax = 1, ebx, ecx = 0, edx;
-+	struct firmware fw;
- 	char name[30];
- 
- 	if (IS_ENABLED(CONFIG_X86_32))
-@@ -509,7 +510,13 @@ static bool load_builtin_intel_microcode(struct cpio_data *cp)
- 	sprintf(name, "intel-ucode/%02x-%02x-%02x",
- 		      x86_family(eax), x86_model(eax), x86_stepping(eax));
- 
--	return get_builtin_firmware(cp, name);
-+	if (fw_get_builtin_firmware(&fw, name, NULL, 0)) {
-+		cp->size = fw.size;
-+		cp->data = (void *)fw.data;
-+		return true;
-+	}
-+
-+	return false;
- }
- 
- /*
-diff --git a/drivers/base/firmware_loader/main.c b/drivers/base/firmware_loader/main.c
-index 76f79913916d..d0ad1ff0ce6d 100644
---- a/drivers/base/firmware_loader/main.c
-+++ b/drivers/base/firmware_loader/main.c
-@@ -106,8 +106,8 @@ static void fw_copy_to_prealloc_buf(struct firmware *fw,
- 	memcpy(buf, fw->data, fw->size);
- }
- 
--static bool fw_get_builtin_firmware(struct firmware *fw, const char *name,
--				    void *buf, size_t size)
-+bool fw_get_builtin_firmware(struct firmware *fw, const char *name, void *buf,
-+			     size_t size)
- {
- 	struct builtin_fw *b_fw;
- 
-@@ -137,13 +137,6 @@ static bool fw_is_builtin_firmware(const struct firmware *fw)
- 
- #else /* Module case - no builtin firmware support */
- 
--static inline bool fw_get_builtin_firmware(struct firmware *fw,
--					   const char *name, void *buf,
--					   size_t size)
--{
--	return false;
--}
--
- static inline bool fw_is_builtin_firmware(const struct firmware *fw)
- {
- 	return false;
-diff --git a/include/linux/firmware.h b/include/linux/firmware.h
-index 4bbd0afd91b7..6f6dc52a9e60 100644
---- a/include/linux/firmware.h
-+++ b/include/linux/firmware.h
-@@ -56,6 +56,8 @@ int request_firmware_into_buf(const struct firmware **firmware_p,
- 	const char *name, struct device *device, void *buf, size_t size);
- 
- void release_firmware(const struct firmware *fw);
-+bool fw_get_builtin_firmware(struct firmware *fw, const char *name,
-+			     void *buf, size_t size);
- #else
- static inline int request_firmware(const struct firmware **fw,
- 				   const char *name,
-@@ -103,6 +105,13 @@ static inline int request_firmware_into_buf(const struct firmware **firmware_p,
- 	return -EINVAL;
- }
- 
-+static inline bool fw_get_builtin_firmware(struct firmware *fw,
-+					   const char *name, void *buf,
-+					   size_t size)
-+{
-+	return false;
-+}
-+
- #endif
- 
- int firmware_request_cache(struct device *device, const char *name);
+ref:
+https://lore.kernel.org/linux-kselftest/CAFd5g46Bwd8HS9-xjHLh_rB59Nfw8iAnM6=
+aFe0QPcveewDUT6g@mail.gmail.com/T/#me600a8093338a485291361aaf9439e8b2f08a20=
+f
 
--- 
-Regards/Gruss,
-    Boris.
+2) This warning is reported on the mailing list and waiting for response,
+warning reported on i386 kernel image running x86_64 device.
 
-https://people.kernel.org/tglx/notes-about-netiquette
+[  166.488084] ------------[ cut here ]------------
+[  166.492749] WARNING: CPU: 2 PID: 1456 at
+/usr/src/kernel/kernel/locking/lockdep.c:1119
+lockdep_register_key+0xb0/0xf0
+[  166.503357] Modules linked in: algif_hash af_alg
+x86_pkg_temp_thermal fuse [last unloaded: test_bpf]
+[  166.512481] CPU: 2 PID: 1456 Comm: ip Not tainted 5.6.3-rc2 #1
+[  166.518306] Hardware name: Supermicro SYS-5019S-ML/X11SSH-F, BIOS
+2.0b 07/27/2017
+[  166.525776] EIP: lockdep_register_key+0xb0/0xf0
+
+ref:
+https://lore.kernel.org/netdev/CA+G9fYt7-R-_fVDeiwj=3DsVvBQ-456Pm1oFFtM5Hm_=
+94nN-tA+w@mail.gmail.com/T/#u
+
+3) This warning is only noticed on stable rc 5.6 and 5.5 seen only on arm64=
+.
+This needs to be investigated.
+
+[  386.349099] kselftest: Running tests in ftrace
+[  393.984018]
+[  393.984290] =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D
+[  393.984781] WARNING: suspicious RCU usage
+[  393.988690] 5.6.3-rc2 #1 Not tainted
+[  393.992679] -----------------------------
+[  393.996327] /usr/src/kernel/include/trace/events/ipi.h:36
+suspicious rcu_dereference_check() usage!
+[  394.000241]
+[  394.000241] other info that might help us debug this:
+[  394.000241]
+[  394.009094]
+[  394.009094] RCU used illegally from idle CPU!
+[  394.009094] rcu_scheduler_active =3D 2, debug_locks =3D 1
+[  394.017084] RCU used illegally from extended quiescent state!
+[  394.028187] 1 lock held by swapper/3/0:
+[  394.033826]  #0: ffff80001237b6a8 (max_trace_lock){....}, at:
+check_critical_timing+0x7c/0x1a8
+
+ref:
+https://lore.kernel.org/linux-kselftest/CA+G9fYtYRc_mKPDN-Gryw7fhjPNGBUP=3D=
+KemTXaXR6UBU94M3hw@mail.gmail.com/T/#u
+
+
+Summary
+------------------------------------------------------------------------
+
+kernel: 5.6.3-rc2
+git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stab=
+le-rc.git
+git branch: linux-5.6.y
+git commit: f106acd0db7c11e0208a2ecbeb0f7c52fc6c455a
+git describe: v5.6.2-31-gf106acd0db7c
+Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-5.6-oe/bui=
+ld/v5.6.2-31-gf106acd0db7c
+
+
+No regressions (compared to build v5.6.2)
+
+No fixes (compared to build v5.6.2)
+
+Ran 22476 total tests in the following environments and test suites.
+
+Environments
+--------------
+- dragonboard-410c
+- hi6220-hikey
+- i386
+- juno-r2
+- nxp-ls2088
+- qemu_arm
+- qemu_arm64
+- qemu_i386
+- qemu_x86_64
+- x15
+- x86
+- x86-kasan
+
+Test Suites
+-----------
+* build
+* install-android-platform-tools-r2600
+* install-android-platform-tools-r2800
+* kselftest
+* kvm-unit-tests
+* libgpiod
+* libhugetlbfs
+* linux-log-parser
+* ltp-cap_bounds-tests
+* ltp-commands-tests
+* ltp-cpuhotplug-tests
+* ltp-crypto-tests
+* ltp-cve-tests
+* ltp-dio-tests
+* ltp-fcntl-locktests-tests
+* ltp-filecaps-tests
+* ltp-fs-tests
+* ltp-fs_bind-tests
+* ltp-fs_perms_simple-tests
+* ltp-fsx-tests
+* ltp-hugetlb-tests
+* ltp-io-tests
+* ltp-ipc-tests
+* ltp-math-tests
+* ltp-nptl-tests
+* ltp-pty-tests
+* ltp-sched-tests
+* ltp-securebits-tests
+* perf
+* v4l2-compliance
+* ltp-containers-tests
+* ltp-mm-tests
+* ltp-open-posix-tests
+* ltp-syscalls-tests
+* network-basic-tests
+* spectre-meltdown-checker-test
+
+--=20
+Linaro LKFT
+https://lkft.linaro.org
