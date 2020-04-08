@@ -2,102 +2,92 @@ Return-Path: <SRS0=8dav=5Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11A0DC2BA1A
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 15:01:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14010C2BA1A
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 15:01:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D15F9206C0
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 15:01:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="RPEB5PM7"
+	by mail.kernel.org (Postfix) with ESMTP id DF74F208E4
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 15:01:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729273AbgDHPBD (ORCPT
+        id S1729276AbgDHPBw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Apr 2020 11:01:03 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:50910 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727929AbgDHPBD (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Apr 2020 11:01:03 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
-        Subject:Sender:Reply-To:Content-ID:Content-Description;
-        bh=7j15irdsaxGX8cfTWAC6matDqLKA3gIZxxOmemamMLM=; b=RPEB5PM73ynSvK416UNxfE6GIR
-        mZshayq2k05WAcYJu/+/rVKoK6NKG7B3MH4ANvlIlgjmk7SZQ9SVZvCi1iFzh152x1dc5HFwC6wiB
-        qZ7+wtgUYAJ/AL1+Nrnu40kKBJNxHFgPazhMH2Ric3UWgKjdkfBZZ4L5DzjO4UWC8nOiEfakNU3sL
-        xeYGj2y01wlVJ6IMOAIJN1BDOjqY06mtmnlOMMnimuv0Lk5fEUfE8xZSq6u7bkZB9iCd/RQJzE/kr
-        AiM4v2OB70pEwCX5052hN8D8H6d2m6wVwy7YCb7MRCFvqlow1x10n6P0OTVWoUlmG05Xu6u09f4Jd
-        +6y90bjw==;
-Received: from [2601:1c0:6280:3f0::19c2]
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jMCCM-0006Vd-CA; Wed, 08 Apr 2020 15:01:02 +0000
-Subject: Re: [PATCH 10/28] mm: only allow page table mappings for built-in
- zsmalloc
-To:     Christoph Hellwig <hch@lst.de>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>, x86@kernel.org,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Laura Abbott <labbott@redhat.com>,
-        Sumit Semwal <sumit.semwal@linaro.org>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Minchan Kim <minchan@kernel.org>,
-        Nitin Gupta <ngupta@vflare.org>
-Cc:     Robin Murphy <robin.murphy@arm.com>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
+        Wed, 8 Apr 2020 11:01:52 -0400
+Received: from foss.arm.com ([217.140.110.172]:39654 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727906AbgDHPBv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Apr 2020 11:01:51 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E80431045;
+        Wed,  8 Apr 2020 08:01:50 -0700 (PDT)
+Received: from e113632-lin (e113632-lin.cambridge.arm.com [10.1.194.46])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id EAF5E3F68F;
+        Wed,  8 Apr 2020 08:01:48 -0700 (PDT)
+References: <20200408095012.3819-1-dietmar.eggemann@arm.com> <20200408095012.3819-3-dietmar.eggemann@arm.com> <jhjeesyw96u.mognet@arm.com> <20200408153032.447e098d@nowhere>
+User-agent: mu4e 0.9.17; emacs 26.3
+From:   Valentin Schneider <valentin.schneider@arm.com>
+To:     luca abeni <luca.abeni@santannapisa.it>
+Cc:     Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Ingo Molnar <mingo@redhat.com>,
         Peter Zijlstra <peterz@infradead.org>,
-        linuxppc-dev@lists.ozlabs.org, linux-hyperv@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org,
-        linux-arch@vger.kernel.org, linux-mm@kvack.org,
-        iommu@lists.linux-foundation.org,
-        linux-arm-kernel@lists.infradead.org, linux-s390@vger.kernel.org,
-        bpf@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200408115926.1467567-1-hch@lst.de>
- <20200408115926.1467567-11-hch@lst.de>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <c0c86feb-b3d8-78f2-127f-71d682ffc51f@infradead.org>
-Date:   Wed, 8 Apr 2020 08:01:00 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Juri Lelli <juri.lelli@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Daniel Bristot de Oliveira <bristot@redhat.com>,
+        Wei Wang <wvw@google.com>, Quentin Perret <qperret@google.com>,
+        Alessio Balsini <balsini@google.com>,
+        Pavan Kondeti <pkondeti@codeaurora.org>,
+        Patrick Bellasi <patrick.bellasi@matbug.net>,
+        Morten Rasmussen <morten.rasmussen@arm.com>,
+        Qais Yousef <qais.yousef@arm.com>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/4] sched/deadline: Improve admission control for asymmetric CPU capacities
+In-reply-to: <20200408153032.447e098d@nowhere>
+Date:   Wed, 08 Apr 2020 16:01:43 +0100
+Message-ID: <jhjblo2vx60.mognet@arm.com>
 MIME-Version: 1.0
-In-Reply-To: <20200408115926.1467567-11-hch@lst.de>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
 
-On 4/8/20 4:59 AM, Christoph Hellwig wrote:
-> diff --git a/mm/Kconfig b/mm/Kconfig
-> index 36949a9425b8..614cc786b519 100644
-> --- a/mm/Kconfig
-> +++ b/mm/Kconfig
-> @@ -702,7 +702,7 @@ config ZSMALLOC
->  
->  config ZSMALLOC_PGTABLE_MAPPING
->  	bool "Use page table mapping to access object in zsmalloc"
-> -	depends on ZSMALLOC
-> +	depends on ZSMALLOC=y
+On 08/04/20 14:30, luca abeni wrote:
+>>
+>> I don't think this is strictly equivalent to what we have now for the
+>> SMP case. 'cpus' used to come from dl_bw_cpus(), which is an ugly way
+>> of writing
+>>
+>>      cpumask_weight(rd->span AND cpu_active_mask);
+>>
+>> The rd->cpu_capacity_orig field you added gets set once per domain
+>> rebuild, so it also happens in sched_cpu_(de)activate() but is
+>> separate from touching cpu_active_mask. AFAICT this mean we can
+>> observe a CPU as !active but still see its capacity_orig accounted in
+>> a root_domain.
+>
+> Sorry, I suspect this is my fault, because the bug comes from my
+> original patch.
+> When I wrote the original code, I believed that when a CPU is
+> deactivated it is also removed from its root domain.
+>
+> I now see that I was wrong.
+>
 
-It's a bool so this shouldn't matter... not needed.
+Well it is indeed the case, but sadly it's not an atomic step - AFAICT with
+cpusets we do hold some cpuset lock when calling __dl_overflow() and when
+rebuilding the domains, but not when fiddling with the active mask.
 
->  	help
->  	  By default, zsmalloc uses a copy-based object mapping method to
->  	  access allocations that span two pages. However, if a particular
+I just realized it's even more obvious for dl_cpu_busy(): IIUC it is meant
+to prevent the removal of a CPU if it would lead to a DL overflow - it
+works now because the active mask is modified before it gets called, but
+here it breaks because it's called before the sched_domain rebuild.
 
+Perhaps re-computing the root domain capacity sum at every dl_bw_cpus()
+call would be simpler. It's a bit more work, but then we already have a
+for_each_cpu_*() loop, and we only rely on the masks being correct.
 
--- 
-~Randy
-
+>
+>                       Luca
