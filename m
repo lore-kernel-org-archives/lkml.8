@@ -2,107 +2,143 @@ Return-Path: <SRS0=8dav=5Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E4DAC2BB54
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 23:46:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6000C2BA2B
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 23:48:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 21AB520BED
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 23:46:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586389587;
-	bh=jdERzFagcZJpT6zeQ9ptPHc+W/HgbAkXikMkMpGMIc8=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=ywjIdO0pEiMj8cq+knLDV4z+2t+g/w1U2DhKAqMKdrOkzlkXKMTBl4H3pbU0KNsem
-	 23Bn8DhkbLstxjFrIiJXTyYkvbcwi7XHZpV3XCVqbYdly2h3eF8hT7kkpKJVreXGoX
-	 aDRMxF5UbrkKRbaGESpR6P+nmlI2aL9W8VdPGYRc=
+	by mail.kernel.org (Postfix) with ESMTP id 896D02082F
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 23:48:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726579AbgDHXqZ (ORCPT
+        id S1726587AbgDHXsY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Apr 2020 19:46:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42304 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726508AbgDHXqZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Apr 2020 19:46:25 -0400
-Received: from localhost (mobile-166-175-188-68.mycingular.net [166.175.188.68])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8821C20787;
-        Wed,  8 Apr 2020 23:46:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586389585;
-        bh=jdERzFagcZJpT6zeQ9ptPHc+W/HgbAkXikMkMpGMIc8=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=UBEF4PPNtgYeAzJH79lLGGULnX41ZtOGL+nLtZMe5rqcdjOevaJL0F7SJcJqnQ/gL
-         cbk/jdvfvN7/J57YJCjLt9hgnh47iQLIXE+WlxuVESZ/NcOWOUykYPQC8tj5yfO0K9
-         NtF4OXMIed85faV2LxGjwdhmPKjCAsn4lB7mBgEc=
-Date:   Wed, 8 Apr 2020 18:46:22 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Cc:     Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Andrew Murray <amurray@thegoodpenguin.co.uk>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Marek Vasut <marek.vasut+renesas@gmail.com>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Shawn Lin <shawn.lin@rock-chips.com>,
-        Tom Joseph <tjoseph@cadence.com>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-renesas-soc@vger.kernel.org,
-        Chris Paterson <Chris.Paterson2@renesas.com>,
-        linux-rockchip@lists.infradead.org,
-        Lad Prabhakar <prabhakar.csengg@gmail.com>
-Subject: Re: [PATCH v7 4/8] PCI: endpoint: Add support to handle multiple
- base for mapping outbound memory
-Message-ID: <20200408234622.GA150772@google.com>
+        Wed, 8 Apr 2020 19:48:24 -0400
+Received: from mail105.syd.optusnet.com.au ([211.29.132.249]:39449 "EHLO
+        mail105.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726508AbgDHXsX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Apr 2020 19:48:23 -0400
+Received: from dread.disaster.area (pa49-180-167-53.pa.nsw.optusnet.com.au [49.180.167.53])
+        by mail105.syd.optusnet.com.au (Postfix) with ESMTPS id C6BD83A367F;
+        Thu,  9 Apr 2020 09:48:18 +1000 (AEST)
+Received: from dave by dread.disaster.area with local (Exim 4.92.3)
+        (envelope-from <david@fromorbit.com>)
+        id 1jMKQb-0005ii-LU; Thu, 09 Apr 2020 09:48:17 +1000
+Date:   Thu, 9 Apr 2020 09:48:17 +1000
+From:   Dave Chinner <david@fromorbit.com>
+To:     Ira Weiny <ira.weiny@intel.com>
+Cc:     Jan Kara <jack@suse.cz>, linux-kernel@vger.kernel.org,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Christoph Hellwig <hch@lst.de>,
+        "Theodore Y. Ts'o" <tytso@mit.edu>, Jeff Moyer <jmoyer@redhat.com>,
+        linux-ext4@vger.kernel.org, linux-xfs@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH V6 7/8] fs/xfs: Change xfs_ioctl_setattr_dax_invalidate()
+ to xfs_ioctl_dax_check()
+Message-ID: <20200408234817.GP24067@dread.disaster.area>
+References: <20200407182958.568475-1-ira.weiny@intel.com>
+ <20200407182958.568475-8-ira.weiny@intel.com>
+ <20200408022318.GJ24067@dread.disaster.area>
+ <20200408095803.GB30172@quack2.suse.cz>
+ <20200408210950.GL24067@dread.disaster.area>
+ <20200408222636.GC664132@iweiny-DESK2.sc.intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1586360280-10956-5-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+In-Reply-To: <20200408222636.GC664132@iweiny-DESK2.sc.intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Optus-CM-Score: 0
+X-Optus-CM-Analysis: v=2.3 cv=LYdCFQXi c=1 sm=1 tr=0
+        a=2xmR08VVv0jSFCMMkhec0Q==:117 a=2xmR08VVv0jSFCMMkhec0Q==:17
+        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=cl8xLZFz6L8A:10
+        a=VwQbUJbxAAAA:8 a=7-415B0cAAAA:8 a=xAaa-ZnbheYG_JgLh6MA:9
+        a=CjuIK1q_8ugA:10 a=AjGcO6oz07-iQ99wixmX:22 a=biEYGPWJfzWAr4FL6Ov7:22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 08, 2020 at 04:37:56PM +0100, Lad Prabhakar wrote:
-> R-Car PCIe controller has support to map multiple memory regions for
-> mapping the outbound memory in local system also the controller limits
-> single allocation for each region (that is, once a chunk is used from the
-> region it cannot be used to allocate a new one). This features inspires to
-> add support for handling multiple memory bases in endpoint framework.
+On Wed, Apr 08, 2020 at 03:26:36PM -0700, Ira Weiny wrote:
+> On Thu, Apr 09, 2020 at 07:09:50AM +1000, Dave Chinner wrote:
+> > On Wed, Apr 08, 2020 at 11:58:03AM +0200, Jan Kara wrote:
+> > I explained how we can safely remove the flag in the other branch of
+> > this thread...
+> > 
+> > > But it seems like more understandable API than letting user clear
+> > > the on-disk flag but the inode will still use DAX until kernel decides to
+> > > evict the inode
+> > 
+> > Certainly doesn't seem that way to me. "stop app, clear flags, drop
+> > caches, restart app" is a pretty simple, easy thing to do for an
+> > admin.
 > 
-> With this patch pci_epc_mem_init() initializes address space for endpoint
-> controller which support single window and whereas __pci_epc_mem_init()
-> now accepts pointer to multiple windows supported by endpoint controller.
+> I want to be clear here: I think this is reasonable.  However, I don't see
+> consensus for that interface.
+> 
+> Christoph in particular said that a 'lazy change' is: "... straight from
+> the playbook for arcane and confusing API designs."
+> 
+> 	"But returning an error and doing a lazy change anyway is straight from
+> 	the playbook for arcane and confusing API designs."
+> 
+> 	-- https://lore.kernel.org/lkml/20200403072731.GA24176@lst.de/
+> 
+> Did I somehow misunderstand this?
 
-Adding a double underscore prefix usually indicates an internal
-function that skips some checking.
+Yes. Clearing the on-disk flag successfully should not return an
+error.
 
-It doesn't seem like quite the right thing for this external interface
-that adds functionality.  Maybe the name could include something like
-"multi"?
+What is wrong is having it clear the flag successfully and returning
+an error because the operation doesn't take immediate effect, then
+having the change take effect later after telling the application
+there was an error.
 
-> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+That's what Christoph was saying is "straight from the playbook for
+arcane and confusing API designs."
 
-This needs an ack from Kishon, of course.
+There's absolutely nothing wrong with setting/clearing the on-disk
+flag and having the change take effect some time later depending on
+some external context. We've done this sort of thing for a -long
+time- and it's not XFS specific at all.
 
-This patch seems like it does several things that could possibly be
-split into separate patches?
+e.g.  changing the on-disk APPEND flag doesn't change the write
+behaviour of currently open files - it only affects the behaviour of
+future file opens. IOWs, we can have the flag set on disk, but we
+can still write randomly to the inode as long as we have a file
+descriptor that was opened before the APPEND on disk flag was set.
 
-  - Change pci_epc_mem_init() interface to add page_size argument (the
-    only one that touches cadence & rockchip; it would be nice if this
-    were a tiny patch)
+That's exactly the same class of behaviour as we are talking about
+here for the on-disk DAX flag.
 
-  - Add struct pci_epc_mem_window
+> > Especially compared to process that is effectively "stop app, backup
+> > data set, delete data set, clear flags, restore data set, restart
+> > app"
+> > 
+> > > - because that often means you need to restart the
+> > > application using the file anyway for the flag change to have any effect.
+> > 
+> > That's a trivial requirement compared to the downtime and resource
+> > cost of a data set backup/restore just to clear inode flags....
+> 
+> I agree but others do not.  This still provides a baby step forward and some
 
-  - Add a pci_epc_multi_mem_init() or similar, implement
-    pci_epc_mem_init() in terms of it (as you already do)
+It's not a baby step forward. We can't expose a behaviour to
+userspace and then decide to change it completely at some later
+date.  We have to think through the entire admin model before
+setting it in concrete.
 
-Bjorn
+If an admin operation can set an optional persistent feature flags
+on a file, then there *must* be admin operations that can remove
+that persistent feature flag from said files. This has *nothing to
+do with DAX* - it's a fundamental principle of balanced system
+design.
+
+Cheers,
+
+Dave.
+-- 
+Dave Chinner
+david@fromorbit.com
