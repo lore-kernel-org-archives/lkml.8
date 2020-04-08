@@ -2,259 +2,229 @@ Return-Path: <SRS0=8dav=5Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA683C2D0EA
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 07:46:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C27D4C2D0EA
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 07:47:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7CC0C20747
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 07:46:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8BCCA20747
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 07:47:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Woe5oiUr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727187AbgDHHqu (ORCPT
+        id S1727226AbgDHHrA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Apr 2020 03:46:50 -0400
-Received: from mx06.melco.co.jp ([192.218.140.146]:38222 "EHLO
-        mx06.melco.co.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726366AbgDHHqu (ORCPT
+        Wed, 8 Apr 2020 03:47:00 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:55283 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726366AbgDHHrA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Apr 2020 03:46:50 -0400
-Received: from mr06.melco.co.jp (mr06 [133.141.98.164])
-        by mx06.melco.co.jp (Postfix) with ESMTP id 82F093A41E6;
-        Wed,  8 Apr 2020 16:46:46 +0900 (JST)
-Received: from mr06.melco.co.jp (unknown [127.0.0.1])
-        by mr06.imss (Postfix) with ESMTP id 48xxDk2KZSzRkCm;
-        Wed,  8 Apr 2020 16:46:46 +0900 (JST)
-Received: from mf03_second.melco.co.jp (unknown [192.168.20.183])
-        by mr06.melco.co.jp (Postfix) with ESMTP id 48xxDk21Y5zRkCj;
-        Wed,  8 Apr 2020 16:46:46 +0900 (JST)
-Received: from mf03.melco.co.jp (unknown [133.141.98.183])
-        by mf03_second.melco.co.jp (Postfix) with ESMTP id 48xxDk1w6WzRkD1;
-        Wed,  8 Apr 2020 16:46:46 +0900 (JST)
-Received: from tux532.tad.melco.co.jp (unknown [133.141.243.226])
-        by mf03.melco.co.jp (Postfix) with ESMTP id 48xxDk0gYfzRkBx;
-        Wed,  8 Apr 2020 16:46:46 +0900 (JST)
-Received:  from tux532.tad.melco.co.jp
-        by tux532.tad.melco.co.jp (unknown) with ESMTP id 0387kj5l032297;
-        Wed, 8 Apr 2020 16:46:45 +0900
-Received: from tux390.tad.melco.co.jp (tux390.tad.melco.co.jp [127.0.0.1])
-        by postfix.imss70 (Postfix) with ESMTP id C6F8317E07A;
-        Wed,  8 Apr 2020 16:46:45 +0900 (JST)
-Received: from tux554.tad.melco.co.jp (tadpost1.tad.melco.co.jp [10.168.7.223])
-        by tux390.tad.melco.co.jp (Postfix) with ESMTP id BA9DD17E079;
-        Wed,  8 Apr 2020 16:46:45 +0900 (JST)
-Received: from tux554.tad.melco.co.jp
-        by tux554.tad.melco.co.jp (unknown) with ESMTP id 0387kjUx005469;
-        Wed, 8 Apr 2020 16:46:45 +0900
-From:   Tetsuhiro Kohada <Kohada.Tetsuhiro@dc.MitsubishiElectric.co.jp>
-To:     Kohada.Tetsuhiro@dc.MitsubishiElectric.co.jp
-Cc:     Mori.Takahiro@ab.MitsubishiElectric.co.jp,
-        motai.hirotaka@aj.mitsubishielectric.co.jp,
-        Namjae Jeon <namjae.jeon@samsung.com>,
-        Sungjong Seo <sj1557.seo@samsung.com>,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2] exfat: replace 'time_ms' with 'time_10ms'
-Date:   Wed,  8 Apr 2020 16:46:10 +0900
-Message-Id: <20200408074610.35591-1-Kohada.Tetsuhiro@dc.MitsubishiElectric.co.jp>
-X-Mailer: git-send-email 2.25.0
+        Wed, 8 Apr 2020 03:47:00 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1586332018;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=Y1arcaLqiwShpjN21yqx0qJmbd250D2huz+f9SVTXzo=;
+        b=Woe5oiUrffoKFfmfSYqKQ+i7gLXDebk9GzuSlnJj/sR8CX9VOKWbn9v4FTmJ27VYQ2usz5
+        cn8to3H0gFIfhJBEpIXfNfARq3XgoUxxAMZDv+AGMVmQgEG1bsROrhBOnpvB7j/983XXf5
+        Jfvwn5ReLI/NCPBpLJruepKWY1jgGYU=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-43-951DvAyvMr-Iq2xJH8E3Tw-1; Wed, 08 Apr 2020 03:46:56 -0400
+X-MC-Unique: 951DvAyvMr-Iq2xJH8E3Tw-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 5B51D107ACCA;
+        Wed,  8 Apr 2020 07:46:55 +0000 (UTC)
+Received: from kamzik.brq.redhat.com (unknown [10.40.193.61])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id A6B2C1C952;
+        Wed,  8 Apr 2020 07:46:47 +0000 (UTC)
+Date:   Wed, 8 Apr 2020 09:46:45 +0200
+From:   Andrew Jones <drjones@redhat.com>
+To:     Wainer dos Santos Moschetta <wainersm@redhat.com>
+Cc:     pbonzini@redhat.com, kvm@vger.kernel.org, david@redhat.com,
+        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org
+Subject: Re: [PATCH v3 2/2] selftests: kvm: Add mem_slot_test test
+Message-ID: <20200408074645.dr6dgybrwwjz2tcp@kamzik.brq.redhat.com>
+References: <20200407153731.3236-1-wainersm@redhat.com>
+ <20200407153731.3236-3-wainersm@redhat.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200407153731.3236-3-wainersm@redhat.com>
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Replace "time_ms"  with "time_10ms" in the file directory entry structure
-and related functions.
+On Tue, Apr 07, 2020 at 12:37:31PM -0300, Wainer dos Santos Moschetta wrote:
+> This patch introduces the mem_slot_test test which checks
+> an VM can have added memory slots up to the limit defined in
+> KVM_CAP_NR_MEMSLOTS. Then attempt to add one more slot to
+> verify it fails as expected.
+> 
+> Signed-off-by: Wainer dos Santos Moschetta <wainersm@redhat.com>
+> ---
+>  tools/testing/selftests/kvm/.gitignore      |  1 +
+>  tools/testing/selftests/kvm/Makefile        |  3 +
+>  tools/testing/selftests/kvm/mem_slot_test.c | 85 +++++++++++++++++++++
+>  3 files changed, 89 insertions(+)
+>  create mode 100644 tools/testing/selftests/kvm/mem_slot_test.c
+> 
+> diff --git a/tools/testing/selftests/kvm/.gitignore b/tools/testing/selftests/kvm/.gitignore
+> index 16877c3daabf..127d27188427 100644
+> --- a/tools/testing/selftests/kvm/.gitignore
+> +++ b/tools/testing/selftests/kvm/.gitignore
+> @@ -21,4 +21,5 @@
+>  /demand_paging_test
+>  /dirty_log_test
+>  /kvm_create_max_vcpus
+> +/mem_slot_test
+>  /steal_time
+> diff --git a/tools/testing/selftests/kvm/Makefile b/tools/testing/selftests/kvm/Makefile
+> index 712a2ddd2a27..338b6cdce1a0 100644
+> --- a/tools/testing/selftests/kvm/Makefile
+> +++ b/tools/testing/selftests/kvm/Makefile
+> @@ -32,12 +32,14 @@ TEST_GEN_PROGS_x86_64 += clear_dirty_log_test
+>  TEST_GEN_PROGS_x86_64 += demand_paging_test
+>  TEST_GEN_PROGS_x86_64 += dirty_log_test
+>  TEST_GEN_PROGS_x86_64 += kvm_create_max_vcpus
+> +TEST_GEN_PROGS_x86_64 += mem_slot_test
+>  TEST_GEN_PROGS_x86_64 += steal_time
+>  
+>  TEST_GEN_PROGS_aarch64 += clear_dirty_log_test
+>  TEST_GEN_PROGS_aarch64 += demand_paging_test
+>  TEST_GEN_PROGS_aarch64 += dirty_log_test
+>  TEST_GEN_PROGS_aarch64 += kvm_create_max_vcpus
+> +TEST_GEN_PROGS_aarch64 += mem_slot_test
+>  TEST_GEN_PROGS_aarch64 += steal_time
+>  
+>  TEST_GEN_PROGS_s390x = s390x/memop
+> @@ -46,6 +48,7 @@ TEST_GEN_PROGS_s390x += s390x/sync_regs_test
+>  TEST_GEN_PROGS_s390x += demand_paging_test
+>  TEST_GEN_PROGS_s390x += dirty_log_test
+>  TEST_GEN_PROGS_s390x += kvm_create_max_vcpus
+> +TEST_GEN_PROGS_s390x += mem_slot_test
+>  
+>  TEST_GEN_PROGS += $(TEST_GEN_PROGS_$(UNAME_M))
+>  LIBKVM += $(LIBKVM_$(UNAME_M))
+> diff --git a/tools/testing/selftests/kvm/mem_slot_test.c b/tools/testing/selftests/kvm/mem_slot_test.c
+> new file mode 100644
+> index 000000000000..0588dc2e8e01
+> --- /dev/null
+> +++ b/tools/testing/selftests/kvm/mem_slot_test.c
+> @@ -0,0 +1,85 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +/*
+> + * mem_slot_test
+> + *
+> + * Copyright (C) 2020, Red Hat, Inc.
+> + *
+> + * Test suite for memory region operations.
+> + */
+> +#define _GNU_SOURCE /* for program_invocation_short_name */
+> +#include <linux/kvm.h>
+> +#include <sys/mman.h>
+> +
+> +#include "test_util.h"
+> +#include "kvm_util.h"
+> +
+> +/*
+> + * Test it can be added memory slots up to KVM_CAP_NR_MEMSLOTS, then any
+> + * tentative to add further slots should fail.
+> + */
+> +static void test_add_max_slots(void)
+> +{
+> +	int ret;
+> +	struct kvm_userspace_memory_region *kvm_region;
 
-The unit of create_time_ms/modify_time_ms in File Directory Entry are
-not 'milli-second', but 'centi-second'.
+nit: this doesn't need to be a pointer, requiring the malloc.
 
-The reason for using 10ms instead of cs for the names is that the exfat
-specification defines it as Create10msIncrement/LastModified10msIncrement.
+> +	struct kvm_vm *vm;
+> +	uint32_t max_mem_slots;
+> +	uint32_t mem_reg_flags;
+> +	uint32_t slot;
+> +	uint64_t guest_addr;
+> +	uint64_t mem_reg_npages;
+> +	uint64_t mem_reg_size;
+> +
+> +	max_mem_slots = kvm_check_cap(KVM_CAP_NR_MEMSLOTS);
+> +	TEST_ASSERT(max_mem_slots > 0,
+> +		    "KVM_CAP_NR_MEMSLOTS should be greater than 0");
+> +	pr_info("Allowed number of memory slots: %i\n", max_mem_slots);
+> +
+> +	vm = vm_create(VM_MODE_DEFAULT, 0, O_RDWR);
+> +
+> +	/*
+> +	 * Uses 1MB sized/aligned memory region since this is the minimal
+> +	 * required on s390x.
+> +	 */
+> +	mem_reg_size = 0x100000;
+> +	mem_reg_npages = vm_calc_num_guest_pages(VM_MODE_DEFAULT, mem_reg_size);
+> +	mem_reg_flags = 0;
 
-Signed-off-by: Tetsuhiro Kohada <Kohada.Tetsuhiro@dc.MitsubishiElectric.co.jp>
----
-Changes in v2:
-- fix spelling mistakes in commit-log.
+nit: don't really need mem_reg_flags anymore.
 
- fs/exfat/dir.c       |  8 ++++----
- fs/exfat/exfat_fs.h  |  4 ++--
- fs/exfat/exfat_raw.h |  4 ++--
- fs/exfat/file.c      |  2 +-
- fs/exfat/inode.c     |  4 ++--
- fs/exfat/misc.c      | 18 +++++++++---------
- fs/exfat/namei.c     |  4 ++--
- 7 files changed, 22 insertions(+), 22 deletions(-)
+> +
+> +	guest_addr = 0x0;
+> +
+> +	/* Check it can be added memory slots up to the maximum allowed */
+> +	pr_info("Adding slots 0..%i, each memory region with %ldK size\n",
+> +		(max_mem_slots - 1), mem_reg_size >> 10);
+> +	for (slot = 0; slot < max_mem_slots; slot++) {
+> +		vm_userspace_mem_region_add(vm, VM_MEM_SRC_ANONYMOUS,
+> +					    guest_addr, slot, mem_reg_npages,
+> +					    mem_reg_flags);
+> +		guest_addr += mem_reg_size;
+> +	}
+> +
+> +	/* Check it cannot be added memory slots beyond the limit */
+> +	void *mem = mmap(NULL, mem_reg_size, PROT_READ | PROT_WRITE,
+> +			 MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
 
-diff --git a/fs/exfat/dir.c b/fs/exfat/dir.c
-index 4b91afb0f0..cacc53ff11 100644
---- a/fs/exfat/dir.c
-+++ b/fs/exfat/dir.c
-@@ -137,12 +137,12 @@ static int exfat_readdir(struct inode *inode, struct exfat_dir_entry *dir_entry)
- 					ep->dentry.file.create_tz,
- 					ep->dentry.file.create_time,
- 					ep->dentry.file.create_date,
--					ep->dentry.file.create_time_ms);
-+					ep->dentry.file.create_time_10ms);
- 			exfat_get_entry_time(sbi, &dir_entry->mtime,
- 					ep->dentry.file.modify_tz,
- 					ep->dentry.file.modify_time,
- 					ep->dentry.file.modify_date,
--					ep->dentry.file.modify_time_ms);
-+					ep->dentry.file.modify_time_10ms);
- 			exfat_get_entry_time(sbi, &dir_entry->atime,
- 					ep->dentry.file.access_tz,
- 					ep->dentry.file.access_time,
-@@ -461,12 +461,12 @@ int exfat_init_dir_entry(struct inode *inode, struct exfat_chain *p_dir,
- 			&ep->dentry.file.create_tz,
- 			&ep->dentry.file.create_time,
- 			&ep->dentry.file.create_date,
--			&ep->dentry.file.create_time_ms);
-+			&ep->dentry.file.create_time_10ms);
- 	exfat_set_entry_time(sbi, &ts,
- 			&ep->dentry.file.modify_tz,
- 			&ep->dentry.file.modify_time,
- 			&ep->dentry.file.modify_date,
--			&ep->dentry.file.modify_time_ms);
-+			&ep->dentry.file.modify_time_10ms);
- 	exfat_set_entry_time(sbi, &ts,
- 			&ep->dentry.file.access_tz,
- 			&ep->dentry.file.access_time,
-diff --git a/fs/exfat/exfat_fs.h b/fs/exfat/exfat_fs.h
-index 67d4e46fb8..6d357e9f5b 100644
---- a/fs/exfat/exfat_fs.h
-+++ b/fs/exfat/exfat_fs.h
-@@ -506,9 +506,9 @@ void __exfat_fs_error(struct super_block *sb, int report, const char *fmt, ...)
- void exfat_msg(struct super_block *sb, const char *lv, const char *fmt, ...)
- 		__printf(3, 4) __cold;
- void exfat_get_entry_time(struct exfat_sb_info *sbi, struct timespec64 *ts,
--		u8 tz, __le16 time, __le16 date, u8 time_ms);
-+		u8 tz, __le16 time, __le16 date, u8 time_10ms);
- void exfat_set_entry_time(struct exfat_sb_info *sbi, struct timespec64 *ts,
--		u8 *tz, __le16 *time, __le16 *date, u8 *time_ms);
-+		u8 *tz, __le16 *time, __le16 *date, u8 *time_10ms);
- unsigned short exfat_calc_chksum_2byte(void *data, int len,
- 		unsigned short chksum, int type);
- void exfat_update_bh(struct super_block *sb, struct buffer_head *bh, int sync);
-diff --git a/fs/exfat/exfat_raw.h b/fs/exfat/exfat_raw.h
-index 2a841010e6..be0e362422 100644
---- a/fs/exfat/exfat_raw.h
-+++ b/fs/exfat/exfat_raw.h
-@@ -136,8 +136,8 @@ struct exfat_dentry {
- 			__le16 modify_date;
- 			__le16 access_time;
- 			__le16 access_date;
--			__u8 create_time_ms;
--			__u8 modify_time_ms;
-+			__u8 create_time_10ms;
-+			__u8 modify_time_10ms;
- 			__u8 create_tz;
- 			__u8 modify_tz;
- 			__u8 access_tz;
-diff --git a/fs/exfat/file.c b/fs/exfat/file.c
-index 483f683757..a986f1eeef 100644
---- a/fs/exfat/file.c
-+++ b/fs/exfat/file.c
-@@ -165,7 +165,7 @@ int __exfat_truncate(struct inode *inode, loff_t new_size)
- 				&ep->dentry.file.modify_tz,
- 				&ep->dentry.file.modify_time,
- 				&ep->dentry.file.modify_date,
--				&ep->dentry.file.modify_time_ms);
-+				&ep->dentry.file.modify_time_10ms);
- 		ep->dentry.file.attr = cpu_to_le16(ei->attr);
- 
- 		/* File size should be zero if there is no cluster allocated */
-diff --git a/fs/exfat/inode.c b/fs/exfat/inode.c
-index 06887492f5..59b50dfbdd 100644
---- a/fs/exfat/inode.c
-+++ b/fs/exfat/inode.c
-@@ -56,12 +56,12 @@ static int __exfat_write_inode(struct inode *inode, int sync)
- 			&ep->dentry.file.create_tz,
- 			&ep->dentry.file.create_time,
- 			&ep->dentry.file.create_date,
--			&ep->dentry.file.create_time_ms);
-+			&ep->dentry.file.create_time_10ms);
- 	exfat_set_entry_time(sbi, &inode->i_mtime,
- 			&ep->dentry.file.modify_tz,
- 			&ep->dentry.file.modify_time,
- 			&ep->dentry.file.modify_date,
--			&ep->dentry.file.modify_time_ms);
-+			&ep->dentry.file.modify_time_10ms);
- 	exfat_set_entry_time(sbi, &inode->i_atime,
- 			&ep->dentry.file.access_tz,
- 			&ep->dentry.file.access_time,
-diff --git a/fs/exfat/misc.c b/fs/exfat/misc.c
-index 14a3300848..8b39c8176a 100644
---- a/fs/exfat/misc.c
-+++ b/fs/exfat/misc.c
-@@ -75,7 +75,7 @@ static void exfat_adjust_tz(struct timespec64 *ts, u8 tz_off)
- 
- /* Convert a EXFAT time/date pair to a UNIX date (seconds since 1 1 70). */
- void exfat_get_entry_time(struct exfat_sb_info *sbi, struct timespec64 *ts,
--		u8 tz, __le16 time, __le16 date, u8 time_ms)
-+		u8 tz, __le16 time, __le16 date, u8 time_10ms)
- {
- 	u16 t = le16_to_cpu(time);
- 	u16 d = le16_to_cpu(date);
-@@ -84,10 +84,10 @@ void exfat_get_entry_time(struct exfat_sb_info *sbi, struct timespec64 *ts,
- 			      t >> 11, (t >> 5) & 0x003F, (t & 0x001F) << 1);
- 
- 
--	/* time_ms field represent 0 ~ 199(1990 ms) */
--	if (time_ms) {
--		ts->tv_sec += time_ms / 100;
--		ts->tv_nsec = (time_ms % 100) * 10 * NSEC_PER_MSEC;
-+	/* time_10ms field represent 0 ~ 199cs(1990 ms) */
-+	if (time_10ms) {
-+		ts->tv_sec += (time_10ms * 10) / 1000;
-+		ts->tv_nsec = (time_10ms * 10) % 1000 * NSEC_PER_MSEC;
- 	}
- 
- 	if (tz & EXFAT_TZ_VALID)
-@@ -100,7 +100,7 @@ void exfat_get_entry_time(struct exfat_sb_info *sbi, struct timespec64 *ts,
- 
- /* Convert linear UNIX date to a EXFAT time/date pair. */
- void exfat_set_entry_time(struct exfat_sb_info *sbi, struct timespec64 *ts,
--		u8 *tz, __le16 *time, __le16 *date, u8 *time_ms)
-+		u8 *tz, __le16 *time, __le16 *date, u8 *time_10ms)
- {
- 	struct tm tm;
- 	u16 t, d;
-@@ -112,9 +112,9 @@ void exfat_set_entry_time(struct exfat_sb_info *sbi, struct timespec64 *ts,
- 	*time = cpu_to_le16(t);
- 	*date = cpu_to_le16(d);
- 
--	/* time_ms field represent 0 ~ 199(1990 ms) */
--	if (time_ms)
--		*time_ms = (tm.tm_sec & 1) * 100 +
-+	/* time_10ms field represent 0 ~ 199cs(1990 ms) */
-+	if (time_10ms)
-+		*time_10ms = (tm.tm_sec & 1) * 100 +
- 			ts->tv_nsec / (10 * NSEC_PER_MSEC);
- 
- 	/*
-diff --git a/fs/exfat/namei.c b/fs/exfat/namei.c
-index a8681d91f5..90d8273cd8 100644
---- a/fs/exfat/namei.c
-+++ b/fs/exfat/namei.c
-@@ -698,12 +698,12 @@ static int exfat_find(struct inode *dir, struct qstr *qname,
- 				ep->dentry.file.create_tz,
- 				ep->dentry.file.create_time,
- 				ep->dentry.file.create_date,
--				ep->dentry.file.create_time_ms);
-+				ep->dentry.file.create_time_10ms);
- 		exfat_get_entry_time(sbi, &info->mtime,
- 				ep->dentry.file.modify_tz,
- 				ep->dentry.file.modify_time,
- 				ep->dentry.file.modify_date,
--				ep->dentry.file.modify_time_ms);
-+				ep->dentry.file.modify_time_10ms);
- 		exfat_get_entry_time(sbi, &info->atime,
- 				ep->dentry.file.access_tz,
- 				ep->dentry.file.access_time,
--- 
-2.25.0
+nit: mem is another middle of block declaration that I didn't notice before
+
+> +	TEST_ASSERT(mem != MAP_FAILED, "Failed to mmap() host");
+> +
+> +	kvm_region = malloc(sizeof(struct kvm_userspace_memory_region));
+> +	TEST_ASSERT(kvm_region,
+> +		    "Failed to malloc() kvm_userspace_memory_region");
+> +	kvm_region->slot = slot;
+> +	kvm_region->flags = mem_reg_flags;
+> +	kvm_region->guest_phys_addr = guest_addr;
+> +	kvm_region->userspace_addr = (uint64_t) mem;
+
+You're missing memory_size here, and it's not even guaranteed to be zero,
+since we malloc'ed and didn't zero initialize.
+
+Actually, I'd probably just drop kvm_region and use a compound literal
+in the ioctl.
+
+> +
+> +	ret = ioctl(vm_get_fd(vm), KVM_SET_USER_MEMORY_REGION, kvm_region);
+> +	TEST_ASSERT(ret == -1 && errno == EINVAL,
+> +		    "Adding one more memory slot should fail with EINVAL");
+> +
+> +	munmap(mem, mem_reg_size);
+> +	free(kvm_region);
+> +	kvm_vm_free(vm);
+> +}
+> +
+> +int main(int argc, char *argv[])
+> +{
+> +	test_add_max_slots();
+> +	return 0;
+> +}
+> -- 
+> 2.17.2
+>
+
+Thanks,
+drew
 
