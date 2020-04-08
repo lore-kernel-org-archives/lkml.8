@@ -2,73 +2,161 @@ Return-Path: <SRS0=8dav=5Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F593C2D0EA
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 07:26:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ABB80C2BA16
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 07:26:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5A01A20730
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 07:26:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 837FA2074F
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 07:26:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="o9b/IpfO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726841AbgDHH0P (ORCPT
+        id S1726877AbgDHH04 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Apr 2020 03:26:15 -0400
-Received: from esa4.mentor.iphmx.com ([68.232.137.252]:14125 "EHLO
-        esa4.mentor.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726512AbgDHH0O (ORCPT
+        Wed, 8 Apr 2020 03:26:56 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:34161 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726605AbgDHH04 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Apr 2020 03:26:14 -0400
-IronPort-SDR: jdC93wlaZSE56uMLyD6MvmmT68UGr2fv/uBsuWU1KCvH5F5MBjMNSeowcvy9MT08YBm+Gnu6E2
- ba2jiRwww9mQkRy/hx0Es6NQgwyaNNinwqp1JWkJi8FkwzAwAMdAUwelmPD+4d8L+QEsk7nXJU
- KIuftHhMx1D51KRDcVSg5SQj9Ui6DPEcPflbtLse6dsY03EDCFdm+jV913NSiuwsystZSpRHKf
- 11npI76BbTq15WfmRWDFrn/63lfF6RtpOBz29gPDyZkOgrT7BH5Ey0dZkepoR5SYrqNvxREmia
- cgI=
-X-IronPort-AV: E=Sophos;i="5.72,357,1580803200"; 
-   d="scan'208";a="47599622"
-Received: from orw-gwy-01-in.mentorg.com ([192.94.38.165])
-  by esa4.mentor.iphmx.com with ESMTP; 07 Apr 2020 23:26:14 -0800
-IronPort-SDR: /3VRTvqjzae+nNNrwtv/DAAyeGsd1/+/Nz9OLejgdmWpJd+lFUrwkFLAsankHd8mYbJIzUzEHQ
- x1LUI6F+VTSrBuncrlCiQaDxmWRq45Gx9yOkzxPT1QporYj1YvJ2nZCTJb2duocIUrirB0sIF1
- 711paZ3l06aq5Ebh7bsIhqJp7zNR46c5i6dpsdwU8EfyLPTE5hqhYcWnU31JY/j5/Z6mJr4jUZ
- 0EnW8yobSBuCLuXveRwwVJUSaXaCGtHloN2XiNHGg0jQPyYmw/RVxPKeLNEzKastZ2ka37wpiy
- iNA=
-From:   "Schmid, Carsten" <Carsten_Schmid@mentor.com>
-To:     Tetsuhiro Kohada <Kohada.Tetsuhiro@dc.MitsubishiElectric.co.jp>
-CC:     "Mori.Takahiro@ab.MitsubishiElectric.co.jp" 
-        <Mori.Takahiro@ab.MitsubishiElectric.co.jp>,
-        "motai.hirotaka@aj.mitsubishielectric.co.jp" 
-        <motai.hirotaka@aj.mitsubishielectric.co.jp>,
-        Namjae Jeon <namjae.jeon@samsung.com>,
-        Sungjong Seo <sj1557.seo@samsung.com>,
-        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: AW: [PATCH] exfat: replace 'time_ms' with 'time_10ms'
-Thread-Topic: [PATCH] exfat: replace 'time_ms' with 'time_10ms'
-Thread-Index: AQHWDXaV+mOELO8XJ0u2W2kinDcPLahu0rjg
-Date:   Wed, 8 Apr 2020 07:26:08 +0000
-Message-ID: <483f4d38d25a400499d3601ae18e041b@SVR-IES-MBX-03.mgc.mentorg.com>
-References: <20200408072242.95334-1-Kohada.Tetsuhiro@dc.MitsubishiElectric.co.jp>
-In-Reply-To: <20200408072242.95334-1-Kohada.Tetsuhiro@dc.MitsubishiElectric.co.jp>
-Accept-Language: de-DE, en-IE, en-US
-Content-Language: de-DE
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [137.202.0.90]
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-MIME-Version: 1.0
+        Wed, 8 Apr 2020 03:26:56 -0400
+Received: by mail-pf1-f193.google.com with SMTP id v23so2669640pfm.1
+        for <linux-kernel@vger.kernel.org>; Wed, 08 Apr 2020 00:26:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=RR92PJz/vfU5+w5Mw1m+JK7ovH9yXMWn2/XVn86hUF4=;
+        b=o9b/IpfOWX3nEWUPGPu6RG3SPuwiAKT/BMhB1+9/Kqv0fSB7vvdjWW1G+KaVsOfOgM
+         r63wgBLsagQyRFpa3sML0m01aNH73sDIWQr5AZk2BUBOnjfhPmwj15A4J9269Y4eQL3A
+         Aiy5PKV4bPb7xjbvqrNthovakqZ4XwH4m8acy7b+ipuIaF+yCnQ823+p4WB5HuSQTczU
+         hS9RoyvPcKYjCNRfA4LDhhuNw0jrxtbeA9tcxUYpeFKJ6nQ645+j5wa2jjWRL3LhsdxQ
+         sFmH767KJfS6IpcxfZ1FUM8vvbmAYo605CSd+aaSpnObNA4IR4EsC+FdYbwxWONGAjKA
+         9/Ng==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=RR92PJz/vfU5+w5Mw1m+JK7ovH9yXMWn2/XVn86hUF4=;
+        b=QEnO2mkgx1Z9hGJihHZNqBmEJQ5thVc2ork1GCDvof+4h6dmekHpsQslFFFf7/JDNq
+         7ffWM8iHhiNEl2lsO/ixYgCsqAUxzD/kOGMsMI92m6EBHALTLcX+A8nVp8KIEhea2uZ1
+         H4KoaM+aTL5DNODxgkL6uno25zYKEoHsittVKeUgPtZ+20GzdjE6A1n4ro6dUcC5kmSv
+         bXBsa3s1fnXq78yKiEJTsObRPD+E6bIiOUxaJ8qabkgPbZY1pOp6LpM61KaPo2kTgrd5
+         GeZw/MG6pQC8rDqn/mymQOpKz/DN0TA9K0TiW9EuCqjXenqIEcKkgJqaj3Pj+7unznJv
+         mDBQ==
+X-Gm-Message-State: AGi0PuaZ1H5hhF2EGmTqpOuxvSI0hZV6i+gPMjbOLsa531zg8Z6X9gA7
+        1dXw2QfZNmt95zYaWyyZws91r1ugz0Q=
+X-Google-Smtp-Source: APiQypI1PwvJKIu1MMqj4sk2SnhJoHI5jNaR8zvH0OAV2wrNTN00E9sg3z8mY1eZAALQB+ttBEMrWw==
+X-Received: by 2002:aa7:880c:: with SMTP id c12mr5940143pfo.77.1586330814919;
+        Wed, 08 Apr 2020 00:26:54 -0700 (PDT)
+Received: from localhost.localdomain ([2601:1c2:680:1319:692:26ff:feda:3a81])
+        by smtp.gmail.com with ESMTPSA id e187sm15356066pfe.143.2020.04.08.00.26.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 08 Apr 2020 00:26:54 -0700 (PDT)
+From:   John Stultz <john.stultz@linaro.org>
+To:     lkml <linux-kernel@vger.kernel.org>
+Cc:     John Stultz <john.stultz@linaro.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
+        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Rob Herring <robh@kernel.org>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        netdev <netdev@vger.kernel.org>, linux-pm@vger.kernel.org
+Subject: [RFC][PATCH v2 1/2] driver core: Revert default driver_deferred_probe_timeout value to 0
+Date:   Wed,  8 Apr 2020 07:26:49 +0000
+Message-Id: <20200408072650.1731-1-john.stultz@linaro.org>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Pg0KPiBUaGUgdW5pdCBvZiBjcmVhdGVfdGltZV9tcy9tb2RpZnlfdGltZV9tcyBpbiBGaWxlIERp
-cmVjdG9yeSBFbnRyeSBhcmUNCj4gbm90ICdtaWxsaS1zZWNvbmQnLCBidXQgJ2Nlbmktc2Vjb25k
-Jy4NCj4NCnMvY2VuaS1zZWNvbmQvY2VudGktc2Vjb25kLw0KDQpCUg0KQ2Fyc3Rlbg0KLS0tLS0t
-LS0tLS0tLS0tLS0NCk1lbnRvciBHcmFwaGljcyAoRGV1dHNjaGxhbmQpIEdtYkgsIEFybnVsZnN0
-cmHDn2UgMjAxLCA4MDYzNCBNw7xuY2hlbiAvIEdlcm1hbnkNClJlZ2lzdGVyZ2VyaWNodCBNw7xu
-Y2hlbiBIUkIgMTA2OTU1LCBHZXNjaMOkZnRzZsO8aHJlcjogVGhvbWFzIEhldXJ1bmcsIEFsZXhh
-bmRlciBXYWx0ZXINCg==
+In commit c8c43cee29f6 ("driver core: Fix
+driver_deferred_probe_check_state() logic"), we both cleaned up
+the logic and also set the default driver_deferred_probe_timeout
+value to 30 seconds to allow for drivers that are missing
+dependencies to have some time so that the dependency may be
+loaded from userland after initcalls_done is set.
+
+However, Yoshihiro Shimoda reported that on his device that
+expects to have unmet dependencies (due to "optional links" in
+its devicetree), was failing to mount the NFS root.
+
+In digging further, it seemed the problem was that while the
+device properly probes after waiting 30 seconds for any missing
+modules to load, the ip_auto_config() had already failed,
+resulting in NFS to fail. This was due to ip_auto_config()
+calling wait_for_device_probe() which doesn't wait for the
+driver_deferred_probe_timeout to fire.
+
+Fixing that issue is possible, but could also introduce 30
+second delays in bootups for users who don't have any
+missing dependencies, which is not ideal.
+
+So I think the best solution to avoid any regressions is to
+revert back to a default timeout value of zero, and allow
+systems that need to utilize the timeout in order for userland
+to load any modules that supply misisng dependencies in the dts
+to specify the timeout length via the exiting documented boot
+argument.
+
+Thanks to Geert for chasing down that ip_auto_config was why NFS
+was failing in this case!
+
+Cc: "David S. Miller" <davem@davemloft.net>
+Cc: Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>
+Cc: Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>
+Cc: Jakub Kicinski <kuba@kernel.org>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Rafael J. Wysocki <rjw@rjwysocki.net>
+Cc: Rob Herring <robh@kernel.org>
+Cc: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Cc: netdev <netdev@vger.kernel.org>
+Cc: linux-pm@vger.kernel.org
+Reported-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Fixes: c8c43cee29f6 ("driver core: Fix driver_deferred_probe_check_state() logic")
+Signed-off-by: John Stultz <john.stultz@linaro.org>
+---
+ drivers/base/dd.c | 13 ++-----------
+ 1 file changed, 2 insertions(+), 11 deletions(-)
+
+diff --git a/drivers/base/dd.c b/drivers/base/dd.c
+index 06ec0e851fa1..908ae4d7805e 100644
+--- a/drivers/base/dd.c
++++ b/drivers/base/dd.c
+@@ -224,16 +224,7 @@ static int deferred_devs_show(struct seq_file *s, void *data)
+ }
+ DEFINE_SHOW_ATTRIBUTE(deferred_devs);
+ 
+-#ifdef CONFIG_MODULES
+-/*
+- * In the case of modules, set the default probe timeout to
+- * 30 seconds to give userland some time to load needed modules
+- */
+-int driver_deferred_probe_timeout = 30;
+-#else
+-/* In the case of !modules, no probe timeout needed */
+-int driver_deferred_probe_timeout = -1;
+-#endif
++int driver_deferred_probe_timeout;
+ EXPORT_SYMBOL_GPL(driver_deferred_probe_timeout);
+ 
+ static int __init deferred_probe_timeout_setup(char *str)
+@@ -266,7 +257,7 @@ int driver_deferred_probe_check_state(struct device *dev)
+ 		return -ENODEV;
+ 	}
+ 
+-	if (!driver_deferred_probe_timeout) {
++	if (!driver_deferred_probe_timeout && initcalls_done) {
+ 		dev_WARN(dev, "deferred probe timeout, ignoring dependency");
+ 		return -ETIMEDOUT;
+ 	}
+-- 
+2.17.1
+
