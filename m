@@ -2,116 +2,97 @@ Return-Path: <SRS0=8dav=5Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E03CC2D0F4
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 19:38:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 487A4C2BA1A
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 19:42:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 57BB020753
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 19:38:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="VsZzjyop"
+	by mail.kernel.org (Postfix) with ESMTP id 2579D20771
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 19:42:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730095AbgDHTiz (ORCPT
+        id S1729183AbgDHTmN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Apr 2020 15:38:55 -0400
-Received: from mail-eopbgr150077.outbound.protection.outlook.com ([40.107.15.77]:25927
-        "EHLO EUR01-DB5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729144AbgDHTiy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Apr 2020 15:38:54 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=d1MgquxvASx5xZj8XxFoVBMVccZsiNLL2ADSwdV+XtGnNTZe2nkGMpoSgTGF7IbwjSyQfqY/8Tp6LDcyP1gP6nLzhtOkl7p/tp4dsI4RBaVdAUHMs/cUh1I3fcrYfCgxhoXsommkfRo9+IMwXpeuGeaBXKRcYE8Vcgwwzpvk19rYNIlqNnzMdUkbjj/YQocjdOyO0Z7Bl2ryUELpj/V0KlYAo1BJFEbN9s9hUkevWlUPbAjCciY/tJQFtEAobtBEjoK0e5pXSwn/45IVa36gzKP7PcCdhgUi0Lht0QUap22BTfEDCoqFIiKNMRgLykjiRAPYTYRxfAKbw42XWjMJng==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=y1yemx7dBpE/p/AmNoPtEiU7nPK56iwcrsM9mPpO9ck=;
- b=GQcBSYL4E2ojqaT0scqhcP4Q2N9hekZcM9TCnbmUgNKtCTEP7AQcWgboA5lJHAcWSzZTq74kMzVBaN8UgO78N8/6pR9avqozcNycS//9FnmTZGLIbouevUJMYqfQpnjQwzllmVv2pOTGQqA9yvn0L34mW6UokTX9q7vkCrCnkPT8KauDp2qyVoIBtTkUqrv8h3VhHKODiEbwcSw5S60TiCJmmoK3aL31eBhtltcvKVwl2rYljAwLHJjTl+Let/Cpd8n4xYT3J/ENmmrnvVnecKdfL8etR+UOrUuvkiVTCn9X5LbKSAs8elt0LPUvhdjbXCgLYYiI3V08hO/4+yfCOQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=mellanox.com; dmarc=pass action=none header.from=mellanox.com;
- dkim=pass header.d=mellanox.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=y1yemx7dBpE/p/AmNoPtEiU7nPK56iwcrsM9mPpO9ck=;
- b=VsZzjyopzOy35Xa+jCFveNyTqt7z5cvJaI5bYjPCozmAFYRb/8dy2lghSfyzPpaNqLLFwU9Ze6xERtC42UEekY36xcRilikAB1uum0gMftVwqKt0HUdnc2YZ/69BQkT1Hlm9qttUh0UvJ/NsD5HzlESAGwjvZlvZTm+L9ZYNUc8=
-Received: from VI1PR05MB5102.eurprd05.prod.outlook.com (2603:10a6:803:5e::23)
- by VI1PR05MB3472.eurprd05.prod.outlook.com (2603:10a6:802:1a::26) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2878.17; Wed, 8 Apr
- 2020 19:38:51 +0000
-Received: from VI1PR05MB5102.eurprd05.prod.outlook.com
- ([fe80::9d19:a564:b84e:7c19]) by VI1PR05MB5102.eurprd05.prod.outlook.com
- ([fe80::9d19:a564:b84e:7c19%7]) with mapi id 15.20.2878.021; Wed, 8 Apr 2020
- 19:38:51 +0000
-From:   Saeed Mahameed <saeedm@mellanox.com>
-To:     "Markus.Elfring@web.de" <Markus.Elfring@web.de>,
-        "schnelle@linux.ibm.com" <schnelle@linux.ibm.com>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
-CC:     Eran Ben Elisha <eranbe@mellanox.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "leon@kernel.org" <leon@kernel.org>,
-        Moshe Shemesh <moshe@mellanox.com>
-Subject: Re: [RFC] net/mlx5: Fix failing fw tracer allocation on s390
-Thread-Topic: [RFC] net/mlx5: Fix failing fw tracer allocation on s390
-Thread-Index: AQHWDO7rXNooSevpp0u4ixl0JMbrO6hu32sAgADBXYA=
-Date:   Wed, 8 Apr 2020 19:38:51 +0000
-Message-ID: <bf22d830013fcdae7b955ac687d96437cd21cc19.camel@mellanox.com>
-References: <77241c76-4836-3080-7fa6-e65fc3af5106@web.de>
-         <7eaec712-6427-7adf-98cd-2c4347dd9e85@linux.ibm.com>
-In-Reply-To: <7eaec712-6427-7adf-98cd-2c4347dd9e85@linux.ibm.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-user-agent: Evolution 3.34.4 (3.34.4-1.fc31) 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=saeedm@mellanox.com; 
-x-originating-ip: [73.15.39.150]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 29ab1092-5b01-4700-0c2a-08d7dbf47779
-x-ms-traffictypediagnostic: VI1PR05MB3472:|VI1PR05MB3472:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <VI1PR05MB3472558F42D8A562A8B4DFB3BEC00@VI1PR05MB3472.eurprd05.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:446;
-x-forefront-prvs: 0367A50BB1
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VI1PR05MB5102.eurprd05.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10009020)(4636009)(376002)(396003)(39850400004)(346002)(366004)(136003)(4326008)(4744005)(71200400001)(26005)(5660300002)(186003)(6486002)(478600001)(81156014)(2616005)(8936002)(81166007)(6506007)(53546011)(8676002)(66556008)(110136005)(64756008)(66476007)(66446008)(91956017)(316002)(107886003)(76116006)(54906003)(2906002)(66946007)(86362001)(36756003)(6512007);DIR:OUT;SFP:1101;
-received-spf: None (protection.outlook.com: mellanox.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: Xw+w4mBXZ40CVpVvUjs3Cv3rBQuepcIm5v+Z8+ger8ymUVmYYwVNYASTCxEWlEfW6UX4ynCne1N3KP/51foJtfAcWx/p08IXX9XBfcXz7AchxzyST+lKPG4MtWZZh2SlDKLd6FgDBfF645fhCDO0pCNihuPCB1CmyD6OKiafVXVIjDaxW5S1Xs4tzHklQ7FmKMirRsT6kwrwo29uC+Wwe1So3ztPyujtvI/Nfdi0ZY267g51kCgO1phtKj9JOpp22/OTTLBm04863ESt9NNU4jlELgoFwTZnIU4opY25uv5qMbVZ/LrVldfsCm1j4FQz32+Chk09UfCWFv+TtrXGFSAb8hQxoGDBL/zWEXy64BHX4W6g/ymWGdSCCPqsBN/Mxyx45D2w75UMrK53hgXLJ3bwVsjBsTk+LXZxwyrv1Y0xMuujY+UPGFO1Cpsg7Uh2
-x-ms-exchange-antispam-messagedata: gKSjipCBQVQcCiaXKW8yfo6ZISCD/r2rNzX/alarLEfSFXQpkZYKSedtuX5ZWd5bVakLjsia+V9Au8Lf1f3zEaDRx4mtEKlWphHQdlUasJuOp1zbxTVrBfpiAy7PerrWHdNElbjJLMexTnRmWi6gdw==
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <DB97C905B2697D4F9430CD411E50E76D@eurprd05.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Wed, 8 Apr 2020 15:42:13 -0400
+Received: from mga01.intel.com ([192.55.52.88]:36087 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726754AbgDHTmM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Apr 2020 15:42:12 -0400
+IronPort-SDR: dPmuqIvuGqchaJ1Bmlf0+RnrUNkJ7KdL/FJGUeCdGkYAjuZsEjT3vhLRO0wE6Ejxsq03KWqkF/
+ 2e0HBKweV22w==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Apr 2020 12:42:12 -0700
+IronPort-SDR: Hrl9SKo0H24KxPjD0M2aHXLOsn2+UsXwA2dsmJFb/OjNKFbGKRiHoxmD3WNBlGMPzI3X9bMrVv
+ 3KGbrKHVhV3w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,359,1580803200"; 
+   d="scan'208";a="254345502"
+Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
+  by orsmga008.jf.intel.com with ESMTP; 08 Apr 2020 12:42:08 -0700
+Received: from kbuild by lkp-server01 with local (Exim 4.89)
+        (envelope-from <lkp@intel.com>)
+        id 1jMGaO-0009Rz-1A; Thu, 09 Apr 2020 03:42:08 +0800
+Date:   Thu, 9 Apr 2020 03:41:26 +0800
+From:   kbuild test robot <lkp@intel.com>
+To:     Shiju Jose <shiju.jose@huawei.com>
+Cc:     kbuild-all@lists.01.org, linux-acpi@vger.kernel.org,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        rjw@rjwysocki.net, bp@alien8.de, james.morse@arm.com,
+        helgaas@kernel.org, lenb@kernel.org, tony.luck@intel.com,
+        dan.carpenter@oracle.com, gregkh@linuxfoundation.org,
+        zhangliguang@linux.alibaba.com, tglx@linutronix.de
+Subject: Re: [v7 PATCH 1/6] ACPI / APEI: Add support to queuing up the
+ non-fatal HW errors and notify
+Message-ID: <202004090342.eexW97It%lkp@intel.com>
+References: <20200407120045.958-2-shiju.jose@huawei.com>
 MIME-Version: 1.0
-X-OriginatorOrg: Mellanox.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 29ab1092-5b01-4700-0c2a-08d7dbf47779
-X-MS-Exchange-CrossTenant-originalarrivaltime: 08 Apr 2020 19:38:51.8419
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: xhsBf+0a2q3cxh78JYKC06Lsdx7YCyKxr3JQijwQltkuFXL0drE5WD9R/MBQB7+T/JwYmGmJW9dpCkyRg3ZzyQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR05MB3472
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200407120045.958-2-shiju.jose@huawei.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gV2VkLCAyMDIwLTA0LTA4IGF0IDEwOjA2ICswMjAwLCBOaWtsYXMgU2NobmVsbGUgd3JvdGU6
-DQo+IE9uIDQvNy8yMCA1OjEyIFBNLCBNYXJrdXMgRWxmcmluZyB3cm90ZToNCj4gPiA+IE9uIHMz
-OTAgRk9SQ0VfTUFYX1pPTkVPUkRFUiBpcyA5IGluc3RlYWQgb2YgMTEsIHRodXMgYSBsYXJnZXIN
-Cj4gPiA+IGt6YWxsb2MoKQ0KPiA+ID4gYWxsb2NhdGlvbiBhcyBkb25lIGZvciB0aGUgZmlybXdh
-cmUgdHJhY2VyIHdpbGwgYWx3YXlzIGZhaWwuDQo+ID4gDQo+ID4gSG93IGRvIHlvdSB0aGluayBh
-Ym91dCB0byBhZGQgdGhlIHRhZyDigJxGaXhlc+KAnSB0byB0aGUgZmluYWwgY2hhbmdlDQo+ID4g
-ZGVzY3JpcHRpb24/DQo+ID4gDQo+ID4gUmVnYXJkcywNCj4gPiBNYXJrdXMNCj4gPiANCj4gWW91
-J3JlIHJpZ2h0IHRoYXQgbWFrZXMgYSBsb3Qgb2Ygc2Vuc2UsIHRoYW5rcyEgSSBndWVzcyB0aGlz
-IHNob3VsZA0KPiByZWZlcmVuY2UNCj4gdGhlIGNvbW1pdCB0aGF0IGludHJvZHVjZWQgdGhlIGRl
-YnVnIHRyYWNlLCByaWdodD8NCj4gDQoNCnByb2JhYmx5LCBqdXN0IGdpdCBibGFtZSB0aGlzIGxp
-bmU6DQogIHRyYWNlciA9IGt6YWxsb2Moc2l6ZW9mKCp0cmFjZXIpLCBHRlBfS0VSTkVMKTsNCg0K
+Hi Shiju,
+
+Thank you for the patch! Perhaps something to improve:
+
+[auto build test WARNING on v5.6]
+[also build test WARNING on next-20200408]
+[cannot apply to pm/linux-next pci/next linus/master linux/master]
+[if your patch is applied to the wrong git tree, please drop us a note to help
+improve the system. BTW, we also suggest to use '--base' option to specify the
+base tree in git format-patch, please see https://stackoverflow.com/a/37406982]
+
+url:    https://github.com/0day-ci/linux/commits/Shiju-Jose/ACPI-APEI-Add-support-to-notify-non-fatal-HW-errors/20200408-014447
+base:    7111951b8d4973bda27ff663f2cf18b663d15b48
+reproduce:
+        # apt-get install sparse
+        # sparse version: v0.6.1-188-g79f7ac98-dirty
+        make ARCH=x86_64 allmodconfig
+        make C=1 CF='-fdiagnostic-prefix -D__CHECK_ENDIAN__'
+
+If you fix the issue, kindly add following tag as appropriate
+Reported-by: kbuild test robot <lkp@intel.com>
+
+
+sparse warnings: (new ones prefixed by >>)
+
+>> drivers/acpi/apei/ghes.c:210:5: sparse: sparse: symbol 'ghes_gdata_pool_init' was not declared. Should it be static?
+   drivers/acpi/apei/ghes.c:715:25: sparse: sparse: incompatible types in comparison expression (different address spaces):
+   drivers/acpi/apei/ghes.c:715:25: sparse:    struct ghes_estatus_cache [noderef] <asn:4> *
+   drivers/acpi/apei/ghes.c:715:25: sparse:    struct ghes_estatus_cache *
+   drivers/acpi/apei/ghes.c:795:25: sparse: sparse: incompatible types in comparison expression (different address spaces):
+   drivers/acpi/apei/ghes.c:795:25: sparse:    struct ghes_estatus_cache [noderef] <asn:4> *
+   drivers/acpi/apei/ghes.c:795:25: sparse:    struct ghes_estatus_cache *
+
+Please review and possibly fold the followup patch.
+
+---
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
