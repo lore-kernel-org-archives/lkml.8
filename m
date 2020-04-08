@@ -6,111 +6,141 @@ X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82D44C2BA1B
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 16:41:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5941BC2BA1B
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 16:41:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6987120787
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 16:41:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3BF0B20769
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 16:41:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730355AbgDHQlw (ORCPT
+        id S1730365AbgDHQl6 convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Apr 2020 12:41:52 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:50183 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728209AbgDHQlw (ORCPT
+        Wed, 8 Apr 2020 12:41:58 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:43191 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730356AbgDHQl5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Apr 2020 12:41:52 -0400
-Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1jMDlp-0001ln-OL; Wed, 08 Apr 2020 18:41:45 +0200
-Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
-        id E278510069D; Wed,  8 Apr 2020 18:41:44 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Paolo Bonzini <pbonzini@redhat.com>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Vivek Goyal <vgoyal@redhat.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
-        kvm list <kvm@vger.kernel.org>, stable <stable@vger.kernel.org>
-Subject: Re: [PATCH v2] x86/kvm: Disable KVM_ASYNC_PF_SEND_ALWAYS
-In-Reply-To: <20200408153824.GO20730@hirez.programming.kicks-ass.net>
-References: <20200407172140.GB64635@redhat.com> <772A564B-3268-49F4-9AEA-CDA648F6131F@amacapital.net> <87eeszjbe6.fsf@nanos.tec.linutronix.de> <ce81c95f-8674-4012-f307-8f32d0e386c2@redhat.com> <874ktukhku.fsf@nanos.tec.linutronix.de> <274f3d14-08ac-e5cc-0b23-e6e0274796c8@redhat.com> <87pncib06x.fsf@nanos.tec.linutronix.de> <20200408153824.GO20730@hirez.programming.kicks-ass.net>
-Date:   Wed, 08 Apr 2020 18:41:44 +0200
-Message-ID: <87h7xuaq0n.fsf@nanos.tec.linutronix.de>
+        Wed, 8 Apr 2020 12:41:57 -0400
+Received: from mail-lj1-f175.google.com ([209.85.208.175])
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <stgraber@ubuntu.com>)
+        id 1jMDlx-0001To-LD
+        for linux-kernel@vger.kernel.org; Wed, 08 Apr 2020 16:41:53 +0000
+Received: by mail-lj1-f175.google.com with SMTP id g27so8301847ljn.10
+        for <linux-kernel@vger.kernel.org>; Wed, 08 Apr 2020 09:41:53 -0700 (PDT)
+X-Gm-Message-State: AGi0PuYN2quChaXSWaJiC+5P6iYrqpRBVuVbWV9OLwkXSpYUkEp38kdz
+        oegBVnBJNTHjPkdr9lAMKlv4gbRhBElqS3jOlqacXQ==
+X-Google-Smtp-Source: APiQypLzUyLptlfj4UREBf2l5xN02F+xA0MQtCV/4zxKUkblPb/olSzPaY17gwOo3IIMcNmLwikMsI/ASDg0+VXPjE8=
+X-Received: by 2002:a2e:97c2:: with SMTP id m2mr5450395ljj.228.1586364113069;
+ Wed, 08 Apr 2020 09:41:53 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+References: <20200408152151.5780-1-christian.brauner@ubuntu.com> <CAG48ez0KWgLMOp1d3X1AcRNc4-eF1YiCw=PgWiGjtM6PqQqawg@mail.gmail.com>
+In-Reply-To: <CAG48ez0KWgLMOp1d3X1AcRNc4-eF1YiCw=PgWiGjtM6PqQqawg@mail.gmail.com>
+From:   =?UTF-8?Q?St=C3=A9phane_Graber?= <stgraber@ubuntu.com>
+Date:   Wed, 8 Apr 2020 12:41:41 -0400
+X-Gmail-Original-Message-ID: <CA+enf=uhTi1yWtOe+iuv2FvdZzo69pwsP-NNU2775jN01aDcVQ@mail.gmail.com>
+Message-ID: <CA+enf=uhTi1yWtOe+iuv2FvdZzo69pwsP-NNU2775jN01aDcVQ@mail.gmail.com>
+Subject: Re: [PATCH 0/8] loopfs
+To:     Jann Horn <jannh@google.com>
+Cc:     Christian Brauner <christian.brauner@ubuntu.com>,
+        Jens Axboe <axboe@kernel.dk>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        kernel list <linux-kernel@vger.kernel.org>,
+        linux-block@vger.kernel.org, Linux API <linux-api@vger.kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Serge Hallyn <serge@hallyn.com>,
+        "Rafael J. Wysocki" <rafael@kernel.org>, Tejun Heo <tj@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Saravana Kannan <saravanak@google.com>,
+        Jan Kara <jack@suse.cz>, David Howells <dhowells@redhat.com>,
+        Seth Forshee <seth.forshee@canonical.com>,
+        David Rheinsberg <david.rheinsberg@gmail.com>,
+        Tom Gundersen <teg@jklm.no>,
+        Christian Kellner <ckellner@redhat.com>,
+        Dmitry Vyukov <dvyukov@google.com>, linux-doc@vger.kernel.org,
+        Network Development <netdev@vger.kernel.org>,
+        Matthew Garrett <mjg59@google.com>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Peter Zijlstra <peterz@infradead.org> writes:
-> On Wed, Apr 08, 2020 at 03:01:58PM +0200, Thomas Gleixner wrote:
->> And it comes with restrictions:
->> 
->>     The Do Other Stuff event can only be delivered when guest IF=1.
->> 
->>     If guest IF=0 then the host has to suspend the guest until the
->>     situation is resolved.
->> 
->>     The 'Situation resolved' event must also wait for a guest IF=1 slot.
+On Wed, Apr 8, 2020 at 12:24 PM Jann Horn <jannh@google.com> wrote:
 >
-> Moo, can we pretty please already kill that ALWAYS and IF nonsense? That
-> results in that terrifyingly crap HLT loop. That needs to die with
-> extreme prejudice.
+> On Wed, Apr 8, 2020 at 5:23 PM Christian Brauner
+> <christian.brauner@ubuntu.com> wrote:
+> > One of the use-cases for loopfs is to allow to dynamically allocate loop
+> > devices in sandboxed workloads without exposing /dev or
+> > /dev/loop-control to the workload in question and without having to
+> > implement a complex and also racy protocol to send around file
+> > descriptors for loop devices. With loopfs each mount is a new instance,
+> > i.e. loop devices created in one loopfs instance are independent of any
+> > loop devices created in another loopfs instance. This allows
+> > sufficiently privileged tools to have their own private stash of loop
+> > device instances. Dmitry has expressed his desire to use this for
+> > syzkaller in a private discussion. And various parties that want to use
+> > it are Cced here too.
+> >
+> > In addition, the loopfs filesystem can be mounted by user namespace root
+> > and is thus suitable for use in containers. Combined with syscall
+> > interception this makes it possible to securely delegate mounting of
+> > images on loop devices, i.e. when a user calls mount -o loop <image>
+> > <mountpoint> it will be possible to completely setup the loop device.
+> > The final mount syscall to actually perform the mount will be handled
+> > through syscall interception and be performed by a sufficiently
+> > privileged process. Syscall interception is already supported through a
+> > new seccomp feature we implemented in [1] and extended in [2] and is
+> > actively used in production workloads. The additional loopfs work will
+> > be used there and in various other workloads too. You'll find a short
+> > illustration how this works with syscall interception below in [4].
 >
-> So the host only inject these OMFG_DOS things when the guest is in
-> luserspace -- which it can see in the VMCS state IIRC. And then using
-> #VE for the make-it-go signal is far preferred over the currentl #PF
-> abuse.
-
-Yes, but this requires software based injection.
-
->> If you just want to solve Viveks problem, then its good enough. I.e. the
->> file truncation turns the EPT entries into #VE convertible entries and
->> the guest #VE handler can figure it out. This one can be injected
->> directly by the hardware, i.e. you don't need a VMEXIT.
+> Would that privileged process then allow you to mount your filesystem
+> images with things like ext4? As far as I know, the filesystem
+> maintainers don't generally consider "untrusted filesystem image" to
+> be a strongly enforced security boundary; and worse, if an attacker
+> has access to a loop device from which something like ext4 is mounted,
+> things like "struct ext4_dir_entry_2" will effectively be in shared
+> memory, and an attacker can trivially bypass e.g.
+> ext4_check_dir_entry(). At the moment, that's not a huge problem (for
+> anything other than kernel lockdown) because only root normally has
+> access to loop devices.
 >
-> That sounds like something that doesn't actually need the whole
-> 'async'/do-something-else-for-a-while crap, right? It's a #PF trap from
-> kernel space where we need to report fail.
-
-Fail or fixup via extable.
-
->> If you want the opportunistic do other stuff mechanism, then #VE has
->> exactly the same problems as the existing async "PF". It's not magicaly
->> making that go away.
+> Ubuntu carries an out-of-tree patch that afaik blocks the shared
+> memory thing: <https://git.launchpad.net/~ubuntu-kernel/ubuntu/+source/linux/+git/eoan/commit?id=4bc428fdf5500b7366313f166b7c9c50ee43f2c4>
 >
-> We need to somehow have the guest teach the host how to tell if it can
-> inject that OMFG_DOS thing or not. Injecting it only to then instantly
-> exit again is stupid and expensive.
+> But even with that patch, I'm not super excited about exposing
+> filesystem image parsing attack surface to containers unless you run
+> the filesystem in a sandboxed environment (at which point you don't
+> need a loop device anymore either).
 
-Not if the injection is actually done by the hardware. Then the guest
-handles #VE and tells the host what to do.
+So in general we certainly agree that you should never expose someone
+that you wouldn't trust with root on the host to syscall interception
+mounting of real kernel filesystems.
 
-> Clearly we don't want to expose preempt_count and make that ABI, but is
-> there some way we can push a snippet of code to the host that instructs
-> the host how to determine if it can sleep or not? I realize that pushing
-> actual x86 .text is a giant security problem, so perhaps a snipped of
-> BPF that the host can verify, which it can run on the guest image ?
+But that's not all that our syscall interception logic can do. We have
+support for rewriting a normal filesystem mount attempt to instead use
+an available FUSE implementation. As far as the user is concerned,
+they ran "mount /dev/sdaX /mnt" and got that ext4 filesystem mounted
+on /mnt as requested, except that the container manager intercepted
+the mount attempt and instead spawned fuse2fs for that mount. This
+requires absolutely no change to the software the user is running.
 
-*SHUDDER*
+loopfs, with that interception mode, will let us also handle all cases
+where a loop would be used, similarly without needing any change to
+the software being run. If a piece of software calls the command
+"mount -o loop blah.img /mnt", the "mount" command will setup a loop
+device as it normally would (doing so through loopfs) and then will
+call the "mount" syscall, which will get intercepted and redirected to
+a FUSE implementation if so configured, resulting in the expected
+filesystem being mounted for the user.
 
-> Make it a hard error (guest cpu dies) to inject the OMFG_DOS signal on a
-> context that cannot put the task to sleep.
+LXD with syscall interception offers both straight up privileged
+mounting using the kernel fs or using a FUSE based implementation.
+This is configurable on a per-filesystem and per-container basis.
 
-With the hardware based #VE and a hypercall which tells the host how to
-handle the EPT fixup (suspend the vcpu or let it continue and do the
-completion later) you don't have to play any games on the host. If the
-guest tells the host the wrong thing, then the guest will have to mop up
-the pieces.
+I hope that clarifies what we're doing here :)
 
-Thanks,
-
-        tglx
+Stéphane
