@@ -2,160 +2,87 @@ Return-Path: <SRS0=8dav=5Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A622C2BA2B
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 09:03:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44CCFC2BA2B
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 09:04:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F04F520784
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 09:03:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 14A3B20768
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 09:04:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1586336680;
+	bh=9kbufo3o6enn038b+/eT3GGy2OJh9n+0Gmmfe1errw4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=pnBqiPxLpn/G25bMW2Bv2jeassHvcmekRPuGStUqlCKVFKGicwmWG4/VhEfzqrC4Z
+	 PXQTHnRlu6tX5g+POyFzFVlhnhoeJZQQgWpYazs3EXMhmPcZBgVUui2HHGmEzzWikU
+	 e54d8pSOdMSZe6u0NJELAVZtTSpaM8BVfxhrcTM0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727865AbgDHJD0 (ORCPT
+        id S1727716AbgDHJEj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Apr 2020 05:03:26 -0400
-Received: from out30-56.freemail.mail.aliyun.com ([115.124.30.56]:59365 "EHLO
-        out30-56.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726996AbgDHJD0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Apr 2020 05:03:26 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R191e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e01419;MF=tianjia.zhang@linux.alibaba.com;NM=1;PH=DS;RN=7;SR=0;TI=SMTPD_---0TuyXpqc_1586336574;
-Received: from localhost(mailfrom:tianjia.zhang@linux.alibaba.com fp:SMTPD_---0TuyXpqc_1586336574)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Wed, 08 Apr 2020 17:02:55 +0800
-From:   Tianjia Zhang <tianjia.zhang@linux.alibaba.com>
-To:     zohar@linux.ibm.com, dmitry.kasatkin@gmail.com, jmorris@namei.org,
-        serge@hallyn.com
-Cc:     linux-integrity@vger.kernel.org,
-        linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] ima: Simplify the implementation of ima_fs_init function
-Date:   Wed,  8 Apr 2020 17:02:54 +0800
-Message-Id: <20200408090254.99525-1-tianjia.zhang@linux.alibaba.com>
-X-Mailer: git-send-email 2.17.1
+        Wed, 8 Apr 2020 05:04:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46658 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726934AbgDHJEi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Apr 2020 05:04:38 -0400
+Received: from pali.im (pali.im [31.31.79.79])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 406BB20692;
+        Wed,  8 Apr 2020 09:04:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1586336678;
+        bh=9kbufo3o6enn038b+/eT3GGy2OJh9n+0Gmmfe1errw4=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=gClleIa6JVwmMtFjQ+VLKstEyu2cAnmLBAYUvRdQ78Mc4QaUjCqjIY+lFgC2tJ/5d
+         K4FpWE2X1K4NjctqOm0u4QC2TyJZxAsOzFJlHQY4zjVgUg7wUDsq0lu83XzZAvTv9y
+         Vy870rZ8PwV6NlUxUWkTaGjnA+N3rxNwUyVmDf+A=
+Received: by pali.im (Postfix)
+        id 51648A7A; Wed,  8 Apr 2020 11:04:35 +0200 (CEST)
+Date:   Wed, 8 Apr 2020 11:04:35 +0200
+From:   Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
+To:     "Kohada.Tetsuhiro@dc.MitsubishiElectric.co.jp" 
+        <Kohada.Tetsuhiro@dc.MitsubishiElectric.co.jp>,
+        viro@zeniv.linux.org.uk
+Cc:     "'linux-fsdevel@vger.kernel.org'" <linux-fsdevel@vger.kernel.org>,
+        "'linux-kernel@vger.kernel.org'" <linux-kernel@vger.kernel.org>,
+        "'namjae.jeon@samsung.com'" <namjae.jeon@samsung.com>,
+        "'sj1557.seo@samsung.com'" <sj1557.seo@samsung.com>
+Subject: Re: [PATCH 1/4] exfat: Simplify exfat_utf8_d_hash() for code points
+ above U+FFFF
+Message-ID: <20200408090435.i3ufmbfinx5dyd7w@pali>
+References: <TY1PR01MB15782019FA3094015950830590C70@TY1PR01MB1578.jpnprd01.prod.outlook.com>
+ <20200403204037.hs4ae6cl3osogrso@pali>
+ <TY1PR01MB1578D63C6F303DE805D75DAA90C20@TY1PR01MB1578.jpnprd01.prod.outlook.com>
+ <20200407100648.phkvxbmv2kootyt7@pali>
+ <TY1PR01MB1578892F886C62868F87663B90C00@TY1PR01MB1578.jpnprd01.prod.outlook.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <TY1PR01MB1578892F886C62868F87663B90C00@TY1PR01MB1578.jpnprd01.prod.outlook.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-ima_fs_init() has more redundant code, a lot of repetitive code
-makes this function ugly, it is inconvenient to add additional
-functions, this patch optimizes the implementation of this function,
-uses an array and loop to simplify the function process.
+On Wednesday 08 April 2020 03:59:06 Kohada.Tetsuhiro@dc.MitsubishiElectric.co.jp wrote:
+> > So partial_name_hash() like I used it in this patch series is enough?
+> 
+> I think partial_name_hash() is enough for 8/16/21bit characters.
 
-Signed-off-by: Tianjia Zhang <tianjia.zhang@linux.alibaba.com>
----
- security/integrity/ima/ima_fs.c | 72 ++++++++++++++++-----------------
- 1 file changed, 35 insertions(+), 37 deletions(-)
+Great!
 
-diff --git a/security/integrity/ima/ima_fs.c b/security/integrity/ima/ima_fs.c
-index a71e822a6e92..6763d6cee78d 100644
---- a/security/integrity/ima/ima_fs.c
-+++ b/security/integrity/ima/ima_fs.c
-@@ -355,10 +355,6 @@ static ssize_t ima_write_policy(struct file *file, const char __user *buf,
- 
- static struct dentry *ima_dir;
- static struct dentry *ima_symlink;
--static struct dentry *binary_runtime_measurements;
--static struct dentry *ascii_runtime_measurements;
--static struct dentry *runtime_measurements_count;
--static struct dentry *violations;
- static struct dentry *ima_policy;
- 
- enum ima_fs_flags {
-@@ -447,8 +443,24 @@ static const struct file_operations ima_measure_policy_ops = {
- 	.llseek = generic_file_llseek,
- };
- 
-+static struct ima_fs_file {
-+	const char *name;
-+	const struct file_operations *fops;
-+	struct dentry *dentry;
-+} ima_fs_entries[] = {
-+	{ "binary_runtime_measurements", &ima_measurements_ops },
-+	{ "ascii_runtime_measurements", &ima_ascii_measurements_ops },
-+	{ "runtime_measurements_count", &ima_measurements_count_ops },
-+	{ "violations", &ima_htable_violations_ops },
-+	{ NULL }
-+};
-+
- int __init ima_fs_init(void)
- {
-+	struct dentry *dentry;
-+	struct ima_fs_file *iff;
-+	int i;
-+
- 	ima_dir = securityfs_create_dir("ima", integrity_dir);
- 	if (IS_ERR(ima_dir))
- 		return -1;
-@@ -458,47 +470,33 @@ int __init ima_fs_init(void)
- 	if (IS_ERR(ima_symlink))
- 		goto out;
- 
--	binary_runtime_measurements =
--	    securityfs_create_file("binary_runtime_measurements",
--				   S_IRUSR | S_IRGRP, ima_dir, NULL,
--				   &ima_measurements_ops);
--	if (IS_ERR(binary_runtime_measurements))
-+	ima_policy = securityfs_create_file("ima_policy", POLICY_FILE_FLAGS,
-+					ima_dir, NULL,
-+					&ima_measure_policy_ops);
-+	if (IS_ERR(ima_policy))
- 		goto out;
- 
--	ascii_runtime_measurements =
--	    securityfs_create_file("ascii_runtime_measurements",
--				   S_IRUSR | S_IRGRP, ima_dir, NULL,
--				   &ima_ascii_measurements_ops);
--	if (IS_ERR(ascii_runtime_measurements))
--		goto out;
-+	for (i = 0; ; i++) {
-+		iff = &ima_fs_entries[i];
-+		if (!iff->name)
-+			return 0;
- 
--	runtime_measurements_count =
--	    securityfs_create_file("runtime_measurements_count",
--				   S_IRUSR | S_IRGRP, ima_dir, NULL,
--				   &ima_measurements_count_ops);
--	if (IS_ERR(runtime_measurements_count))
--		goto out;
-+		dentry = securityfs_create_file(iff->name, S_IRUSR | S_IRGRP,
-+						ima_dir, NULL, iff->fops);
-+		if (IS_ERR(dentry))
-+			break;
- 
--	violations =
--	    securityfs_create_file("violations", S_IRUSR | S_IRGRP,
--				   ima_dir, NULL, &ima_htable_violations_ops);
--	if (IS_ERR(violations))
--		goto out;
-+		iff->dentry = dentry;
-+	}
- 
--	ima_policy = securityfs_create_file("policy", POLICY_FILE_FLAGS,
--					    ima_dir, NULL,
--					    &ima_measure_policy_ops);
--	if (IS_ERR(ima_policy))
--		goto out;
-+	for (i--; i >= 0; i--) {
-+		iff = &ima_fs_entries[i];
-+		securityfs_remove(iff->dentry);
-+		iff->dentry = NULL;
-+	}
- 
--	return 0;
- out:
--	securityfs_remove(violations);
--	securityfs_remove(runtime_measurements_count);
--	securityfs_remove(ascii_runtime_measurements);
--	securityfs_remove(binary_runtime_measurements);
- 	securityfs_remove(ima_symlink);
- 	securityfs_remove(ima_dir);
--	securityfs_remove(ima_policy);
- 	return -1;
- }
--- 
-2.17.1
+Al, could you please take this patch series?
 
+> Another point about the discrimination of 21bit characters:
+> I think that checking in exfat_toupper () can be more simplified.
+> 
+>  ex: return a < PLANE_SIZE && sbi->vol_utbl[a] ? sbi->vol_utbl[a] : a;
+
+I was thinking about it, but it needs more refactoring. Currently
+exfat_toupper() is used on other places for UTF-16 (u16 array) and
+therefore it cannot be extended to take more then 16 bit value.
+
+But I agree that this is another step which can be improved.
