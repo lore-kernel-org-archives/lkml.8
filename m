@@ -2,78 +2,72 @@ Return-Path: <SRS0=8dav=5Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6257C2BA80
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 08:33:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59E02C2BA1B
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 08:33:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7425920769
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 08:33:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3162A20747
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 08:33:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BGTSeYrG"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="t69Xq2ik"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727049AbgDHIdC (ORCPT
+        id S1727115AbgDHIdu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Apr 2020 04:33:02 -0400
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:42485 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726760AbgDHIdC (ORCPT
+        Wed, 8 Apr 2020 04:33:50 -0400
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:41974 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726760AbgDHIdt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Apr 2020 04:33:02 -0400
-Received: by mail-ed1-f65.google.com with SMTP id cw6so7468943edb.9;
-        Wed, 08 Apr 2020 01:32:59 -0700 (PDT)
+        Wed, 8 Apr 2020 04:33:49 -0400
+Received: by mail-lf1-f66.google.com with SMTP id z23so4487038lfh.8
+        for <linux-kernel@vger.kernel.org>; Wed, 08 Apr 2020 01:33:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:reply-to:from:date:message-id
-         :subject:to:cc:content-transfer-encoding;
-        bh=HN3PmUZ9fhU3DNXcfKan8qYGWgSRdIlUaBvY047r1SM=;
-        b=BGTSeYrGs6nPwW0pBTwetxOvG3h4Vd6HUpUGfZ5rIw3eiXZCxuWi+RH6UpAgUftEg6
-         zPBlbaYdJBTL6Hxcsz3RyLUm8ngmae4RqBCCV4ctAxgxNu32UBMO4rfX1iNadhbL0BPs
-         f7ZjlUGvJiAD9LMRUxq2QBUw5vheF8E17s3Wha/fak6um0pr6m38ixUNOWcjsyJEZWik
-         85yfqBynH2mPaHM3ic4TempYghYKUBGJ8ZSZWvVIiWPffuGlRe30s2rBkYuXla86bkGw
-         fE/UDoKrfZR1ucy85k72pT+gjUXMykqdcwubbePajNp4DqBhcyG/lSp4D5xJutzrHQzD
-         2a/A==
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=tvILii5CJ06FrB5H/A/DS06RAK/9uc+M6yIejdDAIMA=;
+        b=t69Xq2ikv0jem5qSN2MzA8dQVEV2UR6xjYO8782vc835XQW8CGHcD+gpUyar4QV3HC
+         mtxzF0oQyyjBQIt7UnJ/m8Kcoc77JPuFSMAZ6k4BywAn7btMJ0F4kgh+ulk3Ku6AEmzj
+         XdLrWRSJs+l88+fX8vG5/Lvx4UFUWDziy1lFu8nnBDttdn9ad6xSXKtbEFyAAPlmPKd8
+         zf63GHwmxiLkHzjbAj+0vnYkFkIujG5PH/FcmxApf7V6B1Lr+xyscfawC+T1A5FdE9RX
+         CX1rw/OquduBwcSBEtP5vJWkXu1jyTojOC93LM6ZDt/vftHnP5IclYcYLOJC9uMmddpl
+         yKdg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:reply-to
-         :from:date:message-id:subject:to:cc:content-transfer-encoding;
-        bh=HN3PmUZ9fhU3DNXcfKan8qYGWgSRdIlUaBvY047r1SM=;
-        b=NA6eGPZybbDZuSkylQ9p1x3EzXWonssefRXU0ukc3p54ktn0HyWDFRBHnWCMLNv1Pp
-         qU/dWqJSEfZct/f982Thkg6h/nylPv9ZiGVx5velJGkJRfWF+w9/J8DVhmn1lrEzXz0O
-         hiPnbwaOpAdLf5MMaPOoda0ibqdpUTh9c2IvS8cnIZ1JsEkyTSAF5vBbWIUZVsuPFSxR
-         p0ch6hmk22K/yWNpMDDX5uJfojqt8mo/o0+0FlIMXj7O7hvkA//233tRPE1qq5B/nTds
-         y+yxyK/5cd/1OhnGqosOkPCc12zm46iDzmpzXAxZyOCPwXpqwxl64PKI+nrkEaqRwhH/
-         4DBw==
-X-Gm-Message-State: AGi0Pub9FEha6+EfNQc/vX9c+5y7wtCch9erBfMQQVsvTgc8aW0GUcGq
-        5wpFSnQNBoKTLQwh5XC1mX/0mqBPZb99OT8L+3c=
-X-Google-Smtp-Source: APiQypI12Fy83Q8xdUmDBUv3sQoaKGjwp78gJSBCygBXGeyhDI8Rn75HBxevzEpYv522bnR7VvPd0zJiESwOoJN+iRo=
-X-Received: by 2002:a17:906:228d:: with SMTP id p13mr5304737eja.113.1586334778849;
- Wed, 08 Apr 2020 01:32:58 -0700 (PDT)
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=tvILii5CJ06FrB5H/A/DS06RAK/9uc+M6yIejdDAIMA=;
+        b=ceeWBnA5bp8zB7rxEwMdrE2Z3ui5p6KFbzrWgECWrebB7oMtHUAxqEQDkpJiAwN59h
+         xxe4ucLSrdZDbogvI+ILjgwimFMu+zfx4ynP3zSMP/63bbSjYlAqJKaAsgy+f2DBmCvc
+         pmogbifjjkJ23dnezZ6/GeG2ns9SPXcOZz9miDVkuxUjOYOzWA8ZvmNk6zwDNLjvLJId
+         oCkeDBLmATs0cBgMK2Fq+vkT/+/M5xyzvRX6fIh2Ed25zS0mRxyLTJq8b1BJNsTPkExm
+         0Wa6qkSOMQjHy3TGWoZ8nvXBYSr9Cth+qA5z2oPwoQBhkvayehkZK/79FVYaR9f8QfCJ
+         Hguw==
+X-Gm-Message-State: AGi0PuZho0L1kEym9cVYtf0Per63DMN/LQD19yJHIvc8P+QA25EJhEZL
+        QpzHNRWADfirT7tw+yNustivJwFNmrHvsr8gXtk8drwevzg=
+X-Google-Smtp-Source: APiQypITME2yJfcGPeX/mq09A/VOU2OcgdoVkUCAOPRENd0OVCBzgf7+1A2Mzt/AOn4LG05KhuntnKaaZk1HF30R7YI=
+X-Received: by 2002:a19:4014:: with SMTP id n20mr3760109lfa.6.1586334825919;
+ Wed, 08 Apr 2020 01:33:45 -0700 (PDT)
 MIME-Version: 1.0
-References: <d6be97d1-38a5-bf43-7c80-7c952a5a44a3@gmail.com> <20200408074459.q3njmvizjge7timg@wittgenstein>
-In-Reply-To: <20200408074459.q3njmvizjge7timg@wittgenstein>
-Reply-To: mtk.manpages@gmail.com
-From:   "Michael Kerrisk (man-pages)" <mtk.manpages@gmail.com>
-Date:   Wed, 8 Apr 2020 10:32:47 +0200
-Message-ID: <CAKgNAkjeUo4j9f=nBvoK3Vg1U9MqT=SgQBxHQ046-eL1nFbF2w@mail.gmail.com>
-Subject: Re: [RESEND] RFC: pidfd_getfd(2) manual page
-To:     Christian Brauner <christian.brauner@ubuntu.com>
-Cc:     Sargun Dhillon <sargun@sargun.me>,
-        linux-man <linux-man@vger.kernel.org>,
-        Linux API <linux-api@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Tycho Andersen <tycho@tycho.ws>, Jann Horn <jannh@google.com>,
-        Aleksa Sarai <cyphar@cyphar.com>,
-        Christian Brauner <christian@brauner.io>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Alexander Viro <viro@zeniv.linux.org.uk>, jld@mozilla.com,
-        Arnd Bergmann <arnd@arndb.de>,
-        Florian Weimer <fweimer@redhat.com>, gpascutto@mozilla.com,
-        ealvarez@mozilla.com
+References: <20200407154755.973323425@linuxfoundation.org>
+In-Reply-To: <20200407154755.973323425@linuxfoundation.org>
+From:   Naresh Kamboju <naresh.kamboju@linaro.org>
+Date:   Wed, 8 Apr 2020 14:03:34 +0530
+Message-ID: <CA+G9fYuAC3Aj_Vy0gg5FxM4_p70+Fh1vA71QdFe=PGSEE1cYow@mail.gmail.com>
+Subject: Re: [PATCH 5.4 00/38] 5.4.31-rc2 review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     open list <linux-kernel@vger.kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
+        Ben Hutchings <ben.hutchings@codethink.co.uk>,
+        lkft-triage@lists.linaro.org,
+        linux- stable <stable@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
@@ -81,153 +75,109 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Christian,
-
-On Wed, 8 Apr 2020 at 09:45, Christian Brauner
-<christian.brauner@ubuntu.com> wrote:
+On Tue, 7 Apr 2020 at 22:08, Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
 >
-> On Tue, Apr 07, 2020 at 08:49:35PM +0200, Michael Kerrisk (man-pages) wro=
-te:
-> > [No response on my mail of a week ago, so I try again; the page
-> > text is unchanged since the draft sent out on 31 March]
+> This is the start of the stable review cycle for the 5.4.31 release.
+> There are 38 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
 >
-> Sorry for the delay.
+> Responses should be made by Thu, 09 Apr 2020 15:46:32 +0000.
+> Anything received after that time might be too late.
 >
-> >
-> > Hello Sargun et al.
-> >
-> > I've taken a shot at writing a manual page for pidfd_getfd().
-> > I would be happy to receive comments, suggestions for
-> > improvements, etc. The text is as follows (the groff source
-> > is at the foot of this mail):
+> The whole patch series can be found in one patch at:
+>         https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-=
+5.4.31-rc2.gz
+> or in the git tree and branch at:
+>         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
+-rc.git linux-5.4.y
+> and the diffstat can be found below.
 >
-> Thanks for that! Really appreciated. Just a few nits below.
-
-Thanks for the review!
-
-> > NAME
-> >        pidfd_getfd  -  obtain  a  duplicate  of  another  process's  fi=
-le
-> >        descriptor
-> >
-> > SYNOPSIS
-> >        int pidfd_getfd(int pidfd, int targetfd, unsigned int flags);
-> >
-> > DESCRIPTION
-> >        The pidfd_getfd() system call allocates a new file  descriptor  =
-in
-> >        the  calling  process.  This new file descriptor is a duplicate =
-of
-> >        an existing file descriptor, targetfd, in the process referred  =
-to
-> >        by the PID file descriptor pidfd.
-> >
-> >        The  duplicate  file  descriptor  refers  to  the  same  open fi=
-le
-> >        description (see open(2)) as the original file descriptor  in  t=
-he
-> >        process referred to by pidfd.  The two file descriptors thus sha=
-re
-> >        file status flags and file offset.  Furthermore, operations on t=
-he
-> >        underlying  file  object  (for  example, assigning an address to=
- a
-> >        socket object using bind(2)) can be equally be performed  via  t=
-he
+> thanks,
 >
-> s/can be equally be performed/can be equally performed
-> ?
-
-Thanks. I made it: "can equally be performed"
-
-> >        duplicate file descriptor.
-> >
-> >        The  close-on-exec  flag  (FD_CLOEXEC; see fcntl(2)) is set on t=
-he
-> >        file descriptor returned by pidfd_getfd().
-> >
-> >        The flags argument is reserved for future use.  Currently, it mu=
-st
-> >        be specified as 0.
-> >
-> >        Permission  to duplicate another process's file descriptor is go=
-v=E2=80=90
-> >        erned by a ptrace access mode  PTRACE_MODE_ATTACH_REALCREDS  che=
-ck
-> >        (see ptrace(2)).
-> >
-> > RETURN VALUE
-> >        On  success,  pidfd_getfd() returns a nonnegative file descripto=
-r.
+> greg k-h
 >
-> Imho, this makes it sound like there are negative file descriptor
-> numbers. But as a non-native speaker that might just be a subtle
-> misreading on my part. Maybe just like open() just mention:
-> "On success, pidfd_getfd() returns a file descriptor."
 
-You're right. That wording is just clumsy! I fixed it.
+Results from Linaro=E2=80=99s test farm.
+No regressions on arm64, arm, x86_64, and i386.
 
-    On success, pidfd_getfd() returns a file descriptor (a
-    nonnegative integer).
+Summary
+------------------------------------------------------------------------
 
-And I also fixed similar clumsy wordings in a number of other pages.
+kernel: 5.4.31-rc2
+git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stab=
+le-rc.git
+git branch: linux-5.4.y
+git commit: 23c04177b89f23d80a3b5dfa54a4babfc32bea3b
+git describe: v5.4.30-39-g23c04177b89f
+Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-5.4-oe/bui=
+ld/v5.4.30-39-g23c04177b89f
 
-> >        On error, -1 is returned and errno is set to indicate the cause =
-of
-> >        the error.
-> >
-> > ERRORS
-> >        EBADF  pidfd is not a valid PID file descriptor.
-> >
-> >        EBADF  targetfd  is  not  an  open  file descriptor in the proce=
-ss
-> >               referred to by pidfd.
-> >
-> >        EINVAL flags is not 0.
-> >
-> >        EMFILE The per-process limit on the number of open  file  descri=
-p=E2=80=90
-> >               tors has been reached (see the description of RLIMIT_NOFI=
-LE
-> >               in getrlimit(2)).
-> >
-> >        ENFILE The system-wide limit on the total number of open files h=
-as
-> >               been reached.
-> >
-> >        ESRCH  The  process  referred to by pidfd does not exist (i.e., =
-it
-> >               has terminated and been waited on).
->
-> EPERM   The calling process did not have PTRACE_MODE_ATTACH_REALCREDS
->         permissions (see ptrace(2)) over the process referred to by
->         pidfd.
 
-Oh yes. Thanks. Added.
+No regressions (compared to build v5.4.30)
 
-> Technically, there should also be a disclaimer that other errno values
-> are possible because of LSM denials, e.g. selinux could return EACCES or
-> any other errno code in their file_receive() hook. But I'm not whether we
-> generally do this. In any case, I would find it useful as a developer.
+No fixes (compared to build v5.4.30)
 
-No, the manual pages don't generally include this. Mainly because I
-just don't know all the details.
+Ran 25033 total tests in the following environments and test suites.
 
-> (Is there actually a place where all LSMs are forced to record their
-> errno returns for their security hooks for each syscall they hook into an=
-d
-> that's visible to userspace? Because that'd be really useful...)
+Environments
+--------------
+- dragonboard-410c
+- hi6220-hikey
+- i386
+- juno-r2
+- juno-r2-kasan
+- nxp-ls2088
+- qemu_arm
+- qemu_arm64
+- qemu_i386
+- qemu_x86_64
+- x15
+- x86
+- x86-kasan
 
-Nothing that I'm aware of, unfortunately.
-
-Thanks again for the review!
-
-Cheers,
-
-Michael
-
+Test Suites
+-----------
+* build
+* install-android-platform-tools-r2600
+* install-android-platform-tools-r2800
+* kselftest
+* libgpiod
+* libhugetlbfs
+* linux-log-parser
+* ltp-cap_bounds-tests
+* ltp-containers-tests
+* ltp-cpuhotplug-tests
+* ltp-crypto-tests
+* ltp-cve-tests
+* ltp-fcntl-locktests-tests
+* ltp-filecaps-tests
+* ltp-fs_bind-tests
+* ltp-fs_perms_simple-tests
+* ltp-fsx-tests
+* ltp-hugetlb-tests
+* ltp-ipc-tests
+* ltp-mm-tests
+* ltp-nptl-tests
+* ltp-pty-tests
+* ltp-sched-tests
+* ltp-securebits-tests
+* perf
+* ltp-commands-tests
+* ltp-dio-tests
+* ltp-io-tests
+* ltp-math-tests
+* ltp-syscalls-tests
+* network-basic-tests
+* v4l2-compliance
+* kvm-unit-tests
+* ltp-fs-tests
+* ltp-open-posix-tests
+* spectre-meltdown-checker-test
+* kselftest-vsyscall-mode-native
+* kselftest-vsyscall-mode-none
 
 --=20
-Michael Kerrisk
-Linux man-pages maintainer; http://www.kernel.org/doc/man-pages/
-Linux/UNIX System Programming Training: http://man7.org/training/
+Linaro LKFT
+https://lkft.linaro.org
