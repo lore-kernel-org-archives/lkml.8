@@ -2,107 +2,215 @@ Return-Path: <SRS0=8dav=5Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E42D0C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 01:25:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E889CC2D0EC
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 01:26:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B970B206F7
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 01:25:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ABC16206F7
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 01:26:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="CrKM7ZbT"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="cEopgmxq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726475AbgDHBZo (ORCPT
+        id S1726571AbgDHB0a (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 21:25:44 -0400
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:45448 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726407AbgDHBZo (ORCPT
+        Tue, 7 Apr 2020 21:26:30 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:46838 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726407AbgDHB0a (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Apr 2020 21:25:44 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1586309143;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=lM7goQi5iDZRKfqm5MbWtS0yDwFe6ni2YZ0TOqXzILY=;
-        b=CrKM7ZbTTKrS6gVMHmByfM+51rvi4BAsexYCm1yIOJB7h2xePaO2LOj2Sg/ChugXgIARPB
-        6JrNMQXJ0GwuOdWmlQHp2p0GCx5Acl5AFrlZtyV5mVBH61bJxWwQWZrSS6uSMltcK7dDUx
-        uHgIbph2GLjCN6IyW62it2MueYJqTzU=
-Received: from mail-qk1-f198.google.com (mail-qk1-f198.google.com
- [209.85.222.198]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-407-uy93qyq7NkaKwtalbL9lNA-1; Tue, 07 Apr 2020 21:25:41 -0400
-X-MC-Unique: uy93qyq7NkaKwtalbL9lNA-1
-Received: by mail-qk1-f198.google.com with SMTP id r64so1346494qkc.17
-        for <linux-kernel@vger.kernel.org>; Tue, 07 Apr 2020 18:25:40 -0700 (PDT)
+        Tue, 7 Apr 2020 21:26:30 -0400
+Received: by mail-lj1-f195.google.com with SMTP id r7so5784814ljg.13
+        for <linux-kernel@vger.kernel.org>; Tue, 07 Apr 2020 18:26:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=XlzDmBeqdYgRXLQPAzyDPVcU/1FTfROFyX1Ur4A01Ds=;
+        b=cEopgmxqQb1bo3jG7QS7u1WahFNuN0hJS0pw82KojLkmV364xeSFDSAL8hOxD3DA3S
+         QprXIbjiokFPxb4uEvWRMDOcP46rydyA7y6lJh5jDBaTvW8EN+DRYmwhxBb3Ordltomd
+         1MAioiDWLl7/et0Wy7l4gk26SYeNBjanGeE+Qu0XO9gVPduTPRR+k6+UU4kW/gdMoZdb
+         CJ/eTc8cCR4aCSTsTyxYQdYx6gdFuTxuyzPFERgoHnfzFS+zD5tvupktXPkfcFC/TnC0
+         epWsChOfvx7U/d9ecQ9MbOU7FQOCW039m4WIIEmAcRMj08OQ+PVHAHi8dynCeYhkEVvO
+         kbnQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=lM7goQi5iDZRKfqm5MbWtS0yDwFe6ni2YZ0TOqXzILY=;
-        b=W47OWUfSJL99KwF3RU4sOtk83iCNywJOQ8exg8KzkvzsHQC9FcYB+VMGWVk3/L1BKU
-         +PGXF7i6PFa/Ij8WoML1FheNDSnqcXppY17/zOWv1ETQm9xNxP6aDW/UMBUuLRtp28f0
-         rzaWUocO4kaV83oxvuaoDxBSfgINP+7jruZTBDgfftZUy6b1P+TEd46C7npkNE4Sa2mI
-         Q/nhMj4jfWQ3hbQX4bHN9ZBHQ2yNlrTkx+FyK0HyZv8Ir1uxTqauIFbXqkJfhKinMMVy
-         qFUJVyeFvJ1cOOlYeHxuTuWaYBn3CJkv3wOfQ59AXYTdXfGnD+hDgJfOjt+WY7NdLbsm
-         dgpg==
-X-Gm-Message-State: AGi0PuY8WA3dcTdRRIpXLW2rnuHirDM7Ee0qYV1QPCgR3ULhgUXdVX3O
-        kf6WMLMq1RYStFeoYcLDxspV8juBC6bt4dGmO2nS6ueeTLiPd8ETp9nqXqbdqzLU4GS6w5q8q2q
-        eWcmG3ZVXkN8Rky0OX3PkzVvp
-X-Received: by 2002:aed:2e07:: with SMTP id j7mr5312117qtd.40.1586309140582;
-        Tue, 07 Apr 2020 18:25:40 -0700 (PDT)
-X-Google-Smtp-Source: APiQypLgUqE+QHH3SuksCDeKtpWwmj+2h4BnQPxOzlmzsRUG0L7NoQHj2y0UA6ks4SwMpFr9ptJdsA==
-X-Received: by 2002:aed:2e07:: with SMTP id j7mr5312093qtd.40.1586309140263;
-        Tue, 07 Apr 2020 18:25:40 -0700 (PDT)
-Received: from xz-x1 ([2607:9880:19c0:32::3])
-        by smtp.gmail.com with ESMTPSA id n67sm1479346qke.88.2020.04.07.18.25.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 07 Apr 2020 18:25:39 -0700 (PDT)
-Date:   Tue, 7 Apr 2020 21:25:38 -0400
-From:   Peter Xu <peterx@redhat.com>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     syzbot <syzbot+18638e81a805a2d96682@syzkaller.appspotmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Brian Geffon <bgeffon@google.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux-MM <linux-mm@kvack.org>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
-Subject: Re: BUG: unable to handle kernel paging request in
- get_pfnblock_flags_mask
-Message-ID: <20200408012538.GC66033@xz-x1>
-References: <00000000000018a92305a2ba57e0@google.com>
- <20200407220837.GB66033@xz-x1>
- <CAHk-=wjQJQM=V6CDPrU2FJVEi4zZsr8-w8a0We8tF5K66J_ZOw@mail.gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=XlzDmBeqdYgRXLQPAzyDPVcU/1FTfROFyX1Ur4A01Ds=;
+        b=iCwlsMiQjLppBEDrPlyUoIiP6mxqyD7VGdsAbOT74RemdHqJy6jdTUX53rCHQdrBNr
+         nMmEktwsXWHqz89xUJP5RfDp2sUpUW5qXrMmYn3Go9z5tXaNITedZvHz+7OqDXUpM5ex
+         SxugA43n1KgJG1p8V/o3vcKNp2IP5lROMpVerIGsWWhdicFWqr+7uT7WLjdWHhM7URhk
+         z8iujU17XfcCE3uLvgggCgZrGP7SayawIPQxooRpNwcEk2XUoh1g8o9t6AyYCveRIo9Q
+         CbUoLvB7rERiPG2EgdhfamNeNy+k5y928w/0kUBZer9VFZM5QZCX32bHRXZJafACnXpU
+         vSCA==
+X-Gm-Message-State: AGi0PubA7o8Y3ZjQMvw6XuODF7qR2xI7LpCAQwkQ5Mdt24qF6OMQTYXk
+        vJRFzuGhuf4ZCbTdJh/ogg/JlKz2shrmSageqYlFJw==
+X-Google-Smtp-Source: APiQypLh65PFQiSfPPMz6ye/cSRWH3nKm8Gx7VV89Kgnd5D3lHz52QE29UFgfjWKR0+F5omc0u+faE8ytU1YVoE/2UA=
+X-Received: by 2002:a2e:9a54:: with SMTP id k20mr3276630ljj.272.1586309187964;
+ Tue, 07 Apr 2020 18:26:27 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <CAHk-=wjQJQM=V6CDPrU2FJVEi4zZsr8-w8a0We8tF5K66J_ZOw@mail.gmail.com>
+References: <cover.1585548051.git.ashish.kalra@amd.com> <9e959ee134ad77f62c9881b8c54cd27e35055072.1585548051.git.ashish.kalra@amd.com>
+ <b77a4a1e-b8ca-57a2-d849-adda91bfeac7@oracle.com> <20200403214559.GB28747@ashkalra_ubuntu_server>
+ <65c09963-2027-22c1-e04d-4c8c3658b2c3@oracle.com>
+In-Reply-To: <65c09963-2027-22c1-e04d-4c8c3658b2c3@oracle.com>
+From:   Steve Rutherford <srutherford@google.com>
+Date:   Tue, 7 Apr 2020 18:25:51 -0700
+Message-ID: <CABayD+cf=Po-k7jqUQjq3AGopxk86d6bTcBhQxijnzpcUh90GA@mail.gmail.com>
+Subject: Re: [PATCH v6 12/14] KVM: x86: Introduce KVM_PAGE_ENC_BITMAP_RESET ioctl
+To:     Krish Sadhukhan <krish.sadhukhan@oracle.com>
+Cc:     Ashish Kalra <ashish.kalra@amd.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Joerg Roedel <joro@8bytes.org>,
+        Borislav Petkov <bp@suse.de>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        X86 ML <x86@kernel.org>, KVM list <kvm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        David Rientjes <rientjes@google.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Brijesh Singh <brijesh.singh@amd.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 07, 2020 at 05:04:52PM -0700, Linus Torvalds wrote:
-> On Tue, Apr 7, 2020 at 3:08 PM Peter Xu <peterx@redhat.com> wrote:
+On Mon, Apr 6, 2020 at 11:53 AM Krish Sadhukhan
+<krish.sadhukhan@oracle.com> wrote:
+>
+>
+> On 4/3/20 2:45 PM, Ashish Kalra wrote:
+> > On Fri, Apr 03, 2020 at 02:14:23PM -0700, Krish Sadhukhan wrote:
+> >> On 3/29/20 11:23 PM, Ashish Kalra wrote:
+> >>> From: Ashish Kalra <ashish.kalra@amd.com>
+> >>>
+> >>> This ioctl can be used by the application to reset the page
+> >>> encryption bitmap managed by the KVM driver. A typical usage
+> >>> for this ioctl is on VM reboot, on reboot, we must reinitialize
+> >>> the bitmap.
+> >>>
+> >>> Signed-off-by: Ashish Kalra <ashish.kalra@amd.com>
+> >>> ---
+> >>>    Documentation/virt/kvm/api.rst  | 13 +++++++++++++
+> >>>    arch/x86/include/asm/kvm_host.h |  1 +
+> >>>    arch/x86/kvm/svm.c              | 16 ++++++++++++++++
+> >>>    arch/x86/kvm/x86.c              |  6 ++++++
+> >>>    include/uapi/linux/kvm.h        |  1 +
+> >>>    5 files changed, 37 insertions(+)
+> >>>
+> >>> diff --git a/Documentation/virt/kvm/api.rst b/Documentation/virt/kvm/api.rst
+> >>> index 4d1004a154f6..a11326ccc51d 100644
+> >>> --- a/Documentation/virt/kvm/api.rst
+> >>> +++ b/Documentation/virt/kvm/api.rst
+> >>> @@ -4698,6 +4698,19 @@ During the guest live migration the outgoing guest exports its page encryption
+> >>>    bitmap, the KVM_SET_PAGE_ENC_BITMAP can be used to build the page encryption
+> >>>    bitmap for an incoming guest.
+> >>> +4.127 KVM_PAGE_ENC_BITMAP_RESET (vm ioctl)
+> >>> +-----------------------------------------
+> >>> +
+> >>> +:Capability: basic
+> >>> +:Architectures: x86
+> >>> +:Type: vm ioctl
+> >>> +:Parameters: none
+> >>> +:Returns: 0 on success, -1 on error
+> >>> +
+> >>> +The KVM_PAGE_ENC_BITMAP_RESET is used to reset the guest's page encryption
+> >>> +bitmap during guest reboot and this is only done on the guest's boot vCPU.
+> >>> +
+> >>> +
+> >>>    5. The kvm_run structure
+> >>>    ========================
+> >>> diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
+> >>> index d30f770aaaea..a96ef6338cd2 100644
+> >>> --- a/arch/x86/include/asm/kvm_host.h
+> >>> +++ b/arch/x86/include/asm/kvm_host.h
+> >>> @@ -1273,6 +1273,7 @@ struct kvm_x86_ops {
+> >>>                             struct kvm_page_enc_bitmap *bmap);
+> >>>     int (*set_page_enc_bitmap)(struct kvm *kvm,
+> >>>                             struct kvm_page_enc_bitmap *bmap);
+> >>> +   int (*reset_page_enc_bitmap)(struct kvm *kvm);
+> >>>    };
+> >>>    struct kvm_arch_async_pf {
+> >>> diff --git a/arch/x86/kvm/svm.c b/arch/x86/kvm/svm.c
+> >>> index 313343a43045..c99b0207a443 100644
+> >>> --- a/arch/x86/kvm/svm.c
+> >>> +++ b/arch/x86/kvm/svm.c
+> >>> @@ -7797,6 +7797,21 @@ static int svm_set_page_enc_bitmap(struct kvm *kvm,
+> >>>     return ret;
+> >>>    }
+> >>> +static int svm_reset_page_enc_bitmap(struct kvm *kvm)
+> >>> +{
+> >>> +   struct kvm_sev_info *sev = &to_kvm_svm(kvm)->sev_info;
+> >>> +
+> >>> +   if (!sev_guest(kvm))
+> >>> +           return -ENOTTY;
+> >>> +
+> >>> +   mutex_lock(&kvm->lock);
+> >>> +   /* by default all pages should be marked encrypted */
+> >>> +   if (sev->page_enc_bmap_size)
+> >>> +           bitmap_fill(sev->page_enc_bmap, sev->page_enc_bmap_size);
+> >>> +   mutex_unlock(&kvm->lock);
+> >>> +   return 0;
+> >>> +}
+> >>> +
+> >>>    static int svm_mem_enc_op(struct kvm *kvm, void __user *argp)
+> >>>    {
+> >>>     struct kvm_sev_cmd sev_cmd;
+> >>> @@ -8203,6 +8218,7 @@ static struct kvm_x86_ops svm_x86_ops __ro_after_init = {
+> >>>     .page_enc_status_hc = svm_page_enc_status_hc,
+> >>>     .get_page_enc_bitmap = svm_get_page_enc_bitmap,
+> >>>     .set_page_enc_bitmap = svm_set_page_enc_bitmap,
+> >>> +   .reset_page_enc_bitmap = svm_reset_page_enc_bitmap,
+> >>
+> >> We don't need to initialize the intel ops to NULL ? It's not initialized in
+> >> the previous patch either.
+> >>
+> >>>    };
+> > This struct is declared as "static storage", so won't the non-initialized
+> > members be 0 ?
+>
+>
+> Correct. Although, I see that 'nested_enable_evmcs' is explicitly
+> initialized. We should maintain the convention, perhaps.
+>
 > >
-> > Thanks; I think this is a dup of previous one too:
-> 
-> Peter, since the two nasties are both fairly bad, would you mind
-> sending me your two patches and I'll just apply them directly.
-> 
-> I've seen them fly by, but I think they both happened inside the
-> threads discussing the problem, and I'd much rather have the final
-> patch sent to me explicitly (with confirmation that syzbot tested them
-> - again I _think_ I saw that fly by too, but my mailbox is fairly
-> chaotic..)
+> >>>    static int __init svm_init(void)
+> >>> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+> >>> index 05e953b2ec61..2127ed937f53 100644
+> >>> --- a/arch/x86/kvm/x86.c
+> >>> +++ b/arch/x86/kvm/x86.c
+> >>> @@ -5250,6 +5250,12 @@ long kvm_arch_vm_ioctl(struct file *filp,
+> >>>                     r = kvm_x86_ops->set_page_enc_bitmap(kvm, &bitmap);
+> >>>             break;
+> >>>     }
+> >>> +   case KVM_PAGE_ENC_BITMAP_RESET: {
+> >>> +           r = -ENOTTY;
+> >>> +           if (kvm_x86_ops->reset_page_enc_bitmap)
+> >>> +                   r = kvm_x86_ops->reset_page_enc_bitmap(kvm);
+> >>> +           break;
+> >>> +   }
+> >>>     default:
+> >>>             r = -ENOTTY;
+> >>>     }
+> >>> diff --git a/include/uapi/linux/kvm.h b/include/uapi/linux/kvm.h
+> >>> index b4b01d47e568..0884a581fc37 100644
+> >>> --- a/include/uapi/linux/kvm.h
+> >>> +++ b/include/uapi/linux/kvm.h
+> >>> @@ -1490,6 +1490,7 @@ struct kvm_enc_region {
+> >>>    #define KVM_GET_PAGE_ENC_BITMAP  _IOW(KVMIO, 0xc5, struct kvm_page_enc_bitmap)
+> >>>    #define KVM_SET_PAGE_ENC_BITMAP  _IOW(KVMIO, 0xc6, struct kvm_page_enc_bitmap)
+> >>> +#define KVM_PAGE_ENC_BITMAP_RESET  _IO(KVMIO, 0xc7)
+> >>>    /* Secure Encrypted Virtualization command */
+> >>>    enum sev_cmd_id {
+> >> Reviewed-by: Krish Sadhukhan <krish.sadhukhan@oracle.com>
 
-Sure, I'll post a small series very soon with the two verified patches
-formally.
 
-Thanks,
-
--- 
-Peter Xu
-
+Doesn't this overlap with the set ioctl? Yes, obviously, you have to
+copy the new value down and do a bit more work, but I don't think
+resetting the bitmap is going to be the bottleneck on reboot. Seems
+excessive to add another ioctl for this.
