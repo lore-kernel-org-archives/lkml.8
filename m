@@ -4,57 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF8C9C2BB54
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 15:46:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 138B1C2BA1A
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 15:46:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BF5032075E
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 15:46:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DEA0A2075E
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 15:46:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586360807;
-	bh=6+PaLUkdrL9YIpHZRkQExO+4pmTux8rSySZ5aPWfrTs=;
+	s=default; t=1586360814;
+	bh=eBOZxoYZIMRnDM3jqbg57vKJcreJqVFOz+37SNmuNs4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UjAFoRNsK6OneG9GSGMqordB4JfqrT95HAj6zeEd+wReb2iOHtKBhK6ZOkGGwlWGy
-	 nw3UwNtfAv5O7C+pty1Ply6YNSwTpH52HKjS+bcgmWVkw6974sXXbaIpsDj8fpXOWZ
-	 01atE0XeQ8bt6/+mGVO7e6MF5KspDrCON0ARHq5M=
+	b=VQh07Xle5xZSv7EafZnOLSDo2iHrXH2Ysyrw5hnKuiunQj8AGzoQgDSHLQ7cebI/U
+	 G8VBsCYd4xqKv5+vn5TQsRoFdXwpN9rPI0pudQgTEoJ8lbn0iR7cEOdGH+lvTQcmUK
+	 9+IuDY922y/UJp1eJA/ywy88N+Q86aOKGHbk8dRg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729787AbgDHPqq (ORCPT
+        id S1729736AbgDHPqf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Apr 2020 11:46:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49356 "EHLO mail.kernel.org"
+        Wed, 8 Apr 2020 11:46:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48970 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729701AbgDHPqd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Apr 2020 11:46:33 -0400
+        id S1729582AbgDHPqb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Apr 2020 11:46:31 -0400
 Received: from mail.kernel.org (ip5f5ad4d8.dynamic.kabel-deutschland.de [95.90.212.216])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0C021221F8;
-        Wed,  8 Apr 2020 15:46:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 15F992076D;
+        Wed,  8 Apr 2020 15:46:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586360792;
-        bh=6+PaLUkdrL9YIpHZRkQExO+4pmTux8rSySZ5aPWfrTs=;
+        s=default; t=1586360791;
+        bh=eBOZxoYZIMRnDM3jqbg57vKJcreJqVFOz+37SNmuNs4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=IXM6mVVc6zpbzCxvNECW6ftqsz+ax/CHmUvySzX9hf5iPTOv7RYMT0YdtTUEXz7xY
-         FEMwsd63okk+fEppiz2c+VBkeZKC0BShSi1jj4VWOcEDVVAIQ8hgWrsCE1MCXKNTlX
-         NU6DdwTcrVGizEZjqIFzyrkbLXlMvdot9AiSGwUE=
+        b=m3ew244OM/fx4Cu3h9fPyfLf7dGPK1IEjnzkaAzjeJ2pyU6ExxesMqoeXxReWfjUa
+         rxrbcrR0NGhGZQbGRLKGMKe7Uqx562qkP1V9lqdNJEfL633G8HdHKuUkhtyLOOXUZS
+         3NUC+M8hmFEKiw5lHbohoYAWA7LUdlKXdg+4XZv8=
 Received: from mchehab by mail.kernel.org with local (Exim 4.92.3)
         (envelope-from <mchehab@kernel.org>)
-        id 1jMCuM-000cCj-7S; Wed, 08 Apr 2020 17:46:30 +0200
+        id 1jMCuL-000cAh-9J; Wed, 08 Apr 2020 17:46:29 +0200
 From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
 Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
         linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        Frederic Barrat <fbarrat@linux.ibm.com>,
-        Andrew Donnellan <ajd@linux.ibm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        linuxppc-dev@lists.ozlabs.org
-Subject: [PATCH 31/35] powerpc: docs: cxl.rst: mark two section titles as such
-Date:   Wed,  8 Apr 2020 17:46:23 +0200
-Message-Id: <cccd2886af9961aad2a69fce96c0cf4f06995d6d.1586359676.git.mchehab+huawei@kernel.org>
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH 06/35] docs: amu: supress some Sphinx warnings
+Date:   Wed,  8 Apr 2020 17:45:58 +0200
+Message-Id: <0063550dd4dd03ec746c056d4d5db447f825a1a8.1586359676.git.mchehab+huawei@kernel.org>
 X-Mailer: git-send-email 2.25.2
 In-Reply-To: <cover.1586359676.git.mchehab+huawei@kernel.org>
 References: <cover.1586359676.git.mchehab+huawei@kernel.org>
@@ -65,34 +62,63 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The User API chapter contains two sub-chapters. Mark them as
-such.
+Add extra blank lines on some places, in order to avoid those
+warnings when building the docs:
+
+    Documentation/arm64/amu.rst:26: WARNING: Unexpected indentation.
+    Documentation/arm64/amu.rst:60: WARNING: Unexpected indentation.
+    Documentation/arm64/amu.rst:81: WARNING: Unexpected indentation.
+    Documentation/arm64/amu.rst:108: WARNING: Unexpected indentation.
 
 Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 ---
- Documentation/powerpc/cxl.rst | 2 ++
- 1 file changed, 2 insertions(+)
+ Documentation/arm64/amu.rst | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/Documentation/powerpc/cxl.rst b/Documentation/powerpc/cxl.rst
-index 920546d81326..d2d77057610e 100644
---- a/Documentation/powerpc/cxl.rst
-+++ b/Documentation/powerpc/cxl.rst
-@@ -133,6 +133,7 @@ User API
- ========
+diff --git a/Documentation/arm64/amu.rst b/Documentation/arm64/amu.rst
+index 5057b11100ed..452ec8b115c2 100644
+--- a/Documentation/arm64/amu.rst
++++ b/Documentation/arm64/amu.rst
+@@ -23,6 +23,7 @@ optional external memory-mapped interface.
  
- 1. AFU character devices
-+^^^^^^^^^^^^^^^^^^^^^^^^
+ Version 1 of the Activity Monitors architecture implements a counter group
+ of four fixed and architecturally defined 64-bit event counters.
++
+   - CPU cycle counter: increments at the frequency of the CPU.
+   - Constant counter: increments at the fixed frequency of the system
+     clock.
+@@ -57,6 +58,7 @@ counters, only the presence of the extension.
  
-     For AFUs operating in AFU directed mode, two character device
-     files will be created. /dev/cxl/afu0.0m will correspond to a
-@@ -395,6 +396,7 @@ read
+ Firmware (code running at higher exception levels, e.g. arm-tf) support is
+ needed to:
++
+  - Enable access for lower exception levels (EL2 and EL1) to the AMU
+    registers.
+  - Enable the counters. If not enabled these will read as 0.
+@@ -78,6 +80,7 @@ are not trapped in EL2/EL3.
  
+ The fixed counters of AMUv1 are accessible though the following system
+ register definitions:
++
+  - SYS_AMEVCNTR0_CORE_EL0
+  - SYS_AMEVCNTR0_CONST_EL0
+  - SYS_AMEVCNTR0_INST_RET_EL0
+@@ -93,6 +96,7 @@ Userspace access
+ ----------------
  
- 2. Card character device (powerVM guest only)
-+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ Currently, access from userspace to the AMU registers is disabled due to:
++
+  - Security reasons: they might expose information about code executed in
+    secure mode.
+  - Purpose: AMU counters are intended for system management use.
+@@ -105,6 +109,7 @@ Virtualization
  
-     In a powerVM guest, an extra character device is created for the
-     card. The device is only used to write (flash) a new image on the
+ Currently, access from userspace (EL0) and kernelspace (EL1) on the KVM
+ guest side is disabled due to:
++
+  - Security reasons: they might expose information about code executed
+    by other guests or the host.
+ 
 -- 
 2.25.2
 
