@@ -2,142 +2,121 @@ Return-Path: <SRS0=8dav=5Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5493BC2BB1D
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 01:58:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56BFEC2D0EC
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 01:59:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 33D9020784
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 01:58:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 231B720730
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 01:59:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dGUK0v3Q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726541AbgDHB6O (ORCPT
+        id S1726620AbgDHB7x (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 21:58:14 -0400
-Received: from mga03.intel.com ([134.134.136.65]:28723 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726504AbgDHB6N (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Apr 2020 21:58:13 -0400
-IronPort-SDR: CTtoA5K0SAoQHSWhC+ybvAQTZIan5vtu4XbMmQr9yfK/KjQalGBVLhWeI4Qve5myTt7YoVPwyX
- SwBcDd0yoyIQ==
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Apr 2020 18:58:12 -0700
-IronPort-SDR: A4X7dV6qT3+K0DSyPnNmCF/GDGceFfXtbdjKlTt2reQA/4yUPH+2z0aFGXOBusNPqoYjKMJCp7
- QnQtn4VLkifQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,357,1580803200"; 
-   d="asc'?scan'208";a="254650039"
-Received: from zhen-hp.sh.intel.com (HELO zhen-hp) ([10.239.160.147])
-  by orsmga006.jf.intel.com with ESMTP; 07 Apr 2020 18:58:06 -0700
-Date:   Wed, 8 Apr 2020 09:44:37 +0800
-From:   Zhenyu Wang <zhenyuw@linux.intel.com>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Jens Axboe <axboe@kernel.dk>, Felipe Balbi <balbi@kernel.org>,
-        amd-gfx@lists.freedesktop.org,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        Felix Kuehling <Felix.Kuehling@amd.com>,
-        linux-usb@vger.kernel.org, io-uring@vger.kernel.org,
+        Tue, 7 Apr 2020 21:59:53 -0400
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:40058 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726406AbgDHB7w (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Apr 2020 21:59:52 -0400
+Received: by mail-ot1-f65.google.com with SMTP id q2so2524134otk.7
+        for <linux-kernel@vger.kernel.org>; Tue, 07 Apr 2020 18:59:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=F/UEX/qu552SCPFaaat1hu6i9S00M212yRB97ZlFyqw=;
+        b=dGUK0v3QQ28XF/v/4rttw4NK/ilYlCaYkXrMBehOnMI3WsTobhpVFN2tErUSmvtD6J
+         MNpwr0w8TltTkwPqLmOxkQTU9IkmlhEXWM0Sn1ILNxdD1JyifDauV4pZhVNvA189Tltd
+         IJvU0fmMImx+hgrgtBqWcnad8EC5/zmWB6PTauFyXUUBfYZIwHqcQ+cGJ6rr4qfOvobO
+         YoLU7oTh+GsyIzRoseGo01fJ65VodPSGb4PQFQfvE8fcAXmkYk7i46pVO90c5tIbzSbO
+         u7KdV45BleSxjj6NShhMGJdTsubQ5c+NUx5HHalLU3sU9flTKyR2l9ruCEE2EQzcL/M/
+         f+BA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=F/UEX/qu552SCPFaaat1hu6i9S00M212yRB97ZlFyqw=;
+        b=pZ6CdQlmljo3lr9fH5PFHwDPvtR2e7jBNDByg/2yROxqBv23/k66fOn5cwmEezrM/W
+         sY77yqjtFmHUjAjg84oAK3yHwOrX1kJ1AN5HIzm9SsdUA3Uea5Lrwtnk+/vszTQiXSRy
+         QCNU1T1q3dwEtPQl/46fVSgrkA8sqvRk1vZ6PZuVBmaK3O2+S9HX1ozUOa0q7ZYxvENj
+         DF8b/kU72groFlMhDbzf+nwy7oDHQ64XhgDdNeAtus/ZKLGx3YvipiXeGFacC6ZVYkm3
+         qznhgEkZN6djEbZBTm0NwuQ9pv9w9iPoOE8I2PwLfB9feBMGVWRZiW8Tq7DqTjF//yf8
+         XZXg==
+X-Gm-Message-State: AGi0PuZBdyrSYH8ojv39ya0xfdulyBKN++80GfahbrnNg0ckRu4IFXw0
+        ftTbHuEvHEGrhI5S1pKEKZE=
+X-Google-Smtp-Source: APiQypJGBjWcy1K64T6QMq8WocCCTCUCqLf6FUlZTIYYZdEbAk6ISTQSX178vh57adpTgRUPbM6P+g==
+X-Received: by 2002:a05:6830:1495:: with SMTP id s21mr4225254otq.35.1586311191582;
+        Tue, 07 Apr 2020 18:59:51 -0700 (PDT)
+Received: from ubuntu-s3-xlarge-x86 ([2604:1380:4111:8b00::3])
+        by smtp.gmail.com with ESMTPSA id f184sm3221012oib.26.2020.04.07.18.59.50
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 07 Apr 2020 18:59:51 -0700 (PDT)
+Date:   Tue, 7 Apr 2020 18:59:49 -0700
+From:   Nathan Chancellor <natechancellor@gmail.com>
+To:     Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
+Cc:     linux-snps-arc@lists.infradead.org,
+        Vineet Gupta <Vineet.Gupta1@synopsys.com>,
         linux-kernel@vger.kernel.org,
-        Zhenyu Wang <zhenyuw@linux.intel.com>,
-        virtualization@lists.linux-foundation.org, linux-mm@kvack.org,
-        linux-fsdevel@vger.kernel.org, Al Viro <viro@zeniv.linux.org.uk>,
-        intel-gfx@lists.freedesktop.org,
-        Alex Deucher <alexander.deucher@amd.com>,
-        intel-gvt-dev@lists.freedesktop.org,
-        Jason Wang <jasowang@redhat.com>,
-        Zhi Wang <zhi.a.wang@intel.com>
-Subject: Re: [PATCH 3/6] i915/gvt: remove unused xen bits
-Message-ID: <20200408014437.GF11247@zhen-hp.sh.intel.com>
-Reply-To: Zhenyu Wang <zhenyuw@linux.intel.com>
-References: <20200404094101.672954-1-hch@lst.de>
- <20200404094101.672954-4-hch@lst.de>
+        Alexey Brodkin <Alexey.Brodkin@synopsys.com>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Thomas Zimmermann <tzimmermann@suse.de>
+Subject: Re: [PATCH] ARC: [plat-hsdk]: fix USB regression
+Message-ID: <20200408015949.GA40360@ubuntu-s3-xlarge-x86>
+References: <20200407161933.10874-1-Eugeniy.Paltsev@synopsys.com>
+ <20200408012028.GA40613@ubuntu-s3-xlarge-x86>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="HnQK338I3UIa/qiP"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200404094101.672954-4-hch@lst.de>
-User-Agent: Mutt/1.10.0 (2018-05-17)
+In-Reply-To: <20200408012028.GA40613@ubuntu-s3-xlarge-x86>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, Apr 07, 2020 at 06:20:28PM -0700, Nathan Chancellor wrote:
+> On Tue, Apr 07, 2020 at 07:19:33PM +0300, Eugeniy Paltsev wrote:
+> > As of today the CONFIG_USB isn't explicitly present in HSDK defconfig
+> > as it is implicitly forcibly enabled by UDL driver which selects CONFIG_USB
+> > in its kconfig.
+> > The commit 5d50bd440bc2 ("drm/udl: Make udl driver depend on CONFIG_USB")
+> > reverse the dependencies between UDL and USB so UDL now depends on
+> > CONFIG_USB and not selects it. This introduces regression for ARC HSDK
+> > board as HSDK defconfig wasn't adjusted and now it misses USB support
+> > due to lack of CONFIG_USB enabled.
+> > 
+> > Fix that.
+> > 
+> > Fixes: 5d50bd440bc2 ("drm/udl: Make udl driver depend on CONFIG_USB")
+> > Signed-off-by: Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
+> > ---
+> >  arch/arc/configs/hsdk_defconfig | 1 +
+> >  1 file changed, 1 insertion(+)
+> > 
+> > diff --git a/arch/arc/configs/hsdk_defconfig b/arch/arc/configs/hsdk_defconfig
+> > index 0974226fab55..f79c15892704 100644
+> > --- a/arch/arc/configs/hsdk_defconfig
+> > +++ b/arch/arc/configs/hsdk_defconfig
+> > @@ -65,6 +65,7 @@ CONFIG_DRM_UDL=y
+> >  CONFIG_DRM_ETNAVIV=y
+> >  CONFIG_FB=y
+> >  CONFIG_FRAMEBUFFER_CONSOLE=y
+> > +CONFIG_USB
+> 
+> Shouldn't this be CONFIG_USB=y?
+> 
+> As it stands, this patch does nothing.
+> 
+> Cheers,
+> Nathan
 
---HnQK338I3UIa/qiP
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Nevermind, I came across v2 on the mailing list, sorry for the noise.
 
-On 2020.04.04 11:40:58 +0200, Christoph Hellwig wrote:
-> No Xen support anywhere here.  Remove a dead declaration and an unused
-> include.
->=20
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
-> ---
-
-We'll keep that off-tree.
-
-Acked-by: Zhenyu Wang <zhenyuw@linux.intel.com>
-
-Thanks
-
->  drivers/gpu/drm/i915/gvt/gvt.c       | 1 -
->  drivers/gpu/drm/i915/gvt/hypercall.h | 2 --
->  2 files changed, 3 deletions(-)
->=20
-> diff --git a/drivers/gpu/drm/i915/gvt/gvt.c b/drivers/gpu/drm/i915/gvt/gv=
-t.c
-> index 9e1787867894..c7c561237883 100644
-> --- a/drivers/gpu/drm/i915/gvt/gvt.c
-> +++ b/drivers/gpu/drm/i915/gvt/gvt.c
-> @@ -31,7 +31,6 @@
->   */
-> =20
->  #include <linux/types.h>
-> -#include <xen/xen.h>
->  #include <linux/kthread.h>
-> =20
->  #include "i915_drv.h"
-> diff --git a/drivers/gpu/drm/i915/gvt/hypercall.h b/drivers/gpu/drm/i915/=
-gvt/hypercall.h
-> index b17c4a1599cd..b79da5124f83 100644
-> --- a/drivers/gpu/drm/i915/gvt/hypercall.h
-> +++ b/drivers/gpu/drm/i915/gvt/hypercall.h
-> @@ -79,6 +79,4 @@ struct intel_gvt_mpt {
->  	bool (*is_valid_gfn)(unsigned long handle, unsigned long gfn);
->  };
-> =20
-> -extern struct intel_gvt_mpt xengt_mpt;
-> -
->  #endif /* _GVT_HYPERCALL_H_ */
-> --=20
-> 2.25.1
->=20
-> _______________________________________________
-> intel-gvt-dev mailing list
-> intel-gvt-dev@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/intel-gvt-dev
-
---=20
-Open Source Technology Center, Intel ltd.
-
-$gpg --keyserver wwwkeys.pgp.net --recv-keys 4D781827
-
---HnQK338I3UIa/qiP
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iF0EARECAB0WIQTXuabgHDW6LPt9CICxBBozTXgYJwUCXo0shQAKCRCxBBozTXgY
-J8WgAJ0VW4AV47S/NYsttohA4zN5UaISYwCcDrId8F/1nTizuYFrFCCaENgnHw4=
-=EI9a
------END PGP SIGNATURE-----
-
---HnQK338I3UIa/qiP--
+Cheers,
+Nathan
