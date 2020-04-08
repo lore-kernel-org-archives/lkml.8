@@ -2,129 +2,131 @@ Return-Path: <SRS0=8dav=5Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E47EC2BA1A
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 16:42:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B1E8C2D0F4
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 16:46:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 304E920769
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 16:42:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586364138;
-	bh=dZflYwtdOE4WpeF55n3a5433aJ25TRS76smK0BBXLRc=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=tEwVrosy5aXHYAVXyx1tvQT7N9kG5A/7aia2dvE1fW6XXP/JDDBkToT/eEfreFu44
-	 D6lqAsdTtdNdAVXIHcsOwAFmP6YdjcA/jRnhK8Ae+LY5Y318py4+gzylKCs5xfZBQK
-	 lA2Pca4qZWC9H51BvS3VV0mtLcUJVgtic1BHwBAo=
+	by mail.kernel.org (Postfix) with ESMTP id 5FD1720730
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 16:46:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="g1fuDWN0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730370AbgDHQmQ (ORCPT
+        id S1729348AbgDHQqX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Apr 2020 12:42:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44848 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730369AbgDHQmP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Apr 2020 12:42:15 -0400
-Received: from coco.lan (ip5f5ad4d8.dynamic.kabel-deutschland.de [95.90.212.216])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Wed, 8 Apr 2020 12:46:23 -0400
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:46959 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728872AbgDHQqX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Apr 2020 12:46:23 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1586364381;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=OS1BYKCP7cBLf4oxAp06CiLumissixgN9CzFoFmvPFs=;
+        b=g1fuDWN0gcw1sfLsyfBwPDsk2d0+OV8McPVZy1Mpta29aEKQXVDDo9203W8IyHSCt7F60c
+        NfE2amgG38QUj9i4aJTkkhaIec8yl5uv+1q/RDFcyqgaW/4mwdGdbZft9ZGGiKRENlMdzs
+        AaatgXkmg2xc0ZVSnVsyvVloSe+t69c=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-22-q_lr7LQCNHOKfs94-AlDmw-1; Wed, 08 Apr 2020 12:46:19 -0400
+X-MC-Unique: q_lr7LQCNHOKfs94-AlDmw-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7CC9420769;
-        Wed,  8 Apr 2020 16:42:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586364134;
-        bh=dZflYwtdOE4WpeF55n3a5433aJ25TRS76smK0BBXLRc=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=pX91x5p/ex8/LllfJiIeej2SPjWU/d1wcD7IAD90y5SaEHcvFWXo85xGJ6QFBMt1u
-         ZiJGS26q3FFxWcH4/RHQQO1EgOWg5eAFYZtiHFCUXlkUkUnqv1soXL7RpTyJsVE5zd
-         k0B9JNAg2QY85+hKcn3mTGujmOGS6djP0timfAgw=
-Date:   Wed, 8 Apr 2020 18:42:10 +0200
-From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-To:     Mark Brown <broonie@kernel.org>
-Cc:     Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        linux-spi@vger.kernel.org
-Subject: Re: [PATCH 21/35] docs: spi: spi.h: fix a doc building warning
-Message-ID: <20200408184210.43c4411b@coco.lan>
-In-Reply-To: <20200408161629.GC5177@sirena.org.uk>
-References: <cover.1586359676.git.mchehab+huawei@kernel.org>
-        <d62f3f3536c0da2062bad87524fb184ad5a9a5f2.1586359676.git.mchehab+huawei@kernel.org>
-        <20200408154925.GA5177@sirena.org.uk>
-        <20200408181154.6c290772@coco.lan>
-        <20200408161629.GC5177@sirena.org.uk>
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 2AAA5801E5A;
+        Wed,  8 Apr 2020 16:46:18 +0000 (UTC)
+Received: from gondolin (ovpn-113-103.ams2.redhat.com [10.36.113.103])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 908721195A4;
+        Wed,  8 Apr 2020 16:46:09 +0000 (UTC)
+Date:   Wed, 8 Apr 2020 18:46:06 +0200
+From:   Cornelia Huck <cohuck@redhat.com>
+To:     Tony Krowiak <akrowiak@linux.ibm.com>
+Cc:     linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org, freude@linux.ibm.com, borntraeger@de.ibm.com,
+        mjrosato@linux.ibm.com, pmorel@linux.ibm.com, pasic@linux.ibm.com,
+        alex.williamson@redhat.com, kwankhede@nvidia.com,
+        jjherne@linux.ibm.com, fiuczy@linux.ibm.com
+Subject: Re: [PATCH v7 06/15] s390/vfio-ap: sysfs attribute to display the
+ guest CRYCB
+Message-ID: <20200408184606.309d9cd9.cohuck@redhat.com>
+In-Reply-To: <60c6bfb6-dd0a-75dc-1043-8dffe983220a@linux.ibm.com>
+References: <20200407192015.19887-1-akrowiak@linux.ibm.com>
+        <20200407192015.19887-7-akrowiak@linux.ibm.com>
+        <20200408123344.1a9032e1.cohuck@redhat.com>
+        <60c6bfb6-dd0a-75dc-1043-8dffe983220a@linux.ibm.com>
+Organization: Red Hat GmbH
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Wed, 8 Apr 2020 17:16:29 +0100
-Mark Brown <broonie@kernel.org> escreveu:
+On Wed, 8 Apr 2020 12:38:49 -0400
+Tony Krowiak <akrowiak@linux.ibm.com> wrote:
 
-> On Wed, Apr 08, 2020 at 06:11:54PM +0200, Mauro Carvalho Chehab wrote:
-> > Mark Brown <broonie@kernel.org> escreveu:  
+> On 4/8/20 6:33 AM, Cornelia Huck wrote:
+> > On Tue,  7 Apr 2020 15:20:06 -0400
+> > Tony Krowiak <akrowiak@linux.ibm.com> wrote:
+> >  
+> >> The matrix of adapters and domains configured in a guest's CRYCB may
+> >> differ from the matrix of adapters and domains assigned to the matrix mdev,
+> >> so this patch introduces a sysfs attribute to display the CRYCB of a guest
+> >> using the matrix mdev. For a matrix mdev denoted by $uuid, the crycb for a
+> >> guest using the matrix mdev can be displayed as follows:
+> >>
+> >>     cat /sys/devices/vfio_ap/matrix/$uuid/guest_matrix
+> >>
+> >> If a guest is not using the matrix mdev at the time the crycb is displayed,
+> >> an error (ENODEV) will be returned.
+> >>
+> >> Signed-off-by: Tony Krowiak <akrowiak@linux.ibm.com>
+> >> ---
+> >>   drivers/s390/crypto/vfio_ap_ops.c | 58 +++++++++++++++++++++++++++++++
+> >>   1 file changed, 58 insertions(+)
+> >> +static DEVICE_ATTR_RO(guest_matrix);  
+> > Hm... should information like the guest configuration be readable by
+> > everyone? Or should it be restricted a bit more?  
 > 
-> > > Are you sure this is a sensible fix?  The following lines should be part
-> > > of the documentation for transfer_one, will that be the case after your
-> > > change?  
+> Why? The matrix attribute already displays the APQNs of the queues
+> assigned to the matrix mdev. The guest_matrix attribute merely displays
+> a subset of the matrix (i.e., the APQNs assigned to the mdev that reference
+> queue devices bound to the vfio_ap device driver).
 > 
-> > Without that, Sphinx will warn and may produce something unexpected.  
-> 
-> Right, but if the warning is telling us something useful we want to
-> handle it rather than just shutting it up.
+> How can this be restricted?
 
-True. Without adding the blank line, kernel-doc would output this as:
+I was thinking of using e.g. 400 instead of 444 for the permissions.
 
-``transfer_one``
-  transfer a single spi_transfer.
-  - return 0 if the transfer is finished,
-  - return 1 if the transfer is still in progress. When
-    the driver is finished with this transfer it must
-    call spi_finalize_current_transfer() so the subsystem
-    can issue the next transfer. Note: transfer_one and
-    transfer_one_message are mutually exclusive; when both
-    are set, the generic subsystem does not call your
-    transfer_one callback.
+I'm not sure if the info about what subset of the queues the guest
+actually uses is all that interesting (except for managing guests); but
+if I see guest information being exposed, I get a little wary, so I
+just stumbled over this.
 
-This would be parsed by Sphinx (newer versions) as if the second line:
-
-	transfer a single spi_transfer.
-	
-would be a sort of subtitle that should be highlighted with a
-vertical line before that. E. g. something equivalent to:
-
-	 ============
-	|transfer_one|
-
-	 -------------------------------
-	|transfer a single spi_transfer.|
-
-	  - return 0 if the transfer is finished,
-	  - return 1 if the transfer is still in progress. When
-	    the driver is finished with this transfer it must
-	    call spi_finalize_current_transfer() so the subsystem
-	    can issue the next transfer. Note: transfer_one and
-	    transfer_one_message are mutually exclusive; when both
-	    are set, the generic subsystem does not call your
-	    transfer_one callback.
-
-Which is not the desired result.
-
-Adding a blank line after it fixes the issue, making it produce the
-expected output.
+Maybe I'll come back to that once I have looked at the series in more
+detail, but this might not be a problem at all.
 
 > 
-> > If this patch is applied after 20/25, the output should produce the
-> > correct result:  
+> >  
+> >> +
+> >>   static struct attribute *vfio_ap_mdev_attrs[] = {
+> >>   	&dev_attr_assign_adapter.attr,
+> >>   	&dev_attr_unassign_adapter.attr,
+> >> @@ -1050,6 +1107,7 @@ static struct attribute *vfio_ap_mdev_attrs[] = {
+> >>   	&dev_attr_unassign_control_domain.attr,
+> >>   	&dev_attr_control_domains.attr,
+> >>   	&dev_attr_matrix.attr,
+> >> +	&dev_attr_guest_matrix.attr,
+> >>   	NULL,
+> >>   };
+> >>     
 > 
-> > 	https://www.infradead.org/~mchehab/kernel_docs/driver-api/spi.html#spi-master-methods  
-> 
-> OK.
-> 
-> Acked-by: Mark Brown <broonie@kernel.org>
 
-Thanks,
-Mauro
