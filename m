@@ -6,56 +6,52 @@ X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04DC7C2BA1B
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 15:42:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4738AC2D0EA
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 15:43:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D815320784
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 15:42:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 237BE20730
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 15:43:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729431AbgDHPm2 (ORCPT
+        id S1729509AbgDHPnG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Apr 2020 11:42:28 -0400
-Received: from verein.lst.de ([213.95.11.211]:42929 "EHLO verein.lst.de"
+        Wed, 8 Apr 2020 11:43:06 -0400
+Received: from verein.lst.de ([213.95.11.211]:42937 "EHLO verein.lst.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727933AbgDHPm2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Apr 2020 11:42:28 -0400
+        id S1728909AbgDHPnF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Apr 2020 11:43:05 -0400
 Received: by verein.lst.de (Postfix, from userid 2407)
-        id 313AE68C4E; Wed,  8 Apr 2020 17:42:26 +0200 (CEST)
-Date:   Wed, 8 Apr 2020 17:42:25 +0200
+        id 2262D68C4E; Wed,  8 Apr 2020 17:43:04 +0200 (CEST)
+Date:   Wed, 8 Apr 2020 17:43:03 +0200
 From:   Christoph Hellwig <hch@lst.de>
 To:     Hillf Danton <hdanton@sina.com>
 Cc:     Christoph Hellwig <hch@lst.de>,
         Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
-        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 04/28] dma-mapping: use vmap insted of reimplementing it
-Message-ID: <20200408154225.GA28676@lst.de>
-References: <20200408115926.1467567-1-hch@lst.de> <20200408131736.9532-1-hdanton@sina.com>
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 17/28] mm: remove the prot argument from vm_map_ram
+Message-ID: <20200408154303.GB28676@lst.de>
+References: <20200408115926.1467567-1-hch@lst.de> <20200408135240.6528-1-hdanton@sina.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200408131736.9532-1-hdanton@sina.com>
+In-Reply-To: <20200408135240.6528-1-hdanton@sina.com>
 User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 08, 2020 at 09:17:36PM +0800, Hillf Danton wrote:
-> > @@ -62,24 +42,20 @@ void *dma_common_pages_remap(struct page **pages, size_t size,
-> >  void *dma_common_contiguous_remap(struct page *page, size_t size,
-> >  			pgprot_t prot, const void *caller)
-> >  {
-> > -	int i;
-> > +	int count = size >> PAGE_SHIFT;
-> >  	struct page **pages;
-> > -	struct vm_struct *area;
-> > +	void *vaddr;
-> > +	int i;
-> >  
-> > -	pages = kmalloc(sizeof(struct page *) << get_order(size), GFP_KERNEL);
-> > +	pages = kmalloc_array(count, sizeof(struct page *), GFP_KERNEL);
+On Wed, Apr 08, 2020 at 09:52:40PM +0800, Hillf Danton wrote:
 > 
-> Is it making sense to vmalloc pages as long as array size is bigger than
-> PAGE_SIZE?
+> On Wed,  8 Apr 2020 13:59:15 +0200 Christoph Hellwig wrote:
+> > 
+> > --- a/fs/xfs/xfs_buf.c
+> > +++ b/fs/xfs/xfs_buf.c
+> > @@ -474,7 +474,7 @@ _xfs_buf_map_pages(
+> >  		nofs_flag = memalloc_nofs_save();
+> >  		do {
+> >  			bp->b_addr = vm_map_ram(bp->b_pages, bp->b_page_count,
+> > -						-1, PAGE_KERNEL);
+> > +						-1);
+> s/-1/NUMA_NO_NODE/
 
-Maybe, maybe not.  But it certainly doesn't fit this series.
+Not really relevant to this series, but otherwise agreed.
