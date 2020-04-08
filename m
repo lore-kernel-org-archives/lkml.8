@@ -2,437 +2,168 @@ Return-Path: <SRS0=8dav=5Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B84A6C2D0EC
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 01:17:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01DBDC2BB1D
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 01:20:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6E1C1206A1
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 01:17:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C1848206A1
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 01:20:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="FrT5X1Qz"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="QBZ2JqO1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726513AbgDHBRi (ORCPT
+        id S1726528AbgDHBUB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 21:17:38 -0400
-Received: from mail-dm6nam12on2086.outbound.protection.outlook.com ([40.107.243.86]:6080
-        "EHLO NAM12-DM6-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726406AbgDHBRi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Apr 2020 21:17:38 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=ks2A8Wv6noAiHnQrI6rFYUuGrnGtU/efunUfL4Vqk3tsfQYwcq6mni8Gglq+mxZu2VngYfr+SxlWjOoCemxYLv7Njw3kZQlL7PMB0Y+JLnQ+1k3SQb+q2Wa8dwDmRwypNcYstB4GbURJUKgjggqvDNJ10FxYoMz6FnDMSXA+XxUvJ5wjbRuaajVQVSatNPTNpMArTm8GKDnzR+hloxTbJv0LglshTpTj6AMBx41owds11rA0inF3d5vaoegwhcJe6E9RZhA8FZCzj36vzSSr+kSmcIN53kjUIhzUiXy0BhX9eJpTvohh3w1+oEMEqUPARYEgUnPQS6gLVjJn0tup4Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=hKSWjJjyLoM5DQhyxp3SBQ9XygQIEW4ygs1Jn9NHA+M=;
- b=IR1Hp5ROcBqRGORTSojal5dymzzy6jOR1u1vSR1gBakwLPMC3GdlyIvfBw+wYjgu+1OIQXvyd2BK8JPebcTuWq7kyKiPOjCtTOFFyzcSDqrN+w9gWmbIAJY/LgA3V/Th2vZVSyWOTkAHfuhJkAEBWwv9Zk0wcHG3lBbY9A/lw6yV8a8komf8KnUJjld2V0dEA2acgatah1FfrGe+4GbdOUrrPLHLmaoD4vWlm913/eVQkCbl5RIzEtcHuvEM0d5tQqxiT0nY8cV7PF08Hu/ZyASVXGBTRY0mOigFSr1Z6LH5BgRsbHmCdyxuMSScOYKYvt6V519u+mT0V4VQUuGohg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=hKSWjJjyLoM5DQhyxp3SBQ9XygQIEW4ygs1Jn9NHA+M=;
- b=FrT5X1QzpaK7o/MIgMEU5TfzoORNXwky+LTYAqWrMhZLMgi7Tl1L1BJVTK3/KVcTiePsZmxz8eL2ejD/kieHS6Wtawk2veZALqs7NWqwQOhF8fR58+MdJa8d1i/0FmNJASEyIIh6gfyq2BU4O03LqDLomL3eZonWrNZJxj+aJLg=
-Authentication-Results: spf=none (sender IP is )
- smtp.mailfrom=Ashish.Kalra@amd.com; 
-Received: from DM5PR12MB1386.namprd12.prod.outlook.com (2603:10b6:3:77::9) by
- DM5PR12MB2568.namprd12.prod.outlook.com (2603:10b6:4:b5::35) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2878.15; Wed, 8 Apr 2020 01:17:33 +0000
-Received: from DM5PR12MB1386.namprd12.prod.outlook.com
- ([fe80::969:3d4e:6f37:c33c]) by DM5PR12MB1386.namprd12.prod.outlook.com
- ([fe80::969:3d4e:6f37:c33c%12]) with mapi id 15.20.2878.022; Wed, 8 Apr 2020
- 01:17:32 +0000
-Date:   Wed, 8 Apr 2020 01:17:26 +0000
-From:   Ashish Kalra <ashish.kalra@amd.com>
-To:     Steve Rutherford <srutherford@google.com>
-Cc:     Brijesh Singh <brijesh.singh@amd.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Joerg Roedel <joro@8bytes.org>,
-        Borislav Petkov <bp@suse.de>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        X86 ML <x86@kernel.org>, KVM list <kvm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        David Rientjes <rientjes@google.com>,
-        Andy Lutomirski <luto@kernel.org>
-Subject: Re: [PATCH v6 08/14] KVM: X86: Introduce KVM_HC_PAGE_ENC_STATUS
- hypercall
-Message-ID: <20200408011726.GA3684@ashkalra_ubuntu_server>
-References: <cover.1585548051.git.ashish.kalra@amd.com>
- <265ef8a0ab75f01bc673cce6ddcf7988c7623943.1585548051.git.ashish.kalra@amd.com>
- <CABayD+ekEYAS4z=L2r1q+8xaEzqKmJuzuYQhsWX3X=htgTvL5w@mail.gmail.com>
- <20200407052740.GA31821@ashkalra_ubuntu_server>
- <CABayD+cNdEJxoSHee3s0toy6-nO6Bm4-OsrbBdS8mCWoMBSqLQ@mail.gmail.com>
- <d67a104e-6a01-a766-63b2-3f8b6026ca4c@amd.com>
- <CABayD+ehZZabp2tA8K-ViB0BXPyjpz-XpXPXoD7MUH0OLz_Z-g@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CABayD+ehZZabp2tA8K-ViB0BXPyjpz-XpXPXoD7MUH0OLz_Z-g@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-ClientProxiedBy: SN6PR05CA0017.namprd05.prod.outlook.com
- (2603:10b6:805:de::30) To DM5PR12MB1386.namprd12.prod.outlook.com
- (2603:10b6:3:77::9)
+        Tue, 7 Apr 2020 21:20:01 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:56623 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726417AbgDHBUB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Apr 2020 21:20:01 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1586308799;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=Yynh6enpaQOt1XUlAWveegHSiUBm2+b0w4JqLXxNInA=;
+        b=QBZ2JqO1rE73UdK5+lZKBShYWCU+ms8I6Vs5tt+hQh13Otgm420kQ+gWRCEwyo4rLMUwC1
+        eM4KgDHr24RlPo+Ek2kWeGOHVAfyhvfaarlj72A71m30eYcvcsO42IEDLm12owzBnsd17l
+        iprqPDNepAhAiJaky4FxeXBtWf+H9Do=
+Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
+ [209.85.221.69]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-318-fOaWOFhZOByPhUr63tCrwA-1; Tue, 07 Apr 2020 21:19:57 -0400
+X-MC-Unique: fOaWOFhZOByPhUr63tCrwA-1
+Received: by mail-wr1-f69.google.com with SMTP id h95so3128081wrh.11
+        for <linux-kernel@vger.kernel.org>; Tue, 07 Apr 2020 18:19:57 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
+         :references:organization:mime-version:content-transfer-encoding;
+        bh=Yynh6enpaQOt1XUlAWveegHSiUBm2+b0w4JqLXxNInA=;
+        b=a1eIzfEjwfUKqMDl74QpR9pyVqyxwPrRtkAItfu6BdtGW321xR5uQ2kM3UEjSjYpJl
+         9RxWbmC79FjWEy+yBIa4u6xqSi5B0Ssi1s9DANT7glllJfMPrvUUnOYyTz8Ifb3LXI7/
+         4HXKowj1BulLTPmKNS7RtMhwG4XPBRb5LAVwFB3h+XK6RedOZcg1rX3eY3AbFC2gWuBh
+         Z5V6/QsPBPOg6WFpiDK2I9vjZ2tdvaQF2gXveTCD565pPv06m+uJhRngnH5+qDTcVkZi
+         /yRPbl9dVzYgyPfHyOIoVxTBhJxLzpkYNg/URhOU9+mZk4pHlrGpY3X+HFb/xhGKo/BG
+         FZfw==
+X-Gm-Message-State: AGi0PubwvV61UUvM/91hy/5bjlWkJCdwgbVfFTKjTb5UGjb0PQg55vFu
+        ueAXPBewxc8aQmP7/svt6YhsONmVOmYuLZ+eKNm7GQq1khRbUmibUCxZVlu140Fy3pjZw6acbB7
+        acaSr4PEUD9B8VH7n3Z03aY6y
+X-Received: by 2002:a1c:ac8a:: with SMTP id v132mr1914449wme.62.1586308795918;
+        Tue, 07 Apr 2020 18:19:55 -0700 (PDT)
+X-Google-Smtp-Source: APiQypLaQ8jm+WBVI/QXXC3y/wecnYYtN4bnsLufT0M1q3rnm9XPOgt4HbcYJI5WGFbrJD6qA1XOcQ==
+X-Received: by 2002:a1c:ac8a:: with SMTP id v132mr1914429wme.62.1586308795574;
+        Tue, 07 Apr 2020 18:19:55 -0700 (PDT)
+Received: from turbo.teknoraver.net (net-93-148-149-154.cust.vodafonedsl.it. [93.148.149.154])
+        by smtp.gmail.com with ESMTPSA id u7sm5080682wmg.41.2020.04.07.18.19.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 07 Apr 2020 18:19:55 -0700 (PDT)
+Date:   Wed, 8 Apr 2020 03:19:52 +0200
+From:   Matteo Croce <mcroce@redhat.com>
+To:     Chris Packham <chris.packham@alliedtelesis.co.nz>
+Cc:     davem@davemloft.net, andrew@lunn.ch, josua@solid-run.com,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Luka Perkov <luka.perkov@sartura.hr>
+Subject: Re: [PATCH v3 0/2] net: mvmdio: avoid error message for optional
+ IRQ
+Message-ID: <20200408031952.1d8dd01b@turbo.teknoraver.net>
+In-Reply-To: <20200316074907.21879-1-chris.packham@alliedtelesis.co.nz>
+References: <20200316074907.21879-1-chris.packham@alliedtelesis.co.nz>
+Organization: Red Hat
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from ashkalra_ubuntu_server (165.204.77.1) by SN6PR05CA0017.namprd05.prod.outlook.com (2603:10b6:805:de::30) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2900.11 via Frontend Transport; Wed, 8 Apr 2020 01:17:31 +0000
-X-Originating-IP: [165.204.77.1]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: b9fd4b48-dd41-4879-1a11-08d7db5a9d06
-X-MS-TrafficTypeDiagnostic: DM5PR12MB2568:|DM5PR12MB2568:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <DM5PR12MB256876D5F51ACF15D99EA90F8EC00@DM5PR12MB2568.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:9508;
-X-Forefront-PRVS: 0367A50BB1
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM5PR12MB1386.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10009020)(4636009)(396003)(376002)(136003)(346002)(366004)(39860400002)(52116002)(6496006)(54906003)(956004)(7416002)(2906002)(26005)(186003)(5660300002)(6916009)(86362001)(478600001)(66476007)(66946007)(66556008)(30864003)(33716001)(316002)(55016002)(16526019)(33656002)(4326008)(44832011)(8676002)(1076003)(53546011)(66574012)(81156014)(81166006)(9686003)(6666004)(8936002);DIR:OUT;SFP:1101;
-Received-SPF: None (protection.outlook.com: amd.com does not designate
- permitted sender hosts)
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 2dub6D7xQGcSID5bdvJhSqsFww13wVtMx7RHVLvSbA1k9tIo9qPWgy70sUOcBjds6g286Ro8UaLJGX3DJdvRgYFNJiEkZgih/w1P+tZT4jfEb/DaRIIHsjesrpOTxc7GfSpBcRffdghzZvGHC7Rmx+JN8vsvss9l87x3L66Qe6y2KCMOL1x0NvGcB+N30+lE5/bW/zjOgTPMds3b9jgVdEN9trTCyMAtMqE153m8XbuPT6ESYvqQ0G2AdgMIJuJ3VvKElWGCORzikKAhIWKB81JtmIP6cCkS25AW6WeidJwl9qgFBonm4vWF15LGGAkoQb8v5Bqu6xNo0Gfci/sxuIp1nRVMPrEhGb3+mG6ATWWpUKL1ZkCJfl4qfydxx31gPOHHzj3inUEZut5fVeab+2ETXGBK6k1HthBJaNQeWAxGCnbCnbE0mQAsTyPXFXGS
-X-MS-Exchange-AntiSpam-MessageData: qms/u25Ne3eRPzq2Hw/q3dTLx2uK0KAkbvKXRPs4KdVfHg2fOZvBWXAize2wr7LbihgcmmnHtxd9NSQezuBjxjLpLwXvKyUIZW6uNA2J6EE89ADzwz4iLeUlkzFkZSovRgSANHSi7OPKVKcW2Q+KXw==
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: b9fd4b48-dd41-4879-1a11-08d7db5a9d06
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 Apr 2020 01:17:32.6645
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: BUa725BajYG7c88ASlGoeIz5Xpz6E0Te0EY500i519EuWCwdZ14vLS0JKq+L9AlBnZ4HpFOeNb9s9NcL/ZQZEw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR12MB2568
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Steve, Brijesh,
+On Mon, 16 Mar 2020 20:49:05 +1300
+Chris Packham <chris.packham@alliedtelesis.co.nz> wrote:
 
-On Tue, Apr 07, 2020 at 05:35:57PM -0700, Steve Rutherford wrote:
-> On Tue, Apr 7, 2020 at 5:29 PM Brijesh Singh <brijesh.singh@amd.com> wrote:
-> >
-> >
-> > On 4/7/20 7:01 PM, Steve Rutherford wrote:
-> > > On Mon, Apr 6, 2020 at 10:27 PM Ashish Kalra <ashish.kalra@amd.com> wrote:
-> > >> Hello Steve,
-> > >>
-> > >> On Mon, Apr 06, 2020 at 07:17:37PM -0700, Steve Rutherford wrote:
-> > >>> On Sun, Mar 29, 2020 at 11:22 PM Ashish Kalra <Ashish.Kalra@amd.com> wrote:
-> > >>>> From: Brijesh Singh <Brijesh.Singh@amd.com>
-> > >>>>
-> > >>>> This hypercall is used by the SEV guest to notify a change in the page
-> > >>>> encryption status to the hypervisor. The hypercall should be invoked
-> > >>>> only when the encryption attribute is changed from encrypted -> decrypted
-> > >>>> and vice versa. By default all guest pages are considered encrypted.
-> > >>>>
-> > >>>> Cc: Thomas Gleixner <tglx@linutronix.de>
-> > >>>> Cc: Ingo Molnar <mingo@redhat.com>
-> > >>>> Cc: "H. Peter Anvin" <hpa@zytor.com>
-> > >>>> Cc: Paolo Bonzini <pbonzini@redhat.com>
-> > >>>> Cc: "Radim Krčmář" <rkrcmar@redhat.com>
-> > >>>> Cc: Joerg Roedel <joro@8bytes.org>
-> > >>>> Cc: Borislav Petkov <bp@suse.de>
-> > >>>> Cc: Tom Lendacky <thomas.lendacky@amd.com>
-> > >>>> Cc: x86@kernel.org
-> > >>>> Cc: kvm@vger.kernel.org
-> > >>>> Cc: linux-kernel@vger.kernel.org
-> > >>>> Signed-off-by: Brijesh Singh <brijesh.singh@amd.com>
-> > >>>> Signed-off-by: Ashish Kalra <ashish.kalra@amd.com>
-> > >>>> ---
-> > >>>>  Documentation/virt/kvm/hypercalls.rst | 15 +++++
-> > >>>>  arch/x86/include/asm/kvm_host.h       |  2 +
-> > >>>>  arch/x86/kvm/svm.c                    | 95 +++++++++++++++++++++++++++
-> > >>>>  arch/x86/kvm/vmx/vmx.c                |  1 +
-> > >>>>  arch/x86/kvm/x86.c                    |  6 ++
-> > >>>>  include/uapi/linux/kvm_para.h         |  1 +
-> > >>>>  6 files changed, 120 insertions(+)
-> > >>>>
-> > >>>> diff --git a/Documentation/virt/kvm/hypercalls.rst b/Documentation/virt/kvm/hypercalls.rst
-> > >>>> index dbaf207e560d..ff5287e68e81 100644
-> > >>>> --- a/Documentation/virt/kvm/hypercalls.rst
-> > >>>> +++ b/Documentation/virt/kvm/hypercalls.rst
-> > >>>> @@ -169,3 +169,18 @@ a0: destination APIC ID
-> > >>>>
-> > >>>>  :Usage example: When sending a call-function IPI-many to vCPUs, yield if
-> > >>>>                 any of the IPI target vCPUs was preempted.
-> > >>>> +
-> > >>>> +
-> > >>>> +8. KVM_HC_PAGE_ENC_STATUS
-> > >>>> +-------------------------
-> > >>>> +:Architecture: x86
-> > >>>> +:Status: active
-> > >>>> +:Purpose: Notify the encryption status changes in guest page table (SEV guest)
-> > >>>> +
-> > >>>> +a0: the guest physical address of the start page
-> > >>>> +a1: the number of pages
-> > >>>> +a2: encryption attribute
-> > >>>> +
-> > >>>> +   Where:
-> > >>>> +       * 1: Encryption attribute is set
-> > >>>> +       * 0: Encryption attribute is cleared
-> > >>>> diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
-> > >>>> index 98959e8cd448..90718fa3db47 100644
-> > >>>> --- a/arch/x86/include/asm/kvm_host.h
-> > >>>> +++ b/arch/x86/include/asm/kvm_host.h
-> > >>>> @@ -1267,6 +1267,8 @@ struct kvm_x86_ops {
-> > >>>>
-> > >>>>         bool (*apic_init_signal_blocked)(struct kvm_vcpu *vcpu);
-> > >>>>         int (*enable_direct_tlbflush)(struct kvm_vcpu *vcpu);
-> > >>>> +       int (*page_enc_status_hc)(struct kvm *kvm, unsigned long gpa,
-> > >>>> +                                 unsigned long sz, unsigned long mode);
-> > >>> Nit: spell out size instead of sz.
-> > >>>>  };
-> > >>>>
-> > >>>>  struct kvm_arch_async_pf {
-> > >>>> diff --git a/arch/x86/kvm/svm.c b/arch/x86/kvm/svm.c
-> > >>>> index 7c2721e18b06..1d8beaf1bceb 100644
-> > >>>> --- a/arch/x86/kvm/svm.c
-> > >>>> +++ b/arch/x86/kvm/svm.c
-> > >>>> @@ -136,6 +136,8 @@ struct kvm_sev_info {
-> > >>>>         int fd;                 /* SEV device fd */
-> > >>>>         unsigned long pages_locked; /* Number of pages locked */
-> > >>>>         struct list_head regions_list;  /* List of registered regions */
-> > >>>> +       unsigned long *page_enc_bmap;
-> > >>>> +       unsigned long page_enc_bmap_size;
-> > >>>>  };
-> > >>>>
-> > >>>>  struct kvm_svm {
-> > >>>> @@ -1991,6 +1993,9 @@ static void sev_vm_destroy(struct kvm *kvm)
-> > >>>>
-> > >>>>         sev_unbind_asid(kvm, sev->handle);
-> > >>>>         sev_asid_free(sev->asid);
-> > >>>> +
-> > >>>> +       kvfree(sev->page_enc_bmap);
-> > >>>> +       sev->page_enc_bmap = NULL;
-> > >>>>  }
-> > >>>>
-> > >>>>  static void avic_vm_destroy(struct kvm *kvm)
-> > >>>> @@ -7593,6 +7598,94 @@ static int sev_receive_finish(struct kvm *kvm, struct kvm_sev_cmd *argp)
-> > >>>>         return ret;
-> > >>>>  }
-> > >>>>
-> > >>>> +static int sev_resize_page_enc_bitmap(struct kvm *kvm, unsigned long new_size)
-> > >>>> +{
-> > >>>> +       struct kvm_sev_info *sev = &to_kvm_svm(kvm)->sev_info;
-> > >>>> +       unsigned long *map;
-> > >>>> +       unsigned long sz;
-> > >>>> +
-> > >>>> +       if (sev->page_enc_bmap_size >= new_size)
-> > >>>> +               return 0;
-> > >>>> +
-> > >>>> +       sz = ALIGN(new_size, BITS_PER_LONG) / 8;
-> > >>>> +
-> > >>>> +       map = vmalloc(sz);
-> > >>>> +       if (!map) {
-> > >>>> +               pr_err_once("Failed to allocate encrypted bitmap size %lx\n",
-> > >>>> +                               sz);
-> > >>>> +               return -ENOMEM;
-> > >>>> +       }
-> > >>>> +
-> > >>>> +       /* mark the page encrypted (by default) */
-> > >>>> +       memset(map, 0xff, sz);
-> > >>>> +
-> > >>>> +       bitmap_copy(map, sev->page_enc_bmap, sev->page_enc_bmap_size);
-> > >>>> +       kvfree(sev->page_enc_bmap);
-> > >>>> +
-> > >>>> +       sev->page_enc_bmap = map;
-> > >>>> +       sev->page_enc_bmap_size = new_size;
-> > >>>> +
-> > >>>> +       return 0;
-> > >>>> +}
-> > >>>> +
-> > >>>> +static int svm_page_enc_status_hc(struct kvm *kvm, unsigned long gpa,
-> > >>>> +                                 unsigned long npages, unsigned long enc)
-> > >>>> +{
-> > >>>> +       struct kvm_sev_info *sev = &to_kvm_svm(kvm)->sev_info;
-> > >>>> +       kvm_pfn_t pfn_start, pfn_end;
-> > >>>> +       gfn_t gfn_start, gfn_end;
-> > >>>> +       int ret;
-> > >>>> +
-> > >>>> +       if (!sev_guest(kvm))
-> > >>>> +               return -EINVAL;
-> > >>>> +
-> > >>>> +       if (!npages)
-> > >>>> +               return 0;
-> > >>>> +
-> > >>>> +       gfn_start = gpa_to_gfn(gpa);
-> > >>>> +       gfn_end = gfn_start + npages;
-> > >>>> +
-> > >>>> +       /* out of bound access error check */
-> > >>>> +       if (gfn_end <= gfn_start)
-> > >>>> +               return -EINVAL;
-> > >>>> +
-> > >>>> +       /* lets make sure that gpa exist in our memslot */
-> > >>>> +       pfn_start = gfn_to_pfn(kvm, gfn_start);
-> > >>>> +       pfn_end = gfn_to_pfn(kvm, gfn_end);
-> > >>>> +
-> > >>>> +       if (is_error_noslot_pfn(pfn_start) && !is_noslot_pfn(pfn_start)) {
-> > >>>> +               /*
-> > >>>> +                * Allow guest MMIO range(s) to be added
-> > >>>> +                * to the page encryption bitmap.
-> > >>>> +                */
-> > >>>> +               return -EINVAL;
-> > >>>> +       }
-> > >>>> +
-> > >>>> +       if (is_error_noslot_pfn(pfn_end) && !is_noslot_pfn(pfn_end)) {
-> > >>>> +               /*
-> > >>>> +                * Allow guest MMIO range(s) to be added
-> > >>>> +                * to the page encryption bitmap.
-> > >>>> +                */
-> > >>>> +               return -EINVAL;
-> > >>>> +       }
-> > >>>> +
-> > >>>> +       mutex_lock(&kvm->lock);
-> > >>>> +       ret = sev_resize_page_enc_bitmap(kvm, gfn_end);
-> > >>>> +       if (ret)
-> > >>>> +               goto unlock;
-> > >>>> +
-> > >>>> +       if (enc)
-> > >>>> +               __bitmap_set(sev->page_enc_bmap, gfn_start,
-> > >>>> +                               gfn_end - gfn_start);
-> > >>>> +       else
-> > >>>> +               __bitmap_clear(sev->page_enc_bmap, gfn_start,
-> > >>>> +                               gfn_end - gfn_start);
-> > >>>> +
-> > >>>> +unlock:
-> > >>>> +       mutex_unlock(&kvm->lock);
-> > >>>> +       return ret;
-> > >>>> +}
-> > >>>> +
-> > >>>>  static int svm_mem_enc_op(struct kvm *kvm, void __user *argp)
-> > >>>>  {
-> > >>>>         struct kvm_sev_cmd sev_cmd;
-> > >>>> @@ -7995,6 +8088,8 @@ static struct kvm_x86_ops svm_x86_ops __ro_after_init = {
-> > >>>>         .need_emulation_on_page_fault = svm_need_emulation_on_page_fault,
-> > >>>>
-> > >>>>         .apic_init_signal_blocked = svm_apic_init_signal_blocked,
-> > >>>> +
-> > >>>> +       .page_enc_status_hc = svm_page_enc_status_hc,
-> > >>>>  };
-> > >>>>
-> > >>>>  static int __init svm_init(void)
-> > >>>> diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-> > >>>> index 079d9fbf278e..f68e76ee7f9c 100644
-> > >>>> --- a/arch/x86/kvm/vmx/vmx.c
-> > >>>> +++ b/arch/x86/kvm/vmx/vmx.c
-> > >>>> @@ -8001,6 +8001,7 @@ static struct kvm_x86_ops vmx_x86_ops __ro_after_init = {
-> > >>>>         .nested_get_evmcs_version = NULL,
-> > >>>>         .need_emulation_on_page_fault = vmx_need_emulation_on_page_fault,
-> > >>>>         .apic_init_signal_blocked = vmx_apic_init_signal_blocked,
-> > >>>> +       .page_enc_status_hc = NULL,
-> > >>>>  };
-> > >>>>
-> > >>>>  static void vmx_cleanup_l1d_flush(void)
-> > >>>> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-> > >>>> index cf95c36cb4f4..68428eef2dde 100644
-> > >>>> --- a/arch/x86/kvm/x86.c
-> > >>>> +++ b/arch/x86/kvm/x86.c
-> > >>>> @@ -7564,6 +7564,12 @@ int kvm_emulate_hypercall(struct kvm_vcpu *vcpu)
-> > >>>>                 kvm_sched_yield(vcpu->kvm, a0);
-> > >>>>                 ret = 0;
-> > >>>>                 break;
-> > >>>> +       case KVM_HC_PAGE_ENC_STATUS:
-> > >>>> +               ret = -KVM_ENOSYS;
-> > >>>> +               if (kvm_x86_ops->page_enc_status_hc)
-> > >>>> +                       ret = kvm_x86_ops->page_enc_status_hc(vcpu->kvm,
-> > >>>> +                                       a0, a1, a2);
-> > >>>> +               break;
-> > >>>>         default:
-> > >>>>                 ret = -KVM_ENOSYS;
-> > >>>>                 break;
-> > >>>> diff --git a/include/uapi/linux/kvm_para.h b/include/uapi/linux/kvm_para.h
-> > >>>> index 8b86609849b9..847b83b75dc8 100644
-> > >>>> --- a/include/uapi/linux/kvm_para.h
-> > >>>> +++ b/include/uapi/linux/kvm_para.h
-> > >>>> @@ -29,6 +29,7 @@
-> > >>>>  #define KVM_HC_CLOCK_PAIRING           9
-> > >>>>  #define KVM_HC_SEND_IPI                10
-> > >>>>  #define KVM_HC_SCHED_YIELD             11
-> > >>>> +#define KVM_HC_PAGE_ENC_STATUS         12
-> > >>>>
-> > >>>>  /*
-> > >>>>   * hypercalls use architecture specific
-> > >>>> --
-> > >>>> 2.17.1
-> > >>>>
-> > >>> I'm still not excited by the dynamic resizing. I believe the guest
-> > >>> hypercall can be called in atomic contexts, which makes me
-> > >>> particularly unexcited to see a potentially large vmalloc on the host
-> > >>> followed by filling the buffer. Particularly when the buffer might be
-> > >>> non-trivial in size (~1MB per 32GB, per some back of the envelope
-> > >>> math).
-> > >>>
-> > >> I think looking at more practical situations, most hypercalls will
-> > >> happen during the boot stage, when device specific initializations are
-> > >> happening, so typically the maximum page encryption bitmap size would
-> > >> be allocated early enough.
-> > >>
-> > >> In fact, initial hypercalls made by OVMF will probably allocate the
-> > >> maximum page bitmap size even before the kernel comes up, especially
-> > >> as they will be setting up page enc/dec status for MMIO, ROM, ACPI
-> > >> regions, PCI device memory, etc., and most importantly for
-> > >> "non-existent" high memory range (which will probably be the
-> > >> maximum size page encryption bitmap allocated/resized).
-> > >>
-> > >> Let me know if you have different thoughts on this ?
-> > > Hi Ashish,
-> > >
-> > > If this is not an issue in practice, we can just move past this. If we
-> > > are basically guaranteed that OVMF will trigger hypercalls that expand
-> > > the bitmap beyond the top of memory, then, yes, that should work. That
-> > > leaves me slightly nervous that OVMF might regress since it's not
-> > > obvious that calling a hypercall beyond the top of memory would be
-> > > "required" for avoiding a somewhat indirectly related issue in guest
-> > > kernels.
-> >
-> >
-> > If possible then we should try to avoid growing/shrinking the bitmap .
-> > Today OVMF may not be accessing beyond memory but a malicious guest
-> > could send a hypercall down which can trigger a huge memory allocation
-> > on the host side and may eventually cause denial of service for other.
-> Nice catch! Was just writing up an email about this.
-> > I am in favor if we can find some solution to handle this case. How
-> > about Steve's suggestion about VMM making a call down to the kernel to
-> > tell how big the bitmap should be? Initially it should be equal to the
-> > guest RAM and if VMM ever did the memory expansion then it can send down
-> > another notification to increase the bitmap ?
-> >
-> > Optionally, instead of adding a new ioctl, I was wondering if we can
-> > extend the kvm_arch_prepare_memory_region() to make svm specific x86_ops
-> > which can take read the userspace provided memory region and calculate
-> > the amount of guest RAM managed by the KVM and grow/shrink the bitmap
-> > based on that information. I have not looked deep enough to see if its
-> > doable but if it can work then we can avoid adding yet another ioctl.
-> We also have the set bitmap ioctl in a later patch in this series. We
-> could also use the set ioctl for initialization (it's a little
-> excessive for initialization since there will be an additional
-> ephemeral allocation and a few additional buffer copies, but that's
-> probably fine). An enable_cap has the added benefit of probably being
-> necessary anyway so usermode can disable the migration feature flag.
+> I've gone ahead an sent a revert. This is the same as the original v1
+> except I've added Andrew's review to the commit message.
 > 
-> In general, userspace is going to have to be in direct control of the
-> buffer and its size.
+> Chris Packham (2):
+>   Revert "net: mvmdio: avoid error message for optional IRQ"
+>   net: mvmdio: avoid error message for optional IRQ
+> 
+>  drivers/net/ethernet/marvell/mvmdio.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
 
-My only practical concern about setting a static bitmap size based on guest
-memory is about the hypercalls being made initially by OVMF to set page
-enc/dec status for ROM, ACPI regions and especially the non-existent
-high memory range. The new ioctl will statically setup bitmap size to 
-whatever guest RAM is specified, say 4G, 8G, etc., but the OVMF
-hypercall for non-existent memory will try to do a hypercall for guest
-physical memory range like ~6G->64G (for 4G guest RAM setup), this
-hypercall will basically have to just return doing nothing, because
-the allocated bitmap won't have this guest physical range available ?
+Hi all,
 
-Also, hypercalls for ROM, ACPI, device regions and any memory holes within
-the static bitmap setup as per guest RAM config will work, but what
-about hypercalls for any device regions beyond the guest RAM config ?
+I have a Macchiatobin board and the 10G port stopped working in net-next.
+I suspect that these two patches could be involved.
+The phy is correctly detected now (I mean no errors and the device is
+registered) but no traffic can be sent or received:
 
-Thanks,
-Ashish
+root@macchiatobin:~# dmesg |grep -i -e phy -e mvpp2
+[    0.000000] Booting Linux on physical CPU 0x0000000000 [0x410fd081]
+[    0.000000] arch_timer: cp15 timer(s) running at 25.00MHz (phys).
+[    0.062798] libphy: Fixed MDIO Bus: probed
+[    1.132552] armada8k-pcie f2600000.pcie: Phy link never came up
+[    2.553464] libphy: orion_mdio_bus: probed
+[    2.558045] libphy: orion_mdio_bus: probed
+[    2.564037] mvpp2 f2000000.ethernet: using 8 per-cpu buffers
+[    2.588754] mvpp2 f2000000.ethernet eth0: Using random mac address 1e:a6:ce:39:8d:22
+[    2.599980] mvpp2 f4000000.ethernet: using 8 per-cpu buffers
+[    2.623293] mvpp2 f4000000.ethernet eth1: Using random mac address aa:ad:b5:91:8c:1e
+[    2.626535] mvpp2 f4000000.ethernet eth2: Using random mac address 6e:39:fb:74:09:6e
+[    2.629600] mvpp2 f4000000.ethernet eth3: Using random mac address 16:ec:bf:9e:11:0f
+[    2.952063] mvpp2 f4000000.ethernet eth2: PHY [f212a200.mdio-mii:00] driver [Marvell 88E1510] (irq=POLL)
+[    2.953251] mvpp2 f4000000.ethernet eth2: configuring for phy/sgmii link mode
+[    7.122899] mvpp2 f4000000.ethernet eth2: Link is Up - 1Gbps/Full - flow control rx/tx
+[   25.727756] mvpp2 f2000000.ethernet eth0: PHY [f212a600.mdio-mii:00] driver [mv88x3310] (irq=POLL)
+[   25.746711] mvpp2 f2000000.ethernet eth0: configuring for phy/10gbase-r link mode
+[   27.842712] mvpp2 f2000000.ethernet eth0: Link is Up - 10Gbps/Full - flow control off
+
+
+The only way to have it working is to unplug the power, boot an old
+kernel, e.g. 5.3.0:
+
+root@macchiatobin:~# dmesg |grep -i -e phy -e mvpp2
+[    0.000000] Booting Linux on physical CPU 0x0000000000 [0x410fd081]
+[    0.000000] arch_timer: cp15 timer(s) running at 25.00MHz (phys).
+[    0.083647] libphy: Fixed MDIO Bus: probed
+[    0.152788] armada8k-pcie f2600000.pcie: Failed to initialize PHY(s) (-22)
+[    1.429643] libphy: orion_mdio_bus: probed
+[    1.439109] libphy: orion_mdio_bus: probed
+[    1.450989] mvpp2 f2000000.ethernet eth0: Using random mac address 5a:09:5f:97:aa:cc
+[    1.476692] mvpp2 f4000000.ethernet eth1: Using random mac address f2:e2:c1:77:fa:23
+[    1.479688] mvpp2 f4000000.ethernet eth2: Using random mac address b2:33:c0:2f:da:ba
+[    1.482296] mvpp2 f4000000.ethernet eth3: Using random mac address 6a:38:79:2e:96:8c
+[    1.814163] mvpp2 f4000000.ethernet eth2: PHY [f212a200.mdio-mii:00] driver [Marvell 88E1510]
+[    1.814170] mvpp2 f4000000.ethernet eth2: phy: setting supported 00,00000000,000066ef advertising 00,00000000,000066ef
+[    1.826025] mvpp2 f4000000.ethernet eth2: configuring for phy/sgmii link mode
+[    1.826030] mvpp2 f4000000.ethernet eth2: phylink_mac_config: mode=phy/sgmii/Unknown/Unknown adv=00,00000000,000066ef pause=10 link=0 an=1
+[    1.827683] mvpp2 f4000000.ethernet eth2: phy link down sgmii/1Gbps/Half
+[    6.002304] mvpp2 f4000000.ethernet eth2: phy link up sgmii/1Gbps/Full
+[    6.002313] mvpp2 f4000000.ethernet eth2: phylink_mac_config: mode=phy/sgmii/1Gbps/Full adv=00,00000000,00000000 pause=0f link=1 an=0
+[    6.002332] mvpp2 f4000000.ethernet eth2: Link is Up - 1Gbps/Full - flow control rx/tx
+[   33.186689] mvpp2 f2000000.ethernet eth0: PHY [f212a600.mdio-mii:00] driver [mv88x3310]
+[   33.194739] mvpp2 f2000000.ethernet eth0: phy: setting supported 00,00008000,0000706f advertising 00,00008000,0000706f
+[   33.218029] mvpp2 f2000000.ethernet eth0: configuring for phy/10gbase-kr link mode
+[   33.225637] mvpp2 f2000000.ethernet eth0: phylink_mac_config: mode=phy/10gbase-kr/Unknown/Unknown adv=00,00008000,0000706f pause=10 link=0 an=1
+[   33.241341] mvpp2 f2000000.ethernet eth0: phy link down 10gbase-kr/Unknown/Unknown
+[   35.362160] mvpp2 f2000000.ethernet eth0: phy link up 10gbase-kr/10Gbps/Full
+[   35.369243] mvpp2 f2000000.ethernet eth0: phylink_mac_config: mode=phy/10gbase-kr/10Gbps/Full adv=00,00000000,00000000 pause=00 link=1 an=0
+[   35.381836] mvpp2 f2000000.ethernet eth0: Link is Up - 10Gbps/Full - flow control off
+
+
+And then do a soft reboot to net-next which works.
+By rebooting the board multiple times it works, until I unplug the power.
+
+Any hint?
+Bye,
+
+-- 
+Matteo Croce
+per aspera ad upstream
+
