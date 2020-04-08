@@ -2,322 +2,121 @@ Return-Path: <SRS0=8dav=5Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15E18C2BB54
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 01:00:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3DEFC2D0EC
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 01:02:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E0D342075E
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 01:00:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sholland.org header.i=@sholland.org header.b="jOBy3fU3";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="pEqCV0wO"
+	by mail.kernel.org (Postfix) with ESMTP id 75E51206F7
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 01:02:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726484AbgDHBAG (ORCPT
+        id S1726510AbgDHBC4 convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 21:00:06 -0400
-Received: from out5-smtp.messagingengine.com ([66.111.4.29]:50719 "EHLO
-        out5-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726437AbgDHBAF (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Apr 2020 21:00:05 -0400
-Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-        by mailout.nyi.internal (Postfix) with ESMTP id E0A3E5C005D;
-        Tue,  7 Apr 2020 21:00:03 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute3.internal (MEProxy); Tue, 07 Apr 2020 21:00:03 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sholland.org; h=
-        from:to:cc:subject:date:message-id:mime-version
-        :content-transfer-encoding; s=fm2; bh=geBpTybH7E3rdFCCql7LS3kZxJ
-        h8KzFXdfL8MpTm4uA=; b=jOBy3fU38YnhzEUfC4/mB1kKkL8tcsO9JEJ3+s/yka
-        b+xYN0diHSWT21W5zEE6CXkVQt4PgKgf+ATQV66BEv9sjkAzty2SFtMHTDduvjfK
-        r2UqfLhDO11vM65XBsB6CYfZxkaAbaPItONbs/E2hu9dN9S2xbdk28d5X0lh+eSm
-        CK+8KCR/iYYdFbAyGxkrGsPRzk8xvF/Wh0VgqxOa0nZ6NAA7f1UHACe29ZPVdHCA
-        n05duRzY0x3idz1mVqnv/CbKK0PmWx/NWBvR4nTC6dHnCNiPKZfcsp7tts7/+ZZm
-        nAs9vaE7I04PdOHC1lai7khAWHtWKB0hlewOn3IS/ixw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-transfer-encoding:date:from
-        :message-id:mime-version:subject:to:x-me-proxy:x-me-proxy
-        :x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=geBpTybH7E3rdFCCq
-        l7LS3kZxJh8KzFXdfL8MpTm4uA=; b=pEqCV0wO+MDMwY+wxBZVCqFuVGL91EzVN
-        ofb5xgeZFseBvnZNV7aZnJxgK3WLS41kyxYS2EILx+KpN5X5blwSsCbs9sXDvCN5
-        aMZf4NbgG3AJBX0PazlcybtF5B1ywUR08CqZiCE4ECgqyszy9uHSRNx+5ZRnEhrV
-        LF4jTi4DqhEKF7wyVA/FINxbEro0bKtc55/LYyeKIZYsE8ZXlEIM14GwTLA61OaH
-        2Tp5jHeFCK6Spd/kdVIvlfmGi5kAhF1o6vV4TY0a/sbtlynIIfQZbjTqsBgQzaqt
-        kA/x7jPEZLgV9hOiM1tW6h09TubFwD9/NDToxkQgLEUnJaVSPbKKA==
-X-ME-Sender: <xms:EyKNXrFpZNtXB-Ah0Z_zSpQlmSy20Ke6-3zo7lbaFobrOfVHl8iMoA>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedrudeigdegudcutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpefhvffufffkofgggfestdekredtredttdenucfhrhhomhepufgrmhhuvghlucfj
-    ohhllhgrnhguuceoshgrmhhuvghlsehshhholhhlrghnugdrohhrgheqnecukfhppeejtd
-    drudefhedrudegkedrudehudenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhep
-    mhgrihhlfhhrohhmpehsrghmuhgvlhesshhhohhllhgrnhgurdhorhhg
-X-ME-Proxy: <xmx:EyKNXlxMvOBaB7C7rloDBhAqCrqSim83kP5pE24z-XsRh-3oedFtBg>
-    <xmx:EyKNXtHm5ye2HVR8SJ5dnwVjifsPeXGyRTMRkym5rIo6EpjXQzirpQ>
-    <xmx:EyKNXqulDchRhFbr50Hd5S2cgAXEJrRXEcHcXcc1u8_NWWNYzKPJBA>
-    <xmx:EyKNXq9ZZEoKLuS6DpU7Ab3ZjiWCIZzExonr2w3lZIAKqv0QJbShJQ>
-Received: from titanium.stl.sholland.net (70-135-148-151.lightspeed.stlsmo.sbcglobal.net [70.135.148.151])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 77F39328005D;
-        Tue,  7 Apr 2020 21:00:02 -0400 (EDT)
-From:   Samuel Holland <samuel@sholland.org>
-To:     Maxime Ripard <mripard@kernel.org>,
-        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-media@vger.kernel.org, linux-sunxi@googlegroups.com,
-        Samuel Holland <samuel@sholland.org>
-Subject: [PATCH] media: cedrus: Implement runtime PM
-Date:   Tue,  7 Apr 2020 20:02:32 -0500
-Message-Id: <20200408010232.48432-1-samuel@sholland.org>
-X-Mailer: git-send-email 2.24.1
+        Tue, 7 Apr 2020 21:02:56 -0400
+Received: from mga04.intel.com ([192.55.52.120]:1582 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726436AbgDHBC4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Apr 2020 21:02:56 -0400
+IronPort-SDR: 4dbzYw+tIZR/z0qjm62dvyIFzo08GoWVyPozslIWbuSK0vmX5Gub0GLDyiMsoOsX8NvNl1rTRI
+ L5cCGUrJK7zg==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Apr 2020 18:02:55 -0700
+IronPort-SDR: aoIgWarb9rwY1gMIByAFYJfIksZEwy6R2tUCK1nWiJ/zDgSSL5U3c++igIgFK/DpicWLudRxgt
+ tMxJ4x9k/FfQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,357,1580803200"; 
+   d="scan'208";a="424955822"
+Received: from fmsmsx107.amr.corp.intel.com ([10.18.124.205])
+  by orsmga005.jf.intel.com with ESMTP; 07 Apr 2020 18:02:55 -0700
+Received: from fmsmsx153.amr.corp.intel.com (10.18.125.6) by
+ fmsmsx107.amr.corp.intel.com (10.18.124.205) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Tue, 7 Apr 2020 18:02:55 -0700
+Received: from shsmsx108.ccr.corp.intel.com (10.239.4.97) by
+ FMSMSX153.amr.corp.intel.com (10.18.125.6) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Tue, 7 Apr 2020 18:02:54 -0700
+Received: from shsmsx104.ccr.corp.intel.com ([169.254.5.225]) by
+ SHSMSX108.ccr.corp.intel.com ([169.254.8.7]) with mapi id 14.03.0439.000;
+ Wed, 8 Apr 2020 09:02:52 +0800
+From:   "Liu, Yi L" <yi.l.liu@intel.com>
+To:     Jean-Philippe Brucker <jean-philippe@linaro.org>,
+        Auger Eric <eric.auger@redhat.com>
+CC:     "alex.williamson@redhat.com" <alex.williamson@redhat.com>,
+        "Tian, Kevin" <kevin.tian@intel.com>,
+        "jacob.jun.pan@linux.intel.com" <jacob.jun.pan@linux.intel.com>,
+        "joro@8bytes.org" <joro@8bytes.org>,
+        "Raj, Ashok" <ashok.raj@intel.com>,
+        "Tian, Jun J" <jun.j.tian@intel.com>,
+        "Sun, Yi Y" <yi.y.sun@intel.com>,
+        "peterx@redhat.com" <peterx@redhat.com>,
+        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Wu, Hao" <hao.wu@intel.com>
+Subject: RE: [PATCH v1 5/8] vfio/type1: Report 1st-level/stage-1 format to
+ userspace
+Thread-Topic: [PATCH v1 5/8] vfio/type1: Report 1st-level/stage-1 format to
+ userspace
+Thread-Index: AQHWAEUcqZEEdiOKbEGofjWp2Yic+6hjfq+AgAC/vLD//4YrAIAC1vWAgAbjh1CAAQJ/8A==
+Date:   Wed, 8 Apr 2020 01:02:51 +0000
+Message-ID: <A2975661238FB949B60364EF0F2C25743A225A72@SHSMSX104.ccr.corp.intel.com>
+References: <1584880325-10561-1-git-send-email-yi.l.liu@intel.com>
+ <1584880325-10561-6-git-send-email-yi.l.liu@intel.com>
+ <cb68e9ab-77b0-7e97-a661-4836962041d9@redhat.com>
+ <A2975661238FB949B60364EF0F2C25743A21DB4E@SHSMSX104.ccr.corp.intel.com>
+ <b47891b1-ece6-c263-9c07-07c09c7d3752@redhat.com>
+ <20200403082305.GA1269501@myrica>
+ <A2975661238FB949B60364EF0F2C25743A2249DF@SHSMSX104.ccr.corp.intel.com>
+In-Reply-To: <A2975661238FB949B60364EF0F2C25743A2249DF@SHSMSX104.ccr.corp.intel.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+dlp-product: dlpe-windows
+dlp-version: 11.2.0.6
+dlp-reaction: no-action
+x-originating-ip: [10.239.127.40]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This allows the VE clocks and PLL_VE to be disabled most of the time.
+> From: Liu, Yi L
+> Sent: Tuesday, April 7, 2020 5:43 PM
+>
+> > We don't, the PASID spaces are per-VM on Arm, so this function should
+> > consult the IOMMU driver before setting flags. As you said on patch 3,
+> > nested doesn't necessarily imply PASID support. The SMMUv2 does not
+> > support PASID but does support nesting stages 1 and 2 for the IOVA space.
+> > SMMUv3 support of PASID depends on HW capabilities. So I think this
+> > needs to be finer grained:
+> >
+> > Does the container support:
+> > * VFIO_IOMMU_PASID_REQUEST?
+> >   -> Yes for VT-d 3
+> >   -> No for Arm SMMU
+> > * VFIO_IOMMU_{,UN}BIND_GUEST_PGTBL?
+> >   -> Yes for VT-d 3
+> >   -> Sometimes for SMMUv2
+> >   -> No for SMMUv3 (if we go with BIND_PASID_TABLE, which is simpler due to
+> >      PASID tables being in GPA space.)
+> > * VFIO_IOMMU_BIND_PASID_TABLE?
+> >   -> No for VT-d
+> >   -> Sometimes for SMMUv3
+> >
+> > Any bind support implies VFIO_IOMMU_CACHE_INVALIDATE support.
+> 
+> good summary. do you expect to see any
+please ignore this message. I planned to ask if possible to report
+VFIO_IOMMU_CACHE_INVALIDATE  only (no bind support). But I stopped
+typing it when I came to believe it's unnecessary to report it if
+there is no bind support.
 
-Since the device is stateless, each frame gets a separate runtime PM
-reference. Enable autosuspend so the PM callbacks are not run before and
-after every frame.
-
-Signed-off-by: Samuel Holland <samuel@sholland.org>
----
-
-I tested this with v4l2-request-test. I don't have the setup to do
-anything more complicated at the moment.
-
----
- drivers/staging/media/sunxi/cedrus/cedrus.c   |   7 ++
- .../staging/media/sunxi/cedrus/cedrus_hw.c    | 115 ++++++++++++------
- .../staging/media/sunxi/cedrus/cedrus_hw.h    |   3 +
- 3 files changed, 88 insertions(+), 37 deletions(-)
-
-diff --git a/drivers/staging/media/sunxi/cedrus/cedrus.c b/drivers/staging/media/sunxi/cedrus/cedrus.c
-index 3fad5edccd17..9aa1fc8a6c26 100644
---- a/drivers/staging/media/sunxi/cedrus/cedrus.c
-+++ b/drivers/staging/media/sunxi/cedrus/cedrus.c
-@@ -16,6 +16,7 @@
- #include <linux/platform_device.h>
- #include <linux/module.h>
- #include <linux/of.h>
-+#include <linux/pm.h>
- 
- #include <media/v4l2-device.h>
- #include <media/v4l2-ioctl.h>
-@@ -474,6 +475,11 @@ static int cedrus_remove(struct platform_device *pdev)
- 	return 0;
- }
- 
-+static const struct dev_pm_ops cedrus_dev_pm_ops = {
-+	SET_RUNTIME_PM_OPS(cedrus_hw_suspend,
-+			   cedrus_hw_resume, NULL)
-+};
-+
- static const struct cedrus_variant sun4i_a10_cedrus_variant = {
- 	.mod_rate	= 320000000,
- };
-@@ -559,6 +565,7 @@ static struct platform_driver cedrus_driver = {
- 	.driver		= {
- 		.name		= CEDRUS_NAME,
- 		.of_match_table	= of_match_ptr(cedrus_dt_match),
-+		.pm		= &cedrus_dev_pm_ops,
- 	},
- };
- module_platform_driver(cedrus_driver);
-diff --git a/drivers/staging/media/sunxi/cedrus/cedrus_hw.c b/drivers/staging/media/sunxi/cedrus/cedrus_hw.c
-index daf5f244f93b..b84814d5afe4 100644
---- a/drivers/staging/media/sunxi/cedrus/cedrus_hw.c
-+++ b/drivers/staging/media/sunxi/cedrus/cedrus_hw.c
-@@ -19,6 +19,7 @@
- #include <linux/dma-mapping.h>
- #include <linux/interrupt.h>
- #include <linux/clk.h>
-+#include <linux/pm_runtime.h>
- #include <linux/regmap.h>
- #include <linux/reset.h>
- #include <linux/soc/sunxi/sunxi_sram.h>
-@@ -63,6 +64,8 @@ int cedrus_engine_enable(struct cedrus_ctx *ctx, enum cedrus_codec codec)
- 	if (ctx->src_fmt.width > 2048)
- 		reg |= VE_MODE_PIC_WIDTH_MORE_2048;
- 
-+	pm_runtime_get_sync(ctx->dev->dev);
-+
- 	cedrus_write(ctx->dev, VE_MODE, reg);
- 
- 	return 0;
-@@ -71,6 +74,9 @@ int cedrus_engine_enable(struct cedrus_ctx *ctx, enum cedrus_codec codec)
- void cedrus_engine_disable(struct cedrus_dev *dev)
- {
- 	cedrus_write(dev, VE_MODE, VE_MODE_DISABLED);
-+
-+	pm_runtime_mark_last_busy(dev->dev);
-+	pm_runtime_put_autosuspend(dev->dev);
- }
- 
- void cedrus_dst_format_set(struct cedrus_dev *dev,
-@@ -134,12 +140,72 @@ static irqreturn_t cedrus_irq(int irq, void *data)
- 	else
- 		state = VB2_BUF_STATE_DONE;
- 
-+	cedrus_engine_disable(dev);
-+
- 	v4l2_m2m_buf_done_and_job_finish(ctx->dev->m2m_dev, ctx->fh.m2m_ctx,
- 					 state);
- 
- 	return IRQ_HANDLED;
- }
- 
-+int cedrus_hw_resume(struct device *d)
-+{
-+	struct cedrus_dev *dev = dev_get_drvdata(d);
-+	int ret;
-+
-+	ret = clk_prepare_enable(dev->ahb_clk);
-+	if (ret) {
-+		dev_err(dev->dev, "Failed to enable AHB clock\n");
-+
-+		return ret;
-+	}
-+
-+	ret = clk_prepare_enable(dev->mod_clk);
-+	if (ret) {
-+		dev_err(dev->dev, "Failed to enable MOD clock\n");
-+
-+		goto err_ahb_clk;
-+	}
-+
-+	ret = clk_prepare_enable(dev->ram_clk);
-+	if (ret) {
-+		dev_err(dev->dev, "Failed to enable RAM clock\n");
-+
-+		goto err_mod_clk;
-+	}
-+
-+	ret = reset_control_reset(dev->rstc);
-+	if (ret) {
-+		dev_err(dev->dev, "Failed to apply reset\n");
-+
-+		goto err_ram_clk;
-+	}
-+
-+	return 0;
-+
-+err_ram_clk:
-+	clk_disable_unprepare(dev->ram_clk);
-+err_mod_clk:
-+	clk_disable_unprepare(dev->mod_clk);
-+err_ahb_clk:
-+	clk_disable_unprepare(dev->ahb_clk);
-+
-+	return ret;
-+}
-+
-+int cedrus_hw_suspend(struct device *d)
-+{
-+	struct cedrus_dev *dev = dev_get_drvdata(d);
-+
-+	reset_control_assert(dev->rstc);
-+
-+	clk_disable_unprepare(dev->ram_clk);
-+	clk_disable_unprepare(dev->mod_clk);
-+	clk_disable_unprepare(dev->ahb_clk);
-+
-+	return 0;
-+}
-+
- int cedrus_hw_probe(struct cedrus_dev *dev)
- {
- 	const struct cedrus_variant *variant;
-@@ -236,42 +302,19 @@ int cedrus_hw_probe(struct cedrus_dev *dev)
- 		goto err_sram;
- 	}
- 
--	ret = clk_prepare_enable(dev->ahb_clk);
--	if (ret) {
--		dev_err(dev->dev, "Failed to enable AHB clock\n");
--
--		goto err_sram;
--	}
--
--	ret = clk_prepare_enable(dev->mod_clk);
--	if (ret) {
--		dev_err(dev->dev, "Failed to enable MOD clock\n");
--
--		goto err_ahb_clk;
--	}
--
--	ret = clk_prepare_enable(dev->ram_clk);
--	if (ret) {
--		dev_err(dev->dev, "Failed to enable RAM clock\n");
--
--		goto err_mod_clk;
--	}
--
--	ret = reset_control_reset(dev->rstc);
--	if (ret) {
--		dev_err(dev->dev, "Failed to apply reset\n");
--
--		goto err_ram_clk;
-+	pm_runtime_set_autosuspend_delay(dev->dev, 1000);
-+	pm_runtime_use_autosuspend(dev->dev);
-+	pm_runtime_enable(dev->dev);
-+	if (!pm_runtime_enabled(dev->dev)) {
-+		ret = cedrus_hw_resume(dev->dev);
-+		if (ret)
-+			goto err_pm;
- 	}
- 
- 	return 0;
- 
--err_ram_clk:
--	clk_disable_unprepare(dev->ram_clk);
--err_mod_clk:
--	clk_disable_unprepare(dev->mod_clk);
--err_ahb_clk:
--	clk_disable_unprepare(dev->ahb_clk);
-+err_pm:
-+	pm_runtime_disable(dev->dev);
- err_sram:
- 	sunxi_sram_release(dev->dev);
- err_mem:
-@@ -282,11 +325,9 @@ int cedrus_hw_probe(struct cedrus_dev *dev)
- 
- void cedrus_hw_remove(struct cedrus_dev *dev)
- {
--	reset_control_assert(dev->rstc);
--
--	clk_disable_unprepare(dev->ram_clk);
--	clk_disable_unprepare(dev->mod_clk);
--	clk_disable_unprepare(dev->ahb_clk);
-+	pm_runtime_disable(dev->dev);
-+	if (!pm_runtime_status_suspended(dev->dev))
-+		cedrus_hw_suspend(dev->dev);
- 
- 	sunxi_sram_release(dev->dev);
- 
-diff --git a/drivers/staging/media/sunxi/cedrus/cedrus_hw.h b/drivers/staging/media/sunxi/cedrus/cedrus_hw.h
-index 604ff932fbf5..17822b470a1e 100644
---- a/drivers/staging/media/sunxi/cedrus/cedrus_hw.h
-+++ b/drivers/staging/media/sunxi/cedrus/cedrus_hw.h
-@@ -22,6 +22,9 @@ void cedrus_engine_disable(struct cedrus_dev *dev);
- void cedrus_dst_format_set(struct cedrus_dev *dev,
- 			   struct v4l2_pix_format *fmt);
- 
-+int cedrus_hw_resume(struct device *dev);
-+int cedrus_hw_suspend(struct device *dev);
-+
- int cedrus_hw_probe(struct cedrus_dev *dev);
- void cedrus_hw_remove(struct cedrus_dev *dev);
- 
--- 
-2.24.1
-
+Regards,
+Yi Liu
