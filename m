@@ -2,91 +2,371 @@ Return-Path: <SRS0=8dav=5Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83B79C2D0EA
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 09:13:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E68CC2BA2B
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 09:14:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4F52B2074F
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 09:13:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="sfSEXoYh"
+	by mail.kernel.org (Postfix) with ESMTP id 1F85020769
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 09:14:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727728AbgDHJNq (ORCPT
+        id S1727815AbgDHJOU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Apr 2020 05:13:46 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:48574 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726632AbgDHJNq (ORCPT
+        Wed, 8 Apr 2020 05:14:20 -0400
+Received: from laurent.telenet-ops.be ([195.130.137.89]:54016 "EHLO
+        laurent.telenet-ops.be" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727736AbgDHJOU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Apr 2020 05:13:46 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=5q1TNgdtG+EvuttG4Krun6x3Mnm4/9W50CZxgMeFbco=; b=sfSEXoYhWdAiMRkFzutN/nydI5
-        lXnJKrsD1MvF0yqVZcyYTjcBrr5fLjzlHXrX/KYsXez1CmfHn+S1Fn2wK4qQC85Ob8PBiM5E9g2gE
-        xRf/Xw10+9UUCj5HRHvoZ5BFOINk+JSJKkpSGKNvzXiaqUHlgCgm/1lsZzZkJFujhMGEWJzcSKx/d
-        Xau7ZAUqpNIEt1z+eTO2XUetcv5X7/STGIAn9MhqTOQazAY6D+0KSoebouR7w19xcmT9Wb5diG3aP
-        8szpdIEeniWEXetZFcJbiPBvfpBjivv2oXJA/rhCe1ANAV3VMvpdmkalsV40IV7S2Y63WZZN2pltF
-        0E0xUE6A==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jM6lg-0006Ge-7R; Wed, 08 Apr 2020 09:13:08 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 21682304DB2;
-        Wed,  8 Apr 2020 11:13:06 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 12B3C2B9C8A02; Wed,  8 Apr 2020 11:13:06 +0200 (CEST)
-Date:   Wed, 8 Apr 2020 11:13:06 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Jan Kiszka <jan.kiszka@siemens.com>
-Cc:     Steven Rostedt <rostedt@goodmis.org>, tglx@linutronix.de,
-        linux-kernel@vger.kernel.org, hch@infradead.org,
-        sean.j.christopherson@intel.com, mingo@redhat.com, bp@alien8.de,
-        hpa@zytor.com, x86@kernel.org, kenny@panix.com, jeyu@kernel.org,
-        rasmus.villemoes@prevas.dk, pbonzini@redhat.com,
-        fenghua.yu@intel.com, xiaoyao.li@intel.com, nadav.amit@gmail.com,
-        thellstrom@vmware.com, tony.luck@intel.com,
-        gregkh@linuxfoundation.org, jannh@google.com,
-        keescook@chromium.org, David.Laight@aculab.com,
-        dcovelli@vmware.com, mhiramat@kernel.org,
-        Wolfgang Mauerer <wolfgang.mauerer@oth-regensburg.de>
-Subject: Re: [PATCH 4/4] x86,module: Detect CRn and DRn manipulation
-Message-ID: <20200408091306.GN20760@hirez.programming.kicks-ass.net>
-References: <20200407110236.930134290@infradead.org>
- <20200407111007.429362016@infradead.org>
- <20200407174824.5e97a597@gandalf.local.home>
- <137fe245-69f3-080e-5f2b-207cd218f199@siemens.com>
- <20200408085138.GQ20713@hirez.programming.kicks-ass.net>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200408085138.GQ20713@hirez.programming.kicks-ass.net>
+        Wed, 8 Apr 2020 05:14:20 -0400
+Received: from ramsan ([84.195.182.253])
+        by laurent.telenet-ops.be with bizsmtp
+        id Q9EH2200L5USYZQ019EHfS; Wed, 08 Apr 2020 11:14:17 +0200
+Received: from rox.of.borg ([192.168.97.57])
+        by ramsan with esmtp (Exim 4.90_1)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1jM6mn-0002rc-Ea; Wed, 08 Apr 2020 11:14:17 +0200
+Received: from geert by rox.of.borg with local (Exim 4.90_1)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1jM6mn-0006he-DN; Wed, 08 Apr 2020 11:14:17 +0200
+From:   Geert Uytterhoeven <geert+renesas@glider.be>
+To:     Rob Herring <robh+dt@kernel.org>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>
+Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-renesas-soc@vger.kernel.org,
+        Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [PATCH] dt-bindings: timer: renesas: cmt: Convert to json-schema
+Date:   Wed,  8 Apr 2020 11:14:16 +0200
+Message-Id: <20200408091416.25725-1-geert+renesas@glider.be>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 08, 2020 at 10:51:38AM +0200, Peter Zijlstra wrote:
-> On Wed, Apr 08, 2020 at 07:58:53AM +0200, Jan Kiszka wrote:
-> > On 07.04.20 23:48, Steven Rostedt wrote:
-> 
-> > > Hmm, wont this break jailhouse?
-> 
-> Breaking it isn't a problem, it's out of tree and it should be fixable.
-> 
-> > Yes, possibly. We load the hypervisor binary via request_firmware into
-> > executable memory and then jump into it. So most of the "suspicious" code is
-> 
-> W.T.H. does the firmware loader have the ability to give executable
-> memory? We need to kill that too. /me goes find.
+Convert the Renesas Compare Match Timer (CMT) Device Tree binding
+documentation to json-schema.
 
-AFAICT the firmware loader only provides PAGE_KERNEL_RO, so how do you
-get it executable?
+Document missing properties.
+Update the example to match reality.
 
-I'm thinking the patches Christoph has lined up will take care of this.
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+---
+For a clean dtbs_check, this depends on "[PATCH] ARM: dts: r8a73a4: Add
+missing CMT1 interrupts"
+(https://lore.kernel.org/r/20200408090926.25201-1-geert+renesas@glider.be),
+which I intend to queue as a fix for v5.7.
+
+ .../devicetree/bindings/timer/renesas,cmt.txt | 110 -----------
+ .../bindings/timer/renesas,cmt.yaml           | 180 ++++++++++++++++++
+ 2 files changed, 180 insertions(+), 110 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/timer/renesas,cmt.txt
+ create mode 100644 Documentation/devicetree/bindings/timer/renesas,cmt.yaml
+
+diff --git a/Documentation/devicetree/bindings/timer/renesas,cmt.txt b/Documentation/devicetree/bindings/timer/renesas,cmt.txt
+deleted file mode 100644
+index a747fabab7d3fda4..0000000000000000
+--- a/Documentation/devicetree/bindings/timer/renesas,cmt.txt
++++ /dev/null
+@@ -1,110 +0,0 @@
+-* Renesas R-Car Compare Match Timer (CMT)
+-
+-The CMT is a multi-channel 16/32/48-bit timer/counter with configurable clock
+-inputs and programmable compare match.
+-
+-Channels share hardware resources but their counter and compare match value
+-are independent. A particular CMT instance can implement only a subset of the
+-channels supported by the CMT model. Channel indices represent the hardware
+-position of the channel in the CMT and don't match the channel numbers in the
+-datasheets.
+-
+-Required Properties:
+-
+-  - compatible: must contain one or more of the following:
+-    - "renesas,r8a73a4-cmt0" for the 32-bit CMT0 device included in r8a73a4.
+-    - "renesas,r8a73a4-cmt1" for the 48-bit CMT1 device included in r8a73a4.
+-    - "renesas,r8a7740-cmt0" for the 32-bit CMT0 device included in r8a7740.
+-    - "renesas,r8a7740-cmt1" for the 48-bit CMT1 device included in r8a7740.
+-    - "renesas,r8a7740-cmt2" for the 32-bit CMT2 device included in r8a7740.
+-    - "renesas,r8a7740-cmt3" for the 32-bit CMT3 device included in r8a7740.
+-    - "renesas,r8a7740-cmt4" for the 32-bit CMT4 device included in r8a7740.
+-    - "renesas,r8a7743-cmt0" for the 32-bit CMT0 device included in r8a7743.
+-    - "renesas,r8a7743-cmt1" for the 48-bit CMT1 device included in r8a7743.
+-    - "renesas,r8a7744-cmt0" for the 32-bit CMT0 device included in r8a7744.
+-    - "renesas,r8a7744-cmt1" for the 48-bit CMT1 device included in r8a7744.
+-    - "renesas,r8a7745-cmt0" for the 32-bit CMT0 device included in r8a7745.
+-    - "renesas,r8a7745-cmt1" for the 48-bit CMT1 device included in r8a7745.
+-    - "renesas,r8a77470-cmt0" for the 32-bit CMT0 device included in r8a77470.
+-    - "renesas,r8a77470-cmt1" for the 48-bit CMT1 device included in r8a77470.
+-    - "renesas,r8a774a1-cmt0" for the 32-bit CMT0 device included in r8a774a1.
+-    - "renesas,r8a774a1-cmt1" for the 48-bit CMT devices included in r8a774a1.
+-    - "renesas,r8a774b1-cmt0" for the 32-bit CMT0 device included in r8a774b1.
+-    - "renesas,r8a774b1-cmt1" for the 48-bit CMT devices included in r8a774b1.
+-    - "renesas,r8a774c0-cmt0" for the 32-bit CMT0 device included in r8a774c0.
+-    - "renesas,r8a774c0-cmt1" for the 48-bit CMT devices included in r8a774c0.
+-    - "renesas,r8a7790-cmt0" for the 32-bit CMT0 device included in r8a7790.
+-    - "renesas,r8a7790-cmt1" for the 48-bit CMT1 device included in r8a7790.
+-    - "renesas,r8a7791-cmt0" for the 32-bit CMT0 device included in r8a7791.
+-    - "renesas,r8a7791-cmt1" for the 48-bit CMT1 device included in r8a7791.
+-    - "renesas,r8a7792-cmt0" for the 32-bit CMT0 device included in r8a7792.
+-    - "renesas,r8a7792-cmt1" for the 48-bit CMT1 device included in r8a7792.
+-    - "renesas,r8a7793-cmt0" for the 32-bit CMT0 device included in r8a7793.
+-    - "renesas,r8a7793-cmt1" for the 48-bit CMT1 device included in r8a7793.
+-    - "renesas,r8a7794-cmt0" for the 32-bit CMT0 device included in r8a7794.
+-    - "renesas,r8a7794-cmt1" for the 48-bit CMT1 device included in r8a7794.
+-    - "renesas,r8a7795-cmt0" for the 32-bit CMT0 device included in r8a7795.
+-    - "renesas,r8a7795-cmt1" for the 48-bit CMT devices included in r8a7795.
+-    - "renesas,r8a7796-cmt0" for the 32-bit CMT0 device included in r8a7796.
+-    - "renesas,r8a7796-cmt1" for the 48-bit CMT devices included in r8a7796.
+-    - "renesas,r8a77965-cmt0" for the 32-bit CMT0 device included in r8a77965.
+-    - "renesas,r8a77965-cmt1" for the 48-bit CMT devices included in r8a77965.
+-    - "renesas,r8a77970-cmt0" for the 32-bit CMT0 device included in r8a77970.
+-    - "renesas,r8a77970-cmt1" for the 48-bit CMT devices included in r8a77970.
+-    - "renesas,r8a77980-cmt0" for the 32-bit CMT0 device included in r8a77980.
+-    - "renesas,r8a77980-cmt1" for the 48-bit CMT devices included in r8a77980.
+-    - "renesas,r8a77990-cmt0" for the 32-bit CMT0 device included in r8a77990.
+-    - "renesas,r8a77990-cmt1" for the 48-bit CMT devices included in r8a77990.
+-    - "renesas,r8a77995-cmt0" for the 32-bit CMT0 device included in r8a77995.
+-    - "renesas,r8a77995-cmt1" for the 48-bit CMT devices included in r8a77995.
+-    - "renesas,sh73a0-cmt0" for the 32-bit CMT0 device included in sh73a0.
+-    - "renesas,sh73a0-cmt1" for the 48-bit CMT1 device included in sh73a0.
+-    - "renesas,sh73a0-cmt2" for the 32-bit CMT2 device included in sh73a0.
+-    - "renesas,sh73a0-cmt3" for the 32-bit CMT3 device included in sh73a0.
+-    - "renesas,sh73a0-cmt4" for the 32-bit CMT4 device included in sh73a0.
+-
+-    - "renesas,rcar-gen2-cmt0" for 32-bit CMT0 devices included in R-Car Gen2
+-		and RZ/G1.
+-    - "renesas,rcar-gen2-cmt1" for 48-bit CMT1 devices included in R-Car Gen2
+-		and RZ/G1.
+-		These are fallbacks for r8a73a4, R-Car Gen2 and RZ/G1 entries
+-		listed above.
+-    - "renesas,rcar-gen3-cmt0" for 32-bit CMT0 devices included in R-Car Gen3
+-		and RZ/G2.
+-    - "renesas,rcar-gen3-cmt1" for 48-bit CMT devices included in R-Car Gen3
+-		and RZ/G2.
+-		These are fallbacks for R-Car Gen3 and RZ/G2 entries listed
+-		above.
+-
+-  - reg: base address and length of the registers block for the timer module.
+-  - interrupts: interrupt-specifier for the timer, one per channel.
+-  - clocks: a list of phandle + clock-specifier pairs, one for each entry
+-    in clock-names.
+-  - clock-names: must contain "fck" for the functional clock.
+-
+-
+-Example: R8A7790 (R-Car H2) CMT0 and CMT1 nodes
+-
+-	cmt0: timer@ffca0000 {
+-		compatible = "renesas,r8a7790-cmt0", "renesas,rcar-gen2-cmt0";
+-		reg = <0 0xffca0000 0 0x1004>;
+-		interrupts = <0 142 IRQ_TYPE_LEVEL_HIGH>,
+-			     <0 142 IRQ_TYPE_LEVEL_HIGH>;
+-		clocks = <&mstp1_clks R8A7790_CLK_CMT0>;
+-		clock-names = "fck";
+-	};
+-
+-	cmt1: timer@e6130000 {
+-		compatible = "renesas,r8a7790-cmt1", "renesas,rcar-gen2-cmt1";
+-		reg = <0 0xe6130000 0 0x1004>;
+-		interrupts = <0 120 IRQ_TYPE_LEVEL_HIGH>,
+-			     <0 121 IRQ_TYPE_LEVEL_HIGH>,
+-			     <0 122 IRQ_TYPE_LEVEL_HIGH>,
+-			     <0 123 IRQ_TYPE_LEVEL_HIGH>,
+-			     <0 124 IRQ_TYPE_LEVEL_HIGH>,
+-			     <0 125 IRQ_TYPE_LEVEL_HIGH>,
+-			     <0 126 IRQ_TYPE_LEVEL_HIGH>,
+-			     <0 127 IRQ_TYPE_LEVEL_HIGH>;
+-		clocks = <&mstp3_clks R8A7790_CLK_CMT1>;
+-		clock-names = "fck";
+-	};
+diff --git a/Documentation/devicetree/bindings/timer/renesas,cmt.yaml b/Documentation/devicetree/bindings/timer/renesas,cmt.yaml
+new file mode 100644
+index 0000000000000000..ba73a19e4d9a48b9
+--- /dev/null
++++ b/Documentation/devicetree/bindings/timer/renesas,cmt.yaml
+@@ -0,0 +1,180 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/timer/renesas,cmt.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Renesas Compare Match Timer (CMT)
++
++maintainers:
++  - Geert Uytterhoeven <geert+renesas@glider.be>
++  - Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
++
++description:
++  The CMT is a multi-channel 16/32/48-bit timer/counter with configurable clock
++  inputs and programmable compare match.
++
++  Channels share hardware resources but their counter and compare match values
++  are independent. A particular CMT instance can implement only a subset of the
++  channels supported by the CMT model. Channel indices represent the hardware
++  position of the channel in the CMT and don't match the channel numbers in the
++  datasheets.
++
++properties:
++  compatible:
++    oneOf:
++      - items:
++          - enum:
++              - renesas,r8a7740-cmt0      # 32-bit CMT0 on R-Mobile A1
++              - renesas,r8a7740-cmt1      # 48-bit CMT1 on R-Mobile A1
++              - renesas,r8a7740-cmt2      # 32-bit CMT2 on R-Mobile A1
++              - renesas,r8a7740-cmt3      # 32-bit CMT3 on R-Mobile A1
++              - renesas,r8a7740-cmt4      # 32-bit CMT4 on R-Mobile A1
++              - renesas,sh73a0-cmt0       # 32-bit CMT0 on SH-Mobile AG5
++              - renesas,sh73a0-cmt1       # 48-bit CMT1 on SH-Mobile AG5
++              - renesas,sh73a0-cmt2       # 32-bit CMT2 on SH-Mobile AG5
++              - renesas,sh73a0-cmt3       # 32-bit CMT3 on SH-Mobile AG5
++              - renesas,sh73a0-cmt4       # 32-bit CMT4 on SH-Mobile AG5
++
++      - items:
++          - enum:
++              - renesas,r8a73a4-cmt0      # 32-bit CMT0 on R-Mobile APE6
++              - renesas,r8a7743-cmt0      # 32-bit CMT0 on RZ/G1M
++              - renesas,r8a7744-cmt0      # 32-bit CMT0 on RZ/G1N
++              - renesas,r8a7745-cmt0      # 32-bit CMT0 on RZ/G1E
++              - renesas,r8a77470-cmt0     # 32-bit CMT0 on RZ/G1C
++              - renesas,r8a7790-cmt0      # 32-bit CMT0 on R-Car H2
++              - renesas,r8a7791-cmt0      # 32-bit CMT0 on R-Car M2-W
++              - renesas,r8a7792-cmt0      # 32-bit CMT0 on R-Car V2H
++              - renesas,r8a7793-cmt0      # 32-bit CMT0 on R-Car M2-N
++              - renesas,r8a7794-cmt0      # 32-bit CMT0 on R-Car E2
++          - const: renesas,rcar-gen2-cmt0 # 32-bit CMT0 on R-Mobile APE6, R-Car Gen2 and RZ/G1
++
++      - items:
++          - enum:
++              - renesas,r8a73a4-cmt1      # 48-bit CMT1 on R-Mobile APE6
++              - renesas,r8a7743-cmt1      # 48-bit CMT1 on RZ/G1M
++              - renesas,r8a7744-cmt1      # 48-bit CMT1 on RZ/G1N
++              - renesas,r8a7745-cmt1      # 48-bit CMT1 on RZ/G1E
++              - renesas,r8a77470-cmt1     # 48-bit CMT1 on RZ/G1C
++              - renesas,r8a7790-cmt1      # 48-bit CMT1 on R-Car H2
++              - renesas,r8a7791-cmt1      # 48-bit CMT1 on R-Car M2-W
++              - renesas,r8a7792-cmt1      # 48-bit CMT1 on R-Car V2H
++              - renesas,r8a7793-cmt1      # 48-bit CMT1 on R-Car M2-N
++              - renesas,r8a7794-cmt1      # 48-bit CMT1 on R-Car E2
++          - const: renesas,rcar-gen2-cmt1 # 48-bit CMT1 on R-Mobile APE6, R-Car Gen2 and RZ/G1
++
++      - items:
++          - enum:
++              - renesas,r8a774a1-cmt0     # 32-bit CMT0 on RZ/G2M
++              - renesas,r8a774b1-cmt0     # 32-bit CMT0 on RZ/G2N
++              - renesas,r8a774c0-cmt0     # 32-bit CMT0 on RZ/G2E
++              - renesas,r8a7795-cmt0      # 32-bit CMT0 on R-Car H3
++              - renesas,r8a7796-cmt0      # 32-bit CMT0 on R-Car M3-W
++              - renesas,r8a77965-cmt0     # 32-bit CMT0 on R-Car M3-N
++              - renesas,r8a77970-cmt0     # 32-bit CMT0 on R-Car V3M
++              - renesas,r8a77980-cmt0     # 32-bit CMT0 on R-Car V3H
++              - renesas,r8a77990-cmt0     # 32-bit CMT0 on R-Car E3
++              - renesas,r8a77995-cmt0     # 32-bit CMT0 on R-Car D3
++          - const: renesas,rcar-gen3-cmt0 # 32-bit CMT0 on R-Car Gen3 and RZ/G2
++
++      - items:
++          - enum:
++              - renesas,r8a774a1-cmt1     # 48-bit CMT on RZ/G2M
++              - renesas,r8a774b1-cmt1     # 48-bit CMT on RZ/G2N
++              - renesas,r8a774c0-cmt1     # 48-bit CMT on RZ/G2E
++              - renesas,r8a7795-cmt1      # 48-bit CMT on R-Car H3
++              - renesas,r8a7796-cmt1      # 48-bit CMT on R-Car M3-W
++              - renesas,r8a77965-cmt1     # 48-bit CMT on R-Car M3-N
++              - renesas,r8a77970-cmt1     # 48-bit CMT on R-Car V3M
++              - renesas,r8a77980-cmt1     # 48-bit CMT on R-Car V3H
++              - renesas,r8a77990-cmt1     # 48-bit CMT on R-Car E3
++              - renesas,r8a77995-cmt1     # 48-bit CMT on R-Car D3
++          - const: renesas,rcar-gen3-cmt1 # 48-bit CMT on R-Car Gen3 and RZ/G2
++
++  reg:
++    maxItems: 1
++
++  interrupts:
++    minItems: 1
++    maxItems: 8
++
++  clocks:
++    maxItems: 1
++
++  clock-names:
++    const: fck
++
++  power-domains:
++    maxItems: 1
++
++  resets:
++    maxItems: 1
++
++required:
++  - compatible
++  - reg
++  - interrupts
++  - clocks
++  - clock-names
++  - power-domains
++
++allOf:
++  - if:
++      properties:
++        compatible:
++          contains:
++            enum:
++              - renesas,rcar-gen2-cmt0
++              - renesas,rcar-gen3-cmt0
++    then:
++      properties:
++        interrupts:
++          minItems: 2
++          maxItems: 2
++
++  - if:
++      properties:
++        compatible:
++          contains:
++            enum:
++              - renesas,rcar-gen2-cmt1
++              - renesas,rcar-gen3-cmt1
++    then:
++      properties:
++        interrupts:
++          minItems: 8
++          maxItems: 8
++
++examples:
++  - |
++    #include <dt-bindings/clock/r8a7790-cpg-mssr.h>
++    #include <dt-bindings/interrupt-controller/arm-gic.h>
++    #include <dt-bindings/power/r8a7790-sysc.h>
++    cmt0: timer@ffca0000 {
++            compatible = "renesas,r8a7790-cmt0", "renesas,rcar-gen2-cmt0";
++            reg = <0xffca0000 0x1004>;
++            interrupts = <GIC_SPI 142 IRQ_TYPE_LEVEL_HIGH>,
++                         <GIC_SPI 143 IRQ_TYPE_LEVEL_HIGH>;
++            clocks = <&cpg CPG_MOD 124>;
++            clock-names = "fck";
++            power-domains = <&sysc R8A7790_PD_ALWAYS_ON>;
++            resets = <&cpg 124>;
++    };
++
++    cmt1: timer@e6130000 {
++            compatible = "renesas,r8a7790-cmt1", "renesas,rcar-gen2-cmt1";
++            reg = <0xe6130000 0x1004>;
++            interrupts = <GIC_SPI 120 IRQ_TYPE_LEVEL_HIGH>,
++                         <GIC_SPI 121 IRQ_TYPE_LEVEL_HIGH>,
++                         <GIC_SPI 122 IRQ_TYPE_LEVEL_HIGH>,
++                         <GIC_SPI 123 IRQ_TYPE_LEVEL_HIGH>,
++                         <GIC_SPI 124 IRQ_TYPE_LEVEL_HIGH>,
++                         <GIC_SPI 125 IRQ_TYPE_LEVEL_HIGH>,
++                         <GIC_SPI 126 IRQ_TYPE_LEVEL_HIGH>,
++                         <GIC_SPI 127 IRQ_TYPE_LEVEL_HIGH>;
++            clocks = <&cpg CPG_MOD 329>;
++            clock-names = "fck";
++            power-domains = <&sysc R8A7790_PD_ALWAYS_ON>;
++            resets = <&cpg 329>;
++    };
+-- 
+2.17.1
+
