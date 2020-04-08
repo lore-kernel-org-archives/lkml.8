@@ -2,95 +2,96 @@ Return-Path: <SRS0=8dav=5Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6ABDBC2BA80
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 14:07:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 149B7C2D0EA
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 14:13:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4154020787
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 14:07:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586354822;
-	bh=mwQWgzVnM1Gk3FCn6bt7z1/0O75c4sfpqBfxxPs/al0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Iqn/YRViJ3X2DPAJMf+PjGQNmtmxyDMDww2lDxL05BwJQBVHMAweAE6bue9wuwNC4
-	 /+qLdIcdDtuOH3Cx+otORuhKjdGUxme+iNyDITeREo0EIG35Z7320g9LnIX1QIj11D
-	 0MVuBToE5sFMqwHHgU1TJ0gvjGYcN5UcRSiQ3vLw=
+	by mail.kernel.org (Postfix) with ESMTP id C77532082F
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 14:13:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728240AbgDHOHB (ORCPT
+        id S1728250AbgDHONT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Apr 2020 10:07:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42994 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728159AbgDHOHA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Apr 2020 10:07:00 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AD26D20780;
-        Wed,  8 Apr 2020 14:06:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586354820;
-        bh=mwQWgzVnM1Gk3FCn6bt7z1/0O75c4sfpqBfxxPs/al0=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Gh7bxstm1xQxcj6Pf/epMrYu3OflWzvm5XzwmHvdoWuHVaZrCDtMitxeuZTT5im+L
-         8ntbEZpPrf/BJgbl+SZHwn3dy4pcYd9O8Zqyvweblvr/Q0Ndbw7FDB5ypNHT7CObXT
-         vQTJ87Osa66oVYrL/5pWmbpjesQ87Sz/FMHCyFsc=
-Date:   Wed, 8 Apr 2020 16:06:58 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Naresh Kamboju <naresh.kamboju@linaro.org>
-Cc:     open list <linux-kernel@vger.kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
-        Ben Hutchings <ben.hutchings@codethink.co.uk>,
-        lkft-triage@lists.linaro.org,
-        linux- stable <stable@vger.kernel.org>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>
-Subject: Re: [PATCH 5.6 00/30] 5.6.3-rc2 review
-Message-ID: <20200408140658.GA1251074@kroah.com>
-References: <20200407154752.006506420@linuxfoundation.org>
- <CA+G9fYsyETNoV58oyrBtb2o_vyFi1MPUNkZ9uUZK6uRCg5OK5w@mail.gmail.com>
+        Wed, 8 Apr 2020 10:13:19 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:49924 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726550AbgDHONT (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Apr 2020 10:13:19 -0400
+Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1jMBRr-0007Ob-HA; Wed, 08 Apr 2020 16:12:59 +0200
+Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
+        id A83CE10069D; Wed,  8 Apr 2020 16:12:58 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Ankur Arora <ankur.a.arora@oracle.com>,
+        linux-kernel@vger.kernel.org, x86@kernel.org
+Cc:     peterz@infradead.org, hpa@zytor.com, jpoimboe@redhat.com,
+        namit@vmware.com, mhiramat@kernel.org, jgross@suse.com,
+        bp@alien8.de, vkuznets@redhat.com, pbonzini@redhat.com,
+        boris.ostrovsky@oracle.com, mihai.carabas@oracle.com,
+        kvm@vger.kernel.org, xen-devel@lists.xenproject.org,
+        virtualization@lists.linux-foundation.org,
+        Ankur Arora <ankur.a.arora@oracle.com>
+Subject: Re: [RFC PATCH 00/26] Runtime paravirt patching
+In-Reply-To: <20200408050323.4237-1-ankur.a.arora@oracle.com>
+References: <20200408050323.4237-1-ankur.a.arora@oracle.com>
+Date:   Wed, 08 Apr 2020 16:12:58 +0200
+Message-ID: <87k12qawwl.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CA+G9fYsyETNoV58oyrBtb2o_vyFi1MPUNkZ9uUZK6uRCg5OK5w@mail.gmail.com>
+Content-Type: text/plain
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 08, 2020 at 03:16:45PM +0530, Naresh Kamboju wrote:
-> On Tue, 7 Apr 2020 at 22:09, Greg Kroah-Hartman
-> <gregkh@linuxfoundation.org> wrote:
-> >
-> > This is the start of the stable review cycle for the 5.6.3 release.
-> > There are 30 patches in this series, all will be posted as a response
-> > to this one.  If anyone has any issues with these being applied, please
-> > let me know.
-> >
-> > Responses should be made by Thu, 09 Apr 2020 15:46:32 +0000.
-> > Anything received after that time might be too late.
-> >
-> > The whole patch series can be found in one patch at:
-> >         https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.6.3-rc2.gz
-> > or in the git tree and branch at:
-> >         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.6.y
-> > and the diffstat can be found below.
-> >
-> > thanks,
-> >
-> > greg k-h
-> 
-> Results from Linaro’s test farm.
-> No regressions on arm64, arm, x86_64, and i386.
+Ankur Arora <ankur.a.arora@oracle.com> writes:
+> A KVM host (or another hypervisor) might advertise paravirtualized
+> features and optimization hints (ex KVM_HINTS_REALTIME) which might
+> become stale over the lifetime of the guest. For instance, the
+> host might go from being undersubscribed to being oversubscribed
+> (or the other way round) and it would make sense for the guest
+> switch pv-ops based on that.
 
-Thanks for testing all of these and letting me know.
+If your host changes his advertised behaviour then you want to fix the
+host setup or find a competent admin.
 
-greg k-h
+> This lockorture splat that I saw on the guest while testing this is
+> indicative of the problem:
+>
+>   [ 1136.461522] watchdog: BUG: soft lockup - CPU#8 stuck for 22s! [lock_torture_wr:12865]
+>   [ 1136.461542] CPU: 8 PID: 12865 Comm: lock_torture_wr Tainted: G W L 5.4.0-rc7+ #77
+>   [ 1136.461546] RIP: 0010:native_queued_spin_lock_slowpath+0x15/0x220
+>
+> (Caused by an oversubscribed host but using mismatched native pv_lock_ops
+> on the gues.)
+
+And this illustrates what? The fact that you used a misconfigured setup.
+
+> This series addresses the problem by doing paravirt switching at
+> runtime.
+
+You're not addressing the problem. Your fixing the symptom, which is
+wrong to begin with.
+
+> The alternative use-case is a runtime version of apply_alternatives()
+> (not posted with this patch-set) that can be used for some safe subset
+> of X86_FEATUREs. This could be useful in conjunction with the ongoing
+> late microcode loading work that Mihai Carabas and others have been
+> working on.
+
+This has been discussed to death before and there is no safe subset as
+long as this hasn't been resolved:
+
+  https://lore.kernel.org/lkml/alpine.DEB.2.21.1909062237580.1902@nanos.tec.linutronix.de/
+
+Thanks,
+
+        tglx
