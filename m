@@ -2,142 +2,115 @@ Return-Path: <SRS0=8dav=5Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B9E9C2BA1B
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 19:42:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A7F8C2BA2B
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 19:43:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0457120769
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 19:42:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6707020753
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 19:43:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="mhx0JZze"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="ZFGiZD87"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730122AbgDHTm4 (ORCPT
+        id S1730134AbgDHTnU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Apr 2020 15:42:56 -0400
-Received: from mail-eopbgr10086.outbound.protection.outlook.com ([40.107.1.86]:25414
-        "EHLO EUR02-HE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727187AbgDHTmz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Apr 2020 15:42:55 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=fFW34sOLly0y8EeDW3ysHL3ONq20+OnuoaUUbr7iksP3lqGSSHTXn7WasXJoHosqqArg7WmBzZ0jjQe0I5v6KGKRXmlSBYtn2vk4A0aRbeUWko111x6ypN6PdYxnSz0GZNILegZJp5W+1LXBSV2CuqjcnU1FJBqp7jSRN9/FVwSKfY1MDrS+sS3D544dIrZvYLL9kGEZl3lEqJTFqK+30tYZFaTKXowQeI40OlIu6jmzR9PTRGAJGDyJm/uQs047nkNrrVB+gqlK9/cmYiNzvdMPZRxZmbb/9OVEivyV+VABrfDi6k0WaPqjYPpDCNtSLBxf5uJeXpEwhx1xVmfUGQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=4/pTqIR7qmH6eKGVXlNVZKOl7KBq/uTH73zRyoSVM38=;
- b=JNJx3MUtxk24R8iedDcBnHbW0cLYEcxCW3g1KLwwB92KmkqirH9Y56z3x4XJbRIxhfdtiXfGVA9J+GocmHKgEFdUun+Fa5dZlwYvMwb7tR24RmfMoJSKnv1kouewUo+iJaDSB/SjaNUMitQriK1DwRYw2YQYYvWS1bm0Wpa5Vx65lr9QaJNHAmpREb587KObvhtQPhVZsTSvzYZueO9pr5BaYu0nkh7aGzS8hS92NyTgmvqztuwMqwvkNUZ638lSk/OveWVPaP/HRcdHbWrywyuYJftgdukA4TDizC/YJwBHOw2+RNRH/Cq54R98x8BN1VK09lk2OjbKVRsgeb/Fqg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=mellanox.com; dmarc=pass action=none header.from=mellanox.com;
- dkim=pass header.d=mellanox.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=4/pTqIR7qmH6eKGVXlNVZKOl7KBq/uTH73zRyoSVM38=;
- b=mhx0JZzeXi6E7e0OrRBcU/3Hlirm3KA3oVO6IEF3BfcXY6/a+x9lRlYQY4aa/9QzN4ZdS2YE9qY4fX0b9k0lv5/gw8jruR67tb1RIk/f6H/cVTiC6yzbddgKjnJMnFZfx5GwX4rINW7QZtiRKtZqTlN4nW/J51o1SLOJxvj8FsU=
-Received: from VI1PR05MB5102.eurprd05.prod.outlook.com (2603:10a6:803:5e::23)
- by VI1PR05MB6896.eurprd05.prod.outlook.com (2603:10a6:800:178::10) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2878.16; Wed, 8 Apr
- 2020 19:42:49 +0000
-Received: from VI1PR05MB5102.eurprd05.prod.outlook.com
- ([fe80::9d19:a564:b84e:7c19]) by VI1PR05MB5102.eurprd05.prod.outlook.com
- ([fe80::9d19:a564:b84e:7c19%7]) with mapi id 15.20.2878.021; Wed, 8 Apr 2020
- 19:42:49 +0000
-From:   Saeed Mahameed <saeedm@mellanox.com>
-To:     "davem@davemloft.net" <davem@davemloft.net>,
-        "xianfengting221@163.com" <xianfengting221@163.com>,
-        "leon@kernel.org" <leon@kernel.org>
-CC:     "cai@lca.pw" <cai@lca.pw>,
-        "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
-        "lsahlber@redhat.com" <lsahlber@redhat.com>,
-        "kw@linux.com" <kw@linux.com>,
-        "xiubli@redhat.com" <xiubli@redhat.com>,
-        "airlied@redhat.com" <airlied@redhat.com>,
-        Moshe Shemesh <moshe@mellanox.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "wqu@suse.com" <wqu@suse.com>,
-        "chris@chris-wilson.co.uk" <chris@chris-wilson.co.uk>,
-        "yamada.masahiro@socionext.com" <yamada.masahiro@socionext.com>,
-        "stfrench@microsoft.com" <stfrench@microsoft.com>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
-Subject: Re: [PATCH v2] net/mlx5: add the missing space character
-Thread-Topic: [PATCH v2] net/mlx5: add the missing space character
-Thread-Index: AQHWCXBS9ROcHN2SK0+YUleKNIIPWqhvqOGA
-Date:   Wed, 8 Apr 2020 19:42:49 +0000
-Message-ID: <14df0ecf093bb2df4efaf9e6f5220ea2bf863f53.camel@mellanox.com>
-References: <20200403042659.9167-1-xianfengting221@163.com>
-In-Reply-To: <20200403042659.9167-1-xianfengting221@163.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-user-agent: Evolution 3.34.4 (3.34.4-1.fc31) 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=saeedm@mellanox.com; 
-x-originating-ip: [73.15.39.150]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: fca70251-73ec-42d5-1b07-08d7dbf50544
-x-ms-traffictypediagnostic: VI1PR05MB6896:|VI1PR05MB6896:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <VI1PR05MB689637986C95B28723D6BBF1BEC00@VI1PR05MB6896.eurprd05.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:216;
-x-forefront-prvs: 0367A50BB1
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VI1PR05MB5102.eurprd05.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10009020)(4636009)(376002)(136003)(346002)(396003)(39850400004)(366004)(8936002)(64756008)(7416002)(91956017)(66446008)(36756003)(478600001)(66556008)(66476007)(66946007)(76116006)(81166007)(71200400001)(6512007)(2906002)(4326008)(316002)(110136005)(6506007)(54906003)(5660300002)(86362001)(81156014)(2616005)(8676002)(6486002)(186003)(26005);DIR:OUT;SFP:1101;
-received-spf: None (protection.outlook.com: mellanox.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: mQN2jzqo29KnCKoO5OWp/EaY5zsUcVyN1Ydu9BSJNfL4qQ8wRjN4TnUthbM7duWMg8Z0kHTVcgwlxGgeZQdXJ/3x3otZChALIIbyaQkqpJGgBUz8xw8Ki5bjFVE8YYuOztgLDVCzDjimXpnlGhhif0ylYgvhK4jEUktUaybqmOwOyfwYojR9GHrDevjm2kd6+q9O7lFskuRaqwE3hdt6E7rxa7AzAaljpFYXT+0ZUidMaPifcj4GX8G8hLHSuT/UDzKAFbWgulWChhn0treRgW5W6JzvG1MbkZVFy9fTy8IDBjY/npDkGofr8qKuYsA7+3Adg2kA08xTYFs6bYumAGRleKjF9k+v+ZH9JFMWFMAEYZNXa30JyTbOCDiaAaEvjZ3hBJaA9PUK6KZr1FinM7Ay2mePlSBWPi6I98QMG6wBhy5xUykgsZlw5Hsmo21N
-x-ms-exchange-antispam-messagedata: nulw/28YQUWIVnoAdm5EIKfJx5opsZBElgpJLghyn3kqtB03sWiejLFk5G90lu9UM5KNEBUkFgCjFCASoEUqs8Xa9PQyZcb8ktFw0Yl9Ppu/DDs8rDy4XO1KJIq1kvyL3zV8KwsI/TnMySM8deJQQw==
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <83C62A16FD5216469246C72D0E2568EF@eurprd05.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Wed, 8 Apr 2020 15:43:20 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:33606 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730124AbgDHTnU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Apr 2020 15:43:20 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 038Jh8Tt033391;
+        Wed, 8 Apr 2020 14:43:08 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1586374988;
+        bh=zJkKVgkfbIzZTkO2jdOTLZAkH40G1j3CYC29M02fcrw=;
+        h=From:To:CC:Subject:Date;
+        b=ZFGiZD87Mm9LOs7iWkStk0bH7xXbSdo8KnoXVvcK80dNlaTV2oIXjwsTCxMOTx1Ag
+         qawEsqWTpiD7vH4EZ/Zb49knK7CsnirLpU/gSshA3EETD0RrjDWLATAAP7Dj6L+DTD
+         9qRfLYxs72mqP/iZ9xziKHeuk6tilEWVAgXWMGwk=
+Received: from DLEE108.ent.ti.com (dlee108.ent.ti.com [157.170.170.38])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 038Jh87M003986
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 8 Apr 2020 14:43:08 -0500
+Received: from DLEE100.ent.ti.com (157.170.170.30) by DLEE108.ent.ti.com
+ (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Wed, 8 Apr
+ 2020 14:43:07 -0500
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE100.ent.ti.com
+ (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Wed, 8 Apr 2020 14:43:07 -0500
+Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 038Jh64Y027091;
+        Wed, 8 Apr 2020 14:43:07 -0500
+From:   Grygorii Strashko <grygorii.strashko@ti.com>
+To:     Christoph Hellwig <hch@lst.de>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        <iommu@lists.linux-foundation.org>
+CC:     Sekhar Nori <nsekhar@ti.com>, <linux-kernel@vger.kernel.org>,
+        Grygorii Strashko <grygorii.strashko@ti.com>
+Subject: [PATCH v2] dma-debug: fix displaying of dma allocation type
+Date:   Wed, 8 Apr 2020 22:43:00 +0300
+Message-ID: <20200408194300.21426-1-grygorii.strashko@ti.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-X-OriginatorOrg: Mellanox.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: fca70251-73ec-42d5-1b07-08d7dbf50544
-X-MS-Exchange-CrossTenant-originalarrivaltime: 08 Apr 2020 19:42:49.7035
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: QpTHWwZhT3EKnxTea/+Br4E+R4xGaApG0dtkhN/6YWYxjM9ruJu2L/T8e7I0PyKhTEaA1cAjOO+VMArSHeMQMA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR05MB6896
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gRnJpLCAyMDIwLTA0LTAzIGF0IDEyOjI2ICswODAwLCBIdSBIYW93ZW4gd3JvdGU6DQo+IENv
-bW1pdCA5MWI1NmQ4NDYyYTkgKCJuZXQvbWx4NTogaW1wcm92ZSBzb21lIGNvbW1lbnRzIikgZGlk
-IG5vdCBhZGQNCj4gdGhhdCBtaXNzaW5nIHNwYWNlIGNoYXJhY3RlciBhbmQgdGhpcyBjb21taXQg
-aXMgdXNlZCB0byBmaXggaXQgdXAuDQo+IA0KPiBGaXhlczogOTFiNTZkODQ2MmE5ICgibmV0L21s
-eDU6IGltcHJvdmUgc29tZSBjb21tZW50cyIpDQo+IA0KDQpQbGVhc2UgcmUtc3BpbiBhbmQgc3Vi
-bWl0IHRvIG5ldC1uZXh0IG9uY2UgbmV0LW5leHQgcmUtb3BlbnMsIA0KYXZvaWQgcmVmZXJlbmNp
-bmcgdGhlIGFib3ZlIGNvbW1pdCBzaW5jZSB0aGlzIHBhdGNoIGlzIGEgc3RhbmQgYWxvbmUNCmFu
-ZCBoYXMgbm90aGluZyB0byBkbyB3aXRoIHRoYXQgcGF0Y2guLiBqdXN0IGhhdmUgYSBzdGFuZCBh
-bG9uZSBjb21taXQNCm1lc3NhZ2UgZXhwbGFpbmluZyB0aGUgc3BhY2UgZml4Lg0KDQppIGZpeGVk
-IHRoZSBjb21taXQgbWVzc2FnZSBvZiB0aGUgcHJldmlvdXMgcGF0Y2gsIHNvIHRoZSBGaXhlcyB0
-YWcgaXMNCnVubmVjZXNzYXJ5IA0KDQo+IFNpZ25lZC1vZmYtYnk6IEh1IEhhb3dlbiA8eGlhbmZl
-bmd0aW5nMjIxQDE2My5jb20+DQoNCg0KPiAtLS0NCj4gIGRyaXZlcnMvbmV0L2V0aGVybmV0L21l
-bGxhbm94L21seDUvY29yZS9kaWFnL2Z3X3RyYWNlci5jIHwgMiArLQ0KPiAgMSBmaWxlIGNoYW5n
-ZWQsIDEgaW5zZXJ0aW9uKCspLCAxIGRlbGV0aW9uKC0pDQo+IA0KPiBkaWZmIC0tZ2l0IGEvZHJp
-dmVycy9uZXQvZXRoZXJuZXQvbWVsbGFub3gvbWx4NS9jb3JlL2RpYWcvZndfdHJhY2VyLmMNCj4g
-Yi9kcml2ZXJzL25ldC9ldGhlcm5ldC9tZWxsYW5veC9tbHg1L2NvcmUvZGlhZy9md190cmFjZXIu
-Yw0KPiBpbmRleCBjOWM5YjQ3OWJkYTUuLjMxYmRkYjQ4ZTVjMyAxMDA2NDQNCj4gLS0tIGEvZHJp
-dmVycy9uZXQvZXRoZXJuZXQvbWVsbGFub3gvbWx4NS9jb3JlL2RpYWcvZndfdHJhY2VyLmMNCj4g
-KysrIGIvZHJpdmVycy9uZXQvZXRoZXJuZXQvbWVsbGFub3gvbWx4NS9jb3JlL2RpYWcvZndfdHJh
-Y2VyLmMNCj4gQEAgLTY3Niw3ICs2NzYsNyBAQCBzdGF0aWMgdm9pZCBtbHg1X2Z3X3RyYWNlcl9o
-YW5kbGVfdHJhY2VzKHN0cnVjdA0KPiB3b3JrX3N0cnVjdCAqd29yaykNCj4gIAlibG9ja19jb3Vu
-dCA9IHRyYWNlci0+YnVmZi5zaXplIC8gVFJBQ0VSX0JMT0NLX1NJWkVfQllURTsNCj4gIAlzdGFy
-dF9vZmZzZXQgPSB0cmFjZXItPmJ1ZmYuY29uc3VtZXJfaW5kZXggKg0KPiBUUkFDRVJfQkxPQ0tf
-U0laRV9CWVRFOw0KPiAgDQo+IC0JLyogQ29weSB0aGUgYmxvY2sgdG8gbG9jYWwgYnVmZmVyIHRv
-IGF2b2lkIEhXIG92ZXJyaWRlIHdoaWxlDQo+IGJlaW5nIHByb2Nlc3NlZCovDQo+ICsJLyogQ29w
-eSB0aGUgYmxvY2sgdG8gbG9jYWwgYnVmZmVyIHRvIGF2b2lkIEhXIG92ZXJyaWRlIHdoaWxlDQo+
-IGJlaW5nIHByb2Nlc3NlZCAqLw0KPiAgCW1lbWNweSh0bXBfdHJhY2VfYmxvY2ssIHRyYWNlci0+
-YnVmZi5sb2dfYnVmICsgc3RhcnRfb2Zmc2V0LA0KPiAgCSAgICAgICBUUkFDRVJfQkxPQ0tfU0la
-RV9CWVRFKTsNCj4gIA0K
+The commit 2e05ea5cdc1a ("dma-mapping: implement dma_map_single_attrs using
+dma_map_page_attrs") removed "dma_debug_page" enum, but missed to update
+type2name string table. This causes incorrect displaying of dma allocation
+type.
+Fix it by removing "page" string from type2name string table and switch to
+use named initializers.
+
+Before (dma_alloc_coherent()):
+k3-ringacc 4b800000.ringacc: scather-gather idx 2208 P=d1140000 N=d114 D=d1140000 L=40 DMA_BIDIRECTIONAL dma map error check not applicable
+k3-ringacc 4b800000.ringacc: scather-gather idx 2216 P=d1150000 N=d115 D=d1150000 L=40 DMA_BIDIRECTIONAL dma map error check not applicable
+
+After:
+k3-ringacc 4b800000.ringacc: coherent idx 2208 P=d1140000 N=d114 D=d1140000 L=40 DMA_BIDIRECTIONAL dma map error check not applicable
+k3-ringacc 4b800000.ringacc: coherent idx 2216 P=d1150000 N=d115 D=d1150000 L=40 DMA_BIDIRECTIONAL dma map error check not applicable
+
+Fixes: 2e05ea5cdc1a ("dma-mapping: implement dma_map_single_attrs using dma_map_page_attrs")
+Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
+---
+v2:
+ - witch to use named initializers.
+
+ kernel/dma/debug.c | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
+
+diff --git a/kernel/dma/debug.c b/kernel/dma/debug.c
+index 2031ed1ad7fa..21dc002eff13 100644
+--- a/kernel/dma/debug.c
++++ b/kernel/dma/debug.c
+@@ -137,9 +137,12 @@ static const char *const maperr2str[] = {
+ 	[MAP_ERR_CHECKED] = "dma map error checked",
+ };
+ 
+-static const char *type2name[5] = { "single", "page",
+-				    "scather-gather", "coherent",
+-				    "resource" };
++static const char *type2name[5] = {
++	[dma_debug_single] = "single",
++	[dma_debug_sg] = "scather-gather",
++	[dma_debug_coherent] = "coherent",
++	[dma_debug_resource] = "resource",
++};
+ 
+ static const char *dir2name[4] = { "DMA_BIDIRECTIONAL", "DMA_TO_DEVICE",
+ 				   "DMA_FROM_DEVICE", "DMA_NONE" };
+-- 
+2.17.1
+
