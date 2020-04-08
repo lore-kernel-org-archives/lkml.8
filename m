@@ -2,149 +2,65 @@ Return-Path: <SRS0=8dav=5Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 350A6C2D0EA
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 14:17:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02DEAC2D0EA
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 14:19:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 06501206F5
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 14:17:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CECD02074F
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 14:19:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728432AbgDHORj (ORCPT
+        id S1728492AbgDHOTS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Apr 2020 10:17:39 -0400
-Received: from mail-il1-f200.google.com ([209.85.166.200]:34345 "EHLO
-        mail-il1-f200.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728081AbgDHORj (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Apr 2020 10:17:39 -0400
-Received: by mail-il1-f200.google.com with SMTP id b14so6894313ilb.1
-        for <linux-kernel@vger.kernel.org>; Wed, 08 Apr 2020 07:17:38 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to
-         :content-transfer-encoding;
-        bh=YrZMt1exbkqGBqVEXEcL8iEn4eFEtm/6F8EduxRoUr4=;
-        b=UF/9vHos47X2zPcWo3eH2SRyY1uUyTC+xqOqfSqI1PKw6XQgwbIWLGxISr2bNB3rb9
-         e/C8XqKyccmnq/FyNUL8o2HJQRIrLHg59ypP4MaYkAWB/wLHBCwO4/eFVPPeon/QBQyS
-         4QsI75gIZMuFzJ1olau+xeMViyYDYI3mQZREI+hm6fipuFwUqBZtlT+tMasD78mPb5wX
-         V9uzbGH9eduIzTcIAL6KJt53HISKL7I/GY2fk+j02cT8lFen9kcjE9GLICTKbnodXwzG
-         YsV17r3nlzaa2suGeJsgh5rd6cCzWPdVUg8vhN1DOfTugrZshWMlpf7LsQAW0B/DBEvU
-         5l1w==
-X-Gm-Message-State: AGi0PuZ2bVLEhAbtJkZqebNOsPUPIC92VpiWb4Cm1KlMJlUCMqeO3NmY
-        gtUmuXnJoC0/CujVD7tNI/dLDni1JZvNrpZIggJxKdDTGSgc
-X-Google-Smtp-Source: APiQypIDNcnnEkvedPTu8OlpqjOdZHi91iTqH8lJ7IlbN3YFlUAbYmugxc8tQrGp2H4C9pvO9zmEnLipc2ByWZFcMYacBGPCvTW5
+        Wed, 8 Apr 2020 10:19:18 -0400
+Received: from 8bytes.org ([81.169.241.247]:58562 "EHLO theia.8bytes.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726550AbgDHOTS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Apr 2020 10:19:18 -0400
+Received: by theia.8bytes.org (Postfix, from userid 1000)
+        id A7BD32B6; Wed,  8 Apr 2020 16:19:16 +0200 (CEST)
+Date:   Wed, 8 Apr 2020 16:19:15 +0200
+From:   Joerg Roedel <joro@8bytes.org>
+To:     Qian Cai <cai@lca.pw>
+Cc:     iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH] iommu/amd: fix a race in fetch_pte()
+Message-ID: <20200408141915.GJ3103@8bytes.org>
+References: <20200407021246.10941-1-cai@lca.pw>
+ <7664E2E7-04D4-44C3-AB7E-A4334CDEC373@lca.pw>
 MIME-Version: 1.0
-X-Received: by 2002:a02:212c:: with SMTP id e44mr6824432jaa.108.1586355435365;
- Wed, 08 Apr 2020 07:17:15 -0700 (PDT)
-Date:   Wed, 08 Apr 2020 07:17:15 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000366e8705a2c82882@google.com>
-Subject: INFO: trying to register non-static key in devres_release_all
-From:   syzbot <syzbot+22aec786ff221549b0ab@syzkaller.appspotmail.com>
-To:     andreyknvl@google.com, gregkh@linuxfoundation.org,
-        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
-        rafael@kernel.org, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <7664E2E7-04D4-44C3-AB7E-A4334CDEC373@lca.pw>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGVsbG8sCgpzeXpib3QgZm91bmQgdGhlIGZvbGxvd2luZyBjcmFzaCBvbjoKCkhFQUQgY29tbWl0
-OiAgICAwZmE4NGFmOCBNZXJnZSB0YWcgJ3VzYi1zZXJpYWwtNS43LXJjMScgb2YgaHR0cHM6Ly9n
-aXQua2VyLi4KZ2l0IHRyZWU6ICAgICAgIGh0dHBzOi8vZ2l0aHViLmNvbS9nb29nbGUva2FzYW4u
-Z2l0IHVzYi1mdXp6ZXIKY29uc29sZSBvdXRwdXQ6IGh0dHBzOi8vc3l6a2FsbGVyLmFwcHNwb3Qu
-Y29tL3gvbG9nLnR4dD94PTEwMWVkOTVkZTAwMDAwCmtlcm5lbCBjb25maWc6ICBodHRwczovL3N5
-emthbGxlci5hcHBzcG90LmNvbS94Ly5jb25maWc/eD02YjljMTU0YjBjMjNhZWNmCmRhc2hib2Fy
-ZCBsaW5rOiBodHRwczovL3N5emthbGxlci5hcHBzcG90LmNvbS9idWc/ZXh0aWQ9MjJhZWM3ODZm
-ZjIyMTU0OWIwYWIKY29tcGlsZXI6ICAgICAgIGdjYyAoR0NDKSA5LjAuMCAyMDE4MTIzMSAoZXhw
-ZXJpbWVudGFsKQoKVW5mb3J0dW5hdGVseSwgSSBkb24ndCBoYXZlIGFueSByZXByb2R1Y2VyIGZv
-ciB0aGlzIGNyYXNoIHlldC4KCklNUE9SVEFOVDogaWYgeW91IGZpeCB0aGUgYnVnLCBwbGVhc2Ug
-YWRkIHRoZSBmb2xsb3dpbmcgdGFnIHRvIHRoZSBjb21taXQ6ClJlcG9ydGVkLWJ5OiBzeXpib3Qr
-MjJhZWM3ODZmZjIyMTU0OWIwYWJAc3l6a2FsbGVyLmFwcHNwb3RtYWlsLmNvbQoKdXNiIDUtMTog
-YXRoOWtfaHRjOiBVU0IgbGF5ZXIgZGVpbml0aWFsaXplZApJTkZPOiB0cnlpbmcgdG8gcmVnaXN0
-ZXIgbm9uLXN0YXRpYyBrZXkuCnRoZSBjb2RlIGlzIGZpbmUgYnV0IG5lZWRzIGxvY2tkZXAgYW5u
-b3RhdGlvbi4KdHVybmluZyBvZmYgdGhlIGxvY2tpbmcgY29ycmVjdG5lc3MgdmFsaWRhdG9yLgpD
-UFU6IDAgUElEOiA1IENvbW06IGt3b3JrZXIvMDowIE5vdCB0YWludGVkIDUuNi4wLXJjNy1zeXpr
-YWxsZXIgIzAKSGFyZHdhcmUgbmFtZTogR29vZ2xlIEdvb2dsZSBDb21wdXRlIEVuZ2luZS9Hb29n
-bGUgQ29tcHV0ZSBFbmdpbmUsIEJJT1MgR29vZ2xlIDAxLzAxLzIwMTEKV29ya3F1ZXVlOiB1c2Jf
-aHViX3dxIGh1Yl9ldmVudApDYWxsIFRyYWNlOgogX19kdW1wX3N0YWNrIGxpYi9kdW1wX3N0YWNr
-LmM6NzcgW2lubGluZV0KIGR1bXBfc3RhY2srMHhlZi8weDE2ZSBsaWIvZHVtcF9zdGFjay5jOjEx
-OAogYXNzaWduX2xvY2tfa2V5IGtlcm5lbC9sb2NraW5nL2xvY2tkZXAuYzo4ODAgW2lubGluZV0K
-IHJlZ2lzdGVyX2xvY2tfY2xhc3MrMHgxMDIyLzB4MTFkMCBrZXJuZWwvbG9ja2luZy9sb2NrZGVw
-LmM6MTE4OQogX19sb2NrX2FjcXVpcmUrMHhmYy8weDNiNjAga2VybmVsL2xvY2tpbmcvbG9ja2Rl
-cC5jOjM4MzYKIGxvY2tfYWNxdWlyZSsweDEzMC8weDM0MCBrZXJuZWwvbG9ja2luZy9sb2NrZGVw
-LmM6NDQ4NAogX19yYXdfc3Bpbl9sb2NrX2lycXNhdmUgaW5jbHVkZS9saW51eC9zcGlubG9ja19h
-cGlfc21wLmg6MTEwIFtpbmxpbmVdCiBfcmF3X3NwaW5fbG9ja19pcnFzYXZlKzB4MzIvMHg1MCBr
-ZXJuZWwvbG9ja2luZy9zcGlubG9jay5jOjE1OQogZGV2cmVzX3JlbGVhc2VfYWxsKzB4NDgvMHhj
-MyBkcml2ZXJzL2Jhc2UvZGV2cmVzLmM6NTI4CiBkZXZpY2VfcmVsZWFzZSsweDM5LzB4MjAwIGRy
-aXZlcnMvYmFzZS9jb3JlLmM6MTM2NAoga29iamVjdF9jbGVhbnVwIGxpYi9rb2JqZWN0LmM6Njkz
-IFtpbmxpbmVdCiBrb2JqZWN0X3JlbGVhc2UgbGliL2tvYmplY3QuYzo3MjIgW2lubGluZV0KIGty
-ZWZfcHV0IGluY2x1ZGUvbGludXgva3JlZi5oOjY1IFtpbmxpbmVdCiBrb2JqZWN0X3B1dCsweDI1
-Ni8weDU1MCBsaWIva29iamVjdC5jOjczOQogcHV0X2RldmljZSBkcml2ZXJzL2Jhc2UvY29yZS5j
-OjI1OTkgW2lubGluZV0KIGRldmljZV91bnJlZ2lzdGVyKzB4MzQvMHhjMCBkcml2ZXJzL2Jhc2Uv
-Y29yZS5jOjI3MTAKIHVzYl9yZW1vdmVfZXBfZGV2cysweDNlLzB4ODAgZHJpdmVycy91c2IvY29y
-ZS9lbmRwb2ludC5jOjIxNQogdXNiX2Rpc2Nvbm5lY3QrMHg0YmIvMHg5MDAgZHJpdmVycy91c2Iv
-Y29yZS9odWIuYzoyMjMwCiBodWJfcG9ydF9jb25uZWN0IGRyaXZlcnMvdXNiL2NvcmUvaHViLmM6
-NTA0NiBbaW5saW5lXQogaHViX3BvcnRfY29ubmVjdF9jaGFuZ2UgZHJpdmVycy91c2IvY29yZS9o
-dWIuYzo1MzM1IFtpbmxpbmVdCiBwb3J0X2V2ZW50IGRyaXZlcnMvdXNiL2NvcmUvaHViLmM6NTQ4
-MSBbaW5saW5lXQogaHViX2V2ZW50KzB4MWExZC8weDQzMDAgZHJpdmVycy91c2IvY29yZS9odWIu
-Yzo1NTYzCiBwcm9jZXNzX29uZV93b3JrKzB4OTRiLzB4MTYyMCBrZXJuZWwvd29ya3F1ZXVlLmM6
-MjI2Ngogd29ya2VyX3RocmVhZCsweDk2LzB4ZTIwIGtlcm5lbC93b3JrcXVldWUuYzoyNDEyCiBr
-dGhyZWFkKzB4MzE4LzB4NDIwIGtlcm5lbC9rdGhyZWFkLmM6MjU1CiByZXRfZnJvbV9mb3JrKzB4
-MjQvMHgzMCBhcmNoL3g4Ni9lbnRyeS9lbnRyeV82NC5TOjM1Mgp1c2IgMS0xOiBuZXcgaGlnaC1z
-cGVlZCBVU0IgZGV2aWNlIG51bWJlciAzIHVzaW5nIGR1bW15X2hjZAp1c2IgMS0xOiBjb25maWcg
-MSBpbnRlcmZhY2UgMCBhbHRzZXR0aW5nIDY0IGJ1bGsgZW5kcG9pbnQgMHg4MiBoYXMgaW52YWxp
-ZCBtYXhwYWNrZXQgMTAyNAp1c2IgMS0xOiBjb25maWcgMSBpbnRlcmZhY2UgMCBoYXMgbm8gYWx0
-c2V0dGluZyAwCnVzYiAxLTE6IE5ldyBVU0IgZGV2aWNlIGZvdW5kLCBpZFZlbmRvcj0wNTI1LCBp
-ZFByb2R1Y3Q9YTRhOCwgYmNkRGV2aWNlPSAwLjQwCnVzYiAxLTE6IE5ldyBVU0IgZGV2aWNlIHN0
-cmluZ3M6IE1mcj0xLCBQcm9kdWN0PTIsIFNlcmlhbE51bWJlcj0zCnVzYiAxLTE6IFByb2R1Y3Q6
-IHN5egp1c2IgMS0xOiBNYW51ZmFjdHVyZXI6IOuQu+SYsOO3ucm24rWW67ma4L+46aWR5YKp77Gs
-75y37LSo7Ka46oec5ZiF4YGn5L6T5YmL5p2h6qCw5oy45riQ7rOV6Iyt5aGC56OI64qa6rCR6q6c
-4KGhxJjrlL3sk5jqhr/qkLjpu4DrnZHolpvrkILsn7HrvY/mgpTjmLnijbjpip/ukIjvlqHuuILk
-nYTjnJPoprzro7ngp5DllKjgq5nuhqHhvqXuj5jrgp/sgIbqr7vqtKfhpJ3smJboorXqjKLgsozu
-qpDrhI/pjKbhgb/iporhk4DkgqDmrKvnn77thrDlspDjkILpkYnnv7HorpLphJXklb3qg5TpjpDr
-spTngKTpn73njLTolZXqgYfru4fqrJvjlq3XrOuymeK1l+SruOG8gum6iO6hvOSrnOm8pOW/rOWI
-p++ElO6Xi+6Ym+i3o+W6mOeDiueBjQp1c2IgMS0xOiBTZXJpYWxOdW1iZXI6IHN5egp1c2JscDog
-Y2FuJ3Qgc2V0IGRlc2lyZWQgYWx0c2V0dGluZyA2NCBvbiBpbnRlcmZhY2UgMAp1c2IgMS0xOiBV
-U0IgZGlzY29ubmVjdCwgZGV2aWNlIG51bWJlciAzCnVzYiAxLTE6IG5ldyBoaWdoLXNwZWVkIFVT
-QiBkZXZpY2UgbnVtYmVyIDQgdXNpbmcgZHVtbXlfaGNkCnVzYiAxLTE6IGNvbmZpZyAxIGludGVy
-ZmFjZSAwIGFsdHNldHRpbmcgNjQgYnVsayBlbmRwb2ludCAweDgyIGhhcyBpbnZhbGlkIG1heHBh
-Y2tldCAxMDI0CnVzYiAxLTE6IGNvbmZpZyAxIGludGVyZmFjZSAwIGhhcyBubyBhbHRzZXR0aW5n
-IDAKdXNiIDEtMTogTmV3IFVTQiBkZXZpY2UgZm91bmQsIGlkVmVuZG9yPTA1MjUsIGlkUHJvZHVj
-dD1hNGE4LCBiY2REZXZpY2U9IDAuNDAKdXNiIDEtMTogTmV3IFVTQiBkZXZpY2Ugc3RyaW5nczog
-TWZyPTEsIFByb2R1Y3Q9MiwgU2VyaWFsTnVtYmVyPTMKdXNiIDEtMTogUHJvZHVjdDogc3l6CnVz
-YiAxLTE6IE1hbnVmYWN0dXJlcjog65C75Jiw47e5ybbitZbruZrgv7jppZHlgqnvsazvnLfstKjs
-prjqh5zlmIXhgafkvpPliYvmnaHqoLDmjLjmuJDus5XojK3loYLno4jriprqsJHqrpzgoaHEmOuU
-veyTmOqGv+qQuOm7gOudkeiWm+uQguyfseu9j+aClOOYueKNuOmKn+6QiO+Woe64guSdhOOck+im
-vOujueCnkOWUqOCrme6GoeG+pe6PmOuCn+yAhuqvu+q0p+GkneyYluiiteqMouCyjO6qkOuEj+mM
-puGBv+KmiuGTgOSCoOasq+efvu2GsOWykOOQgumRiee/seiukumEleSVveqDlOmOkOuylOeApOmf
-veeMtOiVleqBh+u7h+qsm+OWrdes67KZ4rWX5Ku44byC6bqI7qG85Kuc6byk5b+s5Yin74SU7peL
-7pib6Lej5bqY54OK54GNCnVzYiAxLTE6IFNlcmlhbE51bWJlcjogc3l6CnVzYmxwOiBjYW4ndCBz
-ZXQgZGVzaXJlZCBhbHRzZXR0aW5nIDY0IG9uIGludGVyZmFjZSAwCnVzYiAxLTE6IFVTQiBkaXNj
-b25uZWN0LCBkZXZpY2UgbnVtYmVyIDQKdXNiIDYtMTogbmV3IGhpZ2gtc3BlZWQgVVNCIGRldmlj
-ZSBudW1iZXIgOSB1c2luZyBkdW1teV9oY2QKdXNiIDYtMTogY29uZmlnIDEgaW50ZXJmYWNlIDAg
-YWx0c2V0dGluZyA2NCBidWxrIGVuZHBvaW50IDB4ODIgaGFzIGludmFsaWQgbWF4cGFja2V0IDEw
-MjQKdXNiIDYtMTogY29uZmlnIDEgaW50ZXJmYWNlIDAgaGFzIG5vIGFsdHNldHRpbmcgMAp1c2Ig
-Ni0xOiBOZXcgVVNCIGRldmljZSBmb3VuZCwgaWRWZW5kb3I9MDUyNSwgaWRQcm9kdWN0PWE0YTgs
-IGJjZERldmljZT0gMC40MAp1c2IgNi0xOiBOZXcgVVNCIGRldmljZSBzdHJpbmdzOiBNZnI9MSwg
-UHJvZHVjdD0yLCBTZXJpYWxOdW1iZXI9Mwp1c2IgNi0xOiBQcm9kdWN0OiBzeXoKdXNiIDYtMTog
-TWFudWZhY3R1cmVyOiDrkLvkmLDjt7nJtuK1luu5muC/uOmlkeWCqe+xrO+ct+y0qOymuOqHnOWY
-heGBp+S+k+WJi+adoeqgsOaMuOa4kO6zleiMreWhguejiOuKmuqwkequnOChocSY65S97JOY6oa/
-6pC46buA652R6Jab65CC7J+x672P5oKU45i54o246Yqf7pCI75ah7riC5J2E45yT6Ka866O54KeQ
-5ZSo4KuZ7oah4b6l7o+Y64Kf7ICG6q+76rSn4aSd7JiW6KK16oyi4LKM7qqQ64SP6Yym4YG/4qaK
-4ZOA5IKg5qyr55++7Yaw5bKQ45CC6ZGJ57+x6K6S6YSV5JW96oOU6Y6Q67KU54Ck6Z+954y06JWV
-6oGH67uH6qyb45at16zrspnitZfkq7jhvILpuojuobzkq5zpvKTlv6zliKfvhJTul4vumJvot6Pl
-upjng4rngY0KdXNiIDYtMTogU2VyaWFsTnVtYmVyOiBzeXoKdXNibHA6IGNhbid0IHNldCBkZXNp
-cmVkIGFsdHNldHRpbmcgNjQgb24gaW50ZXJmYWNlIDAKdXNiIDYtMTogVVNCIGRpc2Nvbm5lY3Qs
-IGRldmljZSBudW1iZXIgOQoKCi0tLQpUaGlzIGJ1ZyBpcyBnZW5lcmF0ZWQgYnkgYSBib3QuIEl0
-IG1heSBjb250YWluIGVycm9ycy4KU2VlIGh0dHBzOi8vZ29vLmdsL3Rwc21FSiBmb3IgbW9yZSBp
-bmZvcm1hdGlvbiBhYm91dCBzeXpib3QuCnN5emJvdCBlbmdpbmVlcnMgY2FuIGJlIHJlYWNoZWQg
-YXQgc3l6a2FsbGVyQGdvb2dsZWdyb3Vwcy5jb20uCgpzeXpib3Qgd2lsbCBrZWVwIHRyYWNrIG9m
-IHRoaXMgYnVnIHJlcG9ydC4gU2VlOgpodHRwczovL2dvby5nbC90cHNtRUojc3RhdHVzIGZvciBo
-b3cgdG8gY29tbXVuaWNhdGUgd2l0aCBzeXpib3Qu
+Hi Qian,
+
+On Tue, Apr 07, 2020 at 11:36:05AM -0400, Qian Cai wrote:
+> After further testing, the change along is insufficient. What I am chasing right
+> now is the swap device will go offline after heavy memory pressure below. The
+> symptom is similar to what we have in the commit,
+> 
+> 754265bcab78 (“iommu/amd: Fix race in increase_address_space()”)
+> 
+> Apparently, it is no possible to take the domain->lock in fetch_pte() because it
+> could sleep.
+
+Thanks a lot for finding and tracking down another race in the AMD IOMMU
+page-table code.  The domain->lock is a spin-lock and taking it can't
+sleep. But fetch_pte() is a fast-path and must not take any locks.
+
+I think the best fix is to update the pt_root and mode of the domain
+atomically by storing the mode in the lower 12 bits of pt_root. This way
+they are stored together and can be read/write atomically.
+
+Regards,
+
+	Joerg
+
