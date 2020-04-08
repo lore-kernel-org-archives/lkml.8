@@ -2,128 +2,124 @@ Return-Path: <SRS0=8dav=5Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A31F0C2D0EA
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 12:03:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D090C2BA2B
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 12:04:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7FFFB20747
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 12:03:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F3DF820857
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 12:04:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="OdPalx7x"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727368AbgDHMDB (ORCPT
+        id S1727614AbgDHMEv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Apr 2020 08:03:01 -0400
-Received: from mail.cn.fujitsu.com ([183.91.158.132]:8014 "EHLO
-        heian.cn.fujitsu.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726521AbgDHMDB (ORCPT
+        Wed, 8 Apr 2020 08:04:51 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:43635 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726521AbgDHMEv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Apr 2020 08:03:01 -0400
-X-IronPort-AV: E=Sophos;i="5.72,358,1580745600"; 
-   d="scan'208";a="88690985"
-Received: from unknown (HELO cn.fujitsu.com) ([10.167.33.5])
-  by heian.cn.fujitsu.com with ESMTP; 08 Apr 2020 20:02:56 +0800
-Received: from G08CNEXMBPEKD06.g08.fujitsu.local (unknown [10.167.33.206])
-        by cn.fujitsu.com (Postfix) with ESMTP id 0208F49DF129;
-        Wed,  8 Apr 2020 19:52:33 +0800 (CST)
-Received: from [10.167.226.60] (10.167.226.60) by
- G08CNEXMBPEKD06.g08.fujitsu.local (10.167.33.206) with Microsoft SMTP Server
- (TLS) id 15.0.1497.2; Wed, 8 Apr 2020 20:02:55 +0800
-Subject: Re: Question about prefill_possible_map
-From:   Cao jin <caoj.fnst@cn.fujitsu.com>
-To:     Thomas Gleixner <tglx@linutronix.de>
-CC:     X86 ML <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-        Borislav Petkov <bp@alien8.de>, Ingo Molnar <mingo@redhat.com>,
-        "H. Peter Anvin" <hpa@zytor.com>
-References: <687566a8-cacd-e0db-6914-d547853c7555@cn.fujitsu.com>
-Message-ID: <2911d6a8-b0fd-6ee4-40d3-a86e1096de80@cn.fujitsu.com>
-Date:   Wed, 8 Apr 2020 20:07:16 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Wed, 8 Apr 2020 08:04:51 -0400
+Received: by mail-wr1-f65.google.com with SMTP id i10so1203143wrv.10
+        for <linux-kernel@vger.kernel.org>; Wed, 08 Apr 2020 05:04:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ffwll.ch; s=google;
+        h=date:from:to:cc:subject:message-id:mail-followup-to:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=OBnPwGNSGc7YJF6/MDIm1ZT+7em3pqRoLIRd/7b9PxA=;
+        b=OdPalx7xuX4cjKnOHWh9tRuE5bTeRqir5JEhzSbax2+5ltx0Bo82JE5nTq2jKSyUNo
+         EnQyjl56VgC34kFmXVjM5F3zPYcSq2VER8j1v36UD8n+FNghQuOZRUpdlfu2ZIuYnOR3
+         0QpjV4mQsG1i9Sf/WuB0iVARtp9CBtX+ZYcK8=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id
+         :mail-followup-to:references:mime-version:content-disposition
+         :in-reply-to;
+        bh=OBnPwGNSGc7YJF6/MDIm1ZT+7em3pqRoLIRd/7b9PxA=;
+        b=ZhXSLtIf6v2AkaR4RbOYC61TaBBM2Ogi18bV7GftKx60CLS7T51xO3EYkjq4VSozZX
+         8v/BOtAWCADdfiZaQzX+u90Ub939rT/H3Gzsc3QDsm3MQ/CS/k5Rtbs7jvYHjJiH1xOD
+         Jmal5PYUsXOi2D9ZfdmpK08BrBQ49nr4pEt1rUfZGEJ1D2lL/n+la2KhF/7+ou03hxMX
+         7KXygo/CSx42dCmyycvta/Nd7MP4ApYQ236nLYB8aMgD5zdO2cY4idA8pUIEj+K5rVJV
+         cTEkZZBBzlzbYJJ708VWQN+J3c7juq5nT4/p2Ur0WMsFbPlGIpThhl5tT2AItLWfSrSE
+         d9Tg==
+X-Gm-Message-State: AGi0Puac/hM9prjym8fBwCMQZ3uDrSOYnJy1L63sCcTxescx7Vfagw/u
+        mrNfvsP2SE5lZ0WCh5ppeKtdXw==
+X-Google-Smtp-Source: APiQypJXFUS9vFZ2P9v4AgkbysWA38eTSvtMPkZ8z0bqKgeLMkvmrgrnq8Osd1i+8L1IowleNPNkGQ==
+X-Received: by 2002:a5d:4d51:: with SMTP id a17mr8282635wru.317.1586347487880;
+        Wed, 08 Apr 2020 05:04:47 -0700 (PDT)
+Received: from phenom.ffwll.local ([2a02:168:57f4:0:efd0:b9e5:5ae6:c2fa])
+        by smtp.gmail.com with ESMTPSA id a67sm6981132wmc.30.2020.04.08.05.04.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 08 Apr 2020 05:04:46 -0700 (PDT)
+Date:   Wed, 8 Apr 2020 14:04:44 +0200
+From:   Daniel Vetter <daniel@ffwll.ch>
+To:     Paul Cercueil <paul@crapouillou.net>
+Cc:     Daniel Vetter <daniel@ffwll.ch>, David Airlie <airlied@linux.ie>,
+        od@zcrc.me, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 2/3] gpu/drm: ingenic: Switch emulated fbdev to 16bpp
+Message-ID: <20200408120444.GJ3456981@phenom.ffwll.local>
+Mail-Followup-To: Paul Cercueil <paul@crapouillou.net>,
+        David Airlie <airlied@linux.ie>, od@zcrc.me,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+References: <20200226043041.289764-1-paul@crapouillou.net>
+ <20200226043041.289764-2-paul@crapouillou.net>
 MIME-Version: 1.0
-In-Reply-To: <687566a8-cacd-e0db-6914-d547853c7555@cn.fujitsu.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.167.226.60]
-X-ClientProxiedBy: G08CNEXCHPEKD04.g08.fujitsu.local (10.167.33.200) To
- G08CNEXMBPEKD06.g08.fujitsu.local (10.167.33.206)
-X-yoursite-MailScanner-ID: 0208F49DF129.A05B2
-X-yoursite-MailScanner: Found to be clean
-X-yoursite-MailScanner-From: caoj.fnst@cn.fujitsu.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200226043041.289764-2-paul@crapouillou.net>
+X-Operating-System: Linux phenom 5.3.0-3-amd64 
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Thomas,
+On Wed, Feb 26, 2020 at 01:30:40AM -0300, Paul Cercueil wrote:
+> The fbdev emulation is only ever used on Ingenic SoCs to run old SDL1
+> based games at 16bpp (rgb565). Recent applications generally talk to
+> DRM directly, and can request their favourite pixel format; so we can
+> make everybody happy by switching the emulated fbdev to 16bpp.
+> 
+> v2: No change
+> 
+> Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+> ---
+>  drivers/gpu/drm/ingenic/ingenic-drm.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/gpu/drm/ingenic/ingenic-drm.c b/drivers/gpu/drm/ingenic/ingenic-drm.c
+> index 5493a80d7d2f..3f8cc98d41fe 100644
+> --- a/drivers/gpu/drm/ingenic/ingenic-drm.c
+> +++ b/drivers/gpu/drm/ingenic/ingenic-drm.c
+> @@ -807,7 +807,7 @@ static int ingenic_drm_probe(struct platform_device *pdev)
+>  		goto err_devclk_disable;
+>  	}
+>  
+> -	ret = drm_fbdev_generic_setup(drm, 32);
+> +	ret = drm_fbdev_generic_setup(drm, 16);
 
-  Seems you helped improve 2a51fe083eba7f, could you help with this question?
+This will conflict with Thomas' work to remove the error code, so might
+need a rebase. Now for the patch itself your supposed to set
+drm_device->mode_config.preferred_bpp and leave this here as 0. That way
+userspace can also know what's the best option.
+
+Maybe in the future we could auto-compute the preferred_bpp from just
+taking the first format of the first primary plane, but atm not there.
+
+With the above change:
+
+Reviewed-by: Daniel Vetter <daniel.vetter@ffwll.ch>
+>  	if (ret)
+>  		dev_warn(dev, "Unable to start fbdev emulation: %i", ret);
+>  
+> -- 
+> 2.25.0
+> 
 
 -- 
-Sincerely,
-Cao jin
-
-On 3/27/20 2:38 PM, Cao jin wrote:
-> Hi,
-> 
-> At the beginning of this function, there is:
-> 
->     /* No boot processor was found in mptable or ACPI MADT */
->     if (!num_processors) {
->         if (boot_cpu_has(X86_FEATURE_APIC)) {
->             int apicid = boot_cpu_physical_apicid;
->             int cpu = hard_smp_processor_id();
-> 
->             pr_warn("Boot CPU (id %d) not listed by BIOS\n", cpu);
-> 
->             /* Make sure boot cpu is enumerated */
->             if (apic->cpu_present_to_apicid(0) == BAD_APICID &&
->                 apic->apic_id_valid(apicid))
->                 generic_processor_info(apicid, boot_cpu_apic_version);
->         }
-> 
->         if (!num_processors)
->             num_processors = 1;
->     }
-> 
-> I see 3 cases will go through this code chunk,
-> 
-> 1. UP, has no APCI MADT & MP table, but has APIC
-> 2. 2a51fe083eba7f: kdump kernel running on the hot-plugged CPU
-> 3. normal UP(No table, no APIC)
-> 
-> And "if (boot_cpu_has(X86_FEATURE_APIC))" covers case 1 & 2 to my
-> understanding.
-> 
-> But both cases 1 & 2 already have boot_cpu_physical_apicid initialized
-> from APIC ID register:
-> 1. init_apic_mappings --> register_lapic_address
-> 2. early_acpi_boot_init --> early_acpi_process_madt -->...-->
->    register_lapic_address
-> 
-> So my question is: is variable "cpu" redundant? Could it be:
-> 
-> diff --git a/arch/x86/kernel/smpboot.c b/arch/x86/kernel/smpboot.c
-> index 69881b2d446c..99fc03511568 100644
-> --- a/arch/x86/kernel/smpboot.c
-> +++ b/arch/x86/kernel/smpboot.c
-> @@ -1456,9 +1456,9 @@ __init void prefill_possible_map(void)
->         if (!num_processors) {
->                 if (boot_cpu_has(X86_FEATURE_APIC)) {
->                         int apicid = boot_cpu_physical_apicid;
-> -                       int cpu = hard_smp_processor_id();
-> 
-> -                       pr_warn("Boot CPU (id %d) not listed by BIOS\n", cpu);
-> +                       pr_warn("Boot CPU (id %d) not listed by BIOS\n", \
-> +                                boot_cpu_physical_apicid);
-> 
->                         /* Make sure boot cpu is enumerated */
->                         if (apic->cpu_present_to_apicid(0) == BAD_APICID &&
-> 
-
-
-
-
-
+Daniel Vetter
+Software Engineer, Intel Corporation
+http://blog.ffwll.ch
