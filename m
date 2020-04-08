@@ -2,155 +2,119 @@ Return-Path: <SRS0=8dav=5Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-9.3 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D41B0C2BA1A
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 10:03:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89910C2BA2B
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 10:04:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B0F5A20747
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 10:03:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5D67320747
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 10:04:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pwnDjzJ9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728096AbgDHKDX (ORCPT
+        id S1728105AbgDHKEO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Apr 2020 06:03:23 -0400
-Received: from foss.arm.com ([217.140.110.172]:36458 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725932AbgDHKDW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Apr 2020 06:03:22 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B8FF131B;
-        Wed,  8 Apr 2020 03:03:21 -0700 (PDT)
-Received: from [192.168.0.14] (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 681F43F73D;
-        Wed,  8 Apr 2020 03:03:19 -0700 (PDT)
-Subject: Re: [PATCH v6 1/2] ACPI / APEI: Add support to notify the vendor
- specific HW errors
-To:     Borislav Petkov <bp@alien8.de>, Shiju Jose <shiju.jose@huawei.com>
-Cc:     linux-acpi@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, rjw@rjwysocki.net,
-        helgaas@kernel.org, lenb@kernel.org, tony.luck@intel.com,
-        gregkh@linuxfoundation.org, zhangliguang@linux.alibaba.com,
-        tglx@linutronix.de, linuxarm@huawei.com,
-        jonathan.cameron@huawei.com, tanxiaofei@huawei.com,
-        yangyicong@hisilicon.com
-References: <ShijuJose> <20200325164223.650-1-shiju.jose@huawei.com>
- <20200325164223.650-2-shiju.jose@huawei.com> <20200327182214.GD8015@zn.tnic>
-From:   James Morse <james.morse@arm.com>
-Message-ID: <c73bb18b-02ef-6c35-f4cf-1738c17a96e5@arm.com>
-Date:   Wed, 8 Apr 2020 11:03:13 +0100
-User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
-MIME-Version: 1.0
-In-Reply-To: <20200327182214.GD8015@zn.tnic>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+        Wed, 8 Apr 2020 06:04:14 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:34875 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725932AbgDHKEO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Apr 2020 06:04:14 -0400
+Received: by mail-pf1-f195.google.com with SMTP id a13so2193499pfa.2;
+        Wed, 08 Apr 2020 03:04:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=0l2SgjQoUm9XZQWLHdahmUXmkeQjGbkw3tE+oZhCKVs=;
+        b=pwnDjzJ9s4ltda4yGC5klCTFEE8QaNhAa/u7j3EP+/yIokVkfPKvEzGidqZ9FVAKJZ
+         HCfIv8ygTMfIX1eUGAECmcdGhwDz+r6jpWNbjh08mlXTvBMIBCFmooPeEcgzlYrnSojo
+         VGiqfDybdbRtQ3fYcE2WFZF74PH3CUDRyFbCn4Qx/kGBx6UgXuEBHa5GFQLXo8elHT5U
+         u3ukDKJaUxtC/Avln35AQS0d/jskn9xPWtLLGorG5qEFYr3V0Oaow6gJZyUoiMV6GJ2T
+         xHhQLdcxTLc5aPGa5yIfo+Ao3kuOnMp8dfTuMO0bi0y/zeV3wmR/+5GcfxXYSpK92v0j
+         cwAQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=0l2SgjQoUm9XZQWLHdahmUXmkeQjGbkw3tE+oZhCKVs=;
+        b=YTrV0XSZTb/MOTDiqMfKrM6lRUEn2t53KVJdRIlhCb1F+LnIj2V8En319ZRulVwc6C
+         TYFAZl6tOPwVh6t33jc/nP8vIcBiyZpDuhvBMDP1GpoJ5wcHnBH396/WgX3pbQJwoecT
+         +WatbYBh+YesjzoXKL6FAEiB7XpYhz5CNDfd7HVlC0RSfldx3kx3q611raGbafnNGc2d
+         0Q84ReeZY0RtsotXaXolh5R0wSiKAC1dolv5ZCede612ERXdnrwvssuznLTFA3JjyqwA
+         U6p625g7belLhnPS5suudbg6SkWwIddz2eVKZrTBd0uc6EcOEBEDp2wPYz1J7Tbw0Z+G
+         WSiA==
+X-Gm-Message-State: AGi0PuZJBEPCn65Fwua8cMDBlrgkG1joe2p3RJZYVa79OyR5LD8Ccsu3
+        rg0cV2RInIUdjbZI6y7Q4uI=
+X-Google-Smtp-Source: APiQypJ2rtu2lzZorHDGO2Y9Nj8eRhkIqFK3//sK3EfN2KbEyI5rBMrG/z5wgIY4NOsELjd1ZatGLg==
+X-Received: by 2002:aa7:93cd:: with SMTP id y13mr6736602pff.213.1586340253160;
+        Wed, 08 Apr 2020 03:04:13 -0700 (PDT)
+Received: from localhost.localdomain ([2409:4072:610d:c995:d0f2:9d90:2f2e:7df9])
+        by smtp.gmail.com with ESMTPSA id i124sm16140306pfg.14.2020.04.08.03.04.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 08 Apr 2020 03:04:12 -0700 (PDT)
+From:   Aishwarya R <aishwaryarj100@gmail.com>
+Cc:     aishwaryarj100@gmail.com,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Wolfram Sang <wsa@the-dreams.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Richard Fontana <rfontana@redhat.com>,
+        linux-i2c@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] i2c: powermac: Simplify reading the "reg" and "i2c-address" property
+Date:   Wed,  8 Apr 2020 15:33:53 +0530
+Message-Id: <20200408100354.17782-1-aishwaryarj100@gmail.com>
+X-Mailer: git-send-email 2.17.1
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Boris, Shiju,
+Use of_property_read_u32 to read the "reg" and "i2c-address" property
+instead of using of_get_property to check the return values.
 
-Sorry for not spotting this reply earlier: Its in-reply to v1, so gets buried.
+Signed-off-by: Aishwarya R <aishwaryarj100@gmail.com>
+---
+ drivers/i2c/busses/i2c-powermac.c | 16 ++++++++--------
+ 1 file changed, 8 insertions(+), 8 deletions(-)
 
-On 27/03/2020 18:22, Borislav Petkov wrote:
-> On Wed, Mar 25, 2020 at 04:42:22PM +0000, Shiju Jose wrote:
->> Presently APEI does not support reporting the vendor specific
->> HW errors, received in the vendor defined table entries, to the
->> vendor drivers for any recovery.
->>
->> This patch adds the support to register and unregister the
-> 
-> Avoid having "This patch" or "This commit" in the commit message. It is
-> tautologically useless.
-> 
-> Also, do
-> 
-> $ git grep 'This patch' Documentation/process
-> 
-> for more details.
-> 
->> error handling function for the vendor specific HW errors and
->> notify the registered kernel driver.
+diff --git a/drivers/i2c/busses/i2c-powermac.c b/drivers/i2c/busses/i2c-powermac.c
+index d565714c1f13..81506c2dab65 100644
+--- a/drivers/i2c/busses/i2c-powermac.c
++++ b/drivers/i2c/busses/i2c-powermac.c
+@@ -207,18 +207,18 @@ static u32 i2c_powermac_get_addr(struct i2c_adapter *adap,
+ 					   struct pmac_i2c_bus *bus,
+ 					   struct device_node *node)
+ {
+-	const __be32 *prop;
+-	int len;
++	u32 prop;
++	int ret;
+ 
+ 	/* First check for valid "reg" */
+-	prop = of_get_property(node, "reg", &len);
+-	if (prop && (len >= sizeof(int)))
+-		return (be32_to_cpup(prop) & 0xff) >> 1;
++	ret = of_property_read_u32(node, "reg", &prop);
++	if (ret == 0)
++		return (prop & 0xff) >> 1;
+ 
+ 	/* Then check old-style "i2c-address" */
+-	prop = of_get_property(node, "i2c-address", &len);
+-	if (prop && (len >= sizeof(int)))
+-		return (be32_to_cpup(prop) & 0xff) >> 1;
++	ret = of_property_read_u32(node, "i2c-address", &prop);
++	if (ret == 0)
++		return (prop & 0xff) >> 1;
+ 
+ 	/* Now handle some devices with missing "reg" properties */
+ 	if (of_node_name_eq(node, "cereal"))
+-- 
+2.17.1
 
->> @@ -526,10 +552,17 @@ static void ghes_do_proc(struct ghes *ghes,
->>  			log_arm_hw_error(err);
->>  		} else {
->>  			void *err = acpi_hest_get_payload(gdata);
->> +			u8 error_handled = false;
->> +			int ret;
->> +
->> +			ret = atomic_notifier_call_chain(&ghes_event_notify_list, 0, gdata);
-> 
-> Well, this is a notifier with standard name for a non-standard event.
-> Not optimal.
-> 
-> Why does only this event need a notifier? Because your driver is
-> interested in only those events?
-
-Its the 'else' catch-all for stuff drivers/acpi/apei  doesn't know to handle.
-
-In this case its because its a vendor specific GUID that only the vendor driver knows how
-to parse.
-
-
->> +			if (ret & NOTIFY_OK)
->> +				error_handled = true;
->>  
->>  			log_non_standard_event(sec_type, fru_id, fru_text,
->>  					       sec_sev, err,
->> -					       gdata->error_data_length);
->> +					       gdata->error_data_length,
->> +					       error_handled);
-> 
-> What's that error_handled thing for? That's just silly.
-> 
-> Your notifier returns NOTIFY_STOP when it has queued the error. If you
-> don't want to log it, just test == NOTIFY_STOP and do not log it then.
-
-My thinking for this being needed was so user-space consumers of those tracepoints keep
-working. Otherwise you upgrade, get this feature, and your user-space counters stop working.
-
-You'd need to know this error source was now managed by an in-kernel driver, which may
-report the errors somewhere else...
-
-
-> Then your notifier callback is queuing the error into a kfifo for
-> whatever reason and then scheduling a workqueue to handle it in user
-> context...
-> 
-> So I'm thinking that it would be better if you:
-> 
-> * make that kfifo generic and part of ghes.c and queue all types of
-> error records into it in ghes_do_proc() - not just the non-standard
-> ones.
-
-Move the drop to process context into ghes.c? This should result in less code.
-
-I asked for this hooking to only be for the 'catch all' don't-know case so that we don't
-get drivers trying to hook and handle memory errors. (if we ever wanted that, it should be
-from part of memory_failure() so it catches all the ways of reporting memory-failure)
-32bit arm has prior in this area.
-
-
-> * then, when you're done queuing, you kick a workqueue.
-> 
-> * that workqueue runs a normal, blocking notifier to which drivers
-> register.
-> 
-> Your driver can register to that notifier too and do the normal handling
-> then and not have this ad-hoc, semi-generic, semi-vendor-specific thing.
-
-As long as we don't walk a list of things that might handle a memory-error, and have some
-random driver try and NOTIFY_STOP it....
-
-aer_recover_queue() would be replaced by this. memory_failure_queue() has one additional
-caller in drivers/ras/cec.c.
-
-
-Thanks,
-
-James
