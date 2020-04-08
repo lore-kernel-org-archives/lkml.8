@@ -2,85 +2,131 @@ Return-Path: <SRS0=8dav=5Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51F46C2BA1B
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 17:58:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D63DC2D0F4
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 18:01:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2E80D2072F
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 17:58:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="HgiWbD9r"
+	by mail.kernel.org (Postfix) with ESMTP id 1D72A2075E
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 18:01:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729258AbgDHR6D (ORCPT
+        id S1729623AbgDHSBn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Apr 2020 13:58:03 -0400
-Received: from mail.skyhub.de ([5.9.137.197]:59098 "EHLO mail.skyhub.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726780AbgDHR6C (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Apr 2020 13:58:02 -0400
-Received: from zn.tnic (p200300EC2F0A93002886CB34BCAFCB01.dip0.t-ipconnect.de [IPv6:2003:ec:2f0a:9300:2886:cb34:bcaf:cb01])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 90F541EC0CD9;
-        Wed,  8 Apr 2020 19:58:00 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1586368680;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=EzzxUVtmTm/3Jlc1oShOC/yjn0NG06h83DNl2MgAQgg=;
-        b=HgiWbD9rW0RVGYaoQrtZR5kayVtadTnVRw9XJ447LU49VDnnv61CUm0N4zhFCIeH5YYvJf
-        J7L61rcPQRI1RLxG/kahf3/pN6RIid/wknNDP+fJzhEqyMLr6NXpTfLaVgctoP0Qc6tz9C
-        N6eLcJkM+MS1n52Zzcrj/tDuou+0V/w=
-Date:   Wed, 8 Apr 2020 19:57:56 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     Ard Biesheuvel <ardb@kernel.org>
-Cc:     Benjamin Thiel <b.thiel@posteo.de>, X86 ML <x86@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-efi <linux-efi@vger.kernel.org>
-Subject: Re: [PATCH] x86/efi: Add a prototype for efi_arch_mem_reserve()
-Message-ID: <20200408175756.GG24663@zn.tnic>
-References: <20200326135041.3264-1-b.thiel@posteo.de>
- <CAMj1kXF6UF318wCL74T9orJk=+LafZ3VFXUGmqoBefYVaP2gNw@mail.gmail.com>
+        Wed, 8 Apr 2020 14:01:43 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:53826 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726780AbgDHSBm (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Apr 2020 14:01:42 -0400
+Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 038HXC6Z075944;
+        Wed, 8 Apr 2020 14:01:09 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 309210cugm-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 08 Apr 2020 14:01:08 -0400
+Received: from m0098413.ppops.net (m0098413.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 038HnJg0123775;
+        Wed, 8 Apr 2020 14:01:08 -0400
+Received: from ppma04wdc.us.ibm.com (1a.90.2fa9.ip4.static.sl-reverse.com [169.47.144.26])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 309210cug7-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 08 Apr 2020 14:01:08 -0400
+Received: from pps.filterd (ppma04wdc.us.ibm.com [127.0.0.1])
+        by ppma04wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 038I17Fo005697;
+        Wed, 8 Apr 2020 18:01:07 GMT
+Received: from b01cxnp22033.gho.pok.ibm.com (b01cxnp22033.gho.pok.ibm.com [9.57.198.23])
+        by ppma04wdc.us.ibm.com with ESMTP id 3091mdxxva-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 08 Apr 2020 18:01:07 +0000
+Received: from b01ledav006.gho.pok.ibm.com (b01ledav006.gho.pok.ibm.com [9.57.199.111])
+        by b01cxnp22033.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 038I17E052756932
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 8 Apr 2020 18:01:07 GMT
+Received: from b01ledav006.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 4A011AC065;
+        Wed,  8 Apr 2020 18:01:07 +0000 (GMT)
+Received: from b01ledav006.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id A00ADAC05B;
+        Wed,  8 Apr 2020 18:00:56 +0000 (GMT)
+Received: from LeoBras (unknown [9.85.164.111])
+        by b01ledav006.gho.pok.ibm.com (Postfix) with ESMTP;
+        Wed,  8 Apr 2020 18:00:55 +0000 (GMT)
+Message-ID: <08fd515f1e0925a9d640dffd6a97c3ddbcd0cf18.camel@linux.ibm.com>
+Subject: Re: [PATCH v3 1/1] ppc/crash: Reset spinlocks during crash
+From:   Leonardo Bras <leonardo@linux.ibm.com>
+To:     Michael Ellerman <mpe@ellerman.id.au>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Alexios Zavras <alexios.zavras@intel.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Enrico Weigelt <info@metux.net>,
+        Paul Mackerras <paulus@samba.org>, peterz@infradead.org,
+        Thomas Gleixner <tglx@linutronix.de>
+Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+Date:   Wed, 08 Apr 2020 15:00:33 -0300
+In-Reply-To: <87v9majhh2.fsf@mpe.ellerman.id.au>
+References: <20200401000020.590447-1-leonardo@linux.ibm.com>
+         <871rp6t9di.fsf@mpe.ellerman.id.au>
+         <02e74be19534ab1db2f16a0c89ecb164e380c12a.camel@linux.ibm.com>
+         <1585895551.7o9oa0ey62.astroid@bobo.none>
+         <fb98f346a4d6a9d689ae64dae33cbd45d2f8b0df.camel@linux.ibm.com>
+         <87v9majhh2.fsf@mpe.ellerman.id.au>
+Content-Type: multipart/signed; micalg="pgp-sha256";
+        protocol="application/pgp-signature"; boundary="=-dPAT5Uf265gBn5bk+UIE"
+User-Agent: Evolution 3.34.4 (3.34.4-1.fc31) 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAMj1kXF6UF318wCL74T9orJk=+LafZ3VFXUGmqoBefYVaP2gNw@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
+ definitions=2020-04-07_10:2020-04-07,2020-04-07 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 spamscore=0
+ mlxscore=0 impostorscore=0 suspectscore=0 adultscore=0 malwarescore=0
+ lowpriorityscore=0 phishscore=0 priorityscore=1501 mlxlogscore=999
+ bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2004080129
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 08, 2020 at 07:39:56PM +0200, Ard Biesheuvel wrote:
-> On Thu, 26 Mar 2020 at 14:50, Benjamin Thiel <b.thiel@posteo.de> wrote:
-> >
-> > ... in order to fix a -Wmissing-ptototypes warning:
-> >
-> > arch/x86/platform/efi/quirks.c:245:13: warning:
-> > no previous prototype for ‘efi_arch_mem_reserve’ [-Wmissing-prototypes]
-> > void __init efi_arch_mem_reserve(phys_addr_t addr, u64 size)
-> >
-> > Signed-off-by: Benjamin Thiel <b.thiel@posteo.de>
-> 
-> Thanks. I'll queue this as a fix.
 
-I already took that one, see:
+--=-dPAT5Uf265gBn5bk+UIE
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-860f89e61824 ("x86/efi: Add a prototype for efi_arch_mem_reserve()")
+On Wed, 2020-04-08 at 22:21 +1000, Michael Ellerman wrote:
+> We should be able to just allocate the rtas_args on the stack, it's only
+> ~80 odd bytes. And then we can use rtas_call_unlocked() which doesn't
+> take the global lock.
 
-but forgot to Cc: linux-efi@.
+At this point, would it be a problem using kmalloc?=20
 
-Sorry about that.
+Best regards,
 
--- 
-Regards/Gruss,
-    Boris.
+--=-dPAT5Uf265gBn5bk+UIE
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
 
-https://people.kernel.org/tglx/notes-about-netiquette
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEMdeUgIzgjf6YmUyOlQYWtz9SttQFAl6OEUEACgkQlQYWtz9S
+ttRQYBAAjA9TrNO0aSybcGBUbLI3D/xxV/K5oX2uvgUE80/JxGaCtDT09vhBmu1L
+zf0fNtV1m6+DtbMQWeXeAexvSR5Roz1QCkYW8HEndnoavaDHn5InmBPi1iLXe3h0
+1ANo9fyO0HhwNUI9I42OnnH/cKrIRsvtLHxLvLkT2oM4kFlOzfR981dR1ACDVR6M
+FAo1e0Dt85utw+yVvJFfWfY/Ys9H7eTrtowSRqW6GrZ2nKuWW8sgxGPuuuSv84Tn
+KDjMAEqaSw/JR5QEQkMfK8FzFy7h+ra8uhoA+Uasjz6tX4H142baUqjdj0n/hfXC
+KrJ+FuU+AHzmKoUsgP2zeT29F2Zu6ZsmjcctKSvcsHT3/hCrzp2iha0EyV1+A+oF
+v1s7JBEGu1smnq/6Cilw6+MLS7uktbjZQSvWbCuk+Brt9UX8dxVbPSdy3jVeao51
+Dfds2Bz66ECsPZ56OCDmfUmpsQFmFhjCBL/O7BDI5yqf65b1R2KMUp2ozJUfGTIv
+Q8QdzdsY1RE9ED0Rcr4+zOiQWQLXwLcarsrF1DIuD58Bml8+8HpF07I9PHhs/QFh
+VN7wgWQh23m1sVjiMGRdMt4ofR8ZBcUCV+iP2RQewrKWFU4bPoJvai2g9YwlMPZE
+T4UXnRfKeuNxqktKeA02LZBTMPumazdoe/jdUy5v/clZtdC6KCM=
+=2bkq
+-----END PGP SIGNATURE-----
+
+--=-dPAT5Uf265gBn5bk+UIE--
+
