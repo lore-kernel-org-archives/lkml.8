@@ -2,253 +2,171 @@ Return-Path: <SRS0=8dav=5Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DA4BC2D0EA
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 06:49:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A06F3C2D0EA
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 06:55:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 46777206A1
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 06:49:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6C15C206A1
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 06:55:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726575AbgDHGtX (ORCPT
+        id S1726595AbgDHGzV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Apr 2020 02:49:23 -0400
-Received: from mga07.intel.com ([134.134.136.100]:57680 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726453AbgDHGtW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Apr 2020 02:49:22 -0400
-IronPort-SDR: CO4aCdYAie1DHAxzh4hQVQsNAdz4OapS//42+0VtbPvZG1WReYYPAG6mv3YPjvxK/TAJCL7naB
- /bq1vFDOAc+g==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Apr 2020 23:49:21 -0700
-IronPort-SDR: VATxvfgCsugRZgYg4bUr9e8l3RUNAix22mMnZzfKmnAMoyDDeqZT1MZizA0h7mCTrWsoA0I/Po
- YWuu9XIN9y6Q==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,357,1580803200"; 
-   d="scan'208";a="251477373"
-Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
-  by orsmga003.jf.intel.com with ESMTP; 07 Apr 2020 23:49:20 -0700
-Received: from kbuild by lkp-server01 with local (Exim 4.89)
-        (envelope-from <lkp@intel.com>)
-        id 1jM4WW-000Bg9-2g; Wed, 08 Apr 2020 14:49:20 +0800
-Date:   Wed, 08 Apr 2020 14:48:14 +0800
-From:   kbuild test robot <lkp@intel.com>
-To:     "x86-ml" <x86@kernel.org>
-Cc:     linux-kernel@vger.kernel.org
-Subject: [tip:timers/urgent] BUILD SUCCESS
- 0f538e3e712a517bd351607de50cd298102c7c08
-Message-ID: <5e8d73ae.TweGidNfqJJTmsoe%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+        Wed, 8 Apr 2020 02:55:21 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:38296 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726345AbgDHGzV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Apr 2020 02:55:21 -0400
+Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0386Yk93011007
+        for <linux-kernel@vger.kernel.org>; Wed, 8 Apr 2020 02:55:20 -0400
+Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 3091yka6xe-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Wed, 08 Apr 2020 02:55:19 -0400
+Received: from localhost
+        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <borntraeger@de.ibm.com>;
+        Wed, 8 Apr 2020 07:55:05 +0100
+Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
+        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Wed, 8 Apr 2020 07:55:02 +0100
+Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
+        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 0386tDBX58261586
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 8 Apr 2020 06:55:13 GMT
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 90DA3AE057;
+        Wed,  8 Apr 2020 06:55:13 +0000 (GMT)
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 3891EAE04D;
+        Wed,  8 Apr 2020 06:55:13 +0000 (GMT)
+Received: from oc7455500831.ibm.com (unknown [9.145.54.125])
+        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Wed,  8 Apr 2020 06:55:13 +0000 (GMT)
+Subject: Re: [PATCH 0/2] KVM: Fix out-of-bounds memslot access
+To:     Sean Christopherson <sean.j.christopherson@intel.com>,
+        Janosch Frank <frankja@linux.ibm.com>,
+        Paolo Bonzini <pbonzini@redhat.com>
+Cc:     David Hildenbrand <david@redhat.com>,
+        Cornelia Huck <cohuck@redhat.com>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        syzbot+d889b59b2bb87d4047a2@syzkaller.appspotmail.com
+References: <20200408064059.8957-1-sean.j.christopherson@intel.com>
+From:   Christian Borntraeger <borntraeger@de.ibm.com>
+Autocrypt: addr=borntraeger@de.ibm.com; prefer-encrypt=mutual; keydata=
+ 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
+ nS4h0HDFPrrp1C2EMVYIQrMokWvlFZbCpsdYbBI=
+Date:   Wed, 8 Apr 2020 08:55:12 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+In-Reply-To: <20200408064059.8957-1-sean.j.christopherson@intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+x-cbid: 20040806-0012-0000-0000-000003A07AFE
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 20040806-0013-0000-0000-000021DD9F01
+Message-Id: <ce021ce6-b4a9-4dab-a063-945fcd9bfcf5@de.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
+ definitions=2020-04-07_10:2020-04-07,2020-04-07 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 spamscore=0
+ clxscore=1015 mlxscore=0 suspectscore=0 bulkscore=0 adultscore=0
+ phishscore=0 priorityscore=1501 impostorscore=0 mlxlogscore=999
+ lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2004080047
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git  timers/urgent
-branch HEAD: 0f538e3e712a517bd351607de50cd298102c7c08  ucount: Make sure ucounts in /proc/sys/user don't regress again
 
-elapsed time: 653m
 
-configs tested: 186
-configs skipped: 0
+On 08.04.20 08:40, Sean Christopherson wrote:
+> Two fixes for what are effectively the same bug.  The binary search used
+> for memslot lookup doesn't check the resolved index and can access memory
+> beyond the end of the memslot array.
+> 
+> I split the s390 specific change to a separate patch because it's subtly
+> different, and to simplify backporting.  The KVM wide fix can be applied
+> to stable trees as is, but AFAICT the s390 change would need to be paired
+> with the !used_slots check from commit 774a964ef56 ("KVM: Fix out of range
+> accesses to memslots").  This is why I tagged only the KVM wide patch for
+> stable.
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+You can specify dependencies like
 
-arm                              allmodconfig
-arm                               allnoconfig
-arm                              allyesconfig
-arm64                            allmodconfig
-arm64                             allnoconfig
-arm64                            allyesconfig
-arm                         at91_dt_defconfig
-arm                           efm32_defconfig
-arm                          exynos_defconfig
-arm                        multi_v5_defconfig
-arm                        multi_v7_defconfig
-arm                        shmobile_defconfig
-arm                           sunxi_defconfig
-arm64                               defconfig
-sparc                            allyesconfig
-mips                      fuloong2e_defconfig
-c6x                        evmc6678_defconfig
-ia64                                defconfig
-powerpc                             defconfig
-mips                      malta_kvm_defconfig
-i386                              allnoconfig
-i386                             alldefconfig
-i386                             allyesconfig
-i386                              debian-10.3
-i386                                defconfig
-ia64                             allmodconfig
-ia64                              allnoconfig
-ia64                             allyesconfig
-ia64                             alldefconfig
-c6x                              allyesconfig
-nios2                         10m50_defconfig
-nios2                         3c120_defconfig
-openrisc                    or1ksim_defconfig
-openrisc                 simple_smp_defconfig
-xtensa                       common_defconfig
-xtensa                          iss_defconfig
-alpha                               defconfig
-csky                                defconfig
-nds32                             allnoconfig
-nds32                               defconfig
-h8300                     edosk2674_defconfig
-h8300                    h8300h-sim_defconfig
-h8300                       h8s-sim_defconfig
-m68k                             allmodconfig
-m68k                       m5475evb_defconfig
-m68k                          multi_defconfig
-m68k                           sun3_defconfig
-arc                                 defconfig
-arc                              allyesconfig
-powerpc                       ppc64_defconfig
-powerpc                          rhel-kconfig
-microblaze                      mmu_defconfig
-microblaze                    nommu_defconfig
-powerpc                           allnoconfig
-mips                           32r2_defconfig
-mips                         64r6el_defconfig
-mips                             allmodconfig
-mips                              allnoconfig
-mips                             allyesconfig
-parisc                            allnoconfig
-parisc                generic-64bit_defconfig
-parisc                generic-32bit_defconfig
-parisc                           allyesconfig
-x86_64               randconfig-a001-20200408
-x86_64               randconfig-a002-20200408
-x86_64               randconfig-a003-20200408
-i386                 randconfig-a001-20200408
-i386                 randconfig-a002-20200408
-i386                 randconfig-a003-20200408
-alpha                randconfig-a001-20200408
-m68k                 randconfig-a001-20200408
-mips                 randconfig-a001-20200408
-nds32                randconfig-a001-20200408
-parisc               randconfig-a001-20200408
-riscv                randconfig-a001-20200408
-alpha                randconfig-a001-20200407
-m68k                 randconfig-a001-20200407
-nds32                randconfig-a001-20200407
-parisc               randconfig-a001-20200407
-riscv                randconfig-a001-20200407
-c6x                  randconfig-a001-20200407
-h8300                randconfig-a001-20200407
-microblaze           randconfig-a001-20200407
-nios2                randconfig-a001-20200407
-sparc64              randconfig-a001-20200407
-c6x                  randconfig-a001-20200408
-h8300                randconfig-a001-20200408
-microblaze           randconfig-a001-20200408
-nios2                randconfig-a001-20200408
-sparc64              randconfig-a001-20200408
-csky                 randconfig-a001-20200408
-openrisc             randconfig-a001-20200408
-s390                 randconfig-a001-20200408
-sh                   randconfig-a001-20200408
-xtensa               randconfig-a001-20200408
-csky                 randconfig-a001-20200407
-openrisc             randconfig-a001-20200407
-s390                 randconfig-a001-20200407
-sh                   randconfig-a001-20200407
-xtensa               randconfig-a001-20200407
-x86_64               randconfig-c001-20200408
-x86_64               randconfig-c002-20200408
-x86_64               randconfig-c003-20200408
-i386                 randconfig-c001-20200408
-i386                 randconfig-c002-20200408
-i386                 randconfig-c003-20200408
-x86_64               randconfig-d001-20200407
-x86_64               randconfig-d002-20200407
-x86_64               randconfig-d003-20200407
-i386                 randconfig-d001-20200407
-i386                 randconfig-d002-20200407
-i386                 randconfig-d003-20200407
-x86_64               randconfig-d001-20200408
-x86_64               randconfig-d002-20200408
-x86_64               randconfig-d003-20200408
-i386                 randconfig-d001-20200408
-i386                 randconfig-d002-20200408
-i386                 randconfig-d003-20200408
-x86_64               randconfig-e001-20200408
-x86_64               randconfig-e002-20200408
-x86_64               randconfig-e003-20200408
-i386                 randconfig-e001-20200408
-i386                 randconfig-e002-20200408
-i386                 randconfig-e003-20200408
-x86_64               randconfig-f001-20200407
-x86_64               randconfig-f002-20200407
-x86_64               randconfig-f003-20200407
-i386                 randconfig-f001-20200407
-i386                 randconfig-f002-20200407
-i386                 randconfig-f003-20200407
-x86_64               randconfig-g001-20200407
-x86_64               randconfig-g002-20200407
-x86_64               randconfig-g003-20200407
-i386                 randconfig-g001-20200407
-i386                 randconfig-g002-20200407
-i386                 randconfig-g003-20200407
-x86_64               randconfig-h001-20200407
-x86_64               randconfig-h002-20200407
-x86_64               randconfig-h003-20200407
-i386                 randconfig-h001-20200407
-i386                 randconfig-h002-20200407
-i386                 randconfig-h003-20200407
-arc                  randconfig-a001-20200407
-arm                  randconfig-a001-20200407
-arm64                randconfig-a001-20200407
-ia64                 randconfig-a001-20200407
-powerpc              randconfig-a001-20200407
-sparc                randconfig-a001-20200407
-arc                  randconfig-a001-20200408
-arm                  randconfig-a001-20200408
-arm64                randconfig-a001-20200408
-ia64                 randconfig-a001-20200408
-powerpc              randconfig-a001-20200408
-sparc                randconfig-a001-20200408
-riscv                            allyesconfig
-riscv                    nommu_virt_defconfig
-riscv                             allnoconfig
-riscv                               defconfig
-riscv                          rv32_defconfig
-riscv                            allmodconfig
-s390                       zfcpdump_defconfig
-s390                          debug_defconfig
-s390                             allyesconfig
-s390                              allnoconfig
-s390                             allmodconfig
-s390                             alldefconfig
-s390                                defconfig
-sh                               allmodconfig
-sh                                allnoconfig
-sh                          rsk7269_defconfig
-sh                  sh7785lcr_32bit_defconfig
-sh                            titan_defconfig
-sparc                               defconfig
-sparc64                          allmodconfig
-sparc64                           allnoconfig
-sparc64                          allyesconfig
-sparc64                             defconfig
-um                           x86_64_defconfig
-um                             i386_defconfig
-um                                  defconfig
-x86_64                              fedora-25
-x86_64                                  kexec
-x86_64                                    lkp
-x86_64                                   rhel
-x86_64                         rhel-7.2-clear
-x86_64                               rhel-7.6
+see
 
----
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+Documentation/process/stable-kernel-rules.rst
+
+-----------snip---------------
+Additionally, some patches submitted via :ref:`option_1` may have additional
+patch prerequisites which can be cherry-picked. This can be specified in the
+following format in the sign-off area:
+
+.. code-block:: none
+
+     Cc: <stable@vger.kernel.org> # 3.3.x: a1f84a3: sched: Check for idle
+     Cc: <stable@vger.kernel.org> # 3.3.x: 1b9508f: sched: Rate-limit newidle
+     Cc: <stable@vger.kernel.org> # 3.3.x: fd21073: sched: Fix affinity logic
+     Cc: <stable@vger.kernel.org> # 3.3.x
+     Signed-off-by: Ingo Molnar <mingo@elte.hu>
+
+The tag sequence has the meaning of:
+
+.. code-block:: none
+
+     git cherry-pick a1f84a3
+     git cherry-pick 1b9508f
+     git cherry-pick fd21073
+     git cherry-pick <this commit>
+
+-----------snip---------------
+
