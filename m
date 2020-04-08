@@ -2,510 +2,381 @@ Return-Path: <SRS0=8dav=5Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.9 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,
+	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1227C2BA1B
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 21:21:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6484CC2BA80
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 21:21:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8D8CB20771
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 21:21:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3147820771
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 21:21:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="w2p7vEFB"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="jCD1KXRG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730482AbgDHVV3 (ORCPT
+        id S1730302AbgDHVVM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Apr 2020 17:21:29 -0400
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:45097 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730426AbgDHVVX (ORCPT
+        Wed, 8 Apr 2020 17:21:12 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:37966 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729540AbgDHVVG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Apr 2020 17:21:23 -0400
-Received: by mail-lf1-f66.google.com with SMTP id f8so6255218lfe.12
-        for <linux-kernel@vger.kernel.org>; Wed, 08 Apr 2020 14:21:20 -0700 (PDT)
+        Wed, 8 Apr 2020 17:21:06 -0400
+Received: by mail-pf1-f194.google.com with SMTP id c21so3034675pfo.5
+        for <linux-kernel@vger.kernel.org>; Wed, 08 Apr 2020 14:21:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=zrN2AJysnRrd7tScXLgKvVeZNzRk8jbdhU7zjHnGzoM=;
-        b=w2p7vEFBjttXDcozu8XyNt2d5S8Tx4MKu/XCnmkUTh5fYBf0WP0Pmn0QA7h1Alh4Sh
-         zEI0WDD7DmYxO4ckHVugL2HdPYjExF19axfdLGnM9tmWpz4VBNrPqy6EIebfJGPZhZny
-         y5VHDSSCpWBwU55abdAMfvTdHmMNaLYk82+msNjKcixDqy6w3itKDIclhlbyPXFmis0y
-         3vLoVXzLRmNAPT6EuZkntFQeLRPDAC15q95kRsLGSWLWQaf3QfntyP8his3mZa4TUbNv
-         bxcUUqIoMVz5ngJRkE3d9oSKTHci2OZc2fkQTs81S/t+Fk6TyEheBRm+bQiaahJG31PD
-         Z7/g==
+        d=google.com; s=20161025;
+        h=date:from:to:cc:subject:in-reply-to:message-id:references
+         :user-agent:mime-version;
+        bh=34Kn/eu0N7rYRcQksHLSyYAck8Jvs1iQ8jdTQOhf4Ck=;
+        b=jCD1KXRGvc81zHGNV/YZL1/fM8jq8zVdMP7whm5j15FWS1pYB8zRmLnmnFArQ3DsQE
+         Iu+5rSzL1Y586/poD0+AjOFifPtJAMhCHUMC+ai5SLQDEmhKAoUbBVrYwoEcBLNgFMtr
+         o0+KpP8pJ8G4KPrGqeTwIcPnk9Wkbweecz948ztQU5lKSO1d3n0zufuXFlzdMAElQgkl
+         BywzgakieQjRsJf7G0nnCx6Kb5an76l/ttNbOC+ERZlU7puJBzxyBAoTPSTzT/gNEu8W
+         R2jyPA8LJ/zszRi2zDnxfD8jw43BpsSgZmt6mpQPyu34ze+ctwFmQAehvtvsrqNJlB3p
+         Sosg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=zrN2AJysnRrd7tScXLgKvVeZNzRk8jbdhU7zjHnGzoM=;
-        b=cdBFfMRRQXXyoVlrn3Ab2s0ro3egY9fVgFOz5jp+qFT9aZDHjYHijHgkyN1TIDrpnk
-         Qsab/4uuZ3+3Hgy+ZkRkR22NEKIbD6/ZjTK1zY190XCttHfVUc+yr6bSd6jJZ3EjLnXu
-         isPItnKApvtvCSqR3D6L2cB4bIA3CbyQ8uYNbdahlkLwPi9XWjD8f24Y/KzNvVy3HTpG
-         g45RgWqSySFEQ/NarspAlKf9ydtz9IgunHLTzwZKd69YzZQ9bpAYXv09uAodlZmaJNgQ
-         IgQrwppLo/qJeY7sxgszql8RDGaBXPDlXI7rDYRbZrxL1K3iISDrwJ8FmymCrtQK42I4
-         1RqA==
-X-Gm-Message-State: AGi0PuZck9V1QvzUMAo98FzyFR8a0WIlyq6zGpsiWC46cZKIOZ5qw23Y
-        mc5sXvrhMcqfDXkfcXJaJNqJtA==
-X-Google-Smtp-Source: APiQypLazl80SfazbYATmIW7XpVpaNnxb4MWewZXCKb4wNLIViuGqsDajiItsUTxIftr0KesG3bf1A==
-X-Received: by 2002:a05:6512:3049:: with SMTP id b9mr5815265lfb.176.1586380879410;
-        Wed, 08 Apr 2020 14:21:19 -0700 (PDT)
-Received: from localhost.localdomain (212-5-158-138.ip.btc-net.bg. [212.5.158.138])
-        by smtp.gmail.com with ESMTPSA id b28sm17395301ljp.90.2020.04.08.14.21.04
+        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
+         :references:user-agent:mime-version;
+        bh=34Kn/eu0N7rYRcQksHLSyYAck8Jvs1iQ8jdTQOhf4Ck=;
+        b=J0KX46uZ4cY1P5qSgwvu9+PNBiOz24Av4J0/BPz6qXiXZWncoj/YnjeFK7OG4+xf1m
+         bbD5x+b54IHjZ2irdZd/7TcVqwJ+d2oBSPsp2e/LF1Tu8g437uU0bUnDkSnlC6955VNd
+         +NTJ6xNEsGyaB/qgY9gSARhhqD6QLFmY7nV5ETO4jiMsZJMA0VXLC58sanMLLsQFSCwC
+         4rGZkExog58bT6JpnCXXraErYcGeP8P+NUUXGIR69H3CHNByRr/K+11wDFTAjP4G2J0f
+         bupEfh2F+v6g1hiWDlekOHul2uXHNHqSDiFq/jwuBnxQmfVo7nOaqyTFgZBmmT0kh/6v
+         SqzA==
+X-Gm-Message-State: AGi0PuYaWDpkBq2ESTS9MNLLotjAy3G+FpwEGoPgBQ1eI/Svg387H1CJ
+        7mieGrKPoiay9p6+Z/2gkGdJsGg2/vg=
+X-Google-Smtp-Source: APiQypKtS/LFVS198NdDuc3ZtVm87KjhUpjqfAcswscSsZzCMTJ3ghCkfuC8xCZ71NfUFWli5mGQYw==
+X-Received: by 2002:aa7:9f49:: with SMTP id h9mr9824804pfr.217.1586380864725;
+        Wed, 08 Apr 2020 14:21:04 -0700 (PDT)
+Received: from [2620:15c:17:3:3a5:23a7:5e32:4598] ([2620:15c:17:3:3a5:23a7:5e32:4598])
+        by smtp.gmail.com with ESMTPSA id q6sm405407pja.34.2020.04.08.14.21.03
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 08 Apr 2020 14:21:18 -0700 (PDT)
-From:   Stanimir Varbanov <stanimir.varbanov@linaro.org>
-To:     linux-media@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     Vikash Garodia <vgarodia@codeaurora.org>,
-        Stanimir Varbanov <stanimir.varbanov@linaro.org>
-Subject: [PATCH 2/2] venus: make debug infrastructure more flexible
-Date:   Thu,  9 Apr 2020 00:20:24 +0300
-Message-Id: <20200408212024.23377-3-stanimir.varbanov@linaro.org>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200408212024.23377-1-stanimir.varbanov@linaro.org>
-References: <20200408212024.23377-1-stanimir.varbanov@linaro.org>
+        Wed, 08 Apr 2020 14:21:04 -0700 (PDT)
+Date:   Wed, 8 Apr 2020 14:21:03 -0700 (PDT)
+From:   David Rientjes <rientjes@google.com>
+X-X-Sender: rientjes@chino.kir.corp.google.com
+To:     Christoph Hellwig <hch@lst.de>,
+        Tom Lendacky <thomas.lendacky@amd.com>
+cc:     "Singh, Brijesh" <brijesh.singh@amd.com>,
+        "Grimm, Jon" <jon.grimm@amd.com>, Joerg Roedel <joro@8bytes.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>
+Subject: [rfc v2 1/6] dma-remap: separate DMA atomic pools from direct remap
+ code
+In-Reply-To: <alpine.DEB.2.21.2004081418490.19661@chino.kir.corp.google.com>
+Message-ID: <alpine.DEB.2.21.2004081419190.19661@chino.kir.corp.google.com>
+References: <alpine.DEB.2.21.1912311738130.68206@chino.kir.corp.google.com> <b22416ec-cc28-3fd2-3a10-89840be173fa@amd.com> <alpine.DEB.2.21.2002280118461.165532@chino.kir.corp.google.com> <alpine.DEB.2.21.2003011535510.213582@chino.kir.corp.google.com>
+ <alpine.DEB.2.21.2004081418490.19661@chino.kir.corp.google.com>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Here we introduce few debug macros with levels (low, medium and
-high) and debug macro for firmware. Enabling the particular
-level will be done by dynamic debug.
+DMA atomic pools will be needed beyond only CONFIG_DMA_DIRECT_REMAP so
+separate them out into their own file.
 
-For example to enable debug messages with low level:
-echo 'format "VENUSL" +p' > debugfs/dynamic_debug/control
+This also adds a new Kconfig option that can be subsequently used for
+options, such as CONFIG_AMD_MEM_ENCRYPT, that will utilize the coherent
+pools but do not have a dependency on direct remapping.
 
-If you want to enable all levels:
-echo 'format "VENUS" +p' > debugfs/dynamic_debug/control
+For this patch alone, there is no functional change introduced.
 
-All the features which dynamic debugging provide are preserved.
-
-And finaly all dev_dbg are translated to VDBGX with appropriate
-debug levels.
-
-Signed-off-by: Stanimir Varbanov <stanimir.varbanov@linaro.org>
+Signed-off-by: David Rientjes <rientjes@google.com>
 ---
- drivers/media/platform/qcom/venus/core.h      |  5 ++
- drivers/media/platform/qcom/venus/helpers.c   |  2 +-
- drivers/media/platform/qcom/venus/hfi_msgs.c  | 24 ++++---
- drivers/media/platform/qcom/venus/hfi_venus.c | 20 ++++--
- .../media/platform/qcom/venus/pm_helpers.c    |  3 +-
- drivers/media/platform/qcom/venus/vdec.c      | 63 +++++++++++++++++--
- drivers/media/platform/qcom/venus/venc.c      |  4 ++
- 7 files changed, 94 insertions(+), 27 deletions(-)
+ kernel/dma/Kconfig  |   6 ++-
+ kernel/dma/Makefile |   1 +
+ kernel/dma/pool.c   | 125 ++++++++++++++++++++++++++++++++++++++++++++
+ kernel/dma/remap.c  | 114 ----------------------------------------
+ 4 files changed, 131 insertions(+), 115 deletions(-)
+ create mode 100644 kernel/dma/pool.c
 
-diff --git a/drivers/media/platform/qcom/venus/core.h b/drivers/media/platform/qcom/venus/core.h
-index 1980211659f3..b95d0ab7e1aa 100644
---- a/drivers/media/platform/qcom/venus/core.h
-+++ b/drivers/media/platform/qcom/venus/core.h
-@@ -15,6 +15,11 @@
- #include "hfi.h"
- #include "dbgfs.h"
+diff --git a/kernel/dma/Kconfig b/kernel/dma/Kconfig
+index 4c103a24e380..d006668c0027 100644
+--- a/kernel/dma/Kconfig
++++ b/kernel/dma/Kconfig
+@@ -79,10 +79,14 @@ config DMA_REMAP
+ 	select DMA_NONCOHERENT_MMAP
+ 	bool
  
-+#define VDBGL(fmt, args...)	pr_debug("VENUSL: " fmt, ##args)
-+#define VDBGM(fmt, args...)	pr_debug("VENUSM: " fmt, ##args)
-+#define VDBGH(fmt, args...)	pr_debug("VENUSH: " fmt, ##args)
-+#define VDBGFW(fmt, args...)	pr_debug("VENUSFW: " fmt, ##args)
+-config DMA_DIRECT_REMAP
++config DMA_COHERENT_POOL
+ 	bool
+ 	select DMA_REMAP
+ 
++config DMA_DIRECT_REMAP
++	bool
++	select DMA_COHERENT_POOL
 +
- #define VIDC_CLKS_NUM_MAX		4
- #define VIDC_VCODEC_CLKS_NUM_MAX	2
- #define VIDC_PMDOMAINS_NUM_MAX		3
-diff --git a/drivers/media/platform/qcom/venus/helpers.c b/drivers/media/platform/qcom/venus/helpers.c
-index bcc603804041..9fe729ee8c6c 100644
---- a/drivers/media/platform/qcom/venus/helpers.c
-+++ b/drivers/media/platform/qcom/venus/helpers.c
-@@ -396,7 +396,7 @@ put_ts_metadata(struct venus_inst *inst, struct vb2_v4l2_buffer *vbuf)
- 	}
- 
- 	if (slot == -1) {
--		dev_dbg(inst->core->dev, "%s: no free slot\n", __func__);
-+		VDBGH("no free slot for timestamp\n");
- 		return;
- 	}
- 
-diff --git a/drivers/media/platform/qcom/venus/hfi_msgs.c b/drivers/media/platform/qcom/venus/hfi_msgs.c
-index 04ef2286efc6..586c7466bf9f 100644
---- a/drivers/media/platform/qcom/venus/hfi_msgs.c
-+++ b/drivers/media/platform/qcom/venus/hfi_msgs.c
-@@ -138,10 +138,9 @@ static void event_sys_error(struct venus_core *core, u32 event,
- 			    struct hfi_msg_event_notify_pkt *pkt)
- {
- 	if (pkt)
--		dev_dbg(core->dev,
--			"sys error (session id:%x, data1:%x, data2:%x)\n",
--			pkt->shdr.session_id, pkt->event_data1,
--			pkt->event_data2);
-+		VDBGH("sys error (session id: %x, data1: %x, data2: %x)\n",
-+		      pkt->shdr.session_id, pkt->event_data1,
-+		      pkt->event_data2);
- 
- 	core->core_ops->event_notify(core, event);
- }
-@@ -152,8 +151,8 @@ event_session_error(struct venus_core *core, struct venus_inst *inst,
- {
- 	struct device *dev = core->dev;
- 
--	dev_dbg(dev, "session error: event id:%x, session id:%x\n",
--		pkt->event_data1, pkt->shdr.session_id);
-+	VDBGH("session error: event id: %x, session id: %x\n",
-+	      pkt->event_data1, pkt->shdr.session_id);
- 
- 	if (!inst)
- 		return;
-@@ -247,7 +246,7 @@ sys_get_prop_image_version(struct device *dev,
- 		/* bad packet */
- 		return;
- 
--	dev_dbg(dev, "F/W version: %s\n", (u8 *)&pkt->data[1]);
-+	VDBGL("F/W version: %s\n", (u8 *)&pkt->data[1]);
- }
- 
- static void hfi_sys_property_info(struct venus_core *core,
-@@ -257,7 +256,7 @@ static void hfi_sys_property_info(struct venus_core *core,
- 	struct device *dev = core->dev;
- 
- 	if (!pkt->num_properties) {
--		dev_dbg(dev, "%s: no properties\n", __func__);
-+		VDBGM("no properties\n");
- 		return;
- 	}
- 
-@@ -266,7 +265,7 @@ static void hfi_sys_property_info(struct venus_core *core,
- 		sys_get_prop_image_version(dev, pkt);
- 		break;
- 	default:
--		dev_dbg(dev, "%s: unknown property data\n", __func__);
-+		VDBGM("unknown property data\n");
- 		break;
- 	}
- }
-@@ -297,7 +296,7 @@ static void hfi_sys_ping_done(struct venus_core *core, struct venus_inst *inst,
- static void hfi_sys_idle_done(struct venus_core *core, struct venus_inst *inst,
- 			      void *packet)
- {
--	dev_dbg(core->dev, "sys idle\n");
-+	VDBGL("sys idle\n");
- }
- 
- static void hfi_sys_pc_prepare_done(struct venus_core *core,
-@@ -305,7 +304,7 @@ static void hfi_sys_pc_prepare_done(struct venus_core *core,
- {
- 	struct hfi_msg_sys_pc_prep_done_pkt *pkt = packet;
- 
--	dev_dbg(core->dev, "pc prepare done (error %x)\n", pkt->error_type);
-+	VDBGL("pc prepare done (error %x)\n", pkt->error_type);
- }
- 
- static unsigned int
-@@ -387,8 +386,7 @@ static void hfi_session_prop_info(struct venus_core *core,
- 	case HFI_PROPERTY_CONFIG_VDEC_ENTROPY:
- 		break;
- 	default:
--		dev_dbg(dev, "%s: unknown property id:%x\n", __func__,
--			pkt->data[0]);
-+		VDBGH("unknown property id: %x\n", pkt->data[0]);
- 		return;
- 	}
- 
-diff --git a/drivers/media/platform/qcom/venus/hfi_venus.c b/drivers/media/platform/qcom/venus/hfi_venus.c
-index 3a04b08ab85a..9aef62f9b59a 100644
---- a/drivers/media/platform/qcom/venus/hfi_venus.c
-+++ b/drivers/media/platform/qcom/venus/hfi_venus.c
-@@ -467,7 +467,6 @@ static int venus_boot_core(struct venus_hfi_device *hdev)
- 
- static u32 venus_hwversion(struct venus_hfi_device *hdev)
- {
--	struct device *dev = hdev->core->dev;
- 	u32 ver = venus_readl(hdev, WRAPPER_HW_VERSION);
- 	u32 major, minor, step;
- 
-@@ -477,7 +476,7 @@ static u32 venus_hwversion(struct venus_hfi_device *hdev)
- 	minor = minor >> WRAPPER_HW_VERSION_MINOR_VERSION_SHIFT;
- 	step = ver & WRAPPER_HW_VERSION_STEP_VERSION_MASK;
- 
--	dev_dbg(dev, "venus hw version %x.%x.%x\n", major, minor, step);
-+	VDBGL("venus hw version %x.%x.%x\n", major, minor, step);
- 
- 	return major;
- }
-@@ -897,7 +896,6 @@ static int venus_session_cmd(struct venus_inst *inst, u32 pkt_type)
- 
- static void venus_flush_debug_queue(struct venus_hfi_device *hdev)
- {
--	struct device *dev = hdev->core->dev;
- 	void *packet = hdev->dbg_buf;
- 
- 	while (!venus_iface_dbgq_read(hdev, packet)) {
-@@ -906,7 +904,7 @@ static void venus_flush_debug_queue(struct venus_hfi_device *hdev)
- 		if (pkt->hdr.pkt_type != HFI_MSG_SYS_COV) {
- 			struct hfi_msg_sys_debug_pkt *pkt = packet;
- 
--			dev_dbg(dev, "%s", pkt->msg_data);
-+			VDBGFW("%s", pkt->msg_data);
- 		}
- 	}
- }
-@@ -1230,6 +1228,11 @@ static int venus_session_etb(struct venus_inst *inst,
- 		ret = -EINVAL;
- 	}
- 
-+	VDBGM("etb: %s: itag: %u, flen: %u, addr: %x\n",
-+	      session_type == VIDC_SESSION_TYPE_DEC ? "dec" : "enc",
-+	      in_frame->clnt_data, in_frame->filled_len,
-+	      in_frame->device_addr);
+ config DMA_CMA
+ 	bool "DMA Contiguous Memory Allocator"
+ 	depends on HAVE_DMA_CONTIGUOUS && CMA
+diff --git a/kernel/dma/Makefile b/kernel/dma/Makefile
+index d237cf3dc181..370f63344e9c 100644
+--- a/kernel/dma/Makefile
++++ b/kernel/dma/Makefile
+@@ -6,4 +6,5 @@ obj-$(CONFIG_DMA_DECLARE_COHERENT)	+= coherent.o
+ obj-$(CONFIG_DMA_VIRT_OPS)		+= virt.o
+ obj-$(CONFIG_DMA_API_DEBUG)		+= debug.o
+ obj-$(CONFIG_SWIOTLB)			+= swiotlb.o
++obj-$(CONFIG_DMA_COHERENT_POOL)		+= pool.o
+ obj-$(CONFIG_DMA_REMAP)			+= remap.o
+diff --git a/kernel/dma/pool.c b/kernel/dma/pool.c
+new file mode 100644
+index 000000000000..64cbe5852cf6
+--- /dev/null
++++ b/kernel/dma/pool.c
+@@ -0,0 +1,125 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Copyright (C) 2012 ARM Ltd.
++ * Copyright (c) 2014 The Linux Foundation
++ * Copyright (C) 2020 Google LLC
++ */
++#include <linux/dma-direct.h>
++#include <linux/dma-noncoherent.h>
++#include <linux/dma-contiguous.h>
++#include <linux/init.h>
++#include <linux/genalloc.h>
++#include <linux/slab.h>
++#include <linux/vmalloc.h>
 +
- 	return ret;
- }
- 
-@@ -1244,7 +1247,14 @@ static int venus_session_ftb(struct venus_inst *inst,
- 	if (ret)
- 		return ret;
- 
--	return venus_iface_cmdq_write(hdev, &pkt);
-+	ret = venus_iface_cmdq_write(hdev, &pkt);
++static struct gen_pool *atomic_pool __ro_after_init;
 +
-+	VDBGM("ftb: %s: otag: %u, flen: %u, addr: %x\n",
-+	      inst->session_type == VIDC_SESSION_TYPE_DEC ? "dec" : "enc",
-+	      out_frame->clnt_data, out_frame->filled_len,
-+	      out_frame->device_addr);
++#define DEFAULT_DMA_COHERENT_POOL_SIZE  SZ_256K
++static size_t atomic_pool_size __initdata = DEFAULT_DMA_COHERENT_POOL_SIZE;
 +
-+	return ret;
- }
- 
- static int venus_session_set_buffers(struct venus_inst *inst,
-diff --git a/drivers/media/platform/qcom/venus/pm_helpers.c b/drivers/media/platform/qcom/venus/pm_helpers.c
-index abf93158857b..ec7394615ef8 100644
---- a/drivers/media/platform/qcom/venus/pm_helpers.c
-+++ b/drivers/media/platform/qcom/venus/pm_helpers.c
-@@ -212,8 +212,7 @@ static int load_scale_bw(struct venus_core *core)
- 	}
- 	mutex_unlock(&core->lock);
- 
--	dev_dbg(core->dev, "total: avg_bw: %u, peak_bw: %u\n",
--		total_avg, total_peak);
-+	VDBGL("total: avg_bw: %u, peak_bw: %u\n", total_avg, total_peak);
- 
- 	return icc_set_bw(core->video_path, total_avg, total_peak);
- }
-diff --git a/drivers/media/platform/qcom/venus/vdec.c b/drivers/media/platform/qcom/venus/vdec.c
-index 4ed2628585a1..ec9f47a638f6 100644
---- a/drivers/media/platform/qcom/venus/vdec.c
-+++ b/drivers/media/platform/qcom/venus/vdec.c
-@@ -225,7 +225,7 @@ static int vdec_check_src_change(struct venus_inst *inst)
- 
- 	if (!(inst->codec_state == VENUS_DEC_STATE_CAPTURE_SETUP) ||
- 	    !inst->reconfig)
--		dev_dbg(inst->core->dev, "%s: wrong state\n", __func__);
-+		VDBGM("wrong codec state %u\n", inst->codec_state);
- 
- done:
- 	return 0;
-@@ -724,6 +724,10 @@ static int vdec_queue_setup(struct vb2_queue *q,
- 	unsigned int in_num, out_num;
- 	int ret = 0;
- 
-+	VDBGM("vb2: queue_setup: %s: begin (codec_state: %u)\n",
-+	      V4L2_TYPE_IS_OUTPUT(q->type) ? "out" : "cap",
-+	      inst->codec_state);
++static int __init early_coherent_pool(char *p)
++{
++	atomic_pool_size = memparse(p, &p);
++	return 0;
++}
++early_param("coherent_pool", early_coherent_pool);
 +
- 	if (*num_planes) {
- 		unsigned int output_buf_size = venus_helper_get_opb_size(inst);
- 
-@@ -785,6 +789,10 @@ static int vdec_queue_setup(struct vb2_queue *q,
- 		break;
- 	}
- 
-+	VDBGM("vb2: queue_setup: %s: end (codec_state: %u, ret: %d)\n",
-+	      V4L2_TYPE_IS_OUTPUT(q->type) ? "out" : "cap",
-+	      inst->codec_state, ret);
++static gfp_t dma_atomic_pool_gfp(void)
++{
++	if (IS_ENABLED(CONFIG_ZONE_DMA))
++		return GFP_DMA;
++	if (IS_ENABLED(CONFIG_ZONE_DMA32))
++		return GFP_DMA32;
++	return GFP_KERNEL;
++}
 +
- 	return ret;
- }
- 
-@@ -819,6 +827,8 @@ static int vdec_start_capture(struct venus_inst *inst)
- {
- 	int ret;
- 
-+	VDBGM("on: cap: begin (codec_state: %u)\n", inst->codec_state);
-+
- 	if (!inst->streamon_out)
- 		return 0;
- 
-@@ -877,11 +887,16 @@ static int vdec_start_capture(struct venus_inst *inst)
- 	inst->sequence_cap = 0;
- 	inst->reconfig = false;
- 
-+	VDBGM("on: cap: end (codec_state: %u)\n", inst->codec_state);
-+
- 	return 0;
- 
- free_dpb_bufs:
- 	venus_helper_free_dpb_bufs(inst);
- err:
-+	VDBGM("on: cap: end (codec_state: %u, ret: %d)\n",
-+	      inst->codec_state, ret);
-+
- 	return ret;
- }
- 
-@@ -889,6 +904,8 @@ static int vdec_start_output(struct venus_inst *inst)
- {
- 	int ret;
- 
-+	VDBGM("on: out: begin (codec_state: %u)\n", inst->codec_state);
-+
- 	if (inst->codec_state == VENUS_DEC_STATE_SEEK) {
- 		ret = venus_helper_process_initial_out_bufs(inst);
- 		inst->codec_state = VENUS_DEC_STATE_DECODING;
-@@ -937,6 +954,10 @@ static int vdec_start_output(struct venus_inst *inst)
- 
- done:
- 	inst->streamon_out = 1;
-+
-+	VDBGM("on: out: end (codec_state: %u, ret: %d)\n",
-+	      inst->codec_state, ret);
-+
- 	return ret;
- }
- 
-@@ -980,6 +1001,8 @@ static int vdec_stop_capture(struct venus_inst *inst)
- {
- 	int ret = 0;
- 
-+	VDBGM("off: cap: begin (codec_state: %u)\n", inst->codec_state);
-+
- 	switch (inst->codec_state) {
- 	case VENUS_DEC_STATE_DECODING:
- 		ret = hfi_session_flush(inst, HFI_FLUSH_ALL);
-@@ -996,9 +1019,12 @@ static int vdec_stop_capture(struct venus_inst *inst)
- 		venus_helper_free_dpb_bufs(inst);
- 		break;
- 	default:
--		return 0;
-+		break;
- 	}
- 
-+	VDBGM("off: cap: end (codec_state: %u, ret: %d)\n",
-+	      inst->codec_state, ret);
-+
- 	return ret;
- }
- 
-@@ -1006,6 +1032,8 @@ static int vdec_stop_output(struct venus_inst *inst)
- {
- 	int ret = 0;
- 
-+	VDBGM("off: out: begin (codec_state: %u)\n", inst->codec_state);
-+
- 	switch (inst->codec_state) {
- 	case VENUS_DEC_STATE_DECODING:
- 	case VENUS_DEC_STATE_DRAIN:
-@@ -1021,6 +1049,9 @@ static int vdec_stop_output(struct venus_inst *inst)
- 		break;
- 	}
- 
-+	VDBGM("off: out: end (codec_state: %u, ret %d)\n",
-+	      inst->codec_state, ret);
-+
- 	return ret;
- }
- 
-@@ -1055,6 +1086,8 @@ static void vdec_session_release(struct venus_inst *inst)
- 	struct venus_core *core = inst->core;
- 	int ret, abort = 0;
- 
-+	VDBGM("rel: begin (codec_state: %u)\n", inst->codec_state);
-+
- 	mutex_lock(&inst->lock);
- 
- 	inst->codec_state = VENUS_DEC_STATE_DEINIT;
-@@ -1082,15 +1115,23 @@ static void vdec_session_release(struct venus_inst *inst)
- 	INIT_LIST_HEAD(&inst->registeredbufs);
- 
- 	mutex_unlock(&inst->lock);
-+
-+	VDBGM("rel: end (codec_state: %u)\n", inst->codec_state);
- }
- 
- static int vdec_buf_init(struct vb2_buffer *vb)
- {
- 	struct venus_inst *inst = vb2_get_drv_priv(vb->vb2_queue);
++static int __init dma_atomic_pool_init(void)
++{
++	unsigned int pool_size_order = get_order(atomic_pool_size);
++	unsigned long nr_pages = atomic_pool_size >> PAGE_SHIFT;
++	struct page *page;
++	void *addr;
 +	int ret;
- 
- 	inst->buf_count++;
- 
--	return venus_helper_vb2_buf_init(vb);
-+	ret = venus_helper_vb2_buf_init(vb);
 +
-+	VDBGM("vb2: buf_init: %s: done (codec_state: %u)\n",
-+	      V4L2_TYPE_IS_OUTPUT(vb->type) ? "out" : "cap", inst->codec_state);
++	if (dev_get_cma_area(NULL))
++		page = dma_alloc_from_contiguous(NULL, nr_pages,
++						 pool_size_order, false);
++	else
++		page = alloc_pages(dma_atomic_pool_gfp(), pool_size_order);
++	if (!page)
++		goto out;
 +
-+	return ret;
++	arch_dma_prep_coherent(page, atomic_pool_size);
++
++	atomic_pool = gen_pool_create(PAGE_SHIFT, -1);
++	if (!atomic_pool)
++		goto free_page;
++
++	addr = dma_common_contiguous_remap(page, atomic_pool_size,
++					   pgprot_dmacoherent(PAGE_KERNEL),
++					   __builtin_return_address(0));
++	if (!addr)
++		goto destroy_genpool;
++
++	ret = gen_pool_add_virt(atomic_pool, (unsigned long)addr,
++				page_to_phys(page), atomic_pool_size, -1);
++	if (ret)
++		goto remove_mapping;
++	gen_pool_set_algo(atomic_pool, gen_pool_first_fit_order_align, NULL);
++
++	pr_info("DMA: preallocated %zu KiB pool for atomic allocations\n",
++		atomic_pool_size / 1024);
++	return 0;
++
++remove_mapping:
++	dma_common_free_remap(addr, atomic_pool_size);
++destroy_genpool:
++	gen_pool_destroy(atomic_pool);
++	atomic_pool = NULL;
++free_page:
++	if (!dma_release_from_contiguous(NULL, page, nr_pages))
++		__free_pages(page, pool_size_order);
++out:
++	pr_err("DMA: failed to allocate %zu KiB pool for atomic coherent allocation\n",
++		atomic_pool_size / 1024);
++	return -ENOMEM;
++}
++postcore_initcall(dma_atomic_pool_init);
++
++bool dma_in_atomic_pool(void *start, size_t size)
++{
++	if (unlikely(!atomic_pool))
++		return false;
++
++	return gen_pool_has_addr(atomic_pool, (unsigned long)start, size);
++}
++
++void *dma_alloc_from_pool(size_t size, struct page **ret_page, gfp_t flags)
++{
++	unsigned long val;
++	void *ptr = NULL;
++
++	if (!atomic_pool) {
++		WARN(1, "coherent pool not initialised!\n");
++		return NULL;
++	}
++
++	val = gen_pool_alloc(atomic_pool, size);
++	if (val) {
++		phys_addr_t phys = gen_pool_virt_to_phys(atomic_pool, val);
++
++		*ret_page = pfn_to_page(__phys_to_pfn(phys));
++		ptr = (void *)val;
++		memset(ptr, 0, size);
++	}
++
++	return ptr;
++}
++
++bool dma_free_from_pool(void *start, size_t size)
++{
++	if (!dma_in_atomic_pool(start, size))
++		return false;
++	gen_pool_free(atomic_pool, (unsigned long)start, size);
++	return true;
++}
+diff --git a/kernel/dma/remap.c b/kernel/dma/remap.c
+index d14cbc83986a..081486007342 100644
+--- a/kernel/dma/remap.c
++++ b/kernel/dma/remap.c
+@@ -97,117 +97,3 @@ void dma_common_free_remap(void *cpu_addr, size_t size)
+ 	unmap_kernel_range((unsigned long)cpu_addr, PAGE_ALIGN(size));
+ 	vunmap(cpu_addr);
  }
- 
- static void vdec_buf_cleanup(struct vb2_buffer *vb)
-@@ -1100,6 +1141,9 @@ static void vdec_buf_cleanup(struct vb2_buffer *vb)
- 	inst->buf_count--;
- 	if (!inst->buf_count)
- 		vdec_session_release(inst);
-+
-+	VDBGM("vb2: buf_cleanup: %s: done (codec_state: %u)\n",
-+	      V4L2_TYPE_IS_OUTPUT(vb->type) ? "out" : "cap", inst->codec_state);
- }
- 
- static const struct vb2_ops vdec_vb2_ops = {
-@@ -1167,6 +1211,10 @@ static void vdec_buf_done(struct venus_inst *inst, unsigned int buf_type,
- 	}
- 
- 	v4l2_m2m_buf_done(vbuf, state);
-+
-+	VDBGH("done: %s, idx: %02u, flen: %08u, flags: hfi: %08x, v4l2: %08x\n",
-+	      V4L2_TYPE_IS_OUTPUT(type) ? "out" : "cap",
-+	      vbuf->vb2_buf.index, bytesused, hfi_flags, vbuf->flags);
- }
- 
- static void vdec_event_change(struct venus_inst *inst,
-@@ -1175,7 +1223,6 @@ static void vdec_event_change(struct venus_inst *inst,
- 	static const struct v4l2_event ev = {
- 		.type = V4L2_EVENT_SOURCE_CHANGE,
- 		.u.src_change.changes = V4L2_EVENT_SRC_CH_RESOLUTION };
--	struct device *dev = inst->core->dev_dec;
- 	struct v4l2_format format = {};
- 
- 	mutex_lock(&inst->lock);
-@@ -1196,8 +1243,12 @@ static void vdec_event_change(struct venus_inst *inst,
- 	if (inst->bit_depth != ev_data->bit_depth)
- 		inst->bit_depth = ev_data->bit_depth;
- 
--	dev_dbg(dev, "event %s sufficient resources (%ux%u)\n",
--		sufficient ? "" : "not", ev_data->width, ev_data->height);
-+	VDBGH("event: %s sufficient resources (%ux%u)\n",
-+	      sufficient ? "" : "not", ev_data->width, ev_data->height);
-+
-+	if (ev_data->buf_count)
-+		VDBGH("event: buf_count: %u, old: %u\n",
-+			ev_data->buf_count, inst->num_output_bufs);
- 
- 	if (sufficient) {
- 		hfi_session_continue(inst);
-diff --git a/drivers/media/platform/qcom/venus/venc.c b/drivers/media/platform/qcom/venus/venc.c
-index 9981a2a27c90..9b8726a0ac20 100644
---- a/drivers/media/platform/qcom/venus/venc.c
-+++ b/drivers/media/platform/qcom/venus/venc.c
-@@ -1066,6 +1066,10 @@ static void venc_buf_done(struct venus_inst *inst, unsigned int buf_type,
- 	}
- 
- 	v4l2_m2m_buf_done(vbuf, VB2_BUF_STATE_DONE);
-+
-+	VDBGH("done: %s, idx: %02u, flen: %08u, flags: hfi: %08x, v4l2: %08x\n",
-+	      V4L2_TYPE_IS_OUTPUT(type) ? "out" : "cap",
-+	      vbuf->vb2_buf.index, bytesused, hfi_flags, vbuf->flags);
- }
- 
- static void venc_event_notify(struct venus_inst *inst, u32 event,
--- 
-2.17.1
-
+-
+-#ifdef CONFIG_DMA_DIRECT_REMAP
+-static struct gen_pool *atomic_pool __ro_after_init;
+-
+-#define DEFAULT_DMA_COHERENT_POOL_SIZE  SZ_256K
+-static size_t atomic_pool_size __initdata = DEFAULT_DMA_COHERENT_POOL_SIZE;
+-
+-static int __init early_coherent_pool(char *p)
+-{
+-	atomic_pool_size = memparse(p, &p);
+-	return 0;
+-}
+-early_param("coherent_pool", early_coherent_pool);
+-
+-static gfp_t dma_atomic_pool_gfp(void)
+-{
+-	if (IS_ENABLED(CONFIG_ZONE_DMA))
+-		return GFP_DMA;
+-	if (IS_ENABLED(CONFIG_ZONE_DMA32))
+-		return GFP_DMA32;
+-	return GFP_KERNEL;
+-}
+-
+-static int __init dma_atomic_pool_init(void)
+-{
+-	unsigned int pool_size_order = get_order(atomic_pool_size);
+-	unsigned long nr_pages = atomic_pool_size >> PAGE_SHIFT;
+-	struct page *page;
+-	void *addr;
+-	int ret;
+-
+-	if (dev_get_cma_area(NULL))
+-		page = dma_alloc_from_contiguous(NULL, nr_pages,
+-						 pool_size_order, false);
+-	else
+-		page = alloc_pages(dma_atomic_pool_gfp(), pool_size_order);
+-	if (!page)
+-		goto out;
+-
+-	arch_dma_prep_coherent(page, atomic_pool_size);
+-
+-	atomic_pool = gen_pool_create(PAGE_SHIFT, -1);
+-	if (!atomic_pool)
+-		goto free_page;
+-
+-	addr = dma_common_contiguous_remap(page, atomic_pool_size,
+-					   pgprot_dmacoherent(PAGE_KERNEL),
+-					   __builtin_return_address(0));
+-	if (!addr)
+-		goto destroy_genpool;
+-
+-	ret = gen_pool_add_virt(atomic_pool, (unsigned long)addr,
+-				page_to_phys(page), atomic_pool_size, -1);
+-	if (ret)
+-		goto remove_mapping;
+-	gen_pool_set_algo(atomic_pool, gen_pool_first_fit_order_align, NULL);
+-
+-	pr_info("DMA: preallocated %zu KiB pool for atomic allocations\n",
+-		atomic_pool_size / 1024);
+-	return 0;
+-
+-remove_mapping:
+-	dma_common_free_remap(addr, atomic_pool_size);
+-destroy_genpool:
+-	gen_pool_destroy(atomic_pool);
+-	atomic_pool = NULL;
+-free_page:
+-	if (!dma_release_from_contiguous(NULL, page, nr_pages))
+-		__free_pages(page, pool_size_order);
+-out:
+-	pr_err("DMA: failed to allocate %zu KiB pool for atomic coherent allocation\n",
+-		atomic_pool_size / 1024);
+-	return -ENOMEM;
+-}
+-postcore_initcall(dma_atomic_pool_init);
+-
+-bool dma_in_atomic_pool(void *start, size_t size)
+-{
+-	if (unlikely(!atomic_pool))
+-		return false;
+-
+-	return gen_pool_has_addr(atomic_pool, (unsigned long)start, size);
+-}
+-
+-void *dma_alloc_from_pool(size_t size, struct page **ret_page, gfp_t flags)
+-{
+-	unsigned long val;
+-	void *ptr = NULL;
+-
+-	if (!atomic_pool) {
+-		WARN(1, "coherent pool not initialised!\n");
+-		return NULL;
+-	}
+-
+-	val = gen_pool_alloc(atomic_pool, size);
+-	if (val) {
+-		phys_addr_t phys = gen_pool_virt_to_phys(atomic_pool, val);
+-
+-		*ret_page = pfn_to_page(__phys_to_pfn(phys));
+-		ptr = (void *)val;
+-		memset(ptr, 0, size);
+-	}
+-
+-	return ptr;
+-}
+-
+-bool dma_free_from_pool(void *start, size_t size)
+-{
+-	if (!dma_in_atomic_pool(start, size))
+-		return false;
+-	gen_pool_free(atomic_pool, (unsigned long)start, size);
+-	return true;
+-}
+-#endif /* CONFIG_DMA_DIRECT_REMAP */
