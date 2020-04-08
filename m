@@ -2,181 +2,264 @@ Return-Path: <SRS0=8dav=5Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C299FC2BB85
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 05:06:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5166C38A2E
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 05:07:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9AF9F20769
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 05:06:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7CADF2083E
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 05:07:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="mt2UO1ks"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="JdkjanUu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727126AbgDHFGq (ORCPT
+        id S1727195AbgDHFHD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Apr 2020 01:06:46 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:33764 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727077AbgDHFGq (ORCPT
+        Wed, 8 Apr 2020 01:07:03 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:38474 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726366AbgDHFF3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Apr 2020 01:06:46 -0400
-Received: by mail-wr1-f68.google.com with SMTP id a25so6311298wrd.0
-        for <linux-kernel@vger.kernel.org>; Tue, 07 Apr 2020 22:06:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=RVqYLzvz5LKqumC9icZHSiO0RIIhX7YU71aDHaxaFJE=;
-        b=mt2UO1ksFUf2Wqcy/GXaoOoCVWX2OeRgET0TvIwM1qEhWK0CR1YeHqkacSxJv/P8fU
-         VRA2yUT2pdNNBlBgUjtuWicF7bp7SIQxCJV403Pr1MDRJ0rxyUehQKnlOvLM1Ut+1qbD
-         YDyaE7xaFAI8xHJ4/UwY5fE1ZAG0sWOpBgYTQ=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=RVqYLzvz5LKqumC9icZHSiO0RIIhX7YU71aDHaxaFJE=;
-        b=qZV9wUNw+m1FXPBGCQUCWy2vuDfu3fJ7sjq+HyKQBQROzz9UuQWZgYzRKrbCL8l5Er
-         XywbRIWVcITHhE4VH2X5B4Tbz/N/Yt+ImVbC/X5W0lOQ4JyXp+eCBA3DJq6InqQ5tAgR
-         8ppnoabnbJ1+SeDEv5V4DFuQfIjWDbCeF26dpiBIHRcCDUe+/YlBvZRbazw4gb5+SuDl
-         pBOqfGxa0ZoyjlJcX/98JaLy8Yq/imp8SMr3ekhSb8VqO5dj8KfcTMjb0f5DFistSjVI
-         970cOVriJfRGnkFx/s6XmrJ1Wk5nZEaK6DKKsyAPC2bEcuVRFm6KPZJF5r0GEXbXlylW
-         ZWYw==
-X-Gm-Message-State: AGi0PuakawNbpDQuCYhmY8hYUYOxszQk8Tq9wLXUTs8/bWWPOOn0Yayo
-        9U/XsChdRrQbiEyFvhRLu7RXDg2qumvnfCJcpw4mKQaI
-X-Google-Smtp-Source: APiQypIN18iGe7EO2INUCjO7GQKpI0EzzwmN1Z1k8o9aPCwEQGXb3Iysg/a12d8h4jfUDp3v4FHpOhNbFw6kY+d81vI=
-X-Received: by 2002:adf:fa51:: with SMTP id y17mr6697995wrr.358.1586322403655;
- Tue, 07 Apr 2020 22:06:43 -0700 (PDT)
+        Wed, 8 Apr 2020 01:05:29 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03853kJT191170;
+        Wed, 8 Apr 2020 05:05:03 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : date : message-id : in-reply-to : references : mime-version :
+ content-transfer-encoding; s=corp-2020-01-29;
+ bh=YqkpSF+xaj87ukpBfxxbSQruerieQm4kGvLikr6EByg=;
+ b=JdkjanUuxwOILdkRa92kgljdqWjdgneiBkVZJxAeqNWM1rn046UVVjh8q+hLyr1jCaw5
+ efBQTN7ituKdbN9KZYhmSd6bCobGZy4Ai8YbCGV7w+NxE1HICzDkva4dKA2R+PUxPIzC
+ shywYoahTgQ9oCJkap9TlaUAxYpHeIGVf+XMEFvzEXjWP7PfrP/slqcx10d7fz1KStg2
+ kcTlKOfFWU0p6o2YZbGTWkmxDBVRKFs1+6jB2CTRjJvQ3gD2DZgw1BPb+x1v8dy4x7qv
+ J0Dv+ro6jQX3SXKG0NtTYkrxjdavZEFEdN+7kyhodZuYxmp5MbHHWuEIxUhLyQuwPcF6 vg== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by aserp2120.oracle.com with ESMTP id 3091m0s0rs-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 08 Apr 2020 05:05:02 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03852XPH062239;
+        Wed, 8 Apr 2020 05:05:02 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by userp3020.oracle.com with ESMTP id 3091mh1k6d-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 08 Apr 2020 05:05:02 +0000
+Received: from abhmp0012.oracle.com (abhmp0012.oracle.com [141.146.116.18])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 03854w5i030423;
+        Wed, 8 Apr 2020 05:04:59 GMT
+Received: from monad.ca.oracle.com (/10.156.75.81)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 07 Apr 2020 22:04:57 -0700
+From:   Ankur Arora <ankur.a.arora@oracle.com>
+To:     linux-kernel@vger.kernel.org, x86@kernel.org
+Cc:     peterz@infradead.org, hpa@zytor.com, jpoimboe@redhat.com,
+        namit@vmware.com, mhiramat@kernel.org, jgross@suse.com,
+        bp@alien8.de, vkuznets@redhat.com, pbonzini@redhat.com,
+        boris.ostrovsky@oracle.com, mihai.carabas@oracle.com,
+        kvm@vger.kernel.org, xen-devel@lists.xenproject.org,
+        virtualization@lists.linux-foundation.org,
+        Ankur Arora <ankur.a.arora@oracle.com>
+Subject: [RFC PATCH 02/26] x86/paravirt: Allow paravirt patching post-init
+Date:   Tue,  7 Apr 2020 22:02:59 -0700
+Message-Id: <20200408050323.4237-3-ankur.a.arora@oracle.com>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200408050323.4237-1-ankur.a.arora@oracle.com>
+References: <20200408050323.4237-1-ankur.a.arora@oracle.com>
 MIME-Version: 1.0
-References: <20200327151951.18111-1-ricardo.canuelo@collabora.com>
- <20200327154345.GA3971@ninjato> <CAGAzgsqJznZi83ijxCgQg463Q4AnwiNX-a0Q9+Og9MW5OJ4Vew@mail.gmail.com>
- <CAAEAJfCzquaiCkjxXYOJRH8tpGRkHJBSWnFD--S=C7uAvHwqUg@mail.gmail.com>
-In-Reply-To: <CAAEAJfCzquaiCkjxXYOJRH8tpGRkHJBSWnFD--S=C7uAvHwqUg@mail.gmail.com>
-From:   "dbasehore ." <dbasehore@chromium.org>
-Date:   Tue, 7 Apr 2020 22:06:32 -0700
-Message-ID: <CAGAzgsqCasNOFtP6Yk+HQAn_EiYVQApohmmjrGRukGukua9GyA@mail.gmail.com>
-Subject: Re: [PATCH] i2c: enable async suspend/resume on i2c devices
-To:     Ezequiel Garcia <ezequiel@vanguardiasur.com.ar>
-Cc:     Wolfram Sang <wsa@the-dreams.de>,
-        =?UTF-8?Q?Ricardo_Ca=C3=B1uelo?= <ricardo.canuelo@collabora.com>,
-        linux-i2c@vger.kernel.org, Guenter Roeck <groeck@chromium.org>,
-        Linux-pm mailing list <linux-pm@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        kernel@collabora.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9584 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 suspectscore=0 bulkscore=0
+ mlxlogscore=999 mlxscore=0 phishscore=0 malwarescore=0 spamscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
+ definitions=main-2004080037
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9584 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 mlxlogscore=999 mlxscore=0
+ priorityscore=1501 phishscore=0 suspectscore=0 bulkscore=0
+ lowpriorityscore=0 impostorscore=0 malwarescore=0 clxscore=1015
+ spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2004080037
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Mar 29, 2020 at 5:49 AM Ezequiel Garcia
-<ezequiel@vanguardiasur.com.ar> wrote:
->
-> Hi Derek,
->
-> On Fri, 27 Mar 2020 at 17:26, dbasehore . <dbasehore@chromium.org> wrote:
-> >
-> > On Fri, Mar 27, 2020 at 8:43 AM Wolfram Sang <wsa@the-dreams.de> wrote:
-> > >
-> > > On Fri, Mar 27, 2020 at 04:19:51PM +0100, Ricardo Ca=C3=B1uelo wrote:
-> > > > This enables the async suspend property for i2c devices. This reduc=
-es
-> > > > the suspend/resume time considerably on platforms with multiple i2c
-> > > > devices (such as a trackpad or touchscreen).
-> > > >
-> > > > (am from https://patchwork.ozlabs.org/patch/949922/)
-> > > >
-> > > > Signed-off-by: Derek Basehore <dbasehore@chromium.org>
-> > > > Reviewed-on: https://chromium-review.googlesource.com/1152411
-> > > > Tested-by: Venkateswarlu V Vinjamuri <venkateswarlu.v.vinjamuri@int=
-el.com>
-> > > > Reviewed-by: Venkateswarlu V Vinjamuri <venkateswarlu.v.vinjamuri@i=
-ntel.com>
-> > > > Reviewed-by: Justin TerAvest <teravest@chromium.org>
-> > > > Signed-off-by: Guenter Roeck <groeck@chromium.org>
-> > > > Signed-off-by: Ricardo Ca=C3=B1uelo <ricardo.canuelo@collabora.com>
-> > > > ---
-> > >
-> > > Adding linux-pm to CC. I don't know much about internals of async
-> > > suspend. Is there a guide like "what every maintainer needs to know
-> > > about"?
-> >
-> > For more details, you can look at the function dpm_resume in the
-> > drivers/base/power/main.c file and follow from there.
-> >
-> > I can't find anything in Documentation/, so here's a short overview:
-> > Async devices have suspend/resume callbacks scheduled via
-> > async_schedule at every step (normal, late, noirq, etc.) for
-> > suspending/resuming devices. We wait for all device callbacks to
-> > complete at the end of each of these steps before moving onto the next
-> > one. This means that you won't have a resume_early callback running
-> > when you start the normal device resume callbacks.
-> >
-> > The async callbacks still wait individually for children on suspend
-> > and parents on resume to complete their own callbacks before calling
-> > their own. Because some dependencies may not be tracked by the
-> > parent/child graph (or other unknown reasons), async is off by
-> > default.
-> >
-> > Enabling async is a confirmation that all dependencies to other
-> > devices are properly tracked, whether through the parent/child
-> > relationship or otherwise.
-> >
->
-> Have you noticed the async sysfs attribute [1]?
->
-> Given this allows userspace to enable the async suspend/resume,
-> wouldn't it be simpler to just do that in userspace, on the
-> platforms you want to target (e.g. Apollolake Chromebook devices, and so =
-on) ?
+Paravirt-ops are patched at init to convert indirect calls into
+direct calls and in some cases, to inline the target at the call-site.
+This is done by way of PVOP* macros which save the call-site
+information via compile time annotations.
 
-I don't remember much since I attempted this a long time ago. That
-sounds like it would be reasonable under many circumstances though.
+Pull this state out in .parainstructions.runtime for some pv-ops such
+that they can be used for runtime patching.
 
->
-> Thanks,
-> Ezequiel
->
-> [1] Documentation/ABI/testing/sysfs-devices-power
->
-> > >
-> > > > This patch was originally created for chromeos some time ago and I'=
-m
-> > > > evaluating if it's a good candidate for upstreaming.
-> > > >
-> > > > By the looks of it I think it was done with chromebooks in mind, bu=
-t
-> > > > AFAICT this would impact every i2c client in every platform, so I'd=
- like
-> > > > to know your opinion about it.
-> > > >
-> > > > As far as I know there was no further investigation or testing on i=
-t, so
-> > > > I don't know if it was tested on any other hardware.
-> > > >
-> > > > Best,
-> > > > Ricardo
-> > > >
-> > > >  drivers/i2c/i2c-core-base.c | 1 +
-> > > >  1 file changed, 1 insertion(+)
-> > > >
-> > > > diff --git a/drivers/i2c/i2c-core-base.c b/drivers/i2c/i2c-core-bas=
-e.c
-> > > > index cefad0881942..643bc0fe0281 100644
-> > > > --- a/drivers/i2c/i2c-core-base.c
-> > > > +++ b/drivers/i2c/i2c-core-base.c
-> > > > @@ -769,6 +769,7 @@ i2c_new_client_device(struct i2c_adapter *adap,=
- struct i2c_board_info const *inf
-> > > >       client->dev.of_node =3D of_node_get(info->of_node);
-> > > >       client->dev.fwnode =3D info->fwnode;
-> > > >
-> > > > +     device_enable_async_suspend(&client->dev);
-> > > >       i2c_dev_set_name(adap, client, info);
-> > > >
-> > > >       if (info->properties) {
-> > > > --
-> > > > 2.18.0
-> > > >
+Signed-off-by: Ankur Arora <ankur.a.arora@oracle.com>
+---
+ arch/x86/Kconfig                      | 12 ++++++++++++
+ arch/x86/include/asm/paravirt_types.h |  5 +++++
+ arch/x86/include/asm/text-patching.h  |  5 +++++
+ arch/x86/kernel/alternative.c         |  2 ++
+ arch/x86/kernel/module.c              | 10 +++++++++-
+ arch/x86/kernel/vmlinux.lds.S         | 16 ++++++++++++++++
+ include/asm-generic/vmlinux.lds.h     |  8 ++++++++
+ 7 files changed, 57 insertions(+), 1 deletion(-)
+
+diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
+index 1edf788d301c..605619938f08 100644
+--- a/arch/x86/Kconfig
++++ b/arch/x86/Kconfig
+@@ -764,6 +764,18 @@ config PARAVIRT
+ 	  over full virtualization.  However, when run without a hypervisor
+ 	  the kernel is theoretically slower and slightly larger.
+ 
++config PARAVIRT_RUNTIME
++	bool "Enable paravirtualized ops to be patched at runtime"
++	depends on PARAVIRT
++	help
++	  Enable the paravirtualized guest kernel to switch pv-ops based on
++	  changed host conditions, potentially improving performance
++	  significantly.
++
++	  This would increase the memory footprint of the running kernel
++	  slightly (depending mostly on whether lock and unlock are inlined
++	  or not.)
++
+ config PARAVIRT_XXL
+ 	bool
+ 
+diff --git a/arch/x86/include/asm/paravirt_types.h b/arch/x86/include/asm/paravirt_types.h
+index 37e8f27a3b9d..00e4a062ca10 100644
+--- a/arch/x86/include/asm/paravirt_types.h
++++ b/arch/x86/include/asm/paravirt_types.h
+@@ -723,6 +723,11 @@ struct paravirt_patch_site {
+ extern struct paravirt_patch_site __parainstructions[],
+ 	__parainstructions_end[];
+ 
++#ifdef CONFIG_PARAVIRT_RUNTIME
++extern struct paravirt_patch_site __parainstructions_runtime[],
++	__parainstructions_runtime_end[];
++#endif
++
+ #endif	/* __ASSEMBLY__ */
+ 
+ #endif	/* _ASM_X86_PARAVIRT_TYPES_H */
+diff --git a/arch/x86/include/asm/text-patching.h b/arch/x86/include/asm/text-patching.h
+index 67315fa3956a..e2ef241c261e 100644
+--- a/arch/x86/include/asm/text-patching.h
++++ b/arch/x86/include/asm/text-patching.h
+@@ -18,6 +18,11 @@ static inline void apply_paravirt(struct paravirt_patch_site *start,
+ #define __parainstructions_end	NULL
+ #endif
+ 
++#ifndef CONFIG_PARAVIRT_RUNTIME
++#define __parainstructions_runtime	NULL
++#define __parainstructions_runtime_end	NULL
++#endif
++
+ /*
+  * Currently, the max observed size in the kernel code is
+  * JUMP_LABEL_NOP_SIZE/RELATIVEJUMP_SIZE, which are 5.
+diff --git a/arch/x86/kernel/alternative.c b/arch/x86/kernel/alternative.c
+index 7867dfb3963e..fdfda1375f82 100644
+--- a/arch/x86/kernel/alternative.c
++++ b/arch/x86/kernel/alternative.c
+@@ -740,6 +740,8 @@ void __init alternative_instructions(void)
+ #endif
+ 
+ 	apply_paravirt(__parainstructions, __parainstructions_end);
++	apply_paravirt(__parainstructions_runtime,
++		       __parainstructions_runtime_end);
+ 
+ 	restart_nmi();
+ 	alternatives_patched = 1;
+diff --git a/arch/x86/kernel/module.c b/arch/x86/kernel/module.c
+index d5c72cb877b3..658ea60ce324 100644
+--- a/arch/x86/kernel/module.c
++++ b/arch/x86/kernel/module.c
+@@ -222,7 +222,7 @@ int module_finalize(const Elf_Ehdr *hdr,
+ 		    struct module *me)
+ {
+ 	const Elf_Shdr *s, *text = NULL, *alt = NULL, *locks = NULL,
+-		*para = NULL, *orc = NULL, *orc_ip = NULL;
++		*para = NULL, *para_run = NULL, *orc = NULL, *orc_ip = NULL;
+ 	char *secstrings = (void *)hdr + sechdrs[hdr->e_shstrndx].sh_offset;
+ 
+ 	for (s = sechdrs; s < sechdrs + hdr->e_shnum; s++) {
+@@ -234,6 +234,9 @@ int module_finalize(const Elf_Ehdr *hdr,
+ 			locks = s;
+ 		if (!strcmp(".parainstructions", secstrings + s->sh_name))
+ 			para = s;
++		if (!strcmp(".parainstructions.runtime",
++			    secstrings + s->sh_name))
++			para_run = s;
+ 		if (!strcmp(".orc_unwind", secstrings + s->sh_name))
+ 			orc = s;
+ 		if (!strcmp(".orc_unwind_ip", secstrings + s->sh_name))
+@@ -257,6 +260,11 @@ int module_finalize(const Elf_Ehdr *hdr,
+ 		void *pseg = (void *)para->sh_addr;
+ 		apply_paravirt(pseg, pseg + para->sh_size);
+ 	}
++	if (para_run) {
++		void *pseg = (void *)para_run->sh_addr;
++
++		apply_paravirt(pseg, pseg + para_run->sh_size);
++	}
+ 
+ 	/* make jump label nops */
+ 	jump_label_apply_nops(me);
+diff --git a/arch/x86/kernel/vmlinux.lds.S b/arch/x86/kernel/vmlinux.lds.S
+index 1bf7e312361f..7f5b8f6ab96e 100644
+--- a/arch/x86/kernel/vmlinux.lds.S
++++ b/arch/x86/kernel/vmlinux.lds.S
+@@ -269,6 +269,7 @@ SECTIONS
+ 	.parainstructions : AT(ADDR(.parainstructions) - LOAD_OFFSET) {
+ 		__parainstructions = .;
+ 		*(.parainstructions)
++		PARAVIRT_DISCARD(.parainstructions.runtime)
+ 		__parainstructions_end = .;
+ 	}
+ 
+@@ -348,6 +349,21 @@ SECTIONS
+ 		__smp_locks_end = .;
+ 	}
+ 
++#ifdef CONFIG_PARAVIRT_RUNTIME
++	/*
++	 * .parainstructions.runtime sticks around in memory after
++	 * init so it doesn't need to be page-aligned but everything
++	 * around us is so we will be too.
++	 */
++	. = ALIGN(8);
++	.parainstructions.runtime : AT(ADDR(.parainstructions.runtime) - \
++								LOAD_OFFSET) {
++		__parainstructions_runtime = .;
++		PARAVIRT_KEEP(.parainstructions.runtime)
++		__parainstructions_runtime_end = .;
++	}
++#endif
++
+ #ifdef CONFIG_X86_64
+ 	.data_nosave : AT(ADDR(.data_nosave) - LOAD_OFFSET) {
+ 		NOSAVE_DATA
+diff --git a/include/asm-generic/vmlinux.lds.h b/include/asm-generic/vmlinux.lds.h
+index 71e387a5fe90..6b009d5ce51f 100644
+--- a/include/asm-generic/vmlinux.lds.h
++++ b/include/asm-generic/vmlinux.lds.h
+@@ -135,6 +135,14 @@
+ #define MEM_DISCARD(sec) *(.mem##sec)
+ #endif
+ 
++#if defined(CONFIG_PARAVIRT_RUNTIME)
++#define PARAVIRT_KEEP(sec)	*(sec)
++#define PARAVIRT_DISCARD(sec)
++#else
++#define PARAVIRT_KEEP(sec)
++#define PARAVIRT_DISCARD(sec)	*(sec)
++#endif
++
+ #ifdef CONFIG_FTRACE_MCOUNT_RECORD
+ /*
+  * The ftrace call sites are logged to a section whose name depends on the
+-- 
+2.20.1
+
