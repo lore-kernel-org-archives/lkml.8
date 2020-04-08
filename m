@@ -2,353 +2,92 @@ Return-Path: <SRS0=8dav=5Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD65AC2D0EA
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 16:01:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D64DFC2D0EA
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 16:03:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7B1252082F
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 16:01:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JEyQtK99"
+	by mail.kernel.org (Postfix) with ESMTP id A6F002082F
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 16:03:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730096AbgDHQBg (ORCPT
+        id S1730122AbgDHQDA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Apr 2020 12:01:36 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:51632 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729747AbgDHQBg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Apr 2020 12:01:36 -0400
-Received: by mail-wm1-f68.google.com with SMTP id z7so451501wmk.1;
-        Wed, 08 Apr 2020 09:01:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=bgRhZIyjaVy0rMlyDmDPKPQZBxgejQwqSwvwFypmTfA=;
-        b=JEyQtK99j+UriBHHASh8TnZWjN8v8kiJjVj9Do6axLln+OFxq9PsE6X6IkUnd1Ever
-         GNba5apz6MboLaOAAoHLrUQdJFgH/ojvUDzkdMmpqcLx/nwSzp6u0vuvdKanxUs5G+eB
-         3tJs6wEqPx3G6I+d+M4OrQrMSavtMuRYRmQBLdn4q6T8Ox7KTefvIlf2keECoN4uvuC1
-         eCsz3hdygGwzwhe61k9PjJMOZwTFmWOry+tHZAp3Akomgz1EnDAlFyy1nfuguyYHHBk+
-         3fQhoCoGBZ9I3jXirmisplPyfXZQZLBZRFzBCIeYjVSlTGsKQ94DvdPY5LdAE5DXTu1y
-         Vu1w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=bgRhZIyjaVy0rMlyDmDPKPQZBxgejQwqSwvwFypmTfA=;
-        b=efs/OotSKGqa3XuqOTQfitoNrt3gr6VTZLFuWYG9Zlu7bMrAW4JKN2bEhwJkdzydBo
-         /RB+3a1OA9nM4PAC6Y3QR6qeIefMsCocFRp6E1Zimk0GYxfcsFiYG556HoJR1aUYa/HD
-         d+Uy6XPAGY5PMsvYpZXaEjFZ5jJBCAD0lrDuNklwA79H2GrNwDMZseAgCMVnITqPksf5
-         qMIp4Zp0GW/yuF2oGFcuLiBp/eqU6R/AolojJ/7aSSXBR+EdoeWxUw2jt0muEUhTagFb
-         h7hvoJS6xq5nulISqu3lPRHGx3IreWjvbqozbGnjohI6NEsYv+jKyBY5vpRQUdKG/3zX
-         T0qA==
-X-Gm-Message-State: AGi0PuZUwLDP58bIliahHOO4vTRye9MBrt+4N1De1xRr9gmPioBpnXOU
-        JJGMGZEAw4T7/g52mqX+p5GMXcpb7TQ=
-X-Google-Smtp-Source: APiQypI8UbQqGHvMaGEQhmGM18tVLZa+uil7fC2onY+Tbr5QgyJ/Rl4imNFkVAlxAZmbFwyS+92AsQ==
-X-Received: by 2002:a1c:9e08:: with SMTP id h8mr5107318wme.183.1586361692602;
-        Wed, 08 Apr 2020 09:01:32 -0700 (PDT)
-Received: from jernej-laptop.localnet (cpe-194-152-20-232.static.triera.net. [194.152.20.232])
-        by smtp.gmail.com with ESMTPSA id t2sm18055177wrs.7.2020.04.08.09.01.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 08 Apr 2020 09:01:23 -0700 (PDT)
-From:   Jernej =?utf-8?B?xaBrcmFiZWM=?= <jernej.skrabec@gmail.com>
-To:     Maxime Ripard <mripard@kernel.org>,
-        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-sunxi@googlegroups.com
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-media@vger.kernel.org, linux-sunxi@googlegroups.com,
-        Samuel Holland <samuel@sholland.org>, samuel@sholland.org
-Subject: Re: [linux-sunxi] [PATCH] media: cedrus: Implement runtime PM
-Date:   Wed, 08 Apr 2020 18:01:15 +0200
-Message-ID: <9673642.nUPlyArG6x@jernej-laptop>
-In-Reply-To: <20200408010232.48432-1-samuel@sholland.org>
-References: <20200408010232.48432-1-samuel@sholland.org>
+        Wed, 8 Apr 2020 12:03:00 -0400
+Received: from mga07.intel.com ([134.134.136.100]:28384 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730113AbgDHQDA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Apr 2020 12:03:00 -0400
+IronPort-SDR: UYcoLh5xYCPG6aq0jxgPSOHaW63ko6YuEHtCMvPJOXokuM0asCgzmmoqPpIH7r63090kKdXPiP
+ IymLaEpsOvsw==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Apr 2020 09:02:58 -0700
+IronPort-SDR: krJHKQ7pS0QJRJBq0YdxLpoAcDLTKiCB2PTLscsZzEN4Mthr3EwZQN9Lc8NII8IaSY5/IE6Bh8
+ XDXsofpRYovw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,359,1580803200"; 
+   d="scan'208";a="269790350"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
+  by orsmga002.jf.intel.com with ESMTP; 08 Apr 2020 09:02:57 -0700
+Date:   Wed, 8 Apr 2020 09:02:57 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Christoph Hellwig <hch@infradead.org>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Steven Rostedt <rostedt@goodmis.org>, tglx@linutronix.de,
+        linux-kernel@vger.kernel.org, mingo@redhat.com, bp@alien8.de,
+        hpa@zytor.com, x86@kernel.org, kenny@panix.com, jeyu@kernel.org,
+        rasmus.villemoes@prevas.dk, pbonzini@redhat.com,
+        fenghua.yu@intel.com, xiaoyao.li@intel.com, nadav.amit@gmail.com,
+        thellstrom@vmware.com, tony.luck@intel.com,
+        gregkh@linuxfoundation.org, jannh@google.com,
+        keescook@chromium.org, David.Laight@aculab.com,
+        dcovelli@vmware.com, mhiramat@kernel.org
+Subject: Re: [PATCH 4/4] x86,module: Detect CRn and DRn manipulation
+Message-ID: <20200408160257.GB11322@linux.intel.com>
+References: <20200407110236.930134290@infradead.org>
+ <20200407111007.429362016@infradead.org>
+ <20200408092726.7c2bda01@gandalf.local.home>
+ <20200408154419.GP20730@hirez.programming.kicks-ass.net>
+ <20200408154602.GA24869@infradead.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200408154602.GA24869@infradead.org>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Samuel!
+On Wed, Apr 08, 2020 at 08:46:02AM -0700, Christoph Hellwig wrote:
+> On Wed, Apr 08, 2020 at 05:44:19PM +0200, Peter Zijlstra wrote:
+> > On Wed, Apr 08, 2020 at 09:27:26AM -0400, Steven Rostedt wrote:
+> > > On Tue, 07 Apr 2020 13:02:40 +0200
+> > > Peter Zijlstra <peterz@infradead.org> wrote:
+> > 
+> > > > +		if (insn_is_mov_CRn(&insn) || insn_is_mov_DRn(&insn)) {
+> > > > +			pr_err("Module writes to CRn or DRn, please use the proper accessors: %s\n", mod->name);
+> > > > +			return -ENOEXEC;
+> > > > +		}
+> > > > +
+> > > 
+> > > Something like this should be done for all modules, not just out of tree
+> > > modules.
+> > 
+> > I'm all for it; but people were worried scanning all modules was too
+> > expensive (I don't really believe it is, module loading just can't be a
+> > hot-path). Also, in-tree modules are audited a lot more than out of tree
+> > magic voodoo crap.
+> 
+> Scanning all modules seems safer.  While we're at it - can be move the
+> kvm bits using VMX to be always in the core kernel and just forbid
+> modules from using those instructions entirely?
 
-Dne sreda, 08. april 2020 ob 03:02:32 CEST je Samuel Holland napisal(a):
-> This allows the VE clocks and PLL_VE to be disabled most of the time.
-> 
-> Since the device is stateless, each frame gets a separate runtime PM
-> reference. Enable autosuspend so the PM callbacks are not run before and
-> after every frame.
-> 
-> Signed-off-by: Samuel Holland <samuel@sholland.org>
-> ---
-> 
-> I tested this with v4l2-request-test. I don't have the setup to do
-> anything more complicated at the moment.
-> 
-> ---
->  drivers/staging/media/sunxi/cedrus/cedrus.c   |   7 ++
->  .../staging/media/sunxi/cedrus/cedrus_hw.c    | 115 ++++++++++++------
->  .../staging/media/sunxi/cedrus/cedrus_hw.h    |   3 +
->  3 files changed, 88 insertions(+), 37 deletions(-)
-> 
-> diff --git a/drivers/staging/media/sunxi/cedrus/cedrus.c
-> b/drivers/staging/media/sunxi/cedrus/cedrus.c index
-> 3fad5edccd17..9aa1fc8a6c26 100644
-> --- a/drivers/staging/media/sunxi/cedrus/cedrus.c
-> +++ b/drivers/staging/media/sunxi/cedrus/cedrus.c
-> @@ -16,6 +16,7 @@
->  #include <linux/platform_device.h>
->  #include <linux/module.h>
->  #include <linux/of.h>
-> +#include <linux/pm.h>
-> 
->  #include <media/v4l2-device.h>
->  #include <media/v4l2-ioctl.h>
-> @@ -474,6 +475,11 @@ static int cedrus_remove(struct platform_device *pdev)
->  	return 0;
->  }
-> 
-> +static const struct dev_pm_ops cedrus_dev_pm_ops = {
-> +	SET_RUNTIME_PM_OPS(cedrus_hw_suspend,
-> +			   cedrus_hw_resume, NULL)
-> +};
-> +
->  static const struct cedrus_variant sun4i_a10_cedrus_variant = {
->  	.mod_rate	= 320000000,
->  };
-> @@ -559,6 +565,7 @@ static struct platform_driver cedrus_driver = {
->  	.driver		= {
->  		.name		= CEDRUS_NAME,
->  		.of_match_table	= of_match_ptr(cedrus_dt_match),
-> +		.pm		= &cedrus_dev_pm_ops,
->  	},
->  };
->  module_platform_driver(cedrus_driver);
-> diff --git a/drivers/staging/media/sunxi/cedrus/cedrus_hw.c
-> b/drivers/staging/media/sunxi/cedrus/cedrus_hw.c index
-> daf5f244f93b..b84814d5afe4 100644
-> --- a/drivers/staging/media/sunxi/cedrus/cedrus_hw.c
-> +++ b/drivers/staging/media/sunxi/cedrus/cedrus_hw.c
-> @@ -19,6 +19,7 @@
->  #include <linux/dma-mapping.h>
->  #include <linux/interrupt.h>
->  #include <linux/clk.h>
-> +#include <linux/pm_runtime.h>
->  #include <linux/regmap.h>
->  #include <linux/reset.h>
->  #include <linux/soc/sunxi/sunxi_sram.h>
-> @@ -63,6 +64,8 @@ int cedrus_engine_enable(struct cedrus_ctx *ctx, enum
-> cedrus_codec codec) if (ctx->src_fmt.width > 2048)
->  		reg |= VE_MODE_PIC_WIDTH_MORE_2048;
-> 
-> +	pm_runtime_get_sync(ctx->dev->dev);
-> +
->  	cedrus_write(ctx->dev, VE_MODE, reg);
-> 
->  	return 0;
-> @@ -71,6 +74,9 @@ int cedrus_engine_enable(struct cedrus_ctx *ctx, enum
-> cedrus_codec codec) void cedrus_engine_disable(struct cedrus_dev *dev)
->  {
->  	cedrus_write(dev, VE_MODE, VE_MODE_DISABLED);
-> +
-> +	pm_runtime_mark_last_busy(dev->dev);
-> +	pm_runtime_put_autosuspend(dev->dev);
->  }
-> 
->  void cedrus_dst_format_set(struct cedrus_dev *dev,
-> @@ -134,12 +140,72 @@ static irqreturn_t cedrus_irq(int irq, void *data)
->  	else
->  		state = VB2_BUF_STATE_DONE;
-> 
-> +	cedrus_engine_disable(dev);
-> +
->  	v4l2_m2m_buf_done_and_job_finish(ctx->dev->m2m_dev, ctx-
->fh.m2m_ctx,
->  					 state);
-> 
->  	return IRQ_HANDLED;
->  }
-> 
-> +int cedrus_hw_resume(struct device *d)
-> +{
-> +	struct cedrus_dev *dev = dev_get_drvdata(d);
-> +	int ret;
-> +
-> +	ret = clk_prepare_enable(dev->ahb_clk);
-> +	if (ret) {
-> +		dev_err(dev->dev, "Failed to enable AHB clock\n");
-> +
-> +		return ret;
-> +	}
-> +
-> +	ret = clk_prepare_enable(dev->mod_clk);
-> +	if (ret) {
-> +		dev_err(dev->dev, "Failed to enable MOD clock\n");
-> +
-> +		goto err_ahb_clk;
-> +	}
-> +
-> +	ret = clk_prepare_enable(dev->ram_clk);
-> +	if (ret) {
-> +		dev_err(dev->dev, "Failed to enable RAM clock\n");
-> +
-> +		goto err_mod_clk;
-> +	}
-> +
-> +	ret = reset_control_reset(dev->rstc);
-> +	if (ret) {
-> +		dev_err(dev->dev, "Failed to apply reset\n");
-> +
-> +		goto err_ram_clk;
-> +	}
-
-Reset above causes problem. When format is set in cedrus_s_fmt_vid_cap() a 
-function is called, which sets few registers in HW. Of course, there is no 
-guarantee that someone will start decoding immediately after capture format is 
-set. So, if the driver puts VPU to sleep in the mean time, reset will clear 
-those registers and decoded video will be in different format than expected. It 
-could be even argued that registers should not be set in that function and 
-that this is design issue or bug in driver.
-
-Anyway, I made a runtime PM support long time ago, but never do anything 
-besides running few tests:
-https://github.com/jernejsk/linux-1/commit/
-d245b7fa2a26e519ff675a255c45230575a4a848
-
-It takes a bit different approach. Power is enabled in start streaming and 
-disabled in stop streaming. This is simpler approach and doesn't need 
-autosuspend functionality. I also moved call to a function which sets format 
-in HW registers to start streaming handler, so it's guaranteed to be set at 
-the beginning.
-
-Note that some registers are only set in start streaming handler. With your 
-approach, if first frame is submitted too late, asserting and de-asserting 
-reset line could reset those registers.
-
-Best regards,
-Jernej
-
-> +
-> +	return 0;
-> +
-> +err_ram_clk:
-> +	clk_disable_unprepare(dev->ram_clk);
-> +err_mod_clk:
-> +	clk_disable_unprepare(dev->mod_clk);
-> +err_ahb_clk:
-> +	clk_disable_unprepare(dev->ahb_clk);
-> +
-> +	return ret;
-> +}
-> +
-> +int cedrus_hw_suspend(struct device *d)
-> +{
-> +	struct cedrus_dev *dev = dev_get_drvdata(d);
-> +
-> +	reset_control_assert(dev->rstc);
-> +
-> +	clk_disable_unprepare(dev->ram_clk);
-> +	clk_disable_unprepare(dev->mod_clk);
-> +	clk_disable_unprepare(dev->ahb_clk);
-> +
-> +	return 0;
-> +}
-> +
->  int cedrus_hw_probe(struct cedrus_dev *dev)
->  {
->  	const struct cedrus_variant *variant;
-> @@ -236,42 +302,19 @@ int cedrus_hw_probe(struct cedrus_dev *dev)
->  		goto err_sram;
->  	}
-> 
-> -	ret = clk_prepare_enable(dev->ahb_clk);
-> -	if (ret) {
-> -		dev_err(dev->dev, "Failed to enable AHB clock\n");
-> -
-> -		goto err_sram;
-> -	}
-> -
-> -	ret = clk_prepare_enable(dev->mod_clk);
-> -	if (ret) {
-> -		dev_err(dev->dev, "Failed to enable MOD clock\n");
-> -
-> -		goto err_ahb_clk;
-> -	}
-> -
-> -	ret = clk_prepare_enable(dev->ram_clk);
-> -	if (ret) {
-> -		dev_err(dev->dev, "Failed to enable RAM clock\n");
-> -
-> -		goto err_mod_clk;
-> -	}
-> -
-> -	ret = reset_control_reset(dev->rstc);
-> -	if (ret) {
-> -		dev_err(dev->dev, "Failed to apply reset\n");
-> -
-> -		goto err_ram_clk;
-> +	pm_runtime_set_autosuspend_delay(dev->dev, 1000);
-> +	pm_runtime_use_autosuspend(dev->dev);
-> +	pm_runtime_enable(dev->dev);
-> +	if (!pm_runtime_enabled(dev->dev)) {
-> +		ret = cedrus_hw_resume(dev->dev);
-> +		if (ret)
-> +			goto err_pm;
->  	}
-> 
->  	return 0;
-> 
-> -err_ram_clk:
-> -	clk_disable_unprepare(dev->ram_clk);
-> -err_mod_clk:
-> -	clk_disable_unprepare(dev->mod_clk);
-> -err_ahb_clk:
-> -	clk_disable_unprepare(dev->ahb_clk);
-> +err_pm:
-> +	pm_runtime_disable(dev->dev);
->  err_sram:
->  	sunxi_sram_release(dev->dev);
->  err_mem:
-> @@ -282,11 +325,9 @@ int cedrus_hw_probe(struct cedrus_dev *dev)
-> 
->  void cedrus_hw_remove(struct cedrus_dev *dev)
->  {
-> -	reset_control_assert(dev->rstc);
-> -
-> -	clk_disable_unprepare(dev->ram_clk);
-> -	clk_disable_unprepare(dev->mod_clk);
-> -	clk_disable_unprepare(dev->ahb_clk);
-> +	pm_runtime_disable(dev->dev);
-> +	if (!pm_runtime_status_suspended(dev->dev))
-> +		cedrus_hw_suspend(dev->dev);
-> 
->  	sunxi_sram_release(dev->dev);
-> 
-> diff --git a/drivers/staging/media/sunxi/cedrus/cedrus_hw.h
-> b/drivers/staging/media/sunxi/cedrus/cedrus_hw.h index
-> 604ff932fbf5..17822b470a1e 100644
-> --- a/drivers/staging/media/sunxi/cedrus/cedrus_hw.h
-> +++ b/drivers/staging/media/sunxi/cedrus/cedrus_hw.h
-> @@ -22,6 +22,9 @@ void cedrus_engine_disable(struct cedrus_dev *dev);
->  void cedrus_dst_format_set(struct cedrus_dev *dev,
->  			   struct v4l2_pix_format *fmt);
-> 
-> +int cedrus_hw_resume(struct device *dev);
-> +int cedrus_hw_suspend(struct device *dev);
-> +
->  int cedrus_hw_probe(struct cedrus_dev *dev);
->  void cedrus_hw_remove(struct cedrus_dev *dev);
-
-
-
-
+Practically speaking, no.  Turning VMX on and off (literally VMXON/VMXOFF)
+could be moved to helpers in the kernel, but KVM relies on inlining all
+post-VMXON instructions (except for VMLAUNCH/VMRESUME) for performance.
+VMLAUNCH/VMRESUME have their own caveats, moving them out of KVM would be
+messy, to say the least.
