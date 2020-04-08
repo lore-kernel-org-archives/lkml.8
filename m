@@ -2,165 +2,162 @@ Return-Path: <SRS0=8dav=5Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 133C5C2BA1A
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 10:47:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87685C2BA2B
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 10:48:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DE19120747
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 10:47:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586342852;
-	bh=9av4kMPGOh7Vxch5nbV+b3MJZopv/UHJw8uf1Qk/+J0=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=uQgtBjvo2yHsJrA3bZqhgBy1h50K8W5suRncQyTB7/UjfBPUDyA2W01fnTCCBun7v
-	 wfdkgU07nUvY0VEuQGE4wjLy/TQqmZW71V3jjKht9FNB2xOQGGT+9lUb1COGPaSGF3
-	 BfibofdLwvc2woSbGfaZ3LjVg/Ebi7w+SldMr50M=
+	by mail.kernel.org (Postfix) with ESMTP id 5529C20747
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 10:48:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="U1KWFPe3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728341AbgDHKrc (ORCPT
+        id S1728351AbgDHKsQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Apr 2020 06:47:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41962 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726980AbgDHKrb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Apr 2020 06:47:31 -0400
-Received: from mail-io1-f49.google.com (mail-io1-f49.google.com [209.85.166.49])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        Wed, 8 Apr 2020 06:48:16 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:31400 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726980AbgDHKsQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Apr 2020 06:48:16 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1586342895;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=MZtYtcreRWdnZo6HGx0Gzr9jVhTfvPPlSZqe9ZZdt4Q=;
+        b=U1KWFPe3Uwr3m000Lv0aRgvZPrUzo3a2yfJ1MzsWMu1Q6YBP7kk2KpsYF0joMHUuXlvQ6Y
+        h0iqrK5WEXnchQo17HfHm33E1OhwNps4yc4TsRlmWetCYknxIu0yfxrTcul3gkGuGMRT7Q
+        O1CNgqWAJC3ENhp1DZWDRW9WUm5GQ2I=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-481-nMvS2XNPMQ2eYTcYJXs3qA-1; Wed, 08 Apr 2020 06:48:11 -0400
+X-MC-Unique: nMvS2XNPMQ2eYTcYJXs3qA-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 79BA92082F;
-        Wed,  8 Apr 2020 10:47:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586342850;
-        bh=9av4kMPGOh7Vxch5nbV+b3MJZopv/UHJw8uf1Qk/+J0=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=M7+DV3L7gAbDmu92SBwJqw1yFjTkAOcMMU15wIz8iNdCfgzGjrvnEFvePG1J1m3Cq
-         vaM8s8CYM2+cTJQEYyaQ4f4ZtgUVKJa9nLaGDs42SYl+5Oo98Un1szyLVw477GW7Gc
-         EAQQhRwFWA/UQx9tVCGYDkd34gwBpg39NywnQCVA=
-Received: by mail-io1-f49.google.com with SMTP id i3so6570968ioo.13;
-        Wed, 08 Apr 2020 03:47:30 -0700 (PDT)
-X-Gm-Message-State: AGi0Puagp5+0hph1FXDsJCpULxPqvvz/4OKG5mdUNvEa6HgajbiGlfXz
-        sJ1H8VU/olcTuHdL93YWUvojmYcDklX6qCDK8+U=
-X-Google-Smtp-Source: APiQypI1wsTrW2EMeKnNpPsvPuDItyYwV+gZ+RSEDJDmv09Q99mxnqk+AYkw4okm2kh+e3iekChEFQqQYZsKCj8HeEI=
-X-Received: by 2002:a02:6a1e:: with SMTP id l30mr6072507jac.98.1586342849836;
- Wed, 08 Apr 2020 03:47:29 -0700 (PDT)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 20813800D4E;
+        Wed,  8 Apr 2020 10:48:09 +0000 (UTC)
+Received: from gondolin (ovpn-113-103.ams2.redhat.com [10.36.113.103])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id B306B5D9CD;
+        Wed,  8 Apr 2020 10:48:03 +0000 (UTC)
+Date:   Wed, 8 Apr 2020 12:48:01 +0200
+From:   Cornelia Huck <cohuck@redhat.com>
+To:     Tony Krowiak <akrowiak@linux.ibm.com>
+Cc:     linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org, freude@linux.ibm.com, borntraeger@de.ibm.com,
+        mjrosato@linux.ibm.com, pmorel@linux.ibm.com, pasic@linux.ibm.com,
+        alex.williamson@redhat.com, kwankhede@nvidia.com,
+        jjherne@linux.ibm.com, fiuczy@linux.ibm.com
+Subject: Re: [PATCH v7 01/15] s390/vfio-ap: store queue struct in hash table
+ for quick access
+Message-ID: <20200408124801.2d61bc5b.cohuck@redhat.com>
+In-Reply-To: <20200407192015.19887-2-akrowiak@linux.ibm.com>
+References: <20200407192015.19887-1-akrowiak@linux.ibm.com>
+        <20200407192015.19887-2-akrowiak@linux.ibm.com>
+Organization: Red Hat GmbH
 MIME-Version: 1.0
-References: <20200113172245.27925-1-ardb@kernel.org> <20200113172245.27925-6-ardb@kernel.org>
- <63b125a4-6c62-fcdf-de22-d3bebe2dcbf5@suse.cz>
-In-Reply-To: <63b125a4-6c62-fcdf-de22-d3bebe2dcbf5@suse.cz>
-From:   Ard Biesheuvel <ardb@kernel.org>
-Date:   Wed, 8 Apr 2020 12:47:18 +0200
-X-Gmail-Original-Message-ID: <CAMj1kXGiT_zYjc6X-msRXVozhpDAY0UesEW3_4fOgiH4FyMgDw@mail.gmail.com>
-Message-ID: <CAMj1kXGiT_zYjc6X-msRXVozhpDAY0UesEW3_4fOgiH4FyMgDw@mail.gmail.com>
-Subject: Re: [PATCH 05/13] efi/x86: don't map the entire kernel text RW for
- mixed mode
-To:     Jiri Slaby <jslaby@suse.cz>
-Cc:     linux-efi <linux-efi@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Anshuman Khandual <anshuman.khandual@arm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Dave Young <dyoung@redhat.com>,
-        Saravana Kannan <saravanak@google.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 8 Apr 2020 at 12:42, Jiri Slaby <jslaby@suse.cz> wrote:
->
-> On 13. 01. 20, 18:22, Ard Biesheuvel wrote:
-> > The mixed mode thunking routine requires a part of it to be
-> > mapped 1:1, and for this reason, we currently map the entire
-> > kernel .text read/write in the EFI page tables, which is bad.
-> >
-> > In fact, the kernel_map_pages_in_pgd() invocation that installs
-> > this mapping is entirely redundant, since all of DRAM is already
-> > 1:1 mapped read/write in the EFI page tables when we reach this
-> > point, which means that .rodata is mapped read-write as well.
-> >
-> > So let's remap both .text and .rodata read-only in the EFI
-> > page tables.
->
-> This patch causes unhandled page faults in mixed mode:
->
-> > BUG: unable to handle page fault for address: 000000001557ee88
-> > #PF: supervisor write access in kernel mode
-> > #PF: error_code(0x0003) - permissions violation
-> > PGD fd52063 P4D fd52063 PUD fd53063 PMD 154000e1
-> > Oops: 0003 [#1] SMP PTI
-> > CPU: 1 PID: 191 Comm: systemd-escape Not tainted
-> 5.6.2-20.gb22bc26-default #1 openSUSE Tumbleweed (unreleased)
-> > Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 0.0.0
-> 02/06/2015
-> > RIP: 0008:0x3d2eed95
-> > Code: 8b 45 d4 8b 4d 10 8b 40 04 89 01 89 3b 50 6a 00 8b 55 0c 6a 00
-> 8b 45 08 0f b6 4d e4 6a 01 31 f6 e8 ee c5 fc ff 83 c4 10 eb 07 <89> 03
-> be 05 00 00 80 a1 74 63 31 3d 83 c0 48 e8 44 d2 ff ff eb 05
-> > RSP: 0018:000000000fd66fa0 EFLAGS: 00010002
-> > RAX: 0000000000000001 RBX: 000000001557ee88 RCX: 000000003d1f1120
-> > RDX: 0000000000000001 RSI: 0000000000000000 RDI: 0000000000000001
-> > RBP: 000000000fd66fd8 R08: 000000001557ee88 R09: 0000000000000000
-> > R10: 0000000000000055 R11: 0000000000000000 R12: 0000000015bcf000
-> > R13: 0000000000000000 R14: 0000000000000000 R15: 0000000000000000
-> > FS:  00007f36ee9dc940(0000) GS:ffff9b903d700000(0000)
-> knlGS:0000000000000000
-> > CS:  0008 DS: 0018 ES: 0018 CR0: 0000000080050033
-> > CR2: 000000001557ee88 CR3: 000000000fd5e000 CR4: 00000000000006e0
-> > DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-> > DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-> > Call Trace:
-> > Modules linked in: efivarfs
-> > CR2: 000000001557ee88
->
-> EFI apparently tries to write to now read-only memory.
->
-> See:
-> https://bugzilla.suse.com/show_bug.cgi?id=1168645
->
-> Reverting it on the top of 5.6 fixes the issue.
->
-> I am using
-> /usr/share/qemu/ovmf-ia32-code.bin
-> /usr/share/qemu/ovmf-ia32-vars.bin
-> from qemu-ovmf-ia32-202002-1.1.noarch rpm.
->
+On Tue,  7 Apr 2020 15:20:01 -0400
+Tony Krowiak <akrowiak@linux.ibm.com> wrote:
 
-Do you have a git tree for Suse's OVMF fork? I did a lot of testing
-with upstream OVMF, and never ran into this issue.
+> Rather than looping over potentially 65535 objects, let's store the
+> structures for caching information about queue devices bound to the
+> vfio_ap device driver in a hash table keyed by APQN.
 
+This also looks like a nice code simplification.
 
-> > Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
-> > ---
-> >  arch/x86/platform/efi/efi_64.c | 4 ++--
-> >  1 file changed, 2 insertions(+), 2 deletions(-)
-> >
-> > diff --git a/arch/x86/platform/efi/efi_64.c b/arch/x86/platform/efi/efi_64.c
-> > index c13fa2150976..6ec58ff60b56 100644
-> > --- a/arch/x86/platform/efi/efi_64.c
-> > +++ b/arch/x86/platform/efi/efi_64.c
-> > @@ -391,11 +391,11 @@ int __init efi_setup_page_tables(unsigned long pa_memmap, unsigned num_pages)
-> >
-> >       efi_scratch.phys_stack = page_to_phys(page + 1); /* stack grows down */
-> >
-> > -     npages = (_etext - _text) >> PAGE_SHIFT;
-> > +     npages = (__end_rodata_aligned - _text) >> PAGE_SHIFT;
-> >       text = __pa(_text);
-> >       pfn = text >> PAGE_SHIFT;
-> >
-> > -     pf = _PAGE_RW | _PAGE_ENC;
-> > +     pf = _PAGE_ENC;
-> >       if (kernel_map_pages_in_pgd(pgd, pfn, text, npages, pf)) {
-> >               pr_err("Failed to map kernel text 1:1\n");
-> >               return 1;
-> >
->
-> thanks,
-> --
-> js
-> suse labs
+> 
+> Signed-off-by: Tony Krowiak <akrowiak@linux.ibm.com>
+> ---
+>  drivers/s390/crypto/vfio_ap_drv.c     | 28 +++------
+>  drivers/s390/crypto/vfio_ap_ops.c     | 90 ++++++++++++++-------------
+>  drivers/s390/crypto/vfio_ap_private.h | 10 ++-
+>  3 files changed, 60 insertions(+), 68 deletions(-)
+> 
+
+(...)
+
+> diff --git a/drivers/s390/crypto/vfio_ap_ops.c b/drivers/s390/crypto/vfio_ap_ops.c
+> index 5c0f53c6dde7..134860934fe7 100644
+> --- a/drivers/s390/crypto/vfio_ap_ops.c
+> +++ b/drivers/s390/crypto/vfio_ap_ops.c
+> @@ -26,45 +26,16 @@
+>  
+>  static int vfio_ap_mdev_reset_queues(struct mdev_device *mdev);
+>  
+> -static int match_apqn(struct device *dev, const void *data)
+> -{
+> -	struct vfio_ap_queue *q = dev_get_drvdata(dev);
+> -
+> -	return (q->apqn == *(int *)(data)) ? 1 : 0;
+> -}
+> -
+> -/**
+> - * vfio_ap_get_queue: Retrieve a queue with a specific APQN from a list
+> - * @matrix_mdev: the associated mediated matrix
+> - * @apqn: The queue APQN
+> - *
+> - * Retrieve a queue with a specific APQN from the list of the
+> - * devices of the vfio_ap_drv.
+> - * Verify that the APID and the APQI are set in the matrix.
+> - *
+> - * Returns the pointer to the associated vfio_ap_queue
+
+Any reason you're killing this comment, instead of adapting it? The
+function is even no longer static...
+
+> - */
+> -static struct vfio_ap_queue *vfio_ap_get_queue(
+> -					struct ap_matrix_mdev *matrix_mdev,
+> -					int apqn)
+> +struct vfio_ap_queue *vfio_ap_get_queue(unsigned long apqn)
+>  {
+>  	struct vfio_ap_queue *q;
+> -	struct device *dev;
+> -
+> -	if (!test_bit_inv(AP_QID_CARD(apqn), matrix_mdev->matrix.apm))
+> -		return NULL;
+> -	if (!test_bit_inv(AP_QID_QUEUE(apqn), matrix_mdev->matrix.aqm))
+> -		return NULL;
+
+These were just optimizations and therefore can be dropped now?
+
+> -
+> -	dev = driver_find_device(&matrix_dev->vfio_ap_drv->driver, NULL,
+> -				 &apqn, match_apqn);
+> -	if (!dev)
+> -		return NULL;
+> -	q = dev_get_drvdata(dev);
+> -	q->matrix_mdev = matrix_mdev;
+> -	put_device(dev);
+>  
+> -	return q;
+> +	hash_for_each_possible(matrix_dev->qtable, q, qnode, apqn) {
+> +		if (q && (apqn == q->apqn))
+> +			return q;
+> +	}
+
+Do we need any serialization here? Previously, the driver core made
+sure we could get a reference only if the device was still registered;
+not sure if we need any further guarantees now.
+
+> +
+> +	return NULL;
+>  }
+>  
+>  /**
+
+(...)
+
