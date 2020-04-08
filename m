@@ -6,76 +6,96 @@ X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ACAEEC2D0EA
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 11:21:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF9FEC2D0EA
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 11:23:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 611C820753
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 11:21:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9946A20780
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 11:23:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="jL8HBJZU"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="nkszLrTM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728429AbgDHLV5 (ORCPT
+        id S1728440AbgDHLXx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Apr 2020 07:21:57 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:59166 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728205AbgDHLV5 (ORCPT
+        Wed, 8 Apr 2020 07:23:53 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:50686 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728205AbgDHLXx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Apr 2020 07:21:57 -0400
+        Wed, 8 Apr 2020 07:23:53 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
         Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=PWkE951pF6gwEgnZrr9rlPlV6Gs3OzC1B/guo+3Nato=; b=jL8HBJZUW04p8UIqAHE625jZEu
-        pR+6oxFHckjc35R4VhzZcl01WIJomt7KJiZZRvnX/EC/5B2rTcTamkwArtYmzgw80e71f9+U3s1Nn
-        9EbFYHkNZomfJ+Lc2/o0l696J0HTYsH7i+fAey2YjCaGuy3l94V5sxK/5b23Pku3AFe+SbtQGCMt2
-        ptE8WU3lReh6n7K/OYuYAkv940+hijRidD+qYV9oep32w9shhbiP7f3AIzqA1aYrokjRexWTlefYj
-        7lqqoamXNnvxVZdt+nV5xFauE2xq5BUlu5sp0kv9t9tcxIYgH1R+hKwMK41txIr8UAQzpQmCfog4D
-        5EejFJ/w==;
-Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jM8mG-0003CR-H4; Wed, 08 Apr 2020 11:21:52 +0000
-Date:   Wed, 8 Apr 2020 04:21:52 -0700
-From:   Matthew Wilcox <willy@infradead.org>
-To:     Tetsuhiro Kohada <Kohada.Tetsuhiro@dc.mitsubishielectric.co.jp>
-Cc:     Mori.Takahiro@ab.mitsubishielectric.co.jp,
-        motai.hirotaka@aj.mitsubishielectric.co.jp,
-        Namjae Jeon <namjae.jeon@samsung.com>,
-        Sungjong Seo <sj1557.seo@samsung.com>,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] exfat: replace 'time_ms' with 'time_10ms'
-Message-ID: <20200408112152.GP21484@bombadil.infradead.org>
-References: <20200408074610.35591-1-Kohada.Tetsuhiro@dc.MitsubishiElectric.co.jp>
+        bh=4ZLX7MfSUqHHEvMTIVvOx5yn0LV+2MvDcxCOdLfIT5s=; b=nkszLrTMFN8ogtJBJVVDqDDkIX
+        eSArLLy1rOFEHGcIv2pr37OPq3pKTdTYcNgnodxsyyLNWOD3DAjqhsiDqkAyH4oQ6l9V2pQn72kPD
+        mILd26jF+lKPcN8g3yoW3x8kS4c26LjWz7lIqFKXpkhg3jfFTpiwXP0YUs0eTbaTntgpaIHbizTaA
+        9TrGdyDOTCx/MILvvo54NNBGXTQ5n+B6MPfI6sgngiGeJc7xDpCcKRQpmsNEboGHcz6r5hsgA97Y6
+        +tgOqOBPKlkwCWrUoph4w02SlhpL1VEdCekvbk2tenz9RfmrZBEfICuPRptBcDh4bWpIXzaNm5/sg
+        1n6I1bdA==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jM8ns-0000Iw-4E; Wed, 08 Apr 2020 11:23:32 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 302BA300478;
+        Wed,  8 Apr 2020 13:23:29 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 1C0332BA90A63; Wed,  8 Apr 2020 13:23:29 +0200 (CEST)
+Date:   Wed, 8 Apr 2020 13:23:29 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Ankur Arora <ankur.a.arora@oracle.com>
+Cc:     linux-kernel@vger.kernel.org, x86@kernel.org, hpa@zytor.com,
+        jpoimboe@redhat.com, namit@vmware.com, mhiramat@kernel.org,
+        jgross@suse.com, bp@alien8.de, vkuznets@redhat.com,
+        pbonzini@redhat.com, boris.ostrovsky@oracle.com,
+        mihai.carabas@oracle.com, kvm@vger.kernel.org,
+        xen-devel@lists.xenproject.org,
+        virtualization@lists.linux-foundation.org
+Subject: Re: [RFC PATCH 15/26] x86/alternatives: Non-emulated text poking
+Message-ID: <20200408112329.GW20713@hirez.programming.kicks-ass.net>
+References: <20200408050323.4237-1-ankur.a.arora@oracle.com>
+ <20200408050323.4237-16-ankur.a.arora@oracle.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200408074610.35591-1-Kohada.Tetsuhiro@dc.MitsubishiElectric.co.jp>
+In-Reply-To: <20200408050323.4237-16-ankur.a.arora@oracle.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Please leave at least 24 hours between sending new versions so that
-you can collect all feedback relating to your change, and we don't see
-discussion fragment between different threads.
+On Tue, Apr 07, 2020 at 10:03:12PM -0700, Ankur Arora wrote:
+> +static int __maybe_unused text_poke_late(patch_worker_t worker, void *stage)
+> +{
+> +	int ret;
+> +
+> +	lockdep_assert_held(&text_mutex);
+> +
+> +	if (system_state != SYSTEM_RUNNING)
+> +		return -EINVAL;
+> +
+> +	text_poke_state.stage = stage;
+> +	text_poke_state.num_acks = cpumask_weight(cpu_online_mask);
+> +	text_poke_state.head = &alt_modules;
+> +
+> +	text_poke_state.patch_worker = worker;
+> +	text_poke_state.state = PATCH_SYNC_DONE; /* Start state */
+> +	text_poke_state.primary_cpu = smp_processor_id();
+> +
+> +	/*
+> +	 * Run the worker on all online CPUs. Don't need to do anything
+> +	 * for offline CPUs as they come back online with a clean cache.
+> +	 */
+> +	ret = stop_machine(patch_worker, &text_poke_state, cpu_online_mask);
 
-> @@ -84,10 +84,10 @@ void exfat_get_entry_time(struct exfat_sb_info *sbi, struct timespec64 *ts,
->  			      t >> 11, (t >> 5) & 0x003F, (t & 0x001F) << 1);
->  
->  
-> -	/* time_ms field represent 0 ~ 199(1990 ms) */
-> -	if (time_ms) {
-> -		ts->tv_sec += time_ms / 100;
-> -		ts->tv_nsec = (time_ms % 100) * 10 * NSEC_PER_MSEC;
-> +	/* time_10ms field represent 0 ~ 199cs(1990 ms) */
-> +	if (time_10ms) {
-> +		ts->tv_sec += (time_10ms * 10) / 1000;
-> +		ts->tv_nsec = (time_10ms * 10) % 1000 * NSEC_PER_MSEC;
+This.. that on its own is almost a reason to NAK the entire thing. We're
+all working very hard to get rid of stop_machine() and you're adding
+one.
 
-I find this more confusing than the original.
+Worse, stop_machine() is notoriously crap on over-committed virt, the
+exact scenario where you want it.
 
-		ts->tv_sec += time_10ms / 100;
-		ts->tv_nsec = (time_10ms % 100) * 10 * NSEC_PER_MSEC;
-
-is easier to understand for me, not least because I don't need to worry
-about the operator precedence between % and *.
-
+> +
+> +	return ret;
+> +}
