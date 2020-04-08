@@ -2,182 +2,94 @@ Return-Path: <SRS0=8dav=5Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17FEBC2BA1A
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 20:15:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AA06C2BA1B
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 20:18:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D8CF7206C0
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 20:15:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586376917;
-	bh=w747uuIg1jdrXmp0aDyB3OiMnM/0qgxwIntGycBEGOg=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fqe5JBxQp17VOLlCxveGhZC2JrxvYGNsl187Dz7gagpDvtirOixgmSaHGO3TBkuAP
-	 5DsohUYGKFVla3TqGWvHw8x/jo2fK2LIbU6v63FUOZpk8UckUV5S9PIbjdA8BktYx6
-	 cB7zbpf0rIXj0cVzGsaAkh7gZR36M+JfGBpl7QYU=
+	by mail.kernel.org (Postfix) with ESMTP id F0864206C0
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 20:18:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730387AbgDHUPQ (ORCPT
+        id S1729766AbgDHUSK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Apr 2020 16:15:16 -0400
-Received: from mail-qk1-f194.google.com ([209.85.222.194]:45567 "EHLO
-        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730309AbgDHUPC (ORCPT
+        Wed, 8 Apr 2020 16:18:10 -0400
+Received: from asavdk4.altibox.net ([109.247.116.15]:47342 "EHLO
+        asavdk4.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726891AbgDHUSJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Apr 2020 16:15:02 -0400
-Received: by mail-qk1-f194.google.com with SMTP id m67so1624862qke.12;
-        Wed, 08 Apr 2020 13:15:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=JdXZ3lJLN6mj2DFzKWWl+veWK2Db945pbS3QdWvrLY0=;
-        b=vSHKOPOY1fZ0RWyLB4sv9rKbE91lJyvINDh9HA66upkxrCZCsFqamFz/DYSOhOgdYg
-         rhxi9bNKEd+fNPZK7od8vDCK/+vuOvEozB6DDyDXPKN3i9608HYrOHwc9TS5SYRR+l3d
-         ErVkebnrtKaYJY5OOYkBmWrYSxBv2fa1p+zB8dGYc77HKNJ23/vu5Miief6DgyIlWk1c
-         Dteif6bDq7sYypOvnwPEX+FdMG/0OayCjgzzePAgz3Bi6wXWO6CBuPeAOQWTOqyQm2AZ
-         l7AmSsojdFv3eC7jugIOdcAItndujAc3JMFc19DwwdGI6D3ZC1lI8HliuiuKc+UY7W2q
-         LoaQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
-         :in-reply-to:references:mime-version:content-transfer-encoding;
-        bh=JdXZ3lJLN6mj2DFzKWWl+veWK2Db945pbS3QdWvrLY0=;
-        b=ZMIdiRDhVlVhdl1keSalvdCKGlKuUE+oXG1lvPH3cN+YKhR1NgDtOvFLRn7TaYprQA
-         5a1RzB+Bk1kHc+C0d41sigQnRNtNPhOFPQ40G4ojuCp5ESsj0v+uNIaaA4PIzDpmUgwn
-         l6HmdnmelO0u5xkA86JxCHfPdtOk2axG2nswZDO8JZldqKmvDGS+5ZXxEvqJ4ojI7j6P
-         lYqDfjAph6N3GjNexfIfSZVjIdFcgF5ScZTETmQarGDzA9h/CZ3z/UZ0Orzhg4soL6/a
-         QvHkMEevY3Tnlm64Bi5/JqUq71q0LceBXgNSBbtduDNurUjOmYsx9T28ef2m2K+pnweF
-         r1MQ==
-X-Gm-Message-State: AGi0PuZjoyY2XuXoKImdqI7CKZ7MWx91qJiiM2G1vJwjdQ79Seg+sXmd
-        ZsiBT6/AsK3aR8fLKWNLtrrAc1qO9BI=
-X-Google-Smtp-Source: APiQypJ/jtm3TeWXnX5UBgw/Ym2V/O1SmHKO9XstdQMbbCDR0m1fA2SbLHvoG/TnqtB90OV+DDwCNw==
-X-Received: by 2002:a37:a4c3:: with SMTP id n186mr1612922qke.62.1586376901312;
-        Wed, 08 Apr 2020 13:15:01 -0700 (PDT)
-Received: from localhost ([2620:10d:c091:480::36b2])
-        by smtp.gmail.com with ESMTPSA id z11sm19391343qti.23.2020.04.08.13.15.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 08 Apr 2020 13:15:00 -0700 (PDT)
-From:   Tejun Heo <tj@kernel.org>
-To:     axboe@kernel.dk
-Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel-team@vger.kernel.org, cgroups@vger.kernel.org,
-        newella@fb.com, josef@toxicpanda.com, Tejun Heo <tj@kernel.org>
-Subject: [PATCH 3/5] blk-iocost: account for IO size when testing latencies
-Date:   Wed,  8 Apr 2020 16:14:48 -0400
-Message-Id: <20200408201450.3959560-4-tj@kernel.org>
-X-Mailer: git-send-email 2.25.2
-In-Reply-To: <20200408201450.3959560-1-tj@kernel.org>
-References: <20200408201450.3959560-1-tj@kernel.org>
+        Wed, 8 Apr 2020 16:18:09 -0400
+Received: from ravnborg.org (unknown [158.248.194.18])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by asavdk4.altibox.net (Postfix) with ESMTPS id B564B804E6;
+        Wed,  8 Apr 2020 22:18:03 +0200 (CEST)
+Date:   Wed, 8 Apr 2020 22:18:02 +0200
+From:   Sam Ravnborg <sam@ravnborg.org>
+To:     David Lu <david.lu@bitland.com.cn>
+Cc:     Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org,
+        David Airlie <airlied@linux.ie>, linux-kernel@vger.kernel.org,
+        Rob Herring <robh+dt@kernel.org>, jungle.chiang@bitland.com.cn,
+        Thierry Reding <thierry.reding@gmail.com>,
+        dri-devel@lists.freedesktop.org
+Subject: Re: [PATCH] dt-bindings: boe, tv101wum-n16: Add compatible for boe
+ tv105wum-nw0.
+Message-ID: <20200408201802.GB612@ravnborg.org>
+References: <20200324094525.4758-1-david.lu@bitland.com.cn>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200324094525.4758-1-david.lu@bitland.com.cn>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-CMAE-Score: 0
+X-CMAE-Analysis: v=2.3 cv=XpTUx2N9 c=1 sm=1 tr=0
+        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
+        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=iKCrp2iyAAAA:8
+        a=e5mUnYsNAAAA:8 a=KSWG7gIH_8gM9piVvoQA:9 a=CjuIK1q_8ugA:10
+        a=6dnM-gFdnRAg0d82BWIM:22 a=Vxmtnl_E_bksehYqCbjh:22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On each IO completion, iocost decides whether the IO met or missed its latency
-target. Currently, the targets are fixed numbers per IO type. While this can be
-good enough for loose latency targets way higher than typical completion
-latencies, the effect of IO size makes it difficult to tighten the latency
-target - a target adequate for 4k IOs might be too tight for 512k IOs and
-vice-versa.
+Hi David.
 
-iocost already has all the necessary information to account for different IO
-sizes when testing whether the latency target is met as iocost can calculate the
-size vtime cost of a given IO. This patch updates the completion path to
-calculate the size vtime cost of the IO, deduct the nsec equivalent from the
-observed latency and use the adjusted value to decide whether the target is met.
+On Tue, Mar 24, 2020 at 05:45:25PM +0800, David Lu wrote:
+> Add bindings documentation for BOE TV105WUM-NW0 10.5" WUXGA TFT LCD
+> panel.
+> 
+> Signed-off-by: David Lu <david.lu@bitland.com.cn>
+> Change-Id: I450c0e52aae080728d4794bdffc50bb0d2f39f40
 
-This makes latency targets independent from IO size and enables determining
-adequate latency targets with fixed size fio runs.
+I dropped the Change-Id while applying.
+Applied to drm-misc-next and pushed out.
 
-Signed-off-by: Tejun Heo <tj@kernel.org>
-Cc: Andy Newell <newella@fb.com>
----
- block/Kconfig      |  1 +
- block/blk-iocost.c | 31 +++++++++++++++++++++++++++++--
- 2 files changed, 30 insertions(+), 2 deletions(-)
+	Sam
 
-diff --git a/block/Kconfig b/block/Kconfig
-index 48308e600dc8..3b0b698ca254 100644
---- a/block/Kconfig
-+++ b/block/Kconfig
-@@ -149,6 +149,7 @@ config BLK_CGROUP_IOLATENCY
- config BLK_CGROUP_IOCOST
- 	bool "Enable support for cost model based cgroup IO controller"
- 	depends on BLK_CGROUP=y
-+	select BLK_RQ_IO_DATA_LEN
- 	select BLK_RQ_ALLOC_TIME
- 	---help---
- 	Enabling this option enables the .weight interface for cost
-diff --git a/block/blk-iocost.c b/block/blk-iocost.c
-index a8e99ef76a08..76e8738f7bb5 100644
---- a/block/blk-iocost.c
-+++ b/block/blk-iocost.c
-@@ -260,6 +260,7 @@ enum {
- 	VTIME_PER_SEC_SHIFT	= 37,
- 	VTIME_PER_SEC		= 1LLU << VTIME_PER_SEC_SHIFT,
- 	VTIME_PER_USEC		= VTIME_PER_SEC / USEC_PER_SEC,
-+	VTIME_PER_NSEC		= VTIME_PER_SEC / NSEC_PER_SEC,
- 
- 	/* bound vrate adjustments within two orders of magnitude */
- 	VRATE_MIN_PPM		= 10000,	/* 1% */
-@@ -1668,6 +1669,30 @@ static u64 calc_vtime_cost(struct bio *bio, struct ioc_gq *iocg, bool is_merge)
- 	return cost;
- }
- 
-+static void calc_size_vtime_cost_builtin(struct request *rq, struct ioc *ioc, u64 *costp)
-+{
-+	u64 pages = max_t(u64, rq->io_data_len >> IOC_PAGE_SHIFT, 1);
-+
-+	switch (req_op(rq)) {
-+	case REQ_OP_READ:
-+		*costp = pages * ioc->params.lcoefs[LCOEF_RPAGE];
-+		break;
-+	case REQ_OP_WRITE:
-+		*costp = pages * ioc->params.lcoefs[LCOEF_WPAGE];
-+		break;
-+	default:
-+		*costp = 0;
-+	}
-+}
-+
-+static u64 calc_size_vtime_cost(struct request *rq, struct ioc *ioc)
-+{
-+	u64 cost;
-+
-+	calc_size_vtime_cost_builtin(rq, ioc, &cost);
-+	return cost;
-+}
-+
- static void ioc_rqos_throttle(struct rq_qos *rqos, struct bio *bio)
- {
- 	struct blkcg_gq *blkg = bio->bi_blkg;
-@@ -1837,7 +1862,7 @@ static void ioc_rqos_done_bio(struct rq_qos *rqos, struct bio *bio)
- static void ioc_rqos_done(struct rq_qos *rqos, struct request *rq)
- {
- 	struct ioc *ioc = rqos_to_ioc(rqos);
--	u64 on_q_ns, rq_wait_ns;
-+	u64 on_q_ns, rq_wait_ns, size_nsec;
- 	int pidx, rw;
- 
- 	if (!ioc->enabled || !rq->alloc_time_ns || !rq->start_time_ns)
-@@ -1858,8 +1883,10 @@ static void ioc_rqos_done(struct rq_qos *rqos, struct request *rq)
- 
- 	on_q_ns = ktime_get_ns() - rq->alloc_time_ns;
- 	rq_wait_ns = rq->start_time_ns - rq->alloc_time_ns;
-+	size_nsec = div64_u64(calc_size_vtime_cost(rq, ioc), VTIME_PER_NSEC);
- 
--	if (on_q_ns <= ioc->params.qos[pidx] * NSEC_PER_USEC)
-+	if (on_q_ns <= size_nsec ||
-+	    on_q_ns - size_nsec <= ioc->params.qos[pidx] * NSEC_PER_USEC)
- 		this_cpu_inc(ioc->pcpu_stat->missed[rw].nr_met);
- 	else
- 		this_cpu_inc(ioc->pcpu_stat->missed[rw].nr_missed);
--- 
-2.25.1
-
+> ---
+>  .../devicetree/bindings/display/panel/boe,tv101wum-nl6.yaml     | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/display/panel/boe,tv101wum-nl6.yaml b/Documentation/devicetree/bindings/display/panel/boe,tv101wum-nl6.yaml
+> index 740213459134..7f5df5851017 100644
+> --- a/Documentation/devicetree/bindings/display/panel/boe,tv101wum-nl6.yaml
+> +++ b/Documentation/devicetree/bindings/display/panel/boe,tv101wum-nl6.yaml
+> @@ -24,6 +24,8 @@ properties:
+>        - boe,tv101wum-n53
+>          # AUO B101UAN08.3 10.1" WUXGA TFT LCD panel
+>        - auo,b101uan08.3
+> +        # BOE TV105WUM-NW0 10.5" WUXGA TFT LCD panel
+> +      - boe,tv105wum-nw0
+>  
+>    reg:
+>      description: the virtual channel number of a DSI peripheral
+> -- 
+> 2.24.1
+> 
+> 
+> 
+> _______________________________________________
+> dri-devel mailing list
+> dri-devel@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/dri-devel
