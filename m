@@ -2,59 +2,60 @@ Return-Path: <SRS0=8dav=5Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20900C2BA2B
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 11:08:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60BC6C2BA2B
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 11:08:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E52F52076D
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 11:08:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 288012076D
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 11:08:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="fj4kbjPm"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="O2ny8JKG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728205AbgDHLI0 (ORCPT
+        id S1728292AbgDHLI3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Apr 2020 07:08:26 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:44789 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727941AbgDHLIZ (ORCPT
+        Wed, 8 Apr 2020 07:08:29 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:54723 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728228AbgDHLI1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Apr 2020 07:08:25 -0400
-Received: by mail-wr1-f67.google.com with SMTP id c15so7285363wro.11
-        for <linux-kernel@vger.kernel.org>; Wed, 08 Apr 2020 04:08:24 -0700 (PDT)
+        Wed, 8 Apr 2020 07:08:27 -0400
+Received: by mail-wm1-f65.google.com with SMTP id h2so4712978wmb.4
+        for <linux-kernel@vger.kernel.org>; Wed, 08 Apr 2020 04:08:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=uz8UY4eWPJrlC/KHAdRsMpZsS+aRJqI8gmWI20mDg+s=;
-        b=fj4kbjPmHVx5Aq7luyrz5Ec2HyEpIV74NPD7KGBOSquGJHEe85K+/i+xc6OBHI/72N
-         gZqESCnrYhdXbm5qLhael05Y+uXXjB5ynaZRM7facAZgFZ9hLVZU+8D7pznC0wLnWJ1l
-         wBpFwJGlEbu2sy7ZUX8uF55hvdaPWv7rFCTJrmpLIRAYIRwFwHczLYnE/qXt2zSyHpxM
-         NF/wxFpK58xXcqQOTo83kaRjnOUldA3ba4aJpSzGyXiM5Hjpi3HW3O+cSovFVrZvScIA
-         aKnD0vdu+SPzC+oyAM8xB0P8K6wVr9MP/GezOAUCRVHfB2G/qpe+nhPGhte8Phhc03u5
-         EJww==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=EOnNa/TLh6h6HNgX41DYotN/L8BySvP3U4vrVfk7o6Y=;
+        b=O2ny8JKGUSOuz/60vCEy24Z2F71bpl9WsZ1e1tuYDus2ZF4FzzrO3XhUleYtj7jH6l
+         KaCI6/4ClgphAIuccqIzWvMi7JCridrNIfslRWmZYfceqr4F5fjdRmPLpsJzq7Jrar+b
+         QY+9PTmBe0ZdlkzQhxwF3FAO51PbDJBEHM6DaytPjZHiP65zhc6QIKr5FhHVYTUp/2Gt
+         uBcSpt9Ucz22AtBI+ajLPYxJc709g1VompPqnBKcIRo5MnaFk3tNOuq4MfPTfW7CHMT7
+         f8DFa5vpZkBHu4wJmlXw5x+fVhKcKvLUmWEQL3ii5529+kLh7RQaAfii7omMdLSDe3PE
+         LEAw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=uz8UY4eWPJrlC/KHAdRsMpZsS+aRJqI8gmWI20mDg+s=;
-        b=Z+ryYTfNnd8UjkfvZ1L9kAZ4pt0mkDzrqVnHXfJSKhEQXaltcVZJTbLwEev8qpxQEq
-         jJ9cAPEWUcA3+glwCvbuOR9DrXY9gBYf79Ibw0ehJ0FCiVVPv/fnKDzQKPCSvfSn6fMD
-         IJ61yeG3vXkGH+y4DF4m80H3mPOq6AUL6gMe/2PYGKb6UPK5dCxukoedmWz9rE1/MOyF
-         BArfGEOG1RWk8OtO7vMVBMavkL6SgDp1gFWKm4RWqNvvf5LANsvGuajEZilRkyTkJZfW
-         wZr3dInApUeZlYjBYge2g+xCORQJico++ytv5xu87k0pSxJz16V8J5nge139PEKLIen5
-         FZkQ==
-X-Gm-Message-State: AGi0Pub4ZNozqIXSdVQCEQ8s6vRraeMCzjTB2Coy2cjoDyltRwTETdbE
-        Q5hTs41Nkbes9z5aZKOrtP5G0g==
-X-Google-Smtp-Source: APiQypIHRKuvNtlqBzAppetUZdYeMh5uW9upNPqzx1rWVmyvdyQVhoEmPglxFVAPk23/+WwHIT1oGQ==
-X-Received: by 2002:adf:db0a:: with SMTP id s10mr7916205wri.361.1586344103363;
-        Wed, 08 Apr 2020 04:08:23 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=EOnNa/TLh6h6HNgX41DYotN/L8BySvP3U4vrVfk7o6Y=;
+        b=qseKr3nDnI8ZbMxLQ0mam6MadglOVrhRliGqhDQlLS0bu1g8cZFRLC47bxkdihLncp
+         nYxaw0Ehb0bUf3FaJ+zGlN5jTN1LTRRCUhj4fRqSK3A41FqgHh8J4d4NVJn5sn9tZUjb
+         tSkQxFM9iPv0cZKA9yW5rMpxzMJrb0Fa4kX44eyfZbRod7mGDaKcrRIZhotXnWobIl6W
+         mQEctUBLNPTT+xZfvYsiq6IgGDBzQukk2x8u6/R30tM3qrbAGgD3wnv9fSS57Rrh5jXG
+         vhvWBHTYfOMyQA1MqHYJ4bBVlwhCz+ItGeC/w4fAcFD4FrM/0ccmk8MsklabHu0cgGnn
+         6CuQ==
+X-Gm-Message-State: AGi0PuacdQ52HPgNmWxSK3Vy/G9cUAGXuVp5xKpnUy7LZo7MnPQ6xQSz
+        MCcLysiKZ3b253wNddfQaUXRZg==
+X-Google-Smtp-Source: APiQypJ8psA8kj8RYG+w7ZqInsqVOLVF9bsnw1TmjHbXUxzjvKohVvAbjzHiJOBlAF+tzflddAC89A==
+X-Received: by 2002:a1c:e914:: with SMTP id q20mr4038768wmc.105.1586344104561;
+        Wed, 08 Apr 2020 04:08:24 -0700 (PDT)
 Received: from localhost.localdomain ([37.120.50.78])
-        by smtp.gmail.com with ESMTPSA id i8sm37596253wrb.41.2020.04.08.04.08.22
+        by smtp.gmail.com with ESMTPSA id i8sm37596253wrb.41.2020.04.08.04.08.23
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 08 Apr 2020 04:08:22 -0700 (PDT)
+        Wed, 08 Apr 2020 04:08:24 -0700 (PDT)
 From:   Robert Foss <robert.foss@linaro.org>
 To:     Dongchun Zhu <dongchun.zhu@mediatek.com>,
         Fabio Estevam <festevam@gmail.com>,
@@ -66,10 +67,12 @@ To:     Dongchun Zhu <dongchun.zhu@mediatek.com>,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org
 Cc:     Robert Foss <robert.foss@linaro.org>
-Subject: [PATCH v4 0/3] media: ov8856: Add devicetree support
-Date:   Wed,  8 Apr 2020 13:08:13 +0200
-Message-Id: <20200408110816.2712841-1-robert.foss@linaro.org>
+Subject: [PATCH v7 1/3] media: dt-bindings: ov8856: Document YAML bindings
+Date:   Wed,  8 Apr 2020 13:08:14 +0200
+Message-Id: <20200408110816.2712841-2-robert.foss@linaro.org>
 X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200408110816.2712841-1-robert.foss@linaro.org>
+References: <20200408110816.2712841-1-robert.foss@linaro.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -77,24 +80,207 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This adds devicetree support to the ov8856 driver.
-In order to to aid debugging and enable future sensor
-modes to be supported, module revision detection is also added.
+From: Dongchun Zhu <dongchun.zhu@mediatek.com>
 
+This patch adds documentation of device tree in YAML schema for the
+OV8856 CMOS image sensor.
 
-Dongchun Zhu (1):
-  media: dt-bindings: ov8856: Document YAML bindings
+Signed-off-by: Dongchun Zhu <dongchun.zhu@mediatek.com>
+Signed-off-by: Robert Foss <robert.foss@linaro.org>
+---
 
-Robert Foss (2):
-  media: ov8856: Add devicetree support
-  media: ov8856: Implement sensor module revision identification
+- Changes since v6:
+  * Marco: remove qcom specifics from DT example
+   
+- Changes since v5:
+  * Add assigned-clocks and assigned-clock-rates
+  * robher: dt-schema errors
 
- .../devicetree/bindings/media/i2c/ov8856.yaml | 143 +++++++++++++
+- Changes since v4:
+  * Fabio: Change reset-gpio to GPIO_ACTIVE_LOW, explain in description
+  * Add clock-lanes property to example
+  * robher: Fix syntax error in devicetree example
+
+- Changes since v3:
+  * robher: Fix syntax error
+  * robher: Removed maxItems
+  * Fixes yaml 'make dt-binding-check' errors
+
+- Changes since v2:
+  Fixes comments from from Andy, Tomasz, Sakari, Rob.
+  * Convert text documentation to YAML schema.
+
+- Changes since v1:
+  Fixes comments from Sakari, Tomasz
+  * Add clock-frequency and link-frequencies in DT
+
+ .../devicetree/bindings/media/i2c/ov8856.yaml | 143 ++++++++++++++++++
  MAINTAINERS                                   |   1 +
- drivers/media/i2c/ov8856.c                    | 196 ++++++++++++++++--
- 3 files changed, 325 insertions(+), 15 deletions(-)
+ 2 files changed, 144 insertions(+)
  create mode 100644 Documentation/devicetree/bindings/media/i2c/ov8856.yaml
 
+diff --git a/Documentation/devicetree/bindings/media/i2c/ov8856.yaml b/Documentation/devicetree/bindings/media/i2c/ov8856.yaml
+new file mode 100644
+index 000000000000..96bef5403d7e
+--- /dev/null
++++ b/Documentation/devicetree/bindings/media/i2c/ov8856.yaml
+@@ -0,0 +1,143 @@
++# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
++# Copyright (c) 2019 MediaTek Inc.
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/media/i2c/ov8856.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Omnivision OV8856 CMOS Sensor Device Tree Bindings
++
++maintainers:
++  - Ben Kao <ben.kao@intel.com>
++  - Dongchun Zhu <dongchun.zhu@mediatek.com>
++
++description: |-
++  The Omnivision OV8856 is a high performance, 1/4-inch, 8 megapixel, CMOS
++  image sensor that delivers 3264x2448 at 30fps. It provides full-frame,
++  sub-sampled, and windowed 10-bit MIPI images in various formats via the
++  Serial Camera Control Bus (SCCB) interface. This chip is programmable
++  through I2C and two-wire SCCB. The sensor output is available via CSI-2
++  serial data output (up to 4-lane).
++
++properties:
++  compatible:
++    const: ovti,ov8856
++
++  reg:
++    maxItems: 1
++
++  clocks:
++    maxItems: 1
++
++  clock-names:
++    description:
++      Input clock for the sensor.
++    items:
++      - const: xvclk
++
++  assigned-clocks:
++    description:
++      Input clock for the sensor.
++
++  assigned-clock-rates:
++    description:
++      Frequency of the xvclk clock in Hertz.
++
++  dovdd-supply:
++    description:
++      Definition of the regulator used as interface power supply.
++
++  avdd-supply:
++    description:
++      Definition of the regulator used as analog power supply.
++
++  dvdd-supply:
++    description:
++      Definition of the regulator used as digital power supply.
++
++  reset-gpios:
++    description:
++      The phandle and specifier for the GPIO that controls sensor reset.
++      This corresponds to the hardware pin XSHUTDOWN which is physically
++      active low.
++
++  port:
++    type: object
++    additionalProperties: false
++    description:
++      A node containing input and output port nodes with endpoint definitions
++      as documented in
++      Documentation/devicetree/bindings/media/video-interfaces.txt
++
++    properties:
++      endpoint:
++        type: object
++
++        properties:
++          clock-lanes:
++            maxItems: 1
++
++          data-lanes:
++            maxItems: 1
++
++          remote-endpoint: true
++
++        required:
++          - clock-lanes
++          - data-lanes
++          - remote-endpoint
++
++    required:
++      - endpoint
++
++required:
++  - compatible
++  - reg
++  - clocks
++  - clock-names
++  - assigned-clocks
++  - assigned-clock-rates
++  - dovdd-supply
++  - avdd-supply
++  - dvdd-supply
++  - reset-gpios
++  - port
++
++additionalProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/gpio/gpio.h>
++
++    i2c {
++        #address-cells = <1>;
++        #size-cells = <0>;
++
++        ov8856: camera@10 {
++            compatible = "ovti,ov8856";
++            reg = <0x10>;
++
++            reset-gpios = <&pio 111 GPIO_ACTIVE_LOW>;
++            pinctrl-names = "default";
++            pinctrl-0 = <&clk_24m_cam>;
++
++            clocks = <&cam_osc>;
++            clock-names = "xvclk";
++            assigned-clocks = <&cam_osc>;
++            assigned-clock-rates = <19200000>;
++
++            avdd-supply = <&mt6358_vcama2_reg>;
++            dvdd-supply = <&mt6358_vcamd_reg>;
++            dovdd-supply = <&mt6358_vcamio_reg>;
++
++            port {
++                wcam_out: endpoint {
++                    remote-endpoint = <&mipi_in_wcam>;
++                    clock-lanes = <0>;
++                    data-lanes = <1 2 3 4>;
++                    link-frequencies = /bits/ 64 <360000000 180000000>;
++                };
++            };
++        };
++    };
++...
+\ No newline at end of file
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 534a8dc4f84a..3f35c6e9700a 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -12465,6 +12465,7 @@ L:	linux-media@vger.kernel.org
+ T:	git git://linuxtv.org/media_tree.git
+ S:	Maintained
+ F:	drivers/media/i2c/ov8856.c
++F:	Documentation/devicetree/bindings/media/i2c/ov8856.yaml
+ 
+ OMNIVISION OV9650 SENSOR DRIVER
+ M:	Sakari Ailus <sakari.ailus@linux.intel.com>
 -- 
 2.25.1
 
