@@ -2,102 +2,206 @@ Return-Path: <SRS0=8dav=5Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10D98C2D0EA
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 12:13:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 112AAC2BA2B
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 12:15:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9F94B2051A
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 12:13:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="CvHc61oW"
+	by mail.kernel.org (Postfix) with ESMTP id D587F20753
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 12:15:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728180AbgDHMNW (ORCPT
+        id S1728205AbgDHMPR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Apr 2020 08:13:22 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:39413 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726521AbgDHMNW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Apr 2020 08:13:22 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 48y38J2kyXz9sRN;
-        Wed,  8 Apr 2020 22:13:20 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ellerman.id.au;
-        s=201909; t=1586348000;
-        bh=ubGzeXSiVoqtebhTvEZLZD3GVQ6q7AW2piVuB1gAlBA=;
-        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-        b=CvHc61oW7tA7kZxZgTKRkrr72INdmtZmz5b2cWNfwTinUYYVcvgEHtnajpTiQwaWq
-         RInLrTI9uvKzzCpougdbGohfsJjFL9K0UTwXHMbirkCHbfkqJOa8/JN++5teOhXBSi
-         ecCRcm7DO8/gqeCaTulSq2i7bmpwZknTMxVoPQIiP0lShZubxMLu2lijoJj9lqco4o
-         Y6W0UUEPlPu/GwkcXy4vdaYBunXvXJAF3QG/zXFcmdTK/HY2RGbe2nq+WKeqIZdQAu
-         btwyGBcmhkxv9hZHS09dfisn+s8WtiOaESPca0aijOPTVwdEucrjnZ1wDkEHrqXuiy
-         L/LyM6dfCLxpg==
-From:   Michael Ellerman <mpe@ellerman.id.au>
-To:     Leonardo Bras <leonardo@linux.ibm.com>,
+        Wed, 8 Apr 2020 08:15:17 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:3412 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727903AbgDHMPR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Apr 2020 08:15:17 -0400
+Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 038C4PZu045744
+        for <linux-kernel@vger.kernel.org>; Wed, 8 Apr 2020 08:15:16 -0400
+Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 3091yktkys-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Wed, 08 Apr 2020 08:15:15 -0400
+Received: from localhost
+        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <gerald.schaefer@de.ibm.com>;
+        Wed, 8 Apr 2020 13:15:00 +0100
+Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
+        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Wed, 8 Apr 2020 13:14:51 +0100
+Received: from d06av24.portsmouth.uk.ibm.com (d06av24.portsmouth.uk.ibm.com [9.149.105.60])
+        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 038CF24e50987260
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 8 Apr 2020 12:15:02 GMT
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id C021542052;
+        Wed,  8 Apr 2020 12:15:02 +0000 (GMT)
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id DB5164203F;
+        Wed,  8 Apr 2020 12:15:01 +0000 (GMT)
+Received: from thinkpad (unknown [9.145.23.121])
+        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Wed,  8 Apr 2020 12:15:01 +0000 (GMT)
+Date:   Wed, 8 Apr 2020 14:15:00 +0200
+From:   Gerald Schaefer <gerald.schaefer@de.ibm.com>
+To:     Anshuman Khandual <anshuman.khandual@arm.com>
+Cc:     linux-mm@kvack.org, christophe.leroy@c-s.fr,
+        Jonathan Corbet <corbet@lwn.net>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Vineet Gupta <vgupta@synopsys.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
         Benjamin Herrenschmidt <benh@kernel.crashing.org>,
         Paul Mackerras <paulus@samba.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Enrico Weigelt <info@metux.net>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Allison Randal <allison@lohutok.net>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        Leonardo Bras <leonardo@linux.ibm.com>,
-        Nicholas Piggin <npiggin@gmail.com>
-Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/1] powerpc/crash: Use NMI context for printk after crashing other CPUs
-In-Reply-To: <20200406174058.686436-1-leonardo@linux.ibm.com>
-References: <20200406174058.686436-1-leonardo@linux.ibm.com>
-Date:   Wed, 08 Apr 2020 22:13:31 +1000
-Message-ID: <87y2r6jhuc.fsf@mpe.ellerman.id.au>
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        "Kirill A . Shutemov" <kirill@shutemov.name>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        linux-snps-arc@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org,
+        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
+        linux-riscv@lists.infradead.org, x86@kernel.org,
+        linux-doc@vger.kernel.org, linux-arch@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Gerald Schaefer <gerald.schaefer@de.ibm.com>
+Subject: Re: [PATCH V2 0/3] mm/debug: Add more arch page table helper tests
+In-Reply-To: <253cf5c8-e43e-5737-24e8-3eda3b6ba7b3@arm.com>
+References: <1585027375-9997-1-git-send-email-anshuman.khandual@arm.com>
+        <20200331143059.29fca8fa@thinkpad>
+        <e3e35885-6852-16aa-3889-e22750a0cc87@arm.com>
+        <20200407175440.41cc00a5@thinkpad>
+        <253cf5c8-e43e-5737-24e8-3eda3b6ba7b3@arm.com>
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+x-cbid: 20040812-0012-0000-0000-000003A0A8D6
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 20040812-0013-0000-0000-000021DDCDD9
+Message-Id: <20200408141500.75b2e1a7@thinkpad>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
+ definitions=2020-04-07_10:2020-04-07,2020-04-07 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999 bulkscore=0
+ clxscore=1015 malwarescore=0 phishscore=0 adultscore=0 impostorscore=0
+ lowpriorityscore=0 suspectscore=0 priorityscore=1501 mlxscore=0
+ spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2004080097
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Leonardo Bras <leonardo@linux.ibm.com> writes:
-> Currently, if printk lock (logbuf_lock) is held by other thread during
-> crash, there is a chance of deadlocking the crash on next printk, and
-> blocking a possibly desired kdump.
->
-> After sending IPI to all other CPUs, make printk enter in NMI context,
-> as it will use per-cpu buffers to store the message, and avoid locking
-> logbuf_lock.
->
-> Signed-off-by: Leonardo Bras <leonardo@linux.ibm.com>
-> ---
->  arch/powerpc/kexec/crash.c | 1 +
->  1 file changed, 1 insertion(+)
->
-> diff --git a/arch/powerpc/kexec/crash.c b/arch/powerpc/kexec/crash.c
-> index d488311efab1..9b73e3991bf4 100644
-> --- a/arch/powerpc/kexec/crash.c
-> +++ b/arch/powerpc/kexec/crash.c
-> @@ -115,6 +115,7 @@ static void crash_kexec_prepare_cpus(int cpu)
+On Wed, 8 Apr 2020 12:41:51 +0530
+Anshuman Khandual <anshuman.khandual@arm.com> wrote:
 
-Added context:
+[...]
+> >   
+> >>
+> >> Some thing like this instead.
+> >>
+> >> pte_t pte = READ_ONCE(*ptep);
+> >> pte = pte_mkhuge(__pte((pte_val(pte) | RANDOM_ORVALUE) & PMD_MASK));
+> >>
+> >> We cannot use mk_pte_phys() as it is defined only on some platforms
+> >> without any generic fallback for others.  
+> > 
+> > Oh, didn't know that, sorry. What about using mk_pte() instead, at least
+> > it would result in a present pte:
+> > 
+> > pte = pte_mkhuge(mk_pte(phys_to_page(RANDOM_ORVALUE & PMD_MASK), prot));  
+> 
+> Lets use mk_pte() here but can we do this instead
+> 
+> paddr = (__pfn_to_phys(pfn) | RANDOM_ORVALUE) & PMD_MASK;
+> pte = pte_mkhuge(mk_pte(phys_to_page(paddr), prot));
+> 
 
-	printk(KERN_EMERG "Sending IPI to other CPUs\n");
+Sure, that will also work.
 
-	if (crash_wake_offline)
-		ncpus = num_present_cpus() - 1;
+BTW, this RANDOM_ORVALUE is not really very random, the way it is
+defined. For s390 we already changed it to mask out some arch bits,
+but I guess there are other archs and bits that would always be
+set with this "not so random" value, and I wonder if/how that would
+affect all the tests using this value, see also below.
 
->  
->  	crash_send_ipi(crash_ipi_callback);
->  	smp_wmb();
-> +	printk_nmi_enter();
-  
-Why did you decide to put it there, rather than at the start of
-default_machine_crash_shutdown() like I did?
+> > 
+> > And if you also want to do some with the existing value, which seems
+> > to be an empty pte, then maybe just check if writing and reading that
+> > value with set_huge_pte_at() / huge_ptep_get() returns the same,
+> > i.e. initially w/o RANDOM_ORVALUE.
+> > 
+> > So, in combination, like this (BTW, why is the barrier() needed, it
+> > is not used for the other set_huge_pte_at() calls later?):  
+> 
+> Ahh missed, will add them. Earlier we faced problem without it after
+> set_pte_at() for a test on powerpc (64) platform. Hence just added it
+> here to be extra careful.
+> 
+> > 
+> > @@ -733,24 +733,28 @@ static void __init hugetlb_advanced_test
+> >         struct page *page = pfn_to_page(pfn);
+> >         pte_t pte = READ_ONCE(*ptep);
+> >  
+> > -       pte = __pte(pte_val(pte) | RANDOM_ORVALUE);
+> > +       set_huge_pte_at(mm, vaddr, ptep, pte);
+> > +       WARN_ON(!pte_same(pte, huge_ptep_get(ptep)));
+> > +
+> > +       pte = pte_mkhuge(mk_pte(phys_to_page(RANDOM_ORVALUE & PMD_MASK), prot));
+> >         set_huge_pte_at(mm, vaddr, ptep, pte);
+> >         barrier();
+> >         WARN_ON(!pte_same(pte, huge_ptep_get(ptep)));
+> > 
+> > This would actually add a new test "write empty pte with
+> > set_huge_pte_at(), then verify with huge_ptep_get()", which happens
+> > to trigger a warning on s390 :-)  
+> 
+> On arm64 as well which checks for pte_present() in set_huge_pte_at().
+> But PTE present check is not really present in each set_huge_pte_at()
+> implementation especially without __HAVE_ARCH_HUGE_SET_HUGE_PTE_AT.
+> Hence wondering if we should add this new test here which will keep
+> giving warnings on s390 and arm64 (at the least).
 
-The printk() above could have already deadlocked if another CPU is stuck
-with the logbuf lock held.
+Hmm, interesting. I forgot about huge swap / migration, which is not
+(and probably cannot be) supported on s390. The pte_present() check
+on arm64 seems to check for such huge swap / migration entries,
+according to the comment.
 
-cheers
+The new test "write empty pte with set_huge_pte_at(), then verify
+with huge_ptep_get()" would then probably trigger the
+WARN_ON(!pte_present(pte)) in arm64 code. So I guess "writing empty
+ptes with set_huge_pte_at()" is not really a valid use case in practice,
+or else you would have seen this warning before. In that case, it
+might not be a good idea to add this test.
+
+I also do wonder now, why the original test with
+"pte = __pte(pte_val(pte) | RANDOM_ORVALUE);"
+did not also trigger that warning on arm64. On s390 this test failed
+exactly because the constructed pte was not present (initially empty,
+or'ing RANDOM_ORVALUE does not make it present for s390). I guess this
+just worked by chance on arm64, because the bits from RANDOM_ORVALUE
+also happened to mark the pte present for arm64.
+
+This brings us back to the question above, regarding the "randomness"
+of RANDOM_ORVALUE. Not really sure what the intention behind that was,
+but maybe it would make sense to restrict this RANDOM_ORVALUE to
+non-arch-specific bits, i.e. only bits that would be part of the
+address value within a page table entry? Or was it intentionally
+chosen to also mess with other bits?
+
+Regards,
+Gerald
+
