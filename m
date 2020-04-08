@@ -2,117 +2,119 @@ Return-Path: <SRS0=8dav=5Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF0C6C2BB54
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 00:37:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79DCEC2D0EC
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 00:40:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 98BD3206A1
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 00:37:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2AB1B20730
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 00:40:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pyPmrIDp"
+	dkim=pass (2048-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="3TcYGnYj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726545AbgDHAhr (ORCPT
+        id S1726464AbgDHAkU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 20:37:47 -0400
-Received: from mail-qt1-f194.google.com ([209.85.160.194]:37314 "EHLO
-        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726421AbgDHAhr (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Apr 2020 20:37:47 -0400
-Received: by mail-qt1-f194.google.com with SMTP id n17so4323269qtv.4;
-        Tue, 07 Apr 2020 17:37:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=0QEs4QF1dLNDkHNcj/Hb1mTnMIfVWg6wQGYaSYAjEuI=;
-        b=pyPmrIDpX4c8iYcVhnc8Zqf/JsvMtmMT8+2xfzdml946CT9w1ApuOamrLBfSmqbq9/
-         emWtT0Td9yJ4n9LGQQUxPi9BA8jeaDhsb8fWohpbINILuX/EdaBdTIAfypSJVwPOsykP
-         HpP6O9DvA+j+yyGQsmKMoRfMm+A4+MXbIOXW1DxqBAJNtNRgzvdyvczIIjyKsGvLDz1S
-         UWXMj6OBKw/qKc/Ea2nWsr4qvMbRBh4E7VdawowEAL+qyrsI/I29XSaU3IilnG7ExR1g
-         BdpVK6SxppoUop+xIr96RetqhCGA9nRdoFo7g1aOa9yJ1XaBBQy14WFR+dPa3qcyxRI/
-         of4g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=0QEs4QF1dLNDkHNcj/Hb1mTnMIfVWg6wQGYaSYAjEuI=;
-        b=TLBjoqPMjlvtNpNsDOAtVWOpxnqp4Zf5odp1rvOkggB08S5rRhjYVBkaBzyFJzp01b
-         Gh5bJDv8PgmarWXrEvr34DEljUvg4FFdqU9K2ldynLtyKMLapt/RSs7Xqv1M8oVHKOK5
-         0Dqlto5vOEUrZQzhPfQRIKk+ZXbG6YYSUMEp082sO26UJXglUNeI8nhg+u78lvshcLo4
-         QnR3sjpPEXz/V+23mTHRt3dpkLQZSZA3Z5UHSPtDFscV0cnda2da6vFhD6TSbi6z+Vvi
-         DALCgWHqIpd5aKsQ5fnHyD9Ipm7n8szSLEi+WMsCEI/Vm33b4sJAHbxAIaXwr5Dsr6hJ
-         dROg==
-X-Gm-Message-State: AGi0PuawoFF49g/UUDj8BhduBrVw6O0NvvEvwLFA0biqtfsW+KvEuHHj
-        +httT53Fgj+FkvsDH4NPJLwAYTOpRGrYHSEN1s4=
-X-Google-Smtp-Source: APiQypL4S1cYkdiIXBkGpDQ/r3HyQDcmzfSmL8BUkVkT9urkaNW9j2BBEB7WRkuJQpxDZkafPAXfcY1mKOMhx5+HGRs=
-X-Received: by 2002:ac8:7185:: with SMTP id w5mr4867920qto.356.1586306265596;
- Tue, 07 Apr 2020 17:37:45 -0700 (PDT)
+        Tue, 7 Apr 2020 20:40:20 -0400
+Received: from frisell.zx2c4.com ([192.95.5.64]:34299 "EHLO frisell.zx2c4.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726421AbgDHAkU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Apr 2020 20:40:20 -0400
+Received: by frisell.zx2c4.com (ZX2C4 Mail Server) with ESMTP id 1cff259c
+        for <linux-kernel@vger.kernel.org>;
+        Wed, 8 Apr 2020 00:31:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha1; c=relaxed; d=zx2c4.com; h=mime-version
+        :references:in-reply-to:from:date:message-id:subject:to:cc
+        :content-type; s=mail; bh=pVZbz2BQiRw2Mi3KrA8/Yoa+8c8=; b=3TcYGn
+        Yj01O9WWE/XKUXtg4fDPrqV69tp2+JqTx4aclm3f7Q46GJY//9rcpEoQYPOrMPEs
+        drxICokhgcw03fi/N93H+fnRqF60Pw9tZOfw91moZCYnS+h/DVrLMrVYwqUY5h2J
+        KcHrfHEgb2+So579x6808LkgeC1SO47sPFYOmEQeWKulCmDJF3ituSwsLFs7Rz6y
+        fKlTepo+50ybdmQfTqYvrVAjKYMP76uR5SX4hMVI3TccA9MfTgBM/AZpF76+XGVf
+        25VyWRylR6eC/Sh8eYIOhskkPxE1Sc087qrux8s5yk+he4mJcdPtDhzhwlQq8OoZ
+        M2uVtWOhuOzeeweg==
+Received: by frisell.zx2c4.com (ZX2C4 Mail Server) with ESMTPSA id 56d6b9a8 (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256:NO)
+        for <linux-kernel@vger.kernel.org>;
+        Wed, 8 Apr 2020 00:31:19 +0000 (UTC)
+Received: by mail-il1-f177.google.com with SMTP id o11so878509ilq.7
+        for <linux-kernel@vger.kernel.org>; Tue, 07 Apr 2020 17:40:18 -0700 (PDT)
+X-Gm-Message-State: AGi0Pua4iegLbb5jdVUCADN60JOMdllHg5bTGAgkPMSO8pR6otay2wJ8
+        19OEez9xReLnDjRtN+XMypPz1lAUEKIgaKsu/QU=
+X-Google-Smtp-Source: APiQypKf0JHKHozVl5Ekm5/yscJCcYicF7LPFAQcfWzPigdyRdaNvh62EnA/SB13ZFPsDX4AC1SNpbWwZzYtTjPd4Ts=
+X-Received: by 2002:a92:798f:: with SMTP id u137mr5578644ilc.231.1586306418050;
+ Tue, 07 Apr 2020 17:40:18 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200406194110.21283-1-digetx@gmail.com> <20200406194110.21283-7-digetx@gmail.com>
- <20200407100829.GB1720957@ulmo> <70ad6fd6-9603-a114-2d0f-608110b68c0b@gmail.com>
-In-Reply-To: <70ad6fd6-9603-a114-2d0f-608110b68c0b@gmail.com>
-From:   Peter Geis <pgwipeout@gmail.com>
-Date:   Tue, 7 Apr 2020 20:37:34 -0400
-Message-ID: <CAMdYzYr76GUEEXgKippfCJDTU1L+A0UXTyO_B14vkOxVp_pijw@mail.gmail.com>
-Subject: Re: [PATCH v2 6/6] ARM: tegra_defconfig: Enable options useful for
- Nexus 7 and Acer A500
-To:     Dmitry Osipenko <digetx@gmail.com>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>,
-        David Heidelberg <david@ixit.cz>,
-        Stephen Warren <swarren@wwwdotorg.org>,
-        Nicolas Chauvet <kwizart@gmail.com>,
-        =?UTF-8?Q?Pedro_=C3=82ngelo?= <pangelo@void.io>,
-        Matt Merhar <mattmerhar@protonmail.com>,
-        linux-tegra@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
+References: <20200328000422.98978-1-Jason@zx2c4.com> <158538232569.25292.15795048542441478192@build.alporthouse.com>
+In-Reply-To: <158538232569.25292.15795048542441478192@build.alporthouse.com>
+From:   "Jason A. Donenfeld" <Jason@zx2c4.com>
+Date:   Tue, 7 Apr 2020 18:40:07 -0600
+X-Gmail-Original-Message-ID: <CAHmME9rQQjMY3+CxmUO3Yp+hHaOyfyORrPbBV5jBqVEZFXwecg@mail.gmail.com>
+Message-ID: <CAHmME9rQQjMY3+CxmUO3Yp+hHaOyfyORrPbBV5jBqVEZFXwecg@mail.gmail.com>
+Subject: Re: [PATCH] drm/i915: check to see if the FPU is available before
+ using it
+To:     Chris Wilson <chris@chris-wilson.co.uk>
+Cc:     dri-devel <dri-devel@lists.freedesktop.org>,
+        intel-gfx@lists.freedesktop.org,
+        LKML <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 7, 2020 at 12:38 PM Dmitry Osipenko <digetx@gmail.com> wrote:
+On Sat, Mar 28, 2020 at 1:59 AM Chris Wilson <chris@chris-wilson.co.uk> wrote:
 >
-> 07.04.2020 13:08, Thierry Reding =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
-> > On Mon, Apr 06, 2020 at 10:41:10PM +0300, Dmitry Osipenko wrote:
-> >> Enable several drivers for hardware that is found on Nexus 7 and Acer =
-A500
-> >> tablet devices. Please note that some drivers may require firmware fil=
-es
-> >> extracted from original Android image.
-> >>
-> >> Link: https://github.com/digetx/linux-firmware
-> >
-> > What's the license for these files?
+> Quoting Jason A. Donenfeld (2020-03-28 00:04:22)
+> > It's not safe to just grab the FPU willy nilly without first checking to
+> > see if it's available. This patch adds the usual call to may_use_simd()
+> > and falls back to boring memcpy if it's not available.
 >
-> It's either GPL (like touchscreen config) or something else
-> redistributeable.
->
-> > Can they be made available through the official linux-firmware reposito=
-ry?
->
-> Yes, but I don't know yet for sure whether it's really needed for all
-> firmware files.
->
-> For example, the T30 Broadcom WiFi doesn't work using stock
-> linux-firmware, it's on my to-do list to try to figure out why.
+> These instructions do not use the fpu, nor are these registers aliased
+> over the fpu stack. This description and the may_use_simd() do not
+> look like they express the right granularity as to which simd state are
+> included
 
-I've encountered the same issue on the Ouya, only the original
-firmware that came with it will work with the chip. (AW-NH660)
-I wonder if it's an azurewave quirk.
+Most of the time when discussing vector instructions in the kernel
+with x86, "FPU" is used to denote the whole shebang, because of
+similar XSAVE semantics and requirements with actual floating point
+instructions and SIMD instructions. So when I say "grab the FPU", I'm
+really referring to the act of messing with any registers that aren't
+saved and restored by default during context switch and need the
+explicit marking for XSAVE to come in -- the kernel_fpu_begin/end
+calls that you already have.
 
-I've also noticed the Ouya specific configuration txt file seems a lot
-more involved than the standard brcm configs.
+With regards to the granularity here, you are in fact touching xmm
+registers. That means you need kernel_fpu_begin/end, which you
+correctly have. However, it also means that before using those, you
+should check to see if that's okay by using the may_use_simd()
+instruction.
 
->
-> While Bluetooth FW seems to be reusable be many different devices,
-> although (AFAIK) nobody cared to upstream it to the linux-firmware.
+Now you may claim that at the moment
+may_use_simd()-->irq_fpu_usable()-->(!in_interrupt() ||
+interrupted_user_mode() || interrupted_kernel_fpu_idle()) always holds
+true, and you're a keen follower of the (recently changed) kernel fpu
+x86 semantics in case those conditions change, and that your driver is
+so strictly written that you know exactly the context this fancy
+memcpy will run in, always, and you'll never deviate from it, and
+therefore it's okay to depart from the rules and omit the check and
+safe fallback code. But c'mon - i915 is complex, and mixed context
+bugs abound, and the rules for using those registers might in fact
+change without you noticing.
+
+So why not apply this to have a safe fallback for when the numerous
+assumptions no longer hold? (If you're extra worried I suppose you
+could make it a `if (WARN_ON(!may_use_simd()))` instead or something,
+but that seems like a bit much.)
+
+> Look at caller, return the error and let them decide if they can avoid
+> the read from WC, which quite often they can. And no, this is not done
+> from interrupt context, we would be crucified if we did.
+
+Ahh, now, reading this comment here I realize maybe I've misunderstood
+you. Do you mean to say that checking for may_use_simd() is a thing
+that you'd like to do after all, but you don't like it falling back to
+slow memcpy. Instead, you'd like for the code to return an error
+value, and then caller can just optionally skip the memcpy under some
+complicated driver circumstances?
+
+Jason
