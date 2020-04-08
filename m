@@ -2,221 +2,118 @@ Return-Path: <SRS0=8dav=5Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E63B0C2D0EC
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 02:38:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92A8DC2BB54
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 02:40:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B0E3D20730
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 02:38:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6064E20784
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 02:40:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DWTsYb57"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726469AbgDHCiB (ORCPT
+        id S1726510AbgDHCky (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 22:38:01 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:21248 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726428AbgDHCiB (ORCPT
+        Tue, 7 Apr 2020 22:40:54 -0400
+Received: from mail-vs1-f65.google.com ([209.85.217.65]:39494 "EHLO
+        mail-vs1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726428AbgDHCky (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Apr 2020 22:38:01 -0400
-Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0382YAxR042258;
-        Tue, 7 Apr 2020 22:37:22 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 309201n2ud-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 07 Apr 2020 22:37:22 -0400
-Received: from m0098419.ppops.net (m0098419.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 0382bMcD047469;
-        Tue, 7 Apr 2020 22:37:22 -0400
-Received: from ppma02dal.us.ibm.com (a.bd.3ea9.ip4.static.sl-reverse.com [169.62.189.10])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 309201n2u8-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 07 Apr 2020 22:37:22 -0400
-Received: from pps.filterd (ppma02dal.us.ibm.com [127.0.0.1])
-        by ppma02dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 0382af23020544;
-        Wed, 8 Apr 2020 02:37:21 GMT
-Received: from b01cxnp23033.gho.pok.ibm.com (b01cxnp23033.gho.pok.ibm.com [9.57.198.28])
-        by ppma02dal.us.ibm.com with ESMTP id 3091mdj354-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 08 Apr 2020 02:37:21 +0000
-Received: from b01ledav005.gho.pok.ibm.com (b01ledav005.gho.pok.ibm.com [9.57.199.110])
-        by b01cxnp23033.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 0382bKu952036004
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 8 Apr 2020 02:37:20 GMT
-Received: from b01ledav005.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 8EA59AE062;
-        Wed,  8 Apr 2020 02:37:20 +0000 (GMT)
-Received: from b01ledav005.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id BBEE4AE05C;
-        Wed,  8 Apr 2020 02:37:12 +0000 (GMT)
-Received: from LeoBras (unknown [9.85.168.225])
-        by b01ledav005.gho.pok.ibm.com (Postfix) with ESMTP;
-        Wed,  8 Apr 2020 02:37:12 +0000 (GMT)
-Message-ID: <fb98f346a4d6a9d689ae64dae33cbd45d2f8b0df.camel@linux.ibm.com>
-Subject: Re: [PATCH v3 1/1] ppc/crash: Reset spinlocks during crash
-From:   Leonardo Bras <leonardo@linux.ibm.com>
-To:     Nicholas Piggin <npiggin@gmail.com>,
-        Alexios Zavras <alexios.zavras@intel.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Enrico Weigelt <info@metux.net>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Paul Mackerras <paulus@samba.org>, peterz@infradead.org,
-        Thomas Gleixner <tglx@linutronix.de>
-Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-Date:   Tue, 07 Apr 2020 23:36:57 -0300
-In-Reply-To: <1585895551.7o9oa0ey62.astroid@bobo.none>
-References: <20200401000020.590447-1-leonardo@linux.ibm.com>
-         <871rp6t9di.fsf@mpe.ellerman.id.au>
-         <02e74be19534ab1db2f16a0c89ecb164e380c12a.camel@linux.ibm.com>
-         <1585895551.7o9oa0ey62.astroid@bobo.none>
-Content-Type: multipart/signed; micalg="pgp-sha256";
-        protocol="application/pgp-signature"; boundary="=-8CLaLDVIR4ySyvxYU+c9"
-User-Agent: Evolution 3.34.4 (3.34.4-1.fc31) 
+        Tue, 7 Apr 2020 22:40:54 -0400
+Received: by mail-vs1-f65.google.com with SMTP id u9so3815993vsp.6;
+        Tue, 07 Apr 2020 19:40:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=C/ZXELd6yqxZHW3BMVHT8QXqccYsYFJYeRQU4hncJI4=;
+        b=DWTsYb57lLv4UhbmAHVIqGY1gwsmUFF/xGwTBGcOQCFF77+OitoyXkMEwJdwXhGkDx
+         FhAAEQvbXqmJ0WHYXscwJFdhaq3cCsVu4saHA9ffAkEGZdvWEvTCH0WHhZfTR729yF6F
+         isQ7KidVqN2l+h6kbXbnJShrtbzYs4w1YOf03qQwluWbbh5zJOWubOZwiQ/wabk+MWfq
+         bzF8uhMcLIa5y9O9NiwRFMc8h3lGb4QMHW8AXfjJakqZKqjRyf8KuYCO69vQ/Ry6Biii
+         XhoqQZTwDlB1c0gaUNPiLpp39WpFDaBfO+xBbKDJIxM4IsUpLjW8d1PdHuG9jgmRP1xV
+         MLDw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=C/ZXELd6yqxZHW3BMVHT8QXqccYsYFJYeRQU4hncJI4=;
+        b=Gl+SHguUa1C14SyB75qHKzFpUsemjfZDsnt2wW7qkC2XIi9Ri35eCK7wWJ0boHjcDc
+         tUxfvar/D3Q1i7LCuWO0g/9KCKwFL/fR1vXRRcihePTVaQ6NMWzhF6Oqv8ZHGLcRHs++
+         MoM/zkfAPHgnsJ9UaF5wUT6FkQA8UnOxcDPaYfPOz6hAkztu5LBXZJQJAn89TDKxZpZk
+         6NlCM596JjkpfihsQZR2Y4qRw5YY0ol3ppC/FbBHETVCsaO0SlrumYmkP8kaT3xDpogG
+         uPA2Uny5tpRkA0ttEw/NoNGf/LTlO3DLoOGIOdFSEEl0hJpOWonmXMaa+yKfnHACSFjK
+         IAMg==
+X-Gm-Message-State: AGi0PuYgFQCVa8i2WD+doENgMEp6HhUd4bhgpQfWpjOP9WYqIxeSw5cB
+        B++tiZzdTsGfo0K4x0zXBJW/lloYPCs/1YY9Al8=
+X-Google-Smtp-Source: APiQypIP3VAej2uId6VHVbbIUWzlpc0T8buWRSSeE/UQMn2w7lUT8WSp6+QUP6rkBP1MRFbbQdzu/A6tDvKLFRc4HmI=
+X-Received: by 2002:a67:902:: with SMTP id 2mr4789025vsj.133.1586313652812;
+ Tue, 07 Apr 2020 19:40:52 -0700 (PDT)
 MIME-Version: 1.0
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
- definitions=2020-04-07_10:2020-04-07,2020-04-07 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 mlxscore=0
- phishscore=0 impostorscore=0 adultscore=0 mlxlogscore=999 spamscore=0
- suspectscore=0 clxscore=1015 malwarescore=0 lowpriorityscore=0
- priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2004080012
+References: <20200407055837.3508017-1-alistair@alistair23.me>
+ <20200407055837.3508017-2-alistair@alistair23.me> <CA+E=qVdQKS9TCG7Sa4aefAZbgWO3-rgA9u13v=iB6+TN7yQe=Q@mail.gmail.com>
+In-Reply-To: <CA+E=qVdQKS9TCG7Sa4aefAZbgWO3-rgA9u13v=iB6+TN7yQe=Q@mail.gmail.com>
+From:   Alistair Francis <alistair23@gmail.com>
+Date:   Tue, 7 Apr 2020 19:40:26 -0700
+Message-ID: <CAKmqyKPGtHLzyeM5optDBF79sWNvCKt=6Qn+i0sdcqgy_W3nzA@mail.gmail.com>
+Subject: Re: [PATCH v2 2/3] Bluetooth: hci_h5: Add support for binding
+ RTL8723BS with device tree
+To:     Vasily Khoruzhick <anarsoul@gmail.com>
+Cc:     Alistair Francis <alistair@alistair23.me>,
+        netdev <netdev@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Marcel Holtmann <marcel@holtmann.org>,
+        Johan Hedberg <johan.hedberg@gmail.com>,
+        "open list:BLUETOOTH DRIVERS" <linux-bluetooth@vger.kernel.org>,
+        Maxime Ripard <mripard@kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        arm-linux <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, Apr 6, 2020 at 11:51 PM Vasily Khoruzhick <anarsoul@gmail.com> wrote:
+>
+> On Mon, Apr 6, 2020 at 10:58 PM Alistair Francis <alistair@alistair23.me> wrote:
+> >
+> > From: Vasily Khoruzhick <anarsoul@gmail.com>
+> >
+> > RTL8723BS is often used in ARM boards, so add ability to bind it
+> > using device tree.
+> >
+> > Signed-off-by: Vasily Khoruzhick <anarsoul@gmail.com>
+> > Signed-off-by: Alistair Francis <alistair@alistair23.me>
+> > ---
+> >  drivers/bluetooth/hci_h5.c | 2 ++
+> >  1 file changed, 2 insertions(+)
+> >
+> > diff --git a/drivers/bluetooth/hci_h5.c b/drivers/bluetooth/hci_h5.c
+> > index 106c110efe56..b0e25a7ca850 100644
+> > --- a/drivers/bluetooth/hci_h5.c
+> > +++ b/drivers/bluetooth/hci_h5.c
+> > @@ -1019,6 +1019,8 @@ static const struct of_device_id rtl_bluetooth_of_match[] = {
+> >         { .compatible = "realtek,rtl8822cs-bt",
+> >           .data = (const void *)&rtl_vnd },
+> >  #endif
+> > +       { .compatible = "realtek,rtl8822bs-bt",
+>
+> Wrong compatible? Also you probably want to keep it over #endif.
 
---=-8CLaLDVIR4ySyvxYU+c9
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Fixed.
 
-Hello Nick, Michael,
+Alistair
 
-On Fri, 2020-04-03 at 16:41 +1000, Nicholas Piggin wrote:
-[...]
-> > > PAPR says we are not allowed to have multiple CPUs calling RTAS at on=
-ce,
-> > > except for a very small list of RTAS calls. So if we bust the RTAS lo=
-ck
-> > > there's a risk we violate that part of PAPR and crash even harder.
-> >=20
-> > Interesting, I was not aware.
-> >=20
-> > > Also it's not specific to kdump, we can't even get through a normal
-> > > reboot if we crash with the RTAS lock held.
-> > >=20
-> > > Anyway here's a patch with some ideas. That allows me to get from a
-> > > crash with the RTAS lock held through kdump into the 2nd kernel. But =
-it
-> > > only works if it's the crashing CPU that holds the RTAS lock.
-> > >=20
-> >=20
-> > Nice idea.=20
-> > But my test environment is just triggering a crash from sysrq, so I
-> > think it would not improve the result, given that this thread is
-> > probably not holding the lock by the time.
->=20
-> Crash paths should not take that RTAS lock, it's a massive pain. I'm=20
-> fixing it for machine check, for other crashes I think it can be removed=
-=20
-> too, it just needs to be unpicked. The good thing with crashing is that=
-=20
-> you can reasonably *know* that you're single threaded, so you can=20
-> usually reason through situations like above.
->=20
-> > I noticed that when rtas is locked, irqs and preemption are also
-> > disabled.
-> >=20
-> > Should the IPI send by crash be able to interrupt a thread with
-> > disabled irqs?
->=20
-> Yes. It's been a bit painful, but in the long term it means that a CPU=
-=20
-> which hangs with interrupts off can be debugged, and it means we can=20
-> take it offline to crash without risking that it will be clobbering what=
-=20
-> we're doing.
->=20
-> Arguably what I should have done is try a regular IPI first, wait a few=
-=20
-> seconds, then NMI IPI.
->=20
-> A couple of problems with that. Firstly it probably avoids this issue=20
-> you hit almost all the time, so it won't get fixed. So when we really=20
-> need the NMI IPI in the field, it'll still be riddled with deadlocks.
->=20
-> Secondly, sending the IPI first in theory can be more intrusive to the=
-=20
-> state that we want to debug. It uses the currently running stack, paca=
-=20
-> save areas, ec. NMI IPI uses its own stack and save regions so it's a=20
-> little more isolated. Maybe this is only a small advantage but I'd like=
-=20
-> to have it if we can. =20
->=20
-> Thanks,
-> Nick
-
-
-I think the printk issue is solved (sent a patch on that), now what is
-missing is the rtas call spinlock.
-
-I noticed that rtas.lock is taken on machine_kexec_mask_interrupts(),
-which happen after crashing the other threads and getting into
-realmode.=20
-
-The following rtas are called each IRQ with valid interrupt descriptor:
-ibm,int-off : Reset mask bit for that interrupt
-ibm,set_xive : Set XIVE priority to 0xff
-
-By what I could understand, these rtas calls happen to put the next
-kexec kernel (kdump kernel) in a safer environment, so I think it's not
-safe to just remove them.
-=20
-(See commit d6c1a9081080c6c4658acf2a06d851feb2855933)
-
-On the other hand, busting the rtas.lock could be dangerous, because
-it's code we can't control.
-
-According with LoPAR, for both of these rtas-calls, we have:
-
-For the PowerPC External Interrupt option: The call must be reentrant
-to the number of processors on the platform.
-For the PowerPC External Interrupt option: The argument call buffer for
-each simultaneous call must be physically unique.
-
-Which I think means this rtas-calls can be done simultaneously.
-Would it mean that busting the rtas.lock for these calls would be safe?
-
-Best regards,
-Leonardo Bras
-
---=-8CLaLDVIR4ySyvxYU+c9
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEMdeUgIzgjf6YmUyOlQYWtz9SttQFAl6NOMkACgkQlQYWtz9S
-ttRkZw/9EZ+Gm3z4pn3SnktToXv35yU/1QPM2eStiSIWe3s9AK/IKNyj7gqAVB75
-Lbgfb3AVul/aX9QXQvJDUH0NnjQcHcEz0qbps27nS+6uZ72XO7IlhwoXLVVSJo9/
-x5EBUaH1SVzL02HWMaLDauI242HJIJzTEXil2QGoIatALldD9OlH39b3FgBmVTco
-eQp6f/T34lG3ooLKL9fY7Cg3jslB/542/RN8GyYraBH3h1+UPFb5Klv7Dok/78Xz
-HpJLXB511hba5pg/0zxuU3NLQ8NxxY6wgBskw/zU1BF79wig5rIRdHIylPIj3QKV
-XC2aJoG3KC6Z6U2eGDfGwogshKMDyEGQ7dfNPKfiBYZWbmBwlgQprbER1iJruYAs
-xqll9RrwVQYv/xGgDo/baSdd8195gxgJmv5k6IockSF3wLRhFszE6PhHHR4Sp1w9
-CIwYrvLrCT+/KtvsRalDoFJYzBuc1GzM637sQFZvGCsYRD+UpV8EOagjzHqDRMYy
-LAabKnEa+k6jA/PbGtHNOiJsavuaKCG59F3XKnj+0SUCdmR+g4Vsy+e+BuoqVY5d
-dMvEE6BCTUDG5UVfTpusEierwRxcn8M57PjZWuL+qtFRREh+9QUSo814NS/lFgQi
-tJ7PjcqW4+T7kzuQnMoFNLu2QucihFW/jgDSQVPRHtVauS3zXtc=
-=iT2X
------END PGP SIGNATURE-----
-
---=-8CLaLDVIR4ySyvxYU+c9--
-
+>
+> > +         .data = (const void *)&rtl_vnd },
+> >         { },
+> >  };
+> >  MODULE_DEVICE_TABLE(of, rtl_bluetooth_of_match);
+> > --
+> > 2.25.1
+> >
