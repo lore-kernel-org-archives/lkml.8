@@ -7,55 +7,55 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73C07C2BA80
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 11:08:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2355C2D0EA
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 11:08:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3740B2076D
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 11:08:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8334220780
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 11:08:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="L5kDuOec"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="CoSrQxuO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728328AbgDHLIb (ORCPT
+        id S1728351AbgDHLIg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Apr 2020 07:08:31 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:38749 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727986AbgDHLI3 (ORCPT
+        Wed, 8 Apr 2020 07:08:36 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:36083 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728228AbgDHLIa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Apr 2020 07:08:29 -0400
-Received: by mail-wm1-f68.google.com with SMTP id f20so4984140wmh.3
-        for <linux-kernel@vger.kernel.org>; Wed, 08 Apr 2020 04:08:26 -0700 (PDT)
+        Wed, 8 Apr 2020 07:08:30 -0400
+Received: by mail-wr1-f65.google.com with SMTP id k1so7373544wrm.3
+        for <linux-kernel@vger.kernel.org>; Wed, 08 Apr 2020 04:08:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=IUNFIM4tJIflmczFsSMqJ1YMyCdkqcCqkHsbt7Hulfo=;
-        b=L5kDuOec69USIK0cUeccqs5mm+lP6Br4kH8AWPjkuxQtC8DOHvjS5CHZMmkiPLsBd6
-         vu0U7UpCqd9dp1GJ2SXKP6jofSWHf9IrnDLWN+z+YXqvdecFt6Xjhoqgr5PiUj5yj21d
-         Zzvd4hh1anmA6DsN0bbydIsB7p4ci56XXLPWoiZW6k9LLDj4OZJbbH19qdYJoq85dU2P
-         C5W8fraE4Mv3EgEYM/YO/x8zeqOdNmP8Btx8e9V14GCR9L38KDf/YkAwQBN9PZEW8AiF
-         9PQJbfyGbyHm7VlQl6ehyVI9d60PGtT3X5tbe0wJAJQC58tr5HX+Uo4UZ2u7tfZAw2Li
-         5S8g==
+        bh=jeVjBN/6H/gI6gMyuL/+Tdutryht/EUxewf1jqrLbh8=;
+        b=CoSrQxuOgUErP6j4vE5Hnof3IlCEsZecLbmey7kO4uUjcv82/taslS3HKv0A+42o5L
+         OfbEuUrdi0sjmzf9L9MH44bGbnbnhN2vWSuWO9+xJYWDm2mS2PpB9tDa4GSJWUxr1xxA
+         Q8B6NmnYq8CJAjZTwoUszgiOYZ0nNUxeRS6/TuV7+U9ZbMFMgvjwdd3i489E21poNS/e
+         qfg63B8lm51EjOhKSrh+40rsC7XGQrzqGvAHzE7ZZZ3sS6llZOha4jGpQBPQ8Y0ZquY+
+         YNXfDO3eRm56/YZHWf9E94HQkGmp4nJza9reFnnWVLLTGS50ED2VdfYH+rExUOCIdMJM
+         /UGQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=IUNFIM4tJIflmczFsSMqJ1YMyCdkqcCqkHsbt7Hulfo=;
-        b=ueDev/HNssNAmJBm7X6qSj/zHyNywL5SG40bh1J+dUroAZ3Wx1IN3IKiRRFIHUoTwY
-         5o13KGU5j+mKsfx6aZdQxaOJaUYBwa6xFU2xgexupvFgRJNfGxhFrRq6kuyn+36NjrL0
-         Qi8RY8wxqARAfI8r1FU278mXdqZIdx4+079d5Hf6pBbZmaXhDGbQCN+wpjfVz91uQCSN
-         qy7unMNWE49ah+SVSDYCVT6kH3C+1vkIOwZTzj6vl+Brc6JBv/5dEthEZsz5avQYqrfb
-         qEYoT68hDvfFNxC3vc2IBC4GdVva9BOZvXpRlb2L2ozoLfHRXip8BuftP24HW415831y
-         j/yw==
-X-Gm-Message-State: AGi0Publha+2LaAVEoJCyeTv42TYqHETmwcVq077LcPgLpzCJ125fn0e
-        OWNgUfedTT9QYbKcpnQrv9cu6w==
-X-Google-Smtp-Source: APiQypLqRpydvZrHRauRJnFjJpmqKZYAUWKcpkg1CHL2up7wZqe4uqNNZCCB7mJ0OySGEUNslXamtA==
-X-Received: by 2002:a1c:7415:: with SMTP id p21mr4070181wmc.93.1586344105926;
-        Wed, 08 Apr 2020 04:08:25 -0700 (PDT)
+        bh=jeVjBN/6H/gI6gMyuL/+Tdutryht/EUxewf1jqrLbh8=;
+        b=phom7yAy1mnqOLbOXq3INhwlC5huh/H5x0xkGADkMIdg0PUhV82F7rbS9UT6V+EPWk
+         rLlPUPrr44Ssf4hwSlI30AZaHLVRAW0247/bOm6IcxsOS4xU698VyxZRu6ysBdvgaOEr
+         A8ueBf5Zu9CtibzV9qGoh7am/Tn6Z0FEDpIIBZO0HWT0XEg7Kv0i74BepRori97qMoFt
+         oYQYX0Ou/pvNz0a5HO+/10ENDjLsvCwFKTxjn9A0yvKZYJ2VBhzDIKDhuTov6cgoYbv8
+         PP/VcY4ekhaujfGP0IRT+cKaFIuQhQNarV8O9xqO2rQj3FB+SfWxtr7IpIl1wP/ECWum
+         vhmQ==
+X-Gm-Message-State: AGi0PuaEjMkFR8nRvp1lJae8j/gAEvzfZAlIcuH2AzdTBe9RkzvUy8Ks
+        HWt8qKVH+hDXwaqqvBRm9Q1g7g==
+X-Google-Smtp-Source: APiQypLzDqcFeNJoAa/AvreW1err4IF4jkgQFP1M6cVKPw6A9RRXkIJZFlBSKVJUggBN9Dvq+Tnp2g==
+X-Received: by 2002:a5d:4306:: with SMTP id h6mr7558068wrq.234.1586344107109;
+        Wed, 08 Apr 2020 04:08:27 -0700 (PDT)
 Received: from localhost.localdomain ([37.120.50.78])
-        by smtp.gmail.com with ESMTPSA id i8sm37596253wrb.41.2020.04.08.04.08.24
+        by smtp.gmail.com with ESMTPSA id i8sm37596253wrb.41.2020.04.08.04.08.26
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 08 Apr 2020 04:08:25 -0700 (PDT)
+        Wed, 08 Apr 2020 04:08:26 -0700 (PDT)
 From:   Robert Foss <robert.foss@linaro.org>
 To:     Dongchun Zhu <dongchun.zhu@mediatek.com>,
         Fabio Estevam <festevam@gmail.com>,
@@ -67,9 +67,9 @@ To:     Dongchun Zhu <dongchun.zhu@mediatek.com>,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org
 Cc:     Robert Foss <robert.foss@linaro.org>
-Subject: [PATCH v4 2/3] media: ov8856: Add devicetree support
-Date:   Wed,  8 Apr 2020 13:08:15 +0200
-Message-Id: <20200408110816.2712841-3-robert.foss@linaro.org>
+Subject: [PATCH v4 3/3] media: ov8856: Implement sensor module revision identification
+Date:   Wed,  8 Apr 2020 13:08:16 +0200
+Message-Id: <20200408110816.2712841-4-robert.foss@linaro.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200408110816.2712841-1-robert.foss@linaro.org>
 References: <20200408110816.2712841-1-robert.foss@linaro.org>
@@ -80,325 +80,95 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add match table, enable ov8856_probe() to support
-both ACPI and DT modes.
-
-ACPI and DT modes are primarily distinguished from
-each other by relying on devm_XXX_get_optional()
-will return NULL instead of a reference for the
-desired managed resource.
+Query the sensor for its module revision, and compare it
+to known revisions.
+Currently only the '1B' revision has been added.
 
 Signed-off-by: Robert Foss <robert.foss@linaro.org>
 ---
 
 - Changes since v3:
- * Remove redundant {}-brackets
- * Compare xvclk_rate to 5% tolerance
- * Andy: Use dev_fwnode()
- * Andy: Use %pe instead of %ld + PTR_ERR()
- * Andy: Invert reset_gpio logic
- * Andy: Remove dev_dbg() from failing reset_gpio setup
- * Andy: Use dev_err for logging for failures
- * Andy: Remove dev_warn from EDEFER/regulator error path
- * Andy & Sakari: Replaced GPIOD_OUT_XXX with 0/1
- * Maxime & Sakari: Verify clock frequency from DT
- * Sakari: Verify the 'xvclk_rate' is set correctly for ACPI/DT devices
- * Sakari: Remove duplicate ov8856->dev assignment
+  * Actually add module revision 2A
 
 - Changes since v2:
-  * Added "struct device *dev" member to struct ov8856
-  * Andy: Switch to optional version of devm_gpiod_get
-  * Andy: Switch to optional version of devm_clk_get
-  * Fabio: Add reset sleep period
-  * Sakari: Unify defines for 19.2Mhz
-  * Sakari: Remove 24Mhz clock, since it isn't needed for supported modes
-  * Sakari: Replace dev_info() with dev_dbg()
-  * Sakari: Switch induction variable type to unsigned
-  * Sakari: Don't wait for reset_gpio when in ACPI mode
-  * Sakari: Pull reset GPIO high on power on failure
-  * Sakari: Add power on/off to resume/suspend
-  * Sakari: Fix indentation
-  * Sakari: Power off during ov8856_remove()
-  * Sakari: Don't sleep during power-on in ACPI mode
-  * Sakari: Switch to getting xvclk from clk_get_rate
+  * Add module revision 2A
+  * Sakari: Remove ov8856_check_revision()
+  * Sakari: Stop EEPROM streaming mode
 
-- Changes since v1:
-  * Andy & Sakari: Make XVCLK optional since to not break ACPI
-  * Fabio: Change n_shutdown_gpio name to reset_gpio
-  * Fabio: Invert reset_gpio due to GPIO_ACTIVE_HIGH -> GPIO_ACTIVE_LOW change
-  * Fabio: Remove empty line
-  * Fabio: Remove real error from devm_gpiod_get() failures
-  * Sakari: ARRAY_SIZE() directly instead of through OV8856_NUM_SUPPLIES
-  * Sakari: Use XVCLK rate as provided by DT
-
- drivers/media/i2c/ov8856.c | 143 +++++++++++++++++++++++++++++++++----
- 1 file changed, 128 insertions(+), 15 deletions(-)
+ drivers/media/i2c/ov8856.c | 53 ++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 53 insertions(+)
 
 diff --git a/drivers/media/i2c/ov8856.c b/drivers/media/i2c/ov8856.c
-index 8655842af275..473d3245344a 100644
+index 473d3245344a..de0b484b85d0 100644
 --- a/drivers/media/i2c/ov8856.c
 +++ b/drivers/media/i2c/ov8856.c
-@@ -3,10 +3,13 @@
+@@ -32,6 +32,19 @@
+ #define OV8856_MODE_STANDBY		0x00
+ #define OV8856_MODE_STREAMING		0x01
  
- #include <asm/unaligned.h>
- #include <linux/acpi.h>
-+#include <linux/clk.h>
- #include <linux/delay.h>
-+#include <linux/gpio/consumer.h>
- #include <linux/i2c.h>
- #include <linux/module.h>
- #include <linux/pm_runtime.h>
-+#include <linux/regulator/consumer.h>
- #include <media/v4l2-ctrls.h>
- #include <media/v4l2-device.h>
- #include <media/v4l2-fwnode.h>
-@@ -18,7 +21,7 @@
- #define OV8856_LINK_FREQ_360MHZ		360000000ULL
- #define OV8856_LINK_FREQ_180MHZ		180000000ULL
- #define OV8856_SCLK			144000000ULL
--#define OV8856_MCLK			19200000
-+#define OV8856_XVCLK_19_2		19200000
- #define OV8856_DATA_LANES		4
- #define OV8856_RGB_DEPTH		10
- 
-@@ -64,6 +67,12 @@
- 
- #define to_ov8856(_sd)			container_of(_sd, struct ov8856, sd)
- 
-+static const char * const ov8856_supply_names[] = {
-+	"dovdd",	/* Digital I/O power */
-+	"avdd",		/* Analog power */
-+	"dvdd",		/* Digital core power */
-+};
++/* module revisions */
++#define OV8856_2A_MODULE		0x01
++#define OV8856_1B_MODULE		0x02
 +
- enum {
- 	OV8856_LINK_FREQ_720MBPS,
- 	OV8856_LINK_FREQ_360MBPS,
-@@ -566,6 +575,11 @@ struct ov8856 {
- 	struct media_pad pad;
- 	struct v4l2_ctrl_handler ctrl_handler;
- 
-+	struct device		*dev;
-+	struct clk		*xvclk;
-+	struct gpio_desc	*reset_gpio;
-+	struct regulator_bulk_data supplies[ARRAY_SIZE(ov8856_supply_names)];
++/* the OTP read-out buffer is at 0x7000 and 0xf is the offset
++ * of the byte in the OTP that means the module revision
++ */
++#define OV8856_MODULE_REVISION		0x700f
++#define OV8856_OTP_MODE_CTRL		0x3d84
++#define OV8856_OTP_LOAD_CTRL		0x3d81
++#define OV8856_OTP_MODE_AUTO		0x00
++#define OV8856_OTP_LOAD_CTRL_ENABLE	BIT(0)
 +
- 	/* V4L2 Controls */
- 	struct v4l2_ctrl *link_freq;
- 	struct v4l2_ctrl *pixel_rate;
-@@ -908,6 +922,52 @@ static int ov8856_set_stream(struct v4l2_subdev *sd, int enable)
- 	return ret;
- }
- 
-+static int __ov8856_power_on(struct ov8856 *ov8856)
-+{
-+	struct i2c_client *client = v4l2_get_subdevdata(&ov8856->sd);
-+	int ret;
-+
-+	ret = clk_prepare_enable(ov8856->xvclk);
-+	if (ret < 0) {
-+		dev_err(&client->dev, "failed to enable xvclk\n");
-+		return ret;
-+	}
-+
-+	if (is_acpi_node(dev_fwnode(ov8856->dev)))
-+		return 0;
-+
-+	if (ov8856->reset_gpio) {
-+		gpiod_set_value_cansleep(ov8856->reset_gpio, 1);
-+		usleep_range(1000, 2000);
-+	}
-+
-+	ret = regulator_bulk_enable(ARRAY_SIZE(ov8856_supply_names),
-+				    ov8856->supplies);
-+	if (ret < 0) {
-+		dev_err(&client->dev, "failed to enable regulators\n");
-+		goto disable_clk;
-+	}
-+
-+	gpiod_set_value_cansleep(ov8856->reset_gpio, 0);
-+	usleep_range(1500, 1800);
-+
-+	return 0;
-+
-+disable_clk:
-+	gpiod_set_value_cansleep(ov8856->reset_gpio, 1);
-+	clk_disable_unprepare(ov8856->xvclk);
-+
-+	return ret;
-+}
-+
-+static void __ov8856_power_off(struct ov8856 *ov8856)
-+{
-+	gpiod_set_value_cansleep(ov8856->reset_gpio, 1);
-+	regulator_bulk_disable(ARRAY_SIZE(ov8856_supply_names),
-+			       ov8856->supplies);
-+	clk_disable_unprepare(ov8856->xvclk);
-+}
-+
- static int __maybe_unused ov8856_suspend(struct device *dev)
- {
- 	struct i2c_client *client = to_i2c_client(dev);
-@@ -918,6 +978,7 @@ static int __maybe_unused ov8856_suspend(struct device *dev)
- 	if (ov8856->streaming)
- 		ov8856_stop_streaming(ov8856);
- 
-+	__ov8856_power_off(ov8856);
- 	mutex_unlock(&ov8856->mutex);
- 
- 	return 0;
-@@ -931,6 +992,8 @@ static int __maybe_unused ov8856_resume(struct device *dev)
- 	int ret;
- 
- 	mutex_lock(&ov8856->mutex);
-+
-+	__ov8856_power_on(ov8856);
- 	if (ov8856->streaming) {
- 		ret = ov8856_start_streaming(ov8856);
- 		if (ret) {
-@@ -1092,29 +1155,58 @@ static int ov8856_identify_module(struct ov8856 *ov8856)
- 	return 0;
- }
- 
--static int ov8856_check_hwcfg(struct device *dev)
-+static int ov8856_get_hwcfg(struct ov8856 *ov8856)
- {
-+	struct device *dev = ov8856->dev;
- 	struct fwnode_handle *ep;
- 	struct fwnode_handle *fwnode = dev_fwnode(dev);
- 	struct v4l2_fwnode_endpoint bus_cfg = {
- 		.bus_type = V4L2_MBUS_CSI2_DPHY
- 	};
--	u32 mclk;
-+	u32 xvclk_rate;
- 	int ret;
- 	unsigned int i, j;
- 
- 	if (!fwnode)
+ /* vertical-timings from sensor */
+ #define OV8856_REG_VTS			0x380e
+ #define OV8856_VTS_MAX			0x7fff
+@@ -1152,6 +1165,46 @@ static int ov8856_identify_module(struct ov8856 *ov8856)
  		return -ENXIO;
- 
--	ret = fwnode_property_read_u32(fwnode, "clock-frequency", &mclk);
--	if (ret)
--		return ret;
-+	if (is_acpi_node(fwnode)) {
-+		ret = fwnode_property_read_u32(fwnode, "clock-frequency",
-+			&xvclk_rate);
-+		if (ret)
-+			return ret;
-+	} else {
-+		ov8856->xvclk = devm_clk_get(dev, "xvclk");
-+		if (IS_ERR(ov8856->xvclk)) {
-+			dev_err(dev, "could not get xvclk clock (%pe)\n",
-+				ov8856->xvclk);
-+			return PTR_ERR(ov8856->xvclk);
-+		}
-+
-+		xvclk_rate = clk_get_rate(ov8856->xvclk);
-+	}
- 
--	if (mclk != OV8856_MCLK) {
--		dev_err(dev, "external clock %d is not supported", mclk);
-+	/* external clock must be 19.2MHz, allow 5% tolerance */
-+	if (xvclk_rate < OV8856_XVCLK_19_2 * 0.95 ||
-+	    xvclk_rate > OV8856_XVCLK_19_2 * 1.05) {
-+		dev_err(dev, "external clock %d is not supported", xvclk_rate);
- 		return -EINVAL;
  	}
  
-+
-+	ov8856->reset_gpio = devm_gpiod_get_optional(dev, "reset",
-+		GPIOD_OUT_LOW);
-+	if (IS_ERR(ov8856->reset_gpio))
-+		return PTR_ERR(ov8856->reset_gpio);
-+
-+	for (i = 0; i < ARRAY_SIZE(ov8856_supply_names); i++)
-+		ov8856->supplies[i].supply = ov8856_supply_names[i];
-+
-+	ret = devm_regulator_bulk_get(dev, ARRAY_SIZE(ov8856_supply_names),
-+				      ov8856->supplies);
++	ret = ov8856_write_reg(ov8856, OV8856_REG_MODE_SELECT,
++			       OV8856_REG_VALUE_08BIT, OV8856_MODE_STREAMING);
 +	if (ret)
 +		return ret;
 +
- 	ep = fwnode_graph_get_next_endpoint(fwnode, NULL);
- 	if (!ep)
- 		return -ENXIO;
-@@ -1169,6 +1261,8 @@ static int ov8856_remove(struct i2c_client *client)
- 	pm_runtime_disable(&client->dev);
- 	mutex_destroy(&ov8856->mutex);
- 
-+	__ov8856_power_off(ov8856);
++	ret = ov8856_write_reg(ov8856, OV8856_OTP_MODE_CTRL,
++			       OV8856_REG_VALUE_08BIT, OV8856_OTP_MODE_AUTO);
++	if (ret) {
++		dev_err(&client->dev, "failed to set otp mode");
++		return ret;
++	}
++
++	ret = ov8856_write_reg(ov8856, OV8856_OTP_LOAD_CTRL,
++			       OV8856_REG_VALUE_08BIT,
++			       OV8856_OTP_LOAD_CTRL_ENABLE);
++	if (ret) {
++		dev_err(&client->dev, "failed to enable load control");
++		return ret;
++	}
++
++	ret = ov8856_read_reg(ov8856, OV8856_MODULE_REVISION,
++			      OV8856_REG_VALUE_08BIT, &val);
++	if (ret) {
++		dev_err(&client->dev, "failed to read module revision");
++		return ret;
++	}
++
++	dev_info(&client->dev, "OV8856 revision %x (%s) at address 0x%02x\n",
++		val,
++		val == OV8856_2A_MODULE ? "2A" :
++		val == OV8856_1B_MODULE ? "1B" : "unknown revision",
++		client->addr);
++
++	ret = ov8856_write_reg(ov8856, OV8856_REG_MODE_SELECT,
++			       OV8856_REG_VALUE_08BIT, OV8856_MODE_STANDBY);
++	if (ret) {
++		dev_err(&client->dev, "failed to exit streaming mode");
++		return ret;
++	}
 +
  	return 0;
  }
  
-@@ -1177,22 +1271,31 @@ static int ov8856_probe(struct i2c_client *client)
- 	struct ov8856 *ov8856;
- 	int ret;
- 
--	ret = ov8856_check_hwcfg(&client->dev);
-+	ov8856 = devm_kzalloc(&client->dev, sizeof(*ov8856), GFP_KERNEL);
-+	if (!ov8856)
-+		return -ENOMEM;
-+
-+	ov8856->dev = &client->dev;
-+
-+	ret = ov8856_get_hwcfg(ov8856);
- 	if (ret) {
--		dev_err(&client->dev, "failed to check HW configuration: %d",
-+		dev_err(&client->dev, "failed to get HW configuration: %d",
- 			ret);
- 		return ret;
- 	}
- 
--	ov8856 = devm_kzalloc(&client->dev, sizeof(*ov8856), GFP_KERNEL);
--	if (!ov8856)
--		return -ENOMEM;
--
- 	v4l2_i2c_subdev_init(&ov8856->sd, client, &ov8856_subdev_ops);
-+
-+	ret = __ov8856_power_on(ov8856);
-+	if (ret) {
-+		dev_err(&client->dev, "failed to power on\n");
-+		return ret;
-+	}
-+
- 	ret = ov8856_identify_module(ov8856);
- 	if (ret) {
- 		dev_err(&client->dev, "failed to find sensor: %d", ret);
--		return ret;
-+		goto probe_power_off;
- 	}
- 
- 	mutex_init(&ov8856->mutex);
-@@ -1238,6 +1341,9 @@ static int ov8856_probe(struct i2c_client *client)
- 	v4l2_ctrl_handler_free(ov8856->sd.ctrl_handler);
- 	mutex_destroy(&ov8856->mutex);
- 
-+probe_power_off:
-+	__ov8856_power_off(ov8856);
-+
- 	return ret;
- }
- 
-@@ -1254,11 +1360,18 @@ static const struct acpi_device_id ov8856_acpi_ids[] = {
- MODULE_DEVICE_TABLE(acpi, ov8856_acpi_ids);
- #endif
- 
-+static const struct of_device_id ov8856_of_match[] = {
-+	{ .compatible = "ovti,ov8856" },
-+	{ /* sentinel */ }
-+};
-+MODULE_DEVICE_TABLE(of, ov8856_of_match);
-+
- static struct i2c_driver ov8856_i2c_driver = {
- 	.driver = {
- 		.name = "ov8856",
- 		.pm = &ov8856_pm_ops,
- 		.acpi_match_table = ACPI_PTR(ov8856_acpi_ids),
-+		.of_match_table = ov8856_of_match,
- 	},
- 	.probe_new = ov8856_probe,
- 	.remove = ov8856_remove,
 -- 
 2.25.1
 
