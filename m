@@ -2,87 +2,115 @@ Return-Path: <SRS0=8dav=5Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE20DC2BA1A
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 16:41:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82D44C2BA1B
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 16:41:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C6EFB20769
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 16:41:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="kuf+AuGA"
+	by mail.kernel.org (Postfix) with ESMTP id 6987120787
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 16:41:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730342AbgDHQlY (ORCPT
+        id S1730355AbgDHQlw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Apr 2020 12:41:24 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:35280 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728209AbgDHQlY (ORCPT
+        Wed, 8 Apr 2020 12:41:52 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:50183 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728209AbgDHQlw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Apr 2020 12:41:24 -0400
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 038GfLOD050250;
-        Wed, 8 Apr 2020 11:41:21 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1586364081;
-        bh=rMszB/0i6reIacLieAmAbTwgpXpWTaMMrVxKQH7QCmI=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=kuf+AuGAA4bLp/fVjWr/SD6pYDrWUrOVIZQGBCRAevWAza7hTp1xSY9ep6vu20iWO
-         PR2mPJfzGhqFo1RzQipoKoiZL0G72iT3H/ppkW3WEitg4ygs4TKnJ8q2WaOao+0McN
-         nA6mTyraLmoaCXUrs7ugJVEKJyV0ep+JleHm0oqQ=
-Received: from DLEE109.ent.ti.com (dlee109.ent.ti.com [157.170.170.41])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 038GfLiX088090
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 8 Apr 2020 11:41:21 -0500
-Received: from DLEE107.ent.ti.com (157.170.170.37) by DLEE109.ent.ti.com
- (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Wed, 8 Apr
- 2020 11:41:21 -0500
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE107.ent.ti.com
- (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Wed, 8 Apr 2020 11:41:21 -0500
-Received: from [10.250.52.63] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 038GfKmY095071;
-        Wed, 8 Apr 2020 11:41:21 -0500
-Subject: Re: [PATCH v19 04/18] leds: multicolor: Introduce a multicolor class
- definition
-To:     <jacek.anaszewski@gmail.com>, <pavel@ucw.cz>
-CC:     <linux-leds@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <20200402204311.14998-1-dmurphy@ti.com>
- <20200402204311.14998-5-dmurphy@ti.com>
-From:   Dan Murphy <dmurphy@ti.com>
-Message-ID: <e5a789d5-b622-df23-d540-99816851d5f1@ti.com>
-Date:   Wed, 8 Apr 2020 11:35:33 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Wed, 8 Apr 2020 12:41:52 -0400
+Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1jMDlp-0001ln-OL; Wed, 08 Apr 2020 18:41:45 +0200
+Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
+        id E278510069D; Wed,  8 Apr 2020 18:41:44 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Vivek Goyal <vgoyal@redhat.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
+        kvm list <kvm@vger.kernel.org>, stable <stable@vger.kernel.org>
+Subject: Re: [PATCH v2] x86/kvm: Disable KVM_ASYNC_PF_SEND_ALWAYS
+In-Reply-To: <20200408153824.GO20730@hirez.programming.kicks-ass.net>
+References: <20200407172140.GB64635@redhat.com> <772A564B-3268-49F4-9AEA-CDA648F6131F@amacapital.net> <87eeszjbe6.fsf@nanos.tec.linutronix.de> <ce81c95f-8674-4012-f307-8f32d0e386c2@redhat.com> <874ktukhku.fsf@nanos.tec.linutronix.de> <274f3d14-08ac-e5cc-0b23-e6e0274796c8@redhat.com> <87pncib06x.fsf@nanos.tec.linutronix.de> <20200408153824.GO20730@hirez.programming.kicks-ass.net>
+Date:   Wed, 08 Apr 2020 18:41:44 +0200
+Message-ID: <87h7xuaq0n.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-In-Reply-To: <20200402204311.14998-5-dmurphy@ti.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Pavel
-
-On 4/2/20 3:42 PM, Dan Murphy wrote:
-> Introduce a multicolor class that groups colored LEDs
-> within a LED node.
+Peter Zijlstra <peterz@infradead.org> writes:
+> On Wed, Apr 08, 2020 at 03:01:58PM +0200, Thomas Gleixner wrote:
+>> And it comes with restrictions:
+>> 
+>>     The Do Other Stuff event can only be delivered when guest IF=1.
+>> 
+>>     If guest IF=0 then the host has to suspend the guest until the
+>>     situation is resolved.
+>> 
+>>     The 'Situation resolved' event must also wait for a guest IF=1 slot.
 >
-> The multi color class groups monochrome LEDs and allows controlling two
-> aspects of the final combined color: hue and lightness. The former is
-> controlled via <color>_intensity files and the latter is controlled
-> via brightness file.
+> Moo, can we pretty please already kill that ALWAYS and IF nonsense? That
+> results in that terrifyingly crap HLT loop. That needs to die with
+> extreme prejudice.
+>
+> So the host only inject these OMFG_DOS things when the guest is in
+> luserspace -- which it can see in the VMCS state IIRC. And then using
+> #VE for the make-it-go signal is far preferred over the currentl #PF
+> abuse.
 
-When you get a chance I would like to get your review on this patch as 
-well before I submit v20
+Yes, but this requires software based injection.
 
-Dan
+>> If you just want to solve Viveks problem, then its good enough. I.e. the
+>> file truncation turns the EPT entries into #VE convertible entries and
+>> the guest #VE handler can figure it out. This one can be injected
+>> directly by the hardware, i.e. you don't need a VMEXIT.
+>
+> That sounds like something that doesn't actually need the whole
+> 'async'/do-something-else-for-a-while crap, right? It's a #PF trap from
+> kernel space where we need to report fail.
 
+Fail or fixup via extable.
+
+>> If you want the opportunistic do other stuff mechanism, then #VE has
+>> exactly the same problems as the existing async "PF". It's not magicaly
+>> making that go away.
+>
+> We need to somehow have the guest teach the host how to tell if it can
+> inject that OMFG_DOS thing or not. Injecting it only to then instantly
+> exit again is stupid and expensive.
+
+Not if the injection is actually done by the hardware. Then the guest
+handles #VE and tells the host what to do.
+
+> Clearly we don't want to expose preempt_count and make that ABI, but is
+> there some way we can push a snippet of code to the host that instructs
+> the host how to determine if it can sleep or not? I realize that pushing
+> actual x86 .text is a giant security problem, so perhaps a snipped of
+> BPF that the host can verify, which it can run on the guest image ?
+
+*SHUDDER*
+
+> Make it a hard error (guest cpu dies) to inject the OMFG_DOS signal on a
+> context that cannot put the task to sleep.
+
+With the hardware based #VE and a hypercall which tells the host how to
+handle the EPT fixup (suspend the vcpu or let it continue and do the
+completion later) you don't have to play any games on the host. If the
+guest tells the host the wrong thing, then the guest will have to mop up
+the pieces.
+
+Thanks,
+
+        tglx
