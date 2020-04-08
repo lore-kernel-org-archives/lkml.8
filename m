@@ -2,56 +2,57 @@ Return-Path: <SRS0=8dav=5Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-7.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C93CC352B6
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 05:05:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0133BC2BA80
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 05:06:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 036462078E
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 05:05:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C35392083E
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 05:06:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="auE3HQCW"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="y3BkAb4c"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726749AbgDHFFh (ORCPT
+        id S1726883AbgDHFF5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Apr 2020 01:05:37 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:38574 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726689AbgDHFFg (ORCPT
+        Wed, 8 Apr 2020 01:05:57 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:52818 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726803AbgDHFFt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Apr 2020 01:05:36 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03853ldS191183;
-        Wed, 8 Apr 2020 05:05:22 GMT
+        Wed, 8 Apr 2020 01:05:49 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03854Mlq012951;
+        Wed, 8 Apr 2020 05:05:36 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
  subject : date : message-id : in-reply-to : references : mime-version :
  content-transfer-encoding; s=corp-2020-01-29;
- bh=BeFWvYA7XIlpPY3jCn3WOorYd4LJtWrT9UyxM8q4o68=;
- b=auE3HQCWrQ+mTWzjzKVzofN4aU72M02C0tq5tNvEj4eZaVcWC6iqezU+lJkUo5962rlA
- 4ZF60eMjEPMJ/A+8xOPnVl/EcZMjVmy4P1EQt2LIUz1XimSSpXMqTTHEoyRPWWueCrSf
- dtyPCZWNXf9wQpZMuGhmod9YAnk8TApPTY89QWpUzPyBn9D9WOLqI17P+nDESrlNKk6o
- 8EzKhFq6WMDGbcm8hkad6UGs+rc7rm+V1z6dR9vdiS1flnJyUIY05WrkQ4GntkRrYyB3
- U2JU5+ly+cjPGtpBoV6957nPGgXe4v3R7Y0Qx/scVGjvo/UwzNxEdXC/XsDjF6GrmEoA /A== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by aserp2120.oracle.com with ESMTP id 3091m0s0su-1
+ bh=81g/IY4OEO7xOgYmvx3qGX7bGeeG6xG4uYi0m0I9NiU=;
+ b=y3BkAb4cOA19nTsI29w6A52wve6TE0t+BHCi9ZdjwQtnGqWvgh7IabI/Dix1L+vltL6+
+ mntY0r37PP1IWDBBTy+2YBtG9v4se2ceir0lqHohVla5X8su6jF8zFNfMLzZHJqbyeU1
+ P7wxRQe4TE0yGiwyi12K4n95THbgAXKolLnwQ3PAUfmZ/K9Uh2xPVQCki4weMbQtx+gK
+ fM3gayV6jAxZK8ngqPZw4OgFn+fyHMWVmJgWb8KULlqVOON31XdqW9E6VL3Q1lXgInRw
+ vPrlF4p/kqvG774Zn14qeO8bBeToxilc59nm88kTTuGYfJpVwnNZlH0PLwkmJY8IM9Md xA== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by userp2130.oracle.com with ESMTP id 3091m390y9-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 08 Apr 2020 05:05:22 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03852YOP062381;
-        Wed, 8 Apr 2020 05:05:21 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by userp3020.oracle.com with ESMTP id 3091mh1kq2-1
+        Wed, 08 Apr 2020 05:05:36 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03853K3u158680;
+        Wed, 8 Apr 2020 05:05:36 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by userp3030.oracle.com with ESMTP id 3091m01g8r-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 08 Apr 2020 05:05:21 +0000
+        Wed, 08 Apr 2020 05:05:36 +0000
 Received: from abhmp0012.oracle.com (abhmp0012.oracle.com [141.146.116.18])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 03855KuN030519;
-        Wed, 8 Apr 2020 05:05:20 GMT
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 03855YJq022238;
+        Wed, 8 Apr 2020 05:05:34 GMT
 Received: from monad.ca.oracle.com (/10.156.75.81)
         by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 07 Apr 2020 22:05:20 -0700
+        with ESMTP ; Tue, 07 Apr 2020 22:05:34 -0700
 From:   Ankur Arora <ankur.a.arora@oracle.com>
 To:     linux-kernel@vger.kernel.org, x86@kernel.org
 Cc:     peterz@infradead.org, hpa@zytor.com, jpoimboe@redhat.com,
@@ -60,359 +61,131 @@ Cc:     peterz@infradead.org, hpa@zytor.com, jpoimboe@redhat.com,
         boris.ostrovsky@oracle.com, mihai.carabas@oracle.com,
         kvm@vger.kernel.org, xen-devel@lists.xenproject.org,
         virtualization@lists.linux-foundation.org,
-        Ankur Arora <ankur.a.arora@oracle.com>
-Subject: [RFC PATCH 15/26] x86/alternatives: Non-emulated text poking
-Date:   Tue,  7 Apr 2020 22:03:12 -0700
-Message-Id: <20200408050323.4237-16-ankur.a.arora@oracle.com>
+        Ankur Arora <ankur.a.arora@oracle.com>,
+        Joao Martins <joao.m.martins@oracle.com>
+Subject: [RFC PATCH 26/26] x86/kvm: Add hint change notifier for KVM_HINT_REALTIME
+Date:   Tue,  7 Apr 2020 22:03:23 -0700
+Message-Id: <20200408050323.4237-27-ankur.a.arora@oracle.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200408050323.4237-1-ankur.a.arora@oracle.com>
 References: <20200408050323.4237-1-ankur.a.arora@oracle.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9584 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 suspectscore=0 bulkscore=0
- mlxlogscore=999 mlxscore=0 phishscore=0 malwarescore=0 spamscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
- definitions=main-2004080037
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 malwarescore=0
+ mlxlogscore=999 phishscore=0 spamscore=0 adultscore=0 suspectscore=0
+ mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2004080037
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9584 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 mlxlogscore=999 mlxscore=0
- priorityscore=1501 phishscore=0 suspectscore=0 bulkscore=0
- lowpriorityscore=0 impostorscore=0 malwarescore=0 clxscore=1015
- spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 adultscore=0
+ impostorscore=0 malwarescore=0 lowpriorityscore=0 mlxlogscore=999
+ priorityscore=1501 clxscore=1015 bulkscore=0 phishscore=0 mlxscore=0
+ suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
  engine=8.12.0-2003020000 definitions=main-2004080037
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Patching at runtime needs to handle interdependent pv-ops: as an example,
-lock.queued_lock_slowpath(), lock.queued_lock_unlock() and the other
-pv_lock_ops are paired and so need to be updated atomically. This is
-difficult with emulation because non-patching CPUs could be executing in
-critical sections.
-(We could apply INT3 everywhere first and then use RCU to force a
-barrier but given that spinlocks are everywhere, it still might mean a
-lot of time in emulation.)
+Add a blocking notifier that triggers when the host sends a hint
+change notification.
 
-Second, locking operations can be called from interrupt handlers which
-means we cannot trivially use IPIs to introduce a pipeline sync step on
-non-patching CPUs.
-
-Third, some pv-ops can be inlined and so we would need to emulate a
-broader set of operations than CALL, JMP, NOP*.
-
-Introduce the core state-machine with the actual poking and pipeline
-sync stubbed out. This executes via stop_machine() with the primary CPU
-carrying out a text_poke_bp() style three-staged algorithm.
-
-The control flow diagram below shows CPU0 as the primary which does the
-patching, while the rest of the CPUs (CPUx) execute the sync loop in
-text_poke_sync_finish().
-
- CPU0				    CPUx
- ----                               ----
-
- patch_worker()			    patch_worker()
-
-   /* Traversal, insn-gen */	      text_poke_sync_finish()
-   tps.patch_worker()		      /*
-  				       * wait until:
-     /* for each patch-site */ 	       *  tps->state == PATCH_DONE
-     text_poke_site()		       */
-       poke_sync()
-
-  	   ...				       ...
-
-   smp_store_release(&tps->state, PATCH_DONE)
-
-Commits further on flesh out the rest of the code.
-
+Suggested-by: Joao Martins <joao.m.martins@oracle.com>
 Signed-off-by: Ankur Arora <ankur.a.arora@oracle.com>
 ---
-sync_one() uses the following for pipeline synchronization:
+ arch/x86/include/asm/kvm_para.h | 10 ++++++++++
+ arch/x86/kernel/kvm.c           | 16 ++++++++++++++++
+ include/asm-generic/kvm_para.h  |  8 ++++++++
+ 3 files changed, 34 insertions(+)
 
-+       if (in_nmi())
-+               cpuid_eax(1);
-+       else
-+               sync_core();
-
-The if (in_nmi()) clause is meant to be executed from NMI contexts.
-Reading through past LKML discussions cpuid_eax() is probably a
-bad choice -- at least in so far as Xen PV is concerned. What
-would be a good primitive to use insead?
-
-Also, given that we do handle the nested NMI case, does it make sense
-to just use native_iret() (via sync_core()) in NMI contexts well?
-
----
- arch/x86/kernel/alternative.c | 247 ++++++++++++++++++++++++++++++++++
- 1 file changed, 247 insertions(+)
-
-diff --git a/arch/x86/kernel/alternative.c b/arch/x86/kernel/alternative.c
-index 004fe86f463f..452d4081eded 100644
---- a/arch/x86/kernel/alternative.c
-+++ b/arch/x86/kernel/alternative.c
-@@ -979,6 +979,26 @@ void text_poke_sync(void)
- 	on_each_cpu(do_sync_core, NULL, 1);
+diff --git a/arch/x86/include/asm/kvm_para.h b/arch/x86/include/asm/kvm_para.h
+index 5a7ca5639c2e..54c3c7a3225e 100644
+--- a/arch/x86/include/asm/kvm_para.h
++++ b/arch/x86/include/asm/kvm_para.h
+@@ -2,6 +2,7 @@
+ #ifndef _ASM_X86_KVM_PARA_H
+ #define _ASM_X86_KVM_PARA_H
+ 
++#include <linux/notifier.h>
+ #include <asm/processor.h>
+ #include <asm/alternative.h>
+ #include <uapi/asm/kvm_para.h>
+@@ -96,6 +97,9 @@ extern void kvm_disable_steal_time(void);
+ void do_async_page_fault(struct pt_regs *regs, unsigned long error_code, unsigned long address);
+ void kvm_callback_vector(struct pt_regs *regs);
+ 
++void kvm_realtime_notifier_register(struct notifier_block *nb);
++void kvm_realtime_notifier_unregister(struct notifier_block *nb);
++
+ #ifdef CONFIG_PARAVIRT_SPINLOCKS
+ void __init kvm_spinlock_init(void);
+ #else /* !CONFIG_PARAVIRT_SPINLOCKS */
+@@ -137,6 +141,14 @@ static inline void kvm_disable_steal_time(void)
+ {
+ 	return;
+ }
++
++static inline void kvm_realtime_notifier_register(struct notifier_block *nb)
++{
++}
++
++static inline void kvm_realtime_notifier_unregister(struct notifier_block *nb)
++{
++}
+ #endif
+ 
+ #endif /* _ASM_X86_KVM_PARA_H */
+diff --git a/arch/x86/kernel/kvm.c b/arch/x86/kernel/kvm.c
+index 163b7a7ec5f9..35ba4a837027 100644
+--- a/arch/x86/kernel/kvm.c
++++ b/arch/x86/kernel/kvm.c
+@@ -951,6 +951,20 @@ void __init kvm_spinlock_init(void)
+ static inline bool kvm_pv_spinlock(void) { return false; }
+ #endif	/* CONFIG_PARAVIRT_SPINLOCKS */
+ 
++static BLOCKING_NOTIFIER_HEAD(realtime_notifier);
++
++void kvm_realtime_notifier_register(struct notifier_block *nb)
++{
++	blocking_notifier_chain_register(&realtime_notifier, nb);
++}
++EXPORT_SYMBOL_GPL(kvm_realtime_notifier_register);
++
++void kvm_realtime_notifier_unregister(struct notifier_block *nb)
++{
++	blocking_notifier_chain_unregister(&realtime_notifier, nb);
++}
++EXPORT_SYMBOL_GPL(kvm_realtime_notifier_unregister);
++
+ #ifdef CONFIG_ARCH_CPUIDLE_HALTPOLL
+ 
+ static void kvm_disable_host_haltpoll(void *i)
+@@ -1004,6 +1018,8 @@ void kvm_trigger_reprobe_cpuid(struct work_struct *work)
+ 	paravirt_runtime_patch(true);
+ 
+ 	mutex_unlock(&text_mutex);
++
++	blocking_notifier_call_chain(&realtime_notifier, 0, NULL);
  }
  
-+static void __maybe_unused sync_one(void)
-+{
-+	/*
-+	 * We might be executing in NMI context, and so cannot use
-+	 * IRET as a synchronizing instruction.
-+	 *
-+	 * We could use native_write_cr2() but that is not guaranteed
-+	 * to work on Xen-PV -- it is emulated by Xen and might not
-+	 * execute an iret (or similar synchronizing instruction)
-+	 * internally.
-+	 *
-+	 * cpuid() would trap as well. Unclear if that's a solution
-+	 * either.
-+	 */
-+	if (in_nmi())
-+		cpuid_eax(1);
-+	else
-+		sync_core();
-+}
-+
- struct text_poke_loc {
- 	s32 rel_addr; /* addr := _stext + rel_addr */
- 	union {
-@@ -1351,6 +1371,233 @@ void __ref text_poke_bp(void *addr, const void *opcode, size_t len, const void *
- 	text_poke_bp_batch(&tp, 1);
+ static DECLARE_WORK(trigger_reprobe, kvm_trigger_reprobe_cpuid);
+diff --git a/include/asm-generic/kvm_para.h b/include/asm-generic/kvm_para.h
+index 4a575299ad62..d443531b49ac 100644
+--- a/include/asm-generic/kvm_para.h
++++ b/include/asm-generic/kvm_para.h
+@@ -33,4 +33,12 @@ static inline bool kvm_para_available(void)
+ 	return false;
  }
  
-+struct text_poke_state;
-+typedef void (*patch_worker_t)(struct text_poke_state *tps);
-+
-+/*
-+ *                        +-----------possible-BP----------+
-+ *                        |                                |
-+ *         +--write-INT3--+   +--suffix--+   +-insn-prefix-+
-+ *        /               | _/           |__/              |
-+ *       /                v'             v                 v
-+ * PATCH_SYNC_0    PATCH_SYNC_1    PATCH_SYNC_2   *PATCH_SYNC_DONE*
-+ *       \                                                    |`----> PATCH_DONE
-+ *        `----------<---------<---------<---------<----------+
-+ *
-+ * We start in state PATCH_SYNC_DONE and loop through PATCH_SYNC_* states
-+ * to end at PATCH_DONE. The primary drives these in text_poke_site()
-+ * with patch_worker() making the final transition to PATCH_DONE.
-+ * All transitions but the last iteration need to be globally observed.
-+ *
-+ * On secondary CPUs, text_poke_sync_finish() waits in a cpu_relax()
-+ * loop waiting for a transition to PATCH_SYNC_0 at which point it would
-+ * start observing transitions until PATCH_SYNC_DONE.
-+ * Eventually the master moves to PATCH_DONE and secondary CPUs finish.
-+ */
-+enum patch_state {
-+	/*
-+	 * Add an artificial state that we can do a bitwise operation
-+	 * over all the PATCH_SYNC_* states.
-+	 */
-+	PATCH_SYNC_x = 4,
-+	PATCH_SYNC_0 = PATCH_SYNC_x | 0,	/* Serialize INT3 */
-+	PATCH_SYNC_1 = PATCH_SYNC_x | 1,	/* Serialize rest */
-+	PATCH_SYNC_2 = PATCH_SYNC_x | 2,	/* Serialize first opcode */
-+	PATCH_SYNC_DONE = PATCH_SYNC_x | 3,	/* Site done, and start state */
-+
-+	PATCH_DONE = 8,				/* End state */
-+};
-+
-+/*
-+ * State for driving text-poking via stop_machine().
-+ */
-+struct text_poke_state {
-+	/* Whatever we are poking */
-+	void *stage;
-+
-+	/* Modules to be processed. */
-+	struct list_head *head;
-+
-+	/*
-+	 * Accesses to sync_ack_map are ordered by the primary
-+	 * via tps.state.
-+	 */
-+	struct cpumask sync_ack_map;
-+
-+	/*
-+	 * Generates insn sequences for call-sites to be patched and
-+	 * calls text_poke_site() to do the actual poking.
-+	 */
-+	patch_worker_t	patch_worker;
-+
-+	/*
-+	 * Where are we in the patching state-machine.
-+	 */
-+	enum patch_state state;
-+
-+	unsigned int primary_cpu; /* CPU doing the patching. */
-+	unsigned int num_acks; /* Number of Acks needed. */
-+};
-+
-+static struct text_poke_state text_poke_state;
-+
-+/**
-+ * poke_sync() - transitions to the specified state.
-+ *
-+ * @tps - struct text_poke_state *
-+ * @state - one of PATCH_SYNC_* states
-+ * @offset - offset to be patched
-+ * @insns - insns to write
-+ * @len - length of insn sequence
-+ */
-+static void poke_sync(struct text_poke_state *tps, int state, int offset,
-+		      const char *insns, int len)
++static inline void kvm_realtime_notifier_register(struct notifier_block *nb)
 +{
-+	/*
-+	 * STUB: no patching or synchronization, just go through the
-+	 * motions.
-+	 */
-+	smp_store_release(&tps->state, state);
 +}
 +
-+/**
-+ * text_poke_site() - called on the primary to patch a single call site.
-+ *
-+ * Returns after switching tps->state to PATCH_SYNC_DONE.
-+ */
-+static void __maybe_unused text_poke_site(struct text_poke_state *tps,
-+					  struct text_poke_loc *tp)
++static inline void kvm_realtime_notifier_unregister(struct notifier_block *nb)
 +{
-+	const unsigned char int3 = INT3_INSN_OPCODE;
-+	temp_mm_state_t prev_mm;
-+	pte_t *ptep;
-+	int offset;
-+
-+	__text_poke_map(text_poke_addr(tp), tp->native.len, &prev_mm, &ptep);
-+
-+	offset = offset_in_page(text_poke_addr(tp));
-+
-+	/*
-+	 * All secondary CPUs are waiting in tps->state == PATCH_SYNC_DONE
-+	 * to move to PATCH_SYNC_0. Poke the INT3 and wait until all CPUs
-+	 * are known to have observed PATCH_SYNC_0.
-+	 *
-+	 * The earliest we can hit an INT3 is just after the first poke.
-+	 */
-+	poke_sync(tps, PATCH_SYNC_0, offset, &int3, INT3_INSN_SIZE);
-+
-+	/* Poke remaining */
-+	poke_sync(tps, PATCH_SYNC_1, offset + INT3_INSN_SIZE,
-+		  tp->text + INT3_INSN_SIZE, tp->native.len - INT3_INSN_SIZE);
-+
-+	/*
-+	 * Replace the INT3 with the first opcode and force the serializing
-+	 * instruction for the last time. Any secondaries in the BP
-+	 * handler should be able to move past the INT3 handler after this.
-+	 * (See poke_int3_native() for details on this.)
-+	 */
-+	poke_sync(tps, PATCH_SYNC_2, offset, tp->text, INT3_INSN_SIZE);
-+
-+	/*
-+	 * Force all CPUS to observe PATCH_SYNC_DONE (in the BP handler or
-+	 * in text_poke_site()), so they know that this iteration is done
-+	 * and it is safe to exit the wait-until-a-sync-is-required loop.
-+	 */
-+	poke_sync(tps, PATCH_SYNC_DONE, 0, NULL, 0);
-+
-+	/*
-+	 * Unmap the poking_addr, poking_mm.
-+	 */
-+	__text_poke_unmap(text_poke_addr(tp), tp->text, tp->native.len,
-+			  &prev_mm, ptep);
 +}
 +
-+/**
-+ * text_poke_sync_finish() -- called to synchronize the CPU pipeline
-+ * on secondary CPUs for all patch sites.
-+ *
-+ * Called in thread context with tps->state == PATCH_SYNC_DONE.
-+ * Returns with tps->state == PATCH_DONE.
-+ */
-+static void text_poke_sync_finish(struct text_poke_state *tps)
-+{
-+	while (true) {
-+		enum patch_state state;
-+
-+		state = READ_ONCE(tps->state);
-+
-+		/*
-+		 * We aren't doing any actual poking yet, so we don't
-+		 * handle any other states.
-+		 */
-+		if (state == PATCH_DONE)
-+			break;
-+
-+		/*
-+		 * Relax here while the primary makes up its mind on
-+		 * whether it is done or not.
-+		 */
-+		cpu_relax();
-+	}
-+}
-+
-+static int patch_worker(void *t)
-+{
-+	int cpu = smp_processor_id();
-+	struct text_poke_state *tps = t;
-+
-+	if (cpu == tps->primary_cpu) {
-+		/*
-+		 * Generates insns and calls text_poke_site() to do the poking
-+		 * and sync.
-+		 */
-+		tps->patch_worker(tps);
-+
-+		/*
-+		 * We are done patching. Switch the state to PATCH_DONE
-+		 * so the secondaries can exit.
-+		 */
-+		smp_store_release(&tps->state, PATCH_DONE);
-+	} else {
-+		/* Secondary CPUs spin in a sync_core() state-machine. */
-+		text_poke_sync_finish(tps);
-+	}
-+	return 0;
-+}
-+
-+/**
-+ * text_poke_late() -- late patching via stop_machine().
-+ *
-+ * Called holding the text_mutex.
-+ *
-+ * Return: 0 on success, -errno on failure.
-+ */
-+static int __maybe_unused text_poke_late(patch_worker_t worker, void *stage)
-+{
-+	int ret;
-+
-+	lockdep_assert_held(&text_mutex);
-+
-+	if (system_state != SYSTEM_RUNNING)
-+		return -EINVAL;
-+
-+	text_poke_state.stage = stage;
-+	text_poke_state.num_acks = cpumask_weight(cpu_online_mask);
-+	text_poke_state.head = &alt_modules;
-+
-+	text_poke_state.patch_worker = worker;
-+	text_poke_state.state = PATCH_SYNC_DONE; /* Start state */
-+	text_poke_state.primary_cpu = smp_processor_id();
-+
-+	/*
-+	 * Run the worker on all online CPUs. Don't need to do anything
-+	 * for offline CPUs as they come back online with a clean cache.
-+	 */
-+	ret = stop_machine(patch_worker, &text_poke_state, cpu_online_mask);
-+
-+	return ret;
-+}
-+
- #ifdef CONFIG_PARAVIRT_RUNTIME
- struct paravirt_stage_entry {
- 	void *dest;	/* pv_op destination */
+ #endif
 -- 
 2.20.1
 
