@@ -2,139 +2,131 @@ Return-Path: <SRS0=8dav=5Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49849C2BA1A
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 18:58:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6D5CC2D0F4
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 18:59:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1D4D5206BE
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 18:58:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="fFyW9LaI"
+	by mail.kernel.org (Postfix) with ESMTP id BE6E920768
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 18:59:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728820AbgDHS65 (ORCPT
+        id S1728922AbgDHS7Q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Apr 2020 14:58:57 -0400
-Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:13573 "EHLO
-        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726730AbgDHS64 (ORCPT
+        Wed, 8 Apr 2020 14:59:16 -0400
+Received: from mout.kundenserver.de ([217.72.192.75]:38807 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726730AbgDHS7Q (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Apr 2020 14:58:56 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5e8e1eba0001>; Wed, 08 Apr 2020 11:58:02 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Wed, 08 Apr 2020 11:58:55 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Wed, 08 Apr 2020 11:58:55 -0700
-Received: from DRHQMAIL107.nvidia.com (10.27.9.16) by HQMAIL111.nvidia.com
- (172.20.187.18) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 8 Apr
- 2020 18:58:55 +0000
-Received: from [10.2.171.241] (10.124.1.5) by DRHQMAIL107.nvidia.com
- (10.27.9.16) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 8 Apr 2020
- 18:58:53 +0000
-Subject: Re: [RFC PATCH v6 6/9] media: tegra: Add Tegra210 Video input driver
-From:   Sowjanya Komatineni <skomatineni@nvidia.com>
-To:     Dmitry Osipenko <digetx@gmail.com>, <thierry.reding@gmail.com>,
-        <jonathanh@nvidia.com>, <frankc@nvidia.com>, <hverkuil@xs4all.nl>,
-        <sakari.ailus@iki.fi>, <helen.koike@collabora.com>
-CC:     <sboyd@kernel.org>, <linux-media@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-clk@vger.kernel.org>,
-        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <1585963507-12610-1-git-send-email-skomatineni@nvidia.com>
- <e3712e7b-b335-b35b-a94f-24eb85122dca@nvidia.com>
- <b1726d33-0d35-9323-a747-407148d0104e@gmail.com>
- <eb80178f-30f4-8f46-51cd-ea3f4914b81d@nvidia.com>
- <dd16c560-ba8f-e7df-5dc4-5227e0043196@nvidia.com>
- <fea4f0a1-4a20-34d4-9eda-e4a599eeeffc@nvidia.com>
- <760d071e-0cbc-b3eb-9231-fb9f9ecb44a6@nvidia.com>
- <9e317f65-8a02-3b15-cfec-8e0d8374130e@gmail.com>
- <97b35910-4c93-123a-43a0-eb14476ed0f3@nvidia.com>
- <84ad4e2d-6ac1-e1f4-1c55-5edaae850631@nvidia.com>
- <15a879b3-8fb9-6821-3cdc-104ba583ac12@gmail.com>
- <0c425505-347f-7418-af7e-d121fe0d06dc@nvidia.com>
- <db7c7051-5674-cdb9-0aa4-ee94125b3024@gmail.com>
- <1a31cd60-739f-0660-1c45-31487d2f2128@nvidia.com>
- <603084a5-249a-4fe2-3646-e9335ef9ab43@nvidia.com>
- <7895b9c6-f27d-8939-73d7-67d785e1a8b7@nvidia.com>
- <ea60b489-990e-4b15-e215-d93381a1371e@nvidia.com>
- <b2405c2a-73c0-ad69-ccea-0388caf8045c@gmail.com>
- <15d8b525-67b5-b437-f7fd-89f80cd0d9f6@nvidia.com>
-Message-ID: <a638bb8e-bb50-7aa5-05a0-8de1c6207ba7@nvidia.com>
-Date:   Wed, 8 Apr 2020 11:58:52 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Wed, 8 Apr 2020 14:59:16 -0400
+Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
+ (mreue106 [212.227.15.145]) with ESMTPA (Nemesis) id
+ 1N6bwO-1jEDIr0wbW-017z1G; Wed, 08 Apr 2020 20:59:07 +0200
+From:   Arnd Bergmann <arnd@arndb.de>
+List-Id: <soc.lore.kernel.org>
+To:     soc@kernel.org, Roy Pledge <Roy.Pledge@nxp.com>,
+        Li Yang <leoyang.li@nxp.com>,
+        Youri Querry <youri.querry_1@nxp.com>
+Cc:     Arnd Bergmann <arnd@arndb.de>, Roy Pledge <roy.pledge@nxp.com>,
+        Colin Ian King <colin.king@canonical.com>,
+        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH] soc: fsl: dpio: fix incorrect pointer conversions
+Date:   Wed,  8 Apr 2020 20:58:58 +0200
+Message-Id: <20200408185904.460563-1-arnd@arndb.de>
+X-Mailer: git-send-email 2.26.0
 MIME-Version: 1.0
-In-Reply-To: <15d8b525-67b5-b437-f7fd-89f80cd0d9f6@nvidia.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL111.nvidia.com (172.20.187.18) To
- DRHQMAIL107.nvidia.com (10.27.9.16)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: quoted-printable
-Content-Language: en-US
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1586372282; bh=WiXwOMB6IdZZe61YJiuIGQp9xJN94uE559/iv1nBzAs=;
-        h=X-PGP-Universal:Subject:From:To:CC:References:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
-         Content-Language;
-        b=fFyW9LaIcFrNndkItDjS2qGndrz4UgUFDjPq4tudYfhTi00UY4WZy0FIKk49HhNOE
-         NiJdPomwPyEIz+VIalXMiDC6qJU6BPFqDxGZkq6UXKcKW/u60DaHkWo/v0iWh7x/a+
-         5QqsZHrpmgPppeExol8f4P9/lJZhWP+kVoCGIjmk1UrjVbG8I11ox652XWtQPtzHHl
-         ++wD38kDFinJCbzgj7lt3tLLMnk1oizZVxNhvsHi27rFlAszVe82VkBAjKFBvTtvQe
-         mMCA4jKF/OsWzOWNHE7Ef3fmHjDZbau4v+XZUdGoNrVAFrwqPdkXsQxlgdqZtOjLAK
-         6F9w/AXFhy1CQ==
+Content-Transfer-Encoding: 8bit
+X-Provags-ID: V03:K1:8xAGrYaZ/ujoUnW7cL3AgjFcL40IGeG2n3NvTC+XDJlofwfuA9K
+ oDFxnwY0ZfyisID+BW0V1T8NRMPjmB3xcBsR+gAoLr8CFBfD7f3APxjKC2BV/SNoszVmYKi
+ M0vLAM6kpZDaIOc9U6uLbXIFBw4m8GPBgO2DAfYAG2EYz9K1cExMvMJxDJ9+eo/SJEcpqF1
+ w11Qw2RA0RNyEzk/w9iqg==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:R+zWTu3qJj8=:PMGN84S59S9E8FL82EdxEJ
+ TeslY7JBQpC5GCPlSgAgF3eIo1VO8kNJRe2MVvFc/9hhZWzMy8XCJ/t6q9kbIotaEZwNP5wxv
+ XXIP1hlNYDVLdTEnQptpDzyWzLFe5NZQNVi0ZHyXlokmJe8KW2jwAhTM5CJaWLJo/RI2qtirj
+ pFw6gVf3ZNjOmyeQQOUc57sTvCIM2x3EKEZM8B2xbaf8oYuQmdXryQpkVMCa5J9oioRs7wZZv
+ pSTe1hdBBSx6XeUOIo5UQJlQEeR4WuQ8AKkHy9OGRcWUsCRA5chF+JpUKmne+5SKtdg3FLtVO
+ qJdgR4m0M1ljY0FjehKF8CSGE0+m3/9cFzNRYZ+YQuvEAvuTakT5F+jzbXR9hACZyjhzdxO4H
+ L6PP2laJwIXphFwUkhbaTteys5sJB4BqVq6c1ms3pKXWA8rRBwX8JzXG4AyF6MHQ692YAjE+E
+ fAwGo1+g4HTiS6shj85WDM447Ulks22Wpawgbwz9AepxlouwBS7Le06xw2WOUfXwlwygbezJw
+ 5zM1aKcny8zNiQxMmMsXX0ZnuG4w0mFQjX2oTcb+liispyO8EXdeatlV/dMDX2ZoOGI7lCK+A
+ KONEcvszOwwAejQqC4XhcPOk5X0gj8O0Z/P4PWTt2n2B+WivcR2xhEA4T36+BkPIaYo4bQuG7
+ qgobEcWg1p+oaO/4TOaG3t48QvfZsaID0fdeYdmkWj66QwA5z3/OkK6j+0sJLWz9x+viE3XCU
+ xThvkh8aFqpv+AMSwmU9Nf8dZ/fm0wyX0fSXFwdm7GsDL2uz/ud6i5D4j6wvubOJ+0MGlqE00
+ HtZKofaIn4bqehBC1pdMSkpxk94rZbbIYRjEe7hcCLXpLnDCcY=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Building dpio for 32 bit shows a new compiler warning from converting
+a pointer to a u64:
 
-On 4/8/20 10:45 AM, Sowjanya Komatineni wrote:
->
-> On 4/8/20 7:21 AM, Dmitry Osipenko wrote:
->> External email: Use caution opening links or attachments
->>
->>
->> 08.04.2020 03:00, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
->> ...
->>>>>>> I suppose that taking a shot takes at least few milliseconds, which
->>>>>>> should be unacceptable to waste.
->>>>>> As long as buffers are in queue we have to keep processing each
->>>>>> buffer and between buffers obviously we have to wait for previous
->>>>>> frames to finish and this why we have separate thread for frame
->>>>>> finish where we can have next buffer capture ready and issue while
->>>>>> previous frame memory write happens
->>>> Also we specified numbers buffers as 3 to vb2 queue. So this is rare
->>>> case but to prevent issuing more than 2 at a time as VI HW is only
->>>> double buffered and syncpt fifo max depth is 2 added this to be safer.
->>> To be more clear, when more buffers are enqueued from userspace always
->>> capture list will be full and thread will be busy in capture till=20
->>> either
->>> error or stop stream request happens.
->>>
->> If kthreads take more than 1% of CPU time during capture (video) with
->> more than 2 buffers in queue, then it's not good and I think you should
->> do something about it. If kthreads stay at ~0%, then it should be okay
->> as-is.
->
-> VI outstanding requests max can only be 2=C2=A0 as syncpt fifo depth is 2=
-=C2=A0=20
-> and waiting to issue next capture when already 2 captures are inflight=20
-> happens only during beginning of streaming where buffers allocated go=20
-> thru capture for first time after queuing.
->
-> same buffers are returned to userspace after capture and same=20
-> allocated buffers will be queued back for subsequent captures.
->
-> So this case of holding to issue single shot when already single shot=20
-> is issue for 2 frames simultaneous happens only during beginning of=20
-> start stream and also we set num_buffers to allocate for queue as 3=20
-> although 2 is good enough where we will not hit this case even during=20
-> streaming start with 2 buffers
->
-As 2 buffers are good enough to be clear will update in v7 to use 2=20
-buffers so we don't need to check for more than 2 outstanding buffers.
+drivers/soc/fsl/dpio/qbman-portal.c: In function 'qbman_swp_enqueue_multiple_desc_direct':
+drivers/soc/fsl/dpio/qbman-portal.c:870:14: warning: cast from pointer to integer of different size [-Wpointer-to-int-cast]
+  870 |  addr_cena = (uint64_t)s->addr_cena;
+
+The variable is not used anywhere, so removing the assignment seems
+to be the correct workaround. After spotting what seemed to be
+some confusion about address spaces, I ran the file through sparse,
+which showed more warnings:
+
+drivers/soc/fsl/dpio/qbman-portal.c:756:42: warning: incorrect type in argument 1 (different address spaces)
+drivers/soc/fsl/dpio/qbman-portal.c:756:42:    expected void const volatile [noderef] <asn:2> *addr
+drivers/soc/fsl/dpio/qbman-portal.c:756:42:    got unsigned int [usertype] *[assigned] p
+drivers/soc/fsl/dpio/qbman-portal.c:902:42: warning: incorrect type in argument 1 (different address spaces)
+drivers/soc/fsl/dpio/qbman-portal.c:902:42:    expected void const volatile [noderef] <asn:2> *addr
+drivers/soc/fsl/dpio/qbman-portal.c:902:42:    got unsigned int [usertype] *[assigned] p
+
+Here, the problem is passing a token from memremap() into __raw_readl(),
+which is only defined to work on MMIO addresses but not RAM. Turning
+this into a simple pointer dereference avoids this warning as well.
+
+Fixes: 3b2abda7d28c ("soc: fsl: dpio: Replace QMAN array mode with ring mode enqueue")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+---
+ drivers/soc/fsl/dpio/qbman-portal.c | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
+
+diff --git a/drivers/soc/fsl/dpio/qbman-portal.c b/drivers/soc/fsl/dpio/qbman-portal.c
+index d1f49caa5b13..804b8ba9bf5c 100644
+--- a/drivers/soc/fsl/dpio/qbman-portal.c
++++ b/drivers/soc/fsl/dpio/qbman-portal.c
+@@ -753,7 +753,7 @@ int qbman_swp_enqueue_multiple_mem_back(struct qbman_swp *s,
+ 	if (!s->eqcr.available) {
+ 		eqcr_ci = s->eqcr.ci;
+ 		p = s->addr_cena + QBMAN_CENA_SWP_EQCR_CI_MEMBACK;
+-		s->eqcr.ci = __raw_readl(p) & full_mask;
++		s->eqcr.ci = *p & full_mask;
+ 		s->eqcr.available = qm_cyc_diff(s->eqcr.pi_ring_size,
+ 					eqcr_ci, s->eqcr.ci);
+ 		if (!s->eqcr.available) {
+@@ -823,7 +823,6 @@ int qbman_swp_enqueue_multiple_desc_direct(struct qbman_swp *s,
+ 	const uint32_t *cl;
+ 	uint32_t eqcr_ci, eqcr_pi, half_mask, full_mask;
+ 	int i, num_enqueued = 0;
+-	uint64_t addr_cena;
+ 
+ 	half_mask = (s->eqcr.pi_ci_mask>>1);
+ 	full_mask = s->eqcr.pi_ci_mask;
+@@ -867,7 +866,6 @@ int qbman_swp_enqueue_multiple_desc_direct(struct qbman_swp *s,
+ 
+ 	/* Flush all the cacheline without load/store in between */
+ 	eqcr_pi = s->eqcr.pi;
+-	addr_cena = (uint64_t)s->addr_cena;
+ 	for (i = 0; i < num_enqueued; i++)
+ 		eqcr_pi++;
+ 	s->eqcr.pi = eqcr_pi & full_mask;
+@@ -901,7 +899,7 @@ int qbman_swp_enqueue_multiple_desc_mem_back(struct qbman_swp *s,
+ 	if (!s->eqcr.available) {
+ 		eqcr_ci = s->eqcr.ci;
+ 		p = s->addr_cena + QBMAN_CENA_SWP_EQCR_CI_MEMBACK;
+-		s->eqcr.ci = __raw_readl(p) & full_mask;
++		s->eqcr.ci = *p & full_mask;
+ 		s->eqcr.available = qm_cyc_diff(s->eqcr.pi_ring_size,
+ 					eqcr_ci, s->eqcr.ci);
+ 		if (!s->eqcr.available)
+-- 
+2.26.0
+
