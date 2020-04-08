@@ -2,135 +2,132 @@ Return-Path: <SRS0=8dav=5Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9603C2D0F4
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 16:38:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89420C2BA1B
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 16:39:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C5D9520820
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 16:38:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6638820769
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 16:39:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="DLYTr2Y4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730331AbgDHQi5 (ORCPT
+        id S1730341AbgDHQjI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Apr 2020 12:38:57 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:3818 "EHLO
-        mx0b-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728781AbgDHQi5 (ORCPT
+        Wed, 8 Apr 2020 12:39:08 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:35066 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728443AbgDHQjI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Apr 2020 12:38:57 -0400
-Received: from pps.filterd (m0127361.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 038GYXJ6176022;
-        Wed, 8 Apr 2020 12:38:53 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 30920rr6rb-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 08 Apr 2020 12:38:53 -0400
-Received: from m0127361.ppops.net (m0127361.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 038GYblU176183;
-        Wed, 8 Apr 2020 12:38:53 -0400
-Received: from ppma04dal.us.ibm.com (7a.29.35a9.ip4.static.sl-reverse.com [169.53.41.122])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 30920rr6r2-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 08 Apr 2020 12:38:53 -0400
-Received: from pps.filterd (ppma04dal.us.ibm.com [127.0.0.1])
-        by ppma04dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 038GUoPT032378;
-        Wed, 8 Apr 2020 16:38:52 GMT
-Received: from b01cxnp23032.gho.pok.ibm.com (b01cxnp23032.gho.pok.ibm.com [9.57.198.27])
-        by ppma04dal.us.ibm.com with ESMTP id 3091me03td-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 08 Apr 2020 16:38:52 +0000
-Received: from b01ledav005.gho.pok.ibm.com (b01ledav005.gho.pok.ibm.com [9.57.199.110])
-        by b01cxnp23032.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 038GcoAZ48562468
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 8 Apr 2020 16:38:50 GMT
-Received: from b01ledav005.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 5CDA1AE063;
-        Wed,  8 Apr 2020 16:38:50 +0000 (GMT)
-Received: from b01ledav005.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 913C2AE05F;
-        Wed,  8 Apr 2020 16:38:49 +0000 (GMT)
-Received: from cpe-172-100-173-215.stny.res.rr.com (unknown [9.85.151.56])
-        by b01ledav005.gho.pok.ibm.com (Postfix) with ESMTP;
-        Wed,  8 Apr 2020 16:38:49 +0000 (GMT)
-Subject: Re: [PATCH v7 06/15] s390/vfio-ap: sysfs attribute to display the
- guest CRYCB
-To:     Cornelia Huck <cohuck@redhat.com>
-Cc:     linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org, freude@linux.ibm.com, borntraeger@de.ibm.com,
-        mjrosato@linux.ibm.com, pmorel@linux.ibm.com, pasic@linux.ibm.com,
-        alex.williamson@redhat.com, kwankhede@nvidia.com,
-        jjherne@linux.ibm.com, fiuczy@linux.ibm.com
-References: <20200407192015.19887-1-akrowiak@linux.ibm.com>
- <20200407192015.19887-7-akrowiak@linux.ibm.com>
- <20200408123344.1a9032e1.cohuck@redhat.com>
-From:   Tony Krowiak <akrowiak@linux.ibm.com>
-Message-ID: <60c6bfb6-dd0a-75dc-1043-8dffe983220a@linux.ibm.com>
-Date:   Wed, 8 Apr 2020 12:38:49 -0400
+        Wed, 8 Apr 2020 12:39:08 -0400
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 038Gd2Bh049648;
+        Wed, 8 Apr 2020 11:39:02 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1586363942;
+        bh=at0QoQUcc6+11ygTvc8A0xY0vvTEhpKksvaBjMecc1A=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=DLYTr2Y4hT9b+xlOu5w6LklK6S3BKbLqWXgCy/gVXI2I4EIsXcHPxXRj/7r+hE1pC
+         NkjuUo5yVsQl99Q0KlDE0c6FXMkzBI8st165IlAEn0zBRYmAFVxsZDSBAB8KFWp67j
+         +zu9XgTCXTrPVvPRjSvR685vL2VS9c8OAtwaawgw=
+Received: from DLEE112.ent.ti.com (dlee112.ent.ti.com [157.170.170.23])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 038Gd2Kb045097
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 8 Apr 2020 11:39:02 -0500
+Received: from DLEE115.ent.ti.com (157.170.170.26) by DLEE112.ent.ti.com
+ (157.170.170.23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Wed, 8 Apr
+ 2020 11:39:01 -0500
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE115.ent.ti.com
+ (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Wed, 8 Apr 2020 11:39:01 -0500
+Received: from [10.250.52.63] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 038Gd11T091526;
+        Wed, 8 Apr 2020 11:39:01 -0500
+Subject: Re: [PATCH v19 04/18] leds: multicolor: Introduce a multicolor class
+ definition
+To:     Jacek Anaszewski <jacek.anaszewski@gmail.com>, <pavel@ucw.cz>
+CC:     <linux-leds@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <20200402204311.14998-1-dmurphy@ti.com>
+ <20200402204311.14998-5-dmurphy@ti.com>
+ <b27b21bf-9a7a-8233-d033-17bae43b297d@gmail.com>
+From:   Dan Murphy <dmurphy@ti.com>
+Message-ID: <56b1cc39-a17e-0fe5-565b-7f42b6e1dcf1@ti.com>
+Date:   Wed, 8 Apr 2020 11:33:08 -0500
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.4.1
 MIME-Version: 1.0
-In-Reply-To: <20200408123344.1a9032e1.cohuck@redhat.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <b27b21bf-9a7a-8233-d033-17bae43b297d@gmail.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 8bit
 Content-Language: en-US
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
- definitions=2020-04-07_10:2020-04-07,2020-04-07 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 mlxscore=0
- phishscore=0 mlxlogscore=999 adultscore=0 malwarescore=0
- priorityscore=1501 bulkscore=0 clxscore=1015 lowpriorityscore=0
- spamscore=0 suspectscore=3 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2004080125
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Jacek
 
-
-On 4/8/20 6:33 AM, Cornelia Huck wrote:
-> On Tue,  7 Apr 2020 15:20:06 -0400
-> Tony Krowiak <akrowiak@linux.ibm.com> wrote:
+On 4/7/20 4:08 PM, Jacek Anaszewski wrote:
+> Dan,
 >
->> The matrix of adapters and domains configured in a guest's CRYCB may
->> differ from the matrix of adapters and domains assigned to the matrix mdev,
->> so this patch introduces a sysfs attribute to display the CRYCB of a guest
->> using the matrix mdev. For a matrix mdev denoted by $uuid, the crycb for a
->> guest using the matrix mdev can be displayed as follows:
->>
->>     cat /sys/devices/vfio_ap/matrix/$uuid/guest_matrix
->>
->> If a guest is not using the matrix mdev at the time the crycb is displayed,
->> an error (ENODEV) will be returned.
->>
->> Signed-off-by: Tony Krowiak <akrowiak@linux.ibm.com>
->> ---
->>   drivers/s390/crypto/vfio_ap_ops.c | 58 +++++++++++++++++++++++++++++++
->>   1 file changed, 58 insertions(+)
->> +static DEVICE_ATTR_RO(guest_matrix);
-> Hm... should information like the guest configuration be readable by
-> everyone? Or should it be restricted a bit more?
-
-Why? The matrix attribute already displays the APQNs of the queues
-assigned to the matrix mdev. The guest_matrix attribute merely displays
-a subset of the matrix (i.e., the APQNs assigned to the mdev that reference
-queue devices bound to the vfio_ap device driver).
-
-How can this be restricted?
-
+> One more nit below.
 >
+> On 4/2/20 10:42 PM, Dan Murphy wrote:
+>> Introduce a multicolor class that groups colored LEDs
+>> within a LED node.
+>>
+>> The multi color class groups monochrome LEDs and allows controlling two
+>> aspects of the final combined color: hue and lightness. The former is
+>> controlled via <color>_intensity files and the latter is controlled
+>> via brightness file.
+> [...]
+>>   # LED Platform Drivers
+>> diff --git a/drivers/leds/led-class-multicolor.c b/drivers/leds/led-class-multicolor.c
+>> new file mode 100644
+>> index 000000000000..838b1d679647
+>> --- /dev/null
+>> +++ b/drivers/leds/led-class-multicolor.c
+>> @@ -0,0 +1,206 @@
+>> +// SPDX-License-Identifier: GPL-2.0
+>> +// LED Multi Color class interface
+>> +// Copyright (C) 2019-20 Texas Instruments Incorporated - http://www.ti.com/
+>> +// Author: Dan Murphy <dmurphy@ti.com>
 >> +
->>   static struct attribute *vfio_ap_mdev_attrs[] = {
->>   	&dev_attr_assign_adapter.attr,
->>   	&dev_attr_unassign_adapter.attr,
->> @@ -1050,6 +1107,7 @@ static struct attribute *vfio_ap_mdev_attrs[] = {
->>   	&dev_attr_unassign_control_domain.attr,
->>   	&dev_attr_control_domains.attr,
->>   	&dev_attr_matrix.attr,
->> +	&dev_attr_guest_matrix.attr,
->>   	NULL,
->>   };
->>   
+>> +#include <linux/device.h>
+>> +#include <linux/init.h>
+>> +#include <linux/led-class-multicolor.h>
+>> +#include <linux/module.h>
+>> +#include <linux/slab.h>
+>> +#include <linux/uaccess.h>
+>> +
+>> +#include "leds.h"
+>> +
+>> +int led_mc_calc_color_components(struct led_classdev_mc *mcled_cdev,
+>> +				 enum led_brightness brightness)
+>> +{
+>> +	struct led_classdev *led_cdev = &mcled_cdev->led_cdev;
+>> +	int i;
+>> +
+>> +	for (i = 0; i < mcled_cdev->num_colors; i++)
+>> +		mcled_cdev->multicolor_info[i].color_brightness = (brightness *
+> If you passed temporary array for collecting calculated brightness
+> items to this function then you could remove this color_brightness
+> field from struct multicolor_info.
+
+I thought about doing it that way but I liked how each LEDs properties 
+were stored in a single element in the array.
+
+There would be no issues with referencing the array element and knowing 
+everything about the specific LED like the
+
+intensity, brightness, output channel and ID.   This eliminates any need 
+for a channel map or mapping brightness to IDs or channels.
+
+Dan
 
