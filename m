@@ -2,88 +2,48 @@ Return-Path: <SRS0=8dav=5Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ADCC2C2D0EA
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 11:34:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86E65C2D0EA
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 11:35:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7C0B720747
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 11:34:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="RoRVKKv8"
+	by mail.kernel.org (Postfix) with ESMTP id 5BDD620747
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 11:35:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728502AbgDHLeC (ORCPT
+        id S1728517AbgDHLfI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Apr 2020 07:34:02 -0400
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:54358 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727902AbgDHLeC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Apr 2020 07:34:02 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1586345641;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=iMpv1Tcf8msq6CIz6hAZaaOwWt8dkcRjoWBRfrYNwKk=;
-        b=RoRVKKv8OqqSmOdsNBjN+SXCfrC6dR9pT5+lcHua/Ex+qQDyNWTC0wvqN/+IE349BXb7rJ
-        DCBWeZFn9iUKNIQDUzuUtaAMAA6z9vlh4Ms9L0viXFQDWQe+SJ8B+CXWwQ2YaPz53qEI2N
-        eXIJPskYhxi9bTFUGZ8VFpj3Vk0JCfc=
-Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
- [209.85.221.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-50-LJQTftwPM5KjlQlkob7pvg-1; Wed, 08 Apr 2020 07:33:59 -0400
-X-MC-Unique: LJQTftwPM5KjlQlkob7pvg-1
-Received: by mail-wr1-f70.google.com with SMTP id o10so3805931wrj.7
-        for <linux-kernel@vger.kernel.org>; Wed, 08 Apr 2020 04:33:59 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=iMpv1Tcf8msq6CIz6hAZaaOwWt8dkcRjoWBRfrYNwKk=;
-        b=DKmvBigkuLlNTY9IiGSUMqteaEQvjm73c8KR3NGQarPZKzDS0MKWab3Wv0VBu2tZsp
-         7xp3ldWCPKlBsqQ6ghs8ufH+0wi6DRsqgnrsIzVUr0+G4ckinUMemGKlRcVWJ7Zptz4B
-         tkno2xTtzqHZitf3TAz4xQLP7IZW4XcI+ZmNqAMw3qogO7F0CTV5Bes5xFUSya/ngVxW
-         ckYvPWoR+7DhC3ZsBoDf0dehonJOUG4f8vjqHMaakMULXVsypeTLEPoA36hK6GyKdNbv
-         LO7fQ2BK7yiEKerCxXYlj/8gZvQlvAIM9I8Ta66yYSoNibvdFfZjaMQW2lTJv7lIqZfE
-         YlOg==
-X-Gm-Message-State: AGi0PuYtRw0kqJfKOLObF6hJGq3hoGlLtbBWkpY39GUgjfbI/cAushlX
-        +H1olVt1dFcfQ0MqZWAePPJ9UeQUCT4G+cLZ34HHkLt+3lEiO22zfSPH3UF/xu5qUP9BiDrmpYu
-        WNZegaCfPw85wRo7pJDTUS74L
-X-Received: by 2002:a1c:3281:: with SMTP id y123mr4239285wmy.30.1586345637884;
-        Wed, 08 Apr 2020 04:33:57 -0700 (PDT)
-X-Google-Smtp-Source: APiQypLT538fz8uSoawd2IFWIE2g4SRUOixPL/PauE1AvjtumpV89MF+Ihgn7usDfr2aRZ/BhKLoLQ==
-X-Received: by 2002:a1c:3281:: with SMTP id y123mr4239265wmy.30.1586345637681;
-        Wed, 08 Apr 2020 04:33:57 -0700 (PDT)
-Received: from [192.168.10.150] ([93.56.170.5])
-        by smtp.gmail.com with ESMTPSA id f63sm3148639wma.47.2020.04.08.04.33.53
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 08 Apr 2020 04:33:57 -0700 (PDT)
-Subject: Re: [PATCH 2/2] KVM: s390: Return last valid slot if approx index is
- out-of-bounds
-To:     Claudio Imbrenda <imbrenda@linux.ibm.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     Christian Borntraeger <borntraeger@de.ibm.com>,
-        Janosch Frank <frankja@linux.ibm.com>,
-        David Hildenbrand <david@redhat.com>,
-        Cornelia Huck <cohuck@redhat.com>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        syzbot+d889b59b2bb87d4047a2@syzkaller.appspotmail.com
-References: <20200408064059.8957-1-sean.j.christopherson@intel.com>
- <20200408064059.8957-3-sean.j.christopherson@intel.com>
- <20200408122138.71493308@p-imbrenda>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Message-ID: <40b325c7-ca24-3513-b2fa-1e9397c9e353@redhat.com>
-Date:   Wed, 8 Apr 2020 13:33:52 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Wed, 8 Apr 2020 07:35:08 -0400
+Received: from foss.arm.com ([217.140.110.172]:37210 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728454AbgDHLfI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Apr 2020 07:35:08 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7DE1C31B;
+        Wed,  8 Apr 2020 04:35:07 -0700 (PDT)
+Received: from [10.37.12.149] (unknown [10.37.12.149])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 420603F73D;
+        Wed,  8 Apr 2020 04:35:06 -0700 (PDT)
+Subject: Re: [PATCH v2] arm64: armv8_deprecated: Fix undef_hook mask for thumb
+ setend
+To:     fredrik@strupe.net, catalin.marinas@arm.com
+Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        will.deacon@arm.com
+References: <911db2f1-e078-a460-32ee-154a0b4de5d4@strupe.net>
+ <20200407092744.GA2665@gaia> <a2b345a4-30a0-3218-8c8d-e84ec2317dc9@arm.com>
+ <0d7b582a-1bd0-9db2-2fdc-04fc887f64c6@strupe.net>
+ <20200408090111.GA27331@gaia>
+ <9979396e-5d01-0cfe-722f-3a4f6e81dc01@strupe.net>
+ <ab77076b-774d-9158-bc0c-3cfdd36b6e37@strupe.net>
+From:   Suzuki K Poulose <suzuki.poulose@arm.com>
+Message-ID: <f2c442f8-d2b6-c859-ca1a-2b8a343047e6@arm.com>
+Date:   Wed, 8 Apr 2020 12:39:50 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.7.0
 MIME-Version: 1.0
-In-Reply-To: <20200408122138.71493308@p-imbrenda>
-Content-Type: text/plain; charset=windows-1252
+In-Reply-To: <ab77076b-774d-9158-bc0c-3cfdd36b6e37@strupe.net>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -91,21 +51,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 08/04/20 12:21, Claudio Imbrenda wrote:
-> on s390 memory always starts at 0; you can't even boot a system missing
-> the first pages of physical memory, so this means this situation would
-> never happen in practice. 
+On 04/08/2020 12:29 PM, Fredrik Strupe wrote:
+> For thumb instructions, call_undef_hook() in traps.c first reads a u16,
+> and if the u16 indicates a T32 instruction (u16 >= 0xe800), a second
+> u16 is read, which then makes up the the lower half-word of a T32
+> instruction. For T16 instructions, the second u16 is not read,
+> which makes the resulting u32 opcode always have the upper half set to
+> 0.
 > 
-> of course, a malicious userspace program could create an (unbootable) VM
-> and trigger this bug, so the patch itself makes sense.
+> However, having the upper half of instr_mask in the undef_hook set to 0
+> masks out the upper half of all thumb instructions - both T16 and T32.
+> This results in trapped T32 instructions with the lower half-word equal
+> to the T16 encoding of setend (b650) being matched, even though the upper
+> half-word is not 0000 and thus indicates a T32 opcode.
 > 
-> Reviewed-by: Claudio Imbrenda <imbrenda@linux.ibm.com>
+> An example of such a T32 instruction is eaa0b650, which should raise a
+> SIGILL since T32 instructions with an eaa prefix are unallocated as per
+> Arm ARM, but instead works as a SETEND because the second half-word is set
+> to b650.
+> 
+> This patch fixes the issue by extending instr_mask to include the
+> upper u32 half, which will still match T16 instructions where the upper
+> half is 0, but not T32 instructions.
+> 
+> Signed-off-by: Fredrik Strupe <fredrik@strupe.net>
+> Cc: Catalin Marinas <catalin.marinas@arm.com>
+> Cc: Will Deacon <will.deacon@arm.com>
+> Fixes: 2d888f48e056 ("arm64: Emulate SETEND for AArch32 tasks")
+> ---
+>   arch/arm64/kernel/armv8_deprecated.c | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/arch/arm64/kernel/armv8_deprecated.c b/arch/arm64/kernel/armv8_deprecated.c
+> index 9d3442d62..8c06dfee0 100644
+> --- a/arch/arm64/kernel/armv8_deprecated.c
+> +++ b/arch/arm64/kernel/armv8_deprecated.c
+> @@ -609,7 +609,7 @@ static struct undef_hook setend_hooks[] = {
+>   	},
+>   	{
+>   		/* Thumb mode */
+> -		.instr_mask	= 0x0000fff7,
+> +		.instr_mask	= 0xfffffff7,
+>   		.instr_val	= 0x0000b650,
+>   		.pstate_mask	= (PSR_AA32_T_BIT | PSR_AA32_MODE_MASK),
+>   		.pstate_val	= (PSR_AA32_T_BIT | PSR_AA32_MODE_USR),
+> 
 
-What about using KVM just for isolation and not just to run a full-blown
-OS (that is, you might even only have the guest run in problem state)?
-Would that be feasible on s390?
-
-Thanks,
-
-Paolo
-
+Reviewed-by : Suzuki K Poulose <suzuki.poulose@arm.com>
