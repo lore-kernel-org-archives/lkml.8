@@ -2,119 +2,155 @@ Return-Path: <SRS0=8dav=5Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DDC7C2D0F4
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 19:36:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DA09C2BA1A
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 19:38:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EDE0220753
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 19:36:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 509E720768
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 19:38:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="OqvaG2fa"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="j2P10Vzg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730018AbgDHTgM (ORCPT
+        id S1730047AbgDHTi0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Apr 2020 15:36:12 -0400
-Received: from mail-eopbgr150073.outbound.protection.outlook.com ([40.107.15.73]:30368
-        "EHLO EUR01-DB5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729978AbgDHTgL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Apr 2020 15:36:11 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=eLvmuGNMIkW6Aq9UO0tgttyf2CZJBQbDAvdwmK2Gc4mwit5XcJ7dO1/9J+1Sh05q3XCMtCbrTAuXv90jJB0Tf+JNN58lCSMFi4TuX47njegKpgJsEIglS+oCgV/M+emSd7JoO5hh4uGJAK1V6rulT35uFHxqNoIBsTFt/SY+QSd9fJlEnc+8KA2K+S4k2rtlFTO89Qi8QBaKz+W7FI0B26T3s2qz9TjmqtxjNOuRjk8IeNVQ/n9vIyf59Xlflfry/yDoQ+XKoSUdRHTKtb0ZnW5Ii1OH0+6kWqk5LxlG7p/4kcqKk2+svkTalEppQJGZIZX8oWlid2YsMxdpLV8NLg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=1NLgExbLwTCF8CK6zFLNUL7AqliA28Qc0BxN8M9gEkI=;
- b=YXTDmTFfNyn6Om9CAU8hHpKd3LUgAeJouyRsQh4q5tret3aWACQj9MKD78I3PzUe2TPV2k4SjZy6gsgBd8eQvgFzfDB9Enwc+E1UHXKR950QVPApKaU067h7mV8mBOAecMy9bAelwqgq9Rm6HMI5wBXa+muZ2Z/m5Rc9rIIr5UxC3OvejnUhwN6bZKAFCF/K6L4ijF8s2JcgWiNx12Nt/whziCCFROsBOODwnLWwCmBapJ+x3+QC5WV2oGP5jEKFsqXyxY+InwcWQiYWCEtl2sxWNIWpjcqMCa7iXlI+6vogQXpmshdEUWJhxE1lal/N9Kibpi7XQRL3NSpve3PxiQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=mellanox.com; dmarc=pass action=none header.from=mellanox.com;
- dkim=pass header.d=mellanox.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=1NLgExbLwTCF8CK6zFLNUL7AqliA28Qc0BxN8M9gEkI=;
- b=OqvaG2faaHnJ0q7s52AEPeZZdaiuAka0iJNYRryaN76YskILCx/79ZUjs5F+W96qzTM5HcU8l8H6V7J6NLtkWV8WnVJff0YQarBToBYSynG7D94thwybcn+pAL6qQ8EZ2YnmjR/47M0GYvdRSyHZR0WwEaMPGDFHx4Y95pJSzjA=
-Received: from VI1PR05MB5102.eurprd05.prod.outlook.com (2603:10a6:803:5e::23)
- by VI1PR05MB3472.eurprd05.prod.outlook.com (2603:10a6:802:1a::26) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2878.17; Wed, 8 Apr
- 2020 19:36:07 +0000
-Received: from VI1PR05MB5102.eurprd05.prod.outlook.com
- ([fe80::9d19:a564:b84e:7c19]) by VI1PR05MB5102.eurprd05.prod.outlook.com
- ([fe80::9d19:a564:b84e:7c19%7]) with mapi id 15.20.2878.021; Wed, 8 Apr 2020
- 19:36:07 +0000
-From:   Saeed Mahameed <saeedm@mellanox.com>
-To:     "schnelle@linux.ibm.com" <schnelle@linux.ibm.com>,
-        Feras Daoud <ferasda@mellanox.com>,
-        Alex Vesker <valex@mellanox.com>
-CC:     Eran Ben Elisha <eranbe@mellanox.com>,
-        Moshe Shemesh <moshe@mellanox.com>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "leon@kernel.org" <leon@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [RFC 1/1] net/mlx5: Fix failing fw tracer allocation on s390
-Thread-Topic: [RFC 1/1] net/mlx5: Fix failing fw tracer allocation on s390
-Thread-Index: AQHWDLLERkPdcFex20i6r53b871po6hvoH2A
-Date:   Wed, 8 Apr 2020 19:36:07 +0000
-Message-ID: <00fc95b9c6f5da7ec5844b9eccf4488d4a37efd8.camel@mellanox.com>
-References: <20200407080130.34472-1-schnelle@linux.ibm.com>
-         <20200407080130.34472-2-schnelle@linux.ibm.com>
-In-Reply-To: <20200407080130.34472-2-schnelle@linux.ibm.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-user-agent: Evolution 3.34.4 (3.34.4-1.fc31) 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=saeedm@mellanox.com; 
-x-originating-ip: [73.15.39.150]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: e122c735-35d0-4808-ada5-08d7dbf41589
-x-ms-traffictypediagnostic: VI1PR05MB3472:|VI1PR05MB3472:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <VI1PR05MB34723EBA9A664FCFB9FCAA50BEC00@VI1PR05MB3472.eurprd05.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8882;
-x-forefront-prvs: 0367A50BB1
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VI1PR05MB5102.eurprd05.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10009020)(4636009)(376002)(396003)(39850400004)(346002)(366004)(136003)(4326008)(4744005)(6636002)(71200400001)(26005)(5660300002)(186003)(6486002)(478600001)(81156014)(2616005)(8936002)(81166007)(6506007)(8676002)(66556008)(110136005)(64756008)(66476007)(66446008)(91956017)(316002)(76116006)(54906003)(2906002)(66946007)(86362001)(36756003)(6512007);DIR:OUT;SFP:1101;
-received-spf: None (protection.outlook.com: mellanox.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: fkruMyxvNr9asNW/g8lofbDy3mydGzqZNNL+/xzWAVlnUJUI6SnqS0oYaWUrrWL3Rnhky9V/a63bKUB3xfwXOt2jO0cMO0cxKi/x6E0WOClw9XjJvch42cm7F6VeTzevKNGg3DEF5Y+mHdn3NKevLWEKe5xnbV1IQhGK5Drf3uY//AGwzP/fsofNjUQaNi3WnVA4fsgA0YMmi62ng6idpw7m7ADciNc4yVx1XN+LUvXTMCCDEAnRhfwdSnZKjxumhPmPWyUb9x8waGNAVv86jIRc/3wINlLXTKiTXm0V412ftqfzxeqwJ0DaRFJI7jPh9PtOBemJKzD0Bw7pJzyRB323ga6A1SFmGuLVM3L/H4Y4XebjJqccBz6VBDdbF/lOv6FjGcvddHbOSqBJJZ4nO9XcvP85u/cj5QmE9LzwVTs7sKWoFYloQFOcYOoZvx5n
-x-ms-exchange-antispam-messagedata: yPRHVZ+/6yRXZ8II0LF6OgSnNSYKY1VOUXrudgoK6PfUfTgbxw4eWKojK6qGOEWJElGiJa+HIRKb5Syat5oxYtbsvyMWQHQXR9Ym9f+Ps36bgII9Rvofc/Z9RXqrog8Qs/VyUH5t9S61CDpfllCDFA==
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <AB0804B430423243A3973836B19E1ECA@eurprd05.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Wed, 8 Apr 2020 15:38:26 -0400
+Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:2985 "EHLO
+        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728725AbgDHTiZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Apr 2020 15:38:25 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5e8e27c90000>; Wed, 08 Apr 2020 12:36:41 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Wed, 08 Apr 2020 12:38:24 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Wed, 08 Apr 2020 12:38:24 -0700
+Received: from DRHQMAIL107.nvidia.com (10.27.9.16) by HQMAIL111.nvidia.com
+ (172.20.187.18) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 8 Apr
+ 2020 19:38:24 +0000
+Received: from [10.2.171.241] (10.124.1.5) by DRHQMAIL107.nvidia.com
+ (10.27.9.16) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 8 Apr 2020
+ 19:38:23 +0000
+Subject: Re: [RFC PATCH v6 6/9] media: tegra: Add Tegra210 Video input driver
+From:   Sowjanya Komatineni <skomatineni@nvidia.com>
+To:     Dmitry Osipenko <digetx@gmail.com>, <thierry.reding@gmail.com>,
+        <jonathanh@nvidia.com>, <frankc@nvidia.com>, <hverkuil@xs4all.nl>,
+        <sakari.ailus@iki.fi>, <helen.koike@collabora.com>
+CC:     <sboyd@kernel.org>, <linux-media@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-clk@vger.kernel.org>,
+        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <1585963507-12610-1-git-send-email-skomatineni@nvidia.com>
+ <b1726d33-0d35-9323-a747-407148d0104e@gmail.com>
+ <eb80178f-30f4-8f46-51cd-ea3f4914b81d@nvidia.com>
+ <dd16c560-ba8f-e7df-5dc4-5227e0043196@nvidia.com>
+ <fea4f0a1-4a20-34d4-9eda-e4a599eeeffc@nvidia.com>
+ <760d071e-0cbc-b3eb-9231-fb9f9ecb44a6@nvidia.com>
+ <9e317f65-8a02-3b15-cfec-8e0d8374130e@gmail.com>
+ <97b35910-4c93-123a-43a0-eb14476ed0f3@nvidia.com>
+ <84ad4e2d-6ac1-e1f4-1c55-5edaae850631@nvidia.com>
+ <15a879b3-8fb9-6821-3cdc-104ba583ac12@gmail.com>
+ <0c425505-347f-7418-af7e-d121fe0d06dc@nvidia.com>
+ <db7c7051-5674-cdb9-0aa4-ee94125b3024@gmail.com>
+ <1a31cd60-739f-0660-1c45-31487d2f2128@nvidia.com>
+ <603084a5-249a-4fe2-3646-e9335ef9ab43@nvidia.com>
+ <7895b9c6-f27d-8939-73d7-67d785e1a8b7@nvidia.com>
+ <ea60b489-990e-4b15-e215-d93381a1371e@nvidia.com>
+ <b2405c2a-73c0-ad69-ccea-0388caf8045c@gmail.com>
+ <15d8b525-67b5-b437-f7fd-89f80cd0d9f6@nvidia.com>
+ <a638bb8e-bb50-7aa5-05a0-8de1c6207ba7@nvidia.com>
+Message-ID: <ced73258-6f4b-e970-4ca5-ecdf1808a4c3@nvidia.com>
+Date:   Wed, 8 Apr 2020 12:38:21 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-X-OriginatorOrg: Mellanox.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: e122c735-35d0-4808-ada5-08d7dbf41589
-X-MS-Exchange-CrossTenant-originalarrivaltime: 08 Apr 2020 19:36:07.5602
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: IlMYJMooVkKZcYDrMuvYJFocHfMIT9jC7CSMG8FP8E2YUw5Dm3DqQJ7Xv759k0WG4YLpAJ4cGVvyE1e4z+pSgw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR05MB3472
+In-Reply-To: <a638bb8e-bb50-7aa5-05a0-8de1c6207ba7@nvidia.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
+ DRHQMAIL107.nvidia.com (10.27.9.16)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: quoted-printable
+Content-Language: en-US
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1586374601; bh=FzCCMH0FVXQ03sPS9Blx8PYycG7R5/dfGRSA6QuVW5w=;
+        h=X-PGP-Universal:Subject:From:To:CC:References:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
+         Content-Language;
+        b=j2P10VzgKY91EKABc27qxtQBRmIqqfjS1JYnmAPKBKrO/B1S8IJz56Q6xmD/MtHfG
+         VXYbHE/JpFA8Xw2kp9vHG2MGewgoJcZyWCjSm8XGlU+XGpMhYOouL/BGv7ezZPrUFC
+         cGXAuMuS3wuEmHE8eftH0PY49aejq25IOi4CxPrk5Ry6IVOlpduPSCYNYgUDHQ7KQ6
+         ZA02y6Lodd1Mc+YxkyNuSzIRy58FxS0zFl8GDQYW/Z/4HIOVgZyCOq5UmsTB07ae++
+         C9KJoEj5LNi6MwcigyxrOZoEwXjD5PwYPz0XHDug/yd27NZNz80m+0XTli9nvmcuQH
+         E5E7NarLS5OXg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gVHVlLCAyMDIwLTA0LTA3IGF0IDEwOjAxICswMjAwLCBOaWtsYXMgU2NobmVsbGUgd3JvdGU6
-DQo+IE9uIHMzOTAgRk9SQ0VfTUFYX1pPTkVPUkRFUiBpcyA5IGluc3RlYWQgb2YgMTEsIHRodXMg
-YSBsYXJnZXINCj4ga3phbGxvYygpDQo+IGFsbG9jYXRpb24gYXMgZG9uZSBmb3IgdGhlIGZpcm13
-YXJlIHRyYWNlciB3aWxsIGFsd2F5cyBmYWlsLg0KPiANCj4gTG9va2luZyBhdCBtbHg1X2Z3X3Ry
-YWNlcl9zYXZlX3RyYWNlKCksIGl0IGlzIGFjdHVhbGx5IHRoZSBkcml2ZXINCj4gaXRzZWxmDQo+
-IHRoYXQgY29waWVzIHRoZSBkZWJ1ZyBkYXRhIGludG8gdGhlIHRyYWNlIGFycmF5IGFuZCB0aGVy
-ZSBpcyBubyBuZWVkDQo+IGZvcg0KPiB0aGUgYWxsb2NhdGlvbiB0byBiZSBjb250aWd1b3VzIGlu
-IHBoeXNpY2FsIG1lbW9yeS4gV2UgY2FuIHRoZXJlZm9yDQo+IHVzZQ0KPiBrdnphbGxvYygpIGlu
-c3RlYWQgb2Yga3phbGxvYygpIGFuZCBnZXQgcmlkIG9mIHRoZSBsYXJnZSBjb250aWd1b3VzDQo+
-IGFsbGNvYXRpb24uDQo+IA0KDQpUaGlzIGxvb2tzIGZpbmUgYW5kIHZlcnkgc3RyYWlnaHQgZm9y
-d2FyZC4uIGkgZG9uJ3QgZXhwZWN0IGFueSBpc3N1ZQ0Kd2l0aCB0aGlzLg0KDQpQbGVhc2UgcHJv
-dmlkZSBhIHByb3BlciAiRml4ZXM6IiB0YWcgYW5kIHJlc3VibWl0IHRvIG5ldCB3aXRob3V0IHRo
-ZQ0KW1JGQ10uDQoNClRoYW5rcw0K
+
+On 4/8/20 11:58 AM, Sowjanya Komatineni wrote:
+>
+> On 4/8/20 10:45 AM, Sowjanya Komatineni wrote:
+>>
+>> On 4/8/20 7:21 AM, Dmitry Osipenko wrote:
+>>> External email: Use caution opening links or attachments
+>>>
+>>>
+>>> 08.04.2020 03:00, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+>>> ...
+>>>>>>>> I suppose that taking a shot takes at least few milliseconds,=20
+>>>>>>>> which
+>>>>>>>> should be unacceptable to waste.
+>>>>>>> As long as buffers are in queue we have to keep processing each
+>>>>>>> buffer and between buffers obviously we have to wait for previous
+>>>>>>> frames to finish and this why we have separate thread for frame
+>>>>>>> finish where we can have next buffer capture ready and issue while
+>>>>>>> previous frame memory write happens
+>>>>> Also we specified numbers buffers as 3 to vb2 queue. So this is rare
+>>>>> case but to prevent issuing more than 2 at a time as VI HW is only
+>>>>> double buffered and syncpt fifo max depth is 2 added this to be=20
+>>>>> safer.
+>>>> To be more clear, when more buffers are enqueued from userspace always
+>>>> capture list will be full and thread will be busy in capture till=20
+>>>> either
+>>>> error or stop stream request happens.
+>>>>
+>>> If kthreads take more than 1% of CPU time during capture (video) with
+>>> more than 2 buffers in queue, then it's not good and I think you should
+>>> do something about it. If kthreads stay at ~0%, then it should be okay
+>>> as-is.
+>>
+>> VI outstanding requests max can only be 2=C2=A0 as syncpt fifo depth is =
+2=C2=A0=20
+>> and waiting to issue next capture when already 2 captures are=20
+>> inflight happens only during beginning of streaming where buffers=20
+>> allocated go thru capture for first time after queuing.
+>>
+>> same buffers are returned to userspace after capture and same=20
+>> allocated buffers will be queued back for subsequent captures.
+>>
+>> So this case of holding to issue single shot when already single shot=20
+>> is issue for 2 frames simultaneous happens only during beginning of=20
+>> start stream and also we set num_buffers to allocate for queue as 3=20
+>> although 2 is good enough where we will not hit this case even during=20
+>> streaming start with 2 buffers
+>>
+> As 2 buffers are good enough to be clear will update in v7 to use 2=20
+> buffers so we don't need to check for more than 2 outstanding buffers.
+
+correction: With 3 buffers, as soon as buffer is available capture=20
+starts. So right most times I see it waiting for few ms before 3rd=20
+capture to get through.
+
+As only 2 frames single shot can be issued in sequence (inflight=20
+requests), instead of waiting for 1 of the request to finish, we can use=20
+2 buffers and avoid waiting as 2 buffers are good enough. Will change=20
+this in v7.
+
+
+
