@@ -2,96 +2,161 @@ Return-Path: <SRS0=8dav=5Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5BA7C2D0EA
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 15:58:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58F50C2D0EA
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 15:59:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8220220769
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 15:58:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3032E2082D
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 15:59:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="TVULhxZv"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="wrsywjVM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730060AbgDHP6y (ORCPT
+        id S1730069AbgDHP73 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Apr 2020 11:58:54 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:48033 "EHLO pegase1.c-s.fr"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729789AbgDHP6y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Apr 2020 11:58:54 -0400
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 48y88V6Pc2z9v1H5;
-        Wed,  8 Apr 2020 17:58:50 +0200 (CEST)
-Authentication-Results: localhost; dkim=pass
-        reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=TVULhxZv; dkim-adsp=pass;
-        dkim-atps=neutral
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id N7YYW_kaFFbe; Wed,  8 Apr 2020 17:58:50 +0200 (CEST)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 48y88V4wYkz9v1H0;
-        Wed,  8 Apr 2020 17:58:50 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1586361530; bh=SSLdeS8jfMrpRRTIZEZS17MpZ133uX84ktpTVXBDtCg=;
-        h=From:Subject:To:Cc:Date:From;
-        b=TVULhxZvLlDYNB5L6uZv00xd22hUZ2dA+0stSCVDIWeqMFFOnmHF9qflDH158mpSN
-         3MkOJzDLZ/cRuqeBETWhaD9sRiificlHsKZ2lC5SxMj8r0EktnzpcajifsJkJlwFZE
-         m9CMIfSvL79Dx09zlBF9hnHk5L7ZlyDE1VZHV4VY=
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id D0E168B7A0;
-        Wed,  8 Apr 2020 17:58:51 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id N4nKQRmSnhYP; Wed,  8 Apr 2020 17:58:51 +0200 (CEST)
-Received: from pc16570vm.idsi0.si.c-s.fr (unknown [192.168.4.90])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 901FC8B78D;
-        Wed,  8 Apr 2020 17:58:50 +0200 (CEST)
-Received: by pc16570vm.idsi0.si.c-s.fr (Postfix, from userid 0)
-        id 040AC6574F; Wed,  8 Apr 2020 15:58:49 +0000 (UTC)
-Message-Id: <2c50f3b1c9bbaa4217c9a98f3044bd2a36c46a4f.1586361277.git.christophe.leroy@c-s.fr>
-From:   Christophe Leroy <christophe.leroy@c-s.fr>
-Subject: [PATCH] powerpc/kasan: Fix stack overflow by increasing THREAD_SHIFT
-To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>, <erhard_f@mailbox.org>
-Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-Date:   Wed,  8 Apr 2020 15:58:49 +0000 (UTC)
+        Wed, 8 Apr 2020 11:59:29 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:53892 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729889AbgDHP73 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Apr 2020 11:59:29 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 038FeCWe088049;
+        Wed, 8 Apr 2020 15:59:14 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2020-01-29;
+ bh=suh6+9x2SWoNOKBwtEAB3+9V2UZtf1WztxESTUhqu6o=;
+ b=wrsywjVMFNZaYrCXazXnVXP8D+CoQwH9XkRTuyTZkudYdsaAgEuZG4CyffxoIJIWRV62
+ nfZvYRgQ7HRr2ZbP+nJeEVPjL15x2A9DKg5DKQ+fAm54yJRJsyiLL6uloVENDDMV4b64
+ WLF3xr4RpcEQ3Zv8pptjHOgqx1MWOLR14ndOk/HUNJEflIWGtyF8hC0Zkg496VNejuCB
+ eJhI3WwyG30MI+Lqrnb61V0Q4lNuaAO5vvzQXlr1lRWH8HE3SvBFHVkjsArlDN39s1IS
+ lxSUdhnfwz6C/B/nX8n8HoJ/E4HIvHFYRtCLs0Zc66pf2iF7Kt2gOvF5/5swP30PT9aw Zw== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by userp2130.oracle.com with ESMTP id 3091m3cfc2-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 08 Apr 2020 15:59:14 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 038FbeuQ062359;
+        Wed, 8 Apr 2020 15:59:13 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by aserp3020.oracle.com with ESMTP id 3091m4afq7-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 08 Apr 2020 15:59:13 +0000
+Received: from abhmp0013.oracle.com (abhmp0013.oracle.com [141.146.116.19])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 038FxAbK000743;
+        Wed, 8 Apr 2020 15:59:10 GMT
+Received: from linux-1.home (/92.157.90.160)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Wed, 08 Apr 2020 08:59:10 -0700
+Subject: Re: [PATCH V2 5/9] objtool: Add support for intra-function calls
+To:     Julien Thierry <jthierry@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>
+Cc:     x86@kernel.org, linux-kernel@vger.kernel.org, jpoimboe@redhat.com,
+        tglx@linutronix.de
+References: <20200407073142.20659-1-alexandre.chartre@oracle.com>
+ <20200407073142.20659-6-alexandre.chartre@oracle.com>
+ <20200407130729.GZ20730@hirez.programming.kicks-ass.net>
+ <40b19a8e-ae5e-623e-fb3f-261f9fec2ea5@oracle.com>
+ <7ba6d4c9-c1dc-fa83-2ade-b7d3fba9e7fb@oracle.com>
+ <b8d4777e-1c33-7165-33f6-f32007ef7305@redhat.com>
+From:   Alexandre Chartre <alexandre.chartre@oracle.com>
+Message-ID: <cb04c823-3b93-4fe3-9d78-17040b802f82@oracle.com>
+Date:   Wed, 8 Apr 2020 18:03:35 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.0
+MIME-Version: 1.0
+In-Reply-To: <b8d4777e-1c33-7165-33f6-f32007ef7305@redhat.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9584 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 bulkscore=0 mlxscore=0
+ malwarescore=0 spamscore=0 adultscore=0 suspectscore=0 mlxlogscore=999
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
+ definitions=main-2004080124
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9584 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 adultscore=0
+ impostorscore=0 malwarescore=0 lowpriorityscore=0 mlxlogscore=999
+ priorityscore=1501 clxscore=1015 bulkscore=0 phishscore=0 mlxscore=0
+ suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2004080124
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When CONFIG_KASAN is selected, the stack usage is increased.
 
-In the same way as x86 and arm64 architectures, increase
-THREAD_SHIFT when CONFIG_KASAN is selected.
 
-Fixes: 2edb16efc899 ("powerpc/32: Add KASAN support")
-Link: https://bugzilla.kernel.org/show_bug.cgi?id=207129
-Reported-by: <erhard_f@mailbox.org>
-Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
----
- arch/powerpc/Kconfig | 1 +
- 1 file changed, 1 insertion(+)
+On 4/8/20 4:19 PM, Julien Thierry wrote:
+> 
+> 
+> On 4/8/20 3:06 PM, Alexandre Chartre wrote:
+>>
+>>
+>> On 4/7/20 3:28 PM, Alexandre Chartre wrote:
+>>>
+>>> On 4/7/20 3:07 PM, Peter Zijlstra wrote:
+>>>> On Tue, Apr 07, 2020 at 09:31:38AM +0200, Alexandre Chartre wrote:
+>>>>
+>>>>> index a62e032863a8..7ee1561bf7ad 100644
+>>>>> --- a/tools/objtool/arch/x86/decode.c
+>>>>> +++ b/tools/objtool/arch/x86/decode.c
+>>>>> @@ -497,3 +497,15 @@ void arch_initial_func_cfi_state(struct cfi_state *state)
+>>>>>       state->regs[16].base = CFI_CFA;
+>>>>>       state->regs[16].offset = -8;
+>>>>>   }
+>>>>> +
+>>>>> +
+>>>>> +void arch_configure_intra_function_call(struct stack_op *op)
+>>>>> +{
+>>>>> +    /*
+>>>>> +     * For the impact on the stack, make an intra-function
+>>>>> +     * call behaves like a push of an immediate value (the
+>>>>> +     * return address).
+>>>>> +     */
+>>>>> +    op->src.type = OP_SRC_CONST;
+>>>>> +    op->dest.type = OP_DEST_PUSH;
+>>>>> +}
+>>>>
+>>>> An alternative is to always set up stack ops for CALL/RET on decode, but
+>>>> conditionally run update_insn_state() for them.
+>>>>
+>>>> Not sure that makes more logical sense, but the patch would be simpler I
+>>>> think.
+>>>
+>>> Right, this would avoid adding a new arch dependent function and the patch
+>>> will be simpler. This probably makes sense as the stack impact is the same
+>>> for all calls (but objtool will use it only for intra-function calls).
+>>>
+>>
+>> Actually the processing of the ret instruction is more complicated than I
+>> anticipated with intra-function calls, and so my implementation is not
+>> complete at the moment.
+>>
+>> The issue is to correctly handle how the ret is going to behave depending how
+>> the stack (or register on arm) is modified before the ret. Adjusting the stack
+>> offset makes the stack state correct, but objtool still needs to correctly
+>> figure out where the ret is going to return and where the code flow continues.
+>>
+> 
+> A hint indicating the target "jump" address could be useful. It could
+> be used to add the information on some call/jump dynamic that aren't
+> associated with jump tables. Currently when objtool finds a jump
+> dynamic, if no branches were added to it, it will just return.
+> 
+> Having such a hint could help make additional links (at least on
+> arm64). I don't know what Peter and Josh would think of that (if that
+> helps in your case of course).
+> 
 
-diff --git a/arch/powerpc/Kconfig b/arch/powerpc/Kconfig
-index 05d20a8d6581..4444511f9bbc 100644
---- a/arch/powerpc/Kconfig
-+++ b/arch/powerpc/Kconfig
-@@ -771,6 +771,7 @@ config THREAD_SHIFT
- 	range 13 15
- 	default "15" if PPC_256K_PAGES
- 	default "14" if PPC64
-+	default "14" if KASAN
- 	default "13"
- 	help
- 	  Used to define the stack size. The default is almost always what you
--- 
-2.25.0
+Yes, I am thinking about tracking intra-function call return address,
+and having hints to specify a return address changes. For example,
+on x86, when we push the branch address on the stack we overwrite the
+last return address (the return address of the last intra-function call).
+Then the return instruction can figure out where to branch.
 
+alex.
