@@ -2,231 +2,85 @@ Return-Path: <SRS0=8dav=5Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7FF2C2BA1A
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 11:11:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DF44C2D0EA
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 11:11:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5303D2076D
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 11:11:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D7A0D20787
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 11:11:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="R9mQfxu8"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="qL3pjtMb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728363AbgDHLLa (ORCPT
+        id S1728375AbgDHLLd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Apr 2020 07:11:30 -0400
-Received: from mail26.static.mailgun.info ([104.130.122.26]:30757 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728259AbgDHLLa (ORCPT
+        Wed, 8 Apr 2020 07:11:33 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:56874 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728129AbgDHLLc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Apr 2020 07:11:30 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1586344289; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=s31QthLf6r+zfbdeoTdO3eyLBgdOQ87W4bOKtHkgFYk=; b=R9mQfxu82/X9j/1r4bHvXoeZvLA2UG6FhECjHT/8HKKYyexnRxv1Pg4lDDliXJtIYkts3Xgz
- nE5JvmYE+DR1FtpBiyV0+l8lO53JwwMbOQqeIfhullQth26531o/wRrEZ13vKZdrl9Dwspfx
- kQMkGaE7Kc/N+Lwbyu+Iid9eBBk=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e8db155.7f70bdcad7a0-smtp-out-n04;
- Wed, 08 Apr 2020 11:11:17 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id E9235C43636; Wed,  8 Apr 2020 11:11:17 +0000 (UTC)
-Received: from [192.168.43.137] (unknown [106.213.202.231])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: mkshah)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id E99F4C433D2;
-        Wed,  8 Apr 2020 11:11:12 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org E99F4C433D2
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=mkshah@codeaurora.org
-Subject: Re: [PATCH v3 05/10] drivers: qcom: rpmh-rsc: Kill cmd_cache and
- find_match() with fire
-To:     Douglas Anderson <dianders@chromium.org>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     mka@chromium.org, Lina Iyer <ilina@codeaurora.org>,
-        Rajendra Nayak <rnayak@codeaurora.org>, swboyd@chromium.org,
-        evgreen@chromium.org, linux-arm-msm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20200407235024.260460-1-dianders@chromium.org>
- <20200407164915.v3.5.I6d3d0a3ec810dc72ff1df3cbf97deefdcdeb8eef@changeid>
-From:   Maulik Shah <mkshah@codeaurora.org>
-Message-ID: <c7bf0ecb-414c-bb6e-1bc3-1d2430249b54@codeaurora.org>
-Date:   Wed, 8 Apr 2020 16:41:09 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Wed, 8 Apr 2020 07:11:32 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=CGYxPY0UmZ+KsvjUaaa1RrlD6l1Y5r/qTWBeIw/gLCU=; b=qL3pjtMbis9rU768jBizcb/Iy5
+        lkgPZ7sOpK/DsPBuKBnqJPwEoh7EzhRMARN9MxfFoYYI+3cRY8PVXlVrCrA0udfxR5EDjqMc0V+re
+        nLC3SDkLS8Utb2VXyecpgZfXVUU5LMrwtS04bHrIHbiRDeITZiyVdGtK48rrTsO5hjWT0m0UeuXg1
+        tqHJFc/BZHLjSBL8q/xUAIWPg4h93yY40YdgaGCVageZbXlihC5CmwwZiGswbW56qbS7qUjqaFCUs
+        xSCtdr8d62RmcMAbt4O+MdMpNnruGMaaKjQTvSpcNi0aZG7iWT2tmw1b7zea1c4rmvcajFYLhz76g
+        i4M6h/2g==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jM8c8-0005fM-F0; Wed, 08 Apr 2020 11:11:24 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id C0CD1300130;
+        Wed,  8 Apr 2020 13:11:22 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id AC0CC2B120793; Wed,  8 Apr 2020 13:11:22 +0200 (CEST)
+Date:   Wed, 8 Apr 2020 13:11:22 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Ankur Arora <ankur.a.arora@oracle.com>
+Cc:     linux-kernel@vger.kernel.org, x86@kernel.org, hpa@zytor.com,
+        jpoimboe@redhat.com, namit@vmware.com, mhiramat@kernel.org,
+        jgross@suse.com, bp@alien8.de, vkuznets@redhat.com,
+        pbonzini@redhat.com, boris.ostrovsky@oracle.com,
+        mihai.carabas@oracle.com, kvm@vger.kernel.org,
+        xen-devel@lists.xenproject.org,
+        virtualization@lists.linux-foundation.org
+Subject: Re: [RFC PATCH 14/26] x86/alternatives: Handle native insns in
+ text_poke_loc*()
+Message-ID: <20200408111122.GT20713@hirez.programming.kicks-ass.net>
+References: <20200408050323.4237-1-ankur.a.arora@oracle.com>
+ <20200408050323.4237-15-ankur.a.arora@oracle.com>
 MIME-Version: 1.0
-In-Reply-To: <20200407164915.v3.5.I6d3d0a3ec810dc72ff1df3cbf97deefdcdeb8eef@changeid>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-GB
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200408050323.4237-15-ankur.a.arora@oracle.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Tue, Apr 07, 2020 at 10:03:11PM -0700, Ankur Arora wrote:
+>  struct text_poke_loc {
+>  	s32 rel_addr; /* addr := _stext + rel_addr */
+> -	s32 rel32;
+> -	u8 opcode;
+> +	union {
+> +		struct {
+> +			s32 rel32;
+> +			u8 opcode;
+> +		} emulated;
+> +		struct {
+> +			u8 len;
+> +		} native;
+> +	};
+>  	const u8 text[POKE_MAX_OPCODE_SIZE];
+>  };
 
-Reviewed-by: Maulik Shah <mkshah@codeaurora.org>
-Tested-by: Maulik Shah <mkshah@codeaurora.org>
-
-Thanks,
-Maulik
-
-On 4/8/2020 5:20 AM, Douglas Anderson wrote:
-> The "cmd_cache" in RPMH wasn't terribly sensible.  Specifically:
->
-> - The current code doesn't realy detect "conflicts" properly any case
->    where the sequence being checked has more than one entry.  One
->    simple way to see this in the current code is that if cmd[0].addr
->    isn't found that cmd[1].addr is never checked.
-> - The code attempted to use the "cmd_cache" to update an existing
->    message in a sleep/wake TCS with new data.  The goal appeared to be
->    to update part of a TCS while leaving the rest of the TCS alone.  We
->    never actually do this.  We always fully invalidate and re-write
->    everything.
-> - If/when we try to optimize things to not fully invalidate / re-write
->    every time we update the TCSes we'll need to think it through very
->    carefully.  Specifically requirement of find_match() that the new
->    sequence of addrs must match exactly the old sequence of addrs seems
->    inflexible.  It's also not documented in rpmh_write() and
->    rpmh_write_batch().  In any case, if we do decide to require updates
->    to keep the exact same sequence and length then presumably the API
->    and data structures should be updated to understand groups more
->    properly.  The current algorithm doesn't really keep track of the
->    length of the old sequence and there are several boundary-condition
->    bugs because of that.  Said another way: if we decide to do
->    something like this in the future we should start from scratch and
->    thus find_match() isn't useful to keep around.
->
-> This patch isn't quite a no-op.  Specifically:
->
-> - It should be a slight performance boost of not searching through so
->    many arrays.
-> - The old code would have done something useful in one case: it would
->    allow someone calling rpmh_write() to override the data that came
->    from rpmh_write_batch().  I don't believe that actually happens in
->    reality.
->
-> Signed-off-by: Douglas Anderson <dianders@chromium.org>
-> ---
->
-> Changes in v3:
-> - Kill find_match moves from patch #9 to patch #5 (Maulik).
-> - Rewrote commit message to adjust for patch order.
->
-> Changes in v2:
-> - Got rid of useless "if (x) continue" at end of for loop.
->
->   drivers/soc/qcom/rpmh-internal.h |  2 --
->   drivers/soc/qcom/rpmh-rsc.c      | 47 --------------------------------
->   2 files changed, 49 deletions(-)
->
-> diff --git a/drivers/soc/qcom/rpmh-internal.h b/drivers/soc/qcom/rpmh-internal.h
-> index e9a90cb7773e..6a6d776ccca9 100644
-> --- a/drivers/soc/qcom/rpmh-internal.h
-> +++ b/drivers/soc/qcom/rpmh-internal.h
-> @@ -30,7 +30,6 @@ struct rsc_drv;
->    * @ncpt:      number of commands in each TCS
->    * @lock:      lock for synchronizing this TCS writes
->    * @req:       requests that are sent from the TCS
-> - * @cmd_cache: flattened cache of cmds in sleep/wake TCS
->    * @slots:     indicates which of @cmd_addr are occupied
->    */
->   struct tcs_group {
-> @@ -42,7 +41,6 @@ struct tcs_group {
->   	int ncpt;
->   	spinlock_t lock;
->   	const struct tcs_request *req[MAX_TCS_PER_TYPE];
-> -	u32 *cmd_cache;
->   	DECLARE_BITMAP(slots, MAX_TCS_SLOTS);
->   };
->   
-> diff --git a/drivers/soc/qcom/rpmh-rsc.c b/drivers/soc/qcom/rpmh-rsc.c
-> index 855a1dab7718..da1045c92b38 100644
-> --- a/drivers/soc/qcom/rpmh-rsc.c
-> +++ b/drivers/soc/qcom/rpmh-rsc.c
-> @@ -522,42 +522,12 @@ int rpmh_rsc_send_data(struct rsc_drv *drv, const struct tcs_request *msg)
->   	return ret;
->   }
->   
-> -static int find_match(const struct tcs_group *tcs, const struct tcs_cmd *cmd,
-> -		      int len)
-> -{
-> -	int i, j;
-> -
-> -	/* Check for already cached commands */
-> -	for_each_set_bit(i, tcs->slots, MAX_TCS_SLOTS) {
-> -		if (tcs->cmd_cache[i] != cmd[0].addr)
-> -			continue;
-> -		if (i + len >= tcs->num_tcs * tcs->ncpt)
-> -			goto seq_err;
-> -		for (j = 0; j < len; j++) {
-> -			if (tcs->cmd_cache[i + j] != cmd[j].addr)
-> -				goto seq_err;
-> -		}
-> -		return i;
-> -	}
-> -
-> -	return -ENODATA;
-> -
-> -seq_err:
-> -	WARN(1, "Message does not match previous sequence.\n");
-> -	return -EINVAL;
-> -}
-> -
->   static int find_slots(struct tcs_group *tcs, const struct tcs_request *msg,
->   		      int *tcs_id, int *cmd_id)
->   {
->   	int slot, offset;
->   	int i = 0;
->   
-> -	/* Find if we already have the msg in our TCS */
-> -	slot = find_match(tcs, msg->cmds, msg->num_cmds);
-> -	if (slot >= 0)
-> -		goto copy_data;
-> -
->   	/* Do over, until we can fit the full payload in a TCS */
->   	do {
->   		slot = bitmap_find_next_zero_area(tcs->slots, MAX_TCS_SLOTS,
-> @@ -567,11 +537,7 @@ static int find_slots(struct tcs_group *tcs, const struct tcs_request *msg,
->   		i += tcs->ncpt;
->   	} while (slot + msg->num_cmds - 1 >= i);
->   
-> -copy_data:
->   	bitmap_set(tcs->slots, slot, msg->num_cmds);
-> -	/* Copy the addresses of the resources over to the slots */
-> -	for (i = 0; i < msg->num_cmds; i++)
-> -		tcs->cmd_cache[slot + i] = msg->cmds[i].addr;
->   
->   	offset = slot / tcs->ncpt;
->   	*tcs_id = offset + tcs->offset;
-> @@ -763,19 +729,6 @@ static int rpmh_probe_tcs_config(struct platform_device *pdev,
->   		tcs->mask = ((1 << tcs->num_tcs) - 1) << st;
->   		tcs->offset = st;
->   		st += tcs->num_tcs;
-> -
-> -		/*
-> -		 * Allocate memory to cache sleep and wake requests to
-> -		 * avoid reading TCS register memory.
-> -		 */
-> -		if (tcs->type == ACTIVE_TCS)
-> -			continue;
-> -
-> -		tcs->cmd_cache = devm_kcalloc(&pdev->dev,
-> -					      tcs->num_tcs * ncpt, sizeof(u32),
-> -					      GFP_KERNEL);
-> -		if (!tcs->cmd_cache)
-> -			return -ENOMEM;
->   	}
->   
->   	drv->num_tcs = st;
-
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
+NAK, this grows the structure from 16 to 20 bytes.
