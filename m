@@ -2,149 +2,103 @@ Return-Path: <SRS0=8dav=5Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D970C2D0EC
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 00:05:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AFE5C2BB54
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 00:05:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 81B5D2054F
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 00:05:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EA3F42054F
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 00:05:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726534AbgDHAFR (ORCPT
+        id S1726555AbgDHAFi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 20:05:17 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:45468 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726416AbgDHAFQ (ORCPT
+        Tue, 7 Apr 2020 20:05:38 -0400
+Received: from mail104.syd.optusnet.com.au ([211.29.132.246]:59319 "EHLO
+        mail104.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726444AbgDHAFh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Apr 2020 20:05:16 -0400
-Received: from [IPv6:2804:431:e7cc:377d:dcf4:aab0:a7bd:9880] (unknown [IPv6:2804:431:e7cc:377d:dcf4:aab0:a7bd:9880])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: koike)
-        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id 688EF284F73;
-        Wed,  8 Apr 2020 01:05:09 +0100 (BST)
-Subject: Re: [PATCH v2 0/3] media: add v4l2_pipeline_stream_{enable,disable}
- helpers
-To:     =?UTF-8?Q?Niklas_S=c3=b6derlund?= <niklas.soderlund@ragnatech.se>
-Cc:     linux-media@vger.kernel.org, kernel@collabora.com,
-        linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org,
-        hans.verkuil@cisco.com, skhan@linuxfoundation.org,
-        mchehab@kernel.org
-References: <20200403213312.1863876-1-helen.koike@collabora.com>
- <20200407193615.GG1716317@oden.dyn.berto.se>
-From:   Helen Koike <helen.koike@collabora.com>
-Message-ID: <4be824ea-61e2-4624-4880-fccb4ff804cd@collabora.com>
-Date:   Tue, 7 Apr 2020 21:05:03 -0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Tue, 7 Apr 2020 20:05:37 -0400
+Received: from dread.disaster.area (pa49-180-164-3.pa.nsw.optusnet.com.au [49.180.164.3])
+        by mail104.syd.optusnet.com.au (Postfix) with ESMTPS id 48A2D7EC2A3;
+        Wed,  8 Apr 2020 10:05:34 +1000 (AEST)
+Received: from dave by dread.disaster.area with local (Exim 4.92.3)
+        (envelope-from <david@fromorbit.com>)
+        id 1jLyDl-0005kJ-FE; Wed, 08 Apr 2020 10:05:33 +1000
+Date:   Wed, 8 Apr 2020 10:05:33 +1000
+From:   Dave Chinner <david@fromorbit.com>
+To:     ira.weiny@intel.com
+Cc:     linux-kernel@vger.kernel.org,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Christoph Hellwig <hch@lst.de>,
+        "Theodore Y. Ts'o" <tytso@mit.edu>, Jan Kara <jack@suse.cz>,
+        Jeff Moyer <jmoyer@redhat.com>, linux-ext4@vger.kernel.org,
+        linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH V6 5/8] fs/xfs: Create function xfs_inode_enable_dax()
+Message-ID: <20200408000533.GG24067@dread.disaster.area>
+References: <20200407182958.568475-1-ira.weiny@intel.com>
+ <20200407182958.568475-6-ira.weiny@intel.com>
 MIME-Version: 1.0
-In-Reply-To: <20200407193615.GG1716317@oden.dyn.berto.se>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200407182958.568475-6-ira.weiny@intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Optus-CM-Score: 0
+X-Optus-CM-Analysis: v=2.3 cv=LYdCFQXi c=1 sm=1 tr=0
+        a=K0+o7W9luyMo1Ua2eXjR1w==:117 a=K0+o7W9luyMo1Ua2eXjR1w==:17
+        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=cl8xLZFz6L8A:10
+        a=QyXUC8HyAAAA:8 a=7-415B0cAAAA:8 a=85zGKsAm-IAguE7VF_oA:9
+        a=CjuIK1q_8ugA:10 a=biEYGPWJfzWAr4FL6Ov7:22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 4/7/20 4:36 PM, Niklas Söderlund wrote:
-> Hi Helen,
+On Tue, Apr 07, 2020 at 11:29:55AM -0700, ira.weiny@intel.com wrote:
+> From: Ira Weiny <ira.weiny@intel.com>
 > 
-> On 2020-04-03 18:33:09 -0300, Helen Koike wrote:
->> Hi,
->>
->> Media drivers need to iterate through the pipeline and call .s_stream()
->> callbacks in the subdevices.
->>
->> Instead of repeating code, add helpers for this.
->>
->> These helpers will go walk through the pipeline only visiting entities
->> that participates in the stream, i.e. it follows links from sink to source
->> (and not the opposite).
->>
->> Which means that in a topology like this https://bit.ly/3b2MxjI
->> calling v4l2_pipeline_stream_enable() from rkisp1_mainpath won't call
->> .s_stream(true) for rkisp1_resizer_selfpath.
->>
->> stream_count variable was added in v4l2_subdevice to handle nested calls
->> to the helpers.
->> This is useful when the driver allows streaming from more then one
->> capture device sharing subdevices.
->>
->> This patch came from the error I was facing when multistreaming from
->> rkisp1 driver, where stoping one capture would call s_stream(false) in
->> the pipeline, causing a stall in the second capture device.
->>
->> Also, the vimc patch https://patchwork.kernel.org/patch/10948833/ won't
->> be required with this patchset.
->>
->> This patchset was tested on rkisp1 and vimc drivers.
+> xfs_inode_supports_dax() should reflect if the inode can support DAX not
+> that it is enabled for DAX.
 > 
-> I'm just curious, with this series applied can I stream simultaneously 
-> on multiple video devises using vimc?
-
-No, this patch only removes the requirement of patch 1/3 in the series
-"vimc: Allow multiple capture devices to use the same sensor", since the counter
-is being added in the core, so it won't be required to add it for each subdevice.
-The other patches in that series are still required.
-
-
-Regards,
-Helen
-
+> Change the use of xfs_inode_supports_dax() to reflect only if the inode
+> and underlying storage support dax.
 > 
->>
->> Other cleanup might be possible (but I won't add in this patchset as I
->> don't have the hw to test):
->> 	https://git.linuxtv.org/media_tree.git/tree/drivers/media/platform/qcom/camss/camss-video.c#n430
->> 	https://git.linuxtv.org/media_tree.git/tree/drivers/media/platform/omap3isp/isp.c#n697
->> 	https://git.linuxtv.org/media_tree.git/tree/drivers/media/platform/stm32/stm32-dcmi.c#n680
->> 	https://git.linuxtv.org/media_tree.git/tree/drivers/media/platform/xilinx/xilinx-dma.c#n97
->>
->> Changes in V2:
->> ====================
->> The first version was calling the s_stream() callbacks from sensor to
->> capture.
->>
->> This was generating errors in the Scarlet Chromebook, when the sensor
->> was being enabled before the ISP.
->>
->> It make sense to enable subdevices from capture to sensor instead (which
->> is what most drivers do already).
->>
->> This v2 drops the changes from mc-entity.c, and re-implement helpers in
->> v4l2-common.c
->>
->> Overview of patches:
->> ====================
->>
->> Path 1/3 adds the helpers in v4l2-common.c, allowing nested calls by
->> adding stream_count in the subdevice struct.
->>
->> Patch 2/3 cleanup rkisp1 driver to use the helpers.
->>
->> Patch 3/3 cleanup vimc driver to use the helpers.
->>
->> Helen Koike (3):
->>   media: v4l2-common: add helper functions to call s_stream() callbacks
->>   media: staging: rkisp1: use v4l2_pipeline_stream_{enable,disable}
->>     helpers
->>   media: vimc: use v4l2_pipeline_stream_{enable,disable} helpers
->>
->>  drivers/media/platform/vimc/vimc-capture.c    |  28 +++--
->>  drivers/media/platform/vimc/vimc-streamer.c   |  49 +-------
->>  drivers/media/v4l2-core/v4l2-common.c         | 117 ++++++++++++++++++
->>  drivers/staging/media/rkisp1/rkisp1-capture.c |  76 +-----------
->>  include/media/v4l2-common.h                   |  28 +++++
->>  include/media/v4l2-subdev.h                   |   2 +
->>  6 files changed, 173 insertions(+), 127 deletions(-)
->>
->> -- 
->> 2.26.0
->>
+> Add a new function xfs_inode_enable_dax() which reflects if the inode
+> should be enabled for DAX.
 > 
+> Signed-off-by: Ira Weiny <ira.weiny@intel.com>
+....
+>  
+> +STATIC bool
+> +xfs_inode_enable_dax(
+> +	struct xfs_inode *ip)
+> +{
+> +	u32 dax_mode = xfs_mount_dax_mode(ip->i_mount);
+> +
+> +	if (dax_mode == XFS_DAX_NEVER || !xfs_inode_supports_dax(ip))
+> +		return false;
+> +	if (dax_mode == XFS_DAX_ALWAYS || ip->i_d.di_flags2 & XFS_DIFLAG2_DAX)
+> +		return true;
+
+These compound || statements are better written as single conditions
+as they are all sequential logic checks and we can't skip over
+checks.
+
+	if (mp->m_flags & XFS_MOUNT_DAX_NEVER)
+		return false;
+	if (!xfs_inode_supports_dax(ip))
+		return false;
+	if (mp->m_flags & XFS_MOUNT_DAX_ALWAYS)
+		return true;
+	if (ip->i_d.di_flags2 & XFS_DIFLAG2_DAX)
+		return true;
+	return false;
+
+Cheers,
+
+Dave.
+-- 
+Dave Chinner
+david@fromorbit.com
