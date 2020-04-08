@@ -4,52 +4,56 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EB43C2BA2B
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 15:47:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC44AC2BA1A
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 15:47:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6830720787
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 15:47:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 97003206F5
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 15:47:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586360829;
-	bh=i3VqmDuLd/n3AsiTO35YTokWcu5+ERCRSqkQNYVNlZI=;
+	s=default; t=1586360835;
+	bh=LQ1AB7uAXbAwFOOYknVy0Mvjy9Vm+u/u7LD9snOopLU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YMB670cIFALGuwL++pNYOl74JeAn4RUKSr8lxE4qu/wKmMZXvXxJB/0QvhurpPAAx
-	 CRAHzfx0n1zt5aSZ6OjeuDrU5nYHOxMmTbMGmS14PKXECPHIGQ6DQ7VbcEEzcXcF9p
-	 GgjCXvkBkuWitBCcu3hfjE9Jw3pm0TSG4ytuq2Z8=
+	b=xnj6H3UheY8Dm9KZ4ZQLMbQOPP6Na1NA17PiXg4x+Lo7GbkB1VFt9WZhzebmDe4Vv
+	 tZ4YcsJT5+J2Eau0aK2tEppdUqwr3mNdgaYgzy4VvDpZe+TAeaXZ0QNUfK+aSPBs0l
+	 uVRiRmh7vn21MgNfg6eGxypruXBPtPeBUB5JcaPk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729809AbgDHPrI (ORCPT
+        id S1729836AbgDHPrO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Apr 2020 11:47:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49522 "EHLO mail.kernel.org"
+        Wed, 8 Apr 2020 11:47:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49552 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729703AbgDHPqd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1729693AbgDHPqd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 8 Apr 2020 11:46:33 -0400
 Received: from mail.kernel.org (ip5f5ad4d8.dynamic.kabel-deutschland.de [95.90.212.216])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 11229221F9;
-        Wed,  8 Apr 2020 15:46:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C974821D90;
+        Wed,  8 Apr 2020 15:46:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1586360792;
-        bh=i3VqmDuLd/n3AsiTO35YTokWcu5+ERCRSqkQNYVNlZI=;
+        bh=LQ1AB7uAXbAwFOOYknVy0Mvjy9Vm+u/u7LD9snOopLU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=s54V+P4U6AAJxn0p6r1WqQYfUIE1T58epdBzP5oK9nRBv/+MAyHmm8dIJ69bxmJin
-         vthRrKVqPsOUGhuVaOriG7p9hYmdOaeAZS7NbxJqbayuN4MYDU/p1dXIwLueHuZoXc
-         dLudP9OXO5v3WeTrka8UJdbAdgxLP0zA9PxWinCM=
+        b=Cd2++O+WPIQWFWzi8C0poVO/bZNC2rrB1Y06Qb7ZKqBsuGrywoWYrfNUziy9DE4Mv
+         H4SugkdldKynJUxyN+2f/1/fJbktC4rVzMYvybF1QMnMnNztxFl9af9mrswoyyY5EH
+         vlINSaxLC5cU0m7lL5hFizDba9y5It4XAMZKBSow=
 Received: from mchehab by mail.kernel.org with local (Exim 4.92.3)
         (envelope-from <mchehab@kernel.org>)
-        id 1jMCuM-000cCt-9g; Wed, 08 Apr 2020 17:46:30 +0200
+        id 1jMCuL-000cC6-UW; Wed, 08 Apr 2020 17:46:29 +0200
 From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
 Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
         linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        Wolfram Sang <wsa@the-dreams.de>, linux-i2c@vger.kernel.org
-Subject: [PATCH 33/35] docs: i2c: rename i2c.svg to i2c_bus.svg
-Date:   Wed,  8 Apr 2020 17:46:25 +0200
-Message-Id: <bb72db28b4b7d867555b345a49703fdca484957e.1586359676.git.mchehab+huawei@kernel.org>
+        Sathya Prakash <sathya.prakash@broadcom.com>,
+        Chaitra P B <chaitra.basappa@broadcom.com>,
+        Suganath Prabu Subramani 
+        <suganath-prabu.subramani@broadcom.com>,
+        MPT-FusionLinux.pdl@broadcom.com, linux-scsi@vger.kernel.org
+Subject: [PATCH 23/35] docs: fusion: mptbase.c: get rid of a doc build warning
+Date:   Wed,  8 Apr 2020 17:46:15 +0200
+Message-Id: <9ca049c2d25689c56448afddf4f0d1e619fa87f7.1586359676.git.mchehab+huawei@kernel.org>
 X-Mailer: git-send-email 2.25.2
 In-Reply-To: <cover.1586359676.git.mchehab+huawei@kernel.org>
 References: <cover.1586359676.git.mchehab+huawei@kernel.org>
@@ -60,49 +64,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When generating the PDF output, the Documentation/i2c dir
-will generate an i2c.pdf. The same happens with i2c.svg:
-it will also produce a file with the same name, at the same dir.
+Use a table for the enum list, to avoid this warning:
 
-This causes errors when building the PDF output. So, rename the
-image to i2c_bus.svg.
+	./drivers/message/fusion/mptbase.c:5058: WARNING: Definition list ends without a blank line; unexpected unindent.
 
 Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 ---
- Documentation/i2c/{i2c.svg => i2c_bus.svg} | 2 +-
- Documentation/i2c/summary.rst              | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
- rename Documentation/i2c/{i2c.svg => i2c_bus.svg} (99%)
+ drivers/message/fusion/mptbase.c | 8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
 
-diff --git a/Documentation/i2c/i2c.svg b/Documentation/i2c/i2c_bus.svg
-similarity index 99%
-rename from Documentation/i2c/i2c.svg
-rename to Documentation/i2c/i2c_bus.svg
-index 5979405ad1c3..3170de976373 100644
---- a/Documentation/i2c/i2c.svg
-+++ b/Documentation/i2c/i2c_bus.svg
-@@ -9,7 +9,7 @@
-    xmlns="http://www.w3.org/2000/svg"
-    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
-    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
--   sodipodi:docname="i2c.svg"
-+   sodipodi:docname="i2c_bus.svg"
-    inkscape:version="0.92.3 (2405546, 2018-03-11)"
-    version="1.1"
-    id="svg2"
-diff --git a/Documentation/i2c/summary.rst b/Documentation/i2c/summary.rst
-index ce7230025b33..136c4e333be7 100644
---- a/Documentation/i2c/summary.rst
-+++ b/Documentation/i2c/summary.rst
-@@ -34,7 +34,7 @@ Terminology
- Using the terminology from the official documentation, the I2C bus connects
- one or more *master* chips and one or more *slave* chips.
- 
--.. kernel-figure::  i2c.svg
-+.. kernel-figure::  i2c_bus.svg
-    :alt:    Simple I2C bus with one master and 3 slaves
- 
-    Simple I2C bus
+diff --git a/drivers/message/fusion/mptbase.c b/drivers/message/fusion/mptbase.c
+index c2dd322691d1..2ef6506a3bc5 100644
+--- a/drivers/message/fusion/mptbase.c
++++ b/drivers/message/fusion/mptbase.c
+@@ -5052,9 +5052,11 @@ GetLanConfigPages(MPT_ADAPTER *ioc)
+  *	@ioc: Pointer to MPT_ADAPTER structure
+  *	@persist_opcode: see below
+  *
+- *	MPI_SAS_OP_CLEAR_NOT_PRESENT - Free all persist TargetID mappings for
+- *		devices not currently present.
+- *	MPI_SAS_OP_CLEAR_ALL_PERSISTENT - Clear al persist TargetID mappings
++ * 	===============================  ======================================
++ *	MPI_SAS_OP_CLEAR_NOT_PRESENT     Free all persist TargetID mappings for
++ *					 devices not currently present.
++ *	MPI_SAS_OP_CLEAR_ALL_PERSISTENT  Clear al persist TargetID mappings
++ * 	===============================  ======================================
+  *
+  *	NOTE: Don't use not this function during interrupt time.
+  *
 -- 
 2.25.2
 
