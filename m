@@ -7,38 +7,43 @@ X-Spam-Status: No, score=-11.8 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B6A8C2D0EA
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 12:21:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A347C2BA1A
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 12:21:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EAFDD2076D
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 12:21:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 366A820BED
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 12:21:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728661AbgDHMVC (ORCPT
+        id S1728691AbgDHMVF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Apr 2020 08:21:02 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:49685 "EHLO
+        Wed, 8 Apr 2020 08:21:05 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:49687 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726780AbgDHMVB (ORCPT
+        with ESMTP id S1726760AbgDHMVC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Apr 2020 08:21:01 -0400
+        Wed, 8 Apr 2020 08:21:02 -0400
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1jM9hR-0006BX-3V; Wed, 08 Apr 2020 14:20:57 +0200
+        id 1jM9hR-0006Be-Ha; Wed, 08 Apr 2020 14:20:57 +0200
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id A9EB91C0131;
-        Wed,  8 Apr 2020 14:20:56 +0200 (CEST)
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 206F71C047B;
+        Wed,  8 Apr 2020 14:20:57 +0200 (CEST)
 Date:   Wed, 08 Apr 2020 12:20:56 -0000
-From:   "tip-bot2 for Peter Zijlstra" <tip-bot2@linutronix.de>
+From:   "tip-bot2 for Jann Horn" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: locking/urgent] locking/lockdep: Improve 'invalid wait context' splat
-Cc:     "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+Subject: [tip: locking/urgent] locking/refcount: Document interaction with
+ PID_MAX_LIMIT
+Cc:     Kees Cook <keescook@chromium.org>, Will Deacon <will@kernel.org>,
+        Jann Horn <jannh@google.com>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
         Ingo Molnar <mingo@kernel.org>, x86 <x86@kernel.org>,
         LKML <linux-kernel@vger.kernel.org>
+In-Reply-To: <20200303105427.260620-1-jannh@google.com>
+References: <20200303105427.260620-1-jannh@google.com>
 MIME-Version: 1.0
-Message-ID: <158634845623.28353.3377386291983303791.tip-bot2@tip-bot2>
+Message-ID: <158634845677.28353.8519164850978803726.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -54,102 +59,59 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the locking/urgent branch of tip:
 
-Commit-ID:     9a019db0b6bebc84d6b64636faf73ed6d64cd4bb
-Gitweb:        https://git.kernel.org/tip/9a019db0b6bebc84d6b64636faf73ed6d64cd4bb
-Author:        Peter Zijlstra <peterz@infradead.org>
-AuthorDate:    Tue, 31 Mar 2020 20:38:12 +02:00
+Commit-ID:     a13f58a0cafa7b0416a2898bc3b0defbb305d108
+Gitweb:        https://git.kernel.org/tip/a13f58a0cafa7b0416a2898bc3b0defbb305d108
+Author:        Jann Horn <jannh@google.com>
+AuthorDate:    Tue, 03 Mar 2020 11:54:27 +01:00
 Committer:     Ingo Molnar <mingo@kernel.org>
 CommitterDate: Wed, 08 Apr 2020 12:05:07 +02:00
 
-locking/lockdep: Improve 'invalid wait context' splat
+locking/refcount: Document interaction with PID_MAX_LIMIT
 
-The 'invalid wait context' splat doesn't print all the information
-required to reconstruct / validate the error, specifically the
-irq-context state is missing.
+Document the circumstances under which refcount_t's saturation mechanism
+works deterministically.
 
+Acked-by: Kees Cook <keescook@chromium.org>
+Acked-by: Will Deacon <will@kernel.org>
+Signed-off-by: Jann Horn <jannh@google.com>
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Link: https://lkml.kernel.org/r/20200303105427.260620-1-jannh@google.com
 ---
- kernel/locking/lockdep.c | 51 +++++++++++++++++++++++----------------
- 1 file changed, 31 insertions(+), 20 deletions(-)
+ include/linux/refcount.h | 23 ++++++++++++++++++-----
+ 1 file changed, 18 insertions(+), 5 deletions(-)
 
-diff --git a/kernel/locking/lockdep.c b/kernel/locking/lockdep.c
-index 1511690..ac10db6 100644
---- a/kernel/locking/lockdep.c
-+++ b/kernel/locking/lockdep.c
-@@ -3952,10 +3952,36 @@ static int mark_lock(struct task_struct *curr, struct held_lock *this,
- 	return ret;
- }
- 
-+static inline short task_wait_context(struct task_struct *curr)
-+{
-+	/*
-+	 * Set appropriate wait type for the context; for IRQs we have to take
-+	 * into account force_irqthread as that is implied by PREEMPT_RT.
-+	 */
-+	if (curr->hardirq_context) {
-+		/*
-+		 * Check if force_irqthreads will run us threaded.
-+		 */
-+		if (curr->hardirq_threaded || curr->irq_config)
-+			return LD_WAIT_CONFIG;
-+
-+		return LD_WAIT_SPIN;
-+	} else if (curr->softirq_context) {
-+		/*
-+		 * Softirqs are always threaded.
-+		 */
-+		return LD_WAIT_CONFIG;
-+	}
-+
-+	return LD_WAIT_MAX;
-+}
-+
- static int
- print_lock_invalid_wait_context(struct task_struct *curr,
- 				struct held_lock *hlock)
- {
-+	short curr_inner;
-+
- 	if (!debug_locks_off())
- 		return 0;
- 	if (debug_locks_silent)
-@@ -3971,6 +3997,10 @@ print_lock_invalid_wait_context(struct task_struct *curr,
- 	print_lock(hlock);
- 
- 	pr_warn("other info that might help us debug this:\n");
-+
-+	curr_inner = task_wait_context(curr);
-+	pr_warn("context-{%d:%d}\n", curr_inner, curr_inner);
-+
- 	lockdep_print_held_locks(curr);
- 
- 	pr_warn("stack backtrace:\n");
-@@ -4017,26 +4047,7 @@ static int check_wait_context(struct task_struct *curr, struct held_lock *next)
- 	}
- 	depth++;
- 
--	/*
--	 * Set appropriate wait type for the context; for IRQs we have to take
--	 * into account force_irqthread as that is implied by PREEMPT_RT.
--	 */
--	if (curr->hardirq_context) {
--		/*
--		 * Check if force_irqthreads will run us threaded.
--		 */
--		if (curr->hardirq_threaded || curr->irq_config)
--			curr_inner = LD_WAIT_CONFIG;
--		else
--			curr_inner = LD_WAIT_SPIN;
--	} else if (curr->softirq_context) {
--		/*
--		 * Softirqs are always threaded.
--		 */
--		curr_inner = LD_WAIT_CONFIG;
--	} else {
--		curr_inner = LD_WAIT_MAX;
--	}
-+	curr_inner = task_wait_context(curr);
- 
- 	for (; depth < curr->lockdep_depth; depth++) {
- 		struct held_lock *prev = curr->held_locks + depth;
+diff --git a/include/linux/refcount.h b/include/linux/refcount.h
+index 0ac50cf..0e3ee25 100644
+--- a/include/linux/refcount.h
++++ b/include/linux/refcount.h
+@@ -38,11 +38,24 @@
+  * atomic operations, then the count will continue to edge closer to 0. If it
+  * reaches a value of 1 before /any/ of the threads reset it to the saturated
+  * value, then a concurrent refcount_dec_and_test() may erroneously free the
+- * underlying object. Given the precise timing details involved with the
+- * round-robin scheduling of each thread manipulating the refcount and the need
+- * to hit the race multiple times in succession, there doesn't appear to be a
+- * practical avenue of attack even if using refcount_add() operations with
+- * larger increments.
++ * underlying object.
++ * Linux limits the maximum number of tasks to PID_MAX_LIMIT, which is currently
++ * 0x400000 (and can't easily be raised in the future beyond FUTEX_TID_MASK).
++ * With the current PID limit, if no batched refcounting operations are used and
++ * the attacker can't repeatedly trigger kernel oopses in the middle of refcount
++ * operations, this makes it impossible for a saturated refcount to leave the
++ * saturation range, even if it is possible for multiple uses of the same
++ * refcount to nest in the context of a single task:
++ *
++ *     (UINT_MAX+1-REFCOUNT_SATURATED) / PID_MAX_LIMIT =
++ *     0x40000000 / 0x400000 = 0x100 = 256
++ *
++ * If hundreds of references are added/removed with a single refcounting
++ * operation, it may potentially be possible to leave the saturation range; but
++ * given the precise timing details involved with the round-robin scheduling of
++ * each thread manipulating the refcount and the need to hit the race multiple
++ * times in succession, there doesn't appear to be a practical avenue of attack
++ * even if using refcount_add() operations with larger increments.
+  *
+  * Memory ordering
+  * ===============
