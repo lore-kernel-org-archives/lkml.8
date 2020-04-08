@@ -2,243 +2,137 @@ Return-Path: <SRS0=8dav=5Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 513A4C2BA1A
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 12:38:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B796C2BA1A
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 12:38:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 17A7C20747
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 12:38:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JbuD071i"
+	by mail.kernel.org (Postfix) with ESMTP id 276152082D
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 12:38:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728791AbgDHMi2 (ORCPT
+        id S1728814AbgDHMin (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Apr 2020 08:38:28 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:51063 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726977AbgDHMi1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Apr 2020 08:38:27 -0400
-Received: by mail-wm1-f66.google.com with SMTP id x25so4973593wmc.0;
-        Wed, 08 Apr 2020 05:38:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:references:in-reply-to:subject:date:message-id
-         :mime-version:content-transfer-encoding:thread-index
-         :content-language;
-        bh=7WVwy+SP+eZ7W/A++0vMqnUIR9Agu3yjwjMz6EovfMY=;
-        b=JbuD071ifrKUYqa4oD+asFtTeSa7v9MY45CwueqXXHNRH3KhN5lQ8Onp5T665XIQjj
-         dvR2uuyrdh4WvEUlNnnmDpj+vOJV9CgFLY0vaoEYWIZQtFrWWfVNZdWLazQR8yo/ePZ2
-         tOLg4bbB0nSbeqgHwS2wAXx5ZpSz+InwRjcqrUeDdIwmyzsS06CMiKcHMNUDM/EufEFl
-         iydiywBS1wVjqE+ecW2MgMz5nijIo+UOA9V9+X4EoMiD8u1qE0Wo1u3m7tofjIWp3ZVu
-         9QAEye7wh/80MJFN56KgRsCPWzTk6brhcqvHLjR25swvPX6kaAn4+x4rBo2wdHHatmUF
-         7dTw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:references:in-reply-to:subject:date
-         :message-id:mime-version:content-transfer-encoding:thread-index
-         :content-language;
-        bh=7WVwy+SP+eZ7W/A++0vMqnUIR9Agu3yjwjMz6EovfMY=;
-        b=QRJ/28tman2olPPu1nCjOk1oOsiiTHmQjREONYMvdvxDdI/xD/04M+2NVNXaB3a41z
-         G4FRtvQpZxjdQCTg6IQ5CbTz8bSbZku1sBHNmtoF8ChrLCbVmXM84RyGY/v5YAN+kY17
-         F7HPBfbEsH2DGz1zfaT8m6MOtaLim0bGSAc099SjNNwi1s9fwLSJMC4I+HVm9DZOVF/8
-         lOEE8YhyVnftOzyS0KhJj9NWWXk0FCRnDhVR0MuRgPA1IKZYTrqaAC6Mr4u75W+rjVxH
-         GmPddSdYHV+x3dZZeVoQ9Fm7EyyT72WMEZ4ab97S/nfWAT2K5ktSvXMysQn2jBEVyiai
-         KQhg==
-X-Gm-Message-State: AGi0PuZwcUV7drh7Lx7zJCcIEwGuPZ6SWRhKuLcKSW4uQzhvkHFIBRcU
-        MznaEIjgMJD0WIn99xCpqj8=
-X-Google-Smtp-Source: APiQypLk1OSAe8sQxynwPyLUwCr+hQf8DZOMyYWR5Kg8u966nzjURUJs7DUm/o8qnsBF4vC9gi5YqA==
-X-Received: by 2002:a1c:80d3:: with SMTP id b202mr4474826wmd.8.1586349505289;
-        Wed, 08 Apr 2020 05:38:25 -0700 (PDT)
-Received: from AnsuelXPS (host117-205-dynamic.180-80-r.retail.telecomitalia.it. [80.180.205.117])
-        by smtp.gmail.com with ESMTPSA id k185sm6952872wmb.7.2020.04.08.05.38.23
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 08 Apr 2020 05:38:24 -0700 (PDT)
-From:   <ansuelsmth@gmail.com>
-To:     "'Stanimir Varbanov'" <svarbanov@mm-sol.com>,
-        "'Andy Gross'" <agross@kernel.org>
-Cc:     "'Bjorn Andersson'" <bjorn.andersson@linaro.org>,
-        "'Bjorn Helgaas'" <bhelgaas@google.com>,
-        "'Rob Herring'" <robh+dt@kernel.org>,
-        "'Mark Rutland'" <mark.rutland@arm.com>,
-        "'Lorenzo Pieralisi'" <lorenzo.pieralisi@arm.com>,
-        "'Andrew Murray'" <amurray@thegoodpenguin.co.uk>,
-        "'Philipp Zabel'" <p.zabel@pengutronix.de>,
-        <linux-arm-msm@vger.kernel.org>, <linux-pci@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <20200402121148.1767-1-ansuelsmth@gmail.com> <20200402121148.1767-8-ansuelsmth@gmail.com> <fea9cfd1-2bc7-0141-444e-9c781877ad02@mm-sol.com>
-In-Reply-To: <fea9cfd1-2bc7-0141-444e-9c781877ad02@mm-sol.com>
-Subject: R: [PATCH v2 07/10] PCIe: qcom: fix init problem with missing PARF programming
-Date:   Wed, 8 Apr 2020 14:38:21 +0200
-Message-ID: <053e01d60da2$984f1170$c8ed3450$@gmail.com>
+        Wed, 8 Apr 2020 08:38:43 -0400
+Received: from foss.arm.com ([217.140.110.172]:38334 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726977AbgDHMim (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Apr 2020 08:38:42 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 87C1331B;
+        Wed,  8 Apr 2020 05:38:41 -0700 (PDT)
+Received: from lakrids.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 0ADA83F73D;
+        Wed,  8 Apr 2020 05:38:37 -0700 (PDT)
+Date:   Wed, 8 Apr 2020 13:38:36 +0100
+From:   Mark Rutland <mark.rutland@arm.com>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Wei Liu <wei.liu@kernel.org>, x86@kernel.org,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Laura Abbott <labbott@redhat.com>,
+        Sumit Semwal <sumit.semwal@linaro.org>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Minchan Kim <minchan@kernel.org>,
+        Nitin Gupta <ngupta@vflare.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        Peter Zijlstra <peterz@infradead.org>,
+        linuxppc-dev@lists.ozlabs.org, linux-hyperv@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org,
+        linux-arch@vger.kernel.org, linux-mm@kvack.org,
+        iommu@lists.linux-foundation.org,
+        linux-arm-kernel@lists.infradead.org, linux-s390@vger.kernel.org,
+        bpf@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Will Deacon <will@kernel.org>,
+        Catalin marinas <catalin.marinas@arm.com>
+Subject: Re: [PATCH 18/28] mm: enforce that vmap can't map pages executable
+Message-ID: <20200408123835.GB36478@lakrids.cambridge.arm.com>
+References: <20200408115926.1467567-1-hch@lst.de>
+ <20200408115926.1467567-19-hch@lst.de>
 MIME-Version: 1.0
-Content-Type: text/plain;
-        charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: Microsoft Outlook 16.0
-Thread-Index: AQLxewcL6EghaIoibfUjxKO3XpeZ4wIq3QoPAak0GR+mGa3/MA==
-Content-Language: it
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200408115926.1467567-19-hch@lst.de>
+User-Agent: Mutt/1.11.1+11 (2f07cb52) (2018-12-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> PARF programming
+On Wed, Apr 08, 2020 at 01:59:16PM +0200, Christoph Hellwig wrote:
+> To help enforcing the W^X protection don't allow remapping existing
+> pages as executable.
 > 
-> Hi Ansuel,
+> Based on patch from Peter Zijlstra <peterz@infradead.org>.
 > 
-> Please fix the patch subject for all patches in the series per Bjorn H.
-> request.
-> 
-> PCI: qcom: Fix init problem with missing PARF programming
-> 
-> Also the patch subject is misleading to me. Actually you change few phy
-> parameters: Tx De-Emphasis, Tx Swing and Rx equalization. On the other
-> side I guess those parameters are board specific and I'm not sure how
-> this change will reflect on apq8064 boards.
-> 
-
-I also think that this would brake apq8064, on ipq8064 this is needed or 
-the system doesn't boot. 
-Should I move this to the dts and set this params only if they are present
-in dts or also here check for compatible and set accordingly? 
-
-> On 4/2/20 3:11 PM, Ansuel Smith wrote:
-> > PARF programming was missing and this cause initilizzation problem on
-> > some ipq806x based device (Netgear R7800 for example). This cause a
-> > total lock of the system on kernel load.
-> >
-> > Fixes: 82a82383 PCI: qcom: Add Qualcomm PCIe controller driver
-> > Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
-> > ---
-> >  drivers/pci/controller/dwc/pcie-qcom.c | 48 +++++++++++++++++++++--
+> Signed-off-by: Christoph Hellwig <hch@lst.de>
 > ---
-> >  1 file changed, 39 insertions(+), 9 deletions(-)
-> >
-> > diff --git a/drivers/pci/controller/dwc/pcie-qcom.c
-> b/drivers/pci/controller/dwc/pcie-qcom.c
-> > index 211a1aa7d0f1..77b1ab7e23a3 100644
-> > --- a/drivers/pci/controller/dwc/pcie-qcom.c
-> > +++ b/drivers/pci/controller/dwc/pcie-qcom.c
-> > @@ -46,6 +46,9 @@
-> >
-> >  #define PCIE20_PARF_PHY_CTRL			0x40
-> >  #define PCIE20_PARF_PHY_REFCLK			0x4C
-> > +#define REF_SSP_EN				BIT(16)
-> > +#define REF_USE_PAD				BIT(12)
+>  arch/x86/include/asm/pgtable_types.h | 6 ++++++
+>  include/asm-generic/pgtable.h        | 4 ++++
+>  mm/vmalloc.c                         | 2 +-
+>  3 files changed, 11 insertions(+), 1 deletion(-)
 > 
-> Could you rename this to:
-> 
-> PHY_REFCLK_SSP_EN
-> PHY_REFCLK_USE_PAD
-> 
-> > +
-> >  #define PCIE20_PARF_DBI_BASE_ADDR		0x168
-> >  #define PCIE20_PARF_SLV_ADDR_SPACE_SIZE		0x16C
-> >  #define PCIE20_PARF_MHI_CLOCK_RESET_CTRL	0x174
-> > @@ -77,6 +80,18 @@
-> >  #define DBI_RO_WR_EN				1
-> >
-> >  #define PERST_DELAY_US				1000
-> > +/* PARF registers */
-> > +#define PCIE20_PARF_PCS_DEEMPH			0x34
-> > +#define PCS_DEEMPH_TX_DEEMPH_GEN1(x)		(x << 16)
-> > +#define PCS_DEEMPH_TX_DEEMPH_GEN2_3_5DB(x)	(x << 8)
-> > +#define PCS_DEEMPH_TX_DEEMPH_GEN2_6DB(x)	(x << 0)
-> > +
-> > +#define PCIE20_PARF_PCS_SWING			0x38
-> > +#define PCS_SWING_TX_SWING_FULL(x)		(x << 8)
-> > +#define PCS_SWING_TX_SWING_LOW(x)		(x << 0)
-> > +
-> > +#define PCIE20_PARF_CONFIG_BITS		0x50
-> > +#define PHY_RX0_EQ(x)				(x << 24)
-> >
-> >  #define PCIE20_v3_PARF_SLV_ADDR_SPACE_SIZE	0x358
-> >  #define SLV_ADDR_SPACE_SZ			0x10000000
-> > @@ -184,6 +199,16 @@ struct qcom_pcie {
-> >
-> >  #define to_qcom_pcie(x)		dev_get_drvdata((x)->dev)
-> >
-> > +static inline void qcom_clear_and_set_dword(void __iomem *addr,
-> 
-> drop 'inline' the compiler is smart enough to decide.
-> 
-> > +				 u32 clear_mask, u32 set_mask)
-> > +{
-> > +	u32 val = readl(addr);
-> > +
-> > +	val &= ~clear_mask;
-> > +	val |= set_mask;
-> > +	writel(val, addr);
-> > +}
-> > +
-> 
-> If you add such function you should introduce it in a separate patch and
-> use it in the whole driver where it is applicable. After that we can see
-> what is the benefit of it.
-> 
-> >  static void qcom_ep_reset_assert(struct qcom_pcie *pcie)
-> >  {
-> >  	gpiod_set_value_cansleep(pcie->reset, 1);
-> > @@ -304,7 +329,6 @@ static int qcom_pcie_init_2_1_0(struct
-> qcom_pcie *pcie)
-> >  	struct qcom_pcie_resources_2_1_0 *res = &pcie->res.v2_1_0;
-> >  	struct dw_pcie *pci = pcie->pci;
-> >  	struct device *dev = pci->dev;
-> > -	u32 val;
-> >  	int ret;
-> >
-> >  	ret = regulator_bulk_enable(ARRAY_SIZE(res->supplies), res-
-> >supplies);
-> > @@ -355,15 +379,21 @@ static int qcom_pcie_init_2_1_0(struct
-> qcom_pcie *pcie)
-> >  		goto err_deassert_ahb;
-> >  	}
-> >
-> > -	/* enable PCIe clocks and resets */
-> > -	val = readl(pcie->parf + PCIE20_PARF_PHY_CTRL);
-> > -	val &= ~BIT(0);
-> > -	writel(val, pcie->parf + PCIE20_PARF_PHY_CTRL);
-> > +	qcom_clear_and_set_dword(pcie->parf + PCIE20_PARF_PHY_CTRL,
-> BIT(0), 0);
-> 
-> please keep the comment.
-> 
-> > +
-> > +	/* PARF programming */
-> 
-> pointless comment, please drop it.
-> 
-> > +	writel(PCS_DEEMPH_TX_DEEMPH_GEN1(0x18) |
-> > +	       PCS_DEEMPH_TX_DEEMPH_GEN2_3_5DB(0x18) |
-> > +	       PCS_DEEMPH_TX_DEEMPH_GEN2_6DB(0x22),
-> > +	       pcie->parf + PCIE20_PARF_PCS_DEEMPH);
-> > +	writel(PCS_SWING_TX_SWING_FULL(0x78) |
-> > +	       PCS_SWING_TX_SWING_LOW(0x78),
-> > +	       pcie->parf + PCIE20_PARF_PCS_SWING);
-> > +	writel(PHY_RX0_EQ(0x4), pcie->parf + PCIE20_PARF_CONFIG_BITS);
-> >
-> > -	/* enable external reference clock */
-> > -	val = readl(pcie->parf + PCIE20_PARF_PHY_REFCLK);
-> > -	val |= BIT(16);
-> > -	writel(val, pcie->parf + PCIE20_PARF_PHY_REFCLK);
-> > +	/* enable reference clock */
-> 
-> Why you dropped 'external' ?
-> 
-> > +	qcom_clear_and_set_dword(pcie->parf +
-> PCIE20_PARF_PHY_REFCLK,
-> > +		      REF_USE_PAD, REF_SSP_EN);
-> >
-> >  	ret = reset_control_deassert(res->phy_reset);
-> >  	if (ret) {
-> >
-> 
-> --
-> regards,
-> Stan
+> diff --git a/arch/x86/include/asm/pgtable_types.h b/arch/x86/include/asm/pgtable_types.h
+> index 947867f112ea..2e7c442cc618 100644
+> --- a/arch/x86/include/asm/pgtable_types.h
+> +++ b/arch/x86/include/asm/pgtable_types.h
+> @@ -282,6 +282,12 @@ typedef struct pgprot { pgprotval_t pgprot; } pgprot_t;
+>  
+>  typedef struct { pgdval_t pgd; } pgd_t;
+>  
+> +static inline pgprot_t pgprot_nx(pgprot_t prot)
+> +{
+> +	return __pgprot(pgprot_val(prot) | _PAGE_NX);
+> +}
+> +#define pgprot_nx pgprot_nx
+> +
+>  #ifdef CONFIG_X86_PAE
 
+I reckon for arm64 we can do similar in our <asm/pgtable.h>:
+
+#define pgprot_nx(pgprot_t prot) \
+	__pgprot_modify(prot, 0, PTE_PXN)
+
+... matching the style of our existing pgprot_*() modifier helpers.
+
+Mark.
+
+>  
+>  /*
+> diff --git a/include/asm-generic/pgtable.h b/include/asm-generic/pgtable.h
+> index 329b8c8ca703..8c5f9c29698b 100644
+> --- a/include/asm-generic/pgtable.h
+> +++ b/include/asm-generic/pgtable.h
+> @@ -491,6 +491,10 @@ static inline int arch_unmap_one(struct mm_struct *mm,
+>  #define flush_tlb_fix_spurious_fault(vma, address) flush_tlb_page(vma, address)
+>  #endif
+>  
+> +#ifndef pgprot_nx
+> +#define pgprot_nx(prot)	(prot)
+> +#endif
+> +
+>  #ifndef pgprot_noncached
+>  #define pgprot_noncached(prot)	(prot)
+>  #endif
+> diff --git a/mm/vmalloc.c b/mm/vmalloc.c
+> index 7356b3f07bd8..334c75251ddb 100644
+> --- a/mm/vmalloc.c
+> +++ b/mm/vmalloc.c
+> @@ -2390,7 +2390,7 @@ void *vmap(struct page **pages, unsigned int count,
+>  	if (!area)
+>  		return NULL;
+>  
+> -	if (map_kernel_range((unsigned long)area->addr, size, prot,
+> +	if (map_kernel_range((unsigned long)area->addr, size, pgprot_nx(prot),
+>  			pages) < 0) {
+>  		vunmap(area->addr);
+>  		return NULL;
+> -- 
+> 2.25.1
+> 
