@@ -2,113 +2,97 @@ Return-Path: <SRS0=8dav=5Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50825C2BA2B
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 15:48:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D918C2D0EA
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 15:48:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 220E9206F5
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 15:48:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586360922;
-	bh=YrKwSCyyL6nlO0cCOhfxnQbvUXb9v0CXNYMRM9FudAE=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cUvAjmZl6SB2NWNhs9y1YCu5Bo5EZpUuRs43O0DZEN/XUJtRM7K2vX5zIE4KAXi56
-	 R+wp44byjUPY5Hb76wtVmaPwoaSg5Y6JjKnh3jfICDQB+y1ICDOQ0x5nXXHbCvkg3p
-	 7JPe/d9a6RrzLusu7zXzIQLslOTzO2vdMufJYEkA=
+	by mail.kernel.org (Postfix) with ESMTP id 59C9B2075E
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 15:48:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="rmLITQ6k"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729793AbgDHPsc (ORCPT
+        id S1729656AbgDHPso (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Apr 2020 11:48:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49356 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729663AbgDHPqc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Apr 2020 11:46:32 -0400
-Received: from mail.kernel.org (ip5f5ad4d8.dynamic.kabel-deutschland.de [95.90.212.216])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 720FD21744;
-        Wed,  8 Apr 2020 15:46:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586360791;
-        bh=YrKwSCyyL6nlO0cCOhfxnQbvUXb9v0CXNYMRM9FudAE=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=V2yl18RL6fQ8x84NU8RCm7vM++jqIRw3e3wNGTchAaAKSMi2CB5aLvyZKlZW/r+MJ
-         w6tywCe8nxmFlztFY4P6rJUAGDTN6VbSHvpUJvgbvg79nSp3UBFIu9jxqd6NvrcoKU
-         t7lL0pf/oAEuhBEdZerOagYAvXl3/8jjGtFq3EmM=
-Received: from mchehab by mail.kernel.org with local (Exim 4.92.3)
-        (envelope-from <mchehab@kernel.org>)
-        id 1jMCuL-000cBS-KZ; Wed, 08 Apr 2020 17:46:29 +0200
-From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
-Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        Tony Luck <tony.luck@intel.com>,
-        Borislav Petkov <bp@alien8.de>,
-        James Morse <james.morse@arm.com>,
-        Robert Richter <rrichter@marvell.com>,
-        linux-edac@vger.kernel.org
-Subject: [PATCH 15/35] docs: ras: get rid of some warnings
-Date:   Wed,  8 Apr 2020 17:46:07 +0200
-Message-Id: <d503dfb10c86f453de27511158c96a396a9f53de.1586359676.git.mchehab+huawei@kernel.org>
-X-Mailer: git-send-email 2.25.2
-In-Reply-To: <cover.1586359676.git.mchehab+huawei@kernel.org>
-References: <cover.1586359676.git.mchehab+huawei@kernel.org>
+        Wed, 8 Apr 2020 11:48:44 -0400
+Received: from perceval.ideasonboard.com ([213.167.242.64]:32948 "EHLO
+        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729295AbgDHPsk (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Apr 2020 11:48:40 -0400
+Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 2D4EC522;
+        Wed,  8 Apr 2020 17:48:39 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1586360919;
+        bh=/JgXmN/0WyKx0OrE+QYBVoprM4aMOvGu9pmddBBOTck=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=rmLITQ6k1FTf27YU2enzczolQS74XPSGlFhJ/EQQXSIXI1XzLyqq5RoGVNMucXZPG
+         SVY4hg6v413eemiT/yEG6hyHsjdzKF2HpRnG4MZTMN8JK+mNVsgXuH6nBgN1O7qS9M
+         hsypevpJn75bHjg5BVE1q1AujS4QIYgPCk64QV3A=
+Date:   Wed, 8 Apr 2020 18:48:29 +0300
+From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To:     Max Krummenacher <max.oss.09@gmail.com>
+Cc:     Max Krummenacher <max.krummenacher@toradex.com>,
+        linux-arm-kernel@lists.infradead.org,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Will Deacon <will@kernel.org>, Olof Johansson <olof@lixom.net>,
+        linux-kernel@vger.kernel.org, Anson Huang <Anson.Huang@nxp.com>,
+        Marcin Juszkiewicz <marcin.juszkiewicz@linaro.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Li Yang <leoyang.li@nxp.com>, Shawn Guo <shawnguo@kernel.org>
+Subject: Re: [PATCH v2 2/5] arm64: defconfig: add DRM_DISPLAY_CONNECTOR
+Message-ID: <20200408154829.GI4881@pendragon.ideasonboard.com>
+References: <20200408143040.57458-1-max.krummenacher@toradex.com>
+ <20200408143040.57458-3-max.krummenacher@toradex.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200408143040.57458-3-max.krummenacher@toradex.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Sphinx produce some warnings due to a bad table format:
+Hi Max,
 
-    Documentation/admin-guide/ras.rst:358: WARNING: Definition list ends without a blank line; unexpected unindent.
-    Documentation/admin-guide/ras.rst:358: WARNING: Definition list ends without a blank line; unexpected unindent.
-    Documentation/admin-guide/ras.rst:363: WARNING: Definition list ends without a blank line; unexpected unindent.
-    Documentation/admin-guide/ras.rst:363: WARNING: Definition list ends without a blank line; unexpected unindent.
+Thank you for the patch.
 
-Rearrange the things there in order to supress the warnings
-while being precise at the Sphinx output about how ranks are
-mapped into csrows.
+On Wed, Apr 08, 2020 at 04:30:37PM +0200, Max Krummenacher wrote:
+> Add DRM_DISPLAY_CONNECTOR. This got introduced with the bridge rework
+> Which renamed among others DRM_DUMB_VGA_DAC.
+> 
+> Signed-off-by: Max Krummenacher <max.krummenacher@toradex.com>
 
-Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
----
- Documentation/admin-guide/ras.rst | 16 +++++++++-------
- 1 file changed, 9 insertions(+), 7 deletions(-)
+Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 
-diff --git a/Documentation/admin-guide/ras.rst b/Documentation/admin-guide/ras.rst
-index 0310db624964..22b31bc7e129 100644
---- a/Documentation/admin-guide/ras.rst
-+++ b/Documentation/admin-guide/ras.rst
-@@ -351,15 +351,17 @@ controllers. The following example will assume 2 channels:
- 	+------------+-----------+-----------+
- 	|            |  ``ch0``  |  ``ch1``  |
- 	+============+===========+===========+
--	| ``csrow0`` |  DIMM_A0  |  DIMM_B0  |
--	|            |   rank0   |   rank0   |
--	+------------+     -     |     -     |
-+	|            |**DIMM_A0**|**DIMM_B0**|
-+	+------------+-----------+-----------+
-+	| ``csrow0`` |   rank0   |   rank0   |
-+	+------------+-----------+-----------+
- 	| ``csrow1`` |   rank1   |   rank1   |
- 	+------------+-----------+-----------+
--	| ``csrow2`` |  DIMM_A1  | DIMM_B1   |
--	|            |   rank0   |   rank0   |
--	+------------+     -     |     -     |
--	| ``csrow3`` |   rank1   |   rank1   |
-+	|            |**DIMM_A1**|**DIMM_B1**|
-+	+------------+-----------+-----------+
-+	| ``csrow2`` |    rank0  |  rank0    |
-+	+------------+-----------+-----------+
-+	| ``csrow3`` |    rank1  |  rank1    |
- 	+------------+-----------+-----------+
- 
- In the above example, there are 4 physical slots on the motherboard
+> 
+> ---
+> 
+> Changes in v2:
+> - additional patch adding DRM_DISPLAY_CONNECTOR as recommended by Geert and Laurent
+> 
+>  arch/arm64/configs/defconfig | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
+> index ae908c3f43c76..d765a920a20b9 100644
+> --- a/arch/arm64/configs/defconfig
+> +++ b/arch/arm64/configs/defconfig
+> @@ -612,6 +612,7 @@ CONFIG_DRM_PANEL_LVDS=m
+>  CONFIG_DRM_PANEL_SIMPLE=m
+>  CONFIG_DRM_SIMPLE_BRIDGE=m
+>  CONFIG_DRM_PANEL_TRULY_NT35597_WQXGA=m
+> +CONFIG_DRM_DISPLAY_CONNECTOR=m
+>  CONFIG_DRM_SII902X=m
+>  CONFIG_DRM_THINE_THC63LVD1024=m
+>  CONFIG_DRM_TI_SN65DSI86=m
+
 -- 
-2.25.2
+Regards,
 
+Laurent Pinchart
