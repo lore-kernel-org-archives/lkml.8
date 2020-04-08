@@ -2,100 +2,95 @@ Return-Path: <SRS0=8dav=5Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2409C2D0F4
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 17:36:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B17BC2BA1B
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 17:40:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D7B0920730
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 17:36:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 51C1C20730
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 17:40:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1586367610;
+	bh=4z1t98y0f7P25Qq1cT4GsOFIlAkeVEE1O985a/IK2bw=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=dQpj20BtaLduZm5YGtx5Rz3hRS8cnTTq/B1gdzSxavENEm3VgRJ128n8pdx0aSJNS
+	 sh0mcjQ/RPpDYUvv+F8y6wZNa9LuncekVtJJ4rg9NqVbWK/PUj8+Rk37EsbybbW48Y
+	 r21Ga2xO3A8Zu3ZH3G2P6j8T8xoL8eyaIsludGPY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729113AbgDHRgM (ORCPT
+        id S1729256AbgDHRkJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Apr 2020 13:36:12 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:38190 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728262AbgDHRgM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Apr 2020 13:36:12 -0400
-Received: from pps.filterd (m0187473.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 038HXugP010174;
-        Wed, 8 Apr 2020 13:36:07 -0400
-Received: from ppma03wdc.us.ibm.com (ba.79.3fa9.ip4.static.sl-reverse.com [169.63.121.186])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 3091yaaarp-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 08 Apr 2020 13:36:07 -0400
-Received: from pps.filterd (ppma03wdc.us.ibm.com [127.0.0.1])
-        by ppma03wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 038HZbMb032509;
-        Wed, 8 Apr 2020 17:36:06 GMT
-Received: from b01cxnp23034.gho.pok.ibm.com (b01cxnp23034.gho.pok.ibm.com [9.57.198.29])
-        by ppma03wdc.us.ibm.com with ESMTP id 3091mdxtqq-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 08 Apr 2020 17:36:06 +0000
-Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
-        by b01cxnp23034.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 038Ha6IA47186320
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 8 Apr 2020 17:36:06 GMT
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 0ADA8B2065;
-        Wed,  8 Apr 2020 17:36:06 +0000 (GMT)
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id E395BB205F;
-        Wed,  8 Apr 2020 17:36:04 +0000 (GMT)
-Received: from jarvis.ext.hansenpartnership.com (unknown [9.85.187.1])
-        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
-        Wed,  8 Apr 2020 17:36:04 +0000 (GMT)
-Message-ID: <1586367363.7606.34.camel@linux.ibm.com>
-Subject: Re: [PATCH] scsi: core: Rate limit "rejecting I/O" messages
-From:   James Bottomley <jejb@linux.ibm.com>
-To:     Daniel Wagner <dwagner@suse.de>, linux-scsi@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org,
-        "Martin K. Petersen" <martin.petersen@oracle.com>
-Date:   Wed, 08 Apr 2020 10:36:03 -0700
-In-Reply-To: <20200408171012.76890-1-dwagner@suse.de>
-References: <20200408171012.76890-1-dwagner@suse.de>
+        Wed, 8 Apr 2020 13:40:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56108 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726687AbgDHRkJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Apr 2020 13:40:09 -0400
+Received: from mail-io1-f48.google.com (mail-io1-f48.google.com [209.85.166.48])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 958F82082F;
+        Wed,  8 Apr 2020 17:40:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1586367608;
+        bh=4z1t98y0f7P25Qq1cT4GsOFIlAkeVEE1O985a/IK2bw=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=2aCurHaf3Kme+m9VA6KdGsnfYZHycQsMSe1KCF6NApw9Al+cODF6apQPpghxHCZb7
+         XXqHbl32UYsvaItv1JOE4FnK6an5lnTUOYN8mTX+ySi2WF6JJcImhX5FjWDrvn7lZk
+         8Izq2J1s8bYv9/13kjMGJe7p7tFjZdImAwQ3c+kQ=
+Received: by mail-io1-f48.google.com with SMTP id b12so945479ion.8;
+        Wed, 08 Apr 2020 10:40:08 -0700 (PDT)
+X-Gm-Message-State: AGi0PuaCJcAOX65z5ZwJboLG/frzHJzv7y9lwR6ZQOEhfbuOPC4LLNyn
+        e3TRR3Xda2cNL0W1vrxfW3Ar3eGfIij5tEQK8kQ=
+X-Google-Smtp-Source: APiQypLEH9T9Ob5L5UbvOCSRgeiNT5mh0Wy0gYcPpE7ul5g85frCf//lo7NmhEqJG95c0EUOoQ/LFCfUSNUCkGDKkpA=
+X-Received: by 2002:a02:7785:: with SMTP id g127mr7811753jac.134.1586367607998;
+ Wed, 08 Apr 2020 10:40:07 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200326135041.3264-1-b.thiel@posteo.de>
+In-Reply-To: <20200326135041.3264-1-b.thiel@posteo.de>
+From:   Ard Biesheuvel <ardb@kernel.org>
+Date:   Wed, 8 Apr 2020 19:39:56 +0200
+X-Gmail-Original-Message-ID: <CAMj1kXF6UF318wCL74T9orJk=+LafZ3VFXUGmqoBefYVaP2gNw@mail.gmail.com>
+Message-ID: <CAMj1kXF6UF318wCL74T9orJk=+LafZ3VFXUGmqoBefYVaP2gNw@mail.gmail.com>
+Subject: Re: [PATCH] x86/efi: Add a prototype for efi_arch_mem_reserve()
+To:     Benjamin Thiel <b.thiel@posteo.de>
+Cc:     X86 ML <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+        linux-efi <linux-efi@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.26.6 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
- definitions=2020-04-07_10:2020-04-07,2020-04-07 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 bulkscore=0
- mlxscore=0 malwarescore=0 priorityscore=1501 clxscore=1011 adultscore=0
- mlxlogscore=869 suspectscore=0 spamscore=0 lowpriorityscore=0
- impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2004080129
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2020-04-08 at 19:10 +0200, Daniel Wagner wrote: 
-> +#define sdev_printk_ratelimited(l, sdev, fmt, a...)			
-> \
-> +({									
-> \
-> +	static DEFINE_RATELIMIT_STATE(_rs,				
-> \
-> +				      DEFAULT_RATELIMIT_INTERVAL,	
-> \
-> +				      DEFAULT_RATELIMIT_BURST);	
-> 	\
-> +									
-> \
-> +	if (__ratelimit(&_rs))					
-> 	\
-> +		sdev_prefix_printk(l, sdev, NULL, fmt, ##a);	
+On Thu, 26 Mar 2020 at 14:50, Benjamin Thiel <b.thiel@posteo.de> wrote:
+>
+> ... in order to fix a -Wmissing-ptototypes warning:
+>
+> arch/x86/platform/efi/quirks.c:245:13: warning:
+> no previous prototype for =E2=80=98efi_arch_mem_reserve=E2=80=99 [-Wmissi=
+ng-prototypes]
+> void __init efi_arch_mem_reserve(phys_addr_t addr, u64 size)
+>
+> Signed-off-by: Benjamin Thiel <b.thiel@posteo.de>
 
-If we do go with a ratelimit architecture for sdev_printk, I would
-think the limit has to be per sdev, because we wouldn't want a burst of
-messages on one sdev to suppress messages on another.
+Thanks. I'll queue this as a fix.
 
-For this particular issue, I suppose one target can have many sdevs, so
-you'd prefer to rate limit by target?
-
-James
-
+> ---
+>  include/linux/efi.h | 2 ++
+>  1 file changed, 2 insertions(+)
+>
+> diff --git a/include/linux/efi.h b/include/linux/efi.h
+> index 7efd7072cca5..e4b28ae1ba61 100644
+> --- a/include/linux/efi.h
+> +++ b/include/linux/efi.h
+> @@ -1703,4 +1703,6 @@ struct linux_efi_memreserve {
+>
+>  void efi_pci_disable_bridge_busmaster(void);
+>
+> +void __init efi_arch_mem_reserve(phys_addr_t addr, u64 size);
+> +
+>  #endif /* _LINUX_EFI_H */
+> --
+> 2.17.1
+>
