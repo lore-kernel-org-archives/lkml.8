@@ -2,157 +2,115 @@ Return-Path: <SRS0=8dav=5Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DEF8C2BA80
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 02:50:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 653B5C2BA80
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 02:56:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 412F92075E
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 02:50:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3AAA420748
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 02:56:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="KonMvLDA"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="KZgnzElg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726492AbgDHCus (ORCPT
+        id S1726484AbgDHC41 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 22:50:48 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:34929 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726420AbgDHCur (ORCPT
+        Tue, 7 Apr 2020 22:56:27 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:41951 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726428AbgDHC40 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Apr 2020 22:50:47 -0400
-Received: by mail-pf1-f195.google.com with SMTP id a13so1744622pfa.2
-        for <linux-kernel@vger.kernel.org>; Tue, 07 Apr 2020 19:50:46 -0700 (PDT)
+        Tue, 7 Apr 2020 22:56:26 -0400
+Received: by mail-pf1-f193.google.com with SMTP id a24so1736814pfc.8
+        for <linux-kernel@vger.kernel.org>; Tue, 07 Apr 2020 19:56:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=mime-version:content-transfer-encoding:in-reply-to:references
          :subject:from:cc:to:date:message-id:user-agent;
-        bh=JUXF7hM/mccP8YBSv8k1M2FRkWg1QLWdAClD45zoF40=;
-        b=KonMvLDAFt3ozAn0+2/wsP0c5xo5b+hNVOzSBOLp/x0CNovDbKsm+UhULuUMmC5D+5
-         ukMqw7dOF80Xv8Pk/DlQGB/JXqeXCIs/c/5dPHdcia7i2QGyTLJhJK9UofXg2uzPu4H6
-         VBdyXC/zTpvt0zmf80LLyHx0y/2InrYjIxBJU=
+        bh=C19SyW6s9ABaVcA96MgZ/z86+FrD+QX9SGhdUhVzpt4=;
+        b=KZgnzElg6MCmjBX4mGgfKinaj7t+v/aV02z80ncSG8PxUBjzX8osIGF/f2dvYj1g8q
+         qJPltNSCAVYAm7+AZ+kGjBJ4p3+vGibNA+Cs+ci4ZcxqKdTCJP2ul6676KCl8SM862yq
+         KUq5o4+M56r068nRKzqYPTKKbNz6lL2TPGK3I=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:content-transfer-encoding
          :in-reply-to:references:subject:from:cc:to:date:message-id
          :user-agent;
-        bh=JUXF7hM/mccP8YBSv8k1M2FRkWg1QLWdAClD45zoF40=;
-        b=ewMpshCNyrD8fEgab6w/vw5O0TGic80g6kWqSFSmFWgE8jJgnsRMLpkEBkZSJzDqoi
-         muPYc0p4l3nQm3EoWtn8/qg5/3qWVLyhE4HCDFbyaozxkzZCbVAFrf6fXnaYyNOWqGJX
-         0ioxB7PTvdLihQLoBEYHvqmXlztXOo9y6Dj6AdzX0//8bmI1X3c90IlXGE8fZvRNcRYI
-         Zw7dcsCY+5+B1sVk+m72l8Dyd6RIl9DCIvL8mxhBekOvhvlS/VD9bgKXV4UhTnIH+b3+
-         u+L8I65I23XNSoQz1E89LazLAN+Sz7JoDntyJDLqj8MIbzdRuh+nJrFMm/nxMfrJZ/pB
-         zxuA==
-X-Gm-Message-State: AGi0PuaYIH/JzDA2SIbBwLLr5DIyuK26+kdNr5USDzYa2JlfZ9gPGWj+
-        S1x3Ztv8LlSqqc9AvURbMVvgyGRvFgQ=
-X-Google-Smtp-Source: APiQypIREFpQNdyfpZWQZ7fuIoKTQzbCwB9eC/LyMF4RhE1zhQVPTI0b5JqFmD0p7Qjg6dKXPuq1OQ==
-X-Received: by 2002:a65:67c7:: with SMTP id b7mr5006016pgs.345.1586314245452;
-        Tue, 07 Apr 2020 19:50:45 -0700 (PDT)
+        bh=C19SyW6s9ABaVcA96MgZ/z86+FrD+QX9SGhdUhVzpt4=;
+        b=rYXHXrX/DznPwbBMLpcbzOUlhrX5Lo1TEubeH9/pmg3H7saw3YS9DsLeiDwkuYo/80
+         atYz528oQ7IVFI9nhFVidfx715RGTQLtjP+It0WD3crGF18qpke8oXEMYTD0vawEB2Jp
+         CNK2AesfnlPrSc2w3n2N0FLIK0VrFzclyc/B2mhCYhl9NOhjN8SGaR6JS4xOroIbjDCo
+         tHRvzXEV7NdNZhVRcWQ3UNU2Wriz6JztA6SuiL2NWJfvSkuHOU7BrcgQTqOsMU91MHM+
+         j5IkYtcW8iph9yiaSvg7egQ40RL3fez61fTqg2tL1Url4ztORxTSrz7+2OWK+4/keSks
+         IyKw==
+X-Gm-Message-State: AGi0PuayRgZY4YGSUdLFobG97kW6dVjpiQaomvzsEo1WaGK6DzT9dvkQ
+        i/72yB6ROCpiYf/Dn9Gx3g9Vbw==
+X-Google-Smtp-Source: APiQypIDODO01vVtGZfqvyLcC30QAn+V1wKdyLppdB6LkQtNbXFqACB4TCOhjyHrMWZHXdoaBN1JBw==
+X-Received: by 2002:a65:62ce:: with SMTP id m14mr4936916pgv.174.1586314585701;
+        Tue, 07 Apr 2020 19:56:25 -0700 (PDT)
 Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
-        by smtp.gmail.com with ESMTPSA id 135sm15636454pfu.207.2020.04.07.19.50.44
+        by smtp.gmail.com with ESMTPSA id i187sm15200635pfg.33.2020.04.07.19.56.24
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 07 Apr 2020 19:50:44 -0700 (PDT)
+        Tue, 07 Apr 2020 19:56:24 -0700 (PDT)
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <1586154741-8293-5-git-send-email-mkshah@codeaurora.org>
-References: <1586154741-8293-1-git-send-email-mkshah@codeaurora.org> <1586154741-8293-5-git-send-email-mkshah@codeaurora.org>
-Subject: Re: [PATCH v16 4/6] soc: qcom: rpmh: Invoke rpmh_flush() for dirty caches
+In-Reply-To: <20200402234455.75061-1-john.stultz@linaro.org>
+References: <20200402223723.7150-1-john.stultz@linaro.org> <20200402234455.75061-1-john.stultz@linaro.org>
+Subject: Re: [PATCH v2] phy: qcom-qusb2: Re add "qcom,sdm845-qusb2-phy" compat string
 From:   Stephen Boyd <swboyd@chromium.org>
-Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        agross@kernel.org, mka@chromium.org, rnayak@codeaurora.org,
-        ilina@codeaurora.org, lsrao@codeaurora.org,
-        Maulik Shah <mkshah@codeaurora.org>
-To:     Maulik Shah <mkshah@codeaurora.org>, bjorn.andersson@linaro.org,
-        dianders@chromium.org, evgreen@chromium.org
-Date:   Tue, 07 Apr 2020 19:50:43 -0700
-Message-ID: <158631424318.216820.1843109743502322053@swboyd.mtv.corp.google.com>
+Cc:     John Stultz <john.stultz@linaro.org>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Doug Anderson <dianders@chromium.org>,
+        Manu Gautam <mgautam@codeaurora.org>,
+        Sandeep Maheswaram <sanm@codeaurora.org>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org
+To:     John Stultz <john.stultz@linaro.org>,
+        lkml <linux-kernel@vger.kernel.org>
+Date:   Tue, 07 Apr 2020 19:56:23 -0700
+Message-ID: <158631458374.216820.17829557619378130779@swboyd.mtv.corp.google.com>
 User-Agent: alot/0.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Maulik Shah (2020-04-05 23:32:19)
-> Add changes to invoke rpmh flush() from CPU PM notification.
-> This is done when the last the cpu is entering power collapse and
-> controller is not busy.
+Quoting John Stultz (2020-04-02 16:44:55)
+> In commit 8fe75cd4cddf ("phy: qcom-qusb2: Add generic QUSB2 V2
+> PHY support"), the change was made to add "qcom,qusb2-v2-phy"
+> as a generic compat string. However the change also removed
+> the "qcom,sdm845-qusb2-phy" compat string, which is documented
+> in the binding and already in use.
 >=20
-> Controllers that do have 'HW solver' mode do not need to register
-
-Controllers that have 'HW solver' mode don't need to register? The 'do
-have' is throwing me off.
-
-> for CPU PM notification. They may be in autonomous mode executing
-> low power mode and do not require rpmh_flush() to happen from CPU
-> PM notification.
+> This patch re-adds the "qcom,sdm845-qusb2-phy" compat string
+> which allows the driver to continue to work with existing dts
+> entries such as found on the db845c.
 >=20
-> Signed-off-by: Maulik Shah <mkshah@codeaurora.org>
-> Reviewed-by: Douglas Anderson <dianders@chromium.org>
+> Cc: Andy Gross <agross@kernel.org>
+> Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Cc: Doug Anderson <dianders@chromium.org>
+> Cc: Manu Gautam <mgautam@codeaurora.org>
+> Cc: Sandeep Maheswaram <sanm@codeaurora.org>
+> Cc: Matthias Kaehlcke <mka@chromium.org>
+> Cc: Stephen Boyd <swboyd@chromium.org>
+> Cc: Kishon Vijay Abraham I <kishon@ti.com>
+> Cc: linux-arm-msm@vger.kernel.org
+> Cc: devicetree@vger.kernel.org
+> Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+> Fixes: 8fe75cd4cddf ("phy: qcom-qusb2: Add generic QUSB2 V2 PHY support")
+> Reported-by: YongQin Liu <yongqin.liu@linaro.org>
+> Signed-off-by: John Stultz <john.stultz@linaro.org>
 > ---
->  drivers/soc/qcom/rpmh-internal.h |  25 +++++---
->  drivers/soc/qcom/rpmh-rsc.c      | 123 +++++++++++++++++++++++++++++++++=
-++----
->  drivers/soc/qcom/rpmh.c          |  26 +++------
->  3 files changed, 137 insertions(+), 37 deletions(-)
->=20
-> diff --git a/drivers/soc/qcom/rpmh-rsc.c b/drivers/soc/qcom/rpmh-rsc.c
-> index b718221..fbe1f3e 100644
-> --- a/drivers/soc/qcom/rpmh-rsc.c
-> +++ b/drivers/soc/qcom/rpmh-rsc.c
-> @@ -6,6 +6,7 @@
-[...]
-> +
-> +static int rpmh_rsc_cpu_pm_callback(struct notifier_block *nfb,
-> +                                   unsigned long action, void *v)
-> +{
-> +       struct rsc_drv *drv =3D container_of(nfb, struct rsc_drv, rsc_pm);
-> +       int ret =3D NOTIFY_OK;
-> +
-> +       spin_lock(&drv->pm_lock);
-> +
-> +       switch (action) {
-> +       case CPU_PM_ENTER:
 
-I thought CPU_PM notifiers weren't supposed to be used anymore? Or at
-least, the genpd work that has gone on for cpuidle could be used here in
-place of CPU_PM notifiers? And so this isn't actually any different
-than what was proposed originally to use genpd for this?
+Reviewed-by: Stephen Boyd <swboyd@chromium.org>
 
-> +               cpumask_set_cpu(raw_smp_processor_id(),
-
-Why do we need to use raw_smp_processor_id()? smp_processor_id() should
-work just as well?
-
-> +                               &drv->cpus_entered_pm);
-> +
-> +               if (!cpumask_equal(&drv->cpus_entered_pm, cpu_online_mask=
-))
-> +                       goto exit;
-> +               break;
-> +       case CPU_PM_ENTER_FAILED:
-> +       case CPU_PM_EXIT:
-> +               cpumask_clear_cpu(raw_smp_processor_id(),
-> +                                 &drv->cpus_entered_pm);
-> +               goto exit;
-> +       }
-> +
-> +       ret =3D rpmh_rsc_ctrlr_is_busy(drv);
-> +       if (ret) {
-> +               ret =3D NOTIFY_BAD;
-> +               goto exit;
-> +       }
-> +
-> +       ret =3D rpmh_flush(&drv->client);
-> +       if (ret)
-> +               ret =3D NOTIFY_BAD;
-> +       else
-> +               ret =3D NOTIFY_OK;
-> +
-> +exit:
-> +       spin_unlock(&drv->pm_lock);
-> +       return ret;
-> +}
-> +
+Might be worth it sending it outside of this thread in case it's missed.
