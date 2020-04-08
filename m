@@ -2,161 +2,126 @@ Return-Path: <SRS0=8dav=5Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58F50C2D0EA
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 15:59:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33304C2D0EA
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 15:59:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3032E2082D
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 15:59:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 060E72082D
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 15:59:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="wrsywjVM"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="CIhF4lRn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730069AbgDHP73 (ORCPT
+        id S1730081AbgDHP7f (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Apr 2020 11:59:29 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:53892 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729889AbgDHP73 (ORCPT
+        Wed, 8 Apr 2020 11:59:35 -0400
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:31990 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1730045AbgDHP7e (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Apr 2020 11:59:29 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 038FeCWe088049;
-        Wed, 8 Apr 2020 15:59:14 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2020-01-29;
- bh=suh6+9x2SWoNOKBwtEAB3+9V2UZtf1WztxESTUhqu6o=;
- b=wrsywjVMFNZaYrCXazXnVXP8D+CoQwH9XkRTuyTZkudYdsaAgEuZG4CyffxoIJIWRV62
- nfZvYRgQ7HRr2ZbP+nJeEVPjL15x2A9DKg5DKQ+fAm54yJRJsyiLL6uloVENDDMV4b64
- WLF3xr4RpcEQ3Zv8pptjHOgqx1MWOLR14ndOk/HUNJEflIWGtyF8hC0Zkg496VNejuCB
- eJhI3WwyG30MI+Lqrnb61V0Q4lNuaAO5vvzQXlr1lRWH8HE3SvBFHVkjsArlDN39s1IS
- lxSUdhnfwz6C/B/nX8n8HoJ/E4HIvHFYRtCLs0Zc66pf2iF7Kt2gOvF5/5swP30PT9aw Zw== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by userp2130.oracle.com with ESMTP id 3091m3cfc2-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 08 Apr 2020 15:59:14 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 038FbeuQ062359;
-        Wed, 8 Apr 2020 15:59:13 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by aserp3020.oracle.com with ESMTP id 3091m4afq7-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 08 Apr 2020 15:59:13 +0000
-Received: from abhmp0013.oracle.com (abhmp0013.oracle.com [141.146.116.19])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 038FxAbK000743;
-        Wed, 8 Apr 2020 15:59:10 GMT
-Received: from linux-1.home (/92.157.90.160)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 08 Apr 2020 08:59:10 -0700
-Subject: Re: [PATCH V2 5/9] objtool: Add support for intra-function calls
-To:     Julien Thierry <jthierry@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>
-Cc:     x86@kernel.org, linux-kernel@vger.kernel.org, jpoimboe@redhat.com,
-        tglx@linutronix.de
-References: <20200407073142.20659-1-alexandre.chartre@oracle.com>
- <20200407073142.20659-6-alexandre.chartre@oracle.com>
- <20200407130729.GZ20730@hirez.programming.kicks-ass.net>
- <40b19a8e-ae5e-623e-fb3f-261f9fec2ea5@oracle.com>
- <7ba6d4c9-c1dc-fa83-2ade-b7d3fba9e7fb@oracle.com>
- <b8d4777e-1c33-7165-33f6-f32007ef7305@redhat.com>
-From:   Alexandre Chartre <alexandre.chartre@oracle.com>
-Message-ID: <cb04c823-3b93-4fe3-9d78-17040b802f82@oracle.com>
-Date:   Wed, 8 Apr 2020 18:03:35 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.0
+        Wed, 8 Apr 2020 11:59:34 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1586361573;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=Cv3Uc9k7RiYBuNJnamJbsFgYPRzsKo70MnUziLuuZdQ=;
+        b=CIhF4lRnNCUitwSmA+z3sr89LKVm/jySzKCIbAhUJ1Z6cnuojdu/qlsX3V1DG+qqFS6ktb
+        ghFIO5jGWjOwp20hDxJcDyszYK2MEM9pKUEGqWdGtpEWG8Jnu2W5ZpNgKQXttCKziOoR+N
+        TIV+PfmXzCfynt7a0u/gCuIfeWV54XI=
+Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
+ [209.85.128.69]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-107-Me-tmjjHPciFk-E9Thb-Rg-1; Wed, 08 Apr 2020 11:59:29 -0400
+X-MC-Unique: Me-tmjjHPciFk-E9Thb-Rg-1
+Received: by mail-wm1-f69.google.com with SMTP id u6so18710wmm.6
+        for <linux-kernel@vger.kernel.org>; Wed, 08 Apr 2020 08:59:29 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Cv3Uc9k7RiYBuNJnamJbsFgYPRzsKo70MnUziLuuZdQ=;
+        b=WmVNz2Dcdfb8TNXwohA/ql35He8f0dBMjEYzgjw+fH+YX9wdhg+4AxbV7mmHKUXufW
+         LrNWRnXjUWUD8Gk7WKUDLY/Kf1xD/DpQ9Nux4ztGEZ9bZpgVJ47gL/kWuR2p99E/vLN/
+         2f302WOjzuhqi/3Rz4l4qxzeXA+ddmlNsZgQDV5IE0zOVrJ1cInRsNELToBHV14YBzo5
+         qF+xgsicOQJhwkcJ9NfTDwa03N2Iutn0o0jEJAtk7RspmZNfUgdx0XBXPFRUTZUd0scI
+         qxzYHfZJJt8eRhEYnsxGCE9J/ohmbonxg8H8qSExmR16epGabu1jv/LZ+h8piKzNCTYE
+         lDQQ==
+X-Gm-Message-State: AGi0Pub7psMH003vbrXjrVi3ahduVx6Ye7v/BiCJLNof5BtQg2OyaAXJ
+        Rh7WiX/r/g7h8swrDut4joXs5g5p9wk4P4H4aN6LEzz5Tvof+WUe8Nt677ccoKDAwPOjn+Tavty
+        r94Ao309vsfGdOi58d6bumalt
+X-Received: by 2002:adf:e3c9:: with SMTP id k9mr8478739wrm.33.1586361568685;
+        Wed, 08 Apr 2020 08:59:28 -0700 (PDT)
+X-Google-Smtp-Source: APiQypJCu9BKLGk84AVscL0fKdbMzfDwWwkDvUB3DvqVVHDfVGxmDXVIvCJNVm8g5nLEPbtDXIKktQ==
+X-Received: by 2002:adf:e3c9:: with SMTP id k9mr8478726wrm.33.1586361568473;
+        Wed, 08 Apr 2020 08:59:28 -0700 (PDT)
+Received: from xz-x1.redhat.com ([2607:9880:19c0:32::3])
+        by smtp.gmail.com with ESMTPSA id p5sm38401663wrg.49.2020.04.08.08.59.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 08 Apr 2020 08:59:27 -0700 (PDT)
+From:   Peter Xu <peterx@redhat.com>
+To:     linux-mm@kvack.org, Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-kernel@vger.kernel.org
+Cc:     Andrew Morton <akpm@linux-foundation.org>, peterx@redhat.com,
+        Hillf Danton <hdanton@sina.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Peter Zijlstra <peterz@infradead.org>,
+        syzbot+3be1a33f04dc782e9fd5@syzkaller.appspotmail.com,
+        Michal Hocko <mhocko@suse.com>
+Subject: [PATCH] mm/gup: Let __get_user_pages_locked() return -EINTR for fatal signal
+Date:   Wed,  8 Apr 2020 11:59:24 -0400
+Message-Id: <20200408155924.107722-1-peterx@redhat.com>
+X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
-In-Reply-To: <b8d4777e-1c33-7165-33f6-f32007ef7305@redhat.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9584 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 bulkscore=0 mlxscore=0
- malwarescore=0 spamscore=0 adultscore=0 suspectscore=0 mlxlogscore=999
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
- definitions=main-2004080124
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9584 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 adultscore=0
- impostorscore=0 malwarescore=0 lowpriorityscore=0 mlxlogscore=999
- priorityscore=1501 clxscore=1015 bulkscore=0 phishscore=0 mlxscore=0
- suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2004080124
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Hillf Danton <hdanton@sina.com>
 
+__get_user_pages_locked() will return 0 instead of -EINTR after commit
+4426e945df588 which added extra code to allow gup detect fatal signal
+faster.  Restore that behavior.
 
-On 4/8/20 4:19 PM, Julien Thierry wrote:
-> 
-> 
-> On 4/8/20 3:06 PM, Alexandre Chartre wrote:
->>
->>
->> On 4/7/20 3:28 PM, Alexandre Chartre wrote:
->>>
->>> On 4/7/20 3:07 PM, Peter Zijlstra wrote:
->>>> On Tue, Apr 07, 2020 at 09:31:38AM +0200, Alexandre Chartre wrote:
->>>>
->>>>> index a62e032863a8..7ee1561bf7ad 100644
->>>>> --- a/tools/objtool/arch/x86/decode.c
->>>>> +++ b/tools/objtool/arch/x86/decode.c
->>>>> @@ -497,3 +497,15 @@ void arch_initial_func_cfi_state(struct cfi_state *state)
->>>>>       state->regs[16].base = CFI_CFA;
->>>>>       state->regs[16].offset = -8;
->>>>>   }
->>>>> +
->>>>> +
->>>>> +void arch_configure_intra_function_call(struct stack_op *op)
->>>>> +{
->>>>> +    /*
->>>>> +     * For the impact on the stack, make an intra-function
->>>>> +     * call behaves like a push of an immediate value (the
->>>>> +     * return address).
->>>>> +     */
->>>>> +    op->src.type = OP_SRC_CONST;
->>>>> +    op->dest.type = OP_DEST_PUSH;
->>>>> +}
->>>>
->>>> An alternative is to always set up stack ops for CALL/RET on decode, but
->>>> conditionally run update_insn_state() for them.
->>>>
->>>> Not sure that makes more logical sense, but the patch would be simpler I
->>>> think.
->>>
->>> Right, this would avoid adding a new arch dependent function and the patch
->>> will be simpler. This probably makes sense as the stack impact is the same
->>> for all calls (but objtool will use it only for intra-function calls).
->>>
->>
->> Actually the processing of the ret instruction is more complicated than I
->> anticipated with intra-function calls, and so my implementation is not
->> complete at the moment.
->>
->> The issue is to correctly handle how the ret is going to behave depending how
->> the stack (or register on arm) is modified before the ret. Adjusting the stack
->> offset makes the stack state correct, but objtool still needs to correctly
->> figure out where the ret is going to return and where the code flow continues.
->>
-> 
-> A hint indicating the target "jump" address could be useful. It could
-> be used to add the information on some call/jump dynamic that aren't
-> associated with jump tables. Currently when objtool finds a jump
-> dynamic, if no branches were added to it, it will just return.
-> 
-> Having such a hint could help make additional links (at least on
-> arm64). I don't know what Peter and Josh would think of that (if that
-> helps in your case of course).
-> 
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Fixes: 4426e945df58 ("mm/gup: allow VM_FAULT_RETRY for multiple times")
+Reported-by: syzbot+3be1a33f04dc782e9fd5@syzkaller.appspotmail.com
+Signed-off-by: Hillf Danton <hdanton@sina.com>
+Acked-by: Michal Hocko <mhocko@suse.com>
+Signed-off-by: Peter Xu <peterx@redhat.com>
+---
 
-Yes, I am thinking about tracking intra-function call return address,
-and having hints to specify a return address changes. For example,
-on x86, when we push the branch address on the stack we overwrite the
-last return address (the return address of the last intra-function call).
-Then the return instruction can figure out where to branch.
+PS. Patch verified with syzbot.
 
-alex.
+Signed-off-by: Peter Xu <peterx@redhat.com>
+---
+ mm/gup.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
+
+diff --git a/mm/gup.c b/mm/gup.c
+index afce0bc47e70..6076df8e04a4 100644
+--- a/mm/gup.c
++++ b/mm/gup.c
+@@ -1326,8 +1326,11 @@ static __always_inline long __get_user_pages_locked(struct task_struct *tsk,
+ 		 * start trying again otherwise it can loop forever.
+ 		 */
+ 
+-		if (fatal_signal_pending(current))
++		if (fatal_signal_pending(current)) {
++			if (!pages_done)
++				pages_done = -EINTR;
+ 			break;
++		}
+ 
+ 		ret = down_read_killable(&mm->mmap_sem);
+ 		if (ret) {
+-- 
+2.24.1
+
