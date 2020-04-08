@@ -4,105 +4,217 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A3D6C2D0F4
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 19:03:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41EF7C2BA1B
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 19:05:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 71FE92075E
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 19:03:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1C6342075E
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 19:05:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729059AbgDHTDZ (ORCPT
+        id S1729155AbgDHTFI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Apr 2020 15:03:25 -0400
-Received: from mout.kundenserver.de ([217.72.192.75]:37149 "EHLO
+        Wed, 8 Apr 2020 15:05:08 -0400
+Received: from mout.kundenserver.de ([212.227.17.10]:50901 "EHLO
         mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726730AbgDHTDZ (ORCPT
+        with ESMTP id S1726730AbgDHTFI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Apr 2020 15:03:25 -0400
+        Wed, 8 Apr 2020 15:05:08 -0400
 Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
- (mreue108 [212.227.15.145]) with ESMTPA (Nemesis) id
- 1Mg6i8-1iniJB1vaA-00haOp; Wed, 08 Apr 2020 21:03:15 +0200
+ (mreue109 [212.227.15.145]) with ESMTPA (Nemesis) id
+ 1MdeSt-1inTPx0ouf-00ZfGF; Wed, 08 Apr 2020 21:04:52 +0200
 From:   Arnd Bergmann <arnd@arndb.de>
-List-Id: <soc.lore.kernel.org>
-To:     soc@kernel.org, Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>
-Cc:     Arnd Bergmann <arnd@arndb.de>, Anson Huang <Anson.Huang@nxp.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Daniel Baluta <daniel.baluta@nxp.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] firmware: imx: fix compile-testing
-Date:   Wed,  8 Apr 2020 21:02:57 +0200
-Message-Id: <20200408190314.695067-1-arnd@arndb.de>
+To:     Casey Schaufler <casey@schaufler-ca.com>,
+        James Morris <jmorris@namei.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>
+Cc:     Arnd Bergmann <arnd@arndb.de>, stable@vger.kernel.org,
+        David Ahern <dsahern@gmail.com>,
+        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
+        linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] smack: avoid unused 'sip' variable warning
+Date:   Wed,  8 Apr 2020 21:04:31 +0200
+Message-Id: <20200408190448.778791-1-arnd@arndb.de>
 X-Mailer: git-send-email 2.26.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:MHUnGS4mhb9c0Ayqn3vJzYSSZquf3HBpsl6Pj4L+hYt5iYBAWOf
- NQh3uzTRWIYhEs8jW8faJAnTJk1sI/KDx23ioLQUPjJX2ymq+WT9C90sPnhQEtj/KGaD/AM
- +WZqaXe0OeUIhN0W4OmyYU+szIvUsR2+EMH3qSgWOJuOmUACA36zNk+drKkP3RoK5/RbYeS
- goXPkv3p116iHhkEYCCqw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:7T+8WLgcDJs=:xUMyHkZ75drqypZQFuX28i
- BNKdAuhp5qRrP6PXAgJTf8JefObWnjvuFtnXdT2Y0qcGAOxXbIcgqRP3r4qUj86c1Cfo6Q9kr
- 0WjSZ72l77/wNd8Ne9gV+YqS00a2Vd4opY4wjgbGG+pqvi5/kHvDXKAwQEqFgTP3gqIITeIp8
- UkGv08cjyAc5ZEWmt6sQd0ltYZP7fRtxAmLrl+ttXHcXOA8yyiNowvobBvSLJZBS961VO1Na1
- OtM+0yj8mhcYlrz3le4bPleUOuZ4C/T6psozIDGl1MEXreFuaBuVB6SbaztpiIDB4P0nNuUOZ
- YM/LA/hRIUkRp0Lb9GpbWBsNGpqD7dEB5EwbQrT8SZQjhdZ6v6WPBW+e0rtK0EMjvKuggSoEZ
- 1sLaBnc/W1x5te3q+ynOTeokQxybC+nHK666kYUD6ABlp1+I0tqfzx31UNSj3sg1hD6LWgGFv
- s4xN9PcQ58f1zJjiRMwRX8wc81QMSzDWNcIS4E5tFUwaX2jfH9mNQui2pCPrigi+h92hQYeUC
- VG+0sXC+wCPNm8D6VS5eeT2YxR9xNqyqX2OgCPDIZUgmvyswHuFqPRNvAM3AAwaIMe6yRkmoJ
- S4SSAMBYz+67IgDq4YvvpuJXcKaeG/4PDTFIiGLtcPKrXf2VXU/Ab8uRYF2Lt6gshd3m0wLKN
- hvlkSfpdxj0bUuPfgXbi1JYtVEHEsCQbxS+B9XyQxaTq1xB5sKieNsuFkl3cVUHLXJuKzSN1E
- 1fGWREn0Tf7JwuFBz2yQlGZ3RDYUmK10aAuq7YUdgqOFMWSCP2U/ZNC6UFr7niV/DTT2cnniZ
- DmisMpT2nbeXHz3zznECz2ugrkbgRNwXWTdMIYvi4g2iGaB27o=
+X-Provags-ID: V03:K1:YN15JdouRHUqp4Z3FJXkeTN/96nn0sT9zi+9TwGvUZQzcaMfrqR
+ 0IjEoymPsfmLhxaWA+J4RY53s34KX5U6kwNFzK0Y/8P7qH4Nld8AEfaJu2EIYJr7mE6Rztr
+ AVjEvqSs56UWnQiOy1SqWD3ge/DUwsrrdNeVU2qQPJhNo7RiCL1G2qYC9+LN77EJCn9OnM6
+ sJw7Z5FbNB8x98npc/9tA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:P+CL3ETxFTM=:geY3PpBWshG5C2oixOcL/C
+ 9ERZqDcfLxQiZ/WtFKn0ofSrKx3UnzMqCBowkzvoBYuOPMhZAikSh0AfMWWzmQM58NnqjQEMZ
+ 5QgJ/H+1aQIcrTu9rqtODx1iq8Ewyo8e7LO2TMVMw2IfevMsA+sMr/ktkVvIvSnvVbvyzvmx9
+ h/v5z3c8evy4b7OvQIaMUz3qiptayfNOlB+7BcTNB9yjRhnudAhMg93yqpmJcEvGN40doHrEr
+ I4UMi6GhxyEqIMKDqxlfwXGZXcmTo/GS7c84AmNEvgh1fxDGm/d4IR2VSCq4oRblxXZAdx5sG
+ 1mCmOUqtSxAFhFBokSeltjh+F1YXakp7baGM/k+X6nxQfkL1OnkGID/0qFx98Hrm4dWFhpmvt
+ AuJ2wV0wO1n7b2pU88DqaPzKSWM95mHwxEk+Z0yKgYQSlpR0M9QZzOzHoAxNwfgmI+0SbmYzh
+ hfT/i1qxxGLcVrOyRAePKx49NwnE32dXa6bwKoLCEd852p8G0J/akg86jpwqZc4/iMwP1xxkk
+ 8weP+rhNeIVh1llGkA/B9V/g1fuAbdvax5f+KFq9SCMqjp1IMb/paScQNe5K6q1tgyybv+JAo
+ ARxoNKrROCuzCWDTex88I2lzsGJKV4ToN3Qo618JvWfbO0K0dAvZjcWiLZFQ9H3SSnRDdMEx+
+ HJaM2TRH8rULReCytqJyeSlA2gDqMObJPJIO3DHn/iB2BbvLPqTv7hIBSCYhG3pOui+h7bvRb
+ mDwQo6bKPI1G74Ck/ILzsflVM8HdnCIc2KVol13F0erpe7QjuckL3fx3Y5Keun6dtRusp7Aef
+ kBCceNXIBdY+PyjQ7TSx56ITziq2CzaiHD0ByAhd/+pnNfBjxc=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-It is nice to allow compile-testing the firmware drivers, but this
-fails when the dependency is a loadable module:
+The mix of IS_ENABLED() and #ifdef checks has left a combination
+that causes a warning about an unused variable:
 
-aarch64-linux-ld: drivers/firmware/imx/scu-pd.o: in function `imx_sc_pd_power':
-scu-pd.c:(.text+0xd8): undefined reference to `imx_scu_call_rpc'
-aarch64-linux-ld: scu-pd.c:(.text+0x108): undefined reference to `imx_scu_call_rpc'
-aarch64-linux-ld: drivers/firmware/imx/scu-pd.o: in function `imx_sc_pd_probe':
+security/smack/smack_lsm.c: In function 'smack_socket_connect':
+security/smack/smack_lsm.c:2838:24: error: unused variable 'sip' [-Werror=unused-variable]
+ 2838 |   struct sockaddr_in6 *sip = (struct sockaddr_in6 *)sap;
 
-Change the dependencies to ensure that any driver we depend on is
-either reachable or we are compile-testing and it is disabled,
-effectively reverting most of the previous changes that turned
-out to be incorrect.
+Change the code to use C-style checks consistently so the compiler
+can handle it correctly.
 
-Fixes: a9f85f93ed73 ("firmware: imx: add COMPILE_TEST support")
-Fixes: 5b00b8375416 ("firmware: imx: add COMPILE_TEST for IMX_SCU driver")
+Fixes: 87fbfffcc89b ("broken ping to ipv6 linklocal addresses on debian buster")
 Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 ---
- drivers/firmware/imx/Kconfig | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+There are lots of ways of addressing this, if you prefer a different
+way, please just treat this patch as a bug report and apply the
+replacement patch directly.
+---
+ security/smack/smack.h     |  6 ------
+ security/smack/smack_lsm.c | 25 ++++++++-----------------
+ 2 files changed, 8 insertions(+), 23 deletions(-)
 
-diff --git a/drivers/firmware/imx/Kconfig b/drivers/firmware/imx/Kconfig
-index 116707a075f3..1d2e5b85d7ca 100644
---- a/drivers/firmware/imx/Kconfig
-+++ b/drivers/firmware/imx/Kconfig
-@@ -12,7 +12,7 @@ config IMX_DSP
+diff --git a/security/smack/smack.h b/security/smack/smack.h
+index 62529f382942..335d2411abe4 100644
+--- a/security/smack/smack.h
++++ b/security/smack/smack.h
+@@ -148,7 +148,6 @@ struct smk_net4addr {
+ 	struct smack_known	*smk_label;	/* label */
+ };
  
- config IMX_SCU
- 	bool "IMX SCU Protocol driver"
--	depends on IMX_MBOX || COMPILE_TEST
-+	depends on IMX_MBOX
- 	help
- 	  The System Controller Firmware (SCFW) is a low-level system function
- 	  which runs on a dedicated Cortex-M core to provide power, clock, and
-@@ -24,6 +24,6 @@ config IMX_SCU
+-#if IS_ENABLED(CONFIG_IPV6)
+ /*
+  * An entry in the table identifying IPv6 hosts.
+  */
+@@ -159,9 +158,7 @@ struct smk_net6addr {
+ 	int			smk_masks;	/* mask size */
+ 	struct smack_known	*smk_label;	/* label */
+ };
+-#endif /* CONFIG_IPV6 */
  
- config IMX_SCU_PD
- 	bool "IMX SCU Power Domain driver"
--	depends on IMX_SCU || COMPILE_TEST
-+	depends on IMX_SCU
- 	help
- 	  The System Controller Firmware (SCFW) based power domain driver.
+-#ifdef SMACK_IPV6_PORT_LABELING
+ /*
+  * An entry in the table identifying ports.
+  */
+@@ -174,7 +171,6 @@ struct smk_port_label {
+ 	short			smk_sock_type;	/* Socket type */
+ 	short			smk_can_reuse;
+ };
+-#endif /* SMACK_IPV6_PORT_LABELING */
+ 
+ struct smack_known_list_elem {
+ 	struct list_head	list;
+@@ -335,9 +331,7 @@ extern struct smack_known smack_known_web;
+ extern struct mutex	smack_known_lock;
+ extern struct list_head smack_known_list;
+ extern struct list_head smk_net4addr_list;
+-#if IS_ENABLED(CONFIG_IPV6)
+ extern struct list_head smk_net6addr_list;
+-#endif /* CONFIG_IPV6 */
+ 
+ extern struct mutex     smack_onlycap_lock;
+ extern struct list_head smack_onlycap_list;
+diff --git a/security/smack/smack_lsm.c b/security/smack/smack_lsm.c
+index 8c61d175e195..e193b0db0271 100644
+--- a/security/smack/smack_lsm.c
++++ b/security/smack/smack_lsm.c
+@@ -50,10 +50,8 @@
+ #define SMK_RECEIVING	1
+ #define SMK_SENDING	2
+ 
+-#ifdef SMACK_IPV6_PORT_LABELING
+-DEFINE_MUTEX(smack_ipv6_lock);
++static DEFINE_MUTEX(smack_ipv6_lock);
+ static LIST_HEAD(smk_ipv6_port_list);
+-#endif
+ static struct kmem_cache *smack_inode_cache;
+ struct kmem_cache *smack_rule_cache;
+ int smack_enabled;
+@@ -2320,7 +2318,6 @@ static struct smack_known *smack_ipv4host_label(struct sockaddr_in *sip)
+ 	return NULL;
+ }
+ 
+-#if IS_ENABLED(CONFIG_IPV6)
+ /*
+  * smk_ipv6_localhost - Check for local ipv6 host address
+  * @sip: the address
+@@ -2388,7 +2385,6 @@ static struct smack_known *smack_ipv6host_label(struct sockaddr_in6 *sip)
+ 
+ 	return NULL;
+ }
+-#endif /* CONFIG_IPV6 */
+ 
+ /**
+  * smack_netlabel - Set the secattr on a socket
+@@ -2477,7 +2473,6 @@ static int smack_netlabel_send(struct sock *sk, struct sockaddr_in *sap)
+ 	return smack_netlabel(sk, sk_lbl);
+ }
+ 
+-#if IS_ENABLED(CONFIG_IPV6)
+ /**
+  * smk_ipv6_check - check Smack access
+  * @subject: subject Smack label
+@@ -2510,7 +2505,6 @@ static int smk_ipv6_check(struct smack_known *subject,
+ 	rc = smk_bu_note("IPv6 check", subject, object, MAY_WRITE, rc);
+ 	return rc;
+ }
+-#endif /* CONFIG_IPV6 */
+ 
+ #ifdef SMACK_IPV6_PORT_LABELING
+ /**
+@@ -2599,6 +2593,7 @@ static void smk_ipv6_port_label(struct socket *sock, struct sockaddr *address)
+ 	mutex_unlock(&smack_ipv6_lock);
+ 	return;
+ }
++#endif
+ 
+ /**
+  * smk_ipv6_port_check - check Smack port access
+@@ -2661,7 +2656,6 @@ static int smk_ipv6_port_check(struct sock *sk, struct sockaddr_in6 *address,
+ 
+ 	return smk_ipv6_check(skp, object, address, act);
+ }
+-#endif /* SMACK_IPV6_PORT_LABELING */
+ 
+ /**
+  * smack_inode_setsecurity - set smack xattrs
+@@ -2836,24 +2830,21 @@ static int smack_socket_connect(struct socket *sock, struct sockaddr *sap,
+ 		return 0;
+ 	if (IS_ENABLED(CONFIG_IPV6) && sap->sa_family == AF_INET6) {
+ 		struct sockaddr_in6 *sip = (struct sockaddr_in6 *)sap;
+-#ifdef SMACK_IPV6_SECMARK_LABELING
+-		struct smack_known *rsp;
+-#endif
++		struct smack_known *rsp = NULL;
+ 
+ 		if (addrlen < SIN6_LEN_RFC2133)
+ 			return 0;
+-#ifdef SMACK_IPV6_SECMARK_LABELING
+-		rsp = smack_ipv6host_label(sip);
++		if (__is_defined(SMACK_IPV6_SECMARK_LABELING))
++				rsp = smack_ipv6host_label(sip);
+ 		if (rsp != NULL) {
+ 			struct socket_smack *ssp = sock->sk->sk_security;
+ 
+ 			rc = smk_ipv6_check(ssp->smk_out, rsp, sip,
+ 					    SMK_CONNECTING);
+ 		}
+-#endif
+-#ifdef SMACK_IPV6_PORT_LABELING
+-		rc = smk_ipv6_port_check(sock->sk, sip, SMK_CONNECTING);
+-#endif
++		if (__is_defined(SMACK_IPV6_PORT_LABELING))
++			rc = smk_ipv6_port_check(sock->sk, sip, SMK_CONNECTING);
++
+ 		return rc;
+ 	}
+ 	if (sap->sa_family != AF_INET || addrlen < sizeof(struct sockaddr_in))
 -- 
 2.26.0
 
