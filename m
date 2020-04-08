@@ -2,82 +2,155 @@ Return-Path: <SRS0=8dav=5Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B862DC2BA1A
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 10:01:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D41B0C2BA1A
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 10:03:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7EE8E20747
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 10:01:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="l0/4LVJW"
+	by mail.kernel.org (Postfix) with ESMTP id B0F5A20747
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 10:03:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728055AbgDHKB4 (ORCPT
+        id S1728096AbgDHKDX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Apr 2020 06:01:56 -0400
-Received: from mail.skyhub.de ([5.9.137.197]:40042 "EHLO mail.skyhub.de"
+        Wed, 8 Apr 2020 06:03:23 -0400
+Received: from foss.arm.com ([217.140.110.172]:36458 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725932AbgDHKB4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Apr 2020 06:01:56 -0400
-Received: from zn.tnic (p200300EC2F0A9300FDE94558DB0629D0.dip0.t-ipconnect.de [IPv6:2003:ec:2f0a:9300:fde9:4558:db06:29d0])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id F1EBC1EC0A02;
-        Wed,  8 Apr 2020 12:01:54 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1586340115;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=vNYTeV2b64ZBxmOavtdQ8bkFeF6KZzWWTytnRjR7vL8=;
-        b=l0/4LVJWPuFrF7GMaqLg9UPQuF3QuNtio4dgEZosgiwzYEeOHCmk8sIaC3BBFrmBns2qac
-        VH1oyLhjdpkJVZbcd49C5lhyP673vvZjLT/JBLfQCejHbh8S095gXtx9k516KWG++Kk7kI
-        Lo79YX7Rnim0kCCtTbyzXiFaEX4cEYw=
-Date:   Wed, 8 Apr 2020 12:01:51 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     Vivek Goyal <vgoyal@redhat.com>
-Cc:     Andy Lutomirski <luto@amacapital.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
-        kvm list <kvm@vger.kernel.org>, stable <stable@vger.kernel.org>
-Subject: Re: [PATCH v2] x86/kvm: Disable KVM_ASYNC_PF_SEND_ALWAYS
-Message-ID: <20200408100151.GD24663@zn.tnic>
-References: <87eeszjbe6.fsf@nanos.tec.linutronix.de>
- <B85606B0-71B5-4B7D-A892-293CB9C1B434@amacapital.net>
- <20200407224903.GC64635@redhat.com>
+        id S1725932AbgDHKDW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Apr 2020 06:03:22 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B8FF131B;
+        Wed,  8 Apr 2020 03:03:21 -0700 (PDT)
+Received: from [192.168.0.14] (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 681F43F73D;
+        Wed,  8 Apr 2020 03:03:19 -0700 (PDT)
+Subject: Re: [PATCH v6 1/2] ACPI / APEI: Add support to notify the vendor
+ specific HW errors
+To:     Borislav Petkov <bp@alien8.de>, Shiju Jose <shiju.jose@huawei.com>
+Cc:     linux-acpi@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, rjw@rjwysocki.net,
+        helgaas@kernel.org, lenb@kernel.org, tony.luck@intel.com,
+        gregkh@linuxfoundation.org, zhangliguang@linux.alibaba.com,
+        tglx@linutronix.de, linuxarm@huawei.com,
+        jonathan.cameron@huawei.com, tanxiaofei@huawei.com,
+        yangyicong@hisilicon.com
+References: <ShijuJose> <20200325164223.650-1-shiju.jose@huawei.com>
+ <20200325164223.650-2-shiju.jose@huawei.com> <20200327182214.GD8015@zn.tnic>
+From:   James Morse <james.morse@arm.com>
+Message-ID: <c73bb18b-02ef-6c35-f4cf-1738c17a96e5@arm.com>
+Date:   Wed, 8 Apr 2020 11:03:13 +0100
+User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
+In-Reply-To: <20200327182214.GD8015@zn.tnic>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200407224903.GC64635@redhat.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 07, 2020 at 06:49:03PM -0400, Vivek Goyal wrote:
-> > 2. Access to bad memory results in #MC.  Sure, #MC is a turd, but it’s an *architectural* turd. By all means, have a nice simple PV mechanism to tell the #MC code exactly what went wrong, but keep the overall flow the same as in the native case.
-> > 
+Hi Boris, Shiju,
+
+Sorry for not spotting this reply earlier: Its in-reply to v1, so gets buried.
+
+On 27/03/2020 18:22, Borislav Petkov wrote:
+> On Wed, Mar 25, 2020 at 04:42:22PM +0000, Shiju Jose wrote:
+>> Presently APEI does not support reporting the vendor specific
+>> HW errors, received in the vendor defined table entries, to the
+>> vendor drivers for any recovery.
+>>
+>> This patch adds the support to register and unregister the
 > 
-> Should we differentiate between two error cases. In this case memory is
-> not bad. Just that page being asked for can't be faulted in anymore. And
-> another error case is real memory failure. So for the first case it
-> could be injected into guest using #PF or #VE or something paravirt
-> specific and real hardware failures take #MC path (if they are not
-> already doing so).
+> Avoid having "This patch" or "This commit" in the commit message. It is
+> tautologically useless.
+> 
+> Also, do
+> 
+> $ git grep 'This patch' Documentation/process
+> 
+> for more details.
+> 
+>> error handling function for the vendor specific HW errors and
+>> notify the registered kernel driver.
 
-For handling memory failures with guests there's this whole thing
-described Documentation/vm/hwpoison.rst and KVM has support for that.
+>> @@ -526,10 +552,17 @@ static void ghes_do_proc(struct ghes *ghes,
+>>  			log_arm_hw_error(err);
+>>  		} else {
+>>  			void *err = acpi_hest_get_payload(gdata);
+>> +			u8 error_handled = false;
+>> +			int ret;
+>> +
+>> +			ret = atomic_notifier_call_chain(&ghes_event_notify_list, 0, gdata);
+> 
+> Well, this is a notifier with standard name for a non-standard event.
+> Not optimal.
+> 
+> Why does only this event need a notifier? Because your driver is
+> interested in only those events?
 
--- 
-Regards/Gruss,
-    Boris.
+Its the 'else' catch-all for stuff drivers/acpi/apei  doesn't know to handle.
 
-https://people.kernel.org/tglx/notes-about-netiquette
+In this case its because its a vendor specific GUID that only the vendor driver knows how
+to parse.
+
+
+>> +			if (ret & NOTIFY_OK)
+>> +				error_handled = true;
+>>  
+>>  			log_non_standard_event(sec_type, fru_id, fru_text,
+>>  					       sec_sev, err,
+>> -					       gdata->error_data_length);
+>> +					       gdata->error_data_length,
+>> +					       error_handled);
+> 
+> What's that error_handled thing for? That's just silly.
+> 
+> Your notifier returns NOTIFY_STOP when it has queued the error. If you
+> don't want to log it, just test == NOTIFY_STOP and do not log it then.
+
+My thinking for this being needed was so user-space consumers of those tracepoints keep
+working. Otherwise you upgrade, get this feature, and your user-space counters stop working.
+
+You'd need to know this error source was now managed by an in-kernel driver, which may
+report the errors somewhere else...
+
+
+> Then your notifier callback is queuing the error into a kfifo for
+> whatever reason and then scheduling a workqueue to handle it in user
+> context...
+> 
+> So I'm thinking that it would be better if you:
+> 
+> * make that kfifo generic and part of ghes.c and queue all types of
+> error records into it in ghes_do_proc() - not just the non-standard
+> ones.
+
+Move the drop to process context into ghes.c? This should result in less code.
+
+I asked for this hooking to only be for the 'catch all' don't-know case so that we don't
+get drivers trying to hook and handle memory errors. (if we ever wanted that, it should be
+from part of memory_failure() so it catches all the ways of reporting memory-failure)
+32bit arm has prior in this area.
+
+
+> * then, when you're done queuing, you kick a workqueue.
+> 
+> * that workqueue runs a normal, blocking notifier to which drivers
+> register.
+> 
+> Your driver can register to that notifier too and do the normal handling
+> then and not have this ad-hoc, semi-generic, semi-vendor-specific thing.
+
+As long as we don't walk a list of things that might handle a memory-error, and have some
+random driver try and NOTIFY_STOP it....
+
+aer_recover_queue() would be replaced by this. memory_failure_queue() has one additional
+caller in drivers/ras/cec.c.
+
+
+Thanks,
+
+James
