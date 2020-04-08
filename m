@@ -4,38 +4,38 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 397A7C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 12:00:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA589C2BB54
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 12:00:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 01EE520A8B
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 12:00:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 868AA2083E
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 12:00:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Aw93+jFA"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="kl7N1DF4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728787AbgDHMAA (ORCPT
+        id S1728693AbgDHL74 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Apr 2020 08:00:00 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:46414 "EHLO
+        Wed, 8 Apr 2020 07:59:56 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:45914 "EHLO
         bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728646AbgDHL76 (ORCPT
+        with ESMTP id S1726575AbgDHL7x (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Apr 2020 07:59:58 -0400
+        Wed, 8 Apr 2020 07:59:53 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
         MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
         :Reply-To:Content-Type:Content-ID:Content-Description;
-        bh=hvIl8nFdM9AKvvDd2B5Ptj/sPZlvFIjnu0sAKeiFvVM=; b=Aw93+jFA2GdNKeSsa38wNjnfeJ
-        /Hxs35R5BvUIjAi75y9i06TKeMeJbZEpxu+5xdycGhgCnuMKfysp5Xo29U87h+hjXj05dBgfGKrWf
-        i91U3+oTCKj4kvk5IzZbHTAvVhzAiQp/zMp5dFUe+PvkjRZkXTi92j4SSBAM/VBRNxIotnDHo5aQ/
-        2mXhOdSdmKmXpCO8V3CsqLFu1Bjml4USrfdhJMKZ631fM0E0nBcJirRT2+fCqkHq+fRYLuqt949GV
-        Si/voJR5Bp21VepCL6NCwOddv+lAijSqgdykatW2/GLZ2L/I+/7pJ67IF1ZHnLDSPWi+KEDDMxI8x
-        NESmQdmQ==;
+        bh=9qK7Dtj+WtgCtPTEhqLHbohMjBZ/bLj4WGsShpTkfgE=; b=kl7N1DF43PAhfE12A2j1vryrvc
+        zdzDnoFf7SGt36b10eu+SvwYvzbtO5b2A2z+0AJe0Cg3vSHM+ITvfNQkxgr5fjq9GVOQ35V78ADBe
+        Ku4g+ewJmeQS3WruWPb9JUerp36gWxkaLMhWeXcFUsDC5g1tVHCeIGloIxOylUCjlzPz+PtntbNuI
+        wJ/WFv08ob5LQgpVwdauDDZi2MCwUdWBH+7YXT+iab6WbbbzQewHz6qlisMCwlRHJl1Fjx4lKjAb8
+        wSZjxJYJYNDQ+7SbQwq6YvpwCXlVooaIqaFqYGoSNWUDmKqLybYg6nXxqOTJPkakPn3qnmoQYffc1
+        PDsEE2aA==;
 Received: from [2001:4bb8:180:5765:65b6:f11e:f109:b151] (helo=localhost)
         by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jM9Mo-0001cr-R8; Wed, 08 Apr 2020 11:59:39 +0000
+        id 1jM9Mi-0001ZS-2Q; Wed, 08 Apr 2020 11:59:32 +0000
 From:   Christoph Hellwig <hch@lst.de>
 To:     Andrew Morton <akpm@linux-foundation.org>,
         "K. Y. Srinivasan" <kys@microsoft.com>,
@@ -58,9 +58,9 @@ Cc:     Robin Murphy <robin.murphy@arm.com>,
         iommu@lists.linux-foundation.org,
         linux-arm-kernel@lists.infradead.org, linux-s390@vger.kernel.org,
         bpf@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 03/28] staging: media: ipu3: use vmap insted of reimplementing it
-Date:   Wed,  8 Apr 2020 13:59:01 +0200
-Message-Id: <20200408115926.1467567-4-hch@lst.de>
+Subject: [PATCH 01/28] x86/hyperv: use vmalloc_exec for the hypercall page
+Date:   Wed,  8 Apr 2020 13:58:59 +0200
+Message-Id: <20200408115926.1467567-2-hch@lst.de>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200408115926.1467567-1-hch@lst.de>
 References: <20200408115926.1467567-1-hch@lst.de>
@@ -72,116 +72,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Just use vmap instead of messing with vmalloc internals.
+Use the designated helper for allocating executable kernel memory, and
+remove the now unused PAGE_KERNEL_RX define.
 
 Signed-off-by: Christoph Hellwig <hch@lst.de>
 ---
- drivers/staging/media/ipu3/ipu3-css-pool.h |  4 +--
- drivers/staging/media/ipu3/ipu3-dmamap.c   | 30 ++++++----------------
- 2 files changed, 9 insertions(+), 25 deletions(-)
+ arch/x86/hyperv/hv_init.c            | 2 +-
+ arch/x86/include/asm/pgtable_types.h | 2 --
+ 2 files changed, 1 insertion(+), 3 deletions(-)
 
-diff --git a/drivers/staging/media/ipu3/ipu3-css-pool.h b/drivers/staging/media/ipu3/ipu3-css-pool.h
-index f4a60b41401b..a8ccd4f70320 100644
---- a/drivers/staging/media/ipu3/ipu3-css-pool.h
-+++ b/drivers/staging/media/ipu3/ipu3-css-pool.h
-@@ -15,14 +15,12 @@ struct imgu_device;
-  * @size:		size of the buffer in bytes.
-  * @vaddr:		kernel virtual address.
-  * @daddr:		iova dma address to access IPU3.
-- * @vma:		private, a pointer to &struct vm_struct,
-- *			used for imgu_dmamap_free.
-  */
- struct imgu_css_map {
- 	size_t size;
- 	void *vaddr;
- 	dma_addr_t daddr;
--	struct vm_struct *vma;
-+	struct page **pages;
- };
+diff --git a/arch/x86/hyperv/hv_init.c b/arch/x86/hyperv/hv_init.c
+index b0da5320bcff..5a4b363ba67b 100644
+--- a/arch/x86/hyperv/hv_init.c
++++ b/arch/x86/hyperv/hv_init.c
+@@ -355,7 +355,7 @@ void __init hyperv_init(void)
+ 	guest_id = generate_guest_id(0, LINUX_VERSION_CODE, 0);
+ 	wrmsrl(HV_X64_MSR_GUEST_OS_ID, guest_id);
  
- /**
-diff --git a/drivers/staging/media/ipu3/ipu3-dmamap.c b/drivers/staging/media/ipu3/ipu3-dmamap.c
-index 7431322379f6..8a19b0024152 100644
---- a/drivers/staging/media/ipu3/ipu3-dmamap.c
-+++ b/drivers/staging/media/ipu3/ipu3-dmamap.c
-@@ -96,6 +96,7 @@ void *imgu_dmamap_alloc(struct imgu_device *imgu, struct imgu_css_map *map,
- 	unsigned long shift = iova_shift(&imgu->iova_domain);
- 	struct device *dev = &imgu->pci_dev->dev;
- 	size_t size = PAGE_ALIGN(len);
-+	int count = size >> PAGE_SHIFT;
- 	struct page **pages;
- 	dma_addr_t iovaddr;
- 	struct iova *iova;
-@@ -114,7 +115,7 @@ void *imgu_dmamap_alloc(struct imgu_device *imgu, struct imgu_css_map *map,
- 
- 	/* Call IOMMU driver to setup pgt */
- 	iovaddr = iova_dma_addr(&imgu->iova_domain, iova);
--	for (i = 0; i < size / PAGE_SIZE; ++i) {
-+	for (i = 0; i < count; ++i) {
- 		rval = imgu_mmu_map(imgu->mmu, iovaddr,
- 				    page_to_phys(pages[i]), PAGE_SIZE);
- 		if (rval)
-@@ -123,33 +124,23 @@ void *imgu_dmamap_alloc(struct imgu_device *imgu, struct imgu_css_map *map,
- 		iovaddr += PAGE_SIZE;
- 	}
- 
--	/* Now grab a virtual region */
--	map->vma = __get_vm_area(size, VM_USERMAP, VMALLOC_START, VMALLOC_END);
--	if (!map->vma)
-+	map->vaddr = vmap(pages, count, VM_USERMAP, PAGE_KERNEL);
-+	if (!map->vaddr)
- 		goto out_unmap;
- 
--	map->vma->pages = pages;
--	/* And map it in KVA */
--	if (map_vm_area(map->vma, PAGE_KERNEL, pages))
--		goto out_vunmap;
--
-+	map->pages = pages;
- 	map->size = size;
- 	map->daddr = iova_dma_addr(&imgu->iova_domain, iova);
--	map->vaddr = map->vma->addr;
- 
- 	dev_dbg(dev, "%s: allocated %zu @ IOVA %pad @ VA %p\n", __func__,
--		size, &map->daddr, map->vma->addr);
--
--	return map->vma->addr;
-+		size, &map->daddr, map->vaddr);
- 
--out_vunmap:
--	vunmap(map->vma->addr);
-+	return map->vaddr;
- 
- out_unmap:
- 	imgu_dmamap_free_buffer(pages, size);
- 	imgu_mmu_unmap(imgu->mmu, iova_dma_addr(&imgu->iova_domain, iova),
- 		       i * PAGE_SIZE);
--	map->vma = NULL;
- 
- out_free_iova:
- 	__free_iova(&imgu->iova_domain, iova);
-@@ -177,8 +168,6 @@ void imgu_dmamap_unmap(struct imgu_device *imgu, struct imgu_css_map *map)
-  */
- void imgu_dmamap_free(struct imgu_device *imgu, struct imgu_css_map *map)
- {
--	struct vm_struct *area = map->vma;
--
- 	dev_dbg(&imgu->pci_dev->dev, "%s: freeing %zu @ IOVA %pad @ VA %p\n",
- 		__func__, map->size, &map->daddr, map->vaddr);
- 
-@@ -187,11 +176,8 @@ void imgu_dmamap_free(struct imgu_device *imgu, struct imgu_css_map *map)
- 
- 	imgu_dmamap_unmap(imgu, map);
- 
--	if (WARN_ON(!area) || WARN_ON(!area->pages))
--		return;
--
--	imgu_dmamap_free_buffer(area->pages, map->size);
- 	vunmap(map->vaddr);
-+	imgu_dmamap_free_buffer(map->pages, map->size);
- 	map->vaddr = NULL;
- }
- 
+-	hv_hypercall_pg  = __vmalloc(PAGE_SIZE, GFP_KERNEL, PAGE_KERNEL_RX);
++	hv_hypercall_pg = vmalloc_exec(PAGE_SIZE);
+ 	if (hv_hypercall_pg == NULL) {
+ 		wrmsrl(HV_X64_MSR_GUEST_OS_ID, 0);
+ 		goto remove_cpuhp_state;
+diff --git a/arch/x86/include/asm/pgtable_types.h b/arch/x86/include/asm/pgtable_types.h
+index b6606fe6cfdf..947867f112ea 100644
+--- a/arch/x86/include/asm/pgtable_types.h
++++ b/arch/x86/include/asm/pgtable_types.h
+@@ -194,7 +194,6 @@ enum page_cache_mode {
+ #define _PAGE_TABLE_NOENC	 (__PP|__RW|_USR|___A|   0|___D|   0|   0)
+ #define _PAGE_TABLE		 (__PP|__RW|_USR|___A|   0|___D|   0|   0| _ENC)
+ #define __PAGE_KERNEL_RO	 (__PP|   0|   0|___A|__NX|___D|   0|___G)
+-#define __PAGE_KERNEL_RX	 (__PP|   0|   0|___A|   0|___D|   0|___G)
+ #define __PAGE_KERNEL_NOCACHE	 (__PP|__RW|   0|___A|__NX|___D|   0|___G| __NC)
+ #define __PAGE_KERNEL_VVAR	 (__PP|   0|_USR|___A|__NX|___D|   0|___G)
+ #define __PAGE_KERNEL_LARGE	 (__PP|__RW|   0|___A|__NX|___D|_PSE|___G)
+@@ -220,7 +219,6 @@ enum page_cache_mode {
+ #define PAGE_KERNEL_RO		__pgprot_mask(__PAGE_KERNEL_RO         | _ENC)
+ #define PAGE_KERNEL_EXEC	__pgprot_mask(__PAGE_KERNEL_EXEC       | _ENC)
+ #define PAGE_KERNEL_EXEC_NOENC	__pgprot_mask(__PAGE_KERNEL_EXEC       |    0)
+-#define PAGE_KERNEL_RX		__pgprot_mask(__PAGE_KERNEL_RX         | _ENC)
+ #define PAGE_KERNEL_NOCACHE	__pgprot_mask(__PAGE_KERNEL_NOCACHE    | _ENC)
+ #define PAGE_KERNEL_LARGE	__pgprot_mask(__PAGE_KERNEL_LARGE      | _ENC)
+ #define PAGE_KERNEL_LARGE_EXEC	__pgprot_mask(__PAGE_KERNEL_LARGE_EXEC | _ENC)
 -- 
 2.25.1
 
