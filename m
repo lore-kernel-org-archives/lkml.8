@@ -6,34 +6,34 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65C94C2BA1B
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 16:09:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E50AC2BA1A
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 16:09:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4B651206F5
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 16:09:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F177D206F5
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 16:09:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730204AbgDHQJh (ORCPT
+        id S1730241AbgDHQJi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Apr 2020 12:09:37 -0400
-Received: from mga03.intel.com ([134.134.136.65]:19689 "EHLO mga03.intel.com"
+        Wed, 8 Apr 2020 12:09:38 -0400
+Received: from mga14.intel.com ([192.55.52.115]:25663 "EHLO mga14.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730196AbgDHQJc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Apr 2020 12:09:32 -0400
-IronPort-SDR: kFDoxaIZ/2f9Q+PxtExE0FCYZl4lLy7ipTaNPreSfkgAcdLVwj96SsqeuxFNfMR8NgsSzpTgAw
- mx1l1Hchh9kA==
+        id S1730191AbgDHQJb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Apr 2020 12:09:31 -0400
+IronPort-SDR: 4sr+lDj9e8L9d9pyuf6VCuhKeUwcg61Fkk6CiHOUaGc1fVAeZo7eeQ8khGcKd7brsXhwsZldRg
+ lI9OsqdL6rsQ==
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Apr 2020 09:09:31 -0700
-IronPort-SDR: 0xnsWG9+GamSf+vIJR9WAIvUHXFcraF1Xi4ECGr6HdYkbWcLRNeJ6bNwWjBWNBpi0mGiga0wGG
- FVzwli885rWg==
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Apr 2020 09:09:31 -0700
+IronPort-SDR: TjA+ciCjEebbP61BDavfwtxOOiIohUJ+M1KKjf1Vg1wm76UFFko+STHBvYiJL5I/8s4Lv760+3
+ SJz20DewCbcw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.72,359,1580803200"; 
-   d="scan'208";a="275491714"
+   d="scan'208";a="361882381"
 Received: from black.fi.intel.com ([10.237.72.28])
-  by fmsmga004.fm.intel.com with ESMTP; 08 Apr 2020 09:09:29 -0700
+  by fmsmga001.fm.intel.com with ESMTP; 08 Apr 2020 09:09:26 -0700
 Received: by black.fi.intel.com (Postfix, from userid 1003)
-        id A02B87C6; Wed,  8 Apr 2020 19:09:25 +0300 (EEST)
+        id 7B61A1FD; Wed,  8 Apr 2020 19:09:25 +0300 (EEST)
 From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         linux-kernel@vger.kernel.org,
@@ -44,9 +44,9 @@ To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         platform-driver-x86@vger.kernel.org,
         Darren Hart <dvhart@infradead.org>
 Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: [PATCH v1 5/6] platform/x86: intel_cht_int33fe: Switch to use acpi_dev_hid_uid_match()
-Date:   Wed,  8 Apr 2020 19:09:05 +0300
-Message-Id: <20200408160905.12101-6-andriy.shevchenko@linux.intel.com>
+Subject: [PATCH v1 2/6] software node: Allow register and unregister software node groups
+Date:   Wed,  8 Apr 2020 19:09:02 +0300
+Message-Id: <20200408160905.12101-3-andriy.shevchenko@linux.intel.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200408160905.12101-1-andriy.shevchenko@linux.intel.com>
 References: <20200408160905.12101-1-andriy.shevchenko@linux.intel.com>
@@ -57,35 +57,88 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Since we have a generic helper, drop custom implementation in the driver.
+Sometimes it's more convenient to register a set of individual software nodes
+grouped together. Add couple of functions for that.
 
 Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 ---
- drivers/platform/x86/intel_cht_int33fe_typec.c | 5 +----
- 1 file changed, 1 insertion(+), 4 deletions(-)
+ drivers/base/swnode.c    | 48 ++++++++++++++++++++++++++++++++++++++++
+ include/linux/property.h |  3 +++
+ 2 files changed, 51 insertions(+)
 
-diff --git a/drivers/platform/x86/intel_cht_int33fe_typec.c b/drivers/platform/x86/intel_cht_int33fe_typec.c
-index 904e75d39953..e89defb33067 100644
---- a/drivers/platform/x86/intel_cht_int33fe_typec.c
-+++ b/drivers/platform/x86/intel_cht_int33fe_typec.c
-@@ -40,16 +40,13 @@ static int cht_int33fe_check_for_max17047(struct device *dev, void *data)
- {
- 	struct i2c_client **max17047 = data;
- 	struct acpi_device *adev;
--	const char *hid;
+diff --git a/drivers/base/swnode.c b/drivers/base/swnode.c
+index de8d3543e8fe..2079937ddb51 100644
+--- a/drivers/base/swnode.c
++++ b/drivers/base/swnode.c
+@@ -726,6 +726,54 @@ void software_node_unregister_nodes(const struct software_node *nodes)
+ }
+ EXPORT_SYMBOL_GPL(software_node_unregister_nodes);
  
- 	adev = ACPI_COMPANION(dev);
- 	if (!adev)
- 		return 0;
++/**
++ * software_node_register_node_group - Register a group of software nodes
++ * @node_group: NULL terminated array of software node pointers to be registered
++ *
++ * Register multiple software nodes at once.
++ */
++int software_node_register_node_group(const struct software_node **node_group)
++{
++	unsigned int i;
++	int ret;
++
++	if (!node_group)
++		return 0;
++
++	for (i = 0; node_group[i]; i++) {
++		ret = software_node_register(node_group[i]);
++		if (ret) {
++			software_node_unregister_node_group(node_group);
++			return ret;
++		}
++	}
++
++	return 0;
++}
++EXPORT_SYMBOL_GPL(software_node_register_node_group);
++
++/**
++ * software_node_unregister_node_group - Unregister a group of software nodes
++ * @node_group: NULL terminated array of software node pointers to be unregistered
++ *
++ * Unregister multiple software nodes at once.
++ */
++void software_node_unregister_node_group(const struct software_node **node_group)
++{
++	struct swnode *swnode;
++	unsigned int i;
++
++	if (!node_group)
++		return;
++
++	for (i = 0; node_group[i]; i++) {
++		swnode = software_node_to_swnode(node_group[i]);
++		if (swnode)
++			fwnode_remove_software_node(&swnode->fwnode);
++	}
++}
++EXPORT_SYMBOL_GPL(software_node_unregister_node_group);
++
+ /**
+  * software_node_register - Register static software node
+  * @node: The software node to be registered
+diff --git a/include/linux/property.h b/include/linux/property.h
+index d86de017c689..c7b5f3db36aa 100644
+--- a/include/linux/property.h
++++ b/include/linux/property.h
+@@ -440,6 +440,9 @@ software_node_find_by_name(const struct software_node *parent,
+ int software_node_register_nodes(const struct software_node *nodes);
+ void software_node_unregister_nodes(const struct software_node *nodes);
  
--	hid = acpi_device_hid(adev);
--
- 	/* The MAX17047 ACPI node doesn't have an UID, so we don't check that */
--	if (strcmp(hid, "MAX17047"))
-+	if (!acpi_dev_hid_uid_match(adev, "MAX17047", NULL))
- 		return 0;
++int software_node_register_node_group(const struct software_node **node_group);
++void software_node_unregister_node_group(const struct software_node **node_group);
++
+ int software_node_register(const struct software_node *node);
  
- 	*max17047 = to_i2c_client(dev);
+ int software_node_notify(struct device *dev, unsigned long action);
 -- 
 2.25.1
 
