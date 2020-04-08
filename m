@@ -2,78 +2,93 @@ Return-Path: <SRS0=8dav=5Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52F8DC2D0EA
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 07:21:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44052C2D0EA
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 07:21:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2DC9E2072A
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 07:21:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0B2302072A
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 07:21:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="Yc3UUKQj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726684AbgDHHVe (ORCPT
+        id S1726725AbgDHHVi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Apr 2020 03:21:34 -0400
-Received: from mga01.intel.com ([192.55.52.88]:42828 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725763AbgDHHVd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Apr 2020 03:21:33 -0400
-IronPort-SDR: 9qIDK1VANMo4fNW2iwJjwnAkj1z7jP6FOBMh6kWDgDY4jjZcy8eTKgE6LkMWXLKODx8tXrlzYz
- r0FJbG0w8c6Q==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Apr 2020 00:21:32 -0700
-IronPort-SDR: 8DU0rS43X0+q9dh1hmnTkwwNvy5G+AJbotvfyHkVhAtAtrkAB6SWCe/akFWTK0FC7Hnr2U7p4W
- lJW241t73Enw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,357,1580803200"; 
-   d="scan'208";a="254713673"
-Received: from joy-optiplex-7040.sh.intel.com ([10.239.13.16])
-  by orsmga006.jf.intel.com with ESMTP; 08 Apr 2020 00:21:30 -0700
-From:   Yan Zhao <yan.y.zhao@intel.com>
-To:     alex.williamson@redhat.com, cohuck@redhat.com
-Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Yan Zhao <yan.y.zhao@intel.com>,
-        Kees Cook <keescook@chromium.org>
-Subject: [PATCH] vfio: checking of validity of user vaddr in vfio_dma_rw
-Date:   Wed,  8 Apr 2020 03:11:21 -0400
-Message-Id: <20200408071121.25645-1-yan.y.zhao@intel.com>
+        Wed, 8 Apr 2020 03:21:38 -0400
+Received: from conuserg-11.nifty.com ([210.131.2.78]:29406 "EHLO
+        conuserg-11.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725763AbgDHHVh (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Apr 2020 03:21:37 -0400
+Received: from grover.flets-west.jp (softbank126125134031.bbtec.net [126.125.134.31]) (authenticated)
+        by conuserg-11.nifty.com with ESMTP id 0387L6nE022210;
+        Wed, 8 Apr 2020 16:21:06 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-11.nifty.com 0387L6nE022210
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1586330467;
+        bh=6lUuBNJgYs6dcwN9xI/lESbFXHdxhnYtXrKDzIR2VN0=;
+        h=From:To:Cc:Subject:Date:From;
+        b=Yc3UUKQjgqgMrF7+on+WzmPK44dhT2n3OZEn1U3sZrfnGSMyFwC35myRhtnLcsu4y
+         gS/4W8S9zhG+wyyh3agCPJNLEHqp5RbEXRofqBcaP1g+3iKl4GZjuCPHfIn5gPWZq7
+         2bYalDIdMeBl95KvgEOHzb5+ZbCCHMKUjz/pk6ncnIsZn/HNFoeHHOxdb9ctsu2aWg
+         pcr+TW13Mw4aoj+zjlkJO/eqG91z8ULMpTyDrEyHJOMGFoBTAr83lQaPv+gExRacdU
+         Hm4BcQQZr/iZvRLbRJC2IjuarQ7Ec6e3Hr0fN3wV7se0D0czjwXd6T1HNQPXVbEU6B
+         yatyNnCI8YS3g==
+X-Nifty-SrcIP: [126.125.134.31]
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+To:     linux-mmc@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, Ulf Hansson <ulf.hansson@linaro.org>,
+        masahiroy@kernel.org,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Adrian Hunter <adrian.hunter@intel.com>
+Subject: [PATCH 1/2] mmc: sdhci: move SDHCI_CAPABILITIES_1 to a more suitable place
+Date:   Wed,  8 Apr 2020 16:21:04 +0900
+Message-Id: <20200408072105.422-1-yamada.masahiro@socionext.com>
 X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-instead of calling __copy_to/from_user(), use copy_to_from_user() to
-ensure vaddr range is a valid user address range before accessing them.
+In the SDHCI specification, the Capabilities Register (Offset 0x40h)
+is the 64-bit width register, but in Linux, it is represented as two
+registers, SDHCI_CAPABILITIES and SDHCI_CAPABILITIES_1 so that drivers
+can use 32-bit register accessors.
 
-Cc: Kees Cook <keescook@chromium.org>
+The upper 32-bit field is associated with SDHCI_CAPABILITIES_1.
 
-Fixes: 8d46c0cca5f4 ("vfio: introduce vfio_dma_rw to read/write a range of IOVAs")
-Signed-off-by: Yan Zhao <yan.y.zhao@intel.com>
+Move the definition of SDHCI_CAPABILITIES_1 to the correct place.
+
+Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
 ---
- drivers/vfio/vfio_iommu_type1.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/vfio/vfio_iommu_type1.c b/drivers/vfio/vfio_iommu_type1.c
-index 3aefcc8e2933..fbc58284b333 100644
---- a/drivers/vfio/vfio_iommu_type1.c
-+++ b/drivers/vfio/vfio_iommu_type1.c
-@@ -2345,10 +2345,10 @@ static int vfio_iommu_type1_dma_rw_chunk(struct vfio_iommu *iommu,
- 	vaddr = dma->vaddr + offset;
+ drivers/mmc/host/sdhci.h | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
+
+diff --git a/drivers/mmc/host/sdhci.h b/drivers/mmc/host/sdhci.h
+index 79dffbb731d3..b786b68e0302 100644
+--- a/drivers/mmc/host/sdhci.h
++++ b/drivers/mmc/host/sdhci.h
+@@ -220,6 +220,7 @@
+ #define  SDHCI_CAN_64BIT_V4	0x08000000
+ #define  SDHCI_CAN_64BIT	0x10000000
  
- 	if (write)
--		*copied = __copy_to_user((void __user *)vaddr, data,
-+		*copied = copy_to_user((void __user *)vaddr, data,
- 					 count) ? 0 : count;
- 	else
--		*copied = __copy_from_user(data, (void __user *)vaddr,
-+		*copied = copy_from_user(data, (void __user *)vaddr,
- 					   count) ? 0 : count;
- 	if (kthread)
- 		unuse_mm(mm);
++#define SDHCI_CAPABILITIES_1	0x44
+ #define  SDHCI_SUPPORT_SDR50	0x00000001
+ #define  SDHCI_SUPPORT_SDR104	0x00000002
+ #define  SDHCI_SUPPORT_DDR50	0x00000004
+@@ -236,8 +237,6 @@
+ #define  SDHCI_CAN_DO_ADMA3	0x08000000
+ #define  SDHCI_SUPPORT_HS400	0x80000000 /* Non-standard */
+ 
+-#define SDHCI_CAPABILITIES_1	0x44
+-
+ #define SDHCI_MAX_CURRENT		0x48
+ #define  SDHCI_MAX_CURRENT_LIMIT	0xFF
+ #define  SDHCI_MAX_CURRENT_330_MASK	0x0000FF
 -- 
 2.17.1
 
