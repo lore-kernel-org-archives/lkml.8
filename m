@@ -2,171 +2,108 @@ Return-Path: <SRS0=8dav=5Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A06F3C2D0EA
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 06:55:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01623C2BA1B
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 06:56:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6C15C206A1
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 06:55:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D7F6D206A1
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 06:56:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726595AbgDHGzV (ORCPT
+        id S1726650AbgDHG4j (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Apr 2020 02:55:21 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:38296 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726345AbgDHGzV (ORCPT
+        Wed, 8 Apr 2020 02:56:39 -0400
+Received: from relay6-d.mail.gandi.net ([217.70.183.198]:60995 "EHLO
+        relay6-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726477AbgDHG4j (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Apr 2020 02:55:21 -0400
-Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0386Yk93011007
-        for <linux-kernel@vger.kernel.org>; Wed, 8 Apr 2020 02:55:20 -0400
-Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 3091yka6xe-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Wed, 08 Apr 2020 02:55:19 -0400
-Received: from localhost
-        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <borntraeger@de.ibm.com>;
-        Wed, 8 Apr 2020 07:55:05 +0100
-Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
-        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Wed, 8 Apr 2020 07:55:02 +0100
-Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
-        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 0386tDBX58261586
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 8 Apr 2020 06:55:13 GMT
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 90DA3AE057;
-        Wed,  8 Apr 2020 06:55:13 +0000 (GMT)
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 3891EAE04D;
-        Wed,  8 Apr 2020 06:55:13 +0000 (GMT)
-Received: from oc7455500831.ibm.com (unknown [9.145.54.125])
-        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Wed,  8 Apr 2020 06:55:13 +0000 (GMT)
-Subject: Re: [PATCH 0/2] KVM: Fix out-of-bounds memslot access
-To:     Sean Christopherson <sean.j.christopherson@intel.com>,
-        Janosch Frank <frankja@linux.ibm.com>,
-        Paolo Bonzini <pbonzini@redhat.com>
-Cc:     David Hildenbrand <david@redhat.com>,
-        Cornelia Huck <cohuck@redhat.com>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        syzbot+d889b59b2bb87d4047a2@syzkaller.appspotmail.com
-References: <20200408064059.8957-1-sean.j.christopherson@intel.com>
-From:   Christian Borntraeger <borntraeger@de.ibm.com>
-Autocrypt: addr=borntraeger@de.ibm.com; prefer-encrypt=mutual; keydata=
- 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
- nS4h0HDFPrrp1C2EMVYIQrMokWvlFZbCpsdYbBI=
-Date:   Wed, 8 Apr 2020 08:55:12 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Wed, 8 Apr 2020 02:56:39 -0400
+X-Originating-IP: 50.39.163.217
+Received: from localhost (50-39-163-217.bvtn.or.frontiernet.net [50.39.163.217])
+        (Authenticated sender: josh@joshtriplett.org)
+        by relay6-d.mail.gandi.net (Postfix) with ESMTPSA id 2E360C0007;
+        Wed,  8 Apr 2020 06:56:32 +0000 (UTC)
+Date:   Tue, 7 Apr 2020 23:56:29 -0700
+From:   Josh Triplett <josh@joshtriplett.org>
+To:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        io-uring@vger.kernel.org, linux-arch@vger.kernel.org
+Cc:     Alexander Viro <viro@zeniv.linux.org.uk>,
+        Arnd Bergmann <arnd@arndb.de>, Jens Axboe <axboe@kernel.dk>
+Subject: [PATCH v3 0/3] Support userspace-selected fds
+Message-ID: <cover.1586321767.git.josh@joshtriplett.org>
 MIME-Version: 1.0
-In-Reply-To: <20200408064059.8957-1-sean.j.christopherson@intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-x-cbid: 20040806-0012-0000-0000-000003A07AFE
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 20040806-0013-0000-0000-000021DD9F01
-Message-Id: <ce021ce6-b4a9-4dab-a063-945fcd9bfcf5@de.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
- definitions=2020-04-07_10:2020-04-07,2020-04-07 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 spamscore=0
- clxscore=1015 mlxscore=0 suspectscore=0 bulkscore=0 adultscore=0
- phishscore=0 priorityscore=1501 impostorscore=0 mlxlogscore=999
- lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2004080047
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+(Note: numbering this updated version v3, to avoid confusion with Jens'
+v2 that built on my v1. Jens, if you like this approach, please feel
+free to stack your additional patches from the io_uring-fd-select branch
+atop this series. 5.8 material, not intended for the current merge window.)
 
+Inspired by the X protocol's handling of XIDs, allow userspace to select
+the file descriptor opened by a call like openat2, so that it can use
+the resulting file descriptor in subsequent system calls without waiting
+for the response to the initial openat2 syscall.
 
-On 08.04.20 08:40, Sean Christopherson wrote:
-> Two fixes for what are effectively the same bug.  The binary search used
-> for memslot lookup doesn't check the resolved index and can access memory
-> beyond the end of the memslot array.
-> 
-> I split the s390 specific change to a separate patch because it's subtly
-> different, and to simplify backporting.  The KVM wide fix can be applied
-> to stable trees as is, but AFAICT the s390 change would need to be paired
-> with the !used_slots check from commit 774a964ef56 ("KVM: Fix out of range
-> accesses to memslots").  This is why I tagged only the KVM wide patch for
-> stable.
+The first patch is independent of the other two; it allows reserving
+file descriptors below a certain minimum for userspace-selected fd
+allocation only.
 
-You can specify dependencies like
+The second patch implements userspace-selected fd allocation for
+openat2, introducing a new O_SPECIFIC_FD flag and an fd field in struct
+open_how. In io_uring, this allows sequences like openat2/read/close
+without waiting for the openat2 to complete. Multiple such sequences can
+overlap, as long as each uses a distinct file descriptor.
 
-see
+The third patch adds userspace-selected fd allocation to pipe2 as well.
+I did this partly as a demonstration of how simple it is to wire up
+O_SPECIFIC_FD support for any fd-allocating system call, and partly in
+the hopes that this may make it more useful to wire up io_uring support
+for pipe2 in the future.
 
-Documentation/process/stable-kernel-rules.rst
+If this gets accepted, I'm happy to also write corresponding manpage
+patches.
 
------------snip---------------
-Additionally, some patches submitted via :ref:`option_1` may have additional
-patch prerequisites which can be cherry-picked. This can be specified in the
-following format in the sign-off area:
+v3:
+This new version has an API to atomically increase the minimum fd and
+return the previous minimum, rather than just getting and setting the
+minimum; this makes it easier to allocate a range. (A library that might
+initialize after the program has already opened other file descriptors
+may need to check for existing open fds in the range after reserving it,
+and reserve more fds if needed; this can be done entirely in userspace,
+and we can't really do anything simpler in the kernel due to limitations
+on file-descriptor semantics, so this patch series avoids introducing
+any extra complexity in the kernel.)
 
-.. code-block:: none
+This new version also supports a __get_specific_unused_fd_flags call
+which accepts the limit for RLIMIT_NOFILE as an argument, analogous to
+__get_unused_fd_flags, since io_uring needs that to correctly handle
+RLIMIT_NOFILE.
 
-     Cc: <stable@vger.kernel.org> # 3.3.x: a1f84a3: sched: Check for idle
-     Cc: <stable@vger.kernel.org> # 3.3.x: 1b9508f: sched: Rate-limit newidle
-     Cc: <stable@vger.kernel.org> # 3.3.x: fd21073: sched: Fix affinity logic
-     Cc: <stable@vger.kernel.org> # 3.3.x
-     Signed-off-by: Ingo Molnar <mingo@elte.hu>
+Josh Triplett (3):
+  fs: Support setting a minimum fd for "lowest available fd" allocation
+  fs: openat2: Extend open_how to allow userspace-selected fds
+  fs: pipe2: Support O_SPECIFIC_FD
 
-The tag sequence has the meaning of:
+ fs/fcntl.c                       |  2 +-
+ fs/file.c                        | 62 ++++++++++++++++++++++++++++----
+ fs/io_uring.c                    |  3 +-
+ fs/open.c                        |  6 ++--
+ fs/pipe.c                        | 16 ++++++---
+ include/linux/fcntl.h            |  5 +--
+ include/linux/fdtable.h          |  1 +
+ include/linux/file.h             |  4 +++
+ include/uapi/asm-generic/fcntl.h |  4 +++
+ include/uapi/linux/openat2.h     |  2 ++
+ include/uapi/linux/prctl.h       |  3 ++
+ kernel/sys.c                     |  5 +++
+ 12 files changed, 97 insertions(+), 16 deletions(-)
 
-.. code-block:: none
-
-     git cherry-pick a1f84a3
-     git cherry-pick 1b9508f
-     git cherry-pick fd21073
-     git cherry-pick <this commit>
-
------------snip---------------
-
+-- 
+2.26.0
