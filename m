@@ -6,76 +6,93 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85453C2D0EA
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 11:44:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1DE9C2D0EA
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 11:56:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 58C7C2076D
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 11:44:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CC4A420780
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 11:56:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728615AbgDHLoR (ORCPT
+        id S1727939AbgDHL4P (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Apr 2020 07:44:17 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:12697 "EHLO huawei.com"
+        Wed, 8 Apr 2020 07:56:15 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:55242 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728492AbgDHLoQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Apr 2020 07:44:16 -0400
-Received: from DGGEMS411-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 7EE04530F503E3351732;
-        Wed,  8 Apr 2020 19:44:10 +0800 (CST)
-Received: from DESKTOP-8RFUVS3.china.huawei.com (10.173.222.27) by
+        id S1726521AbgDHL4O (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Apr 2020 07:56:14 -0400
+Received: from DGGEMS411-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id EEEB813D232B48F409D6;
+        Wed,  8 Apr 2020 19:55:29 +0800 (CST)
+Received: from szvp000203569.huawei.com (10.120.216.130) by
  DGGEMS411-HUB.china.huawei.com (10.3.19.211) with Microsoft SMTP Server id
- 14.3.487.0; Wed, 8 Apr 2020 19:43:59 +0800
-From:   Zenghui Yu <yuzenghui@huawei.com>
-To:     <linux-kernel@vger.kernel.org>
-CC:     <maz@kernel.org>, <tglx@linutronix.de>, <jason@lakedaemon.net>,
-        <wuyun.wu@huawei.com>, <wanghaibin.wang@huawei.com>,
-        Zenghui Yu <yuzenghui@huawei.com>
-Subject: [PATCH] irqchip/mbigen: Free msi_desc on device teardown
-Date:   Wed, 8 Apr 2020 19:43:52 +0800
-Message-ID: <20200408114352.1604-1-yuzenghui@huawei.com>
-X-Mailer: git-send-email 2.23.0.windows.1
+ 14.3.487.0; Wed, 8 Apr 2020 19:55:21 +0800
+From:   Chao Yu <yuchao0@huawei.com>
+To:     <jaegeuk@kernel.org>
+CC:     <linux-f2fs-devel@lists.sourceforge.net>,
+        <linux-kernel@vger.kernel.org>, <chao@kernel.org>,
+        Chao Yu <yuchao0@huawei.com>
+Subject: [PATCH] f2fs: use round_up to enhance calculation
+Date:   Wed, 8 Apr 2020 19:55:17 +0800
+Message-ID: <20200408115517.15370-1-yuchao0@huawei.com>
+X-Mailer: git-send-email 2.18.0.rc1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.173.222.27]
+Content-Type: text/plain
+X-Originating-IP: [10.120.216.130]
 X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Using irq_domain_free_irqs_common() on the irqdomain free path will
-leave the MSI descriptor unfreed when platform devices get removed.
-Properly free it by MSI domain free function.
+.i_cluster_size should be power of 2, so we can use round_up() instead
+of roundup() to enhance the calculation.
 
-Signed-off-by: Zenghui Yu <yuzenghui@huawei.com>
+Signed-off-by: Chao Yu <yuchao0@huawei.com>
 ---
- drivers/irqchip/irq-mbigen.c | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+ fs/f2fs/file.c | 17 +++++------------
+ 1 file changed, 5 insertions(+), 12 deletions(-)
 
-diff --git a/drivers/irqchip/irq-mbigen.c b/drivers/irqchip/irq-mbigen.c
-index 6b566bba263b..ff7627b57772 100644
---- a/drivers/irqchip/irq-mbigen.c
-+++ b/drivers/irqchip/irq-mbigen.c
-@@ -220,10 +220,16 @@ static int mbigen_irq_domain_alloc(struct irq_domain *domain,
- 	return 0;
- }
+diff --git a/fs/f2fs/file.c b/fs/f2fs/file.c
+index c2d38a1c4972..0f8be076620c 100644
+--- a/fs/f2fs/file.c
++++ b/fs/f2fs/file.c
+@@ -736,16 +736,9 @@ int f2fs_truncate_blocks(struct inode *inode, u64 from, bool lock)
+ 	 * for compressed file, only support cluster size
+ 	 * aligned truncation.
+ 	 */
+-	if (f2fs_compressed_file(inode)) {
+-		size_t cluster_shift = PAGE_SHIFT +
+-					F2FS_I(inode)->i_log_cluster_size;
+-		size_t cluster_mask = (1 << cluster_shift) - 1;
+-
+-		free_from = from >> cluster_shift;
+-		if (from & cluster_mask)
+-			free_from++;
+-		free_from <<= cluster_shift;
+-	}
++	if (f2fs_compressed_file(inode))
++		free_from = round_up(from,
++				F2FS_I(inode)->i_cluster_size << PAGE_SHIFT);
+ #endif
  
-+static void mbigen_irq_domain_free(struct irq_domain *domain, unsigned int virq,
-+				   unsigned int nr_irqs)
-+{
-+	platform_msi_domain_free(domain, virq, nr_irqs);
-+}
-+
- static const struct irq_domain_ops mbigen_domain_ops = {
- 	.translate	= mbigen_domain_translate,
- 	.alloc		= mbigen_irq_domain_alloc,
--	.free		= irq_domain_free_irqs_common,
-+	.free		= mbigen_irq_domain_free,
- };
+ 	err = f2fs_do_truncate_blocks(inode, free_from, lock);
+@@ -3537,7 +3530,7 @@ static int f2fs_release_compress_blocks(struct file *filp, unsigned long arg)
  
- static int mbigen_of_create_domain(struct platform_device *pdev,
+ 		end_offset = ADDRS_PER_PAGE(dn.node_page, inode);
+ 		count = min(end_offset - dn.ofs_in_node, last_idx - page_idx);
+-		count = roundup(count, F2FS_I(inode)->i_cluster_size);
++		count = round_up(count, F2FS_I(inode)->i_cluster_size);
+ 
+ 		ret = release_compress_blocks(&dn, count);
+ 
+@@ -3689,7 +3682,7 @@ static int f2fs_reserve_compress_blocks(struct file *filp, unsigned long arg)
+ 
+ 		end_offset = ADDRS_PER_PAGE(dn.node_page, inode);
+ 		count = min(end_offset - dn.ofs_in_node, last_idx - page_idx);
+-		count = roundup(count, F2FS_I(inode)->i_cluster_size);
++		count = round_up(count, F2FS_I(inode)->i_cluster_size);
+ 
+ 		ret = reserve_compress_blocks(&dn, count);
+ 
 -- 
-2.19.1
-
+2.18.0.rc1
 
