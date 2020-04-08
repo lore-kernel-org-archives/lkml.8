@@ -7,42 +7,43 @@ X-Spam-Status: No, score=-11.8 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 334A9C2D0EA
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 12:21:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8C47C2D0EA
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 12:21:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 11D472076D
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 12:21:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C61522083E
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 12:21:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726730AbgDHMUb (ORCPT
+        id S1728697AbgDHMVQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Apr 2020 08:20:31 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:49639 "EHLO
+        Wed, 8 Apr 2020 08:21:16 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:49636 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728255AbgDHMUa (ORCPT
+        with ESMTP id S1727666AbgDHMU3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Apr 2020 08:20:30 -0400
+        Wed, 8 Apr 2020 08:20:29 -0400
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1jM9gu-00063o-P4; Wed, 08 Apr 2020 14:20:24 +0200
+        id 1jM9gu-00063W-D7; Wed, 08 Apr 2020 14:20:24 +0200
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 67D161C047B;
-        Wed,  8 Apr 2020 14:20:24 +0200 (CEST)
-Date:   Wed, 08 Apr 2020 12:20:24 -0000
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id F00AD1C0131;
+        Wed,  8 Apr 2020 14:20:23 +0200 (CEST)
+Date:   Wed, 08 Apr 2020 12:20:23 -0000
 From:   "tip-bot2 for Valentin Schneider" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: sched/urgent] sched/debug: Remove redundant macro define
+Subject: [tip: sched/urgent] sched/debug: Factor out printing formats into
+ common macros
 Cc:     Qais Yousef <qais.yousef@arm.com>,
         Valentin Schneider <valentin.schneider@arm.com>,
         "Peter Zijlstra (Intel)" <peterz@infradead.org>,
         Ingo Molnar <mingo@kernel.org>, x86 <x86@kernel.org>,
         LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200226124543.31986-2-valentin.schneider@arm.com>
-References: <20200226124543.31986-2-valentin.schneider@arm.com>
+In-Reply-To: <20200226124543.31986-3-valentin.schneider@arm.com>
+References: <20200226124543.31986-3-valentin.schneider@arm.com>
 MIME-Version: 1.0
-Message-ID: <158634842404.28353.12034753755409518464.tip-bot2@tip-bot2>
+Message-ID: <158634842347.28353.13932771277221700536.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -58,59 +59,84 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the sched/urgent branch of tip:
 
-Commit-ID:     c745a6212c9923eb2253f4229e5d7277ca3d9d8e
-Gitweb:        https://git.kernel.org/tip/c745a6212c9923eb2253f4229e5d7277ca3d9d8e
+Commit-ID:     9e3bf9469c29f7e4e49c5c0d8fecaf8ac57d1fe4
+Gitweb:        https://git.kernel.org/tip/9e3bf9469c29f7e4e49c5c0d8fecaf8ac57d1fe4
 Author:        Valentin Schneider <valentin.schneider@arm.com>
-AuthorDate:    Wed, 26 Feb 2020 12:45:41 
+AuthorDate:    Wed, 26 Feb 2020 12:45:42 
 Committer:     Ingo Molnar <mingo@kernel.org>
-CommitterDate: Wed, 08 Apr 2020 11:35:24 +02:00
+CommitterDate: Wed, 08 Apr 2020 11:35:26 +02:00
 
-sched/debug: Remove redundant macro define
+sched/debug: Factor out printing formats into common macros
 
-Most printing macros for procfs are defined globally in debug.c, and they
-are re-defined (to the exact same thing) within proc_sched_show_task().
-
-Get rid of the duplicate defines.
+The printing macros in debug.c keep redefining the same output
+format. Collect each output format in a single definition, and reuse that
+definition in the other macros. While at it, add a layer of parentheses and
+replace printf's  with the newly introduced macros.
 
 Reviewed-by: Qais Yousef <qais.yousef@arm.com>
 Signed-off-by: Valentin Schneider <valentin.schneider@arm.com>
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Link: https://lkml.kernel.org/r/20200226124543.31986-2-valentin.schneider@arm.com
+Link: https://lkml.kernel.org/r/20200226124543.31986-3-valentin.schneider@arm.com
 ---
- kernel/sched/debug.c | 12 ------------
- 1 file changed, 12 deletions(-)
+ kernel/sched/debug.c | 26 ++++++++++++--------------
+ 1 file changed, 12 insertions(+), 14 deletions(-)
 
 diff --git a/kernel/sched/debug.c b/kernel/sched/debug.c
-index 8331bc0..4670151 100644
+index 4670151..315ef6d 100644
 --- a/kernel/sched/debug.c
 +++ b/kernel/sched/debug.c
-@@ -868,16 +868,8 @@ void proc_sched_show_task(struct task_struct *p, struct pid_namespace *ns,
+@@ -816,10 +816,12 @@ static int __init init_sched_debug_procfs(void)
+ 
+ __initcall(init_sched_debug_procfs);
+ 
+-#define __P(F)	SEQ_printf(m, "%-45s:%21Ld\n",	     #F, (long long)F)
+-#define   P(F)	SEQ_printf(m, "%-45s:%21Ld\n",	     #F, (long long)p->F)
+-#define __PN(F)	SEQ_printf(m, "%-45s:%14Ld.%06ld\n", #F, SPLIT_NS((long long)F))
+-#define   PN(F)	SEQ_printf(m, "%-45s:%14Ld.%06ld\n", #F, SPLIT_NS((long long)p->F))
++#define __PS(S, F) SEQ_printf(m, "%-45s:%21Ld\n", S, (long long)(F))
++#define __P(F) __PS(#F, F)
++#define   P(F) __PS(#F, p->F)
++#define __PSN(S, F) SEQ_printf(m, "%-45s:%14Ld.%06ld\n", S, SPLIT_NS((long long)(F)))
++#define __PN(F) __PSN(#F, F)
++#define   PN(F) __PSN(#F, p->F)
+ 
+ 
+ #ifdef CONFIG_NUMA_BALANCING
+@@ -868,10 +870,9 @@ void proc_sched_show_task(struct task_struct *p, struct pid_namespace *ns,
  	SEQ_printf(m,
  		"---------------------------------------------------------"
  		"----------\n");
--#define __P(F) \
--	SEQ_printf(m, "%-45s:%21Ld\n", #F, (long long)F)
--#define P(F) \
--	SEQ_printf(m, "%-45s:%21Ld\n", #F, (long long)p->F)
- #define P_SCHEDSTAT(F) \
- 	SEQ_printf(m, "%-45s:%21Ld\n", #F, (long long)schedstat_val(p->F))
--#define __PN(F) \
--	SEQ_printf(m, "%-45s:%14Ld.%06ld\n", #F, SPLIT_NS((long long)F))
--#define PN(F) \
--	SEQ_printf(m, "%-45s:%14Ld.%06ld\n", #F, SPLIT_NS((long long)p->F))
- #define PN_SCHEDSTAT(F) \
- 	SEQ_printf(m, "%-45s:%14Ld.%06ld\n", #F, SPLIT_NS((long long)schedstat_val(p->F)))
+-#define P_SCHEDSTAT(F) \
+-	SEQ_printf(m, "%-45s:%21Ld\n", #F, (long long)schedstat_val(p->F))
+-#define PN_SCHEDSTAT(F) \
+-	SEQ_printf(m, "%-45s:%14Ld.%06ld\n", #F, SPLIT_NS((long long)schedstat_val(p->F)))
++
++#define P_SCHEDSTAT(F)  __PS(#F, schedstat_val(p->F))
++#define PN_SCHEDSTAT(F) __PSN(#F, schedstat_val(p->F))
  
-@@ -963,11 +955,7 @@ void proc_sched_show_task(struct task_struct *p, struct pid_namespace *ns,
- 		P(dl.deadline);
+ 	PN(se.exec_start);
+ 	PN(se.vruntime);
+@@ -931,10 +932,8 @@ void proc_sched_show_task(struct task_struct *p, struct pid_namespace *ns,
  	}
- #undef PN_SCHEDSTAT
--#undef PN
--#undef __PN
- #undef P_SCHEDSTAT
--#undef P
--#undef __P
  
- 	{
- 		unsigned int this_cpu = raw_smp_processor_id();
+ 	__P(nr_switches);
+-	SEQ_printf(m, "%-45s:%21Ld\n",
+-		   "nr_voluntary_switches", (long long)p->nvcsw);
+-	SEQ_printf(m, "%-45s:%21Ld\n",
+-		   "nr_involuntary_switches", (long long)p->nivcsw);
++	__PS("nr_voluntary_switches", p->nvcsw);
++	__PS("nr_involuntary_switches", p->nivcsw);
+ 
+ 	P(se.load.weight);
+ #ifdef CONFIG_SMP
+@@ -963,8 +962,7 @@ void proc_sched_show_task(struct task_struct *p, struct pid_namespace *ns,
+ 
+ 		t0 = cpu_clock(this_cpu);
+ 		t1 = cpu_clock(this_cpu);
+-		SEQ_printf(m, "%-45s:%21Ld\n",
+-			   "clock-delta", (long long)(t1-t0));
++		__PS("clock-delta", t1-t0);
+ 	}
+ 
+ 	sched_show_numa(p, m);
