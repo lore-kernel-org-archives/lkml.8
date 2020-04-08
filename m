@@ -2,114 +2,154 @@ Return-Path: <SRS0=8dav=5Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A13BC2D0F4
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 19:15:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23B76C2D0F4
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 19:16:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ED97A2072F
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 19:15:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E0EBA2072F
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 19:16:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="h/owNDU1"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Jzq9wlMc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729874AbgDHTP4 (ORCPT
+        id S1729892AbgDHTQh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Apr 2020 15:15:56 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:43284 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727469AbgDHTP4 (ORCPT
+        Wed, 8 Apr 2020 15:16:37 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:24136 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728209AbgDHTQg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Apr 2020 15:15:56 -0400
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 038JFfeK086312;
-        Wed, 8 Apr 2020 14:15:41 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1586373341;
-        bh=Qb5ZeAVRpJh28ykpe0w7F87pvW1U8JceUNeMw/ITQaM=;
-        h=From:To:CC:Subject:Date;
-        b=h/owNDU1NivTnUt4VOatmB7/pwiAwiGO1KnfFF8IFkZul3QdgNDidiTYL/o3l1hll
-         kXryCYfMntuBeGKA7Ah9IF/Q9UTRqm4+td+BX1SpVNFMToYkuPwKMvM4UiT4z8O1im
-         Eum9Yemss3CvZfy7/Vghx9qn4KEldqv4AyhDGl+I=
-Received: from DLEE104.ent.ti.com (dlee104.ent.ti.com [157.170.170.34])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 038JFfTg006789
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 8 Apr 2020 14:15:41 -0500
-Received: from DLEE110.ent.ti.com (157.170.170.21) by DLEE104.ent.ti.com
- (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Wed, 8 Apr
- 2020 14:15:41 -0500
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE110.ent.ti.com
- (157.170.170.21) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Wed, 8 Apr 2020 14:15:41 -0500
-Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 038JFd3K108863;
-        Wed, 8 Apr 2020 14:15:40 -0500
-From:   Grygorii Strashko <grygorii.strashko@ti.com>
-To:     Nishanth Menon <nm@ti.com>, Tero Kristo <t-kristo@ti.com>,
-        Santosh Shilimkar <ssantosh@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>,
-        Lokesh Vutla <lokeshvutla@ti.com>
-CC:     Peter Ujfalusi <peter.ujfalusi@ti.com>,
-        Sekhar Nori <nsekhar@ti.com>, <linux-kernel@vger.kernel.org>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        Grygorii Strashko <grygorii.strashko@ti.com>
-Subject: [PATCH] irqchip/ti-sci-inta: fix processing of masked irqs
-Date:   Wed, 8 Apr 2020 22:15:32 +0300
-Message-ID: <20200408191532.31252-1-grygorii.strashko@ti.com>
-X-Mailer: git-send-email 2.17.1
-MIME-Version: 1.0
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+        Wed, 8 Apr 2020 15:16:36 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1586373395;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=7CvAUIVz+j5eQxkWwgrZLmBoQHc38XJ7xtY6pC6wqtQ=;
+        b=Jzq9wlMcoNYSUCg82JajFpzpeDs5NksxRR5UoA4Bw5n4rnP/lCDDsLWpxOZL12GGDFCH3v
+        BMawgZTBnSa7B61mV19h8zD9Q16F220HV1GVvfZhuVBpkkae3ln85bAeYVh8vEGeQL/o6M
+        +FT1ZFWF3Cj4hu5vXdc4Y0cW8YJrOaE=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-125-1wkKQxUHMoaod1zr0jnyWg-1; Wed, 08 Apr 2020 15:16:30 -0400
+X-MC-Unique: 1wkKQxUHMoaod1zr0jnyWg-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 726931005509;
+        Wed,  8 Apr 2020 19:16:29 +0000 (UTC)
+Received: from ovpn-113-89.phx2.redhat.com (ovpn-113-89.phx2.redhat.com [10.3.113.89])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id CDFF75D9C9;
+        Wed,  8 Apr 2020 19:16:28 +0000 (UTC)
+Message-ID: <120ce7f4cd1fd070e1f7c353223c21b8e4f29337.camel@redhat.com>
+Subject: Re: [PATCH] scsi: core: Rate limit "rejecting I/O" messages
+From:   "Ewan D. Milne" <emilne@redhat.com>
+To:     Daniel Wagner <dwagner@suse.de>, linux-scsi@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>
+Date:   Wed, 08 Apr 2020 15:16:27 -0400
+In-Reply-To: <20200408171012.76890-1-dwagner@suse.de>
+References: <20200408171012.76890-1-dwagner@suse.de>
+Content-Type: text/plain; charset="UTF-8"
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The ti_sci_inta_irq_handler() does not take into account INTA IRQs state
-(masked/unmasked) as it uses INTA_STATUS_CLEAR_j register to get INTA IRQs
-status, which provides raw status value.
-This causes hard IRQ handlers to be called or threaded handlers to be
-scheduled many times even if corresponding INTA IRQ is masked.
-Above, first of all, affects the LEVEL interrupts processing and causes
-unexpected behavior up the system stack or crash.
+On Wed, 2020-04-08 at 19:10 +0200, Daniel Wagner wrote:
+> Prevent excessive logging by rate limiting the "rejecting I/O"
+> messages. For example in setups where remote syslog is used the link
+> is saturated by those messages when a storage controller/disk
+> misbehaves.
+> 
+> Cc: "James E.J. Bottomley" <jejb@linux.ibm.com>
+> Cc: "Martin K. Petersen" <martin.petersen@oracle.com>
+> Signed-off-by: Daniel Wagner <dwagner@suse.de>
+> ---
+>  drivers/scsi/scsi_lib.c    |  4 ++--
+>  include/scsi/scsi_device.h | 10 ++++++++++
+>  2 files changed, 12 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/scsi/scsi_lib.c b/drivers/scsi/scsi_lib.c
+> index 47835c4b4ee0..01c35c58c6f3 100644
+> --- a/drivers/scsi/scsi_lib.c
+> +++ b/drivers/scsi/scsi_lib.c
+> @@ -1217,7 +1217,7 @@ scsi_prep_state_check(struct scsi_device *sdev,
+> struct request *req)
+>  		 */
+>  		if (!sdev->offline_already) {
+>  			sdev->offline_already = true;
+> -			sdev_printk(KERN_ERR, sdev,
+> +			sdev_printk_ratelimited(KERN_ERR, sdev,
+>  				    "rejecting I/O to offline
+> device\n");
 
-Fix it by using the Interrupt Masked Status INTA_STATUSM_j register which
-provides masked INTA IRQs status.
+I would really prefer we not do it this way if at all possible.
+It loses information we may need to debug SAN outage problems.
 
-Fixes: 9f1463b86c13 ("irqchip/ti-sci-inta: Add support for Interrupt Aggregator driver")
-Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
----
- drivers/irqchip/irq-ti-sci-inta.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+The reason I didn't use ratelimit is that the ratelimit structure is
+per-instance of the ratelimit call here, not per-device.  So this
+doesn't work right -- it will drop messages for other devices.
 
-diff --git a/drivers/irqchip/irq-ti-sci-inta.c b/drivers/irqchip/irq-ti-sci-inta.c
-index 8f6e6b08eadf..7e3ebf6ed2cd 100644
---- a/drivers/irqchip/irq-ti-sci-inta.c
-+++ b/drivers/irqchip/irq-ti-sci-inta.c
-@@ -37,6 +37,7 @@
- #define VINT_ENABLE_SET_OFFSET	0x0
- #define VINT_ENABLE_CLR_OFFSET	0x8
- #define VINT_STATUS_OFFSET	0x18
-+#define VINT_STATUS_MASKED_OFFSET	0x20
- 
- /**
-  * struct ti_sci_inta_event_desc - Description of an event coming to
-@@ -116,7 +117,7 @@ static void ti_sci_inta_irq_handler(struct irq_desc *desc)
- 	chained_irq_enter(irq_desc_get_chip(desc), desc);
- 
- 	val = readq_relaxed(inta->base + vint_desc->vint_id * 0x1000 +
--			    VINT_STATUS_OFFSET);
-+			    VINT_STATUS_MASKED_OFFSET);
- 
- 	for_each_set_bit(bit, &val, MAX_EVENTS_PER_VINT) {
- 		virq = irq_find_mapping(domain, vint_desc->events[bit].hwirq);
--- 
-2.17.1
+>  		}
+>  		return BLK_STS_IOERR;
+> @@ -1226,7 +1226,7 @@ scsi_prep_state_check(struct scsi_device *sdev,
+> struct request *req)
+>  		 * If the device is fully deleted, we refuse to
+>  		 * process any commands as well.
+>  		 */
+> -		sdev_printk(KERN_ERR, sdev,
+> +		sdev_printk_ratelimited(KERN_ERR, sdev,
+>  			    "rejecting I/O to dead device\n");
+
+I practice I hardly see this message, do you actually have a case
+where this happens?  If so perhaps add another flag similar to
+offline_already?
+
+The offline message happens a *lot*, we get a ton of them for each
+active device when the queues are unblocked when a target goes away.
+
+-Ewan
+
+>  		return BLK_STS_IOERR;
+>  	case SDEV_BLOCK:
+> diff --git a/include/scsi/scsi_device.h b/include/scsi/scsi_device.h
+> index c3cba2aaf934..8be40b0e1b8f 100644
+> --- a/include/scsi/scsi_device.h
+> +++ b/include/scsi/scsi_device.h
+> @@ -257,6 +257,16 @@ sdev_prefix_printk(const char *, const struct
+> scsi_device *, const char *,
+>  #define sdev_printk(l, sdev, fmt, a...)				
+> \
+>  	sdev_prefix_printk(l, sdev, NULL, fmt, ##a)
+>  
+> +#define sdev_printk_ratelimited(l, sdev, fmt, a...)			
+> \
+> +({									
+> \
+> +	static DEFINE_RATELIMIT_STATE(_rs,				
+> \
+> +				      DEFAULT_RATELIMIT_INTERVAL,	\
+> +				      DEFAULT_RATELIMIT_BURST);		
+> \
+> +									
+> \
+> +	if (__ratelimit(&_rs))						
+> \
+> +		sdev_prefix_printk(l, sdev, NULL, fmt, ##a);		
+> \
+> +})
+> +
+>  __printf(3, 4) void
+>  scmd_printk(const char *, const struct scsi_cmnd *, const char *,
+> ...);
+>  
 
