@@ -2,140 +2,167 @@ Return-Path: <SRS0=8dav=5Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
 	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EFD4FC2D0EA
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 10:22:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC0A7C2D0EA
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 10:25:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BFF6320771
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 10:22:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 861C320771
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 10:25:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AqIGPXCI"
+	dkim=pass (1024-bit key) header.d=renesasgroup.onmicrosoft.com header.i=@renesasgroup.onmicrosoft.com header.b="AMHkf43h"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728171AbgDHKWs (ORCPT
+        id S1728096AbgDHKZL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Apr 2020 06:22:48 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:54122 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726436AbgDHKWr (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Apr 2020 06:22:47 -0400
-Received: by mail-wm1-f66.google.com with SMTP id d77so4588913wmd.3;
-        Wed, 08 Apr 2020 03:22:45 -0700 (PDT)
+        Wed, 8 Apr 2020 06:25:11 -0400
+Received: from mail-eopbgr1410117.outbound.protection.outlook.com ([40.107.141.117]:25520
+        "EHLO JPN01-OS2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725932AbgDHKZL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Apr 2020 06:25:11 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=eIileUYx2ujVRzzqiekNonmMNJBV2atI91vSdQGuaozhL/u5sod1G/pyamIEf4TB03w39xQQV4cZ4r7NC9hM6vv3stgyUo1aIz8K+Uw0q7vNRtT0zYYL8JisPFrwJl2ZwvYt3sS1HKkxD5MFGY5FYlpCBwzbX+1rNx8lmCZGmaAk5iF+MTOZkcRKvH163CruBxi2ZPatlqJOUE0BsY341RW0zcIz805wGjaIGe2N3kRTyS+NTKxVVancPMaVailQtZFGH/0rNCQPSGWkSZ9RDGdeQl+TVBAdIZmJECVHP1XkDe4u5UJ1lSzbyp39LsoAyOrWkt5Ma1ZXTMvCl2qk0g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=0bvMIfu4bNVmo90Z4RETSA6+xb42chgYJiM3N8RXqX8=;
+ b=BBHBTkzMZoX8cpL0Joh2nU9MPgWDz94lOk2Tnzt+rbQQ9Tt2Gz9/0XO+3kpPWMUByvAHdxTNeeQFcfHHKH6HIaIuYFfkGOCvifFo7uLJR8PKEAj4QGpOSyB7IV9ZoL/NU47hM6QHbRLei7iq1d+SXkOYnOOy+8qzNC5d2tPTDzFclczXdfiFwKOiZza4A0YIp7ByPJoPLt+Uv0hPzfQVP69pFbTYBNudcyAoz4o016XUBDH4SEeq2LzBBdm06o7hpA8OdiueFPlSxjomSazkBJonYrAqOgDom1n9UNgDcONUzesFtm58PAC8QQG0paqIt6c1WlNvPXMLP0iEIohGrA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=renesas.com; dmarc=pass action=none header.from=renesas.com;
+ dkim=pass header.d=renesas.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:reply-to:from:date:message-id
-         :subject:to:cc;
-        bh=hFUWuQvfH3+RvUKxsWJsL4BSP/idRCjudICth1NHT3s=;
-        b=AqIGPXCIgW1/5FB/ZbeAyzB79NjkwCut6ixK0yfS3fcsN1Y/9ngitz5v2e0tfZUv/T
-         kM8SraoVcdy8x92oySI6CM8Fvgk1Y5fLQGBM9S3HLIrIKXjHv+EdYQHO2/4MpIZP6wh2
-         UtkZKpV4YoEMzOPBJa3LtVF8C02RtZCKe/sjL3J8qJwficoCs4BuYBgw7TsiByXgWgMc
-         XfjmYXaPuQ4rx1UE0QtYdntllX/OhMNtz/yELqxEwUls+j6I4M3UHnUWeeXBeCsnacGr
-         /9vTX6xDhx0ItfsRCdpAVxyvthh627L+6rxT8/PCzRoRPRXEDUBcZl2EmWMvM+1u1q2o
-         du1w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:reply-to
-         :from:date:message-id:subject:to:cc;
-        bh=hFUWuQvfH3+RvUKxsWJsL4BSP/idRCjudICth1NHT3s=;
-        b=IYfLycAZC3WTCsbb8g8y06jd3MsFVXk5T/IjbjMde0RdN3CU+uw7UfVvW9mGTAFrwH
-         9phF8VzvavuL5+zeRxUoXy9wl8J1ZxO3f2Ecbc2cbDwwRBRMBliH5HnpGVWgZmpUwzd9
-         uTFoeIhhkyC17rLVyRqFh8sZU/U2VCE+s75Ji0Y10xJaCnzbDpyiCWx4M+kKtSG2ySda
-         jt3uMOfb2lMQsz+NVExK80s+nB6lq4WFphjPkGf2gf11f3rtIEu0RaSKYq02+GvnyRTZ
-         2/CmOfaCpOllvagcovIkfqrV30qDG+S6ULThGupjtJVEjJ7jjI8DInryo2H5A3tb03l1
-         0GZQ==
-X-Gm-Message-State: AGi0Pub5XphOhsGANMf8RbOBv8ajtvbZUmKAqYeFtKRkWTHcTVILtCGk
-        WFyiU9eyhS2QOLiaDmTf94h0GFk3/c3y6dWM910=
-X-Google-Smtp-Source: APiQypIe9kUdMfWA55DLGYV342EE3+WfeHshekJxpSz8oqI50v7AM54oekxjyfH+929hbllKRIrZEUzMK5PrJDxY9NA=
-X-Received: by 2002:a7b:cb86:: with SMTP id m6mr3740892wmi.64.1586341365114;
- Wed, 08 Apr 2020 03:22:45 -0700 (PDT)
+ d=renesasgroup.onmicrosoft.com; s=selector2-renesasgroup-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=0bvMIfu4bNVmo90Z4RETSA6+xb42chgYJiM3N8RXqX8=;
+ b=AMHkf43h4Fn1Zz7oPeuMcZkya32VPNVz8TaxJGx3qDy/aQZmoB0bSgsvJgRfatjil5qQ4YdDu7xT19gP3fcxoylZ6XSYz836YzYyLmEKmDbS8ytTGhNuBQLAhGEPk9L/4uY/qzyY33ZUifE75jP6uNywv6HX/2hhXGloNURRF7M=
+Received: from TYAPR01MB4544.jpnprd01.prod.outlook.com (20.179.175.203) by
+ TYAPR01MB2735.jpnprd01.prod.outlook.com (20.177.101.139) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2878.20; Wed, 8 Apr 2020 10:25:06 +0000
+Received: from TYAPR01MB4544.jpnprd01.prod.outlook.com
+ ([fe80::ed7f:1268:55a9:fc06]) by TYAPR01MB4544.jpnprd01.prod.outlook.com
+ ([fe80::ed7f:1268:55a9:fc06%4]) with mapi id 15.20.2900.015; Wed, 8 Apr 2020
+ 10:25:06 +0000
+From:   Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+To:     John Stultz <john.stultz@linaro.org>,
+        lkml <linux-kernel@vger.kernel.org>
+CC:     "David S. Miller" <davem@davemloft.net>,
+        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
+        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Rob Herring <robh@kernel.org>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        netdev <netdev@vger.kernel.org>,
+        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>
+Subject: RE: [RFC][PATCH v2 1/2] driver core: Revert default
+ driver_deferred_probe_timeout value to 0
+Thread-Topic: [RFC][PATCH v2 1/2] driver core: Revert default
+ driver_deferred_probe_timeout value to 0
+Thread-Index: AQHWDXcWXye7D9W90EKkrusU1lNNn6hvBE8w
+Date:   Wed, 8 Apr 2020 10:25:05 +0000
+Message-ID: <TYAPR01MB45442402CC541A01A623F8C4D8C00@TYAPR01MB4544.jpnprd01.prod.outlook.com>
+References: <20200408072650.1731-1-john.stultz@linaro.org>
+In-Reply-To: <20200408072650.1731-1-john.stultz@linaro.org>
+Accept-Language: ja-JP, en-US
+Content-Language: ja-JP
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=yoshihiro.shimoda.uh@renesas.com; 
+x-originating-ip: [124.210.22.195]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 420cafd8-0f3c-4e8e-74f1-08d7dba71b4b
+x-ms-traffictypediagnostic: TYAPR01MB2735:
+x-microsoft-antispam-prvs: <TYAPR01MB27359A1927A17E8886C28950D8C00@TYAPR01MB2735.jpnprd01.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:7219;
+x-forefront-prvs: 0367A50BB1
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TYAPR01MB4544.jpnprd01.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10019020)(4636009)(376002)(346002)(396003)(136003)(39860400002)(366004)(110136005)(52536014)(54906003)(316002)(26005)(8936002)(9686003)(5660300002)(55016002)(81166007)(86362001)(186003)(55236004)(7696005)(66446008)(6506007)(66946007)(4326008)(66556008)(8676002)(64756008)(66476007)(33656002)(7416002)(478600001)(2906002)(71200400001)(76116006)(81156014);DIR:OUT;SFP:1102;
+received-spf: None (protection.outlook.com: renesas.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: iudkrUzifjIHL/KFpCdfRuLdeXMDhNnTGHjz5fM714s2eejcLHxXgDup+dEZO50LDOFARYLkLUVSwWDnyeOj2M0EQUhsc0M9pkpqeZT9WFo3HWcUeQADGXrm6eJjWuOzwAAl6xqJDwLqQI629FZHF2yaujaqoAtEYxMLXcT73IidFNEtrgWap1XqTJm7+i7djBcoPZyCmqQdaFAsujQpl/S+xJuUNeM1MROcRDTnhlNKd8jxYdXgGo4v6plWMP3SqkSJjkl3aLIWXkkThUJoOXeuH91I6f2ZixJBrpYO/kyPlqouT0/HBg0muESdlW0oC8sY/4Mf+gIJ9krsNI0YMrwrURHAtqcsrS/0/+xfDIvNDrWB3syVszHfbH4FGW68x8mlOAHSk6QgprQmZ1nue3rD5TItktDJX8IC1lRx7ja60MA1R+VlqLn1bLdTfq9N
+x-ms-exchange-antispam-messagedata: Mh9U3V2hHSPwIaoL7SvQUOebOFpRI9fIdB7kSB9MUVtviiWw69+Nd/JAS1NyhbyqrsAuvpcSqf2PB9SbSSEEnL8BLw9tUhLrqlHEXRSP8/2+dQgdieHQMQkOahJVBH/2t6PaGB/7HAxG86buobpOsw==
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-References: <202004020117.6E434C035@keescook>
-In-Reply-To: <202004020117.6E434C035@keescook>
-Reply-To: sedat.dilek@gmail.com
-From:   Sedat Dilek <sedat.dilek@gmail.com>
-Date:   Wed, 8 Apr 2020 12:22:33 +0200
-Message-ID: <CA+icZUU_5St7Z31_vSb_57YSm=u9NCKW=MJ2gZUGXnQ8Wx9Mbg@mail.gmail.com>
-Subject: Re: [PATCH] kbuild: mkcompile_h: Include $LD version in /proc/version
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Masahiro Yamada <masahiroy@kernel.org>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-kbuild@vger.kernel.org,
-        Clang-Built-Linux ML <clang-built-linux@googlegroups.com>,
-        linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+X-OriginatorOrg: renesas.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 420cafd8-0f3c-4e8e-74f1-08d7dba71b4b
+X-MS-Exchange-CrossTenant-originalarrivaltime: 08 Apr 2020 10:25:05.8286
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 53d82571-da19-47e4-9cb4-625a166a4a2a
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: XXctKMTY9uJkIE29OV3cRyvokZUPcRS3inyuuvt7PKAZkQP/Nw1uRt63Hyg4RgAKakyL3H64Nw/W9TXEfZOCiF2nFBtkg2Ognq7mKgs6qafp2d0/gNfh3DcSuL3hqJXZ
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYAPR01MB2735
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 2, 2020 at 10:18 AM Kees Cook <keescook@chromium.org> wrote:
->
-> When doing Clang builds of the kernel, it is possible to link with
-> either ld.bfd (binutils) or ld.lld (LLVM), but it is not possible to
-> discover this from a running kernel. Add the "$LD -v" output to
-> /proc/version.
->
+Hi John,
 
-What about also having the linker and its version in the generated
-linux-config file?
+> From: John Stultz, Sent: Wednesday, April 8, 2020 4:27 PM
+>=20
+> In commit c8c43cee29f6 ("driver core: Fix
+> driver_deferred_probe_check_state() logic"), we both cleaned up
+> the logic and also set the default driver_deferred_probe_timeout
+> value to 30 seconds to allow for drivers that are missing
+> dependencies to have some time so that the dependency may be
+> loaded from userland after initcalls_done is set.
+>=20
+> However, Yoshihiro Shimoda reported that on his device that
+> expects to have unmet dependencies (due to "optional links" in
+> its devicetree), was failing to mount the NFS root.
+>=20
+> In digging further, it seemed the problem was that while the
+> device properly probes after waiting 30 seconds for any missing
+> modules to load, the ip_auto_config() had already failed,
+> resulting in NFS to fail. This was due to ip_auto_config()
+> calling wait_for_device_probe() which doesn't wait for the
+> driver_deferred_probe_timeout to fire.
+>=20
+> Fixing that issue is possible, but could also introduce 30
+> second delays in bootups for users who don't have any
+> missing dependencies, which is not ideal.
+>=20
+> So I think the best solution to avoid any regressions is to
+> revert back to a default timeout value of zero, and allow
+> systems that need to utilize the timeout in order for userland
+> to load any modules that supply misisng dependencies in the dts
+> to specify the timeout length via the exiting documented boot
+> argument.
+>=20
+> Thanks to Geert for chasing down that ip_auto_config was why NFS
+> was failing in this case!
+>=20
+> Cc: "David S. Miller" <davem@davemloft.net>
+> Cc: Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>
+> Cc: Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>
+> Cc: Jakub Kicinski <kuba@kernel.org>
+> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Cc: Rafael J. Wysocki <rjw@rjwysocki.net>
+> Cc: Rob Herring <robh@kernel.org>
+> Cc: Geert Uytterhoeven <geert@linux-m68k.org>
+> Cc: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+> Cc: netdev <netdev@vger.kernel.org>
+> Cc: linux-pm@vger.kernel.org
+> Reported-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+> Fixes: c8c43cee29f6 ("driver core: Fix driver_deferred_probe_check_state(=
+) logic")
+> Signed-off-by: John Stultz <john.stultz@linaro.org>
 
-$ git diff
-diff --git a/Kconfig b/Kconfig
-index e10b3ee084d4..98fd210786e5 100644
---- a/Kconfig
-+++ b/Kconfig
-@@ -5,7 +5,7 @@
- #
- mainmenu "Linux/$(ARCH) $(KERNELVERSION) Kernel Configuration"
+Thank you for the patch! This patch could fix the issue
+on my environment. So,
 
--comment "Compiler: $(CC_VERSION_TEXT)"
-+comment "Compiler: $(CC_VERSION_TEXT) Linker: $(LD_VERSION_TEXT)"
+Tested-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
 
- source "scripts/Kconfig.include"
+Best regards,
+Yoshihiro Shimoda
 
-diff --git a/Makefile b/Makefile
-index 91b90ec1737c..42d6834b2255 100644
---- a/Makefile
-+++ b/Makefile
-@@ -553,6 +553,9 @@ endif
- # and from include/config/auto.conf.cmd to detect the compiler upgrade.
- CC_VERSION_TEXT = $(shell $(CC) --version 2>/dev/null | head -n 1)
-
-+# LD_VERSION_TEXT is referenced from Kconfig (so it needs export).
-+LD_VERSION_TEXT = $(shell $(LD) --version 2>/dev/null | head -n 1)
-+
- ifdef config-build
- # ===========================================================================
- # *config targets only - make sure prerequisites are updated, and descend
-@@ -562,7 +565,7 @@ ifdef config-build
- # KBUILD_DEFCONFIG may point out an alternative default configuration
- # used for 'make defconfig'
- include arch/$(SRCARCH)/Makefile
--export KBUILD_DEFCONFIG KBUILD_KCONFIG CC_VERSION_TEXT
-+export KBUILD_DEFCONFIG KBUILD_KCONFIG CC_VERSION_TEXT LD_VERSION_TEXT
-
- config: outputmakefile scripts_basic FORCE
-        $(Q)$(MAKE) $(build)=scripts/kconfig $@
-
-This generates here:
-
---- /boot/config-5.6.0-3-amd64-clang    2020-04-01 13:18:13.000000000 +0200
-+++ .config     2020-04-08 12:16:43.477674201 +0200
-@@ -1,10 +1,10 @@
- #
- # Automatically generated file; DO NOT EDIT.
--# Linux/x86 5.6.0 Kernel Configuration
-+# Linux/x86 5.6.3 Kernel Configuration
- #
-
- #
--# Compiler: clang version 10.0.0-1
-+# Compiler: clang version 10.0.0-2  Linker: LLD 10.0.0 (compatible
-with GNU linkers)
-
-- Sedat -
