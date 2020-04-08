@@ -2,68 +2,82 @@ Return-Path: <SRS0=8dav=5Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.3 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56310C2D0EA
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B07A9C2BA16
 	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 06:16:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2A5012074F
+	by mail.kernel.org (Postfix) with ESMTP id 862BD20BED
 	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 06:16:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726605AbgDHGPw (ORCPT
+        id S1726652AbgDHGQN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Apr 2020 02:15:52 -0400
-Received: from smtp.domeneshop.no ([194.63.252.55]:39089 "EHLO
-        smtp.domeneshop.no" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726467AbgDHGPv (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Apr 2020 02:15:51 -0400
-Received: from [2a02:fe0:c700:2:781f:1a82:338:d2b7] (port=57670)
-        by smtp.domeneshop.no with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.92)
-        (envelope-from <Sami_Lands_Medias@samilands.eu>)
-        id 1jM405-0000og-EJ
-        for linux-kernel@vger.kernel.org; Wed, 08 Apr 2020 08:15:49 +0200
-To:     linux-kernel@vger.kernel.org
-From:   Sami Lands Medias <Sami_Lands_Medias@samilands.eu>
-Subject: ITL and Fair Pay Projects Summary.
-Message-ID: <d1f3a2b2-f5b5-222d-9ba2-709c599666cb@samilands.eu>
-Date:   Wed, 8 Apr 2020 08:15:45 +0200
-User-Agent: Mozilla/5.0 (Windows NT 6.1; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Wed, 8 Apr 2020 02:16:13 -0400
+Received: from helcar.hmeau.com ([216.24.177.18]:32952 "EHLO fornost.hmeau.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725932AbgDHGQN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Apr 2020 02:16:13 -0400
+Received: from gwarestrin.me.apana.org.au ([192.168.0.7] helo=gwarestrin.arnor.me.apana.org.au)
+        by fornost.hmeau.com with smtp (Exim 4.89 #2 (Debian))
+        id 1jM3zV-0000fQ-Ix; Wed, 08 Apr 2020 16:15:14 +1000
+Received: by gwarestrin.arnor.me.apana.org.au (sSMTP sendmail emulation); Wed, 08 Apr 2020 16:15:13 +1000
+Date:   Wed, 8 Apr 2020 16:15:13 +1000
+From:   Herbert Xu <herbert@gondor.apana.org.au>
+To:     Linus Torvalds <torvalds@linux-foundation.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>
+Subject: [GIT PULL] Crypto Fixes for 5.7
+Message-ID: <20200408061513.GA23636@gondor.apana.org.au>
+References: <20190916084901.GA20338@gondor.apana.org.au>
+ <20190923050515.GA6980@gondor.apana.org.au>
+ <20191202062017.ge4rz72ki3vczhgb@gondor.apana.org.au>
+ <20191214084749.jt5ekav5o5pd2dcp@gondor.apana.org.au>
+ <20200115150812.mo2eycc53lbsgvue@gondor.apana.org.au>
+ <20200213033231.xjwt6uf54nu26qm5@gondor.apana.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200213033231.xjwt6uf54nu26qm5@gondor.apana.org.au>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-With a large data correlation we can make this work the best, in the 
-modern time.
+Hi Linus:
 
-ITL - a fair pay orinted linux distribution with the optimal goal of 
-perfection as much as can be over time.
+This push fixes a Kconfig dependency for hisilicon as well as a
+double free in marvell/octeontx.
 
-Samáj Trance Drum - Trance music connected to its roots, and represented 
-in an optimal way.
+The following changes since commit fcb90d51c375d09a034993cda262b68499e233a4:
 
-I/T Eon Enligthened - A chan-realized concept of The Dewa, solving 
-sectarian schisms, with this accurate concept.
+  crypto: af_alg - bool type cosmetics (2020-03-30 11:50:50 +1100)
 
-Samepodiet Parti - a politican party and speakerbox for when needed.
+are available in the Git repository at:
 
-Akraxaz - a game idea supporting 3-D culture all the way back to c-64 
-and now Vulkan.
+  git://git.kernel.org/pub/scm/linux/kernel/git/herbert/crypto-2.6.git linus 
 
-Hoods 4' G-d: Christanity has gone gay support, and this seems optimal 
-economically from the alpha-christian Jung perspective.
+for you to fetch changes up to 755bddd1e4eaf9178758bd554c60aaab46fc42ba:
 
-This is all part of potentiality blocks out, and realizing culture in 
-the I/T Eon the best way.
+  crypto: marvell/octeontx - fix double free of ptr (2020-04-03 15:37:26 +1100)
 
-Serene Greetings,
-Ywe Cærlyn
-https://www.youtube.com/channel/UCRjdZU88Jtu3_HL_N0_KkiA
+----------------------------------------------------------------
+Colin Ian King (1):
+      crypto: marvell/octeontx - fix double free of ptr
+
+YueHaibing (1):
+      crypto: hisilicon - Fix build error
+
+ drivers/crypto/hisilicon/Kconfig                 | 2 ++
+ drivers/crypto/marvell/octeontx/otx_cptvf_algs.c | 8 +++++---
+ 2 files changed, 7 insertions(+), 3 deletions(-)
+
+Thanks,
+-- 
+Email: Herbert Xu <herbert@gondor.apana.org.au>
+Home Page: http://gondor.apana.org.au/~herbert/
+PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
