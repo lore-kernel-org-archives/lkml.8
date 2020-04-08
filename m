@@ -2,131 +2,148 @@ Return-Path: <SRS0=8dav=5Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6D5CC2D0F4
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 18:59:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 917B6C2D0F4
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 19:00:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BE6E920768
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 18:59:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5122F20769
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 19:00:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="hGvWn9mt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728922AbgDHS7Q (ORCPT
+        id S1728979AbgDHTAK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Apr 2020 14:59:16 -0400
-Received: from mout.kundenserver.de ([217.72.192.75]:38807 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726730AbgDHS7Q (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Apr 2020 14:59:16 -0400
-Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
- (mreue106 [212.227.15.145]) with ESMTPA (Nemesis) id
- 1N6bwO-1jEDIr0wbW-017z1G; Wed, 08 Apr 2020 20:59:07 +0200
-From:   Arnd Bergmann <arnd@arndb.de>
-List-Id: <soc.lore.kernel.org>
-To:     soc@kernel.org, Roy Pledge <Roy.Pledge@nxp.com>,
-        Li Yang <leoyang.li@nxp.com>,
-        Youri Querry <youri.querry_1@nxp.com>
-Cc:     Arnd Bergmann <arnd@arndb.de>, Roy Pledge <roy.pledge@nxp.com>,
-        Colin Ian King <colin.king@canonical.com>,
-        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH] soc: fsl: dpio: fix incorrect pointer conversions
-Date:   Wed,  8 Apr 2020 20:58:58 +0200
-Message-Id: <20200408185904.460563-1-arnd@arndb.de>
-X-Mailer: git-send-email 2.26.0
+        Wed, 8 Apr 2020 15:00:10 -0400
+Received: from mail-db8eur05on2083.outbound.protection.outlook.com ([40.107.20.83]:22186
+        "EHLO EUR05-DB8-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726730AbgDHTAJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Apr 2020 15:00:09 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Q4ZVyRu2Bv6zMZhqrz1R3Wv4YfD9yQ7sjiYJBpkcWHy2CLRJ6Yg3rqYLcDH+15skSgSbj4eD0nGrWGl5qUOwAfJ1jX3VQGjGbPIAHlDJED1ZwRgn8DH9bpq9h3VbDqmw+CpALI/Ieh6+mnPf9+Nid7HtkLjcuyq7xcm0AA4TQznuISu5r0Cem0NbShqC1PxfLyTNIgfSyacyXhHKjjqG7rKHhvau42RElMNaYGBoRFM0LOlX9MYHEOTonQJrBnOe1mu1t6wboaPRPyv8JFKW5B5164OT8Vu4/zrUJ3ohM34Q0g2G8GRWToEYP5q6wjk4MPz+qW5S9KHIAWoh3sz87g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=cvlkjkvxb1birQXRTfdAjSLKrjju1OgEmfLKcFedhVE=;
+ b=mQS3KWN+lpHmM145Bw6k/dIJiLVowvxDIyFK/ptkW4qxauhEt15I2hv0nAL8NRd7wYMdZZrK87AK/w7d5r5B1lcDDV7BT64BYiuWs0lJHL9PaCwYtFFRJ/El5359dDlHN4FQeuaFsFPezuM+UVOtHqLeVxMQuwA5OeiHP0Tnm64LR+9IHJH/o2h3fLFA5dFzIqvsSlZ4tj6lz3vLrdGPlYTN6hqOCIbSv4srE7+qxyu53Pqpl2PDiQYK3OneXs+FGv1tMUcdGbAPCO2s5cJ/ixdafyeCmWGzj619TkfGeKw06CvpcgVeoFniLD+BKBwYyFlI3eVhZbgPAOdx+q5KVw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=mellanox.com; dmarc=pass action=none header.from=mellanox.com;
+ dkim=pass header.d=mellanox.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=cvlkjkvxb1birQXRTfdAjSLKrjju1OgEmfLKcFedhVE=;
+ b=hGvWn9mt1VLy2Q4lXmJZViIs8Q6xbA7yvs5ynRjD+9L1NDB3Cq1l0NtQoottbQEjgSi5ceC1X28rZxqmoR1hwNwNCJpK27gktDfiJKo6Snhm3L2Y0HrgtyOBNAmid5Y6//aen83Bs/WteUdjyhlzf0ZsAWK0ClnKpBXnDoSWgcI=
+Authentication-Results: spf=none (sender IP is )
+ smtp.mailfrom=borisp@mellanox.com; 
+Received: from AM7PR05MB7092.eurprd05.prod.outlook.com (2603:10a6:20b:1ac::19)
+ by AM7PR05MB6805.eurprd05.prod.outlook.com (2603:10a6:20b:131::15) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2900.15; Wed, 8 Apr
+ 2020 19:00:05 +0000
+Received: from AM7PR05MB7092.eurprd05.prod.outlook.com
+ ([fe80::9025:8313:4e65:3a05]) by AM7PR05MB7092.eurprd05.prod.outlook.com
+ ([fe80::9025:8313:4e65:3a05%7]) with mapi id 15.20.2835.030; Wed, 8 Apr 2020
+ 19:00:05 +0000
+Subject: Re: [PATCH] net/tls: fix const assignment warning
+To:     Arnd Bergmann <arnd@arndb.de>,
+        Aviad Yehezkel <aviadye@mellanox.com>,
+        John Fastabend <john.fastabend@gmail.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Sitnicki <jakub@cloudflare.com>
+Cc:     Dirk van der Merwe <dirk.vandermerwe@netronome.com>,
+        Simon Horman <simon.horman@netronome.com>,
+        Davide Caratti <dcaratti@redhat.com>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20200408185452.279040-1-arnd@arndb.de>
+From:   Boris Pismenny <borisp@mellanox.com>
+Message-ID: <67e50644-c48e-12b7-4d12-b344f2024090@mellanox.com>
+Date:   Wed, 8 Apr 2020 21:59:49 +0300
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
+In-Reply-To: <20200408185452.279040-1-arnd@arndb.de>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: AM0P190CA0024.EURP190.PROD.OUTLOOK.COM
+ (2603:10a6:208:190::34) To AM7PR05MB7092.eurprd05.prod.outlook.com
+ (2603:10a6:20b:1ac::19)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:8xAGrYaZ/ujoUnW7cL3AgjFcL40IGeG2n3NvTC+XDJlofwfuA9K
- oDFxnwY0ZfyisID+BW0V1T8NRMPjmB3xcBsR+gAoLr8CFBfD7f3APxjKC2BV/SNoszVmYKi
- M0vLAM6kpZDaIOc9U6uLbXIFBw4m8GPBgO2DAfYAG2EYz9K1cExMvMJxDJ9+eo/SJEcpqF1
- w11Qw2RA0RNyEzk/w9iqg==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:R+zWTu3qJj8=:PMGN84S59S9E8FL82EdxEJ
- TeslY7JBQpC5GCPlSgAgF3eIo1VO8kNJRe2MVvFc/9hhZWzMy8XCJ/t6q9kbIotaEZwNP5wxv
- XXIP1hlNYDVLdTEnQptpDzyWzLFe5NZQNVi0ZHyXlokmJe8KW2jwAhTM5CJaWLJo/RI2qtirj
- pFw6gVf3ZNjOmyeQQOUc57sTvCIM2x3EKEZM8B2xbaf8oYuQmdXryQpkVMCa5J9oioRs7wZZv
- pSTe1hdBBSx6XeUOIo5UQJlQEeR4WuQ8AKkHy9OGRcWUsCRA5chF+JpUKmne+5SKtdg3FLtVO
- qJdgR4m0M1ljY0FjehKF8CSGE0+m3/9cFzNRYZ+YQuvEAvuTakT5F+jzbXR9hACZyjhzdxO4H
- L6PP2laJwIXphFwUkhbaTteys5sJB4BqVq6c1ms3pKXWA8rRBwX8JzXG4AyF6MHQ692YAjE+E
- fAwGo1+g4HTiS6shj85WDM447Ulks22Wpawgbwz9AepxlouwBS7Le06xw2WOUfXwlwygbezJw
- 5zM1aKcny8zNiQxMmMsXX0ZnuG4w0mFQjX2oTcb+liispyO8EXdeatlV/dMDX2ZoOGI7lCK+A
- KONEcvszOwwAejQqC4XhcPOk5X0gj8O0Z/P4PWTt2n2B+WivcR2xhEA4T36+BkPIaYo4bQuG7
- qgobEcWg1p+oaO/4TOaG3t48QvfZsaID0fdeYdmkWj66QwA5z3/OkK6j+0sJLWz9x+viE3XCU
- xThvkh8aFqpv+AMSwmU9Nf8dZ/fm0wyX0fSXFwdm7GsDL2uz/ud6i5D4j6wvubOJ+0MGlqE00
- HtZKofaIn4bqehBC1pdMSkpxk94rZbbIYRjEe7hcCLXpLnDCcY=
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from [192.168.1.15] (213.57.108.28) by AM0P190CA0024.EURP190.PROD.OUTLOOK.COM (2603:10a6:208:190::34) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2900.15 via Frontend Transport; Wed, 8 Apr 2020 19:00:03 +0000
+X-Originating-IP: [213.57.108.28]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: a6e73fbb-349b-4871-1a3b-08d7dbef0c9a
+X-MS-TrafficTypeDiagnostic: AM7PR05MB6805:|AM7PR05MB6805:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <AM7PR05MB6805CEC02963CCC2CB31C195B0C00@AM7PR05MB6805.eurprd05.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:200;
+X-Forefront-PRVS: 0367A50BB1
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM7PR05MB7092.eurprd05.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10009020)(4636009)(396003)(376002)(346002)(39840400004)(136003)(366004)(54906003)(8936002)(316002)(16576012)(110136005)(7416002)(36756003)(6666004)(6486002)(2906002)(31696002)(86362001)(8676002)(66556008)(66476007)(66946007)(53546011)(81156014)(26005)(956004)(16526019)(81166007)(4326008)(52116002)(186003)(5660300002)(2616005)(478600001)(31686004);DIR:OUT;SFP:1101;
+Received-SPF: None (protection.outlook.com: mellanox.com does not designate
+ permitted sender hosts)
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: YVdyO32GXQEXCd8y1dKVPaXO0ZnAl6stR1UK3JLo8ZkYl0RjaDm66U7bYUyBLkJzr9Ij3BIxGCLm88BZKVjvnJZbh/yHfEIKkUSn2d9XM52cAxpCSLMahBTKd9gEem1dlY0EKqOlzgQCURpVeiWU7ZHsgn6PvhwHnHD3QUPDk9arEXO1XyAZIhS7eOnCxYlA+GeAMHYspVFPAgOwaCwc7iPqzUTCZhOJ37ELWHjlxzVNyUNcI2GLJwH5txBQO7SC/OZUXIgBoaL2ca+Gzfzk7YYvIxLVLTvXshsLQAMEJnCpOk0yBl5CheIsBTw0aSzmT9BdfKaNgPGoK+kDlpZG1BBQwTOJZTrXaHmUR1Bi1hyUus/9vHW2j9F1tflVO7o8DHW/e5QrGKDn/eCS4i0dT/DK/cjQ5LvKl8345/Q0HqrXvRsNi6wWeo9bRjjUrUvI
+X-MS-Exchange-AntiSpam-MessageData: RQxyGKtJTEFZKyfh5ZE6KtqAM7xZMIYSWvgtkETA7lJJP7rtLU+I6DcLLLUWci0Qfiw9qB5VqHcKJJldVzFE0SZ1SvEC8NSWy8KE6KIhkUO8PRFVYf1HvJEI+0SaT0D+QnsPl2eXXmpBH1U1OobMSQ==
+X-OriginatorOrg: Mellanox.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: a6e73fbb-349b-4871-1a3b-08d7dbef0c9a
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 Apr 2020 19:00:05.2481
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: a652971c-7d2e-4d9b-a6a4-d149256f461b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: TRXRyRk4wYt/SgrBVhnklJmbBcveqrPv1qZX95SGwdgjJmL0LQ8NpZARbUQf7YqUMwe7j7t4J4otO9f+fs1FUQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM7PR05MB6805
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Building dpio for 32 bit shows a new compiler warning from converting
-a pointer to a u64:
 
-drivers/soc/fsl/dpio/qbman-portal.c: In function 'qbman_swp_enqueue_multiple_desc_direct':
-drivers/soc/fsl/dpio/qbman-portal.c:870:14: warning: cast from pointer to integer of different size [-Wpointer-to-int-cast]
-  870 |  addr_cena = (uint64_t)s->addr_cena;
+On 08/04/2020 21:54, Arnd Bergmann wrote:
+> Building with some experimental patches, I came across a warning
+> in the tls code:
+> 
+> include/linux/compiler.h:215:30: warning: assignment discards 'const' qualifier from pointer target type [-Wdiscarded-qualifiers]
+>   215 |  *(volatile typeof(x) *)&(x) = (val);  \
+>       |                              ^
+> net/tls/tls_main.c:650:4: note: in expansion of macro 'smp_store_release'
+>   650 |    smp_store_release(&saved_tcpv4_prot, prot);
+> 
+> This appears to be a legitimate warning about assigning a const pointer
+> into the non-const 'saved_tcpv4_prot' global. Annotate both the ipv4 and
+> ipv6 pointers 'const' to make the code internally consistent.
+> 
+> Fixes: 5bb4c45d466c ("net/tls: Read sk_prot once when building tls proto ops")
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> ---
+>  net/tls/tls_main.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/net/tls/tls_main.c b/net/tls/tls_main.c
+> index 156efce50dbd..0e989005bdc2 100644
+> --- a/net/tls/tls_main.c
+> +++ b/net/tls/tls_main.c
+> @@ -56,9 +56,9 @@ enum {
+>  	TLS_NUM_PROTS,
+>  };
+>  
+> -static struct proto *saved_tcpv6_prot;
+> +static const struct proto *saved_tcpv6_prot;
+>  static DEFINE_MUTEX(tcpv6_prot_mutex);
+> -static struct proto *saved_tcpv4_prot;
+> +static const struct proto *saved_tcpv4_prot;
+>  static DEFINE_MUTEX(tcpv4_prot_mutex);
+>  static struct proto tls_prots[TLS_NUM_PROTS][TLS_NUM_CONFIG][TLS_NUM_CONFIG];
+>  static struct proto_ops tls_sw_proto_ops;
+> 
 
-The variable is not used anywhere, so removing the assignment seems
-to be the correct workaround. After spotting what seemed to be
-some confusion about address spaces, I ran the file through sparse,
-which showed more warnings:
-
-drivers/soc/fsl/dpio/qbman-portal.c:756:42: warning: incorrect type in argument 1 (different address spaces)
-drivers/soc/fsl/dpio/qbman-portal.c:756:42:    expected void const volatile [noderef] <asn:2> *addr
-drivers/soc/fsl/dpio/qbman-portal.c:756:42:    got unsigned int [usertype] *[assigned] p
-drivers/soc/fsl/dpio/qbman-portal.c:902:42: warning: incorrect type in argument 1 (different address spaces)
-drivers/soc/fsl/dpio/qbman-portal.c:902:42:    expected void const volatile [noderef] <asn:2> *addr
-drivers/soc/fsl/dpio/qbman-portal.c:902:42:    got unsigned int [usertype] *[assigned] p
-
-Here, the problem is passing a token from memremap() into __raw_readl(),
-which is only defined to work on MMIO addresses but not RAM. Turning
-this into a simple pointer dereference avoids this warning as well.
-
-Fixes: 3b2abda7d28c ("soc: fsl: dpio: Replace QMAN array mode with ring mode enqueue")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
----
- drivers/soc/fsl/dpio/qbman-portal.c | 6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/soc/fsl/dpio/qbman-portal.c b/drivers/soc/fsl/dpio/qbman-portal.c
-index d1f49caa5b13..804b8ba9bf5c 100644
---- a/drivers/soc/fsl/dpio/qbman-portal.c
-+++ b/drivers/soc/fsl/dpio/qbman-portal.c
-@@ -753,7 +753,7 @@ int qbman_swp_enqueue_multiple_mem_back(struct qbman_swp *s,
- 	if (!s->eqcr.available) {
- 		eqcr_ci = s->eqcr.ci;
- 		p = s->addr_cena + QBMAN_CENA_SWP_EQCR_CI_MEMBACK;
--		s->eqcr.ci = __raw_readl(p) & full_mask;
-+		s->eqcr.ci = *p & full_mask;
- 		s->eqcr.available = qm_cyc_diff(s->eqcr.pi_ring_size,
- 					eqcr_ci, s->eqcr.ci);
- 		if (!s->eqcr.available) {
-@@ -823,7 +823,6 @@ int qbman_swp_enqueue_multiple_desc_direct(struct qbman_swp *s,
- 	const uint32_t *cl;
- 	uint32_t eqcr_ci, eqcr_pi, half_mask, full_mask;
- 	int i, num_enqueued = 0;
--	uint64_t addr_cena;
- 
- 	half_mask = (s->eqcr.pi_ci_mask>>1);
- 	full_mask = s->eqcr.pi_ci_mask;
-@@ -867,7 +866,6 @@ int qbman_swp_enqueue_multiple_desc_direct(struct qbman_swp *s,
- 
- 	/* Flush all the cacheline without load/store in between */
- 	eqcr_pi = s->eqcr.pi;
--	addr_cena = (uint64_t)s->addr_cena;
- 	for (i = 0; i < num_enqueued; i++)
- 		eqcr_pi++;
- 	s->eqcr.pi = eqcr_pi & full_mask;
-@@ -901,7 +899,7 @@ int qbman_swp_enqueue_multiple_desc_mem_back(struct qbman_swp *s,
- 	if (!s->eqcr.available) {
- 		eqcr_ci = s->eqcr.ci;
- 		p = s->addr_cena + QBMAN_CENA_SWP_EQCR_CI_MEMBACK;
--		s->eqcr.ci = __raw_readl(p) & full_mask;
-+		s->eqcr.ci = *p & full_mask;
- 		s->eqcr.available = qm_cyc_diff(s->eqcr.pi_ring_size,
- 					eqcr_ci, s->eqcr.ci);
- 		if (!s->eqcr.available)
--- 
-2.26.0
-
+LGTM
