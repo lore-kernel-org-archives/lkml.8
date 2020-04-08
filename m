@@ -2,262 +2,461 @@ Return-Path: <SRS0=8dav=5Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6C1FC2BA80
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 03:06:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3257C2BA80
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 03:07:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A903C2072A
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 03:06:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 77BFE2074B
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 03:07:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="WQaJu5dX"
+	dkim=pass (1024-bit key) header.d=jms.id.au header.i=@jms.id.au header.b="L/ApaN2o"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726508AbgDHDGt (ORCPT
+        id S1726530AbgDHDHM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 23:06:49 -0400
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:29203 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726453AbgDHDGt (ORCPT
+        Tue, 7 Apr 2020 23:07:12 -0400
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:38290 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726467AbgDHDHM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Apr 2020 23:06:49 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1586315207;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=5yeSyrhzFUknRYXWKSA7RZGwrbGN9UTmgmY3Cbd81n0=;
-        b=WQaJu5dX3nFb6D0vjTBPLu6FTg3GiHEaHIR/1lay7anvyfbjw+y1YuZAZMc8ONjuZhfp2l
-        6Q9+LLE3ybVLLyVUnqa5I7t//Lk/kYb1ImzQuBdCh7Sevu2HoGZWtEGrq3A78smi5vZbsn
-        nlEip/86DU0XaWLIxflmiqSVHJ/pP1A=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-350-uwpOH7cfOnGRc8lpdjvWEQ-1; Tue, 07 Apr 2020 23:06:40 -0400
-X-MC-Unique: uwpOH7cfOnGRc8lpdjvWEQ-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id D156E801E5C;
-        Wed,  8 Apr 2020 03:06:38 +0000 (UTC)
-Received: from localhost.localdomain (ovpn-8-28.pek2.redhat.com [10.72.8.28])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 0D48C60BFB;
-        Wed,  8 Apr 2020 03:06:29 +0000 (UTC)
-Date:   Wed, 8 Apr 2020 11:06:25 +0800
-From:   Ming Lei <ming.lei@redhat.com>
-To:     Doug Anderson <dianders@chromium.org>
-Cc:     Jens Axboe <axboe@kernel.dk>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        linux-scsi@vger.kernel.org, Salman Qazi <sqazi@google.com>,
-        Gwendal Grignou <gwendal@chromium.org>,
-        Guenter Roeck <groeck@chromium.org>,
-        linux-block <linux-block@vger.kernel.org>,
-        Paolo Valente <paolo.valente@linaro.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v3 3/4] blk-mq: Rerun dispatching in the case of budget
- contention
-Message-ID: <20200408030625.GC337494@localhost.localdomain>
-References: <20200407220005.119540-1-dianders@chromium.org>
- <20200407145906.v3.3.I28278ef8ea27afc0ec7e597752a6d4e58c16176f@changeid>
- <20200408020936.GB337494@localhost.localdomain>
- <CAD=FV=WY8sTZQq3NtNe4Ux-C0Q0JOR4V1Z+cjVvj791rFDL+=Q@mail.gmail.com>
+        Tue, 7 Apr 2020 23:07:12 -0400
+Received: by mail-qt1-f196.google.com with SMTP id 13so2665043qtt.5;
+        Tue, 07 Apr 2020 20:07:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=jms.id.au; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=VMs6pkkDIDsmecqZHU0wzCDUHfQWS5zfYqzf+iTg04c=;
+        b=L/ApaN2oajbPAo/BtfJQISdwUpErMmki+nQgyYf0V7i1W1ScAXANuyTTdv+sQHxSpS
+         tMe+IeK8QlR5PEF1D24LnuFpqGG7ycx5PleN67LwT5MnIAjXHWHx5NVvj6LudZM9AYRm
+         AWX8DcQu9IB8acJlFPq8crOHMj3WQd8NG2kk0=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=VMs6pkkDIDsmecqZHU0wzCDUHfQWS5zfYqzf+iTg04c=;
+        b=WXwKUt8wc5pdr1eNUECFmHPr9p4qFtO/x6PkPPIrD0/e+EzISftyjsdrJVJJE0rhL/
+         3oVJThJ6rh8gLFIjZWVxDbpLzXH1OzTXKYWdlB7WctqY7WX7pK1WMvpGajxjTR+uFnWt
+         /AHZz7YGTv2gGjs2P1fdPRj6D1Y6RzqrQIQwtdGpEoHx/bDZI0aV2eZM8o6UzdhVXhAY
+         mgqCOi5cU37vNfUAMnkF2SPZJXEW5gTSdZjvhErxBFwyXvjIpC2RxkWwttF1U+CPk/6d
+         o1mGRwN43m4bQj8EcJtbfUMFhM6BjxEH73NL9zLFeAgT3p81BBUBLfiCEbLfkS27YmeP
+         a/+g==
+X-Gm-Message-State: AGi0Pua5+m0XvZ9wn6XTE618PcHqPauD6GSWMCI6UviF9QL8+iLIA8E5
+        orz2cyjkEg7kpigacuzGs9ulllKSVcU4Ih7carE=
+X-Google-Smtp-Source: APiQypKGl8BsC5XeR2EwydrxInbm1BCQUeFdNGzau0dwf+b7leAZr0WpiL2iOHe/FOTQOpH2oec8zn+wRrpI7S8StH8=
+X-Received: by 2002:ac8:7769:: with SMTP id h9mr5497525qtu.234.1586315229708;
+ Tue, 07 Apr 2020 20:07:09 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAD=FV=WY8sTZQq3NtNe4Ux-C0Q0JOR4V1Z+cjVvj791rFDL+=Q@mail.gmail.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+References: <20200405125352.183693-1-amirmizi6@gmail.com> <20200405125352.183693-8-amirmizi6@gmail.com>
+In-Reply-To: <20200405125352.183693-8-amirmizi6@gmail.com>
+From:   Joel Stanley <joel@jms.id.au>
+Date:   Wed, 8 Apr 2020 03:06:58 +0000
+Message-ID: <CACPK8XeGRq-NbwvJgKcO8odxEkdRrMTrhBsvqf7+cYXGBJxSDA@mail.gmail.com>
+Subject: Re: [PATCH v5 7/7] tpm: tpm_tis: add tpm_tis_i2c driver
+To:     amirmizi6@gmail.com
+Cc:     Eyal.Cohen@nuvoton.com, jarkko.sakkinen@linux.intel.com,
+        oshrialkoby85@gmail.com, alexander.steffen@infineon.com,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>, benoit.houyere@st.com,
+        peterhuewe@gmx.de, christophe-h.richard@st.com, jgg@ziepe.ca,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-integrity@vger.kernel.org, oshri.alkoby@nuvoton.com,
+        Tomer Maimon <tmaimon77@gmail.com>, gcwilson@us.ibm.com,
+        kgoldman@us.ibm.com, Dan.Morav@nuvoton.com,
+        oren.tanami@nuvoton.com, shmulik.hager@nuvoton.com,
+        amir.mizinski@nuvoton.com, Eddie James <eajames@linux.ibm.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 07, 2020 at 07:17:49PM -0700, Doug Anderson wrote:
-> Hi,
-> 
-> On Tue, Apr 7, 2020 at 7:09 PM Ming Lei <ming.lei@redhat.com> wrote:
-> >
-> > On Tue, Apr 07, 2020 at 03:00:04PM -0700, Douglas Anderson wrote:
-> > > If ever a thread running blk-mq code tries to get budget and fails it
-> > > immediately stops doing work and assumes that whenever budget is freed
-> > > up that queues will be kicked and whatever work the thread was trying
-> > > to do will be tried again.
-> > >
-> > > One path where budget is freed and queues are kicked in the normal
-> > > case can be seen in scsi_finish_command().  Specifically:
-> > > - scsi_finish_command()
-> > >   - scsi_device_unbusy()
-> > >     - # Decrement "device_busy", AKA release budget
-> > >   - scsi_io_completion()
-> > >     - scsi_end_request()
-> > >       - blk_mq_run_hw_queues()
-> > >
-> > > The above is all well and good.  The problem comes up when a thread
-> > > claims the budget but then releases it without actually dispatching
-> > > any work.  Since we didn't schedule any work we'll never run the path
-> > > of finishing work / kicking the queues.
-> > >
-> > > This isn't often actually a problem which is why this issue has
-> > > existed for a while and nobody noticed.  Specifically we only get into
-> > > this situation when we unexpectedly found that we weren't going to do
-> > > any work.  Code that later receives new work kicks the queues.  All
-> > > good, right?
-> > >
-> > > The problem shows up, however, if timing is just wrong and we hit a
-> > > race.  To see this race let's think about the case where we only have
-> > > a budget of 1 (only one thread can hold budget).  Now imagine that a
-> > > thread got budget and then decided not to dispatch work.  It's about
-> > > to call put_budget() but then the thread gets context switched out for
-> > > a long, long time.  While in this state, any and all kicks of the
-> > > queue (like the when we received new work) will be no-ops because
-> > > nobody can get budget.  Finally the thread holding budget gets to run
-> > > again and returns.  All the normal kicks will have been no-ops and we
-> > > have an I/O stall.
-> > >
-> > > As you can see from the above, you need just the right timing to see
-> > > the race.  To start with, the only case it happens if we thought we
-> > > had work, actually managed to get the budget, but then actually didn't
-> > > have work.  That's pretty rare to start with.  Even then, there's
-> > > usually a very small amount of time between realizing that there's no
-> > > work and putting the budget.  During this small amount of time new
-> > > work has to come in and the queue kick has to make it all the way to
-> > > trying to get the budget and fail.  It's pretty unlikely.
-> > >
-> > > One case where this could have failed is illustrated by an example of
-> > > threads running blk_mq_do_dispatch_sched():
-> > >
-> > > * Threads A and B both run has_work() at the same time with the same
-> > >   "hctx".  Imagine has_work() is exact.  There's no lock, so it's OK
-> > >   if Thread A and B both get back true.
-> > > * Thread B gets interrupted for a long time right after it decides
-> > >   that there is work.  Maybe its CPU gets an interrupt and the
-> > >   interrupt handler is slow.
-> > > * Thread A runs, get budget, dispatches work.
-> > > * Thread A's work finishes and budget is released.
-> > > * Thread B finally runs again and gets budget.
-> > > * Since Thread A already took care of the work and no new work has
-> > >   come in, Thread B will get NULL from dispatch_request().  I believe
-> > >   this is specifically why dispatch_request() is allowed to return
-> > >   NULL in the first place if has_work() must be exact.
-> > > * Thread B will now be holding the budget and is about to call
-> > >   put_budget(), but hasn't called it yet.
-> > > * Thread B gets interrupted for a long time (again).  Dang interrupts.
-> > > * Now Thread C (maybe with a different "hctx" but the same queue)
-> > >   comes along and runs blk_mq_do_dispatch_sched().
-> > > * Thread C won't do anything because it can't get budget.
-> >
-> > Thread C will re-run queue in this case:
-> >
-> > Just thought scsi_mq_get_budget() does handle the case via re-run queue:
-> >
-> >         if (atomic_read(&sdev->device_busy) == 0 && !scsi_device_blocked(sdev))
-> >                 blk_mq_delay_run_hw_queue(hctx, SCSI_QUEUE_DELAY);
-> >
-> > So looks no such race.
-> 
-> Thread B is holding budget and hasn't released it yet, right?  In the
-> context of scsi, that means "device_busy >= 1", right?  So how can the
-> code you point at help us?  When Thread C reads "device_busy" it will
-> be 1 and that code won't run.  What did I miss?
+On Sun, 5 Apr 2020 at 12:56, <amirmizi6@gmail.com> wrote:
+>
+> From: Amir Mizinski <amirmizi6@gmail.com>
+>
+> Implements the functionality needed to communicate with an I2C TPM
+> according to the TCG TPM I2C Interface Specification.
+>
+> Signed-off-by: Amir Mizinski <amirmizi6@gmail.com>
+> Tested-by: Eddie James <eajames@linux.ibm.com>
+> ---
+>  drivers/char/tpm/Kconfig       |  12 ++
+>  drivers/char/tpm/Makefile      |   1 +
+>  drivers/char/tpm/tpm_tis_i2c.c | 292 +++++++++++++++++++++++++++++++++++=
+++++++
+>  3 files changed, 305 insertions(+)
+>  create mode 100644 drivers/char/tpm/tpm_tis_i2c.c
+>
+> diff --git a/drivers/char/tpm/Kconfig b/drivers/char/tpm/Kconfig
+> index aacdeed..b166ad3 100644
+> --- a/drivers/char/tpm/Kconfig
+> +++ b/drivers/char/tpm/Kconfig
+> @@ -74,6 +74,18 @@ config TCG_TIS_SPI_CR50
+>           If you have a H1 secure module running Cr50 firmware on SPI bus=
+,
+>           say Yes and it will be accessible from within Linux.
+>
+> +config TCG_TIS_I2C
+> +       tristate "TPM I2C Interface Specification"
+> +       depends on I2C
+> +       depends on CRC_CCITT
 
-Oh, this is my fault, sorry for the noise.
+All the other users in the kernel "select CRC_CCITT" instead of
+depending on it. If we do that it's easier to enable this driver, so I
+recommend going that route.
 
-> 
-> 
-> > > * Finally Thread B will run again and put the budget without kicking
-> > >   any queues.
-> > >
-> > > Even though the example above is with blk_mq_do_dispatch_sched() I
-> > > believe the race is possible any time someone is holding budget but
-> > > doesn't do work.
-> > >
-> > > Unfortunately, the unlikely has become more likely if you happen to be
-> > > using the BFQ I/O scheduler.  BFQ, by design, sometimes returns "true"
-> > > for has_work() but then NULL for dispatch_request() and stays in this
-> > > state for a while (currently up to 9 ms).  Suddenly you only need one
-> > > race to hit, not two races in a row.  With my current setup this is
-> > > easy to reproduce in reboot tests and traces have actually shown that
-> > > we hit a race similar to the one describe above.
-> > >
-> > > In theory we could choose to just fix blk_mq_do_dispatch_sched() to
-> > > kick the queues when it puts budget.  That would fix the BFQ case and
-> > > one could argue that all the other cases are just theoretical.  While
-> > > that is true, for all the other cases it should be very uncommon to
-> > > run into the case where we need put_budget().  Having an extra queue
-> > > kick for safety there shouldn't affect much and keeps the race at bay.
-> > >
-> > > One last note is that (at least in the SCSI case) budget is shared by
-> > > all "hctx"s that have the same queue.  Thus we need to make sure to
-> > > kick the whole queue, not just re-run dispatching on a single "hctx".
-> > >
-> > > Signed-off-by: Douglas Anderson <dianders@chromium.org>
-> > > ---
-> > >
-> > > Changes in v3:
-> > > - Always kick when putting the budget.
-> > > - Delay blk_mq_do_dispatch_sched() kick by 3 ms for inexact has_work().
-> > > - Totally rewrote commit message.
-> > >
-> > > Changes in v2:
-> > > - Replace ("scsi: core: Fix stall...") w/ ("blk-mq: Rerun dispatch...")
-> > >
-> > >  block/blk-mq.h | 14 +++++++++++++-
-> > >  1 file changed, 13 insertions(+), 1 deletion(-)
-> > >
-> > > diff --git a/block/blk-mq.h b/block/blk-mq.h
-> > > index 10bfdfb494fa..1270505367ab 100644
-> > > --- a/block/blk-mq.h
-> > > +++ b/block/blk-mq.h
-> > > @@ -180,12 +180,24 @@ unsigned int blk_mq_in_flight(struct request_queue *q, struct hd_struct *part);
-> > >  void blk_mq_in_flight_rw(struct request_queue *q, struct hd_struct *part,
-> > >                        unsigned int inflight[2]);
-> > >
-> > > +#define BLK_MQ_BUDGET_DELAY  3               /* ms units */
-> > > +
-> > >  static inline void blk_mq_put_dispatch_budget(struct blk_mq_hw_ctx *hctx)
-> > >  {
-> > >       struct request_queue *q = hctx->queue;
-> > >
-> > > -     if (q->mq_ops->put_budget)
-> > > +     if (q->mq_ops->put_budget) {
-> > >               q->mq_ops->put_budget(hctx);
-> > > +
-> > > +             /*
-> > > +              * The only time we call blk_mq_put_dispatch_budget() is if
-> > > +              * we released the budget without dispatching.  Holding the
-> > > +              * budget could have blocked any "hctx"s with the same queue
-> > > +              * and if we didn't dispatch then there's no guarantee anyone
-> > > +              * will kick the queue.  Kick it ourselves.
-> > > +              */
-> > > +             blk_mq_delay_run_hw_queues(q, BLK_MQ_BUDGET_DELAY);
-> >
-> > No, please don't do that un-conditionally we just need to re-run queue
-> > when there has work to do.
-> 
-> ...what function would you like me to call to check?  The code you
+I tested your series (backported on to a 5.4 tree) and it worked well
+on my platform. For the series:
 
-At least we only need to call it in blk_mq_do_dispatch_sched() and
-blk_mq_do_dispatch_ctx(), in which no request is dequeued yet. Other
-callers can handle the run queue cause request has been there.
+Tested-by: Joel Stanley <joel@jms.id.au>
 
-> wrote in response to v2 only checked work for the given "hctx".  What
-> about other "hctx" that are part of the same "queue".  Are we
-> guaranteed that has_work() returns the same value for all "hctx"s on
-> the same "queue"?
 
-In theory has_work() should return ture when there is work associated with
-this hctx. However, some schedulers put all requests in global scheduler
-queue instead of per-hctx, then this scheduler's
-has_work() returns true when there is any request in scheduler queue.
 
-> If so, why doesn't has_work() take the "queue" as a
-> parameter?
 
-In theory has_work() needs to be checked before run queue, however this
-code path should be called very unusually, so it is fine to just run all
-hctxs.
-
-Thanks,
-Ming
-
+> +       select TCG_TIS_CORE
+> +       ---help---
+> +         If you have a TPM security chip which is connected to a regular
+> +         I2C master (i.e. most embedded platforms) that is compliant wit=
+h the
+> +         TCG TPM I2C Interface Specification say Yes and it will be acce=
+ssible from
+> +         within Linux. To compile this driver as a module, choose  M her=
+e;
+> +         the module will be called tpm_tis_i2c.
+> +
+>  config TCG_TIS_I2C_ATMEL
+>         tristate "TPM Interface Specification 1.2 Interface (I2C - Atmel)=
+"
+>         depends on I2C
+> diff --git a/drivers/char/tpm/Makefile b/drivers/char/tpm/Makefile
+> index 9567e51..97999cf 100644
+> --- a/drivers/char/tpm/Makefile
+> +++ b/drivers/char/tpm/Makefile
+> @@ -26,6 +26,7 @@ obj-$(CONFIG_TCG_TIS_SPI) +=3D tpm_tis_spi.o
+>  tpm_tis_spi-y :=3D tpm_tis_spi_main.o
+>  tpm_tis_spi-$(CONFIG_TCG_TIS_SPI_CR50) +=3D tpm_tis_spi_cr50.o
+>
+> +obj-$(CONFIG_TCG_TIS_I2C) +=3D tpm_tis_i2c.o
+>  obj-$(CONFIG_TCG_TIS_I2C_ATMEL) +=3D tpm_i2c_atmel.o
+>  obj-$(CONFIG_TCG_TIS_I2C_INFINEON) +=3D tpm_i2c_infineon.o
+>  obj-$(CONFIG_TCG_TIS_I2C_NUVOTON) +=3D tpm_i2c_nuvoton.o
+> diff --git a/drivers/char/tpm/tpm_tis_i2c.c b/drivers/char/tpm/tpm_tis_i2=
+c.c
+> new file mode 100644
+> index 0000000..83c0b3a
+> --- /dev/null
+> +++ b/drivers/char/tpm/tpm_tis_i2c.c
+> @@ -0,0 +1,292 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Copyright (c) 2014-2019 Nuvoton Technology corporation
+> + *
+> + * TPM TIS I2C
+> + *
+> + * TPM TIS I2C Device Driver Interface for devices that implement the TP=
+M I2C
+> + * Interface defined by TCG PC Client Platform TPM Profile (PTP) Specifi=
+cation
+> + * Revision 01.03 v22 at www.trustedcomputinggroup.org
+> + */
+> +
+> +#include <linux/init.h>
+> +#include <linux/module.h>
+> +#include <linux/moduleparam.h>
+> +#include <linux/slab.h>
+> +#include <linux/interrupt.h>
+> +#include <linux/wait.h>
+> +#include <linux/acpi.h>
+> +#include <linux/freezer.h>
+> +#include <linux/crc-ccitt.h>
+> +
+> +#include <linux/module.h>
+> +#include <linux/i2c.h>
+> +#include <linux/gpio.h>
+> +#include <linux/of_irq.h>
+> +#include <linux/of_gpio.h>
+> +#include <linux/tpm.h>
+> +#include "tpm.h"
+> +#include "tpm_tis_core.h"
+> +
+> +#define TPM_LOC_SEL                    0x04
+> +#define TPM_I2C_INTERFACE_CAPABILITY   0x30
+> +#define TPM_I2C_DEVICE_ADDRESS         0x38
+> +#define TPM_DATA_CSUM_ENABLE           0x40
+> +#define TPM_DATA_CSUM                  0x44
+> +#define TPM_I2C_DID_VID                        0x48
+> +#define TPM_I2C_RID                    0x4C
+> +
+> +//#define I2C_IS_TPM2 1
+> +
+> +struct tpm_tis_i2c_phy {
+> +       struct tpm_tis_data priv;
+> +       struct i2c_client *i2c_client;
+> +       bool data_csum;
+> +       u8 *iobuf;
+> +};
+> +
+> +static inline struct tpm_tis_i2c_phy *to_tpm_tis_i2c_phy(struct tpm_tis_=
+data *data)
+> +{
+> +       return container_of(data, struct tpm_tis_i2c_phy, priv);
+> +}
+> +
+> +static u8 address_to_register(u32 addr)
+> +{
+> +       addr &=3D 0xFFF;
+> +
+> +       switch (addr) {
+> +               // adapt register addresses that have changed compared to
+> +               // older TIS versions
+> +       case TPM_ACCESS(0):
+> +               return 0x04;
+> +       case TPM_LOC_SEL:
+> +               return 0x00;
+> +       case TPM_DID_VID(0):
+> +               return 0x48;
+> +       case TPM_RID(0):
+> +               return 0x4C;
+> +       default:
+> +               return addr;
+> +       }
+> +}
+> +
+> +static int tpm_tis_i2c_read_bytes(struct tpm_tis_data *data, u32 addr,
+> +                                 u16 len, u8 *result)
+> +{
+> +       struct tpm_tis_i2c_phy *phy =3D to_tpm_tis_i2c_phy(data);
+> +       int ret =3D 0;
+> +       int i =3D 0;
+> +       u8 reg =3D address_to_register(addr);
+> +       struct i2c_msg msgs[] =3D {
+> +               {
+> +                       .addr =3D phy->i2c_client->addr,
+> +                       .len =3D sizeof(reg),
+> +                       .buf =3D &reg,
+> +               },
+> +               {
+> +                       .addr =3D phy->i2c_client->addr,
+> +                       .len =3D len,
+> +                       .buf =3D result,
+> +                       .flags =3D I2C_M_RD,
+> +               },
+> +       };
+> +
+> +       do {
+> +               ret =3D i2c_transfer(phy->i2c_client->adapter, msgs,
+> +                                  ARRAY_SIZE(msgs));
+> +               usleep_range(250, 300); // wait default GUARD_TIME of 250=
+=C2=B5s
+> +
+> +       } while (ret < 0 && i++ < TPM_RETRY);
+> +
+> +       if (ret < 0)
+> +               return ret;
+> +
+> +
+> +       return 0;
+> +}
+> +
+> +static int tpm_tis_i2c_write_bytes(struct tpm_tis_data *data, u32 addr,
+> +                                  u16 len, const u8 *value)
+> +{
+> +       struct tpm_tis_i2c_phy *phy =3D to_tpm_tis_i2c_phy(data);
+> +       int ret =3D 0;
+> +       int i =3D 0;
+> +
+> +       if (phy->iobuf) {
+> +               if (len > TPM_BUFSIZE - 1)
+> +                       return -EIO;
+> +
+> +               phy->iobuf[0] =3D address_to_register(addr);
+> +               memcpy(phy->iobuf + 1, value, len);
+> +
+> +               {
+> +                       struct i2c_msg msgs[] =3D {
+> +                               {
+> +                                       .addr =3D phy->i2c_client->addr,
+> +                                       .len =3D len + 1,
+> +                                       .buf =3D phy->iobuf,
+> +                               },
+> +                       };
+> +
+> +                       do {
+> +                               ret =3D i2c_transfer(phy->i2c_client->ada=
+pter,
+> +                                                  msgs, ARRAY_SIZE(msgs)=
+);
+> +                               // wait default GUARD_TIME of 250=C2=B5s
+> +                               usleep_range(250, 300);
+> +                       } while (ret < 0 && i++ < TPM_RETRY);
+> +               }
+> +       } else {
+> +               u8 reg =3D address_to_register(addr);
+> +
+> +               struct i2c_msg msgs[] =3D {
+> +                       {
+> +                               .addr =3D phy->i2c_client->addr,
+> +                               .len =3D sizeof(reg),
+> +                               .buf =3D &reg,
+> +                       },
+> +                       {
+> +                               .addr =3D phy->i2c_client->addr,
+> +                               .len =3D len,
+> +                               .buf =3D (u8 *)value,
+> +                               .flags =3D I2C_M_NOSTART,
+> +                       },
+> +               };
+> +               do {
+> +                       ret =3D i2c_transfer(phy->i2c_client->adapter, ms=
+gs,
+> +                                          ARRAY_SIZE(msgs));
+> +                       // wait default GUARD_TIME of 250=C2=B5s
+> +                       usleep_range(250, 300);
+> +               } while (ret < 0 && i++ < TPM_RETRY);
+> +       }
+> +
+> +       if (ret < 0)
+> +               return ret;
+> +
+> +
+> +       return 0;
+> +}
+> +
+> +static bool tpm_tis_i2c_check_data(struct tpm_tis_data *data,
+> +                                  const u8 *buf, size_t len)
+> +{
+> +       struct tpm_tis_i2c_phy *phy =3D to_tpm_tis_i2c_phy(data);
+> +       u16 crc, crc_tpm;
+> +       int rc;
+> +
+> +       if (phy->data_csum) {
+> +               crc =3D crc_ccitt(0x0000, buf, len);
+> +               rc =3D tpm_tis_read16(data, TPM_DATA_CSUM, &crc_tpm);
+> +               if (rc < 0)
+> +                       return false;
+> +
+> +               crc_tpm =3D be16_to_cpu(crc_tpm);
+> +               return crc =3D=3D crc_tpm;
+> +       }
+> +
+> +       return true;
+> +}
+> +
+> +static SIMPLE_DEV_PM_OPS(tpm_tis_pm, tpm_pm_suspend, tpm_tis_resume);
+> +
+> +static int csum_state_store(struct tpm_tis_data *data, u8 new_state)
+> +{
+> +       struct tpm_tis_i2c_phy *phy =3D to_tpm_tis_i2c_phy(data);
+> +       u8 cur_state;
+> +       int rc;
+> +
+> +       rc =3D tpm_tis_i2c_write_bytes(&phy->priv, TPM_DATA_CSUM_ENABLE,
+> +                                    1, &new_state);
+> +       if (rc < 0)
+> +               return rc;
+> +
+> +       rc =3D tpm_tis_i2c_read_bytes(&phy->priv, TPM_DATA_CSUM_ENABLE,
+> +                                   1, &cur_state);
+> +       if (rc < 0)
+> +               return rc;
+> +
+> +       if (new_state =3D=3D cur_state)
+> +               phy->data_csum =3D (bool)new_state;
+> +
+> +       return rc;
+> +}
+> +
+> +static const struct tpm_tis_phy_ops tpm_i2c_phy_ops =3D {
+> +       .read_bytes =3D tpm_tis_i2c_read_bytes,
+> +       .write_bytes =3D tpm_tis_i2c_write_bytes,
+> +       .check_data =3D tpm_tis_i2c_check_data,
+> +};
+> +
+> +static int tpm_tis_i2c_probe(struct i2c_client *dev,
+> +                            const struct i2c_device_id *id)
+> +{
+> +       struct tpm_tis_i2c_phy *phy;
+> +       int rc;
+> +       int CRC_Checksum =3D 0;
+> +       const u8 loc_init =3D 0;
+> +       struct device_node *np;
+> +
+> +       phy =3D devm_kzalloc(&dev->dev, sizeof(struct tpm_tis_i2c_phy),
+> +                          GFP_KERNEL);
+> +       if (!phy)
+> +               return -ENOMEM;
+> +
+> +       phy->i2c_client =3D dev;
+> +
+> +       if (!i2c_check_functionality(dev->adapter, I2C_FUNC_NOSTART)) {
+> +               phy->iobuf =3D devm_kmalloc(&dev->dev, TPM_BUFSIZE, GFP_K=
+ERNEL);
+> +               if (!phy->iobuf)
+> +                       return -ENOMEM;
+> +       }
+> +
+> +       // select locality 0 (the driver will access only via locality 0)
+> +       rc =3D tpm_tis_i2c_write_bytes(&phy->priv, TPM_LOC_SEL, 1, &loc_i=
+nit);
+> +       if (rc < 0)
+> +               return rc;
+> +
+> +       // set CRC checksum calculation enable
+> +       np =3D dev->dev.of_node;
+> +       if (of_property_read_bool(np, "crc-checksum"))
+> +               CRC_Checksum =3D 1;
+> +
+> +       rc =3D csum_state_store(&phy->priv, CRC_Checksum);
+> +       if (rc < 0)
+> +               return rc;
+> +
+> +       return tpm_tis_core_init(&dev->dev, &phy->priv, -1, &tpm_i2c_phy_=
+ops,
+> +                                       NULL);
+> +}
+> +
+> +static const struct i2c_device_id tpm_tis_i2c_id[] =3D {
+> +       {"tpm_tis_i2c", 0},
+> +       {}
+> +};
+> +MODULE_DEVICE_TABLE(i2c, tpm_tis_i2c_id);
+> +
+> +static const struct of_device_id of_tis_i2c_match[] =3D {
+> +       { .compatible =3D "tcg,tpm-tis-i2c", },
+> +       {}
+> +};
+> +MODULE_DEVICE_TABLE(of, of_tis_i2c_match);
+> +
+> +static const struct acpi_device_id acpi_tis_i2c_match[] =3D {
+> +       {"SMO0768", 0},
+> +       {}
+> +};
+> +MODULE_DEVICE_TABLE(acpi, acpi_tis_i2c_match);
+> +
+> +static struct i2c_driver tpm_tis_i2c_driver =3D {
+> +       .driver =3D {
+> +               .owner =3D THIS_MODULE,
+> +               .name =3D "tpm_tis_i2c",
+> +               .pm =3D &tpm_tis_pm,
+> +               .of_match_table =3D of_match_ptr(of_tis_i2c_match),
+> +               .acpi_match_table =3D ACPI_PTR(acpi_tis_i2c_match),
+> +       },
+> +       .probe =3D tpm_tis_i2c_probe,
+> +       .id_table =3D tpm_tis_i2c_id,
+> +};
+> +
+> +module_i2c_driver(tpm_tis_i2c_driver);
+> +
+> +MODULE_DESCRIPTION("TPM Driver");
+> +MODULE_LICENSE("GPL");
+> --
+> 2.7.4
+>
