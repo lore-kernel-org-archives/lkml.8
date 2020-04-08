@@ -2,131 +2,284 @@ Return-Path: <SRS0=8dav=5Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DE0DC2D0F4
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 18:12:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C557C2BA1B
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 18:13:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 320DD2075E
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 18:12:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=cs.washington.edu header.i=@cs.washington.edu header.b="Ism6ahYT"
+	by mail.kernel.org (Postfix) with ESMTP id 581B120768
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 18:13:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730601AbgDHSMz (ORCPT
+        id S1730617AbgDHSNJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Apr 2020 14:12:55 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:45243 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726780AbgDHSMz (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Apr 2020 14:12:55 -0400
-Received: by mail-pg1-f196.google.com with SMTP id 128so1061779pge.12
-        for <linux-kernel@vger.kernel.org>; Wed, 08 Apr 2020 11:12:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cs.washington.edu; s=goo201206;
-        h=from:to:cc:subject:date:message-id;
-        bh=E+fjfxRHSsIlS4yIOdyfHZC/ljktt0WCvaJtbmUNwoo=;
-        b=Ism6ahYTJhW5k4WOAc7eXKD5UlKcHFqYuDe3MLavAJ8laJI05WhzzBXuq3wURZERbG
-         ul6sGaYkLMeDnLYGKyM3tPBIg90jOSNbsNSlyKCGeRshZHc545Qnic2cQONOr4K8jg7e
-         u8MZg2nGjhcSxqlULmBlhNu+bhmVu5bQnCBoo=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=E+fjfxRHSsIlS4yIOdyfHZC/ljktt0WCvaJtbmUNwoo=;
-        b=DYtqiDFzJDpviQjGPr+ChUN/lYB17B7ArAD+c+jDHlni6hZnboRGbP4OvtSQ3HRwtC
-         CtBIUAZFiWNRajm0ouEZqqe8Ci+wFcwNq66WjssQ7zx1lSnExR6nyIqb6CUs9xKPwxOs
-         KkYKMBkvhZPuSq8C3Jp7Zql8olGRoFhqu6xxmldStgPlboo94oV5Yu2chIUBCjq7c02H
-         E8l3PO2QFP8aPZd/pKl99dAfzDtw6D060OB9BTzR7QMwrSmIbM0fAqLA/oa79JW+evG/
-         S6/0XfWg1TfjNqy3Wh7P7Wab3xVbt2E6tgWqwuXH+Z6BplmwndF665Q2MmRv6aX5DfQ9
-         bxeQ==
-X-Gm-Message-State: AGi0Pub1fB00+KHgUUxXfJjVNEXff1f17n4VQtg/fz8Kc3dbxGSFtvBG
-        snfjYtHbdYVDtGoAX8fkbbMShQ==
-X-Google-Smtp-Source: APiQypKU16iVofstluSj0s0+NWi5Ig6G1hkZ3yqoxw816RcFYad9JRg8OlR8yQQ5aFZjb5WEC2rGtg==
-X-Received: by 2002:a63:770d:: with SMTP id s13mr8197474pgc.5.1586369573527;
-        Wed, 08 Apr 2020 11:12:53 -0700 (PDT)
-Received: from localhost.localdomain (c-73-53-94-119.hsd1.wa.comcast.net. [73.53.94.119])
-        by smtp.gmail.com with ESMTPSA id y9sm17706525pfo.135.2020.04.08.11.12.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 08 Apr 2020 11:12:51 -0700 (PDT)
-From:   Luke Nelson <lukenels@cs.washington.edu>
-X-Google-Original-From: Luke Nelson <luke.r.nels@gmail.com>
-To:     bpf@vger.kernel.org
-Cc:     Luke Nelson <luke.r.nels@gmail.com>, Xi Wang <xi.wang@gmail.com>,
-        Shubham Bansal <illusionist.neo@gmail.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        Andrii Nakryiko <andriin@fb.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        KP Singh <kpsingh@chromium.org>,
-        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH bpf] arm: bpf: Fix bugs with ALU64 {RSH, ARSH} BPF_K shift by 0
-Date:   Wed,  8 Apr 2020 18:12:29 +0000
-Message-Id: <20200408181229.10909-1-luke.r.nels@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        Wed, 8 Apr 2020 14:13:09 -0400
+Received: from mga11.intel.com ([192.55.52.93]:47058 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729387AbgDHSNJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Apr 2020 14:13:09 -0400
+IronPort-SDR: isIsVlu97vKQuXxujBhPZ5Weu/6k4WLa5namHLVb0Fuv7zyBX1BpQHCNTbHAeJLpYKRc22GVEA
+ 3k608PCOeOYA==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Apr 2020 11:13:08 -0700
+IronPort-SDR: L7Rv2nmBCkAOLMcUDs5v28XWwubkyLkhzVJxf03f1GFQHbvT7ElRXZjyNbP+GC2r39NWdpOrcv
+ hi7TftJR2T7w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,359,1580803200"; 
+   d="scan'208";a="425225955"
+Received: from iweiny-desk2.sc.intel.com ([10.3.52.147])
+  by orsmga005.jf.intel.com with ESMTP; 08 Apr 2020 11:13:07 -0700
+Date:   Wed, 8 Apr 2020 11:13:07 -0700
+From:   Ira Weiny <ira.weiny@intel.com>
+To:     "Darrick J. Wong" <darrick.wong@oracle.com>
+Cc:     linux-kernel@vger.kernel.org,
+        Dan Williams <dan.j.williams@intel.com>,
+        Dave Chinner <david@fromorbit.com>,
+        Christoph Hellwig <hch@lst.de>,
+        "Theodore Y. Ts'o" <tytso@mit.edu>, Jan Kara <jack@suse.cz>,
+        Jeff Moyer <jmoyer@redhat.com>, linux-ext4@vger.kernel.org,
+        linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH V6 7/8] fs/xfs: Change xfs_ioctl_setattr_dax_invalidate()
+ to xfs_ioctl_dax_check()
+Message-ID: <20200408181307.GD569068@iweiny-DESK2.sc.intel.com>
+References: <20200407182958.568475-1-ira.weiny@intel.com>
+ <20200407182958.568475-8-ira.weiny@intel.com>
+ <20200408153717.GH6742@magnolia>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200408153717.GH6742@magnolia>
+User-Agent: Mutt/1.11.1 (2018-12-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The current arm BPF JIT does not correctly compile RSH or ARSH when the
-immediate shift amount is 0. This causes the "rsh64 by 0 imm" and "arsh64
-by 0 imm" BPF selftests to hang the kernel by reaching an instruction
-the verifier determines to be unreachable.
+On Wed, Apr 08, 2020 at 08:37:17AM -0700, Darrick J. Wong wrote:
+> On Tue, Apr 07, 2020 at 11:29:57AM -0700, ira.weiny@intel.com wrote:
+> > From: Ira Weiny <ira.weiny@intel.com>
+> > 
+> > We only support changing FS_XFLAG_DAX on directories.  Files get their
+> > flag from the parent directory on creation only.  So no data
+> > invalidation needs to happen.
+> > 
+> > Alter the xfs_ioctl_setattr_dax_invalidate() to be
+> > xfs_ioctl_dax_check().
+> > 
+> > This also allows use to remove the join_flags logic.
+> > 
+> > Signed-off-by: Ira Weiny <ira.weiny@intel.com>
+> > 
+> > ---
+> > Changes from v5:
+> > 	New patch
+> > ---
+> >  fs/xfs/xfs_ioctl.c | 91 +++++-----------------------------------------
+> >  1 file changed, 10 insertions(+), 81 deletions(-)
+> > 
+> > diff --git a/fs/xfs/xfs_ioctl.c b/fs/xfs/xfs_ioctl.c
+> > index c6cd92ef4a05..5472faab7c4f 100644
+> > --- a/fs/xfs/xfs_ioctl.c
+> > +++ b/fs/xfs/xfs_ioctl.c
+> > @@ -1145,63 +1145,18 @@ xfs_ioctl_setattr_xflags(
+> >  }
+> >  
+> >  /*
+> > - * If we are changing DAX flags, we have to ensure the file is clean and any
+> > - * cached objects in the address space are invalidated and removed. This
+> > - * requires us to lock out other IO and page faults similar to a truncate
+> > - * operation. The locks need to be held until the transaction has been committed
+> > - * so that the cache invalidation is atomic with respect to the DAX flag
+> > - * manipulation.
+> > + * Only directories are allowed to change dax flags
+> >   */
+> >  static int
+> >  xfs_ioctl_setattr_dax_invalidate(
+> > -	struct xfs_inode	*ip,
+> > -	struct fsxattr		*fa,
+> > -	int			*join_flags)
+> > +	struct xfs_inode	*ip)
+> >  {
+> >  	struct inode		*inode = VFS_I(ip);
+> > -	struct super_block	*sb = inode->i_sb;
+> > -	int			error;
+> > -
+> > -	*join_flags = 0;
+> > -
+> > -	/*
+> > -	 * It is only valid to set the DAX flag on regular files and
+> > -	 * directories on filesystems where the block size is equal to the page
+> > -	 * size. On directories it serves as an inherited hint so we don't
+> > -	 * have to check the device for dax support or flush pagecache.
+> > -	 */
+> > -	if (fa->fsx_xflags & FS_XFLAG_DAX) {
+> > -		struct xfs_buftarg	*target = xfs_inode_buftarg(ip);
+> > -
+> > -		if (!bdev_dax_supported(target->bt_bdev, sb->s_blocksize))
+> > -			return -EINVAL;
+> > -	}
+> > -
+> > -	/* If the DAX state is not changing, we have nothing to do here. */
+> > -	if ((fa->fsx_xflags & FS_XFLAG_DAX) && IS_DAX(inode))
+> > -		return 0;
+> > -	if (!(fa->fsx_xflags & FS_XFLAG_DAX) && !IS_DAX(inode))
+> > -		return 0;
+> 
+> Does the !S_ISDIR check below apply unconditionally even if we weren't
+> trying to change the DAX flag?
 
-The root cause is in how immediate right shifts are encoded on arm.
-For LSR and ASR (logical and arithmetic right shift), a bit-pattern
-of 00000 in the immediate encodes a shift amount of 32. When the BPF
-immediate is 0, the generated code shifts by 32 instead of the expected
-behavior (a no-op).
+:-/
 
-This patch fixes the bugs by adding an additional check if the BPF
-immediate is 0. After the change, the above mentioned BPF selftests pass.
+shoot...  I really screwed this up...
 
-Fixes: 39c13c204bb11 ("arm: eBPF JIT compiler")
-Co-developed-by: Xi Wang <xi.wang@gmail.com>
-Signed-off-by: Xi Wang <xi.wang@gmail.com>
-Signed-off-by: Luke Nelson <luke.r.nels@gmail.com>
----
- arch/arm/net/bpf_jit_32.c | 12 ++++++++++--
- 1 file changed, 10 insertions(+), 2 deletions(-)
+> 
+> > -	if (S_ISDIR(inode->i_mode))
+> > -		return 0;
+> >  
+> > -	/* lock, flush and invalidate mapping in preparation for flag change */
+> > -	xfs_ilock(ip, XFS_MMAPLOCK_EXCL | XFS_IOLOCK_EXCL);
+> > -	error = filemap_write_and_wait(inode->i_mapping);
+> > -	if (error)
+> > -		goto out_unlock;
+> > -	error = invalidate_inode_pages2(inode->i_mapping);
+> > -	if (error)
+> > -		goto out_unlock;
+> > +	if (!S_ISDIR(inode->i_mode))
+> > +		return -EINVAL;
+> 
+> If this entire function collapses to an S_ISDIR check then you might
+> as well just hoist this one piece to the caller.
 
-diff --git a/arch/arm/net/bpf_jit_32.c b/arch/arm/net/bpf_jit_32.c
-index cc29869d12a3..d124f78e20ac 100644
---- a/arch/arm/net/bpf_jit_32.c
-+++ b/arch/arm/net/bpf_jit_32.c
-@@ -929,7 +929,11 @@ static inline void emit_a32_rsh_i64(const s8 dst[],
- 	rd = arm_bpf_get_reg64(dst, tmp, ctx);
- 
- 	/* Do LSR operation */
--	if (val < 32) {
-+	if (val == 0) {
-+		/* An immediate value of 0 encodes a shift amount of 32
-+		 * for LSR. To shift by 0, don't do anything.
-+		 */
-+	} else if (val < 32) {
- 		emit(ARM_MOV_SI(tmp2[1], rd[1], SRTYPE_LSR, val), ctx);
- 		emit(ARM_ORR_SI(rd[1], tmp2[1], rd[0], SRTYPE_ASL, 32 - val), ctx);
- 		emit(ARM_MOV_SI(rd[0], rd[0], SRTYPE_LSR, val), ctx);
-@@ -955,7 +959,11 @@ static inline void emit_a32_arsh_i64(const s8 dst[],
- 	rd = arm_bpf_get_reg64(dst, tmp, ctx);
- 
- 	/* Do ARSH operation */
--	if (val < 32) {
-+	if (val == 0) {
-+		/* An immediate value of 0 encodes a shift amount of 32
-+		 * for ASR. To shift by 0, don't do anything.
-+		 */
-+	} else if (val < 32) {
- 		emit(ARM_MOV_SI(tmp2[1], rd[1], SRTYPE_LSR, val), ctx);
- 		emit(ARM_ORR_SI(rd[1], tmp2[1], rd[0], SRTYPE_ASL, 32 - val), ctx);
- 		emit(ARM_MOV_SI(rd[0], rd[0], SRTYPE_ASR, val), ctx);
--- 
-2.17.1
+Oops...  yea this is broken...  All broken.
 
+> Also, where is
+> xfs_ioctl_dax_check?
+
+I forgot to change the name.
+
+> 
+> <confused>
+
+Much less so than me...  :-/
+
+I'll clean it up.
+
+Thanks, this was really bad on my part...
+Ira
+
+> 
+> --D
+> 
+> >  
+> > -	*join_flags = XFS_MMAPLOCK_EXCL | XFS_IOLOCK_EXCL;
+> >  	return 0;
+> > -
+> > -out_unlock:
+> > -	xfs_iunlock(ip, XFS_MMAPLOCK_EXCL | XFS_IOLOCK_EXCL);
+> > -	return error;
+> > -
+> >  }
+> >  
+> >  /*
+> > @@ -1209,17 +1164,10 @@ xfs_ioctl_setattr_dax_invalidate(
+> >   * have permission to do so. On success, return a clean transaction and the
+> >   * inode locked exclusively ready for further operation specific checks. On
+> >   * failure, return an error without modifying or locking the inode.
+> > - *
+> > - * The inode might already be IO locked on call. If this is the case, it is
+> > - * indicated in @join_flags and we take full responsibility for ensuring they
+> > - * are unlocked from now on. Hence if we have an error here, we still have to
+> > - * unlock them. Otherwise, once they are joined to the transaction, they will
+> > - * be unlocked on commit/cancel.
+> >   */
+> >  static struct xfs_trans *
+> >  xfs_ioctl_setattr_get_trans(
+> > -	struct xfs_inode	*ip,
+> > -	int			join_flags)
+> > +	struct xfs_inode	*ip)
+> >  {
+> >  	struct xfs_mount	*mp = ip->i_mount;
+> >  	struct xfs_trans	*tp;
+> > @@ -1236,8 +1184,7 @@ xfs_ioctl_setattr_get_trans(
+> >  		goto out_unlock;
+> >  
+> >  	xfs_ilock(ip, XFS_ILOCK_EXCL);
+> > -	xfs_trans_ijoin(tp, ip, XFS_ILOCK_EXCL | join_flags);
+> > -	join_flags = 0;
+> > +	xfs_trans_ijoin(tp, ip, XFS_ILOCK_EXCL);
+> >  
+> >  	/*
+> >  	 * CAP_FOWNER overrides the following restrictions:
+> > @@ -1258,8 +1205,6 @@ xfs_ioctl_setattr_get_trans(
+> >  out_cancel:
+> >  	xfs_trans_cancel(tp);
+> >  out_unlock:
+> > -	if (join_flags)
+> > -		xfs_iunlock(ip, join_flags);
+> >  	return ERR_PTR(error);
+> >  }
+> >  
+> > @@ -1386,7 +1331,6 @@ xfs_ioctl_setattr(
+> >  	struct xfs_dquot	*pdqp = NULL;
+> >  	struct xfs_dquot	*olddquot = NULL;
+> >  	int			code;
+> > -	int			join_flags = 0;
+> >  
+> >  	trace_xfs_ioctl_setattr(ip);
+> >  
+> > @@ -1410,18 +1354,11 @@ xfs_ioctl_setattr(
+> >  			return code;
+> >  	}
+> >  
+> > -	/*
+> > -	 * Changing DAX config may require inode locking for mapping
+> > -	 * invalidation. These need to be held all the way to transaction commit
+> > -	 * or cancel time, so need to be passed through to
+> > -	 * xfs_ioctl_setattr_get_trans() so it can apply them to the join call
+> > -	 * appropriately.
+> > -	 */
+> > -	code = xfs_ioctl_setattr_dax_invalidate(ip, fa, &join_flags);
+> > +	code = xfs_ioctl_setattr_dax_invalidate(ip);
+> >  	if (code)
+> >  		goto error_free_dquots;
+> >  
+> > -	tp = xfs_ioctl_setattr_get_trans(ip, join_flags);
+> > +	tp = xfs_ioctl_setattr_get_trans(ip);
+> >  	if (IS_ERR(tp)) {
+> >  		code = PTR_ERR(tp);
+> >  		goto error_free_dquots;
+> > @@ -1552,7 +1489,6 @@ xfs_ioc_setxflags(
+> >  	struct fsxattr		fa;
+> >  	struct fsxattr		old_fa;
+> >  	unsigned int		flags;
+> > -	int			join_flags = 0;
+> >  	int			error;
+> >  
+> >  	if (copy_from_user(&flags, arg, sizeof(flags)))
+> > @@ -1569,18 +1505,11 @@ xfs_ioc_setxflags(
+> >  	if (error)
+> >  		return error;
+> >  
+> > -	/*
+> > -	 * Changing DAX config may require inode locking for mapping
+> > -	 * invalidation. These need to be held all the way to transaction commit
+> > -	 * or cancel time, so need to be passed through to
+> > -	 * xfs_ioctl_setattr_get_trans() so it can apply them to the join call
+> > -	 * appropriately.
+> > -	 */
+> > -	error = xfs_ioctl_setattr_dax_invalidate(ip, &fa, &join_flags);
+> > +	error = xfs_ioctl_setattr_dax_invalidate(ip);
+> >  	if (error)
+> >  		goto out_drop_write;
+> >  
+> > -	tp = xfs_ioctl_setattr_get_trans(ip, join_flags);
+> > +	tp = xfs_ioctl_setattr_get_trans(ip);
+> >  	if (IS_ERR(tp)) {
+> >  		error = PTR_ERR(tp);
+> >  		goto out_drop_write;
+> > -- 
+> > 2.25.1
+> > 
