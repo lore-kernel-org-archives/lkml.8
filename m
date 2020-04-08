@@ -2,125 +2,163 @@ Return-Path: <SRS0=8dav=5Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E22BC2BA1B
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 07:30:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BAAC6C2BA1B
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 07:30:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 460CA206A1
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 07:30:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7F6E5206A1
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 07:30:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=flygoat.com header.i=jiaxun.yang@flygoat.com header.b="f3B2Odmv"
+	dkim=pass (2048-bit key) header.d=verdurent-com.20150623.gappssmtp.com header.i=@verdurent-com.20150623.gappssmtp.com header.b="GNlgSOyi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726890AbgDHHaJ (ORCPT
+        id S1727002AbgDHHaP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Apr 2020 03:30:09 -0400
-Received: from sender2-op-o12.zoho.com.cn ([163.53.93.243]:17696 "EHLO
-        sender2-op-o12.zoho.com.cn" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726689AbgDHHaI (ORCPT
+        Wed, 8 Apr 2020 03:30:15 -0400
+Received: from mail-vs1-f65.google.com ([209.85.217.65]:35323 "EHLO
+        mail-vs1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726921AbgDHHaO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Apr 2020 03:30:08 -0400
-ARC-Seal: i=1; a=rsa-sha256; t=1586330965; cv=none; 
-        d=zoho.com.cn; s=zohoarc; 
-        b=Iycq5DlQ6SOtacyxA7XZxR+thyTuiVVtzIWJLfYi9XnYxwGhquS9MqjNxszhk68P93h2x/7dxVpMgRXoSCcAPgARjQvIXh82P7GdTOu2BxTJaN9dQPyYMjoI92rEi+vW0A/kuUXFpUSKL9VoqJDCNboJlMyN+qX7Hb+L5Xzt08I=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zoho.com.cn; s=zohoarc; 
-        t=1586330965; h=Content-Type:Content-Transfer-Encoding:Cc:Date:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:To; 
-        bh=GNVZm3rqhhIk0ti5k0VINiyIi16Ulbzcehh+RXhWBNo=; 
-        b=kFOW50PX46xQnCjo1S9w/CKkkNsmhmFe6T8h68JG7hifzrhUmnQvqDakglihp1+bYTRwUETIsyKh0IoxOxRWGKLlnYOyPig8mUMxpam7t2+657NH+DRAlq90Vc7inTHzN9n2KfFTY5r4Pj61ddypTKfEq2Eoa7D4zAAw3KsyIU8=
-ARC-Authentication-Results: i=1; mx.zoho.com.cn;
-        dkim=pass  header.i=flygoat.com;
-        spf=pass  smtp.mailfrom=jiaxun.yang@flygoat.com;
-        dmarc=pass header.from=<jiaxun.yang@flygoat.com> header.from=<jiaxun.yang@flygoat.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1586330965;
-        s=mail; d=flygoat.com; i=jiaxun.yang@flygoat.com;
-        h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:MIME-Version:Content-Type:Content-Transfer-Encoding;
-        bh=GNVZm3rqhhIk0ti5k0VINiyIi16Ulbzcehh+RXhWBNo=;
-        b=f3B2OdmvXKAck7Mb/q3crvtDKQsn3TqdDLfCWY1ykXQUh20aHjtdXwLV1za0TCiZ
-        Z0CaBXE+JD68vRly4w2Edx3HMUCpG+d2NiopxKxm91CoVqdsSG8UcENlN3iqq4pGn53
-        zi7KH3G50PelkIl4AWUKhk8gHzg/fJ+KNV4oQbhA=
-Received: from flygoat-x1e (183.156.33.240 [183.156.33.240]) by mx.zoho.com.cn
-        with SMTPS id 1586330963417478.574454780491; Wed, 8 Apr 2020 15:29:23 +0800 (CST)
-Date:   Wed, 8 Apr 2020 15:29:22 +0800
-From:   Jiaxun Yang <jiaxun.yang@flygoat.com>
-To:     Chris Packham <Chris.Packham@alliedtelesis.co.nz>
-Cc:     "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Hamish Martin" <Hamish.Martin@alliedtelesis.co.nz>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
-Subject: Re: Dealing with holes in CPU address space
-Message-ID: <20200408152922.14f90ff3@flygoat-x1e>
-In-Reply-To: <fcb8f2655452f60a7c734e2ce54ac4d47eec7e92.camel@alliedtelesis.co.nz>
-References: <fcb8f2655452f60a7c734e2ce54ac4d47eec7e92.camel@alliedtelesis.co.nz>
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Wed, 8 Apr 2020 03:30:14 -0400
+Received: by mail-vs1-f65.google.com with SMTP id u11so4132638vsg.2
+        for <linux-kernel@vger.kernel.org>; Wed, 08 Apr 2020 00:30:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=verdurent-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=OD0elTcRIMFole7OUjT/DPArTHrKmfnpdtzqT2CbEcI=;
+        b=GNlgSOyiQVP/6vjJXE5Rs4MFQbMsECQtEYiSwZIozcKyRs9mM4wRwjT22otR46/bpO
+         ugZ0Iyn1HrM55Y5B+2Z2FQuJBHYxKWKO8FWDVeOxDerfhaPBbEyyOJk3Y10aDHk0TjAW
+         PLJA7f6mYqIA9YTyjPORzo870AqyXh6ywRbcQ/3f9Leq5QMxdDAgAIoeLt76D3gdwqJ9
+         3MNqNWCByDkHGQ7MTsliT4ScHxUkOr+sD0/eP1A8bnbGa+gsLo4/1hFICx9OnlRnjcGc
+         iqIBMnR9TSOEDIp0jJukL+HTyhqGnhOv0GFgZcf0UYNRRluNUWJ6WdujUSDa63WYSgCS
+         /hdA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=OD0elTcRIMFole7OUjT/DPArTHrKmfnpdtzqT2CbEcI=;
+        b=KzAwOOufiODyPGVmYXoFHVBrYs9YoImje69CuZ9vKO+VIaETpWXsiY6w2nF9RMKz9B
+         mCyCjKQgCD6IOvbl610HoBENmHvcHTdZvsAGhW+wUkjjjFnLO4otCnCAxvZtPuLFzm26
+         HzB6za06JY6ork8rYV3qInmsYOgviRTf+vHk50pcUpBLDiEsRAvLJ7XSWR+nyFsH7qKG
+         fkhE1gW37T/OT43uqIUeXOvvHAB1xOtuwCqlGJD5NwkxZ+oNj+CE4TdvPL14gOH3wJxU
+         9fVayBpqK/fR6MU3C+UOTkrbBQ3lpSbRoZrS/xM2PtPXcbOWG6izUefKW/1L2H9o98Bs
+         Nw0g==
+X-Gm-Message-State: AGi0PuZsjIFRgqAyQe3PiGeqA8o0zem1ZtqD8RDy7D8hNqOVd6BdNUPK
+        sGkQ+P84WlbNX0cl1YQ0hgUzKcjofGs8HICdtU5xdQ==
+X-Google-Smtp-Source: APiQypJT4BDwUnwGDmpI1r6J0epGgiyiPB5hfa/7yBBHYhqblfZim4j2sA6EX0KF68n7dcnpUQxer/An5Kt5MflCHmU=
+X-Received: by 2002:a67:4242:: with SMTP id p63mr1661875vsa.159.1586331012758;
+ Wed, 08 Apr 2020 00:30:12 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-ZohoCNMailClient: External
+References: <20200407055116.16082-1-j-keerthy@ti.com> <20200407055116.16082-2-j-keerthy@ti.com>
+In-Reply-To: <20200407055116.16082-2-j-keerthy@ti.com>
+From:   Amit Kucheria <amit.kucheria@verdurent.com>
+Date:   Wed, 8 Apr 2020 13:00:00 +0530
+Message-ID: <CAHLCerOYfG4eifkWdecJ49cSx05pgDwc30L3zZuu0d9dVQN-AQ@mail.gmail.com>
+Subject: Re: [PATCH v6 1/4] dt-bindings: thermal: k3: Add VTM bindings documentation
+To:     Keerthy <j-keerthy@ti.com>
+Cc:     Zhang Rui <rui.zhang@intel.com>, Rob Herring <robh+dt@kernel.org>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>, t-kristo@ti.com,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+        lakml <linux-arm-kernel@lists.infradead.org>,
+        Linux PM list <linux-pm@vger.kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 8 Apr 2020 05:14:22 +0000
-Chris Packham <Chris.Packham@alliedtelesis.co.nz> wrote:
+On Tue, Apr 7, 2020 at 11:21 AM Keerthy <j-keerthy@ti.com> wrote:
+>
+> Add VTM bindings documentation. In the Voltage Thermal
+> Management Module(VTM), K3 AM654 supplies a voltage
+> reference and a temperature sensor feature that are gathered in the band
+> gap voltage and temperature sensor (VBGAPTS) module. The band
+> gap provides current and voltage reference for its internal
+> circuits and other analog IP blocks. The analog-to-digital
+> converter (ADC) produces an output value that is proportional
+> to the silicon temperature.
+>
+> Signed-off-by: Keerthy <j-keerthy@ti.com>
+> Reviewed-by: Rob Herring <robh@kernel.org>
+Reviewed-by: Amit Kucheria <amit.kucheria@linaro.org>
 
-> Hi All,
-> 
-> I'm trying to port an old Broadcom MIPS CPU (BCM53003) to a shiny new
-> kernel. I have some old historic source from a long forgotten Broadcom
-> LDK but I'd prefer to do things the modern way with device-trees.
-> 
-> The problem I've been grappling with is trying to open up access to
-> all of the RAM on the board. It has 512MB of DDR2. The CPU has two
-> areas where this appears. The first 128MB is from 0 to 0x07ffffff the
-> second area is from 0x88000000 to 0x9fffffff.
-> 
-> SoC peripherals are at 0x18000000 and there is an IO window for flash
-> at 0x20000000.
-> 
-> The old code has some custom tlb initialisation to deal with this but
-> I figured it should be possible with the following dts snippet.
-> 
->         memory@0 {
->                 device_type = "memory";
->                 reg = <0x00000000 0x08000000
->                        0x88000000 0x18000000>;
->         };
-> 
-> I end up with only 128MB available. This appears to be
-> because the default HIGHMEM_START of 0x20000000 stops the rest from
-> being made available. If I add an override of HIGHMEM_START to
-> 0xffffffff I seem to have the full 512MB avaiable but then I get a
-> kernel panic
-
-Hi,
-
-Have you tried to enable CONFIG_HIGHMEM?
-
-> 
->   CPU 0 Unable to handle kernel paging request at virtual address
-> 1fc00000, epc == 800167b8, ra == 800e2860
-> 
-> 0x1fc00000 is in the range where the SoC peripherals are so I'm
-> thinking that is the problem. But then again that is a virtual address
-> so maybe it's just a co-incidence.
-
-0x1fc00000 should be the Boot ROM's physical address. Probably you
-forgot to convert it into virtual address in your platform code?
-
-Check the EPC of exception in vmlinux with addr2line may help. (Don't
-forget to compile your kernel with debuginfo). 
-
-> 
-> Anyway I'd really appreciate any guidance that anyone could provide on
-> this. Even if it's just "go look at this SoC".
-> 
-> Thanks,
-> Chris
-> 
-> 
-
---
-Jiaxun Yang
+> ---
+>
+> Changes in v6:
+>
+>   * Reordered the properties to match the order of definition.
+>
+>  .../bindings/thermal/ti,am654-thermal.yaml    | 56 +++++++++++++++++++
+>  1 file changed, 56 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/thermal/ti,am654-thermal.yaml
+>
+> diff --git a/Documentation/devicetree/bindings/thermal/ti,am654-thermal.yaml b/Documentation/devicetree/bindings/thermal/ti,am654-thermal.yaml
+> new file mode 100644
+> index 000000000000..25b9209c2e5d
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/thermal/ti,am654-thermal.yaml
+> @@ -0,0 +1,56 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/thermal/ti,am654-thermal.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Texas Instruments AM654 VTM (DTS) binding
+> +
+> +maintainers:
+> +  - Keerthy <j-keerthy@ti.com>
+> +
+> +properties:
+> +  compatible:
+> +    const: ti,am654-vtm
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  power-domains:
+> +    maxItems: 1
+> +
+> +  "#thermal-sensor-cells":
+> +    const: 1
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - power-domains
+> +  - "#thermal-sensor-cells"
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/soc/ti,sci_pm_domain.h>
+> +    vtm: thermal@42050000 {
+> +        compatible = "ti,am654-vtm";
+> +        reg = <0x0 0x42050000 0x0 0x25c>;
+> +        power-domains = <&k3_pds 80 TI_SCI_PD_EXCLUSIVE>;
+> +        #thermal-sensor-cells = <1>;
+> +    };
+> +
+> +    mpu0_thermal: mpu0_thermal {
+> +        polling-delay-passive = <250>; /* milliseconds */
+> +        polling-delay = <500>; /* milliseconds */
+> +        thermal-sensors = <&vtm0 0>;
+> +
+> +        trips {
+> +                mpu0_crit: mpu0_crit {
+> +                        temperature = <125000>; /* milliCelsius */
+> +                        hysteresis = <2000>; /* milliCelsius */
+> +                        type = "critical";
+> +                };
+> +        };
+> +    };
+> +...
+> --
+> 2.17.1
+>
