@@ -2,199 +2,141 @@ Return-Path: <SRS0=8dav=5Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98A57C2D0F4
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 20:31:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54EC9C2BA1B
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 20:34:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5B8A120768
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 20:31:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 28BEE206F7
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 20:34:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="VHTztM8X"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728479AbgDHUbt (ORCPT
+        id S1728588AbgDHUec (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Apr 2020 16:31:49 -0400
-Received: from out03.mta.xmission.com ([166.70.13.233]:58030 "EHLO
-        out03.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727817AbgDHUbt (ORCPT
+        Wed, 8 Apr 2020 16:34:32 -0400
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:37181 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726891AbgDHUeb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Apr 2020 16:31:49 -0400
-Received: from in02.mta.xmission.com ([166.70.13.52])
-        by out03.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.90_1)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1jMHME-0004Sh-5A; Wed, 08 Apr 2020 14:31:34 -0600
-Received: from ip68-227-160-95.om.om.cox.net ([68.227.160.95] helo=x220.xmission.com)
-        by in02.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.87)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1jMHMC-0006QZ-IJ; Wed, 08 Apr 2020 14:31:33 -0600
-From:   ebiederm@xmission.com (Eric W. Biederman)
-To:     linux-kernel@vger.kernel.org
-Cc:     Oleg Nesterov <oleg@redhat.com>,
-        syzbot <syzbot+f675f964019f884dbd0f@syzkaller.appspotmail.com>,
-        adobriyan@gmail.com, akpm@linux-foundation.org,
-        allison@lohutok.net, areber@redhat.com, aubrey.li@linux.intel.com,
-        avagin@gmail.com, bfields@fieldses.org, christian@brauner.io,
-        cyphar@cyphar.com, gregkh@linuxfoundation.org, guro@fb.com,
-        jlayton@kernel.org, joel@joelfernandes.org, keescook@chromium.org,
-        linmiaohe@huawei.com, linux-fsdevel@vger.kernel.org,
-        mhocko@suse.com, mingo@kernel.org, peterz@infradead.org,
-        sargun@sargun.me, syzkaller-bugs@googlegroups.com,
-        tglx@linutronix.de, viro@zeniv.linux.org.uk
-References: <00000000000011d66805a25cd73f@google.com>
-        <20200403091135.GA3645@redhat.com>
-Date:   Wed, 08 Apr 2020 15:28:40 -0500
-In-Reply-To: <20200403091135.GA3645@redhat.com> (Oleg Nesterov's message of
-        "Fri, 3 Apr 2020 11:11:35 +0200")
-Message-ID: <87pnchwwlj.fsf_-_@x220.int.ebiederm.org>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
+        Wed, 8 Apr 2020 16:34:31 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1586378071;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=151LHWUJtSDB+75+jyNegOreKhf7IJmTVrlaiuCLhsY=;
+        b=VHTztM8XIUAivj2mGaM5iTDHDnFz4iE5SEWxrxgpFWt522aJwxDxyGDkQHAs67NFTBXE0p
+        PPBbrU/YHzVy2ooJiF8uHsiBWGANxpKXMYbcaGrNCirz3biMAEmNMZ3+OMmqgDRvBSKzuk
+        3Bkk2NfEOSpcETkmo/v/0qDfBeUXs0A=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-357-1QQRLG7LOPa-SnRwx8FAtA-1; Wed, 08 Apr 2020 16:34:27 -0400
+X-MC-Unique: 1QQRLG7LOPa-SnRwx8FAtA-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 16B04107B114;
+        Wed,  8 Apr 2020 20:34:26 +0000 (UTC)
+Received: from horse.redhat.com (ovpn-115-85.rdu2.redhat.com [10.10.115.85])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id DAA125DA84;
+        Wed,  8 Apr 2020 20:34:25 +0000 (UTC)
+Received: by horse.redhat.com (Postfix, from userid 10451)
+        id 4583D2202B8; Wed,  8 Apr 2020 16:34:25 -0400 (EDT)
+Date:   Wed, 8 Apr 2020 16:34:25 -0400
+From:   Vivek Goyal <vgoyal@redhat.com>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
+        kvm list <kvm@vger.kernel.org>, stable <stable@vger.kernel.org>
+Subject: Re: [PATCH v2] x86/kvm: Disable KVM_ASYNC_PF_SEND_ALWAYS
+Message-ID: <20200408203425.GD93547@redhat.com>
+References: <20200407172140.GB64635@redhat.com>
+ <772A564B-3268-49F4-9AEA-CDA648F6131F@amacapital.net>
+ <87eeszjbe6.fsf@nanos.tec.linutronix.de>
+ <ce81c95f-8674-4012-f307-8f32d0e386c2@redhat.com>
+ <874ktukhku.fsf@nanos.tec.linutronix.de>
+ <274f3d14-08ac-e5cc-0b23-e6e0274796c8@redhat.com>
+ <20200408153413.GA11322@linux.intel.com>
+ <ce28e893-2ed0-ea6f-6c36-b08bb0d814f2@redhat.com>
+ <87d08hc0vz.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-XM-SPF: eid=1jMHMC-0006QZ-IJ;;;mid=<87pnchwwlj.fsf_-_@x220.int.ebiederm.org>;;;hst=in02.mta.xmission.com;;;ip=68.227.160.95;;;frm=ebiederm@xmission.com;;;spf=neutral
-X-XM-AID: U2FsdGVkX1++6KsIaJkmWP6lC1k/JL9e4EdcFQS0Cxk=
-X-SA-Exim-Connect-IP: 68.227.160.95
-X-SA-Exim-Mail-From: ebiederm@xmission.com
-Subject: [PATCH] proc: Use a dedicated lock in struct pid
-X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
-X-SA-Exim-Scanned: Yes (on in02.mta.xmission.com)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <87d08hc0vz.fsf@nanos.tec.linutronix.de>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, Apr 08, 2020 at 08:01:36PM +0200, Thomas Gleixner wrote:
+> Paolo Bonzini <pbonzini@redhat.com> writes:
+> > On 08/04/20 17:34, Sean Christopherson wrote:
+> >> On Wed, Apr 08, 2020 at 10:23:58AM +0200, Paolo Bonzini wrote:
+> >>> Page-not-present async page faults are almost a perfect match for the
+> >>> hardware use of #VE (and it might even be possible to let the processor
+> >>> deliver the exceptions).
+> >> 
+> >> My "async" page fault knowledge is limited, but if the desired behavior is
+> >> to reflect a fault into the guest for select EPT Violations, then yes,
+> >> enabling EPT Violation #VEs in hardware is doable.  The big gotcha is that
+> >> KVM needs to set the suppress #VE bit for all EPTEs when allocating a new
+> >> MMU page, otherwise not-present faults on zero-initialized EPTEs will get
+> >> reflected.
+> >> 
+> >> Attached a patch that does the prep work in the MMU.  The VMX usage would be:
+> >> 
+> >> 	kvm_mmu_set_spte_init_value(VMX_EPT_SUPPRESS_VE_BIT);
+> >> 
+> >> when EPT Violation #VEs are enabled.  It's 64-bit only as it uses stosq to
+> >> initialize EPTEs.  32-bit could also be supported by doing memcpy() from
+> >> a static page.
+> >
+> > The complication is that (at least according to the current ABI) we
+> > would not want #VE to kick if the guest currently has IF=0 (and possibly
+> > CPL=0).  But the ABI is not set in stone, and anyway the #VE protocol is
+> > a decent one and worth using as a base for whatever PV protocol we design.
+> 
+> Forget the current pf async semantics (or the lack of). You really want
+> to start from scratch and igore the whole thing.
+> 
+> The charm of #VE is that the hardware can inject it and it's not nesting
+> until the guest cleared the second word in the VE information area. If
+> that word is not 0 then you get a regular vmexit where you suspend the
+> vcpu until the nested problem is solved.
 
-syzbot wrote:
-> ========================================================
-> WARNING: possible irq lock inversion dependency detected
-> 5.6.0-syzkaller #0 Not tainted
-> --------------------------------------------------------
-> swapper/1/0 just changed the state of lock:
-> ffffffff898090d8 (tasklist_lock){.+.?}-{2:2}, at: send_sigurg+0x9f/0x320 fs/fcntl.c:840
-> but this lock took another, SOFTIRQ-unsafe lock in the past:
->  (&pid->wait_pidfd){+.+.}-{2:2}
->
->
-> and interrupts could create inverse lock ordering between them.
->
->
-> other info that might help us debug this:
->  Possible interrupt unsafe locking scenario:
->
->        CPU0                    CPU1
->        ----                    ----
->   lock(&pid->wait_pidfd);
->                                local_irq_disable();
->                                lock(tasklist_lock);
->                                lock(&pid->wait_pidfd);
->   <Interrupt>
->     lock(tasklist_lock);
->
->  *** DEADLOCK ***
->
-> 4 locks held by swapper/1/0:
+So IIUC, only one process on a vcpu could affort to relinquish cpu to
+another task. If next task also triggers EPT violation, that will result
+in VM exit (as previous #VE is not complete yet) and vcpu will be halted.
 
-The problem is that because wait_pidfd.lock is taken under the tasklist
-lock.  It must always be taken with irqs disabled as tasklist_lock can be
-taken from interrupt context and if wait_pidfd.lock was already taken this
-would create a lock order inversion.
+> 
+> So you really don't worry about the guest CPU state at all. The guest
+> side #VE handler has to decide what it wants from the host depending on
+> it's internal state:
+> 
+>      - Suspend me and resume once the EPT fail is solved
+> 
+>      - Let me park the failing task and tell me once you resolved the
+>        problem.
+> 
+> That's pretty straight forward and avoids the whole nonsense which the
+> current mess contains. It completely avoids the allocation stuff as well
+> as you need to use a PV page where the guest copies the VE information
+> to.
+> 
+> The notification that a problem has been resolved needs to go through a
+> separate vector which still has the IF=1 requirement obviously.
 
-Oleg suggested just disabling irqs where I have added extra calls to
-wait_pidfd.lock.  That should be safe and I think the code will eventually
-do that.  It was rightly pointed out by Christian that sharing the
-wait_pidfd.lock was a premature optimization.
+How is this vector decided between guest and host. Failure to fault in
+page will be communicated through same vector?
 
-It is also true that my pre-merge window testing was insufficient.  So
-remove the premature optimization and give struct pid a dedicated lock of
-it's own for struct pid things.  I have verified that lockdep sees all 3
-paths where we take the new pid->lock and lockdep does not complain.
+Thanks
+Vivek
 
-It is my current day dream that one day pid->lock can be used to guard the
-task lists as well and then the tasklist_lock won't need to be held to
-deliver signals.  That will require taking pid->lock with irqs disabled.
-
-Link: https://lore.kernel.org/lkml/00000000000011d66805a25cd73f@google.com/
-Cc: Oleg Nesterov <oleg@redhat.com>
-Cc: Christian Brauner <christian.brauner@ubuntu.com>
-Reported-by: syzbot+343f75cdeea091340956@syzkaller.appspotmail.com
-Reported-by: syzbot+832aabf700bc3ec920b9@syzkaller.appspotmail.com
-Reported-by: syzbot+f675f964019f884dbd0f@syzkaller.appspotmail.com
-Reported-by: syzbot+a9fb1457d720a55d6dc5@syzkaller.appspotmail.com
-Fixes: 7bc3e6e55acf ("proc: Use a list of inodes to flush from proc")
-Signed-off-by: "Eric W. Biederman" <ebiederm@xmission.com>
----
-
-If anyone sees an issue please holer otherwise I plan on sending
-this fix to Linus.
-
- fs/proc/base.c      | 10 +++++-----
- include/linux/pid.h |  1 +
- kernel/pid.c        |  1 +
- 3 files changed, 7 insertions(+), 5 deletions(-)
-
-diff --git a/fs/proc/base.c b/fs/proc/base.c
-index 74f948a6b621..6042b646ab27 100644
---- a/fs/proc/base.c
-+++ b/fs/proc/base.c
-@@ -1839,9 +1839,9 @@ void proc_pid_evict_inode(struct proc_inode *ei)
- 	struct pid *pid = ei->pid;
- 
- 	if (S_ISDIR(ei->vfs_inode.i_mode)) {
--		spin_lock(&pid->wait_pidfd.lock);
-+		spin_lock(&pid->lock);
- 		hlist_del_init_rcu(&ei->sibling_inodes);
--		spin_unlock(&pid->wait_pidfd.lock);
-+		spin_unlock(&pid->lock);
- 	}
- 
- 	put_pid(pid);
-@@ -1877,9 +1877,9 @@ struct inode *proc_pid_make_inode(struct super_block * sb,
- 	/* Let the pid remember us for quick removal */
- 	ei->pid = pid;
- 	if (S_ISDIR(mode)) {
--		spin_lock(&pid->wait_pidfd.lock);
-+		spin_lock(&pid->lock);
- 		hlist_add_head_rcu(&ei->sibling_inodes, &pid->inodes);
--		spin_unlock(&pid->wait_pidfd.lock);
-+		spin_unlock(&pid->lock);
- 	}
- 
- 	task_dump_owner(task, 0, &inode->i_uid, &inode->i_gid);
-@@ -3273,7 +3273,7 @@ static const struct inode_operations proc_tgid_base_inode_operations = {
- 
- void proc_flush_pid(struct pid *pid)
- {
--	proc_invalidate_siblings_dcache(&pid->inodes, &pid->wait_pidfd.lock);
-+	proc_invalidate_siblings_dcache(&pid->inodes, &pid->lock);
- 	put_pid(pid);
- }
- 
-diff --git a/include/linux/pid.h b/include/linux/pid.h
-index 01a0d4e28506..cc896f0fc4e3 100644
---- a/include/linux/pid.h
-+++ b/include/linux/pid.h
-@@ -60,6 +60,7 @@ struct pid
- {
- 	refcount_t count;
- 	unsigned int level;
-+	spinlock_t lock;
- 	/* lists of tasks that use this pid */
- 	struct hlist_head tasks[PIDTYPE_MAX];
- 	struct hlist_head inodes;
-diff --git a/kernel/pid.c b/kernel/pid.c
-index efd34874b3d1..517d0855d4cf 100644
---- a/kernel/pid.c
-+++ b/kernel/pid.c
-@@ -246,6 +246,7 @@ struct pid *alloc_pid(struct pid_namespace *ns, pid_t *set_tid,
- 
- 	get_pid_ns(ns);
- 	refcount_set(&pid->count, 1);
-+	spin_lock_init(&pid->lock);
- 	for (type = 0; type < PIDTYPE_MAX; ++type)
- 		INIT_HLIST_HEAD(&pid->tasks[type]);
- 
--- 
-2.20.1
-
-Eric
