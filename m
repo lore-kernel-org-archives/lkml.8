@@ -2,116 +2,128 @@ Return-Path: <SRS0=8dav=5Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD390C2BA2B
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 21:37:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 965ADC2D0F4
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 21:37:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9FB0B206C0
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 21:37:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hlOthodM"
+	by mail.kernel.org (Postfix) with ESMTP id 640FA2072A
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 21:37:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729689AbgDHVha (ORCPT
+        id S1729841AbgDHVhi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Apr 2020 17:37:30 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:35741 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726754AbgDHVha (ORCPT
+        Wed, 8 Apr 2020 17:37:38 -0400
+Received: from avon.wwwdotorg.org ([104.237.132.123]:46142 "EHLO
+        avon.wwwdotorg.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726754AbgDHVhh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Apr 2020 17:37:30 -0400
-Received: by mail-wm1-f65.google.com with SMTP id r26so1609862wmh.0;
-        Wed, 08 Apr 2020 14:37:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:from:to:cc:references:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=fN4JOUYXzZadhHaigIxCdjHL5JQOp1zv8p0cKNRSlto=;
-        b=hlOthodMjO6sjcfcFgccaZ5PMj6V6vILjdJSDPQJgVhPz9GHOlo05D53ScrTPPvFMh
-         wC1oWvzgN1o7eyi0KBFyOY0UERDgw/ODH6MdC1ghsZb8jlScHD/HmAU6Udh1iViY5/3C
-         0SbEuhzT5fM3teMC5iNGNv58Khvtt4DEGbfSUGcTZ28w7K0j0M0ZTDfP3HhcSTZ8obY4
-         2z1hfIjSVsV9dE+L6qIbbo/b/XrTS9ttbRrbsTpUXsck6BQgQo3ELJ+kNqQ9yP7B8WNr
-         b3Un1zfGwO280S3y8HGc5iBOju5CLaoUU9O/wsxnA37UdaLGlxafOtOwuFZpLrrAh/fO
-         ZWWw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=fN4JOUYXzZadhHaigIxCdjHL5JQOp1zv8p0cKNRSlto=;
-        b=asUmbuSX2T9DiHL8J6yWbfCrEcNDmwsFC+6ImtbUPYpu7PKGf77v3Ce0rH86UuGD2W
-         IafJw+sPfkufwAPQJ0CG+spdjQ4cW+ttvbRjeDX0WY+nxHb487lzKYnFEwVf8MfO/CuL
-         tr6DlvXDEBTczTrZf23IFuNIY7ev6hdHlEn7t7FqGiFK2azUoXS6ajO5eZ7inS+4bLhv
-         wfVzIafRuy4db9Mejc9yuD9vciq2YGsmte2mQyUOD7bfX2YYJyG0S4gU0sS1Va2DMV+c
-         53zTq0wF3PdQlfZgTaGMBq4tzCEsEYMdH3weYqMSNvTB3C35UQcdDgLFZWh82+Aap6ln
-         t7PQ==
-X-Gm-Message-State: AGi0PuY0zcRuhcGjDdEVOdoq34SkX0133m7WFjYY58dgyeJ4ozIsXI5T
-        mVT92+vFr9KLMxSipxVbwb/Jwp91
-X-Google-Smtp-Source: APiQypJV8KbYMbR8exxMpzoNyBXOPHtXxKpL5ZMYtkEcbd6n6QLNiLkEfLHV3+CIV8cBbb0TgPm1HA==
-X-Received: by 2002:a1c:2056:: with SMTP id g83mr6533900wmg.179.1586381847878;
-        Wed, 08 Apr 2020 14:37:27 -0700 (PDT)
-Received: from ?IPv6:2003:ea:8f29:6000:695e:ad67:528c:ed17? (p200300EA8F296000695EAD67528CED17.dip0.t-ipconnect.de. [2003:ea:8f29:6000:695e:ad67:528c:ed17])
-        by smtp.googlemail.com with ESMTPSA id p10sm36707335wrm.6.2020.04.08.14.37.27
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 08 Apr 2020 14:37:27 -0700 (PDT)
-Subject: Re: RFC: Handle hard module dependencies that are not symbol-based
- (r8169 + realtek)
-From:   Heiner Kallweit <hkallweit1@gmail.com>
-To:     Lucas De Marchi <lucas.demarchi@intel.com>,
-        Jessica Yu <jeyu@kernel.org>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-modules@vger.kernel.org,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
-References: <f8e3f271-82df-165f-63f1-6df73ba3d59c@gmail.com>
-Message-ID: <88aabe57-b38f-2200-05ab-7f54bda274fe@gmail.com>
-Date:   Wed, 8 Apr 2020 23:37:23 +0200
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Wed, 8 Apr 2020 17:37:37 -0400
+Received: from [10.2.49.83] (thunderhill.nvidia.com [216.228.112.22])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by avon.wwwdotorg.org (Postfix) with ESMTPSA id 339571C053D;
+        Wed,  8 Apr 2020 15:37:36 -0600 (MDT)
+X-Virus-Status: Clean
+X-Virus-Scanned: clamav-milter 0.102.1 at avon.wwwdotorg.org
+Subject: Re: [PATCH] dmaengine: tegra: fix broken 'select' statement
+To:     Arnd Bergmann <arnd@arndb.de>, Vinod Koul <vkoul@kernel.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>
+Cc:     Dan Williams <dan.j.williams@intel.com>, dmaengine@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-tegra@vger.kernel.org
+References: <20200408200504.4067970-1-arnd@arndb.de>
+From:   Stephen Warren <swarren@wwwdotorg.org>
+Autocrypt: addr=swarren@wwwdotorg.org; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <7c637edc-200b-ed8e-26c8-52c2c7d8025a@wwwdotorg.org>
+Date:   Wed, 8 Apr 2020 15:37:34 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-In-Reply-To: <f8e3f271-82df-165f-63f1-6df73ba3d59c@gmail.com>
+In-Reply-To: <20200408200504.4067970-1-arnd@arndb.de>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+Content-Language: en-GB
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 01.04.2020 23:20, Heiner Kallweit wrote:
-> Currently we have no way to express a hard dependency that is not
-> a symbol-based dependency (symbol defined in module A is used in
-> module B). Use case:
-> Network driver ND uses callbacks in the dedicated PHY driver DP
-> for the integrated PHY (namely read_page() and write_page() in
-> struct phy_driver). If DP can't be loaded (e.g. because ND is in
-> initramfs but DP is not), then phylib will use the generic
-> PHY driver GP. GP doesn't implement certain callbacks that are
-> needed by ND, therefore ND's probe has to bail out with an error
-> once it detects that DP is not loaded.
-> We have this problem with driver r8169 having such a dependency
-> on PHY driver realtek. Some distributions have tools for
-> configuring initramfs that consider hard dependencies based on
-> depmod output. Means so far somebody can add r8169.ko to initramfs,
-> and neither human being nor machine will have an idea that
-> realtek.ko needs to be added too.
+On 4/8/20 2:04 PM, Arnd Bergmann wrote:
+> A SoC driver selects the dmaengine driver for the platform it
+> is made for, leading to Kconfig warnings in some configurations:
 > 
-> Attached patch set (two patches for kmod, one for the kernel)
-> allows to express this hard dependency of ND from DP. depmod will
-> read this dependency information and treat it like a symbol-based
-> dependency. As a result tools e.g. populating initramfs can
-> consider the dependency and place DP in initramfs if ND is in
-> initramfs. On my system the patch set does the trick when
-> adding following line to r8169_main.c:
-> MODULE_HARDDEP("realtek");
+> WARNING: unmet direct dependencies detected for TEGRA20_APB_DMA
+>   Depends on [n]: DMADEVICES [=n] && (ARCH_TEGRA [=y] || COMPILE_TEST [=y])
+>   Selected by [y]:
+>   - SOC_TEGRA_FUSE [=y] && ARCH_TEGRA [=y] && ARCH_TEGRA_2x_SOC [=y]
 > 
-> I'm interested in your opinion on the patches, and whether you
-> maybe have a better idea how to solve the problem.
+> WARNING: unmet direct dependencies detected for TEGRA20_APB_DMA
+>   Depends on [n]: DMADEVICES [=n] && (ARCH_TEGRA [=y] || COMPILE_TEST [=y])
+>   Selected by [y]:
+>   - SOC_TEGRA_FUSE [=y] && ARCH_TEGRA [=y] && ARCH_TEGRA_2x_SOC [=y]
 > 
-> Heiner
-> 
-Any feedback?
+> Generally, no driver should 'select' a driver from a different subsystem,
+> especially when there is no build-time dependency between the two.
 
-Thanks, Heiner
+IIRC there's a run-time dependency between the two though; without the
+DMA driver available to implement a HW WAR, the fuse driver has to
+access fuse registers directly which IIRC can cause a lock-up, or
+something like that. So I think allowing APD_DMA to be deselected by the
+user is wrong for T20 at least; it simply must be enabled. Perhaps
+ARCH_TEGRA_2x_SOC should select it instead?
