@@ -2,143 +2,118 @@ Return-Path: <SRS0=8dav=5Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6000C2BA2B
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 23:48:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE03FC2BA80
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 23:51:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 896D02082F
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 23:48:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A48062087E
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 23:51:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1586389897;
+	bh=ohD59jkDFB/7GbrNwOr+RvtEO78AppOEta0uYKkJaOk=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=tnZRYPRRp2vxGnEMIZbv/wd7bDWHWLSp6AVc5YX478xRr5wEzodH/RM/Ocy+lh6e3
+	 0VfSsXlOpgiN6DnKm8uKcR5aae2pjclTJU1KguqCXFrSPUODs7r4OGkTm/FKf2s62X
+	 ALB9hkQfRdTnmMC1aNkOoAm3aknZW1e0DPyR1vdU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726587AbgDHXsY (ORCPT
+        id S1726591AbgDHXvg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Apr 2020 19:48:24 -0400
-Received: from mail105.syd.optusnet.com.au ([211.29.132.249]:39449 "EHLO
-        mail105.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726508AbgDHXsX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Apr 2020 19:48:23 -0400
-Received: from dread.disaster.area (pa49-180-167-53.pa.nsw.optusnet.com.au [49.180.167.53])
-        by mail105.syd.optusnet.com.au (Postfix) with ESMTPS id C6BD83A367F;
-        Thu,  9 Apr 2020 09:48:18 +1000 (AEST)
-Received: from dave by dread.disaster.area with local (Exim 4.92.3)
-        (envelope-from <david@fromorbit.com>)
-        id 1jMKQb-0005ii-LU; Thu, 09 Apr 2020 09:48:17 +1000
-Date:   Thu, 9 Apr 2020 09:48:17 +1000
-From:   Dave Chinner <david@fromorbit.com>
-To:     Ira Weiny <ira.weiny@intel.com>
-Cc:     Jan Kara <jack@suse.cz>, linux-kernel@vger.kernel.org,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Christoph Hellwig <hch@lst.de>,
-        "Theodore Y. Ts'o" <tytso@mit.edu>, Jeff Moyer <jmoyer@redhat.com>,
-        linux-ext4@vger.kernel.org, linux-xfs@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH V6 7/8] fs/xfs: Change xfs_ioctl_setattr_dax_invalidate()
- to xfs_ioctl_dax_check()
-Message-ID: <20200408234817.GP24067@dread.disaster.area>
-References: <20200407182958.568475-1-ira.weiny@intel.com>
- <20200407182958.568475-8-ira.weiny@intel.com>
- <20200408022318.GJ24067@dread.disaster.area>
- <20200408095803.GB30172@quack2.suse.cz>
- <20200408210950.GL24067@dread.disaster.area>
- <20200408222636.GC664132@iweiny-DESK2.sc.intel.com>
+        Wed, 8 Apr 2020 19:51:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43314 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726523AbgDHXvf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Apr 2020 19:51:35 -0400
+Received: from localhost (mobile-166-175-188-68.mycingular.net [166.175.188.68])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 050E02082F;
+        Wed,  8 Apr 2020 23:51:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1586389895;
+        bh=ohD59jkDFB/7GbrNwOr+RvtEO78AppOEta0uYKkJaOk=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=i243TA3iZ14gJyfzqpJx5lW6qxa0I0TWRjoCNJ1pTyAMoKpRNGO9XGXe4feq2IHKZ
+         /N0BFAPMBXb2oHHt5BczVvgIHnz9by1j5vnTFnMQHgRR+xhuiQqEnffDgEQ9BBv+iT
+         0IpSHFoe/PMaOm3RmcfLSyKA8M4gx9tSc9h2n7QQ=
+Date:   Wed, 8 Apr 2020 18:51:33 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Cc:     Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Andrew Murray <amurray@thegoodpenguin.co.uk>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Marek Vasut <marek.vasut+renesas@gmail.com>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Shawn Lin <shawn.lin@rock-chips.com>,
+        Tom Joseph <tjoseph@cadence.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-renesas-soc@vger.kernel.org,
+        Chris Paterson <Chris.Paterson2@renesas.com>,
+        linux-rockchip@lists.infradead.org,
+        Lad Prabhakar <prabhakar.csengg@gmail.com>
+Subject: Re: [PATCH v7 6/8] PCI: rcar: Add support for R-Car PCIe controller
+ in endpoint mode
+Message-ID: <20200408235133.GA151858@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200408222636.GC664132@iweiny-DESK2.sc.intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Optus-CM-Score: 0
-X-Optus-CM-Analysis: v=2.3 cv=LYdCFQXi c=1 sm=1 tr=0
-        a=2xmR08VVv0jSFCMMkhec0Q==:117 a=2xmR08VVv0jSFCMMkhec0Q==:17
-        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=cl8xLZFz6L8A:10
-        a=VwQbUJbxAAAA:8 a=7-415B0cAAAA:8 a=xAaa-ZnbheYG_JgLh6MA:9
-        a=CjuIK1q_8ugA:10 a=AjGcO6oz07-iQ99wixmX:22 a=biEYGPWJfzWAr4FL6Ov7:22
+In-Reply-To: <1586360280-10956-7-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 08, 2020 at 03:26:36PM -0700, Ira Weiny wrote:
-> On Thu, Apr 09, 2020 at 07:09:50AM +1000, Dave Chinner wrote:
-> > On Wed, Apr 08, 2020 at 11:58:03AM +0200, Jan Kara wrote:
-> > I explained how we can safely remove the flag in the other branch of
-> > this thread...
-> > 
-> > > But it seems like more understandable API than letting user clear
-> > > the on-disk flag but the inode will still use DAX until kernel decides to
-> > > evict the inode
-> > 
-> > Certainly doesn't seem that way to me. "stop app, clear flags, drop
-> > caches, restart app" is a pretty simple, easy thing to do for an
-> > admin.
-> 
-> I want to be clear here: I think this is reasonable.  However, I don't see
-> consensus for that interface.
-> 
-> Christoph in particular said that a 'lazy change' is: "... straight from
-> the playbook for arcane and confusing API designs."
-> 
-> 	"But returning an error and doing a lazy change anyway is straight from
-> 	the playbook for arcane and confusing API designs."
-> 
-> 	-- https://lore.kernel.org/lkml/20200403072731.GA24176@lst.de/
-> 
-> Did I somehow misunderstand this?
+Maybe:
 
-Yes. Clearing the on-disk flag successfully should not return an
-error.
+  PCI: rcar: Add endpoint mode support
 
-What is wrong is having it clear the flag successfully and returning
-an error because the operation doesn't take immediate effect, then
-having the change take effect later after telling the application
-there was an error.
+so the important "endpoint mode" part is early and doesn't get chopped
+off or wrapped.  We already know it's PCIe and rcar-related.
 
-That's what Christoph was saying is "straight from the playbook for
-arcane and confusing API designs."
+On Wed, Apr 08, 2020 at 04:37:58PM +0100, Lad Prabhakar wrote:
+> This patch adds support for R-Car PCIe controller to work in endpoint mode.
 
-There's absolutely nothing wrong with setting/clearing the on-disk
-flag and having the change take effect some time later depending on
-some external context. We've done this sort of thing for a -long
-time- and it's not XFS specific at all.
+s/This patch adds/Add/
 
-e.g.  changing the on-disk APPEND flag doesn't change the write
-behaviour of currently open files - it only affects the behaviour of
-future file opens. IOWs, we can have the flag set on disk, but we
-can still write randomly to the inode as long as we have a file
-descriptor that was opened before the APPEND on disk flag was set.
+> +static int rcar_pcie_ep_set_bar(struct pci_epc *epc, u8 func_no,
+> +				struct pci_epf_bar *epf_bar)
+> +{
+> +	int flags = epf_bar->flags | LAR_ENABLE | LAM_64BIT;
+> +	struct rcar_pcie_endpoint *ep = epc_get_drvdata(epc);
+> +	u64 size = 1ULL << fls64(epf_bar->size - 1);
+> +	dma_addr_t cpu_addr = epf_bar->phys_addr;
+> +	enum pci_barno bar = epf_bar->barno;
+> +	struct rcar_pcie *pcie = &ep->pcie;
+> +	u32 mask;
+> +	int idx;
+> +	int err;
+> +
+> +	idx = find_first_zero_bit(ep->ib_window_map, ep->num_ib_windows);
+> +	if (idx >= ep->num_ib_windows) {
+> +		dev_err(pcie->dev, "no free inbound window\n");
+> +		return -EINVAL;
+> +	}
+> +
+> +	if ((flags & PCI_BASE_ADDRESS_SPACE) == PCI_BASE_ADDRESS_SPACE_IO)
+> +		flags |= IO_SPACE;
+> +
+> +	ep->bar_to_atu[bar] = idx;
+> +	/* use 64 bit bars */
 
-That's exactly the same class of behaviour as we are talking about
-here for the on-disk DAX flag.
+s/64 bit bars/64-bit BARs/
 
-> > Especially compared to process that is effectively "stop app, backup
-> > data set, delete data set, clear flags, restore data set, restart
-> > app"
-> > 
-> > > - because that often means you need to restart the
-> > > application using the file anyway for the flag change to have any effect.
-> > 
-> > That's a trivial requirement compared to the downtime and resource
-> > cost of a data set backup/restore just to clear inode flags....
-> 
-> I agree but others do not.  This still provides a baby step forward and some
+> +static const struct pci_epc_features rcar_pcie_epc_features = {
+> +	.linkup_notifier = false,
+> +	.msi_capable = true,
+> +	.msix_capable = false,
+> +	/* use 64-bit bars so mark bar1/3/5 as reserved */
 
-It's not a baby step forward. We can't expose a behaviour to
-userspace and then decide to change it completely at some later
-date.  We have to think through the entire admin model before
-setting it in concrete.
-
-If an admin operation can set an optional persistent feature flags
-on a file, then there *must* be admin operations that can remove
-that persistent feature flag from said files. This has *nothing to
-do with DAX* - it's a fundamental principle of balanced system
-design.
-
-Cheers,
-
-Dave.
--- 
-Dave Chinner
-david@fromorbit.com
+s/bar/BAR/g
