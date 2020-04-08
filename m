@@ -2,105 +2,81 @@ Return-Path: <SRS0=8dav=5Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44AB0C2D0EA
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 11:17:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE03CC2D0EA
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 11:17:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1B87020753
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 11:17:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BE40A20753
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 11:17:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="I26DyJnG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728371AbgDHLRt (ORCPT
+        id S1728420AbgDHLRz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Apr 2020 07:17:49 -0400
-Received: from eu-smtp-delivery-151.mimecast.com ([207.82.80.151]:30505 "EHLO
-        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727902AbgDHLRt (ORCPT
+        Wed, 8 Apr 2020 07:17:55 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:59032 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727902AbgDHLRz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Apr 2020 07:17:49 -0400
-Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
- TLS) by relay.mimecast.com with ESMTP id
- uk-mta-238-_IBXjKs1Mlq3tHjJlx31Yg-1; Wed, 08 Apr 2020 12:17:44 +0100
-X-MC-Unique: _IBXjKs1Mlq3tHjJlx31Yg-1
-Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
- AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
- Server (TLS) id 15.0.1347.2; Wed, 8 Apr 2020 12:17:43 +0100
-Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
- AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
- Wed, 8 Apr 2020 12:17:43 +0100
-From:   David Laight <David.Laight@ACULAB.COM>
-To:     'Jan Kiszka' <jan.kiszka@siemens.com>,
-        Peter Zijlstra <peterz@infradead.org>
-CC:     Steven Rostedt <rostedt@goodmis.org>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "hch@infradead.org" <hch@infradead.org>,
-        "sean.j.christopherson@intel.com" <sean.j.christopherson@intel.com>,
-        "mingo@redhat.com" <mingo@redhat.com>,
-        "bp@alien8.de" <bp@alien8.de>, "hpa@zytor.com" <hpa@zytor.com>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "kenny@panix.com" <kenny@panix.com>,
-        "jeyu@kernel.org" <jeyu@kernel.org>,
-        "rasmus.villemoes@prevas.dk" <rasmus.villemoes@prevas.dk>,
-        "pbonzini@redhat.com" <pbonzini@redhat.com>,
-        "fenghua.yu@intel.com" <fenghua.yu@intel.com>,
-        "xiaoyao.li@intel.com" <xiaoyao.li@intel.com>,
-        "nadav.amit@gmail.com" <nadav.amit@gmail.com>,
-        "thellstrom@vmware.com" <thellstrom@vmware.com>,
-        "tony.luck@intel.com" <tony.luck@intel.com>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "jannh@google.com" <jannh@google.com>,
-        "keescook@chromium.org" <keescook@chromium.org>,
-        "dcovelli@vmware.com" <dcovelli@vmware.com>,
-        "mhiramat@kernel.org" <mhiramat@kernel.org>,
-        Wolfgang Mauerer <wolfgang.mauerer@oth-regensburg.de>
-Subject: RE: [PATCH 4/4] x86,module: Detect CRn and DRn manipulation
-Thread-Topic: [PATCH 4/4] x86,module: Detect CRn and DRn manipulation
-Thread-Index: AQHWDYP6qgl1fjDEE0GOF/TmmkoV06hu88KwgAAN2oCAABEsYA==
-Date:   Wed, 8 Apr 2020 11:17:43 +0000
-Message-ID: <f42d25409c8642d9beced75f3c314452@AcuMS.aculab.com>
-References: <20200407110236.930134290@infradead.org>
- <20200407111007.429362016@infradead.org>
- <20200407174824.5e97a597@gandalf.local.home>
- <137fe245-69f3-080e-5f2b-207cd218f199@siemens.com>
- <20200408085138.GQ20713@hirez.programming.kicks-ass.net>
- <aa7a2547-9670-d04f-4ca0-ab52abf30441@siemens.com>
- <a426788d340b477f8cc87a173a251fcb@AcuMS.aculab.com>
- <c51317cf-2026-22f8-6763-b3efd2c661d7@siemens.com>
-In-Reply-To: <c51317cf-2026-22f8-6763-b3efd2c661d7@siemens.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.202.205.107]
+        Wed, 8 Apr 2020 07:17:55 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=3YJqaOoM4AXHXL0XANzFtbQE1EpTeXAe0og/pFKkpCA=; b=I26DyJnGGGzpg8aW0CSl3TSO8/
+        fCLcInYqjvbFiDB3N97TYX+H95E7s7uhQVs1LywnJrxvQAyQKrsXOH4HCqon7QCoisfEoaw6RVFDS
+        NQOCO/S4ycVdQoxRL46SZ2UfRTHDCE0HFlkAY/BrTNmWRge1970iZq7hPoYzBfUytDGspcPrPDjhj
+        lDsRcJWFs6qo8zxx5srQ71V1LToOn2jGFgto63isvIjWn9uZp/yp5qMXQVuaeLYT2wjloOAyaBt4C
+        CZadKhWG7I0rpK07+OqaLbMseS8zTcP0JuX9+Fe8qNltNOQHzKTM5TMcUHTWVQtPsjS20OYk7jLcj
+        W3k8stdA==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jM8iL-0000RC-Gm; Wed, 08 Apr 2020 11:17:49 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id C4D5B300130;
+        Wed,  8 Apr 2020 13:17:47 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id B0E612BA90A63; Wed,  8 Apr 2020 13:17:47 +0200 (CEST)
+Date:   Wed, 8 Apr 2020 13:17:47 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Ankur Arora <ankur.a.arora@oracle.com>
+Cc:     linux-kernel@vger.kernel.org, x86@kernel.org, hpa@zytor.com,
+        jpoimboe@redhat.com, namit@vmware.com, mhiramat@kernel.org,
+        jgross@suse.com, bp@alien8.de, vkuznets@redhat.com,
+        pbonzini@redhat.com, boris.ostrovsky@oracle.com,
+        mihai.carabas@oracle.com, kvm@vger.kernel.org,
+        xen-devel@lists.xenproject.org,
+        virtualization@lists.linux-foundation.org
+Subject: Re: [RFC PATCH 14/26] x86/alternatives: Handle native insns in
+ text_poke_loc*()
+Message-ID: <20200408111747.GV20713@hirez.programming.kicks-ass.net>
+References: <20200408050323.4237-1-ankur.a.arora@oracle.com>
+ <20200408050323.4237-15-ankur.a.arora@oracle.com>
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: aculab.com
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200408050323.4237-15-ankur.a.arora@oracle.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-RnJvbTogSmFuIEtpc3prYSANCj4gU2VudDogMDggQXByaWwgMjAyMCAxMjoxMw0KDQo+IA0KPiBP
-biAwOC4wNC4yMCAxMToyNSwgRGF2aWQgTGFpZ2h0IHdyb3RlOg0KPiA+IEZyb206IEphbiBLaXN6
-a2ENCj4gPj4gU2VudDogMDggQXByaWwgMjAyMCAwOTo1OQ0KPiA+IC4uLg0KPiA+PiBBdCB0aGUg
-cmlzayBvZiBjdXR0aW5nIG91ciBvd24gYnJhbmNoIG9mZjogVGhhdCdzIG5vdCB0aGUgZmlybXdh
-cmUNCj4gPj4gbG9hZGVyLCBpdCdzIGlvcmVtYXAgd2l0aCBQQUdFX0tFUk5FTF9FWEVDLg0KPiA+
-DQo+ID4gWW91IGNvdWxkIGxpbmsgdGhlICdibG9iJyBpbnRvIHRoZSAudGV4dCBwYXJ0IG9mIGEg
-bm9ybWFsDQo+ID4ga2VybmVsIG1vZHVsZSBhbmQgdGhlbiBsb2FkIHRoYXQuDQo+IA0KPiBTdXJl
-LCBhbHNvIHBvc3NpYmxlLiBXYXMganVzdCBtb3JlIGNvbnZlbmllbnQgc28gZmFyIHRvIHJlcGxh
-Y2UgdGhlDQo+IGh5cGVydmlzb3IgYmluYXJ5IHdpdGhvdXQgaGF2aW5nIHRvIHJlY29tcGlsZSB0
-aGUgZHJpdmVyIG1vZHVsZS4NCg0KSSB3YXMgdGhpbmtpbmcgb2YgYSBzZXBhcmF0ZSBtb2R1bGUg
-dGhhdCBjb250YWluZWQgbm90aGluZyBlbHNlLg0KSWYgaXQgZGVwZW5kZWQgb24gdGhlIGRyaXZl
-ciBpdCdzICdpbml0JyBmdW5jdGlvbiBjb3VsZCBjYWxsIGJhY2sNCmludG8gdGhlIGRyaXZlciBj
-b2RlIHRvIHBhc3MgYW4gZW50cnlwb2ludCBhcnJheSAoZXRjKS4NCg0KWW91IGNhbiBlYXNpbHkg
-dG8gYSB2ZXJzaW9uIGNoZWNrIGF0IHRoYXQgcG9pbnQgYXMgd2VsbC4NCg0KCURhdmlkDQoNCi0N
-ClJlZ2lzdGVyZWQgQWRkcmVzcyBMYWtlc2lkZSwgQnJhbWxleSBSb2FkLCBNb3VudCBGYXJtLCBN
-aWx0b24gS2V5bmVzLCBNSzEgMVBULCBVSw0KUmVnaXN0cmF0aW9uIE5vOiAxMzk3Mzg2IChXYWxl
-cykNCg==
 
+On Tue, Apr 07, 2020 at 10:03:11PM -0700, Ankur Arora wrote:
+> @@ -1071,10 +1079,13 @@ int notrace poke_int3_handler(struct pt_regs *regs)
+>  			goto out_put;
+>  	}
+>  
+> -	len = text_opcode_size(tp->opcode);
+> +	if (desc->native)
+> +		BUG();
+> +
+
+Subject: x86/alternatives: Handle native insns in text_poke_loc*()
+
+That's not really handling, is it..
