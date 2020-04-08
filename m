@@ -2,141 +2,87 @@ Return-Path: <SRS0=8dav=5Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44CD3C2D0EA
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 08:09:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78200C2BA2B
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 08:10:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E194920771
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 08:09:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586333383;
-	bh=uUSrnD2b+t7jwXeUGhWXZyXgEQB1fI6tRrbRuRU/Ysc=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=mUqPvKGMgDekQbkOTDa0GkAJe3fcBkDB/Zu7DZan4wYUf5PwnFmswfEZPPryUoUnT
-	 d0L+xRA4smeYPei45OxsSGIEfCWtzZHmVmeSQ2F6lz5P6VsvkaT+udHGwYmfCqrkL/
-	 p7k/ZR0BIiSpUBG9dVa7JNNfbkwVk3AIQdBZhHSU=
+	by mail.kernel.org (Postfix) with ESMTP id 422102074F
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 08:10:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="cgizoBWp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726828AbgDHIJl (ORCPT
+        id S1726891AbgDHIK0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Apr 2020 04:09:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34130 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726721AbgDHIJl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Apr 2020 04:09:41 -0400
-Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Wed, 8 Apr 2020 04:10:26 -0400
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:55588 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726525AbgDHIKZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Apr 2020 04:10:25 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1586333424;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=ku+EAOPg4vOvWbFqhNdMl4JM7x36akNpLyA8tGgpuD8=;
+        b=cgizoBWpFXq7W5BaecTgHiSdYNcu0TVdhK8ec/+4YnVMk6bDvyUBYLm6EcQh9Bh+4xONEx
+        mtyYt54opvHlw0DhILXIcaaN81WZTWBUKotMwf/Oi4HKMWH0+47YFKtELcNcTK9NpUWKPo
+        ObyFQMVLmXufCFcvGkGaP+xGvN1k2F4=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-410-raFHZzh3O6iyC_Fqr9rXIQ-1; Wed, 08 Apr 2020 04:10:20 -0400
+X-MC-Unique: raFHZzh3O6iyC_Fqr9rXIQ-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5943720730;
-        Wed,  8 Apr 2020 08:09:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586333380;
-        bh=uUSrnD2b+t7jwXeUGhWXZyXgEQB1fI6tRrbRuRU/Ysc=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=BLVlrHLIZSkcaGQjiBiuUpXhrlJKTZwupV1uerxfAUMUlN2vAWjv/56enCLe+ETex
-         JdBCcWZcuDlalrozNxTpe2cILn1dkMIjnfQN0B0QmohOB6k5f4UbpQt6ADh7mFo3GA
-         JfOUJKDE/aCccRUUVKGVFmMIKIK8KBE/YC+MQfRk=
-Date:   Wed, 8 Apr 2020 17:09:34 +0900
-From:   Masami Hiramatsu <mhiramat@kernel.org>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     tglx@linutronix.de, linux-kernel@vger.kernel.org,
-        hch@infradead.org, sean.j.christopherson@intel.com,
-        mingo@redhat.com, bp@alien8.de, hpa@zytor.com, x86@kernel.org,
-        kenny@panix.com, jeyu@kernel.org, rasmus.villemoes@prevas.dk,
-        pbonzini@redhat.com, fenghua.yu@intel.com, xiaoyao.li@intel.com,
-        nadav.amit@gmail.com, thellstrom@vmware.com, tony.luck@intel.com,
-        rostedt@goodmis.org, gregkh@linuxfoundation.org, jannh@google.com,
-        keescook@chromium.org, David.Laight@aculab.com,
-        dcovelli@vmware.com, mhiramat@kernel.org
-Subject: Re: [PATCH 3/4] x86,module: Detect VMX vs SLD conflicts
-Message-Id: <20200408170934.7238715574818f31f03e687b@kernel.org>
-In-Reply-To: <20200407111007.352324393@infradead.org>
-References: <20200407110236.930134290@infradead.org>
-        <20200407111007.352324393@infradead.org>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 817BADB69;
+        Wed,  8 Apr 2020 08:10:19 +0000 (UTC)
+Received: from gondolin (ovpn-113-103.ams2.redhat.com [10.36.113.103])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 870E55E010;
+        Wed,  8 Apr 2020 08:10:07 +0000 (UTC)
+Date:   Wed, 8 Apr 2020 10:10:04 +0200
+From:   Cornelia Huck <cohuck@redhat.com>
+To:     Christian Borntraeger <borntraeger@de.ibm.com>
+Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
+        Janosch Frank <frankja@linux.ibm.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        David Hildenbrand <david@redhat.com>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        syzbot+d889b59b2bb87d4047a2@syzkaller.appspotmail.com
+Subject: Re: [PATCH 0/2] KVM: Fix out-of-bounds memslot access
+Message-ID: <20200408101004.09b1f56d.cohuck@redhat.com>
+In-Reply-To: <526247ac-4201-8b3d-0f15-d93b12a530b8@de.ibm.com>
+References: <20200408064059.8957-1-sean.j.christopherson@intel.com>
+        <526247ac-4201-8b3d-0f15-d93b12a530b8@de.ibm.com>
+Organization: Red Hat GmbH
+MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 07 Apr 2020 13:02:39 +0200
-Peter Zijlstra <peterz@infradead.org> wrote:
+On Wed, 8 Apr 2020 09:24:27 +0200
+Christian Borntraeger <borntraeger@de.ibm.com> wrote:
 
-> +static bool insn_is_vmx(struct insn *insn)
-> +{
-> +	u8 modrm = insn->modrm.bytes[0];
-> +	u8 modrm_mod = X86_MODRM_MOD(modrm);
-> +	u8 modrm_reg = X86_MODRM_REG(modrm);
-> +
-> +	u8 prefix = insn->prefixes.bytes[0];
+> On 08.04.20 08:40, Sean Christopherson wrote:
+> > Two fixes for what are effectively the same bug.  The binary search used
+> > for memslot lookup doesn't check the resolved index and can access memory
+> > beyond the end of the memslot array.
+> > 
+> > I split the s390 specific change to a separate patch because it's subtly
+> > different, and to simplify backporting.  The KVM wide fix can be applied
+> > to stable trees as is, but AFAICT the s390 change would need to be paired
+> > with the !used_slots check from commit 774a964ef56 ("KVM: Fix out of range  
+> 
+> I cannot find the commit id 774a964ef56
+> 
 
-This should be the last prefix,
+It's 0774a964ef561b7170d8d1b1bfe6f88002b6d219 in my tree.
 
-	u8 prefix = insn->prefixes.bytes[3];
-
-(The last prefix always copied on the bytes[3])
-
-> +
-> +	if (insn->opcode.bytes[0] != 0x0f)
-> +		return false;
-> +
-> +	switch (insn->opcode.bytes[1]) {
-> +	case 0x01:
-> +		switch (insn->opcode.bytes[2]) {
-
-Sorry, VMCALL etc. is in Grp7 (0f 01), the 3rd code is embedded
-in modrm instead of opcode. Thus it should be,
-
-		switch (insn->modrm.value) {
-
-> +		case 0xc1: /* VMCALL */
-> +		case 0xc2: /* VMLAUNCH */
-> +		case 0xc3: /* VMRESUME */
-> +		case 0xc4: /* VMXOFF */
-
-		case 0xd4:	/* VMFUNC */
-
-> +			return true;
-> +
-> +		default:
-> +			break;
-> +		}
-> +		break;
-> +
-> +	case 0x78: /* VMREAD */
-> +	case 0x79: /* VMWRITE */
-
-		return !insn_is_evex(insn);
-
-With EVEX prefix, these becomes vcvt* instructions.
-
-> +	case 0xc7:
-> +		/* VMPTRLD, VMPTRST, VMCLEAR, VMXON */
-> +		if (modrm_mod == 0x03)
-> +			break;
-> +
-> +		if ((modrm_reg == 6 && (!prefix || prefix == 0x66 || prefix == 0xf3)) ||
-> +		    (modrm_reg == 7 && (!prefix || prefix == 0xf3)))
-> +			return true;
-> +
-> +		break;
-> +
-> +	default:
-> +		break;
-> +	}
-> +
-> +	return false;
-> +}
-
-
-Thank you,
-
-
-
--- 
-Masami Hiramatsu <mhiramat@kernel.org>
