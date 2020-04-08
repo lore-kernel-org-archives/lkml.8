@@ -2,119 +2,139 @@ Return-Path: <SRS0=8dav=5Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CB37C2BA1A
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 18:58:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49849C2BA1A
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 18:58:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 69EB4206BE
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 18:58:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1D4D5206BE
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 18:58:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="fFyW9LaI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728661AbgDHS6t (ORCPT
+        id S1728820AbgDHS65 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Apr 2020 14:58:49 -0400
-Received: from mout.kundenserver.de ([217.72.192.73]:37099 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726730AbgDHS6t (ORCPT
+        Wed, 8 Apr 2020 14:58:57 -0400
+Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:13573 "EHLO
+        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726730AbgDHS64 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Apr 2020 14:58:49 -0400
-Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
- (mreue107 [212.227.15.145]) with ESMTPA (Nemesis) id
- 1MGygv-1jZCCz0Nmt-00E1gj; Wed, 08 Apr 2020 20:58:38 +0200
-From:   Arnd Bergmann <arnd@arndb.de>
-List-Id: <soc.lore.kernel.org>
-To:     soc@kernel.org, Roy Pledge <Roy.Pledge@nxp.com>,
-        Li Yang <leoyang.li@nxp.com>,
-        Youri Querry <youri.querry_1@nxp.com>
-Cc:     Arnd Bergmann <arnd@arndb.de>, Roy Pledge <roy.pledge@nxp.com>,
-        Ioana Ciornei <ioana.ciornei@nxp.com>,
-        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH] soc: fsl: dpio: avoid stack usage warning
-Date:   Wed,  8 Apr 2020 20:58:16 +0200
-Message-Id: <20200408185834.434784-1-arnd@arndb.de>
-X-Mailer: git-send-email 2.26.0
+        Wed, 8 Apr 2020 14:58:56 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5e8e1eba0001>; Wed, 08 Apr 2020 11:58:02 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Wed, 08 Apr 2020 11:58:55 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Wed, 08 Apr 2020 11:58:55 -0700
+Received: from DRHQMAIL107.nvidia.com (10.27.9.16) by HQMAIL111.nvidia.com
+ (172.20.187.18) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 8 Apr
+ 2020 18:58:55 +0000
+Received: from [10.2.171.241] (10.124.1.5) by DRHQMAIL107.nvidia.com
+ (10.27.9.16) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 8 Apr 2020
+ 18:58:53 +0000
+Subject: Re: [RFC PATCH v6 6/9] media: tegra: Add Tegra210 Video input driver
+From:   Sowjanya Komatineni <skomatineni@nvidia.com>
+To:     Dmitry Osipenko <digetx@gmail.com>, <thierry.reding@gmail.com>,
+        <jonathanh@nvidia.com>, <frankc@nvidia.com>, <hverkuil@xs4all.nl>,
+        <sakari.ailus@iki.fi>, <helen.koike@collabora.com>
+CC:     <sboyd@kernel.org>, <linux-media@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-clk@vger.kernel.org>,
+        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <1585963507-12610-1-git-send-email-skomatineni@nvidia.com>
+ <e3712e7b-b335-b35b-a94f-24eb85122dca@nvidia.com>
+ <b1726d33-0d35-9323-a747-407148d0104e@gmail.com>
+ <eb80178f-30f4-8f46-51cd-ea3f4914b81d@nvidia.com>
+ <dd16c560-ba8f-e7df-5dc4-5227e0043196@nvidia.com>
+ <fea4f0a1-4a20-34d4-9eda-e4a599eeeffc@nvidia.com>
+ <760d071e-0cbc-b3eb-9231-fb9f9ecb44a6@nvidia.com>
+ <9e317f65-8a02-3b15-cfec-8e0d8374130e@gmail.com>
+ <97b35910-4c93-123a-43a0-eb14476ed0f3@nvidia.com>
+ <84ad4e2d-6ac1-e1f4-1c55-5edaae850631@nvidia.com>
+ <15a879b3-8fb9-6821-3cdc-104ba583ac12@gmail.com>
+ <0c425505-347f-7418-af7e-d121fe0d06dc@nvidia.com>
+ <db7c7051-5674-cdb9-0aa4-ee94125b3024@gmail.com>
+ <1a31cd60-739f-0660-1c45-31487d2f2128@nvidia.com>
+ <603084a5-249a-4fe2-3646-e9335ef9ab43@nvidia.com>
+ <7895b9c6-f27d-8939-73d7-67d785e1a8b7@nvidia.com>
+ <ea60b489-990e-4b15-e215-d93381a1371e@nvidia.com>
+ <b2405c2a-73c0-ad69-ccea-0388caf8045c@gmail.com>
+ <15d8b525-67b5-b437-f7fd-89f80cd0d9f6@nvidia.com>
+Message-ID: <a638bb8e-bb50-7aa5-05a0-8de1c6207ba7@nvidia.com>
+Date:   Wed, 8 Apr 2020 11:58:52 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:OMkgMNWoYNK/PYjxHVjJrtynoXO5dAEnVqvJJrotBwWM8OSqNDq
- n4/wTu1RDdSuijIRMT/mKwLuNyQZl8Spgdi3psfPPgmqchFO/006ZOGM6IvvXihw0jMEQi1
- 56J/m8kvXJHYcy8SPcnZjVa8G7StP/ndGlz4sf5dHsUPDnKJRVesO0rqywtdqf/bapOepvt
- OKslwjMqHRgGccZbrwpSA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:FCcX7YDJ1SE=:HKXDNdhc8sGxe1mtuppB6o
- mNmFSw1aHUeW3PHd0utVq7MbM9hZtK7P2kMs3wB2sMRmfTu/sR6BDCNGTHKA55YiFdHkcgSdk
- G4rrvwRO9Y7We+a/w1sUviQ2Upxly0ybzU1ScFiEWt20sBqo8HdsFSCLiTry+cDfDJuGdeeap
- Ra8FVq9WaPa/TLihjdGNIm2CZoNIrKPZwTrL5xUamTWFb6jeSEK8I7JdzwRYuSj5lXyCD8Oz+
- 22/0yaF1jJpg/foiBFWY22N0BlLyAPmwWCV29dBaSuIehw7HYzdI57fShMwCahgGFtfxUQ3fg
- rmijtfbgc6/9CPp+QaowH7fqTzzkzs1UVOr8hfBp633edwVB6qSzwyxwu4JP0NU5QPhCPrrI2
- vknJvrsqOqRxVEVIVi78WAD/MMpi3WqU9H3yqG9X67NBrxwqJVZuIVJCtaiXdSIts11AU6FxE
- 1u3MRAHSlkupxEJCouNKVFy5A/27Svui8cB7KORPGf7dtjZyMk2pm/prIoL6dDyajoqx4Q9jt
- nijZNRuQ3Euk0z0kzZPl/pDi90tyUEBfauhsg7de9/1qFisE9djOrhPS4n3fdLUVaiiCTrhXc
- y+ns+bzzl9rK5NZVudSB1S6zagkOt80k7LaDRsGsh/7A+LZet1d728v9O6oLlmLHzKRYqjU7X
- qKSS+UB5g8NRHKbLs8gw0BR0xDkSm3xRJs6LLZGpbSSa1xYtAi/E3DM1Zl+gYKmqrmDfe9kST
- 71mI0JqqwZtL2U96/Q0xxshmDYju3wXhyVa9pU5rD4d/RFpf0iWcf/bOinHQ80kU0VOxA2fij
- +c1oqQ1Wz1S1s/QeXDjC94W/u7iM/Sl8ZFB85P88QApLfSF3Tg=
+In-Reply-To: <15d8b525-67b5-b437-f7fd-89f80cd0d9f6@nvidia.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL111.nvidia.com (172.20.187.18) To
+ DRHQMAIL107.nvidia.com (10.27.9.16)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: quoted-printable
+Content-Language: en-US
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1586372282; bh=WiXwOMB6IdZZe61YJiuIGQp9xJN94uE559/iv1nBzAs=;
+        h=X-PGP-Universal:Subject:From:To:CC:References:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
+         Content-Language;
+        b=fFyW9LaIcFrNndkItDjS2qGndrz4UgUFDjPq4tudYfhTi00UY4WZy0FIKk49HhNOE
+         NiJdPomwPyEIz+VIalXMiDC6qJU6BPFqDxGZkq6UXKcKW/u60DaHkWo/v0iWh7x/a+
+         5QqsZHrpmgPppeExol8f4P9/lJZhWP+kVoCGIjmk1UrjVbG8I11ox652XWtQPtzHHl
+         ++wD38kDFinJCbzgj7lt3tLLMnk1oizZVxNhvsHi27rFlAszVe82VkBAjKFBvTtvQe
+         mMCA4jKF/OsWzOWNHE7Ef3fmHjDZbau4v+XZUdGoNrVAFrwqPdkXsQxlgdqZtOjLAK
+         6F9w/AXFhy1CQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-A 1024 byte variable on the stack will warn on any 32-bit architecture
-during compile-testing, and is generally a bad idea anyway:
 
-fsl/dpio/dpio-service.c: In function 'dpaa2_io_service_enqueue_multiple_desc_fq':
-fsl/dpio/dpio-service.c:495:1: error: the frame size of 1032 bytes is larger than 1024 bytes [-Werror=frame-larger-than=]
-
-There are currently no callers of this function, so I cannot tell whether
-dynamic memory allocation is allowed once callers are added. Change
-it to kcalloc for now, if anyone gets a warning about calling this in
-atomic context after they start using it, they can fix it later.
-
-Fixes: 9d98809711ae ("soc: fsl: dpio: Adding QMAN multiple enqueue interface")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
----
- drivers/soc/fsl/dpio/dpio-service.c | 18 +++++++++++++-----
- 1 file changed, 13 insertions(+), 5 deletions(-)
-
-diff --git a/drivers/soc/fsl/dpio/dpio-service.c b/drivers/soc/fsl/dpio/dpio-service.c
-index cd4f6410e8c2..ff0ef8cbdbff 100644
---- a/drivers/soc/fsl/dpio/dpio-service.c
-+++ b/drivers/soc/fsl/dpio/dpio-service.c
-@@ -478,12 +478,17 @@ int dpaa2_io_service_enqueue_multiple_desc_fq(struct dpaa2_io *d,
- 				const struct dpaa2_fd *fd,
- 				int nb)
- {
--	int i;
--	struct qbman_eq_desc ed[32];
-+	struct qbman_eq_desc *ed = kcalloc(sizeof(struct qbman_eq_desc), 32, GFP_KERNEL);
-+	int i, ret;
-+
-+	if (!ed)
-+		return -ENOMEM;
- 
- 	d = service_select(d);
--	if (!d)
--		return -ENODEV;
-+	if (!d) {
-+		ret = -ENODEV;
-+		goto out;
-+	}
- 
- 	for (i = 0; i < nb; i++) {
- 		qbman_eq_desc_clear(&ed[i]);
-@@ -491,7 +496,10 @@ int dpaa2_io_service_enqueue_multiple_desc_fq(struct dpaa2_io *d,
- 		qbman_eq_desc_set_fq(&ed[i], fqid[i]);
- 	}
- 
--	return qbman_swp_enqueue_multiple_desc(d->swp, &ed[0], fd, nb);
-+	ret = qbman_swp_enqueue_multiple_desc(d->swp, &ed[0], fd, nb);
-+out:
-+	kfree(ed);
-+	return ret;
- }
- EXPORT_SYMBOL(dpaa2_io_service_enqueue_multiple_desc_fq);
- 
--- 
-2.26.0
-
+On 4/8/20 10:45 AM, Sowjanya Komatineni wrote:
+>
+> On 4/8/20 7:21 AM, Dmitry Osipenko wrote:
+>> External email: Use caution opening links or attachments
+>>
+>>
+>> 08.04.2020 03:00, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+>> ...
+>>>>>>> I suppose that taking a shot takes at least few milliseconds, which
+>>>>>>> should be unacceptable to waste.
+>>>>>> As long as buffers are in queue we have to keep processing each
+>>>>>> buffer and between buffers obviously we have to wait for previous
+>>>>>> frames to finish and this why we have separate thread for frame
+>>>>>> finish where we can have next buffer capture ready and issue while
+>>>>>> previous frame memory write happens
+>>>> Also we specified numbers buffers as 3 to vb2 queue. So this is rare
+>>>> case but to prevent issuing more than 2 at a time as VI HW is only
+>>>> double buffered and syncpt fifo max depth is 2 added this to be safer.
+>>> To be more clear, when more buffers are enqueued from userspace always
+>>> capture list will be full and thread will be busy in capture till=20
+>>> either
+>>> error or stop stream request happens.
+>>>
+>> If kthreads take more than 1% of CPU time during capture (video) with
+>> more than 2 buffers in queue, then it's not good and I think you should
+>> do something about it. If kthreads stay at ~0%, then it should be okay
+>> as-is.
+>
+> VI outstanding requests max can only be 2=C2=A0 as syncpt fifo depth is 2=
+=C2=A0=20
+> and waiting to issue next capture when already 2 captures are inflight=20
+> happens only during beginning of streaming where buffers allocated go=20
+> thru capture for first time after queuing.
+>
+> same buffers are returned to userspace after capture and same=20
+> allocated buffers will be queued back for subsequent captures.
+>
+> So this case of holding to issue single shot when already single shot=20
+> is issue for 2 frames simultaneous happens only during beginning of=20
+> start stream and also we set num_buffers to allocate for queue as 3=20
+> although 2 is good enough where we will not hit this case even during=20
+> streaming start with 2 buffers
+>
+As 2 buffers are good enough to be clear will update in v7 to use 2=20
+buffers so we don't need to check for more than 2 outstanding buffers.
