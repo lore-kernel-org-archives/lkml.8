@@ -2,70 +2,101 @@ Return-Path: <SRS0=8dav=5Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C93AC2BA1A
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 13:27:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37769C2D0EA
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 13:27:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 40E3020757
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 13:27:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 014D320780
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 13:27:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729148AbgDHN1S (ORCPT
+        id S1729155AbgDHN1b (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Apr 2020 09:27:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55178 "EHLO mail.kernel.org"
+        Wed, 8 Apr 2020 09:27:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55460 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727815AbgDHN1S (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Apr 2020 09:27:18 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        id S1727795AbgDHN1a (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Apr 2020 09:27:30 -0400
+Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CE58E2072A;
-        Wed,  8 Apr 2020 13:27:16 +0000 (UTC)
-Date:   Wed, 8 Apr 2020 15:27:13 +0200
-From:   Greg KH <greg@kroah.com>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>, x86@kernel.org,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Laura Abbott <labbott@redhat.com>,
-        Sumit Semwal <sumit.semwal@linaro.org>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Minchan Kim <minchan@kernel.org>,
-        Nitin Gupta <ngupta@vflare.org>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        Peter Zijlstra <peterz@infradead.org>,
-        linuxppc-dev@lists.ozlabs.org, linux-hyperv@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org,
-        linux-arch@vger.kernel.org, linux-mm@kvack.org,
-        iommu@lists.linux-foundation.org,
-        linux-arm-kernel@lists.infradead.org, linux-s390@vger.kernel.org,
-        bpf@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 02/28] staging: android: ion: use vmap instead of
- vm_map_ram
-Message-ID: <20200408132713.GA1248058@kroah.com>
-References: <20200408115926.1467567-1-hch@lst.de>
- <20200408115926.1467567-3-hch@lst.de>
+        by mail.kernel.org (Postfix) with ESMTPSA id 40A6E2072A;
+        Wed,  8 Apr 2020 13:27:28 +0000 (UTC)
+Date:   Wed, 8 Apr 2020 09:27:26 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     tglx@linutronix.de, linux-kernel@vger.kernel.org,
+        hch@infradead.org, sean.j.christopherson@intel.com,
+        mingo@redhat.com, bp@alien8.de, hpa@zytor.com, x86@kernel.org,
+        kenny@panix.com, jeyu@kernel.org, rasmus.villemoes@prevas.dk,
+        pbonzini@redhat.com, fenghua.yu@intel.com, xiaoyao.li@intel.com,
+        nadav.amit@gmail.com, thellstrom@vmware.com, tony.luck@intel.com,
+        gregkh@linuxfoundation.org, jannh@google.com,
+        keescook@chromium.org, David.Laight@aculab.com,
+        dcovelli@vmware.com, mhiramat@kernel.org
+Subject: Re: [PATCH 4/4] x86,module: Detect CRn and DRn manipulation
+Message-ID: <20200408092726.7c2bda01@gandalf.local.home>
+In-Reply-To: <20200407111007.429362016@infradead.org>
+References: <20200407110236.930134290@infradead.org>
+        <20200407111007.429362016@infradead.org>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200408115926.1467567-3-hch@lst.de>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 08, 2020 at 01:59:00PM +0200, Christoph Hellwig wrote:
-> vm_map_ram can keep mappings around after the vm_unmap_ram.  Using that
-> with non-PAGE_KERNEL mappings can lead to all kinds of aliasing issues.
-> 
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
+On Tue, 07 Apr 2020 13:02:40 +0200
+Peter Zijlstra <peterz@infradead.org> wrote:
 
-Acked-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Since we now have infrastructure to analyze module text, disallow
+> modules that write to CRn and DRn registers.
+> 
+> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+> ---
+>  arch/x86/kernel/module.c |   21 +++++++++++++++++++++
+>  1 file changed, 21 insertions(+)
+> 
+> --- a/arch/x86/kernel/module.c
+> +++ b/arch/x86/kernel/module.c
+> @@ -266,6 +266,22 @@ static bool insn_is_vmx(struct insn *ins
+>  	return false;
+>  }
+>  
+> +static bool insn_is_mov_CRn(struct insn *insn)
+> +{
+> +	if (insn->opcode.bytes[0] == 0x0f && insn->opcode.bytes[1] == 0x22)
+> +		return true;
+> +
+> +	return false;
+> +}
+> +
+> +static bool insn_is_mov_DRn(struct insn *insn)
+> +{
+> +	if (insn->opcode.bytes[0] == 0x0f && insn->opcode.bytes[1] == 0x23)
+> +		return true;
+> +
+> +	return false;
+> +}
+> +
+>  static int decode_module(struct module *mod, void *text, void *text_end, bool sld_safe)
+>  {
+>  	bool allow_vmx = sld_safe || !split_lock_enabled();
+> @@ -285,6 +301,11 @@ static int decode_module(struct module *
+>  			return -ENOEXEC;
+>  		}
+>  
+> +		if (insn_is_mov_CRn(&insn) || insn_is_mov_DRn(&insn)) {
+> +			pr_err("Module writes to CRn or DRn, please use the proper accessors: %s\n", mod->name);
+> +			return -ENOEXEC;
+> +		}
+> +
+
+Something like this should be done for all modules, not just out of tree
+modules.
+
+-- Steve
