@@ -2,93 +2,85 @@ Return-Path: <SRS0=8dav=5Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=no
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6BD7C2D0F4
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 17:56:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51F46C2BA1B
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 17:58:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BD1FB2072F
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 17:56:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2E80D2072F
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 17:58:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="HgiWbD9r"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729203AbgDHR4i (ORCPT
+        id S1729258AbgDHR6D (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Apr 2020 13:56:38 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:55756 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726780AbgDHR4i (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Apr 2020 13:56:38 -0400
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: ezequiel)
-        with ESMTPSA id A28FF296F5E
-Message-ID: <3336c3105120d2f90dbc20d47ff98e722a123d5b.camel@collabora.com>
-Subject: Re: [PATCH] media: staging: rkisp1: avoid unused variable warning
-From:   Ezequiel Garcia <ezequiel@collabora.com>
-To:     Arnd Bergmann <arnd@arndb.de>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Helen Koike <helen.koike@collabora.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc:     Jacob Chen <jacob2.chen@rock-chips.com>,
-        Shunqian Zheng <zhengsq@rock-chips.com>,
-        Yichong Zhong <zyc@rock-chips.com>,
-        Jacob Chen <cc@rock-chips.com>,
-        Eddie Cai <eddie.cai.linux@gmail.com>,
-        Jeffy Chen <jeffy.chen@rock-chips.com>,
-        Allon Huang <allon.huang@rock-chips.com>,
-        Tomasz Figa <tfiga@chromium.org>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Dafna Hirschfeld <dafna.hirschfeld@collabora.com>,
-        linux-media@vger.kernel.org, devel@driverdev.osuosl.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
-Date:   Wed, 08 Apr 2020 14:56:21 -0300
-In-Reply-To: <20200408155325.2077345-1-arnd@arndb.de>
-References: <20200408155325.2077345-1-arnd@arndb.de>
-Organization: Collabora
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.36.0-1 
+        Wed, 8 Apr 2020 13:58:03 -0400
+Received: from mail.skyhub.de ([5.9.137.197]:59098 "EHLO mail.skyhub.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726780AbgDHR6C (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Apr 2020 13:58:02 -0400
+Received: from zn.tnic (p200300EC2F0A93002886CB34BCAFCB01.dip0.t-ipconnect.de [IPv6:2003:ec:2f0a:9300:2886:cb34:bcaf:cb01])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 90F541EC0CD9;
+        Wed,  8 Apr 2020 19:58:00 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1586368680;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=EzzxUVtmTm/3Jlc1oShOC/yjn0NG06h83DNl2MgAQgg=;
+        b=HgiWbD9rW0RVGYaoQrtZR5kayVtadTnVRw9XJ447LU49VDnnv61CUm0N4zhFCIeH5YYvJf
+        J7L61rcPQRI1RLxG/kahf3/pN6RIid/wknNDP+fJzhEqyMLr6NXpTfLaVgctoP0Qc6tz9C
+        N6eLcJkM+MS1n52Zzcrj/tDuou+0V/w=
+Date:   Wed, 8 Apr 2020 19:57:56 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     Ard Biesheuvel <ardb@kernel.org>
+Cc:     Benjamin Thiel <b.thiel@posteo.de>, X86 ML <x86@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-efi <linux-efi@vger.kernel.org>
+Subject: Re: [PATCH] x86/efi: Add a prototype for efi_arch_mem_reserve()
+Message-ID: <20200408175756.GG24663@zn.tnic>
+References: <20200326135041.3264-1-b.thiel@posteo.de>
+ <CAMj1kXF6UF318wCL74T9orJk=+LafZ3VFXUGmqoBefYVaP2gNw@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAMj1kXF6UF318wCL74T9orJk=+LafZ3VFXUGmqoBefYVaP2gNw@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2020-04-08 at 17:52 +0200, Arnd Bergmann wrote:
-> When compile-testing with CONFIG_OF disabled, we get a warning
-> about an unused variable, and about inconsistent Kconfig dependencies:
+On Wed, Apr 08, 2020 at 07:39:56PM +0200, Ard Biesheuvel wrote:
+> On Thu, 26 Mar 2020 at 14:50, Benjamin Thiel <b.thiel@posteo.de> wrote:
+> >
+> > ... in order to fix a -Wmissing-ptototypes warning:
+> >
+> > arch/x86/platform/efi/quirks.c:245:13: warning:
+> > no previous prototype for ‘efi_arch_mem_reserve’ [-Wmissing-prototypes]
+> > void __init efi_arch_mem_reserve(phys_addr_t addr, u64 size)
+> >
+> > Signed-off-by: Benjamin Thiel <b.thiel@posteo.de>
 > 
-> WARNING: unmet direct dependencies detected for PHY_ROCKCHIP_DPHY_RX0
->   Depends on [n]: STAGING [=y] && STAGING_MEDIA [=y] && MEDIA_SUPPORT [=m] && (ARCH_ROCKCHIP [=n] || COMPILE_TEST [=y]) && OF [=n]
->   Selected by [m]:
->   - VIDEO_ROCKCHIP_ISP1 [=m] && STAGING [=y] && STAGING_MEDIA [=y] && MEDIA_SUPPORT [=m] && VIDEO_V4L2 [=m] && VIDEO_V4L2_SUBDEV_API [=y] &&
-> (ARCH_ROCKCHIP [=n] || COMPILE_TEST [=y])
-> 
-> drivers/staging/media/rkisp1/rkisp1-dev.c: In function 'rkisp1_probe':
-> drivers/staging/media/rkisp1/rkisp1-dev.c:457:22: error: unused variable 'node' [-Werror=unused-variable]
->   457 |  struct device_node *node = pdev->dev.of_node;
-> 
-> Simply open-coding the pointer dereference in the only place
-> the variable is used avoids the warning in all configurations,
-> so we can allow compile-testing as well.
-> 
+> Thanks. I'll queue this as a fix.
 
-Hello Arnd,
+I already took that one, see:
 
-Thanks for your patch.
+860f89e61824 ("x86/efi: Add a prototype for efi_arch_mem_reserve()")
 
-I believe this is already fixed here:
+but forgot to Cc: linux-efi@.
 
-https://patchwork.linuxtv.org/patch/62774/
-https://patchwork.linuxtv.org/patch/62775/
+Sorry about that.
 
+-- 
+Regards/Gruss,
+    Boris.
 
-Cheers,
-Ezequiel
-
+https://people.kernel.org/tglx/notes-about-netiquette
