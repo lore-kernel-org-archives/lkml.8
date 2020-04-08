@@ -2,174 +2,232 @@ Return-Path: <SRS0=8dav=5Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 089E9C2BA2B
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 08:24:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6257C2BA80
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 08:33:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C58952075E
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 08:24:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7425920769
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 08:33:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="GDM3Wioe"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BGTSeYrG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726873AbgDHIYI (ORCPT
+        id S1727049AbgDHIdC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Apr 2020 04:24:08 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:27008 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726670AbgDHIYI (ORCPT
+        Wed, 8 Apr 2020 04:33:02 -0400
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:42485 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726760AbgDHIdC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Apr 2020 04:24:08 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1586334245;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=V8GBvWJYx/17VO9qjtI+ZZsm46USQUPFYArvzlSyCX0=;
-        b=GDM3Wioe+IW/y0fjnYWdM5yGCHwHLbtvld69sslB0AVI0f3VnFI4lXG93nRqqphJaFgIn2
-        RD2Z3XvT9MHb3h2PXDtTuBJpPCJtgTsY4kJvsk/uZ/2oZNKIvAIfCPNWT22i0wKHqC6/+Z
-        uOspbJF5LyR+TCpyQlE9UXgLQgn5k/I=
-Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
- [209.85.221.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-267-us2plJ9vNf6IEdOoh2NtCw-1; Wed, 08 Apr 2020 04:24:03 -0400
-X-MC-Unique: us2plJ9vNf6IEdOoh2NtCw-1
-Received: by mail-wr1-f70.google.com with SMTP id g6so3599998wru.8
-        for <linux-kernel@vger.kernel.org>; Wed, 08 Apr 2020 01:24:03 -0700 (PDT)
+        Wed, 8 Apr 2020 04:33:02 -0400
+Received: by mail-ed1-f65.google.com with SMTP id cw6so7468943edb.9;
+        Wed, 08 Apr 2020 01:32:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:reply-to:from:date:message-id
+         :subject:to:cc:content-transfer-encoding;
+        bh=HN3PmUZ9fhU3DNXcfKan8qYGWgSRdIlUaBvY047r1SM=;
+        b=BGTSeYrGs6nPwW0pBTwetxOvG3h4Vd6HUpUGfZ5rIw3eiXZCxuWi+RH6UpAgUftEg6
+         zPBlbaYdJBTL6Hxcsz3RyLUm8ngmae4RqBCCV4ctAxgxNu32UBMO4rfX1iNadhbL0BPs
+         f7ZjlUGvJiAD9LMRUxq2QBUw5vheF8E17s3Wha/fak6um0pr6m38ixUNOWcjsyJEZWik
+         85yfqBynH2mPaHM3ic4TempYghYKUBGJ8ZSZWvVIiWPffuGlRe30s2rBkYuXla86bkGw
+         fE/UDoKrfZR1ucy85k72pT+gjUXMykqdcwubbePajNp4DqBhcyG/lSp4D5xJutzrHQzD
+         2a/A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=V8GBvWJYx/17VO9qjtI+ZZsm46USQUPFYArvzlSyCX0=;
-        b=VOK54kuSbolQV/Rg2L4PJD3hlqmfKteek39HeoClFJqIBTqri/h08Qar0oGPV2fXON
-         vS4Q2YImeiQ8Mtzo8APDUWowsjbYhg900lXAVSOkwENmPvHZhHB+n6uPavMfu7LJGc6g
-         ri9baFI/V4+xes6yt0+95X45B2wii73qGnjbFmWnoQsRW9Uzi70jJLEwWylPf7RcvNSH
-         gfG6cJQ4qY9+rCHVNEI7IaiGvkBvtaLuJZKIUk0AOV087jfO6/YFKvLvdC9RWtiFFb6C
-         G6KtWKW6VWppJ4oSJCiwhzZg0UQQOTZ28oJeyoSr3hyZgviuDFr7qMFr348ob1YWs+M2
-         ZhFQ==
-X-Gm-Message-State: AGi0PuZCRLeUteHXYVBrWKngW7fOzTYF+QruhqZ3HGDkrn8iW8UcBUAo
-        4Ar9zbL7RewmqX3LrwRSQHNrOoX2xtLbw4oIqNCFE8XeHj695rgoRwb5vM8U69b0srdrn+kaj5l
-        /pNHKGLJyjxFMoAKOYDv+KD9J
-X-Received: by 2002:a1c:7301:: with SMTP id d1mr3651747wmb.26.1586334242038;
-        Wed, 08 Apr 2020 01:24:02 -0700 (PDT)
-X-Google-Smtp-Source: APiQypLRHkZKamZXG95b7dvVdIZL49HfD4EV4KT2DnjNBTmCibYNUX8cjaACuR1soo87T9jeXOkUzA==
-X-Received: by 2002:a1c:7301:: with SMTP id d1mr3651721wmb.26.1586334241722;
-        Wed, 08 Apr 2020 01:24:01 -0700 (PDT)
-Received: from [192.168.10.150] ([93.56.170.5])
-        by smtp.gmail.com with ESMTPSA id f14sm5818101wmb.3.2020.04.08.01.24.00
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 08 Apr 2020 01:24:01 -0700 (PDT)
-Subject: Re: [PATCH v2] x86/kvm: Disable KVM_ASYNC_PF_SEND_ALWAYS
-To:     Thomas Gleixner <tglx@linutronix.de>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Vivek Goyal <vgoyal@redhat.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
-        kvm list <kvm@vger.kernel.org>, stable <stable@vger.kernel.org>
-References: <20200407172140.GB64635@redhat.com>
- <772A564B-3268-49F4-9AEA-CDA648F6131F@amacapital.net>
- <87eeszjbe6.fsf@nanos.tec.linutronix.de>
- <ce81c95f-8674-4012-f307-8f32d0e386c2@redhat.com>
- <874ktukhku.fsf@nanos.tec.linutronix.de>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Message-ID: <274f3d14-08ac-e5cc-0b23-e6e0274796c8@redhat.com>
-Date:   Wed, 8 Apr 2020 10:23:58 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:reply-to
+         :from:date:message-id:subject:to:cc:content-transfer-encoding;
+        bh=HN3PmUZ9fhU3DNXcfKan8qYGWgSRdIlUaBvY047r1SM=;
+        b=NA6eGPZybbDZuSkylQ9p1x3EzXWonssefRXU0ukc3p54ktn0HyWDFRBHnWCMLNv1Pp
+         qU/dWqJSEfZct/f982Thkg6h/nylPv9ZiGVx5velJGkJRfWF+w9/J8DVhmn1lrEzXz0O
+         hiPnbwaOpAdLf5MMaPOoda0ibqdpUTh9c2IvS8cnIZ1JsEkyTSAF5vBbWIUZVsuPFSxR
+         p0ch6hmk22K/yWNpMDDX5uJfojqt8mo/o0+0FlIMXj7O7hvkA//233tRPE1qq5B/nTds
+         y+yxyK/5cd/1OhnGqosOkPCc12zm46iDzmpzXAxZyOCPwXpqwxl64PKI+nrkEaqRwhH/
+         4DBw==
+X-Gm-Message-State: AGi0Pub9FEha6+EfNQc/vX9c+5y7wtCch9erBfMQQVsvTgc8aW0GUcGq
+        5wpFSnQNBoKTLQwh5XC1mX/0mqBPZb99OT8L+3c=
+X-Google-Smtp-Source: APiQypI12Fy83Q8xdUmDBUv3sQoaKGjwp78gJSBCygBXGeyhDI8Rn75HBxevzEpYv522bnR7VvPd0zJiESwOoJN+iRo=
+X-Received: by 2002:a17:906:228d:: with SMTP id p13mr5304737eja.113.1586334778849;
+ Wed, 08 Apr 2020 01:32:58 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <874ktukhku.fsf@nanos.tec.linutronix.de>
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <d6be97d1-38a5-bf43-7c80-7c952a5a44a3@gmail.com> <20200408074459.q3njmvizjge7timg@wittgenstein>
+In-Reply-To: <20200408074459.q3njmvizjge7timg@wittgenstein>
+Reply-To: mtk.manpages@gmail.com
+From:   "Michael Kerrisk (man-pages)" <mtk.manpages@gmail.com>
+Date:   Wed, 8 Apr 2020 10:32:47 +0200
+Message-ID: <CAKgNAkjeUo4j9f=nBvoK3Vg1U9MqT=SgQBxHQ046-eL1nFbF2w@mail.gmail.com>
+Subject: Re: [RESEND] RFC: pidfd_getfd(2) manual page
+To:     Christian Brauner <christian.brauner@ubuntu.com>
+Cc:     Sargun Dhillon <sargun@sargun.me>,
+        linux-man <linux-man@vger.kernel.org>,
+        Linux API <linux-api@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Tycho Andersen <tycho@tycho.ws>, Jann Horn <jannh@google.com>,
+        Aleksa Sarai <cyphar@cyphar.com>,
+        Christian Brauner <christian@brauner.io>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Alexander Viro <viro@zeniv.linux.org.uk>, jld@mozilla.com,
+        Arnd Bergmann <arnd@arndb.de>,
+        Florian Weimer <fweimer@redhat.com>, gpascutto@mozilla.com,
+        ealvarez@mozilla.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 08/04/20 01:21, Thomas Gleixner wrote:
-> Paolo Bonzini <pbonzini@redhat.com> writes:
-> 
->> On 07/04/20 22:20, Thomas Gleixner wrote:
->>>>> Havind said that, I thought disabling interrupts does not mask exceptions.
->>>>> So page fault exception should have been delivered even with interrupts
->>>>> disabled. Is that correct? May be there was no vm exit/entry during
->>>>> those 10 seconds and that's why.
->>> No. Async PF is not a real exception. It has interrupt semantics and it
->>> can only be injected when the guest has interrupts enabled. It's bad
->>> design.
->>
->> Page-ready async PF has interrupt semantics.
->>
->> Page-not-present async PF however does not have interrupt semantics, it
->> has to be injected immediately or not at all (falling back to host page
->> fault in the latter case).
-> 
-> If interrupts are disabled in the guest then it is NOT injected and the
-> guest is suspended. So it HAS interrupt semantics. Conditional ones,
-> i.e. if interrupts are disabled, bail, if not then inject it.
+Hello Christian,
 
-Interrupts can be delayed by TPR or STI/MOV SS interrupt window, async
-page faults cannot (again, not the page-ready kind).  Page-not-present
-async page faults are almost a perfect match for the hardware use of #VE
-(and it might even be possible to let the processor deliver the
-exceptions).  There are other advantages:
+On Wed, 8 Apr 2020 at 09:45, Christian Brauner
+<christian.brauner@ubuntu.com> wrote:
+>
+> On Tue, Apr 07, 2020 at 08:49:35PM +0200, Michael Kerrisk (man-pages) wro=
+te:
+> > [No response on my mail of a week ago, so I try again; the page
+> > text is unchanged since the draft sent out on 31 March]
+>
+> Sorry for the delay.
+>
+> >
+> > Hello Sargun et al.
+> >
+> > I've taken a shot at writing a manual page for pidfd_getfd().
+> > I would be happy to receive comments, suggestions for
+> > improvements, etc. The text is as follows (the groff source
+> > is at the foot of this mail):
+>
+> Thanks for that! Really appreciated. Just a few nits below.
 
-- the only real problem with using #PF (with or without
-KVM_ASYNC_PF_SEND_ALWAYS) seems to be the NMI reentrancy issue, which
-would not be there for #VE.
+Thanks for the review!
 
-- #VE are combined the right way with other exceptions (the
-benign/contributory/pagefault stuff)
+> > NAME
+> >        pidfd_getfd  -  obtain  a  duplicate  of  another  process's  fi=
+le
+> >        descriptor
+> >
+> > SYNOPSIS
+> >        int pidfd_getfd(int pidfd, int targetfd, unsigned int flags);
+> >
+> > DESCRIPTION
+> >        The pidfd_getfd() system call allocates a new file  descriptor  =
+in
+> >        the  calling  process.  This new file descriptor is a duplicate =
+of
+> >        an existing file descriptor, targetfd, in the process referred  =
+to
+> >        by the PID file descriptor pidfd.
+> >
+> >        The  duplicate  file  descriptor  refers  to  the  same  open fi=
+le
+> >        description (see open(2)) as the original file descriptor  in  t=
+he
+> >        process referred to by pidfd.  The two file descriptors thus sha=
+re
+> >        file status flags and file offset.  Furthermore, operations on t=
+he
+> >        underlying  file  object  (for  example, assigning an address to=
+ a
+> >        socket object using bind(2)) can be equally be performed  via  t=
+he
+>
+> s/can be equally be performed/can be equally performed
+> ?
 
-- adjusting KVM and Linux to use #VE instead of #PF would be less than
-100 lines of code.
+Thanks. I made it: "can equally be performed"
 
-Paolo
+> >        duplicate file descriptor.
+> >
+> >        The  close-on-exec  flag  (FD_CLOEXEC; see fcntl(2)) is set on t=
+he
+> >        file descriptor returned by pidfd_getfd().
+> >
+> >        The flags argument is reserved for future use.  Currently, it mu=
+st
+> >        be specified as 0.
+> >
+> >        Permission  to duplicate another process's file descriptor is go=
+v=E2=80=90
+> >        erned by a ptrace access mode  PTRACE_MODE_ATTACH_REALCREDS  che=
+ck
+> >        (see ptrace(2)).
+> >
+> > RETURN VALUE
+> >        On  success,  pidfd_getfd() returns a nonnegative file descripto=
+r.
+>
+> Imho, this makes it sound like there are negative file descriptor
+> numbers. But as a non-native speaker that might just be a subtle
+> misreading on my part. Maybe just like open() just mention:
+> "On success, pidfd_getfd() returns a file descriptor."
 
-> But that does not make it an exception by any means.
-> 
-> It never should have been hooked to #PF in the first place and it never
-> should have been named that way. The functionality is to opportunisticly
-> tell the guest to do some other stuff.
-> 
-> So the proper name for this seperate interrupt vector would be:
-> 
->    VECTOR_OMG_DOS - Opportunisticly Make Guest Do Other Stuff
-> 
-> and the counter part
-> 
->    VECTOR_STOP_DOS - Stop Doing Other Stuff 
-> 
->> So page-not-present async PF definitely needs to be an exception, this
->> is independent of whether it can be injected when IF=0.
-> 
-> That wants to be a straight #PF. See my reply to Andy.
-> 
->> Hypervisors do not have any reserved exception vector, and must use
->> vectors up to 31, which is why I believe #PF was used in the first place
->> (though that predates my involvement in KVM by a few years).
-> 
-> No. That was just bad taste or something worse. It has nothing to do
-> with exceptions, see above. Stop proliferating the confusion.
-> 
->> These days, #VE would be a much better exception to use instead (and
->> it also has a defined mechanism to avoid reentrancy).
-> 
-> #VE is not going to solve anything.
-> 
-> The idea of OMG_DOS is to (opportunisticly) avoid that the guest (and
-> perhaps host) sit idle waiting for I/O until the fault has been
-> resolved. That makes sense as there might be enough other stuff to do
-> which does not depend on that particular page. If not then fine, the
-> guest will go idle.
-> 
-> Thanks,
-> 
->         tglx
-> 
+You're right. That wording is just clumsy! I fixed it.
 
+    On success, pidfd_getfd() returns a file descriptor (a
+    nonnegative integer).
+
+And I also fixed similar clumsy wordings in a number of other pages.
+
+> >        On error, -1 is returned and errno is set to indicate the cause =
+of
+> >        the error.
+> >
+> > ERRORS
+> >        EBADF  pidfd is not a valid PID file descriptor.
+> >
+> >        EBADF  targetfd  is  not  an  open  file descriptor in the proce=
+ss
+> >               referred to by pidfd.
+> >
+> >        EINVAL flags is not 0.
+> >
+> >        EMFILE The per-process limit on the number of open  file  descri=
+p=E2=80=90
+> >               tors has been reached (see the description of RLIMIT_NOFI=
+LE
+> >               in getrlimit(2)).
+> >
+> >        ENFILE The system-wide limit on the total number of open files h=
+as
+> >               been reached.
+> >
+> >        ESRCH  The  process  referred to by pidfd does not exist (i.e., =
+it
+> >               has terminated and been waited on).
+>
+> EPERM   The calling process did not have PTRACE_MODE_ATTACH_REALCREDS
+>         permissions (see ptrace(2)) over the process referred to by
+>         pidfd.
+
+Oh yes. Thanks. Added.
+
+> Technically, there should also be a disclaimer that other errno values
+> are possible because of LSM denials, e.g. selinux could return EACCES or
+> any other errno code in their file_receive() hook. But I'm not whether we
+> generally do this. In any case, I would find it useful as a developer.
+
+No, the manual pages don't generally include this. Mainly because I
+just don't know all the details.
+
+> (Is there actually a place where all LSMs are forced to record their
+> errno returns for their security hooks for each syscall they hook into an=
+d
+> that's visible to userspace? Because that'd be really useful...)
+
+Nothing that I'm aware of, unfortunately.
+
+Thanks again for the review!
+
+Cheers,
+
+Michael
+
+
+--=20
+Michael Kerrisk
+Linux man-pages maintainer; http://www.kernel.org/doc/man-pages/
+Linux/UNIX System Programming Training: http://man7.org/training/
