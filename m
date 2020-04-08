@@ -2,367 +2,169 @@ Return-Path: <SRS0=8dav=5Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,TVD_SUBJ_WIPE_DEBT,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3064DC2D0EA
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 12:24:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81845C2BA2B
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 12:25:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E42EE20780
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 12:24:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4BF5E206F7
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 12:25:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="iTDVFh9z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728201AbgDHMYJ (ORCPT
+        id S1728303AbgDHMZL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Apr 2020 08:24:09 -0400
-Received: from mout-p-103.mailbox.org ([80.241.56.161]:58244 "EHLO
-        mout-p-103.mailbox.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726550AbgDHMYI (ORCPT
+        Wed, 8 Apr 2020 08:25:11 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:34173 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727612AbgDHMZK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Apr 2020 08:24:08 -0400
-Received: from smtp1.mailbox.org (smtp1.mailbox.org [IPv6:2001:67c:2050:105:465:1:1:0])
-        (using TLSv1.2 with cipher ECDHE-RSA-CHACHA20-POLY1305 (256/256 bits))
-        (No client certificate requested)
-        by mout-p-103.mailbox.org (Postfix) with ESMTPS id 48y3Ng2756zKmXF;
-        Wed,  8 Apr 2020 14:24:03 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at heinlein-support.de
-Received: from smtp1.mailbox.org ([80.241.60.240])
-        by spamfilter04.heinlein-hosting.de (spamfilter04.heinlein-hosting.de [80.241.56.122]) (amavisd-new, port 10030)
-        with ESMTP id aeR4DgY25IJL; Wed,  8 Apr 2020 14:23:59 +0200 (CEST)
-Date:   Wed, 8 Apr 2020 22:23:30 +1000
-From:   Aleksa Sarai <cyphar@cyphar.com>
-To:     Josh Triplett <josh@joshtriplett.org>
-Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        io-uring@vger.kernel.org, linux-arch@vger.kernel.org,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Arnd Bergmann <arnd@arndb.de>, Jens Axboe <axboe@kernel.dk>
-Subject: Re: [PATCH v3 2/3] fs: openat2: Extend open_how to allow
- userspace-selected fds
-Message-ID: <20200408122330.5vorg2bwtth2dp5k@yavin.dot.cyphar.com>
-References: <cover.1586321767.git.josh@joshtriplett.org>
- <e598110f71a4e2346860b94e91de3e6e75a4b82a.1586321767.git.josh@joshtriplett.org>
+        Wed, 8 Apr 2020 08:25:10 -0400
+Received: by mail-wr1-f67.google.com with SMTP id 65so7617545wrl.1
+        for <linux-kernel@vger.kernel.org>; Wed, 08 Apr 2020 05:25:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ffwll.ch; s=google;
+        h=date:from:to:cc:subject:message-id:mail-followup-to:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=S+T3eMWPDVVKjkhAMCN4OLY+AXtsqs3KpyYmqj2eyPw=;
+        b=iTDVFh9zGz+cA8knHYYQ0Yf9dPIyYyDTxXa4CjSfrmLiD5i70f+PrvxbUf3+NKNs6P
+         0FpMET5mzx+JLVZSzcC1hvsXM+4Tttd8dTrz+Xv2lGQ2cbnW/q88kgg5209meIQ7muh4
+         h9U+2WX4Hzg6PB+HIxI6ZXmC8Lzm/Rzktbqts=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id
+         :mail-followup-to:references:mime-version:content-disposition
+         :in-reply-to;
+        bh=S+T3eMWPDVVKjkhAMCN4OLY+AXtsqs3KpyYmqj2eyPw=;
+        b=ToikSFkwzb8VPlKrNlfDLtVaX6HEK436lRCa9AyORAO3J0Nzt0/L2nNdYaXzc39X1a
+         Ai60doCauTULWOskk1BXadOvt98qMqthDpEABqZ2cAu6s14iQ1nGMFKecXWtDn2ikR9r
+         s6TaqWYFAM5Iqy6jo3/fylHVkeoZEQnUTT8F6v+rQF10rRDLutweIFt7j9wS1ECf6dgO
+         XvMwkKiAYg8/r+8p4g693psUd5TabbCSwS6bz/Sqp3pxveRrESAqhe0DG7G9fPfG+Oi4
+         bHSWdU93sDL8bliE3kNka+uxhNb7U1TcSl7MiNwPnNDX+WVdioPbDYkonreNqdm5BHTO
+         5C4A==
+X-Gm-Message-State: AGi0PuYMj58VwtKsHXnhOXm+8kWHBwbdhJd6FEaWjisFk1ERQdcE8jIG
+        mOjHYlyTwIIR58cZlhJmLIGpLg==
+X-Google-Smtp-Source: APiQypJvxn06n6RmmZE3e7ZfAJg02E1DO8+MxqNnF9onm5w/+2r1QjPARt8wv7KYk/4tgJKIUOQMMQ==
+X-Received: by 2002:a5d:4111:: with SMTP id l17mr8794439wrp.271.1586348708002;
+        Wed, 08 Apr 2020 05:25:08 -0700 (PDT)
+Received: from phenom.ffwll.local ([2a02:168:57f4:0:efd0:b9e5:5ae6:c2fa])
+        by smtp.gmail.com with ESMTPSA id v7sm35651554wrs.96.2020.04.08.05.25.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 08 Apr 2020 05:25:07 -0700 (PDT)
+Date:   Wed, 8 Apr 2020 14:25:04 +0200
+From:   Daniel Vetter <daniel@ffwll.ch>
+To:     Christoph Hellwig <hch@lst.de>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Wei Liu <wei.liu@kernel.org>, x86@kernel.org,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Laura Abbott <labbott@redhat.com>,
+        Sumit Semwal <sumit.semwal@linaro.org>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Minchan Kim <minchan@kernel.org>,
+        Nitin Gupta <ngupta@vflare.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        Peter Zijlstra <peterz@infradead.org>,
+        linuxppc-dev@lists.ozlabs.org, linux-hyperv@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org,
+        linux-arch@vger.kernel.org, linux-mm@kvack.org,
+        iommu@lists.linux-foundation.org,
+        linux-arm-kernel@lists.infradead.org, linux-s390@vger.kernel.org,
+        bpf@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 19/28] gpu/drm: remove the powerpc hack in
+ drm_legacy_sg_alloc
+Message-ID: <20200408122504.GO3456981@phenom.ffwll.local>
+Mail-Followup-To: Christoph Hellwig <hch@lst.de>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Wei Liu <wei.liu@kernel.org>, x86@kernel.org,
+        David Airlie <airlied@linux.ie>, Laura Abbott <labbott@redhat.com>,
+        Sumit Semwal <sumit.semwal@linaro.org>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Minchan Kim <minchan@kernel.org>, Nitin Gupta <ngupta@vflare.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        Peter Zijlstra <peterz@infradead.org>,
+        linuxppc-dev@lists.ozlabs.org, linux-hyperv@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org,
+        linux-arch@vger.kernel.org, linux-mm@kvack.org,
+        iommu@lists.linux-foundation.org,
+        linux-arm-kernel@lists.infradead.org, linux-s390@vger.kernel.org,
+        bpf@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200408115926.1467567-1-hch@lst.de>
+ <20200408115926.1467567-20-hch@lst.de>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="g42ofxvuss5e5opy"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <e598110f71a4e2346860b94e91de3e6e75a4b82a.1586321767.git.josh@joshtriplett.org>
-X-Rspamd-Queue-Id: CA674176B
-X-Rspamd-Score: -8.63 / 15.00 / 15.00
+In-Reply-To: <20200408115926.1467567-20-hch@lst.de>
+X-Operating-System: Linux phenom 5.3.0-3-amd64 
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, Apr 08, 2020 at 01:59:17PM +0200, Christoph Hellwig wrote:
+> If this code was broken for non-coherent caches a crude powerpc hack
+> isn't going to help anyone else.  Remove the hack as it is the last
+> user of __vmalloc passing a page protection flag other than PAGE_KERNEL.
 
---g42ofxvuss5e5opy
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Well Ben added this to make stuff work on ppc, ofc the home grown dma
+layer in drm from back then isn't going to work in other places. I guess
+should have at least an ack from him, in case anyone still cares about
+this on ppc. Adding Ben to cc.
+-Daniel
 
-On 2020-04-07, Josh Triplett <josh@joshtriplett.org> wrote:
-> Inspired by the X protocol's handling of XIDs, allow userspace to select
-> the file descriptor opened by openat2, so that it can use the resulting
-> file descriptor in subsequent system calls without waiting for the
-> response to openat2.
->=20
-> In io_uring, this allows sequences like openat2/read/close without
-> waiting for the openat2 to complete. Multiple such sequences can
-> overlap, as long as each uses a distinct file descriptor.
->=20
-> Add a new O_SPECIFIC_FD open flag to enable this behavior, only accepted
-> by openat2 for now (ignored by open/openat like all unknown flags). Add
-> an fd field to struct open_how (along with appropriate padding, and
-> verify that the padding is 0 to allow replacing the padding with a field
-> in the future).
->=20
-> The file table has a corresponding new function
-> get_specific_unused_fd_flags, which gets the specified file descriptor
-> if O_SPECIFIC_FD is set (and the fd isn't -1); otherwise it falls back
-> to get_unused_fd_flags, to simplify callers.
-
->=20
-> The specified file descriptor must not already be open; if it is,
-> get_specific_unused_fd_flags will fail with -EBUSY. This helps catch
-> userspace errors.
->=20
-> When O_SPECIFIC_FD is set, and fd is not -1, openat2 will use the
-> specified file descriptor rather than finding the lowest available one.
->=20
-> Test program:
->=20
->     #include <err.h>
->     #include <fcntl.h>
->     #include <stdio.h>
->     #include <unistd.h>
->=20
->     int main(void)
->     {
->         struct open_how how =3D {
-> 	    .flags =3D O_RDONLY | O_SPECIFIC_FD,
-> 	    .fd =3D 42
-> 	};
->         int fd =3D openat2(AT_FDCWD, "/dev/null", &how, sizeof(how));
->         if (fd < 0)
->             err(1, "openat2");
->         printf("fd=3D%d\n", fd); // prints fd=3D42
->         return 0;
->     }
->=20
-> Signed-off-by: Josh Triplett <josh@joshtriplett.org>
-> Signed-off-by: Jens Axboe <axboe@kernel.dk>
-
-Maybe I'm misunderstanding something, but this Signed-off-by looks
-strange -- was it Co-developed-by Jens?
-
+> 
+> Signed-off-by: Christoph Hellwig <hch@lst.de>
 > ---
->  fs/fcntl.c                       |  2 +-
->  fs/file.c                        | 39 ++++++++++++++++++++++++++++++++
->  fs/io_uring.c                    |  3 ++-
->  fs/open.c                        |  6 +++--
->  include/linux/fcntl.h            |  5 ++--
->  include/linux/file.h             |  3 +++
->  include/uapi/asm-generic/fcntl.h |  4 ++++
->  include/uapi/linux/openat2.h     |  2 ++
->  8 files changed, 58 insertions(+), 6 deletions(-)
->=20
-> diff --git a/fs/fcntl.c b/fs/fcntl.c
-> index 2e4c0fa2074b..0357ad667563 100644
-> --- a/fs/fcntl.c
-> +++ b/fs/fcntl.c
-> @@ -1033,7 +1033,7 @@ static int __init fcntl_init(void)
->  	 * Exceptions: O_NONBLOCK is a two bit define on parisc; O_NDELAY
->  	 * is defined as O_NONBLOCK on some platforms and not on others.
->  	 */
-> -	BUILD_BUG_ON(21 - 1 /* for O_RDONLY being 0 */ !=3D
-> +	BUILD_BUG_ON(22 - 1 /* for O_RDONLY being 0 */ !=3D
->  		HWEIGHT32(
->  			(VALID_OPEN_FLAGS & ~(O_NONBLOCK | O_NDELAY)) |
->  			__FMODE_EXEC | __FMODE_NONOTIFY));
-> diff --git a/fs/file.c b/fs/file.c
-> index ba06140d89af..0c34206314dc 100644
-> --- a/fs/file.c
-> +++ b/fs/file.c
-> @@ -567,6 +567,45 @@ void put_unused_fd(unsigned int fd)
-> =20
->  EXPORT_SYMBOL(put_unused_fd);
-> =20
-> +int __get_specific_unused_fd_flags(unsigned int fd, unsigned int flags,
-> +				   unsigned long nofile)
-> +{
-> +	int ret;
-> +	struct fdtable *fdt;
-> +	struct files_struct *files =3D current->files;
-> +
-> +	if (!(flags & O_SPECIFIC_FD) || fd =3D=3D -1)
-> +		return __get_unused_fd_flags(flags, nofile);
-
-This check should just be (flags & O_SPECIFIC_FD) -- see my comment
-below about ->fd being negative.
-
-> +
-> +	if (fd >=3D nofile)
-> +		return -EBADF;
-> +
-> +	spin_lock(&files->file_lock);
-> +	ret =3D expand_files(files, fd);
-> +	if (unlikely(ret < 0))
-> +		goto out_unlock;
-> +	fdt =3D files_fdtable(files);
-> +	if (fdt->fd[fd]) {
-> +		ret =3D -EBUSY;
-> +		goto out_unlock;
-
-It would be remiss of me to not mention that this is inconsistent with
-the other way of explicitly picking a file descriptor on Unix -- the dup
-family closes newfd if it's already used.
-
-But that being said, I do actually prefer this behaviour since it means
-that two threads trying to open a file with the same specific file
-descriptor won't see the file descriptor change underneath them (leading
-to who knows how much head-scratching).
-
-> +	}
-> +	__set_open_fd(fd, fdt);
-> +	if (flags & O_CLOEXEC)
-> +		__set_close_on_exec(fd, fdt);
-> +	else
-> +		__clear_close_on_exec(fd, fdt);
-> +	ret =3D fd;
-> +
-> +out_unlock:
-> +	spin_unlock(&files->file_lock);
-> +	return ret;
-> +}
-> +
-> +int get_specific_unused_fd_flags(unsigned int fd, unsigned int flags)
-> +{
-> +	return __get_specific_unused_fd_flags(fd, flags, rlimit(RLIMIT_NOFILE));
-> +}
-> +
->  /*
->   * Install a file pointer in the fd array.
->   *
-> diff --git a/fs/io_uring.c b/fs/io_uring.c
-> index 358f97be9c7b..4a69e1daf3fe 100644
-> --- a/fs/io_uring.c
-> +++ b/fs/io_uring.c
-> @@ -2997,7 +2997,8 @@ static int io_openat2(struct io_kiocb *req, bool fo=
-rce_nonblock)
->  	if (ret)
->  		goto err;
-> =20
-> -	ret =3D __get_unused_fd_flags(req->open.how.flags, req->open.nofile);
-> +	ret =3D __get_specific_unused_fd_flags(req->open.how.fd,
-> +			req->open.how.flags, req->open.nofile);
->  	if (ret < 0)
->  		goto err;
-> =20
-> diff --git a/fs/open.c b/fs/open.c
-> index 719b320ede52..d4225e6f9d4c 100644
-> --- a/fs/open.c
-> +++ b/fs/open.c
-> @@ -958,7 +958,7 @@ EXPORT_SYMBOL(open_with_fake_path);
->  inline struct open_how build_open_how(int flags, umode_t mode)
+>  drivers/gpu/drm/drm_scatter.c | 11 +----------
+>  1 file changed, 1 insertion(+), 10 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/drm_scatter.c b/drivers/gpu/drm/drm_scatter.c
+> index ca520028b2cb..f4e6184d1877 100644
+> --- a/drivers/gpu/drm/drm_scatter.c
+> +++ b/drivers/gpu/drm/drm_scatter.c
+> @@ -43,15 +43,6 @@
+>  
+>  #define DEBUG_SCATTER 0
+>  
+> -static inline void *drm_vmalloc_dma(unsigned long size)
+> -{
+> -#if defined(__powerpc__) && defined(CONFIG_NOT_COHERENT_CACHE)
+> -	return __vmalloc(size, GFP_KERNEL, pgprot_noncached_wc(PAGE_KERNEL));
+> -#else
+> -	return vmalloc_32(size);
+> -#endif
+> -}
+> -
+>  static void drm_sg_cleanup(struct drm_sg_mem * entry)
 >  {
->  	struct open_how how =3D {
-> -		.flags =3D flags & VALID_OPEN_FLAGS,
-> +		.flags =3D flags & VALID_OPEN_FLAGS & ~O_SPECIFIC_FD,
+>  	struct page *page;
+> @@ -126,7 +117,7 @@ int drm_legacy_sg_alloc(struct drm_device *dev, void *data,
+>  		return -ENOMEM;
+>  	}
+>  
+> -	entry->virtual = drm_vmalloc_dma(pages << PAGE_SHIFT);
+> +	entry->virtual = vmalloc_32(pages << PAGE_SHIFT);
+>  	if (!entry->virtual) {
+>  		kfree(entry->busaddr);
+>  		kfree(entry->pagelist);
+> -- 
+> 2.25.1
+> 
 
-This is getting a little ugly, maybe filter out O_SPECIFIC_FD later on
-in build_open_how() -- where we handle O_PATH.
-
->  		.mode =3D mode & S_IALLUGO,
->  	};
-> =20
-> @@ -1143,7 +1143,7 @@ static long do_sys_openat2(int dfd, const char __us=
-er *filename,
->  	if (IS_ERR(tmp))
->  		return PTR_ERR(tmp);
-> =20
-> -	fd =3D get_unused_fd_flags(how->flags);
-> +	fd =3D get_specific_unused_fd_flags(how->fd, how->flags);
->  	if (fd >=3D 0) {
->  		struct file *f =3D do_filp_open(dfd, tmp, &op);
->  		if (IS_ERR(f)) {
-> @@ -1193,6 +1193,8 @@ SYSCALL_DEFINE4(openat2, int, dfd, const char __use=
-r *, filename,
->  	err =3D copy_struct_from_user(&tmp, sizeof(tmp), how, usize);
->  	if (err)
->  		return err;
-> +	if (tmp.pad !=3D 0)
-> +		return -EINVAL;
-
-This check should be done in build_open_flags(), where the other sanity
-checks are done. In addition, there must be an additional check like
-
-  if (!(flags & O_SPECIFIC_FD) && how->fd !=3D 0)
-    return -EINVAL;
-
-Since we must not allow garbage values to be passed and ignored by us in
-openat2().
-
->  	/* O_LARGEFILE is only allowed for non-O_PATH. */
->  	if (!(tmp.flags & O_PATH) && force_o_largefile())
-> diff --git a/include/linux/fcntl.h b/include/linux/fcntl.h
-> index 7bcdcf4f6ab2..728849bcd8fa 100644
-> --- a/include/linux/fcntl.h
-> +++ b/include/linux/fcntl.h
-> @@ -10,7 +10,7 @@
->  	(O_RDONLY | O_WRONLY | O_RDWR | O_CREAT | O_EXCL | O_NOCTTY | O_TRUNC |=
- \
->  	 O_APPEND | O_NDELAY | O_NONBLOCK | O_NDELAY | __O_SYNC | O_DSYNC | \
->  	 FASYNC	| O_DIRECT | O_LARGEFILE | O_DIRECTORY | O_NOFOLLOW | \
-> -	 O_NOATIME | O_CLOEXEC | O_PATH | __O_TMPFILE)
-> +	 O_NOATIME | O_CLOEXEC | O_PATH | __O_TMPFILE | O_SPECIFIC_FD)
-> =20
->  /* List of all valid flags for the how->upgrade_mask argument: */
->  #define VALID_UPGRADE_FLAGS \
-> @@ -23,7 +23,8 @@
-> =20
->  /* List of all open_how "versions". */
->  #define OPEN_HOW_SIZE_VER0	24 /* sizeof first published struct */
-> -#define OPEN_HOW_SIZE_LATEST	OPEN_HOW_SIZE_VER0
-> +#define OPEN_HOW_SIZE_VER1	32 /* added fd and pad */
-> +#define OPEN_HOW_SIZE_LATEST	OPEN_HOW_SIZE_VER1
-> =20
->  #ifndef force_o_largefile
->  #define force_o_largefile() (!IS_ENABLED(CONFIG_ARCH_32BIT_OFF_T))
-> diff --git a/include/linux/file.h b/include/linux/file.h
-> index b67986f818d2..a63301864a36 100644
-> --- a/include/linux/file.h
-> +++ b/include/linux/file.h
-> @@ -87,6 +87,9 @@ extern void set_close_on_exec(unsigned int fd, int flag=
-);
->  extern bool get_close_on_exec(unsigned int fd);
->  extern int __get_unused_fd_flags(unsigned flags, unsigned long nofile);
->  extern int get_unused_fd_flags(unsigned flags);
-> +extern int __get_specific_unused_fd_flags(unsigned int fd, unsigned int =
-flags,
-> +	unsigned long nofile);
-> +extern int get_specific_unused_fd_flags(unsigned int fd, unsigned int fl=
-ags);
->  extern void put_unused_fd(unsigned int fd);
->  extern unsigned int increase_min_fd(unsigned int num);
-> =20
-> diff --git a/include/uapi/asm-generic/fcntl.h b/include/uapi/asm-generic/=
-fcntl.h
-> index 9dc0bf0c5a6e..d3de5b8b3955 100644
-> --- a/include/uapi/asm-generic/fcntl.h
-> +++ b/include/uapi/asm-generic/fcntl.h
-> @@ -89,6 +89,10 @@
->  #define __O_TMPFILE	020000000
->  #endif
-> =20
-> +#ifndef O_SPECIFIC_FD
-> +#define O_SPECIFIC_FD	01000000000	/* open as specified fd */
-> +#endif
-
-Maybe you've already done this (since you skipped several bits in the
-O_* flag space), but I would double-check that there is no conflict on
-other architectures. I faintly recall that FMODE_NOTIFY has a different
-value on sparc, and there was some oddness on alpha too... But as long
-as fcntl.c builds on all the arches then it's fine.
-
-> +
->  /* a horrid kludge trying to make sure that this will fail on old kernel=
-s */
->  #define O_TMPFILE (__O_TMPFILE | O_DIRECTORY)
->  #define O_TMPFILE_MASK (__O_TMPFILE | O_DIRECTORY | O_CREAT)     =20
-> diff --git a/include/uapi/linux/openat2.h b/include/uapi/linux/openat2.h
-> index 58b1eb711360..50d1206b64c2 100644
-> --- a/include/uapi/linux/openat2.h
-> +++ b/include/uapi/linux/openat2.h
-> @@ -20,6 +20,8 @@ struct open_how {
->  	__u64 flags;
->  	__u64 mode;
->  	__u64 resolve;
-> +	__s32 fd;
-> +	__u32 pad; /* Must be 0 in the current version */
-
-I'm not sure I see why the new field is an s32 -- there should be no
-situation where a user specifies O_SPECIFIC_FD and a negative file
-descriptor (if we keep it as an s32, you should get an -EINVAL in that
-case). If you don't want O_SPECIFIC_FD, don't specify it.
-
-But I think this should be a u32. I'm tempted to argue this should
-actually be a u64, but nothing supports 64-bit file descriptor numbers
-(including the return type of openat2).
-
---=20
-Aleksa Sarai
-Senior Software Engineer (Containers)
-SUSE Linux GmbH
-<https://www.cyphar.com/>
-
---g42ofxvuss5e5opy
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQSxZm6dtfE8gxLLfYqdlLljIbnQEgUCXo3COgAKCRCdlLljIbnQ
-EpiUAP9L1qbz1jxK+FpDvuNLGGMxQ3XYNLEQncuNQoU7W+kf4gD9EzA2zojfrPzU
-RwMvoO5TUzUsu+lGQr1yP3CeUAjcpQI=
-=IjzP
------END PGP SIGNATURE-----
-
---g42ofxvuss5e5opy--
+-- 
+Daniel Vetter
+Software Engineer, Intel Corporation
+http://blog.ffwll.ch
