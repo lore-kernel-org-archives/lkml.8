@@ -2,114 +2,119 @@ Return-Path: <SRS0=8dav=5Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB84EC2BB1D
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 13:43:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C7EEC2BA1A
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 13:43:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 97BE42074F
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 13:43:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3FF1F2076D
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 13:43:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Lpb0URCl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728730AbgDHNn2 (ORCPT
+        id S1728866AbgDHNn6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Apr 2020 09:43:28 -0400
-Received: from mga01.intel.com ([192.55.52.88]:3546 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726754AbgDHNn1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Apr 2020 09:43:27 -0400
-IronPort-SDR: cy52Gp4RrHgxtqDf63T65Fo3HKXKm+BgC+j85LQF3t4lTHeHTziD3nO0oKP4q1pdzLyji9J22D
- BgiJTZdxLKuQ==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Apr 2020 06:43:26 -0700
-IronPort-SDR: dG8z2cw1pW2SWUz2Iv+H2Hq+zJvLpjf1NpEABwKCf/4Wvv6FkMARE+rQalznlXG83l/D+q42s5
- PuxVzOWdeDYA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,358,1580803200"; 
-   d="scan'208";a="244038225"
-Received: from tthayer-hp-z620.an.intel.com (HELO [10.122.105.146]) ([10.122.105.146])
-  by fmsmga008.fm.intel.com with ESMTP; 08 Apr 2020 06:43:20 -0700
-Reply-To: thor.thayer@linux.intel.com
-Subject: Re: [PATCH v1 17/28] i2c: altera: convert to
- devm_platform_ioremap_resource
-To:     Dejin Zheng <zhengdejin5@gmail.com>, krzysztof.adamski@nokia.com,
-        rjui@broadcom.com, sbranden@broadcom.com,
-        bcm-kernel-feedback-list@broadcom.com, f.fainelli@gmail.com,
-        nsekhar@ti.com, bgolaszewski@baylibre.com,
-        jarkko.nikula@linux.intel.com, andriy.shevchenko@linux.intel.com,
-        mika.westerberg@linux.intel.com, baruch@tkos.co.il,
-        wsa+renesas@sang-engineering.com, kgene@kernel.org,
-        krzk@kernel.org, paul@crapouillou.net, vz@mleia.com,
-        khilman@baylibre.com, matthias.bgg@gmail.com,
-        gregory.clement@bootlin.com, rrichter@marvell.com,
-        afaerber@suse.de, manivannan.sadhasivam@linaro.org,
-        agross@kernel.org, bjorn.andersson@linaro.org, heiko@sntech.de,
-        baohua@kernel.org, linus.walleij@linaro.org, mripard@kernel.org,
-        wens@csie.org, ardb@kernel.org, michal.simek@xilinx.com,
-        gcherian@marvell.com, jun.nie@linaro.org, shawnguo@kernel.org,
-        rayagonda.kokatanur@broadcom.com, lori.hikichi@broadcom.com,
-        nishkadg.linux@gmail.com, kstewart@linuxfoundation.org,
-        allison@lohutok.net, gregkh@linuxfoundation.org,
-        tglx@linutronix.de, bigeasy@linutronix.de, info@metux.net,
-        hslester96@gmail.com, narmstrong@baylibre.com,
-        martin.blumenstingl@googlemail.com, qii.wang@mediatek.com,
-        drinkcat@chromium.org, hsinyi@chromium.org, fparent@baylibre.com,
-        opensource@jilayne.com, swinslow@gmail.com,
-        linux-i2c@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-References: <20200407163741.17615-1-zhengdejin5@gmail.com>
- <20200407163741.17615-18-zhengdejin5@gmail.com>
-From:   Thor Thayer <thor.thayer@linux.intel.com>
-Message-ID: <626c205a-2f19-ea80-b817-ab64d51cfff7@linux.intel.com>
-Date:   Wed, 8 Apr 2020 08:43:26 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.1
+        Wed, 8 Apr 2020 09:43:58 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:40397 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726754AbgDHNn5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Apr 2020 09:43:57 -0400
+Received: by mail-wm1-f65.google.com with SMTP id a81so5499163wmf.5
+        for <linux-kernel@vger.kernel.org>; Wed, 08 Apr 2020 06:43:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=5JeVxarE1Z1RiJROhmbNs4AI7L5YmBuO9l5ang6+c2c=;
+        b=Lpb0URCll2uC4ADQJYY7mI50YUF0YKFj5Wty4cYMWCdeGVhx0fncfLWtomod/N9nPY
+         F7HrkukZfy+0cuzfU1yzdg6gXZJGJiwbqWb2wZgIq2PKb/IEFLjIIHLYCjx4IQgUiiFv
+         tThQFvsr9XYztxj0ojy5TkKXV4gAdTSDwMuo/RtBCqroxK3K1sdaqzWn26369aphBCID
+         Q12SF0uW+aQh2s9rkMb5hrd6CUXdp72uGQULxsMa+vNe/aPCczKtclvPZVayDlWpX5BV
+         3QjhurMMZIbBiiwBfZd2QkytcEt1327ymh4+gbsbeEuBUGYMRCfhtYuX57h4ZWOOH4DM
+         gCkA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=5JeVxarE1Z1RiJROhmbNs4AI7L5YmBuO9l5ang6+c2c=;
+        b=aybSfo7GyVxtDux8vcFvSOc50KU7gPE1j4rLcjzBsxuYQZADo/N6ah1hR4NRSmaC1n
+         Q5+ErveaDL5N3S6Tgl296c57FtHQ91E27dkAaBeSLvmP0UUSCCcQHXd6m2amNc30avoG
+         RfSf10AjXCwzj+w3GR+xsVF3mrjjrt4b7lzLnha1KHi3XOtWCd6mCKVYg3ZiYhfHzxys
+         M02Dpu6FW0HpbUzqm4uOm09qkGfM3XAGfP7OJmMGABEWDy8/Q7PZbjh5NfLnB3k34pFy
+         n4DMqsAkqontxrwUdYwzAgQ2CTiW4uS67d+xWtPawdT7qfzQny4UCKEHqlNh4Enmu9+E
+         ft6w==
+X-Gm-Message-State: AGi0PuaGfBenBdR4KsL0iHjrbKw4tV6rVmiSG6ZelDXJYMx5L6UOS5Ob
+        TjGrKhuzx2XhGXpu2HRVhpx5pF/PmJP8EBpRz2c=
+X-Google-Smtp-Source: APiQypKVw6l28/vf8DOlr+wvkyILlmlKHHNxDPwytq39w6kUSGnC9oKbQ4hvvCKuyfTXtGZzV1ALzsk2hRmrkhxMRGY=
+X-Received: by 2002:a1c:9d8c:: with SMTP id g134mr4851682wme.79.1586353435428;
+ Wed, 08 Apr 2020 06:43:55 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200407163741.17615-18-zhengdejin5@gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20200407182618.2488-1-mail@aurabindo.in>
+In-Reply-To: <20200407182618.2488-1-mail@aurabindo.in>
+From:   Alex Deucher <alexdeucher@gmail.com>
+Date:   Wed, 8 Apr 2020 09:43:44 -0400
+Message-ID: <CADnq5_OCkhjVoJ8L-KHOo-2b-thAAcSCHoeJc-DsR7j-8ZX7Yw@mail.gmail.com>
+Subject: Re: [PATCH] amdgpu_kms: Remove unnecessary condition check
+To:     Aurabindo Pillai <mail@aurabindo.in>
+Cc:     "Deucher, Alexander" <alexander.deucher@amd.com>,
+        Christian Koenig <christian.koenig@amd.com>,
+        Chunming Zhou <David1.Zhou@amd.com>,
+        Dave Airlie <airlied@linux.ie>,
+        Maling list - DRI developers 
+        <dri-devel@lists.freedesktop.org>,
+        amd-gfx list <amd-gfx@lists.freedesktop.org>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/7/20 11:37 AM, Dejin Zheng wrote:
-> use devm_platform_ioremap_resource() to simplify code, which
-> contains platform_get_resource and devm_ioremap_resource.
-> 
-> Signed-off-by: Dejin Zheng <zhengdejin5@gmail.com>
+On Tue, Apr 7, 2020 at 2:30 PM Aurabindo Pillai <mail@aurabindo.in> wrote:
+>
+> Execution will only reach here if the asserted condition is true.
+> Hence there is no need for the additional check.
+>
+> Signed-off-by: Aurabindo Pillai <mail@aurabindo.in>
 
-Acked-by: Thor Thayer <thor.thayer@linux.intel.com>
+Applied.  Thanks!
+
+Alex
 
 > ---
->   drivers/i2c/busses/i2c-altera.c | 4 +---
->   1 file changed, 1 insertion(+), 3 deletions(-)
-> 
-> diff --git a/drivers/i2c/busses/i2c-altera.c b/drivers/i2c/busses/i2c-altera.c
-> index 1de23b4f3809..7c4c836a3228 100644
-> --- a/drivers/i2c/busses/i2c-altera.c
-> +++ b/drivers/i2c/busses/i2c-altera.c
-> @@ -382,7 +382,6 @@ static const struct i2c_algorithm altr_i2c_algo = {
->   static int altr_i2c_probe(struct platform_device *pdev)
->   {
->   	struct altr_i2c_dev *idev = NULL;
-> -	struct resource *res;
->   	int irq, ret;
->   	u32 val;
->   
-> @@ -390,8 +389,7 @@ static int altr_i2c_probe(struct platform_device *pdev)
->   	if (!idev)
->   		return -ENOMEM;
->   
-> -	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> -	idev->base = devm_ioremap_resource(&pdev->dev, res);
-> +	idev->base = devm_platform_ioremap_resource(pdev, 0);
->   	if (IS_ERR(idev->base))
->   		return PTR_ERR(idev->base);
->   
-> 
-
+>  drivers/gpu/drm/amd/amdgpu/amdgpu_kms.c | 10 ++++------
+>  1 file changed, 4 insertions(+), 6 deletions(-)
+>
+> diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_kms.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_kms.c
+> index 60591dbc2..9fedfa531 100644
+> --- a/drivers/gpu/drm/amd/amdgpu/amdgpu_kms.c
+> +++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_kms.c
+> @@ -179,12 +179,10 @@ int amdgpu_driver_load_kms(struct drm_device *dev, unsigned long flags)
+>         /* Call ACPI methods: require modeset init
+>          * but failure is not fatal
+>          */
+> -       if (!r) {
+> -               acpi_status = amdgpu_acpi_init(adev);
+> -               if (acpi_status)
+> -                       dev_dbg(&dev->pdev->dev,
+> -                               "Error during ACPI methods call\n");
+> -       }
+> +
+> +       acpi_status = amdgpu_acpi_init(adev);
+> +       if (acpi_status)
+> +               dev_dbg(&dev->pdev->dev, "Error during ACPI methods call\n");
+>
+>         if (adev->runpm) {
+>                 dev_pm_set_driver_flags(dev->dev, DPM_FLAG_NEVER_SKIP);
+> --
+> 2.26.0
+>
+> _______________________________________________
+> amd-gfx mailing list
+> amd-gfx@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/amd-gfx
