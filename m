@@ -5,53 +5,53 @@ X-Spam-Level:
 X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EEEDC2BB85
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 05:05:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 856D6C38A24
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 05:05:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 490D52082F
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 05:05:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 527DD20769
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 05:05:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="PlrYMSP2"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="PWi7i/Tl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726841AbgDHFFv (ORCPT
+        id S1726776AbgDHFFl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Apr 2020 01:05:51 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:38234 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726798AbgDHFFr (ORCPT
+        Wed, 8 Apr 2020 01:05:41 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:38616 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726730AbgDHFFh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Apr 2020 01:05:47 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03852xa5179539;
-        Wed, 8 Apr 2020 05:05:36 GMT
+        Wed, 8 Apr 2020 01:05:37 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03853tXe191207;
+        Wed, 8 Apr 2020 05:05:25 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
  subject : date : message-id : in-reply-to : references : mime-version :
  content-transfer-encoding; s=corp-2020-01-29;
- bh=7Qqvi8ilezudja6Xt6TMpZeT8QAYzWIZNCTpskFpIKg=;
- b=PlrYMSP2h6k1ZitVeuybm/+AYAE+sB8vRMB0+kQOvow5oszNXceJgjEAAvFiIlmk8dfT
- 43T9eS07CTuXT5UodAkvV/QFJS1fQXtS2c29x/cctBkqEX6jmAfoJcWHJC0DTzKAUQWR
- iUbfgYI6KmSYNMk70LnKGdaOG/+UOyrjPqDPs2t9xMboURdOeol/NYZGkwptOCiG14T0
- sbJWNxq07XmOG8CdPD29AbXQVHyC/cFAqZVn9RBzyVvGYcPANFGGd78XxPiAgZ4dOBxM
- VvAY06D+9EnXtAWkr8uALBZMh621nLJ+hx8OYkjVKw5z/RXOjk5BS3CqcxHaLinqXVoO jQ== 
+ bh=CcwUPFYBMcHTPmOlaOoTSoN9P8fiON3G468Rwi+IExw=;
+ b=PWi7i/Tl/Y/4IqFE9IYynQEmMUAL6h7KzUdGeQ8aowN7A2vG8aYJ2y1RPUpSFuJ3Al9p
+ YwS1TqaOr8c7YrFYOyShMVhWKNWUtudifHat6cRswuPKLXRwcDy1ydKrAXiPIjl6lopM
+ RMjHL24gyXWl/nW8A2qcjwXVsP1PZ3/0r+Im3dLJe5hFqWgI0VDvD9B0ICCD6mvtFn3w
+ T50v9VWj4ITUUPDhFU4ejXZXdJYGwsLCualChOYeup/fi8BrQuX5+Iys4L4ZzuqJoJTd
+ s99H+9vRPTV9un6VQffzowPsPPsbizyuvOJDx6hBeNIF4jIAX6jEt3+aYp275E6ry4xO kA== 
 Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by userp2120.oracle.com with ESMTP id 3091mnh158-1
+        by aserp2120.oracle.com with ESMTP id 3091m0s0sx-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 08 Apr 2020 05:05:36 +0000
+        Wed, 08 Apr 2020 05:05:25 +0000
 Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03852gSb148301;
-        Wed, 8 Apr 2020 05:05:35 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by aserp3030.oracle.com with ESMTP id 3091kgj7qp-1
+        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03852gSW148301;
+        Wed, 8 Apr 2020 05:05:24 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by aserp3030.oracle.com with ESMTP id 3091kgj7gq-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 08 Apr 2020 05:05:35 +0000
+        Wed, 08 Apr 2020 05:05:24 +0000
 Received: from abhmp0012.oracle.com (abhmp0012.oracle.com [141.146.116.18])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 03855Xes022191;
-        Wed, 8 Apr 2020 05:05:33 GMT
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 03855OXP030617;
+        Wed, 8 Apr 2020 05:05:24 GMT
 Received: from monad.ca.oracle.com (/10.156.75.81)
         by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 07 Apr 2020 22:05:33 -0700
+        with ESMTP ; Tue, 07 Apr 2020 22:05:23 -0700
 From:   Ankur Arora <ankur.a.arora@oracle.com>
 To:     linux-kernel@vger.kernel.org, x86@kernel.org
 Cc:     peterz@infradead.org, hpa@zytor.com, jpoimboe@redhat.com,
@@ -61,9 +61,9 @@ Cc:     peterz@infradead.org, hpa@zytor.com, jpoimboe@redhat.com,
         kvm@vger.kernel.org, xen-devel@lists.xenproject.org,
         virtualization@lists.linux-foundation.org,
         Ankur Arora <ankur.a.arora@oracle.com>
-Subject: [RFC PATCH 25/26] x86/kvm: Guest support for dynamic hints
-Date:   Tue,  7 Apr 2020 22:03:22 -0700
-Message-Id: <20200408050323.4237-26-ankur.a.arora@oracle.com>
+Subject: [RFC PATCH 18/26] x86/alternatives: Handle BP in non-emulated text poking
+Date:   Tue,  7 Apr 2020 22:03:15 -0700
+Message-Id: <20200408050323.4237-19-ankur.a.arora@oracle.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200408050323.4237-1-ankur.a.arora@oracle.com>
 References: <20200408050323.4237-1-ankur.a.arora@oracle.com>
@@ -75,250 +75,304 @@ X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 bulksc
  classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
  definitions=main-2004080037
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9584 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- mlxlogscore=999 mlxscore=0 priorityscore=1501 bulkscore=0 adultscore=0
- impostorscore=0 phishscore=0 spamscore=0 clxscore=1015 lowpriorityscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
- definitions=main-2004080037
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 mlxlogscore=999 mlxscore=0
+ priorityscore=1501 phishscore=0 suspectscore=0 bulkscore=0
+ lowpriorityscore=0 impostorscore=0 malwarescore=0 clxscore=1015
+ spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2004080037
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If the hypervisor supports KVM_FEATURE_DYNAMIC_HINTS, then register a
-callback vector (currently chosen to be HYPERVISOR_CALLBACK_VECTOR.)
-The callback triggers on a change in the active hints which are
-are exported via KVM CPUID in %ecx.
+Handle breakpoints if we hit an INT3 either by way of an NMI while
+patching a site in the NMI handling path, or if we are patching text
+in text_poke_site() (executes on the primary), or in the pipeline sync
+path in text_poke_sync_site() (executes on secondary CPUs.)
+(The last two are not expected to happen, but see below.)
 
-Trigger re-evaluation of KVM_HINTS based on change in their active
-status.
+The handling on the primary CPU is to update the insn stream locally
+such that we can return to the primary patching loop but not force
+the secondary CPUs to execute sync_core().
+
+From my reading of the Intel spec and the thread which laid down the
+INT3 approach: https//lore.kernel.org/lkml/4B4D02B8.5020801@zytor.com,
+skipping the sync_core() would mean that remote pipelines -- if they
+have relevant uops cached would not see the updated instruction and
+would continue to execute stale uops.
+
+This is safe because the primary eventually gets back to the patching
+loop in text_poke_site() and resumes the state-machine, re-writing
+some of the insn sequences just written in the BP handling and forcing
+the secondary CPUs to execute sync_core().
+
+The handling on the secondary, is to call text_poke_sync_site() just as
+in thread-context, so it contains acking the patch states such that the
+primary can continue making forward progress. This can be called in a
+re-entrant fashion.
+
+Note that this does mean that we cannot handle any patches in
+text_poke_sync_site() itself since that would end up being called
+recursively in the BP handler.
+
+Control flow diagram with the BP handler:
+
+ CPU0-BP                             CPUx-BP
+ -------                             -------
+
+ poke_int3_native()                  poke_int3_native()
+   __text_do_poke()         	       text_poke_sync_site()
+   sync_one()               	        /* for state in:
+                                         *  [PATCH_SYNC_y.._SYNC_DONE) */
+                                         sync_one()
+                                         ack()
+
+
+ CPU0                                CPUx
+ ----                                ----
+
+ patch_worker()                      patch_worker()
+
+   /* Traversal, insn-gen */           text_poke_sync_finish()
+   tps.patch_worker()                    /* wait until:
+     /* = paravirt_worker() */            *  tps->state == PATCH_DONE
+                                          */
+                 /* for each patch-site */
+     generate_paravirt()
+       runtime_patch()
+     text_poke_site()                    text_poke_sync_site()
+        poke_sync()                       /* for state in:
+          __text_do_poke()                 *  [PATCH_SYNC_0..PATCH_SYNC_y]
+          sync_one()                       */
+          ack()                            sync_one()
+          wait_for_acks()                  ack()
+
+           ...                                 ...
+
+   smp_store_release(&tps->state, PATCH_DONE)
 
 Signed-off-by: Ankur Arora <ankur.a.arora@oracle.com>
 ---
- arch/x86/Kconfig                |  1 +
- arch/x86/entry/entry_64.S       |  5 +++
- arch/x86/include/asm/kvm_para.h |  7 ++++
- arch/x86/kernel/kvm.c           | 58 ++++++++++++++++++++++++++++++---
- include/asm-generic/kvm_para.h  |  4 +++
- include/linux/kvm_para.h        |  5 +++
- 6 files changed, 76 insertions(+), 4 deletions(-)
+ arch/x86/kernel/alternative.c | 145 ++++++++++++++++++++++++++++++++--
+ 1 file changed, 137 insertions(+), 8 deletions(-)
 
-diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
-index e0629558b6b5..23b239d184fc 100644
---- a/arch/x86/Kconfig
-+++ b/arch/x86/Kconfig
-@@ -810,6 +810,7 @@ config KVM_GUEST
- 	select PARAVIRT_CLOCK
- 	select ARCH_CPUIDLE_HALTPOLL
- 	select PARAVIRT_RUNTIME
-+	select X86_HV_CALLBACK_VECTOR
- 	default y
- 	---help---
- 	  This option enables various optimizations for running under the KVM
-diff --git a/arch/x86/entry/entry_64.S b/arch/x86/entry/entry_64.S
-index 0e9504fabe52..96b2a243c54f 100644
---- a/arch/x86/entry/entry_64.S
-+++ b/arch/x86/entry/entry_64.S
-@@ -1190,6 +1190,11 @@ apicinterrupt3 HYPERVISOR_CALLBACK_VECTOR \
- 	acrn_hv_callback_vector acrn_hv_vector_handler
- #endif
+diff --git a/arch/x86/kernel/alternative.c b/arch/x86/kernel/alternative.c
+index 7fdaae9edbf0..c68d940356a2 100644
+--- a/arch/x86/kernel/alternative.c
++++ b/arch/x86/kernel/alternative.c
+@@ -1055,6 +1055,8 @@ static int notrace patch_cmp(const void *key, const void *elt)
+ }
+ NOKPROBE_SYMBOL(patch_cmp);
  
-+#if IS_ENABLED(CONFIG_KVM_GUEST)
-+apicinterrupt3 HYPERVISOR_CALLBACK_VECTOR \
-+	kvm_callback_vector kvm_do_callback
-+#endif
++static void poke_int3_native(struct pt_regs *regs,
++			     struct text_poke_loc *tp);
+ int notrace poke_int3_handler(struct pt_regs *regs)
+ {
+ 	struct bp_patching_desc *desc;
+@@ -1099,8 +1101,11 @@ int notrace poke_int3_handler(struct pt_regs *regs)
+ 			goto out_put;
+ 	}
+ 
+-	if (desc->native)
+-		BUG();
++	if (desc->native) {
++		poke_int3_native(regs, tp);
++		ret = 1; /* handled */
++		goto out_put;
++	}
+ 
+ 	len = text_opcode_size(tp->emulated.opcode);
+ 	ip += len;
+@@ -1469,8 +1474,15 @@ static void wait_for_acks(struct text_poke_state *tps)
+ static void poke_sync(struct text_poke_state *tps, int state, int offset,
+ 		      const char *insns, int len)
+ {
+-	if (len)
++	if (len) {
++		/*
++		 * Note that we could hit a BP right after patching memory
++		 * below. This could happen before the state change further
++		 * down. The primary BP handler allows us to make
++		 * forward-progress in that case.
++		 */
+ 		__text_do_poke(offset, insns, len);
++	}
+ 	/*
+ 	 * Stores to tps.sync_ack_map are ordered with
+ 	 * smp_load_acquire(tps->state) in text_poke_sync_site()
+@@ -1504,11 +1516,22 @@ static void __maybe_unused text_poke_site(struct text_poke_state *tps,
+ 	temp_mm_state_t prev_mm;
+ 	pte_t *ptep;
+ 	int offset;
++	struct bp_patching_desc desc = {
++		.vec = tp,
++		.nr_entries = 1,
++		.native = true,
++		.refs = ATOMIC_INIT(1),
++	};
+ 
+ 	__text_poke_map(text_poke_addr(tp), tp->native.len, &prev_mm, &ptep);
+ 
+ 	offset = offset_in_page(text_poke_addr(tp));
+ 
++	/*
++	 * For INT3 use the same exclusion logic as BP emulation path.
++	 */
++	smp_store_release(&bp_desc, &desc); /* rcu_assign_pointer */
 +
- idtentry debug			do_debug		has_error_code=0	paranoid=1 shift_ist=IST_INDEX_DB ist_offset=DB_STACK_OFFSET
- idtentry int3			do_int3			has_error_code=0	create_gap=1
- idtentry stack_segment		do_stack_segment	has_error_code=1
-diff --git a/arch/x86/include/asm/kvm_para.h b/arch/x86/include/asm/kvm_para.h
-index 9b4df6eaa11a..5a7ca5639c2e 100644
---- a/arch/x86/include/asm/kvm_para.h
-+++ b/arch/x86/include/asm/kvm_para.h
-@@ -88,11 +88,13 @@ static inline long kvm_hypercall4(unsigned int nr, unsigned long p1,
- bool kvm_para_available(void);
- unsigned int kvm_arch_para_features(void);
- unsigned int kvm_arch_para_hints(void);
-+unsigned int kvm_arch_para_active_hints(void);
- void kvm_async_pf_task_wait(u32 token, int interrupt_kernel);
- void kvm_async_pf_task_wake(u32 token);
- u32 kvm_read_and_reset_pf_reason(void);
- extern void kvm_disable_steal_time(void);
- void do_async_page_fault(struct pt_regs *regs, unsigned long error_code, unsigned long address);
-+void kvm_callback_vector(struct pt_regs *regs);
+ 	/*
+ 	 * All secondary CPUs are waiting in tps->state == PATCH_SYNC_DONE
+ 	 * to move to PATCH_SYNC_0. Poke the INT3 and wait until all CPUs
+@@ -1537,6 +1560,19 @@ static void __maybe_unused text_poke_site(struct text_poke_state *tps,
+ 	 */
+ 	poke_sync(tps, PATCH_SYNC_DONE, 0, NULL, 0);
  
- #ifdef CONFIG_PARAVIRT_SPINLOCKS
- void __init kvm_spinlock_init(void);
-@@ -121,6 +123,11 @@ static inline unsigned int kvm_arch_para_hints(void)
- 	return 0;
++	/*
++	 * All CPUs have ack'd PATCH_SYNC_DONE. So there can be no
++	 * laggard CPUs executing BP handlers. Reset bp_desc.
++	 */
++	WRITE_ONCE(bp_desc, NULL); /* RCU_INIT_POINTER */
++
++	/*
++	 * We've already done the synchronization so this should not
++	 * race.
++	 */
++	if (!atomic_dec_and_test(&desc.refs))
++		atomic_cond_read_acquire(&desc.refs, !VAL);
++
+ 	/*
+ 	 * Unmap the poking_addr, poking_mm.
+ 	 */
+@@ -1548,7 +1584,8 @@ static void __maybe_unused text_poke_site(struct text_poke_state *tps,
+  * text_poke_sync_site() -- called to synchronize the CPU pipeline
+  * on secondary CPUs for each patch site.
+  *
+- * Called in thread context with tps->state == PATCH_SYNC_0.
++ * Called in thread context with tps->state == PATCH_SYNC_0 and in
++ * BP context with tps->state < PATCH_SYNC_DONE.
+  *
+  * Returns after having observed tps->state == PATCH_SYNC_DONE.
+  */
+@@ -1561,6 +1598,26 @@ static void text_poke_sync_site(struct text_poke_state *tps)
+ 	/*
+ 	 * In thread context we arrive here expecting tps->state to move
+ 	 * in-order from PATCH_SYNC_{0 -> 1 -> 2} -> PATCH_SYNC_DONE.
++	 *
++	 * We could also arrive here in BP-context some point after having
++	 * observed bp_patching.nr_entries (and after poking the first INT3.)
++	 * This could happen by way of an NMI while we are patching a site
++	 * that'll get executed in the NMI handler, or if we hit a site
++	 * being patched in text_poke_sync_site().
++	 *
++	 * Just as thread-context, the BP handler calls text_poke_sync_site()
++	 * to keep the primary's state-machine moving forward until it has
++	 * finished patching the call-site. At that point it is safe to
++	 * unwind the contexts.
++	 *
++	 * The second case, where we are patching a site in
++	 * text_poke_sync_site(), could end up in recursive BP handlers
++	 * and is not handled.
++	 *
++	 * Note that unlike thread-context where the start state can only
++	 * be PATCH_SYNC_0, in the BP-context, the start state could be any
++	 * PATCH_SYNC_x, so long as (state < PATCH_SYNC_DONE) since once a
++	 * CPU has acked PATCH_SYNC_2, there is no INT3 left for it to observe.
+ 	 */
+ 	do {
+ 		/*
+@@ -1571,16 +1628,88 @@ static void text_poke_sync_site(struct text_poke_state *tps)
+ 
+ 		prevstate = READ_ONCE(tps->state);
+ 
+-		if (prevstate < PATCH_SYNC_DONE) {
+-			acked = cpumask_test_cpu(cpu, &tps->sync_ack_map);
+-
+-			BUG_ON(acked);
++		/*
++		 * As described above, text_poke_sync_site() gets called
++		 * from both thread-context and potentially in a re-entrant
++		 * fashion in BP-context. Accordingly expect to potentially
++		 * enter and exit this loop twice.
++		 *
++		 * Concretely, this means we need to handle the case where we
++		 * see an already acked state at BP/NMI entry and, see a
++		 * state discontinuity when returning to thread-context from
++		 * BP-context which would return after having observed
++		 * tps->state == PATCH_SYNC_DONE.
++		 *
++		 * Help this along by always exiting with tps->state ==
++		 * PATCH_SYNC_DONE but without acking it. Not acking it in
++		 * text_poke_sync_site(), guarantees that the state can only
++		 * forward once all secondary CPUs have exited both thread
++		 * and BP-contexts.
++		 */
++		acked = cpumask_test_cpu(cpu, &tps->sync_ack_map);
++		if (prevstate < PATCH_SYNC_DONE && !acked) {
+ 			sync_one();
+ 			cpumask_set_cpu(cpu, &tps->sync_ack_map);
+ 		}
+ 	} while (prevstate < PATCH_SYNC_DONE);
  }
  
-+static inline unsigned int kvm_arch_para_active_hints(void)
++static void poke_int3_native(struct pt_regs *regs,
++			     struct text_poke_loc *tp)
 +{
-+	return 0;
-+}
++	int cpu = smp_processor_id();
++	struct text_poke_state *tps = &text_poke_state;
 +
- static inline u32 kvm_read_and_reset_pf_reason(void)
- {
- 	return 0;
-diff --git a/arch/x86/kernel/kvm.c b/arch/x86/kernel/kvm.c
-index 1cb7eab805a6..163b7a7ec5f9 100644
---- a/arch/x86/kernel/kvm.c
-+++ b/arch/x86/kernel/kvm.c
-@@ -25,6 +25,8 @@
- #include <linux/nmi.h>
- #include <linux/swait.h>
- #include <linux/memory.h>
-+#include <linux/irq.h>
-+#include <linux/interrupt.h>
- #include <asm/timer.h>
- #include <asm/cpu.h>
- #include <asm/traps.h>
-@@ -438,7 +440,7 @@ static void __init sev_map_percpu_data(void)
- static bool pv_tlb_flush_supported(void)
- {
- 	return (kvm_para_has_feature(KVM_FEATURE_PV_TLB_FLUSH) &&
--		!kvm_para_has_hint(KVM_HINTS_REALTIME) &&
-+		!kvm_para_has_active_hint(KVM_HINTS_REALTIME) &&
- 		kvm_para_has_feature(KVM_FEATURE_STEAL_TIME));
- }
- 
-@@ -463,7 +465,7 @@ static bool pv_ipi_supported(void)
- static bool pv_sched_yield_supported(void)
- {
- 	return (kvm_para_has_feature(KVM_FEATURE_PV_SCHED_YIELD) &&
--		!kvm_para_has_hint(KVM_HINTS_REALTIME) &&
-+		!kvm_para_has_active_hint(KVM_HINTS_REALTIME) &&
- 	    kvm_para_has_feature(KVM_FEATURE_STEAL_TIME));
- }
- 
-@@ -568,7 +570,7 @@ static void kvm_smp_send_call_func_ipi(const struct cpumask *mask)
- static void __init kvm_smp_prepare_cpus(unsigned int max_cpus)
- {
- 	native_smp_prepare_cpus(max_cpus);
--	if (kvm_para_has_hint(KVM_HINTS_REALTIME))
-+	if (kvm_para_has_active_hint(KVM_HINTS_REALTIME))
- 		static_branch_disable(&virt_spin_lock_key);
- }
- 
-@@ -654,6 +656,13 @@ static bool kvm_pv_tlb(void)
- 	return cond;
- }
- 
-+#ifdef CONFIG_PARAVIRT_RUNTIME
-+static bool has_dynamic_hint;
-+static void __init kvm_register_callback_vector(void);
-+#else
-+#define has_dynamic_hint false
-+#endif /* CONFIG_PARAVIRT_RUNTIME */
++	if (cpu != tps->primary_cpu) {
++		/*
++		 * We came here from the sync loop in text_poke_sync_site().
++		 * Continue syncing. The primary is waiting.
++		 */
++		text_poke_sync_site(tps);
++	} else {
++		int offset = offset_in_page(text_poke_addr(tp));
 +
- static void __init kvm_guest_init(void)
- {
- 	int i;
-@@ -674,6 +683,12 @@ static void __init kvm_guest_init(void)
- 	if (kvm_para_has_feature(KVM_FEATURE_PV_EOI))
- 		apic_set_eoi_write(kvm_guest_apic_eoi_write);
- 
-+	if (IS_ENABLED(CONFIG_PARAVIRT_RUNTIME) &&
-+	    kvm_para_has_feature(KVM_FEATURE_DYNAMIC_HINTS)) {
-+		kvm_register_callback_vector();
-+		has_dynamic_hint = true;
++		/*
++		 * We are in the primary context and have hit the INT3 barrier
++		 * either ourselves or via an NMI.
++		 *
++		 * The secondary CPUs at this time are either in the original
++		 * text_poke_sync_site() loop or after having hit an NMI->INT3
++		 * themselves in the BP text_poke_sync_site() loop.
++		 *
++		 * The minimum that we need to do here is to update the local
++		 * insn stream such that we can return to the primary loop.
++		 * Without executing sync_core() on the secondary CPUs it is
++		 * possible that some of them might be executing stale uops in
++		 * their respective pipelines.
++		 *
++		 * This should be safe because we will get back to the patching
++		 * loop in text_poke_site() in due course and will resume
++		 * the state-machine where we left off including by re-writing
++		 * some of the insns sequences just written here.
++		 *
++		 * Note that we continue to be in poking_mm context and so can
++		 * safely call __text_do_poke() here.
++		 */
++		__text_do_poke(offset + INT3_INSN_SIZE,
++			       tp->text + INT3_INSN_SIZE,
++			       tp->native.len - INT3_INSN_SIZE);
++		__text_do_poke(offset, tp->text, INT3_INSN_SIZE);
++
++		/*
++		 * We only introduce a serializing instruction locally. As
++		 * noted above, the secondary CPUs can stay where they are --
++		 * potentially executing in the now stale INT3.) This is fine
++		 * because the primary will force the sync_core() on the
++		 * secondary CPUs once it returns.
++		 */
++		sync_one();
 +	}
 +
- #ifdef CONFIG_SMP
- 	smp_ops.smp_prepare_cpus = kvm_smp_prepare_cpus;
- 	smp_ops.smp_prepare_boot_cpu = kvm_smp_prepare_boot_cpu;
-@@ -729,12 +744,27 @@ unsigned int kvm_arch_para_features(void)
- 	return cpuid_eax(kvm_cpuid_base() | KVM_CPUID_FEATURES);
- }
- 
-+/*
-+ * Universe of hints that's ever been given to this guest.
-+ */
- unsigned int kvm_arch_para_hints(void)
- {
- 	return cpuid_edx(kvm_cpuid_base() | KVM_CPUID_FEATURES);
- }
- EXPORT_SYMBOL_GPL(kvm_arch_para_hints);
- 
-+/*
-+ * Currently active set of hints. Reading can race with modifications.
-+ */
-+unsigned int kvm_arch_para_active_hints(void)
-+{
-+	if (has_dynamic_hint)
-+		return cpuid_ecx(kvm_cpuid_base() | KVM_CPUID_FEATURES);
-+	else
-+		return kvm_arch_para_hints();
-+}
-+EXPORT_SYMBOL_GPL(kvm_arch_para_active_hints);
-+
- static uint32_t __init kvm_detect(void)
- {
- 	return kvm_cpuid_base();
-@@ -878,7 +908,7 @@ static inline bool kvm_para_lock_ops(void)
- {
- 	/* Does host kernel support KVM_FEATURE_PV_UNHALT? */
- 	return kvm_para_has_feature(KVM_FEATURE_PV_UNHALT) &&
--		!kvm_para_has_hint(KVM_HINTS_REALTIME);
-+		!kvm_para_has_active_hint(KVM_HINTS_REALTIME);
- }
- 
- static bool kvm_pv_spinlock(void)
-@@ -975,4 +1005,24 @@ void kvm_trigger_reprobe_cpuid(struct work_struct *work)
- 
- 	mutex_unlock(&text_mutex);
- }
-+
-+static DECLARE_WORK(trigger_reprobe, kvm_trigger_reprobe_cpuid);
-+
-+void __irq_entry kvm_do_callback(struct pt_regs *regs)
-+{
-+	struct pt_regs *old_regs = set_irq_regs(regs);
-+
-+	irq_enter();
-+	inc_irq_stat(irq_hv_callback_count);
-+
-+	schedule_work(&trigger_reprobe);
-+	irq_exit();
-+	set_irq_regs(old_regs);
++	/* A new start */
++	regs->ip -= INT3_INSN_SIZE;
 +}
 +
-+static void __init kvm_register_callback_vector(void)
-+{
-+	alloc_intr_gate(HYPERVISOR_CALLBACK_VECTOR, kvm_callback_vector);
-+	wrmsrl(MSR_KVM_HINT_VECTOR, HYPERVISOR_CALLBACK_VECTOR);
-+}
- #endif /* CONFIG_PARAVIRT_RUNTIME */
-diff --git a/include/asm-generic/kvm_para.h b/include/asm-generic/kvm_para.h
-index 728e5c5706c4..4a575299ad62 100644
---- a/include/asm-generic/kvm_para.h
-+++ b/include/asm-generic/kvm_para.h
-@@ -24,6 +24,10 @@ static inline unsigned int kvm_arch_para_hints(void)
- 	return 0;
- }
- 
-+static inline unsigned int kvm_arch_para_active_hints(void)
-+{
-+	return 0;
-+}
- static inline bool kvm_para_available(void)
- {
- 	return false;
-diff --git a/include/linux/kvm_para.h b/include/linux/kvm_para.h
-index f23b90b02898..c98d3944d25a 100644
---- a/include/linux/kvm_para.h
-+++ b/include/linux/kvm_para.h
-@@ -14,4 +14,9 @@ static inline bool kvm_para_has_hint(unsigned int feature)
- {
- 	return !!(kvm_arch_para_hints() & (1UL << feature));
- }
-+
-+static inline bool kvm_para_has_active_hint(unsigned int feature)
-+{
-+	return !!(kvm_arch_para_active_hints() & BIT(feature));
-+}
- #endif /* __LINUX_KVM_PARA_H */
+ /**
+  * text_poke_sync_finish() -- called to synchronize the CPU pipeline
+  * on secondary CPUs for all patch sites.
 -- 
 2.20.1
 
