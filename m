@@ -2,100 +2,125 @@ Return-Path: <SRS0=8dav=5Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39552C2BB54
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 01:34:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FDF3C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 01:37:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 108572063A
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 01:34:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="Pvpf7CZV"
+	by mail.kernel.org (Postfix) with ESMTP id 443A1207FF
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 01:37:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726510AbgDHBeU (ORCPT
+        id S1726467AbgDHBhR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 21:34:20 -0400
-Received: from mail27.static.mailgun.info ([104.130.122.27]:60797 "EHLO
-        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726420AbgDHBeT (ORCPT
+        Tue, 7 Apr 2020 21:37:17 -0400
+Received: from mail-il1-f198.google.com ([209.85.166.198]:36852 "EHLO
+        mail-il1-f198.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726417AbgDHBhR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Apr 2020 21:34:19 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1586309659; h=Message-ID: References: In-Reply-To: Subject:
- Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
- MIME-Version: Sender; bh=XoOYi2TV+UeP2kOoRrpUAk9Ku3EzZ9BU0fhtMfFP28s=;
- b=Pvpf7CZVEMApbiorlvaY+4vDU7H11aMv5kzGWZoi54RqlQH8ndO6FXfsEmeyH4tNQBo5ENc1
- Nr9kfpsM6j7tYVgKa89kHBif2+NfR6fAENTJ3yB9tu+FSPhv+cNCFERzP7rdq/JN8ayIcygs
- yNxhJhb/D0hHEo1GXS6ht9Jvxoc=
-X-Mailgun-Sending-Ip: 104.130.122.27
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e8d2a0f.7f5cd5569340-smtp-out-n02;
- Wed, 08 Apr 2020 01:34:07 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 5D7ACC433D2; Wed,  8 Apr 2020 01:34:06 +0000 (UTC)
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: hemantk)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id C3AD1C433F2;
-        Wed,  8 Apr 2020 01:34:05 +0000 (UTC)
+        Tue, 7 Apr 2020 21:37:17 -0400
+Received: by mail-il1-f198.google.com with SMTP id e5so5297909ilg.3
+        for <linux-kernel@vger.kernel.org>; Tue, 07 Apr 2020 18:37:16 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
+         :from:to;
+        bh=iTgwp6BguOdJAZ/PeO1dtbonSopyEraPaAZfeMz81ms=;
+        b=VFrsVh3zjtZUFquheLlUomAu/u0CKfcL9Vt/b2+H5jyvcIxMMaMF0UjrkeA+78dshH
+         sG/uYRh4zX60bBHJJZo5aptDZeBG5FuaHwif8gYH0TV/zWUeI7ajig9rGK/kgs+bOmJF
+         pj2KXtU3zt6un5PGEE+sRA6avUlYCe5k3Ykj9fRYAOaXr8aoeX085yB2Ia4EQ0Efx37i
+         wL1CHC5+qRqlNoVMsDcFDLNXGiwaAWJROPo31WJazkuEmRJLZsn2YMlR5zc7gaxR7DQM
+         CHRBRyWnmdvcjbOX+OFCtIIbz42wyM7sTYxKU5WlSg9KqzizVfdfzjDWuOiugzChsD1g
+         Rjlg==
+X-Gm-Message-State: AGi0PuZP8FzuAWbNyWwfNl3QG0jZtZcWD1I/BCyui3wiQTiYup4fxXSo
+        qjcHYgg1NCCh12aiFGcYy9ZL4n9IN1Mtg31Yx0wgu2j4OtK4
+X-Google-Smtp-Source: APiQypJoZ+PLIMyU+FBlf/9o4hbRkZbgCiJpClZPLiVFx5BXXXgRP+Xs4zPCgzyN+hW9Ww8pJkEV2/pevvcAba6PfBQUlo7EPwTK
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Tue, 07 Apr 2020 18:34:05 -0700
-From:   hemantk@codeaurora.org
-To:     Jeffrey Hugo <jhugo@codeaurora.org>
-Cc:     manivannan.sadhasivam@linaro.org, linux-arm-msm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-msm-owner@vger.kernel.org
-Subject: Re: [PATCH v2 2/5] bus: mhi: core: Make sure to powerdown if
- mhi_sync_power_up fails
-In-Reply-To: <1586278230-29565-3-git-send-email-jhugo@codeaurora.org>
-References: <1586278230-29565-1-git-send-email-jhugo@codeaurora.org>
- <1586278230-29565-3-git-send-email-jhugo@codeaurora.org>
-Message-ID: <7249d9608f41e4528c87c2b1c464d615@codeaurora.org>
-X-Sender: hemantk@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
+X-Received: by 2002:a92:8659:: with SMTP id g86mr5656827ild.267.1586309835938;
+ Tue, 07 Apr 2020 18:37:15 -0700 (PDT)
+Date:   Tue, 07 Apr 2020 18:37:15 -0700
+In-Reply-To: <00000000000005c65d05a2b90e70@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <00000000000046629905a2bd8acc@google.com>
+Subject: Re: WARNING: bad unlock balance in __get_user_pages_remote
+From:   syzbot <syzbot+a8c70b7f3579fc0587dc@syzkaller.appspotmail.com>
+To:     akpm@linux-foundation.org, bgeffon@google.com,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        peterx@redhat.com, syzkaller-bugs@googlegroups.com,
+        torvalds@linux-foundation.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-04-07 09:50, Jeffrey Hugo wrote:
-> Powerdown is necessary if mhi_sync_power_up fails due to a timeout, to
-> clean up the resources.  Otherwise a BUG could be triggered when
-> attempting to clean up MSIs because the IRQ is still active from a
-> request_irq().
-> 
-> Signed-off-by: Jeffrey Hugo <jhugo@codeaurora.org>
-> ---
->  drivers/bus/mhi/core/pm.c | 6 +++++-
->  1 file changed, 5 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/bus/mhi/core/pm.c b/drivers/bus/mhi/core/pm.c
-> index 3285c9e..fbffc6b 100644
-> --- a/drivers/bus/mhi/core/pm.c
-> +++ b/drivers/bus/mhi/core/pm.c
-> @@ -922,7 +922,11 @@ int mhi_sync_power_up(struct mhi_controller 
-> *mhi_cntrl)
->  			   MHI_PM_IN_ERROR_STATE(mhi_cntrl->pm_state),
->  			   msecs_to_jiffies(mhi_cntrl->timeout_ms));
-> 
-> -	return (MHI_IN_MISSION_MODE(mhi_cntrl->ee)) ? 0 : -EIO;
-> +	ret = (MHI_IN_MISSION_MODE(mhi_cntrl->ee)) ? 0 : -EIO;
+syzbot has found a reproducer for the following crash on:
 
-Does it make sense to return -ETIMEDOUT instead of -EIO if device fails 
-to move to mission mode?
-Controller can use this info as mhi_async_power_up() would not return 
--ETIMEDOUT.
+HEAD commit:    763dede1 Merge tag 'for-linus-5.7-rc1' of git://git.kernel..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=17731b0be00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=12205d036cec317f
+dashboard link: https://syzkaller.appspot.com/bug?extid=a8c70b7f3579fc0587dc
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+userspace arch: i386
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=135855cde00000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=149ea07de00000
 
-> +	if (ret)
-> +		mhi_power_down(mhi_cntrl, false);
-> +
-> +	return ret;
->  }
->  EXPORT_SYMBOL(mhi_sync_power_up);
+The bug was bisected to:
+
+commit 71335f37c5e8ec9225285206f7f875057b9737ad
+Author: Peter Xu <peterx@redhat.com>
+Date:   Thu Apr 2 04:08:53 2020 +0000
+
+    mm/gup: allow to react to fatal signals
+
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=17dba9b3e00000
+final crash:    https://syzkaller.appspot.com/x/report.txt?x=143ba9b3e00000
+console output: https://syzkaller.appspot.com/x/log.txt?x=103ba9b3e00000
+
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+a8c70b7f3579fc0587dc@syzkaller.appspotmail.com
+Fixes: 71335f37c5e8 ("mm/gup: allow to react to fatal signals")
+
+=====================================
+WARNING: bad unlock balance detected!
+5.6.0-syzkaller #0 Not tainted
+-------------------------------------
+syz-executor151/7052 is trying to release lock (&mm->mmap_sem) at:
+[<ffffffff819fbf60>] __get_user_pages_locked mm/gup.c:1366 [inline]
+[<ffffffff819fbf60>] __get_user_pages_remote mm/gup.c:1831 [inline]
+[<ffffffff819fbf60>] __get_user_pages_remote+0x540/0x740 mm/gup.c:1806
+but there are no more locks to release!
+
+other info that might help us debug this:
+no locks held by syz-executor151/7052.
+
+stack backtrace:
+CPU: 0 PID: 7052 Comm: syz-executor151 Not tainted 5.6.0-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Call Trace:
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0x188/0x20d lib/dump_stack.c:118
+ __lock_release kernel/locking/lockdep.c:4633 [inline]
+ lock_release+0x586/0x800 kernel/locking/lockdep.c:4941
+ up_read+0x79/0x750 kernel/locking/rwsem.c:1573
+ __get_user_pages_locked mm/gup.c:1366 [inline]
+ __get_user_pages_remote mm/gup.c:1831 [inline]
+ __get_user_pages_remote+0x540/0x740 mm/gup.c:1806
+ pin_user_pages_remote+0x67/0xa0 mm/gup.c:2897
+ process_vm_rw_single_vec mm/process_vm_access.c:108 [inline]
+ process_vm_rw_core.isra.0+0x423/0x940 mm/process_vm_access.c:218
+ compat_process_vm_rw+0x21f/0x240 mm/process_vm_access.c:343
+ __do_compat_sys_process_vm_writev mm/process_vm_access.c:370 [inline]
+ __se_compat_sys_process_vm_writev mm/process_vm_access.c:363 [inline]
+ __ia32_compat_sys_process_vm_writev+0xdc/0x1b0 mm/process_vm_access.c:363
+ do_syscall_32_irqs_on arch/x86/entry/common.c:337 [inline]
+ do_fast_syscall_32+0x270/0xe90 arch/x86/entry/common.c:396
+ entry_SYSENTER_compat+0x70/0x7f arch/x86/entry/entry_64_compat.S:139
+------------[ cut here ]------------
+DEBUG_RWSEMS_WARN_ON(tmp < 0): count = 0xffffffffffffff00, magic = 0xffff88809e2392f8, owner = 0x3, curr 0xffff88809a6c6240, list empty
+WARNING: CPU: 1 PID: 7052 at kernel/locking/rwsem.c:1435 __up_read kernel/locking/rwsem.c:1435 [inline]
+WARNING: CPU: 1 PID: 7052 at kernel/locking/rwsem.c:1435 up_read+0x5f9/0x750 kernel/locking/rwsem.c:1574
+
