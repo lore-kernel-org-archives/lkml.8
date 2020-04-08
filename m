@@ -7,51 +7,51 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0E9CC2BA2B
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 05:06:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC33CC38A24
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 05:06:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AEAFF20771
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 05:06:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B423020769
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 05:06:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="cHnvTrtu"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="Rt+HodiY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727048AbgDHFG2 (ORCPT
+        id S1727079AbgDHFGg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Apr 2020 01:06:28 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:38584 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726713AbgDHFFg (ORCPT
+        Wed, 8 Apr 2020 01:06:36 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:38082 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726680AbgDHFFf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Apr 2020 01:05:36 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03854gSa191662;
-        Wed, 8 Apr 2020 05:05:24 GMT
+        Wed, 8 Apr 2020 01:05:35 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03853CfU179598;
+        Wed, 8 Apr 2020 05:05:21 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
  subject : date : message-id : in-reply-to : references : mime-version :
  content-transfer-encoding; s=corp-2020-01-29;
- bh=oFQu5c5XJMNWspifH0eo8iyuqi9GZvEBODJQANlcAEo=;
- b=cHnvTrtu81AYis8bhTT0uEby3pTuev6G236CP0PzsfSaOXZPYSInf2z4ytK/OtlP6l24
- Lqi3soKd+woQHGRwBladzfjWwRG2mMJiBf5q0t5K8EPT8EPGhaBSBmky2zhwDcMKpVSP
- AAwuDpZW8mEghBQKJXTcrojf3l5DiOFTj6Z/hRPELctygYmKOxqDrr9GLWPsIYm094qi
- IOpH5F7Ex36yPu5jdMQNcVLsQ+ePyT41+S9Df0QQ6H1+9kX7uxdU3Fm5nlrsEVBGHMHj
- DDWUYplrA9rMgTvIwH9LSQkK1sa2aRpXCCa/GSuBz4lkk4MycLL5tMA60Ghjs06yJO/2 RQ== 
+ bh=632WiNiqidlUZOdyno4pYxOiJK2oE9HYRPcYujYQMXU=;
+ b=Rt+HodiYBj5Vb8Zcpm5nlLZpKAa6m/3Me62if7vHull0ZIhUTtFjGOAn/+tC+6LZx/s5
+ fWpl9LbV8Yuyja7tnLkLiXAHctrL58Ve4BTXafjLRAM/XX3zy8q/UIj2/ReIGVT2IBuH
+ oM+WGXSm1tZkS2XoxZpFTkj1VIebdFyTCIcZnizTL6m+tmMN2LmnT2VJ3tPL9TziklGz
+ EAHBitysknFBJmR4mH6Jh/4m9KSZ7GiZiN4mFr57C7s3/0vzhRjmK/pDDi8bZjTJ/kfo
+ Vvh1eEiPIFAbNsqCP8LamGtP0+lgmmfW13oBvy75XnqPHLHyzzKUIQi9as99IYUqMZjr zQ== 
 Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by aserp2120.oracle.com with ESMTP id 3091m0s0sw-1
+        by userp2120.oracle.com with ESMTP id 3091mnh14q-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 08 Apr 2020 05:05:23 +0000
+        Wed, 08 Apr 2020 05:05:21 +0000
 Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03851W8H100632;
-        Wed, 8 Apr 2020 05:05:23 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by aserp3020.oracle.com with ESMTP id 3091m2hv9g-1
+        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03851Wbv100720;
+        Wed, 8 Apr 2020 05:05:21 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by aserp3020.oracle.com with ESMTP id 3091m2hv5d-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 08 Apr 2020 05:05:23 +0000
+        Wed, 08 Apr 2020 05:05:20 +0000
 Received: from abhmp0012.oracle.com (abhmp0012.oracle.com [141.146.116.18])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 03855MKx007459;
-        Wed, 8 Apr 2020 05:05:22 GMT
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 03855Jem015242;
+        Wed, 8 Apr 2020 05:05:19 GMT
 Received: from monad.ca.oracle.com (/10.156.75.81)
         by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 07 Apr 2020 22:05:22 -0700
+        with ESMTP ; Tue, 07 Apr 2020 22:05:18 -0700
 From:   Ankur Arora <ankur.a.arora@oracle.com>
 To:     linux-kernel@vger.kernel.org, x86@kernel.org
 Cc:     peterz@infradead.org, hpa@zytor.com, jpoimboe@redhat.com,
@@ -61,9 +61,9 @@ Cc:     peterz@infradead.org, hpa@zytor.com, jpoimboe@redhat.com,
         kvm@vger.kernel.org, xen-devel@lists.xenproject.org,
         virtualization@lists.linux-foundation.org,
         Ankur Arora <ankur.a.arora@oracle.com>
-Subject: [RFC PATCH 17/26] x86/alternatives: Add patching logic in text_poke_site()
-Date:   Tue,  7 Apr 2020 22:03:14 -0700
-Message-Id: <20200408050323.4237-18-ankur.a.arora@oracle.com>
+Subject: [RFC PATCH 14/26] x86/alternatives: Handle native insns in text_poke_loc*()
+Date:   Tue,  7 Apr 2020 22:03:11 -0700
+Message-Id: <20200408050323.4237-15-ankur.a.arora@oracle.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200408050323.4237-1-ankur.a.arora@oracle.com>
 References: <20200408050323.4237-1-ankur.a.arora@oracle.com>
@@ -75,223 +75,207 @@ X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 bulk
  classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
  definitions=main-2004080037
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9584 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 mlxlogscore=999 mlxscore=0
- priorityscore=1501 phishscore=0 suspectscore=0 bulkscore=0
- lowpriorityscore=0 impostorscore=0 malwarescore=0 clxscore=1015
- spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2004080037
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ mlxlogscore=999 mlxscore=0 priorityscore=1501 bulkscore=0 adultscore=0
+ impostorscore=0 phishscore=0 spamscore=0 clxscore=1015 lowpriorityscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
+ definitions=main-2004080037
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add actual poking and pipeline sync logic in poke_sync(). This is called
-from text_poke_site()).
+Intended to handle scenarios where we might want to patch arbitrary
+instructions (ex. inlined opcodes in pv_lock_ops.)
 
-The patching logic is similar to that in text_poke_bp_batch() where we
-patch the first byte with an INT3, which serves as a barrier, then patch
-the remaining bytes and then come back and fixup the first byte.
-
-The first and the last steps are single byte writes and are thus
-atomic, and the second step is protected because the INT3 serves
-as a barrier.
-
-Between each of these steps is a global pipeline sync which ensures that
-remote pipelines flush out any stale opcodes that they might have cached.
-This is driven from poke_sync() where the primary introduces a sync_core()
-on secondary CPUs for every PATCH_SYNC_* state change. The corresponding
-loop on the secondary executes in text_poke_sync_site().
-
-Note that breakpoints are not handled yet.
-
- CPU0                                CPUx
- ----                                ----
-
- patch_worker()                      patch_worker()
-
-   /* Traversal, insn-gen */           text_poke_sync_finish()
-   tps.patch_worker()                    /* wait until:
-     /* = paravirt_worker() */            *  tps->state == PATCH_DONE
-                                          */
-                  /* for each patch-site */
-     generate_paravirt()
-       runtime_patch()
-     text_poke_site()                    text_poke_sync_site()
-        poke_sync()                       /* for each:
-          __text_do_poke()                 *  PATCH_SYNC_[012] */
-          sync_one()                       sync_one()
-          ack()                            ack()
-          wait_for_acks()
-
-           ...                                 ...
-
-  smp_store_release(&tps->state, PATCH_DONE)
+Users for native mode (as opposed to emulated) are introduced in
+later patches.
 
 Signed-off-by: Ankur Arora <ankur.a.arora@oracle.com>
 ---
- arch/x86/kernel/alternative.c | 103 +++++++++++++++++++++++++++++++---
- 1 file changed, 95 insertions(+), 8 deletions(-)
+ arch/x86/include/asm/text-patching.h |  4 +-
+ arch/x86/kernel/alternative.c        | 61 ++++++++++++++++++++--------
+ 2 files changed, 45 insertions(+), 20 deletions(-)
 
+diff --git a/arch/x86/include/asm/text-patching.h b/arch/x86/include/asm/text-patching.h
+index 04778c2bc34e..c4b2814f2f9d 100644
+--- a/arch/x86/include/asm/text-patching.h
++++ b/arch/x86/include/asm/text-patching.h
+@@ -25,10 +25,10 @@ static inline void apply_paravirt(struct paravirt_patch_site *start,
+ 
+ /*
+  * Currently, the max observed size in the kernel code is
+- * JUMP_LABEL_NOP_SIZE/RELATIVEJUMP_SIZE, which are 5.
++ * NOP7 for indirect call, which is 7.
+  * Raise it if needed.
+  */
+-#define POKE_MAX_OPCODE_SIZE	5
++#define POKE_MAX_OPCODE_SIZE	7
+ 
+ extern void text_poke_early(void *addr, const void *opcode, size_t len);
+ 
 diff --git a/arch/x86/kernel/alternative.c b/arch/x86/kernel/alternative.c
-index 1c5acdc4f349..7fdaae9edbf0 100644
+index 337aad8c2521..004fe86f463f 100644
 --- a/arch/x86/kernel/alternative.c
 +++ b/arch/x86/kernel/alternative.c
-@@ -1441,27 +1441,57 @@ struct text_poke_state {
+@@ -981,8 +981,15 @@ void text_poke_sync(void)
  
- static struct text_poke_state text_poke_state;
+ struct text_poke_loc {
+ 	s32 rel_addr; /* addr := _stext + rel_addr */
+-	s32 rel32;
+-	u8 opcode;
++	union {
++		struct {
++			s32 rel32;
++			u8 opcode;
++		} emulated;
++		struct {
++			u8 len;
++		} native;
++	};
+ 	const u8 text[POKE_MAX_OPCODE_SIZE];
+ };
  
-+static void wait_for_acks(struct text_poke_state *tps)
-+{
-+	int cpu = smp_processor_id();
+@@ -990,6 +997,7 @@ struct bp_patching_desc {
+ 	struct text_poke_loc *vec;
+ 	int nr_entries;
+ 	atomic_t refs;
++	bool native;
+ };
+ 
+ static struct bp_patching_desc *bp_desc;
+@@ -1071,10 +1079,13 @@ int notrace poke_int3_handler(struct pt_regs *regs)
+ 			goto out_put;
+ 	}
+ 
+-	len = text_opcode_size(tp->opcode);
++	if (desc->native)
++		BUG();
 +
-+	cpumask_set_cpu(cpu, &tps->sync_ack_map);
-+
-+	/* Wait until all CPUs are known to have observed the state change. */
-+	while (cpumask_weight(&tps->sync_ack_map) < tps->num_acks)
-+		cpu_relax();
-+}
-+
- /**
-- * poke_sync() - transitions to the specified state.
-+ * poke_sync() - carries out one poke-step for a single site and
-+ * transitions to the specified state.
-+ * Called with the target populated in poking_mm and poking_addr.
-  *
-  * @tps - struct text_poke_state *
-  * @state - one of PATCH_SYNC_* states
-  * @offset - offset to be patched
-  * @insns - insns to write
-  * @len - length of insn sequence
-+ *
-+ * Returns after all CPUs have observed the state change and called
-+ * sync_core().
-  */
- static void poke_sync(struct text_poke_state *tps, int state, int offset,
- 		      const char *insns, int len)
- {
-+	if (len)
-+		__text_do_poke(offset, insns, len);
- 	/*
--	 * STUB: no patching or synchronization, just go through the
--	 * motions.
-+	 * Stores to tps.sync_ack_map are ordered with
-+	 * smp_load_acquire(tps->state) in text_poke_sync_site()
-+	 * so we can safely clear the cpumask.
++	len = text_opcode_size(tp->emulated.opcode);
+ 	ip += len;
+ 
+-	switch (tp->opcode) {
++	switch (tp->emulated.opcode) {
+ 	case INT3_INSN_OPCODE:
+ 		/*
+ 		 * Someone poked an explicit INT3, they'll want to handle it,
+@@ -1083,12 +1094,12 @@ int notrace poke_int3_handler(struct pt_regs *regs)
+ 		goto out_put;
+ 
+ 	case CALL_INSN_OPCODE:
+-		int3_emulate_call(regs, (long)ip + tp->rel32);
++		int3_emulate_call(regs, (long)ip + tp->emulated.rel32);
+ 		break;
+ 
+ 	case JMP32_INSN_OPCODE:
+ 	case JMP8_INSN_OPCODE:
+-		int3_emulate_jmp(regs, (long)ip + tp->rel32);
++		int3_emulate_jmp(regs, (long)ip + tp->emulated.rel32);
+ 		break;
+ 
+ 	default:
+@@ -1134,6 +1145,7 @@ static void text_poke_bp_batch(struct text_poke_loc *tp, unsigned int nr_entries
+ 		.vec = tp,
+ 		.nr_entries = nr_entries,
+ 		.refs = ATOMIC_INIT(1),
++		.native = false,
+ 	};
+ 	unsigned char int3 = INT3_INSN_OPCODE;
+ 	unsigned int i;
+@@ -1161,7 +1173,7 @@ static void text_poke_bp_batch(struct text_poke_loc *tp, unsigned int nr_entries
+ 	 * Second step: update all but the first byte of the patched range.
  	 */
- 	smp_store_release(&tps->state, state);
-+
-+	cpumask_clear(&tps->sync_ack_map);
-+
-+	/*
-+	 * Introduce a synchronizing instruction in local and remote insn
-+	 * streams. This flushes any stale cached uops from CPU pipelines.
-+	 */
-+	sync_one();
-+
-+	wait_for_acks(tps);
+ 	for (do_sync = 0, i = 0; i < nr_entries; i++) {
+-		int len = text_opcode_size(tp[i].opcode);
++		int len = text_opcode_size(tp[i].emulated.opcode);
+ 
+ 		if (len - INT3_INSN_SIZE > 0) {
+ 			text_poke(text_poke_addr(&tp[i]) + INT3_INSN_SIZE,
+@@ -1205,11 +1217,25 @@ static void text_poke_bp_batch(struct text_poke_loc *tp, unsigned int nr_entries
  }
  
- /**
-  * text_poke_site() - called on the primary to patch a single call site.
-+ * The interlocking sync work on the secondary is done in text_poke_sync_site().
-  *
-  * Called in thread context with tps->state == PATCH_SYNC_DONE where it
-  * takes tps->state through different PATCH_SYNC_* states, returning
-@@ -1514,6 +1544,43 @@ static void __maybe_unused text_poke_site(struct text_poke_state *tps,
- 			  &prev_mm, ptep);
- }
- 
-+/**
-+ * text_poke_sync_site() -- called to synchronize the CPU pipeline
-+ * on secondary CPUs for each patch site.
-+ *
-+ * Called in thread context with tps->state == PATCH_SYNC_0.
-+ *
-+ * Returns after having observed tps->state == PATCH_SYNC_DONE.
-+ */
-+static void text_poke_sync_site(struct text_poke_state *tps)
-+{
-+	int cpu = smp_processor_id();
-+	int prevstate = -1;
-+	int acked;
-+
-+	/*
-+	 * In thread context we arrive here expecting tps->state to move
-+	 * in-order from PATCH_SYNC_{0 -> 1 -> 2} -> PATCH_SYNC_DONE.
-+	 */
-+	do {
-+		/*
-+		 * Wait until there's some work for us to do.
-+		 */
-+		smp_cond_load_acquire(&tps->state,
-+				      prevstate != VAL);
-+
-+		prevstate = READ_ONCE(tps->state);
-+
-+		if (prevstate < PATCH_SYNC_DONE) {
-+			acked = cpumask_test_cpu(cpu, &tps->sync_ack_map);
-+
-+			BUG_ON(acked);
-+			sync_one();
-+			cpumask_set_cpu(cpu, &tps->sync_ack_map);
-+		}
-+	} while (prevstate < PATCH_SYNC_DONE);
-+}
-+
- /**
-  * text_poke_sync_finish() -- called to synchronize the CPU pipeline
-  * on secondary CPUs for all patch sites.
-@@ -1525,6 +1592,7 @@ static void text_poke_sync_finish(struct text_poke_state *tps)
+ static void text_poke_loc_init(struct text_poke_loc *tp, void *addr,
+-			       const void *opcode, size_t len, const void *emulate)
++			       const void *opcode, size_t len,
++			       const void *emulate, bool native)
  {
- 	while (true) {
- 		enum patch_state state;
-+		int cpu = smp_processor_id();
+ 	struct insn insn;
  
- 		state = READ_ONCE(tps->state);
++	memset((void *)tp, 0, sizeof(*tp));
+ 	memcpy((void *)tp->text, opcode, len);
++
++	tp->rel_addr = addr - (void *)_stext;
++
++	/*
++	 * Native mode: when we might be poking
++	 * arbitrary (perhaps) multiple instructions.
++	 */
++	if (native) {
++		tp->native.len = (u8)len;
++		return;
++	}
++
+ 	if (!emulate)
+ 		emulate = opcode;
  
-@@ -1535,11 +1603,24 @@ static void text_poke_sync_finish(struct text_poke_state *tps)
- 		if (state == PATCH_DONE)
+@@ -1219,31 +1245,30 @@ static void text_poke_loc_init(struct text_poke_loc *tp, void *addr,
+ 	BUG_ON(!insn_complete(&insn));
+ 	BUG_ON(len != insn.length);
+ 
+-	tp->rel_addr = addr - (void *)_stext;
+-	tp->opcode = insn.opcode.bytes[0];
++	tp->emulated.opcode = insn.opcode.bytes[0];
+ 
+-	switch (tp->opcode) {
++	switch (tp->emulated.opcode) {
+ 	case INT3_INSN_OPCODE:
+ 		break;
+ 
+ 	case CALL_INSN_OPCODE:
+ 	case JMP32_INSN_OPCODE:
+ 	case JMP8_INSN_OPCODE:
+-		tp->rel32 = insn.immediate.value;
++		tp->emulated.rel32 = insn.immediate.value;
+ 		break;
+ 
+ 	default: /* assume NOP */
+ 		switch (len) {
+ 		case 2: /* NOP2 -- emulate as JMP8+0 */
+ 			BUG_ON(memcmp(emulate, ideal_nops[len], len));
+-			tp->opcode = JMP8_INSN_OPCODE;
+-			tp->rel32 = 0;
++			tp->emulated.opcode = JMP8_INSN_OPCODE;
++			tp->emulated.rel32 = 0;
  			break;
  
--		/*
--		 * Relax here while the primary makes up its mind on
--		 * whether it is done or not.
--		 */
--		cpu_relax();
-+		if (state == PATCH_SYNC_DONE) {
-+			/*
-+			 * Ack that we've seen the end of this iteration
-+			 * and then wait until everybody's ready to move
-+			 * to the next iteration or exit.
-+			 */
-+			cpumask_set_cpu(cpu, &tps->sync_ack_map);
-+			smp_cond_load_acquire(&tps->state,
-+					      (state != VAL));
-+		} else if (state == PATCH_SYNC_0) {
-+			/*
-+			 * PATCH_SYNC_1, PATCH_SYNC_2 are handled
-+			 * inside text_poke_sync_site().
-+			 */
-+			text_poke_sync_site(tps);
-+		} else {
-+			BUG();
-+		}
- 	}
+ 		case 5: /* NOP5 -- emulate as JMP32+0 */
+ 			BUG_ON(memcmp(emulate, ideal_nops[NOP_ATOMIC5], len));
+-			tp->opcode = JMP32_INSN_OPCODE;
+-			tp->rel32 = 0;
++			tp->emulated.opcode = JMP32_INSN_OPCODE;
++			tp->emulated.rel32 = 0;
+ 			break;
+ 
+ 		default: /* unknown instruction */
+@@ -1299,7 +1324,7 @@ void __ref text_poke_queue(void *addr, const void *opcode, size_t len, const voi
+ 	text_poke_flush(addr);
+ 
+ 	tp = &tp_vec[tp_vec_nr++];
+-	text_poke_loc_init(tp, addr, opcode, len, emulate);
++	text_poke_loc_init(tp, addr, opcode, len, emulate, false);
  }
  
-@@ -1549,6 +1630,12 @@ static int patch_worker(void *t)
- 	struct text_poke_state *tps = t;
+ /**
+@@ -1322,7 +1347,7 @@ void __ref text_poke_bp(void *addr, const void *opcode, size_t len, const void *
+ 		return;
+ 	}
  
- 	if (cpu == tps->primary_cpu) {
-+		/*
-+		 * The init state is PATCH_SYNC_DONE. Wait until the
-+		 * secondaries have assembled before we start patching.
-+		 */
-+		wait_for_acks(tps);
-+
- 		/*
- 		 * Generates insns and calls text_poke_site() to do the poking
- 		 * and sync.
+-	text_poke_loc_init(&tp, addr, opcode, len, emulate);
++	text_poke_loc_init(&tp, addr, opcode, len, emulate, false);
+ 	text_poke_bp_batch(&tp, 1);
+ }
+ 
 -- 
 2.20.1
 
