@@ -2,171 +2,308 @@ Return-Path: <SRS0=8dav=5Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BAAEC2D0F4
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 17:10:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68682C2BA1B
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 17:12:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 33C2720771
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 17:10:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="JlEGM/DO"
+	by mail.kernel.org (Postfix) with ESMTP id 368C2208FE
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 17:12:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730528AbgDHRKn (ORCPT
+        id S1729014AbgDHRMm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Apr 2020 13:10:43 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:41785 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726663AbgDHRKn (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Apr 2020 13:10:43 -0400
-Received: by mail-io1-f65.google.com with SMTP id b12so842701ion.8
-        for <linux-kernel@vger.kernel.org>; Wed, 08 Apr 2020 10:10:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=EVMc1OHJHB8VvA0TWlbmWmPavYiZYAI6v/n+zzq1Wf0=;
-        b=JlEGM/DOa4q8siqwVYUAftU8gmZWjOLtOYJEE+Bp5LCO4tlR1jInMjHa136elkQI5X
-         fM45YgN4JD3Wm3RtLmMIac1umB86TBoz7VTMsdvJzqdYMKwkFn6ta31nyfuRuxYniSow
-         reddZXCDRqSsCYkcqfJA8aQ7XAHdHC0hXldCo=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=EVMc1OHJHB8VvA0TWlbmWmPavYiZYAI6v/n+zzq1Wf0=;
-        b=pZj7tWEOzhE06PbfyB7EGP3Dk5C9eBNvE+cnbK45ie1ZqlMgzTK3cruX01O+dpGuEx
-         lnTPh7RnB55ekAQsexnax4ZgTavjlbdUv13EqjjLG496TNM6yVab6OuCvg5vVbwq/KpW
-         ItjsqiEy9doOeN+DryI6yr6vTtEq6jc/Yxr5IC7Pug6sWnyDUO33SZAQvye90aDze/j6
-         9snrpTLjRWz+a5Lhp37mCi/BFD4wx9lUoW5I19U096I2DL7HAV6DHwytsESBvtt0dOVJ
-         B90vKAYbstBt6AvI2gqpcYak0sLdR4M2mFW8tAxsstCXQ60Fy5UojJZ+Dw8+ZonnW5Cl
-         q0Hg==
-X-Gm-Message-State: AGi0PuZ2mtC0J4I1JhmsLiJgt4A7Od5jBh4BCVGtu2ObkU/IKDptzHnA
-        WbxL5wwP3kAEKr4zKEJBlR7c5UJ5AMQhII4JoKXaYQ==
-X-Google-Smtp-Source: APiQypJJEoOGQVIJXcXfMbzaBXaiK4IXHxoudhmAmL2UMkWJOUiQXKhncget2FEh09Lc9nSdPCYNibmpUlv56cYFUCg=
-X-Received: by 2002:a02:cac4:: with SMTP id f4mr7518997jap.51.1586365841562;
- Wed, 08 Apr 2020 10:10:41 -0700 (PDT)
-MIME-Version: 1.0
-References: <cover.1566563833.git.fabien.lahoudere@collabora.com>
- <d985a8a811996148e8cda78b9fe47bb87b884b56.1566563833.git.fabien.lahoudere@collabora.com>
- <20190826095612.7455cb05@archlinux> <8abbe9360938ab851d16c2c1494ba56034775823.camel@collabora.com>
- <6b50bdff184e6af664b7a61e0a8a2cddc5718f0a.camel@collabora.com>
- <20191110151408.GB3984@icarus> <20191111114955.00001031@huawei.com> <20191112011618.GA62259@icarus>
-In-Reply-To: <20191112011618.GA62259@icarus>
-From:   Gwendal Grignou <gwendal@chromium.org>
-Date:   Wed, 8 Apr 2020 10:10:28 -0700
-Message-ID: <CAPUE2uvDiAfE68uCzWdTN3T2L_PR3JPeyGWDrc5ToLieEpGH1A@mail.gmail.com>
-Subject: Re: [PATCH v2 1/1] counter: cros_ec: Add synchronization sensor
-To:     William Breathitt Gray <vilhelm.gray@gmail.com>
-Cc:     Jonathan Cameron <jonathan.cameron@huawei.com>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Fabien Lahoudere <fabien.lahoudere@collabora.com>,
-        Enrico Granata <egranata@chromium.org>,
-        Collabora kernel ML <kernel@collabora.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Benson Leung <bleung@chromium.org>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Guenter Roeck <groeck@chromium.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Wed, 8 Apr 2020 13:12:42 -0400
+Received: from honk.sigxcpu.org ([24.134.29.49]:49752 "EHLO honk.sigxcpu.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727996AbgDHRMl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Apr 2020 13:12:41 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by honk.sigxcpu.org (Postfix) with ESMTP id C2D5DFB03;
+        Wed,  8 Apr 2020 19:12:37 +0200 (CEST)
+X-Virus-Scanned: Debian amavisd-new at honk.sigxcpu.org
+Received: from honk.sigxcpu.org ([127.0.0.1])
+        by localhost (honk.sigxcpu.org [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id 0PxCznq62D1s; Wed,  8 Apr 2020 19:12:33 +0200 (CEST)
+Received: by bogon.sigxcpu.org (Postfix, from userid 1000)
+        id D62B4400E8; Wed,  8 Apr 2020 19:12:32 +0200 (CEST)
+Date:   Wed, 8 Apr 2020 19:12:32 +0200
+From:   Guido =?iso-8859-1?Q?G=FCnther?= <agx@sigxcpu.org>
+To:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
         Lee Jones <lee.jones@linaro.org>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Nick Vaccaro <nvaccaro@chromium.org>,
-        linux-iio <linux-iio@vger.kernel.org>, linux-doc@vger.kernel.org,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Robert Chiras <robert.chiras@nxp.com>,
+        Sam Ravnborg <sam@ravnborg.org>, Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH v10 0/2] drm: bridge: Add NWL MIPI DSI host controller
+ support
+Message-ID: <20200408171232.GA4264@bogon.m.sigxcpu.org>
+References: <cover.1584730033.git.agx@sigxcpu.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <cover.1584730033.git.agx@sigxcpu.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-I resend a counter driver for the EC at
-https://patchwork.kernel.org/patch/11479437/
+Hi,
+On Fri, Mar 20, 2020 at 07:49:08PM +0100, Guido Günther wrote:
+> This adds initial support for the NWL MIPI DSI Host controller found on i.MX8
+> SoCs.
 
-I tried a timestamp only IIO sensor, but this is not allowed, as the
-timestamp channel is very specific: no extended parameters can be
-added.
-I did not add a COUNTER_COUNT_TALLY type, as a newer function
-COUNTER_COUNT_FUNCTION_INCREASE, fits the counter better.
-I am still using IIO_COUNT (inspired by the st counter driver) to
-gather the event in real time on the iio side.
+Is there anything in can do to get this into drm-misc?
+Cheers,
+ -- Guido
 
-Gwendal.
+> 
+> It adds support for the i.MX8MQ but the same IP core can also be found on e.g.
+> i.MX8QXP. I added the necessary hooks to support other imx8 variants but since
+> I only have imx8mq boards to test I omitted the platform data for
+> other SoCs.
 
 
-On Mon, Nov 11, 2019 at 5:16 PM William Breathitt Gray
-<vilhelm.gray@gmail.com> wrote:
->
-> On Mon, Nov 11, 2019 at 11:49:55AM +0000, Jonathan Cameron wrote:
-> > On Sun, 10 Nov 2019 10:14:08 -0500
-> > William Breathitt Gray <vilhelm.gray@gmail.com> wrote:
-> >
-> > > On Tue, Sep 24, 2019 at 04:20:51PM +0200, Fabien Lahoudere wrote:
-> > > > Hi all,
-> > > >
-> > > > After some discussions and investigation, the timestamp is very
-> > > > important for that sync driver.
-> > > > Google team uses that timestamp to compare with gyroscope timestamp.
-> > > >
-> > > > So the important data is timestamp and counter value is useless.
-> > > > Just the event of counter increment is important to get a timestamp.
-> > > >
-> > > > In that case, my idea was to just use an IIO driver with a single
-> > > > channel with IIO_TIMESTAMP. We discuss this here and it seems
-> > > > controversial.
-> > > >
-> > > > So my question to Jonathan is if we have a timestamp coming from the EC
-> > > > itself, can we consider this timestamp as a good IIO driver?
-> > > >
-> > > > Any other idea is welcome, however Google team would like to manage
-> > > > only IIO drivers if possible.
-> > > >
-> > > > Thanks
-> > >
-> > > Jonathan,
-> > >
-> > > Should the the timestamp from the EC be introduced as an IIO driver
-> > > using IIO_TIMESTAMP?
-> >
-> > It is is a rather odd driver but I suppose it would be fine with lots
-> > of clear docs on why it is how it is...
-> >
-> > >
-> > > Since there is no corresponding EC Counter driver in the baseline right
-> > > now we don't have a conflict yet. If the EC timestamp is introduced as
-> > > an IIO driver then we should make any future EC Counter driver mutually
-> > > exclusive with the IIO driver in order to prevent any memory space
-> > > conflict. At that point we may deprecate the IIO driver and move the
-> > > timestamp functionality to the corresponding Counter driver.
-> >
-> > That route does become somewhat of a mess so I suspect we'd have to have
-> > a single driver supporting both userspace interfaces.  If you are happy
-> > that we'd be adding a bit of legacy to support for ever then we can go
-> > that way.
->
-> Generally I'd prefer all components of a device to be supported, but
-> if this is as Fabien suggests that due to the nature of this particular
-> device the counter value is of no interest, then a Counter driver is of
-> little practical use here. In this particular case, it seems better to
-> restrict the driver support to just the timestamp functionality that
-> will be used, rather than introduce extra code to expose values that
-> will likely be ignored and risk adding code to the kernel that becomes
-> unmaintained due to lack of exposure or interest.
->
-> William Breathitt Gray
->
-> >
-> > >
-> > > That's assuming someone is interested in the Count component enough to
-> > > implement an EC Counter driver; otherwise, the IIO driver will serve
-> > > just fine if timestamp is the only data desired from this device.
-> > >
-> > > William Breathitt Gray
-> >
-> >
+> 
+> The code is based on NXPs BSP so I added Robert Chiras as Co-authored-by.
+> 
+> The most notable changes over the BSP driver are
+>  - Calculate HS mode timing from phy_configure_opts_mipi_dphy
+>  - Perform all clock setup via DT
+>  - Merge nwl-imx and nwl drivers
+>  - Add B0 silion revision quirk
+>  - become a bridge driver to hook into mxsfb / dcss
+>    imx-display-subsystem so it makes sense to make it drive a bridge for dsi as
+>    well).
+>  - Use panel_bridge to attach the panel
+>  - Use multiplex framework instead of accessing syscon directly
+> 
+> This has been tested on a Librem 5 devkit using mxsfb with Robert's patches[1]
+> and the mainline rocktech-jh057n00900 DSI panel driver on next-20200317 and on
+> the Librem5 with the a Mantix MLAF057WE51-X DSI panel driver (not yet mainline)
+> The DCSS (submitted for mainline inclusion now too) can also act as input
+> source.
+> 
+> Changes from v10:
+> - Per review comments by Sam Ravnborg
+>   https://lore.kernel.org/dri-devel/20200318214639.GA971@ravnborg.org/
+>   - Drop header-test-y since kernel lost support
+>   - Handle drm_bridge_attach's new flags argument
+>   - Add Acked-by: to binding patch, thanks!
+> - Move to next-20200319
+> 
+> Changes from v9:
+> - Per review comments by Robert Chiras
+>   https://lore.kernel.org/dri-devel/1575366594.6423.61.camel@nxp.com/
+>   - don't mix DSI host and bridge initialization
+>   - only select output source once
+>   - defer probe when panel is not ready to fix usage as a module
+>   - use correct reset sequence as described by Robert
+>     (and provided by NWL)
+>   - use mode->clock instead of mode->crtc_clock
+> - Add tested by from Martin Kepplinger, thanks!
+> - Drop platform specific data (as suggested previously by Laurent Pinchart and
+>   Andrzej Hajda) since imx8q* needs another set of abstractions with the new
+>   reset sequence and that's easier to do when adding imx8q* support rather then
+>   adding wrong abstraction now.
+> - Update bindings to use proper clock and irq names to make the example match
+>   reality more closely.
+> - Use `fallthrough;` instead of /* Fall through */ in switch statements
+> - Move to next-20200226
+> 
+> Changes from v8:
+> - Drop reset quirk. It's not needed with mxsfb and sometimes triggers a shifted display.
+> 
+> Changes from v7:
+> - Per review comments by Andrzej Hajda
+>   https://lore.kernel.org/linux-arm-kernel/c86b7ca2-7799-eafd-c380-e4b551520837@samsung.com/
+>   - Drop spare empty line
+>   - handle nwl_dsi_write errors
+>   - better handle read errors
+>   - unwind in case of error in nwl_dsi_enable
+>   - use bridge_to_dsi() instead of accessing driver_private
+>   - don't log on -EPROBEDEFER when fething the reset controller
+>   - use endpoint number to determine input
+> - Spotted by kbuild test robot <lkp@intel.com>
+>   https://lore.kernel.org/linux-arm-kernel/201909230644.qfSKbNf9%25lkp@intel.com/
+>   Use signed return type for nwl_dsi_get_dpi_pixel_format
+> - Drop connector type from drm_panel_bridge_add
+> - Don't forget to set an error value on dsi reads
+> 
+> Changes from v5:
+> - Per review comments by Andrzej Hajda
+>   https://lists.freedesktop.org/archives/dri-devel/2019-September/235281.html
+>   - Fix include file ordering
+>   - Add a comment to nwl_dsi_platform_data that will allow to add support
+>     at least for the i.MX8QM
+>   - Merge driver into a single file plus the register defs in a separate header
+> - Make more functions and structs static
+> 
+> Changes from v4:
+> - Collect Reviewed-by: from Rob Herring, thanks!
+>   https://lists.freedesktop.org/archives/dri-devel/2019-September/233979.html
+> - Spotted by kbuild test robot <lkp@intel.com>
+>   https://lists.freedesktop.org/archives/dri-devel/2019-September/233860.html
+>   https://lists.freedesktop.org/archives/dri-devel/2019-September/233863.html
+>   - fix format string for size_t
+>   - Use DIV64_U64_ROUND_UP to fix build on 32 bit architectures
+>     We can't use simple shift sind d and n are similar in size and
+>     we need full precision
+> - Fix debug cfg_t_post debug print out
+> - Avoid PSEC_PER_SEC
+> - Move timeout / overflow handling out of nwl_dsi_finish_transmission,
+>   it would never end up being reported since the call to the function
+>   was guarded by flags.
+> - Drop 'support for' from KConfig title to make it match the other
+>   drivers in that submenu
+> 
+> Changes from v3:
+> - Per review comments by Robert Chiras
+>   https://lists.freedesktop.org/archives/dri-devel/2019-August/232580.html
+>   - Add Robert's {Signed-off,Tested}-by:
+>   - Respect number of lanes when calculting bandwidth limits
+>   - Drop duplicate NWL_DSI_ENABLE_MULT_PKTS setup
+> - Per testing by Rober Chiras
+>   https://lists.freedesktop.org/archives/dri-devel/2019-August/233688.html
+>   - Drop duplicate (and too early) drm_bridge_add() in nwl_dsi_probe() that
+>     made mxsfb fail to connect to the bridge since the panel_bridge was not up
+>     yet. drm_bridge_add() happens in nwl_dsi_host_attach() where after the
+>     panel_bridge was set up.
+> - Per review comments by Rob Herring on bindings
+>   https://lists.freedesktop.org/archives/dri-devel/2019-August/233196.html
+>   - drop description from power-domains and resets
+>   - allow BSD 2 clause license as well
+>   - make ports more specific
+>   - add #address-cells, #size-cells as required
+>   - use additionalProperties
+>   - panel is of type object
+> 
+> Changes from v2:
+> - Per review comments by Rob Herring
+>   https://lists.freedesktop.org/archives/dri-devel/2019-August/230448.html
+>   - bindings:
+>     - Simplify by restricting to fsl,imx8mq-nwl-dsi
+>     - document reset lines
+>     - add port@{0,1}
+>     - use a real compatible string for the panel
+>     - resets are required
+> - Per review comments by Arnd Bergmann
+>   https://lists.freedesktop.org/archives/dri-devel/2019-August/230868.html
+>   - Don't access iomuxc_gpr regs directly. This allows us to drop the
+>     first patch in the series with the iomuxc_gpr field defines.
+> - Per review comments by Laurent Pinchart
+>   Fix wording in bindings
+> - Add mux-controls to bindings
+> - Don't print error message on dphy probe deferral
+> 
+> Changes from v1:
+> - Per review comments by Sam Ravnborg
+>   https://lists.freedesktop.org/archives/dri-devel/2019-July/228130.html
+>   - Change binding docs to YAML
+>   - build: Don't always visit imx-nwl/
+>   - build: Add header-test-y
+>   - Sort headers according to DRM convention
+>   - Use drm_display_mode instead of videmode
+> - Per review comments by Fabio Estevam
+>   https://lists.freedesktop.org/archives/dri-devel/2019-July/228299.html
+>   - Don't restrict build to ARCH_MXC
+>   - Drop unused includes
+>   - Drop unreachable code in imx_nwl_dsi_bridge_mode_fixup()
+>   - Drop remaining calls of dev_err() and use DRM_DEV_ERR()
+>     consistently.
+>   - Use devm_platform_ioremap_resource()
+>   - Drop devm_free_irq() in probe() error path
+>   - Use single line comments where sufficient
+>   - Use <linux/time64.h> instead of defining USEC_PER_SEC
+>   - Make input source select imx8 specific
+>   - Drop <asm/unaligned.h> inclusion (after removal of get_unaligned_le32)
+>   - Drop all EXPORT_SYMBOL_GPL() for functions used in the same module
+>     but different source files.
+>   - Drop nwl_dsi_enable_{rx,tx}_clock() by invoking clk_prepare_enable()
+>     directly
+>   - Remove pointless comment
+> - Laurent Pinchart
+>   https://lists.freedesktop.org/archives/dri-devel/2019-July/228313.html
+>   https://lists.freedesktop.org/archives/dri-devel/2019-July/228308.html
+>   - Drop (on iMX8MQ) unused csr regmap
+>   - Use NWL_MAX_PLATFORM_CLOCKS everywhere
+>   - Drop get_unaligned_le32() usage
+>   - remove duplicate 'for the' in binding docs
+>   - Don't include unused <linux/clk-provider.h>
+>   - Don't include unused <linux/component.h>
+>   - Drop dpms_mode for tracking state, trust the drm layer on that
+>   - Use pm_runtime_put() instead of pm_runtime_put_sync()
+>   - Don't overwrite encoder type
+>   - Make imx_nwl_platform_data const
+>   - Use the reset controller API instead of open coding that platform specific
+>     part
+>   - Use <linux/bitfield.h> intead of making up our own defines
+>   - name mipi_dsi_transfer less generic: nwl_dsi_transfer
+>   - ensure clean in .remove by calling mipi_dsi_host_unregister.
+>   - prefix constants by NWL_DSI_
+>   - properly format transfer_direction enum
+>   - simplify platform clock handling
+>   - Don't modify state in mode_fixup() and use mode_set() instead
+>   - Drop bridge detach(), already handle by nwl_dsi_host_detach()
+>   - Drop USE_*_QUIRK() macros
+> - Drop (for now) unused clock defnitions. 'pixel' and 'bypass' clock will be
+>   used for i.MX8 SoCs but since they're unused atm drop the definitions - but
+>   keep the logic to enable/disable several clocks in place since we know we'll
+>   need it in the future.
+> 
+> Changes from v0:
+> - Add quirk for IMQ8MQ silicon B0 revision to not mess with the
+>   system reset controller on power down since enable() won't work
+>   otherwise.
+> - Drop devm_free_irq() handled by the device driver core
+> - Disable tx esc clock after the phy power down to unbreak
+>   disable/enable (unblank/blank)
+> - Add ports to dt binding docs
+> - Select GENERIC_PHY_MIPI_DPHY instead of GENERIC_PHY for
+>   phy_mipi_dphy_get_default_config
+> - Select DRM_MIPI_DSI
+> - Include drm_print.h to fix build on next-20190408
+> - Drop some debugging messages
+> - Newline terminate all DRM_ printouts
+> - Turn component driver into a drm bridge
+> 
+> [0]: https://lists.freedesktop.org/archives/dri-devel/2019-May/219484.html
+> [1]: https://patchwork.freedesktop.org/series/62822/
+> 
+> Guido Günther (2):
+>   dt-bindings: display/bridge: Add binding for NWL mipi dsi host
+>     controller
+>   drm/bridge: Add NWL MIPI DSI host controller support
+> 
+>  .../bindings/display/bridge/nwl-dsi.yaml      |  216 +++
+>  drivers/gpu/drm/bridge/Kconfig                |   16 +
+>  drivers/gpu/drm/bridge/Makefile               |    1 +
+>  drivers/gpu/drm/bridge/nwl-dsi.c              | 1218 +++++++++++++++++
+>  drivers/gpu/drm/bridge/nwl-dsi.h              |  144 ++
+>  5 files changed, 1595 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/display/bridge/nwl-dsi.yaml
+>  create mode 100644 drivers/gpu/drm/bridge/nwl-dsi.c
+>  create mode 100644 drivers/gpu/drm/bridge/nwl-dsi.h
+> 
+> -- 
+> 2.23.0
+> 
+> _______________________________________________
+> dri-devel mailing list
+> dri-devel@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/dri-devel
