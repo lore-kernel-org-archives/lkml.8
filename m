@@ -2,234 +2,58 @@ Return-Path: <SRS0=8dav=5Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7641CC2BB54
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 01:37:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1391C2D0EC
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 01:38:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4C4A02075E
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 01:37:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586309877;
-	bh=SFd1DzfM8zpudrE9h+hHUUQLEJWE5VA7mjKo0IeF9xY=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UWLGjApriI19g8yI1KSgweSj6xR/61SGCHlPhaW/VPfMzGGQcfMn4QdyE/D3hLsCX
-	 5bKO71f7uIOoPQKKCCsk83d3PTPX4AihaGv0UQ+v1adaPiNtPSxrxCL6w7vlhC27z/
-	 exfUT67tpD4AvdILfoFqn2v23rExUwXKa17fd9eA=
+	by mail.kernel.org (Postfix) with ESMTP id CC49C206F7
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 01:38:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726530AbgDHBh4 (ORCPT
+        id S1726571AbgDHBiL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 21:37:56 -0400
-Received: from conuserg-12.nifty.com ([210.131.2.79]:51797 "EHLO
-        conuserg-12.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726407AbgDHBh4 (ORCPT
+        Tue, 7 Apr 2020 21:38:11 -0400
+Received: from shards.monkeyblade.net ([23.128.96.9]:44376 "EHLO
+        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726407AbgDHBiL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Apr 2020 21:37:56 -0400
-Received: from grover.flets-west.jp (softbank126125134031.bbtec.net [126.125.134.31]) (authenticated)
-        by conuserg-12.nifty.com with ESMTP id 0381aPHk015816;
-        Wed, 8 Apr 2020 10:36:26 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-12.nifty.com 0381aPHk015816
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1586309787;
-        bh=VX8um7le6Uy6ER5XPnM1U84P87XfhXDwxlFRA+5ZbG0=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=eUsvDlbQbvcaCGRqQfwO2U/mL1iR8lQyK/ePzFpozGB0B/NniW9h/7THVCl6N67jK
-         hnrgkoCm2u0IRC4jRVzLH9jgySj83mfKHSxwkR2lJioS1n124Ka1ZSKbX4TTUMVNij
-         BM5QfGMcxpbfU/uJHVi3yFyfKNgF8s6UplUNUcO6d2NqMypA+UPJHK+vsHiM7Vv7I5
-         PAX6n8mIZHLuyd2GH3Ru4O2n6BpK2vqJhrCc3wNNifbhK9ysICupf3eOCEWYfh7wzf
-         1XwiNaAAIbMIoh6blGUbMCW38sHOK86H+oJSSt4gXMMnena6VaydhYLL6f4gsff4oc
-         eVb8sWP4GhCmw==
-X-Nifty-SrcIP: [126.125.134.31]
-From:   Masahiro Yamada <masahiroy@kernel.org>
-To:     linux-kbuild@vger.kernel.org
-Cc:     clang-built-linux@googlegroups.com,
-        Fangrui Song <maskray@google.com>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Peter Zijlstra <peterz@infradead.org>,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v3 2/2] kbuild: support LLVM=1 to switch the default tools to Clang/LLVM
-Date:   Wed,  8 Apr 2020 10:36:23 +0900
-Message-Id: <20200408013623.31974-2-masahiroy@kernel.org>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200408013623.31974-1-masahiroy@kernel.org>
-References: <20200408013623.31974-1-masahiroy@kernel.org>
+        Tue, 7 Apr 2020 21:38:11 -0400
+Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id D9E4B1210A3E3;
+        Tue,  7 Apr 2020 18:38:09 -0700 (PDT)
+Date:   Tue, 07 Apr 2020 18:38:08 -0700 (PDT)
+Message-Id: <20200407.183808.1820111338460470376.davem@davemloft.net>
+To:     wenhu.wang@vivo.com
+Cc:     kuba@kernel.org, bjorn.andersson@linaro.org, allison@lohutok.net,
+        hofrat@osadl.org, mkl@pengutronix.de, tglx@linutronix.de,
+        arnd@arndb.de, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, opensource.kernel@vivo.org
+Subject: Re: [PATCH] net: qrtr: send msgs from local of same id as broadcast
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <20200407132930.109738-1-wenhu.wang@vivo.com>
+References: <20200407132930.109738-1-wenhu.wang@vivo.com>
+X-Mailer: Mew version 6.8 on Emacs 26.1
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Tue, 07 Apr 2020 18:38:10 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-As Documentation/kbuild/llvm.rst implies, building the kernel with a
-full set of LLVM tools gets very verbose and unwieldy.
+From: WANG Wenhu <wenhu.wang@vivo.com>
+Date: Tue,  7 Apr 2020 06:29:28 -0700
 
-Provide a single switch LLVM=1 to use Clang and LLVM tools instead
-of GCC and Binutils. You can pass it from the command line or as an
-environment variable.
+> -		enqueue_fn = qrtr_bcast_enqueue;
+> -		if (addr->sq_port != QRTR_PORT_CTRL) {
+> +		if (addr->sq_port != QRTR_PORT_CTRL &&
+> +				qrtr_local_nid != QRTR_NODE_BCAST) {
 
-Please note LLVM=1 does not turn on the integrated assembler. You need
-to pass LLVM_IAS=1 to use it. When the upstream kernel is ready for the
-integrated assembler, I think we can make it default.
-
-We discussed what we need, and we agreed to go with a simple boolean
-flag that switches both target and host tools:
-
-  https://lkml.org/lkml/2020/3/28/494
-  https://lkml.org/lkml/2020/4/3/43
-
-Some items discussed, but not adopted:
-
-- LLVM_DIR
-
-  When multiple versions of LLVM are installed, I just thought supporting
-  LLVM_DIR=/path/to/my/llvm/bin/ might be useful.
-
-  CC      = $(LLVM_DIR)clang
-  LD      = $(LLVM_DIR)ld.lld
-    ...
-
-  However, we can handle this by modifying PATH. So, we decided to not do
-  this.
-
-- LLVM_SUFFIX
-
-  Some distributions (e.g. Debian) package specific versions of LLVM with
-  naming conventions that use the version as a suffix.
-
-  CC      = clang$(LLVM_SUFFIX)
-  LD      = ld.lld(LLVM_SUFFIX)
-    ...
-
-  will allow a user to pass LLVM_SUFFIX=-11 to use clang-11 etc.,
-  but the suffixed versions in /usr/bin/ are symlinks to binaries in
-  /usr/lib/llvm-#/bin/, so this can also be handled by PATH.
-
-Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
-Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
-Tested-by: Nathan Chancellor <natechancellor@gmail.com> # build
-Tested-by: Nick Desaulniers <ndesaulniers@google.com>
-Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
----
-
-Changes in v3: None
-Changes in v2:
-  - Switch host compilers as well, as requested by Nick and Nathan
-
- Documentation/kbuild/kbuild.rst |  5 +++++
- Documentation/kbuild/llvm.rst   |  8 ++++++--
- Makefile                        | 29 +++++++++++++++++++++++------
- tools/objtool/Makefile          |  6 ++++++
- 4 files changed, 40 insertions(+), 8 deletions(-)
-
-diff --git a/Documentation/kbuild/kbuild.rst b/Documentation/kbuild/kbuild.rst
-index 510f38d7e78a..2d1fc03d346e 100644
---- a/Documentation/kbuild/kbuild.rst
-+++ b/Documentation/kbuild/kbuild.rst
-@@ -262,3 +262,8 @@ KBUILD_BUILD_USER, KBUILD_BUILD_HOST
- These two variables allow to override the user@host string displayed during
- boot and in /proc/version. The default value is the output of the commands
- whoami and host, respectively.
-+
-+LLVM
-+----
-+If this variable is set to 1, Kbuild will use Clang and LLVM utilities instead
-+of GCC and GNU binutils to build the kernel.
-diff --git a/Documentation/kbuild/llvm.rst b/Documentation/kbuild/llvm.rst
-index 0fefdf1737e9..c0a98c20e34c 100644
---- a/Documentation/kbuild/llvm.rst
-+++ b/Documentation/kbuild/llvm.rst
-@@ -47,8 +47,12 @@ example:
- LLVM Utilities
- --------------
- 
--LLVM has substitutes for GNU binutils utilities. These can be invoked as
--additional parameters to `make`.
-+LLVM has substitutes for GNU binutils utilities. Kbuild supports `LLVM=1`
-+to enable them.
-+
-+	make LLVM=1
-+
-+They can be enabled individually. The full list of the parameters:
- 
- 	make CC=clang LD=ld.lld AR=llvm-ar NM=llvm-nm STRIP=llvm-strip \\
- 	  OBJCOPY=llvm-objcopy OBJDUMP=llvm-objdump OBJSIZE=llvm-size \\
-diff --git a/Makefile b/Makefile
-index a2aadcf8a36c..d5c907c0beb8 100644
---- a/Makefile
-+++ b/Makefile
-@@ -399,8 +399,13 @@ HOST_LFS_CFLAGS := $(shell getconf LFS_CFLAGS 2>/dev/null)
- HOST_LFS_LDFLAGS := $(shell getconf LFS_LDFLAGS 2>/dev/null)
- HOST_LFS_LIBS := $(shell getconf LFS_LIBS 2>/dev/null)
- 
--HOSTCC       = gcc
--HOSTCXX      = g++
-+ifneq ($(LLVM),)
-+HOSTCC	= clang
-+HOSTCXX	= clang++
-+else
-+HOSTCC	= gcc
-+HOSTCXX	= g++
-+endif
- KBUILD_HOSTCFLAGS   := -Wall -Wmissing-prototypes -Wstrict-prototypes -O2 \
- 		-fomit-frame-pointer -std=gnu89 $(HOST_LFS_CFLAGS) \
- 		$(HOSTCFLAGS)
-@@ -409,16 +414,28 @@ KBUILD_HOSTLDFLAGS  := $(HOST_LFS_LDFLAGS) $(HOSTLDFLAGS)
- KBUILD_HOSTLDLIBS   := $(HOST_LFS_LIBS) $(HOSTLDLIBS)
- 
- # Make variables (CC, etc...)
--LD		= $(CROSS_COMPILE)ld
--CC		= $(CROSS_COMPILE)gcc
- CPP		= $(CC) -E
-+ifneq ($(LLVM),)
-+CC		= clang
-+LD		= ld.lld
-+AR		= llvm-ar
-+NM		= llvm-nm
-+OBJCOPY		= llvm-objcopy
-+OBJDUMP		= llvm-objdump
-+READELF		= llvm-readelf
-+OBJSIZE		= llvm-size
-+STRIP		= llvm-strip
-+else
-+CC		= $(CROSS_COMPILE)gcc
-+LD		= $(CROSS_COMPILE)ld
- AR		= $(CROSS_COMPILE)ar
- NM		= $(CROSS_COMPILE)nm
--STRIP		= $(CROSS_COMPILE)strip
- OBJCOPY		= $(CROSS_COMPILE)objcopy
- OBJDUMP		= $(CROSS_COMPILE)objdump
--OBJSIZE		= $(CROSS_COMPILE)size
- READELF		= $(CROSS_COMPILE)readelf
-+OBJSIZE		= $(CROSS_COMPILE)size
-+STRIP		= $(CROSS_COMPILE)strip
-+endif
- PAHOLE		= pahole
- LEX		= flex
- YACC		= bison
-diff --git a/tools/objtool/Makefile b/tools/objtool/Makefile
-index ee08aeff30a1..f591c4d1b6fe 100644
---- a/tools/objtool/Makefile
-+++ b/tools/objtool/Makefile
-@@ -3,9 +3,15 @@ include ../scripts/Makefile.include
- include ../scripts/Makefile.arch
- 
- # always use the host compiler
-+ifneq ($(LLVM),)
-+HOSTAR	?= llvm-ar
-+HOSTCC	?= clang
-+HOSTLD	?= ld.lld
-+else
- HOSTAR	?= ar
- HOSTCC	?= gcc
- HOSTLD	?= ld
-+endif
- AR	 = $(HOSTAR)
- CC	 = $(HOSTCC)
- LD	 = $(HOSTLD)
--- 
-2.17.1
-
+Please line up the second line of this if() statement with the column
+after the openning parenthesis of the first line.
