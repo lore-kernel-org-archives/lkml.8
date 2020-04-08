@@ -2,87 +2,111 @@ Return-Path: <SRS0=8dav=5Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C589C2BB54
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 00:09:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CD5AC2BB1D
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 00:13:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6C89B2054F
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 00:09:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="z9hdFoPy"
+	by mail.kernel.org (Postfix) with ESMTP id DF0262054F
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 00:13:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726525AbgDHAJ4 (ORCPT
+        id S1726483AbgDHANe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 20:09:56 -0400
-Received: from vps0.lunn.ch ([185.16.172.187]:53818 "EHLO vps0.lunn.ch"
+        Tue, 7 Apr 2020 20:13:34 -0400
+Received: from mga01.intel.com ([192.55.52.88]:14879 "EHLO mga01.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726406AbgDHAJ4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Apr 2020 20:09:56 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=AYxIzcriYqOq9OLej1S4GUEYatAw7MytodFh1SBwJUU=; b=z9hdFoPyr9u/KkzOOwGU2qKKEW
-        SU2VWAZUGcAFFkoTpwwRiIgVBG6BLDcbBefWtFyN2pVpO8ZhgmyE44bBEeh8/9SyGkaunVLowBHnN
-        zsJJtMjQfkYylr26SX2Xnw9f7KV3IiqJL33GzmwYVtee9oEZHtHeHpX70g/nqjJHtdno=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.93)
-        (envelope-from <andrew@lunn.ch>)
-        id 1jLyHv-001XmL-3D; Wed, 08 Apr 2020 02:09:51 +0200
-Date:   Wed, 8 Apr 2020 02:09:51 +0200
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Paul Spooren <mail@aparcar.org>
-Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, robh+dt@kernel.org,
-        jason@lakedaemon.net, gregory.clement@bootlin.com,
-        sebastian.hesselbarth@gmail.com, daniel@makrotopia.org,
-        freifunk@adrianschmutzler.de, kaloz@openwrt.org
-Subject: Re: [PATCH 0/5] arm: dts: linksys: rename codename to model
-Message-ID: <20200408000951.GE310042@lunn.ch>
-References: <20200407210816.866084-1-mail@aparcar.org>
- <20200407224615.GA359603@lunn.ch>
- <004a2ef9c1e04f9ffbb9c3cc9907ca656a406713.camel@aparcar.org>
+        id S1726406AbgDHANd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Apr 2020 20:13:33 -0400
+IronPort-SDR: F39ue/fKrtY/EimQVXXVJcTJPLk4URNj1B2VRa1/c7k3/OROszMgYlmzx1L/SjHAp2PAtcPepE
+ mz8XbX6U9JrA==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Apr 2020 17:13:33 -0700
+IronPort-SDR: meCSMCCsHwJL76gliCNHsz/xIRX6N0gXA0H4qHmwyncRdARH0D4hQj9BdM4PIyZOmj6XPOEX4V
+ Icft9yISo17A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,357,1580803200"; 
+   d="scan'208";a="286383509"
+Received: from iweiny-desk2.sc.intel.com ([10.3.52.147])
+  by fmsmga002.fm.intel.com with ESMTP; 07 Apr 2020 17:13:33 -0700
+Date:   Tue, 7 Apr 2020 17:13:33 -0700
+From:   Ira Weiny <ira.weiny@intel.com>
+To:     Dave Chinner <david@fromorbit.com>
+Cc:     linux-kernel@vger.kernel.org,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Christoph Hellwig <hch@lst.de>,
+        "Theodore Y. Ts'o" <tytso@mit.edu>, Jan Kara <jack@suse.cz>,
+        Jeff Moyer <jmoyer@redhat.com>, linux-ext4@vger.kernel.org,
+        linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH V6 5/8] fs/xfs: Create function xfs_inode_enable_dax()
+Message-ID: <20200408001332.GB569068@iweiny-DESK2.sc.intel.com>
+References: <20200407182958.568475-1-ira.weiny@intel.com>
+ <20200407182958.568475-6-ira.weiny@intel.com>
+ <20200408000533.GG24067@dread.disaster.area>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <004a2ef9c1e04f9ffbb9c3cc9907ca656a406713.camel@aparcar.org>
+In-Reply-To: <20200408000533.GG24067@dread.disaster.area>
+User-Agent: Mutt/1.11.1 (2018-12-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 07, 2020 at 01:38:17PM -1000, Paul Spooren wrote:
-> Hi Andrew,
+On Wed, Apr 08, 2020 at 10:05:33AM +1000, Dave Chinner wrote:
+> On Tue, Apr 07, 2020 at 11:29:55AM -0700, ira.weiny@intel.com wrote:
+> > From: Ira Weiny <ira.weiny@intel.com>
+> > 
+> > xfs_inode_supports_dax() should reflect if the inode can support DAX not
+> > that it is enabled for DAX.
+> > 
+> > Change the use of xfs_inode_supports_dax() to reflect only if the inode
+> > and underlying storage support dax.
+> > 
+> > Add a new function xfs_inode_enable_dax() which reflects if the inode
+> > should be enabled for DAX.
+> > 
+> > Signed-off-by: Ira Weiny <ira.weiny@intel.com>
+> ....
+> >  
+> > +STATIC bool
+> > +xfs_inode_enable_dax(
+> > +	struct xfs_inode *ip)
+> > +{
+> > +	u32 dax_mode = xfs_mount_dax_mode(ip->i_mount);
+> > +
+> > +	if (dax_mode == XFS_DAX_NEVER || !xfs_inode_supports_dax(ip))
+> > +		return false;
+> > +	if (dax_mode == XFS_DAX_ALWAYS || ip->i_d.di_flags2 & XFS_DIFLAG2_DAX)
+> > +		return true;
 > 
-> thank you very much for the quick response!
-> Are you okay with adding the new compatible string as first element of
-> the list? This would already simplify the OpenWrt build system.
+> These compound || statements are better written as single conditions
+> as they are all sequential logic checks and we can't skip over
+> checks.
+> 
+> 	if (mp->m_flags & XFS_MOUNT_DAX_NEVER)
+> 		return false;
+> 	if (!xfs_inode_supports_dax(ip))
+> 		return false;
+> 	if (mp->m_flags & XFS_MOUNT_DAX_ALWAYS)
+> 		return true;
+> 	if (ip->i_d.di_flags2 & XFS_DIFLAG2_DAX)
+> 		return true;
+> 	return false;
 
-That should be fine. OF will keep searching from first till last for a
-match. 
+Updated for V7
 
-> What about the changed labels? Are they considered ABI too?
+Thanks,
+Ira
 
-You mean LED names. I would consider those ABI. People can have
-scripts which configure the LEDs how they want, blinking heartbeat,
-etc.
-
-> Regarding file names, I'm new to ABI policies. Within OpenWrt this is
-> all done via a single line patch, I'm not familiar with any other
-> installers/bootloaders. 
-
-Well, it would break how i boot my wrt1900ac. I tftpboot it, grabbing
-both the kernel and the DB blob from my TFTP server. If the blob
-changes names, i would need to modify my uboot configuration. 
-
-I don't know if Debian has full support for any of these boards, but
-if i remember correctly, flash-kernel has a database of machine names
-and DTB file names. My wrt1900ac is quite happy running Debian, but i
-don't have it booting the Debian way, because i use it for kernel
-hacking. But maybe there are people out there that do.
-
-	 Andrew
+> 
+> Cheers,
+> 
+> Dave.
+> -- 
+> Dave Chinner
+> david@fromorbit.com
