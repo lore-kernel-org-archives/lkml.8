@@ -2,147 +2,116 @@ Return-Path: <SRS0=8dav=5Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ADD72C2BA16
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 21:37:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD390C2BA2B
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 21:37:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 72C7A206C0
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 21:37:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9FB0B206C0
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 21:37:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Hco7MSfh"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hlOthodM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729410AbgDHVhC (ORCPT
+        id S1729689AbgDHVha (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Apr 2020 17:37:02 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:52238 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728438AbgDHVhB (ORCPT
+        Wed, 8 Apr 2020 17:37:30 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:35741 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726754AbgDHVha (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Apr 2020 17:37:01 -0400
-Received: by mail-wm1-f67.google.com with SMTP id t203so1486840wmt.2
-        for <linux-kernel@vger.kernel.org>; Wed, 08 Apr 2020 14:37:00 -0700 (PDT)
+        Wed, 8 Apr 2020 17:37:30 -0400
+Received: by mail-wm1-f65.google.com with SMTP id r26so1609862wmh.0;
+        Wed, 08 Apr 2020 14:37:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:reply-to:from:date:message-id
-         :subject:to:cc;
-        bh=q4sLyktfrOExuEZEYqjNYRWtmjYeOihRLdSqSzM0jBQ=;
-        b=Hco7MSfhBD/kWrXXtSZaT1Uq3HYjzmA4BWBwNBTzpupRmSLiC2ehWSbJaPcx3LKRRE
-         CQqagdrVOrJ/io0IH4/tm+to4FWYgZe/eGUtOcscYiApxnKXriXLXv38HTjEeEg/PCPa
-         7jH3H1kS+tK3/P0PTvbiMQjfiXJAXQqygCxS1+ZIWRhUZOifADjfUPbjizrY86rqz0tb
-         +M0lWtS/+Szy0sKswMs5UQEYcEWqLtVp3Vh2Ihc3s//nQfufc7sK+LtMin3WlJxTAeFy
-         /ApET9dWMGVw+ovEvY5VB98kZNucRGPdwWZYkGZcPszR413B2k6Vw0JUiCaVw+zujUxK
-         x0cg==
+        h=subject:from:to:cc:references:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=fN4JOUYXzZadhHaigIxCdjHL5JQOp1zv8p0cKNRSlto=;
+        b=hlOthodMjO6sjcfcFgccaZ5PMj6V6vILjdJSDPQJgVhPz9GHOlo05D53ScrTPPvFMh
+         wC1oWvzgN1o7eyi0KBFyOY0UERDgw/ODH6MdC1ghsZb8jlScHD/HmAU6Udh1iViY5/3C
+         0SbEuhzT5fM3teMC5iNGNv58Khvtt4DEGbfSUGcTZ28w7K0j0M0ZTDfP3HhcSTZ8obY4
+         2z1hfIjSVsV9dE+L6qIbbo/b/XrTS9ttbRrbsTpUXsck6BQgQo3ELJ+kNqQ9yP7B8WNr
+         b3Un1zfGwO280S3y8HGc5iBOju5CLaoUU9O/wsxnA37UdaLGlxafOtOwuFZpLrrAh/fO
+         ZWWw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:reply-to
-         :from:date:message-id:subject:to:cc;
-        bh=q4sLyktfrOExuEZEYqjNYRWtmjYeOihRLdSqSzM0jBQ=;
-        b=b8E1japoTJF9PphxBtr9S2cfj8W8FIiUqHW4gSKK/42MK6HX/X24VZiCqiVNAW2PSq
-         fii/JbfdFFhcoDAaSmwyxKbvZ6TOYZLe/VrMyHMgsujZJVwGMla2+gBf/tU+W2fsBdNa
-         0xj4bN4yszMwTzQpMOJDJa7/x8SidQ6P1fUfglrqyDkQ42njFmCOrzdwRRFA3OevH77Q
-         E4QhxlQi4W0mVMt/Gzrg5W9rLrLO+T+FsRcm49UbYgvlh+Pvqyj5VXoVdH4arwHlLHU4
-         b2FDa2sTle5wli284tHOs/FNU62+yijxRe1eLZOYD8D45kXfs2gjz8tpEFgMZ1Y1HGYK
-         /D3Q==
-X-Gm-Message-State: AGi0PuZN23OIEIU3kg3FlLnvE4Bo4XYDaUgmEZO16/+r1TSeTciEMcbA
-        A31zgtPz3f/ZPijc2mkfWnFPVcwgVRrFdfbYLLrMwZdQ
-X-Google-Smtp-Source: APiQypKkyO/X4F3zpkuwxZGJdH1jCd8hOH5NdPfJtHGzrLYyMWWO6zubYykoEYC7/vylnfuleQnGTAC7qDAAd4gYDiA=
-X-Received: by 2002:a7b:cb86:: with SMTP id m6mr6258988wmi.64.1586381820060;
- Wed, 08 Apr 2020 14:37:00 -0700 (PDT)
+        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=fN4JOUYXzZadhHaigIxCdjHL5JQOp1zv8p0cKNRSlto=;
+        b=asUmbuSX2T9DiHL8J6yWbfCrEcNDmwsFC+6ImtbUPYpu7PKGf77v3Ce0rH86UuGD2W
+         IafJw+sPfkufwAPQJ0CG+spdjQ4cW+ttvbRjeDX0WY+nxHb487lzKYnFEwVf8MfO/CuL
+         tr6DlvXDEBTczTrZf23IFuNIY7ev6hdHlEn7t7FqGiFK2azUoXS6ajO5eZ7inS+4bLhv
+         wfVzIafRuy4db9Mejc9yuD9vciq2YGsmte2mQyUOD7bfX2YYJyG0S4gU0sS1Va2DMV+c
+         53zTq0wF3PdQlfZgTaGMBq4tzCEsEYMdH3weYqMSNvTB3C35UQcdDgLFZWh82+Aap6ln
+         t7PQ==
+X-Gm-Message-State: AGi0PuY0zcRuhcGjDdEVOdoq34SkX0133m7WFjYY58dgyeJ4ozIsXI5T
+        mVT92+vFr9KLMxSipxVbwb/Jwp91
+X-Google-Smtp-Source: APiQypJV8KbYMbR8exxMpzoNyBXOPHtXxKpL5ZMYtkEcbd6n6QLNiLkEfLHV3+CIV8cBbb0TgPm1HA==
+X-Received: by 2002:a1c:2056:: with SMTP id g83mr6533900wmg.179.1586381847878;
+        Wed, 08 Apr 2020 14:37:27 -0700 (PDT)
+Received: from ?IPv6:2003:ea:8f29:6000:695e:ad67:528c:ed17? (p200300EA8F296000695EAD67528CED17.dip0.t-ipconnect.de. [2003:ea:8f29:6000:695e:ad67:528c:ed17])
+        by smtp.googlemail.com with ESMTPSA id p10sm36707335wrm.6.2020.04.08.14.37.27
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 08 Apr 2020 14:37:27 -0700 (PDT)
+Subject: Re: RFC: Handle hard module dependencies that are not symbol-based
+ (r8169 + realtek)
+From:   Heiner Kallweit <hkallweit1@gmail.com>
+To:     Lucas De Marchi <lucas.demarchi@intel.com>,
+        Jessica Yu <jeyu@kernel.org>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-modules@vger.kernel.org,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
+References: <f8e3f271-82df-165f-63f1-6df73ba3d59c@gmail.com>
+Message-ID: <88aabe57-b38f-2200-05ab-7f54bda274fe@gmail.com>
+Date:   Wed, 8 Apr 2020 23:37:23 +0200
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-References: <20200408205323.44490-1-natechancellor@gmail.com> <CA+icZUUTEEZww3qT0jfFP0ZgUPXoF1_uOHMT4ZecrQxumE1Zmg@mail.gmail.com>
-In-Reply-To: <CA+icZUUTEEZww3qT0jfFP0ZgUPXoF1_uOHMT4ZecrQxumE1Zmg@mail.gmail.com>
-Reply-To: sedat.dilek@gmail.com
-From:   Sedat Dilek <sedat.dilek@gmail.com>
-Date:   Wed, 8 Apr 2020 23:36:47 +0200
-Message-ID: <CA+icZUWq=_qjvAf40PqQAj3tQ0WAZ2QAR9hojTuYqZH_=RWd_w@mail.gmail.com>
-Subject: Re: [PATCH] x86: mmiotrace: Use cpumask_available for cpumask_var_t variables
-To:     Nathan Chancellor <natechancellor@gmail.com>
-Cc:     Steven Rostedt <rostedt@goodmis.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Karol Herbst <karolherbst@gmail.com>,
-        Pekka Paalanen <ppaalanen@gmail.com>, x86@kernel.org,
-        linux-kernel@vger.kernel.org, nouveau@lists.freedesktop.org,
-        Clang-Built-Linux ML <clang-built-linux@googlegroups.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <f8e3f271-82df-165f-63f1-6df73ba3d59c@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 8, 2020 at 11:12 PM Sedat Dilek <sedat.dilek@gmail.com> wrote:
->
-> On Wed, Apr 8, 2020 at 10:53 PM Nathan Chancellor
-> <natechancellor@gmail.com> wrote:
-> >
-> > When building with Clang + -Wtautological-compare and
-> > CONFIG_CPUMASK_OFFSTACK unset:
-> >
->
-> Hi Nathan,
->
-> thanks for the quick patch.
->
-> I can confirm I have no CONFIG_CPUMASK_OFFSTACK set.
->
+On 01.04.2020 23:20, Heiner Kallweit wrote:
+> Currently we have no way to express a hard dependency that is not
+> a symbol-based dependency (symbol defined in module A is used in
+> module B). Use case:
+> Network driver ND uses callbacks in the dedicated PHY driver DP
+> for the integrated PHY (namely read_page() and write_page() in
+> struct phy_driver). If DP can't be loaded (e.g. because ND is in
+> initramfs but DP is not), then phylib will use the generic
+> PHY driver GP. GP doesn't implement certain callbacks that are
+> needed by ND, therefore ND's probe has to bail out with an error
+> once it detects that DP is not loaded.
+> We have this problem with driver r8169 having such a dependency
+> on PHY driver realtek. Some distributions have tools for
+> configuring initramfs that consider hard dependencies based on
+> depmod output. Means so far somebody can add r8169.ko to initramfs,
+> and neither human being nor machine will have an idea that
+> realtek.ko needs to be added too.
+> 
+> Attached patch set (two patches for kmod, one for the kernel)
+> allows to express this hard dependency of ND from DP. depmod will
+> read this dependency information and treat it like a symbol-based
+> dependency. As a result tools e.g. populating initramfs can
+> consider the dependency and place DP in initramfs if ND is in
+> initramfs. On my system the patch set does the trick when
+> adding following line to r8169_main.c:
+> MODULE_HARDDEP("realtek");
+> 
+> I'm interested in your opinion on the patches, and whether you
+> maybe have a better idea how to solve the problem.
+> 
+> Heiner
+> 
+Any feedback?
 
-Feel free to add appropriate credits:
-
-   Tested-by: Sedat Dilek <sedat.dilek@gmail.com>
-
-Regards,
-- Sedat -
-
->
-> > arch/x86/mm/mmio-mod.c:375:6: warning: comparison of array 'downed_cpus'
-> > equal to a null pointer is always false [-Wtautological-pointer-compare]
-> >         if (downed_cpus == NULL &&
-> >             ^~~~~~~~~~~    ~~~~
-> > arch/x86/mm/mmio-mod.c:405:6: warning: comparison of array 'downed_cpus'
-> > equal to a null pointer is always false [-Wtautological-pointer-compare]
-> >         if (downed_cpus == NULL || cpumask_weight(downed_cpus) == 0)
-> >             ^~~~~~~~~~~    ~~~~
-> > 2 warnings generated.
-> >
-> > Commit f7e30f01a9e2 ("cpumask: Add helper cpumask_available()") added
-> > cpumask_available to fix warnings of this nature. Use that here so that
-> > clang does not warn regardless of CONFIG_CPUMASK_OFFSTACK's value.
-> >
-> > Link: https://github.com/ClangBuiltLinux/linux/issues/982
-> > Reported-by: Sedat Dilek <sedat.dilek@gmail.com>
-> > Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
-> > ---
-> >  arch/x86/mm/mmio-mod.c | 4 ++--
-> >  1 file changed, 2 insertions(+), 2 deletions(-)
-> >
-> > diff --git a/arch/x86/mm/mmio-mod.c b/arch/x86/mm/mmio-mod.c
-> > index 109325d77b3e..43fd19b3f118 100644
-> > --- a/arch/x86/mm/mmio-mod.c
-> > +++ b/arch/x86/mm/mmio-mod.c
-> > @@ -372,7 +372,7 @@ static void enter_uniprocessor(void)
-> >         int cpu;
-> >         int err;
-> >
-> > -       if (downed_cpus == NULL &&
-> > +       if (!cpumask_available(downed_cpus) &&
-> >             !alloc_cpumask_var(&downed_cpus, GFP_KERNEL)) {
-> >                 pr_notice("Failed to allocate mask\n");
-> >                 goto out;
-> > @@ -402,7 +402,7 @@ static void leave_uniprocessor(void)
-> >         int cpu;
-> >         int err;
-> >
-> > -       if (downed_cpus == NULL || cpumask_weight(downed_cpus) == 0)
-> > +       if (!cpumask_available(downed_cpus) || cpumask_weight(downed_cpus) == 0)
-> >                 return;
-> >         pr_notice("Re-enabling CPUs...\n");
-> >         for_each_cpu(cpu, downed_cpus) {
-> >
-> > base-commit: ae46d2aa6a7fbe8ca0946f24b061b6ccdc6c3f25
-> > --
-> > 2.26.0
-> >
+Thanks, Heiner
