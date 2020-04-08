@@ -2,147 +2,86 @@ Return-Path: <SRS0=8dav=5Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9AE1C2BA1A
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 13:06:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9C06C2D0EA
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 13:07:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8AC12206F7
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 13:06:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=flygoat.com header.i=jiaxun.yang@flygoat.com header.b="JkkmTwA1"
+	by mail.kernel.org (Postfix) with ESMTP id 87834206F7
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 13:07:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729007AbgDHNGk (ORCPT
+        id S1729011AbgDHNH0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Apr 2020 09:06:40 -0400
-Received: from sender3-op-o12.zoho.com.cn ([124.251.121.243]:17893 "EHLO
-        sender3-op-o12.zoho.com.cn" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727902AbgDHNGk (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Apr 2020 09:06:40 -0400
-ARC-Seal: i=1; a=rsa-sha256; t=1586351026; cv=none; 
-        d=zoho.com.cn; s=zohoarc; 
-        b=Xt3QlKHF9gAfs7PFxUfbfSkP2aVAC/tz3Gtn21Vxl34OaxdveVAogbirOWQxjbWyvWuNKvM9EA+oIzKP0hAKyK9keQCVyvtL8Deq/+x3WBcNPj755XaYkAd1Y7bYAyB1LsxBBkNzkhLBGXl25PA+/sKjHm/drvMlIP9cn2IlA7M=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zoho.com.cn; s=zohoarc; 
-        t=1586351026; h=Content-Type:Content-Transfer-Encoding:Cc:Date:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:To; 
-        bh=CuiH5YcI6tCfhJK48jBjzSJsIlmqrJPGhHGDuUriybY=; 
-        b=BvmgYeHKzI358gNXXMatE4R1i71CDcQkWEDt5jfAiSXCugqPHN3bU+6b7QgDbsga98pZlnvyq7UpqADjp3CZYAlmSX+7Sw9OjEzRAJ7E0601qcJsBcbCnBtVpbGg8H6CbksjNjAxbkX1ZeBe2puyLhTEWRNGIwh+fVOEMJXI2A8=
-ARC-Authentication-Results: i=1; mx.zoho.com.cn;
-        dkim=pass  header.i=flygoat.com;
-        spf=pass  smtp.mailfrom=jiaxun.yang@flygoat.com;
-        dmarc=pass header.from=<jiaxun.yang@flygoat.com> header.from=<jiaxun.yang@flygoat.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1586351026;
-        s=mail; d=flygoat.com; i=jiaxun.yang@flygoat.com;
-        h=From:To:Cc:Message-ID:Subject:Date:In-Reply-To:References:MIME-Version:Content-Transfer-Encoding:Content-Type;
-        bh=CuiH5YcI6tCfhJK48jBjzSJsIlmqrJPGhHGDuUriybY=;
-        b=JkkmTwA1xtnZOnvPqGgtJ0KvVe6ewM+F5dVZNsZSTsX9Ms1EI4MxqtL7JHf30NxI
-        8hmOZefcI7oPuh4T+8PLqukQLZgxX3VUx8ArFRvVJNEJqKHKhUl8+PktXp4ir7eJHSs
-        44ZBGWMRoTHvXf0EWiZy1VoLp8Sr9/TAvSqUn4kQ=
-Received: from localhost.localdomain (39.155.141.144 [39.155.141.144]) by mx.zoho.com.cn
-        with SMTPS id 15863510255787.563914307152345; Wed, 8 Apr 2020 21:03:45 +0800 (CST)
-From:   Jiaxun Yang <jiaxun.yang@flygoat.com>
-To:     linux-mips@vger.kernel.org
-Cc:     Jiaxun Yang <jiaxun.yang@flygoat.com>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Huacai Chen <chenhc@lemote.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Robert Richter <rric@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>,
-        Paul Burton <paulburton@kernel.org>,
-        Allison Randal <allison@lohutok.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Vladimir Kondratiev <vladimir.kondratiev@intel.com>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        Alexios Zavras <alexios.zavras@intel.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Serge Semin <fancer.lancer@gmail.com>,
-        Matt Redfearn <matt.redfearn@mips.com>,
-        Steve Winslow <swinslow@gmail.com>,
-        Richard Fontana <rfontana@redhat.com>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Oleksij Rempel <linux@rempel-privat.de>,
-        Kamal Dasu <kdasu.kdev@gmail.com>,
-        linux-kernel@vger.kernel.org,
-        bcm-kernel-feedback-list@broadcom.com, oprofile-list@lists.sf.net
-Message-ID: <20200408130024.2529220-7-jiaxun.yang@flygoat.com>
-Subject: [PATCH 12/12] MIPS: ip27: Fix includes
-Date:   Wed,  8 Apr 2020 20:59:54 +0800
-X-Mailer: git-send-email 2.26.0.rc2
-In-Reply-To: <20200408113505.2528103-1-jiaxun.yang@flygoat.com>
-References: <20200408113505.2528103-1-jiaxun.yang@flygoat.com>
+        Wed, 8 Apr 2020 09:07:26 -0400
+Received: from 8bytes.org ([81.169.241.247]:58502 "EHLO theia.8bytes.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727815AbgDHNH0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Apr 2020 09:07:26 -0400
+Received: by theia.8bytes.org (Postfix, from userid 1000)
+        id CE5312CC; Wed,  8 Apr 2020 15:07:24 +0200 (CEST)
+Date:   Wed, 8 Apr 2020 15:07:22 +0200
+From:   Joerg Roedel <joro@8bytes.org>
+To:     Jacob Pan <jacob.jun.pan@linux.intel.com>
+Cc:     Lu Baolu <baolu.lu@linux.intel.com>,
+        iommu@lists.linux-foundation.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Jean-Philippe Brucker <jean-philippe@linaro.com>,
+        Eric Auger <eric.auger@redhat.com>,
+        Yi Liu <yi.l.liu@intel.com>,
+        "Tian, Kevin" <kevin.tian@intel.com>,
+        Raj Ashok <ashok.raj@intel.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Jonathan Cameron <jic23@kernel.org>
+Subject: Re: [PATCH v11 02/10] iommu/uapi: Define a mask for bind data
+Message-ID: <20200408130722.GA27140@8bytes.org>
+References: <1585939334-21396-1-git-send-email-jacob.jun.pan@linux.intel.com>
+ <1585939334-21396-3-git-send-email-jacob.jun.pan@linux.intel.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-ZohoCNMailClient: External
-Content-Type: text/plain; charset=utf8
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1585939334-21396-3-git-send-email-jacob.jun.pan@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Somehow changes in topology messed up headers.
-So just add necessary headers to make it compile again.
+On Fri, Apr 03, 2020 at 11:42:06AM -0700, Jacob Pan wrote:
+> Memory type related flags can be grouped together for one simple check.
+> 
+> ---
+> v9 renamed from EMT to MTS since these are memory type support flags.
+> ---
+> 
+> Reviewed-by: Eric Auger <eric.auger@redhat.com>
+> Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
+> ---
+>  include/uapi/linux/iommu.h | 5 ++++-
+>  1 file changed, 4 insertions(+), 1 deletion(-)
+> 
+> diff --git a/include/uapi/linux/iommu.h b/include/uapi/linux/iommu.h
+> index 4ad3496e5c43..d7bcbc5f79b0 100644
+> --- a/include/uapi/linux/iommu.h
+> +++ b/include/uapi/linux/iommu.h
+> @@ -284,7 +284,10 @@ struct iommu_gpasid_bind_data_vtd {
+>  	__u32 pat;
+>  	__u32 emt;
+>  };
+> -
+> +#define IOMMU_SVA_VTD_GPASID_MTS_MASK	(IOMMU_SVA_VTD_GPASID_CD | \
+> +					 IOMMU_SVA_VTD_GPASID_EMTE | \
+> +					 IOMMU_SVA_VTD_GPASID_PCD |  \
+> +					 IOMMU_SVA_VTD_GPASID_PWT)
 
-Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
----
- arch/mips/include/asm/mach-ip27/mmzone.h   | 2 ++
- arch/mips/include/asm/mach-ip27/topology.h | 2 ++
- arch/mips/include/asm/sn/addrs.h           | 1 +
- 3 files changed, 5 insertions(+)
+Where and how will this be used? Can you add this in the patch that
+actually makes use of it?
 
-diff --git a/arch/mips/include/asm/mach-ip27/mmzone.h b/arch/mips/include/a=
-sm/mach-ip27/mmzone.h
-index 08c36e50a860..e0a53b97b4a8 100644
---- a/arch/mips/include/asm/mach-ip27/mmzone.h
-+++ b/arch/mips/include/asm/mach-ip27/mmzone.h
-@@ -2,6 +2,8 @@
- #ifndef _ASM_MACH_MMZONE_H
- #define _ASM_MACH_MMZONE_H
-=20
-+#include <linux/mmzone.h>
-+
- #include <asm/sn/addrs.h>
- #include <asm/sn/arch.h>
- #include <asm/sn/agent.h>
-diff --git a/arch/mips/include/asm/mach-ip27/topology.h b/arch/mips/include=
-/asm/mach-ip27/topology.h
-index d66cc53feab8..601e350908f7 100644
---- a/arch/mips/include/asm/mach-ip27/topology.h
-+++ b/arch/mips/include/asm/mach-ip27/topology.h
-@@ -2,6 +2,8 @@
- #ifndef _ASM_MACH_TOPOLOGY_H
- #define _ASM_MACH_TOPOLOGY_H=091
-=20
-+#include <linux/numa.h>
-+
- #include <asm/sn/types.h>
- #include <asm/mmzone.h>
-=20
-diff --git a/arch/mips/include/asm/sn/addrs.h b/arch/mips/include/asm/sn/ad=
-drs.h
-index 837d23e24976..1d3945ef2ca4 100644
---- a/arch/mips/include/asm/sn/addrs.h
-+++ b/arch/mips/include/asm/sn/addrs.h
-@@ -13,6 +13,7 @@
- #ifndef __ASSEMBLY__
- #include <linux/smp.h>
- #include <linux/types.h>
-+#include <asm/io.h>
- #endif /* !__ASSEMBLY__ */
-=20
- #include <asm/addrspace.h>
---=20
-2.26.0.rc2
+Also please add newlines before and after that define.
 
 
+Regards,
+
+	Joerg
