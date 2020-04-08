@@ -2,40 +2,40 @@ Return-Path: <SRS0=8dav=5Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F38AC2BA2B
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 11:59:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 697E2C2D0EA
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 11:59:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2909720747
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 11:59:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 38C6220753
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 11:59:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="QxIpR9Yc"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="AW8pgI8M"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728645AbgDHL7x (ORCPT
+        id S1728720AbgDHL75 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Apr 2020 07:59:53 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:45930 "EHLO
+        Wed, 8 Apr 2020 07:59:57 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:46156 "EHLO
         bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726594AbgDHL7w (ORCPT
+        with ESMTP id S1728646AbgDHL7z (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Apr 2020 07:59:52 -0400
+        Wed, 8 Apr 2020 07:59:55 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        MIME-Version:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:
-        Content-ID:Content-Description:In-Reply-To:References;
-        bh=D4AVwc5A5TrYE1qiofwcyRs9OblgHBTIRND69C8WOt0=; b=QxIpR9YcW4zlQv0D1PVx1O4w+e
-        6AoH6P9DiQVnTVyvjUFva7uacxcWbVMzi8tT0sThE3M71M9cEiBynkFmchCvGJciEPmeo3/uQvlYR
-        wtFUjR78EFF5ZyjMMkVUsanIFNIoeODac3xPuGtXF4l5LbiIBWKxhIDjLLLc1Q/GLriiDWQze3R+Q
-        HzQxNu0emx30OMndXqf/TY05OZsMHUiUKaWMhp5bxRFdmw1Sri71kup0Kj2ZHNawF6DygdV6PDlKu
-        t+Fxg7riz+HXeU7gVyNlLyFQTkfoS6xNo8kPMIJc0+vSNMB1EinNIuq4wvueXomTQU22Nkr4yCLgo
-        zR0nVTaA==;
+        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
+        :Reply-To:Content-Type:Content-ID:Content-Description;
+        bh=PAMsYd2akdNcv/61LqzK42KESSh1nYBdbqHeKhdDNg0=; b=AW8pgI8MPKkROoB8H45BAd8bqD
+        YkGIDJuOmcFj1oi9Sbtk8Zx0z4VdemtQofwcOkWOUbPK7k+JA/rKZETRedymoO8+URo3yaJNhj6r0
+        eD7mbR6lp0GLewQNQfA+FZ4fn5BoO5NBc01lvGRob1ZsACPrZofYyqa33qUOM0XEx+UvHsOkOhOHC
+        oso8J18tJIyNrQNeRtUYklbHL1gG8TjoWe8hVLHTwfZyxDD00nYUDBwXE4xdjqOCiTIc17D9l1YQC
+        xre4RGdbiu32Rv83O8hd5jAzbY+Abw20UrkBSoj2K2jRt2b1hC8yoRTWLwJCC3Njn9FbbYzo1NnJF
+        gQdf9pjA==;
 Received: from [2001:4bb8:180:5765:65b6:f11e:f109:b151] (helo=localhost)
         by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jM9Mf-0001Xh-5a; Wed, 08 Apr 2020 11:59:29 +0000
+        id 1jM9Ml-0001bC-Nz; Wed, 08 Apr 2020 11:59:36 +0000
 From:   Christoph Hellwig <hch@lst.de>
 To:     Andrew Morton <akpm@linux-foundation.org>,
         "K. Y. Srinivasan" <kys@microsoft.com>,
@@ -58,10 +58,12 @@ Cc:     Robin Murphy <robin.murphy@arm.com>,
         iommu@lists.linux-foundation.org,
         linux-arm-kernel@lists.infradead.org, linux-s390@vger.kernel.org,
         bpf@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: decruft the vmalloc API
-Date:   Wed,  8 Apr 2020 13:58:58 +0200
-Message-Id: <20200408115926.1467567-1-hch@lst.de>
+Subject: [PATCH 02/28] staging: android: ion: use vmap instead of vm_map_ram
+Date:   Wed,  8 Apr 2020 13:59:00 +0200
+Message-Id: <20200408115926.1467567-3-hch@lst.de>
 X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200408115926.1467567-1-hch@lst.de>
+References: <20200408115926.1467567-1-hch@lst.de>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
@@ -70,20 +72,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi all,
+vm_map_ram can keep mappings around after the vm_unmap_ram.  Using that
+with non-PAGE_KERNEL mappings can lead to all kinds of aliasing issues.
 
-Peter noticed that with some dumb luck you can toast the kernel address
-space with exported vmalloc symbols.
+Signed-off-by: Christoph Hellwig <hch@lst.de>
+---
+ drivers/staging/android/ion/ion_heap.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-I used this as an opportunity to decruft the vmalloc.c API and make it
-much more systematic.  This also removes any chance to create vmalloc
-mappings outside the designated areas or using executable permissions
-from modules.  Besides that it removes more than 300 lines of code.
+diff --git a/drivers/staging/android/ion/ion_heap.c b/drivers/staging/android/ion/ion_heap.c
+index 473b465724f1..a2d5c6df4b96 100644
+--- a/drivers/staging/android/ion/ion_heap.c
++++ b/drivers/staging/android/ion/ion_heap.c
+@@ -99,12 +99,12 @@ int ion_heap_map_user(struct ion_heap *heap, struct ion_buffer *buffer,
+ 
+ static int ion_heap_clear_pages(struct page **pages, int num, pgprot_t pgprot)
+ {
+-	void *addr = vm_map_ram(pages, num, -1, pgprot);
++	void *addr = vmap(pages, num, VM_MAP);
+ 
+ 	if (!addr)
+ 		return -ENOMEM;
+ 	memset(addr, 0, PAGE_SIZE * num);
+-	vm_unmap_ram(addr, num);
++	vunmap(addr);
+ 
+ 	return 0;
+ }
+-- 
+2.25.1
 
-A git tree is also available here:
-
-    git://git.infradead.org/users/hch/misc.git sanitize-vmalloc-api
-
-Gitweb:
-
-    http://git.infradead.org/users/hch/misc.git/shortlog/refs/heads/sanitize-vmalloc-api
