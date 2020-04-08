@@ -2,255 +2,258 @@ Return-Path: <SRS0=8dav=5Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A744C2BA1A
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 02:26:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83542C2D0EC
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 02:28:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5C704206BE
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 02:26:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="Rl96Myry"
+	by mail.kernel.org (Postfix) with ESMTP id 536D9206BE
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 02:28:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726513AbgDHC0e (ORCPT
+        id S1726477AbgDHC2i convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 22:26:34 -0400
-Received: from mail-eopbgr760137.outbound.protection.outlook.com ([40.107.76.137]:21735
-        "EHLO NAM02-CY1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726421AbgDHC0d (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Apr 2020 22:26:33 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=icUloQvSsEzSUxrYhWPVn3la0/WXSD9kqxCDXDwXfvIz6DT/SumyUpuI89fGoQIkoHn2bOL+w7FXI69qSx2kO/b6akX5oOlP5E68iQF8lhCEQvwZcjNERkPM9GzBIWzDVn+Ui3YYjrONuzf0LYRoYWytsL971B4GI3dwrJHw/iyJtuj4ygDZ+doyA2lguYiTQ509xH4xlYUXZN/rKGomXBH1SPiGzq6IQxR+yQcV3JfP0L5e7bGoW3V9R5VCMxUcxrm6pcg1ZMRf2my9I7cwmSjsGRwUgcMtWoFE9ruJSNLWbMRICCTU/eYR7Ln/3AUbrR5CtGTE3grXA5ntWEnJbw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ri7Ntj1owCwoSV82HgVjtuyx1P2vRIXNhDP52XsXnyY=;
- b=DnvmS2UzDWvXKFrC2TX1JYqVudzHf4DFB1Bq/qK3J1rVoxYMRoumVuYPR5dNjt/iELwQrYfpA7jjbTXB+Q9JmIuMJyRRgDJBVWCDzu3XDdjBnp8UgtE7HNx7upqwEJmXljrBCJ721l6GQJ9Vk0l50YnRe/OIfthiUBBOwk28FapAKGmp9Sin/IervzLLdlsXIFiXWyjdNzgtyW5o+eTeirX/UK22EJ2Oor7w+oylbjJaghZkf5xWCYvaISUqAPofFLMkbKOxCvadlmbV+O66lxLF/ZToFeaSsTUZ/LZJNlyB5ZyWTpmLPUixRwRI5pJdaAcaVTCdq5pDOAxRZ57OTg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microsoft.com; dmarc=pass action=none
- header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ri7Ntj1owCwoSV82HgVjtuyx1P2vRIXNhDP52XsXnyY=;
- b=Rl96MyryChdLYf6EfCYEUaAjG+WUi6TToALTG+WxbKso1zMNLGACB4/aiF8BrpcFX1OmThNUerlbGsTdpp28SIjP2pobstEo6uLHvkioSIhSIrFEscm2l3Y35u6/j2FUud+FjnXDUuqNRsSjMXdAfHMN5ySHeqVHIhW3Zz/U/5E=
-Received: from BN8PR21MB1155.namprd21.prod.outlook.com (2603:10b6:408:73::10)
- by BN8PR21MB1364.namprd21.prod.outlook.com (2603:10b6:408:aa::29) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2921.10; Wed, 8 Apr
- 2020 02:25:52 +0000
-Received: from BN8PR21MB1155.namprd21.prod.outlook.com
- ([fe80::d11:18b7:289c:ea17]) by BN8PR21MB1155.namprd21.prod.outlook.com
- ([fe80::d11:18b7:289c:ea17%6]) with mapi id 15.20.2900.012; Wed, 8 Apr 2020
- 02:25:52 +0000
-From:   Long Li <longli@microsoft.com>
-To:     Andrea Parri <parri.andrea@gmail.com>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        KY Srinivasan <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        Michael Kelley <mikelley@microsoft.com>,
-        Dexuan Cui <decui@microsoft.com>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        vkuznets <vkuznets@redhat.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>
-Subject: RE: [PATCH 11/11] scsi: storvsc: Re-init stor_chns when a channel
- interrupt is re-assigned
-Thread-Topic: [PATCH 11/11] scsi: storvsc: Re-init stor_chns when a channel
- interrupt is re-assigned
-Thread-Index: AQHWC6i+EppuRPIzmUWsHp6UWcZ3DKhscw0QgABenQCAAa+rcA==
-Date:   Wed, 8 Apr 2020 02:25:52 +0000
-Message-ID: <BN8PR21MB1155E335C1E390964C08B6E3CEC00@BN8PR21MB1155.namprd21.prod.outlook.com>
-References: <20200406001514.19876-1-parri.andrea@gmail.com>
- <20200406001514.19876-12-parri.andrea@gmail.com>
- <BN8PR21MB1155C78AAC02D02EA7A7841DCEC20@BN8PR21MB1155.namprd21.prod.outlook.com>
- <20200407003459.GA7776@andrea>
-In-Reply-To: <20200407003459.GA7776@andrea>
+        Tue, 7 Apr 2020 22:28:38 -0400
+Received: from mga06.intel.com ([134.134.136.31]:8916 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726416AbgDHC2i (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Apr 2020 22:28:38 -0400
+IronPort-SDR: 7fQrNsa/yMIku211rrOq35vgTlBEMXetaNCX6whJ0y8sHK7e/3NJlcQ7nD2wIObeMOJhClG/kx
+ u6kgvEsDQPVw==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Apr 2020 19:28:37 -0700
+IronPort-SDR: 7bdsC+YycV3wrifP6a1WNE+0FMX+KTHUuOcw78XugcU/wpGfL7e20M/BsmzpfcpwCwkK3eaukR
+ AJZGHQf3svMw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,357,1580803200"; 
+   d="scan'208";a="330400813"
+Received: from fmsmsx108.amr.corp.intel.com ([10.18.124.206])
+  by orsmga001.jf.intel.com with ESMTP; 07 Apr 2020 19:28:36 -0700
+Received: from fmsmsx163.amr.corp.intel.com (10.18.125.72) by
+ FMSMSX108.amr.corp.intel.com (10.18.124.206) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Tue, 7 Apr 2020 19:28:36 -0700
+Received: from shsmsx107.ccr.corp.intel.com (10.239.4.96) by
+ fmsmsx163.amr.corp.intel.com (10.18.125.72) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Tue, 7 Apr 2020 19:28:36 -0700
+Received: from shsmsx104.ccr.corp.intel.com ([169.254.5.225]) by
+ SHSMSX107.ccr.corp.intel.com ([169.254.9.191]) with mapi id 14.03.0439.000;
+ Wed, 8 Apr 2020 10:28:32 +0800
+From:   "Liu, Yi L" <yi.l.liu@intel.com>
+To:     Alex Williamson <alex.williamson@redhat.com>,
+        "Tian, Kevin" <kevin.tian@intel.com>
+CC:     "eric.auger@redhat.com" <eric.auger@redhat.com>,
+        "jacob.jun.pan@linux.intel.com" <jacob.jun.pan@linux.intel.com>,
+        "joro@8bytes.org" <joro@8bytes.org>,
+        "Raj, Ashok" <ashok.raj@intel.com>,
+        "Tian, Jun J" <jun.j.tian@intel.com>,
+        "Sun, Yi Y" <yi.y.sun@intel.com>,
+        "jean-philippe@linaro.org" <jean-philippe@linaro.org>,
+        "peterx@redhat.com" <peterx@redhat.com>,
+        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Wu, Hao" <hao.wu@intel.com>
+Subject: RE: [PATCH v1 7/8] vfio/type1: Add VFIO_IOMMU_CACHE_INVALIDATE
+Thread-Topic: [PATCH v1 7/8] vfio/type1: Add VFIO_IOMMU_CACHE_INVALIDATE
+Thread-Index: AQHWAEUdcc1u01skwUmp6uBHREsZ66hl0sQAgACrzQCAAJWLAIAHa6Ag
+Date:   Wed, 8 Apr 2020 02:28:32 +0000
+Message-ID: <A2975661238FB949B60364EF0F2C25743A225C45@SHSMSX104.ccr.corp.intel.com>
+References: <1584880325-10561-1-git-send-email-yi.l.liu@intel.com>
+        <1584880325-10561-8-git-send-email-yi.l.liu@intel.com>
+        <20200402142428.2901432e@w520.home>
+        <AADFC41AFE54684AB9EE6CBC0274A5D19D807C4A@SHSMSX104.ccr.corp.intel.com>
+ <20200403093436.094b1928@w520.home>
+In-Reply-To: <20200403093436.094b1928@w520.home>
 Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
 X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=longli@microsoft.com; 
-x-originating-ip: [2001:4898:80e8:0:edee:db5c:c6fe:798]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 8cba394b-ff6e-44cd-050f-08d7db642913
-x-ms-traffictypediagnostic: BN8PR21MB1364:|BN8PR21MB1364:|BN8PR21MB1364:
-x-ms-exchange-transport-forked: True
-x-ld-processed: 72f988bf-86f1-41af-91ab-2d7cd011db47,ExtAddr
-x-microsoft-antispam-prvs: <BN8PR21MB136441DB07D1EC45C77A4C53CEC00@BN8PR21MB1364.namprd21.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:10000;
-x-forefront-prvs: 0367A50BB1
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN8PR21MB1155.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10019020)(4636009)(346002)(136003)(39860400002)(366004)(396003)(376002)(55016002)(6506007)(54906003)(86362001)(9686003)(66556008)(76116006)(66946007)(66476007)(5660300002)(66446008)(64756008)(10290500003)(478600001)(2906002)(71200400001)(52536014)(7696005)(8936002)(8676002)(82950400001)(81156014)(81166006)(82960400001)(8990500004)(186003)(6916009)(4326008)(33656002)(316002);DIR:OUT;SFP:1102;
-received-spf: None (protection.outlook.com: microsoft.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: huwdLpsSkcFz0gEzuj6COlsvI0z29Sja+WbkdJxDveTGT5kK/tS4d8O2PULxnlN9bLQJOsbxWy+qdWQEwbhp56ExbhgnwOS1GFOBLRBgIM0Qt+bTp60YexrsUjVtL49MKgvkY9g03KFlVrCM3E2JTn+9Dfw7qRaC1XYXGnhozJImNoC3qMTaakUwmYC2oHg0xr58viwxAMa4nyhBv6dp3KoiF5HAUmI7E0/WqvzX4XeecNQ2x+riZfZr/3MjvrczAW6NWQBnEvmx510RKXOZ7+5OFsEoayNBKi7/jcpnGDcn0RyqNkh5LfGoWMnoyhd2zQB00JcZkkIP/Akm5zFFFmlNUZZegNYvdJOCkBTSNpAx2FqalttZTGor84Nog7F0h+GnMoPrX3Mo3BnzcIk/vJ9dW7HG/xecvxK76XF/XHIJNJs8uQTgBp7Uke1L5m4n
-x-ms-exchange-antispam-messagedata: clw/CvRicyX2TGLzqpDdJdmnq8It/TyAZu4JtVTHD/97HLOkWgU45g1r6dlhTCvZzUzi+upqkfoaMfm+L3vsxMQ3Y4ejNWWQTc6NZgpC7TvI/xHV73mk73n5QnT6ouP0zU+Q6tkVpwBbWI0YV7KukcRM0WYCFzmNihxPwq3alV+zzhW2R/Wz+8hcrF4j7bVYXnqBFBLT92x1rsqDhOliUw==
+dlp-product: dlpe-windows
+dlp-version: 11.2.0.6
+dlp-reaction: no-action
+x-originating-ip: [10.239.127.40]
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8cba394b-ff6e-44cd-050f-08d7db642913
-X-MS-Exchange-CrossTenant-originalarrivaltime: 08 Apr 2020 02:25:52.6910
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: vxDfTEha5DaXXn6ql+xNfSVPjsk9Qa2529krq+2lZPCdWDrI2zWBRdAbSARUT0mwatoxP0XQyxYh5Q0acnDCEw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN8PR21MB1364
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
->Subject: Re: [PATCH 11/11] scsi: storvsc: Re-init stor_chns when a channel
->interrupt is re-assigned
->
->> >@@ -621,6 +621,63 @@ static inline struct storvsc_device
->> >*get_in_stor_device(
->> >
->> > }
->> >
->> >+void storvsc_change_target_cpu(struct vmbus_channel *channel, u32
->> >+old,
->> >+u32 new) {
->> >+	struct storvsc_device *stor_device;
->> >+	struct vmbus_channel *cur_chn;
->> >+	bool old_is_alloced =3D false;
->> >+	struct hv_device *device;
->> >+	unsigned long flags;
->> >+	int cpu;
->> >+
->> >+	device =3D channel->primary_channel ?
->> >+			channel->primary_channel->device_obj
->> >+				: channel->device_obj;
->> >+	stor_device =3D get_out_stor_device(device);
->> >+	if (!stor_device)
->> >+		return;
->> >+
->> >+	/* See storvsc_do_io() -> get_og_chn(). */
->> >+	spin_lock_irqsave(&device->channel->lock, flags);
->> >+
->> >+	/*
->> >+	 * Determines if the storvsc device has other channels assigned to
->> >+	 * the "old" CPU to update the alloced_cpus mask and the stor_chns
->> >+	 * array.
->> >+	 */
->> >+	if (device->channel !=3D channel && device->channel->target_cpu =3D=
-=3D
->> >old) {
->> >+		cur_chn =3D device->channel;
->> >+		old_is_alloced =3D true;
->> >+		goto old_is_alloced;
->> >+	}
->> >+	list_for_each_entry(cur_chn, &device->channel->sc_list, sc_list) {
->> >+		if (cur_chn =3D=3D channel)
->> >+			continue;
->> >+		if (cur_chn->target_cpu =3D=3D old) {
->> >+			old_is_alloced =3D true;
->> >+			goto old_is_alloced;
->> >+		}
->> >+	}
->> >+
->> >+old_is_alloced:
->> >+	if (old_is_alloced)
->> >+		WRITE_ONCE(stor_device->stor_chns[old], cur_chn);
->> >+	else
->> >+		cpumask_clear_cpu(old, &stor_device->alloced_cpus);
->>
->> If the old cpu is not allocated, is it still necessary to do a cpumask_c=
-lear_cpu?
->
->AFAICT, this really depends on how much we "believe" in the current heuris=
-tic
->(as implemented by get_og_chn()):  ;-)
->
->The cpumask_clear_cpu() (and the below, dependent "flush" as well) are
->intended to re-initialize alloced_cpus and stor_chns in order for get_og_c=
-hn()
->to re-process/update them.
->
->Also, notice that (both in the current code and after this series) alloced=
-_cpus
->can't be offlined and get_og_chn() does rely on this property (cf., e.g., =
-the
->loop/check over alloced_cpus/node_mask).
->
->I suspect that giving up on this invariant/property would require a certai=
-n
->amount of re-design in the heuristic/code in question...
->
->
->> >@@ -1360,7 +1432,14 @@ static int storvsc_do_io(struct hv_device
->*device,
->> > 			}
->> > 		}
->> > 	} else {
->> >+		spin_lock_irqsave(&device->channel->lock, flags);
->> >+		outgoing_channel =3D stor_device->stor_chns[q_num];
->> >+		if (outgoing_channel !=3D NULL) {
->> >+			spin_unlock_irqrestore(&device->channel->lock,
->> >flags);
->>
->> Checking outgoing_channel again seems unnecessary. Why not just call
->get_og_chn()?
->
->target_cpu_store() might have changed stor_chns (and alloced_cpus) in the
->meantime (but before we've acquired the device's lock): the double check i=
-s
->to make sure we have a "consistent"/an up-to-date view of stor_chns and
->alloced_cpus.
->
->
->>
->> >+			goto found_channel;
->> >+		}
->> > 		outgoing_channel =3D get_og_chn(stor_device, q_num);
->> >+		spin_unlock_irqrestore(&device->channel->lock, flags);
->> > 	}
->>
->> With device->channel->lock, now we have one more lock on the I/O issuing
->path. It doesn't seem optimal as you are trying to protect the code in
->storvsc_change_target_cpu(), this doesn't need to block concurrent I/O
->issuers. Maybe moving to RCU is a better approach?
->
->I don't see this as a problem (*and I've validated such conclusion in
->experiments, where the "patched kernel" was sometimes performing slighlty
->better than the "unpatched kernel" and sometimes slightly
->worse...):
->
->On the one hand, the stor_chns array "stabilizes" quite early after system
->initialization in "normal" (i.e., common) situations (i.e., no channel
->reassignments, no device hotplugs...); IOW, get_og_chn() really represents
->the "rare and slow" path here (but not that slow!
->after all...).  Furthermore, notice that even in those "rare cases"
->the number of "contending" channels is limited to at most 1 per 4 CPUs IIR=
-C
->(alloced_cpus is "sparsely populated"...).
+Hi Alex,
 
-Yes I realized it is on the slow path. There is no need to optimize locks.
+> From: Alex Williamson <alex.williamson@redhat.com>
+> Sent: Friday, April 3, 2020 11:35 PM
+> Subject: Re: [PATCH v1 7/8] vfio/type1: Add VFIO_IOMMU_CACHE_INVALIDATE
+> 
+> On Fri, 3 Apr 2020 06:39:22 +0000
+> "Tian, Kevin" <kevin.tian@intel.com> wrote:
+> 
+> > > From: Alex Williamson <alex.williamson@redhat.com>
+> > > Sent: Friday, April 3, 2020 4:24 AM
+> > >
+> > > On Sun, 22 Mar 2020 05:32:04 -0700
+> > > "Liu, Yi L" <yi.l.liu@intel.com> wrote:
+> > >
+> > > > From: Liu Yi L <yi.l.liu@linux.intel.com>
+> > > >
+[...]
+> 
+> > >
+> > > > +
+> > > > +		if (copy_from_user(&cache_inv, (void __user *)arg, minsz))
+> > > > +			return -EFAULT;
+> > > > +
+> > > > +		if (cache_inv.argsz < minsz || cache_inv.flags)
+> > > > +			return -EINVAL;
+> > > > +
+> > > > +		/* Get the version of struct iommu_cache_invalidate_info */
+> > > > +		if (copy_from_user(&version,
+> > > > +			(void __user *) (arg + minsz), sizeof(version)))
+> > > > +			return -EFAULT;
+> > > > +
+> > > > +		info_size = iommu_uapi_get_data_size(
+> > > > +					IOMMU_UAPI_CACHE_INVAL,
+> > > version);
+> > > > +
+> > > > +		cache_info = kzalloc(info_size, GFP_KERNEL);
+> > > > +		if (!cache_info)
+> > > > +			return -ENOMEM;
+> > > > +
+> > > > +		if (copy_from_user(cache_info,
+> > > > +			(void __user *) (arg + minsz), info_size)) {
+> > > > +			kfree(cache_info);
+> > > > +			return -EFAULT;
+> > > > +		}
+> > > > +
+> > > > +		mutex_lock(&iommu->lock);
+> > > > +		ret = vfio_iommu_for_each_dev(iommu, vfio_cache_inv_fn,
+> > > > +					    cache_info);
+> > >
+> > > How does a user respond when their cache invalidate fails?  Isn't this
+> > > also another case where our for_each_dev can fail at an arbitrary point
+> > > leaving us with no idea whether each device even had the opportunity to
+> > > perform the invalidation request.  I don't see how we have any chance
+> > > to maintain coherency after this faults.
+> >
+> > Then can we make it simple to support singleton group only?
+> 
+> Are you suggesting a single group per container or a single device per
+> group? Unless we have both, aren't we always going to have this issue.
 
-Reviewed-by; Long Li <longli@microsoft.com>
+Agreed. we need both to avoid the potential for_each_dev() loop issue.
+I suppose this is also the most typical and desired config for vSVA
+support. I think it makes sense with below items:
 
->
->The latencies of the RCU grace period (in the order of milliseconds) would=
- be a
->major concern for the adoption of RCU here (at least, if we continue to
->consider get_og_chn() as an "updater").  I'm afraid that this could be "to=
-o
->slow" even for our slow path...  ;-/
->
->What am I missing?  ;-)
->
->Thanks,
->  Andrea
+a) one group per container
+PASID and nested translation gives user-space a chance to attach their
+page table (e.g. guest process page table) to host IOMMU, this is vSVA.
+If adding multiple groups to a vSVA-capable container, then a SVA bind
+on this container means bind it with all groups (devices are included)
+within the container. This doesn't make sense with three reasons: for
+one the passthru devices are not necessary to be manipulated by same
+guest application; for two passthru devices are not surely added in a
+single guest group; for three not all passthru devices (either from
+different group or same group) are sva capable.
+As above, enforce one group per container makes sense to me.
+
+b) one device per group
+SVA support is limited to singleton group so far in bare-metal bind
+per Jean's series. I think it's be good to follow it in passthru case.
+https://patchwork.kernel.org/patch/10213877/
+https://lkml.org/lkml/2019/4/10/663
+As mentioned in a), group may have both SVA-capable device and non-SVA
+-capable device, it would be a problem for VFIO to figure a way to isolate
+them.
+
+> OTOH, why should a cache invalidate fail?
+
+there are sanity check done by vendor iommu driver against the invalidate
+request from userspace. so it may fail if sanity check failed. But I guess
+it may be better to something like abort instead of fail the request. isn't?
+
+> 
+> > > > +		mutex_unlock(&iommu->lock);
+> > > > +		kfree(cache_info);
+> > > > +		return ret;
+> > > >  	}
+> > > >
+> > > >  	return -ENOTTY;
+> > > > diff --git a/include/uapi/linux/vfio.h b/include/uapi/linux/vfio.h
+> > > > index 2235bc6..62ca791 100644
+> > > > --- a/include/uapi/linux/vfio.h
+> > > > +++ b/include/uapi/linux/vfio.h
+> > > > @@ -899,6 +899,28 @@ struct vfio_iommu_type1_bind {
+> > > >   */
+> > > >  #define VFIO_IOMMU_BIND		_IO(VFIO_TYPE, VFIO_BASE + 23)
+> > > >
+> > > > +/**
+> > > > + * VFIO_IOMMU_CACHE_INVALIDATE - _IOW(VFIO_TYPE, VFIO_BASE + 24,
+> > > > + *			struct vfio_iommu_type1_cache_invalidate)
+> > > > + *
+> > > > + * Propagate guest IOMMU cache invalidation to the host. The cache
+> > > > + * invalidation information is conveyed by @cache_info, the content
+> > > > + * format would be structures defined in uapi/linux/iommu.h. User
+> > > > + * should be aware of that the struct  iommu_cache_invalidate_info
+> > > > + * has a @version field, vfio needs to parse this field before getting
+> > > > + * data from userspace.
+> > > > + *
+> > > > + * Availability of this IOCTL is after VFIO_SET_IOMMU.
+> > >
+> > > Is this a necessary qualifier?  A user can try to call this ioctl at
+> > > any point, it only makes sense in certain configurations, but it should
+> > > always "do the right thing" relative to the container iommu config.
+> > >
+> > > Also, I don't see anything in these last few patches testing the
+> > > operating IOMMU model, what happens when a user calls them when not
+> > > using the nesting IOMMU?
+> > >
+> > > Is this ioctl and the previous BIND ioctl only valid when configured
+> > > for the nesting IOMMU type?
+> >
+> > I think so. We should add the nesting check in those new ioctls.
+> >
+> > >
+> > > > + *
+> > > > + * returns: 0 on success, -errno on failure.
+> > > > + */
+> > > > +struct vfio_iommu_type1_cache_invalidate {
+> > > > +	__u32   argsz;
+> > > > +	__u32   flags;
+> > > > +	struct	iommu_cache_invalidate_info cache_info;
+> > > > +};
+> > > > +#define VFIO_IOMMU_CACHE_INVALIDATE      _IO(VFIO_TYPE, VFIO_BASE
+> > > + 24)
+> > >
+> > > The future extension capabilities of this ioctl worry me, I wonder if
+> > > we should do another data[] with flag defining that data as CACHE_INFO.
+> >
+> > Can you elaborate? Does it mean with this way we don't rely on iommu
+> > driver to provide version_to_size conversion and instead we just pass
+> > data[] to iommu driver for further audit?
+> 
+> No, my concern is that this ioctl has a single function, strictly tied
+> to the iommu uapi.  If we replace cache_info with data[] then we can
+> define a flag to specify that data[] is struct
+> iommu_cache_invalidate_info, and if we need to, a different flag to
+> identify data[] as something else.  For example if we get stuck
+> expanding cache_info to meet new demands and develop a new uapi to
+> solve that, how would we expand this ioctl to support it rather than
+> also create a new ioctl?  There's also a trade-off in making the ioctl
+> usage more difficult for the user.  I'd still expect the vfio layer to
+> check the flag and interpret data[] as indicated by the flag rather
+> than just passing a blob of opaque data to the iommu layer though.
+
+Ok, I think data[] is acceptable. BTW. Do you have any decision on the
+uapi version open iin Jacob's thread? I'd like to re-work my patch based
+on your decision.
+
+https://lkml.org/lkml/2020/4/2/876
+
+thanks again for your help. :-)
+
+Regards,
+Yi Liu
