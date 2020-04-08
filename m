@@ -2,114 +2,132 @@ Return-Path: <SRS0=8dav=5Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22AEEC2D0EA
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 09:58:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF6F3C2D0EA
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 09:58:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ED0D320753
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 09:58:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A8B0120753
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 09:58:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="IqCD+Fe8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728069AbgDHJ6V (ORCPT
+        id S1728078AbgDHJ6k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Apr 2020 05:58:21 -0400
-Received: from relay3-d.mail.gandi.net ([217.70.183.195]:56289 "EHLO
-        relay3-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725932AbgDHJ6U (ORCPT
+        Wed, 8 Apr 2020 05:58:40 -0400
+Received: from outils.crapouillou.net ([89.234.176.41]:33762 "EHLO
+        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725932AbgDHJ6k (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Apr 2020 05:58:20 -0400
-X-Originating-IP: 84.210.220.251
-Received: from [192.168.1.123] (cm-84.210.220.251.getinternet.no [84.210.220.251])
-        (Authenticated sender: fredrik@strupe.net)
-        by relay3-d.mail.gandi.net (Postfix) with ESMTPSA id EEA966000F;
-        Wed,  8 Apr 2020 09:58:17 +0000 (UTC)
-Subject: Re: [PATCH] arm64: armv8_deprecated: Fix undef_hook mask for thumb
- setend
-To:     Catalin Marinas <catalin.marinas@arm.com>
-Cc:     Suzuki K Poulose <suzuki.poulose@arm.com>,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        will.deacon@arm.com
-References: <911db2f1-e078-a460-32ee-154a0b4de5d4@strupe.net>
- <20200407092744.GA2665@gaia> <a2b345a4-30a0-3218-8c8d-e84ec2317dc9@arm.com>
- <0d7b582a-1bd0-9db2-2fdc-04fc887f64c6@strupe.net>
- <20200408090111.GA27331@gaia>
-From:   Fredrik Strupe <fredrik@strupe.net>
-Message-ID: <9979396e-5d01-0cfe-722f-3a4f6e81dc01@strupe.net>
-Date:   Wed, 8 Apr 2020 11:58:15 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Wed, 8 Apr 2020 05:58:40 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
+        s=mail; t=1586339918; h=from:from:sender:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:references; bh=g62+P3BKA22iNR7eW+jsO/H0my3pBTnlVMgtoacBEdI=;
+        b=IqCD+Fe8iXpPYgZyB4FiufcmedzXHNTYVtshHKXUrSBnmvcKn6oDW1WYFWaua7QWS0vIhH
+        xb1EW+/mtjoDCBoXPpGywY0A2ILVc33DoC/RXCx5bBK2ErUgyGDtXtVAGf5r5J7igRmeNR
+        6oVPctrzbvuwalTWhSrWobxLzOYTa0U=
+From:   Paul Cercueil <paul@crapouillou.net>
+To:     Thierry Reding <thierry.reding@gmail.com>,
+        Sam Ravnborg <sam@ravnborg.org>
+Cc:     od@zcrc.me, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org, Paul Cercueil <paul@crapouillou.net>
+Subject: [PATCH 1/2] drm/panel: NT39016: Add support for multiple modes
+Date:   Wed,  8 Apr 2020 11:58:29 +0200
+Message-Id: <20200408095830.8131-1-paul@crapouillou.net>
 MIME-Version: 1.0
-In-Reply-To: <20200408090111.GA27331@gaia>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 08.04.2020 11:01, Catalin Marinas wrote:
-> On Tue, Apr 07, 2020 at 01:18:21PM +0200, Fredrik Strupe wrote:
->> (Sorry for duplicate, something went terribly wrong with the formatting of
->> the previous email.)
->
-> It's still wrong here with tabs converted to spaces. The patch doesn't
-> apply. Could you please send the patch separately as a v2? It looks fine
-> otherwise.
->
-> Thanks.
->
+Add support for multiple drm_display_mode entries. This will allow to
+add a 50 Hz mode later.
 
-Alright, let's hope third time's the charm.
-
-Fredrik
-
+Signed-off-by: Paul Cercueil <paul@crapouillou.net>
 ---
-For thumb instructions, call_undef_hook() in traps.c first reads a u16,
-and if the u16 indicates a T32 instruction (u16 >= 0xe800), a second
-u16 is read, which then makes up the the lower half-word of a T32
-instruction. For T16 instructions, the second u16 is not read,
-which makes the resulting u32 opcode always have the upper half set to
-0.
+ drivers/gpu/drm/panel/panel-novatek-nt39016.c | 33 +++++++++++++------
+ 1 file changed, 23 insertions(+), 10 deletions(-)
 
-However, having the upper half of instr_mask in the undef_hook set to 0
-masks out the upper half of all thumb instructions - both T16 and T32.
-This results in trapped T32 instructions with the lower half-word equal
-to the T16 encoding of setend (b650) being matched, even though the upper
-half-word is not 0000 and thus indicates a T32 opcode.
-
-An example of such a T32 instruction is eaa0b650, which should raise a
-SIGILL since T32 instructions with an eaa prefix are unallocated as per
-Arm ARM, but instead works as a SETEND because the second half-word is set
-to b650.
-
-This patch fixes the issue by extending instr_mask to include the
-upper u32 half, which will still match T16 instructions where the upper
-half is 0, but not T32 instructions.
-
-Signed-off-by: Fredrik Strupe <fredrik@strupe.net>
-Cc: Catalin Marinas <catalin.marinas@arm.com>
-Cc: Will Deacon <will.deacon@arm.com>
-Fixes: 2d888f48e056 ("arm64: Emulate SETEND for AArch32 tasks")
----
- arch/arm64/kernel/armv8_deprecated.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/arch/arm64/kernel/armv8_deprecated.c b/arch/arm64/kernel/armv8_deprecated.c
-index 9d3442d62..8c06dfee0 100644
---- a/arch/arm64/kernel/armv8_deprecated.c
-+++ b/arch/arm64/kernel/armv8_deprecated.c
-@@ -609,7 +609,7 @@ static struct undef_hook setend_hooks[] = {
+diff --git a/drivers/gpu/drm/panel/panel-novatek-nt39016.c b/drivers/gpu/drm/panel/panel-novatek-nt39016.c
+index a470810f7dbe..f1286cf6528b 100644
+--- a/drivers/gpu/drm/panel/panel-novatek-nt39016.c
++++ b/drivers/gpu/drm/panel/panel-novatek-nt39016.c
+@@ -49,7 +49,8 @@ enum nt39016_regs {
+ #define NT39016_SYSTEM_STANDBY	BIT(1)
+ 
+ struct nt39016_panel_info {
+-	struct drm_display_mode display_mode;
++	const struct drm_display_mode *display_modes;
++	unsigned int num_modes;
+ 	u16 width_mm, height_mm;
+ 	u32 bus_format, bus_flags;
+ };
+@@ -212,15 +213,22 @@ static int nt39016_get_modes(struct drm_panel *drm_panel,
+ 	struct nt39016 *panel = to_nt39016(drm_panel);
+ 	const struct nt39016_panel_info *panel_info = panel->panel_info;
+ 	struct drm_display_mode *mode;
++	unsigned int i;
+ 
+-	mode = drm_mode_duplicate(connector->dev, &panel_info->display_mode);
+-	if (!mode)
+-		return -ENOMEM;
++	for (i = 0; i < panel_info->num_modes; i++) {
++		mode = drm_mode_duplicate(connector->dev,
++					  &panel_info->display_modes[i]);
++		if (!mode)
++			return -ENOMEM;
++
++		drm_mode_set_name(mode);
+ 
+-	drm_mode_set_name(mode);
++		mode->type = DRM_MODE_TYPE_DRIVER;
++		if (panel_info->num_modes == 1)
++			mode->type |= DRM_MODE_TYPE_PREFERRED;
+ 
+-	mode->type = DRM_MODE_TYPE_DRIVER | DRM_MODE_TYPE_PREFERRED;
+-	drm_mode_probed_add(connector, mode);
++		drm_mode_probed_add(connector, mode);
++	}
+ 
+ 	connector->display_info.bpc = 8;
+ 	connector->display_info.width_mm = panel_info->width_mm;
+@@ -230,7 +238,7 @@ static int nt39016_get_modes(struct drm_panel *drm_panel,
+ 					 &panel_info->bus_format, 1);
+ 	connector->display_info.bus_flags = panel_info->bus_flags;
+ 
+-	return 1;
++	return panel_info->num_modes;
+ }
+ 
+ static const struct drm_panel_funcs nt39016_funcs = {
+@@ -316,8 +324,8 @@ static int nt39016_remove(struct spi_device *spi)
+ 	return 0;
+ }
+ 
+-static const struct nt39016_panel_info kd035g6_info = {
+-	.display_mode = {
++static const struct drm_display_mode kd035g6_display_modes[] = {
++	{
+ 		.clock = 6000,
+ 		.hdisplay = 320,
+ 		.hsync_start = 320 + 10,
+@@ -330,6 +338,11 @@ static const struct nt39016_panel_info kd035g6_info = {
+ 		.vrefresh = 60,
+ 		.flags = DRM_MODE_FLAG_NHSYNC | DRM_MODE_FLAG_NVSYNC,
  	},
- 	{
- 		/* Thumb mode */
--		.instr_mask	= 0x0000fff7,
-+		.instr_mask	= 0xfffffff7,
- 		.instr_val	= 0x0000b650,
- 		.pstate_mask	= (PSR_AA32_T_BIT | PSR_AA32_MODE_MASK),
- 		.pstate_val	= (PSR_AA32_T_BIT | PSR_AA32_MODE_USR),
++};
++
++static const struct nt39016_panel_info kd035g6_info = {
++	.display_modes = kd035g6_display_modes,
++	.num_modes = ARRAY_SIZE(kd035g6_display_modes),
+ 	.width_mm = 71,
+ 	.height_mm = 53,
+ 	.bus_format = MEDIA_BUS_FMT_RGB888_1X24,
 -- 
-2.20.1
+2.25.1
 
