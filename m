@@ -2,115 +2,262 @@ Return-Path: <SRS0=8dav=5Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 653B5C2BA80
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 02:56:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6C1FC2BA80
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 03:06:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3AAA420748
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 02:56:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A903C2072A
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 03:06:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="KZgnzElg"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="WQaJu5dX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726484AbgDHC41 (ORCPT
+        id S1726508AbgDHDGt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 22:56:27 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:41951 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726428AbgDHC40 (ORCPT
+        Tue, 7 Apr 2020 23:06:49 -0400
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:29203 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726453AbgDHDGt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Apr 2020 22:56:26 -0400
-Received: by mail-pf1-f193.google.com with SMTP id a24so1736814pfc.8
-        for <linux-kernel@vger.kernel.org>; Tue, 07 Apr 2020 19:56:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:content-transfer-encoding:in-reply-to:references
-         :subject:from:cc:to:date:message-id:user-agent;
-        bh=C19SyW6s9ABaVcA96MgZ/z86+FrD+QX9SGhdUhVzpt4=;
-        b=KZgnzElg6MCmjBX4mGgfKinaj7t+v/aV02z80ncSG8PxUBjzX8osIGF/f2dvYj1g8q
-         qJPltNSCAVYAm7+AZ+kGjBJ4p3+vGibNA+Cs+ci4ZcxqKdTCJP2ul6676KCl8SM862yq
-         KUq5o4+M56r068nRKzqYPTKKbNz6lL2TPGK3I=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:content-transfer-encoding
-         :in-reply-to:references:subject:from:cc:to:date:message-id
-         :user-agent;
-        bh=C19SyW6s9ABaVcA96MgZ/z86+FrD+QX9SGhdUhVzpt4=;
-        b=rYXHXrX/DznPwbBMLpcbzOUlhrX5Lo1TEubeH9/pmg3H7saw3YS9DsLeiDwkuYo/80
-         atYz528oQ7IVFI9nhFVidfx715RGTQLtjP+It0WD3crGF18qpke8oXEMYTD0vawEB2Jp
-         CNK2AesfnlPrSc2w3n2N0FLIK0VrFzclyc/B2mhCYhl9NOhjN8SGaR6JS4xOroIbjDCo
-         tHRvzXEV7NdNZhVRcWQ3UNU2Wriz6JztA6SuiL2NWJfvSkuHOU7BrcgQTqOsMU91MHM+
-         j5IkYtcW8iph9yiaSvg7egQ40RL3fez61fTqg2tL1Url4ztORxTSrz7+2OWK+4/keSks
-         IyKw==
-X-Gm-Message-State: AGi0PuayRgZY4YGSUdLFobG97kW6dVjpiQaomvzsEo1WaGK6DzT9dvkQ
-        i/72yB6ROCpiYf/Dn9Gx3g9Vbw==
-X-Google-Smtp-Source: APiQypIDODO01vVtGZfqvyLcC30QAn+V1wKdyLppdB6LkQtNbXFqACB4TCOhjyHrMWZHXdoaBN1JBw==
-X-Received: by 2002:a65:62ce:: with SMTP id m14mr4936916pgv.174.1586314585701;
-        Tue, 07 Apr 2020 19:56:25 -0700 (PDT)
-Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
-        by smtp.gmail.com with ESMTPSA id i187sm15200635pfg.33.2020.04.07.19.56.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 07 Apr 2020 19:56:24 -0700 (PDT)
-Content-Type: text/plain; charset="utf-8"
+        Tue, 7 Apr 2020 23:06:49 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1586315207;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=5yeSyrhzFUknRYXWKSA7RZGwrbGN9UTmgmY3Cbd81n0=;
+        b=WQaJu5dX3nFb6D0vjTBPLu6FTg3GiHEaHIR/1lay7anvyfbjw+y1YuZAZMc8ONjuZhfp2l
+        6Q9+LLE3ybVLLyVUnqa5I7t//Lk/kYb1ImzQuBdCh7Sevu2HoGZWtEGrq3A78smi5vZbsn
+        nlEip/86DU0XaWLIxflmiqSVHJ/pP1A=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-350-uwpOH7cfOnGRc8lpdjvWEQ-1; Tue, 07 Apr 2020 23:06:40 -0400
+X-MC-Unique: uwpOH7cfOnGRc8lpdjvWEQ-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id D156E801E5C;
+        Wed,  8 Apr 2020 03:06:38 +0000 (UTC)
+Received: from localhost.localdomain (ovpn-8-28.pek2.redhat.com [10.72.8.28])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 0D48C60BFB;
+        Wed,  8 Apr 2020 03:06:29 +0000 (UTC)
+Date:   Wed, 8 Apr 2020 11:06:25 +0800
+From:   Ming Lei <ming.lei@redhat.com>
+To:     Doug Anderson <dianders@chromium.org>
+Cc:     Jens Axboe <axboe@kernel.dk>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        linux-scsi@vger.kernel.org, Salman Qazi <sqazi@google.com>,
+        Gwendal Grignou <gwendal@chromium.org>,
+        Guenter Roeck <groeck@chromium.org>,
+        linux-block <linux-block@vger.kernel.org>,
+        Paolo Valente <paolo.valente@linaro.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v3 3/4] blk-mq: Rerun dispatching in the case of budget
+ contention
+Message-ID: <20200408030625.GC337494@localhost.localdomain>
+References: <20200407220005.119540-1-dianders@chromium.org>
+ <20200407145906.v3.3.I28278ef8ea27afc0ec7e597752a6d4e58c16176f@changeid>
+ <20200408020936.GB337494@localhost.localdomain>
+ <CAD=FV=WY8sTZQq3NtNe4Ux-C0Q0JOR4V1Z+cjVvj791rFDL+=Q@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20200402234455.75061-1-john.stultz@linaro.org>
-References: <20200402223723.7150-1-john.stultz@linaro.org> <20200402234455.75061-1-john.stultz@linaro.org>
-Subject: Re: [PATCH v2] phy: qcom-qusb2: Re add "qcom,sdm845-qusb2-phy" compat string
-From:   Stephen Boyd <swboyd@chromium.org>
-Cc:     John Stultz <john.stultz@linaro.org>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Doug Anderson <dianders@chromium.org>,
-        Manu Gautam <mgautam@codeaurora.org>,
-        Sandeep Maheswaram <sanm@codeaurora.org>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org
-To:     John Stultz <john.stultz@linaro.org>,
-        lkml <linux-kernel@vger.kernel.org>
-Date:   Tue, 07 Apr 2020 19:56:23 -0700
-Message-ID: <158631458374.216820.17829557619378130779@swboyd.mtv.corp.google.com>
-User-Agent: alot/0.9
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAD=FV=WY8sTZQq3NtNe4Ux-C0Q0JOR4V1Z+cjVvj791rFDL+=Q@mail.gmail.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting John Stultz (2020-04-02 16:44:55)
-> In commit 8fe75cd4cddf ("phy: qcom-qusb2: Add generic QUSB2 V2
-> PHY support"), the change was made to add "qcom,qusb2-v2-phy"
-> as a generic compat string. However the change also removed
-> the "qcom,sdm845-qusb2-phy" compat string, which is documented
-> in the binding and already in use.
->=20
-> This patch re-adds the "qcom,sdm845-qusb2-phy" compat string
-> which allows the driver to continue to work with existing dts
-> entries such as found on the db845c.
->=20
-> Cc: Andy Gross <agross@kernel.org>
-> Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: Mark Rutland <mark.rutland@arm.com>
-> Cc: Doug Anderson <dianders@chromium.org>
-> Cc: Manu Gautam <mgautam@codeaurora.org>
-> Cc: Sandeep Maheswaram <sanm@codeaurora.org>
-> Cc: Matthias Kaehlcke <mka@chromium.org>
-> Cc: Stephen Boyd <swboyd@chromium.org>
-> Cc: Kishon Vijay Abraham I <kishon@ti.com>
-> Cc: linux-arm-msm@vger.kernel.org
-> Cc: devicetree@vger.kernel.org
-> Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-> Fixes: 8fe75cd4cddf ("phy: qcom-qusb2: Add generic QUSB2 V2 PHY support")
-> Reported-by: YongQin Liu <yongqin.liu@linaro.org>
-> Signed-off-by: John Stultz <john.stultz@linaro.org>
-> ---
+On Tue, Apr 07, 2020 at 07:17:49PM -0700, Doug Anderson wrote:
+> Hi,
+> 
+> On Tue, Apr 7, 2020 at 7:09 PM Ming Lei <ming.lei@redhat.com> wrote:
+> >
+> > On Tue, Apr 07, 2020 at 03:00:04PM -0700, Douglas Anderson wrote:
+> > > If ever a thread running blk-mq code tries to get budget and fails it
+> > > immediately stops doing work and assumes that whenever budget is freed
+> > > up that queues will be kicked and whatever work the thread was trying
+> > > to do will be tried again.
+> > >
+> > > One path where budget is freed and queues are kicked in the normal
+> > > case can be seen in scsi_finish_command().  Specifically:
+> > > - scsi_finish_command()
+> > >   - scsi_device_unbusy()
+> > >     - # Decrement "device_busy", AKA release budget
+> > >   - scsi_io_completion()
+> > >     - scsi_end_request()
+> > >       - blk_mq_run_hw_queues()
+> > >
+> > > The above is all well and good.  The problem comes up when a thread
+> > > claims the budget but then releases it without actually dispatching
+> > > any work.  Since we didn't schedule any work we'll never run the path
+> > > of finishing work / kicking the queues.
+> > >
+> > > This isn't often actually a problem which is why this issue has
+> > > existed for a while and nobody noticed.  Specifically we only get into
+> > > this situation when we unexpectedly found that we weren't going to do
+> > > any work.  Code that later receives new work kicks the queues.  All
+> > > good, right?
+> > >
+> > > The problem shows up, however, if timing is just wrong and we hit a
+> > > race.  To see this race let's think about the case where we only have
+> > > a budget of 1 (only one thread can hold budget).  Now imagine that a
+> > > thread got budget and then decided not to dispatch work.  It's about
+> > > to call put_budget() but then the thread gets context switched out for
+> > > a long, long time.  While in this state, any and all kicks of the
+> > > queue (like the when we received new work) will be no-ops because
+> > > nobody can get budget.  Finally the thread holding budget gets to run
+> > > again and returns.  All the normal kicks will have been no-ops and we
+> > > have an I/O stall.
+> > >
+> > > As you can see from the above, you need just the right timing to see
+> > > the race.  To start with, the only case it happens if we thought we
+> > > had work, actually managed to get the budget, but then actually didn't
+> > > have work.  That's pretty rare to start with.  Even then, there's
+> > > usually a very small amount of time between realizing that there's no
+> > > work and putting the budget.  During this small amount of time new
+> > > work has to come in and the queue kick has to make it all the way to
+> > > trying to get the budget and fail.  It's pretty unlikely.
+> > >
+> > > One case where this could have failed is illustrated by an example of
+> > > threads running blk_mq_do_dispatch_sched():
+> > >
+> > > * Threads A and B both run has_work() at the same time with the same
+> > >   "hctx".  Imagine has_work() is exact.  There's no lock, so it's OK
+> > >   if Thread A and B both get back true.
+> > > * Thread B gets interrupted for a long time right after it decides
+> > >   that there is work.  Maybe its CPU gets an interrupt and the
+> > >   interrupt handler is slow.
+> > > * Thread A runs, get budget, dispatches work.
+> > > * Thread A's work finishes and budget is released.
+> > > * Thread B finally runs again and gets budget.
+> > > * Since Thread A already took care of the work and no new work has
+> > >   come in, Thread B will get NULL from dispatch_request().  I believe
+> > >   this is specifically why dispatch_request() is allowed to return
+> > >   NULL in the first place if has_work() must be exact.
+> > > * Thread B will now be holding the budget and is about to call
+> > >   put_budget(), but hasn't called it yet.
+> > > * Thread B gets interrupted for a long time (again).  Dang interrupts.
+> > > * Now Thread C (maybe with a different "hctx" but the same queue)
+> > >   comes along and runs blk_mq_do_dispatch_sched().
+> > > * Thread C won't do anything because it can't get budget.
+> >
+> > Thread C will re-run queue in this case:
+> >
+> > Just thought scsi_mq_get_budget() does handle the case via re-run queue:
+> >
+> >         if (atomic_read(&sdev->device_busy) == 0 && !scsi_device_blocked(sdev))
+> >                 blk_mq_delay_run_hw_queue(hctx, SCSI_QUEUE_DELAY);
+> >
+> > So looks no such race.
+> 
+> Thread B is holding budget and hasn't released it yet, right?  In the
+> context of scsi, that means "device_busy >= 1", right?  So how can the
+> code you point at help us?  When Thread C reads "device_busy" it will
+> be 1 and that code won't run.  What did I miss?
 
-Reviewed-by: Stephen Boyd <swboyd@chromium.org>
+Oh, this is my fault, sorry for the noise.
 
-Might be worth it sending it outside of this thread in case it's missed.
+> 
+> 
+> > > * Finally Thread B will run again and put the budget without kicking
+> > >   any queues.
+> > >
+> > > Even though the example above is with blk_mq_do_dispatch_sched() I
+> > > believe the race is possible any time someone is holding budget but
+> > > doesn't do work.
+> > >
+> > > Unfortunately, the unlikely has become more likely if you happen to be
+> > > using the BFQ I/O scheduler.  BFQ, by design, sometimes returns "true"
+> > > for has_work() but then NULL for dispatch_request() and stays in this
+> > > state for a while (currently up to 9 ms).  Suddenly you only need one
+> > > race to hit, not two races in a row.  With my current setup this is
+> > > easy to reproduce in reboot tests and traces have actually shown that
+> > > we hit a race similar to the one describe above.
+> > >
+> > > In theory we could choose to just fix blk_mq_do_dispatch_sched() to
+> > > kick the queues when it puts budget.  That would fix the BFQ case and
+> > > one could argue that all the other cases are just theoretical.  While
+> > > that is true, for all the other cases it should be very uncommon to
+> > > run into the case where we need put_budget().  Having an extra queue
+> > > kick for safety there shouldn't affect much and keeps the race at bay.
+> > >
+> > > One last note is that (at least in the SCSI case) budget is shared by
+> > > all "hctx"s that have the same queue.  Thus we need to make sure to
+> > > kick the whole queue, not just re-run dispatching on a single "hctx".
+> > >
+> > > Signed-off-by: Douglas Anderson <dianders@chromium.org>
+> > > ---
+> > >
+> > > Changes in v3:
+> > > - Always kick when putting the budget.
+> > > - Delay blk_mq_do_dispatch_sched() kick by 3 ms for inexact has_work().
+> > > - Totally rewrote commit message.
+> > >
+> > > Changes in v2:
+> > > - Replace ("scsi: core: Fix stall...") w/ ("blk-mq: Rerun dispatch...")
+> > >
+> > >  block/blk-mq.h | 14 +++++++++++++-
+> > >  1 file changed, 13 insertions(+), 1 deletion(-)
+> > >
+> > > diff --git a/block/blk-mq.h b/block/blk-mq.h
+> > > index 10bfdfb494fa..1270505367ab 100644
+> > > --- a/block/blk-mq.h
+> > > +++ b/block/blk-mq.h
+> > > @@ -180,12 +180,24 @@ unsigned int blk_mq_in_flight(struct request_queue *q, struct hd_struct *part);
+> > >  void blk_mq_in_flight_rw(struct request_queue *q, struct hd_struct *part,
+> > >                        unsigned int inflight[2]);
+> > >
+> > > +#define BLK_MQ_BUDGET_DELAY  3               /* ms units */
+> > > +
+> > >  static inline void blk_mq_put_dispatch_budget(struct blk_mq_hw_ctx *hctx)
+> > >  {
+> > >       struct request_queue *q = hctx->queue;
+> > >
+> > > -     if (q->mq_ops->put_budget)
+> > > +     if (q->mq_ops->put_budget) {
+> > >               q->mq_ops->put_budget(hctx);
+> > > +
+> > > +             /*
+> > > +              * The only time we call blk_mq_put_dispatch_budget() is if
+> > > +              * we released the budget without dispatching.  Holding the
+> > > +              * budget could have blocked any "hctx"s with the same queue
+> > > +              * and if we didn't dispatch then there's no guarantee anyone
+> > > +              * will kick the queue.  Kick it ourselves.
+> > > +              */
+> > > +             blk_mq_delay_run_hw_queues(q, BLK_MQ_BUDGET_DELAY);
+> >
+> > No, please don't do that un-conditionally we just need to re-run queue
+> > when there has work to do.
+> 
+> ...what function would you like me to call to check?  The code you
+
+At least we only need to call it in blk_mq_do_dispatch_sched() and
+blk_mq_do_dispatch_ctx(), in which no request is dequeued yet. Other
+callers can handle the run queue cause request has been there.
+
+> wrote in response to v2 only checked work for the given "hctx".  What
+> about other "hctx" that are part of the same "queue".  Are we
+> guaranteed that has_work() returns the same value for all "hctx"s on
+> the same "queue"?
+
+In theory has_work() should return ture when there is work associated with
+this hctx. However, some schedulers put all requests in global scheduler
+queue instead of per-hctx, then this scheduler's
+has_work() returns true when there is any request in scheduler queue.
+
+> If so, why doesn't has_work() take the "queue" as a
+> parameter?
+
+In theory has_work() needs to be checked before run queue, however this
+code path should be called very unusually, so it is fine to just run all
+hctxs.
+
+Thanks,
+Ming
+
