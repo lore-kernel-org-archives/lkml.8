@@ -2,116 +2,113 @@ Return-Path: <SRS0=8dav=5Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC1FAC2D0F4
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 03:59:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 901B9C2BA16
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 04:00:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A3D0620678
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 03:59:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6908020730
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 04:00:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726527AbgDHD7X (ORCPT
+        id S1726492AbgDHEAW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 23:59:23 -0400
-Received: from mail.itouring.de ([188.40.134.68]:45750 "EHLO mail.itouring.de"
+        Wed, 8 Apr 2020 00:00:22 -0400
+Received: from mga04.intel.com ([192.55.52.120]:12733 "EHLO mga04.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726464AbgDHD7X (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Apr 2020 23:59:23 -0400
-Received: from tux.applied-asynchrony.com (p5B07E2B3.dip0.t-ipconnect.de [91.7.226.179])
-        by mail.itouring.de (Postfix) with ESMTPSA id 14A1B4160ED7;
-        Wed,  8 Apr 2020 05:59:21 +0200 (CEST)
-Received: from [192.168.100.223] (ragnarok.applied-asynchrony.com [192.168.100.223])
-        by tux.applied-asynchrony.com (Postfix) with ESMTP id BD004F01600;
-        Wed,  8 Apr 2020 05:59:20 +0200 (CEST)
-Subject: Re: hwmon: drivetemp: bogus values after wake up from suspend
-To:     Guenter Roeck <linux@roeck-us.net>,
-        LKML <linux-kernel@vger.kernel.org>
-References: <1af049a1-63ae-ee55-05d5-0e55eb00bd0e@applied-asynchrony.com>
- <03b3159b-e9ca-011d-d95c-6572cc07d895@roeck-us.net>
-From:   =?UTF-8?Q?Holger_Hoffst=c3=a4tte?= <holger@applied-asynchrony.com>
-Organization: Applied Asynchrony, Inc.
-Message-ID: <51052162-6d79-f5c0-a811-b77587b51195@applied-asynchrony.com>
-Date:   Wed, 8 Apr 2020 05:59:20 +0200
+        id S1725440AbgDHEAW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Apr 2020 00:00:22 -0400
+IronPort-SDR: fcZA7fQERZUq2zf7yil4HR7pd4u9R4djaZni0CONZOlTJEIcLBamnKRzIKYp4up3gLulLaLQxs
+ Hwx/mH9fvn8Q==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Apr 2020 21:00:21 -0700
+IronPort-SDR: f9f374JUMkKx4uPk6CViWMoJ7usS0ImJsEAoos95KEZ8procvMO83u9Ez6k6bMdPzvgEpKaLQq
+ uU7jtP826KNw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,357,1580803200"; 
+   d="scan'208";a="269639700"
+Received: from otc-nc-03.jf.intel.com (HELO otc-nc-03) ([10.54.39.25])
+  by orsmga002.jf.intel.com with ESMTP; 07 Apr 2020 21:00:21 -0700
+Date:   Tue, 7 Apr 2020 21:00:21 -0700
+From:   "Raj, Ashok" <ashok.raj@intel.com>
+To:     Alex Williamson <alex.williamson@redhat.com>
+Cc:     "Tian, Kevin" <kevin.tian@intel.com>,
+        "Liu, Yi L" <yi.l.liu@intel.com>,
+        "eric.auger@redhat.com" <eric.auger@redhat.com>,
+        "jacob.jun.pan@linux.intel.com" <jacob.jun.pan@linux.intel.com>,
+        "joro@8bytes.org" <joro@8bytes.org>,
+        "Tian, Jun J" <jun.j.tian@intel.com>,
+        "Sun, Yi Y" <yi.y.sun@intel.com>,
+        "jean-philippe@linaro.org" <jean-philippe@linaro.org>,
+        "peterx@redhat.com" <peterx@redhat.com>,
+        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Wu, Hao" <hao.wu@intel.com>, Bjorn Helgaas <bhelgaas@google.com>,
+        Ashok Raj <ashok.raj@intel.com>
+Subject: Re: [PATCH v1 2/2] vfio/pci: Emulate PASID/PRI capability for VFs
+Message-ID: <20200408040021.GS67127@otc-nc-03>
+References: <1584880394-11184-1-git-send-email-yi.l.liu@intel.com>
+ <1584880394-11184-3-git-send-email-yi.l.liu@intel.com>
+ <20200402165954.48d941ee@w520.home>
+ <A2975661238FB949B60364EF0F2C25743A2204FE@SHSMSX104.ccr.corp.intel.com>
+ <20200403112545.6c115ba3@w520.home>
+ <AADFC41AFE54684AB9EE6CBC0274A5D19D80E13D@SHSMSX104.ccr.corp.intel.com>
+ <20200407095801.648b1371@w520.home>
 MIME-Version: 1.0
-In-Reply-To: <03b3159b-e9ca-011d-d95c-6572cc07d895@roeck-us.net>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200407095801.648b1371@w520.home>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/7/20 3:41 AM, Guenter Roeck wrote:
-> On 4/6/20 9:23 AM, Holger Hoffstätte wrote:
->>
->> I've been giving the drivetemp hwmon driver a try and am very happy
->> with it; works right away and - much to my surprise - doesn't wake up
->> HDDs that have gone to sleep. Nice!
->>
->> I did notice one tiny thing though: after waking up from suspend, my SSD
->> (Samsung 850 Pro) reports a few initial bogus values - suspiciously -128°,
->> which is definitely not the temperature in my office. While this is more
->> a cosmetic problem, it cramps my monitoring setup and leads to wrong graphs.
->> Can't have that!
->>
->> So I looked into the source and found that the values are (understandably)
->> passed on unfiltered/uncapped. Since it's unlikely any active device has
->> operating temperature below-zero, I figured the laziest way is to cap the
->> value to positive:
->>
->> diff -rup a/drivers/hwmon/drivetemp.c b/drivers/hwmon/drivetemp.c
->> --- a/drivers/hwmon/drivetemp.c    2020-04-02 08:02:32.000000000 +0200
->> +++ b/drivers/hwmon/drivetemp.c    2020-04-06 18:13:04.892554087 +0200
->> @@ -147,7 +147,7 @@ static LIST_HEAD(drivetemp_devlist);
->>   #define INVALID_TEMP        0x80
->>   
->>   #define temp_is_valid(temp)    ((temp) != INVALID_TEMP)
->> -#define temp_from_sct(temp)    (((s8)(temp)) * 1000)
->> +#define temp_from_sct(temp)    (max(0, ((s8)(temp)) * 1000))
->>   
->>   static inline bool ata_id_smart_supported(u16 *id)
->>   {
->>
->> The assumption is of course *theoretically* wrong since some
->> equipment might indeed operate in negative C°. One way might be
->> to use the device's "low" operating point first, but then that
->> might not be available and we'd be back to capping to 0.
->> I'm open to other suggestions. :)
->>
+Hi Alex
+
++ Bjorn
+
+FWIW I can't understand why PCI SIG went different ways with ATS, 
+where its enumerated on PF and VF. But for PASID and PRI its only
+in PF. 
+
+I'm checking with our internal SIG reps to followup on that.
+
+On Tue, Apr 07, 2020 at 09:58:01AM -0600, Alex Williamson wrote:
+> > Is there vendor guarantee that hidden registers will locate at the
+> > same offset between PF and VF config space? 
 > 
-> Looking into the code, 0x80 or -128 indeed reflects an invalid temperature.
+> I'm not sure if the spec really precludes hidden registers, but the
+> fact that these registers are explicitly outside of the capability
+> chain implies they're only intended for device specific use, so I'd say
+> there are no guarantees about anything related to these registers.
 
-Excellent, that's of course much better than just capping to 0.
+As you had suggested in the other thread, we could consider
+using the same offset as in PF, but even that's a better guess
+still not reliable.
 
-> Any chance you can apply the following to see if it helps ?
+The other option is to maybe extend driver ops in the PF to expose
+where the offsets should be. Sort of adding the quirk in the 
+implementation. 
+
+I'm not sure how prevalent are PASID and PRI in VF devices. If SIG is resisting 
+making VF's first class citizen, we might ask them to add some verbiage
+to suggest leave the same offsets as PF open to help emulation software.
+
+
 > 
-> diff --git a/drivers/hwmon/drivetemp.c b/drivers/hwmon/drivetemp.c
-> index 370d0c74eb01..c27239eb28cf 100644
-> --- a/drivers/hwmon/drivetemp.c
-> +++ b/drivers/hwmon/drivetemp.c
-> @@ -264,6 +264,8 @@ static int drivetemp_get_scttemp(struct drivetemp_data *st, u32 attr, long *val)
->                  return err;
->          switch (attr) {
->          case hwmon_temp_input:
-> +               if (!temp_is_valid(buf[SCT_STATUS_TEMP]))
-> +                       return -ENODATA;
->                  *val = temp_from_sct(buf[SCT_STATUS_TEMP]);
->                  break;
->          case hwmon_temp_lowest:
+> FWIW, vfio started out being more strict about restricting config space
+> access to defined capabilities, until...
 > 
-> I am not sure what the best error code would be - suggestions welcome.
+> commit a7d1ea1c11b33bda2691f3294b4d735ed635535a
+> Author: Alex Williamson <alex.williamson@redhat.com>
+> Date:   Mon Apr 1 09:04:12 2013 -0600
+> 
 
-Gave it a try and had to wait overnight for things to cool down
-(just suspending for an hour wouldn't do it). Right after wakeup sensors
-now shows "N/A" as expected, and no illegal values in drivetemp or my
-monitoring; missing values are perfectly fine.
-After a few minutes correct values show up and all is good.
+Cheers,
+Ashok
 
-In case you submit this as official patch feel free to add my
-Reported-by/Tested-by. Thanks for looking into it!
-
-cheers
-Holger
