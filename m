@@ -2,137 +2,114 @@ Return-Path: <SRS0=8dav=5Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B796C2BA1A
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 12:38:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74A14C2BA2B
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 12:48:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 276152082D
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 12:38:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 326C92051A
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 12:48:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=mm-sol.com header.i=@mm-sol.com header.b="HW8cDe6J"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728814AbgDHMin (ORCPT
+        id S1728820AbgDHMsQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Apr 2020 08:38:43 -0400
-Received: from foss.arm.com ([217.140.110.172]:38334 "EHLO foss.arm.com"
+        Wed, 8 Apr 2020 08:48:16 -0400
+Received: from ns.mm-sol.com ([37.157.136.199]:35254 "EHLO extserv.mm-sol.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726977AbgDHMim (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Apr 2020 08:38:42 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 87C1331B;
-        Wed,  8 Apr 2020 05:38:41 -0700 (PDT)
-Received: from lakrids.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 0ADA83F73D;
-        Wed,  8 Apr 2020 05:38:37 -0700 (PDT)
-Date:   Wed, 8 Apr 2020 13:38:36 +0100
-From:   Mark Rutland <mark.rutland@arm.com>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>, x86@kernel.org,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Laura Abbott <labbott@redhat.com>,
-        Sumit Semwal <sumit.semwal@linaro.org>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Minchan Kim <minchan@kernel.org>,
-        Nitin Gupta <ngupta@vflare.org>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        Peter Zijlstra <peterz@infradead.org>,
-        linuxppc-dev@lists.ozlabs.org, linux-hyperv@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org,
-        linux-arch@vger.kernel.org, linux-mm@kvack.org,
-        iommu@lists.linux-foundation.org,
-        linux-arm-kernel@lists.infradead.org, linux-s390@vger.kernel.org,
-        bpf@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Will Deacon <will@kernel.org>,
-        Catalin marinas <catalin.marinas@arm.com>
-Subject: Re: [PATCH 18/28] mm: enforce that vmap can't map pages executable
-Message-ID: <20200408123835.GB36478@lakrids.cambridge.arm.com>
-References: <20200408115926.1467567-1-hch@lst.de>
- <20200408115926.1467567-19-hch@lst.de>
+        id S1727077AbgDHMsQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Apr 2020 08:48:16 -0400
+Received: from [192.168.1.4] (212-5-158-69.ip.btc-net.bg [212.5.158.69])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by extserv.mm-sol.com (Postfix) with ESMTPSA id 2E464CFB4;
+        Wed,  8 Apr 2020 15:48:13 +0300 (EEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=mm-sol.com; s=201706;
+        t=1586350093; bh=7Eg3xvLl6DWrQSTLQ5XS22kCIbNhJ7asYuWQixzAxzM=;
+        h=Subject:To:Cc:From:Date:From;
+        b=HW8cDe6J1+QmHwi6fmWhIP6x0p70d1zdLRBOWnb7rcaMZtnPoaaoeL6Z80sxdGcwF
+         AlamXw9UkQ8ZnLZUPWo5LPgFCjOl77+4sTbEcex9SX6NSujwc2Wxa28Q5h1CZQ2Rgu
+         2zIEFVy5ZW6LnSbWdxoFQgYxzkkGQLRUUsMilgXjlgEl0q1bglgPENDdieXBaqRpTr
+         R6usio8NhmQ8/isGjK3MAmPQK4o7PqTbspsSbcZ4M2nc0Hlm8QBtfQK3E8RW8R3cSe
+         tB/QJW9AyiD+Xeu1CylzGp/OYkpKDExTcMFeb1pVgdJ3zFGcnDFXni0Zp9Zs7DBZp+
+         W70orzuwpRpcg==
+Subject: Re: R: [PATCH v2 01/10] PCIe: qcom: add missing ipq806x clocks in
+ PCIe driver
+To:     ansuelsmth@gmail.com, 'Andy Gross' <agross@kernel.org>
+Cc:     'Sham Muthayyan' <smuthayy@codeaurora.org>,
+        'Bjorn Andersson' <bjorn.andersson@linaro.org>,
+        'Bjorn Helgaas' <bhelgaas@google.com>,
+        'Rob Herring' <robh+dt@kernel.org>,
+        'Mark Rutland' <mark.rutland@arm.com>,
+        'Lorenzo Pieralisi' <lorenzo.pieralisi@arm.com>,
+        'Andrew Murray' <amurray@thegoodpenguin.co.uk>,
+        'Philipp Zabel' <p.zabel@pengutronix.de>,
+        linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200402121148.1767-1-ansuelsmth@gmail.com>
+ <20200402121148.1767-2-ansuelsmth@gmail.com>
+ <b09627a8-d928-cf5d-c765-406959138a29@mm-sol.com>
+ <053d01d60da2$49e0ca60$dda25f20$@gmail.com>
+From:   Stanimir Varbanov <svarbanov@mm-sol.com>
+Message-ID: <f333d990-6d76-0e04-5949-54ffe31bc0e9@mm-sol.com>
+Date:   Wed, 8 Apr 2020 15:48:10 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200408115926.1467567-19-hch@lst.de>
-User-Agent: Mutt/1.11.1+11 (2f07cb52) (2018-12-01)
+In-Reply-To: <053d01d60da2$49e0ca60$dda25f20$@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 08, 2020 at 01:59:16PM +0200, Christoph Hellwig wrote:
-> To help enforcing the W^X protection don't allow remapping existing
-> pages as executable.
+Hi Ansuel,
+
+On 4/8/20 3:36 PM, ansuelsmth@gmail.com wrote:
+>> PCIe driver
+>>
+>> Ansuel,
+>>
+>> On 4/2/20 3:11 PM, Ansuel Smith wrote:
+>>> Aux and Ref clk are missing in pcie qcom driver.
+>>> Add support in the driver to fix pcie inizialization in ipq806x.
+>>>
+>>> Fixes: 82a82383 PCI: qcom: Add Qualcomm PCIe controller driver
+>>
+>> this should be:
+>>
+>> Fixes: 82a823833f4e PCI: qcom: Add Qualcomm PCIe controller driver
+>>
+>> and add:
+>>
+>> Cc: stable@vger.kernel.org # v4.5+
+>>
+>> But, I wonder, as apq8064 shares the same ops_2_1_0 how it worked until
+>> now. Something more I cannot find such clocks for apq8064, which means
+>> that this patch will break it.
+>>
+>> One option is to use those new clocks only for ipq806x.
+>>
 > 
-> Based on patch from Peter Zijlstra <peterz@infradead.org>.
+> How to add this new clocks only for ipq806x? Check the compatible and add
+> them accordingly? 
 > 
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
-> ---
->  arch/x86/include/asm/pgtable_types.h | 6 ++++++
->  include/asm-generic/pgtable.h        | 4 ++++
->  mm/vmalloc.c                         | 2 +-
->  3 files changed, 11 insertions(+), 1 deletion(-)
-> 
-> diff --git a/arch/x86/include/asm/pgtable_types.h b/arch/x86/include/asm/pgtable_types.h
-> index 947867f112ea..2e7c442cc618 100644
-> --- a/arch/x86/include/asm/pgtable_types.h
-> +++ b/arch/x86/include/asm/pgtable_types.h
-> @@ -282,6 +282,12 @@ typedef struct pgprot { pgprotval_t pgprot; } pgprot_t;
->  
->  typedef struct { pgdval_t pgd; } pgd_t;
->  
-> +static inline pgprot_t pgprot_nx(pgprot_t prot)
-> +{
-> +	return __pgprot(pgprot_val(prot) | _PAGE_NX);
-> +}
-> +#define pgprot_nx pgprot_nx
-> +
->  #ifdef CONFIG_X86_PAE
 
-I reckon for arm64 we can do similar in our <asm/pgtable.h>:
+Yes, through of_device_is_compatible(). See how we done this in
+qcom_pcie_get_resources_2_4_0.
 
-#define pgprot_nx(pgprot_t prot) \
-	__pgprot_modify(prot, 0, PTE_PXN)
+I thought about second option though - encoder what clocks we have for
+any SoC but if you take into that direction you have to change the whole
+driver :)
 
-... matching the style of our existing pgprot_*() modifier helpers.
+Another option is to use clk_get_optional() for the clocks which you
+have on ipq806x (and don't have on apq8064). Please research this one
+first.
 
-Mark.
-
->  
->  /*
-> diff --git a/include/asm-generic/pgtable.h b/include/asm-generic/pgtable.h
-> index 329b8c8ca703..8c5f9c29698b 100644
-> --- a/include/asm-generic/pgtable.h
-> +++ b/include/asm-generic/pgtable.h
-> @@ -491,6 +491,10 @@ static inline int arch_unmap_one(struct mm_struct *mm,
->  #define flush_tlb_fix_spurious_fault(vma, address) flush_tlb_page(vma, address)
->  #endif
->  
-> +#ifndef pgprot_nx
-> +#define pgprot_nx(prot)	(prot)
-> +#endif
-> +
->  #ifndef pgprot_noncached
->  #define pgprot_noncached(prot)	(prot)
->  #endif
-> diff --git a/mm/vmalloc.c b/mm/vmalloc.c
-> index 7356b3f07bd8..334c75251ddb 100644
-> --- a/mm/vmalloc.c
-> +++ b/mm/vmalloc.c
-> @@ -2390,7 +2390,7 @@ void *vmap(struct page **pages, unsigned int count,
->  	if (!area)
->  		return NULL;
->  
-> -	if (map_kernel_range((unsigned long)area->addr, size, prot,
-> +	if (map_kernel_range((unsigned long)area->addr, size, pgprot_nx(prot),
->  			pages) < 0) {
->  		vunmap(area->addr);
->  		return NULL;
-> -- 
-> 2.25.1
-> 
+-- 
+regards,
+Stan
