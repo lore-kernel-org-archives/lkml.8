@@ -2,78 +2,146 @@ Return-Path: <SRS0=8dav=5Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F32F1C2BA1B
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 19:42:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D10B1C2BA1B
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 19:42:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C606420753
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 19:42:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9864520768
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 19:42:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="MCFkqAr2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730094AbgDHTmT (ORCPT
+        id S1730105AbgDHTme (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Apr 2020 15:42:19 -0400
-Received: from mga01.intel.com ([192.55.52.88]:36095 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729090AbgDHTmS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Apr 2020 15:42:18 -0400
-IronPort-SDR: fWZ2WQWMiMq+RCJN4SmGWeLPuQl4WM3aXbt0XC9VXl5iopbp92qIB6Nx8sD7p6zcuHUfDw/vyY
- i1+zsXMJcY7A==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Apr 2020 12:42:18 -0700
-IronPort-SDR: V9zmvoI/wrc/la0Eit0dJ+nWEE0wnSiqpAJmv8vKLyM19ppRttdvpyrVA12TZIxoQqgPSlyd+G
- g4k/IMzeEBgg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,359,1580803200"; 
-   d="scan'208";a="286654685"
-Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
-  by fmsmga002.fm.intel.com with ESMTP; 08 Apr 2020 12:42:15 -0700
-Received: from kbuild by lkp-server01 with local (Exim 4.89)
-        (envelope-from <lkp@intel.com>)
-        id 1jMGaS-0009pI-Br; Thu, 09 Apr 2020 03:42:12 +0800
-Date:   Thu, 9 Apr 2020 03:41:27 +0800
-From:   kbuild test robot <lkp@intel.com>
-To:     Shiju Jose <shiju.jose@huawei.com>
-Cc:     kbuild-all@lists.01.org, linux-acpi@vger.kernel.org,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        rjw@rjwysocki.net, bp@alien8.de, james.morse@arm.com,
-        helgaas@kernel.org, lenb@kernel.org, tony.luck@intel.com,
-        dan.carpenter@oracle.com, gregkh@linuxfoundation.org,
-        zhangliguang@linux.alibaba.com, tglx@linutronix.de
-Subject: [RFC PATCH] ACPI / APEI: ghes_gdata_pool_init() can be static
-Message-ID: <20200408194127.GA90427@7d29259190c9>
-References: <20200407120045.958-2-shiju.jose@huawei.com>
+        Wed, 8 Apr 2020 15:42:34 -0400
+Received: from mail-eopbgr1300090.outbound.protection.outlook.com ([40.107.130.90]:36615
+        "EHLO APC01-HK2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729090AbgDHTme (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Apr 2020 15:42:34 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=jlJA5Jl1/G7gLP7WEp1qBLdmW5DRDjc9NnSCfXcDamQkCGNHPlsnNcQcYJaCae3mdrGyJt6zfOjf3wej2B2XGvTvvNOlU2Uolj+pZsTNdC5xQoz/FkwXVoON3F7hQdMEhS9l0XXVLQ0z2qf7OgW9zlJpDHV+ma6HVkkCeulEriOcpjG4tGKuwGGmeRsKJ1/3Vg46qYaTfzAuvooQHuLnoqcEgYZYZkhojbNG2FkKKMQoi5z8KrTJf+HfAht6VvfiLYjOBzPJcrRBxW20JmliJZmjYw+3j919oZos6jl6uDUA77nTXrD3ew/mlD+4HN35vy31v+QUZu9+xRJW7qniOQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=BdeKSAM3vTx65pJX8H3SHBfSgA/3yRVA7crIXWDpNkA=;
+ b=JOY+mlIIyNIrFpj5WdzkLp9EEePVuoE9p1cnyxP/ieaHt/6fhFL8rCa51us25tCx3P7cWjDUzdBQJDfy+iZZRFdESXtp9ETHkGj3f0COiVbvD2erPKoyuB1QoL7Lfn6CiOKndh/aSHby5F9MSDJd6aD9QEG5S7zazVjnJJbswBvGVcZ5unFA1gojG1a4J2OTW0//zhskj8Z7A+4SGhq8wZp4F0oLtcWMGUuwyi8Vq4sfoVq2bzvyOkuZxbRDBgms9UqjvleMFEz6kVPQpMA7/V9Fhzi+M4U62qK8xzsLK/RkBdKOEFIR01gFguOtDz4W6AdSkJQgfrsaYJn6JwiHsA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microsoft.com; dmarc=pass action=none
+ header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=BdeKSAM3vTx65pJX8H3SHBfSgA/3yRVA7crIXWDpNkA=;
+ b=MCFkqAr2N2i9vt4WrDW4df45HtfPf44X42f2FhTW33ZU09F3HLevydsA4jcIwW3bgpNlWRCAw5qbjOuruw1uh47AYZRdihxJhGSqMtv/U3SbHrvzOQbed2n5+R/YK7dVrqVPdVetVMi6zfnJmhmjYh4PUtNUcXXNiTfAkRFjq10=
+Received: from HK0P153MB0273.APCP153.PROD.OUTLOOK.COM (52.132.236.76) by
+ HK0P153MB0193.APCP153.PROD.OUTLOOK.COM (52.133.212.19) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2921.4; Wed, 8 Apr 2020 19:42:28 +0000
+Received: from HK0P153MB0273.APCP153.PROD.OUTLOOK.COM
+ ([fe80::2d07:e045:9d5b:898a]) by HK0P153MB0273.APCP153.PROD.OUTLOOK.COM
+ ([fe80::2d07:e045:9d5b:898a%2]) with mapi id 15.20.2921.009; Wed, 8 Apr 2020
+ 19:42:28 +0000
+From:   Dexuan Cui <decui@microsoft.com>
+To:     vkuznets <vkuznets@redhat.com>
+CC:     KY Srinivasan <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        "wei.liu@kernel.org" <wei.liu@kernel.org>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Michael Kelley <mikelley@microsoft.com>
+Subject: RE: [PATCH] Drivers: hv: vmbus: Disallow the freeze PM operation
+Thread-Topic: [PATCH] Drivers: hv: vmbus: Disallow the freeze PM operation
+Thread-Index: AQHWDb0CzRPAkatwXES7XuIgEFDFbKhvenBAgAAgogCAAALaEA==
+Date:   Wed, 8 Apr 2020 19:42:27 +0000
+Message-ID: <HK0P153MB0273FCBBEF151A3B3A4AB7F6BFC00@HK0P153MB0273.APCP153.PROD.OUTLOOK.COM>
+References: <1586296907-53744-1-git-send-email-decui@microsoft.com>
+ <877dyq2d4p.fsf@vitty.brq.redhat.com>
+ <HK0P153MB02732CCBDFA879FCE5CA48C7BFC00@HK0P153MB0273.APCP153.PROD.OUTLOOK.COM>
+ <87v9m9233b.fsf@vitty.brq.redhat.com>
+In-Reply-To: <87v9m9233b.fsf@vitty.brq.redhat.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=decui@microsoft.com;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2020-04-08T19:42:26.1558811Z;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
+ Information Protection;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=e7928239-b5ff-4f4d-86a6-a849f7e5c7ff;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=decui@microsoft.com; 
+x-originating-ip: [2601:600:a280:7f70:25f2:87c1:762f:53ac]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 5404c3d7-5789-47b4-53a2-08d7dbf4f886
+x-ms-traffictypediagnostic: HK0P153MB0193:|HK0P153MB0193:|HK0P153MB0193:
+x-ms-exchange-transport-forked: True
+x-ld-processed: 72f988bf-86f1-41af-91ab-2d7cd011db47,ExtAddr
+x-microsoft-antispam-prvs: <HK0P153MB0193A53F54B83CF121CBC699BFC00@HK0P153MB0193.APCP153.PROD.OUTLOOK.COM>
+x-ms-oob-tlc-oobclassifiers: OLM:10000;
+x-forefront-prvs: 0367A50BB1
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:HK0P153MB0273.APCP153.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFTY:;SFS:(10019020)(4636009)(346002)(396003)(39860400002)(376002)(366004)(136003)(8990500004)(76116006)(71200400001)(66556008)(66446008)(64756008)(33656002)(66946007)(66476007)(7696005)(9686003)(6916009)(53546011)(6506007)(55016002)(10290500003)(5660300002)(186003)(81156014)(54906003)(52536014)(4326008)(81166007)(478600001)(86362001)(107886003)(8936002)(316002)(2906002)(82950400001)(8676002)(82960400001);DIR:OUT;SFP:1102;
+received-spf: None (protection.outlook.com: microsoft.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: uTboEo50wrWjysTtuLnanPZDsmDD9V8sxIkhv79i2JBLjK63DyeQPTdZhqEXho9kemV/KDRFrDRVWdrcW4mIpuB2R4R1zjqNWm8gpZYLFKvTvqz1rkeU7Z0xmVPJU7ZsWA5QF93kklvVKRIRFNvaByRY0Y1NKVWd6yGD/zeHpXTjMXARBA07qTadZdi6bY7inDFL+nOdJMzkUh0tTNmFUaPH/wEhXy/EgHCqIF9p3I/e+lBkwhrItwPhrVoj1aKWj97U1AtqZuLsvx/agvSfiCCE4Wr2QxQqrEQwffirT1FwFxl4ghRQnIgQafDEdXXyVxEHUXV6dM2zez+x5g1Vl8aUfUeS65qx2/1TqbTPd1dDrD/tN0TMv19cSJq4y0U4PKYifSeB7d2uT7E3jaWlWJlV3B2rs2dO7LeyS/NsWFGfq2jNldFVCdLLlWVUlwei
+x-ms-exchange-antispam-messagedata: vInF+FwQ3ZXIFqHI4zlI7ffPUxZm8LVlLNCG8qNmwHeUBAk0lHAG9YN6gJZWsxwqJxzdDCLf7V3hW3oz0ABB4Da+f6o9IinFbEa6sDee5IzGbsgoV+qY/oOuOVNROM9OKRzRf1vJbjqWG5Pqk1SDLRAZYxjLCXmTa+/LV9bunHXZafw5wodoNsW3y/FGQI1pX9+QlqIAaQ0xV4Ry33t/zQ==
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200407120045.958-2-shiju.jose@huawei.com>
-X-Patchwork-Hint: ignore
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 5404c3d7-5789-47b4-53a2-08d7dbf4f886
+X-MS-Exchange-CrossTenant-originalarrivaltime: 08 Apr 2020 19:42:27.9673
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 4NPhuoGu2UWKCilf8vF/v0bSaGn1bM1rRrZg8YoK9vV6jZJ8O57Yd5Rgu85lmdnJ7BB8tvVB7Jneyd0LZ6fyKw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: HK0P153MB0193
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+> From: Vitaly Kuznetsov <vkuznets@redhat.com>
+> Sent: Wednesday, April 8, 2020 12:24 PM
+> To: Dexuan Cui <decui@microsoft.com>
+> > ...
+> > This should be doable but IMO this is not a very trivial
+> > effort, and I'm trying to avoid it since IMO Suspend-to-idle is not rea=
+lly
+> > useful in practice for a Linux VM on Hyper-V. :-)
+>=20
+> Well, to me it's equally (not) useful in all other cases :-) I think we
+> should Cc: linux-pm@vger.kernel.org and someone will describe a real
+> world usecase to educate us, we'll then see if there is any Hyper-V
+> specifics.
+Maybe I should support Suspend-to-idle, anyway. :-)
 
-Signed-off-by: kbuild test robot <lkp@intel.com>
----
- ghes.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+> >> In particular, why do we need to do
+> >> anything when we are not hibernating?
+> >
+> > Are you suggesting hv_vmbus should not suspend the vmbus devices at all
+> > in the case of Suspend-to-idle?
+>=20
+> That what we were doing prior to the hibernation series, right? AFAIU
+Yes.
 
-diff --git a/drivers/acpi/apei/ghes.c b/drivers/acpi/apei/ghes.c
-index 5c0ab54223118..6d698867468d1 100644
---- a/drivers/acpi/apei/ghes.c
-+++ b/drivers/acpi/apei/ghes.c
-@@ -207,7 +207,7 @@ int ghes_estatus_pool_init(int num_ghes)
- 	return -ENOMEM;
- }
- 
--int ghes_gdata_pool_init(void)
-+static int ghes_gdata_pool_init(void)
- {
- 	unsigned long addr, len;
- 	int rc;
+> suspend-to-idle is basically 'no processes are scheduled' mode but we
+> don't really need to do anything with devices.
+Got it. Let me try to make a patch to revert to the old behavior for=20
+Suspend-to-idle.
+
+Thanks,
+-- Dexuan
+
