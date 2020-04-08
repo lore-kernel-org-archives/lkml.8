@@ -2,131 +2,87 @@ Return-Path: <SRS0=8dav=5Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B1E8C2D0F4
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 16:46:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3958CC2BA1A
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 16:46:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5FD1720730
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 16:46:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="g1fuDWN0"
+	by mail.kernel.org (Postfix) with ESMTP id 15F8C20730
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 16:46:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729348AbgDHQqX (ORCPT
+        id S1730394AbgDHQqg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Apr 2020 12:46:23 -0400
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:46959 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728872AbgDHQqX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Apr 2020 12:46:23 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1586364381;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=OS1BYKCP7cBLf4oxAp06CiLumissixgN9CzFoFmvPFs=;
-        b=g1fuDWN0gcw1sfLsyfBwPDsk2d0+OV8McPVZy1Mpta29aEKQXVDDo9203W8IyHSCt7F60c
-        NfE2amgG38QUj9i4aJTkkhaIec8yl5uv+1q/RDFcyqgaW/4mwdGdbZft9ZGGiKRENlMdzs
-        AaatgXkmg2xc0ZVSnVsyvVloSe+t69c=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-22-q_lr7LQCNHOKfs94-AlDmw-1; Wed, 08 Apr 2020 12:46:19 -0400
-X-MC-Unique: q_lr7LQCNHOKfs94-AlDmw-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 2AAA5801E5A;
-        Wed,  8 Apr 2020 16:46:18 +0000 (UTC)
-Received: from gondolin (ovpn-113-103.ams2.redhat.com [10.36.113.103])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 908721195A4;
-        Wed,  8 Apr 2020 16:46:09 +0000 (UTC)
-Date:   Wed, 8 Apr 2020 18:46:06 +0200
-From:   Cornelia Huck <cohuck@redhat.com>
-To:     Tony Krowiak <akrowiak@linux.ibm.com>
-Cc:     linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org, freude@linux.ibm.com, borntraeger@de.ibm.com,
-        mjrosato@linux.ibm.com, pmorel@linux.ibm.com, pasic@linux.ibm.com,
-        alex.williamson@redhat.com, kwankhede@nvidia.com,
-        jjherne@linux.ibm.com, fiuczy@linux.ibm.com
-Subject: Re: [PATCH v7 06/15] s390/vfio-ap: sysfs attribute to display the
- guest CRYCB
-Message-ID: <20200408184606.309d9cd9.cohuck@redhat.com>
-In-Reply-To: <60c6bfb6-dd0a-75dc-1043-8dffe983220a@linux.ibm.com>
-References: <20200407192015.19887-1-akrowiak@linux.ibm.com>
-        <20200407192015.19887-7-akrowiak@linux.ibm.com>
-        <20200408123344.1a9032e1.cohuck@redhat.com>
-        <60c6bfb6-dd0a-75dc-1043-8dffe983220a@linux.ibm.com>
-Organization: Red Hat GmbH
+        Wed, 8 Apr 2020 12:46:36 -0400
+Received: from mga11.intel.com ([192.55.52.93]:39188 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729355AbgDHQqf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Apr 2020 12:46:35 -0400
+IronPort-SDR: 45bEa2gAHB2GdoaIEZORwqygpMww3NvW1OyoYRWU+JU6iClxYODD61/X2yzg2jJEtQRw8OYWeL
+ b5rF2WBY7NQQ==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Apr 2020 09:46:34 -0700
+IronPort-SDR: vnrR0SDm2xnMUZvyRTH4Ooy7MJySJhAdizG4leup9HxoJXjykfOP9niO3wUFsAJTh99vx3/vde
+ dZeaCFdP7EJg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,359,1580803200"; 
+   d="scan'208";a="425200141"
+Received: from pratuszn-mobl.ger.corp.intel.com (HELO localhost) ([10.252.40.202])
+  by orsmga005.jf.intel.com with ESMTP; 08 Apr 2020 09:46:24 -0700
+Date:   Wed, 8 Apr 2020 19:46:23 +0300
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     amirmizi6@gmail.com
+Cc:     Eyal.Cohen@nuvoton.com, oshrialkoby85@gmail.com,
+        alexander.steffen@infineon.com, robh+dt@kernel.org,
+        mark.rutland@arm.com, peterhuewe@gmx.de, jgg@ziepe.ca,
+        arnd@arndb.de, gregkh@linuxfoundation.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-integrity@vger.kernel.org, oshri.alkoby@nuvoton.com,
+        tmaimon77@gmail.com, gcwilson@us.ibm.com, kgoldman@us.ibm.com,
+        Dan.Morav@nuvoton.com, oren.tanami@nuvoton.com,
+        shmulik.hager@nuvoton.com, amir.mizinski@nuvoton.com
+Subject: Re: [PATCH v6 1/7] tpm: tpm_tis: Make implementation of read16
+ read32 write32 optional
+Message-ID: <20200408164623.GA33486@linux.intel.com>
+References: <20200407162044.168890-1-amirmizi6@gmail.com>
+ <20200407162044.168890-2-amirmizi6@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200407162044.168890-2-amirmizi6@gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 8 Apr 2020 12:38:49 -0400
-Tony Krowiak <akrowiak@linux.ibm.com> wrote:
-
-> On 4/8/20 6:33 AM, Cornelia Huck wrote:
-> > On Tue,  7 Apr 2020 15:20:06 -0400
-> > Tony Krowiak <akrowiak@linux.ibm.com> wrote:
-> >  
-> >> The matrix of adapters and domains configured in a guest's CRYCB may
-> >> differ from the matrix of adapters and domains assigned to the matrix mdev,
-> >> so this patch introduces a sysfs attribute to display the CRYCB of a guest
-> >> using the matrix mdev. For a matrix mdev denoted by $uuid, the crycb for a
-> >> guest using the matrix mdev can be displayed as follows:
-> >>
-> >>     cat /sys/devices/vfio_ap/matrix/$uuid/guest_matrix
-> >>
-> >> If a guest is not using the matrix mdev at the time the crycb is displayed,
-> >> an error (ENODEV) will be returned.
-> >>
-> >> Signed-off-by: Tony Krowiak <akrowiak@linux.ibm.com>
-> >> ---
-> >>   drivers/s390/crypto/vfio_ap_ops.c | 58 +++++++++++++++++++++++++++++++
-> >>   1 file changed, 58 insertions(+)
-> >> +static DEVICE_ATTR_RO(guest_matrix);  
-> > Hm... should information like the guest configuration be readable by
-> > everyone? Or should it be restricted a bit more?  
+On Tue, Apr 07, 2020 at 07:20:38PM +0300, amirmizi6@gmail.com wrote:
+> From: Amir Mizinski <amirmizi6@gmail.com>
 > 
-> Why? The matrix attribute already displays the APQNs of the queues
-> assigned to the matrix mdev. The guest_matrix attribute merely displays
-> a subset of the matrix (i.e., the APQNs assigned to the mdev that reference
-> queue devices bound to the vfio_ap device driver).
+> Only tpm_tis can use memory mapped I/O, which is truly mapped into
+> the kernel's memory space. So using ioread16/ioread32/iowrite32 turn into a
+> straightforward pointer dereference.
+> Every other driver require more complicated operations to read more than 1
+> byte at a time and will just fall back to read_bytes/write_bytes.
+> Therefore, move this common code out of tpm_tis_spi into tpm_tis_core, so
+> that it is automatically used when low-level drivers do not implement the
+> specialized methods.
 > 
-> How can this be restricted?
+> Co-developed-by: Alexander Steffen <Alexander.Steffen@infineon.com>
+> Signed-off-by: Alexander Steffen <Alexander.Steffen@infineon.com>
+> Signed-off-by: Amir Mizinski <amirmizi6@gmail.com>
+> Reviewed-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
 
-I was thinking of using e.g. 400 instead of 444 for the permissions.
+Just noticed that the short summary is still wrong. As far as I remember
+I asked to fix it.
 
-I'm not sure if the info about what subset of the queues the guest
-actually uses is all that interesting (except for managing guests); but
-if I see guest information being exposed, I get a little wary, so I
-just stumbled over this.
+tpm: tpm_tis: Make implementation of read16 read32 write32 optional
 
-Maybe I'll come back to that once I have looked at the series in more
-detail, but this might not be a problem at all.
+In English you put comma between enumerated things except for the last
+thing where you use and-conjuction. How hard is it seriously to write
+legit sentences?
 
-> 
-> >  
-> >> +
-> >>   static struct attribute *vfio_ap_mdev_attrs[] = {
-> >>   	&dev_attr_assign_adapter.attr,
-> >>   	&dev_attr_unassign_adapter.attr,
-> >> @@ -1050,6 +1107,7 @@ static struct attribute *vfio_ap_mdev_attrs[] = {
-> >>   	&dev_attr_unassign_control_domain.attr,
-> >>   	&dev_attr_control_domains.attr,
-> >>   	&dev_attr_matrix.attr,
-> >> +	&dev_attr_guest_matrix.attr,
-> >>   	NULL,
-> >>   };
-> >>     
-> 
-
+/Jarkko
