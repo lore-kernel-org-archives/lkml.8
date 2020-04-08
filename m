@@ -7,62 +7,62 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA0D1C2BA1B
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 21:34:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16D7CC2BA1B
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 21:34:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7ADBD2082D
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 21:34:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CECD32082D
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 21:34:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Rs+1EAWz"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="jPAP4ppt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730797AbgDHVeO (ORCPT
+        id S1730820AbgDHVeT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Apr 2020 17:34:14 -0400
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:41616 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730771AbgDHVeK (ORCPT
+        Wed, 8 Apr 2020 17:34:19 -0400
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:46369 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730771AbgDHVeR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Apr 2020 17:34:10 -0400
-Received: by mail-lj1-f193.google.com with SMTP id n17so9266159lji.8
-        for <linux-kernel@vger.kernel.org>; Wed, 08 Apr 2020 14:34:08 -0700 (PDT)
+        Wed, 8 Apr 2020 17:34:17 -0400
+Received: by mail-lf1-f65.google.com with SMTP id m19so4288543lfq.13
+        for <linux-kernel@vger.kernel.org>; Wed, 08 Apr 2020 14:34:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=KqwTl0YCgxCFoD6QzWeacolgi5eHFyPVK66/B9eGEJU=;
-        b=Rs+1EAWzy1VV58B8ic72umCM2g0DVr+FxSWDqFmuwQmbfcsQpCSPb7ozP5rsx/AY+v
-         WRNLg7tvETXoGITLQpT/VnxMGFH2obCaWmepQI3a9qkWRDDXkdyEQIJCH/3Sj4/nTST0
-         T26x+BW6P1xRvZ0cSj/M70vkWbWi5s+NJMYTnYH/DbwSaaSfOTaD0im2zjRHktmqAotY
-         eTtHSQcVx3L32UzappU/dibiG6+F0TR+g7dexzBVWP8PzFLig3R/qXtGrOiOd9MlGYES
-         aJvKlWhE3FdV0pJwG+LKBZRLJeBP0lQhpN5F530MQF5kQY1xQj/NaWdktwvQT35PKwoy
-         WzIg==
+        bh=AXEwq2LfKZq9jZegx8V3cfaW46VWP+fA7RcQ4zX+6AI=;
+        b=jPAP4pptlrc6Q8aApSXno0wjC5irSo2RhU/NlN8d93U02X4zOIZYKkmlqTIvOS1QS3
+         1bzshkxkMLXILtyf5A4SpmirLLL/IAYw50MT8vo88yVZVP8s3wMOdRqR6Cq85I/MRgPO
+         ZiOX9GjI2c3WP25YxIgl5Z5xPJKjICKijoiO85WKO8mxv59Fe47KtWMww8OwfUXy5vD8
+         yCw7Oa5pz3yMprnXQr2B4U++0wGYM06NFK5uRdLavEgdOLL5+ufiMbtv8/U5T0KpgMLv
+         eYpdT7Pi+n8538PeSs2WAPcBXVpAiYKvp14CRJYbn7QxD7g0Iy45ZsHGDuq5pOKNE4cQ
+         Vb6w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=KqwTl0YCgxCFoD6QzWeacolgi5eHFyPVK66/B9eGEJU=;
-        b=i39tG2re0L7NSSG8bemRaq4I+Useet5Ldc7uwAet7qKdTfqQprfPLvQaH54A1/hyVR
-         MmWPs+OEbxN2gmOOYsxUhfnZ99cP1BUcP55I8Kiv0VsFag3focfChrwNQ3G9j+CBwPn6
-         dMYFRcZ8DGi6qHpToQ2UqroHmcYc0rgaQJ463VYhTSLITBp2PsDPi+Mhh8jAGbLcYFTs
-         BfTKrwj/3D0y3HSDS/OcelMPVpQhm3ysDb+xp4hHDgmbqzguaLUswr/uVRA5u33n4Qls
-         vD8xSNrU8EDAfNaWhSB3qjFbiYMx/ZdT0M22EQLvJb/izAzCMjmnR0fgOByYX2CCYtwN
-         hTRw==
-X-Gm-Message-State: AGi0PuauT48R2MavIUdu37kEJAI7htPRIYUr7OOwtFaOV59LYUJU5FeB
-        d1xzRYGts9/pbSAS/v7mGlN7JbvTpr8=
-X-Google-Smtp-Source: APiQypLMz6OhjtqiITix26SHaGKIE/PNn8sq0YjVxchoC3Vnmc57okLBEnC2m/RXu2OROr26JHycvw==
-X-Received: by 2002:a2e:9ccd:: with SMTP id g13mr6174687ljj.147.1586381648068;
-        Wed, 08 Apr 2020 14:34:08 -0700 (PDT)
+        bh=AXEwq2LfKZq9jZegx8V3cfaW46VWP+fA7RcQ4zX+6AI=;
+        b=ikomALBveJi80EZa0PoyFHcjgMTN3rw8fQIdi/glSRslJgC6oXMpnUYyWmNnFXNcWr
+         JL9HfOeL7bXkAJ8zOTyJvtYCjyg2HUJ7y84npxhjmHoo9J4eHA6X1U9dVgp9Z696qTYx
+         b81N6xvc4iUwd2a07fQV7l3qARcZ7BNmIGkLmnHfG51DUhNW8Knx9urF99Kw3pX/6bRH
+         bn2087vvZLzNc1aU75LFyJ/73gyp07bmRjhJgbpH4uK8ydWaxg3sJsRlEOYRrVMVwXYK
+         gw4DOkzv3ELLW4thDZ0625wHWZsSOJiyFimJhCUW1kKQw52mHYlUZ9yBdjd2tpAQjmR0
+         l8bQ==
+X-Gm-Message-State: AGi0PuaGpIfvGQ/aG5hU81urYU9GewoyCrJL+LAxiboINdFdJiiESmF4
+        btcXLHY4N9ftoVr6g8ygoHHC+Q==
+X-Google-Smtp-Source: APiQypLFJs1t1iNw8j6sA8tRaEtZ7232JHvqALlP5aaWya5C1Se9P8Y3p+5jI4WkgT3K8YXTUzruAw==
+X-Received: by 2002:a19:7615:: with SMTP id c21mr5612680lff.24.1586381654421;
+        Wed, 08 Apr 2020 14:34:14 -0700 (PDT)
 Received: from localhost.localdomain (212-5-158-138.ip.btc-net.bg. [212.5.158.138])
-        by smtp.gmail.com with ESMTPSA id t6sm15746688lfb.55.2020.04.08.14.34.06
+        by smtp.gmail.com with ESMTPSA id t6sm15746688lfb.55.2020.04.08.14.34.11
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 08 Apr 2020 14:34:07 -0700 (PDT)
+        Wed, 08 Apr 2020 14:34:13 -0700 (PDT)
 From:   Stanimir Varbanov <stanimir.varbanov@linaro.org>
 To:     linux-media@vger.kernel.org, linux-arm-msm@vger.kernel.org,
         linux-kernel@vger.kernel.org
 Cc:     Vikash Garodia <vgarodia@codeaurora.org>,
         Stanimir Varbanov <stanimir.varbanov@linaro.org>
-Subject: [PATCH 5/7] venus: vdec: Mark flushed buffers with error state
-Date:   Thu,  9 Apr 2020 00:33:28 +0300
-Message-Id: <20200408213330.27665-6-stanimir.varbanov@linaro.org>
+Subject: [PATCH 7/7] venus: Mark last capture buffer
+Date:   Thu,  9 Apr 2020 00:33:30 +0300
+Message-Id: <20200408213330.27665-8-stanimir.varbanov@linaro.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200408213330.27665-1-stanimir.varbanov@linaro.org>
 References: <20200408213330.27665-1-stanimir.varbanov@linaro.org>
@@ -71,32 +71,229 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Once the hfi_session_flush is issued by the vdec all queued
-buffers to firmware should be returned to the v4l driver. Some
-of those buffers are not processed at the time of flush command,
-those buffers has filled len zero (no data). Catch that in
-buffer_done callback and mark not filled capture buffers with
-error state so that client can discard them.
+According to stateful Codec API the decoder will process all
+remaining buffers from before the source change event in
+dynamic-resolution-change state and mark the last buffer with
+V4L2_BUF_FLAG_LAST.
+
+In Venus case the firmware doesn't mark that last buffer and
+some mechanism have to be created in v4l decoder driver.
+Fortunately the firmware interface (HFI) claims that the
+decoder output buffers will be returned to v4l decoder
+driver before it send the insufficient event.
+
+In order to do that we save last queued in the driver capture
+buffer in the event_notify and issue flush on output firmware
+buffers queue. Once the saved buffer is returned (as a result of
+flush command) we mark it as LAST. For all that possible we
+extend HFI flush command with one more argument and one more
+flush_done HFI driver callback.
 
 Signed-off-by: Stanimir Varbanov <stanimir.varbanov@linaro.org>
 ---
- drivers/media/platform/qcom/venus/vdec.c | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/media/platform/qcom/venus/core.h     |  5 ++-
+ drivers/media/platform/qcom/venus/hfi.c      | 10 +++--
+ drivers/media/platform/qcom/venus/hfi.h      |  3 +-
+ drivers/media/platform/qcom/venus/hfi_msgs.c |  2 +
+ drivers/media/platform/qcom/venus/vdec.c     | 45 +++++++++++++++++---
+ 5 files changed, 54 insertions(+), 11 deletions(-)
 
+diff --git a/drivers/media/platform/qcom/venus/core.h b/drivers/media/platform/qcom/venus/core.h
+index 3ab644a39786..7118612673c9 100644
+--- a/drivers/media/platform/qcom/venus/core.h
++++ b/drivers/media/platform/qcom/venus/core.h
+@@ -261,7 +261,8 @@ enum venus_dec_state {
+ 	VENUS_DEC_STATE_SEEK		= 4,
+ 	VENUS_DEC_STATE_DRAIN		= 5,
+ 	VENUS_DEC_STATE_DECODING	= 6,
+-	VENUS_DEC_STATE_DRC		= 7
++	VENUS_DEC_STATE_DRC		= 7,
++	VENUS_DEC_STATE_DRC_FLUSH_DONE	= 8,
+ };
+ 
+ struct venus_ts_metadata {
+@@ -326,6 +327,7 @@ struct venus_ts_metadata {
+  * @priv:	a private for HFI operations callbacks
+  * @session_type:	the type of the session (decoder or encoder)
+  * @hprop:	a union used as a holder by get property
++ * @last_buf:	last capture buffer for dynamic-resoluton-change
+  */
+ struct venus_inst {
+ 	struct list_head list;
+@@ -387,6 +389,7 @@ struct venus_inst {
+ 	union hfi_get_property hprop;
+ 	unsigned int core_acquired: 1;
+ 	unsigned int bit_depth;
++	struct vb2_buffer *last_buf;
+ };
+ 
+ #define IS_V1(core)	((core)->res->hfi_version == HFI_VERSION_1XX)
+diff --git a/drivers/media/platform/qcom/venus/hfi.c b/drivers/media/platform/qcom/venus/hfi.c
+index 3d8b1284d1f3..a211eb93e0f9 100644
+--- a/drivers/media/platform/qcom/venus/hfi.c
++++ b/drivers/media/platform/qcom/venus/hfi.c
+@@ -382,7 +382,7 @@ int hfi_session_unload_res(struct venus_inst *inst)
+ }
+ EXPORT_SYMBOL_GPL(hfi_session_unload_res);
+ 
+-int hfi_session_flush(struct venus_inst *inst, u32 type)
++int hfi_session_flush(struct venus_inst *inst, u32 type, bool block)
+ {
+ 	const struct hfi_ops *ops = inst->core->ops;
+ 	int ret;
+@@ -393,9 +393,11 @@ int hfi_session_flush(struct venus_inst *inst, u32 type)
+ 	if (ret)
+ 		return ret;
+ 
+-	ret = wait_session_msg(inst);
+-	if (ret)
+-		return ret;
++	if (block) {
++		ret = wait_session_msg(inst);
++		if (ret)
++			return ret;
++	}
+ 
+ 	return 0;
+ }
+diff --git a/drivers/media/platform/qcom/venus/hfi.h b/drivers/media/platform/qcom/venus/hfi.h
+index 855822c9f39b..62c315291484 100644
+--- a/drivers/media/platform/qcom/venus/hfi.h
++++ b/drivers/media/platform/qcom/venus/hfi.h
+@@ -102,6 +102,7 @@ struct hfi_inst_ops {
+ 			 u32 hfi_flags, u64 timestamp_us);
+ 	void (*event_notify)(struct venus_inst *inst, u32 event,
+ 			     struct hfi_event_data *data);
++	void (*flush_done)(struct venus_inst *inst);
+ };
+ 
+ struct hfi_ops {
+@@ -161,7 +162,7 @@ int hfi_session_continue(struct venus_inst *inst);
+ int hfi_session_abort(struct venus_inst *inst);
+ int hfi_session_load_res(struct venus_inst *inst);
+ int hfi_session_unload_res(struct venus_inst *inst);
+-int hfi_session_flush(struct venus_inst *inst, u32 type);
++int hfi_session_flush(struct venus_inst *inst, u32 type, bool block);
+ int hfi_session_set_buffers(struct venus_inst *inst,
+ 			    struct hfi_buffer_desc *bd);
+ int hfi_session_unset_buffers(struct venus_inst *inst,
+diff --git a/drivers/media/platform/qcom/venus/hfi_msgs.c b/drivers/media/platform/qcom/venus/hfi_msgs.c
+index 04ef2286efc6..279a9d6fe737 100644
+--- a/drivers/media/platform/qcom/venus/hfi_msgs.c
++++ b/drivers/media/platform/qcom/venus/hfi_msgs.c
+@@ -439,6 +439,8 @@ static void hfi_session_flush_done(struct venus_core *core,
+ 
+ 	inst->error = pkt->error_type;
+ 	complete(&inst->done);
++	if (inst->ops->flush_done)
++		inst->ops->flush_done(inst);
+ }
+ 
+ static void hfi_session_etb_done(struct venus_core *core,
 diff --git a/drivers/media/platform/qcom/venus/vdec.c b/drivers/media/platform/qcom/venus/vdec.c
-index 7d093accbd59..5823537b3131 100644
+index f23cbd812ef4..527944c822b5 100644
 --- a/drivers/media/platform/qcom/venus/vdec.c
 +++ b/drivers/media/platform/qcom/venus/vdec.c
-@@ -1241,6 +1241,9 @@ static void vdec_buf_done(struct venus_inst *inst, unsigned int buf_type,
- 			if (inst->codec_state == VENUS_DEC_STATE_DRAIN)
- 				inst->codec_state = VENUS_DEC_STATE_STOPPED;
- 		}
+@@ -906,7 +906,7 @@ static int vdec_start_capture(struct venus_inst *inst)
+ 		return 0;
+ 
+ reconfigure:
+-	ret = hfi_session_flush(inst, HFI_FLUSH_OUTPUT);
++	ret = hfi_session_flush(inst, HFI_FLUSH_OUTPUT, true);
+ 	if (ret)
+ 		return ret;
+ 
+@@ -1063,14 +1063,16 @@ static int vdec_stop_capture(struct venus_inst *inst)
+ 
+ 	switch (inst->codec_state) {
+ 	case VENUS_DEC_STATE_DECODING:
+-		ret = hfi_session_flush(inst, HFI_FLUSH_ALL);
++		ret = hfi_session_flush(inst, HFI_FLUSH_ALL, true);
+ 		/* fallthrough */
+ 	case VENUS_DEC_STATE_DRAIN:
+ 		vdec_cancel_dst_buffers(inst);
+ 		inst->codec_state = VENUS_DEC_STATE_STOPPED;
+ 		break;
+ 	case VENUS_DEC_STATE_DRC:
+-		ret = hfi_session_flush(inst, HFI_FLUSH_OUTPUT);
++		WARN_ON(1);
++		fallthrough;
++	case VENUS_DEC_STATE_DRC_FLUSH_DONE:
+ 		inst->codec_state = VENUS_DEC_STATE_CAPTURE_SETUP;
+ 		venus_helper_free_dpb_bufs(inst);
+ 		break;
+@@ -1091,12 +1093,12 @@ static int vdec_stop_output(struct venus_inst *inst)
+ 	case VENUS_DEC_STATE_DECODING:
+ 	case VENUS_DEC_STATE_DRAIN:
+ 	case VENUS_DEC_STATE_STOPPED:
+-		ret = hfi_session_flush(inst, HFI_FLUSH_ALL);
++		ret = hfi_session_flush(inst, HFI_FLUSH_ALL, true);
+ 		inst->codec_state = VENUS_DEC_STATE_SEEK;
+ 		break;
+ 	case VENUS_DEC_STATE_INIT:
+ 	case VENUS_DEC_STATE_CAPTURE_SETUP:
+-		ret = hfi_session_flush(inst, HFI_FLUSH_INPUT);
++		ret = hfi_session_flush(inst, HFI_FLUSH_INPUT, true);
+ 		break;
+ 	default:
+ 		break;
+@@ -1234,6 +1236,13 @@ static void vdec_buf_done(struct venus_inst *inst, unsigned int buf_type,
+ 		vb->timestamp = timestamp_us * NSEC_PER_USEC;
+ 		vbuf->sequence = inst->sequence_cap++;
+ 
++		if (inst->last_buf == vb) {
++			inst->last_buf = NULL;
++			vbuf->flags |= V4L2_BUF_FLAG_LAST;
++			vb2_set_plane_payload(vb, 0, 0);
++			vb->timestamp = 0;
++		}
 +
-+		if (!bytesused)
-+			state = VB2_BUF_STATE_ERROR;
- 	} else {
- 		vbuf->sequence = inst->sequence_out++;
+ 		if (vbuf->flags & V4L2_BUF_FLAG_LAST) {
+ 			const struct v4l2_event ev = { .type = V4L2_EVENT_EOS };
+ 
+@@ -1311,6 +1320,25 @@ static void vdec_event_change(struct venus_inst *inst,
+ 		}
  	}
+ 
++	/*
++	 * The assumption is that the firmware have to return the last buffer
++	 * before this event is received in the v4l2 driver. Also the firmware
++	 * itself doesn't mark the last decoder output buffer with HFI EOS flag.
++	 */
++
++	if (!sufficient && inst->codec_state == VENUS_DEC_STATE_DRC) {
++		struct vb2_v4l2_buffer *last;
++		int ret;
++
++		last = v4l2_m2m_last_dst_buf(inst->m2m_ctx);
++		if (last)
++			inst->last_buf = &last->vb2_buf;
++
++		ret = hfi_session_flush(inst, HFI_FLUSH_OUTPUT, false);
++		if (ret)
++			dev_dbg(dev, "flush output error %d\n", ret);
++	}
++
+ 	inst->reconfig = true;
+ 	v4l2_event_queue_fh(&inst->fh, &ev);
+ 	wake_up(&inst->reconf_wait);
+@@ -1351,9 +1379,16 @@ static void vdec_event_notify(struct venus_inst *inst, u32 event,
+ 	}
+ }
+ 
++static void vdec_flush_done(struct venus_inst *inst)
++{
++	if (inst->codec_state == VENUS_DEC_STATE_DRC)
++		inst->codec_state = VENUS_DEC_STATE_DRC_FLUSH_DONE;
++}
++
+ static const struct hfi_inst_ops vdec_hfi_ops = {
+ 	.buf_done = vdec_buf_done,
+ 	.event_notify = vdec_event_notify,
++	.flush_done = vdec_flush_done,
+ };
+ 
+ static void vdec_inst_init(struct venus_inst *inst)
 -- 
 2.17.1
 
