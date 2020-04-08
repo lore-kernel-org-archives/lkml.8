@@ -2,172 +2,91 @@ Return-Path: <SRS0=8dav=5Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A52F6C2BA1A
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 15:47:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 253CAC2BA1A
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 15:47:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7F14220820
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 15:47:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="SO0UzvBP"
+	by mail.kernel.org (Postfix) with ESMTP id E2B7420730
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 15:47:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1586360856;
+	bh=2lkqsCAQF54Pdi9xvJJXtrh8wUQHo0cYxp077ryGpVA=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=CnfB1WHfO7FmF/iMWYeEZZMeZYsJkJDu5VhkjgErnswrJHeyPkF5JADSp7ZZJCsiS
+	 Frbq5+Uzk8Yz+v+5p8SrlheG/qo5V0g6l3tc2r1jVRg92drrssE6q2hmT8Gcn34y5q
+	 CKKKKpcJfrw71h23JnAK4RO/abEaoy0r958sLAWs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729898AbgDHPr3 (ORCPT
+        id S1729853AbgDHPrS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Apr 2020 11:47:29 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:26012 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1729682AbgDHPr1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Apr 2020 11:47:27 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1586360847;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=gAEJnsFvJ/UE0FB3O27yABAEEtvPXM+Fg0YVQjfo/a4=;
-        b=SO0UzvBPB3brW+NKADWrvbBix+Dl8ZGoVw3WqvT2Y0ezg0kcukRYW8YiZM6wtfqkKVllkK
-        Kx6LYA6Ye5BFiv2yJVeuYT++Rbard2oJL69TDNpWGeJ38mSCW+7ZWHNxBBur+cqx51FxwR
-        Nex0VDT/iFibLxkPYl/7WrpxVIapTjU=
-Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
- [209.85.221.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-484-brNGuT3YMYqs6Ze3U7W-EQ-1; Wed, 08 Apr 2020 11:47:25 -0400
-X-MC-Unique: brNGuT3YMYqs6Ze3U7W-EQ-1
-Received: by mail-wr1-f71.google.com with SMTP id x9so2523717wrq.17
-        for <linux-kernel@vger.kernel.org>; Wed, 08 Apr 2020 08:47:24 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=gAEJnsFvJ/UE0FB3O27yABAEEtvPXM+Fg0YVQjfo/a4=;
-        b=GbgKD/TlLU6qEUtidtOuCRwqoDdajG0G5ujxP9QYQGFleKfS4C2EpGw/l/gfNwqLzD
-         Q95YhmG+MYSqSt2o9NirTyHq5X385f5yVtBysDo8q08CfTpV32RWnxX03hBniH1HVAek
-         ReH/5djpWXWSwgSXKnAIsP3C/3F3irXZoZVYqT+jsxfYVlo5xZAUQi1JUpyL7mzL/Bg1
-         Wxx6pdrcHqDxvUz+jap0mbVHusRoYYbAYreqVFLkn3SvLkaFiEQ1KaLuAnaVEa+sAbMN
-         pmhp0R/QFUA0yTvB9Om8THQtNZSxemsD97fkB2wLznIukSzQk1hCKw3uD63cao03rM3/
-         bLfA==
-X-Gm-Message-State: AGi0PuYufI+/iq7qtkz6H97+gXnJK2XoJhXYHngfsqKrvB9FSgey07vr
-        P0iIGJF4I+F+KssqrFafYFdSUAvLfVcN6wp2UvhXpAHI+6i2KfMhFaCz794jKOH278HLzO0Pqnl
-        0BEzrcKSdBjalgsF9iQ+XCfpk
-X-Received: by 2002:a1c:9652:: with SMTP id y79mr5236093wmd.89.1586360840768;
-        Wed, 08 Apr 2020 08:47:20 -0700 (PDT)
-X-Google-Smtp-Source: APiQypLIaJalJox0wC1qgjSXqmHy0drYO5xeMGjHVXA0P2g5EJhvdpeQG2ZSxTcASdJhmstQtru9VQ==
-X-Received: by 2002:a1c:9652:: with SMTP id y79mr5236080wmd.89.1586360840526;
-        Wed, 08 Apr 2020 08:47:20 -0700 (PDT)
-Received: from vitty.brq.redhat.com (g-server-2.ign.cz. [91.219.240.2])
-        by smtp.gmail.com with ESMTPSA id c190sm7520877wme.4.2020.04.08.08.47.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 08 Apr 2020 08:47:19 -0700 (PDT)
-From:   Vitaly Kuznetsov <vkuznets@redhat.com>
-To:     Dexuan Cui <decui@microsoft.com>
-Cc:     kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
-        wei.liu@kernel.org, linux-hyperv@vger.kernel.org,
-        linux-kernel@vger.kernel.org, mikelley@microsoft.com
-Subject: Re: [PATCH] Drivers: hv: vmbus: Disallow the freeze PM operation
-In-Reply-To: <1586296907-53744-1-git-send-email-decui@microsoft.com>
-References: <1586296907-53744-1-git-send-email-decui@microsoft.com>
-Date:   Wed, 08 Apr 2020 17:47:18 +0200
-Message-ID: <877dyq2d4p.fsf@vitty.brq.redhat.com>
+        Wed, 8 Apr 2020 11:47:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49544 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729694AbgDHPqd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Apr 2020 11:46:33 -0400
+Received: from mail.kernel.org (ip5f5ad4d8.dynamic.kabel-deutschland.de [95.90.212.216])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C272621D81;
+        Wed,  8 Apr 2020 15:46:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1586360792;
+        bh=2lkqsCAQF54Pdi9xvJJXtrh8wUQHo0cYxp077ryGpVA=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=2DjtbswZXsCX5J5p9U6oXJQIuMpt3+Kf5Xbp/LCUIfYNRKcFn8u6/aQnp6bS5B3xf
+         5rCnS/LhYqqgmzVq5ovt8RT+pb+MI/S1WW0o8zk67xe7NxaSvnW7AxUaBuRvvIOgE5
+         aEvSd1hI598cmwjs2qamWe4ixp657KgmZ+XNZyCQ=
+Received: from mchehab by mail.kernel.org with local (Exim 4.92.3)
+        (envelope-from <mchehab@kernel.org>)
+        id 1jMCuL-000cCB-VT; Wed, 08 Apr 2020 17:46:29 +0200
+From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
+Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
+        Christoph Lameter <cl@linux.com>,
+        Pekka Enberg <penberg@kernel.org>,
+        David Rientjes <rientjes@google.com>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+        Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org
+Subject: [PATCH 24/35] docs: mm: slab.h: fix a broken cross-reference
+Date:   Wed,  8 Apr 2020 17:46:16 +0200
+Message-Id: <0aeac24235d356ebd935d11e147dcc6edbb6465c.1586359676.git.mchehab+huawei@kernel.org>
+X-Mailer: git-send-email 2.25.2
+In-Reply-To: <cover.1586359676.git.mchehab+huawei@kernel.org>
+References: <cover.1586359676.git.mchehab+huawei@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Dexuan Cui <decui@microsoft.com> writes:
+There is a typo at the cross-reference link, causing this
+warning:
 
-> Before the hibernation patchset (e.g. f53335e3289f), a Linux VM on Hyper-V
-> can run "echo freeze > /sys/power/state" (or "systemctl suspend")
-> to freeze the system. The user can press the keyboard or move the mouse
-> to wake up the VM. Note: the two aforementioned commands are equivalent
-> here, because Hyper-V doesn't support the guest ACPI S3 state.
->
-> With the hibernation patchset, a Linux VM on Hyper-V can hibernate to disk
-> and resume back; however, the 'freeze' operation is broken for Hyper-V
-> Generation-2 VM (which doesn't have a legacy keyboard/mouse): when the
-> vmbus devices are suspended, the VM can not receive any interrupt from
-> the synthetic keyboard/mouse devices, so there is no way to wake up the
-> VM. This is not an issue for Generaton-1 VM, because it looks the legacy
-> keyboard/mouse devices can still be used to wake up the VM in my test.
->
-> IMO 'freeze' in a Linux VM on Hyper-V is not really useful in practice,
-> so let's disallow the operation for both Gen-1 and Gen-2 VMs, even if
-> it's not an issue for Gen-1 VMs.
+	./include/linux/slab.h:11: WARNING: undefined label: memory-allocation (if the link has no caption the label must precede a section header)
 
-Suspend-to-idle may not be very useful indeed, however, it worked before
-and I think we can just fix it. In particular, why do we need to do
-anything when we are not hibernating? 
+Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+---
+ include/linux/slab.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
->
-> Fixes: f53335e3289f ("Drivers: hv: vmbus: Suspend/resume the vmbus itself for hibernation")
-> Signed-off-by: Dexuan Cui <decui@microsoft.com>
-> ---
->  drivers/hv/vmbus_drv.c | 21 +++++++++++++++++++++
->  1 file changed, 21 insertions(+)
->
-> diff --git a/drivers/hv/vmbus_drv.c b/drivers/hv/vmbus_drv.c
-> index 029378c..82a4327 100644
-> --- a/drivers/hv/vmbus_drv.c
-> +++ b/drivers/hv/vmbus_drv.c
-> @@ -28,6 +28,7 @@
->  #include <linux/notifier.h>
->  #include <linux/ptrace.h>
->  #include <linux/screen_info.h>
-> +#include <linux/suspend.h>
->  #include <linux/kdebug.h>
->  #include <linux/efi.h>
->  #include <linux/random.h>
-> @@ -2357,6 +2358,23 @@ static void hv_synic_resume(void)
->  	.resume = hv_synic_resume,
->  };
->  
-> +/*
-> + * Note: "freeze/suspend" here means "systemctl suspend".
-> + * "systemctl hibernate" is still supported.
-
-Let's not use systemd terminology in kernel, let's use the ones from
-admin-guide/pm/sleep-states.rst (Suspend-to-Idle/Standby/Suspend-to-RAM/
-Hibernation).
-
-> + */
-> +static int hv_pm_notify(struct notifier_block *nb,
-> +			unsigned long val, void *ign)
-> +{
-> +	if (val == PM_SUSPEND_PREPARE) {
-> +		pr_info("freeze/suspend is not supported\n");
-> +		return NOTIFY_BAD;
-> +	}
-> +
-> +	return NOTIFY_DONE;
-> +}
-> +
-> +static struct notifier_block hv_pm_nb;
-> +
->  static int __init hv_acpi_init(void)
->  {
->  	int ret, t;
-> @@ -2389,6 +2407,8 @@ static int __init hv_acpi_init(void)
->  	hv_setup_crash_handler(hv_crash_handler);
->  
->  	register_syscore_ops(&hv_synic_syscore_ops);
-> +	hv_pm_nb.notifier_call = hv_pm_notify;
-> +	register_pm_notifier(&hv_pm_nb);
->  
->  	return 0;
->  
-> @@ -2402,6 +2422,7 @@ static void __exit vmbus_exit(void)
->  {
->  	int cpu;
->  
-> +	unregister_pm_notifier(&hv_pm_nb);
->  	unregister_syscore_ops(&hv_synic_syscore_ops);
->  
->  	hv_remove_kexec_handler();
-
+diff --git a/include/linux/slab.h b/include/linux/slab.h
+index 03a389358562..6d454886bcaf 100644
+--- a/include/linux/slab.h
++++ b/include/linux/slab.h
+@@ -501,7 +501,7 @@ static __always_inline void *kmalloc_large(size_t size, gfp_t flags)
+  * :ref:`Documentation/core-api/mm-api.rst <mm-api-gfp-flags>`
+  *
+  * The recommended usage of the @flags is described at
+- * :ref:`Documentation/core-api/memory-allocation.rst <memory-allocation>`
++ * :ref:`Documentation/core-api/memory-allocation.rst <memory_allocation>`
+  *
+  * Below is a brief outline of the most useful GFP flags
+  *
 -- 
-Vitaly
+2.25.2
 
