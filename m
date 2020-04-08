@@ -2,94 +2,57 @@ Return-Path: <SRS0=8dav=5Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34F8BC2BA2B
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 10:51:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96D96C2D0EA
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 10:51:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F2DBC20771
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 10:51:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 701B420787
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 10:51:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728274AbgDHKvJ (ORCPT
+        id S1728292AbgDHKvh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Apr 2020 06:51:09 -0400
-Received: from mx2.suse.de ([195.135.220.15]:60918 "EHLO mx2.suse.de"
+        Wed, 8 Apr 2020 06:51:37 -0400
+Received: from lizzard.sbs.de ([194.138.37.39]:35027 "EHLO lizzard.sbs.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726980AbgDHKvI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Apr 2020 06:51:08 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 8690AABCC;
-        Wed,  8 Apr 2020 10:51:04 +0000 (UTC)
-Subject: Re: [PATCH 05/13] efi/x86: don't map the entire kernel text RW for
- mixed mode
-To:     Ard Biesheuvel <ardb@kernel.org>
-Cc:     linux-efi <linux-efi@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Anshuman Khandual <anshuman.khandual@arm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Dave Young <dyoung@redhat.com>,
-        Saravana Kannan <saravanak@google.com>,
-        Gary Lin <GLin@suse.com>
-References: <20200113172245.27925-1-ardb@kernel.org>
- <20200113172245.27925-6-ardb@kernel.org>
- <63b125a4-6c62-fcdf-de22-d3bebe2dcbf5@suse.cz>
- <CAMj1kXGiT_zYjc6X-msRXVozhpDAY0UesEW3_4fOgiH4FyMgDw@mail.gmail.com>
-From:   Jiri Slaby <jslaby@suse.cz>
-Autocrypt: addr=jslaby@suse.cz; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <972b66a9-92c7-9a15-1aa1-e3236abe90df@suse.cz>
-Date:   Wed, 8 Apr 2020 12:51:04 +0200
+        id S1726980AbgDHKvh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Apr 2020 06:51:37 -0400
+Received: from mail2.sbs.de (mail2.sbs.de [192.129.41.66])
+        by lizzard.sbs.de (8.15.2/8.15.2) with ESMTPS id 038AoJ0I018419
+        (version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 8 Apr 2020 12:50:19 +0200
+Received: from [139.22.119.141] ([139.22.119.141])
+        by mail2.sbs.de (8.15.2/8.15.2) with ESMTP id 038AoHjp031142;
+        Wed, 8 Apr 2020 12:50:18 +0200
+Subject: Re: [PATCH 4/4] x86,module: Detect CRn and DRn manipulation
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Steven Rostedt <rostedt@goodmis.org>, tglx@linutronix.de,
+        linux-kernel@vger.kernel.org, hch@infradead.org,
+        sean.j.christopherson@intel.com, mingo@redhat.com, bp@alien8.de,
+        hpa@zytor.com, x86@kernel.org, kenny@panix.com, jeyu@kernel.org,
+        rasmus.villemoes@prevas.dk, pbonzini@redhat.com,
+        fenghua.yu@intel.com, xiaoyao.li@intel.com, nadav.amit@gmail.com,
+        thellstrom@vmware.com, tony.luck@intel.com,
+        gregkh@linuxfoundation.org, jannh@google.com,
+        keescook@chromium.org, David.Laight@aculab.com,
+        dcovelli@vmware.com, mhiramat@kernel.org,
+        Wolfgang Mauerer <wolfgang.mauerer@oth-regensburg.de>
+References: <20200407110236.930134290@infradead.org>
+ <20200407111007.429362016@infradead.org>
+ <20200407174824.5e97a597@gandalf.local.home>
+ <137fe245-69f3-080e-5f2b-207cd218f199@siemens.com>
+ <20200408085138.GQ20713@hirez.programming.kicks-ass.net>
+ <20200408091306.GN20760@hirez.programming.kicks-ass.net>
+From:   Jan Kiszka <jan.kiszka@siemens.com>
+Message-ID: <3751b1d5-113e-4a5c-da3b-fd1afbdba2ae@siemens.com>
+Date:   Wed, 8 Apr 2020 12:50:17 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-In-Reply-To: <CAMj1kXGiT_zYjc6X-msRXVozhpDAY0UesEW3_4fOgiH4FyMgDw@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <20200408091306.GN20760@hirez.programming.kicks-ass.net>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -97,74 +60,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Ccing Gary.
-
-On 08. 04. 20, 12:47, Ard Biesheuvel wrote:
-> On Wed, 8 Apr 2020 at 12:42, Jiri Slaby <jslaby@suse.cz> wrote:
+On 08.04.20 11:13, Peter Zijlstra wrote:
+> On Wed, Apr 08, 2020 at 10:51:38AM +0200, Peter Zijlstra wrote:
+>> On Wed, Apr 08, 2020 at 07:58:53AM +0200, Jan Kiszka wrote:
+>>> On 07.04.20 23:48, Steven Rostedt wrote:
 >>
->> On 13. 01. 20, 18:22, Ard Biesheuvel wrote:
->>> The mixed mode thunking routine requires a part of it to be
->>> mapped 1:1, and for this reason, we currently map the entire
->>> kernel .text read/write in the EFI page tables, which is bad.
->>>
->>> In fact, the kernel_map_pages_in_pgd() invocation that installs
->>> this mapping is entirely redundant, since all of DRAM is already
->>> 1:1 mapped read/write in the EFI page tables when we reach this
->>> point, which means that .rodata is mapped read-write as well.
->>>
->>> So let's remap both .text and .rodata read-only in the EFI
->>> page tables.
+>>>> Hmm, wont this break jailhouse?
 >>
->> This patch causes unhandled page faults in mixed mode:
+>> Breaking it isn't a problem, it's out of tree and it should be fixable.
 >>
->>> BUG: unable to handle page fault for address: 000000001557ee88
->>> #PF: supervisor write access in kernel mode
->>> #PF: error_code(0x0003) - permissions violation
->>> PGD fd52063 P4D fd52063 PUD fd53063 PMD 154000e1
->>> Oops: 0003 [#1] SMP PTI
->>> CPU: 1 PID: 191 Comm: systemd-escape Not tainted
->> 5.6.2-20.gb22bc26-default #1 openSUSE Tumbleweed (unreleased)
->>> Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 0.0.0
->> 02/06/2015
->>> RIP: 0008:0x3d2eed95
->>> Code: 8b 45 d4 8b 4d 10 8b 40 04 89 01 89 3b 50 6a 00 8b 55 0c 6a 00
->> 8b 45 08 0f b6 4d e4 6a 01 31 f6 e8 ee c5 fc ff 83 c4 10 eb 07 <89> 03
->> be 05 00 00 80 a1 74 63 31 3d 83 c0 48 e8 44 d2 ff ff eb 05
->>> RSP: 0018:000000000fd66fa0 EFLAGS: 00010002
->>> RAX: 0000000000000001 RBX: 000000001557ee88 RCX: 000000003d1f1120
->>> RDX: 0000000000000001 RSI: 0000000000000000 RDI: 0000000000000001
->>> RBP: 000000000fd66fd8 R08: 000000001557ee88 R09: 0000000000000000
->>> R10: 0000000000000055 R11: 0000000000000000 R12: 0000000015bcf000
->>> R13: 0000000000000000 R14: 0000000000000000 R15: 0000000000000000
->>> FS:  00007f36ee9dc940(0000) GS:ffff9b903d700000(0000)
->> knlGS:0000000000000000
->>> CS:  0008 DS: 0018 ES: 0018 CR0: 0000000080050033
->>> CR2: 000000001557ee88 CR3: 000000000fd5e000 CR4: 00000000000006e0
->>> DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
->>> DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
->>> Call Trace:
->>> Modules linked in: efivarfs
->>> CR2: 000000001557ee88
+>>> Yes, possibly. We load the hypervisor binary via request_firmware into
+>>> executable memory and then jump into it. So most of the "suspicious" code is
 >>
->> EFI apparently tries to write to now read-only memory.
->>
->> See:
->> https://bugzilla.suse.com/show_bug.cgi?id=1168645
->>
->> Reverting it on the top of 5.6 fixes the issue.
->>
->> I am using
->> /usr/share/qemu/ovmf-ia32-code.bin
->> /usr/share/qemu/ovmf-ia32-vars.bin
->> from qemu-ovmf-ia32-202002-1.1.noarch rpm.
->>
+>> W.T.H. does the firmware loader have the ability to give executable
+>> memory? We need to kill that too. /me goes find.
 > 
-> Do you have a git tree for Suse's OVMF fork? I did a lot of testing
-> with upstream OVMF, and never ran into this issue.
+> AFAICT the firmware loader only provides PAGE_KERNEL_RO, so how do you
+> get it executable?
 
-Not really a git tree, but the sources are here:
-https://build.opensuse.org/package/show/openSUSE:Factory/ovmf
+memcpy(ioremapped_exec_region, firmware_image)
+
+We only use the loader for getting the blob, not for running it. It has 
+to be put at a location that Linux will lose control over anyway.
+
+> 
+> I'm thinking the patches Christoph has lined up will take care of this.
+> 
+
+It would make sense from a certain POV...
+
+Jan
 
 -- 
-js
-suse labs
+Siemens AG, Corporate Technology, CT RDA IOT SES-DE
+Corporate Competence Center Embedded Linux
