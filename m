@@ -2,86 +2,149 @@ Return-Path: <SRS0=8dav=5Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+X-Spam-Status: No, score=-1.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E301DC2D0EC
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 03:10:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC998C2D0EC
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 03:14:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B22A620747
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 03:10:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MbffZqs5"
+	by mail.kernel.org (Postfix) with ESMTP id 7DA9F2075E
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 03:14:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1586315698;
+	bh=0N3k3hrw1Wr+J1lrG8rUq6HXElqTf+oumNfxCX+bX8k=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=P2eXQ5ZsHzQT8MpbH5Au73/VCoxP1HpkPJ/8RW5o0SJ+LBtjwf0iEGaov67FUk1A8
+	 xo0bGLcto8LXPtbOxgrQ3YQ44H1+nQnR1qY1AQXL3qOmwb1e1o+Xy2yUT8N2ErQsmx
+	 Jx2v7L/PsElDvE14WhBxtVgSA1Al2aQxjntPuZpY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726520AbgDHDKr (ORCPT
+        id S1726495AbgDHDO5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 23:10:47 -0400
-Received: from mail-qk1-f195.google.com ([209.85.222.195]:37057 "EHLO
-        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726428AbgDHDKr (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Apr 2020 23:10:47 -0400
-Received: by mail-qk1-f195.google.com with SMTP id 130so1786611qke.4;
-        Tue, 07 Apr 2020 20:10:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=R41HqWjcCbxYDiIRtOcIY5SZNzrEIQi9LSpnnC9HzOA=;
-        b=MbffZqs5HMwMl9Beq2oGUb2EGJrN+vUBK+nJ9tUZLE6weH0OE/Fja8XC2yAJQTYodQ
-         WC7nj+bifOC0nNwPvyoAYa6AJ2agDyaRr3ton2Ejla4KVt40HbQi4naKbcr8eNDnIxJV
-         Gdo9wVM+NQO6TDvfHJLsbW2ab6lj+UoirauNIOnFpAKuTSHH2oOqC5GtS+oQ2S2SuXgr
-         HzTtqhM3AgBIKirvgSq2oocFB8PifEOFTWelWak0sy4PxkcMJAhAXVWQee2EE9kIQEj5
-         AK0n4DVEZGrHhhPCpy4KT0732QpGBE28HG/Othh0nTnDdVVk9dqHyB/vsz1DzIJFs3+g
-         EDWw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=R41HqWjcCbxYDiIRtOcIY5SZNzrEIQi9LSpnnC9HzOA=;
-        b=P3WFHpZN9/z6Ggj/mY9PhST9g4oxEyAi+FDAnHZNonFIWSS58+HS0503Uzm05gSDOY
-         Ng8IqO5ueCqJn7PKdvD5pFMUXuszao0amG42vjRSc0imc9eTHYzJOGGNXsLW94Vsl5HQ
-         PeSRMBEwGBZ5p6gpPci3tJT7Gz8/aMsxPVIQ4ztFEi40Jm5jqS9y9WgiyNEbGddJOUwp
-         3jFVGqL+jZpi+qDQ285Hn5Qt6nzniLlGOZh3kG2QBh4hWNn8PoLaPIKHP3AB0jo4vjyu
-         1JyhA1HSSyV3GV+xlEIVutdbTq6t7OQxTvjufetPgXjVYGWOpaySUzHMvb8BDCOA+JN7
-         UrRg==
-X-Gm-Message-State: AGi0PubrbxCNm1qDsklsNgIqZJNpyp6+zJc5SiPHaWwhn4+wBgg43ndY
-        kEu/74Un5KOutpQFrnUlGkxaaX52zvMfcnoLHig=
-X-Google-Smtp-Source: APiQypIs/DofL/e/K34XwS0je2W1gC36aclLgh8V94q8AO7e/ckZ527xDMiAROJrk6oXj8M9fi7NWQaXlwQ8qMdY3G8=
-X-Received: by 2002:a37:8707:: with SMTP id j7mr5615646qkd.394.1586315445954;
- Tue, 07 Apr 2020 20:10:45 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200407103020.22588-1-lhenriques@suse.com> <20200407103020.22588-3-lhenriques@suse.com>
- <e32db4ef5a0ae4e2002a3d957491c88e49daa5bb.camel@kernel.org>
-In-Reply-To: <e32db4ef5a0ae4e2002a3d957491c88e49daa5bb.camel@kernel.org>
-From:   "Yan, Zheng" <ukernel@gmail.com>
-Date:   Wed, 8 Apr 2020 11:10:34 +0800
-Message-ID: <CAAM7YAmpDKu_WuroNxZ2y+Po8_oT59Bi4_FOY1LD1ttOO0UDgQ@mail.gmail.com>
-Subject: Re: [PATCH v2 2/2] ceph: allow rename operation under different quota realms
-To:     Jeff Layton <jlayton@kernel.org>
-Cc:     Luis Henriques <lhenriques@suse.com>, Sage Weil <sage@redhat.com>,
-        Ilya Dryomov <idryomov@gmail.com>,
-        Gregory Farnum <gfarnum@redhat.com>,
-        Zheng Yan <zyan@redhat.com>, Frank Schilder <frans@dtu.dk>,
-        ceph-devel <ceph-devel@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Tue, 7 Apr 2020 23:14:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59036 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726436AbgDHDO5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Apr 2020 23:14:57 -0400
+Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 24F8020730;
+        Wed,  8 Apr 2020 03:14:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1586315696;
+        bh=0N3k3hrw1Wr+J1lrG8rUq6HXElqTf+oumNfxCX+bX8k=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=YjKrfYjX107+Sj6BZaePOJGDGgucHOSmDqHPt3FzjCM2nBQZz5pen9MCVdE66LhvD
+         KTxZxp2uUBSyJ6KLvYjLFwd5KoCcSZut5TkCJaWe2M/426wHSsRq3xqCRYkwNl6Q3q
+         EpvPCODAr3zfY6QXMRo6tyQwaiOoHZ93vgtMKVUQ=
+Date:   Wed, 8 Apr 2020 12:14:52 +0900
+From:   Masami Hiramatsu <mhiramat@kernel.org>
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     Masami Hiramatsu <mhiramat@kernel.org>,
+        Jiri Olsa <jolsa@kernel.org>, Kajol Jain <kjain@linux.ibm.com>,
+        Andi Kleen <andi@firstfloor.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-perf-users@vger.kernel.org
+Subject: Re: perf probe + uprobes missing events
+Message-Id: <20200408121452.eef4eb8e66367677f295f9ea@kernel.org>
+In-Reply-To: <20200407213943.3a92e040d4ce30dc55e9aa1f@kernel.org>
+References: <20200406145356.GA32649@kernel.org>
+        <20200407213943.3a92e040d4ce30dc55e9aa1f@kernel.org>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 8, 2020 at 7:00 AM Jeff Layton <jlayton@kernel.org> wrote:
+Hi Arnaldo,
 
->
-> Somewhat idle curiosity, but what happens with hardlinked files where
-> one dentry is in one quota domain and another is in a different one?
-> Does it stay in the old quotarealm?
->
-> In any case, this is likely fine as non-hardlinked files are the
-> pessimal case anyway.
+This seems like a perf (perf's ringbuffer?) issue.
 
-rstat only tracks primary dentry.  inode is in the quota realm where
-its primary linkage is in.
+Actually, we can not enable perf and ftrace on same uprobe event yet, but the hit counter (uprobe_profile) works.
+
+1) Setup the event.
+
+$ sudo ./perf probe -x ./perf expr__parse expr:string
+Added new event:
+  probe_perf:expr__parse (on expr__parse in /home/mhiramat/ksrc/linux/tools/perf/perf with expr:string)
+
+You can now use it in all perf tools, such as:
+
+	perf record -e probe_perf:expr__parse -aR sleep 1
+
+$ sudo cat /sys/kernel/debug/tracing/uprobe_profile
+  /home/mhiramat/ksrc/linux/tools/perf/perf expr__parse                                                0
+
+2) run the test command
+
+$ sudo ./perf trace -e probe_perf:expr_* perf test -F expr
+ 7: Simple expression parser                              : Ok
+     0.000 perf/9789 probe_perf:expr__parse(__probe_ip: 94836726971904, expr_string: "1+1")
+
+$ sudo cat /sys/kernel/debug/tracing/uprobe_profile
+  /home/mhiramat/ksrc/linux/tools/perf/perf expr__parse                                               12
+
+OK, this shows the perf trace command only shows 1 event, but uprobe_event itself hits 12 times.
+
+3) run the test command again
+
+$ sudo ./perf trace -e probe_perf:expr_* perf test -F expr
+ 7: Simple expression parser                              : Ok
+     0.000 perf/9847 probe_perf:expr__parse(__probe_ip: 94778335464960, expr_string: "1+1")
+     0.014 perf/9847 probe_perf:expr__parse(__probe_ip: 94778335464960, expr_string: "FOO+BAR")
+     0.018 perf/9847 probe_perf:expr__parse(__probe_ip: 94778335464960, expr_string: "(BAR/2)%2")
+$ sudo cat /sys/kernel/debug/tracing/uprobe_profile
+  /home/mhiramat/ksrc/linux/tools/perf/perf expr__parse                                               24
+
+Again, the perf trace shows only 3 events, but uprobe event hits +12 times
+
+4) run the test command with ftrace.
+
+$ echo 1 | sudo tee /sys/kernel/debug/tracing/events/probe_perf/enable 
+1
+$ ./perf test -F expr
+ 7: Simple expression parser                              : Ok
+$ sudo cat /sys/kernel/debug/tracing/uprobe_profile
+  /home/mhiramat/ksrc/linux/tools/perf/perf expr__parse                                               36
+
+Hit +12 times and the ftrace shows all events correctly.
+
+$ sudo cat /sys/kernel/debug/tracing/trace
+# tracer: nop
+#
+# entries-in-buffer/entries-written: 24/24   #P:8
+#
+#                              _-----=> irqs-off
+#                             / _----=> need-resched
+#                            | / _---=> hardirq/softirq
+#                            || / _--=> preempt-depth
+#                            ||| /     delay
+#           TASK-PID   CPU#  ||||    TIMESTAMP  FUNCTION
+#              | |       |   ||||       |         |
+            perf-9883  [003] d...  9287.936678: expr__parse: (0x55ea35ce9e00) expr_string="1+1"
+            perf-9883  [003] d...  9287.936694: expr__parse: (0x55ea35ce9e00) expr_string="FOO+BAR"
+            perf-9883  [003] d...  9287.936699: expr__parse: (0x55ea35ce9e00) expr_string="(BAR/2)%2"
+            perf-9883  [003] d...  9287.936704: expr__parse: (0x55ea35ce9e00) expr_string="1 - -4"
+            perf-9883  [003] d...  9287.936707: expr__parse: (0x55ea35ce9e00) expr_string="(FOO-1)*2 + (BAR/2)%2 - -4"
+            perf-9883  [003] d...  9287.936712: expr__parse: (0x55ea35ce9e00) expr_string="1-1 | 1"
+            perf-9883  [003] d...  9287.936716: expr__parse: (0x55ea35ce9e00) expr_string="1-1 & 1"
+            perf-9883  [003] d...  9287.936719: expr__parse: (0x55ea35ce9e00) expr_string="min(1,2) + 1"
+            perf-9883  [003] d...  9287.936723: expr__parse: (0x55ea35ce9e00) expr_string="max(1,2) + 1"
+            perf-9883  [003] d...  9287.936726: expr__parse: (0x55ea35ce9e00) expr_string="1+1 if 3*4 else 0"
+            perf-9883  [003] d...  9287.936731: expr__parse: (0x55ea35ce9e00) expr_string="FOO/0"
+            perf-9883  [003] d...  9287.936734: expr__parse: (0x55ea35ce9e00) expr_string="BAR/"
+
+It seems that the perf ring buffer returns only early events
+(since expr_string="1+1" is always shown), so I guess there is
+a timing issue when the ring buffer is read.
+
+Can we delay the read timing?
+
+Thank you,
+
+-- 
+Masami Hiramatsu <mhiramat@kernel.org>
