@@ -2,125 +2,198 @@ Return-Path: <SRS0=8dav=5Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE304C2BA1A
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 15:31:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 145E1C2D0EA
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 15:32:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7FA4C206F7
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 15:31:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586359881;
-	bh=aW3ft5X9hZtu9qVkui3ULDsUUXgTBmC/IHq5RwHtdM0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=z4tEUvLrQVNZQi7Z4flk5V2GDCKMs4HYaz+PZ26iocJx5FmfJ1PREulaHOg9uogCv
-	 gEwcmrby2jSqNtIIT81iWWDWSn9vYWTodwc/+/su0o12dciIMWzKQI93zdsYHBBejx
-	 RGNRKc1bOeDmWMpNXbyJdZBFrsYhRNU/KLMCxLGI=
+	by mail.kernel.org (Postfix) with ESMTP id DD0E6206F7
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 15:32:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728750AbgDHPbU (ORCPT
+        id S1728681AbgDHPcJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Apr 2020 11:31:20 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:43908 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728157AbgDHPbU (ORCPT
+        Wed, 8 Apr 2020 11:32:09 -0400
+Received: from retiisi.org.uk ([95.216.213.190]:34940 "EHLO
+        hillosipuli.retiisi.org.uk" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727226AbgDHPcI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Apr 2020 11:31:20 -0400
-Received: by mail-wr1-f66.google.com with SMTP id i10so1987013wrv.10;
-        Wed, 08 Apr 2020 08:31:17 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=7g2IDxoHI/17bb2lHkaR7jfy7fINZC4aLcy8p7mbFWU=;
-        b=inLFqxRMp0YUXZfzwpNTxO2qdvdCGGFSPg2/eu5X6Ekj4gon+Ye99IflNCRTgsSzzT
-         8qOf4l6Gv2wG7ik9Dm15p05SY25xKxuKwkyRcxJZUnkOpJ5Pk+ug/soR+ftYZCegFXUh
-         2BaQIheb0nefo0Jcw9RnV05Qc2/pk8C4jxsK4wpBWGjZxmLsoGdHLZ9liMdXngOZh6O/
-         OoUi6tBLTGAP1zgswOYshj1v6b+YcLl+Hja/jBlu9rMyEnlV3cFpYMptGoIwSvbwGbPh
-         Q6TshNfaAsWRp3U5GLSFgYN4YEas2PhMnPzqj43VO1K0jIOEcmdLRQFp7AvkRULA55LD
-         cABQ==
-X-Gm-Message-State: AGi0PuaFSVhNWYjkKIrd6HiiK4hJnGKTAQd3RzOqnAtaPHTMQyV070+R
-        aCrzq0dlPLcG6Uh53hbtYkM=
-X-Google-Smtp-Source: APiQypJ9O8BdKURufjoODCWj6Vu45474Vg3xaJGe9sn6hp0NQRyhqjbMB9htMUc2OA9BeOF5icQonw==
-X-Received: by 2002:adf:fe4b:: with SMTP id m11mr8866703wrs.20.1586359877175;
-        Wed, 08 Apr 2020 08:31:17 -0700 (PDT)
-Received: from localhost (ip-37-188-180-223.eurotel.cz. [37.188.180.223])
-        by smtp.gmail.com with ESMTPSA id a7sm7201481wmj.12.2020.04.08.08.31.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 08 Apr 2020 08:31:16 -0700 (PDT)
-Date:   Wed, 8 Apr 2020 17:31:14 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Peter Xu <peterx@redhat.com>
-Cc:     Hillf Danton <hdanton@sina.com>,
-        syzbot <syzbot+3be1a33f04dc782e9fd5@syzkaller.appspotmail.com>,
-        akpm@linux-foundation.org, bgeffon@google.com, davem@davemloft.net,
-        herbert@gondor.apana.org.au, linux-crypto@vger.kernel.org,
-        linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com,
-        torvalds@linux-foundation.org
-Subject: Re: WARNING in af_alg_make_sg
-Message-ID: <20200408153114.GB18914@dhcp22.suse.cz>
-References: <000000000000f2bc9505a2c2b808@google.com>
- <20200408095849.15236-1-hdanton@sina.com>
- <20200408151213.GE66033@xz-x1>
+        Wed, 8 Apr 2020 11:32:08 -0400
+Received: from valkosipuli.localdomain (valkosipuli.retiisi.org.uk [IPv6:2a01:4f9:c010:4572::80:2])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by hillosipuli.retiisi.org.uk (Postfix) with ESMTPS id 14208634C8C;
+        Wed,  8 Apr 2020 18:30:52 +0300 (EEST)
+Received: from sailus by valkosipuli.localdomain with local (Exim 4.92)
+        (envelope-from <sakari.ailus@retiisi.org.uk>)
+        id 1jMCfD-0002T8-2r; Wed, 08 Apr 2020 18:30:51 +0300
+Date:   Wed, 8 Apr 2020 18:30:51 +0300
+From:   Sakari Ailus <sakari.ailus@iki.fi>
+To:     Maxime Ripard <maxime@cerno.tech>
+Cc:     Tomasz Figa <tfiga@chromium.org>,
+        Robert Foss <robert.foss@linaro.org>,
+        Dongchun Zhu <dongchun.zhu@mediatek.com>,
+        Fabio Estevam <festevam@gmail.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        linux-media <linux-media@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCH v6 1/3] media: dt-bindings: ov8856: Document YAML bindings
+Message-ID: <20200408153051.GP6127@valkosipuli.retiisi.org.uk>
+References: <CAG3jFyvd32pWppubMoOoyH9eO2XLjwUXMC7p4xtv8m+JkPv6vw@mail.gmail.com>
+ <20200407123232.ktvaifhqntgzvkap@gilmour.lan>
+ <CAG3jFysSrZJRE2TvL0bWoRFNnscgDGj8yGr-iwWBm4=1wMbJ9A@mail.gmail.com>
+ <20200407163916.GL6127@valkosipuli.retiisi.org.uk>
+ <CAAFQd5BGFB5znb9QyyPVL47kc809Ktu33bssvqg5eA-WwvMgOw@mail.gmail.com>
+ <20200407172035.GM6127@valkosipuli.retiisi.org.uk>
+ <20200408122127.i27hrmjh3pbjeulk@gilmour.lan>
+ <CAAFQd5DNyQra-XksVaSfT_FCkOHTzm9mbn+tMd1vACV=pb9_8g@mail.gmail.com>
+ <20200408134315.a7cemmto6bi26arg@gilmour.lan>
+ <20200408152857.GO6127@valkosipuli.retiisi.org.uk>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200408151213.GE66033@xz-x1>
+In-Reply-To: <20200408152857.GO6127@valkosipuli.retiisi.org.uk>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed 08-04-20 11:12:13, Peter Xu wrote:
-> >From 380003a56efc125565143c91ee6cefd7b3eba869 Mon Sep 17 00:00:00 2001
-> From: Hillf Danton <hdanton@sina.com>
-> Date: Wed, 8 Apr 2020 11:01:25 -0400
-> Subject: [PATCH] mm/gup: Let __get_user_pages_locked() return -EINTR for fatal
->  signal
-> 
-> __get_user_pages_locked() will return 0 instead of -EINTR after commit
-> 4426e945df588 which added extra code to allow gup detect fatal signal
-> faster.  Restore that behavior.
-> 
-> CC: Thomas Gleixner <tglx@linutronix.de>
-> Signed-off-by: Hillf Danton <hdanton@sina.com>
-> [peterx: write commit message]
+Cc'ing Laurent as well.
 
-Fixes: 4426e945df58 ("mm/gup: allow VM_FAULT_RETRY for multiple times")
-> Signed-off-by: Peter Xu <peterx@redhat.com>
-
-Acked-by: Michal Hocko <mhocko@suse.com>
-
-> ---
->  mm/gup.c | 5 ++++-
->  1 file changed, 4 insertions(+), 1 deletion(-)
+On Wed, Apr 08, 2020 at 06:28:57PM +0300, Sakari Ailus wrote:
+> Hi Maxime,
 > 
-> diff --git a/mm/gup.c b/mm/gup.c
-> index afce0bc47e70..6076df8e04a4 100644
-> --- a/mm/gup.c
-> +++ b/mm/gup.c
-> @@ -1326,8 +1326,11 @@ static __always_inline long __get_user_pages_locked(struct task_struct *tsk,
->  		 * start trying again otherwise it can loop forever.
->  		 */
->  
-> -		if (fatal_signal_pending(current))
-> +		if (fatal_signal_pending(current)) {
-> +			if (!pages_done)
-> +				pages_done = -EINTR;
->  			break;
-> +		}
->  
->  		ret = down_read_killable(&mm->mmap_sem);
->  		if (ret) {
+> On Wed, Apr 08, 2020 at 03:43:15PM +0200, Maxime Ripard wrote:
+> > On Wed, Apr 08, 2020 at 02:35:28PM +0200, Tomasz Figa wrote:
+> > > On Wed, Apr 8, 2020 at 2:21 PM Maxime Ripard <maxime@cerno.tech> wrote:
+> > > > On Tue, Apr 07, 2020 at 08:20:35PM +0300, Sakari Ailus wrote:
+> > > > > On Tue, Apr 07, 2020 at 06:46:06PM +0200, Tomasz Figa wrote:
+> > > > > > On Tue, Apr 7, 2020 at 6:40 PM Sakari Ailus <sakari.ailus@iki.fi> wrote:
+> > > > > > >
+> > > > > > > On Tue, Apr 07, 2020 at 05:47:41PM +0200, Robert Foss wrote:
+> > > > > > > > On Tue, 7 Apr 2020 at 14:32, Maxime Ripard <maxime@cerno.tech> wrote:
+> > > > > > > > >
+> > > > > > > > > Hi Robert,
+> > > > > > > > >
+> > > > > > > > > On Tue, Apr 07, 2020 at 01:29:05PM +0200, Robert Foss wrote:
+> > > > > > > > > > On Tue, 7 Apr 2020 at 10:36, Maxime Ripard <maxime@cerno.tech> wrote:
+> > > > > > > > > > > On Mon, Apr 06, 2020 at 11:35:07AM +0300, Sakari Ailus wrote:
+> > > > > > > > > > > > > But that 19.2MHz is not a limitation of the device itself, it's a
+> > > > > > > > > > > > > limitation of our implementation, so we can instead implement
+> > > > > > > > > > > > > something equivalent in Linux using a clk_set_rate to 19.2MHz (to make
+> > > > > > > > > > > > > sure that our parent clock is configured at the right rate) and the
+> > > > > > > > > > > > > clk_get_rate and compare that to 19.2MHz (to make sure that it's not
+> > > > > > > > > > > > > been rounded too far apart from the frequency we expect).
+> > > > > > > > > > > > >
+> > > > > > > > > > > > > This is doing exactly the same thing, except that we don't encode our
+> > > > > > > > > > > > > implementation limitations in the DT, but in the driver instead.
+> > > > > > > > > > > >
+> > > > > > > > > > > > What I really wanted to say that a driver that doesn't get the clock
+> > > > > > > > > > > > frequency from DT but still sets that frequency is broken.
+> > > > > > > > > > > >
+> > > > > > > > > > > > This frequency is highly system specific, and in many cases only a certain
+> > > > > > > > > > > > frequency is usable, for a few reasons: On many SoCs, not all common
+> > > > > > > > > > > > frequencies can be used (e.g. 9,6 MHz, 19,2 MHz and 24 MHz; while others
+> > > > > > > > > > > > are being used as well), and then that frequency affects the usable CSI-2
+> > > > > > > > > > > > bus frequencies directly --- and of those, only safe, known-good ones
+> > > > > > > > > > > > should be used. IOW, getting the external clock frequency wrong typically
+> > > > > > > > > > > > has an effect that that none of the known-good CSI-2 bus clock frequencies
+> > > > > > > > > > > > are available.
+> > > > > > > > > > >
+> > > > > > > > > > > So clock-frequency is not about the "Frequency of the xvclk clock in
+> > > > > > > > > > > Hertz", but the frequency at which that clock must run on this
+> > > > > > > > > > > particular SoC / board to be functional?
+> > > > > > > > > > >
+> > > > > > > > > > > If so, then yeah, we should definitely keep it, but the documentation
+> > > > > > > > > > > of the binding should be made clearer as well.
+> > > > > > > > > >
+> > > > > > > > > > Alright so, let me summarise the desired approach then.
+> > > > > > > > >
+> > > > > > > > > There's a separate discussion on the same topic here:
+> > > > > > > > > https://lore.kernel.org/linux-media/20200407122106.GD4751@pendragon.ideasonboard.com/
+> > > > > > > >
+> > > > > > > > Thanks for the link.
+> > > > > > > >
+> > > > > > > > >
+> > > > > > > > > > ACPI:
+> > > > > > > > > >   - Fetch the "clock-frequency" property
+> > > > > > > > > >   - Verify it to be 19.2Mhz
+> > > > > > > > > >
+> > > > > > > > > > DT:
+> > > > > > > > > >   - Fetch the "clock-frequency" property
+> > > > > > > > > >   - Verify it to be 19.2Mhz
+> > > > > > > > > >   - Get xvclk clock
+> > > > > > > > > >   - Get xvclk clock rate
+> > > > > > > > > >   - Verify xvclk clock rate to be 19.2Mhz
+> > > > > > > > >
+> > > > > > > > > The current status is that you should
+> > > > > > > > > 's/clock-frequency/link-frequencies/', and in order to replace
+> > > > > > > > > assigned-clock-rates, you'll want to have a clk_set_rate to 19.2MHz
+> > > > > > > > > between steps 3 and 4
+> > > > > > > >
+> > > > > > > > Would we want to 's/clock-frequency/link-frequencies/' for ACPI too?
+> > > > > > > > I imagine that would cause some breakage.
+> > > > > > >
+> > > > > > > It would, yes, and it would be no more correct on DT either.
+> > > > > > >
+> > > > > > > There are basically two possibilities here; either use the clock-frequency
+> > > > > > > property and set the frequency, or rely on assigned-clock-rates, and get
+> > > > > > > the frequency instead.
+> > > > > > >
+> > > > > > > The latter, while I understand it is generally preferred, comes with having
+> > > > > > > to figure out the register list set that closest matches the frequency
+> > > > > > > obtained. The former generally gets around this silently by the clock
+> > > > > > > driver setting the closest frequency it can support.
+> > > > > >
+> > > > > > Wouldn't the former actually cause problems, because the closest
+> > > > > > frequency the clock driver can support could be pretty far from the
+> > > > > > one requested? (E.g. 19.2 MHz vs 24 MHz) The driver needs to check the
+> > > > > > resulting frequency anyway.
+> > > > >
+> > > > > That's possible, yes; in this case there wouldn't be a guarantee the
+> > > > > frequency wouldn't be far off.
+> > > >
+> > > > assigned-clock-rates is really fragile... There's zero guarantee on
+> > > > how far the actual rate is going to be from the asked one, but more
+> > > > importantly you have zero guarantee on the time frame that rate is
+> > > > going to be enforced for.
+> > >
+> > > Is there such a guarantee if clk_set_rate() is called?
+> > 
+> > with clk_set_rate itself, no, but...
+> > 
+> > > > It's simply going to change the rate as a one-off thing, and if
+> > > > there's the next millisecond someone else is going to change its rate
+> > > > one way or another, it's going to do so and you won't have any
+> > > > notification.
+> > 
+> > You can get notified, and you can use clk_set_rate_exclusive if you
+> > *really* want to enforce it.
+> 
+> Is the conclusion then we should go back to relying on the clock-frequency
+> property?
+> 
+> This has been discussed multiple times over the years, and I don't really
+> disagree with the above. The frequency is typically indeed hand-picked for
+> the hardware, and no other frequency should be used in any circumstances.
+> 
+> No sensor driver I've seen has used clk_set_rate_exclusive() but I guess
+> they should. The absence of practical problems has been probably because of
+> two factors; firstly, these are typically clocks dedicated to the sensors
+> and secondly, good luck.
+> 
 > -- 
-> 2.24.1
+> Regards,
 > 
-> 
-> -- 
-> Peter Xu
-> 
+> Sakari Ailus
 
 -- 
-Michal Hocko
-SUSE Labs
+Sakari Ailus
