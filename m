@@ -4,135 +4,168 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA43EC2D0EC
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 01:41:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41BFBC2BB54
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 01:45:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 90F0420747
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 01:41:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 17AE220730
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 01:45:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="EvT4EEfH"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="p03uQJ7u"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726484AbgDHBlt (ORCPT
+        id S1726477AbgDHBpC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 21:41:49 -0400
-Received: from mail-eopbgr50074.outbound.protection.outlook.com ([40.107.5.74]:15779
-        "EHLO EUR03-VE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726417AbgDHBlt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Apr 2020 21:41:49 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=K8n57X1fKg0Myy5mPZStOi8DCGm/CayCaYcKi+XbOJ6rhxghJMOmAmFqxze4Snh/iOFs1unBQn4WCRc8DfjYDQz7k+TNogQ4pPPCg26DT4Vtq8d0eFKCJnwEwqyfhat/LrbnmpTmjRQFDE6s7juLywd9dxtk3mGdvWSCgHUi7iREq5Uc5oB4eFSKiQk3kQQiGfheHNtjHtjsPeb2z7d2cH6f3owYF7LT5pVIMYOrMMYMctBvO6p2E0L49m0HOG6+DGYwYFPB5XkwNidTO2bL6wJLhGtUOalzuGSrnbgqGD4GFyaqRJxEp917KHu0AcTEWkpvr3FHDE0dJT+0vOpybQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=2RYLY11ydxvyksZiZpvDpDOLOG2cSMYgCCIGO9F8Vbw=;
- b=PMw1d5WLxrGWne6d3ZVMu01CoohEOzACfbYjyqJfruxsNntNK1jrJTOKmxuSrpKwg1u9IviTxpirYfvuY4QxbrHsSzKvu4hFEa/OPnHVSvwW/H/GagCz3CTmg33UGGt2z101anyYqBI8u99F1QYo5C2BLa7fVscUPFwOP7JW2rBt0+TLsOJH2L/kOymwr/jSClmV46v9IwwIEERKMgbTgF6Hm5J1SNFmrEAFyLmR9DSSQLhkfQGf3Rwa1Ab9LSWRMVxisxeT4+korXG0Vi7diEVnSS7bfwBM0+50IFu2uzZMVbReW/9cJUd6rYdMOWnLg3nunMMVKm5qFUY5+IWEcQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=2RYLY11ydxvyksZiZpvDpDOLOG2cSMYgCCIGO9F8Vbw=;
- b=EvT4EEfHSTfFnA346F+71j7Wp3uUR/sa8Qj9X8nMxESj8L0jMRAAAYWBhFU1l2SFqzH00Wi8ylNoSk5hgBENI7bEJpBgrDOEdrScH7yGfgLAZ3ao2m5GOUDmw8t9ZVJJcjo2sLEc9Nlw4wyTKn0BtbvggtUCsei74IHdnUyfFB4=
-Received: from AM7PR04MB7157.eurprd04.prod.outlook.com (52.135.57.84) by
- AM7PR04MB6837.eurprd04.prod.outlook.com (10.141.173.200) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2900.15; Wed, 8 Apr 2020 01:41:45 +0000
-Received: from AM7PR04MB7157.eurprd04.prod.outlook.com
- ([fe80::902c:71:6377:4273]) by AM7PR04MB7157.eurprd04.prod.outlook.com
- ([fe80::902c:71:6377:4273%5]) with mapi id 15.20.2878.022; Wed, 8 Apr 2020
- 01:41:45 +0000
-From:   Peter Chen <peter.chen@nxp.com>
-To:     =?utf-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>
-CC:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>
-Subject: Re: [PATCH 5/5] usb: chipidea: allow disabling glue drivers if
- EMBEDDED
-Thread-Topic: [PATCH 5/5] usb: chipidea: allow disabling glue drivers if
- EMBEDDED
-Thread-Index: AQHWChQAjD6RZ55p5EW1wRD2DjJFfqhtALoAgAEZhoCAAF9sAA==
-Date:   Wed, 8 Apr 2020 01:41:44 +0000
-Message-ID: <20200408014208.GA22799@b29397-desktop>
-References: <2b6d70595475a3ddbd5bb8ae1765868a98c404b6.1585958250.git.mirq-linux@rere.qmqm.pl>
- <1bf89d4301baa8632daf48b3e28858aff5371954.1585958250.git.mirq-linux@rere.qmqm.pl>
- <20200407031300.GB26899@b29397-desktop> <20200407200037.GB744@qmqm.qmqm.pl>
-In-Reply-To: <20200407200037.GB744@qmqm.qmqm.pl>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=peter.chen@nxp.com; 
-x-originating-ip: [119.31.174.66]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: c0be93b6-6bf9-4eaa-4ff4-08d7db5dfee1
-x-ms-traffictypediagnostic: AM7PR04MB6837:
-x-microsoft-antispam-prvs: <AM7PR04MB6837121918326CB34EC236138BC00@AM7PR04MB6837.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:4125;
-x-forefront-prvs: 0367A50BB1
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM7PR04MB7157.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10009020)(4636009)(7916004)(396003)(376002)(366004)(136003)(39860400002)(346002)(2906002)(316002)(33656002)(81156014)(9686003)(54906003)(91956017)(66446008)(8936002)(6512007)(64756008)(66476007)(66946007)(81166006)(66556008)(6916009)(76116006)(5660300002)(8676002)(86362001)(4326008)(6486002)(26005)(478600001)(71200400001)(53546011)(6506007)(1076003)(186003)(44832011)(33716001);DIR:OUT;SFP:1101;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: RUYCEzVkg544bvoxidYG6aOmEv4gkgvGauAf1aWRyRFtmvQ5kU2N5Oi4Bsitqt5Ic37x4Xn1jpxe2GfoCAlS4/MlX4wv9rGGTBBA5Ors6XoNTnkvDdO5YWqBoS6fKd3d6+VyurT1DRZwZ62frwteYd3HMo790tyOvcEHX4R/cPOO+y8WadGt+lYOLS+ulxpbRypeVHf3iDdMHv+1KYY+USyiBl5CjtG/M9j8PoIQcpbYTpFhANeYnE6gtebZyDpjmCdCSu0Nhj4d7dP77+hCJeVLkis8BzoJILvfyL9w1VQG8ZvNlZ4TgzLXt1L0HBSzvUNX5RfYIoHGjUYSgyhI4JSVnZ1+aaNznSvKfDj2QIBJwz6o4e9ZOlM7tG3WihiVYEp1He1Nhlr51iDvBEB6Qa93JGFxZWSEBXP3F4bk0nMZr/lmCN3QibW1E/+yfJ1h
-x-ms-exchange-antispam-messagedata: 2ckS/06b9mpmsHINIdk/NAS+9K8UCuM91xoQNFzeFmtTV2Y+Sf3vbClJobEJaT2GNQUGjHkTenXpb32lM/GuFb2l9cAPXF15/cMWuNPHSPu5z3qIentKlJVbJepEMv5tzyOWnLj9Z8jBF2bRR3Gy/Q==
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <1E7F000CFFE6D24BBD2172D1044FE88E@eurprd04.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Tue, 7 Apr 2020 21:45:02 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:45789 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726417AbgDHBpB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Apr 2020 21:45:01 -0400
+Received: by mail-pg1-f194.google.com with SMTP id o26so2588284pgc.12
+        for <linux-kernel@vger.kernel.org>; Tue, 07 Apr 2020 18:45:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=mCRX+u0EzkouFlVj2I8+tMZ9dUXOFhMUWExUwyGm5Rg=;
+        b=p03uQJ7ud8vwzag3CvCsja1s50qF/SREZ9xucJouNwLDaRVbhNPRB0pXqqFbkUpqjx
+         rT54kt2OIhSYy5DIj3LnCVl7qBw92oH9FJR1qqsnzSx/FPK9aoCVFoZOZk7nJPNhJ4WP
+         W7AOMORt78aqK7s9YKYT8wjBChTKV6x8emy5JtV3XBRe1Us5StqL956d8667Gw4mfhdt
+         lcNOw7RsLpHvVqrS9H3bCfQntZwMtOjF2Duiy1SntiynuTyIxM2UWeMQlCrJZ0W+vqsC
+         jYVKofj38UNQrbWjz4vsfYFYL64TPTK/RzjctHu+DzkuZ5tUuxkL705uNY/NWJ0UycPT
+         FdsQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=mCRX+u0EzkouFlVj2I8+tMZ9dUXOFhMUWExUwyGm5Rg=;
+        b=ta/w6brUig7lL+p+/Y3yBuddgpfs0tmxvFk+aA5qPLJcSf623najRc8LNwuUgZBQN3
+         KM26VncOam0tAy11+G6sWycjXB0st1MHeh0CVmWqy3vN6nc/POInKJzRQhtngpir0zP3
+         967JaU5Yl7ye7tvlnO1KHqbXc1NDC1URNrIFuz1SdXOGch++ntsJte7VTjaTmbzE+ZnQ
+         ZKE1JErPnaRmTqSMPM6K9OgKQK6r0yYG+YszZ9iPRlDwAq0bIgGdW/jdThHxApKO8gHH
+         wnEL/DDVMeVsOt/uePJedUJKWuUXywR3FDDLEwq65ZW9m8E+yVOBxP9PUcNBjlw7tOgA
+         XpPg==
+X-Gm-Message-State: AGi0PuY2wq4gf2q7qrqEr3TSJt2K8KbZyR2EYdXgDKnbpAlAXZtiSmH1
+        ld9YLRNqHvmd/qlx8vKST2Bmtw==
+X-Google-Smtp-Source: APiQypJHbdsjUjdO3GZGBGPjNOIcwZNKSGxUxtc39Bq+YhExFx7WLZMfvsazzbjAusJ/x+6bnuZ29A==
+X-Received: by 2002:a63:1716:: with SMTP id x22mr4646155pgl.89.1586310300198;
+        Tue, 07 Apr 2020 18:45:00 -0700 (PDT)
+Received: from builder.lan (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id iq23sm2735889pjb.18.2020.04.07.18.44.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 07 Apr 2020 18:44:59 -0700 (PDT)
+Date:   Tue, 7 Apr 2020 18:45:05 -0700
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+Cc:     agross@kernel.org, linux-usb@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        jackp@codeaurora.org, robh@kernel.org,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
+Subject: Re: [PATCH 6/6] arm64: dts: qcom: qcs404-evb: Enable USB controllers
+Message-ID: <20200408014505.GB576963@builder.lan>
+References: <20200311191517.8221-1-bryan.odonoghue@linaro.org>
+ <20200311191517.8221-7-bryan.odonoghue@linaro.org>
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: c0be93b6-6bf9-4eaa-4ff4-08d7db5dfee1
-X-MS-Exchange-CrossTenant-originalarrivaltime: 08 Apr 2020 01:41:44.9799
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: M22lmVf0NnldVcaH6Upd3pTdQNZGwom4HJOSFOEjdMMhDOiClhSf6IMx5ub2wOJhxd3G84fqfLF6E/si/0K5/A==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM7PR04MB6837
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200311191517.8221-7-bryan.odonoghue@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gMjAtMDQtMDcgMjI6MDA6MzcsIE1pY2hhxYIgTWlyb3PFgmF3IHdyb3RlOg0KPiBPbiBUdWUs
-IEFwciAwNywgMjAyMCBhdCAwMzoxMjozNkFNICswMDAwLCBQZXRlciBDaGVuIHdyb3RlOg0KPiA+
-IE9uIDIwLTA0LTA0IDAyOjAwOjA2LCBNaWNoYcWCIE1pcm9zxYJhdyB3cm90ZToNCj4gPiA+IEFs
-bG93IHRvIGN1dCBkb3duIG9uIGRyaXZlciBzaXplIGZvciBlbWJlZGRlZCBjb25maWcuDQo+ID4g
-PiANCj4gPiA+IFNpZ25lZC1vZmYtYnk6IE1pY2hhxYIgTWlyb3PFgmF3IDxtaXJxLWxpbnV4QHJl
-cmUucW1xbS5wbD4NCj4gPiA+IC0tLQ0KPiA+ID4gIGRyaXZlcnMvdXNiL2NoaXBpZGVhL0tjb25m
-aWcgIHwgMzcgKysrKysrKysrKysrKysrKysrKysrKysrLS0tLS0tLS0tLS0NCj4gPiA+ICBkcml2
-ZXJzL3VzYi9jaGlwaWRlYS9NYWtlZmlsZSB8IDEyICsrKysrLS0tLS0tLQ0KPiA+ID4gIDIgZmls
-ZXMgY2hhbmdlZCwgMzEgaW5zZXJ0aW9ucygrKSwgMTggZGVsZXRpb25zKC0pDQo+ID4gPiANCj4g
-PiA+IGRpZmYgLS1naXQgYS9kcml2ZXJzL3VzYi9jaGlwaWRlYS9LY29uZmlnIGIvZHJpdmVycy91
-c2IvY2hpcGlkZWEvS2NvbmZpZw0KPiA+ID4gaW5kZXggZDUzZGI1MjBlMjA5Li44YmFmY2ZjNjA4
-MGQgMTAwNjQ0DQo+ID4gPiAtLS0gYS9kcml2ZXJzL3VzYi9jaGlwaWRlYS9LY29uZmlnDQo+ID4g
-PiArKysgYi9kcml2ZXJzL3VzYi9jaGlwaWRlYS9LY29uZmlnDQo+ID4gPiBAQCAtMTgsMTcgKzE4
-LDYgQEAgY29uZmlnIFVTQl9DSElQSURFQQ0KPiA+ID4gIA0KPiA+ID4gIGlmIFVTQl9DSElQSURF
-QQ0KPiA+ID4gIA0KPiA+ID4gLWNvbmZpZyBVU0JfQ0hJUElERUFfT0YNCj4gPiA+IC0JdHJpc3Rh
-dGUNCj4gPiA+IC0JZGVwZW5kcyBvbiBPRg0KPiA+ID4gLQlkZWZhdWx0IFVTQl9DSElQSURFQQ0K
-PiA+ID4gLQ0KPiA+ID4gLWNvbmZpZyBVU0JfQ0hJUElERUFfUENJDQo+ID4gPiAtCXRyaXN0YXRl
-DQo+ID4gPiAtCWRlcGVuZHMgb24gVVNCX1BDSQ0KPiA+ID4gLQlkZXBlbmRzIG9uIE5PUF9VU0Jf
-WENFSVYNCj4gPiA+IC0JZGVmYXVsdCBVU0JfQ0hJUElERUENCj4gPiA+IC0NCj4gPiA+ICBjb25m
-aWcgVVNCX0NISVBJREVBX1VEQw0KPiA+ID4gIAlib29sICJDaGlwSWRlYSBkZXZpY2UgY29udHJv
-bGxlciINCj4gPiA+ICAJZGVwZW5kcyBvbiBVU0JfR0FER0VUDQo+ID4gPiBAQCAtNDMsNCArMzIs
-MzAgQEAgY29uZmlnIFVTQl9DSElQSURFQV9IT1NUDQo+ID4gPiAgCWhlbHANCj4gPiA+ICAJICBT
-YXkgWSBoZXJlIHRvIGVuYWJsZSBob3N0IGNvbnRyb2xsZXIgZnVuY3Rpb25hbGl0eSBvZiB0aGUN
-Cj4gPiA+ICAJICBDaGlwSWRlYSBkcml2ZXIuDQo+ID4gPiArDQo+ID4gPiArY29uZmlnIFVTQl9D
-SElQSURFQV9QQ0kNCj4gPiA+ICsJdHJpc3RhdGUgIkVuYWJsZSBQQ0kgZ2x1ZSBkcml2ZXIiIGlm
-IEVNQkVEREVEDQo+IFsuLi5dDQo+ID4gV2h5IGRlcGVuZHMgb24gRU1CRURERUQgZm9yIHRoaXMg
-ZHJpdmVyPyBOb3QgZXZlcnlvbmUgbmVlZHMgdGhpcw0KPiA+IGNvbmZpZ3VyYXRpb24uDQo+IA0K
-PiBUaGlzIGRvZXMgbm90IG1ha2UgdGhlIGRyaXZlciBkZXBlbmQgb24gRU1CRURERUQsIG9ubHkg
-dGhlIHByb21wdHMgYXJlLg0KPiBCeSBkZWZhdWx0ICh3aXRob3V0IENPTkZJR19FTUJFRERFRCkg
-eW91IHdpbGwgaGF2ZSBhbGwgZ2x1ZSBsYXllcnMgYnVpbHQNCj4gaWYgeW91IGVuYWJsZSB0aGUg
-ZHJpdmVyLiBJIGNhbiByZW1vdmUgdGhlICdpZiBFTUJFRERFRCcsIGJ1dA0KPiBJIHN1cHBvc2Ug
-dGhvc2Ugb3B0aW9ucyBhcmUgb25seSByZWxldmFudCBmb3IgcGVvcGxlIGJ1aWxkaW5nIGZvcg0K
-PiByZXNvdXJjZS1jb25zdHJhaW5lZCBzeXN0ZW1zLCBzbyB3b3VsZCBoYXZlIEVNQkVEREVEIGVu
-YWJsZWQgYW55d2F5Lg0KPiANCg0KTWFrZSBzZW5zZS4gSSBhcHBsaWVkIHRoaXMgc2VyaWVzLCB0
-aGFua3MuDQoNCi0tIA0KDQpUaGFua3MsDQpQZXRlciBDaGVu
+On Wed 11 Mar 12:15 PDT 2020, Bryan O'Donoghue wrote:
+
+> This patch enables the primary and secondary USB controllers on the
+> qcs404-evb.
+> 
+> Primary:
+> The primary USB controller has
+> 
+> - One USB3 SS PHY using gpio-usb-conn
+> - One USB2 HS PHY in device mode only and no connector driver
+>   associated.
+> 
+> Secondary:
+> The second DWC3 controller which has one USB Hi-Speed PHY attached to it.
+> 
+> Cc: Andy Gross <agross@kernel.org>
+> Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Cc: linux-arm-msm@vger.kernel.org
+> Cc: devicetree@vger.kernel.org
+> Cc: linux-kernel@vger.kernel.org
+> Tested-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+> Signed-off-by: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+
+Hi Bryan,
+
+I dropped the role switching for now, did some testing and applied the
+series for v5.8. Let's follow up with a patch adding the role switching
+once the dwc3 discussion is sorted out.
+
+Thanks,
+Bjorn
+
+> ---
+>  arch/arm64/boot/dts/qcom/qcs404-evb.dtsi | 40 ++++++++++++++++++++++++
+>  1 file changed, 40 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/qcom/qcs404-evb.dtsi b/arch/arm64/boot/dts/qcom/qcs404-evb.dtsi
+> index 44c7dda1e1fc..4dc3f45282fe 100644
+> --- a/arch/arm64/boot/dts/qcom/qcs404-evb.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/qcs404-evb.dtsi
+> @@ -319,6 +319,46 @@ pinconf {
+>  	};
+>  };
+>  
+> +&usb2 {
+> +	status = "okay";
+> +};
+> +
+> +&usb2_phy_sec {
+> +	vdd-supply = <&vreg_l4_1p2>;
+> +	vdda1p8-supply = <&vreg_l5_1p8>;
+> +	vdda3p3-supply = <&vreg_l12_3p3>;
+> +	status = "okay";
+> +};
+> +
+> +&usb3 {
+> +	status = "okay";
+> +	dwc3@7580000 {
+> +		usb-role-switch;
+> +		usb_con: connector {
+> +			compatible = "gpio-usb-b-connector";
+> +			label = "USB-C";
+> +			id-gpios = <&tlmm 116 GPIO_ACTIVE_HIGH>;
+> +			vbus-supply = <&usb3_vbus_reg>;
+> +			pinctrl-names = "default";
+> +			pinctrl-0 = <&usb3_id_pin>, <&usb3_vbus_pin>;
+> +			status = "okay";
+> +		};
+> +	};
+> +};
+> +
+> +&usb2_phy_prim {
+> +	vdd-supply = <&vreg_l4_1p2>;
+> +	vdda1p8-supply = <&vreg_l5_1p8>;
+> +	vdda3p3-supply = <&vreg_l12_3p3>;
+> +	status = "okay";
+> +};
+> +
+> +&usb3_phy {
+> +	vdd-supply = <&vreg_l3_1p05>;
+> +	vdda1p8-supply = <&vreg_l5_1p8>;
+> +	status = "okay";
+> +};
+> +
+>  &wifi {
+>  	status = "okay";
+>  	vdd-0.8-cx-mx-supply = <&vreg_l2_1p275>;
+> -- 
+> 2.25.1
+> 
