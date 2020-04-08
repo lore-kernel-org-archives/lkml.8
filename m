@@ -2,132 +2,129 @@ Return-Path: <SRS0=8dav=5Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2725C2D0F4
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 16:24:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9251BC2D0F4
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 16:26:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BE34B20784
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 16:24:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="DsqtBI6q"
+	by mail.kernel.org (Postfix) with ESMTP id 6EDAC20787
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 16:26:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730291AbgDHQYt (ORCPT
+        id S1730225AbgDHQ0G (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Apr 2020 12:24:49 -0400
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:36460 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730280AbgDHQYr (ORCPT
+        Wed, 8 Apr 2020 12:26:06 -0400
+Received: from mout.kundenserver.de ([212.227.17.13]:46101 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727931AbgDHQ0F (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Apr 2020 12:24:47 -0400
-Received: by mail-lj1-f193.google.com with SMTP id b1so8316122ljp.3
-        for <linux-kernel@vger.kernel.org>; Wed, 08 Apr 2020 09:24:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=s5aiANvhgix2N64LwK7RWDgOwJhQeHsVBzrYi29ys94=;
-        b=DsqtBI6qRFjNpPkePJmA4uX3kNk0ar1H6f+mDa9WCWCogbW1T44w59UgWS3voTEzVK
-         genV1UO4Or0H2X/qb8IDbOA88OBquO3BkpRlNYz06H9TiREZObOBBJUBZTq+Ufv9WsE4
-         +7C0iZS1MYYzD1pJn+M2c6GEdXyXvNHvkqSWB4XXDBcfiYWq+U6RNTMgvedFjt69dE17
-         14nDpSBj3rkurQYjwNYAGpRsn6UJpZ2eN0cavWpSULcVrBGXx1iDEO77FjTZcDVdSRvX
-         QkJmuqfyrMbk+hWYW2pBub6BYirXJ+pM+Mp0JbV/YyhrzUF5+jieHm0nw0AYVfNnXrxV
-         gdfQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=s5aiANvhgix2N64LwK7RWDgOwJhQeHsVBzrYi29ys94=;
-        b=q83desGcIvx4+uNA/wHlv27D5nWT3lSMlmeEm1LhGHitvdYEMdgpCjteLz0hAdhBWK
-         oPl+5eMoIHpK23S/UUu3s5ydYvks7CmrRqVKE0f4IJRseJpvzEmO6kaL3rKSgRsbtW/R
-         F3T/84iOnK0G6IhA/b98viZuU2hv5GjVSBExj2VnwFpBpgUNegaM1UuAT7c/tawizzzE
-         Y4XA+O8WKIFH6vDguVjgq1yqn/pxEAWg9wzV0SUOFAEcpsKcgjD8O200omlI1LAJxjEN
-         MQT/7o5bGR7AtVDDlwAQ9bMbXeb1IdKP+uyX4yC0tPdu5lN9Ne6sDrHclAT5c5WgI/5b
-         0jUQ==
-X-Gm-Message-State: AGi0PuY/bnKQhBkNcXLCT+IRrk+ssR3xrxCf/0DorQz4u53d0pc1dfrO
-        cU1RxlQxrZGsUi4g8OGbymPTMFkqpt3133UUMhLaXg==
-X-Google-Smtp-Source: APiQypJwZtEyXK5GJK6816AgkQZ1Cx5TsDhHg1RPi2SPIJaChvEwYWQCWwAp1ip6qeVHQ0/Dbzy1kvzvsVWhJz83qlI=
-X-Received: by 2002:a05:651c:287:: with SMTP id b7mr400146ljo.73.1586363083460;
- Wed, 08 Apr 2020 09:24:43 -0700 (PDT)
+        Wed, 8 Apr 2020 12:26:05 -0400
+Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
+ (mreue109 [212.227.15.145]) with ESMTPA (Nemesis) id
+ 1N8XHb-1jHHhA1YYr-014Tax; Wed, 08 Apr 2020 18:25:53 +0200
+From:   Arnd Bergmann <arnd@arndb.de>
+To:     Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        Jani Nikula <jani.nikula@intel.com>,
+        Enrico Weigelt <info@metux.net>,
+        dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] fbdev: mx3fb: avoid warning about psABI change
+Date:   Wed,  8 Apr 2020 18:25:38 +0200
+Message-Id: <20200408162551.3928330-1-arnd@arndb.de>
+X-Mailer: git-send-email 2.26.0
 MIME-Version: 1.0
-References: <20200408152151.5780-1-christian.brauner@ubuntu.com>
-In-Reply-To: <20200408152151.5780-1-christian.brauner@ubuntu.com>
-From:   Jann Horn <jannh@google.com>
-Date:   Wed, 8 Apr 2020 18:24:16 +0200
-Message-ID: <CAG48ez0KWgLMOp1d3X1AcRNc4-eF1YiCw=PgWiGjtM6PqQqawg@mail.gmail.com>
-Subject: Re: [PATCH 0/8] loopfs
-To:     Christian Brauner <christian.brauner@ubuntu.com>
-Cc:     Jens Axboe <axboe@kernel.dk>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        kernel list <linux-kernel@vger.kernel.org>,
-        linux-block@vger.kernel.org, Linux API <linux-api@vger.kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Serge Hallyn <serge@hallyn.com>,
-        "Rafael J. Wysocki" <rafael@kernel.org>, Tejun Heo <tj@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Saravana Kannan <saravanak@google.com>,
-        Jan Kara <jack@suse.cz>, David Howells <dhowells@redhat.com>,
-        Seth Forshee <seth.forshee@canonical.com>,
-        David Rheinsberg <david.rheinsberg@gmail.com>,
-        Tom Gundersen <teg@jklm.no>,
-        Christian Kellner <ckellner@redhat.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        =?UTF-8?Q?St=C3=A9phane_Graber?= <stgraber@ubuntu.com>,
-        linux-doc@vger.kernel.org,
-        Network Development <netdev@vger.kernel.org>,
-        Matthew Garrett <mjg59@google.com>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-Provags-ID: V03:K1:a1SttS1sh0V8p8yNp3DZOBnM7t3XNhEBzBMwVVmOUCS7K8nEh0c
+ 8njey4uOCRCAK8sgTmZLVKJHFuADY6t12iLayYT208LdNpRm9Nk2tYvZpNj7E+Yc/U2qtcA
+ ulytP8YPz81OEx7SWoYabgaStCwARP5d5nQqJ862NIg3i/L0a0t/j4a9gOK5SZYohRsPksi
+ bNGUs6HQEWyFiT+EgxmAg==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:dk5f3Sr4sU4=:G4pwmQu7W8VWR/oKC4D7fh
+ zYDpiz4/nmqqokBhiixH+tYQlboMpqizLqa98wG16tvgtwcmSxyB6gapFuYgkdXdiNRSNzw7q
+ f6pK2VziehJuaGLcKDA7NXTbXAmstSsWfhKs9OFN15XhNZo5wkHNxCJrJpEdwhqIcTNJpR6aX
+ cl7tu3JT3y+hHOcHtGwlki3J5zrvxxPWpIHOVG/CR5AYtwQj4JQ8vDNNquIjvOtKA0K+fCUHV
+ 1RF/GbCLqdMHdtIdy9fOy1JwjdBQF0LTM3uuIBSlWgXgh8kiqKw831N7blh3zBlzbZQ/70OWj
+ EeDZfy5ywcdqhoPXklXwxmoCHKHB7K6dfBbJfZ9HOlBca/Y1W8rGJxRGPIqL/p26bDrQIIOBF
+ H37E6PPuCrDz07n3VzWnL/zryCOG0fS4nBRbF+LHy/twFiGyQjwvFD68Yw0dE0GOoFkyQWwGt
+ Yt61AHVZu1qETiIo9dojxRC/zZ3mvyun5Qf4Not90U9oCHBUsa/wlDj5LsX6cvzNJDGFM/M8X
+ lXLrrZgIdoSPJ4Ingtj+USfaCKIlUmPNIWOYMuXcIYCGcZd0vJkgxsxr4OxxS328VIEPDed46
+ MzwIe+hsdcsiMDXofUp1utgQGJOVpeJEono+Ox25sEQPZSPjxh+wLF4+1PFbKtytzJNlDrEfU
+ kFFZc9URlkox2/4mqU5YYQlYEAmb6ziOaabhhB1n3YIq97qWkG6P/OpB5RmfhaJqm5m3j9gOO
+ tuPELPlQUdNNqsGW+xHzppnJPh7i2hmUlOIdgU923HaMqJorb2RCqr1lV+8/EiQ2ZkJw6Ss/Z
+ UbysbcvUGU1nYfLBnovzS1M1baR38tmUQOqpuh+qv9y19jvSYc=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 8, 2020 at 5:23 PM Christian Brauner
-<christian.brauner@ubuntu.com> wrote:
-> One of the use-cases for loopfs is to allow to dynamically allocate loop
-> devices in sandboxed workloads without exposing /dev or
-> /dev/loop-control to the workload in question and without having to
-> implement a complex and also racy protocol to send around file
-> descriptors for loop devices. With loopfs each mount is a new instance,
-> i.e. loop devices created in one loopfs instance are independent of any
-> loop devices created in another loopfs instance. This allows
-> sufficiently privileged tools to have their own private stash of loop
-> device instances. Dmitry has expressed his desire to use this for
-> syzkaller in a private discussion. And various parties that want to use
-> it are Cced here too.
->
-> In addition, the loopfs filesystem can be mounted by user namespace root
-> and is thus suitable for use in containers. Combined with syscall
-> interception this makes it possible to securely delegate mounting of
-> images on loop devices, i.e. when a user calls mount -o loop <image>
-> <mountpoint> it will be possible to completely setup the loop device.
-> The final mount syscall to actually perform the mount will be handled
-> through syscall interception and be performed by a sufficiently
-> privileged process. Syscall interception is already supported through a
-> new seccomp feature we implemented in [1] and extended in [2] and is
-> actively used in production workloads. The additional loopfs work will
-> be used there and in various other workloads too. You'll find a short
-> illustration how this works with syscall interception below in [4].
+The arm64 gcc-9 release warns about a change in the calling
+conventions:
 
-Would that privileged process then allow you to mount your filesystem
-images with things like ext4? As far as I know, the filesystem
-maintainers don't generally consider "untrusted filesystem image" to
-be a strongly enforced security boundary; and worse, if an attacker
-has access to a loop device from which something like ext4 is mounted,
-things like "struct ext4_dir_entry_2" will effectively be in shared
-memory, and an attacker can trivially bypass e.g.
-ext4_check_dir_entry(). At the moment, that's not a huge problem (for
-anything other than kernel lockdown) because only root normally has
-access to loop devices.
+drivers/video/fbdev/mx3fb.c: In function 'sdc_init_panel':
+drivers/video/fbdev/mx3fb.c:506:12: note: parameter passing for argument of type 'struct ipu_di_signal_cfg' changed in GCC 9.1
+  506 | static int sdc_init_panel(struct mx3fb_data *mx3fb, enum ipu_panel panel,
+      |            ^~~~~~~~~~~~~~
+drivers/video/fbdev/mx3fb.c: In function '__set_par':
+drivers/video/fbdev/mx3fb.c:848:7: note: parameter passing for argument of type 'struct ipu_di_signal_cfg' changed in GCC 9.1
 
-Ubuntu carries an out-of-tree patch that afaik blocks the shared
-memory thing: <https://git.launchpad.net/~ubuntu-kernel/ubuntu/+source/linux/+git/eoan/commit?id=4bc428fdf5500b7366313f166b7c9c50ee43f2c4>
+Change the file to just pass the struct by reference, which is
+unambiguous and avoids the warning.
 
-But even with that patch, I'm not super excited about exposing
-filesystem image parsing attack surface to containers unless you run
-the filesystem in a sandboxed environment (at which point you don't
-need a loop device anymore either).
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+---
+ drivers/video/fbdev/mx3fb.c | 20 ++++++++++----------
+ 1 file changed, 10 insertions(+), 10 deletions(-)
+
+diff --git a/drivers/video/fbdev/mx3fb.c b/drivers/video/fbdev/mx3fb.c
+index 4af28e4421e5..e13fea3a292f 100644
+--- a/drivers/video/fbdev/mx3fb.c
++++ b/drivers/video/fbdev/mx3fb.c
+@@ -509,7 +509,7 @@ static int sdc_init_panel(struct mx3fb_data *mx3fb, enum ipu_panel panel,
+ 			  uint16_t h_start_width, uint16_t h_sync_width,
+ 			  uint16_t h_end_width, uint16_t v_start_width,
+ 			  uint16_t v_sync_width, uint16_t v_end_width,
+-			  struct ipu_di_signal_cfg sig)
++			  struct ipu_di_signal_cfg *sig)
+ {
+ 	unsigned long lock_flags;
+ 	uint32_t reg;
+@@ -591,17 +591,17 @@ static int sdc_init_panel(struct mx3fb_data *mx3fb, enum ipu_panel panel,
+ 
+ 	/* DI settings */
+ 	old_conf = mx3fb_read_reg(mx3fb, DI_DISP_IF_CONF) & 0x78FFFFFF;
+-	old_conf |= sig.datamask_en << DI_D3_DATAMSK_SHIFT |
+-		sig.clksel_en << DI_D3_CLK_SEL_SHIFT |
+-		sig.clkidle_en << DI_D3_CLK_IDLE_SHIFT;
++	old_conf |= sig->datamask_en << DI_D3_DATAMSK_SHIFT |
++		sig->clksel_en << DI_D3_CLK_SEL_SHIFT |
++		sig->clkidle_en << DI_D3_CLK_IDLE_SHIFT;
+ 	mx3fb_write_reg(mx3fb, old_conf, DI_DISP_IF_CONF);
+ 
+ 	old_conf = mx3fb_read_reg(mx3fb, DI_DISP_SIG_POL) & 0xE0FFFFFF;
+-	old_conf |= sig.data_pol << DI_D3_DATA_POL_SHIFT |
+-		sig.clk_pol << DI_D3_CLK_POL_SHIFT |
+-		sig.enable_pol << DI_D3_DRDY_SHARP_POL_SHIFT |
+-		sig.Hsync_pol << DI_D3_HSYNC_POL_SHIFT |
+-		sig.Vsync_pol << DI_D3_VSYNC_POL_SHIFT;
++	old_conf |= sig->data_pol << DI_D3_DATA_POL_SHIFT |
++		sig->clk_pol << DI_D3_CLK_POL_SHIFT |
++		sig->enable_pol << DI_D3_DRDY_SHARP_POL_SHIFT |
++		sig->Hsync_pol << DI_D3_HSYNC_POL_SHIFT |
++		sig->Vsync_pol << DI_D3_VSYNC_POL_SHIFT;
+ 	mx3fb_write_reg(mx3fb, old_conf, DI_DISP_SIG_POL);
+ 
+ 	map = &di_mappings[mx3fb->disp_data_fmt];
+@@ -855,7 +855,7 @@ static int __set_par(struct fb_info *fbi, bool lock)
+ 				   fbi->var.upper_margin,
+ 				   fbi->var.vsync_len,
+ 				   fbi->var.lower_margin +
+-				   fbi->var.vsync_len, sig_cfg) != 0) {
++				   fbi->var.vsync_len, &sig_cfg) != 0) {
+ 			dev_err(fbi->device,
+ 				"mx3fb: Error initializing panel.\n");
+ 			return -EINVAL;
+-- 
+2.26.0
+
