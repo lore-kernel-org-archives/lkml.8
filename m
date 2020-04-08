@@ -2,168 +2,159 @@ Return-Path: <SRS0=8dav=5Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A39C7C2D0EA
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 10:12:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DE97C2BA2B
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 10:14:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 73EB720747
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 10:12:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E63FE20768
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 10:14:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="QYg3ozUG"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="qH2Gq9of"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727986AbgDHKMi (ORCPT
+        id S1728015AbgDHKON (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Apr 2020 06:12:38 -0400
-Received: from outils.crapouillou.net ([89.234.176.41]:44498 "EHLO
-        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726632AbgDHKMi (ORCPT
+        Wed, 8 Apr 2020 06:14:13 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:35920 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727912AbgDHKOM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Apr 2020 06:12:38 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
-        s=mail; t=1586340756; h=from:from:sender:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=XHrGg1kJSJbVqULtFtoJ40tkSeQG6c2tAyLWZHr7Y9s=;
-        b=QYg3ozUG1fuyCrM29sl/nZlbn3oH7p7oZtVxLZ1+yJZoycw5Ca/jO6fB6DbneZ5+ohlmIc
-        y2QHAkweKrAICcYYMWXlFQcN4ul64o6cWE09OyVWbdqPPvDF9CM7CL/RIP9w5HwRnR47Gl
-        X2fpx/pMTuMLH9tSzdudeouogOqEV6g=
-Date:   Wed, 08 Apr 2020 12:12:26 +0200
-From:   Paul Cercueil <paul@crapouillou.net>
-Subject: Re: [PATCH 1/2] drm/panel: NT39016: Add support for multiple modes
-To:     Sam Ravnborg <sam@ravnborg.org>
-Cc:     Thierry Reding <thierry.reding@gmail.com>, od@zcrc.me,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Message-Id: <QCSG8Q.N40UK3F20OVT2@crapouillou.net>
-In-Reply-To: <20200408100452.GA20795@ravnborg.org>
-References: <20200408095830.8131-1-paul@crapouillou.net>
-        <20200408100452.GA20795@ravnborg.org>
+        Wed, 8 Apr 2020 06:14:12 -0400
+Received: by mail-wm1-f68.google.com with SMTP id d202so4823371wmd.1
+        for <linux-kernel@vger.kernel.org>; Wed, 08 Apr 2020 03:14:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=25069VDYosEmyzjyjgB1Fr18hxU9v2CBSXz/PzXbBl8=;
+        b=qH2Gq9ofUudA1pSW/odMa2/8M3XmMMz4UqX2oplXnZzl9Zo6pq3fFKvWczVldbcoE3
+         rCblbFO7EivrifQ0yexwYerKq5cUSFOuFmSsm+ChZxBrayh9ItBM00FDUsvaif0CzZUT
+         yXwnsYgQPkmmQec1o15WiCKzl7gZ5VKsbTqCIqd3B+4Vp56sx080HaaB3XlU92ixc7j+
+         lxi3bHPtjS9RgyNojZsXRodNFPBF4XYPZQdnvvXcwz+1uGfrkDexovaZic2rcBwRZ8ii
+         3QNtzuH4yGE4hmhzJEFo6vFePo89Z8YhFrjA40dtu/+8URe59utwIJ0kIMFqkLvlzLB5
+         qsaw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=25069VDYosEmyzjyjgB1Fr18hxU9v2CBSXz/PzXbBl8=;
+        b=bFwV5UcIqdjK2J3o/NrIWT2hGoD4ASXlRezGRcLcnY6QJ1373TyNKZxsEtQYYXHHh0
+         zYsh8GunVm1civA4oFtauBf+nRLQ3xSD3T4X51YbmyPmF8BZa+WVISermhbHFO8FhsiE
+         HipdqBpzDicL6klSYmREUTL+TJV4gSNsX3pdynMj4IcxC0DeCiX56WPctlZpQnx4ygru
+         yw1mFhbqTsNk4lswTgdpR9BdQfl3LmO0v5e7Lw5SPwV8cn6GbYWwSXShD6zhtv8oFW9n
+         3kUeEb9DX0jEtVQ+PSuvKxIY64lwic765bZprm9fchpNEELKvwNnDA/dlWT/RiBBo4pJ
+         4Chg==
+X-Gm-Message-State: AGi0PuYUMuqI1XIa+N+qNVmaRxyxCJO7knAR9JtFlRiZ5C1rd3jztDm6
+        m/yN3mVBChNjc4fTpCCGoudeXg==
+X-Google-Smtp-Source: APiQypJXilSL/A+a4hF27py3ApM+n04W/ugNsSh5QoeD0Hyiw1yKokhPBGveos7hrHjep9MKgM7opA==
+X-Received: by 2002:a05:600c:2c06:: with SMTP id q6mr3967744wmg.42.1586340850731;
+        Wed, 08 Apr 2020 03:14:10 -0700 (PDT)
+Received: from dell ([2.31.167.253])
+        by smtp.gmail.com with ESMTPSA id y7sm33984899wrq.54.2020.04.08.03.14.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 08 Apr 2020 03:14:10 -0700 (PDT)
+Date:   Wed, 8 Apr 2020 11:15:06 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     saravanan sekar <sravanhome@gmail.com>
+Cc:     robh+dt@kernel.org, jic23@kernel.org, knaack.h@gmx.de,
+        lars@metafoo.de, pmeerw@pmeerw.net, sre@kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-iio@vger.kernel.org, linux-pm@vger.kernel.org
+Subject: Re: [PATCH v4 1/5] dt-bindings: mfd: add document bindings for mp2629
+Message-ID: <20200408101506.GI30614@dell>
+References: <20200322224626.13160-1-sravanhome@gmail.com>
+ <20200322224626.13160-2-sravanhome@gmail.com>
+ <20200327080013.GG603801@dell>
+ <d449b567-bd5c-168d-83af-5ba38771f75a@gmail.com>
+ <20200330064630.GA30614@dell>
+ <e4412378-1423-a48e-9176-f0d48f6000c4@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1; format=flowed
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <e4412378-1423-a48e-9176-f0d48f6000c4@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Sam,
+On Tue, 07 Apr 2020, saravanan sekar wrote:
 
+> Hi Lee,
+> 
+> On 30/03/20 8:46 am, Lee Jones wrote:
+> > On Fri, 27 Mar 2020, saravanan sekar wrote:
+> > > On 27/03/20 9:00 am, Lee Jones wrote:
+> > > > On Sun, 22 Mar 2020, Saravanan Sekar wrote:
+> > > > 
+> > > > > Add device tree binding information for mp2629 mfd driver.
+> > > > > 
+> > > > > Signed-off-by: Saravanan Sekar <sravanhome@gmail.com>
+> > > > > ---
+> > > > >    .../devicetree/bindings/mfd/mps,mp2629.yaml   | 60 +++++++++++++++++++
+> > > > >    1 file changed, 60 insertions(+)
+> > > > >    create mode 100644 Documentation/devicetree/bindings/mfd/mps,mp2629.yaml
+> > > > > 
+> > > > > diff --git a/Documentation/devicetree/bindings/mfd/mps,mp2629.yaml b/Documentation/devicetree/bindings/mfd/mps,mp2629.yaml
+> > > > > new file mode 100644
+> > > > > index 000000000000..314309ea91ac
+> > > > > --- /dev/null
+> > > > > +++ b/Documentation/devicetree/bindings/mfd/mps,mp2629.yaml
+> > > > > @@ -0,0 +1,60 @@
+> > > > > +# SPDX-License-Identifier: GPL-2.0
+> > > > > +%YAML 1.2
+> > > > > +---
+> > > > > +$id: http://devicetree.org/schemas/mfd/mps,mp2629.yaml#
+> > > > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > > > Are these links supposed to work?
+> > > Not really, but as far my understanding needed for dt-bindings check
+> > Rob, why are these here if they just result in 404s?
+> > 
+> > > > > +examples:
+> > > > > +  - |
+> > > > > +    #include <dt-bindings/interrupt-controller/irq.h>
+> > > > > +    #include <dt-bindings/input/linux-event-codes.h>
+> > > > > +    i2c {
+> > > > i2c@0x????????
+> > > Its a I2C controller node, I don't think address is needed. Mention like
+> > > this my previous other driver patches,
+> > This doesn't sound right.
+> > 
+> > How do you control/operate the controller?
+> > 
+> > Surely you read/write from/to registers?
+> 
+> 
+> Indeed, but each SoC will have different address so which address to mention
+> here.
+> For me it should be like &i2c {}, anyhow I respect maintainers review (I can
+> give RPi I2c bus address used for testing)
+> and wait for Rob's reply
 
-Le mer. 8 avril 2020 =E0 12:04, Sam Ravnborg <sam@ravnborg.org> a =E9crit=20
-:
-> Hi Paul.
->=20
-> On Wed, Apr 08, 2020 at 11:58:29AM +0200, Paul Cercueil wrote:
->>  Add support for multiple drm_display_mode entries. This will allow=20
->> to
->>  add a 50 Hz mode later.
->>=20
->>  Signed-off-by: Paul Cercueil <paul@crapouillou.net>
-> Patch looks good.
->=20
-> Could we please use lower case in the $subject?
+It's only an example.  It doesn't have to match any real H/W.
 
-You mean 's/Add/add/' or the panel name as well?
+> > > dt_binding_check is also passed
+> > > 
+> > > > > +        #address-cells = <1>;
+> > > > > +        #size-cells = <0>;
+> > > > > +
+> > > > > +        pmic@4b {
+> > > > > +            compatible = "mps,mp2629";
+> > > > > +            reg = <0x4b>;
+> > > > > +
+> > > > > +            interrupt-controller;
+> > > > > +            interrupt-parent = <&gpio2>;
+> > > > > +            #interrupt-cells = <2>;
+> > > > > +            interrupts = <3 IRQ_TYPE_LEVEL_HIGH>;
+> > > > > +        };
+> > > > > +    };
 
--Paul
-
-> Acked-by: Sam Ravnborg <sam@ravnborg.org>
->=20
-> I asume you will apply yourself.
->=20
-> 	Sam
->=20
->>  ---
->>   drivers/gpu/drm/panel/panel-novatek-nt39016.c | 33=20
->> +++++++++++++------
->>   1 file changed, 23 insertions(+), 10 deletions(-)
->>=20
->>  diff --git a/drivers/gpu/drm/panel/panel-novatek-nt39016.c=20
->> b/drivers/gpu/drm/panel/panel-novatek-nt39016.c
->>  index a470810f7dbe..f1286cf6528b 100644
->>  --- a/drivers/gpu/drm/panel/panel-novatek-nt39016.c
->>  +++ b/drivers/gpu/drm/panel/panel-novatek-nt39016.c
->>  @@ -49,7 +49,8 @@ enum nt39016_regs {
->>   #define NT39016_SYSTEM_STANDBY	BIT(1)
->>=20
->>   struct nt39016_panel_info {
->>  -	struct drm_display_mode display_mode;
->>  +	const struct drm_display_mode *display_modes;
->>  +	unsigned int num_modes;
->>   	u16 width_mm, height_mm;
->>   	u32 bus_format, bus_flags;
->>   };
->>  @@ -212,15 +213,22 @@ static int nt39016_get_modes(struct drm_panel=20
->> *drm_panel,
->>   	struct nt39016 *panel =3D to_nt39016(drm_panel);
->>   	const struct nt39016_panel_info *panel_info =3D panel->panel_info;
->>   	struct drm_display_mode *mode;
->>  +	unsigned int i;
->>=20
->>  -	mode =3D drm_mode_duplicate(connector->dev,=20
->> &panel_info->display_mode);
->>  -	if (!mode)
->>  -		return -ENOMEM;
->>  +	for (i =3D 0; i < panel_info->num_modes; i++) {
->>  +		mode =3D drm_mode_duplicate(connector->dev,
->>  +					  &panel_info->display_modes[i]);
->>  +		if (!mode)
->>  +			return -ENOMEM;
->>  +
->>  +		drm_mode_set_name(mode);
->>=20
->>  -	drm_mode_set_name(mode);
->>  +		mode->type =3D DRM_MODE_TYPE_DRIVER;
->>  +		if (panel_info->num_modes =3D=3D 1)
->>  +			mode->type |=3D DRM_MODE_TYPE_PREFERRED;
->>=20
->>  -	mode->type =3D DRM_MODE_TYPE_DRIVER | DRM_MODE_TYPE_PREFERRED;
->>  -	drm_mode_probed_add(connector, mode);
->>  +		drm_mode_probed_add(connector, mode);
->>  +	}
->>=20
->>   	connector->display_info.bpc =3D 8;
->>   	connector->display_info.width_mm =3D panel_info->width_mm;
->>  @@ -230,7 +238,7 @@ static int nt39016_get_modes(struct drm_panel=20
->> *drm_panel,
->>   					 &panel_info->bus_format, 1);
->>   	connector->display_info.bus_flags =3D panel_info->bus_flags;
->>=20
->>  -	return 1;
->>  +	return panel_info->num_modes;
->>   }
->>=20
->>   static const struct drm_panel_funcs nt39016_funcs =3D {
->>  @@ -316,8 +324,8 @@ static int nt39016_remove(struct spi_device=20
->> *spi)
->>   	return 0;
->>   }
->>=20
->>  -static const struct nt39016_panel_info kd035g6_info =3D {
->>  -	.display_mode =3D {
->>  +static const struct drm_display_mode kd035g6_display_modes[] =3D {
->>  +	{
->>   		.clock =3D 6000,
->>   		.hdisplay =3D 320,
->>   		.hsync_start =3D 320 + 10,
->>  @@ -330,6 +338,11 @@ static const struct nt39016_panel_info=20
->> kd035g6_info =3D {
->>   		.vrefresh =3D 60,
->>   		.flags =3D DRM_MODE_FLAG_NHSYNC | DRM_MODE_FLAG_NVSYNC,
->>   	},
->>  +};
->>  +
->>  +static const struct nt39016_panel_info kd035g6_info =3D {
->>  +	.display_modes =3D kd035g6_display_modes,
->>  +	.num_modes =3D ARRAY_SIZE(kd035g6_display_modes),
->>   	.width_mm =3D 71,
->>   	.height_mm =3D 53,
->>   	.bus_format =3D MEDIA_BUS_FMT_RGB888_1X24,
->>  --
->>  2.25.1
-
-
+-- 
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
