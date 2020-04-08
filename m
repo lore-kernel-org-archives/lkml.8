@@ -2,114 +2,101 @@ Return-Path: <SRS0=8dav=5Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CFEBC2BA2B
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 09:08:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80BD6C2D0EA
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 09:12:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 13F422074F
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 09:08:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 52C172074F
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 09:12:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ZJoHCDJg"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="sqpylSrn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727486AbgDHJIx (ORCPT
+        id S1727641AbgDHJMj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Apr 2020 05:08:53 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:60034 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726980AbgDHJIw (ORCPT
+        Wed, 8 Apr 2020 05:12:39 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:48460 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726632AbgDHJMj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Apr 2020 05:08:52 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1586336931;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=rUQ0HsWwrnHe34YtREcTfNzNUJOF3IAdDb38I5AaKxE=;
-        b=ZJoHCDJgaFjuuv2te7kWdxqbeRup+jqTDMJhk1W1sRW30OiOw/pPZR/940JaIHkzO02RUP
-        LRmpfDC7iXSwqfAb2seI3pfYvcGDoOJsKX0kpi6QhPyfNiis/FM3C/hf4TDbCNawIJIdG0
-        XsCy4M/lcd9BCYijg0v5s8fDBXoQ1y0=
-Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
- [209.85.128.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-107-19dmcRemN-KwUGFqiFR8Eg-1; Wed, 08 Apr 2020 05:08:49 -0400
-X-MC-Unique: 19dmcRemN-KwUGFqiFR8Eg-1
-Received: by mail-wm1-f69.google.com with SMTP id s22so2080852wmh.8
-        for <linux-kernel@vger.kernel.org>; Wed, 08 Apr 2020 02:08:49 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=rUQ0HsWwrnHe34YtREcTfNzNUJOF3IAdDb38I5AaKxE=;
-        b=ZsAOLFlpIpGzULwdFyJlqpJfLtwl0jAX7lR2tMJuquZoEzzaXnw8w9Q/7JiPRr0G3G
-         BBkPIJss6Imi4yEg+U6yuDbBSlZpPfs1bBtZJv5NSFquEmDk0gGkCIodO6Pr/c7pGc0c
-         bxZwzjcFpkBmBHRmbkzSEE668Hknc3j3UAxFfNlA6YIakrra6XF+oaNmTU5yec2RiW8Q
-         33QZ/2UoqQLSZJ8PjIpABctq7uASR0KSa5jyFGV5KbPsOQRldux4jaFsm4QhhjJjkl89
-         w9Vnk4CiuN6YNfZCGyQ2NaZocl2fONMg6BXQk6cESZspVecE5GtxSsKw6a23FGQvAXac
-         84PA==
-X-Gm-Message-State: AGi0PubSQITKyvx/6H2k4ZJoCSy+Gh0raU1nKVW5N43yCr83zZKDKifR
-        cjjitH5Fmh4gjJ+3cFHPMnzRIBFoiRq7LjIf54BqnnB3NMwG25dEni6noGr0MpT6ZWahZ/tDYz9
-        LJkV8Q0lQ6win5Z8PNBn+AAsb
-X-Received: by 2002:a7b:cd89:: with SMTP id y9mr3752572wmj.102.1586336928251;
-        Wed, 08 Apr 2020 02:08:48 -0700 (PDT)
-X-Google-Smtp-Source: APiQypLe1s1nvra2eXvOVyXKoy+DeFW86EqO9pdanw+EMwQcEuocAwsAGqIDuWH/3Mfnb2xLGbG1mA==
-X-Received: by 2002:a7b:cd89:: with SMTP id y9mr3752550wmj.102.1586336928006;
-        Wed, 08 Apr 2020 02:08:48 -0700 (PDT)
-Received: from ?IPv6:2001:b07:6468:f312:bd61:914:5c2f:2580? ([2001:b07:6468:f312:bd61:914:5c2f:2580])
-        by smtp.gmail.com with ESMTPSA id s6sm5804360wmh.17.2020.04.08.02.08.47
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 08 Apr 2020 02:08:47 -0700 (PDT)
-Subject: Re: [PATCH 2/2] KVM: s390: Return last valid slot if approx index is
- out-of-bounds
-To:     Cornelia Huck <cohuck@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     Christian Borntraeger <borntraeger@de.ibm.com>,
-        Janosch Frank <frankja@linux.ibm.com>,
-        David Hildenbrand <david@redhat.com>, kvm@vger.kernel.org,
+        Wed, 8 Apr 2020 05:12:39 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=YuWUAhtQoyJ0yUbUeGpr/y1oUIjbtiukjM28xeLeV5E=; b=sqpylSrnXQkmoOxTQxvUfVZ9dD
+        adoXjMoyigkzrQS1H/X0sq2NFbHYS0sykUZYolGdKqKp9WWCnhPzL+CPwTotAXIzIVJaIohOupSiu
+        PzVDC4tqa83jz956iw6smh9WtE4UEa/cu7XRAtzvRWrTwNQRKDuoH4CHuqd1bWjOE/mAfxABYGKIP
+        eeY9rsXZiumS7FYhwDT3T6wbwfguo08jHT9si1ajZbwMBK7wF6VuV9AeLqH7zcIgcuWEHZw6AkcU7
+        +Q1skNnGmIV+Ae4PAjSHcRbsRi7Gpx8nF+CZkleHC/qwQvpoOnCuQShZTPJ8mmoZ5nLLNwjZ3ugB7
+        pwRFoCeQ==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jM6kr-0006DF-S8; Wed, 08 Apr 2020 09:12:18 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 232E0304DB2;
+        Wed,  8 Apr 2020 11:12:15 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 06DC92B9C8A02; Wed,  8 Apr 2020 11:12:15 +0200 (CEST)
+Date:   Wed, 8 Apr 2020 11:12:14 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Christoph Hellwig <hch@infradead.org>
+Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
         linux-kernel@vger.kernel.org,
-        syzbot+d889b59b2bb87d4047a2@syzkaller.appspotmail.com
-References: <20200408064059.8957-1-sean.j.christopherson@intel.com>
- <20200408064059.8957-3-sean.j.christopherson@intel.com>
- <20200408091024.14a0d096.cohuck@redhat.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Message-ID: <2701fd49-4cf8-2b2d-daa8-96945ea4f233@redhat.com>
-Date:   Wed, 8 Apr 2020 11:08:44 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        "Kenneth R. Crudup" <kenny@panix.com>,
+        Jessica Yu <jeyu@kernel.org>,
+        Rasmus Villemoes <rasmus.villemoes@prevas.dk>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Fenghua Yu <fenghua.yu@intel.com>,
+        Xiaoyao Li <xiaoyao.li@intel.com>,
+        Nadav Amit <nadav.amit@gmail.com>,
+        Thomas Hellstrom <thellstrom@vmware.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jann Horn <jannh@google.com>,
+        Kees Cook <keescook@chromium.org>,
+        David Laight <David.Laight@aculab.com>,
+        Doug Covelli <dcovelli@vmware.com>
+Subject: Re: [RFC PATCH] x86/split_lock: Disable SLD if an unaware
+ (out-of-tree) module enables VMX
+Message-ID: <20200408091214.GK20730@hirez.programming.kicks-ass.net>
+References: <20200403163007.6463-1-sean.j.christopherson@intel.com>
+ <20200406125010.GA29306@infradead.org>
+ <20200406140403.GL20730@hirez.programming.kicks-ass.net>
+ <20200406152411.GA25652@infradead.org>
+ <20200406153902.GA9939@infradead.org>
+ <20200406160157.GS20730@hirez.programming.kicks-ass.net>
+ <20200406171058.GA5352@infradead.org>
 MIME-Version: 1.0
-In-Reply-To: <20200408091024.14a0d096.cohuck@redhat.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200406171058.GA5352@infradead.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 08/04/20 09:10, Cornelia Huck wrote:
-> On Tue,  7 Apr 2020 23:40:59 -0700
-> Sean Christopherson <sean.j.christopherson@intel.com> wrote:
+On Mon, Apr 06, 2020 at 10:10:58AM -0700, Christoph Hellwig wrote:
+> On Mon, Apr 06, 2020 at 06:01:57PM +0200, Peter Zijlstra wrote:
+> > Please feel free to use my pgprot_nx() and apply liberally on any
+> > exported function.
+> > 
+> > But crucially, I don't think any of the still exported functions allows
+> > getting memory in the text range, and if you want to run code outside of
+> > the text range, things become _much_ harder. That said, modules
+> > shouldn't be able to create executable code, full-stop (IMO).
 > 
->> Return the index of the last valid slot from gfn_to_memslot_approx() if
->> its binary search loop yielded an out-of-bounds index.  The index can
->> be out-of-bounds if the specified gfn is less than the base of the
->> lowest memslot (which is also the last valid memslot).
->>
->> Note, the sole caller, kvm_s390_get_cmma(), ensures used_slots is
->> non-zero.
->>
-> This also should be cc:stable, with the dependency expressed as
-> mentioned by Christian.
+> This is what i've got for now:
 > 
+> http://git.infradead.org/users/hch/misc.git/shortlog/refs/heads/sanitize-vmalloc-api
 
-So,
-
-Cc: stable@vger.kernel.org # 4.19.x: 0774a964ef56: KVM: Fix out of range accesses to memslots
-Cc: stable@vger.kernel.org # 4.19.x
-
-Paolo
-
+Should we not also apply pgprot_nx() to __vmalloc(), that's also
+EXPORT_SYMBOL().
