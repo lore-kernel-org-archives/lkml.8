@@ -4,51 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 172DCC2BA1A
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 15:47:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F1DAC2BA1A
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 15:47:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DB8CD206F5
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 15:47:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2D84520820
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 15:47:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586360842;
-	bh=wsFZ0dq0htlamdDYAFNWLSa+EU5LvOOu2mo8l16eQAI=;
+	s=default; t=1586360847;
+	bh=QM0vWrqOsJsv4eZsnUj0jGPK7QIQ2t068vlV3vEIqVs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=N3/QH8ataEs3t5LN7zc8rkzszXjDreBqw8NDQoTNQwuq0/zybOvMpEA17SMIzpOdl
-	 fr7nlTDjBidGeINoTc7Q/4eMWgi32JlJ9ITMV78HwgZsfZEBnGgmmC55PfT3JR9A4L
-	 Xi5/Kl0c0KYdq+QjQ4mXsoaMehDPCBJS5oMfftwc=
+	b=i6byG1hfMCHDIMH8ExWTc/O7AimlSQycwBLqhr8KOlTUo18U6vzHd4gF+ZqpUaECX
+	 EH0sdZXXP+xGWTkdocdYpMAMRtasz30P7OehGxKYublvOpUM3qdGt/A6mt8uXZk4Yq
+	 OpaJKAWHLbIK8Op+ycG7d2f1L0Xee8Rh3Vprhm7w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729870AbgDHPrU (ORCPT
+        id S1729880AbgDHPr0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Apr 2020 11:47:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49612 "EHLO mail.kernel.org"
+        Wed, 8 Apr 2020 11:47:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49298 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729706AbgDHPqd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1729682AbgDHPqd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 8 Apr 2020 11:46:33 -0400
 Received: from mail.kernel.org (ip5f5ad4d8.dynamic.kabel-deutschland.de [95.90.212.216])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2088F22204;
-        Wed,  8 Apr 2020 15:46:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B2FC021D7E;
+        Wed,  8 Apr 2020 15:46:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586360792;
-        bh=wsFZ0dq0htlamdDYAFNWLSa+EU5LvOOu2mo8l16eQAI=;
+        s=default; t=1586360791;
+        bh=QM0vWrqOsJsv4eZsnUj0jGPK7QIQ2t068vlV3vEIqVs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qgf/T2zWW53ulxhSMkpAJKoE6cbLNYvi2ZXiHtCfeOl7GrizrQVWWO+WmUB4PX11X
-         LDZEQymc+917N1Vc0OsPnyVl42H3/zmkfqL/1S3uO4WTqU+YdxjlndAPgwqaUjm0zV
-         EXlnz0J91odctiZHwUzdQy3cYv86mark+HOMw6bw=
+        b=bgMG+zPCZqF8L2b5haE8F2fByYG1RelsbPsj82c1DXIfQrvSOkL+fh+qwvh0wHQ1v
+         N2mT/AY89IsGTWjPoF0u9zgZob1jZ56n7SQtob1ZBqFrlPSbIKhux7NgtolKzIYjZ0
+         xahMDL9iFmCEo1dKqLWCsYugVw0h04g1PNGZtYhU=
 Received: from mchehab by mail.kernel.org with local (Exim 4.92.3)
         (envelope-from <mchehab@kernel.org>)
-        id 1jMCuM-000cCz-AX; Wed, 08 Apr 2020 17:46:30 +0200
+        id 1jMCuL-000cC1-Tb; Wed, 08 Apr 2020 17:46:29 +0200
 From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
 Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>
-Subject: [PATCH 34/35] docs: Makefile: place final pdf docs on a separate dir
-Date:   Wed,  8 Apr 2020 17:46:26 +0200
-Message-Id: <0bd1eb674eb35e5f2823f66942fceef450b6c19c.1586359676.git.mchehab+huawei@kernel.org>
+        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>
+Subject: [PATCH 22/35] docs: drivers: fix some warnings at base/platform.c when building docs
+Date:   Wed,  8 Apr 2020 17:46:14 +0200
+Message-Id: <b3a375af07cd1bb521254f01baf176b123839d96.1586359676.git.mchehab+huawei@kernel.org>
 X-Mailer: git-send-email 2.25.2
 In-Reply-To: <cover.1586359676.git.mchehab+huawei@kernel.org>
 References: <cover.1586359676.git.mchehab+huawei@kernel.org>
@@ -59,42 +61,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The Sphinx build system for PDF is too complex and generate
-lots of ancillary files, including one PDF file for each
-image.
+Currrently, two warnings are generated when building docs:
 
-So, at the end, the main latex dir has 156 pdf files, instead
-of the 71 ones that would match each generated book. That's
-confusing and it makes harder to identify when something didn't
-work.
+	./drivers/base/platform.c:136: WARNING: Unexpected indentation.
+	./drivers/base/platform.c:214: WARNING: Unexpected indentation.
 
-So, instead, let's move the final PDF output(s) to a separate
-dir. This way, the latex/ dir will have the temporary and the
-final *.tex files, while the final pdf files that built ok
-will be under the pdf/ directory.
+As examples are code blocks, they should use "::" markup. However,
+
+	Example::
+
+Is currently interpreted as a new section.
+
+While we could fix kernel-doc to accept such new syntax, it is
+easier to just replace it with:
+
+	For Example::
 
 Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 ---
- Documentation/Makefile | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ drivers/base/platform.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/Documentation/Makefile b/Documentation/Makefile
-index cc786d11a028..db1fc35ded50 100644
---- a/Documentation/Makefile
-+++ b/Documentation/Makefile
-@@ -98,7 +98,11 @@ else # HAVE_PDFLATEX
- 
- pdfdocs: latexdocs
- 	@$(srctree)/scripts/sphinx-pre-install --version-check
--	$(foreach var,$(SPHINXDIRS), $(MAKE) PDFLATEX="$(PDFLATEX)" LATEXOPTS="$(LATEXOPTS)" -C $(BUILDDIR)/$(var)/latex || exit;)
-+	$(foreach var,$(SPHINXDIRS), \
-+	   $(MAKE) PDFLATEX="$(PDFLATEX)" LATEXOPTS="$(LATEXOPTS)" -C $(BUILDDIR)/$(var)/latex || exit; \
-+	   mkdir -p $(BUILDDIR)/$(var)/pdf; \
-+	   mv $(subst .tex,.pdf,$(wildcard $(BUILDDIR)/$(var)/latex/*.tex)) $(BUILDDIR)/$(var)/pdf/; \
-+	)
- 
- endif # HAVE_PDFLATEX
- 
+diff --git a/drivers/base/platform.c b/drivers/base/platform.c
+index 5255550b7c34..a07e28eab7d7 100644
+--- a/drivers/base/platform.c
++++ b/drivers/base/platform.c
+@@ -147,7 +147,8 @@ EXPORT_SYMBOL_GPL(devm_platform_ioremap_resource_byname);
+  * request_irq() APIs. This is the same as platform_get_irq(), except that it
+  * does not print an error message if an IRQ can not be obtained.
+  *
+- * Example:
++ * For example::
++ *
+  *		int irq = platform_get_irq_optional(pdev, 0);
+  *		if (irq < 0)
+  *			return irq;
+@@ -226,7 +227,8 @@ EXPORT_SYMBOL_GPL(platform_get_irq_optional);
+  * IRQ fails. Device drivers should check the return value for errors so as to
+  * not pass a negative integer value to the request_irq() APIs.
+  *
+- * Example:
++ * For example::
++ *
+  *		int irq = platform_get_irq(pdev, 0);
+  *		if (irq < 0)
+  *			return irq;
 -- 
 2.25.2
 
