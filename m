@@ -2,219 +2,397 @@ Return-Path: <SRS0=8dav=5Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41EF7C2BA1B
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 19:05:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79948C2BA1B
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 19:06:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1C6342075E
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 19:05:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3D11E2075E
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 19:06:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linumiz.com header.i=@linumiz.com header.b="UgirD3Kq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729155AbgDHTFI (ORCPT
+        id S1729271AbgDHTGD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Apr 2020 15:05:08 -0400
-Received: from mout.kundenserver.de ([212.227.17.10]:50901 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726730AbgDHTFI (ORCPT
+        Wed, 8 Apr 2020 15:06:03 -0400
+Received: from gproxy3-pub.mail.unifiedlayer.com ([69.89.30.42]:51091 "EHLO
+        gproxy3-pub.mail.unifiedlayer.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726730AbgDHTGD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Apr 2020 15:05:08 -0400
-Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
- (mreue109 [212.227.15.145]) with ESMTPA (Nemesis) id
- 1MdeSt-1inTPx0ouf-00ZfGF; Wed, 08 Apr 2020 21:04:52 +0200
-From:   Arnd Bergmann <arnd@arndb.de>
-To:     Casey Schaufler <casey@schaufler-ca.com>,
-        James Morris <jmorris@namei.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>
-Cc:     Arnd Bergmann <arnd@arndb.de>, stable@vger.kernel.org,
-        David Ahern <dsahern@gmail.com>,
-        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
-        linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] smack: avoid unused 'sip' variable warning
-Date:   Wed,  8 Apr 2020 21:04:31 +0200
-Message-Id: <20200408190448.778791-1-arnd@arndb.de>
+        Wed, 8 Apr 2020 15:06:03 -0400
+X-Greylist: delayed 1314 seconds by postgrey-1.27 at vger.kernel.org; Wed, 08 Apr 2020 15:06:02 EDT
+Received: from cmgw11.unifiedlayer.com (unknown [10.9.0.11])
+        by gproxy3.mail.unifiedlayer.com (Postfix) with ESMTP id 4DF79404C6
+        for <linux-kernel@vger.kernel.org>; Wed,  8 Apr 2020 12:44:06 -0600 (MDT)
+Received: from md-in-79.webhostbox.net ([43.225.55.182])
+        by cmsmtp with ESMTP
+        id MFgBjMJ95VKjoMFgDjrFVn; Wed, 08 Apr 2020 12:44:06 -0600
+X-Authority-Reason: nr=8
+X-Authority-Analysis: v=2.3 cv=ONYJIxSB c=1 sm=1 tr=0
+ a=LfuyaZh/8e9VOkaVZk0aRw==:117 a=LfuyaZh/8e9VOkaVZk0aRw==:17
+ a=dLZJa+xiwSxG16/P+YVxDGlgEgI=:19 a=cl8xLZFz6L8A:10:nop_rcvd_month_year
+ a=oz0wMknONp8A:10:endurance_base64_authed_username_1 a=vU9dKmh3AAAA:8
+ a=tc3lRw1TNdAtvppHo30A:9 a=RhmxLcqiqS2McG0f:21 a=B6lwo8GZ6FleYYhm:21
+ a=rsP06fVo5MYu2ilr0aT5:22
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=linumiz.com
+        ; s=default; h=Content-Transfer-Encoding:MIME-Version:Message-Id:Date:Subject
+        :Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:Content-Description:
+        Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
+        In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=/vZs5cp/1KyMqmoUOON5sUkL1L/NlNQhIL8DFDb+LLA=; b=UgirD3KqGYiKVQLgYkZIldYcB/
+        ocB0dsc7IwyI+Zy+BzZrB3bWc6EG3ZXhC57sh/JsdxtnO8FgYgxsOZBPu+v70EF+6CdKm+3J/93EJ
+        FXxI5rx0Bnr446eMlhzPMbTkuCUmt3M4S8zHzqCBLRd2DgoYPZwDd3HlX+tX1vnDqaygocFwuP8eU
+        7T69ghhXOh8BCKkNLPrXNvuk3e8na3D5dUf4M6oxhA7K18g6mEyLs3hmKl9OYp21TqXGCL227Nkvl
+        fLvRQvGQ8h1r3bigDHYKIu2UaFPCmuXEXWu+ozXyLzAnx9X3d5/XwOC9YyyNlD95qqD9v2VhdbpxR
+        dF+mQ/Rg==;
+Received: from dslb-002-205-079-159.002.205.pools.vodafone-ip.de ([2.205.79.159]:46518 helo=parthiban.fritz.box)
+        by md-in-79.webhostbox.net with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
+        (Exim 4.92)
+        (envelope-from <parthiban@linumiz.com>)
+        id 1jMFgA-003UGH-Rs; Wed, 08 Apr 2020 18:44:03 +0000
+From:   Parthiban Nallathambi <parthiban@linumiz.com>
+To:     robh+dt@kernel.org, shawnguo@kernel.org, s.hauer@pengutronix.de,
+        kernel@pengutronix.de, festevam@gmail.com, linux-imx@nxp.com
+Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        Parthiban Nallathambi <parthiban@linumiz.com>
+Subject: [PATCH] ARM: dts: imx6ull: add MYiR MYS-6ULX SBC
+Date:   Wed,  8 Apr 2020 20:43:51 +0200
+Message-Id: <20200408184351.135716-1-parthiban@linumiz.com>
 X-Mailer: git-send-email 2.26.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:YN15JdouRHUqp4Z3FJXkeTN/96nn0sT9zi+9TwGvUZQzcaMfrqR
- 0IjEoymPsfmLhxaWA+J4RY53s34KX5U6kwNFzK0Y/8P7qH4Nld8AEfaJu2EIYJr7mE6Rztr
- AVjEvqSs56UWnQiOy1SqWD3ge/DUwsrrdNeVU2qQPJhNo7RiCL1G2qYC9+LN77EJCn9OnM6
- sJw7Z5FbNB8x98npc/9tA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:P+CL3ETxFTM=:geY3PpBWshG5C2oixOcL/C
- 9ERZqDcfLxQiZ/WtFKn0ofSrKx3UnzMqCBowkzvoBYuOPMhZAikSh0AfMWWzmQM58NnqjQEMZ
- 5QgJ/H+1aQIcrTu9rqtODx1iq8Ewyo8e7LO2TMVMw2IfevMsA+sMr/ktkVvIvSnvVbvyzvmx9
- h/v5z3c8evy4b7OvQIaMUz3qiptayfNOlB+7BcTNB9yjRhnudAhMg93yqpmJcEvGN40doHrEr
- I4UMi6GhxyEqIMKDqxlfwXGZXcmTo/GS7c84AmNEvgh1fxDGm/d4IR2VSCq4oRblxXZAdx5sG
- 1mCmOUqtSxAFhFBokSeltjh+F1YXakp7baGM/k+X6nxQfkL1OnkGID/0qFx98Hrm4dWFhpmvt
- AuJ2wV0wO1n7b2pU88DqaPzKSWM95mHwxEk+Z0yKgYQSlpR0M9QZzOzHoAxNwfgmI+0SbmYzh
- hfT/i1qxxGLcVrOyRAePKx49NwnE32dXa6bwKoLCEd852p8G0J/akg86jpwqZc4/iMwP1xxkk
- 8weP+rhNeIVh1llGkA/B9V/g1fuAbdvax5f+KFq9SCMqjp1IMb/paScQNe5K6q1tgyybv+JAo
- ARxoNKrROCuzCWDTex88I2lzsGJKV4ToN3Qo618JvWfbO0K0dAvZjcWiLZFQ9H3SSnRDdMEx+
- HJaM2TRH8rULReCytqJyeSlA2gDqMObJPJIO3DHn/iB2BbvLPqTv7hIBSCYhG3pOui+h7bvRb
- mDwQo6bKPI1G74Ck/ILzsflVM8HdnCIc2KVol13F0erpe7QjuckL3fx3Y5Keun6dtRusp7Aef
- kBCceNXIBdY+PyjQ7TSx56ITziq2CzaiHD0ByAhd/+pnNfBjxc=
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - md-in-79.webhostbox.net
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - linumiz.com
+X-BWhitelist: no
+X-Source-IP: 2.205.79.159
+X-Source-L: No
+X-Exim-ID: 1jMFgA-003UGH-Rs
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: dslb-002-205-079-159.002.205.pools.vodafone-ip.de (parthiban.fritz.box) [2.205.79.159]:46518
+X-Source-Auth: parthiban@linumiz.com
+X-Email-Count: 2
+X-Org:  HG=dishared_whb_net_legacy;ORG=directi;
+X-Source-Cap: bGludW1jbWM7aG9zdGdhdG9yO21kLWluLTc5LndlYmhvc3Rib3gubmV0
+X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The mix of IS_ENABLED() and #ifdef checks has left a combination
-that causes a warning about an unused variable:
+Add support for the MYiR imx6ULL based single board computer
+equipped with on board 256MB NAND & RAM. The board also
+provides expansion header for expansion board, but this
+commit adds only support for SBC.
 
-security/smack/smack_lsm.c: In function 'smack_socket_connect':
-security/smack/smack_lsm.c:2838:24: error: unused variable 'sip' [-Werror=unused-variable]
- 2838 |   struct sockaddr_in6 *sip = (struct sockaddr_in6 *)sap;
-
-Change the code to use C-style checks consistently so the compiler
-can handle it correctly.
-
-Fixes: 87fbfffcc89b ("broken ping to ipv6 linklocal addresses on debian buster")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Signed-off-by: Parthiban Nallathambi <parthiban@linumiz.com>
 ---
-There are lots of ways of addressing this, if you prefer a different
-way, please just treat this patch as a bug report and apply the
-replacement patch directly.
----
- security/smack/smack.h     |  6 ------
- security/smack/smack_lsm.c | 25 ++++++++-----------------
- 2 files changed, 8 insertions(+), 23 deletions(-)
+ arch/arm/boot/dts/Makefile                       |   1 +
+ arch/arm/boot/dts/imx6ull-myir-mys-6ulx-nand.dts |  19 ++
+ arch/arm/boot/dts/imx6ull-myir-mys-6ulx.dtsi     | 247 +++++++++++++++++++++++
+ 3 files changed, 267 insertions(+)
+ create mode 100644 arch/arm/boot/dts/imx6ull-myir-mys-6ulx-nand.dts
+ create mode 100644 arch/arm/boot/dts/imx6ull-myir-mys-6ulx.dtsi
 
-diff --git a/security/smack/smack.h b/security/smack/smack.h
-index 62529f382942..335d2411abe4 100644
---- a/security/smack/smack.h
-+++ b/security/smack/smack.h
-@@ -148,7 +148,6 @@ struct smk_net4addr {
- 	struct smack_known	*smk_label;	/* label */
- };
- 
--#if IS_ENABLED(CONFIG_IPV6)
- /*
-  * An entry in the table identifying IPv6 hosts.
-  */
-@@ -159,9 +158,7 @@ struct smk_net6addr {
- 	int			smk_masks;	/* mask size */
- 	struct smack_known	*smk_label;	/* label */
- };
--#endif /* CONFIG_IPV6 */
- 
--#ifdef SMACK_IPV6_PORT_LABELING
- /*
-  * An entry in the table identifying ports.
-  */
-@@ -174,7 +171,6 @@ struct smk_port_label {
- 	short			smk_sock_type;	/* Socket type */
- 	short			smk_can_reuse;
- };
--#endif /* SMACK_IPV6_PORT_LABELING */
- 
- struct smack_known_list_elem {
- 	struct list_head	list;
-@@ -335,9 +331,7 @@ extern struct smack_known smack_known_web;
- extern struct mutex	smack_known_lock;
- extern struct list_head smack_known_list;
- extern struct list_head smk_net4addr_list;
--#if IS_ENABLED(CONFIG_IPV6)
- extern struct list_head smk_net6addr_list;
--#endif /* CONFIG_IPV6 */
- 
- extern struct mutex     smack_onlycap_lock;
- extern struct list_head smack_onlycap_list;
-diff --git a/security/smack/smack_lsm.c b/security/smack/smack_lsm.c
-index 8c61d175e195..e193b0db0271 100644
---- a/security/smack/smack_lsm.c
-+++ b/security/smack/smack_lsm.c
-@@ -50,10 +50,8 @@
- #define SMK_RECEIVING	1
- #define SMK_SENDING	2
- 
--#ifdef SMACK_IPV6_PORT_LABELING
--DEFINE_MUTEX(smack_ipv6_lock);
-+static DEFINE_MUTEX(smack_ipv6_lock);
- static LIST_HEAD(smk_ipv6_port_list);
--#endif
- static struct kmem_cache *smack_inode_cache;
- struct kmem_cache *smack_rule_cache;
- int smack_enabled;
-@@ -2320,7 +2318,6 @@ static struct smack_known *smack_ipv4host_label(struct sockaddr_in *sip)
- 	return NULL;
- }
- 
--#if IS_ENABLED(CONFIG_IPV6)
- /*
-  * smk_ipv6_localhost - Check for local ipv6 host address
-  * @sip: the address
-@@ -2388,7 +2385,6 @@ static struct smack_known *smack_ipv6host_label(struct sockaddr_in6 *sip)
- 
- 	return NULL;
- }
--#endif /* CONFIG_IPV6 */
- 
- /**
-  * smack_netlabel - Set the secattr on a socket
-@@ -2477,7 +2473,6 @@ static int smack_netlabel_send(struct sock *sk, struct sockaddr_in *sap)
- 	return smack_netlabel(sk, sk_lbl);
- }
- 
--#if IS_ENABLED(CONFIG_IPV6)
- /**
-  * smk_ipv6_check - check Smack access
-  * @subject: subject Smack label
-@@ -2510,7 +2505,6 @@ static int smk_ipv6_check(struct smack_known *subject,
- 	rc = smk_bu_note("IPv6 check", subject, object, MAY_WRITE, rc);
- 	return rc;
- }
--#endif /* CONFIG_IPV6 */
- 
- #ifdef SMACK_IPV6_PORT_LABELING
- /**
-@@ -2599,6 +2593,7 @@ static void smk_ipv6_port_label(struct socket *sock, struct sockaddr *address)
- 	mutex_unlock(&smack_ipv6_lock);
- 	return;
- }
-+#endif
- 
- /**
-  * smk_ipv6_port_check - check Smack port access
-@@ -2661,7 +2656,6 @@ static int smk_ipv6_port_check(struct sock *sk, struct sockaddr_in6 *address,
- 
- 	return smk_ipv6_check(skp, object, address, act);
- }
--#endif /* SMACK_IPV6_PORT_LABELING */
- 
- /**
-  * smack_inode_setsecurity - set smack xattrs
-@@ -2836,24 +2830,21 @@ static int smack_socket_connect(struct socket *sock, struct sockaddr *sap,
- 		return 0;
- 	if (IS_ENABLED(CONFIG_IPV6) && sap->sa_family == AF_INET6) {
- 		struct sockaddr_in6 *sip = (struct sockaddr_in6 *)sap;
--#ifdef SMACK_IPV6_SECMARK_LABELING
--		struct smack_known *rsp;
--#endif
-+		struct smack_known *rsp = NULL;
- 
- 		if (addrlen < SIN6_LEN_RFC2133)
- 			return 0;
--#ifdef SMACK_IPV6_SECMARK_LABELING
--		rsp = smack_ipv6host_label(sip);
-+		if (__is_defined(SMACK_IPV6_SECMARK_LABELING))
-+				rsp = smack_ipv6host_label(sip);
- 		if (rsp != NULL) {
- 			struct socket_smack *ssp = sock->sk->sk_security;
- 
- 			rc = smk_ipv6_check(ssp->smk_out, rsp, sip,
- 					    SMK_CONNECTING);
- 		}
--#endif
--#ifdef SMACK_IPV6_PORT_LABELING
--		rc = smk_ipv6_port_check(sock->sk, sip, SMK_CONNECTING);
--#endif
-+		if (__is_defined(SMACK_IPV6_PORT_LABELING))
-+			rc = smk_ipv6_port_check(sock->sk, sip, SMK_CONNECTING);
+diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+index e8dd99201397..eab86051d782 100644
+--- a/arch/arm/boot/dts/Makefile
++++ b/arch/arm/boot/dts/Makefile
+@@ -612,6 +612,7 @@ dtb-$(CONFIG_SOC_IMX6UL) += \
+ 	imx6ull-14x14-evk.dtb \
+ 	imx6ull-colibri-eval-v3.dtb \
+ 	imx6ull-colibri-wifi-eval-v3.dtb \
++	imx6ull-myir-mys-6ulx-nand.dtb \
+ 	imx6ull-opos6uldev.dtb \
+ 	imx6ull-phytec-segin-ff-rdk-nand.dtb \
+ 	imx6ull-phytec-segin-ff-rdk-emmc.dtb \
+diff --git a/arch/arm/boot/dts/imx6ull-myir-mys-6ulx-nand.dts b/arch/arm/boot/dts/imx6ull-myir-mys-6ulx-nand.dts
+new file mode 100644
+index 000000000000..6eaba8a8d7a9
+--- /dev/null
++++ b/arch/arm/boot/dts/imx6ull-myir-mys-6ulx-nand.dts
+@@ -0,0 +1,19 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Copyright (C) 2020 Linumiz
++ * Author: Parthiban Nallathambi <parthiban@linumiz.com>
++ */
 +
- 		return rc;
- 	}
- 	if (sap->sa_family != AF_INET || addrlen < sizeof(struct sockaddr_in))
++/dts-v1/;
++#include "imx6ull.dtsi"
++#include "imx6ull-myir-mys-6ulx.dtsi"
++
++/ {
++	model = "MYiR i.MX6ULL MYS-6ULX Single Board Computer with NAND";
++	compatible = "myir,imx6ul-mys-6ulx-nand", "myir,imx6ul-mys-6ulx",
++		     "fsl,imx6ull";
++};
++
++&gpmi {
++	status = "okay";
++};
+diff --git a/arch/arm/boot/dts/imx6ull-myir-mys-6ulx.dtsi b/arch/arm/boot/dts/imx6ull-myir-mys-6ulx.dtsi
+new file mode 100644
+index 000000000000..f0a514187c21
+--- /dev/null
++++ b/arch/arm/boot/dts/imx6ull-myir-mys-6ulx.dtsi
+@@ -0,0 +1,247 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Copyright (C) 2020 Linumiz
++ * Author: Parthiban Nallathambi <parthiban@linumiz.com>
++ */
++
++#include <dt-bindings/gpio/gpio.h>
++#include <dt-bindings/interrupt-controller/irq.h>
++#include <dt-bindings/pwm/pwm.h>
++
++/ {
++	model = "MYiR MYS-6ULX Single Board Computer";
++	compatible = "myir,imx6ull-mys-6ulx", "fsl,imx6ull";
++
++	chosen {
++		stdout-path = &uart1;
++	};
++
++	regulators: regulators {
++		compatible = "simple-bus";
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		vdd_5v: regulator@0 {
++			compatible = "regulator-fixed";
++			regulator-name = "VDD_5V";
++			regulator-min-microvolt = <5000000>;
++			regulator-max-microvolt = <5000000>;
++			regulator-always-on;
++			regulator-boot-on;
++		};
++
++		vdd_3v3: regulator@1 {
++			compatible = "regulator-fixed";
++			regulator-name = "VDD_3V3";
++			regulator-min-microvolt = <3300000>;
++			regulator-max-microvolt = <3300000>;
++			regulator-always-on;
++			vin-supply = <&vdd_5v>;
++		};
++	};
++};
++
++&fec1 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_enet1>;
++	phy-mode = "rmii";
++	phy-handle = <&ethphy0>;
++	phy-supply = <&vdd_3v3>;
++	status = "okay";
++
++	mdio: mdio {
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		ethphy0: ethernet-phy@0 {
++			reg = <0>;
++			compatible = "ethernet-phy-ieee802.3-c22";
++			interrupt-parent = <&gpio5>;
++			interrupts = <5 IRQ_TYPE_LEVEL_LOW>;
++			clocks = <&clks IMX6UL_CLK_ENET_REF>;
++			clock-names = "rmii-ref";
++			status = "okay";
++		};
++	};
++};
++
++&gpmi {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_gpmi_nand>;
++	nand-on-flash-bbt;
++	status = "disabled";
++};
++
++&uart1 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_uart1>;
++	status = "okay";
++};
++
++&usbotg1 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_usb_otg1_id>;
++	dr_mode = "otg";
++	status = "okay";
++};
++
++&usbotg2 {
++	dr_mode = "host";
++	disable-over-current;
++	status = "okay";
++};
++
++&usdhc1 {
++	pinctrl-names = "default", "state_100mhz", "state_200mhz";
++	pinctrl-0 = <&pinctrl_usdhc1>;
++	pinctrl-1 = <&pinctrl_usdhc1_100mhz>;
++	pinctrl-2 = <&pinctrl_usdhc1_200mhz>;
++	cd-gpios = <&gpio1 19 GPIO_ACTIVE_LOW>;
++	no-1-8-v;
++	keep-power-in-suspend;
++	wakeup-source;
++	vmmc-supply = <&vdd_3v3>;
++	status = "okay";
++};
++
++&usdhc2 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_usdhc2>;
++	pinctrl-1 = <&pinctrl_usdhc2_100mhz>;
++	pinctrl-2 = <&pinctrl_usdhc2_200mhz>;
++	bus-width = <8>;
++	non-removable;
++	keep-power-in-suspend;
++	vmmc-supply = <&vdd_3v3>;
++	status = "disabled";
++};
++
++&iomuxc {
++	pinctrl_enet1: enet1grp {
++		fsl,pins = <
++			MX6UL_PAD_GPIO1_IO06__ENET1_MDIO	0x1b0b0
++			MX6UL_PAD_GPIO1_IO07__ENET1_MDC		0x1b0b0
++			MX6UL_PAD_ENET1_RX_EN__ENET1_RX_EN	0x1b0b0
++			MX6UL_PAD_ENET1_RX_ER__ENET1_RX_ER	0x1b0b0
++			MX6UL_PAD_ENET1_RX_DATA0__ENET1_RDATA00	0x1b0b0
++			MX6UL_PAD_ENET1_RX_DATA1__ENET1_RDATA01	0x1b0b0
++			MX6UL_PAD_ENET1_TX_EN__ENET1_TX_EN	0x1b0b0
++			MX6UL_PAD_ENET1_TX_DATA0__ENET1_TDATA00	0x1b0b0
++			MX6UL_PAD_ENET1_TX_DATA1__ENET1_TDATA01	0x1b0b0
++			MX6UL_PAD_ENET1_TX_CLK__ENET1_REF_CLK1	0x4001b031
++			MX6UL_PAD_SNVS_TAMPER5__GPIO5_IO05	0x1b0b0
++		>;
++	};
++
++	pinctrl_gpmi_nand: gpminandgrp {
++		fsl,pins = <
++			MX6UL_PAD_NAND_CLE__RAWNAND_CLE		0x0b0b1
++			MX6UL_PAD_NAND_ALE__RAWNAND_ALE		0x0b0b1
++			MX6UL_PAD_NAND_WP_B__RAWNAND_WP_B	0x0b0b1
++			MX6UL_PAD_NAND_READY_B__RAWNAND_READY_B	0x0b000
++			MX6UL_PAD_NAND_CE0_B__RAWNAND_CE0_B	0x0b0b1
++			MX6UL_PAD_NAND_RE_B__RAWNAND_RE_B	0x0b0b1
++			MX6UL_PAD_NAND_WE_B__RAWNAND_WE_B	0x0b0b1
++			MX6UL_PAD_NAND_DATA00__RAWNAND_DATA00	0x0b0b1
++			MX6UL_PAD_NAND_DATA01__RAWNAND_DATA01	0x0b0b1
++			MX6UL_PAD_NAND_DATA02__RAWNAND_DATA02	0x0b0b1
++			MX6UL_PAD_NAND_DATA03__RAWNAND_DATA03	0x0b0b1
++			MX6UL_PAD_NAND_DATA04__RAWNAND_DATA04	0x0b0b1
++			MX6UL_PAD_NAND_DATA05__RAWNAND_DATA05	0x0b0b1
++			MX6UL_PAD_NAND_DATA06__RAWNAND_DATA06	0x0b0b1
++			MX6UL_PAD_NAND_DATA07__RAWNAND_DATA07	0x0b0b1
++		>;
++	};
++
++	pinctrl_uart1: uart1grp {
++		fsl,pins = <
++			MX6UL_PAD_UART1_TX_DATA__UART1_DCE_TX	0x1b0b1
++			MX6UL_PAD_UART1_RX_DATA__UART1_DCE_RX	0x1b0b1
++		>;
++	};
++
++	pinctrl_usb_otg1_id: usbotg1idgrp {
++		fsl,pins = <
++			MX6UL_PAD_GPIO1_IO00__ANATOP_OTG1_ID	0x17059
++		>;
++	};
++
++	pinctrl_usdhc1: usdhc1grp {
++		fsl,pins = <
++			MX6UL_PAD_SD1_CMD__USDHC1_CMD		0x17059
++			MX6UL_PAD_SD1_CLK__USDHC1_CLK		0x10059
++			MX6UL_PAD_SD1_DATA0__USDHC1_DATA0	0x17059
++			MX6UL_PAD_SD1_DATA1__USDHC1_DATA1	0x17059
++			MX6UL_PAD_SD1_DATA2__USDHC1_DATA2	0x17059
++			MX6UL_PAD_SD1_DATA3__USDHC1_DATA3	0x17059
++			MX6UL_PAD_UART1_RTS_B__GPIO1_IO19	0x17059
++		>;
++	};
++
++	pinctrl_usdhc1_100mhz: usdhc1grp100mhz {
++		fsl,pins = <
++			MX6UL_PAD_SD1_CMD__USDHC1_CMD		0x170b9
++			MX6UL_PAD_SD1_CLK__USDHC1_CLK		0x100b9
++			MX6UL_PAD_SD1_DATA0__USDHC1_DATA0	0x170b9
++			MX6UL_PAD_SD1_DATA1__USDHC1_DATA1	0x170b9
++			MX6UL_PAD_SD1_DATA2__USDHC1_DATA2	0x170b9
++			MX6UL_PAD_SD1_DATA3__USDHC1_DATA3	0x170b9
++		>;
++	};
++
++	pinctrl_usdhc1_200mhz: usdhc1grp200mhz {
++		fsl,pins = <
++			MX6UL_PAD_SD1_CMD__USDHC1_CMD		0x170f9
++			MX6UL_PAD_SD1_CLK__USDHC1_CLK		0x100f9
++			MX6UL_PAD_SD1_DATA0__USDHC1_DATA0	0x170f9
++			MX6UL_PAD_SD1_DATA1__USDHC1_DATA1	0x170f9
++			MX6UL_PAD_SD1_DATA2__USDHC1_DATA2	0x170f9
++			MX6UL_PAD_SD1_DATA3__USDHC1_DATA3	0x170f9
++		>;
++	};
++
++	pinctrl_usdhc2: usdhc2grp {
++		fsl,pins = <
++			MX6UL_PAD_NAND_RE_B__USDHC2_CLK		0x10069
++			MX6UL_PAD_NAND_WE_B__USDHC2_CMD		0x17059
++			MX6UL_PAD_NAND_DATA00__USDHC2_DATA0	0x17059
++			MX6UL_PAD_NAND_DATA01__USDHC2_DATA1	0x17059
++			MX6UL_PAD_NAND_DATA02__USDHC2_DATA2	0x17059
++			MX6UL_PAD_NAND_DATA03__USDHC2_DATA3	0x17059
++			MX6UL_PAD_NAND_DATA04__USDHC2_DATA4	0x17059
++			MX6UL_PAD_NAND_DATA05__USDHC2_DATA5	0x17059
++			MX6UL_PAD_NAND_DATA06__USDHC2_DATA6	0x17059
++			MX6UL_PAD_NAND_DATA07__USDHC2_DATA7	0x17059
++		>;
++	};
++
++	pinctrl_usdhc2_100mhz: usdhc2grp100mhz {
++		fsl,pins = <
++			MX6UL_PAD_NAND_RE_B__USDHC2_CLK		0x100b9
++			MX6UL_PAD_NAND_WE_B__USDHC2_CMD		0x170b9
++			MX6UL_PAD_NAND_DATA00__USDHC2_DATA0	0x170b9
++			MX6UL_PAD_NAND_DATA01__USDHC2_DATA1	0x170b9
++			MX6UL_PAD_NAND_DATA02__USDHC2_DATA2	0x170b9
++			MX6UL_PAD_NAND_DATA03__USDHC2_DATA3	0x170b9
++			MX6UL_PAD_NAND_DATA04__USDHC2_DATA4	0x170b9
++			MX6UL_PAD_NAND_DATA05__USDHC2_DATA5	0x170b9
++			MX6UL_PAD_NAND_DATA06__USDHC2_DATA6	0x170b9
++			MX6UL_PAD_NAND_DATA07__USDHC2_DATA7	0x170b9
++		>;
++	};
++
++	pinctrl_usdhc2_200mhz: usdhc2grp200mhz {
++		fsl,pins = <
++			MX6UL_PAD_NAND_RE_B__USDHC2_CLK		0x100f9
++			MX6UL_PAD_NAND_WE_B__USDHC2_CMD		0x170f9
++			MX6UL_PAD_NAND_DATA00__USDHC2_DATA0	0x170f9
++			MX6UL_PAD_NAND_DATA01__USDHC2_DATA1	0x170f9
++			MX6UL_PAD_NAND_DATA02__USDHC2_DATA2	0x170f9
++			MX6UL_PAD_NAND_DATA03__USDHC2_DATA3	0x170f9
++			MX6UL_PAD_NAND_DATA04__USDHC2_DATA4	0x170f9
++			MX6UL_PAD_NAND_DATA05__USDHC2_DATA5	0x170f9
++			MX6UL_PAD_NAND_DATA06__USDHC2_DATA6	0x170f9
++			MX6UL_PAD_NAND_DATA07__USDHC2_DATA7	0x170f9
++		>;
++	};
++};
 -- 
-2.26.0
+2.11.0
 
