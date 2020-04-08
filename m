@@ -2,106 +2,79 @@ Return-Path: <SRS0=8dav=5Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 949DCC2D0EA
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 13:37:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D488C2D0EA
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 13:38:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 395E720747
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 13:37:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=aurabindo.in header.i=@aurabindo.in header.b="oNGBRMTT"
+	by mail.kernel.org (Postfix) with ESMTP id 398D92072A
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 13:38:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728716AbgDHNhl (ORCPT
+        id S1729203AbgDHNin (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Apr 2020 09:37:41 -0400
-Received: from mail-qk1-f196.google.com ([209.85.222.196]:35399 "EHLO
-        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726760AbgDHNhl (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Apr 2020 09:37:41 -0400
-Received: by mail-qk1-f196.google.com with SMTP id c63so79994qke.2
-        for <linux-kernel@vger.kernel.org>; Wed, 08 Apr 2020 06:37:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=aurabindo.in; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=a8mBf/x6tKmxXEyAN6VSKYHc9JSU+mIaA50Z6TnFau4=;
-        b=oNGBRMTTT4G0ujvkoAxRMd3XDpqMEs3ISjiGTl3+WMr3y0jNbTYWFZVr6oSkfSctjo
-         820mOtbknzXiP1a+VHzTLSrRoFPDtBkZyrvm3Y3KHV/5L1o66DFPQqYtjEqM7Q2tmeN2
-         bZYbGMP/wDNJ20bM9UVlVtK9xYk0ZDHBaRHDUwPMUyRhgJFh220KAzu6Ob9GFKhlQauB
-         xWQdo4bNV/1iV8qJjw+cDLSSoaWUxzOP+3oFmut9SJFXCDdi73L1QXjveEoi4S959mUF
-         MlfOIVkuGAoI/PZErdQEivO3GhuWEOt1ALkBlCc746rf7CeiGoO3crXm+N6ddXc4vbo8
-         YTZQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=a8mBf/x6tKmxXEyAN6VSKYHc9JSU+mIaA50Z6TnFau4=;
-        b=OvO0Ux3v+BlU2FNT+1qCdKzHKU8ipeDyNNb1bO17/QxfCiZjnMo5nJQ58kAtHsPSeK
-         QXFTPGMdHIp0X25YJpQchGymkSI4tib8rVtLAgm7lNNcaQYHSz0YP6iOezJ4L0n3hGb/
-         9+ozD+7SndbGd9HCX/mz1ukT5prEAHicrIvNQgoN0h8XBrETEHj67OKrzvzpNybI98pP
-         lKQyS/3m7AlBdgpSWM9NJ1p/vLovc6me4b5i8A9m0LTrAX2DVpJeNKERjlgF4Uk45a4f
-         h59J0COtj7immvd74Ein7EkJfQ0HuGa2Cs75Hi4AoNwrNNyM1qo+dbOhHy2M7+jQw+Bx
-         GGSA==
-X-Gm-Message-State: AGi0PuaesdlJabAsKehQTXcyWCMNcjBuyqmmNIjTtNlwcKDUdHM0EbNA
-        Xhnl7IBPvJ9UAwLbg+f1Mgf8bg==
-X-Google-Smtp-Source: APiQypLRBp+bZkFj4khOGASSTYhMEobSFxchIEOA/aHpRrEQBTYsVV97VRsDR3YR4b6DeyK0CmNFZA==
-X-Received: by 2002:a37:9e17:: with SMTP id h23mr7319606qke.315.1586353060016;
-        Wed, 08 Apr 2020 06:37:40 -0700 (PDT)
-Received: from localhost.localdomain (135-23-249-169.cpe.pppoe.ca. [135.23.249.169])
-        by smtp.gmail.com with ESMTPSA id q5sm8493827qkn.59.2020.04.08.06.37.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 08 Apr 2020 06:37:38 -0700 (PDT)
-From:   Aurabindo Pillai <mail@aurabindo.in>
-To:     alexander.deucher@amd.com, christian.koenig@amd.com
-Cc:     avid1.Zhou@amd.com, airlied@linux.ie, daniel@ffwll.ch,
-        amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] drm/amd/amdgpu: add prefix for pr_* prints
-Date:   Wed,  8 Apr 2020 09:37:35 -0400
-Message-Id: <20200408133735.7679-1-mail@aurabindo.in>
-X-Mailer: git-send-email 2.26.0
+        Wed, 8 Apr 2020 09:38:43 -0400
+Received: from mga18.intel.com ([134.134.136.126]:33616 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726760AbgDHNim (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Apr 2020 09:38:42 -0400
+IronPort-SDR: qcOm9WP5R5ESi5OFgHO20ROVXOyni0jipJ2DgVeYWRaRxqPLrexL5XH12Aoj4USOtBBBmgfRgh
+ d3L8lazbML1w==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Apr 2020 06:38:42 -0700
+IronPort-SDR: R22WpOEU8IKS8IgdXmswW399/H6U6WiPxgDyUhHCrxA3Ql3xyGoS+vJXGd7pEeMNTNLLln4tnj
+ 6JsvN7gJlfHg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,358,1580803200"; 
+   d="scan'208";a="425136945"
+Received: from eefimov-mobl2.ger.corp.intel.com (HELO localhost) ([10.249.41.73])
+  by orsmga005.jf.intel.com with ESMTP; 08 Apr 2020 06:38:36 -0700
+Date:   Wed, 8 Apr 2020 16:38:35 +0300
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     Waiman Long <longman@redhat.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        David Howells <dhowells@redhat.com>,
+        James Morris <jmorris@namei.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>, linux-mm@kvack.org,
+        keyrings@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Joe Perches <joe@perches.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        David Rientjes <rientjes@google.com>
+Subject: Re: [PATCH v3] mm: Add kvfree_sensitive() for freeing sensitive data
+ objects
+Message-ID: <20200408133835.GA4097@linux.intel.com>
+References: <20200407200318.11711-1-longman@redhat.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200407200318.11711-1-longman@redhat.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-amdgpu uses lots of pr_* calls for printing error messages.
-With this prefix, errors shall be more obvious to the end
-use regarding its origin, and may help debugging.
+On Tue, Apr 07, 2020 at 04:03:18PM -0400, Waiman Long wrote:
+> For kvmalloc'ed data object that contains sensitive information like
+> cryptographic key, we need to make sure that the buffer is always
+> cleared before freeing it. Using memset() alone for buffer clearing may
+> not provide certainty as the compiler may compile it away. To be sure,
+> the special memzero_explicit() has to be used.
+> 
+> This patch introduces a new kvfree_sensitive() for freeing those
+> sensitive data objects allocated by kvmalloc(). The relevnat places
+> where kvfree_sensitive() can be used are modified to use it.
+> 
+> Fixes: 4f0882491a14 ("KEYS: Avoid false positive ENOMEM error on key read")
+> Suggested-by: Linus Torvalds <torvalds@linux-foundation.org>
+> Signed-off-by: Waiman Long <longman@redhat.com>
 
-Prefix format:
+Acked-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
 
-[xxx.xxxxx] amdgpu: ...
+David, you want to pick this one?
 
-Signed-off-by: Aurabindo Pillai <mail@aurabindo.in>
----
- drivers/gpu/drm/amd/amdgpu/amdgpu.h | 6 ++++++
- 1 file changed, 6 insertions(+)
-
-diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu.h b/drivers/gpu/drm/amd/amdgpu/amdgpu.h
-index da3bcff61..67d654a89 100644
---- a/drivers/gpu/drm/amd/amdgpu/amdgpu.h
-+++ b/drivers/gpu/drm/amd/amdgpu/amdgpu.h
-@@ -28,6 +28,12 @@
- #ifndef __AMDGPU_H__
- #define __AMDGPU_H__
- 
-+#ifdef pr_fmt
-+#undef pr_fmt
-+#endif
-+
-+#define pr_fmt(fmt) "amdgpu: " fmt
-+
- #include "amdgpu_ctx.h"
- 
- #include <linux/atomic.h>
--- 
-2.26.0
-
+/Jarkko
