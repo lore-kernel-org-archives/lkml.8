@@ -6,57 +6,56 @@ X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11EDCC2BA1A
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 15:40:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04DC7C2BA1B
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 15:42:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E60232072F
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 15:40:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D815320784
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 15:42:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729499AbgDHPkk (ORCPT
+        id S1729431AbgDHPm2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Apr 2020 11:40:40 -0400
-Received: from verein.lst.de ([213.95.11.211]:42916 "EHLO verein.lst.de"
+        Wed, 8 Apr 2020 11:42:28 -0400
+Received: from verein.lst.de ([213.95.11.211]:42929 "EHLO verein.lst.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728345AbgDHPkj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Apr 2020 11:40:39 -0400
+        id S1727933AbgDHPm2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Apr 2020 11:42:28 -0400
 Received: by verein.lst.de (Postfix, from userid 2407)
-        id 0BEE968C65; Wed,  8 Apr 2020 17:40:34 +0200 (CEST)
-Date:   Wed, 8 Apr 2020 17:40:33 +0200
+        id 313AE68C4E; Wed,  8 Apr 2020 17:42:26 +0200 (CEST)
+Date:   Wed, 8 Apr 2020 17:42:25 +0200
 From:   Christoph Hellwig <hch@lst.de>
 To:     Hillf Danton <hdanton@sina.com>
 Cc:     Christoph Hellwig <hch@lst.de>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        Peter Zijlstra <peterz@infradead.org>,
-        linuxppc-dev@lists.ozlabs.org, linux-hyperv@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org,
-        linux-arch@vger.kernel.org, linux-mm@kvack.org,
-        iommu@lists.linux-foundation.org, syzkaller-bugs@googlegroups.com,
-        linux-arm-kernel@lists.infradead.org, linux-s390@vger.kernel.org,
-        bpf@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 02/28] staging: android: ion: use vmap instead of
- vm_map_ram
-Message-ID: <20200408154033.GA28499@lst.de>
-References: <20200408115926.1467567-1-hch@lst.de> <20200408124833.13032-1-hdanton@sina.com>
+        Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
+        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 04/28] dma-mapping: use vmap insted of reimplementing it
+Message-ID: <20200408154225.GA28676@lst.de>
+References: <20200408115926.1467567-1-hch@lst.de> <20200408131736.9532-1-hdanton@sina.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200408124833.13032-1-hdanton@sina.com>
+In-Reply-To: <20200408131736.9532-1-hdanton@sina.com>
 User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 08, 2020 at 08:48:33PM +0800, Hillf Danton wrote:
-> > -	void *addr = vm_map_ram(pages, num, -1, pgprot);
-> > +	void *addr = vmap(pages, num, VM_MAP);
+On Wed, Apr 08, 2020 at 09:17:36PM +0800, Hillf Danton wrote:
+> > @@ -62,24 +42,20 @@ void *dma_common_pages_remap(struct page **pages, size_t size,
+> >  void *dma_common_contiguous_remap(struct page *page, size_t size,
+> >  			pgprot_t prot, const void *caller)
+> >  {
+> > -	int i;
+> > +	int count = size >> PAGE_SHIFT;
+> >  	struct page **pages;
+> > -	struct vm_struct *area;
+> > +	void *vaddr;
+> > +	int i;
+> >  
+> > -	pages = kmalloc(sizeof(struct page *) << get_order(size), GFP_KERNEL);
+> > +	pages = kmalloc_array(count, sizeof(struct page *), GFP_KERNEL);
 > 
-> A merge glitch?
-> 
-> void *vmap(struct page **pages, unsigned int count,
-> 	   unsigned long flags, pgprot_t prot)
+> Is it making sense to vmalloc pages as long as array size is bigger than
+> PAGE_SIZE?
 
-Yes, thanks for the headsup, you were as fast as the build bot :)
-
-Fixed now.
+Maybe, maybe not.  But it certainly doesn't fit this series.
