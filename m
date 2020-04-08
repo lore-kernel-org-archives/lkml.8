@@ -2,74 +2,78 @@ Return-Path: <SRS0=8dav=5Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0AA0C2D0EC
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 01:40:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27E32C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 01:40:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C5DAA206F7
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 01:40:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F0ECF206F7
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 01:40:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Vgc92owQ"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="HZhDpk9r"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726591AbgDHBkU (ORCPT
+        id S1726620AbgDHBk1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 21:40:20 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:55126 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726484AbgDHBkT (ORCPT
+        Tue, 7 Apr 2020 21:40:27 -0400
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:43798 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726436AbgDHBkZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Apr 2020 21:40:19 -0400
+        Tue, 7 Apr 2020 21:40:25 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1586310019;
+        s=mimecast20190719; t=1586310024;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=wl5DI6kAtUJ8k2YGULEZuXgrxTBuaptiox8B/l3QktI=;
-        b=Vgc92owQgkP61Su6rb7lnRwfQwRpKp6MqFRbbvBVYPAxcMq5IAoAUwj1zXvrR11URSJxYO
-        lRlcTTlcB8Hr4/EVgbuc8Vyn8DEpPcXVY98/NdBYxBDkUtnu4T1DxPSSW7ppOygCV1vfaU
-        Yqkdoc0iRE+2AD+WDcTXpsxNQzj9k5A=
-Received: from mail-qv1-f70.google.com (mail-qv1-f70.google.com
- [209.85.219.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-217-rtbdM2eJOfamBZauj_cL9Q-1; Tue, 07 Apr 2020 21:40:15 -0400
-X-MC-Unique: rtbdM2eJOfamBZauj_cL9Q-1
-Received: by mail-qv1-f70.google.com with SMTP id z14so4839448qvk.2
-        for <linux-kernel@vger.kernel.org>; Tue, 07 Apr 2020 18:40:15 -0700 (PDT)
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=fSQbrEAc+w70rT9qB0nDUcFBa4qHjfjCBhj2Rky49/o=;
+        b=HZhDpk9rshQ3k2xMQGU3BjYCE1tGhC6fEHLJ1prJ1ujQrBpPTH+W/8SRnUfcpP5zJRrJXH
+        v6sw/cS6K06PqRvuzUtqCeTyfwi5b4YYdvkW1hjDesSsIWsLPM7yPihVLbDNglCI3EODjH
+        OTfSpIP72EXhzjHjGoJNa3gP6FZiiUY=
+Received: from mail-qt1-f197.google.com (mail-qt1-f197.google.com
+ [209.85.160.197]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-310-bHa42HK9PH-3ujoxNQ8rRQ-1; Tue, 07 Apr 2020 21:40:23 -0400
+X-MC-Unique: bHa42HK9PH-3ujoxNQ8rRQ-1
+Received: by mail-qt1-f197.google.com with SMTP id z5so5014396qtd.4
+        for <linux-kernel@vger.kernel.org>; Tue, 07 Apr 2020 18:40:22 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=wl5DI6kAtUJ8k2YGULEZuXgrxTBuaptiox8B/l3QktI=;
-        b=CM4vs8PHjt+KdlNj61iLJq/KOiC8twkJ2qPetT75/Ora8ZvMp7EElC8nsyqzfeqcJz
-         c2WE1xGgWaGx4DYd7cynN5QGr8cuKf5zgZxC3BWqBNF6UtnipX1/lzGSmnH3siYXcqal
-         Awp2dyFLHgaPGvdKAj+FG+Vh6v5b01S6HogQz0SsvUwDfy5cR6q9PLEY26aGn4zPBcJC
-         cMdfNsK2Y7ET2ThnkTWAI0OsIyG6zs15cfbBQUJqSpJoIhjm6JhTOrBYVhurAT5Gf5ry
-         Esad1EU9K3xTiGWbt9VdEcqg01MgkHNUsLaHQyf+3m/Ocmz4qVWoR94VjyedBI05dafv
-         Xxwg==
-X-Gm-Message-State: AGi0PuZhyokT2V/V9+C2YUSSEqSV5z7hGI5vhy8RiFkQE867/NzFvX1R
-        MySWIqnRrLveB1DbXqlrdS83BsR4lCKGk8tRGTj0ykuyp4tRKx+VHglEL5An9jJpdW+4gItKVU8
-        KpDbju4iumxcU0VY4WC6atQGY
-X-Received: by 2002:a05:620a:7eb:: with SMTP id k11mr5218335qkk.282.1586310013173;
-        Tue, 07 Apr 2020 18:40:13 -0700 (PDT)
-X-Google-Smtp-Source: APiQypIck+cZdT2RczXl/himnTKPJmXhgzUtYHMHz0sOupASHZtDDvsQBExfkfjpVMjfuSSjvpLSWQ==
-X-Received: by 2002:a05:620a:7eb:: with SMTP id k11mr5218325qkk.282.1586310012967;
-        Tue, 07 Apr 2020 18:40:12 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=fSQbrEAc+w70rT9qB0nDUcFBa4qHjfjCBhj2Rky49/o=;
+        b=KVx/qsv95Qr7EA9+0Q5uumKlxEgysfmWiYyc28OiQX+m55o5ciNJP/kNdc1QWHnm+D
+         4gajE7qbJmPqKlhBZL5xd7Fcn7fpQU/CyZ8PFLIj7HWt4y8bcm+aAkTh486/qU+Nlpk0
+         sN6M58zMxrAQc9CIi7lv3WQnc/bproRBoBM9PUSXbhSRC5DQj4luVCK+bOJiYBgUPlUn
+         DnpQ48+fWi6r+fc42kPOfMh4m/x7r0i/QNmHwQKlR24tCIUOLBEKz7UZI3VRMmwwBfg3
+         Nkjhk8owIWVLKiMzEyciOJBGVfPuPLniyU1yBle6jcsjqywAdyzNGAwOBQePiMtKHxHX
+         0hMw==
+X-Gm-Message-State: AGi0PuYhxhvVl1Q9VPHovJMMeAZfUKGXJavrCR1+VG1nTcy4o8tGwVMh
+        hlPN+8I13ueaJnqzoFK9KmFprLYJfvB7FzGvRVLZw0Tqwwjfkic3Cauf0/SMfTKqEEuoLSZTq8z
+        UoxG7g+2+hePpwP0MdrwwfAsk
+X-Received: by 2002:aed:3b4c:: with SMTP id q12mr5171839qte.18.1586310022101;
+        Tue, 07 Apr 2020 18:40:22 -0700 (PDT)
+X-Google-Smtp-Source: APiQypKjaxC86ETeSiD0L0Kj0V5llgsE6iR778Jm5S9I3k5ubB9PlpALIp3ITqh0ujLQ2viwPE/E4Q==
+X-Received: by 2002:aed:3b4c:: with SMTP id q12mr5171819qte.18.1586310021884;
+        Tue, 07 Apr 2020 18:40:21 -0700 (PDT)
 Received: from xz-x1.hitronhub.home ([2607:9880:19c0:32::3])
-        by smtp.gmail.com with ESMTPSA id g10sm18665035qkb.9.2020.04.07.18.40.11
+        by smtp.gmail.com with ESMTPSA id x24sm6126607qth.80.2020.04.07.18.40.17
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 07 Apr 2020 18:40:12 -0700 (PDT)
+        Tue, 07 Apr 2020 18:40:18 -0700 (PDT)
 From:   Peter Xu <peterx@redhat.com>
 To:     linux-kernel@vger.kernel.org,
         Linus Torvalds <torvalds@linux-foundation.org>,
         linux-mm@kvack.org
-Cc:     Andrew Morton <akpm@linux-foundation.org>, peterx@redhat.com
-Subject: [PATCH 0/2] mm: Two small fixes for recent syzbot reports
-Date:   Tue,  7 Apr 2020 21:40:08 -0400
-Message-Id: <20200408014010.80428-1-peterx@redhat.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>, peterx@redhat.com,
+        syzbot+a8c70b7f3579fc0587dc@syzkaller.appspotmail.com
+Subject: [PATCH 2/2] mm/gup: Mark lock taken only after a successful retake
+Date:   Tue,  7 Apr 2020 21:40:10 -0400
+Message-Id: <20200408014010.80428-3-peterx@redhat.com>
 X-Mailer: git-send-email 2.24.1
+In-Reply-To: <20200408014010.80428-1-peterx@redhat.com>
+References: <20200408014010.80428-1-peterx@redhat.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -77,32 +81,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The two patches should fix below syzbot reports:
+It's definitely incorrect to mark the lock as taken even if
+down_read_killable() failed.  It's overlooked when we switched from
+down_read() to down_read_killable() because down_read() won't fail
+while down_read_killable() could.
 
-  BUG: unable to handle kernel paging request in kernel_get_mempolicy
-  https://lore.kernel.org/lkml/0000000000002b25f105a2a3434d@google.com/
+Reported-by: syzbot+a8c70b7f3579fc0587dc@syzkaller.appspotmail.com
+Fixes: 71335f37c5e8 ("mm/gup: allow to react to fatal signals")
+Signed-off-by: Peter Xu <peterx@redhat.com>
+---
+ mm/gup.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-  WARNING: bad unlock balance in __get_user_pages_remote
-  https://lore.kernel.org/lkml/00000000000005c65d05a2b90e70@google.com/
-
-Note that the 1st patch also applied two extra small changes comparing
-to when posted on the list in that: (1) it squashed an "interupt"
-spelling error that Andrew has pointed out when picked up, and (2) it
-also initializes the "page" pointer to NULL.  But I'm fairly confident
-it shouldn't affect the correctness of the patch.
-
-The 2nd patch is exactly the patch posted previously.
-
-Thanks,
-
-Peter Xu (2):
-  mm/mempolicy: Allow lookup_node() to handle fatal signal
-  mm/gup: Mark lock taken only after a successful retake
-
- mm/gup.c       | 2 +-
- mm/mempolicy.c | 7 +++++--
- 2 files changed, 6 insertions(+), 3 deletions(-)
-
+diff --git a/mm/gup.c b/mm/gup.c
+index da3e03185144..1f9a9b3a5869 100644
+--- a/mm/gup.c
++++ b/mm/gup.c
+@@ -1328,7 +1328,6 @@ static __always_inline long __get_user_pages_locked(struct task_struct *tsk,
+ 		if (fatal_signal_pending(current))
+ 			break;
+ 
+-		*locked = 1;
+ 		ret = down_read_killable(&mm->mmap_sem);
+ 		if (ret) {
+ 			BUG_ON(ret > 0);
+@@ -1337,6 +1336,7 @@ static __always_inline long __get_user_pages_locked(struct task_struct *tsk,
+ 			break;
+ 		}
+ 
++		*locked = 1;
+ 		ret = __get_user_pages(tsk, mm, start, 1, flags | FOLL_TRIED,
+ 				       pages, NULL, locked);
+ 		if (!*locked) {
 -- 
 2.24.1
 
