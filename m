@@ -2,119 +2,164 @@ Return-Path: <SRS0=8dav=5Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79DCEC2D0EC
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 00:40:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8B16C2D0EC
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 00:48:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2AB1B20730
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 00:40:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="3TcYGnYj"
+	by mail.kernel.org (Postfix) with ESMTP id 8C5E820747
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 00:48:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726464AbgDHAkU (ORCPT
+        id S1726492AbgDHAsI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 20:40:20 -0400
-Received: from frisell.zx2c4.com ([192.95.5.64]:34299 "EHLO frisell.zx2c4.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726421AbgDHAkU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Apr 2020 20:40:20 -0400
-Received: by frisell.zx2c4.com (ZX2C4 Mail Server) with ESMTP id 1cff259c
-        for <linux-kernel@vger.kernel.org>;
-        Wed, 8 Apr 2020 00:31:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha1; c=relaxed; d=zx2c4.com; h=mime-version
-        :references:in-reply-to:from:date:message-id:subject:to:cc
-        :content-type; s=mail; bh=pVZbz2BQiRw2Mi3KrA8/Yoa+8c8=; b=3TcYGn
-        Yj01O9WWE/XKUXtg4fDPrqV69tp2+JqTx4aclm3f7Q46GJY//9rcpEoQYPOrMPEs
-        drxICokhgcw03fi/N93H+fnRqF60Pw9tZOfw91moZCYnS+h/DVrLMrVYwqUY5h2J
-        KcHrfHEgb2+So579x6808LkgeC1SO47sPFYOmEQeWKulCmDJF3ituSwsLFs7Rz6y
-        fKlTepo+50ybdmQfTqYvrVAjKYMP76uR5SX4hMVI3TccA9MfTgBM/AZpF76+XGVf
-        25VyWRylR6eC/Sh8eYIOhskkPxE1Sc087qrux8s5yk+he4mJcdPtDhzhwlQq8OoZ
-        M2uVtWOhuOzeeweg==
-Received: by frisell.zx2c4.com (ZX2C4 Mail Server) with ESMTPSA id 56d6b9a8 (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256:NO)
-        for <linux-kernel@vger.kernel.org>;
-        Wed, 8 Apr 2020 00:31:19 +0000 (UTC)
-Received: by mail-il1-f177.google.com with SMTP id o11so878509ilq.7
-        for <linux-kernel@vger.kernel.org>; Tue, 07 Apr 2020 17:40:18 -0700 (PDT)
-X-Gm-Message-State: AGi0Pua4iegLbb5jdVUCADN60JOMdllHg5bTGAgkPMSO8pR6otay2wJ8
-        19OEez9xReLnDjRtN+XMypPz1lAUEKIgaKsu/QU=
-X-Google-Smtp-Source: APiQypKf0JHKHozVl5Ekm5/yscJCcYicF7LPFAQcfWzPigdyRdaNvh62EnA/SB13ZFPsDX4AC1SNpbWwZzYtTjPd4Ts=
-X-Received: by 2002:a92:798f:: with SMTP id u137mr5578644ilc.231.1586306418050;
- Tue, 07 Apr 2020 17:40:18 -0700 (PDT)
+        Tue, 7 Apr 2020 20:48:08 -0400
+Received: from mail105.syd.optusnet.com.au ([211.29.132.249]:57005 "EHLO
+        mail105.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726428AbgDHAsI (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Apr 2020 20:48:08 -0400
+Received: from dread.disaster.area (pa49-180-164-3.pa.nsw.optusnet.com.au [49.180.164.3])
+        by mail105.syd.optusnet.com.au (Postfix) with ESMTPS id E352E3A454A;
+        Wed,  8 Apr 2020 10:48:02 +1000 (AEST)
+Received: from dave by dread.disaster.area with local (Exim 4.92.3)
+        (envelope-from <david@fromorbit.com>)
+        id 1jLysr-0005w2-Tp; Wed, 08 Apr 2020 10:48:01 +1000
+Date:   Wed, 8 Apr 2020 10:48:01 +1000
+From:   Dave Chinner <david@fromorbit.com>
+To:     Ira Weiny <ira.weiny@intel.com>
+Cc:     linux-kernel@vger.kernel.org,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Christoph Hellwig <hch@lst.de>,
+        "Theodore Y. Ts'o" <tytso@mit.edu>, Jan Kara <jack@suse.cz>,
+        Jeff Moyer <jmoyer@redhat.com>, linux-ext4@vger.kernel.org,
+        linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH V6 4/8] fs/xfs: Make DAX mount option a tri-state
+Message-ID: <20200408004801.GH24067@dread.disaster.area>
+References: <20200407182958.568475-1-ira.weiny@intel.com>
+ <20200407182958.568475-5-ira.weiny@intel.com>
+ <20200407235909.GF24067@dread.disaster.area>
+ <20200408000903.GA569068@iweiny-DESK2.sc.intel.com>
 MIME-Version: 1.0
-References: <20200328000422.98978-1-Jason@zx2c4.com> <158538232569.25292.15795048542441478192@build.alporthouse.com>
-In-Reply-To: <158538232569.25292.15795048542441478192@build.alporthouse.com>
-From:   "Jason A. Donenfeld" <Jason@zx2c4.com>
-Date:   Tue, 7 Apr 2020 18:40:07 -0600
-X-Gmail-Original-Message-ID: <CAHmME9rQQjMY3+CxmUO3Yp+hHaOyfyORrPbBV5jBqVEZFXwecg@mail.gmail.com>
-Message-ID: <CAHmME9rQQjMY3+CxmUO3Yp+hHaOyfyORrPbBV5jBqVEZFXwecg@mail.gmail.com>
-Subject: Re: [PATCH] drm/i915: check to see if the FPU is available before
- using it
-To:     Chris Wilson <chris@chris-wilson.co.uk>
-Cc:     dri-devel <dri-devel@lists.freedesktop.org>,
-        intel-gfx@lists.freedesktop.org,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200408000903.GA569068@iweiny-DESK2.sc.intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Optus-CM-Score: 0
+X-Optus-CM-Analysis: v=2.3 cv=LYdCFQXi c=1 sm=1 tr=0
+        a=K0+o7W9luyMo1Ua2eXjR1w==:117 a=K0+o7W9luyMo1Ua2eXjR1w==:17
+        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=cl8xLZFz6L8A:10
+        a=QyXUC8HyAAAA:8 a=VwQbUJbxAAAA:8 a=7-415B0cAAAA:8 a=d8_y8XitTFHW5w8ycSMA:9
+        a=CjuIK1q_8ugA:10 a=AjGcO6oz07-iQ99wixmX:22 a=biEYGPWJfzWAr4FL6Ov7:22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Mar 28, 2020 at 1:59 AM Chris Wilson <chris@chris-wilson.co.uk> wrote:
->
-> Quoting Jason A. Donenfeld (2020-03-28 00:04:22)
-> > It's not safe to just grab the FPU willy nilly without first checking to
-> > see if it's available. This patch adds the usual call to may_use_simd()
-> > and falls back to boring memcpy if it's not available.
->
-> These instructions do not use the fpu, nor are these registers aliased
-> over the fpu stack. This description and the may_use_simd() do not
-> look like they express the right granularity as to which simd state are
-> included
+On Tue, Apr 07, 2020 at 05:09:04PM -0700, Ira Weiny wrote:
+> On Wed, Apr 08, 2020 at 09:59:09AM +1000, Dave Chinner wrote:
+> > On Tue, Apr 07, 2020 at 11:29:54AM -0700, ira.weiny@intel.com wrote:
+> > > From: Ira Weiny <ira.weiny@intel.com>
+> > > 
+> > > As agreed upon[1].  We make the dax mount option a tri-state.  '-o dax'
+> > > continues to operate the same.  We add 'always', 'never', and 'iflag'
+> > > (default).
+> > > 
+> > > [1] https://lore.kernel.org/lkml/20200405061945.GA94792@iweiny-DESK2.sc.intel.com/
+> > > 
+> > > Signed-off-by: Ira Weiny <ira.weiny@intel.com>
+> > > 
+> > > ---
+> > > Changes from v5:
+> > > 	New Patch
+> > > ---
+> > >  fs/xfs/xfs_iops.c  |  2 +-
+> > >  fs/xfs/xfs_mount.h | 26 +++++++++++++++++++++++++-
+> > >  fs/xfs/xfs_super.c | 34 +++++++++++++++++++++++++++++-----
+> > >  3 files changed, 55 insertions(+), 7 deletions(-)
+> > > 
+> > > diff --git a/fs/xfs/xfs_iops.c b/fs/xfs/xfs_iops.c
+> > > index 81f2f93caec0..1ec4a36917bd 100644
+> > > --- a/fs/xfs/xfs_iops.c
+> > > +++ b/fs/xfs/xfs_iops.c
+> > > @@ -1248,7 +1248,7 @@ xfs_inode_supports_dax(
+> > >  		return false;
+> > >  
+> > >  	/* DAX mount option or DAX iflag must be set. */
+> > > -	if (!(mp->m_flags & XFS_MOUNT_DAX) &&
+> > > +	if (xfs_mount_dax_mode(mp) != XFS_DAX_ALWAYS &&
+> > >  	    !(ip->i_d.di_flags2 & XFS_DIFLAG2_DAX))
+> > >  		return false;
+> > >  
+> > > diff --git a/fs/xfs/xfs_mount.h b/fs/xfs/xfs_mount.h
+> > > index 88ab09ed29e7..ce027ee06692 100644
+> > > --- a/fs/xfs/xfs_mount.h
+> > > +++ b/fs/xfs/xfs_mount.h
+> > > @@ -233,7 +233,31 @@ typedef struct xfs_mount {
+> > >  						   allocator */
+> > >  #define XFS_MOUNT_NOATTR2	(1ULL << 25)	/* disable use of attr2 format */
+> > >  
+> > > -#define XFS_MOUNT_DAX		(1ULL << 62)	/* TEST ONLY! */
+> > > +/* DAX flag is a 2 bit field representing a tri-state for dax
+> > > + *      iflag, always, never
+> > > + * We reserve/document the 2 bits using dax field/field2
+> > > + */
+> > > +#define XFS_DAX_FIELD_MASK 0x3ULL
+> > > +#define XFS_DAX_FIELD_SHIFT 62
+> > > +#define XFS_MOUNT_DAX_FIELD	(1ULL << 62)
+> > > +#define XFS_MOUNT_DAX_FIELD2	(1ULL << 63)
+> > > +
+> > > +enum {
+> > > +	XFS_DAX_IFLAG = 0,
+> > > +	XFS_DAX_ALWAYS = 1,
+> > > +	XFS_DAX_NEVER = 2,
+> > > +};
+> > > +
+> > > +static inline void xfs_mount_set_dax(struct xfs_mount *mp, u32 val)
+> > > +{
+> > > +	mp->m_flags &= ~(XFS_DAX_FIELD_MASK << XFS_DAX_FIELD_SHIFT);
+> > > +	mp->m_flags |= ((val & XFS_DAX_FIELD_MASK) << XFS_DAX_FIELD_SHIFT);
+> > > +}
+> > > +
+> > > +static inline u32 xfs_mount_dax_mode(struct xfs_mount *mp)
+> > > +{
+> > > +	return (mp->m_flags >> XFS_DAX_FIELD_SHIFT) & XFS_DAX_FIELD_MASK;
+> > > +}
+> > 
+> > This is overly complex. Just use 2 flags:
+> 
+> LOL...  I was afraid someone would say that.  At first I used 2 flags with
+> fsparam_string, but then I realized Darrick suggested fsparam_enum:
 
-Most of the time when discussing vector instructions in the kernel
-with x86, "FPU" is used to denote the whole shebang, because of
-similar XSAVE semantics and requirements with actual floating point
-instructions and SIMD instructions. So when I say "grab the FPU", I'm
-really referring to the act of messing with any registers that aren't
-saved and restored by default during context switch and need the
-explicit marking for XSAVE to come in -- the kernel_fpu_begin/end
-calls that you already have.
+Well, I'm not concerned about the fsparam enum, it's just that
+encoding an integer into a flags bit field is just ... messy.
+Especially when encoding that state can be done with just 2 flags.
 
-With regards to the granularity here, you are in fact touching xmm
-registers. That means you need kernel_fpu_begin/end, which you
-correctly have. However, it also means that before using those, you
-should check to see if that's okay by using the may_use_simd()
-instruction.
+If you want to keep the xfs_mount_dax_mode() wrapper, then:
 
-Now you may claim that at the moment
-may_use_simd()-->irq_fpu_usable()-->(!in_interrupt() ||
-interrupted_user_mode() || interrupted_kernel_fpu_idle()) always holds
-true, and you're a keen follower of the (recently changed) kernel fpu
-x86 semantics in case those conditions change, and that your driver is
-so strictly written that you know exactly the context this fancy
-memcpy will run in, always, and you'll never deviate from it, and
-therefore it's okay to depart from the rules and omit the check and
-safe fallback code. But c'mon - i915 is complex, and mixed context
-bugs abound, and the rules for using those registers might in fact
-change without you noticing.
+static inline uint32_t xfs_mount_dax_mode(struct xfs_mount *mp)
+{
+	if (mp->m_flags & XFS_MOUNT_DAX_NEVER)
+		return XFS_DAX_NEVER;
+	if (mp->m_flags & XFS_MOUNT_DAX_ALWAYS)
+		return XFS_DAX_ALWAYS;
+	return XFS_DAX_IFLAG;
+}
 
-So why not apply this to have a safe fallback for when the numerous
-assumptions no longer hold? (If you're extra worried I suppose you
-could make it a `if (WARN_ON(!may_use_simd()))` instead or something,
-but that seems like a bit much.)
+but once it's encoded in flags like this, the wrapper really isn't
+necessary...
 
-> Look at caller, return the error and let them decide if they can avoid
-> the read from WC, which quite often they can. And no, this is not done
-> from interrupt context, we would be crucified if we did.
+Also, while I think of it, can we change "iflag" to "inode". i.e.
+the DAX state is held on the inode. Saying it comes from an "inode
+flag" encodes the implementation into the user interface. i.e. it
+could well be held in an xattr on the inode on another filesystem,
+so we shouldn't mention "flag" in the user API....
 
-Ahh, now, reading this comment here I realize maybe I've misunderstood
-you. Do you mean to say that checking for may_use_simd() is a thing
-that you'd like to do after all, but you don't like it falling back to
-slow memcpy. Instead, you'd like for the code to return an error
-value, and then caller can just optionally skip the memcpy under some
-complicated driver circumstances?
+Cheers,
 
-Jason
+Dave.
+-- 
+Dave Chinner
+david@fromorbit.com
