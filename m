@@ -7,42 +7,42 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B73D5C2D0EA
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 13:47:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E159C2D0EA
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 13:47:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 882122083E
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 13:47:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3015920692
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 13:47:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="Y06ssb8q"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="OGZXPhQT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729290AbgDHNro (ORCPT
+        id S1729300AbgDHNrs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Apr 2020 09:47:44 -0400
-Received: from mail26.static.mailgun.info ([104.130.122.26]:54943 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727983AbgDHNrm (ORCPT
+        Wed, 8 Apr 2020 09:47:48 -0400
+Received: from mail27.static.mailgun.info ([104.130.122.27]:61249 "EHLO
+        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729291AbgDHNrp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Apr 2020 09:47:42 -0400
+        Wed, 8 Apr 2020 09:47:45 -0400
 DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1586353662; h=References: In-Reply-To: Message-Id: Date:
+ s=smtp; t=1586353665; h=References: In-Reply-To: Message-Id: Date:
  Subject: Cc: To: From: Sender;
- bh=22ArIKazcYpmZZi/7PHkEImvJYVgzB4jNd5w/bYJj6g=; b=Y06ssb8q8Ic72V33H588aH+cL6ZXDxgaYgSrW3oL1QiSg76+oAInXuv+UXXyTmvOnSZE19cE
- DRTknp5DyDCZ83vmm72WRb8eQJTzq15LCjGxMmHy2uGLs6p25jnqCHbqbhGC9ZsikpHls6rB
- k6X3+e6+/6kN5I++eVYxWhO6GK0=
-X-Mailgun-Sending-Ip: 104.130.122.26
+ bh=H9bFMAAq6wc4O9X/I/zoSuCyfls/aBTfSn27q/TP8ag=; b=OGZXPhQTmZAMA8nNteKVXDoV8u8DuxkNDt/1ZGKmDVONXJLn/h/vvLnhR4R8yqZylgbzSqsO
+ K1M/WA8rt3vEN0parVXlpNLBnrUWxD8WxWYtvJCPuoUpxJUoNL5WCtsNl4O2llDMj7C1gX1f
+ rKdyYLfW+CU68Wn8M2yvPawG7VE=
+X-Mailgun-Sending-Ip: 104.130.122.27
 X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
 Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e8dd5fc.7f8fbbcd0730-smtp-out-n05;
- Wed, 08 Apr 2020 13:47:40 -0000 (UTC)
+ by mxa.mailgun.org with ESMTP id 5e8dd600.7f62f281cdf8-smtp-out-n03;
+ Wed, 08 Apr 2020 13:47:44 -0000 (UTC)
 Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 59F3BC00448; Wed,  8 Apr 2020 13:47:39 +0000 (UTC)
+        id 75F7FC00448; Wed,  8 Apr 2020 13:47:41 +0000 (UTC)
 Received: from blr-ubuntu-173.qualcomm.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
         (No client certificate requested)
         (Authenticated sender: rnayak)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 2CA77C44798;
-        Wed,  8 Apr 2020 13:47:32 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 2CA77C44798
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id E3ECFC4478F;
+        Wed,  8 Apr 2020 13:47:37 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org E3ECFC4478F
 Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
 Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=rnayak@codeaurora.org
 From:   Rajendra Nayak <rnayak@codeaurora.org>
@@ -50,15 +50,10 @@ To:     viresh.kumar@linaro.org, sboyd@kernel.org,
         bjorn.andersson@linaro.org, agross@kernel.org
 Cc:     linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org,
-        Rajendra Nayak <rnayak@codeaurora.org>,
-        Alim Akhtar <alim.akhtar@samsung.com>,
-        Can Guo <cang@codeaurora.org>,
-        Asutosh Das <asutoshd@codeaurora.org>,
-        Subhash Jadavani <subhashj@codeaurora.org>,
-        linux-scsi@vger.kernel.org
-Subject: [PATCH 07/21] scsi: ufs: Add support for specifying OPP tables in DT
-Date:   Wed,  8 Apr 2020 19:16:33 +0530
-Message-Id: <1586353607-32222-8-git-send-email-rnayak@codeaurora.org>
+        Rajendra Nayak <rnayak@codeaurora.org>
+Subject: [PATCH 08/21] arm64: dts: sdm845: Add ufs opps and power-domains
+Date:   Wed,  8 Apr 2020 19:16:34 +0530
+Message-Id: <1586353607-32222-9-git-send-email-rnayak@codeaurora.org>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1586353607-32222-1-git-send-email-rnayak@codeaurora.org>
 References: <1586353607-32222-1-git-send-email-rnayak@codeaurora.org>
@@ -67,57 +62,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Some platforms like qualcomms sdm845 SoC have a need to set
-a performance state of a power domain for UFS along with
-setting the clock rate. Add support for passing this freq/perf state
-tuple from DT as an OPP table. Modify the driver to read the OPP
-table and register with OPP layer.
+Add the additional power domain and the OPP table for ufs on sdm845
+so the driver can set the appropriate performance state of the
+power domain while setting the clock rate.
 
 Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
-Cc: Alim Akhtar <alim.akhtar@samsung.com>
-Cc: Can Guo <cang@codeaurora.org>
-Cc: Asutosh Das <asutoshd@codeaurora.org>
-Cc: Subhash Jadavani <subhashj@codeaurora.org>
-Cc: linux-scsi@vger.kernel.org
 ---
- drivers/scsi/ufs/ufshcd.c | 17 +++++++++++++++--
- 1 file changed, 15 insertions(+), 2 deletions(-)
+ arch/arm64/boot/dts/qcom/sdm845.dtsi | 21 ++++++++++++++++++++-
+ 1 file changed, 20 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
-index e04e8b8..172c6fe 100644
---- a/drivers/scsi/ufs/ufshcd.c
-+++ b/drivers/scsi/ufs/ufshcd.c
-@@ -883,6 +883,16 @@ static int ufshcd_scale_clks(struct ufs_hba *hba, bool scale_up)
- 	if (ret)
- 		return ret;
+diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+index 36b9fb1..9a82f78 100644
+--- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
++++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+@@ -1803,6 +1803,21 @@
+ 			qcom,bcm-voters = <&apps_bcm_voter>;
+ 		};
  
-+	if (hba->opp_virt_dev) {
-+		struct dev_pm_opp *opp;
-+		unsigned long freq = scale_up ? INT_MAX : 0;
-+		if (scale_up)
-+			opp = dev_pm_opp_find_freq_floor(hba->dev, &freq);
-+		else
-+			opp = dev_pm_opp_find_freq_ceil(hba->dev, &freq);
-+		dev_pm_opp_set_rate(hba->dev, dev_pm_opp_get_freq(opp));
-+	}
++		ufs_opp_table: ufs-opp-table {
++			compatible = "operating-points-v2";
 +
- 	list_for_each_entry(clki, head, list) {
- 		if (!IS_ERR_OR_NULL(clki->clk)) {
- 			if (scale_up && clki->max_freq) {
-@@ -1339,8 +1349,11 @@ static int ufshcd_devfreq_init(struct ufs_hba *hba)
- 		return 0;
- 
- 	clki = list_first_entry(clk_list, struct ufs_clk_info, list);
--	dev_pm_opp_add(hba->dev, clki->min_freq, 0);
--	dev_pm_opp_add(hba->dev, clki->max_freq, 0);
++			opp-50000000 {
++				opp-hz = /bits/ 64 <50000000>;
++				required-opps = <&rpmhpd_opp_min_svs>;
++			};
 +
-+	if (dev_pm_opp_of_add_table(hba->dev)) {
-+		dev_pm_opp_add(hba->dev, clki->min_freq, 0);
-+		dev_pm_opp_add(hba->dev, clki->max_freq, 0);
-+	}
- 
- 	ufshcd_vops_config_scaling_param(hba, &ufs_devfreq_profile,
- 					 gov_data);
++			opp-200000000 {
++				opp-hz = /bits/ 64 <200000000>;
++				required-opps = <&rpmhpd_opp_nom>;
++
++			};
++		};
++
+ 		ufs_mem_hc: ufshc@1d84000 {
+ 			compatible = "qcom,sdm845-ufshc", "qcom,ufshc",
+ 				     "jedec,ufs-2.0";
+@@ -1811,7 +1826,8 @@
+ 			phys = <&ufs_mem_phy_lanes>;
+ 			phy-names = "ufsphy";
+ 			lanes-per-direction = <2>;
+-			power-domains = <&gcc UFS_PHY_GDSC>;
++			power-domains = <&gcc UFS_PHY_GDSC>, <&rpmhpd SDM845_CX>;
++			power-domain-names = "gdsc_pd", "rpmh_pd";
+ 			#reset-cells = <1>;
+ 			resets = <&gcc GCC_UFS_PHY_BCR>;
+ 			reset-names = "rst";
+@@ -1836,6 +1852,9 @@
+ 				<&gcc GCC_UFS_PHY_TX_SYMBOL_0_CLK>,
+ 				<&gcc GCC_UFS_PHY_RX_SYMBOL_0_CLK>,
+ 				<&gcc GCC_UFS_PHY_RX_SYMBOL_1_CLK>;
++
++			operating-points-v2 = <&ufs_opp_table>;
++
+ 			freq-table-hz =
+ 				<50000000 200000000>,
+ 				<0 0>,
 -- 
 QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
 of Code Aurora Forum, hosted by The Linux Foundation
