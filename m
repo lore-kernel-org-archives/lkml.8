@@ -2,95 +2,152 @@ Return-Path: <SRS0=8dav=5Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B17BC2BA1B
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 17:40:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DA32C2BA1A
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 17:43:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 51C1C20730
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 17:40:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586367610;
-	bh=4z1t98y0f7P25Qq1cT4GsOFIlAkeVEE1O985a/IK2bw=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=dQpj20BtaLduZm5YGtx5Rz3hRS8cnTTq/B1gdzSxavENEm3VgRJ128n8pdx0aSJNS
-	 sh0mcjQ/RPpDYUvv+F8y6wZNa9LuncekVtJJ4rg9NqVbWK/PUj8+Rk37EsbybbW48Y
-	 r21Ga2xO3A8Zu3ZH3G2P6j8T8xoL8eyaIsludGPY=
+	by mail.kernel.org (Postfix) with ESMTP id 7454C20730
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 17:43:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="ik11uLT8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729256AbgDHRkJ (ORCPT
+        id S1728507AbgDHRnm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Apr 2020 13:40:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56108 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726687AbgDHRkJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Apr 2020 13:40:09 -0400
-Received: from mail-io1-f48.google.com (mail-io1-f48.google.com [209.85.166.48])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 958F82082F;
-        Wed,  8 Apr 2020 17:40:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586367608;
-        bh=4z1t98y0f7P25Qq1cT4GsOFIlAkeVEE1O985a/IK2bw=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=2aCurHaf3Kme+m9VA6KdGsnfYZHycQsMSe1KCF6NApw9Al+cODF6apQPpghxHCZb7
-         XXqHbl32UYsvaItv1JOE4FnK6an5lnTUOYN8mTX+ySi2WF6JJcImhX5FjWDrvn7lZk
-         8Izq2J1s8bYv9/13kjMGJe7p7tFjZdImAwQ3c+kQ=
-Received: by mail-io1-f48.google.com with SMTP id b12so945479ion.8;
-        Wed, 08 Apr 2020 10:40:08 -0700 (PDT)
-X-Gm-Message-State: AGi0PuaCJcAOX65z5ZwJboLG/frzHJzv7y9lwR6ZQOEhfbuOPC4LLNyn
-        e3TRR3Xda2cNL0W1vrxfW3Ar3eGfIij5tEQK8kQ=
-X-Google-Smtp-Source: APiQypLEH9T9Ob5L5UbvOCSRgeiNT5mh0Wy0gYcPpE7ul5g85frCf//lo7NmhEqJG95c0EUOoQ/LFCfUSNUCkGDKkpA=
-X-Received: by 2002:a02:7785:: with SMTP id g127mr7811753jac.134.1586367607998;
- Wed, 08 Apr 2020 10:40:07 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200326135041.3264-1-b.thiel@posteo.de>
-In-Reply-To: <20200326135041.3264-1-b.thiel@posteo.de>
-From:   Ard Biesheuvel <ardb@kernel.org>
-Date:   Wed, 8 Apr 2020 19:39:56 +0200
-X-Gmail-Original-Message-ID: <CAMj1kXF6UF318wCL74T9orJk=+LafZ3VFXUGmqoBefYVaP2gNw@mail.gmail.com>
-Message-ID: <CAMj1kXF6UF318wCL74T9orJk=+LafZ3VFXUGmqoBefYVaP2gNw@mail.gmail.com>
-Subject: Re: [PATCH] x86/efi: Add a prototype for efi_arch_mem_reserve()
-To:     Benjamin Thiel <b.thiel@posteo.de>
-Cc:     X86 ML <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-        linux-efi <linux-efi@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Wed, 8 Apr 2020 13:43:42 -0400
+Received: from mail-eopbgr1300112.outbound.protection.outlook.com ([40.107.130.112]:5460
+        "EHLO APC01-HK2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727028AbgDHRnl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Apr 2020 13:43:41 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=PlZUIJZSB0nG5B+fbWjtJCSG1Yt98oZJgHZPOcV4tSWjucyNeW/6rFBpYiZU8sdm7bMn6I7XoroeDUIl84rSaOdsqxvMeE+C6TAQHV8eLJZUOvgFlc6QR9gALz3fBvv4bxCrwVpuZQ19W5LNM+/joExsmd9RFf7MfzJSqwikWbNpRrUYsYahxeEfpEPki5V6B7iTXQ49vfx2MOuvH4BvjRMjASyUmJr2Y5Z4F8m0q5mpUpVf84W6ID0Y1ZfgfQt/H3khsUKbTW8ffkmo8Q2VKnIxwphNvor06eHE/dVhNSnKTu98Hz8pStSOto5bvzxInftcd4OP5tmNtehzTETn1w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=qKFkx8NFnofuREKm4Em9qiCq5+0kqo8XyjRmgHka6bc=;
+ b=iFFLqe25RE/E+dhhFsx4+8lYeI+hCBDh7yq01W/D1ijtFhJW4BILbcygDZhoQV+NBAnWdd8I9XYL/gtDDc8RMg6kTc4BijNJRicG41M6x9urFvMVqqS3NAG2e58Tff8vq+xJZOXbEyEg0YBv148OZYCkJKNRmUiqGTAu/711P9GW7LevqLBZUJIy+HK2GX96tdGnPD7QgyOeQx+3RQYdV0qhZih2qLjYjqQZvhKz95+cAixX2MVotrfqEnkdYZLBXH+6tDkOcCa2eb1tJkxP/2EYBDSuwNPWPiuZxF+84TFZtBRZGR/Gf9UiDOC6Qpkquyxx82M5luyJv7fmLCOmEA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microsoft.com; dmarc=pass action=none
+ header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=qKFkx8NFnofuREKm4Em9qiCq5+0kqo8XyjRmgHka6bc=;
+ b=ik11uLT8yjY10jksJg21k4abUg/NSA2UAyScWyRf7SotUHbYmtBlGJBoTSDfsn6K1kOFjWA0JYt2vGU+t95A0n4ogoa7sWWEi0VIqgIkVNWoiRFUuwOKpwE3yjLffH9gV3/N/63qJCrqszvKbq7TZLBHBep2R8iK4kqWaG3tgPg=
+Received: from HK0P153MB0273.APCP153.PROD.OUTLOOK.COM (52.132.236.76) by
+ HK0P153MB0337.APCP153.PROD.OUTLOOK.COM (52.132.237.84) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2921.4; Wed, 8 Apr 2020 17:43:35 +0000
+Received: from HK0P153MB0273.APCP153.PROD.OUTLOOK.COM
+ ([fe80::2d07:e045:9d5b:898a]) by HK0P153MB0273.APCP153.PROD.OUTLOOK.COM
+ ([fe80::2d07:e045:9d5b:898a%2]) with mapi id 15.20.2921.009; Wed, 8 Apr 2020
+ 17:43:35 +0000
+From:   Dexuan Cui <decui@microsoft.com>
+To:     vkuznets <vkuznets@redhat.com>
+CC:     KY Srinivasan <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        "wei.liu@kernel.org" <wei.liu@kernel.org>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Michael Kelley <mikelley@microsoft.com>
+Subject: RE: [PATCH] Drivers: hv: vmbus: Disallow the freeze PM operation
+Thread-Topic: [PATCH] Drivers: hv: vmbus: Disallow the freeze PM operation
+Thread-Index: AQHWDb0CzRPAkatwXES7XuIgEFDFbKhvenBA
+Date:   Wed, 8 Apr 2020 17:43:35 +0000
+Message-ID: <HK0P153MB02732CCBDFA879FCE5CA48C7BFC00@HK0P153MB0273.APCP153.PROD.OUTLOOK.COM>
+References: <1586296907-53744-1-git-send-email-decui@microsoft.com>
+ <877dyq2d4p.fsf@vitty.brq.redhat.com>
+In-Reply-To: <877dyq2d4p.fsf@vitty.brq.redhat.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=decui@microsoft.com;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2020-04-08T17:43:31.6238527Z;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
+ Information Protection;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=9df5e1a5-a3b7-4982-a7a0-1af096e5b2e6;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=decui@microsoft.com; 
+x-originating-ip: [2601:600:a280:7f70:25f2:87c1:762f:53ac]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: d8aa7f46-c832-4dad-f3c6-08d7dbe45d09
+x-ms-traffictypediagnostic: HK0P153MB0337:|HK0P153MB0337:|HK0P153MB0337:
+x-ms-exchange-transport-forked: True
+x-ld-processed: 72f988bf-86f1-41af-91ab-2d7cd011db47,ExtAddr
+x-microsoft-antispam-prvs: <HK0P153MB033792928250E1763C4DF25FBFC00@HK0P153MB0337.APCP153.PROD.OUTLOOK.COM>
+x-ms-oob-tlc-oobclassifiers: OLM:8882;
+x-forefront-prvs: 0367A50BB1
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:HK0P153MB0273.APCP153.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFTY:;SFS:(10019020)(4636009)(39860400002)(366004)(376002)(136003)(346002)(396003)(82960400001)(2906002)(316002)(6916009)(33656002)(9686003)(10290500003)(86362001)(8676002)(66556008)(66446008)(64756008)(478600001)(66946007)(8936002)(81156014)(107886003)(186003)(76116006)(66476007)(71200400001)(52536014)(4326008)(6506007)(55016002)(82950400001)(54906003)(8990500004)(81166007)(5660300002)(7696005);DIR:OUT;SFP:1102;
+received-spf: None (protection.outlook.com: microsoft.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: qXMJxVcPss8tcmAMIc0YewpM8jOLil1kKQT0yX59qze53guwB7OQIZkMQbw0ec2ewq+SMeXOc1dt68IcnFq51gx89MpFYWlEQNJLCmHPjDTVROJudgZhYOo36b5EudKTHaNHM1rJKvyrYmM7CZuMsTX5ihzFjWCDHWcSaVdvsfkLQBbEUUb4hgfT5k28KB9beOHEhvjSXwte8u1fSGPFJqcOFLdZnB8r29HL2CUlwBRfFSkJi284ujKrjMPkoyRYFRwltwCKRXOHCqNa1/2HmYKiAqbFQbVnaxwdgt6K+uYwCmeaCJm3e5Ffyf56a/X4t2fl5G/CS7CFYjwsBRTWrAvoFfVChWayoPffWT9Xep9T5KoTo+fySHOK1nSzLDrCkUQkPBUPhm8PcvA8mli2alSrWa6Bc1lx4Ga3p21sXJiieDuDg5GgjBA1gOUylaee
+x-ms-exchange-antispam-messagedata: LBI2+xDw04rQm2us3C1mj2SWadPBdEU9O6S30r+Nqoe8B/b7/tBTUNVICx5+2iNj8tMZA8YtQtwh7wZmv4w1iHI1l3H2aI4/Jg1PDNqYFbq9aoj+TH8WWeoYG2+B3VHVBJoLGcAvoLI0R/B2aU4d4MMK92GXB4ufWsMcLgBDM7gDY31UWZMQlOPYfHkVV0vX60vl1CzCbKBd0MZ5CNNI1g==
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: d8aa7f46-c832-4dad-f3c6-08d7dbe45d09
+X-MS-Exchange-CrossTenant-originalarrivaltime: 08 Apr 2020 17:43:35.1826
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 7hJ6sMlW0jgfMqleL4GFRS+zy/PtYF2op5pO+1wfllWTLxAIHpkbscFf4qLHdmRkOaezGo27Iod4qqXd5q4WSw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: HK0P153MB0337
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 26 Mar 2020 at 14:50, Benjamin Thiel <b.thiel@posteo.de> wrote:
->
-> ... in order to fix a -Wmissing-ptototypes warning:
->
-> arch/x86/platform/efi/quirks.c:245:13: warning:
-> no previous prototype for =E2=80=98efi_arch_mem_reserve=E2=80=99 [-Wmissi=
-ng-prototypes]
-> void __init efi_arch_mem_reserve(phys_addr_t addr, u64 size)
->
-> Signed-off-by: Benjamin Thiel <b.thiel@posteo.de>
+> From: Vitaly Kuznetsov <vkuznets@redhat.com>
+> Sent: Wednesday, April 8, 2020 8:47 AM
+> > IMO 'freeze' in a Linux VM on Hyper-V is not really useful in practice,
+> > so let's disallow the operation for both Gen-1 and Gen-2 VMs, even if
+> > it's not an issue for Gen-1 VMs.
+>=20
+> Suspend-to-idle may not be very useful indeed, however, it worked before
+> and I think we can just fix it.
 
-Thanks. I'll queue this as a fix.
+How can we fix Suspend-to-idle for a Gen-2 VM, in which no device can work
+as wakeup devices? Note: in the case of Suspend-to-idle, now all the vmbus
+devices including the synthetic keyboard/mouse are suspended completely.
 
-> ---
->  include/linux/efi.h | 2 ++
->  1 file changed, 2 insertions(+)
->
-> diff --git a/include/linux/efi.h b/include/linux/efi.h
-> index 7efd7072cca5..e4b28ae1ba61 100644
-> --- a/include/linux/efi.h
-> +++ b/include/linux/efi.h
-> @@ -1703,4 +1703,6 @@ struct linux_efi_memreserve {
->
->  void efi_pci_disable_bridge_busmaster(void);
->
-> +void __init efi_arch_mem_reserve(phys_addr_t addr, u64 size);
-> +
->  #endif /* _LINUX_EFI_H */
+Are you suggesting hv_vmbus should distinguish Suspend-to-idle from
+hibernation, and for the former hv_vmbus should not suspend the synthetic
+keyboard/mouse? This should be doable but IMO this is not a very trivial
+effort, and I'm trying to avoid it since IMO Suspend-to-idle is not really=
+=20
+useful in practice for a Linux VM on Hyper-V. :-)
+
+> In particular, why do we need to do
+> anything when we are not hibernating?
+
+Are you suggesting hv_vmbus should not suspend the vmbus devices at all
+in the case of Suspend-to-idle?
+
+> > +/*
+> > + * Note: "freeze/suspend" here means "systemctl suspend".
+> > + * "systemctl hibernate" is still supported.
+>=20
+> Let's not use systemd terminology in kernel, let's use the ones from
+> admin-guide/pm/sleep-states.rst (Suspend-to-Idle/Standby/Suspend-to-RAM/
+> Hibernation).
 > --
-> 2.17.1
->
+> Vitaly
+
+Thanks! I'll use the accurate terms.
+
+Thanks,
+-- Dexuan
