@@ -2,98 +2,124 @@ Return-Path: <SRS0=8dav=5Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75AFEC2BA80
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 12:18:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59F92C2D0EA
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 12:20:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 524E820753
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 12:18:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3423F2087E
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 12:20:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728230AbgDHMSQ (ORCPT
+        id S1728253AbgDHMU1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Apr 2020 08:18:16 -0400
-Received: from foss.arm.com ([217.140.110.172]:38012 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726924AbgDHMSP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Apr 2020 08:18:15 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 94ADC31B;
-        Wed,  8 Apr 2020 05:18:12 -0700 (PDT)
-Received: from lakrids.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 3217A3F73D;
-        Wed,  8 Apr 2020 05:18:09 -0700 (PDT)
-Date:   Wed, 8 Apr 2020 13:18:02 +0100
-From:   Mark Rutland <mark.rutland@arm.com>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>, x86@kernel.org,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Laura Abbott <labbott@redhat.com>,
-        Sumit Semwal <sumit.semwal@linaro.org>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Minchan Kim <minchan@kernel.org>,
-        Nitin Gupta <ngupta@vflare.org>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        Peter Zijlstra <peterz@infradead.org>,
-        linuxppc-dev@lists.ozlabs.org, linux-hyperv@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org,
-        linux-arch@vger.kernel.org, linux-mm@kvack.org,
-        iommu@lists.linux-foundation.org,
-        linux-arm-kernel@lists.infradead.org, linux-s390@vger.kernel.org,
-        bpf@vger.kernel.org, linux-kernel@vger.kernel.org,
-        james.morse@arm.com
-Subject: Re: [PATCH 26/28] arm64: use __vmalloc_node in arch_alloc_vmap_stack
-Message-ID: <20200408121802.GA36478@lakrids.cambridge.arm.com>
-References: <20200408115926.1467567-1-hch@lst.de>
- <20200408115926.1467567-27-hch@lst.de>
+        Wed, 8 Apr 2020 08:20:27 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:49623 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727666AbgDHMU0 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Apr 2020 08:20:26 -0400
+Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tip-bot2@linutronix.de>)
+        id 1jM9gt-00062k-F9; Wed, 08 Apr 2020 14:20:23 +0200
+Received: from [127.0.1.1] (localhost [IPv6:::1])
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 773D01C0131;
+        Wed,  8 Apr 2020 14:20:21 +0200 (CEST)
+Date:   Wed, 08 Apr 2020 12:20:21 -0000
+From:   "tip-bot2 for Jiri Olsa" <tip-bot2@linutronix.de>
+Reply-to: linux-kernel@vger.kernel.org
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip: perf/urgent] perf/core: Disable page faults when getting phys address
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Jiri Olsa <jolsa@kernel.org>, Ingo Molnar <mingo@kernel.org>,
+        x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
+In-Reply-To: <20200407141427.3184722-1-jolsa@kernel.org>
+References: <20200407141427.3184722-1-jolsa@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200408115926.1467567-27-hch@lst.de>
-User-Agent: Mutt/1.11.1+11 (2f07cb52) (2018-12-01)
+Message-ID: <158634842102.28353.10574957272961464103.tip-bot2@tip-bot2>
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot2.linutronix.de>
+Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 08, 2020 at 01:59:24PM +0200, Christoph Hellwig wrote:
-> arch_alloc_vmap_stack can use a slightly higher level vmalloc function.
-> 
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
+The following commit has been merged into the perf/urgent branch of tip:
 
-Acked-by: Mark Rutland <mark.rutland@arm.com>
+Commit-ID:     d3296fb372bf7497b0e5d0478c4e7a677ec6f6e9
+Gitweb:        https://git.kernel.org/tip/d3296fb372bf7497b0e5d0478c4e7a677ec6f6e9
+Author:        Jiri Olsa <jolsa@kernel.org>
+AuthorDate:    Tue, 07 Apr 2020 16:14:27 +02:00
+Committer:     Ingo Molnar <mingo@kernel.org>
+CommitterDate: Wed, 08 Apr 2020 11:33:46 +02:00
 
-Mark.
+perf/core: Disable page faults when getting phys address
 
-> ---
->  arch/arm64/include/asm/vmap_stack.h | 6 ++----
->  1 file changed, 2 insertions(+), 4 deletions(-)
-> 
-> diff --git a/arch/arm64/include/asm/vmap_stack.h b/arch/arm64/include/asm/vmap_stack.h
-> index 0a12115d9638..0cc6636e3f15 100644
-> --- a/arch/arm64/include/asm/vmap_stack.h
-> +++ b/arch/arm64/include/asm/vmap_stack.h
-> @@ -19,10 +19,8 @@ static inline unsigned long *arch_alloc_vmap_stack(size_t stack_size, int node)
->  {
->  	BUILD_BUG_ON(!IS_ENABLED(CONFIG_VMAP_STACK));
->  
-> -	return __vmalloc_node_range(stack_size, THREAD_ALIGN,
-> -				    VMALLOC_START, VMALLOC_END,
-> -				    THREADINFO_GFP, PAGE_KERNEL, 0, node,
-> -				    __builtin_return_address(0));
-> +	return __vmalloc_node(stack_size, THREAD_ALIGN, THREADINFO_GFP, node,
-> +			__builtin_return_address(0));
->  }
->  
->  #endif /* __ASM_VMAP_STACK_H */
-> -- 
-> 2.25.1
-> 
+We hit following warning when running tests on kernel
+compiled with CONFIG_DEBUG_ATOMIC_SLEEP=y:
+
+ WARNING: CPU: 19 PID: 4472 at mm/gup.c:2381 __get_user_pages_fast+0x1a4/0x200
+ CPU: 19 PID: 4472 Comm: dummy Not tainted 5.6.0-rc6+ #3
+ RIP: 0010:__get_user_pages_fast+0x1a4/0x200
+ ...
+ Call Trace:
+  perf_prepare_sample+0xff1/0x1d90
+  perf_event_output_forward+0xe8/0x210
+  __perf_event_overflow+0x11a/0x310
+  __intel_pmu_pebs_event+0x657/0x850
+  intel_pmu_drain_pebs_nhm+0x7de/0x11d0
+  handle_pmi_common+0x1b2/0x650
+  intel_pmu_handle_irq+0x17b/0x370
+  perf_event_nmi_handler+0x40/0x60
+  nmi_handle+0x192/0x590
+  default_do_nmi+0x6d/0x150
+  do_nmi+0x2f9/0x3c0
+  nmi+0x8e/0xd7
+
+While __get_user_pages_fast() is IRQ-safe, it calls access_ok(),
+which warns on:
+
+  WARN_ON_ONCE(!in_task() && !pagefault_disabled())
+
+Peter suggested disabling page faults around __get_user_pages_fast(),
+which gets rid of the warning in access_ok() call.
+
+Suggested-by: Peter Zijlstra <peterz@infradead.org>
+Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Link: https://lkml.kernel.org/r/20200407141427.3184722-1-jolsa@kernel.org
+---
+ kernel/events/core.c |  9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
+
+diff --git a/kernel/events/core.c b/kernel/events/core.c
+index 26de0a5..bc9b98a 100644
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -6934,9 +6934,12 @@ static u64 perf_virt_to_phys(u64 virt)
+ 		 * Try IRQ-safe __get_user_pages_fast first.
+ 		 * If failed, leave phys_addr as 0.
+ 		 */
+-		if ((current->mm != NULL) &&
+-		    (__get_user_pages_fast(virt, 1, 0, &p) == 1))
+-			phys_addr = page_to_phys(p) + virt % PAGE_SIZE;
++		if (current->mm != NULL) {
++			pagefault_disable();
++			if (__get_user_pages_fast(virt, 1, 0, &p) == 1)
++				phys_addr = page_to_phys(p) + virt % PAGE_SIZE;
++			pagefault_enable();
++		}
+ 
+ 		if (p)
+ 			put_page(p);
