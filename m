@@ -2,167 +2,78 @@ Return-Path: <SRS0=8dav=5Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0508C2D0EA
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 07:09:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 300B5C2BA1B
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 07:09:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A667320747
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 07:09:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="ll0Hfxnu"
+	by mail.kernel.org (Postfix) with ESMTP id F39BF2074F
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 07:09:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1586329767;
+	bh=BuhkXQ0s0C51NfwZIsfiuK5YSd7040TiHqdVwv80cDk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=17knmt1Rnc7uk6pC8QWjGF6fqyyGqZpN55VhOjaZUmRQYj8Ah0+0FctOCU33FdWdJ
+	 laFdrVEdwkwnZZJk4OoKxvxQIBgmZcAhbfubBGz/9I/jSYKpqeF654GqgJAgbkA8hh
+	 6JTKfphDlJz2wUyis8cpbwhkl4GUq8B7tSvRHlMg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726671AbgDHHJO (ORCPT
+        id S1726712AbgDHHJ0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Apr 2020 03:09:14 -0400
-Received: from mail27.static.mailgun.info ([104.130.122.27]:53075 "EHLO
-        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726595AbgDHHJN (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Apr 2020 03:09:13 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1586329752; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=NrED2xtLUvxCV8eFeyJOX2iWBud2d45F2W2UntyzGM4=; b=ll0Hfxnu/X1oOv9+z/+32QdpI/6hBj9xvg5qSyyhYdfoVioWOIDltUko+LIPvj0Q7kjPmHMT
- tJLSirdfhCBu2sZObQNNbuxj5WwoAn9HcYYaohvTgVhf/4JBoxMC8j8BTIWbq7gOI1Ckrktl
- pxfUcrQBoUY90MohS5IyMAEwTYU=
-X-Mailgun-Sending-Ip: 104.130.122.27
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e8d788b.7f8e8a1c8ce0-smtp-out-n02;
- Wed, 08 Apr 2020 07:08:59 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id AA133C433F2; Wed,  8 Apr 2020 07:08:59 +0000 (UTC)
-Received: from [192.168.43.137] (unknown [106.213.204.224])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        Wed, 8 Apr 2020 03:09:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60332 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726436AbgDHHJZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Apr 2020 03:09:25 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        (Authenticated sender: mkshah)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 8B416C433D2;
-        Wed,  8 Apr 2020 07:08:54 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 8B416C433D2
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=mkshah@codeaurora.org
-Subject: Re: [PATCH v16 4/6] soc: qcom: rpmh: Invoke rpmh_flush() for dirty
- caches
-To:     Stephen Boyd <swboyd@chromium.org>, bjorn.andersson@linaro.org,
-        dianders@chromium.org, evgreen@chromium.org
-Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        agross@kernel.org, mka@chromium.org, rnayak@codeaurora.org,
-        ilina@codeaurora.org, lsrao@codeaurora.org
-References: <1586154741-8293-1-git-send-email-mkshah@codeaurora.org>
- <1586154741-8293-5-git-send-email-mkshah@codeaurora.org>
- <158631424318.216820.1843109743502322053@swboyd.mtv.corp.google.com>
-From:   Maulik Shah <mkshah@codeaurora.org>
-Message-ID: <8553ce0f-6dda-b0e0-d67a-f76ce3c0f945@codeaurora.org>
-Date:   Wed, 8 Apr 2020 12:38:48 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        by mail.kernel.org (Postfix) with ESMTPSA id A4F6620747;
+        Wed,  8 Apr 2020 07:09:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1586329765;
+        bh=BuhkXQ0s0C51NfwZIsfiuK5YSd7040TiHqdVwv80cDk=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=KnRDYy8oyfy4vx6CQoNjBBsyP154IW3MM+mpgtrohE6OiWXwZCiILBOGw00dBqOys
+         lvp/4rQj4MqanUImLtdEtJypDN47+9WxuLv5Ns3TsEGwkRGlRFXhTHrsN0Gu1lIEOu
+         qUuifz7iWXqbj7M9qRmuG1evBTFfuBXB59fGSj8s=
+Date:   Wed, 8 Apr 2020 09:09:22 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Guenter Roeck <linux@roeck-us.net>
+Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
+        akpm@linux-foundation.org, shuah@kernel.org, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org
+Subject: Re: [PATCH 5.6 00/30] 5.6.3-rc2 review
+Message-ID: <20200408070922.GA1019278@kroah.com>
+References: <20200407154752.006506420@linuxfoundation.org>
+ <e30dcce7-93e7-801f-6cf4-72028bcbd56d@roeck-us.net>
 MIME-Version: 1.0
-In-Reply-To: <158631424318.216820.1843109743502322053@swboyd.mtv.corp.google.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-GB
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <e30dcce7-93e7-801f-6cf4-72028bcbd56d@roeck-us.net>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Tue, Apr 07, 2020 at 07:44:54PM -0700, Guenter Roeck wrote:
+> On 4/7/20 9:39 AM, Greg Kroah-Hartman wrote:
+> > This is the start of the stable review cycle for the 5.6.3 release.
+> > There are 30 patches in this series, all will be posted as a response
+> > to this one.  If anyone has any issues with these being applied, please
+> > let me know.
+> > 
+> > Responses should be made by Thu, 09 Apr 2020 15:46:32 +0000.
+> > Anything received after that time might be too late.
+> > 
+> 
+> Build results:
+> 	total: 155 pass: 155 fail: 0
+> Qemu test results:
+> 	total: 428 pass: 428 fail: 0
 
-On 4/8/2020 8:20 AM, Stephen Boyd wrote:
-> Quoting Maulik Shah (2020-04-05 23:32:19)
->> Add changes to invoke rpmh flush() from CPU PM notification.
->> This is done when the last the cpu is entering power collapse and
->> controller is not busy.
->>
->> Controllers that do have 'HW solver' mode do not need to register
-> Controllers that have 'HW solver' mode don't need to register? The 'do
-> have' is throwing me off.
-Okay i will remove 'do' from this line.
->> for CPU PM notification. They may be in autonomous mode executing
->> low power mode and do not require rpmh_flush() to happen from CPU
->> PM notification.
->>
->> Signed-off-by: Maulik Shah <mkshah@codeaurora.org>
->> Reviewed-by: Douglas Anderson <dianders@chromium.org>
->> ---
->>   drivers/soc/qcom/rpmh-internal.h |  25 +++++---
->>   drivers/soc/qcom/rpmh-rsc.c      | 123 +++++++++++++++++++++++++++++++++++----
->>   drivers/soc/qcom/rpmh.c          |  26 +++------
->>   3 files changed, 137 insertions(+), 37 deletions(-)
->>
->> diff --git a/drivers/soc/qcom/rpmh-rsc.c b/drivers/soc/qcom/rpmh-rsc.c
->> index b718221..fbe1f3e 100644
->> --- a/drivers/soc/qcom/rpmh-rsc.c
->> +++ b/drivers/soc/qcom/rpmh-rsc.c
->> @@ -6,6 +6,7 @@
-> [...]
->> +
->> +static int rpmh_rsc_cpu_pm_callback(struct notifier_block *nfb,
->> +                                   unsigned long action, void *v)
->> +{
->> +       struct rsc_drv *drv = container_of(nfb, struct rsc_drv, rsc_pm);
->> +       int ret = NOTIFY_OK;
->> +
->> +       spin_lock(&drv->pm_lock);
->> +
->> +       switch (action) {
->> +       case CPU_PM_ENTER:
-> I thought CPU_PM notifiers weren't supposed to be used anymore? Or at
-> least, the genpd work that has gone on for cpuidle could be used here in
-> place of CPU_PM notifiers?
+Thanks for testing all of these and letting me know.
 
-genpd was used in v3 and v4 of this series, where from pd's .power_off  
-function, rpmh_flush() was invoked.
-
-genpd can be useful if target firmware supports PSCI's OSI mode, while 
-sc7180 is non-OSI target.
-
-The current approch (using cpu pm notification) can be used for both OSI 
-and non-OSI targets to invoke rpmh_flush() when last cpu goes to power down.
-
-> And so this isn't actually any different
-> than what was proposed originally to use genpd for this?
->
->> +               cpumask_set_cpu(raw_smp_processor_id(),
-> Why do we need to use raw_smp_processor_id()? smp_processor_id() should
-> work just as well?
-Yes, seems it will work as well. I will change to use smp_processor_id().
->
->> +                               &drv->cpus_entered_pm);
->> +
->> +               if (!cpumask_equal(&drv->cpus_entered_pm, cpu_online_mask))
->> +                       goto exit;
->> +               break;
->> +       case CPU_PM_ENTER_FAILED:
->> +       case CPU_PM_EXIT:
->> +               cpumask_clear_cpu(raw_smp_processor_id(),
->> +                                 &drv->cpus_entered_pm);
->> +               goto exit;
->> +       }
->> +
->> +       ret = rpmh_rsc_ctrlr_is_busy(drv);
->> +       if (ret) {
->> +               ret = NOTIFY_BAD;
->> +               goto exit;
->> +       }
->> +
->> +       ret = rpmh_flush(&drv->client);
->> +       if (ret)
->> +               ret = NOTIFY_BAD;
->> +       else
->> +               ret = NOTIFY_OK;
->> +
->> +exit:
->> +       spin_unlock(&drv->pm_lock);
->> +       return ret;
->> +}
->> +
-Thanks,
-Maulik
-
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
+greg k-h
