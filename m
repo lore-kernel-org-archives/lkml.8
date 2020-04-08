@@ -2,152 +2,98 @@ Return-Path: <SRS0=8dav=5Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D109AC2D0EC
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 00:03:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 864B9C2BB54
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 00:05:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9168F2054F
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 00:03:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="eMoQ2oPL"
+	by mail.kernel.org (Postfix) with ESMTP id 5F777206A1
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 00:05:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1586304314;
+	bh=fRB8R33swTx2eyYH9iWmJjokUFqp36UDQSPo3F/mQiE=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=IzX3B8lGc8VKNuAS+ZeauiGiZafGxsiAQAjjpvi3hSHR5vgfXfCrnm06pJVye37Sr
+	 jBvG6THCKW3pBMxEnkITCNmCAI0f7cUQQ0UEcAjTOYau1l/z8Vy3PUcq+ByaECikXK
+	 hp9C7RPD8jWMWnc8CjdWDQgUStOXliWJdDBlwhMI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726523AbgDHADb (ORCPT
+        id S1726469AbgDHAFN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 20:03:31 -0400
-Received: from mailout1.samsung.com ([203.254.224.24]:30225 "EHLO
-        mailout1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726436AbgDHADb (ORCPT
+        Tue, 7 Apr 2020 20:05:13 -0400
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:32973 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726416AbgDHAFN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Apr 2020 20:03:31 -0400
-Received: from epcas1p1.samsung.com (unknown [182.195.41.45])
-        by mailout1.samsung.com (KnoxPortal) with ESMTP id 20200408000329epoutp016c62fa7ee520ed5ba22bb0ea2fc3c20f~Dr0YUTn9_0168701687epoutp01i
-        for <linux-kernel@vger.kernel.org>; Wed,  8 Apr 2020 00:03:29 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20200408000329epoutp016c62fa7ee520ed5ba22bb0ea2fc3c20f~Dr0YUTn9_0168701687epoutp01i
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1586304209;
-        bh=hRyF0c6ns7OABMuq4l3TMMIsYeGkkkYf4TLQqHrU0tU=;
-        h=From:To:Cc:In-Reply-To:Subject:Date:References:From;
-        b=eMoQ2oPLogBZcfOw8sqcJrZ5YhpdXc16cfgc2AvaGWVddkkXLZEVHQOu9ci592FZB
-         npMUO9GPlNIjvK/gxECCqB1mEELujHKx+B5zltt2Vu62PM34blMcz4xyb1faphT7I+
-         vREDCHDo1bCp3Xp9JBNquVqvuK8WbPtQCzSefzbU=
-Received: from epsnrtp3.localdomain (unknown [182.195.42.164]) by
-        epcas1p3.samsung.com (KnoxPortal) with ESMTP id
-        20200408000328epcas1p3bc5d69616107d6f6f20b9ae70e0e26bd~Dr0X9YE2T1873418734epcas1p3M;
-        Wed,  8 Apr 2020 00:03:28 +0000 (GMT)
-Received: from epsmges1p5.samsung.com (unknown [182.195.40.161]) by
-        epsnrtp3.localdomain (Postfix) with ESMTP id 48xky801CVzMqYks; Wed,  8 Apr
-        2020 00:03:28 +0000 (GMT)
-Received: from epcas1p1.samsung.com ( [182.195.41.45]) by
-        epsmges1p5.samsung.com (Symantec Messaging Gateway) with SMTP id
-        ED.6B.04658.FC41D8E5; Wed,  8 Apr 2020 09:03:27 +0900 (KST)
-Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
-        epcas1p4.samsung.com (KnoxPortal) with ESMTPA id
-        20200408000327epcas1p4f4695df4b40c53f5e87704174d8e2669~Dr0Ww3QRY2207822078epcas1p42;
-        Wed,  8 Apr 2020 00:03:27 +0000 (GMT)
-Received: from epsmgms1p2new.samsung.com (unknown [182.195.42.42]) by
-        epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20200408000327epsmtrp2d3b3e66f0922ee375ad2da070f5ca290~Dr0WwBrmi2890328903epsmtrp28;
-        Wed,  8 Apr 2020 00:03:27 +0000 (GMT)
-X-AuditID: b6c32a39-a81ff70000001232-32-5e8d14cf1263
-Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
-        epsmgms1p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        42.D6.04158.FC41D8E5; Wed,  8 Apr 2020 09:03:27 +0900 (KST)
-Received: from namjaejeon01 (unknown [10.88.104.63]) by epsmtip2.samsung.com
-        (KnoxPortal) with ESMTPA id
-        20200408000327epsmtip2519a8b17fb5837d0a7a07b8c8803081d~Dr0Wm5h8m3058830588epsmtip2d;
-        Wed,  8 Apr 2020 00:03:27 +0000 (GMT)
-From:   "Namjae Jeon" <namjae.jeon@samsung.com>
-To:     "'Tetsuhiro Kohada'" <Kohada.Tetsuhiro@dc.MitsubishiElectric.co.jp>
-Cc:     <Mori.Takahiro@ab.MitsubishiElectric.co.jp>,
-        <motai.hirotaka@aj.mitsubishielectric.co.jp>,
-        "'Sungjong Seo'" <sj1557.seo@samsung.com>,
-        <linux-fsdevel@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200407083410.79154-1-Kohada.Tetsuhiro@dc.MitsubishiElectric.co.jp>
-Subject: RE: [PATCH] exfat: remove 'bps' mount-option
-Date:   Wed, 8 Apr 2020 09:03:27 +0900
-Message-ID: <001301d60d39$212ccf10$63866d30$@samsung.com>
+        Tue, 7 Apr 2020 20:05:13 -0400
+Received: by mail-lf1-f67.google.com with SMTP id h6so3816628lfc.0
+        for <linux-kernel@vger.kernel.org>; Tue, 07 Apr 2020 17:05:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=xIrR6bYca0pm2GJAq9Eb2z2zbLCcWgcw1hONud88tGI=;
+        b=RfefjE1TimGEmBWEYxlaE/AiBpOVt1Uk0Drlf3I8ZJb0O4WXKbDzGGUcGLpSnOHEhp
+         FCgsojfCWzwQP3E/sr9GD1ZyDEtgqn2gZNFoAiBYjUII4mzIAx6gdwZd3XUkMTt7+tTZ
+         zq6O469mwpErQ5rkzqaJDD9339W+4V6tTVcUM=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=xIrR6bYca0pm2GJAq9Eb2z2zbLCcWgcw1hONud88tGI=;
+        b=iEyjBy8b1b2mOXKiMyZFLEEa8Kb0dyctjQlrwOYknFlppHxCMRs/2/Gf1IMCu9C7/O
+         Ws91ed/y77JgjHcKwlyMmOcybooKNUL6jNjvOB/7wPkv1Hn+RwlIYRVZsummAUDN45+D
+         OCFQ4QJV/ua1lYz1lcdxy0vStJCMlLe3Ke6R+4cI7jjNBwPytxKT0dqnvJCay51VdVKJ
+         9hCFhrFFE1HB4GXHMBMACrF36GR11T+sz6/sW/kA6p+5L/GCtlmQWCEDxdQnG2hEJTpO
+         h7t4kR6BT4xI1ckK5LVzKtv1hU8iUFyPK24n3G5V7WWzzJOF4kiDGNjcsYO/Y7TJB2Yo
+         7Y6g==
+X-Gm-Message-State: AGi0PuZlJg6JUYoBRqFHXygo52FihxI2yeJtpby0GipZkwhby/XM/Va2
+        ihTTf8P3WHymSjYBlJgVUJXK5cZxoNs=
+X-Google-Smtp-Source: APiQypIC+y1YKQL/0ft9zqcYVHd4MuWdnMAVNACStzh5urGxrEamu3VtkhPnsl/GZiEGMxnlZq+TQg==
+X-Received: by 2002:a19:f611:: with SMTP id x17mr2952541lfe.51.1586304309995;
+        Tue, 07 Apr 2020 17:05:09 -0700 (PDT)
+Received: from mail-lj1-f171.google.com (mail-lj1-f171.google.com. [209.85.208.171])
+        by smtp.gmail.com with ESMTPSA id w24sm12425464ljh.57.2020.04.07.17.05.08
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 07 Apr 2020 17:05:09 -0700 (PDT)
+Received: by mail-lj1-f171.google.com with SMTP id g27so5647714ljn.10
+        for <linux-kernel@vger.kernel.org>; Tue, 07 Apr 2020 17:05:08 -0700 (PDT)
+X-Received: by 2002:a2e:a58e:: with SMTP id m14mr3154247ljp.204.1586304308658;
+ Tue, 07 Apr 2020 17:05:08 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-Mailer: Microsoft Outlook 16.0
-Thread-Index: AQICYKfYu26zgRX3njdSPq1gDqANSAEqKKnpqAxejhA=
-Content-Language: ko
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprPJsWRmVeSWpSXmKPExsWy7bCmru55kd44g/snzC3enJzKYrFn70kW
-        i8u75rBZXP7/icVi2ZfJLBZb/h1hdWDz+DLnOLtH2+R/7B7Nx1ayefRtWcXo8XmTXABrVI5N
-        RmpiSmqRQmpecn5KZl66rZJ3cLxzvKmZgaGuoaWFuZJCXmJuqq2Si0+ArltmDtAFSgpliTml
-        QKGAxOJiJX07m6L80pJUhYz84hJbpdSClJwCQ4MCveLE3OLSvHS95PxcK0MDAyNToMqEnIxP
-        81vYCvo4KvqOX2RsYLzI1sXIySEhYCKx9MJ2pi5GLg4hgR2MEtduTGKBcD4xShxt+cIG4Xxj
-        lDhxZi1cy9wZS9khEnsZJfr39UI5Lxklfs5exQRSxSagK/Hvz36wDhEBd4k1534ygxQxC5xn
-        lJgw4R+Qw8HBKRAksfujKUiNsICpxIwL7WC9LAIqEs3TfoD18gpYSnzp/8kCYQtKnJz5BMxm
-        FpCX2P52DjPERQoSP58uY4XYZSUxr+k/M0SNiMTszjawvRICr9kkup9eZQXZKyHgIjHlvg5E
-        r7DEq+Nb2CFsKYnP7/ayQZRUS3zcDzW+g1HixXdbCNtY4ub6DWBTmAU0Jdbv0ocIK0rs/D2X
-        EWIrn8S7rz1Qi3glOtqEIEpUJfouHWaCsKUluto/sE9gVJqF5K9ZSP6aheT+WQjLFjCyrGIU
-        Sy0ozk1PLTYsMEWO602M4MSpZbmD8dg5n0OMAhyMSjy8DxJ74oRYE8uKK3MPMUpwMCuJ8Er1
-        dsYJ8aYkVlalFuXHF5XmpBYfYjQFBvtEZinR5HxgUs8riTc0NTI2NrYwMTM3MzVWEuedej0n
-        TkggPbEkNTs1tSC1CKaPiYNTqoGx+KRR1qzqHaoNLi7lMQvdljS8a7irYCR/eV1an/svNd6Y
-        T2ftjnx0qMqzjZt3LsznT9LJ0Fbd1ycYwzn481Ztig5T1RARKPl6y6et+bfrkt3nJzlVSoYU
-        XpJbWGx2M2aVQkvc/NsfWnsMJy/23cU03XsNV76l9OezvTOLL/9uOea1r2uWdZASS3FGoqEW
-        c1FxIgB0MRDosgMAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFupgkeLIzCtJLcpLzFFi42LZdlhJXve8SG+cwb8ryhZvTk5lsdiz9ySL
-        xeVdc9gsLv//xGKx7MtkFost/46wOrB5fJlznN2jbfI/do/mYyvZPPq2rGL0+LxJLoA1issm
-        JTUnsyy1SN8ugSvj0/wWtoI+joq+4xcZGxgvsnUxcnJICJhIzJ2xlL2LkYtDSGA3o8THC7OZ
-        IRLSEsdOnAGyOYBsYYnDh4tBwkICzxklnp0VAbHZBHQl/v3ZDzZHRMBdYs25n8wgc5gFLjJK
-        /D+3jg1i6GJGiQmfnzOCDOIUCJLY/dEUpEFYwFRixoV2JhCbRUBFonnaD7BBvAKWEl/6f7JA
-        2IISJ2c+YQFpZRbQk2jbyAgSZhaQl9j+dg7UmQoSP58uY4W4wUpiXtN/ZogaEYnZnW3MExiF
-        ZyGZNAth0iwkk2Yh6VjAyLKKUTK1oDg3PbfYsMAoL7Vcrzgxt7g0L10vOT93EyM4frS0djCe
-        OBF/iFGAg1GJh/dBYk+cEGtiWXFl7iFGCQ5mJRFeqd7OOCHelMTKqtSi/Pii0pzU4kOM0hws
-        SuK88vnHIoUE0hNLUrNTUwtSi2CyTBycUg2MrKp2/BFyST7txwzcjj/4UKjRMv1sEsNmT+33
-        YrPUG15Km9pseNRnuvylwWwZI+MXU57vmrbi68urAXm2a3fuYXp8rujH3thM5tVbqhtimY1t
-        FlqWHYg887b+/sa+3F8zb5XdrDul5RF/cq1wyParyhdPJVkl3n8x1cz+i5OrxzStEMMP72e5
-        K7EUZyQaajEXFScCAEgKzsCbAgAA
-X-CMS-MailID: 20200408000327epcas1p4f4695df4b40c53f5e87704174d8e2669
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: SVC_REQ_APPROVE
-CMS-TYPE: 101P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20200407083445epcas1p243e93ccad42ed28249356d01bbe8bc7d
-References: <CGME20200407083445epcas1p243e93ccad42ed28249356d01bbe8bc7d@epcas1p2.samsung.com>
-        <20200407083410.79154-1-Kohada.Tetsuhiro@dc.MitsubishiElectric.co.jp>
+References: <00000000000018a92305a2ba57e0@google.com> <20200407220837.GB66033@xz-x1>
+In-Reply-To: <20200407220837.GB66033@xz-x1>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Tue, 7 Apr 2020 17:04:52 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wjQJQM=V6CDPrU2FJVEi4zZsr8-w8a0We8tF5K66J_ZOw@mail.gmail.com>
+Message-ID: <CAHk-=wjQJQM=V6CDPrU2FJVEi4zZsr8-w8a0We8tF5K66J_ZOw@mail.gmail.com>
+Subject: Re: BUG: unable to handle kernel paging request in get_pfnblock_flags_mask
+To:     Peter Xu <peterx@redhat.com>
+Cc:     syzbot <syzbot+18638e81a805a2d96682@syzkaller.appspotmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Brian Geffon <bgeffon@google.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux-MM <linux-mm@kvack.org>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> remount fails because exfat_show_options() returns unsupported option
-> 'bps'.
-> > # mount -o ro,remount
-> > exfat: Unknown parameter 'bps'
-> 
-> To fix the problem, just remove 'bps' option from exfat_show_options().
-> 
-> Signed-off-by: Tetsuhiro Kohada
-> <Kohada.Tetsuhiro@dc.MitsubishiElectric.co.jp>
-I will apply your patches after setting up exfat git tree.
+On Tue, Apr 7, 2020 at 3:08 PM Peter Xu <peterx@redhat.com> wrote:
+>
+> Thanks; I think this is a dup of previous one too:
 
-Thanks for your work!
-> ---
->  fs/exfat/super.c | 1 -
->  1 file changed, 1 deletion(-)
-> 
-> diff --git a/fs/exfat/super.c b/fs/exfat/super.c index
-> 2dd62543a4..1b7d2eb034 100644
-> --- a/fs/exfat/super.c
-> +++ b/fs/exfat/super.c
-> @@ -151,7 +151,6 @@ static int exfat_show_options(struct seq_file *m,
-> struct dentry *root)
->  		seq_puts(m, ",iocharset=utf8");
->  	else if (sbi->nls_io)
->  		seq_printf(m, ",iocharset=%s", sbi->nls_io->charset);
-> -	seq_printf(m, ",bps=%ld", sb->s_blocksize);
->  	if (opts->errors == EXFAT_ERRORS_CONT)
->  		seq_puts(m, ",errors=continue");
->  	else if (opts->errors == EXFAT_ERRORS_PANIC)
-> --
-> 2.25.0
+Peter, since the two nasties are both fairly bad, would you mind
+sending me your two patches and I'll just apply them directly.
 
+I've seen them fly by, but I think they both happened inside the
+threads discussing the problem, and I'd much rather have the final
+patch sent to me explicitly (with confirmation that syzbot tested them
+- again I _think_ I saw that fly by too, but my mailbox is fairly
+chaotic..)
 
+             Linus
