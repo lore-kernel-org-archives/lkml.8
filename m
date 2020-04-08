@@ -2,174 +2,147 @@ Return-Path: <SRS0=8dav=5Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E49BC2BA2B
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 21:36:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ADD72C2BA16
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 21:37:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 43A36206C0
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 21:36:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 72C7A206C0
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 21:37:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="kU38jp13"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Hco7MSfh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729283AbgDHVgE (ORCPT
+        id S1729410AbgDHVhC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Apr 2020 17:36:04 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:38314 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728104AbgDHVgD (ORCPT
+        Wed, 8 Apr 2020 17:37:02 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:52238 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728438AbgDHVhB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Apr 2020 17:36:03 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 038LYJud112156;
-        Wed, 8 Apr 2020 21:36:00 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=content-type :
- mime-version : subject : from : in-reply-to : date : cc :
- content-transfer-encoding : message-id : references : to;
- s=corp-2020-01-29; bh=X44Ebp5uRbRTRUewZMMs2SgPjRTQVEdbIdoNLajs77g=;
- b=kU38jp13L8GzIEnK5kon0DbUuh34s6S6NdligRDxZGA4qeI7kbWZKXI6Csthhk19BvXq
- 1nNoPQOQOwzuKQdzhJgbdsSmiC4wpleJFuhAni6mnm/ViBSEuldg+YxV8Rzr4bySmsEC
- BAL5o9XG/hxhEXqQiuUhK60hNiKBprSZWIMb9TviP9WJU+DOskXyPciNkl3MFwByxqOp
- ag8yMznoVaJhPbHy4hjtb+XWyt7ybwnZVaf0SAxLXpVQZHHLPImv6mHSfibIGCql8IfA
- ZokNbez+r5t3kjKZfdDmDESUbj5CxM6yjPe4JAncn/ElFt5LobFQv6Vkp1lpdQqzTD0l XA== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by userp2130.oracle.com with ESMTP id 3091m3e3mj-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 08 Apr 2020 21:36:00 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 038LXNus008593;
-        Wed, 8 Apr 2020 21:35:59 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by userp3030.oracle.com with ESMTP id 3091m24r8g-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 08 Apr 2020 21:35:59 +0000
-Received: from abhmp0001.oracle.com (abhmp0001.oracle.com [141.146.116.7])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 038LZw0o031821;
-        Wed, 8 Apr 2020 21:35:58 GMT
-Received: from anon-dhcp-153.1015granger.net (/68.61.232.219)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 08 Apr 2020 14:35:58 -0700
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.11\))
-Subject: Re: net/sunrpc/svcsock.c:527:32: warning: Variable
- 'uninitialized_var' is assigned a value that is never used. [unreadVariable]
-From:   Chuck Lever <chuck.lever@oracle.com>
-In-Reply-To: <202004090524.zHtJ3R2B%lkp@intel.com>
-Date:   Wed, 8 Apr 2020 17:35:56 -0400
-Cc:     kbuild-all@lists.01.org, linux-kernel@vger.kernel.org
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <76A08BC7-C37A-495D-998A-2E9DADF454A7@oracle.com>
-References: <202004090524.zHtJ3R2B%lkp@intel.com>
-To:     kbuild test robot <lkp@intel.com>
-X-Mailer: Apple Mail (2.3445.104.11)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9585 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 malwarescore=0
- mlxlogscore=999 phishscore=0 spamscore=0 adultscore=0 suspectscore=0
- mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2004080147
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9585 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 adultscore=0
- impostorscore=0 malwarescore=0 lowpriorityscore=0 mlxlogscore=999
- priorityscore=1501 clxscore=1011 bulkscore=0 phishscore=0 mlxscore=0
- suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2004080147
+        Wed, 8 Apr 2020 17:37:01 -0400
+Received: by mail-wm1-f67.google.com with SMTP id t203so1486840wmt.2
+        for <linux-kernel@vger.kernel.org>; Wed, 08 Apr 2020 14:37:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:reply-to:from:date:message-id
+         :subject:to:cc;
+        bh=q4sLyktfrOExuEZEYqjNYRWtmjYeOihRLdSqSzM0jBQ=;
+        b=Hco7MSfhBD/kWrXXtSZaT1Uq3HYjzmA4BWBwNBTzpupRmSLiC2ehWSbJaPcx3LKRRE
+         CQqagdrVOrJ/io0IH4/tm+to4FWYgZe/eGUtOcscYiApxnKXriXLXv38HTjEeEg/PCPa
+         7jH3H1kS+tK3/P0PTvbiMQjfiXJAXQqygCxS1+ZIWRhUZOifADjfUPbjizrY86rqz0tb
+         +M0lWtS/+Szy0sKswMs5UQEYcEWqLtVp3Vh2Ihc3s//nQfufc7sK+LtMin3WlJxTAeFy
+         /ApET9dWMGVw+ovEvY5VB98kZNucRGPdwWZYkGZcPszR413B2k6Vw0JUiCaVw+zujUxK
+         x0cg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:reply-to
+         :from:date:message-id:subject:to:cc;
+        bh=q4sLyktfrOExuEZEYqjNYRWtmjYeOihRLdSqSzM0jBQ=;
+        b=b8E1japoTJF9PphxBtr9S2cfj8W8FIiUqHW4gSKK/42MK6HX/X24VZiCqiVNAW2PSq
+         fii/JbfdFFhcoDAaSmwyxKbvZ6TOYZLe/VrMyHMgsujZJVwGMla2+gBf/tU+W2fsBdNa
+         0xj4bN4yszMwTzQpMOJDJa7/x8SidQ6P1fUfglrqyDkQ42njFmCOrzdwRRFA3OevH77Q
+         E4QhxlQi4W0mVMt/Gzrg5W9rLrLO+T+FsRcm49UbYgvlh+Pvqyj5VXoVdH4arwHlLHU4
+         b2FDa2sTle5wli284tHOs/FNU62+yijxRe1eLZOYD8D45kXfs2gjz8tpEFgMZ1Y1HGYK
+         /D3Q==
+X-Gm-Message-State: AGi0PuZN23OIEIU3kg3FlLnvE4Bo4XYDaUgmEZO16/+r1TSeTciEMcbA
+        A31zgtPz3f/ZPijc2mkfWnFPVcwgVRrFdfbYLLrMwZdQ
+X-Google-Smtp-Source: APiQypKkyO/X4F3zpkuwxZGJdH1jCd8hOH5NdPfJtHGzrLYyMWWO6zubYykoEYC7/vylnfuleQnGTAC7qDAAd4gYDiA=
+X-Received: by 2002:a7b:cb86:: with SMTP id m6mr6258988wmi.64.1586381820060;
+ Wed, 08 Apr 2020 14:37:00 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200408205323.44490-1-natechancellor@gmail.com> <CA+icZUUTEEZww3qT0jfFP0ZgUPXoF1_uOHMT4ZecrQxumE1Zmg@mail.gmail.com>
+In-Reply-To: <CA+icZUUTEEZww3qT0jfFP0ZgUPXoF1_uOHMT4ZecrQxumE1Zmg@mail.gmail.com>
+Reply-To: sedat.dilek@gmail.com
+From:   Sedat Dilek <sedat.dilek@gmail.com>
+Date:   Wed, 8 Apr 2020 23:36:47 +0200
+Message-ID: <CA+icZUWq=_qjvAf40PqQAj3tQ0WAZ2QAR9hojTuYqZH_=RWd_w@mail.gmail.com>
+Subject: Re: [PATCH] x86: mmiotrace: Use cpumask_available for cpumask_var_t variables
+To:     Nathan Chancellor <natechancellor@gmail.com>
+Cc:     Steven Rostedt <rostedt@goodmis.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Karol Herbst <karolherbst@gmail.com>,
+        Pekka Paalanen <ppaalanen@gmail.com>, x86@kernel.org,
+        linux-kernel@vger.kernel.org, nouveau@lists.freedesktop.org,
+        Clang-Built-Linux ML <clang-built-linux@googlegroups.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, Apr 8, 2020 at 11:12 PM Sedat Dilek <sedat.dilek@gmail.com> wrote:
+>
+> On Wed, Apr 8, 2020 at 10:53 PM Nathan Chancellor
+> <natechancellor@gmail.com> wrote:
+> >
+> > When building with Clang + -Wtautological-compare and
+> > CONFIG_CPUMASK_OFFSTACK unset:
+> >
+>
+> Hi Nathan,
+>
+> thanks for the quick patch.
+>
+> I can confirm I have no CONFIG_CPUMASK_OFFSTACK set.
+>
 
+Feel free to add appropriate credits:
 
-> On Apr 8, 2020, at 5:32 PM, kbuild test robot <lkp@intel.com> wrote:
->=20
-> tree:   =
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git =
-master
-> head:   f5e94d10e4c468357019e5c28d48499f677b284f
-> commit: da1661b93bf489cdbc8bcea919b165d31b4810bf SUNRPC: Teach server =
-to use xprt_sock_sendmsg for socket sends
-> date:   3 weeks ago
->=20
-> If you fix the issue, kindly add following tag as appropriate
-> Reported-by: kbuild test robot <lkp@intel.com>
->=20
->=20
-> cppcheck warnings: (new ones prefixed by >>)
->=20
->   net/sunrpc/svcsock.c:405:9: warning: union member 'Anonymous0::all' =
-is never used. [unusedStructMember]
->     long  all[SVC_PKTINFO_SPACE / sizeof(long)];
->           ^
->   net/sunrpc/svcsock.c:518:9: warning: union member 'Anonymous1::all' =
-is never used. [unusedStructMember]
->     long  all[SVC_PKTINFO_SPACE / sizeof(long)];
->           ^
->>> net/sunrpc/svcsock.c:527:32: warning: Variable 'uninitialized_var' =
-is assigned a value that is never used. [unreadVariable]
->    unsigned int uninitialized_var(sent);
->                                  ^
->=20
-> vim +/uninitialized_var +527 net/sunrpc/svcsock.c
->=20
->   504=09
->   505	/**
->   506	 * svc_udp_sendto - Send out a reply on a UDP socket
->   507	 * @rqstp: completed svc_rqst
->   508	 *
->   509	 * Returns the number of bytes sent, or a negative errno.
->   510	 */
->   511	static int svc_udp_sendto(struct svc_rqst *rqstp)
->   512	{
->   513		struct svc_xprt *xprt =3D rqstp->rq_xprt;
->   514		struct svc_sock	*svsk =3D container_of(xprt, struct =
-svc_sock, sk_xprt);
->   515		struct xdr_buf *xdr =3D &rqstp->rq_res;
->   516		union {
->   517			struct cmsghdr	hdr;
->   518			long		all[SVC_PKTINFO_SPACE / =
-sizeof(long)];
->   519		} buffer;
->   520		struct cmsghdr *cmh =3D &buffer.hdr;
->   521		struct msghdr msg =3D {
->   522			.msg_name	=3D &rqstp->rq_addr,
->   523			.msg_namelen	=3D rqstp->rq_addrlen,
->   524			.msg_control	=3D cmh,
->   525			.msg_controllen	=3D sizeof(buffer),
->   526		};
->> 527		unsigned int uninitialized_var(sent);
->   528		int err;
->   529=09
->   530		svc_set_cmsg_data(rqstp, cmh);
->   531=09
->   532		err =3D xprt_sock_sendmsg(svsk->sk_sock, &msg, xdr, 0, =
-0, &sent);
->   533		xdr_free_bvec(xdr);
->   534		if (err =3D=3D -ECONNREFUSED) {
->   535			/* ICMP error on earlier request. */
->   536			err =3D xprt_sock_sendmsg(svsk->sk_sock, &msg, =
-xdr, 0, 0, &sent);
->   537			xdr_free_bvec(xdr);
->   538		}
->   539		if (err < 0)
->   540			return err;
->   541		return sent;
+   Tested-by: Sedat Dilek <sedat.dilek@gmail.com>
 
-Wha? "sent" is used right here. Can someone explain this warning?
+Regards,
+- Sedat -
 
-
->   542	}
->   543=09
->=20
-> ---
-> 0-DAY CI Kernel Test Service, Intel Corporation
-> https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
-
---
-Chuck Lever
-
-
-
+>
+> > arch/x86/mm/mmio-mod.c:375:6: warning: comparison of array 'downed_cpus'
+> > equal to a null pointer is always false [-Wtautological-pointer-compare]
+> >         if (downed_cpus == NULL &&
+> >             ^~~~~~~~~~~    ~~~~
+> > arch/x86/mm/mmio-mod.c:405:6: warning: comparison of array 'downed_cpus'
+> > equal to a null pointer is always false [-Wtautological-pointer-compare]
+> >         if (downed_cpus == NULL || cpumask_weight(downed_cpus) == 0)
+> >             ^~~~~~~~~~~    ~~~~
+> > 2 warnings generated.
+> >
+> > Commit f7e30f01a9e2 ("cpumask: Add helper cpumask_available()") added
+> > cpumask_available to fix warnings of this nature. Use that here so that
+> > clang does not warn regardless of CONFIG_CPUMASK_OFFSTACK's value.
+> >
+> > Link: https://github.com/ClangBuiltLinux/linux/issues/982
+> > Reported-by: Sedat Dilek <sedat.dilek@gmail.com>
+> > Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+> > ---
+> >  arch/x86/mm/mmio-mod.c | 4 ++--
+> >  1 file changed, 2 insertions(+), 2 deletions(-)
+> >
+> > diff --git a/arch/x86/mm/mmio-mod.c b/arch/x86/mm/mmio-mod.c
+> > index 109325d77b3e..43fd19b3f118 100644
+> > --- a/arch/x86/mm/mmio-mod.c
+> > +++ b/arch/x86/mm/mmio-mod.c
+> > @@ -372,7 +372,7 @@ static void enter_uniprocessor(void)
+> >         int cpu;
+> >         int err;
+> >
+> > -       if (downed_cpus == NULL &&
+> > +       if (!cpumask_available(downed_cpus) &&
+> >             !alloc_cpumask_var(&downed_cpus, GFP_KERNEL)) {
+> >                 pr_notice("Failed to allocate mask\n");
+> >                 goto out;
+> > @@ -402,7 +402,7 @@ static void leave_uniprocessor(void)
+> >         int cpu;
+> >         int err;
+> >
+> > -       if (downed_cpus == NULL || cpumask_weight(downed_cpus) == 0)
+> > +       if (!cpumask_available(downed_cpus) || cpumask_weight(downed_cpus) == 0)
+> >                 return;
+> >         pr_notice("Re-enabling CPUs...\n");
+> >         for_each_cpu(cpu, downed_cpus) {
+> >
+> > base-commit: ae46d2aa6a7fbe8ca0946f24b061b6ccdc6c3f25
+> > --
+> > 2.26.0
+> >
