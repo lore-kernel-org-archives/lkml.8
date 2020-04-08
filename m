@@ -2,94 +2,124 @@ Return-Path: <SRS0=8dav=5Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E77B6C2BB54
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 18:23:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EF87C2BB55
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 18:23:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C039720768
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 18:23:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 43D24208FE
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 18:23:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="eEPqwTCR"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LMJvqQGj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730754AbgDHSXt (ORCPT
+        id S1730764AbgDHSXv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Apr 2020 14:23:49 -0400
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:51764 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1730743AbgDHSXs (ORCPT
+        Wed, 8 Apr 2020 14:23:51 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:36288 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730751AbgDHSXu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Apr 2020 14:23:48 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1586370227;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=hqTq2Wy3TNDTzfSsOcRzLQkDhw37DQsS+GCpZMUDZFo=;
-        b=eEPqwTCRBo1Et90qpZ2uWEcLfaRYwP9J7Lb7wybHtfxWpjJl0m+LbWyRvaNVooCCJTDhSq
-        YZsYXsAcZlet3WKjLhj1yqRbx06EfUe8+cYPVRS1lNmPh/mQ5JgjlXSvFIiLglcnWYy2Vw
-        ZticrKC+wqPv+q12vvvWv1aVzPDxKP8=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-415-XsFltCapNOamuqjPPB_lXg-1; Wed, 08 Apr 2020 14:23:41 -0400
-X-MC-Unique: XsFltCapNOamuqjPPB_lXg-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id E9ED88017F4;
-        Wed,  8 Apr 2020 18:23:39 +0000 (UTC)
-Received: from horse.redhat.com (ovpn-115-85.rdu2.redhat.com [10.10.115.85])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id AFCA09A253;
-        Wed,  8 Apr 2020 18:23:39 +0000 (UTC)
-Received: by horse.redhat.com (Postfix, from userid 10451)
-        id 169B92202B8; Wed,  8 Apr 2020 14:23:39 -0400 (EDT)
-Date:   Wed, 8 Apr 2020 14:23:39 -0400
-From:   Vivek Goyal <vgoyal@redhat.com>
-To:     Andy Lutomirski <luto@amacapital.net>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
-        kvm list <kvm@vger.kernel.org>, stable <stable@vger.kernel.org>
-Subject: Re: [PATCH v2] x86/kvm: Disable KVM_ASYNC_PF_SEND_ALWAYS
-Message-ID: <20200408182339.GC93547@redhat.com>
-References: <877dyqkj3h.fsf@nanos.tec.linutronix.de>
- <F2BD5266-A9E5-41C8-AC64-CC33EB401B37@amacapital.net>
+        Wed, 8 Apr 2020 14:23:50 -0400
+Received: by mail-pg1-f193.google.com with SMTP id c23so3700317pgj.3;
+        Wed, 08 Apr 2020 11:23:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=X0zRSaYXjzcJ9Hlrze4BqCSrCRRxSAkZlA9nRwyv1rA=;
+        b=LMJvqQGjhqBUN/o2zZj5bwYDy9Yj6om9QDHH9O7rbVbgJOO9zioDyq0hf/HluAmH0/
+         KDYoBf3oPT/JYVMx5oFtYIjAru1zbd44ModZ5k53kh4QfdYBGDwQ7sDrpsemxa9bQAYh
+         Ua14qXYITLcj1sSRQgFGb2UXIrEAlPSCxUAvDMrMHAR7y1X24oCmRPKFpT31b9RmR+93
+         3ZEG8chFxnbMqc88bkdroM3drxGvzmx+lARYXe/dcsNU6t7IuW15+cbbM26qIobgp+8Z
+         Wyz64FTh2hGngR3Z9+S+JVlCmsE1MDiCVjbXY22vFB0BLvMnyYI2DzuMMp7z8qNnO6uD
+         qa8Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=X0zRSaYXjzcJ9Hlrze4BqCSrCRRxSAkZlA9nRwyv1rA=;
+        b=LKnAQnQXQjVukHmrN1AlayQ3YKQYoOj9Bv09A3iHpfIv0CRDu/f7AdO53hcvA8hAbJ
+         ZhOrQBHMY6jJD7X4xcMCBuj1hGIFUZ0dg6VANaoOQHCZfWg9ChpCE5dgAdM4MvqiKF9o
+         AagBX/D+5znj1HmjX5AA+dHsZZslDQuZx8Omj6NXdxv84fkhyhwZIkV3qJm6IUUUMsOa
+         982duCLi61X1P2Fgb9ZhzxkoHCs89Frslf1YApRXwr3zxnAr06c4/fGahjVxZSqGK/N3
+         RuxG4Wyvt3BzqSbDoKSaMnKN1VjFHT4IOg5k58EcF19qAoMW+H01/LoQH3p0VnPtWM1r
+         M9hQ==
+X-Gm-Message-State: AGi0PubbdKr7m4asjofwEiK0HXHa90WaOiF+S3maiyhv3ubd6DC12a6Z
+        ie0zn8te0jADAbvSCwIML5k=
+X-Google-Smtp-Source: APiQypJSKipLCRXs7PSE2qrjqRx0zT2oPBc0yNX/TLwG6sPMeYKY5+AX+MpapIxMD8D5o5EJKbzL1Q==
+X-Received: by 2002:a62:5a03:: with SMTP id o3mr8838343pfb.301.1586370228956;
+        Wed, 08 Apr 2020 11:23:48 -0700 (PDT)
+Received: from localhost (89.208.244.140.16clouds.com. [89.208.244.140])
+        by smtp.gmail.com with ESMTPSA id w15sm17158523pfj.28.2020.04.08.11.23.47
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 08 Apr 2020 11:23:48 -0700 (PDT)
+From:   Dejin Zheng <zhengdejin5@gmail.com>
+To:     thor.thayer@linux.intel.com, krzysztof.adamski@nokia.com,
+        f.fainelli@gmail.com, rjui@broadcom.com, sbranden@broadcom.com,
+        bcm-kernel-feedback-list@broadcom.com, nsekhar@ti.com,
+        bgolaszewski@baylibre.com, baruch@tkos.co.il,
+        wsa+renesas@sang-engineering.com, kgene@kernel.org,
+        krzk@kernel.org, paul@crapouillou.net, vz@mleia.com,
+        khilman@baylibre.com, gregory.clement@bootlin.com,
+        rrichter@marvell.com, afaerber@suse.de,
+        manivannan.sadhasivam@linaro.org, agross@kernel.org,
+        bjorn.andersson@linaro.org, heiko@sntech.de, baohua@kernel.org,
+        linus.walleij@linaro.org, mripard@kernel.org, wens@csie.org,
+        ardb@kernel.org, gcherian@marvell.com, jun.nie@linaro.org,
+        shawnguo@kernel.org, tglx@linutronix.de, zhouyanjie@wanyeetech.com,
+        martin.blumenstingl@googlemail.com
+Cc:     linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Dejin Zheng <zhengdejin5@gmail.com>
+Subject: [PATCH v2 06/24] i2c: xlp9xx: convert to devm_platform_ioremap_resource
+Date:   Thu,  9 Apr 2020 02:22:53 +0800
+Message-Id: <20200408182311.26869-7-zhengdejin5@gmail.com>
+X-Mailer: git-send-email 2.25.0
+In-Reply-To: <20200408182311.26869-1-zhengdejin5@gmail.com>
+References: <20200408182311.26869-1-zhengdejin5@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <F2BD5266-A9E5-41C8-AC64-CC33EB401B37@amacapital.net>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 07, 2020 at 09:48:02PM -0700, Andy Lutomirski wrote:
+use devm_platform_ioremap_resource() to simplify code, which
+contains platform_get_resource and devm_ioremap_resource.
 
-[..]
-> It would be nifty if the host also told the guest what the guest virtual address was if the host knows it.
+Acked-by: Robert Richter <rrichter@marvell.com>
+Signed-off-by: Dejin Zheng <zhengdejin5@gmail.com>
+---
+v1 -> v2:
+	- no changed and thanks for Robert's review.
 
-It will be good to know and send guest virtual address as well. While
-sending SIGBUS to guest user space, information about which access
-triggered SIGBUS will be useful.
+ drivers/i2c/busses/i2c-xlp9xx.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
-I thought GUEST_LINEAR_ADDRESS provides guest virtual address if
-EPT_VIOLATION_GLA_VALID bit is set. And it seems to work for my
-simple test case. But when I try to read intel SDM, section "27.2" VM
-exits, EPT violations, I am not so sure.
-
-Somebody who understands this better, can you please help me understand
-what exactly GUEST_LINEAR_ADDRESS is supposed to contain during
-EPT violation. I assumed it is guest virtual address and added a
-patch in my RFC patch series.
-
-https://lore.kernel.org/kvm/20200331194011.24834-3-vgoyal@redhat.com/
-
-But I might have misunderstood it.
-
-Vivek
+diff --git a/drivers/i2c/busses/i2c-xlp9xx.c b/drivers/i2c/busses/i2c-xlp9xx.c
+index 8a873975cf12..beb2bb6905d6 100644
+--- a/drivers/i2c/busses/i2c-xlp9xx.c
++++ b/drivers/i2c/busses/i2c-xlp9xx.c
+@@ -504,15 +504,13 @@ static int xlp9xx_i2c_smbus_setup(struct xlp9xx_i2c_dev *priv,
+ static int xlp9xx_i2c_probe(struct platform_device *pdev)
+ {
+ 	struct xlp9xx_i2c_dev *priv;
+-	struct resource *res;
+ 	int err = 0;
+ 
+ 	priv = devm_kzalloc(&pdev->dev, sizeof(*priv), GFP_KERNEL);
+ 	if (!priv)
+ 		return -ENOMEM;
+ 
+-	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+-	priv->base = devm_ioremap_resource(&pdev->dev, res);
++	priv->base = devm_platform_ioremap_resource(pdev, 0);
+ 	if (IS_ERR(priv->base))
+ 		return PTR_ERR(priv->base);
+ 
+-- 
+2.25.0
 
