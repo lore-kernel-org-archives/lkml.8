@@ -2,242 +2,109 @@ Return-Path: <SRS0=8dav=5Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED701C2BA1B
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 07:22:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1878C2D0EA
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 07:22:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B85A72072A
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 07:22:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="CJM8hBIQ"
+	by mail.kernel.org (Postfix) with ESMTP id C19972074F
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 07:22:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726803AbgDHHW1 (ORCPT
+        id S1726821AbgDHHWo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Apr 2020 03:22:27 -0400
-Received: from conuserg-11.nifty.com ([210.131.2.78]:30771 "EHLO
-        conuserg-11.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725932AbgDHHW1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Apr 2020 03:22:27 -0400
-Received: from grover.flets-west.jp (softbank126125134031.bbtec.net [126.125.134.31]) (authenticated)
-        by conuserg-11.nifty.com with ESMTP id 0387L6nF022210;
-        Wed, 8 Apr 2020 16:21:07 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-11.nifty.com 0387L6nF022210
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1586330468;
-        bh=qUjbnQwwFsW5BDx+0XFBZvxfo0YILRG7lsOhsa6lmXg=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CJM8hBIQHM5yg9Fgv/XaRVgl4w2vJrDrV36EYgJd7/9tq1pNrLovoR8ezfETs2oi3
-         ZwHQa3LYuo9k+K7Lq9sr8JLd9dSfAaBAlLXH7aAfdq+stE0nBf2TNe7W1egbc4gUhE
-         o7lzmgj+kHs98WGrLrJl6XMdfiKnxg2dyrHbykjxjSipiE4fy6bm/5aGqWblTBIONF
-         zlRae7/BD6OQQwzRg0WJ4az5cVLGnhP5E1TAemV0XBNkEiQuOuaPelab50FNG06J6M
-         /+14ZXJ1ffCTWwy1+FekMp96WB1Rxu2dKOOFz8k00+OBMMcVyLSX3Hq/hcy7UmxgZX
-         poxbyc51XVUdg==
-X-Nifty-SrcIP: [126.125.134.31]
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-To:     linux-mmc@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, Ulf Hansson <ulf.hansson@linaro.org>,
-        masahiroy@kernel.org,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Fabio Estevam <festevam@gmail.com>,
-        Ludovic Desroches <ludovic.desroches@microchip.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Shawn Guo <shawnguo@kernel.org>,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH 2/2] mmc: sdhci: use FIELD_GET/PREP for capabilities bit masks
-Date:   Wed,  8 Apr 2020 16:21:05 +0900
-Message-Id: <20200408072105.422-2-yamada.masahiro@socionext.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200408072105.422-1-yamada.masahiro@socionext.com>
-References: <20200408072105.422-1-yamada.masahiro@socionext.com>
+        Wed, 8 Apr 2020 03:22:44 -0400
+Received: from mga18.intel.com ([134.134.136.126]:10805 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725932AbgDHHWo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Apr 2020 03:22:44 -0400
+IronPort-SDR: QZME3hUoJXd7zhOqpVhH5KJJ0cs42SI0cjJJvQi7rihEtw8LcDnt06ezSgrO+vZnCcbi+NDx1a
+ 1tQuyVYYlvUw==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Apr 2020 00:22:43 -0700
+IronPort-SDR: tOuocFG0D/Wi2hHfRqzdl1/BIu5OGbDkB/6Qc4hqb2H0Zzk86rOtoEiwfsNVIN57DqkhkNvVEb
+ WjPeWJNWfWqA==
+X-IronPort-AV: E=Sophos;i="5.72,357,1580803200"; 
+   d="scan'208";a="425043160"
+Received: from slinke-mobl.ger.corp.intel.com (HELO localhost) ([10.252.60.237])
+  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Apr 2020 00:22:40 -0700
+From:   Jani Nikula <jani.nikula@linux.intel.com>
+To:     Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        mripard@kernel.org, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        "Deucher\, Alexander" <alexander.deucher@amd.com>
+Cc:     "open list\:DRM DRIVERS" <dri-devel@lists.freedesktop.org>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] drm/i915: Force DPCD backlight mode for HP Spectre x360 Convertible 13t-aw100
+In-Reply-To: <1F57CA05-3E23-4CA8-A138-6785906ED465@canonical.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+References: <20200323053528.3147-1-kai.heng.feng@canonical.com> <41FD4AD2-81F9-45E8-B5D6-9CC255D0581B@canonical.com> <1F57CA05-3E23-4CA8-A138-6785906ED465@canonical.com>
+Date:   Wed, 08 Apr 2020 10:22:37 +0300
+Message-ID: <87mu7migqq.fsf@intel.com>
+MIME-Version: 1.0
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use FIELD_GET and FIELD_PREP to get access to the register fields.
-Delete the shift macros. I used GENMASK() for touched macros.
+On Tue, 07 Apr 2020, Kai-Heng Feng <kai.heng.feng@canonical.com> wrote:
+>> On Mar 27, 2020, at 19:03, Kai-Heng Feng <kai.heng.feng@canonical.com> wrote:
+>> 
+>> Hi,
+>> 
+>>> On Mar 23, 2020, at 13:35, Kai-Heng Feng <kai.heng.feng@canonical.com> wrote:
+>>> 
+>>> There's another OLED panel needs to use DPCD aux interface to control
+>>> backlight.
+>>> 
+>>> BugLink: https://bugs.launchpad.net/bugs/1860303
+>>> Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+>> 
+>> Would it be possible to review this?
+>> I'd like to send a similar quirk for a new panel, and I want to avoid causing any merge conflict.
+>
+> Another gentle ping...
 
-Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
----
+Can't really review, but if you say that's needed...
 
- drivers/mmc/host/sdhci-esdhc-imx.c |  4 +++-
- drivers/mmc/host/sdhci-of-at91.c   |  5 +++--
- drivers/mmc/host/sdhci-pci-core.c  |  8 ++------
- drivers/mmc/host/sdhci.c           | 19 +++++++------------
- drivers/mmc/host/sdhci.h           | 17 ++++++-----------
- 5 files changed, 21 insertions(+), 32 deletions(-)
+Acked-by: Jani Nikula <jani.nikula@intel.com>
 
-diff --git a/drivers/mmc/host/sdhci-esdhc-imx.c b/drivers/mmc/host/sdhci-esdhc-imx.c
-index 5ec8e4bf1ac7..38cd83118082 100644
---- a/drivers/mmc/host/sdhci-esdhc-imx.c
-+++ b/drivers/mmc/host/sdhci-esdhc-imx.c
-@@ -8,6 +8,7 @@
-  *   Author: Wolfram Sang <kernel@pengutronix.de>
-  */
- 
-+#include <linux/bitfield.h>
- #include <linux/io.h>
- #include <linux/iopoll.h>
- #include <linux/delay.h>
-@@ -399,7 +400,8 @@ static u32 esdhc_readl_le(struct sdhci_host *host, int reg)
- 				val = SDHCI_SUPPORT_DDR50 | SDHCI_SUPPORT_SDR104
- 					| SDHCI_SUPPORT_SDR50
- 					| SDHCI_USE_SDR50_TUNING
--					| (SDHCI_TUNING_MODE_3 << SDHCI_RETUNING_MODE_SHIFT);
-+					| FIELD_PREP(SDHCI_RETUNING_MODE_MASK,
-+						     SDHCI_TUNING_MODE_3);
- 
- 			if (imx_data->socdata->flags & ESDHC_FLAG_HS400)
- 				val |= SDHCI_SUPPORT_HS400;
-diff --git a/drivers/mmc/host/sdhci-of-at91.c b/drivers/mmc/host/sdhci-of-at91.c
-index c79bff5e2280..25f4e0f4f53b 100644
---- a/drivers/mmc/host/sdhci-of-at91.c
-+++ b/drivers/mmc/host/sdhci-of-at91.c
-@@ -6,6 +6,7 @@
-  *		 2015 Ludovic Desroches <ludovic.desroches@atmel.com>
-  */
- 
-+#include <linux/bitfield.h>
- #include <linux/clk.h>
- #include <linux/delay.h>
- #include <linux/err.h>
-@@ -179,9 +180,9 @@ static int sdhci_at91_set_clks_presets(struct device *dev)
- 	clk_mul = gck_rate / clk_base_rate - 1;
- 
- 	caps0 &= ~SDHCI_CLOCK_V3_BASE_MASK;
--	caps0 |= (clk_base << SDHCI_CLOCK_BASE_SHIFT) & SDHCI_CLOCK_V3_BASE_MASK;
-+	caps0 |= FIELD_PREP(SDHCI_CLOCK_V3_BASE_MASK, clk_base);
- 	caps1 &= ~SDHCI_CLOCK_MUL_MASK;
--	caps1 |= (clk_mul << SDHCI_CLOCK_MUL_SHIFT) & SDHCI_CLOCK_MUL_MASK;
-+	caps1 |= FIELD_PREP(SDHCI_CLOCK_MUL_MASK, clk_mul);
- 	/* Set capabilities in r/w mode. */
- 	writel(SDMMC_CACR_KEY | SDMMC_CACR_CAPWREN, host->ioaddr + SDMMC_CACR);
- 	writel(caps0, host->ioaddr + SDHCI_CAPABILITIES);
-diff --git a/drivers/mmc/host/sdhci-pci-core.c b/drivers/mmc/host/sdhci-pci-core.c
-index 525de2454a4d..a98c9476bfc8 100644
---- a/drivers/mmc/host/sdhci-pci-core.c
-+++ b/drivers/mmc/host/sdhci-pci-core.c
-@@ -249,12 +249,8 @@ static int ricoh_probe(struct sdhci_pci_chip *chip)
- static int ricoh_mmc_probe_slot(struct sdhci_pci_slot *slot)
- {
- 	slot->host->caps =
--		((0x21 << SDHCI_TIMEOUT_CLK_SHIFT)
--			& SDHCI_TIMEOUT_CLK_MASK) |
--
--		((0x21 << SDHCI_CLOCK_BASE_SHIFT)
--			& SDHCI_CLOCK_BASE_MASK) |
--
-+		FIELD_PREP(SDHCI_TIMEOUT_CLK_MASK, 0x21) |
-+		FIELD_PREP(SDHCI_CLOCK_BASE_MASK, 0x21) |
- 		SDHCI_TIMEOUT_CLK_UNIT |
- 		SDHCI_CAN_VDD_330 |
- 		SDHCI_CAN_DO_HISPD |
-diff --git a/drivers/mmc/host/sdhci.c b/drivers/mmc/host/sdhci.c
-index 3f716466fcfd..344a7e0e33fe 100644
---- a/drivers/mmc/host/sdhci.c
-+++ b/drivers/mmc/host/sdhci.c
-@@ -4117,11 +4117,9 @@ int sdhci_setup_host(struct sdhci_host *host)
- 	}
- 
- 	if (host->version >= SDHCI_SPEC_300)
--		host->max_clk = (host->caps & SDHCI_CLOCK_V3_BASE_MASK)
--			>> SDHCI_CLOCK_BASE_SHIFT;
-+		host->max_clk = FIELD_GET(SDHCI_CLOCK_V3_BASE_MASK, host->caps);
- 	else
--		host->max_clk = (host->caps & SDHCI_CLOCK_BASE_MASK)
--			>> SDHCI_CLOCK_BASE_SHIFT;
-+		host->max_clk = FIELD_GET(SDHCI_CLOCK_BASE_MASK, host->caps);
- 
- 	host->max_clk *= 1000000;
- 	if (host->max_clk == 0 || host->quirks &
-@@ -4139,8 +4137,7 @@ int sdhci_setup_host(struct sdhci_host *host)
- 	 * In case of Host Controller v3.00, find out whether clock
- 	 * multiplier is supported.
- 	 */
--	host->clk_mul = (host->caps1 & SDHCI_CLOCK_MUL_MASK) >>
--			SDHCI_CLOCK_MUL_SHIFT;
-+	host->clk_mul = FIELD_GET(SDHCI_CLOCK_MUL_MASK, host->caps1);
- 
- 	/*
- 	 * In case the value in Clock Multiplier is 0, then programmable
-@@ -4173,8 +4170,7 @@ int sdhci_setup_host(struct sdhci_host *host)
- 		mmc->f_max = max_clk;
- 
- 	if (!(host->quirks & SDHCI_QUIRK_DATA_TIMEOUT_USES_SDCLK)) {
--		host->timeout_clk = (host->caps & SDHCI_TIMEOUT_CLK_MASK) >>
--					SDHCI_TIMEOUT_CLK_SHIFT;
-+		host->timeout_clk = FIELD_GET(SDHCI_TIMEOUT_CLK_MASK, host->caps);
- 
- 		if (host->caps & SDHCI_TIMEOUT_CLK_UNIT)
- 			host->timeout_clk *= 1000;
-@@ -4326,8 +4322,8 @@ int sdhci_setup_host(struct sdhci_host *host)
- 		mmc->caps |= MMC_CAP_DRIVER_TYPE_D;
- 
- 	/* Initial value for re-tuning timer count */
--	host->tuning_count = (host->caps1 & SDHCI_RETUNING_TIMER_COUNT_MASK) >>
--			     SDHCI_RETUNING_TIMER_COUNT_SHIFT;
-+	host->tuning_count = FIELD_GET(SDHCI_RETUNING_TIMER_COUNT_MASK,
-+				       host->caps1);
- 
- 	/*
- 	 * In case Re-tuning Timer is not disabled, the actual value of
-@@ -4337,8 +4333,7 @@ int sdhci_setup_host(struct sdhci_host *host)
- 		host->tuning_count = 1 << (host->tuning_count - 1);
- 
- 	/* Re-tuning mode supported by the Host Controller */
--	host->tuning_mode = (host->caps1 & SDHCI_RETUNING_MODE_MASK) >>
--			     SDHCI_RETUNING_MODE_SHIFT;
-+	host->tuning_mode = FIELD_GET(SDHCI_RETUNING_MODE_MASK, host->caps1);
- 
- 	ocr_avail = 0;
- 
-diff --git a/drivers/mmc/host/sdhci.h b/drivers/mmc/host/sdhci.h
-index b786b68e0302..d7f1441b0fc3 100644
---- a/drivers/mmc/host/sdhci.h
-+++ b/drivers/mmc/host/sdhci.h
-@@ -200,12 +200,10 @@
- #define  SDHCI_CTRL_PRESET_VAL_ENABLE	0x8000
- 
- #define SDHCI_CAPABILITIES	0x40
--#define  SDHCI_TIMEOUT_CLK_MASK	0x0000003F
--#define  SDHCI_TIMEOUT_CLK_SHIFT 0
-+#define  SDHCI_TIMEOUT_CLK_MASK		GENMASK(5, 0)
- #define  SDHCI_TIMEOUT_CLK_UNIT	0x00000080
--#define  SDHCI_CLOCK_BASE_MASK	0x00003F00
--#define  SDHCI_CLOCK_V3_BASE_MASK	0x0000FF00
--#define  SDHCI_CLOCK_BASE_SHIFT	8
-+#define  SDHCI_CLOCK_BASE_MASK		GENMASK(13, 8)
-+#define  SDHCI_CLOCK_V3_BASE_MASK	GENMASK(15, 8)
- #define  SDHCI_MAX_BLOCK_MASK	0x00030000
- #define  SDHCI_MAX_BLOCK_SHIFT  16
- #define  SDHCI_CAN_DO_8BIT	0x00040000
-@@ -227,13 +225,10 @@
- #define  SDHCI_DRIVER_TYPE_A	0x00000010
- #define  SDHCI_DRIVER_TYPE_C	0x00000020
- #define  SDHCI_DRIVER_TYPE_D	0x00000040
--#define  SDHCI_RETUNING_TIMER_COUNT_MASK	0x00000F00
--#define  SDHCI_RETUNING_TIMER_COUNT_SHIFT	8
-+#define  SDHCI_RETUNING_TIMER_COUNT_MASK	GENMASK(11, 8)
- #define  SDHCI_USE_SDR50_TUNING			0x00002000
--#define  SDHCI_RETUNING_MODE_MASK		0x0000C000
--#define  SDHCI_RETUNING_MODE_SHIFT		14
--#define  SDHCI_CLOCK_MUL_MASK	0x00FF0000
--#define  SDHCI_CLOCK_MUL_SHIFT	16
-+#define  SDHCI_RETUNING_MODE_MASK		GENMASK(15, 14)
-+#define  SDHCI_CLOCK_MUL_MASK			GENMASK(23, 16)
- #define  SDHCI_CAN_DO_ADMA3	0x08000000
- #define  SDHCI_SUPPORT_HS400	0x80000000 /* Non-standard */
- 
+>
+>> 
+>> Kai-Heng
+>> 
+>>> ---
+>>> drivers/gpu/drm/drm_dp_helper.c | 2 ++
+>>> 1 file changed, 2 insertions(+)
+>>> 
+>>> diff --git a/drivers/gpu/drm/drm_dp_helper.c b/drivers/gpu/drm/drm_dp_helper.c
+>>> index 8ba4531e808d..a0d4314663de 100644
+>>> --- a/drivers/gpu/drm/drm_dp_helper.c
+>>> +++ b/drivers/gpu/drm/drm_dp_helper.c
+>>> @@ -1301,6 +1301,8 @@ static const struct edid_quirk edid_quirk_list[] = {
+>>> 	 * only supports DPCD backlight controls
+>>> 	 */
+>>> 	{ MFG(0x4c, 0x83), PROD_ID(0x41, 0x41), BIT(DP_QUIRK_FORCE_DPCD_BACKLIGHT) },
+>>> +	/* HP Spectre x360 Convertible 13t-aw100 */
+>>> +	{ MFG(0x4c, 0x83), PROD_ID(0x42, 0x41), BIT(DP_QUIRK_FORCE_DPCD_BACKLIGHT) },
+>>> 	/*
+>>> 	 * Some Dell CML 2020 systems have panels support both AUX and PWM
+>>> 	 * backlight control, and some only support AUX backlight control. All
+>>> -- 
+>>> 2.17.1
+>>> 
+>> 
+>
+> _______________________________________________
+> dri-devel mailing list
+> dri-devel@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/dri-devel
+
 -- 
-2.17.1
-
+Jani Nikula, Intel Open Source Graphics Center
