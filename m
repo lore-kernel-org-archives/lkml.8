@@ -2,415 +2,148 @@ Return-Path: <SRS0=8dav=5Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38F29C2BA1B
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 18:36:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ACBA2C2BA1A
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 18:42:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 03DD82072F
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 18:36:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8C3C02072F
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 18:42:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729418AbgDHSgb (ORCPT
+        id S1729124AbgDHSm2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Apr 2020 14:36:31 -0400
-Received: from mga05.intel.com ([192.55.52.43]:6163 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726860AbgDHSga (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Apr 2020 14:36:30 -0400
-IronPort-SDR: 2rIbwi+zxbaXPYHK9KlpQ7558VO2+9Zvxg9X15PnBLWZV0X5kSZKoYjRgKgXVv1isozYBgaMXH
- UEGCrcMSx67g==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Apr 2020 11:36:29 -0700
-IronPort-SDR: qam+RlaVYNm5R9009PX3tqio/NXNrkS3KdknY+h/6B87106pSObCMmNvziSc3durSFEUaakrVV
- poE8avCo3xrQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,359,1580803200"; 
-   d="scan'208";a="361919298"
-Received: from pratuszn-mobl.ger.corp.intel.com (HELO localhost) ([10.252.40.202])
-  by fmsmga001.fm.intel.com with ESMTP; 08 Apr 2020 11:36:19 -0700
-Date:   Wed, 8 Apr 2020 21:36:18 +0300
-From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-To:     amirmizi6@gmail.com
-Cc:     Eyal.Cohen@nuvoton.com, oshrialkoby85@gmail.com,
-        alexander.steffen@infineon.com, robh+dt@kernel.org,
-        mark.rutland@arm.com, peterhuewe@gmx.de, jgg@ziepe.ca,
-        arnd@arndb.de, gregkh@linuxfoundation.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-integrity@vger.kernel.org, oshri.alkoby@nuvoton.com,
-        tmaimon77@gmail.com, gcwilson@us.ibm.com, kgoldman@us.ibm.com,
-        Dan.Morav@nuvoton.com, oren.tanami@nuvoton.com,
-        shmulik.hager@nuvoton.com, amir.mizinski@nuvoton.com,
-        Eddie James <eajames@linux.ibm.com>
-Subject: Re: [PATCH v6 7/7] tpm: tpm_tis: add tpm_tis_i2c driver
-Message-ID: <20200408183618.GC33486@linux.intel.com>
-References: <20200407162044.168890-1-amirmizi6@gmail.com>
- <20200407162044.168890-8-amirmizi6@gmail.com>
+        Wed, 8 Apr 2020 14:42:28 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:58148 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728016AbgDHSm2 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Apr 2020 14:42:28 -0400
+Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 038IXGYQ136453;
+        Wed, 8 Apr 2020 14:42:02 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 30920axatm-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 08 Apr 2020 14:42:02 -0400
+Received: from m0098410.ppops.net (m0098410.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 038IXJlW136815;
+        Wed, 8 Apr 2020 14:42:02 -0400
+Received: from ppma04wdc.us.ibm.com (1a.90.2fa9.ip4.static.sl-reverse.com [169.47.144.26])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 30920axata-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 08 Apr 2020 14:42:01 -0400
+Received: from pps.filterd (ppma04wdc.us.ibm.com [127.0.0.1])
+        by ppma04wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 038IelQ0011663;
+        Wed, 8 Apr 2020 18:42:00 GMT
+Received: from b03cxnp07028.gho.boulder.ibm.com (b03cxnp07028.gho.boulder.ibm.com [9.17.130.15])
+        by ppma04wdc.us.ibm.com with ESMTP id 3091mdy6vd-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 08 Apr 2020 18:42:00 +0000
+Received: from b03ledav004.gho.boulder.ibm.com (b03ledav004.gho.boulder.ibm.com [9.17.130.235])
+        by b03cxnp07028.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 038IfxJx50659744
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 8 Apr 2020 18:41:59 GMT
+Received: from b03ledav004.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 9B9467805C;
+        Wed,  8 Apr 2020 18:41:59 +0000 (GMT)
+Received: from b03ledav004.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 463CF78066;
+        Wed,  8 Apr 2020 18:41:49 +0000 (GMT)
+Received: from LeoBras (unknown [9.85.164.111])
+        by b03ledav004.gho.boulder.ibm.com (Postfix) with ESMTP;
+        Wed,  8 Apr 2020 18:41:48 +0000 (GMT)
+Message-ID: <1452b1d770bd6c516606e4855f348773d1fa6e59.camel@linux.ibm.com>
+Subject: Re: [PATCH 1/1] powerpc/crash: Use NMI context for printk after
+ crashing other CPUs
+From:   Leonardo Bras <leonardo@linux.ibm.com>
+To:     Michael Ellerman <mpe@ellerman.id.au>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Enrico Weigelt <info@metux.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Allison Randal <allison@lohutok.net>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        Nicholas Piggin <npiggin@gmail.com>
+Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Date:   Wed, 08 Apr 2020 15:41:37 -0300
+In-Reply-To: <87y2r6jhuc.fsf@mpe.ellerman.id.au>
+References: <20200406174058.686436-1-leonardo@linux.ibm.com>
+         <87y2r6jhuc.fsf@mpe.ellerman.id.au>
+Content-Type: multipart/signed; micalg="pgp-sha256";
+        protocol="application/pgp-signature"; boundary="=-lPjFWmObu0CMRxkrP/CR"
+User-Agent: Evolution 3.34.4 (3.34.4-1.fc31) 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200407162044.168890-8-amirmizi6@gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
+ definitions=2020-04-07_10:2020-04-07,2020-04-07 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 bulkscore=0
+ mlxlogscore=999 adultscore=0 priorityscore=1501 clxscore=1015
+ malwarescore=0 impostorscore=0 mlxscore=0 lowpriorityscore=0
+ suspectscore=0 spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2004080134
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 07, 2020 at 07:20:44PM +0300, amirmizi6@gmail.com wrote:
-> From: Amir Mizinski <amirmizi6@gmail.com>
-> 
-> Implements the functionality needed to communicate with an I2C TPM
-> according to the TCG TPM I2C Interface Specification.
-> 
-> Signed-off-by: Amir Mizinski <amirmizi6@gmail.com>
-> Tested-by: Eddie James <eajames@linux.ibm.com>
-> ---
->  drivers/char/tpm/Kconfig       |  12 ++
->  drivers/char/tpm/Makefile      |   1 +
->  drivers/char/tpm/tpm_tis_i2c.c | 292 +++++++++++++++++++++++++++++++++++++++++
->  3 files changed, 305 insertions(+)
->  create mode 100644 drivers/char/tpm/tpm_tis_i2c.c
-> 
-> diff --git a/drivers/char/tpm/Kconfig b/drivers/char/tpm/Kconfig
-> index aacdeed..b166ad3 100644
-> --- a/drivers/char/tpm/Kconfig
-> +++ b/drivers/char/tpm/Kconfig
-> @@ -74,6 +74,18 @@ config TCG_TIS_SPI_CR50
->  	  If you have a H1 secure module running Cr50 firmware on SPI bus,
->  	  say Yes and it will be accessible from within Linux.
->  
-> +config TCG_TIS_I2C
-> +	tristate "TPM I2C Interface Specification"
-> +	depends on I2C
-> +	depends on CRC_CCITT
-> +	select TCG_TIS_CORE
-> +	---help---
-> +	  If you have a TPM security chip which is connected to a regular
-> +	  I2C master (i.e. most embedded platforms) that is compliant with the
-> +	  TCG TPM I2C Interface Specification say Yes and it will be accessible from
-> +	  within Linux. To compile this driver as a module, choose  M here;
-> +	  the module will be called tpm_tis_i2c.
-> +
->  config TCG_TIS_I2C_ATMEL
->  	tristate "TPM Interface Specification 1.2 Interface (I2C - Atmel)"
->  	depends on I2C
-> diff --git a/drivers/char/tpm/Makefile b/drivers/char/tpm/Makefile
-> index 9567e51..97999cf 100644
-> --- a/drivers/char/tpm/Makefile
-> +++ b/drivers/char/tpm/Makefile
-> @@ -26,6 +26,7 @@ obj-$(CONFIG_TCG_TIS_SPI) += tpm_tis_spi.o
->  tpm_tis_spi-y := tpm_tis_spi_main.o
->  tpm_tis_spi-$(CONFIG_TCG_TIS_SPI_CR50) += tpm_tis_spi_cr50.o
->  
-> +obj-$(CONFIG_TCG_TIS_I2C) += tpm_tis_i2c.o
->  obj-$(CONFIG_TCG_TIS_I2C_ATMEL) += tpm_i2c_atmel.o
->  obj-$(CONFIG_TCG_TIS_I2C_INFINEON) += tpm_i2c_infineon.o
->  obj-$(CONFIG_TCG_TIS_I2C_NUVOTON) += tpm_i2c_nuvoton.o
-> diff --git a/drivers/char/tpm/tpm_tis_i2c.c b/drivers/char/tpm/tpm_tis_i2c.c
-> new file mode 100644
-> index 0000000..83c0b3a
-> --- /dev/null
-> +++ b/drivers/char/tpm/tpm_tis_i2c.c
-> @@ -0,0 +1,292 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Copyright (c) 2014-2019 Nuvoton Technology corporation
-> + *
-> + * TPM TIS I2C
-> + *
-> + * TPM TIS I2C Device Driver Interface for devices that implement the TPM I2C
-> + * Interface defined by TCG PC Client Platform TPM Profile (PTP) Specification
-> + * Revision 01.03 v22 at www.trustedcomputinggroup.org
-> + */
-> +
-> +#include <linux/init.h>
-> +#include <linux/module.h>
-> +#include <linux/moduleparam.h>
-> +#include <linux/slab.h>
-> +#include <linux/interrupt.h>
-> +#include <linux/wait.h>
-> +#include <linux/acpi.h>
-> +#include <linux/freezer.h>
-> +#include <linux/crc-ccitt.h>
-> +
-> +#include <linux/module.h>
-> +#include <linux/i2c.h>
-> +#include <linux/gpio.h>
-> +#include <linux/of_irq.h>
-> +#include <linux/of_gpio.h>
-> +#include <linux/tpm.h>
-> +#include "tpm.h"
-> +#include "tpm_tis_core.h"
-> +
-> +#define TPM_LOC_SEL                    0x04
-> +#define TPM_I2C_INTERFACE_CAPABILITY   0x30
-> +#define TPM_I2C_DEVICE_ADDRESS         0x38
-> +#define TPM_DATA_CSUM_ENABLE           0x40
-> +#define TPM_DATA_CSUM                  0x44
-> +#define TPM_I2C_DID_VID                        0x48
-> +#define TPM_I2C_RID                    0x4C
-> +
-> +//#define I2C_IS_TPM2 1
-> +
-> +struct tpm_tis_i2c_phy {
-> +	struct tpm_tis_data priv;
-> +	struct i2c_client *i2c_client;
-> +	bool data_csum;
-> +	u8 *iobuf;
-> +};
-> +
-> +static inline struct tpm_tis_i2c_phy *to_tpm_tis_i2c_phy(struct tpm_tis_data *data)
-> +{
-> +	return container_of(data, struct tpm_tis_i2c_phy, priv);
-> +}
-> +
-> +static u8 address_to_register(u32 addr)
-> +{
-> +	addr &= 0xFFF;
-> +
-> +	switch (addr) {
-> +		// adapt register addresses that have changed compared to
-> +		// older TIS versions
-> +	case TPM_ACCESS(0):
-> +		return 0x04;
-> +	case TPM_LOC_SEL:
-> +		return 0x00;
-> +	case TPM_DID_VID(0):
-> +		return 0x48;
-> +	case TPM_RID(0):
-> +		return 0x4C;
-> +	default:
-> +		return addr;
-> +	}
-> +}
-> +
-> +static int tpm_tis_i2c_read_bytes(struct tpm_tis_data *data, u32 addr,
-> +				  u16 len, u8 *result)
-> +{
-> +	struct tpm_tis_i2c_phy *phy = to_tpm_tis_i2c_phy(data);
-> +	int ret = 0;
-> +	int i = 0;
-> +	u8 reg = address_to_register(addr);
-> +	struct i2c_msg msgs[] = {
-> +		{
-> +			.addr = phy->i2c_client->addr,
-> +			.len = sizeof(reg),
-> +			.buf = &reg,
-> +		},
-> +		{
-> +			.addr = phy->i2c_client->addr,
-> +			.len = len,
-> +			.buf = result,
-> +			.flags = I2C_M_RD,
-> +		},
-> +	};
-> +
-> +	do {
-> +		ret = i2c_transfer(phy->i2c_client->adapter, msgs,
-> +				   ARRAY_SIZE(msgs));
-> +		usleep_range(250, 300); // wait default GUARD_TIME of 250µs
-> +
-> +	} while (ret < 0 && i++ < TPM_RETRY);
-> +
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +
-> +	return 0;
-> +}
-> +
-> +static int tpm_tis_i2c_write_bytes(struct tpm_tis_data *data, u32 addr,
-> +				   u16 len, const u8 *value)
-> +{
-> +	struct tpm_tis_i2c_phy *phy = to_tpm_tis_i2c_phy(data);
-> +	int ret = 0;
-> +	int i = 0;
-> +
-> +	if (phy->iobuf) {
-> +		if (len > TPM_BUFSIZE - 1)
-> +			return -EIO;
-> +
-> +		phy->iobuf[0] = address_to_register(addr);
-> +		memcpy(phy->iobuf + 1, value, len);
-> +
-> +		{
-> +			struct i2c_msg msgs[] = {
-> +				{
-> +					.addr = phy->i2c_client->addr,
-> +					.len = len + 1,
-> +					.buf = phy->iobuf,
-> +				},
-> +			};
-> +
-> +			do {
-> +				ret = i2c_transfer(phy->i2c_client->adapter,
-> +						   msgs, ARRAY_SIZE(msgs));
-> +				// wait default GUARD_TIME of 250µs
-> +				usleep_range(250, 300);
-> +			} while (ret < 0 && i++ < TPM_RETRY);
-> +		}
-> +	} else {
-> +		u8 reg = address_to_register(addr);
-> +
-> +		struct i2c_msg msgs[] = {
-> +			{
-> +				.addr = phy->i2c_client->addr,
-> +				.len = sizeof(reg),
-> +				.buf = &reg,
-> +			},
-> +			{
-> +				.addr = phy->i2c_client->addr,
-> +				.len = len,
-> +				.buf = (u8 *)value,
-> +				.flags = I2C_M_NOSTART,
-> +			},
-> +		};
-> +		do {
-> +			ret = i2c_transfer(phy->i2c_client->adapter, msgs,
-> +					   ARRAY_SIZE(msgs));
-> +			// wait default GUARD_TIME of 250µs
-> +			usleep_range(250, 300);
-> +		} while (ret < 0 && i++ < TPM_RETRY);
-> +	}
-> +
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +
-> +	return 0;
-> +}
-> +
-> +static bool tpm_tis_i2c_check_data(struct tpm_tis_data *data,
-> +				   const u8 *buf, size_t len)
-> +{
-> +	struct tpm_tis_i2c_phy *phy = to_tpm_tis_i2c_phy(data);
-> +	u16 crc, crc_tpm;
-> +	int rc;
-> +
-> +	if (phy->data_csum) {
-> +		crc = crc_ccitt(0x0000, buf, len);
-> +		rc = tpm_tis_read16(data, TPM_DATA_CSUM, &crc_tpm);
-> +		if (rc < 0)
-> +			return false;
-> +
-> +		crc_tpm = be16_to_cpu(crc_tpm);
-> +		return crc == crc_tpm;
-> +	}
-> +
-> +	return true;
-> +}
-> +
-> +static SIMPLE_DEV_PM_OPS(tpm_tis_pm, tpm_pm_suspend, tpm_tis_resume);
-> +
-> +static int csum_state_store(struct tpm_tis_data *data, u8 new_state)
-> +{
-> +	struct tpm_tis_i2c_phy *phy = to_tpm_tis_i2c_phy(data);
-> +	u8 cur_state;
-> +	int rc;
-> +
-> +	rc = tpm_tis_i2c_write_bytes(&phy->priv, TPM_DATA_CSUM_ENABLE,
-> +				     1, &new_state);
-> +	if (rc < 0)
-> +		return rc;
-> +
-> +	rc = tpm_tis_i2c_read_bytes(&phy->priv, TPM_DATA_CSUM_ENABLE,
-> +				    1, &cur_state);
-> +	if (rc < 0)
-> +		return rc;
-> +
-> +	if (new_state == cur_state)
-> +		phy->data_csum = (bool)new_state;
-> +
-> +	return rc;
-> +}
-> +
-> +static const struct tpm_tis_phy_ops tpm_i2c_phy_ops = {
-> +	.read_bytes = tpm_tis_i2c_read_bytes,
-> +	.write_bytes = tpm_tis_i2c_write_bytes,
-> +	.check_data = tpm_tis_i2c_check_data,
-> +};
-> +
-> +static int tpm_tis_i2c_probe(struct i2c_client *dev,
-> +			     const struct i2c_device_id *id)
-> +{
-> +	struct tpm_tis_i2c_phy *phy;
-> +	int rc;
-> +	int CRC_Checksum = 0;
-> +	const u8 loc_init = 0;
-> +	struct device_node *np;
-> +
-> +	phy = devm_kzalloc(&dev->dev, sizeof(struct tpm_tis_i2c_phy),
-> +			   GFP_KERNEL);
-> +	if (!phy)
-> +		return -ENOMEM;
-> +
-> +	phy->i2c_client = dev;
-> +
-> +	if (!i2c_check_functionality(dev->adapter, I2C_FUNC_NOSTART)) {
-> +		phy->iobuf = devm_kmalloc(&dev->dev, TPM_BUFSIZE, GFP_KERNEL);
-> +		if (!phy->iobuf)
-> +			return -ENOMEM;
-> +	}
-> +
-> +	// select locality 0 (the driver will access only via locality 0)
-> +	rc = tpm_tis_i2c_write_bytes(&phy->priv, TPM_LOC_SEL, 1, &loc_init);
-> +	if (rc < 0)
-> +		return rc;
-> +
-> +	// set CRC checksum calculation enable
-> +	np = dev->dev.of_node;
-> +	if (of_property_read_bool(np, "crc-checksum"))
-> +		CRC_Checksum = 1;
-> +
-> +	rc = csum_state_store(&phy->priv, CRC_Checksum);
-> +	if (rc < 0)
-> +		return rc;
-> +
-> +	return tpm_tis_core_init(&dev->dev, &phy->priv, -1, &tpm_i2c_phy_ops,
-> +					NULL);
-> +}
-> +
-> +static const struct i2c_device_id tpm_tis_i2c_id[] = {
-> +	{"tpm_tis_i2c", 0},
-> +	{}
-> +};
-> +MODULE_DEVICE_TABLE(i2c, tpm_tis_i2c_id);
-> +
-> +static const struct of_device_id of_tis_i2c_match[] = {
-> +	{ .compatible = "tcg,tpm-tis-i2c", },
-> +	{}
-> +};
-> +MODULE_DEVICE_TABLE(of, of_tis_i2c_match);
-> +
-> +static const struct acpi_device_id acpi_tis_i2c_match[] = {
-> +	{"SMO0768", 0},
-> +	{}
-> +};
-> +MODULE_DEVICE_TABLE(acpi, acpi_tis_i2c_match);
-> +
-> +static struct i2c_driver tpm_tis_i2c_driver = {
-> +	.driver = {
-> +		.owner = THIS_MODULE,
-> +		.name = "tpm_tis_i2c",
-> +		.pm = &tpm_tis_pm,
-> +		.of_match_table = of_match_ptr(of_tis_i2c_match),
-> +		.acpi_match_table = ACPI_PTR(acpi_tis_i2c_match),
-> +	},
-> +	.probe = tpm_tis_i2c_probe,
-> +	.id_table = tpm_tis_i2c_id,
-> +};
-> +
-> +module_i2c_driver(tpm_tis_i2c_driver);
-> +
-> +MODULE_DESCRIPTION("TPM Driver");
-> +MODULE_LICENSE("GPL");
-> -- 
-> 2.7.4
-> 
 
-This patch is in corrupted state essentially. No reason to review it.
-Not even checkpatch errors have been fixed.
+--=-lPjFWmObu0CMRxkrP/CR
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+On Wed, 2020-04-08 at 22:13 +1000, Michael Ellerman wrote:
+[...]
+> Added context:
+>=20
+> 	printk(KERN_EMERG "Sending IPI to other CPUs\n");
+>=20
+> 	if (crash_wake_offline)
+> 		ncpus =3D num_present_cpus() - 1;
+>=20
+> > =20
+> >  	crash_send_ipi(crash_ipi_callback);
+> >  	smp_wmb();
+> > +	printk_nmi_enter();
+>  =20
+> Why did you decide to put it there, rather than at the start of
+> default_machine_crash_shutdown() like I did?
+>=20
+> The printk() above could have already deadlocked if another CPU is stuck
+> with the logbuf lock held.
+
+Oh, I thought the CPUs would start crashing after crash_send_ipi(), so
+only printk() after that would possibly deadlock.
+
+I was not able to see how the printk() above would deadlock, but I see
+no problem adding that at the start of the function.
+
+Best regards,
+Leonardo Bras
+
+--=-lPjFWmObu0CMRxkrP/CR
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEMdeUgIzgjf6YmUyOlQYWtz9SttQFAl6OGuIACgkQlQYWtz9S
+ttRQRg/+PovdIjJ5SBFZ1ufMi08FG6Ve7IN2VW3eVtItUXeHSe9o28GwLxTnUXJy
+TRUc1gVx8kUUEhnnKSvrrXyRTPJ/Z7LDEzvvo7o1M0s6buIHvbw8MZQUGSq5l2Sq
+wXNYeApRc7eSvF0mkBs4TZyPu4E5a22RI7SBHMouXqIxpOe4VXwDaEIZ7BOmc8lm
+s6+7EBZt1tI6n6ktHMxqN0GaYr18xWoz0hEscyULb++nGyQPMww8JQBJo9kToV7Q
+ziUpy1IJahKLUrIIxt1CZf3qBaAxO9GbVNEyfDtBEs1nThSJ1eweWk0bwAUJF8ll
+SRfAWcmBfvq3YFgGcWtcf9P1SOVbRJC6fFuaNbV9KP0gzJ8I4JyrA1sIhgIYkKqh
+UzlS15B2JHZBAFuT6J1oAofaP0+hooRipiloeoVhqBH0483jc/EjQS8u96bjgiBS
+AZyr5QjTfEINdvXar23uddbWymLPjh+IPNZAjK+goi0NdIjyHsyHgtz78XaR6q2M
+06YOhmfFi2P9p30jaAqN6+7b4R50M61R+L1fTtzEWgb+xUe1HyKM7j/ff594f6M/
+AZj16bSZtBMtQSp0q4DK/m0d8XXvwy2Hb0ABJiRhCSLxXvCfMEPHVtK9Xqn+JhEj
+XXH4XsARkrl9EQ94RhbUZQ55Y4Yga2F0+PI7dQvcc37KNlTgKo0=
+=pJkd
+-----END PGP SIGNATURE-----
+
+--=-lPjFWmObu0CMRxkrP/CR--
+
