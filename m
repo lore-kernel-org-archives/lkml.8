@@ -2,158 +2,174 @@ Return-Path: <SRS0=8dav=5Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92055C2D0EA
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 15:22:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 666E8C2BA2B
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 15:22:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 66B00206C0
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 15:22:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="E8fGnG3x"
+	by mail.kernel.org (Postfix) with ESMTP id 442D6206C0
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 15:22:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728724AbgDHPWT (ORCPT
+        id S1729210AbgDHPWj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Apr 2020 11:22:19 -0400
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:50887 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726663AbgDHPWT (ORCPT
+        Wed, 8 Apr 2020 11:22:39 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:39079 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728772AbgDHPWi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Apr 2020 11:22:19 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1586359337;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=1txRlmT+72ImlSaHrcTVyVV9rPGbS6nrrn3+UD7QLpI=;
-        b=E8fGnG3xf71R9OfRNJIJoKb6ffwTulusG37+cio1YEj+GWlCHYx8jHN/BHeVbkLbbsm+kc
-        3FtNsvBMgBv5kmd6riqbV2HcTctbwbNvBFCV6y0n+QYgBbaFWr/AqdA9z2VB+7r/9cWega
-        wU5bVRH/cz+5bE1hN+VhMgPD/CTX6wQ=
-Received: from mail-lf1-f70.google.com (mail-lf1-f70.google.com
- [209.85.167.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-67-3a2etxdQOD6R8Zka8-SMtw-1; Wed, 08 Apr 2020 11:22:15 -0400
-X-MC-Unique: 3a2etxdQOD6R8Zka8-SMtw-1
-Received: by mail-lf1-f70.google.com with SMTP id i20so1400978lfl.14
-        for <linux-kernel@vger.kernel.org>; Wed, 08 Apr 2020 08:22:14 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=1txRlmT+72ImlSaHrcTVyVV9rPGbS6nrrn3+UD7QLpI=;
-        b=TApFEK2X8FeNJ+RmfSveXfRO2AOWuQWyb4eJhBo/d0WlYtI4f+3M2fwpCEjMLVALe7
-         BLuwvYoG30PZWv9awqECO8yiiztOY2N5QVSa2YApISGHXoLc1Q80xUkfufgiePT7rWke
-         zzPxY/zi195WcTB5cIOtddBHdj3xu3r+iIF/rg6YrTleqjAXdCIznHu406a8BaZRcXeD
-         3fNITHraHeVn6TvZYGmqrlA9b3xQaDCXprVMJqysrvLA0aHZFvx9LWutZq3ttDz64QXB
-         eeOOsq1RP+/Y2BgAWlas9dXPi2lbRkhyEda4f1U027i6IKZJIXmBJ/5Fhpm4ZC0q+lu3
-         MA5A==
-X-Gm-Message-State: AGi0PuYRqmcr1HYtEVqXJ1S9tJ0TnBKs+tIncGJ9K8kH3Awnz7OzsJY1
-        VOAqApFH2ulvhYHbWioioZ+XUYPtNv+ztTYkAU3NjgG8gvQVmN1itxaVvVwD9kIBlzr/QBCLrjJ
-        3n5XjcVOryApHT68I2YY2Q3QS
-X-Received: by 2002:a2e:330e:: with SMTP id d14mr5352408ljc.153.1586359332735;
-        Wed, 08 Apr 2020 08:22:12 -0700 (PDT)
-X-Google-Smtp-Source: APiQypJdXz3oUttJhWsuebJFdNpeDsyKWPgAW8IH00jWOSlW8PWM08JGzO56MjZfMCAaMit2yGY3xA==
-X-Received: by 2002:a5d:4611:: with SMTP id t17mr9186294wrq.16.1586355600423;
-        Wed, 08 Apr 2020 07:20:00 -0700 (PDT)
-Received: from ?IPv6:2a01:cb14:58d:8400:ecf6:58e2:9c06:a308? ([2a01:cb14:58d:8400:ecf6:58e2:9c06:a308])
-        by smtp.gmail.com with ESMTPSA id r20sm6293441wmh.46.2020.04.08.07.19.59
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 08 Apr 2020 07:19:59 -0700 (PDT)
-Subject: Re: [PATCH V2 5/9] objtool: Add support for intra-function calls
-To:     Alexandre Chartre <alexandre.chartre@oracle.com>,
-        Peter Zijlstra <peterz@infradead.org>
-Cc:     x86@kernel.org, linux-kernel@vger.kernel.org, jpoimboe@redhat.com,
-        tglx@linutronix.de
-References: <20200407073142.20659-1-alexandre.chartre@oracle.com>
- <20200407073142.20659-6-alexandre.chartre@oracle.com>
- <20200407130729.GZ20730@hirez.programming.kicks-ass.net>
- <40b19a8e-ae5e-623e-fb3f-261f9fec2ea5@oracle.com>
- <7ba6d4c9-c1dc-fa83-2ade-b7d3fba9e7fb@oracle.com>
-From:   Julien Thierry <jthierry@redhat.com>
-Message-ID: <b8d4777e-1c33-7165-33f6-f32007ef7305@redhat.com>
-Date:   Wed, 8 Apr 2020 15:19:58 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Wed, 8 Apr 2020 11:22:38 -0400
+Received: from ip5f5bd698.dynamic.kabel-deutschland.de ([95.91.214.152] helo=wittgenstein.fritz.box)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <christian.brauner@ubuntu.com>)
+        id 1jMCXC-0001BO-7U; Wed, 08 Apr 2020 15:22:34 +0000
+From:   Christian Brauner <christian.brauner@ubuntu.com>
+To:     Jens Axboe <axboe@kernel.dk>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org, linux-block@vger.kernel.org,
+        linux-api@vger.kernel.org
+Cc:     Jonathan Corbet <corbet@lwn.net>, Serge Hallyn <serge@hallyn.com>,
+        "Rafael J. Wysocki" <rafael@kernel.org>, Tejun Heo <tj@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        Saravana Kannan <saravanak@google.com>,
+        Jan Kara <jack@suse.cz>, David Howells <dhowells@redhat.com>,
+        Seth Forshee <seth.forshee@canonical.com>,
+        David Rheinsberg <david.rheinsberg@gmail.com>,
+        Tom Gundersen <teg@jklm.no>,
+        Christian Kellner <ckellner@redhat.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        =?UTF-8?q?St=C3=A9phane=20Graber?= <stgraber@ubuntu.com>,
+        linux-doc@vger.kernel.org, netdev@vger.kernel.org
+Subject: [PATCH 1/8] kobject_uevent: remove unneeded netlink_ns check
+Date:   Wed,  8 Apr 2020 17:21:44 +0200
+Message-Id: <20200408152151.5780-2-christian.brauner@ubuntu.com>
+X-Mailer: git-send-email 2.26.0
+In-Reply-To: <20200408152151.5780-1-christian.brauner@ubuntu.com>
+References: <20200408152151.5780-1-christian.brauner@ubuntu.com>
 MIME-Version: 1.0
-In-Reply-To: <7ba6d4c9-c1dc-fa83-2ade-b7d3fba9e7fb@oracle.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Back when I rewrote large chunks of uevent sending I should have removed
+the .netlink_ns method completely after having removed it's last user in
+[1]. Let's remove it now and also remove the helper associated with it
+that is unused too.
 
+Fixes: a3498436b3a0 ("netns: restrict uevents") /* No backport needed. */
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: "David S. Miller" <davem@davemloft.net>
+Signed-off-by: Christian Brauner <christian.brauner@ubuntu.com>
+---
+ Documentation/filesystems/sysfs-tagging.txt |  1 -
+ include/linux/kobject_ns.h                  |  3 ---
+ lib/kobject.c                               | 13 -------------
+ lib/kobject_uevent.c                        |  2 +-
+ net/core/net-sysfs.c                        |  6 ------
+ 5 files changed, 1 insertion(+), 24 deletions(-)
 
-On 4/8/20 3:06 PM, Alexandre Chartre wrote:
-> 
-> 
-> On 4/7/20 3:28 PM, Alexandre Chartre wrote:
->>
->> On 4/7/20 3:07 PM, Peter Zijlstra wrote:
->>> On Tue, Apr 07, 2020 at 09:31:38AM +0200, Alexandre Chartre wrote:
->>>
->>>> index a62e032863a8..7ee1561bf7ad 100644
->>>> --- a/tools/objtool/arch/x86/decode.c
->>>> +++ b/tools/objtool/arch/x86/decode.c
->>>> @@ -497,3 +497,15 @@ void arch_initial_func_cfi_state(struct 
->>>> cfi_state *state)
->>>>       state->regs[16].base = CFI_CFA;
->>>>       state->regs[16].offset = -8;
->>>>   }
->>>> +
->>>> +
->>>> +void arch_configure_intra_function_call(struct stack_op *op)
->>>> +{
->>>> +    /*
->>>> +     * For the impact on the stack, make an intra-function
->>>> +     * call behaves like a push of an immediate value (the
->>>> +     * return address).
->>>> +     */
->>>> +    op->src.type = OP_SRC_CONST;
->>>> +    op->dest.type = OP_DEST_PUSH;
->>>> +}
->>>
->>> An alternative is to always set up stack ops for CALL/RET on decode, but
->>> conditionally run update_insn_state() for them.
->>>
->>> Not sure that makes more logical sense, but the patch would be simpler I
->>> think.
->>
->> Right, this would avoid adding a new arch dependent function and the 
->> patch
->> will be simpler. This probably makes sense as the stack impact is the 
->> same
->> for all calls (but objtool will use it only for intra-function calls).
->>
-> 
-> Actually the processing of the ret instruction is more complicated than I
-> anticipated with intra-function calls, and so my implementation is not
-> complete at the moment.
-> 
-> The issue is to correctly handle how the ret is going to behave 
-> depending how
-> the stack (or register on arm) is modified before the ret. Adjusting the 
-> stack
-> offset makes the stack state correct, but objtool still needs to correctly
-> figure out where the ret is going to return and where the code flow 
-> continues.
-> 
-
-A hint indicating the target "jump" address could be useful. It could be 
-used to add the information on some call/jump dynamic that aren't 
-associated with jump tables. Currently when objtool finds a jump 
-dynamic, if no branches were added to it, it will just return.
-
-Having such a hint could help make additional links (at least on arm64). 
-I don't know what Peter and Josh would think of that (if that helps in 
-your case of course).
-
+diff --git a/Documentation/filesystems/sysfs-tagging.txt b/Documentation/filesystems/sysfs-tagging.txt
+index c7c8e6438958..51d28dd8b84f 100644
+--- a/Documentation/filesystems/sysfs-tagging.txt
++++ b/Documentation/filesystems/sysfs-tagging.txt
+@@ -37,6 +37,5 @@ Users of this interface:
+ - define a type in the kobj_ns_type enumeration.
+ - call kobj_ns_type_register() with its kobj_ns_type_operations which has
+   - current_ns() which returns current's namespace
+-  - netlink_ns() which returns a socket's namespace
+   - initial_ns() which returns the initial namesapce
+ - call kobj_ns_exit() when an individual tag is no longer valid
+diff --git a/include/linux/kobject_ns.h b/include/linux/kobject_ns.h
+index 069aa2ebef90..991a9286bcea 100644
+--- a/include/linux/kobject_ns.h
++++ b/include/linux/kobject_ns.h
+@@ -32,7 +32,6 @@ enum kobj_ns_type {
+ /*
+  * Callbacks so sysfs can determine namespaces
+  *   @grab_current_ns: return a new reference to calling task's namespace
+- *   @netlink_ns: return namespace to which a sock belongs (right?)
+  *   @initial_ns: return the initial namespace (i.e. init_net_ns)
+  *   @drop_ns: drops a reference to namespace
+  */
+@@ -40,7 +39,6 @@ struct kobj_ns_type_operations {
+ 	enum kobj_ns_type type;
+ 	bool (*current_may_mount)(void);
+ 	void *(*grab_current_ns)(void);
+-	const void *(*netlink_ns)(struct sock *sk);
+ 	const void *(*initial_ns)(void);
+ 	void (*drop_ns)(void *);
+ };
+@@ -52,7 +50,6 @@ const struct kobj_ns_type_operations *kobj_ns_ops(struct kobject *kobj);
+ 
+ bool kobj_ns_current_may_mount(enum kobj_ns_type type);
+ void *kobj_ns_grab_current(enum kobj_ns_type type);
+-const void *kobj_ns_netlink(enum kobj_ns_type type, struct sock *sk);
+ const void *kobj_ns_initial(enum kobj_ns_type type);
+ void kobj_ns_drop(enum kobj_ns_type type, void *ns);
+ 
+diff --git a/lib/kobject.c b/lib/kobject.c
+index 83198cb37d8d..6f07083cc111 100644
+--- a/lib/kobject.c
++++ b/lib/kobject.c
+@@ -1092,19 +1092,6 @@ void *kobj_ns_grab_current(enum kobj_ns_type type)
+ }
+ EXPORT_SYMBOL_GPL(kobj_ns_grab_current);
+ 
+-const void *kobj_ns_netlink(enum kobj_ns_type type, struct sock *sk)
+-{
+-	const void *ns = NULL;
+-
+-	spin_lock(&kobj_ns_type_lock);
+-	if ((type > KOBJ_NS_TYPE_NONE) && (type < KOBJ_NS_TYPES) &&
+-	    kobj_ns_ops_tbl[type])
+-		ns = kobj_ns_ops_tbl[type]->netlink_ns(sk);
+-	spin_unlock(&kobj_ns_type_lock);
+-
+-	return ns;
+-}
+-
+ const void *kobj_ns_initial(enum kobj_ns_type type)
+ {
+ 	const void *ns = NULL;
+diff --git a/lib/kobject_uevent.c b/lib/kobject_uevent.c
+index 7998affa45d4..a45b3eeaa2b9 100644
+--- a/lib/kobject_uevent.c
++++ b/lib/kobject_uevent.c
+@@ -400,7 +400,7 @@ static int kobject_uevent_net_broadcast(struct kobject *kobj,
+ 	 * are the only tag relevant here since we want to decide which
+ 	 * network namespaces to broadcast the uevent into.
+ 	 */
+-	if (ops && ops->netlink_ns && kobj->ktype->namespace)
++	if (ops && kobj->ktype->namespace)
+ 		if (ops->type == KOBJ_NS_TYPE_NET)
+ 			net = kobj->ktype->namespace(kobj);
+ 
+diff --git a/net/core/net-sysfs.c b/net/core/net-sysfs.c
+index 4c826b8bf9b1..5d05e13a96cc 100644
+--- a/net/core/net-sysfs.c
++++ b/net/core/net-sysfs.c
+@@ -1592,16 +1592,10 @@ static const void *net_initial_ns(void)
+ 	return &init_net;
+ }
+ 
+-static const void *net_netlink_ns(struct sock *sk)
+-{
+-	return sock_net(sk);
+-}
+-
+ const struct kobj_ns_type_operations net_ns_type_operations = {
+ 	.type = KOBJ_NS_TYPE_NET,
+ 	.current_may_mount = net_current_may_mount,
+ 	.grab_current_ns = net_grab_current_ns,
+-	.netlink_ns = net_netlink_ns,
+ 	.initial_ns = net_initial_ns,
+ 	.drop_ns = net_drop_ns,
+ };
 -- 
-Julien Thierry
+2.26.0
 
