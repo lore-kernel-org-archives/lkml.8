@@ -2,225 +2,290 @@ Return-Path: <SRS0=8dav=5Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CCE17C2BA1A
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 15:18:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42723C2D0EA
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 15:20:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 999FC206F5
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 15:18:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0118E206C0
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 15:20:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="BhHDWiTd"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="TFCVjp3N"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728568AbgDHPS0 (ORCPT
+        id S1728390AbgDHPUs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Apr 2020 11:18:26 -0400
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:36010 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728335AbgDHPSZ (ORCPT
+        Wed, 8 Apr 2020 11:20:48 -0400
+Received: from mail-qk1-f195.google.com ([209.85.222.195]:46000 "EHLO
+        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726663AbgDHPUs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Apr 2020 11:18:25 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1586359103;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=/ihK2X8/8hKS+Dwwu485A0c8mY5IW2uiYdm2HC3B6+Y=;
-        b=BhHDWiTdgcaMKLBVy+4seDxVv82H3z36zYc9CqqtBaL62K45I+m806+mRH8oWaaebxZYAj
-        QDEPn0TK1PDyKX/6hg9a6UAA4APmvBiHzHDYiTuh7QR0LXPYCJvmJqq+8GVQNGvKSzP7UD
-        aFRm+ZOCCafWujOGxC/Y2S9jeOzUsxA=
-Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
- [209.85.221.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-429-6-opA0S_N7GTk_ZHL3NkLg-1; Wed, 08 Apr 2020 11:18:21 -0400
-X-MC-Unique: 6-opA0S_N7GTk_ZHL3NkLg-1
-Received: by mail-wr1-f72.google.com with SMTP id 91so4293895wro.1
-        for <linux-kernel@vger.kernel.org>; Wed, 08 Apr 2020 08:18:21 -0700 (PDT)
+        Wed, 8 Apr 2020 11:20:48 -0400
+Received: by mail-qk1-f195.google.com with SMTP id m67so374552qke.12
+        for <linux-kernel@vger.kernel.org>; Wed, 08 Apr 2020 08:20:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Qlg9Ha7asmk8AhqzsRXiS93vnym8sH9wWiw8n5ZGpI8=;
+        b=TFCVjp3NyxUDXYfxyTrQn6Y3MAbIAXApObNanywuEmB2+bhRrgAd98Z9CYZWnoa8K2
+         jp+NUisf0n29IpSR4wlmB7HFBzhDlC99CnvjlS3QyoczNwcZTD3jVzF1Cad8kBrmxD3i
+         BzaOa6m3kFwmJ8FgNVmMENSkd4iwhyq5HYVPE=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=/ihK2X8/8hKS+Dwwu485A0c8mY5IW2uiYdm2HC3B6+Y=;
-        b=CuJge1HgMUdNxubT7hUwOYwYC/9hBjNl54ywpovjWTb7iTQpwxjhxEwUaLW1uvF6Zl
-         aEFbXZ3W/AQBDX/02eRn5e1WlpZ3OYkVCkDXj4eZtWlBML7jJF4t8ZP8ucEg1aEBecRN
-         deeUrI9TH2VMbosGx6qNGLwpMR4YESQBQzlZ6cu50adZ/teUyERTZ5GYc4ePLkkChYQ/
-         QwxjqFdoNZKPam5zCp33iR0PF1jGC3zY0wtUjcdKP+gfQQEioBgHpbkGgCKprR5IeXGz
-         4UDD4bhIDe1SP5hgHEGJpixkRI1rmbbnyLZTGlJAZ+bS4PChJQcMEGAmCr1UaXk0+Gu0
-         QPMQ==
-X-Gm-Message-State: AGi0PubI3VHXTaGbk5qcJDTkwAEET6TURs7Gxg5yn2SjCMUMAEBHq7aM
-        6shXvjYPhd7m7AgUhgq87SR8/l8cbujx7QXCzV/Pa7nGEhqRwDLgbv38HWV+x6vudh6j6NFqOtE
-        Jy/XLqGVpuA/2EzupDKEuhktz
-X-Received: by 2002:a7b:cf27:: with SMTP id m7mr5209499wmg.58.1586359100709;
-        Wed, 08 Apr 2020 08:18:20 -0700 (PDT)
-X-Google-Smtp-Source: APiQypKUH0Y1rBm9wmvsjZ4/pRfa3T9aubTTViUTWLqlNKYb/3CJkRoSl+Ti6P0oQAD2Pj/rm3IfXA==
-X-Received: by 2002:a7b:cf27:: with SMTP id m7mr5209469wmg.58.1586359100254;
-        Wed, 08 Apr 2020 08:18:20 -0700 (PDT)
-Received: from xz-x1 ([2607:9880:19c0:32::3])
-        by smtp.gmail.com with ESMTPSA id d133sm4292915wmc.27.2020.04.08.08.18.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 08 Apr 2020 08:18:19 -0700 (PDT)
-Date:   Wed, 8 Apr 2020 11:18:15 -0400
-From:   Peter Xu <peterx@redhat.com>
-To:     Hillf Danton <hdanton@sina.com>
-Cc:     syzbot <syzbot+3be1a33f04dc782e9fd5@syzkaller.appspotmail.com>,
-        akpm@linux-foundation.org, bgeffon@google.com, davem@davemloft.net,
-        herbert@gondor.apana.org.au, linux-crypto@vger.kernel.org,
-        linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com,
-        torvalds@linux-foundation.org, Thomas Gleixner <tglx@linutronix.de>
-Subject: Re: WARNING in af_alg_make_sg
-Message-ID: <20200408151815.GG66033@xz-x1>
-References: <000000000000f2bc9505a2c2b808@google.com>
- <20200408095849.15236-1-hdanton@sina.com>
- <20200408151213.GE66033@xz-x1>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Qlg9Ha7asmk8AhqzsRXiS93vnym8sH9wWiw8n5ZGpI8=;
+        b=TldmMZUgQHbYJ43wpvFn0yfaZNAwzpb8IYHSTjIAsG7WzLl8nzpMOQumztC8C8/T5K
+         m2h0HSb9Pz/Uml7/0k0ZouXX61TNX+FRk1tRFr6tsU/myjHfSZ3Gm9OuRulWw+beLfaV
+         mi+/NdSqCRHf+rzKcFMPBjO6s+d1oIS3Ea3QyP899quN863jHX60XK7i38otE4nKJBOc
+         fPJFAyvp+N6EEUyhHlOn/LqX7SeCDWZkMkE3rS4mls7cbenpxTaFUk7myDPJgHzJon17
+         QnZ7zBHGs7opXJ7sHapyX45tZ6SEzOCjeABJC38EJYWekruv5WKQAULxRiV32K/wwSGh
+         xPHw==
+X-Gm-Message-State: AGi0PubzKPqOOalEyx2iXjkUw1w+qTfLm6CxG7y2vUamb6bQ2oUZWz/i
+        IKUi9V6cfffnVe44EVRhWCRugjKXA0U=
+X-Google-Smtp-Source: APiQypJi/1XFidVWspZkIy9/wkbrPd2S+6DUk4jHFDkakMs/ANXiS2hoLA+BzIYo1Ka1DVK0pQqr5w==
+X-Received: by 2002:ac8:8d0:: with SMTP id y16mr7986619qth.340.1586358805122;
+        Wed, 08 Apr 2020 08:13:25 -0700 (PDT)
+Received: from mail-qv1-f45.google.com (mail-qv1-f45.google.com. [209.85.219.45])
+        by smtp.gmail.com with ESMTPSA id 207sm19699124qkf.69.2020.04.08.08.13.24
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 08 Apr 2020 08:13:24 -0700 (PDT)
+Received: by mail-qv1-f45.google.com with SMTP id s18so3779900qvn.1
+        for <linux-kernel@vger.kernel.org>; Wed, 08 Apr 2020 08:13:24 -0700 (PDT)
+X-Received: by 2002:a67:6583:: with SMTP id z125mr5025097vsb.198.1586358348960;
+ Wed, 08 Apr 2020 08:05:48 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200408151213.GE66033@xz-x1>
+References: <20200407220005.119540-1-dianders@chromium.org>
+ <20200407145906.v3.3.I28278ef8ea27afc0ec7e597752a6d4e58c16176f@changeid>
+ <20200408020936.GB337494@localhost.localdomain> <CAD=FV=WY8sTZQq3NtNe4Ux-C0Q0JOR4V1Z+cjVvj791rFDL+=Q@mail.gmail.com>
+ <20200408030625.GC337494@localhost.localdomain> <CAD=FV=VUAyuMnvVwz7OGoe03o4ty1S=44sjkGsFaDR5OJbeCPg@mail.gmail.com>
+ <20200408073618.GA352827@localhost.localdomain>
+In-Reply-To: <20200408073618.GA352827@localhost.localdomain>
+From:   Doug Anderson <dianders@chromium.org>
+Date:   Wed, 8 Apr 2020 08:05:37 -0700
+X-Gmail-Original-Message-ID: <CAD=FV=WkyB-7v6zhiHtn=eHX27JC9g3j3gp_EyFh-y7rxPfrtQ@mail.gmail.com>
+Message-ID: <CAD=FV=WkyB-7v6zhiHtn=eHX27JC9g3j3gp_EyFh-y7rxPfrtQ@mail.gmail.com>
+Subject: Re: [PATCH v3 3/4] blk-mq: Rerun dispatching in the case of budget contention
+To:     Ming Lei <ming.lei@redhat.com>
+Cc:     Jens Axboe <axboe@kernel.dk>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        linux-scsi@vger.kernel.org, Salman Qazi <sqazi@google.com>,
+        Gwendal Grignou <gwendal@chromium.org>,
+        Guenter Roeck <groeck@chromium.org>,
+        linux-block <linux-block@vger.kernel.org>,
+        Paolo Valente <paolo.valente@linaro.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 08, 2020 at 11:12:13AM -0400, Peter Xu wrote:
-> On Wed, Apr 08, 2020 at 05:58:48PM +0800, Hillf Danton wrote:
-> > 
-> > On Wed, 08 Apr 2020 00:48:13 -0700
-> > > syzbot found the following crash on:
-> > > 
-> > > HEAD commit:    763dede1 Merge tag 'for-linus-5.7-rc1' of git://git.kernel..
-> > > git tree:       upstream
-> > > console output: https://syzkaller.appspot.com/x/log.txt?x=12b919c7e00000
-> > > kernel config:  https://syzkaller.appspot.com/x/.config?x=12205d036cec317f
-> > > dashboard link: https://syzkaller.appspot.com/bug?extid=3be1a33f04dc782e9fd5
-> > > compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-> > > syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=142f3b8fe00000
-> > > C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=159bd23fe00000
-> > > 
-> > > The bug was bisected to:
-> > > 
-> > > commit 4426e945df588f2878affddf88a51259200f7e29
-> > > Author: Peter Xu <peterx@redhat.com>
-> > > Date:   Thu Apr 2 04:08:49 2020 +0000
-> > > 
-> > >     mm/gup: allow VM_FAULT_RETRY for multiple times
-> > > 
-> > > bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=1408ea9fe00000
-> > > final crash:    https://syzkaller.appspot.com/x/report.txt?x=1608ea9fe00000
-> > > console output: https://syzkaller.appspot.com/x/log.txt?x=1208ea9fe00000
-> > > 
-> > > IMPORTANT: if you fix the bug, please add the following tag to the commit:
-> > > Reported-by: syzbot+3be1a33f04dc782e9fd5@syzkaller.appspotmail.com
-> > > Fixes: 4426e945df58 ("mm/gup: allow VM_FAULT_RETRY for multiple times")
-> > > 
-> > > ------------[ cut here ]------------
-> > > WARNING: CPU: 1 PID: 7094 at crypto/af_alg.c:404 af_alg_make_sg+0x399/0x400 crypto/af_alg.c:404
-> > > Kernel panic - not syncing: panic_on_warn set ...
-> > > CPU: 1 PID: 7094 Comm: syz-executor037 Not tainted 5.6.0-syzkaller #0
-> > > Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-> > > Call Trace:
-> > >  __dump_stack lib/dump_stack.c:77 [inline]
-> > >  dump_stack+0x188/0x20d lib/dump_stack.c:118
-> > >  panic+0x2e3/0x75c kernel/panic.c:221
-> > >  __warn.cold+0x2f/0x35 kernel/panic.c:582
-> > >  report_bug+0x27b/0x2f0 lib/bug.c:195
-> > >  fixup_bug arch/x86/kernel/traps.c:175 [inline]
-> > >  fixup_bug arch/x86/kernel/traps.c:170 [inline]
-> > >  do_error_trap+0x12b/0x220 arch/x86/kernel/traps.c:267
-> > >  do_invalid_op+0x32/0x40 arch/x86/kernel/traps.c:286
-> > >  invalid_op+0x23/0x30 arch/x86/entry/entry_64.S:1027
-> > > RIP: 0010:af_alg_make_sg+0x399/0x400 crypto/af_alg.c:404
-> > > Code: 5c 24 2b 31 ff 89 de e8 c5 b9 f8 fd 84 db 74 0e e8 8c b8 f8 fd 48 8b 04 24 48 89 44 24 70 e8 7e b8 f8 fd 0f 0b e8 77 b8 f8 fd <0f> 0b c7 44 24 4c ea ff ff ff e9 4b ff ff ff 48 89 df e8 40 6e 36
-> > > RSP: 0018:ffffc900018779a0 EFLAGS: 00010293
-> > > RAX: ffff8880a16b65c0 RBX: ffff8880a4141220 RCX: ffffffff837a763d
-> > > RDX: 0000000000000000 RSI: ffffffff837a78f9 RDI: 0000000000000005
-> > > RBP: 000000001fef2254 R08: ffff8880a16b65c0 R09: ffffed10142d6cb9
-> > > R10: ffff8880a16b65c7 R11: ffffed10142d6cb8 R12: 0000000000000000
-> > > R13: dffffc0000000000 R14: 0000000000000000 R15: dffffc0000000000
-> > >  hash_sendmsg+0x45c/0xad0 crypto/algif_hash.c:94
-> > >  sock_sendmsg_nosec net/socket.c:652 [inline]
-> > >  sock_sendmsg+0xcf/0x120 net/socket.c:672
-> > >  ____sys_sendmsg+0x6bf/0x7e0 net/socket.c:2362
-> > >  ___sys_sendmsg+0x100/0x170 net/socket.c:2416
-> > >  __sys_sendmsg+0xec/0x1b0 net/socket.c:2449
-> > >  do_syscall_64+0xf6/0x7d0 arch/x86/entry/common.c:295
-> > >  entry_SYSCALL_64_after_hwframe+0x49/0xb3
-> > 
-> > Make gup feed back correct error code in case of bailout.
-> > 
-> > --- a/mm/gup.c
-> > +++ b/mm/gup.c
-> > @@ -1325,8 +1325,11 @@ retry:
-> >  		 * start trying again otherwise it can loop forever.
-> >  		 */
-> >  
-> > -		if (fatal_signal_pending(current))
-> > +		if (fatal_signal_pending(current)) {
-> > +			if (!pages_done)
-> > +				pages_done = -EINTR;
-> >  			break;
-> > +		}
-> >  
-> >  		*locked = 1;
-> >  		down_read(&mm->mmap_sem);
-> > 
-> 
-> CC Thomas too.
-> 
-> Sorry for all these mess...
-> 
-> Frankly speaking I didn't notice get_user_pages_fast() forbids
-> returning zero while __get_user_pages() allowed it...  Ideally I think
-> the gup callers should check against ret>0 to know exactly how many
-> valid pages we've got, but it's not an excuse good enough...
-> 
-> Hillf, would you mind kick the syzbot directly next time when post the
-> fix?  I'll make bold to do that for you this time, Thanks!
+Hi,
 
-I got one extra "#"... Doing it again...
+On Wed, Apr 8, 2020 at 12:36 AM Ming Lei <ming.lei@redhat.com> wrote:
+>
+> On Tue, Apr 07, 2020 at 09:11:28PM -0700, Doug Anderson wrote:
+> > Hi,
+> >
+> > On Tue, Apr 7, 2020 at 8:06 PM Ming Lei <ming.lei@redhat.com> wrote:
+> > >
+> > > On Tue, Apr 07, 2020 at 07:17:49PM -0700, Doug Anderson wrote:
+> > > > Hi,
+> > > >
+> > > > On Tue, Apr 7, 2020 at 7:09 PM Ming Lei <ming.lei@redhat.com> wrote:
+> > > > >
+> > > > > On Tue, Apr 07, 2020 at 03:00:04PM -0700, Douglas Anderson wrote:
+> > > > > > If ever a thread running blk-mq code tries to get budget and fails it
+> > > > > > immediately stops doing work and assumes that whenever budget is freed
+> > > > > > up that queues will be kicked and whatever work the thread was trying
+> > > > > > to do will be tried again.
+> > > > > >
+> > > > > > One path where budget is freed and queues are kicked in the normal
+> > > > > > case can be seen in scsi_finish_command().  Specifically:
+> > > > > > - scsi_finish_command()
+> > > > > >   - scsi_device_unbusy()
+> > > > > >     - # Decrement "device_busy", AKA release budget
+> > > > > >   - scsi_io_completion()
+> > > > > >     - scsi_end_request()
+> > > > > >       - blk_mq_run_hw_queues()
+> > > > > >
+> > > > > > The above is all well and good.  The problem comes up when a thread
+> > > > > > claims the budget but then releases it without actually dispatching
+> > > > > > any work.  Since we didn't schedule any work we'll never run the path
+> > > > > > of finishing work / kicking the queues.
+> > > > > >
+> > > > > > This isn't often actually a problem which is why this issue has
+> > > > > > existed for a while and nobody noticed.  Specifically we only get into
+> > > > > > this situation when we unexpectedly found that we weren't going to do
+> > > > > > any work.  Code that later receives new work kicks the queues.  All
+> > > > > > good, right?
+> > > > > >
+> > > > > > The problem shows up, however, if timing is just wrong and we hit a
+> > > > > > race.  To see this race let's think about the case where we only have
+> > > > > > a budget of 1 (only one thread can hold budget).  Now imagine that a
+> > > > > > thread got budget and then decided not to dispatch work.  It's about
+> > > > > > to call put_budget() but then the thread gets context switched out for
+> > > > > > a long, long time.  While in this state, any and all kicks of the
+> > > > > > queue (like the when we received new work) will be no-ops because
+> > > > > > nobody can get budget.  Finally the thread holding budget gets to run
+> > > > > > again and returns.  All the normal kicks will have been no-ops and we
+> > > > > > have an I/O stall.
+> > > > > >
+> > > > > > As you can see from the above, you need just the right timing to see
+> > > > > > the race.  To start with, the only case it happens if we thought we
+> > > > > > had work, actually managed to get the budget, but then actually didn't
+> > > > > > have work.  That's pretty rare to start with.  Even then, there's
+> > > > > > usually a very small amount of time between realizing that there's no
+> > > > > > work and putting the budget.  During this small amount of time new
+> > > > > > work has to come in and the queue kick has to make it all the way to
+> > > > > > trying to get the budget and fail.  It's pretty unlikely.
+> > > > > >
+> > > > > > One case where this could have failed is illustrated by an example of
+> > > > > > threads running blk_mq_do_dispatch_sched():
+> > > > > >
+> > > > > > * Threads A and B both run has_work() at the same time with the same
+> > > > > >   "hctx".  Imagine has_work() is exact.  There's no lock, so it's OK
+> > > > > >   if Thread A and B both get back true.
+> > > > > > * Thread B gets interrupted for a long time right after it decides
+> > > > > >   that there is work.  Maybe its CPU gets an interrupt and the
+> > > > > >   interrupt handler is slow.
+> > > > > > * Thread A runs, get budget, dispatches work.
+> > > > > > * Thread A's work finishes and budget is released.
+> > > > > > * Thread B finally runs again and gets budget.
+> > > > > > * Since Thread A already took care of the work and no new work has
+> > > > > >   come in, Thread B will get NULL from dispatch_request().  I believe
+> > > > > >   this is specifically why dispatch_request() is allowed to return
+> > > > > >   NULL in the first place if has_work() must be exact.
+> > > > > > * Thread B will now be holding the budget and is about to call
+> > > > > >   put_budget(), but hasn't called it yet.
+> > > > > > * Thread B gets interrupted for a long time (again).  Dang interrupts.
+> > > > > > * Now Thread C (maybe with a different "hctx" but the same queue)
+> > > > > >   comes along and runs blk_mq_do_dispatch_sched().
+> > > > > > * Thread C won't do anything because it can't get budget.
+> > > > >
+> > > > > Thread C will re-run queue in this case:
+> > > > >
+> > > > > Just thought scsi_mq_get_budget() does handle the case via re-run queue:
+> > > > >
+> > > > >         if (atomic_read(&sdev->device_busy) == 0 && !scsi_device_blocked(sdev))
+> > > > >                 blk_mq_delay_run_hw_queue(hctx, SCSI_QUEUE_DELAY);
+> > > > >
+> > > > > So looks no such race.
+> > > >
+> > > > Thread B is holding budget and hasn't released it yet, right?  In the
+> > > > context of scsi, that means "device_busy >= 1", right?  So how can the
+> > > > code you point at help us?  When Thread C reads "device_busy" it will
+> > > > be 1 and that code won't run.  What did I miss?
+> > >
+> > > Oh, this is my fault, sorry for the noise.
+> > >
+> > > >
+> > > >
+> > > > > > * Finally Thread B will run again and put the budget without kicking
+> > > > > >   any queues.
+> > > > > >
+> > > > > > Even though the example above is with blk_mq_do_dispatch_sched() I
+> > > > > > believe the race is possible any time someone is holding budget but
+> > > > > > doesn't do work.
+> > > > > >
+> > > > > > Unfortunately, the unlikely has become more likely if you happen to be
+> > > > > > using the BFQ I/O scheduler.  BFQ, by design, sometimes returns "true"
+> > > > > > for has_work() but then NULL for dispatch_request() and stays in this
+> > > > > > state for a while (currently up to 9 ms).  Suddenly you only need one
+> > > > > > race to hit, not two races in a row.  With my current setup this is
+> > > > > > easy to reproduce in reboot tests and traces have actually shown that
+> > > > > > we hit a race similar to the one describe above.
+> > > > > >
+> > > > > > In theory we could choose to just fix blk_mq_do_dispatch_sched() to
+> > > > > > kick the queues when it puts budget.  That would fix the BFQ case and
+> > > > > > one could argue that all the other cases are just theoretical.  While
+> > > > > > that is true, for all the other cases it should be very uncommon to
+> > > > > > run into the case where we need put_budget().  Having an extra queue
+> > > > > > kick for safety there shouldn't affect much and keeps the race at bay.
+> > > > > >
+> > > > > > One last note is that (at least in the SCSI case) budget is shared by
+> > > > > > all "hctx"s that have the same queue.  Thus we need to make sure to
+> > > > > > kick the whole queue, not just re-run dispatching on a single "hctx".
+> > > > > >
+> > > > > > Signed-off-by: Douglas Anderson <dianders@chromium.org>
+> > > > > > ---
+> > > > > >
+> > > > > > Changes in v3:
+> > > > > > - Always kick when putting the budget.
+> > > > > > - Delay blk_mq_do_dispatch_sched() kick by 3 ms for inexact has_work().
+> > > > > > - Totally rewrote commit message.
+> > > > > >
+> > > > > > Changes in v2:
+> > > > > > - Replace ("scsi: core: Fix stall...") w/ ("blk-mq: Rerun dispatch...")
+> > > > > >
+> > > > > >  block/blk-mq.h | 14 +++++++++++++-
+> > > > > >  1 file changed, 13 insertions(+), 1 deletion(-)
+> > > > > >
+> > > > > > diff --git a/block/blk-mq.h b/block/blk-mq.h
+> > > > > > index 10bfdfb494fa..1270505367ab 100644
+> > > > > > --- a/block/blk-mq.h
+> > > > > > +++ b/block/blk-mq.h
+> > > > > > @@ -180,12 +180,24 @@ unsigned int blk_mq_in_flight(struct request_queue *q, struct hd_struct *part);
+> > > > > >  void blk_mq_in_flight_rw(struct request_queue *q, struct hd_struct *part,
+> > > > > >                        unsigned int inflight[2]);
+> > > > > >
+> > > > > > +#define BLK_MQ_BUDGET_DELAY  3               /* ms units */
+> > > > > > +
+> > > > > >  static inline void blk_mq_put_dispatch_budget(struct blk_mq_hw_ctx *hctx)
+> > > > > >  {
+> > > > > >       struct request_queue *q = hctx->queue;
+> > > > > >
+> > > > > > -     if (q->mq_ops->put_budget)
+> > > > > > +     if (q->mq_ops->put_budget) {
+> > > > > >               q->mq_ops->put_budget(hctx);
+> > > > > > +
+> > > > > > +             /*
+> > > > > > +              * The only time we call blk_mq_put_dispatch_budget() is if
+> > > > > > +              * we released the budget without dispatching.  Holding the
+> > > > > > +              * budget could have blocked any "hctx"s with the same queue
+> > > > > > +              * and if we didn't dispatch then there's no guarantee anyone
+> > > > > > +              * will kick the queue.  Kick it ourselves.
+> > > > > > +              */
+> > > > > > +             blk_mq_delay_run_hw_queues(q, BLK_MQ_BUDGET_DELAY);
+> > > > >
+> > > > > No, please don't do that un-conditionally we just need to re-run queue
+> > > > > when there has work to do.
+> > > >
+> > > > ...what function would you like me to call to check?  The code you
+> > >
+> > > At least we only need to call it in blk_mq_do_dispatch_sched() and
+> > > blk_mq_do_dispatch_ctx(), in which no request is dequeued yet. Other
+> > > callers can handle the run queue cause request has been there.
+> >
+> > Sure, I can move it so it's only in blk_mq_do_dispatch_sched() and
+> > blk_mq_do_dispatch_ctx().  That would definitely make it so that I
+> > can't reproduce problems anymore, at least.
+> >
+> > The one thing that worries me is that I couldn't come up with a
+> > convincing argument about why the race wasn't possible when we put the
+> > budget in blk_mq_dispatch_rq_list() and __blk_mq_try_issue_directly().
+> > Perhaps you can explain.  In blk_mq_dispatch_rq_list() I can see that
+> > we will call blk_mq_run_hw_queue() or blk_mq_delay_run_hw_queue(), but
+> > I guess I'm at least slightly worried that we'd also need to kick the
+> > other "hctx"s on the same queue.  In theory holding budget could have
+>
+> No, if there is one request from any one hctx, when this request is
+> dispatched and completed, all hctxs will be run again from
+> scsi_end_request().
 
-#syz test: https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
+Ah, of course!  That makes sense to me.  Thanks for explaining.  So in
+these contexts we know for sure that there is more work to do on our
+"hctx" and we re-kick our own work.  If we happened to have blocked
+some other "hctx" then at least it will get kicked again when we
+finish our work just like in the normal case where we had budget and
+blocked someone else.
 
-8<--------------------------------------------------------------------
-From 380003a56efc125565143c91ee6cefd7b3eba869 Mon Sep 17 00:00:00 2001
-From: Hillf Danton <hdanton@sina.com>
-Date: Wed, 8 Apr 2020 11:01:25 -0400
-Subject: [PATCH] mm/gup: Let __get_user_pages_locked() return -EINTR for fatal
- signal
+I've updated the comments and I'm uploading a v4.  I hope it looks good now.
 
-__get_user_pages_locked() will return 0 instead of -EINTR after commit
-4426e945df588 which added extra code to allow gup detect fatal signal
-faster.  Restore that behavior.
-
-CC: Thomas Gleixner <tglx@linutronix.de>
-Signed-off-by: Hillf Danton <hdanton@sina.com>
-[peterx: write commit message]
-Signed-off-by: Peter Xu <peterx@redhat.com>
----
- mm/gup.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
-
-diff --git a/mm/gup.c b/mm/gup.c
-index afce0bc47e70..6076df8e04a4 100644
---- a/mm/gup.c
-+++ b/mm/gup.c
-@@ -1326,8 +1326,11 @@ static __always_inline long __get_user_pages_locked(struct task_struct *tsk,
- 		 * start trying again otherwise it can loop forever.
- 		 */
- 
--		if (fatal_signal_pending(current))
-+		if (fatal_signal_pending(current)) {
-+			if (!pages_done)
-+				pages_done = -EINTR;
- 			break;
-+		}
- 
- 		ret = down_read_killable(&mm->mmap_sem);
- 		if (ret) {
--- 
-2.24.1
-
--- 
-Peter Xu
-
+-Doug
