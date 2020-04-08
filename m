@@ -2,109 +2,256 @@ Return-Path: <SRS0=8dav=5Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1878C2D0EA
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 07:22:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BEFAC2D0EA
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 07:22:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C19972074F
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 07:22:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1A8832075E
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 07:22:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726821AbgDHHWo (ORCPT
+        id S1726858AbgDHHWz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Apr 2020 03:22:44 -0400
-Received: from mga18.intel.com ([134.134.136.126]:10805 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725932AbgDHHWo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Apr 2020 03:22:44 -0400
-IronPort-SDR: QZME3hUoJXd7zhOqpVhH5KJJ0cs42SI0cjJJvQi7rihEtw8LcDnt06ezSgrO+vZnCcbi+NDx1a
- 1tQuyVYYlvUw==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Apr 2020 00:22:43 -0700
-IronPort-SDR: tOuocFG0D/Wi2hHfRqzdl1/BIu5OGbDkB/6Qc4hqb2H0Zzk86rOtoEiwfsNVIN57DqkhkNvVEb
- WjPeWJNWfWqA==
-X-IronPort-AV: E=Sophos;i="5.72,357,1580803200"; 
-   d="scan'208";a="425043160"
-Received: from slinke-mobl.ger.corp.intel.com (HELO localhost) ([10.252.60.237])
-  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Apr 2020 00:22:40 -0700
-From:   Jani Nikula <jani.nikula@linux.intel.com>
-To:     Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        mripard@kernel.org, David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        "Deucher\, Alexander" <alexander.deucher@amd.com>
-Cc:     "open list\:DRM DRIVERS" <dri-devel@lists.freedesktop.org>,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] drm/i915: Force DPCD backlight mode for HP Spectre x360 Convertible 13t-aw100
-In-Reply-To: <1F57CA05-3E23-4CA8-A138-6785906ED465@canonical.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-References: <20200323053528.3147-1-kai.heng.feng@canonical.com> <41FD4AD2-81F9-45E8-B5D6-9CC255D0581B@canonical.com> <1F57CA05-3E23-4CA8-A138-6785906ED465@canonical.com>
-Date:   Wed, 08 Apr 2020 10:22:37 +0300
-Message-ID: <87mu7migqq.fsf@intel.com>
+        Wed, 8 Apr 2020 03:22:55 -0400
+Received: from mx05.melco.co.jp ([192.218.140.145]:41832 "EHLO
+        mx05.melco.co.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726826AbgDHHWy (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Apr 2020 03:22:54 -0400
+Received: from mr05.melco.co.jp (mr05 [133.141.98.165])
+        by mx05.melco.co.jp (Postfix) with ESMTP id DDEC43A4087;
+        Wed,  8 Apr 2020 16:22:51 +0900 (JST)
+Received: from mr05.melco.co.jp (unknown [127.0.0.1])
+        by mr05.imss (Postfix) with ESMTP id 48xwj764j7zRkDb;
+        Wed,  8 Apr 2020 16:22:51 +0900 (JST)
+Received: from mf03_second.melco.co.jp (unknown [192.168.20.183])
+        by mr05.melco.co.jp (Postfix) with ESMTP id 48xwj75md8zRjp0;
+        Wed,  8 Apr 2020 16:22:51 +0900 (JST)
+Received: from mf03.melco.co.jp (unknown [133.141.98.183])
+        by mf03_second.melco.co.jp (Postfix) with ESMTP id 48xwj75d7rzRkH0;
+        Wed,  8 Apr 2020 16:22:51 +0900 (JST)
+Received: from tux532.tad.melco.co.jp (unknown [133.141.243.226])
+        by mf03.melco.co.jp (Postfix) with ESMTP id 48xwj74TxBzRjHB;
+        Wed,  8 Apr 2020 16:22:51 +0900 (JST)
+Received:  from tux532.tad.melco.co.jp
+        by tux532.tad.melco.co.jp (unknown) with ESMTP id 0387Mpx3030688;
+        Wed, 8 Apr 2020 16:22:51 +0900
+Received: from tux390.tad.melco.co.jp (tux390.tad.melco.co.jp [127.0.0.1])
+        by postfix.imss70 (Postfix) with ESMTP id 50EC217E07A;
+        Wed,  8 Apr 2020 16:22:51 +0900 (JST)
+Received: from tux554.tad.melco.co.jp (mailgw1.tad.melco.co.jp [10.168.7.223])
+        by tux390.tad.melco.co.jp (Postfix) with ESMTP id 4524D17E079;
+        Wed,  8 Apr 2020 16:22:51 +0900 (JST)
+Received: from tux554.tad.melco.co.jp
+        by tux554.tad.melco.co.jp (unknown) with ESMTP id 0387Mpsr003470;
+        Wed, 8 Apr 2020 16:22:51 +0900
+From:   Tetsuhiro Kohada <Kohada.Tetsuhiro@dc.MitsubishiElectric.co.jp>
+To:     Kohada.Tetsuhiro@dc.MitsubishiElectric.co.jp
+Cc:     Mori.Takahiro@ab.MitsubishiElectric.co.jp,
+        motai.hirotaka@aj.mitsubishielectric.co.jp,
+        Namjae Jeon <namjae.jeon@samsung.com>,
+        Sungjong Seo <sj1557.seo@samsung.com>,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] exfat: replace 'time_ms' with 'time_10ms'
+Date:   Wed,  8 Apr 2020 16:22:42 +0900
+Message-Id: <20200408072242.95334-1-Kohada.Tetsuhiro@dc.MitsubishiElectric.co.jp>
+X-Mailer: git-send-email 2.25.0
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 07 Apr 2020, Kai-Heng Feng <kai.heng.feng@canonical.com> wrote:
->> On Mar 27, 2020, at 19:03, Kai-Heng Feng <kai.heng.feng@canonical.com> wrote:
->> 
->> Hi,
->> 
->>> On Mar 23, 2020, at 13:35, Kai-Heng Feng <kai.heng.feng@canonical.com> wrote:
->>> 
->>> There's another OLED panel needs to use DPCD aux interface to control
->>> backlight.
->>> 
->>> BugLink: https://bugs.launchpad.net/bugs/1860303
->>> Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
->> 
->> Would it be possible to review this?
->> I'd like to send a similar quirk for a new panel, and I want to avoid causing any merge conflict.
->
-> Another gentle ping...
+Replace "time_ms"  with "time_10ms" in the file directory entry structure
+and related functions.
 
-Can't really review, but if you say that's needed...
+The unit of create_time_ms/modify_time_ms in File Directory Entry are
+not 'milli-second', but 'ceni-second'.
 
-Acked-by: Jani Nikula <jani.nikula@intel.com>
+The reason for using 10ms instead of cs for the names is that the exfat
+specification defines it as Create10msIncrement/LastModified10msIncrement.
 
->
->> 
->> Kai-Heng
->> 
->>> ---
->>> drivers/gpu/drm/drm_dp_helper.c | 2 ++
->>> 1 file changed, 2 insertions(+)
->>> 
->>> diff --git a/drivers/gpu/drm/drm_dp_helper.c b/drivers/gpu/drm/drm_dp_helper.c
->>> index 8ba4531e808d..a0d4314663de 100644
->>> --- a/drivers/gpu/drm/drm_dp_helper.c
->>> +++ b/drivers/gpu/drm/drm_dp_helper.c
->>> @@ -1301,6 +1301,8 @@ static const struct edid_quirk edid_quirk_list[] = {
->>> 	 * only supports DPCD backlight controls
->>> 	 */
->>> 	{ MFG(0x4c, 0x83), PROD_ID(0x41, 0x41), BIT(DP_QUIRK_FORCE_DPCD_BACKLIGHT) },
->>> +	/* HP Spectre x360 Convertible 13t-aw100 */
->>> +	{ MFG(0x4c, 0x83), PROD_ID(0x42, 0x41), BIT(DP_QUIRK_FORCE_DPCD_BACKLIGHT) },
->>> 	/*
->>> 	 * Some Dell CML 2020 systems have panels support both AUX and PWM
->>> 	 * backlight control, and some only support AUX backlight control. All
->>> -- 
->>> 2.17.1
->>> 
->> 
->
-> _______________________________________________
-> dri-devel mailing list
-> dri-devel@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/dri-devel
+Signed-off-by: Tetsuhiro Kohada <Kohada.Tetsuhiro@dc.MitsubishiElectric.co.jp>
+---
+ fs/exfat/dir.c       |  8 ++++----
+ fs/exfat/exfat_fs.h  |  4 ++--
+ fs/exfat/exfat_raw.h |  4 ++--
+ fs/exfat/file.c      |  2 +-
+ fs/exfat/inode.c     |  4 ++--
+ fs/exfat/misc.c      | 18 +++++++++---------
+ fs/exfat/namei.c     |  4 ++--
+ 7 files changed, 22 insertions(+), 22 deletions(-)
 
+diff --git a/fs/exfat/dir.c b/fs/exfat/dir.c
+index 4b91afb0f0..cacc53ff11 100644
+--- a/fs/exfat/dir.c
++++ b/fs/exfat/dir.c
+@@ -137,12 +137,12 @@ static int exfat_readdir(struct inode *inode, struct exfat_dir_entry *dir_entry)
+ 					ep->dentry.file.create_tz,
+ 					ep->dentry.file.create_time,
+ 					ep->dentry.file.create_date,
+-					ep->dentry.file.create_time_ms);
++					ep->dentry.file.create_time_10ms);
+ 			exfat_get_entry_time(sbi, &dir_entry->mtime,
+ 					ep->dentry.file.modify_tz,
+ 					ep->dentry.file.modify_time,
+ 					ep->dentry.file.modify_date,
+-					ep->dentry.file.modify_time_ms);
++					ep->dentry.file.modify_time_10ms);
+ 			exfat_get_entry_time(sbi, &dir_entry->atime,
+ 					ep->dentry.file.access_tz,
+ 					ep->dentry.file.access_time,
+@@ -461,12 +461,12 @@ int exfat_init_dir_entry(struct inode *inode, struct exfat_chain *p_dir,
+ 			&ep->dentry.file.create_tz,
+ 			&ep->dentry.file.create_time,
+ 			&ep->dentry.file.create_date,
+-			&ep->dentry.file.create_time_ms);
++			&ep->dentry.file.create_time_10ms);
+ 	exfat_set_entry_time(sbi, &ts,
+ 			&ep->dentry.file.modify_tz,
+ 			&ep->dentry.file.modify_time,
+ 			&ep->dentry.file.modify_date,
+-			&ep->dentry.file.modify_time_ms);
++			&ep->dentry.file.modify_time_10ms);
+ 	exfat_set_entry_time(sbi, &ts,
+ 			&ep->dentry.file.access_tz,
+ 			&ep->dentry.file.access_time,
+diff --git a/fs/exfat/exfat_fs.h b/fs/exfat/exfat_fs.h
+index 67d4e46fb8..6d357e9f5b 100644
+--- a/fs/exfat/exfat_fs.h
++++ b/fs/exfat/exfat_fs.h
+@@ -506,9 +506,9 @@ void __exfat_fs_error(struct super_block *sb, int report, const char *fmt, ...)
+ void exfat_msg(struct super_block *sb, const char *lv, const char *fmt, ...)
+ 		__printf(3, 4) __cold;
+ void exfat_get_entry_time(struct exfat_sb_info *sbi, struct timespec64 *ts,
+-		u8 tz, __le16 time, __le16 date, u8 time_ms);
++		u8 tz, __le16 time, __le16 date, u8 time_10ms);
+ void exfat_set_entry_time(struct exfat_sb_info *sbi, struct timespec64 *ts,
+-		u8 *tz, __le16 *time, __le16 *date, u8 *time_ms);
++		u8 *tz, __le16 *time, __le16 *date, u8 *time_10ms);
+ unsigned short exfat_calc_chksum_2byte(void *data, int len,
+ 		unsigned short chksum, int type);
+ void exfat_update_bh(struct super_block *sb, struct buffer_head *bh, int sync);
+diff --git a/fs/exfat/exfat_raw.h b/fs/exfat/exfat_raw.h
+index 2a841010e6..be0e362422 100644
+--- a/fs/exfat/exfat_raw.h
++++ b/fs/exfat/exfat_raw.h
+@@ -136,8 +136,8 @@ struct exfat_dentry {
+ 			__le16 modify_date;
+ 			__le16 access_time;
+ 			__le16 access_date;
+-			__u8 create_time_ms;
+-			__u8 modify_time_ms;
++			__u8 create_time_10ms;
++			__u8 modify_time_10ms;
+ 			__u8 create_tz;
+ 			__u8 modify_tz;
+ 			__u8 access_tz;
+diff --git a/fs/exfat/file.c b/fs/exfat/file.c
+index 483f683757..a986f1eeef 100644
+--- a/fs/exfat/file.c
++++ b/fs/exfat/file.c
+@@ -165,7 +165,7 @@ int __exfat_truncate(struct inode *inode, loff_t new_size)
+ 				&ep->dentry.file.modify_tz,
+ 				&ep->dentry.file.modify_time,
+ 				&ep->dentry.file.modify_date,
+-				&ep->dentry.file.modify_time_ms);
++				&ep->dentry.file.modify_time_10ms);
+ 		ep->dentry.file.attr = cpu_to_le16(ei->attr);
+ 
+ 		/* File size should be zero if there is no cluster allocated */
+diff --git a/fs/exfat/inode.c b/fs/exfat/inode.c
+index 06887492f5..59b50dfbdd 100644
+--- a/fs/exfat/inode.c
++++ b/fs/exfat/inode.c
+@@ -56,12 +56,12 @@ static int __exfat_write_inode(struct inode *inode, int sync)
+ 			&ep->dentry.file.create_tz,
+ 			&ep->dentry.file.create_time,
+ 			&ep->dentry.file.create_date,
+-			&ep->dentry.file.create_time_ms);
++			&ep->dentry.file.create_time_10ms);
+ 	exfat_set_entry_time(sbi, &inode->i_mtime,
+ 			&ep->dentry.file.modify_tz,
+ 			&ep->dentry.file.modify_time,
+ 			&ep->dentry.file.modify_date,
+-			&ep->dentry.file.modify_time_ms);
++			&ep->dentry.file.modify_time_10ms);
+ 	exfat_set_entry_time(sbi, &inode->i_atime,
+ 			&ep->dentry.file.access_tz,
+ 			&ep->dentry.file.access_time,
+diff --git a/fs/exfat/misc.c b/fs/exfat/misc.c
+index 14a3300848..8b39c8176a 100644
+--- a/fs/exfat/misc.c
++++ b/fs/exfat/misc.c
+@@ -75,7 +75,7 @@ static void exfat_adjust_tz(struct timespec64 *ts, u8 tz_off)
+ 
+ /* Convert a EXFAT time/date pair to a UNIX date (seconds since 1 1 70). */
+ void exfat_get_entry_time(struct exfat_sb_info *sbi, struct timespec64 *ts,
+-		u8 tz, __le16 time, __le16 date, u8 time_ms)
++		u8 tz, __le16 time, __le16 date, u8 time_10ms)
+ {
+ 	u16 t = le16_to_cpu(time);
+ 	u16 d = le16_to_cpu(date);
+@@ -84,10 +84,10 @@ void exfat_get_entry_time(struct exfat_sb_info *sbi, struct timespec64 *ts,
+ 			      t >> 11, (t >> 5) & 0x003F, (t & 0x001F) << 1);
+ 
+ 
+-	/* time_ms field represent 0 ~ 199(1990 ms) */
+-	if (time_ms) {
+-		ts->tv_sec += time_ms / 100;
+-		ts->tv_nsec = (time_ms % 100) * 10 * NSEC_PER_MSEC;
++	/* time_10ms field represent 0 ~ 199cs(1990 ms) */
++	if (time_10ms) {
++		ts->tv_sec += (time_10ms * 10) / 1000;
++		ts->tv_nsec = (time_10ms * 10) % 1000 * NSEC_PER_MSEC;
+ 	}
+ 
+ 	if (tz & EXFAT_TZ_VALID)
+@@ -100,7 +100,7 @@ void exfat_get_entry_time(struct exfat_sb_info *sbi, struct timespec64 *ts,
+ 
+ /* Convert linear UNIX date to a EXFAT time/date pair. */
+ void exfat_set_entry_time(struct exfat_sb_info *sbi, struct timespec64 *ts,
+-		u8 *tz, __le16 *time, __le16 *date, u8 *time_ms)
++		u8 *tz, __le16 *time, __le16 *date, u8 *time_10ms)
+ {
+ 	struct tm tm;
+ 	u16 t, d;
+@@ -112,9 +112,9 @@ void exfat_set_entry_time(struct exfat_sb_info *sbi, struct timespec64 *ts,
+ 	*time = cpu_to_le16(t);
+ 	*date = cpu_to_le16(d);
+ 
+-	/* time_ms field represent 0 ~ 199(1990 ms) */
+-	if (time_ms)
+-		*time_ms = (tm.tm_sec & 1) * 100 +
++	/* time_10ms field represent 0 ~ 199cs(1990 ms) */
++	if (time_10ms)
++		*time_10ms = (tm.tm_sec & 1) * 100 +
+ 			ts->tv_nsec / (10 * NSEC_PER_MSEC);
+ 
+ 	/*
+diff --git a/fs/exfat/namei.c b/fs/exfat/namei.c
+index a8681d91f5..90d8273cd8 100644
+--- a/fs/exfat/namei.c
++++ b/fs/exfat/namei.c
+@@ -698,12 +698,12 @@ static int exfat_find(struct inode *dir, struct qstr *qname,
+ 				ep->dentry.file.create_tz,
+ 				ep->dentry.file.create_time,
+ 				ep->dentry.file.create_date,
+-				ep->dentry.file.create_time_ms);
++				ep->dentry.file.create_time_10ms);
+ 		exfat_get_entry_time(sbi, &info->mtime,
+ 				ep->dentry.file.modify_tz,
+ 				ep->dentry.file.modify_time,
+ 				ep->dentry.file.modify_date,
+-				ep->dentry.file.modify_time_ms);
++				ep->dentry.file.modify_time_10ms);
+ 		exfat_get_entry_time(sbi, &info->atime,
+ 				ep->dentry.file.access_tz,
+ 				ep->dentry.file.access_time,
 -- 
-Jani Nikula, Intel Open Source Graphics Center
+2.25.0
+
