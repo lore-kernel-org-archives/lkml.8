@@ -2,145 +2,129 @@ Return-Path: <SRS0=8dav=5Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5941BC2BA1B
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 16:41:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E47EC2BA1A
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 16:42:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3BF0B20769
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 16:41:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 304E920769
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 16:42:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1586364138;
+	bh=dZflYwtdOE4WpeF55n3a5433aJ25TRS76smK0BBXLRc=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=tEwVrosy5aXHYAVXyx1tvQT7N9kG5A/7aia2dvE1fW6XXP/JDDBkToT/eEfreFu44
+	 D6lqAsdTtdNdAVXIHcsOwAFmP6YdjcA/jRnhK8Ae+LY5Y318py4+gzylKCs5xfZBQK
+	 lA2Pca4qZWC9H51BvS3VV0mtLcUJVgtic1BHwBAo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730365AbgDHQl6 convert rfc822-to-8bit (ORCPT
+        id S1730370AbgDHQmQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Apr 2020 12:41:58 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:43191 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730356AbgDHQl5 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Apr 2020 12:41:57 -0400
-Received: from mail-lj1-f175.google.com ([209.85.208.175])
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <stgraber@ubuntu.com>)
-        id 1jMDlx-0001To-LD
-        for linux-kernel@vger.kernel.org; Wed, 08 Apr 2020 16:41:53 +0000
-Received: by mail-lj1-f175.google.com with SMTP id g27so8301847ljn.10
-        for <linux-kernel@vger.kernel.org>; Wed, 08 Apr 2020 09:41:53 -0700 (PDT)
-X-Gm-Message-State: AGi0PuYN2quChaXSWaJiC+5P6iYrqpRBVuVbWV9OLwkXSpYUkEp38kdz
-        oegBVnBJNTHjPkdr9lAMKlv4gbRhBElqS3jOlqacXQ==
-X-Google-Smtp-Source: APiQypLzUyLptlfj4UREBf2l5xN02F+xA0MQtCV/4zxKUkblPb/olSzPaY17gwOo3IIMcNmLwikMsI/ASDg0+VXPjE8=
-X-Received: by 2002:a2e:97c2:: with SMTP id m2mr5450395ljj.228.1586364113069;
- Wed, 08 Apr 2020 09:41:53 -0700 (PDT)
+        Wed, 8 Apr 2020 12:42:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44848 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730369AbgDHQmP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Apr 2020 12:42:15 -0400
+Received: from coco.lan (ip5f5ad4d8.dynamic.kabel-deutschland.de [95.90.212.216])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7CC9420769;
+        Wed,  8 Apr 2020 16:42:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1586364134;
+        bh=dZflYwtdOE4WpeF55n3a5433aJ25TRS76smK0BBXLRc=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=pX91x5p/ex8/LllfJiIeej2SPjWU/d1wcD7IAD90y5SaEHcvFWXo85xGJ6QFBMt1u
+         ZiJGS26q3FFxWcH4/RHQQO1EgOWg5eAFYZtiHFCUXlkUkUnqv1soXL7RpTyJsVE5zd
+         k0B9JNAg2QY85+hKcn3mTGujmOGS6djP0timfAgw=
+Date:   Wed, 8 Apr 2020 18:42:10 +0200
+From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+To:     Mark Brown <broonie@kernel.org>
+Cc:     Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
+        linux-spi@vger.kernel.org
+Subject: Re: [PATCH 21/35] docs: spi: spi.h: fix a doc building warning
+Message-ID: <20200408184210.43c4411b@coco.lan>
+In-Reply-To: <20200408161629.GC5177@sirena.org.uk>
+References: <cover.1586359676.git.mchehab+huawei@kernel.org>
+        <d62f3f3536c0da2062bad87524fb184ad5a9a5f2.1586359676.git.mchehab+huawei@kernel.org>
+        <20200408154925.GA5177@sirena.org.uk>
+        <20200408181154.6c290772@coco.lan>
+        <20200408161629.GC5177@sirena.org.uk>
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-References: <20200408152151.5780-1-christian.brauner@ubuntu.com> <CAG48ez0KWgLMOp1d3X1AcRNc4-eF1YiCw=PgWiGjtM6PqQqawg@mail.gmail.com>
-In-Reply-To: <CAG48ez0KWgLMOp1d3X1AcRNc4-eF1YiCw=PgWiGjtM6PqQqawg@mail.gmail.com>
-From:   =?UTF-8?Q?St=C3=A9phane_Graber?= <stgraber@ubuntu.com>
-Date:   Wed, 8 Apr 2020 12:41:41 -0400
-X-Gmail-Original-Message-ID: <CA+enf=uhTi1yWtOe+iuv2FvdZzo69pwsP-NNU2775jN01aDcVQ@mail.gmail.com>
-Message-ID: <CA+enf=uhTi1yWtOe+iuv2FvdZzo69pwsP-NNU2775jN01aDcVQ@mail.gmail.com>
-Subject: Re: [PATCH 0/8] loopfs
-To:     Jann Horn <jannh@google.com>
-Cc:     Christian Brauner <christian.brauner@ubuntu.com>,
-        Jens Axboe <axboe@kernel.dk>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        kernel list <linux-kernel@vger.kernel.org>,
-        linux-block@vger.kernel.org, Linux API <linux-api@vger.kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Serge Hallyn <serge@hallyn.com>,
-        "Rafael J. Wysocki" <rafael@kernel.org>, Tejun Heo <tj@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Saravana Kannan <saravanak@google.com>,
-        Jan Kara <jack@suse.cz>, David Howells <dhowells@redhat.com>,
-        Seth Forshee <seth.forshee@canonical.com>,
-        David Rheinsberg <david.rheinsberg@gmail.com>,
-        Tom Gundersen <teg@jklm.no>,
-        Christian Kellner <ckellner@redhat.com>,
-        Dmitry Vyukov <dvyukov@google.com>, linux-doc@vger.kernel.org,
-        Network Development <netdev@vger.kernel.org>,
-        Matthew Garrett <mjg59@google.com>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 8, 2020 at 12:24 PM Jann Horn <jannh@google.com> wrote:
->
-> On Wed, Apr 8, 2020 at 5:23 PM Christian Brauner
-> <christian.brauner@ubuntu.com> wrote:
-> > One of the use-cases for loopfs is to allow to dynamically allocate loop
-> > devices in sandboxed workloads without exposing /dev or
-> > /dev/loop-control to the workload in question and without having to
-> > implement a complex and also racy protocol to send around file
-> > descriptors for loop devices. With loopfs each mount is a new instance,
-> > i.e. loop devices created in one loopfs instance are independent of any
-> > loop devices created in another loopfs instance. This allows
-> > sufficiently privileged tools to have their own private stash of loop
-> > device instances. Dmitry has expressed his desire to use this for
-> > syzkaller in a private discussion. And various parties that want to use
-> > it are Cced here too.
-> >
-> > In addition, the loopfs filesystem can be mounted by user namespace root
-> > and is thus suitable for use in containers. Combined with syscall
-> > interception this makes it possible to securely delegate mounting of
-> > images on loop devices, i.e. when a user calls mount -o loop <image>
-> > <mountpoint> it will be possible to completely setup the loop device.
-> > The final mount syscall to actually perform the mount will be handled
-> > through syscall interception and be performed by a sufficiently
-> > privileged process. Syscall interception is already supported through a
-> > new seccomp feature we implemented in [1] and extended in [2] and is
-> > actively used in production workloads. The additional loopfs work will
-> > be used there and in various other workloads too. You'll find a short
-> > illustration how this works with syscall interception below in [4].
->
-> Would that privileged process then allow you to mount your filesystem
-> images with things like ext4? As far as I know, the filesystem
-> maintainers don't generally consider "untrusted filesystem image" to
-> be a strongly enforced security boundary; and worse, if an attacker
-> has access to a loop device from which something like ext4 is mounted,
-> things like "struct ext4_dir_entry_2" will effectively be in shared
-> memory, and an attacker can trivially bypass e.g.
-> ext4_check_dir_entry(). At the moment, that's not a huge problem (for
-> anything other than kernel lockdown) because only root normally has
-> access to loop devices.
->
-> Ubuntu carries an out-of-tree patch that afaik blocks the shared
-> memory thing: <https://git.launchpad.net/~ubuntu-kernel/ubuntu/+source/linux/+git/eoan/commit?id=4bc428fdf5500b7366313f166b7c9c50ee43f2c4>
->
-> But even with that patch, I'm not super excited about exposing
-> filesystem image parsing attack surface to containers unless you run
-> the filesystem in a sandboxed environment (at which point you don't
-> need a loop device anymore either).
+Em Wed, 8 Apr 2020 17:16:29 +0100
+Mark Brown <broonie@kernel.org> escreveu:
 
-So in general we certainly agree that you should never expose someone
-that you wouldn't trust with root on the host to syscall interception
-mounting of real kernel filesystems.
+> On Wed, Apr 08, 2020 at 06:11:54PM +0200, Mauro Carvalho Chehab wrote:
+> > Mark Brown <broonie@kernel.org> escreveu:  
+> 
+> > > Are you sure this is a sensible fix?  The following lines should be part
+> > > of the documentation for transfer_one, will that be the case after your
+> > > change?  
+> 
+> > Without that, Sphinx will warn and may produce something unexpected.  
+> 
+> Right, but if the warning is telling us something useful we want to
+> handle it rather than just shutting it up.
 
-But that's not all that our syscall interception logic can do. We have
-support for rewriting a normal filesystem mount attempt to instead use
-an available FUSE implementation. As far as the user is concerned,
-they ran "mount /dev/sdaX /mnt" and got that ext4 filesystem mounted
-on /mnt as requested, except that the container manager intercepted
-the mount attempt and instead spawned fuse2fs for that mount. This
-requires absolutely no change to the software the user is running.
+True. Without adding the blank line, kernel-doc would output this as:
 
-loopfs, with that interception mode, will let us also handle all cases
-where a loop would be used, similarly without needing any change to
-the software being run. If a piece of software calls the command
-"mount -o loop blah.img /mnt", the "mount" command will setup a loop
-device as it normally would (doing so through loopfs) and then will
-call the "mount" syscall, which will get intercepted and redirected to
-a FUSE implementation if so configured, resulting in the expected
-filesystem being mounted for the user.
+``transfer_one``
+  transfer a single spi_transfer.
+  - return 0 if the transfer is finished,
+  - return 1 if the transfer is still in progress. When
+    the driver is finished with this transfer it must
+    call spi_finalize_current_transfer() so the subsystem
+    can issue the next transfer. Note: transfer_one and
+    transfer_one_message are mutually exclusive; when both
+    are set, the generic subsystem does not call your
+    transfer_one callback.
 
-LXD with syscall interception offers both straight up privileged
-mounting using the kernel fs or using a FUSE based implementation.
-This is configurable on a per-filesystem and per-container basis.
+This would be parsed by Sphinx (newer versions) as if the second line:
 
-I hope that clarifies what we're doing here :)
+	transfer a single spi_transfer.
+	
+would be a sort of subtitle that should be highlighted with a
+vertical line before that. E. g. something equivalent to:
 
-Stéphane
+	 ============
+	|transfer_one|
+
+	 -------------------------------
+	|transfer a single spi_transfer.|
+
+	  - return 0 if the transfer is finished,
+	  - return 1 if the transfer is still in progress. When
+	    the driver is finished with this transfer it must
+	    call spi_finalize_current_transfer() so the subsystem
+	    can issue the next transfer. Note: transfer_one and
+	    transfer_one_message are mutually exclusive; when both
+	    are set, the generic subsystem does not call your
+	    transfer_one callback.
+
+Which is not the desired result.
+
+Adding a blank line after it fixes the issue, making it produce the
+expected output.
+
+> 
+> > If this patch is applied after 20/25, the output should produce the
+> > correct result:  
+> 
+> > 	https://www.infradead.org/~mchehab/kernel_docs/driver-api/spi.html#spi-master-methods  
+> 
+> OK.
+> 
+> Acked-by: Mark Brown <broonie@kernel.org>
+
+Thanks,
+Mauro
