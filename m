@@ -2,141 +2,140 @@ Return-Path: <SRS0=8dav=5Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54EC9C2BA1B
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 20:34:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71A0DC2BA1A
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 20:36:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 28BEE206F7
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 20:34:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="VHTztM8X"
+	by mail.kernel.org (Postfix) with ESMTP id 4CA1E206F7
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 20:36:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728588AbgDHUec (ORCPT
+        id S1728687AbgDHUgb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Apr 2020 16:34:32 -0400
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:37181 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726891AbgDHUeb (ORCPT
+        Wed, 8 Apr 2020 16:36:31 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:57288 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726891AbgDHUga (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Apr 2020 16:34:31 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1586378071;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=151LHWUJtSDB+75+jyNegOreKhf7IJmTVrlaiuCLhsY=;
-        b=VHTztM8XIUAivj2mGaM5iTDHDnFz4iE5SEWxrxgpFWt522aJwxDxyGDkQHAs67NFTBXE0p
-        PPBbrU/YHzVy2ooJiF8uHsiBWGANxpKXMYbcaGrNCirz3biMAEmNMZ3+OMmqgDRvBSKzuk
-        3Bkk2NfEOSpcETkmo/v/0qDfBeUXs0A=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-357-1QQRLG7LOPa-SnRwx8FAtA-1; Wed, 08 Apr 2020 16:34:27 -0400
-X-MC-Unique: 1QQRLG7LOPa-SnRwx8FAtA-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 16B04107B114;
-        Wed,  8 Apr 2020 20:34:26 +0000 (UTC)
-Received: from horse.redhat.com (ovpn-115-85.rdu2.redhat.com [10.10.115.85])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id DAA125DA84;
-        Wed,  8 Apr 2020 20:34:25 +0000 (UTC)
-Received: by horse.redhat.com (Postfix, from userid 10451)
-        id 4583D2202B8; Wed,  8 Apr 2020 16:34:25 -0400 (EDT)
-Date:   Wed, 8 Apr 2020 16:34:25 -0400
-From:   Vivek Goyal <vgoyal@redhat.com>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
-        kvm list <kvm@vger.kernel.org>, stable <stable@vger.kernel.org>
-Subject: Re: [PATCH v2] x86/kvm: Disable KVM_ASYNC_PF_SEND_ALWAYS
-Message-ID: <20200408203425.GD93547@redhat.com>
-References: <20200407172140.GB64635@redhat.com>
- <772A564B-3268-49F4-9AEA-CDA648F6131F@amacapital.net>
- <87eeszjbe6.fsf@nanos.tec.linutronix.de>
- <ce81c95f-8674-4012-f307-8f32d0e386c2@redhat.com>
- <874ktukhku.fsf@nanos.tec.linutronix.de>
- <274f3d14-08ac-e5cc-0b23-e6e0274796c8@redhat.com>
- <20200408153413.GA11322@linux.intel.com>
- <ce28e893-2ed0-ea6f-6c36-b08bb0d814f2@redhat.com>
- <87d08hc0vz.fsf@nanos.tec.linutronix.de>
+        Wed, 8 Apr 2020 16:36:30 -0400
+Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 038KXpKi050590;
+        Wed, 8 Apr 2020 16:36:27 -0400
+Received: from ppma03wdc.us.ibm.com (ba.79.3fa9.ip4.static.sl-reverse.com [169.63.121.186])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 3092098vwh-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 08 Apr 2020 16:36:26 -0400
+Received: from pps.filterd (ppma03wdc.us.ibm.com [127.0.0.1])
+        by ppma03wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 038KUfd6004457;
+        Wed, 8 Apr 2020 20:36:25 GMT
+Received: from b01cxnp22033.gho.pok.ibm.com (b01cxnp22033.gho.pok.ibm.com [9.57.198.23])
+        by ppma03wdc.us.ibm.com with ESMTP id 3091mdyus2-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 08 Apr 2020 20:36:25 +0000
+Received: from b01ledav001.gho.pok.ibm.com (b01ledav001.gho.pok.ibm.com [9.57.199.106])
+        by b01cxnp22033.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 038KaPBd52101450
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 8 Apr 2020 20:36:25 GMT
+Received: from b01ledav001.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 70BF628059;
+        Wed,  8 Apr 2020 20:36:25 +0000 (GMT)
+Received: from b01ledav001.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id A7D7E28058;
+        Wed,  8 Apr 2020 20:36:24 +0000 (GMT)
+Received: from ghost4.ibm.com (unknown [9.211.136.102])
+        by b01ledav001.gho.pok.ibm.com (Postfix) with ESMTP;
+        Wed,  8 Apr 2020 20:36:24 +0000 (GMT)
+From:   Eddie James <eajames@linux.ibm.com>
+To:     linux-clk@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, sboyd@kernel.org,
+        mturquette@baylibre.com, joel@jms.id.au,
+        Eddie James <eajames@linux.ibm.com>
+Subject: [PATCH] clk: ast2600: Fix AHB clock divider for A1
+Date:   Wed,  8 Apr 2020 15:36:16 -0500
+Message-Id: <20200408203616.4031-1-eajames@linux.ibm.com>
+X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87d08hc0vz.fsf@nanos.tec.linutronix.de>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
+ definitions=2020-04-08_08:2020-04-07,2020-04-08 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 spamscore=0
+ priorityscore=1501 impostorscore=0 malwarescore=0 mlxlogscore=999
+ lowpriorityscore=0 mlxscore=0 suspectscore=1 clxscore=1011 phishscore=0
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2004080143
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 08, 2020 at 08:01:36PM +0200, Thomas Gleixner wrote:
-> Paolo Bonzini <pbonzini@redhat.com> writes:
-> > On 08/04/20 17:34, Sean Christopherson wrote:
-> >> On Wed, Apr 08, 2020 at 10:23:58AM +0200, Paolo Bonzini wrote:
-> >>> Page-not-present async page faults are almost a perfect match for the
-> >>> hardware use of #VE (and it might even be possible to let the processor
-> >>> deliver the exceptions).
-> >> 
-> >> My "async" page fault knowledge is limited, but if the desired behavior is
-> >> to reflect a fault into the guest for select EPT Violations, then yes,
-> >> enabling EPT Violation #VEs in hardware is doable.  The big gotcha is that
-> >> KVM needs to set the suppress #VE bit for all EPTEs when allocating a new
-> >> MMU page, otherwise not-present faults on zero-initialized EPTEs will get
-> >> reflected.
-> >> 
-> >> Attached a patch that does the prep work in the MMU.  The VMX usage would be:
-> >> 
-> >> 	kvm_mmu_set_spte_init_value(VMX_EPT_SUPPRESS_VE_BIT);
-> >> 
-> >> when EPT Violation #VEs are enabled.  It's 64-bit only as it uses stosq to
-> >> initialize EPTEs.  32-bit could also be supported by doing memcpy() from
-> >> a static page.
-> >
-> > The complication is that (at least according to the current ABI) we
-> > would not want #VE to kick if the guest currently has IF=0 (and possibly
-> > CPL=0).  But the ABI is not set in stone, and anyway the #VE protocol is
-> > a decent one and worth using as a base for whatever PV protocol we design.
-> 
-> Forget the current pf async semantics (or the lack of). You really want
-> to start from scratch and igore the whole thing.
-> 
-> The charm of #VE is that the hardware can inject it and it's not nesting
-> until the guest cleared the second word in the VE information area. If
-> that word is not 0 then you get a regular vmexit where you suspend the
-> vcpu until the nested problem is solved.
+The latest specs for the AST2600 A1 chip include some different bit
+definitions for calculating the AHB clock divider. Implement these in
+order to get the correct AHB clock value in Linux.
 
-So IIUC, only one process on a vcpu could affort to relinquish cpu to
-another task. If next task also triggers EPT violation, that will result
-in VM exit (as previous #VE is not complete yet) and vcpu will be halted.
+Signed-off-by: Eddie James <eajames@linux.ibm.com>
+---
+ drivers/clk/clk-ast2600.c | 31 +++++++++++++++++++++++++------
+ 1 file changed, 25 insertions(+), 6 deletions(-)
 
-> 
-> So you really don't worry about the guest CPU state at all. The guest
-> side #VE handler has to decide what it wants from the host depending on
-> it's internal state:
-> 
->      - Suspend me and resume once the EPT fail is solved
-> 
->      - Let me park the failing task and tell me once you resolved the
->        problem.
-> 
-> That's pretty straight forward and avoids the whole nonsense which the
-> current mess contains. It completely avoids the allocation stuff as well
-> as you need to use a PV page where the guest copies the VE information
-> to.
-> 
-> The notification that a problem has been resolved needs to go through a
-> separate vector which still has the IF=1 requirement obviously.
-
-How is this vector decided between guest and host. Failure to fault in
-page will be communicated through same vector?
-
-Thanks
-Vivek
+diff --git a/drivers/clk/clk-ast2600.c b/drivers/clk/clk-ast2600.c
+index 392d01705b97..99afc949925f 100644
+--- a/drivers/clk/clk-ast2600.c
++++ b/drivers/clk/clk-ast2600.c
+@@ -642,14 +642,22 @@ static const u32 ast2600_a0_axi_ahb_div_table[] = {
+ 	2, 2, 3, 5,
+ };
+ 
+-static const u32 ast2600_a1_axi_ahb_div_table[] = {
+-	4, 6, 2, 4,
++static const u32 ast2600_a1_axi_ahb_div0_tbl[] = {
++	3, 2, 3, 4,
++};
++
++static const u32 ast2600_a1_axi_ahb_div1_tbl[] = {
++	3, 4, 6, 8,
++};
++
++static const u32 ast2600_a1_axi_ahb200_tbl[] = {
++	3, 4, 3, 4, 2, 2, 2, 2,
+ };
+ 
+ static void __init aspeed_g6_cc(struct regmap *map)
+ {
+ 	struct clk_hw *hw;
+-	u32 val, div, chip_id, axi_div, ahb_div;
++	u32 val, div, divbits, chip_id, axi_div, ahb_div;
+ 
+ 	clk_hw_register_fixed_rate(NULL, "clkin", NULL, 0, 25000000);
+ 
+@@ -679,11 +687,22 @@ static void __init aspeed_g6_cc(struct regmap *map)
+ 	else
+ 		axi_div = 2;
+ 
++	divbits = (val >> 11) & 0x3;
+ 	regmap_read(map, ASPEED_G6_SILICON_REV, &chip_id);
+-	if (chip_id & BIT(16))
+-		ahb_div = ast2600_a1_axi_ahb_div_table[(val >> 11) & 0x3];
+-	else
++	if (chip_id & BIT(16)) {
++		if (!divbits) {
++			ahb_div = ast2600_a1_axi_ahb200_tbl[(val >> 8) & 0x3];
++			if (val & BIT(16))
++				ahb_div *= 2;
++		} else {
++			if (val & BIT(16))
++				ahb_div = ast2600_a1_axi_ahb_div1_tbl[divbits];
++			else
++				ahb_div = ast2600_a1_axi_ahb_div0_tbl[divbits];
++		}
++	} else {
+ 		ahb_div = ast2600_a0_axi_ahb_div_table[(val >> 11) & 0x3];
++	}
+ 
+ 	hw = clk_hw_register_fixed_factor(NULL, "ahb", "hpll", 0, 1, axi_div * ahb_div);
+ 	aspeed_g6_clk_data->hws[ASPEED_CLK_AHB] = hw;
+-- 
+2.24.0
 
