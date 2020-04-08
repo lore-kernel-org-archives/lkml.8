@@ -7,55 +7,55 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B477FC2BA1A
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 13:11:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0332C2BA80
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 13:11:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8786120780
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 13:11:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B5C49206F7
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 13:11:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="YR7kjZED"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="jTY7ueTT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729094AbgDHNK4 (ORCPT
+        id S1729112AbgDHNLC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Apr 2020 09:10:56 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:56115 "EHLO
+        Wed, 8 Apr 2020 09:11:02 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:56121 "EHLO
         mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729075AbgDHNKx (ORCPT
+        with ESMTP id S1729085AbgDHNK4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Apr 2020 09:10:53 -0400
-Received: by mail-wm1-f66.google.com with SMTP id e26so5071453wmk.5
-        for <linux-kernel@vger.kernel.org>; Wed, 08 Apr 2020 06:10:52 -0700 (PDT)
+        Wed, 8 Apr 2020 09:10:56 -0400
+Received: by mail-wm1-f66.google.com with SMTP id e26so5071609wmk.5
+        for <linux-kernel@vger.kernel.org>; Wed, 08 Apr 2020 06:10:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=eyBGvPhV7TUH86tokQz7uJLxAaD+h2U61M1YV5bgXQs=;
-        b=YR7kjZEDp8Dclxy+3WQjIozJps5zrdc4+YpZUIpjxeZLzDHIU344sV0qjc6I5pl5HS
-         dkdFmg3wIS2EartLPHjLFXqCuhZ7hLhu5zLUe8eT5OY1hQwcQho3Koo5VZdAdUPC42D8
-         BKEx2Ih8T9FQYlyYAbVNl4Q0K2CSJOrmYNWBuf3g+UVZaVMPh+uQ39NATJlcMFPmbevA
-         9TFyoOZMfgAqk3zRxULaqOIu8HaSJY4k6FSeWBM6Bh1xa914KMROhcZ3qitfgcZl2t9x
-         LGvT4y1l3mXC3aoE3JyNrZVS+HkWqZVomzaWEs9F3CR1owCjmrGC8D0k1Y/fbqypS7pA
-         GzvA==
+        bh=HSMVnMgP4upKQElf5JgAZWIAcGCpvndMYRb9Vat/nes=;
+        b=jTY7ueTTsIQBFnXQvHWdLsvwO1hONi41sVbUlwZ/VUcwNdlqIdWBAQsD9nxJ0K+TVf
+         8NMjHWmXWYNwSu8kCRyJpvnUsLhXUO2DIlmKGobnOokpOtR0uFywBeNceQIgOaPGAXeH
+         9cVDwKsyAXOkmsnXkdztrirkb9eBgQU22nZSZ8EppmCaWbkz/qDrqZiAziZ2x3ocvfMM
+         AfJDvQRSDknm+9YHWF9eqB21A/INWL61t2kxFlMoGrTZXHSvEqopW6jdo5eSPKD88Ie5
+         lrqoNff86K8IgVHW+5cG5+GQGHD+pf9LJZ/iT+v6WsAsZ/iqS0gWDmJppXPleskAyveD
+         w8Gg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=eyBGvPhV7TUH86tokQz7uJLxAaD+h2U61M1YV5bgXQs=;
-        b=rQHW5BrzD6u/yVk9FS54YrnpR3a8x+2BfdKarB5O5wscuPmvp8/ZSkZQJoswvjye8H
-         ipuVmHcmO41pE9YaYwZoubKF+buTG0xWmi+h+y9WbD4z29jD0BYP72V6+zpKmVYmRPjs
-         CXXnZQXRpEfc3mYvRAnL+E0+zKolQ35iNmsiSDfzJSAFSwdPPZvKUk0R7XYwvHMS5VMV
-         3FyRo7IT5lXACSksnmF8vOz4pm6bd3Novn944F2q/tGh+bhswnxik7DWWNTh985qnFud
-         gq5Bc2oLgx3ehkakT2mN6uD6tL8wdtdCjmam7dS3G+UaGma7dZ6cuQu13Z1Nlj0RsGGE
-         lOmg==
-X-Gm-Message-State: AGi0PuY3sRaR2sIEWtFqT+pX7FXmf89KgnDYkrmrhxXCjEO7wWEchMpV
-        291dvm0QcWE2rYjsg/MAUwHJsQ==
-X-Google-Smtp-Source: APiQypJNeoXs5y2t1gLKM6gDJw9wo7P2PspFCxzFWP5VVAB+XA/VWx9wysS6dw5QBKvX78ZXyqHxXQ==
-X-Received: by 2002:a1c:2c85:: with SMTP id s127mr4663898wms.18.1586351451594;
-        Wed, 08 Apr 2020 06:10:51 -0700 (PDT)
+        bh=HSMVnMgP4upKQElf5JgAZWIAcGCpvndMYRb9Vat/nes=;
+        b=IvV7RB+uST2QzrTCyPiP4Xym9daJUWT6M8FIDjYVq/Nh6PHwY1ul2Nh+fsw1H2TUzS
+         mDOfpWXGS54CeXvIAoLntt3pyzl2uTooWfeHcCQULRIdqAg2mMq5afRqcZhyN1t/XrYd
+         MDz021Iz4bpx4qBV0+FXGomBKGen+GiE9C6FYmavuKSOE5Rmh2i6eiRgFa2RPGvWPMsq
+         1mEQLifD/GdfjkfAnbKFDWPa+3o2J9t8wo5bn5h607VAzzfNPh9XrQWTBkCpf+jc+egV
+         MuJheTP0Kh4DuDJhTTSYeoi6k0ucKlHHn++B0eEwtpahsTTT/7kTK5QRzieePU7zr3kn
+         JtoQ==
+X-Gm-Message-State: AGi0PuZDGc6k8UjoJS0NkJm87VqS2HoBZpTt2SuwLQIdv0SImGZR/VDp
+        9dyapX5A11FHkyPPfgFT7uKAjg==
+X-Google-Smtp-Source: APiQypLR7c3obm73L6raxreYTOjlint94xmBRATqvnqD/s3kybG5fJuCWGpEqrfbhkYkl15QKdl+NA==
+X-Received: by 2002:a7b:c445:: with SMTP id l5mr4760057wmi.61.1586351454571;
+        Wed, 08 Apr 2020 06:10:54 -0700 (PDT)
 Received: from localhost.localdomain ([37.120.50.78])
-        by smtp.gmail.com with ESMTPSA id f4sm18428044wrp.80.2020.04.08.06.10.50
+        by smtp.gmail.com with ESMTPSA id f4sm18428044wrp.80.2020.04.08.06.10.53
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 08 Apr 2020 06:10:51 -0700 (PDT)
+        Wed, 08 Apr 2020 06:10:54 -0700 (PDT)
 From:   Robert Foss <robert.foss@linaro.org>
 To:     agross@kernel.org, bjorn.andersson@linaro.org, robh+dt@kernel.org,
         catalin.marinas@arm.com, will@kernel.org, shawnguo@kernel.org,
@@ -67,9 +67,9 @@ To:     agross@kernel.org, bjorn.andersson@linaro.org, robh+dt@kernel.org,
         Loic Poulain <loic.poulain@linaro.org>,
         Luca Weiss <luca@z3ntu.xyz>
 Cc:     Robert Foss <robert.foss@linaro.org>
-Subject: [PATCH v4 4/6] arm64: dts: sdm845-db845c: Add pm_8998 gpio names
-Date:   Wed,  8 Apr 2020 15:09:57 +0200
-Message-Id: <20200408130959.2717409-5-robert.foss@linaro.org>
+Subject: [PATCH v4 6/6] arm64: defconfig: Enable QCOM CAMCC, CAMSS and CCI drivers
+Date:   Wed,  8 Apr 2020 15:09:59 +0200
+Message-Id: <20200408130959.2717409-7-robert.foss@linaro.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200408130959.2717409-1-robert.foss@linaro.org>
 References: <20200408130959.2717409-1-robert.foss@linaro.org>
@@ -80,58 +80,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add pm_8998 GPIO trace names. These names are defined in
-the 96boards db845c mezzanine schematic.
+Build camera clock, isp and controller drivers as modules.
 
 Signed-off-by: Robert Foss <robert.foss@linaro.org>
 Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 ---
 
-Changes since v1:
- - Move gpio-names to previous reference to pm8998_gpio label
+Changes since v2:
+ - Removed duplicated CONFIG_SDM_CAMCC_845 defconfig
 
- arch/arm64/boot/dts/qcom/sdm845-db845c.dts | 28 ++++++++++++++++++++++
- 1 file changed, 28 insertions(+)
+ arch/arm64/configs/defconfig | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/qcom/sdm845-db845c.dts b/arch/arm64/boot/dts/qcom/sdm845-db845c.dts
-index 8644a2f6095a..5cd06ab97b9a 100644
---- a/arch/arm64/boot/dts/qcom/sdm845-db845c.dts
-+++ b/arch/arm64/boot/dts/qcom/sdm845-db845c.dts
-@@ -412,6 +412,34 @@ &pcie1_phy {
- };
- 
- &pm8998_gpio {
-+	gpio-line-names =
-+		"NC",
-+		"NC",
-+		"WLAN_SW_CTRL",
-+		"NC",
-+		"PM_GPIO5_BLUE_BT_LED",
-+		"VOL_UP_N",
-+		"NC",
-+		"ADC_IN1",
-+		"PM_GPIO9_YEL_WIFI_LED",
-+		"CAM0_AVDD_EN",
-+		"NC",
-+		"CAM0_DVDD_EN",
-+		"PM_GPIO13_GREEN_U4_LED",
-+		"DIV_CLK2",
-+		"NC",
-+		"NC",
-+		"NC",
-+		"SMB_STAT",
-+		"NC",
-+		"NC",
-+		"ADC_IN2",
-+		"OPTION1",
-+		"WCSS_PWR_REQ",
-+		"PM845_GPIO24",
-+		"OPTION2",
-+		"PM845_SLB";
-+
- 	vol_up_pin_a: vol-up-active {
- 		pins = "gpio6";
- 		function = "normal";
+diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
+index 24e534d85045..46ee13b6df27 100644
+--- a/arch/arm64/configs/defconfig
++++ b/arch/arm64/configs/defconfig
+@@ -410,6 +410,7 @@ CONFIG_I2C_MESON=y
+ CONFIG_I2C_MV64XXX=y
+ CONFIG_I2C_OWL=y
+ CONFIG_I2C_PXA=y
++CONFIG_I2C_QCOM_CCI=m
+ CONFIG_I2C_QCOM_GENI=m
+ CONFIG_I2C_QUP=y
+ CONFIG_I2C_RK3X=y
+@@ -582,6 +583,7 @@ CONFIG_VIDEO_RENESAS_FDP1=m
+ CONFIG_VIDEO_RENESAS_FCP=m
+ CONFIG_VIDEO_RENESAS_VSP1=m
+ CONFIG_SDR_PLATFORM_DRIVERS=y
++CONFIG_VIDEO_QCOM_CAMSS=m
+ CONFIG_VIDEO_RCAR_DRIF=m
+ CONFIG_DRM=m
+ CONFIG_DRM_I2C_NXP_TDA998X=m
+@@ -802,6 +804,7 @@ CONFIG_MSM_GCC_8994=y
+ CONFIG_MSM_MMCC_8996=y
+ CONFIG_MSM_GCC_8998=y
+ CONFIG_QCS_GCC_404=y
++CONFIG_SDM_CAMCC_845=m
+ CONFIG_SDM_GCC_845=y
+ CONFIG_SDM_GPUCC_845=y
+ CONFIG_SDM_DISPCC_845=y
 -- 
 2.25.1
 
