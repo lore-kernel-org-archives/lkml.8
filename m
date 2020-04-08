@@ -2,96 +2,102 @@ Return-Path: <SRS0=8dav=5Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB531C2D0EC
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 00:15:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42B66C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 00:15:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8D069206F7
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 00:15:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ragnatech-se.20150623.gappssmtp.com header.i=@ragnatech-se.20150623.gappssmtp.com header.b="eQF82/r2"
+	by mail.kernel.org (Postfix) with ESMTP id 1EDBD206F7
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 00:15:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726477AbgDHAPc (ORCPT
+        id S1726530AbgDHAP6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 20:15:32 -0400
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:37212 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726406AbgDHAPb (ORCPT
+        Tue, 7 Apr 2020 20:15:58 -0400
+Received: from www62.your-server.de ([213.133.104.62]:33280 "EHLO
+        www62.your-server.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726420AbgDHAP5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Apr 2020 20:15:31 -0400
-Received: by mail-lj1-f193.google.com with SMTP id r24so5733327ljd.4
-        for <linux-kernel@vger.kernel.org>; Tue, 07 Apr 2020 17:15:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ragnatech-se.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=wBmmkv5EbGKYUNkzEYnIvZ802Zpc4/nWXvJbm9vTzy8=;
-        b=eQF82/r2ns4IEQGeT7nrbn5xT5aRBAStDla9TU6NBrKxHh7t30Ap/GL+oVxfX5SO6n
-         hrq8w/pWG6CrC+hXGF4fOQN15Vzpa1OBgCPURdTOZlOcDb3zOxT0gXre/74ytrRrU650
-         kYEgR36RQZJqjLGY3uq0M8pvBe3MhxzhSrAj4S6Q6ZM3vlSGM+pz+7+VdhqrLIHgmcin
-         QUf8OjddvEtPnRpNdqz3gCyB1Wf4NYPiSJg0ub28hruqrAUIzvICaNtuLOxCnzkQXq9p
-         xnWceezjkOQeLkChvejKfezYXvEF47geoF/OawZloixqeG4hNmRoUzCl/P40j7g7fuw5
-         NENg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=wBmmkv5EbGKYUNkzEYnIvZ802Zpc4/nWXvJbm9vTzy8=;
-        b=fZ2onqH8lM622HYsi6fEXHj/xZq2eLQg6yq7uu/6xH3PT/AimRssgzUVhoucsKoEOK
-         DBEm8u9M7gCSxNCDBaLixXKkB8VaFhjazYCMutuJ9+TX7hFHk5z6ddr/HALloZot6HJh
-         1YhMg7W5Z2EirRHWSkst0fzgRkTAz8t5GIiDnW20Y1b5zTwV4afebT1ClvrLmiXWsCfc
-         1CNc8qHXzoY/qEoP+eqvMWP6yR1GnbKbBqy2uiyV9JzCHcmYjSbs/rD+nzlL/xrxe/s7
-         Us8LcZY6S4wxYY7KqQ4vw1Q6MaExWY97XiLwroPIQiSSjzCVok6V/vgWOZDMVgArpACO
-         tAnQ==
-X-Gm-Message-State: AGi0PuZdtp9rCCxvUXtFsKnVC6/aGEA8gSJB16fMWtvwL0uM8iKctwTu
-        +9a4Ge2s+ZcUo3njL4NSo+iZPw==
-X-Google-Smtp-Source: APiQypJUuiJTo36iazCjmHoOP1Cj3Ejl1xcr2/9UhmAcs+0WuYL6cL2nXv/XBLNWbQZ0w17jLaqViQ==
-X-Received: by 2002:a2e:8ec2:: with SMTP id e2mr3120283ljl.252.1586304929998;
-        Tue, 07 Apr 2020 17:15:29 -0700 (PDT)
-Received: from localhost (h-200-138.A463.priv.bahnhof.se. [176.10.200.138])
-        by smtp.gmail.com with ESMTPSA id 133sm12464946ljj.91.2020.04.07.17.15.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 07 Apr 2020 17:15:29 -0700 (PDT)
-Date:   Wed, 8 Apr 2020 02:15:28 +0200
-From:   Niklas =?iso-8859-1?Q?S=F6derlund?= 
-        <niklas.soderlund@ragnatech.se>
-To:     Helen Koike <helen.koike@collabora.com>
-Cc:     linux-media@vger.kernel.org, kernel@collabora.com,
-        linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org,
-        hans.verkuil@cisco.com, skhan@linuxfoundation.org,
-        mchehab@kernel.org
-Subject: Re: [PATCH v2 0/3] media: add v4l2_pipeline_stream_{enable,disable}
- helpers
-Message-ID: <20200408001528.GI1716317@oden.dyn.berto.se>
-References: <20200403213312.1863876-1-helen.koike@collabora.com>
- <20200407193615.GG1716317@oden.dyn.berto.se>
- <4be824ea-61e2-4624-4880-fccb4ff804cd@collabora.com>
+        Tue, 7 Apr 2020 20:15:57 -0400
+Received: from sslproxy01.your-server.de ([78.46.139.224])
+        by www62.your-server.de with esmtpsa (TLSv1.2:DHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.89_1)
+        (envelope-from <daniel@iogearbox.net>)
+        id 1jLyNl-0003Wt-MF; Wed, 08 Apr 2020 02:15:53 +0200
+Received: from [178.195.186.98] (helo=pc-9.home)
+        by sslproxy01.your-server.de with esmtpsa (TLSv1.3:TLS_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <daniel@iogearbox.net>)
+        id 1jLyNl-000CZ7-Bb; Wed, 08 Apr 2020 02:15:53 +0200
+Subject: Re: Question on "uaccess: Add strict non-pagefault kernel-space read
+ function"
+To:     Christoph Hellwig <hch@infradead.org>
+Cc:     Alexei Starovoitov <ast@kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>, x86@kernel.org,
+        linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
+        bgregg@netflix.com
+References: <20200403133533.GA3424@infradead.org>
+ <5ddc8c04-279d-9a14-eaa7-755467902ead@iogearbox.net>
+ <20200404093105.GA445@infradead.org>
+ <2adc77e1-e84d-f303-fd88-133ec950c33f@iogearbox.net>
+ <20200407093357.GA24309@infradead.org>
+From:   Daniel Borkmann <daniel@iogearbox.net>
+Message-ID: <776e5c99-57c9-b61b-d466-412db440a859@iogearbox.net>
+Date:   Wed, 8 Apr 2020 02:15:52 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <4be824ea-61e2-4624-4880-fccb4ff804cd@collabora.com>
+In-Reply-To: <20200407093357.GA24309@infradead.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Authenticated-Sender: daniel@iogearbox.net
+X-Virus-Scanned: Clear (ClamAV 0.102.2/25775/Tue Apr  7 14:53:51 2020)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Helen,
+On 4/7/20 11:33 AM, Christoph Hellwig wrote:
+> On Tue, Apr 07, 2020 at 11:03:23AM +0200, Daniel Borkmann wrote:
+>>
+>> ... where archs with non-overlapping user and kernel address range would
+>> only end up having to implementing kernel_range_ok() check. Or, instead of
+>> a generic kernel_range_ok() this could perhaps be more probing-specific as
+>> in probe_kernel_range_ok() where this would then also cover the special
+>> cases we seem to have in parisc and um. Then, this would allow to get rid
+>> of all the __weak aliasing as well which may just be confusing. I could look
+>> into coming up with something along these lines. Thoughts?
+> 
+> FYI, this is what I cooked up a few days ago:
+> 
+> http://git.infradead.org/users/hch/misc.git/shortlog/refs/heads/maccess-fixups
+> 
+> Still misses the final work to switch probe_kernel_read to be the
+> strict version.  Any good naming suggestion for the non-strict one?
 
-Thanks for your reply.
+Ah great, thanks for working on it including the cleanups in your branch above.
+Good naming suggestion is usually the hardest ... ;-) Maybe adding an _unsafe or
+_lax suffix ...
 
-On 2020-04-07 21:05:03 -0300, Helen Koike wrote:
-> No, this patch only removes the requirement of patch 1/3 in the series
-> "vimc: Allow multiple capture devices to use the same sensor", since the counter
-> is being added in the core, so it won't be required to add it for each subdevice.
-> The other patches in that series are still required.
+Regarding commits:
 
-OK, just checking. One step in the that direction at least :-)
+* http://git.infradead.org/users/hch/misc.git/commitdiff/019f5d7894711a8046d1d57640d3db47f690c61e
 
--- 
-Regards,
-Niklas Söderlund
+I think the extra HAVE_PROBE_KERNEL_ALLOWED / HAVE_PROBE_KERNEL_STRICT_ALLOWED
+reads a bit odd. Could we simply have an equivalent for access_ok() that archs
+implement under KERNEL_DS where it covers the allowed/restricted kernel-only range?
+Like mentioned earlier e.g. probe_{user,kernel}_range_ok() helpers where the user
+one defaults to access_ok() internally and the kernel one contains all the range
+restrictions that archs can then define if needed (and if not there could be an
+asm-generic `return true` fallback, for example).
+
+* http://git.infradead.org/users/hch/misc.git/commitdiff/2d6070ac749d0af26367892545d1c288cc00823a
+
+This would still need to set dst[0] = '\0' in that case to be consistent with
+the other error handling cases there when count > 0.
+
+Thanks,
+Daniel
