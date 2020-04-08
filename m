@@ -2,158 +2,120 @@ Return-Path: <SRS0=8dav=5Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05A4BC2D0EA
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 08:00:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C34C5C2D0EA
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 08:00:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CBFCF20730
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 08:00:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8D8802075E
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 08:00:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JNrVsz3s"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726636AbgDHIA1 (ORCPT
+        id S1726716AbgDHIAp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Apr 2020 04:00:27 -0400
-Received: from mx1.tq-group.com ([62.157.118.193]:52846 "EHLO mx1.tq-group.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726436AbgDHIA1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Apr 2020 04:00:27 -0400
-IronPort-SDR: YZ3oCIIvSezQ2JQprv7PkJSs9xhG+L0gPhn9WtA0MQyxSDcZ6+F/4jpqa7BgGMytfNKrCbfwAk
- 8gIP04eZuU4tKjreNARONRLOIWlO2jbspw5GTuOMpGYrHAkF0mGmELcJwBSzv8XjItRx7Pgaxi
- sK+x+Vi22sANcyhu24se/k8ql97mxsakPYO9kasYLJlPgwiSNVe2moN5AeXt+Ww+ZL4OZut4FV
- HnofLVnBSZlwBzrQFyRUqtCiYHEtFmXBiQiKXTx+28MiB9VDDV9XVToYhQk9QvActXuzTLTh2D
- IHU=
-X-IronPort-AV: E=Sophos;i="5.72,357,1580770800"; 
-   d="scan'208";a="11741655"
-Received: from unknown (HELO tq-pgp-pr1.tq-net.de) ([192.168.6.15])
-  by mx1-pgp.tq-group.com with ESMTP; 08 Apr 2020 10:00:25 +0200
-Received: from mx1.tq-group.com ([192.168.6.7])
-  by tq-pgp-pr1.tq-net.de (PGP Universal service);
-  Wed, 08 Apr 2020 10:00:25 +0200
-X-PGP-Universal: processed;
-        by tq-pgp-pr1.tq-net.de on Wed, 08 Apr 2020 10:00:25 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=tq-group.com; i=@tq-group.com; q=dns/txt; s=key1;
-  t=1586332825; x=1617868825;
-  h=message-id:subject:from:to:cc:date:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=FM8vvwRPjqfacbSYX2A3Kn495wuAJwFwLmZF56RyzZk=;
-  b=SSGl/fKBLQ6zBBQzssjXcmB8EQF14VS/VENDmMtuGFzSGZuNELWw3417
-   yr3jV7iUp2tQzDe8hr0iv6V21FDw2B2iXIfjIC6YCT6V49C6JsVi1fHRy
-   JQqyBpJPEvCz8SciMnYRFa3lmdH7SaozPUKqr6P6Yb8S3Ltws0xSsOrWQ
-   FkhfSfxe7rjx73M9YxhFob/R8haRAMlRW6MnOiaI+qCPP8Yh56cpds8Aq
-   Tq+E2HyJ91HUgh2e5xcs3/KGKaihaajhPpGhRyIMLdWs2qToQNF3GJYi+
-   SdthFoR12clqj7+uZfpkTpJfB/x0AxPZy99R6Fgh7XFVrYQFeEbU+3qco
-   w==;
-IronPort-SDR: /L+9vGxeIt5Jv2JplrvfzXRWrsT3Va/pLkDE2tePs1EG/Nah9lvKTPFzxS4rpn+Gf/xHBXJrQV
- tlbj0T7TD5gHwaro9S6UskRPxmQjgiqhquyEsTMc5bSYgu/7GZcqgsH9k8CSERDXBrTqew5h7P
- drrI19g/n1WMkP+YhI4SNyLI/wpQ2KUeFcyNXwtduqFROa25ugR4KcEt2+vJOYe0lZapCq92vF
- prZo/8yA1uTeHVU8TunxvTjncXrc75jSs831Zy7E/7fPJlsLukofq2Rxmvff3KHyojmn3sr/wA
- Z7E=
-X-IronPort-AV: E=Sophos;i="5.72,357,1580770800"; 
-   d="scan'208";a="11741654"
-Received: from vtuxmail01.tq-net.de ([10.115.0.20])
-  by mx1.tq-group.com with ESMTP; 08 Apr 2020 10:00:25 +0200
-Received: from schifferm-ubuntu4.tq-net.de (schifferm-ubuntu4.tq-net.de [10.117.49.26])
-        by vtuxmail01.tq-net.de (Postfix) with ESMTPA id 45945280065;
-        Wed,  8 Apr 2020 10:00:39 +0200 (CEST)
-Message-ID: <405fa9612b52ee9a7c550d2ac5a2df86acb223c1.camel@ew.tq-group.com>
-Subject: Re: (EXT) Re: (EXT) Re: [PATCH 1/4] pwm: pca9685: remove unused
- duty_cycle struct element
-From:   Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
-To:     Sven Van Asbroeck <thesven73@gmail.com>
-Cc:     Uwe =?ISO-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        linux-pwm@vger.kernel.org,
+        Wed, 8 Apr 2020 04:00:45 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:43082 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726436AbgDHIAp (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Apr 2020 04:00:45 -0400
+Received: by mail-wr1-f67.google.com with SMTP id i10so377171wrv.10;
+        Wed, 08 Apr 2020 01:00:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:reply-to:from:date:message-id
+         :subject:to:cc;
+        bh=d9AtxtT4nMo93RM503Qhxe4mGcFfAQvtuS+cWl63KnQ=;
+        b=JNrVsz3sRRBXbhytAbJMYbAf6UDteNy8rer92ZjVD7hXeKg175S/SdM5eJcGOuzX6w
+         CQ4aC/dc8W9lZyo3hYJqr/pCAJLFosnWteEI+Ofb2tEy805+aOKPe7TYSLSG+b5wTUHk
+         wACYbkPpwA85/loNt6gDT4/uP5+nEmleexyF5oAefs1B/dQ6t7+nfd0752YHxNjfOdeP
+         JP340boEH90J7JfzDO7RiCwDtmz89Lt9snvUseZKll/oj4HUkk7K9g9FLP/G9uvmoZno
+         PX4vE6BtndGB3INvwipqNb2sz+JioIyCNUYPHw8GbL7a+1WeqkkRQnhnXpa9Ex+JKAcM
+         1TtA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:reply-to
+         :from:date:message-id:subject:to:cc;
+        bh=d9AtxtT4nMo93RM503Qhxe4mGcFfAQvtuS+cWl63KnQ=;
+        b=NiZL8oV8F5JnX5OZ13BCbE0LHSr7iBktw9IQKRezV8C4xOwlWbewb3q251cMULx3RA
+         7SvOKuCA8/x7gMOWGUdS8/Xde3V+9xyv5nbdgXRMseWSxTA/AXRtimPiybZauI3JKUCD
+         OhQnRdNFMhqOO21IFbTHBMVkt+ogT3WmP2qp3eErebEw30vlYJXkX1drMYmXFrmZjmLa
+         u3pHc6b+JF64XFBPJXBag3o/uRB6kRkOhnv5H0jMUhYkKiv+C8JvnFQ/sefRsW/v9oKQ
+         fIFsrSaZ6qGk4FZBZw96SfCSj7mD952nvZ7PAcvTSocdbmsq0LsBzn23PbORDp+aPmVE
+         UT8g==
+X-Gm-Message-State: AGi0PuZdl2STlPn1b275JYf+AcuNQg87vzisCdmBrqaSmx+CgOIEf/8S
+        TQJb9cJujk7Evlb+Bj6LcPCr0fmzg/MD2qYR2H4=
+X-Google-Smtp-Source: APiQypIteFt2zEB7gCCSrCRpJSxLpfpZGJ01Q8vBp2/XWDKgny5v3VCM1rbtrsQhXGu5EETO6/qYOWNU6x8qL2dhw1E=
+X-Received: by 2002:adf:ef8d:: with SMTP id d13mr5210814wro.197.1586332842029;
+ Wed, 08 Apr 2020 01:00:42 -0700 (PDT)
+MIME-Version: 1.0
+References: <CA+icZUWnZwaNooj4WLvS7FKhkDgq3R3xUaQ8hFjuDgZTSj0s2Q@mail.gmail.com>
+ <CAK7LNATub3fpeTY67miVYJ27MtfwaeETW0HrWHYdM0mmaKCYPA@mail.gmail.com>
+In-Reply-To: <CAK7LNATub3fpeTY67miVYJ27MtfwaeETW0HrWHYdM0mmaKCYPA@mail.gmail.com>
+Reply-To: sedat.dilek@gmail.com
+From:   Sedat Dilek <sedat.dilek@gmail.com>
+Date:   Wed, 8 Apr 2020 10:00:30 +0200
+Message-ID: <CA+icZUV0omDqrmcR__bLVCDevCBQV7KjJ=dOyuQct5AZEoKWew@mail.gmail.com>
+Subject: Re: kbuild: do not pass $(KBUILD_CFLAGS) to scripts/mkcompile_h
+To:     Masahiro Yamada <masahiroy@kernel.org>
+Cc:     Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Clemens Gruber <clemens.gruber@pqgruber.com>
-Date:   Wed, 08 Apr 2020 10:00:22 +0200
-In-Reply-To: <3ec5c2bd67cd714f86178a1e7143cd247759aaf8.camel@ew.tq-group.com>
-References: <20200226135229.24929-1-matthias.schiffer@ew.tq-group.com>
-         <20200226151034.7i3h5blmrwre2yzg@pengutronix.de>
-         <32ec35c2b3da119dd2c7bc09742796a0d8a9607e.camel@ew.tq-group.com>
-         <CAGngYiUinGeppRdnsWvX4DBLVcHFBSGWamUKdTC+rTY3kpFWcQ@mail.gmail.com>
-         <3ec5c2bd67cd714f86178a1e7143cd247759aaf8.camel@ew.tq-group.com>
+        Kees Cook <keescook@chromium.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Thomas Gleixner <tglx@linutronix.de>
 Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2020-04-07 at 16:46 +0200, Matthias Schiffer wrote:
-> On Fri, 2020-04-03 at 19:47 -0400, Sven Van Asbroeck wrote:
-> > On Wed, Feb 26, 2020 at 12:04 PM Matthias Schiffer
-> > <matthias.schiffer@ew.tq-group.com> wrote:
-> > > 
-> > > >  - Is this racy somehow (i.e. can it happen that when going
-> > > > from
-> > > >    duty_cycle/period = 1000/5000 to duty_cycle/period =
-> > > > 4000/10000
-> > > > the
-> > > >    output is 1000/10000 (or 4000/5000) for one cycle)?
-> > > 
-> > > It currently is racy. It should be possible to fix that either by
-> > > updating all 4 registers in a single I2C write, or by using the
-> > > "update
-> > > on ACK" mode which requires all 4 registers to be updated before
-> > > the
-> > > new setting is applied (I'm not sure if this mode would require
-> > > using a
-> > > single I2C write as well though).
-> > 
-> > Matthias, did you verify experimentally that changing the period is
-> > racy?
-> > 
-> > Looking at the datasheet and driver code, it shouldn't be. This is
-> > because
-> > the OFF time is set as a proportion of the counter range. When the
-> > period
-> > changes from 5000 to 10000, then 5000*20%/5000 and 10000*20%/10000
-> > will result in the same 20% ratio (disregarding rounding errors).
-> > 
-> > This is documented at the beginning of the driver:
-> > 
-> 
-> 
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/pwm/pwm-pca9685.c?h=v5.6#n25
-> > 
-> > Should we move that comment to pwm_config(), so future versions of
-> > ourselves won't overlook it?
-> 
-> You are right, this results in the same ratio - the absolute on/off
-> times may be wrong for a moment though when the period is changed.
-> 
-> In the attached image, I have changed the period, but kept the
-> absolute
-> duty cycle fixed (note: this is in inverted mode, so the duty cycle
-> controls the low time). It can be seen that after a too long high
-> time
-> (chip is in sleep mode) one period with too long low time follows
-> (new
-> period, old relative duty cycle), before the counter is reprogrammed
-> to
-> match the previous absolute duty cycle.
-> 
-> I don't care too much about the details of the behaviour, as I only
-> control LEDs using this chip and don't need to change the period
-> after
-> initial setup, but we should accurately document the shortcomings of
-> the hardware and the driver (when we have decided how to fix some of
-> the driver issues).
-> 
-> Matthias
+On Tue, Apr 7, 2020 at 8:56 PM Masahiro Yamada <masahiroy@kernel.org> wrote:
+>
+> Hi Sedat,
+>
+> On Mon, Apr 6, 2020 at 7:01 PM Sedat Dilek <sedat.dilek@gmail.com> wrote:
+> >
+> > [ Please CC me I am not subscribed to this mailing-list ]
+> >
+> > Hi,
+> >
+> > I think with your patch in [1] line #56 can go away, too?
+> >
+> > [ scripts/mkcompile_h ]
+> >
+> > 53 # Generate a temporary compile.h
+> > 54
+> > 55 { echo /\* This file is auto generated, version $VERSION \*/
+> > 56   if [ -n "$CONFIG_FLAGS" ] ; then echo "/* $CONFIG_FLAGS */"; fi
+>
+>
+>
+> I think the this inserts a comment line
+> to make sure compile.h is updated
+> when any of CONFIG_SMP, CONFIG_PREEMPT, CONFIG_PREEMPT_RT
+> is changed.
+>
+> So, this is unrelated to my patch at least.
+>
 
-And another kind of race condition that should be possible, although I
-haven't seen it in practice:
+I mixed up CONFIG_FLAGS with KBUILD_CFLAGS - my bad.
 
-High and low bits of the OFF counter currently aren't programmed
-atomically, so with unlucky timing we get a cycle using new lower 8
-bits with old upper 4 bits of the duty cycle.
+- sed@ -
 
-
+>
+> > Thanks.
+> >
+> > Regards,
+> > - Sedat -
+> >
+> > [1] https://patchwork.kernel.org/patch/11473667/
+>
+>
+>
+> --
+> Best Regards
+> Masahiro Yamada
