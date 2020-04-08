@@ -7,43 +7,43 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63613C2D0EA
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 15:27:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C225FC2BA16
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 15:27:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3B71A20753
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 15:27:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 953CC2072A
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 15:27:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ELwZJspD"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="tjsu90MW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728948AbgDHP1x (ORCPT
+        id S1728976AbgDHP14 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Apr 2020 11:27:53 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:35114 "EHLO
+        Wed, 8 Apr 2020 11:27:56 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:35132 "EHLO
         bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727736AbgDHP1w (ORCPT
+        with ESMTP id S1727736AbgDHP1z (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Apr 2020 11:27:52 -0400
+        Wed, 8 Apr 2020 11:27:55 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
         MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:To:From:Sender:
         Reply-To:Cc:Content-Type:Content-ID:Content-Description;
-        bh=8nJWSG9FGLTV/LSsPhlrBxYCcjYTd9Q8QHp0p+Dc/PE=; b=ELwZJspDRDvGdtx7PT85EPT+YV
-        yxhk4+ibY6HrrZGiqfqwdsUZa6cZF5kpAqbjsD31KrX85b1+AtGYAuLww7Tst3RzdUs9x6VNbeXrZ
-        M01xAh0VzlMOC+Fy/v5kkb57oupdX+fA+fix84dpECbl81ORgNzfPJsInEIL9fWIy+Nl3WvwJjfKB
-        5J4uy4Tk1WEMBYsKhX6BwzlE3UY6BzFaAEmVOZhnGLsH3KGJcNChPa9AAkCCcNnaZcbRWj1RiCwSD
-        tEdd719wJIoPBnrvLAexH11vybo1JchL5GHGZS1kQKd+7wvgCW8Z+A1X4NbO9fBHlBwMxJ80sx2ZU
-        oaN9pcjQ==;
+        bh=OoL3xfc4ZyM4+fjf1W+JBORLUxTwPT7YqdnTagKomoI=; b=tjsu90MWgGgNc5oTFox6Y/O6u5
+        WOHoIVqi/4cHMemAemUTDjFVp4tiZtrwJJW96ZFGXhCpYs78aSRY+s559DR3gEjhHQYMEBv3/AEPz
+        ZBZZlsYlt4zv3bzh89rIcWGW3CGye8ILbX0BBs3K4rWn/PMOY3OfQRyrBWCGstIZsWhxBcnH39M97
+        GIjFDy67JkpJnEo1a88LcsaHOZ4W4/n1fu9L6s8164BkRUQtB38KLQG6TOQxBMrRNbFyztcxMRhwK
+        OUsyH80Or28HUPjxHuKe8QloPC2b+kHCfmexQUgPGCThQiKnQR9MtVXCsZrKRYfyrQ4LST4CrzH0O
+        r98vlQ1Q==;
 Received: from [2001:4bb8:180:5765:65b6:f11e:f109:b151] (helo=localhost)
         by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jMCcI-0007yx-A7; Wed, 08 Apr 2020 15:27:50 +0000
+        id 1jMCcL-0007zC-Fj; Wed, 08 Apr 2020 15:27:53 +0000
 From:   Christoph Hellwig <hch@lst.de>
 To:     x86@kernel.org, Dave Hansen <dave.hansen@linux.intel.com>,
         Andy Lutomirski <luto@kernel.org>,
         Peter Zijlstra <peterz@infradead.org>,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 1/4] x86/mm: Add a x86_has_pat_wp helper
-Date:   Wed,  8 Apr 2020 17:27:42 +0200
-Message-Id: <20200408152745.1565832-2-hch@lst.de>
+Subject: [PATCH 2/4] x86/mm: Move pgprot2cachemode out of line
+Date:   Wed,  8 Apr 2020 17:27:43 +0200
+Message-Id: <20200408152745.1565832-3-hch@lst.de>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200408152745.1565832-1-hch@lst.de>
 References: <20200408152745.1565832-1-hch@lst.de>
@@ -55,71 +55,94 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Abstract the ioremap code away from the caching mode internals.
+This helper is only used by x86 low-level MM code.  Also remove the
+entirely pointless __pte2cachemode_tbl export as that symbol can be
+marked static now.
 
 Signed-off-by: Christoph Hellwig <hch@lst.de>
 ---
- arch/x86/include/asm/memtype.h | 2 ++
- arch/x86/mm/init.c             | 6 ++++++
- arch/x86/mm/ioremap.c          | 8 ++------
- 3 files changed, 10 insertions(+), 6 deletions(-)
+ arch/x86/include/asm/memtype.h       |  1 +
+ arch/x86/include/asm/pgtable_types.h | 10 ----------
+ arch/x86/mm/init.c                   | 13 +++++++++++--
+ 3 files changed, 12 insertions(+), 12 deletions(-)
 
 diff --git a/arch/x86/include/asm/memtype.h b/arch/x86/include/asm/memtype.h
-index 9c2447b3555d..1e4e99b40711 100644
+index 1e4e99b40711..9ca760e430b9 100644
 --- a/arch/x86/include/asm/memtype.h
 +++ b/arch/x86/include/asm/memtype.h
-@@ -24,4 +24,6 @@ extern void memtype_free_io(resource_size_t start, resource_size_t end);
- 
+@@ -25,5 +25,6 @@ extern void memtype_free_io(resource_size_t start, resource_size_t end);
  extern bool pat_pfn_immune_to_uc_mtrr(unsigned long pfn);
  
-+bool x86_has_pat_wp(void);
-+
+ bool x86_has_pat_wp(void);
++enum page_cache_mode pgprot2cachemode(pgprot_t pgprot);
+ 
  #endif /* _ASM_X86_MEMTYPE_H */
+diff --git a/arch/x86/include/asm/pgtable_types.h b/arch/x86/include/asm/pgtable_types.h
+index b6606fe6cfdf..75fe903124f8 100644
+--- a/arch/x86/include/asm/pgtable_types.h
++++ b/arch/x86/include/asm/pgtable_types.h
+@@ -468,7 +468,6 @@ static inline pteval_t pte_flags(pte_t pte)
+ }
+ 
+ extern uint16_t __cachemode2pte_tbl[_PAGE_CACHE_MODE_NUM];
+-extern uint8_t __pte2cachemode_tbl[8];
+ 
+ #define __pte2cm_idx(cb)				\
+ 	((((cb) >> (_PAGE_BIT_PAT - 2)) & 4) |		\
+@@ -489,15 +488,6 @@ static inline pgprot_t cachemode2pgprot(enum page_cache_mode pcm)
+ {
+ 	return __pgprot(cachemode2protval(pcm));
+ }
+-static inline enum page_cache_mode pgprot2cachemode(pgprot_t pgprot)
+-{
+-	unsigned long masked;
+-
+-	masked = pgprot_val(pgprot) & _PAGE_CACHE_MASK;
+-	if (likely(masked == 0))
+-		return 0;
+-	return __pte2cachemode_tbl[__pte2cm_idx(masked)];
+-}
+ static inline pgprot_t pgprot_4k_2_large(pgprot_t pgprot)
+ {
+ 	pgprotval_t val = pgprot_val(pgprot);
 diff --git a/arch/x86/mm/init.c b/arch/x86/mm/init.c
-index e7bb483557c9..83e5780768ad 100644
+index 83e5780768ad..8482ee51b225 100644
 --- a/arch/x86/mm/init.c
 +++ b/arch/x86/mm/init.c
-@@ -71,6 +71,12 @@ uint8_t __pte2cachemode_tbl[8] = {
+@@ -59,7 +59,7 @@ uint16_t __cachemode2pte_tbl[_PAGE_CACHE_MODE_NUM] = {
  };
- EXPORT_SYMBOL(__pte2cachemode_tbl);
+ EXPORT_SYMBOL(__cachemode2pte_tbl);
  
-+/* Check that the write-protect PAT entry is set for write-protect */
-+bool x86_has_pat_wp(void)
+-uint8_t __pte2cachemode_tbl[8] = {
++static uint8_t __pte2cachemode_tbl[8] = {
+ 	[__pte2cm_idx( 0        | 0         | 0        )] = _PAGE_CACHE_MODE_WB,
+ 	[__pte2cm_idx(_PAGE_PWT | 0         | 0        )] = _PAGE_CACHE_MODE_UC_MINUS,
+ 	[__pte2cm_idx( 0        | _PAGE_PCD | 0        )] = _PAGE_CACHE_MODE_UC_MINUS,
+@@ -69,7 +69,6 @@ uint8_t __pte2cachemode_tbl[8] = {
+ 	[__pte2cm_idx(0         | _PAGE_PCD | _PAGE_PAT)] = _PAGE_CACHE_MODE_UC_MINUS,
+ 	[__pte2cm_idx(_PAGE_PWT | _PAGE_PCD | _PAGE_PAT)] = _PAGE_CACHE_MODE_UC,
+ };
+-EXPORT_SYMBOL(__pte2cachemode_tbl);
+ 
+ /* Check that the write-protect PAT entry is set for write-protect */
+ bool x86_has_pat_wp(void)
+@@ -77,6 +76,16 @@ bool x86_has_pat_wp(void)
+ 	return __pte2cachemode_tbl[_PAGE_CACHE_MODE_WP] == _PAGE_CACHE_MODE_WP;
+ }
+ 
++enum page_cache_mode pgprot2cachemode(pgprot_t pgprot)
 +{
-+	return __pte2cachemode_tbl[_PAGE_CACHE_MODE_WP] == _PAGE_CACHE_MODE_WP;
++	unsigned long masked;
++
++	masked = pgprot_val(pgprot) & _PAGE_CACHE_MASK;
++	if (likely(masked == 0))
++		return 0;
++	return __pte2cachemode_tbl[__pte2cm_idx(masked)];
 +}
 +
  static unsigned long __initdata pgt_buf_start;
  static unsigned long __initdata pgt_buf_end;
  static unsigned long __initdata pgt_buf_top;
-diff --git a/arch/x86/mm/ioremap.c b/arch/x86/mm/ioremap.c
-index 18c637c0dc6f..41536f523a5f 100644
---- a/arch/x86/mm/ioremap.c
-+++ b/arch/x86/mm/ioremap.c
-@@ -778,10 +778,8 @@ void __init *early_memremap_encrypted(resource_size_t phys_addr,
- void __init *early_memremap_encrypted_wp(resource_size_t phys_addr,
- 					 unsigned long size)
- {
--	/* Be sure the write-protect PAT entry is set for write-protect */
--	if (__pte2cachemode_tbl[_PAGE_CACHE_MODE_WP] != _PAGE_CACHE_MODE_WP)
-+	if (!x86_has_pat_wp())
- 		return NULL;
--
- 	return early_memremap_prot(phys_addr, size, __PAGE_KERNEL_ENC_WP);
- }
- 
-@@ -799,10 +797,8 @@ void __init *early_memremap_decrypted(resource_size_t phys_addr,
- void __init *early_memremap_decrypted_wp(resource_size_t phys_addr,
- 					 unsigned long size)
- {
--	/* Be sure the write-protect PAT entry is set for write-protect */
--	if (__pte2cachemode_tbl[_PAGE_CACHE_MODE_WP] != _PAGE_CACHE_MODE_WP)
-+	if (!x86_has_pat_wp())
- 		return NULL;
--
- 	return early_memremap_prot(phys_addr, size, __PAGE_KERNEL_NOENC_WP);
- }
- #endif	/* CONFIG_AMD_MEM_ENCRYPT */
 -- 
 2.25.1
 
