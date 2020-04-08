@@ -6,77 +6,76 @@ X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE03CC2D0EA
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 11:17:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ACAEEC2D0EA
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 11:21:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BE40A20753
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 11:17:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 611C820753
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 11:21:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="I26DyJnG"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="jL8HBJZU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728420AbgDHLRz (ORCPT
+        id S1728429AbgDHLV5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Apr 2020 07:17:55 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:59032 "EHLO
+        Wed, 8 Apr 2020 07:21:57 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:59166 "EHLO
         bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727902AbgDHLRz (ORCPT
+        with ESMTP id S1728205AbgDHLV5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Apr 2020 07:17:55 -0400
+        Wed, 8 Apr 2020 07:21:57 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
         :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
         Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=3YJqaOoM4AXHXL0XANzFtbQE1EpTeXAe0og/pFKkpCA=; b=I26DyJnGGGzpg8aW0CSl3TSO8/
-        fCLcInYqjvbFiDB3N97TYX+H95E7s7uhQVs1LywnJrxvQAyQKrsXOH4HCqon7QCoisfEoaw6RVFDS
-        NQOCO/S4ycVdQoxRL46SZ2UfRTHDCE0HFlkAY/BrTNmWRge1970iZq7hPoYzBfUytDGspcPrPDjhj
-        lDsRcJWFs6qo8zxx5srQ71V1LToOn2jGFgto63isvIjWn9uZp/yp5qMXQVuaeLYT2wjloOAyaBt4C
-        CZadKhWG7I0rpK07+OqaLbMseS8zTcP0JuX9+Fe8qNltNOQHzKTM5TMcUHTWVQtPsjS20OYk7jLcj
-        W3k8stdA==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jM8iL-0000RC-Gm; Wed, 08 Apr 2020 11:17:49 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id C4D5B300130;
-        Wed,  8 Apr 2020 13:17:47 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id B0E612BA90A63; Wed,  8 Apr 2020 13:17:47 +0200 (CEST)
-Date:   Wed, 8 Apr 2020 13:17:47 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Ankur Arora <ankur.a.arora@oracle.com>
-Cc:     linux-kernel@vger.kernel.org, x86@kernel.org, hpa@zytor.com,
-        jpoimboe@redhat.com, namit@vmware.com, mhiramat@kernel.org,
-        jgross@suse.com, bp@alien8.de, vkuznets@redhat.com,
-        pbonzini@redhat.com, boris.ostrovsky@oracle.com,
-        mihai.carabas@oracle.com, kvm@vger.kernel.org,
-        xen-devel@lists.xenproject.org,
-        virtualization@lists.linux-foundation.org
-Subject: Re: [RFC PATCH 14/26] x86/alternatives: Handle native insns in
- text_poke_loc*()
-Message-ID: <20200408111747.GV20713@hirez.programming.kicks-ass.net>
-References: <20200408050323.4237-1-ankur.a.arora@oracle.com>
- <20200408050323.4237-15-ankur.a.arora@oracle.com>
+        bh=PWkE951pF6gwEgnZrr9rlPlV6Gs3OzC1B/guo+3Nato=; b=jL8HBJZUW04p8UIqAHE625jZEu
+        pR+6oxFHckjc35R4VhzZcl01WIJomt7KJiZZRvnX/EC/5B2rTcTamkwArtYmzgw80e71f9+U3s1Nn
+        9EbFYHkNZomfJ+Lc2/o0l696J0HTYsH7i+fAey2YjCaGuy3l94V5sxK/5b23Pku3AFe+SbtQGCMt2
+        ptE8WU3lReh6n7K/OYuYAkv940+hijRidD+qYV9oep32w9shhbiP7f3AIzqA1aYrokjRexWTlefYj
+        7lqqoamXNnvxVZdt+nV5xFauE2xq5BUlu5sp0kv9t9tcxIYgH1R+hKwMK41txIr8UAQzpQmCfog4D
+        5EejFJ/w==;
+Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jM8mG-0003CR-H4; Wed, 08 Apr 2020 11:21:52 +0000
+Date:   Wed, 8 Apr 2020 04:21:52 -0700
+From:   Matthew Wilcox <willy@infradead.org>
+To:     Tetsuhiro Kohada <Kohada.Tetsuhiro@dc.mitsubishielectric.co.jp>
+Cc:     Mori.Takahiro@ab.mitsubishielectric.co.jp,
+        motai.hirotaka@aj.mitsubishielectric.co.jp,
+        Namjae Jeon <namjae.jeon@samsung.com>,
+        Sungjong Seo <sj1557.seo@samsung.com>,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] exfat: replace 'time_ms' with 'time_10ms'
+Message-ID: <20200408112152.GP21484@bombadil.infradead.org>
+References: <20200408074610.35591-1-Kohada.Tetsuhiro@dc.MitsubishiElectric.co.jp>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200408050323.4237-15-ankur.a.arora@oracle.com>
+In-Reply-To: <20200408074610.35591-1-Kohada.Tetsuhiro@dc.MitsubishiElectric.co.jp>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Please leave at least 24 hours between sending new versions so that
+you can collect all feedback relating to your change, and we don't see
+discussion fragment between different threads.
 
-On Tue, Apr 07, 2020 at 10:03:11PM -0700, Ankur Arora wrote:
-> @@ -1071,10 +1079,13 @@ int notrace poke_int3_handler(struct pt_regs *regs)
->  			goto out_put;
->  	}
+> @@ -84,10 +84,10 @@ void exfat_get_entry_time(struct exfat_sb_info *sbi, struct timespec64 *ts,
+>  			      t >> 11, (t >> 5) & 0x003F, (t & 0x001F) << 1);
 >  
-> -	len = text_opcode_size(tp->opcode);
-> +	if (desc->native)
-> +		BUG();
-> +
+>  
+> -	/* time_ms field represent 0 ~ 199(1990 ms) */
+> -	if (time_ms) {
+> -		ts->tv_sec += time_ms / 100;
+> -		ts->tv_nsec = (time_ms % 100) * 10 * NSEC_PER_MSEC;
+> +	/* time_10ms field represent 0 ~ 199cs(1990 ms) */
+> +	if (time_10ms) {
+> +		ts->tv_sec += (time_10ms * 10) / 1000;
+> +		ts->tv_nsec = (time_10ms * 10) % 1000 * NSEC_PER_MSEC;
 
-Subject: x86/alternatives: Handle native insns in text_poke_loc*()
+I find this more confusing than the original.
 
-That's not really handling, is it..
+		ts->tv_sec += time_10ms / 100;
+		ts->tv_nsec = (time_10ms % 100) * 10 * NSEC_PER_MSEC;
+
+is easier to understand for me, not least because I don't need to worry
+about the operator precedence between % and *.
+
