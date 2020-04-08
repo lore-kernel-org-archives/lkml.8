@@ -2,242 +2,167 @@ Return-Path: <SRS0=8dav=5Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58D76C2D0EA
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 12:28:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C72EC2D0EA
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 12:29:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 20D3E20787
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 12:28:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1605C206BE
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 12:29:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="YipZuW6X"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728687AbgDHM2M (ORCPT
+        id S1728704AbgDHM3b (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Apr 2020 08:28:12 -0400
-Received: from mx2.suse.de ([195.135.220.15]:57632 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726769AbgDHM2L (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Apr 2020 08:28:11 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 66C7CAC44;
-        Wed,  8 Apr 2020 12:28:07 +0000 (UTC)
-Subject: Re: [RFC PATCH 00/26] Runtime paravirt patching
-To:     Ankur Arora <ankur.a.arora@oracle.com>,
-        linux-kernel@vger.kernel.org, x86@kernel.org
-Cc:     peterz@infradead.org, hpa@zytor.com, jpoimboe@redhat.com,
-        namit@vmware.com, mhiramat@kernel.org, bp@alien8.de,
-        vkuznets@redhat.com, pbonzini@redhat.com,
-        boris.ostrovsky@oracle.com, mihai.carabas@oracle.com,
-        kvm@vger.kernel.org, xen-devel@lists.xenproject.org,
-        virtualization@lists.linux-foundation.org
-References: <20200408050323.4237-1-ankur.a.arora@oracle.com>
-From:   =?UTF-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>
-Message-ID: <d7f8bff3-526a-6a84-2e81-677cfbac0111@suse.com>
-Date:   Wed, 8 Apr 2020 14:28:06 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Wed, 8 Apr 2020 08:29:31 -0400
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:37402 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728274AbgDHM3a (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Apr 2020 08:29:30 -0400
+Received: by mail-lf1-f66.google.com with SMTP id t11so5005324lfe.4
+        for <linux-kernel@vger.kernel.org>; Wed, 08 Apr 2020 05:29:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=YO0DPEIowR6FKoT9Z2QqUeTnswzrFsJGk8ZK6iAlIKU=;
+        b=YipZuW6X1zD7Wvyrp8vARlzLtnPe8PfbQVWbBfV421NTNrYJJOocOBDmHhANQZf4dL
+         O/A2Io4sp3yWjH9+aGtyNht+VGYHZic2QbqmoRWkqavRoIdHjXmM/TSfx4uc/QrU7T+j
+         f5EhaTLD+4z9IjVnVdfhGO0ECm4EwhvVtmcLaC0S/dZTXZ6nfEKKH+mi/ErqgAw+3VDq
+         X2tFuEmyDr/0KETXmBYsgiMxrGwkHhjgpsPLhoIstUmk1mgW36iFX6hA3WHPvnBpgPoq
+         J9qhwTi0aJJurvYXPq+SVoM1pKh3WliNSrNNHXV5x2zC3O3c95DXU0q1ze27E3TfLzHH
+         pYkQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=YO0DPEIowR6FKoT9Z2QqUeTnswzrFsJGk8ZK6iAlIKU=;
+        b=JyC3MhWOwJ80scOse/gFTHrYMrlHETS2BeUZKcozDTGS0p+ofhZKERdbnKTLYXUZd6
+         Ji0ZI8t/1axbwsD8UAJ68L0PB1HnVXOwHmWXLSCrQUP0YVRu8cnxZG1zZT9ZFQhazF2a
+         kMhrB639JuWBVmlUGeaw0PLhYanBE8iz2pTW/LJPrxcGzqR8k7bBglw/k+WJYRrLu/1v
+         AbIzsDIY3WkuZ8ZfAZDXDsWpwCtKagVl5oUa/oEgYww5HGZS5piF9moOpoZQRfjufU7K
+         HtjK3qzL136FgYvTihq1usCkE0TTIk5BLooUahzhe9oypEmekVy4ZC6+c5R3iNdKDPYQ
+         XQ3A==
+X-Gm-Message-State: AGi0PuaJk0wtgzn4bEOPA9SBSJEP5fpJy4cKIJzkToTiQZ+7w/OyiTuG
+        Tna0Etf8J9DC1WhxtS1oortlXdPgtTSjqwq3HcThxA==
+X-Google-Smtp-Source: APiQypJqH7nZPuX1nBy1EL+9zs7Si/fi5boTxKmSFehn/X6zn5fQne54exz4MJYvS6BGs7Z+zWAopdlFX5VS+jLuaZs=
+X-Received: by 2002:ac2:46f9:: with SMTP id q25mr4507268lfo.149.1586348967692;
+ Wed, 08 Apr 2020 05:29:27 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200408050323.4237-1-ankur.a.arora@oracle.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20200408095012.3819-1-dietmar.eggemann@arm.com> <20200408095012.3819-2-dietmar.eggemann@arm.com>
+In-Reply-To: <20200408095012.3819-2-dietmar.eggemann@arm.com>
+From:   Vincent Guittot <vincent.guittot@linaro.org>
+Date:   Wed, 8 Apr 2020 14:29:16 +0200
+Message-ID: <CAKfTPtC4_+dTddLdoFMdzUvsXwWyi3bUOXcg9kstC8RzZS_a+A@mail.gmail.com>
+Subject: Re: [PATCH 1/4] sched/topology: Store root domain CPU capacity sum
+To:     Dietmar Eggemann <dietmar.eggemann@arm.com>
+Cc:     Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Luca Abeni <luca.abeni@santannapisa.it>,
+        Daniel Bristot de Oliveira <bristot@redhat.com>,
+        Wei Wang <wvw@google.com>, Quentin Perret <qperret@google.com>,
+        Alessio Balsini <balsini@google.com>,
+        Pavan Kondeti <pkondeti@codeaurora.org>,
+        Patrick Bellasi <patrick.bellasi@matbug.net>,
+        Morten Rasmussen <morten.rasmussen@arm.com>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Qais Yousef <qais.yousef@arm.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 08.04.20 07:02, Ankur Arora wrote:
-> A KVM host (or another hypervisor) might advertise paravirtualized
-> features and optimization hints (ex KVM_HINTS_REALTIME) which might
-> become stale over the lifetime of the guest. For instance, the
+On Wed, 8 Apr 2020 at 11:50, Dietmar Eggemann <dietmar.eggemann@arm.com> wrote:
+>
+> Add the sum of (original) CPU capacity of all member CPUs to the root
+> domain.
+>
+> This is needed for capacity-aware SCHED_DEADLINE admission control.
+>
+> Signed-off-by: Dietmar Eggemann <dietmar.eggemann@arm.com>
+> ---
+>  kernel/sched/sched.h    | 11 +++++++++++
+>  kernel/sched/topology.c | 14 ++++++++++----
+>  2 files changed, 21 insertions(+), 4 deletions(-)
+>
+> diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
+> index 1e72d1b3d3ce..91bd0cb0c529 100644
+> --- a/kernel/sched/sched.h
+> +++ b/kernel/sched/sched.h
+> @@ -797,6 +797,7 @@ struct root_domain {
+>         cpumask_var_t           rto_mask;
+>         struct cpupri           cpupri;
+>
+> +       unsigned long           sum_cpu_capacity;
+>         unsigned long           max_cpu_capacity;
+>
+>         /*
+> @@ -2393,6 +2394,16 @@ static inline unsigned long capacity_orig_of(int cpu)
+>  {
+>         return cpu_rq(cpu)->cpu_capacity_orig;
+>  }
+> +
+> +static inline unsigned long rd_capacity(int cpu)
+> +{
+> +       return cpu_rq(cpu)->rd->sum_cpu_capacity;
+> +}
+> +#else
+> +static inline unsigned long rd_capacity(int cpu)
+> +{
+> +       return SCHED_CAPACITY_SCALE;
+> +}
+>  #endif
+>
+>  /**
+> diff --git a/kernel/sched/topology.c b/kernel/sched/topology.c
+> index 8344757bba6e..74b0c0fa4b1b 100644
+> --- a/kernel/sched/topology.c
+> +++ b/kernel/sched/topology.c
+> @@ -2052,12 +2052,17 @@ build_sched_domains(const struct cpumask *cpu_map, struct sched_domain_attr *att
+>         /* Attach the domains */
+>         rcu_read_lock();
+>         for_each_cpu(i, cpu_map) {
+> +               unsigned long cap = arch_scale_cpu_capacity(i);
 
-Then this hint is wrong if it can't be guaranteed.
+Why do you replace the use of rq->cpu_capacity_orig by
+arch_scale_cpu_capacity(i) ?
+There is nothing about this change in the commit message
 
-> host might go from being undersubscribed to being oversubscribed
-> (or the other way round) and it would make sense for the guest
-> switch pv-ops based on that.
-
-I think using pvops for such a feature change is just wrong.
-
-What comes next? Using pvops for being able to migrate a guest from an
-Intel to an AMD machine?
-
-...
-
-> There are four main sets of patches in this series:
-> 
->   1. PV-ops management (patches 1-10, 20): mostly infrastructure and
->   refactoring pieces to make paravirt patching usable at runtime. For the
->   most part scoped under CONFIG_PARAVIRT_RUNTIME.
-> 
->   Patches 1-7, to persist part of parainstructions in memory:
->    "x86/paravirt: Specify subsection in PVOP macros"
->    "x86/paravirt: Allow paravirt patching post-init"
->    "x86/paravirt: PVRTOP macros for PARAVIRT_RUNTIME"
->    "x86/alternatives: Refactor alternatives_smp_module*
->    "x86/alternatives: Rename alternatives_smp*, smp_alt_module
->    "x86/alternatives: Remove stale symbols
->    "x86/paravirt: Persist .parainstructions.runtime"
-> 
->   Patches 8-10, develop the inerfaces to safely switch pv-ops:
->    "x86/paravirt: Stash native pv-ops"
->    "x86/paravirt: Add runtime_patch()"
->    "x86/paravirt: Add primitives to stage pv-ops"
-> 
->   Patch 20 enables switching of pv_lock_ops:
->    "x86/paravirt: Enable pv-spinlocks in runtime_patch()"
-> 
->   2. Non-emulated text poking (patches 11-19)
-> 
->   Patches 11-13 are mostly refactoring to split __text_poke() into map,
->   unmap and poke/memcpy phases with the poke portion being re-entrant
->    "x86/alternatives: Remove return value of text_poke*()"
->    "x86/alternatives: Use __get_unlocked_pte() in text_poke()"
->    "x86/alternatives: Split __text_poke()"
-> 
->   Patches 15, 17 add the actual poking state-machine:
->    "x86/alternatives: Non-emulated text poking"
->    "x86/alternatives: Add patching logic in text_poke_site()"
-> 
->   with patches 14 and 18 containing the pieces for BP handling:
->    "x86/alternatives: Handle native insns in text_poke_loc*()"
->    "x86/alternatives: Handle BP in non-emulated text poking"
-> 
->   and patch 19 provides the ability to use the state-machine above in an
->   NMI context (fixes some potential deadlocks when handling inter-
->   dependent operations and multiple NMIs):
->    "x86/alternatives: NMI safe runtime patching".
-> 
->   Patch 16 provides the interface (paravirt_runtime_patch()) to use the
->   poking mechanism developed above and patch 21 adds a selftest:
->    "x86/alternatives: Add paravirt patching at runtime"
->    "x86/alternatives: Paravirt runtime selftest"
-> 
->   3. KVM guest changes to be able to use this (patches 22-23,25-26):
->    "kvm/paravirt: Encapsulate KVM pv switching logic"
->    "x86/kvm: Add worker to trigger runtime patching"
->    "x86/kvm: Guest support for dynamic hints"
->    "x86/kvm: Add hint change notifier for KVM_HINT_REALTIME".
-> 
->   4. KVM host changes to notify the guest of a change (patch 24):
->    "x86/kvm: Support dynamic CPUID hints"
-> 
-> Testing:
-> With paravirt patching, the code is mostly stable on Intel and AMD
-> systems under kernbench and locktorture with paravirt toggling (with,
-> without synthetic NMIs) in the background.
-> 
-> Queued spinlock performance for locktorture is also on expected lines:
->   [ 1533.221563] Writes:  Total: 1048759000  Max/Min: 0/0   Fail: 0
->   # toggle PV spinlocks
-> 
->   [ 1594.713699] Writes:  Total: 1111660545  Max/Min: 0/0   Fail: 0
->   # PV spinlocks (in ~60 seconds) = 62,901,545
-> 
->   # toggle native spinlocks
->   [ 1656.117175] Writes:  Total: 1113888840  Max/Min: 0/0   Fail: 0
->    # native spinlocks (in ~60 seconds) = 2,228,295
-> 
-> The alternatives testing is more limited with it being used to rewrite
-> mostly harmless X86_FEATUREs with load in the background.
-> 
-> Patches also at:
-> 
-> ssh://git@github.com/terminus/linux.git alternatives-rfc-upstream-v1
-> 
-> Please review.
-> 
-> Thanks
-> Ankur
-> 
-> [1] The precise change in memory footprint depends on config options
-> but the following example inlines queued_spin_unlock() (which forms
-> the bulk of the added state). The added footprint is the size of the
-> .parainstructions.runtime section:
-> 
->   $ objdump -h vmlinux|grep .parainstructions
->   Idx Name              		Size      VMA
->   	LMA                File-off  Algn
->    27 .parainstructions 		0001013c  ffffffff82895000
->    	0000000002895000   01c95000  2**3
->    28 .parainstructions.runtime  0000cd2c  ffffffff828a5140
->    	00000000028a5140   01ca5140  2**3
-> 
->    $ size vmlinux
->    text       data       bss        dec      hex       filename
->    13726196   12302814   14094336   40123346 2643bd2   vmlinux
-> 
-> Ankur Arora (26):
->    x86/paravirt: Specify subsection in PVOP macros
->    x86/paravirt: Allow paravirt patching post-init
->    x86/paravirt: PVRTOP macros for PARAVIRT_RUNTIME
->    x86/alternatives: Refactor alternatives_smp_module*
->    x86/alternatives: Rename alternatives_smp*, smp_alt_module
->    x86/alternatives: Remove stale symbols
->    x86/paravirt: Persist .parainstructions.runtime
->    x86/paravirt: Stash native pv-ops
->    x86/paravirt: Add runtime_patch()
->    x86/paravirt: Add primitives to stage pv-ops
->    x86/alternatives: Remove return value of text_poke*()
->    x86/alternatives: Use __get_unlocked_pte() in text_poke()
->    x86/alternatives: Split __text_poke()
->    x86/alternatives: Handle native insns in text_poke_loc*()
->    x86/alternatives: Non-emulated text poking
->    x86/alternatives: Add paravirt patching at runtime
->    x86/alternatives: Add patching logic in text_poke_site()
->    x86/alternatives: Handle BP in non-emulated text poking
->    x86/alternatives: NMI safe runtime patching
->    x86/paravirt: Enable pv-spinlocks in runtime_patch()
->    x86/alternatives: Paravirt runtime selftest
->    kvm/paravirt: Encapsulate KVM pv switching logic
->    x86/kvm: Add worker to trigger runtime patching
->    x86/kvm: Support dynamic CPUID hints
->    x86/kvm: Guest support for dynamic hints
->    x86/kvm: Add hint change notifier for KVM_HINT_REALTIME
-> 
->   Documentation/virt/kvm/api.rst        |  17 +
->   Documentation/virt/kvm/cpuid.rst      |   9 +-
->   arch/x86/Kconfig                      |  14 +
->   arch/x86/Kconfig.debug                |  13 +
->   arch/x86/entry/entry_64.S             |   5 +
->   arch/x86/include/asm/alternative.h    |  20 +-
->   arch/x86/include/asm/kvm_host.h       |   6 +
->   arch/x86/include/asm/kvm_para.h       |  17 +
->   arch/x86/include/asm/paravirt.h       |  10 +-
->   arch/x86/include/asm/paravirt_types.h | 230 ++++--
->   arch/x86/include/asm/text-patching.h  |  18 +-
->   arch/x86/include/uapi/asm/kvm_para.h  |   2 +
->   arch/x86/kernel/Makefile              |   1 +
->   arch/x86/kernel/alternative.c         | 987 +++++++++++++++++++++++---
->   arch/x86/kernel/kvm.c                 | 191 ++++-
->   arch/x86/kernel/module.c              |  42 +-
->   arch/x86/kernel/paravirt.c            |  16 +-
->   arch/x86/kernel/paravirt_patch.c      |  61 ++
->   arch/x86/kernel/pv_selftest.c         | 264 +++++++
->   arch/x86/kernel/pv_selftest.h         |  15 +
->   arch/x86/kernel/setup.c               |   2 +
->   arch/x86/kernel/vmlinux.lds.S         |  16 +
->   arch/x86/kvm/cpuid.c                  |   3 +-
->   arch/x86/kvm/x86.c                    |  39 +
->   include/asm-generic/kvm_para.h        |  12 +
->   include/asm-generic/vmlinux.lds.h     |   8 +
->   include/linux/kvm_para.h              |   5 +
->   include/linux/mm.h                    |  16 +-
->   include/linux/preempt.h               |  17 +
->   include/uapi/linux/kvm.h              |   4 +
->   kernel/locking/lock_events.c          |   2 +-
->   mm/memory.c                           |   9 +-
->   32 files changed, 1850 insertions(+), 221 deletions(-)
->   create mode 100644 arch/x86/kernel/pv_selftest.c
->   create mode 100644 arch/x86/kernel/pv_selftest.h
-> 
-
-Quite a lot of code churn and hacks for a problem which should not
-occur on a well administrated machine.
-
-Especially the NMI dependencies make me not wanting to Ack this series.
-
-
-Juergen
+> +
+>                 rq = cpu_rq(i);
+>                 sd = *per_cpu_ptr(d.sd, i);
+>
+>                 /* Use READ_ONCE()/WRITE_ONCE() to avoid load/store tearing: */
+> -               if (rq->cpu_capacity_orig > READ_ONCE(d.rd->max_cpu_capacity))
+> -                       WRITE_ONCE(d.rd->max_cpu_capacity, rq->cpu_capacity_orig);
+> +               if (cap > READ_ONCE(d.rd->max_cpu_capacity))
+> +                       WRITE_ONCE(d.rd->max_cpu_capacity, cap);
+> +
+> +               WRITE_ONCE(d.rd->sum_cpu_capacity,
+> +                          READ_ONCE(d.rd->sum_cpu_capacity) + cap);
+>
+>                 cpu_attach_domain(sd, d.rd, i);
+>         }
+> @@ -2067,8 +2072,9 @@ build_sched_domains(const struct cpumask *cpu_map, struct sched_domain_attr *att
+>                 static_branch_inc_cpuslocked(&sched_asym_cpucapacity);
+>
+>         if (rq && sched_debug_enabled) {
+> -               pr_info("root domain span: %*pbl (max cpu_capacity = %lu)\n",
+> -                       cpumask_pr_args(cpu_map), rq->rd->max_cpu_capacity);
+> +               pr_info("root domain span: %*pbl (capacity = %lu max cpu_capacity = %lu)\n",
+> +                       cpumask_pr_args(cpu_map), rq->rd->sum_cpu_capacity,
+> +                       rq->rd->max_cpu_capacity);
+>         }
+>
+>         ret = 0;
+> --
+> 2.17.1
+>
