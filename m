@@ -2,270 +2,100 @@ Return-Path: <SRS0=8dav=5Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9695C2BA1B
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 21:28:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AFE20C2BA2B
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 21:29:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 684FE2075E
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 21:28:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 730A4206C0
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 21:29:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="pI/Ke2eb"
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="BWwwyhWd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730123AbgDHV2q (ORCPT
+        id S1730335AbgDHV3V (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Apr 2020 17:28:46 -0400
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:37652 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729692AbgDHV2p (ORCPT
+        Wed, 8 Apr 2020 17:29:21 -0400
+Received: from mail-qv1-f65.google.com ([209.85.219.65]:38727 "EHLO
+        mail-qv1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729692AbgDHV3U (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Apr 2020 17:28:45 -0400
-Received: by mail-ed1-f65.google.com with SMTP id de14so10638210edb.4
-        for <linux-kernel@vger.kernel.org>; Wed, 08 Apr 2020 14:28:42 -0700 (PDT)
+        Wed, 8 Apr 2020 17:29:20 -0400
+Received: by mail-qv1-f65.google.com with SMTP id p60so4492828qva.5
+        for <linux-kernel@vger.kernel.org>; Wed, 08 Apr 2020 14:29:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=gsc90LPV5vuebvWSwowSniEuuhSDnHS3fNotzCrMHhI=;
-        b=pI/Ke2eb3jkjDRXlYPpj3VkVyEJR335iPpo7DsBKOj3g+DjMNeZJvrbuvyfq267OUD
-         4I7dyDJsclQ5Slr540XjTRPHixi7zmEpnJbFNdrNPHGDhdR50DfloDptknHgyMIdpzbg
-         +WLguh/vuRJiMIUGJsbXd21ZCz0w3EwbKD2oPW2TCb/WITmelq+YNrw74a1YeDapL9IM
-         0UVEJDV/xqFxic1LVguPMWHIax948Z3G5lH3pCNHB7nyS8N+6MiW7SNMEuDx41bQqr/o
-         XwWla1TJ1Cpdx1w3dRFYLcVNTKUZee16zXqvVoociuElI8kaSzpd8d2REh/aJHXedYW1
-         1U7Q==
+        d=lca.pw; s=google;
+        h=mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=SVDtsGi6neGFRwikvRHYLrFbo8bPwU6BhE0B4MocRjo=;
+        b=BWwwyhWdP4bCAjyoQRTv8OV8mtlXVPHwPlIm8qddLZj7iC674KnBH0wZ5gmU6DqS70
+         C1/zjPys7SA2QSBdBBh/Vp7z8tP4MoDCZ3J7yPaCEb3aWrDPLZrEzEc/s5uDb6B3B/Zz
+         Q/D2iUPkb1UdcJAn2P997ms7im6hGVN1AKeVtc8UTksahOiOgwZP7W4x2aRAkYxmqdzU
+         iRMjGNH23UhxVno00at7cV4XSlx7ataddhOqFfxmG3KosI9iQ69ciGaSMtVokdO2MFwz
+         mouuM4fw0+U2UEJVYG186lPlYQdy+/QTmGdmwSkRbzlnh2r3DVGyLygwJLFIOmeGB5Hs
+         PMWw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=gsc90LPV5vuebvWSwowSniEuuhSDnHS3fNotzCrMHhI=;
-        b=jeQfBgVuSxYnXofg7ND+Tbmqbau+oCcqPCiwKV0jHsliZDL7hLnSFYEhDep9pHkRgl
-         Pqc/ezCUCBKZuIJK9GXzXg+zx2xigVtR1bMOa0yDGwVvrN/l7o09JqFIF9E1vRbzEnJa
-         ydRvVAxpNeHamzA6wDN5OI4Xf6J07pNZdLJS3XZSggd82w4ZwSAeyglGsAvCJqSXPpZ8
-         spuxPGUnamw746ThejqW8UAPHedU0Ej0uer3nRAz+A22roQ9QhDy/uKzeARlafVnt/I7
-         QodtMr8k/FSXgHYYum47DhfTZoXztj+o4GwMASpGiO3s2XfYToqIoDgo161rKIwKjSPR
-         bKTQ==
-X-Gm-Message-State: AGi0Pub1d8VCG6xhcWI4KPWvzINGzeH89nZefhrtZV2cdAfr7PzYycS0
-        GHqhQ4ec5Is0UbLkCNZrhNaV0RH7hTS/tI8yHwCMwg==
-X-Google-Smtp-Source: APiQypJk5ijyBzx01h6/nF0/FztOREeQcwbT2SBq1CK12n6G3N8IiyFCzIyOVWUiYtoBKEH4Kr8GDj8vGyt7ncuxacA=
-X-Received: by 2002:a17:907:1185:: with SMTP id uz5mr4432200ejb.335.1586381321924;
- Wed, 08 Apr 2020 14:28:41 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200407182958.568475-1-ira.weiny@intel.com> <20200407182958.568475-7-ira.weiny@intel.com>
- <20200408020827.GI24067@dread.disaster.area> <20200408170923.GC569068@iweiny-DESK2.sc.intel.com>
- <20200408210236.GK24067@dread.disaster.area>
-In-Reply-To: <20200408210236.GK24067@dread.disaster.area>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Wed, 8 Apr 2020 14:28:30 -0700
-Message-ID: <CAPcyv4gLvMSA9BypvWbYtv3xsK8o4+db3kvxBozUGAjr_sDDFQ@mail.gmail.com>
-Subject: Re: [PATCH V6 6/8] fs/xfs: Combine xfs_diflags_to_linux() and xfs_diflags_to_iflags()
-To:     Dave Chinner <david@fromorbit.com>
-Cc:     Ira Weiny <ira.weiny@intel.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Christoph Hellwig <hch@lst.de>,
-        "Theodore Y. Ts'o" <tytso@mit.edu>, Jan Kara <jack@suse.cz>,
-        Jeff Moyer <jmoyer@redhat.com>,
-        linux-ext4 <linux-ext4@vger.kernel.org>,
-        linux-xfs <linux-xfs@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=SVDtsGi6neGFRwikvRHYLrFbo8bPwU6BhE0B4MocRjo=;
+        b=DTQHALBGrSGDMShF6h9QCv63eSzfJVnAbXV8BZ/b4XDNZcsW/SQZkEDAMf1sZUWwv6
+         bJRQjkLkQDUgstDZDAaLW5ab5elOntmaK6dtmswHUkFcnpctBncWqOb0vXJP033Mf/4s
+         5IpqaGtDDikkJS1tuWniC0p82XeMfoFANnoLed7PircBTdNPlSr8Yq/EHilGqrId7cc5
+         UqrwwJ0yVIOHRvZKqI+y2WNGh0elB+bKhdPX2zJxSPT/S6H4v21ET1hD+kSNXKuhM3gQ
+         9KcZObHw+VIbmLy6pfbWHi98tF7INg9NpeGL8zVo7hGGxV8uvQ6zEuHQWLWgFhE3yIPd
+         EdGw==
+X-Gm-Message-State: AGi0PuaHBamJHXUNEluyYmDoOzd+uHIEtwoyov2+6IJ6jIQF/t79eGDk
+        PwnNEbSRAYHxMo6HIcZGFXB++w==
+X-Google-Smtp-Source: APiQypIAPF83IDbnxE4npOa8BA/v00NSOs87AvIVV9hoWH5sYbQDJUSaLOrsAy9lYhzUtsirbdBiqw==
+X-Received: by 2002:a05:6214:b21:: with SMTP id w1mr9649854qvj.69.1586381359791;
+        Wed, 08 Apr 2020 14:29:19 -0700 (PDT)
+Received: from [192.168.1.153] (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
+        by smtp.gmail.com with ESMTPSA id i13sm12975162qtj.37.2020.04.08.14.29.18
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 08 Apr 2020 14:29:18 -0700 (PDT)
+Content-Type: text/plain;
+        charset=utf-8
+Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.80.23.2.2\))
+Subject: Re: KCSAN + KVM = host reset
+From:   Qian Cai <cai@lca.pw>
+In-Reply-To: <fb39d3d2-063e-b828-af1c-01f91d9be31c@redhat.com>
+Date:   Wed, 8 Apr 2020 17:29:18 -0400
+Cc:     Elver Marco <elver@google.com>,
+        "paul E. McKenney" <paulmck@kernel.org>,
+        kasan-dev <kasan-dev@googlegroups.com>,
+        LKML <linux-kernel@vger.kernel.org>, kvm@vger.kernel.org
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <017E692B-4791-46AD-B9ED-25B887ECB56B@lca.pw>
+References: <E180B225-BF1E-4153-B399-1DBF8C577A82@lca.pw>
+ <fb39d3d2-063e-b828-af1c-01f91d9be31c@redhat.com>
+To:     Paolo Bonzini <pbonzini@redhat.com>
+X-Mailer: Apple Mail (2.3608.80.23.2.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 8, 2020 at 2:02 PM Dave Chinner <david@fromorbit.com> wrote:
->
-> On Wed, Apr 08, 2020 at 10:09:23AM -0700, Ira Weiny wrote:
-> > On Wed, Apr 08, 2020 at 12:08:27PM +1000, Dave Chinner wrote:
-> > > On Tue, Apr 07, 2020 at 11:29:56AM -0700, ira.weiny@intel.com wrote:
-> > > > From: Ira Weiny <ira.weiny@intel.com>
-> >
-> > [snip]
-> >
-> > > >
-> > > > -STATIC void
-> > > > -xfs_diflags_to_linux(
-> > > > - struct xfs_inode        *ip)
-> > > > -{
-> > > > - struct inode            *inode = VFS_I(ip);
-> > > > - unsigned int            xflags = xfs_ip2xflags(ip);
-> > > > -
-> > > > - if (xflags & FS_XFLAG_IMMUTABLE)
-> > > > -         inode->i_flags |= S_IMMUTABLE;
-> > > > - else
-> > > > -         inode->i_flags &= ~S_IMMUTABLE;
-> > > > - if (xflags & FS_XFLAG_APPEND)
-> > > > -         inode->i_flags |= S_APPEND;
-> > > > - else
-> > > > -         inode->i_flags &= ~S_APPEND;
-> > > > - if (xflags & FS_XFLAG_SYNC)
-> > > > -         inode->i_flags |= S_SYNC;
-> > > > - else
-> > > > -         inode->i_flags &= ~S_SYNC;
-> > > > - if (xflags & FS_XFLAG_NOATIME)
-> > > > -         inode->i_flags |= S_NOATIME;
-> > > > - else
-> > > > -         inode->i_flags &= ~S_NOATIME;
-> > > > -#if 0    /* disabled until the flag switching races are sorted out */
-> > > > - if (xflags & FS_XFLAG_DAX)
-> > > > -         inode->i_flags |= S_DAX;
-> > > > - else
-> > > > -         inode->i_flags &= ~S_DAX;
-> > > > -#endif
-> > >
-> > > So this variant will set the flag in the inode if the disk inode
-> > > flag is set, otherwise it will clear it.  It does it with if/else
-> > > branches.
-> > >
-> > >
-> > > > diff --git a/fs/xfs/xfs_iops.c b/fs/xfs/xfs_iops.c
-> > > > index e07f7b641226..a4ac8568c8c7 100644
-> > > > --- a/fs/xfs/xfs_iops.c
-> > > > +++ b/fs/xfs/xfs_iops.c
-> > > > @@ -1259,7 +1259,7 @@ xfs_inode_supports_dax(
-> > > >   return xfs_inode_buftarg(ip)->bt_daxdev != NULL;
-> > > >  }
-> > > >
-> > > > -STATIC bool
-> > > > +static bool
-> > > >  xfs_inode_enable_dax(
-> > > >   struct xfs_inode *ip)
-> > > >  {
-> > >
-> > > This belongs in the previous patch.
-> >
-> > Ah yea...  Sorry.
-> >
-> > Fixed in V7
-> >
-> > >
-> > > > @@ -1272,26 +1272,38 @@ xfs_inode_enable_dax(
-> > > >   return false;
-> > > >  }
-> > > >
-> > > > -STATIC void
-> > > > +void
-> > > >  xfs_diflags_to_iflags(
-> > > > - struct inode            *inode,
-> > > > - struct xfs_inode        *ip)
-> > > > + struct xfs_inode        *ip,
-> > > > + bool init)
-> > > >  {
-> > > > - uint16_t                flags = ip->i_d.di_flags;
-> > > > -
-> > > > - inode->i_flags &= ~(S_IMMUTABLE | S_APPEND | S_SYNC |
-> > > > -                     S_NOATIME | S_DAX);
-> > >
-> > > And this code cleared all the flags in the inode first, then
-> > > set them if the disk inode flag is set. This does not require
-> > > branches, resulting in more readable code and better code
-> > > generation.
-> > >
-> > > > + struct inode            *inode = VFS_I(ip);
-> > > > + uint                    diflags = xfs_ip2xflags(ip);
-> > > >
-> > > > - if (flags & XFS_DIFLAG_IMMUTABLE)
-> > > > + if (diflags & FS_XFLAG_IMMUTABLE)
-> > > >           inode->i_flags |= S_IMMUTABLE;
-> > > > - if (flags & XFS_DIFLAG_APPEND)
-> > > > + else
-> > > > +         inode->i_flags &= ~S_IMMUTABLE;
-> > >
-> > > > + if (diflags & FS_XFLAG_APPEND)
-> > > >           inode->i_flags |= S_APPEND;
-> > > > - if (flags & XFS_DIFLAG_SYNC)
-> > > > + else
-> > > > +         inode->i_flags &= ~S_APPEND;
-> > > > + if (diflags & FS_XFLAG_SYNC)
-> > > >           inode->i_flags |= S_SYNC;
-> > > > - if (flags & XFS_DIFLAG_NOATIME)
-> > > > + else
-> > > > +         inode->i_flags &= ~S_SYNC;
-> > > > + if (diflags & FS_XFLAG_NOATIME)
-> > > >           inode->i_flags |= S_NOATIME;
-> > > > - if (xfs_inode_enable_dax(ip))
-> > > > -         inode->i_flags |= S_DAX;
-> > > > + else
-> > > > +         inode->i_flags &= ~S_NOATIME;
-> > > > +
-> > > > + /* Only toggle the dax flag when initializing */
-> > > > + if (init) {
-> > > > +         if (xfs_inode_enable_dax(ip))
-> > > > +                 inode->i_flags |= S_DAX;
-> > > > +         else
-> > > > +                 inode->i_flags &= ~S_DAX;
-> > > > + }
-> > > >  }
-> > >
-> > > IOWs, this:
-> > >
-> > >         struct inode            *inode = VFS_I(ip);
-> > >         unsigned int            xflags = xfs_ip2xflags(ip);
-> > >         unsigned int            flags = 0;
-> > >
-> > >         if (xflags & FS_XFLAG_IMMUTABLE)
-> > >                 flags |= S_IMMUTABLE;
-> > >         if (xflags & FS_XFLAG_APPEND)
-> > >                 flags |= S_APPEND;
-> > >         if (xflags & FS_XFLAG_SYNC)
-> > >                 flags |= S_SYNC;
-> > >         if (xflags & FS_XFLAG_NOATIME)
-> > >                 flags |= S_NOATIME;
-> > >     if ((xflags & FS_XFLAG_DAX) && init)
-> > >             flags |= S_DAX;
-> > >
-> > >         inode->i_flags &= ~(S_IMMUTABLE | S_APPEND | S_SYNC | S_NOATIME);
-> > >         inode->i_flags |= flags;
-> > >
-> > > ends up being much easier to read and results in better code
-> > > generation. And we don't need to clear the S_DAX flag when "init" is
-> > > set, because we are starting from an inode that has no flags set
-> > > (because init!)...
-> >
-> > This sounds good but I think we need a slight modification to make the function equivalent in functionality.
-> >
-> > void
-> > xfs_diflags_to_iflags(
-> >         struct xfs_inode        *ip,
-> >         bool init)
-> > {
-> >         struct inode            *inode = VFS_I(ip);
-> >         unsigned int            xflags = xfs_ip2xflags(ip);
-> >         unsigned int            flags = 0;
-> >
-> >         inode->i_flags &= ~(S_IMMUTABLE | S_APPEND | S_SYNC | S_NOATIME |
-> >                             S_DAX);
->
-> We don't want to clear the dax flag here, ever, if it is already
-> set. That is an externally visible change and opens us up (again) to
-> races where IS_DAX() changes half way through a fault path. IOWs, avoiding
-> clearing the DAX flag was something I did explicitly in the above
-> code fragment.
->
-> And it makes the logic clearer by pre-calculating the new flags,
-> then clearing and setting the inode flags together, rather than
-> having the spearated at the top and bottom of the function.
->
-> THis leads to an obvious conclusion: if we never clear the in memory
-> S_DAX flag, we can actually clear the on-disk flag safely, so that
-> next time the inode cycles into memory it won't be using DAX. IOWs,
-> admins can stop the applications, clear the DAX flag and drop
-> caches. This should result in the inode being recycled and when the
-> app is restarted it will run without DAX. No ned for deleting files,
-> copying large data sets, etc just to turn off an inode flag.
 
-Makes sense, but is that sufficient? I recall you saying there might
-be a multitude of other reasons that the inode is not evicted, not the
-least of which is races [1]. Does this need another flag, lets call it
-"dax toggle" to track the "I requested the inode to clear the flag,
-but on cache-flush + restart the inode never got evicted" case. S_DAX
-almost plays this role, but it loses the ability to audit which files
-are pending an inode eviction event. So the dax-toggle flag indicates
-to the kernel to xor the toggle value with the inode flag on inode
-instantiation and the dax inode flag is never directly manipulated by
-the ioctl path.
 
-[1]: http://lore.kernel.org/r/20191025003603.GE4614@dread.disaster.area
+> On Apr 8, 2020, at 5:25 PM, Paolo Bonzini <pbonzini@redhat.com> wrote:
+>=20
+> On 08/04/20 22:59, Qian Cai wrote:
+>> Running a simple thing on this AMD host would trigger a reset right =
+away.
+>> Unselect KCSAN kconfig makes everything work fine (the host would =
+also
+>> reset If only "echo off > /sys/kernel/debug/kcsan=E2=80=9D before =
+running qemu-kvm).
+>=20
+> Is this a regression or something you've just started to play with?  =
+(If
+> anything, the assembly language conversion of the AMD world switch =
+that
+> is in linux-next could have reduced the likelihood of such a failure,
+> not increased it).
+
+I don=E2=80=99t remember I had tried this combination before, so don=E2=80=
+=99t know if it is a
+regression or not.=
