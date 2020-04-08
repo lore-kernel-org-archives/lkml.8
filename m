@@ -2,172 +2,119 @@ Return-Path: <SRS0=8dav=5Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC556C2D0F4
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 19:29:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DDC7C2D0F4
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 19:36:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B7A2420730
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 19:29:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EDE0220753
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 19:36:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="yG0cOYot"
+	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="OqvaG2fa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729980AbgDHT3c (ORCPT
+        id S1730018AbgDHTgM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Apr 2020 15:29:32 -0400
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:39188 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729668AbgDHT3c (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Apr 2020 15:29:32 -0400
-Received: by mail-ed1-f68.google.com with SMTP id a43so10196905edf.6
-        for <linux-kernel@vger.kernel.org>; Wed, 08 Apr 2020 12:29:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=2I+dB0B50ThXp7siibS6X0DXKO49NnaL82k0TLoeWMY=;
-        b=yG0cOYotYZuBAHkbHGXBv0uN7O2sOdDW9Xa72jt9GZNrxi33xcOgMzmAHf3YDnIa6i
-         +Vy532bm2PY05QTAe+unZbwW2F3j9potMZeBwAZHxs1gKyHunW4Tr30rO2hSp+26e4LV
-         RgOBQNLhdk9lS1geSwI0Ey12NZ8m5Ywwemz4WVgFHBNWslZJBkZsbU0exFoNu6DvElNA
-         sTT/It3byeFv8dJ3jdYGFLtxyEEa+anQeXaZMARoU2pUltGiLOqg8w37QTVtF9Cl3tCh
-         x7nOyTiVA8SCK3eA4wMZeGh+Ku20Fz7K4beH0a7Qp7x21GB1NgbfDjhIe7ZS4f731t9o
-         iikA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=2I+dB0B50ThXp7siibS6X0DXKO49NnaL82k0TLoeWMY=;
-        b=Fth7DTmamIMEBl7aZ7rS61+3LSiq2Uqiforw6Vxfr/ttWnFGFTO9zyVERLgk56ZPOu
-         mHmsgbYnJYbRROWxnPILmFB0EjwdvylzryGflY4ghFTx8bwAaPFhmi8gB5Vb1ZmWyg0Y
-         laquuAvdzvSXRgQnEaAcK2jPPM/9SnpEUXKsXbmsdgm/ALWYGKE2tRaI2eGq2KKVoSg5
-         8m5djoCLElgSK/vnvq+sDSibwtXLddmS87em35T1N57MjDr+b6cuLWLj7dS1J1CKynOd
-         6N2b2huKrQLqdbjnji1rxPTDMQ4YFFIbjclhffIg1EU8BcHOEZaZTbNVwsMWTvjbU7+0
-         DtZg==
-X-Gm-Message-State: AGi0Pub5hn751MTJKlSVWBUb4+0h7DW/XjlSChY5NRZXOyx2wzgn/+YK
-        vgQkOxd82dXQ9mNFuHMhE2VrnqJ65B8ENMkyWFZqxA==
-X-Google-Smtp-Source: APiQypKh7MW2L6vpdFisNj8DwA8ikhEpPvrYzpnHu5MtT/bhd43a6I3U63RAoZ5wvMWEYIF3IRyyczq1bpXE+OzPmX4=
-X-Received: by 2002:a17:906:6987:: with SMTP id i7mr8255013ejr.12.1586374169369;
- Wed, 08 Apr 2020 12:29:29 -0700 (PDT)
+        Wed, 8 Apr 2020 15:36:12 -0400
+Received: from mail-eopbgr150073.outbound.protection.outlook.com ([40.107.15.73]:30368
+        "EHLO EUR01-DB5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729978AbgDHTgL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Apr 2020 15:36:11 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=eLvmuGNMIkW6Aq9UO0tgttyf2CZJBQbDAvdwmK2Gc4mwit5XcJ7dO1/9J+1Sh05q3XCMtCbrTAuXv90jJB0Tf+JNN58lCSMFi4TuX47njegKpgJsEIglS+oCgV/M+emSd7JoO5hh4uGJAK1V6rulT35uFHxqNoIBsTFt/SY+QSd9fJlEnc+8KA2K+S4k2rtlFTO89Qi8QBaKz+W7FI0B26T3s2qz9TjmqtxjNOuRjk8IeNVQ/n9vIyf59Xlflfry/yDoQ+XKoSUdRHTKtb0ZnW5Ii1OH0+6kWqk5LxlG7p/4kcqKk2+svkTalEppQJGZIZX8oWlid2YsMxdpLV8NLg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=1NLgExbLwTCF8CK6zFLNUL7AqliA28Qc0BxN8M9gEkI=;
+ b=YXTDmTFfNyn6Om9CAU8hHpKd3LUgAeJouyRsQh4q5tret3aWACQj9MKD78I3PzUe2TPV2k4SjZy6gsgBd8eQvgFzfDB9Enwc+E1UHXKR950QVPApKaU067h7mV8mBOAecMy9bAelwqgq9Rm6HMI5wBXa+muZ2Z/m5Rc9rIIr5UxC3OvejnUhwN6bZKAFCF/K6L4ijF8s2JcgWiNx12Nt/whziCCFROsBOODwnLWwCmBapJ+x3+QC5WV2oGP5jEKFsqXyxY+InwcWQiYWCEtl2sxWNIWpjcqMCa7iXlI+6vogQXpmshdEUWJhxE1lal/N9Kibpi7XQRL3NSpve3PxiQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=mellanox.com; dmarc=pass action=none header.from=mellanox.com;
+ dkim=pass header.d=mellanox.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=1NLgExbLwTCF8CK6zFLNUL7AqliA28Qc0BxN8M9gEkI=;
+ b=OqvaG2faaHnJ0q7s52AEPeZZdaiuAka0iJNYRryaN76YskILCx/79ZUjs5F+W96qzTM5HcU8l8H6V7J6NLtkWV8WnVJff0YQarBToBYSynG7D94thwybcn+pAL6qQ8EZ2YnmjR/47M0GYvdRSyHZR0WwEaMPGDFHx4Y95pJSzjA=
+Received: from VI1PR05MB5102.eurprd05.prod.outlook.com (2603:10a6:803:5e::23)
+ by VI1PR05MB3472.eurprd05.prod.outlook.com (2603:10a6:802:1a::26) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2878.17; Wed, 8 Apr
+ 2020 19:36:07 +0000
+Received: from VI1PR05MB5102.eurprd05.prod.outlook.com
+ ([fe80::9d19:a564:b84e:7c19]) by VI1PR05MB5102.eurprd05.prod.outlook.com
+ ([fe80::9d19:a564:b84e:7c19%7]) with mapi id 15.20.2878.021; Wed, 8 Apr 2020
+ 19:36:07 +0000
+From:   Saeed Mahameed <saeedm@mellanox.com>
+To:     "schnelle@linux.ibm.com" <schnelle@linux.ibm.com>,
+        Feras Daoud <ferasda@mellanox.com>,
+        Alex Vesker <valex@mellanox.com>
+CC:     Eran Ben Elisha <eranbe@mellanox.com>,
+        Moshe Shemesh <moshe@mellanox.com>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "leon@kernel.org" <leon@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [RFC 1/1] net/mlx5: Fix failing fw tracer allocation on s390
+Thread-Topic: [RFC 1/1] net/mlx5: Fix failing fw tracer allocation on s390
+Thread-Index: AQHWDLLERkPdcFex20i6r53b871po6hvoH2A
+Date:   Wed, 8 Apr 2020 19:36:07 +0000
+Message-ID: <00fc95b9c6f5da7ec5844b9eccf4488d4a37efd8.camel@mellanox.com>
+References: <20200407080130.34472-1-schnelle@linux.ibm.com>
+         <20200407080130.34472-2-schnelle@linux.ibm.com>
+In-Reply-To: <20200407080130.34472-2-schnelle@linux.ibm.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+user-agent: Evolution 3.34.4 (3.34.4-1.fc31) 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=saeedm@mellanox.com; 
+x-originating-ip: [73.15.39.150]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: e122c735-35d0-4808-ada5-08d7dbf41589
+x-ms-traffictypediagnostic: VI1PR05MB3472:|VI1PR05MB3472:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <VI1PR05MB34723EBA9A664FCFB9FCAA50BEC00@VI1PR05MB3472.eurprd05.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8882;
+x-forefront-prvs: 0367A50BB1
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VI1PR05MB5102.eurprd05.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10009020)(4636009)(376002)(396003)(39850400004)(346002)(366004)(136003)(4326008)(4744005)(6636002)(71200400001)(26005)(5660300002)(186003)(6486002)(478600001)(81156014)(2616005)(8936002)(81166007)(6506007)(8676002)(66556008)(110136005)(64756008)(66476007)(66446008)(91956017)(316002)(76116006)(54906003)(2906002)(66946007)(86362001)(36756003)(6512007);DIR:OUT;SFP:1101;
+received-spf: None (protection.outlook.com: mellanox.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: fkruMyxvNr9asNW/g8lofbDy3mydGzqZNNL+/xzWAVlnUJUI6SnqS0oYaWUrrWL3Rnhky9V/a63bKUB3xfwXOt2jO0cMO0cxKi/x6E0WOClw9XjJvch42cm7F6VeTzevKNGg3DEF5Y+mHdn3NKevLWEKe5xnbV1IQhGK5Drf3uY//AGwzP/fsofNjUQaNi3WnVA4fsgA0YMmi62ng6idpw7m7ADciNc4yVx1XN+LUvXTMCCDEAnRhfwdSnZKjxumhPmPWyUb9x8waGNAVv86jIRc/3wINlLXTKiTXm0V412ftqfzxeqwJ0DaRFJI7jPh9PtOBemJKzD0Bw7pJzyRB323ga6A1SFmGuLVM3L/H4Y4XebjJqccBz6VBDdbF/lOv6FjGcvddHbOSqBJJZ4nO9XcvP85u/cj5QmE9LzwVTs7sKWoFYloQFOcYOoZvx5n
+x-ms-exchange-antispam-messagedata: yPRHVZ+/6yRXZ8II0LF6OgSnNSYKY1VOUXrudgoK6PfUfTgbxw4eWKojK6qGOEWJElGiJa+HIRKb5Syat5oxYtbsvyMWQHQXR9Ym9f+Ps36bgII9Rvofc/Z9RXqrog8Qs/VyUH5t9S61CDpfllCDFA==
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <AB0804B430423243A3973836B19E1ECA@eurprd05.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-References: <alpine.LRH.2.02.2004071029270.8662@file01.intranet.prod.int.rdu2.redhat.com>
- <CAPcyv4goJ2jbXNVZbMUKtRUominhuMhuTKrMh=fnhrfvC4jyjw@mail.gmail.com> <alpine.LRH.2.02.2004081439080.13932@file01.intranet.prod.int.rdu2.redhat.com>
-In-Reply-To: <alpine.LRH.2.02.2004081439080.13932@file01.intranet.prod.int.rdu2.redhat.com>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Wed, 8 Apr 2020 12:29:18 -0700
-Message-ID: <CAPcyv4grNHvyYEc4W6PkymhEJvLb17tXbC3JZdqvtFxmMZ8DCQ@mail.gmail.com>
-Subject: Re: [PATCH] memcpy_flushcache: use cache flusing for larger lengths
-To:     Mikulas Patocka <mpatocka@redhat.com>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Peter Zijlstra <peterz@infradead.org>, X86 ML <x86@kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        device-mapper development <dm-devel@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
+X-OriginatorOrg: Mellanox.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: e122c735-35d0-4808-ada5-08d7dbf41589
+X-MS-Exchange-CrossTenant-originalarrivaltime: 08 Apr 2020 19:36:07.5602
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: IlMYJMooVkKZcYDrMuvYJFocHfMIT9jC7CSMG8FP8E2YUw5Dm3DqQJ7Xv759k0WG4YLpAJ4cGVvyE1e4z+pSgw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR05MB3472
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 8, 2020 at 11:54 AM Mikulas Patocka <mpatocka@redhat.com> wrote:
->
->
->
-> On Tue, 7 Apr 2020, Dan Williams wrote:
->
-> > On Tue, Apr 7, 2020 at 8:02 AM Mikulas Patocka <mpatocka@redhat.com> wrote:
-> > >
-> > > [ resending this to x86 maintainers ]
-> > >
-> > > Hi
-> > >
-> > > I tested performance of various methods how to write to optane-based
-> > > persistent memory, and found out that non-temporal stores achieve
-> > > throughput 1.3 GB/s. 8 cached stores immediatelly followed by clflushopt
-> > > or clwb achieve throughput 1.6 GB/s.
-> > >
-> > > memcpy_flushcache uses non-temporal stores, I modified it to use cached
-> > > stores + clflushopt and it improved performance of the dm-writecache
-> > > target significantly:
-> > >
-> > > dm-writecache throughput:
-> > > (dd if=/dev/zero of=/dev/mapper/wc bs=64k oflag=direct)
-> > > writecache block size   512             1024            2048            4096
-> > > movnti                  496 MB/s        642 MB/s        725 MB/s        744 MB/s
-> > > clflushopt              373 MB/s        688 MB/s        1.1 GB/s        1.2 GB/s
-> > >
-> > > For block size 512, movnti works better, for larger block sizes,
-> > > clflushopt is better.
-> >
-> > This should use clwb instead of clflushopt, the clwb macri
-> > automatically converts back to clflushopt if clwb is not supported.
->
-> But we want to invalidate cache, we do not expect CPU to access these data
-> anymore (it will be accessed by a DMA engine during writeback).
-
-The cluflushopt and clwb instructions should have identical overhead,
-but clwb wins on the rare chance the written data is needed again
-soon. If it is never needed again then the cost of dropping a clean
-cache line is the same as if the line was invalidated in the first
-instance. In both cases (clflushopt and clwb) the snoop traffic
-overhead is still paid whether the written-back line is still present
-in the cache or not.
-
->
-> > > I was also testing the novafs filesystem, it is not upstream, but it
-> > > benefitted from similar change in __memcpy_flushcache and
-> > > __copy_user_nocache:
-> > > write throughput on big files - movnti: 662 MB/s, clwb: 1323 MB/s
-> > > write throughput on small files - movnti: 621 MB/s, clwb: 1013 MB/s
-> > >
-> > >
-> > > I submit this patch for __memcpy_flushcache that improves dm-writecache
-> > > performance.
-> > >
-> > > Other ideas - should we introduce memcpy_to_pmem instead of modifying
-> > > memcpy_flushcache and move this logic there? Or should I modify the
-> > > dm-writecache target directly to use clflushopt with no change to the
-> > > architecture-specific code?
-> >
-> > This also needs to mention your analysis that showed that this can
-> > have negative cache pollution effects [1], so I'm not sure how to
-> > decide when to make the tradeoff. Once we have movdir64b the tradeoff
-> > equation changes yet again:
-> >
-> > [1]: https://lore.kernel.org/linux-nvdimm/alpine.LRH.2.02.2004010941310.23210@file01.intranet.prod.int.rdu2.redhat.com/
->
-> I analyzed it some more. I have created this program that tests writecache
-> w.r.t. cache pollution:
->
-> http://people.redhat.com/~mpatocka/testcases/pmem/misc/l1-test-2.c
->
-> It fills the cache with a chain of random pointers and then walks these
-> pointers to evaluate cache pollution. Between the walks, it writes data to
-> the dm-writecache target.
->
-> With the original kernel, the result is:
-> 8503 - 11366
-> real    0m7.985s
-> user    0m0.585s
-> sys     0m7.390s
->
-> With dm-writecache hacked to use cached writes + clflushopt:
-> 8513 - 11379
-> real    0m5.045s
-> user    0m0.670s
-> sys     0m4.365s
->
-> So, the hacked dm-writecache is significantly faster, while the cache
-> micro-benchmark doesn't show any more cache pollution.
-
-Nice. These are now the pmem numbers, or dram? Otherwise, what changed
-that was making nt-writes on pmem perform better compared to your
-previous test? I'm just trying to track the results.
-
-> That's for dm-writecache. Are there some other significant users of
-> memcpy_flushcache that need to be checked?
-
-The only other user is direct and dax-I/O to the pmem driver.
+T24gVHVlLCAyMDIwLTA0LTA3IGF0IDEwOjAxICswMjAwLCBOaWtsYXMgU2NobmVsbGUgd3JvdGU6
+DQo+IE9uIHMzOTAgRk9SQ0VfTUFYX1pPTkVPUkRFUiBpcyA5IGluc3RlYWQgb2YgMTEsIHRodXMg
+YSBsYXJnZXINCj4ga3phbGxvYygpDQo+IGFsbG9jYXRpb24gYXMgZG9uZSBmb3IgdGhlIGZpcm13
+YXJlIHRyYWNlciB3aWxsIGFsd2F5cyBmYWlsLg0KPiANCj4gTG9va2luZyBhdCBtbHg1X2Z3X3Ry
+YWNlcl9zYXZlX3RyYWNlKCksIGl0IGlzIGFjdHVhbGx5IHRoZSBkcml2ZXINCj4gaXRzZWxmDQo+
+IHRoYXQgY29waWVzIHRoZSBkZWJ1ZyBkYXRhIGludG8gdGhlIHRyYWNlIGFycmF5IGFuZCB0aGVy
+ZSBpcyBubyBuZWVkDQo+IGZvcg0KPiB0aGUgYWxsb2NhdGlvbiB0byBiZSBjb250aWd1b3VzIGlu
+IHBoeXNpY2FsIG1lbW9yeS4gV2UgY2FuIHRoZXJlZm9yDQo+IHVzZQ0KPiBrdnphbGxvYygpIGlu
+c3RlYWQgb2Yga3phbGxvYygpIGFuZCBnZXQgcmlkIG9mIHRoZSBsYXJnZSBjb250aWd1b3VzDQo+
+IGFsbGNvYXRpb24uDQo+IA0KDQpUaGlzIGxvb2tzIGZpbmUgYW5kIHZlcnkgc3RyYWlnaHQgZm9y
+d2FyZC4uIGkgZG9uJ3QgZXhwZWN0IGFueSBpc3N1ZQ0Kd2l0aCB0aGlzLg0KDQpQbGVhc2UgcHJv
+dmlkZSBhIHByb3BlciAiRml4ZXM6IiB0YWcgYW5kIHJlc3VibWl0IHRvIG5ldCB3aXRob3V0IHRo
+ZQ0KW1JGQ10uDQoNClRoYW5rcw0K
