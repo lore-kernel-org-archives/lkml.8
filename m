@@ -2,772 +2,169 @@ Return-Path: <SRS0=8dav=5Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27992C2D0EA
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 10:49:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34F8BC2BA2B
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 10:51:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D816020747
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 10:49:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F2DBC20771
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 10:51:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728298AbgDHKtl (ORCPT
+        id S1728274AbgDHKvJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Apr 2020 06:49:41 -0400
-Received: from m17618.mail.qiye.163.com ([59.111.176.18]:58928 "EHLO
-        m17618.mail.qiye.163.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726980AbgDHKtl (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Apr 2020 06:49:41 -0400
-Received: from ubuntu.localdomain (unknown [58.251.74.226])
-        by m17618.mail.qiye.163.com (Hmail) with ESMTPA id 7A5684E25AF;
-        Wed,  8 Apr 2020 18:49:22 +0800 (CST)
-From:   Wang Wenhu <wenhu.wang@vivo.com>
-To:     akpm@linux-foundation.org, "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Wang Wenhu <wenhu.wang@vivo.com>,
+        Wed, 8 Apr 2020 06:51:09 -0400
+Received: from mx2.suse.de ([195.135.220.15]:60918 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726980AbgDHKvI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Apr 2020 06:51:08 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 8690AABCC;
+        Wed,  8 Apr 2020 10:51:04 +0000 (UTC)
+Subject: Re: [PATCH 05/13] efi/x86: don't map the entire kernel text RW for
+ mixed mode
+To:     Ard Biesheuvel <ardb@kernel.org>
+Cc:     linux-efi <linux-efi@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Nicholas Mc Guire <hofrat@osadl.org>,
-        Allison Randal <allison@lohutok.net>,
-        Johannes Berg <johannes.berg@intel.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Anshuman Khandual <anshuman.khandual@arm.com>,
         Arnd Bergmann <arnd@arndb.de>,
-        Carl Huang <cjhuang@codeaurora.org>,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org
-Cc:     kernel@vivo.com
-Subject: [PATCH RESEND] net: qrtr: support qrtr service and lookup route
-Date:   Wed,  8 Apr 2020 03:46:35 -0700
-Message-Id: <20200408104833.6880-1-wenhu.wang@vivo.com>
-X-Mailer: git-send-email 2.17.1
-X-HM-Spam-Status: e1kfGhgUHx5ZQUtXWQgYFAkeWUFZTlVDQ0pLS0tLT0pCTUpNTFlXWShZQU
-        hPN1dZLVlBSVdZCQ4XHghZQVk1NCk2OjckKS43PlkG
-X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6Oj46Iyo*Ezg0FhczKTEoAh8h
-        HysaCy5VSlVKTkNNSE9JQk1OQ0pDVTMWGhIXVQweFRMOVQwaFRw7DRINFFUYFBZFWVdZEgtZQVlO
-        Q1VJTkpVTE9VSUlNWVdZCAFZQUpCTExCNwY+
-X-HM-Tid: 0a715968a7cb9376kuws7a5684e25af
+        Dan Williams <dan.j.williams@intel.com>,
+        Dave Young <dyoung@redhat.com>,
+        Saravana Kannan <saravanak@google.com>,
+        Gary Lin <GLin@suse.com>
+References: <20200113172245.27925-1-ardb@kernel.org>
+ <20200113172245.27925-6-ardb@kernel.org>
+ <63b125a4-6c62-fcdf-de22-d3bebe2dcbf5@suse.cz>
+ <CAMj1kXGiT_zYjc6X-msRXVozhpDAY0UesEW3_4fOgiH4FyMgDw@mail.gmail.com>
+From:   Jiri Slaby <jslaby@suse.cz>
+Autocrypt: addr=jslaby@suse.cz; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <972b66a9-92c7-9a15-1aa1-e3236abe90df@suse.cz>
+Date:   Wed, 8 Apr 2020 12:51:04 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
+MIME-Version: 1.0
+In-Reply-To: <CAMj1kXGiT_zYjc6X-msRXVozhpDAY0UesEW3_4fOgiH4FyMgDw@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-QSR implements maintenance of qrtr services and lookups. It would
-be helpful for developers to work with QRTR without the none-opensource
-user-space implementation part of IPC Router.
+Ccing Gary.
 
-As we know, the extremely important point of IPC Router is the support
-of services form different nodes. But QRTR was pushed into mainline
-without route process support of services, and the router port process
-is implemented in user-space as none-opensource codes, which is an
-great unconvenience for developers.
+On 08. 04. 20, 12:47, Ard Biesheuvel wrote:
+> On Wed, 8 Apr 2020 at 12:42, Jiri Slaby <jslaby@suse.cz> wrote:
+>>
+>> On 13. 01. 20, 18:22, Ard Biesheuvel wrote:
+>>> The mixed mode thunking routine requires a part of it to be
+>>> mapped 1:1, and for this reason, we currently map the entire
+>>> kernel .text read/write in the EFI page tables, which is bad.
+>>>
+>>> In fact, the kernel_map_pages_in_pgd() invocation that installs
+>>> this mapping is entirely redundant, since all of DRAM is already
+>>> 1:1 mapped read/write in the EFI page tables when we reach this
+>>> point, which means that .rodata is mapped read-write as well.
+>>>
+>>> So let's remap both .text and .rodata read-only in the EFI
+>>> page tables.
+>>
+>> This patch causes unhandled page faults in mixed mode:
+>>
+>>> BUG: unable to handle page fault for address: 000000001557ee88
+>>> #PF: supervisor write access in kernel mode
+>>> #PF: error_code(0x0003) - permissions violation
+>>> PGD fd52063 P4D fd52063 PUD fd53063 PMD 154000e1
+>>> Oops: 0003 [#1] SMP PTI
+>>> CPU: 1 PID: 191 Comm: systemd-escape Not tainted
+>> 5.6.2-20.gb22bc26-default #1 openSUSE Tumbleweed (unreleased)
+>>> Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 0.0.0
+>> 02/06/2015
+>>> RIP: 0008:0x3d2eed95
+>>> Code: 8b 45 d4 8b 4d 10 8b 40 04 89 01 89 3b 50 6a 00 8b 55 0c 6a 00
+>> 8b 45 08 0f b6 4d e4 6a 01 31 f6 e8 ee c5 fc ff 83 c4 10 eb 07 <89> 03
+>> be 05 00 00 80 a1 74 63 31 3d 83 c0 48 e8 44 d2 ff ff eb 05
+>>> RSP: 0018:000000000fd66fa0 EFLAGS: 00010002
+>>> RAX: 0000000000000001 RBX: 000000001557ee88 RCX: 000000003d1f1120
+>>> RDX: 0000000000000001 RSI: 0000000000000000 RDI: 0000000000000001
+>>> RBP: 000000000fd66fd8 R08: 000000001557ee88 R09: 0000000000000000
+>>> R10: 0000000000000055 R11: 0000000000000000 R12: 0000000015bcf000
+>>> R13: 0000000000000000 R14: 0000000000000000 R15: 0000000000000000
+>>> FS:  00007f36ee9dc940(0000) GS:ffff9b903d700000(0000)
+>> knlGS:0000000000000000
+>>> CS:  0008 DS: 0018 ES: 0018 CR0: 0000000080050033
+>>> CR2: 000000001557ee88 CR3: 000000000fd5e000 CR4: 00000000000006e0
+>>> DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+>>> DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+>>> Call Trace:
+>>> Modules linked in: efivarfs
+>>> CR2: 000000001557ee88
+>>
+>> EFI apparently tries to write to now read-only memory.
+>>
+>> See:
+>> https://bugzilla.suse.com/show_bug.cgi?id=1168645
+>>
+>> Reverting it on the top of 5.6 fixes the issue.
+>>
+>> I am using
+>> /usr/share/qemu/ovmf-ia32-code.bin
+>> /usr/share/qemu/ovmf-ia32-vars.bin
+>> from qemu-ovmf-ia32-202002-1.1.noarch rpm.
+>>
+> 
+> Do you have a git tree for Suse's OVMF fork? I did a lot of testing
+> with upstream OVMF, and never ran into this issue.
 
-QSR also implements a interface via chardev and a set of sysfs class
-files for the communication and debugging in user-space. We can get
-service and lookup entries conveniently via sysfs file in /sys/class/qsr/.
-Currently add-server, del-server, add-lookup and del-lookup control
-packatets are processed and enhancements could be taken easily upon
-currently implementation.
+Not really a git tree, but the sources are here:
+https://build.opensuse.org/package/show/openSUSE:Factory/ovmf
 
-Signed-off-by: Wang Wenhu <wenhu.wang@vivo.com>
----
-Changelog:
- This is a resent, but the first normal version of QSR support.
- The former one sent out earlier contains only the patch of coding
- style modification of qsr.c.
- 
- Please do not be confused and take this patch as the NORMAL commit of QSR.
----
- net/qrtr/Kconfig  |   8 +
- net/qrtr/Makefile |   2 +
- net/qrtr/qrtr.c   |   5 +
- net/qrtr/qrtr.h   |   2 +
- net/qrtr/qsr.c    | 622 ++++++++++++++++++++++++++++++++++++++++++++++
- 5 files changed, 639 insertions(+)
- create mode 100644 net/qrtr/qsr.c
-
-diff --git a/net/qrtr/Kconfig b/net/qrtr/Kconfig
-index 63f89cc6e82c..d2ce8fb57278 100644
---- a/net/qrtr/Kconfig
-+++ b/net/qrtr/Kconfig
-@@ -29,4 +29,12 @@ config QRTR_TUN
- 	  implement endpoints of QRTR, for purpose of tunneling data to other
- 	  hosts or testing purposes.
- 
-+config QSR
-+	tristate "QRTR Service Router"
-+	help
-+	  Say Y here to enable the kernel QRTR Service Router module.
-+	  QSR support route processes of QRTR services and lookups. It would be
-+	  helpful when develop with QRTR without user-space implementation of
-+	  IPC Router support.
-+
- endif # QRTR
-diff --git a/net/qrtr/Makefile b/net/qrtr/Makefile
-index 1c6d6c120fb7..3882beaead29 100644
---- a/net/qrtr/Makefile
-+++ b/net/qrtr/Makefile
-@@ -5,3 +5,5 @@ obj-$(CONFIG_QRTR_SMD) += qrtr-smd.o
- qrtr-smd-y	:= smd.o
- obj-$(CONFIG_QRTR_TUN) += qrtr-tun.o
- qrtr-tun-y	:= tun.o
-+obj-$(CONFIG_QSR) += qrtr-svc-router.o
-+qrtr-svc-router-y	:= qsr.o
-diff --git a/net/qrtr/qrtr.c b/net/qrtr/qrtr.c
-index 5a8e42ad1504..267f7d6c746f 100644
---- a/net/qrtr/qrtr.c
-+++ b/net/qrtr/qrtr.c
-@@ -158,6 +158,11 @@ static int qrtr_bcast_enqueue(struct qrtr_node *node, struct sk_buff *skb,
- static struct qrtr_sock *qrtr_port_lookup(int port);
- static void qrtr_port_put(struct qrtr_sock *ipc);
- 
-+unsigned int get_qrtr_local_nid(void)
-+{
-+	return qrtr_local_nid;
-+}
-+
- /* Release node resources and free the node.
-  *
-  * Do not call directly, use qrtr_node_release.  To be used with
-diff --git a/net/qrtr/qrtr.h b/net/qrtr/qrtr.h
-index b81e6953c04b..872d98fd36c6 100644
---- a/net/qrtr/qrtr.h
-+++ b/net/qrtr/qrtr.h
-@@ -29,4 +29,6 @@ void qrtr_endpoint_unregister(struct qrtr_endpoint *ep);
- 
- int qrtr_endpoint_post(struct qrtr_endpoint *ep, const void *data, size_t len);
- 
-+unsigned int get_qrtr_local_nid(void);
-+
- #endif
-diff --git a/net/qrtr/qsr.c b/net/qrtr/qsr.c
-new file mode 100644
-index 000000000000..906f5903ebad
---- /dev/null
-+++ b/net/qrtr/qsr.c
-@@ -0,0 +1,622 @@
-+// SPDX-License-Identifier: GPL-2.0
-+
-+/*
-+ * Copyright (C) 2020 Vivo Communication Technology Co. Ltd.
-+ * Copyright (C) 2020 Wang Wenhu <wenhu.wang@vivo.com>
-+ *
-+ * The QRTR Service Route module aims at providing maintenance
-+ * and route processes for qrtr service and lookup requests in
-+ * kernel. Also, it provides sysfs class interface to expose
-+ * the status of qrtr services and lookups. More could be done
-+ * through the character device /dev/qsr in user-space.
-+ *
-+ * Currently, only server add, server delete, lookup add and
-+ * lookup delete requests are processed.
-+ */
-+
-+#include <linux/module.h>
-+#include <linux/skbuff.h>
-+#include <linux/mutex.h>
-+#include <linux/device.h>
-+#include <linux/string.h>
-+#include <linux/kobject.h>
-+#include <linux/cdev.h>
-+#include <linux/qrtr.h>
-+#include <net/sock.h>
-+
-+#include "qrtr.h"
-+
-+#define QSR_NAME	"qsr"
-+
-+/**
-+ * struct qsr_info - qrtr service route request information
-+ * @service:	service identity
-+ * @instance:	service instance
-+ * @server:		server address
-+ * @client:		client address
-+ * @node:		qrtr node of server or client
-+ * @port:		qrtr port of server or client
-+ *
-+ * When a control packet of new server request is received, the server
-+ * field should be reference for the server node address. For the opposite
-+ * situation, the client field should be referenced within a lookup request.
-+ */
-+struct qsr_info {
-+	__le32 service;
-+	__le32 instance;
-+
-+	union {
-+		struct {
-+			__le32 node;
-+			__le32 port;
-+		} server;
-+
-+		struct {
-+			__le32 node;
-+			__le32 port;
-+		} client;
-+	};
-+
-+	struct list_head list;
-+};
-+
-+/**
-+ * struct qsr - qrtr service route device structure
-+ * @dev:		character device for user-space communication
-+ * @sk:			socket to process messages
-+ * @sq:			socket address to be binded
-+ * @ops:		callbacks of different control package types
-+ * @qsr_lock:	data buffer lock
-+ * @recv_buf:	receive buffer
-+ * @recv_buf_size:	receive buffer size
-+ * @wq:			workqueue for message process worker
-+ * @work:		work route to process queued messages
-+ * @lookups:	pending lookup requests
-+ * @services:	servers list to provide different kind of services
-+ */
-+struct qsr {
-+	struct device			dev;
-+	struct socket			*sk;
-+	struct sockaddr_qrtr	sq;
-+	struct qsr_ops			*ops;
-+
-+	struct mutex			qsr_lock;
-+	void					*recv_buf;
-+	size_t					recv_buf_size;
-+
-+	struct workqueue_struct	*wq;
-+	struct work_struct		work;
-+
-+	struct list_head		lookups;
-+	struct list_head		services;
-+};
-+
-+struct qsr_ops {
-+	int (*new_server)(struct qsr_info *svc);
-+	int (*new_lookup)(struct qsr_info *svc, u32 node, u32 port);
-+};
-+
-+static int qsr_major;
-+static struct cdev *qsr_cdev;
-+static struct qsr *qsr;
-+
-+static int qsr_new_server(struct qsr_info *new)
-+{
-+	struct qsr_info *lookup;
-+	struct qsr_ops *ops = qsr->ops;
-+	int ret;
-+
-+	if (!ops->new_lookup)
-+		return 0;
-+
-+	list_for_each_entry(lookup, &qsr->lookups, list) {
-+		if (lookup->service == new->service &&
-+		    lookup->instance == new->instance) {
-+			ret = ops->new_lookup(new,
-+							lookup->client.node,
-+							lookup->client.port);
-+			if (ret < 0)
-+				pr_err("Error to notice client of new server, %d\n", ret);
-+			else
-+				list_del(&lookup->list);
-+			return 0;
-+		}
-+	}
-+
-+	return 0;
-+}
-+
-+static int qsr_new_lookup(struct qsr_info *svc, u32 node, u32 port)
-+{
-+	struct qrtr_ctrl_pkt pkt;
-+	struct sockaddr_qrtr sq;
-+	struct msghdr msg = { };
-+	struct kvec iv = { &pkt, sizeof(pkt) };
-+	int ret = 0;
-+
-+	memset(&pkt, 0, sizeof(pkt));
-+	pkt.cmd = cpu_to_le32(QRTR_TYPE_NEW_SERVER);
-+	pkt.server.service = cpu_to_le32(svc->service);
-+	pkt.server.instance = cpu_to_le32(svc->instance);
-+	pkt.server.node = cpu_to_le32(svc->server.node);
-+	pkt.server.port = cpu_to_le32(svc->server.port);
-+
-+	sq.sq_family = AF_QIPCRTR;
-+	sq.sq_node = node;
-+	sq.sq_port = port;
-+
-+	msg.msg_name = &sq;
-+	msg.msg_namelen = sizeof(sq);
-+
-+	mutex_lock(&qsr->qsr_lock);
-+	if (qsr->sk) {
-+		ret = kernel_sendmsg(qsr->sk, &msg, &iv, 1, sizeof(pkt));
-+		if (ret < 0)
-+			pr_err("Error to send server info to client, %d\n", ret);
-+	}
-+	mutex_unlock(&qsr->qsr_lock);
-+
-+	return ret;
-+}
-+
-+static void qsr_recv_new_server(u32 service,
-+				u32 instance,
-+				u32 node,
-+				u32 port)
-+{
-+	struct qsr_ops *ops = qsr->ops;
-+	struct qsr_info *svc, *temp;
-+	int ret;
-+
-+	if (!ops->new_server)
-+		return;
-+
-+	if (!node && !port)
-+		return;
-+
-+	list_for_each_entry(temp, &qsr->services, list) {
-+		if (temp->service == service && temp->instance == instance) {
-+			pr_err("Error server exists, service:0x%x instance:0x%x",
-+			       service, instance);
-+			return;
-+		}
-+	}
-+
-+	svc = kzalloc(sizeof(*svc), GFP_KERNEL);
-+	if (!svc)
-+		return;
-+
-+	svc->service = service;
-+	svc->instance = instance;
-+	svc->server.node = node;
-+	svc->server.port = port;
-+
-+	ret = ops->new_server(svc);
-+	if (ret < 0)
-+		kfree(svc);
-+	else
-+		list_add(&svc->list, &qsr->services);
-+}
-+
-+static void qsr_recv_del_server(u32 service, u32 instance)
-+{
-+	struct qsr_info *svc;
-+
-+	list_for_each_entry(svc, &qsr->lookups, list) {
-+		if (svc->service == service && svc->instance == instance) {
-+			list_del(&svc->list);
-+			return;
-+		}
-+	}
-+}
-+
-+static void qsr_recv_new_lookup(u32 service,
-+				u32 instance,
-+				u32 node,
-+				u32 port)
-+{
-+	struct qsr_ops *ops = qsr->ops;
-+	struct qsr_info *svc, *temp;
-+	int ret;
-+
-+	if (!ops->new_lookup)
-+		return;
-+
-+	if (!node && !port)
-+		return;
-+
-+	list_for_each_entry(temp, &qsr->lookups, list) {
-+		if (temp->service == service &&
-+		    temp->instance == instance &&
-+		    temp->client.node == node &&
-+		    temp->client.port == port) {
-+			pr_err("Error lookup exists, service:0x%x instance:0x%x node:%d port:%d",
-+			       service, instance, node, port);
-+			return;
-+		}
-+	}
-+
-+	list_for_each_entry(svc, &qsr->services, list) {
-+		if (svc->service == service && svc->instance == instance) {
-+			ret = ops->new_lookup(svc, node, port);
-+			if (ret < 0)
-+				pr_err("Error to send server info to client, %d", ret);
-+			return;
-+		}
-+	}
-+
-+	/* Server does not exist.
-+	 * Record the lookup information and add it to the pending list.
-+	 */
-+
-+	svc = kzalloc(sizeof(*svc), GFP_KERNEL);
-+	if (!svc)
-+		return;
-+
-+	svc->service = service;
-+	svc->instance = instance;
-+	svc->client.node = node;
-+	svc->client.port = port;
-+
-+	list_add(&svc->list, &qsr->lookups);
-+}
-+
-+static void qsr_recv_del_lookup(u32 service,
-+				u32 instance,
-+				u32 node,
-+				u32 port)
-+{
-+	struct qsr_info *lookup;
-+
-+	if (!node && !port)
-+		return;
-+
-+	list_for_each_entry(lookup, &qsr->lookups, list) {
-+		if (lookup->service == service &&
-+		    lookup->instance == instance &&
-+		    lookup->client.node == node &&
-+		    lookup->client.port == port) {
-+			list_del(&lookup->list);
-+			return;
-+		}
-+	}
-+}
-+
-+static void qsr_recv_ctrl_pkt(struct sockaddr_qrtr *sq,
-+			      const void *buf,
-+			      size_t len)
-+{
-+	const struct qrtr_ctrl_pkt *pkt = buf;
-+
-+	if (len < sizeof(struct qrtr_ctrl_pkt)) {
-+		pr_debug("ignoring short control packet\n");
-+		return;
-+	}
-+
-+	switch (le32_to_cpu(pkt->cmd)) {
-+	case QRTR_TYPE_NEW_SERVER:
-+		qsr_recv_new_server(le32_to_cpu(pkt->server.service),
-+				    le32_to_cpu(pkt->server.instance),
-+				    le32_to_cpu(pkt->server.node),
-+				    le32_to_cpu(pkt->server.port));
-+		break;
-+
-+	case QRTR_TYPE_NEW_LOOKUP:
-+		qsr_recv_new_lookup(le32_to_cpu(pkt->server.service),
-+				    le32_to_cpu(pkt->server.instance),
-+				    sq->sq_node,
-+				    sq->sq_port);
-+		break;
-+
-+	case QRTR_TYPE_DEL_SERVER:
-+		qsr_recv_del_server(le32_to_cpu(pkt->server.service),
-+				    le32_to_cpu(pkt->server.instance));
-+		break;
-+
-+	case QRTR_TYPE_DEL_LOOKUP:
-+		qsr_recv_del_lookup(le32_to_cpu(pkt->server.service),
-+				    le32_to_cpu(pkt->server.instance),
-+				    sq->sq_node,
-+				    sq->sq_port);
-+		break;
-+	}
-+}
-+
-+static void qsr_recv_work(struct work_struct *work)
-+{
-+	struct sockaddr_qrtr sq;
-+	struct msghdr msg = { .msg_name = &sq, .msg_namelen = sizeof(sq) };
-+	struct kvec iv;
-+	ssize_t msglen;
-+
-+	for (;;) {
-+		iv.iov_base = qsr->recv_buf;
-+		iv.iov_len = qsr->recv_buf_size;
-+
-+		mutex_lock(&qsr->qsr_lock);
-+		if (qsr->sk)
-+			msglen = kernel_recvmsg(qsr->sk, &msg, &iv, 1,
-+						iv.iov_len, MSG_DONTWAIT);
-+		else
-+			msglen = -EPIPE;
-+		mutex_unlock(&qsr->qsr_lock);
-+
-+		if (msglen == -EAGAIN)
-+			break;
-+
-+		if (msglen < 0) {
-+			pr_err("qmi recvmsg failed: %zd\n", msglen);
-+			break;
-+		}
-+
-+		qsr_recv_ctrl_pkt(&sq, qsr->recv_buf, msglen);
-+	}
-+}
-+
-+static void qsr_data_ready(struct sock *sk)
-+{
-+	read_lock_bh(&sk->sk_callback_lock);
-+	queue_work(qsr->wq, &qsr->work);
-+	read_unlock_bh(&sk->sk_callback_lock);
-+}
-+
-+static ssize_t name_show(struct device *dev,
-+			 struct device_attribute *attr, char *buf)
-+{
-+	int ret;
-+
-+	mutex_lock(&qsr->qsr_lock);
-+	ret = sprintf(buf, "%s\n", QSR_NAME);
-+	mutex_unlock(&qsr->qsr_lock);
-+
-+	return ret;
-+}
-+static DEVICE_ATTR_RO(name);
-+
-+static ssize_t lookups_show(struct device *dev,
-+			    struct device_attribute *attr, char *buf)
-+{
-+	struct qsr_info *lookup;
-+	int ret = 0;
-+
-+	mutex_lock(&qsr->qsr_lock);
-+	list_for_each_entry(lookup, &qsr->lookups, list) {
-+		ret += sprintf(buf, "service:0x%04x instance:0x%04x node:%04d port:%04d\n",
-+					lookup->service,
-+					lookup->instance,
-+					lookup->server.node,
-+					lookup->server.port);
-+	}
-+	mutex_unlock(&qsr->qsr_lock);
-+
-+	return ret;
-+}
-+static DEVICE_ATTR_RO(lookups);
-+
-+static ssize_t services_show(struct device *dev,
-+			     struct device_attribute *attr,
-+				 char *buf)
-+{
-+	struct qsr_info *svc;
-+	int ret = 0;
-+
-+	mutex_lock(&qsr->qsr_lock);
-+	list_for_each_entry(svc, &qsr->services, list) {
-+		ret += sprintf(buf, "service:0x%04x instance:0x%04x node:%04d port:%04d\n",
-+					svc->service,
-+					svc->instance,
-+					svc->server.node,
-+					svc->server.port);
-+	}
-+	mutex_unlock(&qsr->qsr_lock);
-+
-+	return ret;
-+}
-+static DEVICE_ATTR_RO(services);
-+
-+static struct attribute *qsr_attrs[] = {
-+	&dev_attr_name.attr,
-+	&dev_attr_lookups.attr,
-+	&dev_attr_services.attr,
-+	NULL,
-+};
-+ATTRIBUTE_GROUPS(qsr);
-+
-+/* Interface class infrastructure. */
-+static struct class qsr_class = {
-+	.name = QSR_NAME,
-+	.dev_groups = qsr_groups,
-+};
-+
-+static int qsr_dev_create(void)
-+{
-+	int ret = -ENOMEM;
-+
-+	qsr = kzalloc(sizeof(*qsr), GFP_KERNEL);
-+	if (!qsr)
-+		goto out;
-+
-+	INIT_LIST_HEAD(&qsr->lookups);
-+	INIT_LIST_HEAD(&qsr->services);
-+
-+	INIT_WORK(&qsr->work, qsr_recv_work);
-+
-+	qsr->recv_buf_size = sizeof(struct qrtr_ctrl_pkt);
-+	qsr->recv_buf = kzalloc(qsr->recv_buf_size, GFP_KERNEL);
-+	if (!qsr->recv_buf)
-+		goto out_qsr_free;
-+
-+	qsr->wq = alloc_workqueue("qsr_wq", WQ_UNBOUND, 1);
-+	if (!qsr->wq)
-+		goto out_recv_buf_free;
-+
-+	device_initialize(&qsr->dev);
-+	qsr->dev.devt = MKDEV(qsr_major, 0);
-+	qsr->dev.class = &qsr_class;
-+	dev_set_drvdata(&qsr->dev, qsr);
-+
-+	ret = dev_set_name(&qsr->dev, QSR_NAME);
-+	if (ret) {
-+		pr_err("device name %s set failed, %d", QSR_NAME, ret);
-+		goto out_recv_buf_free;
-+	}
-+
-+	mutex_init(&qsr->qsr_lock);
-+
-+	ret = device_add(&qsr->dev);
-+	if (ret)
-+		goto out_wq_destroy;
-+
-+	return ret;
-+
-+out_wq_destroy:
-+	destroy_workqueue(qsr->wq);
-+out_recv_buf_free:
-+	kfree(qsr->recv_buf);
-+out_qsr_free:
-+	kfree(qsr);
-+out:
-+	return ret;
-+}
-+
-+struct qsr_ops qsr_handle_ops = {
-+	.new_server = qsr_new_server,
-+	.new_lookup = qsr_new_lookup,
-+};
-+
-+static struct socket *qsr_sock_create(void)
-+{
-+	struct socket *sock;
-+	struct sockaddr addr;
-+	int ret;
-+
-+	ret = sock_create_kern(&init_net, AF_QIPCRTR, SOCK_DGRAM,
-+			       PF_QIPCRTR, &sock);
-+
-+	if (ret < 0)
-+		return ERR_PTR(ret);
-+
-+	qsr->sq.sq_family = AF_QIPCRTR;
-+	qsr->sq.sq_node = get_qrtr_local_nid();
-+	qsr->sq.sq_port = QRTR_PORT_CTRL;
-+	qsr->ops = &qsr_handle_ops;
-+
-+	if (sock->ops->bind) {
-+		memcpy(&addr, &qsr->sq, sizeof(qsr->sq));
-+		ret = sock->ops->bind(sock, &addr, sizeof(addr));
-+		if (ret) {
-+			pr_err("Failed to bind socket address node:0x%x port:0x%x.\n",
-+			       qsr->sq.sq_node, qsr->sq.sq_port);
-+			goto err_bind;
-+		}
-+		pr_debug("qsr router port binded successfully.\n");
-+	}
-+
-+	sock->sk->sk_user_data = qsr;
-+	sock->sk->sk_data_ready = qsr_data_ready;
-+	sock->sk->sk_error_report = qsr_data_ready;
-+	sock->sk->sk_sndtimeo = HZ * 10;
-+
-+	return sock;
-+
-+err_bind:
-+	sock_release(sock);
-+	return NULL;
-+}
-+
-+static int qsr_release(void)
-+{
-+	sock_release(qsr->sk);
-+
-+	kfree(qsr->recv_buf);
-+
-+	destroy_workqueue(qsr->wq);
-+
-+	kfree(qsr);
-+
-+	return 0;
-+}
-+
-+static const struct file_operations qsr_fops = {
-+	.owner = THIS_MODULE,
-+};
-+
-+static int __init qsr_init(void)
-+{
-+	int ret;
-+	static const char name[] = QSR_NAME;
-+	struct cdev *cdev = NULL;
-+	dev_t rtdev;
-+
-+	/* 1. Allocate character device region. */
-+	ret = alloc_chrdev_region(&rtdev, 0, 1, name);
-+	if (ret) {
-+		pr_err("failed to alloc chardev region\n");
-+		goto out;
-+	}
-+
-+	/* 2. Allocate, initiate and add cdev. */
-+	ret = -ENOMEM;
-+	cdev = cdev_alloc();
-+	if (!cdev) {
-+		pr_err("failed to alloc cdev\n");
-+		goto out_unregister;
-+	}
-+
-+	cdev->owner = THIS_MODULE;
-+	cdev->ops = &qsr_fops;
-+	kobject_set_name(&cdev->kobj, "%s", name);
-+
-+	ret = cdev_add(cdev, rtdev, 1);
-+	if (ret)
-+		goto out_put;
-+
-+	qsr_major = MAJOR(rtdev);
-+	qsr_cdev = cdev;
-+
-+	/* 3. Register class. */
-+	ret = class_register(&qsr_class);
-+	if (ret) {
-+		pr_err("class_register failed for qrtr route\n");
-+		goto out_cdev_del;
-+	}
-+
-+	/* 4. Create a qsr device. */
-+	if (qsr_dev_create())
-+		goto out_unregister_class;
-+
-+	/* 5. Create a qrtr socket and bind it to Router port. */
-+	qsr->sk = qsr_sock_create();
-+	if (!qsr->sk)
-+		goto out_qsr_dev_del;
-+
-+	return 0;
-+
-+out_qsr_dev_del:
-+	kfree(qsr);
-+out_unregister_class:
-+	class_unregister(&qsr_class);
-+out_cdev_del:
-+	cdev_del(qsr_cdev);
-+out_put:
-+	kobject_put(&cdev->kobj);
-+out_unregister:
-+	unregister_chrdev_region(rtdev, 1);
-+out:
-+	return ret;
-+}
-+subsys_initcall(qsr_init);
-+
-+static void __exit qsr_exit(void)
-+{
-+	qsr_release();
-+	unregister_chrdev_region(MKDEV(qsr_major, 0), 1);
-+	cdev_del(qsr_cdev);
-+	class_unregister(&qsr_class);
-+}
-+module_exit(qsr_exit);
-+
-+MODULE_AUTHOR("Wang Wenhu");
-+MODULE_ALIAS("QRTR:" QSR_NAME);
-+MODULE_DESCRIPTION("Qualcomm IPC Router Service Route Support");
-+MODULE_LICENSE("GPL v2");
 -- 
-2.17.1
-
+js
+suse labs
