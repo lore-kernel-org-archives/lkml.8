@@ -2,124 +2,108 @@ Return-Path: <SRS0=8dav=5Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D090C2BA2B
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 12:04:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED749C2D0EA
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 12:05:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F3DF820857
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 12:04:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="OdPalx7x"
+	by mail.kernel.org (Postfix) with ESMTP id B865E20747
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 12:05:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1586347547;
+	bh=h5Rm4Z4HRl5tEkemhyFQt/1ada5sl6ktIG5BqGPe39U=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Lzi3eVr0rZUQ2ba3wjx5ukWG+qfWCNAVDF3MMiqTDac/EOE6+2FECcnvqli2XK9Bo
+	 wGBlZYPVrVIXWaKrLNEvPKn5BHBOe7XDVpuya/m9Y2NygWuhxBU/1J+lXnRGEi/2wm
+	 ulwP9PI6yYPQ4P53h8FyJiuj9PJ60bxpiPNxg2mk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727614AbgDHMEv (ORCPT
+        id S1727769AbgDHMFq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Apr 2020 08:04:51 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:43635 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726521AbgDHMEv (ORCPT
+        Wed, 8 Apr 2020 08:05:46 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:44916 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726534AbgDHMFq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Apr 2020 08:04:51 -0400
-Received: by mail-wr1-f65.google.com with SMTP id i10so1203143wrv.10
-        for <linux-kernel@vger.kernel.org>; Wed, 08 Apr 2020 05:04:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ffwll.ch; s=google;
-        h=date:from:to:cc:subject:message-id:mail-followup-to:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=OBnPwGNSGc7YJF6/MDIm1ZT+7em3pqRoLIRd/7b9PxA=;
-        b=OdPalx7xuX4cjKnOHWh9tRuE5bTeRqir5JEhzSbax2+5ltx0Bo82JE5nTq2jKSyUNo
-         EnQyjl56VgC34kFmXVjM5F3zPYcSq2VER8j1v36UD8n+FNghQuOZRUpdlfu2ZIuYnOR3
-         0QpjV4mQsG1i9Sf/WuB0iVARtp9CBtX+ZYcK8=
+        Wed, 8 Apr 2020 08:05:46 -0400
+Received: by mail-pl1-f195.google.com with SMTP id h11so2421558plr.11
+        for <linux-kernel@vger.kernel.org>; Wed, 08 Apr 2020 05:05:45 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id
-         :mail-followup-to:references:mime-version:content-disposition
-         :in-reply-to;
-        bh=OBnPwGNSGc7YJF6/MDIm1ZT+7em3pqRoLIRd/7b9PxA=;
-        b=ZhXSLtIf6v2AkaR4RbOYC61TaBBM2Ogi18bV7GftKx60CLS7T51xO3EYkjq4VSozZX
-         8v/BOtAWCADdfiZaQzX+u90Ub939rT/H3Gzsc3QDsm3MQ/CS/k5Rtbs7jvYHjJiH1xOD
-         Jmal5PYUsXOi2D9ZfdmpK08BrBQ49nr4pEt1rUfZGEJ1D2lL/n+la2KhF/7+ou03hxMX
-         7KXygo/CSx42dCmyycvta/Nd7MP4ApYQ236nLYB8aMgD5zdO2cY4idA8pUIEj+K5rVJV
-         cTEkZZBBzlzbYJJ708VWQN+J3c7juq5nT4/p2Ur0WMsFbPlGIpThhl5tT2AItLWfSrSE
-         d9Tg==
-X-Gm-Message-State: AGi0Puac/hM9prjym8fBwCMQZ3uDrSOYnJy1L63sCcTxescx7Vfagw/u
-        mrNfvsP2SE5lZ0WCh5ppeKtdXw==
-X-Google-Smtp-Source: APiQypJXFUS9vFZ2P9v4AgkbysWA38eTSvtMPkZ8z0bqKgeLMkvmrgrnq8Osd1i+8L1IowleNPNkGQ==
-X-Received: by 2002:a5d:4d51:: with SMTP id a17mr8282635wru.317.1586347487880;
-        Wed, 08 Apr 2020 05:04:47 -0700 (PDT)
-Received: from phenom.ffwll.local ([2a02:168:57f4:0:efd0:b9e5:5ae6:c2fa])
-        by smtp.gmail.com with ESMTPSA id a67sm6981132wmc.30.2020.04.08.05.04.46
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=4xbq6aIfltEeB3nQ+J87gRF2/OBnuvcF5a/mkz8lZa4=;
+        b=hp/oakz6tmv6+rUD2lIcQadafWKfpErgxCZiUjOd9jrB8v7MwmbLIU1LPQY9wrRDbg
+         2zF7tZ7CyUpyPlZZRHvaFURvnylulQASTh+KE7qUThz6BTbn2ANmFg1Th1au3LM7Gb6s
+         Qqfsczs9Ycuyup50OfPVs6sF3aMovtPCTBoP6Yk6USFObR0KOWYxkBHpVC3EjX1NkFVm
+         +PC1JkR7o30PdWbg5z0m3x6wZNAkYcK2ubIiZryA/M4kYphtXTtPmWJMyW1ldtYQT2fx
+         GxVaOrzly87xHWvAjv4yhuWLE8y3DtMaQmMcuvo4B+XPEvC4+Hd4A4QgBaFfnYwJwf+H
+         f8lQ==
+X-Gm-Message-State: AGi0PuZPPWb/PYRJyci7UNgvrLViGPp9OCmPjS3r3rOI2QZEsAVuaxbk
+        X6mKlL8PHWC/gRMhYXwh0Nh0PfbeU8I=
+X-Google-Smtp-Source: APiQypLOJe4ASWMMJpSvgh6wwihJqRwnPIUKxKPbnv9yfu5tOSwGtjskNA8VtheoTEaZnPGr8NtnYQ==
+X-Received: by 2002:a17:90a:8c07:: with SMTP id a7mr902002pjo.67.1586347545247;
+        Wed, 08 Apr 2020 05:05:45 -0700 (PDT)
+Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
+        by smtp.gmail.com with ESMTPSA id f11sm3695780pfa.149.2020.04.08.05.05.42
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 08 Apr 2020 05:04:46 -0700 (PDT)
-Date:   Wed, 8 Apr 2020 14:04:44 +0200
-From:   Daniel Vetter <daniel@ffwll.ch>
-To:     Paul Cercueil <paul@crapouillou.net>
-Cc:     Daniel Vetter <daniel@ffwll.ch>, David Airlie <airlied@linux.ie>,
-        od@zcrc.me, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 2/3] gpu/drm: ingenic: Switch emulated fbdev to 16bpp
-Message-ID: <20200408120444.GJ3456981@phenom.ffwll.local>
-Mail-Followup-To: Paul Cercueil <paul@crapouillou.net>,
-        David Airlie <airlied@linux.ie>, od@zcrc.me,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-References: <20200226043041.289764-1-paul@crapouillou.net>
- <20200226043041.289764-2-paul@crapouillou.net>
+        Wed, 08 Apr 2020 05:05:42 -0700 (PDT)
+Received: by 42.do-not-panic.com (Postfix, from userid 1000)
+        id 9EEEE40246; Wed,  8 Apr 2020 12:05:41 +0000 (UTC)
+Date:   Wed, 8 Apr 2020 12:05:41 +0000
+From:   Luis Chamberlain <mcgrof@kernel.org>
+To:     Borislav Petkov <bp@alien8.de>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        lkml <linux-kernel@vger.kernel.org>
+Subject: Re: Export fw_get_builtin_firmware()?
+Message-ID: <20200408120541.GH11244@42.do-not-panic.com>
+References: <20200408094526.GC24663@zn.tnic>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200226043041.289764-2-paul@crapouillou.net>
-X-Operating-System: Linux phenom 5.3.0-3-amd64 
+In-Reply-To: <20200408094526.GC24663@zn.tnic>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Feb 26, 2020 at 01:30:40AM -0300, Paul Cercueil wrote:
-> The fbdev emulation is only ever used on Ingenic SoCs to run old SDL1
-> based games at 16bpp (rgb565). Recent applications generally talk to
-> DRM directly, and can request their favourite pixel format; so we can
-> make everybody happy by switching the emulated fbdev to 16bpp.
+On Wed, Apr 08, 2020 at 11:45:26AM +0200, Borislav Petkov wrote:
+> Hi guys,
 > 
-> v2: No change
+> so I've come across this recently where the microcode loader
+> has a trivial helper get_builtin_firmware() which scans through
+> the builtin firmware to find microcode in there. Looking at
+> fw_get_builtin_firmware(), that one does practically the same so how
+> about I export it and have the microcode loader use it instead of
+> homegrowing the same thing?
 > 
-> Signed-off-by: Paul Cercueil <paul@crapouillou.net>
-> ---
->  drivers/gpu/drm/ingenic/ingenic-drm.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+> IOW, something like this below?
 > 
-> diff --git a/drivers/gpu/drm/ingenic/ingenic-drm.c b/drivers/gpu/drm/ingenic/ingenic-drm.c
-> index 5493a80d7d2f..3f8cc98d41fe 100644
-> --- a/drivers/gpu/drm/ingenic/ingenic-drm.c
-> +++ b/drivers/gpu/drm/ingenic/ingenic-drm.c
-> @@ -807,7 +807,7 @@ static int ingenic_drm_probe(struct platform_device *pdev)
->  		goto err_devclk_disable;
->  	}
+> If you agree with the approach, I'll split it properly into patches,
+> etc, of course.
+
+> diff --git a/drivers/base/firmware_loader/main.c b/drivers/base/firmware_loader/main.c
+> index 76f79913916d..d0ad1ff0ce6d 100644
+> --- a/drivers/base/firmware_loader/main.c
+> +++ b/drivers/base/firmware_loader/main.c
+> @@ -106,8 +106,8 @@ static void fw_copy_to_prealloc_buf(struct firmware *fw,
+>  	memcpy(buf, fw->data, fw->size);
+>  }
 >  
-> -	ret = drm_fbdev_generic_setup(drm, 32);
-> +	ret = drm_fbdev_generic_setup(drm, 16);
+> -static bool fw_get_builtin_firmware(struct firmware *fw, const char *name,
+> -				    void *buf, size_t size)
+> +bool fw_get_builtin_firmware(struct firmware *fw, const char *name, void *buf,
+> +			     size_t size)
 
-This will conflict with Thomas' work to remove the error code, so might
-need a rebase. Now for the patch itself your supposed to set
-drm_device->mode_config.preferred_bpp and leave this here as 0. That way
-userspace can also know what's the best option.
+Yes please! Just a few things while you're at it.
 
-Maybe in the future we could auto-compute the preferred_bpp from just
-taking the first format of the first primary plane, but atm not there.
+Can you rename this to firmware_request_builtin() to match
+the new style? And those users, can never be moduels can they?
 
-With the above change:
+And lastly, bonus points if you can add a respective test to
+lib/test_firmware.c and tools/testing/selftests/firmware/ You'd need to
+add a test dummy built-in firmware.
 
-Reviewed-by: Daniel Vetter <daniel.vetter@ffwll.ch>
->  	if (ret)
->  		dev_warn(dev, "Unable to start fbdev emulation: %i", ret);
->  
-> -- 
-> 2.25.0
-> 
-
--- 
-Daniel Vetter
-Software Engineer, Intel Corporation
-http://blog.ffwll.ch
+  Luis
