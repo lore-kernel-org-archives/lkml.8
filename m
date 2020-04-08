@@ -2,47 +2,47 @@ Return-Path: <SRS0=8dav=5Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA3F8C2D0EA
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 13:47:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82570C2BA1A
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 13:48:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A074220780
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 13:47:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 569E320780
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 13:48:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="LIhcem91"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="oVmK4Ooh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729304AbgDHNrx (ORCPT
+        id S1729341AbgDHNsA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Apr 2020 09:47:53 -0400
-Received: from mail26.static.mailgun.info ([104.130.122.26]:54943 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729301AbgDHNrt (ORCPT
+        Wed, 8 Apr 2020 09:48:00 -0400
+Received: from mail27.static.mailgun.info ([104.130.122.27]:55211 "EHLO
+        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729303AbgDHNr6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Apr 2020 09:47:49 -0400
+        Wed, 8 Apr 2020 09:47:58 -0400
 DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1586353669; h=References: In-Reply-To: Message-Id: Date:
+ s=smtp; t=1586353677; h=References: In-Reply-To: Message-Id: Date:
  Subject: Cc: To: From: Sender;
- bh=qDXeYWdOzaIFeRQkrQQZ1e+GTg6PqbVJi/l/1wjGoTI=; b=LIhcem91nwm6EBsWTHd9rX+TfUm8uzuKHGTlAxI1ythxyHO5Uy9nacoDVDwBY86b03PTCZx6
- m9tqVsFZcZZFWNMpdFJviJT1MDIakwQC7I3aCi7RZAX9+WcCapmFTbUQTq1Ce4iE85VeVpUE
- hFteQJWKC1HAAMDSJohBhJr4MJM=
-X-Mailgun-Sending-Ip: 104.130.122.26
+ bh=08zJ1NHvBOjIlSqp5uuXRMe1DjBI5sRbVqENCJar+Uw=; b=oVmK4OohVV+EWLtTKOO1DefmZdYCzdPSyiZIHM0SAypy33g9XAKMpUwyK2RrnkHcoyXcxIzN
+ N+iyX11jrNM6d8LyrbohORykxVkyy7Q20+Ma0TPSzj1GALeZxu91cJCvFYlBC7jopHsmZNyp
+ crVJbW67o3aV5hwTABXaQ48w78w=
+X-Mailgun-Sending-Ip: 104.130.122.27
 X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
 Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e8dd604.7f7cd0c36b90-smtp-out-n02;
- Wed, 08 Apr 2020 13:47:48 -0000 (UTC)
+ by mxa.mailgun.org with ESMTP id 5e8dd60c.7f58d4cf5b58-smtp-out-n02;
+ Wed, 08 Apr 2020 13:47:56 -0000 (UTC)
 Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 888DDC44798; Wed,  8 Apr 2020 13:47:46 +0000 (UTC)
+        id 084E9C072B7; Wed,  8 Apr 2020 13:47:54 +0000 (UTC)
 Received: from blr-ubuntu-173.qualcomm.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
         (No client certificate requested)
         (Authenticated sender: rnayak)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 3D541C44799;
-        Wed,  8 Apr 2020 13:47:40 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 3D541C44799
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id C0745C00452;
+        Wed,  8 Apr 2020 13:47:49 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org C0745C00452
 Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
 Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=rnayak@codeaurora.org
 From:   Rajendra Nayak <rnayak@codeaurora.org>
@@ -50,12 +50,10 @@ To:     viresh.kumar@linaro.org, sboyd@kernel.org,
         bjorn.andersson@linaro.org, agross@kernel.org
 Cc:     linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org,
-        Rajendra Nayak <rnayak@codeaurora.org>,
-        Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>,
-        dri-devel@lists.freedesktop.org
-Subject: [PATCH 09/21] drm/msm/dpu: Use OPP API to set clk/perf state
-Date:   Wed,  8 Apr 2020 19:16:35 +0530
-Message-Id: <1586353607-32222-10-git-send-email-rnayak@codeaurora.org>
+        Rajendra Nayak <rnayak@codeaurora.org>
+Subject: [PATCH 11/21] arm64: dts: sdm845: Add DSI and MDP OPP tables and power-domains
+Date:   Wed,  8 Apr 2020 19:16:37 +0530
+Message-Id: <1586353607-32222-12-git-send-email-rnayak@codeaurora.org>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1586353607-32222-1-git-send-email-rnayak@codeaurora.org>
 References: <1586353607-32222-1-git-send-email-rnayak@codeaurora.org>
@@ -64,79 +62,106 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On some qualcomm platforms DPU needs to express a perforamnce state
-requirement on a power domain depending on the clock rates.
-Use OPP table from DT to register with OPP framework and use
-dev_pm_opp_set_rate() to set the clk/perf state.
+Add the OPP tables for DSI and MDP based on the perf state/clk
+requirements, and add the power-domains property to specify the
+scalable power domain.
 
 Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
-Cc: Rob Clark <robdclark@gmail.com>
-Cc: Sean Paul <sean@poorly.run>
-Cc: dri-devel@lists.freedesktop.org
 ---
- drivers/gpu/drm/msm/disp/dpu1/dpu_core_perf.c | 3 ++-
- drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c       | 6 ++++++
- 2 files changed, 8 insertions(+), 1 deletion(-)
+ arch/arm64/boot/dts/qcom/sdm845.dtsi | 59 ++++++++++++++++++++++++++++++++++++
+ 1 file changed, 59 insertions(+)
 
-diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_core_perf.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_core_perf.c
-index 11f2beb..fe5717df 100644
---- a/drivers/gpu/drm/msm/disp/dpu1/dpu_core_perf.c
-+++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_core_perf.c
-@@ -7,6 +7,7 @@
- #include <linux/debugfs.h>
- #include <linux/errno.h>
- #include <linux/mutex.h>
-+#include <linux/pm_opp.h>
- #include <linux/sort.h>
- #include <linux/clk.h>
- #include <linux/bitmap.h>
-@@ -239,7 +240,7 @@ static int _dpu_core_perf_set_core_clk_rate(struct dpu_kms *kms, u64 rate)
- 		rate = core_clk->max_rate;
+diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+index 9a82f78..7e3f022 100644
+--- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
++++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+@@ -3328,6 +3328,59 @@
+ 			#reset-cells = <1>;
+ 		};
  
- 	core_clk->rate = rate;
--	return msm_dss_clk_set_rate(core_clk, 1);
-+	return dev_pm_opp_set_rate(&kms->pdev->dev, core_clk->rate);
- }
- 
- static u64 _dpu_core_perf_get_core_clk_rate(struct dpu_kms *kms)
-diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c
-index ce19f1d..949157a 100644
---- a/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c
-+++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c
-@@ -10,6 +10,7 @@
- #include <linux/debugfs.h>
- #include <linux/dma-buf.h>
- #include <linux/of_irq.h>
-+#include <linux/pm_opp.h>
- 
- #include <drm/drm_crtc.h>
- #include <drm/drm_file.h>
-@@ -1033,6 +1034,9 @@ static int dpu_bind(struct device *dev, struct device *master, void *data)
- 	if (!dpu_kms)
- 		return -ENOMEM;
- 
-+	dev_pm_opp_set_clkname(dev, "core");
-+	dev_pm_opp_of_add_table(dev);
++		mdp_opp_table: mdp-opp-table {
++			compatible = "operating-points-v2";
 +
- 	mp = &dpu_kms->mp;
- 	ret = msm_dss_parse_clock(pdev, mp);
- 	if (ret) {
-@@ -1059,6 +1063,7 @@ static void dpu_unbind(struct device *dev, struct device *master, void *data)
- 	struct dpu_kms *dpu_kms = platform_get_drvdata(pdev);
- 	struct dss_module_power *mp = &dpu_kms->mp;
++			opp-19200000 {
++				opp-hz = /bits/ 64 <19200000>;
++				required-opps = <&rpmhpd_opp_min_svs>;
++			};
++
++			opp-171428571 {
++				opp-hz = /bits/ 64 <171428571>;
++				required-opps = <&rpmhpd_opp_low_svs>;
++			};
++
++			opp-344000000 {
++				opp-hz = /bits/ 64 <344000000>;
++				required-opps = <&rpmhpd_opp_svs_l1>;
++			};
++
++			opp-430000000 {
++				opp-hz = /bits/ 64 <430000000>;
++				required-opps = <&rpmhpd_opp_nom>;
++			};
++		};
++
++		dsi_opp_table: dsi-opp-table {
++			compatible = "operating-points-v2";
++
++			opp-19200000 {
++				opp-hz = /bits/ 64 <19200000>;
++				required-opps = <&rpmhpd_opp_min_svs>;
++			};
++
++			opp-180000000 {
++				opp-hz = /bits/ 64 <180000000>;
++				required-opps = <&rpmhpd_opp_low_svs>;
++			};
++
++			opp-275000000 {
++				opp-hz = /bits/ 64 <275000000>;
++				required-opps = <&rpmhpd_opp_svs>;
++			};
++
++			opp-328580000 {
++				opp-hz = /bits/ 64 <328580000>;
++				required-opps = <&rpmhpd_opp_svs_l1>;
++			};
++
++			opp-358000000 {
++				opp-hz = /bits/ 64 <358000000>;
++				required-opps = <&rpmhpd_opp_nom>;
++			};
++		};
++
+ 		mdss: mdss@ae00000 {
+ 			compatible = "qcom,sdm845-mdss";
+ 			reg = <0 0x0ae00000 0 0x1000>;
+@@ -3372,6 +3425,8 @@
+ 						  <&dispcc DISP_CC_MDSS_VSYNC_CLK>;
+ 				assigned-clock-rates = <300000000>,
+ 						       <19200000>;
++				operating-points-v2 = <&mdp_opp_table>;
++				power-domains = <&rpmhpd SDM845_CX>;
  
-+	dev_pm_opp_of_remove_table(dev);
- 	msm_dss_put_clk(mp->clk_config, mp->num_clk);
- 	devm_kfree(&pdev->dev, mp->clk_config);
- 	mp->num_clk = 0;
-@@ -1090,6 +1095,7 @@ static int __maybe_unused dpu_runtime_suspend(struct device *dev)
- 	struct dpu_kms *dpu_kms = platform_get_drvdata(pdev);
- 	struct dss_module_power *mp = &dpu_kms->mp;
+ 				interrupt-parent = <&mdss>;
+ 				interrupts = <0 IRQ_TYPE_LEVEL_HIGH>;
+@@ -3418,6 +3473,8 @@
+ 					      "core",
+ 					      "iface",
+ 					      "bus";
++				operating-points-v2 = <&dsi_opp_table>;
++				power-domains = <&rpmhpd SDM845_CX>;
  
-+	dev_pm_opp_set_rate(dev, 0);
- 	rc = msm_dss_enable_clk(mp->clk_config, mp->num_clk, false);
- 	if (rc)
- 		DPU_ERROR("clock disable failed rc:%d\n", rc);
+ 				phys = <&dsi0_phy>;
+ 				phy-names = "dsi";
+@@ -3482,6 +3539,8 @@
+ 					      "core",
+ 					      "iface",
+ 					      "bus";
++				operating-points-v2 = <&dsi_opp_table>;
++				power-domains = <&rpmhpd SDM845_CX>;
+ 
+ 				phys = <&dsi1_phy>;
+ 				phy-names = "dsi";
 -- 
 QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
 of Code Aurora Forum, hosted by The Linux Foundation
