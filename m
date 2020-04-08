@@ -2,125 +2,107 @@ Return-Path: <SRS0=8dav=5Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA37BC2BA1A
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 18:25:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B208C2BA1A
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 18:26:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9D1C320678
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 18:25:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="i14l3L3m"
+	by mail.kernel.org (Postfix) with ESMTP id 2C59420678
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 18:26:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730912AbgDHSZD (ORCPT
+        id S1729889AbgDHS0G (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Apr 2020 14:25:03 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:43141 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729773AbgDHSZC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Apr 2020 14:25:02 -0400
-Received: by mail-pl1-f195.google.com with SMTP id z6so1322628plk.10;
-        Wed, 08 Apr 2020 11:24:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=lEwiscqdjE+0yBwv6UHLDrqeoId+6rAZT43UcJfE/I0=;
-        b=i14l3L3m+gTu7hgExNhjKaqbfcwLEYvm5aI08/qNSsFlm1XTSP+QhXvh0KH3bpmNAq
-         6d1IeHYjbpblCqvPREjPPyouuki2Jes7zAjsVfu+0Dn7ggPF3obcw7bs7p4Zt1Aykuih
-         q8mvrYOVZHkjzDoY0qV6SDr0zkdN5hSO2v4YA6yhLDsYAHIDhPE2tm9Gn0ewsXsjGy4V
-         ZY8qEwRl+Ds7nR65+/xNXSQ4OkZo0JM/Wh9LDe9q1V6Xc/CmyK/4g+XIuKbcy1PZV3In
-         7xANJdj3USwHeXNyTQI5JdupqBFupUUzCZRqpXIVzH13LGsIQ0pOHTrzRcHx317yrPT5
-         rTVA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=lEwiscqdjE+0yBwv6UHLDrqeoId+6rAZT43UcJfE/I0=;
-        b=ZtlOqrzYzZLWkJzcZQojXNr33upxEYWIGi9IV6L8xjcht2X0t0dKl42i12n0Nxgypq
-         bDMQJPyeLaqr5VCoMH8wLu0NE938+Ixd+a48phqmcImVrrP6Hr1a7oVCJSp7zj6hUjMo
-         nAfMpocFqGAAwlqfHTWmFFMlSUtIwQVlTyolXgOp3JphM8smPVsagw2Vz8k8YjV+h+W8
-         fskgiw1sGdsz9zTL287hxBfiFAh1SzTb+YQNGBSPcEoT4rI4q5q9xHLM/9t/BU91IWzr
-         Lwl2wJOIhvkQNWk7EfWc4QWi8sl2GxxZ0w28z/H8gVIPCEbkPzngcPRMq7ASkOcpJjtS
-         skBA==
-X-Gm-Message-State: AGi0PubkskDHrybrO/laYIWOvo72A0PfR0fV6Cvznf1cRv0arxcru9L8
-        mlSBp9tNYx1l4dNhJddThFw=
-X-Google-Smtp-Source: APiQypJCtRDPT+H+rYaPeQ9fT9TsEeZuEGB8ryEaN7siOyR6GWwcjUSFzqe0S52EfWTSqf5n48VWjw==
-X-Received: by 2002:a17:90a:a113:: with SMTP id s19mr7107978pjp.161.1586370299455;
-        Wed, 08 Apr 2020 11:24:59 -0700 (PDT)
-Received: from localhost (89.208.244.140.16clouds.com. [89.208.244.140])
-        by smtp.gmail.com with ESMTPSA id a13sm231327pjq.0.2020.04.08.11.24.58
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 08 Apr 2020 11:24:59 -0700 (PDT)
-From:   Dejin Zheng <zhengdejin5@gmail.com>
-To:     thor.thayer@linux.intel.com, krzysztof.adamski@nokia.com,
-        f.fainelli@gmail.com, rjui@broadcom.com, sbranden@broadcom.com,
-        bcm-kernel-feedback-list@broadcom.com, nsekhar@ti.com,
-        bgolaszewski@baylibre.com, baruch@tkos.co.il,
-        wsa+renesas@sang-engineering.com, kgene@kernel.org,
-        krzk@kernel.org, paul@crapouillou.net, vz@mleia.com,
-        khilman@baylibre.com, gregory.clement@bootlin.com,
-        rrichter@marvell.com, afaerber@suse.de,
-        manivannan.sadhasivam@linaro.org, agross@kernel.org,
-        bjorn.andersson@linaro.org, heiko@sntech.de, baohua@kernel.org,
-        linus.walleij@linaro.org, mripard@kernel.org, wens@csie.org,
-        ardb@kernel.org, gcherian@marvell.com, jun.nie@linaro.org,
-        shawnguo@kernel.org, tglx@linutronix.de, zhouyanjie@wanyeetech.com,
-        martin.blumenstingl@googlemail.com
-Cc:     linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Dejin Zheng <zhengdejin5@gmail.com>
-Subject: [PATCH v2 24/24] i2c: octeon-platdrv: convert to devm_platform_ioremap_resource
-Date:   Thu,  9 Apr 2020 02:23:11 +0800
-Message-Id: <20200408182311.26869-25-zhengdejin5@gmail.com>
-X-Mailer: git-send-email 2.25.0
-In-Reply-To: <20200408182311.26869-1-zhengdejin5@gmail.com>
-References: <20200408182311.26869-1-zhengdejin5@gmail.com>
+        Wed, 8 Apr 2020 14:26:06 -0400
+Received: from mga02.intel.com ([134.134.136.20]:9897 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727801AbgDHS0F (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Apr 2020 14:26:05 -0400
+IronPort-SDR: WPZG6HhFA53Fr8YR0v5ZLwQWzHb8P//uMhtvTw1XRZmWu/3KUXXjXL2i9ziGNAWxmbqYFRd5HC
+ lYj3cj/JMTLw==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Apr 2020 11:25:57 -0700
+IronPort-SDR: kzvi+KBl4k5fsZ2oCipAYSwCzSGcXbflV+yrjvAb05aE9aOA86S/6zKzG+UrgYrTmt3oKadiT6
+ 9CwsxJ+UDTDg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,359,1580803200"; 
+   d="scan'208";a="251643727"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by orsmga003.jf.intel.com with ESMTP; 08 Apr 2020 11:25:54 -0700
+Received: from andy by smile with local (Exim 4.93)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1jMFOf-00Gles-95; Wed, 08 Apr 2020 21:25:57 +0300
+Date:   Wed, 8 Apr 2020 21:25:57 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Al Cooper <alcooperx@gmail.com>
+Cc:     linux-kernel@vger.kernel.org,
+        Alan Stern <stern@rowland.harvard.edu>,
+        bcm-kernel-feedback-list@broadcom.com, devicetree@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jonathan =?iso-8859-1?Q?Neusch=E4fer?= <j.neuschaefer@gmx.net>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        linux-usb@vger.kernel.org, Mathias Nyman <mathias.nyman@intel.com>,
+        Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH v3 0/4] Add XHCI, EHCI and OHCI support for Broadcom STB
+ SoS's
+Message-ID: <20200408182557.GR3676135@smile.fi.intel.com>
+References: <20200408181406.40389-1-alcooperx@gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200408181406.40389-1-alcooperx@gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-use devm_platform_ioremap_resource() to simplify code, which
-contains platform_get_resource and devm_ioremap_resource.
+On Wed, Apr 08, 2020 at 02:14:02PM -0400, Al Cooper wrote:
+> v3 - Addressed all of Andy Shevchenko's review comments for
+>      ehci-brcm.c.
+>    - Fixed the brcm,bcm7445-ehci.yaml dt-bindings document,
+>      dt_binding_check now passes.
+>    - Added the XHCI functionality to xhci-plat.c instead of creating
+>      new brcmstb files, as suggested by Mathias Nyman.
 
-Acked-by: Robert Richter <rrichter@marvell.com>
-Signed-off-by: Dejin Zheng <zhengdejin5@gmail.com>
----
-v1 -> v2:
-	- no changed and thanks for Robert's review.
+It's nice, but have you heard what Mathias asked / proposed?
 
- drivers/i2c/busses/i2c-octeon-platdrv.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+> v2 - Addressed Andy Shevchenko's review comments.
+>    - Fixed dt_binding_check error pointed out by Rob Herring.
+>    - Removed pr_info message in ehci_brcm_init as suggested by
+>      Greg Kroah-Hartman.
+> 
+> This adds support for the XHCI, EHCI and OHCI host controllers found
+> in Broadcom STB SoC's. These drivers depend on getting access to the
+> new Broadcom STB USB PHY driver through a device-tree phandle and
+> will fail if the driver is not available.
+> 
+> Al Cooper (4):
+>   dt-bindings: Add Broadcom STB USB support
+>   usb: xhci: xhci-plat: Add support for Broadcom STB SoC's
+>   usb: ehci: Add new EHCI driver for Broadcom STB SoC's
+>   usb: host: Add ability to build new Broadcom STB USB drivers
+> 
+>  .../bindings/usb/brcm,bcm7445-ehci.yaml       |  60 ++++
+>  .../devicetree/bindings/usb/usb-xhci.txt      |   1 +
+>  MAINTAINERS                                   |   8 +
+>  drivers/usb/host/Kconfig                      |  16 +
+>  drivers/usb/host/Makefile                     |  16 +-
+>  drivers/usb/host/ehci-brcm.c                  | 286 ++++++++++++++++++
+>  drivers/usb/host/xhci-plat.c                  |  10 +
+>  7 files changed, 391 insertions(+), 6 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/usb/brcm,bcm7445-ehci.yaml
+>  create mode 100644 drivers/usb/host/ehci-brcm.c
+> 
+> -- 
+> 2.17.1
+> 
 
-diff --git a/drivers/i2c/busses/i2c-octeon-platdrv.c b/drivers/i2c/busses/i2c-octeon-platdrv.c
-index 64bda83e65ac..0c227963c8d6 100644
---- a/drivers/i2c/busses/i2c-octeon-platdrv.c
-+++ b/drivers/i2c/busses/i2c-octeon-platdrv.c
-@@ -136,7 +136,6 @@ static int octeon_i2c_probe(struct platform_device *pdev)
- {
- 	struct device_node *node = pdev->dev.of_node;
- 	int irq, result = 0, hlc_irq = 0;
--	struct resource *res_mem;
- 	struct octeon_i2c *i2c;
- 	bool cn78xx_style;
- 
-@@ -167,8 +166,7 @@ static int octeon_i2c_probe(struct platform_device *pdev)
- 	i2c->roff.twsi_int = 0x10;
- 	i2c->roff.sw_twsi_ext = 0x18;
- 
--	res_mem = platform_get_resource(pdev, IORESOURCE_MEM, 0);
--	i2c->twsi_base = devm_ioremap_resource(&pdev->dev, res_mem);
-+	i2c->twsi_base = devm_platform_ioremap_resource(pdev, 0);
- 	if (IS_ERR(i2c->twsi_base)) {
- 		result = PTR_ERR(i2c->twsi_base);
- 		goto out;
 -- 
-2.25.0
+With Best Regards,
+Andy Shevchenko
+
 
