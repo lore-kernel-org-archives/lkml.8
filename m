@@ -4,45 +4,45 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3071CC2D0F4
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 22:18:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46987C2BA2B
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 22:18:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 03B1E2083E
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 22:18:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1D2CC206C0
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 22:18:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="KSnd93Bp"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="XQ+j2Ts1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726574AbgDHWSx (ORCPT
+        id S1726591AbgDHWSy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Apr 2020 18:18:53 -0400
-Received: from mail26.static.mailgun.info ([104.130.122.26]:58982 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726469AbgDHWSw (ORCPT
+        Wed, 8 Apr 2020 18:18:54 -0400
+Received: from mail27.static.mailgun.info ([104.130.122.27]:13345 "EHLO
+        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726534AbgDHWSx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Apr 2020 18:18:52 -0400
+        Wed, 8 Apr 2020 18:18:53 -0400
 DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1586384331; h=References: In-Reply-To: Message-Id: Date:
+ s=smtp; t=1586384332; h=References: In-Reply-To: Message-Id: Date:
  Subject: Cc: To: From: Sender;
- bh=hb1eX7bss06mePS2zUQBRyjgMYc604+/EGTk9RLwCGk=; b=KSnd93BpaTfLvoTQj4FBgWNMB3w6J31sUTDAo1wRQgLiFgSjl5T12siJwgH+u68vnH9knQCG
- rcd87+2N/snrLop2H9wOcVBd2Y5jPT3jcFqA+CDmJ0TL6XG0bjRwT1I9aWg6d4ybnQkbZcVb
- PH9QJRHOOqBTQMTxhVm13iu+yN0=
-X-Mailgun-Sending-Ip: 104.130.122.26
+ bh=nxckJHsYlH6PpUyv1QAJtQ0NRWLvH1oUQd2EinXVQSg=; b=XQ+j2Ts1YMk9DBu4mt1cMYmvApJ5ZcRWsa+iuFPnHfADNYmYuRY5OCuZIjgCeGUjqrPicsuA
+ w+CvrJLxeQPGf7wP2vzwuJi9e0rlOiZ507qHXVCKBDCkfSDCMlNPyUrouyk2cbIztM1vUc8u
+ GCnPQAP8sdABNq2/GE1ZGMPOuHQ=
+X-Mailgun-Sending-Ip: 104.130.122.27
 X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
 Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e8e4dcb.7f4fdbf7df80-smtp-out-n03;
+ by mxa.mailgun.org with ESMTP id 5e8e4dcb.7fcf59ae6260-smtp-out-n04;
  Wed, 08 Apr 2020 22:18:51 -0000 (UTC)
 Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 53ACCC43636; Wed,  8 Apr 2020 22:18:51 +0000 (UTC)
+        id 7CA9EC433D2; Wed,  8 Apr 2020 22:18:51 +0000 (UTC)
 Received: from sidgup-linux.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
         (No client certificate requested)
         (Authenticated sender: sidgup)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 6335DC4478F;
-        Wed,  8 Apr 2020 22:18:50 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 6335DC4478F
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id C7EDCC433BA;
+        Wed,  8 Apr 2020 22:18:49 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org C7EDCC433BA
 Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
 Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=sidgup@codeaurora.org
 From:   Siddharth Gupta <sidgup@codeaurora.org>
@@ -52,9 +52,9 @@ Cc:     Siddharth Gupta <sidgup@codeaurora.org>,
         linux-arm-msm@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org, tsoni@codeaurora.org,
         psodagud@codeaurora.org, rishabhb@codeaurora.org
-Subject: [PATCH v2 2/2] remoteproc: core: Prevent sleep when rproc crashes
-Date:   Wed,  8 Apr 2020 15:18:25 -0700
-Message-Id: <1586384305-7825-3-git-send-email-sidgup@codeaurora.org>
+Subject: [PATCH v2 1/2] remoteproc: core: Add an API for changing firmware name
+Date:   Wed,  8 Apr 2020 15:18:24 -0700
+Message-Id: <1586384305-7825-2-git-send-email-sidgup@codeaurora.org>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1586384305-7825-1-git-send-email-sidgup@codeaurora.org>
 References: <1586384305-7825-1-git-send-email-sidgup@codeaurora.org>
@@ -63,51 +63,84 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Remoteproc recovery should be fast and any delay will have an impact on the
-user-experience. Add a wakeup source to remoteproc which ensures that the
-system does not go into idle state while a remoteproc is recovering, thus
-prevent any delays that might occur during system resume.
+Add an API which allows to change the name of the firmware to be booted on
+the specified rproc. This change gives us the flixibility to change the
+firmware at run-time depending on the usecase. Some remoteprocs might use
+a different firmware for testing, production and development purposes,
+which may be selected based on the fuse settings during bootup.
 
 Signed-off-by: Siddharth Gupta <sidgup@codeaurora.org>
 ---
- drivers/remoteproc/qcom_q6v5_pas.c   | 1 +
- drivers/remoteproc/remoteproc_core.c | 4 ++++
- 2 files changed, 5 insertions(+)
+ drivers/remoteproc/remoteproc_core.c | 43 ++++++++++++++++++++++++++++++++++++
+ include/linux/remoteproc.h           |  1 +
+ 2 files changed, 44 insertions(+)
 
-diff --git a/drivers/remoteproc/qcom_q6v5_pas.c b/drivers/remoteproc/qcom_q6v5_pas.c
-index 7a63efb..6bb2c7d 100644
---- a/drivers/remoteproc/qcom_q6v5_pas.c
-+++ b/drivers/remoteproc/qcom_q6v5_pas.c
-@@ -401,6 +401,7 @@ static int adsp_probe(struct platform_device *pdev)
- 
- 	adsp = (struct qcom_adsp *)rproc->priv;
- 	adsp->dev = &pdev->dev;
-+	device_wakeup_enable(adsp->dev);
- 	adsp->rproc = rproc;
- 	adsp->pas_id = desc->pas_id;
- 	adsp->has_aggre2_clk = desc->has_aggre2_clk;
 diff --git a/drivers/remoteproc/remoteproc_core.c b/drivers/remoteproc/remoteproc_core.c
-index 9f99fe2..19a360d 100644
+index fb9c813..9f99fe2 100644
 --- a/drivers/remoteproc/remoteproc_core.c
 +++ b/drivers/remoteproc/remoteproc_core.c
-@@ -1729,6 +1729,8 @@ static void rproc_crash_handler_work(struct work_struct *work)
- 
- 	if (!rproc->recovery_disabled)
- 		rproc_trigger_recovery(rproc);
-+
-+	pm_relax(rproc->dev.parent);
- }
+@@ -1796,6 +1796,49 @@ int rproc_boot(struct rproc *rproc)
+ EXPORT_SYMBOL(rproc_boot);
  
  /**
-@@ -2273,6 +2275,8 @@ void rproc_report_crash(struct rproc *rproc, enum rproc_crash_type type)
- 		return;
- 	}
- 
-+	pm_stay_awake(rproc->dev.parent);
++ * rproc_set_firmware_name() - change the firmware name for specified remoteproc
++ * @rproc: handle of a remote processor
++ * @firmware: name of the firmware to boot with
++ *
++ * Change the name of the firmware to be loaded to @firmware in the rproc
++ * structure. We should ensure that the remoteproc is not running.
++ *
++ * Returns 0 on success, and an appropriate error value otherwise.
++ */
++int rproc_set_firmware_name(struct rproc *rproc, const char *firmware)
++{
++	int len, ret = 0;
++	char *p;
 +
- 	dev_err(&rproc->dev, "crash detected in %s: type %s\n",
- 		rproc->name, rproc_crash_to_string(type));
++	if (!rproc || !firmware)
++		return -EINVAL;
++
++	len = strcspn(firmware, "\n");
++	if (!len)
++		return -EINVAL;
++
++	mutex_lock(&rproc->lock);
++
++	if (rproc->state != RPROC_OFFLINE) {
++		ret = -EBUSY;
++		goto out;
++	}
++
++	p = kstrndup(firmware, len, GFP_KERNEL);
++	if (!p) {
++		ret = -ENOMEM;
++		goto out;
++	}
++
++	kfree(rproc->firmware);
++	rproc->firmware = p;
++out:
++	mutex_unlock(&rproc->lock);
++	return ret;
++}
++EXPORT_SYMBOL(rproc_set_firmware_name);
++
++/**
+  * rproc_shutdown() - power off the remote processor
+  * @rproc: the remote processor
+  *
+diff --git a/include/linux/remoteproc.h b/include/linux/remoteproc.h
+index 9c07d79..c5d36e6 100644
+--- a/include/linux/remoteproc.h
++++ b/include/linux/remoteproc.h
+@@ -613,6 +613,7 @@ rproc_of_resm_mem_entry_init(struct device *dev, u32 of_resm_idx, size_t len,
+ 			     u32 da, const char *name, ...);
  
+ int rproc_boot(struct rproc *rproc);
++int rproc_set_firmware_name(struct rproc *rproc, const char *firmware);
+ void rproc_shutdown(struct rproc *rproc);
+ void rproc_report_crash(struct rproc *rproc, enum rproc_crash_type type);
+ int rproc_coredump_add_segment(struct rproc *rproc, dma_addr_t da, size_t size);
 -- 
 Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
 a Linux Foundation Collaborative Project
