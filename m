@@ -2,69 +2,138 @@ Return-Path: <SRS0=8dav=5Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07F2CC2BA2B
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 16:07:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6B8AC2D0EA
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 16:08:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E050120787
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 16:07:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B24D6206F5
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 16:08:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="MgwmrRdg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730154AbgDHQHs (ORCPT
+        id S1730155AbgDHQIT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Apr 2020 12:07:48 -0400
-Received: from verein.lst.de ([213.95.11.211]:43068 "EHLO verein.lst.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729684AbgDHQHs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Apr 2020 12:07:48 -0400
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id 9BEC068C4E; Wed,  8 Apr 2020 18:07:43 +0200 (CEST)
-Date:   Wed, 8 Apr 2020 18:07:43 +0200
-From:   Christoph Hellwig <hch@lst.de>
-To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
-Cc:     Christoph Hellwig <hch@lst.de>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>, x86@kernel.org,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Laura Abbott <labbott@redhat.com>,
-        Sumit Semwal <sumit.semwal@linaro.org>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Minchan Kim <minchan@kernel.org>,
-        Nitin Gupta <ngupta@vflare.org>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        linux-arch@vger.kernel.org, linux-hyperv@vger.kernel.org,
-        linux-s390@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>,
-        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org,
-        linux-mm@kvack.org, iommu@lists.linux-foundation.org,
-        bpf@vger.kernel.org, Robin Murphy <robin.murphy@arm.com>,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: decruft the vmalloc API
-Message-ID: <20200408160743.GA30662@lst.de>
-References: <20200408115926.1467567-1-hch@lst.de> <20200408160324.GS25745@shell.armlinux.org.uk>
+        Wed, 8 Apr 2020 12:08:19 -0400
+Received: from perceval.ideasonboard.com ([213.167.242.64]:33072 "EHLO
+        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729684AbgDHQIT (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Apr 2020 12:08:19 -0400
+Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id D52D2522;
+        Wed,  8 Apr 2020 18:08:16 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1586362097;
+        bh=AJzfCUM1HjeczLj5Whnp3MrdeZwLtEyNuz8qCxUuqww=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=MgwmrRdgrr9cVDRNCd23nmAvQGIUJgYrfc0CpnOKiNwMZKu8bCzBTX/A/K/rSyvfh
+         +DR/f48BgmMyzWwKDuGlFi/nP/3kXKHtaCXhFiz8vFIL2oP0xbNpCWDwNEnRoluhRM
+         +Zw2ycYZWgIbFN9H8VF4O6Fb/MV4OkIpGGq+GssA=
+Date:   Wed, 8 Apr 2020 19:08:06 +0300
+From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Helen Koike <helen.koike@collabora.com>,
+        Jacob Chen <jacob2.chen@rock-chips.com>,
+        Shunqian Zheng <zhengsq@rock-chips.com>,
+        Yichong Zhong <zyc@rock-chips.com>,
+        Jacob Chen <cc@rock-chips.com>,
+        Eddie Cai <eddie.cai.linux@gmail.com>,
+        Jeffy Chen <jeffy.chen@rock-chips.com>,
+        Allon Huang <allon.huang@rock-chips.com>,
+        Tomasz Figa <tfiga@chromium.org>,
+        Ezequiel Garcia <ezequiel@collabora.com>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Dafna Hirschfeld <dafna.hirschfeld@collabora.com>,
+        linux-media@vger.kernel.org, devel@driverdev.osuosl.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] media: staging: rkisp1: avoid unused variable warning
+Message-ID: <20200408160806.GJ4881@pendragon.ideasonboard.com>
+References: <20200408155325.2077345-1-arnd@arndb.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200408160324.GS25745@shell.armlinux.org.uk>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+In-Reply-To: <20200408155325.2077345-1-arnd@arndb.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 08, 2020 at 05:03:24PM +0100, Russell King - ARM Linux admin wrote:
-> I haven't read all your patches yet.
-> 
-> Have you tested it on 32-bit ARM, where the module area is located
-> _below_ PAGE_OFFSET and outside of the vmalloc area?
+Hi Arnd,
 
-I have not tested it.  However existing in-kernel users that use
-different areas (and we have quite a few of those) have not been
-changed at all.  I think the arm32 module loader (like various other
-module loaders) falls into that category.
+Thank you for the patch.
+
+On Wed, Apr 08, 2020 at 05:52:44PM +0200, Arnd Bergmann wrote:
+> When compile-testing with CONFIG_OF disabled, we get a warning
+> about an unused variable, and about inconsistent Kconfig dependencies:
+> 
+> WARNING: unmet direct dependencies detected for PHY_ROCKCHIP_DPHY_RX0
+>   Depends on [n]: STAGING [=y] && STAGING_MEDIA [=y] && MEDIA_SUPPORT [=m] && (ARCH_ROCKCHIP [=n] || COMPILE_TEST [=y]) && OF [=n]
+>   Selected by [m]:
+>   - VIDEO_ROCKCHIP_ISP1 [=m] && STAGING [=y] && STAGING_MEDIA [=y] && MEDIA_SUPPORT [=m] && VIDEO_V4L2 [=m] && VIDEO_V4L2_SUBDEV_API [=y] && (ARCH_ROCKCHIP [=n] || COMPILE_TEST [=y])
+> 
+> drivers/staging/media/rkisp1/rkisp1-dev.c: In function 'rkisp1_probe':
+> drivers/staging/media/rkisp1/rkisp1-dev.c:457:22: error: unused variable 'node' [-Werror=unused-variable]
+>   457 |  struct device_node *node = pdev->dev.of_node;
+> 
+> Simply open-coding the pointer dereference in the only place
+> the variable is used avoids the warning in all configurations,
+> so we can allow compile-testing as well.
+> 
+> Fixes: d65dd85281fb ("media: staging: rkisp1: add Rockchip ISP1 base driver")
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+
+Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+
+> ---
+>  drivers/staging/media/phy-rockchip-dphy-rx0/Kconfig | 2 +-
+>  drivers/staging/media/rkisp1/rkisp1-dev.c           | 3 +--
+>  2 files changed, 2 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/staging/media/phy-rockchip-dphy-rx0/Kconfig b/drivers/staging/media/phy-rockchip-dphy-rx0/Kconfig
+> index bd0147624de1..dd5d4d741bdd 100644
+> --- a/drivers/staging/media/phy-rockchip-dphy-rx0/Kconfig
+> +++ b/drivers/staging/media/phy-rockchip-dphy-rx0/Kconfig
+> @@ -2,7 +2,7 @@
+>  
+>  config PHY_ROCKCHIP_DPHY_RX0
+>  	tristate "Rockchip MIPI Synopsys DPHY RX0 driver"
+> -	depends on (ARCH_ROCKCHIP || COMPILE_TEST) && OF
+> +	depends on (ARCH_ROCKCHIP && OF) || COMPILE_TEST
+>  	select GENERIC_PHY_MIPI_DPHY
+>  	select GENERIC_PHY
+>  	help
+> diff --git a/drivers/staging/media/rkisp1/rkisp1-dev.c b/drivers/staging/media/rkisp1/rkisp1-dev.c
+> index b1b3c058e957..5e7e797aad71 100644
+> --- a/drivers/staging/media/rkisp1/rkisp1-dev.c
+> +++ b/drivers/staging/media/rkisp1/rkisp1-dev.c
+> @@ -454,7 +454,6 @@ static void rkisp1_debug_init(struct rkisp1_device *rkisp1)
+>  
+>  static int rkisp1_probe(struct platform_device *pdev)
+>  {
+> -	struct device_node *node = pdev->dev.of_node;
+>  	const struct rkisp1_match_data *clk_data;
+>  	const struct of_device_id *match;
+>  	struct device *dev = &pdev->dev;
+> @@ -463,7 +462,7 @@ static int rkisp1_probe(struct platform_device *pdev)
+>  	unsigned int i;
+>  	int ret, irq;
+>  
+> -	match = of_match_node(rkisp1_of_match, node);
+> +	match = of_match_node(rkisp1_of_match, pdev->dev.of_node);
+>  	rkisp1 = devm_kzalloc(dev, sizeof(*rkisp1), GFP_KERNEL);
+>  	if (!rkisp1)
+>  		return -ENOMEM;
+
+-- 
+Regards,
+
+Laurent Pinchart
