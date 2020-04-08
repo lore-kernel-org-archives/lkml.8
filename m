@@ -2,136 +2,147 @@ Return-Path: <SRS0=8dav=5Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 299B7C2BA1A
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 13:06:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9AE1C2BA1A
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 13:06:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F3C2D2076D
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 13:06:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8AC12206F7
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 13:06:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=mm-sol.com header.i=@mm-sol.com header.b="YnZae3dt"
+	dkim=pass (1024-bit key) header.d=flygoat.com header.i=jiaxun.yang@flygoat.com header.b="JkkmTwA1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728989AbgDHNG2 (ORCPT
+        id S1729007AbgDHNGk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Apr 2020 09:06:28 -0400
-Received: from ns.mm-sol.com ([37.157.136.199]:36970 "EHLO extserv.mm-sol.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727902AbgDHNG1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Apr 2020 09:06:27 -0400
-Received: from [192.168.1.4] (212-5-158-69.ip.btc-net.bg [212.5.158.69])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by extserv.mm-sol.com (Postfix) with ESMTPSA id AC2DFCFB4;
-        Wed,  8 Apr 2020 16:06:24 +0300 (EEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=mm-sol.com; s=201706;
-        t=1586351185; bh=b49iDG8IN2LwQuXCivPrSYLmA+u1Ox/a/HqsWubR/cs=;
-        h=Subject:To:Cc:From:Date:From;
-        b=YnZae3dtnDweNils7UPkECsSFUcxag0g6B9OS0FcGO4iTuvphscpte+fPB9x1aHok
-         chukJ1sx8kdHSZ54RXmoGFny7C33xmNV01xNjmcUKWq8FflRs3Bh3PvMNpNS6i3ZL7
-         DnRBlD5hKjrv0/a8LnouZF5aZakeoKMkJkggOZH6gW26E0LUV6o6eWWlam76/AxC8N
-         7pUBVXQoMmGLEi1HTp91BVrHpToaY/VIoG6XkImVnJwZLBfKb1bNCye3UNXFv31wVb
-         Sn3PQTR+25cq/oCfXwcdNU+0ybwMNoN+Ik5tzkHdowDUdfGxufuZnVATQqIU2wFRuf
-         oPd6kuKim7P9g==
-Subject: Re: R: R: [PATCH v2 01/10] PCIe: qcom: add missing ipq806x clocks in
- PCIe driver
-To:     ansuelsmth@gmail.com, 'Andy Gross' <agross@kernel.org>
-Cc:     'Sham Muthayyan' <smuthayy@codeaurora.org>,
-        'Bjorn Andersson' <bjorn.andersson@linaro.org>,
-        'Bjorn Helgaas' <bhelgaas@google.com>,
-        'Rob Herring' <robh+dt@kernel.org>,
-        'Mark Rutland' <mark.rutland@arm.com>,
-        'Lorenzo Pieralisi' <lorenzo.pieralisi@arm.com>,
-        'Andrew Murray' <amurray@thegoodpenguin.co.uk>,
-        'Philipp Zabel' <p.zabel@pengutronix.de>,
-        linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200402121148.1767-1-ansuelsmth@gmail.com>
- <20200402121148.1767-2-ansuelsmth@gmail.com>
- <b09627a8-d928-cf5d-c765-406959138a29@mm-sol.com>
- <053d01d60da2$49e0ca60$dda25f20$@gmail.com>
- <f333d990-6d76-0e04-5949-54ffe31bc0e9@mm-sol.com>
- <000401d60da5$0669a4c0$133cee40$@gmail.com>
-From:   Stanimir Varbanov <svarbanov@mm-sol.com>
-Message-ID: <98b7eba1-4ab4-8d39-655f-01d31ca12406@mm-sol.com>
-Date:   Wed, 8 Apr 2020 16:06:24 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Wed, 8 Apr 2020 09:06:40 -0400
+Received: from sender3-op-o12.zoho.com.cn ([124.251.121.243]:17893 "EHLO
+        sender3-op-o12.zoho.com.cn" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727902AbgDHNGk (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Apr 2020 09:06:40 -0400
+ARC-Seal: i=1; a=rsa-sha256; t=1586351026; cv=none; 
+        d=zoho.com.cn; s=zohoarc; 
+        b=Xt3QlKHF9gAfs7PFxUfbfSkP2aVAC/tz3Gtn21Vxl34OaxdveVAogbirOWQxjbWyvWuNKvM9EA+oIzKP0hAKyK9keQCVyvtL8Deq/+x3WBcNPj755XaYkAd1Y7bYAyB1LsxBBkNzkhLBGXl25PA+/sKjHm/drvMlIP9cn2IlA7M=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zoho.com.cn; s=zohoarc; 
+        t=1586351026; h=Content-Type:Content-Transfer-Encoding:Cc:Date:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:To; 
+        bh=CuiH5YcI6tCfhJK48jBjzSJsIlmqrJPGhHGDuUriybY=; 
+        b=BvmgYeHKzI358gNXXMatE4R1i71CDcQkWEDt5jfAiSXCugqPHN3bU+6b7QgDbsga98pZlnvyq7UpqADjp3CZYAlmSX+7Sw9OjEzRAJ7E0601qcJsBcbCnBtVpbGg8H6CbksjNjAxbkX1ZeBe2puyLhTEWRNGIwh+fVOEMJXI2A8=
+ARC-Authentication-Results: i=1; mx.zoho.com.cn;
+        dkim=pass  header.i=flygoat.com;
+        spf=pass  smtp.mailfrom=jiaxun.yang@flygoat.com;
+        dmarc=pass header.from=<jiaxun.yang@flygoat.com> header.from=<jiaxun.yang@flygoat.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1586351026;
+        s=mail; d=flygoat.com; i=jiaxun.yang@flygoat.com;
+        h=From:To:Cc:Message-ID:Subject:Date:In-Reply-To:References:MIME-Version:Content-Transfer-Encoding:Content-Type;
+        bh=CuiH5YcI6tCfhJK48jBjzSJsIlmqrJPGhHGDuUriybY=;
+        b=JkkmTwA1xtnZOnvPqGgtJ0KvVe6ewM+F5dVZNsZSTsX9Ms1EI4MxqtL7JHf30NxI
+        8hmOZefcI7oPuh4T+8PLqukQLZgxX3VUx8ArFRvVJNEJqKHKhUl8+PktXp4ir7eJHSs
+        44ZBGWMRoTHvXf0EWiZy1VoLp8Sr9/TAvSqUn4kQ=
+Received: from localhost.localdomain (39.155.141.144 [39.155.141.144]) by mx.zoho.com.cn
+        with SMTPS id 15863510255787.563914307152345; Wed, 8 Apr 2020 21:03:45 +0800 (CST)
+From:   Jiaxun Yang <jiaxun.yang@flygoat.com>
+To:     linux-mips@vger.kernel.org
+Cc:     Jiaxun Yang <jiaxun.yang@flygoat.com>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Huacai Chen <chenhc@lemote.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Robert Richter <rric@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>,
+        Paul Burton <paulburton@kernel.org>,
+        Allison Randal <allison@lohutok.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Vladimir Kondratiev <vladimir.kondratiev@intel.com>,
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        Alexios Zavras <alexios.zavras@intel.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        Matt Redfearn <matt.redfearn@mips.com>,
+        Steve Winslow <swinslow@gmail.com>,
+        Richard Fontana <rfontana@redhat.com>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Oleksij Rempel <linux@rempel-privat.de>,
+        Kamal Dasu <kdasu.kdev@gmail.com>,
+        linux-kernel@vger.kernel.org,
+        bcm-kernel-feedback-list@broadcom.com, oprofile-list@lists.sf.net
+Message-ID: <20200408130024.2529220-7-jiaxun.yang@flygoat.com>
+Subject: [PATCH 12/12] MIPS: ip27: Fix includes
+Date:   Wed,  8 Apr 2020 20:59:54 +0800
+X-Mailer: git-send-email 2.26.0.rc2
+In-Reply-To: <20200408113505.2528103-1-jiaxun.yang@flygoat.com>
+References: <20200408113505.2528103-1-jiaxun.yang@flygoat.com>
 MIME-Version: 1.0
-In-Reply-To: <000401d60da5$0669a4c0$133cee40$@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: quoted-printable
+X-ZohoCNMailClient: External
+Content-Type: text/plain; charset=utf8
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Somehow changes in topology messed up headers.
+So just add necessary headers to make it compile again.
+
+Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
+---
+ arch/mips/include/asm/mach-ip27/mmzone.h   | 2 ++
+ arch/mips/include/asm/mach-ip27/topology.h | 2 ++
+ arch/mips/include/asm/sn/addrs.h           | 1 +
+ 3 files changed, 5 insertions(+)
+
+diff --git a/arch/mips/include/asm/mach-ip27/mmzone.h b/arch/mips/include/a=
+sm/mach-ip27/mmzone.h
+index 08c36e50a860..e0a53b97b4a8 100644
+--- a/arch/mips/include/asm/mach-ip27/mmzone.h
++++ b/arch/mips/include/asm/mach-ip27/mmzone.h
+@@ -2,6 +2,8 @@
+ #ifndef _ASM_MACH_MMZONE_H
+ #define _ASM_MACH_MMZONE_H
+=20
++#include <linux/mmzone.h>
++
+ #include <asm/sn/addrs.h>
+ #include <asm/sn/arch.h>
+ #include <asm/sn/agent.h>
+diff --git a/arch/mips/include/asm/mach-ip27/topology.h b/arch/mips/include=
+/asm/mach-ip27/topology.h
+index d66cc53feab8..601e350908f7 100644
+--- a/arch/mips/include/asm/mach-ip27/topology.h
++++ b/arch/mips/include/asm/mach-ip27/topology.h
+@@ -2,6 +2,8 @@
+ #ifndef _ASM_MACH_TOPOLOGY_H
+ #define _ASM_MACH_TOPOLOGY_H=091
+=20
++#include <linux/numa.h>
++
+ #include <asm/sn/types.h>
+ #include <asm/mmzone.h>
+=20
+diff --git a/arch/mips/include/asm/sn/addrs.h b/arch/mips/include/asm/sn/ad=
+drs.h
+index 837d23e24976..1d3945ef2ca4 100644
+--- a/arch/mips/include/asm/sn/addrs.h
++++ b/arch/mips/include/asm/sn/addrs.h
+@@ -13,6 +13,7 @@
+ #ifndef __ASSEMBLY__
+ #include <linux/smp.h>
+ #include <linux/types.h>
++#include <asm/io.h>
+ #endif /* !__ASSEMBLY__ */
+=20
+ #include <asm/addrspace.h>
+--=20
+2.26.0.rc2
 
 
-On 4/8/20 3:55 PM, ansuelsmth@gmail.com wrote:
->> in PCIe driver
->>
->> Hi Ansuel,
->>
->> On 4/8/20 3:36 PM, ansuelsmth@gmail.com wrote:
->>>> PCIe driver
->>>>
->>>> Ansuel,
->>>>
->>>> On 4/2/20 3:11 PM, Ansuel Smith wrote:
->>>>> Aux and Ref clk are missing in pcie qcom driver.
->>>>> Add support in the driver to fix pcie inizialization in ipq806x.
->>>>>
->>>>> Fixes: 82a82383 PCI: qcom: Add Qualcomm PCIe controller driver
->>>>
->>>> this should be:
->>>>
->>>> Fixes: 82a823833f4e PCI: qcom: Add Qualcomm PCIe controller driver
->>>>
->>>> and add:
->>>>
->>>> Cc: stable@vger.kernel.org # v4.5+
->>>>
->>>> But, I wonder, as apq8064 shares the same ops_2_1_0 how it worked
->> until
->>>> now. Something more I cannot find such clocks for apq8064, which
->> means
->>>> that this patch will break it.
->>>>
->>>> One option is to use those new clocks only for ipq806x.
->>>>
->>>
->>> How to add this new clocks only for ipq806x? Check the compatible and
->> add
->>> them accordingly?
->>>
->>
->> Yes, through of_device_is_compatible(). See how we done this in
->> qcom_pcie_get_resources_2_4_0.
->>
->> I thought about second option though - encoder what clocks we have for
->> any SoC but if you take into that direction you have to change the whole
->> driver :)
->>
->> Another option is to use clk_get_optional() for the clocks which you
->> have on ipq806x (and don't have on apq8064). Please research this one
->> first.
->>
->> --
->> regards,
->> Stan
-> 
-> Ok I will use get optional for the extra clocks. Should I add a warning if they 
-> are not present? Also what about the extra reset? Should I follow the same
-> approach? 
-> Thx for the suggestions. 
-> 
-
-No warnings please. You should follow the same rules for resets.
-
--- 
-regards,
-Stan
