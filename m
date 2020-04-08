@@ -7,49 +7,58 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19564C2BA2B
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 15:46:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56563C2BA1A
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 15:46:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DDCD320787
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 15:46:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 22F322078E
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 15:46:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586360805;
-	bh=2dtxiXcqpLlxzQY41glPzfxzzobbNtue35byn94ocz8=;
+	s=default; t=1586360803;
+	bh=9Y31naY1EvKUzeBtNXH9yLcsi4Q9S83JSI6RN3kfVpY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QEsbbB6T8pfk1WEGbByEyMNbSC2xfNK+Xq1WFFrChvw7EuFeAphI03rd8kyoHRXwj
-	 B+5Qlvg9EY6ismrEA68DBKT9+4yRX/dFaIojquij6FKhtjvQbX1yZ7G6qfLGbDWLte
-	 +O/sKo2ayvUYUYfa66t8++wkWTGByqZ4/3H20Kw4=
+	b=qj6etrKtbRJuzEoGYxSmaFcej3PMpOUW2sxwpVz0Yw1oWCiTbSol2f/TEgStSDLkN
+	 La0Hmcf3fkMRRBvFDugrhEUyUZAI5hd+drLwQX5aYfo5fIQos1aNJiRM9RNMoweWiA
+	 sL8ixWrk+gmp0CKqFK0O+QjgHSNiSp4JdhzOE1gk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729777AbgDHPqn (ORCPT
+        id S1729767AbgDHPqm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Apr 2020 11:46:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49316 "EHLO mail.kernel.org"
+        Wed, 8 Apr 2020 11:46:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49558 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729684AbgDHPqd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1729690AbgDHPqd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 8 Apr 2020 11:46:33 -0400
 Received: from mail.kernel.org (ip5f5ad4d8.dynamic.kabel-deutschland.de [95.90.212.216])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A7B2B21D79;
+        by mail.kernel.org (Postfix) with ESMTPSA id F1957221ED;
         Wed,  8 Apr 2020 15:46:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586360791;
-        bh=2dtxiXcqpLlxzQY41glPzfxzzobbNtue35byn94ocz8=;
+        s=default; t=1586360792;
+        bh=9Y31naY1EvKUzeBtNXH9yLcsi4Q9S83JSI6RN3kfVpY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kj8MextYAoIKsWvztzjCGcKAsGVM1/9pAq2gRfDT/NqG2fUo8IAcqV441T/vNl56C
-         9j4AscDetciOP4kRZGj/DcYvPvFhwG9zEusuROZCQJqbTf4AKV89pn+KzOJfzz6K7y
-         b33++rZUEOu+m8Yo1q1U9vVZTrdgUcaCXvab2CXo=
+        b=tsgcmjmKJvEsykOhbhneuXgALWi3DZUG6PeK6tKsuiCpyxAF0eRNcJQW+kOLQ23Jo
+         TiuMKmNUD04eGycwukqX37pEATv3blbXtUprAgSohyoGT/IjUULpxWsDlglsFYurNQ
+         IcV2ozRTLNNwG7Pijm3ZElFADoHObDJ4PrXz9SO0=
 Received: from mchehab by mail.kernel.org with local (Exim 4.92.3)
         (envelope-from <mchehab@kernel.org>)
-        id 1jMCuL-000cBv-SA; Wed, 08 Apr 2020 17:46:29 +0200
+        id 1jMCuM-000cCV-3n; Wed, 08 Apr 2020 17:46:30 +0200
 From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
 Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
         linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        Mark Brown <broonie@kernel.org>, linux-spi@vger.kernel.org
-Subject: [PATCH 21/35] docs: spi: spi.h: fix a doc building warning
-Date:   Wed,  8 Apr 2020 17:46:13 +0200
-Message-Id: <d62f3f3536c0da2062bad87524fb184ad5a9a5f2.1586359676.git.mchehab+huawei@kernel.org>
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Sandeep Maheswaram <sanm@codeaurora.org>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org,
+        devicetree@vger.kernel.org
+Subject: [PATCH 28/35] docs: dt: qcom,dwc3.txt: fix cross-reference for a converted file
+Date:   Wed,  8 Apr 2020 17:46:20 +0200
+Message-Id: <24b30222392569e7aa5d61d46642a4c38a964512.1586359676.git.mchehab+huawei@kernel.org>
 X-Mailer: git-send-email 2.25.2
 In-Reply-To: <cover.1586359676.git.mchehab+huawei@kernel.org>
 References: <cover.1586359676.git.mchehab+huawei@kernel.org>
@@ -60,27 +69,30 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We need to add a blank line to avoid this warning:
+The qcom-qusb2-phy.txt file was converted and renamed to yaml.
+Update cross-reference accordingly.
 
-	./include/linux/spi/spi.h:401: WARNING: Unexpected indentation.
-
+Fixes: 8ce65d8d38df ("dt-bindings: phy: qcom,qusb2: Convert QUSB2 phy bindings to yaml")
 Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 ---
- include/linux/spi/spi.h | 1 +
- 1 file changed, 1 insertion(+)
+ Documentation/devicetree/bindings/usb/qcom,dwc3.txt | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/include/linux/spi/spi.h b/include/linux/spi/spi.h
-index 38286de779e3..aac57b5b7c21 100644
---- a/include/linux/spi/spi.h
-+++ b/include/linux/spi/spi.h
-@@ -394,6 +394,7 @@ static inline void spi_unregister_driver(struct spi_driver *sdrv)
-  *                   for example doing DMA mapping.  Called from threaded
-  *                   context.
-  * @transfer_one: transfer a single spi_transfer.
-+ *
-  *                  - return 0 if the transfer is finished,
-  *                  - return 1 if the transfer is still in progress. When
-  *                    the driver is finished with this transfer it must
+diff --git a/Documentation/devicetree/bindings/usb/qcom,dwc3.txt b/Documentation/devicetree/bindings/usb/qcom,dwc3.txt
+index cb695aa3fba4..fbdd01756752 100644
+--- a/Documentation/devicetree/bindings/usb/qcom,dwc3.txt
++++ b/Documentation/devicetree/bindings/usb/qcom,dwc3.txt
+@@ -52,8 +52,8 @@ A child node must exist to represent the core DWC3 IP block. The name of
+ the node is not important. The content of the node is defined in dwc3.txt.
+ 
+ Phy documentation is provided in the following places:
+-Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt   - USB3 QMP PHY
+-Documentation/devicetree/bindings/phy/qcom-qusb2-phy.txt - USB2 QUSB2 PHY
++Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt    - USB3 QMP PHY
++Documentation/devicetree/bindings/phy/qcom,qusb2-phy.yaml - USB2 QUSB2 PHY
+ 
+ Example device nodes:
+ 
 -- 
 2.25.2
 
