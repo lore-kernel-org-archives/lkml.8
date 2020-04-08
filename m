@@ -2,128 +2,116 @@ Return-Path: <SRS0=8dav=5Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 965ADC2D0F4
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 21:37:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C231C2D0F4
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 21:40:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 640FA2072A
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 21:37:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D9F0F206C0
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 21:40:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729841AbgDHVhi (ORCPT
+        id S1729446AbgDHVkX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Apr 2020 17:37:38 -0400
-Received: from avon.wwwdotorg.org ([104.237.132.123]:46142 "EHLO
-        avon.wwwdotorg.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726754AbgDHVhh (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Apr 2020 17:37:37 -0400
-Received: from [10.2.49.83] (thunderhill.nvidia.com [216.228.112.22])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by avon.wwwdotorg.org (Postfix) with ESMTPSA id 339571C053D;
-        Wed,  8 Apr 2020 15:37:36 -0600 (MDT)
-X-Virus-Status: Clean
-X-Virus-Scanned: clamav-milter 0.102.1 at avon.wwwdotorg.org
-Subject: Re: [PATCH] dmaengine: tegra: fix broken 'select' statement
-To:     Arnd Bergmann <arnd@arndb.de>, Vinod Koul <vkoul@kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>
-Cc:     Dan Williams <dan.j.williams@intel.com>, dmaengine@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-tegra@vger.kernel.org
-References: <20200408200504.4067970-1-arnd@arndb.de>
-From:   Stephen Warren <swarren@wwwdotorg.org>
-Autocrypt: addr=swarren@wwwdotorg.org; prefer-encrypt=mutual; keydata=
- xsFNBE6KoecBEACosznehcVarBMNKGOiQ4MBbDAKQo73RDLP4hKEtaTVoQKg7tAM/tcQgbR6
- p1NSxVq9tunbEskwHkHc/ES/xT+JBFMmG8mh2SmBocyuNjlN8lsW8r2CuLA8EuDr7Laz5yl0
- Gf/G3Q+yYH+ytUnUuPmlxTueR7MNxIT0lz0fjil2HJclha/T3o8osagYWsXyN9Iaqy+6YTit
- fG4hVCr0s+3SYylRp9m2/LaP0CPTQVCJKnv1Oq83PnnV/BA/9sBYxDaVNGfdz2FAWqSH4H7q
- oyonAMzsF7f/cTYcFGTN3kL3UonG43DHpqCv+gHMKITBCxN+3HjX4wuNC7raoHVRRbx7/JES
- ZrJ1ymKdMNxl8bquldTk6VyAJlTRjuq7jRY9LIEHcns91MYFgpz7RAhCPmXnsMgpuIvU/yTE
- aApIAkHSo2Nyk9NeyIsji5voa9VAAoZKLGFTkhyPLEcjU9JmH/x224zGLtK28bL+P61PCk02
- jG7RTF4665IDbmC8UNvEm9mBgFNlEgOPqbVF9oa5Gd9cnaOTucDLJqjCpM53SM5Jd3eRHk7A
- zDHSBWsRsmKXU4hhxlu+90tb7I0TcjPfqeCrO46rNELdskcJAlLzx0v07+IhhGAM70oAbP49
- VBA7hsVCimuITFSUUwAtzFJmFg/mjxNdftTr3yssaK41VmxsIQARAQABzSZTdGVwaGVuIFdh
- cnJlbiA8c3dhcnJlbkB3d3dkb3Rvcmcub3JnPsLBrAQTAQIAPwIbAwYLCQgHAwIGFQgCCQoL
- BBYCAwECHgECF4AWIQTmd6/Z3M3mpZiMqw6bjacJJlQhnAUCXboEKAUJERCVvgAhCRCbjacJ
- JlQhnBYhBOZ3r9nczealmIyrDpuNpwkmVCGc074P/jq2nW6yORiLCgiTX3I0ro0sUq6aOvkq
- WH/g1Oq4fTr6TmabZVFvuuUZDF/AwB6p0Mm6tWar29nF1/OEx7QrrrHrBEcaAEHmZFjoenDK
- 3SJDHDLBkcuMiZS7CFdb22vBYrgzoHwptySrRcHWW5rxhAKgyTX/p7F96zicNPS1sljc7JNW
- oik6b90PmCeKCeuoH4ruBO+3naDInKrL389xvujF38aTkgai9DJtWjWizZzAP+DWJrHtb6zz
- fsPA41hnZ5mKmUbiuJehPbv0+Q6QSFjLhNiP6lvkV34uANH3TQn2o6nApoa3XT5fIxrJOFrz
- q6xuM2tcyd/dRr1TdtIQCRABaKYIF/mgtMa19+GbLI8A/t1RmxEhlctSEUOFO7E3PNiwIjvI
- OpqZjq3NR8/+Lw2Zv9H3B7Wywk87ESwaYhYL29AzVvAMKFYHpDbn0abN+GVyit+fVbrUvKed
- nr63H7bG81O1DBA44gBDaIZhwOQDqeTou05rFa2PLGbdd6YL8AM6nWVI9UqD2+aKg1GcXtFO
- cq3Ll5fzUoSys13a14cCDLI82XvPxJh8TOtC8wJywYwAa75ieuVXxWh74d9qRYq3iJZpIWCE
- s5NkkGN4Q1dul84OQrwiN+2PYH+k2M6MGMt+9MHEoR+vrtMNUIeCa/ctYX6mb+nSPZAr5Fx0
- LZMdzsFNBE6KoecBEAC5xnYhQJCsaOCCTrzpnifMCUC0zLvhKgdChd4QAJm8ap+qufkbz3oF
- iJx1u19AbX8PNT3mdtwsguJhcamdT49YepVEvo6znc4S/pxjbX882CovKoOqSPSnE9VIbLHG
- VnxwDQGp2cbdqYOF7qvr4wGliR/X1Hx72EK3kSppvGEQp/uyW0QzHUC6XX9TdKawWAPohaqm
- TXqaQSMp6uOhNCTmydTAN2V4bJpQBU3BpNNtBZ+mnHlu/Yl74x0tgIYBqxEVdYz3Ryn1FTTC
- NCKcGiO8px2e7VBsKAiC9tRMZYjuH5HaS0SgI2asbAqX1OduiC1BTvM9P3oqps0Vs8zR7nxt
- Lodws79Vjoc0Ab/5BSEMIooww0Eo/VYwqnMs6Bvk5dtv7kCVRMUyV2JrTD0cCw0E+urjW5Dw
- kr4hRDTi8Xr45WecHxXMHZOllE4q8PxaK+rwoX0boXIQ+i3bL6Nemj3d6+ELYe5Dpswzmn0Z
- RrDegq7ly9303bEve09cIVZ4PS2rkx54bGN9R9TgXhU7XnRHyCSKFE8vSXXyG9Lu2aHq+od1
- bUoTOQfoLOAeJOrbo+crZAq33W69t6rD0Q1WHuvzd2zpOQdlsrUOGkDKuk0dBxpzlf8uusaD
- lE5fjd4RQXreKVjSKczrMd9uhLe2cdsVNFljHZlXnFRciNsUge6AKwARAQABwsGTBBgBAgAm
- AhsMFiEE5nev2dzN5qWYjKsOm42nCSZUIZwFAl03xTwFCRD+ZlUAIQkQm42nCSZUIZwWIQTm
- d6/Z3M3mpZiMqw6bjacJJlQhnA+lD/9/DbFI8lUQyb0ZOBLHW6iX+Ps++hElYOmjL4T4f6wa
- FMNiFk2lPom/xq8OL5B2swWC7w5o/j+GwrS6MbkL/s932zQ15+AVD0HfhTBKKQEnQUPVLM2T
- 9AcXpY0s8AYsWa89YNTJpdbFc5ep/Nx6R3rYu0ixJtrJT+p19qhIavMRaHMYuxGLO4xs4CUO
- Z2kq6+KKNIAi63FjYBLYPPGd6KyXSj1zWZwAE6qLLPl/MGrbKSqETj01Z7NuGYbJNVi0ooIq
- b+iBGsPQRx6FhiVXbo9eheBJ/Qui4QVCur2WFzxzlhqTDknA0d5by+tQvg4NUmm0u64YIeGQ
- 5U4wLL60kch1Cr1MSM9eBi1fsq3FRCd7QQnCO3MaJ9odE5BaHKpDFzd9cxrBA/StoDkiU6Ci
- o9HrHblS9gNQemZT+WTSA/t7dB97NesqGbDtdW5G0wfliNFmvS9qDpUe3hSa6f9PgCz/8QzS
- aXcBhnI7xRoXZxRKo3mnNihC/5hnNxMsUP5oNdhRPVyTs8wlLKXBHXUpj6OgoFO01e05Niak
- UR3Mub2hXCUcJ3UuO1+nxY88x+K86LZnMCa+0A6RTeTJAz6aaF2Fr/h7xncLk3LG3/ODQFjb
- S1cWYsAeg++INJffJzend+91hvGp1WcI8TGc6BjYnO5mKBuVumOKXi4wa2OJo9y3lMLBkwQY
- AQIAJgIbDBYhBOZ3r9nczealmIyrDpuNpwkmVCGcBQJdugQxBQkREJXIACEJEJuNpwkmVCGc
- FiEE5nev2dzN5qWYjKsOm42nCSZUIZywWA//d3PsJki5IAkAsALeF+qMHtyGFCf/vc1V91jN
- MC2wuAo7MKLxQDyMdkjSp0s+UrDzTY9bYocfB2G3mXnJDEzQSd6snf0pEMQVf77SGbddcFCO
- GsfJuE6DmsSjVncK3JO9/eXeqyTup/PNN2RYkuR394+RxeUvf/f1km80DtO0beI3g/EtMSE1
- ljLwDuh98j9qVSJ0xK7cmf/ngi703BltS8rpoXDioS1fTlVFdJpGOH94PVlyJsDbHy4rDeFU
- Ptk1Q0hRGKNpCPCVQntLAc3mH9++3oVxxCsvgUfjHbgwzptTGj6SbXH3piyBPMHRXhtIiHRH
- kkrxbMKGuzkU5dPmMv7Mzw9yaMYY8mmPZMPJoLA0bW6DuZ1nAz9U7njM/xb1WIZHKA8HVfTz
- 4fO8lP7jxCod6uBvu3vgBRbYTu3QoQjxhIjbAE5P9ZxLggx919dKypYiXeIPB8OHg5/4LwEi
- f+rjKF/HHMo+ZCJx9BCZeW5yNkeTm638JfD1XjrZzDNsawdMFFdGL5TJrubu52fxsml41ay6
- Qacni4jVUmZDP1HVYzcQN42O7ynZKMecpwM3G6V9L3Ifs8VpfdPpOnJb6TOXUOrITz4kyHDy
- 0hRsU1DwGeqzyyZAJT6MHZR0qO93XKFy9+WgzUXS2j0rQ9D4zTQI4c0Zp3ri8v5ZDXJh1W0=
-Message-ID: <7c637edc-200b-ed8e-26c8-52c2c7d8025a@wwwdotorg.org>
-Date:   Wed, 8 Apr 2020 15:37:34 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
-MIME-Version: 1.0
-In-Reply-To: <20200408200504.4067970-1-arnd@arndb.de>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+        Wed, 8 Apr 2020 17:40:23 -0400
+Received: from mga14.intel.com ([192.55.52.115]:53957 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726754AbgDHVkW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Apr 2020 17:40:22 -0400
+IronPort-SDR: 7AvUkrLPiruJhOLZBUQqa4yZuJRrF/4rfQvaXQDu1nRJhhQkHT5TsVC9SQNT9lWdtpO3aj2Xdq
+ 1AKbG7B97VoA==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Apr 2020 14:40:22 -0700
+IronPort-SDR: pYdRjkkvnYKqR4RRN9bB4ujXTKh2yqdoD4DbNL9tB4f1o3M41wKAu8z4s3NLX39ETcUbE18tHG
+ RFOFLuimfqqA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,360,1580803200"; 
+   d="scan'208";a="251690961"
+Received: from pknguyen-mobl.amr.corp.intel.com (HELO localhost.localdomain) ([10.255.228.194])
+  by orsmga003.jf.intel.com with ESMTP; 08 Apr 2020 14:40:21 -0700
+From:   sathyanarayanan.kuppuswamy@linux.intel.com
+To:     gregkh@linuxfoundation.org, rafael@kernel.org
+Cc:     linux-kernel@vger.kernel.org
+Subject: [PATCH v1 1/1] drivers: base: Fix NULL pointer exception in __platform_driver_probe()
+Date:   Wed,  8 Apr 2020 14:40:03 -0700
+Message-Id: <20200408214003.3356-1-sathyanarayanan.kuppuswamy@linux.intel.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/8/20 2:04 PM, Arnd Bergmann wrote:
-> A SoC driver selects the dmaengine driver for the platform it
-> is made for, leading to Kconfig warnings in some configurations:
-> 
-> WARNING: unmet direct dependencies detected for TEGRA20_APB_DMA
->   Depends on [n]: DMADEVICES [=n] && (ARCH_TEGRA [=y] || COMPILE_TEST [=y])
->   Selected by [y]:
->   - SOC_TEGRA_FUSE [=y] && ARCH_TEGRA [=y] && ARCH_TEGRA_2x_SOC [=y]
-> 
-> WARNING: unmet direct dependencies detected for TEGRA20_APB_DMA
->   Depends on [n]: DMADEVICES [=n] && (ARCH_TEGRA [=y] || COMPILE_TEST [=y])
->   Selected by [y]:
->   - SOC_TEGRA_FUSE [=y] && ARCH_TEGRA [=y] && ARCH_TEGRA_2x_SOC [=y]
-> 
-> Generally, no driver should 'select' a driver from a different subsystem,
-> especially when there is no build-time dependency between the two.
+From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
 
-IIRC there's a run-time dependency between the two though; without the
-DMA driver available to implement a HW WAR, the fuse driver has to
-access fuse registers directly which IIRC can cause a lock-up, or
-something like that. So I think allowing APD_DMA to be deselected by the
-user is wrong for T20 at least; it simply must be enabled. Perhaps
-ARCH_TEGRA_2x_SOC should select it instead?
+If platform bus driver registration is failed then, accessing
+platform bus spin lock (&drv->driver.bus->p->klist_drivers.k_lock)
+in __platform_driver_probe() without verifying the return value
+__platform_driver_register() can lead to NULL pointer exception.
+
+So check the return value before attempting the spin lock.
+
+One such example is below:
+
+For a custom usecase, I have intentionally failed the platform bus
+registration and I expected all the platform device/driver
+registrations to fail gracefully. But I came across this panic
+issue.
+
+[    1.331067] BUG: kernel NULL pointer dereference, address: 00000000000000c8
+[    1.331118] #PF: supervisor write access in kernel mode
+[    1.331163] #PF: error_code(0x0002) - not-present page
+[    1.331208] PGD 0 P4D 0
+[    1.331233] Oops: 0002 [#1] PREEMPT SMP
+[    1.331268] CPU: 3 PID: 1 Comm: swapper/0 Tainted: G        W         5.6.0-00049-g670d35fb0144 #165
+[    1.331341] Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 0.0.0 02/06/2015
+[    1.331406] RIP: 0010:_raw_spin_lock+0x15/0x30
+[    1.331588] RSP: 0000:ffffc9000001be70 EFLAGS: 00010246
+[    1.331632] RAX: 0000000000000000 RBX: 00000000000000c8 RCX: 0000000000000001
+[    1.331696] RDX: 0000000000000001 RSI: 0000000000000092 RDI: 0000000000000000
+[    1.331754] RBP: 00000000ffffffed R08: 0000000000000501 R09: 0000000000000001
+[    1.331817] R10: ffff88817abcc520 R11: 0000000000000670 R12: 00000000ffffffed
+[    1.331881] R13: ffffffff82dbc268 R14: ffffffff832f070a R15: 0000000000000000
+[    1.331945] FS:  0000000000000000(0000) GS:ffff88817bd80000(0000) knlGS:0000000000000000
+[    1.332008] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[    1.332062] CR2: 00000000000000c8 CR3: 000000000681e001 CR4: 00000000003606e0
+[    1.332126] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+[    1.332189] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+[    1.332252] Call Trace:
+[    1.332281]  __platform_driver_probe+0x92/0xee
+[    1.332323]  ? rtc_dev_init+0x2b/0x2b
+[    1.332358]  cmos_init+0x37/0x67
+[    1.332396]  do_one_initcall+0x7d/0x168
+[    1.332428]  kernel_init_freeable+0x16c/0x1c9
+[    1.332473]  ? rest_init+0xc0/0xc0
+[    1.332508]  kernel_init+0x5/0x100
+[    1.332543]  ret_from_fork+0x1f/0x30
+[    1.332579] CR2: 00000000000000c8
+[    1.332616] ---[ end trace 3bd87f12e9010b87 ]---
+[    1.333549] note: swapper/0[1] exited with preempt_count 1
+[    1.333592] Kernel panic - not syncing: Attempted to kill init! exitcode=0x00000009
+[    1.333736] Kernel Offset: disabled
+
+Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+---
+ drivers/base/platform.c | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/drivers/base/platform.c b/drivers/base/platform.c
+index b5ce7b085795..3e75c4893789 100644
+--- a/drivers/base/platform.c
++++ b/drivers/base/platform.c
+@@ -830,6 +830,8 @@ int __init_or_module __platform_driver_probe(struct platform_driver *drv,
+ 	/* temporary section violation during probe() */
+ 	drv->probe = probe;
+ 	retval = code = __platform_driver_register(drv, module);
++	if (retval)
++		return retval;
+ 
+ 	/*
+ 	 * Fixup that section violation, being paranoid about code scanning
+-- 
+2.17.1
+
