@@ -4,25 +4,25 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FBFDC2D0F4
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 20:28:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64B78C2D0F4
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 20:28:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DDE5920753
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 20:28:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3E4E920753
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 20:28:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730412AbgDHU1s (ORCPT
+        id S1730620AbgDHU2P (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Apr 2020 16:27:48 -0400
-Received: from mout.kundenserver.de ([212.227.126.135]:43153 "EHLO
+        Wed, 8 Apr 2020 16:28:15 -0400
+Received: from mout.kundenserver.de ([212.227.126.130]:47637 "EHLO
         mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728221AbgDHU1r (ORCPT
+        with ESMTP id S1729429AbgDHU1s (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Apr 2020 16:27:47 -0400
+        Wed, 8 Apr 2020 16:27:48 -0400
 Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
  (mreue010 [212.227.15.129]) with ESMTPA (Nemesis) id
- 1MHGPA-1jZQRE3rtY-00DKmr; Wed, 08 Apr 2020 22:27:21 +0200
+ 1MlwO3-1ivhhR25Ex-00j4la; Wed, 08 Apr 2020 22:27:22 +0200
 From:   Arnd Bergmann <arnd@arndb.de>
 To:     linux-kernel@vger.kernel.org,
         Masahiro Yamada <masahiroy@kernel.org>,
@@ -40,62 +40,71 @@ Cc:     Arnd Bergmann <arnd@arndb.de>, Andrzej Hajda <a.hajda@samsung.com>,
         Leon Romanovsky <leon@kernel.org>,
         dri-devel@lists.freedesktop.org, linux-renesas-soc@vger.kernel.org,
         netdev@vger.kernel.org, linux-rdma@vger.kernel.org
-Subject: [RFC 3/6] LiquidIO VF: add dependency for PTP_1588_CLOCK
-Date:   Wed,  8 Apr 2020 22:27:08 +0200
-Message-Id: <20200408202711.1198966-4-arnd@arndb.de>
+Subject: [RFC 6/6] drm/rcar-du: fix lvds dependency
+Date:   Wed,  8 Apr 2020 22:27:11 +0200
+Message-Id: <20200408202711.1198966-7-arnd@arndb.de>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200408202711.1198966-1-arnd@arndb.de>
 References: <20200408202711.1198966-1-arnd@arndb.de>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:5gAXVieAiTDMVgOwMbM5A19MMx9acTKbfT3cm2YOhdzeb/EYJqs
- Te4CgqXnmQtMe+2OOhCDLGzIANrnZ90bJvbRpt7xp9tPopYPK34AYq2XwYjnPbCemctGCMx
- N+rTuDxeII+rMjAK7irDB1W8ndokokIDC2krQnC8xvnrVTQvZQFWn5Hrgw71ufxQQZ9KOIb
- TP8qo/XObsotxVQ27d5RA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:NRuTrC3phjI=:xaa2zTMfhPfNkIb3+uRvAz
- aOg1rZdZRmxxIc6g6+VG5HeTHmY1F7Z4l/de6QyK5vKhYfA3qz2OjA+rcwjt1nS463vOEuvHn
- f9p2Q7lWRUYsSHTXijhpB05u3xZ7R5lK+L8Ox6JCzrWJehS0UitxV6Q4qeI+GDlCr4P0a9O5B
- sr4hwwRsOkiwFhQBledXwf6Nwc28VN3epP5RXHdQWY0iFH3razZsmP7OKWbcDK+08IX6VRiEo
- De5Z1WflnClFpJVjM3e46r6H2d+8MMkk7nEA4GPWR5AJ4DGrTuSHHtfHHyNZ3V0mhzyils6QX
- 0BpRfqCNgru0vdl+zDCVmFMsKTG/jQl9IgapKImPnv3eHAGYWeRow6pgXpJjrqWGL4ifzW3GQ
- jdWzggVOZMjYStPc6g9OunbziB1Oazlh97E+SSwjIxsDLLRTiJTX+tJlBrtf3yL3BAyuvbXQk
- E8MBAxGXfuuxNNhtm4715Uwce/UGLAW3xqgf8hwyfqLqy8ZntI8aoe9hbkfl+JglQQd+dBG4n
- P4dehVuWxT9noRIrrqbj2FjxpDYrvhV7FknXKtaPr/NkZoNeS9sSQ7mUUbK4B0E7frN4sWdhp
- 8zrl/PiFPsrtJPqIMgWRO0ZHt7lS4fz9thQesQOYzcgXYXy6I1Ps4CHTaSlp0XrAvjRtJ7BNU
- L+HqTRIsrc62vZu+A3tCOjwHMYZBUjg7Vp/B++OdPCte8NMuxVbCKjIkcP5/AS8Lqzfm1i7au
- L9aLAOSr7a5Ra7Ih0p6IdsnwIhiwTyhYnjzScDb5J5P8LRHDaP04BDu1wrQXRZ7j3JpflN667
- ura8Or9OeUg355x6QIVnmkKTzR4Vdr0dmLd1ifBX5y0q7LS8BQ=
+X-Provags-ID: V03:K1:6joVxabJuDS2zN5PignIP9zyZK531/9BWLW8G6Y1kfoxuD26fpJ
+ e9TjrS9eT9Ko/YwofV0uvqlzR39kV/5clC3e1cU1XtH9XiRMdS8pY8+PMidq93htFsYtGB+
+ 2rST/EfwV6XIEX89jrfzlrw1uiIeJ/U9vaNXBxNHd+ymwIvLks+L+zpkB/LFrnUO/RGvcku
+ XhWxpOHWmXxopP4MjfpIw==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:V6Hg3hzNJgA=:jAW5mLgmVYFGsGDyp6JaXk
+ Dlvd8CjREs2fojxU42iMYR3PHdV6NrT/CljWmBlPWkxQycRnbtkItT3lT8Odd6ggW9Uhfur5+
+ 4p1NaqMhG5UaFssj7+7RXYybsDS76nscqwnfSbHXrkweinjBnCc1pDvPFCEbA1A1uZrVJQRAT
+ 8IVxJk3frSPEODrMbDQ274Be//Ts5uVyiCNxRBAJzr35tO7HjuVN/YrOBhltazb5s/yD3+0Nu
+ l+sY7m/m/GeCFgo4cwB3ibxhAzKW7WbXb4pAEITob4YbtEIxThVNhk4xlmhG5iFmH9qa0+9mk
+ aWUDtLw+WN61FFGI5xT11PttDQHEFXL1momPLde43hFjHoC9XIObYaCjB9nGTEYpgsJwf2SPM
+ RjdEuKC4Ld8pz/nJpsBluuGGkDVPzEiY91VDKxaN3l4uEiC4HHlaH29yh34+ANrRXwralZLmk
+ 7VtvAFvWjBrJUVLLbOgvOIQLZL+viu0bdJV2Xww5hjkbgefEGsEW0CijQ2v3qfeRUyZELKGHi
+ 3v8m3T83iUoZy8w4aKYoE8sPDzVhGOq/2FU6MVyyUMxAt1cbmMEhBJUl6SECbms/dR4kHOlhm
+ jROLQPSHz52dxAsQHe9UKWPbn2PKDFiQ3gfcc7R0gXy22Ja46N0wWx0j6bGibiGYkbI9uLv6v
+ F7KPxMoRJYjPHwTvdMOBc4qi1PLZwRUmXJ6eP0B1Yk4mTj9ORNrtvkxb2+y7GDHfvljYoufCk
+ EiFB/wrLOG5bJPih2rNCsRbu4kYaFl8VnEW1ZuefobXZELHLEqUhKNzJyaktefLCrHSEd7bLY
+ CPvoocEN7msNixrDQ9qyTSAYQnjNywPI+GL9PHTYP1XbKe0Ams=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The 'imply' keyword no longer does what it was originally
-introduced for:
+arm-linux-gnueabi-ld: drivers/gpu/drm/rcar-du/rcar_du_crtc.o: in function `rcar_du_crtc_atomic_enable':
+rcar_du_crtc.c:(.text+0xad4): undefined reference to `rcar_lvds_clk_enable'
+arm-linux-gnueabi-ld: drivers/gpu/drm/rcar-du/rcar_du_crtc.o: in function `rcar_du_crtc_atomic_disable':
+rcar_du_crtc.c:(.text+0xd7c): undefined reference to `rcar_lvds_clk_disable'
+arm-linux-gnueabi-ld: drivers/gpu/drm/rcar-du/rcar_du_drv.o: in function `rcar_du_init':
+rcar_du_drv.c:(.init.text+0x4): undefined reference to `rcar_du_of_init'
+arm-linux-gnueabi-ld: drivers/gpu/drm/rcar-du/rcar_du_encoder.o: in function `rcar_du_encoder_init':
+rcar_du_encoder.c:(.text+0x7a): undefined reference to `rcar_lvds_dual_link'
 
-lio_ethtool.c:(.text+0xba8): undefined reference to `ptp_clock_index'
-
-Use a dependency instead.
-
-Fixes: cd7aeb1f9706 ("LiquidIO VF: s/select/imply/ for PTP_1588_CLOCK")
 Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 ---
- drivers/net/ethernet/cavium/Kconfig | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/gpu/drm/rcar-du/Kconfig | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/drivers/net/ethernet/cavium/Kconfig b/drivers/net/ethernet/cavium/Kconfig
-index 52806ef20d2d..e483c3001dc6 100644
---- a/drivers/net/ethernet/cavium/Kconfig
-+++ b/drivers/net/ethernet/cavium/Kconfig
-@@ -66,7 +66,7 @@ config LIQUIDIO
- 	tristate "Cavium LiquidIO support"
- 	depends on 64BIT && PCI
- 	depends on PCI
--	imply PTP_1588_CLOCK
-+	depends on PTP_1588_CLOCK || !PTP_1588_CLOCK
- 	select FW_LOADER
- 	select LIBCRC32C
- 	select NET_DEVLINK
+diff --git a/drivers/gpu/drm/rcar-du/Kconfig b/drivers/gpu/drm/rcar-du/Kconfig
+index 5e35f5934d62..4bb879f02633 100644
+--- a/drivers/gpu/drm/rcar-du/Kconfig
++++ b/drivers/gpu/drm/rcar-du/Kconfig
+@@ -4,7 +4,6 @@ config DRM_RCAR_DU
+ 	depends on DRM && OF
+ 	depends on ARM || ARM64
+ 	depends on ARCH_RENESAS || COMPILE_TEST
+-	imply DRM_RCAR_LVDS
+ 	select DRM_KMS_HELPER
+ 	select DRM_KMS_CMA_HELPER
+ 	select DRM_GEM_CMA_HELPER
+@@ -27,7 +26,7 @@ config DRM_RCAR_DW_HDMI
+ 	  Enable support for R-Car Gen3 internal HDMI encoder.
+ 
+ config DRM_RCAR_LVDS
+-	tristate "R-Car DU LVDS Encoder Support"
++	def_tristate DRM_RCAR_DU
+ 	depends on DRM && DRM_BRIDGE && OF
+ 	select DRM_PANEL
+ 	select OF_FLATTREE
 -- 
 2.26.0
 
