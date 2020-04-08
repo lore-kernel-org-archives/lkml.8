@@ -4,54 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2184CC2D0EA
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 15:48:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 855AAC2D0EA
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 15:48:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E51EF206F5
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 15:48:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5114F2075E
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 15:48:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586360931;
-	bh=ooW89rST4GmeQXzLWvXim86Mk5Dn0bBASsKnbkuiJgo=;
+	s=default; t=1586360936;
+	bh=pkQRKk4Q3BJwEsZPq9Rvl8GhUQxw4EhOBSPeWUeyTXI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1ORJsoL2+UfpUOkA4lPOLjPXoWTfBMz1R4gIkBlPqQKSrx6kgB8/Bf15SYXP+KmoR
-	 XWdoEt56YOBS/4wqDoFGzEtTwOP84NAfGenY1y3d3V0pwHpm8HHv1HnwDqYhdoVfHE
-	 2QM30IM9YHWUBPWmqf5e5du3DHQSEJy4cCEs1ERM=
+	b=fG1q0LiPWhq+WZcf621NBDc+HSSXvcNH7+7BJ9iJ13y0LcyhDlk9nd12X27UDFWjq
+	 ua+vbhV7DmAmjJuAoEfvd/zYagCUHVcwm8SBIi3+zFI+jCWLkVfCutAtdaM5ZbaC+x
+	 up9BzN47C6TbdfLFeCwv2D2vxxj8BWj+Q0bXEUTk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729657AbgDHPqc (ORCPT
+        id S1729866AbgDHPsy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Apr 2020 11:46:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48838 "EHLO mail.kernel.org"
+        Wed, 8 Apr 2020 11:48:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49290 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729566AbgDHPqb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Apr 2020 11:46:31 -0400
+        id S1729660AbgDHPqc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Apr 2020 11:46:32 -0400
 Received: from mail.kernel.org (ip5f5ad4d8.dynamic.kabel-deutschland.de [95.90.212.216])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CFBF720730;
-        Wed,  8 Apr 2020 15:46:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6D8AD215A4;
+        Wed,  8 Apr 2020 15:46:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1586360791;
-        bh=ooW89rST4GmeQXzLWvXim86Mk5Dn0bBASsKnbkuiJgo=;
+        bh=pkQRKk4Q3BJwEsZPq9Rvl8GhUQxw4EhOBSPeWUeyTXI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=l55rUwi6jEY2YGj9/088umhgixkoDyC8JHBIIxCim0CxdmtfSdy5TnjzxWsV2ya+Z
-         pQxgmoO4b05mjJyPYugJuYuyMc9fdPOJnMLQYlMew5joUed7Qx+kGDcXzd4Prh8IgD
-         NOOfxZp72IDNpxrRDe/vLF5ge8lp0O32A44Nkoto=
+        b=hVsYDw/hg1IPkOLfiOqWetfXQhzaJ8qZ7bJQHbLy6BAC9Fa6hVGzFYBXLTOU5Jnhd
+         VrLtZCyT8j0ovJNGbnwkz78SjqV/8DtXAdXC15UTBDy8OrQxx8JrIe9KMr0+uXmC5J
+         Q/wLE6rbh+xTqCCqrIZ/ZQFSSqO0K/HLYN+W+w+E=
 Received: from mchehab by mail.kernel.org with local (Exim 4.92.3)
         (envelope-from <mchehab@kernel.org>)
-        id 1jMCuL-000cAO-2O; Wed, 08 Apr 2020 17:46:29 +0200
+        id 1jMCuL-000cBI-IH; Wed, 08 Apr 2020 17:46:29 +0200
 From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
 Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
         linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Yuti Amonkar <yamonkar@cadence.com>, devicetree@vger.kernel.org
-Subject: [PATCH 02/35] docs: dt: fix broken reference to phy-cadence-torrent.yaml
-Date:   Wed,  8 Apr 2020 17:45:54 +0200
-Message-Id: <e2b930ceda89bc29ad84a6c6edcf196930dc18a6.1586359676.git.mchehab+huawei@kernel.org>
+        Jens Axboe <axboe@kernel.dk>, linux-ide@vger.kernel.org
+Subject: [PATCH 13/35] ata: libata-core: fix a doc warning
+Date:   Wed,  8 Apr 2020 17:46:05 +0200
+Message-Id: <5fd12ef049c330fe62eb0c23b61e8bea2812e445.1586359676.git.mchehab+huawei@kernel.org>
 X-Mailer: git-send-email 2.25.2
 In-Reply-To: <cover.1586359676.git.mchehab+huawei@kernel.org>
 References: <cover.1586359676.git.mchehab+huawei@kernel.org>
@@ -62,36 +60,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This file was removed, and another file was added instead of
-it, on two separate commits.
+The docs toolchain doesn't recognise this pattern:
 
-Splitting a single logical change (doc conversion) on two
-patches is a bad thing, as it makes harder to discover what
-crap happened.
+	@link->[hw_]sata_spd_limit
 
-Anyway, this patch fixes the broken reference, making it
-pointing to the new location of the file.
+As it can't really process it. So, instead, let's mark it with
+a literal block markup:
 
-Fixes: 922003733d42 ("dt-bindings: phy: Remove Cadence MHDP PHY dt binding")
-Fixes: c6d8eef38b7f ("dt-bindings: phy: Add Cadence MHDP PHY bindings in YAML format.")
+	``link->[hw_]sata_spd_limit``
+
+in order to get rid of the following warning:
+
+	./drivers/ata/libata-core.c:5974: WARNING: Unknown target name: "hw".
+
 Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 ---
- Documentation/devicetree/bindings/phy/ti,phy-j721e-wiz.yaml | 2 +-
+ drivers/ata/libata-core.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/phy/ti,phy-j721e-wiz.yaml b/Documentation/devicetree/bindings/phy/ti,phy-j721e-wiz.yaml
-index fd1982c56104..3f913d6d1c3d 100644
---- a/Documentation/devicetree/bindings/phy/ti,phy-j721e-wiz.yaml
-+++ b/Documentation/devicetree/bindings/phy/ti,phy-j721e-wiz.yaml
-@@ -146,7 +146,7 @@ patternProperties:
-       bindings specified in
-       Documentation/devicetree/bindings/phy/phy-cadence-sierra.txt
-       Torrent SERDES should follow the bindings specified in
--      Documentation/devicetree/bindings/phy/phy-cadence-dp.txt
-+      Documentation/devicetree/bindings/phy/phy-cadence-torrent.yaml
- 
- required:
-   - compatible
+diff --git a/drivers/ata/libata-core.c b/drivers/ata/libata-core.c
+index beca5f91bb4c..69361ec43db5 100644
+--- a/drivers/ata/libata-core.c
++++ b/drivers/ata/libata-core.c
+@@ -5209,7 +5209,7 @@ void ata_link_init(struct ata_port *ap, struct ata_link *link, int pmp)
+  *	sata_link_init_spd - Initialize link->sata_spd_limit
+  *	@link: Link to configure sata_spd_limit for
+  *
+- *	Initialize @link->[hw_]sata_spd_limit to the currently
++ *	Initialize ``link->[hw_]sata_spd_limit`` to the currently
+  *	configured value.
+  *
+  *	LOCKING:
 -- 
 2.25.2
 
