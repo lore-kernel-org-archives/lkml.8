@@ -2,183 +2,304 @@ Return-Path: <SRS0=8dav=5Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B57D5C2BB55
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 01:45:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CEB58C2D0EC
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 01:49:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8142C20753
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 01:45:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7F2A72074F
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 01:49:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b="vbkD8CPk"
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="0h5/QRKN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726521AbgDHBpG (ORCPT
+        id S1726464AbgDHBtC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 21:45:06 -0400
-Received: from gate2.alliedtelesis.co.nz ([202.36.163.20]:42179 "EHLO
-        gate2.alliedtelesis.co.nz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726406AbgDHBpD (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Apr 2020 21:45:03 -0400
-Received: from mmarshal3.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id F0AB58066C;
-        Wed,  8 Apr 2020 13:44:59 +1200 (NZST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
-        s=mail181024; t=1586310299;
-        bh=K7/TFg0N3LmQHIr8XEpmXO75/ootCTQ6I+xg9LZ1/Kw=;
-        h=From:To:CC:Subject:Date:References:In-Reply-To;
-        b=vbkD8CPkaNZ9p6PCviuKE60wQJvr4DE2WslEZ+/Ruiy809IWBHlim3bE+nTkViu+x
-         mLgomgwb9eIc5HNMY9Iv74PyaDCXo3hTSIkc1y5Qi9CdBVrS7z0hKSf2KIMju3jUSa
-         YNJSB7RK3l8qwzhCjd8wuk/7GncHVZ3+Cu7Z4Z5QRnpnE1phLHO9QtTeSs0JjruBTd
-         s2d6hSFarVlFckG/wxQRhBJlSVBweCu8MDT5LSaCEYD2e16QKXITjUxa01NVOb3M5o
-         yekHwGhsjJVgnUO0FtA/YsIEazc+PxIW8YaWjjjSKsWuVZ2gH1IbwusPifaK+D9pWk
-         4KhOomNCehvTA==
-Received: from svr-chch-ex1.atlnz.lc (Not Verified[10.32.16.77]) by mmarshal3.atlnz.lc with Trustwave SEG (v7,5,8,10121)
-        id <B5e8d2c9c0001>; Wed, 08 Apr 2020 13:45:00 +1200
-Received: from svr-chch-ex1.atlnz.lc (2001:df5:b000:bc8:409d:36f5:8899:92e8)
- by svr-chch-ex1.atlnz.lc (2001:df5:b000:bc8:409d:36f5:8899:92e8) with
- Microsoft SMTP Server (TLS) id 15.0.1497.2; Wed, 8 Apr 2020 13:44:59 +1200
-Received: from svr-chch-ex1.atlnz.lc ([fe80::409d:36f5:8899:92e8]) by
- svr-chch-ex1.atlnz.lc ([fe80::409d:36f5:8899:92e8%12]) with mapi id
- 15.00.1497.006; Wed, 8 Apr 2020 13:44:59 +1200
-From:   Chris Packham <Chris.Packham@alliedtelesis.co.nz>
-To:     "mcroce@redhat.com" <mcroce@redhat.com>
-CC:     "davem@davemloft.net" <davem@davemloft.net>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "andrew@lunn.ch" <andrew@lunn.ch>,
-        "josua@solid-run.com" <josua@solid-run.com>,
-        "luka.perkov@sartura.hr" <luka.perkov@sartura.hr>
-Subject: Re: [PATCH v3 0/2] net: mvmdio: avoid error message for optional IRQ
-Thread-Topic: [PATCH v3 0/2] net: mvmdio: avoid error message for optional IRQ
-Thread-Index: AQHV+2djOeAFy692vUqS5ahA4q+Yrqhtx6IAgAAHAwA=
-Date:   Wed, 8 Apr 2020 01:44:58 +0000
-Message-ID: <ea3a8bfb9cef4c82447a8af5c891fe430fedd279.camel@alliedtelesis.co.nz>
-References: <20200316074907.21879-1-chris.packham@alliedtelesis.co.nz>
-         <20200408031952.1d8dd01b@turbo.teknoraver.net>
-In-Reply-To: <20200408031952.1d8dd01b@turbo.teknoraver.net>
-Accept-Language: en-NZ, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.32.14.96]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <D998F807D6C5E34991FA73E70EDDE2E2@atlnz.lc>
-Content-Transfer-Encoding: base64
+        Tue, 7 Apr 2020 21:49:02 -0400
+Received: from mail-mw2nam10on2067.outbound.protection.outlook.com ([40.107.94.67]:3552
+        "EHLO NAM10-MW2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726406AbgDHBtB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Apr 2020 21:49:01 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=JC2SLhUGhVVa+rrToRW0p4Fv5Zat1+aDv8Vzb52z6VpKxK03yfgXeVYia6FIZ23eBtb2F2tbuvf0ZoEyxcruODXMQF3/lezUtuLEaPt3tgPHmj9jySLHRVoB01mMsVuXrvbvFVhlVqB9oBED3mnWC0vAiDB3DwUlTm4QzL+QctY661MlxozVhqX7iIBOt+oGpIu4O7Q89obi1GOy53tNDRNxYBDFf6nD/BBDBKj96fR6fZTTOamtd54ErJ85UUWVLxsBsnReyWklfmcxPpLIdxjB8Vggwahuudu0rImXov3XBG6riY6x2Ywbhes+0AnpVe31UMg8rC817ddTVkscNQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=c7gJVccucub9vVqme0NC+HSZ6MsURWDxnQQIe8K+SZY=;
+ b=FLYiP7HvUpuSwNnlwhYi/Kw91IlmXduHJvQN+1li0BE0UZ//XUD4c+ILiYjkJoZ4WIcqxp7JsVDTv5VGZp4PolIFkCZL29lEBP8UMg4e9SNH3GrzpX/DBff43bP/zITuScRb4h797XO4B5uMKNlrmFbN+kKeIzFwXu2YjLrIkkecChfBlNLbcW6bskWtl+NI5g+9RjU9CZcG6+yXdVmWgD4YYGwJ59pQRELRyUEYcUWIth6RcMfXv3f2DrkmDiDSSi9dyYRtgfwVEGn44Lhfl9Ay85j+oCM72WTloalBnn8KwgSUz+Fa//7sVJMpbNPSK+XdtYwIQnyScPhLChbsXQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=c7gJVccucub9vVqme0NC+HSZ6MsURWDxnQQIe8K+SZY=;
+ b=0h5/QRKNgSSlC5mk7wtxDT9C+QTShAo9LHqhrhQYnegQcPwCkVZPoKEGpeh+ybhPiOsmcNzyCMAIbdpBtCBjFo2ZXG8UGD0vzFaWrgK5GtLs+KDtMUFiWY1L+JlnCmpgZvM925kFngKW1g2gncguSLblP076EG/MxDugFTLa/iA=
+Authentication-Results: spf=none (sender IP is )
+ smtp.mailfrom=Ashish.Kalra@amd.com; 
+Received: from DM5PR12MB1386.namprd12.prod.outlook.com (2603:10b6:3:77::9) by
+ DM5PR12MB1481.namprd12.prod.outlook.com (2603:10b6:4:e::13) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2878.20; Wed, 8 Apr 2020 01:48:58 +0000
+Received: from DM5PR12MB1386.namprd12.prod.outlook.com
+ ([fe80::969:3d4e:6f37:c33c]) by DM5PR12MB1386.namprd12.prod.outlook.com
+ ([fe80::969:3d4e:6f37:c33c%12]) with mapi id 15.20.2878.022; Wed, 8 Apr 2020
+ 01:48:58 +0000
+Date:   Wed, 8 Apr 2020 01:48:52 +0000
+From:   Ashish Kalra <ashish.kalra@amd.com>
+To:     Steve Rutherford <srutherford@google.com>
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Joerg Roedel <joro@8bytes.org>,
+        Borislav Petkov <bp@suse.de>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        X86 ML <x86@kernel.org>, KVM list <kvm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        David Rientjes <rientjes@google.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Brijesh Singh <brijesh.singh@amd.com>
+Subject: Re: [PATCH v6 11/14] KVM: x86: Introduce KVM_SET_PAGE_ENC_BITMAP
+ ioctl
+Message-ID: <20200408014852.GA27608@ashkalra_ubuntu_server>
+References: <cover.1585548051.git.ashish.kalra@amd.com>
+ <4d4fbe2b9acda82c04834682900acf782182ec23.1585548051.git.ashish.kalra@amd.com>
+ <CABayD+eOCpTGjvxwhtP85j98BKvCxtG8QDBYSC0E08GnaA12jw@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CABayD+eOCpTGjvxwhtP85j98BKvCxtG8QDBYSC0E08GnaA12jw@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-ClientProxiedBy: DM5PR16CA0020.namprd16.prod.outlook.com
+ (2603:10b6:3:c0::30) To DM5PR12MB1386.namprd12.prod.outlook.com
+ (2603:10b6:3:77::9)
 MIME-Version: 1.0
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from ashkalra_ubuntu_server (165.204.77.1) by DM5PR16CA0020.namprd16.prod.outlook.com (2603:10b6:3:c0::30) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2900.15 via Frontend Transport; Wed, 8 Apr 2020 01:48:56 +0000
+X-Originating-IP: [165.204.77.1]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: 6833266f-c311-4202-a3a0-08d7db5f0094
+X-MS-TrafficTypeDiagnostic: DM5PR12MB1481:|DM5PR12MB1481:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <DM5PR12MB1481A87CE202F0E44DF023B38EC00@DM5PR12MB1481.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:8882;
+X-Forefront-PRVS: 0367A50BB1
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM5PR12MB1386.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10009020)(4636009)(346002)(376002)(396003)(366004)(136003)(39860400002)(33656002)(53546011)(66946007)(66476007)(66556008)(2906002)(316002)(1076003)(478600001)(4326008)(33716001)(54906003)(66574012)(9686003)(6916009)(55016002)(7416002)(81166006)(26005)(8676002)(81156014)(86362001)(5660300002)(6666004)(186003)(16526019)(52116002)(44832011)(956004)(6496006)(8936002);DIR:OUT;SFP:1101;
+Received-SPF: None (protection.outlook.com: amd.com does not designate
+ permitted sender hosts)
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: sgjpl1jv/A1Z6UElf8TMfxvL541ggsttOGoHS15g2ebPR03k9Mq9L/2kkgrjiQxWzKcPmL8s0A9H1/zkhuArojuquFic0Tph5jArM+v0iR0FflY3VJERgbdB4DguCZZMUpTh60xdcmG6XC5E3IfTjAGeeyt70V8zabaXsGzUBJxl7xnrqiSKcZZUqnCrOTw8GWqLyRDxZdTFdNsHHh0LSIdr+SRou0RlPSg/42KmYXfMlUtQHFpPKFeu1fct5armSfuel5gxVbjY8k0CWMYCgoN23ABYXEmrRsemjpxn7fkUOUkUN22EYoQP79susuIPW7o2oUhTlyIu4f1Saj4ietzwyzw7JC0rw5KfOvzs2KyJ5t51+L76M1KgGWRgqrcaGvQI5zRaQB9GdWzAyPfRLEHlgcloYodEZSExD+rjHrBoJa24WITE065s1PKtke7x
+X-MS-Exchange-AntiSpam-MessageData: uj3YFNntc8LClCN6rTFr1WuJp8CeFvVqfhlcNIdC6KuzBELICRYdlVG0fRMdxY5/sJ/NHb2D+q/BYe/jsiY2EsiBoUutTkxImFI5UTXr9YNqqfRqtKye6en0tLcqzj9jKCw3Kl7qLlkPuE1nD4XCjA==
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 6833266f-c311-4202-a3a0-08d7db5f0094
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 Apr 2020 01:48:57.6530
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: sLDWH77Obs2NUHDdaUJmCAWMO/TcSd6NvHkgaiqsaCXG52UGf+Ynxn+qc+GP0+dxWnWinW113vZPfRiYJxZUlw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR12MB1481
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGkgTWF0dGVvLA0KDQpPbiBXZWQsIDIwMjAtMDQtMDggYXQgMDM6MTkgKzAyMDAsIE1hdHRlbyBD
-cm9jZSB3cm90ZToNCj4gT24gTW9uLCAxNiBNYXIgMjAyMCAyMDo0OTowNSArMTMwMA0KPiBDaHJp
-cyBQYWNraGFtIDxjaHJpcy5wYWNraGFtQGFsbGllZHRlbGVzaXMuY28ubno+IHdyb3RlOg0KPiAN
-Cj4gPiBJJ3ZlIGdvbmUgYWhlYWQgYW4gc2VudCBhIHJldmVydC4gVGhpcyBpcyB0aGUgc2FtZSBh
-cyB0aGUgb3JpZ2luYWwNCj4gPiB2MQ0KPiA+IGV4Y2VwdCBJJ3ZlIGFkZGVkIEFuZHJldydzIHJl
-dmlldyB0byB0aGUgY29tbWl0IG1lc3NhZ2UuDQo+ID4gDQo+ID4gQ2hyaXMgUGFja2hhbSAoMik6
-DQo+ID4gICBSZXZlcnQgIm5ldDogbXZtZGlvOiBhdm9pZCBlcnJvciBtZXNzYWdlIGZvciBvcHRp
-b25hbCBJUlEiDQo+ID4gICBuZXQ6IG12bWRpbzogYXZvaWQgZXJyb3IgbWVzc2FnZSBmb3Igb3B0
-aW9uYWwgSVJRDQo+ID4gDQo+ID4gIGRyaXZlcnMvbmV0L2V0aGVybmV0L21hcnZlbGwvbXZtZGlv
-LmMgfCA0ICsrLS0NCj4gPiAgMSBmaWxlIGNoYW5nZWQsIDIgaW5zZXJ0aW9ucygrKSwgMiBkZWxl
-dGlvbnMoLSkNCj4gPiANCj4gDQo+IEhpIGFsbCwNCj4gDQo+IEkgaGF2ZSBhIE1hY2NoaWF0b2Jp
-biBib2FyZCBhbmQgdGhlIDEwRyBwb3J0IHN0b3BwZWQgd29ya2luZyBpbiBuZXQtDQo+IG5leHQu
-DQo+IEkgc3VzcGVjdCB0aGF0IHRoZXNlIHR3byBwYXRjaGVzIGNvdWxkIGJlIGludm9sdmVkLg0K
-PiBUaGUgcGh5IGlzIGNvcnJlY3RseSBkZXRlY3RlZCBub3cgKEkgbWVhbiBubyBlcnJvcnMgYW5k
-IHRoZSBkZXZpY2UgaXMNCj4gcmVnaXN0ZXJlZCkgYnV0IG5vIHRyYWZmaWMgY2FuIGJlIHNlbnQg
-b3IgcmVjZWl2ZWQ6DQo+IA0KPiByb290QG1hY2NoaWF0b2Jpbjp+IyBkbWVzZyB8Z3JlcCAtaSAt
-ZSBwaHkgLWUgbXZwcDINCj4gWyAgICAwLjAwMDAwMF0gQm9vdGluZyBMaW51eCBvbiBwaHlzaWNh
-bCBDUFUgMHgwMDAwMDAwMDAwDQo+IFsweDQxMGZkMDgxXQ0KPiBbICAgIDAuMDAwMDAwXSBhcmNo
-X3RpbWVyOiBjcDE1IHRpbWVyKHMpIHJ1bm5pbmcgYXQgMjUuMDBNSHogKHBoeXMpLg0KPiBbICAg
-IDAuMDYyNzk4XSBsaWJwaHk6IEZpeGVkIE1ESU8gQnVzOiBwcm9iZWQNCj4gWyAgICAxLjEzMjU1
-Ml0gYXJtYWRhOGstcGNpZSBmMjYwMDAwMC5wY2llOiBQaHkgbGluayBuZXZlciBjYW1lIHVwDQo+
-IFsgICAgMi41NTM0NjRdIGxpYnBoeTogb3Jpb25fbWRpb19idXM6IHByb2JlZA0KPiBbICAgIDIu
-NTU4MDQ1XSBsaWJwaHk6IG9yaW9uX21kaW9fYnVzOiBwcm9iZWQNCj4gWyAgICAyLjU2NDAzN10g
-bXZwcDIgZjIwMDAwMDAuZXRoZXJuZXQ6IHVzaW5nIDggcGVyLWNwdSBidWZmZXJzDQo+IFsgICAg
-Mi41ODg3NTRdIG12cHAyIGYyMDAwMDAwLmV0aGVybmV0IGV0aDA6IFVzaW5nIHJhbmRvbSBtYWMg
-YWRkcmVzcw0KPiAxZTphNjpjZTozOTo4ZDoyMg0KPiBbICAgIDIuNTk5OTgwXSBtdnBwMiBmNDAw
-MDAwMC5ldGhlcm5ldDogdXNpbmcgOCBwZXItY3B1IGJ1ZmZlcnMNCj4gWyAgICAyLjYyMzI5M10g
-bXZwcDIgZjQwMDAwMDAuZXRoZXJuZXQgZXRoMTogVXNpbmcgcmFuZG9tIG1hYyBhZGRyZXNzDQo+
-IGFhOmFkOmI1OjkxOjhjOjFlDQo+IFsgICAgMi42MjY1MzVdIG12cHAyIGY0MDAwMDAwLmV0aGVy
-bmV0IGV0aDI6IFVzaW5nIHJhbmRvbSBtYWMgYWRkcmVzcw0KPiA2ZTozOTpmYjo3NDowOTo2ZQ0K
-PiBbICAgIDIuNjI5NjAwXSBtdnBwMiBmNDAwMDAwMC5ldGhlcm5ldCBldGgzOiBVc2luZyByYW5k
-b20gbWFjIGFkZHJlc3MNCj4gMTY6ZWM6YmY6OWU6MTE6MGYNCj4gWyAgICAyLjk1MjA2M10gbXZw
-cDIgZjQwMDAwMDAuZXRoZXJuZXQgZXRoMjogUEhZIFtmMjEyYTIwMC5tZGlvLQ0KPiBtaWk6MDBd
-IGRyaXZlciBbTWFydmVsbCA4OEUxNTEwXSAoaXJxPVBPTEwpDQo+IFsgICAgMi45NTMyNTFdIG12
-cHAyIGY0MDAwMDAwLmV0aGVybmV0IGV0aDI6IGNvbmZpZ3VyaW5nIGZvcg0KPiBwaHkvc2dtaWkg
-bGluayBtb2RlDQo+IFsgICAgNy4xMjI4OTldIG12cHAyIGY0MDAwMDAwLmV0aGVybmV0IGV0aDI6
-IExpbmsgaXMgVXAgLSAxR2Jwcy9GdWxsDQo+IC0gZmxvdyBjb250cm9sIHJ4L3R4DQo+IFsgICAy
-NS43Mjc3NTZdIG12cHAyIGYyMDAwMDAwLmV0aGVybmV0IGV0aDA6IFBIWSBbZjIxMmE2MDAubWRp
-by0NCj4gbWlpOjAwXSBkcml2ZXIgW212ODh4MzMxMF0gKGlycT1QT0xMKQ0KPiBbICAgMjUuNzQ2
-NzExXSBtdnBwMiBmMjAwMDAwMC5ldGhlcm5ldCBldGgwOiBjb25maWd1cmluZyBmb3INCj4gcGh5
-LzEwZ2Jhc2UtciBsaW5rIG1vZGUNCj4gWyAgIDI3Ljg0MjcxMl0gbXZwcDIgZjIwMDAwMDAuZXRo
-ZXJuZXQgZXRoMDogTGluayBpcyBVcCAtIDEwR2Jwcy9GdWxsDQo+IC0gZmxvdyBjb250cm9sIG9m
-Zg0KPiANCj4gDQo+IFRoZSBvbmx5IHdheSB0byBoYXZlIGl0IHdvcmtpbmcgaXMgdG8gdW5wbHVn
-IHRoZSBwb3dlciwgYm9vdCBhbiBvbGQNCj4ga2VybmVsLCBlLmcuIDUuMy4wOg0KPiANCj4gcm9v
-dEBtYWNjaGlhdG9iaW46fiMgZG1lc2cgfGdyZXAgLWkgLWUgcGh5IC1lIG12cHAyDQo+IFsgICAg
-MC4wMDAwMDBdIEJvb3RpbmcgTGludXggb24gcGh5c2ljYWwgQ1BVIDB4MDAwMDAwMDAwMA0KPiBb
-MHg0MTBmZDA4MV0NCj4gWyAgICAwLjAwMDAwMF0gYXJjaF90aW1lcjogY3AxNSB0aW1lcihzKSBy
-dW5uaW5nIGF0IDI1LjAwTUh6IChwaHlzKS4NCj4gWyAgICAwLjA4MzY0N10gbGlicGh5OiBGaXhl
-ZCBNRElPIEJ1czogcHJvYmVkDQo+IFsgICAgMC4xNTI3ODhdIGFybWFkYThrLXBjaWUgZjI2MDAw
-MDAucGNpZTogRmFpbGVkIHRvIGluaXRpYWxpemUNCj4gUEhZKHMpICgtMjIpDQo+IFsgICAgMS40
-Mjk2NDNdIGxpYnBoeTogb3Jpb25fbWRpb19idXM6IHByb2JlZA0KPiBbICAgIDEuNDM5MTA5XSBs
-aWJwaHk6IG9yaW9uX21kaW9fYnVzOiBwcm9iZWQNCj4gWyAgICAxLjQ1MDk4OV0gbXZwcDIgZjIw
-MDAwMDAuZXRoZXJuZXQgZXRoMDogVXNpbmcgcmFuZG9tIG1hYyBhZGRyZXNzDQo+IDVhOjA5OjVm
-Ojk3OmFhOmNjDQo+IFsgICAgMS40NzY2OTJdIG12cHAyIGY0MDAwMDAwLmV0aGVybmV0IGV0aDE6
-IFVzaW5nIHJhbmRvbSBtYWMgYWRkcmVzcw0KPiBmMjplMjpjMTo3NzpmYToyMw0KPiBbICAgIDEu
-NDc5Njg4XSBtdnBwMiBmNDAwMDAwMC5ldGhlcm5ldCBldGgyOiBVc2luZyByYW5kb20gbWFjIGFk
-ZHJlc3MNCj4gYjI6MzM6YzA6MmY6ZGE6YmENCj4gWyAgICAxLjQ4MjI5Nl0gbXZwcDIgZjQwMDAw
-MDAuZXRoZXJuZXQgZXRoMzogVXNpbmcgcmFuZG9tIG1hYyBhZGRyZXNzDQo+IDZhOjM4Ojc5OjJl
-Ojk2OjhjDQo+IFsgICAgMS44MTQxNjNdIG12cHAyIGY0MDAwMDAwLmV0aGVybmV0IGV0aDI6IFBI
-WSBbZjIxMmEyMDAubWRpby0NCj4gbWlpOjAwXSBkcml2ZXIgW01hcnZlbGwgODhFMTUxMF0NCj4g
-WyAgICAxLjgxNDE3MF0gbXZwcDIgZjQwMDAwMDAuZXRoZXJuZXQgZXRoMjogcGh5OiBzZXR0aW5n
-IHN1cHBvcnRlZA0KPiAwMCwwMDAwMDAwMCwwMDAwNjZlZiBhZHZlcnRpc2luZyAwMCwwMDAwMDAw
-MCwwMDAwNjZlZg0KPiBbICAgIDEuODI2MDI1XSBtdnBwMiBmNDAwMDAwMC5ldGhlcm5ldCBldGgy
-OiBjb25maWd1cmluZyBmb3INCj4gcGh5L3NnbWlpIGxpbmsgbW9kZQ0KPiBbICAgIDEuODI2MDMw
-XSBtdnBwMiBmNDAwMDAwMC5ldGhlcm5ldCBldGgyOiBwaHlsaW5rX21hY19jb25maWc6DQo+IG1v
-ZGU9cGh5L3NnbWlpL1Vua25vd24vVW5rbm93biBhZHY9MDAsMDAwMDAwMDAsMDAwMDY2ZWYgcGF1
-c2U9MTANCj4gbGluaz0wIGFuPTENCj4gWyAgICAxLjgyNzY4M10gbXZwcDIgZjQwMDAwMDAuZXRo
-ZXJuZXQgZXRoMjogcGh5IGxpbmsgZG93bg0KPiBzZ21paS8xR2Jwcy9IYWxmDQo+IFsgICAgNi4w
-MDIzMDRdIG12cHAyIGY0MDAwMDAwLmV0aGVybmV0IGV0aDI6IHBoeSBsaW5rIHVwDQo+IHNnbWlp
-LzFHYnBzL0Z1bGwNCj4gWyAgICA2LjAwMjMxM10gbXZwcDIgZjQwMDAwMDAuZXRoZXJuZXQgZXRo
-MjogcGh5bGlua19tYWNfY29uZmlnOg0KPiBtb2RlPXBoeS9zZ21paS8xR2Jwcy9GdWxsIGFkdj0w
-MCwwMDAwMDAwMCwwMDAwMDAwMCBwYXVzZT0wZiBsaW5rPTENCj4gYW49MA0KPiBbICAgIDYuMDAy
-MzMyXSBtdnBwMiBmNDAwMDAwMC5ldGhlcm5ldCBldGgyOiBMaW5rIGlzIFVwIC0gMUdicHMvRnVs
-bA0KPiAtIGZsb3cgY29udHJvbCByeC90eA0KPiBbICAgMzMuMTg2Njg5XSBtdnBwMiBmMjAwMDAw
-MC5ldGhlcm5ldCBldGgwOiBQSFkgW2YyMTJhNjAwLm1kaW8tDQo+IG1paTowMF0gZHJpdmVyIFtt
-djg4eDMzMTBdDQo+IFsgICAzMy4xOTQ3MzldIG12cHAyIGYyMDAwMDAwLmV0aGVybmV0IGV0aDA6
-IHBoeTogc2V0dGluZyBzdXBwb3J0ZWQNCj4gMDAsMDAwMDgwMDAsMDAwMDcwNmYgYWR2ZXJ0aXNp
-bmcgMDAsMDAwMDgwMDAsMDAwMDcwNmYNCj4gWyAgIDMzLjIxODAyOV0gbXZwcDIgZjIwMDAwMDAu
-ZXRoZXJuZXQgZXRoMDogY29uZmlndXJpbmcgZm9yDQo+IHBoeS8xMGdiYXNlLWtyIGxpbmsgbW9k
-ZQ0KPiBbICAgMzMuMjI1NjM3XSBtdnBwMiBmMjAwMDAwMC5ldGhlcm5ldCBldGgwOiBwaHlsaW5r
-X21hY19jb25maWc6DQo+IG1vZGU9cGh5LzEwZ2Jhc2Uta3IvVW5rbm93bi9Vbmtub3duIGFkdj0w
-MCwwMDAwODAwMCwwMDAwNzA2ZiBwYXVzZT0xMA0KPiBsaW5rPTAgYW49MQ0KPiBbICAgMzMuMjQx
-MzQxXSBtdnBwMiBmMjAwMDAwMC5ldGhlcm5ldCBldGgwOiBwaHkgbGluayBkb3duIDEwZ2Jhc2Ut
-DQo+IGtyL1Vua25vd24vVW5rbm93bg0KPiBbICAgMzUuMzYyMTYwXSBtdnBwMiBmMjAwMDAwMC5l
-dGhlcm5ldCBldGgwOiBwaHkgbGluayB1cCAxMGdiYXNlLQ0KPiBrci8xMEdicHMvRnVsbA0KPiBb
-ICAgMzUuMzY5MjQzXSBtdnBwMiBmMjAwMDAwMC5ldGhlcm5ldCBldGgwOiBwaHlsaW5rX21hY19j
-b25maWc6DQo+IG1vZGU9cGh5LzEwZ2Jhc2Uta3IvMTBHYnBzL0Z1bGwgYWR2PTAwLDAwMDAwMDAw
-LDAwMDAwMDAwIHBhdXNlPTAwDQo+IGxpbms9MSBhbj0wDQo+IFsgICAzNS4zODE4MzZdIG12cHAy
-IGYyMDAwMDAwLmV0aGVybmV0IGV0aDA6IExpbmsgaXMgVXAgLSAxMEdicHMvRnVsbA0KPiAtIGZs
-b3cgY29udHJvbCBvZmYNCj4gDQo+IA0KPiBBbmQgdGhlbiBkbyBhIHNvZnQgcmVib290IHRvIG5l
-dC1uZXh0IHdoaWNoIHdvcmtzLg0KPiBCeSByZWJvb3RpbmcgdGhlIGJvYXJkIG11bHRpcGxlIHRp
-bWVzIGl0IHdvcmtzLCB1bnRpbCBJIHVucGx1ZyB0aGUNCj4gcG93ZXIuDQo+IA0KPiBBbnkgaGlu
-dD8NCj4gQnllLA0KPiANCg0KV2VsbCBjZXJ0YWlubHkgdGhlIGZpcnN0IGNoYW5nZSB0aGF0IGdv
-dCBhcHBsaWVkIGNvbW1pdCBlMWY1NTBkYzQ0YTQNCigibmV0OiBtdm1kaW86IGF2b2lkIGVycm9y
-IG1lc3NhZ2UgZm9yIG9wdGlvbmFsIElSUSIpIHdvdWxkIGNhdXNlIGENCnByb2JsZW0uIEJ1dCB0
-aGUgcmV2ZXJ0IGFuZCB0aGUgY29ycmVjdGVkIGNoYW5nZSBjb21taXQgZmEyNjMyZjc0ZTU3DQoo
-Im5ldDogbXZtZGlvOiBhdm9pZCBlcnJvciBtZXNzYWdlIGZvciBvcHRpb25hbCBJUlEiKSBzaG91
-bGQgcmVzdWx0IGluDQpubyBiZWhhdmlvdXIgY2hhbmdpbmcgKG90aGVyIHRoYW4gdGhlIHNwdXJp
-b3VzIGxvZyBtZXNzYWdlLg0KDQpUaGVyZSBpcyBhIHByZS1leGlzdGluZyBwcm9ibGVtIHRoYXQg
-YW55IGVycm9yIG90aGVyIHRoYW4gLUVQUk9CRV9ERUZFUg0Kd2lsbCBiZSBzaWxlbnRseSBpZ25v
-cmVkICh0aGF0IHdhcyB3aGF0IHRoZSBpbml0aWFsIGF0dGVtcHQgd2FzIHRyeWluZw0KdG8gaGFu
-ZGxlIGJ1dCBnb3QgaXQgd3JvbmcpLiBTbyB0aGVyZSBjb3VsZCBiZSBhbiBlcnJvciB0aGF0IG1p
-Z2h0IGJlDQp0cnlpbmcgdG8gdGVsbCB5b3UgdGhhdCBzb21ldGhpbmcgd2VudCB3cm9uZy4NCg==
+Hello Steve,
+
+On Tue, Apr 07, 2020 at 05:26:33PM -0700, Steve Rutherford wrote:
+> On Sun, Mar 29, 2020 at 11:23 PM Ashish Kalra <Ashish.Kalra@amd.com> wrote:
+> >
+> > From: Brijesh Singh <Brijesh.Singh@amd.com>
+> >
+> > The ioctl can be used to set page encryption bitmap for an
+> > incoming guest.
+> >
+> > Cc: Thomas Gleixner <tglx@linutronix.de>
+> > Cc: Ingo Molnar <mingo@redhat.com>
+> > Cc: "H. Peter Anvin" <hpa@zytor.com>
+> > Cc: Paolo Bonzini <pbonzini@redhat.com>
+> > Cc: "Radim Krčmář" <rkrcmar@redhat.com>
+> > Cc: Joerg Roedel <joro@8bytes.org>
+> > Cc: Borislav Petkov <bp@suse.de>
+> > Cc: Tom Lendacky <thomas.lendacky@amd.com>
+> > Cc: x86@kernel.org
+> > Cc: kvm@vger.kernel.org
+> > Cc: linux-kernel@vger.kernel.org
+> > Signed-off-by: Brijesh Singh <brijesh.singh@amd.com>
+> > Signed-off-by: Ashish Kalra <ashish.kalra@amd.com>
+> > ---
+> >  Documentation/virt/kvm/api.rst  | 22 +++++++++++++++++
+> >  arch/x86/include/asm/kvm_host.h |  2 ++
+> >  arch/x86/kvm/svm.c              | 42 +++++++++++++++++++++++++++++++++
+> >  arch/x86/kvm/x86.c              | 12 ++++++++++
+> >  include/uapi/linux/kvm.h        |  1 +
+> >  5 files changed, 79 insertions(+)
+> >
+> > diff --git a/Documentation/virt/kvm/api.rst b/Documentation/virt/kvm/api.rst
+> > index 8ad800ebb54f..4d1004a154f6 100644
+> > --- a/Documentation/virt/kvm/api.rst
+> > +++ b/Documentation/virt/kvm/api.rst
+> > @@ -4675,6 +4675,28 @@ or shared. The bitmap can be used during the guest migration, if the page
+> >  is private then userspace need to use SEV migration commands to transmit
+> >  the page.
+> >
+> > +4.126 KVM_SET_PAGE_ENC_BITMAP (vm ioctl)
+> > +---------------------------------------
+> > +
+> > +:Capability: basic
+> > +:Architectures: x86
+> > +:Type: vm ioctl
+> > +:Parameters: struct kvm_page_enc_bitmap (in/out)
+> > +:Returns: 0 on success, -1 on error
+> > +
+> > +/* for KVM_SET_PAGE_ENC_BITMAP */
+> > +struct kvm_page_enc_bitmap {
+> > +       __u64 start_gfn;
+> > +       __u64 num_pages;
+> > +       union {
+> > +               void __user *enc_bitmap; /* one bit per page */
+> > +               __u64 padding2;
+> > +       };
+> > +};
+> > +
+> > +During the guest live migration the outgoing guest exports its page encryption
+> > +bitmap, the KVM_SET_PAGE_ENC_BITMAP can be used to build the page encryption
+> > +bitmap for an incoming guest.
+> >
+> >  5. The kvm_run structure
+> >  ========================
+> > diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
+> > index 27e43e3ec9d8..d30f770aaaea 100644
+> > --- a/arch/x86/include/asm/kvm_host.h
+> > +++ b/arch/x86/include/asm/kvm_host.h
+> > @@ -1271,6 +1271,8 @@ struct kvm_x86_ops {
+> >                                   unsigned long sz, unsigned long mode);
+> >         int (*get_page_enc_bitmap)(struct kvm *kvm,
+> >                                 struct kvm_page_enc_bitmap *bmap);
+> > +       int (*set_page_enc_bitmap)(struct kvm *kvm,
+> > +                               struct kvm_page_enc_bitmap *bmap);
+> >  };
+> >
+> >  struct kvm_arch_async_pf {
+> > diff --git a/arch/x86/kvm/svm.c b/arch/x86/kvm/svm.c
+> > index bae783cd396a..313343a43045 100644
+> > --- a/arch/x86/kvm/svm.c
+> > +++ b/arch/x86/kvm/svm.c
+> > @@ -7756,6 +7756,47 @@ static int svm_get_page_enc_bitmap(struct kvm *kvm,
+> >         return ret;
+> >  }
+> >
+> > +static int svm_set_page_enc_bitmap(struct kvm *kvm,
+> > +                                  struct kvm_page_enc_bitmap *bmap)
+> > +{
+> > +       struct kvm_sev_info *sev = &to_kvm_svm(kvm)->sev_info;
+> > +       unsigned long gfn_start, gfn_end;
+> > +       unsigned long *bitmap;
+> > +       unsigned long sz, i;
+> > +       int ret;
+> > +
+> > +       if (!sev_guest(kvm))
+> > +               return -ENOTTY;
+> > +
+> > +       gfn_start = bmap->start_gfn;
+> > +       gfn_end = gfn_start + bmap->num_pages;
+> > +
+> > +       sz = ALIGN(bmap->num_pages, BITS_PER_LONG) / 8;
+> > +       bitmap = kmalloc(sz, GFP_KERNEL);
+> > +       if (!bitmap)
+> > +               return -ENOMEM;
+> > +
+> > +       ret = -EFAULT;
+> > +       if (copy_from_user(bitmap, bmap->enc_bitmap, sz))
+> > +               goto out;
+> > +
+> > +       mutex_lock(&kvm->lock);
+> > +       ret = sev_resize_page_enc_bitmap(kvm, gfn_end);
+> I realize now that usermode could use this for initializing the
+> minimum size of the enc bitmap, which probably solves my issue from
+> the other thread.
+> > +       if (ret)
+> > +               goto unlock;
+> > +
+> > +       i = gfn_start;
+> > +       for_each_clear_bit_from(i, bitmap, (gfn_end - gfn_start))
+> > +               clear_bit(i + gfn_start, sev->page_enc_bmap);
+> This API seems a bit strange, since it can only clear bits. I would
+> expect "set" to force the values to match the values passed down,
+> instead of only ensuring that cleared bits in the input are also
+> cleared in the kernel.
+>
+
+The sev_resize_page_enc_bitmap() will allocate a new bitmap and
+set it to all 0xFF's, therefore, the code here simply clears the bits
+in the bitmap as per the cleared bits in the input.
+
+Thanks,
+Ashish
+
+> This should copy the values from userspace (and fix up the ends since
+> byte alignment makes that complicated), instead of iterating in this
+> way.
+> > +
+> > +       ret = 0;
+> > +unlock:
+> > +       mutex_unlock(&kvm->lock);
+> > +out:
+> > +       kfree(bitmap);
+> > +       return ret;
+> > +}
+> > +
+> >  static int svm_mem_enc_op(struct kvm *kvm, void __user *argp)
+> >  {
+> >         struct kvm_sev_cmd sev_cmd;
+> > @@ -8161,6 +8202,7 @@ static struct kvm_x86_ops svm_x86_ops __ro_after_init = {
+> >
+> >         .page_enc_status_hc = svm_page_enc_status_hc,
+> >         .get_page_enc_bitmap = svm_get_page_enc_bitmap,
+> > +       .set_page_enc_bitmap = svm_set_page_enc_bitmap,
+> >  };
+> >
+> >  static int __init svm_init(void)
+> > diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+> > index 3c3fea4e20b5..05e953b2ec61 100644
+> > --- a/arch/x86/kvm/x86.c
+> > +++ b/arch/x86/kvm/x86.c
+> > @@ -5238,6 +5238,18 @@ long kvm_arch_vm_ioctl(struct file *filp,
+> >                         r = kvm_x86_ops->get_page_enc_bitmap(kvm, &bitmap);
+> >                 break;
+> >         }
+> > +       case KVM_SET_PAGE_ENC_BITMAP: {
+> > +               struct kvm_page_enc_bitmap bitmap;
+> > +
+> > +               r = -EFAULT;
+> > +               if (copy_from_user(&bitmap, argp, sizeof(bitmap)))
+> > +                       goto out;
+> > +
+> > +               r = -ENOTTY;
+> > +               if (kvm_x86_ops->set_page_enc_bitmap)
+> > +                       r = kvm_x86_ops->set_page_enc_bitmap(kvm, &bitmap);
+> > +               break;
+> > +       }
+> >         default:
+> >                 r = -ENOTTY;
+> >         }
+> > diff --git a/include/uapi/linux/kvm.h b/include/uapi/linux/kvm.h
+> > index db1ebf85e177..b4b01d47e568 100644
+> > --- a/include/uapi/linux/kvm.h
+> > +++ b/include/uapi/linux/kvm.h
+> > @@ -1489,6 +1489,7 @@ struct kvm_enc_region {
+> >  #define KVM_S390_CLEAR_RESET   _IO(KVMIO,   0xc4)
+> >
+> >  #define KVM_GET_PAGE_ENC_BITMAP        _IOW(KVMIO, 0xc5, struct kvm_page_enc_bitmap)
+> > +#define KVM_SET_PAGE_ENC_BITMAP        _IOW(KVMIO, 0xc6, struct kvm_page_enc_bitmap)
+> >
+> >  /* Secure Encrypted Virtualization command */
+> >  enum sev_cmd_id {
+> > --
+> > 2.17.1
+> >
