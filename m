@@ -2,167 +2,149 @@ Return-Path: <SRS0=8dav=5Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC0A7C2D0EA
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 10:25:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62CCCC2BA2B
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 10:27:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 861C320771
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 10:25:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3721120768
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 10:27:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=renesasgroup.onmicrosoft.com header.i=@renesasgroup.onmicrosoft.com header.b="AMHkf43h"
+	dkim=pass (1024-bit key) header.d=linux-watchdog.org header.i=@linux-watchdog.org header.b="pZ8XIefn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728096AbgDHKZL (ORCPT
+        id S1727934AbgDHK1i (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Apr 2020 06:25:11 -0400
-Received: from mail-eopbgr1410117.outbound.protection.outlook.com ([40.107.141.117]:25520
-        "EHLO JPN01-OS2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725932AbgDHKZL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Apr 2020 06:25:11 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=eIileUYx2ujVRzzqiekNonmMNJBV2atI91vSdQGuaozhL/u5sod1G/pyamIEf4TB03w39xQQV4cZ4r7NC9hM6vv3stgyUo1aIz8K+Uw0q7vNRtT0zYYL8JisPFrwJl2ZwvYt3sS1HKkxD5MFGY5FYlpCBwzbX+1rNx8lmCZGmaAk5iF+MTOZkcRKvH163CruBxi2ZPatlqJOUE0BsY341RW0zcIz805wGjaIGe2N3kRTyS+NTKxVVancPMaVailQtZFGH/0rNCQPSGWkSZ9RDGdeQl+TVBAdIZmJECVHP1XkDe4u5UJ1lSzbyp39LsoAyOrWkt5Ma1ZXTMvCl2qk0g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=0bvMIfu4bNVmo90Z4RETSA6+xb42chgYJiM3N8RXqX8=;
- b=BBHBTkzMZoX8cpL0Joh2nU9MPgWDz94lOk2Tnzt+rbQQ9Tt2Gz9/0XO+3kpPWMUByvAHdxTNeeQFcfHHKH6HIaIuYFfkGOCvifFo7uLJR8PKEAj4QGpOSyB7IV9ZoL/NU47hM6QHbRLei7iq1d+SXkOYnOOy+8qzNC5d2tPTDzFclczXdfiFwKOiZza4A0YIp7ByPJoPLt+Uv0hPzfQVP69pFbTYBNudcyAoz4o016XUBDH4SEeq2LzBBdm06o7hpA8OdiueFPlSxjomSazkBJonYrAqOgDom1n9UNgDcONUzesFtm58PAC8QQG0paqIt6c1WlNvPXMLP0iEIohGrA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=renesas.com; dmarc=pass action=none header.from=renesas.com;
- dkim=pass header.d=renesas.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=renesasgroup.onmicrosoft.com; s=selector2-renesasgroup-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=0bvMIfu4bNVmo90Z4RETSA6+xb42chgYJiM3N8RXqX8=;
- b=AMHkf43h4Fn1Zz7oPeuMcZkya32VPNVz8TaxJGx3qDy/aQZmoB0bSgsvJgRfatjil5qQ4YdDu7xT19gP3fcxoylZ6XSYz836YzYyLmEKmDbS8ytTGhNuBQLAhGEPk9L/4uY/qzyY33ZUifE75jP6uNywv6HX/2hhXGloNURRF7M=
-Received: from TYAPR01MB4544.jpnprd01.prod.outlook.com (20.179.175.203) by
- TYAPR01MB2735.jpnprd01.prod.outlook.com (20.177.101.139) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2878.20; Wed, 8 Apr 2020 10:25:06 +0000
-Received: from TYAPR01MB4544.jpnprd01.prod.outlook.com
- ([fe80::ed7f:1268:55a9:fc06]) by TYAPR01MB4544.jpnprd01.prod.outlook.com
- ([fe80::ed7f:1268:55a9:fc06%4]) with mapi id 15.20.2900.015; Wed, 8 Apr 2020
- 10:25:06 +0000
-From:   Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-To:     John Stultz <john.stultz@linaro.org>,
-        lkml <linux-kernel@vger.kernel.org>
-CC:     "David S. Miller" <davem@davemloft.net>,
-        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
-        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Rob Herring <robh@kernel.org>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        netdev <netdev@vger.kernel.org>,
-        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>
-Subject: RE: [RFC][PATCH v2 1/2] driver core: Revert default
- driver_deferred_probe_timeout value to 0
-Thread-Topic: [RFC][PATCH v2 1/2] driver core: Revert default
- driver_deferred_probe_timeout value to 0
-Thread-Index: AQHWDXcWXye7D9W90EKkrusU1lNNn6hvBE8w
-Date:   Wed, 8 Apr 2020 10:25:05 +0000
-Message-ID: <TYAPR01MB45442402CC541A01A623F8C4D8C00@TYAPR01MB4544.jpnprd01.prod.outlook.com>
-References: <20200408072650.1731-1-john.stultz@linaro.org>
-In-Reply-To: <20200408072650.1731-1-john.stultz@linaro.org>
-Accept-Language: ja-JP, en-US
-Content-Language: ja-JP
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=yoshihiro.shimoda.uh@renesas.com; 
-x-originating-ip: [124.210.22.195]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 420cafd8-0f3c-4e8e-74f1-08d7dba71b4b
-x-ms-traffictypediagnostic: TYAPR01MB2735:
-x-microsoft-antispam-prvs: <TYAPR01MB27359A1927A17E8886C28950D8C00@TYAPR01MB2735.jpnprd01.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:7219;
-x-forefront-prvs: 0367A50BB1
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TYAPR01MB4544.jpnprd01.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10019020)(4636009)(376002)(346002)(396003)(136003)(39860400002)(366004)(110136005)(52536014)(54906003)(316002)(26005)(8936002)(9686003)(5660300002)(55016002)(81166007)(86362001)(186003)(55236004)(7696005)(66446008)(6506007)(66946007)(4326008)(66556008)(8676002)(64756008)(66476007)(33656002)(7416002)(478600001)(2906002)(71200400001)(76116006)(81156014);DIR:OUT;SFP:1102;
-received-spf: None (protection.outlook.com: renesas.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: iudkrUzifjIHL/KFpCdfRuLdeXMDhNnTGHjz5fM714s2eejcLHxXgDup+dEZO50LDOFARYLkLUVSwWDnyeOj2M0EQUhsc0M9pkpqeZT9WFo3HWcUeQADGXrm6eJjWuOzwAAl6xqJDwLqQI629FZHF2yaujaqoAtEYxMLXcT73IidFNEtrgWap1XqTJm7+i7djBcoPZyCmqQdaFAsujQpl/S+xJuUNeM1MROcRDTnhlNKd8jxYdXgGo4v6plWMP3SqkSJjkl3aLIWXkkThUJoOXeuH91I6f2ZixJBrpYO/kyPlqouT0/HBg0muESdlW0oC8sY/4Mf+gIJ9krsNI0YMrwrURHAtqcsrS/0/+xfDIvNDrWB3syVszHfbH4FGW68x8mlOAHSk6QgprQmZ1nue3rD5TItktDJX8IC1lRx7ja60MA1R+VlqLn1bLdTfq9N
-x-ms-exchange-antispam-messagedata: Mh9U3V2hHSPwIaoL7SvQUOebOFpRI9fIdB7kSB9MUVtviiWw69+Nd/JAS1NyhbyqrsAuvpcSqf2PB9SbSSEEnL8BLw9tUhLrqlHEXRSP8/2+dQgdieHQMQkOahJVBH/2t6PaGB/7HAxG86buobpOsw==
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Wed, 8 Apr 2020 06:27:38 -0400
+Received: from www.linux-watchdog.org ([185.87.125.42]:33188 "EHLO
+        www.linux-watchdog.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726146AbgDHK1h (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Apr 2020 06:27:37 -0400
+X-Greylist: delayed 467 seconds by postgrey-1.27 at vger.kernel.org; Wed, 08 Apr 2020 06:27:36 EDT
+Received: by www.linux-watchdog.org (Postfix, from userid 500)
+        id 2F644409E5; Wed,  8 Apr 2020 11:27:03 +0200 (CEST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 www.linux-watchdog.org 2F644409E5
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-watchdog.org;
+        s=odk20180602; t=1586338023;
+        bh=VOzQum+z/bArM7BjUmo6thZ+xFwIvAwR6O4velNsQqo=;
+        h=Date:From:To:Cc:Subject:From;
+        b=pZ8XIefn1emLE9xMV+JoG+3kGpmswKdMySQYzKX43ZwEHJY6FlCOdBiXY8OZM+O7L
+         S7L8wVVmUrwILUz0aOYbrFcEKs80A6hqgvx/dms+XfGQXmwWBPHQ06xMQZUrhRGuMB
+         UMzG3bw7kJZyDm11MWrJ0R5AUS2m690cwpXt+hQ8=
+Date:   Wed, 8 Apr 2020 11:27:03 +0200
+From:   Wim Van Sebroeck <wim@linux-watchdog.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux Watchdog Mailing List <linux-watchdog@vger.kernel.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Anson Huang <Anson.Huang@nxp.com>,
+        Ansuel Smith <ansuelsmth@gmail.com>,
+        Chris Packham <chris.packham@alliedtelesis.co.nz>,
+        Dmitry Safonov <dima@arista.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Loic Poulain <loic.poulain@linaro.org>,
+        Lucas Stach <l.stach@pengutronix.de>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Tero Kristo <t-kristo@ti.com>,
+        Tomer Maimon <tmaimon77@gmail.com>
+Subject: [GIT PULL REQUEST] watchdog - v5.7 Merge window
+Message-ID: <20200408092702.GA27984@www.linux-watchdog.org>
 MIME-Version: 1.0
-X-OriginatorOrg: renesas.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 420cafd8-0f3c-4e8e-74f1-08d7dba71b4b
-X-MS-Exchange-CrossTenant-originalarrivaltime: 08 Apr 2020 10:25:05.8286
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 53d82571-da19-47e4-9cb4-625a166a4a2a
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: XXctKMTY9uJkIE29OV3cRyvokZUPcRS3inyuuvt7PKAZkQP/Nw1uRt63Hyg4RgAKakyL3H64Nw/W9TXEfZOCiF2nFBtkg2Ognq7mKgs6qafp2d0/gNfh3DcSuL3hqJXZ
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYAPR01MB2735
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.5.20 (2009-12-10)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi John,
+Hi Linus,
 
-> From: John Stultz, Sent: Wednesday, April 8, 2020 4:27 PM
->=20
-> In commit c8c43cee29f6 ("driver core: Fix
-> driver_deferred_probe_check_state() logic"), we both cleaned up
-> the logic and also set the default driver_deferred_probe_timeout
-> value to 30 seconds to allow for drivers that are missing
-> dependencies to have some time so that the dependency may be
-> loaded from userland after initcalls_done is set.
->=20
-> However, Yoshihiro Shimoda reported that on his device that
-> expects to have unmet dependencies (due to "optional links" in
-> its devicetree), was failing to mount the NFS root.
->=20
-> In digging further, it seemed the problem was that while the
-> device properly probes after waiting 30 seconds for any missing
-> modules to load, the ip_auto_config() had already failed,
-> resulting in NFS to fail. This was due to ip_auto_config()
-> calling wait_for_device_probe() which doesn't wait for the
-> driver_deferred_probe_timeout to fire.
->=20
-> Fixing that issue is possible, but could also introduce 30
-> second delays in bootups for users who don't have any
-> missing dependencies, which is not ideal.
->=20
-> So I think the best solution to avoid any regressions is to
-> revert back to a default timeout value of zero, and allow
-> systems that need to utilize the timeout in order for userland
-> to load any modules that supply misisng dependencies in the dts
-> to specify the timeout length via the exiting documented boot
-> argument.
->=20
-> Thanks to Geert for chasing down that ip_auto_config was why NFS
-> was failing in this case!
->=20
-> Cc: "David S. Miller" <davem@davemloft.net>
-> Cc: Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>
-> Cc: Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>
-> Cc: Jakub Kicinski <kuba@kernel.org>
-> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Cc: Rafael J. Wysocki <rjw@rjwysocki.net>
-> Cc: Rob Herring <robh@kernel.org>
-> Cc: Geert Uytterhoeven <geert@linux-m68k.org>
-> Cc: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-> Cc: netdev <netdev@vger.kernel.org>
-> Cc: linux-pm@vger.kernel.org
-> Reported-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-> Fixes: c8c43cee29f6 ("driver core: Fix driver_deferred_probe_check_state(=
-) logic")
-> Signed-off-by: John Stultz <john.stultz@linaro.org>
+Please pull the watchdog changes for the v5.7 release cycle.
 
-Thank you for the patch! This patch could fix the issue
-on my environment. So,
+This series contains:
+* Add TI K3 RTI watchdog
+* Add stop_on_reboot parameter to control reboot policy
+* wm831x_wdt: Remove GPIO handling
+* Several small fixes, improvements and clean-ups
 
-Tested-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+The output from git request-pull:
+----------------------------------------------------------------
+The following changes since commit fb33c6510d5595144d585aa194d377cf74d31911:
 
-Best regards,
-Yoshihiro Shimoda
+  Linux 5.6-rc6 (2020-03-15 15:01:23 -0700)
+
+are available in the git repository at:
+
+  git://www.linux-watchdog.org/linux-watchdog.git tags/linux-watchdog-5.7-rc1
+
+for you to fetch changes up to 2d63908bdbfbce0d98195b22236ad5105dc6eba2:
+
+  watchdog: Add K3 RTI watchdog support (2020-04-01 11:35:23 +0200)
+
+----------------------------------------------------------------
+linux-watchdog 5.7-rc1 tag
+
+----------------------------------------------------------------
+Anson Huang (3):
+      watchdog: imx_sc_wdt: Remove unused includes
+      watchdog: imx7ulp: Remove unused include of init.h
+      watchdog: imx2_wdt: Drop .remove callback
+
+Ansuel Smith (1):
+      watchdog: qcom-wdt: disable pretimeout on timer platform
+
+Chris Packham (1):
+      watchdog: orion: use 0 for unset heartbeat
+
+Dmitry Safonov (1):
+      watchdog: Add stop_on_reboot parameter to control reboot policy
+
+Linus Walleij (1):
+      watchdog: wm831x_wdt: Remove GPIO handling
+
+Loic Poulain (1):
+      watchdog: pm8916_wdt: Add system sleep callbacks
+
+Lucas Stach (1):
+      watchdog: ziirave_wdt: change name to be more specific
+
+Stephen Boyd (1):
+      watchdog: qcom: Use irq flags from firmware
+
+Tero Kristo (3):
+      watchdog: reset last_hw_keepalive time at start
+      dt-bindings: watchdog: Add support for TI K3 RTI watchdog
+      watchdog: Add K3 RTI watchdog support
+
+Tomer Maimon (1):
+      watchdog: npcm: remove whitespaces
+
+ .../devicetree/bindings/watchdog/ti,rti-wdt.yaml   |  65 ++++++
+ drivers/watchdog/Kconfig                           |   8 +
+ drivers/watchdog/Makefile                          |   1 +
+ drivers/watchdog/imx2_wdt.c                        |  37 +--
+ drivers/watchdog/imx7ulp_wdt.c                     |   1 -
+ drivers/watchdog/imx_sc_wdt.c                      |   2 -
+ drivers/watchdog/npcm_wdt.c                        |  19 +-
+ drivers/watchdog/orion_wdt.c                       |   2 +-
+ drivers/watchdog/pm8916_wdt.c                      |  25 ++
+ drivers/watchdog/qcom-wdt.c                        |  34 ++-
+ drivers/watchdog/rti_wdt.c                         | 255 +++++++++++++++++++++
+ drivers/watchdog/watchdog_core.c                   |  12 +
+ drivers/watchdog/watchdog_dev.c                    |   1 +
+ drivers/watchdog/wm831x_wdt.c                      |  27 ---
+ drivers/watchdog/ziirave_wdt.c                     |   2 +-
+ include/linux/mfd/wm831x/pdata.h                   |   1 -
+ 16 files changed, 412 insertions(+), 80 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/watchdog/ti,rti-wdt.yaml
+ create mode 100644 drivers/watchdog/rti_wdt.c
+----------------------------------------------------------------
+
+Kind regards,
+Wim.
 
