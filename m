@@ -2,121 +2,101 @@ Return-Path: <SRS0=8dav=5Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 873CDC2D0EA
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 13:17:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1936BC2BA1A
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 13:18:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 439FA2072A
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 13:17:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E2ABC2076D
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 13:18:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=yandex.ru header.i=@yandex.ru header.b="klGqDbBm"
+	dkim=pass (2048-bit key) header.d=mm-sol.com header.i=@mm-sol.com header.b="H5BsiIzB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729054AbgDHNRN (ORCPT
+        id S1729111AbgDHNSG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Apr 2020 09:17:13 -0400
-Received: from forward101j.mail.yandex.net ([5.45.198.241]:41158 "EHLO
-        forward101j.mail.yandex.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728484AbgDHNRN (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Apr 2020 09:17:13 -0400
-Received: from forward101q.mail.yandex.net (forward101q.mail.yandex.net [IPv6:2a02:6b8:c0e:4b:0:640:4012:bb98])
-        by forward101j.mail.yandex.net (Yandex) with ESMTP id 2B0DD1BE259D;
-        Wed,  8 Apr 2020 16:17:10 +0300 (MSK)
-Received: from mxback7q.mail.yandex.net (mxback7q.mail.yandex.net [IPv6:2a02:6b8:c0e:41:0:640:cbbf:d618])
-        by forward101q.mail.yandex.net (Yandex) with ESMTP id 28170CF40007;
-        Wed,  8 Apr 2020 16:17:10 +0300 (MSK)
-Received: from vla4-2e76570dd7f5.qloud-c.yandex.net (vla4-2e76570dd7f5.qloud-c.yandex.net [2a02:6b8:c17:c8b:0:640:2e76:570d])
-        by mxback7q.mail.yandex.net (mxback/Yandex) with ESMTP id yyyfb7s1NS-H9x026fN;
-        Wed, 08 Apr 2020 16:17:10 +0300
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex.ru; s=mail; t=1586351830;
-        bh=QICxSrOBFKEqCY/3Lc54+2QUvUNhDgqEpKodDF5z+hw=;
-        h=In-Reply-To:Cc:To:From:Subject:References:Date:Message-ID;
-        b=klGqDbBm6qFEA4IeFtQ84Wdke69SIVV36iC8bADRA9wueDhM1yAC6GowbEsiw/Ccb
-         eD7P8wYUAbVkt8SD0Ry6rrhgZhsn9a7ophx/VaVEnPY2fzFDovdajeslBa6DIjrC14
-         /0H3hJj0cVH66M5f+algGkygYfGXK+76FPieq+Nk=
-Authentication-Results: mxback7q.mail.yandex.net; dkim=pass header.i=@yandex.ru
-Received: by vla4-2e76570dd7f5.qloud-c.yandex.net (smtp/Yandex) with ESMTPSA id omL8cJmw5C-H8WaEfNU;
-        Wed, 08 Apr 2020 16:17:08 +0300
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (Client certificate not present)
-Message-ID: <e6140ec9728e5695bbd99270f1ed6b60aab8cf48.camel@yandex.ru>
-Subject: Re: [PATCH] virtio: virtio_console: add missing
- MODULE_DEVICE_TABLE() for rproc serial
-From:   Alexander Lobakin <bloodyreaper@yandex.ru>
-To:     Amit Shah <amit@kernel.org>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sjur Brandeland <sjur.brandeland@stericsson.com>,
-        Rusty Russell <rusty@rustcorp.com.au>,
-        virtualization@lists.linux-foundation.org, stable@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Date:   Wed, 08 Apr 2020 16:17:07 +0300
-In-Reply-To: <f09bacf3029edfc7f90097f7fc6e41176ddd4873.camel@kernel.org>
-References: <20200310110538.19254-1-alobakin@dlink.ru>
-         <f09bacf3029edfc7f90097f7fc6e41176ddd4873.camel@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.36.1 
+        Wed, 8 Apr 2020 09:18:06 -0400
+Received: from ns.mm-sol.com ([37.157.136.199]:38172 "EHLO extserv.mm-sol.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728062AbgDHNSF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Apr 2020 09:18:05 -0400
+Received: from [192.168.1.4] (212-5-158-69.ip.btc-net.bg [212.5.158.69])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by extserv.mm-sol.com (Postfix) with ESMTPSA id A35B7CFB4;
+        Wed,  8 Apr 2020 16:18:02 +0300 (EEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=mm-sol.com; s=201706;
+        t=1586351883; bh=6jsS54DDAbAVWAIdONxSTHUhrCNzAC7cdn2dSGdXnBg=;
+        h=Subject:To:Cc:From:Date:From;
+        b=H5BsiIzB8AZxY0Wq3Tf16IwYzzmNiusO9OkRSYpYmfdIUGLh+BC4cjiSyKjjdU/20
+         OLzEOj8NRb7KFq6sCwZk+L+B6rEFumPkXkvAJMAq6ekGwk0ahP8ztFLDQrwpuhC8az
+         VfQp97J1Ov1sFxv2bnMBcDblhbNWtSDtgT1MqIfpq0WJYQ+RJDEoeEPUHzhvhksk0e
+         ElRZ//uN6BAO1ZDzMx++hPMrGd1TycYo+7c46ge4WdqAVyVgYJ5JOCxosA8l+a1WaL
+         koBe23FyOZtaShYFn51cpiPYHIJvnGbhnOIv0w+2XPhYSx4hZr0WjoTsauBcJ1DYSc
+         SUs2QL8bsicTQ==
+Subject: Re: R: [PATCH v2 07/10] PCIe: qcom: fix init problem with missing
+ PARF programming
+To:     ansuelsmth@gmail.com, 'Andy Gross' <agross@kernel.org>
+Cc:     'Bjorn Andersson' <bjorn.andersson@linaro.org>,
+        'Bjorn Helgaas' <bhelgaas@google.com>,
+        'Rob Herring' <robh+dt@kernel.org>,
+        'Mark Rutland' <mark.rutland@arm.com>,
+        'Lorenzo Pieralisi' <lorenzo.pieralisi@arm.com>,
+        'Andrew Murray' <amurray@thegoodpenguin.co.uk>,
+        'Philipp Zabel' <p.zabel@pengutronix.de>,
+        linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200402121148.1767-1-ansuelsmth@gmail.com>
+ <20200402121148.1767-8-ansuelsmth@gmail.com>
+ <fea9cfd1-2bc7-0141-444e-9c781877ad02@mm-sol.com>
+ <053e01d60da2$984f1170$c8ed3450$@gmail.com>
+From:   Stanimir Varbanov <svarbanov@mm-sol.com>
+Message-ID: <2c5dcc8e-fc65-bc72-64c4-b5c69a21f7ca@mm-sol.com>
+Date:   Wed, 8 Apr 2020 16:18:02 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
+In-Reply-To: <053e01d60da2$984f1170$c8ed3450$@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2020-03-11 at 15:53 +0100, Amit Shah wrote:
-> On Tue, 2020-03-10 at 14:05 +0300, Alexander Lobakin wrote:
-> > rproc_serial_id_table lacks an exposure to module devicetable, so
-> > when remoteproc firmware requests VIRTIO_ID_RPROC_SERIAL, no uevent
-> > is generated and no module autoloading occurs.
-> > Add missing MODULE_DEVICE_TABLE() annotation and move the existing
-> > one for VIRTIO_ID_CONSOLE right to the table itself.
-> > 
-> > Fixes: 1b6370463e88 ("virtio_console: Add support for remoteproc
-> > serial")
-> > Cc: <stable@vger.kernel.org> # v3.8+
-> > Signed-off-by: Alexander Lobakin <alobakin@dlink.ru>
+Hi Ansuel,
+
+On 4/8/20 3:38 PM, ansuelsmth@gmail.com wrote:
+>> PARF programming
+>>
+>> Hi Ansuel,
+>>
+>> Please fix the patch subject for all patches in the series per Bjorn H.
+>> request.
+>>
+>> PCI: qcom: Fix init problem with missing PARF programming
+>>
+>> Also the patch subject is misleading to me. Actually you change few phy
+>> parameters: Tx De-Emphasis, Tx Swing and Rx equalization. On the other
+>> side I guess those parameters are board specific and I'm not sure how
+>> this change will reflect on apq8064 boards.
+>>
 > 
-> Reviewed-by: Amit Shah <amit@kernel.org>
-
-Thank you! Well, who will take this into his tree?
-
-> Thanks,
+> I also think that this would brake apq8064, on ipq8064 this is needed or 
+> the system doesn't boot. 
+> Should I move this to the dts and set this params only if they are present
+> in dts or also here check for compatible and set accordingly? 
 > 
-> > ---
-> >  drivers/char/virtio_console.c | 3 ++-
-> >  1 file changed, 2 insertions(+), 1 deletion(-)
-> > 
-> > diff --git a/drivers/char/virtio_console.c
-> > b/drivers/char/virtio_console.c
-> > index 4df9b40d6342..7e1bc0f580a2 100644
-> > --- a/drivers/char/virtio_console.c
-> > +++ b/drivers/char/virtio_console.c
-> > @@ -2116,6 +2116,7 @@ static struct virtio_device_id id_table[] = {
-> >  	{ VIRTIO_ID_CONSOLE, VIRTIO_DEV_ANY_ID },
-> >  	{ 0 },
-> >  };
-> > +MODULE_DEVICE_TABLE(virtio, id_table);
-> >  
-> >  static unsigned int features[] = {
-> >  	VIRTIO_CONSOLE_F_SIZE,
-> > @@ -2128,6 +2129,7 @@ static struct virtio_device_id
-> > rproc_serial_id_table[] = {
-> >  #endif
-> >  	{ 0 },
-> >  };
-> > +MODULE_DEVICE_TABLE(virtio, rproc_serial_id_table);
-> >  
-> >  static unsigned int rproc_serial_features[] = {
-> >  };
-> > @@ -2280,6 +2282,5 @@ static void __exit fini(void)
-> >  module_init(init);
-> >  module_exit(fini);
-> >  
-> > -MODULE_DEVICE_TABLE(virtio, id_table);
-> >  MODULE_DESCRIPTION("Virtio console driver");
-> >  MODULE_LICENSE("GPL");
 
+I also think that these phy params should be per board (and they are
+tunable).
+
+Maybe you can propose those as generic phy params in pci.txt binding
+document and then we can ask DT maintainers for opinion. If they refuse
+such generic bindings, we could switch to custom qcom,phy properties.
+
+-- 
+regards,
+Stan
