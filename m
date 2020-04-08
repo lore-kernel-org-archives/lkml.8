@@ -2,85 +2,61 @@ Return-Path: <SRS0=8dav=5Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7414C2BA1A
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 15:39:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11EDCC2BA1A
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 15:40:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A0776206F7
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 15:39:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E60232072F
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 15:40:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729687AbgDHPi7 (ORCPT
+        id S1729499AbgDHPkk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Apr 2020 11:38:59 -0400
-Received: from relmlor2.renesas.com ([210.160.252.172]:22084 "EHLO
-        relmlie6.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729674AbgDHPi6 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Apr 2020 11:38:58 -0400
-X-IronPort-AV: E=Sophos;i="5.72,359,1580742000"; 
-   d="scan'208";a="43920588"
-Received: from unknown (HELO relmlir5.idc.renesas.com) ([10.200.68.151])
-  by relmlie6.idc.renesas.com with ESMTP; 09 Apr 2020 00:38:57 +0900
-Received: from localhost.localdomain (unknown [10.226.36.204])
-        by relmlir5.idc.renesas.com (Postfix) with ESMTP id DF4114004BDB;
-        Thu,  9 Apr 2020 00:38:52 +0900 (JST)
-From:   Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-To:     Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Andrew Murray <amurray@thegoodpenguin.co.uk>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Marek Vasut <marek.vasut+renesas@gmail.com>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Shawn Lin <shawn.lin@rock-chips.com>,
-        Tom Joseph <tjoseph@cadence.com>,
-        Heiko Stuebner <heiko@sntech.de>
-Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-renesas-soc@vger.kernel.org,
-        Chris Paterson <Chris.Paterson2@renesas.com>,
-        linux-rockchip@lists.infradead.org,
-        Lad Prabhakar <prabhakar.csengg@gmail.com>,
-        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Subject: [PATCH v7 8/8] MAINTAINERS: Add file patterns for rcar PCI device tree bindings
-Date:   Wed,  8 Apr 2020 16:38:00 +0100
-Message-Id: <1586360280-10956-9-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1586360280-10956-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-References: <1586360280-10956-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+        Wed, 8 Apr 2020 11:40:40 -0400
+Received: from verein.lst.de ([213.95.11.211]:42916 "EHLO verein.lst.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728345AbgDHPkj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Apr 2020 11:40:39 -0400
+Received: by verein.lst.de (Postfix, from userid 2407)
+        id 0BEE968C65; Wed,  8 Apr 2020 17:40:34 +0200 (CEST)
+Date:   Wed, 8 Apr 2020 17:40:33 +0200
+From:   Christoph Hellwig <hch@lst.de>
+To:     Hillf Danton <hdanton@sina.com>
+Cc:     Christoph Hellwig <hch@lst.de>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        Peter Zijlstra <peterz@infradead.org>,
+        linuxppc-dev@lists.ozlabs.org, linux-hyperv@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org,
+        linux-arch@vger.kernel.org, linux-mm@kvack.org,
+        iommu@lists.linux-foundation.org, syzkaller-bugs@googlegroups.com,
+        linux-arm-kernel@lists.infradead.org, linux-s390@vger.kernel.org,
+        bpf@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 02/28] staging: android: ion: use vmap instead of
+ vm_map_ram
+Message-ID: <20200408154033.GA28499@lst.de>
+References: <20200408115926.1467567-1-hch@lst.de> <20200408124833.13032-1-hdanton@sina.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200408124833.13032-1-hdanton@sina.com>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add file pattern entry for rcar PCI devicetree binding, so that when
-people run ./scripts/get_maintainer.pl the rcar PCI maintainers could also
-be listed.
+On Wed, Apr 08, 2020 at 08:48:33PM +0800, Hillf Danton wrote:
+> > -	void *addr = vm_map_ram(pages, num, -1, pgprot);
+> > +	void *addr = vmap(pages, num, VM_MAP);
+> 
+> A merge glitch?
+> 
+> void *vmap(struct page **pages, unsigned int count,
+> 	   unsigned long flags, pgprot_t prot)
 
-Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Reviewed-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
----
- MAINTAINERS | 1 +
- 1 file changed, 1 insertion(+)
+Yes, thanks for the headsup, you were as fast as the build bot :)
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 3f0f2ee2af32..87df2d31a54b 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -12933,6 +12933,7 @@ L:	linux-pci@vger.kernel.org
- L:	linux-renesas-soc@vger.kernel.org
- S:	Maintained
- F:	drivers/pci/controller/*rcar*
-+F:	Documentation/devicetree/bindings/pci/*rcar*
- 
- PCI DRIVER FOR SAMSUNG EXYNOS
- M:	Jingoo Han <jingoohan1@gmail.com>
--- 
-2.20.1
-
+Fixed now.
