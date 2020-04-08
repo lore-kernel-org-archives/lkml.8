@@ -2,505 +2,181 @@ Return-Path: <SRS0=8dav=5Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79C15C352BE
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 05:06:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C299FC2BB85
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 05:06:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3BE472082F
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 05:06:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9AF9F20769
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 05:06:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="AvHVQP9q"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="mt2UO1ks"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726894AbgDHFF7 (ORCPT
+        id S1727126AbgDHFGq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Apr 2020 01:05:59 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:38322 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726846AbgDHFFx (ORCPT
+        Wed, 8 Apr 2020 01:06:46 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:33764 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727077AbgDHFGq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Apr 2020 01:05:53 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03854CmS180113;
-        Wed, 8 Apr 2020 05:05:30 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
- subject : date : message-id : in-reply-to : references : mime-version :
- content-transfer-encoding; s=corp-2020-01-29;
- bh=7QyLiBCO3vyvqJ8QQH0U81XYGVivm5nwHGLYsFlNJAo=;
- b=AvHVQP9qtew1hsN6EtCaOeF520A4+Z8TUiZF8HI5faa0Jz1VTdsvMiJby5SU8RUz1GIi
- Rg7/4ShQivVruZUqr7xq5Zo5D65mgdKB0GzTlFD1YqCjZqnXWqZVYy6AbPPQA8DcQ9w6
- nb8znQ4P7Cgfx/4eWvv5Co9yR3rhKguPsyGKTvdcq+RXTH7hGYWKx4rlfUfNxTY2kMyp
- jH65pvII+gGiUkKYMJUofuBTG0cihFr4kMmZSaPbLnay6cPDpOUebP8eRjiWZ18zM8Do
- sJDeBhv3oYGnjqdviRm8ykKGhEvBOZE88dP/yx/gC9JPyQDY4ir2oY0TfZnbZUoc8nA/ Yw== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by userp2120.oracle.com with ESMTP id 3091mnh150-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 08 Apr 2020 05:05:30 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03852X3K062284;
-        Wed, 8 Apr 2020 05:05:29 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by userp3020.oracle.com with ESMTP id 3091mh1kvb-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 08 Apr 2020 05:05:29 +0000
-Received: from abhmp0012.oracle.com (abhmp0012.oracle.com [141.146.116.18])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 03855SHY007473;
-        Wed, 8 Apr 2020 05:05:28 GMT
-Received: from monad.ca.oracle.com (/10.156.75.81)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 07 Apr 2020 22:05:27 -0700
-From:   Ankur Arora <ankur.a.arora@oracle.com>
-To:     linux-kernel@vger.kernel.org, x86@kernel.org
-Cc:     peterz@infradead.org, hpa@zytor.com, jpoimboe@redhat.com,
-        namit@vmware.com, mhiramat@kernel.org, jgross@suse.com,
-        bp@alien8.de, vkuznets@redhat.com, pbonzini@redhat.com,
-        boris.ostrovsky@oracle.com, mihai.carabas@oracle.com,
-        kvm@vger.kernel.org, xen-devel@lists.xenproject.org,
-        virtualization@lists.linux-foundation.org,
-        Ankur Arora <ankur.a.arora@oracle.com>
-Subject: [RFC PATCH 21/26] x86/alternatives: Paravirt runtime selftest
-Date:   Tue,  7 Apr 2020 22:03:18 -0700
-Message-Id: <20200408050323.4237-22-ankur.a.arora@oracle.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200408050323.4237-1-ankur.a.arora@oracle.com>
-References: <20200408050323.4237-1-ankur.a.arora@oracle.com>
+        Wed, 8 Apr 2020 01:06:46 -0400
+Received: by mail-wr1-f68.google.com with SMTP id a25so6311298wrd.0
+        for <linux-kernel@vger.kernel.org>; Tue, 07 Apr 2020 22:06:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=RVqYLzvz5LKqumC9icZHSiO0RIIhX7YU71aDHaxaFJE=;
+        b=mt2UO1ksFUf2Wqcy/GXaoOoCVWX2OeRgET0TvIwM1qEhWK0CR1YeHqkacSxJv/P8fU
+         VRA2yUT2pdNNBlBgUjtuWicF7bp7SIQxCJV403Pr1MDRJ0rxyUehQKnlOvLM1Ut+1qbD
+         YDyaE7xaFAI8xHJ4/UwY5fE1ZAG0sWOpBgYTQ=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=RVqYLzvz5LKqumC9icZHSiO0RIIhX7YU71aDHaxaFJE=;
+        b=qZV9wUNw+m1FXPBGCQUCWy2vuDfu3fJ7sjq+HyKQBQROzz9UuQWZgYzRKrbCL8l5Er
+         XywbRIWVcITHhE4VH2X5B4Tbz/N/Yt+ImVbC/X5W0lOQ4JyXp+eCBA3DJq6InqQ5tAgR
+         8ppnoabnbJ1+SeDEv5V4DFuQfIjWDbCeF26dpiBIHRcCDUe+/YlBvZRbazw4gb5+SuDl
+         pBOqfGxa0ZoyjlJcX/98JaLy8Yq/imp8SMr3ekhSb8VqO5dj8KfcTMjb0f5DFistSjVI
+         970cOVriJfRGnkFx/s6XmrJ1Wk5nZEaK6DKKsyAPC2bEcuVRFm6KPZJF5r0GEXbXlylW
+         ZWYw==
+X-Gm-Message-State: AGi0PuakawNbpDQuCYhmY8hYUYOxszQk8Tq9wLXUTs8/bWWPOOn0Yayo
+        9U/XsChdRrQbiEyFvhRLu7RXDg2qumvnfCJcpw4mKQaI
+X-Google-Smtp-Source: APiQypIN18iGe7EO2INUCjO7GQKpI0EzzwmN1Z1k8o9aPCwEQGXb3Iysg/a12d8h4jfUDp3v4FHpOhNbFw6kY+d81vI=
+X-Received: by 2002:adf:fa51:: with SMTP id y17mr6697995wrr.358.1586322403655;
+ Tue, 07 Apr 2020 22:06:43 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9584 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 suspectscore=0 bulkscore=0
- mlxlogscore=999 mlxscore=0 phishscore=0 malwarescore=0 spamscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
- definitions=main-2004080037
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9584 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- mlxlogscore=999 mlxscore=0 priorityscore=1501 bulkscore=0 adultscore=0
- impostorscore=0 phishscore=0 spamscore=0 clxscore=1015 lowpriorityscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
- definitions=main-2004080037
+References: <20200327151951.18111-1-ricardo.canuelo@collabora.com>
+ <20200327154345.GA3971@ninjato> <CAGAzgsqJznZi83ijxCgQg463Q4AnwiNX-a0Q9+Og9MW5OJ4Vew@mail.gmail.com>
+ <CAAEAJfCzquaiCkjxXYOJRH8tpGRkHJBSWnFD--S=C7uAvHwqUg@mail.gmail.com>
+In-Reply-To: <CAAEAJfCzquaiCkjxXYOJRH8tpGRkHJBSWnFD--S=C7uAvHwqUg@mail.gmail.com>
+From:   "dbasehore ." <dbasehore@chromium.org>
+Date:   Tue, 7 Apr 2020 22:06:32 -0700
+Message-ID: <CAGAzgsqCasNOFtP6Yk+HQAn_EiYVQApohmmjrGRukGukua9GyA@mail.gmail.com>
+Subject: Re: [PATCH] i2c: enable async suspend/resume on i2c devices
+To:     Ezequiel Garcia <ezequiel@vanguardiasur.com.ar>
+Cc:     Wolfram Sang <wsa@the-dreams.de>,
+        =?UTF-8?Q?Ricardo_Ca=C3=B1uelo?= <ricardo.canuelo@collabora.com>,
+        linux-i2c@vger.kernel.org, Guenter Roeck <groeck@chromium.org>,
+        Linux-pm mailing list <linux-pm@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        kernel@collabora.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add a selftest that triggers paravirt_runtime_patch() which
-toggles between the paravirt and native pv_lock_ops.
+On Sun, Mar 29, 2020 at 5:49 AM Ezequiel Garcia
+<ezequiel@vanguardiasur.com.ar> wrote:
+>
+> Hi Derek,
+>
+> On Fri, 27 Mar 2020 at 17:26, dbasehore . <dbasehore@chromium.org> wrote:
+> >
+> > On Fri, Mar 27, 2020 at 8:43 AM Wolfram Sang <wsa@the-dreams.de> wrote:
+> > >
+> > > On Fri, Mar 27, 2020 at 04:19:51PM +0100, Ricardo Ca=C3=B1uelo wrote:
+> > > > This enables the async suspend property for i2c devices. This reduc=
+es
+> > > > the suspend/resume time considerably on platforms with multiple i2c
+> > > > devices (such as a trackpad or touchscreen).
+> > > >
+> > > > (am from https://patchwork.ozlabs.org/patch/949922/)
+> > > >
+> > > > Signed-off-by: Derek Basehore <dbasehore@chromium.org>
+> > > > Reviewed-on: https://chromium-review.googlesource.com/1152411
+> > > > Tested-by: Venkateswarlu V Vinjamuri <venkateswarlu.v.vinjamuri@int=
+el.com>
+> > > > Reviewed-by: Venkateswarlu V Vinjamuri <venkateswarlu.v.vinjamuri@i=
+ntel.com>
+> > > > Reviewed-by: Justin TerAvest <teravest@chromium.org>
+> > > > Signed-off-by: Guenter Roeck <groeck@chromium.org>
+> > > > Signed-off-by: Ricardo Ca=C3=B1uelo <ricardo.canuelo@collabora.com>
+> > > > ---
+> > >
+> > > Adding linux-pm to CC. I don't know much about internals of async
+> > > suspend. Is there a guide like "what every maintainer needs to know
+> > > about"?
+> >
+> > For more details, you can look at the function dpm_resume in the
+> > drivers/base/power/main.c file and follow from there.
+> >
+> > I can't find anything in Documentation/, so here's a short overview:
+> > Async devices have suspend/resume callbacks scheduled via
+> > async_schedule at every step (normal, late, noirq, etc.) for
+> > suspending/resuming devices. We wait for all device callbacks to
+> > complete at the end of each of these steps before moving onto the next
+> > one. This means that you won't have a resume_early callback running
+> > when you start the normal device resume callbacks.
+> >
+> > The async callbacks still wait individually for children on suspend
+> > and parents on resume to complete their own callbacks before calling
+> > their own. Because some dependencies may not be tracked by the
+> > parent/child graph (or other unknown reasons), async is off by
+> > default.
+> >
+> > Enabling async is a confirmation that all dependencies to other
+> > devices are properly tracked, whether through the parent/child
+> > relationship or otherwise.
+> >
+>
+> Have you noticed the async sysfs attribute [1]?
+>
+> Given this allows userspace to enable the async suspend/resume,
+> wouldn't it be simpler to just do that in userspace, on the
+> platforms you want to target (e.g. Apollolake Chromebook devices, and so =
+on) ?
 
-The selftest also register an NMI handler, which exercises the
-patched pv-ops by spin-lock operations. These are triggered via
-artificially sent NMIs.
+I don't remember much since I attempted this a long time ago. That
+sounds like it would be reasonable under many circumstances though.
 
-And last, introduce patch sites in the primary and secondary
-patching code which are hit while during the patching process.
-
-Signed-off-by: Ankur Arora <ankur.a.arora@oracle.com>
----
- arch/x86/Kconfig.debug        |  13 ++
- arch/x86/kernel/Makefile      |   1 +
- arch/x86/kernel/alternative.c |  20 +++
- arch/x86/kernel/kvm.c         |   4 +-
- arch/x86/kernel/pv_selftest.c | 264 ++++++++++++++++++++++++++++++++++
- arch/x86/kernel/pv_selftest.h |  15 ++
- 6 files changed, 315 insertions(+), 2 deletions(-)
- create mode 100644 arch/x86/kernel/pv_selftest.c
- create mode 100644 arch/x86/kernel/pv_selftest.h
-
-diff --git a/arch/x86/Kconfig.debug b/arch/x86/Kconfig.debug
-index 2e74690b028a..82a8e3fa68c7 100644
---- a/arch/x86/Kconfig.debug
-+++ b/arch/x86/Kconfig.debug
-@@ -252,6 +252,19 @@ config X86_DEBUG_FPU
- 
- 	  If unsure, say N.
- 
-+config DEBUG_PARAVIRT_SELFTEST
-+	bool "Enable paravirt runtime selftest"
-+	depends on PARAVIRT
-+	depends on PARAVIRT_RUNTIME
-+	depends on PARAVIRT_SPINLOCKS
-+	depends on KVM_GUEST
-+	help
-+	  This option enables sanity testing of the runtime paravirtualized
-+	  patching code. Triggered via debugfs.
-+
-+	  Might help diagnose patching problems in different
-+	  configurations and loads.
-+
- config PUNIT_ATOM_DEBUG
- 	tristate "ATOM Punit debug driver"
- 	depends on PCI
-diff --git a/arch/x86/kernel/Makefile b/arch/x86/kernel/Makefile
-index ba89cabe5fcf..ed3c93681f12 100644
---- a/arch/x86/kernel/Makefile
-+++ b/arch/x86/kernel/Makefile
-@@ -114,6 +114,7 @@ obj-$(CONFIG_APB_TIMER)		+= apb_timer.o
- 
- obj-$(CONFIG_AMD_NB)		+= amd_nb.o
- obj-$(CONFIG_DEBUG_NMI_SELFTEST) += nmi_selftest.o
-+obj-$(CONFIG_DEBUG_PARAVIRT_SELFTEST) += pv_selftest.o
- 
- obj-$(CONFIG_KVM_GUEST)		+= kvm.o kvmclock.o
- obj-$(CONFIG_PARAVIRT)		+= paravirt.o paravirt_patch.o
-diff --git a/arch/x86/kernel/alternative.c b/arch/x86/kernel/alternative.c
-index 385c3e6ea925..26407d7a54db 100644
---- a/arch/x86/kernel/alternative.c
-+++ b/arch/x86/kernel/alternative.c
-@@ -26,6 +26,7 @@
- #include <asm/insn.h>
- #include <asm/io.h>
- #include <asm/fixmap.h>
-+#include "pv_selftest.h"
- 
- int __read_mostly alternatives_patched;
- 
-@@ -1549,6 +1550,12 @@ static void __maybe_unused text_poke_site(struct text_poke_state *tps,
- 	 */
- 	poke_sync(tps, PATCH_SYNC_0, offset, &int3, INT3_INSN_SIZE);
- 
-+	/*
-+	 * We have an INT3 in place; execute a contrived selftest that
-+	 * has an insn sequence that is under patching.
-+	 */
-+	pv_selftest_primary();
-+
- 	/* Poke remaining */
- 	poke_sync(tps, PATCH_SYNC_1, offset + INT3_INSN_SIZE,
- 		  tp->text + INT3_INSN_SIZE, tp->native.len - INT3_INSN_SIZE);
-@@ -1634,6 +1641,19 @@ static void text_poke_sync_site(struct text_poke_state *tps)
- 		smp_cond_load_acquire(&tps->state,
- 				      prevstate != VAL);
- 
-+		/*
-+		 * Send an NMI to one of the other CPUs.
-+		 */
-+		pv_selftest_send_nmi();
-+
-+		/*
-+		 * We have an INT3 in place; execute a contrived selftest that
-+		 * has an insn sequence that is under patching.
-+		 *
-+		 * Note that this function is also called from BP fixup but
-+		 * is just an NOP when called from there.
-+		 */
-+		pv_selftest_secondary();
- 		prevstate = READ_ONCE(tps->state);
- 
- 		/*
-diff --git a/arch/x86/kernel/kvm.c b/arch/x86/kernel/kvm.c
-index 6efe0410fb72..e56d263159d7 100644
---- a/arch/x86/kernel/kvm.c
-+++ b/arch/x86/kernel/kvm.c
-@@ -779,7 +779,7 @@ arch_initcall(kvm_alloc_cpumask);
- #ifdef CONFIG_PARAVIRT_SPINLOCKS
- 
- /* Kick a cpu by its apicid. Used to wake up a halted vcpu */
--static void kvm_kick_cpu(int cpu)
-+void kvm_kick_cpu(int cpu)
- {
- 	int apicid;
- 	unsigned long flags = 0;
-@@ -790,7 +790,7 @@ static void kvm_kick_cpu(int cpu)
- 
- #include <asm/qspinlock.h>
- 
--static void kvm_wait(u8 *ptr, u8 val)
-+void kvm_wait(u8 *ptr, u8 val)
- {
- 	unsigned long flags;
- 
-diff --git a/arch/x86/kernel/pv_selftest.c b/arch/x86/kernel/pv_selftest.c
-new file mode 100644
-index 000000000000..e522f444bd6e
---- /dev/null
-+++ b/arch/x86/kernel/pv_selftest.c
-@@ -0,0 +1,264 @@
-+// SPDX-License-Identifier: GPL-2.0
-+
-+#include <linux/delay.h>
-+#include <linux/irq.h>
-+#include <linux/spinlock.h>
-+#include <linux/debugfs.h>
-+#include <linux/memory.h>
-+#include <linux/nmi.h>
-+#include <linux/uaccess.h>
-+#include <asm/apic.h>
-+#include <asm/text-patching.h>
-+#include <asm/paravirt.h>
-+#include <asm/paravirt_types.h>
-+#include "pv_selftest.h"
-+
-+static int nmi_selftest;
-+static bool cond_state;
-+
-+#define SELFTEST_PARAVIRT	1
-+static int test_mode;
-+
-+/*
-+ * Mark this and the following functions __always_inline to ensure
-+ * we generate multiple patch sites that can be hit independently
-+ * in thread, NMI etc contexts.
-+ */
-+static __always_inline void selftest_pv(void)
-+{
-+	struct qspinlock test;
-+
-+	memset(&test, 0, sizeof(test));
-+
-+	test.locked = _Q_LOCKED_VAL;
-+
-+	/*
-+	 * Sits directly in the path of the test.
-+	 *
-+	 * The primary sets up an INT3 instruction at pv_queued_spin_unlock().
-+	 * Both the primary and secondary CPUs should hit that in both
-+	 * thread and NMI contexts.
-+	 *
-+	 * Additionally, this also gets inlined in nmi_pv_callback() so we
-+	 * should hit this with nmi_selftest.
-+	 *
-+	 * The fixup takes place in poke_int3_native().
-+	 */
-+	pv_queued_spin_unlock(&test);
-+}
-+
-+static __always_inline void patch_selftest(void)
-+{
-+	if (test_mode == SELFTEST_PARAVIRT)
-+		selftest_pv();
-+}
-+
-+static DEFINE_PER_CPU(int, selftest_count);
-+void pv_selftest_secondary(void)
-+{
-+	/*
-+	 * On the secondary we execute the same code in both the
-+	 * thread-context and the BP-context and so would hit this
-+	 * recursively if we do inside the fixup context.
-+	 *
-+	 * So we trigger the selftest only if it's not ongoing already
-+	 * (thus allowing the thread or NMI context, but excluding
-+	 * the INT3 handling path.)
-+	 */
-+	if (this_cpu_read(selftest_count))
-+		return;
-+
-+	this_cpu_inc(selftest_count);
-+
-+	patch_selftest();
-+
-+	this_cpu_dec(selftest_count);
-+}
-+
-+void pv_selftest_primary(void)
-+{
-+	patch_selftest();
-+}
-+
-+/*
-+ * We only come here if nmi_selftest > 0.
-+ *  - nmi_selftest >= 1: execute a pv-op that will be patched
-+ *  - nmi_selftest >= 2: execute a paired pv-op that is also contended
-+ *  - nmi_selftest >= 3: add lock contention
-+ */
-+static int nmi_callback(unsigned int val, struct pt_regs *regs)
-+{
-+	static DEFINE_SPINLOCK(nmi_spin);
-+
-+	if (!nmi_selftest)
-+		goto out;
-+
-+	patch_selftest();
-+
-+	if (nmi_selftest >= 2) {
-+		/*
-+		 * Depending on whether CONFIG_[UN]INLINE_SPIN_* are
-+		 * defined or not, these would get patched or just
-+		 * create race conditions between via NMIs.
-+		 */
-+		spin_lock(&nmi_spin);
-+
-+		/* Dilate the critical section to force contention. */
-+		if (nmi_selftest >= 3)
-+			udelay(1);
-+
-+		spin_unlock(&nmi_spin);
-+	}
-+
-+	/*
-+	 * nmi_selftest > 0, but we should really have a bitmap where
-+	 * to check if this really was destined for us or not.
-+	 */
-+	return NMI_HANDLED;
-+out:
-+	return NMI_DONE;
-+}
-+
-+void pv_selftest_register(void)
-+{
-+	register_nmi_handler(NMI_LOCAL, nmi_callback,
-+			     0, "paravirt_nmi_selftest");
-+}
-+
-+void pv_selftest_unregister(void)
-+{
-+	unregister_nmi_handler(NMI_LOCAL, "paravirt_nmi_selftest");
-+}
-+
-+void pv_selftest_send_nmi(void)
-+{
-+	int cpu = smp_processor_id();
-+	/* NMI or INT3 */
-+	if (nmi_selftest && !in_interrupt())
-+		apic->send_IPI(cpu + 1 % num_online_cpus(), NMI_VECTOR);
-+}
-+
-+/*
-+ * Just declare these locally here instead of having them be
-+ * exposed to the whole world.
-+ */
-+void kvm_wait(u8 *ptr, u8 val);
-+void kvm_kick_cpu(int cpu);
-+bool __raw_callee_save___kvm_vcpu_is_preempted(long cpu);
-+static void pv_spinlocks(void)
-+{
-+	paravirt_stage_alt(cond_state,
-+			   lock.queued_spin_lock_slowpath,
-+			   __pv_queued_spin_lock_slowpath);
-+	paravirt_stage_alt(cond_state, lock.queued_spin_unlock.func,
-+			   PV_CALLEE_SAVE(__pv_queued_spin_unlock).func);
-+	paravirt_stage_alt(cond_state, lock.wait, kvm_wait);
-+	paravirt_stage_alt(cond_state, lock.kick, kvm_kick_cpu);
-+
-+	paravirt_stage_alt(cond_state,
-+			   lock.vcpu_is_preempted.func,
-+			   PV_CALLEE_SAVE(__kvm_vcpu_is_preempted).func);
-+}
-+
-+void pv_trigger(void)
-+{
-+	bool nmi_mode = nmi_selftest ? true : false;
-+	int ret;
-+
-+	pr_debug("%s: nmi=%d; NMI-mode=%d\n", __func__, nmi_selftest, nmi_mode);
-+
-+	mutex_lock(&text_mutex);
-+
-+	paravirt_stage_zero();
-+	pv_spinlocks();
-+
-+	/*
-+	 * paravirt patching for pv_locks can potentially deadlock
-+	 * if we are running with nmi_mode=false and we get an NMI.
-+	 *
-+	 * For the sake of testing that path, we risk it. However, if
-+	 * we are generating synthetic NMIs (nmi_selftest > 0) then
-+	 * run with nmi_mode=true.
-+	 */
-+	ret = paravirt_runtime_patch(nmi_mode);
-+
-+	/*
-+	 * Flip the state so we switch the pv_lock_ops on the next test.
-+	 */
-+	cond_state = !cond_state;
-+
-+	mutex_unlock(&text_mutex);
-+
-+	pr_debug("%s: nmi=%d; NMI-mode=%d, ret=%d\n", __func__, nmi_selftest,
-+		 nmi_mode, ret);
-+}
-+
-+static void pv_selftest_trigger(void)
-+{
-+	test_mode = SELFTEST_PARAVIRT;
-+	pv_trigger();
-+}
-+
-+static ssize_t pv_selftest_write(struct file *file, const char __user *ubuf,
-+				 size_t count, loff_t *ppos)
-+{
-+	pv_selftest_register();
-+	pv_selftest_trigger();
-+	pv_selftest_unregister();
-+
-+	return count;
-+}
-+
-+static ssize_t pv_nmi_read(struct file *file, char __user *ubuf,
-+			   size_t count, loff_t *ppos)
-+{
-+	char buf[32];
-+	unsigned int len;
-+
-+	len = snprintf(buf, sizeof(buf), "%d\n", nmi_selftest);
-+	return simple_read_from_buffer(ubuf, count, ppos, buf, len);
-+}
-+
-+static ssize_t pv_nmi_write(struct file *file, const char __user *ubuf,
-+			    size_t count, loff_t *ppos)
-+{
-+	char buf[32];
-+	unsigned int len;
-+	unsigned int enabled;
-+
-+	len = min(sizeof(buf) - 1, count);
-+	if (copy_from_user(buf, ubuf, len))
-+		return -EFAULT;
-+
-+	buf[len] = '\0';
-+	if (kstrtoint(buf, 0, &enabled))
-+		return -EINVAL;
-+
-+	nmi_selftest = enabled > 3 ? 3 : enabled;
-+
-+	return count;
-+}
-+
-+static const struct file_operations pv_selftest_fops = {
-+	.read = NULL,
-+	.write = pv_selftest_write,
-+	.llseek = default_llseek,
-+};
-+
-+static const struct file_operations pv_nmi_fops = {
-+	.read = pv_nmi_read,
-+	.write = pv_nmi_write,
-+	.llseek = default_llseek,
-+};
-+
-+static int __init pv_selftest_init(void)
-+{
-+	struct dentry *d = debugfs_create_dir("pv_selftest", NULL);
-+
-+	debugfs_create_file("toggle", 0600, d, NULL, &pv_selftest_fops);
-+	debugfs_create_file("nmi", 0600, d, NULL, &pv_nmi_fops);
-+
-+	return 0;
-+}
-+
-+late_initcall(pv_selftest_init);
-diff --git a/arch/x86/kernel/pv_selftest.h b/arch/x86/kernel/pv_selftest.h
-new file mode 100644
-index 000000000000..5afa0f7db5cc
---- /dev/null
-+++ b/arch/x86/kernel/pv_selftest.h
-@@ -0,0 +1,15 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+#ifndef _PVR_SELFTEST_H
-+#define _PVR_SELFTEST_H
-+
-+#ifdef CONFIG_DEBUG_PARAVIRT_SELFTEST
-+void pv_selftest_send_nmi(void);
-+void pv_selftest_primary(void);
-+void pv_selftest_secondary(void);
-+#else
-+static inline void pv_selftest_send_nmi(void) { }
-+static inline void pv_selftest_primary(void) { }
-+static inline void pv_selftest_secondary(void) { }
-+#endif /*! CONFIG_DEBUG_PARAVIRT_SELFTEST */
-+
-+#endif /* _PVR_SELFTEST_H */
--- 
-2.20.1
-
+>
+> Thanks,
+> Ezequiel
+>
+> [1] Documentation/ABI/testing/sysfs-devices-power
+>
+> > >
+> > > > This patch was originally created for chromeos some time ago and I'=
+m
+> > > > evaluating if it's a good candidate for upstreaming.
+> > > >
+> > > > By the looks of it I think it was done with chromebooks in mind, bu=
+t
+> > > > AFAICT this would impact every i2c client in every platform, so I'd=
+ like
+> > > > to know your opinion about it.
+> > > >
+> > > > As far as I know there was no further investigation or testing on i=
+t, so
+> > > > I don't know if it was tested on any other hardware.
+> > > >
+> > > > Best,
+> > > > Ricardo
+> > > >
+> > > >  drivers/i2c/i2c-core-base.c | 1 +
+> > > >  1 file changed, 1 insertion(+)
+> > > >
+> > > > diff --git a/drivers/i2c/i2c-core-base.c b/drivers/i2c/i2c-core-bas=
+e.c
+> > > > index cefad0881942..643bc0fe0281 100644
+> > > > --- a/drivers/i2c/i2c-core-base.c
+> > > > +++ b/drivers/i2c/i2c-core-base.c
+> > > > @@ -769,6 +769,7 @@ i2c_new_client_device(struct i2c_adapter *adap,=
+ struct i2c_board_info const *inf
+> > > >       client->dev.of_node =3D of_node_get(info->of_node);
+> > > >       client->dev.fwnode =3D info->fwnode;
+> > > >
+> > > > +     device_enable_async_suspend(&client->dev);
+> > > >       i2c_dev_set_name(adap, client, info);
+> > > >
+> > > >       if (info->properties) {
+> > > > --
+> > > > 2.18.0
+> > > >
