@@ -2,146 +2,130 @@ Return-Path: <SRS0=n+Ub=5Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7616C2BBFD
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4ADEC3815B
 	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 10:14:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1A48320A8B
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 10:07:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0E49221D6C
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 10:05:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726647AbgDIKHo (ORCPT
+        id S1726571AbgDIKFV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Apr 2020 06:07:44 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:37736 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725828AbgDIKHn (ORCPT
+        Thu, 9 Apr 2020 06:05:21 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:33189 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725783AbgDIKFU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Apr 2020 06:07:43 -0400
-Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 039A3JN4129732
-        for <linux-kernel@vger.kernel.org>; Thu, 9 Apr 2020 06:07:43 -0400
-Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 3092110jt7-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Thu, 09 Apr 2020 06:07:42 -0400
-Received: from localhost
-        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <rppt@linux.ibm.com>;
-        Thu, 9 Apr 2020 11:07:20 +0100
-Received: from b06avi18878370.portsmouth.uk.ibm.com (9.149.26.194)
-        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Thu, 9 Apr 2020 11:07:12 +0100
-Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
-        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 039A7VBW33358272
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 9 Apr 2020 10:07:31 GMT
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 5F75411C05C;
-        Thu,  9 Apr 2020 10:07:31 +0000 (GMT)
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id A2EEE11C05E;
-        Thu,  9 Apr 2020 10:07:28 +0000 (GMT)
-Received: from linux.ibm.com (unknown [9.148.207.228])
-        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
-        Thu,  9 Apr 2020 10:07:28 +0000 (GMT)
-Date:   Thu, 9 Apr 2020 13:07:26 +0300
-From:   Mike Rapoport <rppt@linux.ibm.com>
-To:     Jiaxun Yang <jiaxun.yang@flygoat.com>
-Cc:     linux-mips@vger.kernel.org,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Huacai Chen <chenhc@lemote.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Robert Richter <rric@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>,
-        Paul Burton <paulburton@kernel.org>,
-        Allison Randal <allison@lohutok.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Vladimir Kondratiev <vladimir.kondratiev@intel.com>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        Alexios Zavras <alexios.zavras@intel.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Serge Semin <fancer.lancer@gmail.com>,
-        Matt Redfearn <matt.redfearn@mips.com>,
-        Steve Winslow <swinslow@gmail.com>,
-        Richard Fontana <rfontana@redhat.com>,
-        Oleksij Rempel <linux@rempel-privat.de>,
-        Kamal Dasu <kdasu.kdev@gmail.com>,
-        linux-kernel@vger.kernel.org,
-        bcm-kernel-feedback-list@broadcom.com, oprofile-list@lists.sf.net
-Subject: Re: [PATCH 12/12] MIPS: ip27: Fix includes
-References: <20200408113505.2528103-1-jiaxun.yang@flygoat.com>
- <20200408130024.2529220-7-jiaxun.yang@flygoat.com>
- <20200409091922.GA17293@linux.ibm.com>
- <20200409173835.27ed1e64@flygoat-x1e>
+        Thu, 9 Apr 2020 06:05:20 -0400
+Received: by mail-ot1-f67.google.com with SMTP id 103so3519923otv.0;
+        Thu, 09 Apr 2020 03:05:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=339j4MaqRyQUqdJT33toZfwVsRBRNf1r0tP9u8tA6/k=;
+        b=E1dFeILKHlqqZAzfS0yB6UoHzzwrLRtZ8X8WHp+c1guK812Ac3v1D8MqHQms5kdfj0
+         3yyMWYgtrOyTvMYdbGk7LG3bqCNXBbKmyVByy1WkLVRcyRNNHIKtAC/Ff/Ffrx0Eyxwg
+         34jnSSD42/QryQnaEchzDT17xTYgVRNKJotdWuyJBww1ox8bXhVVLeVPnmnemwEUjJ19
+         /vNgWYmIKQfliHgiboJ5yKJveN5HoiD5xnCDzFwefHb0Kx4WaqeSCvuqR7IYEwoGbmfa
+         xnjM1LOH0HynOtlqdJOWztV53gpIugfHYz9hYfqAXd12Wk/G21Z6fXwZK3+8Fm31/kRz
+         KE2A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=339j4MaqRyQUqdJT33toZfwVsRBRNf1r0tP9u8tA6/k=;
+        b=h30BwOqb943WWLPKJDgPZV6lL+NL7sISAyPkNuJ9D6lLf9mwgvyARvISazHMLHBJ/J
+         zGU6EiBEHX7cf7g2LOxasCBv+Xp6wfAb4b5jqByxObQqG2FmgQVTUuPmh5YoiKMxy3n9
+         O0GJUtQwF7Y+Ekt8BnjR7Agp5dE0RL6uaGXuvKRn0gPusvwjy4uZ+o8WGgX61ZCTDdXL
+         5S6/ZlkO5QYdgvfOdcM+hp8V1GKr4pyHBcWP/sUnyB2mh1uz/o1T3vfYAXJSpQPUmpNh
+         5JjkAi6TSpQGc3rYHRiYebkBmMQoQq/w7vPWkpAO7TlnzUVoOSGlWzsS9vjmlB+NWir/
+         smnQ==
+X-Gm-Message-State: AGi0PuYh9GO3mc3Zu2qlNvDDlsNJTyh4Xxh2/0JWswsOtVToyt0eVrsg
+        0YOn2Lrumt52fNrOlGdctgVl+ZAg/ZbzVIT+A04=
+X-Google-Smtp-Source: APiQypI1ZTh7a2IVl4I8tXE41Mc3lGPBZY4nosM1GN+H5r+AL5nH4NCX6DGIGvQhFATTRXa0MRQAoqev/aam1hCwyf0=
+X-Received: by 2002:a9d:ef6:: with SMTP id 109mr2955843otj.43.1586426718309;
+ Thu, 09 Apr 2020 03:05:18 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200409173835.27ed1e64@flygoat-x1e>
-X-TM-AS-GCONF: 00
-x-cbid: 20040910-0008-0000-0000-0000036D7458
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 20040910-0009-0000-0000-00004A8F160C
-Message-Id: <20200409100726.GB17293@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
- definitions=2020-04-09_03:2020-04-07,2020-04-09 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 spamscore=0
- mlxscore=0 impostorscore=0 suspectscore=1 adultscore=0 malwarescore=0
- lowpriorityscore=0 phishscore=0 priorityscore=1501 mlxlogscore=270
- bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2004090073
+References: <1586360280-10956-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <1586360280-10956-8-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com> <e3f5fa77-f78e-edbf-9efc-53b5ea620460@cogentembedded.com>
+In-Reply-To: <e3f5fa77-f78e-edbf-9efc-53b5ea620460@cogentembedded.com>
+From:   "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+Date:   Thu, 9 Apr 2020 11:04:52 +0100
+Message-ID: <CA+V-a8s1E_kq_GENBTw3zGxKSPFnVKNY-ta9+c8W8nV4JFyEEw@mail.gmail.com>
+Subject: Re: [PATCH v7 7/8] PCI: Add Renesas R8A774C0 device ID
+To:     Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>,
+        Bjorn Helgaas <bhelgaas@google.com>
+Cc:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Andrew Murray <amurray@thegoodpenguin.co.uk>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Marek Vasut <marek.vasut+renesas@gmail.com>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Shawn Lin <shawn.lin@rock-chips.com>,
+        Tom Joseph <tjoseph@cadence.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+        LAK <linux-arm-kernel@lists.infradead.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        Chris Paterson <Chris.Paterson2@renesas.com>,
+        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 09, 2020 at 05:38:35PM +0800, Jiaxun Yang wrote:
-> On Thu, 9 Apr 2020 12:19:22 +0300
-> Mike Rapoport <rppt@linux.ibm.com> wrote:
-> 
-> > On Wed, Apr 08, 2020 at 08:59:54PM +0800, Jiaxun Yang wrote:
-> > > Somehow changes in topology messed up headers.
-> > > So just add necessary headers to make it compile again.  
-> > 
-> > Please avoid aftermath build fixes because it breaks bisection.
-> > Each commit should be buildable, so this changes should go into the
-> > patches that actually require them.
-> 
-> I'd love to but for that I'll have to squash patch #5~#12 into a single
-> patch. T thought it's to big and touching too many files.
-> 
-> Is that acceptable? 
+Hi Sergei and Bjorn,
 
-If I understand correctly, the patches #5-#12 replace custom MIPS
-implementation of CPU topology with a generic one, so making them a single
-patch could be Ok as it is single logical change.
+On Thu, Apr 9, 2020 at 10:36 AM Sergei Shtylyov
+<sergei.shtylyov@cogentembedded.com> wrote:
+>
+> Hello!
+>
+> On 08.04.2020 18:37, Lad Prabhakar wrote:
+>
+> > Add R8A774C0 device ID so that this can be used by
+> > pci_endpoint_test driver.
+> >
+> > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> > Reviewed-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+> > ---
+> >   include/linux/pci_ids.h | 1 +
+> >   1 file changed, 1 insertion(+)
+> >
+> > diff --git a/include/linux/pci_ids.h b/include/linux/pci_ids.h
+> > index 1dfc4e1dcb94..9e957c18abeb 100644
+> > --- a/include/linux/pci_ids.h
+> > +++ b/include/linux/pci_ids.h
+> > @@ -2460,6 +2460,7 @@
+> >   #define PCI_DEVICE_ID_RENESAS_SH7763        0x0004
+> >   #define PCI_DEVICE_ID_RENESAS_SH7785        0x0007
+> >   #define PCI_DEVICE_ID_RENESAS_SH7786        0x0010
+> > +#define PCI_DEVICE_ID_RENESAS_R8A774C0       0x002d
+>
+>     We don't add the device IDs in this file, unless used in several places.
+> Is it?
+>
+My bad I should have checked it before making this change actually it
+was suggested in my previous version of the series but anyway atm this
+was planned to be  used only in pci_endpoint_test driver, so in that
+case Ill drop this patch.
 
-But I'm not sure it is required. Judging by diffstat, my guess would be
-that patch #5 breaks ip27 builds. If that's true, only patch #5 should be
-redacted
- 
-> Thanks.
-> >  
-> > > Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
-> > > ---
-> --
-> Jiaxun Yang
-> 
-> 
+Cheers,
+--Prabhakar
 
--- 
-Sincerely yours,
-Mike.
-
+> [...]
+>
+> MBR, Sergei
