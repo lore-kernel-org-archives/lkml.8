@@ -2,87 +2,70 @@ Return-Path: <SRS0=n+Ub=5Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 757E5C2BA2B
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 11:42:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60774C2BA2B
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 11:42:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 42EC320A8B
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 11:42:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TQKvrRs7"
+	by mail.kernel.org (Postfix) with ESMTP id 36FA220771
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 11:42:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726641AbgDILmR (ORCPT
+        id S1726657AbgDILmY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Apr 2020 07:42:17 -0400
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:46218 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725971AbgDILmR (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Apr 2020 07:42:17 -0400
-Received: by mail-ot1-f67.google.com with SMTP id 88so907470otx.13;
-        Thu, 09 Apr 2020 04:42:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=QSdmLn/47rBWdzKSuy9mWSxAVccVvsu0MtzKNdTSVJs=;
-        b=TQKvrRs72fLHco+11O8lbJRsVzpW+nmiLZg9JT2qYME6dfk909CrQi8VK4Znmzt9wF
-         Jo0oPrDaNXJbB2lgXSml/x6zCoBvahhmyJgmWBPOLTfc5TgytB3ifSSNDmWzVpiaaV8W
-         /ZmLmENX0mjBGyNA8/d20SWJhTeXI3G4KrPwHO50GQX/5+1Neoz466ZOLYwymWYQzI62
-         5hvZdxzNjJrfkPIO3Rd2DaJ6BCAuSoCQ8kjtqPJMudpf9oEAW5vxAR0QhOIo8pQIJcQl
-         axn3n1wlVHRLITZcIdyFPjJSd0Wam4tfOxVw2AcF2zF8UM1/JGIKHZn5gTQ5gWkQoBBW
-         FszA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=QSdmLn/47rBWdzKSuy9mWSxAVccVvsu0MtzKNdTSVJs=;
-        b=hkHa0LUtftxkjPdxUvt2LPhIrgF3MBs7XWA7e7kbnGrjzNS7kCiAi8ZCp3rkfPh3K4
-         R2Tx4ZuKbsD2i3LaEbxteBPEsh0ivt9ryBM2OJnp1324NysCeB3hD4LdETLAvZ6axGux
-         SDZiXSpZ9z6l8C0gAtfbr29G9w4I5hROfDR6YJKVaRhcBq5v5JaPD7vCdBi3mcJpLgRp
-         c4dk/lvjmGkYCG4bWYQNiJIt+M0Vn8R7KVoJfhv9MWVASrgdoY85MXcmnaUEZsYcuK8g
-         IpXTnRrkhS1MA4JUVECU3f+a0IwneJ6Jr42HiopspmD8xI4cbVl8n0wndjgZjVKuVqm/
-         jU2w==
-X-Gm-Message-State: AGi0PuZnG30ekppm+HnYmh9S/3w2XMxp9BWKgBv7p815H3k+OxRCffvU
-        Ubqpxv1rMCnsMREBuTUB56TJ5EZyyxSKLGMzL4s=
-X-Google-Smtp-Source: APiQypJMFPyFCIIC/zZqgeb5ciZU4mgfNDDmqfwmYgNfamEqORgmLs/i8FWeNYIkHVPlaejOKAMgEtoUWlUMpWOy4rs=
-X-Received: by 2002:a9d:19ca:: with SMTP id k68mr9439579otk.232.1586432536695;
- Thu, 09 Apr 2020 04:42:16 -0700 (PDT)
+        Thu, 9 Apr 2020 07:42:24 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:12631 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725971AbgDILmY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Apr 2020 07:42:24 -0400
+Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id DD028843B943801B9B5E;
+        Thu,  9 Apr 2020 19:42:21 +0800 (CST)
+Received: from huawei.com (10.175.124.28) by DGGEMS402-HUB.china.huawei.com
+ (10.3.19.202) with Microsoft SMTP Server id 14.3.487.0; Thu, 9 Apr 2020
+ 19:42:13 +0800
+From:   Jason Yan <yanaijie@huawei.com>
+To:     <tglx@linutronix.de>, <mingo@redhat.com>, <bp@alien8.de>,
+        <hpa@zytor.com>, <x86@kernel.org>, <yanaijie@huawei.com>,
+        <linux-kernel@vger.kernel.org>
+Subject: [PATCH] x86: i8259: make default_legacy_pic static
+Date:   Thu, 9 Apr 2020 19:40:45 +0800
+Message-ID: <20200409114045.38648-1-yanaijie@huawei.com>
+X-Mailer: git-send-email 2.17.2
 MIME-Version: 1.0
-References: <20200226135229.24929-1-matthias.schiffer@ew.tq-group.com>
- <20200226151034.7i3h5blmrwre2yzg@pengutronix.de> <32ec35c2b3da119dd2c7bc09742796a0d8a9607e.camel@ew.tq-group.com>
- <20200330151231.GA1650@workstation.tuxnet> <CAGngYiUe-tihBJUcXQ738_5aA9pzgp_-NSs4iCrz3eWO6rMukA@mail.gmail.com>
- <20200404173546.GA55833@workstation.tuxnet> <CAGngYiWpO_N+t74k-==RNaXkZcp6TZvVOJzXPOi84cpQ6PHbhw@mail.gmail.com>
- <20200406095124.GA475759@ulmo>
-In-Reply-To: <20200406095124.GA475759@ulmo>
-From:   Sven Van Asbroeck <thesven73@gmail.com>
-Date:   Thu, 9 Apr 2020 07:42:05 -0400
-Message-ID: <CAGngYiWz-XCenfWAnTFR9jKuQpGQXi26B5-K0T3dvB_g54h6qA@mail.gmail.com>
-Subject: Re: (EXT) Re: [PATCH 1/4] pwm: pca9685: remove unused duty_cycle
- struct element
-To:     Thierry Reding <thierry.reding@gmail.com>
-Cc:     Clemens Gruber <clemens.gruber@pqgruber.com>,
-        Matthias Schiffer <matthias.schiffer@ew.tq-group.com>,
-        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>, linux-pwm@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-Originating-IP: [10.175.124.28]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 6, 2020 at 5:51 AM Thierry Reding <thierry.reding@gmail.com> wrote:
->
-> There are other chips where a single period is shared across multiple
-> PWM channels. Typically what we do there is once a period is configured
-> for a given channel, all subsequent PWM channel configurations must use
-> the same period, or otherwise the driver will return an error code.
+Fix the following sparse warning:
 
-Thank you for the clarification Thierry. Do you think this method would be
-appropriate for this chip?
+arch/x86/kernel/i8259.c:410:19: warning: symbol 'default_legacy_pic' was
+not declared. Should it be static?
+
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: Jason Yan <yanaijie@huawei.com>
+---
+ arch/x86/kernel/i8259.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/arch/x86/kernel/i8259.c b/arch/x86/kernel/i8259.c
+index 519649ddf100..004f32d2c61c 100644
+--- a/arch/x86/kernel/i8259.c
++++ b/arch/x86/kernel/i8259.c
+@@ -407,7 +407,7 @@ struct legacy_pic null_legacy_pic = {
+ 	.make_irq = legacy_pic_uint_noop,
+ };
+ 
+-struct legacy_pic default_legacy_pic = {
++static struct legacy_pic default_legacy_pic = {
+ 	.nr_legacy_irqs = NR_IRQS_LEGACY,
+ 	.chip  = &i8259A_chip,
+ 	.mask = mask_8259A_irq,
+-- 
+2.17.2
+
