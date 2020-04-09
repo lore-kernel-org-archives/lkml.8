@@ -2,127 +2,209 @@ Return-Path: <SRS0=n+Ub=5Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B778EC2D0EA
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 09:00:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82909C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 09:01:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7AD3D2075E
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 09:00:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4D5372075E
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 09:01:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="VutFBNdu"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Mn4dIaBi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726646AbgDIJAa (ORCPT
+        id S1726679AbgDIJBk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Apr 2020 05:00:30 -0400
-Received: from mail-eopbgr80079.outbound.protection.outlook.com ([40.107.8.79]:35651
-        "EHLO EUR04-VI1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726082AbgDIJAa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Apr 2020 05:00:30 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=OeRpwB3NK1Gqkgc8fbn6xoxYDwmxcwUMLbEm7quxEuiXarJelG3UmbU0KpNyH+rFFWSc8Bw1EfYTEnfwTXz+1Z3WNdEKy15+IOP6yFbAy6KsryFfbNVazWMMQlcFLYnNXugTPMEQhucGpBM2VwuE1AGVVyjs6L2uxStdUOf4yM6jMDK+gmOcG6xKXZ1vf5lb3cNVetXmRUO5YT1rRiTISOXFlPlxywLSjBus8BDOqzfMcPh8pPVJqF2YfwB99r7hy9MzKeNFigadHisxya8BQbykG4for/Y45KR4Y1UUGpSuDa3ubJwg1MqOI8bJh/5el+vlRtE3bgnulVz1LG8kAQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=mTgo6E0KhCgesssTNJ/pmnhEjCLELAajw4eTDiMWoeg=;
- b=GEiCpctv53aB2MsP8xaGy+jQBThuylZJszJIfzkJt21KqFjIc+QORO2a8LSd3pUSwW7sdcAGuX69AUxzxVk/S+YgPy6tU0U+Q9+7OcGZontRkgrA5orU7b/rglRMeLVNeMPQVqOHVZnOBdXdtmENYY+PxKR6ZZ1WL00PKWtxG1ANF2vyEsyG61gu1idETmwOmsJr8mjMW4qeDrlzVpuhOTefGw7Q7h2zcpZwGqjIzp+Rl6XZaw2wGzMy2ozUMMTswLtTlpNlIRbnrN4O063vTBYscYZtCF0Hy/P0E6j4m2nvBb3Fj15/cq4CSAGBYWk4d7kScrrDBUvPqs7i4im4DA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=mTgo6E0KhCgesssTNJ/pmnhEjCLELAajw4eTDiMWoeg=;
- b=VutFBNdu6g2RPz/IN8XUU6m00+7wU8pWZ1JkXTly7Ik02WC/CIST4me4biHkklVI+QfVHMPyUrVBd/Vb1gKceLsi9ykaqNvnej5FKy+ycpQAu/L82qDlYm5qv8Nhy6RF5/rSKjt9rrKdQntef/2ageMX2UQOgnkphznVldxbC7E=
-Received: from AM0PR04MB4481.eurprd04.prod.outlook.com (2603:10a6:208:70::15)
- by AM0PR04MB5825.eurprd04.prod.outlook.com (2603:10a6:208:127::19) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2878.16; Thu, 9 Apr
- 2020 09:00:26 +0000
-Received: from AM0PR04MB4481.eurprd04.prod.outlook.com
- ([fe80::ad44:6b0d:205d:f8fc]) by AM0PR04MB4481.eurprd04.prod.outlook.com
- ([fe80::ad44:6b0d:205d:f8fc%7]) with mapi id 15.20.2900.015; Thu, 9 Apr 2020
- 09:00:26 +0000
-From:   Peng Fan <peng.fan@nxp.com>
-List-Id: <soc.lore.kernel.org>
-To:     Arnd Bergmann <arnd@arndb.de>, "soc@kernel.org" <soc@kernel.org>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Leonard Crestez <leonard.crestez@nxp.com>
-CC:     Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        dl-linux-imx <linux-imx@nxp.com>, Abel Vesa <abel.vesa@nxp.com>,
-        Anson Huang <anson.huang@nxp.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH] soc: imx8: select SOC_BUS
-Thread-Topic: [PATCH] soc: imx8: select SOC_BUS
-Thread-Index: AQHWDkPILViybyw+CEWAlrPoiFlrqqhwfepQ
-Date:   Thu, 9 Apr 2020 09:00:26 +0000
-Message-ID: <AM0PR04MB4481AE18877828766FD1818E88C10@AM0PR04MB4481.eurprd04.prod.outlook.com>
-References: <20200409075208.2824062-1-arnd@arndb.de>
-In-Reply-To: <20200409075208.2824062-1-arnd@arndb.de>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=peng.fan@nxp.com; 
-x-originating-ip: [119.31.174.71]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: f9f925b8-83d4-4d5c-5f6c-08d7dc647251
-x-ms-traffictypediagnostic: AM0PR04MB5825:|AM0PR04MB5825:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <AM0PR04MB5825E64A8E80507F5E8D494188C10@AM0PR04MB5825.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:7691;
-x-forefront-prvs: 0368E78B5B
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM0PR04MB4481.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10009020)(4636009)(136003)(376002)(346002)(39860400002)(396003)(366004)(8936002)(71200400001)(86362001)(33656002)(44832011)(66446008)(8676002)(6636002)(316002)(4326008)(2906002)(81156014)(64756008)(66556008)(5660300002)(52536014)(76116006)(7696005)(54906003)(6506007)(9686003)(4744005)(478600001)(66476007)(26005)(81166007)(66946007)(55016002)(110136005)(186003);DIR:OUT;SFP:1101;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 4wj8UCbMLBqX3mBp06LziJUsuIqwuM2tv2YJlO2ztknNFzJbAINHtFpaSopNLHeuizYFv74Dvof/GyKou15luFl8j/cmVydleW9gk6oFFC5QtlIho5zQAJ9k0ejedG7yXIvXKIrk7dnGGO0REgyhDQCgZ5yBz3fwZIvKx1l2I4KAczDOf1rqe2YDEONPhFaIKoW/ivjVnyfo0450jXzxUOznZrJjwAlC2zseI5QnbUEdKnrH2aeblY9NpO9auKO+hMBkQdIW+GTB8sqMuWX29Ft2TuGUQvjc3lsr4MAyplLlChsa9e2aPrlzMfeRXmi+rMmVmmvqSIYsxfeBPu6PYmkL7YZn5+EQOlG3LNNPowSl7ud0nx58D4NhbRAaXGnoSuQkT8EY9gFHWCZkdUqpOcrWrIkGLUA+hmh5Eh5m9SiDdwEPvs/RDLG9t8pF7cjN
-x-ms-exchange-antispam-messagedata: z7E836vbdDViwIfAmZ11nqDc7mAFr02HN6U7+ozubbskb9u9Thquq8+R+yagZG7wMGajTHblF/eo7ASryRpKqk+AGuZ+oRdaJJw9mlRZ1L9ojZT4me/2EloJ68h3gAXml2EKd2TlpU/5PCWuK8igVQ==
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Thu, 9 Apr 2020 05:01:40 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:47699 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726082AbgDIJBk (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Apr 2020 05:01:40 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1586422899;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=msTkXhnouvwVtlF7/78TkiH9nVYNya7vCxTaw1gbKMk=;
+        b=Mn4dIaBiUGlkQQvGjJ50BEnVgvcmpzeZ/NjCnn7/pz8HCIjuWyQqx3OorYHtIUp6fIo2/n
+        Y3cCnd9rnOIqULb85bfdjbG1gRoYx3W+u4mSDQC11Q/p98WY5CQ81ueCLBZ75FsCwDJhWI
+        DexeS/qkuigD+QaBdx5ollJOwMN8Nno=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-20-4d7R36GENiiwKgaxvAcgYQ-1; Thu, 09 Apr 2020 05:01:37 -0400
+X-MC-Unique: 4d7R36GENiiwKgaxvAcgYQ-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 88F18107ACCA;
+        Thu,  9 Apr 2020 09:01:35 +0000 (UTC)
+Received: from [10.36.115.53] (ovpn-115-53.ams2.redhat.com [10.36.115.53])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 8122AA63D6;
+        Thu,  9 Apr 2020 09:01:26 +0000 (UTC)
+Subject: Re: [PATCH v1 5/8] vfio/type1: Report 1st-level/stage-1 format to
+ userspace
+To:     Jean-Philippe Brucker <jean-philippe@linaro.org>
+Cc:     "Liu, Yi L" <yi.l.liu@intel.com>,
+        "alex.williamson@redhat.com" <alex.williamson@redhat.com>,
+        "Tian, Kevin" <kevin.tian@intel.com>,
+        "jacob.jun.pan@linux.intel.com" <jacob.jun.pan@linux.intel.com>,
+        "joro@8bytes.org" <joro@8bytes.org>,
+        "Raj, Ashok" <ashok.raj@intel.com>,
+        "Tian, Jun J" <jun.j.tian@intel.com>,
+        "Sun, Yi Y" <yi.y.sun@intel.com>,
+        "peterx@redhat.com" <peterx@redhat.com>,
+        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Wu, Hao" <hao.wu@intel.com>
+References: <1584880325-10561-1-git-send-email-yi.l.liu@intel.com>
+ <1584880325-10561-6-git-send-email-yi.l.liu@intel.com>
+ <cb68e9ab-77b0-7e97-a661-4836962041d9@redhat.com>
+ <A2975661238FB949B60364EF0F2C25743A21DB4E@SHSMSX104.ccr.corp.intel.com>
+ <b47891b1-ece6-c263-9c07-07c09c7d3752@redhat.com>
+ <20200403082305.GA1269501@myrica>
+ <A2975661238FB949B60364EF0F2C25743A2249DF@SHSMSX104.ccr.corp.intel.com>
+ <acf8c809-8d29-92d6-2445-3a94fc8b82fd@redhat.com>
+ <20200409081442.GD2435@myrica>
+From:   Auger Eric <eric.auger@redhat.com>
+Message-ID: <f9ed6639-35f2-af32-2d2c-78929d52b763@redhat.com>
+Date:   Thu, 9 Apr 2020 11:01:24 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.4.0
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: f9f925b8-83d4-4d5c-5f6c-08d7dc647251
-X-MS-Exchange-CrossTenant-originalarrivaltime: 09 Apr 2020 09:00:26.7771
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: RLvpXcjEiH3Rkw146guUliFRJeWQRo6UNrhbn1o7CAOl0mUetrDcXrND8G5gUI3+0AeSBqGzdd4lP/1SR8hDBg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR04MB5825
+In-Reply-To: <20200409081442.GD2435@myrica>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> Subject: [PATCH] soc: imx8: select SOC_BUS
->=20
-> Compile-testing the driver can result in a link failure when CONFIG_SOC_B=
-US
-> is disabled:
->=20
-> x86_64-linux-ld: drivers/soc/imx/soc-imx8m.o: in function `imx8_soc_init'=
-:
-> soc-imx8m.c:(.init.text+0x28d): undefined reference to `soc_device_regist=
-er'
->=20
-> Select it from Kconfig, as we do from the other SoC drivers.
->=20
-> Fixes: fc40200ebf82 ("soc: imx: increase build coverage for imx8m soc dri=
-ver")
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Hi Jean,
 
-Acked-by: Peng Fan <peng.fan@nxp.com>
+On 4/9/20 10:14 AM, Jean-Philippe Brucker wrote:
+> On Wed, Apr 08, 2020 at 12:27:58PM +0200, Auger Eric wrote:
+>> Hi Yi,
+>>
+>> On 4/7/20 11:43 AM, Liu, Yi L wrote:
+>>> Hi Jean,
+>>>
+>>>> From: Jean-Philippe Brucker <jean-philippe@linaro.org>
+>>>> Sent: Friday, April 3, 2020 4:23 PM
+>>>> To: Auger Eric <eric.auger@redhat.com>
+>>>> userspace
+>>>>
+>>>> On Wed, Apr 01, 2020 at 03:01:12PM +0200, Auger Eric wrote:
+>>>>>>>>  	header = vfio_info_cap_add(caps, sizeof(*nesting_cap),
+>>>>>>>>  				   VFIO_IOMMU_TYPE1_INFO_CAP_NESTING, 1);
+>>>> @@ -2254,6 +2309,7
+>>>>>>>> @@ static int vfio_iommu_info_add_nesting_cap(struct
+>>>>>>> vfio_iommu *iommu,
+>>>>>>>>  		/* nesting iommu type supports PASID requests (alloc/free) */
+>>>>>>>>  		nesting_cap->nesting_capabilities |= VFIO_IOMMU_PASID_REQS;
+>>>>>>> What is the meaning for ARM?
+>>>>>>
+>>>>>> I think it's just a software capability exposed to userspace, on
+>>>>>> userspace side, it has a choice to use it or not. :-) The reason
+>>>>>> define it and report it in cap nesting is that I'd like to make the
+>>>>>> pasid alloc/free be available just for IOMMU with type
+>>>>>> VFIO_IOMMU_TYPE1_NESTING. Please feel free tell me if it is not good
+>>>>>> for ARM. We can find a proper way to report the availability.
+>>>>>
+>>>>> Well it is more a question for jean-Philippe. Do we have a system wide
+>>>>> PASID allocation on ARM?
+>>>>
+>>>> We don't, the PASID spaces are per-VM on Arm, so this function should consult the
+>>>> IOMMU driver before setting flags. As you said on patch 3, nested doesn't
+>>>> necessarily imply PASID support. The SMMUv2 does not support PASID but does
+>>>> support nesting stages 1 and 2 for the IOVA space.
+>>>> SMMUv3 support of PASID depends on HW capabilities. So I think this needs to be
+>>>> finer grained:
+>>>>
+>>>> Does the container support:
+>>>> * VFIO_IOMMU_PASID_REQUEST?
+>>>>   -> Yes for VT-d 3
+>>>>   -> No for Arm SMMU
+>>>> * VFIO_IOMMU_{,UN}BIND_GUEST_PGTBL?
+>>>>   -> Yes for VT-d 3
+>>>>   -> Sometimes for SMMUv2
+>>>>   -> No for SMMUv3 (if we go with BIND_PASID_TABLE, which is simpler due to
+>>>>      PASID tables being in GPA space.)
+>>>> * VFIO_IOMMU_BIND_PASID_TABLE?
+>>>>   -> No for VT-d
+>>>>   -> Sometimes for SMMUv3
+>>>>
+>>>> Any bind support implies VFIO_IOMMU_CACHE_INVALIDATE support.
+>>>
+>>> good summary. do you expect to see any 
+>>>
+>>>>
+>>>>>>>> +	nesting_cap->stage1_formats = formats;
+>>>>>>> as spotted by Kevin, since a single format is supported, rename
+>>>>>>
+>>>>>> ok, I was believing it may be possible on ARM or so. :-) will rename
+>>>>>> it.
+>>>>
+>>>> Yes I don't think an u32 is going to cut it for Arm :( We need to describe all sorts of
+>>>> capabilities for page and PASID tables (granules, GPA size, ASID/PASID size, HW
+>>>> access/dirty, etc etc.) Just saying "Arm stage-1 format" wouldn't mean much. I
+>>>> guess we could have a secondary vendor capability for these?
+>>>
+>>> Actually, I'm wondering if we can define some formats to stands for a set of
+>>> capabilities. e.g. VTD_STAGE1_FORMAT_V1 which may indicates the 1st level
+>>> page table related caps (aw, a/d, SRE, EA and etc.). And vIOMMU can parse
+>>> the capabilities.
+>>
+>> But eventually do we really need all those capability getters? I mean
+>> can't we simply rely on the actual call to VFIO_IOMMU_BIND_GUEST_PGTBL()
+>> to detect any mismatch? Definitively the error handling may be heavier
+>> on userspace but can't we manage.
+> 
+> I think we need to present these capabilities at boot time, long before
+> the guest triggers a bind(). For example if the host SMMU doesn't support
+> 16-bit ASID, we need to communicate that to the guest using vSMMU ID
+> registers or PROBE properties. Otherwise a bind() will succeed, but if the
+> guest uses 16-bit ASIDs in its CD, DMA will result in C_BAD_CD events
+> which we'll inject into the guest, for no apparent reason from their
+> perspective.
+OK I understand this case as in this situation we may be able to change
+the way to iommu is exposed to the guest.
+> 
+> In addition some VMMs may have fallbacks if shared page tables are not
+> available. They could fall back to a MAP/UNMAP interface, or simply not
+> present a vIOMMU to the guest.
+fair enough, there is a need for such capability checker in the mid
+term. But this patch introduces the capability to check whether system
+wide PASID alloc is supported and this may not be requested at that
+stage for the whole vSVM integration?
 
-Thanks,
-Peng.
+Thanks
+
+Eric
+> 
+> Thanks,
+> Jean
+> 
+>> My fear is we end up with an overly
+>> complex series. This capability getter may be interesting if we can
+>> switch to a fallback implementation but here I guess we don't have any
+>> fallback. With smmuv3 nested stage we don't have any fallback solution
+>> either. For the versions, it is different because the userspace shall be
+>> able to adapt (or not) to the max version supported by the kernel.
+>>
+>> Thanks
+>>
+>> Eric
+>>>
+>>> Regards,
+>>> Yi Liu
+>>>
+>>
+> 
+
