@@ -2,107 +2,149 @@ Return-Path: <SRS0=n+Ub=5Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3010FC2BA2B
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 12:04:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A43E6C2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 12:04:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F257E20753
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 12:04:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 74CD120771
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 12:04:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=yandex-team.ru header.i=@yandex-team.ru header.b="ZLUDmpwj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726641AbgDIMEd (ORCPT
+        id S1726681AbgDIMEp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Apr 2020 08:04:33 -0400
-Received: from foss.arm.com ([217.140.110.172]:49364 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725971AbgDIMEd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Apr 2020 08:04:33 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 33B1830E;
-        Thu,  9 Apr 2020 05:04:33 -0700 (PDT)
-Received: from [192.168.1.172] (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 0F8FD3F73D;
-        Thu,  9 Apr 2020 05:04:31 -0700 (PDT)
-Subject: Re: [PATCH v2 5/6] arm64/vdso: Restrict splitting VVAR VMA
-To:     Andrei Vagin <avagin@gmail.com>
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Dmitry Safonov <dima@arista.com>
-References: <20200225073731.465270-1-avagin@gmail.com>
- <20200225073731.465270-6-avagin@gmail.com>
-From:   Vincenzo Frascino <vincenzo.frascino@arm.com>
-Message-ID: <31a0e784-7d38-b9aa-d84c-8deb6436b647@arm.com>
-Date:   Thu, 9 Apr 2020 13:05:17 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Thu, 9 Apr 2020 08:04:45 -0400
+Received: from forwardcorp1o.mail.yandex.net ([95.108.205.193]:50140 "EHLO
+        forwardcorp1o.mail.yandex.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725971AbgDIMEo (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Apr 2020 08:04:44 -0400
+Received: from mxbackcorp1j.mail.yandex.net (mxbackcorp1j.mail.yandex.net [IPv6:2a02:6b8:0:1619::162])
+        by forwardcorp1o.mail.yandex.net (Yandex) with ESMTP id 1F88B2E16AA;
+        Thu,  9 Apr 2020 15:04:41 +0300 (MSK)
+Received: from iva4-7c3d9abce76c.qloud-c.yandex.net (iva4-7c3d9abce76c.qloud-c.yandex.net [2a02:6b8:c0c:4e8e:0:640:7c3d:9abc])
+        by mxbackcorp1j.mail.yandex.net (mxbackcorp/Yandex) with ESMTP id fKqmUPxWMS-4eM0sZjt;
+        Thu, 09 Apr 2020 15:04:41 +0300
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex-team.ru; s=default;
+        t=1586433881; bh=FCZ1roq6HF59fxR/Hx5/7l8o/xdUIxWkBDHgx8u8dH8=;
+        h=In-Reply-To:Message-ID:From:Date:References:To:Subject:Cc;
+        b=ZLUDmpwjpo8Dv4WQSVTsKg6VcKkkgnl4sMU8TnoLUMQK32XJ4Mvtdrktcxd085W1b
+         NwHZ/HbbypToOkmt+5zbYIq+azGq1ar6VBbBhqOZhi0gY+SwYLfkTYkPD/RxruIqvk
+         XpE6AzuQwarf6TeHdWRF+Ih5U0UAhzxWDUt4AGeI=
+Authentication-Results: mxbackcorp1j.mail.yandex.net; dkim=pass header.i=@yandex-team.ru
+Received: from unknown (unknown [2a02:6b8:b080:8808::1:4])
+        by iva4-7c3d9abce76c.qloud-c.yandex.net (smtpcorp/Yandex) with ESMTPSA id ltmsYkOcyX-4eWqNfOa;
+        Thu, 09 Apr 2020 15:04:40 +0300
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (Client certificate not present)
+Subject: Re: [PATCH] ovl: skip overlayfs superblocks at global sync
+To:     Amir Goldstein <amir73il@gmail.com>
+Cc:     linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Miklos Szeredi <miklos@szeredi.hu>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        overlayfs <linux-unionfs@vger.kernel.org>,
+        Dmitry Monakhov <dmtrmonakhov@yandex-team.ru>,
+        Linux Containers <containers@lists.linux-foundation.org>,
+        Theodore Tso <tytso@mit.edu>
+References: <158642098777.5635.10501704178160375549.stgit@buzz>
+ <CAOQ4uxgTtbb-vDQNnY1_7EzQ=p5p2MqkfyZo2zkFQ1Wv29uqCA@mail.gmail.com>
+ <67bdead3-a29f-a8af-5e7b-193a72cd4b86@yandex-team.ru>
+ <CAOQ4uxgeCc=_b1FG3vfMWF50qCousXxEWa63Wn3iCHmLXDNCNA@mail.gmail.com>
+From:   Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+Message-ID: <6af394f4-7cfd-5303-0042-9e37e43cf346@yandex-team.ru>
+Date:   Thu, 9 Apr 2020 15:04:39 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-In-Reply-To: <20200225073731.465270-6-avagin@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+In-Reply-To: <CAOQ4uxgeCc=_b1FG3vfMWF50qCousXxEWa63Wn3iCHmLXDNCNA@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-CA
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2/25/20 7:37 AM, Andrei Vagin wrote:
-> Forbid splitting VVAR VMA resulting in a stricter ABI and reducing the
-> amount of corner-cases to consider while working further on VDSO time
-> namespace support.
-> 
-> As the offset from timens to VVAR page is computed compile-time, the pages
-> in VVAR should stay together and not being partically mremap()'ed.
-> 
-> Signed-off-by: Andrei Vagin <avagin@gmail.com>
 
-Reviewed-by: Vincenzo Frascino <vincenzo.frascino@arm.com>
 
-> ---
->  arch/arm64/kernel/vdso.c | 13 +++++++++++++
->  1 file changed, 13 insertions(+)
+On 09/04/2020 14.48, Amir Goldstein wrote:
+> On Thu, Apr 9, 2020 at 2:28 PM Konstantin Khlebnikov
+> <khlebnikov@yandex-team.ru> wrote:
+>>
+>> On 09/04/2020 13.23, Amir Goldstein wrote:
+>>> On Thu, Apr 9, 2020 at 11:30 AM Konstantin Khlebnikov
+>>> <khlebnikov@yandex-team.ru> wrote:
+>>>>
+>>>> Stacked filesystems like overlayfs has no own writeback, but they have to
+>>>> forward syncfs() requests to backend for keeping data integrity.
+>>>>
+>>>> During global sync() each overlayfs instance calls method ->sync_fs()
+>>>> for backend although it itself is in global list of superblocks too.
+>>>> As a result one syscall sync() could write one superblock several times
+>>>> and send multiple disk barriers.
+>>>>
+>>>> This patch adds flag SB_I_SKIP_SYNC into sb->sb_iflags to avoid that.
+>>>>
+>>>> Reported-by: Dmitry Monakhov <dmtrmonakhov@yandex-team.ru>
+>>>> Signed-off-by: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+>>>> ---
+>>>
+>>> Seems reasonable.
+>>> You may add:
+>>> Reviewed-by: Amir Goldstein <amir73il@gmail.com>
+>>>
+>>> +CC: containers list
+>>
+>> Thanks
+>>
+>>>
+>>> This bring up old memories.
+>>> I posted this way back to fix handling of emergency_remount() in the
+>>> presence of loop mounted fs:
+>>> https://lore.kernel.org/linux-ext4/CAA2m6vfatWKS1CQFpaRbii2AXiZFvQUjVvYhGxWTSpz+2rxDyg@mail.gmail.com/
+>>>
+>>> But seems to me that emergency_sync() and sync(2) are equally broken
+>>> for this use case.
+>>>
+>>> I wonder if anyone cares enough about resilience of loop mounted fs to try
+>>> and change the iterate_* functions to iterate supers/bdevs in reverse order...
+>>
+>> Now I see reason behind "sync; sync; sync; reboot" =)
+>>
+>> Order old -> new allows to not miss new items if list modifies.
+>> Might be important for some users.
+>>
 > 
-> diff --git a/arch/arm64/kernel/vdso.c b/arch/arm64/kernel/vdso.c
-> index fb32c6f76078..c003f7ee383a 100644
-> --- a/arch/arm64/kernel/vdso.c
-> +++ b/arch/arm64/kernel/vdso.c
-> @@ -235,6 +235,17 @@ static vm_fault_t vvar_fault(const struct vm_special_mapping *sm,
->  	return vmf_insert_pfn(vma, vmf->address, pfn);
->  }
->  
-> +static int vvar_mremap(const struct vm_special_mapping *sm,
-> +		       struct vm_area_struct *new_vma)
-> +{
-> +	unsigned long new_size = new_vma->vm_end - new_vma->vm_start;
-> +
-> +	if (new_size != VVAR_NR_PAGES * PAGE_SIZE)
-> +		return -EINVAL;
-> +
-> +	return 0;
-> +}
-> +
->  static int __setup_additional_pages(enum arch_vdso_type arch_index,
->  				    struct mm_struct *mm,
->  				    struct linux_binprm *bprm,
-> @@ -315,6 +326,7 @@ static struct vm_special_mapping aarch32_vdso_spec[C_PAGES] = {
->  	{
->  		.name = "[vvar]",
->  		.fault = vvar_fault,
-> +		.mremap = vvar_mremap,
->  	},
->  	{
->  		.name = "[vdso]",
-> @@ -497,6 +509,7 @@ static struct vm_special_mapping vdso_spec[A_PAGES] __ro_after_init = {
->  	{
->  		.name	= "[vvar]",
->  		.fault = vvar_fault,
-> +		.mremap = vvar_mremap,
->  	},
->  	{
->  		.name	= "[vdso]",
+> That's not the reason I suggested reverse order.
+> The reason is that with loop mounted fs, the correct order of flushing is:
+> 1. sync loop mounted fs inodes => writes to loop image file
+> 2. sync loop mounted fs sb => fsyncs the loop image file
+> 3. sync the loop image host fs sb
 > 
+> With forward sb iteration order, #3 happens before #1, so the
+> loop mounted fs changes are not really being made durable by
+> a single sync(2) call.
 
--- 
-Regards,
-Vincenzo
+If fs in loop mounted with barriers then sync_fs will issue
+REQ_OP_FLUSH to loop device and trigger fsync() for image file.
+Sync() might write something twice but data should be safe.
+Without barriers this scenario is broken for sure.
+
+Emergency remount R/O is other thing. It really needs reverse order.
+
+> 
+>> bdev iteration seems already reversed: inode_sb_list_add adds to the head
+>>
+> 
+> I think bdev iteration order will not make a difference in this case.
+> flushing /dev/loopX will not be needed and it happens too late
+> anyway.
+> 
+> Thanks,
+> Amir.
+> 
