@@ -2,146 +2,145 @@ Return-Path: <SRS0=n+Ub=5Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B621AC2BA19
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 21:58:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 534BAC2BA19
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 21:58:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8C6F92072F
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 21:58:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="CPX2S6Eq"
+	by mail.kernel.org (Postfix) with ESMTP id 310342072F
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 21:58:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726814AbgDIV6J (ORCPT
+        id S1726867AbgDIV6X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Apr 2020 17:58:09 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:54392 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726638AbgDIV6J (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Apr 2020 17:58:09 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1586469488;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=9YlJfp8gcnULlH0Iw/uIfxlGLQ2jILFfQLjgtpxox2c=;
-        b=CPX2S6EqgkVyDWNZ3jyqJ7RQZsj2iauzpmEzVv6UiGzcZOVKL46ok2zVvx6NNGeVxs3ii+
-        cZOIF690nZaz0qPnNVIzWm8FwIBWZwnj+m45OSXUvZ6+4yqfAz6AXm2EG+NcBuhx9mSOVk
-        U0Ls71+H+We7ripdttU8XPwzHYj0TS4=
-Received: from mail-qk1-f198.google.com (mail-qk1-f198.google.com
- [209.85.222.198]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-197-5Zx9rBwVPSm3qVpSfrjlqg-1; Thu, 09 Apr 2020 17:58:04 -0400
-X-MC-Unique: 5Zx9rBwVPSm3qVpSfrjlqg-1
-Received: by mail-qk1-f198.google.com with SMTP id a67so463685qke.0
-        for <linux-kernel@vger.kernel.org>; Thu, 09 Apr 2020 14:58:04 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=9YlJfp8gcnULlH0Iw/uIfxlGLQ2jILFfQLjgtpxox2c=;
-        b=suMcxAU5npu8ti2rTEOY2Wu6CyW2vwT1IKstyGtokZPst49p5X+fkxsNSGBz7SV7ad
-         RgXAtIEdd14az0x3FGtV+cBve6IOPl/PcfKNQyp+FJk3rAkkivBdWPbHjGiQB0TJVsb/
-         V9QQa+Q8UXLtG1VChdjfFmaFRH9eTn4rYz7BXhFrsKrzfMalHPzqQr+2iPoDSGbA+jEj
-         Q5lyxSgV13IQAkPayNON0kidD/lNkGU+g1yvo+S3LbUGI2KIN8N2cqUOalV9gxgZj+k1
-         0bjB9F6bk/8AdMtTR4kuBk5U4+wXFt5GLRoIikU75edwP+6LfEou+fu1Lu6q6Ptz08FK
-         fWhQ==
-X-Gm-Message-State: AGi0PuZreYHmn7QXKGzF/rGkRNI4uNTDs4eATmlf1fux4KKIxx69rq1y
-        n/BPaQZwrMzjuaKXrve6BLJggEhK0K07jM/l3WCnk7+yhwYZn1oSrVI2vMTQw7T6LsnUZxUvN1u
-        UqA+xhv7OoCdW2OMLwhfoQ4/L
-X-Received: by 2002:ae9:e8c1:: with SMTP id a184mr988562qkg.242.1586469484034;
-        Thu, 09 Apr 2020 14:58:04 -0700 (PDT)
-X-Google-Smtp-Source: APiQypKLmS8XXUNIiGvZvCrKQlsPyUcVaCnI5PoZiI1hPytd9AWi1VwgIeqBvXPZH/X8OoxSv8t7aw==
-X-Received: by 2002:ae9:e8c1:: with SMTP id a184mr988543qkg.242.1586469483726;
-        Thu, 09 Apr 2020 14:58:03 -0700 (PDT)
-Received: from xz-x1.hitronhub.home ([2607:9880:19c0:32::2])
-        by smtp.gmail.com with ESMTPSA id m11sm103828qkg.130.2020.04.09.14.58.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 09 Apr 2020 14:58:03 -0700 (PDT)
-From:   Peter Xu <peterx@redhat.com>
-To:     linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Cc:     Nitesh Narayan Lal <nitesh@redhat.com>, peterx@redhat.com,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Mike Kravetz <mike.kravetz@oracle.com>
-Subject: [PATCH] Documentation: hugetlb: Update hugetlb options
-Date:   Thu,  9 Apr 2020 17:58:00 -0400
-Message-Id: <20200409215800.8967-1-peterx@redhat.com>
-X-Mailer: git-send-email 2.24.1
+        Thu, 9 Apr 2020 17:58:23 -0400
+Received: from mga14.intel.com ([192.55.52.115]:31050 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726827AbgDIV6X (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Apr 2020 17:58:23 -0400
+IronPort-SDR: goDZvpGnQQi1ZNi7gzZRKsBF76MeU/NSLcDhbGPXofRlZnKkx6CjQ6fW+Ggivtu259CMXvJMu0
+ vrIkzadClxBA==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Apr 2020 14:58:23 -0700
+IronPort-SDR: D0pm5353ktocpv3kpo6A6WHysf3MP6G8D5ge3b2t4SECFo5NL7i7GSNW6qc7EkQ/UyECLinL/P
+ sDP9uCGUF1yA==
+X-IronPort-AV: E=Sophos;i="5.72,364,1580803200"; 
+   d="scan'208";a="425675703"
+Received: from ashakhno-mobl.ccr.corp.intel.com (HELO localhost) ([10.252.61.38])
+  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Apr 2020 14:58:18 -0700
+From:   Jani Nikula <jani.nikula@linux.intel.com>
+To:     Masahiro Yamada <masahiroy@kernel.org>,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        intel-gfx@lists.freedesktop.org
+Cc:     Masahiro Yamada <masahiroy@kernel.org>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        David Airlie <airlied@linux.ie>,
+        Zhenyu Wang <zhenyuw@linux.intel.com>,
+        Zhi Wang <zhi.a.wang@intel.com>,
+        dri-devel@lists.freedesktop.org,
+        intel-gvt-dev@lists.freedesktop.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/2] drm/i915: remove gvt/Makefile
+In-Reply-To: <20200409150627.29205-2-masahiroy@kernel.org>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+References: <20200409150627.29205-1-masahiroy@kernel.org> <20200409150627.29205-2-masahiroy@kernel.org>
+Date:   Fri, 10 Apr 2020 00:58:16 +0300
+Message-ID: <87h7xsgw3r.fsf@intel.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The hugepage options are not documented clearly.
+On Fri, 10 Apr 2020, Masahiro Yamada <masahiroy@kernel.org> wrote:
+> Including subdirectory Makefile from the driver main Makefile does not
+> buy us much because this is not real isolation.
 
-Firstly, default_hugepagesz= should always be specified after the
-declaration of the same type of huge page using hugepagesz=.  For
-example, if we boot a x86_64 system with kernel cmdline
-"default_hugepagesz=2M", we'll get a very funny error message:
+The isolation it does buy us is that gvt/ subdirectory is developed and
+maintained on a separate mailing list and separate git repo. I think at
+some point there were plans to make it an actual module too.
 
-"HugeTLB: unsupported default_hugepagesz 2097152. Reverting to 2097152"
+So while you could quip about Conway's law here, I think it might be
+better to keep this as it is.
 
-It's understandable from code-wise because when hugetlb_init() we
-didn't have the 2M page hstate registered, so it's unsupported.
-However 2M is actually the default huge page size on x86_64, so we'll
-register it right after the error message.  However it's very
-confusing if without these knowledges.
+Zhenyu, Zhi, what do you think?
 
-Secondly, hugepages= option must be used _after_ another hugepagesz=.
-The word "interleave" is fine but it didn't declare the fact that
-each of the hugepages= option will be applied to the previous parsed
-hugepagesz= option.
 
-State all these clear.
+BR,
+Jani.
 
-Signed-off-by: Peter Xu <peterx@redhat.com>
----
- .../admin-guide/kernel-parameters.txt         | 19 ++++++++++++-------
- 1 file changed, 12 insertions(+), 7 deletions(-)
 
-diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-index 86aae1fa099a..2a77b2b01e5e 100644
---- a/Documentation/admin-guide/kernel-parameters.txt
-+++ b/Documentation/admin-guide/kernel-parameters.txt
-@@ -839,7 +839,8 @@
- 			the legacy /proc/ hugepages APIs, used for SHM, and
- 			default size when mounting hugetlbfs filesystems.
- 			Defaults to the default architecture's huge page size
--			if not specified.
-+			if not specified.  This option can only be used with a
-+			pre-defined "hugepagesz=" of the same size.
- 
- 	deferred_probe_timeout=
- 			[KNL] Debugging option to set a timeout in seconds for
-@@ -1475,13 +1476,17 @@
- 	hpet_mmap=	[X86, HPET_MMAP] Allow userspace to mmap HPET
- 			registers.  Default set by CONFIG_HPET_MMAP_DEFAULT.
- 
-+	hugepagesz=	[HW,IA-64,PPC,X86-64] Declare one type of HugeTLB pages
-+			with the size specified.  Valid pages sizes on x86-64
-+			are 2M (when the CPU supports "pse") and 1G (when the
-+			CPU supports the "pdpe1gb" cpuinfo flag).
-+
- 	hugepages=	[HW,X86-32,IA-64] HugeTLB pages to allocate at boot.
--	hugepagesz=	[HW,IA-64,PPC,X86-64] The size of the HugeTLB pages.
--			On x86-64 and powerpc, this option can be specified
--			multiple times interleaved with hugepages= to reserve
--			huge pages of different sizes. Valid pages sizes on
--			x86-64 are 2M (when the CPU supports "pse") and 1G
--			(when the CPU supports the "pdpe1gb" cpuinfo flag).
-+			On x86-64 and powerpc, this option must be used after
-+			one hugepagesz= to allocate huge pages of that specific
-+			size.  This option can also be used multiple times
-+			pairing with hugepagesz= to allocate huge pages for
-+			different sizes.
- 
- 	hung_task_panic=
- 			[KNL] Should the hung task detector generate panics.
+>
+> Having a single Makefile at the top of the module is clearer, and
+> it is what this driver almost does.
+>
+> Move all gvt objects to the i915 main Makefile.
+>
+> Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+> ---
+>
+>  drivers/gpu/drm/i915/Makefile     | 28 ++++++++++++++++++++++++----
+>  drivers/gpu/drm/i915/gvt/Makefile |  8 --------
+>  2 files changed, 24 insertions(+), 12 deletions(-)
+>  delete mode 100644 drivers/gpu/drm/i915/gvt/Makefile
+>
+> diff --git a/drivers/gpu/drm/i915/Makefile b/drivers/gpu/drm/i915/Makefile
+> index 6cd1f6253814..74e965882a98 100644
+> --- a/drivers/gpu/drm/i915/Makefile
+> +++ b/drivers/gpu/drm/i915/Makefile
+> @@ -275,10 +275,30 @@ i915-$(CONFIG_DRM_I915_SELFTEST) += \
+>  # virtual gpu code
+>  i915-y += i915_vgpu.o
+>  
+> -ifeq ($(CONFIG_DRM_I915_GVT),y)
+> -i915-y += intel_gvt.o
+> -include $(src)/gvt/Makefile
+> -endif
+> +i915-$(CONFIG_DRM_I915_GVT) += \
+> +	intel_gvt.o \
+> +	gvt/gvt.o \
+> +	gvt/aperture_gm.o \
+> +	gvt/handlers.o \
+> +	gvt/vgpu.o \
+> +	gvt/trace_points.o \
+> +	gvt/firmware.o \
+> +	gvt/interrupt.o \
+> +	gvt/gtt.o \
+> +	gvt/cfg_space.o \
+> +	gvt/opregion.o \
+> +	gvt/mmio.o \
+> +	gvt/display.o \
+> +	gvt/edid.o \
+> +	gvt/execlist.o \
+> +	gvt/scheduler.o \
+> +	gvt/sched_policy.o \
+> +	gvt/mmio_context.o \
+> +	gvt/cmd_parser.o \
+> +	gvt/debugfs.o \
+> +	gvt/fb_decoder.o \
+> +	gvt/dmabuf.o \
+> +	gvt/page_track.o
+>  
+>  obj-$(CONFIG_DRM_I915) += i915.o
+>  obj-$(CONFIG_DRM_I915_GVT_KVMGT) += gvt/kvmgt.o
+> diff --git a/drivers/gpu/drm/i915/gvt/Makefile b/drivers/gpu/drm/i915/gvt/Makefile
+> deleted file mode 100644
+> index 4d70f4689479..000000000000
+> --- a/drivers/gpu/drm/i915/gvt/Makefile
+> +++ /dev/null
+> @@ -1,8 +0,0 @@
+> -# SPDX-License-Identifier: GPL-2.0
+> -GVT_DIR := gvt
+> -GVT_SOURCE := gvt.o aperture_gm.o handlers.o vgpu.o trace_points.o firmware.o \
+> -	interrupt.o gtt.o cfg_space.o opregion.o mmio.o display.o edid.o \
+> -	execlist.o scheduler.o sched_policy.o mmio_context.o cmd_parser.o debugfs.o \
+> -	fb_decoder.o dmabuf.o page_track.o
+> -
+> -i915-y					+= $(addprefix $(GVT_DIR)/, $(GVT_SOURCE))
+
 -- 
-2.24.1
-
+Jani Nikula, Intel Open Source Graphics Center
