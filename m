@@ -2,175 +2,171 @@ Return-Path: <SRS0=n+Ub=5Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CF42C2D0EA
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 05:00:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B229CC2BB1D
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 05:07:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6C96620B1F
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 05:00:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586408443;
-	bh=ybAemVinDOrFkWGU4pR0kABPQkU2CYgYUAJ3d024/hg=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=t86RJ6pXGSrfYrRfJupuxhh0+VU5elCHcNVxP1qZNjJie7DX2hnNQzpGsPtbtdlu5
-	 ySPi9mbboSLId1ldd14T6kSqEoM5tRscu+nDjPhmwIapdpm5D7mvJj79C4Gcauwevy
-	 +1+pBDIc1YpFg1qSwcp1Qtb4jBeL0nWqunnCy3lM=
+	by mail.kernel.org (Postfix) with ESMTP id 6C62F20784
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 05:07:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=flygoat.com header.i=jiaxun.yang@flygoat.com header.b="KrcB7BQF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726734AbgDIFAl (ORCPT
+        id S1725997AbgDIFHV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Apr 2020 01:00:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47958 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725283AbgDIFAl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Apr 2020 01:00:41 -0400
-Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8591C2084D
-        for <linux-kernel@vger.kernel.org>; Thu,  9 Apr 2020 05:00:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586408440;
-        bh=ybAemVinDOrFkWGU4pR0kABPQkU2CYgYUAJ3d024/hg=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=naYoU8128r/t5DBcg5YON2seFf+Pgvb+D3pHFg1EjnLsLSo30WFo2p+B7VGmAEae2
-         x9hZFMicI3wqBHlV4v0c94LujKhWuyhBI+DeJcmQLJUrMBp90yGwmcjfiptlttdVbU
-         lMA0A5DMjV7VkJNDdl0zF019oKwvEQOMzypx+ITo=
-Received: by mail-wm1-f51.google.com with SMTP id v8so1620143wma.0
-        for <linux-kernel@vger.kernel.org>; Wed, 08 Apr 2020 22:00:40 -0700 (PDT)
-X-Gm-Message-State: AGi0PubIoV4E4ZPPDF5ux68qLCAvA/Dc7uq08ASA8ZYCod3LaRdnp0y6
-        JrMhBcgIO2rnGO3DxMje7RmWeA/7INluSxA52dEcjA==
-X-Google-Smtp-Source: APiQypIRJj7f30eROzcVUMIqGh0ifT2Cl8xvUp1wurfEe/Fdj9DuHrhVpqsSMHno4+Uy9AvpjV+ZRXUkSPNiYTbW66I=
-X-Received: by 2002:a7b:c8cd:: with SMTP id f13mr8047341wml.138.1586408438909;
- Wed, 08 Apr 2020 22:00:38 -0700 (PDT)
+        Thu, 9 Apr 2020 01:07:21 -0400
+Received: from sender3-op-o12.zoho.com.cn ([124.251.121.243]:17863 "EHLO
+        sender3-op-o12.zoho.com.cn" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725271AbgDIFHV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Apr 2020 01:07:21 -0400
+ARC-Seal: i=1; a=rsa-sha256; t=1586408795; cv=none; 
+        d=zoho.com.cn; s=zohoarc; 
+        b=axyfKa6+yKpn/MMbVGEDwvxVo+0Xr6DHv6ASYKuSKyqf9F2sOADNOphNhQh+3kJXGEXW02S1Z46vJseXV3QH+IKYduSNqP/ex9n13nPOk1Kx0F1wiqbNz+UQI4evjx6ZqhLwRQk9j4aqxUOuwC+kFRa4dku5TKo/kQWtvNpXP5I=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zoho.com.cn; s=zohoarc; 
+        t=1586408795; h=Content-Type:Content-Transfer-Encoding:Cc:Date:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:To; 
+        bh=oZguYgV4dt6GMip/bfTlUgHicwDP44JSTvTs02Kyom4=; 
+        b=env2q6KeNYdV55Jy1oWWmf4NST8AWqg0c+z++ZShezUK6KIlSrZ/yXFcPOlfZI/Puij+TelHy/mjV0JGUewELfA2PRO0B200SwoPmbc11MCdB26VK7K9QLrP222BhDR7lqlSZNI3oQ07FNjvNFC2J+5e7xcbH6cPgCDTWMIcSOU=
+ARC-Authentication-Results: i=1; mx.zoho.com.cn;
+        dkim=pass  header.i=flygoat.com;
+        spf=pass  smtp.mailfrom=jiaxun.yang@flygoat.com;
+        dmarc=pass header.from=<jiaxun.yang@flygoat.com> header.from=<jiaxun.yang@flygoat.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1586408795;
+        s=mail; d=flygoat.com; i=jiaxun.yang@flygoat.com;
+        h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:MIME-Version:Content-Type:Content-Transfer-Encoding;
+        bh=oZguYgV4dt6GMip/bfTlUgHicwDP44JSTvTs02Kyom4=;
+        b=KrcB7BQFuykNkEDk4Q17FFxcD5p9im+NmHklrjJgcdhUQwJ56DwSrKjOU8+bhI4V
+        LPDlLQUJWYe8xurWhNLfPCi1zd1yFqF1xM97g1RsvvWgxpZ8kJN4QubL0auAlVet2eC
+        Z4u//YB+e3BbY12XsmKE5TncKWgqQGq1hHANZvdA=
+Received: from flygoat-x1e (122.235.212.87 [122.235.212.87]) by mx.zoho.com.cn
+        with SMTPS id 1586408793441802.0844748222644; Thu, 9 Apr 2020 13:06:33 +0800 (CST)
+Date:   Thu, 9 Apr 2020 13:06:31 +0800
+From:   Jiaxun Yang <jiaxun.yang@flygoat.com>
+To:     Chris Packham <Chris.Packham@alliedtelesis.co.nz>
+Cc:     "f.fainelli@gmail.com" <f.fainelli@gmail.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Hamish Martin" <Hamish.Martin@alliedtelesis.co.nz>,
+        "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Subject: Re: Dealing with holes in CPU address space
+Message-ID: <20200409130631.69413b76@flygoat-x1e>
+In-Reply-To: <f5c7a3387dde5667be4fc462838edfaefae31e16.camel@alliedtelesis.co.nz>
+References: <fcb8f2655452f60a7c734e2ce54ac4d47eec7e92.camel@alliedtelesis.co.nz>
+        <20200408152922.14f90ff3@flygoat-x1e>
+        <2e10a19b6608a6c3413b52180c69500aa255a701.camel@alliedtelesis.co.nz>
+        <dd91aa7f-ed7d-44de-6887-ad25c7e4d4ff@gmail.com>
+        <f5c7a3387dde5667be4fc462838edfaefae31e16.camel@alliedtelesis.co.nz>
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-References: <alpine.DEB.2.22.394.2004081607050.27197@tglase.lan.tarent.de>
-In-Reply-To: <alpine.DEB.2.22.394.2004081607050.27197@tglase.lan.tarent.de>
-From:   Andy Lutomirski <luto@kernel.org>
-Date:   Wed, 8 Apr 2020 22:00:27 -0700
-X-Gmail-Original-Message-ID: <CALCETrUkC0mfbo44+Jb7p6f19S+nH5VAEZAwTaYApbNqy9Fj-w@mail.gmail.com>
-Message-ID: <CALCETrUkC0mfbo44+Jb7p6f19S+nH5VAEZAwTaYApbNqy9Fj-w@mail.gmail.com>
-Subject: Re: __X32_SYSCALL_BIT being defined as UL constant breaks userspace
-To:     Thorsten Glaser <t.glaser@tarent.de>, X86 ML <x86@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Cc:     Andy Lutomirski <luto@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>, 954294@bugs.debian.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-ZohoCNMailClient: External
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 8, 2020 at 7:34 AM Thorsten Glaser <t.glaser@tarent.de> wrote:
->
-> Hello,
->
-> I=E2=80=99m writing to you because your name shows up on this:
->
-> commit 45e29d119e9923ff14dfb840e3482bef1667bbfb
-> Author: Andy Lutomirski <luto@kernel.org>
-> Date:   Wed Jul 3 13:34:05 2019 -0700
->
->     x86/syscalls: Make __X32_SYSCALL_BIT be unsigned long
->
->     Currently, it's an int.  This is bizarre.  Fortunately, the code usin=
-g it
->     still works: ~__X32_SYSCALL_BIT is also int, so, if nr is unsigned lo=
-ng,
->     then C kindly sign-extends the ~__X32_SYSCALL_BIT part, and it actual=
-ly
->     results in the desired value.
->
->     This is far more subtle than it deserves to be.  Syscall numbers are,=
- for
->     all practical purposes, unsigned long, so make __X32_SYSCALL_BIT be
->     unsigned long.
->
->     Signed-off-by: Andy Lutomirski <luto@kernel.org>
->     Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
->     Link: https://lkml.kernel.org/r/99b0d83ad891c67105470a1a6b63243fd63a5=
-061.1562185330.git.luto@kernel.org
->
-> This commit changed an uapi header, breaking userspace. Long debugging
-> story (https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=3D954294 if you
-> are interested) short, it goes like this:
->
-> libseccomp exposes an interface SCMP_SYS() which is designed to expand
-> to an int and be usable in cpp context. It redirects to the __NR_*
-> constants from <asm/unistd.h>.
->
-> Example: SCMP_SYS(mmap) becomes __NR_mmap or __NR_mmap2 (depending on
-> the architecture).
->
-> Now, most architectures define __NR_mmap as a mere integer number:
->
-> asm/unistd_32.h:#define __NR_mmap 90
-> asm/unistd_64.h:#define __NR_mmap 9
->
-> x32 differs:
->
-> asm/unistd_x32.h:#define __NR_mmap (__X32_SYSCALL_BIT + 9)
->
-> This construct is, thankfully, still usable in something like
->         #if (__NR_mmap > __NR_somethingelse)
-> but as __X32_SYSCALL_BIT is no longer int its type also isn=E2=80=99t.
->
-> Therefore I ask you to revert this change, bringing x32 closer
-> to all other architectures.
->
+On Thu, 9 Apr 2020 04:50:23 +0000
+Chris Packham <Chris.Packham@alliedtelesis.co.nz> wrote:
 
-One might reasonably ask whether it makes sense for syscall nrs to be
-signed at all.
+> On Wed, 2020-04-08 at 21:03 -0700, Florian Fainelli wrote:
+> > 
+> > On 4/8/2020 2:33 PM, Chris Packham wrote:  
+> > > On Wed, 2020-04-08 at 15:29 +0800, Jiaxun Yang wrote:  
+> > > > On Wed, 8 Apr 2020 05:14:22 +0000
+> > > > Chris Packham <Chris.Packham@alliedtelesis.co.nz> wrote:
+> > > >   
+> > > > > Hi All,
+> > > > > 
+> > > > > I'm trying to port an old Broadcom MIPS CPU (BCM53003) to a
+> > > > > shiny
+> > > > > new
+> > > > > kernel. I have some old historic source from a long forgotten
+> > > > > Broadcom
+> > > > > LDK but I'd prefer to do things the modern way with device-
+> > > > > trees.
+> > > > > 
+> > > > > The problem I've been grappling with is trying to open up
+> > > > > access to
+> > > > > all of the RAM on the board. It has 512MB of DDR2. The CPU has
+> > > > > two
+> > > > > areas where this appears. The first 128MB is from 0 to
+> > > > > 0x07ffffff
+> > > > > the
+> > > > > second area is from 0x88000000 to 0x9fffffff.
+> > > > > 
+> > > > > SoC peripherals are at 0x18000000 and there is an IO window
+> > > > > for flash
+> > > > > at 0x20000000.
+> > > > > 
+> > > > > The old code has some custom tlb initialisation to deal with
+> > > > > this
+> > > > > but
+> > > > > I figured it should be possible with the following dts
+> > > > > snippet.
+> > > > > 
+> > > > >         memory@0 {
+> > > > >                 device_type = "memory";
+> > > > >                 reg = <0x00000000 0x08000000
+> > > > >                        0x88000000 0x18000000>;
+> > > > >         };
+> > > > > 
+> > > > > I end up with only 128MB available. This appears to be
+> > > > > because the default HIGHMEM_START of 0x20000000 stops the rest
+> > > > > from
+> > > > > being made available. If I add an override of HIGHMEM_START to
+> > > > > 0xffffffff I seem to have the full 512MB avaiable but then I
+> > > > > get a
+> > > > > kernel panic  
+> > > > 
+> > > > Hi,
+> > > > 
+> > > > Have you tried to enable CONFIG_HIGHMEM?
+> > > >   
+> > > 
+> > > I have but that didn't seem to help. As I understand it HIGHMEM is
+> > > intended for situations when you have more physical RAM that can
+> > > be addressed (e.g. >4GB on a 32-bit system).  
+> > 
+> > On MIPS you may have to enable HIGHMEM as soon as you run out of
+> > virtual
+> > kernel address space to map the entire amount of memory that is
+> > populated AFAICT. The kernel has a little under 1GB of virtual
+> > address
+> > space that can be mapped via the TLB since the first 512MB are
+> > occupied
+> > by KSEG0/1.
+> >   
+> 
+> My adventures thus far with HIGHMEM have got as far as
+> 
+>   This processor doesn't support highmem. 2490368k highmem ignored
+> 
+> Which I think has something to do with the max_low_pfn and highend_pfn
+> being different.
+> 
 
-But regardless, this breaks userspace and we should fix it.  I can
-whip up a patch to split it into X32_SYSCALL_BIT (unsigned long) and
-__X32_SYSCALL_BIT (uapi, int).  Thomas, etc, does this seem
-reasonable?  (For those not following all the machinations, this
-change caused some userspace build failures in libseccomp and/or
-systemd for reasons that are vaguely silly.)
+You might have cpu_has_dc_aliases defined.
+HIGHMEM is unsafe on these systems due to Cache Alias issue.
 
-> > Syscall numbers are, for
-> > all practical purposes, unsigned long
->
-> Yes, except for the one purpose of the C data type of the
-> syscall constants exposed to userspace, they are.
->
-> Feel free to handle __X32_SYSCALL_BIT differently in the
-> kernel (although even there it *will* introduce subtle
-> differences from other architectures), but please keep it
-> as int as visible from userspace.
->
-> Thanks in advance,
-> //mirabilos
->
-> PS: Please keep both me *and* the Debian bug in Cc, but
->     feel free to forward to relevant lists and persons;
->     I=E2=80=99m unsure where exactly to write to about this.
->
-> @bwh: commit 45e29d119e9923ff14dfb840e3482bef1667bbfb is
->     literally just this=E2=80=A6
->         -#define __X32_SYSCALL_BIT      0x40000000
->         +#define __X32_SYSCALL_BIT      0x40000000UL
->     =E2=80=A6 so can you please revert it in Debian in the meantime,
->     even if you said you won=E2=80=99t spend time on this?
-> --
-> tarent solutions GmbH
-> Rochusstra=C3=9Fe 2-4, D-53123 Bonn =E2=80=A2 http://www.tarent.de/
-> Tel: +49 228 54881-393 =E2=80=A2 Fax: +49 228 54881-235
-> HRB 5168 (AG Bonn) =E2=80=A2 USt-ID (VAT): DE122264941
-> Gesch=C3=A4ftsf=C3=BChrer: Dr. Stefan Barth, Kai Ebenrett, Boris Esser, A=
-lexander Steeg
->
-> **********
->
-> Mit der tarent Academy bieten wir auch Trainings und Schulungen in den
-> Bereichen Softwareentwicklung, Agiles Arbeiten und Zukunftstechnologien a=
-n.
->
-> Besuchen Sie uns auf www.tarent.de/academy. Wir freuen uns auf Ihren Kont=
-akt.
->
-> **********
+Here is a comment in mips/kernel/cpu-probe.c:
+
+/*
+ * Early versions of the 74K do not update the cache tags on a
+ * vtag miss/ptag hit which can occur in the case of KSEG0/KUSEG
+ * aliases.  In this case it is better to treat the cache as always
+ * having aliases.  Also disable the synonym tag update feature
+ * where available.  In this case no opportunistic tag update will
+ * happen where a load causes a virtual address miss but a physical
+ * address hit during a D-cache look-up.
+ */
+
+Probably you system have this kind of issue?
+
+You can determine waysize of D-Cache and set a larger pagesize.
+
+--
+Jiaxun Yang
+
