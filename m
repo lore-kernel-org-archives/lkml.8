@@ -2,128 +2,99 @@ Return-Path: <SRS0=n+Ub=5Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 206F9C2D0EA
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 09:31:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FACFC2BB54
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 09:34:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E1B49208FE
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 09:31:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586424716;
-	bh=yu1DxhA5goDLvRx/GPY7agiWxznEHMQNlRX0ba5w0Mk=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=s4LW2XmX9cMGSMbbirfK+8Y3BsPJumhXUMdRPYLSVRY6iaC2aIT24GaYn8A9fLTJ/
-	 Pil/13lN6CqX5tO9QXBx2kdAHMK6B1i/JlNn/4BBaBz1HG16ZQIzRwAvAjWV1+ioFD
-	 lyekm5TTccEaZwM5GnUX7/NzqbbwSNGOS/TWKMo8=
+	by mail.kernel.org (Postfix) with ESMTP id 6E75F20730
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 09:34:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ofMneNF5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726597AbgDIJby (ORCPT
+        id S1726632AbgDIJeG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Apr 2020 05:31:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43850 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725828AbgDIJbx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Apr 2020 05:31:53 -0400
-Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5518220730;
-        Thu,  9 Apr 2020 09:31:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586424713;
-        bh=yu1DxhA5goDLvRx/GPY7agiWxznEHMQNlRX0ba5w0Mk=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=gSUHo4+B6MWf9VBolg2AvbN+t9D926yHPJkK5bSTa93ofzCplHB/Tgjl/uBT29NPL
-         FShJubWHD3/RVb6Eersg/7hprxFTloZioz9EWSAD75N2SEGcmCaF5QKHyCi0+mJsJ6
-         IeNija7yfMYeS2fVSiSWK2GSiQuRTHgDh6yUCyPE=
-Received: from 78.163-31-62.static.virginmediabusiness.co.uk ([62.31.163.78] helo=why)
-        by disco-boy.misterjones.org with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <maz@kernel.org>)
-        id 1jMTXG-001rlN-39; Thu, 09 Apr 2020 10:31:46 +0100
-Date:   Thu, 9 Apr 2020 10:31:44 +0100
-From:   Marc Zyngier <maz@kernel.org>
-To:     Grygorii Strashko <grygorii.strashko@ti.com>
-Cc:     Nishanth Menon <nm@ti.com>, Tero Kristo <t-kristo@ti.com>,
-        Santosh Shilimkar <ssantosh@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Lokesh Vutla <lokeshvutla@ti.com>,
-        Peter Ujfalusi <peter.ujfalusi@ti.com>,
-        Sekhar Nori <nsekhar@ti.com>, <linux-kernel@vger.kernel.org>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [PATCH] irqchip/ti-sci-inta: fix processing of masked irqs
-Message-ID: <20200409103144.3b2169bf@why>
-In-Reply-To: <20200408191532.31252-1-grygorii.strashko@ti.com>
-References: <20200408191532.31252-1-grygorii.strashko@ti.com>
-Organization: Approximate
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 62.31.163.78
-X-SA-Exim-Rcpt-To: grygorii.strashko@ti.com, nm@ti.com, t-kristo@ti.com, ssantosh@kernel.org, tglx@linutronix.de, jason@lakedaemon.net, lokeshvutla@ti.com, peter.ujfalusi@ti.com, nsekhar@ti.com, linux-kernel@vger.kernel.org, vigneshr@ti.com, linux-arm-kernel@lists.infradead.org
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+        Thu, 9 Apr 2020 05:34:06 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:55138 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725987AbgDIJeG (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Apr 2020 05:34:06 -0400
+Received: by mail-wm1-f65.google.com with SMTP id h2so3194505wmb.4;
+        Thu, 09 Apr 2020 02:34:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=Q+Y8y+xM8vAvx70ujvAzR4mi6uLfRgpj02F8stEfpIA=;
+        b=ofMneNF5Y0aAD9253NDdrUw9Mge6LX6y60ilTfxLFZHKQdoCjmQ2N7ZJQHoGhhyCyf
+         NRTI8H1syvnJCdM0lr8dWnZXMK+1GG1pTce74JM4dqgFCelwqBeZD34gi0DD6VAhwla1
+         K7LiJG+IxuChBO6y5/NwWy24mJkHXw5Z38Z2y0HimI8yTxTyFbCDPpLBuBB/n8DC1Spd
+         0qAWGXtu2mSC4+1jvrrqhlHAB1+ASiSYOCG7q+YJy4h1V0vHENgr5KkmaR26Gd+8uKqg
+         MOM12l0mrWytNgMI2RiOYyFbinuJjeWk66VKevVXwJ3vinfLuJqQkj/D4s/MkjZvnZMw
+         Pu2g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=Q+Y8y+xM8vAvx70ujvAzR4mi6uLfRgpj02F8stEfpIA=;
+        b=KdNgosNnZVLi9APjSjHvpEXz0fM2jUmUR+eA69GsjSORCFFv4NzAuqyBDg9wPK8+11
+         4TqFvO60RAKJd2X5oia++zukQWV3Z7xXrhXUrOwSG9ofBb11KUkyOei8GN9vlAJcK3JK
+         SwWxxYDHUfVMHBeuRrEL2dfcuhcImApEC19cMv6FTOUG1GmCUmyG7xeqAAorT6LtL+v+
+         1bNTBawy5DEM/oMui8j8E9VZ6wqewJXundSzYNa6yCRdE5aA+cdnQ/1GCDfRaPKm0141
+         VNvL4LU67YHGA44/GQVbWowKxY06MSWtg6DDGXUJA2Onwf05Le9Ppm3mCxivvsD8tX9u
+         LOgw==
+X-Gm-Message-State: AGi0PuZmVDPd9OPP1V+jf3gkF971nHPTrpX2Kn3B02eEbhujIEeovfQh
+        lKGg6mExtWRGyDRExCElTCo=
+X-Google-Smtp-Source: APiQypKmYqD8YLDmepZyhhgWsPaAGtq8nWuP47xQWFlkBa278hJ29MRxmwYNHkqIpqqk3tgrP67MKQ==
+X-Received: by 2002:a1c:5a41:: with SMTP id o62mr2048499wmb.43.1586424844697;
+        Thu, 09 Apr 2020 02:34:04 -0700 (PDT)
+Received: from localhost (ip1f115f16.dynamic.kabel-deutschland.de. [31.17.95.22])
+        by smtp.gmail.com with ESMTPSA id y7sm3150319wmb.43.2020.04.09.02.34.03
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 09 Apr 2020 02:34:03 -0700 (PDT)
+From:   Oliver Graute <oliver.graute@gmail.com>
+To:     dmitry.torokhov@gmail.com
+Cc:     oliver.graute@gmail.com,
+        Oliver Graute <oliver.graute@kococonnector.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Sasha Levin <sashal@kernel.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v1] Input: edt-ft5x06 - added case for EDT EP0110M09
+Date:   Thu,  9 Apr 2020 11:21:52 +0200
+Message-Id: <1586424116-25739-1-git-send-email-oliver.graute@gmail.com>
+X-Mailer: git-send-email 2.7.4
+X-Patchwork-Bot: notify
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 8 Apr 2020 22:15:32 +0300
-Grygorii Strashko <grygorii.strashko@ti.com> wrote:
+From: Oliver Graute <oliver.graute@kococonnector.com>
 
-> The ti_sci_inta_irq_handler() does not take into account INTA IRQs state
-> (masked/unmasked) as it uses INTA_STATUS_CLEAR_j register to get INTA IRQs
-> status, which provides raw status value.
-> This causes hard IRQ handlers to be called or threaded handlers to be
-> scheduled many times even if corresponding INTA IRQ is masked.
-> Above, first of all, affects the LEVEL interrupts processing and causes
-> unexpected behavior up the system stack or crash.
-> 
-> Fix it by using the Interrupt Masked Status INTA_STATUSM_j register which
-> provides masked INTA IRQs status.
-> 
-> Fixes: 9f1463b86c13 ("irqchip/ti-sci-inta: Add support for Interrupt Aggregator driver")
-> Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
+Add Support for EP011M09 Firmware
 
-Given the failure mode, doesn't this deserve a Cc stable?
+Signed-off-by: Oliver Graute <oliver.graute@kococonnector.com>
+---
+ drivers/input/touchscreen/edt-ft5x06.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-> ---
->  drivers/irqchip/irq-ti-sci-inta.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/irqchip/irq-ti-sci-inta.c b/drivers/irqchip/irq-ti-sci-inta.c
-> index 8f6e6b08eadf..7e3ebf6ed2cd 100644
-> --- a/drivers/irqchip/irq-ti-sci-inta.c
-> +++ b/drivers/irqchip/irq-ti-sci-inta.c
-> @@ -37,6 +37,7 @@
->  #define VINT_ENABLE_SET_OFFSET	0x0
->  #define VINT_ENABLE_CLR_OFFSET	0x8
->  #define VINT_STATUS_OFFSET	0x18
-> +#define VINT_STATUS_MASKED_OFFSET	0x20
->  
->  /**
->   * struct ti_sci_inta_event_desc - Description of an event coming to
-> @@ -116,7 +117,7 @@ static void ti_sci_inta_irq_handler(struct irq_desc *desc)
->  	chained_irq_enter(irq_desc_get_chip(desc), desc);
->  
->  	val = readq_relaxed(inta->base + vint_desc->vint_id * 0x1000 +
-> -			    VINT_STATUS_OFFSET);
-> +			    VINT_STATUS_MASKED_OFFSET);
->  
->  	for_each_set_bit(bit, &val, MAX_EVENTS_PER_VINT) {
->  		virq = irq_find_mapping(domain, vint_desc->events[bit].hwirq);
-
-
-Otherwise queued for post -rc1.
-
-Thanks,
-
-	M.
+diff --git a/drivers/input/touchscreen/edt-ft5x06.c b/drivers/input/touchscreen/edt-ft5x06.c
+index d2587724c52a..13665389d28c 100644
+--- a/drivers/input/touchscreen/edt-ft5x06.c
++++ b/drivers/input/touchscreen/edt-ft5x06.c
+@@ -879,6 +879,7 @@ static int edt_ft5x06_ts_identify(struct i2c_client *client,
+ 		 * the identification registers.
+ 		 */
+ 		switch (rdbuf[0]) {
++		case 0x11:   /* EDT EP0110M09 */
+ 		case 0x35:   /* EDT EP0350M09 */
+ 		case 0x43:   /* EDT EP0430M09 */
+ 		case 0x50:   /* EDT EP0500M09 */
 -- 
-Jazz is not dead. It just smells funny...
+2.17.1
+
