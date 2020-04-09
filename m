@@ -2,120 +2,133 @@ Return-Path: <SRS0=n+Ub=5Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DAA6DC2BB85
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 20:46:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10D3CC2BA19
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 20:48:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AFB3920730
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 20:46:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CC8A420730
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 20:48:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="vTO45h5q"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UvB8ZTZ6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727184AbgDIUqT (ORCPT
+        id S1727035AbgDIUsX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Apr 2020 16:46:19 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:46895 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726725AbgDIUqT (ORCPT
+        Thu, 9 Apr 2020 16:48:23 -0400
+Received: from mail-pj1-f66.google.com ([209.85.216.66]:36024 "EHLO
+        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726650AbgDIUsW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Apr 2020 16:46:19 -0400
-Received: by mail-wr1-f67.google.com with SMTP id f13so7009352wrm.13
-        for <linux-kernel@vger.kernel.org>; Thu, 09 Apr 2020 13:46:17 -0700 (PDT)
+        Thu, 9 Apr 2020 16:48:22 -0400
+Received: by mail-pj1-f66.google.com with SMTP id nu11so1763611pjb.1;
+        Thu, 09 Apr 2020 13:48:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=lD1Rt/y2uoNW+nfIN7RZ4aTdLWF/Ni9UbL6zK1y9lCs=;
-        b=vTO45h5qjxpUO0RZop+vt4zHCddVEsZg/knGJrQn7U+9DGy67NQQXrh5TsjLyQKFxk
-         SVJ4ctNyC2RjMmwReBBiXEmv8qAjR3Axw/byAo3Pj/w49nw5+YMtL7twgpeAPoGbZCXz
-         0M02Fe5dDpE5jg4qlkoUgpj0CcHSn0dZMW+4a9LjQ08lCk/CqL7jcpvzC/MgKDixMzXI
-         zhXzxMDFp9Sh8EKc30sXOVpooFDSWETY3fGnVyR4YswQIh47peeB/Dk0Dl0CGxVXN59v
-         Bk9e5sMiVdKHPKW3NqBcvwElouV/WMgTem0s+CQZIvqdiBLGHj72A9ZM9/VBArivHXP3
-         vIuQ==
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=Yq49Nu++9i3zAXXAfzhjx/M1svNPVbcVpmDhc428p6Y=;
+        b=UvB8ZTZ63yO4h619p7pJUHFX2LYYElGo+ZrAVp1iZAoYKRKm38FfNX3baVWKtj+UGE
+         lf6Wl7iPAGDDwcb03GD4OVvW6vivoOx8sqTDEOSCaq8xSxzrm5ogqUmJKVp4sW6PBT5F
+         eFxHERpC1wLw5ugHBupA1DGIr/HBK13edgGepM6jS87ZfGvlqO+nGsOlSmak0s+XjXBJ
+         d7SOmSIK97jye6VkO1CvmByeIiwoK7IBSr5QnNgnUc3Ak1E7Ok3g5oVjlQRQLNtbl++O
+         odG8bGBbKHioOmjbgwpQAy55AM1xWQB1GXqmlqov9tOZLlWboW5/6/pKJomRsV8kUCvZ
+         dtgw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=lD1Rt/y2uoNW+nfIN7RZ4aTdLWF/Ni9UbL6zK1y9lCs=;
-        b=SJWtuAsJVxKYeUnRgmZeR+zaLivvm+58GVsKH5WOCyx68XuvdE/xeBo/wZFoKFKrxp
-         OLRWyvRGc9HUtJq5JqUHd5rhxWXTFN/ljlTO5EVg2nOxvr0ZrdtrOsoqx5JiX20TxJlQ
-         3dVj0qA6Agt3UnX7UGNqC2IULAM3QDODCGULo2eYrwtDGaxsuPx7y5lDbIyOwfoWhiuA
-         nutZTHXJaujRUSNdT2/2uud/Q5cAbQGU6VoUa+yUpC1fU4dqnSTYGmD8jQh+hVhD/XV9
-         zacqFqvh5cUlEX2P0fH7nHv2pf0iwSy4OeHkIG7rk3gIkmmi1uq7YBzbSqkvBq2y3tYd
-         QOXg==
-X-Gm-Message-State: AGi0PuZPeYUtXHu1u/hXTSI7mVl8Hkm6/Uq+7huI8ABYuoHePc+LZjiB
-        UMiqI1viS/HD9wrFh8qsSdC2Xak3jJY=
-X-Google-Smtp-Source: APiQypLKK0n4RrvpfsZv9DWiFKMNRxBOXEgwdl/5+7rT+wUMjrtPZmlVoDQbKd2WnWBKMbZfIRzE8w==
-X-Received: by 2002:a5d:5228:: with SMTP id i8mr1038315wra.156.1586465176507;
-        Thu, 09 Apr 2020 13:46:16 -0700 (PDT)
-Received: from localhost.localdomain ([89.208.134.182])
-        by smtp.gmail.com with ESMTPSA id c18sm40639876wrx.5.2020.04.09.13.46.14
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=Yq49Nu++9i3zAXXAfzhjx/M1svNPVbcVpmDhc428p6Y=;
+        b=MzKTi1dCuRYIaDqJNzdXBMkwFLXZUH1TCwTtui+v1CEpJOq+2jGUWk2VroGbOduetV
+         ftIX3hzwYxPqoEBhDjGIFH2IwqXsFmoTK3z+dNC1lXbW7/Lmlq2uCHuLWou2hytVtAWr
+         2tJKNom8CYFgN4OJDHYmTH0g8N/Y6/d1C7R74mLWJXtPRDObSLpmRJcbvX5loVnRDK9D
+         bTUQ0QPpsFJEYigKnn7Jw8cU2nHjD4TD9E2nIux9eEP7CtJc5Q9x1CH77A5OpGeQO6Iz
+         /NgIS+K8YWo+e0p4+NcjSKC+YQzhb0zRcFzGKZF4HZ1Ke7FDz6rU/LippA2A409ldsNq
+         7aZg==
+X-Gm-Message-State: AGi0PuYXvhBwBgYZ4go+mh6FJi1KilrE4vOmt0v3ikNvzljKxQ+orL76
+        1krf103RHNkBNbcdtRbz6+8=
+X-Google-Smtp-Source: APiQypIFh/iHLVwKUI5JspshlUj/HlEIvFYdhLH0oeNMqqYs0gq049IClzpw4xbqJQ4ciMOEfTv39Q==
+X-Received: by 2002:a17:902:107:: with SMTP id 7mr1391190plb.302.1586465301762;
+        Thu, 09 Apr 2020 13:48:21 -0700 (PDT)
+Received: from dtor-ws ([2620:15c:202:201:3c2a:73a9:c2cf:7f45])
+        by smtp.gmail.com with ESMTPSA id u13sm10854pgp.49.2020.04.09.13.48.20
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 09 Apr 2020 13:46:15 -0700 (PDT)
-From:   Leonid Bloch <lb.workbox@gmail.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     John Stultz <john.stultz@linaro.org>,
+        Thu, 09 Apr 2020 13:48:21 -0700 (PDT)
+Date:   Thu, 9 Apr 2020 13:48:19 -0700
+From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To:     Markus Elfring <Markus.Elfring@web.de>
+Cc:     linux-input@vger.kernel.org, Allison Randal <allison@lohutok.net>,
+        Arnd Bergmann <arnd@arndb.de>,
+        H Hartley Sweeten <hsweeten@visionengravers.com>,
+        Olof Johansson <olof@lixom.net>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Leonid Bloch <lb.workbowx@gmail.com>
-Subject: [PATCH] rtc: Do not sync CMOS clock when CONFIG_RTC_SYSTOHC is not set
-Date:   Thu,  9 Apr 2020 23:46:07 +0300
-Message-Id: <20200409204607.8280-1-lb.workbox@gmail.com>
-X-Mailer: git-send-email 2.26.0
+        LKML <linux-kernel@vger.kernel.org>,
+        kernel-janitors@vger.kernel.org,
+        Tang Bin <tangbin@cmss.chinamobile.com>
+Subject: Re: Input: ep93xx_keypad: Checking for a failed platform_get_irq()
+ call in ep93xx_keypad_probe()
+Message-ID: <20200409204819.GR75430@dtor-ws>
+References: <11aecb68-d243-2eeb-0cc8-50e1ec22bd71@web.de>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <11aecb68-d243-2eeb-0cc8-50e1ec22bd71@web.de>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-According to documentation in 'drivers/rtc/Kconfig', if
-'CONFIG_RTC_SYSTOHC' is set, then:
+Hi Markus,
 
-'''
-The system time (wall clock) will be stored in the RTC specified by
-RTC_HCTOSYS_DEVICE approximately every 11 minutes if userspace reports
-synchronized NTP status.
-'''
+On Wed, Apr 08, 2020 at 06:52:31PM +0200, Markus Elfring wrote:
+> Hello,
+> 
+> I have taken another look at the implementation of the function “ep93xx_keypad_probe”.
+> A software analysis approach points the following source code out for
+> further development considerations.
+> https://elixir.bootlin.com/linux/v5.6.3/source/drivers/input/keyboard/ep93xx_keypad.c#L252
+> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/input/keyboard/ep93xx_keypad.c?id=f5e94d10e4c468357019e5c28d48499f677b284f#n252
+> 
+>  	keypad->irq = platform_get_irq(pdev, 0);
+>  	if (!keypad->irq) {
+>  		err = -ENXIO;
+>  		goto failed_free;
+>  	}
+> 
+> 
+> The software documentation is providing the following information
+> for the used programming interface.
+> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/base/platform.c?id=f5e94d10e4c468357019e5c28d48499f677b284f#n221
+> https://elixir.bootlin.com/linux/v5.6.3/source/drivers/base/platform.c#L202
+> 
+> “…
+>  * Return: IRQ number on success, negative error number on failure.
+> …”
+> 
+> Would you like to reconsider the shown condition check?
 
-However in reality, even if 'CONFIG_RTC_SYSTOHC' is not set, the RTC
-is still sometimes synced with the system time: at least when the RTC
-driver is 'rtc_cmos', in certain situations. This commit prevents that.
+Platform code historically allowed creating IRQ resources with IRQ
+number 0 to indicate "no interrupt assigned", so this driver tries to
+filter out such conditions. The negative IRQs (errors) will be rejected
+by request_irq() but I guess we can lose -EPROBE_DEFER. We could do
 
-Signed-off-by: Leonid Bloch <lb.workbox@gmail.com>
----
- kernel/time/ntp.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+	if (keypad->irq <= 0) {
+		err = keypad->irq ?: -ENXIO : keypad->irq;
+		goto failed_free;
+	}
 
-diff --git a/kernel/time/ntp.c b/kernel/time/ntp.c
-index 069ca78fb0bf..58260ca75c64 100644
---- a/kernel/time/ntp.c
-+++ b/kernel/time/ntp.c
-@@ -535,9 +535,6 @@ static void sync_rtc_clock(void)
- 	struct timespec64 adjust, now;
- 	int rc;
- 
--	if (!IS_ENABLED(CONFIG_RTC_SYSTOHC))
--		return;
--
- 	ktime_get_real_ts64(&now);
- 
- 	adjust = now;
-@@ -613,6 +610,9 @@ static bool sync_cmos_clock(void)
-  */
- static void sync_hw_clock(struct work_struct *work)
- {
-+	if (!IS_ENABLED(CONFIG_RTC_SYSTOHC))
-+		return;
-+
- 	if (!ntp_synced())
- 		return;
- 
+
+or, maybe we should take a look at platform_get_irq() and see if we can
+stop it returning 0 interrupt numbers and clean up the drivers.
+
+Thanks.
+
 -- 
-2.26.0
-
+Dmitry
