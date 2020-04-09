@@ -2,108 +2,95 @@ Return-Path: <SRS0=n+Ub=5Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0026FC2BA2B
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 02:32:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03C36C2BA80
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 02:39:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D12C22074F
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 02:32:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C38762087E
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 02:39:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="a74Iq1D9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726652AbgDICcF (ORCPT
+        id S1726626AbgDICjS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Apr 2020 22:32:05 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:35574 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726523AbgDICcE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Apr 2020 22:32:04 -0400
-Received: from DGGEMS412-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id F1524DF3F5850194B77B;
-        Thu,  9 Apr 2020 10:31:54 +0800 (CST)
-Received: from [10.134.22.195] (10.134.22.195) by smtp.huawei.com
- (10.3.19.212) with Microsoft SMTP Server (TLS) id 14.3.487.0; Thu, 9 Apr 2020
- 10:31:49 +0800
-Subject: Re: [f2fs-dev] [PATCH] f2fs: introduce sysfs/data_io_flag to attach
- REQ_META/FUA
-To:     Jaegeuk Kim <jaegeuk@kernel.org>
-CC:     <linux-kernel@vger.kernel.org>,
-        <linux-f2fs-devel@lists.sourceforge.net>, <kernel-team@android.com>
-References: <20200403161249.68385-1-jaegeuk@kernel.org>
- <0e627c29-7fb0-5bd6-c1d9-b96a94df62ae@huawei.com>
- <20200407025913.GB137081@google.com>
- <2ca452cd-073a-29fa-1884-99ad1199bb97@huawei.com>
- <20200409022005.GA110440@google.com>
- <69df999a-1df2-595e-579d-a8c3fc700d7b@huawei.com>
- <20200409022802.GC110440@google.com>
-From:   Chao Yu <yuchao0@huawei.com>
-Message-ID: <edf76981-d427-bea7-81c5-531878112443@huawei.com>
-Date:   Thu, 9 Apr 2020 10:31:48 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+        Wed, 8 Apr 2020 22:39:18 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:55266 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726574AbgDICjS (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Apr 2020 22:39:18 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1586399957;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=HR+51ncLat+TViGePt1EzZ9/+c+0ffiOCieXE52eEnw=;
+        b=a74Iq1D9jmoc2Uu2DWxX8xGCUIp1W/halFfnb3tSVZo2u51ZcOGNvFsHjLNQHWrXACE9mh
+        029j5bdmVGAGkq7D1Mqv8ZcfD04DE8gfg9uCQRlSWKWXGK584UK7NCMI4690NAigjwhTaR
+        fXFZj3AtIk1dXdj1C2RCQP47yHKUOJg=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-204-x3013G3HMNqqRz2AZLIqHg-1; Wed, 08 Apr 2020 22:39:12 -0400
+X-MC-Unique: x3013G3HMNqqRz2AZLIqHg-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id F23DF107ACCA;
+        Thu,  9 Apr 2020 02:39:10 +0000 (UTC)
+Received: from localhost.localdomain (ovpn-8-27.pek2.redhat.com [10.72.8.27])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id ABBA19DD6B;
+        Thu,  9 Apr 2020 02:39:02 +0000 (UTC)
+Date:   Thu, 9 Apr 2020 10:38:57 +0800
+From:   Ming Lei <ming.lei@redhat.com>
+To:     Tejun Heo <tj@kernel.org>
+Cc:     axboe@kernel.dk, linux-block@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kernel-team@vger.kernel.org,
+        cgroups@vger.kernel.org, newella@fb.com, josef@toxicpanda.com
+Subject: Re: [PATCH 2/5] block: add request->io_data_len
+Message-ID: <20200409023857.GB370295@localhost.localdomain>
+References: <20200408201450.3959560-1-tj@kernel.org>
+ <20200408201450.3959560-3-tj@kernel.org>
+ <20200409014406.GA370295@localhost.localdomain>
+ <20200409021119.GJ162390@mtj.duckdns.org>
 MIME-Version: 1.0
-In-Reply-To: <20200409022802.GC110440@google.com>
-Content-Type: text/plain; charset="windows-1252"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.134.22.195]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200409021119.GJ162390@mtj.duckdns.org>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020/4/9 10:28, Jaegeuk Kim wrote:
-> On 04/09, Chao Yu wrote:
->> On 2020/4/9 10:20, Jaegeuk Kim wrote:
->>> On 04/07, Chao Yu wrote:
->>>> On 2020/4/7 10:59, Jaegeuk Kim wrote:
->>>>> On 04/07, Chao Yu wrote:
->>>>>> On 2020/4/4 0:12, Jaegeuk Kim wrote:
->>>>>>> This patch introduces a way to attach REQ_META/FUA explicitly
->>>>>>> to all the data writes given temperature.
->>>>>>>
->>>>>>> -> attach REQ_FUA to Hot Data writes
->>>>>>>
->>>>>>> -> attach REQ_FUA to Hot|Warm Data writes
->>>>>>>
->>>>>>> -> attach REQ_FUA to Hot|Warm|Cold Data writes
->>>>>>>
->>>>>>> -> attach REQ_FUA to Hot|Warm|Cold Data writes as well as
->>>>>>>           REQ_META to Hot Data writes
->>>>>>
->>>>>> Out of curiosity, what scenario it is used for?
->>>>>
->>>>> It's testing purpose to compare the bandwidths per different IO flags.
->>>>
->>>> Thanks for the hint. :)
->>>>
->>>> As nobarrier was set in Android, so REQ_PREFLUSH will not be considered in
->>>> this sysfs interface?
->>>
->>> I don't see any diff on performance, so not interesting. :)
->>
->> I doubt it may has diff on non-ufs/emmc device? just guess.
+On Wed, Apr 08, 2020 at 10:11:19PM -0400, Tejun Heo wrote:
+> On Thu, Apr 09, 2020 at 09:44:06AM +0800, Ming Lei wrote:
+> > Almost all __blk_mq_end_request() follow blk_update_request(), so the
+> > completed bytes can be passed to __blk_mq_end_request(), then we can
+> > avoid to introduce this field.
 > 
-> I don't have any data on emmc, so maybe. Which case do we send REQ_PREFLUSH?
+> But on some drivers blk_update_request() may be called multiple times before
+> __blk_mq_end_request() is called and what's needed here is the total number of
+> bytes in the whole request, not just in the final completion.
 
-fsync w/ barrier mount option.
+OK.
+
+Another choice might be to record request bytes in rq's payload
+when calling .queue_rq() only for these drivers.
 
 > 
->>
->> Thanks,
->>
->>>
->>>>
->>>> Thanks,
->>>>
->>>>>
->>>>>>
->>>>>> Thanks,
->>>>> .
->>>>>
->>> .
->>>
-> .
+> > Also there is just 20 callers of __blk_mq_end_request(), looks this kind
+> > of change shouldn't be too big.
 > 
+> This would work iff we get rid of partial completions and if we get rid of
+> partial completions, we might as well stop exposing blk_update_request() and
+> __blk_mq_end_request().
+
+Indeed, we can store the completed bytes in request payload, so looks killing
+partial completion shouldn't be too hard.
+
+Thanks,
+Ming
+
