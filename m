@@ -2,151 +2,106 @@ Return-Path: <SRS0=n+Ub=5Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D9D8C2BB85
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 09:43:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0D29C2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 09:43:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E6B45221EB
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 09:43:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5F6B221D91
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 09:43:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="IxjUOPF2"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="IP59XrEs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726691AbgDIJnK (ORCPT
+        id S1726754AbgDIJnN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Apr 2020 05:43:10 -0400
-Received: from smtp-fw-9101.amazon.com ([207.171.184.25]:34683 "EHLO
-        smtp-fw-9101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726620AbgDIJnK (ORCPT
+        Thu, 9 Apr 2020 05:43:13 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:45046 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726620AbgDIJnL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Apr 2020 05:43:10 -0400
+        Thu, 9 Apr 2020 05:43:11 -0400
+Received: by mail-wr1-f65.google.com with SMTP id c15so11106216wro.11
+        for <linux-kernel@vger.kernel.org>; Thu, 09 Apr 2020 02:43:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1586425390; x=1617961390;
-  h=from:to:cc:subject:date:message-id:mime-version;
-  bh=A3o7iwNYKZ7O2kghXsLkm2MqLsk9mCv8wiHQj4pLUK8=;
-  b=IxjUOPF2lOfppCOPNOeYcy83ZKs65nW/7eJ7JckTdikwYBzlHTd3lbtq
-   e0liv2uPaVFN8xT7CzNuwYDBifunJJQRvENVYdQdOpyDq0YJ8WmogQkwM
-   6q+YB69jyUcmmDDFUNUBegbumkF+XofIzHPBxu2SqCgn2EbjLORBVEhDO
-   o=;
-IronPort-SDR: v3D4vMoCWVdOhLTBHJE/sCYO8YnRcak74zexDsowtMi2dnxT5bknVRPyMtc2mZRRyW0dvlPHs7
- /G4kT01Gsc8Q==
-X-IronPort-AV: E=Sophos;i="5.72,362,1580774400"; 
-   d="scan'208";a="27833870"
-Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-2c-2225282c.us-west-2.amazon.com) ([10.47.23.38])
-  by smtp-border-fw-out-9101.sea19.amazon.com with ESMTP; 09 Apr 2020 09:43:07 +0000
-Received: from EX13MTAUEA002.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan3.pdx.amazon.com [10.170.41.166])
-        by email-inbound-relay-2c-2225282c.us-west-2.amazon.com (Postfix) with ESMTPS id 244A8A2426;
-        Thu,  9 Apr 2020 09:43:05 +0000 (UTC)
-Received: from EX13D31EUA001.ant.amazon.com (10.43.165.15) by
- EX13MTAUEA002.ant.amazon.com (10.43.61.77) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Thu, 9 Apr 2020 09:43:04 +0000
-Received: from u886c93fd17d25d.ant.amazon.com (10.43.161.115) by
- EX13D31EUA001.ant.amazon.com (10.43.165.15) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Thu, 9 Apr 2020 09:42:50 +0000
-From:   SeongJae Park <sjpark@amazon.com>
-To:     <akpm@linux-foundation.org>
-CC:     SeongJae Park <sjpark@amazon.de>, <Jonathan.Cameron@Huawei.com>,
-        <aarcange@redhat.com>, <acme@kernel.org>,
-        <alexander.shishkin@linux.intel.com>, <amit@kernel.org>,
-        <brendan.d.gregg@gmail.com>, <brendanhiggins@google.com>,
-        <cai@lca.pw>, <colin.king@canonical.com>, <corbet@lwn.net>,
-        <dwmw@amazon.com>, <irogers@google.com>, <jolsa@redhat.com>,
-        <kirill@shutemov.name>, <mark.rutland@arm.com>, <mgorman@suse.de>,
-        <minchan@kernel.org>, <mingo@redhat.com>, <namhyung@kernel.org>,
-        <peterz@infradead.org>, <rdunlap@infradead.org>,
-        <riel@surriel.com>, <rientjes@google.com>, <rostedt@goodmis.org>,
-        <shakeelb@google.com>, <shuah@kernel.org>, <sj38.park@gmail.com>,
-        <vbabka@suse.cz>, <vdavydov.dev@gmail.com>,
-        <yang.shi@linux.alibaba.com>, <ying.huang@intel.com>,
-        <linux-mm@kvack.org>, <linux-doc@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: [RFC PATCH 0/4] DAMON: Make Configurable for Various Address Spaces Including Physical Memory
-Date:   Thu, 9 Apr 2020 11:42:28 +0200
-Message-ID: <20200409094232.29680-1-sjpark@amazon.com>
-X-Mailer: git-send-email 2.17.1
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=GOxv76VTNJn0re7QfDmZ3EwQKAGpjmry3VNCaBN+aEQ=;
+        b=IP59XrEseUrCjteD617L7bdHWtqsEZx8Lje5p2DC45Lafpf/q/phhPrG3hBxueq9Ag
+         mFiuXzx5ii8IdBh8hvy21u1TxyLVcX0UHUlQQgQhzKwkUv5/qSlMKzJ6BQK6/ahmvV0K
+         Ir9Uq+fOX4Z8TgsnRGv7fRCz2LaXFVDwAYdOHZztVpYY/zf/batqId6+Adzxf2oYB5oR
+         kYc2dTbk+T761BuKJFa5qohcQ6l7yDLjEYFjTeURoq+WkkuBYEWoMKWIcmX6Jy3ttCKJ
+         YTSTwkxhg2LqycUBJgIzGn+FMiBUutTRjSNI1g0uaD58HLt9VD7ITU4D8ywEDfFAL6iM
+         gJPg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=GOxv76VTNJn0re7QfDmZ3EwQKAGpjmry3VNCaBN+aEQ=;
+        b=HnMX/CZ8sc0wzCV+sQQzCPX6MIRCDg5Ft2DgbPn/KE2DYSQfHmFAG1iLrBVr437te/
+         v6uxZCkaEghnjWdD9Pa2jRvbXHx9+scnPxn+/hyEvXPHzhbXdWgwaZjOzZmVtQ7CoUj/
+         bPeoxrgdbt6rGCyLrAdnq/ot7ioQIflktqG05cT9J89wvsDV9R1GxPachUMLDgusjt95
+         ST/B5Qsu0x8khhMQvwfbG+poGpZk27YoWOaupVsocPq3OY/Cvw+oYVUKaSIAiWZ/yZJ4
+         QzD9AgDWyqY3Hn7ukFu/4vv5+3rqoj9vGqmu6dcQ5qQ7Jn3uW4VZtSKCoJhg3P8y6g8B
+         6u8Q==
+X-Gm-Message-State: AGi0PuaCV/QfEsYAV//lBZh4AnxfL/9Tmm9TLGfyF+4yjQMipm5e40AO
+        myN/XpdEHG+5ZYbYBSAgqSxozWO33ww=
+X-Google-Smtp-Source: APiQypIIn+KJTOqwwGo0FkMWMplK9DMO0NpY4o/cCriwOi5mFiBWE9LHKwJ1GNBC8+FkmGeRaP0qew==
+X-Received: by 2002:adf:fa51:: with SMTP id y17mr14071155wrr.358.1586425390597;
+        Thu, 09 Apr 2020 02:43:10 -0700 (PDT)
+Received: from ?IPv6:2a01:e34:ed2f:f020:e1dc:4371:fecd:8292? ([2a01:e34:ed2f:f020:e1dc:4371:fecd:8292])
+        by smtp.googlemail.com with ESMTPSA id f1sm41701387wrv.37.2020.04.09.02.43.09
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 09 Apr 2020 02:43:09 -0700 (PDT)
+Subject: Re: [PATCH] clocksource: davinci: avoid trailing '\n' hidden in
+ pr_fmt()
+To:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+        tglx@linutronix.de
+Cc:     linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
+References: <20200409092543.14727-1-christophe.jaillet@wanadoo.fr>
+From:   Daniel Lezcano <daniel.lezcano@linaro.org>
+Message-ID: <54def81a-5065-93d6-3397-5086f2d86994@linaro.org>
+Date:   Thu, 9 Apr 2020 11:43:09 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.43.161.115]
-X-ClientProxiedBy: EX13D15UWB003.ant.amazon.com (10.43.161.138) To
- EX13D31EUA001.ant.amazon.com (10.43.165.15)
+In-Reply-To: <20200409092543.14727-1-christophe.jaillet@wanadoo.fr>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: SeongJae Park <sjpark@amazon.de>
+On 09/04/2020 11:25, Christophe JAILLET wrote:
+> pr_xxx() functions usually have '\n' at the end of the logging message.
+> Here, this '\n' is added via the 'pr_fmt' macro.
+> 
+> In order to be more consistent with other files, use a more standard
+> convention and put these '\n' back in the messages themselves and remove it
+> from the pr_fmt macro.
+> 
+> While at it, remove a useless message in case of 'kzalloc' failure,
+> especially with a __GFP_NOFAIL flag.
+> 
+> Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
 
-DAMON[1] is currently supporing only virtual memory address spaces of several
-target processes.  Therefore, the user of DAMON should first select the target
-processes.  This could be cumbersome in some cases and even makes no sense if
-the user want to monitor non-virtual address spaces.  Especially, there were
-many requests and questions for support of physical memory monitoring.
+Applied, thanks
 
-There were also many questions about use of different access check mechanisms
-such as dedicated H/W features[2], idle page tracking, or perf-mem, instead of
-the PTE Accessed bit checking, which is currently used by DAMON.  Supporting
-various access check mechanisms will make DAMON to be highly tunable for
-specific cases.
+> ---
+> Not sure that the __GFP_NOFAIL is relevant here.
 
-Fortunately, the core mechanisms of DAMON, the region-based sampling and
-adaptive regions adjustment, are not coupled with the virtual memory spaces and
-Accessed bit based access check.  As long as there is a way to 1) address every
-region in the space and 2) check access to specific address, the core
-mechanisms could be applied.  Nonetheless, current implementation of DAMON is
-highly coupled with the virtual memory address spaces.
+No, it is not relevant.
 
-[1] https://lore.kernel.org/linux-mm/20200406130938.14066-1-sjpark@amazon.com/
-[2] https://images.anandtech.com/doci/10591/HC28.AMD.Mike%20Clark.final-page-016.jpg
-
-
-Baseline and Complete Git Trees
-===============================
-
-The patches are based on the v5.6 plus DAMON v8 patchset[1] and DAMOS RFC v6[2]
-patchset.  You can also clone the complete git tree:
-
-    $ git clone git://github.com/sjp38/linux -b cdamon/rfc/v1
-
-The web is also available:
-https://github.com/sjp38/linux/releases/tag/cdamon/rfc/v1
-
-This patchset breaks the couplings and allows the target region definition and
-the access check to be configurable by users so that it can support various
-types of address spaces and use cases.  Based on this patchset, you can
-configure DAMON to monitor physical memory or other special address spaces with
-your preferred access check mechanism.
-
-[1] https://lore.kernel.org/linux-mm/20200406130938.14066-1-sjpark@amazon.com/
-[2] https://lore.kernel.org/linux-mm/20200407100007.3894-1-sjpark@amazon.com/
-
-
-Sequence of Patches
-===================
-
-The sequence of patches is as follow.  The first patch defines the monitoring
-region again based on pure address range abstraction so that there is no
-assumption of virtual memory in there.  The following patch cleans up code
-using the new abstraction.  The third patch allows users to configure the
-initialization and dynamic update of the target address regions, which were
-highly coupled with virtual memory area, with their own things.  Finally, the
-fourth patch further make the access check mechanism, which were based on PTE
-Accessed bit, configurable.
-
-SeongJae Park (4):
-  mm/damon: Use vm-independent address range concept
-  mm/damon: Clean up code using 'struct damon_addr_range'
-  mm/damon: Make monitoring target regions init/update configurable
-  mm/damon: Make access check configurable
-
- include/linux/damon.h |  15 +++-
- mm/damon-test.h       |  82 ++++++++++----------
- mm/damon.c            | 174 ++++++++++++++++++++----------------------
- 3 files changed, 136 insertions(+), 135 deletions(-)
 
 -- 
-2.17.1
+<http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
 
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
