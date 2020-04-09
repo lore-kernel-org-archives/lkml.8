@@ -2,480 +2,138 @@ Return-Path: <SRS0=n+Ub=5Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.7 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36026C2D0EA
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 06:06:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3C0FC2BB1D
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 06:07:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EEB4E20784
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 06:06:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AAA152084D
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 06:07:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="lj0CjFEm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726641AbgDIGGc convert rfc822-to-8bit (ORCPT
+        id S1726654AbgDIGHB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Apr 2020 02:06:32 -0400
-Received: from out30-45.freemail.mail.aliyun.com ([115.124.30.45]:46748 "EHLO
-        out30-45.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725765AbgDIGGb (ORCPT
+        Thu, 9 Apr 2020 02:07:01 -0400
+Received: from mail-pj1-f65.google.com ([209.85.216.65]:38903 "EHLO
+        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725765AbgDIGHB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Apr 2020 02:06:31 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R111e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01f04397;MF=teawaterz@linux.alibaba.com;NM=1;PH=DS;RN=13;SR=0;TI=SMTPD_---0Tv1UAfo_1586412304;
-Received: from 30.25.195.195(mailfrom:teawaterz@linux.alibaba.com fp:SMTPD_---0Tv1UAfo_1586412304)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Thu, 09 Apr 2020 14:05:05 +0800
-Content-Type: text/plain;
-        charset=utf-8
-Mime-Version: 1.0 (Mac OS X Mail 13.0 \(3608.60.0.2.5\))
-Subject: Re: [PATCH for Linux v2] virtio_balloon: Add
- VIRTIO_BALLOON_VQ_INFLATE_CONT to handle THP split issue
-From:   teawater <teawaterz@linux.alibaba.com>
-In-Reply-To: <20200326030318-mutt-send-email-mst@kernel.org>
-Date:   Thu, 9 Apr 2020 14:05:04 +0800
-Cc:     Hui Zhu <teawater@gmail.com>, Jason Wang <jasowang@redhat.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        mojha@codeaurora.org, pagupta@redhat.com, aquini@redhat.com,
-        Nadav Amit <namit@vmware.com>, david@redhat.com,
-        virtualization@lists.linux-foundation.org,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        qemu-devel@nongnu.org
-Content-Transfer-Encoding: 8BIT
-Message-Id: <3ACCC5DE-3EE7-40A2-942D-1751221F5E55@linux.alibaba.com>
-References: <1584893097-12317-1-git-send-email-teawater@gmail.com>
- <20200326030318-mutt-send-email-mst@kernel.org>
-To:     "Michael S. Tsirkin" <mst@redhat.com>
-X-Mailer: Apple Mail (2.3608.60.0.2.5)
+        Thu, 9 Apr 2020 02:07:01 -0400
+Received: by mail-pj1-f65.google.com with SMTP id t40so839349pjb.3
+        for <linux-kernel@vger.kernel.org>; Wed, 08 Apr 2020 23:07:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=PDVCcQ8eW3xzr0q0fg0rFZhCBqGt/pkIyn1XMDFNGIQ=;
+        b=lj0CjFEmmT9lQy65b0Ne6akclJt8eimW65qFTdm50riSBxgY5Oea+B9HT8lYxTkpCz
+         /P1YjHZpiEUN9UGqGlVwmH2hPKZd2YcsnmNllqEEeXRHi8WNZpZdMBFAeIrpx4T632eq
+         uHEkWyWv1h55xsKN1ZnTz4zBLbec8p3u17o8jdgejp69SEDt8oNSmXFzaRfcG5h9jLmM
+         mL1/ycLrGvNc2K4a5Cc8/Cnm6yUEoLxPtnsjLzV+2qLQP2TJzAIA6TP+dOtcVbd2WjN2
+         Nr38UjdfRfGJuBGfx0y3kINf9naWJD2TT9MbyUlC1dmC/7boMG3zfPO1aLLMWvEAuGF1
+         dANw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=PDVCcQ8eW3xzr0q0fg0rFZhCBqGt/pkIyn1XMDFNGIQ=;
+        b=uHtMQFcwv2vVf/HTKFnW7WILH0eI5NJinPuOKNasvRJ/I44L9uGOi7lctJ0c4JCeWJ
+         a1jU8nvH1mtTXpAMrKZ3l+5z3Ggi0jSoMwlFZ4GI7h6uvHaT+gjAPZpE5xWnO0afvMF7
+         5sL5A0ilTLM0IgU2IvB0PRujuw+VzwnaWXsCJBgGZkWsagK1mTwNqiP9tG7Dt7+JtHzs
+         MM4UQRb1RatvgU5fB7DqapjVq+pj/fq4i5i4JbfyygrdLTiqP1pLfbIQ4whpim4miE9z
+         5PMaveAU2nkeLpmriR++mdw7Tl5y8XElXbUSRC92AvAvSd+QUWoNy0W73VnMyeGB4j4d
+         HViQ==
+X-Gm-Message-State: AGi0Pub8uwOy+ahlnNz314Diu8D4dbQmigHFt2z4lW4FAU+9/BtBUuyf
+        MwXm4EwcEfZTQo22HmLo+rLm
+X-Google-Smtp-Source: APiQypLzQNmwG//ib7FauV8yUSzEnCm4L6N8bPxdz2kPV14xDTahS4nqsqZcfN1scrt9Fem/iVmZNQ==
+X-Received: by 2002:a17:902:d3cb:: with SMTP id w11mr10543306plb.257.1586412420780;
+        Wed, 08 Apr 2020 23:07:00 -0700 (PDT)
+Received: from Mani-XPS-13-9360 ([2409:4072:880:9bea:1d3e:17d:bd87:fce7])
+        by smtp.gmail.com with ESMTPSA id r189sm17408396pgr.31.2020.04.08.23.06.42
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 08 Apr 2020 23:06:59 -0700 (PDT)
+Date:   Thu, 9 Apr 2020 11:36:40 +0530
+From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To:     Dejin Zheng <zhengdejin5@gmail.com>
+Cc:     thor.thayer@linux.intel.com, krzysztof.adamski@nokia.com,
+        rjui@broadcom.com, sbranden@broadcom.com,
+        bcm-kernel-feedback-list@broadcom.com, f.fainelli@gmail.com,
+        nsekhar@ti.com, bgolaszewski@baylibre.com,
+        jarkko.nikula@linux.intel.com, andriy.shevchenko@linux.intel.com,
+        mika.westerberg@linux.intel.com, baruch@tkos.co.il,
+        wsa+renesas@sang-engineering.com, kgene@kernel.org,
+        krzk@kernel.org, paul@crapouillou.net, vz@mleia.com,
+        khilman@baylibre.com, matthias.bgg@gmail.com,
+        gregory.clement@bootlin.com, rrichter@marvell.com,
+        afaerber@suse.de, agross@kernel.org, bjorn.andersson@linaro.org,
+        heiko@sntech.de, baohua@kernel.org, linus.walleij@linaro.org,
+        mripard@kernel.org, wens@csie.org, ardb@kernel.org,
+        michal.simek@xilinx.com, gcherian@marvell.com, jun.nie@linaro.org,
+        shawnguo@kernel.org, rayagonda.kokatanur@broadcom.com,
+        lori.hikichi@broadcom.com, nishkadg.linux@gmail.com,
+        kstewart@linuxfoundation.org, allison@lohutok.net,
+        gregkh@linuxfoundation.org, tglx@linutronix.de,
+        bigeasy@linutronix.de, info@metux.net, hslester96@gmail.com,
+        narmstrong@baylibre.com, martin.blumenstingl@googlemail.com,
+        qii.wang@mediatek.com, drinkcat@chromium.org, hsinyi@chromium.org,
+        fparent@baylibre.com, opensource@jilayne.com, swinslow@gmail.com,
+        linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v1 03/28] i2c: owl: convert to
+ devm_platform_ioremap_resource
+Message-ID: <20200409060640.GA4243@Mani-XPS-13-9360>
+References: <20200407163741.17615-1-zhengdejin5@gmail.com>
+ <20200407163741.17615-4-zhengdejin5@gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200407163741.17615-4-zhengdejin5@gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, Apr 08, 2020 at 12:37:16AM +0800, Dejin Zheng wrote:
+> use devm_platform_ioremap_resource() to simplify code, which
+> contains platform_get_resource and devm_ioremap_resource.
+> 
+> Signed-off-by: Dejin Zheng <zhengdejin5@gmail.com>
 
+Acked-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 
-> 2020年3月26日 15:17，Michael S. Tsirkin <mst@redhat.com> 写道：
-> 
-> First, either QEMU or Linux version of any interface changes
-> should be copied to the virtio TC.
-> 
-> :
+Thanks,
+Mani
 
-OK.
-
+> ---
+>  drivers/i2c/busses/i2c-owl.c | 4 +---
+>  1 file changed, 1 insertion(+), 3 deletions(-)
 > 
+> diff --git a/drivers/i2c/busses/i2c-owl.c b/drivers/i2c/busses/i2c-owl.c
+> index b6b5a495118b..c9e7fcac12ae 100644
+> --- a/drivers/i2c/busses/i2c-owl.c
+> +++ b/drivers/i2c/busses/i2c-owl.c
+> @@ -399,15 +399,13 @@ static int owl_i2c_probe(struct platform_device *pdev)
+>  {
+>  	struct device *dev = &pdev->dev;
+>  	struct owl_i2c_dev *i2c_dev;
+> -	struct resource *res;
+>  	int ret, irq;
+>  
+>  	i2c_dev = devm_kzalloc(dev, sizeof(*i2c_dev), GFP_KERNEL);
+>  	if (!i2c_dev)
+>  		return -ENOMEM;
+>  
+> -	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> -	i2c_dev->base = devm_ioremap_resource(dev, res);
+> +	i2c_dev->base = devm_platform_ioremap_resource(pdev, 0);
+>  	if (IS_ERR(i2c_dev->base))
+>  		return PTR_ERR(i2c_dev->base);
+>  
+> -- 
+> 2.25.0
 > 
-> On Mon, Mar 23, 2020 at 12:04:56AM +0800, Hui Zhu wrote:
->> The first version is in [1].
->> According to the comments from Michael and David, I updated the patch.
->> 1. Added a separate vq inflate_cont_vq to transport inflate continuous
->>   pages.
->> 2. Set all the pages in the continuous pages movable then they can be
->>   compaction.
->> 3. Added a new element pages_order to virtio_balloon_config.  It is the
->>   inflate pages order that is set by the QEMU.
->> 4. If the balloon cannot get any continuous pages from the system.
->>   Go back to use the single page to fill the balloon.
->> 5.  Use balloon_pages_alloc to allocate the single page and continuous
->>    pages.  Replace __GFP_NORETRY with __GFP_RETRY_MAYFAIL when allocating
->>    the continuous pages because it can increase the success rate of
->>    allocating large chunks of memory.
->> 
->> Following is the introduction of the function.
->> If the guest kernel has many fragmentation pages, use virtio_balloon
->> will split THP of QEMU when it calls MADV_DONTNEED madvise to release
->> the balloon pages.
->> This is an example in a VM with 1G memory 1CPU:
->> // This is the THP number before VM execution in the host.
->> // None use THP.
->> cat /proc/meminfo | grep AnonHugePages:
->> AnonHugePages:         0 kB
->> 
->> // After VM start, use usemem
->> // (https://git.kernel.org/pub/scm/linux/kernel/git/wfg/vm-scalability.git)
->> // punch-holes function generates 400m fragmentation pages in the guest
->> // kernel.
->> usemem --punch-holes -s -1 800m &
->> 
->> // This is the THP number after this command in the host.
->> // Some THP is used by VM because usemem will access 800M memory
->> // in the guest.
->> cat /proc/meminfo | grep AnonHugePages:
->> AnonHugePages:    976896 kB
->> 
->> // Connect to the QEMU monitor, setup balloon, and set it size to 600M.
->> (qemu) device_add virtio-balloon-pci,id=balloon1
->> (qemu) info balloon
->> balloon: actual=1024
->> (qemu) balloon 600
->> (qemu) info balloon
->> balloon: actual=600
->> 
->> // This is the THP number after inflate the balloon in the host.
->> cat /proc/meminfo | grep AnonHugePages:
->> AnonHugePages:    151552 kB
->> 
->> THP number decreased more than 800M.
->> The reason is usemem with punch-holes option will free every other
->> page after allocation.  Then 400M free memory inside the guest kernel
->> is fragmentation pages.
->> The guest kernel will use them to inflate the balloon.  When these
->> fragmentation pages are freed, THP will be split.
->> 
->> This commit tries to handle this with add a new flag
->> VIRTIO_BALLOON_VQ_INFLATE_CONT.
->> When this flag is set, the balloon will try to use continuous pages
->> inflate the balloon.  And the pages order is set to THP order.
->> Then THP pages will be freed together in the host.
->> This is an example in a VM with 1G memory 1CPU:
->> // This is the THP number before VM execution in the host.
->> // None use THP.
->> cat /proc/meminfo | grep AnonHugePages:
->> AnonHugePages:         0 kB
->> 
->> // After VM start, use usemem punch-holes function generates 400M
->> // fragmentation pages in the guest kernel.
->> usemem --punch-holes -s -1 800m &
->> 
->> // This is the THP number after this command in the host.
->> // Some THP is used by VM because usemem will access 800M memory
->> // in the guest.
->> cat /proc/meminfo | grep AnonHugePages:
->> AnonHugePages:    976896 kB
->> 
->> // Connect to the QEMU monitor, setup balloon, and set it size to 600M.
->> (qemu) device_add virtio-balloon-pci,id=balloon1,cont-pages=on
->> (qemu) info balloon
->> balloon: actual=1024
->> (qemu) balloon 600
->> (qemu) info balloon
->> balloon: actual=600
->> 
->> // This is the THP number after inflate the balloon in the host.
->> cat /proc/meminfo | grep AnonHugePages:
->> AnonHugePages:    610304 kB
->> 
->> The THP number decreases 358M.  This shows that
->> VIRTIO_BALLOON_VQ_INFLATE_CONT can help handle the THP split issue.
->> 
->> [1] https://lkml.org/lkml/2020/3/12/144
->> 
->> Signed-off-by: Hui Zhu <teawaterz@linux.alibaba.com>
-> 
-> I'd like to repeat my original idea of doing large page allocations
-> unconditionally within guest.
-> 
-
-If so, should it transfer the large page information using inflate_vq?
-
-> 
->> ---
->> drivers/virtio/virtio_balloon.c     | 78 ++++++++++++++++++++++++++++++-------
->> include/linux/balloon_compaction.h  |  9 ++++-
->> include/uapi/linux/virtio_balloon.h |  3 ++
->> mm/balloon_compaction.c             | 40 +++++++++++++++----
->> 4 files changed, 109 insertions(+), 21 deletions(-)
->> 
->> diff --git a/drivers/virtio/virtio_balloon.c b/drivers/virtio/virtio_balloon.c
->> index 341458f..fbd2b02f 100644
->> --- a/drivers/virtio/virtio_balloon.c
->> +++ b/drivers/virtio/virtio_balloon.c
->> @@ -47,6 +47,7 @@ enum virtio_balloon_vq {
->> 	VIRTIO_BALLOON_VQ_DEFLATE,
->> 	VIRTIO_BALLOON_VQ_STATS,
->> 	VIRTIO_BALLOON_VQ_FREE_PAGE,
->> +	VIRTIO_BALLOON_VQ_INFLATE_CONT,
->> 	VIRTIO_BALLOON_VQ_MAX
->> };
->> 
->> @@ -56,7 +57,8 @@ enum virtio_balloon_config_read {
->> 
->> struct virtio_balloon {
->> 	struct virtio_device *vdev;
->> -	struct virtqueue *inflate_vq, *deflate_vq, *stats_vq, *free_page_vq;
->> +	struct virtqueue *inflate_vq, *deflate_vq, *stats_vq, *free_page_vq,
->> +			 *inflate_cont_vq;
->> 
->> 	/* Balloon's own wq for cpu-intensive work items */
->> 	struct workqueue_struct *balloon_wq;
->> @@ -114,6 +116,12 @@ struct virtio_balloon {
->> 
->> 	/* To register a shrinker to shrink memory upon memory pressure */
->> 	struct shrinker shrinker;
->> +
->> +	/* Pages order if VIRTIO_BALLOON_F_CONT_PAGES is set.
->> +	 * if VIRTIO_BALLOON_F_CONT_PAGES is not set,
->> +	 * pages_order will be set to 0.
->> +	 */
->> +	__u32 pages_order;
->> };
->> 
->> static struct virtio_device_id id_table[] = {
->> @@ -169,10 +177,11 @@ static void set_page_pfns(struct virtio_balloon *vb,
->> 					  page_to_balloon_pfn(page) + i);
->> }
->> 
->> -static unsigned fill_balloon(struct virtio_balloon *vb, size_t num)
->> +static unsigned int fill_balloon_order(struct virtio_balloon *vb, size_t num,
->> +				       unsigned int order)
->> {
->> -	unsigned num_allocated_pages;
->> -	unsigned num_pfns;
->> +	unsigned int num_allocated_pages;
->> +	unsigned int num_pfns;
->> 	struct page *page;
->> 	LIST_HEAD(pages);
->> 
->> @@ -181,12 +190,12 @@ static unsigned fill_balloon(struct virtio_balloon *vb, size_t num)
->> 
->> 	for (num_pfns = 0; num_pfns < num;
->> 	     num_pfns += VIRTIO_BALLOON_PAGES_PER_PAGE) {
->> -		struct page *page = balloon_page_alloc();
->> +		struct page *page = balloon_pages_alloc(order);
->> 
->> 		if (!page) {
->> 			dev_info_ratelimited(&vb->vdev->dev,
->> -					     "Out of puff! Can't get %u pages\n",
->> -					     VIRTIO_BALLOON_PAGES_PER_PAGE);
->> +				"Out of puff! Can't get %u pages\n",
->> +				VIRTIO_BALLOON_PAGES_PER_PAGE << order);
->> 			/* Sleep for at least 1/5 of a second before retry. */
->> 			msleep(200);
->> 			break;
->> @@ -200,25 +209,48 @@ static unsigned fill_balloon(struct virtio_balloon *vb, size_t num)
->> 	vb->num_pfns = 0;
->> 
->> 	while ((page = balloon_page_pop(&pages))) {
->> -		balloon_page_enqueue(&vb->vb_dev_info, page);
->> +		balloon_pages_enqueue(&vb->vb_dev_info, page, order);
->> 
->> 		set_page_pfns(vb, vb->pfns + vb->num_pfns, page);
->> -		vb->num_pages += VIRTIO_BALLOON_PAGES_PER_PAGE;
->> +		vb->num_pages += VIRTIO_BALLOON_PAGES_PER_PAGE << order;
->> 		if (!virtio_has_feature(vb->vdev,
->> 					VIRTIO_BALLOON_F_DEFLATE_ON_OOM))
->> -			adjust_managed_page_count(page, -1);
->> +			adjust_managed_page_count(page, -(1 << order));
->> 		vb->num_pfns += VIRTIO_BALLOON_PAGES_PER_PAGE;
->> 	}
->> 
->> -	num_allocated_pages = vb->num_pfns;
->> +	num_allocated_pages = vb->num_pfns << order;
->> 	/* Did we get any? */
->> -	if (vb->num_pfns != 0)
->> -		tell_host(vb, vb->inflate_vq);
->> +	if (vb->num_pfns != 0) {
->> +		if (order)
->> +			tell_host(vb, vb->inflate_cont_vq);
->> +		else
->> +			tell_host(vb, vb->inflate_vq);
->> +	}
->> 	mutex_unlock(&vb->balloon_lock);
->> 
->> 	return num_allocated_pages;
->> }
->> 
->> +static unsigned int fill_balloon(struct virtio_balloon *vb, size_t num)
->> +{
->> +	unsigned int num_allocated_pages = 0;
->> +
->> +	if (vb->pages_order) {
->> +		num_allocated_pages = fill_balloon_order(vb, num,
->> +							 vb->pages_order);
->> +		if (!num_allocated_pages)
->> +			dev_info_ratelimited(&vb->vdev->dev,
->> +				"Fail get any continuous pages in order %u\n",
->> +				vb->pages_order);
->> +	}
->> +
->> +	if (!num_allocated_pages)
->> +		num_allocated_pages = fill_balloon_order(vb, num, 0);
->> +
->> +	return num_allocated_pages;
->> +}
->> +
->> static void release_pages_balloon(struct virtio_balloon *vb,
->> 				 struct list_head *pages)
->> {
-> 
-> 
-> Hmm no this is not what was previously suggested. David Hildenbrand proposed
-> starting with highest order and iterating until we reach 0.
-> And I proposed a new API to allocate some memory between min and max
-> orders.
-> 
-> 
->> @@ -481,6 +513,8 @@ static int init_vqs(struct virtio_balloon *vb)
->> 	names[VIRTIO_BALLOON_VQ_STATS] = NULL;
->> 	callbacks[VIRTIO_BALLOON_VQ_FREE_PAGE] = NULL;
->> 	names[VIRTIO_BALLOON_VQ_FREE_PAGE] = NULL;
->> +	callbacks[VIRTIO_BALLOON_VQ_INFLATE_CONT] = NULL;
->> +	names[VIRTIO_BALLOON_VQ_INFLATE_CONT] = NULL;
->> 
->> 	if (virtio_has_feature(vb->vdev, VIRTIO_BALLOON_F_STATS_VQ)) {
->> 		names[VIRTIO_BALLOON_VQ_STATS] = "stats";
->> @@ -492,6 +526,11 @@ static int init_vqs(struct virtio_balloon *vb)
->> 		callbacks[VIRTIO_BALLOON_VQ_FREE_PAGE] = NULL;
->> 	}
->> 
->> +	if (virtio_has_feature(vb->vdev, VIRTIO_BALLOON_F_CONT_PAGES)) {
->> +		names[VIRTIO_BALLOON_VQ_INFLATE_CONT] = "inflate_cont";
->> +		callbacks[VIRTIO_BALLOON_VQ_INFLATE_CONT] = balloon_ack;
->> +	}
->> +
->> 	err = vb->vdev->config->find_vqs(vb->vdev, VIRTIO_BALLOON_VQ_MAX,
->> 					 vqs, callbacks, names, NULL, NULL);
->> 	if (err)
->> @@ -524,6 +563,10 @@ static int init_vqs(struct virtio_balloon *vb)
->> 	if (virtio_has_feature(vb->vdev, VIRTIO_BALLOON_F_FREE_PAGE_HINT))
->> 		vb->free_page_vq = vqs[VIRTIO_BALLOON_VQ_FREE_PAGE];
->> 
->> +	if (virtio_has_feature(vb->vdev, VIRTIO_BALLOON_F_CONT_PAGES))
->> +		vb->inflate_cont_vq
->> +			= vqs[VIRTIO_BALLOON_VQ_INFLATE_CONT];
->> +
->> 	return 0;
->> }
->> 
->> @@ -945,6 +988,14 @@ static int virtballoon_probe(struct virtio_device *vdev)
->> 		if (err)
->> 			goto out_del_balloon_wq;
->> 	}
->> +	if (virtio_has_feature(vb->vdev, VIRTIO_BALLOON_F_CONT_PAGES)) {
->> +		virtio_cread(vb->vdev, struct virtio_balloon_config,
->> +			     pages_order, &vb->pages_order);
->> +		if (!virtio_has_feature(vb->vdev, VIRTIO_F_VERSION_1))
->> +			vb->pages_order
->> +				= le32_to_cpu((__force __le32)vb->pages_order);
->> +	} else
->> +		vb->pages_order = 0;
->> 	virtio_device_ready(vdev);
->> 
->> 	if (towards_target(vb))
->> @@ -1058,6 +1109,7 @@ static unsigned int features[] = {
->> 	VIRTIO_BALLOON_F_DEFLATE_ON_OOM,
->> 	VIRTIO_BALLOON_F_FREE_PAGE_HINT,
->> 	VIRTIO_BALLOON_F_PAGE_POISON,
->> +	VIRTIO_BALLOON_F_CONT_PAGES,
->> };
->> 
->> static struct virtio_driver virtio_balloon_driver = {
->> diff --git a/include/linux/balloon_compaction.h b/include/linux/balloon_compaction.h
->> index 338aa27..8180bbf 100644
->> --- a/include/linux/balloon_compaction.h
->> +++ b/include/linux/balloon_compaction.h
->> @@ -60,15 +60,22 @@ struct balloon_dev_info {
->> 	struct inode *inode;
->> };
->> 
->> -extern struct page *balloon_page_alloc(void);
->> +extern struct page *balloon_pages_alloc(unsigned int order);
->> extern void balloon_page_enqueue(struct balloon_dev_info *b_dev_info,
->> 				 struct page *page);
->> +extern void balloon_pages_enqueue(struct balloon_dev_info *b_dev_info,
->> +				  struct page *page, unsigned int order);
->> extern struct page *balloon_page_dequeue(struct balloon_dev_info *b_dev_info);
->> extern size_t balloon_page_list_enqueue(struct balloon_dev_info *b_dev_info,
->> 				      struct list_head *pages);
->> extern size_t balloon_page_list_dequeue(struct balloon_dev_info *b_dev_info,
->> 				     struct list_head *pages, size_t n_req_pages);
->> 
->> +static inline struct page *balloon_page_alloc(void)
->> +{
->> +	return balloon_pages_alloc(0);
->> +}
->> +
->> static inline void balloon_devinfo_init(struct balloon_dev_info *balloon)
->> {
->> 	balloon->isolated_pages = 0;
->> diff --git a/include/uapi/linux/virtio_balloon.h b/include/uapi/linux/virtio_balloon.h
->> index a1966cd7..e21b0aa 100644
->> --- a/include/uapi/linux/virtio_balloon.h
->> +++ b/include/uapi/linux/virtio_balloon.h
->> @@ -36,6 +36,7 @@
->> #define VIRTIO_BALLOON_F_DEFLATE_ON_OOM	2 /* Deflate balloon on OOM */
->> #define VIRTIO_BALLOON_F_FREE_PAGE_HINT	3 /* VQ to report free pages */
->> #define VIRTIO_BALLOON_F_PAGE_POISON	4 /* Guest is using page poisoning */
->> +#define VIRTIO_BALLOON_F_CONT_PAGES	5 /* VQ to report continuous pages */
->> 
->> /* Size of a PFN in the balloon interface. */
->> #define VIRTIO_BALLOON_PFN_SHIFT 12
->> @@ -51,6 +52,8 @@ struct virtio_balloon_config {
->> 	__u32 free_page_report_cmd_id;
->> 	/* Stores PAGE_POISON if page poisoning is in use */
->> 	__u32 poison_val;
->> +	/* Pages order if VIRTIO_BALLOON_F_CONT_PAGES is set */
->> +	__u32 pages_order;
->> };
->> 
->> #define VIRTIO_BALLOON_S_SWAP_IN  0   /* Amount of memory swapped in */
->> diff --git a/mm/balloon_compaction.c b/mm/balloon_compaction.c
->> index 26de020..87df4b2 100644
->> --- a/mm/balloon_compaction.c
->> +++ b/mm/balloon_compaction.c
->> @@ -112,8 +112,8 @@ size_t balloon_page_list_dequeue(struct balloon_dev_info *b_dev_info,
->> EXPORT_SYMBOL_GPL(balloon_page_list_dequeue);
->> 
->> /*
->> - * balloon_page_alloc - allocates a new page for insertion into the balloon
->> - *			page list.
->> + * balloon_pages_alloc - allocates a new page for insertion into the balloon
->> + *			 page list.
->>  *
->>  * Driver must call this function to properly allocate a new balloon page.
->>  * Driver must call balloon_page_enqueue before definitively removing the page
->> @@ -121,14 +121,21 @@ EXPORT_SYMBOL_GPL(balloon_page_list_dequeue);
->>  *
->>  * Return: struct page for the allocated page or NULL on allocation failure.
->>  */
->> -struct page *balloon_page_alloc(void)
->> +struct page *balloon_pages_alloc(unsigned int order)
->> {
->> -	struct page *page = alloc_page(balloon_mapping_gfp_mask() |
->> -				       __GFP_NOMEMALLOC | __GFP_NORETRY |
->> -				       __GFP_NOWARN);
->> +	gfp_t gfp_mask;
->> +
->> +	if (order > 1)
->> +		gfp_mask = __GFP_RETRY_MAYFAIL;
->> +	else
->> +		gfp_mask = __GFP_NORETRY;
->> +
->> +	struct page *page = alloc_pages(balloon_mapping_gfp_mask() |
->> +					gfp_mask | __GFP_NOMEMALLOC |
->> +					__GFP_NOWARN, order);
->> 	return page;
->> }
->> -EXPORT_SYMBOL_GPL(balloon_page_alloc);
->> +EXPORT_SYMBOL_GPL(balloon_pages_alloc);
->> 
->> /*
->>  * balloon_page_enqueue - inserts a new page into the balloon page list.
->> @@ -155,6 +162,25 @@ void balloon_page_enqueue(struct balloon_dev_info *b_dev_info,
->> EXPORT_SYMBOL_GPL(balloon_page_enqueue);
->> 
->> /*
->> + * balloon_pages_enqueue - inserts continuous pages into the balloon page list.
->> + */
->> +void balloon_pages_enqueue(struct balloon_dev_info *b_dev_info,
->> +			   struct page *page, unsigned int order)
->> +{
->> +	unsigned long flags;
->> +	unsigned long pfn = page_to_pfn(page);
->> +	unsigned long last_pfn = pfn + (1 << order) - 1;
->> +
->> +	spin_lock_irqsave(&b_dev_info->pages_lock, flags);
->> +	for (; pfn <= last_pfn; pfn++) {
->> +		page = pfn_to_page(pfn);
->> +		balloon_page_enqueue_one(b_dev_info, page);
->> +	}
->> +	spin_unlock_irqrestore(&b_dev_info->pages_lock, flags);
->> +}
->> +EXPORT_SYMBOL_GPL(balloon_pages_enqueue);
->> +
->> +/*
->>  * balloon_page_dequeue - removes a page from balloon's page list and returns
->>  *			  its address to allow the driver to release the page.
->>  * @b_dev_info: balloon device decriptor where we will grab a page from.
->> -- 
->> 2.7.4
-
