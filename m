@@ -2,117 +2,177 @@ Return-Path: <SRS0=n+Ub=5Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,TVD_SUBJ_WIPE_DEBT,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23FD8C2BBC7
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E19AC38A29
 	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 09:49:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DE8EE21D7A
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 09:41:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 801E2221E8
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 09:41:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=flygoat.com header.i=jiaxun.yang@flygoat.com header.b="WqgMCsmN"
+	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="WXfJC2xv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726720AbgDIJk7 (ORCPT
+        id S1726740AbgDIJld (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Apr 2020 05:40:59 -0400
-Received: from sender3-op-o12.zoho.com.cn ([124.251.121.243]:17827 "EHLO
-        sender3-op-o12.zoho.com.cn" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726623AbgDIJk7 (ORCPT
+        Thu, 9 Apr 2020 05:41:33 -0400
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:42013 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726623AbgDIJld (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Apr 2020 05:40:59 -0400
-ARC-Seal: i=1; a=rsa-sha256; t=1586425119; cv=none; 
-        d=zoho.com.cn; s=zohoarc; 
-        b=Xm3Is2wmldS7Fqn/L5Q9W0eSTd20L/QVaCDc+Vfft1gdW9dt2kAAM0cIAf9QqwZYe8gMrCxaAmMGZMQ1HMXv8nn09ncigMrsB35uIxZx8cKqBtt5nYMjyYbr0ze1VofG7oJ1Spoc777iaizchzhflfRo27m2GzynOdL3uVDXdTM=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zoho.com.cn; s=zohoarc; 
-        t=1586425119; h=Content-Type:Content-Transfer-Encoding:Cc:Date:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:To; 
-        bh=U3OUEi6suDWXBHYtmbz9aBjh2aLvWTneUmFTniJfo9s=; 
-        b=GnkLlFKnSKLj7DTVZTCdrjRlP13qvpGHkadT06XRSrxPEvlumpO+GPjc4eFAZNA/+11z+vefJoRIa8E0aQNKXGHzBlmH09EHBsTXKKACzHrgeWMIg4XqMX+WIOwauAR0mVVTTWOHMuhDnGg9h+EuxU9vOwviXM9vr+zuu+DJ/YI=
-ARC-Authentication-Results: i=1; mx.zoho.com.cn;
-        dkim=pass  header.i=flygoat.com;
-        spf=pass  smtp.mailfrom=jiaxun.yang@flygoat.com;
-        dmarc=pass header.from=<jiaxun.yang@flygoat.com> header.from=<jiaxun.yang@flygoat.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1586425119;
-        s=mail; d=flygoat.com; i=jiaxun.yang@flygoat.com;
-        h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:MIME-Version:Content-Type:Content-Transfer-Encoding;
-        bh=U3OUEi6suDWXBHYtmbz9aBjh2aLvWTneUmFTniJfo9s=;
-        b=WqgMCsmN0p2/AV8ZdfiD+DjoAfTXs8dItcVu2zIm6F/K0Y2L8txyGC+aMAhLvVJo
-        BJmAcvz5IYBaC1PS2faE4yaDdTxyVP9q6rmPEzDOI5h2xnckGO1KYfiyVAo3FP/hr2T
-        qfo7neCcoswAdkrD/N6mKWV5xwB5PSobKn1Lek4c=
-Received: from flygoat-x1e (122.235.212.87 [122.235.212.87]) by mx.zoho.com.cn
-        with SMTPS id 1586425116678346.8969598464105; Thu, 9 Apr 2020 17:38:36 +0800 (CST)
-Date:   Thu, 9 Apr 2020 17:38:35 +0800
-From:   Jiaxun Yang <jiaxun.yang@flygoat.com>
-To:     Mike Rapoport <rppt@linux.ibm.com>
-Cc:     linux-mips@vger.kernel.org,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Huacai Chen <chenhc@lemote.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Robert Richter <rric@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>,
-        Paul Burton <paulburton@kernel.org>,
-        Allison Randal <allison@lohutok.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Vladimir Kondratiev <vladimir.kondratiev@intel.com>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        Alexios Zavras <alexios.zavras@intel.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Serge Semin <fancer.lancer@gmail.com>,
-        Matt Redfearn <matt.redfearn@mips.com>,
-        Steve Winslow <swinslow@gmail.com>,
-        Richard Fontana <rfontana@redhat.com>,
-        Oleksij Rempel <linux@rempel-privat.de>,
-        Kamal Dasu <kdasu.kdev@gmail.com>,
-        linux-kernel@vger.kernel.org,
-        bcm-kernel-feedback-list@broadcom.com, oprofile-list@lists.sf.net
-Subject: Re: [PATCH 12/12] MIPS: ip27: Fix includes
-Message-ID: <20200409173835.27ed1e64@flygoat-x1e>
-In-Reply-To: <20200409091922.GA17293@linux.ibm.com>
-References: <20200408113505.2528103-1-jiaxun.yang@flygoat.com>
-        <20200408130024.2529220-7-jiaxun.yang@flygoat.com>
-        <20200409091922.GA17293@linux.ibm.com>
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Thu, 9 Apr 2020 05:41:33 -0400
+Received: by mail-ot1-f65.google.com with SMTP id t92so923669otb.9
+        for <linux-kernel@vger.kernel.org>; Thu, 09 Apr 2020 02:41:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ffwll.ch; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=AAmPcakirZ+49aStGKItq0c+j+VEsXqfcBH/BMyGspk=;
+        b=WXfJC2xvujS1NMEJmo8auNqU+zz3KoHNnFI/ZwIoQGqsenIlj1/rLp7i8g0wrHhNMA
+         tB4UaPYqL8fo1FBLJD1QspR85zqLl/OHQQ2XW2wZhxbVmnvXaj4OEg2HGRtpK4xkfIA5
+         QryyOXVdb1eBXsQfmBlDoe7W6QRuDag4YOw+c=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=AAmPcakirZ+49aStGKItq0c+j+VEsXqfcBH/BMyGspk=;
+        b=kowpc6XCYZvbzW+5awK96cfMJLZVrhdirwB6Vm2ybc1RZMf7vuAv/lWqMopIYrI2dt
+         nf1unBjaPAKv/AsIP3n+ZnwqFkwxLYNYaV/Ytz8TiukK8PdSVKpYMTX4GklSHDXmFWzt
+         awKBjY6ri2clmUkQsNtQsxonzbMMujkod+B9PIuGD0j1RckNbuKWM5U6j81w9JeQ4fFV
+         D/DPz6psK5FvH99UuNDrqkICZ7UjzMdbAirci3vKKC5qOotusK0xionuqBPuSj1hmEse
+         oUebLRNpxhZl4050v0W8uq+uByxkL2CQ6j46JYBDAKjfHvHlHLkbItPc8jxtT3VofV1G
+         hXgQ==
+X-Gm-Message-State: AGi0Pub6B3aK4yZOTJ2PE9whf0TQBQbhQyI/8o/EOtQEVEY9eUG5Bp5e
+        hD9CRDAYHq6zBUsICE8DA88DHYNiSaUiyoZKd9u7kA==
+X-Google-Smtp-Source: APiQypLHBVJAv55CZxyRjUHHZPFErxI7m2EAB+edMw28HekqHKAMU8pcbynFySqYUgFQY0OpR/l48dylQu4jTtXwGxw=
+X-Received: by 2002:a4a:4190:: with SMTP id x138mr9186341ooa.35.1586425291875;
+ Thu, 09 Apr 2020 02:41:31 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-ZohoCNMailClient: External
+References: <20200408115926.1467567-1-hch@lst.de> <20200408115926.1467567-20-hch@lst.de>
+ <20200408122504.GO3456981@phenom.ffwll.local> <eb48f7b6327e482ea9911b129210c0417ab48345.camel@kernel.crashing.org>
+In-Reply-To: <eb48f7b6327e482ea9911b129210c0417ab48345.camel@kernel.crashing.org>
+From:   Daniel Vetter <daniel@ffwll.ch>
+Date:   Thu, 9 Apr 2020 11:41:20 +0200
+Message-ID: <CAKMK7uHtkLvdsWFGiAtkzVa5mpnDvXkn3CHZQ6bgJ_enbyAc8A@mail.gmail.com>
+Subject: Re: [PATCH 19/28] gpu/drm: remove the powerpc hack in drm_legacy_sg_alloc
+To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Cc:     Christoph Hellwig <hch@lst.de>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Wei Liu <wei.liu@kernel.org>, X86 ML <x86@kernel.org>,
+        David Airlie <airlied@linux.ie>,
+        Laura Abbott <labbott@redhat.com>,
+        Sumit Semwal <sumit.semwal@linaro.org>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Minchan Kim <minchan@kernel.org>,
+        Nitin Gupta <ngupta@vflare.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        Peter Zijlstra <peterz@infradead.org>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        linux-hyperv@vger.kernel.org,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        "moderated list:DMA BUFFER SHARING FRAMEWORK" 
+        <linaro-mm-sig@lists.linaro.org>,
+        "open list:GENERIC INCLUDE/A..." <linux-arch@vger.kernel.org>,
+        Linux MM <linux-mm@kvack.org>,
+        "list@263.net:IOMMU DRIVERS <iommu@lists.linux-foundation.org>, Joerg
+        Roedel <joro@8bytes.org>," <iommu@lists.linux-foundation.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linux-s390@vger.kernel.org, bpf <bpf@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 9 Apr 2020 12:19:22 +0300
-Mike Rapoport <rppt@linux.ibm.com> wrote:
+On Thu, Apr 9, 2020 at 10:54 AM Benjamin Herrenschmidt
+<benh@kernel.crashing.org> wrote:
+>
+> On Wed, 2020-04-08 at 14:25 +0200, Daniel Vetter wrote:
+> > On Wed, Apr 08, 2020 at 01:59:17PM +0200, Christoph Hellwig wrote:
+> > > If this code was broken for non-coherent caches a crude powerpc hack
+> > > isn't going to help anyone else.  Remove the hack as it is the last
+> > > user of __vmalloc passing a page protection flag other than PAGE_KERNEL.
+> >
+> > Well Ben added this to make stuff work on ppc, ofc the home grown dma
+> > layer in drm from back then isn't going to work in other places. I guess
+> > should have at least an ack from him, in case anyone still cares about
+> > this on ppc. Adding Ben to cc.
+>
+> This was due to some drivers (radeon ?) trying to use vmalloc pages for
+> coherent DMA, which means on those 4xx powerpc's need to be non-cached.
+>
+> There were machines using that (440 based iirc), though I honestly
+> can't tell if anybody still uses any of it.
 
-> On Wed, Apr 08, 2020 at 08:59:54PM +0800, Jiaxun Yang wrote:
-> > Somehow changes in topology messed up headers.
-> > So just add necessary headers to make it compile again.  
-> 
-> Please avoid aftermath build fixes because it breaks bisection.
-> Each commit should be buildable, so this changes should go into the
-> patches that actually require them.
+agp subsystem still seems to happily do that (vmalloc memory for
+device access), never having been ported to dma apis (or well
+converted to iommu drivers, which they kinda are really). So I think
+this all still works exactly as back then, even with the kms radeon
+drivers. Question really is whether we have users left, and I have no
+clue about that either.
 
-I'd love to but for that I'll have to squash patch #5~#12 into a single
-patch. T thought it's to big and touching too many files.
+Now if these boxes didn't ever have agp then I think we can get away
+with deleting this, since we've already deleted the legacy radeon
+driver. And that one used vmalloc for everything. The new kms one does
+use the dma-api if the gpu isn't connected through agp.
+-Daniel
 
-Is that acceptable? 
+> Cheers,
+> Ben.
+>
+> > -Daniel
+> >
+> > >
+> > > Signed-off-by: Christoph Hellwig <hch@lst.de>
+> > > ---
+> > >  drivers/gpu/drm/drm_scatter.c | 11 +----------
+> > >  1 file changed, 1 insertion(+), 10 deletions(-)
+> > >
+> > > diff --git a/drivers/gpu/drm/drm_scatter.c b/drivers/gpu/drm/drm_scatter.c
+> > > index ca520028b2cb..f4e6184d1877 100644
+> > > --- a/drivers/gpu/drm/drm_scatter.c
+> > > +++ b/drivers/gpu/drm/drm_scatter.c
+> > > @@ -43,15 +43,6 @@
+> > >
+> > >  #define DEBUG_SCATTER 0
+> > >
+> > > -static inline void *drm_vmalloc_dma(unsigned long size)
+> > > -{
+> > > -#if defined(__powerpc__) && defined(CONFIG_NOT_COHERENT_CACHE)
+> > > -   return __vmalloc(size, GFP_KERNEL, pgprot_noncached_wc(PAGE_KERNEL));
+> > > -#else
+> > > -   return vmalloc_32(size);
+> > > -#endif
+> > > -}
+> > > -
+> > >  static void drm_sg_cleanup(struct drm_sg_mem * entry)
+> > >  {
+> > >     struct page *page;
+> > > @@ -126,7 +117,7 @@ int drm_legacy_sg_alloc(struct drm_device *dev, void *data,
+> > >             return -ENOMEM;
+> > >     }
+> > >
+> > > -   entry->virtual = drm_vmalloc_dma(pages << PAGE_SHIFT);
+> > > +   entry->virtual = vmalloc_32(pages << PAGE_SHIFT);
+> > >     if (!entry->virtual) {
+> > >             kfree(entry->busaddr);
+> > >             kfree(entry->pagelist);
+> > > --
+> > > 2.25.1
+> > >
+> >
+> >
+>
 
-Thanks.
->  
-> > Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
-> > ---
---
-Jiaxun Yang
 
-
+-- 
+Daniel Vetter
+Software Engineer, Intel Corporation
++41 (0) 79 365 57 48 - http://blog.ffwll.ch
