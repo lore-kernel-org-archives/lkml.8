@@ -2,129 +2,104 @@ Return-Path: <SRS0=n+Ub=5Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80274C2D0EA
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 06:21:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D649C2BB54
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 06:25:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 366082072F
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 06:21:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="KqxHoMXi"
+	by mail.kernel.org (Postfix) with ESMTP id 1ACD22072F
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 06:25:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726538AbgDIGVQ (ORCPT
+        id S1726538AbgDIGZV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Apr 2020 02:21:16 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:31709 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725970AbgDIGVQ (ORCPT
+        Thu, 9 Apr 2020 02:25:21 -0400
+Received: from esa4.mentor.iphmx.com ([68.232.137.252]:43574 "EHLO
+        esa4.mentor.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725783AbgDIGZV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Apr 2020 02:21:16 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1586413275;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=5mB7SP/Y8MXrZQ6SPWB8nv21X1ADlrVhI+qwnI43BNs=;
-        b=KqxHoMXilldwjw/IdXZBQ+ZtHZk/FWbVsJa6TMPudOT4R3CXRlZMVf3SozDQQhNDM59HLN
-        qlsmZOgYI3q6TR8Lxznf6Gm5xwON56azVV5YB6IjMiKNP4ZKCL4Tr1/Wxw+6/4A+PCdo9H
-        pOkPKSq2qJIkdKPo1ihBm3XL/CKZOa4=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-339-4PB6D7EUPkmm0VMYoI55sA-1; Thu, 09 Apr 2020 02:21:10 -0400
-X-MC-Unique: 4PB6D7EUPkmm0VMYoI55sA-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 7BA3A107B7D4;
-        Thu,  9 Apr 2020 06:21:08 +0000 (UTC)
-Received: from [10.72.13.188] (ovpn-13-188.pek2.redhat.com [10.72.13.188])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 4B42960C18;
-        Thu,  9 Apr 2020 06:20:39 +0000 (UTC)
-Subject: Re: virtio-mmio: Delete an error message in vm_find_vqs()
-To:     Markus Elfring <Markus.Elfring@web.de>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        virtualization@lists.linux-foundation.org
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        kernel-janitors@vger.kernel.org,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Javier Martinez Canillas <javierm@redhat.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Mark Brown <broonie@kernel.org>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Rob Herring <robh@kernel.org>,
-        Russell King <linux@armlinux.org.uk>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Tang Bin <tangbin@cmss.chinamobile.com>
-References: <9e27bc4a-cfa1-7818-dc25-8ad308816b30@web.de>
- <03b19e72-0021-dc6b-77c4-ed3c4e13d526@redhat.com>
- <96031fc7-dced-95bd-fc57-a5fe890638f4@web.de>
-From:   Jason Wang <jasowang@redhat.com>
-Message-ID: <6c94db13-ae46-cf8e-f3c4-6f270112ad87@redhat.com>
-Date:   Thu, 9 Apr 2020 14:20:38 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Thu, 9 Apr 2020 02:25:21 -0400
+IronPort-SDR: dafdDJP0RaCgHTSueUstCenKWbqFRbB0PqudBDEh2MYvT3x1ExYPGl0iqsyYR40BCWappZcPp2
+ reRoFymGntKPCkzzHNbnyPfIlIrCc3D3GM1ZzTMykbrawrVnFwG3XP67furFSbp/1maZvNXDHa
+ dAYvoHqByVa0fthr6eX7xwNyYHieAeiQhpiJEWgR72hmA1+4RBQAvBNU/A0yf8U2FAbK3bPpFN
+ u81+3CkzCcmMhbNT1W0KWhkkKM37/oARxjQeqYlFKHdBm75oQSr/oHxuhFy3FE3pyi/YPf15lH
+ zp0=
+X-IronPort-AV: E=Sophos;i="5.72,361,1580803200"; 
+   d="scan'208";a="47638267"
+Received: from orw-gwy-02-in.mentorg.com ([192.94.38.167])
+  by esa4.mentor.iphmx.com with ESMTP; 08 Apr 2020 22:25:20 -0800
+IronPort-SDR: Lz2cfuUitvx1f/tgahpSs/gQ+32w/hm4kADV5An3Z2mJRJ9YpyPaE1rRAi/T/J09G6uFZ+SuXY
+ vgSvsrXTnmO6SilOyUgk7p/dB93o7t86C2Vmh5WopQiCjBX5J8f3izKTeuhoAis0vUI26AQiyr
+ EpBv9b2QtsDRXVd75cNI16rILsQ8tgaQxeBghlBypdu0EGLAb+PXhiJ9OSgQzY0uGisqKOZ+d3
+ TqekwoE+vhZa0uiGAMWvg8Kfi/g3PLXFMD3pPFUc+c4Cfr9ddSz5RNBJqFNW/wFN0pQxIp8tT6
+ u9o=
+Subject: Re: [PATCH v10 43/55] dt-bindings: input: atmel: support to set max
+ bytes transferred
+To:     Dmitry Osipenko <digetx@gmail.com>, <nick@shmanahar.org>,
+        <dmitry.torokhov@gmail.com>, <jikos@kernel.org>,
+        <benjamin.tissoires@redhat.com>, <bsz@semihalf.com>
+CC:     <linux-input@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <erosca@de.adit-jv.com>, <Andrew_Gabbasov@mentor.com>,
+        <Balasubramani_Vivekanandan@mentor.com>
+References: <20200331105051.58896-1-jiada_wang@mentor.com>
+ <20200331105051.58896-44-jiada_wang@mentor.com>
+ <a15d312d-587e-5b10-e031-dde1965f6f89@gmail.com>
+ <9b98a3fc-b7ee-fc01-dc5c-248df507d4a2@mentor.com>
+ <008d019c-2de7-4fe4-0c22-2668312f808b@gmail.com>
+From:   "Wang, Jiada" <jiada_wang@mentor.com>
+Message-ID: <5abe310f-094c-9355-d533-fb64efcbf726@mentor.com>
+Date:   Thu, 9 Apr 2020 15:25:15 +0900
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-In-Reply-To: <96031fc7-dced-95bd-fc57-a5fe890638f4@web.de>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <008d019c-2de7-4fe4-0c22-2668312f808b@gmail.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
 Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: SVR-ORW-MBX-07.mgc.mentorg.com (147.34.90.207) To
+ svr-orw-mbx-01.mgc.mentorg.com (147.34.90.201)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Dmitry
 
-On 2020/4/9 =E4=B8=8B=E5=8D=882:02, Markus Elfring wrote:
->>> The function =E2=80=9Cplatform_get_irq=E2=80=9D can log an error alre=
-ady.
->>> Thus omit a redundant message for the exception handling in the
->>> calling function.
->> It looks to me that not all error path of platform_get_irq() were logg=
-d.
-> How do you think about to clarify the handling of the error code =E2=80=
-=9C-EPROBE_DEFER=E2=80=9D any more?
-> https://elixir.bootlin.com/linux/v5.6.3/source/drivers/base/platform.c#=
-L202
+On 2020/04/07 23:47, Dmitry Osipenko wrote:
+> 07.04.2020 12:27, Wang, Jiada пишет:
+> ..
+>>> Is this a software (firmware) limitation which varies from version to
+>>> version?
+>>>
+>>
+>> the timeout issue trying to be addressed in this patch is from software,
+>> one of our board a Serializer/Deserializer bridge exists between the SoC
+>> (imx6) and the Atmel touch controller.
+>> imx6 i2c controller driver has a timeout value(100ms) for each i2c
+>> transaction,
+>> Large i2c read transaction failed to complete within this timeout value
+>> and therefore imx6 i2c controller driver aborts the transaction
+>> and returns failure.
+>>
+>> Therefore this patch was created to split the large i2c transaction into
+>> smaller chunks which can complete
+>> within the timeout defined by i2c controller driver.
+> 
+> Isn't it possible to use the max_read/write_len of the generic struct
+> i2c_adapter_quirks for limiting the transfer size?
+> 
+> BTW, it looks like the i.MX I2C driver doesn't specify the
+> i2c_adapter_quirks, which probably needs to be fixed.
+> 
+yes, i.MX I2C driver can specify i2c_adapter_quirks to limit the size be 
+transferred in one transaction.
 
-
-Aha, it looks to me that I'm on the wrong branch. Sorry.
-
-
->
->
->> And git grep told me there're other users of platform_get_irq() that c=
-heck and log by themselves.
-> Source code analysis can point further update candidates out, can't it?
-> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/comm=
-it/drivers/base/platform.c?id=3D7723f4c5ecdb8d832f049f8483beb0d1081cedf6
-
-
-Yes, it can.
-
-
->
-> Would you like to achieve collateral evolution?
-
-
-Yes and it's probably be better to put all the fixes in one series.
-
-For this patch.
-
-Acked-by: Jason Wang <jasowang@redhat.com>
-
-Thanks
+But even in this case, mxt_process_messages_t44() fails when it tries to 
+transfer data count larger than max_read/write_len set in i.MX I2C 
+driver, which we would like to avoid.
 
 
->
-> Regards,
-> Markus
->
+Thanks,
+Jiada
 
