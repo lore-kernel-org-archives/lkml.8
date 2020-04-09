@@ -2,109 +2,117 @@ Return-Path: <SRS0=n+Ub=5Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17C33C3A5A0
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23FD8C2BBC7
 	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 09:49:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2707321D7E
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 09:40:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DE8EE21D7A
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 09:41:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JPNexXEe"
+	dkim=pass (1024-bit key) header.d=flygoat.com header.i=jiaxun.yang@flygoat.com header.b="WqgMCsmN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726669AbgDIJkW (ORCPT
+        id S1726720AbgDIJk7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Apr 2020 05:40:22 -0400
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:43738 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725972AbgDIJkW (ORCPT
+        Thu, 9 Apr 2020 05:40:59 -0400
+Received: from sender3-op-o12.zoho.com.cn ([124.251.121.243]:17827 "EHLO
+        sender3-op-o12.zoho.com.cn" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726623AbgDIJk7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Apr 2020 05:40:22 -0400
-Received: by mail-lj1-f194.google.com with SMTP id h25so833843lja.10
-        for <linux-kernel@vger.kernel.org>; Thu, 09 Apr 2020 02:40:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=LgFkSUz0v3R4bkB5V+D5UMhS2cYsaT9/1pL+etapsD4=;
-        b=JPNexXEeIt/U33OVj4WP/94syOFkeqUwHdMIq5H7RWXe/OPXbAdyMUgK5wZq3sWUNL
-         imvoRp5Hm+NfjsOvyfqYeYGoB681I+J5FB7oUydEX/h/RPt3UQZvy+0LjaIhLDpgsB+h
-         0NGnPZ8vb7rkKg6hES58shForkhPwzm7TAiqRSSkG6+biZ9mMP9uwQuflpspRklJEbGQ
-         1TpUAhkJIJPHIf5vnwk6wSiCWg1Hw1yu/ONv654UmU15YcPhgWOu8XRH8iPAoAMdYzJY
-         Qxw+VqkfJgqp6HqILw1wM87TCGOUbmhk0KOtw7wqMUQWBY54Py/oXaFg8qpLhOs0+jpU
-         /bjg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=LgFkSUz0v3R4bkB5V+D5UMhS2cYsaT9/1pL+etapsD4=;
-        b=lwH3KO61twHiM+PVeNnXGuhFlfgebcwrbmz4Qy57EQhUcaseMW85nYbU6w3aWaGui0
-         XLhu6uKiPddV1+5BImnj4T4jROlAWKFiQ7uOMuZmKSTyt0bWg7E1ruq6+eCJO/K5bdo9
-         OapIkNqTSGKJFa0lV3kmktEmk3VtlVRGIFqfLTqch2hU3nl0NSLuOoxntgzFt5IBpITh
-         AT7O88uOmIax3vnaZZX5nq0uZ/E1xcRxyS4UrsQRPuEZXETUUMO5BsowSd38wbB4fip1
-         Oh0wrRp1zVS+cYl7N8ZksaqezLfZBxW3oDgN4xypoF6Vl41gsLlZpPuN+m9pfql0AMW+
-         yUrQ==
-X-Gm-Message-State: AGi0PuaBtI0iyIGSfRJxNM/PqL9zB+f0bZmyDtDFgUVV8Q3mscAfVSkp
-        oDZ/jjvDmHGtMxWn/jl305M1+ASlHZJwmTh6rUE=
-X-Google-Smtp-Source: APiQypKo8LVXqoYVtBrVuYWmZZJdh2e+KxaobbXQfvZgNQnkc/ER8sfgHVJboqMyLu9tpe5TL8wloOsVOP6LiaWj28U=
-X-Received: by 2002:a2e:89c5:: with SMTP id c5mr7351482ljk.48.1586425219621;
- Thu, 09 Apr 2020 02:40:19 -0700 (PDT)
+        Thu, 9 Apr 2020 05:40:59 -0400
+ARC-Seal: i=1; a=rsa-sha256; t=1586425119; cv=none; 
+        d=zoho.com.cn; s=zohoarc; 
+        b=Xm3Is2wmldS7Fqn/L5Q9W0eSTd20L/QVaCDc+Vfft1gdW9dt2kAAM0cIAf9QqwZYe8gMrCxaAmMGZMQ1HMXv8nn09ncigMrsB35uIxZx8cKqBtt5nYMjyYbr0ze1VofG7oJ1Spoc777iaizchzhflfRo27m2GzynOdL3uVDXdTM=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zoho.com.cn; s=zohoarc; 
+        t=1586425119; h=Content-Type:Content-Transfer-Encoding:Cc:Date:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:To; 
+        bh=U3OUEi6suDWXBHYtmbz9aBjh2aLvWTneUmFTniJfo9s=; 
+        b=GnkLlFKnSKLj7DTVZTCdrjRlP13qvpGHkadT06XRSrxPEvlumpO+GPjc4eFAZNA/+11z+vefJoRIa8E0aQNKXGHzBlmH09EHBsTXKKACzHrgeWMIg4XqMX+WIOwauAR0mVVTTWOHMuhDnGg9h+EuxU9vOwviXM9vr+zuu+DJ/YI=
+ARC-Authentication-Results: i=1; mx.zoho.com.cn;
+        dkim=pass  header.i=flygoat.com;
+        spf=pass  smtp.mailfrom=jiaxun.yang@flygoat.com;
+        dmarc=pass header.from=<jiaxun.yang@flygoat.com> header.from=<jiaxun.yang@flygoat.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1586425119;
+        s=mail; d=flygoat.com; i=jiaxun.yang@flygoat.com;
+        h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:MIME-Version:Content-Type:Content-Transfer-Encoding;
+        bh=U3OUEi6suDWXBHYtmbz9aBjh2aLvWTneUmFTniJfo9s=;
+        b=WqgMCsmN0p2/AV8ZdfiD+DjoAfTXs8dItcVu2zIm6F/K0Y2L8txyGC+aMAhLvVJo
+        BJmAcvz5IYBaC1PS2faE4yaDdTxyVP9q6rmPEzDOI5h2xnckGO1KYfiyVAo3FP/hr2T
+        qfo7neCcoswAdkrD/N6mKWV5xwB5PSobKn1Lek4c=
+Received: from flygoat-x1e (122.235.212.87 [122.235.212.87]) by mx.zoho.com.cn
+        with SMTPS id 1586425116678346.8969598464105; Thu, 9 Apr 2020 17:38:36 +0800 (CST)
+Date:   Thu, 9 Apr 2020 17:38:35 +0800
+From:   Jiaxun Yang <jiaxun.yang@flygoat.com>
+To:     Mike Rapoport <rppt@linux.ibm.com>
+Cc:     linux-mips@vger.kernel.org,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Huacai Chen <chenhc@lemote.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Robert Richter <rric@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>,
+        Paul Burton <paulburton@kernel.org>,
+        Allison Randal <allison@lohutok.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Vladimir Kondratiev <vladimir.kondratiev@intel.com>,
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        Alexios Zavras <alexios.zavras@intel.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        Matt Redfearn <matt.redfearn@mips.com>,
+        Steve Winslow <swinslow@gmail.com>,
+        Richard Fontana <rfontana@redhat.com>,
+        Oleksij Rempel <linux@rempel-privat.de>,
+        Kamal Dasu <kdasu.kdev@gmail.com>,
+        linux-kernel@vger.kernel.org,
+        bcm-kernel-feedback-list@broadcom.com, oprofile-list@lists.sf.net
+Subject: Re: [PATCH 12/12] MIPS: ip27: Fix includes
+Message-ID: <20200409173835.27ed1e64@flygoat-x1e>
+In-Reply-To: <20200409091922.GA17293@linux.ibm.com>
+References: <20200408113505.2528103-1-jiaxun.yang@flygoat.com>
+        <20200408130024.2529220-7-jiaxun.yang@flygoat.com>
+        <20200409091922.GA17293@linux.ibm.com>
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-References: <cover.1586422035.git.baolin.wang7@gmail.com> <CAK8P3a1rWuL-mSeFBN0Dk7u3wnDmPgknEM3Em734KP64-Wv0ZQ@mail.gmail.com>
-In-Reply-To: <CAK8P3a1rWuL-mSeFBN0Dk7u3wnDmPgknEM3Em734KP64-Wv0ZQ@mail.gmail.com>
-From:   Baolin Wang <baolin.wang7@gmail.com>
-Date:   Thu, 9 Apr 2020 17:40:08 +0800
-Message-ID: <CADBw62qEfdLM9e2oyPKz1qRk4mZaFPbXRYpLfVHzxKj0Cz90kw@mail.gmail.com>
-Subject: Re: [RFC PATCH 0/3] Add new reg_update_bits() support
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Lee Jones <lee.jones@linaro.org>, Mark Brown <broonie@kernel.org>,
-        Orson Zhai <orsonzhai@gmail.com>,
-        Lyra Zhang <zhang.lyra@gmail.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-ZohoCNMailClient: External
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 9, 2020 at 5:15 PM Arnd Bergmann <arnd@arndb.de> wrote:
->
-> On Thu, Apr 9, 2020 at 10:58 AM Baolin Wang <baolin.wang7@gmail.com> wrote:
-> >
-> > The Spreadtrum platform uses a special set/clear method to update
-> > registers' bits, thus this patch set introduces a new reg_update_bits()
-> > callback, as well as adding a helper in syscon driver to support
-> > this feature.
-> >
-> > Any comments are welcome. Thanks.
->
-> This looks like a good idea to me, both the concept and the implementation.
+On Thu, 9 Apr 2020 12:19:22 +0300
+Mike Rapoport <rppt@linux.ibm.com> wrote:
 
-Thanks for your quick response :)
+> On Wed, Apr 08, 2020 at 08:59:54PM +0800, Jiaxun Yang wrote:
+> > Somehow changes in topology messed up headers.
+> > So just add necessary headers to make it compile again.  
+> 
+> Please avoid aftermath build fixes because it breaks bisection.
+> Each commit should be buildable, so this changes should go into the
+> patches that actually require them.
 
->
-> The one thing I'd note is that we have a similar mechanism for devices made
-> by Sigmatel and later Freescale after they acquired them.
-> include/linux/stmp_device.h only holds a couple of definitions, so it's much
-> less abstract than your approach, but the idea is similar.
+I'd love to but for that I'll have to squash patch #5~#12 into a single
+patch. T thought it's to big and touching too many files.
 
-Ah, yes, sigmatel devices' idea is similar with ours.
+Is that acceptable? 
 
->
-> It would be nice in theory to move the sigmatel devices over to
-> reg_update_bits() in theory, but this seems unlikely to actually happen,
-> given that these are mostly obsolete drivers at this point.
+Thanks.
+>  
+> > Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
+> > ---
+--
+Jiaxun Yang
 
-I checked all sigmatel devices (about 10 drivers), I think there will
-be more work to change them to use syscon/regmap when changing to
-reg_update_bits(). I am afraid I can not thelp to convert them without
-a hardware, and as you said, some drivers are already dead. So I think
-it would be nice if the driver owners can help to convert these
-drivers, if we get a consensus about the reg_update_bits()
-implementation at last.
 
--- 
-Baolin Wang
