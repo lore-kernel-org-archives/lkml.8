@@ -2,160 +2,131 @@ Return-Path: <SRS0=n+Ub=5Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EED5FC2BB86
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 11:20:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E3ABC2BA2B
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 11:21:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C66DF20B1F
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 11:20:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="Rjpp4cG4"
+	by mail.kernel.org (Postfix) with ESMTP id 0154920B1F
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 11:21:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726589AbgDILUz (ORCPT
+        id S1726641AbgDILVa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Apr 2020 07:20:55 -0400
-Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:17408 "EHLO
-        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725972AbgDILUz (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Apr 2020 07:20:55 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5e8f04ae0000>; Thu, 09 Apr 2020 04:19:10 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Thu, 09 Apr 2020 04:20:54 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Thu, 09 Apr 2020 04:20:54 -0700
-Received: from DRHQMAIL107.nvidia.com (10.27.9.16) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 9 Apr
- 2020 11:20:54 +0000
-Received: from [10.24.37.103] (10.124.1.5) by DRHQMAIL107.nvidia.com
- (10.27.9.16) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 9 Apr 2020
- 11:20:49 +0000
-Subject: Re: [TEGRA194_CPUFREQ Patch 2/3] cpufreq: Add Tegra194 cpufreq driver
-To:     Viresh Kumar <viresh.kumar@linaro.org>
-CC:     <rjw@rjwysocki.net>, <catalin.marinas@arm.com>, <will@kernel.org>,
-        <thierry.reding@gmail.com>, <jonathanh@nvidia.com>,
-        <talho@nvidia.com>, <linux-pm@vger.kernel.org>,
-        <linux-tegra@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <bbasu@nvidia.com>,
-        <mperttunen@nvidia.com>, Sumit Gupta <sumitg@nvidia.com>
-References: <1575394348-17649-1-git-send-email-sumitg@nvidia.com>
- <1575394348-17649-2-git-send-email-sumitg@nvidia.com>
- <20200326115023.xy3n5bl7uetuw7mx@vireshk-i7>
- <d233b26b-6b50-7d41-9f33-a5dc151e0e7d@nvidia.com>
- <20200406025549.qfwzlk3745y3r274@vireshk-i7>
- <3ab4136c-8cca-c2f9-d286-b82dac23e720@nvidia.com>
- <20200408055301.jhvu5bc2luu3b5qr@vireshk-i7>
- <08307e54-0e14-14a3-7d6a-d59e1e04a683@nvidia.com>
- <20200409074415.twpzu2n4frqlde7b@vireshk-i7>
-From:   Sumit Gupta <sumitg@nvidia.com>
-Message-ID: <00390070-38a1-19aa-ca59-42c4658bee7e@nvidia.com>
-Date:   Thu, 9 Apr 2020 16:51:13 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
-MIME-Version: 1.0
-In-Reply-To: <20200409074415.twpzu2n4frqlde7b@vireshk-i7>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
- DRHQMAIL107.nvidia.com (10.27.9.16)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1586431150; bh=qMj+7UqSwh6oU1fngw5KoRbQ6xPzFrPcGepKTB1mVZk=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=Rjpp4cG4bDTXrC6kQByGu9sXXULFmZfKueFslkBwG7MqdgPN4ewhwHCClI/UlFr1d
-         g6vaC3CTN0fXLX0i7vcueUHYBa25tt4wGFjyidi3w7T5dnKEKSkoMJcZV9z4/bmhVs
-         ByaVYwf6aGGyg/syi9vdzrlI0cpmWKa+OxAwB+FqGzoMZlKD5d9KQf2CT/hL1Uh/Tu
-         2nOWyBtV7AD4CnOOCSnc98IrrljSfAXLEYGcPAfN1pzi0zi604lvPQev+KkSPctUtk
-         +yX1OQGsBistlrxX97ZqQNJ+K8RFRHUawTd+BDj+Q70YcTWAnUTMU629pspUBI7unW
-         Ic82eu3GUyjkg==
+        Thu, 9 Apr 2020 07:21:30 -0400
+Received: from smtp25.cstnet.cn ([159.226.251.25]:58406 "EHLO cstnet.cn"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725972AbgDILVa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Apr 2020 07:21:30 -0400
+Received: from ubuntu.localdomain (unknown [111.198.228.245])
+        by APP-05 (Coremail) with SMTP id zQCowACXn5sVBY9eVbUUAQ--.40637S2;
+        Thu, 09 Apr 2020 19:20:54 +0800 (CST)
+From:   Xu Wang <vulab@iscas.ac.cn>
+To:     perex@perex.cz, tiwai@suse.com, tglx@linutronix.de,
+        allison@lohutok.net
+Cc:     alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] ALSA: ctxfi: Remove unnecessary cast in kfree
+Date:   Thu,  9 Apr 2020 19:20:52 +0800
+Message-Id: <20200409112052.13402-1-vulab@iscas.ac.cn>
+X-Mailer: git-send-email 2.17.1
+X-CM-TRANSID: zQCowACXn5sVBY9eVbUUAQ--.40637S2
+X-Coremail-Antispam: 1UD129KBjvJXoW7ZF1DZrW3Ww48tr1DCFWDCFg_yoW8ArWfpF
+        48GrsxWrW7JFWqywn5trs8XasxCanrCr4xC340kw4fCa45JF18XFn3uFWUKr47ua4fGF1F
+        k3yjkFy5Cr90yrUanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+        9KBjDU0xBIdaVrnRJUUUyab7Iv0xC_KF4lb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I2
+        0VC2zVCF04k26cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rw
+        A2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xII
+        jxv20xvEc7CjxVAFwI0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVWxJr0_GcWl84ACjcxK6I
+        8E87Iv6xkF7I0E14v26rxl6s0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI
+        64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8Jw
+        Am72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41l42xK82IYc2Ij64vIr41l4I8I
+        3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxV
+        WUGVWUWwC2zVAF1VAY17CE14v26r126r1DMIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAF
+        wI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK8VAvwI8IcI
+        k0rVWrZr1j6s0DMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_
+        Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU8P5r7UUUUU==
+X-Originating-IP: [111.198.228.245]
+X-CM-SenderInfo: pyxotu46lvutnvoduhdfq/1tbiBgEBA10Teu1UpQAAst
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Remove unnecassary casts in the argument to kfree.
 
+Signed-off-by: Xu Wang <vulab@iscas.ac.cn>
+---
+ sound/pci/ctxfi/cthw20k1.c | 14 +++++++-------
+ 1 file changed, 7 insertions(+), 7 deletions(-)
 
-On 09/04/20 1:14 PM, Viresh Kumar wrote:
-> External email: Use caution opening links or attachments
-> 
-> 
-> On 08-04-20, 16:54, sumitg wrote:
->>
->>
->> On 08/04/20 11:23 AM, Viresh Kumar wrote:
->>> External email: Use caution opening links or attachments
->>>
->>>
->>> On 07-04-20, 23:48, sumitg wrote:
->>>> On 06/04/20 8:25 AM, Viresh Kumar wrote:
->>>>> On 05-04-20, 00:08, sumitg wrote:
->>>>>> On 26/03/20 5:20 PM, Viresh Kumar wrote:
->>>>>>> On 03-12-19, 23:02, Sumit Gupta wrote:
->>>>>>>> diff --git a/drivers/cpufreq/tegra194-cpufreq.c b/drivers/cpufreq/tegra194-cpufreq.c
->>>>>>>> +static unsigned int tegra194_get_speed_common(u32 cpu, u32 delay)
->>>>>>>> +{
->>>>>>>> +     struct read_counters_work read_counters_work;
->>>>>>>> +     struct tegra_cpu_ctr c;
->>>>>>>> +     u32 delta_refcnt;
->>>>>>>> +     u32 delta_ccnt;
->>>>>>>> +     u32 rate_mhz;
->>>>>>>> +
->>>>>>>> +     read_counters_work.c.cpu = cpu;
->>>>>>>> +     read_counters_work.c.delay = delay;
->>>>>>>> +     INIT_WORK_ONSTACK(&read_counters_work.work, tegra_read_counters);
-> 
-> Initialize the work only once from init routine.
-> 
-We are using "read_counters_work" as local variable. So every invocation 
-the function will have its own copy of counters for corresponding cpu. 
-That's why are doing INIT_WORK_ONSTACK here.
+diff --git a/sound/pci/ctxfi/cthw20k1.c b/sound/pci/ctxfi/cthw20k1.c
+index 6e3177bcc709..015c0d676897 100644
+--- a/sound/pci/ctxfi/cthw20k1.c
++++ b/sound/pci/ctxfi/cthw20k1.c
+@@ -168,7 +168,7 @@ static int src_get_rsc_ctrl_blk(void **rblk)
+ 
+ static int src_put_rsc_ctrl_blk(void *blk)
+ {
+-	kfree((struct src_rsc_ctrl_blk *)blk);
++	kfree(blk);
+ 
+ 	return 0;
+ }
+@@ -494,7 +494,7 @@ static int src_mgr_get_ctrl_blk(void **rblk)
+ 
+ static int src_mgr_put_ctrl_blk(void *blk)
+ {
+-	kfree((struct src_mgr_ctrl_blk *)blk);
++	kfree(blk);
+ 
+ 	return 0;
+ }
+@@ -515,7 +515,7 @@ static int srcimp_mgr_get_ctrl_blk(void **rblk)
+ 
+ static int srcimp_mgr_put_ctrl_blk(void *blk)
+ {
+-	kfree((struct srcimp_mgr_ctrl_blk *)blk);
++	kfree(blk);
+ 
+ 	return 0;
+ }
+@@ -702,7 +702,7 @@ static int amixer_rsc_get_ctrl_blk(void **rblk)
+ 
+ static int amixer_rsc_put_ctrl_blk(void *blk)
+ {
+-	kfree((struct amixer_rsc_ctrl_blk *)blk);
++	kfree(blk);
+ 
+ 	return 0;
+ }
+@@ -909,7 +909,7 @@ static int dai_get_ctrl_blk(void **rblk)
+ 
+ static int dai_put_ctrl_blk(void *blk)
+ {
+-	kfree((struct dai_ctrl_blk *)blk);
++	kfree(blk);
+ 
+ 	return 0;
+ }
+@@ -958,7 +958,7 @@ static int dao_get_ctrl_blk(void **rblk)
+ 
+ static int dao_put_ctrl_blk(void *blk)
+ {
+-	kfree((struct dao_ctrl_blk *)blk);
++	kfree(blk);
+ 
+ 	return 0;
+ }
+@@ -1156,7 +1156,7 @@ static int daio_mgr_get_ctrl_blk(struct hw *hw, void **rblk)
+ 
+ static int daio_mgr_put_ctrl_blk(void *blk)
+ {
+-	kfree((struct daio_mgr_ctrl_blk *)blk);
++	kfree(blk);
+ 
+ 	return 0;
+ }
+-- 
+2.17.1
 
->>>>>>>> +     queue_work_on(cpu, read_counters_wq, &read_counters_work.work);
->>>>>>>> +     flush_work(&read_counters_work.work);
->>>>>>>
->>>>>>> Why can't this be done in current context ?
->>>>>>>
->>>>>> We used work queue instead of smp_call_function_single() to have long delay.
->>>>>
->>>>> Please explain completely, you have raised more questions than you
->>>>> answered :)
->>>>>
->>>>> Why do you want to have long delays ?
->>>>>
->>>> Long delay value is used to have the observation window long enough for
->>>> correctly reconstructing the CPU frequency considering noise.
->>>> In next patch version, changed delay value to 500us which in our tests is
->>>> considered reliable.
->>>
->>> I understand that you need to put a udelay() while reading the freq from
->>> hardware, that is fine, but why do you need a workqueue for that? Why can't you
->>> just read the values directly from the same context ?
->>>
->> The register to read frequency is per core and not accessible to other
->> cores. So, we have to execute the function remotely as the target core to
->> read frequency might be different from current.
->> The functions for that are smp_call_function_single or queue_work_on.
->> We used queue_work_on() to avoid long delay inside ipi interrupt context
->> with interrupts disabled.
-> 
-> Okay, I understand this now, finally :)
-> 
-> But if the interrupts are disabled during some call, won't workqueues face the
-> same problem ?
-> 
-Yes, we are trying to minimize the case.
-
-> --
-> viresh
-> 
