@@ -2,337 +2,221 @@ Return-Path: <SRS0=n+Ub=5Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59892C2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 14:01:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 584A9C2BB86
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 14:01:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 32B8820857
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 14:01:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2622120730
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 14:01:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ZHEX9Cka"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727115AbgDIOBj (ORCPT
+        id S1727173AbgDIOBu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Apr 2020 10:01:39 -0400
-Received: from asavdk3.altibox.net ([109.247.116.14]:51300 "EHLO
-        asavdk3.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726895AbgDIOBj (ORCPT
+        Thu, 9 Apr 2020 10:01:50 -0400
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:60576 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726992AbgDIOBu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Apr 2020 10:01:39 -0400
-Received: from ravnborg.org (unknown [158.248.194.18])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Thu, 9 Apr 2020 10:01:50 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1586440909;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=bw7u+5j7ITPvTdArG6JXONPD18tDn7QLSy7rD70/Hok=;
+        b=ZHEX9CkaB5M641AbX8hCUMiLw5qgfNkmLa58v4PORCYmRy9S5HqJAaFIeCoSdnMlhr5Ofa
+        JaxGktKekhkHJ7EGeYnTzjAmaqIdLOtp/XKTaRFJtQp8UdyaNiWVmRZsKWn4tiLLF+vHW7
+        6Xy5tscZkmJVnSu5M2w0mx6qZ3l6iLE=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-1-VpEONoBOOVWAdN2cI4LHBQ-1; Thu, 09 Apr 2020 10:01:45 -0400
+X-MC-Unique: VpEONoBOOVWAdN2cI4LHBQ-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by asavdk3.altibox.net (Postfix) with ESMTPS id A450220085;
-        Thu,  9 Apr 2020 16:01:31 +0200 (CEST)
-Date:   Thu, 9 Apr 2020 16:01:30 +0200
-From:   Sam Ravnborg <sam@ravnborg.org>
-To:     Guido =?iso-8859-1?Q?G=FCnther?= <agx@sigxcpu.org>
-Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
-        Lee Jones <lee.jones@linaro.org>,
-        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Robert Chiras <robert.chiras@nxp.com>,
-        Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v11 0/2] drm: bridge: Add NWL MIPI DSI host controller
- support
-Message-ID: <20200409140130.GA11188@ravnborg.org>
-References: <cover.1586427783.git.agx@sigxcpu.org>
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 24D068018A9;
+        Thu,  9 Apr 2020 14:01:43 +0000 (UTC)
+Received: from [10.72.8.19] (ovpn-8-19.pek2.redhat.com [10.72.8.19])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id DED3352735;
+        Thu,  9 Apr 2020 14:01:33 +0000 (UTC)
+Subject: Re: [PATCH v1 1/2] powerpc/pseries/hotplug-memory: stop checking
+ is_mem_section_removable()
+To:     David Hildenbrand <david@redhat.com>, Baoquan He <bhe@redhat.com>
+References: <20200407135416.24093-1-david@redhat.com>
+ <20200407135416.24093-2-david@redhat.com>
+ <20200408024630.GQ2402@MiWiFi-R3L-srv>
+ <16187f69-0e5b-c9c2-a31b-8658425758aa@redhat.com>
+ <85637e60-4d11-2b69-f2a9-1505e0342ce3@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        linuxppc-dev@lists.ozlabs.org,
+        Nathan Fontenot <nfont@linux.vnet.ibm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michal Hocko <mhocko@suse.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Oscar Salvador <osalvador@suse.de>,
+        Wei Yang <richard.weiyang@gmail.com>
+From:   piliu <piliu@redhat.com>
+X-Enigmail-Draft-Status: N1110
+Message-ID: <efb1f5f1-b1af-ee39-f89e-805f48944d73@redhat.com>
+Date:   Thu, 9 Apr 2020 22:01:30 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:45.0) Gecko/20100101
+ Thunderbird/45.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <cover.1586427783.git.agx@sigxcpu.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-CMAE-Score: 0
-X-CMAE-Analysis: v=2.3 cv=eMA9ckh1 c=1 sm=1 tr=0
-        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
-        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=8nJEP1OIZ-IA:10 a=VwQbUJbxAAAA:8
-        a=7gkXJVJtAAAA:8 a=pGLkceISAAAA:8 a=8AirrxEcAAAA:8 a=hD80L64hAAAA:8
-        a=QyXUC8HyAAAA:8 a=e5mUnYsNAAAA:8 a=bsAt4o6wKiNBuRCtWDoA:9
-        a=Wa48wQFXcrM_O4rm:21 a=NDxvc7IDKwPJqmQL:21 a=wPNLvfGTeEIA:10
-        a=rTCnN_VGR-kA:10 a=XnmhkrOpp1gA:10 a=ADAus2jqH40A:10 a=xeO5FI30bkQA:10
-        a=vwhoAI3WNd0A:10 a=OIfed0KlwsEA:10 a=V1ylM5Ky8W4A:10 a=I7S5AE4GHJEA:10
-        a=9MgLeVKQu2IA:10 a=Zxz2OGRwlcEA:10 a=v60rsBRmgyoA:10 a=wktuWAoFL4cA:10
-        a=ig373oIn6hUA:10 a=Qj1vBhx7iUYA:10 a=AjGcO6oz07-iQ99wixmX:22
-        a=E9Po1WZjFZOl8hwRPBS3:22 a=ST-jHhOKWsTCqRlWije3:22
-        a=Vxmtnl_E_bksehYqCbjh:22 a=pHzHmUro8NiASowvMSCR:22
-        a=nt3jZW36AmriUCFCBwmW:22
+In-Reply-To: <85637e60-4d11-2b69-f2a9-1505e0342ce3@redhat.com>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Guido.
 
-On Thu, Apr 09, 2020 at 12:42:00PM +0200, Guido Günther wrote:
-> This adds initial support for the NWL MIPI DSI Host controller found on i.MX8
-> SoCs.
-> 
-> It adds support for the i.MX8MQ but the same IP core can also be found on e.g.
-> i.MX8QXP. I added the necessary hooks to support other imx8 variants but since
-> I only have imx8mq boards to test I omitted the platform data for other SoCs.
-> 
-> The code is based on NXPs BSP so I added Robert Chiras as Co-authored-by.
-> 
-> The most notable changes over the BSP driver are
->  - Calculate HS mode timing from phy_configure_opts_mipi_dphy
->  - Perform all clock setup via DT
->  - Merge nwl-imx and nwl drivers
->  - Add B0 silion revision quirk
->  - become a bridge driver to hook into mxsfb / dcss
->    imx-display-subsystem so it makes sense to make it drive a bridge for dsi as
->    well).
->  - Use panel_bridge to attach the panel
->  - Use multiplex framework instead of accessing syscon directly
-> 
-> This has been tested on a Librem 5 devkit using mxsfb with Robert's patches[1]
-> and the mainline rocktech-jh057n00900 DSI panel driver on next-20200317 and on
-> the Librem5 with the a Mantix MLAF057WE51-X DSI panel driver (not yet mainline)
-> The DCSS (submitted for mainline inclusion now too) can also act as input
-> source.
 
-Thanks for your persistence with this driver.
-I got ack from Laurent on IRC to apply it (not for the driver as he had
-no time to review it).
-So applied to drm-misc-next now.
+On 04/09/2020 03:26 PM, David Hildenbrand wrote:
+> On 09.04.20 04:59, piliu wrote:
+>>
+>>
+>> On 04/08/2020 10:46 AM, Baoquan He wrote:
+>>> Add Pingfan to CC since he usually handles ppc related bugs for RHEL.
+>>>
+>>> On 04/07/20 at 03:54pm, David Hildenbrand wrote:
+>>>> In commit 53cdc1cb29e8 ("drivers/base/memory.c: indicate all memory
+>>>> blocks as removable"), the user space interface to compute whether a memory
+>>>> block can be offlined (exposed via
+>>>> /sys/devices/system/memory/memoryX/removable) has effectively been
+>>>> deprecated. We want to remove the leftovers of the kernel implementation.
+>>>
+>>> Pingfan, can you have a look at this change on PPC?  Please feel free to
+>>> give comments if any concern, or offer ack if it's OK to you.
+>>>
+>>>>
+>>>> When offlining a memory block (mm/memory_hotplug.c:__offline_pages()),
+>>>> we'll start by:
+>>>> 1. Testing if it contains any holes, and reject if so
+>>>> 2. Testing if pages belong to different zones, and reject if so
+>>>> 3. Isolating the page range, checking if it contains any unmovable pages
+>>>>
+>>>> Using is_mem_section_removable() before trying to offline is not only racy,
+>>>> it can easily result in false positives/negatives. Let's stop manually
+>>>> checking is_mem_section_removable(), and let device_offline() handle it
+>>>> completely instead. We can remove the racy is_mem_section_removable()
+>>>> implementation next.
+>>>>
+>>>> We now take more locks (e.g., memory hotplug lock when offlining and the
+>>>> zone lock when isolating), but maybe we should optimize that
+>>>> implementation instead if this ever becomes a real problem (after all,
+>>>> memory unplug is already an expensive operation). We started using
+>>>> is_mem_section_removable() in commit 51925fb3c5c9 ("powerpc/pseries:
+>>>> Implement memory hotplug remove in the kernel"), with the initial
+>>>> hotremove support of lmbs.
+>>>>
+>>>> Cc: Nathan Fontenot <nfont@linux.vnet.ibm.com>
+>>>> Cc: Michael Ellerman <mpe@ellerman.id.au>
+>>>> Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+>>>> Cc: Paul Mackerras <paulus@samba.org>
+>>>> Cc: Michal Hocko <mhocko@suse.com>
+>>>> Cc: Andrew Morton <akpm@linux-foundation.org>
+>>>> Cc: Oscar Salvador <osalvador@suse.de>
+>>>> Cc: Baoquan He <bhe@redhat.com>
+>>>> Cc: Wei Yang <richard.weiyang@gmail.com>
+>>>> Signed-off-by: David Hildenbrand <david@redhat.com>
+>>>> ---
+>>>>  .../platforms/pseries/hotplug-memory.c        | 26 +++----------------
+>>>>  1 file changed, 3 insertions(+), 23 deletions(-)
+>>>>
+>>>> diff --git a/arch/powerpc/platforms/pseries/hotplug-memory.c b/arch/powerpc/platforms/pseries/hotplug-memory.c
+>>>> index b2cde1732301..5ace2f9a277e 100644
+>>>> --- a/arch/powerpc/platforms/pseries/hotplug-memory.c
+>>>> +++ b/arch/powerpc/platforms/pseries/hotplug-memory.c
+>>>> @@ -337,39 +337,19 @@ static int pseries_remove_mem_node(struct device_node *np)
+>>>>  
+>>>>  static bool lmb_is_removable(struct drmem_lmb *lmb)
+>>>>  {
+>>>> -	int i, scns_per_block;
+>>>> -	bool rc = true;
+>>>> -	unsigned long pfn, block_sz;
+>>>> -	u64 phys_addr;
+>>>> -
+>>>>  	if (!(lmb->flags & DRCONF_MEM_ASSIGNED))
+>>>>  		return false;
+>>>>  
+>>>> -	block_sz = memory_block_size_bytes();
+>>>> -	scns_per_block = block_sz / MIN_MEMORY_BLOCK_SIZE;
+>>>> -	phys_addr = lmb->base_addr;
+>>>> -
+>>>>  #ifdef CONFIG_FA_DUMP
+>>>>  	/*
+>>>>  	 * Don't hot-remove memory that falls in fadump boot memory area
+>>>>  	 * and memory that is reserved for capturing old kernel memory.
+>>>>  	 */
+>>>> -	if (is_fadump_memory_area(phys_addr, block_sz))
+>>>> +	if (is_fadump_memory_area(lmb->base_addr, memory_block_size_bytes()))
+>>>>  		return false;
+>>>>  #endif
+>>>> -
+>>>> -	for (i = 0; i < scns_per_block; i++) {
+>>>> -		pfn = PFN_DOWN(phys_addr);
+>>>> -		if (!pfn_in_present_section(pfn)) {
+>>>> -			phys_addr += MIN_MEMORY_BLOCK_SIZE;
+>>>> -			continue;
+>>>> -		}
+>>>> -
+>>>> -		rc = rc && is_mem_section_removable(pfn, PAGES_PER_SECTION);
+>>>> -		phys_addr += MIN_MEMORY_BLOCK_SIZE;
+>>>> -	}
+>>>> -
+>>>> -	return rc;
+>>>> +	/* device_offline() will determine if we can actually remove this lmb */
+>>>> +	return true;
+>> So I think here swaps the check and do sequence. At least it breaks
+>> dlpar_memory_remove_by_count(). It is doable to remove
+>> is_mem_section_removable(), but here should be more effort to re-arrange
+>> the code.
+>>
+> 
+> Thanks Pingfan,
+> 
+> 1. "swaps the check and do sequence":
+> 
+> Partially. Any caller of dlpar_remove_lmb() already has to deal with
+> false positives. device_offline() can easily fail after
+> dlpar_remove_lmb() == true. It's inherently racy.
+> 
+> 2. "breaks dlpar_memory_remove_by_count()"
+> 
+> Can you elaborate why it "breaks" it? It will simply try to
+> offline+remove lmbs, detect that it wasn't able to offline+remove as
+> much as it wanted (which could happen before as well easily), and re-add
+> the already offlined+removed ones.
+> 
+I overlooked the re-add logic. Then I think
+dlpar_memory_remove_by_count() is OK with this patch.
+> 3. "more effort to re-arrange the code"
+> 
+> What would be your suggestion?
+> 
+I had thought about merging the two loop "for_each_drmem_lmb()", and do
+check inside the loop. But now it is needless.
 
-I look forward for the update to support DRM_BRIDGE_ATTACH_NO_CONNECTOR
-in this driver and the corresponding display driver.
+The only concerned left is "if (lmbs_available < lmbs_to_remove)" fails
+to alarm due to the weaken checking in lmb_is_removable(). Then after
+heavy migration in offline_pages, we encounters this limit, and need to
+re-add them back.
 
-	Sam
-> 
-> Changes from v10:
-> - Per review comments by Sam Ravnborg
->   https://lore.kernel.org/linux-arm-kernel/20200408175252.GB24828@ravnborg.org/
->   - Drop unused headers
->   - Fix 'check-patch --strict' findings
->   - Print error when DRM_BRIDGE_ATTACH_NO_CONNECTOR is passed
-> - Per review comment by Laurent Pinchart
->   https://lore.kernel.org/linux-arm-kernel/20200408173258.GA24828@ravnborg.org/
->   - There's only one endpoint allowed at a time, add a restriction for that.
-> - Add Reviewed-by from Fabio Estevam
->   https://lore.kernel.org/linux-arm-kernel/CAOMZO5Dhy7ahcR-S=QG=pumxXa8HnQoWpg0TdFyeu_Levdh9_Q@mail.gmail.com/
->   https://lore.kernel.org/linux-arm-kernel/CAOMZO5Du-ZP7Wxm2eh8WaFoCk_kWomgH57ayJrBB0PzhuAA+mw@mail.gmail.com/
-> - Move to next-20200408
-> 
-> Changes from v9:
-> - Per review comments by Sam Ravnborg
->   https://lore.kernel.org/dri-devel/20200318214639.GA971@ravnborg.org/
->   - Drop header-test-y since kernel lost support
->   - Handle drm_bridge_attach's new flags argument
->   - Add Acked-by: to binding patch, thanks!
-> - Move to next-20200319
-> 
-> Changes from v8:
-> - Per review comments by Robert Chiras
->   https://lore.kernel.org/dri-devel/1575366594.6423.61.camel@nxp.com/
->   - don't mix DSI host and bridge initialization
->   - only select output source once
->   - defer probe when panel is not ready to fix usage as a module
->   - use correct reset sequence as described by Robert
->     (and provided by NWL)
->   - use mode->clock instead of mode->crtc_clock
-> - Add tested by from Martin Kepplinger, thanks!
-> - Drop platform specific data (as suggested previously by Laurent Pinchart and
->   Andrzej Hajda) since imx8q* needs another set of abstractions with the new
->   reset sequence and that's easier to do when adding imx8q* support rather then
->   adding wrong abstraction now.
-> - Update bindings to use proper clock and irq names to make the example match
->   reality more closely.
-> - Use `fallthrough;` instead of /* Fall through */ in switch statements
-> - Move to next-20200226
-> 
-> Changes from v7:
-> - Drop reset quirk. It's not needed with mxsfb and sometimes triggers a shifted display.
-> 
-> Changes from v6:
-> - Per review comments by Andrzej Hajda
->   https://lore.kernel.org/linux-arm-kernel/c86b7ca2-7799-eafd-c380-e4b551520837@samsung.com/
->   - Drop spare empty line
->   - handle nwl_dsi_write errors
->   - better handle read errors
->   - unwind in case of error in nwl_dsi_enable
->   - use bridge_to_dsi() instead of accessing driver_private
->   - don't log on -EPROBEDEFER when fething the reset controller
->   - use endpoint number to determine input
-> - Spotted by kbuild test robot <lkp@intel.com>
->   https://lore.kernel.org/linux-arm-kernel/201909230644.qfSKbNf9%25lkp@intel.com/
->   Use signed return type for nwl_dsi_get_dpi_pixel_format
-> - Drop connector type from drm_panel_bridge_add
-> - Don't forget to set an error value on dsi reads
-> 
-> Changes from v5:
-> - Per review comments by Andrzej Hajda
->   https://lists.freedesktop.org/archives/dri-devel/2019-September/235281.html
->   - Fix include file ordering
->   - Add a comment to nwl_dsi_platform_data that will allow to add support
->     at least for the i.MX8QM
->   - Merge driver into a single file plus the register defs in a separate header
-> - Make more functions and structs static
-> 
-> Changes from v4:
-> - Collect Reviewed-by: from Rob Herring, thanks!
->   https://lists.freedesktop.org/archives/dri-devel/2019-September/233979.html
-> - Spotted by kbuild test robot <lkp@intel.com>
->   https://lists.freedesktop.org/archives/dri-devel/2019-September/233860.html
->   https://lists.freedesktop.org/archives/dri-devel/2019-September/233863.html
->   - fix format string for size_t
->   - Use DIV64_U64_ROUND_UP to fix build on 32 bit architectures
->     We can't use simple shift sind d and n are similar in size and
->     we need full precision
-> - Fix debug cfg_t_post debug print out
-> - Avoid PSEC_PER_SEC
-> - Move timeout / overflow handling out of nwl_dsi_finish_transmission,
->   it would never end up being reported since the call to the function
->   was guarded by flags.
-> - Drop 'support for' from KConfig title to make it match the other
->   drivers in that submenu
-> 
-> Changes from v3:
-> - Per review comments by Robert Chiras
->   https://lists.freedesktop.org/archives/dri-devel/2019-August/232580.html
->   - Add Robert's {Signed-off,Tested}-by:
->   - Respect number of lanes when calculting bandwidth limits
->   - Drop duplicate NWL_DSI_ENABLE_MULT_PKTS setup
-> - Per testing by Rober Chiras
->   https://lists.freedesktop.org/archives/dri-devel/2019-August/233688.html
->   - Drop duplicate (and too early) drm_bridge_add() in nwl_dsi_probe() that
->     made mxsfb fail to connect to the bridge since the panel_bridge was not up
->     yet. drm_bridge_add() happens in nwl_dsi_host_attach() where after the
->     panel_bridge was set up.
-> - Per review comments by Rob Herring on bindings
->   https://lists.freedesktop.org/archives/dri-devel/2019-August/233196.html
->   - drop description from power-domains and resets
->   - allow BSD 2 clause license as well
->   - make ports more specific
->   - add #address-cells, #size-cells as required
->   - use additionalProperties
->   - panel is of type object
-> 
-> Changes from v2:
-> - Per review comments by Rob Herring
->   https://lists.freedesktop.org/archives/dri-devel/2019-August/230448.html
->   - bindings:
->     - Simplify by restricting to fsl,imx8mq-nwl-dsi
->     - document reset lines
->     - add port@{0,1}
->     - use a real compatible string for the panel
->     - resets are required
-> - Per review comments by Arnd Bergmann
->   https://lists.freedesktop.org/archives/dri-devel/2019-August/230868.html
->   - Don't access iomuxc_gpr regs directly. This allows us to drop the
->     first patch in the series with the iomuxc_gpr field defines.
-> - Per review comments by Laurent Pinchart
->   Fix wording in bindings
-> - Add mux-controls to bindings
-> - Don't print error message on dphy probe deferral
-> 
-> Changes from v1:
-> - Per review comments by Sam Ravnborg
->   https://lists.freedesktop.org/archives/dri-devel/2019-July/228130.html
->   - Change binding docs to YAML
->   - build: Don't always visit imx-nwl/
->   - build: Add header-test-y
->   - Sort headers according to DRM convention
->   - Use drm_display_mode instead of videmode
-> - Per review comments by Fabio Estevam
->   https://lists.freedesktop.org/archives/dri-devel/2019-July/228299.html
->   - Don't restrict build to ARCH_MXC
->   - Drop unused includes
->   - Drop unreachable code in imx_nwl_dsi_bridge_mode_fixup()
->   - Drop remaining calls of dev_err() and use DRM_DEV_ERR()
->     consistently.
->   - Use devm_platform_ioremap_resource()
->   - Drop devm_free_irq() in probe() error path
->   - Use single line comments where sufficient
->   - Use <linux/time64.h> instead of defining USEC_PER_SEC
->   - Make input source select imx8 specific
->   - Drop <asm/unaligned.h> inclusion (after removal of get_unaligned_le32)
->   - Drop all EXPORT_SYMBOL_GPL() for functions used in the same module
->     but different source files.
->   - Drop nwl_dsi_enable_{rx,tx}_clock() by invoking clk_prepare_enable()
->     directly
->   - Remove pointless comment
-> - Laurent Pinchart
->   https://lists.freedesktop.org/archives/dri-devel/2019-July/228313.html
->   https://lists.freedesktop.org/archives/dri-devel/2019-July/228308.html
->   - Drop (on iMX8MQ) unused csr regmap
->   - Use NWL_MAX_PLATFORM_CLOCKS everywhere
->   - Drop get_unaligned_le32() usage
->   - remove duplicate 'for the' in binding docs
->   - Don't include unused <linux/clk-provider.h>
->   - Don't include unused <linux/component.h>
->   - Drop dpms_mode for tracking state, trust the drm layer on that
->   - Use pm_runtime_put() instead of pm_runtime_put_sync()
->   - Don't overwrite encoder type
->   - Make imx_nwl_platform_data const
->   - Use the reset controller API instead of open coding that platform specific
->     part
->   - Use <linux/bitfield.h> intead of making up our own defines
->   - name mipi_dsi_transfer less generic: nwl_dsi_transfer
->   - ensure clean in .remove by calling mipi_dsi_host_unregister.
->   - prefix constants by NWL_DSI_
->   - properly format transfer_direction enum
->   - simplify platform clock handling
->   - Don't modify state in mode_fixup() and use mode_set() instead
->   - Drop bridge detach(), already handle by nwl_dsi_host_detach()
->   - Drop USE_*_QUIRK() macros
-> - Drop (for now) unused clock defnitions. 'pixel' and 'bypass' clock will be
->   used for i.MX8 SoCs but since they're unused atm drop the definitions - but
->   keep the logic to enable/disable several clocks in place since we know we'll
->   need it in the future.
-> 
-> Changes from v0:
-> - Add quirk for IMQ8MQ silicon B0 revision to not mess with the
->   system reset controller on power down since enable() won't work
->   otherwise.
-> - Drop devm_free_irq() handled by the device driver core
-> - Disable tx esc clock after the phy power down to unbreak
->   disable/enable (unblank/blank)
-> - Add ports to dt binding docs
-> - Select GENERIC_PHY_MIPI_DPHY instead of GENERIC_PHY for
->   phy_mipi_dphy_get_default_config
-> - Select DRM_MIPI_DSI
-> - Include drm_print.h to fix build on next-20190408
-> - Drop some debugging messages
-> - Newline terminate all DRM_ printouts
-> - Turn component driver into a drm bridge
-> 
-> [0]: https://lists.freedesktop.org/archives/dri-devel/2019-May/219484.html
-> [1]: https://patchwork.freedesktop.org/series/62822/
-> 
-> Guido Günther (2):
->   dt-bindings: display/bridge: Add binding for NWL mipi dsi host
->     controller
->   drm/bridge: Add NWL MIPI DSI host controller support
-> 
->  .../bindings/display/bridge/nwl-dsi.yaml      |  226 +++
->  drivers/gpu/drm/bridge/Kconfig                |   16 +
->  drivers/gpu/drm/bridge/Makefile               |    1 +
->  drivers/gpu/drm/bridge/nwl-dsi.c              | 1213 +++++++++++++++++
->  drivers/gpu/drm/bridge/nwl-dsi.h              |  144 ++
->  5 files changed, 1600 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/display/bridge/nwl-dsi.yaml
->  create mode 100644 drivers/gpu/drm/bridge/nwl-dsi.c
->  create mode 100644 drivers/gpu/drm/bridge/nwl-dsi.h
-> 
-> -- 
-> 2.23.0
-> 
-> _______________________________________________
-> dri-devel mailing list
-> dri-devel@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/dri-devel
+But I think it is a rare case plus hot-remove is also not a quite
+frequent event. So it is worth to simplify the code by this patch.
+
+Thanks for your classification.
+
+For [1/2]
+Reviewed-by: Pingfan Liu <piliu@redhat.com>
+
