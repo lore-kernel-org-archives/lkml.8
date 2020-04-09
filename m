@@ -2,142 +2,233 @@ Return-Path: <SRS0=n+Ub=5Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0C90C2BA2B
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 00:10:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DAF4C2BA80
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 00:12:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 724B720757
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 00:10:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="QzNPLo5R"
+	by mail.kernel.org (Postfix) with ESMTP id 56C692084D
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 00:12:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726571AbgDIAKP (ORCPT
+        id S1726609AbgDIAMI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Apr 2020 20:10:15 -0400
-Received: from mail-vs1-f65.google.com ([209.85.217.65]:36388 "EHLO
-        mail-vs1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726530AbgDIAKP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Apr 2020 20:10:15 -0400
-Received: by mail-vs1-f65.google.com with SMTP id 184so5898342vsu.3
-        for <linux-kernel@vger.kernel.org>; Wed, 08 Apr 2020 17:10:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=B6pS9OgAcPsD6CSPKpIIvHEG5zqVSzQLTTYkVt8jyck=;
-        b=QzNPLo5RL3lO4TmcYcF4V23HmCtH6zvc/crCSse2osUeXKghPrIz35H3jROp57Pjgn
-         bNzydnCYuDad7TyqCSU8b4kqNffY3kKjr7V85Po1uBZTiSt9EqlzUwi3Ra7nIr2/HtKy
-         U+Y0d1OkSTzwAv2urvP556j42eGzCmag+ojsI=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=B6pS9OgAcPsD6CSPKpIIvHEG5zqVSzQLTTYkVt8jyck=;
-        b=N/A8s9VaJscnH0N41TkmoA7+wNfL0iPGaUeq0HfsPxqLq176d5L3whWx2bXtB8/aSP
-         Og8chIUmJq8s/2HCx4wejHRyTHVBb+uGvVIjwDNQ0cM/RScq4avs8/CM/4KXq95AgsgF
-         3aCh/VaedSAMZBZ6aSzL5RKVZy6JDpzzN/brUW/urmrCGXvnkeniz2BEtYuL5LFiU3MA
-         o65QZNqgLasIlIPv4GR1M/4Q+Nu8YjtFHRYtBymilCz+leJwqlIUMr5+bXPSwwvqSDuB
-         ElDesCLHXsZ2hzYquugnk2tt0xyub965BVEzk/uq5wjTpBn5HUyEDRyD69C7fWFQ6W6i
-         6LnQ==
-X-Gm-Message-State: AGi0PuYbd52bUr7DK4yJOTANAcRX2v+guCyc3BDsm/o17ec09wzFaEFe
-        T5wTg3rnnnZtZTTLGxfVKlNxxQYX0Vc=
-X-Google-Smtp-Source: APiQypKJekb7wML7baI7rjx0gIln2lOUGDaGe1BYA+x1B39L81gWZyIOV+I3hIZK2C3UZp8NgyQZ8g==
-X-Received: by 2002:a67:320f:: with SMTP id y15mr8798396vsy.157.1586391014611;
-        Wed, 08 Apr 2020 17:10:14 -0700 (PDT)
-Received: from mail-ua1-f49.google.com (mail-ua1-f49.google.com. [209.85.222.49])
-        by smtp.gmail.com with ESMTPSA id d83sm6829264vka.34.2020.04.08.17.10.12
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 08 Apr 2020 17:10:13 -0700 (PDT)
-Received: by mail-ua1-f49.google.com with SMTP id g24so3327813uan.10
-        for <linux-kernel@vger.kernel.org>; Wed, 08 Apr 2020 17:10:12 -0700 (PDT)
-X-Received: by 2002:ab0:2389:: with SMTP id b9mr7355490uan.120.1586391012513;
- Wed, 08 Apr 2020 17:10:12 -0700 (PDT)
+        Wed, 8 Apr 2020 20:12:08 -0400
+Received: from mga07.intel.com ([134.134.136.100]:61592 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726527AbgDIAMH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Apr 2020 20:12:07 -0400
+IronPort-SDR: ND5DkgcL+z7gVwp3XABxUt63eoTIeZKdnsHqh0FdJ5Vp/E6CxN0XM4YilMarkFcIggPm6Aofzk
+ HmZwWPOofR7g==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Apr 2020 17:12:07 -0700
+IronPort-SDR: C0qu+JybDG0QthltkoJTdCtv80Mb6QfdGXNwCVFyt5H3gZHhGU+0LzHSeJ7Zf5tdCc/C6gKDGD
+ EghjE+0adNwg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,360,1580803200"; 
+   d="scan'208";a="240456460"
+Received: from iweiny-desk2.sc.intel.com ([10.3.52.147])
+  by orsmga007.jf.intel.com with ESMTP; 08 Apr 2020 17:12:07 -0700
+Date:   Wed, 8 Apr 2020 17:12:06 -0700
+From:   Ira Weiny <ira.weiny@intel.com>
+To:     Dave Chinner <david@fromorbit.com>
+Cc:     linux-kernel@vger.kernel.org,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Christoph Hellwig <hch@lst.de>,
+        "Theodore Y. Ts'o" <tytso@mit.edu>, Jan Kara <jack@suse.cz>,
+        Jeff Moyer <jmoyer@redhat.com>, linux-ext4@vger.kernel.org,
+        linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH V6 6/8] fs/xfs: Combine xfs_diflags_to_linux() and
+ xfs_diflags_to_iflags()
+Message-ID: <20200409001206.GD664132@iweiny-DESK2.sc.intel.com>
+References: <20200407182958.568475-1-ira.weiny@intel.com>
+ <20200407182958.568475-7-ira.weiny@intel.com>
+ <20200408020827.GI24067@dread.disaster.area>
+ <20200408170923.GC569068@iweiny-DESK2.sc.intel.com>
+ <20200408210236.GK24067@dread.disaster.area>
+ <20200408220734.GA664132@iweiny-DESK2.sc.intel.com>
+ <20200408232106.GO24067@dread.disaster.area>
 MIME-Version: 1.0
-References: <20200407235024.260460-1-dianders@chromium.org>
- <20200407164915.v3.8.I8e187cdfb7a31f5bb7724f1f937f2862ee464a35@changeid> <b61a5b31-d614-93f2-7fdd-ec372fba3080@codeaurora.org>
-In-Reply-To: <b61a5b31-d614-93f2-7fdd-ec372fba3080@codeaurora.org>
-From:   Doug Anderson <dianders@chromium.org>
-Date:   Wed, 8 Apr 2020 17:10:01 -0700
-X-Gmail-Original-Message-ID: <CAD=FV=XQbtrkK1u6jTuc-pP4fUx0av3eMYznSkUSC2io7BGmmg@mail.gmail.com>
-Message-ID: <CAD=FV=XQbtrkK1u6jTuc-pP4fUx0av3eMYznSkUSC2io7BGmmg@mail.gmail.com>
-Subject: Re: [PATCH v3 08/10] drivers: qcom: rpmh-rsc: Don't double-check rpmh
-To:     Maulik Shah <mkshah@codeaurora.org>
-Cc:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        Lina Iyer <ilina@codeaurora.org>,
-        Rajendra Nayak <rnayak@codeaurora.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Evan Green <evgreen@chromium.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200408232106.GO24067@dread.disaster.area>
+User-Agent: Mutt/1.11.1 (2018-12-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Thu, Apr 09, 2020 at 09:21:06AM +1000, Dave Chinner wrote:
+> On Wed, Apr 08, 2020 at 03:07:35PM -0700, Ira Weiny wrote:
+> > On Thu, Apr 09, 2020 at 07:02:36AM +1000, Dave Chinner wrote:
+> > > On Wed, Apr 08, 2020 at 10:09:23AM -0700, Ira Weiny wrote:
+> > 
+> > [snip]
+> > 
+> > > > 
+> > > > This sounds good but I think we need a slight modification to make the function equivalent in functionality.
+> > > > 
+> > > > void
+> > > > xfs_diflags_to_iflags(
+> > > >         struct xfs_inode        *ip,
+> > > >         bool init)
+> > > > {
+> > > >         struct inode            *inode = VFS_I(ip);
+> > > >         unsigned int            xflags = xfs_ip2xflags(ip);
+> > > >         unsigned int            flags = 0;
+> > > > 
+> > > >         inode->i_flags &= ~(S_IMMUTABLE | S_APPEND | S_SYNC | S_NOATIME |
+> > > >                             S_DAX);
+> > > 
+> > > We don't want to clear the dax flag here, ever, if it is already
+> > > set. That is an externally visible change and opens us up (again) to
+> > > races where IS_DAX() changes half way through a fault path. IOWs, avoiding
+> > > clearing the DAX flag was something I did explicitly in the above
+> > > code fragment.
+> > 
+> > <sigh> yes... you are correct.
+> > 
+> > But I don't like depending on the caller to clear the S_DAX flag if
+> > xfs_inode_enable_dax() is false.  IMO this function should clear the flag in
+> > that case for consistency...
+> 
+> No. We simply cannot do that here except in the init case when the
+> inode is not yet visible to userspace. In which case, we know -for
+> certain- that the S_DAX is not set, and hence we do not need to
+> clear it. Initial conditions matter!
+> 
+> If you want to make sure of this, add this:
+> 
+> 	ASSERT(!(IS_DAX(inode) && init));
+> 
+> And now we'll catch inodes that incorrectly have S_DAX set at init
+> time.
 
-On Wed, Apr 8, 2020 at 5:24 AM Maulik Shah <mkshah@codeaurora.org> wrote:
->
-> Hi,
->
-> In rpmh.c, rpmh_write_async() and rpmh_write_batch() uses
-> __fill_rpmh_msg() which already checks for below payload conditions.
->
-> so i am ok to remove duplicate checks from rpmh-rsc.c
->
-> can you please add payload at the end of subject.
->
-> drivers: qcom: rpmh-rsc: Don't double-check rpmh payload
->
-> Other than this.
->
-> Reviewed-by: Maulik Shah <mkshah@codeaurora.org>
-> Tested-by: Maulik Shah <mkshah@codeaurora.org>
+Ok, that will work.  Also documents that expected initial condition.
 
-Thanks!  Bjorn / Andy: if you want me to spin my series I'm happy to.
-I'm also happy to just let you fix this nit in the commit message and
-the other one Maulik had when applying.  Just let me know.
+> 
+> > > memory S_DAX flag, we can actually clear the on-disk flag
+> > > safely, so that next time the inode cycles into memory it won't
+> > > be using DAX. IOWs, admins can stop the applications, clear the
+> > > DAX flag and drop caches. This should result in the inode being
+> > > recycled and when the app is restarted it will run without DAX.
+> > > No ned for deleting files, copying large data sets, etc just to
+> > > turn off an inode flag.
+> > 
+> > We already discussed evicting the inode and it was determined to
+> > be too confusing.[*]
+> 
+> That discussion did not even consider how admins are supposed to
+> clear the inode flag once it is set on disk.
+
+I think this is a bit unfair.  I think we were all considering it...  and I
+still think this patch set is a step in the right direction.
+
+> It was entirely
+> focussed around "we can't change in memory S_DAX state"
+
+Not true.  There were many ideas on how to change the FS_XFLAG_DAX with some
+sort of delayed S_DAX state to avoid changing S_DAX on an in memory inode.
+
+I made the comment:
+
+	"... I want to clarify.  ...  we could have the flag change with an
+	appropriate error which could let the user know the change has been
+	delayed."
+
+	-- https://lore.kernel.org/lkml/20200402205518.GF3952565@iweiny-DESK2.sc.intel.com/
+
+Jan made multiple comments:
+
+	"I generally like the proposal but I think the fact that toggling
+	FS_XFLAG_DAX will not have immediate effect on S_DAX will cause quite
+	some confusion and ultimately bug reports."
+
+	-- https://lore.kernel.org/lkml/20200401102511.GC19466@quack2.suse.cz/
 
 
-> Note:
->
-> rpmh_write() is not using __fill_rpmh_msg() and have replica as below,
-> probably since it was declares message on stack instead of using malloc()
->
->          if (!cmd || !n || n > MAX_RPMH_PAYLOAD)
->                  return -EINVAL;
->
->          memcpy(rpm_msg.cmd, cmd, n * sizeof(*cmd));
->          rpm_msg.msg.num_cmds = n;
->
-> Making a note to remove above if check and start using __fill_rpmh_msg()
-> here as well to do memcpy() and num_cmds initilization.
->
-> Although it may end up writing msg.state and msg.cmd twice (once during
-> defining msg on stack and then during fill rpmh msg) but it should be ok.
->
-> Below two lines from __rpmh_write() can be removed as well.
->
->          rpm_msg->msg.state = state;
->
-> DEFINE_RPMH_MSG_ONSTACK() and __fill_rpmh_msg() seems taking care of
-> initializing msg.state already, so we should be good.
->
-> if you are spinning a new version and want to include above change as
-> well, i am ok.
->
-> if not, i can push separate patch to update this as well once my series
-> to invoke rpmh_flush() gets picked up.
+	"Just switch FS_XFLAG_DAX flag, S_DAX flag will magically switch when
+	inode gets evicted and the inode gets reloaded from the disk again. Did
+	I misunderstand anything?
 
-I'd sorta be inclined to wait and do this later just because it seems
-like we've got enough changes stacked together right now...
+	And my thinking was that this is surprising behavior for the user and
+	so it will likely generate lots of bug reports along the lines of "DAX
+	inode flag does not work!"."
 
--Doug
+	-- https://lore.kernel.org/lkml/20200403170338.GD29920@quack2.suse.cz/
+
+Darrick also had similar ideas/comments.
+
+Christoph did say:
+
+	"A reasonably smart application can try to evict itself."
+
+	-- https://lore.kernel.org/lkml/20200403072731.GA24176@lst.de/
+
+Which I was unclear about???
+
+Christoph does this mean you would be ok with changing the FS_XFLAG_DAX on disk
+and letting S_DAX change later?
+
+> and how the
+> tri-state mount option to "override" the on-disk flag could be done.
+> 
+> Nobody noticed that being unable to rmeove the on-disk flag means
+> the admin's only option to turn off dax for an application is to
+> turn it off for everything, filesystem wide, which requires:
+
+No. This is not entirely true.  While I don't like the idea of having to copy
+data (and I agree with your points) it is possible to do.
+
+> 
+> 	1. stopping the app.
+> 	2. stopping every other app using the filesystem
+> 	3. unmounting the filesystem
+> 	4. changing to dax=never mount option
+
+I don't understand why we need to unmount and mount with dax=never?
+
+> 	5. mounting the filesystem
+> 	6. restarting all apps.
+> 
+> It's a hard stop for everything using the filesystem, and it changes
+> the runtime environment for all applications, not just the one that
+> needs DAX turned off.  Not to mention that if it's the root
+> filesystem that is using DAX, then it's a full system reboot needed
+> to change the mount options.
+> 
+> IMO, this is a non-starter from a production point of view - testing
+> and qualification of all applications rather than just the affected
+> app is required to make this sort of change.  It simply does not
+> follow the "minimal change to fix the problem" rules for managing
+> issues in production environments.
+> 
+> So, pLease explain to me how this process:
+> 
+> 	1. stop the app
+> 	2. remove inode flags via xfs_io
+> 	3. run drop_caches
+> 	4. start the app
+> 
+> is worse than requiring admins to unmount the filesystem to turn off
+> DAX for an application.
+
+Jan?  Christoph?
+
+> 
+> > Furthermore, if we did want an interface like that why not allow
+> > the on-disk flag to be set as well as cleared?
+> 
+> Well, why not - it's why I implemented the flag in the first place!
+> The only problem we have here is how to safely change the in-memory
+> DAX state, and that largely has nothing to do with setting/clearing
+> the on-disk flag....
+
+With the above change to xfs_diflags_to_iflags() I think we are ok here.
+
+Ira
+
