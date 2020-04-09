@@ -2,139 +2,148 @@ Return-Path: <SRS0=n+Ub=5Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E1B2C2BA19
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 20:54:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5EF9C2BA19
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 20:56:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 276D820730
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 20:54:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9EB3320730
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 20:56:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1586465814;
+	bh=FBMWmb9p9rL4CgCUxYg6eSlSd2wCSC/e4pjROnOE71I=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=0cJVBStdbjZ2vzugwRgF/l7dzF+jCrOaOSytHeyOacKncyx2rAyBuX86DOUE34u12
+	 5b0bNpyjeRodYqazaE0xqNiX0lqQBWxPfBYUYHi98g0Eo8w0mWzGuoxMHl4WTFaT7p
+	 +0wXkYarpEgTwdr6JYIG26DmnjMecKp+QzSZMRBY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727258AbgDIUyw (ORCPT
+        id S1727121AbgDIU4x (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Apr 2020 16:54:52 -0400
-Received: from mga02.intel.com ([134.134.136.20]:50906 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727035AbgDIUyw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Apr 2020 16:54:52 -0400
-IronPort-SDR: +yTMvB5HLnWNAuPol3OcjXZpyIgphh/Vw66LILsaOp7inwF0W4JA9Akgw8cks82Sd3tnmTftb4
- T3Obrr0e82Jw==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Apr 2020 13:54:51 -0700
-IronPort-SDR: 8iz+ZbkWeR4tFmHL9Uxkk6dATcbBtgYmZ174jmuLk6GVWnSJx13NwbSQ/tD2XZ4EWD2ZvPk2Sd
- 8uYkzMn9aDXQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,364,1580803200"; 
-   d="scan'208";a="425654165"
-Received: from iweiny-desk2.sc.intel.com ([10.3.52.147])
-  by orsmga005.jf.intel.com with ESMTP; 09 Apr 2020 13:54:51 -0700
-Date:   Thu, 9 Apr 2020 13:54:51 -0700
-From:   Ira Weiny <ira.weiny@intel.com>
-To:     "Darrick J. Wong" <darrick.wong@oracle.com>
-Cc:     Dave Chinner <david@fromorbit.com>, linux-kernel@vger.kernel.org,
-        Dan Williams <dan.j.williams@intel.com>,
-        Christoph Hellwig <hch@lst.de>,
-        "Theodore Y. Ts'o" <tytso@mit.edu>, Jan Kara <jack@suse.cz>,
-        Jeff Moyer <jmoyer@redhat.com>, linux-ext4@vger.kernel.org,
-        linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH V6 6/8] fs/xfs: Combine xfs_diflags_to_linux() and
- xfs_diflags_to_iflags()
-Message-ID: <20200409205451.GC801897@iweiny-DESK2.sc.intel.com>
-References: <20200407182958.568475-7-ira.weiny@intel.com>
- <20200408020827.GI24067@dread.disaster.area>
- <20200408170923.GC569068@iweiny-DESK2.sc.intel.com>
- <20200408210236.GK24067@dread.disaster.area>
- <20200408220734.GA664132@iweiny-DESK2.sc.intel.com>
- <20200408232106.GO24067@dread.disaster.area>
- <20200409001206.GD664132@iweiny-DESK2.sc.intel.com>
- <20200409003021.GJ6742@magnolia>
- <20200409152944.GA801705@iweiny-DESK2.sc.intel.com>
- <20200409165927.GD6741@magnolia>
+        Thu, 9 Apr 2020 16:56:53 -0400
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:37969 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726650AbgDIU4w (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Apr 2020 16:56:52 -0400
+Received: by mail-lf1-f68.google.com with SMTP id l11so725015lfc.5
+        for <linux-kernel@vger.kernel.org>; Thu, 09 Apr 2020 13:56:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=6iXvIdYpMMdaZcrY8CYi0zKhJsLjYjxYUyiUwCPLGBw=;
+        b=SKppsqnUWK53xq5DHVmd18JZLjvCv8Z986IJdsmvF/UoFOuqJlDFIhVw04DPuQIU1Z
+         LAH0kLb4IbF7ynM8iL0uL3mwEpmOpBgWVbpSeh44ffmyIV/SINa/6aI5owY6Ivok45MC
+         UvfMNCV3QoEUyaqfrTp9VXbm3NAlq3mnJMhv4=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=6iXvIdYpMMdaZcrY8CYi0zKhJsLjYjxYUyiUwCPLGBw=;
+        b=EKfePRJM5UKfeFfg+BeUElppq/GcdXeubG8j0rxNR570+fAmEuvWfCxCyITrFxPTpl
+         UYavFedDghbu/dlt/tXcvaOP2FAMofdptL9ZirMv3ghJG24kB0mwZemFg0nlRBnyivNn
+         N4lyV659xJYnryGEFcRIzDirBQifnFVNrNNo3EL2LHjr4lP1bPjCvae1AMXgiiUbrql6
+         +t7comExluDTJK5F/z19arZ9ChBn+2+9xXLEhrjd2z6udAc681uv1Mg8m1y4dBYozQkU
+         3/raLPN5/Xq8B4UCOKSnWn2yqKTDXCB6bZgZb53hdEtYWED5uerYRZm+FmBS9wmFEg6c
+         iPvA==
+X-Gm-Message-State: AGi0Pub0qvyEE5evRNlWK5aP693e8miITz5P4U/PCGUR70Lyi0hUJDMy
+        5ibozpdVBvzexY3IfqWKRQGjCD+KZp0=
+X-Google-Smtp-Source: APiQypI4UfpBooAYOOPRdJPKFhD/t59ThG0zkVfyj9AW8oqAlodivJenliWc9UJMoW/TrzvPo5sIKw==
+X-Received: by 2002:ac2:5c07:: with SMTP id r7mr689668lfp.160.1586465811046;
+        Thu, 09 Apr 2020 13:56:51 -0700 (PDT)
+Received: from mail-lj1-f171.google.com (mail-lj1-f171.google.com. [209.85.208.171])
+        by smtp.gmail.com with ESMTPSA id p28sm282577ljn.24.2020.04.09.13.56.48
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 09 Apr 2020 13:56:48 -0700 (PDT)
+Received: by mail-lj1-f171.google.com with SMTP id r7so1141420ljg.13
+        for <linux-kernel@vger.kernel.org>; Thu, 09 Apr 2020 13:56:48 -0700 (PDT)
+X-Received: by 2002:a2e:7c1a:: with SMTP id x26mr934145ljc.209.1586465808087;
+ Thu, 09 Apr 2020 13:56:48 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200409165927.GD6741@magnolia>
-User-Agent: Mutt/1.11.1 (2018-12-01)
+References: <87blobnq02.fsf@x220.int.ebiederm.org> <CAHk-=wgYCUbEmwieOBzVNZbSAM9wCZA8Z0665onpNnEcC-UpDg@mail.gmail.com>
+ <AM6PR03MB5170B606F9AC663225EC9609E4C60@AM6PR03MB5170.eurprd03.prod.outlook.com>
+ <CAHk-=whM3r7zrm8mSi7HJhuZbYiXx9PFU5VQYeKm6Low=r15eQ@mail.gmail.com>
+ <AM6PR03MB517003D5965F48AC5FE7283DE4C60@AM6PR03MB5170.eurprd03.prod.outlook.com>
+ <CAHk-=wg5LvjumW9PVQiF7jB8yig98K8XTk4tHo9W-sYmxzW+9g@mail.gmail.com>
+ <87lfnda3w3.fsf@x220.int.ebiederm.org> <CAHk-=wjxyGCj9675mf31uhoJCyHn74ON_+O6SjSqBSSvqWxC1Q@mail.gmail.com>
+ <87blo45keg.fsf@x220.int.ebiederm.org> <CAHk-=whES-KCO6Bs93-QBK1tS5CfiWSi+v5D1a7Sc1TD5RFoaA@mail.gmail.com>
+ <87v9maxb5q.fsf@x220.int.ebiederm.org> <CAHk-=wih4BqW7GTLaYxewynuT-iFHrXroip0wNo0CyPtmYGUow@mail.gmail.com>
+ <87y2r4so3i.fsf@x220.int.ebiederm.org> <CAHk-=wjhAvv6s_7OVeZJiHaY7bBrHyiPTkSpq-TLr6qxYqxUUw@mail.gmail.com>
+ <CAHk-=wi0jrKv9x6vJ9FDgTrSUbdbZYDX-79T-E87C48MGSn5=g@mail.gmail.com>
+ <87wo6or3pg.fsf@x220.int.ebiederm.org> <CAHk-=wiB762bDtiNZJ8KcRSkapOv3VUZbzyCvAt-8tSMWhR1DA@mail.gmail.com>
+ <871rowpfe5.fsf@x220.int.ebiederm.org>
+In-Reply-To: <871rowpfe5.fsf@x220.int.ebiederm.org>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Thu, 9 Apr 2020 13:56:31 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wiDm68i2sT3xNm-JdwmqAYzeQHTDZzEzm-NLfo_i38YBg@mail.gmail.com>
+Message-ID: <CAHk-=wiDm68i2sT3xNm-JdwmqAYzeQHTDZzEzm-NLfo_i38YBg@mail.gmail.com>
+Subject: Re: [GIT PULL] Please pull proc and exec work for 5.7-rc1
+To:     "Eric W. Biederman" <ebiederm@xmission.com>
+Cc:     Waiman Long <longman@redhat.com>, Ingo Molnar <mingo@kernel.org>,
+        Will Deacon <will@kernel.org>,
+        Bernd Edlinger <bernd.edlinger@hotmail.de>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Alexey Gladkov <gladkov.alexey@gmail.com>,
+        Oleg Nesterov <oleg@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 09, 2020 at 09:59:27AM -0700, Darrick J. Wong wrote:
+On Thu, Apr 9, 2020 at 1:37 PM Eric W. Biederman <ebiederm@xmission.com> wrote:
+>
+> Since they are all waiting for each other that loop is a deadlock.
 
-[snip]
- 
-> And today:
-> 
->  1. There exists an in-kernel access mode flag S_DAX that is set when
->     file accesses go directly to persistent memory, bypassing the page
->     cache.  Applications must call statx to discover the current S_DAX
->     state (STATX_ATTR_DAX).
-> 
->  2. There exists an advisory file inode flag FS_XFLAG_DAX that is
->     inherited from the parent directory FS_XFLAG_DAX inode flag at file
->     creation time.  This advisory flag can be set or cleared at any
->     time, but doing so does not immediately affect the S_DAX state.
-> 
->     Unless overridden by mount options (see (3)), if FS_XFLAG_DAX is set
->     and the fs is on pmem then it will enable S_DAX at inode load time;
->     if FS_XFLAG_DAX is not set, it will not enable S_DAX.
-> 
->  3. There exists a dax= mount option.
-> 
->     "-o dax=never"  means "never set S_DAX, ignore FS_XFLAG_DAX."
-> 
->     "-o dax=always" means "always set S_DAX (at least on pmem),
->                     and ignore FS_XFLAG_DAX."
-> 
->     "-o dax"        is an alias for "dax=always".
-> 
->     "-o dax=inode"  means "follow FS_XFLAG_DAX" and is the default.
-> 
->  4. There exists an advisory directory inode flag FS_XFLAG_DAX that can
->     be set or cleared at any time.  The flag state is copied into any
->     files or subdirectories when they are created within that directory.
-> 
->  5. Programs that require a specific file access mode (DAX or not DAX)
->     can do one of the following:
-> 
->     (a) Create files in directories that the FS_XFLAG_DAX flag set as
->         needed; or
-> 
->     (b) Have the administrator set an override via mount option; or
-> 
->     (c) Set or clear the file's FS_XFLAG_DAX flag as needed.  Programs
->         must then cause the kernel to evict the inode from memory.  This
->         can be done by:
-> 
->         i>  Closing the file and re-opening the file and using statx to
->             see if the fs has changed the S_DAX flag; and
-> 
->         ii> If the file still does not have the desired S_DAX access
->             mode, either unmount and remount the filesystem, or close
->             the file and use drop_caches.
-> 
->  6. It's not unreasonable that users who want to squeeze every last bit
->     of performance out of the particular rough and tumble bits of their
->     storage also be exposed to the difficulties of what happens when the
->     operating system can't totally virtualize those hardware
->     capabilities.  Your high performance sports car is not a Toyota
->     minivan, as it were.
-> 
-> Given our overnight discussions, I don't think it'll be difficult to
-> hoist XFS_IDONTCACHE to the VFS so that 5.c.i is enough to change the
-> S_DAX state if nobody else is using the file.
+No.
 
-Agreed!
+That's just a user bug. It's not a deadlock for the kernel.
 
-One note on implementation, I plan to get XFS_IDONTCACHE tested with XFS and
-leave hoisting it to VFS for the series which enables ext4 as that is when we
-would need such hoisting.
+The fact that you guys kept calling it a deadlock was what confused me
+and made me think you were talking about something much more
+fundamental (like the same thread trying to take the lock recursively
+- *THAT* is a deadlock).
 
-Thanks everyone for another round of discussions!  :-D
+There are lots of easier ways to make people wait for each other. This
+is a trivial one:
 
-Ira
+  #include <unistd.h>
+
+  int main(void)
+  {
+        int fd[2];
+        char buffer[1];
+
+        pipe(fd);
+        fork();
+        read(fd[0], buffer, sizeof(buffer));
+        write(fd[1], buffer, sizeof(buffer));
+  }
+
+where you have two readers that both wait for each other to write.
+
+As far as the kernel is concerned, it's not a deadlock. It's just a
+user space bug.
+
+The exact same thing is true here. The user space was buggy, and set
+it up so that both sides of two processes were just waiting for the
+other side to do something that they never did.
+
+And exactly like the reads, it's not a kernel bug.
+
+Now, I do agree that from a QoI standpoint, it's annoying when
+ptrace() just stops like that, particularly when you want to use
+ptrace for debugging. So I'm not dismissing trying to improve on
+interfaces, but I think you've confused things by calling this a
+deadlock and thinking that it's a kernel bug.
+
+The kernel never tries to figure out "Oh, stupid users are waiting for
+each other". Sure, file locking has the special circular locking
+detection, but that's literally a special case. The normal semantics
+are that you give users rope. If users make a noose of the rope and
+then trip on it, that's _their_ problem, not the kernels.
+
+            Linus
