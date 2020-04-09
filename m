@@ -2,221 +2,123 @@ Return-Path: <SRS0=n+Ub=5Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D907DC2BA19
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 21:12:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 324B9C2BA19
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 21:13:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A27E42072F
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 21:12:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 07E782072F
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 21:13:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727469AbgDIVMY (ORCPT
+        id S1727505AbgDIVNv convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Apr 2020 17:12:24 -0400
-Received: from mga11.intel.com ([192.55.52.93]:35413 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727001AbgDIVMY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Apr 2020 17:12:24 -0400
-IronPort-SDR: o1dSfHR7faoIHkab43wrXDh5GxR77JwYglKwFJOxXpTHWTspVTRY+UVAnhyy/gmVUe3pOFVjLS
- aqDDswH9U5nA==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Apr 2020 14:12:24 -0700
-IronPort-SDR: b2+9JE46pAO6sV1FuBEEobN0JsD1jcsWtPo56Im6RlZevm7kItY8drWDbRSpoz6mUPU8R9iMiJ
- AT7V+CbmUYYg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,364,1580803200"; 
-   d="scan'208";a="275976467"
-Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
-  by fmsmga004.fm.intel.com with ESMTP; 09 Apr 2020 14:12:23 -0700
-Received: from kbuild by lkp-server01 with local (Exim 4.89)
-        (envelope-from <lkp@intel.com>)
-        id 1jMeTG-000FP3-4V; Fri, 10 Apr 2020 05:12:22 +0800
-Date:   Fri, 10 Apr 2020 05:12:10 +0800
-From:   kbuild test robot <lkp@intel.com>
-To:     "x86-ml" <x86@kernel.org>
-Cc:     linux-kernel@vger.kernel.org
-Subject: [tip:master] BUILD SUCCESS
- 4342fdc5c2df0195b40f6465e1f6ef6f5619ce28
-Message-ID: <5e8f8faa.YUA7Vd+whD5c+SfA%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+        Thu, 9 Apr 2020 17:13:51 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:53710 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727376AbgDIVNv (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Apr 2020 17:13:51 -0400
+Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1jMeUF-0004z0-44; Thu, 09 Apr 2020 23:13:23 +0200
+Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
+        id 7E127101150; Thu,  9 Apr 2020 23:13:22 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Nadav Amit <nadav.amit@gmail.com>,
+        Peter Zijlstra <peterz@infradead.org>
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        mingo@redhat.com, bp@alien8.de, hpa@zytor.com, x86@kernel.org,
+        kenny@panix.com, jeyu@kernel.org, rasmus.villemoes@prevas.dk,
+        fenghua.yu@intel.com, xiaoyao.li@intel.com, thellstrom@vmware.com,
+        tony.luck@intel.com, gregkh@linuxfoundation.org, jannh@google.com,
+        keescook@chromium.org, David.Laight@aculab.com,
+        dcovelli@vmware.com, mhiramat@kernel.org
+Subject: Re: [PATCH 4/4] x86,module: Detect CRn and DRn manipulation
+In-Reply-To: <9A25271A-71F7-4EA1-9D1C-23B53E35C281@gmail.com>
+References: <20200407110236.930134290@infradead.org> <20200407111007.429362016@infradead.org> <20200408092726.7c2bda01@gandalf.local.home> <20200408154419.GP20730@hirez.programming.kicks-ass.net> <20200408154602.GA24869@infradead.org> <2b0dc69c-f7f9-985d-fc40-8b7bbd927e4f@redhat.com> <20200409085632.GB20713@hirez.programming.kicks-ass.net> <9A25271A-71F7-4EA1-9D1C-23B53E35C281@gmail.com>
+Date:   Thu, 09 Apr 2020 23:13:22 +0200
+Message-ID: <87imi8pdl9.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8BIT
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git  master
-branch HEAD: 4342fdc5c2df0195b40f6465e1f6ef6f5619ce28  Merge branch 'linus'
+Nadav Amit <nadav.amit@gmail.com> writes:
+>> On Apr 9, 2020, at 1:56 AM, Peter Zijlstra <peterz@infradead.org> wrote:
+>> Speaking with my virt ignorance hat on, how impossible is it to provide
+>> generic/useful VMLAUNCH/VMRESUME wrappers?
+>> 
+>> Because a lot of what happens around VMEXIT/VMENTER is very much like
+>> the userspace entry crud, as per that series from Thomas that fixes all
+>> that. And surely we don't need various broken copies of that in all the
+>> out-of-tree hypervisors.
+>> 
+>> Also, I suppose if you have this, we no longer need to excempt CR2.
+>
+> It depends on what you mean by “VMLAUNCH/VMRESUME”. If you only consider the
+> instructions themselves, as Sean did in vmx_vmenter() and vmx_vmexit(),
+> there is no problem. Even if you consider saving the general purpose
+> registers as done in __vmx_vcpu_run() - that’s relatively easy.
 
-elapsed time: 485m
+__vmx_vcpu_run() is roughly the scope, but that wont work.
 
-configs tested: 154
-configs skipped: 0
+Looking at the vmmon source:
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+Task_Switch()
 
-arm                              allmodconfig
-arm                               allnoconfig
-arm                              allyesconfig
-arm64                            allmodconfig
-arm64                             allnoconfig
-arm64                            allyesconfig
-arm                           efm32_defconfig
-arm                         at91_dt_defconfig
-arm                        shmobile_defconfig
-arm64                               defconfig
-arm                          exynos_defconfig
-arm                        multi_v5_defconfig
-arm                           sunxi_defconfig
-arm                        multi_v7_defconfig
-sparc                            allyesconfig
-h8300                       h8s-sim_defconfig
-s390                              allnoconfig
-mips                             allyesconfig
-xtensa                          iss_defconfig
-i386                              allnoconfig
-i386                             alldefconfig
-i386                             allyesconfig
-i386                              debian-10.3
-i386                                defconfig
-ia64                             alldefconfig
-ia64                             allmodconfig
-ia64                              allnoconfig
-ia64                             allyesconfig
-ia64                                defconfig
-nios2                         3c120_defconfig
-nios2                         10m50_defconfig
-c6x                        evmc6678_defconfig
-c6x                              allyesconfig
-xtensa                       common_defconfig
-openrisc                 simple_smp_defconfig
-openrisc                    or1ksim_defconfig
-nds32                               defconfig
-nds32                             allnoconfig
-csky                                defconfig
-alpha                               defconfig
-h8300                     edosk2674_defconfig
-m68k                       m5475evb_defconfig
-m68k                             allmodconfig
-h8300                    h8300h-sim_defconfig
-m68k                           sun3_defconfig
-m68k                          multi_defconfig
-arc                                 defconfig
-arc                              allyesconfig
-microblaze                      mmu_defconfig
-microblaze                    nommu_defconfig
-powerpc                           allnoconfig
-powerpc                             defconfig
-powerpc                       ppc64_defconfig
-powerpc                          rhel-kconfig
-mips                           32r2_defconfig
-mips                         64r6el_defconfig
-mips                             allmodconfig
-mips                              allnoconfig
-mips                      fuloong2e_defconfig
-mips                      malta_kvm_defconfig
-parisc                            allnoconfig
-parisc                generic-64bit_defconfig
-parisc                generic-32bit_defconfig
-parisc                           allyesconfig
-x86_64               randconfig-a001-20200409
-x86_64               randconfig-a002-20200409
-x86_64               randconfig-a003-20200409
-i386                 randconfig-a001-20200409
-i386                 randconfig-a002-20200409
-i386                 randconfig-a003-20200409
-alpha                randconfig-a001-20200409
-m68k                 randconfig-a001-20200409
-mips                 randconfig-a001-20200409
-nds32                randconfig-a001-20200409
-parisc               randconfig-a001-20200409
-riscv                randconfig-a001-20200409
-sparc64              randconfig-a001-20200409
-h8300                randconfig-a001-20200409
-nios2                randconfig-a001-20200409
-microblaze           randconfig-a001-20200409
-c6x                  randconfig-a001-20200409
-csky                 randconfig-a001-20200409
-openrisc             randconfig-a001-20200409
-s390                 randconfig-a001-20200409
-sh                   randconfig-a001-20200409
-xtensa               randconfig-a001-20200409
-x86_64               randconfig-d001-20200409
-x86_64               randconfig-d002-20200409
-x86_64               randconfig-d003-20200409
-i386                 randconfig-d001-20200409
-i386                 randconfig-d002-20200409
-i386                 randconfig-d003-20200409
-x86_64               randconfig-e001-20200409
-x86_64               randconfig-e002-20200409
-x86_64               randconfig-e003-20200409
-i386                 randconfig-e001-20200409
-i386                 randconfig-e002-20200409
-i386                 randconfig-e003-20200409
-x86_64               randconfig-f001-20200409
-x86_64               randconfig-f002-20200409
-x86_64               randconfig-f003-20200409
-i386                 randconfig-f001-20200409
-i386                 randconfig-f002-20200409
-i386                 randconfig-f003-20200409
-x86_64               randconfig-g001-20200409
-x86_64               randconfig-g002-20200409
-x86_64               randconfig-g003-20200409
-i386                 randconfig-g001-20200409
-i386                 randconfig-g002-20200409
-i386                 randconfig-g003-20200409
-x86_64               randconfig-h001-20200409
-x86_64               randconfig-h002-20200409
-x86_64               randconfig-h003-20200409
-i386                 randconfig-h001-20200409
-i386                 randconfig-h002-20200409
-i386                 randconfig-h003-20200409
-arc                  randconfig-a001-20200409
-arm                  randconfig-a001-20200409
-arm64                randconfig-a001-20200409
-ia64                 randconfig-a001-20200409
-powerpc              randconfig-a001-20200409
-sparc                randconfig-a001-20200409
-riscv                            allyesconfig
-riscv                    nommu_virt_defconfig
-riscv                             allnoconfig
-riscv                               defconfig
-riscv                          rv32_defconfig
-riscv                            allmodconfig
-s390                             alldefconfig
-s390                             allmodconfig
-s390                             allyesconfig
-s390                          debug_defconfig
-s390                                defconfig
-s390                       zfcpdump_defconfig
-sh                               allmodconfig
-sh                                allnoconfig
-sh                          rsk7269_defconfig
-sh                  sh7785lcr_32bit_defconfig
-sh                            titan_defconfig
-sparc                               defconfig
-sparc64                             defconfig
-sparc64                           allnoconfig
-sparc64                          allyesconfig
-sparc64                          allmodconfig
-um                           x86_64_defconfig
-um                             i386_defconfig
-um                                  defconfig
-x86_64                              fedora-25
-x86_64                                  kexec
-x86_64                                    lkp
-x86_64                                   rhel
-x86_64                         rhel-7.2-clear
-x86_64                               rhel-7.6
-x86_64                    rhel-7.6-kselftests
+    1) Mask all APIC LVTs which have NMI delivery mode enabled, e.g. PERF
 
----
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+    2) Disable interrupts
+
+    3) Disable PEBS
+
+    4) Disable PT
+
+    5) Load a magic IDT
+
+       According to comments these are stubs to catch any exception which
+       happens while switching over.
+
+    6) Write CR0 and CR4 directly which is "safe" as the the IDT is
+       redirected to the monitor stubs.
+
+    7) VMXON()
+
+    8) Invoke monitor on some magic page which switches CR3 and GDT and
+       clears CR4.PCIDE (at least thats what the comments claim)
+
+       The monitor code is loaded from a binary only blob and that does
+       the actual vmlaunch/vmresume ...
+
+       And as this runs with a completely different CR3 sharing that
+       code is impossible.
+
+    When returning the above is undone in reverse order and any catched
+    exceptions / interrupts are replayed via "int $NR".
+
+So it's pretty much the same mess as with vbox just different and
+binary. Oh well...
+
+The "good" news is that it's not involved in any of the context tracking
+stuff so RCU wont ever be affected when a vmware vCPU runs. It's not
+pretty, but TBH I don't care.
+
+Thanks,
+
+        tglx
+
+
