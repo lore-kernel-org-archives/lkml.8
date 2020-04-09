@@ -2,107 +2,154 @@ Return-Path: <SRS0=n+Ub=5Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 092B0C2BB86
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 22:53:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B08BC2BB85
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 22:56:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CFA532074F
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 22:53:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="YqtRTHir"
+	by mail.kernel.org (Postfix) with ESMTP id 3C27F2074F
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 22:56:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727237AbgDIWxB (ORCPT
+        id S1726871AbgDIW4I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Apr 2020 18:53:01 -0400
-Received: from mail27.static.mailgun.info ([104.130.122.27]:51121 "EHLO
-        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726933AbgDIWwm (ORCPT
+        Thu, 9 Apr 2020 18:56:08 -0400
+Received: from kernel.crashing.org ([76.164.61.194]:42740 "EHLO
+        kernel.crashing.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726725AbgDIW4I (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Apr 2020 18:52:42 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1586472762; h=Message-Id: Date: Subject: Cc: To: From:
- Sender; bh=4VHVn9nVFsUQOnjsMQdKD/QU88hkBjHogDQBbcbmW8I=; b=YqtRTHirIkJqSuHlHWn2Bc+2J+5a695cTEhODTOIlOU2N2OlzPD73NH016ZjKVLBEF+60gEs
- YS1C5LaGgf8YVgGYz9QUWAy7Nw03fAH301FwZCkhVCLKnBY4vPQgBEGKdd+ft8u5yJefTFPJ
- svmJheshrU97T/yNIueVxKLzgG4=
-X-Mailgun-Sending-Ip: 104.130.122.27
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e8fa734.7fc2fd9e6810-smtp-out-n04;
- Thu, 09 Apr 2020 22:52:36 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id AA462C44788; Thu,  9 Apr 2020 22:52:36 +0000 (UTC)
-Received: from wcheng-linux.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: wcheng)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 9F809C433D2;
-        Thu,  9 Apr 2020 22:52:35 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 9F809C433D2
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=wcheng@codeaurora.org
-From:   Wesley Cheng <wcheng@codeaurora.org>
-To:     agross@kernel.org, bjorn.andersson@linaro.org, kishon@ti.com,
-        robh+dt@kernel.org, mark.rutland@arm.com, p.zabel@pengutronix.de,
-        mgautam@codeaurora.org, vkoul@kernel.org
-Cc:     linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, Wesley Cheng <wcheng@codeaurora.org>
-Subject: [PATCH v6 0/5] Add SS/HS-USB changes for Qualcomm SM8150 chipset
-Date:   Thu,  9 Apr 2020 15:52:24 -0700
-Message-Id: <1586472749-18599-1-git-send-email-wcheng@codeaurora.org>
-X-Mailer: git-send-email 1.9.1
+        Thu, 9 Apr 2020 18:56:08 -0400
+Received: from localhost (gate.crashing.org [63.228.1.57])
+        (authenticated bits=0)
+        by kernel.crashing.org (8.14.7/8.14.7) with ESMTP id 039MtGxC010105
+        (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
+        Thu, 9 Apr 2020 17:55:19 -0500
+Message-ID: <8c7a48e1b06771edf0aa46f5b4cee300aa1eeb06.camel@kernel.crashing.org>
+Subject: Re: [PATCH v4] usb: gadget: aspeed: improve vhub port irq handling
+From:   Benjamin Herrenschmidt <benh@kernel.crashing.org>
+To:     rentao.bupt@gmail.com, Felipe Balbi <balbi@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Joel Stanley <joel@jms.id.au>,
+        Andrew Jeffery <andrew@aj.id.au>,
+        Chunfeng Yun <chunfeng.yun@mediatek.com>,
+        Stephen Boyd <swboyd@chromium.org>, linux-usb@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+        openbmc@lists.ozlabs.org, taoren@fb.com
+Date:   Fri, 10 Apr 2020 08:55:15 +1000
+In-Reply-To: <20200409204030.21330-1-rentao.bupt@gmail.com>
+References: <20200409204030.21330-1-rentao.bupt@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This series adds support for the Synopsis 7nm HSPHY USB driver being
-used in QCOM chipsets.  The HSPHY register map differs compared to 
-other PHY revisions.  In addition, modifications and updates are done
-to the QMP driver to add new registers/offsets, and to update the
-initialization sequence for enabling the SSUSB path on SM8150.
+On Thu, 2020-04-09 at 13:40 -0700, rentao.bupt@gmail.com wrote:
+> From: Tao Ren <rentao.bupt@gmail.com>
+> 
+> This patch evaluates vhub ports' irq mask before going through per-
+> port
+> irq handling one by one, which helps to speed up irq handling in case
+> there is no port interrupt.
+> 
+> Signed-off-by: Tao Ren <rentao.bupt@gmail.com>
 
-Changes in v6:
- - Addressed coding style errors in phy-qcom-snps-femto-v2.c
+Acked-by: Benjamin Herrenschmidt <benh@kernel.crashing.org>
 
-Changes in v5:
- - Reorganize IF check for when to use the proper PWRDOWN CTRL offset
- - Rename UFS specific offset definitions in the QMP PHY driver to clearly
-   denote they are UFS specific
- - Rename the phy-qcom-snps-7nm driver to phy-qcom-snps-femto-v2
+> ---
+>  Changes in v4:
+>    - use simple for() loop as it runs faster than for_each_set_bit()
+>      loop on aspeed BMCs.
+>  Changes in v3:
+>    - assign istat to (unsigned long) bitmap before calling
+>      "for_each_set_bit_from".
+>  Changes in v2:
+>    - use "for_each_set_bit" to speed up port irq handling.
+> 
+>  drivers/usb/gadget/udc/aspeed-vhub/core.c | 12 +++++++-----
+>  drivers/usb/gadget/udc/aspeed-vhub/vhub.h | 11 ++++++-----
+>  2 files changed, 13 insertions(+), 10 deletions(-)
+> 
+> diff --git a/drivers/usb/gadget/udc/aspeed-vhub/core.c
+> b/drivers/usb/gadget/udc/aspeed-vhub/core.c
+> index f8d35dd60c34..fb36bad2c0b7 100644
+> --- a/drivers/usb/gadget/udc/aspeed-vhub/core.c
+> +++ b/drivers/usb/gadget/udc/aspeed-vhub/core.c
+> @@ -134,11 +134,11 @@ static irqreturn_t ast_vhub_irq(int irq, void
+> *data)
+>  	}
+>  
+>  	/* Handle device interrupts */
+> -	for (i = 0; i < vhub->max_ports; i++) {
+> -		u32 dev_mask = VHUB_IRQ_DEVICE1 << i;
+> -
+> -		if (istat & dev_mask)
+> -			ast_vhub_dev_irq(&vhub->ports[i].dev);
+> +	if (istat & vhub->port_irq_mask) {
+> +		for (i = 0; i < vhub->max_ports; i++) {
+> +			if (istat & VHUB_DEV_IRQ(i))
+> +				ast_vhub_dev_irq(&vhub->ports[i].dev);
+> +		}
+>  	}
+>  
+>  	/* Handle top-level vHub EP0 interrupts */
+> @@ -332,6 +332,8 @@ static int ast_vhub_probe(struct platform_device
+> *pdev)
+>  
+>  	spin_lock_init(&vhub->lock);
+>  	vhub->pdev = pdev;
+> +	vhub->port_irq_mask = GENMASK(VHUB_IRQ_DEV1_BIT + vhub-
+> >max_ports - 1,
+> +				      VHUB_IRQ_DEV1_BIT);
+>  
+>  	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+>  	vhub->regs = devm_ioremap_resource(&pdev->dev, res);
+> diff --git a/drivers/usb/gadget/udc/aspeed-vhub/vhub.h
+> b/drivers/usb/gadget/udc/aspeed-vhub/vhub.h
+> index fac79ef6d669..b80e3ddff797 100644
+> --- a/drivers/usb/gadget/udc/aspeed-vhub/vhub.h
+> +++ b/drivers/usb/gadget/udc/aspeed-vhub/vhub.h
+> @@ -51,14 +51,11 @@
+>  #define VHUB_CTRL_UPSTREAM_CONNECT		(1 << 0)
+>  
+>  /* IER & ISR */
+> +#define VHUB_IRQ_DEV1_BIT			9
+>  #define VHUB_IRQ_USB_CMD_DEADLOCK		(1 << 18)
+>  #define VHUB_IRQ_EP_POOL_NAK			(1 << 17)
+>  #define VHUB_IRQ_EP_POOL_ACK_STALL		(1 << 16)
+> -#define VHUB_IRQ_DEVICE5			(1 << 13)
+> -#define VHUB_IRQ_DEVICE4			(1 << 12)
+> -#define VHUB_IRQ_DEVICE3			(1 << 11)
+> -#define VHUB_IRQ_DEVICE2			(1 << 10)
+> -#define VHUB_IRQ_DEVICE1			(1 << 9)
+> +#define VHUB_IRQ_DEVICE1			(1 <<
+> (VHUB_IRQ_DEV1_BIT))
+>  #define VHUB_IRQ_BUS_RESUME			(1 << 8)
+>  #define VHUB_IRQ_BUS_SUSPEND 			(1 << 7)
+>  #define VHUB_IRQ_BUS_RESET 			(1 << 6)
+> @@ -70,6 +67,9 @@
+>  #define VHUB_IRQ_HUB_EP0_SETUP			(1 << 0)
+>  #define VHUB_IRQ_ACK_ALL			0x1ff
+>  
+> +/* Downstream device IRQ mask. */
+> +#define VHUB_DEV_IRQ(n)				(VHUB_IRQ_DEVIC
+> E1 << (n))
+> +
+>  /* SW reset reg */
+>  #define VHUB_SW_RESET_EP_POOL			(1 << 9)
+>  #define VHUB_SW_RESET_DMA_CONTROLLER		(1 << 8)
+> @@ -402,6 +402,7 @@ struct ast_vhub {
+>  	/* Per-port info */
+>  	struct ast_vhub_port		*ports;
+>  	u32				max_ports;
+> +	u32				port_irq_mask;
+>  
+>  	/* Generic EP data structures */
+>  	struct ast_vhub_ep		*epns;
 
-Changes in v4:
- - Fix POWERDOWN offset for QMP PHY exit routine, and check for
-   has_phy_dp_com_ctrl instead of !has_phy_com_ctrl
-
-Changes in v3:
- - Use devm_reset_control_get_exclusive instead of referencing index for
-   reset handle
-
-Changes in v2:
- - Fixed YAML errors caught by dt_binding_check
-
-Jack Pham (1):
-  phy: qcom-qmp: Add SM8150 QMP USB3 PHY support
-
-Wesley Cheng (4):
-  dt-bindings: phy: Add binding for qcom,usb-snps-femto-v2
-  phy: qcom-snps: Add SNPS USB PHY driver for QCOM based SOCs
-  phy: qcom-qmp: Use proper PWRDOWN offset for sm8150 USB
-  phy: qcom-qmp: Rename UFS PCS QMP v4 registers
-
- .../bindings/phy/qcom,usb-snps-femto-v2.yaml       |  77 ++++++
- drivers/phy/qualcomm/Kconfig                       |  10 +
- drivers/phy/qualcomm/Makefile                      |   1 +
- drivers/phy/qualcomm/phy-qcom-qmp.c                | 193 +++++++++++++-
- drivers/phy/qualcomm/phy-qcom-qmp.h                | 238 +++++++++++++++--
- drivers/phy/qualcomm/phy-qcom-snps-femto-v2.c      | 296 +++++++++++++++++++++
- 6 files changed, 779 insertions(+), 36 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/phy/qcom,usb-snps-femto-v2.yaml
- create mode 100644 drivers/phy/qualcomm/phy-qcom-snps-femto-v2.c
-
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
