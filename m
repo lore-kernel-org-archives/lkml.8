@@ -2,182 +2,272 @@ Return-Path: <SRS0=n+Ub=5Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BCB67C2BA1B
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 05:39:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D1BDC2D0EA
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 05:39:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 95AFB2072F
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 05:39:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 241FD20753
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 05:39:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="r2lQzTZc"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HkG56GMf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725997AbgDIFjZ (ORCPT
+        id S1726595AbgDIFjb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Apr 2020 01:39:25 -0400
-Received: from mail-mw2nam12on2047.outbound.protection.outlook.com ([40.107.244.47]:44353
-        "EHLO NAM12-MW2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725785AbgDIFjZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Apr 2020 01:39:25 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=av8KWoeZp2Cif+QKdiLwtWUb7rHncJNlesgTcwEQsRCDFlULO1BICs4I+Nczwe7viAU88tFaycSOpEezXYG8QS1T44+mkPGJ7+unDFn21G9DwfrJXZ0ttRrWSrYBXSeKUwIyJd1XfA2SS/fkO+qkYxMkBSdDYFr9WAkN7+2+vCJOxTz7rknqi3nDv7kgTAZy20s7CGJ5XiNGQ86sjwj9dVORd6w9kHRZbb+33QaYmONWF2kIGgdGwnKrj1BfhDR4NwYZ5lK5gDR7rwAHgKRKq4xv0dQJq7kGztF8sSZgyRLO9MuptD04gPqoMfKvc8w8UPTxScJHakJIxGgsBO3VUg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=A9xaEK/87C76ykRRp7etPBrNdJP/aGkZcw1gxsXliCE=;
- b=RqZ8hIhCfRO6QyZoYyJgnOLWgnK3F63kOnfMsDpY79//EmkuiL1eV590/eqUFDjA/CCioJlkTwucneU8I9iwTEBgqXKnYvTcAJVFDSyG8brtyeTme2owV5BNGVczDur1/SmvK14L/82EIlY6GHFtqmnk5mn9KkH6UAFQVR1CMHjMd+1rJ3C6FLLvc19O+AY0Ig6sOB8/durvq4OBPipu9tHYmezb41n1mCps4A5ywLOYrg6Deofbg31LQREbByqlzAa2mVoxqZi1gFguMgvvXAmpjolj23DmEJIR19mpvk5984jPR+yElnvl6IHt5QYdqosWa3xMlkhpOFb6I4ZfdA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=xilinx.com; dmarc=pass action=none header.from=xilinx.com;
- dkim=pass header.d=xilinx.com; arc=none
+        Thu, 9 Apr 2020 01:39:31 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:43024 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726052AbgDIFja (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Apr 2020 01:39:30 -0400
+Received: by mail-io1-f66.google.com with SMTP id u2so2630760iop.10;
+        Wed, 08 Apr 2020 22:39:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=A9xaEK/87C76ykRRp7etPBrNdJP/aGkZcw1gxsXliCE=;
- b=r2lQzTZchyuX9KM8tusa5lJUbq73RDajQd0A5HWhWoUnkgS8ZZFkHVDGpqpxi40ckGJ6w5fzh0DzfErKffAOfDmTEB35DKYTPukA5S3z/oYduxKl+xgpYt2ja9tLSyxRqscsPyZEiXq/I03LCNzDx5hm9FMDwlhenVLki9YQeH4=
-Received: from SN4PR0201MB3486.namprd02.prod.outlook.com
- (2603:10b6:803:51::12) by SN4PR0201MB3549.namprd02.prod.outlook.com
- (2603:10b6:803:44::23) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2878.21; Thu, 9 Apr
- 2020 05:39:18 +0000
-Received: from SN4PR0201MB3486.namprd02.prod.outlook.com
- ([fe80::61b6:6bad:266b:d0da]) by SN4PR0201MB3486.namprd02.prod.outlook.com
- ([fe80::61b6:6bad:266b:d0da%5]) with mapi id 15.20.2900.015; Thu, 9 Apr 2020
- 05:39:18 +0000
-From:   Raviteja Narayanam <rna@xilinx.com>
-To:     Maarten Brock <m.brock@vanmierlo.com>
-CC:     "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "jslaby@suse.com" <jslaby@suse.com>,
-        Michal Simek <michals@xilinx.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        git <git@xilinx.com>,
-        "linux-serial-owner@vger.kernel.org" 
-        <linux-serial-owner@vger.kernel.org>
-Subject: RE: [PATCH] serial: uartps: Wait for tx_empty in console setup
-Thread-Topic: [PATCH] serial: uartps: Wait for tx_empty in console setup
-Thread-Index: AQHWDP0l3OgsBXnKvUufxZn7tcNQPqhvYOQAgADmX/A=
-Date:   Thu, 9 Apr 2020 05:39:18 +0000
-Message-ID: <SN4PR0201MB3486FECBFEA2271F2C6D0EA9CAC10@SN4PR0201MB3486.namprd02.prod.outlook.com>
-References: <1586278391-9061-1-git-send-email-raviteja.narayanam@xilinx.com>
- <396bcf8a0068fc05e70cc439a4843b61@vanmierlo.com>
-In-Reply-To: <396bcf8a0068fc05e70cc439a4843b61@vanmierlo.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is ) smtp.mailfrom=rna@xilinx.com; 
-x-originating-ip: [106.212.235.169]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 4a76024f-5864-400c-8c38-08d7dc485929
-x-ms-traffictypediagnostic: SN4PR0201MB3549:|SN4PR0201MB3549:
-x-ld-processed: 657af505-d5df-48d0-8300-c31994686c5c,ExtAddr
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <SN4PR0201MB3549AA4F433B32E768611F45CAC10@SN4PR0201MB3549.namprd02.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:7691;
-x-forefront-prvs: 0368E78B5B
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN4PR0201MB3486.namprd02.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10009020)(4636009)(376002)(39860400002)(136003)(366004)(346002)(396003)(478600001)(26005)(186003)(81156014)(71200400001)(8936002)(6506007)(52536014)(9686003)(53546011)(55016002)(64756008)(66556008)(6916009)(66476007)(316002)(66446008)(5660300002)(54906003)(7696005)(81166007)(8676002)(76116006)(86362001)(2906002)(4326008)(33656002)(66946007);DIR:OUT;SFP:1101;
-received-spf: None (protection.outlook.com: xilinx.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: bOqGNC9Eh53IVVJ6PBqOH+F813uXl1hcnSrY47De9RFhMrSLYlpDYIYrW66lQ3VVyNfgZcuCoKNZS+J/VkvHmUDnpBx+dx24LoBTEtu8iuzRbTXI3IACU0Tw6ReSfuCsrQDCDwy2IRg1u5G7IJdwN/w4Sin2SlXeaMHsxs0ghClmSnssRyJHsFPHwtgQc4goIdGmY3qEpZ/x0o+tDtb6JXFauNQw+Crc3LlUYHkF5LCYHxequYFDcuiCwQihuxQyQTmNLBtezOsOJfqmJ/Ff3Mm2QDtQUmHfvOAc3g1QoP8JnFziRA6I/E8qPbCbRZtuv1e3G+3JipmMs8owqpU/Ckw0kTIwkb1JMD5Jga6pM85JIM6bqd2ZP5pbmb4/FiYELwgWod5cGzXKTSq1R0ghwaCJhnTpy3Cc76hKJzaEyvcD+b843xd+FOsgLg2INg+Z
-x-ms-exchange-antispam-messagedata: ZD6Tvup16IKzhLXrNoTKkjMXCI7g2DDO0w8annylY+7mN1DNmV/f8/Ep2PDuwTQECoH9QnIg1Bc7jBv7be62bjIFwpyxrccMVGLspVMO0Zg6z4Dssf/h/Lc/lNYmb/mgk1V1j7MKYruaH6Ym6LHkBg==
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ljGAHp2OjKbTOFHe8vnoaVTTxVxXbioqrcoMST1/WOo=;
+        b=HkG56GMfGJ4oOadqcLZ8K9Ajjq83Iyh59fq801QTD4zro/RN9oEeQEvooFasxrfuGz
+         BzKmFHaUGhXK5R2MqHGJXcMU0QKgkBTY9bk+Dr4xm1NO0WnnQDZcuNwAPvu7wGpOCMmk
+         t2K7/u5Y6+3RA8y1RUgDhYz8BgvFB3eBZtM1sNjmiGhfoL7OGG6x33RmyDZqQkx4dXek
+         IIwzbjuPUQU9harCVey752sogp8rmD+CdeW8CIUUtNyxJh4PdV7nhEDY21FTP4E5vBpX
+         mkrasJc8tvc6IXNJGIeutXFt6PI1hokvM0Kb4dfs4HpUBUSwID2C+0VsV/m895xuZkyj
+         Ub4w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ljGAHp2OjKbTOFHe8vnoaVTTxVxXbioqrcoMST1/WOo=;
+        b=UjHuUOQPsMnVOw9k7TCYcsoQPfhJFSviIjZO9p0GYqkwYZKP3vXURcSvzbl6cYS0aC
+         hawMtXw5Uh/yqNMZaucNU+J/QcyKhHOhBO667EWjL/iMRuRUx/6p3yX+atVYoGn2MUeN
+         zVhie+NVB9NxIbGcR7OwuIYRia2LqYPdBAxnORoSW9V4PK9FE9ZkDaNgz6H7SHm6GUIY
+         SbuG9TUtK4AxBF5DuX3Gaueovq8hCNhqag/lrukKXz9a/c/hrsXvinUL1+GCZHkR4a8C
+         4/UgcMdnXUJwzmkqy7KM5RdN+c4+F/ADX/HyLS8mSBTixCX7jqDGGSyXCDC+3akvDKbO
+         51XA==
+X-Gm-Message-State: AGi0PuahwDRDpvxeukGixeVhGF4lNay2Ykvb+DZYWgizQ1xYQGAy+QUY
+        6gSqNjSJHtG4X4x4tJ/C9pxzhZKfsQeUnbiIz2o=
+X-Google-Smtp-Source: APiQypIL7SeYio2ZFuNp5g6MDFQufig71I9V1q4nfq+9nWJ+P9gSXGZQgEVwLHyPBwzlz+ajo1kFs5NqvWoLGRKwBuA=
+X-Received: by 2002:a05:6638:186:: with SMTP id a6mr1070872jaq.36.1586410769722;
+ Wed, 08 Apr 2020 22:39:29 -0700 (PDT)
 MIME-Version: 1.0
-X-OriginatorOrg: xilinx.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 4a76024f-5864-400c-8c38-08d7dc485929
-X-MS-Exchange-CrossTenant-originalarrivaltime: 09 Apr 2020 05:39:18.5886
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 657af505-d5df-48d0-8300-c31994686c5c
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 1qEgUUZoSiOCSIt1bGY3A8RQrBUZ1bw93FRzpOSoTfebEZv6XRa+NFYUl0gATTqS
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN4PR0201MB3549
+References: <20200408152151.5780-1-christian.brauner@ubuntu.com> <20200408152151.5780-3-christian.brauner@ubuntu.com>
+In-Reply-To: <20200408152151.5780-3-christian.brauner@ubuntu.com>
+From:   David Rheinsberg <david.rheinsberg@gmail.com>
+Date:   Thu, 9 Apr 2020 07:39:18 +0200
+Message-ID: <CADyDSO54-GuSUJrciSD2jbSShCYDpXCp53cr+D7u0ZQT141uTA@mail.gmail.com>
+Subject: Re: [PATCH 2/8] loopfs: implement loopfs
+To:     Christian Brauner <christian.brauner@ubuntu.com>
+Cc:     Jens Axboe <axboe@kernel.dk>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        lkml <linux-kernel@vger.kernel.org>, linux-block@vger.kernel.org,
+        linux-api@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
+        Serge Hallyn <serge@hallyn.com>,
+        "Rafael J. Wysocki" <rafael@kernel.org>, Tejun Heo <tj@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Saravana Kannan <saravanak@google.com>,
+        Jan Kara <jack@suse.cz>, David Howells <dhowells@redhat.com>,
+        Seth Forshee <seth.forshee@canonical.com>,
+        Tom Gundersen <teg@jklm.no>,
+        Christian Kellner <ckellner@redhat.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        =?UTF-8?Q?St=C3=A9phane_Graber?= <stgraber@ubuntu.com>,
+        linux-doc@vger.kernel.org, netdev@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Maarten,
+Hi
 
-Thanks for the review.
+On Wed, Apr 8, 2020 at 5:27 PM Christian Brauner
+<christian.brauner@ubuntu.com> wrote:
+>
+> This implements loopfs, a loop device filesystem. It takes inspiration
+> from the binderfs filesystem I implemented about two years ago and with
+> which we had overally good experiences so far. Parts of it are also
+> based on [3] but it's mostly a new, imho cleaner approach.
+>
+> One of the use-cases for loopfs is to allow to dynamically allocate loop
+> devices in sandboxed workloads without exposing /dev or
+> /dev/loop-control to the workload in question and without having to
+> implement a complex and also racy protocol to send around file
+> descriptors for loop devices. With loopfs each mount is a new instance,
+> i.e. loop devices created in one loopfs instance are independent of any
+> loop devices created in another loopfs instance. This allows
+> sufficiently privileged tools to have their own private stash of loop
+> device instances.
+>
+> In addition, the loopfs filesystem can be mounted by user namespace root
+> and is thus suitable for use in containers. Combined with syscall
+> interception this makes it possible to securely delegate mounting of
+> images on loop devices, i.e. when a users calls mount -o loop <image>
+> <mountpoint> it will be possible to completely setup the loop device
+> (enabled in later patches) and the mount syscall to actually perform the
+> mount will be handled through syscall interception and be performed by a
+> sufficiently privileged process. Syscall interception is already
+> supported through a new seccomp feature we implemented in [1] and
+> extended in [2] and is actively used in production workloads. The
+> additional loopfs work will be used there and in various other workloads
+> too.
+>
+> The number of loop devices available to a loopfs instance can be limited
+> by setting the "max" mount option to a positive integer. This e.g.
+> allows sufficiently privileged processes to dynamically enforce a limit
+> on the number of devices. This limit is dynamic in contrast to the
+> max_loop module option in that a sufficiently privileged process can
+> update it with a simple remount operation.
+>
+> The loopfs filesystem is placed under a new config option and special
+> care has been taken to not introduce any new code when users do not
+> select this config option.
+>
+> Note that in __loop_clr_fd() we now need not just check whether bdev is
+> valid but also whether bdev->bd_disk is valid. This wasn't necessary
+> before because in order to call LOOP_CLR_FD the loop device would need
+> to be open and thus bdev->bd_disk was guaranteed to be allocated. For
+> loopfs loop devices we allow callers to simply unlink them just as we do
+> for binderfs binder devices and we do also need to account for the case
+> where a loopfs superblock is shutdown while backing files might still be
+> associated with some loop devices. In such cases no bd_disk device will
+> be attached to bdev. This is not in itself noteworthy it's more about
+> documenting the "why" of the added bdev->bd_disk check for posterity.
+>
+> [1]: 6a21cc50f0c7 ("seccomp: add a return code to trap to userspace")
+> [2]: fb3c5386b382 ("seccomp: add SECCOMP_USER_NOTIF_FLAG_CONTINUE")
+> [3]: https://lore.kernel.org/lkml/1401227936-15698-1-git-send-email-seth.forshee@canonical.com
+> Cc: Jens Axboe <axboe@kernel.dk>
+> Cc: Seth Forshee <seth.forshee@canonical.com>
+> Cc: Tom Gundersen <teg@jklm.no>
+> Cc: Tejun Heo <tj@kernel.org>
+> Cc: Christian Kellner <ckellner@redhat.com>
+> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Cc: "David S. Miller" <davem@davemloft.net>
+> Cc: David Rheinsberg <david.rheinsberg@gmail.com>
+> Cc: Dmitry Vyukov <dvyukov@google.com>
+> Cc: "Rafael J. Wysocki" <rafael@kernel.org>
+> Signed-off-by: Christian Brauner <christian.brauner@ubuntu.com>
+> ---
+>  MAINTAINERS                   |   5 +
+>  drivers/block/Kconfig         |   4 +
+>  drivers/block/Makefile        |   1 +
+>  drivers/block/loop.c          | 151 +++++++++---
+>  drivers/block/loop.h          |   8 +-
+>  drivers/block/loopfs/Makefile |   3 +
+>  drivers/block/loopfs/loopfs.c | 429 ++++++++++++++++++++++++++++++++++
+>  drivers/block/loopfs/loopfs.h |  35 +++
+>  include/uapi/linux/magic.h    |   1 +
+>  9 files changed, 600 insertions(+), 37 deletions(-)
+>  create mode 100644 drivers/block/loopfs/Makefile
+>  create mode 100644 drivers/block/loopfs/loopfs.c
+>  create mode 100644 drivers/block/loopfs/loopfs.h
+>
+[...]
+> diff --git a/drivers/block/loopfs/loopfs.c b/drivers/block/loopfs/loopfs.c
+> new file mode 100644
+> index 000000000000..ac46aa337008
+> --- /dev/null
+> +++ b/drivers/block/loopfs/loopfs.c
+> @@ -0,0 +1,429 @@
+[...]
+> +/**
+> + * loopfs_loop_device_create - allocate inode from super block of a loopfs mount
+> + * @lo:                loop device for which we are creating a new device entry
+> + * @ref_inode: inode from wich the super block will be taken
+> + * @device_nr:  device number of the associated disk device
+> + *
+> + * This function creates a new device node for @lo.
+> + * Minor numbers are limited and tracked globally. The
+> + * function will stash a struct loop_device for the specific loop
+> + * device in i_private of the inode.
+> + * It will go on to allocate a new inode from the super block of the
+> + * filesystem mount, stash a struct loop_device in its i_private field
+> + * and attach a dentry to that inode.
+> + *
+> + * Return: 0 on success, negative errno on failure
+> + */
+> +int loopfs_loop_device_create(struct loop_device *lo, struct inode *ref_inode,
+> +                             dev_t device_nr)
+> +{
+> +       char name[DISK_NAME_LEN];
+> +       struct super_block *sb;
+> +       struct loopfs_info *info;
+> +       struct dentry *root, *dentry;
+> +       struct inode *inode;
+> +
+> +       sb = loopfs_i_sb(ref_inode);
+> +       if (!sb)
+> +               return 0;
+> +
+> +       if (MAJOR(device_nr) != LOOP_MAJOR)
+> +               return -EINVAL;
+> +
+> +       info = LOOPFS_SB(sb);
+> +       if ((info->device_count + 1) > info->mount_opts.max)
+> +               return -ENOSPC;
 
-> -----Original Message-----
-> From: linux-serial-owner@vger.kernel.org <linux-serial-
-> owner@vger.kernel.org> On Behalf Of Maarten Brock
-> Sent: Wednesday, April 8, 2020 9:21 PM
-> To: Raviteja Narayanam <rna@xilinx.com>
-> Cc: linux-serial@vger.kernel.org; gregkh@linuxfoundation.org;
-> jslaby@suse.com; Michal Simek <michals@xilinx.com>; linux-arm-
-> kernel@lists.infradead.org; linux-kernel@vger.kernel.org; git <git@xilinx=
-.com>;
-> linux-serial-owner@vger.kernel.org
-> Subject: Re: [PATCH] serial: uartps: Wait for tx_empty in console setup
->=20
-> On 2020-04-07 18:53, Raviteja Narayanam wrote:
-> > On some platforms, the log is corrupted while console is being
-> > registered. It is observed that when set_termios is called, there are
-> > still some bytes in the FIFO to be transmitted.
-> >
-> > So, wait for tx_empty inside cdns_uart_console_setup before calling
-> > set_termios.
-> >
-> > Signed-off-by: Raviteja Narayanam <raviteja.narayanam@xilinx.com>
-> > ---
-> >  drivers/tty/serial/xilinx_uartps.c | 10 ++++++++++
-> >  1 file changed, 10 insertions(+)
-> >
-> > diff --git a/drivers/tty/serial/xilinx_uartps.c
-> > b/drivers/tty/serial/xilinx_uartps.c
-> > index 6b26f76..23468ff 100644
-> > --- a/drivers/tty/serial/xilinx_uartps.c
-> > +++ b/drivers/tty/serial/xilinx_uartps.c
-> > @@ -1260,6 +1260,8 @@ static int cdns_uart_console_setup(struct
-> > console *co, char *options)
-> >  	int bits =3D 8;
-> >  	int parity =3D 'n';
-> >  	int flow =3D 'n';
-> > +	unsigned long time_out =3D jiffies + usecs_to_jiffies(TX_TIMEOUT);
-> > +	int status;
-> >
-> >  	if (!port->membase) {
-> >  		pr_debug("console on " CDNS_UART_TTY_NAME "%i not
-> present\n", @@
-> > -1270,6 +1272,14 @@ static int cdns_uart_console_setup(struct console
-> > *co, char *options)
-> >  	if (options)
-> >  		uart_parse_options(options, &baud, &parity, &bits, &flow);
-> >
-> > +	/* Wait for tx_empty before setting up the console */
-> > +	while (time_before(jiffies, time_out)) {
-> > +		status =3D cdns_uart_tx_empty(port);
-> > +		if (status =3D=3D TIOCSER_TEMT)
-> > +			break;
-> > +		cpu_relax();
-> > +	}
-> > +
-> >  	return uart_set_options(port, co, baud, parity, bits, flow);  }
-> > #endif /* CONFIG_SERIAL_XILINX_PS_UART_CONSOLE */
->=20
-> You could do without the status variable. You could even combine the whil=
-e
-> and if conditions.
->=20
-> And while you're at it, you might as well also rewrite the lines
-> 1236-1238 to also use cdns_uart_tx_empty() for clarity.
+Can you elaborate what the use-case for this limit is?
 
-Will send v2, addressing these.
->=20
-> Maarten
+With loopfs in place, any process can create its own user_ns, mount
+their private loopfs and create as many loop-devices as they want.
+Hence, this limit does not serve as an effective global
+resource-control. Secondly, anyone with access to `loop-control` can
+now create loop instances until this limit is hit, thus causing anyone
+else to be unable to create more. This effectively prevents you from
+sharing a loopfs between non-trusting parties. I am unsure where that
+limit would actually be used?
 
-Regards,
-Raviteja N
+Thanks
+David
+
+> +
+> +       if (snprintf(name, sizeof(name), "loop%d", lo->lo_number) >= sizeof(name))
+> +               return -EINVAL;
+> +
+> +       inode = new_inode(sb);
+> +       if (!inode)
+> +               return -ENOMEM;
+> +
+> +       /*
+> +        * The i_fop field will be set to the correct fops by the device layer
+> +        * when the loop device in this loopfs instance is opened.
+> +        */
+> +       inode->i_ino = MINOR(device_nr) + INODE_OFFSET;
+> +       inode->i_mtime = inode->i_atime = inode->i_ctime = current_time(inode);
+> +       inode->i_uid = info->root_uid;
+> +       inode->i_gid = info->root_gid;
+> +       init_special_inode(inode, S_IFBLK | 0600, device_nr);
+> +
+> +       root = sb->s_root;
+> +       inode_lock(d_inode(root));
+> +       /* look it up */
+> +       dentry = lookup_one_len(name, root, strlen(name));
+> +       if (IS_ERR(dentry)) {
+> +               inode_unlock(d_inode(root));
+> +               iput(inode);
+> +               return PTR_ERR(dentry);
+> +       }
+> +
+> +       if (d_really_is_positive(dentry)) {
+> +               /* already exists */
+> +               dput(dentry);
+> +               inode_unlock(d_inode(root));
+> +               iput(inode);
+> +               return -EEXIST;
+> +       }
+> +
+> +       d_instantiate(dentry, inode);
+> +       fsnotify_create(d_inode(root), dentry);
+> +       inode_unlock(d_inode(root));
+> +
+> +       inode->i_private = lo;
+> +       lo->lo_loopfs_i = inode;
+> +       info->device_count++;
+> +
+> +       return 0;
+> +}
+[...]
