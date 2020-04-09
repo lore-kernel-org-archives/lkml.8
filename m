@@ -2,72 +2,115 @@ Return-Path: <SRS0=n+Ub=5Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 503BAC2BA19
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 18:10:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 639F3C2BB85
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 18:11:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 279B6208E4
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 18:10:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3D7C820771
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 18:11:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586455835;
-	bh=BR5zpLn3iIqFuK0MM+6K+hdgjXFllmqjXxS9v8rM6mQ=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=QB3cQsO6a6kpxW1hgv8N6kVPFMQdGSUqVRjdEYfQ1q5cmTxwZOCgN+6CqM9hm66yN
-	 AXupgvo/RaStyktPIKFIlz4E5s2fyqI59wXMjObdrh5uWSPiQFXZ3Yi/babEUWXXiv
-	 jT+93VZFauc2LftthpHuGZPNzjYNqf5yGqQVeJbY=
+	s=default; t=1586455876;
+	bh=lI66sUkYORb2/YlfU+5U3heNT5NZ831su6mzgZODTT8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=KGmavR20rhJ4tZqjyxH76JJOdgO/4tWrYWpHsvvNiBVUlW+ML9wCJNfbcgbPZjKYF
+	 EFZTiFHDE5cr8B1Z3x4fOghFP1xcu27jpM8gHpKOsjSk4XAj/H8NGmoDJ4q84Tn6dd
+	 g2xSHkSBpfydcSZ2+z+t4lvW+nUx6kOMSJ+3lppU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726740AbgDISK3 (ORCPT
+        id S1726729AbgDISLO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Apr 2020 14:10:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55062 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726678AbgDISK2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Apr 2020 14:10:28 -0400
-Subject: Re: [GIT PULL] Please pull powerpc/linux.git powerpc-5.7-2 tag
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586455828;
-        bh=BR5zpLn3iIqFuK0MM+6K+hdgjXFllmqjXxS9v8rM6mQ=;
-        h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=KgEPBLB4ndUQFXmXEYai5+hxuskI2doF8U8Xs4KDVN3rcrNhGGZJdWfcRW7+1pIRS
-         DHm9Kf+y0x2mJr0AApceQiaEyNAhn7gDtZbt1wQHrBq3crwJLvBUrNUY+sw2nNC1Eu
-         cVyyJinI8H2THmmWMcHDAoelPbEgmKvgbqJZRSOo=
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <87pncgkjdf.fsf@mpe.ellerman.id.au>
-References: <87pncgkjdf.fsf@mpe.ellerman.id.au>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <87pncgkjdf.fsf@mpe.ellerman.id.au>
-X-PR-Tracked-Remote: https://git.kernel.org/pub/scm/linux/kernel/git/powerpc/linux.git
- tags/powerpc-5.7-2
-X-PR-Tracked-Commit-Id: 6ba4a2d3591039aea1cb45c7c42262d26351a2fa
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: e4da01d8333e500e15a674d75885a9dfcfd31e77
-Message-Id: <158645582834.26793.6840925047262398976.pr-tracker-bot@kernel.org>
-Date:   Thu, 09 Apr 2020 18:10:28 +0000
-To:     Michael Ellerman <mpe@ellerman.id.au>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>, aik@ozlabs.ru,
-        anju@linux.vnet.ibm.com, dan.carpenter@oracle.com,
-        elfring@users.sourceforge.net, ganeshgr@linux.ibm.com,
-        geert+renesas@glider.be, geoff@infradead.org,
-        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        msuchanek@suse.de, npiggin@gmail.com
+        Thu, 9 Apr 2020 14:11:14 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:40473 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725987AbgDISLO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Apr 2020 14:11:14 -0400
+Received: by mail-pl1-f194.google.com with SMTP id h11so4099495plk.7;
+        Thu, 09 Apr 2020 11:11:13 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=+u9wu3D+1SAT+AyByv6VWCl1y8XJyfZjKsIoztZ2sLk=;
+        b=uBbHcBc4eqQ3MoO6nRN5kfqc1RT/wk6gAngm1is9dhITwi3l1GkR0PoM17F4Exs3jO
+         L1SQGxdjVuCZbpRyZRiaC1fwRTbtCEh56inWC/rq8q7AWygbVnwUQJGvoR6KJ9An541p
+         lb21VxlEB6YoJGZgFCpawLgVDXCJII47ixBTERoFFeGCbsGKULhtV/5PpVc1ALgrEHPA
+         myqVWOZUx811xHROrzxefSv9v4PPUrkxNIVO50Q5uFtpogkW6cVy0OCx3QCL6l8x68jK
+         KC/pNU4tJ8M7vKmaoJGwpogVvH0nEICz2sGzgb2u2NeqQBuL72NQTZRNf8v/fOIJRkDX
+         QC/A==
+X-Gm-Message-State: AGi0PubUeKDLSxT5+2DAS/09bU2IvO9pTiDKlc3HGcCqfBEKrq4d2oj9
+        vcF3diZpKkT6y9daUzs0nos=
+X-Google-Smtp-Source: APiQypIEjb7k0vg1mEoUtBe15H1kcK7BSjonLF/QsYErQW99NzcpWLX1DshA4rkPF6yQ2OehZFCT2Q==
+X-Received: by 2002:a17:90b:4d04:: with SMTP id mw4mr791725pjb.180.1586455873370;
+        Thu, 09 Apr 2020 11:11:13 -0700 (PDT)
+Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
+        by smtp.gmail.com with ESMTPSA id r4sm6458344pgi.6.2020.04.09.11.11.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 09 Apr 2020 11:11:12 -0700 (PDT)
+Received: by 42.do-not-panic.com (Postfix, from userid 1000)
+        id 8790440246; Thu,  9 Apr 2020 18:11:11 +0000 (UTC)
+Date:   Thu, 9 Apr 2020 18:11:11 +0000
+From:   Luis Chamberlain <mcgrof@kernel.org>
+To:     Nicolai Stange <nstange@suse.de>
+Cc:     Bart Van Assche <bvanassche@acm.org>, axboe@kernel.dk,
+        viro@zeniv.linux.org.uk, gregkh@linuxfoundation.org,
+        rostedt@goodmis.org, mingo@redhat.com, jack@suse.cz,
+        ming.lei@redhat.com, mhocko@suse.com, linux-block@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Omar Sandoval <osandov@fb.com>,
+        Hannes Reinecke <hare@suse.com>,
+        Michal Hocko <mhocko@kernel.org>
+Subject: Re: [RFC 3/3] block: avoid deferral of blk_release_queue() work
+Message-ID: <20200409181111.GJ11244@42.do-not-panic.com>
+References: <20200402000002.7442-1-mcgrof@kernel.org>
+ <20200402000002.7442-4-mcgrof@kernel.org>
+ <774a33e8-43ba-143f-f6fd-9cb0ae0862ac@acm.org>
+ <87o8saj62m.fsf@suse.de>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <87o8saj62m.fsf@suse.de>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Thu, 09 Apr 2020 21:07:24 +1000:
+On Thu, Apr 02, 2020 at 04:49:37PM +0200, Nicolai Stange wrote:
+> Bart Van Assche <bvanassche@acm.org> writes:
+> 
+> > On 2020-04-01 17:00, Luis Chamberlain wrote:
+> > The description of this patch mentions a single blk_release_queue() call
+> > that happened in the past from a context from which sleeping is not
+> > allowed and from which sleeping is allowed today. Have all other
+> > blk_release_queue() / blk_put_queue() calls been verified to see whether
+> > none of these happens from a context from which sleeping is not allowed?
+> 
+> I've just done this today and found the following potentially
+> problematic call paths to blk_put_queue().
+> 
+> 1.) mem_cgroup_throttle_swaprate() takes a spinlock and
+>     calls blkcg_schedule_throttle()->blk_put_queue().
+> 
+>     Also note that AFAICS mem_cgroup_try_charge_delay() can be called
+>     with GFP_ATOMIC.
 
-> https://git.kernel.org/pub/scm/linux/kernel/git/powerpc/linux.git tags/powerpc-5.7-2
+I have a solution to this which would avoid having to deal with the
+concern completely. I'll post in my follow up.
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/e4da01d8333e500e15a674d75885a9dfcfd31e77
+> 2.) scsi_unblock_requests() gets called from a lot of drivers and
+>     invoke blk_put_queue() through
+>     scsi_unblock_requests() -> scsi_run_host_queues() ->
+>     scsi_starved_list_run() -> blk_put_queue().
 
-Thank you!
+sd_probe() calls device_add_disk(), and the scsi lib also has its
+own refcounting for scsi, but unless you call sd_remove() you'll be
+protecting the underlying block disk and request_queue, as sd_remove()
+calls the del_gendisk() which would in call call blk_unregister_queue()
+which calls the last blk_put_queue(). If sd_remove() can be called from
+atomic context we can also fix this, and this should be evident how in
+my next follow up series of patches.
 
--- 
-Deet-doot-dot, I am a bot.
-https://korg.wiki.kernel.org/userdoc/prtracker
+  Luis
