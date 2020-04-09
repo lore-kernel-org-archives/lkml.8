@@ -2,120 +2,102 @@ Return-Path: <SRS0=n+Ub=5Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6643C2BB86
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 13:42:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C059FC2BA2B
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 13:46:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 99301208FE
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 13:42:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 933652083E
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 13:46:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=bytedance-com.20150623.gappssmtp.com header.i=@bytedance-com.20150623.gappssmtp.com header.b="U0UZJXOe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726940AbgDINmt (ORCPT
+        id S1726873AbgDINqW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Apr 2020 09:42:49 -0400
-Received: from raptor.unsafe.ru ([5.9.43.93]:53632 "EHLO raptor.unsafe.ru"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726880AbgDINmt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Apr 2020 09:42:49 -0400
-Received: from comp-core-i7-2640m-0182e6 (ip-89-102-33-211.net.upcbroadband.cz [89.102.33.211])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (No client certificate requested)
-        by raptor.unsafe.ru (Postfix) with ESMTPSA id 26602209C3;
-        Thu,  9 Apr 2020 13:42:43 +0000 (UTC)
-Date:   Thu, 9 Apr 2020 15:42:36 +0200
-From:   Alexey Gladkov <gladkov.alexey@gmail.com>
-To:     "Eric W. Biederman" <ebiederm@xmission.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Kernel Hardening <kernel-hardening@lists.openwall.com>,
-        Linux API <linux-api@vger.kernel.org>,
-        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
-        Linux Security Module <linux-security-module@vger.kernel.org>,
-        Akinobu Mita <akinobu.mita@gmail.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Daniel Micay <danielmicay@gmail.com>,
-        Djalal Harouni <tixxdz@gmail.com>,
-        "Dmitry V . Levin" <ldv@altlinux.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        "J . Bruce Fields" <bfields@fieldses.org>,
-        Jeff Layton <jlayton@poochiereds.net>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Kees Cook <keescook@chromium.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Oleg Nesterov <oleg@redhat.com>,
-        David Howells <dhowells@redhat.com>
-Subject: Re: [PATCH RESEND v11 0/8] proc: modernize proc to support multiple
- private instances
-Message-ID: <20200409134236.mksvudaucp3jawf6@comp-core-i7-2640m-0182e6>
-References: <20200409123752.1070597-1-gladkov.alexey@gmail.com>
- <87y2r4vmpo.fsf@x220.int.ebiederm.org>
+        Thu, 9 Apr 2020 09:46:22 -0400
+Received: from mail-pj1-f66.google.com ([209.85.216.66]:35682 "EHLO
+        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726621AbgDINqV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Apr 2020 09:46:21 -0400
+Received: by mail-pj1-f66.google.com with SMTP id mn19so1308207pjb.0
+        for <linux-kernel@vger.kernel.org>; Thu, 09 Apr 2020 06:46:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bytedance-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ALRgRwayDOlRm4S4HcDIOKGfniGPEmV1GEg/TDbG97k=;
+        b=U0UZJXOey1JuGiw+K6HY6gbPV+FWGEzhtVbTIFboBDLb59FgOmirVAPn0mnr6pjEKl
+         Nnm48ig5KQr491qk/E4taCtN1aNuiZk6HKu/95b/1WnR84tsbtZ7LP3oXt+sKcq/nTgJ
+         4lGvLuj6SS0Cu+QAl6vx0Z8N5x1+TFw/AFJvpYL7DzN7+geGWW102rIphnRKgIcT4whH
+         geiBxh01j9x4GNAGTfu5AYRg3BkDPX28nVRru0g5mwQst1m+YEk4iT0mi4i+MmGLN/8E
+         57ayplDYbW/2JhL5/mCxvM1VmHakqrm28BZJ72JX31p4W8Yv7dZK5/B3143BF0dDaOWy
+         yr+g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ALRgRwayDOlRm4S4HcDIOKGfniGPEmV1GEg/TDbG97k=;
+        b=eW1LpEOqbybgRtwY1GePbKOyGxIkbQ1PICntu38kxbj9mQoJOlUrH5lx3GGGzqzv8h
+         YUtILdxfgO6ezn3oKd24ijY2pZ7LyVbm/gEVhpUO3qiBgOK/1Gf4tD3DUc8NiWPKqynt
+         bm2Po4XnQJ0cSnUAEexLqfBRd9AVPyRhIQbDIix5Q0PkiDILmB44WiUIC0/GZnR/GqIs
+         JTrLfo2N4VLPTDsN1Q4jnt54w9U+VWwDSaeBBuvI4lP7vkYTx85dqibUO30NeQjUrQZb
+         at7MU6X4BwCPDP3vOpOB2/50OVnL6jNl78QSoTekHPOToGjpNKaVXSMe1mb7fFLFyPar
+         R6bA==
+X-Gm-Message-State: AGi0PuZNTc65vMFI1xHnMGnoV9AO6KkatZv6iDkKZ5WfqOEYMdH9VUpU
+        9zKRFpKQCq1vMVieD5CwPEI/Qg==
+X-Google-Smtp-Source: APiQypJTJnizBSc/GwQ1IxY2bOQ+OmvhYa0t2OxZxF8YEmMgafP8T6H3g9l2ILhhL4XB/BTCtFlWag==
+X-Received: by 2002:a17:90a:f011:: with SMTP id bt17mr9747347pjb.3.1586439980764;
+        Thu, 09 Apr 2020 06:46:20 -0700 (PDT)
+Received: from Smcdef-MBP.lan ([103.136.221.72])
+        by smtp.gmail.com with ESMTPSA id u15sm5324193pgj.34.2020.04.09.06.46.17
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 09 Apr 2020 06:46:20 -0700 (PDT)
+From:   Muchun Song <songmuchun@bytedance.com>
+To:     peterz@infradead.org, mingo@redhat.com, will@kernel.org,
+        mingo@kernel.org
+Cc:     linux-kernel@vger.kernel.org,
+        Muchun Song <songmuchun@bytedance.com>
+Subject: [PATCH] seqlock: Use while instead of if+goto in __read_seqcount_begin
+Date:   Thu,  9 Apr 2020 21:45:58 +0800
+Message-Id: <20200409134558.90863-1-songmuchun@bytedance.com>
+X-Mailer: git-send-email 2.21.0 (Apple Git-122)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87y2r4vmpo.fsf@x220.int.ebiederm.org>
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.6.1 (raptor.unsafe.ru [5.9.43.93]); Thu, 09 Apr 2020 13:42:45 +0000 (UTC)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 09, 2020 at 07:59:47AM -0500, Eric W. Biederman wrote:
-> Alexey Gladkov <gladkov.alexey@gmail.com> writes:
-> 
-> > Preface:
-> > --------
-> > This is patchset v11 to modernize procfs and make it able to support multiple
-> > private instances per the same pid namespace.
-> >
-> > This patchset can be applied on top of:
-> >
-> > git.kernel.org/pub/scm/linux/kernel/git/ebiederm/user-namespace.git
-> > 4b871ce26ab2
-> 
-> 
-> 
-> Why the resend?
-> 
-> Nothing happens until the merge window closes with the release of -rc1
-> (almost certainly on this coming Sunday).  I goofed and did not act on
-> this faster, and so it is my fault this did not make it into linux-next
-> before the merge window.  But I am not going to rush this forward.
-> 
-> 
-> 
-> You also ignored my review and have not even descibed why it is safe
-> to change the type of a filesystem parameter.
-> 
-> -	fsparam_u32("hidepid",	Opt_hidepid),
-> +	fsparam_string("hidepid",	Opt_hidepid),
-> 
-> 
-> Especially in light of people using fsconfig(fd, FSCONFIG_SET_...);
-> 
-> All I need is someone to point out that fsparam_u32 does not use
-> FSCONFIG_SET_BINARY, but FSCONFIG_SET_STRING.
+The creators of the C language gave us the while keyword. Let's use
+that instead of synthesizing it from if+goto.
 
-I decided to resend again because I was not sure that the previous
-patchset was not lost. I also wanted to ask David to review and explain
-about the new API. I in any case did not ignore your question about
-changing the type of the parameter.
+Signed-off-by: Muchun Song <songmuchun@bytedance.com>
+---
+ include/linux/seqlock.h | 6 +-----
+ 1 file changed, 1 insertion(+), 5 deletions(-)
 
-I guess I was wrong when I sent the whole patchset again. Sorry.
-
-> My apologies for being grumpy but this feels like you are asking me to
-> go faster when it is totally inappropriate to do so, while busily
-> ignoring my feedback.
-> 
-> I think this should happen.  But I can't do anything until after -rc1.
-
-I think you misunderstood me. I didn't mean to rush you.
-
+diff --git a/include/linux/seqlock.h b/include/linux/seqlock.h
+index 8b97204f35a77..7bdea019814ce 100644
+--- a/include/linux/seqlock.h
++++ b/include/linux/seqlock.h
+@@ -125,12 +125,8 @@ static inline unsigned __read_seqcount_begin(const seqcount_t *s)
+ {
+ 	unsigned ret;
+ 
+-repeat:
+-	ret = READ_ONCE(s->sequence);
+-	if (unlikely(ret & 1)) {
++	while (unlikely((ret = READ_ONCE(s->sequence)) & 1))
+ 		cpu_relax();
+-		goto repeat;
+-	}
+ 	kcsan_atomic_next(KCSAN_SEQLOCK_REGION_MAX);
+ 	return ret;
+ }
 -- 
-Rgrds, legion
+2.11.0
 
