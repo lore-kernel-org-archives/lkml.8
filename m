@@ -2,102 +2,99 @@ Return-Path: <SRS0=n+Ub=5Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C059FC2BA2B
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 13:46:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FB25C2BA2B
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 13:47:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 933652083E
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 13:46:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=bytedance-com.20150623.gappssmtp.com header.i=@bytedance-com.20150623.gappssmtp.com header.b="U0UZJXOe"
+	by mail.kernel.org (Postfix) with ESMTP id C671E2083E
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 13:47:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1586440044;
+	bh=qb0zEt9oZjXwhGut9OGCMasSdPJZIafUHazH89S648o=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=G2VWJeNKJfb3E7uJU79n1LZIWM3tAn8CgsmOm/hwtNaV51v+zXwyR3JjCYn2UWj2m
+	 namNH8ZDaBx7YDi51CGJmAJvCCiIvRMYT3MYH42Vu/+OASjBKI+qsSVFiRrROCc/Ha
+	 5iTeqMa4FUfTPah+3ZG97imQRdApEPYIpuruFTmE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726873AbgDINqW (ORCPT
+        id S1726896AbgDINrX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Apr 2020 09:46:22 -0400
-Received: from mail-pj1-f66.google.com ([209.85.216.66]:35682 "EHLO
-        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726621AbgDINqV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Apr 2020 09:46:21 -0400
-Received: by mail-pj1-f66.google.com with SMTP id mn19so1308207pjb.0
-        for <linux-kernel@vger.kernel.org>; Thu, 09 Apr 2020 06:46:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bytedance-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=ALRgRwayDOlRm4S4HcDIOKGfniGPEmV1GEg/TDbG97k=;
-        b=U0UZJXOey1JuGiw+K6HY6gbPV+FWGEzhtVbTIFboBDLb59FgOmirVAPn0mnr6pjEKl
-         Nnm48ig5KQr491qk/E4taCtN1aNuiZk6HKu/95b/1WnR84tsbtZ7LP3oXt+sKcq/nTgJ
-         4lGvLuj6SS0Cu+QAl6vx0Z8N5x1+TFw/AFJvpYL7DzN7+geGWW102rIphnRKgIcT4whH
-         geiBxh01j9x4GNAGTfu5AYRg3BkDPX28nVRru0g5mwQst1m+YEk4iT0mi4i+MmGLN/8E
-         57ayplDYbW/2JhL5/mCxvM1VmHakqrm28BZJ72JX31p4W8Yv7dZK5/B3143BF0dDaOWy
-         yr+g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=ALRgRwayDOlRm4S4HcDIOKGfniGPEmV1GEg/TDbG97k=;
-        b=eW1LpEOqbybgRtwY1GePbKOyGxIkbQ1PICntu38kxbj9mQoJOlUrH5lx3GGGzqzv8h
-         YUtILdxfgO6ezn3oKd24ijY2pZ7LyVbm/gEVhpUO3qiBgOK/1Gf4tD3DUc8NiWPKqynt
-         bm2Po4XnQJ0cSnUAEexLqfBRd9AVPyRhIQbDIix5Q0PkiDILmB44WiUIC0/GZnR/GqIs
-         JTrLfo2N4VLPTDsN1Q4jnt54w9U+VWwDSaeBBuvI4lP7vkYTx85dqibUO30NeQjUrQZb
-         at7MU6X4BwCPDP3vOpOB2/50OVnL6jNl78QSoTekHPOToGjpNKaVXSMe1mb7fFLFyPar
-         R6bA==
-X-Gm-Message-State: AGi0PuZNTc65vMFI1xHnMGnoV9AO6KkatZv6iDkKZ5WfqOEYMdH9VUpU
-        9zKRFpKQCq1vMVieD5CwPEI/Qg==
-X-Google-Smtp-Source: APiQypJTJnizBSc/GwQ1IxY2bOQ+OmvhYa0t2OxZxF8YEmMgafP8T6H3g9l2ILhhL4XB/BTCtFlWag==
-X-Received: by 2002:a17:90a:f011:: with SMTP id bt17mr9747347pjb.3.1586439980764;
-        Thu, 09 Apr 2020 06:46:20 -0700 (PDT)
-Received: from Smcdef-MBP.lan ([103.136.221.72])
-        by smtp.gmail.com with ESMTPSA id u15sm5324193pgj.34.2020.04.09.06.46.17
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 09 Apr 2020 06:46:20 -0700 (PDT)
-From:   Muchun Song <songmuchun@bytedance.com>
-To:     peterz@infradead.org, mingo@redhat.com, will@kernel.org,
-        mingo@kernel.org
-Cc:     linux-kernel@vger.kernel.org,
-        Muchun Song <songmuchun@bytedance.com>
-Subject: [PATCH] seqlock: Use while instead of if+goto in __read_seqcount_begin
-Date:   Thu,  9 Apr 2020 21:45:58 +0800
-Message-Id: <20200409134558.90863-1-songmuchun@bytedance.com>
-X-Mailer: git-send-email 2.21.0 (Apple Git-122)
+        Thu, 9 Apr 2020 09:47:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54156 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726621AbgDINrX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Apr 2020 09:47:23 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 80E022083E;
+        Thu,  9 Apr 2020 13:47:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1586440042;
+        bh=qb0zEt9oZjXwhGut9OGCMasSdPJZIafUHazH89S648o=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=RuzJZmyzOkjXYOGh8vDBL9dHWEU80N2DEtFKZexMz0v6eM79kJgkniryfWaidu2wD
+         MT8PhAao2sv9XOSkYFdPCB3D3awBw4ZGRz8593TPA4mOyFXMyatUsqKUhyuywo73Fh
+         tzjo/HViO/9QdWkv3O28bnocc8vOnKm6icwL2Ovw=
+Date:   Thu, 9 Apr 2020 15:47:18 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Thierry Reding <thierry.reding@gmail.com>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Corentin Labbe <clabbe@baylibre.com>,
+        Nagarjuna Kristam <nkristam@nvidia.com>,
+        Thierry Reding <treding@nvidia.com>,
+        Vidya Sagar <vidyas@nvidia.com>, linux-kernel@vger.kernel.org,
+        linux-tegra@vger.kernel.org
+Subject: Re: [PATCH] phy: tegra: fix USB dependencies
+Message-ID: <20200409134718.GB1546731@kroah.com>
+References: <20200408200828.124139-1-arnd@arndb.de>
+ <20200409132435.GA3263479@ulmo>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200409132435.GA3263479@ulmo>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The creators of the C language gave us the while keyword. Let's use
-that instead of synthesizing it from if+goto.
+On Thu, Apr 09, 2020 at 03:24:35PM +0200, Thierry Reding wrote:
+> On Wed, Apr 08, 2020 at 10:08:14PM +0200, Arnd Bergmann wrote:
+> > Without CONFIG_USB_SUPPORT, we can get a couple of warnings for
+> > missing dependencies:
+> > 
+> > WARNING: unmet direct dependencies detected for USB_PHY
+> >   Depends on [n]: USB_SUPPORT [=n]
+> >   Selected by [m]:
+> >   - PHY_TEGRA_XUSB [=m] && ARCH_TEGRA [=y]
+> > 
+> > WARNING: unmet direct dependencies detected for USB_CONN_GPIO
+> >   Depends on [n]: USB_SUPPORT [=n] && GPIOLIB [=y]
+> >   Selected by [m]:
+> >   - PHY_TEGRA_XUSB [=m] && ARCH_TEGRA [=y]
+> > 
+> > Fixes: 6835bdc99580 ("phy: tegra: Select USB_PHY")
+> > Fixes: f67213cee2b3 ("phy: tegra: xusb: Add usb-role-switch support")
+> > Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> > ---
+> >  drivers/phy/tegra/Kconfig | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> I sent a similar patch a couple of days ago:
+> 
+> 	http://patchwork.ozlabs.org/patch/1263865/
+> 
+> This should be applied by Greg on top of the PR that I sent for USB. I
+> did get the semi-automated "we're in the merge window" reply from Greg,
+> but I was under the impression that he still applied fixes during the
+> merge window. It seems like he didn't pick this up yet, though.
+> 
+> Greg, anything I should've done differently for you to notice this?
 
-Signed-off-by: Muchun Song <songmuchun@bytedance.com>
----
- include/linux/seqlock.h | 6 +-----
- 1 file changed, 1 insertion(+), 5 deletions(-)
-
-diff --git a/include/linux/seqlock.h b/include/linux/seqlock.h
-index 8b97204f35a77..7bdea019814ce 100644
---- a/include/linux/seqlock.h
-+++ b/include/linux/seqlock.h
-@@ -125,12 +125,8 @@ static inline unsigned __read_seqcount_begin(const seqcount_t *s)
- {
- 	unsigned ret;
- 
--repeat:
--	ret = READ_ONCE(s->sequence);
--	if (unlikely(ret & 1)) {
-+	while (unlikely((ret = READ_ONCE(s->sequence)) & 1))
- 		cpu_relax();
--		goto repeat;
--	}
- 	kcsan_atomic_next(KCSAN_SEQLOCK_REGION_MAX);
- 	return ret;
- }
--- 
-2.11.0
+I try not to apply anything during the merge window...
 
