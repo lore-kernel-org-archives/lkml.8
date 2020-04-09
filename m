@@ -2,111 +2,109 @@ Return-Path: <SRS0=n+Ub=5Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18431C2BA2B
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 15:43:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 907D7C2BA2B
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 15:44:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D434E20753
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 15:43:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="P/C/mQMK"
+	by mail.kernel.org (Postfix) with ESMTP id 71BED20771
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 15:44:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728247AbgDIPnn (ORCPT
+        id S1728290AbgDIPoR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Apr 2020 11:43:43 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:22430 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728167AbgDIPnn (ORCPT
+        Thu, 9 Apr 2020 11:44:17 -0400
+Received: from outbound-smtp55.blacknight.com ([46.22.136.239]:55477 "EHLO
+        outbound-smtp55.blacknight.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728020AbgDIPoR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Apr 2020 11:43:43 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1586447022;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=mtjSwR8IguPOXLT021Rh82aVT+w9DQDweQ+imYBuk/8=;
-        b=P/C/mQMKU7epnIUDRvm0wnehLP8xs5OpqhxWaJWYtnmJG2MazrGcsPfcOslCBXXDWzK00S
-        htvhJSpQXU94QzEOKuOVwiotsv7VoLOunCdhbLbl/jsGpkeXiXrGFgZt7ll84qp2ZnL9E5
-        iMSDp9gCMGc1gOgAk+wH0Fc3wEXM/yA=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-429-ivM-dGSJM1eeyFLSix0CsA-1; Thu, 09 Apr 2020 11:43:38 -0400
-X-MC-Unique: ivM-dGSJM1eeyFLSix0CsA-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 0021CDB66;
-        Thu,  9 Apr 2020 15:43:36 +0000 (UTC)
-Received: from krava (unknown [10.40.196.41])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 9A33560BF3;
-        Thu,  9 Apr 2020 15:43:34 +0000 (UTC)
-Date:   Thu, 9 Apr 2020 17:43:32 +0200
-From:   Jiri Olsa <jolsa@redhat.com>
-To:     Jin Yao <yao.jin@linux.intel.com>
-Cc:     acme@kernel.org, jolsa@kernel.org, peterz@infradead.org,
-        mingo@redhat.com, alexander.shishkin@linux.intel.com,
-        Linux-kernel@vger.kernel.org, ak@linux.intel.com,
-        kan.liang@intel.com, yao.jin@intel.com
-Subject: Re: [PATCH] perf stat: Zero ena and run for interval mode
-Message-ID: <20200409154332.GD3309111@krava>
-References: <20200409070755.17261-1-yao.jin@linux.intel.com>
+        Thu, 9 Apr 2020 11:44:17 -0400
+Received: from mail.blacknight.com (pemlinmail03.blacknight.ie [81.17.254.16])
+        by outbound-smtp55.blacknight.com (Postfix) with ESMTPS id B0947FADED
+        for <linux-kernel@vger.kernel.org>; Thu,  9 Apr 2020 16:44:15 +0100 (IST)
+Received: (qmail 25920 invoked from network); 9 Apr 2020 15:44:15 -0000
+Received: from unknown (HELO techsingularity.net) (mgorman@techsingularity.net@[84.203.18.57])
+  by 81.17.254.9 with ESMTPSA (AES256-SHA encrypted, authenticated); 9 Apr 2020 15:44:15 -0000
+Date:   Thu, 9 Apr 2020 16:44:13 +0100
+From:   Mel Gorman <mgorman@techsingularity.net>
+To:     Tejun Heo <tj@kernel.org>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Cgroup memory barrier usage and call frequency from scheduler
+Message-ID: <20200409154413.GK3818@techsingularity.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-15
 Content-Disposition: inline
-In-Reply-To: <20200409070755.17261-1-yao.jin@linux.intel.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 09, 2020 at 03:07:55PM +0800, Jin Yao wrote:
-> As the code comments in perf_stat_process_counter() say,
-> we calculate counter's data every interval, and the display
-> code shows ps->res_stats avg value. We need to zero the stats
-> for interval mode.
-> 
-> But the current code only zeros the res_stats[0], it doesn't
-> zero the res_stats[1] and res_stats[2], which are for ena
-> and run of counter.
-> 
-> This patch zeros the whole res_stats[] for interval mode.
-> 
-> Signed-off-by: Jin Yao <yao.jin@linux.intel.com>
+Hi Tejun,
 
-nice catch ;-)
+Commit 9a9e97b2f1f2 ("cgroup: Add memory barriers to plug
+cgroup_rstat_updated() race window") introduced two full memory
+barriers to close a race. The one in cgroup_rstat_updated can be
+called at a high frequency from the scheduler from update_curr ->
+cgroup_account_cputime. The patch has no cc's, acks or reviews so I'm
+not sure how closely this was looked at. cgroup_rstat_updated shows up
+in profiles of netperf UDP_STREAM accounting for about 1% of overhead
+which doesn't sound a lot but that's about the same weight as some of
+the critical network paths. I have three questions about the patch
 
-Acked-by: Jiri Olsa <jolsa@redhat.com>
+1. Why were full barriers used?
+2. Why was it important that the data race be closed when the inaccuracy
+   is temporary?
+3. Why is it called from the context of update_curr()?
 
-thanks,
-jirka
+For 1, the use of a full barrier seems unnecessary when it appears that
+you could have used a read barrier and a write barrier. The following
+patch drops the profile overhead to 0.1%
 
-> ---
->  tools/perf/util/stat.c | 6 ++++--
->  1 file changed, 4 insertions(+), 2 deletions(-)
-> 
-> diff --git a/tools/perf/util/stat.c b/tools/perf/util/stat.c
-> index 5f26137b8d60..242476eb808c 100644
-> --- a/tools/perf/util/stat.c
-> +++ b/tools/perf/util/stat.c
-> @@ -368,8 +368,10 @@ int perf_stat_process_counter(struct perf_stat_config *config,
->  	 * interval mode, otherwise overall avg running
->  	 * averages will be shown for each interval.
->  	 */
-> -	if (config->interval)
-> -		init_stats(ps->res_stats);
-> +	if (config->interval) {
-> +		for (i = 0; i < 3; i++)
-> +			init_stats(&ps->res_stats[i]);
-> +	}
->  
->  	if (counter->per_pkg)
->  		zero_per_pkg(counter);
-> -- 
-> 2.17.1
-> 
+diff --git a/kernel/cgroup/rstat.c b/kernel/cgroup/rstat.c
+index ca19b4c8acf5..bc3125949b4b 100644
+--- a/kernel/cgroup/rstat.c
++++ b/kernel/cgroup/rstat.c
+@@ -36,7 +36,7 @@ void cgroup_rstat_updated(struct cgroup *cgrp, int cpu)
+ 	 * Paired with the one in cgroup_rstat_cpu_pop_upated().  Either we
+ 	 * see NULL updated_next or they see our updated stat.
+ 	 */
+-	smp_mb();
++	smp_rmb();
+ 
+ 	/*
+ 	 * Because @parent's updated_children is terminated with @parent
+@@ -139,7 +139,7 @@ static struct cgroup *cgroup_rstat_cpu_pop_updated(struct cgroup *pos,
+ 		 * Either they see NULL updated_next or we see their
+ 		 * updated stat.
+ 		 */
+-		smp_mb();
++		smp_wmb();
+ 
+ 		return pos;
+ 	}
 
+For 2, the changelog says the barriers are necessary because "we plan to use
+rstat to track counters which need to be accurate". That is a bit vague.
+Under what circumstances is a transient inaccuracy a serious enough
+problem to justify additional barriers in the scheduler?
+
+For 3, update_curr() is called from a lot of places, some of which are
+quite hot -- e.g. task enqueue/dequeue. This is necessary information from
+the runqueue needs to be preserved. However, it's less clear that the cpu
+accounting information needs to be up to date on this granularity although
+it might be related to question 2. Why was the delta_exec not similarly
+accumulated in cpuacct_change() and defer the hierarchical update to
+be called from somewhere like entity_tick()? It would need tracking the
+CPU time at the last update as delta_exec would be lost so it's not very
+trivial but it does not look like it would be overly complicated.
+
+Thanks
+
+-- 
+Mel Gorman
+SUSE Labs
