@@ -2,135 +2,82 @@ Return-Path: <SRS0=n+Ub=5Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EE21C38A29
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5D7CC38A2C
 	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 09:54:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6D3BE2145D
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 09:38:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="vWxBeDjo"
+	by mail.kernel.org (Postfix) with ESMTP id 67A70215A4
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 09:38:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726647AbgDIJiH (ORCPT
+        id S1726678AbgDIJin (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Apr 2020 05:38:07 -0400
-Received: from pandora.armlinux.org.uk ([78.32.30.218]:42198 "EHLO
-        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725997AbgDIJiG (ORCPT
+        Thu, 9 Apr 2020 05:38:43 -0400
+Received: from m17617.mail.qiye.163.com ([59.111.176.17]:60715 "EHLO
+        m17617.mail.qiye.163.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725997AbgDIJin (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Apr 2020 05:38:06 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=RGFwgNOxy2c5vC5HpDYOZgBADwWmZdC/mr6ZrB/I1+o=; b=vWxBeDjoSh9OhHIils63Rrjju
-        X/UBHlDShAXNcg2MZNhY2NIIxfBNU+JSAlmkVRvUgQTBlghcFNPpiUHZowfdnxdTq/fb/Gxa7Jvrj
-        e1vCU5nLZN0NfaVhjPldRoZYQtw2ngYAd7Lu8YqTLNyziLFO/NDGA27gn3k1O5gkRSYjpcxRk9b6d
-        yCA6MyIqCWhIXGJubHG302XX8XoW9PQpkhvI06Af6M5D/f9NwvXvPOmvp+/vX/NlrfNQVYrev9aSU
-        dV3Qb/227TVaUkKHkKyOxPUZMgLbaPl04sL9OuxGSqtBG+Vy83yj7vHALT3TTgPgDk6j2DWgKIrFN
-        O+3l+XINw==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:47690)
-        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.90_1)
-        (envelope-from <linux@armlinux.org.uk>)
-        id 1jMTdC-00035R-OS; Thu, 09 Apr 2020 10:37:54 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
-        (envelope-from <linux@shell.armlinux.org.uk>)
-        id 1jMTdA-0002hb-Ax; Thu, 09 Apr 2020 10:37:52 +0100
-Date:   Thu, 9 Apr 2020 10:37:52 +0100
-From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
-To:     Hui Song <hui.song_1@nxp.com>
-Cc:     Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
-        Rob Herring <robh+dt@kernel.org>,
+        Thu, 9 Apr 2020 05:38:43 -0400
+Received: from wangqing-virtual-machine.localdomain (unknown [157.0.31.122])
+        by m17617.mail.qiye.163.com (Hmail) with ESMTPA id D770B26289F;
+        Thu,  9 Apr 2020 17:38:36 +0800 (CST)
+From:   Wang Qing <wangqing@vivo.com>
+To:     Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org
-Subject: Re: [PATCH] gpio: mpc8xxx: Add shutdown function.
-Message-ID: <20200409093752.GV25745@shell.armlinux.org.uk>
-References: <20200409090259.13126-1-hui.song_1@nxp.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200409090259.13126-1-hui.song_1@nxp.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        James Morse <james.morse@arm.com>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Wang Qing <wangqing@vivo.com>,
+        jinho lim <jordan.lim@samsung.com>,
+        Dave Martin <Dave.Martin@arm.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc:     opensource.kernel@vivo.com
+Subject: [PATCH] ARM64: fixed dump_backtrace() when task running on another cpu
+Date:   Thu,  9 Apr 2020 17:38:16 +0800
+Message-Id: <1586425106-7369-1-git-send-email-wangqing@vivo.com>
+X-Mailer: git-send-email 2.7.4
+X-HM-Spam-Status: e1kfGhgUHx5ZQUtXWQgYFAkeWUFZT1VJS05CQkJDTkpJSU1DSllXWShZQU
+        hPN1dZLVlBSVdZCQ4XHghZQVk1NCk2OjckKS43PlkG
+X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6OTI6ASo4MTg#GhYIPh5JThoQ
+        CBIaCVFVSlVKTkNNT0lOSkpMSkxJVTMWGhIXVQwaFRwKEhUcOw0SDRRVGBQWRVlXWRILWUFZSk5M
+        VUtVSEpVSklJWVdZCAFZQUlITk03Bg++
+X-HM-Tid: 0a715e4e399d9375kuwsd770b26289f
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 09, 2020 at 05:02:59PM +0800, Hui Song wrote:
-> From: Song Hui <hui.song_1@nxp.com>
-> 
-> When the kexec command is executed, the memory area will be re-paginated.
-> The shutdown function needed to make interrupt handler to be NULL.If
-> not, an interrupt will be generated during this period. When the interrupt
-> handler is executed,the handler function address changed and crash will
-> occur.
+We cannot get FP and PC when the task is running on another CPU,
+task->thread.cpu_context is the last time the task was switched out,
+it's better to give a reminder than to provide wrong information.
 
-I still don't think this is adequate.
+Signed-off-by: Wang Qing <wangqing@vivo.com>
+---
+ arch/arm64/kernel/traps.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-When kexec takes effect, the existing kernel is shutdown and replaced
-with the new kernel, and it completely takes over the system.  The
-dynamically allocated structures (which include pointers for the parent
-interrupt for mpc8xxx) are irrelevant, as they will need to be
-reallocated.  It feels like you're just putting a band-aid over a real
-problem.
-
-I think rather than producing a patch, you need to give details of the
-crash you are seeing.  Probably having the kernel message log across
-the kexec and into the new kernel up to the point where the crash occurs
-would be a good idea.
-
-> 
-> Signed-off-by: Song Hui <hui.song_1@nxp.com>
-> ---
->  drivers/gpio/gpio-mpc8xxx.c | 12 ++++++++++++
->  1 file changed, 12 insertions(+)
-> 
-> diff --git a/drivers/gpio/gpio-mpc8xxx.c b/drivers/gpio/gpio-mpc8xxx.c
-> index 604dfec..a24e6c5 100644
-> --- a/drivers/gpio/gpio-mpc8xxx.c
-> +++ b/drivers/gpio/gpio-mpc8xxx.c
-> @@ -446,9 +446,21 @@ static int mpc8xxx_remove(struct platform_device *pdev)
->  	return 0;
->  }
->  
-> +static int mpc8xxx_shutdown(struct platform_device *pdev)
-> +{
-> +	struct mpc8xxx_gpio_chip *mpc8xxx_gc = platform_get_drvdata(pdev);
-> +
-> +	if (mpc8xxx_gc->irq) {
-> +		irq_set_chained_handler_and_data(mpc8xxx_gc->irqn, NULL, NULL);
-> +		irq_domain_remove(mpc8xxx_gc->irq);
-> +	}
-> +
-> +	return 0;
-> +}
->  static struct platform_driver mpc8xxx_plat_driver = {
->  	.probe		= mpc8xxx_probe,
->  	.remove		= mpc8xxx_remove,
-> +	.shutdown	= mpc8xxx_shutdown,
->  	.driver		= {
->  		.name = "gpio-mpc8xxx",
->  		.of_match_table	= mpc8xxx_gpio_ids,
-> -- 
-> 2.9.5
-> 
-> 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-> 
-
+diff --git a/arch/arm64/kernel/traps.c b/arch/arm64/kernel/traps.c
+index cf402be..c04e3e8 100644
+--- a/arch/arm64/kernel/traps.c
++++ b/arch/arm64/kernel/traps.c
+@@ -106,6 +106,14 @@ void dump_backtrace(struct pt_regs *regs, struct task_struct *tsk)
+ 		start_backtrace(&frame,
+ 				(unsigned long)__builtin_frame_address(0),
+ 				(unsigned long)dump_backtrace);
++	} else if (tsk->on_cpu) {
++		/*
++		 * The task is running in another cpu, so the call stack
++		 * is changing and we cannot get it.
++		 */
++		pr_warn("tsk: %s is running in CPU%d, Don't call trace!\n",
++			tsk->comm, tsk->cpu);
++		return;
+ 	} else {
+ 		/*
+ 		 * task blocked in __switch_to
 -- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line in suburbia: sync at 10.2Mbps down 587kbps up
+2.7.4
+
