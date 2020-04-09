@@ -2,152 +2,128 @@ Return-Path: <SRS0=n+Ub=5Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BB34C2BA2B
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 12:49:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35C42C2BB86
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 12:50:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 014EC20730
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 12:49:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0BE272078E
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 12:50:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="aH9lC/5s"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726713AbgDIMty (ORCPT
+        id S1726726AbgDIMuA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Apr 2020 08:49:54 -0400
-Received: from mga07.intel.com ([134.134.136.100]:41653 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726470AbgDIMty (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Apr 2020 08:49:54 -0400
-IronPort-SDR: Pb6bj8f5yrXrVPTT+TA3ZgKRaHkb8pxTbBMrkIB39iJFOaNgh5QTecRwL2JGIqTXR+V8Ea0ziB
- XHHeNZ84bH6A==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Apr 2020 05:49:53 -0700
-IronPort-SDR: N5VXaRe48B8SAxKxfo5v5QMlhj9Pa+/OO0FWcuPh8ngN915uUgU5EGRTHFbRorl/pt6equ/xjd
- lJeakK0NqPNQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,362,1580803200"; 
-   d="scan'208";a="255137124"
-Received: from jieren-mobl.ccr.corp.intel.com (HELO [10.249.174.27]) ([10.249.174.27])
-  by orsmga006.jf.intel.com with ESMTP; 09 Apr 2020 05:49:46 -0700
-Subject: Re: [PATCH V9 9/9] virtio: Intel IFC VF driver for VDPA
-To:     Jason Wang <jasowang@redhat.com>, Arnd Bergmann <arnd@arndb.de>
-Cc:     "Michael S. Tsirkin" <mst@redhat.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        kvm list <kvm@vger.kernel.org>,
-        virtualization@lists.linux-foundation.org,
-        Networking <netdev@vger.kernel.org>,
-        Jason Gunthorpe <jgg@mellanox.com>, maxime.coquelin@redhat.com,
-        cunming.liang@intel.com, zhihong.wang@intel.com,
-        rob.miller@broadcom.com, xiao.w.wang@intel.com,
-        eperezma@redhat.com, lulu@redhat.com,
-        Parav Pandit <parav@mellanox.com>, kevin.tian@intel.com,
-        Stefan Hajnoczi <stefanha@redhat.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Christoph Hellwig <hch@infradead.org>, aadam@redhat.com,
-        Jiri Pirko <jiri@mellanox.com>, shahafs@mellanox.com,
-        hanand@xilinx.com, mhabets@solarflare.com, gdawar@xilinx.com,
-        saugatm@xilinx.com, vmireyno@marvell.com,
-        zhangweining@ruijie.com.cn, Bie Tiwei <tiwei.bie@intel.com>
-References: <20200326140125.19794-1-jasowang@redhat.com>
- <20200326140125.19794-10-jasowang@redhat.com>
- <CAK8P3a1RXUXs5oYjB=Jq5cpvG11eTnmJ+vc18_-0fzgTH6envA@mail.gmail.com>
- <ffc4c788-2319-efda-508c-275b9f7efb95@redhat.com>
-From:   "Zhu, Lingshan" <lingshan.zhu@intel.com>
-Message-ID: <4bd16fa9-5436-4cd4-a565-89e11b9f6f92@intel.com>
-Date:   Thu, 9 Apr 2020 20:49:44 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
-MIME-Version: 1.0
-In-Reply-To: <ffc4c788-2319-efda-508c-275b9f7efb95@redhat.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+        Thu, 9 Apr 2020 08:50:00 -0400
+Received: from mailout3.samsung.com ([203.254.224.33]:41553 "EHLO
+        mailout3.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725987AbgDIMt7 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Apr 2020 08:49:59 -0400
+Received: from epcas5p2.samsung.com (unknown [182.195.41.40])
+        by mailout3.samsung.com (KnoxPortal) with ESMTP id 20200409124957epoutp03a70acfe904bc40925a14aafe20ab8926~EJ64c2R001562515625epoutp034
+        for <linux-kernel@vger.kernel.org>; Thu,  9 Apr 2020 12:49:57 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20200409124957epoutp03a70acfe904bc40925a14aafe20ab8926~EJ64c2R001562515625epoutp034
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1586436597;
+        bh=k127lAaemQMj/UxuaYJHqu26q7MPrNgzRaknKbgSsf0=;
+        h=From:To:Cc:Subject:Date:References:From;
+        b=aH9lC/5sYSfdgu0FWppKJyeFctE7U9niFnQ5lD/3vYVSg2lg8F/TgO69aU3MPh7dy
+         xw6WUb2WG+aqtV77iACLwenOWc4q5v/mZ+w/4uDMkS4wNaDUKLJSBRZYlXs5tnCdcv
+         fA2ky4L/iXDZHy6l8FycjiF6QDylXZGM/mCzzAf4=
+Received: from epsmges5p3new.samsung.com (unknown [182.195.42.75]) by
+        epcas5p3.samsung.com (KnoxPortal) with ESMTP id
+        20200409124957epcas5p3dfbf7b1eda2f7fbb79cea1a1f234cfdf~EJ64IgjDX0948209482epcas5p3s;
+        Thu,  9 Apr 2020 12:49:57 +0000 (GMT)
+Received: from epcas5p3.samsung.com ( [182.195.41.41]) by
+        epsmges5p3new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        69.E7.04736.5F91F8E5; Thu,  9 Apr 2020 21:49:57 +0900 (KST)
+Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
+        epcas5p3.samsung.com (KnoxPortal) with ESMTPA id
+        20200409124013epcas5p33036c008f30327378a6ff02050261626~EJyY8LLLP3207032070epcas5p3i;
+        Thu,  9 Apr 2020 12:40:13 +0000 (GMT)
+Received: from epsmgms1p2new.samsung.com (unknown [182.195.42.42]) by
+        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20200409124013epsmtrp10b7baeb055849648c1ebca84be825506~EJyY7dqyu3224132241epsmtrp1J;
+        Thu,  9 Apr 2020 12:40:13 +0000 (GMT)
+X-AuditID: b6c32a4b-ae3ff70000001280-4a-5e8f19f5c79f
+Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
+        epsmgms1p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        69.B3.04158.DA71F8E5; Thu,  9 Apr 2020 21:40:13 +0900 (KST)
+Received: from localhost.localdomain (unknown [107.109.224.135]) by
+        epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
+        20200409124012epsmtip272daa145077cb78ee405e314a1f6a06a~EJyXWxDKh1242112421epsmtip2l;
+        Thu,  9 Apr 2020 12:40:12 +0000 (GMT)
+From:   Maninder Singh <maninder1.s@samsung.com>
+To:     casey@schaufler-ca.com, jmorris@namei.org, serge@hallyn.com
+Cc:     linux-security-module@vger.kernel.org,
+        linux-kernel@vger.kernel.org, a.sahrawat@samsung.com,
+        v.narang@samsung.com, Maninder Singh <maninder1.s@samsung.com>
+Subject: [PATCH 1/1] smack: remove redundant structure variable from header.
+Date:   Thu,  9 Apr 2020 18:09:58 +0530
+Message-Id: <1586435998-18921-1-git-send-email-maninder1.s@samsung.com>
+X-Mailer: git-send-email 2.7.4
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrGIsWRmVeSWpSXmKPExsWy7bCmpu5Xyf44g+d7WCwu7k61uLftF5vF
+        uvWLmSwu75rDZvGh5xGbxeH5bSwW5y+cY7c4dHIuowOHx7XdkR4935M9+rasYvQ4un8Rm8fn
+        TXIBrFFcNimpOZllqUX6dglcGf3HIwsms1V07dvJ3sDYxNrFyMkhIWAi8ar7JksXIxeHkMBu
+        RonVy7axQjifGCX+tv9hB6kSEvjGKDGvWwam483cFVAdexklnn46CeV8ZZRYt2gjE0gVm4Ce
+        xKpde1hAbBEBe4nJ2++xgdjMAosZJd42KoDYwgI+Ejt/LgKq5+BgEVCV2HarGiTMK+Au8fr0
+        R2aIZXISN891MoPMlxDoYJNY2rWNESLhInHnWhM7hC0s8er4FihbSuJlfxs7REMzo8SnfWsZ
+        IZwpjBJLL36E+tpe4nVzA9hmZgFNifW79CHCshJTT61jgjiUT6L39xMmiDivxI55MLaqRMvN
+        DVBjpCU+f/zIAmF7SEza9hFspJBArMTsf6kTGGVnISxYwMi4ilEytaA4Nz212LTAOC+1XK84
+        Mbe4NC9dLzk/dxMjOPa1vHcwbjrnc4hRgINRiYe3g6k/Tog1say4MvcQowQHs5IIr3dTb5wQ
+        b0piZVVqUX58UWlOavEhRmkOFiVx3kmsV2OEBNITS1KzU1MLUotgskwcnFINjJ7th3IWlTvY
+        P97yIG+yu/+dt32T+Ca5lh0XTUz7IvWS6YPGob4HvvLaJ7K3RV22OZqh9v7xwvcHrG52Wtfq
+        Rax1r1l7NP5VUlLn7x+yCzuDbum+O/4mzjR7gs41YSHZr0acm4IXdTatV1m0Y292YGxEWbR+
+        M9OBdkkzm7AjNxXdJlTxzw68oMRSnJFoqMVcVJwIAH46SEf5AgAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFuphluLIzCtJLcpLzFFi42LZdlhJXneteH+cwf8rphYXd6da3Nv2i81i
+        3frFTBaXd81hs/jQ84jN4vD8NhaL8xfOsVscOjmX0YHD49ruSI+e78kefVtWMXoc3b+IzePz
+        JrkA1igum5TUnMyy1CJ9uwSujP7jkQWT2Sq69u1kb2BsYu1i5OSQEDCReDN3BUsXIxeHkMBu
+        RolD+94zQiSkJX7+e88CYQtLrPz3nB2i6DOjxPqfh8GK2AT0JFbt2gNUxMEhIuAs8Ws5M0gN
+        s8ByRomDxx6BbRAW8JHY+XMRE0gNi4CqxLZb1SBhXgF3idenPzJDzJeTuHmuk3kCI88CRoZV
+        jJKpBcW56bnFhgVGeanlesWJucWleel6yfm5mxjBYaSltYPxxIn4Q4wCHIxKPLwGDP1xQqyJ
+        ZcWVuYcYJTiYlUR4vZt644R4UxIrq1KL8uOLSnNSiw8xSnOwKInzyucfixQSSE8sSc1OTS1I
+        LYLJMnFwSjUwys16bZCxzWfn3WmPpHQr8sysotY3BJR0LH3zpOLn7F93WxsXHRJ3qPtS/tak
+        +NQCoRszO9c+q9i4QOa9stXMPJuzzEz37m+RVp/J8s3229xFS8ubH7Dt2X0koZthJw9H7IUr
+        Sy4v/2cgbDljQtkUgYr5FbZXVFh3zIt8nZZ98ShzhNA8mY1dAUosxRmJhlrMRcWJAF/bcy8f
+        AgAA
+X-CMS-MailID: 20200409124013epcas5p33036c008f30327378a6ff02050261626
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: REQ_APPROVE
+CMS-TYPE: 105P
+X-CMS-RootMailID: 20200409124013epcas5p33036c008f30327378a6ff02050261626
+References: <CGME20200409124013epcas5p33036c008f30327378a6ff02050261626@epcas5p3.samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+commit afb1cbe37440 ("LSM: Infrastructure management
+of the inode security") removed usage of smk_rcu,
+thus removing it from structure.
 
-On 4/9/2020 8:43 PM, Jason Wang wrote:
->
-> On 2020/4/9 下午6:41, Arnd Bergmann wrote:
->> On Thu, Mar 26, 2020 at 3:08 PM Jason Wang <jasowang@redhat.com> wrote:
->>> From: Zhu Lingshan <lingshan.zhu@intel.com>
->>>
->>> This commit introduced two layers to drive IFC VF:
->>>
->>> (1) ifcvf_base layer, which handles IFC VF NIC hardware operations and
->>>      configurations.
->>>
->>> (2) ifcvf_main layer, which complies to VDPA bus framework,
->>>      implemented device operations for VDPA bus, handles device probe,
->>>      bus attaching, vring operations, etc.
->>>
->>> Signed-off-by: Zhu Lingshan <lingshan.zhu@intel.com>
->>> Signed-off-by: Bie Tiwei <tiwei.bie@intel.com>
->>> Signed-off-by: Wang Xiao <xiao.w.wang@intel.com>
->>> Signed-off-by: Jason Wang <jasowang@redhat.com>
->>> +
->>> +#define IFCVF_QUEUE_ALIGNMENT  PAGE_SIZE
->>> +#define IFCVF_QUEUE_MAX                32768
->>> +static u16 ifcvf_vdpa_get_vq_align(struct vdpa_device *vdpa_dev)
->>> +{
->>> +       return IFCVF_QUEUE_ALIGNMENT;
->>> +}
->> This fails to build on arm64 with 64kb page size (found in linux-next):
->>
->> /drivers/vdpa/ifcvf/ifcvf_main.c: In function 'ifcvf_vdpa_get_vq_align':
->> arch/arm64/include/asm/page-def.h:17:20: error: conversion from 'long
->> unsigned int' to 'u16' {aka 'short unsigned int'} changes value from
->> '65536' to '0' [-Werror=overflow]
->>     17 | #define PAGE_SIZE  (_AC(1, UL) << PAGE_SHIFT)
->>        |                    ^
->> drivers/vdpa/ifcvf/ifcvf_base.h:37:31: note: in expansion of macro 
->> 'PAGE_SIZE'
->>     37 | #define IFCVF_QUEUE_ALIGNMENT PAGE_SIZE
->>        |                               ^~~~~~~~~
->> drivers/vdpa/ifcvf/ifcvf_main.c:231:9: note: in expansion of macro
->> 'IFCVF_QUEUE_ALIGNMENT'
->>    231 |  return IFCVF_QUEUE_ALIGNMENT;
->>        |         ^~~~~~~~~~~~~~~~~~~~~
->>
->> It's probably good enough to just not allow the driver to be built in 
->> that
->> configuration as it's fairly rare but unfortunately there is no 
->> simple Kconfig
->> symbol for it.
->
->
-> Or I think the 64KB alignment is probably more than enough.
->
-> Ling Shan, can we use smaller value here?
->
-> Thanks
+Signed-off-by: Maninder Singh <maninder1.s@samsung.com>
+Signed-off-by: Vaneet Narang <v.narang@samsung.com>
+---
+ security/smack/smack.h | 1 -
+ 1 file changed, 1 deletion(-)
 
-sure, we just need it page aligned, this value is only used in 
-get_vq_align(). I will try to find a arm64 machine and debug on this issue
+diff --git a/security/smack/smack.h b/security/smack/smack.h
+index 62529f3..5ebd0bb 100644
+--- a/security/smack/smack.h
++++ b/security/smack/smack.h
+@@ -111,7 +111,6 @@ struct inode_smack {
+ 	struct smack_known	*smk_mmap;	/* label of the mmap domain */
+ 	struct mutex		smk_lock;	/* initialization lock */
+ 	int			smk_flags;	/* smack inode flags */
+-	struct rcu_head         smk_rcu;	/* for freeing inode_smack */
+ };
+ 
+ struct task_smack {
+-- 
+1.9.1
 
-Thanks!
-
->
->
->>
->> In a similar driver, we did
->>
->> config VMXNET3
->>          tristate "VMware VMXNET3 ethernet driver"
->>          depends on PCI && INET
->>          depends on !(PAGE_SIZE_64KB || ARM64_64K_PAGES || \
->>                       IA64_PAGE_SIZE_64KB || MICROBLAZE_64K_PAGES || \
->>                       PARISC_PAGE_SIZE_64KB || PPC_64K_PAGES)
->>
->> I think we should probably make PAGE_SIZE_64KB a global symbol
->> in arch/Kconfig and have it selected by the other symbols so drivers
->> like yours can add a dependency for it.
->>
->>           Arnd
->>
->
