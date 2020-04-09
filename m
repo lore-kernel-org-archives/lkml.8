@@ -2,146 +2,149 @@ Return-Path: <SRS0=n+Ub=5Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B00CC2BA19
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 22:01:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DAD3C2BA19
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 22:06:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 28A872083E
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 22:01:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3CD722074F
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 22:06:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="ovvSPpNc"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HvapQdcE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726827AbgDIWBK (ORCPT
+        id S1726871AbgDIWGb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Apr 2020 18:01:10 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:41208 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726632AbgDIWBK (ORCPT
+        Thu, 9 Apr 2020 18:06:31 -0400
+Received: from mail-il1-f196.google.com ([209.85.166.196]:33886 "EHLO
+        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726797AbgDIWGb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Apr 2020 18:01:10 -0400
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 039M13xW030654;
-        Thu, 9 Apr 2020 17:01:03 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1586469663;
-        bh=1M+jwazQX4BDpMZKdqu/6bX8vsrM9v22p6tALsFhTxo=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=ovvSPpNcKyvxXg82NJUPUvrdqfAySOrq32XSWMJAs6XmnocP6RYdWcVLlNoWlAb+B
-         LbN3BgvVPbcmHKIEJRshorcFvq0Qm9HOd42XvaRgshF/tG7biFlg1RhDGJcsYFc9kd
-         DeYp9OM3QfLHkuOEHyMxmFzmG//8Pe6Zt/Xw6src=
-Received: from DFLE103.ent.ti.com (dfle103.ent.ti.com [10.64.6.24])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 039M12UF067248
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 9 Apr 2020 17:01:02 -0500
-Received: from DFLE105.ent.ti.com (10.64.6.26) by DFLE103.ent.ti.com
- (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Thu, 9 Apr
- 2020 17:01:02 -0500
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE105.ent.ti.com
- (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Thu, 9 Apr 2020 17:01:02 -0500
-Received: from [10.250.86.212] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 039M12ax068082;
-        Thu, 9 Apr 2020 17:01:02 -0500
-Subject: Re: [PATCH 6/7] remoteproc/k3-r5: Initialize TCM memories for ECC
-To:     Mathieu Poirier <mathieu.poirier@linaro.org>
-CC:     Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Lokesh Vutla <lokeshvutla@ti.com>,
-        <linux-remoteproc@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>
-References: <20200324201819.23095-1-s-anna@ti.com>
- <20200324201819.23095-7-s-anna@ti.com> <20200409213633.GB32029@xps15>
-From:   Suman Anna <s-anna@ti.com>
-Message-ID: <b7dfa5d6-53cc-362d-dd76-941639dfbf29@ti.com>
-Date:   Thu, 9 Apr 2020 17:01:02 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Thu, 9 Apr 2020 18:06:31 -0400
+Received: by mail-il1-f196.google.com with SMTP id t11so260094ils.1
+        for <linux-kernel@vger.kernel.org>; Thu, 09 Apr 2020 15:06:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=CGEzotVnRaQT7yF2QaJvHPaB3shOSQ3vcyNarTslrC8=;
+        b=HvapQdcECFWw/ne9zn+KAqOvO4558LNtGEQ4kL6usWUSXTXPck/iGafSzERuAMrQvZ
+         yHo2ND8PSweIBvCw6iuIeTZWayhtPOQNMfxxVRsO2yfJCRWh1ZFyhUBtcD4lEJhecHHH
+         s/we+ObvnqCd2SjrfkaiF1WCL84JcFvVdq2ubrUvA7lYMp1m+dTJwoKF+XRh6ePzi/3y
+         3sL+QirO5q4RGTYAHyG90pflJN/QM8ZeSjJdCwklBzgiPAWPnc14XKcDdXFSup5OgIyC
+         Gdy9vIMCbc/Gb3XbVAoA5toHp+AbOnY6TyyN+KciMcgyTVh6NH7ZPg4sanYeV0C+/DU5
+         BJUA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=CGEzotVnRaQT7yF2QaJvHPaB3shOSQ3vcyNarTslrC8=;
+        b=AAueDYO/U8GUjMXkIsUuyKd5AsVEw5239Byk8VR7eF/TijpsDxbU5dIptbrNWMwz7V
+         czKrLPthR6nBliiTJK6hkl6+9Am/7feinW6BZcYlSirtxA705BmSGY+ToUGRwJuL89qu
+         BqsN+Rv2rLDBHUDOzMCYyi+eGAYhVAYrPPWJFrKjevndY0ckVxrmvSJcQ9TO0ezuxblu
+         87m+Az339SGceHjdINRTIbxSpvKDD99n3WQSeJ5sT7xzyTQ2V/5/7UJZ3poVJd3rN1T4
+         AvEtfbNnR5QyQ2OQ5+x6lDPys3SqjZGo42OF71pGiLo/EVpslUp04i84MGu1305MKhYB
+         Ltzw==
+X-Gm-Message-State: AGi0Pubn6XH0hMETx+DyrdV7JkdLBgfPDc6hsAooAdg2qb8V7202HAUM
+        316uBQ4zYKUI9QsBc4sz3p8Yz2aGnQrVWFxKkEk=
+X-Google-Smtp-Source: APiQypLnsRlAm0w0mpfuP1UYMQZW3TM7H42jhSIG7Glgjj1GugOTTUrhNbOA3SEOea0zGfzoyJX0coVDtzOrlEHFpS4=
+X-Received: by 2002:a92:d407:: with SMTP id q7mr2019917ilm.95.1586469988954;
+ Thu, 09 Apr 2020 15:06:28 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200409213633.GB32029@xps15>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+References: <CA+G9fYtfG4nZs0ON=bBNarPaycNOgGNvhXxcdrGzM1epDDBt7A@mail.gmail.com>
+ <20200406172525.GA338360@carbon.DHCP.thefacebook.com>
+In-Reply-To: <20200406172525.GA338360@carbon.DHCP.thefacebook.com>
+From:   Yang Li <pku.leo@gmail.com>
+Date:   Thu, 9 Apr 2020 17:06:17 -0500
+Message-ID: <CADRPPNTSOJsz3kihZ3vXK0i6zWpUY_C36GxqmMO6ehACPT=aBg@mail.gmail.com>
+Subject: Re: mm/hugetlb.c:5580:3: error: implicit declaration of function
+ 'for_each_mem_pfn_range'; did you mean 'for_each_mem_range'
+To:     Roman Gushchin <guro@fb.com>
+Cc:     Naresh Kamboju <naresh.kamboju@linaro.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        andreas.schaufler@gmx.de,
+        "Kirill A. Shutemov" <kirill@shutemov.name>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Michal Hocko <mhocko@kernel.org>,
+        Rik van Riel <riel@surriel.com>, js1304@gmail.com,
+        lkft-triage@lists.linaro.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/9/20 4:36 PM, Mathieu Poirier wrote:
-> On Tue, Mar 24, 2020 at 03:18:18PM -0500, Suman Anna wrote:
->> The R5F processors on K3 SoCs all have two TCMs (ATCM and BTCM) that
->> support 32-bit ECC. The TCMs are typically loaded with some boot-up
->> code to initialize the R5 MPUs to further execute code out of DDR.
->> The ECC for the TCMs is enabled by default on K3 SoCs due to internal
->> default tie-off values, but the TCM memories are not initialized on
->> device power up. Any read access without the corresponding TCM memory
->> location initialized will generate an ECC error, and any such access
->> from a A72 or A53 core will trigger a SError.
->>
->> So, zero initialize both the TCM memories before loading any firmware
->> onto a R5F in remoteproc mode. Any R5F booted from U-Boot/SPL would
->> require a similar initialization in the bootloader. Note that both
->> the TCMs are initialized unconditionally as the TCM enable config bits
->> only manage the access and visibility from R5. The Core1 TCMs are not
->> used and accessible in LockStep mode, so they are only initialized
->> in Split-mode.
-> 
-> Everything was going well with this changelog until the last sentence.
-> Intuitively one is looking for the code that avoids the initialisation for
-> "Core1" in the patch but it is not there, and rightly so.  In locksetup mode the
-> second core is not registered with the remoteproc core and as such the
-> associated TCMs won't be initialised.
-> 
-> Simply put, I would just remove the last sentence as all it does (at least for
-> me) is add confusion.
+On Mon, Apr 6, 2020 at 12:37 PM Roman Gushchin <guro@fb.com> wrote:
+>
+> On Mon, Apr 06, 2020 at 07:48:54PM +0530, Naresh Kamboju wrote:
+> > While building Linux-next master for arm beagle board x15 the following
+> > build error was noticed.
+>
+> Hello Naresh!
+>
+> There was a number of cleanups and fixes to the original hugetlb_cma
+> patch, and it looks like some parts were lost.
+> I'm going to gather all changes and resubmit a new version later today.
+> Sorry for the inconvenience.
 
-Yep, that was more of a "NOTE: " type comment on overall behavior. I
-will drop the sentence for v2.
+Hi Roman,
 
-regards
-Suman
+I'm still getting this compile issue with linux-next tag
+next-20200409.  If the current patch set is broken, can we remove them
+from the linux-next for now?
 
-> 
-> With that:
-> 
-> Acked-by: Mathieu Poirier <mathieu.poirier@linaro.org>
-> 
->>
->> Signed-off-by: Suman Anna <s-anna@ti.com>
->> ---
->>  drivers/remoteproc/ti_k3_r5_remoteproc.c | 11 +++++++++++
->>  1 file changed, 11 insertions(+)
->>
->> diff --git a/drivers/remoteproc/ti_k3_r5_remoteproc.c b/drivers/remoteproc/ti_k3_r5_remoteproc.c
->> index 655f8f14c37d..8c9b7ae5d8b7 100644
->> --- a/drivers/remoteproc/ti_k3_r5_remoteproc.c
->> +++ b/drivers/remoteproc/ti_k3_r5_remoteproc.c
->> @@ -366,6 +366,17 @@ static int k3_r5_rproc_prepare(struct rproc *rproc)
->>  		dev_err(dev, "unable to enable cores for TCM loading, ret = %d\n",
->>  			ret);
->>  
->> +	/*
->> +	 * Zero out both TCMs unconditionally (access from v8 Arm core is not
->> +	 * affected by ATCM & BTCM enable configuration values) so that ECC
->> +	 * can be effective on all TCM addresses.
->> +	 */
->> +	dev_dbg(dev, "zeroing out ATCM memory\n");
->> +	memset(core->mem[0].cpu_addr, 0x00, core->mem[0].size);
->> +
->> +	dev_dbg(dev, "zeroing out BTCM memory\n");
->> +	memset(core->mem[1].cpu_addr, 0x00, core->mem[1].size);
->> +
->>  	return ret;
->>  }
->>  
->> -- 
->> 2.23.0
->>
+Regards,
+Leo
+>
+> Thanks!
+>
+> >
+> > mm/hugetlb.c: In function 'hugetlb_cma_reserve':
+> > mm/hugetlb.c:5580:3: error: implicit declaration of function
+> > 'for_each_mem_pfn_range'; did you mean 'for_each_mem_range'?
+> > [-Werror=3Dimplicit-function-declaration]
+> >    for_each_mem_pfn_range(i, nid, &start_pfn, &end_pfn, NULL) {
+> >    ^~~~~~~~~~~~~~~~~~~~~~
+> >    for_each_mem_range
+> > mm/hugetlb.c:5580:62: error: expected ';' before '{' token
+> >    for_each_mem_pfn_range(i, nid, &start_pfn, &end_pfn, NULL) {
+> >                                                               ^
+> > Few more details about build test,
+> >
+> > CONFIG_HUGETLBFS=3Dy
+> > CONFIG_HUGETLB_PAGE=3Dy
+> > CONFIG_HAVE_ARCH_TRANSPARENT_HUGEPAGE=3Dy
+> > CONFIG_ARCH_WANT_HUGE_PMD_SHARE=3Dy
+> >
+> > # CONFIG_TRANSPARENT_HUGEPAGE is not set
+> > # CONFIG_CMA is not set
+> >
+> > Kernel config link,
+> > https://urldefense.proofpoint.com/v2/url?u=3Dhttp-3A__snapshots.linaro.=
+org_openembedded_lkft_lkft_sumo_intel-2Dcore2-2D32_lkft_linux-2Dmainline_25=
+91_config&d=3DDwIBaQ&c=3D5VD0RTtNlTh3ycd41b3MUw&r=3DjJYgtDM7QT-W-Fz_d29HYQ&=
+m=3DUExtNmMVvgxP1D5SQnPuvrZmT1KYfONSBf9zENyfrs4&s=3DO436GE4UqAvqVk0stawAOhO=
+Um1bNCFpZzxiVeNSs-ck&e=3D
+> >
+> > Build log,
+> > https://urldefense.proofpoint.com/v2/url?u=3Dhttps-3A__ci.linaro.org_vi=
+ew_lkft_job_openembedded-2Dlkft-2Dlinux-2Dnext_DISTRO-3Dlkft-2CMACHINE-3Dam=
+57xx-2Devm-2Clabel-3Ddocker-2Dlkft_743_consoleText&d=3DDwIBaQ&c=3D5VD0RTtNl=
+Th3ycd41b3MUw&r=3DjJYgtDM7QT-W-Fz_d29HYQ&m=3DUExtNmMVvgxP1D5SQnPuvrZmT1KYfO=
+NSBf9zENyfrs4&s=3DnuGZRu4xyY-99ohWh1uNDTo6NeV62n7kSsyoefxEGvI&e=3D
+> >
+> > --
+> > Linaro LKFT
+> > https://urldefense.proofpoint.com/v2/url?u=3Dhttps-3A__lkft.linaro.org&=
+d=3DDwIBaQ&c=3D5VD0RTtNlTh3ycd41b3MUw&r=3DjJYgtDM7QT-W-Fz_d29HYQ&m=3DUExtNm=
+MVvgxP1D5SQnPuvrZmT1KYfONSBf9zENyfrs4&s=3DuYemxk7TXD2Qie6H7zY9UjuE7zlN5ILjb=
+D_1UD3jo4A&e=3D
 
+
+
+--=20
+- Leo
