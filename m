@@ -2,153 +2,171 @@ Return-Path: <SRS0=n+Ub=5Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB906C2BB85
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 22:39:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ABEC5C2BA19
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 22:39:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BFCB72072F
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 22:39:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7BFCD20730
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 22:39:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="ks+HwLLD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726928AbgDIWjL (ORCPT
+        id S1726934AbgDIWjQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Apr 2020 18:39:11 -0400
-Received: from relay9-d.mail.gandi.net ([217.70.183.199]:58675 "EHLO
-        relay9-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726689AbgDIWjL (ORCPT
+        Thu, 9 Apr 2020 18:39:16 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:41106 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726689AbgDIWjQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Apr 2020 18:39:11 -0400
-X-Originating-IP: 86.202.105.35
-Received: from localhost (lfbn-lyo-1-9-35.w86-202.abo.wanadoo.fr [86.202.105.35])
-        (Authenticated sender: alexandre.belloni@bootlin.com)
-        by relay9-d.mail.gandi.net (Postfix) with ESMTPSA id 78876FF803;
-        Thu,  9 Apr 2020 22:39:07 +0000 (UTC)
-Date:   Fri, 10 Apr 2020 00:39:07 +0200
-From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
-To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc:     Kamel Bouhara <kamel.bouhara@bootlin.com>,
-        William Breathitt Gray <vilhelm.gray@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Ludovic Desroches <ludovic.desroches@microchip.com>,
-        linux-arm-kernel@lists.infradead.org,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        linux-input@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org
-Subject: Re: [PATCH 2/3] Input: rotary-encoder-counter: add DT bindings
-Message-ID: <20200409223907.GW3628@piout.net>
-References: <20200406155806.1295169-1-kamel.bouhara@bootlin.com>
- <20200406155806.1295169-3-kamel.bouhara@bootlin.com>
- <20200409222115.GT75430@dtor-ws>
+        Thu, 9 Apr 2020 18:39:16 -0400
+Received: by mail-pf1-f196.google.com with SMTP id b8so201986pfp.8
+        for <linux-kernel@vger.kernel.org>; Thu, 09 Apr 2020 15:39:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=VafVIttK4BQaNnVH9DUs0wyPcW9Q+K+8pZ94hsjXorY=;
+        b=ks+HwLLDksBEOvVvqN/JGC0kYT1YA3ZyODv7fd5LcRQkkuCxeD/U4NzuevuVxgJHc0
+         N5Bpx7PYe2ea8hQXAZJUBCWzfmRs7/8n4XbU7v/nxBhZXmVzM/zBEsQKYM0j/LSOxFXb
+         /58Uv7YkttG9qPg91DkELUonTxslLhWtlIM58=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=VafVIttK4BQaNnVH9DUs0wyPcW9Q+K+8pZ94hsjXorY=;
+        b=LfxyIpF528FnxnPDIRN1B0UF3gcEEBFh/te18sIG/o0HIsXUeZG4lrNBFlfipYoV65
+         m1qMdqxPUciIzN3enRl7jNiQiuQMp9FEeHnMPJHNxuk3Oe7NHynFRlGIRj1jNEsoZ5iv
+         pgZyx/lCBOF1Br46HV1nI+sSjtXe999DszFopgWyOt+/K4h3ft9VgGjylkJrt7B/xRmZ
+         ncKXZ/aoia/vkGflzPOt6Byj6xnT8DjYXchPfcoKCbpX6g+qlzVKoRW4ogA/se3305Pb
+         onimIfofHuf1+IyWMCJTewWRyCIgrYzMwf+eDlgM0gemY32qSg2i4y8I0gerYB1jEM66
+         Ok8g==
+X-Gm-Message-State: AGi0PuZoVcq0siaeZZr23QrtIO3Kiy60HfKQurxbRa2Kn/jlv+jtmeyQ
+        BfPPdu2YCqcNERvG36ysqfuP4ZGSLxo=
+X-Google-Smtp-Source: APiQypJ5RNA/tsP/dhUFjAOHB8REdm0Pn79S8FKQSwN87WJZXsGMFAdBEb6WbpfS6Ja1icGakzD98A==
+X-Received: by 2002:a63:ff59:: with SMTP id s25mr1608578pgk.159.1586471955396;
+        Thu, 09 Apr 2020 15:39:15 -0700 (PDT)
+Received: from google.com ([2620:15c:202:201:476b:691:abc3:38db])
+        by smtp.gmail.com with ESMTPSA id o15sm171016pjp.41.2020.04.09.15.39.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 09 Apr 2020 15:39:14 -0700 (PDT)
+Date:   Thu, 9 Apr 2020 15:39:13 -0700
+From:   Prashant Malani <pmalani@chromium.org>
+To:     Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Cc:     linux-kernel@vger.kernel.org, heikki.krogerus@linux.intel.com,
+        Benson Leung <bleung@chromium.org>,
+        Guenter Roeck <groeck@chromium.org>
+Subject: Re: [PATCH 1/3] platform/chrome: typec: Use notifier for updates
+Message-ID: <20200409223913.GA15090@google.com>
+References: <20200407010940.155490-1-pmalani@chromium.org>
+ <20200407010940.155490-2-pmalani@chromium.org>
+ <12997222-5df5-1e16-3eb1-1e26252315f8@collabora.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200409222115.GT75430@dtor-ws>
+In-Reply-To: <12997222-5df5-1e16-3eb1-1e26252315f8@collabora.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Dmitry,
+Hi Enric,
 
-On 09/04/2020 15:21:15-0700, Dmitry Torokhov wrote:
-> On Mon, Apr 06, 2020 at 05:58:05PM +0200, Kamel Bouhara wrote:
-> > Add dt binding for the counter variant of the rotary encoder driver.
+Thanks for the reviews, as always. Kindly see inline:
+
+On Thu, Apr 09, 2020 at 11:01:42PM +0200, Enric Balletbo i Serra wrote:
+> Hi Prashant,
+> 
+> Thank you for the patch.
+> 
+> On 7/4/20 3:09, Prashant Malani wrote:
+> > Register a listener for the cros-usbpd-notifier, and update port state
+> > when a notification comes in.
 > > 
-> > Signed-off-by: Kamel Bouhara <kamel.bouhara@bootlin.com>
+> > Signed-off-by: Prashant Malani <pmalani@chromium.org>
 > > ---
-> >  .../input/rotary-encoder-counter.yaml         | 67 +++++++++++++++++++
-> >  1 file changed, 67 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/input/rotary-encoder-counter.yaml
+> >  drivers/platform/chrome/cros_ec_typec.c | 25 +++++++++++++++++++++++++
+> >  1 file changed, 25 insertions(+)
 > > 
-> > diff --git a/Documentation/devicetree/bindings/input/rotary-encoder-counter.yaml b/Documentation/devicetree/bindings/input/rotary-encoder-counter.yaml
-> > new file mode 100644
-> > index 000000000000..a59f7c1faf0c
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/input/rotary-encoder-counter.yaml
-> > @@ -0,0 +1,67 @@
-> > +# SPDX-License-Identifier: GPL-2.0
-> > +%YAML 1.2
-> > +---
-> > +$id: http://devicetree.org/schemas/input/rotary-encoder-counter.yaml#
-> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > +
-> > +title: Rotary Encoder Counter
-> > +
-> > +maintainers:
-> > +  - Kamel Bouhara <kamel.bouhara@bootlin.com>
-> > +
-> > +description:
-> > +  Registers a Rotary encoder connected through a counter device.
-> > +
-> > +properties:
-> > +  compatible:
-> > +    const: rotary-encoder-counter
+> > diff --git a/drivers/platform/chrome/cros_ec_typec.c b/drivers/platform/chrome/cros_ec_typec.c
+> > index 874269c070739..cf7c2652a1d6d 100644
+> > --- a/drivers/platform/chrome/cros_ec_typec.c
+> > +++ b/drivers/platform/chrome/cros_ec_typec.c
+> > @@ -11,6 +11,7 @@
+> >  #include <linux/of.h>
+> >  #include <linux/platform_data/cros_ec_commands.h>
+> >  #include <linux/platform_data/cros_ec_proto.h>
+> > +#include <linux/platform_data/cros_usbpd_notify.h>
 > 
-> I wonder if a separate driver is really needed. The original driver be
-> taught to use counter device when available?
+> I think you need to add a kconfig dependency/selection in order to don't have
+> build problems.
+
+Thanks, will make the change.
 > 
-
-By the original driver, do you mean drivers/input/misc/rotary_encoder.c
-that is using gpios ?
-
+> >  #include <linux/platform_device.h>
+> >  #include <linux/usb/typec.h>
+> >  
+> > @@ -26,6 +27,7 @@ struct cros_typec_data {
+> >  	struct typec_port *ports[EC_USB_PD_MAX_PORTS];
+> >  	/* Initial capabilities for each port. */
+> >  	struct typec_capability *caps[EC_USB_PD_MAX_PORTS];
+> > +	struct notifier_block nb;
+> >  };
+> >  
+> >  static int cros_typec_parse_port_props(struct typec_capability *cap,
+> > @@ -272,6 +274,22 @@ static int cros_typec_get_cmd_version(struct cros_typec_data *typec)
+> >  	return 0;
+> >  }
+> >  
+> > +static int cros_ec_typec_event(struct notifier_block *nb,
+> > +			       unsigned long host_event, void *_notify)
+> > +{
+> > +	struct cros_typec_data *typec = container_of(nb, struct cros_typec_data,
+> > +						     nb);
+> > +	int ret, i;
 > > +
-> > +  counter:
-> > +    description: Phandle for the counter device providing rotary position.
-> > +
-> > +  linux-axis:
-> > +    description: The input subsystem axis to map to this rotary encoder.
-> > +    type: boolean
-> > +
-> > +  qdec-mode:
-> > +    description: |
-> > +      Quadrature decoder function to set in the counter device.
-> > +      3: x1-PHA
-> > +      4: x1-PHB
-> > +      5: x2-PHA
-> > +      6: x2-PHB
-> > +      7: x4-PHA and PHB
+> > +	for (i = 0; i < typec->num_ports; i++) {
+> > +		ret = cros_typec_port_update(typec, i);
+> > +		if (ret < 0)
+> > +			dev_warn(typec->dev, "Update failed for port:%d\n", i);
 > 
-> Is it really property of the rotary encoder itself or property of the
-> counter device?
+> nit: space between : and %d
 > 
-
-The mode the quadrature decoder has to be put in depends on both the
-rotary encoder and the qdec.
-
+Done.
+> > +	}
 > > +
-> > +  steps:
-> > +    description: Number of steps in a full turnaround of the encoder.
-> > +      Only relevant for absolute axis. Defaults to 24 which is a typical
-> > +      value for such devices.
+> > +	return NOTIFY_OK;
+> > +}
 > > +
-> > +  relative-axis:
-> > +    description: Register a relative axis rather than an absolute one.
-> > +    type: boolean
-> > +
-> > +  rollover:
-> > +    description: Automatic rollover when the rotary value becomes greater
-> > +      than the specified steps or smaller than 0. For absolute axis only.
-> > +    type: boolean
-> > +
-> > +  poll-interval:
-> > +    description: Poll interval at which the position is read from the counter
-> > +      device (default 500ms).
+> >  #ifdef CONFIG_ACPI
+> >  static const struct acpi_device_id cros_typec_acpi_id[] = {
+> >  	{ "GOOG0014", 0 },
+> > @@ -332,6 +350,13 @@ static int cros_typec_probe(struct platform_device *pdev)
+> >  			goto unregister_ports;
+> >  	}
+> >  
+> > +	typec->nb.notifier_call = cros_ec_typec_event;
+> > +	ret = cros_usbpd_register_notify(&typec->nb);
+> > +	if (ret < 0) {
+> > +		dev_err(dev, "Failed to register notifier\n");
 > 
-> Is there a way found counters to signal an interrupt?
+> Currently cros_usbpd_register_notfity calls blocking_notifier_chain_register
+> that always return zero. Is fine to check the error but the print is unneded. If
+> probe fails will report the error.
 > 
+Done.
 
-For some counters, there are interrupts available, this is not trivial
-with the counter that is the target of this work but this is on the TODO
-list. Of course, this will also require adding a bit more to the
-in-kernel counter API to allow registering a callback that would be
-called when an interrupt happens.
+> > +		goto unregister_ports;
+> > +	}
+> > +
+> >  	return 0;
+> >  
+> >  unregister_ports:
+> > 
 
+Best regards,
 
--- 
-Alexandre Belloni, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+-Prashant
