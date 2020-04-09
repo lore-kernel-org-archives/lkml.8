@@ -2,235 +2,164 @@ Return-Path: <SRS0=n+Ub=5Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21095C2BBFD
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 13:17:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9DEFC2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 13:20:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E436E208FE
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 13:17:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 876AE20857
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 13:20:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726810AbgDINRA convert rfc822-to-8bit (ORCPT
+        id S1726817AbgDINUm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Apr 2020 09:17:00 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:16664 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726571AbgDINRA (ORCPT
+        Thu, 9 Apr 2020 09:20:42 -0400
+Received: from ivanoab7.miniserver.com ([37.128.132.42]:41048 "EHLO
+        www.kot-begemot.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726621AbgDINUl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Apr 2020 09:17:00 -0400
-Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 039D3dDk139234
-        for <linux-kernel@vger.kernel.org>; Thu, 9 Apr 2020 09:16:59 -0400
-Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 309209yqdw-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Thu, 09 Apr 2020 09:16:59 -0400
-Received: from localhost
-        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <naveen.n.rao@linux.ibm.com>;
-        Thu, 9 Apr 2020 14:16:43 +0100
-Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
-        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Thu, 9 Apr 2020 14:16:38 +0100
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
-        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 039DGpKa49807606
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 9 Apr 2020 13:16:51 GMT
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 64FD2A405F;
-        Thu,  9 Apr 2020 13:16:51 +0000 (GMT)
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 04876A4066;
-        Thu,  9 Apr 2020 13:16:51 +0000 (GMT)
-Received: from localhost (unknown [9.85.116.227])
-        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Thu,  9 Apr 2020 13:16:50 +0000 (GMT)
-Date:   Thu, 09 Apr 2020 18:46:47 +0530
-From:   "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>
-Subject: Re: [RFC] kretprobe: Prevent triggering kretprobe from within
- kprobe_flush_task
-To:     Jiri Olsa <jolsa@kernel.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>
-Cc:     Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>,
-        "bibo,mao" <bibo.mao@intel.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        "Ziqian SUN (Zamir)" <zsun@redhat.com>
-References: <20200408164641.3299633-1-jolsa@kernel.org>
-        <20200409213806.7657ec27d1b5cbd8243505b9@kernel.org>
-In-Reply-To: <20200409213806.7657ec27d1b5cbd8243505b9@kernel.org>
+        Thu, 9 Apr 2020 09:20:41 -0400
+Received: from tun252.jain.kot-begemot.co.uk ([192.168.18.6] helo=jain.kot-begemot.co.uk)
+        by www.kot-begemot.co.uk with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <anton.ivanov@cambridgegreys.com>)
+        id 1jMX6k-0006Uc-Ha; Thu, 09 Apr 2020 13:20:38 +0000
+Received: from jain.kot-begemot.co.uk ([192.168.3.3])
+        by jain.kot-begemot.co.uk with esmtp (Exim 4.92)
+        (envelope-from <anton.ivanov@cambridgegreys.com>)
+        id 1jMX6i-00080H-5Q; Thu, 09 Apr 2020 14:20:38 +0100
+Subject: Re: [PATCH] um: add a generic "fd" vector transport
+To:     =?UTF-8?Q?Marc-Andr=c3=a9_Lureau?= <marcandre.lureau@redhat.com>,
+        linux-um@lists.infradead.org
+Cc:     joerd.simons@collabora.co.uk, richard@nod.at, jdike@addtoit.com,
+        linux-kernel@vger.kernel.org, alex.dewar@gmx.co.uk
+References: <20200407202853.1791218-1-marcandre.lureau@redhat.com>
+From:   Anton Ivanov <anton.ivanov@cambridgegreys.com>
+Message-ID: <b21237a4-e54e-8d3d-fba2-c95d76b434bb@cambridgegreys.com>
+Date:   Thu, 9 Apr 2020 14:20:36 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-User-Agent: astroid/v0.15-13-gb675b421
- (https://github.com/astroidmail/astroid)
+In-Reply-To: <20200407202853.1791218-1-marcandre.lureau@redhat.com>
 Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8BIT
-X-TM-AS-GCONF: 00
-x-cbid: 20040913-0012-0000-0000-000003A16536
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 20040913-0013-0000-0000-000021DE8F3F
-Message-Id: <1586437540.j6vekko069.naveen@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
- definitions=2020-04-09_04:2020-04-07,2020-04-09 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 spamscore=0
- priorityscore=1501 impostorscore=0 malwarescore=0 mlxlogscore=999
- lowpriorityscore=0 mlxscore=0 suspectscore=0 clxscore=1015 phishscore=0
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2004090101
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-Clacks-Overhead: GNU Terry Pratchett
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Masami,
 
-Masami Hiramatsu wrote:
-> Hi Jiri,
-> 
-> On Wed,  8 Apr 2020 18:46:41 +0200
-> Jiri Olsa <jolsa@kernel.org> wrote:
-> 
->> hi,
->> Ziqian reported lockup when adding retprobe on _raw_spin_lock_irqsave.
-> 
-> Hmm, kprobe is lockless, but kretprobe involves spinlock.
-> Thus, eventually, I will blacklist the _raw_spin_lock_irqsave()
-> for kretprobe.
+On 07/04/2020 21:28, Marc-André Lureau wrote:
+> Learn to take a pre-opened file-descriptor for vector IO.
+>
+> Instead of teaching the driver to open a FD in multiple ways, it can
+> rely on management layer to do it on its behalf. For example, this
+> allows inheriting a preconfigured device fd or a simple socketpair()
+> setup, without further arguments, privileges or system access by UML.
+>
+> Signed-off-by: Marc-André Lureau <marcandre.lureau@redhat.com>
+> ---
+>   arch/um/drivers/vector_user.c | 59 +++++++++++++++++++++++++++++++++++
+>   1 file changed, 59 insertions(+)
+>
+> diff --git a/arch/um/drivers/vector_user.c b/arch/um/drivers/vector_user.c
+> index 29fae0456ade..45c1550dbb37 100644
+> --- a/arch/um/drivers/vector_user.c
+> +++ b/arch/um/drivers/vector_user.c
+> @@ -29,6 +29,7 @@
+>   #include <netdb.h>
+>   #include <stdlib.h>
+>   #include <os.h>
+> +#include <limits.h>
+>   #include <um_malloc.h>
+>   #include "vector_user.h"
+>   
+> @@ -42,6 +43,9 @@
+>   #define TRANS_RAW "raw"
+>   #define TRANS_RAW_LEN strlen(TRANS_RAW)
+>   
+> +#define TRANS_FD "fd"
+> +#define TRANS_FD_LEN strlen(TRANS_FD)
+> +
+>   #define VNET_HDR_FAIL "could not enable vnet headers on fd %d"
+>   #define TUN_GET_F_FAIL "tapraw: TUNGETFEATURES failed: %s"
+>   #define L2TPV3_BIND_FAIL "l2tpv3_open : could not bind socket err=%i"
+> @@ -347,6 +351,59 @@ static struct vector_fds *user_init_unix_fds(struct arglist *ifspec, int id)
+>   	return NULL;
+>   }
+>   
+> +static int strtofd(const char *nptr)
+> +{
+> +	long fd;
+> +	char *endptr;
+> +
+> +	if (nptr == NULL)
+> +		return -1;
+> +
+> +	errno = 0;
+> +	fd = strtol(nptr, &endptr, 10);
+> +	if (nptr == endptr ||
+> +		errno != 0 ||
+> +		*endptr != '\0' ||
+> +		fd < 0 ||
+> +		fd > INT_MAX) {
+> +		return -1;
+> +	}
+> +	return fd;
+> +}
+> +
+> +static struct vector_fds *user_init_fd_fds(struct arglist *ifspec)
+> +{
+> +	int fd = -1;
+> +	char *fdarg = NULL;
+> +	struct vector_fds *result = NULL;
+> +
+> +	fdarg = uml_vector_fetch_arg(ifspec, "fd");
+> +	fd = strtofd(fdarg);
+> +	if (fd == -1) {
+> +		printk(UM_KERN_ERR "fd open: bad or missing fd argument");
+> +		goto fd_cleanup;
+> +	}
+> +
+> +	result = uml_kmalloc(sizeof(struct vector_fds), UM_GFP_KERNEL);
+> +	if (result == NULL) {
+> +		printk(UM_KERN_ERR "fd open: allocation failed");
+> +		goto fd_cleanup;
+> +	}
+> +
+> +	result->rx_fd = fd;
+> +	result->tx_fd = fd;
+> +	result->remote_addr_size = 0;
+> +	result->remote_addr = NULL;
+> +	return result;
+> +
+> +fd_cleanup:
+> +	if (fd >= 0)
+> +		os_close_file(fd);
+> +	if (result != NULL)
+> +		kfree(result);
+> +	return NULL;
+> +}
+> +
+>   static struct vector_fds *user_init_raw_fds(struct arglist *ifspec)
+>   {
+>   	int rxfd = -1, txfd = -1;
+> @@ -578,6 +635,8 @@ struct vector_fds *uml_vector_user_open(
+>   		return user_init_socket_fds(parsed, ID_L2TPV3);
+>   	if (strncmp(transport, TRANS_BESS, TRANS_BESS_LEN) == 0)
+>   		return user_init_unix_fds(parsed, ID_BESS);
+> +	if (strncmp(transport, TRANS_FD, TRANS_FD_LEN) == 0)
+> +		return user_init_fd_fds(parsed);
+>   	return NULL;
+>   }
+>   
+Acked-By: Anton Ivanov <anton.ivanov@cambridgegreys.com>
 
-As far as I can see, this is the only place where probing 
-_raw_spin_lock_irqsave() is an issue.  Should we blacklist all users for 
-this case alone?
-
-> If you need to trace spinlock return, please consider to putting
-> kprobe at "ret" instruction.
-> 
->> My test was also able to trigger lockdep output:
->> 
->>  ============================================
->>  WARNING: possible recursive locking detected
->>  5.6.0-rc6+ #6 Not tainted
->>  --------------------------------------------
->>  sched-messaging/2767 is trying to acquire lock:
->>  ffffffff9a492798 (&(kretprobe_table_locks[i].lock)){-.-.}, at: kretprobe_hash_lock+0x52/0xa0
->> 
->>  but task is already holding lock:
->>  ffffffff9a491a18 (&(kretprobe_table_locks[i].lock)){-.-.}, at: kretprobe_trampoline+0x0/0x50
->> 
->>  other info that might help us debug this:
->>   Possible unsafe locking scenario:
->> 
->>         CPU0
->>         ----
->>    lock(&(kretprobe_table_locks[i].lock));
->>    lock(&(kretprobe_table_locks[i].lock));
->> 
->>   *** DEADLOCK ***
->> 
->>   May be due to missing lock nesting notation
->> 
->>  1 lock held by sched-messaging/2767:
->>   #0: ffffffff9a491a18 (&(kretprobe_table_locks[i].lock)){-.-.}, at: kretprobe_trampoline+0x0/0x50
->> 
->>  stack backtrace:
->>  CPU: 3 PID: 2767 Comm: sched-messaging Not tainted 5.6.0-rc6+ #6
->>  Call Trace:
->>   dump_stack+0x96/0xe0
->>   __lock_acquire.cold.57+0x173/0x2b7
->>   ? native_queued_spin_lock_slowpath+0x42b/0x9e0
->>   ? lockdep_hardirqs_on+0x590/0x590
->>   ? __lock_acquire+0xf63/0x4030
->>   lock_acquire+0x15a/0x3d0
->>   ? kretprobe_hash_lock+0x52/0xa0
->>   _raw_spin_lock_irqsave+0x36/0x70
->>   ? kretprobe_hash_lock+0x52/0xa0
->>   kretprobe_hash_lock+0x52/0xa0
->>   trampoline_handler+0xf8/0x940
->>   ? kprobe_fault_handler+0x380/0x380
->>   ? find_held_lock+0x3a/0x1c0
->>   kretprobe_trampoline+0x25/0x50
->>   ? lock_acquired+0x392/0xbc0
->>   ? _raw_spin_lock_irqsave+0x50/0x70
->>   ? __get_valid_kprobe+0x1f0/0x1f0
->>   ? _raw_spin_unlock_irqrestore+0x3b/0x40
->>   ? finish_task_switch+0x4b9/0x6d0
->>   ? __switch_to_asm+0x34/0x70
->>   ? __switch_to_asm+0x40/0x70
->> 
->> The code within the kretprobe handler checks for probe reentrancy,
->> so we won't trigger any _raw_spin_lock_irqsave probe in there.
->> 
->> The problem is in outside kprobe_flush_task, where we call:
->> 
->>   kprobe_flush_task
->>     kretprobe_table_lock
->>       raw_spin_lock_irqsave
->>         _raw_spin_lock_irqsave
->> 
->> where _raw_spin_lock_irqsave triggers the kretprobe and installs
->> kretprobe_trampoline handler on _raw_spin_lock_irqsave return.
-> 
-> Hmm, OK. In this case, I think we should mark this process is
-> going to die and never try to kretprobe on it.
-> 
->> 
->> The kretprobe_trampoline handler is then executed with already
->> locked kretprobe_table_locks, and first thing it does is to
->> lock kretprobe_table_locks ;-) the whole lockup path like:
->> 
->>   kprobe_flush_task
->>     kretprobe_table_lock
->>       raw_spin_lock_irqsave
->>         _raw_spin_lock_irqsave ---> probe triggered, kretprobe_trampoline installed
->> 
->>         ---> kretprobe_table_locks locked
->> 
->>         kretprobe_trampoline
->>           trampoline_handler
->>             kretprobe_hash_lock(current, &head, &flags);  <--- deadlock
->> 
->> The change below sets current_kprobe in kprobe_flush_task, so the probe
->> recursion protection check is hit and the probe is never set. It seems
->> to fix the deadlock.
->> 
->> I'm not sure this is the best fix, any ideas are welcome ;-)
-> 
-> Hmm, this is a bit tricky to fix this issue. Of course, temporary disable
-> kprobes (and kretprobe) on an area by filling current_kprobe might
-> be a good idea, but it also involves other kprobes.
-
-Not sure how you mean that. Jiri's RFC patch would be disabling 
-k[ret]probes within kprobe_flush_task(), which is only ever invoked from 
-finish_task_switch(). I only see calls to spin locks and kfree() from 
-here. Besides, kprobe_flush_task() itself is NOKPROBE, so we would 
-ideally want to not trace/probe other functions it calls.
-
-> 
-> How about let kretprobe skip the task which state == TASK_DEAD ?
-> 
-> diff --git a/kernel/kprobes.c b/kernel/kprobes.c
-> index 627fc1b7011a..3f207d2e0afb 100644
-> --- a/kernel/kprobes.c
-> +++ b/kernel/kprobes.c
-> @@ -1874,9 +1874,12 @@ static int pre_handler_kretprobe(struct kprobe *p, struct pt_regs *regs)
->  	 * To avoid deadlocks, prohibit return probing in NMI contexts,
->  	 * just skip the probe and increase the (inexact) 'nmissed'
->  	 * statistical counter, so that the user is informed that
-> -	 * something happened:
-> +	 * something happened.
-> +	 * Also, if the current task is dead, we will already in the process
-> +	 * to reclaim kretprobe instances from hash list. To avoid memory
-> +	 * leak, skip to run the kretprobe on such task.
->  	 */
-> -	if (unlikely(in_nmi())) {
-> +	if (unlikely(in_nmi()) || current->state == TASK_DEAD) {
-
-I'm wondering if this actually works. kprobe_flush_task() seems to be 
-called from finish_task_switch(), after the task switch is complete. So, 
-current task won't actually be dead here.
-
-
-- Naveen
+-- 
+Anton R. Ivanov
+Cambridgegreys Limited. Registered in England. Company Number 10273661
+https://www.cambridgegreys.com/
 
