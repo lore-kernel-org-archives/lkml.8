@@ -2,227 +2,130 @@ Return-Path: <SRS0=n+Ub=5Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CBB44C2BA19
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 17:16:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E38C3C2BB85
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 17:17:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9F392206F7
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 17:16:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C73E2206F7
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 17:17:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727224AbgDIRQg (ORCPT
+        id S1727421AbgDIRRi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Apr 2020 13:16:36 -0400
-Received: from smtp10.smtpout.orange.fr ([80.12.242.132]:60563 "EHLO
-        smtp.smtpout.orange.fr" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726795AbgDIRQg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Apr 2020 13:16:36 -0400
-Received: from localhost.localdomain ([93.22.150.119])
-        by mwinf5d45 with ME
-        id QhGa220032aoYT903hGajk; Thu, 09 Apr 2020 19:16:35 +0200
-X-ME-Helo: localhost.localdomain
-X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
-X-ME-Date: Thu, 09 Apr 2020 19:16:35 +0200
-X-ME-IP: 93.22.150.119
-From:   Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-To:     gregkh@linuxfoundation.org, tglx@linutronix.de
-Cc:     linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org,
-        Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Subject: [PATCH] lib: avoid trailing '\n' hidden in pr_fmt() in test_hash.c
-Date:   Thu,  9 Apr 2020 19:16:32 +0200
-Message-Id: <20200409171632.30738-1-christophe.jaillet@wanadoo.fr>
-X-Mailer: git-send-email 2.20.1
+        Thu, 9 Apr 2020 13:17:38 -0400
+Received: from mx2.suse.de ([195.135.220.15]:45794 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726787AbgDIRRi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Apr 2020 13:17:38 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 6E081ABEF;
+        Thu,  9 Apr 2020 17:17:35 +0000 (UTC)
+Received: by quack2.suse.cz (Postfix, from userid 1000)
+        id 0D76D1E124D; Thu,  9 Apr 2020 19:17:35 +0200 (CEST)
+Date:   Thu, 9 Apr 2020 19:17:35 +0200
+From:   Jan Kara <jack@suse.cz>
+To:     "Darrick J. Wong" <darrick.wong@oracle.com>
+Cc:     Ira Weiny <ira.weiny@intel.com>,
+        Dave Chinner <david@fromorbit.com>,
+        linux-kernel@vger.kernel.org,
+        Dan Williams <dan.j.williams@intel.com>,
+        Christoph Hellwig <hch@lst.de>,
+        "Theodore Y. Ts'o" <tytso@mit.edu>, Jan Kara <jack@suse.cz>,
+        Jeff Moyer <jmoyer@redhat.com>, linux-ext4@vger.kernel.org,
+        linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH V6 6/8] fs/xfs: Combine xfs_diflags_to_linux() and
+ xfs_diflags_to_iflags()
+Message-ID: <20200409171735.GA24720@quack2.suse.cz>
+References: <20200407182958.568475-7-ira.weiny@intel.com>
+ <20200408020827.GI24067@dread.disaster.area>
+ <20200408170923.GC569068@iweiny-DESK2.sc.intel.com>
+ <20200408210236.GK24067@dread.disaster.area>
+ <20200408220734.GA664132@iweiny-DESK2.sc.intel.com>
+ <20200408232106.GO24067@dread.disaster.area>
+ <20200409001206.GD664132@iweiny-DESK2.sc.intel.com>
+ <20200409003021.GJ6742@magnolia>
+ <20200409152944.GA801705@iweiny-DESK2.sc.intel.com>
+ <20200409165927.GD6741@magnolia>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200409165927.GD6741@magnolia>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-pr_xxx() functions usually have '\n' at the end of the logging message.
-Here, this '\n' is added via the 'pr_fmt' macro.
+On Thu 09-04-20 09:59:27, Darrick J. Wong wrote:
+> And today:
+> 
+>  1. There exists an in-kernel access mode flag S_DAX that is set when
+>     file accesses go directly to persistent memory, bypassing the page
+>     cache.  Applications must call statx to discover the current S_DAX
+>     state (STATX_ATTR_DAX).
+> 
+>  2. There exists an advisory file inode flag FS_XFLAG_DAX that is
+>     inherited from the parent directory FS_XFLAG_DAX inode flag at file
+>     creation time.  This advisory flag can be set or cleared at any
+>     time, but doing so does not immediately affect the S_DAX state.
+> 
+>     Unless overridden by mount options (see (3)), if FS_XFLAG_DAX is set
+>     and the fs is on pmem then it will enable S_DAX at inode load time;
+>     if FS_XFLAG_DAX is not set, it will not enable S_DAX.
+> 
+>  3. There exists a dax= mount option.
+> 
+>     "-o dax=never"  means "never set S_DAX, ignore FS_XFLAG_DAX."
+> 
+>     "-o dax=always" means "always set S_DAX (at least on pmem),
+>                     and ignore FS_XFLAG_DAX."
+> 
+>     "-o dax"        is an alias for "dax=always".
+> 
+>     "-o dax=inode"  means "follow FS_XFLAG_DAX" and is the default.
+> 
+>  4. There exists an advisory directory inode flag FS_XFLAG_DAX that can
+>     be set or cleared at any time.  The flag state is copied into any
+>     files or subdirectories when they are created within that directory.
+> 
+>  5. Programs that require a specific file access mode (DAX or not DAX)
+>     can do one of the following:
+> 
+>     (a) Create files in directories that the FS_XFLAG_DAX flag set as
+>         needed; or
+> 
+>     (b) Have the administrator set an override via mount option; or
+> 
+>     (c) Set or clear the file's FS_XFLAG_DAX flag as needed.  Programs
+>         must then cause the kernel to evict the inode from memory.  This
+>         can be done by:
+> 
+>         i>  Closing the file and re-opening the file and using statx to
+>             see if the fs has changed the S_DAX flag; and
+> 
+>         ii> If the file still does not have the desired S_DAX access
+>             mode, either unmount and remount the filesystem, or close
+>             the file and use drop_caches.
+> 
+>  6. It's not unreasonable that users who want to squeeze every last bit
+>     of performance out of the particular rough and tumble bits of their
+>     storage also be exposed to the difficulties of what happens when the
+>     operating system can't totally virtualize those hardware
+>     capabilities.  Your high performance sports car is not a Toyota
+>     minivan, as it were.
+> 
+> Given our overnight discussions, I don't think it'll be difficult to
+> hoist XFS_IDONTCACHE to the VFS so that 5.c.i is enough to change the
+> S_DAX state if nobody else is using the file.
 
-In order to be more consistent with other files, use a more standard
-convention and put these '\n' back in the messages themselves and remove it
-from the pr_fmt macro.
+I still find the "S_DAX changes on inode eviction" confusing but I
+guess it's as good as it gets and with XFS_IDONTCACHE lifted to VFS, 
+it seems acceptable so OK from me.
 
-While at it, merge some split strings.
-
-Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
----
- lib/test_hash.c | 55 ++++++++++++++++++++++++-------------------------
- 1 file changed, 27 insertions(+), 28 deletions(-)
-
-diff --git a/lib/test_hash.c b/lib/test_hash.c
-index 0ee40b4a56dd..e4bd06fdb9cb 100644
---- a/lib/test_hash.c
-+++ b/lib/test_hash.c
-@@ -14,7 +14,7 @@
-  * and hash_64().
-  */
- 
--#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt "\n"
-+#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
- 
- #include <linux/compiler.h>
- #include <linux/types.h>
-@@ -77,7 +77,7 @@ test_int_hash(unsigned long long h64, u32 hash_or[2][33])
- 	hash_or[1][0] |= h2 = __hash_32_generic(h0);
- #if HAVE_ARCH__HASH_32 == 1
- 	if (h1 != h2) {
--		pr_err("__hash_32(%#x) = %#x != __hash_32_generic() = %#x",
-+		pr_err("__hash_32(%#x) = %#x != __hash_32_generic() = %#x\n",
- 			h0, h1, h2);
- 		return false;
- 	}
-@@ -91,20 +91,20 @@ test_int_hash(unsigned long long h64, u32 hash_or[2][33])
- 		/* Test hash_32 */
- 		hash_or[0][k] |= h1 = hash_32(h0, k);
- 		if (h1 > m) {
--			pr_err("hash_32(%#x, %d) = %#x > %#x", h0, k, h1, m);
-+			pr_err("hash_32(%#x, %d) = %#x > %#x\n", h0, k, h1, m);
- 			return false;
- 		}
- #ifdef HAVE_ARCH_HASH_32
- 		h2 = hash_32_generic(h0, k);
- #if HAVE_ARCH_HASH_32 == 1
- 		if (h1 != h2) {
--			pr_err("hash_32(%#x, %d) = %#x != hash_32_generic() "
--				" = %#x", h0, k, h1, h2);
-+			pr_err("hash_32(%#x, %d) = %#x != hash_32_generic() = %#x\n",
-+				h0, k, h1, h2);
- 			return false;
- 		}
- #else
- 		if (h2 > m) {
--			pr_err("hash_32_generic(%#x, %d) = %#x > %#x",
-+			pr_err("hash_32_generic(%#x, %d) = %#x > %#x\n",
- 				h0, k, h1, m);
- 			return false;
- 		}
-@@ -113,20 +113,21 @@ test_int_hash(unsigned long long h64, u32 hash_or[2][33])
- 		/* Test hash_64 */
- 		hash_or[1][k] |= h1 = hash_64(h64, k);
- 		if (h1 > m) {
--			pr_err("hash_64(%#llx, %d) = %#x > %#x", h64, k, h1, m);
-+			pr_err("hash_64(%#llx, %d) = %#x > %#x\n",
-+				h64, k, h1, m);
- 			return false;
- 		}
- #ifdef HAVE_ARCH_HASH_64
- 		h2 = hash_64_generic(h64, k);
- #if HAVE_ARCH_HASH_64 == 1
- 		if (h1 != h2) {
--			pr_err("hash_64(%#llx, %d) = %#x != hash_64_generic() "
--				"= %#x", h64, k, h1, h2);
-+			pr_err("hash_64(%#llx, %d) = %#x != hash_64_generic() = %#x\n",
-+				h64, k, h1, h2);
- 			return false;
- 		}
- #else
- 		if (h2 > m) {
--			pr_err("hash_64_generic(%#llx, %d) = %#x > %#x",
-+			pr_err("hash_64_generic(%#llx, %d) = %#x > %#x\n",
- 				h64, k, h1, m);
- 			return false;
- 		}
-@@ -161,15 +162,13 @@ test_hash_init(void)
- 
- 			/* Check that hashlen_string gets the length right */
- 			if (hashlen_len(hashlen) != j-i) {
--				pr_err("hashlen_string(%d..%d) returned length"
--					" %u, expected %d",
-+				pr_err("hashlen_string(%d..%d) returned length %u, expected %d\n",
- 					i, j, hashlen_len(hashlen), j-i);
- 				return -EINVAL;
- 			}
- 			/* Check that the hashes match */
- 			if (hashlen_hash(hashlen) != h0) {
--				pr_err("hashlen_string(%d..%d) = %08x != "
--					"full_name_hash() = %08x",
-+				pr_err("hashlen_string(%d..%d) = %08x != full_name_hash() = %08x\n",
- 					i, j, hashlen_hash(hashlen), h0);
- 				return -EINVAL;
- 			}
-@@ -184,19 +183,19 @@ test_hash_init(void)
- 
- 	/* The OR of all the hash values should cover all the bits */
- 	if (~string_or) {
--		pr_err("OR of all string hash results = %#x != %#x",
-+		pr_err("OR of all string hash results = %#x != %#x\n",
- 			string_or, -1u);
- 		return -EINVAL;
- 	}
- 	if (~hash_or[0][0]) {
--		pr_err("OR of all __hash_32 results = %#x != %#x",
-+		pr_err("OR of all __hash_32 results = %#x != %#x\n",
- 			hash_or[0][0], -1u);
- 		return -EINVAL;
- 	}
- #ifdef HAVE_ARCH__HASH_32
- #if HAVE_ARCH__HASH_32 != 1	/* Test is pointless if results match */
- 	if (~hash_or[1][0]) {
--		pr_err("OR of all __hash_32_generic results = %#x != %#x",
-+		pr_err("OR of all __hash_32_generic results = %#x != %#x\n",
- 			hash_or[1][0], -1u);
- 		return -EINVAL;
- 	}
-@@ -208,13 +207,13 @@ test_hash_init(void)
- 		u32 const m = ((u32)2 << (i-1)) - 1;	/* Low i bits set */
- 
- 		if (hash_or[0][i] != m) {
--			pr_err("OR of all hash_32(%d) results = %#x "
--				"(%#x expected)", i, hash_or[0][i], m);
-+			pr_err("OR of all hash_32(%d) results = %#x (%#x expected)\n",
-+				i, hash_or[0][i], m);
- 			return -EINVAL;
- 		}
- 		if (hash_or[1][i] != m) {
--			pr_err("OR of all hash_64(%d) results = %#x "
--				"(%#x expected)", i, hash_or[1][i], m);
-+			pr_err("OR of all hash_64(%d) results = %#x (%#x expected)\n",
-+				i, hash_or[1][i], m);
- 			return -EINVAL;
- 		}
- 	}
-@@ -222,27 +221,27 @@ test_hash_init(void)
- 	/* Issue notices about skipped tests. */
- #ifdef HAVE_ARCH__HASH_32
- #if HAVE_ARCH__HASH_32 != 1
--	pr_info("__hash_32() is arch-specific; not compared to generic.");
-+	pr_info("__hash_32() is arch-specific; not compared to generic.\n");
- #endif
- #else
--	pr_info("__hash_32() has no arch implementation to test.");
-+	pr_info("__hash_32() has no arch implementation to test.\n");
- #endif
- #ifdef HAVE_ARCH_HASH_32
- #if HAVE_ARCH_HASH_32 != 1
--	pr_info("hash_32() is arch-specific; not compared to generic.");
-+	pr_info("hash_32() is arch-specific; not compared to generic.\n");
- #endif
- #else
--	pr_info("hash_32() has no arch implementation to test.");
-+	pr_info("hash_32() has no arch implementation to test.\n");
- #endif
- #ifdef HAVE_ARCH_HASH_64
- #if HAVE_ARCH_HASH_64 != 1
--	pr_info("hash_64() is arch-specific; not compared to generic.");
-+	pr_info("hash_64() is arch-specific; not compared to generic.\n");
- #endif
- #else
--	pr_info("hash_64() has no arch implementation to test.");
-+	pr_info("hash_64() has no arch implementation to test.\n");
- #endif
- 
--	pr_notice("%u tests passed.", tests);
-+	pr_notice("%u tests passed.\n", tests);
- 
- 	return 0;
- }
+								Honza
 -- 
-2.20.1
-
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
