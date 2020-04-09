@@ -2,195 +2,80 @@ Return-Path: <SRS0=n+Ub=5Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83E11C3815B
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 08:54:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE3CCC2D0EA
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 08:54:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0F53320784
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 08:36:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B85EB20730
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 08:54:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726597AbgDIIgf (ORCPT
+        id S1726654AbgDIIyT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Apr 2020 04:36:35 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:40827 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725828AbgDIIge (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Apr 2020 04:36:34 -0400
-Received: from ip5f5bd698.dynamic.kabel-deutschland.de ([95.91.214.152] helo=wittgenstein)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <christian.brauner@ubuntu.com>)
-        id 1jMSea-0007to-72; Thu, 09 Apr 2020 08:35:16 +0000
-Date:   Thu, 9 Apr 2020 10:35:14 +0200
-From:   Christian Brauner <christian.brauner@ubuntu.com>
-To:     "Eric W. Biederman" <ebiederm@xmission.com>
-Cc:     linux-kernel@vger.kernel.org, Oleg Nesterov <oleg@redhat.com>,
-        syzbot <syzbot+f675f964019f884dbd0f@syzkaller.appspotmail.com>,
-        adobriyan@gmail.com, akpm@linux-foundation.org,
-        allison@lohutok.net, areber@redhat.com, aubrey.li@linux.intel.com,
-        avagin@gmail.com, bfields@fieldses.org, christian@brauner.io,
-        cyphar@cyphar.com, gregkh@linuxfoundation.org, guro@fb.com,
-        jlayton@kernel.org, joel@joelfernandes.org, keescook@chromium.org,
-        linmiaohe@huawei.com, linux-fsdevel@vger.kernel.org,
-        mhocko@suse.com, mingo@kernel.org, peterz@infradead.org,
-        sargun@sargun.me, syzkaller-bugs@googlegroups.com,
-        tglx@linutronix.de, viro@zeniv.linux.org.uk
-Subject: Re: [PATCH] proc: Use a dedicated lock in struct pid
-Message-ID: <20200409083514.owpl4sbrqsif2ljq@wittgenstein>
-References: <00000000000011d66805a25cd73f@google.com>
- <20200403091135.GA3645@redhat.com>
- <87pnchwwlj.fsf_-_@x220.int.ebiederm.org>
+        Thu, 9 Apr 2020 04:54:19 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:58548 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725997AbgDIIyS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Apr 2020 04:54:18 -0400
+Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 756BDA00F8B9400D6FFA;
+        Thu,  9 Apr 2020 16:54:10 +0800 (CST)
+Received: from huawei.com (10.175.124.28) by DGGEMS409-HUB.china.huawei.com
+ (10.3.19.209) with Microsoft SMTP Server id 14.3.487.0; Thu, 9 Apr 2020
+ 16:54:04 +0800
+From:   Jason Yan <yanaijie@huawei.com>
+To:     <khuong@os.amperecomputing.com>, <bp@alien8.de>,
+        <mchehab@kernel.org>, <tony.luck@intel.com>, <james.morse@arm.com>,
+        <rrichter@marvell.com>, <linux-edac@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+CC:     Jason Yan <yanaijie@huawei.com>
+Subject: [PATCH] EDAC, xgene: remove set but not used 'address'
+Date:   Thu, 9 Apr 2020 16:52:37 +0800
+Message-ID: <20200409085237.46642-1-yanaijie@huawei.com>
+X-Mailer: git-send-email 2.17.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <87pnchwwlj.fsf_-_@x220.int.ebiederm.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.175.124.28]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 08, 2020 at 03:28:40PM -0500, Eric W. Biederman wrote:
-> 
-> syzbot wrote:
-> > ========================================================
-> > WARNING: possible irq lock inversion dependency detected
-> > 5.6.0-syzkaller #0 Not tainted
-> > --------------------------------------------------------
-> > swapper/1/0 just changed the state of lock:
-> > ffffffff898090d8 (tasklist_lock){.+.?}-{2:2}, at: send_sigurg+0x9f/0x320 fs/fcntl.c:840
-> > but this lock took another, SOFTIRQ-unsafe lock in the past:
-> >  (&pid->wait_pidfd){+.+.}-{2:2}
-> >
-> >
-> > and interrupts could create inverse lock ordering between them.
-> >
-> >
-> > other info that might help us debug this:
-> >  Possible interrupt unsafe locking scenario:
-> >
-> >        CPU0                    CPU1
-> >        ----                    ----
-> >   lock(&pid->wait_pidfd);
-> >                                local_irq_disable();
-> >                                lock(tasklist_lock);
-> >                                lock(&pid->wait_pidfd);
-> >   <Interrupt>
-> >     lock(tasklist_lock);
-> >
-> >  *** DEADLOCK ***
-> >
-> > 4 locks held by swapper/1/0:
-> 
-> The problem is that because wait_pidfd.lock is taken under the tasklist
-> lock.  It must always be taken with irqs disabled as tasklist_lock can be
-> taken from interrupt context and if wait_pidfd.lock was already taken this
-> would create a lock order inversion.
-> 
-> Oleg suggested just disabling irqs where I have added extra calls to
-> wait_pidfd.lock.  That should be safe and I think the code will eventually
-> do that.  It was rightly pointed out by Christian that sharing the
-> wait_pidfd.lock was a premature optimization.
-> 
-> It is also true that my pre-merge window testing was insufficient.  So
-> remove the premature optimization and give struct pid a dedicated lock of
-> it's own for struct pid things.  I have verified that lockdep sees all 3
-> paths where we take the new pid->lock and lockdep does not complain.
-> 
-> It is my current day dream that one day pid->lock can be used to guard the
-> task lists as well and then the tasklist_lock won't need to be held to
-> deliver signals.  That will require taking pid->lock with irqs disabled.
-> 
-> Link: https://lore.kernel.org/lkml/00000000000011d66805a25cd73f@google.com/
-> Cc: Oleg Nesterov <oleg@redhat.com>
-> Cc: Christian Brauner <christian.brauner@ubuntu.com>
-> Reported-by: syzbot+343f75cdeea091340956@syzkaller.appspotmail.com
-> Reported-by: syzbot+832aabf700bc3ec920b9@syzkaller.appspotmail.com
-> Reported-by: syzbot+f675f964019f884dbd0f@syzkaller.appspotmail.com
-> Reported-by: syzbot+a9fb1457d720a55d6dc5@syzkaller.appspotmail.com
-> Fixes: 7bc3e6e55acf ("proc: Use a list of inodes to flush from proc")
-> Signed-off-by: "Eric W. Biederman" <ebiederm@xmission.com>
+Fix the following gcc warning:
 
-Thanks, Eric.
-Acked-by: Christian Brauner <christian.brauner@ubuntu.com>
+drivers/edac/xgene_edac.c:1486:7: warning: variable ‘address’ set but
+not used [-Wunused-but-set-variable]
+   u32 address;
+       ^~~~~~~
 
-Christian
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: Jason Yan <yanaijie@huawei.com>
+---
+ drivers/edac/xgene_edac.c | 2 --
+ 1 file changed, 2 deletions(-)
 
-> ---
-> 
-> If anyone sees an issue please holer otherwise I plan on sending
-> this fix to Linus.
-> 
->  fs/proc/base.c      | 10 +++++-----
->  include/linux/pid.h |  1 +
->  kernel/pid.c        |  1 +
->  3 files changed, 7 insertions(+), 5 deletions(-)
-> 
-> diff --git a/fs/proc/base.c b/fs/proc/base.c
-> index 74f948a6b621..6042b646ab27 100644
-> --- a/fs/proc/base.c
-> +++ b/fs/proc/base.c
-> @@ -1839,9 +1839,9 @@ void proc_pid_evict_inode(struct proc_inode *ei)
->  	struct pid *pid = ei->pid;
->  
->  	if (S_ISDIR(ei->vfs_inode.i_mode)) {
-> -		spin_lock(&pid->wait_pidfd.lock);
-> +		spin_lock(&pid->lock);
->  		hlist_del_init_rcu(&ei->sibling_inodes);
-> -		spin_unlock(&pid->wait_pidfd.lock);
-> +		spin_unlock(&pid->lock);
->  	}
->  
->  	put_pid(pid);
-> @@ -1877,9 +1877,9 @@ struct inode *proc_pid_make_inode(struct super_block * sb,
->  	/* Let the pid remember us for quick removal */
->  	ei->pid = pid;
->  	if (S_ISDIR(mode)) {
-> -		spin_lock(&pid->wait_pidfd.lock);
-> +		spin_lock(&pid->lock);
->  		hlist_add_head_rcu(&ei->sibling_inodes, &pid->inodes);
-> -		spin_unlock(&pid->wait_pidfd.lock);
-> +		spin_unlock(&pid->lock);
->  	}
->  
->  	task_dump_owner(task, 0, &inode->i_uid, &inode->i_gid);
-> @@ -3273,7 +3273,7 @@ static const struct inode_operations proc_tgid_base_inode_operations = {
->  
->  void proc_flush_pid(struct pid *pid)
->  {
-> -	proc_invalidate_siblings_dcache(&pid->inodes, &pid->wait_pidfd.lock);
-> +	proc_invalidate_siblings_dcache(&pid->inodes, &pid->lock);
->  	put_pid(pid);
->  }
->  
-> diff --git a/include/linux/pid.h b/include/linux/pid.h
-> index 01a0d4e28506..cc896f0fc4e3 100644
-> --- a/include/linux/pid.h
-> +++ b/include/linux/pid.h
-> @@ -60,6 +60,7 @@ struct pid
->  {
->  	refcount_t count;
->  	unsigned int level;
-> +	spinlock_t lock;
->  	/* lists of tasks that use this pid */
->  	struct hlist_head tasks[PIDTYPE_MAX];
->  	struct hlist_head inodes;
-> diff --git a/kernel/pid.c b/kernel/pid.c
-> index efd34874b3d1..517d0855d4cf 100644
-> --- a/kernel/pid.c
-> +++ b/kernel/pid.c
-> @@ -246,6 +246,7 @@ struct pid *alloc_pid(struct pid_namespace *ns, pid_t *set_tid,
->  
->  	get_pid_ns(ns);
->  	refcount_set(&pid->count, 1);
-> +	spin_lock_init(&pid->lock);
->  	for (type = 0; type < PIDTYPE_MAX; ++type)
->  		INIT_HLIST_HEAD(&pid->tasks[type]);
->  
-> -- 
-> 2.20.1
-> 
-> Eric
+diff --git a/drivers/edac/xgene_edac.c b/drivers/edac/xgene_edac.c
+index e4a1032ba0b5..e5e0fbdeca29 100644
+--- a/drivers/edac/xgene_edac.c
++++ b/drivers/edac/xgene_edac.c
+@@ -1483,13 +1483,11 @@ static void xgene_edac_rb_report(struct edac_device_ctl_info *edac_dev)
+ 		return;
+ 	if (reg & STICKYERR_MASK) {
+ 		bool write;
+-		u32 address;
+ 
+ 		dev_err(edac_dev->dev, "IOB bus access error(s)\n");
+ 		if (regmap_read(ctx->edac->rb_map, RBEIR, &reg))
+ 			return;
+ 		write = reg & WRITE_ACCESS_MASK ? 1 : 0;
+-		address = RBERRADDR_RD(reg);
+ 		if (reg & AGENT_OFFLINE_ERR_MASK)
+ 			dev_err(edac_dev->dev,
+ 				"IOB bus %s access to offline agent error\n",
+-- 
+2.17.2
+
