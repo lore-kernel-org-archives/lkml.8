@@ -2,95 +2,134 @@ Return-Path: <SRS0=n+Ub=5Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07521C2BA2B
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 10:45:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AF71C2BB86
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 10:46:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CF3C020A8B
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 10:45:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3427020A8B
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 10:46:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586429150;
-	bh=Bj4KCi4Ibg5oo9TbDcevGuX/4djzmyiF0/NqHpujLqQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=RiR9qqGObFuCfDLeT4SK/FokTfJl3OCz8PSOiAN3FuPrfJju5+E7HW7LRLksCxwyZ
-	 Sh9MbHBORCdbeyAFH3XLtsa/LWFIx0OfGBPh95O46Xx+IotpuhjNkVnDQ+i2mnM9GH
-	 Cgh2fI+v/op5GQ5GjAwChq8KvWpvwGvAO9gw7Sjo=
+	s=default; t=1586429160;
+	bh=2sApeTj49jEgM0EIBBiKjWdk0CL0Z8Nfx1A+M++tSp0=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=kKesTkOlc+RWyLFxKzqpA+6u0VZq0yTcXiHlHx1pRyKpolyJNXlz1uLEIeElT3Jbz
+	 BmuvHOAgfsZ3GWSqbarwIGs18DE5/gbJkt0oh49HNS3Sk2JVd2YPK5akrg196vcebK
+	 qvhQne9LSA1uQYY6TVhu08QahCM7L4gBjWmk6DFI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726642AbgDIKpt (ORCPT
+        id S1726666AbgDIKp7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Apr 2020 06:45:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34898 "EHLO mail.kernel.org"
+        Thu, 9 Apr 2020 06:45:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35090 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725783AbgDIKps (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Apr 2020 06:45:48 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1725783AbgDIKp6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Apr 2020 06:45:58 -0400
+Received: from mail-io1-f44.google.com (mail-io1-f44.google.com [209.85.166.44])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 73EC820857;
-        Thu,  9 Apr 2020 10:45:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 94D1021473;
+        Thu,  9 Apr 2020 10:45:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586429149;
-        bh=Bj4KCi4Ibg5oo9TbDcevGuX/4djzmyiF0/NqHpujLqQ=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=LNFrHuPszFFuiny384iC1PwRmTLzv4HQZNyo/jrxoac4fWOVWAPGFo/+wZOT2LuKu
-         X97cz7kC1A/dUII7JG5bbJ5LASWAjI/vznxf653JbVBgn+4Euav7vLeb9o4kKJ8U8G
-         8l+vYYuekSh6cJ94lnWD1cjCmvRDjvfGUmtJbGmY=
-Date:   Thu, 9 Apr 2020 11:45:46 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Baolin Wang <baolin.wang7@gmail.com>
-Cc:     lee.jones@linaro.org, arnd@arndb.de, orsonzhai@gmail.com,
-        zhang.lyra@gmail.com, linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH 2/3] regmap: Add reg_update_bits() support
-Message-ID: <20200409104546.GA5399@sirena.org.uk>
-References: <cover.1586422035.git.baolin.wang7@gmail.com>
- <f48d3b98debe5b2c1cc9a384874d6032b051a4c5.1586422035.git.baolin.wang7@gmail.com>
+        s=default; t=1586429158;
+        bh=2sApeTj49jEgM0EIBBiKjWdk0CL0Z8Nfx1A+M++tSp0=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=g3CKIqBoso44Q5ajMRvQONnNDDJBHJXGv+zjNFeBARBgPA544ypF2VkraZzIeiIc3
+         D7xEZsyYLTPn+FU+r8M6l6E0ocpshCB28aUmhTLnOL0YUZW5tAXiD64Jo+uDKft2UV
+         3zi5XVcds8d8appO2pbzwdK5RptaZF87/MezVJco=
+Received: by mail-io1-f44.google.com with SMTP id y17so3323860iow.9;
+        Thu, 09 Apr 2020 03:45:58 -0700 (PDT)
+X-Gm-Message-State: AGi0PuYhTwHuCZlh04bdRTH24SCwAJeYr6H44avzPZhiHjDfY9nIpY0b
+        ztO/qIlpCzOhiDo8YjTYJiX/qIY6B4gdy6Z3zxA=
+X-Google-Smtp-Source: APiQypLZXSP9OLEawh2kPzU7n5CwbnEHLFiJwNvhkkyeNMLGtRypdtoHpl9suvWk1e2Zkevx4iuWD6RTyO9WRxwTVCc=
+X-Received: by 2002:a5e:8b47:: with SMTP id z7mr11130047iom.16.1586429157928;
+ Thu, 09 Apr 2020 03:45:57 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="u3/rZRmxL6MmkK24"
-Content-Disposition: inline
-In-Reply-To: <f48d3b98debe5b2c1cc9a384874d6032b051a4c5.1586422035.git.baolin.wang7@gmail.com>
-X-Cookie: HUGH BEAUMONT died in 1982!!
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20200113172245.27925-1-ardb@kernel.org> <20200113172245.27925-6-ardb@kernel.org>
+ <63b125a4-6c62-fcdf-de22-d3bebe2dcbf5@suse.cz> <CAMj1kXGiT_zYjc6X-msRXVozhpDAY0UesEW3_4fOgiH4FyMgDw@mail.gmail.com>
+ <972b66a9-92c7-9a15-1aa1-e3236abe90df@suse.cz> <CAMj1kXFGkOM9fbqr44_TbdxqFjH1i3d8dkO64C1mQmH=AqrUSQ@mail.gmail.com>
+ <20200409080626.GV5951@GaryWorkstation> <984a2b3c-a9d4-e733-6372-4abf0f99be1f@suse.cz>
+ <CAMj1kXFHUusU9dDgqhU_qswDVgYWx_kpaDEroj4ZSt3hr-AFsA@mail.gmail.com>
+ <d38fd829-b944-da10-58c0-180f80e8264d@suse.cz> <CAMj1kXG4F+WzJX8_FyRAxQmDwqvbQMzh3Ji1KcpH_eO3Zt3-WQ@mail.gmail.com>
+ <b6006dd7-2ce0-0776-9a61-52377b8eef63@suse.cz>
+In-Reply-To: <b6006dd7-2ce0-0776-9a61-52377b8eef63@suse.cz>
+From:   Ard Biesheuvel <ardb@kernel.org>
+Date:   Thu, 9 Apr 2020 12:45:47 +0200
+X-Gmail-Original-Message-ID: <CAMj1kXFsaoUoWbwRVFJX_ze+gJHOKRLyTL5kEecYJRPr84wWqw@mail.gmail.com>
+Message-ID: <CAMj1kXFsaoUoWbwRVFJX_ze+gJHOKRLyTL5kEecYJRPr84wWqw@mail.gmail.com>
+Subject: Re: [PATCH 05/13] efi/x86: don't map the entire kernel text RW for
+ mixed mode
+To:     Jiri Slaby <jslaby@suse.cz>
+Cc:     Gary Lin <glin@suse.com>, linux-efi <linux-efi@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Anshuman Khandual <anshuman.khandual@arm.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Dave Young <dyoung@redhat.com>,
+        Saravana Kannan <saravanak@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, 9 Apr 2020 at 12:09, Jiri Slaby <jslaby@suse.cz> wrote:
+>
+> On 09. 04. 20, 11:09, Ard Biesheuvel wrote:
+> > On Thu, 9 Apr 2020 at 10:36, Jiri Slaby <jslaby@suse.cz> wrote:
+> >>
+> >> On 09. 04. 20, 10:19, Ard Biesheuvel wrote:
+> >>>>>> $ rpm -qlp ~/Downloads/ovmf-202002-1.1.i586.rpm
+> >>>>>> warning: /home/ardbie01/Downloads/ovmf-202002-1.1.i586.rpm: Header V3
+> >>>>>> RSA/SHA256 Signature, key ID 3dbdc284: NOKEY
+> >>>>>> /usr/share/doc/packages/ovmf
+> >>>>>> /usr/share/doc/packages/ovmf/README
+> >>>>>
+> >>>>> Hmmm, it's weird that OBS doesn't list all derived files.
+> >>>>> Anyway, the ia32 ovmf is available in
+> >>>>> http://download.opensuse.org/tumbleweed/repo/oss/noarch/qemu-ovmf-ia32-202002-1.1.noarch.rpm
+> >>>>
+> >>>> It indeed does:
+> >>>> https://build.opensuse.org/package/binaries/openSUSE:Factory/ovmf/standard
+> >>>>
+> >>>> Note that the ia32 version is noarch, built on i586.
+> >>>>
+> >>>
+> >>> I am not able to reproduce this issue using the linked firmware image
+> >>> and a 5.6 x86_64_defconfig with efivarfs built in.
+> >>
+> >> Yeah, I had to use the distro config too. Not sure what the trigger is.
+> >> Maybe some NUMA configs or something.
+> >>
+> >>> Could anyone share the full log, please, along with the kernel config
+> >>> that was used?
+> >>
+> >> Both uploaded:
+> >> http://decibel.fi.muni.cz/~xslaby/err/
+> >>
+> >
+> > With the same config, I am still not seeing the issue.
+> >
+> >
+> >> Note that I switched the for-me-necessary =m configs to =y. So that it
+> >> is enough to build bzImage, w/o modules...
+> >>
+> >
+> > Could you please try running it again with CONFIG_EFI_PGT_DUMP=y enabled?
+>
+> No problem:
+> http://decibel.fi.muni.cz/~xslaby/err/dmesg2.txt
+>
+> > In the mean time, I will try to install Tumbleweed from scratch. Do
+> > you have any steps I could follow to reproduce your setup?
+>
+> Not really, just installed TW 64-bit and used efi and grub 32 bit.
+>
 
---u3/rZRmxL6MmkK24
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+OK, so you installed using a 64-bit EFI, and then switched to a 32-bit
+one? Or is there a special mixed-mode capable installer?
 
-On Thu, Apr 09, 2020 at 04:57:58PM +0800, Baolin Wang wrote:
-> Add reg_update_bits() support in case some platforms use a special method
-> to update bits of registers.
->=20
-> Signed-off-by: Baolin Wang <baolin.wang7@gmail.com>
-> ---
->  drivers/base/regmap/regmap-mmio.c | 29 ++++++++++++++++++++++++++++-
->  drivers/base/regmap/regmap.c      |  1 +
-
-MMIO devices clearly don't physically have an update_bits() operation so
-this should be implemented further up the stack where it applies to all
-buses without physical support.
-
---u3/rZRmxL6MmkK24
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl6O/NcACgkQJNaLcl1U
-h9DjRgf+IP/u9nUEoNtZLGYFiBKynZ6dn873JFvLn2vt0eHtxyyxscgijvgMfV/K
-DeVYVYmwbnc2/YVjVbNWna7fhvNgjVxWx23JH1AyUCGBJm58a5QVht3k0SJaWx6/
-wUDpjGNzdJbyZfMo+ifhzr6/4gqnoylniIAVntbuFoPkHoCg5F5QGdVmje7YwC3z
-VaMLNNxKW1egPjy7JZ7f+K/08yjKURsMkZ6793ebYl00s9Xf49JSse/0szNilBjj
-2r7Te/+wHtBYmFRe2dP0jwqQLE89KmSuHy7ONHuaLSdVkyiD1UVVLS2EsFwMF4Dk
-IxzikTfhuUw5IT02gSckH9+KCxC2Dw==
-=Kfcm
------END PGP SIGNATURE-----
-
---u3/rZRmxL6MmkK24--
+(The ones I found are x86_64 only)
