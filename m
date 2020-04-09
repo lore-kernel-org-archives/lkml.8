@@ -6,93 +6,94 @@ X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D28EC2BB1D
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B78BC2BB55
 	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 08:04:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9508D212CC
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 07:57:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 52C4421924
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 07:58:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726559AbgDIH5C convert rfc822-to-8bit (ORCPT
+        id S1726666AbgDIH6X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Apr 2020 03:57:02 -0400
-Received: from lixid.tarent.de ([193.107.123.118]:44812 "EHLO mail.lixid.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725972AbgDIH5C (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Apr 2020 03:57:02 -0400
-X-Greylist: delayed 542 seconds by postgrey-1.27 at vger.kernel.org; Thu, 09 Apr 2020 03:57:01 EDT
-Received: from localhost (localhost [127.0.0.1])
-        by mail.lixid.net (MTA) with ESMTP id B721814094B;
-        Thu,  9 Apr 2020 09:47:57 +0200 (CEST)
-Received: from mail.lixid.net ([127.0.0.1])
-        by localhost (mail.lixid.net [127.0.0.1]) (MFA, port 10024) with LMTP
-        id L4OhUbqpilQB; Thu,  9 Apr 2020 09:47:52 +0200 (CEST)
-Received: from tglase-nb.lan.tarent.de (vpn-172-34-0-14.dynamic.tarent.de [172.34.0.14])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.lixid.net (MTA) with ESMTPS id 4FB5D1406B0;
-        Thu,  9 Apr 2020 09:47:52 +0200 (CEST)
-Received: by tglase-nb.lan.tarent.de (Postfix, from userid 1000)
-        id 0662B5203EC; Thu,  9 Apr 2020 09:47:52 +0200 (CEST)
-Received: from localhost (localhost [127.0.0.1])
-        by tglase-nb.lan.tarent.de (Postfix) with ESMTP id 038A352034C;
-        Thu,  9 Apr 2020 09:47:52 +0200 (CEST)
-Date:   Thu, 9 Apr 2020 09:47:51 +0200 (CEST)
-From:   Thorsten Glaser <t.glaser@tarent.de>
-X-X-Sender: tglase@tglase-nb.lan.tarent.de
-To:     Andy Lutomirski <luto@kernel.org>
-cc:     X86 ML <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>, 954294@bugs.debian.org
-Subject: Re: __X32_SYSCALL_BIT being defined as UL constant breaks
- userspace
-In-Reply-To: <CALCETrUkC0mfbo44+Jb7p6f19S+nH5VAEZAwTaYApbNqy9Fj-w@mail.gmail.com>
-Message-ID: <alpine.DEB.2.22.394.2004090945110.31491@tglase-nb.lan.tarent.de>
-References: <alpine.DEB.2.22.394.2004081607050.27197@tglase.lan.tarent.de> <CALCETrUkC0mfbo44+Jb7p6f19S+nH5VAEZAwTaYApbNqy9Fj-w@mail.gmail.com>
-User-Agent: Alpine 2.22 (DEB 394 2020-01-19)
-Content-Language: de-DE-1901
+        Thu, 9 Apr 2020 03:58:23 -0400
+Received: from jabberwock.ucw.cz ([46.255.230.98]:53052 "EHLO
+        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725970AbgDIH6W (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Apr 2020 03:58:22 -0400
+Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
+        id 58DD41C55CF; Thu,  9 Apr 2020 09:58:21 +0200 (CEST)
+Date:   Thu, 9 Apr 2020 09:58:20 +0200
+From:   Pavel Machek <pavel@ucw.cz>
+To:     Stephen Rothwell <sfr@canb.auug.org.au>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Marek =?iso-8859-1?Q?Beh=FAn?= <marek.behun@nic.cz>
+Subject: Re: linux-next: manual merge of the leds tree with Linus' tree
+Message-ID: <20200409075820.GA2414@amd.ucw.cz>
+References: <20200409131252.2dfde0b7@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="1yeeQ81UyVL57Vl7"
+Content-Disposition: inline
+In-Reply-To: <20200409131252.2dfde0b7@canb.auug.org.au>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 8 Apr 2020, Andy Lutomirski wrote:
 
-> One might reasonably ask whether it makes sense for syscall nrs to be
-> signed at all.
+--1yeeQ81UyVL57Vl7
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-It doesn’t, but it’s probably this way for hysteric raisins.
+Hi!
 
-> But regardless, this breaks userspace and we should fix it.  I can
-> whip up a patch to split it into X32_SYSCALL_BIT (unsigned long) and
-> __X32_SYSCALL_BIT (uapi, int).  Thomas, etc, does this seem
+> Today's linux-next merge of the leds tree got a conflict in:
+>=20
+>   drivers/leds/Makefile
+>=20
+> between commit:
+>=20
+>   457386350e6a ("leds: sort Makefile entries")
+>=20
+> from Linus' tree and commit:
+>=20
+>   3953d1908b2c ("From: Marek Beh=FAn <marek.behun@nic.cz>")
+>   53cb3df9dd2d ("Sort Makefile entries to reduce risk of rejects.")
+>=20
+> from the leds tree.
+>=20
+> I fixed it up (I used the latter version) and can carry the fix as
+> necessary. This is now fixed as far as linux-next is concerned, but any
+> non trivial conflicts should be mentioned to your upstream maintainer
+> when your tree is submitted for merging.  You may also want to consider
+> cooperating with the maintainer of the conflicting tree to minimise any
+> particularly complex conflicts.
+>=20
+> BTW, commit 3953d1908b2c clearly did not get applied correctly :-(
 
-This would help with the issue, thanks.
+Um, sorry about that. My tree got merged to Linus, so for-next is now
+for-next-next and I need to empty it.
 
-> reasonable?  (For those not following all the machinations, this
-> change caused some userspace build failures in libseccomp and/or
-> systemd for reasons that are vaguely silly.)
+Best regards,
+									Pavel
 
-Not very silly:
 
-	printf("%d\n", __NR_mmap);
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
 
-That with -Wformat and -Werror (or -Werror=format) rightfully warns,
-as the compiler cannot, on x32 (where int=long), detect that, on
-architectures where int≠long the constant is int.
+--1yeeQ81UyVL57Vl7
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Even worse, switching userspace to unsigned long globally would
-completely hose this on LP64 architectures.
+-----BEGIN PGP SIGNATURE-----
 
-So this is, in my opinion, completely justified. (Disclaimer: I’m
-not affiliated with systemd and not even running it except udev.)
+iF0EABECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCXo7VnAAKCRAw5/Bqldv6
+8sxeAKDAPr0fwbVzQxim0lnNx1hwXqyj8wCfe6tpHj3PNAbhu2do5IEpy7DwnvA=
+=Rfml
+-----END PGP SIGNATURE-----
 
-bye,
-//mirabilos
--- 
-tarent solutions GmbH
-Rochusstraße 2-4, D-53123 Bonn • http://www.tarent.de/
-Tel: +49 228 54881-393 • Fax: +49 228 54881-235
-HRB 5168 (AG Bonn) • USt-ID (VAT): DE122264941
-Geschäftsführer: Dr. Stefan Barth, Kai Ebenrett, Boris Esser, Alexander Steeg
+--1yeeQ81UyVL57Vl7--
