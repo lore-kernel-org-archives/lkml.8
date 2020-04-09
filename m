@@ -2,187 +2,337 @@ Return-Path: <SRS0=n+Ub=5Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C17B5C2BB86
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 13:59:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59892C2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 14:01:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 91C0C20730
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 13:59:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=verdurent-com.20150623.gappssmtp.com header.i=@verdurent-com.20150623.gappssmtp.com header.b="FxVC96kM"
+	by mail.kernel.org (Postfix) with ESMTP id 32B8820857
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 14:01:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727049AbgDIN74 (ORCPT
+        id S1727115AbgDIOBj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Apr 2020 09:59:56 -0400
-Received: from mail-ua1-f68.google.com ([209.85.222.68]:34291 "EHLO
-        mail-ua1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726951AbgDIN7z (ORCPT
+        Thu, 9 Apr 2020 10:01:39 -0400
+Received: from asavdk3.altibox.net ([109.247.116.14]:51300 "EHLO
+        asavdk3.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726895AbgDIOBj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Apr 2020 09:59:55 -0400
-Received: by mail-ua1-f68.google.com with SMTP id d23so3964565uak.1
-        for <linux-kernel@vger.kernel.org>; Thu, 09 Apr 2020 06:59:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=verdurent-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=6jkl82fMmpPtjMZVRujvoQOTRneX3UQjhsTCNuv3S3s=;
-        b=FxVC96kMHeavDRhR9NWDUmy5X49gFWh+0HDbaZ+6UAnMrYLIJRBzFUzjIg5nPzxoBt
-         5TBgUZVAHEdP1R0TyuZ9lnFvvuIHvJBobOtbitVPPXKY/vCVO3XVZYahbUJoDoTnPZNZ
-         yqxmWfG17xufkMVcpF2SWFHvkVpXZk7zp+AM0WYwKew0o4xf3jubzWh/IKVh692yiXTG
-         BK/OC78W9NuBBh4XwFtoL0dnoumlFR41FMU//UDE4T5k8Iae0juCPjjByqkCIX5G+Lve
-         FjYpYaR8S3OAGW8iSoabqVJmnJk8LaYyh56y27V3s/ThIjWI03x7Dfs5AkWDG1u28hQI
-         W+ng==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=6jkl82fMmpPtjMZVRujvoQOTRneX3UQjhsTCNuv3S3s=;
-        b=kmqve16uetWOPqYyMM7fEWPl6mY+Kv8YVw0puLQ+ZzONNWqlJk8Rz8x5q5u4WoWruw
-         oKucfJTAAJubgw8068+9vaP6VVHiXIH1fDBSDhWhiehLDoD+br9DltxB0zQ3jVAUoxpm
-         lEjn2N+KrBI4A5ru0kW93qHFZ3Fqd+3EaXdMbXoVBtogYpxtFd9DjOpC93SqYdHdDKax
-         rUeoTyDRBlgnvzPtR4U1NMG2GCwXPkj/0kVqL6xPBQdOBUgvNDfNjdclY9Jn1ZP2Sw5+
-         5kfx2yVLYBU1sqQ+Eo3SZK34CZYv08LC1pXBqKGsEz1HGtTj8ZLgUeA33necv435HLKo
-         2mEw==
-X-Gm-Message-State: AGi0PuYR2s9oVuSPVxlBJd4lNnj+mLGvzzZpzvO4FhNnTXwEOtfbGI+M
-        ZZi+nEUDAJAkWcaJeSZV+IP+Huzoepgwwey8nJ4g5w==
-X-Google-Smtp-Source: APiQypIDFpo4gH1UScb4MbAQVnWTILN06mQONvAjwMuBOpgK2p9AlvbueRBggIkJbzWGyZJKZKNcrD7wzAfLjecKsWE=
-X-Received: by 2002:ab0:608b:: with SMTP id i11mr9020160ual.94.1586440794633;
- Thu, 09 Apr 2020 06:59:54 -0700 (PDT)
-MIME-Version: 1.0
-References: <1586402293-30579-1-git-send-email-Anson.Huang@nxp.com>
-In-Reply-To: <1586402293-30579-1-git-send-email-Anson.Huang@nxp.com>
-From:   Amit Kucheria <amit.kucheria@verdurent.com>
-Date:   Thu, 9 Apr 2020 19:29:43 +0530
-Message-ID: <CAHLCerNonZ7qJi8Qihmj87QteEnxTF0PRS6vw5GPemMurOfS9Q@mail.gmail.com>
-Subject: Re: [PATCH] dt-bindings: thermal: Convert i.MX8MM to json-schema
-To:     Anson Huang <Anson.Huang@nxp.com>
-Cc:     Zhang Rui <rui.zhang@intel.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Thu, 9 Apr 2020 10:01:39 -0400
+Received: from ravnborg.org (unknown [158.248.194.18])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by asavdk3.altibox.net (Postfix) with ESMTPS id A450220085;
+        Thu,  9 Apr 2020 16:01:31 +0200 (CEST)
+Date:   Thu, 9 Apr 2020 16:01:30 +0200
+From:   Sam Ravnborg <sam@ravnborg.org>
+To:     Guido =?iso-8859-1?Q?G=FCnther?= <agx@sigxcpu.org>
+Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
         Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
         Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>, kernel@pengutronix.de,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
         Fabio Estevam <festevam@gmail.com>,
-        Linux PM list <linux-pm@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        lakml <linux-arm-kernel@lists.infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        dl-linux-imx <Linux-imx@nxp.com>
-Content-Type: text/plain; charset="UTF-8"
+        NXP Linux Team <linux-imx@nxp.com>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        Lee Jones <lee.jones@linaro.org>,
+        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Robert Chiras <robert.chiras@nxp.com>,
+        Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH v11 0/2] drm: bridge: Add NWL MIPI DSI host controller
+ support
+Message-ID: <20200409140130.GA11188@ravnborg.org>
+References: <cover.1586427783.git.agx@sigxcpu.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <cover.1586427783.git.agx@sigxcpu.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-CMAE-Score: 0
+X-CMAE-Analysis: v=2.3 cv=eMA9ckh1 c=1 sm=1 tr=0
+        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
+        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=8nJEP1OIZ-IA:10 a=VwQbUJbxAAAA:8
+        a=7gkXJVJtAAAA:8 a=pGLkceISAAAA:8 a=8AirrxEcAAAA:8 a=hD80L64hAAAA:8
+        a=QyXUC8HyAAAA:8 a=e5mUnYsNAAAA:8 a=bsAt4o6wKiNBuRCtWDoA:9
+        a=Wa48wQFXcrM_O4rm:21 a=NDxvc7IDKwPJqmQL:21 a=wPNLvfGTeEIA:10
+        a=rTCnN_VGR-kA:10 a=XnmhkrOpp1gA:10 a=ADAus2jqH40A:10 a=xeO5FI30bkQA:10
+        a=vwhoAI3WNd0A:10 a=OIfed0KlwsEA:10 a=V1ylM5Ky8W4A:10 a=I7S5AE4GHJEA:10
+        a=9MgLeVKQu2IA:10 a=Zxz2OGRwlcEA:10 a=v60rsBRmgyoA:10 a=wktuWAoFL4cA:10
+        a=ig373oIn6hUA:10 a=Qj1vBhx7iUYA:10 a=AjGcO6oz07-iQ99wixmX:22
+        a=E9Po1WZjFZOl8hwRPBS3:22 a=ST-jHhOKWsTCqRlWije3:22
+        a=Vxmtnl_E_bksehYqCbjh:22 a=pHzHmUro8NiASowvMSCR:22
+        a=nt3jZW36AmriUCFCBwmW:22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Anson,
+Hi Guido.
 
-On Thu, Apr 9, 2020 at 8:56 AM Anson Huang <Anson.Huang@nxp.com> wrote:
->
-> Convert the i.MX8MM thermal binding to DT schema format using json-schema
+On Thu, Apr 09, 2020 at 12:42:00PM +0200, Guido Günther wrote:
+> This adds initial support for the NWL MIPI DSI Host controller found on i.MX8
+> SoCs.
+> 
+> It adds support for the i.MX8MQ but the same IP core can also be found on e.g.
+> i.MX8QXP. I added the necessary hooks to support other imx8 variants but since
+> I only have imx8mq boards to test I omitted the platform data for other SoCs.
+> 
+> The code is based on NXPs BSP so I added Robert Chiras as Co-authored-by.
+> 
+> The most notable changes over the BSP driver are
+>  - Calculate HS mode timing from phy_configure_opts_mipi_dphy
+>  - Perform all clock setup via DT
+>  - Merge nwl-imx and nwl drivers
+>  - Add B0 silion revision quirk
+>  - become a bridge driver to hook into mxsfb / dcss
+>    imx-display-subsystem so it makes sense to make it drive a bridge for dsi as
+>    well).
+>  - Use panel_bridge to attach the panel
+>  - Use multiplex framework instead of accessing syscon directly
+> 
+> This has been tested on a Librem 5 devkit using mxsfb with Robert's patches[1]
+> and the mainline rocktech-jh057n00900 DSI panel driver on next-20200317 and on
+> the Librem5 with the a Mantix MLAF057WE51-X DSI panel driver (not yet mainline)
+> The DCSS (submitted for mainline inclusion now too) can also act as input
+> source.
 
-Would it be possible to have a single yaml file for all i.MX thermal
-sensors by playing with required and optional properties ?
+Thanks for your persistence with this driver.
+I got ack from Laurent on IRC to apply it (not for the driver as he had
+no time to review it).
+So applied to drm-misc-next now.
 
-> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
-> ---
->  .../devicetree/bindings/thermal/imx8mm-thermal.txt | 15 ------
->  .../bindings/thermal/imx8mm-thermal.yaml           | 53 ++++++++++++++++++++++
->  2 files changed, 53 insertions(+), 15 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/thermal/imx8mm-thermal.txt
->  create mode 100644 Documentation/devicetree/bindings/thermal/imx8mm-thermal.yaml
->
-> diff --git a/Documentation/devicetree/bindings/thermal/imx8mm-thermal.txt b/Documentation/devicetree/bindings/thermal/imx8mm-thermal.txt
-> deleted file mode 100644
-> index 3629d3c..0000000
-> --- a/Documentation/devicetree/bindings/thermal/imx8mm-thermal.txt
-> +++ /dev/null
-> @@ -1,15 +0,0 @@
-> -* Thermal Monitoring Unit (TMU) on Freescale i.MX8MM SoC
-> -
-> -Required properties:
-> -- compatible : Must be "fsl,imx8mm-tmu" or "fsl,imx8mp-tmu".
-> -- reg : Address range of TMU registers.
-> -- clocks : TMU's clock source.
-> -- #thermal-sensor-cells : Should be 0 or 1. See ./thermal.txt for a description.
-> -
-> -Example:
-> -tmu: tmu@30260000 {
-> -       compatible = "fsl,imx8mm-tmu";
-> -       reg = <0x30260000 0x10000>;
-> -       clocks = <&clk IMX8MM_CLK_TMU_ROOT>;
-> -       #thermal-sensor-cells = <0>;
-> -};
-> diff --git a/Documentation/devicetree/bindings/thermal/imx8mm-thermal.yaml b/Documentation/devicetree/bindings/thermal/imx8mm-thermal.yaml
-> new file mode 100644
-> index 0000000..53a42b3
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/thermal/imx8mm-thermal.yaml
-> @@ -0,0 +1,53 @@
-> +# SPDX-License-Identifier: GPL-2.0
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/thermal/imx8mm-thermal.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: NXP i.MX8M Mini Thermal Binding
-> +
-> +maintainers:
-> +  - Anson Huang <Anson.Huang@nxp.com>
-> +
-> +properties:
-> +  compatible:
-> +    oneOf:
-> +      - items:
-> +          - enum:
-> +              - fsl,imx8mm-tmu
-> +              - fsl,imx8mp-tmu
-> +  reg:
-> +    description: |
-> +      Address range of TMU registers.
-> +    maxItems: 1
-> +  clocks:
-> +    description: |
-> +      TMU's clock source.
-> +    maxItems: 1
-> +
-> +  # See ./thermal.txt for details
+I look forward for the update to support DRM_BRIDGE_ATTACH_NO_CONNECTOR
+in this driver and the corresponding display driver.
 
-Don't point to thermal.txt anymore. thermal.txt will be replaced by
-thermal-*.yaml files at some point soon.
-
-> +  "#thermal-sensor-cells":
-> +    enum:
-> +      - 0
-
-Don't you have multiple sensors connected to this controller? In that
-case, 0 won't be a valid value.
-
-> +      - 1
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - clocks
-> +  - '#thermal-sensor-cells'
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/clock/imx8mm-clock.h>
-> +
-> +    tmu: tmu@30260000 {
-> +         compatible = "fsl,imx8mm-tmu";
-> +         reg = <0x30260000 0x10000>;
-> +         clocks = <&clk IMX8MM_CLK_TMU_ROOT>;
-> +         #thermal-sensor-cells = <0>;
-> +    };
-> +
-> +...
-> --
-> 2.7.4
->
+	Sam
+> 
+> Changes from v10:
+> - Per review comments by Sam Ravnborg
+>   https://lore.kernel.org/linux-arm-kernel/20200408175252.GB24828@ravnborg.org/
+>   - Drop unused headers
+>   - Fix 'check-patch --strict' findings
+>   - Print error when DRM_BRIDGE_ATTACH_NO_CONNECTOR is passed
+> - Per review comment by Laurent Pinchart
+>   https://lore.kernel.org/linux-arm-kernel/20200408173258.GA24828@ravnborg.org/
+>   - There's only one endpoint allowed at a time, add a restriction for that.
+> - Add Reviewed-by from Fabio Estevam
+>   https://lore.kernel.org/linux-arm-kernel/CAOMZO5Dhy7ahcR-S=QG=pumxXa8HnQoWpg0TdFyeu_Levdh9_Q@mail.gmail.com/
+>   https://lore.kernel.org/linux-arm-kernel/CAOMZO5Du-ZP7Wxm2eh8WaFoCk_kWomgH57ayJrBB0PzhuAA+mw@mail.gmail.com/
+> - Move to next-20200408
+> 
+> Changes from v9:
+> - Per review comments by Sam Ravnborg
+>   https://lore.kernel.org/dri-devel/20200318214639.GA971@ravnborg.org/
+>   - Drop header-test-y since kernel lost support
+>   - Handle drm_bridge_attach's new flags argument
+>   - Add Acked-by: to binding patch, thanks!
+> - Move to next-20200319
+> 
+> Changes from v8:
+> - Per review comments by Robert Chiras
+>   https://lore.kernel.org/dri-devel/1575366594.6423.61.camel@nxp.com/
+>   - don't mix DSI host and bridge initialization
+>   - only select output source once
+>   - defer probe when panel is not ready to fix usage as a module
+>   - use correct reset sequence as described by Robert
+>     (and provided by NWL)
+>   - use mode->clock instead of mode->crtc_clock
+> - Add tested by from Martin Kepplinger, thanks!
+> - Drop platform specific data (as suggested previously by Laurent Pinchart and
+>   Andrzej Hajda) since imx8q* needs another set of abstractions with the new
+>   reset sequence and that's easier to do when adding imx8q* support rather then
+>   adding wrong abstraction now.
+> - Update bindings to use proper clock and irq names to make the example match
+>   reality more closely.
+> - Use `fallthrough;` instead of /* Fall through */ in switch statements
+> - Move to next-20200226
+> 
+> Changes from v7:
+> - Drop reset quirk. It's not needed with mxsfb and sometimes triggers a shifted display.
+> 
+> Changes from v6:
+> - Per review comments by Andrzej Hajda
+>   https://lore.kernel.org/linux-arm-kernel/c86b7ca2-7799-eafd-c380-e4b551520837@samsung.com/
+>   - Drop spare empty line
+>   - handle nwl_dsi_write errors
+>   - better handle read errors
+>   - unwind in case of error in nwl_dsi_enable
+>   - use bridge_to_dsi() instead of accessing driver_private
+>   - don't log on -EPROBEDEFER when fething the reset controller
+>   - use endpoint number to determine input
+> - Spotted by kbuild test robot <lkp@intel.com>
+>   https://lore.kernel.org/linux-arm-kernel/201909230644.qfSKbNf9%25lkp@intel.com/
+>   Use signed return type for nwl_dsi_get_dpi_pixel_format
+> - Drop connector type from drm_panel_bridge_add
+> - Don't forget to set an error value on dsi reads
+> 
+> Changes from v5:
+> - Per review comments by Andrzej Hajda
+>   https://lists.freedesktop.org/archives/dri-devel/2019-September/235281.html
+>   - Fix include file ordering
+>   - Add a comment to nwl_dsi_platform_data that will allow to add support
+>     at least for the i.MX8QM
+>   - Merge driver into a single file plus the register defs in a separate header
+> - Make more functions and structs static
+> 
+> Changes from v4:
+> - Collect Reviewed-by: from Rob Herring, thanks!
+>   https://lists.freedesktop.org/archives/dri-devel/2019-September/233979.html
+> - Spotted by kbuild test robot <lkp@intel.com>
+>   https://lists.freedesktop.org/archives/dri-devel/2019-September/233860.html
+>   https://lists.freedesktop.org/archives/dri-devel/2019-September/233863.html
+>   - fix format string for size_t
+>   - Use DIV64_U64_ROUND_UP to fix build on 32 bit architectures
+>     We can't use simple shift sind d and n are similar in size and
+>     we need full precision
+> - Fix debug cfg_t_post debug print out
+> - Avoid PSEC_PER_SEC
+> - Move timeout / overflow handling out of nwl_dsi_finish_transmission,
+>   it would never end up being reported since the call to the function
+>   was guarded by flags.
+> - Drop 'support for' from KConfig title to make it match the other
+>   drivers in that submenu
+> 
+> Changes from v3:
+> - Per review comments by Robert Chiras
+>   https://lists.freedesktop.org/archives/dri-devel/2019-August/232580.html
+>   - Add Robert's {Signed-off,Tested}-by:
+>   - Respect number of lanes when calculting bandwidth limits
+>   - Drop duplicate NWL_DSI_ENABLE_MULT_PKTS setup
+> - Per testing by Rober Chiras
+>   https://lists.freedesktop.org/archives/dri-devel/2019-August/233688.html
+>   - Drop duplicate (and too early) drm_bridge_add() in nwl_dsi_probe() that
+>     made mxsfb fail to connect to the bridge since the panel_bridge was not up
+>     yet. drm_bridge_add() happens in nwl_dsi_host_attach() where after the
+>     panel_bridge was set up.
+> - Per review comments by Rob Herring on bindings
+>   https://lists.freedesktop.org/archives/dri-devel/2019-August/233196.html
+>   - drop description from power-domains and resets
+>   - allow BSD 2 clause license as well
+>   - make ports more specific
+>   - add #address-cells, #size-cells as required
+>   - use additionalProperties
+>   - panel is of type object
+> 
+> Changes from v2:
+> - Per review comments by Rob Herring
+>   https://lists.freedesktop.org/archives/dri-devel/2019-August/230448.html
+>   - bindings:
+>     - Simplify by restricting to fsl,imx8mq-nwl-dsi
+>     - document reset lines
+>     - add port@{0,1}
+>     - use a real compatible string for the panel
+>     - resets are required
+> - Per review comments by Arnd Bergmann
+>   https://lists.freedesktop.org/archives/dri-devel/2019-August/230868.html
+>   - Don't access iomuxc_gpr regs directly. This allows us to drop the
+>     first patch in the series with the iomuxc_gpr field defines.
+> - Per review comments by Laurent Pinchart
+>   Fix wording in bindings
+> - Add mux-controls to bindings
+> - Don't print error message on dphy probe deferral
+> 
+> Changes from v1:
+> - Per review comments by Sam Ravnborg
+>   https://lists.freedesktop.org/archives/dri-devel/2019-July/228130.html
+>   - Change binding docs to YAML
+>   - build: Don't always visit imx-nwl/
+>   - build: Add header-test-y
+>   - Sort headers according to DRM convention
+>   - Use drm_display_mode instead of videmode
+> - Per review comments by Fabio Estevam
+>   https://lists.freedesktop.org/archives/dri-devel/2019-July/228299.html
+>   - Don't restrict build to ARCH_MXC
+>   - Drop unused includes
+>   - Drop unreachable code in imx_nwl_dsi_bridge_mode_fixup()
+>   - Drop remaining calls of dev_err() and use DRM_DEV_ERR()
+>     consistently.
+>   - Use devm_platform_ioremap_resource()
+>   - Drop devm_free_irq() in probe() error path
+>   - Use single line comments where sufficient
+>   - Use <linux/time64.h> instead of defining USEC_PER_SEC
+>   - Make input source select imx8 specific
+>   - Drop <asm/unaligned.h> inclusion (after removal of get_unaligned_le32)
+>   - Drop all EXPORT_SYMBOL_GPL() for functions used in the same module
+>     but different source files.
+>   - Drop nwl_dsi_enable_{rx,tx}_clock() by invoking clk_prepare_enable()
+>     directly
+>   - Remove pointless comment
+> - Laurent Pinchart
+>   https://lists.freedesktop.org/archives/dri-devel/2019-July/228313.html
+>   https://lists.freedesktop.org/archives/dri-devel/2019-July/228308.html
+>   - Drop (on iMX8MQ) unused csr regmap
+>   - Use NWL_MAX_PLATFORM_CLOCKS everywhere
+>   - Drop get_unaligned_le32() usage
+>   - remove duplicate 'for the' in binding docs
+>   - Don't include unused <linux/clk-provider.h>
+>   - Don't include unused <linux/component.h>
+>   - Drop dpms_mode for tracking state, trust the drm layer on that
+>   - Use pm_runtime_put() instead of pm_runtime_put_sync()
+>   - Don't overwrite encoder type
+>   - Make imx_nwl_platform_data const
+>   - Use the reset controller API instead of open coding that platform specific
+>     part
+>   - Use <linux/bitfield.h> intead of making up our own defines
+>   - name mipi_dsi_transfer less generic: nwl_dsi_transfer
+>   - ensure clean in .remove by calling mipi_dsi_host_unregister.
+>   - prefix constants by NWL_DSI_
+>   - properly format transfer_direction enum
+>   - simplify platform clock handling
+>   - Don't modify state in mode_fixup() and use mode_set() instead
+>   - Drop bridge detach(), already handle by nwl_dsi_host_detach()
+>   - Drop USE_*_QUIRK() macros
+> - Drop (for now) unused clock defnitions. 'pixel' and 'bypass' clock will be
+>   used for i.MX8 SoCs but since they're unused atm drop the definitions - but
+>   keep the logic to enable/disable several clocks in place since we know we'll
+>   need it in the future.
+> 
+> Changes from v0:
+> - Add quirk for IMQ8MQ silicon B0 revision to not mess with the
+>   system reset controller on power down since enable() won't work
+>   otherwise.
+> - Drop devm_free_irq() handled by the device driver core
+> - Disable tx esc clock after the phy power down to unbreak
+>   disable/enable (unblank/blank)
+> - Add ports to dt binding docs
+> - Select GENERIC_PHY_MIPI_DPHY instead of GENERIC_PHY for
+>   phy_mipi_dphy_get_default_config
+> - Select DRM_MIPI_DSI
+> - Include drm_print.h to fix build on next-20190408
+> - Drop some debugging messages
+> - Newline terminate all DRM_ printouts
+> - Turn component driver into a drm bridge
+> 
+> [0]: https://lists.freedesktop.org/archives/dri-devel/2019-May/219484.html
+> [1]: https://patchwork.freedesktop.org/series/62822/
+> 
+> Guido Günther (2):
+>   dt-bindings: display/bridge: Add binding for NWL mipi dsi host
+>     controller
+>   drm/bridge: Add NWL MIPI DSI host controller support
+> 
+>  .../bindings/display/bridge/nwl-dsi.yaml      |  226 +++
+>  drivers/gpu/drm/bridge/Kconfig                |   16 +
+>  drivers/gpu/drm/bridge/Makefile               |    1 +
+>  drivers/gpu/drm/bridge/nwl-dsi.c              | 1213 +++++++++++++++++
+>  drivers/gpu/drm/bridge/nwl-dsi.h              |  144 ++
+>  5 files changed, 1600 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/display/bridge/nwl-dsi.yaml
+>  create mode 100644 drivers/gpu/drm/bridge/nwl-dsi.c
+>  create mode 100644 drivers/gpu/drm/bridge/nwl-dsi.h
+> 
+> -- 
+> 2.23.0
+> 
+> _______________________________________________
+> dri-devel mailing list
+> dri-devel@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/dri-devel
