@@ -2,144 +2,102 @@ Return-Path: <SRS0=n+Ub=5Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 842A9C2BA2B
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 14:13:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6B04C2BBC7
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 14:14:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4C7E62166E
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 14:13:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8DC9A20A8B
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 14:14:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=citrix.com header.i=@citrix.com header.b="RmW0ycWE"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="K+HQzlSA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727387AbgDIONu (ORCPT
+        id S1727235AbgDIOOM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Apr 2020 10:13:50 -0400
-Received: from esa4.hc3370-68.iphmx.com ([216.71.155.144]:39704 "EHLO
-        esa4.hc3370-68.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726977AbgDIONu (ORCPT
+        Thu, 9 Apr 2020 10:14:12 -0400
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:43970 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726552AbgDIOOK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Apr 2020 10:13:50 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=citrix.com; s=securemail; t=1586441629;
-  h=subject:to:cc:references:from:message-id:date:
-   mime-version:in-reply-to:content-transfer-encoding;
-  bh=yrdagwIUFtKwt9MOyKCVl5M6aNY/cfIdCXlLoDli1mo=;
-  b=RmW0ycWECRy2O+5SUYHNrhL4uNdjFn65RoMiOZ3DjJAg0EgtIiXhyveJ
-   NIKJkEa46Axn+/0qoQBSeOgZgnFB/jWSDyMfslGq1qdLDfHXvHiWoQR/N
-   WkeE1tTIB381HV22INysfWtTXzN4TaytnuUfqdCBlXmcazt9vEh5tBGCU
-   s=;
-Authentication-Results: esa4.hc3370-68.iphmx.com; dkim=none (message not signed) header.i=none; spf=None smtp.pra=andrew.cooper3@citrix.com; spf=Pass smtp.mailfrom=Andrew.Cooper3@citrix.com; spf=None smtp.helo=postmaster@mail.citrix.com
-Received-SPF: None (esa4.hc3370-68.iphmx.com: no sender
-  authenticity information available from domain of
-  andrew.cooper3@citrix.com) identity=pra;
-  client-ip=162.221.158.21; receiver=esa4.hc3370-68.iphmx.com;
-  envelope-from="Andrew.Cooper3@citrix.com";
-  x-sender="andrew.cooper3@citrix.com";
-  x-conformance=sidf_compatible
-Received-SPF: Pass (esa4.hc3370-68.iphmx.com: domain of
-  Andrew.Cooper3@citrix.com designates 162.221.158.21 as
-  permitted sender) identity=mailfrom;
-  client-ip=162.221.158.21; receiver=esa4.hc3370-68.iphmx.com;
-  envelope-from="Andrew.Cooper3@citrix.com";
-  x-sender="Andrew.Cooper3@citrix.com";
-  x-conformance=sidf_compatible; x-record-type="v=spf1";
-  x-record-text="v=spf1 ip4:209.167.231.154 ip4:178.63.86.133
-  ip4:195.66.111.40/30 ip4:85.115.9.32/28 ip4:199.102.83.4
-  ip4:192.28.146.160 ip4:192.28.146.107 ip4:216.52.6.88
-  ip4:216.52.6.188 ip4:162.221.158.21 ip4:162.221.156.83
-  ip4:168.245.78.127 ~all"
-Received-SPF: None (esa4.hc3370-68.iphmx.com: no sender
-  authenticity information available from domain of
-  postmaster@mail.citrix.com) identity=helo;
-  client-ip=162.221.158.21; receiver=esa4.hc3370-68.iphmx.com;
-  envelope-from="Andrew.Cooper3@citrix.com";
-  x-sender="postmaster@mail.citrix.com";
-  x-conformance=sidf_compatible
-IronPort-SDR: zMk+TKhFbvmlTvoCJdMSK9a1ddjz6WkQv7BWesBz+ogcJU8kOEJKQncyCsihklOwhLbAH9bieq
- ovx75BttbXMGRC2n5IP1+jzMc8rPHC+15aAyeMUUkyRwD/b57GZTH+wszLrtZxgm2PQymMTvUf
- r1tL6PHFTbL/fTQvDQyVbUu9dJe5o+bSJqST5Q1Wx1gv8RB4xP5wa3GM9jIooKST7vc4ARc7pC
- jnaUgAs9TAetgBX8EMdc5lphvZLvvA9lcVd9Fgyd2zEJ1wu7ewwYQ8pGs52v/Z9aM1g8DrATom
- c9k=
-X-SBRS: 2.7
-X-MesageID: 16107785
-X-Ironport-Server: esa4.hc3370-68.iphmx.com
-X-Remote-IP: 162.221.158.21
-X-Policy: $RELAYED
-X-IronPort-AV: E=Sophos;i="5.72,363,1580792400"; 
-   d="scan'208";a="16107785"
-Subject: Re: [PATCH v2] x86/kvm: Disable KVM_ASYNC_PF_SEND_ALWAYS
-To:     Paolo Bonzini <pbonzini@redhat.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>
-CC:     Sean Christopherson <sean.j.christopherson@intel.com>,
-        Vivek Goyal <vgoyal@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
-        kvm list <kvm@vger.kernel.org>, stable <stable@vger.kernel.org>
-References: <20200407172140.GB64635@redhat.com>
- <772A564B-3268-49F4-9AEA-CDA648F6131F@amacapital.net>
- <87eeszjbe6.fsf@nanos.tec.linutronix.de>
- <ce81c95f-8674-4012-f307-8f32d0e386c2@redhat.com>
- <874ktukhku.fsf@nanos.tec.linutronix.de>
- <274f3d14-08ac-e5cc-0b23-e6e0274796c8@redhat.com>
- <20200408153413.GA11322@linux.intel.com>
- <ce28e893-2ed0-ea6f-6c36-b08bb0d814f2@redhat.com>
- <87d08hc0vz.fsf@nanos.tec.linutronix.de>
- <CALCETrWG2Y4SPmVkugqgjZcMfpQiq=YgsYBmWBm1hj_qx3JNVQ@mail.gmail.com>
- <04aca08a-cfce-b4db-559a-23aee0a0b7aa@redhat.com>
-From:   Andrew Cooper <andrew.cooper3@citrix.com>
-Message-ID: <0b632fb1-b662-89bf-2b95-6888bd64b3a9@citrix.com>
-Date:   Thu, 9 Apr 2020 15:13:41 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Thu, 9 Apr 2020 10:14:10 -0400
+Received: by mail-lf1-f67.google.com with SMTP id k28so7990867lfe.10
+        for <linux-kernel@vger.kernel.org>; Thu, 09 Apr 2020 07:14:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=5l6PQ+GVRa7BU6U1ZntSLjLMMgypiepyMSXTfzbcfec=;
+        b=K+HQzlSADdA/gU9UN5hsyB/wBOLVrotfN1xcU/hiZ4MkzvC/09TmlJ0cMyNtSK85i+
+         /HAQ2E/Oq/VmfOyviHdluDWMX4GMsQYVcRHcSkRiTUWsAUBQULwzl9MbP9eMUlzS7ow6
+         IjtTG82w6zZ1vVJgylNTT7jPU516wUFxUqGJP8DreizdEF+C/Ij4pyuklFd2Xu722SgG
+         iEiKbRVjaT8d8R/A0tfm1CRwsp/jU5dN/vDeYHwLFOL0KeeYzQc3VHbkXSn6qUwF+is9
+         9bEywhJO0uB7J2Ht3v6eV244MIBu46Qx/PUfed00wwxDaC/D9E5xhv05vCqU6i6aOc99
+         zyOg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=5l6PQ+GVRa7BU6U1ZntSLjLMMgypiepyMSXTfzbcfec=;
+        b=a/GZVPxDDR7bClFZXb+45eZMDjcFRWENC9YLdwLHzBZWStjJQvpWmGzRiBxbrT7gs6
+         d8G3NjYdodWMT98UYpWP9U5BOAO6x+qfcY4qVJRb+MxGiCrab8cVWUr7+gx3AZ5edlB4
+         RUZ802VEOyFzOcDf2iPYzx2R1WYcgkFvttqm/84fsCcUuEG11NnYMvhwOY2XeINN5Vwz
+         ms5SyCmWeCDMUz0XtB1druJ9mJwdhFYDw0G1bz9S1PeMp1MyHl25Jn8Vrd954sexg5uK
+         NDpIn8Njhlqtqk9p2ljh6h23vrsll/9edupKQqRqbkA871FECgJzA2tiRuMJ00CfmF0S
+         NpBw==
+X-Gm-Message-State: AGi0PuYFsV5Km0ovDthpY4QERSBU9JxSxI0kYf6eI73pQ2Tpfk7CYmGR
+        ogdQyljpmhxxrObE/aYYQhgONDEgNvjAd+LbC1c=
+X-Google-Smtp-Source: APiQypLlMrBVdUqdc71hA6o3EJAn4zXAycY/2wmHzaXHCp+RIRfuYi7Nw8iUkdf3tCEZE1im8tZoNiItZj0w8w2Jx8A=
+X-Received: by 2002:ac2:4199:: with SMTP id z25mr7913943lfh.90.1586441648993;
+ Thu, 09 Apr 2020 07:14:08 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <04aca08a-cfce-b4db-559a-23aee0a0b7aa@redhat.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Content-Language: en-GB
-X-ClientProxiedBy: AMSPEX02CAS02.citrite.net (10.69.22.113) To
- AMSPEX02CL02.citrite.net (10.69.22.126)
+References: <cover.1586422035.git.baolin.wang7@gmail.com> <759f7471d03946ae273a06f7bcca8a54528ec08c.1586422035.git.baolin.wang7@gmail.com>
+ <20200409104802.GB5399@sirena.org.uk>
+In-Reply-To: <20200409104802.GB5399@sirena.org.uk>
+From:   Baolin Wang <baolin.wang7@gmail.com>
+Date:   Thu, 9 Apr 2020 22:13:58 +0800
+Message-ID: <CADBw62oh6juAqUR1-U1D73H0oeW1x0gk0XJ01h47ko_Dxy7eEQ@mail.gmail.com>
+Subject: Re: [RFC PATCH 1/3] mfd: syscon: Add reg_update_bits() callback support
+To:     Mark Brown <broonie@kernel.org>
+Cc:     Lee Jones <lee.jones@linaro.org>, Arnd Bergmann <arnd@arndb.de>,
+        Orson Zhai <orsonzhai@gmail.com>,
+        Chunyan Zhang <zhang.lyra@gmail.com>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 09/04/2020 13:47, Paolo Bonzini wrote:
-> On 09/04/20 06:50, Andy Lutomirski wrote:
->> The small
->> (or maybe small) one is that any fancy protocol where the guest
->> returns from an exception by doing, logically:
->>
->> Hey I'm done;  /* MOV somewhere, hypercall, MOV to CR4, whatever */
->> IRET;
->>
->> is fundamentally racy.  After we say we're done and before IRET, we
->> can be recursively reentered.  Hi, NMI!
-> That's possible in theory.  In practice there would be only two levels
-> of nesting, one for the original page being loaded and one for the tail
-> of the #VE handler.  The nested #VE would see IF=0, resolve the EPT
-> violation synchronously and both handlers would finish.  For the tail
-> page to be swapped out again, leading to more nesting, the host's LRU
-> must be seriously messed up.
+On Thu, Apr 9, 2020 at 6:48 PM Mark Brown <broonie@kernel.org> wrote:
 >
-> With IST it would be much messier, and I haven't quite understood why
-> you believe the #VE handler should have an IST.
+> On Thu, Apr 09, 2020 at 04:57:57PM +0800, Baolin Wang wrote:
+>
+> > --- a/include/linux/regmap.h
+> > +++ b/include/linux/regmap.h
+> > @@ -340,6 +340,8 @@ struct regmap_access_table {
+> >   *             read operation on a bus such as SPI, I2C, etc. Most of the
+> >   *             devices do not need this.
+> >   * @reg_write:         Same as above for writing.
+> > + * @reg_update_bits: Optional, should only be provided for devices whose update
+> > + *                operation cannot be represented as read and write.
+> >   * @fast_io:   Register IO is fast. Use a spinlock instead of a mutex
+> >   *             to perform locking. This field is ignored if custom lock/unlock
+> >   *             functions are used (see fields lock/unlock of struct regmap_config).
+> > @@ -416,6 +418,8 @@ struct regmap_config {
+> >
+> >       int (*reg_read)(void *context, unsigned int reg, unsigned int *val);
+> >       int (*reg_write)(void *context, unsigned int reg, unsigned int val);
+> > +     int (*reg_update_bits)(void *context, unsigned int reg,
+> > +                            unsigned int mask, unsigned int val);
+>
+> This is fine, we already have this operation for buses, but why is this
+> munged in with the MFD patch?
 
-Any interrupt/exception which can possibly occur between a SYSCALL and
-re-establishing a kernel stack (several instructions), must be IST to
-avoid taking said exception on a user stack and being a trivial
-privilege escalation.
+Originally I want to show a example usage of the new callback, but I
+can spilt them into 2 patches as you suggested. Thanks.
 
-In terms of using #VE in its architecturally-expected way, this can
-occur in general before the kernel stack is established, so must be IST
-for safety.
-
-Therefore, it doesn't really matter if KVM's paravirt use of #VE does
-respect the interrupt flag.  It is not sensible to build a paravirt
-interface using #VE who's safety depends on never turning on
-hardware-induced #VE's.
-
-~Andrew
+-- 
+Baolin Wang
