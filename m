@@ -2,153 +2,220 @@ Return-Path: <SRS0=n+Ub=5Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE268C2BB86
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 14:39:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46A9DC2BB86
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 14:39:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 82B6F2078E
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 14:39:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 184FA2083E
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 14:39:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RFiloriP"
+	dkim=pass (2048-bit key) header.d=verdurent-com.20150623.gappssmtp.com header.i=@verdurent-com.20150623.gappssmtp.com header.b="gRRRZ1sM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727794AbgDIOjO (ORCPT
+        id S1727805AbgDIOjn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Apr 2020 10:39:14 -0400
-Received: from mail-qv1-f67.google.com ([209.85.219.67]:37699 "EHLO
-        mail-qv1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727368AbgDIOjO (ORCPT
+        Thu, 9 Apr 2020 10:39:43 -0400
+Received: from mail-vk1-f195.google.com ([209.85.221.195]:42316 "EHLO
+        mail-vk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727162AbgDIOjn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Apr 2020 10:39:14 -0400
-Received: by mail-qv1-f67.google.com with SMTP id n1so5584722qvz.4;
-        Thu, 09 Apr 2020 07:39:14 -0700 (PDT)
+        Thu, 9 Apr 2020 10:39:43 -0400
+Received: by mail-vk1-f195.google.com with SMTP id q7so9497vkb.9
+        for <linux-kernel@vger.kernel.org>; Thu, 09 Apr 2020 07:39:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=V0peUcS4xyy6xzU2lui7tASWzqbXgbJ8PVWPkgOy87s=;
-        b=RFiloriPPxNl0UwUwYFNvjkQ9B8zNeV1F2WqXq8W32IOtZkfIxpqRPoQrEYtCYyGUP
-         ygUK3mwr7qTV3R6x8c7ilNyb/V1tKjGSoxfVd5uk1mp91hKB4e6iTYzJ0ZlvioPmNVRM
-         Ei/Cs1woOrhsRMK6jreFMlLIw/OEfu28s/R4mdDneKg4oXIx66ZB1+lW6q6g5KBnrSt8
-         E+BwdceRHn3cKMcDs3BDS+PXeCbeUep+wrB699VInBE+9LiXh2MXQF09JDQ3VFU5bdXr
-         LdESYtYUavSLYVJPT+NWFqzgpDOYfKYoxuG69prZloX3HDfMBk3GUU5Eh99dRkgVMVmv
-         Ih4A==
+        d=verdurent-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=xEkP9tsPmG6xIpP1vzjRU5PHmw91Ij8x4EQYq0ffIRY=;
+        b=gRRRZ1sMj922xak2A74EFoOiHADrJzQm7/rJaeK5pfAuVSHS3gB2+2r+tsPF5OS3eU
+         d6WCreqRsPuEuBmb7GUYzdYOWcj35hAhSyknSdX72vRTG8MWdz56Xa0CxZ3wF6m+lNY+
+         LTFdC2ag6KmzAX+wWZkumO7x9+kjKJCrPw4XheX1XI6vClZR6jJ3v9g8n+UDk6Y5h+94
+         DCmS5TZheYWqU1IJ9febMYwkGVw3Spycnc9wl32T284wdq1MJvmrwQuP6SJyi2M0qycW
+         JoLTjabvZkTA6YKrrBRs8HZv8gpzqbcKC+Km/0ddJSh+SHoNn/WtjQiXGv+2ykhEopSO
+         4W4A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:date:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to;
-        bh=V0peUcS4xyy6xzU2lui7tASWzqbXgbJ8PVWPkgOy87s=;
-        b=XsfQ5aIFojdZtSPqc1gD/XTFKj4GEkEZf7m2O7U4/oJyA7jtzvv3XIs5YoMxn1x51o
-         b53wWIPyEyn0T5nxHHmXfpo+PHJXXPVkdIMVQA1GJx2wLpLYbMW5yhuwUdPtWsHWIVh+
-         D4Komwmrpv059FeJFJcVSMj/JiN5pFLcv1XG11hcmNwATcrHpj++BUx2GW9PVlD0uGrv
-         Fu1Q1a+3vCZVxkXFzru48R893nfeupzCKnyxbN1if4znoWRrQrNYOlEZnt0S9o9buzN9
-         DrCfKiq7uALw//JizA1Lu/X5h1EJADvH9Jxw7nueTWkM+8W9HKZZUKRIZUicdjb/4F57
-         xuCA==
-X-Gm-Message-State: AGi0PubLwm8Nzo1o86rrKi9TkltyZZFMvm1RZgDcfV9cfdSImvcYLZ4Z
-        kRQPUKzcJmCBZLjQpe2QNvk=
-X-Google-Smtp-Source: APiQypKR9/XpDamJYVfxyRTxLwmb+HIiAdic1PwWBGZ+2jeo+4tSTFUem5fLxgYZEwsb3kHKg+JU5Q==
-X-Received: by 2002:a0c:9aee:: with SMTP id k46mr307996qvf.7.1586443153294;
-        Thu, 09 Apr 2020 07:39:13 -0700 (PDT)
-Received: from rani.riverdale.lan ([2001:470:1f07:5f3::b55f])
-        by smtp.gmail.com with ESMTPSA id d24sm20629143qkl.8.2020.04.09.07.39.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 09 Apr 2020 07:39:12 -0700 (PDT)
-From:   Arvind Sankar <nivedita@alum.mit.edu>
-X-Google-Original-From: Arvind Sankar <arvind@rani.riverdale.lan>
-Date:   Thu, 9 Apr 2020 10:39:10 -0400
-To:     Ard Biesheuvel <ardb@kernel.org>
-Cc:     Dave Young <dyoung@redhat.com>, pjones@redhat.com,
-        daniel.kiper@oracle.com, Leif Lindholm <leif@nuviainc.com>,
-        Arvind Sankar <nivedita@alum.mit.edu>,
-        Borislav Petkov <bp@alien8.de>, Sergey Shatunov <me@prok.pw>,
-        hpa@zytor.com,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        mingo@redhat.com, Thomas Gleixner <tglx@linutronix.de>,
-        x86@kernel.org, linux-efi <linux-efi@vger.kernel.org>,
-        initramfs@vger.kernel.org,
-        Donovan Tremura <neurognostic@protonmail.ch>,
-        Harald Hoyer <harald@hoyer.xyz>
-Subject: Re: [PATCH 1/2] efi/x86: Move efi stub globals from .bss to .data
-Message-ID: <20200409143910.GA727557@rani.riverdale.lan>
-References: <CAMj1kXEUkJ1XJ9OTsijeq8tNNYC00bXqEV44OMtX5ugo9WoLKA@mail.gmail.com>
- <20200406180614.429454-1-nivedita@alum.mit.edu>
- <20200408074334.GA21886@dhcp-128-65.nay.redhat.com>
- <CAMj1kXGPOZ6zWtgGScLy0ECrTtf1yhngDTNE1chW-MQw3XQp9Q@mail.gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=xEkP9tsPmG6xIpP1vzjRU5PHmw91Ij8x4EQYq0ffIRY=;
+        b=A2vGTzIfSaXWzY8e+b9uAgvHE4MLqD7d2CohP2xdPO1TN49OXliwE+V91ieM10n7l5
+         JTkmfmMDJBAcV1VgrU1zfzzd2od+lqA9QeTRS7JPdwJBu9eeZYPhJkN0wVRwdGlag66r
+         PZHK6nbDqWDRLmocTToOvazSlt2vS5iUNQ7CxunRlcsIEWrBLqavteFvha/ry9KOc5AZ
+         VZYngC6uF8ASzG6zmQss9oGkF51xdqqNChyzs93vJ7XHf8te0AHOkUL8KB0WLdKsZqcR
+         xL9E9Ab/FZDB1eBsRpcK3N2Y1/wPtfrbn7iP/+1HnhXVGU3A0jrkPhbh96HPwnFkDejl
+         AcXA==
+X-Gm-Message-State: AGi0PuZvcyVtvO2DavABJXC30v3ubqpB3g5GubViLiBtmQ0f4Dx+qu4P
+        /gaUREpQfLlnZ6JPiONgvj/5ZKjwuxyR5RiY8Env0w==
+X-Google-Smtp-Source: APiQypLrVG6KjexVOrXdXNiyGWmOu+0dTmnud+29Y24Oy2Dagz3JnegvbbcroVkVqLcf1po17uWnVbKTKKTfeO305Zg=
+X-Received: by 2002:a05:6122:446:: with SMTP id f6mr1083497vkk.79.1586443182560;
+ Thu, 09 Apr 2020 07:39:42 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <CAMj1kXGPOZ6zWtgGScLy0ECrTtf1yhngDTNE1chW-MQw3XQp9Q@mail.gmail.com>
+References: <1586402293-30579-1-git-send-email-Anson.Huang@nxp.com>
+ <CAHLCerNonZ7qJi8Qihmj87QteEnxTF0PRS6vw5GPemMurOfS9Q@mail.gmail.com> <DB3PR0402MB39160A94CD5E97AA79E2DB5AF5C10@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+In-Reply-To: <DB3PR0402MB39160A94CD5E97AA79E2DB5AF5C10@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+From:   Amit Kucheria <amit.kucheria@verdurent.com>
+Date:   Thu, 9 Apr 2020 20:09:31 +0530
+Message-ID: <CAHLCerM+UpmdvvxV2KpEZuJSKQNjz2ONpXdFPdyUxCOj0PjnGA@mail.gmail.com>
+Subject: Re: [PATCH] dt-bindings: thermal: Convert i.MX8MM to json-schema
+To:     Anson Huang <anson.huang@nxp.com>
+Cc:     Zhang Rui <rui.zhang@intel.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        Linux PM list <linux-pm@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        lakml <linux-arm-kernel@lists.infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        dl-linux-imx <linux-imx@nxp.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 08, 2020 at 09:49:15AM +0200, Ard Biesheuvel wrote:
-> (add Peter, Leif and Daniel)
-> 
-> On Wed, 8 Apr 2020 at 09:43, Dave Young <dyoung@redhat.com> wrote:
+On Thu, Apr 9, 2020 at 7:52 PM Anson Huang <anson.huang@nxp.com> wrote:
+>
+> Hi, Amit
+>
+> > Subject: Re: [PATCH] dt-bindings: thermal: Convert i.MX8MM to json-schema
 > >
-> > On 04/06/20 at 02:06pm, Arvind Sankar wrote:
-> > > Commit
-> > >
-> > >   3ee372ccce4d ("x86/boot/compressed/64: Remove .bss/.pgtable from
-> > >   bzImage")
-> > >
-> > > removed the .bss section from the bzImage.
-> > >
-> > > However, while a PE loader is required to zero-initialize the .bss
-> > > section before calling the PE entry point, the EFI handover protocol
-> > > does not currently document any requirement that .bss be initialized by
-> > > the bootloader prior to calling the handover entry.
-> > >
-> > > When systemd-boot is used to boot a unified kernel image [1], the image
-> > > is constructed by embedding the bzImage as a .linux section in a PE
-> > > executable that contains a small stub loader from systemd together with
-> > > additional sections and potentially an initrd. As the .bss section
-> > > within the bzImage is no longer explicitly present as part of the file,
-> > > it is not initialized before calling the EFI handover entry.
-> > > Furthermore, as the size of the embedded .linux section is only the size
-> > > of the bzImage file itself, the .bss section's memory may not even have
-> > > been allocated.
+> > Hi Anson,
 > >
-> > I did not follow up the old report, maybe I missed something. But not
-> > sure why only systemd-boot is mentioned here.  I also have similar issue
-> > with early efi failure.  With these two patches applied, it works well
-> > then.
+> > On Thu, Apr 9, 2020 at 8:56 AM Anson Huang <Anson.Huang@nxp.com>
+> > wrote:
+> > >
+> > > Convert the i.MX8MM thermal binding to DT schema format using
+> > > json-schema
 > >
-> > BTW, I use Fedora 31 + Grub2
+> > Would it be possible to have a single yaml file for all i.MX thermal sensors by
+> > playing with required and optional properties ?
+>
+> i.MX SoCs have many different thermal sensor IP and hence different thermal driver
+> is used, and different i.MX thermal drivers have different DT bindings, so is it good to
+> put all of them into single yaml file? For example, imx_thermal.c is for i.MX6/7 SoCs which
+> do NOT use of_thermal framework, imx8mm_thermal.c is for i.MX8MM/i.MX8MP which
+> use of_thermal framework.
+>
+> If putting all of them into 1 yaml file, it will be almost like just putting 2 files together, I
+> Personally don't think it is a good idea.
+
+OK.
+
 > >
-> 
-> OK, so I take it this means that GRUB's PE/COFF loader does not
-> zero-initialize BSS either? Does it honor the image size in memory if
-> it exceeds the file size?
+> > > Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+> > > ---
+> > >  .../devicetree/bindings/thermal/imx8mm-thermal.txt | 15 ------
+> > >  .../bindings/thermal/imx8mm-thermal.yaml           | 53
+> > ++++++++++++++++++++++
+> > >  2 files changed, 53 insertions(+), 15 deletions(-)  delete mode
+> > > 100644 Documentation/devicetree/bindings/thermal/imx8mm-thermal.txt
+> > >  create mode 100644
+> > > Documentation/devicetree/bindings/thermal/imx8mm-thermal.yaml
+> > >
+> > > diff --git
+> > > a/Documentation/devicetree/bindings/thermal/imx8mm-thermal.txt
+> > > b/Documentation/devicetree/bindings/thermal/imx8mm-thermal.txt
+> > > deleted file mode 100644
+> > > index 3629d3c..0000000
+> > > --- a/Documentation/devicetree/bindings/thermal/imx8mm-thermal.txt
+> > > +++ /dev/null
+> > > @@ -1,15 +0,0 @@
+> > > -* Thermal Monitoring Unit (TMU) on Freescale i.MX8MM SoC
+> > > -
+> > > -Required properties:
+> > > -- compatible : Must be "fsl,imx8mm-tmu" or "fsl,imx8mp-tmu".
+> > > -- reg : Address range of TMU registers.
+> > > -- clocks : TMU's clock source.
+> > > -- #thermal-sensor-cells : Should be 0 or 1. See ./thermal.txt for a description.
+> > > -
+> > > -Example:
+> > > -tmu: tmu@30260000 {
+> > > -       compatible = "fsl,imx8mm-tmu";
+> > > -       reg = <0x30260000 0x10000>;
+> > > -       clocks = <&clk IMX8MM_CLK_TMU_ROOT>;
+> > > -       #thermal-sensor-cells = <0>;
+> > > -};
+> > > diff --git
+> > > a/Documentation/devicetree/bindings/thermal/imx8mm-thermal.yaml
+> > > b/Documentation/devicetree/bindings/thermal/imx8mm-thermal.yaml
+> > > new file mode 100644
+> > > index 0000000..53a42b3
+> > > --- /dev/null
+> > > +++ b/Documentation/devicetree/bindings/thermal/imx8mm-thermal.yaml
+> > > @@ -0,0 +1,53 @@
+> > > +# SPDX-License-Identifier: GPL-2.0
+> > > +%YAML 1.2
+> > > +---
+> > > +$id:
+> > > +https://eur01.safelinks.protection.outlook.com/?url=http%3A%2F%2Fdevi
+> > >
+> > +cetree.org%2Fschemas%2Fthermal%2Fimx8mm-thermal.yaml%23&amp;data
+> > =02%7
+> > >
+> > +C01%7CAnson.Huang%40nxp.com%7Cb190e049130e49e0750d08d7dc8e48
+> > a3%7C686e
+> > >
+> > +a1d3bc2b4c6fa92cd99c5c301635%7C0%7C0%7C637220375963888457&am
+> > p;sdata=s
+> > >
+> > +S8%2FR2j%2BT1UmDqXFIPPzPgWs26lMiwW3saTq4qlZAUs%3D&amp;reserve
+> > d=0
+> > > +$schema:
+> > > +https://eur01.safelinks.protection.outlook.com/?url=http%3A%2F%2Fdevi
+> > >
+> > +cetree.org%2Fmeta-schemas%2Fcore.yaml%23&amp;data=02%7C01%7CAns
+> > on.Hua
+> > >
+> > +ng%40nxp.com%7Cb190e049130e49e0750d08d7dc8e48a3%7C686ea1d3bc
+> > 2b4c6fa92
+> > >
+> > +cd99c5c301635%7C0%7C0%7C637220375963898454&amp;sdata=tXIh9d%
+> > 2BszcExH0
+> > > +7ic7s%2BqJyUdbE0aHM3tH%2BwkWgnbhQ%3D&amp;reserved=0
+> > > +
+> > > +title: NXP i.MX8M Mini Thermal Binding
+> > > +
+> > > +maintainers:
+> > > +  - Anson Huang <Anson.Huang@nxp.com>
+> > > +
+> > > +properties:
+> > > +  compatible:
+> > > +    oneOf:
+> > > +      - items:
+> > > +          - enum:
+> > > +              - fsl,imx8mm-tmu
+> > > +              - fsl,imx8mp-tmu
+> > > +  reg:
+> > > +    description: |
+> > > +      Address range of TMU registers.
+> > > +    maxItems: 1
+> > > +  clocks:
+> > > +    description: |
+> > > +      TMU's clock source.
+> > > +    maxItems: 1
+> > > +
+> > > +  # See ./thermal.txt for details
+> >
+> > Don't point to thermal.txt anymore. thermal.txt will be replaced by
+> > thermal-*.yaml files at some point soon.
+>
+> OK, will remove it.
+>
+> >
+> > > +  "#thermal-sensor-cells":
+> > > +    enum:
+> > > +      - 0
+> >
+> > Don't you have multiple sensors connected to this controller? In that case, 0
+> > won't be a valid value.
+>
+> imx8mm_thermal driver is for i.MX8MM and i.MX8MP, i.MX8MM ONLY has 1 sensor,
+> while i.MX8MP has 2 sensors, that is why I put both 0 and 1 here.
 
-Dave, that comment was because the previous report was for systemd-boot
-stub.
-
-Ard, should I revise the commit message to make it clear it's not
-restricted to systemd-boot but anything using handover entry may be
-affected? Maybe just a "for example, when systemd-boot..." and then a
-line to say grub2 with the EFI stub patches is also impacted?
-
-https://src.fedoraproject.org/rpms/grub2/blob/f31/f/0001-Add-support-for-Linux-EFI-stub-loading.patch#_743
-
-+  kernel_mem = grub_efi_allocate_pages_max(lh.pref_address,
-+					   BYTES_TO_PAGES(lh.init_size));
-
-Looking at this, grub does allocate init_size for the image, but it
-doesn't zero it out.
-
-This call also looks wrong to me though. It allocates at max address of
-pref_address, which, if it succeeds, will guarantee that the kernel gets
-loaded entirely below pref_address == LOAD_PHYSICAL_ADDR. In native
-mode, if it weren't for the EFI stub copying the kernel again, this
-would cause the startup code to relocate the kernel into unallocated
-memory. On a mixed-mode boot, this would cause the early page tables
-setup prior to transitioning to 64-bit mode to be in unallocated memory
-and potentially get clobbered by the EFI stub.
-
-The first try to allocate pref_address should be calling
-grub_efi_allocate_fixed instead.
+Please put this in description after maintainers above.
