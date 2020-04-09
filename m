@@ -2,43 +2,43 @@ Return-Path: <SRS0=n+Ub=5Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0815C3815B
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 13:05:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20055C38A29
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 13:05:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 88863216FD
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 13:05:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EBC872145D
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 13:05:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586437519;
-	bh=vCcsT7+NygRnTXSt2aa9KbXrWpz8ex7XrrLJuGpgULQ=;
+	s=default; t=1586437524;
+	bh=qZCGqLyDsrfWvTIBZIFUaR8x9EPxCLTQDYBA4Nrfm2Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gpmQ9mIEeyDI4FzS6mkPe9SOXfx0Y0ktelgfz5U+czpBAt7rZekZAc9WlCHxQjl7T
-	 Yu0Hf4xmC+URENRZMSd/VKX79pOz5owXE4wLu6ey7VJK0iDFhQGYpHtQf2Ub/SIX0i
-	 5EgiPdWl4XfJuFURz/CJN8EOfPNIWaSJ2Ba4LSYs=
+	b=sF1ncRmmRX9J4InqQTvb/G2BwgQ/uUCCMjisg4hycrqwFLNcg0H4OLbPdfQhw2ABT
+	 uBP5OdsFP7gdvo4ZRg504mIhCoHKImYq5iW/LPh38GgfE9lX4CgqjODwWDj/xMwIqy
+	 7x9iaUrxrIVQr4RwyPeJsZRK0FzzgckiKJ9g0gK0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726893AbgDINFP (ORCPT
+        id S1726925AbgDINFW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Apr 2020 09:05:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44052 "EHLO mail.kernel.org"
+        Thu, 9 Apr 2020 09:05:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44238 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726871AbgDINFM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Apr 2020 09:05:12 -0400
+        id S1726890AbgDINFU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Apr 2020 09:05:20 -0400
 Received: from e123331-lin.home (amontpellier-657-1-18-247.w109-210.abo.wanadoo.fr [109.210.65.247])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7919E21473;
-        Thu,  9 Apr 2020 13:05:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DD3762083E;
+        Thu,  9 Apr 2020 13:05:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586437511;
-        bh=vCcsT7+NygRnTXSt2aa9KbXrWpz8ex7XrrLJuGpgULQ=;
+        s=default; t=1586437520;
+        bh=qZCGqLyDsrfWvTIBZIFUaR8x9EPxCLTQDYBA4Nrfm2Y=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pFDfpLRVRypgIwn8ix8hVyEWSc4iP3ENOny9OB4Q2vn3zFH9o7MkNqi3RbL/doRsC
-         yhuQ+ou4bLgF4TDvNWPdR3mRrvjv+M5hlLteDuXeT6bsO9Fo4EmC801VV4va10Z5nA
-         zLXPz4gcqfZbUk/5BQ02FdhGZpiBsX2dHo9UvPTg=
+        b=fOMA3Q/mK1X8bDIQ+0ZRU7tylCDlsiuObwFpiFlS5z1I71NcsaOXh0H2Zwf5CbPAy
+         +paleQA0IGfdtxP4WZ+yJowXMgfgtaqtcnjQ4Ql1tupFurzvr1UUjmob+Kqvfc4XY7
+         zSRffMajdRpGfpe6Oxhg3fdrEp8Vk8g9GK7oE0q8=
 From:   Ard Biesheuvel <ardb@kernel.org>
 To:     linux-efi@vger.kernel.org, Ingo Molnar <mingo@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>
@@ -49,9 +49,9 @@ Cc:     Ard Biesheuvel <ardb@kernel.org>, linux-kernel@vger.kernel.org,
         Colin Ian King <colin.king@canonical.com>,
         Gary Lin <glin@suse.com>, Jiri Slaby <jslaby@suse.cz>,
         Sergey Shatunov <me@prok.pw>, Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 6/9] Documentation: efi/x86: clarify EFI handover protocol and its requirements
-Date:   Thu,  9 Apr 2020 15:04:31 +0200
-Message-Id: <20200409130434.6736-7-ardb@kernel.org>
+Subject: [PATCH 9/9] efi/x86: Don't remap text<->rodata gap read-only for mixed mode
+Date:   Thu,  9 Apr 2020 15:04:34 +0200
+Message-Id: <20200409130434.6736-10-ardb@kernel.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200409130434.6736-1-ardb@kernel.org>
 References: <20200409130434.6736-1-ardb@kernel.org>
@@ -60,81 +60,95 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The EFI handover protocol was introduced on x86 to permit the boot
-loader to pass a populated boot_params structure as an additional
-function argument to the entry point. This allows the bootloader to
-pass the base and size of a initrd image, which is more flexible
-than relying on the EFI stub's file I/O routines, which can only
-access the file system from which the kernel image itself was loaded
-from firmware.
+Commit
 
-This approach requires a fair amount of internal knowledge regarding
-the layout of the boot_params structure on the part of the boot loader,
-as well as knowledge regarding the allowed placement of the initrd in
-memory, and so it has been deprecated in favour of a new initrd loading
-method that is based on existing UEFI protocols and best practices.
+  d9e3d2c4f10320 ("efi/x86: Don't map the entire kernel text RW for mixed mode")
 
-So update the x86 boot protocol documentation to clarify that the EFI
-handover protocol has been deprecated, and while at it, add a note that
-invoking the EFI handover protocol still requires the PE/COFF image to
-be loaded properly (as opposed to simply being copied into memory).
-Also, drop the code32_start header field from the list of values that
-need to be provided, as this is no longer required.
+updated the code that creates the 1:1 memory mapping to use read-only
+attributes for the 1:1 alias of the kernel's text and rodata sections, to
+protect it from inadvertent modification. However, it failed to take into
+account that the unused gap between text and rodata is given to the page
+allocator for general use.
 
-Reviewed-by: Borislav Petkov <bp@suse.de>
+If the vmap'ed stack happens to be allocated from this region, any by-ref
+output arguments passed to EFI runtime services that are allocated on the
+stack (such as the 'datasize' argument taken by GetVariable() when invoked
+from efivar_entry_size()) will be referenced via a read-only mapping,
+resulting in a page fault if the EFI code tries to write to it:
+
+  BUG: unable to handle page fault for address: 00000000386aae88
+  #PF: supervisor write access in kernel mode
+  #PF: error_code(0x0003) - permissions violation
+  PGD fd61063 P4D fd61063 PUD fd62063 PMD 386000e1
+  Oops: 0003 [#1] SMP PTI
+  CPU: 2 PID: 255 Comm: systemd-sysv-ge Not tainted 5.6.0-rc4-default+ #22
+  Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 0.0.0 02/06/2015
+  RIP: 0008:0x3eaeed95
+  Code: ...  <89> 03 be 05 00 00 80 a1 74 63 b1 3e 83 c0 48 e8 44 d2 ff ff eb 05
+  RSP: 0018:000000000fd73fa0 EFLAGS: 00010002
+  RAX: 0000000000000001 RBX: 00000000386aae88 RCX: 000000003e9f1120
+  RDX: 0000000000000001 RSI: 0000000000000000 RDI: 0000000000000001
+  RBP: 000000000fd73fd8 R08: 00000000386aae88 R09: 0000000000000000
+  R10: 0000000000000002 R11: 0000000000000000 R12: 0000000000000000
+  R13: ffffc0f040220000 R14: 0000000000000000 R15: 0000000000000000
+  FS:  00007f21160ac940(0000) GS:ffff9cf23d500000(0000) knlGS:0000000000000000
+  CS:  0008 DS: 0018 ES: 0018 CR0: 0000000080050033
+  CR2: 00000000386aae88 CR3: 000000000fd6c004 CR4: 00000000003606e0
+  DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+  DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+  Call Trace:
+  Modules linked in:
+  CR2: 00000000386aae88
+  ---[ end trace a8bfbd202e712834 ]---
+
+Let's fix this by remapping text and rodata individually, and leave the
+gaps mapped read-write.
+
+Fixes: d9e3d2c4f10320 ("efi/x86: Don't map the entire kernel text RW for mixed mode")
+Reported-by: Jiri Slaby <jslaby@suse.cz>
+Tested-by: Jiri Slaby <jslaby@suse.cz>
 Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
 ---
- Documentation/x86/boot.rst | 21 ++++++++++++++++++---
- 1 file changed, 18 insertions(+), 3 deletions(-)
+ arch/x86/platform/efi/efi_64.c | 12 ++++++++++--
+ 1 file changed, 10 insertions(+), 2 deletions(-)
 
-diff --git a/Documentation/x86/boot.rst b/Documentation/x86/boot.rst
-index fa7ddc0428c8..5325c71ca877 100644
---- a/Documentation/x86/boot.rst
-+++ b/Documentation/x86/boot.rst
-@@ -1399,8 +1399,8 @@ must have read/write permission; CS must be __BOOT_CS and DS, ES, SS
- must be __BOOT_DS; interrupt must be disabled; %rsi must hold the base
- address of the struct boot_params.
+diff --git a/arch/x86/platform/efi/efi_64.c b/arch/x86/platform/efi/efi_64.c
+index e0e2e8136cf5..c5e393f8bb3f 100644
+--- a/arch/x86/platform/efi/efi_64.c
++++ b/arch/x86/platform/efi/efi_64.c
+@@ -202,7 +202,7 @@ virt_to_phys_or_null_size(void *va, unsigned long size)
  
--EFI Handover Protocol
--=====================
-+EFI Handover Protocol (deprecated)
-+==================================
+ int __init efi_setup_page_tables(unsigned long pa_memmap, unsigned num_pages)
+ {
+-	unsigned long pfn, text, pf;
++	unsigned long pfn, text, pf, rodata;
+ 	struct page *page;
+ 	unsigned npages;
+ 	pgd_t *pgd = efi_mm.pgd;
+@@ -256,7 +256,7 @@ int __init efi_setup_page_tables(unsigned long pa_memmap, unsigned num_pages)
  
- This protocol allows boot loaders to defer initialisation to the EFI
- boot stub. The boot loader is required to load the kernel/initrd(s)
-@@ -1408,6 +1408,12 @@ from the boot media and jump to the EFI handover protocol entry point
- which is hdr->handover_offset bytes from the beginning of
- startup_{32,64}.
+ 	efi_scratch.phys_stack = page_to_phys(page + 1); /* stack grows down */
  
-+The boot loader MUST respect the kernel's PE/COFF metadata when it comes
-+to section alignment, the memory footprint of the executable image beyond
-+the size of the file itself, and any other aspect of the PE/COFF header
-+that may affect correct operation of the image as a PE/COFF binary in the
-+execution context provided by the EFI firmware.
+-	npages = (__end_rodata_aligned - _text) >> PAGE_SHIFT;
++	npages = (_etext - _text) >> PAGE_SHIFT;
+ 	text = __pa(_text);
+ 	pfn = text >> PAGE_SHIFT;
+ 
+@@ -266,6 +266,14 @@ int __init efi_setup_page_tables(unsigned long pa_memmap, unsigned num_pages)
+ 		return 1;
+ 	}
+ 
++	npages = (__end_rodata - __start_rodata) >> PAGE_SHIFT;
++	rodata = __pa(__start_rodata);
++	pfn = rodata >> PAGE_SHIFT;
++	if (kernel_map_pages_in_pgd(pgd, pfn, rodata, npages, pf)) {
++		pr_err("Failed to map kernel rodata 1:1\n");
++		return 1;
++	}
 +
- The function prototype for the handover entry point looks like this::
+ 	return 0;
+ }
  
-     efi_main(void *handle, efi_system_table_t *table, struct boot_params *bp)
-@@ -1419,9 +1425,18 @@ UEFI specification. 'bp' is the boot loader-allocated boot params.
- 
- The boot loader *must* fill out the following fields in bp::
- 
--  - hdr.code32_start
-   - hdr.cmd_line_ptr
-   - hdr.ramdisk_image (if applicable)
-   - hdr.ramdisk_size  (if applicable)
- 
- All other fields should be zero.
-+
-+NOTE: The EFI Handover Protocol is deprecated in favour of the ordinary PE/COFF
-+      entry point, combined with the LINUX_EFI_INITRD_MEDIA_GUID based initrd
-+      loading protocol (refer to [0] for an example of the bootloader side of
-+      this), which removes the need for any knowledge on the part of the EFI
-+      bootloader regarding the internal representation of boot_params or any
-+      requirements/limitations regarding the placement of the command line
-+      and ramdisk in memory, or the placement of the kernel image itself.
-+
-+[0] https://github.com/u-boot/u-boot/commit/ec80b4735a593961fe701cc3a5d717d4739b0fd0
 -- 
 2.17.1
 
