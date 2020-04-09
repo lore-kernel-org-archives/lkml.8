@@ -2,143 +2,160 @@ Return-Path: <SRS0=n+Ub=5Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DEFCC2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 17:54:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F4C7C2BA19
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 17:56:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 05F8C206E9
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 17:54:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ElcSoZ2h"
+	by mail.kernel.org (Postfix) with ESMTP id 37F03206E9
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 17:56:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1586454988;
+	bh=PqnGA18fbjWJ6jPpaALQpwlsOsX9WtYIEa3CMbgDX8Y=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=R3/tUeYn4HBB8fvjP4z4yEzohbX/BG3u6GUjdsEiA9qnz8d2hqZ7azFkSk4ZFXitK
+	 7tSfTwCQoA2hocJ9b8txDUuxJ7nY2r6Jh5Adc8zubggjt3QKt18G3mS7TrMsfDSUYf
+	 7D5CdytUoWUdLS2ywwNOII9I+08PniP1gwBZ3jvY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726620AbgDIRyZ (ORCPT
+        id S1726579AbgDIR40 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Apr 2020 13:54:25 -0400
-Received: from mail-qv1-f67.google.com ([209.85.219.67]:37279 "EHLO
-        mail-qv1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725970AbgDIRyZ (ORCPT
+        Thu, 9 Apr 2020 13:56:26 -0400
+Received: from mail-qk1-f193.google.com ([209.85.222.193]:33321 "EHLO
+        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725970AbgDIR40 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Apr 2020 13:54:25 -0400
-Received: by mail-qv1-f67.google.com with SMTP id n1so5957064qvz.4
-        for <linux-kernel@vger.kernel.org>; Thu, 09 Apr 2020 10:54:25 -0700 (PDT)
+        Thu, 9 Apr 2020 13:56:26 -0400
+Received: by mail-qk1-f193.google.com with SMTP id v7so4942725qkc.0
+        for <linux-kernel@vger.kernel.org>; Thu, 09 Apr 2020 10:56:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=T68rPewmf4BnEjG4gbV45voMaldyLN/fs5q/Sve6O4Q=;
-        b=ElcSoZ2hSryP0NOI23Sav6u//9KLZnBNbbDNdDAFlJUKPjBMd6LSrzm4JBSbhIibDI
-         RugUq4rXBOiK5q74PQvz+Rr5OBy3zs/+JzARqs7Hxn8W1QMYF7VjvQoI/ZJqaUM0JcUq
-         WASmRHLJAdqjqnD2GXR75v+X6Mht85cQRNyDg461zHBvDF+JcapAGerWNerh520g94YR
-         uTnzlDFskAlG65RcrdwVHdsAn8X7MCVfXj9eTEy7+beAwuKsisiUkwfLelk2F0TwXsch
-         9a/6xlSgI+dFKGtYt8AKNBc5ZtiuMbXCty24Uv3HmKrEHao6MUa+bmhPFyOT49OveEWg
-         71mw==
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=3gLm9c9BJkp5q7ogvl1hMr79wf7+tg3z7449OZ6CG6E=;
+        b=ILYODuX/tzwdF6uf10NHw7hbDVVLkx9CmAELs+PDiqL69d15eWKafKTOfqRmWwIYZ5
+         aT77ZTYREnawvoIWlZ40rT1ijMKmQcVS4nwccdviNA6AEK03pDSo0Wj0WxwrvNDeIdF9
+         YIeOFG50we74b24N5a2pao9P/XSzEdzZQQDprsWp3GrrmpuBBg5MCGual2uW0TBG2G2f
+         GKcg7v/PvP9KIPjg47HXxWPj+3wAFOBXf3uhfZEnki6wg1Lz/l6Q2o3Eh8ktGKbTtoqH
+         RD3gEdZ7jIAuw3Pfx09z2r6B8+a0uWmd/ng86sW412ejhGb8NYONUAfoyPbDKWKglNJu
+         8Ojg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=T68rPewmf4BnEjG4gbV45voMaldyLN/fs5q/Sve6O4Q=;
-        b=il9txihcUg3KLCPCSWYTFSOLjnEEo5N8M5CBI5m7hRxx3RsfyZheNVTMOc9pv1iTwp
-         IOF0axPoWDu1hWfEqXChiBrCKSEaphSSs73UefkPsAvcxqm6Npf6JbU2aKfCRzByTljQ
-         OCrAyFQuOtMLTIF063gYliqKocuXiK2pP/aaOt2J1Zl7kIShhmdvkKynIdF+DwtaFRXT
-         miDTd5tKKlU8dlnw2Q7moffMXTKQt8Y0Cyx94pJ2W5eeUcBGdOo43liHpcsOW07qn1fh
-         hf9f/igyr/XXOvy3hv7yxavgfB+IV4P/9cgDj0lbIm0iEOtcgxA8BiXhCWj/P5M6MK4Z
-         t+rQ==
-X-Gm-Message-State: AGi0Pub6oxnPY0cgUR1avjXoAAeYJZ6+4M7/Ql7WpdoxNs0eSz4GGr9X
-        GI1s2D0LYTCxQ8jVz2NXmdJfZljJ2UKbZeNatrh0Sg==
-X-Google-Smtp-Source: APiQypL4GIZ16krMeIYz180+JcjeFeUo3/PF+/HzEK8g/KUfeZ/nh0KVBZ8b2keh/jk0MTTeoDu8oOMCvuE3H7r1Gcw=
-X-Received: by 2002:ad4:4c85:: with SMTP id bs5mr1274772qvb.213.1586454864517;
- Thu, 09 Apr 2020 10:54:24 -0700 (PDT)
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to;
+        bh=3gLm9c9BJkp5q7ogvl1hMr79wf7+tg3z7449OZ6CG6E=;
+        b=iV2bIb0MJUSk1Ej7mxMwwi5pSEWaiTCja2kHFOK0ZbdvLLY+ie4WH5L5OB56rk9vA+
+         pFeNlmjiqsKXAoj9fAlvaPrtV8RaZC41amE/8n/YGHedmwwFzyhjgqvZe8uz1JQhnxlK
+         s1aDvFaavtHj/Z4Hf1SFCgigxWUvOnOCotyLTZkXhHyMxSc4R1mZSOkbvyCydUnu89oi
+         GDCALj7ioekyJlhR/3cqAqbUU6hcgZb3cMVGm16BF+vQKk3N5bAwDfrep9+fG59aJucW
+         qzw3VO/sxCPgwybNGOfZ2fZyUNklwv4Saaj05+qbAP1mnfs1TVydrKQ4a4Pc5uOE8H71
+         IHxw==
+X-Gm-Message-State: AGi0Puat6wI24fsQnCWR7Fqz/KVH8dL6Ybwn3Qc8xTjwlyNIrRdAfVBk
+        jJmAi16hWOSdiFZToxxVD54=
+X-Google-Smtp-Source: APiQypLyh1A1Qit1zcPSU8vU7ck8R3gN7tFBFmpJPUwAevwsJim1Wa63V+WOIast3+Fm1q73SjQQVw==
+X-Received: by 2002:a37:e312:: with SMTP id y18mr1060332qki.243.1586454983739;
+        Thu, 09 Apr 2020 10:56:23 -0700 (PDT)
+Received: from localhost ([2620:10d:c091:480::74a8])
+        by smtp.gmail.com with ESMTPSA id 207sm22546620qkf.69.2020.04.09.10.56.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 09 Apr 2020 10:56:23 -0700 (PDT)
+Date:   Thu, 9 Apr 2020 13:56:21 -0400
+From:   Tejun Heo <tj@kernel.org>
+To:     Mel Gorman <mgorman@techsingularity.net>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: Cgroup memory barrier usage and call frequency from scheduler
+Message-ID: <20200409175621.GA37608@mtj.thefacebook.com>
+References: <20200409154413.GK3818@techsingularity.net>
 MIME-Version: 1.0
-References: <855831b59e1b3774b11c3e33050eac4cc4639f06.1583332765.git.vpillai@digitalocean.com>
- <20200401114215.36640-1-cj.chengjian@huawei.com>
-In-Reply-To: <20200401114215.36640-1-cj.chengjian@huawei.com>
-From:   Joel Fernandes <joelaf@google.com>
-Date:   Thu, 9 Apr 2020 13:54:13 -0400
-Message-ID: <CAJWu+ooyRsFFA13=rqMBCFgf_JeHsOr16-ayuECaQ5Xz48mrqQ@mail.gmail.com>
-Subject: Re: [PATCH] sched/arm64: store cpu topology before notify_cpu_starting
-To:     Cheng Jian <cj.chengjian@huawei.com>
-Cc:     Vineeth Remanan Pillai <vpillai@digitalocean.com>,
-        aaron.lwe@gmail.com, aubrey.intel@gmail.com,
-        aubrey.li@linux.intel.com,
-        "Cc: Frederic Weisbecker" <fweisbec@gmail.com>,
-        Julien Desfossez <jdesfossez@digitalocean.com>,
-        "Joel Fernandes (Google)" <joel@joelfernandes.org>,
-        Kees Cook <keescook@chromium.org>,
-        Greg Kerr <kerrnel@google.com>,
-        LKML <linux-kernel@vger.kernel.org>, mgorman@techsingularity.net,
-        Ingo Molnar <mingo@kernel.org>, naravamudan@digitalocean.com,
-        pauld@redhat.com, pawan.kumar.gupta@linux.intel.com,
-        pbonzini@redhat.com, Peter Zijlstra <peterz@infradead.org>,
-        Paul Turner <pjt@google.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        tim.c.chen@linux.intel.com,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        xiexiuqi@huawei.com, huawei.libin@huawei.com, w.f@huawei.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200409154413.GK3818@techsingularity.net>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 1, 2020 at 7:27 AM Cheng Jian <cj.chengjian@huawei.com> wrote:
->
-> when SCHED_CORE enabled, sched_cpu_starting() uses thread_sibling as
-> SMT_MASK to initialize rq->core, but only after store_cpu_topology(),
-> the thread_sibling is ready for use.
->
->         notify_cpu_starting()
->             -> sched_cpu_starting()     # use thread_sibling
->
->         store_cpu_topology(cpu)
->             -> update_siblings_masks    # set thread_sibling
->
-> Fix this by doing notify_cpu_starting later, just like x86 do.
->
-> Signed-off-by: Cheng Jian <cj.chengjian@huawei.com>
+Hello, Mel.
 
-Just a high-level question, why does core-scheduling matter on ARM64?
-Is it for HPC workloads?
+On Thu, Apr 09, 2020 at 04:44:13PM +0100, Mel Gorman wrote:
+> Commit 9a9e97b2f1f2 ("cgroup: Add memory barriers to plug
+> cgroup_rstat_updated() race window") introduced two full memory
+> barriers to close a race. The one in cgroup_rstat_updated can be
+> called at a high frequency from the scheduler from update_curr ->
+> cgroup_account_cputime. The patch has no cc's, acks or reviews so I'm
+> not sure how closely this was looked at. cgroup_rstat_updated shows up
+> in profiles of netperf UDP_STREAM accounting for about 1% of overhead
 
-Thanks,
+Oops, that's pretty high.
 
- - Joel
+> which doesn't sound a lot but that's about the same weight as some of
+> the critical network paths. I have three questions about the patch
+> 
+> 1. Why were full barriers used?
 
+Given
 
-> ---
->  arch/arm64/kernel/smp.c | 11 ++++++++---
->  1 file changed, 8 insertions(+), 3 deletions(-)
->
-> diff --git a/arch/arm64/kernel/smp.c b/arch/arm64/kernel/smp.c
-> index 5407bf5d98ac..a427c14e82af 100644
-> --- a/arch/arm64/kernel/smp.c
-> +++ b/arch/arm64/kernel/smp.c
-> @@ -236,13 +236,18 @@ asmlinkage notrace void secondary_start_kernel(void)
->         cpuinfo_store_cpu();
->
->         /*
-> -        * Enable GIC and timers.
-> +        * Store cpu topology before notify_cpu_starting,
-> +        * CPUHP_AP_SCHED_STARTING requires SMT topology
-> +        * been initialized for SCHED_CORE.
->          */
-> -       notify_cpu_starting(cpu);
-> -
->         store_cpu_topology(cpu);
->         numa_add_cpu(cpu);
->
-> +       /*
-> +        * Enable GIC and timers.
-> +        */
-> +       notify_cpu_starting(cpu);
-> +
->         /*
->          * OK, now it's safe to let the boot CPU continue.  Wait for
->          * the CPU migration code to notice that the CPU is online
-> --
-> 2.17.1
->
+   A    C
+  ---  ---
+   B    D
+
+the code is trying to guarantee that either B sees C or D sees A, so it does
+need full ordering.
+
+> 2. Why was it important that the data race be closed when the inaccuracy
+>    is temporary?
+
+There was a pending patchset which converted memcg to use rstat and the
+conversion included the event counters which needed to be synchronous (e.g.
+for things like oom kill counts). The patchset didn't make it through due to
+the percpu memory overhead at the time. The memory overhead issue can be
+resolved now but in the meantime memcg got improved in a different way which
+made the rstat conversion not immediately necessary, so it fell through the
+cracks. In retrospect, this patch shouldn't have been committed on its own or
+at least the synchronous and pure state update paths should have been
+separate.
+
+> 3. Why is it called from the context of update_curr()?
+
+It's just being callled from the path which udpates sched statistics.
+
+> For 1, the use of a full barrier seems unnecessary when it appears that
+> you could have used a read barrier and a write barrier. The following
+> patch drops the profile overhead to 0.1%
+
+I'm not sure this is correct but that's kinda irrelevant.
+
+> For 2, the changelog says the barriers are necessary because "we plan to use
+> rstat to track counters which need to be accurate". That is a bit vague.
+> Under what circumstances is a transient inaccuracy a serious enough
+> problem to justify additional barriers in the scheduler?
+
+Hope this is explained now.
+
+> For 3, update_curr() is called from a lot of places, some of which are
+> quite hot -- e.g. task enqueue/dequeue. This is necessary information from
+> the runqueue needs to be preserved. However, it's less clear that the cpu
+> accounting information needs to be up to date on this granularity although
+> it might be related to question 2. Why was the delta_exec not similarly
+> accumulated in cpuacct_change() and defer the hierarchical update to
+> be called from somewhere like entity_tick()? It would need tracking the
+> CPU time at the last update as delta_exec would be lost so it's not very
+> trivial but it does not look like it would be overly complicated.
+
+Most likely historic. The code has been there for a long time and the only
+recent changes were plumbing around them. Nothing in cpuacct needs to be
+per-scheduling-event accurate, so yeah, for the longer term, it'd be a good
+idea to move them out of hot path.
+
+For now, I'll revert the patch. Nothing in tree needs that right now. If the
+need for synchronous counting comes back later, I'll make that a separate
+path.
+
+Thanks.
+
+-- 
+tejun
