@@ -2,96 +2,104 @@ Return-Path: <SRS0=n+Ub=5Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A07E9C2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 15:59:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48DDDC2BB86
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 16:00:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 76F9B20768
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 15:59:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 220CB2084D
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 16:00:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1586448006;
+	bh=2ylDsivN/r0ti8f91iXzewtcQz7cQM2hZ25HPdw9vPg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=r2HWhf23GsSC+lVJJ+n/LtOO0Cym8FuT1+57FbmwvLAhSMTN2kRgEqsnc7tj3NvJG
+	 REI2zN4+PWuwlK5DFTeWIkTnnuS1B0S8tehgpiv1UQ0B4tOfYf6Ej/cleZhopgUvc6
+	 H8FV9HdAKYfvTovr3FAuhw2BzfpWi8U/hH+aegac=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728383AbgDIP7k (ORCPT
+        id S1728397AbgDIQAE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Apr 2020 11:59:40 -0400
-Received: from relay9-d.mail.gandi.net ([217.70.183.199]:36003 "EHLO
-        relay9-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727865AbgDIP7j (ORCPT
+        Thu, 9 Apr 2020 12:00:04 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:35139 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727736AbgDIQAE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Apr 2020 11:59:39 -0400
-X-Originating-IP: 86.202.105.35
-Received: from localhost (lfbn-lyo-1-9-35.w86-202.abo.wanadoo.fr [86.202.105.35])
-        (Authenticated sender: alexandre.belloni@bootlin.com)
-        by relay9-d.mail.gandi.net (Postfix) with ESMTPSA id E02C2FF802;
-        Thu,  9 Apr 2020 15:59:36 +0000 (UTC)
-Date:   Thu, 9 Apr 2020 17:59:36 +0200
-From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
-To:     Aishwarya R <aishwaryarj100@gmail.com>
-Cc:     Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Ludovic Desroches <ludovic.desroches@microchip.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Allison Randal <allison@lohutok.net>,
-        Kefeng Wang <wangkefeng.wang@huawei.com>,
-        Stephen Boyd <swboyd@chromium.org>, linux-iio@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] iio: adc: at91-adc: Use devm_platform_ioremap_resource
-Message-ID: <20200409155936.GV3628@piout.net>
-References: <20200409151125.32677-1-aishwaryarj100@gmail.com>
+        Thu, 9 Apr 2020 12:00:04 -0400
+Received: by mail-pf1-f196.google.com with SMTP id a13so4312205pfa.2;
+        Thu, 09 Apr 2020 09:00:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=aQRKpekxDIbOTQGjAcEIQGsYobF8qM0SxjsCWTw2ZsI=;
+        b=sih21yydVRFHZsFGgg59HNuBfeOLWxP9lrEPMN105FfVz58rnW/GDEcO4zsmsi+D4H
+         wfVsCAsfHYhb74tml4QNYR7f9EYK10v4PgVx53AGyktrCWIvgakaRU3DkpUR+Lp5/V+G
+         lLb/WOY+7lne5P6uJPBpxjiGqkkRjtOHRD+VYpIGgdyip5zJPYNfganUG5rlt+iX65Ia
+         G+O1XkANhyv7aIffHK9DPrr3KKB0tuS8o3hYzz5dANw43pLgXhhewQpf8p3UQzu7jaUX
+         vklovoYaq3tUs05JhS/KPyXwPS2z6JKDw0gxXTNpi9Odm5NtE18/784OJMXo1euPhq2F
+         NSfA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to;
+        bh=aQRKpekxDIbOTQGjAcEIQGsYobF8qM0SxjsCWTw2ZsI=;
+        b=ryIH6lCL9fNkiW/ajPCA9mke8HL3Du5neIEbHM8dODhD4xi5kuF2Fz1Mkxf5pra6k5
+         ZgyKmiAsb4p02HScM24gmR3tEdk/gzw4Zq4rYrJwfazEXC/9Ppa34lk7T8v4AYy+dvWv
+         edJdkyMa8Vohs0Iz2229MC8e+KZC14YteFQqGIY6mpL2d8PCdrIszhm3CJ+PrViOKXi4
+         ohWoEUJO2W4CEM/wTfQfk41NxugUnbXZFYxtkP9BJXG2p13Zn3bjzpgNCqDL6CA+iii5
+         N40ijHmo/8pY3d3nel5SkmdgV/YfLfXUKsEUr32om62rIgMZ1A777ktV7urXAOfbX38B
+         fqzA==
+X-Gm-Message-State: AGi0PuZNxoheX3oRcu4Zb/I40Md2RfUiunJYmHc4nPDGv/gPlpCVT0Tn
+        wNyDIrvIszXqGyKZhXBpoaU=
+X-Google-Smtp-Source: APiQypJjp3TKUZfafGLvg6qEU9KISYf3/iG0IoFzAvoBFmETLO9Bl0QvCAR/K1DmpfYnyGtmiu0e2g==
+X-Received: by 2002:a65:580d:: with SMTP id g13mr110923pgr.45.1586448003209;
+        Thu, 09 Apr 2020 09:00:03 -0700 (PDT)
+Received: from google.com ([2601:647:4001:3000::50e3])
+        by smtp.gmail.com with ESMTPSA id a24sm10081726pgd.50.2020.04.09.09.00.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 09 Apr 2020 09:00:01 -0700 (PDT)
+Date:   Thu, 9 Apr 2020 08:59:59 -0700
+From:   Minchan Kim <minchan@kernel.org>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Wei Liu <wei.liu@kernel.org>, x86@kernel.org,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Laura Abbott <labbott@redhat.com>,
+        Sumit Semwal <sumit.semwal@linaro.org>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Nitin Gupta <ngupta@vflare.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        Peter Zijlstra <peterz@infradead.org>,
+        linuxppc-dev@lists.ozlabs.org, linux-hyperv@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org,
+        linux-arch@vger.kernel.org, linux-mm@kvack.org,
+        iommu@lists.linux-foundation.org,
+        linux-arm-kernel@lists.infradead.org, linux-s390@vger.kernel.org,
+        bpf@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 09/28] mm: rename CONFIG_PGTABLE_MAPPING to
+ CONFIG_ZSMALLOC_PGTABLE_MAPPING
+Message-ID: <20200409155959.GB247701@google.com>
+References: <20200408115926.1467567-1-hch@lst.de>
+ <20200408115926.1467567-10-hch@lst.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200409151125.32677-1-aishwaryarj100@gmail.com>
+In-Reply-To: <20200408115926.1467567-10-hch@lst.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 09/04/2020 20:41:23+0530, Aishwarya R wrote:
-> Use the helper function that wraps the calls to
-> platform_get_resource() and devm_ioremap_resource()
-> together.
+On Wed, Apr 08, 2020 at 01:59:07PM +0200, Christoph Hellwig wrote:
+> Rename the Kconfig variable to clarify the scope.
 > 
-
-Please elaborate the actual value of doing that.
-
-> Signed-off-by: Aishwarya R <aishwaryarj100@gmail.com>
-> ---
->  drivers/iio/adc/at91_adc.c | 5 +----
->  1 file changed, 1 insertion(+), 4 deletions(-)
-> 
-> diff --git a/drivers/iio/adc/at91_adc.c b/drivers/iio/adc/at91_adc.c
-> index abe99856c823..0368b6dc6d60 100644
-> --- a/drivers/iio/adc/at91_adc.c
-> +++ b/drivers/iio/adc/at91_adc.c
-> @@ -1152,7 +1152,6 @@ static int at91_adc_probe(struct platform_device *pdev)
->  	int ret;
->  	struct iio_dev *idev;
->  	struct at91_adc_state *st;
-> -	struct resource *res;
->  	u32 reg;
->  
->  	idev = devm_iio_device_alloc(&pdev->dev, sizeof(struct at91_adc_state));
-> @@ -1182,9 +1181,7 @@ static int at91_adc_probe(struct platform_device *pdev)
->  	if (st->irq < 0)
->  		return -ENODEV;
->  
-> -	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> -
-> -	st->reg_base = devm_ioremap_resource(&pdev->dev, res);
-> +	st->reg_base = devm_platform_ioremap_resource(pdev, 0);
->  	if (IS_ERR(st->reg_base))
->  		return PTR_ERR(st->reg_base);
->  
-> -- 
-> 2.17.1
-> 
-
--- 
-Alexandre Belloni, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+> Signed-off-by: Christoph Hellwig <hch@lst.de>
+Acked-by: Minchan Kim <minchan@kernel.org>
