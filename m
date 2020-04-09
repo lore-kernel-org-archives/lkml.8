@@ -2,127 +2,79 @@ Return-Path: <SRS0=n+Ub=5Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12320C2BB85
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 18:28:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EEAB1C2BA19
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 18:34:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D7D952082D
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 18:28:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="YPzLgxQA"
+	by mail.kernel.org (Postfix) with ESMTP id CA5F7206F7
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 18:34:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726651AbgDIS2S (ORCPT
+        id S1726659AbgDISea (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Apr 2020 14:28:18 -0400
-Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:9757 "EHLO
-        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726595AbgDIS2S (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Apr 2020 14:28:18 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5e8f690c0000>; Thu, 09 Apr 2020 11:27:24 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Thu, 09 Apr 2020 11:28:18 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Thu, 09 Apr 2020 11:28:18 -0700
-Received: from DRHQMAIL107.nvidia.com (10.27.9.16) by HQMAIL101.nvidia.com
- (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 9 Apr
- 2020 18:28:17 +0000
-Received: from [10.2.171.241] (10.124.1.5) by DRHQMAIL107.nvidia.com
- (10.27.9.16) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 9 Apr 2020
- 18:28:16 +0000
-Subject: Re: [RFC PATCH v6 6/9] media: tegra: Add Tegra210 Video input driver
-To:     Dmitry Osipenko <digetx@gmail.com>, <thierry.reding@gmail.com>,
-        <jonathanh@nvidia.com>, <frankc@nvidia.com>, <hverkuil@xs4all.nl>,
-        <sakari.ailus@iki.fi>, <helen.koike@collabora.com>
-CC:     <sboyd@kernel.org>, <linux-media@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-clk@vger.kernel.org>,
-        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <1585963507-12610-1-git-send-email-skomatineni@nvidia.com>
- <fea4f0a1-4a20-34d4-9eda-e4a599eeeffc@nvidia.com>
- <760d071e-0cbc-b3eb-9231-fb9f9ecb44a6@nvidia.com>
- <9e317f65-8a02-3b15-cfec-8e0d8374130e@gmail.com>
- <97b35910-4c93-123a-43a0-eb14476ed0f3@nvidia.com>
- <84ad4e2d-6ac1-e1f4-1c55-5edaae850631@nvidia.com>
- <15a879b3-8fb9-6821-3cdc-104ba583ac12@gmail.com>
- <0c425505-347f-7418-af7e-d121fe0d06dc@nvidia.com>
- <db7c7051-5674-cdb9-0aa4-ee94125b3024@gmail.com>
- <1a31cd60-739f-0660-1c45-31487d2f2128@nvidia.com>
- <603084a5-249a-4fe2-3646-e9335ef9ab43@nvidia.com>
- <7895b9c6-f27d-8939-73d7-67d785e1a8b7@nvidia.com>
- <ea60b489-990e-4b15-e215-d93381a1371e@nvidia.com>
- <b2405c2a-73c0-ad69-ccea-0388caf8045c@gmail.com>
- <15d8b525-67b5-b437-f7fd-89f80cd0d9f6@nvidia.com>
- <a638bb8e-bb50-7aa5-05a0-8de1c6207ba7@nvidia.com>
- <ced73258-6f4b-e970-4ca5-ecdf1808a4c3@nvidia.com>
- <ad646fde-2eed-eeeb-4d85-ec36d6613eb1@nvidia.com>
- <7288cacd-badc-cb01-1f4c-286dd024ca10@gmail.com>
-From:   Sowjanya Komatineni <skomatineni@nvidia.com>
-Message-ID: <77c88717-618f-b366-2b6a-f8b4abaa66cc@nvidia.com>
-Date:   Thu, 9 Apr 2020 11:28:15 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Thu, 9 Apr 2020 14:34:30 -0400
+Received: from mga11.intel.com ([192.55.52.93]:23441 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725987AbgDISe3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Apr 2020 14:34:29 -0400
+IronPort-SDR: sOVKgnjaZM2QywELzJE6Xp5QY/Fl+TLrl8+VJh+oKgM4j+CF8DpByLuA17bQg6zBrfyCj2les3
+ gXfIA3+580lw==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Apr 2020 11:34:29 -0700
+IronPort-SDR: TXiQILKrvdolDKooLN9c/56KVHIEqAB+3FOJVk0Pm8gC6Cuodb9ZMB8c7oO0p3xyw7/Wf3Del6
+ S0hoHcbVYIdw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,363,1580803200"; 
+   d="scan'208";a="453259274"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
+  by fmsmga006.fm.intel.com with ESMTP; 09 Apr 2020 11:34:29 -0700
+Date:   Thu, 9 Apr 2020 11:34:29 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     "Kang, Luwei" <luwei.kang@intel.com>
+Cc:     "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "pbonzini@redhat.com" <pbonzini@redhat.com>,
+        "vkuznets@redhat.com" <vkuznets@redhat.com>,
+        "wanpengli@tencent.com" <wanpengli@tencent.com>,
+        "jmattson@google.com" <jmattson@google.com>,
+        "joro@8bytes.org" <joro@8bytes.org>
+Subject: Re: [PATCH] KVM: VMX: Disable Intel PT before VM-entry
+Message-ID: <20200409183429.GA8919@linux.intel.com>
+References: <1584503298-18731-1-git-send-email-luwei.kang@intel.com>
+ <20200318154826.GC24357@linux.intel.com>
+ <82D7661F83C1A047AF7DC287873BF1E1738A9724@SHSMSX104.ccr.corp.intel.com>
+ <20200330172152.GE24988@linux.intel.com>
+ <82D7661F83C1A047AF7DC287873BF1E1738B1A1C@SHSMSX104.ccr.corp.intel.com>
 MIME-Version: 1.0
-In-Reply-To: <7288cacd-badc-cb01-1f4c-286dd024ca10@gmail.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL111.nvidia.com (172.20.187.18) To
- DRHQMAIL107.nvidia.com (10.27.9.16)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: quoted-printable
-Content-Language: en-US
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1586456844; bh=J/aG9q8CC/oWgBUBz0DhAt3fXvAn/5D8wg8H/6egt/k=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
-         Content-Language;
-        b=YPzLgxQABUqO8OPEPQuriGTYqhWKxRFVQrPN++BwMsEhM6J9i6K8noQnvD0TY2Knu
-         RiBq8AfHissKuS2udec8T94gBVNUEIdF49dfKr0zhbfzVMgl+IgneaUjB6vIlJqvow
-         qK8v9s3lxrmlKiTI9Ow6XuZsKHp6Ig4oSqJJCnziLNupWfqC/z3kUSbkdKRPLlIDNO
-         h/vRsMsyimqOCe6d1PfptFD6mGbK3Z174Gwhdgp3Fdwy2I4ZxkXFgkEgzO57j1hE+g
-         kqtVlEcahsvxGcs8vH+QZvais40AOL7k/7vszJlqJ4A1IxGLDp9UXAY+qMWoNJvvOM
-         vX53TCKI0iRcg==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <82D7661F83C1A047AF7DC287873BF1E1738B1A1C@SHSMSX104.ccr.corp.intel.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, Mar 30, 2020 at 08:29:26PM -0700, Kang, Luwei wrote:
+> > > > On Wed, Mar 18, 2020 at 11:48:18AM +0800, Luwei Kang wrote:
+> > Ah, right.  What about enhancing intel_pt_handle_vmx() and 'struct pt' to
+> > replace vmx_on with a field that incorporates the KVM mode?
+> 
+> Some history is the host perf didn't fully agree with introducing HOST_GUEST
+> mode for PT in KVM. Because the KVM will disable the host trace before
+> VM-entry in HOST_GUEST mode and KVM guest will win in this case. e.g. Intel
+> PT has been enabled in KVM guest and the host wants to start system-wide
+> trace(collect all the trace on this system) at this time, the trace produced
+> by the Guest OS will be saved in guest PT buffer and host buffer can't get
+> this. So I prefer don't introduce the KVM PT mode to host perf framework. The
+> similar problem happens on PEBS virtualization via DS as well.
 
-On 4/9/20 7:50 AM, Dmitry Osipenko wrote:
-> External email: Use caution opening links or attachments
->
->
-> 09.04.2020 06:38, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
-> ...
->> Tested with 3 buffers and by checking outstanding buffers in process by
->> VI hw and holding to start capture till one outstanding buffer in
->> process by HW.
->> Also tested with 2 buffers without checking for outstanding buffers.
->>
->> In both cases, I see same %CPU for the kthreads and is < 1%
->>
-> I don't see where buffers queue max limit is set to 3 in the code, but
-> should be okay if CPU isn't getting hogged. Looking forward to v7.
-Sorry, correction I meant to say pre-queued buffers before streaming not=20
-num_buffers.
-vb2 queue min_buffers_needed was set to 3 as part of one of the issue=20
-debug in earlier version which actually was irrelevant to that issue and=20
-should have been removed. Will remove min_buffers_needed in v7.
-
-I added checking for outstanding requests by hardware just to be safer=20
-although we may not hit this case of issuing more than 1 outstanding=20
-frame capture to VI hardware as capture_frame() waits till it sees frame=20
-start event through HW syncpt increment before proceeding for memory=20
-write and issuing next frame capture.
-
-So issuing frame captures are synchronized with frame start and frame end.
-
-Will remove min_buffers_needed and also explicit check for outstanding=20
-buffers in v7.
-
-
+A maintainer's distaste for a feature isn't a good reason to put a hack
+into KVM.  Perf burying its head in the sand won't change the fact that
+"pt->vmx_on" is poorly named and misleading.  Disagreement over features
+is fine, but things will go sideways quick if perf and KVM are outright
+hostile towards each other.
