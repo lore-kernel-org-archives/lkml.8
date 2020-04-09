@@ -2,187 +2,232 @@ Return-Path: <SRS0=n+Ub=5Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC137C2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 09:01:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8661EC2D0EA
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 09:02:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 755972083E
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 09:01:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="yit1NHNG"
+	by mail.kernel.org (Postfix) with ESMTP id 596C32075E
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 09:02:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726699AbgDIJBm (ORCPT
+        id S1726702AbgDIJCe convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Apr 2020 05:01:42 -0400
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:38693 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725862AbgDIJBl (ORCPT
+        Thu, 9 Apr 2020 05:02:34 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:3900 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726470AbgDIJCe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Apr 2020 05:01:41 -0400
-Received: by mail-lf1-f65.google.com with SMTP id l11so7333024lfc.5
-        for <linux-kernel@vger.kernel.org>; Thu, 09 Apr 2020 02:01:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:from:date:message-id:subject:to:cc;
-        bh=bL9ifUNW59crmzsbt6dLo+loyDPtO9QCB/tGi8Xv10s=;
-        b=yit1NHNGe2LMUd6uNWHOj/JoYnC//4fbuMT69yswwnLXwr/x/l8GKovnWAwpEbD+fn
-         hHekbdd4URx8tlZPLkkaHboAvu8zSZYZ/SzQoxZG3AHKgiRS/cYIo2/qEORnXX0Vvvo5
-         mOOfG9pxdE2RcEgM3c64JAXbtPhrBhyxHg5uzfezcvr8ZAzCh2lk+yuZoxFGseUdaIE7
-         Q38il3/mkWwBj7pTVK9lacERVuhl/a+05OUEhMW5l9GHR8/l15N9q8o20HQmb1zanELy
-         bNxBgD6mvQmgGTzYDxND+ji8oAcQz1iBYZiKht+oWGgYYluryXuJwSgHyhp0/33CpMQ/
-         oW3w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
-        bh=bL9ifUNW59crmzsbt6dLo+loyDPtO9QCB/tGi8Xv10s=;
-        b=PhfVEeAcg2Chxvv+nu9Huj+/z0tggLev0jT80/PyS4GuVerkHyNLaED6QX7+KGQ4HU
-         ipIT5XC4EtYc43KHpC5AUb4KrxXsTWx2tV6B1jjzFBwIy1diYOUIGgvuT4HtFHR7mkq9
-         toGf0kV+u0pgHHWRF00PMJ+lgaJl4Yre8inHEnh0RHJenh63tI0/y4RKlnm++JCvXzh5
-         Ws0yWvbQfQA0eT2kogKXGH1eH8HsW95WFbmB3PULBcx0gqVy6e3DzFqLhzfzhMgZEGKC
-         ZV/pAVr8qnH05mDIbvDGNjFSm1yUJomc74U8cZz1j0nVCzghoxQPS93SyvKW8fHKq39Q
-         +g/g==
-X-Gm-Message-State: AGi0PuYIwGUQIYMS4D8D/Oa7vtgQWDIVRqA8MlphASK1oavX6SfI2JYR
-        6bd5UVZtaPeYG+4BLPA5pS98G+w7AZb6C3o5QbPDmA==
-X-Google-Smtp-Source: APiQypKELkgKiHNjicowPErrJEQbXbFPe6vvVay3gM3VtClfJFqU4xTmZR5uCDhTkctQxTqVbbHKgZL59q1r5hl9XvM=
-X-Received: by 2002:a19:c64b:: with SMTP id w72mr7087057lff.82.1586422896545;
- Thu, 09 Apr 2020 02:01:36 -0700 (PDT)
+        Thu, 9 Apr 2020 05:02:34 -0400
+Received: from pps.filterd (m0098393.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0398X5fw096166
+        for <linux-kernel@vger.kernel.org>; Thu, 9 Apr 2020 05:02:34 -0400
+Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 30920682bm-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Thu, 09 Apr 2020 05:02:33 -0400
+Received: from localhost
+        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <naveen.n.rao@linux.ibm.com>;
+        Thu, 9 Apr 2020 10:02:18 +0100
+Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
+        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Thu, 9 Apr 2020 10:02:13 +0100
+Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
+        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 03992QOX58392830
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 9 Apr 2020 09:02:26 GMT
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 1CF02AE04D;
+        Thu,  9 Apr 2020 09:02:26 +0000 (GMT)
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id B0ACAAE053;
+        Thu,  9 Apr 2020 09:02:25 +0000 (GMT)
+Received: from localhost (unknown [9.85.116.227])
+        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Thu,  9 Apr 2020 09:02:25 +0000 (GMT)
+Date:   Thu, 09 Apr 2020 14:32:21 +0530
+From:   "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>
+Subject: Re: [RFC] kretprobe: Prevent triggering kretprobe from within
+ kprobe_flush_task
+To:     Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>
+Cc:     "bibo,mao" <bibo.mao@intel.com>,
+        lkml <linux-kernel@vger.kernel.org>,
+        "Ziqian SUN (Zamir)" <zsun@redhat.com>
+References: <20200408164641.3299633-1-jolsa@kernel.org>
+In-Reply-To: <20200408164641.3299633-1-jolsa@kernel.org>
 MIME-Version: 1.0
-From:   Naresh Kamboju <naresh.kamboju@linaro.org>
-Date:   Thu, 9 Apr 2020 14:31:24 +0530
-Message-ID: <CA+G9fYtMupyHuEsdUwSGQu6czFO7xhe45Km_=DJ8P1v7wpto7Q@mail.gmail.com>
-Subject: memfd/fuse_test: BUG: kernel NULL pointer dereference, address: 00000041
-To:     "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        linux-mm <linux-mm@kvack.org>, linux-fsdevel@vger.kernel.org
-Cc:     Joel Fernandes <joel@joelfernandes.org>,
-        Hugh Dickins <hughd@google.com>, ngeoffray@google.com,
-        Shuah Khan <shuah@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>, miklos@szeredi.hu,
-        lkft-triage@lists.linaro.org
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: astroid/v0.15-13-gb675b421
+ (https://github.com/astroidmail/astroid)
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8BIT
+X-TM-AS-GCONF: 00
+x-cbid: 20040909-0012-0000-0000-000003A13F7A
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 20040909-0013-0000-0000-000021DE6892
+Message-Id: <1586422762.2z1fgtvri9.naveen@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
+ definitions=2020-04-09_02:2020-04-07,2020-04-09 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ priorityscore=1501 phishscore=0 bulkscore=0 clxscore=1015 impostorscore=0
+ malwarescore=0 mlxscore=0 spamscore=0 suspectscore=0 adultscore=0
+ mlxlogscore=999 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2004090066
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-While running kselftest memfd fuse_test test case kernel BUG found on
-i386 kernel running x86_64 device running Linux-next
-5.6.0-next-20200408 kernel version.
+Hi Jiri,
 
-Linux version 5.6.0-next-20200408 (oe-user@oe-host) (gcc version 7.3.0
-(GCC), GNU ld (GNU Binutils) 2.30.0.20180208) #1 SMP Wed Apr 8
-04:48:57 UTC 2020
-<>
-[  452.885727] kselftest: Running tests in memfd
-[  452.974683] audit: type=1701 audit(1586366703.840:87435):
-auid=4294967295 uid=0 gid=0 ses=4294967295 subj=kernel pid=13617
-comm=\"fuse_test\"
-exe=\"/opt/kselftests/default-in-kernel/memfd/fuse_test\" sig=6 res=1
-[  452.975400] BUG: kernel NULL pointer dereference, address: 00000041
-[  452.999344] #PF: supervisor read access in kernel mode
-[  453.004475] #PF: error_code(0x0000) - not-present page
-[  453.009605] *pde = 00000000
-[  453.012482] Oops: 0000 [#2] SMP
-[  453.015619] CPU: 1 PID: 13617 Comm: fuse_test Tainted: G      D W
-      5.6.0-next-20200408 #1
-[  453.024388] Hardware name: Supermicro SYS-5019S-ML/X11SSH-F, BIOS
-2.0b 07/27/2017
-[  453.031862] EIP: __kmalloc+0xa2/0x310
-[  453.035525] Code: 9c 01 00 00 89 75 e4 8b 07 64 8b 50 04 64 03 05
-d8 92 bd cb 8b 08 85 c9 89 4d f0 0f 84 07 02 00 00 8b 75 f0 8b 47 14
-8d 4a 01 <8b> 1c 06 89 f0 8b 37 64 0f c7 0e 75 d0 8b 75 e4 8b 47 14 0f
-18 04
-[  453.054264] EAX: 00000040 EBX: 00000cc0 ECX: 000045c3 EDX: 000045c2
-[  453.060519] ESI: 00000001 EDI: f5403680 EBP: e1effcb8 ESP: e1effc98
-[  453.066776] DS: 007b ES: 007b FS: 00d8 GS: 00e0 SS: 0068 EFLAGS: 00010202
-[  453.073555] CR0: 80050033 CR2: 00000041 CR3: 216ee000 CR4: 003406d0
-[  453.079812] DR0: 00000000 DR1: 00000000 DR2: 00000000 DR3: 00000000
-[  453.086067] DR6: fffe0ff0 DR7: 00000400
-[  453.089898] Call Trace:
-[  453.092345]  ? elf_core_dump+0x520/0x16a0
-[  453.096357]  elf_core_dump+0x520/0x16a0
-[  453.100215]  ? kmem_cache_free+0xeb/0x2e0
-[  453.104236]  do_coredump+0x617/0x1070
-[  453.107911]  ? trace_hardirqs_off+0x1d/0xf0
-[  453.112095]  ? lock_acquire+0x81/0x320
-[  453.115850]  get_signal+0xaa8/0xb40
-[  453.119341]  do_signal+0x23/0x630
-[  453.122659]  ? _raw_spin_unlock_irq+0x22/0x30
-[  453.127019]  ? __set_current_blocked+0x47/0x50
-[  453.131468]  exit_to_usermode_loop+0x6a/0xd0
-[  453.135736]  do_fast_syscall_32+0x297/0x330
-[  453.139914]  entry_SYSENTER_32+0xaa/0x102
-[  453.143916] EIP: 0xb7f1bce1
-[  453.146706] Code: 5e 5d c3 8d b6 00 00 00 00 b8 40 42 0f 00 eb c1
-8b 04 24 c3 8b 1c 24 c3 8b 34 24 c3 8b 3c 24 c3 90 51 52 55 89 e5 0f
-34 cd 80 <5d> 5a 59 c3 90 90 90 90 8d 76 00 58 b8 77 00 00 00 cd 80 90
-8d 76
-[  453.165444] EAX: 00000000 EBX: 00000002 ECX: bfb63cc0 EDX: 00000000
-[  453.171700] ESI: 00000008 EDI: 00000000 EBP: bfb63cc0 ESP: bfb63cb0
-[  453.177957] DS: 007b ES: 007b FS: 0000 GS: 0033 SS: 007b EFLAGS: 00000246
-[  453.184737] Modules linked in: test_printf(+) cls_bpf sch_fq
-sch_ingress algif_hash x86_pkg_temp_thermal fuse [last unloaded:
-test_strscpy]
-[  453.197292] CR2: 0000000000000041
-[  453.200612] ---[ end trace 4ae6b60cdb1cebfa ]---
-[  453.205222] EIP: ida_free+0x61/0x130
-[  453.208794] Code: 00 c7 45 e8 00 00 00 00 c7 45 ec 00 00 00 00 0f
-88 c4 00 00 00 89 d3 e8 6d 60 8a 00 89 c7 8d 45 d8 e8 c3 1a 01 00 a8
-01 75 3f <0f> a3 30 72 72 8b 45 d8 89 fa e8 40 62 8a 00 53 68 e8 db 80
-cb e8
-[  453.227529] EAX: 00000000 EBX: 00000000 ECX: f37c3540 EDX: 00000000
-[  453.233787] ESI: 00000000 EDI: 00000246 EBP: e1e75cdc ESP: e1e75cb0
-[  453.240043] DS: 007b ES: 007b FS: 00d8 GS: 00e0 SS: 0068 EFLAGS: 00010046
-[  453.246820] CR0: 80050033 CR2: 00000041 CR3: 216ee000 CR4: 003406d0
-[  453.253077] DR0: 00000000 DR1: 00000000 DR2: 00000000 DR3: 00000000
-[  453.259334] DR6: fffe0ff0 DR7: 00000400
-[  453.263176] BUG: sleeping function called from invalid context at
-/usr/src/kernel/include/linux/percpu-rwsem.h:49
-[  453.273445] in_atomic(): 0, irqs_disabled(): 1, non_block: 0, pid:
-13617, name: fuse_test
-[  453.281615] INFO: lockdep is turned off.
-[  453.285533] irq event stamp: 0
-[  453.288585] hardirqs last  enabled at (0): [<00000000>] 0x0
-[  453.294173] hardirqs last disabled at (0): [<ca6ed9ea>]
-copy_process+0x3ea/0x17d0
-[  453.301672] softirqs last  enabled at (0): [<ca6ed9ea>]
-copy_process+0x3ea/0x17d0
-[  453.309172] softirqs last disabled at (0): [<00000000>] 0x0
-[  453.314741] CPU: 1 PID: 13617 Comm: fuse_test Tainted: G      D W
-      5.6.0-next-20200408 #1
-[  453.323519] Hardware name: Supermicro SYS-5019S-ML/X11SSH-F, BIOS
-2.0b 07/27/2017
-[  453.330988] Call Trace:
-[  453.333435]  dump_stack+0x6e/0x96
-[  453.336754]  ___might_sleep+0x14d/0x240
-[  453.340592]  __might_sleep+0x33/0x80
-[  453.344173]  exit_signals+0x2a/0x2d0
-[  453.347750]  do_exit+0x8e/0xb40
-[  453.350889]  ? exit_to_usermode_loop+0x6a/0xd0
-[  453.355336]  rewind_stack_do_exit+0x11/0x13
-[  453.359519] EIP: 0xb7f1bce1
-[  453.362308] Code: 5e 5d c3 8d b6 00 00 00 00 b8 40 42 0f 00 eb c1
-8b 04 24 c3 8b 1c 24 c3 8b 34 24 c3 8b 3c 24 c3 90 51 52 55 89 e5 0f
-34 cd 80 <5d> 5a 59 c3 90 90 90 90 8d 76 00 58 b8 77 00 00 00 cd 80 90
-8d 76
-[  453.381044] EAX: 00000000 EBX: 00000002 ECX: bfb63cc0 EDX: 00000000
-[  453.387303] ESI: 00000008 EDI: 00000000 EBP: bfb63cc0 ESP: bfb63cb0
-[  453.393560] DS: 007b ES: 007b FS: 0000 GS: 0033 SS: 007b EFLAGS: 00000246
+Jiri Olsa wrote:
+> hi,
+> Ziqian reported lockup when adding retprobe on _raw_spin_lock_irqsave.
+> My test was also able to trigger lockdep output:
+> 
+>  ============================================
+>  WARNING: possible recursive locking detected
+>  5.6.0-rc6+ #6 Not tainted
+>  --------------------------------------------
+>  sched-messaging/2767 is trying to acquire lock:
+>  ffffffff9a492798 (&(kretprobe_table_locks[i].lock)){-.-.}, at: kretprobe_hash_lock+0x52/0xa0
+> 
+>  but task is already holding lock:
+>  ffffffff9a491a18 (&(kretprobe_table_locks[i].lock)){-.-.}, at: kretprobe_trampoline+0x0/0x50
+> 
+>  other info that might help us debug this:
+>   Possible unsafe locking scenario:
+> 
+>         CPU0
+>         ----
+>    lock(&(kretprobe_table_locks[i].lock));
+>    lock(&(kretprobe_table_locks[i].lock));
+> 
+>   *** DEADLOCK ***
+> 
+>   May be due to missing lock nesting notation
+> 
+>  1 lock held by sched-messaging/2767:
+>   #0: ffffffff9a491a18 (&(kretprobe_table_locks[i].lock)){-.-.}, at: kretprobe_trampoline+0x0/0x50
+> 
+>  stack backtrace:
+>  CPU: 3 PID: 2767 Comm: sched-messaging Not tainted 5.6.0-rc6+ #6
+>  Call Trace:
+>   dump_stack+0x96/0xe0
+>   __lock_acquire.cold.57+0x173/0x2b7
+>   ? native_queued_spin_lock_slowpath+0x42b/0x9e0
+>   ? lockdep_hardirqs_on+0x590/0x590
+>   ? __lock_acquire+0xf63/0x4030
+>   lock_acquire+0x15a/0x3d0
+>   ? kretprobe_hash_lock+0x52/0xa0
+>   _raw_spin_lock_irqsave+0x36/0x70
+>   ? kretprobe_hash_lock+0x52/0xa0
+>   kretprobe_hash_lock+0x52/0xa0
+>   trampoline_handler+0xf8/0x940
+>   ? kprobe_fault_handler+0x380/0x380
+>   ? find_held_lock+0x3a/0x1c0
+>   kretprobe_trampoline+0x25/0x50
+>   ? lock_acquired+0x392/0xbc0
+>   ? _raw_spin_lock_irqsave+0x50/0x70
+>   ? __get_valid_kprobe+0x1f0/0x1f0
+>   ? _raw_spin_unlock_irqrestore+0x3b/0x40
+>   ? finish_task_switch+0x4b9/0x6d0
+>   ? __switch_to_asm+0x34/0x70
+>   ? __switch_to_asm+0x40/0x70
+> 
+> The code within the kretprobe handler checks for probe reentrancy,
+> so we won't trigger any _raw_spin_lock_irqsave probe in there.
+> 
+> The problem is in outside kprobe_flush_task, where we call:
+> 
+>   kprobe_flush_task
+>     kretprobe_table_lock
+>       raw_spin_lock_irqsave
+>         _raw_spin_lock_irqsave
+> 
+> where _raw_spin_lock_irqsave triggers the kretprobe and installs
+> kretprobe_trampoline handler on _raw_spin_lock_irqsave return.
+> 
+> The kretprobe_trampoline handler is then executed with already
+> locked kretprobe_table_locks, and first thing it does is to
+> lock kretprobe_table_locks ;-) the whole lockup path like:
+> 
+>   kprobe_flush_task
+>     kretprobe_table_lock
+>       raw_spin_lock_irqsave
+>         _raw_spin_lock_irqsave ---> probe triggered, kretprobe_trampoline installed
+> 
+>         ---> kretprobe_table_locks locked
+> 
+>         kretprobe_trampoline
+>           trampoline_handler
+>             kretprobe_hash_lock(current, &head, &flags);  <--- deadlock
+> 
+> The change below sets current_kprobe in kprobe_flush_task, so the probe
+> recursion protection check is hit and the probe is never set. It seems
+> to fix the deadlock.
 
-metadata:
-  git branch: master
-  git repo: https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git
-  kernel-config:
-http://snapshots.linaro.org/openembedded/lkft/lkft/sumo/intel-core2-32/lkft/linux-next/745/config
+Good analysis!
 
-Full test log,
-https://lkft.validation.linaro.org/scheduler/job/1352031#L10567
+> 
+> I'm not sure this is the best fix, any ideas are welcome ;-)
 
--- 
-Linaro LKFT
-https://lkft.linaro.org
+I think this is a good way to address this issue.
+
+> 
+> thanks,
+> jirka
+> 
+> 
+> ---
+>  kernel/kprobes.c | 6 ++++++
+>  1 file changed, 6 insertions(+)
+> 
+> diff --git a/kernel/kprobes.c b/kernel/kprobes.c
+> index 2625c241ac00..b13247cae752 100644
+> --- a/kernel/kprobes.c
+> +++ b/kernel/kprobes.c
+> @@ -1236,6 +1236,10 @@ __releases(hlist_lock)
+>  }
+>  NOKPROBE_SYMBOL(kretprobe_table_unlock);
+>  
+> +static struct kprobe kretprobe_dummy = {
+> +        .addr = (void *)kretprobe_trampoline,
+> +};
+> +
+
+Perhaps a more meaningful name, say, kprobe_flush_task_protect ?
+
+>  /*
+>   * This function is called from finish_task_switch when task tk becomes dead,
+>   * so that we can recycle any function-return probe instances associated
+> @@ -1256,12 +1260,14 @@ void kprobe_flush_task(struct task_struct *tk)
+>  	INIT_HLIST_HEAD(&empty_rp);
+>  	hash = hash_ptr(tk, KPROBE_HASH_BITS);
+>  	head = &kretprobe_inst_table[hash];
+> +	__this_cpu_write(current_kprobe, &kretprobe_dummy);
+>  	kretprobe_table_lock(hash, &flags);
+>  	hlist_for_each_entry_safe(ri, tmp, head, hlist) {
+>  		if (ri->task == tk)
+>  			recycle_rp_inst(ri, &empty_rp);
+>  	}
+>  	kretprobe_table_unlock(hash, &flags);
+> +	__this_cpu_write(current_kprobe, NULL);
+
+I would move this to the end of the function to also cover the below 
+code. kprobe_flush_task() is marked NOKPROBE, so it is good to prevent 
+probe handling in the below code too.
+
+>  	hlist_for_each_entry_safe(ri, tmp, &empty_rp, hlist) {
+>  		hlist_del(&ri->hlist);
+>  		kfree(ri);
+
+
+- Naveen
+
