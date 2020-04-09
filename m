@@ -2,154 +2,351 @@ Return-Path: <SRS0=n+Ub=5Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 032E7C2BB54
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 07:51:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E330C2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 07:51:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CDFBF2075E
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 07:51:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586418694;
-	bh=SttG6HiBtvSMedkK2H7xZTLf5No9PN+aJtrQbBH6Nhc=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=zuQe82Ky3JX46BhcUPl8wOIlfVhIBqB0dE0ozgIJ1smwNWtUR4ta28OnK1vZNkFHN
-	 Z48sMFuDzTZBY95ff5KXF5mi5P3MEjdgNFtlSBWxSbbVFnzwA77XoM6iYC1JetLlxc
-	 S4PKrjnejHGGE7s1zRjiNffQSw2fgT5UinBKE/tc=
+	by mail.kernel.org (Postfix) with ESMTP id 626D62082D
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 07:51:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="oYMJtsSZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726583AbgDIHvd (ORCPT
+        id S1726638AbgDIHvi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Apr 2020 03:51:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51618 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725881AbgDIHvc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Apr 2020 03:51:32 -0400
-Received: from mail-il1-f175.google.com (mail-il1-f175.google.com [209.85.166.175])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        Thu, 9 Apr 2020 03:51:38 -0400
+Received: from mail26.static.mailgun.info ([104.130.122.26]:27252 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725997AbgDIHvh (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Apr 2020 03:51:37 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1586418697; h=Message-ID: References: In-Reply-To: Subject:
+ Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Sender; bh=xrWTTOY2ADY2AUD5EsjPbs7aUNyeVE/cj6sqUAzf9Pg=;
+ b=oYMJtsSZC9XI4CNCDSgenVGTCXYQqGG4rypOQ17zhBdBLKf7mppYLD/HXw1AxwkQlrSZ/w2a
+ PPc5qTwXPVtZ7pveiV6ssqE85UBa9gdCZAohE3/ydlPiAJ9ghcsSs4FI5dqskyf/lbGldIa5
+ LB2tYlGDeUFVp7gLAb9aqgNGLsk=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e8ed3f8.7f3eae4d8378-smtp-out-n04;
+ Thu, 09 Apr 2020 07:51:20 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id A84CBC433F2; Thu,  9 Apr 2020 07:51:19 +0000 (UTC)
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 913B82082D;
-        Thu,  9 Apr 2020 07:51:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586418692;
-        bh=SttG6HiBtvSMedkK2H7xZTLf5No9PN+aJtrQbBH6Nhc=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=agXTuHhD/YCD603fUVDGzhcEATxdRue+5w+2i0G8fSZHF2MGmhEhBtBLON+n+dl31
-         /6Lr9wox1fE9aZHhhkqMhRlpoBt2yj46L52SyssUHsWEybRwW5kTL+MqGOlIJcB4rn
-         7Jwk31OzCoUvsNJQJNrwLxYJmqMd2vSAN8OI6yd4=
-Received: by mail-il1-f175.google.com with SMTP id k29so9387900ilg.0;
-        Thu, 09 Apr 2020 00:51:32 -0700 (PDT)
-X-Gm-Message-State: AGi0PuZ5FwCRYec9D/iMttw9aqVtotmctfqJo9bApu6v2ChDsk5xStGF
-        34L9IncwvVYoYcGnWsrq4lQEVG6ZSNlBtcATX1A=
-X-Google-Smtp-Source: APiQypJnt7QCvckQDVsZl8+eLb3PzG4uDQYlm7wmZ+7BQZxNfuNp3KZE2cMie/BZ3Hfa3QgG7VGRtb6r9ME6JulUqps=
-X-Received: by 2002:a05:6e02:551:: with SMTP id i17mr3552543ils.218.1586418691873;
- Thu, 09 Apr 2020 00:51:31 -0700 (PDT)
+        (Authenticated sender: saiprakash.ranjan)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 960FDC433D2;
+        Thu,  9 Apr 2020 07:51:18 +0000 (UTC)
 MIME-Version: 1.0
-References: <20200113172245.27925-1-ardb@kernel.org> <20200113172245.27925-6-ardb@kernel.org>
- <63b125a4-6c62-fcdf-de22-d3bebe2dcbf5@suse.cz> <CAMj1kXGiT_zYjc6X-msRXVozhpDAY0UesEW3_4fOgiH4FyMgDw@mail.gmail.com>
- <972b66a9-92c7-9a15-1aa1-e3236abe90df@suse.cz>
-In-Reply-To: <972b66a9-92c7-9a15-1aa1-e3236abe90df@suse.cz>
-From:   Ard Biesheuvel <ardb@kernel.org>
-Date:   Thu, 9 Apr 2020 09:51:20 +0200
-X-Gmail-Original-Message-ID: <CAMj1kXFGkOM9fbqr44_TbdxqFjH1i3d8dkO64C1mQmH=AqrUSQ@mail.gmail.com>
-Message-ID: <CAMj1kXFGkOM9fbqr44_TbdxqFjH1i3d8dkO64C1mQmH=AqrUSQ@mail.gmail.com>
-Subject: Re: [PATCH 05/13] efi/x86: don't map the entire kernel text RW for
- mixed mode
-To:     Jiri Slaby <jslaby@suse.cz>
-Cc:     linux-efi <linux-efi@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Anshuman Khandual <anshuman.khandual@arm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Dave Young <dyoung@redhat.com>,
-        Saravana Kannan <saravanak@google.com>,
-        Gary Lin <GLin@suse.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Thu, 09 Apr 2020 13:21:18 +0530
+From:   Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+To:     Suzuki K Poulose <Suzuki.Poulose@arm.com>
+Cc:     mike.leach@linaro.org, mathieu.poirier@linaro.org,
+        leo.yan@linaro.org, alexander.shishkin@linux.intel.com,
+        swboyd@chromium.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
+Subject: Re: [RFC PATCH] coresight: dynamic-replicator: Fix handling of
+ multiple connections
+In-Reply-To: <20200408224347.GA388414@ewhatever.cambridge.arm.com>
+References: <20200405102819.28460-1-saiprakash.ranjan@codeaurora.org>
+ <CAJ9a7VgQzK1XSCvLwuqODwkWfvo=6Wwps7Db+pL5xYDeCuktrg@mail.gmail.com>
+ <6c0f45488f8a44bf860759e00fcabd09@codeaurora.org>
+ <906d374d-a4d6-f2f2-6845-88b97a5ff7d9@arm.com>
+ <39a2b3fff165a108fa59d72b630b5f14@codeaurora.org>
+ <bb209f80-ac02-6321-dac4-ebf9ee6fa9a0@arm.com>
+ <bd05b31c2391edfff5044f22f2f83edf@codeaurora.org>
+ <e9c299c4-caeb-9eb8-f019-b311bfce756a@arm.com>
+ <a7074f44ebbde720b5e0189801eab7c9@codeaurora.org>
+ <20200408224347.GA388414@ewhatever.cambridge.arm.com>
+Message-ID: <9ad167836b0a22694d58d24f39db89a6@codeaurora.org>
+X-Sender: saiprakash.ranjan@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 8 Apr 2020 at 12:51, Jiri Slaby <jslaby@suse.cz> wrote:
->
-> Ccing Gary.
->
-> On 08. 04. 20, 12:47, Ard Biesheuvel wrote:
-> > On Wed, 8 Apr 2020 at 12:42, Jiri Slaby <jslaby@suse.cz> wrote:
-> >>
-> >> On 13. 01. 20, 18:22, Ard Biesheuvel wrote:
-> >>> The mixed mode thunking routine requires a part of it to be
-> >>> mapped 1:1, and for this reason, we currently map the entire
-> >>> kernel .text read/write in the EFI page tables, which is bad.
-> >>>
-> >>> In fact, the kernel_map_pages_in_pgd() invocation that installs
-> >>> this mapping is entirely redundant, since all of DRAM is already
-> >>> 1:1 mapped read/write in the EFI page tables when we reach this
-> >>> point, which means that .rodata is mapped read-write as well.
-> >>>
-> >>> So let's remap both .text and .rodata read-only in the EFI
-> >>> page tables.
-> >>
-> >> This patch causes unhandled page faults in mixed mode:
-> >>
-> >>> BUG: unable to handle page fault for address: 000000001557ee88
-> >>> #PF: supervisor write access in kernel mode
-> >>> #PF: error_code(0x0003) - permissions violation
-> >>> PGD fd52063 P4D fd52063 PUD fd53063 PMD 154000e1
-> >>> Oops: 0003 [#1] SMP PTI
-> >>> CPU: 1 PID: 191 Comm: systemd-escape Not tainted
-> >> 5.6.2-20.gb22bc26-default #1 openSUSE Tumbleweed (unreleased)
-> >>> Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 0.0.0
-> >> 02/06/2015
-> >>> RIP: 0008:0x3d2eed95
-> >>> Code: 8b 45 d4 8b 4d 10 8b 40 04 89 01 89 3b 50 6a 00 8b 55 0c 6a 00
-> >> 8b 45 08 0f b6 4d e4 6a 01 31 f6 e8 ee c5 fc ff 83 c4 10 eb 07 <89> 03
-> >> be 05 00 00 80 a1 74 63 31 3d 83 c0 48 e8 44 d2 ff ff eb 05
-> >>> RSP: 0018:000000000fd66fa0 EFLAGS: 00010002
-> >>> RAX: 0000000000000001 RBX: 000000001557ee88 RCX: 000000003d1f1120
-> >>> RDX: 0000000000000001 RSI: 0000000000000000 RDI: 0000000000000001
-> >>> RBP: 000000000fd66fd8 R08: 000000001557ee88 R09: 0000000000000000
-> >>> R10: 0000000000000055 R11: 0000000000000000 R12: 0000000015bcf000
-> >>> R13: 0000000000000000 R14: 0000000000000000 R15: 0000000000000000
-> >>> FS:  00007f36ee9dc940(0000) GS:ffff9b903d700000(0000)
-> >> knlGS:0000000000000000
-> >>> CS:  0008 DS: 0018 ES: 0018 CR0: 0000000080050033
-> >>> CR2: 000000001557ee88 CR3: 000000000fd5e000 CR4: 00000000000006e0
-> >>> DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-> >>> DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-> >>> Call Trace:
-> >>> Modules linked in: efivarfs
-> >>> CR2: 000000001557ee88
-> >>
-> >> EFI apparently tries to write to now read-only memory.
-> >>
-> >> See:
-> >> https://bugzilla.suse.com/show_bug.cgi?id=1168645
-> >>
-> >> Reverting it on the top of 5.6 fixes the issue.
-> >>
-> >> I am using
-> >> /usr/share/qemu/ovmf-ia32-code.bin
-> >> /usr/share/qemu/ovmf-ia32-vars.bin
-> >> from qemu-ovmf-ia32-202002-1.1.noarch rpm.
-> >>
-> >
-> > Do you have a git tree for Suse's OVMF fork? I did a lot of testing
-> > with upstream OVMF, and never ran into this issue.
->
-> Not really a git tree, but the sources are here:
-> https://build.opensuse.org/package/show/openSUSE:Factory/ovmf
->
+Hi Suzuki,
+
+On 2020-04-09 04:13, Suzuki K Poulose wrote:
+> On Tue, Apr 07, 2020 at 08:48:54PM +0530, Sai Prakash Ranjan wrote:
+> 
+> Please find the untested patch below.
+> 
+> ---8>---
+> 
+> [untested] coresight: Fix support for sparse port numbers
+> 
+> On some systems the firmware may not describe all the ports
+> connected to a component (e.g, for security reasons). This
+> could be especially problematic for "funnels" where we could
+> end up in modifying memory beyond the allocated space for
+> refcounts.
+> 
+> e.g, for a funnel with input ports listed 0, 3, 5, nr_inport = 3.
+> However the we could access refcnts[5] while checking for
+> references.
+> 
+> Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
+> ---
+>  .../hwtracing/coresight/coresight-platform.c  | 74 ++++++++++++-------
+>  drivers/hwtracing/coresight/coresight.c       |  8 +-
+>  2 files changed, 56 insertions(+), 26 deletions(-)
+> 
+> diff --git a/drivers/hwtracing/coresight/coresight-platform.c
+> b/drivers/hwtracing/coresight/coresight-platform.c
+> index 3c5bee429105..1c610d6e944b 100644
+> --- a/drivers/hwtracing/coresight/coresight-platform.c
+> +++ b/drivers/hwtracing/coresight/coresight-platform.c
+> @@ -67,6 +67,7 @@ static void of_coresight_get_ports_legacy(const
+> struct device_node *node,
+>  					  int *nr_inport, int *nr_outport)
+>  {
+>  	struct device_node *ep = NULL;
+> +	struct of_endpoint endpoint;
+>  	int in = 0, out = 0;
+> 
+>  	do {
+> @@ -74,10 +75,16 @@ static void of_coresight_get_ports_legacy(const
+> struct device_node *node,
+>  		if (!ep)
+>  			break;
+> 
+> -		if (of_coresight_legacy_ep_is_input(ep))
+> -			in++;
+> -		else
+> -			out++;
+> +		if (of_graph_parse_endpoint(ep, &endpoint))
+> +			continue;
+> +
+> +		if (of_coresight_legacy_ep_is_input(ep)) {
+> +			in = (endpoint.port + 1 > in) ?
+> +				endpoint.port + 1 : in;
+> +		} else {
+> +			out = (endpoint.port + 1) > out ?
+> +				endpoint.port + 1 : out;
+> +		}
+> 
+>  	} while (ep);
+> 
+> @@ -117,9 +124,16 @@ of_coresight_count_ports(struct device_node 
+> *port_parent)
+>  {
+>  	int i = 0;
+>  	struct device_node *ep = NULL;
+> +	struct of_endpoint endpoint;
+> +
+> +	while ((ep = of_graph_get_next_endpoint(port_parent, ep))) {
+> +		/* Defer error handling to parsing */
+> +		if (of_graph_parse_endpoint(ep, &endpoint))
+> +			continue;
+> +		if (endpoint.port + 1 > i)
+> +			i = endpoint.port + 1;
+> +	}
+> 
+> -	while ((ep = of_graph_get_next_endpoint(port_parent, ep)))
+> -		i++;
+>  	return i;
+>  }
+> 
+> @@ -171,14 +185,12 @@ static int of_coresight_get_cpu(struct device 
+> *dev)
+>   * Parses the local port, remote device name and the remote port.
+>   *
+>   * Returns :
+> - *	 1	- If the parsing is successful and a connection record
+> - *		  was created for an output connection.
+>   *	 0	- If the parsing completed without any fatal errors.
+>   *	-Errno	- Fatal error, abort the scanning.
+>   */
+>  static int of_coresight_parse_endpoint(struct device *dev,
+>  				       struct device_node *ep,
+> -				       struct coresight_connection *conn)
+> +				       struct coresight_platform_data *pdata)
+>  {
+>  	int ret = 0;
+>  	struct of_endpoint endpoint, rendpoint;
+> @@ -186,6 +198,7 @@ static int of_coresight_parse_endpoint(struct 
+> device *dev,
+>  	struct device_node *rep = NULL;
+>  	struct device *rdev = NULL;
+>  	struct fwnode_handle *rdev_fwnode;
+> +	struct coresight_connection *conn;
+> 
+>  	do {
+>  		/* Parse the local port details */
+> @@ -212,6 +225,12 @@ static int of_coresight_parse_endpoint(struct 
+> device *dev,
+>  			break;
+>  		}
+> 
+> +		conn = &pdata->conns[endpoint.port];
+> +		if (conn->child_fwnode) {
+> +			dev_warn(dev, "Duplicate output port %d\n", endpoint.port);
+> +			ret = -EINVAL;
+> +			break;
+> +		}
+>  		conn->outport = endpoint.port;
+>  		/*
+>  		 * Hold the refcount to the target device. This could be
+> @@ -224,7 +243,6 @@ static int of_coresight_parse_endpoint(struct 
+> device *dev,
+>  		conn->child_fwnode = fwnode_handle_get(rdev_fwnode);
+>  		conn->child_port = rendpoint.port;
+>  		/* Connection record updated */
+> -		ret = 1;
+>  	} while (0);
+> 
+>  	of_node_put(rparent);
+> @@ -238,7 +256,6 @@ static int of_get_coresight_platform_data(struct
+> device *dev,
+>  					  struct coresight_platform_data *pdata)
+>  {
+>  	int ret = 0;
+> -	struct coresight_connection *conn;
+>  	struct device_node *ep = NULL;
+>  	const struct device_node *parent = NULL;
+>  	bool legacy_binding = false;
+> @@ -267,8 +284,6 @@ static int of_get_coresight_platform_data(struct
+> device *dev,
+>  		dev_warn_once(dev, "Uses obsolete Coresight DT bindings\n");
+>  	}
+> 
+> -	conn = pdata->conns;
+> -
+>  	/* Iterate through each output port to discover topology */
+>  	while ((ep = of_graph_get_next_endpoint(parent, ep))) {
+>  		/*
+> @@ -280,15 +295,9 @@ static int of_get_coresight_platform_data(struct
+> device *dev,
+>  		if (legacy_binding && of_coresight_legacy_ep_is_input(ep))
+>  			continue;
+> 
+> -		ret = of_coresight_parse_endpoint(dev, ep, conn);
+> -		switch (ret) {
+> -		case 1:
+> -			conn++;		/* Fall through */
+> -		case 0:
+> -			break;
+> -		default:
+> +		ret = of_coresight_parse_endpoint(dev, ep, pdata);
+> +		if (ret)
+>  			return ret;
+> -		}
+>  	}
+> 
+>  	return 0;
+> @@ -627,6 +636,11 @@ static int acpi_coresight_parse_link(struct
+> acpi_device *adev,
+>  		 *    coresight_remove_match().
+>  		 */
+>  		conn->child_fwnode = fwnode_handle_get(&r_adev->fwnode);
+> +	} else if (dir == ACPI_CORESIGHT_LINK_SLAVE) {
+> +		conn->child_port = fields[0].integer.value;
+> +	} else {
+> +		/* Invalid direction */
+> +		return -EINVAL;
+>  	}
+> 
+>  	return dir;
+> @@ -672,10 +686,14 @@ static int acpi_coresight_parse_graph(struct
+> acpi_device *adev,
+>  			return dir;
+> 
+>  		if (dir == ACPI_CORESIGHT_LINK_MASTER) {
+> -			pdata->nr_outport++;
+> +			if (ptr->outport > pdata->nr_outport)
+> +				pdata->nr_outport = ptr->outport;
+>  			ptr++;
+>  		} else {
+> -			pdata->nr_inport++;
+> +			WARN_ON(pdata->nr_inport == ptr->child_port);
+> +			/* Do not move the ptr for input connections */
+> +			if (ptr->child_port > pdata->nr_inport)
+> +				pdata->nr_inport = ptr->child_port;
+>  		}
+>  	}
+> 
+> @@ -684,8 +702,13 @@ static int acpi_coresight_parse_graph(struct
+> acpi_device *adev,
+>  		return rc;
+> 
+>  	/* Copy the connection information to the final location */
+> -	for (i = 0; i < pdata->nr_outport; i++)
+> -		pdata->conns[i] = conns[i];
+> +	for (i = 0; conns + i < ptr; i++) {
+> +		int port = conns[i].outport;
+> +
+> +		/* Duplicate output port */
+> +		WARN_ON(pdata->conns[port].child_fwnode);
+> +		pdata->conns[port] = conns[i];
+> +	}
+> 
+>  	devm_kfree(&adev->dev, conns);
+>  	return 0;
+> @@ -787,6 +810,7 @@ coresight_get_platform_data(struct device *dev)
+>  		goto error;
+> 
+>  	pdata = devm_kzalloc(dev, sizeof(*pdata), GFP_KERNEL);
+> +	pdata->nr_outport = pdata->nr_inport = -1;
+>  	if (!pdata) {
+>  		ret = -ENOMEM;
+>  		goto error;
+> diff --git a/drivers/hwtracing/coresight/coresight.c
+> b/drivers/hwtracing/coresight/coresight.c
+> index ef20f74c85fa..f07bc0a7ab88 100644
+> --- a/drivers/hwtracing/coresight/coresight.c
+> +++ b/drivers/hwtracing/coresight/coresight.c
+> @@ -990,6 +990,9 @@ static int coresight_orphan_match(struct device
+> *dev, void *data)
+>  	for (i = 0; i < i_csdev->pdata->nr_outport; i++) {
+>  		conn = &i_csdev->pdata->conns[i];
+> 
+> +		/* Skip the port if FW doesn't describe it */
+> +		if (!conn->child_fwnode)
+> +			continue;
+>  		/* We have found at least one orphan connection */
+>  		if (conn->child_dev == NULL) {
+>  			/* Does it match this newly added device? */
+> @@ -1029,6 +1032,9 @@ static void coresight_fixup_device_conns(struct
+> coresight_device *csdev)
+>  		struct coresight_connection *conn = &csdev->pdata->conns[i];
+>  		struct device *dev = NULL;
+> 
+> +		if (!conn->child_fwnode)
+> +			continue;
+> +
+>  		dev = bus_find_device_by_fwnode(&coresight_bustype, 
+> conn->child_fwnode);
+>  		if (dev) {
+>  			conn->child_dev = to_coresight_device(dev);
+> @@ -1061,7 +1067,7 @@ static int coresight_remove_match(struct device
+> *dev, void *data)
+>  	for (i = 0; i < iterator->pdata->nr_outport; i++) {
+>  		conn = &iterator->pdata->conns[i];
+> 
+> -		if (conn->child_dev == NULL)
+> +		if (conn->child_dev == NULL || conn->child_fwnode == NULL)
+>  			continue;
+> 
+>  		if (csdev->dev.fwnode == conn->child_fwnode) {
 
 
-Anywhere I can get an actual build? The src rpm only has the sources,
-and the i586 rpm has nothing except
+Thanks Suzuki, I don't see the KASAN warning anymore with this patch.
+But somehow tmc_etr probe fails with error -12(ENOMEM).
 
-$ rpm -qlp ~/Downloads/ovmf-202002-1.1.i586.rpm
-warning: /home/ardbie01/Downloads/ovmf-202002-1.1.i586.rpm: Header V3
-RSA/SHA256 Signature, key ID 3dbdc284: NOKEY
-/usr/share/doc/packages/ovmf
-/usr/share/doc/packages/ovmf/README
+Thanks,
+Sai
+
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a 
+member
+of Code Aurora Forum, hosted by The Linux Foundation
