@@ -2,102 +2,96 @@ Return-Path: <SRS0=n+Ub=5Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.2 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3CDAC2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 16:50:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C551C2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 16:51:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B273C20B1F
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 16:50:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5C16A20753
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 16:51:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="GGka1vwl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727140AbgDIQuy (ORCPT
+        id S1727751AbgDIQvA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Apr 2020 12:50:54 -0400
-Received: from foss.arm.com ([217.140.110.172]:52446 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727028AbgDIQuy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Apr 2020 12:50:54 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 79F0631B;
-        Thu,  9 Apr 2020 09:50:54 -0700 (PDT)
-Received: from gaia (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id BC1553F73D;
-        Thu,  9 Apr 2020 09:50:53 -0700 (PDT)
-Date:   Thu, 9 Apr 2020 17:50:51 +0100
-From:   Catalin Marinas <catalin.marinas@arm.com>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Will Deacon <will@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [GIT PULL] arm64 fixes for 5.7-rc1
-Message-ID: <20200409165049.GA872@gaia>
+        Thu, 9 Apr 2020 12:51:00 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:40948 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726574AbgDIQvA (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Apr 2020 12:51:00 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=PkxaeFIVCfsrSeEEx8LVvo4pS30j4LAzfUOxmZwXge8=; b=GGka1vwlLS5MYPkTsGxdsFzTuS
+        DS3rDOfcUb9HLd/6b5SzwWrTADDVOx+0LMT07aKgtVPr0kLJtgCbA+XGpR2mfVKdM0lLjJkIQgK4y
+        JJeb53TiZpO2ZclH17Kurq5SVEpz5LXzF1wWUnNNKS1WGzPcvxRb9wmHrQyxFtRy+uyqP24cIe0KY
+        pOG0lsOHBWcprrx3Gv3iiQRWTZ33466s6rwrhNnc3MB6T0ncOjpk58lBhF98CB6EkIqA1yDHRsSWh
+        wWIOFqpiUn8qqReI/bzkBn05Ww7Pt2yi1wt87V0Jos7AemDE3ibOYANc7V5Qh5so5rDdLtn63Ocq5
+        lv9xW10Q==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jMaNt-0003gC-0y; Thu, 09 Apr 2020 16:50:33 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id B26BC3012D8;
+        Thu,  9 Apr 2020 18:50:30 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 962822BA1D82B; Thu,  9 Apr 2020 18:50:30 +0200 (CEST)
+Date:   Thu, 9 Apr 2020 18:50:30 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Minchan Kim <minchan@kernel.org>
+Cc:     Christoph Hellwig <hch@lst.de>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Wei Liu <wei.liu@kernel.org>, x86@kernel.org,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Laura Abbott <labbott@redhat.com>,
+        Sumit Semwal <sumit.semwal@linaro.org>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Nitin Gupta <ngupta@vflare.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        linuxppc-dev@lists.ozlabs.org, linux-hyperv@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org,
+        linux-arch@vger.kernel.org, linux-mm@kvack.org,
+        iommu@lists.linux-foundation.org,
+        linux-arm-kernel@lists.infradead.org, linux-s390@vger.kernel.org,
+        bpf@vger.kernel.org, linux-kernel@vger.kernel.org,
+        sergey.senozhatsky@gmail.com
+Subject: Re: [PATCH 10/28] mm: only allow page table mappings for built-in
+ zsmalloc
+Message-ID: <20200409165030.GG20713@hirez.programming.kicks-ass.net>
+References: <20200408115926.1467567-1-hch@lst.de>
+ <20200408115926.1467567-11-hch@lst.de>
+ <20200409160826.GC247701@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200409160826.GC247701@google.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
+On Thu, Apr 09, 2020 at 09:08:26AM -0700, Minchan Kim wrote:
+> On Wed, Apr 08, 2020 at 01:59:08PM +0200, Christoph Hellwig wrote:
+> > This allows to unexport map_vm_area and unmap_kernel_range, which are
+> > rather deep internal and should not be available to modules.
+> 
+> Even though I don't know how many usecase we have using zsmalloc as
+> module(I heard only once by dumb reason), it could affect existing
+> users. Thus, please include concrete explanation in the patch to
+> justify when the complain occurs.
 
-Please pull the arm64 fixes below (on top of the previous pull request
-for 5.7-rc1). Thanks.
+The justification is 'we can unexport functions that have no sane reason
+of being exported in the first place'.
 
-The following changes since commit b2a84de2a2deb76a6a51609845341f508c518c03:
-
-  mm/mremap: Add comment explaining the untagging behaviour of mremap() (2020-03-26 11:28:57 +0000)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/arm64/linux tags/arm64-fixes
-
-for you to fetch changes up to fc2266011accd5aeb8ebc335c381991f20e26e33:
-
-  arm64: armv8_deprecated: Fix undef_hook mask for thumb setend (2020-04-08 18:19:20 +0100)
-
-----------------------------------------------------------------
-arm64 fixes:
-
-- Ensure that the compiler and linker versions are aligned so that ld
-  doesn't complain about not understanding a .note.gnu.property section
-  (emitted when pointer authentication is enabled).
-
-- Force -mbranch-protection=none when the feature is not enabled, in
-  case a compiler may choose a different default value.
-
-- Remove CONFIG_DEBUG_ALIGN_RODATA. It was never in defconfig and rarely
-  enabled.
-
-- Fix checking 16-bit Thumb-2 instructions checking mask in the
-  emulation of the SETEND instruction (it could match the bottom half of
-  a 32-bit Thumb-2 instruction).
-
-----------------------------------------------------------------
-Amit Daniel Kachhap (2):
-      init/kconfig: Add LD_VERSION Kconfig
-      arm64: Kconfig: ptrauth: Add binutils version check to fix mismatch
-
-Ard Biesheuvel (1):
-      arm64: remove CONFIG_DEBUG_ALIGN_RODATA feature
-
-Fredrik Strupe (1):
-      arm64: armv8_deprecated: Fix undef_hook mask for thumb setend
-
-Mark Brown (1):
-      arm64: Always force a branch protection mode when the compiler has one
-
- arch/arm64/Kconfig                        |  5 ++++-
- arch/arm64/Kconfig.debug                  | 13 -------------
- arch/arm64/Makefile                       |  7 ++++++-
- arch/arm64/include/asm/memory.h           | 12 +-----------
- arch/arm64/kernel/armv8_deprecated.c      |  2 +-
- drivers/firmware/efi/libstub/arm64-stub.c |  8 +++-----
- init/Kconfig                              |  4 ++++
- 7 files changed, 19 insertions(+), 32 deletions(-)
-
--- 
-Catalin
+The Changelog pretty much says that.
