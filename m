@@ -2,108 +2,96 @@ Return-Path: <SRS0=n+Ub=5Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 339B8C2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 20:48:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0A09C2BB85
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 20:49:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 09D4E20730
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 20:48:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=flygoat.com header.i=jiaxun.yang@flygoat.com header.b="BtQUv/Os"
+	by mail.kernel.org (Postfix) with ESMTP id A73F22082D
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 20:49:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727244AbgDIUsr (ORCPT
+        id S1727349AbgDIUtz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Apr 2020 16:48:47 -0400
-Received: from sender3-op-o12.zoho.com.cn ([124.251.121.243]:17846 "EHLO
-        sender3-op-o12.zoho.com.cn" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726650AbgDIUsq (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Apr 2020 16:48:46 -0400
-ARC-Seal: i=1; a=rsa-sha256; t=1586465306; cv=none; 
-        d=zoho.com.cn; s=zohoarc; 
-        b=YlfU/ZLjvK1Na/tap//Goz97Lpo0r+FRNLa9VZx+D4BqCREdgmz881mmg3RXubqlQM4mbkM442JXDqfHJXcMzuvSvQKWK6/fTqJRMwSHE3T+qeP3Zk7OMH/aYcsd6Rf/00XXEEZ3SlKYLLTVM9PEkG/lQleLQ1ob7bNBWNavoGI=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zoho.com.cn; s=zohoarc; 
-        t=1586465306; h=Content-Type:Content-Transfer-Encoding:Cc:Date:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:To; 
-        bh=U0pq0JEPCR1+7zJuPhI3a++HaEktJMT6prJ5o5utijU=; 
-        b=SNCJUtJth8MFokubqEONHn5/sXe/a95XSieeknM7hhR83+YEB2ZOYDPvvLY3fIwRD+VY6TxQogFbMJNwS7nBt+2l1VzatS5gTWxpAKid7XgIPiLewrmCqD+n//lpop7WpkOi/OV3ECK+x9Zng/RSTEu2TmYTSbPaOB2T691PZrw=
-ARC-Authentication-Results: i=1; mx.zoho.com.cn;
-        dkim=pass  header.i=flygoat.com;
-        spf=pass  smtp.mailfrom=jiaxun.yang@flygoat.com;
-        dmarc=pass header.from=<jiaxun.yang@flygoat.com> header.from=<jiaxun.yang@flygoat.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1586465306;
-        s=mail; d=flygoat.com; i=jiaxun.yang@flygoat.com;
-        h=Date:In-Reply-To:References:MIME-Version:Content-Type:Content-Transfer-Encoding:Subject:To:CC:From:Message-ID;
-        bh=U0pq0JEPCR1+7zJuPhI3a++HaEktJMT6prJ5o5utijU=;
-        b=BtQUv/OsYeLeeQp+rqPMrYREWLLLinWGVTOMYqQyFluaxL9IU8+eG+b7eRKR4VvQ
-        EPi9XZQONhtukY7Fkw1Rw+rzmWhXbJabAmV5ZzblTQ0a0m4t3fCHR94ztaZG/nOATTr
-        0ETqFfuKAxoM6miMWGZGbmepBKgspjXzG2hmyang=
-Received: from [26.26.26.1] (122.235.212.87 [122.235.212.87]) by mx.zoho.com.cn
-        with SMTPS id 1586465304314253.90545532683097; Fri, 10 Apr 2020 04:48:24 +0800 (CST)
-Date:   Fri, 10 Apr 2020 04:48:21 +0800
-User-Agent: K-9 Mail for Android
-In-Reply-To: <alpine.LFD.2.21.2004091704570.596385@eddie.linux-mips.org>
-References: <1586401829-22242-1-git-send-email-yangtiezhu@loongson.cn> <CAKcpw6XywbOs-rh5ko0uz9vLz9nkgrJ0LiRTSkQQaU9dZbg7oQ@mail.gmail.com> <20200409150923.5b224361@flygoat-x1e> <alpine.LFD.2.21.2004091540450.596385@eddie.linux-mips.org> <7A98E39B-EDCF-496D-9525-0160A368361B@flygoat.com> <alpine.LFD.2.21.2004091704570.596385@eddie.linux-mips.org>
+        Thu, 9 Apr 2020 16:49:55 -0400
+Received: from mga17.intel.com ([192.55.52.151]:43445 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726964AbgDIUtz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Apr 2020 16:49:55 -0400
+IronPort-SDR: uXuWMNIRaWcJ3HWZL8ZTsRL/q4urg2weWeN1PdqnxNbjT8SlR3aEoGHjDucOfUB8ItnLhqSjB5
+ C44WU4ixg5TA==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Apr 2020 13:49:54 -0700
+IronPort-SDR: uGT2DQfawKjjxTzrrboYSQ2lFlqOecSpTc00bpqC/04zZXNNxhOiDe9kG3EkErDx95QHN0t0w6
+ ULbqkaHAeq0g==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,364,1580803200"; 
+   d="scan'208";a="452138957"
+Received: from iweiny-desk2.sc.intel.com ([10.3.52.147])
+  by fmsmga005.fm.intel.com with ESMTP; 09 Apr 2020 13:49:53 -0700
+Date:   Thu, 9 Apr 2020 13:49:53 -0700
+From:   Ira Weiny <ira.weiny@intel.com>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Dave Chinner <david@fromorbit.com>, Jan Kara <jack@suse.cz>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        "Theodore Y. Ts'o" <tytso@mit.edu>, Jeff Moyer <jmoyer@redhat.com>,
+        linux-ext4 <linux-ext4@vger.kernel.org>,
+        linux-xfs <linux-xfs@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>
+Subject: Re: [PATCH V6 6/8] fs/xfs: Combine xfs_diflags_to_linux() and
+ xfs_diflags_to_iflags()
+Message-ID: <20200409204952.GB801897@iweiny-DESK2.sc.intel.com>
+References: <20200407182958.568475-1-ira.weiny@intel.com>
+ <20200407182958.568475-7-ira.weiny@intel.com>
+ <20200408020827.GI24067@dread.disaster.area>
+ <20200408170923.GC569068@iweiny-DESK2.sc.intel.com>
+ <20200408210236.GK24067@dread.disaster.area>
+ <CAPcyv4gLvMSA9BypvWbYtv3xsK8o4+db3kvxBozUGAjr_sDDFQ@mail.gmail.com>
+ <20200408235836.GQ24067@dread.disaster.area>
+ <20200409002203.GE664132@iweiny-DESK2.sc.intel.com>
+ <20200409124127.GB18171@lst.de>
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH] MIPS: Limit check_bugs32() under CONFIG_32BIT
-To:     "Maciej W. Rozycki" <macro@linux-mips.org>
-CC:     YunQiang Su <wzssyqa@gmail.com>,
-        Tiezhu Yang <yangtiezhu@loongson.cn>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        linux-mips <linux-mips@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Xuefeng Li <lixuefeng@loongson.cn>
-From:   Jiaxun Yang <jiaxun.yang@flygoat.com>
-Message-ID: <27B762B9-ABD9-495A-B9A6-74541FEB8F2F@flygoat.com>
-X-ZohoCNMailClient: External
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200409124127.GB18171@lst.de>
+User-Agent: Mutt/1.11.1 (2018-12-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, Apr 09, 2020 at 02:41:27PM +0200, Christoph Hellwig wrote:
+> On Wed, Apr 08, 2020 at 05:22:03PM -0700, Ira Weiny wrote:
+> > > You mean something like XFS_IDONTCACHE?
+> > > 
+> > > i.e. the functionality already exists in XFS to selectively evict an
+> > > inode from cache when the last reference to it is dropped rather
+> > > than let it go to the LRUs and hang around in memory.
+> > > 
+> > > That flag can be set when changing the on disk DAX flag, and we can
+> > > tweak how it works so new cache hits don't clear it (as happens
+> > > now). Hence the only thing that can prevent eviction are active
+> > > references.
+> > > 
+> > > That means we'll still need to stop the application and drop_caches,
+> > > because we need to close all the files and purge the dentries that
+> > > hold references to the inode before it can be evicted.
+> > 
+> > That sounds like a great idea...
+> > 
+> > Jan?  Christoph?
+> 
+> Sounds ok.  Note that we could also pretty trivially lift
+> XFS_IDONTCACHE to the VFS if we need to apply the same scheme to
+> ext4.
 
+Yes I have been slowing working on ext4 in the background.  So lifting
+XXX_IDONTCACHE to VFS will be part of that series.
 
-=E4=BA=8E 2020=E5=B9=B44=E6=9C=8810=E6=97=A5 GMT+08:00 =E4=B8=8A=E5=8D=881=
-2:15:27, "Maciej W=2E Rozycki" <macro@linux-mips=2Eorg> =E5=86=99=E5=88=B0:
->On Thu, 9 Apr 2020, Jiaxun Yang wrote:
->
->> > Why is using Kconfig supposed to be better?  Several configurations
->
->> >support multiple processor types (e=2Eg=2E swappable CPU daugthercards
->or
->> >FPGA=20
->> >soft-cores) and having to list CPU types across platforms as CPUs
->are=20
->> >added is going to be a maintenance nightmare=2E  Whereas having
->> >workarounds=20
->> >or panics associated with run-time determination of the actual CPU
->type
->> >
->> >guarantees they will trigger where necessary=2E  The use of `init'
->> >sections=20
->> >assures the reclaim of memory for use after bootstrap=2E
->>=20
->> Actually I meant let bug checks depends on Kconfig's CPU selection=2E
->>=20
->> It's guaranteed that you can only select one kind of CPU one time,
->> to prevent the overhead of checking bugs on irrelevant processors=2E
->
->That makes no sense to me sorry=2E  When you select say a MIPS32r2 CPU
->for=20
->a Malta configuration, you can run it with a 4KE, 24K, 24KE, 34K, 74K,=20
->1004K, M14K, and probably a few other CPUs I have forgotten about=2E  Are
->
->you suggesting now that you want to require a separate kernel=20
->configuration for each of these CPUs?
-
-Nope=2E As the Kconfig is telling about the possibility,
-the real CPUTYPE check is still done during boot=2E
-
-Thanks=2E
---=20
-Jiaxun Yang
+Thanks,
+Ira
