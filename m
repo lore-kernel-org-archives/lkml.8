@@ -2,142 +2,81 @@ Return-Path: <SRS0=n+Ub=5Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21AF5C2BB86
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 11:48:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15E1AC2BA2B
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 11:49:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EE30020771
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 11:48:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C941420692
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 11:49:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ha8tTLiN"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="bXwfJCg7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726712AbgDILsn (ORCPT
+        id S1726713AbgDILtl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Apr 2020 07:48:43 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:45448 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726082AbgDILsn (ORCPT
+        Thu, 9 Apr 2020 07:49:41 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:52454 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725971AbgDILtl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Apr 2020 07:48:43 -0400
-Received: by mail-io1-f67.google.com with SMTP id i19so3476184ioh.12;
-        Thu, 09 Apr 2020 04:48:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=MOlvHl/QCsBwvft4LaTJNK728rPGD47CC5sTsHAjTkI=;
-        b=ha8tTLiN1nWPhSdpUxRrPNrKqZ8H87enea/Zm1U7cxzYt6AuA3NlzQWOg6XXbCHvIO
-         LE2O17Nt8RkJf2KIeChDaPo0GYIA/liE/hfhU0V83QjAT9eYDkay1qy6MLsln8lFDbZ+
-         TaeYe9JPZJG+lPArQkzJ9GFTV3YMLKbfgGKK4BkDBtv0b1RPT+hvl23dkjjlUs8nO7kL
-         I7XqCF3nNKSfMNKc9EwsZQeOI71r50wGcrrZE2AErIrivZsKdpz9zYV7YahSigzRFQig
-         /jW+RILAk5aKSZWm4NJ5cHq0Pk46+bk2aOsx4jtFXp+pHFNapbTdHwBTmUP3ZbobWcMQ
-         bSLg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=MOlvHl/QCsBwvft4LaTJNK728rPGD47CC5sTsHAjTkI=;
-        b=lbs8OlJE5GEh7nW4IIX6Ry5o+AiO2SxXv+DvWDzFtKjcoAAg49s9JKN1B901ihlk0S
-         cj2307DxhnL5FNgdNThjDeGAK8w0WIQMszS70GcbeOzxkTXfmr/OS2I5reGOhOITSrHx
-         qu4k0uYZP5Cg1tRsxahMc4druD/xcgOnLfFdPnx0LKFNyGOHlrfT6kylI5rN1Ljhygz0
-         XvKZGTgWeSi8uPb35U8wYKPCOPDnMcw6hJvijGmFN4J2cAH/rbecU0kbTtlNxwkOJ/Hs
-         34sy+cPYP/4vyK3K04Ppl+WLXvrwDdwYenCg3F+ah9SW/c/r43b7B+f1cBk/cDzXUR7X
-         Y8DQ==
-X-Gm-Message-State: AGi0Pua+3LNAUsQ1vzCnFjBgMc8ANFMpXv1amawn//YgKcIFFaUsBfbS
-        073UDJtPqhspUFeSItj8LJBpPwMqE/6K/FU92Kc=
-X-Google-Smtp-Source: APiQypJopO6UWjOdF9QGXTJSRp18bsEQwMGxO021kEHxRmwH1fiitgdSAqVcsqA1ijwHIeuwwaO/EpQuHHgV6/23LQk=
-X-Received: by 2002:a6b:cd4a:: with SMTP id d71mr11544464iog.5.1586432922571;
- Thu, 09 Apr 2020 04:48:42 -0700 (PDT)
+        Thu, 9 Apr 2020 07:49:41 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=T7RovBNTm93gHpCFIjf9x4gbspde05eEfozfmq8ZK24=; b=bXwfJCg7HPdgShtDyaX15C/qJU
+        WNewdVuNMkc9h0JKj1xvNDRDxRlOVsMHlBMgCZ196dNI2bYjaBG8WZeetxj4Tam6gCzFf/jmFi1ul
+        NRlSFI/tt0vyYqYacQGvoBO8rxSfYhwV2kLi41QsWOqQOgeKXyqdJTPFa1pbJ4o1oLJLcFgrew8M+
+        E31koRZddoWkoRv0EU0x63wWI6kniYYtXDb8rmh6rYGmPaTss2M9GV5DVlgy740amyBXRmuUG5Ufe
+        lC92uL9zwf0y7EUvGW9bpsBvjEgXkSV4a42yX2TcK5hmvyeAbdbL66ewbbx35Jv42uv2yD/q8Lqgm
+        5wRem42g==;
+Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jMVgi-0006A7-Rn; Thu, 09 Apr 2020 11:49:40 +0000
+Date:   Thu, 9 Apr 2020 04:49:40 -0700
+From:   Matthew Wilcox <willy@infradead.org>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     Peter Xu <peterx@redhat.com>, linux-kernel@vger.kernel.org,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-mm@kvack.org, syzkaller-bugs@googlegroups.com
+Subject: Re: [PATCH 0/2] mm: Two small fixes for recent syzbot reports
+Message-ID: <20200409114940.GT21484@bombadil.infradead.org>
+References: <20200408014010.80428-1-peterx@redhat.com>
+ <20200408174732.bc448bbe41d190bfe5cc252e@linux-foundation.org>
 MIME-Version: 1.0
-References: <158642098777.5635.10501704178160375549.stgit@buzz>
- <CAOQ4uxgTtbb-vDQNnY1_7EzQ=p5p2MqkfyZo2zkFQ1Wv29uqCA@mail.gmail.com> <67bdead3-a29f-a8af-5e7b-193a72cd4b86@yandex-team.ru>
-In-Reply-To: <67bdead3-a29f-a8af-5e7b-193a72cd4b86@yandex-team.ru>
-From:   Amir Goldstein <amir73il@gmail.com>
-Date:   Thu, 9 Apr 2020 14:48:31 +0300
-Message-ID: <CAOQ4uxgeCc=_b1FG3vfMWF50qCousXxEWa63Wn3iCHmLXDNCNA@mail.gmail.com>
-Subject: Re: [PATCH] ovl: skip overlayfs superblocks at global sync
-To:     Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
-Cc:     linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Miklos Szeredi <miklos@szeredi.hu>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        overlayfs <linux-unionfs@vger.kernel.org>,
-        Dmitry Monakhov <dmtrmonakhov@yandex-team.ru>,
-        Linux Containers <containers@lists.linux-foundation.org>,
-        Theodore Tso <tytso@mit.edu>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200408174732.bc448bbe41d190bfe5cc252e@linux-foundation.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 9, 2020 at 2:28 PM Konstantin Khlebnikov
-<khlebnikov@yandex-team.ru> wrote:
->
-> On 09/04/2020 13.23, Amir Goldstein wrote:
-> > On Thu, Apr 9, 2020 at 11:30 AM Konstantin Khlebnikov
-> > <khlebnikov@yandex-team.ru> wrote:
-> >>
-> >> Stacked filesystems like overlayfs has no own writeback, but they have to
-> >> forward syncfs() requests to backend for keeping data integrity.
-> >>
-> >> During global sync() each overlayfs instance calls method ->sync_fs()
-> >> for backend although it itself is in global list of superblocks too.
-> >> As a result one syscall sync() could write one superblock several times
-> >> and send multiple disk barriers.
-> >>
-> >> This patch adds flag SB_I_SKIP_SYNC into sb->sb_iflags to avoid that.
-> >>
-> >> Reported-by: Dmitry Monakhov <dmtrmonakhov@yandex-team.ru>
-> >> Signed-off-by: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
-> >> ---
-> >
-> > Seems reasonable.
-> > You may add:
-> > Reviewed-by: Amir Goldstein <amir73il@gmail.com>
-> >
-> > +CC: containers list
->
-> Thanks
->
-> >
-> > This bring up old memories.
-> > I posted this way back to fix handling of emergency_remount() in the
-> > presence of loop mounted fs:
-> > https://lore.kernel.org/linux-ext4/CAA2m6vfatWKS1CQFpaRbii2AXiZFvQUjVvYhGxWTSpz+2rxDyg@mail.gmail.com/
-> >
-> > But seems to me that emergency_sync() and sync(2) are equally broken
-> > for this use case.
-> >
-> > I wonder if anyone cares enough about resilience of loop mounted fs to try
-> > and change the iterate_* functions to iterate supers/bdevs in reverse order...
->
-> Now I see reason behind "sync; sync; sync; reboot" =)
->
-> Order old -> new allows to not miss new items if list modifies.
-> Might be important for some users.
->
+On Wed, Apr 08, 2020 at 05:47:32PM -0700, Andrew Morton wrote:
+> On Tue,  7 Apr 2020 21:40:08 -0400 Peter Xu <peterx@redhat.com> wrote:
+> 
+> > The two patches should fix below syzbot reports:
+> > 
+> >   BUG: unable to handle kernel paging request in kernel_get_mempolicy
+> >   https://lore.kernel.org/lkml/0000000000002b25f105a2a3434d@google.com/
+> > 
+> >   WARNING: bad unlock balance in __get_user_pages_remote
+> >   https://lore.kernel.org/lkml/00000000000005c65d05a2b90e70@google.com/
+> 
+> (Is there an email address for the syzbot operators?)
 
-That's not the reason I suggested reverse order.
-The reason is that with loop mounted fs, the correct order of flushing is:
-1. sync loop mounted fs inodes => writes to loop image file
-2. sync loop mounted fs sb => fsyncs the loop image file
-3. sync the loop image host fs sb
+I'd suggest syzkaller-bugs@googlegroups.com (added to the Cc).
 
-With forward sb iteration order, #3 happens before #1, so the
-loop mounted fs changes are not really being made durable by
-a single sync(2) call.
+But there's a deeper problem in that we don't have anywhere to stash
+that kind of information in the kernel tree right now.  Perhaps a special
+entry in the MAINTAINERS file for bot operators?  Or one entry per bot?
 
-> bdev iteration seems already reversed: inode_sb_list_add adds to the head
->
-
-I think bdev iteration order will not make a difference in this case.
-flushing /dev/loopX will not be needed and it happens too late
-anyway.
-
-Thanks,
-Amir.
+> sysbot does test linux-next, yet these patches sat in linux-next for a
+> month without a peep, but all hell broke loose when they hit Linus's
+> tree.  How could this have happened?
+> 
+> Possibly I've been carrying a later patch which fixed all this up, but
+> I'm not seeing anything like that.  Nothing at all against mm/gup.c.
+> 
+> 
