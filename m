@@ -2,131 +2,100 @@ Return-Path: <SRS0=n+Ub=5Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED4B7C2BB85
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 21:29:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7E8AC2BB85
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 21:35:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C0225206A1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 21:29:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586467759;
-	bh=ScDbH132wmevlViehYSb3vPuHS7/Osy+J1p9xXpIiA8=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=oyQayGX7yTgmn/LQgDnpEk7KtOoLqVBzIijizylzLxQrYMBAG3I4Hor4dOJ6/ild7
-	 OwFHrJtLZnCY4U3P12wC0A2pGPBP5sdiyiBGQPcyNeC0FsB0DXl0m7ll68xgLzPLrd
-	 SF0pE/1PjnDeXb0vMOQbnjBdAA1uJP548WxPwebg=
+	by mail.kernel.org (Postfix) with ESMTP id 87B2B206F7
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 21:35:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727629AbgDIV3S (ORCPT
+        id S1727548AbgDIVfQ convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Apr 2020 17:29:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44938 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726928AbgDIV3S (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Apr 2020 17:29:18 -0400
-Received: from mail-io1-f49.google.com (mail-io1-f49.google.com [209.85.166.49])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AFB0620B1F;
-        Thu,  9 Apr 2020 21:29:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586467757;
-        bh=ScDbH132wmevlViehYSb3vPuHS7/Osy+J1p9xXpIiA8=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=w2RqWeUVJ78hOhcm/TJInru4bbWjBYTaBM0fSwPDxNas3PeGhrcp3DeduHq1drjJ+
-         /ZNObBWtly5M1z0oxxWLxo6sbB94yEDw3x8tMqs6plwO8JQUBLaepC5RRKCvb0EDPR
-         SkDmOehHTmSdsLRf2YigWQWaWadwsZNEsZWlAkvo=
-Received: by mail-io1-f49.google.com with SMTP id w20so1126971iob.2;
-        Thu, 09 Apr 2020 14:29:17 -0700 (PDT)
-X-Gm-Message-State: AGi0PubuvBm6Na5dqscAiiKoDY2Fd3aJrR/UORary0BzyXJhlz7l8QXn
-        lLei9hUh5NfuiVuycU3rwO172HTCfw+ef+I7cTg=
-X-Google-Smtp-Source: APiQypKWBwnqQybIW4xlFVNQhFjET+Pm794MfxAc7HzWxprhbyIfqYLTa73CdHEguIc+eVUdm26A4hOgp58lmjJKw2Q=
-X-Received: by 2002:a05:6602:1550:: with SMTP id h16mr1244659iow.171.1586467756995;
- Thu, 09 Apr 2020 14:29:16 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200409130434.6736-1-ardb@kernel.org> <20200409190109.GB45598@mit.edu>
- <CAMj1kXGiA3PAybR7r9tatL7WV5iU7B1OQxQok3d-JmRnhX1TnA@mail.gmail.com> <20200409201632.GC45598@mit.edu>
-In-Reply-To: <20200409201632.GC45598@mit.edu>
-From:   Ard Biesheuvel <ardb@kernel.org>
-Date:   Thu, 9 Apr 2020 23:29:06 +0200
-X-Gmail-Original-Message-ID: <CAMj1kXFqKGSqm_y+ht4mmmu10TrhSyiTG8V3PxRYGodpZ=xNFQ@mail.gmail.com>
-Message-ID: <CAMj1kXFqKGSqm_y+ht4mmmu10TrhSyiTG8V3PxRYGodpZ=xNFQ@mail.gmail.com>
-Subject: Re: [GIT PULL 0/9] EFI fixes for v5.7-rc
-To:     "Theodore Y. Ts'o" <tytso@mit.edu>
-Cc:     linux-efi <linux-efi@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
+        Thu, 9 Apr 2020 17:35:16 -0400
+Received: from out03.mta.xmission.com ([166.70.13.233]:45652 "EHLO
+        out03.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726638AbgDIVfP (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Apr 2020 17:35:15 -0400
+Received: from in02.mta.xmission.com ([166.70.13.52])
+        by out03.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.90_1)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1jMepN-0006bs-Vj; Thu, 09 Apr 2020 15:35:14 -0600
+Received: from ip68-227-160-95.om.om.cox.net ([68.227.160.95] helo=x220.xmission.com)
+        by in02.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.87)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1jMepN-00032q-1R; Thu, 09 Apr 2020 15:35:13 -0600
+From:   ebiederm@xmission.com (Eric W. Biederman)
+To:     Andrey Vagin <avagin@openvz.org>
+Cc:     "Michael Kerrisk \(man-pages\)" <mtk.manpages@gmail.com>,
+        Dmitry Safonov <dima@arista.com>,
+        Linux API <linux-api@vger.kernel.org>,
+        Containers <containers@lists.linux-foundation.org>,
+        Dmitry Safonov <0x7f454c46@gmail.com>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Andy Lutomirski <luto@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Arvind Sankar <nivedita@alum.mit.edu>,
-        Borislav Petkov <bp@suse.de>,
-        Colin Ian King <colin.king@canonical.com>,
-        Gary Lin <glin@suse.com>, Jiri Slaby <jslaby@suse.cz>,
-        Sergey Shatunov <me@prok.pw>, Takashi Iwai <tiwai@suse.de>
-Content-Type: text/plain; charset="UTF-8"
+        Adrian Reber <adrian@lisas.de>
+References: <703440af-031c-16b5-c1ff-54fb4bb5e10c@gmail.com>
+        <CANaxB-y0ZB223dQgvxvUHRzkn4f-_B2vTzYxe_mi=o+3SJ4yVw@mail.gmail.com>
+Date:   Thu, 09 Apr 2020 16:32:21 -0500
+In-Reply-To: <CANaxB-y0ZB223dQgvxvUHRzkn4f-_B2vTzYxe_mi=o+3SJ4yVw@mail.gmail.com>
+        (Andrey Vagin's message of "Thu, 9 Apr 2020 12:17:52 -0700")
+Message-ID: <87a73kny56.fsf@x220.int.ebiederm.org>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8BIT
+X-XM-SPF: eid=1jMepN-00032q-1R;;;mid=<87a73kny56.fsf@x220.int.ebiederm.org>;;;hst=in02.mta.xmission.com;;;ip=68.227.160.95;;;frm=ebiederm@xmission.com;;;spf=neutral
+X-XM-AID: U2FsdGVkX18ah23PW2EV6pjinWNRtdlzOJou4jxyK7w=
+X-SA-Exim-Connect-IP: 68.227.160.95
+X-SA-Exim-Mail-From: ebiederm@xmission.com
+Subject: Re: A further though on /proc/PID/timens_offsets
+X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
+X-SA-Exim-Scanned: Yes (on in02.mta.xmission.com)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 9 Apr 2020 at 22:16, Theodore Y. Ts'o <tytso@mit.edu> wrote:
->
-> On Thu, Apr 09, 2020 at 09:04:42PM +0200, Ard Biesheuvel wrote:
-> >
-> > > I'm currently building Linus's latest branch to see if it's been fixed
-> > > since v5.6-11114-g9c94b39560c3 (which is where I first noticed it) and
-> > > while I was waiting for v5.6-12349-g87ebc45d2d32 to finish building so
-> > > I could test it, I noticed these patches, and so I figured I'd fire
-> > > off this quick question.
-> > >
-> >
-> > I think we might be able to downright revert that patch if the
-> > underlying assumption on my part is inaccurate, which was that the
-> > fact that the boot code no longer uses the runtime table address
-> > implies that there is no longer a reason to pass it.
->
-> Unfortunately, it doesn't cleanly revert, which is why I started
-> checking to see if it might be fixed already before trying to figure
-> out how to do a manual revert.  I just tested and the tip of Linus's
-> tree still has the failure.
->
-> The short description of the failure: I'm using Debian Stable (Buster)
-> with a 4.19 distro kernel and kexec-tools 2.0.18 to kexec into the
-> kernel under test.  I'm using a Google Compute Engine VM, and the
-> actual kexec command is here:
->
-> https://github.com/tytso/xfstests-bld/blob/master/kvm-xfstests/test-appliance/files/usr/local/lib/gce-kexec#L146
->
-> What happens is that the kexec'ed kernel immediately crashes, at which
-> point we drop back into the BIOS, and then it boots the Debain 4.19.0
-> distro kernel instead of the kernel to be tested boot.  Since we lose
-> the boot command line that was used from the kexec, the gce-xfstests
-> image retries the kexec, which fails, and the failing kexec repeats
-> until I manually kill the VM.
->
-> The bisect fingred v5.6-rc1-59-g0a67361dcdaa ("efi/x86: Remove runtime
-> table address from kexec EFI setup data") as the first failing commit.
-> Its immediate parent commit, v5.6-rc1-58-g06c0bd93434c works just
-> fine.
->
-> Is there any further debugging information that would be useful?
->
+Andrey Vagin <avagin@openvz.org> writes:
 
-Does this help at all?
+> On Tue, Apr 7, 2020 at 6:24 AM Michael Kerrisk (man-pages)
+> <mtk.manpages@gmail.com> wrote:
+>
+>>        The  clock-id  identifies the clock whose offsets are being shown.
+>>        This field is either 1, for CLOCK_MONOTONIC, or 7, for CLOCK_BOOT‐
+>>        TIME.
+>>
+>> What was the reason for exposing numeric clock IDs in the
+>> timens_offsets file? In API terms, that seems a little ugly.
+>>
+>> I think it would have been much nicer if the clocks were defined
+>> symbolically in this file. I.e., that reading the file would have
+>> shown something like
+>>
+>> monotonic    x    y
+>> boottime     x    y
+>>
+>> And that records similarly with symbolic clock names could have
+>> been written to the file. Was there a reason not to do this?
+>
+> No, there was not except that I haven't thought about this. I agree
+> that symbolic clock names looks nicer for humans, but numeric clock
+> IDs are a bit more convenient when we  need to set/read offsets from
+> code. This interface is in the released kernel, so I think we can't
+> change the format of the content of this file. But we can add support
+> of symbolic clock names for setting clock offsets. What do you think?
 
-diff --git a/arch/x86/include/asm/efi.h b/arch/x86/include/asm/efi.h
-index 781170d36f50..52f8138243df 100644
---- a/arch/x86/include/asm/efi.h
-+++ b/arch/x86/include/asm/efi.h
-@@ -180,6 +180,7 @@ extern void __init
-efi_uv1_memmap_phys_epilog(pgd_t *save_pgd);
+The rule is we can change things as long as userspace doesn't care.  For
+very new interfaces like this it is possible there are few enough
+userspace programs that nothing cares.
 
- struct efi_setup_data {
-        u64 fw_vendor;
-+       u64 __unused;
-        u64 tables;
-        u64 smbios;
-        u64 reserved[8];
+Do you know if someone is using this interface yet?
+
+Eric
