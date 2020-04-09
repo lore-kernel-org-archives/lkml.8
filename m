@@ -2,161 +2,113 @@ Return-Path: <SRS0=n+Ub=5Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 809E8C2BA19
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 20:25:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 797FAC2BB85
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 20:25:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4106C20757
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 20:25:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="CtodDgnm"
+	by mail.kernel.org (Postfix) with ESMTP id 443F420757
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 20:25:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1586463936;
+	bh=FqZZyRWNedoHw8WL71Vs8Cf07Eww+PbhCLq5spNRf7A=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=DN+arXhYwBKs9qgUZr21S1FO9PLWD/pPXiHBT0+Zji/WDdFavCOKx2c6BQ0YWZI1D
+	 /oT/Y3oWK5Azpuhqh+JhRu9m/bqiLCeWZ8Rc72LVbNCiUyNWMrB4ZcE0nNUp97OEgN
+	 Q7s5nieGOiAmmIwLr8H0IFeW2s9+sqUss2rcPCPo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727078AbgDIUZY (ORCPT
+        id S1727131AbgDIUZe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Apr 2020 16:25:24 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:21420 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726681AbgDIUZX (ORCPT
+        Thu, 9 Apr 2020 16:25:34 -0400
+Received: from mail-il1-f193.google.com ([209.85.166.193]:42516 "EHLO
+        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726623AbgDIUZe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Apr 2020 16:25:23 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1586463922;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=L8axp0M5oMyn2GgLyL35ut9Src771+7B+nC1atGx9hE=;
-        b=CtodDgnmq14Flol6VGruMyhaU1bHSCY72jifTfhul+kYGHODaHiyY3/B/HBS+lTwR33Bj9
-        QkxqTti1MfRM5Na21hiRn7rdTJlK3HtcaDV5IEz1CnLAxZMEW9xIPjcsxgA+JXtCUeMVmh
-        9IakI0XvXCYw1Uc1ixVJsp1w3rfezkE=
-Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
- [209.85.221.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-163-hDlMFfmkMGaXR6aCZ0CgOg-1; Thu, 09 Apr 2020 16:25:21 -0400
-X-MC-Unique: hDlMFfmkMGaXR6aCZ0CgOg-1
-Received: by mail-wr1-f71.google.com with SMTP id r17so1619703wrg.19
-        for <linux-kernel@vger.kernel.org>; Thu, 09 Apr 2020 13:25:20 -0700 (PDT)
+        Thu, 9 Apr 2020 16:25:34 -0400
+Received: by mail-il1-f193.google.com with SMTP id f16so953444ilj.9;
+        Thu, 09 Apr 2020 13:25:32 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=L8axp0M5oMyn2GgLyL35ut9Src771+7B+nC1atGx9hE=;
-        b=GJXxAR/Kr4E6pH10orUima07Z3N1xnwhaN3jwk7J+a37qyMgu/l6L7pxDfCoLI5bCy
-         qWPLfsQmIT38CFkGH1vjePe0jcvS1AcFefwKRytkR2vE0eRgHiZtdFNmI6K90aDwoERG
-         0S9092ZotLRlxTx2IaBNCQ4S8Nf8mDL6r65LYoXuih1sZ+51CA0P/sWaQDS3wSaTbx2B
-         WQc+X5RkVKueyuBgPU81nVfuYy+N7Lt/DkIfKd3QS1leIY18tPfq6Hm768DHwy9GKeF4
-         sPhVQUW7DPE/aPFv0CKxkjek9MV4SsAWn56mDrOH3HjDC7OrE+mRLFbqbHphcdy/Nkpm
-         9KUA==
-X-Gm-Message-State: AGi0PuYKby5igyHNGEmtRdsH2baikEh5qs5oohG/Zqc02kdv6gbUomOu
-        Gh7N08y6Du4A7go2GxAkfv0i1oZ/jyDiSMfihsjVKV0kP0cOvxgaz6Qd1YLhWFdjVNssHOsvHK7
-        H4AHfec7j0nFbttPT27YyQ8C3
-X-Received: by 2002:a5d:5273:: with SMTP id l19mr962754wrc.42.1586463920112;
-        Thu, 09 Apr 2020 13:25:20 -0700 (PDT)
-X-Google-Smtp-Source: APiQypK9hgUgDJGxmm/80KKJjVxLtENNXunW/R8rpld3/YZUF/cp56xBd16lnX4CPWATeKNdabIvmw==
-X-Received: by 2002:a5d:5273:: with SMTP id l19mr962722wrc.42.1586463919863;
-        Thu, 09 Apr 2020 13:25:19 -0700 (PDT)
-Received: from redhat.com (bzq-109-67-97-76.red.bezeqint.net. [109.67.97.76])
-        by smtp.gmail.com with ESMTPSA id s13sm25438882wrw.20.2020.04.09.13.25.16
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=gXUwa06vZwL6x1t/SJK4W0bICpt4Py/Wq2j3O5BCR6s=;
+        b=fAD0j4BQT84Jiw3Z7B4+tnjEE8hQtV/N60Dro0QiFQd7EZTTTNvc9Msk5wIgPFxqW8
+         XHygXwHkv5s2KDKb5MxBD8Oxkf6Cf25TOgBxsy6m6JWoTBiBN0hxDaEgUO3ZWSi8OW6G
+         kxZ3XrHPfxeOK0Oj6R/OUHYkriSWJ+XcOUYwxqmRfpqi/EjepBk6A+KNwjlqI6paloOn
+         VOG5/Zq9+GDCt5AsYcJbJwpDr7aZRUiyYbXhAkJUQ7iOgrlAPI72SK6BJ5/jEDIK+dhJ
+         N7hwjfVSO/XpIuOXcYajlxVNgAFNUGSfifGOnJaz6/eE0I7cwrMjkc+xknRC9fxLL1Ug
+         BHpw==
+X-Gm-Message-State: AGi0PuaRlw+FbegMdLAIkkbTxUjCsyhuMyogl/+HktxeI6gAlJzdlfjv
+        faCig3RvdcfJMVCMXFTbz9G4uuQ=
+X-Google-Smtp-Source: APiQypIKKEX2iOUPUALGPbiTMi7yg5LcSctrYW9Lt5dTuemdG/CaezitWE9LCXuToVcYeYtb6lgphA==
+X-Received: by 2002:a92:7e07:: with SMTP id z7mr1713542ilc.289.1586463932044;
+        Thu, 09 Apr 2020 13:25:32 -0700 (PDT)
+Received: from xps15.herring.priv ([64.188.179.248])
+        by smtp.googlemail.com with ESMTPSA id x15sm26202ilg.29.2020.04.09.13.25.30
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 09 Apr 2020 13:25:19 -0700 (PDT)
-Date:   Thu, 9 Apr 2020 16:25:15 -0400
-From:   "Michael S. Tsirkin" <mst@redhat.com>
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Jason Wang <jasowang@redhat.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        kvm list <kvm@vger.kernel.org>,
-        virtualization@lists.linux-foundation.org,
-        Networking <netdev@vger.kernel.org>,
-        Jason Gunthorpe <jgg@mellanox.com>, maxime.coquelin@redhat.com,
-        cunming.liang@intel.com, zhihong.wang@intel.com,
-        rob.miller@broadcom.com, xiao.w.wang@intel.com,
-        lingshan.zhu@intel.com, eperezma@redhat.com, lulu@redhat.com,
-        Parav Pandit <parav@mellanox.com>, kevin.tian@intel.com,
-        Stefan Hajnoczi <stefanha@redhat.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Christoph Hellwig <hch@infradead.org>, aadam@redhat.com,
-        Jiri Pirko <jiri@mellanox.com>, shahafs@mellanox.com,
-        hanand@xilinx.com, mhabets@solarflare.com, gdawar@xilinx.com,
-        saugatm@xilinx.com, vmireyno@marvell.com,
-        zhangweining@ruijie.com.cn, Bie Tiwei <tiwei.bie@intel.com>
-Subject: Re: [PATCH V9 9/9] virtio: Intel IFC VF driver for VDPA
-Message-ID: <20200409162427-mutt-send-email-mst@kernel.org>
-References: <20200326140125.19794-1-jasowang@redhat.com>
- <20200326140125.19794-10-jasowang@redhat.com>
- <CAK8P3a1RXUXs5oYjB=Jq5cpvG11eTnmJ+vc18_-0fzgTH6envA@mail.gmail.com>
+        Thu, 09 Apr 2020 13:25:31 -0700 (PDT)
+From:   Rob Herring <robh@kernel.org>
+To:     devicetree@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>
+Subject: [PATCH] dt-bindings: interrupt-controller: Fix loongson,parent_int_map property schema
+Date:   Thu,  9 Apr 2020 14:25:29 -0600
+Message-Id: <20200409202529.25699-1-robh@kernel.org>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAK8P3a1RXUXs5oYjB=Jq5cpvG11eTnmJ+vc18_-0fzgTH6envA@mail.gmail.com>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 09, 2020 at 12:41:13PM +0200, Arnd Bergmann wrote:
-> On Thu, Mar 26, 2020 at 3:08 PM Jason Wang <jasowang@redhat.com> wrote:
-> >
-> > From: Zhu Lingshan <lingshan.zhu@intel.com>
-> >
-> > This commit introduced two layers to drive IFC VF:
-> >
-> > (1) ifcvf_base layer, which handles IFC VF NIC hardware operations and
-> >     configurations.
-> >
-> > (2) ifcvf_main layer, which complies to VDPA bus framework,
-> >     implemented device operations for VDPA bus, handles device probe,
-> >     bus attaching, vring operations, etc.
-> >
-> > Signed-off-by: Zhu Lingshan <lingshan.zhu@intel.com>
-> > Signed-off-by: Bie Tiwei <tiwei.bie@intel.com>
-> > Signed-off-by: Wang Xiao <xiao.w.wang@intel.com>
-> > Signed-off-by: Jason Wang <jasowang@redhat.com>
-> 
-> > +
-> > +#define IFCVF_QUEUE_ALIGNMENT  PAGE_SIZE
-> > +#define IFCVF_QUEUE_MAX                32768
-> > +static u16 ifcvf_vdpa_get_vq_align(struct vdpa_device *vdpa_dev)
-> > +{
-> > +       return IFCVF_QUEUE_ALIGNMENT;
-> > +}
-> 
-> This fails to build on arm64 with 64kb page size (found in linux-next):
-> 
-> /drivers/vdpa/ifcvf/ifcvf_main.c: In function 'ifcvf_vdpa_get_vq_align':
-> arch/arm64/include/asm/page-def.h:17:20: error: conversion from 'long
-> unsigned int' to 'u16' {aka 'short unsigned int'} changes value from
-> '65536' to '0' [-Werror=overflow]
->    17 | #define PAGE_SIZE  (_AC(1, UL) << PAGE_SHIFT)
->       |                    ^
-> drivers/vdpa/ifcvf/ifcvf_base.h:37:31: note: in expansion of macro 'PAGE_SIZE'
->    37 | #define IFCVF_QUEUE_ALIGNMENT PAGE_SIZE
->       |                               ^~~~~~~~~
-> drivers/vdpa/ifcvf/ifcvf_main.c:231:9: note: in expansion of macro
-> 'IFCVF_QUEUE_ALIGNMENT'
->   231 |  return IFCVF_QUEUE_ALIGNMENT;
->       |         ^~~~~~~~~~~~~~~~~~~~~
-> 
-> It's probably good enough to just not allow the driver to be built in that
-> configuration as it's fairly rare but unfortunately there is no simple Kconfig
-> symbol for it.
-> 
-> In a similar driver, we did
-> 
-> config VMXNET3
->         tristate "VMware VMXNET3 ethernet driver"
->         depends on PCI && INET
->         depends on !(PAGE_SIZE_64KB || ARM64_64K_PAGES || \
->                      IA64_PAGE_SIZE_64KB || MICROBLAZE_64K_PAGES || \
->                      PARISC_PAGE_SIZE_64KB || PPC_64K_PAGES)
-> 
-> I think we should probably make PAGE_SIZE_64KB a global symbol
-> in arch/Kconfig and have it selected by the other symbols so drivers
-> like yours can add a dependency for it.
-> 
->          Arnd
+'loongson,parent_int_map' is an array, but the schema is defining a
+matrix resulting in the follow warnings:
 
-It's probably easier to make the alignment u32 - I don't really know why it's
-u16, all callers seem to assign the result to a u32 value.
+Documentation/devicetree/bindings/interrupt-controller/loongson,liointc.example.dt.yaml:
+  interrupt-controller@3ff01400: loongson,parent_int_map:0: [4043309055] is too short
+Documentation/devicetree/bindings/interrupt-controller/loongson,liointc.example.dt.yaml:
+  interrupt-controller@3ff01400: loongson,parent_int_map:1: [251658240] is too short
+Documentation/devicetree/bindings/interrupt-controller/loongson,liointc.example.dt.yaml:
+  interrupt-controller@3ff01400: loongson,parent_int_map:2: [0] is too short
+Documentation/devicetree/bindings/interrupt-controller/loongson,liointc.example.dt.yaml:
+  interrupt-controller@3ff01400: loongson,parent_int_map:3: [0] is too short
+
+The correct way to define an array is a list in 'items' and/or a size
+defined by 'minItems' and 'maxItems'.
+
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Jason Cooper <jason@lakedaemon.net>
+Cc: Marc Zyngier <maz@kernel.org>
+Signed-off-by: Rob Herring <robh@kernel.org>
+---
+Will take this via the DT tree.
+
+Rob
+
+ .../bindings/interrupt-controller/loongson,liointc.yaml      | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/interrupt-controller/loongson,liointc.yaml b/Documentation/devicetree/bindings/interrupt-controller/loongson,liointc.yaml
+index 9c6b91fee477..26f1fcf0857a 100644
+--- a/Documentation/devicetree/bindings/interrupt-controller/loongson,liointc.yaml
++++ b/Documentation/devicetree/bindings/interrupt-controller/loongson,liointc.yaml
+@@ -56,9 +56,8 @@ properties:
+       cell with zero.
+     allOf:
+       - $ref: /schemas/types.yaml#/definitions/uint32-array
+-      - items:
+-          minItems: 4
+-          maxItems: 4
++      - minItems: 4
++        maxItems: 4
+ 
+ 
+ required:
+-- 
+2.20.1
 
