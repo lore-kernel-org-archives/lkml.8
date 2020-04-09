@@ -2,136 +2,158 @@ Return-Path: <SRS0=n+Ub=5Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96B34C2BB86
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 14:16:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F06CC2BB86
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 14:18:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7634620771
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 14:16:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 317C620771
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 14:18:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727732AbgDIOQv (ORCPT
+        id S1727749AbgDIOSr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Apr 2020 10:16:51 -0400
-Received: from out02.mta.xmission.com ([166.70.13.232]:45682 "EHLO
-        out02.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726977AbgDIOQu (ORCPT
+        Thu, 9 Apr 2020 10:18:47 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:9274 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726977AbgDIOSr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Apr 2020 10:16:50 -0400
-Received: from in01.mta.xmission.com ([166.70.13.51])
-        by out02.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.90_1)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1jMXz8-0002BY-0C; Thu, 09 Apr 2020 08:16:50 -0600
-Received: from ip68-227-160-95.om.om.cox.net ([68.227.160.95] helo=x220.xmission.com)
-        by in01.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.87)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1jMXz6-0008S7-HG; Thu, 09 Apr 2020 08:16:49 -0600
-From:   ebiederm@xmission.com (Eric W. Biederman)
-To:     Alexey Gladkov <gladkov.alexey@gmail.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Kernel Hardening <kernel-hardening@lists.openwall.com>,
-        Linux API <linux-api@vger.kernel.org>,
-        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
-        Linux Security Module <linux-security-module@vger.kernel.org>,
-        Akinobu Mita <akinobu.mita@gmail.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Daniel Micay <danielmicay@gmail.com>,
-        Djalal Harouni <tixxdz@gmail.com>,
-        "Dmitry V . Levin" <ldv@altlinux.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        "J . Bruce Fields" <bfields@fieldses.org>,
-        Jeff Layton <jlayton@poochiereds.net>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Kees Cook <keescook@chromium.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Oleg Nesterov <oleg@redhat.com>,
-        David Howells <dhowells@redhat.com>
-References: <20200409123752.1070597-1-gladkov.alexey@gmail.com>
-        <87y2r4vmpo.fsf@x220.int.ebiederm.org>
-        <20200409134236.mksvudaucp3jawf6@comp-core-i7-2640m-0182e6>
-Date:   Thu, 09 Apr 2020 09:13:55 -0500
-In-Reply-To: <20200409134236.mksvudaucp3jawf6@comp-core-i7-2640m-0182e6>
-        (Alexey Gladkov's message of "Thu, 9 Apr 2020 15:42:36 +0200")
-Message-ID: <87r1wwvja4.fsf@x220.int.ebiederm.org>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
+        Thu, 9 Apr 2020 10:18:47 -0400
+Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 039E3GnA110666;
+        Thu, 9 Apr 2020 10:18:45 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 30920xgsj7-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 09 Apr 2020 10:18:45 -0400
+Received: from m0098421.ppops.net (m0098421.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 039E4OfI115723;
+        Thu, 9 Apr 2020 10:18:45 -0400
+Received: from ppma04dal.us.ibm.com (7a.29.35a9.ip4.static.sl-reverse.com [169.53.41.122])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 30920xgshu-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 09 Apr 2020 10:18:45 -0400
+Received: from pps.filterd (ppma04dal.us.ibm.com [127.0.0.1])
+        by ppma04dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 039EF4gU008147;
+        Thu, 9 Apr 2020 14:18:44 GMT
+Received: from b03cxnp08027.gho.boulder.ibm.com (b03cxnp08027.gho.boulder.ibm.com [9.17.130.19])
+        by ppma04dal.us.ibm.com with ESMTP id 3091me94vh-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 09 Apr 2020 14:18:44 +0000
+Received: from b03ledav001.gho.boulder.ibm.com (b03ledav001.gho.boulder.ibm.com [9.17.130.232])
+        by b03cxnp08027.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 039EIeC34784668
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 9 Apr 2020 14:18:40 GMT
+Received: from b03ledav001.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id BD9DC6E05D;
+        Thu,  9 Apr 2020 14:18:40 +0000 (GMT)
+Received: from b03ledav001.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 8CBF06E054;
+        Thu,  9 Apr 2020 14:18:39 +0000 (GMT)
+Received: from cpe-172-100-173-215.stny.res.rr.com (unknown [9.85.171.227])
+        by b03ledav001.gho.boulder.ibm.com (Postfix) with ESMTP;
+        Thu,  9 Apr 2020 14:18:39 +0000 (GMT)
+Subject: Re: [PATCH v7 06/15] s390/vfio-ap: sysfs attribute to display the
+ guest CRYCB
+To:     Cornelia Huck <cohuck@redhat.com>
+Cc:     linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org, freude@linux.ibm.com, borntraeger@de.ibm.com,
+        mjrosato@linux.ibm.com, pmorel@linux.ibm.com, pasic@linux.ibm.com,
+        alex.williamson@redhat.com, kwankhede@nvidia.com,
+        jjherne@linux.ibm.com, fiuczy@linux.ibm.com
+References: <20200407192015.19887-1-akrowiak@linux.ibm.com>
+ <20200407192015.19887-7-akrowiak@linux.ibm.com>
+ <20200408123344.1a9032e1.cohuck@redhat.com>
+ <60c6bfb6-dd0a-75dc-1043-8dffe983220a@linux.ibm.com>
+ <20200408184606.309d9cd9.cohuck@redhat.com>
+From:   Tony Krowiak <akrowiak@linux.ibm.com>
+Message-ID: <e5823678-9f17-2849-09c1-d4db39b4e696@linux.ibm.com>
+Date:   Thu, 9 Apr 2020 10:18:38 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain
-X-XM-SPF: eid=1jMXz6-0008S7-HG;;;mid=<87r1wwvja4.fsf@x220.int.ebiederm.org>;;;hst=in01.mta.xmission.com;;;ip=68.227.160.95;;;frm=ebiederm@xmission.com;;;spf=neutral
-X-XM-AID: U2FsdGVkX194Q5MsMFzZbdx4uJwnCGkLXvKZWMd2p1E=
-X-SA-Exim-Connect-IP: 68.227.160.95
-X-SA-Exim-Mail-From: ebiederm@xmission.com
-Subject: Re: [PATCH RESEND v11 0/8] proc: modernize proc to support multiple private instances
-X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
-X-SA-Exim-Scanned: Yes (on in01.mta.xmission.com)
+In-Reply-To: <20200408184606.309d9cd9.cohuck@redhat.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
+ definitions=2020-04-09_04:2020-04-07,2020-04-09 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 adultscore=0
+ impostorscore=0 spamscore=0 priorityscore=1501 bulkscore=0 malwarescore=0
+ lowpriorityscore=0 mlxlogscore=999 mlxscore=0 clxscore=1015 suspectscore=3
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
+ definitions=main-2004090105
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Alexey Gladkov <gladkov.alexey@gmail.com> writes:
 
-> On Thu, Apr 09, 2020 at 07:59:47AM -0500, Eric W. Biederman wrote:
->> Alexey Gladkov <gladkov.alexey@gmail.com> writes:
->> 
->> > Preface:
->> > --------
->> > This is patchset v11 to modernize procfs and make it able to support multiple
->> > private instances per the same pid namespace.
->> >
->> > This patchset can be applied on top of:
->> >
->> > git.kernel.org/pub/scm/linux/kernel/git/ebiederm/user-namespace.git
->> > 4b871ce26ab2
->> 
->> 
->> 
->> Why the resend?
->> 
->> Nothing happens until the merge window closes with the release of -rc1
->> (almost certainly on this coming Sunday).  I goofed and did not act on
->> this faster, and so it is my fault this did not make it into linux-next
->> before the merge window.  But I am not going to rush this forward.
->> 
->> 
->> 
->> You also ignored my review and have not even descibed why it is safe
->> to change the type of a filesystem parameter.
->> 
->> -	fsparam_u32("hidepid",	Opt_hidepid),
->> +	fsparam_string("hidepid",	Opt_hidepid),
->> 
->> 
->> Especially in light of people using fsconfig(fd, FSCONFIG_SET_...);
->> 
->> All I need is someone to point out that fsparam_u32 does not use
->> FSCONFIG_SET_BINARY, but FSCONFIG_SET_STRING.
+
+On 4/8/20 12:46 PM, Cornelia Huck wrote:
+> On Wed, 8 Apr 2020 12:38:49 -0400
+> Tony Krowiak <akrowiak@linux.ibm.com> wrote:
 >
-> I decided to resend again because I was not sure that the previous
-> patchset was not lost. I also wanted to ask David to review and explain
-> about the new API. I in any case did not ignore your question about
-> changing the type of the parameter.
+>> On 4/8/20 6:33 AM, Cornelia Huck wrote:
+>>> On Tue,  7 Apr 2020 15:20:06 -0400
+>>> Tony Krowiak <akrowiak@linux.ibm.com> wrote:
+>>>   
+>>>> The matrix of adapters and domains configured in a guest's CRYCB may
+>>>> differ from the matrix of adapters and domains assigned to the matrix mdev,
+>>>> so this patch introduces a sysfs attribute to display the CRYCB of a guest
+>>>> using the matrix mdev. For a matrix mdev denoted by $uuid, the crycb for a
+>>>> guest using the matrix mdev can be displayed as follows:
+>>>>
+>>>>      cat /sys/devices/vfio_ap/matrix/$uuid/guest_matrix
+>>>>
+>>>> If a guest is not using the matrix mdev at the time the crycb is displayed,
+>>>> an error (ENODEV) will be returned.
+>>>>
+>>>> Signed-off-by: Tony Krowiak <akrowiak@linux.ibm.com>
+>>>> ---
+>>>>    drivers/s390/crypto/vfio_ap_ops.c | 58 +++++++++++++++++++++++++++++++
+>>>>    1 file changed, 58 insertions(+)
+>>>> +static DEVICE_ATTR_RO(guest_matrix);
+>>> Hm... should information like the guest configuration be readable by
+>>> everyone? Or should it be restricted a bit more?
+>> Why? The matrix attribute already displays the APQNs of the queues
+>> assigned to the matrix mdev. The guest_matrix attribute merely displays
+>> a subset of the matrix (i.e., the APQNs assigned to the mdev that reference
+>> queue devices bound to the vfio_ap device driver).
+>>
+>> How can this be restricted?
+> I was thinking of using e.g. 400 instead of 444 for the permissions.
 >
-> I guess I was wrong when I sent the whole patchset again. Sorry.
+> I'm not sure if the info about what subset of the queues the guest
+> actually uses is all that interesting (except for managing guests); but
+> if I see guest information being exposed, I get a little wary, so I
+> just stumbled over this.
 >
->> My apologies for being grumpy but this feels like you are asking me to
->> go faster when it is totally inappropriate to do so, while busily
->> ignoring my feedback.
->> 
->> I think this should happen.  But I can't do anything until after -rc1.
+> Maybe I'll come back to that once I have looked at the series in more
+> detail, but this might not be a problem at all.
+
+I created this patch primarily because I found it very helpful when
+testing. It saved me from logging on to the guest and executing
+lszcrypt to verify the AP configuration for the guest. I thought this
+might also add value for a system administrator responsible for
+KVM guests. It would not be a problem to remove this patch or
+change the permissions for the attribute. Let me know when you
+complete the series review. Thanks.
+
 >
-> I think you misunderstood me. I didn't mean to rush you.
-
-It looks like.  My apologies for the misunderstanding then.
-
-Eric
-
-
+>>>   
+>>>> +
+>>>>    static struct attribute *vfio_ap_mdev_attrs[] = {
+>>>>    	&dev_attr_assign_adapter.attr,
+>>>>    	&dev_attr_unassign_adapter.attr,
+>>>> @@ -1050,6 +1107,7 @@ static struct attribute *vfio_ap_mdev_attrs[] = {
+>>>>    	&dev_attr_unassign_control_domain.attr,
+>>>>    	&dev_attr_control_domains.attr,
+>>>>    	&dev_attr_matrix.attr,
+>>>> +	&dev_attr_guest_matrix.attr,
+>>>>    	NULL,
+>>>>    };
+>>>>      
 
