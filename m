@@ -2,104 +2,119 @@ Return-Path: <SRS0=n+Ub=5Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BAEF4C2BA2B
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 03:19:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D40F8C2BA1A
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 03:19:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 93C952087E
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 03:19:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A13392084D
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 03:19:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="RHzU2qIA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726638AbgDIDT0 (ORCPT
+        id S1726657AbgDIDTg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Apr 2020 23:19:26 -0400
-Received: from relay12.mail.gandi.net ([217.70.178.232]:38009 "EHLO
-        relay12.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726534AbgDIDT0 (ORCPT
+        Wed, 8 Apr 2020 23:19:36 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:45540 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726552AbgDIDTf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Apr 2020 23:19:26 -0400
-Received: from localhost (50-39-163-217.bvtn.or.frontiernet.net [50.39.163.217])
-        (Authenticated sender: josh@joshtriplett.org)
-        by relay12.mail.gandi.net (Postfix) with ESMTPSA id ED5FD200002;
-        Thu,  9 Apr 2020 03:19:20 +0000 (UTC)
-Date:   Wed, 8 Apr 2020 20:19:18 -0700
-From:   Josh Triplett <josh@joshtriplett.org>
-To:     Aleksa Sarai <cyphar@cyphar.com>
-Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        io-uring@vger.kernel.org, linux-arch@vger.kernel.org,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Arnd Bergmann <arnd@arndb.de>, Jens Axboe <axboe@kernel.dk>
-Subject: Re: [PATCH v3 0/3] Support userspace-selected fds
-Message-ID: <20200409031918.GD6149@localhost>
-References: <cover.1586321767.git.josh@joshtriplett.org>
- <20200408122601.kvrdjksjkl7ktgt4@yavin.dot.cyphar.com>
+        Wed, 8 Apr 2020 23:19:35 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1586402375;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=7+SzqkDXl2Jmhsnr0y9L6At5X0+bUJC/xN2Tg8J4VyY=;
+        b=RHzU2qIAWu9rSJvP6+j1Yo570y0u9KYJQ9ywQPQkr9yiy7C3+4rTC+6Cnt49SufVqa2qr2
+        hxg1RJ+10ttIClVTMC+sBOKp6DgELoV0JGIf9ff/0FC924T0iK5QKvFeqS+5bOdPB0A2on
+        zKY3N8kXu+bvJGXnIb4fU0zixwfbBUc=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-443-z9lXOdvvODmFYx4fo57fBg-1; Wed, 08 Apr 2020 23:19:33 -0400
+X-MC-Unique: z9lXOdvvODmFYx4fo57fBg-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id ED6EC1902EAE;
+        Thu,  9 Apr 2020 03:19:28 +0000 (UTC)
+Received: from [10.72.13.188] (ovpn-13-188.pek2.redhat.com [10.72.13.188])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 53354272CB;
+        Thu,  9 Apr 2020 03:19:21 +0000 (UTC)
+Subject: Re: [PATCH] virtio-mmio: Delete an error message in vm_find_vqs()
+To:     Markus Elfring <Markus.Elfring@web.de>,
+        virtualization@lists.linux-foundation.org,
+        "Michael S. Tsirkin" <mst@redhat.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        kernel-janitors@vger.kernel.org,
+        Tang Bin <tangbin@cmss.chinamobile.com>
+References: <9e27bc4a-cfa1-7818-dc25-8ad308816b30@web.de>
+From:   Jason Wang <jasowang@redhat.com>
+Message-ID: <03b19e72-0021-dc6b-77c4-ed3c4e13d526@redhat.com>
+Date:   Thu, 9 Apr 2020 11:19:20 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200408122601.kvrdjksjkl7ktgt4@yavin.dot.cyphar.com>
+In-Reply-To: <9e27bc4a-cfa1-7818-dc25-8ad308816b30@web.de>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 08, 2020 at 10:26:01PM +1000, Aleksa Sarai wrote:
-> On 2020-04-07, Josh Triplett <josh@joshtriplett.org> wrote:
-> > (Note: numbering this updated version v3, to avoid confusion with Jens'
-> > v2 that built on my v1. Jens, if you like this approach, please feel
-> > free to stack your additional patches from the io_uring-fd-select branch
-> > atop this series. 5.8 material, not intended for the current merge window.)
-> > 
-> > Inspired by the X protocol's handling of XIDs, allow userspace to select
-> > the file descriptor opened by a call like openat2, so that it can use
-> > the resulting file descriptor in subsequent system calls without waiting
-> > for the response to the initial openat2 syscall.
-> > 
-> > The first patch is independent of the other two; it allows reserving
-> > file descriptors below a certain minimum for userspace-selected fd
-> > allocation only.
-> > 
-> > The second patch implements userspace-selected fd allocation for
-> > openat2, introducing a new O_SPECIFIC_FD flag and an fd field in struct
-> > open_how. In io_uring, this allows sequences like openat2/read/close
-> > without waiting for the openat2 to complete. Multiple such sequences can
-> > overlap, as long as each uses a distinct file descriptor.
-> > 
-> > The third patch adds userspace-selected fd allocation to pipe2 as well.
-> > I did this partly as a demonstration of how simple it is to wire up
-> > O_SPECIFIC_FD support for any fd-allocating system call, and partly in
-> > the hopes that this may make it more useful to wire up io_uring support
-> > for pipe2 in the future.
-> > 
-> > If this gets accepted, I'm happy to also write corresponding manpage
-> > patches.
-> > 
-> > v3:
-> > This new version has an API to atomically increase the minimum fd and
-> > return the previous minimum, rather than just getting and setting the
-> > minimum; this makes it easier to allocate a range. (A library that might
-> > initialize after the program has already opened other file descriptors
-> > may need to check for existing open fds in the range after reserving it,
-> > and reserve more fds if needed; this can be done entirely in userspace,
-> > and we can't really do anything simpler in the kernel due to limitations
-> > on file-descriptor semantics, so this patch series avoids introducing
-> > any extra complexity in the kernel.)
-> > 
-> > This new version also supports a __get_specific_unused_fd_flags call
-> > which accepts the limit for RLIMIT_NOFILE as an argument, analogous to
-> > __get_unused_fd_flags, since io_uring needs that to correctly handle
-> > RLIMIT_NOFILE.
-> > 
-> > Josh Triplett (3):
-> >   fs: Support setting a minimum fd for "lowest available fd" allocation
-> >   fs: openat2: Extend open_how to allow userspace-selected fds
-> >   fs: pipe2: Support O_SPECIFIC_FD
-> 
-> Aside from my specific comments and questions, the changes to openat2
-> deserve at least one or two selftests.
 
-Agreed. I don't expect this to get merged until it has tests and
-manpage patches.
+On 2020/4/6 =E4=B8=8A=E5=8D=881:19, Markus Elfring wrote:
+> From: Markus Elfring <elfring@users.sourceforge.net>
+> Date: Sun, 5 Apr 2020 19:14:10 +0200
+>
+> The function =E2=80=9Cplatform_get_irq=E2=80=9D can log an error alread=
+y.
+> Thus omit a redundant message for the exception handling in the
+> calling function.
 
-- Josh Triplett
+
+It looks to me that not all error path of platform_get_irq() were loggd.
+
+And git grep told me there're other users of platform_get_irq() that=20
+check and log by themselves.
+
+Thanks
+
+
+>
+> This issue was detected by using the Coccinelle software.
+>
+> Signed-off-by: Markus Elfring <elfring@users.sourceforge.net>
+> ---
+>   drivers/virtio/virtio_mmio.c | 4 +---
+>   1 file changed, 1 insertion(+), 3 deletions(-)
+>
+> diff --git a/drivers/virtio/virtio_mmio.c b/drivers/virtio/virtio_mmio.=
+c
+> index 97d5725fd9a2..9d16aaffca9d 100644
+> --- a/drivers/virtio/virtio_mmio.c
+> +++ b/drivers/virtio/virtio_mmio.c
+> @@ -466,10 +466,8 @@ static int vm_find_vqs(struct virtio_device *vdev,=
+ unsigned nvqs,
+>   	int irq =3D platform_get_irq(vm_dev->pdev, 0);
+>   	int i, err, queue_idx =3D 0;
+>
+> -	if (irq < 0) {
+> -		dev_err(&vdev->dev, "Cannot get IRQ resource\n");
+> +	if (irq < 0)
+>   		return irq;
+> -	}
+>
+>   	err =3D request_irq(irq, vm_interrupt, IRQF_SHARED,
+>   			dev_name(&vdev->dev), vm_dev);
+> --
+> 2.26.0
+>
+
