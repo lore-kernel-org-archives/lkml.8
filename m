@@ -2,526 +2,140 @@ Return-Path: <SRS0=n+Ub=5Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE0C9C2BA2B
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 11:08:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED779C2BB86
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 11:08:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9787120771
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 11:08:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="fOb0Wu7e"
+	by mail.kernel.org (Postfix) with ESMTP id BEAE220BED
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 11:08:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1586430511;
+	bh=nKcVNNbDsBhlfWYnZ08AXKiy6f8voXP4SBw/qoRDLGQ=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=PJkk3bQFMeEGha2usqHcpuHMnRd50ILOHCztHcLvvDt7BilsgYmpd2PFCA+lfVDnM
+	 ayrs6N353reAO9bzibmSw893L6O5ZEUcFWDE8RPIJDAGGjDDWDZ6iaoWbwkKIQ1Tjx
+	 XxxhQcLvdgQPig1eV6fysOd4YJnDBv+UMUDhME1c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726641AbgDILIT (ORCPT
+        id S1726663AbgDILI3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Apr 2020 07:08:19 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:46991 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726470AbgDILIT (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Apr 2020 07:08:19 -0400
-Received: by mail-ot1-f66.google.com with SMTP id 88so821387otx.13
-        for <linux-kernel@vger.kernel.org>; Thu, 09 Apr 2020 04:08:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=OlQnVWcaj998qpe88seNO9Wy3RQcfG+/Atb2YGMFJp4=;
-        b=fOb0Wu7exUv7r5OlopRULCHLdnR0Vwvit7JsTY4TgdHDvM/IeMbUR4dFUrWUTIpuZ7
-         Jra3lyqjvForAfc4oRfMmhN60R8B9yJVKfFrk9cdaSb5DWOsysUpNhMcSDwHBw1XScoc
-         FDgvb0g+wDYBugVtjKK7obhljDrOXJ6ZOKsuejmRHBT3yv/aXuN15/TFWLhp4oQhtj23
-         EH06HvLz79NJdGCTDEwR3NY7feva41WAfathgq2WgUlHta9+04rpZNcqiYexEPi5MgEr
-         HaKRqKfCdVE+CwD3uQCujFpHzqqzj+f45Isp2IM593RApG2pqlDLI2MWEkf/Rr2lPntZ
-         a5MQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=OlQnVWcaj998qpe88seNO9Wy3RQcfG+/Atb2YGMFJp4=;
-        b=oX6SkmjijtyqmST0ZHohorikNi7c1tBxo82X26mvRwvC6vVhteGF7shC8fBphXpVS/
-         54tcLDMGqPFPNS/zjw1jPjOYXZ3glHRHAHt5iFQruYrWM83Kl0zvklwNjnf0t6+7CpRK
-         dtgVCB/9FFMbOYJ183IuTNFjT8PBTge1c7nYT2uvz/N/n06AOD5DoYv+zvrJersZUTIz
-         cYWipxKTb6XB7yKXzZXBwbi6I9rba6/4+iGfLq3onX8nJBdB6gLO27SQjFYvop3Fz7Mp
-         +YPAx6YPo4smx1qqujTBQzE0+uwM/s+isXFYEprC58nXv0lMy2OsPZcKDorc76w9UgHY
-         A7wQ==
-X-Gm-Message-State: AGi0PuYxx8VgiCnEJYfpCJNXsXxqjF+qKhm4uf7X5ZoxpGagPDOSV2t+
-        TkWHQUScPctH4mMGjkFLyWv+zx4SJup4W+bSAo0mhw==
-X-Google-Smtp-Source: APiQypLpiGD1hP/FA+1Qfs8FKHNfy/40G6OI6L4/cHyGa1XIO50DsVQyYWIIfwfFoUuPVaXI4e0XO1RkFeELN3MSEK8=
-X-Received: by 2002:a9d:7f19:: with SMTP id j25mr3287086otq.129.1586430498077;
- Thu, 09 Apr 2020 04:08:18 -0700 (PDT)
+        Thu, 9 Apr 2020 07:08:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38176 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726470AbgDILI3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Apr 2020 07:08:29 -0400
+Received: from mail-io1-f48.google.com (mail-io1-f48.google.com [209.85.166.48])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7D42721473;
+        Thu,  9 Apr 2020 11:08:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1586430509;
+        bh=nKcVNNbDsBhlfWYnZ08AXKiy6f8voXP4SBw/qoRDLGQ=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=y12xfx2jHRcz7Xj8E4KiAetwNxAJMpYhu6JAGkfDwGc+VtDlb163jkT8V+hvG5UJZ
+         UutyhRP02DmPiGjvugQLGdOYiTlPCiQ/jyO8+5/3Ey0LngkDM02WqoBgCeUrAcEkHC
+         J6FLLRIW6gu5xCWuBL92O3RIwS1mHjeEvR45/6NI=
+Received: by mail-io1-f48.google.com with SMTP id f19so3407785iog.5;
+        Thu, 09 Apr 2020 04:08:29 -0700 (PDT)
+X-Gm-Message-State: AGi0PuZyw9Hkhycpxj1oqOqZ4OSkX4QvBsah9D6mci9lj5Ukj4zkbQbz
+        VWQH/qEwASrW7SaYEfAU3tXV3IoC8aABgy5E/uM=
+X-Google-Smtp-Source: APiQypKW3FSRiKcw5UcsWUzBp+isKHjGSYUGcHGHb7BrRprKjbiuQVYggD3evhNtKTrY8cXwlo+PdO4idv6EkgzLNXM=
+X-Received: by 2002:a02:969a:: with SMTP id w26mr2026088jai.71.1586430508859;
+ Thu, 09 Apr 2020 04:08:28 -0700 (PDT)
 MIME-Version: 1.0
-References: <cover.1584352425.git.zong.li@sifive.com> <fe97f88c69a9f752a96623afa398c4125aab930f.1584352425.git.zong.li@sifive.com>
- <7e490410-9f2c-62dc-e3ab-8018cc3ee534@ghiti.fr> <CANXhq0pDA6ndahKwLMvpGHmwxrQZwnDdL5iGCacyXX7DbqpV7g@mail.gmail.com>
- <e0079c17-1039-27b9-72d7-d5009b6d1a4b@ghiti.fr>
-In-Reply-To: <e0079c17-1039-27b9-72d7-d5009b6d1a4b@ghiti.fr>
-From:   Zong Li <zong.li@sifive.com>
-Date:   Thu, 9 Apr 2020 19:08:06 +0800
-Message-ID: <CANXhq0rPAwGzgP1DEwRXe3ZACgMstk1Rnn=3pPNdr+WNcqMZnA@mail.gmail.com>
-Subject: Re: [PATCH RFC 3/8] riscv/kaslr: support KASLR infrastructure
-To:     Alex Ghiti <alex@ghiti.fr>
-Cc:     Palmer Dabbelt <palmer@dabbelt.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        linux-riscv <linux-riscv@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org List" <linux-kernel@vger.kernel.org>
+References: <20200113172245.27925-1-ardb@kernel.org> <20200113172245.27925-6-ardb@kernel.org>
+ <63b125a4-6c62-fcdf-de22-d3bebe2dcbf5@suse.cz> <CAMj1kXGiT_zYjc6X-msRXVozhpDAY0UesEW3_4fOgiH4FyMgDw@mail.gmail.com>
+ <972b66a9-92c7-9a15-1aa1-e3236abe90df@suse.cz> <CAMj1kXFGkOM9fbqr44_TbdxqFjH1i3d8dkO64C1mQmH=AqrUSQ@mail.gmail.com>
+ <20200409080626.GV5951@GaryWorkstation> <984a2b3c-a9d4-e733-6372-4abf0f99be1f@suse.cz>
+ <CAMj1kXFHUusU9dDgqhU_qswDVgYWx_kpaDEroj4ZSt3hr-AFsA@mail.gmail.com>
+ <d38fd829-b944-da10-58c0-180f80e8264d@suse.cz> <CAMj1kXG4F+WzJX8_FyRAxQmDwqvbQMzh3Ji1KcpH_eO3Zt3-WQ@mail.gmail.com>
+ <b6006dd7-2ce0-0776-9a61-52377b8eef63@suse.cz> <CAMj1kXFsaoUoWbwRVFJX_ze+gJHOKRLyTL5kEecYJRPr84wWqw@mail.gmail.com>
+In-Reply-To: <CAMj1kXFsaoUoWbwRVFJX_ze+gJHOKRLyTL5kEecYJRPr84wWqw@mail.gmail.com>
+From:   Ard Biesheuvel <ardb@kernel.org>
+Date:   Thu, 9 Apr 2020 13:08:17 +0200
+X-Gmail-Original-Message-ID: <CAMj1kXEhLjh4NENkzfKmO=eLxEXmgU7MDyJsL51Ctas5XW40Sw@mail.gmail.com>
+Message-ID: <CAMj1kXEhLjh4NENkzfKmO=eLxEXmgU7MDyJsL51Ctas5XW40Sw@mail.gmail.com>
+Subject: Re: [PATCH 05/13] efi/x86: don't map the entire kernel text RW for
+ mixed mode
+To:     Jiri Slaby <jslaby@suse.cz>
+Cc:     Gary Lin <glin@suse.com>, linux-efi <linux-efi@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Anshuman Khandual <anshuman.khandual@arm.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Dave Young <dyoung@redhat.com>,
+        Saravana Kannan <saravanak@google.com>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 9, 2020 at 1:53 PM Alex Ghiti <alex@ghiti.fr> wrote:
+On Thu, 9 Apr 2020 at 12:45, Ard Biesheuvel <ardb@kernel.org> wrote:
 >
-> Hi Zong,
->
-> On 4/7/20 6:34 AM, Zong Li wrote:
-> > On Tue, Apr 7, 2020 at 1:10 PM Alex Ghiti <alex@ghiti.fr> wrote:
-> >>
-> >>
-> >>
-> >> On 3/24/20 3:30 AM, Zong Li wrote:
-> >>> This patch support KASLR implementation. It copies kernel image to a
-> >>> proper and random place, and make all harts go to the new destination=
-.
-> >>>
-> >>> After KASLR initialization, secondary harts go to the new destination
-> >>> to wait their stack pointer to be setup by main hart, main hart goes =
-to
-> >>> re-create the early page table and doing relocation by going back to
-> >>> setup_vm again.
-> >>>
-> >>> We separate the randomization process from this patch, so the kernel
-> >>> offset was not randomized yet, it just hardcode a meanless number her=
-e.
-> >>>
-> >>> Signed-off-by: Zong Li <zong.li@sifive.com>
-> >>> ---
-> >>>    arch/riscv/Kconfig         | 15 +++++++++++
-> >>>    arch/riscv/kernel/Makefile |  2 ++
-> >>>    arch/riscv/kernel/head.S   | 39 +++++++++++++++++++++++++++
-> >>>    arch/riscv/kernel/kaslr.c  | 55 ++++++++++++++++++++++++++++++++++=
-++++
-> >>>    arch/riscv/mm/init.c       | 53 ++++++++++++++++++++++++++++++++++=
-+-
-> >>>    5 files changed, 163 insertions(+), 1 deletion(-)
-> >>>    create mode 100644 arch/riscv/kernel/kaslr.c
-> >>>
-> >>> diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
-> >>> index aea03ac470c8..8f566b40ea1e 100644
-> >>> --- a/arch/riscv/Kconfig
-> >>> +++ b/arch/riscv/Kconfig
-> >>> @@ -183,6 +183,21 @@ config RELOCATABLE
-> >>>              relocation pass at runtime even if the kernel is loaded =
-at the
-> >>>              same address it was linked at.
-> >>>
-> >>> +config RANDOMIZE_BASE
-> >>> +     bool "Randomize the address of the kernel image"
-> >>> +     depends on MMU
-> >>> +     select MODULE_SECTIONS if MODULES
-> >>> +     select RELOCATABLE
-> >>> +     help
-> >>> +       Randomizes the virtual address at which the kernel image is
-> >>> +       loaded, as a security feature that deters exploit attempts
-> >>> +       relying on knowledge of the location of kernel internals.
-> >>> +
-> >>> +       It is the job of previous stage to provide entropy, by passin=
-g a
-> >>> +       random u64 value in /chosen/kaslr-seed at kernel entry.
-> >>> +
-> >>> +       If unsure, say N.
-> >>> +
-> >>>    source "arch/riscv/Kconfig.socs"
-> >>>
-> >>>    menu "Platform type"
-> >>> diff --git a/arch/riscv/kernel/Makefile b/arch/riscv/kernel/Makefile
-> >>> index d189bd3d8501..8f62732b1135 100644
-> >>> --- a/arch/riscv/kernel/Makefile
-> >>> +++ b/arch/riscv/kernel/Makefile
-> >>> @@ -45,4 +45,6 @@ obj-$(CONFIG_PERF_EVENTS)   +=3D perf_callchain.o
-> >>>    obj-$(CONFIG_HAVE_PERF_REGS)        +=3D perf_regs.o
-> >>>    obj-$(CONFIG_RISCV_SBI)             +=3D sbi.o
-> >>>
-> >>> +obj-$(CONFIG_RANDOMIZE_BASE) +=3D kaslr.o
-> >>> +
-> >>>    clean:
-> >>> diff --git a/arch/riscv/kernel/head.S b/arch/riscv/kernel/head.S
-> >>> index cb4a6e2d3793..5191e528d813 100644
-> >>> --- a/arch/riscv/kernel/head.S
-> >>> +++ b/arch/riscv/kernel/head.S
-> >>> @@ -113,9 +113,12 @@ clear_bss_done:
-> >>>        la a2, boot_cpu_hartid
-> >>>        REG_S a0, (a2)
-> >>>
-> >>> +.align 2
-> >>
-> >> Why do you need this new alignment constraint ?
+> On Thu, 9 Apr 2020 at 12:09, Jiri Slaby <jslaby@suse.cz> wrote:
 > >
-> > We need to ensure the target of the trap vector is 4-byte alignment.
->
-> Ok thanks.
->
+> > On 09. 04. 20, 11:09, Ard Biesheuvel wrote:
+> > > On Thu, 9 Apr 2020 at 10:36, Jiri Slaby <jslaby@suse.cz> wrote:
+> > >>
+> > >> On 09. 04. 20, 10:19, Ard Biesheuvel wrote:
+> > >>>>>> $ rpm -qlp ~/Downloads/ovmf-202002-1.1.i586.rpm
+> > >>>>>> warning: /home/ardbie01/Downloads/ovmf-202002-1.1.i586.rpm: Header V3
+> > >>>>>> RSA/SHA256 Signature, key ID 3dbdc284: NOKEY
+> > >>>>>> /usr/share/doc/packages/ovmf
+> > >>>>>> /usr/share/doc/packages/ovmf/README
+> > >>>>>
+> > >>>>> Hmmm, it's weird that OBS doesn't list all derived files.
+> > >>>>> Anyway, the ia32 ovmf is available in
+> > >>>>> http://download.opensuse.org/tumbleweed/repo/oss/noarch/qemu-ovmf-ia32-202002-1.1.noarch.rpm
+> > >>>>
+> > >>>> It indeed does:
+> > >>>> https://build.opensuse.org/package/binaries/openSUSE:Factory/ovmf/standard
+> > >>>>
+> > >>>> Note that the ia32 version is noarch, built on i586.
+> > >>>>
+> > >>>
+> > >>> I am not able to reproduce this issue using the linked firmware image
+> > >>> and a 5.6 x86_64_defconfig with efivarfs built in.
+> > >>
+> > >> Yeah, I had to use the distro config too. Not sure what the trigger is.
+> > >> Maybe some NUMA configs or something.
+> > >>
+> > >>> Could anyone share the full log, please, along with the kernel config
+> > >>> that was used?
+> > >>
+> > >> Both uploaded:
+> > >> http://decibel.fi.muni.cz/~xslaby/err/
+> > >>
+> > >
+> > > With the same config, I am still not seeing the issue.
+> > >
+> > >
+> > >> Note that I switched the for-me-necessary =m configs to =y. So that it
+> > >> is enough to build bzImage, w/o modules...
+> > >>
+> > >
+> > > Could you please try running it again with CONFIG_EFI_PGT_DUMP=y enabled?
 > >
-> >>
-> >>> +early_page_table:
-> >>>        /* Initialize page tables and relocate to virtual addresses */
-> >>>        la sp, init_thread_union + THREAD_SIZE
-> >>>        mv a0, s1
-> >>> +
-> >>
-> >> Newline ?
+> > No problem:
+> > http://decibel.fi.muni.cz/~xslaby/err/dmesg2.txt
 > >
-> > Remove it in the next version. Thanks.
+> > > In the mean time, I will try to install Tumbleweed from scratch. Do
+> > > you have any steps I could follow to reproduce your setup?
 > >
-> >>
-> >>>        call setup_vm
-> >>>    #ifdef CONFIG_MMU
-> >>>        la a0, early_pg_dir
-> >>> @@ -127,6 +130,29 @@ clear_bss_done:
-> >>>        sw zero, TASK_TI_CPU(tp)
-> >>>        la sp, init_thread_union + THREAD_SIZE
-> >>>
-> >>> +#ifdef CONFIG_RANDOMIZE_BASE
-> >>> +     /* KASRL initialization. Try to get a random kernel offset. */
-> >>> +     call kaslr_early_init
-> >>> +
-> >>> +     /* If return value equals to zero, we don't need to randomize k=
-ernel */
-> >>> +     beqz a0, 1f
-> >>> +
-> >>> +     la a1, early_page_table
-> >>> +     add a1, a1, a0
-> >>> +     la a0, va_pa_offset
-> >>> +     REG_L a0, 0(a0)
-> >>> +     sub a1, a1, a0
-> >>> +     mv a0, s1
-> >>> +
-> >>> +     /*
-> >>> +      * Go to new kernel image destination, and disable MMU to re-cr=
-eate
-> >>> +      * early page table and do relocation.
-> >>> +      */
-> >>> +     csrw CSR_TVEC, a1
-> >>> +     csrw CSR_SATP, x0
-> >>> +1:
-> >>> +#endif
-> >>> +
-> >>>    #ifdef CONFIG_KASAN
-> >>>        call kasan_early_init
-> >>>    #endif
-> >>> @@ -194,6 +220,19 @@ relocate:
-> >>>        la a3, .Lsecondary_park
-> >>>        csrw CSR_TVEC, a3
-> >>>
-> >>> +#ifdef CONFIG_RANDOMIZE_BASE
-> >>> +     /*
-> >>> +      * Wait winning hart to tell secondary harts where is the new
-> >>> +      * destination to go.
-> >>> +      */
-> >>> +.Lwait_for_next_target:
-> >>> +     la a3, secondary_next_target
-> >>> +     REG_L a3, 0(a3)
-> >>> +     beqz a3, .Lwait_for_next_target
-> >>> +     jr a3
-> >>> +.global secondary_random_target
-> >>> +secondary_random_target:
-> >>> +#endif
-> >>>        slli a3, a0, LGREG
-> >>>        la a1, __cpu_up_stack_pointer
-> >>>        la a2, __cpu_up_task_pointer
-> >>> diff --git a/arch/riscv/kernel/kaslr.c b/arch/riscv/kernel/kaslr.c
-> >>> new file mode 100644
-> >>> index 000000000000..281b5fcca5c8
-> >>> --- /dev/null
-> >>> +++ b/arch/riscv/kernel/kaslr.c
-> >>> @@ -0,0 +1,55 @@
-> >>> +// SPDX-License-Identifier: GPL-2.0-only
-> >>> +/*
-> >>> + * Copyright (C) 2020 SiFive
-> >>> + * Copyright (C) 2020 Zong Li <zong.li@sifive.com>
-> >>> + */
-> >>> +
-> >>> +#include <linux/libfdt.h>
-> >>> +#include <linux/timex.h>
-> >>> +#include <linux/random.h>
-> >>> +#include <linux/set_memory.h>
-> >>> +#include <asm/cacheflush.h>
-> >>> +
-> >>> +extern char _start[], _end[];
-> >>> +extern void secondary_random_target(void);
-> >>> +extern void kaslr_create_page_table(uintptr_t start, uintptr_t end);
-> >>> +
-> >>> +uintptr_t secondary_next_target __initdata;
-> >>> +static uintptr_t kaslr_offset __initdata;
-> >>> +
-> >>> +uintptr_t __init kaslr_early_init(void)
-> >>> +{
-> >>> +     uintptr_t dest_start, dest_end;
-> >>> +     uintptr_t kernel_size =3D (uintptr_t) _end - (uintptr_t) _start=
-;
-> >>> +
-> >>> +     /* Get zero value at second time to avoid doing randomization a=
-gain. */
-> >>> +     if (kaslr_offset)
-> >>> +             return 0;
-> >>> +
-> >>> +     /* Get the random number for kaslr offset. */
-> >>> +     kaslr_offset =3D 0x10000000;
-> >>
-> >> For clarity, you could use a macro or something like that for this con=
-stant.
+> > Not really, just installed TW 64-bit and used efi and grub 32 bit.
 > >
-> > This is a temporary assignment for this patch. The kaslr_offset is not
-> > randomized yet, so it is just a hardcode meaningless number here.
-> > Eventually, kalser_offset should be assigned a random number, that is
-> > what the next patch does ('riscv/kaslr: randomize the kernel image
-> > offset').
 >
-> Yes, I just don't like random constants, even temporary. I was just
-> thinking of something like that:
+> OK, so you installed using a 64-bit EFI, and then switched to a 32-bit
+> one? Or is there a special mixed-mode capable installer?
 >
-> #define KASLR_RANDOM_OFFSET 0x10000000
->
-> But it's up to you of course.
+> (The ones I found are x86_64 only)
 
-It is OK to me to change it. Or maybe I add some comments here, does
-it sound good to you?
+OK, I have managed to install tumbleweed into a 64-bit VM with 64-bit GRUB.
 
-
->
-> >
-> >>
-> >>> +
-> >>> +     /* Update kernel_virt_addr for get_kaslr_offset. */
-> >>> +     kernel_virt_addr +=3D kaslr_offset;
-> >>
-> >> This could be done after you test if kaslr_offset is null below.
-> >
-> > Yes, make sense, change it in the next version patch. Thanks.
-> >
-> >>
-> >>> +
-> >>> +     if (kaslr_offset) {
-> >>> +             dest_start =3D (uintptr_t) (PAGE_OFFSET + kaslr_offset)=
-;
-> >>> +             dest_end =3D dest_start + kernel_size;
-> >>
-> >> dest_end =3D dest_start + kernel_size - 1;
-> >
-> > OK, Thanks.
-> >
-> >>
-> >>> +
-> >>> +             /* Create the new destination mapping for kernel image.=
- */
-> >>> +             kaslr_create_page_table(dest_start, dest_end);
-> >>> +
-> >>> +             /* Copy kernel image from orignial location. */
-> >>> +             memcpy((void *)dest_start, (void *)_start, kernel_size)=
-;
-> >>> +             flush_icache_range(dest_start, dest_end); > +
-> >>> +             /* Make secondary harts jump to new kernel image destin=
-ation. */
-> >>> +             WRITE_ONCE(secondary_next_target,
-> >>> +                        __pa_symbol(secondary_random_target) + kaslr=
-_offset);
-> >>
-> >> Don't you need to sync secondary harts icache with main hart dcache he=
-re ?
-> >
-> > It seems to me that secondary harts could see secondary_next_target
-> > immediately through cache coherence, just like __cpu_up_stack_pointer
-> > and __cpu_up_task_pointer. Could you give more detail here or why we
-> > need to write secondary_next_target back to memory? Thanks.
->
-> I may be mistaken here, but flush_icache_range uses sfence.i instruction
-> that guarantees that following instruction fetches will see previously
-> written data. But this works for the local hart: what if other harts
-> already have a match in their instruction cache ? The ISA spec states:
->
-> "FENCE.I does not ensure that other RISC-V harts=E2=80=99 instruction fet=
-ches
-> will observe the local hart=E2=80=99s stores in a multiprocessor system. =
-To make
-> a store to instruction memory visible to all RISC-V harts, the writing
-> hart has to execute a data FENCE before requesting that all remote
-> RISC-V harts execute a FENCE.I"
->
-> >
-> >>
-> >>> +     } else {
-> >>> +             WRITE_ONCE(secondary_next_target,
-> >>> +                        __pa_symbol(secondary_random_target));
-> >>> +     }
-> >>> +
-> >>> +     return kaslr_offset;
-> >>> +}
-> >>> diff --git a/arch/riscv/mm/init.c b/arch/riscv/mm/init.c
-> >>> index 51e263c04fa2..2f5b25f02b6c 100644
-> >>> --- a/arch/riscv/mm/init.c
-> >>> +++ b/arch/riscv/mm/init.c
-> >>> @@ -413,6 +413,41 @@ static void __init clear_pgd(pgd_t *pgdp)
-> >>>                        }
-> >>>                }
-> >>>    }
-> >>> +
-> >>> +static void __init clear_page_tables(void)
-> >>> +{
-> >>> +     clear_pgd(early_pg_dir);
-> >>> +     clear_pgd(trampoline_pg_dir);
-> >>> +}
-> >>
-> >> early page table and trampoline page table consist in one page per
-> >> level, I confirm that a memset to 0 is easier here.
-> >
-> > yes, I'll change it. Thanks.
-> >
-> >>
-> >>> +
-> >>> +void __init kaslr_create_page_table(uintptr_t start, uintptr_t end)
-> >>> +{
-> >>> +     pgd_next_t *nextp;
-> >>> +     phys_addr_t next_phys;
-> >>> +     uintptr_t pgd_index, va;
-> >>> +     phys_addr_t pa =3D __pa(PAGE_OFFSET) + get_kaslr_offset();
-> >>> +     uintptr_t map_size =3D
-> >>> +             best_map_size(__pa(PAGE_OFFSET), MAX_EARLY_MAPPING_SIZE=
-);
-> >>> +
-> >>> +     /* Expolit early_pg_dir and early_pmd during using early page t=
-able. */
-> >>> +     for (va =3D start; va < end; va +=3D map_size, pa +=3D map_size=
-) {
-> >>> +             pgd_index =3D pgd_index(va);
-> >>> +
-> >>> +             if (pgd_val(early_pg_dir[pgd_index]) =3D=3D 0) {
-> >>> +                     next_phys =3D alloc_pgd_next(va);
-> >>> +                     early_pg_dir[pgd_index] =3D
-> >>> +                             pfn_pgd(PFN_DOWN(next_phys), PAGE_TABLE=
-);
-> >>> +                     nextp =3D (pgd_next_t *)(__va(next_phys));
-> >>> +                     memset(nextp, 0, PAGE_SIZE);
-> >>> +             } else {
-> >>> +                     next_phys =3D PFN_PHYS(_pgd_pfn(early_pg_dir[pg=
-d_index]));
-> >>> +                     nextp =3D (pgd_next_t *)(__va(next_phys));
-> >>> +             }
-> >>> +
-> >>> +             create_pgd_next_mapping(nextp, va, pa, map_size,
-> >>> +                                     PAGE_KERNEL_EXEC);
-> >>> +     }
-> >>> +}
-> >>>    #endif
-> >>
-> >> I may be missing something here: I don't see where the mappings for th=
-e
-> >> new kernel you create here are used between here and setup_vm ?
-> >
-> > Early page tables only create the mappings for original kernel image
-> > (i.e., from vmlinux_start to vmlinux_end), so the mapping of the
-> > destination of the new kernel image isn't be created, it would cause
-> > error when copying kernel image.
->
-> Oh right, setup_vm creates a mapping that only covers the kernel and not
-> a zone that spans an entire PGD: then you have to create mapping for the
-> destination.
->
-> Thanks,
->
-> >
-> >>
-> >> If I read correctly, if kaslr_early_init returns a random offset, you
-> >> disable mmu and then call setup_vm which will recreate early page tabl=
-es
-> >> anyway.
-> >
-> > Yes, we can exploit the setup_vm implementation to create the page
-> > table for the destination of the new kernel image.
-> >
-> >>
-> >>>
-> >>>    /*
-> >>> @@ -489,7 +524,13 @@ asmlinkage void __init setup_vm(uintptr_t dtb_pa=
-)
-> >>>        uintptr_t map_size =3D best_map_size(load_pa, MAX_EARLY_MAPPIN=
-G_SIZE);
-> >>>
-> >>>        va_pa_offset =3D kernel_virt_addr - load_pa;
-> >>> -     pfn_base =3D PFN_DOWN(load_pa);
-> >>> +
-> >>> +     /*
-> >>> +      * Update pfn_base only if pfn_base is empty. It's avoid to mes=
-s up it
-> >>> +      * when re-enter this function by KASLR.
-> >>> +      */
-> >>> +     if (!pfn_base)
-> >>> +             pfn_base =3D PFN_DOWN(load_pa);
-> >>>
-> >>>    #ifdef CONFIG_RELOCATABLE
-> >>>        /*
-> >>> @@ -513,6 +554,16 @@ asmlinkage void __init setup_vm(uintptr_t dtb_pa=
-)
-> >>>        BUG_ON((load_pa % map_size) !=3D 0);
-> >>>        BUG_ON(load_sz > MAX_EARLY_MAPPING_SIZE);
-> >>>
-> >>> +#ifdef CONFIG_RANDOMIZE_BASE
-> >>> +     /*
-> >>> +      * Enter setup_vm twice if there is a legal random destination =
-in KASLR,
-> >>> +      * Reach here at second time, Clear page table because PTE entr=
-is allow
-> >>> +      * writing when it's empty.
-> >>> +      */
-> >>> +     if (get_kaslr_offset())
-> >>> +             clear_page_tables();
-> >>> +#endif
-> >>> +
-> >>>        /* Setup early PGD for fixmap */
-> >>>        create_pgd_mapping(early_pg_dir, FIXADDR_START,
-> >>>                           (uintptr_t)fixmap_pgd_next, PGDIR_SIZE, PAG=
-E_TABLE);
-> >>>
-> >>
-> >> Just an idea, maybe worthless, but couldn't we benefit from kexec here=
- ?
-> >> That's quite the same: copy a new kernel from the current kernel in so=
-me
-> >> new memory locations and then jump to it. We could pass the computed
-> >> random offset as a very early kernel parameter so that setup_vm would
-> >> only be called once (per kernel).
-> >
-> > Actually, I had tried something like you said, if that, we would
-> > encounter some difficulties. We need to limit kaslr implementation to
-> > use local symbols only, including all the functions which were used in
-> > other files, because the kernel is built as pie, so the global symbols
-> > need to be accessed by got table. If we want to access global symbols,
-> > we need to do relocation first, but even if we did relocation first,
-> > the content of each got table entry would be virtual address not
-> > physical address, it would cause error during MMU disabled.
->
-> The first time we enter setup_vm, relocations are done based on current
-> kernel_virt_addr so the GOT is already filled with virtual addresses
-> when MMU is disabled and it works since init.c is compiled with -fno-pie
-> option. So I'm not sure it would work differently from what you already d=
-o.
->
-
-Yes, we need to apply -fno-pie to kaslr.c, but it might not be enough,
-because we leveraged other code in linux source as well, such as
-libfdt to parse dtb, so we also need to apply the -fno-pie to all
-these files. Moreover, the relocation function needs to be extracted
-from setup_vm, because we have to finish relocation and calculation of
-random offset before setup_vm. So finally, it would be easier to me on
-MMU enabled.
-
-> Alex
->
-> > Maybe we
-> > could overcome these problems, but it seems to me that it would be
-> > more difficult.
-> >
-> >>
-> >> Alex
+Could you give any instructions how to convert to 32-bit GRUB please?
