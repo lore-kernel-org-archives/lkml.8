@@ -2,123 +2,132 @@ Return-Path: <SRS0=n+Ub=5Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1882C2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 20:34:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA8B5C2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 20:36:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7703A2082D
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 20:34:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586464482;
-	bh=iJ3yn9Hoe/emMfC2mf/MoI/2PrilVA/uh+edAWLaatU=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=SfGFl2+J6Vu2AexKDBYePDOzf4bWKyNRGdEUCFTpW+0ewS6A0TbuPk0R8KZr2+cjA
-	 3oglGOfgCh8tVMZ4opiaC08y8O3DqHbgsz2m5HXz6ce/p9VR0/mxqoGpwBmcGKK30O
-	 YTdCOfJhOAnGV0Y0jBTR6U1KCiGMpLRZ2jrwzQ3k=
+	by mail.kernel.org (Postfix) with ESMTP id 7EEFB2082D
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 20:36:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="K1cFSHTi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726908AbgDIUek (ORCPT
+        id S1726918AbgDIUgF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Apr 2020 16:34:40 -0400
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:33136 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726623AbgDIUek (ORCPT
+        Thu, 9 Apr 2020 16:36:05 -0400
+Received: from mail-pj1-f67.google.com ([209.85.216.67]:51158 "EHLO
+        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726623AbgDIUgE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Apr 2020 16:34:40 -0400
-Received: by mail-lj1-f194.google.com with SMTP id q22so1176904ljg.0
-        for <linux-kernel@vger.kernel.org>; Thu, 09 Apr 2020 13:34:38 -0700 (PDT)
+        Thu, 9 Apr 2020 16:36:04 -0400
+Received: by mail-pj1-f67.google.com with SMTP id b7so1783938pju.0;
+        Thu, 09 Apr 2020 13:36:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=a17YufEga9jnk+rgyH4vzLPfXMVuVPsDZ6W27y5AWxI=;
-        b=bcodf7k76qWbzKM2JNgsCzbqA1Xun50xmz3N3JshhB8QIIESOoi69MIBaCB91pvyt7
-         M7bvuW47x/pN2V6IJxSyeInBJZuttbCXX5J0NDPbruwBN6gG44tItnKv5mBm6V2zWKKl
-         paq/JWoKNaq7/n525kX/rdVAkPNBx4naEwJGk=
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=dFIub08dv1QQq5SgcObGuR/DyrCleszAJVI9be3EdCA=;
+        b=K1cFSHTiOgekug/s67L3AghkWAlJq8b+yZbE5hI1GI+hEGEj25JWhP0qUA0QTDNMYA
+         BweoAnl7DRMHegPwITP+6vnaZPuWbpAwc7ExJR2rmdkFv3VF587cVh7/S0xqT6WFX/Fq
+         H7M75LG295cteN6e37Fgh0yFiFcJvocsPrUjeKni7uKgzqsBCH0x2+sSAebVURwwXntP
+         xfyx0iRNfbAYd6EHs851WBbzBSbX73ojIrHUW+ujEUZjHTbCJ/NxI3Nz7HXWt7+jacp2
+         KFq7EMJWE+H+B2yIuJtU5+bJ8LZ+0PKIhIW0YckEjHR/gta3f67E19wMddr6ksP79sTG
+         5oBw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=a17YufEga9jnk+rgyH4vzLPfXMVuVPsDZ6W27y5AWxI=;
-        b=AkiJOjKJtfMzUWl6zlX86IE+IoKH8LLWpvLuNK8Cl/ui1krDLNV2mWAoKnezMeSEnw
-         IiWBXU2c3+g7cUUd57Gac+va6Br7H5iyxHSSYNNIrfvAjXtcigtxU+pkwXkE7aoCrcVi
-         BWnvENUa3SPeq83KS4lDAo/N9zPj9j/pSylxih8V79BmeHkEzbYTsXllV8aF8jC+JSLW
-         I1kHhi7t4SnehICJ2CJJ8HAy4HKGfV+IotBvCv2klcg/qdTG8SC9edywAoltR0taU8Gs
-         emvkvglhAh4KSFfmoG8hDt5fBXMzgOHRJrcbAEWXGVDaTQzTOSNrlWn5JuXt3N5pycBj
-         rC9g==
-X-Gm-Message-State: AGi0PuZml64MX6HTiGKkMrg8v91H3bpMKhda8o6zZRcav4IP94GTs9nq
-        KQF3nbiQFavmnp/czOyWjroym8KsKi0=
-X-Google-Smtp-Source: APiQypLNxmI4jvuJ4PJ3PVm0dJraMyofQ+a+C+ecGXGIl9WeFlRXPkGEtmbCLuX8w5Sp4Fb9+veYQw==
-X-Received: by 2002:a2e:3a16:: with SMTP id h22mr915321lja.81.1586464477078;
-        Thu, 09 Apr 2020 13:34:37 -0700 (PDT)
-Received: from mail-lj1-f169.google.com (mail-lj1-f169.google.com. [209.85.208.169])
-        by smtp.gmail.com with ESMTPSA id e20sm16552960ljn.107.2020.04.09.13.34.35
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 09 Apr 2020 13:34:35 -0700 (PDT)
-Received: by mail-lj1-f169.google.com with SMTP id q19so1111161ljp.9
-        for <linux-kernel@vger.kernel.org>; Thu, 09 Apr 2020 13:34:35 -0700 (PDT)
-X-Received: by 2002:a2e:870f:: with SMTP id m15mr1007489lji.16.1586464475263;
- Thu, 09 Apr 2020 13:34:35 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=dFIub08dv1QQq5SgcObGuR/DyrCleszAJVI9be3EdCA=;
+        b=fVwpPN35x0evMHwaBC51AUOJZ0LEy2ufJ5jeY//lXPDfPxtC8YwKn6l2ZvamDN9fP7
+         UKCMl1OI5uP12Ez4zBkMJaWFCaHFLtMyCxWQL6O2DNK7mRUsE9oHuo2CWb2w9CJ1MYfI
+         hIiPMjMrvS6BJZRyIiugotOKPtFDmaf9vd07kiIz38PuI8D7scs63gqzDpaqHnyPonxX
+         9Qzzkznb/9WT8avp5QVe9i0NiObuDgMsjRzAsiE6XO6RgixNpRgfUupVQckdSJtc7E1T
+         7b476cOhku8BpW/DTpXvQnnulrxxhf+8KPtrByit6cYsOM7WKPu8bbPH6QeyjHrGtwD5
+         VetQ==
+X-Gm-Message-State: AGi0PuYzx5viZFF5uAtTsqF8XoZhP+bwDGvlxhApDm9obKFELaMHa1Ur
+        /tKNRtyUGxVYdM5D/GhSJzA=
+X-Google-Smtp-Source: APiQypIn3amnj/rWygPYz5aPM28w0LFg6zTOEBQT/lUYZ94DMZUxgOivrrJbNlYvlBUaX181p5yL/g==
+X-Received: by 2002:a17:902:7448:: with SMTP id e8mr1356414plt.115.1586464563816;
+        Thu, 09 Apr 2020 13:36:03 -0700 (PDT)
+Received: from dtor-ws ([2620:15c:202:201:3c2a:73a9:c2cf:7f45])
+        by smtp.gmail.com with ESMTPSA id bt19sm50710pjb.3.2020.04.09.13.36.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 09 Apr 2020 13:36:03 -0700 (PDT)
+Date:   Thu, 9 Apr 2020 13:36:01 -0700
+From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     Oliver Graute <oliver.graute@gmail.com>,
+        Marco Felsch <m.felsch@pengutronix.de>,
+        Oliver Graute <oliver.graute@kococonnector.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sasha Levin <sashal@kernel.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1] Input: edt-ft5x06 - fix crash on EDT EP0110M09
+Message-ID: <20200409203601.GQ75430@dtor-ws>
+References: <1586424425-27038-1-git-send-email-oliver.graute@gmail.com>
+ <20200409105253.qvezbikpbnrkig52@pengutronix.de>
+ <20200409120242.GA17410@portage>
+ <20200409123622.GA3676135@smile.fi.intel.com>
 MIME-Version: 1.0
-References: <20200408014010.80428-1-peterx@redhat.com> <20200408174732.bc448bbe41d190bfe5cc252e@linux-foundation.org>
- <20200409114940.GT21484@bombadil.infradead.org> <CACT4Y+ZvQ9UvVAwTjjD8Zxo0X_nfxa3+6n6TqWk2g+hahBwdCw@mail.gmail.com>
- <20200409111604.c778ff091c00fab5db095e48@linux-foundation.org>
- <CAHk-=wiU77DeNxQsU4XrDCk59asyTs=Hn+mnTx6-SHB1_fA2NQ@mail.gmail.com>
- <20200409121250.d6bba6965b86c8dfcf325fbc@linux-foundation.org>
- <CAHk-=wgy3XRiyRP7vdfF6bHwWGaB1RwyWJmyphh+Q3qYk6w27w@mail.gmail.com>
- <20200409195633.GZ21484@bombadil.infradead.org> <CAHk-=wi50jKXOFpsRkxrqu4upNnEKm1oRZ_SG1yJB9QVh=VJZQ@mail.gmail.com>
- <20200409202751.GA7976@gmail.com>
-In-Reply-To: <20200409202751.GA7976@gmail.com>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Thu, 9 Apr 2020 13:34:18 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wj64Uw1O9-f=XYCraLgbqBqqBHSdyO1JG80smvC-01Nug@mail.gmail.com>
-Message-ID: <CAHk-=wj64Uw1O9-f=XYCraLgbqBqqBHSdyO1JG80smvC-01Nug@mail.gmail.com>
-Subject: Re: [PATCH 0/2] mm: Two small fixes for recent syzbot reports
-To:     Eric Biggers <ebiggers@kernel.org>
-Cc:     Matthew Wilcox <willy@infradead.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Peter Xu <peterx@redhat.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux-MM <linux-mm@kvack.org>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
-        Stephen Rothwell <sfr@canb.auug.org.au>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200409123622.GA3676135@smile.fi.intel.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 9, 2020 at 1:27 PM Eric Biggers <ebiggers@kernel.org> wrote:
->
-> Would it help if bugs blocking testing on linux-next were Cc'ed to
-> linux-next@vger.kernel.org, so that Stephen could investigate?
+On Thu, Apr 09, 2020 at 03:36:22PM +0300, Andy Shevchenko wrote:
+> On Thu, Apr 09, 2020 at 02:02:42PM +0200, Oliver Graute wrote:
+> > On 09/04/20, Marco Felsch wrote:
+> > > Hi Oliver,
+> > > 
+> > > thanks for your patch.
+> > > 
+> > > On 20-04-09 11:27, Oliver Graute wrote:
+> > > > From: Oliver Graute <oliver.graute@kococonnector.com>
+> > > 
+> > > ...
+> > > 
+> > > >  drivers/input/touchscreen/edt-ft5x06.c | 4 ----
+> > > >  1 file changed, 4 deletions(-)
+> > > > 
+> > > > diff --git a/drivers/input/touchscreen/edt-ft5x06.c b/drivers/input/touchscreen/edt-ft5x06.c
+> > > > index 06aa8ba0b6d7..6fbc87d041a1 100644
+> > > > --- a/drivers/input/touchscreen/edt-ft5x06.c
+> > > > +++ b/drivers/input/touchscreen/edt-ft5x06.c
+> > > > @@ -819,10 +819,6 @@ static int edt_ft5x06_ts_identify(struct i2c_client *client,
+> > > >  	 * to have garbage in there
+> > > >  	 */
+> > > >  	memset(rdbuf, 0, sizeof(rdbuf));
+> > > > -	error = edt_ft5x06_ts_readwrite(client, 1, "\xBB",
+> > > > -					EDT_NAME_LEN - 1, rdbuf);
+> > > > -	if (error)
+> > > > -		return error;
+> > > 
+> > > 
+> > > I don't see how this call can corrupt the stack..
+> > 
+> > I admit that this is strange. The patch fixed my problems so I posted
+> > it. Still interested in the root-cause.
+> 
+> I'm wondering how you nailed down to this function? Have you able to use kASAN?
+> 
+> By the way, what I²C controller behind this? Maybe the bug in its driver?
 
-Maybe. I'll let Stephen say.
+I would try instrumenting drivers/i2c/busses/i2c-imx-lpi2c.c to make
+sure it does not try to stuff into the rdbuf more data than requested...
 
-But I think the big issue is the "blocking testing" part.
+Thanks.
 
-If it's "just" regular bugs, then:
-
-> FWIW, the issue of "syzbot report sent and ignored for months/years" is actually
-> a much broader one which applies to all bugs, not just build / test breakages.
-
-I don't  know what to do about that, but it may be that people just
-don't judge the bugs interesting or assume that they are old.
-
-That's what made bugzilla so useless - being flooded with stale bugs
-that might not be worth worrying about, and no way to really tell.
-
-So old bugs generally should be aged out, and then if they still
-happen, prioritized. With "this keeps us from even finding new bugs"
-being a fairly high priority..
-
-One de-motivational issue with syzbot reported bugs may be that they
-sometimes get sent to the wrong set of people - but still wide enough
-that everybody feels it's somebody elses issue. A kind of bystander
-effect for bugs.
-
-                Linus
+-- 
+Dmitry
