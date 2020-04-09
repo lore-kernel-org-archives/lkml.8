@@ -2,97 +2,80 @@ Return-Path: <SRS0=n+Ub=5Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D456C2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 19:55:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC798C2BA19
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 19:56:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E798B2084D
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 19:55:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586462139;
-	bh=w8kOwNf8SSxiuY6rSlwM6iiARoUIlHsuXczFkoIS32I=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=WcR7uWMUNqSROhKCWOPNCovYq6MKlyxrCv7cqRl7cmdQXG+eFxhg2hg8zJFzTdCao
-	 tMR2SQN+rVl7xkFQV74Ol+rqWDXrV97NVSjtc1mzV7R6+9YFx98LAHjzxArCQ528ip
-	 7KMI92RpMX7kfReCuKcTbOE50VFM+YqlaKXEzvHY=
+	by mail.kernel.org (Postfix) with ESMTP id ACB7F2084D
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 19:56:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="gJfrFOtE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726819AbgDITzh (ORCPT
+        id S1726872AbgDIT4i (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Apr 2020 15:55:37 -0400
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:37415 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725970AbgDITzh (ORCPT
+        Thu, 9 Apr 2020 15:56:38 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:50104 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725970AbgDIT4h (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Apr 2020 15:55:37 -0400
-Received: by mail-lj1-f195.google.com with SMTP id r24so1032191ljd.4
-        for <linux-kernel@vger.kernel.org>; Thu, 09 Apr 2020 12:55:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=FWqxa7IgEF9kjblzeGUACdh2V+Kc1/x9y1BsC32Ew80=;
-        b=aGkY8jiS6vcqO54+MzZBq6t09AZ9z9nNDAnW2XAwn+SlblvC8sObX5Tr+07IwPurpA
-         Tuaoiydplp3y51TfJ36L1C78h376noZYZ1tlNKwp67EXunNuIaFgvF6lyQsDZtvXg3TS
-         yiPcAguS17DgYZhWDB9geFPpXHoUef6RG+gCY=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=FWqxa7IgEF9kjblzeGUACdh2V+Kc1/x9y1BsC32Ew80=;
-        b=PKFDGz7eKJn32FMVMqWmRjBFaQ/5UkLvbTaNp5zIDHYXPf0mp9QvUjkL3q7cDM3Ej+
-         xbNO1G0YWnW1zidduS4bwM9arzuT4Qj7Mrubvuo5J5/oVyhEsUwvp385LKt5cKynmbI8
-         xZBgEYt6tvyZQnDWKtABX3rBh5srRI9cRvPzaiFqkEQMlFarhx1dUNelJ/dQ8TudyZdb
-         EnciFrTApumj149WWVy2UZB0tEH2aQsLKJ51yFF9cRySMG4VprS08l7sZjQ8JVz6EtdX
-         vRzbgNweCzCITp1w/rwpTpf4yGIVkt+MBxGWJN0MZsswpbSz+2CUVmH0cUv64jVqOJdm
-         a8RQ==
-X-Gm-Message-State: AGi0PuaUgTxzgP+8F8LvnToAjZ3WeOo8JuABf+PRre3u1GjIzQy+OcUQ
-        ITYyoV/7A2hRpz8vAQ6rS+LRm/+hzsM=
-X-Google-Smtp-Source: APiQypJ4I5TKqO4xPnShJirGJZpd8ibsjbD15EuyxOm7t+ZNB0Mvye2Zlrhyt3x8tbZi7S6Coa26qw==
-X-Received: by 2002:a2e:a176:: with SMTP id u22mr913260ljl.84.1586462134669;
-        Thu, 09 Apr 2020 12:55:34 -0700 (PDT)
-Received: from mail-lj1-f174.google.com (mail-lj1-f174.google.com. [209.85.208.174])
-        by smtp.gmail.com with ESMTPSA id o6sm15239060lji.15.2020.04.09.12.55.33
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 09 Apr 2020 12:55:33 -0700 (PDT)
-Received: by mail-lj1-f174.google.com with SMTP id i20so1020163ljn.6
-        for <linux-kernel@vger.kernel.org>; Thu, 09 Apr 2020 12:55:33 -0700 (PDT)
-X-Received: by 2002:a2e:8652:: with SMTP id i18mr901347ljj.265.1586462132767;
- Thu, 09 Apr 2020 12:55:32 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200409071133.31734-1-mhocko@kernel.org>
-In-Reply-To: <20200409071133.31734-1-mhocko@kernel.org>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Thu, 9 Apr 2020 12:55:17 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wg_vgcq6R_JXUq0+GXuSLFV8tvfSTzFWjGTimJN1pjF+A@mail.gmail.com>
-Message-ID: <CAHk-=wg_vgcq6R_JXUq0+GXuSLFV8tvfSTzFWjGTimJN1pjF+A@mail.gmail.com>
-Subject: Re: [PATCH] mm, gup: return EINTR when gup is interrupted by fatal signals
-To:     Michal Hocko <mhocko@kernel.org>
+        Thu, 9 Apr 2020 15:56:37 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=i/Ib4BiClvleXIoK3v98aLbfzb+Rs0/mxLWIdU8QNHc=; b=gJfrFOtEqUP/OBZzznRgqVXVm0
+        80qAaIzwYAgXUr/zh5LgvB+b06t7+mrAPxPKHmhgUqULxH3uALGGPjhh8ZCYGL9fi0wJdY+Nz4txt
+        S7NEG+eVuhBISAg5MQl25PT0qwkif3dWp7Poj5URV0xESkr69XYfQcENplfXKEoknb+Q2QflCiku4
+        BxU1IibcZ535RjuxqHmxxaHM1bJ4jdK5jDJKDVceu0YVnSe64MyptqeKt0sPWLhdrJHtzZUinXVtY
+        HPQrgtQYSkbO8F2NuBxeKNqOKQDMb8ldB0Pvrxankp9cRn8L8HQpl5ZCKToW5Rldfn8Al3AZcBel5
+        IATvMDoQ==;
+Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jMdHu-0007pI-2m; Thu, 09 Apr 2020 19:56:34 +0000
+Date:   Thu, 9 Apr 2020 12:56:33 -0700
+From:   Matthew Wilcox <willy@infradead.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
 Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Peter Xu <peterx@redhat.com>, Hillf Danton <hdanton@sina.com>,
-        Linux-MM <linux-mm@kvack.org>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Peter Xu <peterx@redhat.com>,
         LKML <linux-kernel@vger.kernel.org>,
-        Michal Hocko <mhocko@suse.com>
-Content-Type: text/plain; charset="UTF-8"
+        Linux-MM <linux-mm@kvack.org>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
+        Stephen Rothwell <sfr@canb.auug.org.au>
+Subject: Re: [PATCH 0/2] mm: Two small fixes for recent syzbot reports
+Message-ID: <20200409195633.GZ21484@bombadil.infradead.org>
+References: <20200408014010.80428-1-peterx@redhat.com>
+ <20200408174732.bc448bbe41d190bfe5cc252e@linux-foundation.org>
+ <20200409114940.GT21484@bombadil.infradead.org>
+ <CACT4Y+ZvQ9UvVAwTjjD8Zxo0X_nfxa3+6n6TqWk2g+hahBwdCw@mail.gmail.com>
+ <20200409111604.c778ff091c00fab5db095e48@linux-foundation.org>
+ <CAHk-=wiU77DeNxQsU4XrDCk59asyTs=Hn+mnTx6-SHB1_fA2NQ@mail.gmail.com>
+ <20200409121250.d6bba6965b86c8dfcf325fbc@linux-foundation.org>
+ <CAHk-=wgy3XRiyRP7vdfF6bHwWGaB1RwyWJmyphh+Q3qYk6w27w@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHk-=wgy3XRiyRP7vdfF6bHwWGaB1RwyWJmyphh+Q3qYk6w27w@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 9, 2020 at 12:11 AM Michal Hocko <mhocko@kernel.org> wrote:
->
-> ERESTARTSYS is also quite confusing because the signal is fatal and so
-> no handling will happen before returning to the userspace.
+On Thu, Apr 09, 2020 at 12:46:08PM -0700, Linus Torvalds wrote:
+> On Thu, Apr 9, 2020 at 12:12 PM Andrew Morton <akpm@linux-foundation.org> wrote:
+> >
+> > And now the challenge is to protect your tree from the bad patches.
+> 
+> Well, right now, yes.
+> 
+> But in the longer term, I think we want to protect linux-next from the
+> bad patches so that they don't poison the testing that the bots can
+> do.
+> 
+> So that's why I suggested that linux-next and syzbot have some
+> protocol to have things that cause syzbot pain to be removed from
+> linux-next more aggressively.
 
-Ack. Except I'd rephrase that as "no restart" rather than "no handling".
-
-We do end up handling the fatal signal, it's just that the handling
-doesn't involve restarting, it just involves dying.
-
-That said, I'll leave this to the usual channels, since it isn't
-exactly the same kind of urgent fix that I picked up directly..
-
-              Linus
+We should probably give Stephen a cc here ...
