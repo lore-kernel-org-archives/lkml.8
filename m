@@ -2,68 +2,88 @@ Return-Path: <SRS0=n+Ub=5Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 233A2C2D0EA
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 07:00:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F851C2D0EA
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 07:02:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E595C2072F
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 07:00:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E903720B1F
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 07:02:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726137AbgDIHAH (ORCPT
+        id S1726523AbgDIHCq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Apr 2020 03:00:07 -0400
-Received: from mx2.suse.de ([195.135.220.15]:44216 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725783AbgDIHAH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Apr 2020 03:00:07 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 66991AC64;
-        Thu,  9 Apr 2020 07:00:05 +0000 (UTC)
-From:   Juergen Gross <jgross@suse.com>
-To:     xen-devel@lists.xenproject.org, x86@kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     Juergen Gross <jgross@suse.com>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>
-Subject: [PATCH] x86/xen: fix booting 32-bit pv guest
-Date:   Thu,  9 Apr 2020 09:00:01 +0200
-Message-Id: <20200409070001.16675-1-jgross@suse.com>
-X-Mailer: git-send-email 2.16.4
+        Thu, 9 Apr 2020 03:02:46 -0400
+Received: from lhrrgout.huawei.com ([185.176.76.210]:2645 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725783AbgDIHCq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Apr 2020 03:02:46 -0400
+Received: from lhreml724-chm.china.huawei.com (unknown [172.18.7.106])
+        by Forcepoint Email with ESMTP id 0F0463508B4D76666315;
+        Thu,  9 Apr 2020 08:02:45 +0100 (IST)
+Received: from [127.0.0.1] (10.47.11.47) by lhreml724-chm.china.huawei.com
+ (10.201.108.75) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1913.5; Thu, 9 Apr 2020
+ 08:02:44 +0100
+Subject: Re: [RFC PATCH] perf/smmuv3: Fix shared interrupt handling
+To:     Robin Murphy <robin.murphy@arm.com>,
+        "will@kernel.org" <will@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>
+CC:     "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        Shameerali Kolothum Thodi 
+        <shameerali.kolothum.thodi@huawei.com>,
+        "harb@amperecomputing.com" <harb@amperecomputing.com>,
+        "tuanphan@os.amperecomputing.com" <tuanphan@os.amperecomputing.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <d73dd8c3579fbf713d6215317404549aede8ad2d.1586363449.git.robin.murphy@arm.com>
+From:   John Garry <john.garry@huawei.com>
+Message-ID: <34dd7c2e-b6db-684f-f0a2-73f2e6951308@huawei.com>
+Date:   Thu, 9 Apr 2020 08:02:20 +0100
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.2
+MIME-Version: 1.0
+In-Reply-To: <d73dd8c3579fbf713d6215317404549aede8ad2d.1586363449.git.robin.murphy@arm.com>
+Content-Type: text/plain; charset="gbk"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.47.11.47]
+X-ClientProxiedBy: lhreml738-chm.china.huawei.com (10.201.108.188) To
+ lhreml724-chm.china.huawei.com (10.201.108.75)
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit 2f62f36e62daec ("x86/xen: Make the boot CPU idle task reliable")
-introduced a regression for booting 32 bit Xen PV guests: the address
-of the initial stack needs to be a virtual one.
+On 08/04/2020 17:49, Robin Murphy wrote:
+> IRQF_SHARED is dangerous, since it allows other agents to retarget the
+> IRQ's affinity without migrating PMU contexts to match, breaking the way
+> in which perf manages mutual exclusion for accessing events. Although
+> this means it's not realistically possible to support PMU IRQs being
+> shared with other drivers, we *can* handle sharing between multiple PMU
+> instances with some explicit affinity bookkeeping and manual interrupt
+> multiplexing.
 
-Fixes: 2f62f36e62daec ("x86/xen: Make the boot CPU idle task reliable")
-Signed-off-by: Juergen Gross <jgross@suse.com>
----
- arch/x86/xen/xen-head.S | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Hi Robin,
 
-diff --git a/arch/x86/xen/xen-head.S b/arch/x86/xen/xen-head.S
-index 7d1c4fcbe8f7..1ba601df3a37 100644
---- a/arch/x86/xen/xen-head.S
-+++ b/arch/x86/xen/xen-head.S
-@@ -38,7 +38,7 @@ SYM_CODE_START(startup_xen)
- #ifdef CONFIG_X86_64
- 	mov initial_stack(%rip), %rsp
- #else
--	mov pa(initial_stack), %esp
-+	mov initial_stack, %esp
- #endif
- 
- #ifdef CONFIG_X86_64
--- 
-2.16.4
+Out of curiosity, do we even need to support shared interrupts for any 
+implementations today?
+
+D06 board:
+
+john@ubuntu:~$ more /proc/interrupts | grep smmuv3-pmu
+
+  989:  0  0  0  0  ITS-pMSI 133120 Edge  smmuv3-pmu
+  990:  0  0  0  0  ITS-pMSI 135168 Edge  smmuv3-pmu
+  991:  0  0  0  0  ITS-pMSI 137216 Edge  smmuv3-pmu
+  992:  0  0  0  0  ITS-pMSI 139264 Edge  smmuv3-pmu
+  993:  0  0  0  0  ITS-pMSI 141312 Edge  smmuv3-pmu
+  994:  0  0  0  0  ITS-pMSI 143360 Edge  smmuv3-pmu
+  995:  0  0  0  0  ITS-pMSI 145408 Edge  smmuv3-pmu
+  996:  0  0  0  0  ITS-pMSI 147456 Edge  smmuv3-pmu
+
+Thanks,
+John
 
