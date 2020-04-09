@@ -6,37 +6,38 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC7E4C2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 11:43:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D5A9C2BA2B
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 11:43:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 828BC20771
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 11:43:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1CC6B20A8B
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 11:43:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726689AbgDILm7 (ORCPT
+        id S1726703AbgDILnG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Apr 2020 07:42:59 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:12707 "EHLO huawei.com"
+        Thu, 9 Apr 2020 07:43:06 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:12632 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726521AbgDILmz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Apr 2020 07:42:55 -0400
-Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 84429AF7EE05142D64A7;
-        Thu,  9 Apr 2020 19:42:02 +0800 (CST)
-Received: from huawei.com (10.175.124.28) by DGGEMS409-HUB.china.huawei.com
- (10.3.19.209) with Microsoft SMTP Server id 14.3.487.0; Thu, 9 Apr 2020
- 19:41:53 +0800
+        id S1726502AbgDILnG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Apr 2020 07:43:06 -0400
+Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 6FEB96847F92ADA8CBD0;
+        Thu,  9 Apr 2020 19:43:02 +0800 (CST)
+Received: from huawei.com (10.175.124.28) by DGGEMS402-HUB.china.huawei.com
+ (10.3.19.202) with Microsoft SMTP Server id 14.3.487.0; Thu, 9 Apr 2020
+ 19:42:53 +0800
 From:   Jason Yan <yanaijie@huawei.com>
-To:     <agross@kernel.org>, <bjorn.andersson@linaro.org>,
-        <lgirdwood@gmail.com>, <broonie@kernel.org>,
-        <linux-arm-msm@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+To:     <tglx@linutronix.de>, <mingo@redhat.com>, <bp@alien8.de>,
+        <hpa@zytor.com>, <x86@kernel.org>, <rafael.j.wysocki@intel.com>,
+        <vincenzo.frascino@arm.com>, <jgross@suse.com>,
+        <drake@endlessm.com>, <mzhivich@akamai.com>,
+        <peterz@infradead.org>, <linux-kernel@vger.kernel.org>
 CC:     Jason Yan <yanaijie@huawei.com>
-Subject: [PATCH] regulator: qcom_rpm: remove defined but not used 'pm8921_ftsmps'
-Date:   Thu, 9 Apr 2020 19:40:26 +0800
-Message-ID: <20200409114026.38383-1-yanaijie@huawei.com>
+Subject: [PATCH] x86/tsc: make art_related_clocksource static
+Date:   Thu, 9 Apr 2020 19:41:22 +0800
+Message-ID: <20200409114122.39056-1-yanaijie@huawei.com>
 X-Mailer: git-send-email 2.17.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 X-Originating-IP: [10.175.124.28]
 X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
@@ -44,40 +45,30 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix the following gcc warning:
+Fix the following sparse warning:
 
-drivers/regulator/qcom_rpm-regulator.c:607:34: warning: ‘pm8921_ftsmps’
-defined but not used [-Wunused-const-variable=]
- static const struct qcom_rpm_reg pm8921_ftsmps = {
-                                  ^~~~~~~~~~~~~
+arch/x86/kernel/tsc.c:52:20: warning: symbol 'art_related_clocksource'
+was not declared. Should it be static?
 
 Reported-by: Hulk Robot <hulkci@huawei.com>
 Signed-off-by: Jason Yan <yanaijie@huawei.com>
 ---
- drivers/regulator/qcom_rpm-regulator.c | 10 ----------
- 1 file changed, 10 deletions(-)
+ arch/x86/kernel/tsc.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/regulator/qcom_rpm-regulator.c b/drivers/regulator/qcom_rpm-regulator.c
-index 7fc97f23fcf4..1ee8ec686ed3 100644
---- a/drivers/regulator/qcom_rpm-regulator.c
-+++ b/drivers/regulator/qcom_rpm-regulator.c
-@@ -604,16 +604,6 @@ static const struct qcom_rpm_reg pm8921_smps = {
- 	.supports_force_mode_bypass = false,
- };
+diff --git a/arch/x86/kernel/tsc.c b/arch/x86/kernel/tsc.c
+index fdd4c1078632..6550239a7fca 100644
+--- a/arch/x86/kernel/tsc.c
++++ b/arch/x86/kernel/tsc.c
+@@ -49,7 +49,7 @@ int tsc_clocksource_reliable;
+ static u32 art_to_tsc_numerator;
+ static u32 art_to_tsc_denominator;
+ static u64 art_to_tsc_offset;
+-struct clocksource *art_related_clocksource;
++static struct clocksource *art_related_clocksource;
  
--static const struct qcom_rpm_reg pm8921_ftsmps = {
--	.desc.linear_ranges = ftsmps_ranges,
--	.desc.n_linear_ranges = ARRAY_SIZE(ftsmps_ranges),
--	.desc.n_voltages = 101,
--	.desc.ops = &uV_ops,
--	.parts = &rpm8960_smps_parts,
--	.supports_force_mode_auto = true,
--	.supports_force_mode_bypass = false,
--};
--
- static const struct qcom_rpm_reg pm8921_ncp = {
- 	.desc.linear_ranges = ncp_ranges,
- 	.desc.n_linear_ranges = ARRAY_SIZE(ncp_ranges),
+ struct cyc2ns {
+ 	struct cyc2ns_data data[2];	/*  0 + 2*16 = 32 */
 -- 
 2.17.2
 
