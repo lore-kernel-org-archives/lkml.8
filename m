@@ -2,279 +2,587 @@ Return-Path: <SRS0=n+Ub=5Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE589C2BA2B
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 00:02:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2A6AC2BA2B
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 00:02:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 92EFA20757
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 00:02:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 74D7F20B1F
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 00:02:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="eolr92kS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726591AbgDIACG (ORCPT
+        id S1726613AbgDIACS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Apr 2020 20:02:06 -0400
-Received: from mga17.intel.com ([192.55.52.151]:18010 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726508AbgDIACG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Apr 2020 20:02:06 -0400
-IronPort-SDR: N+lPKJc4UBhyCal2dBKnU75kTU+nSfkMIhln8u6J7Refp//scvCMyk7L7MtWkFVxxx7eQliVqM
- eAj4zcBSXAYQ==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Apr 2020 17:02:01 -0700
-IronPort-SDR: +ypRmnB5gwAK8bb/tfHXzvqLQ68o9DPvqW5AIryWRX5RYB2yaXmNDSEUwi9NDoq7t5Zq2Or0DO
- EmN+ByjxbHVQ==
-X-IronPort-AV: E=Sophos;i="5.72,360,1580803200"; 
-   d="scan'208";a="330686210"
-Received: from rselimox-mobl.amr.corp.intel.com (HELO ldmartin-desk1) ([10.251.9.202])
-  by orsmga001-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Apr 2020 17:02:00 -0700
-Date:   Wed, 8 Apr 2020 17:02:00 -0700
-From:   Lucas De Marchi <lucas.demarchi@intel.com>
-To:     Heiner Kallweit <hkallweit1@gmail.com>
-Cc:     Jessica Yu <jeyu@kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-module@vger.kernel.org,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
-Subject: Re: RFC: Handle hard module dependencies that are not symbol-based
- (r8169 + realtek)
-Message-ID: <20200409000200.2qsqcbrzcztk6gmu@ldmartin-desk1>
-X-Patchwork-Hint: ignore
-References: <f8e3f271-82df-165f-63f1-6df73ba3d59c@gmail.com>
+        Wed, 8 Apr 2020 20:02:18 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:41668 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726508AbgDIACR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Apr 2020 20:02:17 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 039027Xf033354;
+        Wed, 8 Apr 2020 19:02:07 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1586390527;
+        bh=3SXoNqQ/Qohczo02kc6rTpyLmeIai7jU/VQTKDNDaGE=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=eolr92kScgpeDkjFsVxMur7HyuYZ8OYulDYZ12TMJzE+Xs68lxN/SQ203k9tcbVqT
+         tHDSIFTDPHJp+sOgIg8T/nYeVwdSUrXXM6OfP3vFP+GZoicD8xcWATQ/pluSwHBxEw
+         rD7ftJlHa2ylnHxuGzvzdfzriUN5+vPy+vMgLOaY=
+Received: from DFLE103.ent.ti.com (dfle103.ent.ti.com [10.64.6.24])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 039027nX117043
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 8 Apr 2020 19:02:07 -0500
+Received: from DFLE109.ent.ti.com (10.64.6.30) by DFLE103.ent.ti.com
+ (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Wed, 8 Apr
+ 2020 19:02:06 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE109.ent.ti.com
+ (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Wed, 8 Apr 2020 19:02:07 -0500
+Received: from [10.250.86.212] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 039026MX079644;
+        Wed, 8 Apr 2020 19:02:06 -0500
+Subject: Re: [PATCH 3/7] dt-bindings: remoteproc: Add bindings for R5F
+ subsystem on TI K3 SoCs
+To:     Rob Herring <robh+dt@kernel.org>
+CC:     Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Lokesh Vutla <lokeshvutla@ti.com>,
+        "open list:REMOTE PROCESSOR (REMOTEPROC) SUBSYSTEM" 
+        <linux-remoteproc@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <20200324201819.23095-1-s-anna@ti.com>
+ <20200324201819.23095-4-s-anna@ti.com>
+ <CAL_JsqKpC=W-y3OdeqSROhiKLbQKf3sGyCXzQH__Wr-O=QS4Tg@mail.gmail.com>
+From:   Suman Anna <s-anna@ti.com>
+Message-ID: <30cb4bee-fe79-8683-8225-fad174e0d630@ti.com>
+Date:   Wed, 8 Apr 2020 19:02:06 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <f8e3f271-82df-165f-63f1-6df73ba3d59c@gmail.com>
+In-Reply-To: <CAL_JsqKpC=W-y3OdeqSROhiKLbQKf3sGyCXzQH__Wr-O=QS4Tg@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 01, 2020 at 11:20:20PM +0200, Heiner Kallweit wrote:
->Currently we have no way to express a hard dependency that is not
->a symbol-based dependency (symbol defined in module A is used in
->module B). Use case:
->Network driver ND uses callbacks in the dedicated PHY driver DP
->for the integrated PHY (namely read_page() and write_page() in
->struct phy_driver). If DP can't be loaded (e.g. because ND is in
->initramfs but DP is not), then phylib will use the generic
->PHY driver GP. GP doesn't implement certain callbacks that are
->needed by ND, therefore ND's probe has to bail out with an error
->once it detects that DP is not loaded.
->We have this problem with driver r8169 having such a dependency
->on PHY driver realtek. Some distributions have tools for
->configuring initramfs that consider hard dependencies based on
->depmod output. Means so far somebody can add r8169.ko to initramfs,
->and neither human being nor machine will have an idea that
->realtek.ko needs to be added too.
+Hi Rob,
 
-Could you expand on why softdep doesn't solve this problem
-with MODULE_SOFTDEP()
+On 3/26/20 11:53 AM, Rob Herring wrote:
+> On Tue, Mar 24, 2020 at 2:18 PM Suman Anna <s-anna@ti.com> wrote:
+>>
+>> The Texas Instruments K3 family of SoCs have one or more dual-core
+>> Arm Cortex R5F processor subsystems/clusters (R5FSS). The clusters
+>> can be split between multiple voltage domains as well. Add the device
+>> tree bindings document for these R5F subsystem devices. These R5F
+>> processors do not have an MMU, and so require fixed memory carveout
+>> regions matching the firmware image addresses. The nodes require more
+>> than one memory region, with the first memory region used for DMA
+>> allocations at runtime. The remaining memory regions are reserved
+>> and are used for the loading and running of the R5F remote processors.
+>> The R5F processors can also optionally use any internal on-chip SRAM
+>> memories either for executing code or using it as fast-access data.
+> 
+> I'm inclined to say the system DT stuff should be sorted out before
+> accepting this. Is the system DT stuff going to be useful for your R5
+> cores? Do you really want to be stuck with this binding?
 
-initramfs tools can already read it and modules can already expose them
-(they end up in /lib/modules/$(uname -r)/modules.softdep and modprobe
-makes use of them)
+Hmm, I am not dependent on System DT and prefer to be not gated by that.
+This is still all from the Linux host perspective, and we don't have any
+plans to use DT on the firmware-side.
 
-Lucas De Marchi
+> 
+>> The added example illustrates the DT nodes for the single R5FSS device
+>> present on K3 AM65x family of SoCs.
+>>
+>> Signed-off-by: Suman Anna <s-anna@ti.com>
+>> ---
+>> Hi Rob,
+>>
+>> The dt_bindings_check seems to throw couple of warnings around the
+>> usage of ranges because the tooling is adding the #address-cells
+>> and #size-cells of 1 by default, whereas our actual code uses 2.
+> 
+> Then change the default by specifying what you want. Or change the
+> example to be 1 cell. It is *just* an example.
 
->
->Attached patch set (two patches for kmod, one for the kernel)
->allows to express this hard dependency of ND from DP. depmod will
->read this dependency information and treat it like a symbol-based
->dependency. As a result tools e.g. populating initramfs can
->consider the dependency and place DP in initramfs if ND is in
->initramfs. On my system the patch set does the trick when
->adding following line to r8169_main.c:
->MODULE_HARDDEP("realtek");
->
->I'm interested in your opinion on the patches, and whether you
->maybe have a better idea how to solve the problem.
->
->Heiner
+OK, was using the actual dts nodes as how they would be added in our dts
+files. The only way to get rid of the warnings is to use 1 cell. I can
+do that for the R5F bindings, but cannot really do that for the DSPs
+since the addresses need 2 cells.
 
->From 290e7dee9f6043d677f08dc06e612e13ee0d2d83 Mon Sep 17 00:00:00 2001
->From: Heiner Kallweit <hkallweit1@gmail.com>
->Date: Tue, 31 Mar 2020 23:02:47 +0200
->Subject: [PATCH 1/2] depmod: add helper mod_add_dep_unique
->
->Create new helper mod_add_dep_unique(), next patch in this series will
->also make use of it.
->
->Signed-off-by: Heiner Kallweit <hkallweit1@gmail.com>
->---
-> tools/depmod.c | 26 +++++++++++++++++++-------
-> 1 file changed, 19 insertions(+), 7 deletions(-)
->
->diff --git a/tools/depmod.c b/tools/depmod.c
->index 875e314..5419d4d 100644
->--- a/tools/depmod.c
->+++ b/tools/depmod.c
->@@ -907,23 +907,35 @@ static void mod_free(struct mod *mod)
-> 	free(mod);
-> }
->
->-static int mod_add_dependency(struct mod *mod, struct symbol *sym)
->+static int mod_add_dep_unique(struct mod *mod, struct mod *dep)
-> {
-> 	int err;
->
->-	DBG("%s depends on %s %s\n", mod->path, sym->name,
->-	    sym->owner != NULL ? sym->owner->path : "(unknown)");
->-
->-	if (sym->owner == NULL)
->+	if (dep == NULL)
-> 		return 0;
->
->-	err = array_append_unique(&mod->deps, sym->owner);
->+	err = array_append_unique(&mod->deps, dep);
-> 	if (err == -EEXIST)
-> 		return 0;
-> 	if (err < 0)
-> 		return err;
->
->-	sym->owner->users++;
->+	dep->users++;
->+
->+	return 1;
->+}
->+
->+static int mod_add_dependency(struct mod *mod, struct symbol *sym)
->+{
->+	int err;
->+
->+	DBG("%s depends on %s %s\n", mod->path, sym->name,
->+	    sym->owner != NULL ? sym->owner->path : "(unknown)");
->+
->+	err = mod_add_dep_unique(mod, sym->owner);
->+	if (err <= 0)
->+		return err;
->+
-> 	SHOW("%s needs \"%s\": %s\n", mod->path, sym->name, sym->owner->path);
-> 	return 0;
-> }
->-- 
->2.26.0
->
+> 
+>> No issues are found with dtbs_check.
+> 
+> I doubt that if your dts matches the example.
 
->From b12fa0d85b21d84cdf4509c5048c67e17914eb28 Mon Sep 17 00:00:00 2001
->From: Heiner Kallweit <hkallweit1@gmail.com>
->Date: Mon, 30 Mar 2020 17:12:44 +0200
->Subject: [PATCH] module: add MODULE_HARDDEP
->
->Currently we have no way to express a hard dependency that is not a
->symbol-based dependency (symbol defined in module A is used in
->module B). Use case:
->Network driver ND uses callbacks in the dedicated PHY driver DP
->for the integrated PHY. If DP can't be loaded (e.g. because ND
->is in initramfs but DP is not), then phylib will load the generic
->PHY driver GP. GP doesn't implement certain callbacks that are
->used by ND, therefore ND's probe has to bail out with an error
->once it detects that DP is not loaded.
->This patch allows to express this hard dependency of ND from DP.
->depmod will read this dependency information and treat it like
->a symbol-based dependency. As a result tools e.g. populating
->initramfs can consider the dependency and place DP in initramfs
->if ND is in initramfs.
->
->Signed-off-by: Heiner Kallweit <hkallweit1@gmail.com>
->---
-> include/linux/module.h | 5 +++++
-> 1 file changed, 5 insertions(+)
->
->diff --git a/include/linux/module.h b/include/linux/module.h
->index 1ad393e62..f38d4107f 100644
->--- a/include/linux/module.h
->+++ b/include/linux/module.h
->@@ -169,6 +169,11 @@ extern void cleanup_module(void);
->  */
-> #define MODULE_SOFTDEP(_softdep) MODULE_INFO(softdep, _softdep)
->
->+/* Hard module dependencies that are not code dependencies
->+ * Example: MODULE_HARDDEP("module-foo module-bar")
->+ */
->+#define MODULE_HARDDEP(_harddep) MODULE_INFO(harddep, _harddep)
->+
-> /*
->  * MODULE_FILE is used for generating modules.builtin
->  * So, make it no-op when this is being built as a module
->-- 
->2.26.0
->
+The top-level cells value is 2 in our dts files (See either of
+arm64/dts/ti/k3-am65.dtsi or k3-j721e.dtsi).
 
->From af3a25833a160e029441eaf5a93f7c8625544296 Mon Sep 17 00:00:00 2001
->From: Heiner Kallweit <hkallweit1@gmail.com>
->Date: Wed, 1 Apr 2020 22:42:55 +0200
->Subject: [PATCH 2/2] depmod: add depmod_load_harddeps
->
->Load explicitly declared hard dependency information from modules and
->add it to the symbol-derived dependencies. This will allow
->depmod-based tools to consider hard dependencies that are not code
->dependencies.
->
->Signed-off-by: Heiner Kallweit <hkallweit1@gmail.com>
->---
-> tools/depmod.c | 38 ++++++++++++++++++++++++++++++++++++++
-> 1 file changed, 38 insertions(+)
->
->diff --git a/tools/depmod.c b/tools/depmod.c
->index 5419d4d..5771dc9 100644
->--- a/tools/depmod.c
->+++ b/tools/depmod.c
->@@ -1522,6 +1522,41 @@ static struct symbol *depmod_symbol_find(const struct depmod *depmod,
-> 	return hash_find(depmod->symbols, name);
-> }
->
->+static void depmod_load_harddeps(struct depmod *depmod, struct mod *mod)
->+{
->+
->+	struct kmod_list *l;
->+
->+	kmod_list_foreach(l, mod->info_list) {
->+		const char *key = kmod_module_info_get_key(l);
->+		const char *dep_name;
->+		struct mod *dep;
->+		char *value;
->+
->+		if (!streq(key, "harddep"))
->+			continue;
->+
->+		value = strdup(kmod_module_info_get_value(l));
->+		if (value == NULL)
->+			return;
->+
->+		dep_name = strtok(value, " \t");
->+
->+		while (dep_name) {
->+			dep = hash_find(depmod->modules_by_name, dep_name);
->+			if (dep)
->+				mod_add_dep_unique(mod, dep);
->+			else
->+				WRN("harddep: %s: unknown dependency %s\n",
->+				    mod->modname, dep_name);
->+
->+			dep_name = strtok(NULL, " \t");
->+		}
->+
->+		free(value);
->+	}
->+}
->+
-> static int depmod_load_modules(struct depmod *depmod)
-> {
-> 	struct mod **itr, **itr_end;
->@@ -1569,6 +1604,9 @@ static int depmod_load_module_dependencies(struct depmod *depmod, struct mod *mo
-> 	struct kmod_list *l;
->
-> 	DBG("do dependencies of %s\n", mod->path);
->+
->+	depmod_load_harddeps(depmod, mod);
->+
-> 	kmod_list_foreach(l, mod->dep_sym_list) {
-> 		const char *name = kmod_module_dependency_symbol_get_symbol(l);
-> 		uint64_t crc = kmod_module_dependency_symbol_get_crc(l);
->-- 
->2.26.0
->
+> 
+>>
+>> regards
+>> Suman
+>>
+>>  .../bindings/remoteproc/ti,k3-r5f-rproc.yaml  | 338 ++++++++++++++++++
+>>  1 file changed, 338 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/remoteproc/ti,k3-r5f-rproc.yaml
+>>
+>> diff --git a/Documentation/devicetree/bindings/remoteproc/ti,k3-r5f-rproc.yaml b/Documentation/devicetree/bindings/remoteproc/ti,k3-r5f-rproc.yaml
+>> new file mode 100644
+>> index 000000000000..bbfc1e6ae884
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/remoteproc/ti,k3-r5f-rproc.yaml
+>> @@ -0,0 +1,338 @@
+>> +# SPDX-License-Identifier: (GPL-2.0-only or BSD-2-Clause)
+>> +%YAML 1.2
+>> +---
+>> +$id: http://devicetree.org/schemas/remoteproc/ti,k3-r5f-rproc.yaml#
+>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+>> +
+>> +title: TI K3 R5F processor subsystems
+>> +
+>> +maintainers:
+>> +  - Suman Anna <s-anna@ti.com>
+>> +
+>> +description: |
+>> +  The TI K3 family of SoCs usually have one or more dual-core Arm Cortex R5F
+>> +  processor subsystems/clusters (R5FSS). The dual core cluster can be used
+>> +  either in a LockStep mode providing safety/fault tolerance features or in a
+>> +  Split mode providing two individual compute cores for doubling the compute
+>> +  capacity. These are used together with other processors present on the SoC
+>> +  to achieve various system level goals.
+>> +
+>> +  Each Dual-Core R5F sub-system is represented as a single DTS node
+>> +  representing the cluster, with a pair of child DT nodes representing
+>> +  the individual R5F cores. Each node has a number of required or optional
+>> +  properties that enable the OS running on the host processor to perform
+>> +  the device management of the remote processor and to communicate with the
+>> +  remote processor.
+>> +
+>> +# Required properties:
+>> +# --------------------
+>> +# The following are the mandatory properties:
+>> +
+>> +properties:
+>> +  $nodename:
+>> +    pattern: "^r5fss(@.*)?"
+>> +
+>> +  compatible:
+>> +    enum:
+>> +      - ti,am654-r5fss
+>> +      - ti,j721e-r5fss
+>> +
+>> +  power-domains:
+>> +    description: |
+>> +      Should contain a phandle to a PM domain provider node and an args
+>> +      specifier containing the R5FSS device id value. This property is
+>> +      as per the binding,
+>> +      Documentation/devicetree/bindings/soc/ti/sci-pm-domain.txt
+> 
+> What implementation of power domains is used is outside the scope of
+> this binding. I'd just drop the whole description as it is pretty
+> generic.
+
+OK.
+
+> 
+>> +    maxItems: 1
+>> +
+>> +  "#address-cells":
+>> +    const: 1
+>> +
+>> +  "#size-cells":
+>> +    const: 1
+>> +
+>> +  ranges:
+>> +    description: |
+>> +      Standard ranges definition providing address translations for
+>> +      local R5F TCM address spaces to bus addresses.
+>> +
+>> +# Optional properties:
+>> +# --------------------
+>> +
+>> +  lockstep-mode:
+> 
+> Needs a vendor prefix.
+
+Yep, will fix this one and all the others below.
+
+> 
+>> +    $ref: /schemas/types.yaml#/definitions/uint32
+>> +    enum: [0, 1]
+>> +    description: |
+>> +      Configuration Mode for the Dual R5F cores within the R5F
+>> +      cluster. Should be either a value of 1 (LockStep mode) or
+>> +      0 (Split mode), default is LockStep mode if omitted.
+>> +
+>> +# R5F Processor Child Nodes:
+>> +# ==========================
+>> +
+>> +patternProperties:
+>> +  "^r5f@[a-f0-9]+$":
+>> +    type: object
+>> +    description: |
+>> +        The R5F Sub-System device node should define two R5F child nodes, each
+>> +        node representing a TI instantiation of the Arm Cortex R5F core. There
+>> +        are some specific integration differences for the IP like the usage of
+>> +        a Region Address Translator (RAT) for translating the larger SoC bus
+>> +        addresses into a 32-bit address space for the processor.
+>> +
+>> +# Required properties:
+>> +# --------------------
+>> +# The following are the mandatory properties:
+>> +
+>> +    properties:
+>> +      compatible:
+>> +        enum:
+>> +          - ti,am654-r5f
+>> +          - ti,j721e-r5f
+>> +
+>> +      reg:
+>> +        description: |
+>> +          Should contain an entry for each value in 'reg-names'.
+>> +          Each entry should have the memory region's start address
+>> +          and the size of the region, the representation matching
+>> +          the parent node's '#address-cells' and '#size-cells' values.
+> 
+> That's every 'reg' property.
+> 
+>> +        maxItems: 2
+> 
+> You need to define what each one is:
+> 
+> items:
+>   - description: ...
+>   - description: ...
+
+OK, will fix.
+
+> 
+>> +
+>> +      reg-names:
+>> +        description: |
+>> +          Should contain strings with the names of the specific internal
+>> +          internal memory regions, and should be defined in this order
+>> +        maxItems: 2
+>> +        items:
+>> +          - const: atcm
+>> +          - const: btcm
+>> +
+>> +      ti,sci:
+>> +        $ref: /schemas/types.yaml#/definitions/phandle
+>> +        description:
+>> +          Should be a phandle to the TI-SCI System Controller node
+>> +
+>> +      ti,sci-dev-id:
+>> +        $ref: /schemas/types.yaml#/definitions/uint32
+>> +        description: |
+>> +          Should contain the TI-SCI device id corresponding to the R5F core.
+>> +          Please refer to the corresponding System Controller documentation
+>> +          for valid values for the R5F cores.
+>> +
+>> +      ti,sci-proc-ids:
+>> +        description: Should contain a single tuple of <proc_id host_id>.
+>> +        allOf:
+>> +          - $ref: /schemas/types.yaml#/definitions/uint32-matrix
+> 
+> Sounds more like an array.
+
+OK, I can modify this. Went with this originally to reflect the tuple,
+but guess both translate similarly for my usage.
+
+> 
+>> +          - maxItems: 1
+>> +            items:
+>> +              items:
+>> +                - description: TI-SCI processor id for the R5F core device
+>> +                - description: TI-SCI host id to which processor control
+>> +                               ownership should be transferred to
+>> +
+>> +      resets:
+>> +        description: |
+>> +          Should contain the phandle to the reset controller node
+>> +          managing the resets for this device, and a reset
+>> +          specifier. Please refer to the following reset bindings
+>> +          for the reset argument specifier,
+>> +          Documentation/devicetree/bindings/reset/ti,sci-reset.txt
+>> +            for AM65x and J721E SoCs
+> 
+> Drop. How many resets (maxItems or items list)?
+
+Yeah, this is 1, will update. Do you want me to drop just the specifier
+link or the entire description?
+
+> 
+>> +
+>> +      firmware-name:
+>> +        description: |
+>> +          Should contain the name of the default firmware image
+>> +          file located on the firmware search path
+>> +
+>> +# The following properties are mandatory for R5F Core0 in both LockStep and Split
+>> +# modes, and are mandatory for R5F Core1 _only_ in Split mode. They are unused for
+>> +# R5F Core1 in LockStep mode:
+>> +
+>> +      mboxes:
+>> +        description: |
+>> +          OMAP Mailbox specifier denoting the sub-mailbox, to be used for
+>> +          communication with the remote processor. This property should match
+>> +          with the sub-mailbox node used in the firmware image. The specifier
+>> +          format is as per the bindings,
+>> +          Documentation/devicetree/bindings/mailbox/omap-mailbox.txt
+> 
+> How many?
+
+OK, will fix.
+
+> 
+>> +
+>> +      memory-region:
+>> +        minItems: 2
+>> +        description: |
+>> +          phandle to the reserved memory nodes to be associated with the remoteproc
+>> +          device. There should be atleast two reserved memory nodes defined - the
+> 
+> What's the max number? As is, it will be 2.
+
+Aah, I misinterpreted that not having would be open-ended. OK, I will
+have to give an arbitrary number here (maybe 4 or 8). Can we update this
+later on if a usecase really needs more?
+
+> 
+>> +          first one would be used for dynamic DMA allocations like vrings and vring
+>> +          buffers, and the remaining ones used for the firmware image sections. The
+>> +          reserved memory nodes should be carveout nodes, and should be defined as
+>> +          per the bindings in
+>> +          Documentation/devicetree/bindings/reserved-memory/reserved-memory.txt
+>> +
+>> +# Optional properties:
+>> +# --------------------
+>> +# The following properties are optional properties for each of the R5F cores:
+>> +
+>> +      atcm-enable:
+> 
+> Vendor prefix needed.
+> 
+>> +        $ref: /schemas/types.yaml#/definitions/uint32
+>> +        enum: [0, 1]
+>> +        description: |
+>> +          R5F core configuration mode dictating if ATCM should be enabled. R5F
+>> +          view of ATCM dictated by loczrama property. Should be either a value
+>> +          of 1 (enabled) or 0 (disabled), default is disabled if omitted.
+>> +
+>> +      btcm-enable:
+> 
+> ditto
+> 
+>> +        $ref: /schemas/types.yaml#/definitions/uint32
+>> +        enum: [0, 1]
+>> +        description: |
+>> +          R5F core configuration mode dictating if BTCM should be enabled. R5F
+>> +          view of BTCM dictated by loczrama property. Should be either a value
+>> +          of 1 (enabled) or 0 (disabled), default is enabled if omitted.
+>> +
+>> +      loczrama:
+> 
+> ditto
+> 
+>> +        $ref: /schemas/types.yaml#/definitions/uint32
+>> +        enum: [0, 1]
+>> +        description: |
+>> +          R5F core configuration mode dictating which TCM should appear at
+>> +          address 0 (from core's view). Should be either a value of 1 (ATCM
+>> +          at 0x0) or 0 (BTCM at 0x0), default value is 1 if omitted.
+> 
+> I can't decipher how you came up with 'loczrama' based on the description.
+
+That's actually the signal name from the Arm R5 specs.
+
+> 
+>> +
+>> +      sram:
+>> +        $ref: /schemas/types.yaml#/definitions/phandle-array
+>> +        minItems: 1
+>> +        description: |
+>> +          pHandles to one or more reserved on-chip SRAM region. The regions
+>> +          should be defined as child nodes of the respective SRAM node, and
+>> +          should be defined as per the generic bindings in,
+>> +          Documentation/devicetree/bindings/sram/sram.yaml
+>> +
+>> +    required:
+>> +     - compatible
+>> +     - reg
+>> +     - reg-names
+>> +     - ti,sci
+>> +     - ti,sci-dev-id
+>> +     - ti,sci-proc-ids
+>> +     - resets
+>> +     - firmware-name
+>> +
+>> +    additionalProperties: false
+>> +
+>> +required:
+>> + - compatible
+>> + - power-domains
+>> + - "#address-cells"
+>> + - "#size-cells"
+>> + - ranges
+>> +
+>> +additionalProperties: false
+>> +
+>> +examples:
+>> +  - |
+>> +
+>> +    //Example: AM654 SoC
+>> +    /* R5F DDR Carveout reserved memory nodes */
+>> +    reserved-memory {
+>> +        #address-cells = <2>;
+>> +        #size-cells = <2>;
+>> +        ranges;
+>> +
+>> +        mcu_r5fss0_core1_dma_memory_region: r5f-dma-memory@9b000000 {
+>> +            compatible = "shared-dma-pool";
+>> +            reg = <0x00 0x9b000000 0x00 0x100000>;
+>> +            no-map;
+>> +        };
+>> +
+>> +        mcu_r5fss0_core1_memory_region: r5f-memory@9b100000 {
+>> +            compatible = "shared-dma-pool";
+>> +            reg = <0x00 0x9b100000 0x00 0xf00000>;
+>> +            no-map;
+>> +        };
+>> +
+>> +        mcu_r5fss0_core0_dma_memory_region: r5f-dma-memory@9c000000 {
+>> +            compatible = "shared-dma-pool";
+>> +            reg = <0x00 0x9c000000 0x00 0x100000>;
+>> +            no-map;
+>> +        };
+>> +
+>> +        mcu_r5fss0_core0_memory_region: r5f-memory@9c100000 {
+>> +            compatible = "shared-dma-pool";
+>> +            reg = <0x00 0x9c100000 0x00 0x700000>;
+>> +            no-map;
+>> +        };
+>> +    };
+>> +
+>> +    cbass_main: interconnect@100000 {
+> 
+> bus@...
+
+Yeah, will update the example to use bus. The DTS nodes in the kernel
+are already using the interconnect name.
+
+> 
+> Doesn't look like the right address either.
+
+Yeah, I skipped the actual first entry from the ranges, and only
+mentioned the ones that I am using in the nodes. Will fix this.
+
+> 
+>> +        compatible = "simple-bus";
+>> +        #address-cells = <2>;
+>> +        #size-cells = <2>;
+>> +        ranges = <0x00 0x41000000 0x00 0x41000000 0x00 0x00020000>,
+>> +                 <0x00 0x41400000 0x00 0x41400000 0x00 0x00020000>,
+>> +                 <0x00 0x41c00000 0x00 0x41c00000 0x00 0x00080000>;
+>> +
+>> +        cbass_mcu: interconnect@28380000 {
+> 
+> Doesn't look like the right address.
+
+Same as above.
+
+> 
+>> +            compatible = "simple-bus";
+>> +            #address-cells = <2>;
+>> +            #size-cells = <2>;
+>> +            ranges = <0x00 0x41000000 0x00 0x41000000 0x00 0x00020000>, /* MCU R5F Core0 */
+>> +                     <0x00 0x41400000 0x00 0x41400000 0x00 0x00020000>, /* MCU R5F Core1 */
+>> +                     <0x00 0x41c00000 0x00 0x41c00000 0x00 0x00080000>; /* MCU SRAM */
+>> +
+>> +            /* MCU domain SRAM node */
+>> +            mcu_ram: mcu-ram@41c00000 {
+> 
+> I would omit this node from the example. Nothing special here really.
+
+Showcasing the optional sram property usage from the mcu_r5f0 node.
+
+regards
+Suman
+
+> 
+>> +                compatible = "mmio-sram";
+>> +                reg = <0x00 0x41c00000 0x00 0x80000>;
+>> +                ranges = <0x0 0x00 0x41c00000 0x80000>;
+>> +                #address-cells = <1>;
+>> +                #size-cells = <1>;
+>> +
+>> +                mcu_r5fss0_core0_sram: r5f-sram@0 {
+>> +                    reg = <0x0 0x40000>;
+>> +                };
+>> +            };
+>> +
+>> +            /* AM65x MCU R5FSS node */
+>> +            mcu_r5fss0: r5fss@41000000 {
+>> +                compatible = "ti,am654-r5fss";
+>> +                power-domains = <&k3_pds 129>;
+>> +                lockstep-mode = <1>;
+>> +                #address-cells = <1>;
+>> +                #size-cells = <1>;
+>> +                ranges = <0x41000000 0x00 0x41000000 0x20000>,
+>> +                         <0x41400000 0x00 0x41400000 0x20000>;
+>> +
+>> +                mcu_r5f0: r5f@41000000 {
+>> +                    compatible = "ti,am654-r5f";
+>> +                    reg = <0x41000000 0x00008000>,
+>> +                          <0x41010000 0x00008000>;
+>> +                    reg-names = "atcm", "btcm";
+>> +                    ti,sci = <&dmsc>;
+>> +                    ti,sci-dev-id = <159>;
+>> +                    ti,sci-proc-ids = <0x01 0xFF>;
+>> +                    resets = <&k3_reset 159 1>;
+>> +                    firmware-name = "am65x-mcu-r5f0_0-fw";
+>> +                    atcm-enable = <1>;
+>> +                    btcm-enable = <1>;
+>> +                    loczrama = <1>;
+>> +                    mboxes = <&mailbox0 &mbox_mcu_r5fss0_core0>;
+>> +                    memory-region = <&mcu_r5fss0_core0_dma_memory_region>,
+>> +                                    <&mcu_r5fss0_core0_memory_region>;
+>> +                    sram = <&mcu_r5fss0_core0_sram>;
+>> +                };
+>> +
+>> +                mcu_r5f1: r5f@41400000 {
+>> +                    compatible = "ti,am654-r5f";
+>> +                    reg = <0x41400000 0x00008000>,
+>> +                          <0x41410000 0x00008000>;
+>> +                    reg-names = "atcm", "btcm";
+>> +                    ti,sci = <&dmsc>;
+>> +                    ti,sci-dev-id = <245>;
+>> +                    ti,sci-proc-ids = <0x02 0xFF>;
+>> +                    resets = <&k3_reset 245 1>;
+>> +                    firmware-name = "am65x-mcu-r5f0_1-fw";
+>> +                    atcm-enable = <1>;
+>> +                    btcm-enable = <1>;
+>> +                    loczrama = <1>;
+>> +                    mboxes = <&mailbox1 &mbox_mcu_r5fss0_core1>;
+>> +               };
+>> +           };
+>> +        };
+>> +    };
+>> --
+>> 2.23.0
+>>
 
