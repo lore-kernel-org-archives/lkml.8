@@ -2,161 +2,124 @@ Return-Path: <SRS0=n+Ub=5Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C264C2BA19
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 17:06:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03A06C2BA19
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 17:07:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 222EF20768
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 17:06:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C575620678
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 17:07:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="W4cuyUmn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728019AbgDIRGt (ORCPT
+        id S1728060AbgDIRHN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Apr 2020 13:06:49 -0400
-Received: from out03.mta.xmission.com ([166.70.13.233]:38906 "EHLO
-        out03.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727984AbgDIRGt (ORCPT
+        Thu, 9 Apr 2020 13:07:13 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:39756 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728026AbgDIRHM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Apr 2020 13:06:49 -0400
-Received: from in01.mta.xmission.com ([166.70.13.51])
-        by out03.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.90_1)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1jMadb-0000tW-PT; Thu, 09 Apr 2020 11:06:47 -0600
-Received: from ip68-227-160-95.om.om.cox.net ([68.227.160.95] helo=x220.xmission.com)
-        by in01.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.87)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1jMada-0005PU-Py; Thu, 09 Apr 2020 11:06:47 -0600
-From:   ebiederm@xmission.com (Eric W. Biederman)
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Waiman Long <longman@redhat.com>, Ingo Molnar <mingo@kernel.org>,
-        Will Deacon <will@kernel.org>,
-        Bernd Edlinger <bernd.edlinger@hotmail.de>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Alexey Gladkov <gladkov.alexey@gmail.com>,
-        Oleg Nesterov <oleg@redhat.com>
-References: <87blobnq02.fsf@x220.int.ebiederm.org>
-        <CAHk-=wgYCUbEmwieOBzVNZbSAM9wCZA8Z0665onpNnEcC-UpDg@mail.gmail.com>
-        <AM6PR03MB5170B606F9AC663225EC9609E4C60@AM6PR03MB5170.eurprd03.prod.outlook.com>
-        <CAHk-=whM3r7zrm8mSi7HJhuZbYiXx9PFU5VQYeKm6Low=r15eQ@mail.gmail.com>
-        <AM6PR03MB517003D5965F48AC5FE7283DE4C60@AM6PR03MB5170.eurprd03.prod.outlook.com>
-        <CAHk-=wg5LvjumW9PVQiF7jB8yig98K8XTk4tHo9W-sYmxzW+9g@mail.gmail.com>
-        <87lfnda3w3.fsf@x220.int.ebiederm.org>
-        <CAHk-=wjxyGCj9675mf31uhoJCyHn74ON_+O6SjSqBSSvqWxC1Q@mail.gmail.com>
-        <87blo45keg.fsf@x220.int.ebiederm.org>
-        <CAHk-=whES-KCO6Bs93-QBK1tS5CfiWSi+v5D1a7Sc1TD5RFoaA@mail.gmail.com>
-        <87v9maxb5q.fsf@x220.int.ebiederm.org>
-        <CAHk-=wih4BqW7GTLaYxewynuT-iFHrXroip0wNo0CyPtmYGUow@mail.gmail.com>
-        <87y2r4so3i.fsf@x220.int.ebiederm.org>
-        <CAHk-=wjhAvv6s_7OVeZJiHaY7bBrHyiPTkSpq-TLr6qxYqxUUw@mail.gmail.com>
-        <CAHk-=wi0jrKv9x6vJ9FDgTrSUbdbZYDX-79T-E87C48MGSn5=g@mail.gmail.com>
-Date:   Thu, 09 Apr 2020 12:03:55 -0500
-In-Reply-To: <CAHk-=wi0jrKv9x6vJ9FDgTrSUbdbZYDX-79T-E87C48MGSn5=g@mail.gmail.com>
-        (Linus Torvalds's message of "Thu, 9 Apr 2020 09:24:23 -0700")
-Message-ID: <87wo6or3pg.fsf@x220.int.ebiederm.org>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
-MIME-Version: 1.0
-Content-Type: text/plain
-X-XM-SPF: eid=1jMada-0005PU-Py;;;mid=<87wo6or3pg.fsf@x220.int.ebiederm.org>;;;hst=in01.mta.xmission.com;;;ip=68.227.160.95;;;frm=ebiederm@xmission.com;;;spf=neutral
-X-XM-AID: U2FsdGVkX19xiliuIjxQOTWcYhWi4aqPdImDYESOPcY=
-X-SA-Exim-Connect-IP: 68.227.160.95
-X-SA-Exim-Mail-From: ebiederm@xmission.com
-Subject: Re: [GIT PULL] Please pull proc and exec work for 5.7-rc1
-X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
-X-SA-Exim-Scanned: Yes (on in01.mta.xmission.com)
+        Thu, 9 Apr 2020 13:07:12 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1586452031;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=f8hRg5EYNwvd8gy24wDwcLfYiAk7Uf7td7X5fprQc0g=;
+        b=W4cuyUmnrHIGL3v2T9+u7YjyI2N0E7dDj9UAjfXkAVupOKjOvhzjxP78BVzp35bEnwjo2X
+        atER6l5c+XRCh+qriqYFdtYK3kMByKXZksy1BclT4GtTNizEE8MsGF92bTQhBj4wAEaorY
+        vb4FNbRvJ3ghFis2lcBTZ1G2g6lDp8s=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-226-wbcQ8QmgNVGmmCDUvSS3tA-1; Thu, 09 Apr 2020 13:07:08 -0400
+X-MC-Unique: wbcQ8QmgNVGmmCDUvSS3tA-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 0D58F18AB2CF;
+        Thu,  9 Apr 2020 17:07:07 +0000 (UTC)
+Received: from ovpn-113-89.phx2.redhat.com (ovpn-113-89.phx2.redhat.com [10.3.113.89])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 626165D9CA;
+        Thu,  9 Apr 2020 17:07:06 +0000 (UTC)
+Message-ID: <1b1be267b80404dc8ca5a14b3e26710c53f50fb4.camel@redhat.com>
+Subject: Re: [PATCH] scsi: core: Rate limit "rejecting I/O" messages
+From:   "Ewan D. Milne" <emilne@redhat.com>
+To:     Joe Perches <joe@perches.com>, Daniel Wagner <dwagner@suse.de>,
+        linux-scsi@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>
+Date:   Thu, 09 Apr 2020 13:07:05 -0400
+In-Reply-To: <2de69a35463317f5eca2ce665b0ee8b90b8c717b.camel@perches.com>
+References: <20200408171012.76890-1-dwagner@suse.de>
+         <120ce7f4cd1fd070e1f7c353223c21b8e4f29337.camel@redhat.com>
+         <2de69a35463317f5eca2ce665b0ee8b90b8c717b.camel@perches.com>
+Content-Type: text/plain; charset="UTF-8"
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, 2020-04-08 at 12:49 -0700, Joe Perches wrote:
+> 
+> Could add a ratelimit_state to struct scsi_device.
+> 
+> Something like:
+> ---
+>  drivers/scsi/scsi_scan.c   | 2 ++
+>  include/scsi/scsi_device.h | 2 ++
+>  2 files changed, 4 insertions(+)
+> 
+> diff --git a/drivers/scsi/scsi_scan.c b/drivers/scsi/scsi_scan.c
+> index f2437a..938c83f 100644
+> --- a/drivers/scsi/scsi_scan.c
+> +++ b/drivers/scsi/scsi_scan.c
+> @@ -279,6 +279,8 @@ static struct scsi_device *scsi_alloc_sdev(struct
+> scsi_target *starget,
+>  	scsi_change_queue_depth(sdev, sdev->host->cmd_per_lun ?
+>  					sdev->host->cmd_per_lun : 1);
+>  
+> +	ratelimit_state_init(&sdev->rs, DEFAULT_RATELIMIT_INTERVAL,
+> +			     DEFAULT_RATELIMIT_BURST);
+>  	scsi_sysfs_device_initialize(sdev);
+>  
+>  	if (shost->hostt->slave_alloc) {
+> diff --git a/include/scsi/scsi_device.h b/include/scsi/scsi_device.h
+> index c3cba2..2600de7 100644
+> --- a/include/scsi/scsi_device.h
+> +++ b/include/scsi/scsi_device.h
+> @@ -8,6 +8,7 @@
+>  #include <linux/blkdev.h>
+>  #include <scsi/scsi.h>
+>  #include <linux/atomic.h>
+> +#include <linux/ratelimit.h>
+>  
+>  struct device;
+>  struct request_queue;
+> @@ -233,6 +234,7 @@ struct scsi_device {
+>  	struct mutex		state_mutex;
+>  	enum scsi_device_state sdev_state;
+>  	struct task_struct	*quiesced_by;
+> +	struct ratelimit_state	rs;
+>  	unsigned long		sdev_data[];
+>  } __attribute__((aligned(sizeof(unsigned long))));
+>  
 
-Adding Oleg to the conversation if for no other reason that he can see
-it is happening.
+We could but in our experience this may not work well enough.  We do
+wants to see the message when the device goes offline, so we can look
+at logs from SAN failures to see when that happened, but logging more
+than one message per device is worthless.  And there can be *LOTS*
+of LUNs behind targets that go away.  Hundreds.  Thousands, even.
 
-Oleg has had a test case where this can happen for years and nothing
-has come out as an obvious proper fix for this deadlock issue.
+I keep getting crash dumps with nothing useful in the dmesg buffer.
+And we see a lot of serial console lockups.
 
-Linus Torvalds <torvalds@linux-foundation.org> writes:
+-Ewan
 
-> On Thu, Apr 9, 2020 at 9:15 AM Linus Torvalds
-> <torvalds@linux-foundation.org> wrote:
->>
->> may_ptrace_stop() is supposed to stop the blocking exactly so that it
->> doesn't deadlock.
->>
->> I wonder why that doesn't work..
->>
->> [ Goes and look ]
->>
->> Oh. I see.
->>
->> That ptrace_may_stop() only ever considered core-dumping, not execve().
->>
->> But if _that_ is the reason for the deadlock, then it's trivially fixed.
->
-> So maybe may_ptrace_stop() should just do something like this
-> (ENTIRELY UNTESTED):
->
->         struct task_struct *me = current, *parent = me->parent;
->
->         if (!likely(me->ptrace))
->                 return false;
->
->         /* If the parent is exiting or core-dumping, it's not
-> listening to our signals */
->         if (parent->signal->flags & (SIGNAL_GROUP_EXIT | SIGNAL_GROUP_COREDUMP))
->                 return false;
->
->         /* if the parent is going through a execve(), it's not listening */
->         if (parent->signal->group_exit_task)
->                 return false;
->
->         return true;
->
-> instead of the fairly ad-hoc tests for core-dumping.
->
-> The above is hand-wavy - I didn't think a lot about locking.
-> may_ptrace_stop() is already called under the tasklist_lock, so the
-> parent won't change, but maybe it should take the signal lock?
->
-> So the above very much is *not* meant to be a "do it like this", more
-> of a "this direction, maybe"?
->
-> The existing code is definitely broken. It special-cases core-dumping
-> probably simply because that's the only case people had realized, and
-> not thought of the execve() thing.
-
-
-I don't see how there can be a complete solution in may_ptrace_stop.
-
-a) We must stop in PTRACE_EVENT_EXIT during exec or userspace *breaks*.
-
-   Those are the defined semantics and I believe it is something
-   as common as strace that depends on them.
-
-b) Even if we added a test for our ptrace parent blocking in a ptrace
-   attach of an ongoing exec, it still wouldn't help.
-
-   That ptrace attach could legitimately come after the thread in
-   question has stopped and notified it's parent it is stopped.
-
-
-
-None of this is to say I like the semantics of PTRACE_EVENT_EXIT.  It is
-just we will violate the no regressions rule if we don't stop there
-during exec.
-
-The normal case is that the strace or whomever is already attached to
-all of the threads during exec and no deadlock occurs.  So the current
-behavior is quite usable.
-
-
-
-Maybe my memory is wrong that userspace cares but I really don't think
-so.
-
-
-Eric
