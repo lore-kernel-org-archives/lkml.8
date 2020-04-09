@@ -2,354 +2,168 @@ Return-Path: <SRS0=n+Ub=5Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 716B8C2BA2B
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 14:42:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 072A8C2BA2B
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 14:45:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3502A20A8B
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 14:42:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C6BB12051A
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 14:45:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=verdurent-com.20150623.gappssmtp.com header.i=@verdurent-com.20150623.gappssmtp.com header.b="BmZ6GULs"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="G+wqJ3Ce"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727865AbgDIOmC (ORCPT
+        id S1727736AbgDIOo7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Apr 2020 10:42:02 -0400
-Received: from mail-vs1-f66.google.com ([209.85.217.66]:34597 "EHLO
-        mail-vs1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727115AbgDIOmC (ORCPT
+        Thu, 9 Apr 2020 10:44:59 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:50600 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726977AbgDIOo6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Apr 2020 10:42:02 -0400
-Received: by mail-vs1-f66.google.com with SMTP id b5so7055315vsb.1
-        for <linux-kernel@vger.kernel.org>; Thu, 09 Apr 2020 07:42:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=verdurent-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=f4mXwOzfoQFfmTyPdF7FI/nvZYzgTEkhsp/jnf7l374=;
-        b=BmZ6GULsIOlPMSeR4QFP6UMU8xiIGx++xbVXvG4Ec14xhXm9xO54PsRz2mxTHRE/zS
-         hpnnjFBGw3DoPCT4XJ7XPcvn+ZgD5Dgv4qo5ptYViWYP2VA8mdbkSTJBY4YTL2N3HfKg
-         NvMMJbwI124CbsUc49NgD5VNIjOLwitQnU4+iWusAWlVIN9V1lY+wZb1fxfzhVJg7Svf
-         tLTlb0SMJOEU8ESAlUSC4HYXZv0ZCbmYiIxUY8zyGJ4F3r8I0gnyw7/uXQt0DyZIpP3Q
-         oiGGkLLnrmCU41aWoN54rM9dBwhyKbJ7TaN+gyUI1YiyHTQd891cnjftlUVYLlc6ZDy5
-         DTcA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=f4mXwOzfoQFfmTyPdF7FI/nvZYzgTEkhsp/jnf7l374=;
-        b=qzfj4VjBwnCkRacFFnvB+Z5rCLGMsdx50rGQoY1zlra1PJuJOw0wm1gbA0l1H795sB
-         CKq9rxyl8scUu0r0r7ErMU6gg7xFcPuIq0gTGv3x2p0Vtv2fUS8JHMAE41Q8lJXaDgHv
-         7sKYQ9ZaGvi10DKMM/iI343iTsljzgqsPV50lUOFBL20FdRSJYgv07+t25332K1O5HbW
-         uFrnocAUhV7BEBXjr3yqzLj5uPylHXwYklT6cE0WBS9b8h9ITEMRax6ZSLz/eeJO6EoK
-         uqxhROGHR6raZDXCNfBVQ058bQi5LyUSQcc56HgMlRHpfrSsZjnqcF9mrDV3eXQr5uVn
-         iFHQ==
-X-Gm-Message-State: AGi0PuZaFCNIhAWNFfzJy1SmVmpvYfs4pDOz1MkmXXNBUJyIaicumzKV
-        dMlKI7H672nx8OaE2HiLFkzuoNdBFStvNUenKw5xqw==
-X-Google-Smtp-Source: APiQypIMwqo54G8PDp6x6bzZoYY0l/NI3qEPSUYHGLPzdzXdkZbfrZHq59Uacbj6+5+FPXnMW5l6fHqSuoOtciP+E30=
-X-Received: by 2002:a67:4242:: with SMTP id p63mr243113vsa.159.1586443321181;
- Thu, 09 Apr 2020 07:42:01 -0700 (PDT)
+        Thu, 9 Apr 2020 10:44:58 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 039EeKK4060061;
+        Thu, 9 Apr 2020 14:44:37 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2020-01-29;
+ bh=VTF5rzoS67jGgvr3WONUoqlugTDPyKjLN90Y48dLo9s=;
+ b=G+wqJ3CeYZSIigcMpcz9XR+n7ibh2+/ALDXGHW6uitOFrluEyAuIrSdqwDTZd0iab1e+
+ VMziR4aslIqHV54auFKqqc6dISQKiu/7Cwnjeu0CZQvngF61lVt6dQDvEAKkmo+SzvOH
+ nh1SuZei2t0/yWyy5rd2Gbd+mYc0nLJT2c5eNDo9Cnz5tNK2QglWPfJdeHUvSxrANyA1
+ 6zynWBznVHkxWQ9u1ejSU/RyiNHF8GJdhfgY4NPWe1Zr6QqAJUBaveVaFW9IkWNDZ9w7
+ P0+dvwDO9Tx0hXm58ODihI/vTinf+4npyUkvEqjFJ64w2E1VNVeoYHjqvQkSTYzByTSS hQ== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by userp2130.oracle.com with ESMTP id 3091m3hx1k-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 09 Apr 2020 14:44:37 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 039Eat7Q023906;
+        Thu, 9 Apr 2020 14:44:36 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by aserp3030.oracle.com with ESMTP id 309ag4se2c-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 09 Apr 2020 14:44:36 +0000
+Received: from abhmp0020.oracle.com (abhmp0020.oracle.com [141.146.116.26])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 039EiU7P004126;
+        Thu, 9 Apr 2020 14:44:30 GMT
+Received: from [10.39.247.246] (/10.39.247.246)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Thu, 09 Apr 2020 07:44:30 -0700
+Subject: Re: [PATCH] x86/xen: fix booting 32-bit pv guest
+To:     Juergen Gross <jgross@suse.com>, xen-devel@lists.xenproject.org,
+        x86@kernel.org, linux-kernel@vger.kernel.org
+Cc:     Stefano Stabellini <sstabellini@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>
+References: <20200409070001.16675-1-jgross@suse.com>
+From:   Boris Ostrovsky <boris.ostrovsky@oracle.com>
+Autocrypt: addr=boris.ostrovsky@oracle.com; keydata=
+ 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
+ Jg6OxFYd01z+a+oL
+Message-ID: <ee2aa0c4-b633-a5e6-436c-0776407c98ac@oracle.com>
+Date:   Thu, 9 Apr 2020 10:44:25 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-References: <1586407908-27139-1-git-send-email-Anson.Huang@nxp.com>
- <CAHLCerPi36z4z4DLmP9czEp8aw8yQq7EHAtHdCFLO2ZVYBZsRA@mail.gmail.com> <DB3PR0402MB3916F4F4BD5B0DC083E76183F5C10@DB3PR0402MB3916.eurprd04.prod.outlook.com>
-In-Reply-To: <DB3PR0402MB3916F4F4BD5B0DC083E76183F5C10@DB3PR0402MB3916.eurprd04.prod.outlook.com>
-From:   Amit Kucheria <amit.kucheria@verdurent.com>
-Date:   Thu, 9 Apr 2020 20:11:50 +0530
-Message-ID: <CAHLCerOrto=3xXpU1Aimf0Zh197K-tQHuOou-VXg+W+Nf_eTWQ@mail.gmail.com>
-Subject: Re: [PATCH] dt-bindings: thermal: Convert i.MX to json-schema
-To:     Anson Huang <anson.huang@nxp.com>
-Cc:     Zhang Rui <rui.zhang@intel.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        Linux PM list <linux-pm@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        lakml <linux-arm-kernel@lists.infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        dl-linux-imx <linux-imx@nxp.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200409070001.16675-1-jgross@suse.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9586 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 spamscore=0 malwarescore=0
+ phishscore=0 mlxscore=0 bulkscore=0 mlxlogscore=999 suspectscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
+ definitions=main-2004090115
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9586 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 adultscore=0
+ impostorscore=0 malwarescore=0 lowpriorityscore=0 mlxlogscore=999
+ priorityscore=1501 clxscore=1015 bulkscore=0 phishscore=0 mlxscore=0
+ suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2004090115
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 9, 2020 at 8:04 PM Anson Huang <anson.huang@nxp.com> wrote:
->
-> Hi, Amit
->
-> > Subject: Re: [PATCH] dt-bindings: thermal: Convert i.MX to json-schema
-> >
-> > Hi Anson,
-> >
-> > On Thu, Apr 9, 2020 at 10:29 AM Anson Huang <Anson.Huang@nxp.com>
-> > wrote:
-> > >
-> > > Convert the i.MX thermal binding to DT schema format using json-schema
-> > >
-> > > Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
-> > > ---
-> > >  .../devicetree/bindings/thermal/imx-thermal.txt    | 61 --------------
-> > >  .../devicetree/bindings/thermal/imx-thermal.yaml   | 97
-> > ++++++++++++++++++++++
-> > >  2 files changed, 97 insertions(+), 61 deletions(-)  delete mode
-> > > 100644 Documentation/devicetree/bindings/thermal/imx-thermal.txt
-> > >  create mode 100644
-> > > Documentation/devicetree/bindings/thermal/imx-thermal.yaml
-> > >
-> > > diff --git a/Documentation/devicetree/bindings/thermal/imx-thermal.txt
-> > > b/Documentation/devicetree/bindings/thermal/imx-thermal.txt
-> > > deleted file mode 100644
-> > > index 823e417..0000000
-> > > --- a/Documentation/devicetree/bindings/thermal/imx-thermal.txt
-> > > +++ /dev/null
-> > > @@ -1,61 +0,0 @@
-> > > -* Temperature Monitor (TEMPMON) on Freescale i.MX SoCs
-> > > -
-> > > -Required properties:
-> > > -- compatible : must be one of following:
-> > > -  - "fsl,imx6q-tempmon" for i.MX6Q,
-> > > -  - "fsl,imx6sx-tempmon" for i.MX6SX,
-> > > -  - "fsl,imx7d-tempmon" for i.MX7S/D.
-> > > -- interrupts : the interrupt output of the controller:
-> > > -  i.MX6Q has one IRQ which will be triggered when temperature is
-> > > higher than high threshold,
-> > > -  i.MX6SX and i.MX7S/D have two more IRQs than i.MX6Q, one is IRQ_LOW
-> > > and the other is IRQ_PANIC,
-> > > -  when temperature is below than low threshold, IRQ_LOW will be
-> > > triggered, when temperature
-> > > -  is higher than panic threshold, system will auto reboot by SRC module.
-> > > -- fsl,tempmon : phandle pointer to system controller that contains
-> > > TEMPMON
-> > > -  control registers, e.g. ANATOP on imx6q.
-> > > -- nvmem-cells: A phandle to the calibration cells provided by ocotp.
-> > > -- nvmem-cell-names: Should be "calib", "temp_grade".
-> > > -
-> > > -Deprecated properties:
-> > > -- fsl,tempmon-data : phandle pointer to fuse controller that contains
-> > > TEMPMON
-> > > -  calibration data, e.g. OCOTP on imx6q.  The details about
-> > > calibration data
-> > > -  can be found in SoC Reference Manual.
-> > > -
-> > > -Direct access to OCOTP via fsl,tempmon-data is incorrect on some
-> > > newer chips -because it does not handle OCOTP clock requirements.
-> > > -
-> > > -Optional properties:
-> > > -- clocks : thermal sensor's clock source.
-> > > -
-> > > -Example:
-> > > -ocotp: ocotp@21bc000 {
-> > > -       #address-cells = <1>;
-> > > -       #size-cells = <1>;
-> > > -       compatible = "fsl,imx6sx-ocotp", "syscon";
-> > > -       reg = <0x021bc000 0x4000>;
-> > > -       clocks = <&clks IMX6SX_CLK_OCOTP>;
-> > > -
-> > > -       tempmon_calib: calib@38 {
-> > > -               reg = <0x38 4>;
-> > > -       };
-> > > -
-> > > -       tempmon_temp_grade: temp-grade@20 {
-> > > -               reg = <0x20 4>;
-> > > -       };
-> > > -};
-> > > -
-> > > -tempmon: tempmon {
-> > > -       compatible = "fsl,imx6sx-tempmon", "fsl,imx6q-tempmon";
-> > > -       interrupts = <GIC_SPI 49 IRQ_TYPE_LEVEL_HIGH>;
-> > > -       fsl,tempmon = <&anatop>;
-> > > -       nvmem-cells = <&tempmon_calib>, <&tempmon_temp_grade>;
-> > > -       nvmem-cell-names = "calib", "temp_grade";
-> > > -       clocks = <&clks IMX6SX_CLK_PLL3_USB_OTG>;
-> > > -};
-> > > -
-> > > -Legacy method (Deprecated):
-> > > -tempmon {
-> > > -       compatible = "fsl,imx6q-tempmon";
-> > > -       fsl,tempmon = <&anatop>;
-> > > -       fsl,tempmon-data = <&ocotp>;
-> > > -       clocks = <&clks 172>;
-> > > -};
-> > > diff --git
-> > > a/Documentation/devicetree/bindings/thermal/imx-thermal.yaml
-> > > b/Documentation/devicetree/bindings/thermal/imx-thermal.yaml
-> > > new file mode 100644
-> > > index 0000000..ad12622
-> > > --- /dev/null
-> > > +++ b/Documentation/devicetree/bindings/thermal/imx-thermal.yaml
-> > > @@ -0,0 +1,97 @@
-> > > +# SPDX-License-Identifier: GPL-2.0
-> > > +%YAML 1.2
-> > > +---
-> > > +$id:
-> > > +https://eur01.safelinks.protection.outlook.com/?url=http%3A%2F%2Fdevi
-> > >
-> > +cetree.org%2Fschemas%2Fthermal%2Fimx-thermal.yaml%23&amp;data=02%
-> > 7C01
-> > >
-> > +%7Canson.huang%40nxp.com%7C408494436dca450abb5d08d7dc8cc727%7
-> > C686ea1d
-> > >
-> > +3bc2b4c6fa92cd99c5c301635%7C0%7C1%7C637220369539115517&amp;s
-> > data=e3R5
-> > > +q1YhIRLSOVdLYJWVlbOdqdjxYHNJMcXz%2Bxb1kjc%3D&amp;reserved=0
-> > > +$schema:
-> > > +https://eur01.safelinks.protection.outlook.com/?url=http%3A%2F%2Fdevi
-> > >
-> > +cetree.org%2Fmeta-schemas%2Fcore.yaml%23&amp;data=02%7C01%7Cans
-> > on.hua
-> > >
-> > +ng%40nxp.com%7C408494436dca450abb5d08d7dc8cc727%7C686ea1d3bc
-> > 2b4c6fa92
-> > >
-> > +cd99c5c301635%7C0%7C1%7C637220369539125508&amp;sdata=VjZ%2FPJ
-> > BVQc9jpc
-> > > +H3Hvvc2fYy70B%2Fmun0mxdvSHHktEU%3D&amp;reserved=0
-> > > +
-> > > +title: NXP i.MX Thermal Binding
-> > > +
-> > > +maintainers:
-> > > +  - Anson Huang <Anson.Huang@nxp.com>
-> > > +
-> > > +properties:
-> > > +  compatible:
-> > > +    oneOf:
-> > > +      - items:
-> > > +          - enum:
-> > > +              - fsl,imx6q-tempmon
-> > > +              - fsl,imx6sx-tempmon
-> > > +              - fsl,imx7d-tempmon
-> > > +
-> >
-> > > +  interrupts:
-> > > +    description: |
-> > > +      The interrupt output of the controller, the IRQ will be triggered
-> > > +      when temperature is higher than high threshold.
-> > > +    maxItems: 1
-> > > +
-> >
-> > imx6sx and imx7d have 3 interrupts each. So you need an if clause to change
-> > the interrupt number based on what compatible is provided. See
-> > qcom-tsens.yaml for an example.
->
-> I noticed this, yes, i.MX6SX/7D has 3 interrupts, but the driver actually ONLY uses
-> the high irq, low and panic irq are NOT used. So for such scenario, binding doc should
-> still mention all of them?
 
-No, just describe what the driver implements. If the driver doesn't
-implement that other two interrupts, leave it out.
+On 4/9/20 3:00 AM, Juergen Gross wrote:
+> Commit 2f62f36e62daec ("x86/xen: Make the boot CPU idle task reliable")
+> introduced a regression for booting 32 bit Xen PV guests: the address
+> of the initial stack needs to be a virtual one.
+>
+> Fixes: 2f62f36e62daec ("x86/xen: Make the boot CPU idle task reliable")
+> Signed-off-by: Juergen Gross <jgross@suse.com>
 
-I was only comparing it to the old binding where those 3 interrupts
-are mentioned.
 
-Regards,
-Amit
+Reviewed-by: Boris Ostrovsky <boris.ostrovsky@oracle.com>
 
-> >
-> > > +  nvmem-cells:
-> > > +    description: |
-> > > +      Phandle to the calibration cells provided by ocotp for calibration
-> > > +      data and temperature grade.
-> > > +    maxItems: 2
-> > > +
-> > > +  nvmem-cell-names:
-> > > +    maxItems: 2
-> > > +    items:
-> > > +      - const: calib
-> > > +      - const: temp_grade
-> > > +
-> > > +  fsl,tempmon:
-> > > +    description: |
-> > > +      Phandle pointer to system controller that contains TEMPMON
-> > control
-> > > +      registers, e.g. ANATOP on imx6q.
-> > > +    $ref: '/schemas/types.yaml#/definitions/phandle'
-> >
-> > Nit: move $ref line above description. IMO it makes the binding easier to read.
+
+> ---
+>  arch/x86/xen/xen-head.S | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 >
-> OK.
->
-> >
-> > > +
-> > > +  fsl,tempmon-data:
-> > > +    description: |
-> > > +      Deprecated property, phandle pointer to fuse controller that
-> > contains
-> > > +      TEMPMON calibration data, e.g. OCOTP on imx6q. The details about
-> > > +      calibration data can be found in SoC Reference Manual.
-> > > +    $ref: '/schemas/types.yaml#/definitions/phandle'
-> >
-> > Nit: move $ref line above description. IMO it makes the binding easier to read.
->
-> OK.
->
-> >
-> > > +
-> > > +  clocks:
-> > > +    description: |
-> > > +      Thermal sensor's clock source.
-> > > +    maxItems: 1
-> > > +
-> > > +required:
-> > > +  - compatible
-> > > +  - interrupts
-> > > +  - fsl,tempmon
-> > > +  - clocks
-> >
-> > Clocks was an optional property before, are you sure?
->
-> I misunderstand the 'optional', the clock is always necessary, ONLY for those SoCs have
-> no thermal clock available, then it is unnecessary. Now I see, I will make it as optional.
->
-> I will add example for #thermal-sensor-cells property you mentioned in the other mail.
->
-> Thanks,
-> Anson
->
-> >
-> > > +  - nvmem-cells
-> > > +  - nvmem-cell-names
-> > > +
-> > > +additionalProperties: false
-> > > +
-> > > +examples:
-> > > +  - |
-> > > +    #include <dt-bindings/clock/imx6sx-clock.h>
-> > > +    #include <dt-bindings/interrupt-controller/arm-gic.h>
-> > > +
-> > > +    ocotp: ocotp@21bc000 {
-> > > +         #address-cells = <1>;
-> > > +         #size-cells = <1>;
-> > > +         compatible = "fsl,imx6sx-ocotp", "syscon";
-> > > +         reg = <0x021bc000 0x4000>;
-> > > +         clocks = <&clks IMX6SX_CLK_OCOTP>;
-> > > +
-> > > +         tempmon_calib: calib@38 {
-> > > +             reg = <0x38 4>;
-> > > +         };
-> > > +
-> > > +         tempmon_temp_grade: temp-grade@20 {
-> > > +             reg = <0x20 4>;
-> > > +         };
-> > > +    };
-> > > +
-> > > +    tempmon: tempmon {
-> > > +         compatible = "fsl,imx6sx-tempmon";
-> > > +         interrupts = <GIC_SPI 49 IRQ_TYPE_LEVEL_HIGH>;
-> > > +         fsl,tempmon = <&anatop>;
-> > > +         nvmem-cells = <&tempmon_calib>, <&tempmon_temp_grade>;
-> > > +         nvmem-cell-names = "calib", "temp_grade";
-> > > +         clocks = <&clks IMX6SX_CLK_PLL3_USB_OTG>;
-> > > +    };
-> > > +
-> > > +...
-> > > --
-> > > 2.7.4
-> > >
+> diff --git a/arch/x86/xen/xen-head.S b/arch/x86/xen/xen-head.S
+> index 7d1c4fcbe8f7..1ba601df3a37 100644
+> --- a/arch/x86/xen/xen-head.S
+> +++ b/arch/x86/xen/xen-head.S
+> @@ -38,7 +38,7 @@ SYM_CODE_START(startup_xen)
+>  #ifdef CONFIG_X86_64
+
+
+While at it, I'd swap the ifdefs and fold x86_64 case into the one below.
+
+
+>  	mov initial_stack(%rip), %rsp
+>  #else
+> -	mov pa(initial_stack), %esp
+> +	mov initial_stack, %esp
+>  #endif
+>  
+>  #ifdef CONFIG_X86_64
+
+
+
