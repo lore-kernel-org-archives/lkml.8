@@ -2,131 +2,117 @@ Return-Path: <SRS0=n+Ub=5Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E3ABC2BA2B
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 11:21:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C558BC2BA2B
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 11:22:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0154920B1F
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 11:21:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A335120B1F
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 11:22:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726641AbgDILVa (ORCPT
+        id S1726626AbgDILWa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Apr 2020 07:21:30 -0400
-Received: from smtp25.cstnet.cn ([159.226.251.25]:58406 "EHLO cstnet.cn"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725972AbgDILVa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Apr 2020 07:21:30 -0400
-Received: from ubuntu.localdomain (unknown [111.198.228.245])
-        by APP-05 (Coremail) with SMTP id zQCowACXn5sVBY9eVbUUAQ--.40637S2;
-        Thu, 09 Apr 2020 19:20:54 +0800 (CST)
-From:   Xu Wang <vulab@iscas.ac.cn>
-To:     perex@perex.cz, tiwai@suse.com, tglx@linutronix.de,
-        allison@lohutok.net
-Cc:     alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] ALSA: ctxfi: Remove unnecessary cast in kfree
-Date:   Thu,  9 Apr 2020 19:20:52 +0800
-Message-Id: <20200409112052.13402-1-vulab@iscas.ac.cn>
-X-Mailer: git-send-email 2.17.1
-X-CM-TRANSID: zQCowACXn5sVBY9eVbUUAQ--.40637S2
-X-Coremail-Antispam: 1UD129KBjvJXoW7ZF1DZrW3Ww48tr1DCFWDCFg_yoW8ArWfpF
-        48GrsxWrW7JFWqywn5trs8XasxCanrCr4xC340kw4fCa45JF18XFn3uFWUKr47ua4fGF1F
-        k3yjkFy5Cr90yrUanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-        9KBjDU0xBIdaVrnRJUUUyab7Iv0xC_KF4lb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I2
-        0VC2zVCF04k26cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rw
-        A2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xII
-        jxv20xvEc7CjxVAFwI0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVWxJr0_GcWl84ACjcxK6I
-        8E87Iv6xkF7I0E14v26rxl6s0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI
-        64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8Jw
-        Am72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41l42xK82IYc2Ij64vIr41l4I8I
-        3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxV
-        WUGVWUWwC2zVAF1VAY17CE14v26r126r1DMIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAF
-        wI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK8VAvwI8IcI
-        k0rVWrZr1j6s0DMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_
-        Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU8P5r7UUUUU==
-X-Originating-IP: [111.198.228.245]
-X-CM-SenderInfo: pyxotu46lvutnvoduhdfq/1tbiBgEBA10Teu1UpQAAst
+        Thu, 9 Apr 2020 07:22:30 -0400
+Received: from mx2.suse.de ([195.135.220.15]:33002 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725987AbgDILW3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Apr 2020 07:22:29 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 9634EAE24;
+        Thu,  9 Apr 2020 11:22:27 +0000 (UTC)
+Date:   Thu, 9 Apr 2020 13:22:26 +0200
+From:   Michal =?iso-8859-1?Q?Such=E1nek?= <msuchanek@suse.de>
+To:     Christophe Leroy <christophe.leroy@c-s.fr>
+Cc:     linuxppc-dev@lists.ozlabs.org, Nicholas Piggin <npiggin@gmail.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] powerpcs: perf: consolidate perf_callchain_user_64 and
+ perf_callchain_user_32
+Message-ID: <20200409112226.GT25468@kitsune.suse.cz>
+References: <1585896170.ohti800w9v.astroid@bobo.none>
+ <20200406210022.32265-1-msuchanek@suse.de>
+ <8786906b-edd5-e4a3-8286-33a05f39668c@c-s.fr>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <8786906b-edd5-e4a3-8286-33a05f39668c@c-s.fr>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Remove unnecassary casts in the argument to kfree.
+On Tue, Apr 07, 2020 at 07:21:06AM +0200, Christophe Leroy wrote:
+> 
+> 
+> Le 06/04/2020 à 23:00, Michal Suchanek a écrit :
+> > perf_callchain_user_64 and perf_callchain_user_32 are nearly identical.
+> > Consolidate into one function with thin wrappers.
+> > 
+> > Suggested-by: Nicholas Piggin <npiggin@gmail.com>
+> > Signed-off-by: Michal Suchanek <msuchanek@suse.de>
+> > ---
+> >   arch/powerpc/perf/callchain.h    | 24 +++++++++++++++++++++++-
+> >   arch/powerpc/perf/callchain_32.c | 21 ++-------------------
+> >   arch/powerpc/perf/callchain_64.c | 14 ++++----------
+> >   3 files changed, 29 insertions(+), 30 deletions(-)
+> > 
+> > diff --git a/arch/powerpc/perf/callchain.h b/arch/powerpc/perf/callchain.h
+> > index 7a2cb9e1181a..7540bb71cb60 100644
+> > --- a/arch/powerpc/perf/callchain.h
+> > +++ b/arch/powerpc/perf/callchain.h
+> > @@ -2,7 +2,7 @@
+> >   #ifndef _POWERPC_PERF_CALLCHAIN_H
+> >   #define _POWERPC_PERF_CALLCHAIN_H
+> > -int read_user_stack_slow(void __user *ptr, void *buf, int nb);
+> > +int read_user_stack_slow(const void __user *ptr, void *buf, int nb);
+> 
+> Does the constification of ptr has to be in this patch ?
+It was in the original patch. The code is touched anyway.
+> Wouldn't it be better to have it as a separate patch ?
+Don't care much either way. Can resend it as separate patches.
+> 
+> >   void perf_callchain_user_64(struct perf_callchain_entry_ctx *entry,
+> >   			    struct pt_regs *regs);
+> >   void perf_callchain_user_32(struct perf_callchain_entry_ctx *entry,
+> > @@ -16,4 +16,26 @@ static inline bool invalid_user_sp(unsigned long sp)
+> >   	return (!sp || (sp & mask) || (sp > top));
+> >   }
+> > +/*
+> > + * On 32-bit we just access the address and let hash_page create a
+> > + * HPTE if necessary, so there is no need to fall back to reading
+> > + * the page tables.  Since this is called at interrupt level,
+> > + * do_page_fault() won't treat a DSI as a page fault.
+> > + */
+> > +static inline int __read_user_stack(const void __user *ptr, void *ret,
+> > +				    size_t size)
+> > +{
+> > +	int rc;
+> > +
+> > +	if ((unsigned long)ptr > TASK_SIZE - size ||
+> > +			((unsigned long)ptr & (size - 1)))
+> > +		return -EFAULT;
+> > +	rc = probe_user_read(ret, ptr, size);
+> > +
+> > +	if (rc && IS_ENABLED(CONFIG_PPC64))
+> 
+> gcc is probably smart enough to deal with it efficiently, but it would
+> be more correct to test rc after checking CONFIG_PPC64.
+IS_ENABLED(CONFIG_PPC64) is constant so that part of the check should be
+compiled out in any case.
 
-Signed-off-by: Xu Wang <vulab@iscas.ac.cn>
----
- sound/pci/ctxfi/cthw20k1.c | 14 +++++++-------
- 1 file changed, 7 insertions(+), 7 deletions(-)
+Thanks
 
-diff --git a/sound/pci/ctxfi/cthw20k1.c b/sound/pci/ctxfi/cthw20k1.c
-index 6e3177bcc709..015c0d676897 100644
---- a/sound/pci/ctxfi/cthw20k1.c
-+++ b/sound/pci/ctxfi/cthw20k1.c
-@@ -168,7 +168,7 @@ static int src_get_rsc_ctrl_blk(void **rblk)
- 
- static int src_put_rsc_ctrl_blk(void *blk)
- {
--	kfree((struct src_rsc_ctrl_blk *)blk);
-+	kfree(blk);
- 
- 	return 0;
- }
-@@ -494,7 +494,7 @@ static int src_mgr_get_ctrl_blk(void **rblk)
- 
- static int src_mgr_put_ctrl_blk(void *blk)
- {
--	kfree((struct src_mgr_ctrl_blk *)blk);
-+	kfree(blk);
- 
- 	return 0;
- }
-@@ -515,7 +515,7 @@ static int srcimp_mgr_get_ctrl_blk(void **rblk)
- 
- static int srcimp_mgr_put_ctrl_blk(void *blk)
- {
--	kfree((struct srcimp_mgr_ctrl_blk *)blk);
-+	kfree(blk);
- 
- 	return 0;
- }
-@@ -702,7 +702,7 @@ static int amixer_rsc_get_ctrl_blk(void **rblk)
- 
- static int amixer_rsc_put_ctrl_blk(void *blk)
- {
--	kfree((struct amixer_rsc_ctrl_blk *)blk);
-+	kfree(blk);
- 
- 	return 0;
- }
-@@ -909,7 +909,7 @@ static int dai_get_ctrl_blk(void **rblk)
- 
- static int dai_put_ctrl_blk(void *blk)
- {
--	kfree((struct dai_ctrl_blk *)blk);
-+	kfree(blk);
- 
- 	return 0;
- }
-@@ -958,7 +958,7 @@ static int dao_get_ctrl_blk(void **rblk)
- 
- static int dao_put_ctrl_blk(void *blk)
- {
--	kfree((struct dao_ctrl_blk *)blk);
-+	kfree(blk);
- 
- 	return 0;
- }
-@@ -1156,7 +1156,7 @@ static int daio_mgr_get_ctrl_blk(struct hw *hw, void **rblk)
- 
- static int daio_mgr_put_ctrl_blk(void *blk)
- {
--	kfree((struct daio_mgr_ctrl_blk *)blk);
-+	kfree(blk);
- 
- 	return 0;
- }
--- 
-2.17.1
-
+Michal
