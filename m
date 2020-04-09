@@ -2,173 +2,153 @@ Return-Path: <SRS0=n+Ub=5Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2BA1C2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 14:37:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE268C2BB86
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 14:39:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AC3182082D
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 14:37:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 82B6F2078E
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 14:39:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="wQflHXbm"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RFiloriP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727775AbgDIOhW (ORCPT
+        id S1727794AbgDIOjO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Apr 2020 10:37:22 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:34870 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727327AbgDIOhV (ORCPT
+        Thu, 9 Apr 2020 10:39:14 -0400
+Received: from mail-qv1-f67.google.com ([209.85.219.67]:37699 "EHLO
+        mail-qv1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727368AbgDIOjO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Apr 2020 10:37:21 -0400
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 039EbA5j008107;
-        Thu, 9 Apr 2020 09:37:10 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1586443030;
-        bh=t0Pz8343qyR0XZCGjZzKoEfLBwp8RY74fZEv6viiDRk=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=wQflHXbmBySjer9/hT20YQkA86nduHAOQSxNmJ+JkcmfIybnRtPjd/+QLdn6sXnAh
-         q3n9Sgybhy/GZJNlkTgoZXm/j8qRzyRSSJC25TycQOpENGyElgMxLxVKhz3kx7jSi+
-         U9oXaQOZxwn2oS+o8pb9d4QW+B5hAjNHkE39Un1k=
-Received: from DLEE102.ent.ti.com (dlee102.ent.ti.com [157.170.170.32])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 039EbANt016166
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 9 Apr 2020 09:37:10 -0500
-Received: from DLEE101.ent.ti.com (157.170.170.31) by DLEE102.ent.ti.com
- (157.170.170.32) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Thu, 9 Apr
- 2020 09:37:08 -0500
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE101.ent.ti.com
- (157.170.170.31) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Thu, 9 Apr 2020 09:37:08 -0500
-Received: from [127.0.0.1] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 039Eb6BD069628;
-        Thu, 9 Apr 2020 09:37:06 -0500
-Subject: Re: [PATCH v6 0/4] thermal: k3: Add support for bandgap sensors
-To:     "J, KEERTHY" <j-keerthy@ti.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        <rui.zhang@intel.com>, <robh+dt@kernel.org>
-CC:     <amit.kucheria@verdurent.com>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <linux-pm@vger.kernel.org>,
-        <mark.rutland@arm.com>
-References: <20200407055116.16082-1-j-keerthy@ti.com>
- <3c69e3c6-5549-e891-fde6-95a2ecc49f77@linaro.org>
- <0817f9ee-c72f-3e9f-00cf-e8ddaf608020@ti.com>
-From:   Tero Kristo <t-kristo@ti.com>
-Message-ID: <e7dd6470-5992-8d22-5d0c-7532a47a400c@ti.com>
-Date:   Thu, 9 Apr 2020 17:37:05 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Thu, 9 Apr 2020 10:39:14 -0400
+Received: by mail-qv1-f67.google.com with SMTP id n1so5584722qvz.4;
+        Thu, 09 Apr 2020 07:39:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=V0peUcS4xyy6xzU2lui7tASWzqbXgbJ8PVWPkgOy87s=;
+        b=RFiloriPPxNl0UwUwYFNvjkQ9B8zNeV1F2WqXq8W32IOtZkfIxpqRPoQrEYtCYyGUP
+         ygUK3mwr7qTV3R6x8c7ilNyb/V1tKjGSoxfVd5uk1mp91hKB4e6iTYzJ0ZlvioPmNVRM
+         Ei/Cs1woOrhsRMK6jreFMlLIw/OEfu28s/R4mdDneKg4oXIx66ZB1+lW6q6g5KBnrSt8
+         E+BwdceRHn3cKMcDs3BDS+PXeCbeUep+wrB699VInBE+9LiXh2MXQF09JDQ3VFU5bdXr
+         LdESYtYUavSLYVJPT+NWFqzgpDOYfKYoxuG69prZloX3HDfMBk3GUU5Eh99dRkgVMVmv
+         Ih4A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:from:date:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to;
+        bh=V0peUcS4xyy6xzU2lui7tASWzqbXgbJ8PVWPkgOy87s=;
+        b=XsfQ5aIFojdZtSPqc1gD/XTFKj4GEkEZf7m2O7U4/oJyA7jtzvv3XIs5YoMxn1x51o
+         b53wWIPyEyn0T5nxHHmXfpo+PHJXXPVkdIMVQA1GJx2wLpLYbMW5yhuwUdPtWsHWIVh+
+         D4Komwmrpv059FeJFJcVSMj/JiN5pFLcv1XG11hcmNwATcrHpj++BUx2GW9PVlD0uGrv
+         Fu1Q1a+3vCZVxkXFzru48R893nfeupzCKnyxbN1if4znoWRrQrNYOlEZnt0S9o9buzN9
+         DrCfKiq7uALw//JizA1Lu/X5h1EJADvH9Jxw7nueTWkM+8W9HKZZUKRIZUicdjb/4F57
+         xuCA==
+X-Gm-Message-State: AGi0PubLwm8Nzo1o86rrKi9TkltyZZFMvm1RZgDcfV9cfdSImvcYLZ4Z
+        kRQPUKzcJmCBZLjQpe2QNvk=
+X-Google-Smtp-Source: APiQypKR9/XpDamJYVfxyRTxLwmb+HIiAdic1PwWBGZ+2jeo+4tSTFUem5fLxgYZEwsb3kHKg+JU5Q==
+X-Received: by 2002:a0c:9aee:: with SMTP id k46mr307996qvf.7.1586443153294;
+        Thu, 09 Apr 2020 07:39:13 -0700 (PDT)
+Received: from rani.riverdale.lan ([2001:470:1f07:5f3::b55f])
+        by smtp.gmail.com with ESMTPSA id d24sm20629143qkl.8.2020.04.09.07.39.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 09 Apr 2020 07:39:12 -0700 (PDT)
+From:   Arvind Sankar <nivedita@alum.mit.edu>
+X-Google-Original-From: Arvind Sankar <arvind@rani.riverdale.lan>
+Date:   Thu, 9 Apr 2020 10:39:10 -0400
+To:     Ard Biesheuvel <ardb@kernel.org>
+Cc:     Dave Young <dyoung@redhat.com>, pjones@redhat.com,
+        daniel.kiper@oracle.com, Leif Lindholm <leif@nuviainc.com>,
+        Arvind Sankar <nivedita@alum.mit.edu>,
+        Borislav Petkov <bp@alien8.de>, Sergey Shatunov <me@prok.pw>,
+        hpa@zytor.com,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        mingo@redhat.com, Thomas Gleixner <tglx@linutronix.de>,
+        x86@kernel.org, linux-efi <linux-efi@vger.kernel.org>,
+        initramfs@vger.kernel.org,
+        Donovan Tremura <neurognostic@protonmail.ch>,
+        Harald Hoyer <harald@hoyer.xyz>
+Subject: Re: [PATCH 1/2] efi/x86: Move efi stub globals from .bss to .data
+Message-ID: <20200409143910.GA727557@rani.riverdale.lan>
+References: <CAMj1kXEUkJ1XJ9OTsijeq8tNNYC00bXqEV44OMtX5ugo9WoLKA@mail.gmail.com>
+ <20200406180614.429454-1-nivedita@alum.mit.edu>
+ <20200408074334.GA21886@dhcp-128-65.nay.redhat.com>
+ <CAMj1kXGPOZ6zWtgGScLy0ECrTtf1yhngDTNE1chW-MQw3XQp9Q@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <0817f9ee-c72f-3e9f-00cf-e8ddaf608020@ti.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <CAMj1kXGPOZ6zWtgGScLy0ECrTtf1yhngDTNE1chW-MQw3XQp9Q@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 09/04/2020 17:07, J, KEERTHY wrote:
+On Wed, Apr 08, 2020 at 09:49:15AM +0200, Ard Biesheuvel wrote:
+> (add Peter, Leif and Daniel)
 > 
+> On Wed, 8 Apr 2020 at 09:43, Dave Young <dyoung@redhat.com> wrote:
+> >
+> > On 04/06/20 at 02:06pm, Arvind Sankar wrote:
+> > > Commit
+> > >
+> > >   3ee372ccce4d ("x86/boot/compressed/64: Remove .bss/.pgtable from
+> > >   bzImage")
+> > >
+> > > removed the .bss section from the bzImage.
+> > >
+> > > However, while a PE loader is required to zero-initialize the .bss
+> > > section before calling the PE entry point, the EFI handover protocol
+> > > does not currently document any requirement that .bss be initialized by
+> > > the bootloader prior to calling the handover entry.
+> > >
+> > > When systemd-boot is used to boot a unified kernel image [1], the image
+> > > is constructed by embedding the bzImage as a .linux section in a PE
+> > > executable that contains a small stub loader from systemd together with
+> > > additional sections and potentially an initrd. As the .bss section
+> > > within the bzImage is no longer explicitly present as part of the file,
+> > > it is not initialized before calling the EFI handover entry.
+> > > Furthermore, as the size of the embedded .linux section is only the size
+> > > of the bzImage file itself, the .bss section's memory may not even have
+> > > been allocated.
+> >
+> > I did not follow up the old report, maybe I missed something. But not
+> > sure why only systemd-boot is mentioned here.  I also have similar issue
+> > with early efi failure.  With these two patches applied, it works well
+> > then.
+> >
+> > BTW, I use Fedora 31 + Grub2
+> >
 > 
-> On 4/9/2020 7:19 PM, Daniel Lezcano wrote:
->>
->> Hi Keerthy,
->>
->> On 07/04/2020 07:51, Keerthy wrote:
->>> Add VTM thermal support. In the Voltage Thermal
->>> Management Module(VTM), K3 AM654 supplies a voltage
->>> reference and a temperature sensor feature that are gathered in the band
->>> gap voltage and temperature sensor (VBGAPTS) module. The band
->>> gap provides current and voltage reference for its internal
->>> circuits and other analog IP blocks. The analog-to-digital
->>> converter (ADC) produces an output value that is proportional
->>> to the silicon temperature.
->>>
->>> Add support for bandgap sensors. Currently reading temperatures
->>> is supported.
->>
->> How do you want to proceed? Shall I take patches 1 & 2 ?
-> 
-> +Tero
-> 
-> Hi Tero,
-> 
-> Can you pull 3 & 4? Or Daniel can take all 4?
+> OK, so I take it this means that GRUB's PE/COFF loader does not
+> zero-initialize BSS either? Does it honor the image size in memory if
+> it exceeds the file size?
 
-Let me pull the DT patches, that way we avoid any conflicts in the 
-arm64/dts tree. There has been quite a bit of traffic on that front 
-lately and we did mess up something with the current merge window already.
+Dave, that comment was because the previous report was for systemd-boot
+stub.
 
-I believe you are picking the driver side changes to 5.8?
+Ard, should I revise the commit message to make it clear it's not
+restricted to systemd-boot but anything using handover entry may be
+affected? Maybe just a "for example, when systemd-boot..." and then a
+line to say grub2 with the EFI stub patches is also impacted?
 
--Tero
+https://src.fedoraproject.org/rpms/grub2/blob/f31/f/0001-Add-support-for-Linux-EFI-stub-loading.patch#_743
 
-> 
-> - Keerthy
-> 
->>
->>
->>> Changes in v6:
->>>
->>>    * Removed bunch of unused #defines and couple of redundant variables.
->>>    * Reordered patches a bit.
->>>    * Minor reordering in dt binding patch.
->>>
->>> Changes in v5:
->>>
->>>    * Removed thermal work function which was unused.
->>>    * Removed unused preve_tenmp and a couple more struct variables.
->>>    * Removed couple of redundant header function include.
->>>
->>> Changes in v4:
->>>
->>>    * Fixed comments from Daniel to remove trend function.
->>>    * Mostly cleaned up all the unused variables.
->>>    * Driver from bool to tristate.
->>>
->>> Changes in v3:
->>>
->>>    * Fixed errors seen with:
->>>      dt_binding_check 
->>> DT_SCHEMA_FILES=Documentation/devicetree/bindings/thermal/ti,am654-thermal.yaml 
->>>
->>>
->>> Changes in v2:
->>>
->>>    * Fixed yaml errors
->>>    * renamed am654-industrial-thermal.dtsi to 
->>> k3-am654-industrial-thermal.dtsi
->>>      to follow the convention for k3 family.
->>>
->>> Keerthy (4):
->>>    dt-bindings: thermal: k3: Add VTM bindings documentation
->>>    thermal: k3: Add support for bandgap sensors
->>>    arm64: dts: ti: am65-wakeup: Add VTM node
->>>    arm64: dts: ti: am654: Add thermal zones
->>>
->>>   .../bindings/thermal/ti,am654-thermal.yaml    |  56 ++++
->>>   arch/arm64/boot/dts/ti/k3-am65-wakeup.dtsi    |  11 +
->>>   .../dts/ti/k3-am654-industrial-thermal.dtsi   |  45 +++
->>>   drivers/thermal/Kconfig                       |  10 +
->>>   drivers/thermal/Makefile                      |   1 +
->>>   drivers/thermal/k3_bandgap.c                  | 264 ++++++++++++++++++
->>>   6 files changed, 387 insertions(+)
->>>   create mode 100644 
->>> Documentation/devicetree/bindings/thermal/ti,am654-thermal.yaml
->>>   create mode 100644 
->>> arch/arm64/boot/dts/ti/k3-am654-industrial-thermal.dtsi
->>>   create mode 100644 drivers/thermal/k3_bandgap.c
->>>
->>
->>
++  kernel_mem = grub_efi_allocate_pages_max(lh.pref_address,
++					   BYTES_TO_PAGES(lh.init_size));
 
---
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki. Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+Looking at this, grub does allocate init_size for the image, but it
+doesn't zero it out.
+
+This call also looks wrong to me though. It allocates at max address of
+pref_address, which, if it succeeds, will guarantee that the kernel gets
+loaded entirely below pref_address == LOAD_PHYSICAL_ADDR. In native
+mode, if it weren't for the EFI stub copying the kernel again, this
+would cause the startup code to relocate the kernel into unallocated
+memory. On a mixed-mode boot, this would cause the early page tables
+setup prior to transitioning to 64-bit mode to be in unallocated memory
+and potentially get clobbered by the EFI stub.
+
+The first try to allocate pref_address should be calling
+grub_efi_allocate_fixed instead.
