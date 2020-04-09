@@ -2,198 +2,166 @@ Return-Path: <SRS0=n+Ub=5Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E781C2BA80
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 09:10:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3111C2BB54
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 09:10:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6AA4D212CC
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 09:10:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586423412;
-	bh=Uviqfimv67NG+X74+yP1MK+0TUFuwrubxbBGo2wzZaQ=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=f3wYukJZ6osMfePDZKhwUCNcwK9/Hi0fiOD9dXwp9Ll/ZycZM+1GyH/TNCygtrDNz
-	 i9W8IzyRo8/WuboG2dG8g1LEV46D6OTU4h1AZDqojECia7FJhX8PQDK8etgp+Qw5PP
-	 ydKoAuaJHoMbcxW9fk6q1apwOyfbr+w6Q3Ge0K3c=
+	by mail.kernel.org (Postfix) with ESMTP id 7AFCF2084D
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 09:10:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b="YiyekxgM";
+	dkim=pass (1024-bit key) header.d=marvell.onmicrosoft.com header.i=@marvell.onmicrosoft.com header.b="SJGbUuHR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726647AbgDIJKL (ORCPT
+        id S1726651AbgDIJKx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Apr 2020 05:10:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38026 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725783AbgDIJKK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Apr 2020 05:10:10 -0400
-Received: from mail-il1-f175.google.com (mail-il1-f175.google.com [209.85.166.175])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 925482137B;
-        Thu,  9 Apr 2020 09:10:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586423410;
-        bh=Uviqfimv67NG+X74+yP1MK+0TUFuwrubxbBGo2wzZaQ=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=i3BDDgL/ruQ7rZAZmGWl3u2L0gp5eyBYnsm53fJd2AaPgshO8B9/Km33GsvbHJpR/
-         J9+vn5f4mPEhfpOy5JdYSLwb3KzxMC+dolkeTKrO+8bfOM3Wc2pe5yOQPnk/yBzcAD
-         WSKVJ6AyeP22pc/yTsRr1x2tntducu2tL01htMFY=
-Received: by mail-il1-f175.google.com with SMTP id o11so5319680ilq.7;
-        Thu, 09 Apr 2020 02:10:10 -0700 (PDT)
-X-Gm-Message-State: AGi0PuY8uR/I0s2Qh6UYE8K4yzvJp/0qGetFYYRTSvAb98E5nFodXYds
-        AsSkvop6et2i6N9o8+eJTyJ64k0uBSJUrODhjuY=
-X-Google-Smtp-Source: APiQypKljZ6WyUnHqOA1idl4JWds6dEGHGcOLlF21cv12dl5CWyCoAenNhQpoBHx1XNzjo6qtSWv1/3/bss3lPZ7/1Q=
-X-Received: by 2002:a92:443:: with SMTP id 64mr4270679ile.258.1586423409864;
- Thu, 09 Apr 2020 02:10:09 -0700 (PDT)
+        Thu, 9 Apr 2020 05:10:53 -0400
+Received: from mx0b-0016f401.pphosted.com ([67.231.156.173]:49926 "EHLO
+        mx0b-0016f401.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725783AbgDIJKw (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Apr 2020 05:10:52 -0400
+Received: from pps.filterd (m0045851.ppops.net [127.0.0.1])
+        by mx0b-0016f401.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0399AUck010249;
+        Thu, 9 Apr 2020 02:10:30 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=date : from : to :
+ cc : subject : message-id : references : content-type :
+ content-transfer-encoding : in-reply-to : mime-version; s=pfpt0818;
+ bh=VYMWXZdDnpx2fNUap5BCtn+JUWTkSKaf+5QedQQqng0=;
+ b=YiyekxgMG9DQHYNYPc+JMdk9qTuCYtjAVLHAj2FP8tqy8mTa4uuCSI2GYEAuyD2SnuqW
+ 4gNtOL4i0cpQz6PaxlPLREcYzRGArKn+yFRBY5qPMH5BUSye7f8GW47eOf8dLEs9ln/+
+ sJ+h1hfevFTeT7CtQrzA8fjhzkgnBsyGgACkRizdFIVdliNScw5aX4Kvh4bgFT4uo+A5
+ UPohqsNR1opsPBue8omsh+TKIAstyaupYDqvrZyw117zasxBX9uBIWm8VGFOIlmR3Zhz
+ bo+xxlRiQ9zFVmI2IINySeN++YkDjecOJFu2hq/WbG4zmt4BYZM/PCQRBVmxegvdsPkI Pg== 
+Received: from sc-exch03.marvell.com ([199.233.58.183])
+        by mx0b-0016f401.pphosted.com with ESMTP id 3091me7jpx-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
+        Thu, 09 Apr 2020 02:10:30 -0700
+Received: from DC5-EXCH02.marvell.com (10.69.176.39) by SC-EXCH03.marvell.com
+ (10.93.176.83) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Thu, 9 Apr
+ 2020 02:10:28 -0700
+Received: from SC-EXCH01.marvell.com (10.93.176.81) by DC5-EXCH02.marvell.com
+ (10.69.176.39) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Thu, 9 Apr
+ 2020 02:10:27 -0700
+Received: from NAM12-DM6-obe.outbound.protection.outlook.com (104.47.59.172)
+ by SC-EXCH01.marvell.com (10.93.176.81) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2 via Frontend Transport; Thu, 9 Apr 2020 02:10:27 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=OfyPjtUHJ03Hms73eV3HrrKmWZjM2ZBlNn9plHZE3s+oUFjyqGmjGsGiiKKv8UvK85uiTVJmyJkO1Ohk8N2Bw4PzvDRsJ2Asezy1UL4pTjiJ24pMFj3B+LpKXeQpSbtgWNHi9TBaIIfYzLPN3rDwZsk/aQDPNxAQ0sszWo3sENt6wNubthWJDoj9BlK1RRgz+jNAQ83yBzzg323e9ZsC7+IS5kocw0YVikUvwWEcC5nKmZfxJ+t5/bCO/CG2MKwmEVyls7iA97jvcn0oWNYDejg5Rz9DFIYJbbDSJHS7S8ZLnYiaMsN0gcH/DW8gowGqzBeHvGltw3uLhM9rpt4kFA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=VYMWXZdDnpx2fNUap5BCtn+JUWTkSKaf+5QedQQqng0=;
+ b=kP5lcajm984zi6OkWsaapvnOQ/YHu1TJOtVSpUxnIOuw3LNQ5/k4KFz0gbDLMBTEry4FYbFKEbzWYT5HBN9wCUGIDpxoLjGBXJEUlGoi1ZB/cJw0eG8KMTlBmKjPj4tHYYhLVipQMLInJb++aYApwMXwgYSr06yuXPwpj+v72XEACp4Jsha9fTNIKY+wNjOJyI/dzDlSATbnCo1X6FSONOd2fSiXm+dh5CYQvB1fPOC3SyZYfGHpjE2IMK286kGZbgblMTdf+W5L5tOH7S+CkynMcFlR4IKQ3B41O6QEe4NTwUCwpjPrF7ocfvUSC8ZgIvuoZZOujiffAGqh62Cddw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=marvell.com; dmarc=pass action=none header.from=marvell.com;
+ dkim=pass header.d=marvell.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=marvell.onmicrosoft.com; s=selector1-marvell-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=VYMWXZdDnpx2fNUap5BCtn+JUWTkSKaf+5QedQQqng0=;
+ b=SJGbUuHR6KZbI2HEuOXb3L83iUf48x0/5udD+7Y/5HstKJ4digCL4sCg74KW/25O1mTecV7Zyrcun9t9DXOOZ/ZWEjXlmPOfTvOFOFDX3tM9sV3Sgu70G+XuGVJ+aSJ0Jk6NoOf+0wpZbDhXofRBIqvY6P4vtwEhLx9BSjEcHGA=
+Received: from BYAPR18MB2661.namprd18.prod.outlook.com (2603:10b6:a03:136::26)
+ by BYAPR18MB2375.namprd18.prod.outlook.com (2603:10b6:a03:12d::24) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2878.19; Thu, 9 Apr
+ 2020 09:10:26 +0000
+Received: from BYAPR18MB2661.namprd18.prod.outlook.com
+ ([fe80::78a2:38df:6c52:a953]) by BYAPR18MB2661.namprd18.prod.outlook.com
+ ([fe80::78a2:38df:6c52:a953%3]) with mapi id 15.20.2878.023; Thu, 9 Apr 2020
+ 09:10:26 +0000
+Date:   Thu, 9 Apr 2020 11:10:16 +0200
+From:   Robert Richter <rrichter@marvell.com>
+To:     Jason Yan <yanaijie@huawei.com>
+CC:     <khuong@os.amperecomputing.com>, <bp@alien8.de>,
+        <mchehab@kernel.org>, <tony.luck@intel.com>, <james.morse@arm.com>,
+        <linux-edac@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] EDAC, xgene: remove set but not used 'address'
+Message-ID: <20200409091016.d3uohmt2o3zwhmro@rric.localdomain>
+References: <20200409085237.46642-1-yanaijie@huawei.com>
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200409085237.46642-1-yanaijie@huawei.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-ClientProxiedBy: HE1PR0901CA0049.eurprd09.prod.outlook.com
+ (2603:10a6:3:45::17) To BYAPR18MB2661.namprd18.prod.outlook.com
+ (2603:10b6:a03:136::26)
 MIME-Version: 1.0
-References: <20200113172245.27925-1-ardb@kernel.org> <20200113172245.27925-6-ardb@kernel.org>
- <63b125a4-6c62-fcdf-de22-d3bebe2dcbf5@suse.cz> <CAMj1kXGiT_zYjc6X-msRXVozhpDAY0UesEW3_4fOgiH4FyMgDw@mail.gmail.com>
- <972b66a9-92c7-9a15-1aa1-e3236abe90df@suse.cz> <CAMj1kXFGkOM9fbqr44_TbdxqFjH1i3d8dkO64C1mQmH=AqrUSQ@mail.gmail.com>
- <20200409080626.GV5951@GaryWorkstation> <984a2b3c-a9d4-e733-6372-4abf0f99be1f@suse.cz>
- <CAMj1kXFHUusU9dDgqhU_qswDVgYWx_kpaDEroj4ZSt3hr-AFsA@mail.gmail.com> <d38fd829-b944-da10-58c0-180f80e8264d@suse.cz>
-In-Reply-To: <d38fd829-b944-da10-58c0-180f80e8264d@suse.cz>
-From:   Ard Biesheuvel <ardb@kernel.org>
-Date:   Thu, 9 Apr 2020 11:09:58 +0200
-X-Gmail-Original-Message-ID: <CAMj1kXG4F+WzJX8_FyRAxQmDwqvbQMzh3Ji1KcpH_eO3Zt3-WQ@mail.gmail.com>
-Message-ID: <CAMj1kXG4F+WzJX8_FyRAxQmDwqvbQMzh3Ji1KcpH_eO3Zt3-WQ@mail.gmail.com>
-Subject: Re: [PATCH 05/13] efi/x86: don't map the entire kernel text RW for
- mixed mode
-To:     Jiri Slaby <jslaby@suse.cz>
-Cc:     Gary Lin <glin@suse.com>, linux-efi <linux-efi@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Anshuman Khandual <anshuman.khandual@arm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Dave Young <dyoung@redhat.com>,
-        Saravana Kannan <saravanak@google.com>
-Content-Type: text/plain; charset="UTF-8"
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from rric.localdomain (31.208.96.227) by HE1PR0901CA0049.eurprd09.prod.outlook.com (2603:10a6:3:45::17) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2900.16 via Frontend Transport; Thu, 9 Apr 2020 09:10:24 +0000
+X-Originating-IP: [31.208.96.227]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 2567d6ec-e130-4133-666b-08d7dc65d768
+X-MS-TrafficTypeDiagnostic: BYAPR18MB2375:
+X-Microsoft-Antispam-PRVS: <BYAPR18MB237583794D6DD78F3ED66F35D9C10@BYAPR18MB2375.namprd18.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:514;
+X-Forefront-PRVS: 0368E78B5B
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR18MB2661.namprd18.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10009020)(4636009)(376002)(136003)(346002)(39850400004)(366004)(396003)(6506007)(9686003)(66476007)(81156014)(478600001)(186003)(55016002)(86362001)(6666004)(8936002)(8676002)(1076003)(53546011)(7696005)(66946007)(5660300002)(66556008)(52116002)(316002)(81166007)(956004)(16526019)(2906002)(6916009)(4326008)(26005);DIR:OUT;SFP:1101;
+Received-SPF: None (protection.outlook.com: marvell.com does not designate
+ permitted sender hosts)
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 9P0lEIk2EoIf+kG5T6PDrUBlo5097Paf7Wg0dakt0qQqZOOiE6u0B8QWuA3muLVTVx8/XWqJo6r3S782MvXk7RgtnkAxaDxKyxxiCbDs/EftRKiwNfzVM+fS+rK7Fqw9p0Kn0cpOI95r4QH/mkTl7tb1esczau0nh73VZlFtcdncGzIGilvhr0tGI3sWHxTL+i/jYes2enUVYwoCAwwym5K4t7eVBzR7MdvoxFugm+UH3tjsbRGFsjKvEozaEprp0ZYvnSY3ZH+Y917F8kobOoMRe5H5NUqW/rlkm0IQUPBjciKU8Qww/hNTkwNxvuYW2gBo0sqUkl8tuT1XARRHNeHUnRIACxQtGlH5ex95RwKa6eouv1gbK1FpoRb8T6xpwpLWdZGnrmJWF5fH57wzdcC9k6jZCqGp+EHtNtF5jEyM9RH2LsguMso0Oe76gYiW
+X-MS-Exchange-AntiSpam-MessageData: lEJcO5YyshLHHC/ltM7u45QqOpXbLM29npVIYcxn0S3aMFoS5FIbv6wwpjx4ftl4K/4f2Ypy0gd/hFqGJ6QmEnsVWRusqhdlluurtxM9qVrcbQBsJPXOlJHM+/pkb0+oS+vBnj+jKk74cm7UH6c+TQ==
+X-MS-Exchange-CrossTenant-Network-Message-Id: 2567d6ec-e130-4133-666b-08d7dc65d768
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Apr 2020 09:10:26.1724
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 70e1fb47-1155-421d-87fc-2e58f638b6e0
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 0m6jfJSFVCAVedFmnUquvQUn/obektAPVD2ZrP/plF/RNNoGFqxl+iRVf2km5GcXSjzFWqUmzbruagwwUXOKfQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR18MB2375
+X-OriginatorOrg: marvell.com
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
+ definitions=2020-04-09_03:2020-04-07,2020-04-09 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 9 Apr 2020 at 10:36, Jiri Slaby <jslaby@suse.cz> wrote:
->
-> On 09. 04. 20, 10:19, Ard Biesheuvel wrote:
-> >>>> $ rpm -qlp ~/Downloads/ovmf-202002-1.1.i586.rpm
-> >>>> warning: /home/ardbie01/Downloads/ovmf-202002-1.1.i586.rpm: Header V3
-> >>>> RSA/SHA256 Signature, key ID 3dbdc284: NOKEY
-> >>>> /usr/share/doc/packages/ovmf
-> >>>> /usr/share/doc/packages/ovmf/README
-> >>>
-> >>> Hmmm, it's weird that OBS doesn't list all derived files.
-> >>> Anyway, the ia32 ovmf is available in
-> >>> http://download.opensuse.org/tumbleweed/repo/oss/noarch/qemu-ovmf-ia32-202002-1.1.noarch.rpm
-> >>
-> >> It indeed does:
-> >> https://build.opensuse.org/package/binaries/openSUSE:Factory/ovmf/standard
-> >>
-> >> Note that the ia32 version is noarch, built on i586.
-> >>
-> >
-> > I am not able to reproduce this issue using the linked firmware image
-> > and a 5.6 x86_64_defconfig with efivarfs built in.
->
-> Yeah, I had to use the distro config too. Not sure what the trigger is.
-> Maybe some NUMA configs or something.
->
-> > Could anyone share the full log, please, along with the kernel config
-> > that was used?
->
-> Both uploaded:
-> http://decibel.fi.muni.cz/~xslaby/err/
->
+On 09.04.20 16:52:37, Jason Yan wrote:
+> Fix the following gcc warning:
+> 
+> drivers/edac/xgene_edac.c:1486:7: warning: variable ‘address’ set but
+> not used [-Wunused-but-set-variable]
+>    u32 address;
+>        ^~~~~~~
+> 
+> Reported-by: Hulk Robot <hulkci@huawei.com>
+> Signed-off-by: Jason Yan <yanaijie@huawei.com>
+> ---
+>  drivers/edac/xgene_edac.c | 2 --
+>  1 file changed, 2 deletions(-)
+> 
+> diff --git a/drivers/edac/xgene_edac.c b/drivers/edac/xgene_edac.c
+> index e4a1032ba0b5..e5e0fbdeca29 100644
+> --- a/drivers/edac/xgene_edac.c
+> +++ b/drivers/edac/xgene_edac.c
+> @@ -1483,13 +1483,11 @@ static void xgene_edac_rb_report(struct edac_device_ctl_info *edac_dev)
+>  		return;
+>  	if (reg & STICKYERR_MASK) {
+>  		bool write;
+> -		u32 address;
+>  
+>  		dev_err(edac_dev->dev, "IOB bus access error(s)\n");
+>  		if (regmap_read(ctx->edac->rb_map, RBEIR, &reg))
+>  			return;
+>  		write = reg & WRITE_ACCESS_MASK ? 1 : 0;
+> -		address = RBERRADDR_RD(reg);
 
-With the same config, I am still not seeing the issue.
+Please also remove that unused macro.
 
+Thanks,
 
-> Note that I switched the for-me-necessary =m configs to =y. So that it
-> is enough to build bzImage, w/o modules...
->
+-Robert
 
-Could you please try running it again with CONFIG_EFI_PGT_DUMP=y enabled?
-
-In the mean time, I will try to install Tumbleweed from scratch. Do
-you have any steps I could follow to reproduce your setup?
-
-
-> > Also, it would be good to know if it is reproducible
-> > using a kernel built from upstream.
->
-> Sure, I was bisecting the upstream kernel:
-> git bisect start
-> # bad: [7111951b8d4973bda27ff663f2cf18b663d15b48] Linux 5.6
-> git bisect bad 7111951b8d4973bda27ff663f2cf18b663d15b48
-> # good: [d5226fa6dbae0569ee43ecfc08bdcd6770fc4755] Linux 5.5
-> git bisect good d5226fa6dbae0569ee43ecfc08bdcd6770fc4755
-> # skip: [9f68e3655aae6d49d6ba05dd263f99f33c2567af] Merge tag
-> 'drm-next-2020-01-30' of git://anongit.freedesktop.org/drm/drm
-> git bisect skip 9f68e3655aae6d49d6ba05dd263f99f33c2567af
-> # good: [b4a4bd0f2629ec2ece7690de1b4721529da29871] irqchip/gic-v4.1: Add
-> VPE INVALL callback
-> git bisect good b4a4bd0f2629ec2ece7690de1b4721529da29871
-> # good: [c130d2dc93cd03323494d82dbe7b5fb0d101ab62] rcu: Rename some
-> instance of CONFIG_PREEMPTION to CONFIG_PREEMPT_RCU
-> git bisect good c130d2dc93cd03323494d82dbe7b5fb0d101ab62
-> # good: [0aee99a1ea53de1aedcf96a4d52d6161ffba011a] iio: gyro: adis16136:
-> rework locks using ADIS library's state lock
-> git bisect good 0aee99a1ea53de1aedcf96a4d52d6161ffba011a
-> # bad: [83576e32a71717d1912b7dcb247a0f15613272da] Merge branch
-> 'macb-TSO-bug-fixes'
-> git bisect bad 83576e32a71717d1912b7dcb247a0f15613272da
-> # bad: [7ba31c3f2f1ee095d8126f4d3757fc3b2bc3c838] Merge tag
-> 'staging-5.6-rc1' of
-> git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/staging
-> git bisect bad 7ba31c3f2f1ee095d8126f4d3757fc3b2bc3c838
-> # good: [f76e4c167ea2212e23c15ee7e601a865e822c291] net: phy: add default
-> ARCH_BCM_IPROC for MDIO_BCM_IPROC
-> git bisect good f76e4c167ea2212e23c15ee7e601a865e822c291
-> # bad: [bd2463ac7d7ec51d432f23bf0e893fb371a908cd] Merge
-> git://git.kernel.org/pub/scm/linux/kernel/git/netdev/net-next
-> git bisect bad bd2463ac7d7ec51d432f23bf0e893fb371a908cd
-> # good: [e279160f491392f1345f6eb4b0eeec5a6a2ecdd7] Merge tag
-> 'timers-core-2020-01-27' of
-> git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip
-> git bisect good e279160f491392f1345f6eb4b0eeec5a6a2ecdd7
-> # bad: [511fdb78442229ac11057b4a55c3f03c253c062f] Merge branch
-> 'x86-mtrr-for-linus' of
-> git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip
-> git bisect bad 511fdb78442229ac11057b4a55c3f03c253c062f
-> # bad: [2180f214f4a5d8e2d8b7138d9a59246ee05753b9] Merge branch
-> 'locking-core-for-linus' of
-> git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip
-> git bisect bad 2180f214f4a5d8e2d8b7138d9a59246ee05753b9
-> # good: [d99391ec2b42d827d92003dcdcb96fadac9d862b] Merge branch
-> 'core-rcu-for-linus' of
-> git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip
-> git bisect good d99391ec2b42d827d92003dcdcb96fadac9d862b
-> # good: [57ad87ddce79b6d54f8e442d0ecf4b5bbe8c5a9e] Merge branch 'x86/mm'
-> into efi/core, to pick up dependencies
-> git bisect good 57ad87ddce79b6d54f8e442d0ecf4b5bbe8c5a9e
-> # good: [ac3c76cc6d6deef573dd8c14232f20c6aa744f83] efi/libstub/x86: Use
-> mandatory 16-byte stack alignment in mixed mode
-> git bisect good ac3c76cc6d6deef573dd8c14232f20c6aa744f83
-> # bad: [484a418d075488c6999528247cc711d12c373447] efi: Fix handling of
-> multiple efi_fake_mem= entries
-> git bisect bad 484a418d075488c6999528247cc711d12c373447
-> # bad: [1f299fad1e312947c974c6a1d8a3a484f27a6111] efi/x86: Limit EFI old
-> memory map to SGI UV machines
-> git bisect bad 1f299fad1e312947c974c6a1d8a3a484f27a6111
-> # good: [75fbef0a8b6b4bb19b9a91b5214f846c2dc5139e] x86/mm: Fix NX bit
-> clearing issue in kernel_map_pages_in_pgd
-> git bisect good 75fbef0a8b6b4bb19b9a91b5214f846c2dc5139e
-> # bad: [97bb9cdc32108036170d9d0d208257168f80d9e9] efi/x86: Avoid RWX
-> mappings for all of DRAM
-> git bisect bad 97bb9cdc32108036170d9d0d208257168f80d9e9
-> # bad: [d9e3d2c4f103200d87f2c243a84c1fd3b3bfea8c] efi/x86: Don't map the
-> entire kernel text RW for mixed mode
-> git bisect bad d9e3d2c4f103200d87f2c243a84c1fd3b3bfea8c
-> # first bad commit: [d9e3d2c4f103200d87f2c243a84c1fd3b3bfea8c] efi/x86:
-> Don't map the entire kernel text RW for mixed mode
->
-> thanks,
-> --
-> js
-> suse labs
+>  		if (reg & AGENT_OFFLINE_ERR_MASK)
+>  			dev_err(edac_dev->dev,
+>  				"IOB bus %s access to offline agent error\n",
+> -- 
+> 2.17.2
+> 
