@@ -2,157 +2,116 @@ Return-Path: <SRS0=n+Ub=5Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF674C2BB86
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 13:35:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7F34C2BA2B
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 13:36:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B417A2078E
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 13:35:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Zp3NgtrQ"
+	by mail.kernel.org (Postfix) with ESMTP id B08A52078E
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 13:36:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726876AbgDINfP (ORCPT
+        id S1726882AbgDINgI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Apr 2020 09:35:15 -0400
-Received: from mail-qv1-f67.google.com ([209.85.219.67]:32924 "EHLO
-        mail-qv1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726621AbgDINfO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Apr 2020 09:35:14 -0400
-Received: by mail-qv1-f67.google.com with SMTP id p19so5477836qve.0
-        for <linux-kernel@vger.kernel.org>; Thu, 09 Apr 2020 06:35:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=/Vv+1R03DQVI7xYMxThrrmY4cHaZPeIPyuzJ14TmSL0=;
-        b=Zp3NgtrQ1vfTTYfgW0xmuVmJgbKYkzCnOxiwfbVjlCreMgRQdn7dDxlqiWGHe9aQ66
-         +CDMJBLuCagUM8RNHiyjFPH90w960p9forSKEIbCQVRKSQMgeLdDSRI/UzIf01+c6/D6
-         SYeitg6zj6s2K6CL1nz68LwT3ZYYkE9LpOUmp5nns9tl3WjI6/eWOCTXxHooSNsgmPBe
-         xaBtZsAJM1ZOnt4r5f9wPwJcK1tL+fr5dfocVUMWn4u5NbBOGGhAecFXUUiv9JPJ1NM/
-         1QU1yx4wG9PFESYQO2TX1/J6A4rQkcQIQSEQBGRj33Qeo33JcdvgCGDPbqg7YGifoSlY
-         ZJPA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=/Vv+1R03DQVI7xYMxThrrmY4cHaZPeIPyuzJ14TmSL0=;
-        b=iyid3/vdvq0q/yWOI/ITh7tfSs/FKOx62h9K3y28EBaTR7uF5CjvNct698G6o8sfM6
-         uf84r2i9w8t8I9Y6p4JhnRtP18KoR3Fp02BhXc9VKHIux5ki5/hGbx7ooFeqBJExJzi/
-         yE68L16LwaOFxYuZvWB59dfTCl354fzCP/V1ILtyGj3nxOrR0Vi2/bYFzEzz3HSNOMV5
-         MjqND4UfMiNKcUj/I6OHFfJCpo55ynkdcJdY7Y9uC/+xKjtmEiwiOwPxtZY6WGkYC92L
-         gNHyYRt4IPejnGXtq7Dvu6gGaic+VVPUipQRfjvjFe4SynF9Wo6190MkJ8s0gFE9bA2b
-         bZZg==
-X-Gm-Message-State: AGi0PuZQ2kfZiEpa4zo3YKwmPddadxzumcRSAqJIgJjwIReYNZMjv8S3
-        XKngDRi+xlCj///ub5NOQDSc0fT5bp6Yf9ZZpRKJWO7vRNNiWQ==
-X-Google-Smtp-Source: APiQypJ9AbNO5hodxrNmpo8tup2Sxro3VOnrszXIDpmLe7VEDvNIrpXgWp+m6E5XmJpzgPy0Fu8DZqcWuB//dPVOU2A=
-X-Received: by 2002:a05:6214:434:: with SMTP id a20mr57329qvy.80.1586439314158;
- Thu, 09 Apr 2020 06:35:14 -0700 (PDT)
+        Thu, 9 Apr 2020 09:36:08 -0400
+Received: from foss.arm.com ([217.140.110.172]:50244 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726597AbgDINgI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Apr 2020 09:36:08 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id BD66930E;
+        Thu,  9 Apr 2020 06:36:07 -0700 (PDT)
+Received: from [10.37.8.193] (unknown [10.37.8.193])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 6B1603F73D;
+        Thu,  9 Apr 2020 06:36:03 -0700 (PDT)
+Subject: Re: [PATCH v3 21/26] arm64: Introduce asm/vdso/arch_timer.h
+To:     Will Deacon <will@kernel.org>
+Cc:     Catalin Marinas <catalin.marinas@arm.com>,
+        linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org,
+        clang-built-linux@googlegroups.com, x86@kernel.org,
+        Will Deacon <will.deacon@arm.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Russell King <linux@armlinux.org.uk>,
+        Paul Burton <paul.burton@mips.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Andy Lutomirski <luto@kernel.org>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Mark Salyzyn <salyzyn@android.com>,
+        Kees Cook <keescook@chromium.org>,
+        Peter Collingbourne <pcc@google.com>,
+        Dmitry Safonov <0x7f454c46@gmail.com>,
+        Andrei Vagin <avagin@openvz.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Marc Zyngier <maz@kernel.org>,
+        Mark Rutland <Mark.Rutland@arm.com>
+References: <20200313154345.56760-1-vincenzo.frascino@arm.com>
+ <20200313154345.56760-22-vincenzo.frascino@arm.com>
+ <20200315183151.GE32205@mbp> <4914ad9c-3eaf-b328-f31b-5d3077ef272f@arm.com>
+ <20200409132633.GD13078@willie-the-truck>
+From:   Vincenzo Frascino <vincenzo.frascino@arm.com>
+Message-ID: <d578db85-7581-9bbb-2dab-25555e424ceb@arm.com>
+Date:   Thu, 9 Apr 2020 14:36:48 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-References: <00000000000075245205a2997f68@google.com> <20200406172151.GJ80989@unreal>
- <20200406174440.GR20941@ziepe.ca> <CACT4Y+Zv_WXEn6u5a6kRZpkDJnSzeGF1L7JMw4g85TLEgAM7Lw@mail.gmail.com>
- <20200407115548.GU20941@ziepe.ca> <CACT4Y+Zy0LwpHkTMTtb08ojOxuEUFo1Z7wkMCYSVCvsVDcxayw@mail.gmail.com>
- <20200407143528.GV20941@ziepe.ca>
-In-Reply-To: <20200407143528.GV20941@ziepe.ca>
-From:   Dmitry Vyukov <dvyukov@google.com>
-Date:   Thu, 9 Apr 2020 15:35:02 +0200
-Message-ID: <CACT4Y+bpms6+tPunsznx5_90Six_uicfx-_F2qctubmtBcq2Qw@mail.gmail.com>
-Subject: Re: WARNING in ib_umad_kill_port
-To:     Jason Gunthorpe <jgg@ziepe.ca>
-Cc:     Leon Romanovsky <leon@kernel.org>,
-        syzbot <syzbot+9627a92b1f9262d5d30c@syzkaller.appspotmail.com>,
-        RDMA mailing list <linux-rdma@vger.kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        netdev <netdev@vger.kernel.org>,
-        Rafael Wysocki <rafael@kernel.org>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200409132633.GD13078@willie-the-truck>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 7, 2020 at 4:35 PM Jason Gunthorpe <jgg@ziepe.ca> wrote:
->
-> On Tue, Apr 07, 2020 at 02:39:42PM +0200, Dmitry Vyukov wrote:
-> > On Tue, Apr 7, 2020 at 1:55 PM Jason Gunthorpe <jgg@ziepe.ca> wrote:
-> > >
-> > > On Tue, Apr 07, 2020 at 11:56:30AM +0200, Dmitry Vyukov wrote:
-> > > > > I'm not sure what could be done wrong here to elicit this:
-> > > > >
-> > > > >  sysfs group 'power' not found for kobject 'umad1'
-> > > > >
-> > > > > ??
-> > > > >
-> > > > > I've seen another similar sysfs related trigger that we couldn't
-> > > > > figure out.
-> > > > >
-> > > > > Hard to investigate without a reproducer.
-> > > >
-> > > > Based on all of the sysfs-related bugs I've seen, my bet would be on
-> > > > some races. E.g. one thread registers devices, while another
-> > > > unregisters these.
-> > >
-> > > I did check that the naming is ordered right, at least we won't be
-> > > concurrently creating and destroying umadX sysfs of the same names.
-> > >
-> > > I'm also fairly sure we can't be destroying the parent at the same
-> > > time as this child.
-> > >
-> > > Do you see the above commonly? Could it be some driver core thing? Or
-> > > is it more likely something wrong in umad?
-> >
-> > Mmmm... I can't say, I am looking at some bugs very briefly. I've
-> > noticed that sysfs comes up periodically (or was it some other similar
-> > fs?).
->
-> Hmm..
->
-> Looking at the git history I see several cases where there are
-> ordering problems. I wonder if the rdma parent device is being
-> destroyed before the rdma devices complete destruction?
->
-> I see the syzkaller is creating a bunch of virtual net devices, and I
-> assume it has created a software rdma device on one of these virtual
-> devices.
->
-> So I'm guessing that it is also destroying a parent? But I can't guess
-> which.. Some simple tests with veth suggest it is OK because the
-> parent is virtual. But maybe bond or bridge or something?
->
-> The issue in rdma is that unregistering a netdev triggers an async
-> destruction of the RDMA devices. This has to be async because the
-> netdev notification is delivered with RTNL held, and a rdma device
-> cannot be destroyed while holding RTNL.
->
-> So there is a race, I suppose, where the netdev can complete
-> destruction while rdma continues, and if someone deletes the sysfs
-> holding the netdev before rdma completes, I'm going to guess, that we
-> hit this warning?
->
-> Could it be? I would love to know what netdev the rdma device was
-> created on, but it doesn't seem to show in the trace :\
->
-> This theory could be made more likely by adding a sleep to
-> ib_unregister_work() to increase the race window - is there some way
-> to get syzkaller to search for a reproducer with that patch?
+Hi Will,
 
+On 4/9/20 2:26 PM, Will Deacon wrote:
+> Hi Vincenzo,
+> 
+> Sorry, I was on holiday when you posted this and it slipped through the
+> cracks.
+> 
 
-Bad it happened in kthread context. Otherwise it's usually possible to
-pinpoint the test based on process name.
+No issue at all. Thank you for getting back to me.
 
-syz-repro utility will do reproduction process with a any kernel you give it:
-https://github.com/google/syzkaller/blob/master/docs/reproducing_crashes.md
+> On Mon, Mar 16, 2020 at 03:37:23PM +0000, Vincenzo Frascino wrote:
+>>> On Fri, Mar 13, 2020 at 03:43:40PM +0000, Vincenzo Frascino wrote:
+>>>> The vDSO library should only include the necessary headers required for
+>>>> a userspace library (UAPI and a minimal set of kernel headers). To make
+>>>> this possible it is necessary to isolate from the kernel headers the
+>>>> common parts that are strictly necessary to build the library.
+>>>>
+>>>> Introduce asm/vdso/arch_timer.h to contain all the arm64 specific
+>>>> code. This allows to replace the second isb() in __arch_get_hw_counter()
+>>>> with a fake dependent stack read of the counter which improves the vdso
+>>>> library peformances of ~4.5%. Below the results of vdsotest [1] ran for
+>>>> 100 iterations.
+>>>
+>>> The subject seems to imply a non-functional change but as you read, it
+>>> gets a lot more complicated. Could you keep the functional change
+>>> separate from the header clean-up, maybe submit it as an independent
+>>> patch? And it shouldn't go in without Will's ack ;).
+>>>
+>>
+>> It is fine by me. I will repost the series with the required fixes and without
+>> this patch. This will give to me enough time to address Mark's comments as well
+>> and to Will to have a proper look.
+> 
+> Please can you post whatever is left at -rc1? I'll have a look then, but
+> let's stick to just moving code around rather than randomly changing it
+> at the same time, ok?
+> 
 
-Or it's possible to run individual programs, or whole log with
-syz-execprog utility:
-https://github.com/google/syzkaller/blob/master/docs/executing_syzkaller_programs.md
+Sure, I will try to re-post it by -rc1 and take on board your comments.
 
-Or maybe you could pinpoint the guilty test program by hand in the log
-(it's probably somewhere closer to the end):
-https://syzkaller.appspot.com/x/log.txt?x=119dd16de00000
+> Thanks,
+> 
+> Will
+> 
+
+-- 
+Regards,
+Vincenzo
