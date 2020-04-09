@@ -2,152 +2,240 @@ Return-Path: <SRS0=n+Ub=5Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
 	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 335F7C2BA19
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 19:08:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E6BCC2BA19
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 19:12:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 04BC2206F5
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 19:08:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586459299;
-	bh=bg+rj/lc6QJrR2P3BSqqa6AnptHPJVP8cBgTCl6lPGg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=KvOE1dODEjE2tj+QTaReMGHMLslAC6hv+3vql9xUzcQe6KDc3F7LPKIyL89JrrD24
-	 ZYyGMLGE+rnbowSgN/rQUipZbKvGC68nTmdra7WGKrRxSeSbp33g7Pj+Ym50UxdH1w
-	 igsiGKHccaYVFHCtCdq8NMs0j/viWQw8nEJvjaZk=
+	by mail.kernel.org (Postfix) with ESMTP id 193B2206F5
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 19:12:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="q8W7U/8p"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726701AbgDITIR (ORCPT
+        id S1726715AbgDITMN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Apr 2020 15:08:17 -0400
-Received: from mail-qv1-f67.google.com ([209.85.219.67]:46786 "EHLO
-        mail-qv1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726632AbgDITIR (ORCPT
+        Thu, 9 Apr 2020 15:12:13 -0400
+Received: from mail-io1-f65.google.com ([209.85.166.65]:46042 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726598AbgDITMN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Apr 2020 15:08:17 -0400
-Received: by mail-qv1-f67.google.com with SMTP id bu9so6054902qvb.13;
-        Thu, 09 Apr 2020 12:08:15 -0700 (PDT)
+        Thu, 9 Apr 2020 15:12:13 -0400
+Received: by mail-io1-f65.google.com with SMTP id i19so654182ioh.12;
+        Thu, 09 Apr 2020 12:12:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=ayL215ffxl6RjJBBrVofm8B1vxSMDd7VbUsUyBtw+QM=;
-        b=bCjHWWd3Hfo9Zwt/UN+F0Hmriun0dZN9aT7DnbdFO67O+uTY8o4uHtiVMRsX+dpyJN
-         uqSC7XBHSdVmBnjTb+GzXMxHG0leQir/TIZQehT1LbKR5q3MGPV4VDAXhy2xrBN7l9Gh
-         ZajFf8FvKF10zqVXppmyPMPJ4I1g3bRutLOaQ2tdae0/BtP0lFDAlUfDlz9TyG8YvKsR
-         s29MqYvn1Pi0UMZ5IDyJ2dEiekkwhXDhzTXrlcT5uetSE3RTRP55s7Qfd0nuI1BagM2J
-         9eI0erzZctXjuuGgwj504H5ML+j0VUeK7dfkRyPIo7Tjr+6brZ00OPJwJqwjqtr8LsFS
-         9S+A==
+        h=mime-version:from:date:message-id:subject:to;
+        bh=Ntgh7ggRVyuTK7qYbcPinZghAPb2Fm06PKgbVvN1RvE=;
+        b=q8W7U/8pcYPRtd6rGVYf5YkCnHWc6GrAAcojXVxhKKIg6PUumFKbYS0c59k+DsSqvz
+         We45F23OlwIMWCngXFh04gSJP9ctlLpUPd86rVOe7Jpm0wv7YumBWVHCsbVpDXk+yO/j
+         7GkrBhmp+RtdQX4fmiUSKPhEgDoDoVAXFuuahkGa0/TUvEsbGGRZTGBtegNAbli0pKSj
+         t4uAc6ShrxlxGa1fPyQoSfQTPl16WtpgobgR7+JWSfnY27SXa3pECzidFsMFd1uiimGv
+         BDKOblegXhzr8rDZ3hRSGPCkl69MT0PFIQWQq259IzuxLGtjHfO17jC4NESm+FgI1wlD
+         n9OQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to;
-        bh=ayL215ffxl6RjJBBrVofm8B1vxSMDd7VbUsUyBtw+QM=;
-        b=kLdrvgp6ZoCK1ABIC8YzTrvmVe7K1J+XzQhqOUJ4l7436FL/8sfkrsbWcmwileVW8a
-         Vx8fJJ7jRzhbd+CbhZEyFXZ91aJkfV3IGGjRY+HmpyWmFjCC2PKDPESP3qnWcQvdjtU6
-         RyJ2XMUw+rq20tAnfBkD81ddU0z0P4STqbslbi7kKmzo0m4C02D9Uut3UcjXmRQsk7Ch
-         aO+E3phZDra51NQp14Eq32A9Hbg1LkRgqLdZJCaiiC5NEYOHdiiMwOW2rPBN2nmvik0h
-         q5Xk9foJaeUQYGXH9E+X8c1OnGMbuMjVTF2xro0m+jqsO2GuDDNKJNJmgrq8iC4asuAA
-         3OrQ==
-X-Gm-Message-State: AGi0PuY34/uq8SncUJkkaPGscwAFR1y1COf0q8+6L7+4iiK/tXMto/xp
-        PkT8POQ3YmXLdtw0JzRAwIY=
-X-Google-Smtp-Source: APiQypLnt+6zVmfQ9hqx9DH8q8ecuGIo+Iqvzrff47Vh7roL00Z5OuaUYmLyG6u64qYsJWLh+i3QeQ==
-X-Received: by 2002:a0c:ee81:: with SMTP id u1mr1635057qvr.187.1586459294676;
-        Thu, 09 Apr 2020 12:08:14 -0700 (PDT)
-Received: from localhost ([2620:10d:c091:480::74a8])
-        by smtp.gmail.com with ESMTPSA id z43sm23415759qtb.92.2020.04.09.12.08.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 09 Apr 2020 12:08:13 -0700 (PDT)
-Date:   Thu, 9 Apr 2020 15:08:12 -0400
-From:   Tejun Heo <tj@kernel.org>
-To:     Mel Gorman <mgorman@techsingularity.net>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        LKML <linux-kernel@vger.kernel.org>, cgroups@vger.kernel.org
-Subject: [PATCH cgroup/for-5.7-fixes] Revert "cgroup: Add memory barriers to
- plug cgroup_rstat_updated() race window"
-Message-ID: <20200409190812.GB37608@mtj.thefacebook.com>
-References: <20200409154413.GK3818@techsingularity.net>
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to;
+        bh=Ntgh7ggRVyuTK7qYbcPinZghAPb2Fm06PKgbVvN1RvE=;
+        b=uKw401/mKRuJchvW6eyu3Gs6g1eVwDh2XbzuahZsCZZpzC5hgUhwVV8O4fpGjrE35C
+         i6BMrSIXLG2rgXjFPiPrLe4rhPKyApzGjto1P9GeGmjGZdhjrGBYmoP9nJMajC5JDBbK
+         Wq8Gc4QYTX9NLm2mly702hl3I1xIoWrImD7vCLicktzgt6d/v5IFhlHEbpAfWay/RA6o
+         ofbQHvITv4lCxzw+2EOjaEp2blevoGChekys0WVJiTV9DcTJYu9CdDnhF3CLV/xsb7cN
+         GDG95p+ZjQHRiOPXyY5IoyRStHLQwFnsqm8i/ZBF4n+fCf2aFkvfXXd64pQzyF7u+eoI
+         9SHQ==
+X-Gm-Message-State: AGi0PuZyPd2rHWEWJoPaa5aqRXLUwbRk5lv8geEzQbCn6PHJtHlWZGB2
+        +XOEz1pMU2pBMnOLa2sw37I9Gg17x53uvmQP9bcdQBTry2i3Jw==
+X-Google-Smtp-Source: APiQypLgpUstaEz8/6gOw4FLChsJa3c6p1VXDui4wrbFATLOmMOPJkZRwm6qC54ibmu6jbUZth/+jtAzxx11F9NYQjk=
+X-Received: by 2002:a02:8445:: with SMTP id l5mr949692jah.43.1586459532202;
+ Thu, 09 Apr 2020 12:12:12 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200409154413.GK3818@techsingularity.net>
+From:   Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>
+Date:   Fri, 10 Apr 2020 00:12:01 +0500
+Message-ID: <CABXGCsPpD+ExaeA6v+gSPPgtxcVzpKLWJNwGPPDKGFkPCv5kDg@mail.gmail.com>
+Subject: [Bug report] Kernel 5.7 become unbootable
+To:     Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        linux-x86_64@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From d8ef4b38cb69d907f9b0e889c44d05fc0f890977 Mon Sep 17 00:00:00 2001
-From: Tejun Heo <tj@kernel.org>
-Date: Thu, 9 Apr 2020 14:55:35 -0400
+Hi folks.
+I use Fedora Rawhide and today's update came with the new kernel
+5.7.0-0.rc0.git6.1.
+As it turned out this kernel won't boot. Instead, I see the black
+screen and some times see messages:
+exit_boot() failed!
+efi_main() failed!
 
-This reverts commit 9a9e97b2f1f2 ("cgroup: Add memory barriers to plug
-cgroup_rstat_updated() race window").
+The last working kernel is kernel-core-5.7.0-0.rc0.git2.1
 
-The commit was added in anticipation of memcg rstat conversion which needed
-synchronous accounting for the event counters (e.g. oom kill count). However,
-the conversion didn't get merged due to percpu memory overhead concern which
-couldn't be addressed at the time.
+I looked at the spec file and found out that the last bootable kernel
+was related to the commit cad18da0afb1
+(https://src.fedoraproject.org/rpms/kernel/c/9949db6070c6ca501d7235760ca8aba120db7448?branch=master),
+and the first non-bootable kernel related to the commit a10c9c710f9e
+(https://src.fedoraproject.org/rpms/kernel/c/0561e0bf0e459dd4b27a77670de838128b87bd0e?branch=master)
 
-Unfortunately, the patch's addition of smp_mb() to cgroup_rstat_updated()
-meant that every scheduling event now had to go through an additional full
-barrier and Mel Gorman noticed it as 1% regression in netperf UDP_STREAM test.
+Of course, knowing these two commits, I made bisecting with the vanilla kernel:
 
-There's no need to have this barrier in tree now and even if we need
-synchronous accounting in the future, the right thing to do is separating that
-out to a separate function so that hot paths which don't care about
-synchronous behavior don't have to pay the overhead of the full barrier. Let's
-revert.
+$ git bisect log
+git bisect start
+# good: [cad18da0afb1bc7b37d73a74067ab7ff5974897c] Merge tag
+'please-pull-ia64_for_5.7' of
+git://git.kernel.org/pub/scm/linux/kernel/git/aegl/linux
+git bisect good cad18da0afb1bc7b37d73a74067ab7ff5974897c
+# bad: [a10c9c710f9ecea87b9f4bbb837467893b4bef01] Merge tag 'for-v5.7'
+of git://git.kernel.org/pub/scm/linux/kernel/git/sre/linux-power-supply
+git bisect bad a10c9c710f9ecea87b9f4bbb837467893b4bef01
+# bad: [f365ab31efacb70bed1e821f7435626e0b2528a6] Merge tag
+'drm-next-2020-04-01' of git://anongit.freedesktop.org/drm/drm
+git bisect bad f365ab31efacb70bed1e821f7435626e0b2528a6
+# good: [7f80ccfe996871ca69648efee74a60ae7ad0dcd9] net: ipv6:
+rpl_iptunnel: Fix potential memory leak in rpl_do_srh_inline
+git bisect good 7f80ccfe996871ca69648efee74a60ae7ad0dcd9
+# good: [9001b17698d86f842e2b13e0cafe8021d43209e9] Merge tag
+'drm-intel-next-2020-03-13' of
+git://anongit.freedesktop.org/drm/drm-intel into drm-next
+git bisect good 9001b17698d86f842e2b13e0cafe8021d43209e9
+# bad: [dfabb077d62552797ca0ae7756cb30d3e195ead5] Merge tag 'mmc-v5.7'
+of git://git.kernel.org/pub/scm/linux/kernel/git/ulfh/mmc
+git bisect bad dfabb077d62552797ca0ae7756cb30d3e195ead5
+# bad: [15c981d16d70e8a5be297fa4af07a64ab7e080ed] Merge tag
+'for-5.7-tag' of
+git://git.kernel.org/pub/scm/linux/kernel/git/kdave/linux
+git bisect bad 15c981d16d70e8a5be297fa4af07a64ab7e080ed
+# good: [dc9492c14c758639d7b2468d4ed3c77e785c1a35] btrfs: hold a ref
+on the root on the dead roots list
+git bisect good dc9492c14c758639d7b2468d4ed3c77e785c1a35
+# good: [3cd86a58f7734bf9cef38f6f899608ebcaa3da13] Merge tag
+'arm64-upstream' of
+git://git.kernel.org/pub/scm/linux/kernel/git/arm64/linux
+git bisect good 3cd86a58f7734bf9cef38f6f899608ebcaa3da13
+# bad: [fdf5563a720004199324371c08071b8ea27bd994] Merge branch
+'x86-cleanups-for-linus' of
+git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip
+git bisect bad fdf5563a720004199324371c08071b8ea27bd994
+# skip: [cf122cfba5b1d9daf64009d143f51dfec4b1705a] kill uaccess_try()
+git bisect skip cf122cfba5b1d9daf64009d143f51dfec4b1705a
+# skip: [4dd2a1b92b91b5f2acf853ee1dc0df135054698f] x86: Replace
+setup_irq() by request_irq()
+git bisect skip 4dd2a1b92b91b5f2acf853ee1dc0df135054698f
+# skip: [5c1f178094631e8b9acc67e4a9b6e03abfbc2529] x86:
+__setup_frame(): consolidate uaccess areas
+git bisect skip 5c1f178094631e8b9acc67e4a9b6e03abfbc2529
+# skip: [3add42c29cebb1d5f83c6205c59466a06ccf8da1] x86: get rid of
+get_user_ex() in restore_sigcontext()
+git bisect skip 3add42c29cebb1d5f83c6205c59466a06ccf8da1
+# skip: [ead8e4e7e2c75ced6fcd9a53d3e9a2ecd7368553] x86:
+__setup_rt_frame(): consolidate uaccess areas
+git bisect skip ead8e4e7e2c75ced6fcd9a53d3e9a2ecd7368553
+# skip: [31a9122058bc5f042cb04bcdb8cd9e6c77fdae8d] x86/mm: Drop
+pud_mknotpresent()
+git bisect skip 31a9122058bc5f042cb04bcdb8cd9e6c77fdae8d
+# skip: [791612e9668cecbf5dd24d13400ac74e099f005c] x86:
+x32_setup_rt_frame(): consolidate uaccess areas
+git bisect skip 791612e9668cecbf5dd24d13400ac74e099f005c
+# skip: [77f3c6166ddc7567455b244074b3ebb63862b56f] x86: kill
+get_user_{try,catch,ex}
+git bisect skip 77f3c6166ddc7567455b244074b3ebb63862b56f
+# skip: [b00d8f8f0b2b39223c3fd6713d318aba95420264] x86:
+setup_sigcontext(): list user_access_{begin,end}() into callers
+git bisect skip b00d8f8f0b2b39223c3fd6713d318aba95420264
+# skip: [0e79ad863df43b01090ae18c97de5c3787f069c6] x86/cpu: Fix a
+-Wmissing-prototypes warning for init_ia32_feat_ctl()
+git bisect skip 0e79ad863df43b01090ae18c97de5c3787f069c6
+# skip: [b87df6594486626a9ae5944807307f2604cea3e2] x86:
+unsafe_put-style macro for sigmask
+git bisect skip b87df6594486626a9ae5944807307f2604cea3e2
+# skip: [a37d01ead405e3aa14d72d284721fe46422b3b63] x86: switch
+save_v86_state() to unsafe_put_user()
+git bisect skip a37d01ead405e3aa14d72d284721fe46422b3b63
+# skip: [119cd59fcfbe70fb3fcab4e64cd232bcc3807585] x86: get rid of
+put_user_try in __setup_rt_frame() (both 32bit and 64bit)
+git bisect skip 119cd59fcfbe70fb3fcab4e64cd232bcc3807585
+# skip: [119cd59fcfbe70fb3fcab4e64cd232bcc3807585] x86: get rid of
+put_user_try in __setup_rt_frame() (both 32bit and 64bit)
+git bisect skip 119cd59fcfbe70fb3fcab4e64cd232bcc3807585
+# bad: [9589351ccf47a85a75180a430627c16bc28da929] Merge branch
+'x86-boot-for-linus' of
+git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip
+git bisect bad 9589351ccf47a85a75180a430627c16bc28da929
+# skip: [003602ad5516e59940de42e44c8d8033387bb363] x86/*/Makefile: Use
+-fno-asynchronous-unwind-tables to suppress .eh_frame sections
+git bisect skip 003602ad5516e59940de42e44c8d8033387bb363
+# skip: [0eea39a234dc52063d14541fabcb2c64516a2328]
+x86/boot/compressed: Remove .eh_frame section from bzImage
+git bisect skip 0eea39a234dc52063d14541fabcb2c64516a2328
+# skip: [bac59d18c7018a2fd5e800a1e72a8271bf404977] x86/setup: Fix
+static memory detection
+git bisect skip bac59d18c7018a2fd5e800a1e72a8271bf404977
+# skip: [3ee372ccce4d4e7c610748d0583979d3ed3a0cf4]
+x86/boot/compressed/64: Remove .bss/.pgtable from bzImage
+git bisect skip 3ee372ccce4d4e7c610748d0583979d3ed3a0cf4
+# skip: [a86255fe5258714e1f7c1bdfe95f08e4d098d450]
+x86/boot/compressed/64: Use 32-bit (zero-extended) MOV for
+z_output_len
+git bisect skip a86255fe5258714e1f7c1bdfe95f08e4d098d450
+# skip: [6f8f0dc980028e98ae339876a8403edae4d20e39] x86/vmlinux: Drop
+unneeded linker script discard of .eh_frame
+git bisect skip 6f8f0dc980028e98ae339876a8403edae4d20e39
+# skip: [48bfdb9deffdc6b683feb25e15f4f26aac503501]
+x86/boot/compressed/64: Use LEA to initialize boot stack pointer
+git bisect skip 48bfdb9deffdc6b683feb25e15f4f26aac503501
+# skip: [c90beea22a2bece4b0bbb39789bf835504421594]
+x86/boot/compressed: Fix debug_puthex() parameter type
+git bisect skip c90beea22a2bece4b0bbb39789bf835504421594
+# only skipped commits left to test
+# possible first bad commit:
+[9589351ccf47a85a75180a430627c16bc28da929] Merge branch
+'x86-boot-for-linus' of
+git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip
+# possible first bad commit:
+[c90beea22a2bece4b0bbb39789bf835504421594] x86/boot/compressed: Fix
+debug_puthex() parameter type
+# possible first bad commit:
+[bac59d18c7018a2fd5e800a1e72a8271bf404977] x86/setup: Fix static
+memory detection
+# possible first bad commit:
+[6f8f0dc980028e98ae339876a8403edae4d20e39] x86/vmlinux: Drop unneeded
+linker script discard of .eh_frame
+# possible first bad commit:
+[003602ad5516e59940de42e44c8d8033387bb363] x86/*/Makefile: Use
+-fno-asynchronous-unwind-tables to suppress .eh_frame sections
+# possible first bad commit:
+[0eea39a234dc52063d14541fabcb2c64516a2328] x86/boot/compressed: Remove
+.eh_frame section from bzImage
+# possible first bad commit:
+[3ee372ccce4d4e7c610748d0583979d3ed3a0cf4] x86/boot/compressed/64:
+Remove .bss/.pgtable from bzImage
+# possible first bad commit:
+[a86255fe5258714e1f7c1bdfe95f08e4d098d450] x86/boot/compressed/64: Use
+32-bit (zero-extended) MOV for z_output_len
+# possible first bad commit:
+[48bfdb9deffdc6b683feb25e15f4f26aac503501] x86/boot/compressed/64: Use
+LEA to initialize boot stack pointer
 
-Signed-off-by: Tejun Heo <tj@kernel.org>
-Reported-by: Mel Gorman <mgorman@techsingularity.net>
-Link: http://lkml.kernel.org/r/20200409154413.GK3818@techsingularity.net
-Cc: v4.18+
----
-Applying to cgroup/for-5.7-fixes.
+Unfortunately, kernel bisecting not telling exactly which commit is blame.
+In my bisecting a lot of skipping commits because of the unsuccessful builds:
+ld: arch/x86/boot/compressed/pgtable_64.o:(.bss+0x0): multiple
+definition of `__force_order';
+arch/x86/boot/compressed/kaslr_64.o:(.bss+0x0): first defined here
+make[2]: *** [arch/x86/boot/compressed/Makefile:120:
+arch/x86/boot/compressed/vmlinux] Error 1
+make[1]: *** [arch/x86/boot/Makefile:114:
+arch/x86/boot/compressed/vmlinux] Error 2
+make: *** [arch/x86/Makefile:283: bzImage] Error 2
 
-Thanks!
+Can anyone here help me with this issue?
 
- kernel/cgroup/rstat.c | 16 +++-------------
- 1 file changed, 3 insertions(+), 13 deletions(-)
+Thanks.
 
-diff --git a/kernel/cgroup/rstat.c b/kernel/cgroup/rstat.c
-index 6f87352f8219..41ca996568df 100644
---- a/kernel/cgroup/rstat.c
-+++ b/kernel/cgroup/rstat.c
-@@ -33,12 +33,9 @@ void cgroup_rstat_updated(struct cgroup *cgrp, int cpu)
- 		return;
- 
- 	/*
--	 * Paired with the one in cgroup_rstat_cpu_pop_updated().  Either we
--	 * see NULL updated_next or they see our updated stat.
--	 */
--	smp_mb();
--
--	/*
-+	 * Speculative already-on-list test. This may race leading to
-+	 * temporary inaccuracies, which is fine.
-+	 *
- 	 * Because @parent's updated_children is terminated with @parent
- 	 * instead of NULL, we can tell whether @cgrp is on the list by
- 	 * testing the next pointer for NULL.
-@@ -134,13 +131,6 @@ static struct cgroup *cgroup_rstat_cpu_pop_updated(struct cgroup *pos,
- 		*nextp = rstatc->updated_next;
- 		rstatc->updated_next = NULL;
- 
--		/*
--		 * Paired with the one in cgroup_rstat_cpu_updated().
--		 * Either they see NULL updated_next or we see their
--		 * updated stat.
--		 */
--		smp_mb();
--
- 		return pos;
- 	}
- 
--- 
-2.25.2
+Downstream bugreport:
+https://bugzilla.redhat.com/show_bug.cgi?id=1822731
 
+--
+Best Regards,
+Mike Gavrilov.
