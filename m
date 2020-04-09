@@ -2,98 +2,135 @@ Return-Path: <SRS0=n+Ub=5Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MIME_QP_LONG_LINE,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C392C2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 15:02:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B49EC2BA2B
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 15:03:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0F9C120692
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 15:02:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 327BD20692
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 15:03:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=sslab.ics.keio.ac.jp header.i=@sslab.ics.keio.ac.jp header.b="f4PZ9Bp7"
+	dkim=pass (2048-bit key) header.d=amacapital-net.20150623.gappssmtp.com header.i=@amacapital-net.20150623.gappssmtp.com header.b="upbS40tf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727962AbgDIPCj (ORCPT
+        id S1727981AbgDIPDQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Apr 2020 11:02:39 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:47027 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727930AbgDIPCi (ORCPT
+        Thu, 9 Apr 2020 11:03:16 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:33919 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727963AbgDIPDQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Apr 2020 11:02:38 -0400
-Received: by mail-pg1-f196.google.com with SMTP id k191so5079326pgc.13
-        for <linux-kernel@vger.kernel.org>; Thu, 09 Apr 2020 08:02:38 -0700 (PDT)
+        Thu, 9 Apr 2020 11:03:16 -0400
+Received: by mail-pg1-f194.google.com with SMTP id l14so5115007pgb.1
+        for <linux-kernel@vger.kernel.org>; Thu, 09 Apr 2020 08:03:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sslab.ics.keio.ac.jp; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=dvyI036P6l3pT4bwTfgpCwEd0qlAqIVfCnEFYrQjFgY=;
-        b=f4PZ9Bp7DWyP45o1+1dY6OVR9t/Zn2U4t5xNaMLvMds4J0mo8zf/NBp6vUIk9mngXh
-         Y/A5NFrZtyE6uz8iwlOW5p/92lllpK6egMiWRFzyA+Ba9vXeCKQMG+IHqkdKSwo5rgGa
-         OEFxEe6JIVdZf8iaj0THuN4IQubcC6Di5dUeA=
+        d=amacapital-net.20150623.gappssmtp.com; s=20150623;
+        h=content-transfer-encoding:from:mime-version:subject:date:message-id
+         :references:cc:in-reply-to:to;
+        bh=vti+QulpjK02SSgR5ooO7HQioSPVHwldN19SASyEiDY=;
+        b=upbS40tfJGsurJN7/mZHHFDliZikCZoIqFpXUGM/QaX+XuaD80GaYleZ8Q5F5rFQw/
+         hg5GsRuF/YZFNrKs46ev2JPQE6CZ6zwFE9+U9flddA1uwIqdhpgRZlt7k4l+/d3zM1vs
+         jEZbhwHPLDu1rPZtLSIutcjRdcxN4ipu7eH1+ygqELUoA9SQUoAxXJussghke9nuhlf+
+         piDd35eola4QOziF01AiaD6EWaY1HmgpYaL4eYp5vA5XrJpU2vEVXm/WdKCpWa799jiv
+         XCM/P3yqtmVbZOT6W7+Epwo8ep7ZlXlfg7Ry7R4zR7JXskDfrJQ78E5psLgnhQkACxPo
+         O+hA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=dvyI036P6l3pT4bwTfgpCwEd0qlAqIVfCnEFYrQjFgY=;
-        b=qlawE4hBmr/5bUCwB0JtbQP0NwYPgAy0IJizWd0AOBtI7ru90AJCOLrZKzqR1f0T5N
-         Nypok4aWThdfjCAqbr6OUuvAecQmoyF75L+DfVEPis+PXI2FgbC14pirB6iWBpFaUJVn
-         qiUfpfwP6qvPSE681IE79GJ/EDw7qfPLBHbMiWS2WqrycIlO/Ehnz+eOF+7eoGfnChgh
-         7t0L/O5UR5RyCIsb0gEVJGJqydQBAhV+J2IU+I0q71cVcT7eag2FAcAGv8yM2gNX8Gxw
-         Bii3A0SLiy7KoZN2wVhN3HaZWJGeB3I8LExW/df0rqoT8jkrfBo/mJhbKk1b5Di830V0
-         oV6A==
-X-Gm-Message-State: AGi0PuY/9ew1DCiXxsdubFAG5HW+ss51Vc/DJHCQV5ga2cvGpXG+5Mrz
-        1bUD4sRa+/pmLFhIXcYMYg8m4A==
-X-Google-Smtp-Source: APiQypJTXJxBJ9WbxJJfFI/qBsLnEp2Iq0pi46An/bRVCiraAMsH8JrHzqke9DjnO90Z7gNY5xGcAw==
-X-Received: by 2002:a63:6cc5:: with SMTP id h188mr12079390pgc.337.1586444557551;
-        Thu, 09 Apr 2020 08:02:37 -0700 (PDT)
-Received: from brooklyn.i.sslab.ics.keio.ac.jp (sslab-relay.ics.keio.ac.jp. [131.113.126.173])
-        by smtp.googlemail.com with ESMTPSA id a3sm2823068pfi.60.2020.04.09.08.02.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 09 Apr 2020 08:02:36 -0700 (PDT)
-From:   Keita Suzuki <keitasuzuki.park@sslab.ics.keio.ac.jp>
-Cc:     keitasuzuki.park@sslab.ics.keio.ac.jp,
-        takafumi.kubota1012@sslab.ics.keio.ac.jp,
-        Jakub Kicinski <kuba@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        oss-drivers@netronome.com (open list:NETRONOME ETHERNET DRIVERS),
-        netdev@vger.kernel.org (open list:NETWORKING DRIVERS),
-        linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH] nfp: Fix memory leak in nfp_resource_acquire()
-Date:   Thu,  9 Apr 2020 15:02:07 +0000
-Message-Id: <20200409150210.15488-1-keitasuzuki.park@sslab.ics.keio.ac.jp>
-X-Mailer: git-send-email 2.17.1
-To:     unlisted-recipients:; (no To-header on input)
+        h=x-gm-message-state:content-transfer-encoding:from:mime-version
+         :subject:date:message-id:references:cc:in-reply-to:to;
+        bh=vti+QulpjK02SSgR5ooO7HQioSPVHwldN19SASyEiDY=;
+        b=NJ80noFNjbkx0pJg5szVALOUa7vDXi89DGls094tHkQwOag83O1K0IkoDoar4bhM5e
+         VY2YA+VbErC3bly6np2ZJso0l3GvZy/YqPmTQQWHBg3VIYMdPkRXeNmZbc7O+0PPV5Ip
+         pOrEaNEN456U3ELLO3SjmhBEzaohLexdNmEyBusYmzLsFwWK17nEwXfBmGf2iQFCuLOG
+         BsjJWDI6onsMmytK8ZuhxAXs30TktbmcKWrDe+GiDk2Mhajtc+CRe9SDYktZA/0LAHcF
+         oxTyI3nL3OcArec+iIcGIMfJpM7vkhdwkL3/n4kOUnId1btcYGYg248uEzz4EInt+t0Y
+         GbOA==
+X-Gm-Message-State: AGi0PuaHoi448QzrbyVwK2BYtUII/r4nKvwp4fuPf97TWyUUfYKR0UIG
+        YtWEvRqIR6+lUmdejtt0hFM8dg==
+X-Google-Smtp-Source: APiQypLj56yP6feP8J+oTUBnBLkI9ELSEhd5pzgk/Fpw9mVbT1NODELR0bH6iBDE7Bhy+q0sfUedoQ==
+X-Received: by 2002:aa7:969b:: with SMTP id f27mr2820pfk.116.1586444593655;
+        Thu, 09 Apr 2020 08:03:13 -0700 (PDT)
+Received: from ?IPv6:2601:646:c200:1ef2:d3f:18b:ffcb:12f6? ([2601:646:c200:1ef2:d3f:18b:ffcb:12f6])
+        by smtp.gmail.com with ESMTPSA id y193sm18125956pgd.87.2020.04.09.08.03.12
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 09 Apr 2020 08:03:12 -0700 (PDT)
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+From:   Andy Lutomirski <luto@amacapital.net>
+Mime-Version: 1.0 (1.0)
+Subject: Re: [PATCH v2] x86/kvm: Disable KVM_ASYNC_PF_SEND_ALWAYS
+Date:   Thu, 9 Apr 2020 08:03:09 -0700
+Message-Id: <4EB5D96F-F322-45BB-9169-6BF932D413D4@amacapital.net>
+References: <c09dd91f-c280-85a6-c2a2-d44a0d378bbc@redhat.com>
+Cc:     Andrew Cooper <andrew.cooper3@citrix.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Vivek Goyal <vgoyal@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
+        kvm list <kvm@vger.kernel.org>, stable <stable@vger.kernel.org>
+In-Reply-To: <c09dd91f-c280-85a6-c2a2-d44a0d378bbc@redhat.com>
+To:     Paolo Bonzini <pbonzini@redhat.com>
+X-Mailer: iPhone Mail (17E255)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch fixes a memory leak in nfp_resource_acquire(). res->mutex is
-alllocated in nfp_resource_try_acquire(). However, when
-msleep_interruptible() or time_is_before_eq_jiffies() fails, it falls
-into err_fails path where res is freed, but res->mutex is not.
 
-Fix this by changing call to free to nfp_resource_release().
 
-Signed-off-by: Keita Suzuki <keitasuzuki.park@sslab.ics.keio.ac.jp>
----
- drivers/net/ethernet/netronome/nfp/nfpcore/nfp_resource.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+> On Apr 9, 2020, at 7:32 AM, Paolo Bonzini <pbonzini@redhat.com> wrote:
+>=20
+> =EF=BB=BFOn 09/04/20 16:13, Andrew Cooper wrote:
+>>> On 09/04/2020 13:47, Paolo Bonzini wrote:
+>>> On 09/04/20 06:50, Andy Lutomirski wrote:
+>>>> The small
+>>>> (or maybe small) one is that any fancy protocol where the guest
+>>>> returns from an exception by doing, logically:
+>>>>=20
+>>>> Hey I'm done;  /* MOV somewhere, hypercall, MOV to CR4, whatever */
+>>>> IRET;
+>>>>=20
+>>>> is fundamentally racy.  After we say we're done and before IRET, we
+>>>> can be recursively reentered.  Hi, NMI!
+>>> That's possible in theory.  In practice there would be only two levels
+>>> of nesting, one for the original page being loaded and one for the tail
+>>> of the #VE handler.  The nested #VE would see IF=3D0, resolve the EPT
+>>> violation synchronously and both handlers would finish.  For the tail
+>>> page to be swapped out again, leading to more nesting, the host's LRU
+>>> must be seriously messed up.
+>>>=20
+>>> With IST it would be much messier, and I haven't quite understood why
+>>> you believe the #VE handler should have an IST.
+>>=20
+>> Any interrupt/exception which can possibly occur between a SYSCALL and
+>> re-establishing a kernel stack (several instructions), must be IST to
+>> avoid taking said exception on a user stack and being a trivial
+>> privilege escalation.
+>=20
+> Doh, of course.  I always confuse SYSCALL and SYSENTER.
+>=20
+>> Therefore, it doesn't really matter if KVM's paravirt use of #VE does
+>> respect the interrupt flag.  It is not sensible to build a paravirt
+>> interface using #VE who's safety depends on never turning on
+>> hardware-induced #VE's.
+>=20
+> No, I think we wouldn't use a paravirt #VE at this point, we would use
+> the real thing if available.
+>=20
+> It would still be possible to switch from the IST to the main kernel
+> stack before writing 0 to the reentrancy word.
+>=20
+>=20
 
-diff --git a/drivers/net/ethernet/netronome/nfp/nfpcore/nfp_resource.c b/drivers/net/ethernet/netronome/nfp/nfpcore/nfp_resource.c
-index ce7492a6a98f..95e7bdc95652 100644
---- a/drivers/net/ethernet/netronome/nfp/nfpcore/nfp_resource.c
-+++ b/drivers/net/ethernet/netronome/nfp/nfpcore/nfp_resource.c
-@@ -200,7 +200,7 @@ nfp_resource_acquire(struct nfp_cpp *cpp, const char *name)
- 
- err_free:
- 	nfp_cpp_mutex_free(dev_mutex);
--	kfree(res);
-+	nfp_resource_relase(res);
- 	return ERR_PTR(err);
- }
- 
--- 
-2.17.1
+Almost but not quite. We do this for NMI-from-usermode, and it=E2=80=99s ugl=
+y. But we can=E2=80=99t do this for NMI-from-kernel or #VE-from-kernel becau=
+se there might not be a kernel stack.  Trying to hack around this won=E2=80=99=
+t be pretty.
+
+Frankly, I think that we shouldn=E2=80=99t even try to report memory failure=
+ to the guest if it happens with interrupts off. Just kill the guest cleanly=
+ and keep it simple. Or inject an intentionally unrecoverable IST exception.=
 
