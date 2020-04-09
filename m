@@ -6,67 +6,61 @@ X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
 	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 713AEC2BB1D
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1242C2BB54
 	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 04:05:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4897E20757
+	by mail.kernel.org (Postfix) with ESMTP id 710CF20769
 	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 04:05:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=default; t=1586405130;
-	bh=7GvQa0HrqqaUPyMzD6HMwdmeFP/jlkvX9MkIeMHYssY=;
+	bh=/iCiFLfNiF3lDS9yAdPdQdDcxKFBzlt/5vNI9IAYhjU=;
 	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=GHfwIXsUmC9bL4oJEGq4aF8Nx6JYuqe3x+Pa2NG+gjU71LO42V0uNBexZaNkMQy2s
-	 0SPaJpkgcKvlp8iFwQ617lVGrEJnU+y/vpCqL3220uHDQLlJYXkaEoyaUe2szNTxOU
-	 e1H39rpQExVC+pJcOkIUhioqVuZmylGlrH4AUdUI=
+	b=ssj7K4cNIb3lecsFg1BfxsAB+/6ccxCCvn7dsp9RuPl+y7u8TSZO5BevncrYoEzer
+	 6X1HBhf0zgCNpkUau/7DEyeIlDTU/Jw5jC8CcMoyYQDTwRAqTl7AkvICrryM5w+nHc
+	 Gc5OKIdi5IVhNumecyCVGlpO0nrHnXfw0sV9bXso=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726754AbgDIEF1 (ORCPT
+        id S1726767AbgDIEF2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Apr 2020 00:05:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39552 "EHLO mail.kernel.org"
+        Thu, 9 Apr 2020 00:05:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39592 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725271AbgDIEF0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Apr 2020 00:05:26 -0400
-Subject: Re: [GIT PULL v2] vhost: cleanups and fixes
+        id S1726740AbgDIEF1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Apr 2020 00:05:27 -0400
+Subject: Re: [git pull] IOMMU Updates for Linux v5.7
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586405126;
-        bh=7GvQa0HrqqaUPyMzD6HMwdmeFP/jlkvX9MkIeMHYssY=;
+        s=default; t=1586405127;
+        bh=/iCiFLfNiF3lDS9yAdPdQdDcxKFBzlt/5vNI9IAYhjU=;
         h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=VuKswTp1GM5Z90B4daadYE1nSkeRAjec81BvpyKR9xmkj84xjyrwfmO/2ZEiboZyh
-         iFOtwG1ZLsCdcvJcvI8NLymgQ7Sz1c7ebrLa9USfukfK0ABWl+oZ7ea0ceD8f0sqB2
-         cTEdesLwCsgEvZNSDXk7At9MYig6SaqemfvEYgFo=
+        b=OaL50o8N/S53pWagcp6RAbqUFlYFfG+1qWIbyI5wkvAEyQyME5S8c1f214kKSmMC4
+         nQbOG5HYbkW54Zn4+vndYAkj0ovdM+FXj1fSvLjSqSHSQAVdq2C8RYYGrhdbDdinrY
+         /s4EF0cQfdYApC/krqOC26Hmjf9yu/s0+qH3Zdgs=
 From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20200407055334-mutt-send-email-mst@kernel.org>
-References: <20200407055334-mutt-send-email-mst@kernel.org>
+In-Reply-To: <20200407152635.GA10588@8bytes.org>
+References: <20200407152635.GA10588@8bytes.org>
 X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20200407055334-mutt-send-email-mst@kernel.org>
-X-PR-Tracked-Remote: https://git.kernel.org/pub/scm/linux/kernel/git/mst/vhost.git tags/for_linus
-X-PR-Tracked-Commit-Id: 835a6a649d0dd1b1f46759eb60fff2f63ed253a7
+X-PR-Tracked-Message-Id: <20200407152635.GA10588@8bytes.org>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/joro/iommu.git
+ tags/iommu-updates-v5.7
+X-PR-Tracked-Commit-Id: ff68eb23308e6538ec7864c83d39540f423bbe90
 X-PR-Merge-Tree: torvalds/linux.git
 X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 9bb715260ed4cef6948cb2e05cf670462367da71
-Message-Id: <158640512623.12302.18379400588057389333.pr-tracker-bot@kernel.org>
-Date:   Thu, 09 Apr 2020 04:05:26 +0000
-To:     "Michael S. Tsirkin" <mst@redhat.com>
+X-PR-Merge-Commit-Id: 0906d8b975ff713cfb55328e4f3bf6de5967415e
+Message-Id: <158640512732.12302.9078407130199098833.pr-tracker-bot@kernel.org>
+Date:   Thu, 09 Apr 2020 04:05:27 +0000
+To:     Joerg Roedel <joro@8bytes.org>
 Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        kvm@vger.kernel.org, virtualization@lists.linux-foundation.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        alexander.h.duyck@linux.intel.com, david@redhat.com,
-        eperezma@redhat.com, jasowang@redhat.com, lingshan.zhu@intel.com,
-        mhocko@kernel.org, mst@redhat.com, namit@vmware.com,
-        rdunlap@infradead.org, rientjes@google.com, tiwei.bie@intel.com,
-        tysand@google.com, wei.w.wang@intel.com, xiao.w.wang@intel.com,
-        yuri.benditovich@daynix.com
+        linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Tue, 7 Apr 2020 05:53:34 -0400:
+The pull request you sent on Tue, 7 Apr 2020 17:26:40 +0200:
 
-> https://git.kernel.org/pub/scm/linux/kernel/git/mst/vhost.git tags/for_linus
+> git://git.kernel.org/pub/scm/linux/kernel/git/joro/iommu.git tags/iommu-updates-v5.7
 
 has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/9bb715260ed4cef6948cb2e05cf670462367da71
+https://git.kernel.org/torvalds/c/0906d8b975ff713cfb55328e4f3bf6de5967415e
 
 Thank you!
 
