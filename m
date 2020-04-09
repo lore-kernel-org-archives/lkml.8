@@ -2,102 +2,212 @@ Return-Path: <SRS0=n+Ub=5Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.3 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A01FC2BBC7
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 23:00:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A479FC2BB86
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 23:01:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 11B19206C0
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 23:00:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586473248;
-	bh=IgOjn/GxRtasyphIYkYZcdySwxtAL+ZzkL4NiA03h0U=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=cumDuhtIJO5ibQgHvxlpAbXfkxyhorryWfmP+Bpqp51Veyv/HvT/dawBd70WMaHVp
-	 siizPHlQeitO26u+PaklIzTyBclwYHvv41eUHUcIHBnXCUa2vjJLzw2aK0qfSNlIWM
-	 /ghNmRQlmFEw94pgxFaIR1tFvu494KTDRX6X+yJg=
+	by mail.kernel.org (Postfix) with ESMTP id 73D58206C0
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 23:01:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qYjkAKzf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726928AbgDIXAq (ORCPT
+        id S1726953AbgDIXBQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Apr 2020 19:00:46 -0400
-Received: from mail-il1-f193.google.com ([209.85.166.193]:36342 "EHLO
-        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726875AbgDIXAq (ORCPT
+        Thu, 9 Apr 2020 19:01:16 -0400
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:34086 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726722AbgDIXBP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Apr 2020 19:00:46 -0400
-Received: by mail-il1-f193.google.com with SMTP id p13so355435ilp.3;
-        Thu, 09 Apr 2020 16:00:46 -0700 (PDT)
+        Thu, 9 Apr 2020 19:01:15 -0400
+Received: by mail-lf1-f68.google.com with SMTP id x23so155065lfq.1;
+        Thu, 09 Apr 2020 16:01:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=XgDTQTaRBDUklcxuKHaLcBMeTWXjmOCFSHQMoVbCiNk=;
+        b=qYjkAKzfXiacUud1aDXy841UDPUZQW8mRD/GqsC7kX9tjO8W7vdcBdG+EL75p8vVN5
+         osOu/EnTmu0Dogp57X5jUMkELxjJOkRD+Drh/cprsNi70IUqxiAMXaBzvo2eVOl+akIu
+         eAsYGjyAX+PmlsFGeBwFN03ilgDS3CKZzMbvpvqmnG8+za7QYErY7I1Oxuc4SbMpYHcx
+         ViK6dfKX+l2OlsyfZwIEm2miNZ/aR9LppaE9Pel8TCgM7Dp6s0iaUvPxmc3NdoH6XIvN
+         aj9HqVNq3JlcPjqkNUljA7OjuvA/G5xizVPpzlE+aPynr6bm3/GWpBsm3wGihvKu5FY/
+         WABg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Uc46kdVNduykSvXO5lVtxr8veYg7KgzN/ssrZ47l1hg=;
-        b=qRk/AmNRkiM64e9flKAXC/e8RiPLXo2PZgzorxNcPH9k2kN/nRo9gHLZvSYP4Jab4J
-         7/F2srfnI4nBlTYsxmmj/MPxs4W2/m6FtfuTyRRwbeoK+2zObh8OrPt6PJyezsqjit+g
-         2FWp/l0UTXScdOBgR8FiQGXLBZvYI6qVbxLT830dMVsAE6L7vSOaHjSW10BPd90U1LmQ
-         X1Vc1ZL4Niy54WrdhMjVr0QlHlPkIRy/F4SMoPO9DfSGwEYiFY7hbcvCUrvP44tdMmdY
-         z2QS3kwfzqX0H3mF6gfAVyGYspwg7fS3Auut/kx7DaM0H9xAbShH3bAsiZ9+k5E0ahIZ
-         /wtA==
-X-Gm-Message-State: AGi0PuaG3XddwGEcF9w/kzqijGL81lCYygcrBrxbyOrpCSH0HrnEkloa
-        mMVbDEydj/cu8m2HFm3+jQ==
-X-Google-Smtp-Source: APiQypILccj1GZ4l+HD6IM1kuuB93JyalMoaWIKBSZb2y88Xpbg2XvHKiX5upl96mrxT+spAIxQLZA==
-X-Received: by 2002:a92:359b:: with SMTP id c27mr2249082ilf.148.1586473245487;
-        Thu, 09 Apr 2020 16:00:45 -0700 (PDT)
-Received: from rob-hp-laptop ([64.188.179.248])
-        by smtp.gmail.com with ESMTPSA id e11sm147208ilr.30.2020.04.09.16.00.42
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=XgDTQTaRBDUklcxuKHaLcBMeTWXjmOCFSHQMoVbCiNk=;
+        b=VSxpc3dSQMVMyZIohTKGdCJPTY4RQTCyu2ryxTrDKRIU9PCbn897IjsPLjG/y6IYrB
+         o/caAjVr7YQ28wnFz0qkwlCM7YeVimvyesos505VxaAgBpcbUOx+9SDq58/YorpJfM4S
+         TacHmyKTOcC8frBDxYyDsivCGK2nguOMyFh+gfow3wazCKoxMaZrDRm5fIY5nG2xDDWH
+         okPZUx8gC/JGfuId3TmMX8SemPP3C6IsPmnu8qYMfbmzBMVdCHA9iNk41lms88zXgXzK
+         JKOCffeB1B+AUC+/szPrCLQMQMp2oC20LyVkz5ZXbEJZDjgnBo4brACbsJbT+MZkXmWm
+         GZZg==
+X-Gm-Message-State: AGi0PuYNZqWavTGe1Tnst1mzD39TtCrWYkorrcnbjMOGk4kR5veVxZOS
+        9jjiuRfOLn4M+vnewZ02yco=
+X-Google-Smtp-Source: APiQypJpazaoUZ7uu/Vxt+qSFD5Lays9gPVB6WMgwiDlVNoLOA+5xBQWKJYsEfnTV8W1A1cyz5oBsQ==
+X-Received: by 2002:a19:c385:: with SMTP id t127mr877176lff.117.1586473273192;
+        Thu, 09 Apr 2020 16:01:13 -0700 (PDT)
+Received: from localhost.localdomain ([85.173.88.81])
+        by smtp.googlemail.com with ESMTPSA id v18sm325079lfd.0.2020.04.09.16.01.11
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 09 Apr 2020 16:00:44 -0700 (PDT)
-Received: (nullmailer pid 5080 invoked by uid 1000);
-        Thu, 09 Apr 2020 23:00:40 -0000
-Date:   Thu, 9 Apr 2020 17:00:40 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Sivaprakash Murugesan <sivaprak@codeaurora.org>
-Cc:     agross@kernel.org, bjorn.andersson@linaro.org,
-        mturquette@baylibre.com, sboyd@kernel.org, robh+dt@kernel.org,
-        jassisinghbrar@gmail.com, linux-arm-msm@vger.kernel.org,
-        linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, sivaprak@codeaurora.org
-Subject: Re: [PATCH V2 2/8] dt-bindings: clock: Add YAML schemas for QCOM A53
- PLL
-Message-ID: <20200409230040.GA1782@bogus>
-References: <1586086165-19426-1-git-send-email-sivaprak@codeaurora.org>
- <1586086165-19426-3-git-send-email-sivaprak@codeaurora.org>
+        Thu, 09 Apr 2020 16:01:12 -0700 (PDT)
+From:   Artem Borisov <dedsa2002@gmail.com>
+Cc:     jikos@kernel.org, masaki.ota@jp.alps.com,
+        Artem Borisov <dedsa2002@gmail.com>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        Henrik Rydberg <rydberg@bitmath.org>,
+        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 2/2] HID: alps: Refactor axis resolution logic
+Date:   Fri, 10 Apr 2020 03:00:08 +0400
+Message-Id: <20200409230009.22551-1-dedsa2002@gmail.com>
+X-Mailer: git-send-email 2.26.0
+In-Reply-To: <nycvar.YFH.7.76.2004100019450.19713@cbobk.fhfr.pm>
+References: <nycvar.YFH.7.76.2004100019450.19713@cbobk.fhfr.pm>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1586086165-19426-3-git-send-email-sivaprak@codeaurora.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun,  5 Apr 2020 16:59:19 +0530, Sivaprakash Murugesan wrote:
-> This patch adds schema for primary CPU PLL found on few Qualcomm
-> platforms.
-> 
-> Signed-off-by: Sivaprakash Murugesan <sivaprak@codeaurora.org>
-> ---
->  .../devicetree/bindings/clock/qcom,a53pll.txt      | 22 --------
->  .../devicetree/bindings/clock/qcom,a53pll.yaml     | 60 ++++++++++++++++++++++
->  2 files changed, 60 insertions(+), 22 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/clock/qcom,a53pll.txt
->  create mode 100644 Documentation/devicetree/bindings/clock/qcom,a53pll.yaml
-> 
+AUI1657 doesn't follow the same logic for resolution calculation, since
+the resulting values are incorrect. Instead, it reports the actual
+resolution values in place of the pitch ones.
+While we're at it, also refactor the whole resolution logic to make it more
+generic and sensible for multiple device support.
 
-My bot found errors running 'make dt_binding_check' on your patch:
+There are two main logical problems with the current code:
+1. active_len_mm values are only used for resolution calculation on U1,
+yet are exposed globally as part of alps_dev structure.
+2. The resolution calculation process happens in alps_input_configured,
+while everything else is calculated in u1_init function.
 
-Documentation/devicetree/bindings/clock/qcom,a53pll.yaml: $id: relative path/filename doesn't match actual path or filename
-	expected: http://devicetree.org/schemas/clock/qcom,a53pll.yaml#
+These problems become more apparent when we try to support a device
+that doesn't follow the same resolution calculation logic as U1.
+Since alps_input_configured is a device-agnostic function, we should
+avoid doing any measurements there and handle them in device-specific
+init functions like u1/T4_init instead.
 
-See https://patchwork.ozlabs.org/patch/1266526
+To eliminate these problems we add global x_res and y_res values
+and populate them on a device-specific basis in the according init
+functions.
 
-If you already ran 'make dt_binding_check' and didn't see the above
-error(s), then make sure dt-schema is up to date:
+Signed-off-by: Artem Borisov <dedsa2002@gmail.com>
+---
+ drivers/hid/hid-alps.c | 41 +++++++++++++++++++++++++----------------
+ 1 file changed, 25 insertions(+), 16 deletions(-)
 
-pip3 install git+https://github.com/devicetree-org/dt-schema.git@master --upgrade
+diff --git a/drivers/hid/hid-alps.c b/drivers/hid/hid-alps.c
+index c2a2bd528890..494c08cca645 100644
+--- a/drivers/hid/hid-alps.c
++++ b/drivers/hid/hid-alps.c
+@@ -83,8 +83,8 @@ enum dev_num {
+  * @max_fingers: total number of fingers
+  * @has_sp: boolean of sp existense
+  * @sp_btn_info: button information
+- * @x_active_len_mm: active area length of X (mm)
+- * @y_active_len_mm: active area length of Y (mm)
++ * @x_res: resolution of X
++ * @y_res: resolution of Y
+  * @x_max: maximum x coordinate value
+  * @y_max: maximum y coordinate value
+  * @x_min: minimum x coordinate value
+@@ -100,9 +100,10 @@ struct alps_dev {
+ 	enum dev_num dev_type;
+ 	u8  max_fingers;
+ 	u8  has_sp;
++	u8  no_pitch;
+ 	u8	sp_btn_info;
+-	u32	x_active_len_mm;
+-	u32	y_active_len_mm;
++	u32	x_res;
++	u32	y_res;
+ 	u32	x_max;
+ 	u32	y_max;
+ 	u32	x_min;
+@@ -550,10 +551,6 @@ static int u1_init(struct hid_device *hdev, struct alps_dev *pri_data)
+ 		dev_err(&hdev->dev, "failed U1_RESO_DWN_ABS (%d)\n", ret);
+ 		goto exit;
+ 	}
+-	pri_data->x_active_len_mm =
+-		(pitch_x * (sen_line_num_x - 1)) / 10;
+-	pri_data->y_active_len_mm =
+-		(pitch_y * (sen_line_num_y - 1)) / 10;
+ 
+ 	pri_data->x_max =
+ 		(resolution << 2) * (sen_line_num_x - 1);
+@@ -562,6 +559,18 @@ static int u1_init(struct hid_device *hdev, struct alps_dev *pri_data)
+ 		(resolution << 2) * (sen_line_num_y - 1);
+ 	pri_data->y_min = 1;
+ 
++	if (pri_data->no_pitch) {
++		pri_data->x_res = pitch_x;
++		pri_data->y_res = pitch_y;
++	} else {
++		pri_data->x_res =
++			(pri_data->x_max - 1) /
++			((pitch_x * (sen_line_num_x - 1)) / 10);
++		pri_data->y_res =
++			(pri_data->y_max - 1) /
++			((pitch_y * (sen_line_num_y - 1)) / 10);
++	}
++
+ 	ret = u1_read_write_register(hdev, ADDRESS_U1_PAD_BTN,
+ 			&tmp, 0, true);
+ 	if (ret < 0) {
+@@ -622,7 +631,7 @@ static int T4_init(struct hid_device *hdev, struct alps_dev *pri_data)
+ 	pri_data->x_min = T4_COUNT_PER_ELECTRODE;
+ 	pri_data->y_max = sen_line_num_y * T4_COUNT_PER_ELECTRODE;
+ 	pri_data->y_min = T4_COUNT_PER_ELECTRODE;
+-	pri_data->x_active_len_mm = pri_data->y_active_len_mm = 0;
++	pri_data->x_res = pri_data->y_res = 0;
+ 	pri_data->btn_cnt = 1;
+ 
+ 	ret = t4_read_write_register(hdev, PRM_SYS_CONFIG_1, &tmp, 0, true);
+@@ -675,7 +684,7 @@ static int alps_input_configured(struct hid_device *hdev, struct hid_input *hi)
+ 	struct alps_dev *data = hid_get_drvdata(hdev);
+ 	struct input_dev *input = hi->input, *input2;
+ 	int ret;
+-	int res_x, res_y, i;
++	int i;
+ 
+ 	data->input = input;
+ 
+@@ -706,12 +715,9 @@ static int alps_input_configured(struct hid_device *hdev, struct hid_input *hi)
+ 	input_set_abs_params(input, ABS_MT_POSITION_Y,
+ 						data->y_min, data->y_max, 0, 0);
+ 
+-	if (data->x_active_len_mm && data->y_active_len_mm) {
+-		res_x = (data->x_max - 1) / data->x_active_len_mm;
+-		res_y = (data->y_max - 1) / data->y_active_len_mm;
+-
+-		input_abs_set_res(input, ABS_MT_POSITION_X, res_x);
+-		input_abs_set_res(input, ABS_MT_POSITION_Y, res_y);
++	if (data->x_res && data->y_res) {
++		input_abs_set_res(input, ABS_MT_POSITION_X, data->x_res);
++		input_abs_set_res(input, ABS_MT_POSITION_Y, data->y_res);
+ 	}
+ 
+ 	input_set_abs_params(input, ABS_MT_PRESSURE, 0, 64, 0, 0);
+@@ -802,8 +808,11 @@ static int alps_probe(struct hid_device *hdev, const struct hid_device_id *id)
+ 		break;
+ 	case HID_DEVICE_ID_ALPS_U1_DUAL:
+ 	case HID_DEVICE_ID_ALPS_U1:
++		data->dev_type = U1;
++		break;
+ 	case HID_DEVICE_ID_ALPS_1657:
+ 		data->dev_type = U1;
++		data->no_pitch = 1;
+ 		break;
+ 	default:
+ 		data->dev_type = UNKNOWN;
+-- 
+2.26.0
 
-Please check and re-submit.
