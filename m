@@ -2,123 +2,106 @@ Return-Path: <SRS0=n+Ub=5Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 324B9C2BA19
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 21:13:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12A76C2BB85
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 21:14:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 07E782072F
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 21:13:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DD96020753
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 21:14:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="mpEcu9oq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727505AbgDIVNv convert rfc822-to-8bit (ORCPT
+        id S1727533AbgDIVOt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Apr 2020 17:13:51 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:53710 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727376AbgDIVNv (ORCPT
+        Thu, 9 Apr 2020 17:14:49 -0400
+Received: from mail-qk1-f195.google.com ([209.85.222.195]:42241 "EHLO
+        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727331AbgDIVOs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Apr 2020 17:13:51 -0400
-Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1jMeUF-0004z0-44; Thu, 09 Apr 2020 23:13:23 +0200
-Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
-        id 7E127101150; Thu,  9 Apr 2020 23:13:22 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Nadav Amit <nadav.amit@gmail.com>,
-        Peter Zijlstra <peterz@infradead.org>
-Cc:     Paolo Bonzini <pbonzini@redhat.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
+        Thu, 9 Apr 2020 17:14:48 -0400
+Received: by mail-qk1-f195.google.com with SMTP id x66so229566qkd.9
+        for <linux-kernel@vger.kernel.org>; Thu, 09 Apr 2020 14:14:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=lca.pw; s=google;
+        h=mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=mPZ1Crw8eOW/x4DBqeSZklPBJbmwIyV+b71mBMMt/XA=;
+        b=mpEcu9oqPI5v1uDdoflpAfmaGrxhmS3S92KsvTmM9/mPRZ6sAfeRS/xV4EMeO3bziv
+         eYfF7Zzv8nX8BdTm1ZOghvn0jCBJcsYBO2dMEB+x4s8ys1WJ180iQAJWe6yvkuJUVwMG
+         rNkrRuSzIHMFjFEX5AFO7PASr3qM+MejJaQAEUDANOkD5rZIz2pzT9DtS9FyhVl+oJVb
+         kkR3iBb25CeeXXxQI3nbShg1JZWREKE8bHN9cVtP32VE3oH80SeKqnFJmtSBpcVuiRa8
+         JiP8I6tCsmP6bqG+9th7armJ2YN75rHQiDjExNhtU4KPp/8Wu26fuoZ1JqQjf3JtQsqW
+         uMfQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=mPZ1Crw8eOW/x4DBqeSZklPBJbmwIyV+b71mBMMt/XA=;
+        b=D1zv2wnKBlkiOn1saLEESdgyNSz/cICQcoiULMAiGC2dW7qkeUWEN/+Kk/Dpm/JWYb
+         ZuKVDSr0e4Op6yIPV/c3FOwzpcAie00JwdZICnylrOBJHMEGgTpLUKfcd32FnekFCzl5
+         +s5Mqtwq/HOOArMEKYL91Ng/aO488skYf2FjlDE4/AkL6+EhEXDvSNaDs5vLBl4kT/hh
+         csyGgLUnXt60dtZAkZ+rsBaaW+VJ7ommQWL6H80bPN9bqFibqN8qcO2PhagZ/v6sHlwf
+         tMafBpd81OFwD+E4tdmWg2OkCQWdEXMt7lX8eE4jCEfrhPSb2uyWTEjVuxWsYT43wwyz
+         o4pA==
+X-Gm-Message-State: AGi0PuYSiWMA0bP2HpY+MXT0Vhskzz4EJcuzFn108XdX/myT4opFjjmP
+        XRbD9rJt39emH0Dv41fMWuSvrQ==
+X-Google-Smtp-Source: APiQypI/mjrS5BMQ6tlVRk1yDVd5dIgAzGv/NF9nAs1y4Eo5vYcNPLLmt8C6D6aw+4HbEjaECyl3TQ==
+X-Received: by 2002:a05:620a:11:: with SMTP id j17mr859091qki.117.1586466888215;
+        Thu, 09 Apr 2020 14:14:48 -0700 (PDT)
+Received: from [192.168.1.153] (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
+        by smtp.gmail.com with ESMTPSA id p10sm62002qtu.14.2020.04.09.14.14.46
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 09 Apr 2020 14:14:47 -0700 (PDT)
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.80.23.2.2\))
+Subject: Re: [PATCH 0/2] mm: Two small fixes for recent syzbot reports
+From:   Qian Cai <cai@lca.pw>
+In-Reply-To: <CAHk-=wgFn4rHZM8ttPWvdSzV3pL1nS3EDcAh+83OObObkot4-g@mail.gmail.com>
+Date:   Thu, 9 Apr 2020 17:14:46 -0400
+Cc:     Dmitry Vyukov <dvyukov@google.com>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Peter Xu <peterx@redhat.com>,
         LKML <linux-kernel@vger.kernel.org>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        mingo@redhat.com, bp@alien8.de, hpa@zytor.com, x86@kernel.org,
-        kenny@panix.com, jeyu@kernel.org, rasmus.villemoes@prevas.dk,
-        fenghua.yu@intel.com, xiaoyao.li@intel.com, thellstrom@vmware.com,
-        tony.luck@intel.com, gregkh@linuxfoundation.org, jannh@google.com,
-        keescook@chromium.org, David.Laight@aculab.com,
-        dcovelli@vmware.com, mhiramat@kernel.org
-Subject: Re: [PATCH 4/4] x86,module: Detect CRn and DRn manipulation
-In-Reply-To: <9A25271A-71F7-4EA1-9D1C-23B53E35C281@gmail.com>
-References: <20200407110236.930134290@infradead.org> <20200407111007.429362016@infradead.org> <20200408092726.7c2bda01@gandalf.local.home> <20200408154419.GP20730@hirez.programming.kicks-ass.net> <20200408154602.GA24869@infradead.org> <2b0dc69c-f7f9-985d-fc40-8b7bbd927e4f@redhat.com> <20200409085632.GB20713@hirez.programming.kicks-ass.net> <9A25271A-71F7-4EA1-9D1C-23B53E35C281@gmail.com>
-Date:   Thu, 09 Apr 2020 23:13:22 +0200
-Message-ID: <87imi8pdl9.fsf@nanos.tec.linutronix.de>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8BIT
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+        Linux-MM <linux-mm@kvack.org>
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <9C21961E-24D3-4C97-A5AB-B70451E4F952@lca.pw>
+References: <CAHk-=wjfngA7nHAsie7bW_JmKBhUyV9oV7zmDbZuchkJK3sR1w@mail.gmail.com>
+ <AFD0DADD-0558-463F-B219-5F098E6C2EDF@lca.pw>
+ <CAHk-=wgFn4rHZM8ttPWvdSzV3pL1nS3EDcAh+83OObObkot4-g@mail.gmail.com>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+X-Mailer: Apple Mail (2.3608.80.23.2.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Nadav Amit <nadav.amit@gmail.com> writes:
->> On Apr 9, 2020, at 1:56 AM, Peter Zijlstra <peterz@infradead.org> wrote:
->> Speaking with my virt ignorance hat on, how impossible is it to provide
->> generic/useful VMLAUNCH/VMRESUME wrappers?
->> 
->> Because a lot of what happens around VMEXIT/VMENTER is very much like
->> the userspace entry crud, as per that series from Thomas that fixes all
->> that. And surely we don't need various broken copies of that in all the
->> out-of-tree hypervisors.
->> 
->> Also, I suppose if you have this, we no longer need to excempt CR2.
->
-> It depends on what you mean by “VMLAUNCH/VMRESUME”. If you only consider the
-> instructions themselves, as Sean did in vmx_vmenter() and vmx_vmexit(),
-> there is no problem. Even if you consider saving the general purpose
-> registers as done in __vmx_vcpu_run() - that’s relatively easy.
-
-__vmx_vcpu_run() is roughly the scope, but that wont work.
-
-Looking at the vmmon source:
-
-Task_Switch()
-
-    1) Mask all APIC LVTs which have NMI delivery mode enabled, e.g. PERF
-
-    2) Disable interrupts
-
-    3) Disable PEBS
-
-    4) Disable PT
-
-    5) Load a magic IDT
-
-       According to comments these are stubs to catch any exception which
-       happens while switching over.
-
-    6) Write CR0 and CR4 directly which is "safe" as the the IDT is
-       redirected to the monitor stubs.
-
-    7) VMXON()
-
-    8) Invoke monitor on some magic page which switches CR3 and GDT and
-       clears CR4.PCIDE (at least thats what the comments claim)
-
-       The monitor code is loaded from a binary only blob and that does
-       the actual vmlaunch/vmresume ...
-
-       And as this runs with a completely different CR3 sharing that
-       code is impossible.
-
-    When returning the above is undone in reverse order and any catched
-    exceptions / interrupts are replayed via "int $NR".
-
-So it's pretty much the same mess as with vbox just different and
-binary. Oh well...
-
-The "good" news is that it's not involved in any of the context tracking
-stuff so RCU wont ever be affected when a vmware vCPU runs. It's not
-pretty, but TBH I don't care.
-
-Thanks,
-
-        tglx
 
 
+> On Apr 9, 2020, at 2:06 PM, Linus Torvalds =
+<torvalds@linux-foundation.org> wrote:
+>=20
+> On Thu, Apr 9, 2020 at 10:58 AM Qian Cai <cai@lca.pw> wrote:
+>>=20
+>> Agree to make a big deal part. My point is that when kicking trees of =
+linux-next, it also could reduce the exposure of many patches (which =
+could be bad) to linux-next and miss valuable early testing either from =
+robots or human.
+>=20
+> Sure. But I'd want to be notified when something gets kicked out, so
+> that I then know not to pull it.
+>=20
+> So it would reduce the exposure of patches, but it would also make
+> sure those patches then don't make it upstream.
+>=20
+> Untested patches is fine - as long as nobody else has to suffer =
+through them.
+
+Excellent. It now very much depends on how Stephen will notify you when
+a tree, a patchset or even a developer should be blacklisted for some =
+time
+to make this a success.=
