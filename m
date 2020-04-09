@@ -2,102 +2,142 @@ Return-Path: <SRS0=n+Ub=5Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F37AC2BA2B
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 03:10:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F6EAC2BA1A
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 03:12:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3FD5A20730
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 03:10:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2136120730
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 03:12:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726594AbgDIDKx (ORCPT
+        id S1726627AbgDIDMZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Apr 2020 23:10:53 -0400
-Received: from mail.loongson.cn ([114.242.206.163]:41078 "EHLO loongson.cn"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726521AbgDIDKx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Apr 2020 23:10:53 -0400
-Received: from linux.localdomain (unknown [113.200.148.30])
-        by mail.loongson.cn (Coremail) with SMTP id AQAAf9Dx794mko5etI0lAA--.30S2;
-        Thu, 09 Apr 2020 11:10:32 +0800 (CST)
-From:   Tiezhu Yang <yangtiezhu@loongson.cn>
-To:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-Cc:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Xuefeng Li <lixuefeng@loongson.cn>
-Subject: [PATCH] MIPS: Limit check_bugs32() under CONFIG_32BIT
-Date:   Thu,  9 Apr 2020 11:10:29 +0800
-Message-Id: <1586401829-22242-1-git-send-email-yangtiezhu@loongson.cn>
-X-Mailer: git-send-email 2.1.0
-X-CM-TRANSID: AQAAf9Dx794mko5etI0lAA--.30S2
-X-Coremail-Antispam: 1UD129KBjvJXoW7ArW8Jr48tr13tr43WryxGrg_yoW8GFy3pF
-        sFyw4kJr4UuFyDAa9Yyr1kWryYqr1kGr45KrW0gFWDAF15XF4UGFn3Kr45Jrn7ZryfKa4r
-        uF9aqr1ftF4Iyw7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-        9KBjDU0xBIdaVrnRJUUUkG14x267AKxVWUJVW8JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-        rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-        1l84ACjcxK6xIIjxv20xvE14v26r4j6ryUM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4j
-        6F4UM28EF7xvwVC2z280aVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gr
-        1j6F4UJwAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv
-        7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r
-        1j6r4UM4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwCY02Avz4vE14v_
-        Gr4l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxV
-        WUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMIIYrxkI
-        7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r
-        1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWrJr0_WFyUJwCI42IY6I8E87Iv67AKxVWUJVW8
-        JwCI42IY6I8E87Iv6xkF7I0E14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x0JU2FALUUU
-        UU=
-X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
+        Wed, 8 Apr 2020 23:12:25 -0400
+Received: from smtprelay0078.hostedemail.com ([216.40.44.78]:45098 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726521AbgDIDMZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Apr 2020 23:12:25 -0400
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay07.hostedemail.com (Postfix) with ESMTP id 8D166181D396F;
+        Thu,  9 Apr 2020 03:12:24 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: brick58_894f471779363
+X-Filterd-Recvd-Size: 4187
+Received: from XPS-9350.home (unknown [47.151.136.130])
+        (Authenticated sender: joe@perches.com)
+        by omf05.hostedemail.com (Postfix) with ESMTPA;
+        Thu,  9 Apr 2020 03:12:23 +0000 (UTC)
+Message-ID: <efb5a518fdc47f0120b94a7e8a95d275c0f4ad43.camel@perches.com>
+Subject: Re: [PATCH] checkpatch: check for missing \n at the end of logging
+ message
+From:   Joe Perches <joe@perches.com>
+To:     Marion & Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+        apw@canonical.com, Andrew Morton <akpm@linux-foundation.org>
+Cc:     linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
+Date:   Wed, 08 Apr 2020 20:10:23 -0700
+In-Reply-To: <4b7e1cf3-6fa7-60af-a1d3-2457339dbe8a@wanadoo.fr>
+References: <20200407204908.10420-1-christophe.jaillet@wanadoo.fr>
+         <8617a6b94c0644bce1fd4ca77309d67a612e6300.camel@perches.com>
+         <4b7e1cf3-6fa7-60af-a1d3-2457339dbe8a@wanadoo.fr>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.34.1-2 
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There is no need to build and call check_bugs32() under CONFIG_64BIT,
-just limit it under CONFIG_32BIT.
+On Wed, 2020-04-08 at 22:23 +0200, Marion & Christophe JAILLET wrote:
+> Le 08/04/2020 à 04:14, Joe Perches a écrit :
+> > This works rather better:
+> > 
+> > Perhaps you could test?
+> > ---
+> > 
+> > v2:
+> > 
+> > o Avoid pr_cont
+> > o Use only last format line if split across multiple lines
+> > 
+> >   scripts/checkpatch.pl | 22 ++++++++++++++++++++++
+> >   1 file changed, 22 insertions(+)
+> > 
+> > diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
+> > index d64c67..f00a6c8 100755
+> > --- a/scripts/checkpatch.pl
+> > +++ b/scripts/checkpatch.pl
+> > @@ -5673,6 +5673,28 @@ sub process {
+> >   			}
+> >   		}
+> >   
+> > +# check for possible missing newlines at the end of common logging functions
+> > +		if (defined($stat) &&
+> > +		    $stat =~ /^\+\s*($logFunctions)\s*\((?:\s*$FuncArg\s*,\s*){0,3}\s*$String/ &&
+> > +		    $1 !~ /_cont$/ && $1 =~ /^(?:pr|dev|netdev|netif|wiphy)_/) {
+> > +			my $cnt = statement_rawlines($stat);
+> > +			my $extracted_string = "";
+> > +			for (my $i = 0; $i < $cnt; $i++) {
+> > +				next if ($lines[$linenr + $i - 1] !~ /$String\s*[,\)]/);
+> > +				$extracted_string = get_quoted_string($lines[$linenr + $i - 1],
+> > +								      $rawlines[$linenr + $i - 1]);
+> > +				last if ($extracted_string ne "");
+> > +			}
+> > +			if ($extracted_string ne "" && $extracted_string !~ /\\n"$/) {
+> > +				my $herectx = $here . "\n";
+> > +				for (my $n = 0; $n < $cnt; $n++) {
+> > +					$herectx .=  raw_line($linenr, $n) . "\n";
+> > +				}
+> > +				WARN("MISSING_FORMAT_NEWLINE",
+> > +				     "Possible missing '\\n' at the end of a logging message format string\n" . $herectx);
+> > +			}
+> > +		}
+> > +
+> >   # check for logging functions with KERN_<LEVEL>
+> >   		if ($line !~ /printk(?:_ratelimited|_once)?\s*\(/ &&
+> >   		    $line =~ /\b$logFunctions\s*\(.*\b(KERN_[A-Z]+)\b/) {
+> > 
+> For what I wanted to check and according to the few tests I've made, it 
+> looks fine.
+> 
+> Thank you very much for sharing this much more robust (and working) 
+> alternative.
+> 
+> For what it worth: (i.e. much more tests should be done)
+> Tested-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
 
-Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
----
- arch/mips/include/asm/bugs.h | 4 +++-
- arch/mips/kernel/cpu-probe.c | 2 ++
- 2 files changed, 5 insertions(+), 1 deletion(-)
+Then I think you really haven't tested it very thoroughly.
 
-diff --git a/arch/mips/include/asm/bugs.h b/arch/mips/include/asm/bugs.h
-index d72dc6e..5f8d2bf 100644
---- a/arch/mips/include/asm/bugs.h
-+++ b/arch/mips/include/asm/bugs.h
-@@ -35,7 +35,9 @@ static inline void check_bugs(void)
- 	unsigned int cpu = smp_processor_id();
- 
- 	cpu_data[cpu].udelay_val = loops_per_jiffy;
--	check_bugs32();
-+
-+	if (IS_ENABLED(CONFIG_32BIT))
-+		check_bugs32();
- 
- 	if (IS_ENABLED(CONFIG_CPU_R4X00_BUGS64))
- 		check_bugs64();
-diff --git a/arch/mips/kernel/cpu-probe.c b/arch/mips/kernel/cpu-probe.c
-index f21a230..85d7273 100644
---- a/arch/mips/kernel/cpu-probe.c
-+++ b/arch/mips/kernel/cpu-probe.c
-@@ -461,6 +461,7 @@ static inline void cpu_set_mt_per_tc_perf(struct cpuinfo_mips *c)
- 		c->options |= MIPS_CPU_MT_PER_TC_PERF_COUNTERS;
- }
- 
-+#ifdef CONFIG_32BIT
- static inline void check_errata(void)
- {
- 	struct cpuinfo_mips *c = &current_cpu_data;
-@@ -484,6 +485,7 @@ void __init check_bugs32(void)
- {
- 	check_errata();
- }
-+#endif /* CONFIG_32BIT */
- 
- /*
-  * Probe whether cpu has config register by trying to play with
--- 
-2.1.0
+For instance:
+
+$ git ls-files -- 'drivers/*.[ch]' | \
+  xargs ./scripts/checkpatch.pl -f --quiet --no-summary --types=MISSING_FORMAT_NEWLINE
+
+emits many false positives.
+
+Some types of false positives:
+
+o Many of the formats seem to end in a ':' or a ' '
+  maybe those should be excluded
+   #86: FILE: drivers/android/binder_alloc_selftest.c:86:
+   +	pr_err("free seq: ");
+
+   o Split string formats should be excluded better
+     as only the first string fragment is checked:
+   #1001: FILE: drivers/ata/pata_octeon_cf.c:1001:
+   +	dev_info(&pdev->dev, "version " DRV_VERSION" %d bit%s.\n",
+   +		 is_16bit ? 16 : 8,
+   +		 cf_port->is_true_ide ? ", True IDE" : "");
+
+   probably a few others, including a desire to check
+   if a pr_cont is below the use within a few lines.
+
+   > Maybe, at least a Suggested-By: would be appreciated.
+
+No worries, when it's cooked, it'll have that.
+
+cheers, Joe
 
