@@ -2,151 +2,113 @@ Return-Path: <SRS0=n+Ub=5Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE694C2BB86
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 10:15:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6B59C2BB86
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 10:16:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B513120771
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 10:15:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7C22B20771
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 10:16:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iQL+Gq3Q"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="mjDUXopO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726651AbgDIKPH (ORCPT
+        id S1726597AbgDIKQl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Apr 2020 06:15:07 -0400
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:43693 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725783AbgDIKPG (ORCPT
+        Thu, 9 Apr 2020 06:16:41 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:39532 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725783AbgDIKQk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Apr 2020 06:15:06 -0400
-Received: by mail-ot1-f67.google.com with SMTP id n25so7286341otr.10;
-        Thu, 09 Apr 2020 03:15:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=/NSZZSKSu5WJt1RNoef9dBjCn8fIK10WqZ6WGC2+h/M=;
-        b=iQL+Gq3QA9xSB0G77RYT1DZl9zxaKwiQKV7PF57j5DmP4f7Z+K389I+vbjLtPG0pyw
-         TsgkfIqwbahrRJXW8+QzFOO4x6LTG5trpY7ZUktLi8S7PL9Ekma4X2V2Cx+W6nUc/hBP
-         o8WvUlKV5Pm80i7lOPwWp7H6C8ljw9sMS24M3L83ZVjo8e/XavF7iDhLPZJuU6P8JADJ
-         ROC17jM7JvA/1li4pUqoH2bNUu+g3zK4qs0i8GBIPfm6oJBciuxGe5xjvSUfcOJB1XQF
-         ZnBjsViCtVXvHYEeBNexwrm34bN3C5mE/kI0lc084QX8A9v2+w7IAa67TUTcdks1+NHE
-         UKFA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=/NSZZSKSu5WJt1RNoef9dBjCn8fIK10WqZ6WGC2+h/M=;
-        b=pw90wKgMwoIxtYdUcUHsBgOAwcvDYSe4Wr6vnRAAhDL6zesqJpmqf+/+g9xBUR5qwt
-         97ot9VL4Djn4C//HuMPV/+CJrThTwyaFJDTSbSWEfHptCSN6UZmI+crPPLoN00ZWQE2b
-         OTSI8Lf/ge3dKJsXk+3UL9YgIQjpkpOaN7AxF5+f2i8uAgPN+wdBkd6Br8FPrDX9Wrjv
-         JamGcXzHyB8uaw+Mu/9woybBzxAUO30G8e0m1wW1CiNBfFQTiM5D18YapWKB/e4PUD8p
-         flGhkGSX0LgINmYRh7lTChuJjN/mW9zr1f2EN6WQr8f3yiaKIsJ8odDxMb4Dvh/C6foY
-         tQng==
-X-Gm-Message-State: AGi0PuYt0N/PZ1sbSRhXPL2m1XLUcDJwvgPfijtuhR2AQhMtWkkDYYdi
-        obZ0487HEJnrCQNzxWt+BTi2C+PQEH0xzGlzXHE=
-X-Google-Smtp-Source: APiQypJZ7ipa4bMCkW9mI2xrPpPXDZ+7ffNf67WIS2NRxz3lWs1SiJCULWWWchWx+Is+aY4H+ame5VIgN7uLwHuVtno=
-X-Received: by 2002:a9d:895:: with SMTP id 21mr8780254otf.365.1586427305866;
- Thu, 09 Apr 2020 03:15:05 -0700 (PDT)
+        Thu, 9 Apr 2020 06:16:40 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 039ADtZl069500;
+        Thu, 9 Apr 2020 10:16:30 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2020-01-29;
+ bh=39Ni081FXBK7Yqe2dP5DkBkYVP3K7UrlF3aJOoZyVRU=;
+ b=mjDUXopOwz5JjapBHkk4egTZ+9hEIiMoV1gq+KdePC/2pa/W+f5m5Ah5GZ09RJk2IU1Q
+ GqQR9h9HPdQb1gYMMLAa05i3R8jfnGUyR6ggHA0q1nN94s3vH/QjM/+xIdL5fp4NYFuB
+ 511yMNHDqedn0vhfyvcKroOoMt+9f0M4nMv9wK65RAHJtrJePS2T5ialLOfnpa01mA1j
+ Hq6MuIXoOvOdSqrrKmMSK4YcR/xgLy/+5aF8ZtfUqV6TW28l/wRhmfUxAN2Q/UVTiM/s
+ 1x9vDJp4rvMzLVoAiyUSDLjXOfEHUOGSaSiOSYQIXu83++uRlYv5mRLix+cE0SqyG/Pg VA== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by aserp2120.oracle.com with ESMTP id 3091m10nsc-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 09 Apr 2020 10:16:29 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 039ABlp1070488;
+        Thu, 9 Apr 2020 10:14:29 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by aserp3020.oracle.com with ESMTP id 3091m7fj9e-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 09 Apr 2020 10:14:29 +0000
+Received: from abhmp0006.oracle.com (abhmp0006.oracle.com [141.146.116.12])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 039AEO0q032019;
+        Thu, 9 Apr 2020 10:14:24 GMT
+Received: from kadam (/41.57.98.10)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Thu, 09 Apr 2020 03:14:23 -0700
+Date:   Thu, 9 Apr 2020 13:14:16 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     Oliver Graute <oliver.graute@gmail.com>
+Cc:     gregkh@linuxfoundation.org, devel@driverdev.osuosl.org,
+        linux-fbdev@vger.kernel.org,
+        Oliver Graute <oliver.graute@kococonnector.com>,
+        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org
+Subject: Re: [PATCH v1] staging: fbtft: fb_st7789v: enabled inversion
+Message-ID: <20200409101416.GN2001@kadam>
+References: <1586424250-25897-1-git-send-email-oliver.graute@gmail.com>
 MIME-Version: 1.0
-References: <1586360280-10956-7-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <20200408235133.GA151858@google.com>
-In-Reply-To: <20200408235133.GA151858@google.com>
-From:   "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-Date:   Thu, 9 Apr 2020 11:14:39 +0100
-Message-ID: <CA+V-a8taA-CYNC2vLoPPm9WHZwTOFoHe-c2zus_n5=qr4x32WQ@mail.gmail.com>
-Subject: Re: [PATCH v7 6/8] PCI: rcar: Add support for R-Car PCIe controller
- in endpoint mode
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Andrew Murray <amurray@thegoodpenguin.co.uk>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Marek Vasut <marek.vasut+renesas@gmail.com>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Shawn Lin <shawn.lin@rock-chips.com>,
-        Tom Joseph <tjoseph@cadence.com>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-        LAK <linux-arm-kernel@lists.infradead.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        Chris Paterson <Chris.Paterson2@renesas.com>,
-        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1586424250-25897-1-git-send-email-oliver.graute@gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9585 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 bulkscore=0 mlxscore=0
+ malwarescore=0 spamscore=0 adultscore=0 suspectscore=0 mlxlogscore=999
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
+ definitions=main-2004090077
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9585 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 mlxlogscore=999 mlxscore=0
+ priorityscore=1501 phishscore=0 suspectscore=0 bulkscore=0
+ lowpriorityscore=0 impostorscore=0 malwarescore=0 clxscore=1011
+ spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2004090077
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Bjorn,
+On Thu, Apr 09, 2020 at 11:24:05AM +0200, Oliver Graute wrote:
+> From: Oliver Graute <oliver.graute@kococonnector.com>
+> 
+> Enable inversion mode
+> 
+> Signed-off-by: Oliver Graute <oliver.graute@kococonnector.com>
+> ---
+>  drivers/staging/fbtft/fb_st7789v.c | 4 ++++
+>  1 file changed, 4 insertions(+)
+> 
+> diff --git a/drivers/staging/fbtft/fb_st7789v.c b/drivers/staging/fbtft/fb_st7789v.c
+> index 3c3f387936e8..84c5af2dc9a0 100644
+> --- a/drivers/staging/fbtft/fb_st7789v.c
+> +++ b/drivers/staging/fbtft/fb_st7789v.c
+> @@ -120,6 +120,10 @@ static int init_display(struct fbtft_par *par)
+>  	write_reg(par, PWCTRL1, 0xA4, 0xA1);
+>  
+>  	write_reg(par, MIPI_DCS_SET_DISPLAY_ON);
+> +
+> +	/* enable inversion mode */
+> +	write_reg(par, 0x21);
 
-Thank you for the review.
+Use the define and delete the comment.
 
-On Thu, Apr 9, 2020 at 12:51 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
->
-> Maybe:
->
->   PCI: rcar: Add endpoint mode support
->
-> so the important "endpoint mode" part is early and doesn't get chopped
-> off or wrapped.  We already know it's PCIe and rcar-related.
->
-Agreed will change it.
+	write_reg(par, MIPI_DCS_ENTER_INVERT_MODE);
 
-> On Wed, Apr 08, 2020 at 04:37:58PM +0100, Lad Prabhakar wrote:
-> > This patch adds support for R-Car PCIe controller to work in endpoint mode.
->
-> s/This patch adds/Add/
->
-OK
+regards,
+dan carpenter
 
-> > +static int rcar_pcie_ep_set_bar(struct pci_epc *epc, u8 func_no,
-> > +                             struct pci_epf_bar *epf_bar)
-> > +{
-> > +     int flags = epf_bar->flags | LAR_ENABLE | LAM_64BIT;
-> > +     struct rcar_pcie_endpoint *ep = epc_get_drvdata(epc);
-> > +     u64 size = 1ULL << fls64(epf_bar->size - 1);
-> > +     dma_addr_t cpu_addr = epf_bar->phys_addr;
-> > +     enum pci_barno bar = epf_bar->barno;
-> > +     struct rcar_pcie *pcie = &ep->pcie;
-> > +     u32 mask;
-> > +     int idx;
-> > +     int err;
-> > +
-> > +     idx = find_first_zero_bit(ep->ib_window_map, ep->num_ib_windows);
-> > +     if (idx >= ep->num_ib_windows) {
-> > +             dev_err(pcie->dev, "no free inbound window\n");
-> > +             return -EINVAL;
-> > +     }
-> > +
-> > +     if ((flags & PCI_BASE_ADDRESS_SPACE) == PCI_BASE_ADDRESS_SPACE_IO)
-> > +             flags |= IO_SPACE;
-> > +
-> > +     ep->bar_to_atu[bar] = idx;
-> > +     /* use 64 bit bars */
->
-> s/64 bit bars/64-bit BARs/
->
-OK shall replace it.
-
-> > +static const struct pci_epc_features rcar_pcie_epc_features = {
-> > +     .linkup_notifier = false,
-> > +     .msi_capable = true,
-> > +     .msix_capable = false,
-> > +     /* use 64-bit bars so mark bar1/3/5 as reserved */
->
-> s/bar/BAR/g
-OK shall replace it.
-
-Cheers,
---Prabhakar
