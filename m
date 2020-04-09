@@ -2,145 +2,129 @@ Return-Path: <SRS0=n+Ub=5Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 567DAC2BB86
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 11:25:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0722FC2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 11:28:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2EC4920BED
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 11:25:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586431533;
-	bh=pZaCgk4fe9qVDezZmFxHsQI5ERTJ0fxa4TeJSZBvIMI=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=nvxpVY9Q88dgnpckFo7+YUTvIEny/0+S/bbWlQK4v7GcO0/dgzpbsQ8JaXljuCTUM
-	 c63rNhxwAg32mIFMUfRnuL/xtNLY/tjrtTKt8Y4QRqidIvACQmS5akpyWFJle37GR2
-	 Cq4WrWdzJBZazBbQ1wf1V77SvIZ6GMYAcvZ/jOUc=
+	by mail.kernel.org (Postfix) with ESMTP id DD39620757
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 11:28:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726647AbgDILZb (ORCPT
+        id S1726623AbgDIL2K (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Apr 2020 07:25:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43436 "EHLO mail.kernel.org"
+        Thu, 9 Apr 2020 07:28:10 -0400
+Received: from foss.arm.com ([217.140.110.172]:48898 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726559AbgDILZb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Apr 2020 07:25:31 -0400
-Received: from mail-io1-f41.google.com (mail-io1-f41.google.com [209.85.166.41])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3439821655;
-        Thu,  9 Apr 2020 11:25:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586431531;
-        bh=pZaCgk4fe9qVDezZmFxHsQI5ERTJ0fxa4TeJSZBvIMI=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=WVv8TH180MosttzZ7CrKsHsa+98uqe9Si2Nn/uy58C3wDVJ2cAyGh2IIHpqmmB4gz
-         02uPIp2bCK0k3pZ+QmVBm/VOD0abv1lgFBRsnLLD96VM0AgyOS6uHeNqdsQlmxILtq
-         6bJ3lVvFp+jYtV0zqOgXRN9nsQfMfudTI7GdJHHM=
-Received: by mail-io1-f41.google.com with SMTP id h6so3405581iok.11;
-        Thu, 09 Apr 2020 04:25:31 -0700 (PDT)
-X-Gm-Message-State: AGi0PubcGRDMCYLMgJ2TfSmdRU52Fg2ginWLACIDYqEMMcZYSHZt7V4u
-        XUmfzLNOkbMI95kN4VCx7JAnOaW+FS+45zy2KOQ=
-X-Google-Smtp-Source: APiQypJUNHXZ7kzlhiVsDGZYvX1sItKiakzaHFgIAx5133GDf10QUpQHJoK5litM/tSHaUhi9lwMy04JBweQTmlcUC0=
-X-Received: by 2002:a5e:8b47:: with SMTP id z7mr11257862iom.16.1586431530471;
- Thu, 09 Apr 2020 04:25:30 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200113172245.27925-1-ardb@kernel.org> <20200113172245.27925-6-ardb@kernel.org>
- <63b125a4-6c62-fcdf-de22-d3bebe2dcbf5@suse.cz> <CAMj1kXGiT_zYjc6X-msRXVozhpDAY0UesEW3_4fOgiH4FyMgDw@mail.gmail.com>
- <972b66a9-92c7-9a15-1aa1-e3236abe90df@suse.cz> <CAMj1kXFGkOM9fbqr44_TbdxqFjH1i3d8dkO64C1mQmH=AqrUSQ@mail.gmail.com>
- <20200409080626.GV5951@GaryWorkstation> <984a2b3c-a9d4-e733-6372-4abf0f99be1f@suse.cz>
- <CAMj1kXFHUusU9dDgqhU_qswDVgYWx_kpaDEroj4ZSt3hr-AFsA@mail.gmail.com>
- <d38fd829-b944-da10-58c0-180f80e8264d@suse.cz> <CAMj1kXG4F+WzJX8_FyRAxQmDwqvbQMzh3Ji1KcpH_eO3Zt3-WQ@mail.gmail.com>
- <b6006dd7-2ce0-0776-9a61-52377b8eef63@suse.cz> <CAMj1kXFsaoUoWbwRVFJX_ze+gJHOKRLyTL5kEecYJRPr84wWqw@mail.gmail.com>
- <CAMj1kXEhLjh4NENkzfKmO=eLxEXmgU7MDyJsL51Ctas5XW40Sw@mail.gmail.com>
-In-Reply-To: <CAMj1kXEhLjh4NENkzfKmO=eLxEXmgU7MDyJsL51Ctas5XW40Sw@mail.gmail.com>
-From:   Ard Biesheuvel <ardb@kernel.org>
-Date:   Thu, 9 Apr 2020 13:25:18 +0200
-X-Gmail-Original-Message-ID: <CAMj1kXFJ3WvtTKejKFwY-JKsTBjANdM8+Mae8+Yvfsu15ke+zg@mail.gmail.com>
-Message-ID: <CAMj1kXFJ3WvtTKejKFwY-JKsTBjANdM8+Mae8+Yvfsu15ke+zg@mail.gmail.com>
-Subject: Re: [PATCH 05/13] efi/x86: don't map the entire kernel text RW for
- mixed mode
-To:     Jiri Slaby <jslaby@suse.cz>
-Cc:     Gary Lin <glin@suse.com>, linux-efi <linux-efi@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Anshuman Khandual <anshuman.khandual@arm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Dave Young <dyoung@redhat.com>,
-        Saravana Kannan <saravanak@google.com>
-Content-Type: text/plain; charset="UTF-8"
+        id S1726470AbgDIL2K (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Apr 2020 07:28:10 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3614031B;
+        Thu,  9 Apr 2020 04:28:08 -0700 (PDT)
+Received: from e107158-lin.cambridge.arm.com (e107158-lin.cambridge.arm.com [10.1.195.21])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A21003F73D;
+        Thu,  9 Apr 2020 04:28:06 -0700 (PDT)
+From:   Qais Yousef <qais.yousef@arm.com>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     Qais Yousef <qais.yousef@arm.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <len.brown@intel.com>, Pavel Machek <pavel@ucw.cz>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        Todd E Brandt <todd.e.brandt@linux.intel.com>,
+        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 1/3] Revert "cpu/hotplug: Ignore pm_wakeup_pending() for disable_nonboot_cpus()"
+Date:   Thu,  9 Apr 2020 12:27:40 +0100
+Message-Id: <20200409112742.3581-1-qais.yousef@arm.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 9 Apr 2020 at 13:08, Ard Biesheuvel <ardb@kernel.org> wrote:
->
-> On Thu, 9 Apr 2020 at 12:45, Ard Biesheuvel <ardb@kernel.org> wrote:
-> >
-> > On Thu, 9 Apr 2020 at 12:09, Jiri Slaby <jslaby@suse.cz> wrote:
-> > >
-> > > On 09. 04. 20, 11:09, Ard Biesheuvel wrote:
-> > > > On Thu, 9 Apr 2020 at 10:36, Jiri Slaby <jslaby@suse.cz> wrote:
-> > > >>
-> > > >> On 09. 04. 20, 10:19, Ard Biesheuvel wrote:
-> > > >>>>>> $ rpm -qlp ~/Downloads/ovmf-202002-1.1.i586.rpm
-> > > >>>>>> warning: /home/ardbie01/Downloads/ovmf-202002-1.1.i586.rpm: Header V3
-> > > >>>>>> RSA/SHA256 Signature, key ID 3dbdc284: NOKEY
-> > > >>>>>> /usr/share/doc/packages/ovmf
-> > > >>>>>> /usr/share/doc/packages/ovmf/README
-> > > >>>>>
-> > > >>>>> Hmmm, it's weird that OBS doesn't list all derived files.
-> > > >>>>> Anyway, the ia32 ovmf is available in
-> > > >>>>> http://download.opensuse.org/tumbleweed/repo/oss/noarch/qemu-ovmf-ia32-202002-1.1.noarch.rpm
-> > > >>>>
-> > > >>>> It indeed does:
-> > > >>>> https://build.opensuse.org/package/binaries/openSUSE:Factory/ovmf/standard
-> > > >>>>
-> > > >>>> Note that the ia32 version is noarch, built on i586.
-> > > >>>>
-> > > >>>
-> > > >>> I am not able to reproduce this issue using the linked firmware image
-> > > >>> and a 5.6 x86_64_defconfig with efivarfs built in.
-> > > >>
-> > > >> Yeah, I had to use the distro config too. Not sure what the trigger is.
-> > > >> Maybe some NUMA configs or something.
-> > > >>
-> > > >>> Could anyone share the full log, please, along with the kernel config
-> > > >>> that was used?
-> > > >>
-> > > >> Both uploaded:
-> > > >> http://decibel.fi.muni.cz/~xslaby/err/
-> > > >>
-> > > >
-> > > > With the same config, I am still not seeing the issue.
-> > > >
-> > > >
-> > > >> Note that I switched the for-me-necessary =m configs to =y. So that it
-> > > >> is enough to build bzImage, w/o modules...
-> > > >>
-> > > >
-> > > > Could you please try running it again with CONFIG_EFI_PGT_DUMP=y enabled?
-> > >
-> > > No problem:
-> > > http://decibel.fi.muni.cz/~xslaby/err/dmesg2.txt
-> > >
-> > > > In the mean time, I will try to install Tumbleweed from scratch. Do
-> > > > you have any steps I could follow to reproduce your setup?
-> > >
-> > > Not really, just installed TW 64-bit and used efi and grub 32 bit.
-> > >
-> >
-> > OK, so you installed using a 64-bit EFI, and then switched to a 32-bit
-> > one? Or is there a special mixed-mode capable installer?
-> >
-> > (The ones I found are x86_64 only)
->
-> OK, I have managed to install tumbleweed into a 64-bit VM with 64-bit GRUB.
->
-> Could you give any instructions how to convert to 32-bit GRUB please?
+This issue was fixed already by:
 
-Never mind - I managed to switch. I still don't see the issue though :-(
+commit d66b16f5df4b ("arm64: Don't use disable_nonboot_cpus()")
+commit dddf3578e0d4 ("ARM: Don't use disable_nonboot_cpus()")
+
+The only caller of disable_nonboot_cpus() is x86, which is in a proper
+suspend/resume path and due to the reverted patch lost its ability to
+early abort due to a pending wakeup.
+
+The fix that is being reverted is arguably a better one to backport to
+stable trees. But it highlights the confusion about using
+disable_nonboot_cpus() API.
+
+This is a preparation to remove disable_nonboot_cpus() in favor of
+freeze_secondary_cpus().
+
+This reverts commit e98eac6ff1b45e4e73f2e6031b37c256ccb5d36b.
+
+Signed-off-by: Qais Yousef <qais.yousef@arm.com>
+CC: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+CC: Len Brown <len.brown@intel.com>
+CC: Pavel Machek <pavel@ucw.cz>
+CC: Ingo Molnar <mingo@redhat.com>
+CC: Borislav Petkov <bp@alien8.de>
+CC: "H. Peter Anvin" <hpa@zytor.com>
+CC: x86@kernel.org
+CC: Todd E Brandt <todd.e.brandt@linux.intel.com>
+CC: linux-pm@vger.kernel.org
+CC: linux-kernel@vger.kernel.org
+---
+ include/linux/cpu.h | 12 +++---------
+ kernel/cpu.c        |  4 ++--
+ 2 files changed, 5 insertions(+), 11 deletions(-)
+
+diff --git a/include/linux/cpu.h b/include/linux/cpu.h
+index beaed2dc269e..9ead281157d3 100644
+--- a/include/linux/cpu.h
++++ b/include/linux/cpu.h
+@@ -144,18 +144,12 @@ static inline void get_online_cpus(void) { cpus_read_lock(); }
+ static inline void put_online_cpus(void) { cpus_read_unlock(); }
+ 
+ #ifdef CONFIG_PM_SLEEP_SMP
+-int __freeze_secondary_cpus(int primary, bool suspend);
+-static inline int freeze_secondary_cpus(int primary)
+-{
+-	return __freeze_secondary_cpus(primary, true);
+-}
+-
++extern int freeze_secondary_cpus(int primary);
+ static inline int disable_nonboot_cpus(void)
+ {
+-	return __freeze_secondary_cpus(0, false);
++	return freeze_secondary_cpus(0);
+ }
+-
+-void enable_nonboot_cpus(void);
++extern void enable_nonboot_cpus(void);
+ 
+ static inline int suspend_disable_secondary_cpus(void)
+ {
+diff --git a/kernel/cpu.c b/kernel/cpu.c
+index 12ae636e9cb6..30848496cbc7 100644
+--- a/kernel/cpu.c
++++ b/kernel/cpu.c
+@@ -1327,7 +1327,7 @@ void bringup_nonboot_cpus(unsigned int setup_max_cpus)
+ #ifdef CONFIG_PM_SLEEP_SMP
+ static cpumask_var_t frozen_cpus;
+ 
+-int __freeze_secondary_cpus(int primary, bool suspend)
++int freeze_secondary_cpus(int primary)
+ {
+ 	int cpu, error = 0;
+ 
+@@ -1352,7 +1352,7 @@ int __freeze_secondary_cpus(int primary, bool suspend)
+ 		if (cpu == primary)
+ 			continue;
+ 
+-		if (suspend && pm_wakeup_pending()) {
++		if (pm_wakeup_pending()) {
+ 			pr_info("Wakeup pending. Abort CPU freeze\n");
+ 			error = -EBUSY;
+ 			break;
+-- 
+2.17.1
+
