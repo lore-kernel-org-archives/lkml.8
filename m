@@ -2,168 +2,126 @@ Return-Path: <SRS0=n+Ub=5Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 072A8C2BA2B
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 14:45:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48344C2BA2B
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 14:45:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C6BB12051A
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 14:45:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0CAEC2051A
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 14:45:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="G+wqJ3Ce"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="tKQj+I8Q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727736AbgDIOo7 (ORCPT
+        id S1727789AbgDIOp4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Apr 2020 10:44:59 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:50600 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726977AbgDIOo6 (ORCPT
+        Thu, 9 Apr 2020 10:45:56 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:50086 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726977AbgDIOpz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Apr 2020 10:44:58 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 039EeKK4060061;
-        Thu, 9 Apr 2020 14:44:37 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2020-01-29;
- bh=VTF5rzoS67jGgvr3WONUoqlugTDPyKjLN90Y48dLo9s=;
- b=G+wqJ3CeYZSIigcMpcz9XR+n7ibh2+/ALDXGHW6uitOFrluEyAuIrSdqwDTZd0iab1e+
- VMziR4aslIqHV54auFKqqc6dISQKiu/7Cwnjeu0CZQvngF61lVt6dQDvEAKkmo+SzvOH
- nh1SuZei2t0/yWyy5rd2Gbd+mYc0nLJT2c5eNDo9Cnz5tNK2QglWPfJdeHUvSxrANyA1
- 6zynWBznVHkxWQ9u1ejSU/RyiNHF8GJdhfgY4NPWe1Zr6QqAJUBaveVaFW9IkWNDZ9w7
- P0+dvwDO9Tx0hXm58ODihI/vTinf+4npyUkvEqjFJ64w2E1VNVeoYHjqvQkSTYzByTSS hQ== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by userp2130.oracle.com with ESMTP id 3091m3hx1k-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 09 Apr 2020 14:44:37 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 039Eat7Q023906;
-        Thu, 9 Apr 2020 14:44:36 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by aserp3030.oracle.com with ESMTP id 309ag4se2c-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 09 Apr 2020 14:44:36 +0000
-Received: from abhmp0020.oracle.com (abhmp0020.oracle.com [141.146.116.26])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 039EiU7P004126;
-        Thu, 9 Apr 2020 14:44:30 GMT
-Received: from [10.39.247.246] (/10.39.247.246)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 09 Apr 2020 07:44:30 -0700
-Subject: Re: [PATCH] x86/xen: fix booting 32-bit pv guest
-To:     Juergen Gross <jgross@suse.com>, xen-devel@lists.xenproject.org,
-        x86@kernel.org, linux-kernel@vger.kernel.org
-Cc:     Stefano Stabellini <sstabellini@kernel.org>,
+        Thu, 9 Apr 2020 10:45:55 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=UaY+F14JIF5fNnFl5Q0dxEWbJVvhGgScCq/Av6dpNmk=; b=tKQj+I8QN0CWaEHBaQakSjP1MS
+        NFMrpBCBq1e6c51EZI6d6hUiCFB0HPjMG5DJ9ONn+g69FXwgZiYKAT2OR3mkVPFdFudBMApREZSfL
+        jVduc+H0ZTMlL6GNHH01b9l/NQp2VHMzeB+IhtRxnIQ3YTpqodDbZVICtGRLhzoxljjvJ/UsckgFz
+        GCJhFdUEZhD2IZm6IWCfgHVtZ+YVW4WXYiZDCPa62xLXIiDbX7LBbOr5joW631gIp9epNaMHg5kEV
+        BFtZmCV4v2gY0qCnIZ6o4hT3KvqbZqU0mnBgYweLXCISBPfCtZkbGcJtcjjoIMzjrsbZ5OfVS5Ssw
+        iF1N53Hg==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jMYRB-0002N4-OD; Thu, 09 Apr 2020 14:45:49 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id AC72B300B38;
+        Thu,  9 Apr 2020 16:45:46 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 949002BB012BC; Thu,  9 Apr 2020 16:45:46 +0200 (CEST)
+Date:   Thu, 9 Apr 2020 16:45:46 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Masami Hiramatsu <mhiramat@kernel.org>
+Cc:     Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
+        Jann Horn <jannh@google.com>,
+        Harry Wentland <harry.wentland@amd.com>,
+        Leo Li <sunpeng.li@amd.com>, amd-gfx@lists.freedesktop.org,
+        Alex Deucher <alexander.deucher@amd.com>,
+        David Zhou <David1.Zhou@amd.com>,
         Thomas Gleixner <tglx@linutronix.de>,
         Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>
-References: <20200409070001.16675-1-jgross@suse.com>
-From:   Boris Ostrovsky <boris.ostrovsky@oracle.com>
-Autocrypt: addr=boris.ostrovsky@oracle.com; keydata=
- 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
- Jg6OxFYd01z+a+oL
-Message-ID: <ee2aa0c4-b633-a5e6-436c-0776407c98ac@oracle.com>
-Date:   Thu, 9 Apr 2020 10:44:25 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        "H . Peter Anvin" <hpa@zytor.com>,
+        the arch/x86 maintainers <x86@kernel.org>,
+        kernel list <linux-kernel@vger.kernel.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>
+Subject: Re: [PATCH v2] x86: insn: Add insn_is_fpu()
+Message-ID: <20200409144546.GP20760@hirez.programming.kicks-ass.net>
+References: <20200407155449.GF20730@hirez.programming.kicks-ass.net>
+ <158636215075.6641.10786116450376715657.stgit@devnote2>
+ <20200409143212.GW20696@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-In-Reply-To: <20200409070001.16675-1-jgross@suse.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9586 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 spamscore=0 malwarescore=0
- phishscore=0 mlxscore=0 bulkscore=0 mlxlogscore=999 suspectscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
- definitions=main-2004090115
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9586 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 adultscore=0
- impostorscore=0 malwarescore=0 lowpriorityscore=0 mlxlogscore=999
- priorityscore=1501 clxscore=1015 bulkscore=0 phishscore=0 mlxscore=0
- suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2004090115
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200409143212.GW20696@hirez.programming.kicks-ass.net>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-On 4/9/20 3:00 AM, Juergen Gross wrote:
-> Commit 2f62f36e62daec ("x86/xen: Make the boot CPU idle task reliable")
-> introduced a regression for booting 32 bit Xen PV guests: the address
-> of the initial stack needs to be a virtual one.
->
-> Fixes: 2f62f36e62daec ("x86/xen: Make the boot CPU idle task reliable")
-> Signed-off-by: Juergen Gross <jgross@suse.com>
-
-
-Reviewed-by: Boris Ostrovsky <boris.ostrovsky@oracle.com>
-
-
-> ---
->  arch/x86/xen/xen-head.S | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/arch/x86/xen/xen-head.S b/arch/x86/xen/xen-head.S
-> index 7d1c4fcbe8f7..1ba601df3a37 100644
-> --- a/arch/x86/xen/xen-head.S
-> +++ b/arch/x86/xen/xen-head.S
-> @@ -38,7 +38,7 @@ SYM_CODE_START(startup_xen)
->  #ifdef CONFIG_X86_64
-
-
-While at it, I'd swap the ifdefs and fold x86_64 case into the one below.
-
-
->  	mov initial_stack(%rip), %rsp
->  #else
-> -	mov pa(initial_stack), %esp
-> +	mov initial_stack, %esp
->  #endif
+On Thu, Apr 09, 2020 at 04:32:12PM +0200, Peter Zijlstra wrote:
+> On Thu, Apr 09, 2020 at 01:09:11AM +0900, Masami Hiramatsu wrote:
+> > Add insn_is_fpu(insn) which tells that the insn is
+> > whether touch the FPU/SSE/MMX register or the instruction
+> > of FP coprocessor.
+> > 
+> > Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
+> > ---
+> 
+> Sadly, it turns out I need "FWAIT" too, which I tried adding like the
+> below, but that comes apart most mighty :/
+> 
+> The trouble is that FWAIT doesn't take a MODRM, so the previous
+> assumption that INAT_FPU implied INAT_MODRM needs to be broken, and I
+> think that ripples through somewhere.
+> 
+> (also, your patch adds some whitespace to convert_operands(), not sure
+> that was intended)
+> 
+> --- a/arch/x86/lib/x86-opcode-map.txt
+> +++ b/arch/x86/lib/x86-opcode-map.txt
+> @@ -206,7 +206,7 @@ Table: one byte opcode
+>  98: CBW/CWDE/CDQE
+>  99: CWD/CDQ/CQO
+>  9a: CALLF Ap (i64)
+> -9b: FWAIT/WAIT
+> +9b: FWAIT/WAIT {FPU}
+>  9c: PUSHF/D/Q Fv (d64)
+>  9d: POPF/D/Q Fv (d64)
+>  9e: SAHF
+> --- a/arch/x86/tools/gen-insn-attr-x86.awk
+> +++ b/arch/x86/tools/gen-insn-attr-x86.awk
+> @@ -331,9 +331,13 @@ function convert_operands(count,opnd,
+>  		if (match(opcode, rex_expr))
+>  			flags = add_flags(flags, "INAT_MAKE_PREFIX(INAT_PFX_REX)")
 >  
->  #ifdef CONFIG_X86_64
+> +		# check coprocessor escape
+> +		if (match(ext, "^ESC"))
+> +			flags = add_flags(flags, "INAT_MODRM")
 
+I'm an idiot; that needs to be:
 
+		if (match(opcode, "^ESC"))
 
+> +
+>  		# check FPU/MMX/SSE superscripts
+>  		if (match(ext, fpu_expr))
+> -			flags = add_flags(flags, "INAT_MODRM | INAT_FPU")
+> +			flags = add_flags(flags, "INAT_FPU")
+>  
+>  		# check VEX codes
+>  		if (match(ext, evexonly_expr))
