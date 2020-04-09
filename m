@@ -2,366 +2,188 @@ Return-Path: <SRS0=n+Ub=5Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0B6CC2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 11:04:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4161BC2BA2B
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 11:07:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7CFD120BED
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 11:04:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6A2A920771
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 11:07:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="F+kEw+Ih"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726582AbgDILEW (ORCPT
+        id S1726627AbgDILHW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Apr 2020 07:04:22 -0400
-Received: from foss.arm.com ([217.140.110.172]:48680 "EHLO foss.arm.com"
+        Thu, 9 Apr 2020 07:07:22 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:43015 "EHLO ozlabs.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725828AbgDILEV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Apr 2020 07:04:21 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 281D331B;
-        Thu,  9 Apr 2020 04:04:21 -0700 (PDT)
-Received: from ewhatever.cambridge.arm.com (ewhatever.cambridge.arm.com [10.1.197.1])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id C943D3F73D;
-        Thu,  9 Apr 2020 04:04:19 -0700 (PDT)
-From:   Suzuki K Poulose <suzuki.poulose@arm.com>
-To:     linux-arm-kernel@lists.infradead.org
-Cc:     linux-kernel@vger.kernel.org, coresight@lists.linaro.org,
-        saiprakash.ranjan@codeaurora.org, leo.yan@linaro.org,
-        linux-arm-msm@vger.kernel.org, swboyd@chromium.org,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Mike Leach <mike.leach@linaro.org>
-Subject: [PATCH] coresight: Fix support for sparsely populated ports
-Date:   Thu,  9 Apr 2020 12:03:16 +0100
-Message-Id: <20200409110316.409148-1-suzuki.poulose@arm.com>
-X-Mailer: git-send-email 2.24.1
+        id S1726559AbgDILHW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Apr 2020 07:07:22 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 48yddc52bhz9sRN;
+        Thu,  9 Apr 2020 21:07:16 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ellerman.id.au;
+        s=201909; t=1586430439;
+        bh=xotQBYRFGsmzLCVRR6MSqTD+OJW/kGzZooVJ093bNOI=;
+        h=From:To:Cc:Subject:Date:From;
+        b=F+kEw+IhkO4MBLJ1wh7SK9D68H/+Cjwmbg92YGaUsmrBL8t+hWtMY81q1/z0tF0Zd
+         5Glpc9phI91qtWD6DAtLBlrHluWoPSAy/alP/ev63padSXiLytkoqlrKgFdny90MSu
+         Jgk2vMdEbMdCqgGaVO2Lf7Yah+KftobWjAQdiC3uLV1m4F021j6RClkpRZdqCkW3FV
+         h2vvSPdq+DRqw5U+JsKowf9Y9lFEEXJ0swScwQKfWQJaVRGZJG8kSmsTXt1bGC94sV
+         oP+iTA0xMmeiPk/1Ks7/tDX7mdsC5U+LycD6gTHAc6znnjetfJUfbFVXw/D+uhDovS
+         kCd7epszhYHPQ==
+From:   Michael Ellerman <mpe@ellerman.id.au>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     aik@ozlabs.ru, anju@linux.vnet.ibm.com, dan.carpenter@oracle.com,
+        elfring@users.sourceforge.net, ganeshgr@linux.ibm.com,
+        geert+renesas@glider.be, geoff@infradead.org,
+        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        msuchanek@suse.de, npiggin@gmail.com
+Subject: [GIT PULL] Please pull powerpc/linux.git powerpc-5.7-2 tag
+Date:   Thu, 09 Apr 2020 21:07:24 +1000
+Message-ID: <87pncgkjdf.fsf@mpe.ellerman.id.au>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On some systems the firmware may not describe all the ports
-connected to a component (e.g, for security reasons). This
-could be especially problematic for "funnels" where we could
-end up in modifying memory beyond the allocated space for
-refcounts.
+-----BEGIN PGP SIGNED MESSAGE-----
+Hash: SHA256
 
-e.g, for a funnel with input ports listed 0, 3, 5, nr_inport = 3.
-However the we could access refcnts[5] while checking for
-references, like :
+Hi Linus,
 
- [  526.110401] ==================================================================
- [  526.117988] BUG: KASAN: slab-out-of-bounds in funnel_enable+0x54/0x1b0
- [  526.124706] Read of size 4 at addr ffffff8135f9549c by task bash/1114
- [  526.131324]
- [  526.132886] CPU: 3 PID: 1114 Comm: bash Tainted: G S                5.4.25 #232
- [  526.140397] Hardware name: Qualcomm Technologies, Inc. SC7180 IDP (DT)
- [  526.147113] Call trace:
- [  526.149653]  dump_backtrace+0x0/0x188
- [  526.153431]  show_stack+0x20/0x2c
- [  526.156852]  dump_stack+0xdc/0x144
- [  526.160370]  print_address_description+0x3c/0x494
- [  526.165211]  __kasan_report+0x144/0x168
- [  526.169170]  kasan_report+0x10/0x18
- [  526.172769]  check_memory_region+0x1a4/0x1b4
- [  526.177164]  __kasan_check_read+0x18/0x24
- [  526.181292]  funnel_enable+0x54/0x1b0
- [  526.185072]  coresight_enable_path+0x104/0x198
- [  526.189649]  coresight_enable+0x118/0x26c
+Please pull some more powerpc updates for 5.7.
 
-  ...
+The bulk of this is the series to make CONFIG_COMPAT user-selectable, it's been
+around for a long time but was blocked behind the syscall-in-C series. Plus
+there's also a few fixes and other minor things.
 
- [  526.237782] Allocated by task 280:
- [  526.241298]  __kasan_kmalloc+0xf0/0x1ac
- [  526.245249]  kasan_kmalloc+0xc/0x14
- [  526.248849]  __kmalloc+0x28c/0x3b4
- [  526.252361]  coresight_register+0x88/0x250
- [  526.256587]  funnel_probe+0x15c/0x228
- [  526.260365]  dynamic_funnel_probe+0x20/0x2c
- [  526.264679]  amba_probe+0xbc/0x158
- [  526.268193]  really_probe+0x144/0x408
- [  526.271970]  driver_probe_device+0x70/0x140
+cheers
 
- ...
 
- [  526.316810]
- [  526.318364] Freed by task 0:
- [  526.321344] (stack is not available)
- [  526.325024]
- [  526.326580] The buggy address belongs to the object at ffffff8135f95480
- [  526.326580]  which belongs to the cache kmalloc-128 of size 128
- [  526.339439] The buggy address is located 28 bytes inside of
- [  526.339439]  128-byte region [ffffff8135f95480, ffffff8135f95500)
- [  526.351399] The buggy address belongs to the page:
- [  526.356342] page:ffffffff04b7e500 refcount:1 mapcount:0 mapping:ffffff814b00c380 index:0x0 compound_mapcount: 0
- [  526.366711] flags: 0x4000000000010200(slab|head)
- [  526.371475] raw: 4000000000010200 ffffffff05034008 ffffffff0501eb08 ffffff814b00c380
- [  526.379435] raw: 0000000000000000 0000000000190019 00000001ffffffff 0000000000000000
- [  526.387393] page dumped because: kasan: bad access detected
- [  526.393128]
- [  526.394681] Memory state around the buggy address:
- [  526.399619]  ffffff8135f95380: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
- [  526.407046]  ffffff8135f95400: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
- [  526.414473] >ffffff8135f95480: 04 fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
- [  526.421900]                             ^
- [  526.426029]  ffffff8135f95500: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
- [  526.433456]  ffffff8135f95580: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
- [  526.440883] ==================================================================
+The following changes since commit c17eb4dca5a353a9dbbb8ad6934fe57af7165e91:
 
-To keep the code simple, we now track the maximum number of
-possible input/output connections to/from this component
-@ nr_inport and nr_outport in platform_data, respectively.
-Thus the output connections could be sparse and code is
-adjusted to skip the unspecified connections.
+  powerpc: Make setjmp/longjmp signature standard (2020-04-01 14:30:51 +1100)
 
-Cc: Mathieu Poirier <mathieu.poirier@linaro.org>
-Cc: Mike Leach <mike.leach@linaro.org>
-Reported-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-Tested-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-Tested-by: Stephen Boyd <swboyd@chromium.org>
-Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
----
- .../hwtracing/coresight/coresight-platform.c  | 74 ++++++++++++-------
- drivers/hwtracing/coresight/coresight.c       |  8 +-
- include/linux/coresight.h                     | 10 ++-
- 3 files changed, 62 insertions(+), 30 deletions(-)
+are available in the git repository at:
 
-diff --git a/drivers/hwtracing/coresight/coresight-platform.c b/drivers/hwtracing/coresight/coresight-platform.c
-index 3c5bee429105..c57373b49b42 100644
---- a/drivers/hwtracing/coresight/coresight-platform.c
-+++ b/drivers/hwtracing/coresight/coresight-platform.c
-@@ -67,6 +67,7 @@ static void of_coresight_get_ports_legacy(const struct device_node *node,
- 					  int *nr_inport, int *nr_outport)
- {
- 	struct device_node *ep = NULL;
-+	struct of_endpoint endpoint;
- 	int in = 0, out = 0;
- 
- 	do {
-@@ -74,10 +75,16 @@ static void of_coresight_get_ports_legacy(const struct device_node *node,
- 		if (!ep)
- 			break;
- 
--		if (of_coresight_legacy_ep_is_input(ep))
--			in++;
--		else
--			out++;
-+		if (of_graph_parse_endpoint(ep, &endpoint))
-+			continue;
-+
-+		if (of_coresight_legacy_ep_is_input(ep)) {
-+			in = (endpoint.port + 1 > in) ?
-+				endpoint.port + 1 : in;
-+		} else {
-+			out = (endpoint.port + 1) > out ?
-+				endpoint.port + 1 : out;
-+		}
- 
- 	} while (ep);
- 
-@@ -117,9 +124,16 @@ of_coresight_count_ports(struct device_node *port_parent)
- {
- 	int i = 0;
- 	struct device_node *ep = NULL;
-+	struct of_endpoint endpoint;
-+
-+	while ((ep = of_graph_get_next_endpoint(port_parent, ep))) {
-+		/* Defer error handling to parsing */
-+		if (of_graph_parse_endpoint(ep, &endpoint))
-+			continue;
-+		if (endpoint.port + 1 > i)
-+			i = endpoint.port + 1;
-+	}
- 
--	while ((ep = of_graph_get_next_endpoint(port_parent, ep)))
--		i++;
- 	return i;
- }
- 
-@@ -171,14 +185,12 @@ static int of_coresight_get_cpu(struct device *dev)
-  * Parses the local port, remote device name and the remote port.
-  *
-  * Returns :
-- *	 1	- If the parsing is successful and a connection record
-- *		  was created for an output connection.
-  *	 0	- If the parsing completed without any fatal errors.
-  *	-Errno	- Fatal error, abort the scanning.
-  */
- static int of_coresight_parse_endpoint(struct device *dev,
- 				       struct device_node *ep,
--				       struct coresight_connection *conn)
-+				       struct coresight_platform_data *pdata)
- {
- 	int ret = 0;
- 	struct of_endpoint endpoint, rendpoint;
-@@ -186,6 +198,7 @@ static int of_coresight_parse_endpoint(struct device *dev,
- 	struct device_node *rep = NULL;
- 	struct device *rdev = NULL;
- 	struct fwnode_handle *rdev_fwnode;
-+	struct coresight_connection *conn;
- 
- 	do {
- 		/* Parse the local port details */
-@@ -212,6 +225,13 @@ static int of_coresight_parse_endpoint(struct device *dev,
- 			break;
- 		}
- 
-+		conn = &pdata->conns[endpoint.port];
-+		if (conn->child_fwnode) {
-+			dev_warn(dev, "Duplicate output port %d\n",
-+				 endpoint.port);
-+			ret = -EINVAL;
-+			break;
-+		}
- 		conn->outport = endpoint.port;
- 		/*
- 		 * Hold the refcount to the target device. This could be
-@@ -224,7 +244,6 @@ static int of_coresight_parse_endpoint(struct device *dev,
- 		conn->child_fwnode = fwnode_handle_get(rdev_fwnode);
- 		conn->child_port = rendpoint.port;
- 		/* Connection record updated */
--		ret = 1;
- 	} while (0);
- 
- 	of_node_put(rparent);
-@@ -238,7 +257,6 @@ static int of_get_coresight_platform_data(struct device *dev,
- 					  struct coresight_platform_data *pdata)
- {
- 	int ret = 0;
--	struct coresight_connection *conn;
- 	struct device_node *ep = NULL;
- 	const struct device_node *parent = NULL;
- 	bool legacy_binding = false;
-@@ -267,8 +285,6 @@ static int of_get_coresight_platform_data(struct device *dev,
- 		dev_warn_once(dev, "Uses obsolete Coresight DT bindings\n");
- 	}
- 
--	conn = pdata->conns;
--
- 	/* Iterate through each output port to discover topology */
- 	while ((ep = of_graph_get_next_endpoint(parent, ep))) {
- 		/*
-@@ -280,15 +296,9 @@ static int of_get_coresight_platform_data(struct device *dev,
- 		if (legacy_binding && of_coresight_legacy_ep_is_input(ep))
- 			continue;
- 
--		ret = of_coresight_parse_endpoint(dev, ep, conn);
--		switch (ret) {
--		case 1:
--			conn++;		/* Fall through */
--		case 0:
--			break;
--		default:
-+		ret = of_coresight_parse_endpoint(dev, ep, pdata);
-+		if (ret)
- 			return ret;
--		}
- 	}
- 
- 	return 0;
-@@ -627,6 +637,11 @@ static int acpi_coresight_parse_link(struct acpi_device *adev,
- 		 *    coresight_remove_match().
- 		 */
- 		conn->child_fwnode = fwnode_handle_get(&r_adev->fwnode);
-+	} else if (dir == ACPI_CORESIGHT_LINK_SLAVE) {
-+		conn->child_port = fields[0].integer.value;
-+	} else {
-+		/* Invalid direction */
-+		return -EINVAL;
- 	}
- 
- 	return dir;
-@@ -672,10 +687,14 @@ static int acpi_coresight_parse_graph(struct acpi_device *adev,
- 			return dir;
- 
- 		if (dir == ACPI_CORESIGHT_LINK_MASTER) {
--			pdata->nr_outport++;
-+			if (ptr->outport > pdata->nr_outport)
-+				pdata->nr_outport = ptr->outport;
- 			ptr++;
- 		} else {
--			pdata->nr_inport++;
-+			WARN_ON(pdata->nr_inport == ptr->child_port);
-+			/* Do not move the ptr for input connections */
-+			if (ptr->child_port > pdata->nr_inport)
-+				pdata->nr_inport = ptr->child_port;
- 		}
- 	}
- 
-@@ -684,8 +703,13 @@ static int acpi_coresight_parse_graph(struct acpi_device *adev,
- 		return rc;
- 
- 	/* Copy the connection information to the final location */
--	for (i = 0; i < pdata->nr_outport; i++)
--		pdata->conns[i] = conns[i];
-+	for (i = 0; conns + i < ptr; i++) {
-+		int port = conns[i].outport;
-+
-+		/* Duplicate output port */
-+		WARN_ON(pdata->conns[port].child_fwnode);
-+		pdata->conns[port] = conns[i];
-+	}
- 
- 	devm_kfree(&adev->dev, conns);
- 	return 0;
-diff --git a/drivers/hwtracing/coresight/coresight.c b/drivers/hwtracing/coresight/coresight.c
-index ef20f74c85fa..f07bc0a7ab88 100644
---- a/drivers/hwtracing/coresight/coresight.c
-+++ b/drivers/hwtracing/coresight/coresight.c
-@@ -990,6 +990,9 @@ static int coresight_orphan_match(struct device *dev, void *data)
- 	for (i = 0; i < i_csdev->pdata->nr_outport; i++) {
- 		conn = &i_csdev->pdata->conns[i];
- 
-+		/* Skip the port if FW doesn't describe it */
-+		if (!conn->child_fwnode)
-+			continue;
- 		/* We have found at least one orphan connection */
- 		if (conn->child_dev == NULL) {
- 			/* Does it match this newly added device? */
-@@ -1029,6 +1032,9 @@ static void coresight_fixup_device_conns(struct coresight_device *csdev)
- 		struct coresight_connection *conn = &csdev->pdata->conns[i];
- 		struct device *dev = NULL;
- 
-+		if (!conn->child_fwnode)
-+			continue;
-+
- 		dev = bus_find_device_by_fwnode(&coresight_bustype, conn->child_fwnode);
- 		if (dev) {
- 			conn->child_dev = to_coresight_device(dev);
-@@ -1061,7 +1067,7 @@ static int coresight_remove_match(struct device *dev, void *data)
- 	for (i = 0; i < iterator->pdata->nr_outport; i++) {
- 		conn = &iterator->pdata->conns[i];
- 
--		if (conn->child_dev == NULL)
-+		if (conn->child_dev == NULL || conn->child_fwnode == NULL)
- 			continue;
- 
- 		if (csdev->dev.fwnode == conn->child_fwnode) {
-diff --git a/include/linux/coresight.h b/include/linux/coresight.h
-index 44e552de419c..7f8d2b39aee2 100644
---- a/include/linux/coresight.h
-+++ b/include/linux/coresight.h
-@@ -90,10 +90,12 @@ union coresight_dev_subtype {
- };
- 
- /**
-- * struct coresight_platform_data - data harvested from the DT specification
-- * @nr_inport:	number of input ports for this component.
-- * @nr_outport:	number of output ports for this component.
-- * @conns:	Array of nr_outport connections from this component
-+ * struct coresight_platform_data - data harvested from the firmware
-+ * specification.
-+ *
-+ * @nr_inport:	Number of elements for the input connections.
-+ * @nr_outport:	Number of elements for the output connections.
-+ * @conns:	Sparse arrray of nr_outport connections from this component.
-  */
- struct coresight_platform_data {
- 	int nr_inport;
--- 
-2.24.1
+  https://git.kernel.org/pub/scm/linux/kernel/git/powerpc/linux.git tags/powerpc-5.7-2
 
+for you to fetch changes up to 6ba4a2d3591039aea1cb45c7c42262d26351a2fa:
+
+  selftests/powerpc: Always build the tm-poison test 64-bit (2020-04-04 21:41:40 +1100)
+
+- ------------------------------------------------------------------
+powerpc updates for 5.7 #2
+
+ - A fix for a crash in machine check handling on pseries (ie. guests)
+
+ - A small series to make it possible to disable CONFIG_COMPAT, and turn it off
+   by default for ppc64le where it's not used.
+
+ - A few other miscellaneous fixes and small improvements.
+
+Thanks to:
+  Alexey Kardashevskiy, Anju T Sudhakar, Arnd Bergmann, Christophe Leroy, Dan
+  Carpenter, Ganesh Goudar, Geert Uytterhoeven, Geoff Levand, Mahesh Salgaonkar,
+  Markus Elfring, Michal Suchanek, Nicholas Piggin, Stephen Boyd, Wen Xiong.
+
+- ------------------------------------------------------------------
+Alexey Kardashevskiy (1):
+      powerpc/pseries/ddw: Extend upper limit for huge DMA window for persistent memory
+
+Anju T Sudhakar (2):
+      powerpc/perf: Implement a global lock to avoid races between trace, core and thread imc events.
+      powerpc/powernv: Re-enable imc trace-mode in kernel
+
+Dan Carpenter (1):
+      powerpc/ps3: Remove an unneeded NULL check
+
+Ganesh Goudar (1):
+      powerpc/pseries: Fix MCE handling on pseries
+
+Geert Uytterhoeven (1):
+      powerpc/time: Replace <linux/clk-provider.h> by <linux/of_clk.h>
+
+Geoff Levand (1):
+      powerpc/ps3: Set CONFIG_UEVENT_HELPER=y in ps3_defconfig
+
+Markus Elfring (1):
+      powerpc/ps3: Remove duplicate error message
+
+Michael Ellerman (2):
+      selftests/eeh: Skip ahci adapters
+      selftests/powerpc: Always build the tm-poison test 64-bit
+
+Michal Suchanek (7):
+      powerpc: Add back __ARCH_WANT_SYS_LLSEEK macro
+      powerpc: move common register copy functions from signal_32.c to signal.c
+      powerpc/perf: consolidate read_user_stack_32
+      powerpc/perf: consolidate valid_user_sp -> invalid_user_sp
+      powerpc/64: make buildable without CONFIG_COMPAT
+      powerpc/64: Make COMPAT user-selectable disabled on littleendian by default.
+      powerpc/perf: split callchain.c by bitness
+
+Nicholas Piggin (3):
+      powerpc/64s: Fix doorbell wakeup msgclr optimisation
+      Revert "powerpc/64: irq_work avoid interrupt when called with hardware irqs enabled"
+      powerpc: Improve ppc_save_regs()
+
+
+ arch/powerpc/Kconfig                             |   5 +-
+ arch/powerpc/configs/ps3_defconfig               |   2 +
+ arch/powerpc/include/asm/thread_info.h           |   4 +-
+ arch/powerpc/include/asm/unistd.h                |   1 +
+ arch/powerpc/kernel/Makefile                     |   5 +-
+ arch/powerpc/kernel/entry_64.S                   |   2 +
+ arch/powerpc/kernel/exceptions-64s.S             |  19 --
+ arch/powerpc/kernel/irq.c                        |  13 +
+ arch/powerpc/kernel/ppc_save_regs.S              |   6 +-
+ arch/powerpc/kernel/ptrace/Makefile              |   2 +-
+ arch/powerpc/kernel/signal.c                     | 144 +++++++-
+ arch/powerpc/kernel/signal_32.c                  | 140 --------
+ arch/powerpc/kernel/syscall_64.c                 |   6 +-
+ arch/powerpc/kernel/time.c                       |  48 +--
+ arch/powerpc/kernel/vdso.c                       |   3 +-
+ arch/powerpc/perf/Makefile                       |   5 +-
+ arch/powerpc/perf/callchain.c                    | 356 +-------------------
+ arch/powerpc/perf/callchain.h                    |  19 ++
+ arch/powerpc/perf/callchain_32.c                 | 196 +++++++++++
+ arch/powerpc/perf/callchain_64.c                 | 174 ++++++++++
+ arch/powerpc/perf/imc-pmu.c                      | 173 ++++++++--
+ arch/powerpc/platforms/powernv/opal-imc.c        |   9 +-
+ arch/powerpc/platforms/ps3/os-area.c             |   4 +-
+ arch/powerpc/platforms/pseries/iommu.c           |   9 +
+ arch/powerpc/platforms/pseries/ras.c             |  11 +
+ drivers/ps3/sys-manager-core.c                   |   2 +-
+ fs/read_write.c                                  |   3 +-
+ tools/testing/selftests/powerpc/eeh/eeh-basic.sh |   5 +
+ tools/testing/selftests/powerpc/tm/Makefile      |   1 +
+ 29 files changed, 766 insertions(+), 601 deletions(-)
+ create mode 100644 arch/powerpc/perf/callchain.h
+ create mode 100644 arch/powerpc/perf/callchain_32.c
+ create mode 100644 arch/powerpc/perf/callchain_64.c
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEEJFGtCPCthwEv2Y/bUevqPMjhpYAFAl6O+ZoACgkQUevqPMjh
+pYBTEA/8Dkp4b60dA28iP/z6XntEIl3QT4rxAa3M89Pws6gxUw6uG5UmvjZe+lAa
+IezHEfFx5cwAiXqMIT1NFF4H4QAeOZEN4bq0sIkOPXdme+75oWK4qSGdgXwdTEXr
+ssW7I7LPGwMYJZUBhhHkijD0IN7nK2Tdd22Yucj2fGLX2Rzhst4302Dl7CH8SmZf
+waoQZBB6PrxV1HxGv92Sb83iuhOqhgAdhwwQS50PVzSPlZH8vBW3HDMIESg9pHWT
+NrNq7I8Y0mk6YUfmwWgJbVpqftXInnRjisFNQij7wBYtK8lw/vBOA5j1avqmhkNl
+NJPGp5eGkC0MLfsx6qLYC+6FEcAYHfPHAlMpq6/6HvicNmEc0rrHU8dx2owb63p1
+ahn57m1JOS1ndITTOWCjDXaOQC/Ho32duWmz6m+HJMD7X7cPH9ITbbKsRZzWP3Zm
+5H64UEPsWDeia9c90FqjuA2xYSD4lIGUKAQ6Z73LXmUz2E8fF0/98ZniBvuFM8ce
+w/Lg8edlX5Bg9n4elFsCYagHPRK5i9Tmv9Bdnw4tJ30yGPQ86ZLTmaq3ru0lky/1
+mQ/Za/1wKydS3rq94Qnhag1EKUghBVgNzwtCACoONsaUHTcf9ybD6dE+riQ5J6VZ
+ec3y1+QjyaQMxgJdnafIPAsQ1OH1L5wPZkr0ZKBzy+qAtACeHpE=
+=9QaQ
+-----END PGP SIGNATURE-----
