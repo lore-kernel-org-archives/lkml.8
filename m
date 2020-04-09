@@ -2,92 +2,61 @@ Return-Path: <SRS0=n+Ub=5Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0413EC2BB85
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 19:18:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD6A6C2BA19
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 19:20:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CC03B206F5
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 19:18:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A6C62206F5
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 19:20:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726806AbgDITSF convert rfc822-to-8bit (ORCPT
+        id S1726789AbgDITUM convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Apr 2020 15:18:05 -0400
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:35246 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726632AbgDITSE (ORCPT
+        Thu, 9 Apr 2020 15:20:12 -0400
+Received: from mail.fireflyinternet.com ([109.228.58.192]:57517 "EHLO
+        fireflyinternet.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726632AbgDITUM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Apr 2020 15:18:04 -0400
-Received: by mail-oi1-f195.google.com with SMTP id b10so453262oic.2;
-        Thu, 09 Apr 2020 12:18:04 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=QXRAlkJ3rCw/bTZOgIY7CDzFwnx0yQZmKTD1ENCI1IY=;
-        b=FvT5SMe/hsClg5o4ADDGtCUC6bn/z7iu20pvFBtjTGQH9Ne+fgXU0KGY5WDCWndRC3
-         D7iY/YT42zFKWFQNcJFg11rdQejgTMxOiz4qz8vlBPF7yMLbILrcA1hgslObh5jCUNcC
-         B+VNgVqyqOKAQh7mhMF0glpTSHAFUTlCaKqs9VK+t4+fB0/p09JHynBtIylMXQpK206E
-         SMZ4AyOSSRWuNnHt5GzeDOtjbvnRxLV9hfLz4AvQAByq2jPiVFCx3BA/QgyP75ErWK43
-         mKcJ545rxImxEkD5QwN3sTHefCZ1y96WTIg9dmC0Hch8iVWUdTRiibzob3yLC0WgGyvh
-         Skrw==
-X-Gm-Message-State: AGi0PuZihme8+y6H5heoSxCdM1jtr6PFsO9GEoZoZxsrt5NQAK+v4Ek4
-        Gnn9SYoD0S2B3J1jfQsFhIsr9Lai7Q4fvEOOgik=
-X-Google-Smtp-Source: APiQypIN28QpzFRXKr8LxKyIJkWbtETYUjlzokfO48YRixxeBZfG2QhrPvDMMZJSsy7IbQZs6/TBPZzLKO13p2u/NbE=
-X-Received: by 2002:aca:da8b:: with SMTP id r133mr725258oig.81.1586459883987;
- Thu, 09 Apr 2020 12:18:03 -0700 (PDT)
+        Thu, 9 Apr 2020 15:20:12 -0400
+X-Default-Received-SPF: pass (skip=forwardok (res=PASS)) x-ip-name=78.156.65.138;
+Received: from localhost (unverified [78.156.65.138]) 
+        by fireflyinternet.com (Firefly Internet (M1)) with ESMTP (TLS) id 20856328-1500050 
+        for multiple; Thu, 09 Apr 2020 20:19:27 +0100
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-References: <703440af-031c-16b5-c1ff-54fb4bb5e10c@gmail.com>
-In-Reply-To: <703440af-031c-16b5-c1ff-54fb4bb5e10c@gmail.com>
-From:   Andrey Vagin <avagin@openvz.org>
-Date:   Thu, 9 Apr 2020 12:17:52 -0700
-Message-ID: <CANaxB-y0ZB223dQgvxvUHRzkn4f-_B2vTzYxe_mi=o+3SJ4yVw@mail.gmail.com>
-Subject: Re: A further though on /proc/PID/timens_offsets
-To:     "Michael Kerrisk (man-pages)" <mtk.manpages@gmail.com>
-Cc:     Dmitry Safonov <dima@arista.com>,
-        Linux API <linux-api@vger.kernel.org>,
-        Containers <containers@lists.linux-foundation.org>,
-        Dmitry Safonov <0x7f454c46@gmail.com>,
-        lkml <linux-kernel@vger.kernel.org>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Adrian Reber <adrian@lisas.de>
-Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8BIT
+In-Reply-To: <20200409133107.415812-1-colin.king@canonical.com>
+References: <20200409133107.415812-1-colin.king@canonical.com>
+From:   Chris Wilson <chris@chris-wilson.co.uk>
+Subject: Re: [PATCH] drm/i915: remove redundant assignment to variable err
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+To:     Colin King <colin.king@canonical.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        David Airlie <airlied@linux.ie>,
+        Jani Nikula <jani.nikula@linux.intel.com>,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        dri-devel@lists.freedesktop.org, intel-gfx@lists.freedesktop.org
+Message-ID: <158645996713.23161.4368543521925428819@build.alporthouse.com>
+User-Agent: alot/0.8.1
+Date:   Thu, 09 Apr 2020 20:19:27 +0100
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 7, 2020 at 6:24 AM Michael Kerrisk (man-pages)
-<mtk.manpages@gmail.com> wrote:
+Quoting Colin King (2020-04-09 14:31:07)
+> From: Colin Ian King <colin.king@canonical.com>
+> 
+> The variable err is being initialized with a value that is never read
+> and it is being updated later with a new value.  The initialization is
+> redundant and can be removed.
+> 
+> Addresses-Coverity: ("Unused value")
+> Signed-off-by: Colin Ian King <colin.king@canonical.com>
 
->        The  clock-id  identifies the clock whose offsets are being shown.
->        This field is either 1, for CLOCK_MONOTONIC, or 7, for CLOCK_BOOT‐
->        TIME.
->
-> What was the reason for exposing numeric clock IDs in the
-> timens_offsets file? In API terms, that seems a little ugly.
->
-> I think it would have been much nicer if the clocks were defined
-> symbolically in this file. I.e., that reading the file would have
-> shown something like
->
-> monotonic    x    y
-> boottime     x    y
->
-> And that records similarly with symbolic clock names could have
-> been written to the file. Was there a reason not to do this?
-
-No, there was not except that I haven't thought about this. I agree
-that symbolic clock names looks nicer for humans, but numeric clock
-IDs are a bit more convenient when we  need to set/read offsets from
-code. This interface is in the released kernel, so I think we can't
-change the format of the content of this file. But we can add support
-of symbolic clock names for setting clock offsets. What do you think?
-
-Thanks,
-Andrei
+Could be useful... No, let's not look at that function again.
+Reviewed-by: Chris Wilson <chris@chris-wilson.co.uk>
+-Chris
