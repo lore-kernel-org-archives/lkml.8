@@ -2,103 +2,195 @@ Return-Path: <SRS0=n+Ub=5Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80B86C2BB86
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 12:36:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6147C2BA2B
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 12:38:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 62BBB2078E
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 12:36:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 85D55208FE
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 12:38:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1586435894;
+	bh=WARbwZGnUZV2UnK9Vejh4wss2lITzfHqNzx1x0ZnRIg=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=LFLoLIbsa3QejAi2bzL41dll0zblZ/uHUyd2d49k3KA9QCF7l2MrWZavU9M4cq+fz
+	 edzhoVYibGa2cijBIgkZQn8UaOn9yTiWrQ3gCl8/y/OjGyBiZnCyrzhAnUCyt4q2zF
+	 16eVTcLn03SqBG5HJ66+PW8VsVL44NQmpaDPgefw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726621AbgDIMgW (ORCPT
+        id S1726641AbgDIMiM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Apr 2020 08:36:22 -0400
-Received: from mga02.intel.com ([134.134.136.20]:15362 "EHLO mga02.intel.com"
+        Thu, 9 Apr 2020 08:38:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36876 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725970AbgDIMgW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Apr 2020 08:36:22 -0400
-IronPort-SDR: U1cjUZrrUJVeo79R3yhmcD9o0zbhRwzWNCdiw5WIn5taYYupLWbnqOM6dGZQvQxXxM1XuHPRtO
- IwfVkUJEuJdA==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Apr 2020 05:36:22 -0700
-IronPort-SDR: JHmvK/8heplCA/1OkTxw8zcPViPkWtbLJkh2Q/88MdeEzo4LOa19MJFYnJUvQe+zpxjxTgeLzV
- ydMzzR1C2XPw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,362,1580803200"; 
-   d="scan'208";a="398553773"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by orsmga004.jf.intel.com with ESMTP; 09 Apr 2020 05:36:20 -0700
-Received: from andy by smile with local (Exim 4.93)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1jMWPu-00GxF6-Oe; Thu, 09 Apr 2020 15:36:22 +0300
-Date:   Thu, 9 Apr 2020 15:36:22 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Oliver Graute <oliver.graute@gmail.com>
-Cc:     Marco Felsch <m.felsch@pengutronix.de>, dmitry.torokhov@gmail.com,
-        Oliver Graute <oliver.graute@kococonnector.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sasha Levin <sashal@kernel.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1] Input: edt-ft5x06 - fix crash on EDT EP0110M09
-Message-ID: <20200409123622.GA3676135@smile.fi.intel.com>
-References: <1586424425-27038-1-git-send-email-oliver.graute@gmail.com>
- <20200409105253.qvezbikpbnrkig52@pengutronix.de>
- <20200409120242.GA17410@portage>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200409120242.GA17410@portage>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+        id S1725970AbgDIMiM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Apr 2020 08:38:12 -0400
+Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8EF682078E;
+        Thu,  9 Apr 2020 12:38:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1586435892;
+        bh=WARbwZGnUZV2UnK9Vejh4wss2lITzfHqNzx1x0ZnRIg=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=NRBW2/AFGuzYC27wZRpNJxuLpZcvmamSLi8xTBrmfGTW/VHHGTuNRYnjX/TDoVsC3
+         hdSQDu38KHTMS6fjLPT0j+mcYbHpwQddILv8v1hWocS6Pu3W0ya3HJAc3Jk0KywbBB
+         150KxrFUbK1j4cIG0WpZRnKg1SWYhOaS8AMPD3Es=
+Date:   Thu, 9 Apr 2020 21:38:06 +0900
+From:   Masami Hiramatsu <mhiramat@kernel.org>
+To:     Jiri Olsa <jolsa@kernel.org>
+Cc:     "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
+        Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Peter Zijlstra <peterz@infradead.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        "bibo,mao" <bibo.mao@intel.com>,
+        "Ziqian SUN (Zamir)" <zsun@redhat.com>
+Subject: Re: [RFC] kretprobe: Prevent triggering kretprobe from within
+ kprobe_flush_task
+Message-Id: <20200409213806.7657ec27d1b5cbd8243505b9@kernel.org>
+In-Reply-To: <20200408164641.3299633-1-jolsa@kernel.org>
+References: <20200408164641.3299633-1-jolsa@kernel.org>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 09, 2020 at 02:02:42PM +0200, Oliver Graute wrote:
-> On 09/04/20, Marco Felsch wrote:
-> > Hi Oliver,
-> > 
-> > thanks for your patch.
-> > 
-> > On 20-04-09 11:27, Oliver Graute wrote:
-> > > From: Oliver Graute <oliver.graute@kococonnector.com>
-> > 
-> > ...
-> > 
-> > >  drivers/input/touchscreen/edt-ft5x06.c | 4 ----
-> > >  1 file changed, 4 deletions(-)
-> > > 
-> > > diff --git a/drivers/input/touchscreen/edt-ft5x06.c b/drivers/input/touchscreen/edt-ft5x06.c
-> > > index 06aa8ba0b6d7..6fbc87d041a1 100644
-> > > --- a/drivers/input/touchscreen/edt-ft5x06.c
-> > > +++ b/drivers/input/touchscreen/edt-ft5x06.c
-> > > @@ -819,10 +819,6 @@ static int edt_ft5x06_ts_identify(struct i2c_client *client,
-> > >  	 * to have garbage in there
-> > >  	 */
-> > >  	memset(rdbuf, 0, sizeof(rdbuf));
-> > > -	error = edt_ft5x06_ts_readwrite(client, 1, "\xBB",
-> > > -					EDT_NAME_LEN - 1, rdbuf);
-> > > -	if (error)
-> > > -		return error;
-> > 
-> > 
-> > I don't see how this call can corrupt the stack..
+Hi Jiri,
+
+On Wed,  8 Apr 2020 18:46:41 +0200
+Jiri Olsa <jolsa@kernel.org> wrote:
+
+> hi,
+> Ziqian reported lockup when adding retprobe on _raw_spin_lock_irqsave.
+
+Hmm, kprobe is lockless, but kretprobe involves spinlock.
+Thus, eventually, I will blacklist the _raw_spin_lock_irqsave()
+for kretprobe.
+If you need to trace spinlock return, please consider to putting
+kprobe at "ret" instruction.
+
+> My test was also able to trigger lockdep output:
 > 
-> I admit that this is strange. The patch fixed my problems so I posted
-> it. Still interested in the root-cause.
+>  ============================================
+>  WARNING: possible recursive locking detected
+>  5.6.0-rc6+ #6 Not tainted
+>  --------------------------------------------
+>  sched-messaging/2767 is trying to acquire lock:
+>  ffffffff9a492798 (&(kretprobe_table_locks[i].lock)){-.-.}, at: kretprobe_hash_lock+0x52/0xa0
+> 
+>  but task is already holding lock:
+>  ffffffff9a491a18 (&(kretprobe_table_locks[i].lock)){-.-.}, at: kretprobe_trampoline+0x0/0x50
+> 
+>  other info that might help us debug this:
+>   Possible unsafe locking scenario:
+> 
+>         CPU0
+>         ----
+>    lock(&(kretprobe_table_locks[i].lock));
+>    lock(&(kretprobe_table_locks[i].lock));
+> 
+>   *** DEADLOCK ***
+> 
+>   May be due to missing lock nesting notation
+> 
+>  1 lock held by sched-messaging/2767:
+>   #0: ffffffff9a491a18 (&(kretprobe_table_locks[i].lock)){-.-.}, at: kretprobe_trampoline+0x0/0x50
+> 
+>  stack backtrace:
+>  CPU: 3 PID: 2767 Comm: sched-messaging Not tainted 5.6.0-rc6+ #6
+>  Call Trace:
+>   dump_stack+0x96/0xe0
+>   __lock_acquire.cold.57+0x173/0x2b7
+>   ? native_queued_spin_lock_slowpath+0x42b/0x9e0
+>   ? lockdep_hardirqs_on+0x590/0x590
+>   ? __lock_acquire+0xf63/0x4030
+>   lock_acquire+0x15a/0x3d0
+>   ? kretprobe_hash_lock+0x52/0xa0
+>   _raw_spin_lock_irqsave+0x36/0x70
+>   ? kretprobe_hash_lock+0x52/0xa0
+>   kretprobe_hash_lock+0x52/0xa0
+>   trampoline_handler+0xf8/0x940
+>   ? kprobe_fault_handler+0x380/0x380
+>   ? find_held_lock+0x3a/0x1c0
+>   kretprobe_trampoline+0x25/0x50
+>   ? lock_acquired+0x392/0xbc0
+>   ? _raw_spin_lock_irqsave+0x50/0x70
+>   ? __get_valid_kprobe+0x1f0/0x1f0
+>   ? _raw_spin_unlock_irqrestore+0x3b/0x40
+>   ? finish_task_switch+0x4b9/0x6d0
+>   ? __switch_to_asm+0x34/0x70
+>   ? __switch_to_asm+0x40/0x70
+> 
+> The code within the kretprobe handler checks for probe reentrancy,
+> so we won't trigger any _raw_spin_lock_irqsave probe in there.
+> 
+> The problem is in outside kprobe_flush_task, where we call:
+> 
+>   kprobe_flush_task
+>     kretprobe_table_lock
+>       raw_spin_lock_irqsave
+>         _raw_spin_lock_irqsave
+> 
+> where _raw_spin_lock_irqsave triggers the kretprobe and installs
+> kretprobe_trampoline handler on _raw_spin_lock_irqsave return.
 
-I'm wondering how you nailed down to this function? Have you able to use kASAN?
+Hmm, OK. In this case, I think we should mark this process is
+going to die and never try to kretprobe on it.
 
-By the way, what I²C controller behind this? Maybe the bug in its driver?
+> 
+> The kretprobe_trampoline handler is then executed with already
+> locked kretprobe_table_locks, and first thing it does is to
+> lock kretprobe_table_locks ;-) the whole lockup path like:
+> 
+>   kprobe_flush_task
+>     kretprobe_table_lock
+>       raw_spin_lock_irqsave
+>         _raw_spin_lock_irqsave ---> probe triggered, kretprobe_trampoline installed
+> 
+>         ---> kretprobe_table_locks locked
+> 
+>         kretprobe_trampoline
+>           trampoline_handler
+>             kretprobe_hash_lock(current, &head, &flags);  <--- deadlock
+> 
+> The change below sets current_kprobe in kprobe_flush_task, so the probe
+> recursion protection check is hit and the probe is never set. It seems
+> to fix the deadlock.
+> 
+> I'm not sure this is the best fix, any ideas are welcome ;-)
+
+Hmm, this is a bit tricky to fix this issue. Of course, temporary disable
+kprobes (and kretprobe) on an area by filling current_kprobe might
+be a good idea, but it also involves other kprobes.
+
+How about let kretprobe skip the task which state == TASK_DEAD ?
+
+diff --git a/kernel/kprobes.c b/kernel/kprobes.c
+index 627fc1b7011a..3f207d2e0afb 100644
+--- a/kernel/kprobes.c
++++ b/kernel/kprobes.c
+@@ -1874,9 +1874,12 @@ static int pre_handler_kretprobe(struct kprobe *p, struct pt_regs *regs)
+ 	 * To avoid deadlocks, prohibit return probing in NMI contexts,
+ 	 * just skip the probe and increase the (inexact) 'nmissed'
+ 	 * statistical counter, so that the user is informed that
+-	 * something happened:
++	 * something happened.
++	 * Also, if the current task is dead, we will already in the process
++	 * to reclaim kretprobe instances from hash list. To avoid memory
++	 * leak, skip to run the kretprobe on such task.
+ 	 */
+-	if (unlikely(in_nmi())) {
++	if (unlikely(in_nmi()) || current->state == TASK_DEAD) {
+ 		rp->nmissed++;
+ 		return 0;
+ 	}
 
 -- 
-With Best Regards,
-Andy Shevchenko
-
-
+Masami Hiramatsu <mhiramat@kernel.org>
