@@ -7,121 +7,124 @@ X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BDCDC2BA2B
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 15:01:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A36AC2BA2B
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 15:02:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2CE612082D
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 15:01:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 503A420692
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 15:02:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="jjpV0xYD"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="rryVHpI+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727919AbgDIPBt (ORCPT
+        id S1727941AbgDIPCf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Apr 2020 11:01:49 -0400
-Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:5968 "EHLO
+        Thu, 9 Apr 2020 11:02:35 -0400
+Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:6001 "EHLO
         hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727884AbgDIPBt (ORCPT
+        with ESMTP id S1727884AbgDIPCf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Apr 2020 11:01:49 -0400
+        Thu, 9 Apr 2020 11:02:35 -0400
 Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5e8f38d00000>; Thu, 09 Apr 2020 08:01:36 -0700
+        id <B5e8f38fe0000>; Thu, 09 Apr 2020 08:02:22 -0700
 Received: from hqmail.nvidia.com ([172.20.161.6])
   by hqpgpgate101.nvidia.com (PGP Universal service);
-  Thu, 09 Apr 2020 08:01:49 -0700
+  Thu, 09 Apr 2020 08:02:35 -0700
 X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Thu, 09 Apr 2020 08:01:49 -0700
-Received: from DRHQMAIL107.nvidia.com (10.27.9.16) by HQMAIL109.nvidia.com
- (172.20.187.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 9 Apr
- 2020 15:01:48 +0000
+        by hqpgpgate101.nvidia.com on Thu, 09 Apr 2020 08:02:35 -0700
+Received: from DRHQMAIL107.nvidia.com (10.27.9.16) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 9 Apr
+ 2020 15:02:35 +0000
 Received: from localhost (10.124.1.5) by DRHQMAIL107.nvidia.com (10.27.9.16)
- with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 9 Apr 2020 15:01:48
+ with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 9 Apr 2020 15:02:34
  +0000
-Date:   Thu, 9 Apr 2020 17:01:46 +0200
+Date:   Thu, 9 Apr 2020 17:02:31 +0200
 From:   Thierry Reding <treding@nvidia.com>
 To:     Arnd Bergmann <arnd@arndb.de>
-CC:     Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
+List-Id: <soc.lore.kernel.org>
+CC:     <soc@kernel.org>, Thierry Reding <thierry.reding@gmail.com>,
+        "Jonathan Hunter" <jonathanh@nvidia.com>,
+        Dmitry Osipenko <digetx@gmail.com>,
+        "Daniel Lezcano" <daniel.lezcano@linaro.org>,
+        Peter De Schrijver <pdeschrijver@nvidia.com>,
+        Venkat Reddy Talla <vreddytalla@nvidia.com>,
         <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] memory: tegra: avoid unused function warnings
-Message-ID: <20200409150146.GA3505571@ulmo>
-References: <20200408190043.532711-1-arnd@arndb.de>
+Subject: Re: [PATCH] soc: tegra: fix tegra_pmc_get_suspend_mode definition
+Message-ID: <20200409150231.GB3505571@ulmo>
+References: <20200408190127.587768-1-arnd@arndb.de>
 MIME-Version: 1.0
-In-Reply-To: <20200408190043.532711-1-arnd@arndb.de>
+In-Reply-To: <20200408190127.587768-1-arnd@arndb.de>
 X-NVConfidentiality: public
 User-Agent: Mutt/1.13.1 (2019-12-14)
 X-Originating-IP: [10.124.1.5]
 X-ClientProxiedBy: HQMAIL111.nvidia.com (172.20.187.18) To
  DRHQMAIL107.nvidia.com (10.27.9.16)
 Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="x+6KMIRAuhnl3hBn"
+        protocol="application/pgp-signature"; boundary="neYutvxvOLaeuPCA"
 Content-Disposition: inline
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1586444496; bh=230bk55FM60HDeEDaVtGNsbVY+5/gRY3TT5xB7NycJQ=;
+        t=1586444542; bh=ntEzEcDK7qFFQ5MRDfSpyPN3i0B0OGhn7ZR8O7yPDEg=;
         h=X-PGP-Universal:Date:From:To:CC:Subject:Message-ID:References:
          MIME-Version:In-Reply-To:X-NVConfidentiality:User-Agent:
          X-Originating-IP:X-ClientProxiedBy:Content-Type:
          Content-Disposition;
-        b=jjpV0xYDrI5Jh1DdqRNFyUEGGwgYhpf7tDYD3Ia41t3pixcPKpQPNo+Wc6h+r4Jpk
-         6tE3V0VhfWkegayHAVLVoK+/ATDwEtPMrR7ZHrXTp899PB/kCcCz1hn0Qf+E7+7yec
-         D0fX3FXFuHl9Rqfy0yxbrpAK2EF33ZgllfFbyxgsulQ4w7WdL64hrnCb0R1g1Oy+/N
-         Tv42Jp6GGBhcItUpf69xckICWh7fMt35EAkYBjjn3x00JJA7WiMYEEV8p9+6Ff3pYB
-         j4H7PPB33dALl5r3nGt/fDiQRvDQ0ol03WtHsZr/AsmgWy32JeRjk/jCkGCLIGtgre
-         IKZJG42c1OMPg==
+        b=rryVHpI+ggy0ulgypiiSLZINLweYm/+7Q/qWKjDXHk0z67QEUCHqF3O3hNYXNj6UE
+         u859EIPaDUS/HPa7HIfMP8EnwJ5Ab6Zsix5MebiHKK5UObENw+GEqTbS/DcVX7R9lj
+         6g575bxuYjjCN/jkHsURVbUg79seg/yzCvgqflHwkdbmCIggisPaCErADpkBdfkrjX
+         LSkTYlQ36XZtWuxr8lNQdbg/W6URMv5R1ok0rGTLc9a6/+DivPTVOoh5xwQAAIvhDx
+         vVbbZWUXwc4NLYzWTtu1DXsbh+7z6pXfSBjKgZ+eeW0La2xm9AX3jqjdBzRmX/Xz5f
+         qJVkcZz5QHmjw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---x+6KMIRAuhnl3hBn
+--neYutvxvOLaeuPCA
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Apr 08, 2020 at 09:00:30PM +0200, Arnd Bergmann wrote:
-> The suspend/resume functions have no callers depending on
-> configuration, so they must be marked __maybe_unused to
-> avoid these harmless warnings:
+On Wed, Apr 08, 2020 at 09:01:15PM +0200, Arnd Bergmann wrote:
+> When CONFIG_PM_SLEEP is disabled, the function is not defined,
+> causing a link failure:
 >=20
-> drivers/memory/tegra/tegra186.c:1578:12: error: 'tegra186_mc_resume' defi=
-ned but not used [-Werror=3Dunused-function]
->  1578 | static int tegra186_mc_resume(struct device *dev)
->       |            ^~~~~~~~~~~~~~~~~~
-> drivers/memory/tegra/tegra186.c:1573:12: error: 'tegra186_mc_suspend' def=
-ined but not used [-Werror=3Dunused-function]
->  1573 | static int tegra186_mc_suspend(struct device *dev)
->       |            ^~~~~~~~~~~~~~~~~~~
+> arm-linux-gnueabi-ld: drivers/cpuidle/cpuidle-tegra.o: in function `tegra=
+_cpuidle_probe':
+> cpuidle-tegra.c:(.text+0x24): undefined reference to `tegra_pmc_get_suspe=
+nd_mode'
 >=20
-> Fixes: 177602b00641 ("memory: tegra: Add system sleep support")
+> Change the #ifdef check according to the definition.
+>=20
+> Fixes: 382ac8e22b90 ("cpuidle: tegra: Disable CC6 state if LP2 unavailabl=
+e")
 > Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 > ---
->  drivers/memory/tegra/tegra186.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-
-Do you want to apply this to ARM SoC directly or would you prefer if I
-collected fixes and send a PR sometime later in the cycle?
-
-If the former:
+>  include/soc/tegra/pmc.h | 15 +++++++++------
+>  1 file changed, 9 insertions(+), 6 deletions(-)
 
 Acked-by: Thierry Reding <treding@nvidia.com>
 
---x+6KMIRAuhnl3hBn
+Let me know if you'd prefer me to send this in a pull request later on.
+
+Thanks,
+Thierry
+
+--neYutvxvOLaeuPCA
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl6PONkACgkQ3SOs138+
-s6GwCxAAqz/EbclxuLXTI0bmj3b7UG7+js/fzr2oWdIIu3SkJWJfoxyfxdWXZDUG
-M5989jPwZxiqyZU68dplxAED6TzPTMFJHYqvtk+Ex73gwRidRj5Jpoa8sXuOVsLL
-Io7Us/Zhd233Qi+QyfSfmR3Gvq6X9M/HKvLIVj8x/lbLinnunGlmMBE0i4VTt0e0
-1yK6L2wMWTolXwmJqRYtZ8Ct8HbSJUfOQnrx4dvrthrxYpEGe9c3mqj7b2ds7TeQ
-Y7tAoPxqOmMbju5BKHhmMkY+xpIfE4NNxyCGfiLcGaPuJ0DQtrIqrLGWAtD7RpMj
-CXAqI7YUvp3fF/CUIDgVrPRt17G/VR98EYYuyu0YO7Frr3eUx9p7LsWtmC0vQvb5
-I2c+crnGHhnb8Rw9I4B9xH3pYt+7bLPg5wz/4stF8SWE3oq3FZc41Dd9k2jir7vy
-daz7SxTC++0aBIa3gwk2tXWLbb90fZuMOi0T8QVz5uaGWUpGygaT/WyUBucMTGQ3
-qtJJe7nJ6RHwQZL8tvsuxDR6djl0zV3jHtOvT5s17ET/HNCgANp1cSr8UOJOgqdg
-F+ape+W428Hgpkp+6Kj6IbCtVHbW1lgmEcLxuLb4BvPIR4mroQNg5ffYzpWZ5TTL
-8iUv9Z4kedsuVwd01glV7uMV6+aW3n2u5P34R5s21OTFlF2C8e4=
-=KD63
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl6POQcACgkQ3SOs138+
+s6F7ZhAAvVQ5d5Dr9bT31eAT6TA/weF92Mw2WXqCGnhT/tDE5mSqIkGHnhLvMHXa
+h334Mk0SNxcgKec5lXumw2TFlnvfFy2aEItOrMP4U4CIe99AYpknMfE+LvQplfb4
+JDzqugOFS7c9rUOPfQQy9WJ0YL/7qYm01gPtTAor+yGY5dJJW3vHl8I/issqJQnU
+xPbY0EzD4qPyKe8e3T1OwpgiF1vHQCDrNtFsNt6otc/2lV5t+/OxLWxRx9skp9A4
+zTMFVOK8CuhyUnE5Ik0y/ZmzmUFbrjOqOntuvO/NUotkPB95x5/AYy+P3Eu+qBqT
+/3510BE94NojOZu7rY7PKlCkI0DuwXV4qV6FrRLvpAWa3xf/Y6/afJMgRSWNKKHj
+ODOfgPrR71u0om9DG+/CrlD7QpYWXbpGQUB1JUtoQTU53UNSo9ZNgsvngzEwcqUY
+6WYVi5EWitfVXcmvyEWyJ002EJAvLNgnwxmPZl1zVDAVB8NOsQhV0Qvi5lwLFGhF
+u4Qmc9b+WndPwHaELLB3ScUPCD3+gT8WSOLavYZdQl3x48aFySWjm1OeXiBGfebq
+4mVHghjV3/7YVPIvOom+EhAoEAJox5WnZzeRht1AleTmDt7IqNvPSUygNk2L/lrQ
+XRZcVXx3nNe+vcwsJaW6Ln8z0gtTlKmUjN8Xzmy2wRhtPFaSziU=
+=lZ2U
 -----END PGP SIGNATURE-----
 
---x+6KMIRAuhnl3hBn--
+--neYutvxvOLaeuPCA--
