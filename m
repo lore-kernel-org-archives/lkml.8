@@ -2,130 +2,117 @@ Return-Path: <SRS0=VV4q=52=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.9 required=3.0 tests=DATE_IN_PAST_12_24,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00290C2BB85
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 02:03:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BD1FC2BA19
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 02:07:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C29A720730
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 02:03:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alpsgroup.onmicrosoft.com header.i=@alpsgroup.onmicrosoft.com header.b="L6MIVOTd"
+	by mail.kernel.org (Postfix) with ESMTP id 5660C20769
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 02:07:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726654AbgDJCDh (ORCPT
+        id S1726670AbgDJCHk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Apr 2020 22:03:37 -0400
-Received: from mail-eopbgr1400040.outbound.protection.outlook.com ([40.107.140.40]:19904
-        "EHLO JPN01-TY1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726082AbgDJCDh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Apr 2020 22:03:37 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=f0EKxy16AHzGvyg0ElIpw1AikmjVr6rFAGLOJM0rCx6mK4A7LkX+4OC2WzIbAZJ5Le2UlrSKIpfx+ip6zvMFzxripngJc1fvTSZJGhPwybITyGruX/gIRRykfXk+hOhFBKeWhTdzig9x3EX977A6r9Rj4+nklTLsk8npr3wuYBb+4iwAKkxRfCjCPbQah/UbFlZUIyEBwiqODAjhbex7qQsPAY6pdd09OGu81mw7FMDUx7o4x2gyw/x4bh++hOOdHtv0AKwWyQUfMUlxbcKw7gEyg8wx2WVUZuc7XDBhLt5pPIOo32/53XQ91nYpsdpECybvh/yI0M/UP8kKIBG3wQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=9Yv54uSToHu3GXfl8o/Cbueuu8ycC+XZ4mfq2v44JiA=;
- b=i05BU8S5AS60KUCq0Y8pdANzfGe6wK+LrttkQHZk3yw9TFGjffCuL/BKed9jSA0Te1gXZlhntYO64mKBA2x53NJbVZBjOy+ZNL3XT37kwJ+kN0eaV7L74O3BmN4mDCa5GJJ+LnuLGMMuetDWJPbW3h9be0k5dGeii1AaZOImHSkUGtnWDuQjJlHeqcsas24itjjYGA+ICuqdfgBMzdicPk1nsE4vO1QJEdn38a2AGg7aMEJ/AM6ayQ9aMCMxOjgnbmvarcBPJ+chkdQHYtKNoNYUrYCRAkfjVUBU7AUvRyGtXoZITUneP5mbx6q2mwfO4s/7zM685YJg+FTTlU5W8A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=cn.alps.com; dmarc=pass action=none header.from=cn.alps.com;
- dkim=pass header.d=cn.alps.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=alpsgroup.onmicrosoft.com; s=selector2-alpsgroup-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=9Yv54uSToHu3GXfl8o/Cbueuu8ycC+XZ4mfq2v44JiA=;
- b=L6MIVOTdc9ljSjdjYiKc1M5BrUbcCxh1DBkActR4wxtAvs15/mvspaqPb/QF4fiEMv0yWaATcHyFZ77x0O7eE/rUlrxdQdAkEQLqchRMbGfWEISEKChjzP/onGdVGBRlvYCepInaq9cqZgcLjDgdRJNHlmvJDDaQ/LTJX/WeeBs=
-Received: from OSAPR01MB3057.jpnprd01.prod.outlook.com (52.134.248.141) by
- OSAPR01MB1955.jpnprd01.prod.outlook.com (52.134.235.140) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2878.17; Fri, 10 Apr 2020 02:03:34 +0000
-Received: from OSAPR01MB3057.jpnprd01.prod.outlook.com
- ([fe80::c41b:4bf7:2ad1:6fc7]) by OSAPR01MB3057.jpnprd01.prod.outlook.com
- ([fe80::c41b:4bf7:2ad1:6fc7%3]) with mapi id 15.20.2900.015; Fri, 10 Apr 2020
- 02:03:34 +0000
-From:   Xiaojian Cao <xiaojian.cao@cn.alps.com>
-To:     Jiri Kosina <jikos@kernel.org>,
-        Masaki Ota <masaki.ota@alpsalpine.com>
-CC:     Artem Borisov <dedsa2002@gmail.com>,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
-        Henrik Rydberg <rydberg@bitmath.org>,
-        "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Tetsuya Nomura <tetsuya.nomura@alpsalpine.com>,
-        "vadim@cirque.com" <vadim@cirque.com>,
-        "pod.alcht@cn.alps.com" <pod.alcht@cn.alps.com>
-Subject: RE: [PATCH 2/2] HID: alps: Refactor axis resolution logic
-Thread-Topic: [PATCH 2/2] HID: alps: Refactor axis resolution logic
-Thread-Index: AQHWDr0x2NbbGmh+BEarMrC/TfssrKhxZ8AAgAAQo0CAAA1IgIAADdJg
-Date:   Fri, 10 Apr 2020 02:03:33 +0000
-Message-ID: <OSAPR01MB305721805C57AEC99D48F107C8DE0@OSAPR01MB3057.jpnprd01.prod.outlook.com>
-References: <nycvar.YFH.7.76.2004100019450.19713@cbobk.fhfr.pm>
- <20200409230009.22551-1-dedsa2002@gmail.com>
- <TYAPR01MB3871E974EFE06EBF40074470ECDE0@TYAPR01MB3871.jpnprd01.prod.outlook.com>
- <nycvar.YFH.7.76.2004100245260.19713@cbobk.fhfr.pm>
-In-Reply-To: <nycvar.YFH.7.76.2004100245260.19713@cbobk.fhfr.pm>
-Accept-Language: en-US, zh-CN
-Content-Language: zh-CN
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=xiaojian.cao@cn.alps.com; 
-x-originating-ip: [58.247.0.86]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 50ce6a8a-5e3e-46c2-65e4-08d7dcf35ff5
-x-ms-traffictypediagnostic: OSAPR01MB1955:
-x-ld-processed: 57e76998-77bd-4b82-a424-198f46eb2254,ExtAddr
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <OSAPR01MB19553BAEB371A68EF9BD8F07C8DE0@OSAPR01MB1955.jpnprd01.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8273;
-x-forefront-prvs: 0369E8196C
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:OSAPR01MB3057.jpnprd01.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10009020)(4636009)(376002)(136003)(39860400002)(346002)(366004)(396003)(4326008)(55016002)(52536014)(76116006)(966005)(66946007)(86362001)(66476007)(71200400001)(107886003)(8936002)(64756008)(66556008)(66446008)(5660300002)(186003)(2906002)(26005)(54906003)(110136005)(7696005)(478600001)(9686003)(6506007)(316002)(53546011)(8676002)(85182001)(81156014)(33656002);DIR:OUT;SFP:1101;
-received-spf: None (protection.outlook.com: cn.alps.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: Z1hWjIUCsWV29y2bjce9VRSl3lDHZx0b0637rhYmHI+xSlFpNYumnT73Fm0FzPFXHV0JKq26M9T7NVAT679fwo0eajTQbZlAiVHWnL5G2wUscWB1F49+Qa+KYy4MIDxkP7WWqRZKFZ916aeIfg6A0yhO0vk2GwcYu9ri8M/S1dwHdqtgc88JT3w60nCfLzckRKfCc2gQc10ReLzfGHV5tGUKVEUOZtjohemK/UGjk9JJmGzfQRfDC/BR8Ntpn56vJgL+KP3XzbXUGMmo4Cu3fWm1TwcPvK6pBqSrSIr9HHdhtRhaKUJT8bhWNXCXB+IMkCOIhvFerCRp05pj1mFeCvTHN5AvAOg+l5FhfqM6Tb1LPjKvCC3tvIuyY11kKiYl+HvZM1kueoCR4Mpo6wrGdfIrC0/cpWuzOTfhEoUxjoj9GVuzqV3qSZJA411LWEiICEhorPKOXWAQ6R1lsUojsmB6pQmS8j/I1aexVL1p/fJalPaCfxeVtS3KM+c42AsDtT+NEVcxcgcsGF+26qrDHA==
-x-ms-exchange-antispam-messagedata: t82Aa5BEyr25orwuCh1Mv67UIwKoCPyAyOGbgXG+0o0vt+3v7sQoTf37L1dY8kg9Ea0SMGexGB2cIlU0zTMrkfQ5ZkRFHh1hw+1qPS6UsjCU2+6P/BvWknQIYfBYZ0nbn43UvFfSsw9j87hNQ4nExA==
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Thu, 9 Apr 2020 22:07:40 -0400
+Received: from mail1.bemta26.messagelabs.com ([85.158.142.113]:49808 "EHLO
+        mail1.bemta26.messagelabs.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726538AbgDJCHk (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Apr 2020 22:07:40 -0400
+Received: from [100.113.5.56] (using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256 bits))
+        by server-2.bemta.az-b.eu-central-1.aws.symcld.net id 7C/FC-36561-AE4DF8E5; Fri, 10 Apr 2020 02:07:38 +0000
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrIIsWRWlGSWpSXmKPExsVy8MN7Xd2XV/r
+  jDHpabC3mnG9hsWhevJ7NYtXCa2wWl3fNYbN4/6mTyeL/nh3sDmweW1beZPJoOfKW1WPTqk42
+  j/1z17B7fN4kF8AaxZqZl5RfkcCaMWvxfZaCs5wVt8/fZ2pgPMLRxcjFISSwllHi+8V29i5GT
+  iCnUqJ70SxmEJtXIELi0KL9bCA2p4CZxJm2HqgaU4lF7fcYQWw2AR2JRzPXM4HYLAIqEvdmbg
+  WrFxZIldjw+BEbyAIRgYuMEk8e/wFLMAvEScxqWM4KsUBQ4uTMJywQcQmJgy9eMEMs0JI4t2Y
+  V4wRG3llIymYhKVvAyLSK0TKpKDM9oyQ3MTNH19DAQNfQ0FjXFMgy10us0k3SSy3VTU7NKylK
+  BMrqJZYX6xVX5ibnpOjlpZZsYgSGbkoha/YOxq3z3+sdYpTkYFIS5T15qj9OiC8pP6UyI7E4I
+  76oNCe1+BCjDAeHkgRvwWWgnGBRanpqRVpmDjCOYNISHDxKIrzvLgGleYsLEnOLM9MhUqcYdT
+  l2Hp23iFmIJS8/L1VKnDcIZIYASFFGaR7cCFhMX2KUlRLmZWRgYBDiKUgtys0sQZV/xSjOwag
+  kzGsAsoonM68EbtMroCOYgI44HA52REkiQkqqgSk47+zaOc21U1OqDP64brgRqfP48EHlt+JP
+  pbb6ZiXFJ5R2bW1bM4VrzYVfe09+mamddnmz0ClffRe1a78us504/qJn21x2xqjNZRt3i0TdE
+  c0Tf6ljmxIozMR6y9qJd2uq0GkeizleeZXN5680cxw8m7FbopX3Q8jk/SmNobxdBfulmk8WJI
+  dNllBMso0W2mk9pUhRNE3fZeeBhtmvmJZqTa5j2hcurb1o6a2TVx5YhigfCq4qPnBIw3G6+UT
+  mW4zbN32oni7xcFXN56zFvI1c4pVbTTtFbW77LRXbfsyzZsV3GUEmsT9sL94xNuVM3N7fW+W8
+  uef5jdV6KYcfKofoPlokLhe7TeZec7edpBJLcUaioRZzUXEiAOPE3UdkAwAA
+X-Env-Sender: roy.im.opensource@diasemi.com
+X-Msg-Ref: server-24.tower-239.messagelabs.com!1586484457!2817432!2
+X-Originating-IP: [193.240.239.45]
+X-SYMC-ESS-Client-Auth: outbound-route-from=pass
+X-StarScan-Received: 
+X-StarScan-Version: 9.50.1; banners=-,-,-
+X-VirusChecked: Checked
+Received: (qmail 26340 invoked from network); 10 Apr 2020 02:07:37 -0000
+Received: from unknown (HELO NB-EX-CASHUB01.diasemi.com) (193.240.239.45)
+  by server-24.tower-239.messagelabs.com with ECDHE-RSA-AES256-SHA384 encrypted SMTP; 10 Apr 2020 02:07:37 -0000
+Received: from krsrvapps-03.diasemi.com (10.95.17.51) by
+ NB-EX-CASHUB01.diasemi.com (10.1.16.140) with Microsoft SMTP Server id
+ 14.3.468.0; Fri, 10 Apr 2020 04:07:35 +0200
+Received: by krsrvapps-03.diasemi.com (Postfix, from userid 22266)      id
+ 7D5FA13F670; Fri, 10 Apr 2020 11:07:34 +0900 (KST)
+Message-ID: <efd63d42b7fd2ca15777c9b06a9ea4a162324028.1586439647.git.Roy.Im@diasemi.com>
+In-Reply-To: <cover.1586439647.git.Roy.Im@diasemi.com>
+References: <cover.1586439647.git.Roy.Im@diasemi.com>
+From:   Roy Im <roy.im.opensource@diasemi.com>
+Date:   Thu, 9 Apr 2020 22:40:46 +0900
+Subject: [RESEND PATCH V11 1/3] MAINTAINERS: da7280 updates to the Dialog
+ Semiconductor search terms
+To:     "David S. Miller" <davem@davemloft.net>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Rob Herring <robh@kernel.org>, <linux-kernel@vger.kernel.org>
+CC:     Greg KH <gregkh@linuxfoundation.org>,
+        Support Opensource <support.opensource@diasemi.com>
 MIME-Version: 1.0
-X-OriginatorOrg: cn.alps.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 50ce6a8a-5e3e-46c2-65e4-08d7dcf35ff5
-X-MS-Exchange-CrossTenant-originalarrivaltime: 10 Apr 2020 02:03:33.9437
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 57e76998-77bd-4b82-a424-198f46eb2254
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: eX//MJ6uopyVbXy6+GRTE55iMgOsOIhTrD5h7qeE0vGdik5um8JHDpMyOKI/rp03vM7MaO8YaalIIQBtey2nnv4Q/1DyOC+Vvgnc8cxPLLw=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: OSAPR01MB1955
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGkgSmlyaS1zYW4sDQoNClRoYW5rcyBmb3IgeW91ciBpbmZvcm1hdGlvbi4gSSB3aWxsIGxvb2sg
-aW50byBpdC4NCg0KQmVzdCBSZWdhcmRzLA0KLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLQ0KSmFzb24gQ2FvKOabueaZk+W7uikNCg0KDQotLS0tLU9yaWdpbmFs
-IE1lc3NhZ2UtLS0tLQ0KRnJvbTogSmlyaSBLb3NpbmEgPGppa29zQGtlcm5lbC5vcmc+IA0KU2Vu
-dDogRnJpZGF5LCBBcHJpbCAxMCwgMjAyMCA4OjQ3IEFNDQpUbzog5aSq55SwIOecn+WWnCBNYXNh
-a2kgT3RhIDxtYXNha2kub3RhQGFscHNhbHBpbmUuY29tPg0KQ2M6IOabuSDmm4nlu7ogWGlhb2pp
-YW4gQ2FvIDx4aWFvamlhbi5jYW9AY24uYWxwcy5jb20+OyBBcnRlbSBCb3Jpc292IDxkZWRzYTIw
-MDJAZ21haWwuY29tPjsgQmVuamFtaW4gVGlzc29pcmVzIDxiZW5qYW1pbi50aXNzb2lyZXNAcmVk
-aGF0LmNvbT47IEhlbnJpayBSeWRiZXJnIDxyeWRiZXJnQGJpdG1hdGgub3JnPjsgbGludXgtaW5w
-dXRAdmdlci5rZXJuZWwub3JnOyBsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnDQpTdWJqZWN0
-OiBSRTogW1BBVENIIDIvMl0gSElEOiBhbHBzOiBSZWZhY3RvciBheGlzIHJlc29sdXRpb24gbG9n
-aWMNCg0KT24gRnJpLCAxMCBBcHIgMjAyMCwgTWFzYWtpIE90YSB3cm90ZToNCg0KPiBIaSwgQ2Fv
-LXNhbiwNCj4gDQo+IERvIHlvdSBrbm93IEFVSTE2NTcgZGV2aWNlPyBUaGlzIGRldmljZSBsb29r
-cyBVMS4gSSB0aGluayByZWNlbnQgYWxsIA0KPiBVMSBkZXZpY2VzIHdvcmsgYXMgUFRQLiBMaW51
-eCBhbHNvIHN1cHBvcnRzIFBUUCwgc28gSSB0aGluayB3ZSBzaG91bGQgDQo+IGFkZCBzb21ldGhp
-bmcgSUQgdG8gTGludXggc291cmNlIGNvZGUuIChJIHJlbWVtYmVyIGEgc29tZXRoaW5nIGZsYWcg
-aXMgDQo+IGFscmVhZHkgZXhpc3QuKQ0KDQpUaGF0J3MgYWN0dWFsbHkgcGFydGlhbGx5IGNvdmVy
-ZWQgYnkgQXJ0ZW0ncyAxLzEgcGF0Y2ggeW91IGhhdmUgbm90IGJlZW4gQ0NlZCBvbiAtLSBwbGVh
-c2Ugc2VlIGl0IGhlcmU6DQoNCglodHRwOi8vbG9yZS5rZXJuZWwub3JnL3IvMjAyMDA0MDUyMzU1
-MTcuMTgyMDMtMS1kZWRzYTIwMDJAZ21haWwuY29tDQoNCklmIHRoaXMgY291bGQgYmUgbWFkZSBt
-b3JlIGdlbmVyaWMgdG8gY292ZXIgYSBncm91cCBvZiBkZXZpY2VzIGFsbC1pbi1vbmUsIHRoYXQn
-ZCBiZSBldmVuIGJldHRlciBvZiBjb3Vyc2UuDQoNClRoYW5rcywNCg0KLS0NCkppcmkgS29zaW5h
-DQpTVVNFIExhYnMNCg0K
+This patch adds the da7280 bindings doc and driver to the Dialog
+Semiconductor support list.
+
+Signed-off-by: Roy Im <roy.im.opensource@diasemi.com>
+
+---
+v11: No changes.
+v10: No changes.
+v9: No changes.
+v8: No changes.
+v7: No changes.
+v6: No changes.
+v5: No changes.
+v4: No changes.
+v3: No changes.
+v2: No changes.
+
+
+ MAINTAINERS | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 62a56ba..a3589c1 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -4953,6 +4953,7 @@ S:	Supported
+ F:	Documentation/hwmon/da90??.rst
+ F:	Documentation/devicetree/bindings/mfd/da90*.txt
+ F:	Documentation/devicetree/bindings/input/da90??-onkey.txt
++F:	Documentation/devicetree/bindings/input/dlg,da72??.txt
+ F:	Documentation/devicetree/bindings/thermal/da90??-thermal.txt
+ F:	Documentation/devicetree/bindings/regulator/da92*.txt
+ F:	Documentation/devicetree/bindings/regulator/slg51000.txt
+@@ -4962,6 +4963,7 @@ F:	drivers/gpio/gpio-da90??.c
+ F:	drivers/hwmon/da90??-hwmon.c
+ F:	drivers/iio/adc/da91??-*.c
+ F:	drivers/input/misc/da90??_onkey.c
++F:	drivers/input/misc/da72??.[ch]
+ F:	drivers/input/touchscreen/da9052_tsi.c
+ F:	drivers/leds/leds-da90??.c
+ F:	drivers/mfd/da903x.c
+-- 
+end-of-patch for RESEND PATCH V11
+
