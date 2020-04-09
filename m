@@ -7,29 +7,29 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C373C2BA19
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 19:13:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FC0CC2BA19
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 19:13:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5D64C206F5
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 19:13:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1EE18206F5
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 19:13:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="Oyv9fYBq"
+	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="hC7qGK+4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726882AbgDITNE (ORCPT
+        id S1726918AbgDITNQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Apr 2020 15:13:04 -0400
-Received: from mail-dm6nam10on2089.outbound.protection.outlook.com ([40.107.93.89]:17935
-        "EHLO NAM10-DM6-obe.outbound.protection.outlook.com"
+        Thu, 9 Apr 2020 15:13:16 -0400
+Received: from mail-co1nam11on2083.outbound.protection.outlook.com ([40.107.220.83]:60864
+        "EHLO NAM11-CO1-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726766AbgDITMz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Apr 2020 15:12:55 -0400
+        id S1726791AbgDITNO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Apr 2020 15:13:14 -0400
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=F786lz5YDBn91ogJwElS1mzJT05yEihYKMs7shzpbJ8GC45BpFjSdvW2x5w35zk3pGVGbd4oHYjHO77gyLV9cYhZi/57cTwMtVny2Zxi/kqcvsAp1YfylHedl5NltnG29JWc9TfPLWawqO9MaKFSI82ghjxALFc8fzo6emWj4Egmu/ZAgLnw2ataV0j1NCY1tL8nCEG43zfH3tpt3B5nss/i/dNF3PV6T+hGF6Uf/5SaRlz3SnfGVG/kW7INbpzEbi5iWKB5gTZHkml6AMgxN9qt8j1+nB9Ww/Jb5g+RU5KhEY3x2LoW74ld1JoDB1icZtHRUfEFfRsn+RvNWwTZEw==
+ b=HhVdk8BVwqGdA+HiXqgL8xKJfKHx1Z59CEtKPURiTNv6xrtDeOtS+u8MC4J08pDPqiMIcYYJnVCKjrHEJsUwjrFyVK7gyXjOeYGa4Eg1oXS8zuIoH9UWKXaQcA92AF9AojpqhkuAXiwKbFv++y/1W6pBK0E58UCvjxE55Vq6dLbHxfYsAJ3v8yj7ivLxthhIVAmMVUnvWlC7QvBWwjskdTr1ragKa6xc6f1/Lm9IL/30Bfw1npHJbJ/BwzHzqPN2TqxRB2Rs7NtJ0zL2Lke8ECROlM+CbrVrNIxCaM3IxqkJgIlooamj8aJUyP/Q3ejD4zkhbYSZ0eHDWYXogLW9Zg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=MYMpy/m/kT2XAeV+FuLIblvsW8H16frR16o5kpPnYbw=;
- b=L+KhDkPhZBq5wP9EpXQ0NQXdn7Vox6Pu2JNgPL3R0D8bvPX+EH1s7aBMDgMnVFgFlxIXycYUWH1KWkCeqv3ZnMtfh2r7bAXIRhDTIuNzfh1gXRbvB5yVGBlMTDhV0W3+OU2TXO152ynclrqyhVnazq7XtlDDxXUxP7f56xImbbUYJSrK7alEtQkXhd+hVEUY0HMuYCM+kffGuPnSHXnVlOINll8s5M8xDJbvq8Z6LoI1SmIYGQfTjvoc05wOK2IgKrQ9YoMa8nidHB9uKW3L7l3+2zL8CFvnNHvtfaTUr5rmOoKPWxLzhVHf5eEoga+4H8NWla8kXl2Az4ZPgrKzqg==
+ bh=2zYd+PdfJZ+DlAsLw2nYnCZox51wYur3HUdv1Q+qJEc=;
+ b=YTB8XMnq8yWIxMPY4tCPFW/zcYC5c5m1JdAbHv2/hSMJs/xAuXaT8FgGdCchHLl5xsp1zzbFWq0Cx/dor/ejRo0AUAPjJuZUWEsE61sY5Tnf9+zJ4wd5gZpPKw17P+3Lk+pGgaWOrWejUbH8r+E6H1k1eiSG+7nY8KRs9ZCWeiF2LCJPD9ZZR7rwIwGwAJrC+Msa+ebDqcuFLr5ErrLHyo+BBXfTMtsRbxFtoJPZRjhs28lHpw1RDlgrpy7ZyPb+/DVmN4Y/gE0hFEVlWyEH06wTDPEkWIPcuczXsthKxi4AmES1qgx5TqVIROV6O4F1LLn6UjjFTHI5HtkCmQ6NKQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
  149.199.60.83) smtp.rcpttodomain=linaro.org smtp.mailfrom=xilinx.com;
  dmarc=bestguesspass action=none header.from=xilinx.com; dkim=none (message
@@ -37,17 +37,17 @@ ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
  d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=MYMpy/m/kT2XAeV+FuLIblvsW8H16frR16o5kpPnYbw=;
- b=Oyv9fYBq3hlnP8bDe8pSLiTU5X7BbIouqEMU3hvO6xmNVwy+oQJIG+s7kkyWrCpHJQgNcxtaVFccOvgO0z7MyAnoJE7iePjvofiuinxdjfrnvj9MQKutodo+SksLaLWhPlTa1P0K2zKd2ZSjKMjNKi/lX1lbga3bHbzM8CARenQ=
-Received: from MN2PR16CA0016.namprd16.prod.outlook.com (2603:10b6:208:134::29)
- by BN6PR02MB2404.namprd02.prod.outlook.com (2603:10b6:404:2b::18) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2878.20; Thu, 9 Apr
- 2020 19:12:50 +0000
-Received: from BL2NAM02FT021.eop-nam02.prod.protection.outlook.com
- (2603:10b6:208:134:cafe::3f) by MN2PR16CA0016.outlook.office365.com
- (2603:10b6:208:134::29) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2900.16 via Frontend
+ bh=2zYd+PdfJZ+DlAsLw2nYnCZox51wYur3HUdv1Q+qJEc=;
+ b=hC7qGK+4bpSU+qxsGMCRyXiy+/p6KcXgXV1tnjROJue03vRS9hsiQrHLHU9L5fYTm4vACm9193FANMoGAzWjiWMdLAxoWYIUnMVZ6H8q78tP3pvOUcIQEMVEgKuZ8yP/OZW/8RH5ulMyept7nYzTDKEStDrgcAZ4ooahtjM/ufM=
+Received: from SN4PR0501CA0084.namprd05.prod.outlook.com
+ (2603:10b6:803:22::22) by CY4PR0201MB3570.namprd02.prod.outlook.com
+ (2603:10b6:910:91::11) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2856.20; Thu, 9 Apr
+ 2020 19:12:51 +0000
+Received: from SN1NAM02FT011.eop-nam02.prod.protection.outlook.com
+ (2603:10b6:803:22:cafe::c2) by SN4PR0501CA0084.outlook.office365.com
+ (2603:10b6:803:22::22) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2900.6 via Frontend
  Transport; Thu, 9 Apr 2020 19:12:50 +0000
 Authentication-Results: spf=pass (sender IP is 149.199.60.83)
  smtp.mailfrom=xilinx.com; linaro.org; dkim=none (message not signed)
@@ -57,21 +57,21 @@ Received-SPF: Pass (protection.outlook.com: domain of xilinx.com designates
  149.199.60.83 as permitted sender) receiver=protection.outlook.com;
  client-ip=149.199.60.83; helo=xsj-pvapsmtpgw01;
 Received: from xsj-pvapsmtpgw01 (149.199.60.83) by
- BL2NAM02FT021.mail.protection.outlook.com (10.152.77.158) with Microsoft SMTP
+ SN1NAM02FT011.mail.protection.outlook.com (10.152.72.82) with Microsoft SMTP
  Server id 15.20.2900.15 via Frontend Transport; Thu, 9 Apr 2020 19:12:50
  +0000
-Received: from [149.199.38.66] (port=44302 helo=xsj-pvapsmtp01)
+Received: from [149.199.38.66] (port=44330 helo=xsj-pvapsmtp01)
         by xsj-pvapsmtpgw01 with esmtp (Exim 4.90)
         (envelope-from <jolly.shah@xilinx.com>)
-        id 1jMcb9-00060D-A9; Thu, 09 Apr 2020 12:12:23 -0700
+        id 1jMcb9-00060Z-Lr; Thu, 09 Apr 2020 12:12:23 -0700
 Received: from [127.0.0.1] (helo=localhost)
         by xsj-pvapsmtp01 with smtp (Exim 4.63)
         (envelope-from <jolly.shah@xilinx.com>)
-        id 1jMcbZ-0007NV-Oj; Thu, 09 Apr 2020 12:12:49 -0700
+        id 1jMcba-0007NV-4Q; Thu, 09 Apr 2020 12:12:50 -0700
 Received: from [172.19.2.91] (helo=xsjjollys50.xilinx.com)
         by xsj-pvapsmtp01 with esmtp (Exim 4.63)
         (envelope-from <jolly.shah@xilinx.com>)
-        id 1jMcbT-0007La-GO; Thu, 09 Apr 2020 12:12:43 -0700
+        id 1jMcbS-0007La-KQ; Thu, 09 Apr 2020 12:12:42 -0700
 From:   Jolly Shah <jolly.shah@xilinx.com>
 To:     ard.biesheuvel@linaro.org, mingo@kernel.org,
         gregkh@linuxfoundation.org, matt@codeblueprint.co.uk,
@@ -79,11 +79,10 @@ To:     ard.biesheuvel@linaro.org, mingo@kernel.org,
         dmitry.torokhov@gmail.com, michal.simek@xilinx.com
 Cc:     rajanv@xilinx.com, linux-arm-kernel@lists.infradead.org,
         linux-kernel@vger.kernel.org, Rajan Vaja <rajan.vaja@xilinx.com>,
-        Tejas Patel <tejas.patel@xilinx.com>,
         Jolly Shah <jolly.shah@xilinx.com>
-Subject: [PATCH v4 25/25] firmware: xilinx: Add sysfs and API to set boot health status
-Date:   Thu,  9 Apr 2020 12:12:14 -0700
-Message-Id: <1586459534-8997-26-git-send-email-jolly.shah@xilinx.com>
+Subject: [PATCH v4 15/25] firmware: xilinx: Remove eemi ops for set_suspend_mode
+Date:   Thu,  9 Apr 2020 12:12:04 -0700
+Message-Id: <1586459534-8997-16-git-send-email-jolly.shah@xilinx.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1586459534-8997-1-git-send-email-jolly.shah@xilinx.com>
 References: <1586459534-8997-1-git-send-email-jolly.shah@xilinx.com>
@@ -91,27 +90,27 @@ X-TM-AS-Product-Ver: IMSS-7.1.0.1224-8.2.0.1013-23620.005
 X-TM-AS-User-Approved-Sender: Yes;Yes
 X-EOPAttributedMessage: 0
 X-MS-Office365-Filtering-HT: Tenant
-X-Forefront-Antispam-Report: CIP:149.199.60.83;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:xsj-pvapsmtpgw01;PTR:unknown-60-83.xilinx.com;CAT:NONE;SFTY:;SFS:(10009020)(4636009)(39860400002)(376002)(346002)(136003)(396003)(46966005)(26005)(186003)(6666004)(356004)(426003)(44832011)(7416002)(5660300002)(107886003)(336012)(2616005)(70206006)(70586007)(8936002)(81156014)(82740400003)(54906003)(9786002)(4326008)(36756003)(478600001)(7696005)(6636002)(8676002)(2906002)(316002)(81166007)(47076004);DIR:OUT;SFP:1101;
+X-Forefront-Antispam-Report: CIP:149.199.60.83;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:xsj-pvapsmtpgw01;PTR:unknown-60-83.xilinx.com;CAT:NONE;SFTY:;SFS:(10009020)(4636009)(396003)(376002)(39860400002)(346002)(136003)(46966005)(7696005)(4326008)(81156014)(47076004)(6666004)(356004)(70206006)(426003)(478600001)(44832011)(54906003)(7416002)(82740400003)(6636002)(70586007)(81166007)(107886003)(186003)(316002)(5660300002)(8936002)(8676002)(9786002)(2616005)(336012)(26005)(2906002)(36756003);DIR:OUT;SFP:1101;
 MIME-Version: 1.0
 Content-Type: text/plain
 X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: cb03e767-73af-4cee-57f2-08d7dcb9ff0f
-X-MS-TrafficTypeDiagnostic: BN6PR02MB2404:
-X-Microsoft-Antispam-PRVS: <BN6PR02MB24041E30811FAC3C76A14C1BB8C10@BN6PR02MB2404.namprd02.prod.outlook.com>
+X-MS-Office365-Filtering-Correlation-Id: c8cfb223-2c47-4dd3-e486-08d7dcb9ff38
+X-MS-TrafficTypeDiagnostic: CY4PR0201MB3570:
+X-Microsoft-Antispam-PRVS: <CY4PR0201MB3570446CFD66ABE0AA4E3F17B8C10@CY4PR0201MB3570.namprd02.prod.outlook.com>
 X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
-X-MS-Oob-TLC-OOBClassifiers: OLM:6108;
+X-MS-Oob-TLC-OOBClassifiers: OLM:923;
 X-Forefront-PRVS: 0368E78B5B
 X-MS-Exchange-SenderADCheck: 1
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: xEcM9csIqACiZrObfXVOFrvlRK/CiWPkGxwU/2cucTqzvhBHaya9YAxr4+1C9aHZRbyrmfg/L+vOUSIelDKnyhaTIm1ju7ovc+gZoiXmvhrqAeYbsRkRgKSLzR0SaOU+ilUkC40hsn7rRsR6AOgnqa1kjUKCdVEB9Qtg2RvUkmPROx7xMM5geNLG8gczzVCmadfvx8nHyU0EoZV5KmMOq6yn531P38dOjGZ3o7EeXSeNfMqCNwQ4mFr4KjnQOGxTu2aUpQxHfIdEvhsRIb0wiEkU+9N/j6tib7zjyIik5Q8HQAGzqcZ9gEIu4uryWrUXD2N1ivZPC+3rFk4uCPOZP27wjV3IBMBBIu4Ahh9SJiDBXt1i27l+WwhgBzZksW0gXF7zs52KEiTUZ0qJPXt1ZMFW3seDisiJOVtBKLnfI2kVlaLlx0URtyT6L1TXunaKYbJ/Iw0WsEOKBqv1T+sUIPEt/M7+rb778ttqWY2jZ4lAxub/vVlakPK+OGdIZtxvC13PQs8ir+PtwO7RtpF/Yg==
+X-Microsoft-Antispam-Message-Info: oimK77UJ54iKO3zvMa5LYMpeHJPdgNmB/AOMQSnbskuzov31ZLW0By/nXwwlZKDbQTS1wYLNLy8vDhKfAXsHgFtErHLZBB8lAVa7EKIA8q/Eh0FTd5Y798lR36fkYDkFrGHVEV4Md1I35jKqwTO7ecpALvRqwxjA+XkmtsOVVsfILuOiEjIbngHZvkDZRPTZad2yOqn344zk5/8i7CbnnnwY+ygdN+Vb+rvNLtZ4ID5oZXGK0AqISdk+Z6B4Ns8Ce+7qjVBRmxxrMta37mz1TJmVCb7nslFteb9KfwfjfGq136BWoFwI9bk5sFfG0LPPGBafkIhOzrOP2JlB5ksA3g9v0pEITuHMpAX5SZgaf/sC0UCtNgy9YqIq4o9/3/UrdiEVA0By2OpasLy6BMWApgEShki/mtWaQLTeYz5f/5Vb8ysdZrMRkN2wHhyZMC7l8DgUfVi5pkUJrCCcSjqRtJpGVnN55qJDIRs9qMzWrL85Y2mMP+oDJYhPXdvz831rZLHlizc7WxovlrYpYGOYCg==
 X-OriginatorOrg: xilinx.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Apr 2020 19:12:50.2310
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Apr 2020 19:12:50.5043
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: cb03e767-73af-4cee-57f2-08d7dcb9ff0f
+X-MS-Exchange-CrossTenant-Network-Message-Id: c8cfb223-2c47-4dd3-e486-08d7dcb9ff38
 X-MS-Exchange-CrossTenant-Id: 657af505-d5df-48d0-8300-c31994686c5c
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=657af505-d5df-48d0-8300-c31994686c5c;Ip=[149.199.60.83];Helo=[xsj-pvapsmtpgw01]
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN6PR02MB2404
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY4PR0201MB3570
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -119,144 +118,97 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Rajan Vaja <rajan.vaja@xilinx.com>
 
-Add sysfs interface to set boot health status from user space.
-Add API used by this interface to communicate with firmware.
-
-If PMUFW is compiled with CHECK_HEALTHY_BOOT, it will check the
-healthy bit on FPD WDT expiration. If healthy bit is set by a user
-application running in Linux, PMUFW will do APU only restart. If
-healthy bit is not set during FPD WDT expiration, PMUFW will do
-system restart.
+Use direct function call instead of eemi ops for set_suspend_mode.
 
 Signed-off-by: Rajan Vaja <rajan.vaja@xilinx.com>
-Signed-off-by: Michal Simek <michal.simek@xilinx.com>
-Signed-off-by: Tejas Patel <tejas.patel@xilinx.com>
 Signed-off-by: Jolly Shah <jolly.shah@xilinx.com>
 ---
- .../ABI/stable/sysfs-driver-firmware-zynqmp        | 21 ++++++++++++
- drivers/firmware/xilinx/zynqmp.c                   | 39 ++++++++++++++++++++++
- include/linux/firmware/xlnx-zynqmp.h               |  7 ++++
- 3 files changed, 67 insertions(+)
+ drivers/firmware/xilinx/zynqmp.c     | 4 ++--
+ drivers/soc/xilinx/zynqmp_power.c    | 6 +-----
+ include/linux/firmware/xlnx-zynqmp.h | 6 +++++-
+ 3 files changed, 8 insertions(+), 8 deletions(-)
 
-diff --git a/Documentation/ABI/stable/sysfs-driver-firmware-zynqmp b/Documentation/ABI/stable/sysfs-driver-firmware-zynqmp
-index 554f30c..00fa04c 100644
---- a/Documentation/ABI/stable/sysfs-driver-firmware-zynqmp
-+++ b/Documentation/ABI/stable/sysfs-driver-firmware-zynqmp
-@@ -80,3 +80,24 @@ Description:
- 		# echo "subsystem" > /sys/devices/platform/firmware\:zynqmp-firmware/shutdown_scope
- 
- Users:		Xilinx
-+
-+What:		/sys/devices/platform/firmware\:zynqmp-firmware/health_status
-+Date:		March 2020
-+KernelVersion:	5.6
-+Contact:	"Jolly Shah" <jollys@xilinx.com>
-+Description:
-+		This sysfs interface allows to set the health status. If PMUFW
-+		is compiled with CHECK_HEALTHY_BOOT, it will check the healthy
-+		bit on FPD WDT expiration. If healthy bit is set by a user
-+		application running in Linux, PMUFW will do APU only restart. If
-+		healthy bit is not set during FPD WDT expiration, PMUFW will do
-+		system restart.
-+
-+		Usage:
-+		Set healthy bit
-+		# echo 1 > /sys/devices/platform/firmware\:zynqmp-firmware/health_status
-+
-+		Unset healthy bit
-+		# echo 0 > /sys/devices/platform/firmware\:zynqmp-firmware/health_status
-+
-+Users:		Xilinx
 diff --git a/drivers/firmware/xilinx/zynqmp.c b/drivers/firmware/xilinx/zynqmp.c
-index 8d36618..bfaf29a 100644
+index 869366f..cc74165 100644
 --- a/drivers/firmware/xilinx/zynqmp.c
 +++ b/drivers/firmware/xilinx/zynqmp.c
-@@ -684,6 +684,21 @@ int zynqmp_pm_read_pggs(u32 index, u32 *value)
- EXPORT_SYMBOL_GPL(zynqmp_pm_read_pggs);
+@@ -724,10 +724,11 @@ EXPORT_SYMBOL_GPL(zynqmp_pm_init_finalize);
+  *
+  * Return: Returns status, either success or error+reason
+  */
+-static int zynqmp_pm_set_suspend_mode(u32 mode)
++int zynqmp_pm_set_suspend_mode(u32 mode)
+ {
+ 	return zynqmp_pm_invoke_fn(PM_SET_SUSPEND_MODE, mode, 0, 0, 0, NULL);
+ }
++EXPORT_SYMBOL_GPL(zynqmp_pm_set_suspend_mode);
  
  /**
-+ * zynqmp_pm_set_boot_health_status() - PM API for setting healthy boot status
-+ * @value	Status value to be written
-+ *
-+ * This function sets healthy bit value to indicate boot health status
-+ * to firmware.
-+ *
-+ * @return      Returns status, either success or error+reason
-+ */
-+int zynqmp_pm_set_boot_health_status(u32 value)
-+{
-+	return zynqmp_pm_invoke_fn(PM_IOCTL, 0, IOCTL_SET_BOOT_HEALTH_STATUS,
-+				   value, 0, NULL);
-+}
-+
-+/**
-  * zynqmp_pm_reset_assert - Request setting of reset (1 - assert, 0 - release)
-  * @reset:		Reset to be configured
-  * @assert_flag:	Flag stating should reset be asserted (1) or
-@@ -984,6 +999,29 @@ static ssize_t shutdown_scope_store(struct device *device,
+  * zynqmp_pm_request_node() - Request a node with specific capabilities
+@@ -809,7 +810,6 @@ static int zynqmp_pm_aes_engine(const u64 address, u32 *out)
+ }
  
- static DEVICE_ATTR_RW(shutdown_scope);
+ static const struct zynqmp_eemi_ops eemi_ops = {
+-	.set_suspend_mode = zynqmp_pm_set_suspend_mode,
+ 	.request_node = zynqmp_pm_request_node,
+ 	.release_node = zynqmp_pm_release_node,
+ 	.set_requirement = zynqmp_pm_set_requirement,
+diff --git a/drivers/soc/xilinx/zynqmp_power.c b/drivers/soc/xilinx/zynqmp_power.c
+index f4a9371..31ff49f 100644
+--- a/drivers/soc/xilinx/zynqmp_power.c
++++ b/drivers/soc/xilinx/zynqmp_power.c
+@@ -30,7 +30,6 @@ struct zynqmp_pm_work_struct {
  
-+static ssize_t health_status_store(struct device *device,
-+				   struct device_attribute *attr,
-+				   const char *buf, size_t count)
-+{
-+	int ret;
-+	unsigned int value;
-+
-+	ret = kstrtouint(buf, 10, &value);
-+	if (ret)
-+		return ret;
-+
-+	ret = zynqmp_pm_set_boot_health_status(value);
-+	if (ret) {
-+		dev_err(device, "unable to set healthy bit value to %u\n",
-+			value);
-+		return ret;
-+	}
-+
-+	return count;
-+}
-+
-+static DEVICE_ATTR_WO(health_status);
-+
- static ssize_t ggs_show(struct device *device,
- 			struct device_attribute *attr,
- 			char *buf,
-@@ -1143,6 +1181,7 @@ static struct attribute *zynqmp_firmware_attrs[] = {
- 	&dev_attr_pggs2.attr,
- 	&dev_attr_pggs3.attr,
- 	&dev_attr_shutdown_scope.attr,
-+	&dev_attr_health_status.attr,
- 	NULL,
- };
+ static struct zynqmp_pm_work_struct *zynqmp_pm_init_suspend_work;
+ static struct mbox_chan *rx_chan;
+-static const struct zynqmp_eemi_ops *eemi_ops;
  
+ enum pm_suspend_mode {
+ 	PM_SUSPEND_MODE_FIRST = 0,
+@@ -155,9 +154,6 @@ static ssize_t suspend_mode_store(struct device *dev,
+ {
+ 	int md, ret = -EINVAL;
+ 
+-	if (!eemi_ops->set_suspend_mode)
+-		return ret;
+-
+ 	for (md = PM_SUSPEND_MODE_FIRST; md < ARRAY_SIZE(suspend_modes); md++)
+ 		if (suspend_modes[md] &&
+ 		    sysfs_streq(suspend_modes[md], buf)) {
+@@ -166,7 +162,7 @@ static ssize_t suspend_mode_store(struct device *dev,
+ 		}
+ 
+ 	if (!ret && md != suspend_mode) {
+-		ret = eemi_ops->set_suspend_mode(md);
++		ret = zynqmp_pm_set_suspend_mode(md);
+ 		if (likely(!ret))
+ 			suspend_mode = md;
+ 	}
 diff --git a/include/linux/firmware/xlnx-zynqmp.h b/include/linux/firmware/xlnx-zynqmp.h
-index c297333..5968df8 100644
+index 9aa5fe8..761caed 100644
 --- a/include/linux/firmware/xlnx-zynqmp.h
 +++ b/include/linux/firmware/xlnx-zynqmp.h
-@@ -114,6 +114,8 @@ enum pm_ioctl_id {
- 	IOCTL_READ_GGS = 13,
- 	IOCTL_WRITE_PGGS = 14,
- 	IOCTL_READ_PGGS = 15,
-+	/* Set healthy bit value */
-+	IOCTL_SET_BOOT_HEALTH_STATUS = 17,
- };
- 
- enum pm_query_id {
-@@ -354,6 +356,7 @@ int zynqmp_pm_read_ggs(u32 index, u32 *value);
- int zynqmp_pm_write_pggs(u32 index, u32 value);
- int zynqmp_pm_read_pggs(u32 index, u32 *value);
- int zynqmp_pm_system_shutdown(const u32 type, const u32 subtype);
-+int zynqmp_pm_set_boot_health_status(u32 value);
+@@ -296,7 +296,6 @@ struct zynqmp_pm_query_data {
+ struct zynqmp_eemi_ops {
+ 	int (*fpga_load)(const u64 address, const u32 size, const u32 flags);
+ 	int (*fpga_get_status)(u32 *value);
+-	int (*set_suspend_mode)(u32 mode);
+ 	int (*request_node)(const u32 node,
+ 			    const u32 capabilities,
+ 			    const u32 qos,
+@@ -336,6 +335,7 @@ int zynqmp_pm_reset_assert(const enum zynqmp_pm_reset reset,
+ 			   const enum zynqmp_pm_reset_action assert_flag);
+ int zynqmp_pm_reset_get_status(const enum zynqmp_pm_reset reset, u32 *status);
+ int zynqmp_pm_init_finalize(void);
++int zynqmp_pm_set_suspend_mode(u32 mode);
  #else
  static inline struct zynqmp_eemi_ops *zynqmp_pm_get_eemi_ops(void)
  {
-@@ -500,6 +503,10 @@ static inline int zynqmp_pm_system_shutdown(const u32 type, const u32 subtype)
+@@ -428,6 +428,10 @@ static inline int zynqmp_pm_init_finalize(void)
  {
  	return -ENODEV;
  }
-+static inline int zynqmp_pm_set_boot_health_status(u32 value)
++static inline int zynqmp_pm_set_suspend_mode(u32 mode)
 +{
 +	return -ENODEV;
 +}
