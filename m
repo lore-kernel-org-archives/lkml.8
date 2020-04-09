@@ -2,310 +2,281 @@ Return-Path: <SRS0=n+Ub=5Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8488C2BB86
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 13:47:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC1DDC2BBC7
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 13:49:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A82342083E
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 13:47:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8A6E42083E
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 13:49:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=shutemov-name.20150623.gappssmtp.com header.i=@shutemov-name.20150623.gappssmtp.com header.b="MaxLNg4M"
+	dkim=pass (2048-bit key) header.d=verdurent-com.20150623.gappssmtp.com header.i=@verdurent-com.20150623.gappssmtp.com header.b="amKfqnd8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726945AbgDINrh (ORCPT
+        id S1726926AbgDINtJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Apr 2020 09:47:37 -0400
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:45249 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726909AbgDINrh (ORCPT
+        Thu, 9 Apr 2020 09:49:09 -0400
+Received: from mail-ua1-f68.google.com ([209.85.222.68]:36649 "EHLO
+        mail-ua1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726582AbgDINtI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Apr 2020 09:47:37 -0400
-Received: by mail-lf1-f65.google.com with SMTP id f8so7901984lfe.12
-        for <linux-kernel@vger.kernel.org>; Thu, 09 Apr 2020 06:47:33 -0700 (PDT)
+        Thu, 9 Apr 2020 09:49:08 -0400
+Received: by mail-ua1-f68.google.com with SMTP id m15so3943067uao.3
+        for <linux-kernel@vger.kernel.org>; Thu, 09 Apr 2020 06:49:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=shutemov-name.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=WxsYhONXDtg1Qnn/7QLfd5zufk95XV6uJBDX4X8LzJA=;
-        b=MaxLNg4MeUv/EiG4b4oMCllB2q9YzMybpCipimycYIpFj58ZQeC3gvMhyAdGRCXwjk
-         5cjDqK0v93j45uMHPpLa/m+5d13M4W/s81VebSP5pkIt3EYESVPDHbuOA12QaHlPpJ3h
-         QbjNGX5zXhg+JWS2kriCpl8b2cc3I2nHw4cG2gBF4PqFsl0IBqvMgfRxPqrpiJdm+UmR
-         7pGCsSsotxnuUHQbgcbiXtjA74Nowd0c/BK4HTIKKFQlJblUWwQhcUe8yEaY61DKL/ZL
-         Zt2hxcHgIuUd1OCykxE5QQNIxgJbtzTsl4jyG/tXa3VLdSyKCN+Wm3bB7OWd37MPLNDR
-         D8zA==
+        d=verdurent-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=5dJ2iz6mYeufR/3a819TAwvmat0FG6WlCPrzsZs/LR0=;
+        b=amKfqnd8WQyQUAwi4cZoNrTICQeFaNVJPH28XmKBDQXacysYodktIyiN2ndQx+TQcv
+         bE1YQidGEZu1EqGjm0MH4mmpq5nA+42ldSSrTL99PS28PvRiy5Hu36Cw1+BHd0Q73auH
+         i7MxRDbVc1bfVrS2iATOcjNUHRMwaGOf7ARFElgadRaI+Se1QV8mAOs2BNZiqLtpCn8c
+         oTRo6ATdFF9BsWVB81GBQe4ny1no9JSpdhqD2Z9AjhLDI+EVj/kkJjI4KioULc4bTIrU
+         53JZXLEI3Y9kZK43il6Z+a7GkDur/yKP+teUqIU/+86Cx0fcoAj2NCUItb1asfK4YGnz
+         WjZw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=WxsYhONXDtg1Qnn/7QLfd5zufk95XV6uJBDX4X8LzJA=;
-        b=Ft0wjaH1ZynifD2mk3rvvZ1Qis3+S6KTOjJpREdrUooOafkFb/GFjqjLwIAdDJ4ouh
-         mOTUl1PHGFfC/ldLDIMGeMw4s9NiONVOuHT2ll8a6A3GT1mHfQQJCy3jhxFvIflRsnhL
-         X4iPJGt9Xp1CeIYJ8avGs/8WsFdhUr9oh766WCrmx98LySD/s+qU7ftoOwphtkuXOYry
-         DBo/iCXGSQ1A7lMzsxjDb6LuL0xS32573bGNigxOTBmgB8i4XYbGLh3f9i2+9jwOyf5E
-         n9+y21HsAK4emAtNBw35bmBukYXl81MTnhOUDFxIQdAv1pGQ+peCnpzrqEjB/hpEYd4h
-         RuuQ==
-X-Gm-Message-State: AGi0PuZePVZZgYMm8n/F6d0oLpuQJj51IIsiJTqGPpXoGXHw5MWtB8oj
-        8+DF2c3Em1ooiIJxkeaZGbTVpCvI0Y0=
-X-Google-Smtp-Source: APiQypJP9qtYbfLDSmGwAGfgQmuDfCaNxupeyzaT1jKHaLGrNLlzLjmOigRxu/5HqjUKmB6SHzLnFw==
-X-Received: by 2002:ac2:4112:: with SMTP id b18mr7811723lfi.106.1586440052534;
-        Thu, 09 Apr 2020 06:47:32 -0700 (PDT)
-Received: from box.localdomain ([86.57.175.117])
-        by smtp.gmail.com with ESMTPSA id f21sm14172811lfk.94.2020.04.09.06.47.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 09 Apr 2020 06:47:31 -0700 (PDT)
-Received: by box.localdomain (Postfix, from userid 1000)
-        id 4FA85102132; Thu,  9 Apr 2020 16:47:31 +0300 (+03)
-Date:   Thu, 9 Apr 2020 16:47:31 +0300
-From:   "Kirill A. Shutemov" <kirill@shutemov.name>
-To:     Yang Shi <yang.shi@linux.alibaba.com>
-Cc:     akpm@linux-foundation.org, Andrea Arcangeli <aarcange@redhat.com>,
-        Zi Yan <ziy@nvidia.com>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-Subject: Re: [PATCHv2 6/8] khugepaged: Allow to collapse PTE-mapped compound
- pages
-Message-ID: <20200409134731.hm5a7ye7tljdguge@box>
-References: <20200403112928.19742-1-kirill.shutemov@linux.intel.com>
- <20200403112928.19742-7-kirill.shutemov@linux.intel.com>
- <10820b6f-f15a-1768-3aca-d0f464185b5e@linux.alibaba.com>
- <20200408132948.axaz3ytquoulaazp@box>
- <90b803eb-e3ba-bcf7-7987-6f0e33f76d4c@linux.alibaba.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=5dJ2iz6mYeufR/3a819TAwvmat0FG6WlCPrzsZs/LR0=;
+        b=QHCiCO2/cRTIyUAj+XoI2GaGc776BUnoV8ay94PgO8LXanbA3tzE6wsS1AYhRiIXhx
+         +wueHzEvd39iF2vjylfg+G/ITTGO/k5Uel+6+tGRPGLfjfgN1G099bzLGBtbhLAlfQED
+         ytcf5+VZmdfczrwJ1EQ+jbe51rC2c/jQJqvAaANZj52RZGIQi7FWrBOrNXM6dZuFMgUh
+         0UcxyF+NANOnFdKa3vsORqSy3LsIHQ4971LyYjRcXW0CfMtpUKbUmJB7dFfj1H7NELKd
+         p1VPiJ3xEIUutPiKZqdMa0oqb5KLBsXE11woTNG312lu93+swg3JxW9j9DN/8hGNT9Dt
+         GyGw==
+X-Gm-Message-State: AGi0Pua72HpfLZR5eZjXUkemXMAjz1mn2LmS4Z5z3vWO9v5k2yDUFlQe
+        CT0suW2TQZx12NNBho4bmLX5zayMF1FTvJ0Jhr/7WQ==
+X-Google-Smtp-Source: APiQypJeghsuGIyn0WvqoYX5wxkTIWjxtH/G1Qe+Ftm6KAYOlTTo2AJGBIWDmRQ2iRf8Hp4GTBdezU70qfNWPExhJhA=
+X-Received: by 2002:ab0:654c:: with SMTP id x12mr9506156uap.48.1586440147159;
+ Thu, 09 Apr 2020 06:49:07 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <90b803eb-e3ba-bcf7-7987-6f0e33f76d4c@linux.alibaba.com>
+References: <1586407908-27139-1-git-send-email-Anson.Huang@nxp.com>
+In-Reply-To: <1586407908-27139-1-git-send-email-Anson.Huang@nxp.com>
+From:   Amit Kucheria <amit.kucheria@verdurent.com>
+Date:   Thu, 9 Apr 2020 19:18:56 +0530
+Message-ID: <CAHLCerPi36z4z4DLmP9czEp8aw8yQq7EHAtHdCFLO2ZVYBZsRA@mail.gmail.com>
+Subject: Re: [PATCH] dt-bindings: thermal: Convert i.MX to json-schema
+To:     Anson Huang <Anson.Huang@nxp.com>
+Cc:     Zhang Rui <rui.zhang@intel.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>, kernel@pengutronix.de,
+        Fabio Estevam <festevam@gmail.com>,
+        Linux PM list <linux-pm@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        lakml <linux-arm-kernel@lists.infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        dl-linux-imx <Linux-imx@nxp.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 08, 2020 at 11:57:27AM -0700, Yang Shi wrote:
-> 
-> 
-> On 4/8/20 6:29 AM, Kirill A. Shutemov wrote:
-> > On Mon, Apr 06, 2020 at 02:29:35PM -0700, Yang Shi wrote:
-> > > 
-> > > On 4/3/20 4:29 AM, Kirill A. Shutemov wrote:
-> > > > We can collapse PTE-mapped compound pages. We only need to avoid
-> > > > handling them more than once: lock/unlock page only once if it's present
-> > > > in the PMD range multiple times as it handled on compound level. The
-> > > > same goes for LRU isolation and putback.
-> > > > 
-> > > > Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
-> > > > ---
-> > > >    mm/khugepaged.c | 103 ++++++++++++++++++++++++++++++++----------------
-> > > >    1 file changed, 68 insertions(+), 35 deletions(-)
-> > > > 
-> > > > diff --git a/mm/khugepaged.c b/mm/khugepaged.c
-> > > > index 1e7e6543ebca..49e56e4e30d1 100644
-> > > > --- a/mm/khugepaged.c
-> > > > +++ b/mm/khugepaged.c
-> > > > @@ -515,23 +515,37 @@ void __khugepaged_exit(struct mm_struct *mm)
-> > > >    static void release_pte_page(struct page *page)
-> > > >    {
-> > > > -	dec_node_page_state(page, NR_ISOLATED_ANON + page_is_file_cache(page));
-> > > > +	mod_node_page_state(page_pgdat(page),
-> > > > +			NR_ISOLATED_ANON + page_is_file_cache(page),
-> > > > +			-compound_nr(page));
-> > > >    	unlock_page(page);
-> > > >    	putback_lru_page(page);
-> > > >    }
-> > > > -static void release_pte_pages(pte_t *pte, pte_t *_pte)
-> > > > +static void release_pte_pages(pte_t *pte, pte_t *_pte,
-> > > > +		struct list_head *compound_pagelist)
-> > > >    {
-> > > > +	struct page *page, *tmp;
-> > > > +
-> > > >    	while (--_pte >= pte) {
-> > > >    		pte_t pteval = *_pte;
-> > > > -		if (!pte_none(pteval) && !is_zero_pfn(pte_pfn(pteval)))
-> > > > -			release_pte_page(pte_page(pteval));
-> > > > +
-> > > > +		page = pte_page(pteval);
-> > > > +		if (!pte_none(pteval) && !is_zero_pfn(pte_pfn(pteval)) &&
-> > > > +				!PageCompound(page))
-> > > > +			release_pte_page(page);
-> > > > +	}
-> > > > +
-> > > > +	list_for_each_entry_safe(page, tmp, compound_pagelist, lru) {
-> > > > +		list_del(&page->lru);
-> > > > +		release_pte_page(page);
-> > > >    	}
-> > > >    }
-> > > >    static int __collapse_huge_page_isolate(struct vm_area_struct *vma,
-> > > >    					unsigned long address,
-> > > > -					pte_t *pte)
-> > > > +					pte_t *pte,
-> > > > +					struct list_head *compound_pagelist)
-> > > >    {
-> > > >    	struct page *page = NULL;
-> > > >    	pte_t *_pte;
-> > > > @@ -561,13 +575,21 @@ static int __collapse_huge_page_isolate(struct vm_area_struct *vma,
-> > > >    			goto out;
-> > > >    		}
-> > > > -		/* TODO: teach khugepaged to collapse THP mapped with pte */
-> > > > +		VM_BUG_ON_PAGE(!PageAnon(page), page);
-> > > > +
-> > > >    		if (PageCompound(page)) {
-> > > > -			result = SCAN_PAGE_COMPOUND;
-> > > > -			goto out;
-> > > > -		}
-> > > > +			struct page *p;
-> > > > +			page = compound_head(page);
-> > > > -		VM_BUG_ON_PAGE(!PageAnon(page), page);
-> > > > +			/*
-> > > > +			 * Check if we have dealt with the compound page
-> > > > +			 * already
-> > > > +			 */
-> > > > +			list_for_each_entry(p, compound_pagelist, lru) {
-> > > > +				if (page == p)
-> > > > +					goto next;
-> > > > +			}
-> > > > +		}
-> > > >    		/*
-> > > >    		 * We can do it before isolate_lru_page because the
-> > > > @@ -597,19 +619,15 @@ static int __collapse_huge_page_isolate(struct vm_area_struct *vma,
-> > > >    			result = SCAN_PAGE_COUNT;
-> > > >    			goto out;
-> > > >    		}
-> > > > -		if (pte_write(pteval)) {
-> > > > -			writable = true;
-> > > > -		} else {
-> > > > -			if (PageSwapCache(page) &&
-> > > > -			    !reuse_swap_page(page, NULL)) {
-> > > > -				unlock_page(page);
-> > > > -				result = SCAN_SWAP_CACHE_PAGE;
-> > > > -				goto out;
-> > > > -			}
-> > > > +		if (!pte_write(pteval) && PageSwapCache(page) &&
-> > > > +				!reuse_swap_page(page, NULL)) {
-> > > >    			/*
-> > > > -			 * Page is not in the swap cache. It can be collapsed
-> > > > -			 * into a THP.
-> > > > +			 * Page is in the swap cache and cannot be re-used.
-> > > > +			 * It cannot be collapsed into a THP.
-> > > >    			 */
-> > > > +			unlock_page(page);
-> > > > +			result = SCAN_SWAP_CACHE_PAGE;
-> > > > +			goto out;
-> > > >    		}
-> > > >    		/*
-> > > > @@ -621,16 +639,23 @@ static int __collapse_huge_page_isolate(struct vm_area_struct *vma,
-> > > >    			result = SCAN_DEL_PAGE_LRU;
-> > > >    			goto out;
-> > > >    		}
-> > > > -		inc_node_page_state(page,
-> > > > -				NR_ISOLATED_ANON + page_is_file_cache(page));
-> > > > +		mod_node_page_state(page_pgdat(page),
-> > > > +				NR_ISOLATED_ANON + page_is_file_cache(page),
-> > > > +				compound_nr(page));
-> > > >    		VM_BUG_ON_PAGE(!PageLocked(page), page);
-> > > >    		VM_BUG_ON_PAGE(PageLRU(page), page);
-> > > > +		if (PageCompound(page))
-> > > > +			list_add_tail(&page->lru, compound_pagelist);
-> > > > +next:
-> > > >    		/* There should be enough young pte to collapse the page */
-> > > >    		if (pte_young(pteval) ||
-> > > >    		    page_is_young(page) || PageReferenced(page) ||
-> > > >    		    mmu_notifier_test_young(vma->vm_mm, address))
-> > > >    			referenced++;
-> > > > +
-> > > > +		if (pte_write(pteval))
-> > > > +			writable = true;
-> > > >    	}
-> > > >    	if (likely(writable)) {
-> > > >    		if (likely(referenced)) {
-> > > > @@ -644,7 +669,7 @@ static int __collapse_huge_page_isolate(struct vm_area_struct *vma,
-> > > >    	}
-> > > >    out:
-> > > > -	release_pte_pages(pte, _pte);
-> > > > +	release_pte_pages(pte, _pte, compound_pagelist);
-> > > >    	trace_mm_collapse_huge_page_isolate(page, none_or_zero,
-> > > >    					    referenced, writable, result);
-> > > >    	return 0;
-> > > > @@ -653,13 +678,14 @@ static int __collapse_huge_page_isolate(struct vm_area_struct *vma,
-> > > >    static void __collapse_huge_page_copy(pte_t *pte, struct page *page,
-> > > >    				      struct vm_area_struct *vma,
-> > > >    				      unsigned long address,
-> > > > -				      spinlock_t *ptl)
-> > > > +				      spinlock_t *ptl,
-> > > > +				      struct list_head *compound_pagelist)
-> > > >    {
-> > > > +	struct page *src_page, *tmp;
-> > > >    	pte_t *_pte;
-> > > >    	for (_pte = pte; _pte < pte + HPAGE_PMD_NR;
-> > > >    				_pte++, page++, address += PAGE_SIZE) {
-> > > >    		pte_t pteval = *_pte;
-> > > > -		struct page *src_page;
-> > > >    		if (pte_none(pteval) || is_zero_pfn(pte_pfn(pteval))) {
-> > > >    			clear_user_highpage(page, address);
-> > > > @@ -679,7 +705,6 @@ static void __collapse_huge_page_copy(pte_t *pte, struct page *page,
-> > > >    		} else {
-> > > >    			src_page = pte_page(pteval);
-> > > >    			copy_user_highpage(page, src_page, address, vma);
-> > > > -			release_pte_page(src_page);
-> > > >    			/*
-> > > >    			 * ptl mostly unnecessary, but preempt has to
-> > > >    			 * be disabled to update the per-cpu stats
-> > > > @@ -693,9 +718,18 @@ static void __collapse_huge_page_copy(pte_t *pte, struct page *page,
-> > > >    			pte_clear(vma->vm_mm, address, _pte);
-> > > >    			page_remove_rmap(src_page, false);
-> > > >    			spin_unlock(ptl);
-> > > > -			free_page_and_swap_cache(src_page);
-> > > > +			if (!PageCompound(src_page)) {
-> > > > +				release_pte_page(src_page);
-> > > > +				free_page_and_swap_cache(src_page);
-> > > > +			}
-> > > >    		}
-> > > >    	}
-> > > > +
-> > > > +	list_for_each_entry_safe(src_page, tmp, compound_pagelist, lru) {
-> > > > +		list_del(&src_page->lru);
-> > > > +		release_pte_page(src_page);
-> > > > +		free_page_and_swap_cache(src_page);
-> > > > +	}
-> > > It looks this may mess up the PTE-mapped THP's refcount if it has multiple
-> > > PTE-mapped subpages since put_page() is not called for every PTE-mapped
-> > > subpages.
-> > Good catch!
-> > 
-> > I *think* something like this should fix the issue (untested):
-> 
-> Is this an incremental fix?
+Hi Anson,
 
-Yes. I will fold it in before the next submission.
+On Thu, Apr 9, 2020 at 10:29 AM Anson Huang <Anson.Huang@nxp.com> wrote:
+>
+> Convert the i.MX thermal binding to DT schema format using json-schema
+>
+> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+> ---
+>  .../devicetree/bindings/thermal/imx-thermal.txt    | 61 --------------
+>  .../devicetree/bindings/thermal/imx-thermal.yaml   | 97 ++++++++++++++++++++++
+>  2 files changed, 97 insertions(+), 61 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/thermal/imx-thermal.txt
+>  create mode 100644 Documentation/devicetree/bindings/thermal/imx-thermal.yaml
+>
+> diff --git a/Documentation/devicetree/bindings/thermal/imx-thermal.txt b/Documentation/devicetree/bindings/thermal/imx-thermal.txt
+> deleted file mode 100644
+> index 823e417..0000000
+> --- a/Documentation/devicetree/bindings/thermal/imx-thermal.txt
+> +++ /dev/null
+> @@ -1,61 +0,0 @@
+> -* Temperature Monitor (TEMPMON) on Freescale i.MX SoCs
+> -
+> -Required properties:
+> -- compatible : must be one of following:
+> -  - "fsl,imx6q-tempmon" for i.MX6Q,
+> -  - "fsl,imx6sx-tempmon" for i.MX6SX,
+> -  - "fsl,imx7d-tempmon" for i.MX7S/D.
+> -- interrupts : the interrupt output of the controller:
+> -  i.MX6Q has one IRQ which will be triggered when temperature is higher than high threshold,
+> -  i.MX6SX and i.MX7S/D have two more IRQs than i.MX6Q, one is IRQ_LOW and the other is IRQ_PANIC,
+> -  when temperature is below than low threshold, IRQ_LOW will be triggered, when temperature
+> -  is higher than panic threshold, system will auto reboot by SRC module.
+> -- fsl,tempmon : phandle pointer to system controller that contains TEMPMON
+> -  control registers, e.g. ANATOP on imx6q.
+> -- nvmem-cells: A phandle to the calibration cells provided by ocotp.
+> -- nvmem-cell-names: Should be "calib", "temp_grade".
+> -
+> -Deprecated properties:
+> -- fsl,tempmon-data : phandle pointer to fuse controller that contains TEMPMON
+> -  calibration data, e.g. OCOTP on imx6q.  The details about calibration data
+> -  can be found in SoC Reference Manual.
+> -
+> -Direct access to OCOTP via fsl,tempmon-data is incorrect on some newer chips
+> -because it does not handle OCOTP clock requirements.
+> -
+> -Optional properties:
+> -- clocks : thermal sensor's clock source.
+> -
+> -Example:
+> -ocotp: ocotp@21bc000 {
+> -       #address-cells = <1>;
+> -       #size-cells = <1>;
+> -       compatible = "fsl,imx6sx-ocotp", "syscon";
+> -       reg = <0x021bc000 0x4000>;
+> -       clocks = <&clks IMX6SX_CLK_OCOTP>;
+> -
+> -       tempmon_calib: calib@38 {
+> -               reg = <0x38 4>;
+> -       };
+> -
+> -       tempmon_temp_grade: temp-grade@20 {
+> -               reg = <0x20 4>;
+> -       };
+> -};
+> -
+> -tempmon: tempmon {
+> -       compatible = "fsl,imx6sx-tempmon", "fsl,imx6q-tempmon";
+> -       interrupts = <GIC_SPI 49 IRQ_TYPE_LEVEL_HIGH>;
+> -       fsl,tempmon = <&anatop>;
+> -       nvmem-cells = <&tempmon_calib>, <&tempmon_temp_grade>;
+> -       nvmem-cell-names = "calib", "temp_grade";
+> -       clocks = <&clks IMX6SX_CLK_PLL3_USB_OTG>;
+> -};
+> -
+> -Legacy method (Deprecated):
+> -tempmon {
+> -       compatible = "fsl,imx6q-tempmon";
+> -       fsl,tempmon = <&anatop>;
+> -       fsl,tempmon-data = <&ocotp>;
+> -       clocks = <&clks 172>;
+> -};
+> diff --git a/Documentation/devicetree/bindings/thermal/imx-thermal.yaml b/Documentation/devicetree/bindings/thermal/imx-thermal.yaml
+> new file mode 100644
+> index 0000000..ad12622
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/thermal/imx-thermal.yaml
+> @@ -0,0 +1,97 @@
+> +# SPDX-License-Identifier: GPL-2.0
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/thermal/imx-thermal.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: NXP i.MX Thermal Binding
+> +
+> +maintainers:
+> +  - Anson Huang <Anson.Huang@nxp.com>
+> +
+> +properties:
+> +  compatible:
+> +    oneOf:
+> +      - items:
+> +          - enum:
+> +              - fsl,imx6q-tempmon
+> +              - fsl,imx6sx-tempmon
+> +              - fsl,imx7d-tempmon
+> +
 
-> > diff --git a/mm/khugepaged.c b/mm/khugepaged.c
-> > index bfb6155f1d69..9a96f9bff798 100644
-> > --- a/mm/khugepaged.c
-> > +++ b/mm/khugepaged.c
-> > @@ -570,6 +570,7 @@ static void release_pte_pages(pte_t *pte, pte_t *_pte,
-> >   	list_for_each_entry_safe(page, tmp, compound_pagelist, lru) {
-> >   		list_del(&page->lru);
-> >   		release_pte_page(page);
-> > +		put_page(page);
-> >   	}
-> >   }
-> > @@ -682,8 +683,10 @@ static int __collapse_huge_page_isolate(struct vm_area_struct *vma,
-> >   		VM_BUG_ON_PAGE(!PageLocked(page), page);
-> >   		VM_BUG_ON_PAGE(PageLRU(page), page);
-> > -		if (PageCompound(page))
-> > +		if (PageCompound(page)) {
-> >   			list_add_tail(&page->lru, compound_pagelist);
-> > +			get_page(page);
-> 
-> I don't get why we have to bump refcount here? The THP won't go away since
-> it is pinned by isolation. I'm supposed calling
-> free_page_and_swap_cache(src_page) in each loop looks good enough to dec
-> refcount for each PTE-mapped subpage.
-> 
-> Then calling release_pte_page() for each entry on compund_pagelist outside
-> the loop to release the pin from isolation. The compound page would get
-> freed via pagevec finally.
+> +  interrupts:
+> +    description: |
+> +      The interrupt output of the controller, the IRQ will be triggered
+> +      when temperature is higher than high threshold.
+> +    maxItems: 1
+> +
 
-Fair enough.
+imx6sx and imx7d have 3 interrupts each. So you need an if clause to
+change the interrupt number based on what compatible is provided. See
+qcom-tsens.yaml for an example.
 
--- 
- Kirill A. Shutemov
+> +  nvmem-cells:
+> +    description: |
+> +      Phandle to the calibration cells provided by ocotp for calibration
+> +      data and temperature grade.
+> +    maxItems: 2
+> +
+> +  nvmem-cell-names:
+> +    maxItems: 2
+> +    items:
+> +      - const: calib
+> +      - const: temp_grade
+> +
+> +  fsl,tempmon:
+> +    description: |
+> +      Phandle pointer to system controller that contains TEMPMON control
+> +      registers, e.g. ANATOP on imx6q.
+> +    $ref: '/schemas/types.yaml#/definitions/phandle'
+
+Nit: move $ref line above description. IMO it makes the binding easier to read.
+
+> +
+> +  fsl,tempmon-data:
+> +    description: |
+> +      Deprecated property, phandle pointer to fuse controller that contains
+> +      TEMPMON calibration data, e.g. OCOTP on imx6q. The details about
+> +      calibration data can be found in SoC Reference Manual.
+> +    $ref: '/schemas/types.yaml#/definitions/phandle'
+
+Nit: move $ref line above description. IMO it makes the binding easier to read.
+
+> +
+> +  clocks:
+> +    description: |
+> +      Thermal sensor's clock source.
+> +    maxItems: 1
+> +
+> +required:
+> +  - compatible
+> +  - interrupts
+> +  - fsl,tempmon
+> +  - clocks
+
+Clocks was an optional property before, are you sure?
+
+> +  - nvmem-cells
+> +  - nvmem-cell-names
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/clock/imx6sx-clock.h>
+> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
+> +
+> +    ocotp: ocotp@21bc000 {
+> +         #address-cells = <1>;
+> +         #size-cells = <1>;
+> +         compatible = "fsl,imx6sx-ocotp", "syscon";
+> +         reg = <0x021bc000 0x4000>;
+> +         clocks = <&clks IMX6SX_CLK_OCOTP>;
+> +
+> +         tempmon_calib: calib@38 {
+> +             reg = <0x38 4>;
+> +         };
+> +
+> +         tempmon_temp_grade: temp-grade@20 {
+> +             reg = <0x20 4>;
+> +         };
+> +    };
+> +
+> +    tempmon: tempmon {
+> +         compatible = "fsl,imx6sx-tempmon";
+> +         interrupts = <GIC_SPI 49 IRQ_TYPE_LEVEL_HIGH>;
+> +         fsl,tempmon = <&anatop>;
+> +         nvmem-cells = <&tempmon_calib>, <&tempmon_temp_grade>;
+> +         nvmem-cell-names = "calib", "temp_grade";
+> +         clocks = <&clks IMX6SX_CLK_PLL3_USB_OTG>;
+> +    };
+> +
+> +...
+> --
+> 2.7.4
+>
