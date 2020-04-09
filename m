@@ -2,158 +2,194 @@ Return-Path: <SRS0=n+Ub=5Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,TVD_SUBJ_WIPE_DEBT,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F06CC2BB86
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 14:18:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91EB8C2BBC7
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 14:19:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 317C620771
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 14:18:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 617D120A8B
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 14:19:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BC90dwXA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727749AbgDIOSr (ORCPT
+        id S1727755AbgDIOTo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Apr 2020 10:18:47 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:9274 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726977AbgDIOSr (ORCPT
+        Thu, 9 Apr 2020 10:19:44 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:40243 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726977AbgDIOTn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Apr 2020 10:18:47 -0400
-Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 039E3GnA110666;
-        Thu, 9 Apr 2020 10:18:45 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 30920xgsj7-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 09 Apr 2020 10:18:45 -0400
-Received: from m0098421.ppops.net (m0098421.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 039E4OfI115723;
-        Thu, 9 Apr 2020 10:18:45 -0400
-Received: from ppma04dal.us.ibm.com (7a.29.35a9.ip4.static.sl-reverse.com [169.53.41.122])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 30920xgshu-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 09 Apr 2020 10:18:45 -0400
-Received: from pps.filterd (ppma04dal.us.ibm.com [127.0.0.1])
-        by ppma04dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 039EF4gU008147;
-        Thu, 9 Apr 2020 14:18:44 GMT
-Received: from b03cxnp08027.gho.boulder.ibm.com (b03cxnp08027.gho.boulder.ibm.com [9.17.130.19])
-        by ppma04dal.us.ibm.com with ESMTP id 3091me94vh-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 09 Apr 2020 14:18:44 +0000
-Received: from b03ledav001.gho.boulder.ibm.com (b03ledav001.gho.boulder.ibm.com [9.17.130.232])
-        by b03cxnp08027.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 039EIeC34784668
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 9 Apr 2020 14:18:40 GMT
-Received: from b03ledav001.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id BD9DC6E05D;
-        Thu,  9 Apr 2020 14:18:40 +0000 (GMT)
-Received: from b03ledav001.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 8CBF06E054;
-        Thu,  9 Apr 2020 14:18:39 +0000 (GMT)
-Received: from cpe-172-100-173-215.stny.res.rr.com (unknown [9.85.171.227])
-        by b03ledav001.gho.boulder.ibm.com (Postfix) with ESMTP;
-        Thu,  9 Apr 2020 14:18:39 +0000 (GMT)
-Subject: Re: [PATCH v7 06/15] s390/vfio-ap: sysfs attribute to display the
- guest CRYCB
-To:     Cornelia Huck <cohuck@redhat.com>
-Cc:     linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org, freude@linux.ibm.com, borntraeger@de.ibm.com,
-        mjrosato@linux.ibm.com, pmorel@linux.ibm.com, pasic@linux.ibm.com,
-        alex.williamson@redhat.com, kwankhede@nvidia.com,
-        jjherne@linux.ibm.com, fiuczy@linux.ibm.com
-References: <20200407192015.19887-1-akrowiak@linux.ibm.com>
- <20200407192015.19887-7-akrowiak@linux.ibm.com>
- <20200408123344.1a9032e1.cohuck@redhat.com>
- <60c6bfb6-dd0a-75dc-1043-8dffe983220a@linux.ibm.com>
- <20200408184606.309d9cd9.cohuck@redhat.com>
-From:   Tony Krowiak <akrowiak@linux.ibm.com>
-Message-ID: <e5823678-9f17-2849-09c1-d4db39b4e696@linux.ibm.com>
-Date:   Thu, 9 Apr 2020 10:18:38 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Thu, 9 Apr 2020 10:19:43 -0400
+Received: by mail-wr1-f67.google.com with SMTP id s8so12105071wrt.7;
+        Thu, 09 Apr 2020 07:19:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ZUmhXgHoG6HvjILgsbXz8GHCgll+LOxrRpBdz13V/lg=;
+        b=BC90dwXA5AK4WR90ooTtvULwZnu4ZsRVQnQLV9NzDFZ7lKqicRXsEGPNedNOxy+3QI
+         a1kmoOXSFteeDxdRL+7e8P62DjjD9bQZg3s3fofRhJoe7L1J9a46LbUxrQ6AtBTORXKV
+         NDIKSoT9CEStlFz6MiX3tbzgvTr7KX9SEjLdYBH0eiP7EZNSClTpfzc0SSPSYynPiChj
+         rYQTfJjtkntOCwrv+a6GMvAsCqYj/CQkd4PMEIkllHf9XhpKzORn/6xDs0+pafSbvmxv
+         oU2GBI4+6mAQrXmQRuIHv6FAH1pdnq+zGKXLFmqILm/RS3QETgMEHnp/o0W7dlcGkPIh
+         SqeA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ZUmhXgHoG6HvjILgsbXz8GHCgll+LOxrRpBdz13V/lg=;
+        b=RDl7sinI4dbRLE8IkhQIZeGMRk2aHuMnCINsz8Wfzhl7mEMFNJLbCCydSPrdXp6W8K
+         gosKEnsjgExDQ56dHzsLcgIYm8IFhVy9KSZ4q3M6q9W/wVsr1pJ5H81zdjyGpEOSFGKQ
+         8j/uOjdAwMQdReqkvnd6TDre4bOBIiEH253W3dyp8fkRydqABjZquNos1prT7pJxCY02
+         DHvr94MXV9YqYt5cGOj3xLjLr5v28LTQx7TQ7gReJSYNYxwkVmVf0Efop9NC4CXWDjTl
+         LrhwjYrUk2o+Y6sVkMzl4KYDP/kecuop6JyOzQVNiC9gjvQySeFnpvUiGD22DObQ9NoU
+         or0Q==
+X-Gm-Message-State: AGi0PuZad56Av4AwNmGHlJRjGilIQr9qJcNh0DEOD3sHhkBt6/Mu43AY
+        /v5LiTr8x+IJq5bXuTTZjfmuFSFnfqTBxb+gCEp5JQ==
+X-Google-Smtp-Source: APiQypLOoBbfys5GjBpuB2sw0gQny4RebKmCrdoglSc09SupmnqmNJDVTgB3bGVTn0oBHL2+TIHKXrenRgwfEr3zhLg=
+X-Received: by 2002:a5d:4145:: with SMTP id c5mr9091691wrq.362.1586441981450;
+ Thu, 09 Apr 2020 07:19:41 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200408184606.309d9cd9.cohuck@redhat.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
- definitions=2020-04-09_04:2020-04-07,2020-04-09 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 adultscore=0
- impostorscore=0 spamscore=0 priorityscore=1501 bulkscore=0 malwarescore=0
- lowpriorityscore=0 mlxlogscore=999 mlxscore=0 clxscore=1015 suspectscore=3
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
- definitions=main-2004090105
+References: <20200408115926.1467567-1-hch@lst.de> <20200408115926.1467567-20-hch@lst.de>
+ <20200408122504.GO3456981@phenom.ffwll.local> <eb48f7b6327e482ea9911b129210c0417ab48345.camel@kernel.crashing.org>
+ <CAKMK7uHtkLvdsWFGiAtkzVa5mpnDvXkn3CHZQ6bgJ_enbyAc8A@mail.gmail.com>
+In-Reply-To: <CAKMK7uHtkLvdsWFGiAtkzVa5mpnDvXkn3CHZQ6bgJ_enbyAc8A@mail.gmail.com>
+From:   Alex Deucher <alexdeucher@gmail.com>
+Date:   Thu, 9 Apr 2020 10:19:30 -0400
+Message-ID: <CADnq5_MjTSm6j=_8huVQ854H6jXY5Rg36wc31QDfOpfjfscWxA@mail.gmail.com>
+Subject: Re: [PATCH 19/28] gpu/drm: remove the powerpc hack in drm_legacy_sg_alloc
+To:     Daniel Vetter <daniel@ffwll.ch>
+Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        linux-hyperv@vger.kernel.org, David Airlie <airlied@linux.ie>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Linux MM <linux-mm@kvack.org>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        "open list:GENERIC INCLUDE/A..." <linux-arch@vger.kernel.org>,
+        linux-s390@vger.kernel.org, Wei Liu <wei.liu@kernel.org>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        X86 ML <x86@kernel.org>, Christoph Hellwig <hch@lst.de>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Laura Abbott <labbott@redhat.com>,
+        Nitin Gupta <ngupta@vflare.org>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        "moderated list:DMA BUFFER SHARING FRAMEWORK" 
+        <linaro-mm-sig@lists.linaro.org>, bpf <bpf@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Minchan Kim <minchan@kernel.org>,
+        "list@263.net:IOMMU DRIVERS <iommu@lists.linux-foundation.org>, Joerg
+        Roedel <joro@8bytes.org>," <iommu@lists.linux-foundation.org>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 4/8/20 12:46 PM, Cornelia Huck wrote:
-> On Wed, 8 Apr 2020 12:38:49 -0400
-> Tony Krowiak <akrowiak@linux.ibm.com> wrote:
+On Thu, Apr 9, 2020 at 5:41 AM Daniel Vetter <daniel@ffwll.ch> wrote:
 >
->> On 4/8/20 6:33 AM, Cornelia Huck wrote:
->>> On Tue,  7 Apr 2020 15:20:06 -0400
->>> Tony Krowiak <akrowiak@linux.ibm.com> wrote:
->>>   
->>>> The matrix of adapters and domains configured in a guest's CRYCB may
->>>> differ from the matrix of adapters and domains assigned to the matrix mdev,
->>>> so this patch introduces a sysfs attribute to display the CRYCB of a guest
->>>> using the matrix mdev. For a matrix mdev denoted by $uuid, the crycb for a
->>>> guest using the matrix mdev can be displayed as follows:
->>>>
->>>>      cat /sys/devices/vfio_ap/matrix/$uuid/guest_matrix
->>>>
->>>> If a guest is not using the matrix mdev at the time the crycb is displayed,
->>>> an error (ENODEV) will be returned.
->>>>
->>>> Signed-off-by: Tony Krowiak <akrowiak@linux.ibm.com>
->>>> ---
->>>>    drivers/s390/crypto/vfio_ap_ops.c | 58 +++++++++++++++++++++++++++++++
->>>>    1 file changed, 58 insertions(+)
->>>> +static DEVICE_ATTR_RO(guest_matrix);
->>> Hm... should information like the guest configuration be readable by
->>> everyone? Or should it be restricted a bit more?
->> Why? The matrix attribute already displays the APQNs of the queues
->> assigned to the matrix mdev. The guest_matrix attribute merely displays
->> a subset of the matrix (i.e., the APQNs assigned to the mdev that reference
->> queue devices bound to the vfio_ap device driver).
->>
->> How can this be restricted?
-> I was thinking of using e.g. 400 instead of 444 for the permissions.
+> On Thu, Apr 9, 2020 at 10:54 AM Benjamin Herrenschmidt
+> <benh@kernel.crashing.org> wrote:
+> >
+> > On Wed, 2020-04-08 at 14:25 +0200, Daniel Vetter wrote:
+> > > On Wed, Apr 08, 2020 at 01:59:17PM +0200, Christoph Hellwig wrote:
+> > > > If this code was broken for non-coherent caches a crude powerpc hack
+> > > > isn't going to help anyone else.  Remove the hack as it is the last
+> > > > user of __vmalloc passing a page protection flag other than PAGE_KERNEL.
+> > >
+> > > Well Ben added this to make stuff work on ppc, ofc the home grown dma
+> > > layer in drm from back then isn't going to work in other places. I guess
+> > > should have at least an ack from him, in case anyone still cares about
+> > > this on ppc. Adding Ben to cc.
+> >
+> > This was due to some drivers (radeon ?) trying to use vmalloc pages for
+> > coherent DMA, which means on those 4xx powerpc's need to be non-cached.
+> >
+> > There were machines using that (440 based iirc), though I honestly
+> > can't tell if anybody still uses any of it.
 >
-> I'm not sure if the info about what subset of the queues the guest
-> actually uses is all that interesting (except for managing guests); but
-> if I see guest information being exposed, I get a little wary, so I
-> just stumbled over this.
+> agp subsystem still seems to happily do that (vmalloc memory for
+> device access), never having been ported to dma apis (or well
+> converted to iommu drivers, which they kinda are really). So I think
+> this all still works exactly as back then, even with the kms radeon
+> drivers. Question really is whether we have users left, and I have no
+> clue about that either.
 >
-> Maybe I'll come back to that once I have looked at the series in more
-> detail, but this might not be a problem at all.
+> Now if these boxes didn't ever have agp then I think we can get away
+> with deleting this, since we've already deleted the legacy radeon
+> driver. And that one used vmalloc for everything. The new kms one does
+> use the dma-api if the gpu isn't connected through agp.
 
-I created this patch primarily because I found it very helpful when
-testing. It saved me from logging on to the guest and executing
-lszcrypt to verify the AP configuration for the guest. I thought this
-might also add value for a system administrator responsible for
-KVM guests. It would not be a problem to remove this patch or
-change the permissions for the attribute. Let me know when you
-complete the series review. Thanks.
+All radeons have a built in remapping table to handle non-AGP systems.
+On the earlier radeons it wasn't quite as performant as AGP, but it
+was always more reliable because AGP is AGP.  Maybe it's time to let
+AGP go?
 
+Alex
+
+> -Daniel
 >
->>>   
->>>> +
->>>>    static struct attribute *vfio_ap_mdev_attrs[] = {
->>>>    	&dev_attr_assign_adapter.attr,
->>>>    	&dev_attr_unassign_adapter.attr,
->>>> @@ -1050,6 +1107,7 @@ static struct attribute *vfio_ap_mdev_attrs[] = {
->>>>    	&dev_attr_unassign_control_domain.attr,
->>>>    	&dev_attr_control_domains.attr,
->>>>    	&dev_attr_matrix.attr,
->>>> +	&dev_attr_guest_matrix.attr,
->>>>    	NULL,
->>>>    };
->>>>      
-
+> > Cheers,
+> > Ben.
+> >
+> > > -Daniel
+> > >
+> > > >
+> > > > Signed-off-by: Christoph Hellwig <hch@lst.de>
+> > > > ---
+> > > >  drivers/gpu/drm/drm_scatter.c | 11 +----------
+> > > >  1 file changed, 1 insertion(+), 10 deletions(-)
+> > > >
+> > > > diff --git a/drivers/gpu/drm/drm_scatter.c b/drivers/gpu/drm/drm_scatter.c
+> > > > index ca520028b2cb..f4e6184d1877 100644
+> > > > --- a/drivers/gpu/drm/drm_scatter.c
+> > > > +++ b/drivers/gpu/drm/drm_scatter.c
+> > > > @@ -43,15 +43,6 @@
+> > > >
+> > > >  #define DEBUG_SCATTER 0
+> > > >
+> > > > -static inline void *drm_vmalloc_dma(unsigned long size)
+> > > > -{
+> > > > -#if defined(__powerpc__) && defined(CONFIG_NOT_COHERENT_CACHE)
+> > > > -   return __vmalloc(size, GFP_KERNEL, pgprot_noncached_wc(PAGE_KERNEL));
+> > > > -#else
+> > > > -   return vmalloc_32(size);
+> > > > -#endif
+> > > > -}
+> > > > -
+> > > >  static void drm_sg_cleanup(struct drm_sg_mem * entry)
+> > > >  {
+> > > >     struct page *page;
+> > > > @@ -126,7 +117,7 @@ int drm_legacy_sg_alloc(struct drm_device *dev, void *data,
+> > > >             return -ENOMEM;
+> > > >     }
+> > > >
+> > > > -   entry->virtual = drm_vmalloc_dma(pages << PAGE_SHIFT);
+> > > > +   entry->virtual = vmalloc_32(pages << PAGE_SHIFT);
+> > > >     if (!entry->virtual) {
+> > > >             kfree(entry->busaddr);
+> > > >             kfree(entry->pagelist);
+> > > > --
+> > > > 2.25.1
+> > > >
+> > >
+> > >
+> >
+>
+>
+> --
+> Daniel Vetter
+> Software Engineer, Intel Corporation
+> +41 (0) 79 365 57 48 - http://blog.ffwll.ch
+> _______________________________________________
+> dri-devel mailing list
+> dri-devel@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/dri-devel
