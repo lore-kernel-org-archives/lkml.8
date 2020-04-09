@@ -2,193 +2,114 @@ Return-Path: <SRS0=n+Ub=5Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=0.2 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	UPPERCASE_50_75 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E19A3C2BA2B
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 10:37:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9895C2BA2B
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 10:40:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A9B7320757
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 10:37:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7F29320757
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 10:40:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=windriversystems.onmicrosoft.com header.i=@windriversystems.onmicrosoft.com header.b="qQ7UOUxA"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="T7D56jXv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726642AbgDIKh1 (ORCPT
+        id S1726582AbgDIKkR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Apr 2020 06:37:27 -0400
-Received: from mail-co1nam11on2045.outbound.protection.outlook.com ([40.107.220.45]:20832
-        "EHLO NAM11-CO1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725970AbgDIKh0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Apr 2020 06:37:26 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=FU2MA7EVlQEwDV2w4TfE0nQJQJ3X3r64ivslGJEF8tXvWhaL2uzUGRuz6y0hkSTdjfauzcIVsgxN0AMUYDL/xnTsDzqPbmGnYapDu38g7dSrnYJ5AxWY+OH4RIg+t+VOAbaZ2F/67St31OYZrF7/eDlRqLMfS04aIevUeSF0jPPDNrupoEtY7wTuUNlzAc9RWo3R3T43hviMUFeWfzaHUDXkKGZutj0bEaEo20A4wU1qhCqjqMgRMOJvWoX/4DtSi9cJUINLs7lN+DAjVn1cr9IVgyC+nlGmjPXljhHDIPlnJ9dMUDlDhl9ORxzWdgrhtQXsinQULSuoOYP27Gpnjw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=HEm0sS68S5Qe4CNORcRWtf3C+XtfzUKSpEe+YKZO0+4=;
- b=oWHn3foylD2YyBWvRKKhDPHtJR0ERRE4Zo87y+es63Vjo//So+HxUnVOXdHiTlAGK4xbR1XPwwaZ/ShrI0hkVccqTl7pXIrb0YgFcOUAvVnFm8oeUBE9jl4BpZuHOlYxAYpYNdKqGqONMg1TrTlbtiw+YC8ldjM+WA9Db5B4Q4AS5doosSeeoOsvb+GrLOLPazNs51tfZP0N+FdpV25MpSw3jlsxwt/qH5r5W/FkY/wu22LLeXOnrt+WWbIrhCg8SagncARvK3JYzqpfxh5oBT8wlrZWIJwwBrbQz7Az4yRHdfUxfwqtF6HIDz8P63cvI0/kRrI94zOacUnQhhg8lw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=windriver.com; dmarc=pass action=none
- header.from=windriver.com; dkim=pass header.d=windriver.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=windriversystems.onmicrosoft.com;
- s=selector2-windriversystems-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=HEm0sS68S5Qe4CNORcRWtf3C+XtfzUKSpEe+YKZO0+4=;
- b=qQ7UOUxAnXQnOzxqXk5p9iUirftmZvd45LvUvLj4vcqsqI0jWIVtzGlfyZTv2uWBZO864KCBv4NWwm7mXP1BDsCDTum/SO2I4olNH1n1xdENIMA9eD0Up3cr1r9hJSMw0zxwAp3IPWkHSVoeHnSWznvzZnDdvI3DbdJnpBS64cA=
-Authentication-Results: spf=none (sender IP is )
- smtp.mailfrom=Zhe.He@windriver.com; 
-Received: from SN6PR11MB3360.namprd11.prod.outlook.com (2603:10b6:805:c8::30)
- by SN6PR11MB2544.namprd11.prod.outlook.com (2603:10b6:805:5d::25) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2878.16; Thu, 9 Apr
- 2020 10:37:23 +0000
-Received: from SN6PR11MB3360.namprd11.prod.outlook.com
- ([fe80::75b1:da01:9747:ae65]) by SN6PR11MB3360.namprd11.prod.outlook.com
- ([fe80::75b1:da01:9747:ae65%4]) with mapi id 15.20.2900.015; Thu, 9 Apr 2020
- 10:37:23 +0000
-Subject: Re: [PATCH 1/2] eventfd: Make wake counter work for single fd instead
- of all
-To:     Jens Axboe <axboe@kernel.dk>, viro@zeniv.linux.org.uk,
-        bcrl@kvack.org, linux-fsdevel@vger.kernel.org, linux-aio@kvack.org,
-        linux-kernel@vger.kernel.org
-References: <1586257192-58369-1-git-send-email-zhe.he@windriver.com>
- <3f395813-a497-aa25-71cc-8aed345b9f75@kernel.dk>
-From:   He Zhe <zhe.he@windriver.com>
-Message-ID: <c4984e43-480c-3f9a-2316-249c61507bf2@windriver.com>
-Date:   Thu, 9 Apr 2020 18:37:14 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
-In-Reply-To: <3f395813-a497-aa25-71cc-8aed345b9f75@kernel.dk>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-ClientProxiedBy: HK2PR04CA0078.apcprd04.prod.outlook.com
- (2603:1096:202:15::22) To SN6PR11MB3360.namprd11.prod.outlook.com
- (2603:10b6:805:c8::30)
+        Thu, 9 Apr 2020 06:40:17 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:47802 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725828AbgDIKkR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Apr 2020 06:40:17 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=bx+bEhrOCMKBgN3dLTzVqiIsNYJFlRJP4agNxc0F9uA=; b=T7D56jXvcYhf4/kuIDveNAQvH8
+        RF0ZQKWf81/04cgUjG2KgB9q9iUmV+KNWI5jJy8/GAoPjucXkeR91+gwWl5fnsd8Sh71XzFnwIjIQ
+        qy2437/dhG/IqBaRH6hPaK8/avIU3KuC9yjcNriuR42fmSOgkS/+lSFIl3uHEtqGKH26l0vyJGe/u
+        xY34Lv1w6iIcp5froTdVHwQuHdoZHJUEQBvswUw7mJ5q57m+T052lbIMphWP7rBGdC2dRjhH8gjLl
+        dvSn/RLE+BT3G+sP+V+2FsMyxl3IeUqCqOwAaGkjf8A6cMUuYLD5kcOhvx/8O/ucPZb8JiI9PWBOd
+        GnwzEwZA==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jMUbU-00072y-Nc; Thu, 09 Apr 2020 10:40:12 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 3329B3012D8;
+        Thu,  9 Apr 2020 12:40:08 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 1F6392BB332D0; Thu,  9 Apr 2020 12:40:08 +0200 (CEST)
+Date:   Thu, 9 Apr 2020 12:40:08 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Alexandre Chartre <alexandre.chartre@oracle.com>
+Cc:     Josh Poimboeuf <jpoimboe@redhat.com>, x86@kernel.org,
+        linux-kernel@vger.kernel.org, jthierry@redhat.com,
+        tglx@linutronix.de
+Subject: Re: [PATCH V2 9/9] x86/speculation: Remove all
+ ANNOTATE_NOSPEC_ALTERNATIVE directives
+Message-ID: <20200409104008.GO20760@hirez.programming.kicks-ass.net>
+References: <20200407073142.20659-10-alexandre.chartre@oracle.com>
+ <20200407132837.GA20730@hirez.programming.kicks-ass.net>
+ <20200407133454.n55u5nx33ruj73gx@treble>
+ <89b10eb8-c030-b954-6be3-8830fc6a8daa@oracle.com>
+ <3eb36fd2-9827-4c1b-681c-9c1d65c7582f@oracle.com>
+ <20200407162838.5hlh6oom4oa45ugt@treble>
+ <20200407172739.GI20730@hirez.programming.kicks-ass.net>
+ <20200408213508.GA4496@worktop.programming.kicks-ass.net>
+ <da6efbb5-2610-6721-77ca-9833d13b9398@oracle.com>
+ <20200409103424.GC20713@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from [128.224.162.175] (60.247.85.82) by HK2PR04CA0078.apcprd04.prod.outlook.com (2603:1096:202:15::22) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2900.16 via Frontend Transport; Thu, 9 Apr 2020 10:37:20 +0000
-X-Originating-IP: [60.247.85.82]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 7aabdb2d-b935-4fcf-c124-08d7dc71fd00
-X-MS-TrafficTypeDiagnostic: SN6PR11MB2544:
-X-Microsoft-Antispam-PRVS: <SN6PR11MB25448C052699781E5D40F4E28FC10@SN6PR11MB2544.namprd11.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:8882;
-X-Forefront-PRVS: 0368E78B5B
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN6PR11MB3360.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10009020)(396003)(366004)(39840400004)(346002)(376002)(136003)(52116002)(53546011)(31686004)(5660300002)(31696002)(66476007)(66556008)(66946007)(6666004)(86362001)(186003)(6706004)(26005)(8676002)(81156014)(956004)(36756003)(16526019)(316002)(81166007)(2906002)(6486002)(16576012)(478600001)(8936002)(2616005)(78286006);DIR:OUT;SFP:1101;
-Received-SPF: None (protection.outlook.com: windriver.com does not designate
- permitted sender hosts)
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: t/ztEb50SLzbF4luLysrIka18gG8T4gFAslOhP79nXgxefX/QYtW7mUa00tnjEjcgfV6eiO4r+8QB2H7yFM2omIlT3bpM1T6RoYdhU9lLHwP1PvViQlsk6cdrUHEiQLYw7rKHLOQ3OzMXFM05eA7ERa76jSO/5l1P3soxVtaAwhSmFS0QwhmG/OPdsvVtn+G6cy5RRoeSOND1ZBFvrblNXDOTTPUyNW97S7AtAcqEBmvaFRkuczebFHFS7FishCMwkdlLxlVO2ZRoAkkMdU9OioPB4jABrUo55qklw8zo52lfuQQ/y5+8DITKc/4VT/1jmtnzekPgl6eZZ9je7F9j75YLkxpNN0ankKn0wewrZhJ1fwstkCmIZy0gfSLTSLxYyShwOefcXbucAq2HW3fgiy2Hrc86gjM9AWpuaktaaKjkr2KsEY+dQ3woyR/7WCVbS9C8oherpCbwZO0Frlxd+nAG/pfCO7P7RVVa9rZUvsMR20qAyaefdeR2hxoA9/hVgkkNeaURkV76fD4wgLlKEC6nqXS90XF9ytAXQ4eaGU=
-X-MS-Exchange-AntiSpam-MessageData: Nsr7oabrpxrQMqHJVQBLOJlaByHyY+qhb5AdJFLNnkRRJPsXT//uAKU2sMqrNf/AvipawI04BwW4iBQ3Rgcd5WV8zXWXuHAC3Y/JiI/7zEkmfJWHawLzFOXRIAWhMYFrkhlnGIfPqYS05/2p/J4DVw==
-X-OriginatorOrg: windriver.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 7aabdb2d-b935-4fcf-c124-08d7dc71fd00
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Apr 2020 10:37:23.2803
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 8ddb2873-a1ad-4a18-ae4e-4644631433be
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: nWgN/dbgk9xmakECRMdxVFQxb3Eb5nW39bzsJXohfQF8183orNKZnaFW/OnYXqIZogjaCf136BuFto4wdIvRcg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR11MB2544
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200409103424.GC20713@hirez.programming.kicks-ass.net>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, Apr 09, 2020 at 12:34:24PM +0200, Peter Zijlstra wrote:
+> @@ -111,23 +83,21 @@
+>   */
+>  .macro JMP_NOSPEC reg:req
+>  #ifdef CONFIG_RETPOLINE
+> -	ANNOTATE_NOSPEC_ALTERNATIVE
+> -	ALTERNATIVE_2 __stringify(ANNOTATE_RETPOLINE_SAFE; jmp *\reg),	\
+> -		__stringify(RETPOLINE_JMP \reg), X86_FEATURE_RETPOLINE,	\
+> -		__stringify(lfence; ANNOTATE_RETPOLINE_SAFE; jmp *\reg), X86_FEATURE_RETPOLINE_AMD
+> +	ALTERNATIVE "", "lfence", X86_FEATURE_RETPOLINE_AMD
+> +	ALTERNATIVE __stringify(ANNOTATE_RETPOLINE_SAFE; jmp *%\reg), \
+> +		    __stringify(jmp __x86_retpoline_\reg), X86_FEATURE_RETPOLINE
 
+Still, I am being an idiot, only the call (below) needs this, this can
+stay what it was:
 
-On 4/8/20 4:06 AM, Jens Axboe wrote:
-> On 4/7/20 3:59 AM, zhe.he@windriver.com wrote:
->> From: He Zhe <zhe.he@windriver.com>
->>
->> commit b5e683d5cab8 ("eventfd: track eventfd_signal() recursion depth")
->> introduces a percpu counter that tracks the percpu recursion depth and
->> warn if it greater than one, to avoid potential deadlock and stack
->> overflow.
->>
->> However sometimes different eventfds may be used in parallel.
->> Specifically, when high network load goes through kvm and vhost, working
->> as below, it would trigger the following call trace.
->>
->> -  100.00%
->>    - 66.51%
->>         ret_from_fork
->>         kthread
->>       - vhost_worker
->>          - 33.47% handle_tx_kick
->>               handle_tx
->>               handle_tx_copy
->>               vhost_tx_batch.isra.0
->>               vhost_add_used_and_signal_n
->>               eventfd_signal
->>          - 33.05% handle_rx_net
->>               handle_rx
->>               vhost_add_used_and_signal_n
->>               eventfd_signal
->>    - 33.49%
->>         ioctl
->>         entry_SYSCALL_64_after_hwframe
->>         do_syscall_64
->>         __x64_sys_ioctl
->>         ksys_ioctl
->>         do_vfs_ioctl
->>         kvm_vcpu_ioctl
->>         kvm_arch_vcpu_ioctl_run
->>         vmx_handle_exit
->>         handle_ept_misconfig
->>         kvm_io_bus_write
->>         __kvm_io_bus_write
->>         eventfd_signal
->>
->> 001: WARNING: CPU: 1 PID: 1503 at fs/eventfd.c:73 eventfd_signal+0x85/0xa0
->> ---- snip ----
->> 001: Call Trace:
->> 001:  vhost_signal+0x15e/0x1b0 [vhost]
->> 001:  vhost_add_used_and_signal_n+0x2b/0x40 [vhost]
->> 001:  handle_rx+0xb9/0x900 [vhost_net]
->> 001:  handle_rx_net+0x15/0x20 [vhost_net]
->> 001:  vhost_worker+0xbe/0x120 [vhost]
->> 001:  kthread+0x106/0x140
->> 001:  ? log_used.part.0+0x20/0x20 [vhost]
->> 001:  ? kthread_park+0x90/0x90
->> 001:  ret_from_fork+0x35/0x40
->> 001: ---[ end trace 0000000000000003 ]---
->>
->> This patch moves the percpu counter into eventfd control structure and
->> does the clean-ups, so that eventfd can still be protected from deadlock
->> while allowing different ones to work in parallel.
->>
->> As to potential stack overflow, we might want to figure out a better
->> solution in the future to warn when the stack is about to overflow so it
->> can be better utilized, rather than break the working flow when just the
->> second one comes.
-> This doesn't work for the infinite recursion case, the state has to be
-> global, or per thread.
++       ALTERNATIVE_2 __stringify(ANNOTATE_RETPOLINE_SAFE; jmp *%\reg), \
++                     __stringify(jmp __x86_retpoline_\()\reg), X86_FEATURE_RETPOLINE, \
++                     __stringify(lfence; ANNOTATE_RETPOLINE_SAFE; jmp *%\reg), X86_FEATURE_RETPOLINE_AMD
 
-Thanks, but I'm not very clear about why the counter has to be global or per
-thread.
+>  #else
+> -	jmp	*\reg
+> +	jmp	*%\reg
+>  #endif
+>  .endm
+>  
+>  .macro CALL_NOSPEC reg:req
+>  #ifdef CONFIG_RETPOLINE
+> -	ANNOTATE_NOSPEC_ALTERNATIVE
+> -	ALTERNATIVE_2 __stringify(ANNOTATE_RETPOLINE_SAFE; call *\reg),	\
+> -		__stringify(RETPOLINE_CALL \reg), X86_FEATURE_RETPOLINE,\
+> -		__stringify(lfence; ANNOTATE_RETPOLINE_SAFE; call *\reg), X86_FEATURE_RETPOLINE_AMD
 
-If the recursion happens on the same eventfd, the attempt to re-grab the same
-ctx->wqh.lock would be blocked by the fd-specific counter in this patch.
+And then this needs a comment on why it is not ALTERNATIVE_2 like above.
 
-If the recursion happens with a chain of different eventfds, that might lead to
-a stack overflow issue. The issue should be handled but it seems unnecessary to
-stop the just the second ring(when the counter is going to be 2) of the chain.
-
-Specifically in the vhost case, it runs very likely with heavy network load
-which generates loads of eventfd_signal. Delaying the eventfd_signal to worker
-threads will still end up violating the global counter later and failing as
-above.
-
-So we might want to take care of the potential overflow later, hopefully with a
-measurement that can tell us if it's about to overflow.
-
-Zhe
-
->
-
+> +	ALTERNATIVE "", "lfence", X86_FEATURE_RETPOLINE_AMD
+> +	ALTERNATIVE __stringify(ANNOTATE_RETPOLINE_SAFE; call *%\reg), \
+> +		    __stringify(call __x86_retpoline_\reg), X86_FEATURE_RETPOLINE
+>  #else
+> -	call	*\reg
+> +	call	*%\reg
+>  #endif
+>  .endm
