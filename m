@@ -2,104 +2,166 @@ Return-Path: <SRS0=n+Ub=5Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3B04C2BBC7
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 10:53:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E70EC2BB86
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 10:53:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C9854208FE
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 10:53:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586429630;
-	bh=BZVpag0qQETEDSuxALqBEW3mh5PAYg0YPSQ6u6hT+os=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=j15RfDZFN54qk3iwlUA5zf0IFAlouZ9ugWuvB4C4TXN3dzHesWaY3OQWIn43Mov86
-	 U2egrPo7FczOysWO+iiupxNVtQEDGVpGG1ms+wggARHXISRXaLU8LFFh29KbxxQnGu
-	 Pv4X1YzRi0zSW+1xZN1Woui/RFlIFx20NmWIorrY=
+	by mail.kernel.org (Postfix) with ESMTP id 2E2BF20BED
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 10:53:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726646AbgDIKxt (ORCPT
+        id S1726670AbgDIKx4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Apr 2020 06:53:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36252 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725970AbgDIKxs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Apr 2020 06:53:48 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 29C1320857;
-        Thu,  9 Apr 2020 10:53:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586429628;
-        bh=BZVpag0qQETEDSuxALqBEW3mh5PAYg0YPSQ6u6hT+os=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=tTiZNE4MZTrKG51Y9OasNhBTM4o2bQLbPf4Wf7/YAQELzNOT+AZAkgn2K0xhT4IA2
-         HuyI4p0Y0c92dYiCkVqvymJQgjD6EbHBHAoaHwPXk/+7v+O7zifx1qUnqixV55VStn
-         4PNGjE29VSHGt8vR/xAWJjchP4WQ81ol1wBUKig8=
-Date:   Thu, 9 Apr 2020 11:53:46 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Stephen Boyd <sboyd@kernel.org>
-Cc:     Michael Turquette <mturquette@baylibre.com>,
-        linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Mark Salter <msalter@redhat.com>,
-        Aurelien Jacquiot <jacquiot.aurelien@gmail.com>,
-        Jiaxun Yang <jiaxun.yang@flygoat.com>,
-        Guan Xuetao <gxt@pku.edu.cn>,
-        Russell King <linux@armlinux.org.uk>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Yoshinori Sato <ysato@users.sourceforge.jp>,
-        Rich Felker <dalias@libc.org>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        linux-mips@vger.kernel.org, linux-c6x-dev@linux-c6x.org,
-        linux-m68k@lists.linux-m68k.org,
-        linux-arm-kernel@lists.infradead.org, linux-sh@vger.kernel.org
-Subject: Re: [PATCH v2 07/10] clk: Allow the common clk framework to be
- selectable
-Message-ID: <20200409105346.GC5399@sirena.org.uk>
-References: <20200409064416.83340-1-sboyd@kernel.org>
- <20200409064416.83340-8-sboyd@kernel.org>
+        Thu, 9 Apr 2020 06:53:56 -0400
+Received: from mail2-relais-roc.national.inria.fr ([192.134.164.83]:36477 "EHLO
+        mail2-relais-roc.national.inria.fr" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725828AbgDIKx4 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Apr 2020 06:53:56 -0400
+X-IronPort-AV: E=Sophos;i="5.72,362,1580770800"; 
+   d="scan'208";a="444554909"
+Received: from abo-173-121-68.mrs.modulonet.fr (HELO hadrien) ([85.68.121.173])
+  by mail2-relais-roc.national.inria.fr with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 09 Apr 2020 12:53:54 +0200
+Date:   Thu, 9 Apr 2020 12:53:54 +0200 (CEST)
+From:   Julia Lawall <julia.lawall@inria.fr>
+X-X-Sender: jll@hadrien
+To:     Alexander Popov <alex.popov@linux.com>
+cc:     Gilles Muller <Gilles.Muller@lip6.fr>,
+        Nicolas Palix <nicolas.palix@imag.fr>,
+        Michal Marek <michal.lkml@markovi.net>, cocci@systeme.lip6.fr,
+        "kernel-hardening@lists.openwall.com" 
+        <kernel-hardening@lists.openwall.com>,
+        Jann Horn <jannh@google.com>,
+        Kees Cook <keescook@chromium.org>,
+        Hans Verkuil <hverkuil@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Linux Media Mailing List <linux-media@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>, jannh@google.com
+Subject: Re: [Cocci] Coccinelle rule for CVE-2019-18683
+In-Reply-To: <fff664e9-06c9-d2fb-738f-e8e591e09569@linux.com>
+Message-ID: <alpine.DEB.2.21.2004091248190.2403@hadrien>
+References: <fff664e9-06c9-d2fb-738f-e8e591e09569@linux.com>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="8X7/QrJGcKSMr1RN"
-Content-Disposition: inline
-In-Reply-To: <20200409064416.83340-8-sboyd@kernel.org>
-X-Cookie: HUGH BEAUMONT died in 1982!!
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
---8X7/QrJGcKSMr1RN
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
 
-On Wed, Apr 08, 2020 at 11:44:13PM -0700, Stephen Boyd wrote:
-> Enable build testing and configuration control of the common clk
-> framework so that more code coverage and testing can be done on the
-> common clk framework across various architectures. This also nicely
-> removes the requirement that architectures must select the framework
-> when they don't use it in architecture code.
+On Thu, 9 Apr 2020, Alexander Popov wrote:
 
-Reviwed-by: Mark Brown <broonie@kernel.org>
+> Hello!
+>
+> Some time ago I fixed CVE-2019-18683 in the V4L2 subsystem of the Linux kernel.
+>
+> I created a Coccinelle rule that detects that bug pattern. Let me show it.
 
---8X7/QrJGcKSMr1RN
-Content-Type: application/pgp-signature; name="signature.asc"
+Thanks for the discussion :)
 
------BEGIN PGP SIGNATURE-----
+>
+>
+> Bug pattern
+> ===========
+>
+> CVE-2019-18683 refers to three similar vulnerabilities caused by the same
+> incorrect approach to locking that is used in vivid_stop_generating_vid_cap(),
+> vivid_stop_generating_vid_out(), and sdr_cap_stop_streaming().
+>
+> For fixes please see the commit 6dcd5d7a7a29c1e4 (media: vivid: Fix wrong
+> locking that causes race conditions on streaming stop).
+>
+> These three functions are called during streaming stopping with vivid_dev.mutex
+> locked. And they all do the same mistake while stopping their kthreads, which
+> need to lock this mutex as well. See the example from
+> vivid_stop_generating_vid_cap():
+>     /* shutdown control thread */
+>     vivid_grab_controls(dev, false);
+>     mutex_unlock(&dev->mutex);
+>     kthread_stop(dev->kthread_vid_cap);
+>     dev->kthread_vid_cap = NULL;
+>     mutex_lock(&dev->mutex);
+>
+> But when this mutex is unlocked, another vb2_fop_read() can lock it instead of
+> the kthread and manipulate the buffer queue. That causes use-after-free.
+>
+> I created a Coccinelle rule that detects mutex_unlock+kthread_stop+mutex_lock
+> within one function.
+>
+>
+> Coccinelle rule
+> ===============
+>
+> virtual report
+>
+> @race exists@
+> expression E;
+> position stop_p;
+> position unlock_p;
+> position lock_p;
+> @@
+>
+> mutex_unlock@unlock_p(E)
+> ...
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl6O/rkACgkQJNaLcl1U
-h9C8bAf/SJkvvbTRmpOunw3fAHei1NkJ2RUZ/Ax5l+NwzvC+fSezjkGHKH+2LVOV
-6vTimPH4EKoGc/4RRBVRSrlp20QY/mz4/7+/Ojsrfp9KsWdcH167Zd26sYP3kSy2
-8jxnHBccoWJ8B9p9YVYslrMb0+y1mjnfLOsBioILN1wa6R2vuv7/JXuu1FmaeYLl
-geaZWL7Aw8Knj421ywLqEbg57Zd7M/2ei5gI/plDWIS+UoeuPPPhsUCVkza76DOE
-pyvpA21x2ceFOmCTq0O5O2a/WlM8xwfklNLML6wx3NSS02WWiqnAbMS3sZ9Adk50
-k7m1LMdfWu/q1CQwp58kVOsZJVWZ4g==
-=+bDI
------END PGP SIGNATURE-----
+It would be good to put when != mutex_lock(E) after the ... above.  Your
+rule doesn't actually prevent the lock from being retaken.
 
---8X7/QrJGcKSMr1RN--
+> kthread_stop@stop_p(...)
+> ...
+> mutex_lock@lock_p(E)
+>
+> @script:python@
+> stop_p << race.stop_p;
+> unlock_p << race.unlock_p;
+> lock_p << race.lock_p;
+> E << race.E;
+> @@
+>
+> coccilib.report.print_report(unlock_p[0], 'mutex_unlock(' + E + ') here')
+> coccilib.report.print_report(stop_p[0], 'kthread_stop here')
+> coccilib.report.print_report(lock_p[0], 'mutex_lock(' + E + ') here\n')
+>
+>
+> Testing the rule
+> ================
+>
+> I reverted the commit 6dcd5d7a7a29c1e4 and called:
+> COCCI=./scripts/coccinelle/kthread_race.cocci make coccicheck MODE=report
+>
+> The result:
+>
+> ./drivers/media/platform/vivid/vivid-kthread-out.c:347:1-13: mutex_unlock(& dev
+> -> mutex) here
+> ./drivers/media/platform/vivid/vivid-kthread-out.c:348:1-13: kthread_stop here
+> ./drivers/media/platform/vivid/vivid-kthread-out.c:350:1-11: mutex_lock(& dev ->
+> mutex) here
+>
+> ./drivers/media/platform/vivid/vivid-sdr-cap.c:306:1-13: mutex_unlock(& dev ->
+> mutex) here
+> ./drivers/media/platform/vivid/vivid-sdr-cap.c:307:1-13: kthread_stop here
+> ./drivers/media/platform/vivid/vivid-sdr-cap.c:309:1-11: mutex_lock(& dev ->
+> mutex) here
+>
+> ./drivers/media/platform/vivid/vivid-kthread-cap.c:1001:1-13: mutex_unlock(& dev
+> -> mutex) here
+> ./drivers/media/platform/vivid/vivid-kthread-cap.c:1002:1-13: kthread_stop here
+> ./drivers/media/platform/vivid/vivid-kthread-cap.c:1004:1-11: mutex_lock(& dev
+> -> mutex) here
+>
+> There are no other bugs detected.
+>
+> Do you have any idea how to improve it?
+> Do we need that rule for regression testing in the upstream?
+
+Based on Jann's suggestion, it seem like it could be interesting to find
+these locking pauses, and then collect functions that are used in locks
+and in lock pauses.  If a function is mostly used with locks held, then
+using it in a lock pause could be a sign of a bug.  I will see if it turns
+up anything interesting.
+
+julia
