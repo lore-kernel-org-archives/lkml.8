@@ -2,156 +2,102 @@ Return-Path: <SRS0=n+Ub=5Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B020C38A24
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 13:05:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B539C2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 13:16:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BC9A620B1F
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 13:05:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 72B832082D
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 13:16:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="mzrdEIiL"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Jns0a8t7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726956AbgDINFZ (ORCPT
+        id S1726786AbgDINQB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Apr 2020 09:05:25 -0400
-Received: from mout.web.de ([212.227.15.14]:44593 "EHLO mout.web.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726924AbgDINFX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Apr 2020 09:05:23 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
-        s=dbaedf251592; t=1586437519;
-        bh=pdTvAlI3N4fXOnDTP/rTIVU30iaj/Z2obJ7/NGxzl6M=;
-        h=X-UI-Sender-Class:To:From:Subject:Cc:Date;
-        b=mzrdEIiLKsjxXs2TwVnX6X6JIjVYOhlT64xwsNMWsPYOIeXYQwMxs+RoJ354OXBXv
-         AFQUTSsKZzZJe7VuhiETP+9GcBY7v6SqCVUEEVXmARmypWQWanq9CBLBURFvrxKhVL
-         saUVqRuEos2R/Co+XhKxF3SI/+rx1iT1+Y27l4Kw=
-X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
-Received: from [192.168.1.3] ([93.133.77.56]) by smtp.web.de (mrweb003
- [213.165.67.108]) with ESMTPSA (Nemesis) id 0ML8Vd-1jMFkl3iQT-000Ixb; Thu, 09
- Apr 2020 15:05:19 +0200
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        dri-devel@lists.freedesktop.org
-From:   Markus Elfring <Markus.Elfring@web.de>
-Subject: drm/tve200: Checking for a failed platform_get_irq() call in
- tve200_probe()
-Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
- 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 FEE=
-Cc:     Daniel Vetter <daniel@ffwll.ch>, David Airlie <airlied@linux.ie>,
-        kernel-janitors@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>
-Message-ID: <0263f4fb-c349-7651-b590-8722cdd30c85@web.de>
-Date:   Thu, 9 Apr 2020 15:05:17 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Thu, 9 Apr 2020 09:16:01 -0400
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:44211 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726571AbgDINQB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Apr 2020 09:16:01 -0400
+Received: by mail-pl1-f196.google.com with SMTP id h11so3808272plr.11;
+        Thu, 09 Apr 2020 06:16:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=i8qLidDf4LUpcOzJlNZoOnQbZ15pPTTrp1eBbk9aLvs=;
+        b=Jns0a8t7+fzVa/lAxcxEuE8EvRYo34PI1p/IIP/GA2ZYubSrZ4j7kHkBV7WwUrnaWj
+         CjR2yZBEhW5WybC9NZLiJJM6aiQIlym15yprkXbMc5+CBc1xWtC7z9Rg/YO967uMYzYZ
+         4qBrmtmJTZzxxnyghu4gHk4n7vBf7IuFFzF2wEbaWTfaIRDhof5cEoR+5KsO+9jn2Qh7
+         GKAeSjigziaAYJnulwrzPmTVaCLqRzlen/iiQvZN4wg03zXRA0Xo1Fd1uQKzSwPIbFai
+         zvl2lXN4rnq+tRIDLmTgaP6TfA2/2q25BOII4S+V1yyr9P5T+uaXwk6rn5KgIzjVSE3o
+         h4OQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=i8qLidDf4LUpcOzJlNZoOnQbZ15pPTTrp1eBbk9aLvs=;
+        b=AKcFaXhH7sQ25zTeTvzWF+5+2jTSWw/Kdzebzt/cJKc5DiCZK/3QdcYW6I/pYlaasU
+         pmJpTLfgo+8Jcg8kyU4Afqui2Ar5JUODH4n/p3hO7FvzqmwadNwQjWuqQTf4sq2MAwe8
+         4PuYmoAdEO1alqpT3fKso1PL2qdactEv/uGzwMkP1jsXvDYgsH22mNe5CWHBdMwP5j0u
+         vjMbXy8adP1646RXBf9A3tVO7rZWfgYLxnLUSEr8MiIiEc6H1R1qn5J3aa+PpXpzQMz6
+         ZyPVh4+tDXVI0Q/9tL3Tgl3IqySFzF+YF0Hi0fmeOcGtxCe/7DWIlyLQ1IIYnBnxVBx1
+         WesQ==
+X-Gm-Message-State: AGi0PuYK4fcSBLDtjDL8mTwcG81z3SuwwSycb64830Nmp6fDRzMUOHyQ
+        /YNr6A++MbBh7iVbA25GSZY=
+X-Google-Smtp-Source: APiQypKvVmzycPqbOZsJkUD2nXaOhlcJllxCOtUp9WHMCGJjFE0o1SziQldVENrM/1PHsSoMhIW7ew==
+X-Received: by 2002:a17:90b:2352:: with SMTP id ms18mr10463821pjb.97.1586438160532;
+        Thu, 09 Apr 2020 06:16:00 -0700 (PDT)
+Received: from localhost (89.208.244.140.16clouds.com. [89.208.244.140])
+        by smtp.gmail.com with ESMTPSA id i8sm1014564pfr.138.2020.04.09.06.15.58
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 09 Apr 2020 06:15:59 -0700 (PDT)
+Date:   Thu, 9 Apr 2020 21:15:57 +0800
+From:   Dejin Zheng <zhengdejin5@gmail.com>
+To:     Wolfram Sang <wsa@the-dreams.de>
+Cc:     thor.thayer@linux.intel.com, krzysztof.adamski@nokia.com,
+        f.fainelli@gmail.com, rjui@broadcom.com, sbranden@broadcom.com,
+        bcm-kernel-feedback-list@broadcom.com, nsekhar@ti.com,
+        bgolaszewski@baylibre.com, baruch@tkos.co.il,
+        wsa+renesas@sang-engineering.com, kgene@kernel.org,
+        krzk@kernel.org, paul@crapouillou.net, vz@mleia.com,
+        khilman@baylibre.com, gregory.clement@bootlin.com,
+        rrichter@marvell.com, afaerber@suse.de,
+        manivannan.sadhasivam@linaro.org, agross@kernel.org,
+        bjorn.andersson@linaro.org, heiko@sntech.de, baohua@kernel.org,
+        linus.walleij@linaro.org, mripard@kernel.org, wens@csie.org,
+        ardb@kernel.org, gcherian@marvell.com, jun.nie@linaro.org,
+        shawnguo@kernel.org, tglx@linutronix.de, zhouyanjie@wanyeetech.com,
+        martin.blumenstingl@googlemail.com, linux-i2c@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 00/24] convert to devm_platform_ioremap_resource
+Message-ID: <20200409131557.GA6328@nuc8i5>
+References: <20200408182311.26869-1-zhengdejin5@gmail.com>
+ <20200408195232.GB22619@ninjato>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:wjsT6tNGG/h3uDxJEg4/4mXra+qdNJxG1omsKT7lgkRF5XcgI2Q
- uKdtczR1znRwgemW8s3KkD/iBdBbmlAf6fgUk2Fi/wpa7O9arz8oW9KJLQkyhismGunNZ3m
- PRMRDBg5x+CDDRyqqwp0pOps1Sp9pudMfUNEYIH1g9fwnBDBhpWQu21NFDyWWk58sReD3N8
- Jww1Q6u60QxZ769MEVM8A==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:9hS6Z0RwO1A=:xOb6oXpb2KFdWHAUuHreN4
- nMf1ubiIWbiIvQ0GBG1i30WLMR7dOlWOP8we44+VSX00Y7HMBYBC2Beq0kK868qrWETY6jBTm
- qROz/cHDM6Ujjj6ZYtlsChlRs9Zr/DV81VeAN/QpQFXAHjGO1BqojV1qjvo98N7Gd8mhTkadP
- qE1t+0Itg6X/PkgnFnQ5o4hKajRQYjV6y/UVrmqgM++r033ZB3OBrP7cHWzYliIJ3DV1Sifjp
- Ogl9I5gKsqSYrmgFCMMiiAXKYLssl+FGXW5pIDt8PYrns/iXU0AbV3p61h4T7p3jv6It67WZw
- ouejn0Dj1usi1E7gxvlSMhFYzyUbzFET8GUIeF5PVnEeSt/8CV7hJgakQCFo6IJJZXyV6gH8z
- +AFw1A0v4kNmWVc8A2wkxiuptpO3dQwC8KRWzO850dHLwW4sTx/Z5HuBg0Oj7uCtXFzX+4Lum
- J5OKMIMlK3/hloL2TgAi01vttRE58OSaFhROMoJ9ePOB/KvVN5+JPim8Mf0oDdR1QMZq+trPX
- Qvyj0EKnmjLxnN7MS/FJHoVx3m2zquJ8X+pIw6MjCzB7DIjLCxUX58vcd5afPCD1tjg6THMs9
- wY1hEyoqR60G/8OsFIMXrgVx7SNmjBSVHLZ1cTe2rA0F4rzFI74Cor36bz4HVAmQhSnKhVrQV
- gyoD5sIbbCwu0fKlxp2aM12Y1OHnIfscgHv0AJijpCNOH/bn47GbdvS0dpF7nU6EttitY0swQ
- yiafL7MqqKjE6UxvBDbpnwSRC4ZphBLzwCebbAOaUeMZ728IGTZbKTwn92wiinnq1KvMPg2UW
- L8qYoz+PCbN+NkquWN09D+nnvii0EFGftQczfG+PM97ALJ7pRft+ZHnz0uuz0tcBhlnU3zim7
- itBTdk81c9JpwyWnTkvF31ixVX5m37Mt2lJ6GIOlsVU6JAPaIN7grcyJIXiub94JsFkSwILt8
- nojCHU8R3P8Tb2BxOKhDvf9nCdUVBwxzFFAgMTGro6ptEKsU5WJfcv1Fmf6pP3qGqUghQ4c5i
- Cg3/x9v9TcBpPG720Dag6InnQeyDbC0mN9GrnJ6x0pKHQevCs4wUc5j4PGpuQS8Qe3shavMf4
- gEM1mNwOmuf9mUWHIVZIOr2X6mFTilBf0rBL1HaTsgHkg/qJq7/o0lcKlGdqPTVvgdomUic8j
- A3Wx3S0cg+VTGyfPlNPGtcQV0oDeesPQEnOAu2oYkYVWwjPUlh/rThwWTqcp5DmFzV5wkPMs8
- ePbD9S6qcbAwpTFyL
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200408195232.GB22619@ninjato>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+On Wed, Apr 08, 2020 at 09:52:32PM +0200, Wolfram Sang wrote:
+> 
+> > v1 -> v2:
+> > 	- delete 4 patches of can not be sent by gmail server.
+> 
+> I asked you to squash all these patches into one when resending.
+>
+Wolfram, I am so sorry for that, I missed your suggestion yesterday,
+I will send patch v3 and squash all patches into one. sorry!
 
-I have taken another look at the implementation of the function =E2=80=9Ct=
-ve200_probe=E2=80=9D.
-A software analysis approach points the following source code out for
-further development considerations.
-https://elixir.bootlin.com/linux/v5.6.3/source/drivers/gpu/drm/tve200/tve2=
-00_drv.c#L212
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/dr=
-ivers/gpu/drm/tve200/tve200_drv.c?id=3D5d30bcacd91af6874481129797af364a53c=
-d9b46#n212
+BR,
+Dejin
 
-	irq =3D platform_get_irq(pdev, 0);
-	if (!irq) {
-		ret =3D -EINVAL;
-		goto clk_disable;
-	}
-
-
-The software documentation is providing the following information
-for the used programming interface.
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/dr=
-ivers/base/platform.c?id=3D5d30bcacd91af6874481129797af364a53cd9b46#n221
-https://elixir.bootlin.com/linux/v5.6.3/source/drivers/base/platform.c#L20=
-2
-
-=E2=80=9C=E2=80=A6
- * Return: IRQ number on success, negative error number on failure.
-=E2=80=A6=E2=80=9D
-
-Would you like to reconsider the shown condition check?
-
-Regards,
-Markus
