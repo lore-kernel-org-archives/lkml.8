@@ -2,149 +2,76 @@ Return-Path: <SRS0=n+Ub=5Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A43E6C2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 12:04:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E8C6C2BA2B
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 12:05:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 74CD120771
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 12:04:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=yandex-team.ru header.i=@yandex-team.ru header.b="ZLUDmpwj"
+	by mail.kernel.org (Postfix) with ESMTP id 0BAE520771
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 12:05:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726681AbgDIMEp (ORCPT
+        id S1726692AbgDIMFU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Apr 2020 08:04:45 -0400
-Received: from forwardcorp1o.mail.yandex.net ([95.108.205.193]:50140 "EHLO
-        forwardcorp1o.mail.yandex.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725971AbgDIMEo (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Apr 2020 08:04:44 -0400
-Received: from mxbackcorp1j.mail.yandex.net (mxbackcorp1j.mail.yandex.net [IPv6:2a02:6b8:0:1619::162])
-        by forwardcorp1o.mail.yandex.net (Yandex) with ESMTP id 1F88B2E16AA;
-        Thu,  9 Apr 2020 15:04:41 +0300 (MSK)
-Received: from iva4-7c3d9abce76c.qloud-c.yandex.net (iva4-7c3d9abce76c.qloud-c.yandex.net [2a02:6b8:c0c:4e8e:0:640:7c3d:9abc])
-        by mxbackcorp1j.mail.yandex.net (mxbackcorp/Yandex) with ESMTP id fKqmUPxWMS-4eM0sZjt;
-        Thu, 09 Apr 2020 15:04:41 +0300
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex-team.ru; s=default;
-        t=1586433881; bh=FCZ1roq6HF59fxR/Hx5/7l8o/xdUIxWkBDHgx8u8dH8=;
-        h=In-Reply-To:Message-ID:From:Date:References:To:Subject:Cc;
-        b=ZLUDmpwjpo8Dv4WQSVTsKg6VcKkkgnl4sMU8TnoLUMQK32XJ4Mvtdrktcxd085W1b
-         NwHZ/HbbypToOkmt+5zbYIq+azGq1ar6VBbBhqOZhi0gY+SwYLfkTYkPD/RxruIqvk
-         XpE6AzuQwarf6TeHdWRF+Ih5U0UAhzxWDUt4AGeI=
-Authentication-Results: mxbackcorp1j.mail.yandex.net; dkim=pass header.i=@yandex-team.ru
-Received: from unknown (unknown [2a02:6b8:b080:8808::1:4])
-        by iva4-7c3d9abce76c.qloud-c.yandex.net (smtpcorp/Yandex) with ESMTPSA id ltmsYkOcyX-4eWqNfOa;
-        Thu, 09 Apr 2020 15:04:40 +0300
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (Client certificate not present)
-Subject: Re: [PATCH] ovl: skip overlayfs superblocks at global sync
-To:     Amir Goldstein <amir73il@gmail.com>
-Cc:     linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Miklos Szeredi <miklos@szeredi.hu>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        overlayfs <linux-unionfs@vger.kernel.org>,
-        Dmitry Monakhov <dmtrmonakhov@yandex-team.ru>,
-        Linux Containers <containers@lists.linux-foundation.org>,
-        Theodore Tso <tytso@mit.edu>
-References: <158642098777.5635.10501704178160375549.stgit@buzz>
- <CAOQ4uxgTtbb-vDQNnY1_7EzQ=p5p2MqkfyZo2zkFQ1Wv29uqCA@mail.gmail.com>
- <67bdead3-a29f-a8af-5e7b-193a72cd4b86@yandex-team.ru>
- <CAOQ4uxgeCc=_b1FG3vfMWF50qCousXxEWa63Wn3iCHmLXDNCNA@mail.gmail.com>
-From:   Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
-Message-ID: <6af394f4-7cfd-5303-0042-9e37e43cf346@yandex-team.ru>
-Date:   Thu, 9 Apr 2020 15:04:39 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Thu, 9 Apr 2020 08:05:20 -0400
+Received: from foss.arm.com ([217.140.110.172]:49394 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725971AbgDIMFU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Apr 2020 08:05:20 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 61FD730E;
+        Thu,  9 Apr 2020 05:05:20 -0700 (PDT)
+Received: from [192.168.1.172] (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 6BEE83F73D;
+        Thu,  9 Apr 2020 05:05:19 -0700 (PDT)
+Subject: Re: [PATCH v2 6/6] arm64: enable time namespace support
+To:     Andrei Vagin <avagin@gmail.com>
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Dmitry Safonov <dima@arista.com>
+References: <20200225073731.465270-1-avagin@gmail.com>
+ <20200225073731.465270-7-avagin@gmail.com>
+From:   Vincenzo Frascino <vincenzo.frascino@arm.com>
+Message-ID: <71ccd3ac-0357-10f6-6e37-a3380e46ff33@arm.com>
+Date:   Thu, 9 Apr 2020 13:06:04 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-In-Reply-To: <CAOQ4uxgeCc=_b1FG3vfMWF50qCousXxEWa63Wn3iCHmLXDNCNA@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-CA
+In-Reply-To: <20200225073731.465270-7-avagin@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 2/25/20 7:37 AM, Andrei Vagin wrote:
+> CONFIG_TIME_NS is dependes on GENERIC_VDSO_TIME_NS.
+> 
+> Signed-off-by: Andrei Vagin <avagin@gmail.com>
 
+Reviewed-by: Vincenzo Frascino <vincenzo.frascino@arm.com>
 
-On 09/04/2020 14.48, Amir Goldstein wrote:
-> On Thu, Apr 9, 2020 at 2:28 PM Konstantin Khlebnikov
-> <khlebnikov@yandex-team.ru> wrote:
->>
->> On 09/04/2020 13.23, Amir Goldstein wrote:
->>> On Thu, Apr 9, 2020 at 11:30 AM Konstantin Khlebnikov
->>> <khlebnikov@yandex-team.ru> wrote:
->>>>
->>>> Stacked filesystems like overlayfs has no own writeback, but they have to
->>>> forward syncfs() requests to backend for keeping data integrity.
->>>>
->>>> During global sync() each overlayfs instance calls method ->sync_fs()
->>>> for backend although it itself is in global list of superblocks too.
->>>> As a result one syscall sync() could write one superblock several times
->>>> and send multiple disk barriers.
->>>>
->>>> This patch adds flag SB_I_SKIP_SYNC into sb->sb_iflags to avoid that.
->>>>
->>>> Reported-by: Dmitry Monakhov <dmtrmonakhov@yandex-team.ru>
->>>> Signed-off-by: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
->>>> ---
->>>
->>> Seems reasonable.
->>> You may add:
->>> Reviewed-by: Amir Goldstein <amir73il@gmail.com>
->>>
->>> +CC: containers list
->>
->> Thanks
->>
->>>
->>> This bring up old memories.
->>> I posted this way back to fix handling of emergency_remount() in the
->>> presence of loop mounted fs:
->>> https://lore.kernel.org/linux-ext4/CAA2m6vfatWKS1CQFpaRbii2AXiZFvQUjVvYhGxWTSpz+2rxDyg@mail.gmail.com/
->>>
->>> But seems to me that emergency_sync() and sync(2) are equally broken
->>> for this use case.
->>>
->>> I wonder if anyone cares enough about resilience of loop mounted fs to try
->>> and change the iterate_* functions to iterate supers/bdevs in reverse order...
->>
->> Now I see reason behind "sync; sync; sync; reboot" =)
->>
->> Order old -> new allows to not miss new items if list modifies.
->> Might be important for some users.
->>
+> ---
+>  arch/arm64/Kconfig | 1 +
+>  1 file changed, 1 insertion(+)
 > 
-> That's not the reason I suggested reverse order.
-> The reason is that with loop mounted fs, the correct order of flushing is:
-> 1. sync loop mounted fs inodes => writes to loop image file
-> 2. sync loop mounted fs sb => fsyncs the loop image file
-> 3. sync the loop image host fs sb
+> diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
+> index c6c32fb7f546..660ad0b0e6bb 100644
+> --- a/arch/arm64/Kconfig
+> +++ b/arch/arm64/Kconfig
+> @@ -110,6 +110,7 @@ config ARM64
+>  	select GENERIC_STRNLEN_USER
+>  	select GENERIC_TIME_VSYSCALL
+>  	select GENERIC_GETTIMEOFDAY
+> +	select GENERIC_VDSO_TIME_NS
+>  	select HANDLE_DOMAIN_IRQ
+>  	select HARDIRQS_SW_RESEND
+>  	select HAVE_PCI
 > 
-> With forward sb iteration order, #3 happens before #1, so the
-> loop mounted fs changes are not really being made durable by
-> a single sync(2) call.
 
-If fs in loop mounted with barriers then sync_fs will issue
-REQ_OP_FLUSH to loop device and trigger fsync() for image file.
-Sync() might write something twice but data should be safe.
-Without barriers this scenario is broken for sure.
-
-Emergency remount R/O is other thing. It really needs reverse order.
-
-> 
->> bdev iteration seems already reversed: inode_sb_list_add adds to the head
->>
-> 
-> I think bdev iteration order will not make a difference in this case.
-> flushing /dev/loopX will not be needed and it happens too late
-> anyway.
-> 
-> Thanks,
-> Amir.
-> 
+-- 
+Regards,
+Vincenzo
