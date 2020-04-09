@@ -6,207 +6,86 @@ X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64EA5C2BBFD
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 12:21:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB1CEC2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 12:29:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 430AB20B1F
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 12:21:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9358D208FE
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 12:29:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726579AbgDIMVI (ORCPT
+        id S1726589AbgDIM3B (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Apr 2020 08:21:08 -0400
-Received: from asavdk4.altibox.net ([109.247.116.15]:56972 "EHLO
-        asavdk4.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725971AbgDIMVI (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Apr 2020 08:21:08 -0400
-Received: from ravnborg.org (unknown [158.248.194.18])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by asavdk4.altibox.net (Postfix) with ESMTPS id DA56180539;
-        Thu,  9 Apr 2020 14:21:00 +0200 (CEST)
-Date:   Thu, 9 Apr 2020 14:20:54 +0200
-From:   Sam Ravnborg <sam@ravnborg.org>
-To:     "H. Nikolaus Schaller" <hns@goldelico.com>
-Cc:     Paul Cercueil <paul@crapouillou.net>,
-        Paul Boddie <paul@boddie.org.uk>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <paulburton@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Andi Kleen <ak@linux.intel.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Kees Cook <keescook@chromium.org>, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linux-mips@vger.kernel.org, linux-gpio@vger.kernel.org,
-        mips-creator-ci20-dev@googlegroups.com,
-        letux-kernel@openphoenux.org
-Subject: Re: [RFC v3 1/8] dt-bindings: display: convert ingenic, lcd.txt to
- ingenic, lcd.yaml
-Message-ID: <20200409122054.GA5683@ravnborg.org>
-References: <cover.1585503354.git.hns@goldelico.com>
- <a75c77fa8528f44832993f9780ae4ea409125a90.1585503354.git.hns@goldelico.com>
- <20200409072559.GB12367@ravnborg.org>
- <F4F5D267-A538-444B-9DCA-EA87AC798FB3@goldelico.com>
+        Thu, 9 Apr 2020 08:29:01 -0400
+Received: from verein.lst.de ([213.95.11.211]:46513 "EHLO verein.lst.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725970AbgDIM3B (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Apr 2020 08:29:01 -0400
+Received: by verein.lst.de (Postfix, from userid 2407)
+        id DE2B068C4E; Thu,  9 Apr 2020 14:28:56 +0200 (CEST)
+Date:   Thu, 9 Apr 2020 14:28:56 +0200
+From:   Christoph Hellwig <hch@lst.de>
+To:     Dave Chinner <david@fromorbit.com>
+Cc:     Ira Weiny <ira.weiny@intel.com>, Jan Kara <jack@suse.cz>,
+        linux-kernel@vger.kernel.org,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Christoph Hellwig <hch@lst.de>,
+        "Theodore Y. Ts'o" <tytso@mit.edu>, Jeff Moyer <jmoyer@redhat.com>,
+        linux-ext4@vger.kernel.org, linux-xfs@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH V6 7/8] fs/xfs: Change
+ xfs_ioctl_setattr_dax_invalidate() to xfs_ioctl_dax_check()
+Message-ID: <20200409122856.GA17929@lst.de>
+References: <20200407182958.568475-1-ira.weiny@intel.com> <20200407182958.568475-8-ira.weiny@intel.com> <20200408022318.GJ24067@dread.disaster.area> <20200408095803.GB30172@quack2.suse.cz> <20200408210950.GL24067@dread.disaster.area> <20200408222636.GC664132@iweiny-DESK2.sc.intel.com> <20200408234817.GP24067@dread.disaster.area>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <F4F5D267-A538-444B-9DCA-EA87AC798FB3@goldelico.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-CMAE-Score: 0
-X-CMAE-Analysis: v=2.3 cv=XpTUx2N9 c=1 sm=1 tr=0
-        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
-        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10
-        a=Cwf29u2qlR-08nbE3pUA:9 a=CjuIK1q_8ugA:10
+In-Reply-To: <20200408234817.GP24067@dread.disaster.area>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Nikolaus.
+On Thu, Apr 09, 2020 at 09:48:17AM +1000, Dave Chinner wrote:
+> > Christoph in particular said that a 'lazy change' is: "... straight from
+> > the playbook for arcane and confusing API designs."
+> > 
+> > 	"But returning an error and doing a lazy change anyway is straight from
+> > 	the playbook for arcane and confusing API designs."
+> > 
+> > 	-- https://lore.kernel.org/lkml/20200403072731.GA24176@lst.de/
+> > 
+> > Did I somehow misunderstand this?
+> 
+> Yes. Clearing the on-disk flag successfully should not return an
+> error.
+> 
+> What is wrong is having it clear the flag successfully and returning
+> an error because the operation doesn't take immediate effect, then
+> having the change take effect later after telling the application
+> there was an error.
+> 
+> That's what Christoph was saying is "straight from the playbook for
+> arcane and confusing API designs."
 
-> >> +
-> >> +examples:
-> >> +  - |
-> >> +    #include <dt-bindings/clock/jz4725b-cgu.h>
-> >> +
-> >> +    panel {
-> >> +      compatible = "sharp,ls020b1dd01d";
-> >> +
-> >> +      backlight = <&backlight>;
-> >> +      power-supply = <&vcc>;
-> >> +
-> >> +      port {
-> >> +        panel_input: endpoint {
-> >> +          remote-endpoint = <&panel_output>;
-> >> +          };
-> >> +        };
-> >> +      };
-> > The panel part is not needed - better to drop it.
-> 
-> Well, it is needed to fulfill the remote-endpoint below.
+Yes.
 
-Examples may have phandle that are not defined.
-So the example will work fine without it.
-See other similar examples.
+> There's absolutely nothing wrong with setting/clearing the on-disk
+> flag and having the change take effect some time later depending on
+> some external context. We've done this sort of thing for a -long
+> time- and it's not XFS specific at all.
+> 
+> e.g.  changing the on-disk APPEND flag doesn't change the write
+> behaviour of currently open files - it only affects the behaviour of
+> future file opens. IOWs, we can have the flag set on disk, but we
+> can still write randomly to the inode as long as we have a file
+> descriptor that was opened before the APPEND on disk flag was set.
+> 
+> That's exactly the same class of behaviour as we are talking about
+> here for the on-disk DAX flag.
 
-> 
-> > 
-> > 
-> >> +
-> >> +    lcd: lcd-controller@13050000 {
-> >> +      compatible = "ingenic,jz4725b-lcd";
-> >> +      reg = <0x13050000 0x1000>;
-> >> +
-> >> +      interrupt-parent = <&intc>;
-> >> +      interrupts = <31>;
-> >> +
-> >> +      clocks = <&cgu JZ4725B_CLK_LCD>;
-> >> +      clock-names = "lcd", "lcd_pclk";
-> >> +
-> >> +      port {
-> >> +        panel_output: endpoint {
-> >> +          remote-endpoint = <&panel_input>;
-> >> +          };
-> >> +        };
-> >> +      };
-> > We know this example will not pass the check, as there is only
-> > one clock specified.
-> > I suggest to drop this example.
-> > If it later turns out that jz4725b only have one clock,
-> 
-> Paul already reported that it only wants to see one clock.
-> 
-> > then the binding
-> > needs to be updated.
-> 
-> Yes, I have that on my to-do list to update the binding to reflect
-> this minItems/maxItems thing but I am not yet sure about how
-> to handle the clock-names in that case. I.e. make "lcd" optional
-> and enforce "lcd_pclk" only.
-Look forward to next version.
-
-> 
-> > But the best guess is that the example is wrong.
-> > 
-> > The example below for jz4780-lcd cover all relevant parts - so
-> > just keep it as the only example.
-> > 
-> >> +
-> >> +  - |
-> >> +    #include <dt-bindings/clock/jz4780-cgu.h>
-> >> +
-> >> +    lcdc0: lcdc0@13050000 {
-> > Name this lcdc
-> > And drop "lcdc0@13050000" as this is not relevant for this example.
-> > 
-> > Remember - the examples exist to explain the binding. They are
-> > just examples.
-> > 
-> >> +        compatible = "ingenic,jz4780-lcd";
-> >> +        reg = <0x13050000 0x1800>;
-> >> +
-> >> +        clocks = <&cgu JZ4780_CLK_TVE>, <&cgu JZ4780_CLK_LCD0PIXCLK>;
-> >> +        clock-names = "lcd", "lcd_pclk";
-> >> +
-> >> +        interrupt-parent = <&intc>;
-> >> +        interrupts = <31>;
-> >> +
-> >> +        jz4780_lcd_out: port {
-> >> +            #address-cells = <1>;
-> >> +            #size-cells = <0>;
-> >> +
-> >> +            jz4780_out_hdmi: endpoint@0 {
-> >> +                reg = <0>;
-> >> +                remote-endpoint = <&hdmi_in_lcd>;
-> >> +            };
-> >> +        };
-> >> +    };
-> >> +
-> > 
-> > And drop this as it does not add anything extra.
-> 
-> Well, it demonstrates how to add a second lcdc which is disabled.
-The purpose of the example is to show an example of the
-binding specified in this file.
-Adding a second disabled lcdc is a general thing, and not
-something we want in all the individual examples.
-
-Also the actual content, for example register values can be
-random as they are not part of the binding.
-This is not a documentation of the HW but a binding example.
-
-	Sam
-
-> 
-> Showing that it is possible to do so is IMHO the most important
-> part of the example because it is not at all obvious.
-> 
-> I have also added both SoC to show how differently they can
-> and should be.
-> 
-> >> +    lcdc1: lcdc1@130a0000 {
-> >> +        compatible = "ingenic,jz4780-lcd";
-> >> +        reg = <0x130a0000 0x1800>;
-> >> +
-> >> +        clocks = <&cgu JZ4780_CLK_TVE>, <&cgu JZ4780_CLK_LCD1PIXCLK>;
-> >> +        clock-names = "lcd", "lcd_pclk";
-> >> +
-> >> +        interrupt-parent = <&intc>;
-> >> +        interrupts = <31>;
-> >> +
-> >> +        status = "disabled";
-> >> +    };
-> > 
-> > 	Sam
-> 
-> BR and thanks,
-> Nikolaus
-> 
+Some people consider that a bug, though.  But I don't think we can
+change that now.  In general I don't think APIs that don't take
+immediate effect are all that great, but in some cases we can live
+with them if they are properly documented.  But APIs that return
+an error, but actually take effect later anyway are just crazy.
