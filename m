@@ -2,48 +2,42 @@ Return-Path: <SRS0=n+Ub=5Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CBFBC2BB1D
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 01:45:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D1AFC2BA80
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 01:57:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6DD6720857
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 01:45:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1E36220857
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 01:57:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726627AbgDIBpT (ORCPT
+        id S1726574AbgDIB5h (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Apr 2020 21:45:19 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:37328 "EHLO huawei.com"
+        Wed, 8 Apr 2020 21:57:37 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:12700 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726579AbgDIBpT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Apr 2020 21:45:19 -0400
-Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 9B416B59D0BA86C2FC1F;
-        Thu,  9 Apr 2020 09:45:10 +0800 (CST)
-Received: from [127.0.0.1] (10.63.139.185) by DGGEMS413-HUB.china.huawei.com
- (10.3.19.213) with Microsoft SMTP Server id 14.3.487.0; Thu, 9 Apr 2020
- 09:45:03 +0800
-Subject: Re: [PATCH] crypto: hisilicon: add more dependencies
-To:     Arnd Bergmann <arnd@arndb.de>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S. Miller" <davem@davemloft.net>,
-        Hongbo Yao <yaohongbo@huawei.com>
-References: <20200408162718.4004527-1-arnd@arndb.de>
-CC:     Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Zaibo Xu <xuzaibo@huawei.com>, Hao Fang <fanghao11@huawei.com>,
-        Eric Biggers <ebiggers@google.com>,
-        Mao Wenan <maowenan@huawei.com>,
-        <linux-crypto@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+        id S1726521AbgDIB5g (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Apr 2020 21:57:36 -0400
+Received: from DGGEMS411-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 0F458CA7414E7270DFF8;
+        Thu,  9 Apr 2020 09:57:34 +0800 (CST)
+Received: from [127.0.0.1] (10.63.139.185) by DGGEMS411-HUB.china.huawei.com
+ (10.3.19.211) with Microsoft SMTP Server id 14.3.487.0; Thu, 9 Apr 2020
+ 09:57:25 +0800
+Subject: Re: [PATCH] dmaengine: hisilicon: fix PCI_MSI dependency
+To:     Arnd Bergmann <arnd@arndb.de>, Vinod Koul <vkoul@kernel.org>,
+        Zhenfa Qiu <qiuzhenfa@hisilicon.com>
+References: <20200408200559.4124238-1-arnd@arndb.de>
+CC:     Dan Williams <dan.j.williams@intel.com>,
+        <dmaengine@vger.kernel.org>, <linux-kernel@vger.kernel.org>
 From:   Zhou Wang <wangzhou1@hisilicon.com>
-Message-ID: <5E8E7E0D.4090702@hisilicon.com>
-Date:   Thu, 9 Apr 2020 09:44:45 +0800
+Message-ID: <5E8E8104.5060307@hisilicon.com>
+Date:   Thu, 9 Apr 2020 09:57:24 +0800
 User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:38.0) Gecko/20100101
  Thunderbird/38.5.1
 MIME-Version: 1.0
-In-Reply-To: <20200408162718.4004527-1-arnd@arndb.de>
+In-Reply-To: <20200408200559.4124238-1-arnd@arndb.de>
 Content-Type: text/plain; charset="windows-1252"
 Content-Transfer-Encoding: 7bit
 X-Originating-IP: [10.63.139.185]
@@ -53,51 +47,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020/4/9 0:27, Arnd Bergmann wrote:
-> The added dependencies must be applied recursively to
-> other modules that select CRYPTO_DEV_HISI_QM, to avoid
-> running into the same problem again:
+On 2020/4/9 4:05, Arnd Bergmann wrote:
+> The dependency is phrased incorrectly, so on arm64, it is possible
+> to build with CONFIG_PCI disabled, resulting a build failure:
 > 
-> WARNING: unmet direct dependencies detected for CRYPTO_DEV_HISI_QM
->   Depends on [m]: CRYPTO [=y] && CRYPTO_HW [=y] && (ARM64 [=y] || COMPILE_TEST [=y]) && PCI [=y] && PCI_MSI [=y] && (UACCE [=m] || UACCE [=m]=n)
->   Selected by [y]:
->   - CRYPTO_DEV_HISI_SEC2 [=y] && CRYPTO [=y] && CRYPTO_HW [=y] && PCI [=y] && PCI_MSI [=y] && (ARM64 [=y] || COMPILE_TEST [=y] && 64BIT [=y])
->   - CRYPTO_DEV_HISI_HPRE [=y] && CRYPTO [=y] && CRYPTO_HW [=y] && PCI [=y] && PCI_MSI [=y] && (ARM64 [=y] || COMPILE_TEST [=y] && 64BIT [=y])
-> ld: drivers/crypto/hisilicon/qm.o: in function `hisi_qm_uninit': qm.c:(.text+0x23b8): undefined reference to `uacce_remove'
+> drivers/dma/hisi_dma.c: In function 'hisi_dma_free_irq_vectors':
+> drivers/dma/hisi_dma.c:138:2: error: implicit declaration of function 'pci_free_irq_vectors'; did you mean 'pci_alloc_irq_vectors'? [-Werror=implicit-function-declaration]
+>   138 |  pci_free_irq_vectors(data);
+>       |  ^~~~~~~~~~~~~~~~~~~~
+>       |  pci_alloc_irq_vectors
+> drivers/dma/hisi_dma.c: At top level:
+> drivers/dma/hisi_dma.c:605:1: warning: data definition has no type or storage class
+>   605 | module_pci_driver(hisi_dma_pci_driver);
+>       | ^~~~~~~~~~~~~~~~~
+> drivers/dma/hisi_dma.c:605:1: error: type defaults to 'int' in declaration of 'module_pci_driver' [-Werror=implicit-int]
+> drivers/dma/hisi_dma.c:605:1: warning: parameter names (without types) in function declaration
+> drivers/dma/hisi_dma.c:599:26: error: 'hisi_dma_pci_driver' defined but not used [-Werror=unused-variable]
+>   599 | static struct pci_driver hisi_dma_pci_driver = {
 > 
-> Fixes: 47c16b449921 ("crypto: hisilicon - qm depends on UACCE")
+> Change it so we always depend on PCI_MSI, even on ARM64
+> 
+> Fixes: e9f08b65250d ("dmaengine: hisilicon: Add Kunpeng DMA engine support")
 > Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 > ---
->  drivers/crypto/hisilicon/Kconfig | 2 ++
->  1 file changed, 2 insertions(+)
+>  drivers/dma/Kconfig | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
 > 
-> diff --git a/drivers/crypto/hisilicon/Kconfig b/drivers/crypto/hisilicon/Kconfig
-> index 095850d01dcc..9c3004663fe8 100644
-> --- a/drivers/crypto/hisilicon/Kconfig
-> +++ b/drivers/crypto/hisilicon/Kconfig
-> @@ -28,6 +28,7 @@ config CRYPTO_DEV_HISI_SEC2
->  	select CRYPTO_SHA512
->  	depends on PCI && PCI_MSI
->  	depends on ARM64 || (COMPILE_TEST && 64BIT)
-> +	depends on UACCE || UACCE=n
+> diff --git a/drivers/dma/Kconfig b/drivers/dma/Kconfig
+> index 98ae15c82a30..c19e25b140c5 100644
+> --- a/drivers/dma/Kconfig
+> +++ b/drivers/dma/Kconfig
+> @@ -241,7 +241,8 @@ config FSL_RAID
+>  
+>  config HISI_DMA
+>  	tristate "HiSilicon DMA Engine support"
+> -	depends on ARM64 || (COMPILE_TEST && PCI_MSI)
+> +	depends on ARM64 || COMPILE_TEST
+> +	depends on PCI_MSI
+>  	select DMA_ENGINE
+>  	select DMA_VIRTUAL_CHANNELS
 >  	help
->  	  Support for HiSilicon SEC Engine of version 2 in crypto subsystem.
->  	  It provides AES, SM4, and 3DES algorithms with ECB
-> @@ -59,6 +60,7 @@ config CRYPTO_DEV_HISI_HPRE
->  	tristate "Support for HISI HPRE accelerator"
->  	depends on PCI && PCI_MSI
->  	depends on ARM64 || (COMPILE_TEST && 64BIT)
-> +	depends on UACCE || UACCE=n
->  	select CRYPTO_DEV_HISI_QM
->  	select CRYPTO_DH
->  	select CRYPTO_RSA
 > 
 
 Hi Arnd,
 
-Seems we already have a fix: https://lkml.org/lkml/2020/3/30/173 with your reviewed-by :)
+There was a fix from Haibing: https://lkml.org/lkml/2020/3/28/158
+Maybe Vinod will review and take it later :)
 
 Best,
 Zhou
-
 
