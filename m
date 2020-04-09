@@ -2,304 +2,99 @@ Return-Path: <SRS0=n+Ub=5Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE787C2BA2B
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 02:29:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2570C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 02:31:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9B58B20857
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 02:29:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586399371;
-	bh=9Ma3L1fySRklm6bl3YO+KuHY8W+LytPch+IbfWBH+hI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=cj3wIbtlFZCIVcxKgkB8RuiFF8gwD5lDGoU1sTeoZJKbpnv729ni93FOoe9/iN5lO
-	 VmAJHSoE9Uv05W7tL9mcSmuBTFog1TlzUciSE5ipuAY3Rle80Jr3E3/AiexfV+guO/
-	 6W9k3/xl7BDzovtAW/RHPsNZqrcJ9DWv2lBGxlbk=
+	by mail.kernel.org (Postfix) with ESMTP id C0AF72074F
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 02:31:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726641AbgDIC3a (ORCPT
+        id S1726632AbgDICbg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Apr 2020 22:29:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53890 "EHLO mail.kernel.org"
+        Wed, 8 Apr 2020 22:31:36 -0400
+Received: from helcar.hmeau.com ([216.24.177.18]:38492 "EHLO fornost.hmeau.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726534AbgDIC33 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Apr 2020 22:29:29 -0400
-Received: from localhost (unknown [104.132.1.66])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E652B2074F;
-        Thu,  9 Apr 2020 02:29:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586399369;
-        bh=9Ma3L1fySRklm6bl3YO+KuHY8W+LytPch+IbfWBH+hI=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=EEUZYZI8/imbFcKtWY8Uo61UnKnOctE8fpj2Pkg7qOnWKjlUOYGZMmDeOlSFms/LP
-         KfuC/geIH4tHOLl+PWoZ4kQEdQNTL8WVG+1P6lmPlWdQ+mbl5tJmccZn7QvbSkymi8
-         Mtz/hyIXl7VjQk2J5DR+aVNywFl737bIAg5RkfB4=
-Date:   Wed, 8 Apr 2020 19:29:28 -0700
-From:   Jaegeuk Kim <jaegeuk@kernel.org>
-To:     Sahitya Tummala <stummala@codeaurora.org>
-Cc:     Chao Yu <yuchao0@huawei.com>,
-        linux-f2fs-devel@lists.sourceforge.net,
+        id S1726523AbgDICbf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Apr 2020 22:31:35 -0400
+Received: from gwarestrin.me.apana.org.au ([192.168.0.7] helo=gwarestrin.arnor.me.apana.org.au)
+        by fornost.hmeau.com with smtp (Exim 4.89 #2 (Debian))
+        id 1jMMxf-0003kw-TV; Thu, 09 Apr 2020 12:30:37 +1000
+Received: by gwarestrin.arnor.me.apana.org.au (sSMTP sendmail emulation); Thu, 09 Apr 2020 12:30:35 +1000
+Date:   Thu, 9 Apr 2020 12:30:35 +1000
+From:   Herbert Xu <herbert@gondor.apana.org.au>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Ayush Sawal <ayush.sawal@chelsio.com>,
+        Vinay Kumar Yadav <vinay.yadav@chelsio.com>,
+        Rohit Maheshwari <rohitm@chelsio.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        YueHaibing <yuehaibing@huawei.com>, linux-crypto@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3] f2fs: fix long latency due to discard during umount
-Message-ID: <20200409022928.GD110440@google.com>
-References: <1585550730-1858-1-git-send-email-stummala@codeaurora.org>
- <20200331184655.GB198665@google.com>
- <20200401092201.GB20234@codeaurora.org>
- <20200403171943.GC68460@google.com>
- <20200408090024.GC20234@codeaurora.org>
+Subject: Re: [PATCH] cxgb4/chcr: fix building without IPv6
+Message-ID: <20200409023035.GA27525@gondor.apana.org.au>
+References: <20200408185330.190658-1-arnd@arndb.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200408090024.GC20234@codeaurora.org>
+In-Reply-To: <20200408185330.190658-1-arnd@arndb.de>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 04/08, Sahitya Tummala wrote:
-> Hi Jaegeuk,
+On Wed, Apr 08, 2020 at 08:53:06PM +0200, Arnd Bergmann wrote:
+> When IPv6 support is completely disabled, the chelsio driver fails
+> to build with
 > 
-> On Fri, Apr 03, 2020 at 10:19:43AM -0700, Jaegeuk Kim wrote:
-> > On 04/01, Sahitya Tummala wrote:
-> > > Hi Jaegeuk,
-> > > 
-> > > On Tue, Mar 31, 2020 at 11:46:55AM -0700, Jaegeuk Kim wrote:
-> > > > On 03/30, Sahitya Tummala wrote:
-> > > > > F2FS already has a default timeout of 5 secs for discards that
-> > > > > can be issued during umount, but it can take more than the 5 sec
-> > > > > timeout if the underlying UFS device queue is already full and there
-> > > > > are no more available free tags to be used. In that case, submit_bio()
-> > > > > will wait for the already queued discard requests to complete to get
-> > > > > a free tag, which can potentially take way more than 5 sec.
-> > > > > 
-> > > > > Fix this by submitting the discard requests with REQ_NOWAIT
-> > > > > flags during umount. This will return -EAGAIN for UFS queue/tag full
-> > > > > scenario without waiting in the context of submit_bio(). The FS can
-> > > > > then handle these requests by retrying again within the stipulated
-> > > > > discard timeout period to avoid long latencies.
-> > > > 
-> > > > Sorry, Sahitya, but, do we really need to do like this? How about just
-> > > > controlling # of outstanding discarding bios in __issue_discard_cmd()?
-> > > 
-> > > Do you mean something like this?
-> > > 
-> > > diff --git a/fs/f2fs/segment.c b/fs/f2fs/segment.c
-> > > index 1a62b27..860dd43 100644
-> > > --- a/fs/f2fs/segment.c
-> > > +++ b/fs/f2fs/segment.c
-> > > @@ -1099,7 +1099,7 @@ static void __init_discard_policy(struct f2fs_sb_info *sbi,
-> > >         } else if (discard_type == DPOLICY_FSTRIM) {
-> > >                 dpolicy->io_aware = false;
-> > >         } else if (discard_type == DPOLICY_UMOUNT) {
-> > > -               dpolicy->max_requests = UINT_MAX;
-> > > +               dpolicy->max_requests = 30;
-> > 
-> > Can we use max queue depth of the block device?
+> drivers/crypto/chelsio/chcr_ktls.c: In function 'chcr_ktls_act_open_req6':
+> include/net/sock.h:380:37: error: 'struct sock_common' has no member named 'skc_v6_rcv_saddr'; did you mean 'skc_rcv_saddr'?
+>   380 | #define sk_v6_rcv_saddr __sk_common.skc_v6_rcv_saddr
+>       |                                     ^~~~~~~~~~~~~~~~
+> drivers/crypto/chelsio/chcr_ktls.c:258:37: note: in expansion of macro 'sk_v6_rcv_saddr'
+>   258 |  cpl->local_ip_hi = *(__be64 *)&sk->sk_v6_rcv_saddr.in6_u.u6_addr8[0];
+>       |                                     ^~~~~~~~~~~~~~~
+> drivers/crypto/chelsio/chcr_ktls.c:260:36: note: in expansion of macro 'sk_v6_daddr'
+>   260 |  cpl->peer_ip_hi = *(__be64 *)&sk->sk_v6_daddr.in6_u.u6_addr8[0];
+>       |                                    ^~~~~~~~~~~
+> drivers/crypto/chelsio/chcr_ktls.c:261:36: note: in expansion of macro 'sk_v6_daddr'
+>   261 |  cpl->peer_ip_lo = *(__be64 *)&sk->sk_v6_daddr.in6_u.u6_addr8[8];
+>       |                                    ^~~~~~~~~~~
+> drivers/crypto/chelsio/chcr_ktls.c:296:27: note: in expansion of macro 'sk_v6_daddr'
+>   296 |       ipv6_addr_type(&sk->sk_v6_daddr) == IPV6_ADDR_MAPPED)) {
+>       |                           ^~~~~~~~~~~
+> drivers/crypto/chelsio/chcr_ktls.c:303:29: note: in expansion of macro 'sk_v6_rcv_saddr'
+>   303 |           (const u32 *)&sk->sk_v6_rcv_saddr.in6_u.u6_addr8,
+>       |                             ^~~~~~~~~~~~~~~
+> drivers/crypto/chelsio/chcr_ktls.c: In function 'chcr_ktls_dev_del':
+> drivers/crypto/chelsio/chcr_ktls.c:401:26: note: in expansion of macro 'sk_v6_daddr'
+>   401 |        (const u32 *)&sk->sk_v6_daddr.in6_u.u6_addr8,
+>       |                          ^~~~~~~~~~~
+> drivers/crypto/chelsio/chcr_ktls.c: In function 'chcr_ktls_dev_add':
+> drivers/crypto/chelsio/chcr_ktls.c:495:27: note: in expansion of macro 'sk_v6_daddr'
+>   495 |       ipv6_addr_type(&sk->sk_v6_daddr) == IPV6_ADDR_MAPPED)) {
+>       |                           ^~~~~~~~~~~
+> drivers/crypto/chelsio/chcr_ktls.c:498:22: note: in expansion of macro 'sk_v6_daddr'
+>   498 |   memcpy(daaddr, sk->sk_v6_daddr.in6_u.u6_addr8, 16);
+>       |                      ^~~~~~~~~~~
 > 
-> I think it should be limited to 8 or 16 as Chao suggested, so that we can have
-> better control on the given timeout value? Thoughts?
+> There is probably a good way to fix it, but this patch just adds a
+> bunch of #if checks to get it to build again, which gets a bit
+> ugly.
+> 
+> Fixes: 62370a4f346d ("cxgb4/chcr: Add ipv6 support and statistics")
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> ---
+> If you have a better idea to fix it, please send a different patch
+> instead and treat this as a bug report. ;-)
+> ---
+>  drivers/crypto/chelsio/chcr_ktls.c | 26 ++++++++++++++++++++------
+>  1 file changed, 20 insertions(+), 6 deletions(-)
 
-Where is 8 or 16 coming from? What about SSD? Sorry, it's unclear to me.
-
-> 
-> Thanks,
-> 
-> > 
-> > >                 dpolicy->io_aware = false;
-> > >                 /* we need to issue all to keep CP_TRIMMED_FLAG */
-> > >                 dpolicy->granularity = 1;
-> > > @@ -1470,12 +1470,14 @@ static int __issue_discard_cmd(struct f2fs_sb_info *sbi,
-> > >         struct list_head *pend_list;
-> > >         struct discard_cmd *dc, *tmp;
-> > >         struct blk_plug plug;
-> > > -       int i, issued = 0;
-> > > +       int i, issued;
-> > >         bool io_interrupted = false;
-> > > 
-> > >         if (dpolicy->timeout != 0)
-> > >                 f2fs_update_time(sbi, dpolicy->timeout);
-> > > 
-> > > +retry:
-> > > +       issued = 0;
-> > >         for (i = MAX_PLIST_NUM - 1; i >= 0; i--) {
-> > >                 if (dpolicy->timeout != 0 &&
-> > >                                 f2fs_time_over(sbi, dpolicy->timeout))
-> > > @@ -1522,6 +1524,11 @@ static int __issue_discard_cmd(struct f2fs_sb_info *sbi,
-> > >                         break;
-> > >         }
-> > > 
-> > > +       if (dpolicy->type == DPOLICY_UMOUNT && issued) {
-> > > +               __wait_all_discard_cmd(sbi, dpolicy);
-> > > +               goto retry;
-> > > +       }
-> > > +
-> > >         if (!issued && io_interrupted)
-> > >                 issued = -1;
-> > > 
-> > > Thanks,
-> > > 
-> > > > 
-> > > > > 
-> > > > > Signed-off-by: Sahitya Tummala <stummala@codeaurora.org>
-> > > > > ---
-> > > > > v3:
-> > > > > -Handle the regression reported by Chao with v2.
-> > > > > -simplify the logic to split the dc with multiple bios incase any bio returns
-> > > > >  EAGAIN and retry those new dc within 5 sec timeout.
-> > > > > 
-> > > > >  fs/f2fs/segment.c | 65 +++++++++++++++++++++++++++++++++++++++++++------------
-> > > > >  1 file changed, 51 insertions(+), 14 deletions(-)
-> > > > > 
-> > > > > diff --git a/fs/f2fs/segment.c b/fs/f2fs/segment.c
-> > > > > index fb3e531..55d18c7 100644
-> > > > > --- a/fs/f2fs/segment.c
-> > > > > +++ b/fs/f2fs/segment.c
-> > > > > @@ -1029,13 +1029,16 @@ static void f2fs_submit_discard_endio(struct bio *bio)
-> > > > >  	struct discard_cmd *dc = (struct discard_cmd *)bio->bi_private;
-> > > > >  	unsigned long flags;
-> > > > >  
-> > > > > -	dc->error = blk_status_to_errno(bio->bi_status);
-> > > > > -
-> > > > >  	spin_lock_irqsave(&dc->lock, flags);
-> > > > > +	if (!dc->error)
-> > > > > +		dc->error = blk_status_to_errno(bio->bi_status);
-> > > > > +
-> > > > >  	dc->bio_ref--;
-> > > > > -	if (!dc->bio_ref && dc->state == D_SUBMIT) {
-> > > > > -		dc->state = D_DONE;
-> > > > > -		complete_all(&dc->wait);
-> > > > > +	if (!dc->bio_ref) {
-> > > > > +		if (dc->error || dc->state == D_SUBMIT) {
-> > > > > +			dc->state = D_DONE;
-> > > > > +			complete_all(&dc->wait);
-> > > > > +		}
-> > > > >  	}
-> > > > >  	spin_unlock_irqrestore(&dc->lock, flags);
-> > > > >  	bio_put(bio);
-> > > > > @@ -1124,10 +1127,13 @@ static int __submit_discard_cmd(struct f2fs_sb_info *sbi,
-> > > > >  	struct discard_cmd_control *dcc = SM_I(sbi)->dcc_info;
-> > > > >  	struct list_head *wait_list = (dpolicy->type == DPOLICY_FSTRIM) ?
-> > > > >  					&(dcc->fstrim_list) : &(dcc->wait_list);
-> > > > > -	int flag = dpolicy->sync ? REQ_SYNC : 0;
-> > > > > +	int flag;
-> > > > >  	block_t lstart, start, len, total_len;
-> > > > >  	int err = 0;
-> > > > >  
-> > > > > +	flag = dpolicy->sync ? REQ_SYNC : 0;
-> > > > > +	flag |= dpolicy->type == DPOLICY_UMOUNT ? REQ_NOWAIT : 0;
-> > > > > +
-> > > > >  	if (dc->state != D_PREP)
-> > > > >  		return 0;
-> > > > >  
-> > > > > @@ -1192,10 +1198,6 @@ static int __submit_discard_cmd(struct f2fs_sb_info *sbi,
-> > > > >  		dc->bio_ref++;
-> > > > >  		spin_unlock_irqrestore(&dc->lock, flags);
-> > > > >  
-> > > > > -		atomic_inc(&dcc->queued_discard);
-> > > > > -		dc->queued++;
-> > > > > -		list_move_tail(&dc->list, wait_list);
-> > > > > -
-> > > > >  		/* sanity check on discard range */
-> > > > >  		__check_sit_bitmap(sbi, lstart, lstart + len);
-> > > > >  
-> > > > > @@ -1203,6 +1205,29 @@ static int __submit_discard_cmd(struct f2fs_sb_info *sbi,
-> > > > >  		bio->bi_end_io = f2fs_submit_discard_endio;
-> > > > >  		bio->bi_opf |= flag;
-> > > > >  		submit_bio(bio);
-> > > > > +		if (flag & REQ_NOWAIT) {
-> > > > > +			if (dc->error == -EAGAIN) {
-> > > > > +				spin_lock_irqsave(&dc->lock, flags);
-> > > > > +				dc->len -= len;
-> > > > > +				if (!dc->len) {
-> > > > > +					dc->len = total_len;
-> > > > > +					dc->state = D_PREP;
-> > > > > +					reinit_completion(&dc->wait);
-> > > > > +				} else {
-> > > > > +					dcc->undiscard_blks -= total_len;
-> > > > > +					if (dc->state == D_PARTIAL)
-> > > > > +						dc->state = D_SUBMIT;
-> > > > > +				}
-> > > > > +				err = dc->error;
-> > > > > +				dc->error = 0;
-> > > > > +				spin_unlock_irqrestore(&dc->lock, flags);
-> > > > > +				break;
-> > > > > +			}
-> > > > > +		}
-> > > > > +
-> > > > > +		atomic_inc(&dcc->queued_discard);
-> > > > > +		dc->queued++;
-> > > > > +		list_move_tail(&dc->list, wait_list);
-> > > > >  
-> > > > >  		atomic_inc(&dcc->issued_discard);
-> > > > >  
-> > > > > @@ -1214,8 +1239,9 @@ static int __submit_discard_cmd(struct f2fs_sb_info *sbi,
-> > > > >  		len = total_len;
-> > > > >  	}
-> > > > >  
-> > > > > -	if (!err && len)
-> > > > > -		__update_discard_tree_range(sbi, bdev, lstart, start, len);
-> > > > > +	if ((!err || err == -EAGAIN) && total_len && dc->start != start)
-> > > > > +		__update_discard_tree_range(sbi, bdev, lstart, start,
-> > > > > +					total_len);
-> > > > >  	return err;
-> > > > >  }
-> > > > >  
-> > > > > @@ -1470,12 +1496,15 @@ static int __issue_discard_cmd(struct f2fs_sb_info *sbi,
-> > > > >  	struct list_head *pend_list;
-> > > > >  	struct discard_cmd *dc, *tmp;
-> > > > >  	struct blk_plug plug;
-> > > > > -	int i, issued = 0;
-> > > > > +	int i, err, issued = 0;
-> > > > >  	bool io_interrupted = false;
-> > > > > +	bool retry;
-> > > > >  
-> > > > >  	if (dpolicy->timeout != 0)
-> > > > >  		f2fs_update_time(sbi, dpolicy->timeout);
-> > > > >  
-> > > > > +retry:
-> > > > > +	retry = false;
-> > > > >  	for (i = MAX_PLIST_NUM - 1; i >= 0; i--) {
-> > > > >  		if (dpolicy->timeout != 0 &&
-> > > > >  				f2fs_time_over(sbi, dpolicy->timeout))
-> > > > > @@ -1509,7 +1538,12 @@ static int __issue_discard_cmd(struct f2fs_sb_info *sbi,
-> > > > >  				break;
-> > > > >  			}
-> > > > >  
-> > > > > -			__submit_discard_cmd(sbi, dpolicy, dc, &issued);
-> > > > > +			err = __submit_discard_cmd(sbi, dpolicy, dc, &issued);
-> > > > > +			if (err == -EAGAIN) {
-> > > > > +				congestion_wait(BLK_RW_ASYNC,
-> > > > > +						DEFAULT_IO_TIMEOUT);
-> > > > > +				retry = true;
-> > > > > +			}
-> > > > >  
-> > > > >  			if (issued >= dpolicy->max_requests)
-> > > > >  				break;
-> > > > > @@ -1522,6 +1556,9 @@ static int __issue_discard_cmd(struct f2fs_sb_info *sbi,
-> > > > >  			break;
-> > > > >  	}
-> > > > >  
-> > > > > +	if (retry)
-> > > > > +		goto retry;
-> > > > > +
-> > > > >  	if (!issued && io_interrupted)
-> > > > >  		issued = -1;
-> > > > >  
-> > > > > -- 
-> > > > > Qualcomm India Private Limited, on behalf of Qualcomm Innovation Center, Inc.
-> > > > > Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, a Linux Foundation Collaborative Project.
-> > > 
-> > > -- 
-> > > --
-> > > Sent by a consultant of the Qualcomm Innovation Center, Inc.
-> > > The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum.
-> 
-> -- 
-> --
-> Sent by a consultant of the Qualcomm Innovation Center, Inc.
-> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum.
+Please send all chelsio patches via netdev.  Thanks!
+-- 
+Email: Herbert Xu <herbert@gondor.apana.org.au>
+Home Page: http://gondor.apana.org.au/~herbert/
+PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
