@@ -2,99 +2,109 @@ Return-Path: <SRS0=n+Ub=5Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D6C5C2D0EA
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 05:14:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA64AC2BB1D
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 05:19:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4D661206C0
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 05:14:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AEF8C20787
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 05:19:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="ncEgIzCv"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="o5WIwXuZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725985AbgDIFOY (ORCPT
+        id S1726648AbgDIFTJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Apr 2020 01:14:24 -0400
-Received: from mail-ed1-f66.google.com ([209.85.208.66]:40860 "EHLO
-        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725271AbgDIFOY (ORCPT
+        Thu, 9 Apr 2020 01:19:09 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:35284 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725283AbgDIFTJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Apr 2020 01:14:24 -0400
-Received: by mail-ed1-f66.google.com with SMTP id w26so11736931edu.7
-        for <linux-kernel@vger.kernel.org>; Wed, 08 Apr 2020 22:14:23 -0700 (PDT)
+        Thu, 9 Apr 2020 01:19:09 -0400
+Received: by mail-wr1-f66.google.com with SMTP id g3so10422949wrx.2;
+        Wed, 08 Apr 2020 22:19:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=UY7MUWYg0CK1Tvzj+QeStPn2WOKppk76oqJCa/ryNiY=;
-        b=ncEgIzCvOvPaBRt8Ee6N8e5EoonoCr5fsBu95DHAeb5SJ/12QZWvHXq4GN+jqapHR4
-         briZV+vnfqG1R6TU3oAExC6nQcl5dDnQXYHTkbEyeVCw67ecoGBtAmTOzWrj1xEHs5Jv
-         5XIH391bN25Bgynirn/RSGkCeMx9OjprrwTDd/curha6Yfmukf7sVh/1ibdeaKrDNzU7
-         34S6wSkNykWLijBhaPsvBKkaDXPLtwfgJ5HC0+WkdoLAj0Qge34IecQk1x36bYE+zalQ
-         sp1Ps7btAz97osQcuqtcWIwS0CO4Of/IWFErKeWhiNcNj4Ez5657kFYuJi1N9SaW+TLT
-         5QIw==
+        d=gmail.com; s=20161025;
+        h=from:to:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=uSC39yWXfhJXkC8zUepIWQwvmgUUPBBJLFDU4bzKkpQ=;
+        b=o5WIwXuZFOq1RA0LEFWaQ7za8Af33EPFCI2sfVg7e7YzQRB5RsBXB+8O6T+oVbrBpM
+         n4gZjlZrDrsY4zos6QdUQAruaKWGJ+w5UGGFGwOG1nYS21WfjQ6Y4999Cj1p0Pk6SnxI
+         4awQP0sjrITaA8jDsz0h6hOyu6Z6GurwbZl44GdKd2j7P9cT6DEpvQTrBDVUVNsnnxBX
+         J2vkilXOP9RtjA8egMCS0lgazf/bbVB3+/dAL7U6Py6DuOyQSrjr7hiSrDlM0ZGbTe4q
+         wkNTmHoAVABfdv63uxSmTJBqsxvNq7XMQiB0jngL+wTnu2InNf0Z47Su0cYooTstlobq
+         bmFA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=UY7MUWYg0CK1Tvzj+QeStPn2WOKppk76oqJCa/ryNiY=;
-        b=I+u+KsqABFLcRwWl5EaR1BhuldqOpNJOBRawYwp1eAbtJsmZ0v/QNhJYCdOjPOPTtg
-         L+aJP9YKQgB7efisnQbft/DIrM7TwKQfnXkNA3zDqjb6xSYCCC3y9KgX6Z9KpjeaLpBO
-         r3IbbiEG2WlTd6AGNZji/Cj0ZTvLSM6WTm3gyOZ7e//hU/13kFmwNzmfiwoTqvpWIXUc
-         PyQfh1tN3v2UydAqNk7fDC9yasYyx4CbYzwwAQYFM065DEwoSxj0ZdlkaIp2kztDBjCj
-         8Q98gdObxwabwOYpKNtUxZce2tgvDILVHFuLa4VhM3Msa3HpByatvQ423FHF2ixxKKnL
-         zxXQ==
-X-Gm-Message-State: AGi0PuYb9A1iAyS15QTFGO0D2B1iqaaCcFJntad/o/aNGpaYY2WJWgeg
-        ozo7mSpRZvYhKwYMLUYgfdQtUiZpK45E4vvNNej/Cg==
-X-Google-Smtp-Source: APiQypKWClH3zGpC71koBaydDhSE0bupeJ0O0XyeGFTZoiaBGvpA9xzgxXuW3dPnCi0PoIHYk0YHMzS7SxCzW5IYnhc=
-X-Received: by 2002:a17:906:6987:: with SMTP id i7mr9963952ejr.12.1586409262689;
- Wed, 08 Apr 2020 22:14:22 -0700 (PDT)
+        h=x-gm-message-state:from:to:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=uSC39yWXfhJXkC8zUepIWQwvmgUUPBBJLFDU4bzKkpQ=;
+        b=jVdgmlo4JXRyRDWTrou0orNQVkg3k6pv+Wkv1ZbcV0s/A7edENmddce4wnV+88eLyg
+         5II02nSo9Fdxur1LZft0Tsl7jtjo1kNPPY74SXcZTmfCwE2m7sg/JqXw6qQN2l/nTirT
+         eJtTj5NL8juqG8pF1KYJ2CRI5KEDU3sZkW0YTiq+iVPb06n9haBAH4dAkiTpAUrNNZbm
+         rrqoxNkhRA+bJ/BSRWHSy2V2x5AKZoQvrj5uAKH0KnMUbt/A2jmsRdeHbqCfnbhMCrUz
+         o51pFY5TvzgpGy+jXvcGoEZsQALhq09DovJ34rwuRQKgTjuNtYPdZ7/Rw4Z4a9JEQjnO
+         Stpg==
+X-Gm-Message-State: AGi0PuaXbVi6AzLY40wgqh4OlnA0zIGj0ICc4unRZmh4x9panNbMMKGH
+        GDeUngLDzvXbStE8DEwP/KeH+wXu
+X-Google-Smtp-Source: APiQypJxKuNMkASgyk6loARWy+tTolgmYLS8K8yzWmQqVpcH3RvwBniTJdBRqmxHmX/DSKmyfXt0Bg==
+X-Received: by 2002:a5d:5448:: with SMTP id w8mr2088365wrv.419.1586409546958;
+        Wed, 08 Apr 2020 22:19:06 -0700 (PDT)
+Received: from localhost.localdomain ([109.126.129.227])
+        by smtp.gmail.com with ESMTPSA id h81sm2395073wme.42.2020.04.08.22.19.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 08 Apr 2020 22:19:06 -0700 (PDT)
+From:   Pavel Begunkov <asml.silence@gmail.com>
+To:     Jens Axboe <axboe@kernel.dk>, io-uring@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] io_uring: fix fs cleanup on cqe overflow
+Date:   Thu,  9 Apr 2020 08:17:59 +0300
+Message-Id: <72e624af63743f265e25da90c322bd45b9d4feeb.1586409373.git.asml.silence@gmail.com>
+X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
-References: <CAPcyv4gKr57qNnMEupjcjQmH9Vy_iZuLPE1VA36QAkKhzEbzSA@mail.gmail.com>
- <CAHk-=whm-J+j86gqWA93tpBHDfOwsLGt=dV2px8bUL7pbRR4ug@mail.gmail.com>
-In-Reply-To: <CAHk-=whm-J+j86gqWA93tpBHDfOwsLGt=dV2px8bUL7pbRR4ug@mail.gmail.com>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Wed, 8 Apr 2020 22:14:11 -0700
-Message-ID: <CAPcyv4g0-rxw2KXrRRe4Mr-zS4ujx6pTqApZgZrPhJetLgjRPA@mail.gmail.com>
-Subject: Re: [GIT PULL] libnvdimm for v5.7
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-nvdimm <linux-nvdimm@lists.01.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Vishal L Verma <vishal.l.verma@intel.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 8, 2020 at 9:11 PM Linus Torvalds
-<torvalds@linux-foundation.org> wrote:
->
-> On Tue, Apr 7, 2020 at 1:12 PM Dan Williams <dan.j.williams@intel.com> wrote:
-> >
-> >       mm/memremap_pages: Introduce memremap_compat_align()
->
-> Why is this an exported function that just returns a constant?
->
-> Why isn't it just a #define (or inline) in a header file?
->
-> Yes, yes, it would need to be conditional on not having that
-> CONFIG_ARCH_HAS_MEMREMAP_COMPAT_ALIGN, but it does look strange.
->
-> I've pulled it, since it doesn't matter that much, but I find it silly
-> to have full-fledged functions - and exported them GPL-only - to
-> return a constant. Crazy.
+If completion queue overflow happened, __io_cqring_fill_event() will
+update req->cflags, which is in a union with req->work and happend to
+be aliased to req->work.fs. Following io_free_req() ->
+io_req_work_drop_env() may get a bunch of different problems (miscount
+fs->users, segfault, etc) on cleaning @fs.
 
-Yes. tl;dr I gave up after failing to unwind a header dependency chain [1].
+Signed-off-by: Pavel Begunkov <asml.silence@gmail.com>
+---
 
-The source of the trouble was trying to find an existing top-level
-header file that included an asm local version, but also needed to
-include mmzone.h for the definition of SUBSECTION_SIZE.
-include/linux/io.h fit that requirement, pulling in mmzone.h there
-proved more difficult than my header unwinding skills could
-accomplish.
+P.S. never tried to reproduce the issue
 
-[1]: https://git.kernel.org/pub/scm/linux/kernel/git/djbw/nvdimm.git/commit/?id=c990ae9376c15f40aff2f61f42a71be5b81f9ee1
+ fs/io_uring.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/fs/io_uring.c b/fs/io_uring.c
+index 21e1c69b9c43..be65eda059ac 100644
+--- a/fs/io_uring.c
++++ b/fs/io_uring.c
+@@ -608,6 +608,7 @@ struct io_kiocb {
+ 	};
+ 
+ 	struct io_async_ctx		*io;
++	int				cflags;
+ 	bool				needs_fixed_file;
+ 	u8				opcode;
+ 
+@@ -638,7 +639,6 @@ struct io_kiocb {
+ 			struct callback_head	task_work;
+ 			struct hlist_node	hash_node;
+ 			struct async_poll	*apoll;
+-			int			cflags;
+ 		};
+ 		struct io_wq_work	work;
+ 	};
+-- 
+2.24.0
+
