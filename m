@@ -6,62 +6,61 @@ X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
 	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BC0EC2D0EA
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 04:55:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DEB2EC2BA1B
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 04:55:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6AEE820757
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 04:55:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B2A3D20757
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 04:55:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586408105;
-	bh=jUpJ31BbW2mHk4Zs/dET7SWdHJgma+q5ROKfc9fq3Zw=;
+	s=default; t=1586408110;
+	bh=hdpZkEo40TxKGxrgo2q/EeO6h/GBJrP5hu6h21WMR0A=;
 	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=oeS2uho0UHb4kY1jrHu6yFS01Bti4gEx533XUMEXGX3fxKx6FKsXQSBHfb573X42t
-	 yxGcBrGc1bQQbX+d/WsYtwfsBNe3jcs9U9hdkj4ozd3BdxfGpySr3bPX2Fqeo4xgxs
-	 +cVosknvOONNxnkkLsnb58X9rfnktIHUmzCRCPQ0=
+	b=bYnAptfzRx9Nx8Mk8h/J+MhSqvlcD1TZvDHbcbgxska/7077t5Q22JqRkDihQEeyA
+	 Tib9u3OPaKzE1/pNjdaa8aukbPvO6TzjE0YMHjoWAV1AyAvaaEoyWv73nx9Gdo2BKs
+	 +EJCRvASJjhtyMbzifn32lPcXX80dgQYesiHFXn0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726627AbgDIEzD (ORCPT
+        id S1726679AbgDIEzJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Apr 2020 00:55:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43990 "EHLO mail.kernel.org"
+        Thu, 9 Apr 2020 00:55:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44006 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725783AbgDIEzD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Apr 2020 00:55:03 -0400
-Subject: Re: [GIT PULL] overlayfs update for 5.7
+        id S1725783AbgDIEzE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Apr 2020 00:55:04 -0400
+Subject: Re: [GIT PULL v2] 9p update for 5.7
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586408103;
-        bh=jUpJ31BbW2mHk4Zs/dET7SWdHJgma+q5ROKfc9fq3Zw=;
+        s=default; t=1586408104;
+        bh=hdpZkEo40TxKGxrgo2q/EeO6h/GBJrP5hu6h21WMR0A=;
         h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=dYXFozcfYj24k/zjfdYtdPyUD8ucg+h1vLhMksN9uH3w3lMgfmpDVP/mxMc8zNFzw
-         kNrPXGYpPvPaFaUlQcK5sJPY6+HzZt1QSAyXfBGj/0YgJPBfO/05yBrijdPoM1S1hf
-         FX6p2mNzunCTwJj/utCe6RuKiGeoOZANOLazz31A=
+        b=LM6XI5h5yH8+ErTQDsmCJXtKTUDOo49mr+jsvpqojWB1pgxtjusMZvFRbNwu6OZuJ
+         xlNrZdBHmRHs+vhQiajF75tTyc/7rnc0P0u4BDtPrSLmcgSuUhBMTtpVXdVOeDPDyv
+         BDI5wQnGCOHyqvR6Gojrntw4Y8fEDc0jeypKHiqo=
 From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20200408085423.GA21974@miu.piliscsaba.redhat.com>
-References: <20200408085423.GA21974@miu.piliscsaba.redhat.com>
+In-Reply-To: <20200408151214.GA30977@nautica>
+References: <20200408151214.GA30977@nautica>
 X-PR-Tracked-List-Id: <linux-fsdevel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20200408085423.GA21974@miu.piliscsaba.redhat.com>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/mszeredi/vfs.git
- tags/ovl-update-5.7
-X-PR-Tracked-Commit-Id: 2eda9eaa6d7ec129150df4c7b7be65f27ac47346
+X-PR-Tracked-Message-Id: <20200408151214.GA30977@nautica>
+X-PR-Tracked-Remote: https://github.com/martinetd/linux tags/9p-for-5.7-2
+X-PR-Tracked-Commit-Id: c6f141412d24c8d8a9d98ef45303c0235829044b
 X-PR-Merge-Tree: torvalds/linux.git
 X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: c6b80eb89b55590b12db11103913088735205b5c
-Message-Id: <158640810364.3202.13189376481193073892.pr-tracker-bot@kernel.org>
-Date:   Thu, 09 Apr 2020 04:55:03 +0000
-To:     Miklos Szeredi <miklos@szeredi.hu>
+X-PR-Merge-Commit-Id: 5d30bcacd91af6874481129797af364a53cd9b46
+Message-Id: <158640810475.3202.11767820306106270043.pr-tracker-bot@kernel.org>
+Date:   Thu, 09 Apr 2020 04:55:04 +0000
+To:     Dominique Martinet <asmadeus@codewreck.org>
 Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-unionfs@vger.kernel.org
+        linux-fsdevel@vger.kernel.org,
+        v9fs-developer@lists.sourceforge.net, linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Wed, 8 Apr 2020 10:54:23 +0200:
+The pull request you sent on Wed, 8 Apr 2020 17:12:14 +0200:
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/mszeredi/vfs.git tags/ovl-update-5.7
+> https://github.com/martinetd/linux tags/9p-for-5.7-2
 
 has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/c6b80eb89b55590b12db11103913088735205b5c
+https://git.kernel.org/torvalds/c/5d30bcacd91af6874481129797af364a53cd9b46
 
 Thank you!
 
