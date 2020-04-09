@@ -2,166 +2,366 @@ Return-Path: <SRS0=n+Ub=5Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E70EC2BB86
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 10:53:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0B6CC2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 11:04:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2E2BF20BED
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 10:53:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7CFD120BED
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 11:04:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726670AbgDIKx4 (ORCPT
+        id S1726582AbgDILEW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Apr 2020 06:53:56 -0400
-Received: from mail2-relais-roc.national.inria.fr ([192.134.164.83]:36477 "EHLO
-        mail2-relais-roc.national.inria.fr" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725828AbgDIKx4 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Apr 2020 06:53:56 -0400
-X-IronPort-AV: E=Sophos;i="5.72,362,1580770800"; 
-   d="scan'208";a="444554909"
-Received: from abo-173-121-68.mrs.modulonet.fr (HELO hadrien) ([85.68.121.173])
-  by mail2-relais-roc.national.inria.fr with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 09 Apr 2020 12:53:54 +0200
-Date:   Thu, 9 Apr 2020 12:53:54 +0200 (CEST)
-From:   Julia Lawall <julia.lawall@inria.fr>
-X-X-Sender: jll@hadrien
-To:     Alexander Popov <alex.popov@linux.com>
-cc:     Gilles Muller <Gilles.Muller@lip6.fr>,
-        Nicolas Palix <nicolas.palix@imag.fr>,
-        Michal Marek <michal.lkml@markovi.net>, cocci@systeme.lip6.fr,
-        "kernel-hardening@lists.openwall.com" 
-        <kernel-hardening@lists.openwall.com>,
-        Jann Horn <jannh@google.com>,
-        Kees Cook <keescook@chromium.org>,
-        Hans Verkuil <hverkuil@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Linux Media Mailing List <linux-media@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>, jannh@google.com
-Subject: Re: [Cocci] Coccinelle rule for CVE-2019-18683
-In-Reply-To: <fff664e9-06c9-d2fb-738f-e8e591e09569@linux.com>
-Message-ID: <alpine.DEB.2.21.2004091248190.2403@hadrien>
-References: <fff664e9-06c9-d2fb-738f-e8e591e09569@linux.com>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Thu, 9 Apr 2020 07:04:22 -0400
+Received: from foss.arm.com ([217.140.110.172]:48680 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725828AbgDILEV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Apr 2020 07:04:21 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 281D331B;
+        Thu,  9 Apr 2020 04:04:21 -0700 (PDT)
+Received: from ewhatever.cambridge.arm.com (ewhatever.cambridge.arm.com [10.1.197.1])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id C943D3F73D;
+        Thu,  9 Apr 2020 04:04:19 -0700 (PDT)
+From:   Suzuki K Poulose <suzuki.poulose@arm.com>
+To:     linux-arm-kernel@lists.infradead.org
+Cc:     linux-kernel@vger.kernel.org, coresight@lists.linaro.org,
+        saiprakash.ranjan@codeaurora.org, leo.yan@linaro.org,
+        linux-arm-msm@vger.kernel.org, swboyd@chromium.org,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Mike Leach <mike.leach@linaro.org>
+Subject: [PATCH] coresight: Fix support for sparsely populated ports
+Date:   Thu,  9 Apr 2020 12:03:16 +0100
+Message-Id: <20200409110316.409148-1-suzuki.poulose@arm.com>
+X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On some systems the firmware may not describe all the ports
+connected to a component (e.g, for security reasons). This
+could be especially problematic for "funnels" where we could
+end up in modifying memory beyond the allocated space for
+refcounts.
 
+e.g, for a funnel with input ports listed 0, 3, 5, nr_inport = 3.
+However the we could access refcnts[5] while checking for
+references, like :
 
-On Thu, 9 Apr 2020, Alexander Popov wrote:
+ [  526.110401] ==================================================================
+ [  526.117988] BUG: KASAN: slab-out-of-bounds in funnel_enable+0x54/0x1b0
+ [  526.124706] Read of size 4 at addr ffffff8135f9549c by task bash/1114
+ [  526.131324]
+ [  526.132886] CPU: 3 PID: 1114 Comm: bash Tainted: G S                5.4.25 #232
+ [  526.140397] Hardware name: Qualcomm Technologies, Inc. SC7180 IDP (DT)
+ [  526.147113] Call trace:
+ [  526.149653]  dump_backtrace+0x0/0x188
+ [  526.153431]  show_stack+0x20/0x2c
+ [  526.156852]  dump_stack+0xdc/0x144
+ [  526.160370]  print_address_description+0x3c/0x494
+ [  526.165211]  __kasan_report+0x144/0x168
+ [  526.169170]  kasan_report+0x10/0x18
+ [  526.172769]  check_memory_region+0x1a4/0x1b4
+ [  526.177164]  __kasan_check_read+0x18/0x24
+ [  526.181292]  funnel_enable+0x54/0x1b0
+ [  526.185072]  coresight_enable_path+0x104/0x198
+ [  526.189649]  coresight_enable+0x118/0x26c
 
-> Hello!
->
-> Some time ago I fixed CVE-2019-18683 in the V4L2 subsystem of the Linux kernel.
->
-> I created a Coccinelle rule that detects that bug pattern. Let me show it.
+  ...
 
-Thanks for the discussion :)
+ [  526.237782] Allocated by task 280:
+ [  526.241298]  __kasan_kmalloc+0xf0/0x1ac
+ [  526.245249]  kasan_kmalloc+0xc/0x14
+ [  526.248849]  __kmalloc+0x28c/0x3b4
+ [  526.252361]  coresight_register+0x88/0x250
+ [  526.256587]  funnel_probe+0x15c/0x228
+ [  526.260365]  dynamic_funnel_probe+0x20/0x2c
+ [  526.264679]  amba_probe+0xbc/0x158
+ [  526.268193]  really_probe+0x144/0x408
+ [  526.271970]  driver_probe_device+0x70/0x140
 
->
->
-> Bug pattern
-> ===========
->
-> CVE-2019-18683 refers to three similar vulnerabilities caused by the same
-> incorrect approach to locking that is used in vivid_stop_generating_vid_cap(),
-> vivid_stop_generating_vid_out(), and sdr_cap_stop_streaming().
->
-> For fixes please see the commit 6dcd5d7a7a29c1e4 (media: vivid: Fix wrong
-> locking that causes race conditions on streaming stop).
->
-> These three functions are called during streaming stopping with vivid_dev.mutex
-> locked. And they all do the same mistake while stopping their kthreads, which
-> need to lock this mutex as well. See the example from
-> vivid_stop_generating_vid_cap():
->     /* shutdown control thread */
->     vivid_grab_controls(dev, false);
->     mutex_unlock(&dev->mutex);
->     kthread_stop(dev->kthread_vid_cap);
->     dev->kthread_vid_cap = NULL;
->     mutex_lock(&dev->mutex);
->
-> But when this mutex is unlocked, another vb2_fop_read() can lock it instead of
-> the kthread and manipulate the buffer queue. That causes use-after-free.
->
-> I created a Coccinelle rule that detects mutex_unlock+kthread_stop+mutex_lock
-> within one function.
->
->
-> Coccinelle rule
-> ===============
->
-> virtual report
->
-> @race exists@
-> expression E;
-> position stop_p;
-> position unlock_p;
-> position lock_p;
-> @@
->
-> mutex_unlock@unlock_p(E)
-> ...
+ ...
 
-It would be good to put when != mutex_lock(E) after the ... above.  Your
-rule doesn't actually prevent the lock from being retaken.
+ [  526.316810]
+ [  526.318364] Freed by task 0:
+ [  526.321344] (stack is not available)
+ [  526.325024]
+ [  526.326580] The buggy address belongs to the object at ffffff8135f95480
+ [  526.326580]  which belongs to the cache kmalloc-128 of size 128
+ [  526.339439] The buggy address is located 28 bytes inside of
+ [  526.339439]  128-byte region [ffffff8135f95480, ffffff8135f95500)
+ [  526.351399] The buggy address belongs to the page:
+ [  526.356342] page:ffffffff04b7e500 refcount:1 mapcount:0 mapping:ffffff814b00c380 index:0x0 compound_mapcount: 0
+ [  526.366711] flags: 0x4000000000010200(slab|head)
+ [  526.371475] raw: 4000000000010200 ffffffff05034008 ffffffff0501eb08 ffffff814b00c380
+ [  526.379435] raw: 0000000000000000 0000000000190019 00000001ffffffff 0000000000000000
+ [  526.387393] page dumped because: kasan: bad access detected
+ [  526.393128]
+ [  526.394681] Memory state around the buggy address:
+ [  526.399619]  ffffff8135f95380: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
+ [  526.407046]  ffffff8135f95400: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
+ [  526.414473] >ffffff8135f95480: 04 fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
+ [  526.421900]                             ^
+ [  526.426029]  ffffff8135f95500: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
+ [  526.433456]  ffffff8135f95580: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
+ [  526.440883] ==================================================================
 
-> kthread_stop@stop_p(...)
-> ...
-> mutex_lock@lock_p(E)
->
-> @script:python@
-> stop_p << race.stop_p;
-> unlock_p << race.unlock_p;
-> lock_p << race.lock_p;
-> E << race.E;
-> @@
->
-> coccilib.report.print_report(unlock_p[0], 'mutex_unlock(' + E + ') here')
-> coccilib.report.print_report(stop_p[0], 'kthread_stop here')
-> coccilib.report.print_report(lock_p[0], 'mutex_lock(' + E + ') here\n')
->
->
-> Testing the rule
-> ================
->
-> I reverted the commit 6dcd5d7a7a29c1e4 and called:
-> COCCI=./scripts/coccinelle/kthread_race.cocci make coccicheck MODE=report
->
-> The result:
->
-> ./drivers/media/platform/vivid/vivid-kthread-out.c:347:1-13: mutex_unlock(& dev
-> -> mutex) here
-> ./drivers/media/platform/vivid/vivid-kthread-out.c:348:1-13: kthread_stop here
-> ./drivers/media/platform/vivid/vivid-kthread-out.c:350:1-11: mutex_lock(& dev ->
-> mutex) here
->
-> ./drivers/media/platform/vivid/vivid-sdr-cap.c:306:1-13: mutex_unlock(& dev ->
-> mutex) here
-> ./drivers/media/platform/vivid/vivid-sdr-cap.c:307:1-13: kthread_stop here
-> ./drivers/media/platform/vivid/vivid-sdr-cap.c:309:1-11: mutex_lock(& dev ->
-> mutex) here
->
-> ./drivers/media/platform/vivid/vivid-kthread-cap.c:1001:1-13: mutex_unlock(& dev
-> -> mutex) here
-> ./drivers/media/platform/vivid/vivid-kthread-cap.c:1002:1-13: kthread_stop here
-> ./drivers/media/platform/vivid/vivid-kthread-cap.c:1004:1-11: mutex_lock(& dev
-> -> mutex) here
->
-> There are no other bugs detected.
->
-> Do you have any idea how to improve it?
-> Do we need that rule for regression testing in the upstream?
+To keep the code simple, we now track the maximum number of
+possible input/output connections to/from this component
+@ nr_inport and nr_outport in platform_data, respectively.
+Thus the output connections could be sparse and code is
+adjusted to skip the unspecified connections.
 
-Based on Jann's suggestion, it seem like it could be interesting to find
-these locking pauses, and then collect functions that are used in locks
-and in lock pauses.  If a function is mostly used with locks held, then
-using it in a lock pause could be a sign of a bug.  I will see if it turns
-up anything interesting.
+Cc: Mathieu Poirier <mathieu.poirier@linaro.org>
+Cc: Mike Leach <mike.leach@linaro.org>
+Reported-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+Tested-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+Tested-by: Stephen Boyd <swboyd@chromium.org>
+Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
+---
+ .../hwtracing/coresight/coresight-platform.c  | 74 ++++++++++++-------
+ drivers/hwtracing/coresight/coresight.c       |  8 +-
+ include/linux/coresight.h                     | 10 ++-
+ 3 files changed, 62 insertions(+), 30 deletions(-)
 
-julia
+diff --git a/drivers/hwtracing/coresight/coresight-platform.c b/drivers/hwtracing/coresight/coresight-platform.c
+index 3c5bee429105..c57373b49b42 100644
+--- a/drivers/hwtracing/coresight/coresight-platform.c
++++ b/drivers/hwtracing/coresight/coresight-platform.c
+@@ -67,6 +67,7 @@ static void of_coresight_get_ports_legacy(const struct device_node *node,
+ 					  int *nr_inport, int *nr_outport)
+ {
+ 	struct device_node *ep = NULL;
++	struct of_endpoint endpoint;
+ 	int in = 0, out = 0;
+ 
+ 	do {
+@@ -74,10 +75,16 @@ static void of_coresight_get_ports_legacy(const struct device_node *node,
+ 		if (!ep)
+ 			break;
+ 
+-		if (of_coresight_legacy_ep_is_input(ep))
+-			in++;
+-		else
+-			out++;
++		if (of_graph_parse_endpoint(ep, &endpoint))
++			continue;
++
++		if (of_coresight_legacy_ep_is_input(ep)) {
++			in = (endpoint.port + 1 > in) ?
++				endpoint.port + 1 : in;
++		} else {
++			out = (endpoint.port + 1) > out ?
++				endpoint.port + 1 : out;
++		}
+ 
+ 	} while (ep);
+ 
+@@ -117,9 +124,16 @@ of_coresight_count_ports(struct device_node *port_parent)
+ {
+ 	int i = 0;
+ 	struct device_node *ep = NULL;
++	struct of_endpoint endpoint;
++
++	while ((ep = of_graph_get_next_endpoint(port_parent, ep))) {
++		/* Defer error handling to parsing */
++		if (of_graph_parse_endpoint(ep, &endpoint))
++			continue;
++		if (endpoint.port + 1 > i)
++			i = endpoint.port + 1;
++	}
+ 
+-	while ((ep = of_graph_get_next_endpoint(port_parent, ep)))
+-		i++;
+ 	return i;
+ }
+ 
+@@ -171,14 +185,12 @@ static int of_coresight_get_cpu(struct device *dev)
+  * Parses the local port, remote device name and the remote port.
+  *
+  * Returns :
+- *	 1	- If the parsing is successful and a connection record
+- *		  was created for an output connection.
+  *	 0	- If the parsing completed without any fatal errors.
+  *	-Errno	- Fatal error, abort the scanning.
+  */
+ static int of_coresight_parse_endpoint(struct device *dev,
+ 				       struct device_node *ep,
+-				       struct coresight_connection *conn)
++				       struct coresight_platform_data *pdata)
+ {
+ 	int ret = 0;
+ 	struct of_endpoint endpoint, rendpoint;
+@@ -186,6 +198,7 @@ static int of_coresight_parse_endpoint(struct device *dev,
+ 	struct device_node *rep = NULL;
+ 	struct device *rdev = NULL;
+ 	struct fwnode_handle *rdev_fwnode;
++	struct coresight_connection *conn;
+ 
+ 	do {
+ 		/* Parse the local port details */
+@@ -212,6 +225,13 @@ static int of_coresight_parse_endpoint(struct device *dev,
+ 			break;
+ 		}
+ 
++		conn = &pdata->conns[endpoint.port];
++		if (conn->child_fwnode) {
++			dev_warn(dev, "Duplicate output port %d\n",
++				 endpoint.port);
++			ret = -EINVAL;
++			break;
++		}
+ 		conn->outport = endpoint.port;
+ 		/*
+ 		 * Hold the refcount to the target device. This could be
+@@ -224,7 +244,6 @@ static int of_coresight_parse_endpoint(struct device *dev,
+ 		conn->child_fwnode = fwnode_handle_get(rdev_fwnode);
+ 		conn->child_port = rendpoint.port;
+ 		/* Connection record updated */
+-		ret = 1;
+ 	} while (0);
+ 
+ 	of_node_put(rparent);
+@@ -238,7 +257,6 @@ static int of_get_coresight_platform_data(struct device *dev,
+ 					  struct coresight_platform_data *pdata)
+ {
+ 	int ret = 0;
+-	struct coresight_connection *conn;
+ 	struct device_node *ep = NULL;
+ 	const struct device_node *parent = NULL;
+ 	bool legacy_binding = false;
+@@ -267,8 +285,6 @@ static int of_get_coresight_platform_data(struct device *dev,
+ 		dev_warn_once(dev, "Uses obsolete Coresight DT bindings\n");
+ 	}
+ 
+-	conn = pdata->conns;
+-
+ 	/* Iterate through each output port to discover topology */
+ 	while ((ep = of_graph_get_next_endpoint(parent, ep))) {
+ 		/*
+@@ -280,15 +296,9 @@ static int of_get_coresight_platform_data(struct device *dev,
+ 		if (legacy_binding && of_coresight_legacy_ep_is_input(ep))
+ 			continue;
+ 
+-		ret = of_coresight_parse_endpoint(dev, ep, conn);
+-		switch (ret) {
+-		case 1:
+-			conn++;		/* Fall through */
+-		case 0:
+-			break;
+-		default:
++		ret = of_coresight_parse_endpoint(dev, ep, pdata);
++		if (ret)
+ 			return ret;
+-		}
+ 	}
+ 
+ 	return 0;
+@@ -627,6 +637,11 @@ static int acpi_coresight_parse_link(struct acpi_device *adev,
+ 		 *    coresight_remove_match().
+ 		 */
+ 		conn->child_fwnode = fwnode_handle_get(&r_adev->fwnode);
++	} else if (dir == ACPI_CORESIGHT_LINK_SLAVE) {
++		conn->child_port = fields[0].integer.value;
++	} else {
++		/* Invalid direction */
++		return -EINVAL;
+ 	}
+ 
+ 	return dir;
+@@ -672,10 +687,14 @@ static int acpi_coresight_parse_graph(struct acpi_device *adev,
+ 			return dir;
+ 
+ 		if (dir == ACPI_CORESIGHT_LINK_MASTER) {
+-			pdata->nr_outport++;
++			if (ptr->outport > pdata->nr_outport)
++				pdata->nr_outport = ptr->outport;
+ 			ptr++;
+ 		} else {
+-			pdata->nr_inport++;
++			WARN_ON(pdata->nr_inport == ptr->child_port);
++			/* Do not move the ptr for input connections */
++			if (ptr->child_port > pdata->nr_inport)
++				pdata->nr_inport = ptr->child_port;
+ 		}
+ 	}
+ 
+@@ -684,8 +703,13 @@ static int acpi_coresight_parse_graph(struct acpi_device *adev,
+ 		return rc;
+ 
+ 	/* Copy the connection information to the final location */
+-	for (i = 0; i < pdata->nr_outport; i++)
+-		pdata->conns[i] = conns[i];
++	for (i = 0; conns + i < ptr; i++) {
++		int port = conns[i].outport;
++
++		/* Duplicate output port */
++		WARN_ON(pdata->conns[port].child_fwnode);
++		pdata->conns[port] = conns[i];
++	}
+ 
+ 	devm_kfree(&adev->dev, conns);
+ 	return 0;
+diff --git a/drivers/hwtracing/coresight/coresight.c b/drivers/hwtracing/coresight/coresight.c
+index ef20f74c85fa..f07bc0a7ab88 100644
+--- a/drivers/hwtracing/coresight/coresight.c
++++ b/drivers/hwtracing/coresight/coresight.c
+@@ -990,6 +990,9 @@ static int coresight_orphan_match(struct device *dev, void *data)
+ 	for (i = 0; i < i_csdev->pdata->nr_outport; i++) {
+ 		conn = &i_csdev->pdata->conns[i];
+ 
++		/* Skip the port if FW doesn't describe it */
++		if (!conn->child_fwnode)
++			continue;
+ 		/* We have found at least one orphan connection */
+ 		if (conn->child_dev == NULL) {
+ 			/* Does it match this newly added device? */
+@@ -1029,6 +1032,9 @@ static void coresight_fixup_device_conns(struct coresight_device *csdev)
+ 		struct coresight_connection *conn = &csdev->pdata->conns[i];
+ 		struct device *dev = NULL;
+ 
++		if (!conn->child_fwnode)
++			continue;
++
+ 		dev = bus_find_device_by_fwnode(&coresight_bustype, conn->child_fwnode);
+ 		if (dev) {
+ 			conn->child_dev = to_coresight_device(dev);
+@@ -1061,7 +1067,7 @@ static int coresight_remove_match(struct device *dev, void *data)
+ 	for (i = 0; i < iterator->pdata->nr_outport; i++) {
+ 		conn = &iterator->pdata->conns[i];
+ 
+-		if (conn->child_dev == NULL)
++		if (conn->child_dev == NULL || conn->child_fwnode == NULL)
+ 			continue;
+ 
+ 		if (csdev->dev.fwnode == conn->child_fwnode) {
+diff --git a/include/linux/coresight.h b/include/linux/coresight.h
+index 44e552de419c..7f8d2b39aee2 100644
+--- a/include/linux/coresight.h
++++ b/include/linux/coresight.h
+@@ -90,10 +90,12 @@ union coresight_dev_subtype {
+ };
+ 
+ /**
+- * struct coresight_platform_data - data harvested from the DT specification
+- * @nr_inport:	number of input ports for this component.
+- * @nr_outport:	number of output ports for this component.
+- * @conns:	Array of nr_outport connections from this component
++ * struct coresight_platform_data - data harvested from the firmware
++ * specification.
++ *
++ * @nr_inport:	Number of elements for the input connections.
++ * @nr_outport:	Number of elements for the output connections.
++ * @conns:	Sparse arrray of nr_outport connections from this component.
+  */
+ struct coresight_platform_data {
+ 	int nr_inport;
+-- 
+2.24.1
+
