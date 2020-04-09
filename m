@@ -2,34 +2,33 @@ Return-Path: <SRS0=n+Ub=5Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F134C2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 19:13:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A72F7C2BA19
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 19:14:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4D7552087E
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 19:13:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6507C206F5
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 19:14:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="hWiKPGWH"
+	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="ZjSJj9CR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727162AbgDITNy (ORCPT
+        id S1727187AbgDITOE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Apr 2020 15:13:54 -0400
-Received: from mail-co1nam11on2049.outbound.protection.outlook.com ([40.107.220.49]:43681
-        "EHLO NAM11-CO1-obe.outbound.protection.outlook.com"
+        Thu, 9 Apr 2020 15:14:04 -0400
+Received: from mail-eopbgr700059.outbound.protection.outlook.com ([40.107.70.59]:38477
+        "EHLO NAM04-SN1-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726757AbgDITMy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Apr 2020 15:12:54 -0400
+        id S1726741AbgDITMx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Apr 2020 15:12:53 -0400
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=ikw+FC3XbW+ZeuiS6xMno4fawDN9oYt5ozB60E5IliCfzexaXeao6yjNGuOdww7FjmAzJtaM8BzKE2AXbKLoaVgw7wahS7nF7MV+3RpVadaKZ7W7FNI744p6fiBrk+dreTQQT54+x4r63BItQczZbL4g4v4epCrx3CKmsv3em4D2kI4xsSV6afMZZL9QqFTfGrKdlv5i3shKkHDcr9ayvEEngDoRlOF/dIb5o6ExqG1ZuL6x8zIKe4yaSusH0umFBt1V+QIR8l2JUeBofQlemftOIIfp+nn/1U+0TKY6lHx6SIqAvdJtXkR7r7p77nnHjhleMunc2fHKrtXkTGAMvA==
+ b=JWAhXmK+iSjMLtkmb74k0Ng4H+KkF1+75d6C4NWwP+w+K8wvKANLx3opS08/xDby7mgB8GFxB3/yDKuhJbxAF/Hju41iglicH7GwOJxcw58qy8S0EOUwOJwOEHduQEa9UAeraQ/7eIYFymTAyp7cnywzxTrmHUvj+DdstLvPNZ9YPYrwCrhnHtg7dbJXQ6CHdhcrLjNw2Z1DE7LITt3YFwmkhmv/2CmDq0hffiZgqxLxVD+kBOtJhUEbb4bPMHE6VZA1mEtRlVD9Z+B1HwiL31IsYX1swI53lol535whIS5UrZAkxKyMNcKFwxrqGw+CyEoiMd9O7Mp0oDP15UaAzg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=eE9E4UqxZHPRPsIR6m5we0QgvAqlAAnOxx20TYuDZ5A=;
- b=kGZqic4qyeKfgd88VXWq4WFvnRx7CVXx7mcDA1a820AivHV+WoiZUS9gHOWDI4i+66MD/Fhh0ARwC/ZkO5SZG2kNaVo7eCkRxx+VclyfRoyU4OW610WssRLJdTTZOiXNAa09jqwFID8z8FblYfLvwPEqFIkZ5CVOLDiIWK33tUjcb2fICb1Li+Crs88pahReZF+1MEpLidAJW7n4Tia1ZeyplNSKdb0mK6/4ln2W5wyV1p6tzs79YC7UhnXs41/YXW3d5HMrZtjXm1aj4Z1D9s+YWlpd1xHSm6GXvY89Xxg7LJjW4KjqSX5QzHTH9kA7iwKETQ0hMJMeFIFxAUTS/w==
+ bh=LyaQQSBoqnt3cHq0TsKtRSqzQWFJuf15o19UstUhrds=;
+ b=aFo42Ai8QrRzM32Xeie8vMfU6GkAmmMarmWMnqkstCWg7I2T6pAud76n+JQDzN4Lrhi7KGMf0qlks+4P3gGAcvJIhFd1f5zxeqH4Na3m2qfqYOO9AicPNU1cX8LojuF9UUpeNP0iqAKwXauHahF4jln1wntkzJRazm/3VR0YHq8Anwy2Aved3PR1tBglHf0LBsN5vCRlB2uA/48EehYg7FznbhIBIVKtK7czpznZNTKlDiqkB11muLKMOzJ8tyT36PAsQhE1/OHzuQljOqDhO5SYtNp1N494IjYCnqIt/FSGFjATaFS9SMjZ8jO7eBRL5oBSY7mAI4/evv1zeDGJTw==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
  149.199.60.83) smtp.rcpttodomain=linaro.org smtp.mailfrom=xilinx.com;
  dmarc=bestguesspass action=none header.from=xilinx.com; dkim=none (message
@@ -37,18 +36,18 @@ ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
  d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=eE9E4UqxZHPRPsIR6m5we0QgvAqlAAnOxx20TYuDZ5A=;
- b=hWiKPGWHeMIo4WD8W7Vc29X2iu30+gq3HNPOTCWDTGCUuqxYS/Q/ML19Pnh445OilE4dHZXBm1iveDLr2uc7y2iSKlrnRU+Po24l1sYjDRMbauOgX8blxV+GCwOVCCG8FrMbf6HqzqEHdFa1hq8j5a5NtgwgbwNUot6OTTndi0s=
-Received: from MN2PR18CA0024.namprd18.prod.outlook.com (2603:10b6:208:23c::29)
- by BN6PR02MB2292.namprd02.prod.outlook.com (2603:10b6:404:2b::12) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2878.20; Thu, 9 Apr
+ bh=LyaQQSBoqnt3cHq0TsKtRSqzQWFJuf15o19UstUhrds=;
+ b=ZjSJj9CRqOFpXLLtkf3t3YTH3pDVhXDn2yMKfTH8CjGzFjUn55LramdSQRw/Vdp2Cig52npRFnQwww/TFryHJVEYh0Z1P3RYi+TzofujwAo43nh3Ivwy7EwghfEzhYUn2INPhkwI0e7n1oIgiiGdqagc2cWcN6Kpc0NFfX4JpCY=
+Received: from SN4PR0701CA0002.namprd07.prod.outlook.com
+ (2603:10b6:803:28::12) by BN6PR02MB2708.namprd02.prod.outlook.com
+ (2603:10b6:404:fa::22) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2878.15; Thu, 9 Apr
  2020 19:12:51 +0000
-Received: from BL2NAM02FT007.eop-nam02.prod.protection.outlook.com
- (2603:10b6:208:23c:cafe::5c) by MN2PR18CA0024.outlook.office365.com
- (2603:10b6:208:23c::29) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2900.15 via Frontend
- Transport; Thu, 9 Apr 2020 19:12:51 +0000
+Received: from SN1NAM02FT026.eop-nam02.prod.protection.outlook.com
+ (2603:10b6:803:28:cafe::41) by SN4PR0701CA0002.outlook.office365.com
+ (2603:10b6:803:28::12) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2878.19 via Frontend
+ Transport; Thu, 9 Apr 2020 19:12:50 +0000
 Authentication-Results: spf=pass (sender IP is 149.199.60.83)
  smtp.mailfrom=xilinx.com; linaro.org; dkim=none (message not signed)
  header.d=none;linaro.org; dmarc=bestguesspass action=none
@@ -57,343 +56,176 @@ Received-SPF: Pass (protection.outlook.com: domain of xilinx.com designates
  149.199.60.83 as permitted sender) receiver=protection.outlook.com;
  client-ip=149.199.60.83; helo=xsj-pvapsmtpgw01;
 Received: from xsj-pvapsmtpgw01 (149.199.60.83) by
- BL2NAM02FT007.mail.protection.outlook.com (10.152.77.46) with Microsoft SMTP
+ SN1NAM02FT026.mail.protection.outlook.com (10.152.72.97) with Microsoft SMTP
  Server id 15.20.2900.15 via Frontend Transport; Thu, 9 Apr 2020 19:12:50
  +0000
-Received: from [149.199.38.66] (port=44356 helo=xsj-pvapsmtp01)
+Received: from [149.199.38.66] (port=44327 helo=xsj-pvapsmtp01)
         by xsj-pvapsmtpgw01 with esmtp (Exim 4.90)
         (envelope-from <jolly.shah@xilinx.com>)
-        id 1jMcbA-00060g-0J; Thu, 09 Apr 2020 12:12:24 -0700
+        id 1jMcb9-00060W-KX; Thu, 09 Apr 2020 12:12:23 -0700
 Received: from [127.0.0.1] (helo=localhost)
         by xsj-pvapsmtp01 with smtp (Exim 4.63)
         (envelope-from <jolly.shah@xilinx.com>)
-        id 1jMcba-0007NV-F1; Thu, 09 Apr 2020 12:12:50 -0700
+        id 1jMcba-0007NV-2v; Thu, 09 Apr 2020 12:12:50 -0700
 Received: from [172.19.2.91] (helo=xsjjollys50.xilinx.com)
         by xsj-pvapsmtp01 with esmtp (Exim 4.63)
         (envelope-from <jolly.shah@xilinx.com>)
-        id 1jMcbT-0007La-9w; Thu, 09 Apr 2020 12:12:43 -0700
+        id 1jMcbR-0007La-Le; Thu, 09 Apr 2020 12:12:41 -0700
 From:   Jolly Shah <jolly.shah@xilinx.com>
 To:     ard.biesheuvel@linaro.org, mingo@kernel.org,
         gregkh@linuxfoundation.org, matt@codeblueprint.co.uk,
         sudeep.holla@arm.com, hkallweit1@gmail.com, keescook@chromium.org,
         dmitry.torokhov@gmail.com, michal.simek@xilinx.com
 Cc:     rajanv@xilinx.com, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, Rajan Vaja <rajan.vaja@xilinx.com>,
-        Tejas Patel <tejas.patel@xilinx.com>,
-        Jolly Shah <jolly.shah@xilinx.com>
-Subject: [PATCH v4 22/25] firmware: xilinx: Add sysfs interface
-Date:   Thu,  9 Apr 2020 12:12:11 -0700
-Message-Id: <1586459534-8997-23-git-send-email-jolly.shah@xilinx.com>
+        linux-kernel@vger.kernel.org, Jolly Shah <jolly.shah@xilinx.com>
+Subject: [PATCH v4 00/25] firmware: xilinx: Add xilinx specific sysfs interface
+Date:   Thu,  9 Apr 2020 12:11:49 -0700
+Message-Id: <1586459534-8997-1-git-send-email-jolly.shah@xilinx.com>
 X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1586459534-8997-1-git-send-email-jolly.shah@xilinx.com>
-References: <1586459534-8997-1-git-send-email-jolly.shah@xilinx.com>
 X-TM-AS-Product-Ver: IMSS-7.1.0.1224-8.2.0.1013-23620.005
 X-TM-AS-User-Approved-Sender: Yes;Yes
 X-EOPAttributedMessage: 0
 X-MS-Office365-Filtering-HT: Tenant
-X-Forefront-Antispam-Report: CIP:149.199.60.83;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:xsj-pvapsmtpgw01;PTR:unknown-60-83.xilinx.com;CAT:NONE;SFTY:;SFS:(10009020)(4636009)(136003)(346002)(396003)(39860400002)(376002)(46966005)(4326008)(7696005)(356004)(6666004)(9786002)(8936002)(6636002)(5660300002)(478600001)(186003)(81156014)(26005)(2906002)(316002)(336012)(36756003)(82740400003)(47076004)(426003)(2616005)(70586007)(70206006)(81166007)(107886003)(54906003)(44832011)(8676002)(7416002);DIR:OUT;SFP:1101;
+X-Forefront-Antispam-Report: CIP:149.199.60.83;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:xsj-pvapsmtpgw01;PTR:unknown-60-83.xilinx.com;CAT:NONE;SFTY:;SFS:(10009020)(4636009)(39860400002)(376002)(346002)(396003)(136003)(46966005)(26005)(316002)(2906002)(47076004)(6636002)(336012)(478600001)(36756003)(426003)(82740400003)(5660300002)(7416002)(186003)(44832011)(70206006)(107886003)(4326008)(70586007)(81166007)(8936002)(7696005)(9786002)(81156014)(8676002)(2616005)(356004);DIR:OUT;SFP:1101;
 MIME-Version: 1.0
 Content-Type: text/plain
 X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 3cf89192-1697-4fb7-72b3-08d7dcb9ff6e
-X-MS-TrafficTypeDiagnostic: BN6PR02MB2292:
-X-Microsoft-Antispam-PRVS: <BN6PR02MB2292211403DD250DD8C34C86B8C10@BN6PR02MB2292.namprd02.prod.outlook.com>
+X-MS-Office365-Filtering-Correlation-Id: bdf666ed-5d19-4139-37d6-08d7dcb9ff2d
+X-MS-TrafficTypeDiagnostic: BN6PR02MB2708:
+X-Microsoft-Antispam-PRVS: <BN6PR02MB27083ADEEDFC9AA5F09F7F82B8C10@BN6PR02MB2708.namprd02.prod.outlook.com>
 X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
-X-MS-Oob-TLC-OOBClassifiers: OLM:3383;
+X-MS-Oob-TLC-OOBClassifiers: OLM:7691;
 X-Forefront-PRVS: 0368E78B5B
 X-MS-Exchange-SenderADCheck: 1
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: gUf1VG2fPsdsvOUk9POSoM4t82iTXzzFg/MAuZpsJKiSRWRf6mIrye4K2rDRdj/rj9QPmDxCSuc1Tr5yI0O6OzIl3FGf151A4tufBjG8YL+cnt41FEd3tpNd6/U18xwx6/uO9ZBuLqcLAD1YrYqyjM6eCIZD36mxaitxVJk0WcrlptSH6IriS6QRdy9o6S+n1v/KUvHIs+qKXpxbQOYbljaxEuazqAKcsgNn26iAY1I0T74SqhcDK7nDZuZgAcBWg33vyCTlFu2DRZOxYdI6egK1KJ7cS4tW3Kn0legS4rCFL3MfjcAT//fFYYoQD4G8UXQcMBS53wMc+w0KH4LnqdntjtWQqG1tYCV/pCYRMRkp6QCjlWiqOwhXaANts5kGbJvRjy9LDXBRQ9d5KehkVgHW9b3PHc1TKixB/VMAr1MtTp9pL2VGituTF3ryVgzlsXTb03Np7v2y13Do3euRrli+WbjWTIsQ0lTDpy0M6yYzVftzgMxDZdmKqZGa5PyJ
+X-Microsoft-Antispam-Message-Info: Aq/INaOCBQuHtqQnjFIWRZaNx5FUkmeI67DfMCnhC+FIzjFNUbciCukF/WUGP5gUlnjTjTW4KafJZm+++633Crk5DnklfgHaf6olUvk6vrknm+Ca2TjIPbFO4wlZoeWnyUUj/5ASP/eK1GeOL3lqEvjQg2WQh6OXh3hpCbnFvGeFR3QKuQK0ENm/AWDONBdVWErsj0O1nOOFdBdxxiWGtFSvpKyAAsPY4hQbEsPCNnVcw14x6S7G8Li5FzkMeRJ+AWWTwIL/gXM1tySJeBP648bDc1WN/cbyfriEfKzoLDod23UNRipApxWKS2QagEy3RT7XUOD4bFnrG4Jtsg6L6bd3lLAHlXGN8s8HxdRM6kOz9tB9PnY+k0D4mYx3CX+s5jH+YODizKcYqVR6QEpzRJvYXLhttPJwOuFmAySXXgs7pDgHQLJB3oYLNIISUakbew/J9kjK4zMgQRl1EIZY/dC2xF+C7CkjuC+lYFnA7YyG7WywRo5ZKrzZaU4DvkWDOo/OLFV2cPxaIGuodUdVLA==
 X-OriginatorOrg: xilinx.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Apr 2020 19:12:50.8533
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Apr 2020 19:12:50.4278
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 3cf89192-1697-4fb7-72b3-08d7dcb9ff6e
+X-MS-Exchange-CrossTenant-Network-Message-Id: bdf666ed-5d19-4139-37d6-08d7dcb9ff2d
 X-MS-Exchange-CrossTenant-Id: 657af505-d5df-48d0-8300-c31994686c5c
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=657af505-d5df-48d0-8300-c31994686c5c;Ip=[149.199.60.83];Helo=[xsj-pvapsmtpgw01]
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN6PR02MB2292
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN6PR02MB2708
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Rajan Vaja <rajan.vaja@xilinx.com>
+This patch series adds xilinx specific sysfs interface for below
+purposes:
+- Register access
+- Set shutdown scope
+- Set boot health status bit
 
-Add firmware-ggs sysfs interface which provides read/write
-interface to global storage registers.
+Also this patch series removes eemi ops and adds API
+corresponding to each eemi ops.
 
-Signed-off-by: Rajan Vaja <rajan.vaja@xilinx.com>
-Signed-off-by: Michal Simek <michal.simek@xilinx.com>
-Signed-off-by: Tejas Patel <tejas.patel@xilinx.com>
-Signed-off-by: Jolly Shah <jolly.shah@xilinx.com>
----
- .../ABI/stable/sysfs-driver-firmware-zynqmp        |  50 ++++++
- drivers/firmware/xilinx/zynqmp.c                   | 167 ++++++++++++++++++++-
- include/linux/firmware/xlnx-zynqmp.h               |   2 +
- 3 files changed, 218 insertions(+), 1 deletion(-)
+Rajan Vaja (25):
+  firmware: xilinx: Remove eemi ops for get_api_version
+  firmware: xilinx: Remove eemi ops for get_chipid
+  firmware: xilinx: Remove eemi ops for query_data
+  firmware: xilinx: Remove eemi ops for clock_enable
+  firmware: xilinx: Remove eemi ops for clock_disable
+  firmware: xilinx: Remove eemi ops for clock_getstate
+  firmware: xilinx: Remove eemi ops for clock_setdivider
+  firmware: xilinx: Remove eemi ops for clock_getdivider
+  firmware: xilinx: Remove eemi ops for clock set/get rate
+  firmware: xilinx: Remove eemi ops for clock set/get parent
+  firmware: xilinx: Use APIs instead of IOCTLs
+  firmware: xilinx: Remove eemi ops for reset_assert
+  firmware: xilinx: Remove eemi ops for reset_get_status
+  firmware: xilinx: Remove eemi ops for init_finalize
+  firmware: xilinx: Remove eemi ops for set_suspend_mode
+  firmware: xilinx: Remove eemi ops for request_node
+  firmware: xilinx: Remove eemi ops for release_node
+  firmware: xilinx: Remove eemi ops for set_requirement
+  firmware: xilinx: Remove eemi ops for aes engine
+  firmware: xilinx: Remove eemi ops for fpga related APIs
+  firmware: xilinx: Add APIs to read/write GGS/PGGS registers
+  firmware: xilinx: Add sysfs interface
+  firmware: xilinx: Add system shutdown API interface
+  firmware: xilinx: Add sysfs to set shutdown scope
+  firmware: xilinx: Add sysfs and API to set boot health status
+
+ .../ABI/stable/sysfs-driver-firmware-zynqmp        | 103 ++++
+ drivers/clk/zynqmp/clk-gate-zynqmp.c               |   9 +-
+ drivers/clk/zynqmp/clk-mux-zynqmp.c                |   6 +-
+ drivers/clk/zynqmp/clkc.c                          |  17 +-
+ drivers/clk/zynqmp/divider.c                       |  12 +-
+ drivers/clk/zynqmp/pll.c                           |  29 +-
+ drivers/crypto/xilinx/zynqmp-aes-gcm.c             |  12 +-
+ drivers/firmware/xilinx/zynqmp-debug.c             |   5 +-
+ drivers/firmware/xilinx/zynqmp.c                   | 601 +++++++++++++++++----
+ drivers/fpga/zynqmp-fpga.c                         |  12 +-
+ drivers/mmc/host/sdhci-of-arasan.c                 |  38 +-
+ drivers/nvmem/zynqmp_nvmem.c                       |  11 +-
+ drivers/reset/reset-zynqmp.c                       |  26 +-
+ drivers/soc/xilinx/zynqmp_pm_domains.c             |  26 +-
+ drivers/soc/xilinx/zynqmp_power.c                  |  17 +-
+ drivers/spi/spi-zynqmp-gqspi.c                     |   5 -
+ include/linux/firmware/xlnx-zynqmp.h               | 237 ++++++--
+ 17 files changed, 861 insertions(+), 305 deletions(-)
  create mode 100644 Documentation/ABI/stable/sysfs-driver-firmware-zynqmp
 
-diff --git a/Documentation/ABI/stable/sysfs-driver-firmware-zynqmp b/Documentation/ABI/stable/sysfs-driver-firmware-zynqmp
-new file mode 100644
-index 0000000..2e3aebd
---- /dev/null
-+++ b/Documentation/ABI/stable/sysfs-driver-firmware-zynqmp
-@@ -0,0 +1,50 @@
-+What:		/sys/devices/platform/firmware\:zynqmp-firmware/ggs*
-+Date:		March 2020
-+KernelVersion:	5.6
-+Contact:	"Jolly Shah" <jollys@xilinx.com>
-+Description:
-+		Read/Write PMU global general storage register value,
-+		GLOBAL_GEN_STORAGE{0:3}.
-+		Global general storage register that can be used
-+		by system to pass information between masters.
-+
-+		The register is reset during system or power-on
-+		resets. Three registers are used by the FSBL and
-+		other Xilinx software products: GLOBAL_GEN_STORAGE{4:6}.
-+
-+		Usage:
-+		# cat /sys/devices/platform/firmware\:zynqmp-firmware/ggs0
-+		# echo <value> > /sys/devices/platform/firmware\:zynqmp-firmware/ggs0
-+
-+		Example:
-+		# cat /sys/devices/platform/firmware\:zynqmp-firmware/ggs0
-+		# echo 0x1234ABCD > /sys/devices/platform/firmware\:zynqmp-firmware/ggs0
-+
-+Users:		Xilinx
-+
-+What:		/sys/devices/platform/firmware\:zynqmp-firmware/pggs*
-+Date:		March 2020
-+KernelVersion:	5.6
-+Contact:	"Jolly Shah" <jollys@xilinx.com>
-+Description:
-+		Read/Write PMU persistent global general storage register
-+		value, PERS_GLOB_GEN_STORAGE{0:3}.
-+		Persistent global general storage register that
-+		can be used by system to pass information between
-+		masters.
-+
-+		This register is only reset by the power-on reset
-+		and maintains its value through a system reset.
-+		Four registers are used by the FSBL and other Xilinx
-+		software products: PERS_GLOB_GEN_STORAGE{4:7}.
-+		Register is reset only by a POR reset.
-+
-+		Usage:
-+		# cat /sys/devices/platform/firmware\:zynqmp-firmware/pggs0
-+		# echo <value> > /sys/devices/platform/firmware\:zynqmp-firmware/pggs0
-+
-+		Example:
-+		# cat /sys/devices/platform/firmware\:zynqmp-firmware/pggs0
-+		# echo 0x1234ABCD > /sys/devices/platform/firmware\:zynqmp-firmware/pggs0
-+
-+Users:		Xilinx
-diff --git a/drivers/firmware/xilinx/zynqmp.c b/drivers/firmware/xilinx/zynqmp.c
-index 3518456..2fe4f57 100644
---- a/drivers/firmware/xilinx/zynqmp.c
-+++ b/drivers/firmware/xilinx/zynqmp.c
-@@ -2,7 +2,7 @@
- /*
-  * Xilinx Zynq MPSoC Firmware layer
-  *
-- *  Copyright (C) 2014-2018 Xilinx, Inc.
-+ *  Copyright (C) 2014-2020 Xilinx, Inc.
-  *
-  *  Michal Simek <michal.simek@xilinx.com>
-  *  Davorin Mista <davorin.mista@aggios.com>
-@@ -875,6 +875,170 @@ int zynqmp_pm_aes_engine(const u64 address, u32 *out)
- }
- EXPORT_SYMBOL_GPL(zynqmp_pm_aes_engine);
- 
-+static ssize_t ggs_show(struct device *device,
-+			struct device_attribute *attr,
-+			char *buf,
-+			u32 reg)
-+{
-+	int ret;
-+	u32 ret_payload[PAYLOAD_ARG_CNT];
-+
-+	ret = zynqmp_pm_read_ggs(reg, ret_payload);
-+	if (ret)
-+		return ret;
-+
-+	return sprintf(buf, "0x%x\n", ret_payload[1]);
-+}
-+
-+static ssize_t ggs_store(struct device *device,
-+			 struct device_attribute *attr,
-+			 const char *buf, size_t count,
-+			 u32 reg)
-+{
-+	long value;
-+	int ret;
-+
-+	if (reg >= GSS_NUM_REGS)
-+		return -EINVAL;
-+
-+	ret = kstrtol(buf, 16, &value);
-+	if (ret) {
-+		count = -EFAULT;
-+		goto err;
-+	}
-+
-+	ret = zynqmp_pm_write_ggs(reg, value);
-+	if (ret)
-+		count = -EFAULT;
-+
-+err:
-+	return count;
-+}
-+
-+/* GGS register show functions */
-+#define GGS0_SHOW(N)						\
-+	ssize_t ggs##N##_show(struct device *device,		\
-+			      struct device_attribute *attr,	\
-+			      char *buf)			\
-+	{							\
-+		return ggs_show(device, attr, buf, N);		\
-+	}
-+
-+static GGS0_SHOW(0);
-+static GGS0_SHOW(1);
-+static GGS0_SHOW(2);
-+static GGS0_SHOW(3);
-+
-+/* GGS register store function */
-+#define GGS0_STORE(N)						\
-+	ssize_t ggs##N##_store(struct device *device,		\
-+			       struct device_attribute *attr,	\
-+			       const char *buf,			\
-+			       size_t count)			\
-+	{							\
-+		return ggs_store(device, attr, buf, count, N);	\
-+	}
-+
-+static GGS0_STORE(0);
-+static GGS0_STORE(1);
-+static GGS0_STORE(2);
-+static GGS0_STORE(3);
-+
-+static ssize_t pggs_show(struct device *device,
-+			 struct device_attribute *attr,
-+			 char *buf,
-+			 u32 reg)
-+{
-+	int ret;
-+	u32 ret_payload[PAYLOAD_ARG_CNT];
-+
-+	ret = zynqmp_pm_read_pggs(reg, ret_payload);
-+	if (ret)
-+		return ret;
-+
-+	return sprintf(buf, "0x%x\n", ret_payload[1]);
-+}
-+
-+static ssize_t pggs_store(struct device *device,
-+			  struct device_attribute *attr,
-+			  const char *buf, size_t count,
-+			  u32 reg)
-+{
-+	long value;
-+	int ret;
-+
-+	if (reg >= GSS_NUM_REGS)
-+		return -EINVAL;
-+
-+	ret = kstrtol(buf, 16, &value);
-+	if (ret) {
-+		count = -EFAULT;
-+		goto err;
-+	}
-+
-+	ret = zynqmp_pm_write_pggs(reg, value);
-+	if (ret)
-+		count = -EFAULT;
-+
-+err:
-+	return count;
-+}
-+
-+#define PGGS0_SHOW(N)						\
-+	ssize_t pggs##N##_show(struct device *device,		\
-+			       struct device_attribute *attr,	\
-+			       char *buf)			\
-+	{							\
-+		return pggs_show(device, attr, buf, N);		\
-+	}
-+
-+#define PGGS0_STORE(N)						\
-+	ssize_t pggs##N##_store(struct device *device,		\
-+				struct device_attribute *attr,	\
-+				const char *buf,		\
-+				size_t count)			\
-+	{							\
-+		return pggs_store(device, attr, buf, count, N);	\
-+	}
-+
-+/* PGGS register show functions */
-+static PGGS0_SHOW(0);
-+static PGGS0_SHOW(1);
-+static PGGS0_SHOW(2);
-+static PGGS0_SHOW(3);
-+
-+/* PGGS register store functions */
-+static PGGS0_STORE(0);
-+static PGGS0_STORE(1);
-+static PGGS0_STORE(2);
-+static PGGS0_STORE(3);
-+
-+/* GGS register attributes */
-+static DEVICE_ATTR_RW(ggs0);
-+static DEVICE_ATTR_RW(ggs1);
-+static DEVICE_ATTR_RW(ggs2);
-+static DEVICE_ATTR_RW(ggs3);
-+
-+/* PGGS register attributes */
-+static DEVICE_ATTR_RW(pggs0);
-+static DEVICE_ATTR_RW(pggs1);
-+static DEVICE_ATTR_RW(pggs2);
-+static DEVICE_ATTR_RW(pggs3);
-+
-+static struct attribute *zynqmp_firmware_attrs[] = {
-+	&dev_attr_ggs0.attr,
-+	&dev_attr_ggs1.attr,
-+	&dev_attr_ggs2.attr,
-+	&dev_attr_ggs3.attr,
-+	&dev_attr_pggs0.attr,
-+	&dev_attr_pggs1.attr,
-+	&dev_attr_pggs2.attr,
-+	&dev_attr_pggs3.attr,
-+	NULL,
-+};
-+
-+ATTRIBUTE_GROUPS(zynqmp_firmware);
-+
- static int zynqmp_firmware_probe(struct platform_device *pdev)
- {
- 	struct device *dev = &pdev->dev;
-@@ -952,6 +1116,7 @@ static struct platform_driver zynqmp_firmware_driver = {
- 	.driver = {
- 		.name = "zynqmp_firmware",
- 		.of_match_table = zynqmp_firmware_of_match,
-+		.dev_groups = zynqmp_firmware_groups,
- 	},
- 	.probe = zynqmp_firmware_probe,
- 	.remove = zynqmp_firmware_remove,
-diff --git a/include/linux/firmware/xlnx-zynqmp.h b/include/linux/firmware/xlnx-zynqmp.h
-index e23251d..c1356e9 100644
---- a/include/linux/firmware/xlnx-zynqmp.h
-+++ b/include/linux/firmware/xlnx-zynqmp.h
-@@ -42,6 +42,8 @@
- 
- #define ZYNQMP_PM_MAX_QOS		100U
- 
-+#define GSS_NUM_REGS	(4)
-+
- /* Node capabilities */
- #define	ZYNQMP_PM_CAPABILITY_ACCESS	0x1U
- #define	ZYNQMP_PM_CAPABILITY_CONTEXT	0x2U
+--
+Changes in v4:
+ - Rebased on latest repository.
+ - Resolve compilation errors from patch #1 - #20.
+ - Add patch #19 to remove eemi ops for aes engine.
+ - [PATCH 11/25]:
+   - Add API for SD DLL reset.
+   - Rebase on latest repository.
+ - [PATCH 21/25]:
+   - Use explicit values for enums.
+ - [PATCH 22/25]:
+   - Remove function header for static functions.
+   - Remove unnecessary condition checks.
+   - Use one value per file.
+   - Use ATTRIBUTE_GROUPS() macro for assigning attribute groups.
+   - Remove unnecessary inclusion of header file.
+ - [PATCH 23/25]:
+   - Use explicit values for enums.
+ - [PATCH 24/25]:
+   - Use ATTRIBUTE_GROUPS() macro for assigning attribute groups.
+ - [PATCH 25/25]:
+   - Use dev_err() instead of pr_err().
+   - Use ATTRIBUTE_GROUPS() macro for assigning attribute groups.
+Changes in v3:
+ - add patch #1/24 to #11/24 and #12/24 to #20/24 to remove eemi apis
+   and use direct function call.
+ - Add patch #11/24 to use ZynqMP APIs of IOCTLs instead of IOCTLs
+   and remove IOCTLs for ZynqMP.
+ - Add patch #20/24 to add APIs for read/write GGS and PGGS registers.
+ - [PATCH 21/24]:
+   - Add GGS sysfs interface in zynqmp.c file instead of zynqmp_ggs.c.
+   - Use platform device directory for sysfs instead of creating new
+     directory in firmware.
+   - Change kernel version to 5.6.
+   - Set count variable to the error value instead of testing ret
+     variable at the end of function to store GGS/PGGS.
+   - Use ZynqMP firmware API for write/read PGGS and GGS instead of
+     ioctls.
+   - Use platform device attribute off instead of creating new kobject.
+   - Change Date field in documentation.
+ - [PATCH 23/24]:
+   - Use platform device directory for sysfs instead of creating new
+     directory in firmware.
+   - Change kernel version to 5.6.
+   - Change Date field in documentation.
+ - [PATCH 24/24]:
+   - Use platform device directory for sysfs instead of creating new
+     directory in firmware.
+   - Change kernel version to 5.6.
+   - Change Date field in documentation.
+   - Add eemi API to set boot health status instead of IOCTL.
+Changes in v2:
+ - Removed patch #1 for register access sysfs.
+ - Updated kernel version in documentation.
+ - Used DEVICE_ATTR_* and ATTRIBUTE_GROUPS macros.
+ - Correct typo
+ - Free Kobject structure in case of error.
+ - Resolved smatch errors.
+ - Updated Signed-off-by sequence.
 -- 
 2.7.4
-
