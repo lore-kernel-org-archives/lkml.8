@@ -2,122 +2,69 @@ Return-Path: <SRS0=n+Ub=5Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BAC2C352B6
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 17:08:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C5AAC2BA19
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 17:09:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DFDEC20678
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 17:08:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586452101;
-	bh=DkI9SjN3OWXs0vW733wNCwe6g6vZ8E046v23cEw+Vc8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=l80UyeUBGL30fqQeSdbHWTt39gfdSQs7xb1GHi4qLkq8EqIE/GzelfU0YwD1ROU+k
-	 b7Jn0dvYB1n0snqhqH7uQSXMwpMPtMsQaEDJeMgw+d9fmwi7qhNmfP7YVi1fZ7cvZn
-	 +XTI9J6LrbOt1etokMn6k6/0riyS3Q+tphRUnv90=
+	by mail.kernel.org (Postfix) with ESMTP id 6BB2120678
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 17:09:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728137AbgDIRIT (ORCPT
+        id S1728072AbgDIRJ0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Apr 2020 13:08:19 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:45387 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726725AbgDIRIS (ORCPT
+        Thu, 9 Apr 2020 13:09:26 -0400
+Received: from shards.monkeyblade.net ([23.128.96.9]:33206 "EHLO
+        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726627AbgDIRJ0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Apr 2020 13:08:18 -0400
-Received: by mail-pg1-f194.google.com with SMTP id w11so1077230pga.12;
-        Thu, 09 Apr 2020 10:08:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=bQvrRMm1xrJntOiYTsW2Lx5FztmdO0PKJyWqixStKZM=;
-        b=SMSIs7zBXCYahuaxAxR+LoWlUnZeIr9zTb2pf+IjX3ssSGO4f/LJ71rs7cs+jdg3O/
-         IC2318r5GGhJcELuDl/Ze0uwNXia0OcIjwna6k5blB77mj0Y4XtCiMcbIK8st3rNlQ+e
-         osVfwDBBL2rIaU7lZns6ACclP5PoeUh8qegQnwkKt4YjmRM4qERNzP7oJBRDLPzgJljZ
-         qy1lKCQ8rFVztGlVzfI/Rkmzy7LEt8LalUdIpP0YHvwYF+bjfC0BE4mFZcwtZ0vyDnDC
-         IIFREURwImK0S68ylJtyrSaPkrzDPGZiOeOLFfr2hQJsER61wmNg7KZF/yKS5L8L3Igm
-         o7XQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to;
-        bh=bQvrRMm1xrJntOiYTsW2Lx5FztmdO0PKJyWqixStKZM=;
-        b=i3nkaZ13ETB5IUczlsyQYc9Thcx/YHhjSVhB6zhwj1wGO7PkZIEa6KzjIM2eTvuzeV
-         VhoVoJa0Fp1Zm1+Io1kOZxgm0T9P4SXeu08JuiXSS636dOvB3VPRlDpOQ3Ud/is5Q4JU
-         HVd1YybmDVTykG4wtC8DYe6ce3/XHFzmlCT/o7xYk6E3XwQBnN5uWX2JgWmaAbR6Ky+0
-         /ieUaHVV0NvprR31j0ZxEJfAoZNTI65EEbPugMNnZnf0EeM/JuwJia9D7J87dUmhx6HA
-         /uscLSKdpmxDn9pZUVolGR0Ra7RmB+Y5cCHhLRSelCQs9EcXPxwt3b7QAIBXMsV7bqMD
-         Ny7w==
-X-Gm-Message-State: AGi0PuahRDUn8Tv1zLIE7P0ApJYSh0GbBOnoGIPeVUMxDm31Gv0Zog2S
-        kW17R47N+UzkY32rOCOpEVI=
-X-Google-Smtp-Source: APiQypIGXl7ptK897jLts3QdF+EDBFxPJWcYJ6uqbpmOLvOgFWAldqFqZYwLtwgtv4/3t4lh0qbzWw==
-X-Received: by 2002:a63:d143:: with SMTP id c3mr401112pgj.171.1586452097545;
-        Thu, 09 Apr 2020 10:08:17 -0700 (PDT)
-Received: from google.com ([2601:647:4001:3000::50e3])
-        by smtp.gmail.com with ESMTPSA id w142sm1167934pff.111.2020.04.09.10.08.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 09 Apr 2020 10:08:16 -0700 (PDT)
-Date:   Thu, 9 Apr 2020 10:08:13 -0700
-From:   Minchan Kim <minchan@kernel.org>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Christoph Hellwig <hch@lst.de>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>, x86@kernel.org,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Laura Abbott <labbott@redhat.com>,
-        Sumit Semwal <sumit.semwal@linaro.org>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Nitin Gupta <ngupta@vflare.org>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        linuxppc-dev@lists.ozlabs.org, linux-hyperv@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org,
-        linux-arch@vger.kernel.org, linux-mm@kvack.org,
-        iommu@lists.linux-foundation.org,
-        linux-arm-kernel@lists.infradead.org, linux-s390@vger.kernel.org,
-        bpf@vger.kernel.org, linux-kernel@vger.kernel.org,
-        sergey.senozhatsky@gmail.com
-Subject: Re: [PATCH 10/28] mm: only allow page table mappings for built-in
- zsmalloc
-Message-ID: <20200409170813.GD247701@google.com>
-References: <20200408115926.1467567-1-hch@lst.de>
- <20200408115926.1467567-11-hch@lst.de>
- <20200409160826.GC247701@google.com>
- <20200409165030.GG20713@hirez.programming.kicks-ass.net>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200409165030.GG20713@hirez.programming.kicks-ass.net>
+        Thu, 9 Apr 2020 13:09:26 -0400
+Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id B2B67128C125F;
+        Thu,  9 Apr 2020 10:09:25 -0700 (PDT)
+Date:   Thu, 09 Apr 2020 10:09:25 -0700 (PDT)
+Message-Id: <20200409.100925.1802925797170855675.davem@davemloft.net>
+To:     wenhu.wang@vivo.com
+Cc:     kuba@kernel.org, bjorn.andersson@linaro.org, wgong@codeaurora.org,
+        allison@lohutok.net, willemb@google.com, arnd@arndb.de,
+        johannes.berg@intel.com, cjhuang@codeaurora.org,
+        tglx@linutronix.de, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kernel@vivo.com
+Subject: Re: [PATCH v3] net: qrtr: send msgs from local of same id as
+ broadcast
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <20200409025414.19376-1-wenhu.wang@vivo.com>
+References: <20200409025414.19376-1-wenhu.wang@vivo.com>
+X-Mailer: Mew version 6.8 on Emacs 26.1
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Thu, 09 Apr 2020 10:09:26 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 09, 2020 at 06:50:30PM +0200, Peter Zijlstra wrote:
-> On Thu, Apr 09, 2020 at 09:08:26AM -0700, Minchan Kim wrote:
-> > On Wed, Apr 08, 2020 at 01:59:08PM +0200, Christoph Hellwig wrote:
-> > > This allows to unexport map_vm_area and unmap_kernel_range, which are
-> > > rather deep internal and should not be available to modules.
-> > 
-> > Even though I don't know how many usecase we have using zsmalloc as
-> > module(I heard only once by dumb reason), it could affect existing
-> > users. Thus, please include concrete explanation in the patch to
-> > justify when the complain occurs.
-> 
-> The justification is 'we can unexport functions that have no sane reason
-> of being exported in the first place'.
-> 
-> The Changelog pretty much says that.
+From: Wang Wenhu <wenhu.wang@vivo.com>
+Date: Wed,  8 Apr 2020 19:53:53 -0700
 
-Okay, I hope there is no affected user since this patch.
-If there are someone, they need to provide sane reason why they want
-to have zsmalloc as module.
+> If the local node id(qrtr_local_nid) is not modified after its
+> initialization, it equals to the broadcast node id(QRTR_NODE_BCAST).
+> So the messages from local node should not be taken as broadcast
+> and keep the process going to send them out anyway.
+> 
+> The definitions are as follow:
+> static unsigned int qrtr_local_nid = NUMA_NO_NODE;
+> #define QRTR_NODE_BCAST	0xffffffffu
+> 
+> Fixes: commit fdf5fd397566 ("net: qrtr: Broadcast messages only from control port")
+> Signed-off-by: Wang Wenhu <wenhu.wang@vivo.com>
 
-Acked-by: Minchan Kim <minchan@kernel.org>
+Please do not put the word "commit" in your Fixes: tag in the future,
+it does not belong there.
+
+Applied and queued up for -stable, thanks.
