@@ -2,94 +2,161 @@ Return-Path: <SRS0=n+Ub=5Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21A99C2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 17:05:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C264C2BA19
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 17:06:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EED0820678
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 17:05:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586451955;
-	bh=fUdCdfgCMOdpTqm2H4y9o8TlBgAtHXzY64JbZfLxtKM=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=F4kVzHsu4nb23rGJxEaqCpWlVsbpI2xSvPjqD6X5allNyPx1UD4t2P8LrswOMBAq5
-	 EC700tjbOn90P45RFEa4ueH/c5HvAbTY9DC0MPM9cmQ5HyTHQbMXHpwCX45/LFfpE8
-	 MFTwg+2f0cVYq2p1c73LRT+fzk18jtIrbWd3bpmM=
+	by mail.kernel.org (Postfix) with ESMTP id 222EF20768
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 17:06:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727982AbgDIRFx (ORCPT
+        id S1728019AbgDIRGt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Apr 2020 13:05:53 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:41839 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727849AbgDIRFx (ORCPT
+        Thu, 9 Apr 2020 13:06:49 -0400
+Received: from out03.mta.xmission.com ([166.70.13.233]:38906 "EHLO
+        out03.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727984AbgDIRGt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Apr 2020 13:05:53 -0400
-Received: by mail-lj1-f196.google.com with SMTP id n17so430612lji.8
-        for <linux-kernel@vger.kernel.org>; Thu, 09 Apr 2020 10:05:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=sTzH1Bhr1hDM1qjv9jkCYGCa68nXo9HmCjXfmtTX3vU=;
-        b=Or+5V8+WP93RTeSd9r7vwKWDbL50ajg+ekJ83WIjflsqZzEAZPjHAfTt8hEKToRfbK
-         iU/Se9eyWg4gFlQ0PytYEYzVIQbDOvDw55/vAL3JQP3cnPRzf5ex5xCP38S9Pd+rI2Cx
-         CpkaVxAdYcOmFAZVfsZg4fOGxnBT/RWf5YQGs=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=sTzH1Bhr1hDM1qjv9jkCYGCa68nXo9HmCjXfmtTX3vU=;
-        b=ZSbVLBKN6WG9kdGgelsNcKONPqxs7Xz5PbuDbDGbQD09x0bGwF7AuZvH7HnsLYTG9/
-         e8p1O83b6ldIVDceokovnRSF7ivATkI4OtG3iNQROUxByNzLbPIp+aO4r+o6qQWTytMa
-         DSyA4LBL9HQs/f6sTgTz+AMc5AglMg0Y8B8BILlIhHOxkP0ivwfJr+a78CuVDwxCJ63z
-         24ePSr7e3jGQptaAFeKULQ0Oqve/pzsGqEHvq4XM0W7+bn0lpweBT+RVe6qCKxv18AqR
-         hvTu9G/HpJa23ajdla7Kg9zcklshW/q7oY+6EWktH7i5GjVYBfHuYPYSSSlyAjuNpJxJ
-         BqUw==
-X-Gm-Message-State: AGi0PuZ02MsEvv9YsukfLl9OuG3g+Gvm0u+2SqQ43FDJ6geBkqPHTLfV
-        fZHUykgBxs4RiTEeRP2c0LhdsQgHyVE=
-X-Google-Smtp-Source: APiQypL654hUlS10v2IVDNYVUNTIlKtDPksErESlDhYqVWf2qUA6GL/aoi9SZDQ6UCffQnl2C1kkww==
-X-Received: by 2002:a2e:9e89:: with SMTP id f9mr486668ljk.234.1586451949031;
-        Thu, 09 Apr 2020 10:05:49 -0700 (PDT)
-Received: from mail-lj1-f170.google.com (mail-lj1-f170.google.com. [209.85.208.170])
-        by smtp.gmail.com with ESMTPSA id u1sm1814227ljo.65.2020.04.09.10.05.47
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 09 Apr 2020 10:05:48 -0700 (PDT)
-Received: by mail-lj1-f170.google.com with SMTP id q22so493855ljg.0
-        for <linux-kernel@vger.kernel.org>; Thu, 09 Apr 2020 10:05:47 -0700 (PDT)
-X-Received: by 2002:a2e:870f:: with SMTP id m15mr507650lji.16.1586451947460;
- Thu, 09 Apr 2020 10:05:47 -0700 (PDT)
+        Thu, 9 Apr 2020 13:06:49 -0400
+Received: from in01.mta.xmission.com ([166.70.13.51])
+        by out03.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.90_1)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1jMadb-0000tW-PT; Thu, 09 Apr 2020 11:06:47 -0600
+Received: from ip68-227-160-95.om.om.cox.net ([68.227.160.95] helo=x220.xmission.com)
+        by in01.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.87)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1jMada-0005PU-Py; Thu, 09 Apr 2020 11:06:47 -0600
+From:   ebiederm@xmission.com (Eric W. Biederman)
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Waiman Long <longman@redhat.com>, Ingo Molnar <mingo@kernel.org>,
+        Will Deacon <will@kernel.org>,
+        Bernd Edlinger <bernd.edlinger@hotmail.de>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Alexey Gladkov <gladkov.alexey@gmail.com>,
+        Oleg Nesterov <oleg@redhat.com>
+References: <87blobnq02.fsf@x220.int.ebiederm.org>
+        <CAHk-=wgYCUbEmwieOBzVNZbSAM9wCZA8Z0665onpNnEcC-UpDg@mail.gmail.com>
+        <AM6PR03MB5170B606F9AC663225EC9609E4C60@AM6PR03MB5170.eurprd03.prod.outlook.com>
+        <CAHk-=whM3r7zrm8mSi7HJhuZbYiXx9PFU5VQYeKm6Low=r15eQ@mail.gmail.com>
+        <AM6PR03MB517003D5965F48AC5FE7283DE4C60@AM6PR03MB5170.eurprd03.prod.outlook.com>
+        <CAHk-=wg5LvjumW9PVQiF7jB8yig98K8XTk4tHo9W-sYmxzW+9g@mail.gmail.com>
+        <87lfnda3w3.fsf@x220.int.ebiederm.org>
+        <CAHk-=wjxyGCj9675mf31uhoJCyHn74ON_+O6SjSqBSSvqWxC1Q@mail.gmail.com>
+        <87blo45keg.fsf@x220.int.ebiederm.org>
+        <CAHk-=whES-KCO6Bs93-QBK1tS5CfiWSi+v5D1a7Sc1TD5RFoaA@mail.gmail.com>
+        <87v9maxb5q.fsf@x220.int.ebiederm.org>
+        <CAHk-=wih4BqW7GTLaYxewynuT-iFHrXroip0wNo0CyPtmYGUow@mail.gmail.com>
+        <87y2r4so3i.fsf@x220.int.ebiederm.org>
+        <CAHk-=wjhAvv6s_7OVeZJiHaY7bBrHyiPTkSpq-TLr6qxYqxUUw@mail.gmail.com>
+        <CAHk-=wi0jrKv9x6vJ9FDgTrSUbdbZYDX-79T-E87C48MGSn5=g@mail.gmail.com>
+Date:   Thu, 09 Apr 2020 12:03:55 -0500
+In-Reply-To: <CAHk-=wi0jrKv9x6vJ9FDgTrSUbdbZYDX-79T-E87C48MGSn5=g@mail.gmail.com>
+        (Linus Torvalds's message of "Thu, 9 Apr 2020 09:24:23 -0700")
+Message-ID: <87wo6or3pg.fsf@x220.int.ebiederm.org>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
 MIME-Version: 1.0
-References: <CAHk-=wgjGgfUfVm_DpTay5TS03pLCgUWqRpQS++90fSE2V-e=g@mail.gmail.com>
- <BB768A53-4A6F-4C69-8FBC-8BCAB1F4F280@lca.pw>
-In-Reply-To: <BB768A53-4A6F-4C69-8FBC-8BCAB1F4F280@lca.pw>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Thu, 9 Apr 2020 10:05:31 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wjfngA7nHAsie7bW_JmKBhUyV9oV7zmDbZuchkJK3sR1w@mail.gmail.com>
-Message-ID: <CAHk-=wjfngA7nHAsie7bW_JmKBhUyV9oV7zmDbZuchkJK3sR1w@mail.gmail.com>
-Subject: Re: [PATCH 0/2] mm: Two small fixes for recent syzbot reports
-To:     Qian Cai <cai@lca.pw>
-Cc:     Dmitry Vyukov <dvyukov@google.com>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Peter Xu <peterx@redhat.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux-MM <linux-mm@kvack.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-XM-SPF: eid=1jMada-0005PU-Py;;;mid=<87wo6or3pg.fsf@x220.int.ebiederm.org>;;;hst=in01.mta.xmission.com;;;ip=68.227.160.95;;;frm=ebiederm@xmission.com;;;spf=neutral
+X-XM-AID: U2FsdGVkX19xiliuIjxQOTWcYhWi4aqPdImDYESOPcY=
+X-SA-Exim-Connect-IP: 68.227.160.95
+X-SA-Exim-Mail-From: ebiederm@xmission.com
+Subject: Re: [GIT PULL] Please pull proc and exec work for 5.7-rc1
+X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
+X-SA-Exim-Scanned: Yes (on in01.mta.xmission.com)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 9, 2020 at 9:58 AM Qian Cai <cai@lca.pw> wrote:
+
+Adding Oleg to the conversation if for no other reason that he can see
+it is happening.
+
+Oleg has had a test case where this can happen for years and nothing
+has come out as an obvious proper fix for this deadlock issue.
+
+Linus Torvalds <torvalds@linux-foundation.org> writes:
+
+> On Thu, Apr 9, 2020 at 9:15 AM Linus Torvalds
+> <torvalds@linux-foundation.org> wrote:
+>>
+>> may_ptrace_stop() is supposed to stop the blocking exactly so that it
+>> doesn't deadlock.
+>>
+>> I wonder why that doesn't work..
+>>
+>> [ Goes and look ]
+>>
+>> Oh. I see.
+>>
+>> That ptrace_may_stop() only ever considered core-dumping, not execve().
+>>
+>> But if _that_ is the reason for the deadlock, then it's trivially fixed.
 >
-> On the other hand, this makes me worry who is testing on linux-next every day.
+> So maybe may_ptrace_stop() should just do something like this
+> (ENTIRELY UNTESTED):
+>
+>         struct task_struct *me = current, *parent = me->parent;
+>
+>         if (!likely(me->ptrace))
+>                 return false;
+>
+>         /* If the parent is exiting or core-dumping, it's not
+> listening to our signals */
+>         if (parent->signal->flags & (SIGNAL_GROUP_EXIT | SIGNAL_GROUP_COREDUMP))
+>                 return false;
+>
+>         /* if the parent is going through a execve(), it's not listening */
+>         if (parent->signal->group_exit_task)
+>                 return false;
+>
+>         return true;
+>
+> instead of the fairly ad-hoc tests for core-dumping.
+>
+> The above is hand-wavy - I didn't think a lot about locking.
+> may_ptrace_stop() is already called under the tasklist_lock, so the
+> parent won't change, but maybe it should take the signal lock?
+>
+> So the above very much is *not* meant to be a "do it like this", more
+> of a "this direction, maybe"?
+>
+> The existing code is definitely broken. It special-cases core-dumping
+> probably simply because that's the only case people had realized, and
+> not thought of the execve() thing.
 
-Well, probably not very many people outside of robots.
 
-Which is fine, but is also why I'd like robot failures to then be a big deal.
+I don't see how there can be a complete solution in may_ptrace_stop.
 
-           Linus
+a) We must stop in PTRACE_EVENT_EXIT during exec or userspace *breaks*.
+
+   Those are the defined semantics and I believe it is something
+   as common as strace that depends on them.
+
+b) Even if we added a test for our ptrace parent blocking in a ptrace
+   attach of an ongoing exec, it still wouldn't help.
+
+   That ptrace attach could legitimately come after the thread in
+   question has stopped and notified it's parent it is stopped.
+
+
+
+None of this is to say I like the semantics of PTRACE_EVENT_EXIT.  It is
+just we will violate the no regressions rule if we don't stop there
+during exec.
+
+The normal case is that the strace or whomever is already attached to
+all of the threads during exec and no deadlock occurs.  So the current
+behavior is quite usable.
+
+
+
+Maybe my memory is wrong that userspace cares but I really don't think
+so.
+
+
+Eric
