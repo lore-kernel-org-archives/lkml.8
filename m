@@ -2,230 +2,231 @@ Return-Path: <SRS0=n+Ub=5Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 426D2C2BB54
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 04:59:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E082C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 05:00:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1ECDF2078E
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 04:59:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 384D020784
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 05:00:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726670AbgDIE7q (ORCPT
+        id S1726722AbgDIFAM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Apr 2020 00:59:46 -0400
-Received: from inva020.nxp.com ([92.121.34.13]:48172 "EHLO inva020.nxp.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725283AbgDIE7q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Apr 2020 00:59:46 -0400
-Received: from inva020.nxp.com (localhost [127.0.0.1])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 94EF81A02F2;
-        Thu,  9 Apr 2020 06:59:44 +0200 (CEST)
-Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id BB9921A0170;
-        Thu,  9 Apr 2020 06:59:37 +0200 (CEST)
-Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 8710D40293;
-        Thu,  9 Apr 2020 12:59:29 +0800 (SGT)
-From:   Anson Huang <Anson.Huang@nxp.com>
-To:     rui.zhang@intel.com, daniel.lezcano@linaro.org,
-        amit.kucheria@verdurent.com, robh+dt@kernel.org,
-        shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de,
-        festevam@gmail.com, linux-pm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Cc:     Linux-imx@nxp.com
-Subject: [PATCH] dt-bindings: thermal: Convert i.MX to json-schema
-Date:   Thu,  9 Apr 2020 12:51:48 +0800
-Message-Id: <1586407908-27139-1-git-send-email-Anson.Huang@nxp.com>
-X-Mailer: git-send-email 2.7.4
-X-Virus-Scanned: ClamAV using ClamSMTP
+        Thu, 9 Apr 2020 01:00:12 -0400
+Received: from relay7-d.mail.gandi.net ([217.70.183.200]:59027 "EHLO
+        relay7-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725283AbgDIFAL (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Apr 2020 01:00:11 -0400
+X-Originating-IP: 50.39.163.217
+Received: from localhost (50-39-163-217.bvtn.or.frontiernet.net [50.39.163.217])
+        (Authenticated sender: josh@joshtriplett.org)
+        by relay7-d.mail.gandi.net (Postfix) with ESMTPSA id 9B4972000A;
+        Thu,  9 Apr 2020 05:00:02 +0000 (UTC)
+Date:   Wed, 8 Apr 2020 22:00:00 -0700
+From:   Josh Triplett <josh@joshtriplett.org>
+To:     Aleksa Sarai <cyphar@cyphar.com>
+Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        io-uring@vger.kernel.org, linux-arch@vger.kernel.org,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Arnd Bergmann <arnd@arndb.de>, Jens Axboe <axboe@kernel.dk>
+Subject: Re: [PATCH v3 2/3] fs: openat2: Extend open_how to allow
+ userspace-selected fds
+Message-ID: <20200409050000.GE6149@localhost>
+References: <cover.1586321767.git.josh@joshtriplett.org>
+ <e598110f71a4e2346860b94e91de3e6e75a4b82a.1586321767.git.josh@joshtriplett.org>
+ <20200408122330.5vorg2bwtth2dp5k@yavin.dot.cyphar.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200408122330.5vorg2bwtth2dp5k@yavin.dot.cyphar.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Convert the i.MX thermal binding to DT schema format using json-schema
+On Wed, Apr 08, 2020 at 10:23:30PM +1000, Aleksa Sarai wrote:
+> On 2020-04-07, Josh Triplett <josh@joshtriplett.org> wrote:
+> > Signed-off-by: Josh Triplett <josh@joshtriplett.org>
+> > Signed-off-by: Jens Axboe <axboe@kernel.dk>
+> 
+> Maybe I'm misunderstanding something, but this Signed-off-by looks
+> strange -- was it Co-developed-by Jens?
 
-Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
----
- .../devicetree/bindings/thermal/imx-thermal.txt    | 61 --------------
- .../devicetree/bindings/thermal/imx-thermal.yaml   | 97 ++++++++++++++++++++++
- 2 files changed, 97 insertions(+), 61 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/thermal/imx-thermal.txt
- create mode 100644 Documentation/devicetree/bindings/thermal/imx-thermal.yaml
+No. I wrote v1, and Jens incorporated some of those patches into a v2
+series that added signoffs. So when I took patch 2 from that series and
+rebased it into this new series, I kept the signoff.
 
-diff --git a/Documentation/devicetree/bindings/thermal/imx-thermal.txt b/Documentation/devicetree/bindings/thermal/imx-thermal.txt
-deleted file mode 100644
-index 823e417..0000000
---- a/Documentation/devicetree/bindings/thermal/imx-thermal.txt
-+++ /dev/null
-@@ -1,61 +0,0 @@
--* Temperature Monitor (TEMPMON) on Freescale i.MX SoCs
--
--Required properties:
--- compatible : must be one of following:
--  - "fsl,imx6q-tempmon" for i.MX6Q,
--  - "fsl,imx6sx-tempmon" for i.MX6SX,
--  - "fsl,imx7d-tempmon" for i.MX7S/D.
--- interrupts : the interrupt output of the controller:
--  i.MX6Q has one IRQ which will be triggered when temperature is higher than high threshold,
--  i.MX6SX and i.MX7S/D have two more IRQs than i.MX6Q, one is IRQ_LOW and the other is IRQ_PANIC,
--  when temperature is below than low threshold, IRQ_LOW will be triggered, when temperature
--  is higher than panic threshold, system will auto reboot by SRC module.
--- fsl,tempmon : phandle pointer to system controller that contains TEMPMON
--  control registers, e.g. ANATOP on imx6q.
--- nvmem-cells: A phandle to the calibration cells provided by ocotp.
--- nvmem-cell-names: Should be "calib", "temp_grade".
--
--Deprecated properties:
--- fsl,tempmon-data : phandle pointer to fuse controller that contains TEMPMON
--  calibration data, e.g. OCOTP on imx6q.  The details about calibration data
--  can be found in SoC Reference Manual.
--
--Direct access to OCOTP via fsl,tempmon-data is incorrect on some newer chips
--because it does not handle OCOTP clock requirements.
--
--Optional properties:
--- clocks : thermal sensor's clock source.
--
--Example:
--ocotp: ocotp@21bc000 {
--	#address-cells = <1>;
--	#size-cells = <1>;
--	compatible = "fsl,imx6sx-ocotp", "syscon";
--	reg = <0x021bc000 0x4000>;
--	clocks = <&clks IMX6SX_CLK_OCOTP>;
--
--	tempmon_calib: calib@38 {
--		reg = <0x38 4>;
--	};
--
--	tempmon_temp_grade: temp-grade@20 {
--		reg = <0x20 4>;
--	};
--};
--
--tempmon: tempmon {
--	compatible = "fsl,imx6sx-tempmon", "fsl,imx6q-tempmon";
--	interrupts = <GIC_SPI 49 IRQ_TYPE_LEVEL_HIGH>;
--	fsl,tempmon = <&anatop>;
--	nvmem-cells = <&tempmon_calib>, <&tempmon_temp_grade>;
--	nvmem-cell-names = "calib", "temp_grade";
--	clocks = <&clks IMX6SX_CLK_PLL3_USB_OTG>;
--};
--
--Legacy method (Deprecated):
--tempmon {
--	compatible = "fsl,imx6q-tempmon";
--	fsl,tempmon = <&anatop>;
--	fsl,tempmon-data = <&ocotp>;
--	clocks = <&clks 172>;
--};
-diff --git a/Documentation/devicetree/bindings/thermal/imx-thermal.yaml b/Documentation/devicetree/bindings/thermal/imx-thermal.yaml
-new file mode 100644
-index 0000000..ad12622
---- /dev/null
-+++ b/Documentation/devicetree/bindings/thermal/imx-thermal.yaml
-@@ -0,0 +1,97 @@
-+# SPDX-License-Identifier: GPL-2.0
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/thermal/imx-thermal.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: NXP i.MX Thermal Binding
-+
-+maintainers:
-+  - Anson Huang <Anson.Huang@nxp.com>
-+
-+properties:
-+  compatible:
-+    oneOf:
-+      - items:
-+          - enum:
-+              - fsl,imx6q-tempmon
-+              - fsl,imx6sx-tempmon
-+              - fsl,imx7d-tempmon
-+
-+  interrupts:
-+    description: |
-+      The interrupt output of the controller, the IRQ will be triggered
-+      when temperature is higher than high threshold.
-+    maxItems: 1
-+
-+  nvmem-cells:
-+    description: |
-+      Phandle to the calibration cells provided by ocotp for calibration
-+      data and temperature grade.
-+    maxItems: 2
-+
-+  nvmem-cell-names:
-+    maxItems: 2
-+    items:
-+      - const: calib
-+      - const: temp_grade
-+
-+  fsl,tempmon:
-+    description: |
-+      Phandle pointer to system controller that contains TEMPMON control
-+      registers, e.g. ANATOP on imx6q.
-+    $ref: '/schemas/types.yaml#/definitions/phandle'
-+
-+  fsl,tempmon-data:
-+    description: |
-+      Deprecated property, phandle pointer to fuse controller that contains
-+      TEMPMON calibration data, e.g. OCOTP on imx6q. The details about
-+      calibration data can be found in SoC Reference Manual.
-+    $ref: '/schemas/types.yaml#/definitions/phandle'
-+
-+  clocks:
-+    description: |
-+      Thermal sensor's clock source.
-+    maxItems: 1
-+
-+required:
-+  - compatible
-+  - interrupts
-+  - fsl,tempmon
-+  - clocks
-+  - nvmem-cells
-+  - nvmem-cell-names
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/clock/imx6sx-clock.h>
-+    #include <dt-bindings/interrupt-controller/arm-gic.h>
-+
-+    ocotp: ocotp@21bc000 {
-+         #address-cells = <1>;
-+         #size-cells = <1>;
-+         compatible = "fsl,imx6sx-ocotp", "syscon";
-+         reg = <0x021bc000 0x4000>;
-+         clocks = <&clks IMX6SX_CLK_OCOTP>;
-+
-+         tempmon_calib: calib@38 {
-+             reg = <0x38 4>;
-+         };
-+
-+         tempmon_temp_grade: temp-grade@20 {
-+             reg = <0x20 4>;
-+         };
-+    };
-+
-+    tempmon: tempmon {
-+         compatible = "fsl,imx6sx-tempmon";
-+         interrupts = <GIC_SPI 49 IRQ_TYPE_LEVEL_HIGH>;
-+         fsl,tempmon = <&anatop>;
-+         nvmem-cells = <&tempmon_calib>, <&tempmon_temp_grade>;
-+         nvmem-cell-names = "calib", "temp_grade";
-+         clocks = <&clks IMX6SX_CLK_PLL3_USB_OTG>;
-+    };
-+
-+...
--- 
-2.7.4
+> > ---
+> >  fs/fcntl.c                       |  2 +-
+> >  fs/file.c                        | 39 ++++++++++++++++++++++++++++++++
+> >  fs/io_uring.c                    |  3 ++-
+> >  fs/open.c                        |  6 +++--
+> >  include/linux/fcntl.h            |  5 ++--
+> >  include/linux/file.h             |  3 +++
+> >  include/uapi/asm-generic/fcntl.h |  4 ++++
+> >  include/uapi/linux/openat2.h     |  2 ++
+> >  8 files changed, 58 insertions(+), 6 deletions(-)
 
+> > --- a/fs/file.c
+> > +++ b/fs/file.c
+> > @@ -567,6 +567,45 @@ void put_unused_fd(unsigned int fd)
+> >  
+> >  EXPORT_SYMBOL(put_unused_fd);
+> >  
+> > +int __get_specific_unused_fd_flags(unsigned int fd, unsigned int flags,
+> > +				   unsigned long nofile)
+> > +{
+> > +	int ret;
+> > +	struct fdtable *fdt;
+> > +	struct files_struct *files = current->files;
+> > +
+> > +	if (!(flags & O_SPECIFIC_FD) || fd == -1)
+> > +		return __get_unused_fd_flags(flags, nofile);
+> 
+> This check should just be (flags & O_SPECIFIC_FD) -- see my comment
+> below about ->fd being negative.
+
+This was intentional, and I think it makes sense to keep. I'd like to
+maintain the same consistent behavior in any call that uses
+O_SPECIFIC_FD: an fd of -1 means "go ahead and assign the lowest
+available fd". This allows for calls like pipe2, or in the future
+socketpair, where you might want to explicitly assign one end, but allow
+the kernel to allocate the other end. -1 can never be a valid file
+descriptor, since it would be interpreted as an errno instead. mmap
+similarly treats -1 as an invalid file descriptor.
+
+As an example use case: in one io_uring batch, you want to allocate a
+pipe, send one end over a UNIX socket to another process, and close that
+end in your process. So you need *that* end to be a userspace-allocated
+file descriptor, so you know what fd to use in the subsequent sendmsg
+and close calls. But for the other end that you plan to hold onto, you
+don't want to use up one of your small number of preallocated file
+descriptors (of which you only need enough for the operations in any one
+io_uring batch).
+
+However, in response to your comment below, I've changed this from -1 to
+UINT_MAX.
+
+> > +
+> > +	if (fd >= nofile)
+> > +		return -EBADF;
+> > +
+> > +	spin_lock(&files->file_lock);
+> > +	ret = expand_files(files, fd);
+> > +	if (unlikely(ret < 0))
+> > +		goto out_unlock;
+> > +	fdt = files_fdtable(files);
+> > +	if (fdt->fd[fd]) {
+> > +		ret = -EBUSY;
+> > +		goto out_unlock;
+> 
+> It would be remiss of me to not mention that this is inconsistent with
+> the other way of explicitly picking a file descriptor on Unix -- the dup
+> family closes newfd if it's already used.
+> 
+> But that being said, I do actually prefer this behaviour since it means
+> that two threads trying to open a file with the same specific file
+> descriptor won't see the file descriptor change underneath them (leading
+> to who knows how much head-scratching).
+
+Exactly. I documented that difference explicitly in the commit message:
+
+> The specified file descriptor must not already be open; if it is,
+> get_specific_unused_fd_flags will fail with -EBUSY. This helps catch
+> userspace errors.
+
+I also intend for that to appear in the manpage.
+
+> > --- a/fs/open.c
+> > +++ b/fs/open.c
+> > @@ -958,7 +958,7 @@ EXPORT_SYMBOL(open_with_fake_path);
+> >  inline struct open_how build_open_how(int flags, umode_t mode)
+> >  {
+> >  	struct open_how how = {
+> > -		.flags = flags & VALID_OPEN_FLAGS,
+> > +		.flags = flags & VALID_OPEN_FLAGS & ~O_SPECIFIC_FD,
+> 
+> This is getting a little ugly, maybe filter out O_SPECIFIC_FD later on
+> in build_open_how() -- where we handle O_PATH.
+
+Sure; I'll move it down and add a comment.
+
+> >  		.mode = mode & S_IALLUGO,
+> >  	};
+> >  
+> > @@ -1143,7 +1143,7 @@ static long do_sys_openat2(int dfd, const char __user *filename,
+> >  	if (IS_ERR(tmp))
+> >  		return PTR_ERR(tmp);
+> >  
+> > -	fd = get_unused_fd_flags(how->flags);
+> > +	fd = get_specific_unused_fd_flags(how->fd, how->flags);
+> >  	if (fd >= 0) {
+> >  		struct file *f = do_filp_open(dfd, tmp, &op);
+> >  		if (IS_ERR(f)) {
+> > @@ -1193,6 +1193,8 @@ SYSCALL_DEFINE4(openat2, int, dfd, const char __user *, filename,
+> >  	err = copy_struct_from_user(&tmp, sizeof(tmp), how, usize);
+> >  	if (err)
+> >  		return err;
+> > +	if (tmp.pad != 0)
+> > +		return -EINVAL;
+> 
+> This check should be done in build_open_flags(), where the other sanity
+> checks are done.
+
+Good idea; done.
+
+> In addition, there must be an additional check like
+> 
+>   if (!(flags & O_SPECIFIC_FD) && how->fd != 0)
+>     return -EINVAL;
+> 
+> Since we must not allow garbage values to be passed and ignored by us in
+> openat2().
+
+Good catch! Added.
+
+> > --- a/include/uapi/asm-generic/fcntl.h
+> > +++ b/include/uapi/asm-generic/fcntl.h
+> > @@ -89,6 +89,10 @@
+> >  #define __O_TMPFILE	020000000
+> >  #endif
+> >  
+> > +#ifndef O_SPECIFIC_FD
+> > +#define O_SPECIFIC_FD	01000000000	/* open as specified fd */
+> > +#endif
+> 
+> Maybe you've already done this (since you skipped several bits in the
+> O_* flag space), but I would double-check that there is no conflict on
+> other architectures. I faintly recall that FMODE_NOTIFY has a different
+> value on sparc, and there was some oddness on alpha too... But as long
+> as fcntl.c builds on all the arches then it's fine.
+
+I checked other architectures carefully, and yes, I picked this value
+because some of the intermediate values conflicted on specific
+architectures.
+
+> > --- a/include/uapi/linux/openat2.h
+> > +++ b/include/uapi/linux/openat2.h
+> > @@ -20,6 +20,8 @@ struct open_how {
+> >  	__u64 flags;
+> >  	__u64 mode;
+> >  	__u64 resolve;
+> > +	__s32 fd;
+> > +	__u32 pad; /* Must be 0 in the current version */
+> 
+> I'm not sure I see why the new field is an s32 -- there should be no
+> situation where a user specifies O_SPECIFIC_FD and a negative file
+> descriptor (if we keep it as an s32, you should get an -EINVAL in that
+> case). If you don't want O_SPECIFIC_FD, don't specify it.
+>
+> But I think this should be a u32.
+
+See my explanation above for why I do want to allow `-1` here.
+
+However, there's no reason I need to make the field signed just because
+of that one reserved value. I'll change the field to a __u32.
+
+- Josh Triplett
