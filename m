@@ -2,101 +2,125 @@ Return-Path: <SRS0=n+Ub=5Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7451FC2BB85
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 21:44:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5014C2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 21:45:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 480932072F
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 21:44:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="JVWpMDaF"
+	by mail.kernel.org (Postfix) with ESMTP id AB4E12084D
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 21:45:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1586468737;
+	bh=sPgKZcIbslMsYUL+H7kbEpKllf9J9gMN5tOWhmBtZnc=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=iIE7fxvFjcZSvFn+OAFGzerydCSnBgZdpFuq1ASVRm8WZZu6uFzCyBekSSGh1de1o
+	 yHGtiY6iMzQdyZ9HJEyDCkj0xSL4a18ldxBBQGgot/JQn5WvvskjsVMzKfj2rie8k4
+	 ADtfWQ4I53dgxD8FPBme7SFDx0oLl+hOcVdZ2Yng=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727244AbgDIVo5 (ORCPT
+        id S1727666AbgDIVpg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Apr 2020 17:44:57 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:54766 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726866AbgDIVo4 (ORCPT
+        Thu, 9 Apr 2020 17:45:36 -0400
+Received: from mail-pj1-f65.google.com ([209.85.216.65]:39805 "EHLO
+        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726666AbgDIVpf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Apr 2020 17:44:56 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 039Lh6gl051871;
-        Thu, 9 Apr 2020 21:44:55 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
- subject : date : message-id; s=corp-2020-01-29;
- bh=KVyrR7Ev5APxOYVha5QcIl4uYw2bqBLsnRLs8f9X/Zo=;
- b=JVWpMDaFxV/Xn08SFhcnwE+kgFdAVQyxbDj8C/1buG1gAWbip/BW23tkFw70Lx8ghAj9
- YmMXoxpxmkLRSZef9thxMjHriDKdyZRDCcSyRLQzT1VXm/h7TOsRzng8QLLo/OxBbUfD
- ZeGkO0b7QdVOL9bUiTpKmuvoZHd362724REh9k0uNeDe4GolPiBU9J7Fe06vTl2B2Hsn
- lGTj0sMslkluHAT5JxcQv9P/sjot3EIlyIXNd1Ct9Zjsoz56um7D8sVa/VAWpQM05FdA
- 7ogw1cGBuSWnw8v9qmLhqP7oa79pfV96LfTZcyNGqY5iQu4lN2wkOy1uJcQISJ8hmSHC /Q== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by userp2120.oracle.com with ESMTP id 309gw4fuu1-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 09 Apr 2020 21:44:55 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 039LfdM1180988;
-        Thu, 9 Apr 2020 21:44:54 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by aserp3020.oracle.com with ESMTP id 3091m9p5sh-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 09 Apr 2020 21:44:54 +0000
-Received: from abhmp0017.oracle.com (abhmp0017.oracle.com [141.146.116.23])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 039Lirng016549;
-        Thu, 9 Apr 2020 21:44:53 GMT
-Received: from toshiba-tecra.hsd1.ca.comcast.net (/10.159.132.43)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 09 Apr 2020 14:44:53 -0700
-From:   Victor Erminpour <victor.erminpour@oracle.com>
-To:     ardb@kernel.org
-Cc:     linux-efi@vger.kernel.org, linux-kernel@vger.kernel.org,
-        victor.erminpour@oracle.com
-Subject: [PATCH] efi/libstub/arm64: Enable __efistub_global define in .data section
-Date:   Thu,  9 Apr 2020 14:44:29 -0700
-Message-Id: <1586468669-21456-1-git-send-email-victor.erminpour@oracle.com>
-X-Mailer: git-send-email 1.8.3.1
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9586 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 bulkscore=0 mlxscore=0
- malwarescore=0 spamscore=0 adultscore=0 suspectscore=1 mlxlogscore=979
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
- definitions=main-2004090152
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9586 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 bulkscore=0
- phishscore=0 lowpriorityscore=0 impostorscore=0 clxscore=1011
- suspectscore=1 malwarescore=0 spamscore=0 mlxlogscore=999 mlxscore=0
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2004090152
+        Thu, 9 Apr 2020 17:45:35 -0400
+Received: by mail-pj1-f65.google.com with SMTP id z3so26341pjr.4;
+        Thu, 09 Apr 2020 14:45:35 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=eoDxljTp5vbr3aoHKkBfKXVECAcC7qfX/D5k3HZf/M0=;
+        b=P1CySppNDyG4X/dJQjTjZVVcnrzipKQxDqaLUpx7gMZigXiTJSleZAEmUqaV14KU0+
+         xyrSTUO3SW7RjVxd/flCjnrt++5fRlxmEh1ra2oni4C+T/bTItHjrxDSP/4sCqsh0Et6
+         WyE1UwWp4kg+A1SDJfOpnWZ2PMzuwADHH4VaiqKI6cMB5y/XjfojEg4snVHXS371oRVO
+         mB7P54CGtUOvlffE7Iz9n94N3XCfeYzJawWXTtYc00nzydEfS7DDUIBzu182doNmRMME
+         6aPl5sPYEnQ7rAEGGwxWjilC/Ciob4N3HfnKhbc6SlZ6ZkZx36bxiKsARkmiQvPA+0Ze
+         sVFQ==
+X-Gm-Message-State: AGi0Pua+Abv9HUsXk43pU0iUUvSBj47sLsvut5vUCdyypEHUH7Bms78D
+        O1uejfjQd6/wrt2Y0EIfn+w=
+X-Google-Smtp-Source: APiQypJjM7OsXoNAVoK/beb/tphg54XlEChQn9RFbJNqZgnvlVR9rMP+bWm17T1MuhZd12Ok+Iemmg==
+X-Received: by 2002:a17:902:ba86:: with SMTP id k6mr1675518pls.47.1586468735123;
+        Thu, 09 Apr 2020 14:45:35 -0700 (PDT)
+Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
+        by smtp.gmail.com with ESMTPSA id u186sm42297pfu.205.2020.04.09.14.45.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 09 Apr 2020 14:45:32 -0700 (PDT)
+Received: by 42.do-not-panic.com (Postfix, from userid 1000)
+        id 4DC0C41D00; Thu,  9 Apr 2020 21:45:32 +0000 (UTC)
+From:   Luis Chamberlain <mcgrof@kernel.org>
+To:     axboe@kernel.dk, viro@zeniv.linux.org.uk,
+        gregkh@linuxfoundation.org, rostedt@goodmis.org, mingo@redhat.com,
+        jack@suse.cz, ming.lei@redhat.com, nstange@suse.de,
+        akpm@linux-foundation.org
+Cc:     mhocko@suse.com, yukuai3@huawei.com, linux-block@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, Luis Chamberlain <mcgrof@kernel.org>,
+        Bart Van Assche <bvanassche@acm.org>,
+        Omar Sandoval <osandov@fb.com>,
+        Hannes Reinecke <hare@suse.com>,
+        Michal Hocko <mhocko@kernel.org>
+Subject: [RFC v2 3/5] blktrace: ref count the request_queue during ioctl
+Date:   Thu,  9 Apr 2020 21:45:28 +0000
+Message-Id: <20200409214530.2413-4-mcgrof@kernel.org>
+X-Mailer: git-send-email 2.23.0.rc1
+In-Reply-To: <20200409214530.2413-1-mcgrof@kernel.org>
+References: <20200409214530.2413-1-mcgrof@kernel.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Enable the __efistub_global define to place variables in the
-.data section for both CONFIG_ARM and CONFIG_ARM64.
+Ensure that the reqest_queue ref counts the request_queue
+during its full ioctl cycle. This avoids possible races against
+removal, given blk_get_queue() also checks to ensure the queue
+is not dying.
 
-This places the EFIstub sys_table variable and other EFIstub
-static variables in the .data section for both CONFIG_ARM and
-CONFIG_ARM64.
+This small race is possible if you defer removal of the reqest_queue
+and userspace fires off an ioctl for the device in the meantime.
 
-Signed-off-by: Victor Erminpour <victor.erminpour@oracle.com>
+Cc: Bart Van Assche <bvanassche@acm.org>
+Cc: Omar Sandoval <osandov@fb.com>
+Cc: Hannes Reinecke <hare@suse.com>
+Cc: Nicolai Stange <nstange@suse.de>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Michal Hocko <mhocko@kernel.org>
+Cc: yu kuai <yukuai3@huawei.com>
+Signed-off-by: Luis Chamberlain <mcgrof@kernel.org>
 ---
- drivers/firmware/efi/libstub/efistub.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ kernel/trace/blktrace.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/drivers/firmware/efi/libstub/efistub.h b/drivers/firmware/efi/libstub/efistub.h
-index c244b16..59932d6 100644
---- a/drivers/firmware/efi/libstub/efistub.h
-+++ b/drivers/firmware/efi/libstub/efistub.h
-@@ -25,7 +25,7 @@
- #define EFI_ALLOC_ALIGN		EFI_PAGE_SIZE
- #endif
+diff --git a/kernel/trace/blktrace.c b/kernel/trace/blktrace.c
+index 15086227592f..17e144d15779 100644
+--- a/kernel/trace/blktrace.c
++++ b/kernel/trace/blktrace.c
+@@ -701,6 +701,9 @@ int blk_trace_ioctl(struct block_device *bdev, unsigned cmd, char __user *arg)
+ 	if (!q)
+ 		return -ENXIO;
  
--#ifdef CONFIG_ARM
-+#if defined(CONFIG_ARM) || defined(CONFIG_ARM64)
- #define __efistub_global	__section(.data)
- #else
- #define __efistub_global
++	if (!blk_get_queue(q))
++		return -ENXIO;
++
+ 	mutex_lock(&q->blk_trace_mutex);
+ 
+ 	switch (cmd) {
+@@ -729,6 +732,9 @@ int blk_trace_ioctl(struct block_device *bdev, unsigned cmd, char __user *arg)
+ 	}
+ 
+ 	mutex_unlock(&q->blk_trace_mutex);
++
++	blk_put_queue(q);
++
+ 	return ret;
+ }
+ 
+-- 
+2.25.1
+
