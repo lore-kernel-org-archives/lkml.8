@@ -2,179 +2,211 @@ Return-Path: <SRS0=n+Ub=5Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BDC2FC2BB86
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 12:15:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64EA5C2BBFD
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 12:21:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8B26720857
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 12:15:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586434504;
-	bh=rb5Md3zmf06y7cA4k7nEUfslEQ4Wr/PeZLhfvGB4ogo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=nhkQs5s2B8h2F0tJJcYhAgaaaCUHgPZ8XM7Jjk79pFg+it7n4Ik2qzYpC9zEvXCNP
-	 +S+AYakKLQBzAqlt+7jnH3mRecldZfyk+GScRafBNDZKq+ZVx4XphtOHKRYs9QfAje
-	 GQ/Z233SkMe8OTHsexN+HnmocQCi+dwdrceCdae8=
+	by mail.kernel.org (Postfix) with ESMTP id 430AB20B1F
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 12:21:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726632AbgDIMPD (ORCPT
+        id S1726579AbgDIMVI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Apr 2020 08:15:03 -0400
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:46250 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725971AbgDIMPC (ORCPT
+        Thu, 9 Apr 2020 08:21:08 -0400
+Received: from asavdk4.altibox.net ([109.247.116.15]:56972 "EHLO
+        asavdk4.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725971AbgDIMVI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Apr 2020 08:15:02 -0400
-Received: by mail-ed1-f68.google.com with SMTP id dk4so1561741edb.13;
-        Thu, 09 Apr 2020 05:15:01 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=gYvBs+A4oEEcIMW3rEpNzM655tFmA/5YHjSipVpMudE=;
-        b=KNpAMrlizzkRUjdtArRcZnepHKNbBBN3N29ICe8f+8u6zOuwzgheP2XUgCe+44NkIR
-         mQLi0LbDma0eJfXyOWBKcbI2n8ancJall5BX2XkJNVRNNTKMoc9a5b/UIpi2u5H8OdAL
-         wApHdYZ1LSSr/6trI/dFG30x/Qyr6p7NIUqAv1DOYTzLuPrY0sPMLn94+uwoMPyEWaBW
-         iVEgmf1Qbe3qa84zsIAGGS/pv73wUuLRlgOQEiKqf0CFJrzUUWOVeXsAEFJhh97kXPyr
-         GZyGrCIrhxxiIcOrNhwBEE1X+Y+gwd4BQvdD7blpBMPJQIY5Zp2FVyy0J6fa9RShslsv
-         euOw==
-X-Gm-Message-State: AGi0PuZNdCjWjEQGXtYtDzyb1AFiyKSVK99JM7iY3Sjepioh9ROim5x1
-        yUJDf1ERp7TF+bavcIpO8i0=
-X-Google-Smtp-Source: APiQypJUJiiLoo3HAf51vgJTKYVBHwPZEVH7hjM1r+1VFWyM0ypQpU23tWpSatmkBm3yArwlL/zmtg==
-X-Received: by 2002:a17:906:66c1:: with SMTP id k1mr11490807ejp.208.1586434500891;
-        Thu, 09 Apr 2020 05:15:00 -0700 (PDT)
-Received: from kozik-lap ([194.230.155.125])
-        by smtp.googlemail.com with ESMTPSA id m1sm532752ejr.81.2020.04.09.05.14.58
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 09 Apr 2020 05:14:59 -0700 (PDT)
-Date:   Thu, 9 Apr 2020 14:14:56 +0200
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Oleksandr Suvorov <oleksandr.suvorov@toradex.com>
-Cc:     devicetree@vger.kernel.org, Paul Barker <pbarker@konsulko.com>,
-        Marcel Ziswiler <marcel.ziswiler@toradex.com>,
-        Igor Opaniuk <igor.opaniuk@toradex.com>,
-        Philippe Schenker <philippe.schenker@toradex.com>,
-        Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson@baylibre.com>,
-        Chen-Yu Tsai <wens@csie.org>,
-        David Lechner <david@lechnology.com>,
-        Fabio Estevam <festevam@gmail.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Jisheng Zhang <Jisheng.Zhang@synaptics.com>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Kukjin Kim <kgene@kernel.org>,
-        Ludovic Desroches <ludovic.desroches@microchip.com>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Peter Rosin <peda@axentia.se>,
+        Thu, 9 Apr 2020 08:21:08 -0400
+Received: from ravnborg.org (unknown [158.248.194.18])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by asavdk4.altibox.net (Postfix) with ESMTPS id DA56180539;
+        Thu,  9 Apr 2020 14:21:00 +0200 (CEST)
+Date:   Thu, 9 Apr 2020 14:20:54 +0200
+From:   Sam Ravnborg <sam@ravnborg.org>
+To:     "H. Nikolaus Schaller" <hns@goldelico.com>
+Cc:     Paul Cercueil <paul@crapouillou.net>,
+        Paul Boddie <paul@boddie.org.uk>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
         Rob Herring <robh+dt@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
-        Sekhar Nori <nsekhar@ti.com>, Shawn Guo <shawnguo@kernel.org>,
-        Stefan Agner <stefan@agner.ch>,
-        Tony Lindgren <tony@atomide.com>,
-        linux-amlogic@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-omap@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-        linux-rockchip@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org
-Subject: Re: [RFC PATCH v2 6/6] arm: dts: pwm: replace flag 0 with PWM_NOFLAGS
-Message-ID: <20200409121456.GB802@kozik-lap>
-References: <20200405192246.3741784-1-oleksandr.suvorov@toradex.com>
- <20200405192246.3741784-7-oleksandr.suvorov@toradex.com>
+        Mark Rutland <mark.rutland@arm.com>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paulburton@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Andi Kleen <ak@linux.intel.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Kees Cook <keescook@chromium.org>, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linux-mips@vger.kernel.org, linux-gpio@vger.kernel.org,
+        mips-creator-ci20-dev@googlegroups.com,
+        letux-kernel@openphoenux.org
+Subject: Re: [RFC v3 1/8] dt-bindings: display: convert ingenic, lcd.txt to
+ ingenic, lcd.yaml
+Message-ID: <20200409122054.GA5683@ravnborg.org>
+References: <cover.1585503354.git.hns@goldelico.com>
+ <a75c77fa8528f44832993f9780ae4ea409125a90.1585503354.git.hns@goldelico.com>
+ <20200409072559.GB12367@ravnborg.org>
+ <F4F5D267-A538-444B-9DCA-EA87AC798FB3@goldelico.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200405192246.3741784-7-oleksandr.suvorov@toradex.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <F4F5D267-A538-444B-9DCA-EA87AC798FB3@goldelico.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-CMAE-Score: 0
+X-CMAE-Analysis: v=2.3 cv=XpTUx2N9 c=1 sm=1 tr=0
+        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
+        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10
+        a=Cwf29u2qlR-08nbE3pUA:9 a=CjuIK1q_8ugA:10
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Apr 05, 2020 at 10:22:46PM +0300, Oleksandr Suvorov wrote:
-> The raw value '0' in the 3rd cell of the "pwms" property means there are
-> no flags to be set.
-> 
-> This patch converts '0' value into PWM_NOFLAGS.
-> 
-> Signed-off-by: Oleksandr Suvorov <oleksandr.suvorov@toradex.com>
-> ---
-> 
-> Changes in v2:
-> - remove the driver part of patchset as dangerous and senseless.
-> - use PWM_NOFLAGS instead of PWM_POLARITY_NORMAL to avoid possible
->   conflict with enum pwm_polarity in <linux/pwm.h>. Also, this name
->   reflects the sense of this value more precisely.
-> 
->  arch/arm/boot/dts/am335x-cm-t335.dts               | 2 +-
->  arch/arm/boot/dts/am335x-evm.dts                   | 2 +-
->  arch/arm/boot/dts/am3517-evm.dts                   | 2 +-
->  arch/arm/boot/dts/at91-dvk_su60_somc_lcm.dtsi      | 2 +-
->  arch/arm/boot/dts/at91-kizbox2-common.dtsi         | 6 +++---
->  arch/arm/boot/dts/at91-kizbox3_common.dtsi         | 8 ++++----
->  arch/arm/boot/dts/at91-kizboxmini-common.dtsi      | 6 +++---
->  arch/arm/boot/dts/at91-nattis-2-natte-2.dts        | 2 +-
->  arch/arm/boot/dts/at91-sama5d4_ma5d4evk.dts        | 2 +-
->  arch/arm/boot/dts/at91sam9n12ek.dts                | 2 +-
->  arch/arm/boot/dts/at91sam9x5dm.dtsi                | 2 +-
->  arch/arm/boot/dts/berlin2cd-google-chromecast.dts  | 4 ++--
->  arch/arm/boot/dts/da850-evm.dts                    | 2 +-
->  arch/arm/boot/dts/da850-lego-ev3.dts               | 4 ++--
->  arch/arm/boot/dts/exynos4412-midas.dtsi            | 2 +-
->  arch/arm/boot/dts/exynos4412-odroidu3.dts          | 2 +-
->  arch/arm/boot/dts/exynos5250-snow-common.dtsi      | 2 +-
->  arch/arm/boot/dts/exynos5410-odroidxu.dts          | 2 +-
->  arch/arm/boot/dts/exynos5420-peach-pit.dts         | 2 +-
->  arch/arm/boot/dts/exynos5422-odroidhc1.dts         | 2 +-
->  arch/arm/boot/dts/exynos5422-odroidxu3-common.dtsi | 2 +-
->  arch/arm/boot/dts/exynos5422-odroidxu4.dts         | 2 +-
->  arch/arm/boot/dts/exynos54xx-odroidxu-leds.dtsi    | 4 ++--
->  arch/arm/boot/dts/exynos5800-peach-pi.dts          | 2 +-
->  arch/arm/boot/dts/imx53-tx53-x13x.dts              | 5 +++--
->  arch/arm/boot/dts/imx6dl-tx6dl-comtft.dts          | 2 +-
->  arch/arm/boot/dts/imx6q-display5.dtsi              | 2 +-
->  arch/arm/boot/dts/imx6q-tx6q-1010-comtft.dts       | 2 +-
->  arch/arm/boot/dts/imx6q-tx6q-1020-comtft.dts       | 2 +-
->  arch/arm/boot/dts/imx6qdl-tx6-lvds.dtsi            | 4 ++--
->  arch/arm/boot/dts/imx7-colibri.dtsi                | 4 +++-
->  arch/arm/boot/dts/imx7d-nitrogen7.dts              | 3 ++-
->  arch/arm/boot/dts/imx7d-pico.dtsi                  | 3 ++-
->  arch/arm/boot/dts/imx7d-sdb.dts                    | 3 ++-
->  arch/arm/boot/dts/imx7ulp-evk.dts                  | 3 ++-
->  arch/arm/boot/dts/iwg20d-q7-common.dtsi            | 2 +-
->  arch/arm/boot/dts/logicpd-torpedo-baseboard.dtsi   | 2 +-
->  arch/arm/boot/dts/meson8b-ec100.dts                | 4 ++--
->  arch/arm/boot/dts/meson8b-mxq.dts                  | 4 ++--
->  arch/arm/boot/dts/meson8b-odroidc1.dts             | 4 ++--
->  arch/arm/boot/dts/motorola-mapphone-common.dtsi    | 3 ++-
->  arch/arm/boot/dts/omap3-gta04.dtsi                 | 2 +-
->  arch/arm/boot/dts/omap3-n900.dts                   | 2 +-
->  arch/arm/boot/dts/rk3288-veyron-edp.dtsi           | 2 +-
->  arch/arm/boot/dts/rk3288-veyron.dtsi               | 2 +-
->  arch/arm/boot/dts/rv1108-evb.dts                   | 2 +-
->  arch/arm/boot/dts/s3c6410-mini6410.dts             | 2 +-
->  arch/arm/boot/dts/s5pv210-aries.dtsi               | 2 +-
->  arch/arm/boot/dts/s5pv210-smdkv210.dts             | 2 +-
+Hi Nikolaus.
 
+> >> +
+> >> +examples:
+> >> +  - |
+> >> +    #include <dt-bindings/clock/jz4725b-cgu.h>
+> >> +
+> >> +    panel {
+> >> +      compatible = "sharp,ls020b1dd01d";
+> >> +
+> >> +      backlight = <&backlight>;
+> >> +      power-supply = <&vcc>;
+> >> +
+> >> +      port {
+> >> +        panel_input: endpoint {
+> >> +          remote-endpoint = <&panel_output>;
+> >> +          };
+> >> +        };
+> >> +      };
+> > The panel part is not needed - better to drop it.
+> 
+> Well, it is needed to fulfill the remote-endpoint below.
 
-I understand you are going to push it through arm-soc, so:
-For Exynos/S3C/S5P:
-Acked-by: Krzysztof Kozlowski <krzk@kernel.org>
+Examples may have phandle that are not defined.
+So the example will work fine without it.
+See other similar examples.
 
-Otherwise if you expect individual maintainers to pick it up, please
-split per architecture.
+> 
+> > 
+> > 
+> >> +
+> >> +    lcd: lcd-controller@13050000 {
+> >> +      compatible = "ingenic,jz4725b-lcd";
+> >> +      reg = <0x13050000 0x1000>;
+> >> +
+> >> +      interrupt-parent = <&intc>;
+> >> +      interrupts = <31>;
+> >> +
+> >> +      clocks = <&cgu JZ4725B_CLK_LCD>;
+> >> +      clock-names = "lcd", "lcd_pclk";
+> >> +
+> >> +      port {
+> >> +        panel_output: endpoint {
+> >> +          remote-endpoint = <&panel_input>;
+> >> +          };
+> >> +        };
+> >> +      };
+> > We know this example will not pass the check, as there is only
+> > one clock specified.
+> > I suggest to drop this example.
+> > If it later turns out that jz4725b only have one clock,
+> 
+> Paul already reported that it only wants to see one clock.
+> 
+> > then the binding
+> > needs to be updated.
+> 
+> Yes, I have that on my to-do list to update the binding to reflect
+> this minItems/maxItems thing but I am not yet sure about how
+> to handle the clock-names in that case. I.e. make "lcd" optional
+> and enforce "lcd_pclk" only.
+Look forward to next version.
 
-Best regards,
-Krzysztof
+> 
+> > But the best guess is that the example is wrong.
+> > 
+> > The example below for jz4780-lcd cover all relevant parts - so
+> > just keep it as the only example.
+> > 
+> >> +
+> >> +  - |
+> >> +    #include <dt-bindings/clock/jz4780-cgu.h>
+> >> +
+> >> +    lcdc0: lcdc0@13050000 {
+> > Name this lcdc
+> > And drop "lcdc0@13050000" as this is not relevant for this example.
+> > 
+> > Remember - the examples exist to explain the binding. They are
+> > just examples.
+> > 
+> >> +        compatible = "ingenic,jz4780-lcd";
+> >> +        reg = <0x13050000 0x1800>;
+> >> +
+> >> +        clocks = <&cgu JZ4780_CLK_TVE>, <&cgu JZ4780_CLK_LCD0PIXCLK>;
+> >> +        clock-names = "lcd", "lcd_pclk";
+> >> +
+> >> +        interrupt-parent = <&intc>;
+> >> +        interrupts = <31>;
+> >> +
+> >> +        jz4780_lcd_out: port {
+> >> +            #address-cells = <1>;
+> >> +            #size-cells = <0>;
+> >> +
+> >> +            jz4780_out_hdmi: endpoint@0 {
+> >> +                reg = <0>;
+> >> +                remote-endpoint = <&hdmi_in_lcd>;
+> >> +            };
+> >> +        };
+> >> +    };
+> >> +
+> > 
+> > And drop this as it does not add anything extra.
+> 
+> Well, it demonstrates how to add a second lcdc which is disabled.
+The purpose of the example is to show an example of the
+binding specified in this file.
+Adding a second disabled lcdc is a general thing, and not
+something we want in all the individual examples.
+
+Also the actual content, for example register values can be
+random as they are not part of the binding.
+This is not a documentation of the HW but a binding example.
+
+	Sam
+
+> 
+> Showing that it is possible to do so is IMHO the most important
+> part of the example because it is not at all obvious.
+> 
+> I have also added both SoC to show how differently they can
+> and should be.
+> 
+> >> +    lcdc1: lcdc1@130a0000 {
+> >> +        compatible = "ingenic,jz4780-lcd";
+> >> +        reg = <0x130a0000 0x1800>;
+> >> +
+> >> +        clocks = <&cgu JZ4780_CLK_TVE>, <&cgu JZ4780_CLK_LCD1PIXCLK>;
+> >> +        clock-names = "lcd", "lcd_pclk";
+> >> +
+> >> +        interrupt-parent = <&intc>;
+> >> +        interrupts = <31>;
+> >> +
+> >> +        status = "disabled";
+> >> +    };
+> > 
+> > 	Sam
+> 
+> BR and thanks,
+> Nikolaus
+> 
