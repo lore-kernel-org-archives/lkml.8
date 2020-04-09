@@ -2,126 +2,133 @@ Return-Path: <SRS0=n+Ub=5Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48344C2BA2B
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 14:45:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27930C2BB86
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 14:47:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0CAEC2051A
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 14:45:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F2EDE2051A
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 14:47:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="tKQj+I8Q"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="pPPYIThh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727789AbgDIOp4 (ORCPT
+        id S1727801AbgDIOrW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Apr 2020 10:45:56 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:50086 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726977AbgDIOpz (ORCPT
+        Thu, 9 Apr 2020 10:47:22 -0400
+Received: from mail-wr1-f45.google.com ([209.85.221.45]:35131 "EHLO
+        mail-wr1-f45.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727354AbgDIOrW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Apr 2020 10:45:55 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=UaY+F14JIF5fNnFl5Q0dxEWbJVvhGgScCq/Av6dpNmk=; b=tKQj+I8QN0CWaEHBaQakSjP1MS
-        NFMrpBCBq1e6c51EZI6d6hUiCFB0HPjMG5DJ9ONn+g69FXwgZiYKAT2OR3mkVPFdFudBMApREZSfL
-        jVduc+H0ZTMlL6GNHH01b9l/NQp2VHMzeB+IhtRxnIQ3YTpqodDbZVICtGRLhzoxljjvJ/UsckgFz
-        GCJhFdUEZhD2IZm6IWCfgHVtZ+YVW4WXYiZDCPa62xLXIiDbX7LBbOr5joW631gIp9epNaMHg5kEV
-        BFtZmCV4v2gY0qCnIZ6o4hT3KvqbZqU0mnBgYweLXCISBPfCtZkbGcJtcjjoIMzjrsbZ5OfVS5Ssw
-        iF1N53Hg==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jMYRB-0002N4-OD; Thu, 09 Apr 2020 14:45:49 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id AC72B300B38;
-        Thu,  9 Apr 2020 16:45:46 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 949002BB012BC; Thu,  9 Apr 2020 16:45:46 +0200 (CEST)
-Date:   Thu, 9 Apr 2020 16:45:46 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Masami Hiramatsu <mhiramat@kernel.org>
-Cc:     Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
-        Jann Horn <jannh@google.com>,
-        Harry Wentland <harry.wentland@amd.com>,
-        Leo Li <sunpeng.li@amd.com>, amd-gfx@lists.freedesktop.org,
-        Alex Deucher <alexander.deucher@amd.com>,
-        David Zhou <David1.Zhou@amd.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H . Peter Anvin" <hpa@zytor.com>,
-        the arch/x86 maintainers <x86@kernel.org>,
-        kernel list <linux-kernel@vger.kernel.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: Re: [PATCH v2] x86: insn: Add insn_is_fpu()
-Message-ID: <20200409144546.GP20760@hirez.programming.kicks-ass.net>
-References: <20200407155449.GF20730@hirez.programming.kicks-ass.net>
- <158636215075.6641.10786116450376715657.stgit@devnote2>
- <20200409143212.GW20696@hirez.programming.kicks-ass.net>
+        Thu, 9 Apr 2020 10:47:22 -0400
+Received: by mail-wr1-f45.google.com with SMTP id g3so12274584wrx.2
+        for <linux-kernel@vger.kernel.org>; Thu, 09 Apr 2020 07:47:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=ZZS9U1ArwsTmsSPlfGJd5HeXSHO0SdvQfFd8dx+1UVk=;
+        b=pPPYIThhwzhDNkp6VOJ+CbRbSQJHdOGFcH+VYBuGxQPgg1cFdXyhYy0Y10a2nwGDrG
+         LaQ5HlQ4lKwgKEl37rk7qWOVSIrNnk1s3P6VBPxmBwXz+J8bXLpDfObMzOCsZL/Di4Yl
+         OlYOtrzoZrkE7LDvGnHaXNL+cimv0xXrBbz/CFq39SZjL+kIbuRdxY41dGh++w20t6Fg
+         BzklAUcwdMcaUoQKUISJuK83qod9vHrQApnRJ3LDtblxM40cSvVdBXaLtx/C0iF30rL5
+         r8BGtK6xTqAMDXmIDGud7+pxNot89WTdTL2d6IvihKpj272J310TY7FX8Io96nBNrIyp
+         4oQA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=ZZS9U1ArwsTmsSPlfGJd5HeXSHO0SdvQfFd8dx+1UVk=;
+        b=Nw0dU+02yN/yYB3PF0Y/EbCTboLxLr949OTt0knJ+DPHK97tRveXLBKJ7/wdb3MLtI
+         QIv/cyvLlA62D2f5nkfa0ki1awJKiWgxxAJvDH5gDQzQNa+yKQGPVqQNZgGXMUVJ319o
+         IGzdDGe17Ywj8bb6xvFBb5MXAaPFZOx9URwNU0D6Ba24DzDsR+mchjTnBNPjOeIfIZf2
+         FbTIZQrkKiTv/AnuiH2jD0cJPzj2bFesfHhv08B/ggIz6j/LZRZiBgaVZdevcGyLEpd9
+         nSK2vn5Rm3zhme3Vd0dDdy0PR1as6XwrqdO4C/BWwcjPUXkJVAXTDdD0mHiT4sRwmGqv
+         AwWA==
+X-Gm-Message-State: AGi0PuYVTjqVLkZKlcwuEIQnLwI2bY5ECj1+RMg5KkjLuHAaOlXl4c0K
+        mTXjcYqrBAKVd7UGLWYECtDtRA==
+X-Google-Smtp-Source: APiQypK/poVrrLLEc2SNT/FoCaqqeJDqSdaOa5up0mRVX6coNjeR1Ww0pzfAVxRyFxqkdfoGHAOMLQ==
+X-Received: by 2002:a5d:4d12:: with SMTP id z18mr14869150wrt.67.1586443639710;
+        Thu, 09 Apr 2020 07:47:19 -0700 (PDT)
+Received: from ?IPv6:2a01:e34:ed2f:f020:4e:2ab3:ef46:7bda? ([2a01:e34:ed2f:f020:4e:2ab3:ef46:7bda])
+        by smtp.googlemail.com with ESMTPSA id n4sm3897949wmi.20.2020.04.09.07.47.18
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 09 Apr 2020 07:47:19 -0700 (PDT)
+Subject: Re: [PATCH v6 0/4] thermal: k3: Add support for bandgap sensors
+To:     Tero Kristo <t-kristo@ti.com>, "J, KEERTHY" <j-keerthy@ti.com>,
+        rui.zhang@intel.com, robh+dt@kernel.org
+Cc:     amit.kucheria@verdurent.com, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-pm@vger.kernel.org, mark.rutland@arm.com
+References: <20200407055116.16082-1-j-keerthy@ti.com>
+ <3c69e3c6-5549-e891-fde6-95a2ecc49f77@linaro.org>
+ <0817f9ee-c72f-3e9f-00cf-e8ddaf608020@ti.com>
+ <e7dd6470-5992-8d22-5d0c-7532a47a400c@ti.com>
+From:   Daniel Lezcano <daniel.lezcano@linaro.org>
+Message-ID: <3221f241-7118-a586-1789-d427791215c6@linaro.org>
+Date:   Thu, 9 Apr 2020 16:47:18 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200409143212.GW20696@hirez.programming.kicks-ass.net>
+In-Reply-To: <e7dd6470-5992-8d22-5d0c-7532a47a400c@ti.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 09, 2020 at 04:32:12PM +0200, Peter Zijlstra wrote:
-> On Thu, Apr 09, 2020 at 01:09:11AM +0900, Masami Hiramatsu wrote:
-> > Add insn_is_fpu(insn) which tells that the insn is
-> > whether touch the FPU/SSE/MMX register or the instruction
-> > of FP coprocessor.
-> > 
-> > Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
-> > ---
+On 09/04/2020 16:37, Tero Kristo wrote:
+> On 09/04/2020 17:07, J, KEERTHY wrote:
+>>
+>>
+>> On 4/9/2020 7:19 PM, Daniel Lezcano wrote:
+>>>
+>>> Hi Keerthy,
+>>>
+>>> On 07/04/2020 07:51, Keerthy wrote:
+>>>> Add VTM thermal support. In the Voltage Thermal
+>>>> Management Module(VTM), K3 AM654 supplies a voltage
+>>>> reference and a temperature sensor feature that are gathered in the
+>>>> band
+>>>> gap voltage and temperature sensor (VBGAPTS) module. The band
+>>>> gap provides current and voltage reference for its internal
+>>>> circuits and other analog IP blocks. The analog-to-digital
+>>>> converter (ADC) produces an output value that is proportional
+>>>> to the silicon temperature.
+>>>>
+>>>> Add support for bandgap sensors. Currently reading temperatures
+>>>> is supported.
+>>>
+>>> How do you want to proceed? Shall I take patches 1 & 2 ?
+>>
+>> +Tero
+>>
+>> Hi Tero,
+>>
+>> Can you pull 3 & 4? Or Daniel can take all 4?
 > 
-> Sadly, it turns out I need "FWAIT" too, which I tried adding like the
-> below, but that comes apart most mighty :/
+> Let me pull the DT patches, that way we avoid any conflicts in the
+> arm64/dts tree. There has been quite a bit of traffic on that front
+> lately and we did mess up something with the current merge window already.
 > 
-> The trouble is that FWAIT doesn't take a MODRM, so the previous
-> assumption that INAT_FPU implied INAT_MODRM needs to be broken, and I
-> think that ripples through somewhere.
-> 
-> (also, your patch adds some whitespace to convert_operands(), not sure
-> that was intended)
-> 
-> --- a/arch/x86/lib/x86-opcode-map.txt
-> +++ b/arch/x86/lib/x86-opcode-map.txt
-> @@ -206,7 +206,7 @@ Table: one byte opcode
->  98: CBW/CWDE/CDQE
->  99: CWD/CDQ/CQO
->  9a: CALLF Ap (i64)
-> -9b: FWAIT/WAIT
-> +9b: FWAIT/WAIT {FPU}
->  9c: PUSHF/D/Q Fv (d64)
->  9d: POPF/D/Q Fv (d64)
->  9e: SAHF
-> --- a/arch/x86/tools/gen-insn-attr-x86.awk
-> +++ b/arch/x86/tools/gen-insn-attr-x86.awk
-> @@ -331,9 +331,13 @@ function convert_operands(count,opnd,
->  		if (match(opcode, rex_expr))
->  			flags = add_flags(flags, "INAT_MAKE_PREFIX(INAT_PFX_REX)")
->  
-> +		# check coprocessor escape
-> +		if (match(ext, "^ESC"))
-> +			flags = add_flags(flags, "INAT_MODRM")
+> I believe you are picking the driver side changes to 5.8?
 
-I'm an idiot; that needs to be:
+Applied patches 1 & 2
 
-		if (match(opcode, "^ESC"))
+Thanks
 
-> +
->  		# check FPU/MMX/SSE superscripts
->  		if (match(ext, fpu_expr))
-> -			flags = add_flags(flags, "INAT_MODRM | INAT_FPU")
-> +			flags = add_flags(flags, "INAT_FPU")
->  
->  		# check VEX codes
->  		if (match(ext, evexonly_expr))
+  -- Daniel
+
+
+
+-- 
+<http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
