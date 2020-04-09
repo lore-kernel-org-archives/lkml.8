@@ -2,105 +2,91 @@ Return-Path: <SRS0=n+Ub=5Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.3 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 408D5C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 03:13:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34F42C2BA1A
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 03:14:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 07A66208FE
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 03:13:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="JfeFkrWM"
+	by mail.kernel.org (Postfix) with ESMTP id 08D272087E
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 03:14:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726650AbgDIDM7 (ORCPT
+        id S1726597AbgDIDOy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Apr 2020 23:12:59 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:39985 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726521AbgDIDM7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Apr 2020 23:12:59 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 48yR6K01pzz9sSh;
-        Thu,  9 Apr 2020 13:12:56 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1586401978;
-        bh=a8wJcXOoSO96vrw4kf8n/9jQq4/HbjP3dnRcSeSQqSg=;
-        h=Date:From:To:Cc:Subject:From;
-        b=JfeFkrWMTgI4DUrgJEzI7zzictqFUcjkDb0NyNWSLWIYDjddP4aSFepFDzVX7Q9lU
-         fcgK0WZInCdk8SPKnp079Gc0bE/lr2BjApcKkG54crMlIgN1A/rsufJ/jbg0QylJqh
-         CBKEFKFEEnLWJqSpQSRyOkYs0mbaLd8lvUFcWwqnK5dg8y6qEnDd3Qi3d0UTetWgwZ
-         NHyP2yw2XTnLqQvd03Mo9ousSRpO9WzObPPWikfyVkqiA9qkR5afD/cktOieawrXi/
-         xlhiyk+Qzl9tGtCBPhuXgMd9sKw7xd5B3tcRIJRRL+5MboMlbSDEnwE7LTNJ7N7F4N
-         WPM1XDDpFxEBw==
-Date:   Thu, 9 Apr 2020 13:12:52 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Pavel Machek <pavel@ucw.cz>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Marek =?UTF-8?B?QmVow7pu?= <marek.behun@nic.cz>
-Subject: linux-next: manual merge of the leds tree with Linus' tree
-Message-ID: <20200409131252.2dfde0b7@canb.auug.org.au>
+        Wed, 8 Apr 2020 23:14:54 -0400
+Received: from icp-osb-irony-out3.external.iinet.net.au ([203.59.1.153]:21224
+        "EHLO icp-osb-irony-out3.external.iinet.net.au" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726536AbgDIDOy (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Apr 2020 23:14:54 -0400
+X-SMTP-MATCH: 0
+X-IronPort-Anti-Spam-Filtered: true
+X-IronPort-Anti-Spam-Result: =?us-ascii?q?A2A4AADQko5e/zXSMGcNWR0BAQEJARE?=
+ =?us-ascii?q?FBQGBaQYBCwGDFIExhByPUgEBBoEKCIojj1CBewoBAQEBAQEBAQEjFAQBAYR?=
+ =?us-ascii?q?Egi02Bw4CEAEBAQUBAQEBAQUDAYV3TIV/JxVBKAUIAiYCSyEIAQGDIgGCV69?=
+ =?us-ascii?q?0dYEyGoksgUCBDioBgWSKaHmBB4E4DIg2gkWCXgSODoolmQUIgkCHeI88I4J?=
+ =?us-ascii?q?PiD6ETQOMM61zCoF/MxoIKAiDJAlHmk6FU2KPQQEB?=
+X-IPAS-Result: =?us-ascii?q?A2A4AADQko5e/zXSMGcNWR0BAQEJAREFBQGBaQYBCwGDF?=
+ =?us-ascii?q?IExhByPUgEBBoEKCIojj1CBewoBAQEBAQEBAQEjFAQBAYREgi02Bw4CEAEBA?=
+ =?us-ascii?q?QUBAQEBAQUDAYV3TIV/JxVBKAUIAiYCSyEIAQGDIgGCV690dYEyGoksgUCBD?=
+ =?us-ascii?q?ioBgWSKaHmBB4E4DIg2gkWCXgSODoolmQUIgkCHeI88I4JPiD6ETQOMM61zC?=
+ =?us-ascii?q?oF/MxoIKAiDJAlHmk6FU2KPQQEB?=
+X-IronPort-AV: E=Sophos;i="5.72,361,1580745600"; 
+   d="scan'208";a="253499226"
+Received: from unknown (HELO [10.44.0.192]) ([103.48.210.53])
+  by icp-osb-irony-out3.iinet.net.au with ESMTP; 09 Apr 2020 11:14:11 +0800
+From:   Greg Ungerer <gerg@linux-m68k.org>
+Subject: [git pull] m68knommu changes for v5.7
+To:     torvalds@linux-foundation.org
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Linux/m68k <linux-m68k@vger.kernel.org>,
+        Geert Uytterhoeven <geert@linux-m68k.org>
+Message-ID: <ea2d2b5c-a164-7318-3dcf-3c30098364f2@linux-m68k.org>
+Date:   Thu, 9 Apr 2020 13:14:08 +1000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/GPKmm5.xLW2paourexw5EdS";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/GPKmm5.xLW2paourexw5EdS
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
 
-Hi all,
+Hi Linus,
 
-Today's linux-next merge of the leds tree got a conflict in:
+Can you please pull the m68knommu git tree, for-next branch.
 
-  drivers/leds/Makefile
+Only a single commit, to remove all use of the obsolete setup_irq()
+calls within the m68knommu architecture code.
 
-between commit:
+Regards
+Greg
 
-  457386350e6a ("leds: sort Makefile entries")
 
-from Linus' tree and commit:
 
-  3953d1908b2c ("From: Marek Beh=C3=BAn <marek.behun@nic.cz>")
-  53cb3df9dd2d ("Sort Makefile entries to reduce risk of rejects.")
+The following changes since commit 16fbf79b0f83bc752cee8589279f1ebfe57b3b6e:
 
-from the leds tree.
+   Linux 5.6-rc7 (2020-03-22 18:31:56 -0700)
 
-I fixed it up (I used the latter version) and can carry the fix as
-necessary. This is now fixed as far as linux-next is concerned, but any
-non trivial conflicts should be mentioned to your upstream maintainer
-when your tree is submitted for merging.  You may also want to consider
-cooperating with the maintainer of the conflicting tree to minimise any
-particularly complex conflicts.
+are available in the Git repository at:
 
-BTW, commit 3953d1908b2c clearly did not get applied correctly :-(
+   git://git.kernel.org/pub/scm/linux/kernel/git/gerg/m68knommu.git for-next
 
---=20
-Cheers,
-Stephen Rothwell
+for you to fetch changes up to ba000760eb0f182e6ef04faca70bb9737a9674b4:
 
---Sig_/GPKmm5.xLW2paourexw5EdS
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
+   m68k: Replace setup_irq() by request_irq() (2020-03-23 12:01:19 +1000)
 
------BEGIN PGP SIGNATURE-----
+----------------------------------------------------------------
+afzal mohammed (1):
+       m68k: Replace setup_irq() by request_irq()
 
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl6OkrQACgkQAVBC80lX
-0Gy0aQf/c9NSIkhqI3H7e0exL3hHsZd54Ls7wOV0y98kK0pQ3rWrBzmXPIddBvhe
-zhNqVJWbB40lLNLsUlGI0P10NX7fBUcBmyNIubm3LrIcInXLqDDVd5bWqgpzqCGm
-7n3RiFgN7IIIUx5yW/gBte9EMZOG3YJcNjX7I18hq1NuU4mxbYw2/y8yauu8OqPg
-E4yu1uwBrHH1wIXgfCwIy8OjC7h+IBQBhd27ckjDMY96OsCOIUSEw8stsh/vhpb8
-V2WD25JoEUGZgmFPJZC3zMeX3Cc3xZZusw6But6mR81D0Qrc+mWtTHGCmYRrr0A5
-VXTDmJaFzzz3u5mYZBNdox51YcbkaA==
-=f5DQ
------END PGP SIGNATURE-----
-
---Sig_/GPKmm5.xLW2paourexw5EdS--
+  arch/m68k/68000/timers.c      | 16 +++++++---------
+  arch/m68k/coldfire/pit.c      | 16 +++++++---------
+  arch/m68k/coldfire/sltimers.c | 29 +++++++++++++++--------------
+  arch/m68k/coldfire/timers.c   | 31 +++++++++++++++----------------
+  4 files changed, 44 insertions(+), 48 deletions(-)
