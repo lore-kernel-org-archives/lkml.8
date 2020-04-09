@@ -2,90 +2,110 @@ Return-Path: <SRS0=n+Ub=5Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-0.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB1CEC2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 12:29:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 327ECC2BB86
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 12:30:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9358D208FE
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 12:29:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 132522078E
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 12:30:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726589AbgDIM3B (ORCPT
+        id S1726632AbgDIMaJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Apr 2020 08:29:01 -0400
-Received: from verein.lst.de ([213.95.11.211]:46513 "EHLO verein.lst.de"
+        Thu, 9 Apr 2020 08:30:09 -0400
+Received: from mga12.intel.com ([192.55.52.136]:32630 "EHLO mga12.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725970AbgDIM3B (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Apr 2020 08:29:01 -0400
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id DE2B068C4E; Thu,  9 Apr 2020 14:28:56 +0200 (CEST)
-Date:   Thu, 9 Apr 2020 14:28:56 +0200
-From:   Christoph Hellwig <hch@lst.de>
-To:     Dave Chinner <david@fromorbit.com>
-Cc:     Ira Weiny <ira.weiny@intel.com>, Jan Kara <jack@suse.cz>,
-        linux-kernel@vger.kernel.org,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Christoph Hellwig <hch@lst.de>,
-        "Theodore Y. Ts'o" <tytso@mit.edu>, Jeff Moyer <jmoyer@redhat.com>,
-        linux-ext4@vger.kernel.org, linux-xfs@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH V6 7/8] fs/xfs: Change
- xfs_ioctl_setattr_dax_invalidate() to xfs_ioctl_dax_check()
-Message-ID: <20200409122856.GA17929@lst.de>
-References: <20200407182958.568475-1-ira.weiny@intel.com> <20200407182958.568475-8-ira.weiny@intel.com> <20200408022318.GJ24067@dread.disaster.area> <20200408095803.GB30172@quack2.suse.cz> <20200408210950.GL24067@dread.disaster.area> <20200408222636.GC664132@iweiny-DESK2.sc.intel.com> <20200408234817.GP24067@dread.disaster.area>
+        id S1725970AbgDIMaJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Apr 2020 08:30:09 -0400
+IronPort-SDR: tLcE/I/nyxdIntRi+kIFpwB43fynvVDm2JC34IXFaiNzWqh4X8nHQ0P3bP8zFqKEDPGGnrdsgG
+ 0cqcL8Bo37OA==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Apr 2020 05:30:09 -0700
+IronPort-SDR: jNckGK922sv43RdgPwXtoSA0NNEQdR62cPtNEuay78mLz49CqmwXBAhFjv+7kH0lXUfRn2pGQ2
+ DHLGdtuAjqJA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,362,1580803200"; 
+   d="scan'208";a="362140105"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by fmsmga001.fm.intel.com with ESMTP; 09 Apr 2020 05:30:03 -0700
+Received: from andy by smile with local (Exim 4.93)
+        (envelope-from <andy.shevchenko@gmail.com>)
+        id 1jMWJp-00GxB8-3x; Thu, 09 Apr 2020 15:30:05 +0300
+Date:   Thu, 9 Apr 2020 15:30:05 +0300
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+To:     Alan Cooper <alcooperx@gmail.com>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>,
+        devicetree <devicetree@vger.kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jonathan =?iso-8859-1?Q?Neusch=E4fer?= <j.neuschaefer@gmx.net>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        USB <linux-usb@vger.kernel.org>,
+        Mathias Nyman <mathias.nyman@intel.com>,
+        Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH v3 4/4] usb: host: Add ability to build new Broadcom STB
+ USB drivers
+Message-ID: <20200409123005.GZ3676135@smile.fi.intel.com>
+References: <20200408181406.40389-1-alcooperx@gmail.com>
+ <20200408181406.40389-5-alcooperx@gmail.com>
+ <CAHp75Vd_nbgwdE5Fbm3oxd_+51BJZ=67sVyjKiN2zLS+J4X-Fw@mail.gmail.com>
+ <CAOGqxeXQE0z=+6yuEME48am__2vtJhBpetYd_sZamJmm1h_TLQ@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200408234817.GP24067@dread.disaster.area>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+In-Reply-To: <CAOGqxeXQE0z=+6yuEME48am__2vtJhBpetYd_sZamJmm1h_TLQ@mail.gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 09, 2020 at 09:48:17AM +1000, Dave Chinner wrote:
-> > Christoph in particular said that a 'lazy change' is: "... straight from
-> > the playbook for arcane and confusing API designs."
-> > 
-> > 	"But returning an error and doing a lazy change anyway is straight from
-> > 	the playbook for arcane and confusing API designs."
-> > 
-> > 	-- https://lore.kernel.org/lkml/20200403072731.GA24176@lst.de/
-> > 
-> > Did I somehow misunderstand this?
+On Thu, Apr 09, 2020 at 07:49:52AM -0400, Alan Cooper wrote:
+> On Thu, Apr 9, 2020 at 5:08 AM Andy Shevchenko
+> <andy.shevchenko@gmail.com> wrote:
+> >
+> > On Thu, Apr 9, 2020 at 12:52 AM Al Cooper <alcooperx@gmail.com> wrote:
+> > >
+> > > Add the build system changes needed to get the Broadcom STB XHCI,
+> > > EHCI and OHCI functionality working. The OHCI support does not
+> > > require anything unique to Broadcom so the standard ohci-platform
+> > > driver is being used. The link order for XHCI was changed in the
+> > > Makefile because of the way STB XHCI, EHCI and OHCI controllers
+> > > share a port which requires that the XHCI driver be initialized
+> > > first. Also update MAINTAINERS.
+> >
+> > > --- a/MAINTAINERS
+> > > +++ b/MAINTAINERS
+> > > @@ -3477,6 +3477,14 @@ S:       Supported
+> > >  F:     drivers/i2c/busses/i2c-brcmstb.c
+> > >  F:     Documentation/devicetree/bindings/i2c/brcm,brcmstb-i2c.yaml
+> > >
+> > > +BROADCOM BRCMSTB USB EHCI DRIVER
+> > > +M:     Al Cooper <alcooperx@gmail.com>
+> > > +L:     linux-usb@vger.kernel.org
+> > > +L:     bcm-kernel-feedback-list@broadcom.com
+> > > +S:     Maintained
+> > > +F:     drivers/usb/host/ehci-brcm.*
+> > > +F:     Documentation/devicetree/bindings/usb/brcm,bcm7445-ehci.yaml
+> >
+> > This has ordering issues.
+> > Run parse-maintainer.pl to fix. (Note, it creates by default a new
+> > file, you might need to run diff manually to see the difference).
 > 
-> Yes. Clearing the on-disk flag successfully should not return an
-> error.
-> 
-> What is wrong is having it clear the flag successfully and returning
-> an error because the operation doesn't take immediate effect, then
-> having the change take effect later after telling the application
-> there was an error.
-> 
-> That's what Christoph was saying is "straight from the playbook for
-> arcane and confusing API designs."
+> I'm not sure what you mean.
+> I ran "./scripts/parse-maintainers.pl" and did "diff MAINTAINERS
+> MAINTAINERS.new" and there are no differences in or around my entry.
 
-Yes.
+Perhaps --order should be added.
 
-> There's absolutely nothing wrong with setting/clearing the on-disk
-> flag and having the change take effect some time later depending on
-> some external context. We've done this sort of thing for a -long
-> time- and it's not XFS specific at all.
-> 
-> e.g.  changing the on-disk APPEND flag doesn't change the write
-> behaviour of currently open files - it only affects the behaviour of
-> future file opens. IOWs, we can have the flag set on disk, but we
-> can still write randomly to the inode as long as we have a file
-> descriptor that was opened before the APPEND on disk flag was set.
-> 
-> That's exactly the same class of behaviour as we are talking about
-> here for the on-disk DAX flag.
+-- 
+With Best Regards,
+Andy Shevchenko
 
-Some people consider that a bug, though.  But I don't think we can
-change that now.  In general I don't think APIs that don't take
-immediate effect are all that great, but in some cases we can live
-with them if they are properly documented.  But APIs that return
-an error, but actually take effect later anyway are just crazy.
+
