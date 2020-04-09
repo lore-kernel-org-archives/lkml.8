@@ -2,65 +2,71 @@ Return-Path: <SRS0=n+Ub=5Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6633C2BA19
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 17:18:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2083C2BA19
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 17:21:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7FD9A206F7
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 17:18:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D78F520768
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 17:21:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727548AbgDIRSp (ORCPT
+        id S1726910AbgDIRVP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Apr 2020 13:18:45 -0400
-Received: from shards.monkeyblade.net ([23.128.96.9]:33328 "EHLO
-        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726703AbgDIRSp (ORCPT
+        Thu, 9 Apr 2020 13:21:15 -0400
+Received: from outbound-smtp52.blacknight.com ([46.22.136.236]:55435 "EHLO
+        outbound-smtp52.blacknight.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726642AbgDIRVP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Apr 2020 13:18:45 -0400
-Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id 123FC128B3890;
-        Thu,  9 Apr 2020 10:18:45 -0700 (PDT)
-Date:   Thu, 09 Apr 2020 10:18:44 -0700 (PDT)
-Message-Id: <20200409.101844.1655988786538703860.davem@davemloft.net>
-To:     keitasuzuki.park@sslab.ics.keio.ac.jp
-Cc:     takafumi.kubota1012@sslab.ics.keio.ac.jp, kuba@kernel.org,
-        oss-drivers@netronome.com, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] nfp: Fix memory leak in nfp_resource_acquire()
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <20200409150210.15488-1-keitasuzuki.park@sslab.ics.keio.ac.jp>
-References: <20200409150210.15488-1-keitasuzuki.park@sslab.ics.keio.ac.jp>
-X-Mailer: Mew version 6.8 on Emacs 26.1
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=iso-8859-7
-Content-Transfer-Encoding: base64
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Thu, 09 Apr 2020 10:18:45 -0700 (PDT)
+        Thu, 9 Apr 2020 13:21:15 -0400
+Received: from mail.blacknight.com (pemlinmail04.blacknight.ie [81.17.254.17])
+        by outbound-smtp52.blacknight.com (Postfix) with ESMTPS id BA00BFADA1
+        for <linux-kernel@vger.kernel.org>; Thu,  9 Apr 2020 18:21:13 +0100 (IST)
+Received: (qmail 24392 invoked from network); 9 Apr 2020 17:21:13 -0000
+Received: from unknown (HELO techsingularity.net) (mgorman@techsingularity.net@[84.203.18.57])
+  by 81.17.254.9 with ESMTPSA (AES256-SHA encrypted, authenticated); 9 Apr 2020 17:21:13 -0000
+Date:   Thu, 9 Apr 2020 18:21:11 +0100
+From:   Mel Gorman <mgorman@techsingularity.net>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Tejun Heo <tj@kernel.org>, Ingo Molnar <mingo@redhat.com>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: Cgroup memory barrier usage and call frequency from scheduler
+Message-ID: <20200409172111.GL3818@techsingularity.net>
+References: <20200409154413.GK3818@techsingularity.net>
+ <20200409164919.GF20713@hirez.programming.kicks-ass.net>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-15
+Content-Disposition: inline
+In-Reply-To: <20200409164919.GF20713@hirez.programming.kicks-ass.net>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-RnJvbTogS2VpdGEgU3V6dWtpIDxrZWl0YXN1enVraS5wYXJrQHNzbGFiLmljcy5rZWlvLmFjLmpw
-Pg0KRGF0ZTogVGh1LCAgOSBBcHIgMjAyMCAxNTowMjowNyArMDAwMA0KDQo+IFRoaXMgcGF0Y2gg
-Zml4ZXMgYSBtZW1vcnkgbGVhayBpbiBuZnBfcmVzb3VyY2VfYWNxdWlyZSgpLiByZXMtPm11dGV4
-IGlzDQo+IGFsbGxvY2F0ZWQgaW4gbmZwX3Jlc291cmNlX3RyeV9hY3F1aXJlKCkuIEhvd2V2ZXIs
-IHdoZW4NCj4gbXNsZWVwX2ludGVycnVwdGlibGUoKSBvciB0aW1lX2lzX2JlZm9yZV9lcV9qaWZm
-aWVzKCkgZmFpbHMsIGl0IGZhbGxzDQo+IGludG8gZXJyX2ZhaWxzIHBhdGggd2hlcmUgcmVzIGlz
-IGZyZWVkLCBidXQgcmVzLT5tdXRleCBpcyBub3QuDQo+IA0KPiBGaXggdGhpcyBieSBjaGFuZ2lu
-ZyBjYWxsIHRvIGZyZWUgdG8gbmZwX3Jlc291cmNlX3JlbGVhc2UoKS4NCj4gDQo+IFNpZ25lZC1v
-ZmYtYnk6IEtlaXRhIFN1enVraSA8a2VpdGFzdXp1a2kucGFya0Bzc2xhYi5pY3Mua2Vpby5hYy5q
-cD4NCg0KRGlkIHlvdSB0ZXN0IGNvbXBpbGUgdGhpcz8NCg0KZHJpdmVycy9uZXQvZXRoZXJuZXQv
-bmV0cm9ub21lL25mcC9uZnBjb3JlL25mcF9yZXNvdXJjZS5jOiBJbiBmdW5jdGlvbiChbmZwX3Jl
-c291cmNlX2FjcXVpcmWiOg0KZHJpdmVycy9uZXQvZXRoZXJuZXQvbmV0cm9ub21lL25mcC9uZnBj
-b3JlL25mcF9yZXNvdXJjZS5jOjIwMzoyOiBlcnJvcjogaW1wbGljaXQgZGVjbGFyYXRpb24gb2Yg
-ZnVuY3Rpb24goW5mcF9yZXNvdXJjZV9yZWxhc2WiOyBkaWQgeW91IG1lYW4goW5mcF9yZXNvdXJj
-ZV9yZWxlYXNloj8gWy1XZXJyb3I9aW1wbGljaXQtZnVuY3Rpb24tZGVjbGFyYXRpb25dDQogIG5m
-cF9yZXNvdXJjZV9yZWxhc2UocmVzKTsNCiAgXn5+fn5+fn5+fn5+fn5+fn5+fg0KICBuZnBfcmVz
-b3VyY2VfcmVsZWFzZQ0KDQpBbmQgdGhpcyBtYWtlcyBtZSBmZWVsIGxpa2UgdGhlIHRlc3Qgd2Fz
-IG5vdCBydW50aW1lIHRlc3RlZCBlaXRoZXIuDQo=
+On Thu, Apr 09, 2020 at 06:49:19PM +0200, Peter Zijlstra wrote:
+> On Thu, Apr 09, 2020 at 04:44:13PM +0100, Mel Gorman wrote:
+> 
+> > For 1, the use of a full barrier seems unnecessary when it appears that
+> > you could have used a read barrier and a write barrier. The following
+> > patch drops the profile overhead to 0.1%
+> 
+> Yikes. And why still .1% the below should be a barrier() on x86. Is the
+> compiler so contrained by that?
+> 
+
+The 0.1% is still doing all the work up until just after the barrier with
+this check;
+
+	if (cgroup_rstat_cpu(cgrp, cpu)->updated_next)
+		return;
+
+That must often be true as samples were not gathered in the rest of the
+function. As this function is called on every update_curr(), it gets
+called a lot.
+
+-- 
+Mel Gorman
+SUSE Labs
