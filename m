@@ -2,36 +2,40 @@ Return-Path: <SRS0=n+Ub=5Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75F5DC2BB1D
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 08:51:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1DE4C2BB54
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 08:51:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 44F43216FD
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 08:51:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8206821556
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 08:51:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726728AbgDIIu7 (ORCPT
+        id S1726647AbgDIIvr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Apr 2020 04:50:59 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:12626 "EHLO huawei.com"
+        Thu, 9 Apr 2020 04:51:47 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:12703 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726702AbgDIIu4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Apr 2020 04:50:56 -0400
-Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 0F84898B1BD6B12F272A;
-        Thu,  9 Apr 2020 16:50:49 +0800 (CST)
-Received: from huawei.com (10.175.124.28) by DGGEMS403-HUB.china.huawei.com
- (10.3.19.203) with Microsoft SMTP Server id 14.3.487.0; Thu, 9 Apr 2020
- 16:50:38 +0800
+        id S1725970AbgDIIvq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Apr 2020 04:51:46 -0400
+Received: from DGGEMS412-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id B51C658B19EB8263FEEF;
+        Thu,  9 Apr 2020 16:51:43 +0800 (CST)
+Received: from huawei.com (10.175.124.28) by DGGEMS412-HUB.china.huawei.com
+ (10.3.19.212) with Microsoft SMTP Server id 14.3.487.0; Thu, 9 Apr 2020
+ 16:51:36 +0800
 From:   Jason Yan <yanaijie@huawei.com>
-To:     <mdr@sgi.com>, <jejb@linux.ibm.com>, <martin.petersen@oracle.com>,
-        <linux-scsi@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+To:     <broonie@kernel.org>, <matthias.bgg@gmail.com>,
+        <linux-spi@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>
 CC:     Jason Yan <yanaijie@huawei.com>
-Subject: [PATCH] scsi: qla1280: make qla1280_firmware_mutex and qla1280_fw_tbl static
-Date:   Thu, 9 Apr 2020 16:49:10 +0800
-Message-ID: <20200409084910.44336-1-yanaijie@huawei.com>
+Subject: [PATCH] spi: spi-mtk-nor: make mtk_nor_exec_op() statuc
+Date:   Thu, 9 Apr 2020 16:50:09 +0800
+Message-ID: <20200409085009.44971-1-yanaijie@huawei.com>
 X-Mailer: git-send-email 2.17.2
 MIME-Version: 1.0
 Content-Type: text/plain
@@ -44,39 +48,28 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 Fix the following sparse warning:
 
-drivers/scsi/qla1280.c:529:1: warning: symbol 'qla1280_firmware_mutex'
-was not declared. Should it be static?
-drivers/scsi/qla1280.c:538:15: warning: symbol 'qla1280_fw_tbl' was not
-declared. Should it be static?
+drivers/spi/spi-mtk-nor.c:394:5: warning: symbol 'mtk_nor_exec_op' was
+not declared. Should it be static?
 
 Reported-by: Hulk Robot <hulkci@huawei.com>
 Signed-off-by: Jason Yan <yanaijie@huawei.com>
 ---
- drivers/scsi/qla1280.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/spi/spi-mtk-nor.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/scsi/qla1280.c b/drivers/scsi/qla1280.c
-index 3337cd341d21..441a45349349 100644
---- a/drivers/scsi/qla1280.c
-+++ b/drivers/scsi/qla1280.c
-@@ -526,7 +526,7 @@ static struct pci_device_id qla1280_pci_tbl[] = {
- };
- MODULE_DEVICE_TABLE(pci, qla1280_pci_tbl);
+diff --git a/drivers/spi/spi-mtk-nor.c b/drivers/spi/spi-mtk-nor.c
+index c15a9910549f..7bc302b50396 100644
+--- a/drivers/spi/spi-mtk-nor.c
++++ b/drivers/spi/spi-mtk-nor.c
+@@ -391,7 +391,7 @@ static int mtk_nor_pp_unbuffered(struct mtk_nor *sp,
+ 	return mtk_nor_cmd_exec(sp, MTK_NOR_CMD_WRITE, 6 * BITS_PER_BYTE);
+ }
  
--DEFINE_MUTEX(qla1280_firmware_mutex);
-+static DEFINE_MUTEX(qla1280_firmware_mutex);
- 
- struct qla_fw {
- 	char *fwname;
-@@ -535,7 +535,7 @@ struct qla_fw {
- 
- #define QL_NUM_FW_IMAGES 3
- 
--struct qla_fw qla1280_fw_tbl[QL_NUM_FW_IMAGES] = {
-+static struct qla_fw qla1280_fw_tbl[QL_NUM_FW_IMAGES] = {
- 	{"qlogic/1040.bin",  NULL},	/* image 0 */
- 	{"qlogic/1280.bin",  NULL},	/* image 1 */
- 	{"qlogic/12160.bin", NULL},	/* image 2 */
+-int mtk_nor_exec_op(struct spi_mem *mem, const struct spi_mem_op *op)
++static int mtk_nor_exec_op(struct spi_mem *mem, const struct spi_mem_op *op)
+ {
+ 	struct mtk_nor *sp = spi_controller_get_devdata(mem->spi->master);
+ 	int ret;
 -- 
 2.17.2
 
