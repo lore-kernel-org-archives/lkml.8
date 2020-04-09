@@ -2,96 +2,129 @@ Return-Path: <SRS0=n+Ub=5Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32C6CC2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 16:43:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42192C2BA2B
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 16:46:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0699F206F7
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 16:43:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586450615;
-	bh=tWmtBMYPtxoHtcj515zSkY5qeqXsouKm56hZuCT8k+8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=AqG0Vtsi1bFtE0xv/C/ekaeqVWVjCtuII6vy7q6wEokPQh/8+qiWXQhblkdGo5nDX
-	 RbAkH0OkhkkV9or5JOsEn8XLE9bTMt1dSljCp+vaTic3EDIssdCgMVvSzH2hvb4Y2f
-	 ShBfSaEL4sVJ4/3qUQgKNJibRdEyA50wqAdi11QE=
+	by mail.kernel.org (Postfix) with ESMTP id 1506A20753
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 16:46:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="zGwzrwVZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728081AbgDIQnd (ORCPT
+        id S1726922AbgDIQqC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Apr 2020 12:43:33 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:35890 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726583AbgDIQnd (ORCPT
+        Thu, 9 Apr 2020 12:46:02 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:44838 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726583AbgDIQqC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Apr 2020 12:43:33 -0400
-Received: by mail-wm1-f67.google.com with SMTP id d202so444905wmd.1;
-        Thu, 09 Apr 2020 09:43:31 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=GqsW4NplX15N8qX+8fVspcv31iYa9ZYqvFm21P/uzwY=;
-        b=IxSi3nKjpYfYIZLIeYjg1JAcS/ySWj2Y+xAT5KsrMrzDsWAVToiuImAibwTXDzi1eX
-         LkXO7IWdsbQ0jbXxQSVThCPWOdNIzDbpekF6KE4h8TtCmZ3piKUYKne8buozPH9jphUv
-         G8euP7RR12C/qyxFDS9Xv3He63tusu3mQ+S2z0PBRUjoiR55wZ8U3/e5sdhAJsUvU+7g
-         xPWzpdCtT3xHgvCIVQR7QuVOW2dJw5BkY7WlXtyKFwXIl9Eouf8sngNCW+pL+cr11xV3
-         nYe6x+loB2FXgXEkXwe7Kc5p4pzyBChmWlSC5YgJozPMg1llfgv1Ft8HGMeeajf9ikgp
-         e60A==
-X-Gm-Message-State: AGi0PuZVZIVJT1i3lKdhKfkg8GVjrwqjsPRm+nbczdrGiclWRtwE/bWU
-        4/ZOBnaTYqxEUY/exTqxK4A=
-X-Google-Smtp-Source: APiQypI0XKG4vTskNbZYqy+3guwd9G+vGhZsx3YHrh6ec78LRBC87cZaW5haKsZ2Z5ug+a0JJbAaig==
-X-Received: by 2002:a05:600c:210c:: with SMTP id u12mr759394wml.135.1586450610513;
-        Thu, 09 Apr 2020 09:43:30 -0700 (PDT)
-Received: from debian (44.142.6.51.dyn.plus.net. [51.6.142.44])
-        by smtp.gmail.com with ESMTPSA id v9sm31279066wrv.18.2020.04.09.09.43.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 09 Apr 2020 09:43:29 -0700 (PDT)
-Date:   Thu, 9 Apr 2020 17:43:28 +0100
-From:   Wei Liu <wei.liu@kernel.org>
-To:     Vitaly Kuznetsov <vkuznets@redhat.com>
-Cc:     linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Wei Liu <wei.liu@kernel.org>,
-        Tianyu Lan <Tianyu.Lan@microsoft.com>,
-        Michael Kelley <mikelley@microsoft.com>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        "Andrea Parri (Microsoft)" <parri.andrea@gmail.com>
-Subject: Re: [PATCH v2 0/5] Drivers: hv: cleanup VMBus messages handling
-Message-ID: <20200409164328.qy4aqvgzayhorzjp@debian>
-References: <20200406104154.45010-1-vkuznets@redhat.com>
+        Thu, 9 Apr 2020 12:46:02 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=JF8YIk2xFNHVFU1BBr/GqiO+G+p4hUPmEi3VXvq3m8w=; b=zGwzrwVZUwkq0Ox8InOnz/dj9j
+        1H28pKr6QAnD702oNub4/F3RpPbM7V1b0EqQFnDOXKFXpjYnLRHM8X89fugBhBjb1azQf/FgggwkF
+        k1r1KPBnjLcfH12NgxGYlEHF4jyUxD1khm6MJ59YSi28ygiNk7K2LCttumYJJFEtEJkWep+QjZE8q
+        +mnhR9oLBp1Gz92FBPWaYBkaGL4miUM3sKtWdrkNYx3ZrLV7lm+tRPi1+bKAcKm7dOCvRDmYVlRNP
+        DxItH7vdamlQJ1FWaEl/m4D6S2WLJ8UbtymNZlecI3EOkExp4pI1ibMGmWSawygb73iWR8DV+w3Vi
+        Y07OXveQ==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jMaJG-0004Bi-SA; Thu, 09 Apr 2020 16:45:47 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 43F9A300478;
+        Thu,  9 Apr 2020 18:45:45 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 3678F2BA1D829; Thu,  9 Apr 2020 18:45:45 +0200 (CEST)
+Date:   Thu, 9 Apr 2020 18:45:45 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Like Xu <like.xu@linux.intel.com>
+Cc:     Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org,
+        Andi Kleen <ak@linux.intel.com>,
+        Jim Mattson <jmattson@google.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Liran Alon <liran.alon@oracle.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Liang Kan <kan.liang@linux.intel.com>,
+        Wei Wang <wei.w.wang@intel.com>, linux-kernel@vger.kernel.org,
+        Ingo Molnar <mingo@kernel.org>
+Subject: Re: [PATCH v9 04/10] perf/x86: Keep LBR stack unchanged on the host
+ for guest LBR event
+Message-ID: <20200409164545.GE20713@hirez.programming.kicks-ass.net>
+References: <20200313021616.112322-1-like.xu@linux.intel.com>
+ <20200313021616.112322-5-like.xu@linux.intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200406104154.45010-1-vkuznets@redhat.com>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <20200313021616.112322-5-like.xu@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 06, 2020 at 12:41:49PM +0200, Vitaly Kuznetsov wrote:
-> A small cleanup series mostly aimed at sanitizing memory we pass to
-> message handlers: not passing garbage/lefrtovers from other messages
-> and making sure we fail early when hypervisor misbehaves.
+On Fri, Mar 13, 2020 at 10:16:10AM +0800, Like Xu wrote:
+> When a guest wants to use the LBR stack, its hypervisor creates a guest
+> LBR event and let host perf schedules it. A new 'int guest_lbr_enabled'
+> field in the "struct cpu_hw_events", is marked as true when perf adds
+> a guest LBR event and false on deletion.
 > 
-> No (real) functional change intended.
+> The LBR stack msrs are accessible to the guest when its guest LBR event
+> is scheduled in by the perf subsystem. Before scheduling out the event,
+> we should avoid host changes on IA32_DEBUGCTLMSR or LBR_SELECT. Otherwise,
+> some unexpected branch operations may interfere with guest behavior,
+> pollute LBR records, and even cause host branch data leakage. In addition,
+> the intel_pmu_lbr_read() on the host is also avoidable for guest usage.
 > 
-> Changes since v1:
-> - Check that the payload size specified by the host is <= 240 bytes
-> - Add Michael's R-b tags.
+> On v4 PMU or later, the LBR stack are frozen on the overflowed condition
+> if Freeze_LBR_On_PMI is true and resume recording via acking LBRS_FROZEN
+> to global status msr instead of re-enabling IA32_DEBUGCTL.LBR. So when a
+> guest LBR event is running, the host PMI handler has to keep LBRS_FROZEN
+> bit set (thus LBR being frozen) until the guest enables it. Otherwise,
+> when the guest enters non-root mode, the LBR will start recording and
+> the guest PMI handler code will also pollute the LBR stack.
 > 
-> Vitaly Kuznetsov (5):
->   Drivers: hv: copy from message page only what's needed
->   Drivers: hv: allocate the exact needed memory for messages
->   Drivers: hv: avoid passing opaque pointer to vmbus_onmessage()
->   Drivers: hv: make sure that 'struct vmbus_channel_message_header'
->     compiles correctly
->   Drivers: hv: check VMBus messages lengths
+> To ensure that guest LBR records are not lost during the context switch,
+> the BRANCH_CALL_STACK flag should be configured in the 'branch_sample_type'
+> for a guest LBR event because a callstack event could save/restore guest
+> unread records with the help of intel_pmu_lbr_sched_task() naturally.
+> 
+> However, the regular host LBR perf event doesn't save/restore LBR_SELECT,
+> because it's configured in the LBR_enable() based on branch_sample_type.
+> So when a guest LBR is running, the guest LBR_SELECT may changes for its
+> own use and we have to add the LBR_SELECT save/restore to ensure what the
+> guest LBR_SELECT value doesn't get lost during the context switching.
 
-Queued. Thanks.
+I had to read the patch before that made sense; I think it's mostly
+there, but it can use a little help.
 
-Wei.
+
+> @@ -691,8 +714,12 @@ void intel_pmu_lbr_read(void)
+>  	 *
+>  	 * This could be smarter and actually check the event,
+>  	 * but this simple approach seems to work for now.
+> +	 *
+> +	 * And there is no need to read lbr here if a guest LBR event
+
+There's 'lbr' and 'LBR' in the same sentence
+
+> +	 * is using it, because the guest will read them on its own.
+>  	 */
+> -	if (!cpuc->lbr_users || cpuc->lbr_users == cpuc->lbr_pebs_users)
+> +	if (!cpuc->lbr_users || cpuc->guest_lbr_enabled ||
+> +		cpuc->lbr_users == cpuc->lbr_pebs_users)
+
+indent fail
+
+>  		return;
+>  
+>  	if (x86_pmu.intel_cap.lbr_format == LBR_FORMAT_32)
