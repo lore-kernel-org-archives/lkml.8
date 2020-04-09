@@ -2,99 +2,203 @@ Return-Path: <SRS0=n+Ub=5Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE49DC2BBC7
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 08:49:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A428C352B6
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 08:49:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 260DA21973
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 08:42:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 81F8521D91
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 08:44:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="b5kBE9d3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726671AbgDIImS (ORCPT
+        id S1726609AbgDIIoC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Apr 2020 04:42:18 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:45390 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725987AbgDIImS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Apr 2020 04:42:18 -0400
-Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id AB59DAC02DEF2497F8AE;
-        Thu,  9 Apr 2020 16:42:06 +0800 (CST)
-Received: from [127.0.0.1] (10.173.220.183) by DGGEMS413-HUB.china.huawei.com
- (10.3.19.213) with Microsoft SMTP Server id 14.3.487.0; Thu, 9 Apr 2020
- 16:41:58 +0800
-Subject: Re: [PATCH] signal: check sig before setting info in
- kill_pid_usb_asyncio
-To:     Christian Brauner <christian.brauner@ubuntu.com>
-CC:     <ebiederm@xmission.com>, <oleg@redhat.com>, <tj@kernel.org>,
-        <guro@fb.com>, <joel@joelfernandes.org>, <jannh@google.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Mingfangsen <mingfangsen@huawei.com>,
-        Yanxiaodan <yanxiaodan@huawei.com>,
-        linfeilong <linfeilong@huawei.com>
-References: <f525fd08-1cf7-fb09-d20c-4359145eb940@huawei.com>
- <20200330084415.p4v5g6s24innsjrc@wittgenstein>
- <2d00096f-94f7-753e-c05f-14860fed2abe@huawei.com>
- <EFD902AA-B999-4E13-AC1E-1A28E93435BB@ubuntu.com>
-From:   Zhiqiang Liu <liuzhiqiang26@huawei.com>
-Message-ID: <d4d090da-02dc-c2ca-32ab-90057d5aa893@huawei.com>
-Date:   Thu, 9 Apr 2020 16:41:57 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Thu, 9 Apr 2020 04:44:02 -0400
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:44936 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725987AbgDIIoB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Apr 2020 04:44:01 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1586421840;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=uQKpffnCoC6BT0R2gqVX5COY810824MTw4KX1Q4Nozs=;
+        b=b5kBE9d3glFN7APVmB1rqYmIxyEv7XXmNANU9B/WeZee84L70jHQ+xcpRlXuobjvGaBJmL
+        BgOIRYmuKJVJXLM7s79ClUSXZabVp7mBIgheWoiuWwVeSUxTi2ftGrp7RWU0Bvb2D2Olri
+        GRLQdP9IRXK5LmL3mebQd0q1RtQVCP0=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-197-3mGfnDCcNgKxAe1hYT61mg-1; Thu, 09 Apr 2020 04:43:58 -0400
+X-MC-Unique: 3mGfnDCcNgKxAe1hYT61mg-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 6FDA685EE6B;
+        Thu,  9 Apr 2020 08:43:57 +0000 (UTC)
+Received: from kamzik.brq.redhat.com (unknown [10.40.194.9])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id F1F5D5E037;
+        Thu,  9 Apr 2020 08:43:50 +0000 (UTC)
+Date:   Thu, 9 Apr 2020 10:43:47 +0200
+From:   Andrew Jones <drjones@redhat.com>
+To:     Wainer dos Santos Moschetta <wainersm@redhat.com>
+Cc:     pbonzini@redhat.com, kvm@vger.kernel.org, david@redhat.com,
+        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org
+Subject: Re: [PATCH v4 2/2] selftests: kvm: Add mem_slot_test test
+Message-ID: <20200409084347.267pvadbgjmh4wyk@kamzik.brq.redhat.com>
+References: <20200408220818.4306-1-wainersm@redhat.com>
+ <20200408220818.4306-3-wainersm@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <EFD902AA-B999-4E13-AC1E-1A28E93435BB@ubuntu.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.173.220.183]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200408220818.4306-3-wainersm@redhat.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 2020/4/9 14:53, Christian Brauner wrote:
-> On April 9, 2020 5:26:08 AM GMT+02:00, Zhiqiang Liu <liuzhiqiang26@huawei.com> wrote:
->> Friendly ping...
->>
->> On 2020/3/30 16:44, Christian Brauner wrote:
->>> On Mon, Mar 30, 2020 at 10:18:33AM +0800, Zhiqiang Liu wrote:
->>>>
->>>> In kill_pid_usb_asyncio, if signal is not valid, we do not need to
->>>> set info struct.
->>>>
->>>> Signed-off-by: Zhiqiang Liu <liuzhiqiang26@huawei.com>
->>>
->>> I'd have done:
->>>
->>> if (!valid_signal(sig))
->>> 	return -EINVAL;
->>>
->>> instead of setting ret to EINVAL above but that's mostly a matter of
->> style.
->>>
->>> Picking this up unless someone sees a problem with it.
->>>
->>> Thank you!
->>> Acked-by: Christian Brauner <christian.brauner@ubuntu.com>
->>>
->>> .
->>>
+On Wed, Apr 08, 2020 at 07:08:18PM -0300, Wainer dos Santos Moschetta wrote:
+> This patch introduces the mem_slot_test test which checks
+> an VM can have added memory slots up to the limit defined in
+> KVM_CAP_NR_MEMSLOTS. Then attempt to add one more slot to
+> verify it fails as expected.
 > 
-> The patches are queued for after rc1. So around next week.
-> They came too late to make it into the merge window.
+> Signed-off-by: Wainer dos Santos Moschetta <wainersm@redhat.com>
+> ---
+>  tools/testing/selftests/kvm/.gitignore      |  1 +
+>  tools/testing/selftests/kvm/Makefile        |  3 +
+>  tools/testing/selftests/kvm/mem_slot_test.c | 76 +++++++++++++++++++++
+>  3 files changed, 80 insertions(+)
+>  create mode 100644 tools/testing/selftests/kvm/mem_slot_test.c
 > 
-> Christian
-> 
-That is ok, thanks.
+> diff --git a/tools/testing/selftests/kvm/.gitignore b/tools/testing/selftests/kvm/.gitignore
+> index 16877c3daabf..127d27188427 100644
+> --- a/tools/testing/selftests/kvm/.gitignore
+> +++ b/tools/testing/selftests/kvm/.gitignore
+> @@ -21,4 +21,5 @@
+>  /demand_paging_test
+>  /dirty_log_test
+>  /kvm_create_max_vcpus
+> +/mem_slot_test
+>  /steal_time
+> diff --git a/tools/testing/selftests/kvm/Makefile b/tools/testing/selftests/kvm/Makefile
+> index 712a2ddd2a27..338b6cdce1a0 100644
+> --- a/tools/testing/selftests/kvm/Makefile
+> +++ b/tools/testing/selftests/kvm/Makefile
+> @@ -32,12 +32,14 @@ TEST_GEN_PROGS_x86_64 += clear_dirty_log_test
+>  TEST_GEN_PROGS_x86_64 += demand_paging_test
+>  TEST_GEN_PROGS_x86_64 += dirty_log_test
+>  TEST_GEN_PROGS_x86_64 += kvm_create_max_vcpus
+> +TEST_GEN_PROGS_x86_64 += mem_slot_test
+>  TEST_GEN_PROGS_x86_64 += steal_time
+>  
+>  TEST_GEN_PROGS_aarch64 += clear_dirty_log_test
+>  TEST_GEN_PROGS_aarch64 += demand_paging_test
+>  TEST_GEN_PROGS_aarch64 += dirty_log_test
+>  TEST_GEN_PROGS_aarch64 += kvm_create_max_vcpus
+> +TEST_GEN_PROGS_aarch64 += mem_slot_test
+>  TEST_GEN_PROGS_aarch64 += steal_time
+>  
+>  TEST_GEN_PROGS_s390x = s390x/memop
+> @@ -46,6 +48,7 @@ TEST_GEN_PROGS_s390x += s390x/sync_regs_test
+>  TEST_GEN_PROGS_s390x += demand_paging_test
+>  TEST_GEN_PROGS_s390x += dirty_log_test
+>  TEST_GEN_PROGS_s390x += kvm_create_max_vcpus
+> +TEST_GEN_PROGS_s390x += mem_slot_test
+>  
+>  TEST_GEN_PROGS += $(TEST_GEN_PROGS_$(UNAME_M))
+>  LIBKVM += $(LIBKVM_$(UNAME_M))
+> diff --git a/tools/testing/selftests/kvm/mem_slot_test.c b/tools/testing/selftests/kvm/mem_slot_test.c
+> new file mode 100644
+> index 000000000000..7c1009f0bc07
+> --- /dev/null
+> +++ b/tools/testing/selftests/kvm/mem_slot_test.c
+> @@ -0,0 +1,76 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +/*
+> + * mem_slot_test
+> + *
+> + * Copyright (C) 2020, Red Hat, Inc.
+> + *
+> + * Test suite for memory region operations.
+> + */
+> +#define _GNU_SOURCE /* for program_invocation_short_name */
+> +#include <linux/kvm.h>
+> +#include <sys/mman.h>
+> +
+> +#include "test_util.h"
+> +#include "kvm_util.h"
+> +
+> +/*
+> + * Test it can be added memory slots up to KVM_CAP_NR_MEMSLOTS, then any
+> + * tentative to add further slots should fail.
+> + */
+> +static void test_add_max_slots(void)
+> +{
+> +	int ret;
+> +	struct kvm_vm *vm;
+> +	uint32_t max_mem_slots;
+> +	uint32_t slot;
+> +	uint64_t guest_addr;
+> +	uint64_t mem_reg_npages;
+> +	uint64_t mem_reg_size;
+> +	void *mem;
+> +
+> +	max_mem_slots = kvm_check_cap(KVM_CAP_NR_MEMSLOTS);
+> +	TEST_ASSERT(max_mem_slots > 0,
+> +		    "KVM_CAP_NR_MEMSLOTS should be greater than 0");
+> +	pr_info("Allowed number of memory slots: %i\n", max_mem_slots);
+> +
+> +	vm = vm_create(VM_MODE_DEFAULT, 0, O_RDWR);
+> +
+> +	/*
+> +	 * Uses 1MB sized/aligned memory region since this is the minimal
+> +	 * required on s390x.
+> +	 */
+> +	mem_reg_size = 0x100000;
+> +	mem_reg_npages = vm_calc_num_guest_pages(VM_MODE_DEFAULT, mem_reg_size);
+> +
+> +	guest_addr = 0x0;
+> +
+> +	/* Check it can be added memory slots up to the maximum allowed */
+> +	pr_info("Adding slots 0..%i, each memory region with %ldK size\n",
+> +		(max_mem_slots - 1), mem_reg_size >> 10);
+> +	for (slot = 0; slot < max_mem_slots; slot++) {
+> +		vm_userspace_mem_region_add(vm, VM_MEM_SRC_ANONYMOUS,
+> +					    guest_addr, slot, mem_reg_npages,
+> +					    0);
+> +		guest_addr += mem_reg_size;
+> +	}
+> +
+> +	/* Check it cannot be added memory slots beyond the limit */
+> +	mem = mmap(NULL, mem_reg_size, PROT_READ | PROT_WRITE,
+> +		   MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
+> +	TEST_ASSERT(mem != MAP_FAILED, "Failed to mmap() host");
+> +
+> +	ret = ioctl(vm_get_fd(vm), KVM_SET_USER_MEMORY_REGION,
+> +		    &(struct kvm_userspace_memory_region) {slot, 0, guest_addr,
+> +		    mem_reg_size, (uint64_t) mem});
+> +	TEST_ASSERT(ret == -1 && errno == EINVAL,
+> +		    "Adding one more memory slot should fail with EINVAL");
+> +
+> +	munmap(mem, mem_reg_size);
+> +	kvm_vm_free(vm);
+> +}
+> +
+> +int main(int argc, char *argv[])
+> +{
+> +	test_add_max_slots();
+> +	return 0;
+> +}
+> -- 
+> 2.17.2
+>
 
-Regards.
-Zhiqiang Liu.
-
-> .
-> 
+Reviewed-by: Andrew Jones <drjones@redhat.com>
 
