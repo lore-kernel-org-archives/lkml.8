@@ -2,260 +2,323 @@ Return-Path: <SRS0=n+Ub=5Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 379CAC2D0EA
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 04:45:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3979C2D0EA
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 04:50:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ECDA620757
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 04:45:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2FDDB20757
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 04:50:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="b3feWRBN"
+	dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b="QtJEoauo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726637AbgDIEpO (ORCPT
+        id S1726137AbgDIEu2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Apr 2020 00:45:14 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:37662 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725785AbgDIEpN (ORCPT
+        Thu, 9 Apr 2020 00:50:28 -0400
+Received: from gate2.alliedtelesis.co.nz ([202.36.163.20]:44914 "EHLO
+        gate2.alliedtelesis.co.nz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725765AbgDIEu1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Apr 2020 00:45:13 -0400
-Received: by mail-wr1-f66.google.com with SMTP id w10so10330934wrm.4;
-        Wed, 08 Apr 2020 21:45:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:reply-to:from:date:message-id
-         :subject:to:cc;
-        bh=P+FlJCkwPf/azKtYWPJtzmTKRGoPr//gBroGNE4MTSM=;
-        b=b3feWRBNgz6em1w5K5MzcOP5LvA7xD1SMkQCigA1NTs07NZpRmeqF8qtATfp1RMd6O
-         P8vDdTf0+ndl9fBsqS8K42DLHC1DrPP0BZJfZqOG5EJi3NOLcVJS2MrzDFXYLUvE9h5h
-         JnonpZ+dEl5PFn6Z20oNrTFYKNzuX45VYNnHO1lWfDup5bcV5nw3B1G4pQxGvzVgTKCl
-         FJcJeQi2/9BZ4UKUbU9ewjY84udgNd6ajdCVafUhKWwZuYBZg4Vb/U1Hpc3JAICc0gQt
-         QRlNSdP8L7WSndqtEEfpOZkzaDzjWJ2H3jikBHDPqYiJ9lh9R0pNBtaEISQ4yZ83VVvO
-         rXpw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:reply-to
-         :from:date:message-id:subject:to:cc;
-        bh=P+FlJCkwPf/azKtYWPJtzmTKRGoPr//gBroGNE4MTSM=;
-        b=BYVEIl7eZCvEMvyBLnFJ7GxRQqddnGAN9q7d3CKqh12eIVaIBiT1UWakHhR9ClFMyL
-         hcY7KqJsRnd0ttGVUbRJSTXxDJvZlomnn2CbzjR8t3PuQjTWl2Ivfb6+h0dhk26LGXNB
-         fyeVRpZ6glvWCLZmVIbWHlaebgkW0lsOTMjSSm2Nvm5VmJf9KVLvxkHMIt1N/5w/eaoO
-         jJ+5L/jRu3aH5e+wObrTWqzYdwiuv0sTTecCnhC2bI1LFEksmHu/oPgdKhMTHM+7LFWv
-         UKCUWdALJHU/A4ffXD6NU1MjYKRhC6YOmZHqvmwckmcmfvLKE7UKn8YrN/HZ/j1D2ubK
-         X+RA==
-X-Gm-Message-State: AGi0PubnCfdZNrIvMYoq4138lPfrCRMePZGjHJGXO11oWG6kLOTSaYEA
-        Z/0/CNvyqRF7ehykuch6a66aq3rx68Iovtoa73Y=
-X-Google-Smtp-Source: APiQypI7Wh7sJIXLBbMYJGRN93eG+br3YZJ28emQ59Ep9oDYdY4AafvPvjxJppGnJew6vIO2q12Ka4+UJ/3edvjn5U8=
-X-Received: by 2002:adf:ef8d:: with SMTP id d13mr10166318wro.197.1586407510642;
- Wed, 08 Apr 2020 21:45:10 -0700 (PDT)
+        Thu, 9 Apr 2020 00:50:27 -0400
+Received: from mmarshal3.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id 3CE848066C;
+        Thu,  9 Apr 2020 16:50:25 +1200 (NZST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
+        s=mail181024; t=1586407825;
+        bh=2a+QvJeEMgfgD8MYgpqL0txx98rA8ewZrzs/v7cLI4U=;
+        h=From:To:CC:Subject:Date:References:In-Reply-To;
+        b=QtJEoauo9se31Krx156LMcL6r11M6YxhedYJLhgA9PrOq0hCfyrPc0NcUzwp8dUjR
+         hRHNXGhcwbUo3UsqG0cDrI9X4cF+SApW8LTWBhEnQGqkNxXWlAH3SHEqDEhy8StevT
+         7NxC55ddIY7zTYmwRRj6y5crQoPeWnbpZVSPowAJVRfE7Y4L/izlzNEwL/IhyHpvEZ
+         Mc6GvdRyhMrMblcyM761IXx9+AshhzFp1Jnu2R6dtBWQcP/NMfW9BUEsRIHvjjYYHL
+         xVAmppUHq8gMuOS7gH2qGCuMShZeP61tUTB7/eD4u1H+4x6MRRJfhPn4PjXxlQHL/r
+         eE7SUSh7tRYOw==
+Received: from svr-chch-ex1.atlnz.lc (Not Verified[10.32.16.77]) by mmarshal3.atlnz.lc with Trustwave SEG (v7,5,8,10121)
+        id <B5e8ea9910001>; Thu, 09 Apr 2020 16:50:25 +1200
+Received: from svr-chch-ex1.atlnz.lc (2001:df5:b000:bc8:409d:36f5:8899:92e8)
+ by svr-chch-ex1.atlnz.lc (2001:df5:b000:bc8:409d:36f5:8899:92e8) with
+ Microsoft SMTP Server (TLS) id 15.0.1497.2; Thu, 9 Apr 2020 16:50:24 +1200
+Received: from svr-chch-ex1.atlnz.lc ([fe80::409d:36f5:8899:92e8]) by
+ svr-chch-ex1.atlnz.lc ([fe80::409d:36f5:8899:92e8%12]) with mapi id
+ 15.00.1497.006; Thu, 9 Apr 2020 16:50:24 +1200
+From:   Chris Packham <Chris.Packham@alliedtelesis.co.nz>
+To:     "jiaxun.yang@flygoat.com" <jiaxun.yang@flygoat.com>,
+        "f.fainelli@gmail.com" <f.fainelli@gmail.com>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Hamish Martin" <Hamish.Martin@alliedtelesis.co.nz>,
+        "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Subject: Re: Dealing with holes in CPU address space
+Thread-Topic: Dealing with holes in CPU address space
+Thread-Index: AQHWDWSQGXFxFOrcR0ujeloVxC+pHKhuCuQAgADrvoCAAGz3gIAADTWA
+Date:   Thu, 9 Apr 2020 04:50:23 +0000
+Message-ID: <f5c7a3387dde5667be4fc462838edfaefae31e16.camel@alliedtelesis.co.nz>
+References: <fcb8f2655452f60a7c734e2ce54ac4d47eec7e92.camel@alliedtelesis.co.nz>
+         <20200408152922.14f90ff3@flygoat-x1e>
+         <2e10a19b6608a6c3413b52180c69500aa255a701.camel@alliedtelesis.co.nz>
+         <dd91aa7f-ed7d-44de-6887-ad25c7e4d4ff@gmail.com>
+In-Reply-To: <dd91aa7f-ed7d-44de-6887-ad25c7e4d4ff@gmail.com>
+Accept-Language: en-NZ, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.32.14.96]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <AD512F97C0BD0040B1C13BCBB461D74F@atlnz.lc>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-References: <1586254255-28713-1-git-send-email-sumit.garg@linaro.org>
- <CABPxzY+hL=jD6Zy=netP3oqNXg69gDL2g0KiPe40eaXXgZBnxw@mail.gmail.com> <CAFA6WYMZAq6X5m++h33ySCa6jOQCq_tHL=8mUi-kPMcn4FH=jA@mail.gmail.com>
-In-Reply-To: <CAFA6WYMZAq6X5m++h33ySCa6jOQCq_tHL=8mUi-kPMcn4FH=jA@mail.gmail.com>
-Reply-To: sedat.dilek@gmail.com
-From:   Sedat Dilek <sedat.dilek@gmail.com>
-Date:   Thu, 9 Apr 2020 06:44:59 +0200
-Message-ID: <CA+icZUVACJ8e0R04Ao7JejonytjG57oVFyGC3=kJpEP+_e8S-g@mail.gmail.com>
-Subject: Re: [PATCH v2] mac80211: fix race in ieee80211_register_hw()
-To:     Sumit Garg <sumit.garg@linaro.org>
-Cc:     Johannes Berg <johannes@sipsolutions.net>,
-        linux-wireless <linux-wireless@vger.kernel.org>,
-        Krishna Chaitanya <chaitanya.mgit@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>, kuba@kernel.org,
-        Kalle Valo <kvalo@codeaurora.org>,
-        netdev <netdev@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        =?UTF-8?Q?Matthias=2DPeter_Sch=C3=B6pfer?= 
-        <matthias.schoepfer@ithinx.io>,
-        "Berg Philipp (HAU-EDS)" <Philipp.Berg@liebherr.com>,
-        "Weitner Michael (HAU-EDS)" <Michael.Weitner@liebherr.com>,
-        Daniel Thompson <daniel.thompson@linaro.org>,
-        Loic Poulain <loic.poulain@linaro.org>, stable@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 9, 2020 at 6:43 AM Sumit Garg <sumit.garg@linaro.org> wrote:
->
-> Hi Johannes,
->
-> On Wed, 8 Apr 2020 at 00:55, Krishna Chaitanya <chaitanya.mgit@gmail.com> wrote:
-> >
-> > On Tue, Apr 7, 2020 at 3:41 PM Sumit Garg <sumit.garg@linaro.org> wrote:
-> > >
-> > > A race condition leading to a kernel crash is observed during invocation
-> > > of ieee80211_register_hw() on a dragonboard410c device having wcn36xx
-> > > driver built as a loadable module along with a wifi manager in user-space
-> > > waiting for a wifi device (wlanX) to be active.
-> > >
-> > > Sequence diagram for a particular kernel crash scenario:
-> > >
-> > >     user-space  ieee80211_register_hw()  ieee80211_tasklet_handler()
-> > >     ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-> > >        |                    |                 |
-> > >        |<---phy0----wiphy_register()          |
-> > >        |-----iwd if_add---->|                 |
-> > just a nitpick, a better one would be (iwd: if_add + ap_start) since
-> > we need to have 'iwctl ap start'
-> > to trigger the interrupts.
-> > >        |                    |<---IRQ----(RX packet)
-> > >        |              Kernel crash            |
-> > >        |              due to unallocated      |
-> > >        |              workqueue.              |
-> > >        |                    |                 |
-> > >        |       alloc_ordered_workqueue()      |
-> > >        |                    |                 |
-> > >        |              Misc wiphy init.        |
-> > >        |                    |                 |
-> > >        |            ieee80211_if_add()        |
-> > >        |                    |                 |
-> > >
-> > > As evident from above sequence diagram, this race condition isn't specific
-> > > to a particular wifi driver but rather the initialization sequence in
-> > > ieee80211_register_hw() needs to be fixed. So re-order the initialization
-> > > sequence and the updated sequence diagram would look like:
-> > >
-> > >     user-space  ieee80211_register_hw()  ieee80211_tasklet_handler()
-> > >     ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-> > >        |                    |                 |
-> > >        |       alloc_ordered_workqueue()      |
-> > >        |                    |                 |
-> > >        |              Misc wiphy init.        |
-> > >        |                    |                 |
-> > >        |<---phy0----wiphy_register()          |
-> > >        |-----iwd if_add---->|                 |
-> > same as above.
-> > >        |                    |<---IRQ----(RX packet)
-> > >        |                    |                 |
-> > >        |            ieee80211_if_add()        |
-> > >        |                    |                 |
-> > >
-> > > Cc: <stable@vger.kernel.org>
-> > > Signed-off-by: Sumit Garg <sumit.garg@linaro.org>
-> > > ---
-> > >
->
-> In case we don't have any further comments, could you fix this nitpick
-> from Chaitanya while applying or would you like me to respin and send
-> v3?
->
-
-Hi Sumit,
-
-when you send out a v3, feel free to add...
-
-   Tested-by: Sedat Dilek <sedat.dilek@gmail.com>
-
-Thanks.
-
-Regards,
-- Sedat -
-
-> -Sumit
->
-> > > Changes in v2:
-> > > - Move rtnl_unlock() just after ieee80211_init_rate_ctrl_alg().
-> > > - Update sequence diagrams in commit message for more clarification.
-> > >
-> > >  net/mac80211/main.c | 22 +++++++++++++---------
-> > >  1 file changed, 13 insertions(+), 9 deletions(-)
-> > >
-> > > diff --git a/net/mac80211/main.c b/net/mac80211/main.c
-> > > index 4c2b5ba..d497129 100644
-> > > --- a/net/mac80211/main.c
-> > > +++ b/net/mac80211/main.c
-> > > @@ -1051,7 +1051,7 @@ int ieee80211_register_hw(struct ieee80211_hw *hw)
-> > >                 local->hw.wiphy->signal_type = CFG80211_SIGNAL_TYPE_UNSPEC;
-> > >                 if (hw->max_signal <= 0) {
-> > >                         result = -EINVAL;
-> > > -                       goto fail_wiphy_register;
-> > > +                       goto fail_workqueue;
-> > >                 }
-> > >         }
-> > >
-> > > @@ -1113,7 +1113,7 @@ int ieee80211_register_hw(struct ieee80211_hw *hw)
-> > >
-> > >         result = ieee80211_init_cipher_suites(local);
-> > >         if (result < 0)
-> > > -               goto fail_wiphy_register;
-> > > +               goto fail_workqueue;
-> > >
-> > >         if (!local->ops->remain_on_channel)
-> > >                 local->hw.wiphy->max_remain_on_channel_duration = 5000;
-> > > @@ -1139,10 +1139,6 @@ int ieee80211_register_hw(struct ieee80211_hw *hw)
-> > >
-> > >         local->hw.wiphy->max_num_csa_counters = IEEE80211_MAX_CSA_COUNTERS_NUM;
-> > >
-> > > -       result = wiphy_register(local->hw.wiphy);
-> > > -       if (result < 0)
-> > > -               goto fail_wiphy_register;
-> > > -
-> > >         /*
-> > >          * We use the number of queues for feature tests (QoS, HT) internally
-> > >          * so restrict them appropriately.
-> > > @@ -1207,6 +1203,8 @@ int ieee80211_register_hw(struct ieee80211_hw *hw)
-> > >                 goto fail_rate;
-> > >         }
-> > >
-> > > +       rtnl_unlock();
-> > > +
-> > >         if (local->rate_ctrl) {
-> > >                 clear_bit(IEEE80211_HW_SUPPORTS_VHT_EXT_NSS_BW, hw->flags);
-> > >                 if (local->rate_ctrl->ops->capa & RATE_CTRL_CAPA_VHT_EXT_NSS_BW)
-> > > @@ -1254,6 +1252,12 @@ int ieee80211_register_hw(struct ieee80211_hw *hw)
-> > >                 local->sband_allocated |= BIT(band);
-> > >         }
-> > >
-> > > +       result = wiphy_register(local->hw.wiphy);
-> > > +       if (result < 0)
-> > > +               goto fail_wiphy_register;
-> > > +
-> > > +       rtnl_lock();
-> > > +
-> > >         /* add one default STA interface if supported */
-> > >         if (local->hw.wiphy->interface_modes & BIT(NL80211_IFTYPE_STATION) &&
-> > >             !ieee80211_hw_check(hw, NO_AUTO_VIF)) {
-> > > @@ -1293,6 +1297,8 @@ int ieee80211_register_hw(struct ieee80211_hw *hw)
-> > >  #if defined(CONFIG_INET) || defined(CONFIG_IPV6)
-> > >   fail_ifa:
-> > >  #endif
-> > > +       wiphy_unregister(local->hw.wiphy);
-> > > + fail_wiphy_register:
-> > >         rtnl_lock();
-> > >         rate_control_deinitialize(local);
-> > >         ieee80211_remove_interfaces(local);
-> > > @@ -1302,8 +1308,6 @@ int ieee80211_register_hw(struct ieee80211_hw *hw)
-> > >         ieee80211_led_exit(local);
-> > >         destroy_workqueue(local->workqueue);
-> > >   fail_workqueue:
-> > > -       wiphy_unregister(local->hw.wiphy);
-> > > - fail_wiphy_register:
-> > >         if (local->wiphy_ciphers_allocated)
-> > >                 kfree(local->hw.wiphy->cipher_suites);
-> > >         kfree(local->int_scan_req);
-> > > @@ -1353,8 +1357,8 @@ void ieee80211_unregister_hw(struct ieee80211_hw *hw)
-> > >         skb_queue_purge(&local->skb_queue_unreliable);
-> > >         skb_queue_purge(&local->skb_queue_tdls_chsw);
-> > >
-> > > -       destroy_workqueue(local->workqueue);
-> > >         wiphy_unregister(local->hw.wiphy);
-> > > +       destroy_workqueue(local->workqueue);
-> > >         ieee80211_led_exit(local);
-> > >         kfree(local->int_scan_req);
-> > >  }
-> > > --
-> > > 2.7.4
-> > >
-> >
-> >
-> > --
-> > Thanks,
-> > Regards,
-> > Chaitanya T K.
+T24gV2VkLCAyMDIwLTA0LTA4IGF0IDIxOjAzIC0wNzAwLCBGbG9yaWFuIEZhaW5lbGxpIHdyb3Rl
+Og0KPiANCj4gT24gNC84LzIwMjAgMjozMyBQTSwgQ2hyaXMgUGFja2hhbSB3cm90ZToNCj4gPiBP
+biBXZWQsIDIwMjAtMDQtMDggYXQgMTU6MjkgKzA4MDAsIEppYXh1biBZYW5nIHdyb3RlOg0KPiA+
+ID4gT24gV2VkLCA4IEFwciAyMDIwIDA1OjE0OjIyICswMDAwDQo+ID4gPiBDaHJpcyBQYWNraGFt
+IDxDaHJpcy5QYWNraGFtQGFsbGllZHRlbGVzaXMuY28ubno+IHdyb3RlOg0KPiA+ID4gDQo+ID4g
+PiA+IEhpIEFsbCwNCj4gPiA+ID4gDQo+ID4gPiA+IEknbSB0cnlpbmcgdG8gcG9ydCBhbiBvbGQg
+QnJvYWRjb20gTUlQUyBDUFUgKEJDTTUzMDAzKSB0byBhDQo+ID4gPiA+IHNoaW55DQo+ID4gPiA+
+IG5ldw0KPiA+ID4gPiBrZXJuZWwuIEkgaGF2ZSBzb21lIG9sZCBoaXN0b3JpYyBzb3VyY2UgZnJv
+bSBhIGxvbmcgZm9yZ290dGVuDQo+ID4gPiA+IEJyb2FkY29tDQo+ID4gPiA+IExESyBidXQgSSdk
+IHByZWZlciB0byBkbyB0aGluZ3MgdGhlIG1vZGVybiB3YXkgd2l0aCBkZXZpY2UtDQo+ID4gPiA+
+IHRyZWVzLg0KPiA+ID4gPiANCj4gPiA+ID4gVGhlIHByb2JsZW0gSSd2ZSBiZWVuIGdyYXBwbGlu
+ZyB3aXRoIGlzIHRyeWluZyB0byBvcGVuIHVwDQo+ID4gPiA+IGFjY2VzcyB0bw0KPiA+ID4gPiBh
+bGwgb2YgdGhlIFJBTSBvbiB0aGUgYm9hcmQuIEl0IGhhcyA1MTJNQiBvZiBERFIyLiBUaGUgQ1BV
+IGhhcw0KPiA+ID4gPiB0d28NCj4gPiA+ID4gYXJlYXMgd2hlcmUgdGhpcyBhcHBlYXJzLiBUaGUg
+Zmlyc3QgMTI4TUIgaXMgZnJvbSAwIHRvDQo+ID4gPiA+IDB4MDdmZmZmZmYNCj4gPiA+ID4gdGhl
+DQo+ID4gPiA+IHNlY29uZCBhcmVhIGlzIGZyb20gMHg4ODAwMDAwMCB0byAweDlmZmZmZmZmLg0K
+PiA+ID4gPiANCj4gPiA+ID4gU29DIHBlcmlwaGVyYWxzIGFyZSBhdCAweDE4MDAwMDAwIGFuZCB0
+aGVyZSBpcyBhbiBJTyB3aW5kb3cgZm9yDQo+ID4gPiA+IGZsYXNoDQo+ID4gPiA+IGF0IDB4MjAw
+MDAwMDAuDQo+ID4gPiA+IA0KPiA+ID4gPiBUaGUgb2xkIGNvZGUgaGFzIHNvbWUgY3VzdG9tIHRs
+YiBpbml0aWFsaXNhdGlvbiB0byBkZWFsIHdpdGgNCj4gPiA+ID4gdGhpcw0KPiA+ID4gPiBidXQN
+Cj4gPiA+ID4gSSBmaWd1cmVkIGl0IHNob3VsZCBiZSBwb3NzaWJsZSB3aXRoIHRoZSBmb2xsb3dp
+bmcgZHRzIHNuaXBwZXQuDQo+ID4gPiA+IA0KPiA+ID4gPiAgICAgICAgIG1lbW9yeUAwIHsNCj4g
+PiA+ID4gICAgICAgICAgICAgICAgIGRldmljZV90eXBlID0gIm1lbW9yeSI7DQo+ID4gPiA+ICAg
+ICAgICAgICAgICAgICByZWcgPSA8MHgwMDAwMDAwMCAweDA4MDAwMDAwDQo+ID4gPiA+ICAgICAg
+ICAgICAgICAgICAgICAgICAgMHg4ODAwMDAwMCAweDE4MDAwMDAwPjsNCj4gPiA+ID4gICAgICAg
+ICB9Ow0KPiA+ID4gPiANCj4gPiA+ID4gSSBlbmQgdXAgd2l0aCBvbmx5IDEyOE1CIGF2YWlsYWJs
+ZS4gVGhpcyBhcHBlYXJzIHRvIGJlDQo+ID4gPiA+IGJlY2F1c2UgdGhlIGRlZmF1bHQgSElHSE1F
+TV9TVEFSVCBvZiAweDIwMDAwMDAwIHN0b3BzIHRoZSByZXN0DQo+ID4gPiA+IGZyb20NCj4gPiA+
+ID4gYmVpbmcgbWFkZSBhdmFpbGFibGUuIElmIEkgYWRkIGFuIG92ZXJyaWRlIG9mIEhJR0hNRU1f
+U1RBUlQgdG8NCj4gPiA+ID4gMHhmZmZmZmZmZiBJIHNlZW0gdG8gaGF2ZSB0aGUgZnVsbCA1MTJN
+QiBhdmFpYWJsZSBidXQgdGhlbiBJDQo+ID4gPiA+IGdldCBhDQo+ID4gPiA+IGtlcm5lbCBwYW5p
+Yw0KPiA+ID4gDQo+ID4gPiBIaSwNCj4gPiA+IA0KPiA+ID4gSGF2ZSB5b3UgdHJpZWQgdG8gZW5h
+YmxlIENPTkZJR19ISUdITUVNPw0KPiA+ID4gDQo+ID4gDQo+ID4gSSBoYXZlIGJ1dCB0aGF0IGRp
+ZG4ndCBzZWVtIHRvIGhlbHAuIEFzIEkgdW5kZXJzdGFuZCBpdCBISUdITUVNIGlzDQo+ID4gaW50
+ZW5kZWQgZm9yIHNpdHVhdGlvbnMgd2hlbiB5b3UgaGF2ZSBtb3JlIHBoeXNpY2FsIFJBTSB0aGF0
+IGNhbiBiZQ0KPiA+IGFkZHJlc3NlZCAoZS5nLiA+NEdCIG9uIGEgMzItYml0IHN5c3RlbSkuDQo+
+IA0KPiBPbiBNSVBTIHlvdSBtYXkgaGF2ZSB0byBlbmFibGUgSElHSE1FTSBhcyBzb29uIGFzIHlv
+dSBydW4gb3V0IG9mDQo+IHZpcnR1YWwNCj4ga2VybmVsIGFkZHJlc3Mgc3BhY2UgdG8gbWFwIHRo
+ZSBlbnRpcmUgYW1vdW50IG9mIG1lbW9yeSB0aGF0IGlzDQo+IHBvcHVsYXRlZCBBRkFJQ1QuIFRo
+ZSBrZXJuZWwgaGFzIGEgbGl0dGxlIHVuZGVyIDFHQiBvZiB2aXJ0dWFsDQo+IGFkZHJlc3MNCj4g
+c3BhY2UgdGhhdCBjYW4gYmUgbWFwcGVkIHZpYSB0aGUgVExCIHNpbmNlIHRoZSBmaXJzdCA1MTJN
+QiBhcmUNCj4gb2NjdXBpZWQNCj4gYnkgS1NFRzAvMS4NCj4gDQoNCk15IGFkdmVudHVyZXMgdGh1
+cyBmYXIgd2l0aCBISUdITUVNIGhhdmUgZ290IGFzIGZhciBhcw0KDQogIFRoaXMgcHJvY2Vzc29y
+IGRvZXNuJ3Qgc3VwcG9ydCBoaWdobWVtLiAyNDkwMzY4ayBoaWdobWVtIGlnbm9yZWQNCg0KV2hp
+Y2ggSSB0aGluayBoYXMgc29tZXRoaW5nIHRvIGRvIHdpdGggdGhlIG1heF9sb3dfcGZuIGFuZCBo
+aWdoZW5kX3Bmbg0KYmVpbmcgZGlmZmVyZW50Lg0KDQoNCj4gPiANCj4gPiA+ID4gDQo+ID4gPiA+
+ICAgQ1BVIDAgVW5hYmxlIHRvIGhhbmRsZSBrZXJuZWwgcGFnaW5nIHJlcXVlc3QgYXQgdmlydHVh
+bA0KPiA+ID4gPiBhZGRyZXNzDQo+ID4gPiA+IDFmYzAwMDAwLCBlcGMgPT0gODAwMTY3YjgsIHJh
+ID09IDgwMGUyODYwDQo+ID4gPiA+IA0KPiA+ID4gPiAweDFmYzAwMDAwIGlzIGluIHRoZSByYW5n
+ZSB3aGVyZSB0aGUgU29DIHBlcmlwaGVyYWxzIGFyZSBzbyBJJ20NCj4gPiA+ID4gdGhpbmtpbmcg
+dGhhdCBpcyB0aGUgcHJvYmxlbS4gQnV0IHRoZW4gYWdhaW4gdGhhdCBpcyBhIHZpcnR1YWwNCj4g
+PiA+ID4gYWRkcmVzcw0KPiA+ID4gPiBzbyBtYXliZSBpdCdzIGp1c3QgYSBjby1pbmNpZGVuY2Uu
+DQo+ID4gPiANCj4gPiA+IDB4MWZjMDAwMDAgc2hvdWxkIGJlIHRoZSBCb290IFJPTSdzIHBoeXNp
+Y2FsIGFkZHJlc3MuIFByb2JhYmx5DQo+ID4gPiB5b3UNCj4gPiA+IGZvcmdvdCB0byBjb252ZXJ0
+IGl0IGludG8gdmlydHVhbCBhZGRyZXNzIGluIHlvdXIgcGxhdGZvcm0gY29kZT8NCj4gPiANCj4g
+PiBZZXMgdGhhdCdzIHJpZ2h0IGl0J3MgdGhlIGJvb3Ryb21zIFBBLiBJJ20gbm90IGludGl0ZW50
+aW9uYWxseQ0KPiA+IGRvaW5nDQo+ID4gYW55dGhpbmcgd2l0aCBpdCBidXQgbWF5YmUgdGhhdCdz
+IHRoZSBwcm9ibGVtLg0KPiANCj4gSWYgeW91IHdlcmUgYWNjZXNzaW5nIHRoaXMgYXMgYSB2aXJ0
+dWFsIGFkZHJlc3MgdGhlbiBpdCB3b3VsZCBiZQ0KPiBlaXRoZXINCj4gdmlhIEtTRUcwLzEgYW5k
+IHRoZSBhZGRyZXNzZXMgd291bGQgYmUgMHgxZmMwXzAwMDAgKyAweDgwMDBfMDAwMCBvcg0KPiAw
+eDFmYzBfMDAwMCArIDB4YTAwMF8wMDAwIGJ1dCBoZXJlIGl0IGxvb2tzIGxpa2UgdGhlIHJhdyBw
+aHlzaWNhbA0KPiBhZGRyZXNzIGlzIGJlaW5nIGFjY2Vzc2VkIHdoaWNoIHN1Z2dlc3RzIHRoZSBU
+TEIgaXMgaW5jb3JyZWN0bHkNCj4gcHJvZ3JhbW1lZCBzb21laG93Lg0KPiANCj4gPiANCj4gPiA+
+IA0KPiA+ID4gQ2hlY2sgdGhlIEVQQyBvZiBleGNlcHRpb24gaW4gdm1saW51eCB3aXRoIGFkZHIy
+bGluZSBtYXkgaGVscC4NCj4gPiA+IChEb24ndA0KPiA+ID4gZm9yZ2V0IHRvIGNvbXBpbGUgeW91
+ciBrZXJuZWwgd2l0aCBkZWJ1Z2luZm8pLiANCj4gPiA+IA0KPiA+IA0KPiA+IFRoZSBmdWxsIHBh
+bmljIGlzDQo+ID4gDQo+ID4gQ1BVIDAgVW5hYmxlIHRvIGhhbmRsZSBrZXJuZWwgcGFnaW5nIHJl
+cXVlc3QgYXQgdmlydHVhbCBhZGRyZXNzDQo+ID4gMWZjMDAwMDAsIGVwYyA9PSA4MDAxNjdiOCwg
+cmEgPT0NCj4gPiA4MDBlMjg2MCAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgDQo+ID4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIA0KPiA+ICAgICAgIA0KPiA+IE9v
+cHNbIzFdOiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICANCj4gPiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgDQo+ID4gICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIA0KPiA+ICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgIA0KPiA+IENQVTogMCBQSUQ6IDAgQ29tbTogc3dhcHBl
+ciBOb3QgdGFpbnRlZCA1LjUuMC1hdDENCj4gPiAjNDYgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgDQo+ID4gICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIA0K
+PiA+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+DQo+ID4gJCAwICAgOiAwMDAwMDAwMCAwMDAwMDAwMSAwMDAwMDAwMQ0KPiA+IDgwN2U0MjcwICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAN
+Cj4gPiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgDQo+ID4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIA0KPiA+ICANCj4gPiAkIDQgICA6IDFmYzAw
+MDAwIDAwMDAwMDAwIDFmYzAwZjgwDQo+ID4gMDAwMDAwMDEgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIA0KPiA+ICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICANCj4g
+PiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgDQo+ID4gIA0KPiA+ICQgOCAgIDogODNlNTJhMDAgODNlNTJhMjQgODA3ZjYy
+OGMNCj4gPiA4MDgwZmEwMCAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgDQo+ID4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIA0KPiA+ICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICANCj4gPiAg
+DQo+ID4gJDEyICAgOiBmZmZmZmZmZiAwMDAwMDAwMSAwMDAwMDAwYg0KPiA+IGZmZmZmZmZmICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAN
+Cj4gPiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgDQo+ID4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIA0KPiA+ICANCj4gPiAkMTYgICA6IDgzZTUy
+YTIwIDgwMDAwMDAwIDgwODcwMDAwDQo+ID4gODNlNTJhMDAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIA0KPiA+ICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICANCj4g
+PiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgDQo+ID4gIA0KPiA+ICQyMCAgIDogODA4MGZkZDQgODA3ZGRlMDAgMDAwMDAw
+MDANCj4gPiA4MDgwZjliYyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgDQo+ID4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIA0KPiA+ICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICANCj4gPiAg
+DQo+ID4gJDI0ICAgOiA4MDgwZmI2OA0KPiA+IGZmZmZmZjdmICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICANCj4gPiAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgDQo+
+ID4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgIA0KPiA+ICAgICAgICAgICAgICAgICAgICANCj4gPiAkMjggICA6IDgwN2Rj
+MDAwIDgwN2RkZDM4IDgzZTUyYTAwDQo+ID4gODAwZTI4NjAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIA0KPiA+ICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICANCj4g
+PiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgDQo+ID4gIA0KPiA+IEhpICAgIDoNCj4gPiAwMDAwMDAwMCAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgDQo+ID4gICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgIA0KPiA+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICANCj4gPiAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+DQo+ID4gTG8gICAgOg0KPiA+IDAwMDAwMDAwICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICANCj4gPiAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgDQo+ID4gICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgIA0KPiA+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICANCj4gPiBlcGMgICA6IDgwMDE2
+N2I4DQo+ID4gY2xlYXJfcGFnZSsweDE4LzB4MTI4ICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgIA0KPiA+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICANCj4gPiAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgDQo+ID4g
+ICAgICAgICAgICAgICAgICAgIA0KPiA+IHJhICAgIDogODAwZTI4NjANCj4gPiBnZXRfcGFnZV9m
+cm9tX2ZyZWVsaXN0KzB4YTk0LzB4ZGQ0ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+DQo+ID4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgIA0KPiA+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICANCj4gPiAgICAgICAgICAgICAgICAgICAg
+DQo+ID4gU3RhdHVzOiAxMTAwMDAwMiAgICAgICAgS0VSTkVMDQo+ID4gRVhMICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIA0KPiA+
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICANCj4gPiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgDQo+ID4gICAgICANCj4gPiBDYXVzZSA6IDQwODAw
+MDBjIChFeGNDb2RlDQo+ID4gMDMpICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgIA0KPiA+ICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICANCj4gPiAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgDQo+ID4gICAgICAgICAgIA0KPiA+IEJhZFZBIDoNCj4gPiAxZmMwMDAwMCAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgDQo+ID4gICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgIA0KPiA+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICANCj4gPiAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+DQo+ID4gUHJJZCAgOiAwMDAxOTc0OSAoTUlQUw0KPiA+IDc0S2MpICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICANCj4gPiAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgDQo+ID4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgIA0KPiA+ICAgICAgICAgICAgICANCj4gPiBNb2R1bGVzIGxpbmtl
+ZA0KPiA+IGluOiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICANCj4gPiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgDQo+ID4gICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIA0KPiA+ICAg
+ICAgICAgICAgICAgICAgICAgIA0KPiA+IFByb2Nlc3Mgc3dhcHBlciAocGlkOiAwLCB0aHJlYWRp
+bmZvPShwdHJ2YWwpLCB0YXNrPShwdHJ2YWwpLA0KPiA+IHRscz0wMDAwMDAwMCkgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICANCj4gPiAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgDQo+ID4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgDQo+ID4g
+Kkh3VExTOg0KPiA+IGUxOWY3ZDNhICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICANCj4gPiAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgDQo+ID4gICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIA0K
+PiA+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICANCj4gPiBTdGFjayA6IDgwN2UwMDAwIDgw
+N2RkZTk4IDgwODY3Y2Q4IDgwNzkxODE0IDAwMDAwMDAxIDgwNjg3OTc0DQo+ID4gODA3ZGRlMTgN
+Cj4gPiAwMDAwMDAwMCAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgDQo+ID4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIA0KPiA+ICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgDQo+ID4gICAgICAgICA4MDdmNWVkMCA4MDdmNjI4YyA4MDdmNjI4YyA4MDgw
+ZmRkNCA4MDg3MDAwMCAwMDAwMDAwMQ0KPiA+IDgwN2UwMDAwDQo+ID4gMDAwMDAwNDQgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIA0KPiA+
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICANCj4gPiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIA0KPiA+ICAg
+ICAgICAgMDAwMDAwNWMgODA3ZGRlMDAgMDAwMDAwMDAgMDAwMDAwMDEgODA4MTAwMDAgODA3NWE2
+NjANCj4gPiA4MDg3MDAwMQ0KPiA+IDAwMDAwMDAwICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICANCj4gPiAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgDQo+ID4gICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICANCj4gPiAgICAgICAgIDAwMDAwMTAwIDAwMDAw
+MDAwIDgwN2UwMDAwIDAwMDAwMDAwIDAwMDAwMDAwIDAwMDAwMDAxDQo+ID4gODA4NjAwMDANCj4g
+PiA4MDg0OTJiNCAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgDQo+ID4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgIA0KPiA+ICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgDQo+ID4gICAgICAgICA4N2Q3NTYwOCA4MDBlMzAyOCAwMDAwMDEwMCAwMDAwMDAw
+MCAwMDAwMDAwMSA4MDA1OGMwOA0KPiA+IDgwODcwMDAwDQo+ID4gODA4NzAwMDAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIA0KPiA+ICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICANCj4gPiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIA0KPiA+ICAgICAg
+ICAgLi4uICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICANCj4gPiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgDQo+ID4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIA0KPiA+ICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgIA0KPiA+IENhbGwNCj4gPiBUcmFjZTogICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgDQo+ID4gICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgIA0KPiA+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICANCj4gPiAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgDQo+ID4gWzw4MDAxNjdiOD5dDQo+ID4gY2xlYXJfcGFnZSsweDE4LzB4MTI4ICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIA0KPiA+ICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICANCj4g
+PiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgDQo+ID4gICAgICAgICAgICAgICAgICAgICAgICANCj4gPiBbPDgwMGUyODYw
+Pl0NCj4gPiBnZXRfcGFnZV9mcm9tX2ZyZWVsaXN0KzB4YTk0LzB4ZGQ0ICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgDQo+ID4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIA0KPiA+ICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICANCj4gPiAg
+ICAgICAgICAgICAgICAgICAgICAgIA0KPiA+IFs8ODAwZTMwMjg+XQ0KPiA+IF9fYWxsb2NfcGFn
+ZXNfbm9kZW1hc2srMHhmNC8weGJiOCAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAN
+Cj4gPiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgDQo+ID4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIA0KPiA+ICAgICAgICAgICAgICAgICAgICAg
+ICAgDQo+ID4gWzw4MDBlM2IwOD5dDQo+ID4gX19nZXRfZnJlZV9wYWdlcysweDFjLzB4NTggICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIA0KPiA+ICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICANCj4g
+PiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgDQo+ID4gICAgICAgICAgICAgICAgICAgICAgICANCj4gPiBbPDgwMDEzNDMw
+Pl0NCj4gPiBzZXR1cF96ZXJvX3BhZ2VzKzB4M2MvMHhlNCAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgDQo+ID4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIA0KPiA+ICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICANCj4gPiAg
+ICAgICAgICAgICAgICAgICAgICAgIA0KPiA+IFs8ODA4MjZlYWM+XQ0KPiA+IG1lbV9pbml0KzB4
+NDAvMHg1MCAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAN
+Cj4gPiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgDQo+ID4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIA0KPiA+ICAgICAgICAgICAgICAgICAgICAg
+ICAgDQo+ID4gWzw4MDgyMTljMD5dDQo+ID4gc3RhcnRfa2VybmVsKzB4MjUwLzB4NTEwICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIA0KPiA+ICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICANCj4g
+PiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgDQo+ID4gICAgICAgICAgICAgICAgICAgICAgICANCj4gPiBDb2RlOiBjYzll
+MDA0MCAgY2M5ZTAwNjAgIGNjOWUwMDgwIDxhYzgwMDAwMD4NCj4gPiBhYzgwMDAwNCAgYWM4MDAw
+MDggIGFjODAwMDBjICAyNDg0MDAyMCAgYWM4MGZmZjAgIA0KPiA+IA0KPiA+IEkgdGhpbmsgdGhp
+cyBpcyBqdXN0IHRoZSBlYXJseSBzZXR1cCBvZiB0aGUgcGFnZXMuDQo+ID4gDQo+ID4gPiA+IA0K
+PiA+ID4gPiBBbnl3YXkgSSdkIHJlYWxseSBhcHByZWNpYXRlIGFueSBndWlkYW5jZSB0aGF0IGFu
+eW9uZSBjb3VsZA0KPiA+ID4gPiBwcm92aWRlDQo+ID4gPiA+IG9uDQo+ID4gPiA+IHRoaXMuIEV2
+ZW4gaWYgaXQncyBqdXN0ICJnbyBsb29rIGF0IHRoaXMgU29DIi4NCj4gPiA+ID4gDQo+ID4gPiA+
+IFRoYW5rcywNCj4gPiA+ID4gQ2hyaXMNCj4gPiA+ID4gDQo+ID4gPiA+IA0KPiA+ID4gDQo+ID4g
+PiAtLQ0KPiA+ID4gSmlheHVuIFlhbmcNCj4gDQo+IA0K
