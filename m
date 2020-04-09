@@ -2,132 +2,95 @@ Return-Path: <SRS0=n+Ub=5Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B0DAC2BB1D
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 01:25:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A625C2BA2B
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 01:28:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F22352084D
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 01:25:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 254272084D
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 01:28:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="JiM67cz8"
+	dkim=pass (2048-bit key) header.d=aurabindo.in header.i=@aurabindo.in header.b="N5VA5PzW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726680AbgDIBZx (ORCPT
+        id S1726646AbgDIB2V (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Apr 2020 21:25:53 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:39588 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726539AbgDIBZx (ORCPT
+        Wed, 8 Apr 2020 21:28:21 -0400
+Received: from mail-qk1-f179.google.com ([209.85.222.179]:38209 "EHLO
+        mail-qk1-f179.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726539AbgDIB2V (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Apr 2020 21:25:53 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0391Do6r152904;
-        Thu, 9 Apr 2020 01:25:50 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2020-01-29;
- bh=ojvWGTH16FqGalLxUHiUu7u1GemaC0gdhKfWhTg68f0=;
- b=JiM67cz8h5VnilGB4K6xUuzTNv002U18cMZdIGxzylwgK5PtRIGSwXGtSOoiQwnIO1xW
- Xu/S40UOac+gelZenkgFK+Pje+QuA0JdjIIqsHYYvkIQuDMNpS5WW4v7KrOT25PtMF/L
- i7rRCY8d9HJA/Y+V8r31M7crNoZ/+RWTVb+d8B2cvW/w0Gg8NTHoIqWlNgNQlUwMS17I
- 7EDYXtHRbhNJEXsfccHBL1CSjzKvfp9bd1rwtBZ32BhiXjWKB+64BMbVEgHcHUMa76/v
- RPXD8olYyH+GVNDGsMvvbAXkORYO5MXGnNJgo83OZ1Sw277M18Mu14CTEVcmKEnajk4w hw== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by aserp2120.oracle.com with ESMTP id 3091m0xr27-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 09 Apr 2020 01:25:50 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0391BZY8039144;
-        Thu, 9 Apr 2020 01:25:49 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by aserp3020.oracle.com with ESMTP id 3091m60k08-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 09 Apr 2020 01:25:49 +0000
-Received: from abhmp0008.oracle.com (abhmp0008.oracle.com [141.146.116.14])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 0391PnnR027694;
-        Thu, 9 Apr 2020 01:25:49 GMT
-Received: from localhost.localdomain (/10.159.148.185)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 08 Apr 2020 18:25:48 -0700
-Subject: Re: [PATCH v4 1/2] selftests: kvm: Add vm_get_fd() in kvm_util
-To:     Wainer dos Santos Moschetta <wainersm@redhat.com>,
-        pbonzini@redhat.com, kvm@vger.kernel.org
-Cc:     drjones@redhat.com, david@redhat.com, linux-kernel@vger.kernel.org,
-        linux-kselftest@vger.kernel.org
-References: <20200408220818.4306-1-wainersm@redhat.com>
- <20200408220818.4306-2-wainersm@redhat.com>
-From:   Krish Sadhukhan <krish.sadhukhan@oracle.com>
-Message-ID: <734ebc46-ff31-708b-5a2f-8bda248cd290@oracle.com>
-Date:   Wed, 8 Apr 2020 18:25:41 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Wed, 8 Apr 2020 21:28:21 -0400
+Received: by mail-qk1-f179.google.com with SMTP id h14so2454554qke.5
+        for <linux-kernel@vger.kernel.org>; Wed, 08 Apr 2020 18:28:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=aurabindo.in; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=W+2Y0Xi530M87fNTrtIwP1pMSm7GqwPkRfMOed11GCs=;
+        b=N5VA5PzWygwcF51uf54k+ipqv7JgkBJdnFyoVNkSZM2Y5Bl7CGNj1MEyoXmsSDXGiV
+         tGmSgTfxguxY7RCreRX1mU1o7GwN2vzb8xJIQgiHGtvLCgqt/fvNs71MJR6ZKjMHhA4R
+         lt+IQNlGF0X/xUSNtXAXNNVICu97RIexts3lt+IaZLSfr5FtJjFlTi1gWyvJ/7b1k14k
+         zgWwfyNLYfNfUiCDTFwhJoWNEyszdYTyWtjsMtTPvFJm2VL/IxwXxox+6hgRy02EQlRv
+         sGfEuGn3eDWrOKwKq2r/XI4vPkjlB0p8ZdV7huJhorql6JWRl/I6WjMUdNgDnu9XFblg
+         nwng==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=W+2Y0Xi530M87fNTrtIwP1pMSm7GqwPkRfMOed11GCs=;
+        b=n15fkLR/iX6wYTPiXfIzPY4sSERFKIl/p7FUBbLoVcP+bStO4X1S8TyDDvUqfjUIbZ
+         f1Q810Z8QO93Ixm8lVJvRKIJe91ZdZVaFPpjZ0CmPNmnQLJmX16sPYV9p9mL8EAoOtAw
+         dzb358z+1wopdnK9EqGKL9PzMjPobYuJfoHo95RbiEYC2XVuKb83g9rlpEPChSs1Mghb
+         V/uyZL2M3dIlpgQwefVMats+pG77csILX3eymnvPqu6PoxkZ+6+SNsoZKOZdOe7Zm3Iq
+         fT7SY29+391x5wa1nhMvADkXpUeIXKg8RcB/5sW6W7OwTYhnpSDnYqh5Enw+aDeoEhiO
+         SHgA==
+X-Gm-Message-State: AGi0PuZhSLtbwJXS2GsdGYB7Ek3MU8xL5hlfIB7sQJpvIUY5MgIXugz3
+        F/poS84JhxRP4z8ttHd8KTDpUOM6eFKvLvd4kMI=
+X-Google-Smtp-Source: APiQypIcnFZuNeQsehdaKyuMo95ePmC43hl4IAy8auSxxePTv47MMvGLLjTgt/bXZQrCEEnI0SdLgA==
+X-Received: by 2002:a05:620a:15d1:: with SMTP id o17mr10479294qkm.457.1586395698825;
+        Wed, 08 Apr 2020 18:28:18 -0700 (PDT)
+Received: from localhost.localdomain (135-23-249-169.cpe.pppoe.ca. [135.23.249.169])
+        by smtp.gmail.com with ESMTPSA id h13sm11710186qkj.21.2020.04.08.18.28.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 08 Apr 2020 18:28:18 -0700 (PDT)
+From:   Aurabindo Pillai <mail@aurabindo.in>
+To:     christian.koenig@amd.com, alexander.deucher@amd.com,
+        David1.Zhou@amd.com
+Cc:     airlied@linux.ie, daniel@ffwll.ch, Felix.Kuehling@amd.com,
+        amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v2 0/3] drm/amd/amdgpu: Add print format prefix
+Date:   Wed,  8 Apr 2020 21:28:12 -0400
+Message-Id: <20200409012815.22309-1-mail@aurabindo.in>
+X-Mailer: git-send-email 2.26.0
 MIME-Version: 1.0
-In-Reply-To: <20200408220818.4306-2-wainersm@redhat.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9585 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 bulkscore=0 mlxscore=0
- malwarescore=0 spamscore=0 adultscore=0 suspectscore=0 mlxlogscore=999
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
- definitions=main-2004090006
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9585 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 mlxlogscore=999 mlxscore=0
- priorityscore=1501 phishscore=0 suspectscore=0 bulkscore=0
- lowpriorityscore=0 impostorscore=0 malwarescore=0 clxscore=1011
- spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2004090006
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Changes in v2
 
-On 4/8/20 3:08 PM, Wainer dos Santos Moschetta wrote:
-> Introduces the vm_get_fd() function in kvm_util which returns
-> the VM file descriptor.
->
-> Reviewed-by: Andrew Jones <drjones@redhat.com>
-> Signed-off-by: Wainer dos Santos Moschetta <wainersm@redhat.com>
-> ---
->   tools/testing/selftests/kvm/include/kvm_util.h | 1 +
->   tools/testing/selftests/kvm/lib/kvm_util.c     | 5 +++++
->   2 files changed, 6 insertions(+)
->
-> diff --git a/tools/testing/selftests/kvm/include/kvm_util.h b/tools/testing/selftests/kvm/include/kvm_util.h
-> index a99b875f50d2..4e122819ee24 100644
-> --- a/tools/testing/selftests/kvm/include/kvm_util.h
-> +++ b/tools/testing/selftests/kvm/include/kvm_util.h
-> @@ -254,6 +254,7 @@ bool vm_is_unrestricted_guest(struct kvm_vm *vm);
->   unsigned int vm_get_page_size(struct kvm_vm *vm);
->   unsigned int vm_get_page_shift(struct kvm_vm *vm);
->   unsigned int vm_get_max_gfn(struct kvm_vm *vm);
-> +int vm_get_fd(struct kvm_vm *vm);
->   
->   unsigned int vm_calc_num_guest_pages(enum vm_guest_mode mode, size_t size);
->   unsigned int vm_num_host_pages(enum vm_guest_mode mode, unsigned int num_guest_pages);
-> diff --git a/tools/testing/selftests/kvm/lib/kvm_util.c b/tools/testing/selftests/kvm/lib/kvm_util.c
-> index 8a3523d4434f..3e36a1eb8771 100644
-> --- a/tools/testing/selftests/kvm/lib/kvm_util.c
-> +++ b/tools/testing/selftests/kvm/lib/kvm_util.c
-> @@ -1734,6 +1734,11 @@ unsigned int vm_get_max_gfn(struct kvm_vm *vm)
->   	return vm->max_gfn;
->   }
->   
-> +int vm_get_fd(struct kvm_vm *vm)
-> +{
-> +        return vm->fd;
-> +}
-> +
+* Add dev_fmt format prefix
+* Removed hardcoded module names in pr_* and dev_* prints
 
+Aurabindo Pillai (3):
+  drm/amd/amdgpu: add prefix for pr_* prints
+  drm/amd/amdgpu: add print prefix for dev_* variants
+  drm/amd/amdgpu: remove hardcoded module name in prints
 
-I am just trying to understand why we need a separate function when the 
-'vm' variable is all local within the same file. There are a number of 
-places in kvm_util.c where it is used directly.
+ drivers/gpu/drm/amd/amdgpu/amdgpu.h              | 12 ++++++++++++
+ drivers/gpu/drm/amd/amdgpu/amdgpu_amdkfd_gpuvm.c |  6 +++---
+ drivers/gpu/drm/amd/amdgpu/amdgpu_device.c       |  4 ++--
+ drivers/gpu/drm/amd/amdgpu/amdgpu_irq.c          |  2 +-
+ drivers/gpu/drm/amd/amdgpu/gmc_v6_0.c            |  2 +-
+ drivers/gpu/drm/amd/amdgpu/gmc_v7_0.c            |  2 +-
+ drivers/gpu/drm/amd/amdgpu/gmc_v8_0.c            |  2 +-
+ 7 files changed, 21 insertions(+), 9 deletions(-)
 
->   static unsigned int vm_calc_num_pages(unsigned int num_pages,
->   				      unsigned int page_shift,
->   				      unsigned int new_page_shift,
+-- 
+2.26.0
+
