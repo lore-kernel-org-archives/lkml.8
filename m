@@ -2,180 +2,175 @@ Return-Path: <SRS0=n+Ub=5Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F34FC2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 08:19:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66D19C2D0EA
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 08:19:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4519920757
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 08:12:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="DIe7T36y"
+	by mail.kernel.org (Postfix) with ESMTP id 3B6BC206F5
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 08:19:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1586420376;
+	bh=W/nixM4Oi/VzLBVtTFDmUh394dSfQ8nzuUewfPJ+Vxg=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=T4eQu0Vojh/+SY93KScXHlpJ12S+d6/KY3yMhbd9mMz34KM6Xp6ijbUgukkLcSAKH
+	 kUp2nV7OMEwUjv4hPlepIV+MK6Fq3osDX7EoIV6vGAh9gqJdYEC1IKYNSVQhXcahUE
+	 di6xM8AQHx6hJ4HSgOLaYYefuOmlyxW++MTStgGs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726627AbgDIIMc (ORCPT
+        id S1726561AbgDIITe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Apr 2020 04:12:32 -0400
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:35200 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725828AbgDIIMb (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Apr 2020 04:12:31 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1586419950;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-        bh=1oEhsZS3AKZKX3xaATSdurKYTMszIQ2hjphKj4FRwmg=;
-        b=DIe7T36yEKa1RlCgnqUJ9tU9V35iIPzYG2V+glJ4wnfkSrfzyKvjPOERKaeM75OrjuFU2D
-        EZQi6vC4n+dIK4TKFjyzKcvSydcr8bFGcTOOOOTsRckK1QJ9RVsdHzTSYyWTTmvpwuhusj
-        H2d7D8y3/owzYGKLHe5wYfVFNs1CI8M=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-230-WBpehaiqPhqlG0gGfE2EmQ-1; Thu, 09 Apr 2020 04:12:26 -0400
-X-MC-Unique: WBpehaiqPhqlG0gGfE2EmQ-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Thu, 9 Apr 2020 04:19:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56684 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725828AbgDIITe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Apr 2020 04:19:34 -0400
+Received: from mail-io1-f50.google.com (mail-io1-f50.google.com [209.85.166.50])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 1C0FA802560;
-        Thu,  9 Apr 2020 08:12:24 +0000 (UTC)
-Received: from [10.36.113.222] (ovpn-113-222.ams2.redhat.com [10.36.113.222])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id AA39E99E03;
-        Thu,  9 Apr 2020 08:12:21 +0000 (UTC)
-Subject: Re: [PATCH v1 1/2] powerpc/pseries/hotplug-memory: stop checking
- is_mem_section_removable()
-To:     Michal Hocko <mhocko@kernel.org>,
-        Michael Ellerman <mpe@ellerman.id.au>
-Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        linuxppc-dev@lists.ozlabs.org,
-        Nathan Fontenot <nfont@linux.vnet.ibm.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Oscar Salvador <osalvador@suse.de>,
-        Baoquan He <bhe@redhat.com>,
-        Wei Yang <richard.weiyang@gmail.com>
-References: <20200407135416.24093-1-david@redhat.com>
- <20200407135416.24093-2-david@redhat.com> <87sghdjf1y.fsf@mpe.ellerman.id.au>
- <20200409075927.GC18386@dhcp22.suse.cz>
-From:   David Hildenbrand <david@redhat.com>
-Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
- 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
-Organization: Red Hat GmbH
-Message-ID: <0a0ed3ed-f792-f8f7-07f4-cacc2b565a95@redhat.com>
-Date:   Thu, 9 Apr 2020 10:12:20 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        by mail.kernel.org (Postfix) with ESMTPSA id B5E7D206F5;
+        Thu,  9 Apr 2020 08:19:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1586420373;
+        bh=W/nixM4Oi/VzLBVtTFDmUh394dSfQ8nzuUewfPJ+Vxg=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=u/2lFNtOcX6OMxFuWpdDUKnk5wGSi7l9l8TJq/RNU7ut6gHeiryipE7e2YO21Va3j
+         OS059n/fdTPV+YgmTXg0YCjDbDAk1o0dY7Y7oUlGF1/FT0nLfvZlVbLkZJ26SBDwdn
+         WeVS2LjqQZxveiUu9uz2NiRv0rebEmmPzbgwVm1E=
+Received: by mail-io1-f50.google.com with SMTP id f3so3020301ioj.1;
+        Thu, 09 Apr 2020 01:19:33 -0700 (PDT)
+X-Gm-Message-State: AGi0PubcwfMRu3dyQTugUAykS97KIdQhNrX75VBrW3uDd0nsaNmmC++r
+        TcSdKoQzXDrLae+opXQ1NcNWjynSwL2RxkLNuWM=
+X-Google-Smtp-Source: APiQypJ8sS5bP8UnFCC5IOTIE/mcXrrclkovcihKSJMmmXBhGgZaVJIahO+oMpxhKurh8GQ2C6WvD6l+YFBUqa/FaxU=
+X-Received: by 2002:a6b:f413:: with SMTP id i19mr10971407iog.203.1586420373143;
+ Thu, 09 Apr 2020 01:19:33 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200409075927.GC18386@dhcp22.suse.cz>
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+References: <20200113172245.27925-1-ardb@kernel.org> <20200113172245.27925-6-ardb@kernel.org>
+ <63b125a4-6c62-fcdf-de22-d3bebe2dcbf5@suse.cz> <CAMj1kXGiT_zYjc6X-msRXVozhpDAY0UesEW3_4fOgiH4FyMgDw@mail.gmail.com>
+ <972b66a9-92c7-9a15-1aa1-e3236abe90df@suse.cz> <CAMj1kXFGkOM9fbqr44_TbdxqFjH1i3d8dkO64C1mQmH=AqrUSQ@mail.gmail.com>
+ <20200409080626.GV5951@GaryWorkstation> <984a2b3c-a9d4-e733-6372-4abf0f99be1f@suse.cz>
+In-Reply-To: <984a2b3c-a9d4-e733-6372-4abf0f99be1f@suse.cz>
+From:   Ard Biesheuvel <ardb@kernel.org>
+Date:   Thu, 9 Apr 2020 10:19:22 +0200
+X-Gmail-Original-Message-ID: <CAMj1kXFHUusU9dDgqhU_qswDVgYWx_kpaDEroj4ZSt3hr-AFsA@mail.gmail.com>
+Message-ID: <CAMj1kXFHUusU9dDgqhU_qswDVgYWx_kpaDEroj4ZSt3hr-AFsA@mail.gmail.com>
+Subject: Re: [PATCH 05/13] efi/x86: don't map the entire kernel text RW for
+ mixed mode
+To:     Jiri Slaby <jslaby@suse.cz>
+Cc:     Gary Lin <glin@suse.com>, linux-efi <linux-efi@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Anshuman Khandual <anshuman.khandual@arm.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Dave Young <dyoung@redhat.com>,
+        Saravana Kannan <saravanak@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 09.04.20 09:59, Michal Hocko wrote:
-> On Thu 09-04-20 17:26:01, Michael Ellerman wrote:
->> David Hildenbrand <david@redhat.com> writes:
->>
->>> In commit 53cdc1cb29e8 ("drivers/base/memory.c: indicate all memory
->>> blocks as removable"), the user space interface to compute whether a memory
->>> block can be offlined (exposed via
->>> /sys/devices/system/memory/memoryX/removable) has effectively been
->>> deprecated. We want to remove the leftovers of the kernel implementation.
->>>
->>> When offlining a memory block (mm/memory_hotplug.c:__offline_pages()),
->>> we'll start by:
->>> 1. Testing if it contains any holes, and reject if so
->>> 2. Testing if pages belong to different zones, and reject if so
->>> 3. Isolating the page range, checking if it contains any unmovable pages
->>>
->>> Using is_mem_section_removable() before trying to offline is not only racy,
->>> it can easily result in false positives/negatives. Let's stop manually
->>> checking is_mem_section_removable(), and let device_offline() handle it
->>> completely instead. We can remove the racy is_mem_section_removable()
->>> implementation next.
->>>
->>> We now take more locks (e.g., memory hotplug lock when offlining and the
->>> zone lock when isolating), but maybe we should optimize that
->>> implementation instead if this ever becomes a real problem (after all,
->>> memory unplug is already an expensive operation). We started using
->>> is_mem_section_removable() in commit 51925fb3c5c9 ("powerpc/pseries:
->>> Implement memory hotplug remove in the kernel"), with the initial
->>> hotremove support of lmbs.
->>
->> It's also not very pretty in dmesg.
->>
->> Before:
->>
->>   pseries-hotplug-mem: Attempting to hot-add 10 LMB(s)
->>   pseries-hotplug-mem: Memory hot-add failed, removing any added LMBs
->>   dlpar: Could not handle DLPAR request "memory add count 10"
-> 
-> Yeah, there is more output but isn't that useful? Or put it differently
-> what is the actual problem from having those messages in the kernel log?
-> 
-> From the below you can clearly tell that there are kernel allocations
-> which prevent hot remove from happening.
-> 
-> If the overall size of the debugging output is a concern then we can
-> think of a way to reduce it. E.g. once you have a couple of pages
-> reported then all others from the same block are likely not interesting
-> much.
-> 
+On Thu, 9 Apr 2020 at 10:10, Jiri Slaby <jslaby@suse.cz> wrote:
+>
+> On 09. 04. 20, 10:06, Gary Lin wrote:
+> > On Thu, Apr 09, 2020 at 09:51:20AM +0200, Ard Biesheuvel wrote:
+> >> On Wed, 8 Apr 2020 at 12:51, Jiri Slaby <jslaby@suse.cz> wrote:
+> >>>
+> >>> Ccing Gary.
+> >>>
+> >>> On 08. 04. 20, 12:47, Ard Biesheuvel wrote:
+> >>>> On Wed, 8 Apr 2020 at 12:42, Jiri Slaby <jslaby@suse.cz> wrote:
+> >>>>>
+> >>>>> On 13. 01. 20, 18:22, Ard Biesheuvel wrote:
+> >>>>>> The mixed mode thunking routine requires a part of it to be
+> >>>>>> mapped 1:1, and for this reason, we currently map the entire
+> >>>>>> kernel .text read/write in the EFI page tables, which is bad.
+> >>>>>>
+> >>>>>> In fact, the kernel_map_pages_in_pgd() invocation that installs
+> >>>>>> this mapping is entirely redundant, since all of DRAM is already
+> >>>>>> 1:1 mapped read/write in the EFI page tables when we reach this
+> >>>>>> point, which means that .rodata is mapped read-write as well.
+> >>>>>>
+> >>>>>> So let's remap both .text and .rodata read-only in the EFI
+> >>>>>> page tables.
+> >>>>>
+> >>>>> This patch causes unhandled page faults in mixed mode:
+> >>>>>
+> >>>>>> BUG: unable to handle page fault for address: 000000001557ee88
+> >>>>>> #PF: supervisor write access in kernel mode
+> >>>>>> #PF: error_code(0x0003) - permissions violation
+> >>>>>> PGD fd52063 P4D fd52063 PUD fd53063 PMD 154000e1
+> >>>>>> Oops: 0003 [#1] SMP PTI
+> >>>>>> CPU: 1 PID: 191 Comm: systemd-escape Not tainted
+> >>>>> 5.6.2-20.gb22bc26-default #1 openSUSE Tumbleweed (unreleased)
+> >>>>>> Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 0.0.0
+> >>>>> 02/06/2015
+> >>>>>> RIP: 0008:0x3d2eed95
+> >>>>>> Code: 8b 45 d4 8b 4d 10 8b 40 04 89 01 89 3b 50 6a 00 8b 55 0c 6a 00
+> >>>>> 8b 45 08 0f b6 4d e4 6a 01 31 f6 e8 ee c5 fc ff 83 c4 10 eb 07 <89> 03
+> >>>>> be 05 00 00 80 a1 74 63 31 3d 83 c0 48 e8 44 d2 ff ff eb 05
+> >>>>>> RSP: 0018:000000000fd66fa0 EFLAGS: 00010002
+> >>>>>> RAX: 0000000000000001 RBX: 000000001557ee88 RCX: 000000003d1f1120
+> >>>>>> RDX: 0000000000000001 RSI: 0000000000000000 RDI: 0000000000000001
+> >>>>>> RBP: 000000000fd66fd8 R08: 000000001557ee88 R09: 0000000000000000
+> >>>>>> R10: 0000000000000055 R11: 0000000000000000 R12: 0000000015bcf000
+> >>>>>> R13: 0000000000000000 R14: 0000000000000000 R15: 0000000000000000
+> >>>>>> FS:  00007f36ee9dc940(0000) GS:ffff9b903d700000(0000)
+> >>>>> knlGS:0000000000000000
+> >>>>>> CS:  0008 DS: 0018 ES: 0018 CR0: 0000000080050033
+> >>>>>> CR2: 000000001557ee88 CR3: 000000000fd5e000 CR4: 00000000000006e0
+> >>>>>> DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+> >>>>>> DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+> >>>>>> Call Trace:
+> >>>>>> Modules linked in: efivarfs
+> >>>>>> CR2: 000000001557ee88
+> >>>>>
+> >>>>> EFI apparently tries to write to now read-only memory.
+> >>>>>
+> >>>>> See:
+> >>>>> https://bugzilla.suse.com/show_bug.cgi?id=1168645
+> >>>>>
+> >>>>> Reverting it on the top of 5.6 fixes the issue.
+> >>>>>
+> >>>>> I am using
+> >>>>> /usr/share/qemu/ovmf-ia32-code.bin
+> >>>>> /usr/share/qemu/ovmf-ia32-vars.bin
+> >>>>> from qemu-ovmf-ia32-202002-1.1.noarch rpm.
+> >>>>>
+> >>>>
+> >>>> Do you have a git tree for Suse's OVMF fork? I did a lot of testing
+> >>>> with upstream OVMF, and never ran into this issue.
+> >>>
+> >>> Not really a git tree, but the sources are here:
+> >>> https://build.opensuse.org/package/show/openSUSE:Factory/ovmf
+> >>>
+> >>
+> >>
+> >> Anywhere I can get an actual build? The src rpm only has the sources,
+> >> and the i586 rpm has nothing except
+> >>
+> >> $ rpm -qlp ~/Downloads/ovmf-202002-1.1.i586.rpm
+> >> warning: /home/ardbie01/Downloads/ovmf-202002-1.1.i586.rpm: Header V3
+> >> RSA/SHA256 Signature, key ID 3dbdc284: NOKEY
+> >> /usr/share/doc/packages/ovmf
+> >> /usr/share/doc/packages/ovmf/README
+> >
+> > Hmmm, it's weird that OBS doesn't list all derived files.
+> > Anyway, the ia32 ovmf is available in
+> > http://download.opensuse.org/tumbleweed/repo/oss/noarch/qemu-ovmf-ia32-202002-1.1.noarch.rpm
+>
+> It indeed does:
+> https://build.opensuse.org/package/binaries/openSUSE:Factory/ovmf/standard
+>
+> Note that the ia32 version is noarch, built on i586.
+>
 
-IIRC, we only report one page per block already. (and stop, as we
-detected something unmovable)
+I am not able to reproduce this issue using the linked firmware image
+and a 5.6 x86_64_defconfig with efivarfs built in.
 
--- 
-Thanks,
-
-David / dhildenb
-
+Could anyone share the full log, please, along with the kernel config
+that was used? Also, it would be good to know if it is reproducible
+using a kernel built from upstream.
