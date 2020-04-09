@@ -2,86 +2,153 @@ Return-Path: <SRS0=n+Ub=5Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D814C2BA19
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 17:32:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5762C2BA19
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 17:32:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E265220769
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 17:32:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="LhxWNog6"
+	by mail.kernel.org (Postfix) with ESMTP id B950F20753
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 17:32:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1586453575;
+	bh=IBuZEgijyAZREsl+G4BQjvkNizxCg7cks8fO++AV2XA=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=KgJSmKzEDkezknUW18JPmEsN1QSAkIOjrYJ1PLHWS2LPHOYSbi4hzyrwvv//6uWkO
+	 HxV3TdTeqjjQzj0/MAOUZZGXk4yKoOW8Vhd0CfuyCOiykt19IYCvMSBURCK2VqrA+V
+	 pYRsjk/hKIjnXxsqRZcZ6vmGRGeWYUFpS93+IcEk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726648AbgDIRcY (ORCPT
+        id S1726679AbgDIRcy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Apr 2020 13:32:24 -0400
-Received: from mail-yb1-f193.google.com ([209.85.219.193]:40774 "EHLO
-        mail-yb1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726477AbgDIRcX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Apr 2020 13:32:23 -0400
-Received: by mail-yb1-f193.google.com with SMTP id a5so6126380ybo.7
-        for <linux-kernel@vger.kernel.org>; Thu, 09 Apr 2020 10:32:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Mp9ron0QEbR+5PIC/6wd8mlHTQ3C2lOlQANEcm1kIPk=;
-        b=LhxWNog6VVrgOvZOd6G3ZQJUpCHiuIk6yxEutecouJO6tGdNTsHulwM91owTqIFmwP
-         EaLc+m4veWreX5at+Shm1YjJCHjf/9mO1338i0wUmlRtT2+UE6KywrnJx0THLhVzE+Ql
-         LVaMQbvPW0YZAQe6YZGOfc/qV97n6E4QTclaY=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Mp9ron0QEbR+5PIC/6wd8mlHTQ3C2lOlQANEcm1kIPk=;
-        b=aR0W5kL4NCXT7xNmKpE/isAO10zxrESgxw7+S9VFRGjgh94NJIt/n6muc8NkPfBwCg
-         9mr01JN9BmsQdhbk19dvRelx8BIWxT1hv6gdFQ+02Vrn+fe9059AaY4+tu5dGBuFMveX
-         2SicevFGB/g4d3Y5v0RRcg3wAahK6ZwJD+e/kuinBgt6Zi7lqpIGylsF0QB3ln7XQDqT
-         qQisrW+LFEO9TtmRIUefls5vJm+xQ2HDQOklFocjKNvWFMn2mmV3/tyqkqh63y2Bg+AF
-         hwOf+DlTuRrDmAIv14YSjLgfn99jymtrNS22C+b0Oplv1/3v0Wfpf/JXaRkiSjxz6Tms
-         1mHA==
-X-Gm-Message-State: AGi0PuZFuUDkEHO6qcivdEQUJAPv/p82U/U9YzbnlMKvrNer2A2cx2oM
-        XsDRd9P7s0xAvSLUHNO6S/pU8Vl1F8hHphWt3jB4LtgGiqk=
-X-Google-Smtp-Source: APiQypKnHP7JJ/UOIb1NWR+NfOlMqkd3p1ZIQezrHa0Qko3rdv4wDaUQCokFL88/t/g7xBGI58BoGwPTa3THk2T+axA=
-X-Received: by 2002:ab0:3154:: with SMTP id e20mr160174uam.136.1586453077481;
- Thu, 09 Apr 2020 10:24:37 -0700 (PDT)
+        Thu, 9 Apr 2020 13:32:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56374 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726652AbgDIRcx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Apr 2020 13:32:53 -0400
+Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 57670208FE
+        for <linux-kernel@vger.kernel.org>; Thu,  9 Apr 2020 17:32:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1586453573;
+        bh=IBuZEgijyAZREsl+G4BQjvkNizxCg7cks8fO++AV2XA=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=kFEzwXHDig+6mpRJP27Lvw+9no7VIbkjMrVguBlJqMoPADnJXy15cQD67IadXBR5u
+         fxXeDn5OkQ/p+8cSUhhW+LeX5Dh3Jgzhnb+ybqMccG8bSjw1lgwgksU/TZz20gZ/64
+         xInCI3KMBKixQaZsTEqS33BJKp2UqR6jeIxy3QGk=
+Received: by mail-wr1-f46.google.com with SMTP id k1so12887507wrm.3
+        for <linux-kernel@vger.kernel.org>; Thu, 09 Apr 2020 10:32:53 -0700 (PDT)
+X-Gm-Message-State: AGi0PuYSHOZT78G4g+3/AkX3ljsZ+N0uPo1VCjdLtkSbY3FCkOOtzKGA
+        S4RqdAlF4yqRp6lWceF1nI8Tqrh7tCfQEw8gTiCP/A==
+X-Google-Smtp-Source: APiQypLEiHQsMq8szXbLnpQbM1VupAPJctZFhnFSSXM3V5XoGXOx1XbOz0uCtxrbjmBSCYE2gAQxGXqRHjzPLG1/z74=
+X-Received: by 2002:adf:aad7:: with SMTP id i23mr254511wrc.184.1586453571673;
+ Thu, 09 Apr 2020 10:32:51 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200304010650.259961-1-abhishekpandit@chromium.org> <20200409170742.27865-1-youling257@gmail.com>
-In-Reply-To: <20200409170742.27865-1-youling257@gmail.com>
-From:   Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
-Date:   Thu, 9 Apr 2020 10:24:25 -0700
-Message-ID: <CANFp7mV_bTKwMPt44BpvkuUtnYz5yh2qhzprbgwhDaqwR8duvw@mail.gmail.com>
-Subject: Re: [RFC PATCH v4 0/5] Bluetooth: Handle system suspend gracefully
-To:     youling257 <youling257@gmail.com>
-Cc:     Marcel Holtmann <marcel@holtmann.org>,
-        Luiz Augusto von Dentz <luiz.dentz@gmail.com>,
-        Bluez mailing list <linux-bluetooth@vger.kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Johan Hedberg <johan.hedberg@gmail.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Jakub Kicinski <kuba@kernel.org>, hdegoede@redhat.com
+References: <c09dd91f-c280-85a6-c2a2-d44a0d378bbc@redhat.com>
+ <4EB5D96F-F322-45BB-9169-6BF932D413D4@amacapital.net> <931f6e6d-ac17-05f9-0605-ac8f89f40b2b@redhat.com>
+In-Reply-To: <931f6e6d-ac17-05f9-0605-ac8f89f40b2b@redhat.com>
+From:   Andy Lutomirski <luto@kernel.org>
+Date:   Thu, 9 Apr 2020 10:32:39 -0700
+X-Gmail-Original-Message-ID: <CALCETrUpWBKHHyfMoqD2ZT3CnDdguNnK=KoZiTmN5PnbnD_k0A@mail.gmail.com>
+Message-ID: <CALCETrUpWBKHHyfMoqD2ZT3CnDdguNnK=KoZiTmN5PnbnD_k0A@mail.gmail.com>
+Subject: Re: [PATCH v2] x86/kvm: Disable KVM_ASYNC_PF_SEND_ALWAYS
+To:     Paolo Bonzini <pbonzini@redhat.com>,
+        Tony Luck <tony.luck@intel.com>
+Cc:     Andrew Cooper <andrew.cooper3@citrix.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Vivek Goyal <vgoyal@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
+        kvm list <kvm@vger.kernel.org>, stable <stable@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+Hi, Tony.  I'm adding you because, despite the fact that everyone in
+this thread is allergic to #MC, this seems to be one of your favorite
+topics :)
 
-Could you collect more logs w/ dynamic debug and post on the bug?
-
-Dyndebug instructions:
-https://www.kernel.org/doc/html/latest/admin-guide/dynamic-debug-howto.html
-
-Please enable debug for files hci_core.c, hci_request.c and hci_event.c:
-(for example: echo 'file hci_core.c +p' > <debugfs>/dynamic_debug/control)
-
-Thanks
-Abhishek
-
-On Thu, Apr 9, 2020 at 10:08 AM youling257 <youling257@gmail.com> wrote:
+> On Apr 9, 2020, at 8:17 AM, Paolo Bonzini <pbonzini@redhat.com> wrote:
 >
-> This patch series cause a suspend problem on BYT/CHT device, https://bugzilla.kernel.org/show_bug.cgi?id=207169
+> =EF=BB=BFOn 09/04/20 17:03, Andy Lutomirski wrote:
+>>> No, I think we wouldn't use a paravirt #VE at this point, we would
+>>> use the real thing if available.
+>>>
+>>> It would still be possible to switch from the IST to the main
+>>> kernel stack before writing 0 to the reentrancy word.
+>>
+>> Almost but not quite. We do this for NMI-from-usermode, and it=E2=80=99s
+>> ugly. But we can=E2=80=99t do this for NMI-from-kernel or #VE-from-kerne=
+l
+>> because there might not be a kernel stack.  Trying to hack around
+>> this won=E2=80=99t be pretty.
+>>
+>> Frankly, I think that we shouldn=E2=80=99t even try to report memory fai=
+lure
+>> to the guest if it happens with interrupts off. Just kill the guest
+>> cleanly and keep it simple. Or inject an intentionally unrecoverable
+>> IST exception.
+>
+> But it would be nice to use #VE for all host-side page faults, not just
+> for memory failure.
+>
+> So the solution would be the same as for NMIs, duplicating the stack
+> frame and patching the outer handler's stack from the recursive #VE
+> (https://lwn.net/Articles/484932/).  It's ugly but it's a known ugliness.
+>
+>
+
+Believe me, I know all about how ugly it is, since I=E2=80=99m the one who
+fixed most of the bugs in the first few implementations.  And, before
+I wrote or ack any such thing for #VE, I want to know why.  What,
+exactly, is a sufficiently strong motivation for using #VE *at all*
+that Linux should implement a #VE handler?
+
+As I see it, #VE has several downsides:
+
+1. Intel only.
+
+2. Depending on precisely what it's used for, literally any memory
+access in the kernel can trigger it as a fault.  This means that it
+joins NMI and #MC (and, to a limited extent, #DB) in the horrible
+super-atomic-happens-in-bad-contexts camp.  IST is mandatory, and IST
+is not so great.
+
+3. Just like NMI and MCE, it comes with a fundamentally broken
+don't-recurse-me mechanism.
+
+If we do support #VE, I would suggest we do it roughly like this.  The
+#VE handler is a regular IST entry -- there's a single IST stack, and
+#VE from userspace stack-switches to the regular kernel stack.  The C
+handler (do_virtualization_exception?) is permitted to panic if
+something is horribly wrong, but is *not* permitted to clear the word
+at byte 4 to re-enable #VE.  Instead, it does something to trigger a
+deferred re-enable.  For example, it sends IPI to self and the IPI
+handler clears the magic re-enable flag.
+
+There are definitely horrible corner cases here.  For example, suppose
+user code mmaps() some kind of failable memory (due to NVDIMM hardware
+failures, truncation, whatever).  Then user code points RBP at it and
+we get a perf NMI.  Now the perf code tries to copy_from_user_nmi()
+the user stack and hits the failure.  It gets #MC or #VE or some
+paravirt thing.  Now we're in a situation where we got an IST
+exception in the middle of NMI processing and we're expected to do
+something intelligent about it.  Sure, we can invoke the extable
+handler, but it's not really clear how to recover if we somehow hit
+the same type of failure again in the same NMI.
+
+A model that could actually work, perhaps for #VE and #MC, is to have
+the extable code do the re-enabling.  So ex_handler_uaccess() and
+ex_handler_mcsafe() will call something like rearm_memory_failure(),
+and that will do whatever is needed to re-arm the specific memory
+failure reporting mechanism in use.
+
+But, before I touch that with a ten-foot pole, I want to know *why*.
+What's the benefit?  Why do we want convertible EPT violations?
