@@ -2,195 +2,113 @@ Return-Path: <SRS0=n+Ub=5Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 218BFC2BB86
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 13:25:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3288DC2BB86
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 13:26:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 00B7E208FE
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 13:25:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0A4D720857
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 13:26:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1586438803;
+	bh=cV6hSehyX6lw4Tv9+IglB58tggNYFJ6BalVHwJs8cI8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=nNJEhaD0DcNLkoIVfmU5HojeDLvn///kaVNzLpDO0q719RzdcuEwcsu4AmSTwx8j2
+	 wMW2Dv6t5UbUphZzC+RYxfgotFMB298n9h0EcwV7trtkqD+lNHxz2RCHWZdMZflBrU
+	 EEdfyt11/2nItKbnbs9uEtOQBqxxUloPpKWF/Afo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726877AbgDINZL (ORCPT
+        id S1726882AbgDIN0l (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Apr 2020 09:25:11 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:38042 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726632AbgDINZL (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Apr 2020 09:25:11 -0400
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: eballetbo)
-        with ESMTPSA id 0A542297B00
-Subject: Re: [PATCH v2] arm64: dts: mt8173: Add gce setting in mmsys and
- display node
-To:     Hsin-Yi Wang <hsinyi@chromium.org>,
-        linux-arm-kernel@lists.infradead.org
-Cc:     devicetree@vger.kernel.org,
-        Chun-Kuang Hu <chunkuang.hu@kernel.org>,
-        linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
-        linux-mediatek@lists.infradead.org,
-        Matthias Brugger <matthias.bgg@gmail.com>
-References: <20200409055012.199320-1-hsinyi@chromium.org>
-From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Message-ID: <63058ea1-9cce-2c2e-0041-9369033a7b33@collabora.com>
-Date:   Thu, 9 Apr 2020 15:25:04 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Thu, 9 Apr 2020 09:26:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48448 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726681AbgDIN0l (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Apr 2020 09:26:41 -0400
+Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 62E882072F;
+        Thu,  9 Apr 2020 13:26:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1586438801;
+        bh=cV6hSehyX6lw4Tv9+IglB58tggNYFJ6BalVHwJs8cI8=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=H9uzvWqkZoza1WwcQy6lLYj+vDp8hvrlgELwPMjzCUzfYJ5JZZHkeINQiHfngaRFe
+         7WOLZlaXP9ZxF2dUO/OHweSokzXySPzG3A+GzKiIDeTCRFX6R5SSdhlywofkdfwzLU
+         IdwaSKjwyHFZtTWRiPWDOJOI9+eAPT6vkZvZF0Jk=
+Date:   Thu, 9 Apr 2020 14:26:34 +0100
+From:   Will Deacon <will@kernel.org>
+To:     Vincenzo Frascino <vincenzo.frascino@arm.com>
+Cc:     Catalin Marinas <catalin.marinas@arm.com>,
+        linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org,
+        clang-built-linux@googlegroups.com, x86@kernel.org,
+        Will Deacon <will.deacon@arm.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Russell King <linux@armlinux.org.uk>,
+        Paul Burton <paul.burton@mips.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Andy Lutomirski <luto@kernel.org>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Mark Salyzyn <salyzyn@android.com>,
+        Kees Cook <keescook@chromium.org>,
+        Peter Collingbourne <pcc@google.com>,
+        Dmitry Safonov <0x7f454c46@gmail.com>,
+        Andrei Vagin <avagin@openvz.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Marc Zyngier <maz@kernel.org>,
+        Mark Rutland <Mark.Rutland@arm.com>
+Subject: Re: [PATCH v3 21/26] arm64: Introduce asm/vdso/arch_timer.h
+Message-ID: <20200409132633.GD13078@willie-the-truck>
+References: <20200313154345.56760-1-vincenzo.frascino@arm.com>
+ <20200313154345.56760-22-vincenzo.frascino@arm.com>
+ <20200315183151.GE32205@mbp>
+ <4914ad9c-3eaf-b328-f31b-5d3077ef272f@arm.com>
 MIME-Version: 1.0
-In-Reply-To: <20200409055012.199320-1-hsinyi@chromium.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <4914ad9c-3eaf-b328-f31b-5d3077ef272f@arm.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Hsin-Yi,
+Hi Vincenzo,
 
-Thanks for sending the patch upstream
+Sorry, I was on holiday when you posted this and it slipped through the
+cracks.
 
-On 9/4/20 7:50, Hsin-Yi Wang wrote:
-> In order to use GCE function, we need add some informations
-> into display node (mboxes, mediatek,gce-client-reg, mediatek,gce-events).
+On Mon, Mar 16, 2020 at 03:37:23PM +0000, Vincenzo Frascino wrote:
+> > On Fri, Mar 13, 2020 at 03:43:40PM +0000, Vincenzo Frascino wrote:
+> >> The vDSO library should only include the necessary headers required for
+> >> a userspace library (UAPI and a minimal set of kernel headers). To make
+> >> this possible it is necessary to isolate from the kernel headers the
+> >> common parts that are strictly necessary to build the library.
+> >>
+> >> Introduce asm/vdso/arch_timer.h to contain all the arm64 specific
+> >> code. This allows to replace the second isb() in __arch_get_hw_counter()
+> >> with a fake dependent stack read of the counter which improves the vdso
+> >> library peformances of ~4.5%. Below the results of vdsotest [1] ran for
+> >> 100 iterations.
+> > 
+> > The subject seems to imply a non-functional change but as you read, it
+> > gets a lot more complicated. Could you keep the functional change
+> > separate from the header clean-up, maybe submit it as an independent
+> > patch? And it shouldn't go in without Will's ack ;).
+> > 
 > 
-> Signed-off-by: Hsin-Yi Wang <hsinyi@chromium.org>
-> Reviewed-by: Bibby Hsieh <bibby.hsieh@mediatek.com>
+> It is fine by me. I will repost the series with the required fixes and without
+> this patch. This will give to me enough time to address Mark's comments as well
+> and to Will to have a proper look.
 
-Tested on my Acer Chromebook R13, so
+Please can you post whatever is left at -rc1? I'll have a look then, but
+let's stick to just moving code around rather than randomly changing it
+at the same time, ok?
 
-Tested-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Thanks,
 
-> ---
-> change log:
-> v1->v2: align with
-> 19d8e335d58a ("dt-binding: gce: remove atomic_exec in mboxes property")
-> 60fa8c13ab1a ("drm/mediatek: Move gce event property to mutex device node")
-> ---
->  arch/arm64/boot/dts/mediatek/mt8173.dtsi | 18 +++++++++++++++++-
->  1 file changed, 17 insertions(+), 1 deletion(-)
-> 
-> diff --git a/arch/arm64/boot/dts/mediatek/mt8173.dtsi b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-> index ccb8e88a60c5..8337ba42845d 100644
-> --- a/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-> +++ b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-> @@ -549,7 +549,7 @@ gce: mailbox@10212000 {
->  			interrupts = <GIC_SPI 135 IRQ_TYPE_LEVEL_LOW>;
->  			clocks = <&infracfg CLK_INFRA_GCE>;
->  			clock-names = "gce";
-> -			#mbox-cells = <3>;
-> +			#mbox-cells = <2>;
->  		};
->  
->  		mipi_tx0: mipi-dphy@10215000 {
-> @@ -916,6 +916,9 @@ mmsys: clock-controller@14000000 {
->  			assigned-clocks = <&topckgen CLK_TOP_MM_SEL>;
->  			assigned-clock-rates = <400000000>;
->  			#clock-cells = <1>;
-> +			mboxes = <&gce 0 CMDQ_THR_PRIO_HIGHEST>,
-> +				 <&gce 1 CMDQ_THR_PRIO_HIGHEST>;
-> +			mediatek,gce-client-reg = <&gce SUBSYS_1400XXXX 0 0x1000>;
->  		};
->  
->  		mdp_rdma0: rdma@14001000 {
-> @@ -996,6 +999,7 @@ ovl0: ovl@1400c000 {
->  			clocks = <&mmsys CLK_MM_DISP_OVL0>;
->  			iommus = <&iommu M4U_PORT_DISP_OVL0>;
->  			mediatek,larb = <&larb0>;
-> +			mediatek,gce-client-reg = <&gce SUBSYS_1400XXXX 0xc000 0x1000>;
->  		};
->  
->  		ovl1: ovl@1400d000 {
-> @@ -1006,6 +1010,7 @@ ovl1: ovl@1400d000 {
->  			clocks = <&mmsys CLK_MM_DISP_OVL1>;
->  			iommus = <&iommu M4U_PORT_DISP_OVL1>;
->  			mediatek,larb = <&larb4>;
-> +			mediatek,gce-client-reg = <&gce SUBSYS_1400XXXX 0xd000 0x1000>;
->  		};
->  
->  		rdma0: rdma@1400e000 {
-> @@ -1016,6 +1021,7 @@ rdma0: rdma@1400e000 {
->  			clocks = <&mmsys CLK_MM_DISP_RDMA0>;
->  			iommus = <&iommu M4U_PORT_DISP_RDMA0>;
->  			mediatek,larb = <&larb0>;
-> +			mediatek,gce-client-reg = <&gce SUBSYS_1400XXXX 0xe000 0x1000>;
->  		};
->  
->  		rdma1: rdma@1400f000 {
-> @@ -1026,6 +1032,7 @@ rdma1: rdma@1400f000 {
->  			clocks = <&mmsys CLK_MM_DISP_RDMA1>;
->  			iommus = <&iommu M4U_PORT_DISP_RDMA1>;
->  			mediatek,larb = <&larb4>;
-> +			mediatek,gce-client-reg = <&gce SUBSYS_1400XXXX 0xf000 0x1000>;
->  		};
->  
->  		rdma2: rdma@14010000 {
-> @@ -1036,6 +1043,7 @@ rdma2: rdma@14010000 {
->  			clocks = <&mmsys CLK_MM_DISP_RDMA2>;
->  			iommus = <&iommu M4U_PORT_DISP_RDMA2>;
->  			mediatek,larb = <&larb4>;
-> +			mediatek,gce-client-reg = <&gce SUBSYS_1401XXXX 0 0x1000>;
->  		};
->  
->  		wdma0: wdma@14011000 {
-> @@ -1046,6 +1054,7 @@ wdma0: wdma@14011000 {
->  			clocks = <&mmsys CLK_MM_DISP_WDMA0>;
->  			iommus = <&iommu M4U_PORT_DISP_WDMA0>;
->  			mediatek,larb = <&larb0>;
-> +			mediatek,gce-client-reg = <&gce SUBSYS_1401XXXX 0x1000 0x1000>;
->  		};
->  
->  		wdma1: wdma@14012000 {
-> @@ -1056,6 +1065,7 @@ wdma1: wdma@14012000 {
->  			clocks = <&mmsys CLK_MM_DISP_WDMA1>;
->  			iommus = <&iommu M4U_PORT_DISP_WDMA1>;
->  			mediatek,larb = <&larb4>;
-> +			mediatek,gce-client-reg = <&gce SUBSYS_1401XXXX 0x2000 0x1000>;
->  		};
->  
->  		color0: color@14013000 {
-> @@ -1064,6 +1074,7 @@ color0: color@14013000 {
->  			interrupts = <GIC_SPI 187 IRQ_TYPE_LEVEL_LOW>;
->  			power-domains = <&scpsys MT8173_POWER_DOMAIN_MM>;
->  			clocks = <&mmsys CLK_MM_DISP_COLOR0>;
-> +			mediatek,gce-client-reg = <&gce SUBSYS_1401XXXX 0x3000 0x1000>;
->  		};
->  
->  		color1: color@14014000 {
-> @@ -1072,6 +1083,7 @@ color1: color@14014000 {
->  			interrupts = <GIC_SPI 188 IRQ_TYPE_LEVEL_LOW>;
->  			power-domains = <&scpsys MT8173_POWER_DOMAIN_MM>;
->  			clocks = <&mmsys CLK_MM_DISP_COLOR1>;
-> +			mediatek,gce-client-reg = <&gce SUBSYS_1401XXXX 0x4000 0x1000>;
->  		};
->  
->  		aal@14015000 {
-> @@ -1080,6 +1092,7 @@ aal@14015000 {
->  			interrupts = <GIC_SPI 189 IRQ_TYPE_LEVEL_LOW>;
->  			power-domains = <&scpsys MT8173_POWER_DOMAIN_MM>;
->  			clocks = <&mmsys CLK_MM_DISP_AAL>;
-> +			mediatek,gce-client-reg = <&gce SUBSYS_1401XXXX 0x5000 0x1000>;
->  		};
->  
->  		gamma@14016000 {
-> @@ -1088,6 +1101,7 @@ gamma@14016000 {
->  			interrupts = <GIC_SPI 190 IRQ_TYPE_LEVEL_LOW>;
->  			power-domains = <&scpsys MT8173_POWER_DOMAIN_MM>;
->  			clocks = <&mmsys CLK_MM_DISP_GAMMA>;
-> +			mediatek,gce-client-reg = <&gce SUBSYS_1401XXXX 0x6000 0x1000>;
->  		};
->  
->  		merge@14017000 {
-> @@ -1193,6 +1207,8 @@ mutex: mutex@14020000 {
->  			interrupts = <GIC_SPI 169 IRQ_TYPE_LEVEL_LOW>;
->  			power-domains = <&scpsys MT8173_POWER_DOMAIN_MM>;
->  			clocks = <&mmsys CLK_MM_MUTEX_32K>;
-> +			mediatek,gce-events = <CMDQ_EVENT_MUTEX0_STREAM_EOF>,
-> +                                              <CMDQ_EVENT_MUTEX1_STREAM_EOF>;
->  		};
->  
->  		larb0: larb@14021000 {
-> 
+Will
