@@ -2,231 +2,285 @@ Return-Path: <SRS0=n+Ub=5Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C65F4C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 00:49:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5DB3C2BA80
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 00:50:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9DD7320857
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 00:49:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B2D2E20857
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 00:50:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="c7QPMSWD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726621AbgDIAt3 (ORCPT
+        id S1726654AbgDIAuO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Apr 2020 20:49:29 -0400
-Received: from mail105.syd.optusnet.com.au ([211.29.132.249]:47127 "EHLO
-        mail105.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726536AbgDIAt3 (ORCPT
+        Wed, 8 Apr 2020 20:50:14 -0400
+Received: from mail-qk1-f174.google.com ([209.85.222.174]:40653 "EHLO
+        mail-qk1-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726536AbgDIAuN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Apr 2020 20:49:29 -0400
-Received: from dread.disaster.area (pa49-180-167-53.pa.nsw.optusnet.com.au [49.180.167.53])
-        by mail105.syd.optusnet.com.au (Postfix) with ESMTPS id 925BD3A3A5F;
-        Thu,  9 Apr 2020 10:49:24 +1000 (AEST)
-Received: from dave by dread.disaster.area with local (Exim 4.92.3)
-        (envelope-from <david@fromorbit.com>)
-        id 1jMLNh-00064c-Uo; Thu, 09 Apr 2020 10:49:21 +1000
-Date:   Thu, 9 Apr 2020 10:49:21 +1000
-From:   Dave Chinner <david@fromorbit.com>
-To:     Ira Weiny <ira.weiny@intel.com>
-Cc:     linux-kernel@vger.kernel.org,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Christoph Hellwig <hch@lst.de>,
-        "Theodore Y. Ts'o" <tytso@mit.edu>, Jan Kara <jack@suse.cz>,
-        Jeff Moyer <jmoyer@redhat.com>, linux-ext4@vger.kernel.org,
-        linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH V6 6/8] fs/xfs: Combine xfs_diflags_to_linux() and
- xfs_diflags_to_iflags()
-Message-ID: <20200409004921.GS24067@dread.disaster.area>
-References: <20200407182958.568475-1-ira.weiny@intel.com>
- <20200407182958.568475-7-ira.weiny@intel.com>
- <20200408020827.GI24067@dread.disaster.area>
- <20200408170923.GC569068@iweiny-DESK2.sc.intel.com>
- <20200408210236.GK24067@dread.disaster.area>
- <20200408220734.GA664132@iweiny-DESK2.sc.intel.com>
- <20200408232106.GO24067@dread.disaster.area>
- <20200409001206.GD664132@iweiny-DESK2.sc.intel.com>
+        Wed, 8 Apr 2020 20:50:13 -0400
+Received: by mail-qk1-f174.google.com with SMTP id z15so2375032qki.7
+        for <linux-kernel@vger.kernel.org>; Wed, 08 Apr 2020 17:50:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=dwHTRqaMeWKQo8pkhWDyrO1F8nXatpOEGoXaxkOIkmU=;
+        b=c7QPMSWDbvHOzo+rhOTS20BvUCOnK2azDS3qnqhjIzVz9DAJGz2DI3vlwiVXZ7xcy3
+         mVTwPI8smCSzFCE+fCkvWY7A4Wp6jLYsBJlPB+rjpJ1Uv3ibayAAJXRYXqDo7PnoMypY
+         WBq6HWvY0UkxGmMZV8xxAGkyBdK7WXfR/aOKVo4xAeWJ6qQrgqd2ntYeCwQwxIWMkTgs
+         ZAqUmlKd91+mIi+323AsTl7XTrJKn1TZqP4ngYUcQSq3DxYt3CLb3Pz3NSbfP4AqliYA
+         CpwwUUs+NNqHUrK6aJGCxIQzX+FfBS+lTWv0MJQje7iofPbId4LcDN32PKVutOv87flp
+         /6JA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=dwHTRqaMeWKQo8pkhWDyrO1F8nXatpOEGoXaxkOIkmU=;
+        b=cQL/Pj2DEobi9hWhltcvxJgGOPqsmL86B5DTb98kkiASSfut5kBCsgttVi3bct3qcP
+         hml1KYEHnXyD/Ks05CyZXmZ3V1cWbfUN8m04pLTVo5NVxauCuBX1tAC4Q9l1aP0vPP+w
+         Sk77GV6MSHZNC4AK5SyJYzVRGLA4zfCgcCPsqr2CkPvfYDRZsnQS3bw+QMJHF6Fmubss
+         ZXHATTls18QxKDEmFOgtBcGJqrBfWfOseS0uz8em23bs03+rL8cLfEJGGsE9+pnVWlNW
+         OxfcGTaBazPoMighVEy5lGAaYENuS5pIGJ0A4Y8JX+nL2X+7zCeVebdD66ajZ84NYOiE
+         Ug7A==
+X-Gm-Message-State: AGi0PuatVewCL7b3PMie/+TjcaER601XSWrCQa+PmITHW1HydDY/mjTq
+        7Hfx0AuaBB315zFJIou2QoEhWVQGis0wTKt/EjM=
+X-Google-Smtp-Source: APiQypJSLvSklAC0eMTd7Nr5ng00zmc1uWSo//7Ut+5AUnGvo8poiYZ3BvibGxMP9Fs+g/yOEF7x5z9vB4+cAodUGes=
+X-Received: by 2002:a37:af86:: with SMTP id y128mr10649195qke.429.1586393412482;
+ Wed, 08 Apr 2020 17:50:12 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200409001206.GD664132@iweiny-DESK2.sc.intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Optus-CM-Score: 0
-X-Optus-CM-Analysis: v=2.3 cv=LYdCFQXi c=1 sm=1 tr=0
-        a=2xmR08VVv0jSFCMMkhec0Q==:117 a=2xmR08VVv0jSFCMMkhec0Q==:17
-        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=cl8xLZFz6L8A:10
-        a=VwQbUJbxAAAA:8 a=QyXUC8HyAAAA:8 a=7-415B0cAAAA:8 a=XzohEP87-a05f5LQuZEA:9
-        a=nMb1Ig4BaMjQqHx8:21 a=cqw_wM9ek9d8jNnC:21 a=CjuIK1q_8ugA:10
-        a=AjGcO6oz07-iQ99wixmX:22 a=biEYGPWJfzWAr4FL6Ov7:22
+References: <1585892447-32059-1-git-send-email-iamjoonsoo.kim@lge.com> <f8b9b387-df30-d960-4833-ce6e7974a633@suse.cz>
+In-Reply-To: <f8b9b387-df30-d960-4833-ce6e7974a633@suse.cz>
+From:   Joonsoo Kim <js1304@gmail.com>
+Date:   Thu, 9 Apr 2020 09:50:01 +0900
+Message-ID: <CAAmzW4OsxZV-xRtPqXUVAoP+dM6SQSaw1E1EE+0Fw2fS1Z9K9A@mail.gmail.com>
+Subject: Re: [PATCH v5 00/10] workingset protection/detection on the anonymous
+ LRU list
+To:     Vlastimil Babka <vbabka@suse.cz>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Linux Memory Management List <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        Hugh Dickins <hughd@google.com>,
+        Minchan Kim <minchan@kernel.org>,
+        Mel Gorman <mgorman@techsingularity.net>, kernel-team@lge.com,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 08, 2020 at 05:12:06PM -0700, Ira Weiny wrote:
-> On Thu, Apr 09, 2020 at 09:21:06AM +1000, Dave Chinner wrote:
-> > On Wed, Apr 08, 2020 at 03:07:35PM -0700, Ira Weiny wrote:
-> > > On Thu, Apr 09, 2020 at 07:02:36AM +1000, Dave Chinner wrote:
-> > > > On Wed, Apr 08, 2020 at 10:09:23AM -0700, Ira Weiny wrote:
-> > > 
-> > > [snip]
-> > > 
-> > > > > 
-> > > > > This sounds good but I think we need a slight modification to make the function equivalent in functionality.
-> > > > > 
-> > > > > void
-> > > > > xfs_diflags_to_iflags(
-> > > > >         struct xfs_inode        *ip,
-> > > > >         bool init)
-> > > > > {
-> > > > >         struct inode            *inode = VFS_I(ip);
-> > > > >         unsigned int            xflags = xfs_ip2xflags(ip);
-> > > > >         unsigned int            flags = 0;
-> > > > > 
-> > > > >         inode->i_flags &= ~(S_IMMUTABLE | S_APPEND | S_SYNC | S_NOATIME |
-> > > > >                             S_DAX);
-> > > > 
-> > > > We don't want to clear the dax flag here, ever, if it is already
-> > > > set. That is an externally visible change and opens us up (again) to
-> > > > races where IS_DAX() changes half way through a fault path. IOWs, avoiding
-> > > > clearing the DAX flag was something I did explicitly in the above
-> > > > code fragment.
-> > > 
-> > > <sigh> yes... you are correct.
-> > > 
-> > > But I don't like depending on the caller to clear the S_DAX flag if
-> > > xfs_inode_enable_dax() is false.  IMO this function should clear the flag in
-> > > that case for consistency...
-> > 
-> > No. We simply cannot do that here except in the init case when the
-> > inode is not yet visible to userspace. In which case, we know -for
-> > certain- that the S_DAX is not set, and hence we do not need to
-> > clear it. Initial conditions matter!
-> > 
-> > If you want to make sure of this, add this:
-> > 
-> > 	ASSERT(!(IS_DAX(inode) && init));
-> > 
-> > And now we'll catch inodes that incorrectly have S_DAX set at init
-> > time.
-> 
-> Ok, that will work.  Also documents that expected initial condition.
-> 
-> > 
-> > > > memory S_DAX flag, we can actually clear the on-disk flag
-> > > > safely, so that next time the inode cycles into memory it won't
-> > > > be using DAX. IOWs, admins can stop the applications, clear the
-> > > > DAX flag and drop caches. This should result in the inode being
-> > > > recycled and when the app is restarted it will run without DAX.
-> > > > No ned for deleting files, copying large data sets, etc just to
-> > > > turn off an inode flag.
-> > > 
-> > > We already discussed evicting the inode and it was determined to
-> > > be too confusing.[*]
-> > 
-> > That discussion did not even consider how admins are supposed to
-> > clear the inode flag once it is set on disk.
-> 
-> I think this is a bit unfair.  I think we were all considering it...  and I
-> still think this patch set is a step in the right direction.
-> 
-> > It was entirely
-> > focussed around "we can't change in memory S_DAX state"
-> 
-> Not true.  There were many ideas on how to change the FS_XFLAG_DAX with some
-> sort of delayed S_DAX state to avoid changing S_DAX on an in memory inode.
-> 
-> I made the comment:
-> 
-> 	"... I want to clarify.  ...  we could have the flag change with an
-> 	appropriate error which could let the user know the change has been
-> 	delayed."
-> 
-> 	-- https://lore.kernel.org/lkml/20200402205518.GF3952565@iweiny-DESK2.sc.intel.com/
-> 
-> Jan made multiple comments:
-> 
-> 	"I generally like the proposal but I think the fact that toggling
-> 	FS_XFLAG_DAX will not have immediate effect on S_DAX will cause quite
-> 	some confusion and ultimately bug reports."
-> 
-> 	-- https://lore.kernel.org/lkml/20200401102511.GC19466@quack2.suse.cz/
-> 
-> 
-> 	"Just switch FS_XFLAG_DAX flag, S_DAX flag will magically switch when
-> 	inode gets evicted and the inode gets reloaded from the disk again. Did
-> 	I misunderstand anything?
-> 
-> 	And my thinking was that this is surprising behavior for the user and
-> 	so it will likely generate lots of bug reports along the lines of "DAX
-> 	inode flag does not work!"."
-> 
-> 	-- https://lore.kernel.org/lkml/20200403170338.GD29920@quack2.suse.cz/
-> 
-> Darrick also had similar ideas/comments.
+2020=EB=85=84 4=EC=9B=94 9=EC=9D=BC (=EB=AA=A9) =EC=98=A4=EC=A0=84 1:55, Vl=
+astimil Babka <vbabka@suse.cz>=EB=8B=98=EC=9D=B4 =EC=9E=91=EC=84=B1:
+>
+> On 4/3/20 7:40 AM, js1304@gmail.com wrote:
+> > From: Joonsoo Kim <iamjoonsoo.kim@lge.com>
+> >
+> > Hello,
+> >
+> > This patchset implements workingset protection and detection on
+> > the anonymous LRU list.
+>
+> Hi!
 
-None of these consider how the admin is supposed to remove
-the flag once it is set. They all talk about issues that result
-from setting/clearing the flag inside the kernel, and don't consider
-the administration impacts of having an unclearable flag on disk
-that the kernel uses for operational policy decisions.
+Hi!
 
-Nobody said "hey, wait, if we don't allow the flag to be cleared
-once the flag is set, how do we actually remove it so the admin can
-stop overriding them globally with the mount option? If the kernel
-can't clear the flag, then what mechanism are we going to provide to
-let them clear it without interrupting production?"
+> > I did another test to show the performance effect of this patchset.
+> >
+> > - ebizzy (with modified random function)
+> > ebizzy is the test program that main thread allocates lots of memory an=
+d
+> > child threads access them randomly during the given times. Swap-in/out
+> > will happen if allocated memory is larger than the system memory.
+> >
+> > The random function that represents the zipf distribution is used to
+> > make hot/cold memory. Hot/cold ratio is controlled by the parameter. If
+> > the parameter is high, hot memory is accessed much larger than cold one=
+.
+> > If the parameter is low, the number of access on each memory would be
+> > similar. I uses various parameters in order to show the effect of
+> > patchset on various hot/cold ratio workload.
+> >
+> > My test setup is a virtual machine with 8 cpus and 1024MB memory.
+> >
+> > Result format is as following.
+> >
+> > Parameter 0.1 ... 1.3
+> > Allocated memory size
+> > Throughput for base (larger is better)
+> > Throughput for patchset (larger is better)
+> > Improvement (larger is better)
+> >
+> >
+> > * single thread
+> >
+> >      0.1      0.3      0.5      0.7      0.9      1.1      1.3
+> > <512M>
+> >   7009.0   7372.0   7774.0   8523.0   9569.0  10724.0  11936.0
+> >   6973.0   7342.0   7745.0   8576.0   9441.0  10730.0  12033.0
+> >    -0.01     -0.0     -0.0     0.01    -0.01      0.0     0.01
+> > <768M>
+> >    915.0   1039.0   1275.0   1687.0   2328.0   3486.0   5445.0
+> >    920.0   1037.0   1238.0   1689.0   2384.0   3638.0   5381.0
+> >     0.01     -0.0    -0.03      0.0     0.02     0.04    -0.01
+> > <1024M>
+> >    425.0    471.0    539.0    753.0   1183.0   2130.0   3839.0
+> >    414.0    468.0    553.0    770.0   1242.0   2187.0   3932.0
+> >    -0.03    -0.01     0.03     0.02     0.05     0.03     0.02
+> > <1280M>
+> >    320.0    346.0    410.0    556.0    871.0   1654.0   3298.0
+> >    316.0    346.0    411.0    550.0    892.0   1652.0   3293.0
+> >    -0.01      0.0      0.0    -0.01     0.02     -0.0     -0.0
+> > <1536M>
+> >    273.0    290.0    341.0    458.0    733.0   1381.0   2925.0
+> >    271.0    293.0    344.0    462.0    740.0   1398.0   2969.0
+> >    -0.01     0.01     0.01     0.01     0.01     0.01     0.02
+> > <2048M>
+> >     77.0     79.0     95.0    147.0    276.0    690.0   1816.0
+> >     91.0     94.0    115.0    170.0    321.0    770.0   2018.0
+> >     0.18     0.19     0.21     0.16     0.16     0.12     0.11
+> >
+> >
+> > * multi thread (8)
+> >
+> >      0.1      0.3      0.5      0.7      0.9      1.1      1.3
+> > <512M>
+> >  29083.0  29648.0  30145.0  31668.0  33964.0  38414.0  43707.0
+> >  29238.0  29701.0  30301.0  31328.0  33809.0  37991.0  43667.0
+> >     0.01      0.0     0.01    -0.01     -0.0    -0.01     -0.0
+> > <768M>
+> >   3332.0   3699.0   4673.0   5830.0   8307.0  12969.0  17665.0
+> >   3579.0   3992.0   4432.0   6111.0   8699.0  12604.0  18061.0
+> >     0.07     0.08    -0.05     0.05     0.05    -0.03     0.02
+> > <1024M>
+> >   1921.0   2141.0   2484.0   3296.0   5391.0   8227.0  14574.0
+> >   1989.0   2155.0   2609.0   3565.0   5463.0   8170.0  15642.0
+> >     0.04     0.01     0.05     0.08     0.01    -0.01     0.07
+> > <1280M>
+> >   1524.0   1625.0   1931.0   2581.0   4155.0   6959.0  12443.0
+> >   1560.0   1707.0   2016.0   2714.0   4262.0   7518.0  13910.0
+> >     0.02     0.05     0.04     0.05     0.03     0.08     0.12
+> > <1536M>
+> >   1303.0   1399.0   1550.0   2137.0   3469.0   6712.0  12944.0
+> >   1356.0   1465.0   1701.0   2237.0   3583.0   6830.0  13580.0
+> >     0.04     0.05      0.1     0.05     0.03     0.02     0.05
+> > <2048M>
+> >    172.0    184.0    215.0    289.0    514.0   1318.0   4153.0
+> >    175.0    190.0    225.0    329.0    606.0   1585.0   5170.0
+> >     0.02     0.03     0.05     0.14     0.18      0.2     0.24
+> >
+> > As we can see, as allocated memory grows, patched kernel get the better
+> > result. Maximum improvement is 21% for the single thread test and
+> > 24% for the multi thread test.
+>
+> So, these results seem to be identical since v1. After the various change=
+s up to
+> v5, should  the benchmark be redone? And was that with a full patchset or
+> patches 1+2?
 
-> Christoph did say:
-> 
-> 	"A reasonably smart application can try to evict itself."
-> 
-> 	-- https://lore.kernel.org/lkml/20200403072731.GA24176@lst.de/
+It was done with a full patchset. I think that these results would not
+be changed
+even on v5 since it is improvement from the concept of this patchset and
+implementation detail doesn't much matter. However, I will redo.
 
-I'd love to know how an unprivileged application can force the
-eviction of an inode from cache. If the application cannot evict
-files it is using reliably, then it's no better solution than
-drop_caches. And given that userspace has to take references to
-files to access them, by definition a file that userspace is trying
-to evict will have active references and hence cannot be evicted.
+> > * EXPERIMENT
+> > I made a test program to imitates above scenario and confirmed that
+> > problem exists. Then, I checked that this patchset fixes it.
+> >
+> > My test setup is a virtual machine with 8 cpus and 6100MB memory. But,
+> > the amount of the memory that the test program can use is about 280 MB.
+> > This is because the system uses large ram-backed swap and large ramdisk
+> > to capture the trace.
+> >
+> > Test scenario is like as below.
+> >
+> > 1. allocate cold memory (512MB)
+> > 2. allocate hot-1 memory (96MB)
+> > 3. activate hot-1 memory (96MB)
+> > 4. allocate another hot-2 memory (96MB)
+> > 5. access cold memory (128MB)
+> > 6. access hot-2 memory (96MB)
+> > 7. repeat 5, 6
+> >
+> > Since hot-1 memory (96MB) is on the active list, the inactive list can
+> > contains roughly 190MB pages. hot-2 memory's re-access interval
+> > (96+128 MB) is more 190MB, so it cannot be promoted without workingset
+> > detection and swap-in/out happens repeatedly. With this patchset,
+> > workingset detection works and promotion happens. Therefore, swap-in/ou=
+t
+> > occurs less.
+> >
+> > Here is the result. (average of 5 runs)
+> >
+> > type swap-in swap-out
+> > base 863240 989945
+> > patch 681565 809273
+> >
+> > As we can see, patched kernel do less swap-in/out.
+>
+> Same comment, also v1 has this note:
 
-However, if userspace can reliably evict inodes that it can access,
-then we have a timing attack vector that we need to address.  i.e.
-by now everyone here should know that user controlled cache eviction
-is the basic requirement for creating most OS and CPU level timing
-attacks....
+I had tested this scenario on every version of the patchset and found the s=
+ame
+trend.
 
-> > and how the
-> > tri-state mount option to "override" the on-disk flag could be done.
-> > 
-> > Nobody noticed that being unable to rmeove the on-disk flag means
-> > the admin's only option to turn off dax for an application is to
-> > turn it off for everything, filesystem wide, which requires:
-> 
-> No. This is not entirely true.  While I don't like the idea of having to copy
-> data (and I agree with your points) it is possible to do.
-> 
-> > 
-> > 	1. stopping the app.
-> > 	2. stopping every other app using the filesystem
-> > 	3. unmounting the filesystem
-> > 	4. changing to dax=never mount option
-> 
-> I don't understand why we need to unmount and mount with dax=never?
+> > Note that, this result is gotten from v5.1. Although workingset detecti=
+on
+> > works on v5.1, it doesn't work well on v5.5. It looks like that recent
+> > code change on workingset.c is the reason of this problem. I will
+> > track it soon.
+> What was the problem then, assuming it's fixed? Maybe I just missed it
+> mentioned. Can results now be gathered on 5.6?
 
-1. IIUC your patches correctly, that's exactly how you implemented
-the dax=... mount option.
+It was fixed on v2. Change log on v2 "fix a critical bug that uses out of i=
+ndex
+lru list in workingset_refault()" is for this problem. I should note
+that clearly.
 
-2. If you don't unmount the filesystem and only require a remount,
-then changing the mount option has all the same "delayed effect"
-issues that changing the on-disk flag has. i.e. We can't change the
-in-memory inode state until the inode has been evicted from cache
-and a remount doesn't guarantee that cache eviction will succeed.
+> In general, this patchset seems to be doing the right thing. I haven't re=
+viewed
+> the code yet, but hope to do so soon. But inevitably, with any changes in=
+ this
+> area there will be workloads that will suffer instead of benefit. That ca=
+n be
+> because we are actually doing a wrong thing, or there's a bug in the code=
+, or
+> the workloads happen to benefit from the current behavior even if it's no=
+t the
+> generally optimal one. And I'm afraid only testing on a variety of worklo=
+ads can
+> show that. You mentioned somewhere that your production workloads benefit=
+? Can
+> it be quantified more? Could e.g. Johannes test this a bit at Facebook, o=
+r
 
-Cheers,
+I cannot share the detail of the test for my production (smart TV)
+workload. Roughly,
+it is repeat of various action and app (channel change, volume change,
+youtube, etc.)
+on smart TV and it is memory stress test. Result after the workload is:
 
-Dave.
--- 
-Dave Chinner
-david@fromorbit.com
+base
+pswpin 328211
+pswpout 304015
+
+patched
+pswpin 261884
+pswpout 276062
+
+So, improvement on pswpin and pswpout is roughly 20% and 9%, respectively.
+
+> it be quantified more? Could e.g. Johannes test this a bit at Facebook, o=
+r
+> somebody at Google?
+
+It's really helpful if someone else could test this on their workload.
+
+Thanks.
