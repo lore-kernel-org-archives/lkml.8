@@ -2,119 +2,118 @@ Return-Path: <SRS0=n+Ub=5Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3629AC2BA19
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 22:08:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A72DBC2BB86
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 22:09:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 055CE2083E
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 22:08:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7C7B920757
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 22:09:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="K1VZhl35"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="RWFHgXcA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726917AbgDIWIQ (ORCPT
+        id S1726951AbgDIWJV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Apr 2020 18:08:16 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:52232 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726797AbgDIWIQ (ORCPT
+        Thu, 9 Apr 2020 18:09:21 -0400
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:27115 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726713AbgDIWJV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Apr 2020 18:08:16 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 039M3jf0081816;
-        Thu, 9 Apr 2020 22:08:10 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2020-01-29;
- bh=KJh07q7uvOkDoDWvPxD4kKvVu9QeaGoOd2hp5uE/ptE=;
- b=K1VZhl35SODodLXB/ZzTyYKN/5naGz4OQx77cB58MUiTOIdU2OduyWbJLX6DUXpweRzI
- KQWnNiMjLjZw7Bd4bjDo/fj0PwzSRBVyFrlv3bqhmU3C4MBjVSibVFPP/PuYu6XCq6gh
- TMi9a67XCQHJGtMueZT0BIHdtQ0pIYkxKPLm9LIbumLqSTaUDP1FW9JNR+CghMhxk/2j
- ucCWhR9mjRax1iFuqQk0eya3lnoQjJFbrHI3WCFQ+d4nChi78G3wEcuh5bFKsoxSwhHe
- 8KE3LmRYfXEGmMGqU4P70+PIXKi6cq7Ag9/c9pILGQw8EwRMbZrLzEr8R8KoNQJtwEfy kg== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by userp2120.oracle.com with ESMTP id 309gw4fxde-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 09 Apr 2020 22:08:10 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 039M6umD116523;
-        Thu, 9 Apr 2020 22:08:09 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by aserp3030.oracle.com with ESMTP id 309ag5tgdw-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 09 Apr 2020 22:08:09 +0000
-Received: from abhmp0001.oracle.com (abhmp0001.oracle.com [141.146.116.7])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 039M88EO014851;
-        Thu, 9 Apr 2020 22:08:08 GMT
-Received: from [192.168.1.206] (/71.63.128.209)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 09 Apr 2020 15:08:08 -0700
-Subject: Re: [PATCH] Documentation: hugetlb: Update hugetlb options
-To:     Peter Xu <peterx@redhat.com>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-Cc:     Nitesh Narayan Lal <nitesh@redhat.com>,
-        Andrew Morton <akpm@linux-foundation.org>
-References: <20200409215800.8967-1-peterx@redhat.com>
-From:   Mike Kravetz <mike.kravetz@oracle.com>
-Message-ID: <ba5c87df-9a77-ebd2-e45e-f262a36fbf22@oracle.com>
-Date:   Thu, 9 Apr 2020 15:08:07 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
-MIME-Version: 1.0
-In-Reply-To: <20200409215800.8967-1-peterx@redhat.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9586 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 spamscore=0 malwarescore=0
- phishscore=0 mlxscore=0 bulkscore=0 mlxlogscore=999 suspectscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
- definitions=main-2004090156
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9586 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 bulkscore=0
- phishscore=0 lowpriorityscore=0 impostorscore=0 clxscore=1011
- suspectscore=0 malwarescore=0 spamscore=0 mlxlogscore=999 mlxscore=0
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2004090155
+        Thu, 9 Apr 2020 18:09:21 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1586470160;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc; bh=d0YWsJp6o5xV2UL2uS6Ygl+hmCi+0Eyl441GMe3mK+4=;
+        b=RWFHgXcAGp5D+FvzAq++KyZR7mp8T7f/a3kqnWF7LrlucDHbL/imgjyMtjLdldjizFSjcs
+        XBc3aLa3691AdCmlbrBOvJzHxMeq5wwicWCSoriUnEBynCsG8Ploi1hLcNXdeYa1PpNZER
+        vNfiJEkxMhnYZJYoxlRuAfU0MLIgaqc=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-475-GMJ2DFMMM52FoRdkcOgzgg-1; Thu, 09 Apr 2020 18:09:15 -0400
+X-MC-Unique: GMJ2DFMMM52FoRdkcOgzgg-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id B06421007268;
+        Thu,  9 Apr 2020 22:09:14 +0000 (UTC)
+Received: from localhost.localdomain (ovpn-116-15.gru2.redhat.com [10.97.116.15])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 983379D348;
+        Thu,  9 Apr 2020 22:09:08 +0000 (UTC)
+From:   Wainer dos Santos Moschetta <wainersm@redhat.com>
+To:     pbonzini@redhat.com, kvm@vger.kernel.org
+Cc:     drjones@redhat.com, david@redhat.com, linux-kernel@vger.kernel.org,
+        linux-kselftest@vger.kernel.org, krish.sadhukhan@oracle.com
+Subject: [PATCH v5 0/2] selftests: kvm: Introduce the mem_slot_test test
+Date:   Thu,  9 Apr 2020 19:09:03 -0300
+Message-Id: <20200409220905.26573-1-wainersm@redhat.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/9/20 2:58 PM, Peter Xu wrote:
-> The hugepage options are not documented clearly.
-> 
-> Firstly, default_hugepagesz= should always be specified after the
-> declaration of the same type of huge page using hugepagesz=.  For
-> example, if we boot a x86_64 system with kernel cmdline
-> "default_hugepagesz=2M", we'll get a very funny error message:
-> 
-> "HugeTLB: unsupported default_hugepagesz 2097152. Reverting to 2097152"
-> 
-> It's understandable from code-wise because when hugetlb_init() we
-> didn't have the 2M page hstate registered, so it's unsupported.
-> However 2M is actually the default huge page size on x86_64, so we'll
-> register it right after the error message.  However it's very
-> confusing if without these knowledges.
-> 
-> Secondly, hugepages= option must be used _after_ another hugepagesz=.
-> The word "interleave" is fine but it didn't declare the fact that
-> each of the hugepages= option will be applied to the previous parsed
-> hugepagesz= option.
-> 
-> State all these clear.
-> 
-> Signed-off-by: Peter Xu <peterx@redhat.com>
+This series introduces a new KVM selftest (mem_slot_test) that goal
+is to verify memory slots can be added up to the maximum allowed. An
+extra slot is attempted which should occur on error.
 
-Hi Peter,
+The patch 01 is needed so that the VM fd can be accessed from the
+test code (for the ioctl call attempting to add an extra slot).
 
-Did you happen to see this patch series?
+I ran the test successfully on x86_64, aarch64, and s390x.  This
+is why it is enabled to build on those arches.
 
-https://lore.kernel.org/linux-mm/20200401183819.20647-1-mike.kravetz@oracle.com/
+- Changelog -
 
-That should address the documentation issue and more.
+v4 -> v5:
+ - Initialize the guest_addr and mem_reg_size variables on definition
+   [krish.sadhukhan]
+
+v3 -> v4:
+ - Discarded mem_reg_flags variable. Simply using 0 instead [drjones]
+ - Discarded kvm_region pointer. Instead passing a compound literal in
+   the ioctl [drjones]
+ - All variables are declared on the declaration block [drjones]
+
+v2 -> v3:
+ - Keep alphabetical order of .gitignore and Makefile [drjones]
+ - Use memory region flags equals to zero [drjones]
+ - Changed mmap() assert from 'mem != NULL' to 'mem != MAP_FAILED' [drjones]
+ - kvm_region is declared along side other variables and malloc()'ed
+   later [drjones]
+ - Combined two asserts into a single 'ret == -1 && errno == EINVAL'
+   [drjones]
+
+v1 -> v2:
+ - Rebased to queue
+ - vm_get_fd() returns int instead of unsigned int (patch 01) [drjones]
+ - Removed MEM_REG_FLAGS and GUEST_VM_MODE defines [drjones]
+ - Replaced DEBUG() with pr_info() [drjones]
+ - Calculate number of guest pages with vm_calc_num_guest_pages()
+   [drjones]
+ - Using memory region of 1 MB sized (matches mininum needed
+   for s390x)
+ - Removed the increment of guest_addr after the loop [drjones]
+ - Added assert for the errno when adding a slot beyond-the-limit [drjones]
+ - Prefer KVM_MEM_READONLY flag but on s390x it switch to KVM_MEM_LOG_DIRTY_PAGES,
+   so ensure the coverage of both flags. Also somewhat tests the KVM_CAP_READONLY_MEM capability check [drjones]
+ - Moved the test logic to test_add_max_slots(), this allows to more easily add new cases in the "suite".
+
+v1: https://lore.kernel.org/kvm/20200330204310.21736-1-wainersm@redhat.com
+
+Wainer dos Santos Moschetta (2):
+  selftests: kvm: Add vm_get_fd() in kvm_util
+  selftests: kvm: Add mem_slot_test test
+
+ tools/testing/selftests/kvm/.gitignore        |  1 +
+ tools/testing/selftests/kvm/Makefile          |  3 +
+ .../testing/selftests/kvm/include/kvm_util.h  |  1 +
+ tools/testing/selftests/kvm/lib/kvm_util.c    |  5 ++
+ tools/testing/selftests/kvm/mem_slot_test.c   | 69 +++++++++++++++++++
+ 5 files changed, 79 insertions(+)
+ create mode 100644 tools/testing/selftests/kvm/mem_slot_test.c
+
 -- 
-Mike Kravetz
+2.17.2
+
