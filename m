@@ -2,131 +2,157 @@ Return-Path: <SRS0=n+Ub=5Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84374C2BA19
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 20:04:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF15BC2BB85
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 20:05:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 57D3420730
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 20:04:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586462697;
-	bh=VOsN/mgO6bG3EpuwyMixUlFvqdt0vggrIge9V0PiGj4=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=wxcCZhiQzKjrF6Z4cRMVzqR4FgBbKcGZTU64VG6eJRdRAJm4z+2Hax+VE5ln3mKKT
-	 X2vf5AjBecaz1WYYNweqZSdTZo2XHUgJoGX15vGhj/dNiN+pFEha4W2YY3FdGBuib9
-	 JToBhZSiYQc3oZQPGJYJk0rCJbw3jJmG3OGSu/+M=
+	by mail.kernel.org (Postfix) with ESMTP id 7BEEF20730
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 20:05:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="D84IgnWF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726946AbgDIUEz (ORCPT
+        id S1726979AbgDIUFr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Apr 2020 16:04:55 -0400
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:33665 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726638AbgDIUEz (ORCPT
+        Thu, 9 Apr 2020 16:05:47 -0400
+Received: from mail-il1-f195.google.com ([209.85.166.195]:37486 "EHLO
+        mail-il1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726638AbgDIUFq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Apr 2020 16:04:55 -0400
-Received: by mail-lj1-f194.google.com with SMTP id q22so1091445ljg.0
-        for <linux-kernel@vger.kernel.org>; Thu, 09 Apr 2020 13:04:54 -0700 (PDT)
+        Thu, 9 Apr 2020 16:05:46 -0400
+Received: by mail-il1-f195.google.com with SMTP id a6so931796ilr.4;
+        Thu, 09 Apr 2020 13:05:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
+        d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=uNxSVyIGdaSTr0lywTyA2DSe6ffIyDbX6ysZP8sCQHU=;
-        b=VHdaI9F2b94QbcEW3FTvBCL1X8t5Kxv3xHYG1y/drJJib7CVtztF9I6Na7ybMVJ827
-         u5LxYnpsHzUd6oa4D6rh0TGzUqKsASlIAeq8+IIshnJ+XRaDMSMBTMcSjsclg32h+X9h
-         0P8y05H/E0Y5AgTPYk48DrvCyc6FnUlPR197g=
+        bh=eY4NXfWdxU2CUwlEll88egn0KhohAKVRNqZHn1rtHs0=;
+        b=D84IgnWFav8SFYOz9KRCkia4lQVBPZRp0les6nxG/JqT03joqeJisIs/NINduHOlIS
+         Byot5Jb6lZjWzexapLrYDGroa/W6CZDSMoiubF2FbFqqMllFy+e3/WsmCGxijA4h2HAD
+         Z/n02O0025+PtcL93fQHrkxUjMPl48eAqQXI+ANwU76p4uruERr7nQI3kKS79MRARoQN
+         4AAGPL5iJ7i2agq8UeSdtkwEwphwUp7LpxIz3Lo3UoftnMKSxBIxM8bl7S+vPvw5yDzG
+         +5UhzR2Ceyo3xyD94QzpIjGNRRl2dd4GLxLddZO5uO/RALjxskbw7R6xQIj6vwwnJ7un
+         YOWQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=uNxSVyIGdaSTr0lywTyA2DSe6ffIyDbX6ysZP8sCQHU=;
-        b=VqKTYCx+wPFklX0HcFkqb7HPeHBLc+2deCjShrTTEe02LPtclAuVpyO+YVyNxJfpJo
-         edcVidfnghTiByOdQakxcuC8JuJ5VJU54oEcIl1veLfPpJDK1nBO2r5jVBsC7tID4Sk6
-         3k74ww9v+weNj1c8ls/LtWtg9FU6GxwFJhDpwccf+q0FN49yxZwBAw6ZCdPp1SCoae8U
-         Bxlalv9Gy4gkBLslVuGGEdWtJ3ZePybp4/IsVdfBZzmvr3+unTbF084snZ71pLkL6C5d
-         viW4+sQQK0Krc0PNXs0wtNsLw8c60wxfncFey0w9XQVP111XILvPGrZaS+wep3z65wNw
-         23iA==
-X-Gm-Message-State: AGi0PuYg9hfC+xpd2haX1UODoy/DsFAVJUGeOyWf1tiXc0yRx2x2JB5f
-        U3/DbtLXw7h7THV+R+cId1kfKDxK3eo=
-X-Google-Smtp-Source: APiQypJXbrR+vfhaiNbPFr4/CDiS/fcSb/42l7wJyZoFDdnz+2RJQiRF8pnN5BJGRB3RQ8a1hc7NiQ==
-X-Received: by 2002:a2e:9c4:: with SMTP id 187mr903993ljj.89.1586462692438;
-        Thu, 09 Apr 2020 13:04:52 -0700 (PDT)
-Received: from mail-lj1-f173.google.com (mail-lj1-f173.google.com. [209.85.208.173])
-        by smtp.gmail.com with ESMTPSA id 83sm46345lfn.30.2020.04.09.13.04.51
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 09 Apr 2020 13:04:51 -0700 (PDT)
-Received: by mail-lj1-f173.google.com with SMTP id r24so1060245ljd.4
-        for <linux-kernel@vger.kernel.org>; Thu, 09 Apr 2020 13:04:51 -0700 (PDT)
-X-Received: by 2002:a2e:8652:: with SMTP id i18mr922513ljj.265.1586462690881;
- Thu, 09 Apr 2020 13:04:50 -0700 (PDT)
+        bh=eY4NXfWdxU2CUwlEll88egn0KhohAKVRNqZHn1rtHs0=;
+        b=gzZ6kaT281/gdN7rh/V/9A6CTtc5F7eG+LLL36aXyrhhWCqmGubUca4eC3d9/rUVGM
+         jDmZaezmVhkywMkC+7nJyFtVaYRQovPt+Muw9o7xNLqhLVDu4kSfUmUhDTLPJstexVuI
+         q5jrTeJoWvfLiLOIpfeh14C/dOK3xgbxNA81qsE1Ld2NOPSTtsesnKBhXIUuk3qGqpTl
+         FWfZkDE+O8S8DwNKqDsgDmj243L0nBOpQ4hnB/0jAbMmJ0Vq6ce6gooGzjuv+OtG+RG4
+         8HrJl5/uBfUpWjVhTKGhE82C2Y9ypmub7XonkUvIfOjE2+TBKL9KOSEvjVrnxIWiLTgJ
+         MMWQ==
+X-Gm-Message-State: AGi0PuY+u2or/R+gW25NW/N5JjRtc/O+s1Kp7sG78SlGBC38WBSu8pX3
+        v3f7slthZasPSwvoj6IFPvM/LxzqOudRxWJ19g==
+X-Google-Smtp-Source: APiQypICxnCx+0c7cm22qQLPOolW5rvfQfgQHaWxlvxF+vJF9GXwvBC7P76mDWFhkSXFGlLHH6n0/6+7it/HkVP0GOQ=
+X-Received: by 2002:a92:d28a:: with SMTP id p10mr1456675ilp.191.1586462744487;
+ Thu, 09 Apr 2020 13:05:44 -0700 (PDT)
 MIME-Version: 1.0
-References: <87blobnq02.fsf@x220.int.ebiederm.org> <87lfnda3w3.fsf@x220.int.ebiederm.org>
- <CAHk-=wjxyGCj9675mf31uhoJCyHn74ON_+O6SjSqBSSvqWxC1Q@mail.gmail.com>
- <87blo45keg.fsf@x220.int.ebiederm.org> <CAHk-=whES-KCO6Bs93-QBK1tS5CfiWSi+v5D1a7Sc1TD5RFoaA@mail.gmail.com>
- <87v9maxb5q.fsf@x220.int.ebiederm.org> <CAHk-=wih4BqW7GTLaYxewynuT-iFHrXroip0wNo0CyPtmYGUow@mail.gmail.com>
- <87y2r4so3i.fsf@x220.int.ebiederm.org> <CAHk-=wjhAvv6s_7OVeZJiHaY7bBrHyiPTkSpq-TLr6qxYqxUUw@mail.gmail.com>
- <CAHk-=wi0jrKv9x6vJ9FDgTrSUbdbZYDX-79T-E87C48MGSn5=g@mail.gmail.com>
- <87wo6or3pg.fsf@x220.int.ebiederm.org> <AM6PR03MB51708FD4226E07AB7CB0D6A7E4C10@AM6PR03MB5170.eurprd03.prod.outlook.com>
- <CAHk-=wjaoYM4gXdAyYY=u8PaYj2LXUvcfp=8DKum8f1DM+Ws0A@mail.gmail.com>
- <AM6PR03MB5170F924EA69A81D79BD0929E4C10@AM6PR03MB5170.eurprd03.prod.outlook.com>
- <CAHk-=whMKC5F-=QQP=fCNRuTF+ZGiNtLEKvx7KekpK1JtrwDhw@mail.gmail.com>
- <CAHk-=whJ8khGBqfqh6ZmHsKjcyyBLm5xgkgLW_AC_=82iFBWoQ@mail.gmail.com> <AM6PR03MB51700B243E34BF4A59FF33CFE4C10@AM6PR03MB5170.eurprd03.prod.outlook.com>
-In-Reply-To: <AM6PR03MB51700B243E34BF4A59FF33CFE4C10@AM6PR03MB5170.eurprd03.prod.outlook.com>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Thu, 9 Apr 2020 13:04:34 -0700
-X-Gmail-Original-Message-ID: <CAHk-=whJttTNFQn1fMYp91LZ90iHE7B2THZ8NjQ7fBwmWX9k6w@mail.gmail.com>
-Message-ID: <CAHk-=whJttTNFQn1fMYp91LZ90iHE7B2THZ8NjQ7fBwmWX9k6w@mail.gmail.com>
-Subject: Re: [GIT PULL] Please pull proc and exec work for 5.7-rc1
-To:     Bernd Edlinger <bernd.edlinger@hotmail.de>
-Cc:     "Eric W. Biederman" <ebiederm@xmission.com>,
-        Waiman Long <longman@redhat.com>,
-        Ingo Molnar <mingo@kernel.org>, Will Deacon <will@kernel.org>,
+References: <20200409130434.6736-1-ardb@kernel.org> <20200409130434.6736-4-ardb@kernel.org>
+In-Reply-To: <20200409130434.6736-4-ardb@kernel.org>
+From:   Brian Gerst <brgerst@gmail.com>
+Date:   Thu, 9 Apr 2020 16:05:33 -0400
+Message-ID: <CAMzpN2gJWwVun1Kp6vGuza9LM5KpB=0EwsP8x8eOJQuDGh38Hg@mail.gmail.com>
+Subject: Re: [PATCH 3/9] efi/x86: Move efi stub globals from .bss to .data
+To:     Ard Biesheuvel <ardb@kernel.org>
+Cc:     linux-efi@vger.kernel.org, Ingo Molnar <mingo@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Alexey Gladkov <gladkov.alexey@gmail.com>,
-        Oleg Nesterov <oleg@redhat.com>
+        Arnd Bergmann <arnd@arndb.de>,
+        Arvind Sankar <nivedita@alum.mit.edu>,
+        Borislav Petkov <bp@suse.de>,
+        Colin Ian King <colin.king@canonical.com>,
+        Gary Lin <glin@suse.com>, Jiri Slaby <jslaby@suse.cz>,
+        Sergey Shatunov <me@prok.pw>, Takashi Iwai <tiwai@suse.de>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 9, 2020 at 12:57 PM Bernd Edlinger
-<bernd.edlinger@hotmail.de> wrote:
+On Thu, Apr 9, 2020 at 9:07 AM Ard Biesheuvel <ardb@kernel.org> wrote:
 >
-> The use case where this may happen with strace
-> when you call strace with lots of -p <pid> arguments,
-> and one of them is a bomb. strace stuck.
+> From: Arvind Sankar <nivedita@alum.mit.edu>
+>
+> Commit
+>
+>   3ee372ccce4d ("x86/boot/compressed/64: Remove .bss/.pgtable from bzImage")
+>
+> removed the .bss section from the bzImage.
+>
+> However, while a PE loader is required to zero-initialize the .bss
+> section before calling the PE entry point, the EFI handover protocol
+> does not currently document any requirement that .bss be initialized by
+> the bootloader prior to calling the handover entry.
+>
+> When systemd-boot is used to boot a unified kernel image [1], the image
+> is constructed by embedding the bzImage as a .linux section in a PE
+> executable that contains a small stub loader from systemd together with
+> additional sections and potentially an initrd. As the .bss section
+> within the bzImage is no longer explicitly present as part of the file,
+> it is not initialized before calling the EFI handover entry.
+> Furthermore, as the size of the embedded .linux section is only the size
+> of the bzImage file itself, the .bss section's memory may not even have
+> been allocated.
+>
+> In particular, this can result in efi_disable_pci_dma being true even
+> when it was not specified via the command line or configuration option,
+> which in turn causes crashes while booting on some systems.
+>
+> To avoid issues, place all EFI stub global variables into the .data
+> section instead of .bss. As of this writing, only boolean flags for a
+> few command line arguments and the sys_table pointer were in .bss and
+> will now move into the .data section.
+>
+> [1] https://systemd.io/BOOT_LOADER_SPECIFICATION/#type-2-efi-unified-kernel-images
+>
+> Signed-off-by: Arvind Sankar <nivedita@alum.mit.edu>
+> Reported-by: Sergey Shatunov <me@prok.pw>
+> Fixes: 3ee372ccce4d ("x86/boot/compressed/64: Remove .bss/.pgtable from bzImage")
+> Link: https://lore.kernel.org/r/20200406180614.429454-1-nivedita@alum.mit.edu
+> Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
+> ---
+>  drivers/firmware/efi/libstub/efistub.h  | 2 +-
+>  drivers/firmware/efi/libstub/x86-stub.c | 2 +-
+>  2 files changed, 2 insertions(+), 2 deletions(-)
+>
+> diff --git a/drivers/firmware/efi/libstub/efistub.h b/drivers/firmware/efi/libstub/efistub.h
+> index cc90a748bcf0..67d26949fd26 100644
+> --- a/drivers/firmware/efi/libstub/efistub.h
+> +++ b/drivers/firmware/efi/libstub/efistub.h
+> @@ -25,7 +25,7 @@
+>  #define EFI_ALLOC_ALIGN                EFI_PAGE_SIZE
+>  #endif
+>
+> -#ifdef CONFIG_ARM
+> +#if defined(CONFIG_ARM) || defined(CONFIG_X86)
+>  #define __efistub_global       __section(.data)
+>  #else
+>  #define __efistub_global
+> diff --git a/drivers/firmware/efi/libstub/x86-stub.c b/drivers/firmware/efi/libstub/x86-stub.c
+> index e02ea51273ff..867a57e28980 100644
+> --- a/drivers/firmware/efi/libstub/x86-stub.c
+> +++ b/drivers/firmware/efi/libstub/x86-stub.c
+> @@ -20,7 +20,7 @@
+>  /* Maximum physical address for 64-bit kernel with 4-level paging */
+>  #define MAXMEM_X86_64_4LEVEL (1ull << 46)
+>
+> -static efi_system_table_t *sys_table;
+> +static efi_system_table_t *sys_table __efistub_global;
+>  extern const bool efi_is64;
+>  extern u32 image_offset;
+>
+> --
+> 2.17.1
+>
 
-Yeah, so from a convenience angle I do agree that it would be nicer to
-just not count dead threads.
+Can we use the -fno-zero-initialized-in-bss compiler flag instead of
+explicitly marking global variables?
 
-You can test that by just moving the
-
-                /* Don't bother with already dead threads */
-                if (t->exit_state)
-                        continue;
-
-test in zap_other_threads() to above the
-
-                count++;
-
-line instead.
-
-NOTE! That is *NOT* the correct true fix. I'm just suggesting that you
-try if it fixes that particular test-case (I did not try it myself -
-because .. lazy)
-
-If Oleg agrees that we could take the approach that we can share a
-signal struct with dead threads, we'd also need to change the
-accounting to do that notify_count not when the signal struct is
-unlinked, but when exit_state is first set.
-
-I'm not convinced that's the right solution, but I do agree that it's
-annoying how easily strace can get stuck, since one of the main uses
-for strace is for debugging nasty situations.
-
-                Linus
+--
+Brian Gerst
