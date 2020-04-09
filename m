@@ -2,107 +2,152 @@ Return-Path: <SRS0=n+Ub=5Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E339C2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 19:04:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 335F7C2BA19
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 19:08:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E60982087E
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 19:04:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 04BC2206F5
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 19:08:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586459096;
-	bh=V2Dm74kapwMY5qPqupKzeC2dI0fLAelD9KY+aWD8br4=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=XgKh4j3p2ohtvlew/4bZLmUHcLaoY1Dl1ziaP/UQlqRDPDJLauVIJPCEcLCstn0iS
-	 1VkUqWpvIGNSG7qoTY6hEhGkXnYbwli3I349Ri5EyE+/DJ5wMYG0pt4cOkFiJydP73
-	 W+ngeabR4oamSeoD3WEKkR+4jjuYhiWzSt3swzt8=
+	s=default; t=1586459299;
+	bh=bg+rj/lc6QJrR2P3BSqqa6AnptHPJVP8cBgTCl6lPGg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=KvOE1dODEjE2tj+QTaReMGHMLslAC6hv+3vql9xUzcQe6KDc3F7LPKIyL89JrrD24
+	 ZYyGMLGE+rnbowSgN/rQUipZbKvGC68nTmdra7WGKrRxSeSbp33g7Pj+Ym50UxdH1w
+	 igsiGKHccaYVFHCtCdq8NMs0j/viWQw8nEJvjaZk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726708AbgDITEy (ORCPT
+        id S1726701AbgDITIR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Apr 2020 15:04:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51244 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726470AbgDITEx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Apr 2020 15:04:53 -0400
-Received: from mail-io1-f44.google.com (mail-io1-f44.google.com [209.85.166.44])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AEEB6206F5;
-        Thu,  9 Apr 2020 19:04:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586459093;
-        bh=V2Dm74kapwMY5qPqupKzeC2dI0fLAelD9KY+aWD8br4=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=JXeEWWl4zNy1/xBC3zTHc0IQTWUqNnyvCSUIiKXMwxIAsjERBOUWdkZWELQauCRsv
-         jE6ki5qyywpGCH7iSiru07uArXVE0FksESCLLEgEWhEjgCTzSL/6BpkkTuTt60KpUh
-         7DZs8/NAOo/OCpiDYw4tOQ0U3oxG3QAl4Gf5ct9M=
-Received: by mail-io1-f44.google.com with SMTP id b12so660623ion.8;
-        Thu, 09 Apr 2020 12:04:53 -0700 (PDT)
-X-Gm-Message-State: AGi0PuamDu0SdoeI9KoAMUzdZKs7mfwoCFkZMju3jDUlgJpoBR228vgu
-        UCA6zNswM6XR6ZE6yCzIZnC4ygsH1wjgMLxZOGI=
-X-Google-Smtp-Source: APiQypIF+4n8/KNulSddyuMmbaGBCI4is4Gr6JDUPo/ir7NC88cNdQ8GT3wHq3n+3iVN7qUIeQ1lBG/KsJ4l4C2pW6Q=
-X-Received: by 2002:a02:7785:: with SMTP id g127mr932207jac.134.1586459093121;
- Thu, 09 Apr 2020 12:04:53 -0700 (PDT)
+        Thu, 9 Apr 2020 15:08:17 -0400
+Received: from mail-qv1-f67.google.com ([209.85.219.67]:46786 "EHLO
+        mail-qv1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726632AbgDITIR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Apr 2020 15:08:17 -0400
+Received: by mail-qv1-f67.google.com with SMTP id bu9so6054902qvb.13;
+        Thu, 09 Apr 2020 12:08:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=ayL215ffxl6RjJBBrVofm8B1vxSMDd7VbUsUyBtw+QM=;
+        b=bCjHWWd3Hfo9Zwt/UN+F0Hmriun0dZN9aT7DnbdFO67O+uTY8o4uHtiVMRsX+dpyJN
+         uqSC7XBHSdVmBnjTb+GzXMxHG0leQir/TIZQehT1LbKR5q3MGPV4VDAXhy2xrBN7l9Gh
+         ZajFf8FvKF10zqVXppmyPMPJ4I1g3bRutLOaQ2tdae0/BtP0lFDAlUfDlz9TyG8YvKsR
+         s29MqYvn1Pi0UMZ5IDyJ2dEiekkwhXDhzTXrlcT5uetSE3RTRP55s7Qfd0nuI1BagM2J
+         9eI0erzZctXjuuGgwj504H5ML+j0VUeK7dfkRyPIo7Tjr+6brZ00OPJwJqwjqtr8LsFS
+         9S+A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to;
+        bh=ayL215ffxl6RjJBBrVofm8B1vxSMDd7VbUsUyBtw+QM=;
+        b=kLdrvgp6ZoCK1ABIC8YzTrvmVe7K1J+XzQhqOUJ4l7436FL/8sfkrsbWcmwileVW8a
+         Vx8fJJ7jRzhbd+CbhZEyFXZ91aJkfV3IGGjRY+HmpyWmFjCC2PKDPESP3qnWcQvdjtU6
+         RyJ2XMUw+rq20tAnfBkD81ddU0z0P4STqbslbi7kKmzo0m4C02D9Uut3UcjXmRQsk7Ch
+         aO+E3phZDra51NQp14Eq32A9Hbg1LkRgqLdZJCaiiC5NEYOHdiiMwOW2rPBN2nmvik0h
+         q5Xk9foJaeUQYGXH9E+X8c1OnGMbuMjVTF2xro0m+jqsO2GuDDNKJNJmgrq8iC4asuAA
+         3OrQ==
+X-Gm-Message-State: AGi0PuY34/uq8SncUJkkaPGscwAFR1y1COf0q8+6L7+4iiK/tXMto/xp
+        PkT8POQ3YmXLdtw0JzRAwIY=
+X-Google-Smtp-Source: APiQypLnt+6zVmfQ9hqx9DH8q8ecuGIo+Iqvzrff47Vh7roL00Z5OuaUYmLyG6u64qYsJWLh+i3QeQ==
+X-Received: by 2002:a0c:ee81:: with SMTP id u1mr1635057qvr.187.1586459294676;
+        Thu, 09 Apr 2020 12:08:14 -0700 (PDT)
+Received: from localhost ([2620:10d:c091:480::74a8])
+        by smtp.gmail.com with ESMTPSA id z43sm23415759qtb.92.2020.04.09.12.08.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 09 Apr 2020 12:08:13 -0700 (PDT)
+Date:   Thu, 9 Apr 2020 15:08:12 -0400
+From:   Tejun Heo <tj@kernel.org>
+To:     Mel Gorman <mgorman@techsingularity.net>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        LKML <linux-kernel@vger.kernel.org>, cgroups@vger.kernel.org
+Subject: [PATCH cgroup/for-5.7-fixes] Revert "cgroup: Add memory barriers to
+ plug cgroup_rstat_updated() race window"
+Message-ID: <20200409190812.GB37608@mtj.thefacebook.com>
+References: <20200409154413.GK3818@techsingularity.net>
 MIME-Version: 1.0
-References: <20200409130434.6736-1-ardb@kernel.org> <20200409190109.GB45598@mit.edu>
-In-Reply-To: <20200409190109.GB45598@mit.edu>
-From:   Ard Biesheuvel <ardb@kernel.org>
-Date:   Thu, 9 Apr 2020 21:04:42 +0200
-X-Gmail-Original-Message-ID: <CAMj1kXGiA3PAybR7r9tatL7WV5iU7B1OQxQok3d-JmRnhX1TnA@mail.gmail.com>
-Message-ID: <CAMj1kXGiA3PAybR7r9tatL7WV5iU7B1OQxQok3d-JmRnhX1TnA@mail.gmail.com>
-Subject: Re: [GIT PULL 0/9] EFI fixes for v5.7-rc
-To:     "Theodore Y. Ts'o" <tytso@mit.edu>
-Cc:     linux-efi <linux-efi@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Arvind Sankar <nivedita@alum.mit.edu>,
-        Borislav Petkov <bp@suse.de>,
-        Colin Ian King <colin.king@canonical.com>,
-        Gary Lin <glin@suse.com>, Jiri Slaby <jslaby@suse.cz>,
-        Sergey Shatunov <me@prok.pw>, Takashi Iwai <tiwai@suse.de>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200409154413.GK3818@techsingularity.net>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 9 Apr 2020 at 21:01, Theodore Y. Ts'o <tytso@mit.edu> wrote:
->
-> On Thu, Apr 09, 2020 at 03:04:25PM +0200, Ard Biesheuvel wrote:
-> > The following changes since commit 594e576d4b93b8cda3247542366b47e1b2ddc4dc:
-> >
-> >   efi/libstub/arm: Fix spurious message that an initrd was loaded (2020-03-29 12:08:18 +0200)
-> >
-> > are available in the Git repository at:
-> >
-> >   git://git.kernel.org/pub/scm/linux/kernel/git/efi/efi.git tags/efi-urgent
->
-> Hi Ard,
->
-> By any chance does this series fix a kexec failure which I bisected
-> down to 0a67361dcdaa ("efi/x86: Remove runtime table address from
-> kexec EFI setup data")?   Or if it doesn't, is this a known failure?
->
+From d8ef4b38cb69d907f9b0e889c44d05fc0f890977 Mon Sep 17 00:00:00 2001
+From: Tejun Heo <tj@kernel.org>
+Date: Thu, 9 Apr 2020 14:55:35 -0400
 
-Hi Ted,
+This reverts commit 9a9e97b2f1f2 ("cgroup: Add memory barriers to plug
+cgroup_rstat_updated() race window").
 
-I wasn't aware of this issue, and this series will most likely not fix it.
+The commit was added in anticipation of memcg rstat conversion which needed
+synchronous accounting for the event counters (e.g. oom kill count). However,
+the conversion didn't get merged due to percpu memory overhead concern which
+couldn't be addressed at the time.
 
-> I'm currently building Linus's latest branch to see if it's been fixed
-> since v5.6-11114-g9c94b39560c3 (which is where I first noticed it) and
-> while I was waiting for v5.6-12349-g87ebc45d2d32 to finish building so
-> I could test it, I noticed these patches, and so I figured I'd fire
-> off this quick question.
->
+Unfortunately, the patch's addition of smp_mb() to cgroup_rstat_updated()
+meant that every scheduling event now had to go through an additional full
+barrier and Mel Gorman noticed it as 1% regression in netperf UDP_STREAM test.
 
-I think we might be able to downright revert that patch if the
-underlying assumption on my part is inaccurate, which was that the
-fact that the boot code no longer uses the runtime table address
-implies that there is no longer a reason to pass it.
+There's no need to have this barrier in tree now and even if we need
+synchronous accounting in the future, the right thing to do is separating that
+out to a separate function so that hot paths which don't care about
+synchronous behavior don't have to pay the overhead of the full barrier. Let's
+revert.
 
-Please involve me in the discussions on this issue.
+Signed-off-by: Tejun Heo <tj@kernel.org>
+Reported-by: Mel Gorman <mgorman@techsingularity.net>
+Link: http://lkml.kernel.org/r/20200409154413.GK3818@techsingularity.net
+Cc: v4.18+
+---
+Applying to cgroup/for-5.7-fixes.
+
+Thanks!
+
+ kernel/cgroup/rstat.c | 16 +++-------------
+ 1 file changed, 3 insertions(+), 13 deletions(-)
+
+diff --git a/kernel/cgroup/rstat.c b/kernel/cgroup/rstat.c
+index 6f87352f8219..41ca996568df 100644
+--- a/kernel/cgroup/rstat.c
++++ b/kernel/cgroup/rstat.c
+@@ -33,12 +33,9 @@ void cgroup_rstat_updated(struct cgroup *cgrp, int cpu)
+ 		return;
+ 
+ 	/*
+-	 * Paired with the one in cgroup_rstat_cpu_pop_updated().  Either we
+-	 * see NULL updated_next or they see our updated stat.
+-	 */
+-	smp_mb();
+-
+-	/*
++	 * Speculative already-on-list test. This may race leading to
++	 * temporary inaccuracies, which is fine.
++	 *
+ 	 * Because @parent's updated_children is terminated with @parent
+ 	 * instead of NULL, we can tell whether @cgrp is on the list by
+ 	 * testing the next pointer for NULL.
+@@ -134,13 +131,6 @@ static struct cgroup *cgroup_rstat_cpu_pop_updated(struct cgroup *pos,
+ 		*nextp = rstatc->updated_next;
+ 		rstatc->updated_next = NULL;
+ 
+-		/*
+-		 * Paired with the one in cgroup_rstat_cpu_updated().
+-		 * Either they see NULL updated_next or we see their
+-		 * updated stat.
+-		 */
+-		smp_mb();
+-
+ 		return pos;
+ 	}
+ 
+-- 
+2.25.2
+
