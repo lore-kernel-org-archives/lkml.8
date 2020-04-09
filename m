@@ -2,293 +2,148 @@ Return-Path: <SRS0=n+Ub=5Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 163FBC2BA2B
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 03:01:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FA41C2BA2B
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 03:04:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CB9FC20730
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 03:01:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="eiGr5pq1"
+	by mail.kernel.org (Postfix) with ESMTP id DCFF420730
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 03:04:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726641AbgDIDBo (ORCPT
+        id S1726582AbgDIDEZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Apr 2020 23:01:44 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:54647 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726594AbgDIDBn (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Apr 2020 23:01:43 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1586401303;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=WO6th5iglO/vCpRCjBIVJY71pAHVzermG4zRkNZ/5uI=;
-        b=eiGr5pq1mIzPGhud3o+b8fmYEEI/AQwI6NSDy5i4bfYGmi1sQL5M1nZ3j+2k1ZpLrA6w7z
-        ExjclHe8alnVBNlB3LRAE9W4GilKF0EVPRjXqAavQEevrLxCiGVmWVFCys7kdiqoPlbPiJ
-        /YU2vWn1DNUccUZqRae78ExIIoR149U=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-455-kVoCApZRO16ZWYNbhbPj6Q-1; Wed, 08 Apr 2020 23:01:41 -0400
-X-MC-Unique: kVoCApZRO16ZWYNbhbPj6Q-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 3B5718018A8;
-        Thu,  9 Apr 2020 03:01:40 +0000 (UTC)
-Received: from localhost.localdomain (ovpn-116-15.gru2.redhat.com [10.97.116.15])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 024965D9C9;
-        Thu,  9 Apr 2020 03:01:35 +0000 (UTC)
-Subject: Re: [PATCH v4 2/2] selftests: kvm: Add mem_slot_test test
-To:     Krish Sadhukhan <krish.sadhukhan@oracle.com>, pbonzini@redhat.com,
-        kvm@vger.kernel.org
-Cc:     drjones@redhat.com, david@redhat.com, linux-kernel@vger.kernel.org,
-        linux-kselftest@vger.kernel.org
-References: <20200408220818.4306-1-wainersm@redhat.com>
- <20200408220818.4306-3-wainersm@redhat.com>
- <0009f75a-4c09-139e-c793-574291ad20dc@oracle.com>
-From:   Wainer dos Santos Moschetta <wainersm@redhat.com>
-Message-ID: <2fa07481-effb-788d-89d2-0b54842cbd4b@redhat.com>
-Date:   Thu, 9 Apr 2020 00:01:33 -0300
+        Wed, 8 Apr 2020 23:04:25 -0400
+Received: from mga01.intel.com ([192.55.52.88]:2898 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726523AbgDIDEY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Apr 2020 23:04:24 -0400
+IronPort-SDR: 8fGZOQaZfkjSsyaBGX7Jtmsy4p6YDjR6oQBWvfMZTBH3RqGCBalUv+33U6hOEAVur6Zn0toml1
+ ctLSMsSm7+ag==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Apr 2020 20:04:24 -0700
+IronPort-SDR: vDxBV0AmCbLH8/faC998XO8FxwbfFq0sCtpWv9QL7v+DmQ75QXKmjn896vWB+xDwh2D9wWub/i
+ hDw5A+U3Ffdg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,361,1580803200"; 
+   d="scan'208";a="297404358"
+Received: from shao2-debian.sh.intel.com (HELO [10.239.13.3]) ([10.239.13.3])
+  by FMSMGA003.fm.intel.com with ESMTP; 08 Apr 2020 20:04:23 -0700
+Subject: Re: [kbuild-all] Re: net/sunrpc/svcsock.c:527:32: warning: Variable
+ 'uninitialized_var' is assigned a value that is never used. [unreadVariable]
+To:     Chuck Lever <chuck.lever@oracle.com>,
+        kbuild test robot <lkp@intel.com>
+Cc:     kbuild-all@lists.01.org, linux-kernel@vger.kernel.org
+References: <202004090524.zHtJ3R2B%lkp@intel.com>
+ <76A08BC7-C37A-495D-998A-2E9DADF454A7@oracle.com>
+From:   Rong Chen <rong.a.chen@intel.com>
+Message-ID: <2342285b-3bb6-32cd-2611-264bc0773150@intel.com>
+Date:   Thu, 9 Apr 2020 11:04:00 +0800
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.4.0
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-In-Reply-To: <0009f75a-4c09-139e-c793-574291ad20dc@oracle.com>
+In-Reply-To: <76A08BC7-C37A-495D-998A-2E9DADF454A7@oracle.com>
 Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
-On 4/8/20 10:31 PM, Krish Sadhukhan wrote:
+
+On 4/9/20 5:35 AM, Chuck Lever wrote:
 >
-> On 4/8/20 3:08 PM, Wainer dos Santos Moschetta wrote:
->> This patch introduces the mem_slot_test test which checks
->> an VM can have added memory slots up to the limit defined in
->> KVM_CAP_NR_MEMSLOTS. Then attempt to add one more slot to
->> verify it fails as expected.
+>> On Apr 8, 2020, at 5:32 PM, kbuild test robot <lkp@intel.com> wrote:
 >>
->> Signed-off-by: Wainer dos Santos Moschetta <wainersm@redhat.com>
+>> tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
+>> head:   f5e94d10e4c468357019e5c28d48499f677b284f
+>> commit: da1661b93bf489cdbc8bcea919b165d31b4810bf SUNRPC: Teach server to use xprt_sock_sendmsg for socket sends
+>> date:   3 weeks ago
+>>
+>> If you fix the issue, kindly add following tag as appropriate
+>> Reported-by: kbuild test robot <lkp@intel.com>
+>>
+>>
+>> cppcheck warnings: (new ones prefixed by >>)
+>>
+>>    net/sunrpc/svcsock.c:405:9: warning: union member 'Anonymous0::all' is never used. [unusedStructMember]
+>>      long  all[SVC_PKTINFO_SPACE / sizeof(long)];
+>>            ^
+>>    net/sunrpc/svcsock.c:518:9: warning: union member 'Anonymous1::all' is never used. [unusedStructMember]
+>>      long  all[SVC_PKTINFO_SPACE / sizeof(long)];
+>>            ^
+>>>> net/sunrpc/svcsock.c:527:32: warning: Variable 'uninitialized_var' is assigned a value that is never used. [unreadVariable]
+>>     unsigned int uninitialized_var(sent);
+>>                                   ^
+>>
+>> vim +/uninitialized_var +527 net/sunrpc/svcsock.c
+>>
+>>    504	
+>>    505	/**
+>>    506	 * svc_udp_sendto - Send out a reply on a UDP socket
+>>    507	 * @rqstp: completed svc_rqst
+>>    508	 *
+>>    509	 * Returns the number of bytes sent, or a negative errno.
+>>    510	 */
+>>    511	static int svc_udp_sendto(struct svc_rqst *rqstp)
+>>    512	{
+>>    513		struct svc_xprt *xprt = rqstp->rq_xprt;
+>>    514		struct svc_sock	*svsk = container_of(xprt, struct svc_sock, sk_xprt);
+>>    515		struct xdr_buf *xdr = &rqstp->rq_res;
+>>    516		union {
+>>    517			struct cmsghdr	hdr;
+>>    518			long		all[SVC_PKTINFO_SPACE / sizeof(long)];
+>>    519		} buffer;
+>>    520		struct cmsghdr *cmh = &buffer.hdr;
+>>    521		struct msghdr msg = {
+>>    522			.msg_name	= &rqstp->rq_addr,
+>>    523			.msg_namelen	= rqstp->rq_addrlen,
+>>    524			.msg_control	= cmh,
+>>    525			.msg_controllen	= sizeof(buffer),
+>>    526		};
+>>> 527		unsigned int uninitialized_var(sent);
+>>    528		int err;
+>>    529	
+>>    530		svc_set_cmsg_data(rqstp, cmh);
+>>    531	
+>>    532		err = xprt_sock_sendmsg(svsk->sk_sock, &msg, xdr, 0, 0, &sent);
+>>    533		xdr_free_bvec(xdr);
+>>    534		if (err == -ECONNREFUSED) {
+>>    535			/* ICMP error on earlier request. */
+>>    536			err = xprt_sock_sendmsg(svsk->sk_sock, &msg, xdr, 0, 0, &sent);
+>>    537			xdr_free_bvec(xdr);
+>>    538		}
+>>    539		if (err < 0)
+>>    540			return err;
+>>    541		return sent;
+> Wha? "sent" is used right here. Can someone explain this warning?
+
+Hi Chuck,
+
+Sorry for the inconvenience, it should be a false warning,
+It's every odd that removing uninitialized_var can silence this warning.
+
+Best Regards,
+Rong Chen
+
+>
+>
+>>    542	}
+>>    543	
+>>
 >> ---
->> =C2=A0 tools/testing/selftests/kvm/.gitignore=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0 |=C2=A0 1 +
->> =C2=A0 tools/testing/selftests/kvm/Makefile=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0 |=C2=A0 3 +
->> =C2=A0 tools/testing/selftests/kvm/mem_slot_test.c | 76 ++++++++++++++=
-+++++++
->> =C2=A0 3 files changed, 80 insertions(+)
->> =C2=A0 create mode 100644 tools/testing/selftests/kvm/mem_slot_test.c
->>
->> diff --git a/tools/testing/selftests/kvm/.gitignore=20
->> b/tools/testing/selftests/kvm/.gitignore
->> index 16877c3daabf..127d27188427 100644
->> --- a/tools/testing/selftests/kvm/.gitignore
->> +++ b/tools/testing/selftests/kvm/.gitignore
->> @@ -21,4 +21,5 @@
->> =C2=A0 /demand_paging_test
->> =C2=A0 /dirty_log_test
->> =C2=A0 /kvm_create_max_vcpus
->> +/mem_slot_test
->> =C2=A0 /steal_time
->> diff --git a/tools/testing/selftests/kvm/Makefile=20
->> b/tools/testing/selftests/kvm/Makefile
->> index 712a2ddd2a27..338b6cdce1a0 100644
->> --- a/tools/testing/selftests/kvm/Makefile
->> +++ b/tools/testing/selftests/kvm/Makefile
->> @@ -32,12 +32,14 @@ TEST_GEN_PROGS_x86_64 +=3D clear_dirty_log_test
->> =C2=A0 TEST_GEN_PROGS_x86_64 +=3D demand_paging_test
->> =C2=A0 TEST_GEN_PROGS_x86_64 +=3D dirty_log_test
->> =C2=A0 TEST_GEN_PROGS_x86_64 +=3D kvm_create_max_vcpus
->> +TEST_GEN_PROGS_x86_64 +=3D mem_slot_test
->> =C2=A0 TEST_GEN_PROGS_x86_64 +=3D steal_time
->> =C2=A0 =C2=A0 TEST_GEN_PROGS_aarch64 +=3D clear_dirty_log_test
->> =C2=A0 TEST_GEN_PROGS_aarch64 +=3D demand_paging_test
->> =C2=A0 TEST_GEN_PROGS_aarch64 +=3D dirty_log_test
->> =C2=A0 TEST_GEN_PROGS_aarch64 +=3D kvm_create_max_vcpus
->> +TEST_GEN_PROGS_aarch64 +=3D mem_slot_test
->> =C2=A0 TEST_GEN_PROGS_aarch64 +=3D steal_time
->> =C2=A0 =C2=A0 TEST_GEN_PROGS_s390x =3D s390x/memop
->> @@ -46,6 +48,7 @@ TEST_GEN_PROGS_s390x +=3D s390x/sync_regs_test
->> =C2=A0 TEST_GEN_PROGS_s390x +=3D demand_paging_test
->> =C2=A0 TEST_GEN_PROGS_s390x +=3D dirty_log_test
->> =C2=A0 TEST_GEN_PROGS_s390x +=3D kvm_create_max_vcpus
->> +TEST_GEN_PROGS_s390x +=3D mem_slot_test
->> =C2=A0 =C2=A0 TEST_GEN_PROGS +=3D $(TEST_GEN_PROGS_$(UNAME_M))
->> =C2=A0 LIBKVM +=3D $(LIBKVM_$(UNAME_M))
->> diff --git a/tools/testing/selftests/kvm/mem_slot_test.c=20
->> b/tools/testing/selftests/kvm/mem_slot_test.c
->> new file mode 100644
->> index 000000000000..7c1009f0bc07
->> --- /dev/null
->> +++ b/tools/testing/selftests/kvm/mem_slot_test.c
->> @@ -0,0 +1,76 @@
->> +// SPDX-License-Identifier: GPL-2.0-only
->> +/*
->> + * mem_slot_test
->> + *
->> + * Copyright (C) 2020, Red Hat, Inc.
->> + *
->> + * Test suite for memory region operations.
->> + */
->> +#define _GNU_SOURCE /* for program_invocation_short_name */
->> +#include <linux/kvm.h>
->> +#include <sys/mman.h>
->> +
->> +#include "test_util.h"
->> +#include "kvm_util.h"
->> +
->> +/*
->> + * Test it can be added memory slots up to KVM_CAP_NR_MEMSLOTS, then=20
->> any
->> + * tentative to add further slots should fail.
->> + */
->> +static void test_add_max_slots(void)
->> +{
->> +=C2=A0=C2=A0=C2=A0 int ret;
->> +=C2=A0=C2=A0=C2=A0 struct kvm_vm *vm;
->> +=C2=A0=C2=A0=C2=A0 uint32_t max_mem_slots;
->> +=C2=A0=C2=A0=C2=A0 uint32_t slot;
->> +=C2=A0=C2=A0=C2=A0 uint64_t guest_addr;
->> +=C2=A0=C2=A0=C2=A0 uint64_t mem_reg_npages;
->> +=C2=A0=C2=A0=C2=A0 uint64_t mem_reg_size;
->> +=C2=A0=C2=A0=C2=A0 void *mem;
->> +
->> +=C2=A0=C2=A0=C2=A0 max_mem_slots =3D kvm_check_cap(KVM_CAP_NR_MEMSLOT=
-S);
->> +=C2=A0=C2=A0=C2=A0 TEST_ASSERT(max_mem_slots > 0,
->> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 "K=
-VM_CAP_NR_MEMSLOTS should be greater than 0");
->> +=C2=A0=C2=A0=C2=A0 pr_info("Allowed number of memory slots: %i\n", ma=
-x_mem_slots);
->> +
->> +=C2=A0=C2=A0=C2=A0 vm =3D vm_create(VM_MODE_DEFAULT, 0, O_RDWR);
->> +
->> +=C2=A0=C2=A0=C2=A0 /*
->> +=C2=A0=C2=A0=C2=A0=C2=A0 * Uses 1MB sized/aligned memory region since=
- this is the minimal
->> +=C2=A0=C2=A0=C2=A0=C2=A0 * required on s390x.
->> +=C2=A0=C2=A0=C2=A0=C2=A0 */
->> +=C2=A0=C2=A0=C2=A0 mem_reg_size =3D 0x100000;
->> +=C2=A0=C2=A0=C2=A0 mem_reg_npages =3D vm_calc_num_guest_pages(VM_MODE=
-_DEFAULT,=20
->> mem_reg_size);
->> +
->> +=C2=A0=C2=A0=C2=A0 guest_addr =3D 0x0;
+>> 0-DAY CI Kernel Test Service, Intel Corporation
+>> https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+> --
+> Chuck Lever
 >
 >
-> Nit: Can't this be initialized where it's defined above ?
-
-
-I don't have a strong preference. Is it generally initialized on=20
-definition on kvm (selftests or not) code?
-
-
->
->
->> +
->> +=C2=A0=C2=A0=C2=A0 /* Check it can be added memory slots up to the ma=
-ximum allowed */
->> +=C2=A0=C2=A0=C2=A0 pr_info("Adding slots 0..%i, each memory region wi=
-th %ldK size\n",
->> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 (max_mem_slots - 1), mem_r=
-eg_size >> 10);
->> +=C2=A0=C2=A0=C2=A0 for (slot =3D 0; slot < max_mem_slots; slot++) {
->> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 vm_userspace_mem_region_ad=
-d(vm, VM_MEM_SRC_ANONYMOUS,
->> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 gue=
-st_addr, slot, mem_reg_npages,
->> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 0);
->> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 guest_addr +=3D mem_reg_si=
-ze;
->> +=C2=A0=C2=A0=C2=A0 }
->> +
->> +=C2=A0=C2=A0=C2=A0 /* Check it cannot be added memory slots beyond th=
-e limit */
->> +=C2=A0=C2=A0=C2=A0 mem =3D mmap(NULL, mem_reg_size, PROT_READ | PROT_=
-WRITE,
->> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 MAP_PRIV=
-ATE | MAP_ANONYMOUS, -1, 0);
->> +=C2=A0=C2=A0=C2=A0 TEST_ASSERT(mem !=3D MAP_FAILED, "Failed to mmap()=
- host");
->> +
->> +=C2=A0=C2=A0=C2=A0 ret =3D ioctl(vm_get_fd(vm), KVM_SET_USER_MEMORY_R=
-EGION,
->> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 &(=
-struct kvm_userspace_memory_region) {slot, 0, guest_addr,
->> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 me=
-m_reg_size, (uint64_t) mem});
->> +=C2=A0=C2=A0=C2=A0 TEST_ASSERT(ret =3D=3D -1 && errno =3D=3D EINVAL,
->> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 "A=
-dding one more memory slot should fail with EINVAL");
->
->
-> Why not add a test here for adding memory at an existing slot ?
-
-Good question.
-
-I'm working on another test which should check it cannot be added=20
-overlapping slots. I will send it in a separate patch series, depending=20
-on the fate of this one. :)
-
-More precisely, those are the cases I will cover on this new test:
-
-
- =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0 0x100000=C2=A0 0x300000
- =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 0x0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 0x200000 0x400000
- =C2=A0slot0 |=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0 |---2MB--|=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0 (SUCCESS)
- =C2=A0slot1=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |---2MB--|=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 (FAIL)
- =C2=A0slot2 |---2MB--|=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 (SUCCESS)
- =C2=A0slot3=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0 |---2MB--|=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 (FAIL)
- =C2=A0slot4=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0 |---2MB--|=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 (FAIL)
- =C2=A0slot5=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |---2MB--|=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 (SUCCESS)
-
-Thanks!
-
-Wainer
-
->
->
->> +
->> +=C2=A0=C2=A0=C2=A0 munmap(mem, mem_reg_size);
->> +=C2=A0=C2=A0=C2=A0 kvm_vm_free(vm);
->> +}
->> +
->> +int main(int argc, char *argv[])
->> +{
->> +=C2=A0=C2=A0=C2=A0 test_add_max_slots();
->> +=C2=A0=C2=A0=C2=A0 return 0;
->> +}
->
+> _______________________________________________
+> kbuild-all mailing list -- kbuild-all@lists.01.org
+> To unsubscribe send an email to kbuild-all-leave@lists.01.org
 
