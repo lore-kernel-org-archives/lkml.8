@@ -2,163 +2,134 @@ Return-Path: <SRS0=n+Ub=5Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26DD3C2BB85
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 18:15:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D901FC2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 18:15:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EF42120753
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 18:15:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586456130;
-	bh=Vh/nEZmKyunglWKfJLO8V2/jVJZeYUVc1nRZToQfYJM=;
-	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=iFYKBpN8+0g11vpMxZ9vYZreGqwPMWjgo2xGDxKOlJtmY0Vi+J5kKaEgQOmK2U+uC
-	 ECXw5TTz+FE/Xtj8E/qflFhaOI6eBQYEyDy1lqmgXfzS9daBDdQlYBdDCZ3o/jhXvf
-	 ShIBDMyQr7Af/3DXCf8cMpuN8KEYL93iIlbo2VYc=
+	by mail.kernel.org (Postfix) with ESMTP id B3DC620753
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 18:15:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pVpwsncD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726595AbgDISP2 (ORCPT
+        id S1726652AbgDISPo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Apr 2020 14:15:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33684 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725970AbgDISP2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Apr 2020 14:15:28 -0400
-Received: from localhost (c-67-169-218-210.hsd1.or.comcast.net [67.169.218.210])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 64F4620753;
-        Thu,  9 Apr 2020 18:15:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586456127;
-        bh=Vh/nEZmKyunglWKfJLO8V2/jVJZeYUVc1nRZToQfYJM=;
-        h=Date:From:To:Cc:Subject:From;
-        b=JrnwGAzOOtbxisYagljxGCFpNA6x4T9l9xygwGEQbJFCtvdSPlHle0qjfrmp03opp
-         IZDF24W/orZj3Jh5oQKgaNGkwO52y5137qoj+0MdJ2/zP79zhUw2OiVbwYZVhQc81w
-         xQtozQp1PN5BTGs/B4d9iYXqHVe3Vn1ICnl7Pf60=
-Date:   Thu, 9 Apr 2020 11:15:26 -0700
-From:   "Darrick J. Wong" <djwong@kernel.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     "Darrick J. Wong" <djwong@kernel.org>,
-        linux-fsdevel@vger.kernel.org, linux-xfs@vger.kernel.org,
-        david@fromorbit.com, linux-kernel@vger.kernel.org,
-        sandeen@sandeen.net, hch@lst.de
-Subject: [GIT PULL] xfs: new code for 5.7, part 2
-Message-ID: <20200409181526.GM6742@magnolia>
+        Thu, 9 Apr 2020 14:15:44 -0400
+Received: from mail-io1-f65.google.com ([209.85.166.65]:37696 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725970AbgDISPo (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Apr 2020 14:15:44 -0400
+Received: by mail-io1-f65.google.com with SMTP id n20so530824ioa.4;
+        Thu, 09 Apr 2020 11:15:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=LL3UHibZ+te+7A+uSzs2GWjULtkRzuINzptnfU6LoEo=;
+        b=pVpwsncD80U1Vo8ia9pZ/EIwpyB6jWDA1LFtTHdzPhG+PFggIu9xT7DWirMQXBLPvb
+         uONSu5B2gHFjWRPVcNH4Y7lAyNfvbDbR+XNpc4f3kIZPCNIB9lO6Bl2mFI6sC2wKDYPN
+         Jmt9gIPoVwW9WEkdi6ZVE7PSyBZDTrzDHaC9eGZMC4Du/1odJcs2mIp+sRe+xvVTsSmA
+         c6LqudHjmIPcnK0EmbwGnZJt7WuHeUI8VqGyShq35ttOanWgY7xllA5m3KPzFsw4MMnx
+         6zR9PxwSVHh503zEcoQG+weKgF7X0M20jHJwW9OOhmeHUMqwnInLweQaxjijxb8SDjyH
+         lO8g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=LL3UHibZ+te+7A+uSzs2GWjULtkRzuINzptnfU6LoEo=;
+        b=n9XOUsA/MiLfMW8SVmLhzppSBdPMr+7j2s1G2v8eG73+5rs4FG0QowowIb1in0ZtqB
+         DfaAM9t/nbiEbtWyWxT72kkW2dECsjMWrMDTwMsyv37/jH0Qps99xapOJsUAZcEWy0rz
+         bKkfjKW1VSJnuuGrc0qIFxnRNdjYD+8Mv/hi57y1TW3M4X70eG1MirHvgnre46juykFt
+         3cSAoNrO11VcjedW9E5vPB8lpP6un9cLqFrlQ/gM5Y91AKp9JsIkAoF9QdbGxeewYj0e
+         0YMZTJQ9IAZ+AYRgigi1Osofo1fz+xYxu2q00Xg/2YgwKflq44Q/DxSOTpjJQAXP2alR
+         43KA==
+X-Gm-Message-State: AGi0PubAkExVN9pgAFQmJlD0/IGNdXIbg0h/NjD7Tr/FDo0LNafcB/cC
+        cGjS2spPUsU7qbcZFr+vgCp+z3zYL0a0lJmlT5g=
+X-Google-Smtp-Source: APiQypJVQCvGnxu7nG00aqRlf3SSOvrrDHqAXeb07CR8HgcmHaQ/4QZcfGexyp4Xp6Arr7ZLoLwDE9ymHWIXeKQNlD0=
+X-Received: by 2002:a02:ccf4:: with SMTP id l20mr794921jaq.28.1586456143394;
+ Thu, 09 Apr 2020 11:15:43 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <20200408181406.40389-1-alcooperx@gmail.com> <20200408181406.40389-5-alcooperx@gmail.com>
+ <CAHp75Vd_nbgwdE5Fbm3oxd_+51BJZ=67sVyjKiN2zLS+J4X-Fw@mail.gmail.com>
+ <CAOGqxeXQE0z=+6yuEME48am__2vtJhBpetYd_sZamJmm1h_TLQ@mail.gmail.com> <20200409123005.GZ3676135@smile.fi.intel.com>
+In-Reply-To: <20200409123005.GZ3676135@smile.fi.intel.com>
+From:   Alan Cooper <alcooperx@gmail.com>
+Date:   Thu, 9 Apr 2020 14:15:32 -0400
+Message-ID: <CAOGqxeUounB5f5oht+d=y+bOiAFe_RM20GUACv2rkL6aR_DV2Q@mail.gmail.com>
+Subject: Re: [PATCH v3 4/4] usb: host: Add ability to build new Broadcom STB
+ USB drivers
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>,
+        devicetree <devicetree@vger.kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        =?UTF-8?Q?Jonathan_Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        USB <linux-usb@vger.kernel.org>,
+        Mathias Nyman <mathias.nyman@intel.com>,
+        Rob Herring <robh+dt@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
+On Thu, Apr 9, 2020 at 8:30 AM Andy Shevchenko
+<andy.shevchenko@gmail.com> wrote:
+>
+> On Thu, Apr 09, 2020 at 07:49:52AM -0400, Alan Cooper wrote:
+> > On Thu, Apr 9, 2020 at 5:08 AM Andy Shevchenko
+> > <andy.shevchenko@gmail.com> wrote:
+> > >
+> > > On Thu, Apr 9, 2020 at 12:52 AM Al Cooper <alcooperx@gmail.com> wrote:
+> > > >
+> > > > Add the build system changes needed to get the Broadcom STB XHCI,
+> > > > EHCI and OHCI functionality working. The OHCI support does not
+> > > > require anything unique to Broadcom so the standard ohci-platform
+> > > > driver is being used. The link order for XHCI was changed in the
+> > > > Makefile because of the way STB XHCI, EHCI and OHCI controllers
+> > > > share a port which requires that the XHCI driver be initialized
+> > > > first. Also update MAINTAINERS.
+> > >
+> > > > --- a/MAINTAINERS
+> > > > +++ b/MAINTAINERS
+> > > > @@ -3477,6 +3477,14 @@ S:       Supported
+> > > >  F:     drivers/i2c/busses/i2c-brcmstb.c
+> > > >  F:     Documentation/devicetree/bindings/i2c/brcm,brcmstb-i2c.yaml
+> > > >
+> > > > +BROADCOM BRCMSTB USB EHCI DRIVER
+> > > > +M:     Al Cooper <alcooperx@gmail.com>
+> > > > +L:     linux-usb@vger.kernel.org
+> > > > +L:     bcm-kernel-feedback-list@broadcom.com
+> > > > +S:     Maintained
+> > > > +F:     drivers/usb/host/ehci-brcm.*
+> > > > +F:     Documentation/devicetree/bindings/usb/brcm,bcm7445-ehci.yaml
+> > >
+> > > This has ordering issues.
+> > > Run parse-maintainer.pl to fix. (Note, it creates by default a new
+> > > file, you might need to run diff manually to see the difference).
+> >
+> > I'm not sure what you mean.
+> > I ran "./scripts/parse-maintainers.pl" and did "diff MAINTAINERS
+> > MAINTAINERS.new" and there are no differences in or around my entry.
+>
+> Perhaps --order should be added.
 
-Please pull this second batch of new changes for 5.7.  As promised last
-week, this batch changes how xfs interacts with memory reclaim; how the
-log batches and throttles log items; how hard writes near ENOSPC will
-try to squeeze more space out of the filesystem; and hopefully fix the
-last of the umount hangs after a catastrophic failure.
+So you're asking me to swap the following lines?
 
-This branch merges cleanly with master as of a few minutes ago, so
-please let me know if anything strange happens.
+F:    drivers/usb/host/ehci-brcm.*
+F:    Documentation/devicetree/bindings/usb/brcm,bcm7445-ehci.yaml
 
---D
+Al
 
-The following changes since commit 27fb5a72f50aa770dd38b0478c07acacef97e3e7:
-
-  xfs: prohibit fs freezing when using empty transactions (2020-03-26 08:19:24 -0700)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/fs/xfs/xfs-linux.git tags/xfs-5.7-merge-12
-
-for you to fetch changes up to 5833112df7e9a306af9af09c60127b92ed723962:
-
-  xfs: reflink should force the log out if mounted with wsync (2020-04-06 08:44:39 -0700)
-
-----------------------------------------------------------------
-(More) new code for 5.7:
-- Validate the realtime geometry in the superblock when mounting
-- Refactor a bunch of tricky flag handling in the log code
-- Flush the CIL more judiciously so that we don't wait until there are
-  millions of log items consuming a lot of memory.
-- Throttle transaction commits to prevent the xfs frontend from flooding
-  the CIL with too many log items.
-- Account metadata buffers correctly for memory reclaim.
-- Mark slabs properly for memory reclaim.  These should help reclaim run
-  more effectively when XFS is using a lot of memory.
-- Don't write a garbage log record at unmount time if we're trying to
-  trigger summary counter recalculation at next mount.
-- Don't block the AIL on locked dquot/inode buffers; instead trigger its
-  backoff mechanism to give the lock holder a chance to finish up.
-- Ratelimit writeback flushing when buffered writes encounter ENOSPC.
-- Other minor cleanups.
-- Make reflink a synchronous operation when the fs is mounted with wsync
-  or sync, which means that now we force the log to disk to record the
-  changes.
-
-----------------------------------------------------------------
-Brian Foster (3):
-      xfs: trylock underlying buffer on dquot flush
-      xfs: return locked status of inode buffer on xfsaild push
-      xfs: fix inode number overflow in ifree cluster helper
-
-Christoph Hellwig (3):
-      xfs: split xlog_ticket_done
-      xfs: factor out a new xfs_log_force_inode helper
-      xfs: reflink should force the log out if mounted with wsync
-
-Darrick J. Wong (3):
-      xfs: validate the realtime geometry in xfs_validate_sb_common
-      xfs: don't write a corrupt unmount record to force summary counter recalc
-      xfs: ratelimit inode flush on buffered write ENOSPC
-
-Dave Chinner (15):
-      xfs: don't try to write a start record into every iclog
-      xfs: re-order initial space accounting checks in xlog_write
-      xfs: refactor and split xfs_log_done()
-      xfs: kill XLOG_TIC_INITED
-      xfs: merge xlog_commit_record with xlog_write_done
-      xfs: refactor unmount record writing
-      xfs: remove some stale comments from the log code
-      xfs: Lower CIL flush limit for large logs
-      xfs: Throttle commits on delayed background CIL push
-      xfs: don't allow log IO to be throttled
-      xfs: Improve metadata buffer reclaim accountability
-      xfs: correctly acount for reclaimable slabs
-      xfs: factor common AIL item deletion code
-      xfs: tail updates only need to occur when LSN changes
-      xfs: factor inode lookup from xfs_ifree_cluster
-
-Kaixu Xia (2):
-      xfs: remove unnecessary ternary from xfs_create
-      xfs: remove redundant variable assignment in xfs_symlink()
-
- fs/xfs/libxfs/xfs_sb.c  |  32 +++++
- fs/xfs/xfs_buf.c        |  11 +-
- fs/xfs/xfs_dquot.c      |   6 +-
- fs/xfs/xfs_dquot_item.c |   3 +-
- fs/xfs/xfs_export.c     |  14 +-
- fs/xfs/xfs_file.c       |  16 +--
- fs/xfs/xfs_inode.c      | 174 +++++++++++++---------
- fs/xfs/xfs_inode.h      |   1 +
- fs/xfs/xfs_inode_item.c |  31 ++--
- fs/xfs/xfs_log.c        | 372 +++++++++++++++++-------------------------------
- fs/xfs/xfs_log.h        |   4 -
- fs/xfs/xfs_log_cil.c    |  55 +++++--
- fs/xfs/xfs_log_priv.h   |  75 +++++++---
- fs/xfs/xfs_mount.h      |   1 +
- fs/xfs/xfs_qm.c         |  14 +-
- fs/xfs/xfs_super.c      |  17 ++-
- fs/xfs/xfs_symlink.c    |   1 -
- fs/xfs/xfs_trace.h      |  15 +-
- fs/xfs/xfs_trans.c      |  27 ++--
- fs/xfs/xfs_trans_ail.c  |  88 +++++++-----
- fs/xfs/xfs_trans_priv.h |   6 +-
- 21 files changed, 512 insertions(+), 451 deletions(-)
+>
+> --
+> With Best Regards,
+> Andy Shevchenko
+>
+>
