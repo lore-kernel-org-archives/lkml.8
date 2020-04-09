@@ -2,121 +2,136 @@ Return-Path: <SRS0=n+Ub=5Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10066C2BA2B
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 11:50:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DBBC0C2BA2B
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 12:00:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D6A9320757
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 11:50:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pb9aAJmg"
+	by mail.kernel.org (Postfix) with ESMTP id B60D920768
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 12:00:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726728AbgDILuE (ORCPT
+        id S1726589AbgDIMA3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Apr 2020 07:50:04 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:41049 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726523AbgDILuE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Apr 2020 07:50:04 -0400
-Received: by mail-io1-f68.google.com with SMTP id b12so3493438ion.8;
-        Thu, 09 Apr 2020 04:50:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=+XqP7Ap1vUorR0W4ROT/4/sK/I8YLfCYd/qeR1cdEgE=;
-        b=pb9aAJmgSBJLFZELTtD91Tc95hIg9mDY+5kW6+GTYkZaHen2JQf7wzds/IJmGDXHUe
-         C5XEesCYKp3GfC6zLjKW6/rvD1Yrj3DHNXFn1DbVZQ8i7epRLwih8GTlFT1vZSK/iYU8
-         vlTFysaBrWnf11tqcUfcGUNE46VNhUcf8ztZzk/5FRvhWUb3VEOSNVyBh0nlgN6nh2d8
-         YTMQ6vxxVkgVp4cgEPHpp42L2cxkjxsoMNvWzg53KTRQONuKukD05S9tegwhGPsq396I
-         FmAQwmI57WYF2vX58i/su/H2kvtQmacL17KBJJy8pNhDaC8XurNV8rGaHkA8bQGfYj5k
-         ELYQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=+XqP7Ap1vUorR0W4ROT/4/sK/I8YLfCYd/qeR1cdEgE=;
-        b=ASPO49B6wmSm9iVAe2Tzq9BLkM/gYshECuOECmlDZ9ra3LzNf3VI4jb0gVgNHuB+GD
-         VSe7Kfh8hN02osjyDKZpwzQjNE4RdEiT9GFqLz1uBpBCiXJXI8OYrU637MIk/uIZHjrf
-         XUHxcpwtBpAq8QXdz8cemW1+k6rxMRAEL94GYUg646qs/kp6nufpxek/OIy/MZ4LzVs5
-         m95X8ALrTWZqGKz5g1v0BlMll4k3q8Moig/wQhPuJdnkQV+H/4qmMXdfknAX1iOKGG7x
-         fvZLHaLnT4000iysc4TPJD/u+BxY3+XuJqCd1HFA2JwGxk6j2GnkGtOUHfTVMud3YwCS
-         sZug==
-X-Gm-Message-State: AGi0PuYzy2PdlbjhheieVSrC32Pw1AwUL0QIy5/3uhzzGoEwWyjs59lI
-        EKR7LATooYnSqrb5wd/v/PTeOlSuyMyfPNyJ76BMtpHaErY=
-X-Google-Smtp-Source: APiQypJQhXszQeNXb++KfW2iCUidd5W34HBnZ+kUn+qj+aseYfrFokyXuutDqIhvyASuZlMs6VaFb/5bfk17ypWr05s=
-X-Received: by 2002:a6b:5116:: with SMTP id f22mr11568386iob.15.1586433003478;
- Thu, 09 Apr 2020 04:50:03 -0700 (PDT)
+        Thu, 9 Apr 2020 08:00:29 -0400
+Received: from foss.arm.com ([217.140.110.172]:49250 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725970AbgDIMA2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Apr 2020 08:00:28 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0726730E;
+        Thu,  9 Apr 2020 05:00:29 -0700 (PDT)
+Received: from [192.168.1.172] (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id EB4323F73D;
+        Thu,  9 Apr 2020 05:00:27 -0700 (PDT)
+Subject: Re: [PATCH v2 1/6] arm64/vdso: use the fault callback to map vvar
+ pages
+To:     Andrei Vagin <avagin@gmail.com>
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Dmitry Safonov <dima@arista.com>
+References: <20200225073731.465270-1-avagin@gmail.com>
+ <20200225073731.465270-2-avagin@gmail.com>
+From:   Vincenzo Frascino <vincenzo.frascino@arm.com>
+Message-ID: <fd287633-a383-e1ee-2c4a-b961e1b95d66@arm.com>
+Date:   Thu, 9 Apr 2020 13:01:12 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-References: <20200408181406.40389-1-alcooperx@gmail.com> <20200408181406.40389-5-alcooperx@gmail.com>
- <CAHp75Vd_nbgwdE5Fbm3oxd_+51BJZ=67sVyjKiN2zLS+J4X-Fw@mail.gmail.com>
-In-Reply-To: <CAHp75Vd_nbgwdE5Fbm3oxd_+51BJZ=67sVyjKiN2zLS+J4X-Fw@mail.gmail.com>
-From:   Alan Cooper <alcooperx@gmail.com>
-Date:   Thu, 9 Apr 2020 07:49:52 -0400
-Message-ID: <CAOGqxeXQE0z=+6yuEME48am__2vtJhBpetYd_sZamJmm1h_TLQ@mail.gmail.com>
-Subject: Re: [PATCH v3 4/4] usb: host: Add ability to build new Broadcom STB
- USB drivers
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>,
-        devicetree <devicetree@vger.kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        =?UTF-8?Q?Jonathan_Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        USB <linux-usb@vger.kernel.org>,
-        Mathias Nyman <mathias.nyman@intel.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200225073731.465270-2-avagin@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 9, 2020 at 5:08 AM Andy Shevchenko
-<andy.shevchenko@gmail.com> wrote:
->
-> On Thu, Apr 9, 2020 at 12:52 AM Al Cooper <alcooperx@gmail.com> wrote:
-> >
-> > Add the build system changes needed to get the Broadcom STB XHCI,
-> > EHCI and OHCI functionality working. The OHCI support does not
-> > require anything unique to Broadcom so the standard ohci-platform
-> > driver is being used. The link order for XHCI was changed in the
-> > Makefile because of the way STB XHCI, EHCI and OHCI controllers
-> > share a port which requires that the XHCI driver be initialized
-> > first. Also update MAINTAINERS.
->
-> > --- a/MAINTAINERS
-> > +++ b/MAINTAINERS
-> > @@ -3477,6 +3477,14 @@ S:       Supported
-> >  F:     drivers/i2c/busses/i2c-brcmstb.c
-> >  F:     Documentation/devicetree/bindings/i2c/brcm,brcmstb-i2c.yaml
-> >
-> > +BROADCOM BRCMSTB USB EHCI DRIVER
-> > +M:     Al Cooper <alcooperx@gmail.com>
-> > +L:     linux-usb@vger.kernel.org
-> > +L:     bcm-kernel-feedback-list@broadcom.com
-> > +S:     Maintained
-> > +F:     drivers/usb/host/ehci-brcm.*
-> > +F:     Documentation/devicetree/bindings/usb/brcm,bcm7445-ehci.yaml
->
-> This has ordering issues.
-> Run parse-maintainer.pl to fix. (Note, it creates by default a new
-> file, you might need to run diff manually to see the difference).
+On 2/25/20 7:37 AM, Andrei Vagin wrote:
+> This is required to support time namespaces where a time namespace data
+> page is different for each namespace.
+> 
+> Signed-off-by: Andrei Vagin <avagin@gmail.com>
 
-I'm not sure what you mean.
-I ran "./scripts/parse-maintainers.pl" and did "diff MAINTAINERS
-MAINTAINERS.new" and there are no differences in or around my entry.
+Reviewed-by: Vincenzo Frascino <vincenzo.frascino@arm.com>
 
-Al
+> ---
+>  arch/arm64/kernel/vdso.c | 24 +++++++++++++++---------
+>  1 file changed, 15 insertions(+), 9 deletions(-)
+> 
+> diff --git a/arch/arm64/kernel/vdso.c b/arch/arm64/kernel/vdso.c
+> index 354b11e27c07..290c36d74e03 100644
+> --- a/arch/arm64/kernel/vdso.c
+> +++ b/arch/arm64/kernel/vdso.c
+> @@ -114,28 +114,32 @@ static int __vdso_init(enum arch_vdso_type arch_index)
+>  			PAGE_SHIFT;
+>  
+>  	/* Allocate the vDSO pagelist, plus a page for the data. */
+> -	vdso_pagelist = kcalloc(vdso_lookup[arch_index].vdso_pages + 1,
+> +	vdso_pagelist = kcalloc(vdso_lookup[arch_index].vdso_pages,
+>  				sizeof(struct page *),
+>  				GFP_KERNEL);
+>  	if (vdso_pagelist == NULL)
+>  		return -ENOMEM;
+>  
+> -	/* Grab the vDSO data page. */
+> -	vdso_pagelist[0] = phys_to_page(__pa_symbol(vdso_data));
+> -
+> -
+>  	/* Grab the vDSO code pages. */
+>  	pfn = sym_to_pfn(vdso_lookup[arch_index].vdso_code_start);
+>  
+>  	for (i = 0; i < vdso_lookup[arch_index].vdso_pages; i++)
+> -		vdso_pagelist[i + 1] = pfn_to_page(pfn + i);
+> +		vdso_pagelist[i] = pfn_to_page(pfn + i);
+>  
+> -	vdso_lookup[arch_index].dm->pages = &vdso_pagelist[0];
+> -	vdso_lookup[arch_index].cm->pages = &vdso_pagelist[1];
+> +	vdso_lookup[arch_index].cm->pages = vdso_pagelist;
+>  
+>  	return 0;
+>  }
+>  
+> +static vm_fault_t vvar_fault(const struct vm_special_mapping *sm,
+> +			     struct vm_area_struct *vma, struct vm_fault *vmf)
+> +{
+> +	if (vmf->pgoff == 0)
+> +		return vmf_insert_pfn(vma, vmf->address,
+> +				sym_to_pfn(vdso_data));
+> +	return VM_FAULT_SIGBUS;
+> +}
+> +
+>  static int __setup_additional_pages(enum arch_vdso_type arch_index,
+>  				    struct mm_struct *mm,
+>  				    struct linux_binprm *bprm,
+> @@ -155,7 +159,7 @@ static int __setup_additional_pages(enum arch_vdso_type arch_index,
+>  	}
+>  
+>  	ret = _install_special_mapping(mm, vdso_base, PAGE_SIZE,
+> -				       VM_READ|VM_MAYREAD,
+> +				       VM_READ|VM_MAYREAD|VM_PFNMAP,
+>  				       vdso_lookup[arch_index].dm);
+>  	if (IS_ERR(ret))
+>  		goto up_fail;
+> @@ -215,6 +219,7 @@ static struct vm_special_mapping aarch32_vdso_spec[C_PAGES] = {
+>  #ifdef CONFIG_COMPAT_VDSO
+>  	{
+>  		.name = "[vvar]",
+> +		.fault = vvar_fault,
+>  	},
+>  	{
+>  		.name = "[vdso]",
+> @@ -396,6 +401,7 @@ static int vdso_mremap(const struct vm_special_mapping *sm,
+>  static struct vm_special_mapping vdso_spec[A_PAGES] __ro_after_init = {
+>  	{
+>  		.name	= "[vvar]",
+> +		.fault = vvar_fault,
+>  	},
+>  	{
+>  		.name	= "[vdso]",
+> 
 
->
-> --
-> With Best Regards,
-> Andy Shevchenko
+-- 
+Regards,
+Vincenzo
