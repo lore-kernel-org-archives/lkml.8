@@ -2,219 +2,136 @@ Return-Path: <SRS0=n+Ub=5Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-3.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10B55C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 07:17:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34BF0C2BB54
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 07:18:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D490D2075E
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 07:17:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A4A1020753
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 07:18:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="J3TnySVG"
+	dkim=pass (1024-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b="fBHl3nAd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726574AbgDIHR4 (ORCPT
+        id S1726597AbgDIHSu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Apr 2020 03:17:56 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:32783 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725881AbgDIHR4 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Apr 2020 03:17:56 -0400
-Received: by mail-wr1-f66.google.com with SMTP id a25so10693127wrd.0
-        for <linux-kernel@vger.kernel.org>; Thu, 09 Apr 2020 00:17:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ffwll.ch; s=google;
-        h=date:from:to:cc:subject:message-id:mail-followup-to:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=XEywRyOXwpoRuTWlJ5j+LMEado440dnVx99CELnLolo=;
-        b=J3TnySVG7X0SRfOQujg6yOG3DavP+JDN0lkGk+UlvIFcT6iYa5Q8C65gCTkCAtE2Mo
-         kGmMZx6JLxF4erEc4I6K7rg8br6hzlz0f38KYmgt7Sh0IBzxOCuZ9JUe4h1rgeUm2VwD
-         exythHc/jTstzJ2Fb1HjOoqzOI1cfvOyGgXMg=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id
-         :mail-followup-to:references:mime-version:content-disposition
-         :in-reply-to;
-        bh=XEywRyOXwpoRuTWlJ5j+LMEado440dnVx99CELnLolo=;
-        b=R7rZhp+ZnNbcWSe4vuP9X0UONXH4KhYiYqh1UtJ0zzEnwc3q7IVppmLj8hPAp5efKq
-         McmP3F2vsLb00kn1Mq71mOYqefbk4ddtZtzXlJG+P3U70ojZZGhchyTfzyX41/1p3NbA
-         XzbN8hHc6zRyZrNq3u8EiQs6ynIkJ47Off/JsadSCzN0gtGlbQerXCI5WxlZk/797kXc
-         aKh9O5VGMFW6H5xw+y2cP3laZucZVnXFEslUBekySEcuCcZQtRkMUbgVnb5h+9y+kimn
-         HUf3ZmO3ZwJdwWwBrxOB0oWtBrDf1XTFCheRUMzrbdiUgEIa+BGTQvLd8HmbhCgnHUtK
-         istA==
-X-Gm-Message-State: AGi0Pua4w6Pl2sLtMhilIo9fSPcRz3TxOhOqOQcy83Frp+MfuQOyC7sN
-        f8Tafh7A8DWHHrgKHodNhM/jeDES6uM=
-X-Google-Smtp-Source: APiQypKS89n1ukOHevM/fA/En9CkkMkPx2aqkN1GaCwQI3yncisvGnWmhFn0YJmrjhmGia2Bk2TIOQ==
-X-Received: by 2002:a5d:4081:: with SMTP id o1mr13176684wrp.114.1586416672112;
-        Thu, 09 Apr 2020 00:17:52 -0700 (PDT)
-Received: from phenom.ffwll.local ([2a02:168:57f4:0:efd0:b9e5:5ae6:c2fa])
-        by smtp.gmail.com with ESMTPSA id v7sm2294539wmg.3.2020.04.09.00.17.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 09 Apr 2020 00:17:51 -0700 (PDT)
-Date:   Thu, 9 Apr 2020 09:17:49 +0200
-From:   Daniel Vetter <daniel@ffwll.ch>
-To:     John Stultz <john.stultz@linaro.org>
-Cc:     lkml <linux-kernel@vger.kernel.org>,
-        Xu YiPing <xuyiping@hisilicon.com>,
-        Rongrong Zou <zourongrong@gmail.com>,
-        Xinliang Liu <xinliang.liu@linaro.org>,
-        Xinwei Kong <kong.kongxinwei@hisilicon.com>,
-        Chen Feng <puck.chen@hisilicon.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>
-Subject: Re: [PATCH] drm: kirin: Revert change to add register connect helper
- functions
-Message-ID: <20200409071749.GQ3456981@phenom.ffwll.local>
-Mail-Followup-To: John Stultz <john.stultz@linaro.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Xu YiPing <xuyiping@hisilicon.com>,
-        Rongrong Zou <zourongrong@gmail.com>,
-        Xinliang Liu <xinliang.liu@linaro.org>,
-        Xinwei Kong <kong.kongxinwei@hisilicon.com>,
-        Chen Feng <puck.chen@hisilicon.com>,
-        David Airlie <airlied@linux.ie>, Sam Ravnborg <sam@ravnborg.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>
-References: <20200409004306.18541-1-john.stultz@linaro.org>
+        Thu, 9 Apr 2020 03:18:50 -0400
+Received: from mail-vi1eur05on2071.outbound.protection.outlook.com ([40.107.21.71]:6249
+        "EHLO EUR05-VI1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725795AbgDIHSu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Apr 2020 03:18:50 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=AKNfJWcctU8ATMyifCvTrBZK4OcYPXdXBY11kfWUtXkZUu/HMZmAW+hSZKm1M4h7XUR6sdohlhC5pa9Fn5FmOPJciUGer7hCWk8LIENmTt9067fHO6GiAvCbu8A5PNMyCr76y3LqNDVPTll2+/jc3/uCJ54JpQPe9JDDGHPLjBDllZWqaRe3HYC54pw/oQq9i2srFL+ZSmfRqWMqU3wB7BgBr6bfjLI3WQkhVwCk1zFB7sHYxUPQfoOs6BB23ftQ2posmDL6TSedPaZb/PvV93/ki6LejeMOnY2bLPI2HtqNonPJswafqUKQYkqq8APJ7II828iD95Uu4/LPPtlc9g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Mk8+h7R5wYqtP9UURofjAZhtSs0oAT6VipNz7xuQLks=;
+ b=Prai0z353lsOG3ytZHvlhPBjGqPvlTNShVH5i60i3Mo9m0JmQTwC3L+hWG+FDGDyMz+wjiVuHNyzwT/FW2XkTg7Z07Ytbb4aJvg4rru8ZZK9jJn7YAXuqumZc7zE0QzQ8QlJ5xI6LXTisxa/+fdAEGb4YZuCrtD4idplzkAX3dxi+BiU+/7BTTUKdDch7b3BNtjCqfH07Oh+ZYHwA8QqtXoh/aBfQnMb7RjVypHQGKhnqcLPjNzG99ol70+ZlauEhNEfjetEnuJQxk8Ff8GLcFEbrsiQJbryRD/aOPvEcWriqjY3TqlNe4YyM+u0HmGDLfxmT8/2MpucTwLRwuuRDQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oss.nxp.com; dmarc=pass action=none header.from=oss.nxp.com;
+ dkim=pass header.d=oss.nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=NXP1.onmicrosoft.com;
+ s=selector2-NXP1-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Mk8+h7R5wYqtP9UURofjAZhtSs0oAT6VipNz7xuQLks=;
+ b=fBHl3nAdLFjki3SeAeo09xE0vJPklz6M71D7LXE5fENfWkavP6KduU/gIZqyJG4yp2CuPfEZofyfyhUDLME5uHR9Qd/DENB4PQnSRrfUTgX9BzyCX+NlTs4kePCdfpTfFxB/K34aEpEtnN+2l+6ztmu+9o6XqyPAO/wgCoGVy/g=
+Authentication-Results: spf=none (sender IP is )
+ smtp.mailfrom=daniel.baluta@oss.nxp.com; 
+Received: from DB3PR0402MB3835.eurprd04.prod.outlook.com (2603:10a6:8:3::30)
+ by DB3PR0402MB3756.eurprd04.prod.outlook.com (2603:10a6:8:12::29) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2878.17; Thu, 9 Apr
+ 2020 07:18:45 +0000
+Received: from DB3PR0402MB3835.eurprd04.prod.outlook.com
+ ([fe80::f0e5:c143:32aa:ed7c]) by DB3PR0402MB3835.eurprd04.prod.outlook.com
+ ([fe80::f0e5:c143:32aa:ed7c%7]) with mapi id 15.20.2878.023; Thu, 9 Apr 2020
+ 07:18:45 +0000
+From:   Daniel Baluta <daniel.baluta@oss.nxp.com>
+To:     broonie@kernel.org
+Cc:     pierre-louis.bossart@linux.intel.com,
+        ranjani.sridharan@linux.intel.com, kai.vehmanen@linux.intel.com,
+        linux-imx@nxp.com, festevam@gmail.com,
+        linux-kernel@vger.kernel.org, alsa-devel@alsa-project.org,
+        devicetree@vger.kernel.org, robh+dt@kernel.org,
+        shengjiu.wang@nxp.com, Daniel Baluta <daniel.baluta@nxp.com>
+Subject: [PATCH v2 0/5] Add support for SOF on i.MX8M
+Date:   Thu,  9 Apr 2020 10:18:27 +0300
+Message-Id: <20200409071832.2039-1-daniel.baluta@oss.nxp.com>
+X-Mailer: git-send-email 2.17.1
+Content-Type: text/plain
+X-ClientProxiedBy: AM4P190CA0002.EURP190.PROD.OUTLOOK.COM
+ (2603:10a6:200:56::12) To DB3PR0402MB3835.eurprd04.prod.outlook.com
+ (2603:10a6:8:3::30)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200409004306.18541-1-john.stultz@linaro.org>
-X-Operating-System: Linux phenom 5.3.0-3-amd64 
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from fsr-ub1864-103.ro-buh02.nxp.com (89.37.124.34) by AM4P190CA0002.EURP190.PROD.OUTLOOK.COM (2603:10a6:200:56::12) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2900.15 via Frontend Transport; Thu, 9 Apr 2020 07:18:43 +0000
+X-Mailer: git-send-email 2.17.1
+X-Originating-IP: [89.37.124.34]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: bbd7ccac-5399-42b3-aae1-08d7dc563d18
+X-MS-TrafficTypeDiagnostic: DB3PR0402MB3756:|DB3PR0402MB3756:
+X-MS-Exchange-SharedMailbox-RoutingAgent-Processed: True
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <DB3PR0402MB3756190099B6C37B62094601B8C10@DB3PR0402MB3756.eurprd04.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:6108;
+X-Forefront-PRVS: 0368E78B5B
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB3PR0402MB3835.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10009020)(4636009)(366004)(346002)(376002)(396003)(136003)(39860400002)(4326008)(5660300002)(478600001)(316002)(26005)(4744005)(1076003)(66476007)(6512007)(81156014)(81166007)(66556008)(6506007)(2906002)(66946007)(52116002)(956004)(2616005)(8936002)(6916009)(6486002)(8676002)(86362001)(6666004)(186003)(16526019)(44832011);DIR:OUT;SFP:1101;
+Received-SPF: None (protection.outlook.com: oss.nxp.com does not designate
+ permitted sender hosts)
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: iGGGFXiEk0xt9U4idbP3uU/TStipN4UeBIt44KGY6WrTWufBD0SlPK1Wh2ujhnYii12W0ukHkJCZuxtYfI/yz8CKkZ2b0hxcIghv7rAjUa5XHhMwHZYi2NF1a0+U5piFN9HCde24lQ4e1IPYd8i6apRIJRzkEHLaNzZop136Eucb3+Zk1MnEroGFNLMLCCSaUd9/1uDKfubXXchcLfeSA64xETPfX1zYYpqV4auk430tQXMWtOmSm1RwhqaWrtqvMWJCnxu4xL8kofDC0IgMf6ZBe9tcHnvhu24qEdd3/jQR2G8wuhHLrCF6co6fU5k06yKGXHXCt8dGnvUHdQkx/sasB1HEd7enc4eRW4V9Xy0GI3QRDmL+BnW3uOcZstOUYe3FR908ZQfBBZYfIglVDIfltjFu21hNkCuxMF4KDtCDDcAdCjZKSUc5xL/LoMwC
+X-MS-Exchange-AntiSpam-MessageData: qWgNV3Q6/GsrVoB/t+yg7Gt3AYFqPp6xxjPKg3GjmfFtQyIm9bjrhWDpVyFHbA5NaD22JneY8LEQctOxWkoSdKHGAxhDSeiO9WKoNBIBfmOYN3rsfxhRj2EC0tHZIxVpF60xFyKF7elK5bRxUNrDzA==
+X-OriginatorOrg: oss.nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: bbd7ccac-5399-42b3-aae1-08d7dc563d18
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Apr 2020 07:18:45.0447
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: EOisoa59itoyKQCnxQpeWizdgUdtfH86zWc0Lkk+KufVk7lXP8wWzR5mUqv7tHOX0GamE8+1YxH0nKaZOEz2cw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB3PR0402MB3756
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 09, 2020 at 12:43:06AM +0000, John Stultz wrote:
-> Daniel noted[1] that commit d606dc9a6323 ("drm: kirin: Add
-> register connect helper functions in drm init") was unnecessary
-> and incorrect, as drm_dev_register does register connectors for
-> us.
-> 
-> Thus, this patch reverts the change as suggested by Daniel.
-> 
-> [1]: https://lore.kernel.org/lkml/CAKMK7uHr5U-pPsxdQ4MpfK5v8iLjphDFug_3VTiUAf06nhS=yQ@mail.gmail.com/
-> 
-> Cc: Xu YiPing <xuyiping@hisilicon.com>
-> Cc: Rongrong Zou <zourongrong@gmail.com>
-> Cc: Xinliang Liu <xinliang.liu@linaro.org>
-> Cc: Xinwei Kong <kong.kongxinwei@hisilicon.com>
-> Cc: Chen Feng <puck.chen@hisilicon.com>
-> Cc: David Airlie <airlied@linux.ie>
-> Cc: Daniel Vetter <daniel@ffwll.ch>
-> Cc: Sam Ravnborg <sam@ravnborg.org>
-> Cc: dri-devel <dri-devel@lists.freedesktop.org>
-> Signed-off-by: John Stultz <john.stultz@linaro.org>
+From: Daniel Baluta <daniel.baluta@nxp.com>
 
-Reviewed-by: Daniel Vetter <daniel.vetter@ffwll.ch>
+This patch series adds support for SOF on i.MX8M family. First board
+from this family that has a DSP is i.MX8MP.
 
-Thanks for the quick fix!
+First 2 patches are trying to fix some compilation issues, the next two
+are adding the imx8m support and the last one adds the devicetree
+binding.
 
-Cheers, Daniel
+Changes since v2:
+ - add reviewed by from Rob to DT patch
+ - fix ownership for patch 2
 
-> ---
->  .../gpu/drm/hisilicon/kirin/kirin_drm_ade.c   |  1 -
->  .../gpu/drm/hisilicon/kirin/kirin_drm_drv.c   | 43 -------------------
->  .../gpu/drm/hisilicon/kirin/kirin_drm_drv.h   |  1 -
->  3 files changed, 45 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/hisilicon/kirin/kirin_drm_ade.c b/drivers/gpu/drm/hisilicon/kirin/kirin_drm_ade.c
-> index 86000127d4ee..c339e632522a 100644
-> --- a/drivers/gpu/drm/hisilicon/kirin/kirin_drm_ade.c
-> +++ b/drivers/gpu/drm/hisilicon/kirin/kirin_drm_ade.c
-> @@ -940,7 +940,6 @@ static struct drm_driver ade_driver = {
->  };
->  
->  struct kirin_drm_data ade_driver_data = {
-> -	.register_connects = false,
->  	.num_planes = ADE_CH_NUM,
->  	.prim_plane = ADE_CH1,
->  	.channel_formats = channel_formats,
-> diff --git a/drivers/gpu/drm/hisilicon/kirin/kirin_drm_drv.c b/drivers/gpu/drm/hisilicon/kirin/kirin_drm_drv.c
-> index d3145ae877d7..4349da3e2379 100644
-> --- a/drivers/gpu/drm/hisilicon/kirin/kirin_drm_drv.c
-> +++ b/drivers/gpu/drm/hisilicon/kirin/kirin_drm_drv.c
-> @@ -219,40 +219,6 @@ static int kirin_drm_kms_cleanup(struct drm_device *dev)
->  	return 0;
->  }
->  
-> -static int kirin_drm_connectors_register(struct drm_device *dev)
-> -{
-> -	struct drm_connector *connector;
-> -	struct drm_connector *failed_connector;
-> -	struct drm_connector_list_iter conn_iter;
-> -	int ret;
-> -
-> -	mutex_lock(&dev->mode_config.mutex);
-> -	drm_connector_list_iter_begin(dev, &conn_iter);
-> -	drm_for_each_connector_iter(connector, &conn_iter) {
-> -		ret = drm_connector_register(connector);
-> -		if (ret) {
-> -			failed_connector = connector;
-> -			goto err;
-> -		}
-> -	}
-> -	drm_connector_list_iter_end(&conn_iter);
-> -	mutex_unlock(&dev->mode_config.mutex);
-> -
-> -	return 0;
-> -
-> -err:
-> -	drm_connector_list_iter_begin(dev, &conn_iter);
-> -	drm_for_each_connector_iter(connector, &conn_iter) {
-> -		if (failed_connector == connector)
-> -			break;
-> -		drm_connector_unregister(connector);
-> -	}
-> -	drm_connector_list_iter_end(&conn_iter);
-> -	mutex_unlock(&dev->mode_config.mutex);
-> -
-> -	return ret;
-> -}
-> -
->  static int kirin_drm_bind(struct device *dev)
->  {
->  	struct kirin_drm_data *driver_data;
-> @@ -279,17 +245,8 @@ static int kirin_drm_bind(struct device *dev)
->  
->  	drm_fbdev_generic_setup(drm_dev, 32);
->  
-> -	/* connectors should be registered after drm device register */
-> -	if (driver_data->register_connects) {
-> -		ret = kirin_drm_connectors_register(drm_dev);
-> -		if (ret)
-> -			goto err_drm_dev_unregister;
-> -	}
-> -
->  	return 0;
->  
-> -err_drm_dev_unregister:
-> -	drm_dev_unregister(drm_dev);
->  err_kms_cleanup:
->  	kirin_drm_kms_cleanup(drm_dev);
->  err_drm_dev_put:
-> diff --git a/drivers/gpu/drm/hisilicon/kirin/kirin_drm_drv.h b/drivers/gpu/drm/hisilicon/kirin/kirin_drm_drv.h
-> index 4d5c05a24065..dee8ec2f7f2e 100644
-> --- a/drivers/gpu/drm/hisilicon/kirin/kirin_drm_drv.h
-> +++ b/drivers/gpu/drm/hisilicon/kirin/kirin_drm_drv.h
-> @@ -37,7 +37,6 @@ struct kirin_drm_data {
->  	u32 channel_formats_cnt;
->  	int config_max_width;
->  	int config_max_height;
-> -	bool register_connects;
->  	u32 num_planes;
->  	u32 prim_plane;
->  
-> -- 
-> 2.17.1
-> 
+Daniel Baluta (3):
+  ASoC: SOF: imx: Add i.MX8M HW support
+  ASoC: SOF: Add i.MX8MP device descriptor
+  dt-bindings: dsp: fsl: Add fsl,imx8mp-dsp entry
+
+Pierre-Louis Bossart (1):
+  ASoC: SOF: imx: fix undefined reference issue
+
+YueHaibing (1):
+  ASoC: SOF: imx8: Fix randbuild error
+
+ .../devicetree/bindings/dsp/fsl,dsp.yaml      |   2 +
+ sound/soc/sof/imx/Kconfig                     |  32 +-
+ sound/soc/sof/imx/Makefile                    |   2 +
+ sound/soc/sof/imx/imx8m.c                     | 279 ++++++++++++++++++
+ sound/soc/sof/sof-of-dev.c                    |  14 +
+ 5 files changed, 325 insertions(+), 4 deletions(-)
+ create mode 100644 sound/soc/sof/imx/imx8m.c
 
 -- 
-Daniel Vetter
-Software Engineer, Intel Corporation
-http://blog.ffwll.ch
+2.17.1
+
