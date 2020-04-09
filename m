@@ -2,100 +2,132 @@ Return-Path: <SRS0=n+Ub=5Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B20BEC2BB1D
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 01:24:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B0DAC2BB1D
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 01:25:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8A9FF2085B
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 01:24:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F22352084D
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 01:25:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="HFf879Xb"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="JiM67cz8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726654AbgDIBYw (ORCPT
+        id S1726680AbgDIBZx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Apr 2020 21:24:52 -0400
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:34518 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726552AbgDIBYw (ORCPT
+        Wed, 8 Apr 2020 21:25:53 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:39588 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726539AbgDIBZx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Apr 2020 21:24:52 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1586395492;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=NbqUujqUBgWimkq47tbzopEW+FIVMfLk+fggqhU1i0c=;
-        b=HFf879XbJCOPWBf9EO9dJ9rR9VSmiMKhMsurL47+DmO0z2UP3nDRN1liMjBQH8fv6X+qe2
-        PgNJha53Rgoc7MLk35QrYEApDRfv8fcbUMn5aF7F3j0oKRw2+eFqfrjXYh/iC0nDOiCQ0R
-        GysrQ33whGywK0ylaEVaOavFzQ1QC5c=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-279-qVDO5DX0OIiAl8SojBTAHw-1; Wed, 08 Apr 2020 21:24:48 -0400
-X-MC-Unique: qVDO5DX0OIiAl8SojBTAHw-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 4FB808017F5;
-        Thu,  9 Apr 2020 01:24:46 +0000 (UTC)
-Received: from localhost.localdomain (ovpn-8-27.pek2.redhat.com [10.72.8.27])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 7DF1A46;
-        Thu,  9 Apr 2020 01:24:35 +0000 (UTC)
-Date:   Thu, 9 Apr 2020 09:24:30 +0800
-From:   Ming Lei <ming.lei@redhat.com>
-To:     Douglas Anderson <dianders@chromium.org>
-Cc:     axboe@kernel.dk, jejb@linux.ibm.com, martin.petersen@oracle.com,
-        paolo.valente@linaro.org, groeck@chromium.org,
-        Gwendal Grignou <gwendal@chromium.org>,
-        linux-scsi@vger.kernel.org, linux-block@vger.kernel.org,
-        sqazi@google.com, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 4/4] Revert "scsi: core: run queue if SCSI device
- queue isn't ready and queue is idle"
-Message-ID: <20200409012430.GC369792@localhost.localdomain>
-References: <20200408150402.21208-1-dianders@chromium.org>
- <20200408080255.v4.4.I630e6ca4cdcf9ab13ea899274745f9e3174eb12b@changeid>
+        Wed, 8 Apr 2020 21:25:53 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0391Do6r152904;
+        Thu, 9 Apr 2020 01:25:50 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2020-01-29;
+ bh=ojvWGTH16FqGalLxUHiUu7u1GemaC0gdhKfWhTg68f0=;
+ b=JiM67cz8h5VnilGB4K6xUuzTNv002U18cMZdIGxzylwgK5PtRIGSwXGtSOoiQwnIO1xW
+ Xu/S40UOac+gelZenkgFK+Pje+QuA0JdjIIqsHYYvkIQuDMNpS5WW4v7KrOT25PtMF/L
+ i7rRCY8d9HJA/Y+V8r31M7crNoZ/+RWTVb+d8B2cvW/w0Gg8NTHoIqWlNgNQlUwMS17I
+ 7EDYXtHRbhNJEXsfccHBL1CSjzKvfp9bd1rwtBZ32BhiXjWKB+64BMbVEgHcHUMa76/v
+ RPXD8olYyH+GVNDGsMvvbAXkORYO5MXGnNJgo83OZ1Sw277M18Mu14CTEVcmKEnajk4w hw== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by aserp2120.oracle.com with ESMTP id 3091m0xr27-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 09 Apr 2020 01:25:50 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0391BZY8039144;
+        Thu, 9 Apr 2020 01:25:49 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by aserp3020.oracle.com with ESMTP id 3091m60k08-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 09 Apr 2020 01:25:49 +0000
+Received: from abhmp0008.oracle.com (abhmp0008.oracle.com [141.146.116.14])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 0391PnnR027694;
+        Thu, 9 Apr 2020 01:25:49 GMT
+Received: from localhost.localdomain (/10.159.148.185)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Wed, 08 Apr 2020 18:25:48 -0700
+Subject: Re: [PATCH v4 1/2] selftests: kvm: Add vm_get_fd() in kvm_util
+To:     Wainer dos Santos Moschetta <wainersm@redhat.com>,
+        pbonzini@redhat.com, kvm@vger.kernel.org
+Cc:     drjones@redhat.com, david@redhat.com, linux-kernel@vger.kernel.org,
+        linux-kselftest@vger.kernel.org
+References: <20200408220818.4306-1-wainersm@redhat.com>
+ <20200408220818.4306-2-wainersm@redhat.com>
+From:   Krish Sadhukhan <krish.sadhukhan@oracle.com>
+Message-ID: <734ebc46-ff31-708b-5a2f-8bda248cd290@oracle.com>
+Date:   Wed, 8 Apr 2020 18:25:41 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200408080255.v4.4.I630e6ca4cdcf9ab13ea899274745f9e3174eb12b@changeid>
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+In-Reply-To: <20200408220818.4306-2-wainersm@redhat.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9585 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 bulkscore=0 mlxscore=0
+ malwarescore=0 spamscore=0 adultscore=0 suspectscore=0 mlxlogscore=999
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
+ definitions=main-2004090006
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9585 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 mlxlogscore=999 mlxscore=0
+ priorityscore=1501 phishscore=0 suspectscore=0 bulkscore=0
+ lowpriorityscore=0 impostorscore=0 malwarescore=0 clxscore=1011
+ spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2004090006
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 08, 2020 at 08:04:02AM -0700, Douglas Anderson wrote:
-> This reverts commit 7e70aa789d4a0c89dbfbd2c8a974a4df717475ec.
-> 
-> Now that we have the patches ("blk-mq: In blk_mq_dispatch_rq_list()
-> "no budget" is a reason to kick") and ("blk-mq: Rerun dispatching in
-> the case of budget contention") we should no longer need the fix in
-> the SCSI code.  Revert it, resolving conflicts with other patches that
-> have touched this code.
-> 
-> With this revert (and the two new patches) I can run the script that
-> was in commit 7e70aa789d4a ("scsi: core: run queue if SCSI device
-> queue isn't ready and queue is idle") in a loop with no failure.  If I
-> do this revert without the two new patches I can easily get a failure.
-> 
-> Signed-off-by: Douglas Anderson <dianders@chromium.org>
+
+On 4/8/20 3:08 PM, Wainer dos Santos Moschetta wrote:
+> Introduces the vm_get_fd() function in kvm_util which returns
+> the VM file descriptor.
+>
+> Reviewed-by: Andrew Jones <drjones@redhat.com>
+> Signed-off-by: Wainer dos Santos Moschetta <wainersm@redhat.com>
 > ---
-> I don't know for sure that we can revert this patch, but in the very
-> least the original test case now passes.  If there is any question
-> about this, we can just drop this patch.
+>   tools/testing/selftests/kvm/include/kvm_util.h | 1 +
+>   tools/testing/selftests/kvm/lib/kvm_util.c     | 5 +++++
+>   2 files changed, 6 insertions(+)
+>
+> diff --git a/tools/testing/selftests/kvm/include/kvm_util.h b/tools/testing/selftests/kvm/include/kvm_util.h
+> index a99b875f50d2..4e122819ee24 100644
+> --- a/tools/testing/selftests/kvm/include/kvm_util.h
+> +++ b/tools/testing/selftests/kvm/include/kvm_util.h
+> @@ -254,6 +254,7 @@ bool vm_is_unrestricted_guest(struct kvm_vm *vm);
+>   unsigned int vm_get_page_size(struct kvm_vm *vm);
+>   unsigned int vm_get_page_shift(struct kvm_vm *vm);
+>   unsigned int vm_get_max_gfn(struct kvm_vm *vm);
+> +int vm_get_fd(struct kvm_vm *vm);
+>   
+>   unsigned int vm_calc_num_guest_pages(enum vm_guest_mode mode, size_t size);
+>   unsigned int vm_num_host_pages(enum vm_guest_mode mode, unsigned int num_guest_pages);
+> diff --git a/tools/testing/selftests/kvm/lib/kvm_util.c b/tools/testing/selftests/kvm/lib/kvm_util.c
+> index 8a3523d4434f..3e36a1eb8771 100644
+> --- a/tools/testing/selftests/kvm/lib/kvm_util.c
+> +++ b/tools/testing/selftests/kvm/lib/kvm_util.c
+> @@ -1734,6 +1734,11 @@ unsigned int vm_get_max_gfn(struct kvm_vm *vm)
+>   	return vm->max_gfn;
+>   }
+>   
+> +int vm_get_fd(struct kvm_vm *vm)
+> +{
+> +        return vm->fd;
+> +}
+> +
 
-I think it is safe to revert this patch.
 
-This patch should have been one workaround in case of dispatch from hctx->dispatch,
-since there is one race. When dispatch from scheduler queue, any
-IO completion will re-run all hctxs, so no need to do the trick.
+I am just trying to understand why we need a separate function when the 
+'vm' variable is all local within the same file. There are a number of 
+places in kvm_util.c where it is used directly.
 
-Reviewed-by: Ming Lei <ming.lei@redhat.com>
-
-
-thanks,
-Ming
-
+>   static unsigned int vm_calc_num_pages(unsigned int num_pages,
+>   				      unsigned int page_shift,
+>   				      unsigned int new_page_shift,
