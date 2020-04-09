@@ -2,376 +2,170 @@ Return-Path: <SRS0=n+Ub=5Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA046C2BB54
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 09:02:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 870D9C2D0EA
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 09:04:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 776562083E
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 09:02:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 316F22083E
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 09:04:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="enbU4GZL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726720AbgDIJCx (ORCPT
+        id S1726734AbgDIJEA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Apr 2020 05:02:53 -0400
-Received: from mout.kundenserver.de ([217.72.192.75]:47445 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726470AbgDIJCx (ORCPT
+        Thu, 9 Apr 2020 05:04:00 -0400
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:27450 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726583AbgDIJEA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Apr 2020 05:02:53 -0400
-Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
- (mreue108 [212.227.15.145]) with ESMTPA (Nemesis) id
- 1N9Mh8-1jGjxi1CFg-015Llz; Thu, 09 Apr 2020 11:02:38 +0200
-From:   Arnd Bergmann <arnd@arndb.de>
-To:     sboyd@kernel.org, jiaxun.yang@flygoat.com,
-        linux-mips@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
-        chenhc@lemote.com, Paul Burton <paulburton@kernel.org>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        mturquette@baylibre.com, Arnd Bergmann <arnd@arndb.de>
-Subject: [PATCH] mips: loongsoon2ef: remove private clk api
-Date:   Thu,  9 Apr 2020 11:02:28 +0200
-Message-Id: <20200409090228.2241176-1-arnd@arndb.de>
-X-Mailer: git-send-email 2.26.0
-In-Reply-To: <20200409064416.83340-1-sboyd@kernel.org>
-References: <20200409064416.83340-1-sboyd@kernel.org>
+        Thu, 9 Apr 2020 05:04:00 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1586423039;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=8kQ7lBIYRxVIllP8WU3yr1RLlp3Ki4sY9tIMcm8NLXo=;
+        b=enbU4GZLdWg9Oxsb7kLZFSfzulPxa4RTDfayTiCMG22gjp8uYp3xqt5YD+ecwSOqZSy3cg
+        xmcCvPmt3Ktafqt/bYJgUT6cD9mPngWXwpOObLBh0kk7iEy20bXcMEqI5h6GCC1GfFrbat
+        oxv8FpNyqeNuBg/XTZyBKo2tIFSxl48=
+Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
+ [209.85.221.69]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-162-ROahz57vMHmhv6YH0OmnNQ-1; Thu, 09 Apr 2020 05:03:53 -0400
+X-MC-Unique: ROahz57vMHmhv6YH0OmnNQ-1
+Received: by mail-wr1-f69.google.com with SMTP id 91so6027725wro.1
+        for <linux-kernel@vger.kernel.org>; Thu, 09 Apr 2020 02:03:53 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=8kQ7lBIYRxVIllP8WU3yr1RLlp3Ki4sY9tIMcm8NLXo=;
+        b=CLe0hjO7sZoTD7wN+Dfpbcy/fO7gXRe0YmaZ2+v30jpzoWmJV9bdWMUyrJIy1Cbm51
+         PebN7doJtstawsc9dbrNWJtaXLVyswk4cjQsDGHr9nNrVYaeijOzwg+rBvtXJZ9tGJiD
+         9DFZeXlpQvICR9Z30FsBOXjNFmSGNtEdG9v/cQpOpvUj2P7MxFEGdVDwVFHpupM3qRWi
+         31d7ttFsuowXEy23culObA3SP+VLllYILt+QsBwmctEvkDR9kUA2ePYA5xGrRoGFvD2/
+         7COUNMzmzWZSa/1p4eDqx6RqZTZppeE10jFFg6IdfcKtWwDmnKs+ywRqVmLj8DCSqAkz
+         hW7g==
+X-Gm-Message-State: AGi0PuZ7AEu+IY1h2GB4i2AeqOoXjw9s/mvA9W6/40dzpiBU/O6u5d1O
+        DrVCYPJG4E4FQ1A/Ylpw6gaSjYmp0NM95JNdcZZ0v9Q/L8AZO965L8mmVERh+2skPV8pX+ShQBE
+        m7TuTnVunKlWEb8GbIbx7ytqb
+X-Received: by 2002:adf:b1c6:: with SMTP id r6mr12632478wra.49.1586423032029;
+        Thu, 09 Apr 2020 02:03:52 -0700 (PDT)
+X-Google-Smtp-Source: APiQypLF16jQY0MQeLOoeWEjDvj99XBLM/QjgSY70WD35IL8kqp+4bpmhm1qfLNT2fbzdEIEC3sYEw==
+X-Received: by 2002:adf:b1c6:: with SMTP id r6mr12632450wra.49.1586423031690;
+        Thu, 09 Apr 2020 02:03:51 -0700 (PDT)
+Received: from ?IPv6:2001:b07:6468:f312:bddb:697c:bea8:abc? ([2001:b07:6468:f312:bddb:697c:bea8:abc])
+        by smtp.gmail.com with ESMTPSA id t8sm300999wrq.88.2020.04.09.02.03.50
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 09 Apr 2020 02:03:51 -0700 (PDT)
+Subject: Re: [PATCH v2] x86/kvm: Disable KVM_ASYNC_PF_SEND_ALWAYS
+To:     Thomas Gleixner <tglx@linutronix.de>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Vivek Goyal <vgoyal@redhat.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
+        kvm list <kvm@vger.kernel.org>, stable <stable@vger.kernel.org>
+References: <20200407172140.GB64635@redhat.com>
+ <772A564B-3268-49F4-9AEA-CDA648F6131F@amacapital.net>
+ <87eeszjbe6.fsf@nanos.tec.linutronix.de>
+ <ce81c95f-8674-4012-f307-8f32d0e386c2@redhat.com>
+ <874ktukhku.fsf@nanos.tec.linutronix.de>
+ <274f3d14-08ac-e5cc-0b23-e6e0274796c8@redhat.com>
+ <87pncib06x.fsf@nanos.tec.linutronix.de>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Message-ID: <92ea7036-0b77-20da-34ac-f425e6f233c2@redhat.com>
+Date:   Thu, 9 Apr 2020 11:03:50 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:+262q9UA77aJWFHjKmxZSa0iY5GOcX0ILth/tpOhPziL0YwsuY4
- 8fdhwju4nCRPdhxtQaF8nAF2oJnQs/Jpav/bcbTC/nPZ8fp7eMHtj3LbvnySELs9CC/BmPJ
- lTBfWXbC2tEZqfWDjCxc4SE75hTZY1X2poo/lRh3qg793jq9KkMhGTSSLeK10EyPK15nBFZ
- UzXVp03Etnc0wTa9MIfVA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:X/PMLhjxSe0=:roICuxUE8MhuZKW+fwvAlC
- JvAow4r4MlAl0tFAVvxX5TUUF4owyfDYsQPigU/eELySQjak71KpEx6/leLe6fSIX4dclO2rJ
- Wi0iT1H37SKwO7JXuEbdiL0De/ATGvyAo1K3qmypZ+IxOno00dht8CdaH1nELlWMh42swZMlU
- LdMi1MMoBkUHwTBuQ7Xi9xTbQe+yedPwSYtnYLyG/o7C/W7dygu/ww+vrKxlm/Sz+1WrgPaJk
- yknzx2vt0GLkWHFvhxlLMdTzt7uFyR8KtkGTAOz1ij4N1ikEageT1aMBvxz3aiSUef2KCA5ae
- PrNKwW8yvySzsBpHOC96iAj9yk58r8QuetPo/fmjOHiVCMrs588lkNPnk5WOlWwXfilGU9ktE
- nARDtpRvovXf92Yu06bN8wLykcUHr/eDyezGQOHRu8fb5tlCQaJHZYNJ7rZUd6s1j5nJGGDv1
- 7w68L8qcG4+bEW3MfJUrY7AwAcu4flmaWdzW3Ou1JLCxZOVTKU/Ja6W4arwiCobgaFIgHG7qs
- JvUQZEb63sPppPuGpoVX/xzt9ObvL240onMVBTd7tWJnl51GGEZiYmniBR7JtZzCu4hibuXbC
- H3EhCD9rS10XAeJiF8Jn22aOU9K0Er/jBspTR5NL2GxyhecXpuwekyhMRk13bYqdu4bnibvWE
- FbSkB18ViZfxkkWQFmzQdvq8ivgHIPev7MhZjwVl5Ov2NCx+HRWQFAGMhNLcFQbrhF9znb7mU
- tigmkvgon9cqDXxBl2nhrQuTozWxHvWtgEg9a3wY2FNo/wL9d+nM7Y5c5nJrWtCO0/36XsnSL
- 5td0e+gqBIYCDbUmOMCjsgmA5DKfFOV38ZMb3d477X6cxkkLxA=
+In-Reply-To: <87pncib06x.fsf@nanos.tec.linutronix.de>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-As platforms are moving to COMMON_CLK in general, loongson2ef
-stuck out as something that has a private implementation but
-does not actually use it except for setting the frequency of
-the CPU itself from the loongson2_cpufreq driver.
+On 08/04/20 15:01, Thomas Gleixner wrote:
+> 
+> And it comes with restrictions:
+> 
+>     The Do Other Stuff event can only be delivered when guest IF=1.
+> 
+>     If guest IF=0 then the host has to suspend the guest until the
+>     situation is resolved.
+> 
+>     The 'Situation resolved' event must also wait for a guest IF=1 slot.
 
-Change that driver to call the register setting function directly
-and remove the rest of the stub implementation.
+Additionally:
 
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
----
- arch/mips/include/asm/clock.h                 | 49 ----------
- .../include/asm/mach-loongson2ef/loongson.h   |  1 +
- arch/mips/loongson2ef/Kconfig                 |  1 -
- arch/mips/loongson2ef/lemote-2f/clock.c       | 98 +------------------
- arch/mips/loongson64/smp.c                    |  1 -
- drivers/cpufreq/loongson2_cpufreq.c           | 22 +----
- 6 files changed, 8 insertions(+), 164 deletions(-)
- delete mode 100644 arch/mips/include/asm/clock.h
+- the do other stuff event must be delivered to the same CPU that is
+causing the host-side page fault
 
-diff --git a/arch/mips/include/asm/clock.h b/arch/mips/include/asm/clock.h
-deleted file mode 100644
-index 5a8f96ebe5fa..000000000000
---- a/arch/mips/include/asm/clock.h
-+++ /dev/null
-@@ -1,49 +0,0 @@
--/* SPDX-License-Identifier: GPL-2.0 */
--#ifndef __ASM_MIPS_CLOCK_H
--#define __ASM_MIPS_CLOCK_H
--
--#include <linux/kref.h>
--#include <linux/list.h>
--#include <linux/seq_file.h>
--#include <linux/clk.h>
--
--struct clk;
--
--struct clk_ops {
--	void (*init) (struct clk *clk);
--	void (*enable) (struct clk *clk);
--	void (*disable) (struct clk *clk);
--	void (*recalc) (struct clk *clk);
--	int (*set_rate) (struct clk *clk, unsigned long rate, int algo_id);
--	long (*round_rate) (struct clk *clk, unsigned long rate);
--};
--
--struct clk {
--	struct list_head node;
--	const char *name;
--	int id;
--	struct module *owner;
--
--	struct clk *parent;
--	struct clk_ops *ops;
--
--	struct kref kref;
--
--	unsigned long rate;
--	unsigned long flags;
--};
--
--#define CLK_ALWAYS_ENABLED	(1 << 0)
--#define CLK_RATE_PROPAGATES	(1 << 1)
--
--int clk_init(void);
--
--int __clk_enable(struct clk *);
--void __clk_disable(struct clk *);
--
--void clk_recalc_rate(struct clk *);
--
--int clk_register(struct clk *);
--void clk_unregister(struct clk *);
--
--#endif				/* __ASM_MIPS_CLOCK_H */
-diff --git a/arch/mips/include/asm/mach-loongson2ef/loongson.h b/arch/mips/include/asm/mach-loongson2ef/loongson.h
-index 5008af0a1a19..57e571128489 100644
---- a/arch/mips/include/asm/mach-loongson2ef/loongson.h
-+++ b/arch/mips/include/asm/mach-loongson2ef/loongson.h
-@@ -244,6 +244,7 @@ static inline void do_perfcnt_IRQ(void)
- #ifdef CONFIG_CPU_SUPPORTS_CPUFREQ
- #include <linux/cpufreq.h>
- extern struct cpufreq_frequency_table loongson2_clockmod_table[];
-+extern int loongson2_cpu_set_rate(unsigned long rate_khz);
- #endif
- 
- /*
-diff --git a/arch/mips/loongson2ef/Kconfig b/arch/mips/loongson2ef/Kconfig
-index 595dd48e1e4d..96dc6eba4310 100644
---- a/arch/mips/loongson2ef/Kconfig
-+++ b/arch/mips/loongson2ef/Kconfig
-@@ -46,7 +46,6 @@ config LEMOTE_MACH2F
- 	select CSRC_R4K if ! MIPS_EXTERNAL_TIMER
- 	select DMA_NONCOHERENT
- 	select GENERIC_ISA_DMA_SUPPORT_BROKEN
--	select HAVE_CLK
- 	select FORCE_PCI
- 	select I8259
- 	select IRQ_MIPS_CPU
-diff --git a/arch/mips/loongson2ef/lemote-2f/clock.c b/arch/mips/loongson2ef/lemote-2f/clock.c
-index 414f282c8ab5..850b6b9f8f15 100644
---- a/arch/mips/loongson2ef/lemote-2f/clock.c
-+++ b/arch/mips/loongson2ef/lemote-2f/clock.c
-@@ -6,22 +6,12 @@
-  * License.  See the file "COPYING" in the main directory of this archive
-  * for more details.
-  */
--#include <linux/clk.h>
- #include <linux/cpufreq.h>
- #include <linux/errno.h>
- #include <linux/export.h>
--#include <linux/list.h>
--#include <linux/mutex.h>
--#include <linux/spinlock.h>
- 
--#include <asm/clock.h>
- #include <asm/mach-loongson2ef/loongson.h>
- 
--static LIST_HEAD(clock_list);
--static DEFINE_SPINLOCK(clock_lock);
--static DEFINE_MUTEX(clock_list_sem);
--
--/* Minimum CLK support */
- enum {
- 	DC_ZERO, DC_25PT = 2, DC_37PT, DC_50PT, DC_62PT, DC_75PT,
- 	DC_87PT, DC_DISABLE, DC_RESV
-@@ -41,103 +31,21 @@ struct cpufreq_frequency_table loongson2_clockmod_table[] = {
- };
- EXPORT_SYMBOL_GPL(loongson2_clockmod_table);
- 
--static struct clk cpu_clk = {
--	.name = "cpu_clk",
--	.flags = CLK_ALWAYS_ENABLED | CLK_RATE_PROPAGATES,
--	.rate = 800000000,
--};
--
--struct clk *clk_get(struct device *dev, const char *id)
--{
--	return &cpu_clk;
--}
--EXPORT_SYMBOL(clk_get);
--
--static void propagate_rate(struct clk *clk)
--{
--	struct clk *clkp;
--
--	list_for_each_entry(clkp, &clock_list, node) {
--		if (likely(clkp->parent != clk))
--			continue;
--		if (likely(clkp->ops && clkp->ops->recalc))
--			clkp->ops->recalc(clkp);
--		if (unlikely(clkp->flags & CLK_RATE_PROPAGATES))
--			propagate_rate(clkp);
--	}
--}
--
--int clk_enable(struct clk *clk)
--{
--	return 0;
--}
--EXPORT_SYMBOL(clk_enable);
--
--void clk_disable(struct clk *clk)
-+int loongson2_cpu_set_rate(unsigned long rate_khz)
- {
--}
--EXPORT_SYMBOL(clk_disable);
--
--unsigned long clk_get_rate(struct clk *clk)
--{
--	if (!clk)
--		return 0;
--
--	return (unsigned long)clk->rate;
--}
--EXPORT_SYMBOL(clk_get_rate);
--
--void clk_put(struct clk *clk)
--{
--}
--EXPORT_SYMBOL(clk_put);
--
--int clk_set_rate(struct clk *clk, unsigned long rate)
--{
--	unsigned int rate_khz = rate / 1000;
- 	struct cpufreq_frequency_table *pos;
--	int ret = 0;
- 	int regval;
- 
--	if (likely(clk->ops && clk->ops->set_rate)) {
--		unsigned long flags;
--
--		spin_lock_irqsave(&clock_lock, flags);
--		ret = clk->ops->set_rate(clk, rate, 0);
--		spin_unlock_irqrestore(&clock_lock, flags);
--	}
--
--	if (unlikely(clk->flags & CLK_RATE_PROPAGATES))
--		propagate_rate(clk);
--
- 	cpufreq_for_each_valid_entry(pos, loongson2_clockmod_table)
- 		if (rate_khz == pos->frequency)
- 			break;
- 	if (rate_khz != pos->frequency)
- 		return -ENOTSUPP;
- 
--	clk->rate = rate;
--
- 	regval = readl(LOONGSON_CHIPCFG);
- 	regval = (regval & ~0x7) | (pos->driver_data - 1);
- 	writel(regval, LOONGSON_CHIPCFG);
- 
--	return ret;
--}
--EXPORT_SYMBOL_GPL(clk_set_rate);
--
--long clk_round_rate(struct clk *clk, unsigned long rate)
--{
--	if (likely(clk->ops && clk->ops->round_rate)) {
--		unsigned long flags, rounded;
--
--		spin_lock_irqsave(&clock_lock, flags);
--		rounded = clk->ops->round_rate(clk, rate);
--		spin_unlock_irqrestore(&clock_lock, flags);
--
--		return rounded;
--	}
--
--	return rate;
-+	return 0;
- }
--EXPORT_SYMBOL_GPL(clk_round_rate);
-+EXPORT_SYMBOL_GPL(loongson2_cpu_set_rate);
-diff --git a/arch/mips/loongson64/smp.c b/arch/mips/loongson64/smp.c
-index e1fe8bbb377d..e744e1bee49e 100644
---- a/arch/mips/loongson64/smp.c
-+++ b/arch/mips/loongson64/smp.c
-@@ -15,7 +15,6 @@
- #include <linux/kexec.h>
- #include <asm/processor.h>
- #include <asm/time.h>
--#include <asm/clock.h>
- #include <asm/tlbflush.h>
- #include <asm/cacheflush.h>
- #include <loongson.h>
-diff --git a/drivers/cpufreq/loongson2_cpufreq.c b/drivers/cpufreq/loongson2_cpufreq.c
-index 909f40fbcde2..d05e761d9572 100644
---- a/drivers/cpufreq/loongson2_cpufreq.c
-+++ b/drivers/cpufreq/loongson2_cpufreq.c
-@@ -20,7 +20,6 @@
- #include <linux/delay.h>
- #include <linux/platform_device.h>
- 
--#include <asm/clock.h>
- #include <asm/idle.h>
- 
- #include <asm/mach-loongson2ef/loongson.h>
-@@ -58,29 +57,20 @@ static int loongson2_cpufreq_target(struct cpufreq_policy *policy,
- 	     loongson2_clockmod_table[index].driver_data) / 8;
- 
- 	/* setting the cpu frequency */
--	clk_set_rate(policy->clk, freq * 1000);
-+	loongson2_cpu_set_rate(freq);
- 
- 	return 0;
- }
- 
- static int loongson2_cpufreq_cpu_init(struct cpufreq_policy *policy)
- {
--	struct clk *cpuclk;
- 	int i;
- 	unsigned long rate;
- 	int ret;
- 
--	cpuclk = clk_get(NULL, "cpu_clk");
--	if (IS_ERR(cpuclk)) {
--		pr_err("couldn't get CPU clk\n");
--		return PTR_ERR(cpuclk);
--	}
--
- 	rate = cpu_clock_freq / 1000;
--	if (!rate) {
--		clk_put(cpuclk);
-+	if (!rate)
- 		return -EINVAL;
--	}
- 
- 	/* clock table init */
- 	for (i = 2;
-@@ -88,20 +78,16 @@ static int loongson2_cpufreq_cpu_init(struct cpufreq_policy *policy)
- 	     i++)
- 		loongson2_clockmod_table[i].frequency = (rate * i) / 8;
- 
--	ret = clk_set_rate(cpuclk, rate * 1000);
--	if (ret) {
--		clk_put(cpuclk);
-+	ret = loongson2_cpu_set_rate(rate);
-+	if (ret)
- 		return ret;
--	}
- 
--	policy->clk = cpuclk;
- 	cpufreq_generic_init(policy, &loongson2_clockmod_table[0], 0);
- 	return 0;
- }
- 
- static int loongson2_cpufreq_exit(struct cpufreq_policy *policy)
- {
--	clk_put(policy->clk);
- 	return 0;
- }
- 
--- 
-2.26.0
+- the do other stuff event provides a token that identifies the cause
+and the situation resolved event provides a matching token
+
+This stuff is why I think the do other stuff event looks very much like
+a #VE.  But I think we're in violent agreement after all.
+
+> If you just want to solve Viveks problem, then its good enough. I.e. the
+> file truncation turns the EPT entries into #VE convertible entries and
+> the guest #VE handler can figure it out. This one can be injected
+> directly by the hardware, i.e. you don't need a VMEXIT.
+> 
+> If you want the opportunistic do other stuff mechanism, then #VE has
+> exactly the same problems as the existing async "PF". It's not magicaly
+> making that go away.
+
+You can inject #VE from the hypervisor too, with PV magic to distinguish
+the two.  However that's not necessarily a good idea because it makes it
+harder to switch to hardware delivery in the future.
+
+> One possible solution might be to make all recoverable EPT entries
+> convertible and let the HW inject #VE for those.
+> 
+> So the #VE handler in the guest would have to do:
+> 
+>        if (!recoverable()) {
+>        	if (user_mode)
+>                 	send_signal();
+>                 else if (!fixup_exception())
+>                 	die_hard();
+>                 goto done;  
+>        }                 
+> 
+>        store_ve_info_in_pv_page();
+> 
+>        if (!user_mode(regs) || !preemptible()) {
+>        	hypercall_resolve_ept(can_continue = false);
+>        } else {
+>               init_completion();
+>        	hypercall_resolve_ept(can_continue = true);
+>               wait_for_completion();
+>        }
+> 
+> or something like that.
+
+Yes, pretty much.  The VE info can also be passed down to the hypercall
+as arguments.
+
+Paolo
+
+> The hypercall to resolve the EPT fail on the host acts on the
+> can_continue argument.
+> 
+> If false, it suspends the guest vCPU and only returns when done.
+> 
+> If true it kicks the resolve process and returns to the guest which
+> suspends the task and tries to do something else.
+> 
+> The wakeup side needs to be a regular interrupt and cannot go through
+> #VE.
 
