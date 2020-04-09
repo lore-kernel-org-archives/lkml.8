@@ -6,26 +6,26 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 276F7C2D0EA
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 06:53:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C1B9C2D0EA
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 06:53:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 025ED20784
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 06:53:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 06E5120CC7
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 06:53:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726759AbgDIGxU (ORCPT
+        id S1726776AbgDIGx2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Apr 2020 02:53:20 -0400
+        Thu, 9 Apr 2020 02:53:28 -0400
 Received: from alexa-out-sd-02.qualcomm.com ([199.106.114.39]:47343 "EHLO
         alexa-out-sd-02.qualcomm.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725985AbgDIGw4 (ORCPT
+        by vger.kernel.org with ESMTP id S1725795AbgDIGwz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Apr 2020 02:52:56 -0400
+        Thu, 9 Apr 2020 02:52:55 -0400
 Received: from unknown (HELO ironmsg03-sd.qualcomm.com) ([10.53.140.143])
   by alexa-out-sd-02.qualcomm.com with ESMTP; 08 Apr 2020 23:52:54 -0700
 Received: from gurus-linux.qualcomm.com ([10.46.162.81])
   by ironmsg03-sd.qualcomm.com with ESMTP; 08 Apr 2020 23:52:54 -0700
 Received: by gurus-linux.qualcomm.com (Postfix, from userid 383780)
-        id 214134BF6; Wed,  8 Apr 2020 23:52:54 -0700 (PDT)
+        id 068C34C4A; Wed,  8 Apr 2020 23:52:54 -0700 (PDT)
 From:   Guru Das Srinagesh <gurus@codeaurora.org>
 To:     linux-pwm@vger.kernel.org
 Cc:     Thierry Reding <thierry.reding@gmail.com>,
@@ -35,15 +35,15 @@ Cc:     Thierry Reding <thierry.reding@gmail.com>,
         David Collins <collinsd@codeaurora.org>,
         linux-kernel@vger.kernel.org,
         Guru Das Srinagesh <gurus@codeaurora.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Richard Fontana <rfontana@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        Allison Randal <allison@lohutok.net>,
-        linux-media@vger.kernel.org
-Subject: [PATCH v12 03/11] ir-rx51: Use 64-bit division macro
-Date:   Wed,  8 Apr 2020 23:52:32 -0700
-Message-Id: <a12fd93a93612326d08e9312c626f89c26213ca4.1586414867.git.gurus@codeaurora.org>
+        Kamil Debski <kamil@wypas.org>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>, linux-hwmon@vger.kernel.org
+Subject: [PATCH v12 02/11] hwmon: pwm-fan: Use 64-bit division macro
+Date:   Wed,  8 Apr 2020 23:52:31 -0700
+Message-Id: <57dc832db730c7bdbc8ab20a9099bcff3c890a32.1586414867.git.gurus@codeaurora.org>
 X-Mailer: git-send-email 1.9.1
 In-Reply-To: <cover.1586414867.git.gurus@codeaurora.org>
 References: <cover.1586414867.git.gurus@codeaurora.org>
@@ -54,37 +54,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Since the PWM framework is switching struct pwm_state.period's datatype
-to u64, prepare for this transition by using DIV_ROUND_CLOSEST_ULL to
-handle a 64-bit dividend.
+Since the PWM framework is switching struct pwm_args.period's datatype
+to u64, prepare for this transition by using DIV_ROUND_UP_ULL to handle
+a 64-bit dividend.
 
-Cc: Mauro Carvalho Chehab <mchehab@kernel.org>
-Cc: Richard Fontana <rfontana@redhat.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Kate Stewart <kstewart@linuxfoundation.org>
-Cc: Allison Randal <allison@lohutok.net>
-Cc: linux-media@vger.kernel.org
+Cc: Kamil Debski <kamil@wypas.org>
+Cc: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Cc: Jean Delvare <jdelvare@suse.com>
+Cc: Guenter Roeck <linux@roeck-us.net>
+Cc: Liam Girdwood <lgirdwood@gmail.com>
+Cc: Mark Brown <broonie@kernel.org>
+Cc: linux-hwmon@vger.kernel.org
 
 Signed-off-by: Guru Das Srinagesh <gurus@codeaurora.org>
-Acked-by: Sean Young <sean@mess.org>
+Acked-by: Guenter Roeck <linux@roeck-us.net>
 ---
- drivers/media/rc/ir-rx51.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/hwmon/pwm-fan.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/media/rc/ir-rx51.c b/drivers/media/rc/ir-rx51.c
-index 8574eda..9a5dfd7 100644
---- a/drivers/media/rc/ir-rx51.c
-+++ b/drivers/media/rc/ir-rx51.c
-@@ -241,7 +241,8 @@ static int ir_rx51_probe(struct platform_device *dev)
- 	}
+diff --git a/drivers/hwmon/pwm-fan.c b/drivers/hwmon/pwm-fan.c
+index 30b7b3e..17bb642 100644
+--- a/drivers/hwmon/pwm-fan.c
++++ b/drivers/hwmon/pwm-fan.c
+@@ -447,7 +447,7 @@ static int pwm_fan_resume(struct device *dev)
+ 		return 0;
  
- 	/* Use default, in case userspace does not set the carrier */
--	ir_rx51.freq = DIV_ROUND_CLOSEST(pwm_get_period(pwm), NSEC_PER_SEC);
-+	ir_rx51.freq = DIV_ROUND_CLOSEST_ULL(pwm_get_period(pwm),
-+			NSEC_PER_SEC);
- 	pwm_put(pwm);
- 
- 	hrtimer_init(&ir_rx51.timer, CLOCK_MONOTONIC, HRTIMER_MODE_REL);
+ 	pwm_get_args(ctx->pwm, &pargs);
+-	duty = DIV_ROUND_UP(ctx->pwm_value * (pargs.period - 1), MAX_PWM);
++	duty = DIV_ROUND_UP_ULL(ctx->pwm_value * (pargs.period - 1), MAX_PWM);
+ 	ret = pwm_config(ctx->pwm, duty, pargs.period);
+ 	if (ret)
+ 		return ret;
 -- 
 The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
 a Linux Foundation Collaborative Project
