@@ -2,107 +2,192 @@ Return-Path: <SRS0=n+Ub=5Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71E35C2BA19
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 22:19:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D3B9C2BB86
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 22:21:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3704F20692
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 22:19:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ayC55L88"
+	by mail.kernel.org (Postfix) with ESMTP id 41DF52084D
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 22:21:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1586470877;
+	bh=Jppb1obNkX1IeI3tjxBViiA7iN4ydeaVqv01zbXI0WA=;
+	h=Date:From:To:cc:Subject:In-Reply-To:References:List-ID:From;
+	b=h2CUAsLi2omk/uht9KxCi0YjkZpRUj5o1H46oiKVpIT3koEmJAvA61Pz3+oI17lWM
+	 Nt3T9kVXohcRAjUoWfJSB+7xAInY0p1/siTCHS5s3jajOgi+gXZisruTsbZxcKipK2
+	 xIiPzO/81Lx9WzbZ4Taq6zIDrGqqm2GtV2KWRg+4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726924AbgDIWTW (ORCPT
+        id S1726767AbgDIWVP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Apr 2020 18:19:22 -0400
-Received: from mail-qk1-f194.google.com ([209.85.222.194]:37907 "EHLO
-        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726714AbgDIWTW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Apr 2020 18:19:22 -0400
-Received: by mail-qk1-f194.google.com with SMTP id h14so442681qke.5
-        for <linux-kernel@vger.kernel.org>; Thu, 09 Apr 2020 15:19:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=yF+4ifTZpgac0AbgqyHYOhjvKVGLdZBmX5qyHKVLzpw=;
-        b=ayC55L881C6xg8HNUeEsEsdG+JjdxCnjA7UteuNLnWVIETAYJFL0syDwTwbXrwKNQL
-         aTbVmOYsLBPrcWQXkiUI0SCP1s+aJ1i08TjGVWGMvHeLKysNIYCnLC7eb32KIrzy/Tiu
-         v4nq50XzsOXfMouLuH1upugXdP8A3MXgtAKvbyjlMVcufRn2qSZiqRMbthmhcuouwzuC
-         7YsB3TGQSigp5bYimeU9pryCMNu2H2HJzm8+B0E5BHgrFb0VgT2CZTMzWvGtZIALp9g8
-         k/jv+Klv0FmpvLvIuFG3AKlNFlBeo3LnegGrWnxxKuEtfuZljPdSScQR/+iEm/RDMkzn
-         gCcA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:date:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to;
-        bh=yF+4ifTZpgac0AbgqyHYOhjvKVGLdZBmX5qyHKVLzpw=;
-        b=MKltCR+FBGsUkXJK63ufCUS/szqDa4o2JnjPdf7lWaVqN4aEFVcxvaz4vy2ycXsRH2
-         OpKrBsTIb+BBu1u+C1jfgI22EjRQ3QQEwj77EYS10nkb+qUXmG2JVosVSzAyfFCQbRtu
-         wh2bab+UuVim/jYddfITPEMV49swr5colVRVIZNbfY/SqiFsxaZUghXdPDUXJlNCei1n
-         OxSAFc/Bh90bB7I0iBxzOT93dv8wL55BJtpErjXbu8OSOi2Wgm82lmPrPQ5VeIAUjltw
-         JhvTBe+Mgr1HvpImrDjKX+hpvjhMhjxlnZXPlSbkRFcng6Q1hqhMCGT6WO0Za2WTIx5L
-         66zQ==
-X-Gm-Message-State: AGi0PualgO06LaU7sRzFs+hw4PgfcThRLbR4JlhaSHLaMfJy4IpO3hDN
-        e/swDlQCz6ubKavBrNUgHjc=
-X-Google-Smtp-Source: APiQypJrKv7Asjch32aD4xEpFDeOyjpzVmOBQiF/yaYfcx+nuoITzrJsRZSj7Udu9wt+ElHx97bWzQ==
-X-Received: by 2002:a37:ae04:: with SMTP id x4mr1187661qke.278.1586470762165;
-        Thu, 09 Apr 2020 15:19:22 -0700 (PDT)
-Received: from rani.riverdale.lan ([2001:470:1f07:5f3::b55f])
-        by smtp.gmail.com with ESMTPSA id z3sm180468qtq.7.2020.04.09.15.19.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 09 Apr 2020 15:19:21 -0700 (PDT)
-From:   Arvind Sankar <nivedita@alum.mit.edu>
-X-Google-Original-From: Arvind Sankar <arvind@rani.riverdale.lan>
-Date:   Thu, 9 Apr 2020 18:19:19 -0400
-To:     Arvind Sankar <nivedita@alum.mit.edu>
-Cc:     "Tobin C . Harding" <me@tobin.cc>, Tycho Andersen <tycho@tycho.ws>,
-        kernel-hardening@lists.openwall.com,
-        Kees Cook <keescook@chromium.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>, x86@kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] x86/mm/init: Stop printing pgt_buf addresses
-Message-ID: <20200409221919.GA1460035@rani.riverdale.lan>
-References: <20200229231120.1147527-1-nivedita@alum.mit.edu>
+        Thu, 9 Apr 2020 18:21:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57144 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726638AbgDIWVP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Apr 2020 18:21:15 -0400
+Received: from pobox.suse.cz (prg-ext-pat.suse.com [213.151.95.130])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9A5EE2083E;
+        Thu,  9 Apr 2020 22:21:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1586470875;
+        bh=Jppb1obNkX1IeI3tjxBViiA7iN4ydeaVqv01zbXI0WA=;
+        h=Date:From:To:cc:Subject:In-Reply-To:References:From;
+        b=AybwdDI/rjq6JeEpISwPayKV7Ui/fiWUlgsjQjGJhLkpTw6uW22lZmrsIb+Ll7JPL
+         J2aiBEfqqxY2/v5Wrx9qqGSh/L0SjYf6GLa2GHKl5nFqCxdIM9QAfCyM/ERpCyr9dy
+         2m4zxvvLv7wQ7MGKO/gw4LorqgirvpaXS1Hccjso=
+Date:   Fri, 10 Apr 2020 00:21:12 +0200 (CEST)
+From:   Jiri Kosina <jikos@kernel.org>
+To:     Artem Borisov <dedsa2002@gmail.com>
+cc:     Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        Henrik Rydberg <rydberg@bitmath.org>,
+        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Masaki Ota <masaki.ota@jp.alps.com>
+Subject: Re: [PATCH 2/2] HID: alps: Refactor axis resolution logic
+In-Reply-To: <20200405235517.18203-2-dedsa2002@gmail.com>
+Message-ID: <nycvar.YFH.7.76.2004100019450.19713@cbobk.fhfr.pm>
+References: <20200405235517.18203-1-dedsa2002@gmail.com> <20200405235517.18203-2-dedsa2002@gmail.com>
+User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200229231120.1147527-1-nivedita@alum.mit.edu>
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Feb 29, 2020 at 06:11:20PM -0500, Arvind Sankar wrote:
-> This currently leaks kernel physical addresses into userspace.
-> 
-> Signed-off-by: Arvind Sankar <nivedita@alum.mit.edu>
+On Mon, 6 Apr 2020, Artem Borisov wrote:
+
+> AUI1657 doesn't follow the same logic for resolution calculation, since
+> the resulting values are incorrect. Instead, it reports the actual
+> resolution values in place of the pitch ones.
+> While we're at it, also refactor the whole resolution logic to make it more
+> generic and sensible for multiple device support.
+
+Let's add Masaki Ota to ack this change if possible.
+
+Would it be possible to be a little bit more verbose in the changelog, 
+explaining *how* (or why) is the patch making the logic more generic and 
+sensible?
+
+Thanks!
+
+> Signed-off-by: Artem Borisov <dedsa2002@gmail.com>
 > ---
->  arch/x86/mm/init.c | 2 --
->  1 file changed, 2 deletions(-)
+>  drivers/hid/hid-alps.c | 41 +++++++++++++++++++++++++----------------
+>  1 file changed, 25 insertions(+), 16 deletions(-)
 > 
-> diff --git a/arch/x86/mm/init.c b/arch/x86/mm/init.c
-> index e7bb483557c9..dc4711f09cdc 100644
-> --- a/arch/x86/mm/init.c
-> +++ b/arch/x86/mm/init.c
-> @@ -121,8 +121,6 @@ __ref void *alloc_low_pages(unsigned int num)
->  	} else {
->  		pfn = pgt_buf_end;
->  		pgt_buf_end += num;
-> -		printk(KERN_DEBUG "BRK [%#010lx, %#010lx] PGTABLE\n",
-> -			pfn << PAGE_SHIFT, (pgt_buf_end << PAGE_SHIFT) - 1);
+> diff --git a/drivers/hid/hid-alps.c b/drivers/hid/hid-alps.c
+> index c2a2bd528890..494c08cca645 100644
+> --- a/drivers/hid/hid-alps.c
+> +++ b/drivers/hid/hid-alps.c
+> @@ -83,8 +83,8 @@ enum dev_num {
+>   * @max_fingers: total number of fingers
+>   * @has_sp: boolean of sp existense
+>   * @sp_btn_info: button information
+> - * @x_active_len_mm: active area length of X (mm)
+> - * @y_active_len_mm: active area length of Y (mm)
+> + * @x_res: resolution of X
+> + * @y_res: resolution of Y
+>   * @x_max: maximum x coordinate value
+>   * @y_max: maximum y coordinate value
+>   * @x_min: minimum x coordinate value
+> @@ -100,9 +100,10 @@ struct alps_dev {
+>  	enum dev_num dev_type;
+>  	u8  max_fingers;
+>  	u8  has_sp;
+> +	u8  no_pitch;
+>  	u8	sp_btn_info;
+> -	u32	x_active_len_mm;
+> -	u32	y_active_len_mm;
+> +	u32	x_res;
+> +	u32	y_res;
+>  	u32	x_max;
+>  	u32	y_max;
+>  	u32	x_min;
+> @@ -550,10 +551,6 @@ static int u1_init(struct hid_device *hdev, struct alps_dev *pri_data)
+>  		dev_err(&hdev->dev, "failed U1_RESO_DWN_ABS (%d)\n", ret);
+>  		goto exit;
+>  	}
+> -	pri_data->x_active_len_mm =
+> -		(pitch_x * (sen_line_num_x - 1)) / 10;
+> -	pri_data->y_active_len_mm =
+> -		(pitch_y * (sen_line_num_y - 1)) / 10;
+>  
+>  	pri_data->x_max =
+>  		(resolution << 2) * (sen_line_num_x - 1);
+> @@ -562,6 +559,18 @@ static int u1_init(struct hid_device *hdev, struct alps_dev *pri_data)
+>  		(resolution << 2) * (sen_line_num_y - 1);
+>  	pri_data->y_min = 1;
+>  
+> +	if (pri_data->no_pitch) {
+> +		pri_data->x_res = pitch_x;
+> +		pri_data->y_res = pitch_y;
+> +	} else {
+> +		pri_data->x_res =
+> +			(pri_data->x_max - 1) /
+> +			((pitch_x * (sen_line_num_x - 1)) / 10);
+> +		pri_data->y_res =
+> +			(pri_data->y_max - 1) /
+> +			((pitch_y * (sen_line_num_y - 1)) / 10);
+> +	}
+> +
+>  	ret = u1_read_write_register(hdev, ADDRESS_U1_PAD_BTN,
+>  			&tmp, 0, true);
+>  	if (ret < 0) {
+> @@ -622,7 +631,7 @@ static int T4_init(struct hid_device *hdev, struct alps_dev *pri_data)
+>  	pri_data->x_min = T4_COUNT_PER_ELECTRODE;
+>  	pri_data->y_max = sen_line_num_y * T4_COUNT_PER_ELECTRODE;
+>  	pri_data->y_min = T4_COUNT_PER_ELECTRODE;
+> -	pri_data->x_active_len_mm = pri_data->y_active_len_mm = 0;
+> +	pri_data->x_res = pri_data->y_res = 0;
+>  	pri_data->btn_cnt = 1;
+>  
+>  	ret = t4_read_write_register(hdev, PRM_SYS_CONFIG_1, &tmp, 0, true);
+> @@ -675,7 +684,7 @@ static int alps_input_configured(struct hid_device *hdev, struct hid_input *hi)
+>  	struct alps_dev *data = hid_get_drvdata(hdev);
+>  	struct input_dev *input = hi->input, *input2;
+>  	int ret;
+> -	int res_x, res_y, i;
+> +	int i;
+>  
+>  	data->input = input;
+>  
+> @@ -706,12 +715,9 @@ static int alps_input_configured(struct hid_device *hdev, struct hid_input *hi)
+>  	input_set_abs_params(input, ABS_MT_POSITION_Y,
+>  						data->y_min, data->y_max, 0, 0);
+>  
+> -	if (data->x_active_len_mm && data->y_active_len_mm) {
+> -		res_x = (data->x_max - 1) / data->x_active_len_mm;
+> -		res_y = (data->y_max - 1) / data->y_active_len_mm;
+> -
+> -		input_abs_set_res(input, ABS_MT_POSITION_X, res_x);
+> -		input_abs_set_res(input, ABS_MT_POSITION_Y, res_y);
+> +	if (data->x_res && data->y_res) {
+> +		input_abs_set_res(input, ABS_MT_POSITION_X, data->x_res);
+> +		input_abs_set_res(input, ABS_MT_POSITION_Y, data->y_res);
 >  	}
 >  
->  	for (i = 0; i < num; i++) {
+>  	input_set_abs_params(input, ABS_MT_PRESSURE, 0, 64, 0, 0);
+> @@ -802,8 +808,11 @@ static int alps_probe(struct hid_device *hdev, const struct hid_device_id *id)
+>  		break;
+>  	case HID_DEVICE_ID_ALPS_U1_DUAL:
+>  	case HID_DEVICE_ID_ALPS_U1:
+> +		data->dev_type = U1;
+> +		break;
+>  	case HID_DEVICE_ID_ALPS_1657:
+>  		data->dev_type = U1;
+> +		data->no_pitch = 1;
+>  		break;
+>  	default:
+>  		data->dev_type = UNKNOWN;
 > -- 
-> 2.24.1
+> 2.26.0
 > 
 
-This was acked by Kees, is it ok for merge?
+-- 
+Jiri Kosina
+SUSE Labs
 
-Thanks.
