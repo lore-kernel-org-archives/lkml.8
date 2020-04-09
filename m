@@ -7,29 +7,29 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D4F3C2BB85
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 19:13:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F134C2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 19:13:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E017D206F5
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 19:13:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4D7552087E
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 19:13:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="ZKdlqn1I"
+	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="hWiKPGWH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727118AbgDITNw (ORCPT
+        id S1727162AbgDITNy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Apr 2020 15:13:52 -0400
-Received: from mail-bn8nam11on2088.outbound.protection.outlook.com ([40.107.236.88]:6253
-        "EHLO NAM11-BN8-obe.outbound.protection.outlook.com"
+        Thu, 9 Apr 2020 15:13:54 -0400
+Received: from mail-co1nam11on2049.outbound.protection.outlook.com ([40.107.220.49]:43681
+        "EHLO NAM11-CO1-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726759AbgDITMy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726757AbgDITMy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 9 Apr 2020 15:12:54 -0400
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=QUNMxEmkB8tiIl+OcpI1ZVkxM/OEvSUiNfA5+wrkdjuyLQEIrsx/rLRmf7XCkwAEncm5SYSDISKZs3sE1j+7mCyJXlxNCzQTPg9GJdjvinG7W2eZxJZu5tC+mccOHXWZ5AASEt7R8DvkA9iZ8drPLyk+R7gKfZ7fKORapQKHzSklg81ynWn2iFR6Wb5A7vaCI/GCs8DR5ojQ+Z8O3Z1wdHtd72gJaOyfazNwUnbFXqPUZltrm6i75szQf7Oa7KmiSjBefnoHazpjRzE7mCuT6K/UcafsbvcdX26X//yGjttw038zHHezena1mzh4jQKbVc0fWxkTn2/oG27zdrr/AQ==
+ b=ikw+FC3XbW+ZeuiS6xMno4fawDN9oYt5ozB60E5IliCfzexaXeao6yjNGuOdww7FjmAzJtaM8BzKE2AXbKLoaVgw7wahS7nF7MV+3RpVadaKZ7W7FNI744p6fiBrk+dreTQQT54+x4r63BItQczZbL4g4v4epCrx3CKmsv3em4D2kI4xsSV6afMZZL9QqFTfGrKdlv5i3shKkHDcr9ayvEEngDoRlOF/dIb5o6ExqG1ZuL6x8zIKe4yaSusH0umFBt1V+QIR8l2JUeBofQlemftOIIfp+nn/1U+0TKY6lHx6SIqAvdJtXkR7r7p77nnHjhleMunc2fHKrtXkTGAMvA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ipW0UsClo2pc4QFwai8/rdVe7fqM2Gs+DuOOP8moBBQ=;
- b=YUZoMDRkyPUxzEQ/bEhmPLCxkcH+O0zHq4ueH4ROLDbOIwFZMZwr2O3mkCMfAqu9ccqgtKGLbOmrsKxM/Z9+3nqBpt+CEdww0jJBBnyIsocPBEtrH7ID7bJSJ4SZrMBI5z+ZbsVReKWpZ03dc+1u8FCqL+6br/SkjbsDuvXHp8KC4ll9AezySjSBhNks3IF64Eb3OP2rSzz9DUdweatUZQCLHSRvz0mIEiU+TaN3KoWmi5cG+FPS279pv+CIm7AFodTZbITdVXj3gaiN6CcDtc9BnzBloZ+YRjHbTAPZH8RcW1exp7HufLLuvFZF/Ajv3/aLZ75JOFFsGeVRhJiKEw==
+ bh=eE9E4UqxZHPRPsIR6m5we0QgvAqlAAnOxx20TYuDZ5A=;
+ b=kGZqic4qyeKfgd88VXWq4WFvnRx7CVXx7mcDA1a820AivHV+WoiZUS9gHOWDI4i+66MD/Fhh0ARwC/ZkO5SZG2kNaVo7eCkRxx+VclyfRoyU4OW610WssRLJdTTZOiXNAa09jqwFID8z8FblYfLvwPEqFIkZ5CVOLDiIWK33tUjcb2fICb1Li+Crs88pahReZF+1MEpLidAJW7n4Tia1ZeyplNSKdb0mK6/4ln2W5wyV1p6tzs79YC7UhnXs41/YXW3d5HMrZtjXm1aj4Z1D9s+YWlpd1xHSm6GXvY89Xxg7LJjW4KjqSX5QzHTH9kA7iwKETQ0hMJMeFIFxAUTS/w==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
  149.199.60.83) smtp.rcpttodomain=linaro.org smtp.mailfrom=xilinx.com;
  dmarc=bestguesspass action=none header.from=xilinx.com; dkim=none (message
@@ -37,18 +37,18 @@ ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
  d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ipW0UsClo2pc4QFwai8/rdVe7fqM2Gs+DuOOP8moBBQ=;
- b=ZKdlqn1Ig8cfjTxUfWPW8Gylx384mKyydsPFJxa1BdEeHGUvj0vPKZukKCvbMnrp5s2aTfNXfInrIjx7jaWGR6KSTie+rAEprP9Bzj+1wMIMRKmQDgyE1Y2uVvPMZdZgXDDtDqYTSCZeEURZLn4Sd7J/u7SPPiYBJFkUpmE/Lvk=
-Received: from BL0PR03CA0003.namprd03.prod.outlook.com (2603:10b6:208:2d::16)
- by MWHPR02MB2381.namprd02.prod.outlook.com (2603:10b6:300:5a::12) with
+ bh=eE9E4UqxZHPRPsIR6m5we0QgvAqlAAnOxx20TYuDZ5A=;
+ b=hWiKPGWHeMIo4WD8W7Vc29X2iu30+gq3HNPOTCWDTGCUuqxYS/Q/ML19Pnh445OilE4dHZXBm1iveDLr2uc7y2iSKlrnRU+Po24l1sYjDRMbauOgX8blxV+GCwOVCCG8FrMbf6HqzqEHdFa1hq8j5a5NtgwgbwNUot6OTTndi0s=
+Received: from MN2PR18CA0024.namprd18.prod.outlook.com (2603:10b6:208:23c::29)
+ by BN6PR02MB2292.namprd02.prod.outlook.com (2603:10b6:404:2b::12) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2878.20; Thu, 9 Apr
- 2020 19:12:50 +0000
-Received: from BL2NAM02FT025.eop-nam02.prod.protection.outlook.com
- (2603:10b6:208:2d:cafe::e1) by BL0PR03CA0003.outlook.office365.com
- (2603:10b6:208:2d::16) with Microsoft SMTP Server (version=TLS1_2,
+ 2020 19:12:51 +0000
+Received: from BL2NAM02FT007.eop-nam02.prod.protection.outlook.com
+ (2603:10b6:208:23c:cafe::5c) by MN2PR18CA0024.outlook.office365.com
+ (2603:10b6:208:23c::29) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2900.15 via Frontend
- Transport; Thu, 9 Apr 2020 19:12:50 +0000
+ Transport; Thu, 9 Apr 2020 19:12:51 +0000
 Authentication-Results: spf=pass (sender IP is 149.199.60.83)
  smtp.mailfrom=xilinx.com; linaro.org; dkim=none (message not signed)
  header.d=none;linaro.org; dmarc=bestguesspass action=none
@@ -57,21 +57,21 @@ Received-SPF: Pass (protection.outlook.com: domain of xilinx.com designates
  149.199.60.83 as permitted sender) receiver=protection.outlook.com;
  client-ip=149.199.60.83; helo=xsj-pvapsmtpgw01;
 Received: from xsj-pvapsmtpgw01 (149.199.60.83) by
- BL2NAM02FT025.mail.protection.outlook.com (10.152.77.151) with Microsoft SMTP
- Server id 15.20.2900.15 via Frontend Transport; Thu, 9 Apr 2020 19:12:49
+ BL2NAM02FT007.mail.protection.outlook.com (10.152.77.46) with Microsoft SMTP
+ Server id 15.20.2900.15 via Frontend Transport; Thu, 9 Apr 2020 19:12:50
  +0000
-Received: from [149.199.38.66] (port=44281 helo=xsj-pvapsmtp01)
+Received: from [149.199.38.66] (port=44356 helo=xsj-pvapsmtp01)
         by xsj-pvapsmtpgw01 with esmtp (Exim 4.90)
         (envelope-from <jolly.shah@xilinx.com>)
-        id 1jMcb9-000602-41; Thu, 09 Apr 2020 12:12:23 -0700
+        id 1jMcbA-00060g-0J; Thu, 09 Apr 2020 12:12:24 -0700
 Received: from [127.0.0.1] (helo=localhost)
         by xsj-pvapsmtp01 with smtp (Exim 4.63)
         (envelope-from <jolly.shah@xilinx.com>)
-        id 1jMcbZ-0007NV-IM; Thu, 09 Apr 2020 12:12:49 -0700
+        id 1jMcba-0007NV-F1; Thu, 09 Apr 2020 12:12:50 -0700
 Received: from [172.19.2.91] (helo=xsjjollys50.xilinx.com)
         by xsj-pvapsmtp01 with esmtp (Exim 4.63)
         (envelope-from <jolly.shah@xilinx.com>)
-        id 1jMcbS-0007La-3m; Thu, 09 Apr 2020 12:12:42 -0700
+        id 1jMcbT-0007La-9w; Thu, 09 Apr 2020 12:12:43 -0700
 From:   Jolly Shah <jolly.shah@xilinx.com>
 To:     ard.biesheuvel@linaro.org, mingo@kernel.org,
         gregkh@linuxfoundation.org, matt@codeblueprint.co.uk,
@@ -79,10 +79,11 @@ To:     ard.biesheuvel@linaro.org, mingo@kernel.org,
         dmitry.torokhov@gmail.com, michal.simek@xilinx.com
 Cc:     rajanv@xilinx.com, linux-arm-kernel@lists.infradead.org,
         linux-kernel@vger.kernel.org, Rajan Vaja <rajan.vaja@xilinx.com>,
+        Tejas Patel <tejas.patel@xilinx.com>,
         Jolly Shah <jolly.shah@xilinx.com>
-Subject: [PATCH v4 07/25] firmware: xilinx: Remove eemi ops for clock_setdivider
-Date:   Thu,  9 Apr 2020 12:11:56 -0700
-Message-Id: <1586459534-8997-8-git-send-email-jolly.shah@xilinx.com>
+Subject: [PATCH v4 22/25] firmware: xilinx: Add sysfs interface
+Date:   Thu,  9 Apr 2020 12:12:11 -0700
+Message-Id: <1586459534-8997-23-git-send-email-jolly.shah@xilinx.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1586459534-8997-1-git-send-email-jolly.shah@xilinx.com>
 References: <1586459534-8997-1-git-send-email-jolly.shah@xilinx.com>
@@ -90,27 +91,27 @@ X-TM-AS-Product-Ver: IMSS-7.1.0.1224-8.2.0.1013-23620.005
 X-TM-AS-User-Approved-Sender: Yes;Yes
 X-EOPAttributedMessage: 0
 X-MS-Office365-Filtering-HT: Tenant
-X-Forefront-Antispam-Report: CIP:149.199.60.83;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:xsj-pvapsmtpgw01;PTR:unknown-60-83.xilinx.com;CAT:NONE;SFTY:;SFS:(10009020)(4636009)(46966005)(7416002)(6636002)(70206006)(8936002)(9786002)(54906003)(7696005)(36756003)(336012)(2906002)(426003)(81156014)(44832011)(5660300002)(6666004)(356004)(8676002)(70586007)(107886003)(26005)(4326008)(81166007)(498600001)(2616005)(47076004)(186003);DIR:OUT;SFP:1101;
+X-Forefront-Antispam-Report: CIP:149.199.60.83;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:xsj-pvapsmtpgw01;PTR:unknown-60-83.xilinx.com;CAT:NONE;SFTY:;SFS:(10009020)(4636009)(136003)(346002)(396003)(39860400002)(376002)(46966005)(4326008)(7696005)(356004)(6666004)(9786002)(8936002)(6636002)(5660300002)(478600001)(186003)(81156014)(26005)(2906002)(316002)(336012)(36756003)(82740400003)(47076004)(426003)(2616005)(70586007)(70206006)(81166007)(107886003)(54906003)(44832011)(8676002)(7416002);DIR:OUT;SFP:1101;
 MIME-Version: 1.0
 Content-Type: text/plain
 X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 5f8d8863-b40e-484c-e427-08d7dcb9fee6
-X-MS-TrafficTypeDiagnostic: MWHPR02MB2381:
-X-Microsoft-Antispam-PRVS: <MWHPR02MB2381320003B7012E46F0CBB2B8C10@MWHPR02MB2381.namprd02.prod.outlook.com>
+X-MS-Office365-Filtering-Correlation-Id: 3cf89192-1697-4fb7-72b3-08d7dcb9ff6e
+X-MS-TrafficTypeDiagnostic: BN6PR02MB2292:
+X-Microsoft-Antispam-PRVS: <BN6PR02MB2292211403DD250DD8C34C86B8C10@BN6PR02MB2292.namprd02.prod.outlook.com>
 X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
-X-MS-Oob-TLC-OOBClassifiers: OLM:60;
+X-MS-Oob-TLC-OOBClassifiers: OLM:3383;
 X-Forefront-PRVS: 0368E78B5B
 X-MS-Exchange-SenderADCheck: 1
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: QGknWMUIeO5MoU2y4w7nR1eeIgI5T4Oj+JYM2/PUj0d6rpan57w9mZTEhdN/JhwpZbfy8Jsc73s2y+mjWO4LVKExRBvmJSWBEVkQysbCgt9A9U7QP28rz/001soFFtq75fSZKWdfod2vDaczE8xaZSTSCAAOZKhM8Z6NyhqtQnXjmgoWeqBO9Xgexkg7zGAzSlY6ik0NtiND76TJFX3DVK/rJeZ6gfE1lq62xBsM0fLwcb5h9/bpq3wQqxcsHG6J8a1mTuuFZmiwNvpGnxEz8xVxiGU+DrRviZQmwv6FHZlxm2AFs7EhcOMPMbKN2OT+8yyMRx6pE3eMqvcLtSHswwKc3IW/FneWLAhZQ5SPU2445TcPqpWDpTpBepVTWg7NWjaiKs7UN+1LmfQ2nYuP7Ph8CVuQoGGCxE1neQDl5eTW9G9nnZqniVDqOpPEEITXjMSrw5GT2HVX+nuJXh4ot9rYH/XXYOWTCj6I+xGWZ2Gkda4kwO6goNkpDJBCEN2bahRCJ7Ldx+sC3K3MUcQrCw==
+X-Microsoft-Antispam-Message-Info: gUf1VG2fPsdsvOUk9POSoM4t82iTXzzFg/MAuZpsJKiSRWRf6mIrye4K2rDRdj/rj9QPmDxCSuc1Tr5yI0O6OzIl3FGf151A4tufBjG8YL+cnt41FEd3tpNd6/U18xwx6/uO9ZBuLqcLAD1YrYqyjM6eCIZD36mxaitxVJk0WcrlptSH6IriS6QRdy9o6S+n1v/KUvHIs+qKXpxbQOYbljaxEuazqAKcsgNn26iAY1I0T74SqhcDK7nDZuZgAcBWg33vyCTlFu2DRZOxYdI6egK1KJ7cS4tW3Kn0legS4rCFL3MfjcAT//fFYYoQD4G8UXQcMBS53wMc+w0KH4LnqdntjtWQqG1tYCV/pCYRMRkp6QCjlWiqOwhXaANts5kGbJvRjy9LDXBRQ9d5KehkVgHW9b3PHc1TKixB/VMAr1MtTp9pL2VGituTF3ryVgzlsXTb03Np7v2y13Do3euRrli+WbjWTIsQ0lTDpy0M6yYzVftzgMxDZdmKqZGa5PyJ
 X-OriginatorOrg: xilinx.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Apr 2020 19:12:49.9669
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Apr 2020 19:12:50.8533
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 5f8d8863-b40e-484c-e427-08d7dcb9fee6
+X-MS-Exchange-CrossTenant-Network-Message-Id: 3cf89192-1697-4fb7-72b3-08d7dcb9ff6e
 X-MS-Exchange-CrossTenant-Id: 657af505-d5df-48d0-8300-c31994686c5c
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=657af505-d5df-48d0-8300-c31994686c5c;Ip=[149.199.60.83];Helo=[xsj-pvapsmtpgw01]
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR02MB2381
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN6PR02MB2292
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -118,118 +119,281 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Rajan Vaja <rajan.vaja@xilinx.com>
 
-Use direct function call instead of using eemi ops for
-clock_setdivider.
+Add firmware-ggs sysfs interface which provides read/write
+interface to global storage registers.
 
 Signed-off-by: Rajan Vaja <rajan.vaja@xilinx.com>
+Signed-off-by: Michal Simek <michal.simek@xilinx.com>
+Signed-off-by: Tejas Patel <tejas.patel@xilinx.com>
 Signed-off-by: Jolly Shah <jolly.shah@xilinx.com>
 ---
- drivers/clk/zynqmp/divider.c         | 3 +--
- drivers/clk/zynqmp/pll.c             | 4 ++--
- drivers/firmware/xilinx/zynqmp.c     | 4 ++--
- include/linux/firmware/xlnx-zynqmp.h | 6 +++++-
- 4 files changed, 10 insertions(+), 7 deletions(-)
+ .../ABI/stable/sysfs-driver-firmware-zynqmp        |  50 ++++++
+ drivers/firmware/xilinx/zynqmp.c                   | 167 ++++++++++++++++++++-
+ include/linux/firmware/xlnx-zynqmp.h               |   2 +
+ 3 files changed, 218 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/ABI/stable/sysfs-driver-firmware-zynqmp
 
-diff --git a/drivers/clk/zynqmp/divider.c b/drivers/clk/zynqmp/divider.c
-index e21f4ea..13041cd 100644
---- a/drivers/clk/zynqmp/divider.c
-+++ b/drivers/clk/zynqmp/divider.c
-@@ -219,7 +219,6 @@ static int zynqmp_clk_divider_set_rate(struct clk_hw *hw, unsigned long rate,
- 	u32 div_type = divider->div_type;
- 	u32 value, div;
- 	int ret;
--	const struct zynqmp_eemi_ops *eemi_ops = zynqmp_pm_get_eemi_ops();
- 
- 	value = zynqmp_divider_get_val(parent_rate, rate, divider->flags);
- 	if (div_type == TYPE_DIV1) {
-@@ -233,7 +232,7 @@ static int zynqmp_clk_divider_set_rate(struct clk_hw *hw, unsigned long rate,
- 	if (divider->flags & CLK_DIVIDER_POWER_OF_TWO)
- 		div = __ffs(div);
- 
--	ret = eemi_ops->clock_setdivider(clk_id, div);
-+	ret = zynqmp_pm_clock_setdivider(clk_id, div);
- 
- 	if (ret)
- 		pr_warn_once("%s() set divider failed for %s, ret = %d\n",
-diff --git a/drivers/clk/zynqmp/pll.c b/drivers/clk/zynqmp/pll.c
-index 41f376a..95fad06 100644
---- a/drivers/clk/zynqmp/pll.c
-+++ b/drivers/clk/zynqmp/pll.c
-@@ -187,7 +187,7 @@ static int zynqmp_pll_set_rate(struct clk_hw *hw, unsigned long rate,
- 		rate = parent_rate * m;
- 		frac = (parent_rate * f) / FRAC_DIV;
- 
--		ret = eemi_ops->clock_setdivider(clk_id, m);
-+		ret = zynqmp_pm_clock_setdivider(clk_id, m);
- 		if (ret == -EUSERS)
- 			WARN(1, "More than allowed devices are using the %s, which is forbidden\n",
- 			     clk_name);
-@@ -201,7 +201,7 @@ static int zynqmp_pll_set_rate(struct clk_hw *hw, unsigned long rate,
- 
- 	fbdiv = DIV_ROUND_CLOSEST(rate, parent_rate);
- 	fbdiv = clamp_t(u32, fbdiv, PLL_FBDIV_MIN, PLL_FBDIV_MAX);
--	ret = eemi_ops->clock_setdivider(clk_id, fbdiv);
-+	ret = zynqmp_pm_clock_setdivider(clk_id, fbdiv);
- 	if (ret)
- 		pr_warn_once("%s() set divider failed for %s, ret = %d\n",
- 			     __func__, clk_name, ret);
+diff --git a/Documentation/ABI/stable/sysfs-driver-firmware-zynqmp b/Documentation/ABI/stable/sysfs-driver-firmware-zynqmp
+new file mode 100644
+index 0000000..2e3aebd
+--- /dev/null
++++ b/Documentation/ABI/stable/sysfs-driver-firmware-zynqmp
+@@ -0,0 +1,50 @@
++What:		/sys/devices/platform/firmware\:zynqmp-firmware/ggs*
++Date:		March 2020
++KernelVersion:	5.6
++Contact:	"Jolly Shah" <jollys@xilinx.com>
++Description:
++		Read/Write PMU global general storage register value,
++		GLOBAL_GEN_STORAGE{0:3}.
++		Global general storage register that can be used
++		by system to pass information between masters.
++
++		The register is reset during system or power-on
++		resets. Three registers are used by the FSBL and
++		other Xilinx software products: GLOBAL_GEN_STORAGE{4:6}.
++
++		Usage:
++		# cat /sys/devices/platform/firmware\:zynqmp-firmware/ggs0
++		# echo <value> > /sys/devices/platform/firmware\:zynqmp-firmware/ggs0
++
++		Example:
++		# cat /sys/devices/platform/firmware\:zynqmp-firmware/ggs0
++		# echo 0x1234ABCD > /sys/devices/platform/firmware\:zynqmp-firmware/ggs0
++
++Users:		Xilinx
++
++What:		/sys/devices/platform/firmware\:zynqmp-firmware/pggs*
++Date:		March 2020
++KernelVersion:	5.6
++Contact:	"Jolly Shah" <jollys@xilinx.com>
++Description:
++		Read/Write PMU persistent global general storage register
++		value, PERS_GLOB_GEN_STORAGE{0:3}.
++		Persistent global general storage register that
++		can be used by system to pass information between
++		masters.
++
++		This register is only reset by the power-on reset
++		and maintains its value through a system reset.
++		Four registers are used by the FSBL and other Xilinx
++		software products: PERS_GLOB_GEN_STORAGE{4:7}.
++		Register is reset only by a POR reset.
++
++		Usage:
++		# cat /sys/devices/platform/firmware\:zynqmp-firmware/pggs0
++		# echo <value> > /sys/devices/platform/firmware\:zynqmp-firmware/pggs0
++
++		Example:
++		# cat /sys/devices/platform/firmware\:zynqmp-firmware/pggs0
++		# echo 0x1234ABCD > /sys/devices/platform/firmware\:zynqmp-firmware/pggs0
++
++Users:		Xilinx
 diff --git a/drivers/firmware/xilinx/zynqmp.c b/drivers/firmware/xilinx/zynqmp.c
-index c11b528..ef2412d 100644
+index 3518456..2fe4f57 100644
 --- a/drivers/firmware/xilinx/zynqmp.c
 +++ b/drivers/firmware/xilinx/zynqmp.c
-@@ -405,11 +405,12 @@ EXPORT_SYMBOL_GPL(zynqmp_pm_clock_getstate);
+@@ -2,7 +2,7 @@
+ /*
+  * Xilinx Zynq MPSoC Firmware layer
   *
-  * Return: Returns status, either success or error+reason
-  */
--static int zynqmp_pm_clock_setdivider(u32 clock_id, u32 divider)
-+int zynqmp_pm_clock_setdivider(u32 clock_id, u32 divider)
+- *  Copyright (C) 2014-2018 Xilinx, Inc.
++ *  Copyright (C) 2014-2020 Xilinx, Inc.
+  *
+  *  Michal Simek <michal.simek@xilinx.com>
+  *  Davorin Mista <davorin.mista@aggios.com>
+@@ -875,6 +875,170 @@ int zynqmp_pm_aes_engine(const u64 address, u32 *out)
+ }
+ EXPORT_SYMBOL_GPL(zynqmp_pm_aes_engine);
+ 
++static ssize_t ggs_show(struct device *device,
++			struct device_attribute *attr,
++			char *buf,
++			u32 reg)
++{
++	int ret;
++	u32 ret_payload[PAYLOAD_ARG_CNT];
++
++	ret = zynqmp_pm_read_ggs(reg, ret_payload);
++	if (ret)
++		return ret;
++
++	return sprintf(buf, "0x%x\n", ret_payload[1]);
++}
++
++static ssize_t ggs_store(struct device *device,
++			 struct device_attribute *attr,
++			 const char *buf, size_t count,
++			 u32 reg)
++{
++	long value;
++	int ret;
++
++	if (reg >= GSS_NUM_REGS)
++		return -EINVAL;
++
++	ret = kstrtol(buf, 16, &value);
++	if (ret) {
++		count = -EFAULT;
++		goto err;
++	}
++
++	ret = zynqmp_pm_write_ggs(reg, value);
++	if (ret)
++		count = -EFAULT;
++
++err:
++	return count;
++}
++
++/* GGS register show functions */
++#define GGS0_SHOW(N)						\
++	ssize_t ggs##N##_show(struct device *device,		\
++			      struct device_attribute *attr,	\
++			      char *buf)			\
++	{							\
++		return ggs_show(device, attr, buf, N);		\
++	}
++
++static GGS0_SHOW(0);
++static GGS0_SHOW(1);
++static GGS0_SHOW(2);
++static GGS0_SHOW(3);
++
++/* GGS register store function */
++#define GGS0_STORE(N)						\
++	ssize_t ggs##N##_store(struct device *device,		\
++			       struct device_attribute *attr,	\
++			       const char *buf,			\
++			       size_t count)			\
++	{							\
++		return ggs_store(device, attr, buf, count, N);	\
++	}
++
++static GGS0_STORE(0);
++static GGS0_STORE(1);
++static GGS0_STORE(2);
++static GGS0_STORE(3);
++
++static ssize_t pggs_show(struct device *device,
++			 struct device_attribute *attr,
++			 char *buf,
++			 u32 reg)
++{
++	int ret;
++	u32 ret_payload[PAYLOAD_ARG_CNT];
++
++	ret = zynqmp_pm_read_pggs(reg, ret_payload);
++	if (ret)
++		return ret;
++
++	return sprintf(buf, "0x%x\n", ret_payload[1]);
++}
++
++static ssize_t pggs_store(struct device *device,
++			  struct device_attribute *attr,
++			  const char *buf, size_t count,
++			  u32 reg)
++{
++	long value;
++	int ret;
++
++	if (reg >= GSS_NUM_REGS)
++		return -EINVAL;
++
++	ret = kstrtol(buf, 16, &value);
++	if (ret) {
++		count = -EFAULT;
++		goto err;
++	}
++
++	ret = zynqmp_pm_write_pggs(reg, value);
++	if (ret)
++		count = -EFAULT;
++
++err:
++	return count;
++}
++
++#define PGGS0_SHOW(N)						\
++	ssize_t pggs##N##_show(struct device *device,		\
++			       struct device_attribute *attr,	\
++			       char *buf)			\
++	{							\
++		return pggs_show(device, attr, buf, N);		\
++	}
++
++#define PGGS0_STORE(N)						\
++	ssize_t pggs##N##_store(struct device *device,		\
++				struct device_attribute *attr,	\
++				const char *buf,		\
++				size_t count)			\
++	{							\
++		return pggs_store(device, attr, buf, count, N);	\
++	}
++
++/* PGGS register show functions */
++static PGGS0_SHOW(0);
++static PGGS0_SHOW(1);
++static PGGS0_SHOW(2);
++static PGGS0_SHOW(3);
++
++/* PGGS register store functions */
++static PGGS0_STORE(0);
++static PGGS0_STORE(1);
++static PGGS0_STORE(2);
++static PGGS0_STORE(3);
++
++/* GGS register attributes */
++static DEVICE_ATTR_RW(ggs0);
++static DEVICE_ATTR_RW(ggs1);
++static DEVICE_ATTR_RW(ggs2);
++static DEVICE_ATTR_RW(ggs3);
++
++/* PGGS register attributes */
++static DEVICE_ATTR_RW(pggs0);
++static DEVICE_ATTR_RW(pggs1);
++static DEVICE_ATTR_RW(pggs2);
++static DEVICE_ATTR_RW(pggs3);
++
++static struct attribute *zynqmp_firmware_attrs[] = {
++	&dev_attr_ggs0.attr,
++	&dev_attr_ggs1.attr,
++	&dev_attr_ggs2.attr,
++	&dev_attr_ggs3.attr,
++	&dev_attr_pggs0.attr,
++	&dev_attr_pggs1.attr,
++	&dev_attr_pggs2.attr,
++	&dev_attr_pggs3.attr,
++	NULL,
++};
++
++ATTRIBUTE_GROUPS(zynqmp_firmware);
++
+ static int zynqmp_firmware_probe(struct platform_device *pdev)
  {
- 	return zynqmp_pm_invoke_fn(PM_CLOCK_SETDIVIDER, clock_id, divider,
- 				   0, 0, NULL);
- }
-+EXPORT_SYMBOL_GPL(zynqmp_pm_clock_setdivider);
- 
- /**
-  * zynqmp_pm_clock_getdivider() - Get the clock divider for given id
-@@ -740,7 +741,6 @@ static int zynqmp_pm_aes_engine(const u64 address, u32 *out)
- }
- 
- static const struct zynqmp_eemi_ops eemi_ops = {
--	.clock_setdivider = zynqmp_pm_clock_setdivider,
- 	.clock_getdivider = zynqmp_pm_clock_getdivider,
- 	.clock_setrate = zynqmp_pm_clock_setrate,
- 	.clock_getrate = zynqmp_pm_clock_getrate,
+ 	struct device *dev = &pdev->dev;
+@@ -952,6 +1116,7 @@ static struct platform_driver zynqmp_firmware_driver = {
+ 	.driver = {
+ 		.name = "zynqmp_firmware",
+ 		.of_match_table = zynqmp_firmware_of_match,
++		.dev_groups = zynqmp_firmware_groups,
+ 	},
+ 	.probe = zynqmp_firmware_probe,
+ 	.remove = zynqmp_firmware_remove,
 diff --git a/include/linux/firmware/xlnx-zynqmp.h b/include/linux/firmware/xlnx-zynqmp.h
-index e874f0c..023f1f9 100644
+index e23251d..c1356e9 100644
 --- a/include/linux/firmware/xlnx-zynqmp.h
 +++ b/include/linux/firmware/xlnx-zynqmp.h
-@@ -296,7 +296,6 @@ struct zynqmp_pm_query_data {
- struct zynqmp_eemi_ops {
- 	int (*fpga_load)(const u64 address, const u32 size, const u32 flags);
- 	int (*fpga_get_status)(u32 *value);
--	int (*clock_setdivider)(u32 clock_id, u32 divider);
- 	int (*clock_getdivider)(u32 clock_id, u32 *divider);
- 	int (*clock_setrate)(u32 clock_id, u64 rate);
- 	int (*clock_getrate)(u32 clock_id, u64 *rate);
-@@ -331,6 +330,7 @@ int zynqmp_pm_query_data(struct zynqmp_pm_query_data qdata, u32 *out);
- int zynqmp_pm_clock_enable(u32 clock_id);
- int zynqmp_pm_clock_disable(u32 clock_id);
- int zynqmp_pm_clock_getstate(u32 clock_id, u32 *state);
-+int zynqmp_pm_clock_setdivider(u32 clock_id, u32 divider);
- #else
- static inline struct zynqmp_eemi_ops *zynqmp_pm_get_eemi_ops(void)
- {
-@@ -361,6 +361,10 @@ static inline int zynqmp_pm_clock_getstate(u32 clock_id, u32 *state)
- {
- 	return -ENODEV;
- }
-+static inline int zynqmp_pm_clock_setdivider(u32 clock_id, u32 divider)
-+{
-+	return -ENODEV;
-+}
- #endif
+@@ -42,6 +42,8 @@
  
- #endif /* __FIRMWARE_ZYNQMP_H__ */
+ #define ZYNQMP_PM_MAX_QOS		100U
+ 
++#define GSS_NUM_REGS	(4)
++
+ /* Node capabilities */
+ #define	ZYNQMP_PM_CAPABILITY_ACCESS	0x1U
+ #define	ZYNQMP_PM_CAPABILITY_CONTEXT	0x2U
 -- 
 2.7.4
 
