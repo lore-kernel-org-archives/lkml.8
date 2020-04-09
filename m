@@ -2,95 +2,104 @@ Return-Path: <SRS0=n+Ub=5Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03C36C2BA80
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 02:39:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F3BEC2BA2B
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 02:40:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C38762087E
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 02:39:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="a74Iq1D9"
+	by mail.kernel.org (Postfix) with ESMTP id 7A9F12087E
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 02:40:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726626AbgDICjS (ORCPT
+        id S1726654AbgDICkq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Apr 2020 22:39:18 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:55266 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726574AbgDICjS (ORCPT
+        Wed, 8 Apr 2020 22:40:46 -0400
+Received: from alexa-out-sd-01.qualcomm.com ([199.106.114.38]:26320 "EHLO
+        alexa-out-sd-01.qualcomm.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726523AbgDICkq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Apr 2020 22:39:18 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1586399957;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=HR+51ncLat+TViGePt1EzZ9/+c+0ffiOCieXE52eEnw=;
-        b=a74Iq1D9jmoc2Uu2DWxX8xGCUIp1W/halFfnb3tSVZo2u51ZcOGNvFsHjLNQHWrXACE9mh
-        029j5bdmVGAGkq7D1Mqv8ZcfD04DE8gfg9uCQRlSWKWXGK584UK7NCMI4690NAigjwhTaR
-        fXFZj3AtIk1dXdj1C2RCQP47yHKUOJg=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-204-x3013G3HMNqqRz2AZLIqHg-1; Wed, 08 Apr 2020 22:39:12 -0400
-X-MC-Unique: x3013G3HMNqqRz2AZLIqHg-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id F23DF107ACCA;
-        Thu,  9 Apr 2020 02:39:10 +0000 (UTC)
-Received: from localhost.localdomain (ovpn-8-27.pek2.redhat.com [10.72.8.27])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id ABBA19DD6B;
-        Thu,  9 Apr 2020 02:39:02 +0000 (UTC)
-Date:   Thu, 9 Apr 2020 10:38:57 +0800
-From:   Ming Lei <ming.lei@redhat.com>
-To:     Tejun Heo <tj@kernel.org>
-Cc:     axboe@kernel.dk, linux-block@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kernel-team@vger.kernel.org,
-        cgroups@vger.kernel.org, newella@fb.com, josef@toxicpanda.com
-Subject: Re: [PATCH 2/5] block: add request->io_data_len
-Message-ID: <20200409023857.GB370295@localhost.localdomain>
-References: <20200408201450.3959560-1-tj@kernel.org>
- <20200408201450.3959560-3-tj@kernel.org>
- <20200409014406.GA370295@localhost.localdomain>
- <20200409021119.GJ162390@mtj.duckdns.org>
+        Wed, 8 Apr 2020 22:40:46 -0400
+Received: from unknown (HELO ironmsg05-sd.qualcomm.com) ([10.53.140.145])
+  by alexa-out-sd-01.qualcomm.com with ESMTP; 08 Apr 2020 19:40:46 -0700
+Received: from gurus-linux.qualcomm.com ([10.46.162.81])
+  by ironmsg05-sd.qualcomm.com with ESMTP; 08 Apr 2020 19:40:46 -0700
+Received: by gurus-linux.qualcomm.com (Postfix, from userid 383780)
+        id D817A4C51; Wed,  8 Apr 2020 19:40:45 -0700 (PDT)
+Date:   Wed, 8 Apr 2020 19:40:45 -0700
+From:   Guru Das Srinagesh <gurus@codeaurora.org>
+To:     David Laight <David.Laight@ACULAB.COM>
+Cc:     "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <uwe@kleine-koenig.org>,
+        Subbaraman Narayanamurthy <subbaram@codeaurora.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>
+Subject: Re: [PATCH v8 01/12] clk: pwm: Use 64-bit division function
+Message-ID: <20200409024045.GA1147@codeaurora.org>
+References: <cover.1583889178.git.gurus@codeaurora.org>
+ <338966686a673c241905716c90049993e7bb7d6a.1583889178.git.gurus@codeaurora.org>
+ <7506bc2972324fd286dac6327ec73a3a@AcuMS.aculab.com>
+ <20200312020938.GA14827@codeaurora.org>
+ <fea86a43b28f4493abe0826654369513@AcuMS.aculab.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200409021119.GJ162390@mtj.duckdns.org>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+In-Reply-To: <fea86a43b28f4493abe0826654369513@AcuMS.aculab.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 08, 2020 at 10:11:19PM -0400, Tejun Heo wrote:
-> On Thu, Apr 09, 2020 at 09:44:06AM +0800, Ming Lei wrote:
-> > Almost all __blk_mq_end_request() follow blk_update_request(), so the
-> > completed bytes can be passed to __blk_mq_end_request(), then we can
-> > avoid to introduce this field.
+On Thu, Mar 12, 2020 at 09:14:09AM +0000, David Laight wrote:
+> From: Guru Das Srinagesh
+> > Sent: 12 March 2020 02:10
+> > On Wed, Mar 11, 2020 at 04:58:24PM +0000, David Laight wrote:
+> > > From: Guru Das Srinagesh
+> > > > Sent: 11 March 2020 01:41
+> > > >
+> > > > Since the PWM framework is switching struct pwm_args.period's datatype
+> > > > to u64, prepare for this transition by using div64_u64 to handle a
+> > > > 64-bit divisor.
+> > > >
+> ...
+> > > > --- a/drivers/clk/clk-pwm.c
+> > > > +++ b/drivers/clk/clk-pwm.c
+> > > > @@ -89,7 +89,7 @@ static int clk_pwm_probe(struct platform_device *pdev)
+> > > >  	}
+> > > >
+> > > >  	if (of_property_read_u32(node, "clock-frequency", &clk_pwm->fixed_rate))
+> > > > -		clk_pwm->fixed_rate = NSEC_PER_SEC / pargs.period;
+> > > > +		clk_pwm->fixed_rate = div64_u64(NSEC_PER_SEC, pargs.period);
+> > >
+> > > That cannot be needed, a 32 bit division is fine.
+> > 
+> > Could you please explain why? I think the use of this function is
+> > warranted in order to handle the division properly with a 64-bit
+> > divisor.
+> ...
+> > > I'd assign pargs.period to an 'unsigned int' variable
+> > > prior to the division (I hate casts - been bitten by them in the past.).
+> > 
+> > Wouldn't this truncate the 64-bit value? The intention behind this patch
+> > is to allow the processing of 64-bit values in full.
 > 
-> But on some drivers blk_update_request() may be called multiple times before
-> __blk_mq_end_request() is called and what's needed here is the total number of
-> bytes in the whole request, not just in the final completion.
+> You are dividing a 32bit constant by a value.
+> If pargs.period is greater than 2^32 the result is zero.
 
-OK.
+Correction: if pargs.period is greater than NSEC_PER_SEC, not 2^32.
 
-Another choice might be to record request bytes in rq's payload
-when calling .queue_rq() only for these drivers.
+> I think you divide by 'fixed_rate' a bit later on - better not be zero.
 
-> 
-> > Also there is just 20 callers of __blk_mq_end_request(), looks this kind
-> > of change shouldn't be too big.
-> 
-> This would work iff we get rid of partial completions and if we get rid of
-> partial completions, we might as well stop exposing blk_update_request() and
-> __blk_mq_end_request().
+I am adding an explicit check in v12 to ensure fixed_rate is not zero. If
+during the calculation it is found to be zero, probing will fail.
 
-Indeed, we can store the completed bytes in request payload, so looks killing
-partial completion shouldn't be too hard.
+I think with this modification, this v8 version of this change makes
+sense to use.
 
-Thanks,
-Ming
+Thank you.
 
+Guru Das.
