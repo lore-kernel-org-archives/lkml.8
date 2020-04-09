@@ -2,30 +2,30 @@ Return-Path: <SRS0=n+Ub=5Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7F5CC2D0EA
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 06:53:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A60EC2BB1D
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 06:53:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9166E20784
+	by mail.kernel.org (Postfix) with ESMTP id E37A420784
 	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 06:53:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726654AbgDIGw5 (ORCPT
+        id S1726722AbgDIGxD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Apr 2020 02:52:57 -0400
-Received: from alexa-out-sd-02.qualcomm.com ([199.106.114.39]:47343 "EHLO
+        Thu, 9 Apr 2020 02:53:03 -0400
+Received: from alexa-out-sd-02.qualcomm.com ([199.106.114.39]:47363 "EHLO
         alexa-out-sd-02.qualcomm.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726470AbgDIGw4 (ORCPT
+        by vger.kernel.org with ESMTP id S1726623AbgDIGw5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Apr 2020 02:52:56 -0400
+        Thu, 9 Apr 2020 02:52:57 -0400
 Received: from unknown (HELO ironmsg01-sd.qualcomm.com) ([10.53.140.141])
-  by alexa-out-sd-02.qualcomm.com with ESMTP; 08 Apr 2020 23:52:54 -0700
+  by alexa-out-sd-02.qualcomm.com with ESMTP; 08 Apr 2020 23:52:55 -0700
 Received: from gurus-linux.qualcomm.com ([10.46.162.81])
   by ironmsg01-sd.qualcomm.com with ESMTP; 08 Apr 2020 23:52:54 -0700
 Received: by gurus-linux.qualcomm.com (Postfix, from userid 383780)
-        id 74AC64BF6; Wed,  8 Apr 2020 23:52:54 -0700 (PDT)
+        id 6E4744C4D; Wed,  8 Apr 2020 23:52:54 -0700 (PDT)
 From:   Guru Das Srinagesh <gurus@codeaurora.org>
 To:     linux-pwm@vger.kernel.org
 Cc:     Thierry Reding <thierry.reding@gmail.com>,
@@ -35,11 +35,14 @@ Cc:     Thierry Reding <thierry.reding@gmail.com>,
         David Collins <collinsd@codeaurora.org>,
         linux-kernel@vger.kernel.org,
         Guru Das Srinagesh <gurus@codeaurora.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>, linux-clk@vger.kernel.org
-Subject: [PATCH v12 10/11] clk: pwm: Use 64-bit division function
-Date:   Wed,  8 Apr 2020 23:52:39 -0700
-Message-Id: <d5127aa19a128edf7c3dd437291b366b77be4ac5.1586414867.git.gurus@codeaurora.org>
+        Lee Jones <lee.jones@linaro.org>,
+        Daniel Thompson <daniel.thompson@linaro.org>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org
+Subject: [PATCH v12 09/11] backlight: pwm_bl: Use 64-bit division function
+Date:   Wed,  8 Apr 2020 23:52:38 -0700
+Message-Id: <e2139a83008e9f301889f9384487c55de475a6a2.1586414867.git.gurus@codeaurora.org>
 X-Mailer: git-send-email 1.9.1
 In-Reply-To: <cover.1586414867.git.gurus@codeaurora.org>
 References: <cover.1586414867.git.gurus@codeaurora.org>
@@ -50,40 +53,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Since the PWM framework is switching struct pwm_args.period's datatype
-to u64, prepare for this transition by using div64_u64 to handle a
-64-bit divisor.
+Since the PWM framework is switching struct pwm_state.period's datatype
+to u64, prepare for this transition by using div_u64 to handle a 64-bit
+dividend instead of a straight division operation.
 
-Also ensure that divide-by-zero (with fixed_rate as denominator) does
-not happen with an explicit check with probe failure as a consequence.
-
-Cc: Michael Turquette <mturquette@baylibre.com>
-Cc: Stephen Boyd <sboyd@kernel.org>
-Cc: linux-clk@vger.kernel.org
+Cc: Lee Jones <lee.jones@linaro.org>
+Cc: Daniel Thompson <daniel.thompson@linaro.org>
+Cc: Jingoo Han <jingoohan1@gmail.com>
+Cc: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Cc: linux-pwm@vger.kernel.org
+Cc: dri-devel@lists.freedesktop.org
+Cc: linux-fbdev@vger.kernel.org
 
 Signed-off-by: Guru Das Srinagesh <gurus@codeaurora.org>
+Reviewed-by: Daniel Thompson <daniel.thompson@linaro.org>
 ---
- drivers/clk/clk-pwm.c | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+ drivers/video/backlight/pwm_bl.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/clk/clk-pwm.c b/drivers/clk/clk-pwm.c
-index 87fe0b0e..86f2e2d 100644
---- a/drivers/clk/clk-pwm.c
-+++ b/drivers/clk/clk-pwm.c
-@@ -89,7 +89,12 @@ static int clk_pwm_probe(struct platform_device *pdev)
+diff --git a/drivers/video/backlight/pwm_bl.c b/drivers/video/backlight/pwm_bl.c
+index efb4efc..3e5dbcf 100644
+--- a/drivers/video/backlight/pwm_bl.c
++++ b/drivers/video/backlight/pwm_bl.c
+@@ -625,7 +625,8 @@ static int pwm_backlight_probe(struct platform_device *pdev)
+ 		pb->scale = data->max_brightness;
  	}
  
- 	if (of_property_read_u32(node, "clock-frequency", &clk_pwm->fixed_rate))
--		clk_pwm->fixed_rate = NSEC_PER_SEC / pargs.period;
-+		clk_pwm->fixed_rate = div64_u64(NSEC_PER_SEC, pargs.period);
-+
-+	if (!clk_pwm->fixed_rate) {
-+		dev_err(&pdev->dev, "fixed_rate cannot be zero\n");
-+		return -EINVAL;
-+	}
+-	pb->lth_brightness = data->lth_brightness * (state.period / pb->scale);
++	pb->lth_brightness = data->lth_brightness * (div_u64(state.period,
++				pb->scale));
  
- 	if (pargs.period != NSEC_PER_SEC / clk_pwm->fixed_rate &&
- 	    pargs.period != DIV_ROUND_UP(NSEC_PER_SEC, clk_pwm->fixed_rate)) {
+ 	props.type = BACKLIGHT_RAW;
+ 	props.max_brightness = data->max_brightness;
 -- 
 The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
 a Linux Foundation Collaborative Project
