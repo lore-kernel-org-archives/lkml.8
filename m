@@ -6,70 +6,71 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54F44C2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 11:41:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9012DC2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 11:41:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 35E9020771
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 11:41:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6532F20771
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 11:41:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726579AbgDILld (ORCPT
+        id S1726621AbgDILlj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Apr 2020 07:41:33 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:48265 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725971AbgDILld (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Apr 2020 07:41:33 -0400
-Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <colin.king@canonical.com>)
-        id 1jMVYc-0004rk-7i; Thu, 09 Apr 2020 11:41:18 +0000
-From:   Colin King <colin.king@canonical.com>
-To:     Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H . Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        xen-devel@lists.xenproject.org, linux-pci@vger.kernel.org
-Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] xen/pci: remove redundant assignment to variable irq
-Date:   Thu,  9 Apr 2020 12:41:18 +0100
-Message-Id: <20200409114118.249461-1-colin.king@canonical.com>
-X-Mailer: git-send-email 2.25.1
+        Thu, 9 Apr 2020 07:41:39 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:12706 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725971AbgDILli (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Apr 2020 07:41:38 -0400
+Received: from DGGEMS401-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id C4AE6E691DB7A3209D39;
+        Thu,  9 Apr 2020 19:41:34 +0800 (CST)
+Received: from huawei.com (10.175.124.28) by DGGEMS401-HUB.china.huawei.com
+ (10.3.19.201) with Microsoft SMTP Server id 14.3.487.0; Thu, 9 Apr 2020
+ 19:41:27 +0800
+From:   Jason Yan <yanaijie@huawei.com>
+To:     <mturquette@baylibre.com>, <sboyd@kernel.org>, <heiko@sntech.de>,
+        <linux-clk@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-rockchip@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>
+CC:     Jason Yan <yanaijie@huawei.com>
+Subject: [PATCH] clk: rockchip: remove defined but not used 'mux_timer_src_p'
+Date:   Thu, 9 Apr 2020 19:40:01 +0800
+Message-ID: <20200409114001.38122-1-yanaijie@huawei.com>
+X-Mailer: git-send-email 2.17.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.175.124.28]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+Fix the following gcc warning:
 
-The variable irq is being initialized with a value that is never read
-and it is being updated later with a new value.  The initialization is
-redundant and can be removed.
+drivers/clk/rockchip/clk-rk3308.c:136:7: warning: ‘mux_timer_src_p’
+defined but not used [-Wunused-const-variable=]
+ PNAME(mux_timer_src_p)  = { "xin24m", "clk_rtc32k" };
+       ^
 
-Addresses-Coverity: ("Unused value")
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: Jason Yan <yanaijie@huawei.com>
 ---
- arch/x86/pci/xen.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/clk/rockchip/clk-rk3308.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/arch/x86/pci/xen.c b/arch/x86/pci/xen.c
-index 91220cc25854..80272eb49230 100644
---- a/arch/x86/pci/xen.c
-+++ b/arch/x86/pci/xen.c
-@@ -63,7 +63,7 @@ static int xen_pcifront_enable_irq(struct pci_dev *dev)
- static int xen_register_pirq(u32 gsi, int gsi_override, int triggering,
- 			     bool set_pirq)
- {
--	int rc, pirq = -1, irq = -1;
-+	int rc, pirq = -1, irq;
- 	struct physdev_map_pirq map_irq;
- 	int shareable = 0;
- 	char *name;
+diff --git a/drivers/clk/rockchip/clk-rk3308.c b/drivers/clk/rockchip/clk-rk3308.c
+index b0baf87a283e..5bf15f2a44b7 100644
+--- a/drivers/clk/rockchip/clk-rk3308.c
++++ b/drivers/clk/rockchip/clk-rk3308.c
+@@ -133,7 +133,6 @@ PNAME(mux_uart1_p)		= { "clk_uart1_src", "dummy", "clk_uart1_frac" };
+ PNAME(mux_uart2_p)		= { "clk_uart2_src", "dummy", "clk_uart2_frac" };
+ PNAME(mux_uart3_p)		= { "clk_uart3_src", "dummy", "clk_uart3_frac" };
+ PNAME(mux_uart4_p)		= { "clk_uart4_src", "dummy", "clk_uart4_frac" };
+-PNAME(mux_timer_src_p)		= { "xin24m", "clk_rtc32k" };
+ PNAME(mux_dclk_vop_p)		= { "dclk_vop_src", "dclk_vop_frac", "xin24m" };
+ PNAME(mux_nandc_p)		= { "clk_nandc_div", "clk_nandc_div50" };
+ PNAME(mux_sdmmc_p)		= { "clk_sdmmc_div", "clk_sdmmc_div50" };
 -- 
-2.25.1
+2.17.2
 
