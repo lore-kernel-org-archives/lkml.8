@@ -2,106 +2,109 @@ Return-Path: <SRS0=n+Ub=5Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82F81C2BA19
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 22:29:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C745C2BB86
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 22:33:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4E046206F7
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 22:29:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D75D62072F
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 22:33:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="hfIVKWB9"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aFzSLMqX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726799AbgDIW3K (ORCPT
+        id S1726846AbgDIWdl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Apr 2020 18:29:10 -0400
-Received: from mail-yb1-f202.google.com ([209.85.219.202]:33431 "EHLO
-        mail-yb1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726689AbgDIW3K (ORCPT
+        Thu, 9 Apr 2020 18:33:41 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:38644 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726679AbgDIWdl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Apr 2020 18:29:10 -0400
-Received: by mail-yb1-f202.google.com with SMTP id v46so669408ybi.0
-        for <linux-kernel@vger.kernel.org>; Thu, 09 Apr 2020 15:29:10 -0700 (PDT)
+        Thu, 9 Apr 2020 18:33:41 -0400
+Received: by mail-pf1-f196.google.com with SMTP id c21so203775pfo.5;
+        Thu, 09 Apr 2020 15:33:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:message-id:mime-version:subject:from:to:cc;
-        bh=b/dOwLUQ4awW4wuKHSakVt1acQwI+Qy4HT+dV/1grog=;
-        b=hfIVKWB9CrLwkogy2lQycBLjkgKykYZdXEoOucLUgnRzUanF+7JiWU8/NvmVGRVWLb
-         +APd/xNaW/JS89RTqAYHh4LEWmIzgZrzaTo1B5PZlOZDnOljuapxKPZx5OwP4hUKqnoS
-         I0smuTEqekWowtpi9u0JCFtSASGRFiWwnVzw+CV71ZIVQR/KcfLpIVyj70/Eteztc3iR
-         td6cq8g7YsvT7FFJ1wHPbx6711Y7o5p194BZJGXNZ4OdHiVgdehvjB32k8H13eCPp882
-         xAnwSpKo6bFo0TCtggzMAHtd6g2Fdc0/LCrmBhjFuz16MrcBUn9yp9Qr9BgFFJBl2FRa
-         4eWg==
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=h6CIWptWdgEYb7MN2wQY+7B3RiKrdcdmKs6r8jKHbUQ=;
+        b=aFzSLMqXkYUkWTXZf/+hjn33ZQ+pGbjtq3DbLoRoUzO+mOIdinxzUpOdg9Bm4l55fY
+         1eXpGvBqe+m/5dHjD/j6Yb2Lq+4eMXj7D7ZMxHC/gLmPV+tQiQp89Zji6AcxJ6MQS4Kp
+         3GqAZAgxDKro7/TC0OHa5wIAmtn13WKqpIkuuvPFqj8+WDej/0XH7IH56DqYUPHcpLo6
+         uWPeGitvXf/CBxkHl+YT/Y4IFvlAiJx/jfjarvUH6yZ4p7g+hi9hTICcNgZ2wggGaujt
+         vL9W0pVDGgRjLq/fZFSU4ED0KUgsjQxky8FhSj7d7bfiCUkzSfLJ3AudquBUqBuHv6+g
+         qPlQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
-        bh=b/dOwLUQ4awW4wuKHSakVt1acQwI+Qy4HT+dV/1grog=;
-        b=Ora3KZzgjYYZ15jyZEAfopupfq//nAjb79nUZO3kdbSpvxUrzoZVROB1MItehNqe0P
-         taRs48hMvKp0nxzwVpYgxIIJwtRwIjBGAJqOlN0gnfox05vC554YQKuVOcBMSxG8gHSG
-         qjnHnZoEnjkYsDEFtPm1Q6lO3O1f2L2CIlg4sNwNdE6seTzJOTdIyXMOjA0yT3gf2jUz
-         /v0yQitIEJVUV3FUSRjlDysqr4lvvlNtbStaFLSgsQDafuPYJhY9BDtQjdQA7YeDYRdP
-         ymPbaSvveugnJ/FIoRMXKpIzEQlvvaV28xAdyM87X56seGI20eXvwUZWJ4PZiY8zx+Lb
-         MD3A==
-X-Gm-Message-State: AGi0Pub3KLDMlO57bkGb9KpDYLjD1+Q5cYEIWtA8INL/+1ptwpbv/Y5C
-        rKu6TyGuMtumF+K9aKl9xQE/a5sRpTPEiTxrgJrLfA==
-X-Google-Smtp-Source: APiQypL0JMSLASw3TiGOXOIT90FuwqpyH1o4LzS3LkTNHHKAR/YLE8LjcXI7t2Xw+OUppoTbkFA+zzYem8vjJZvmOz0WWA==
-X-Received: by 2002:a05:6902:4c2:: with SMTP id v2mr3076158ybs.225.1586471349465;
- Thu, 09 Apr 2020 15:29:09 -0700 (PDT)
-Date:   Thu,  9 Apr 2020 15:28:50 -0700
-Message-Id: <20200409222850.238805-1-brendanhiggins@google.com>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.26.0.110.g2183baf09c-goog
-Subject: [PATCH v1] kunit: relax regex for .config entries to allow spaces
-From:   Brendan Higgins <brendanhiggins@google.com>
-To:     shuah@kernel.org, davidgow@google.com
-Cc:     linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com,
-        linux-kernel@vger.kernel.org, Daniel Latypov <dlatypov@google.com>,
-        Brendan Higgins <brendanhiggins@google.com>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=h6CIWptWdgEYb7MN2wQY+7B3RiKrdcdmKs6r8jKHbUQ=;
+        b=HOnBFvoLyjE5bVFkIVTd6JpKah5gaCenJi9tIQ0pAzh5ke6xB+rnbaVQ50uMNxUUMU
+         8K4L79YGmX8bUyj/e6SgOHvZVSEtij9hdr/rIww2YABHt5U42vnC4LqaTnHEEuvTiiAo
+         3aRvLDL5sZ1rXJK2ybT/PGgOS64/HrZx1XL+dCQv/qwDhILebB9EN6URuskQtYI6Rt3J
+         pKfcJ38V8V0XAmFcu7cMuGmK/J8P+kna1pq31h+K4KG/3GsGFkrhstLxs/SpuUMwaPet
+         YEDa3iH26jNZbUSCGARNe2ZAVosv8B03NJeaMqcDdnmOzg/Qfv9wDC0XspgC7BmYR4X+
+         qxHg==
+X-Gm-Message-State: AGi0PuZjabOhax1HVvppLDrwCAR+NEzx3XwabElFNdt7/5+3NTQiWtID
+        SKMWR7pk0ZnR84ArXJc4TuI=
+X-Google-Smtp-Source: APiQypJaBhU/00jWtLTIagZAShLNSuuZI+wxh6wVCmQrvZ4Kdyo8ltKirou0fEd/yrEm/fYRCULOdA==
+X-Received: by 2002:a63:a601:: with SMTP id t1mr1618612pge.23.1586471618671;
+        Thu, 09 Apr 2020 15:33:38 -0700 (PDT)
+Received: from ast-mbp.dhcp.thefacebook.com ([2620:10d:c090:400::5:dc3d])
+        by smtp.gmail.com with ESMTPSA id t23sm173152pjq.27.2020.04.09.15.33.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 09 Apr 2020 15:33:37 -0700 (PDT)
+Date:   Thu, 9 Apr 2020 15:33:35 -0700
+From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
+To:     Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Will Deacon <will@kernel.org>, akpm@linux-foundation.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "K . Prasad" <prasad@linux.vnet.ibm.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>, rostedt@goodmis.org,
+        Alexei Starovoitov <ast@kernel.org>,
+        linux-kernel@vger.kernel.org,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Ingo Molnar <mingo@redhat.com>, bpf@vger.kernel.org,
+        netdev@vger.kernel.org
+Subject: Re: [RFC PATCH 3/9] writeback: tracing: pass global_wb_domain as
+ tracepoint parameter
+Message-ID: <20200409223335.ovetfovkm2d2ca36@ast-mbp.dhcp.thefacebook.com>
+References: <20200409193543.18115-1-mathieu.desnoyers@efficios.com>
+ <20200409193543.18115-4-mathieu.desnoyers@efficios.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200409193543.18115-4-mathieu.desnoyers@efficios.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Daniel Latypov <dlatypov@google.com>
+On Thu, Apr 09, 2020 at 03:35:37PM -0400, Mathieu Desnoyers wrote:
+>  		if (pause < min_pause) {
+> -			trace_balance_dirty_pages(wb,
+> +			trace_balance_dirty_pages(&global_wb_domain,
+> +						  wb,
+>  						  sdtc->thresh,
+>  						  sdtc->bg_thresh,
+>  						  sdtc->dirty,
 
-kunit parses .config in the `build_reconfig()` of `run_tests()`.
-Problematically, the current regex '^CONFIG_\w+=\S+$' does not allow for
-spaces anywhere after the "=", even the option is a string.
-
-So kunit will refuse to run if the existing .config has something like
-  CONFIG_CMDLINE="something and_something_else"
-even if kunit.py will drop this entry when it regenerates the .config!
-
-So relax the regex to allow entries that match `CONFIG_\w+=".*"` as a
-minimal change. The question remains as to whether we should do any
-validation of the string after the "=", however.
-
-Signed-off-by: Daniel Latypov <dlatypov@google.com>
-Signed-off-by: Brendan Higgins <brendanhiggins@google.com>
----
- tools/testing/kunit/kunit_config.py | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/tools/testing/kunit/kunit_config.py b/tools/testing/kunit/kunit_config.py
-index e75063d603b5..0733796b0e32 100644
---- a/tools/testing/kunit/kunit_config.py
-+++ b/tools/testing/kunit/kunit_config.py
-@@ -10,7 +10,7 @@ import collections
- import re
- 
- CONFIG_IS_NOT_SET_PATTERN = r'^# CONFIG_(\w+) is not set$'
--CONFIG_PATTERN = r'^CONFIG_(\w+)=(\S+)$'
-+CONFIG_PATTERN = r'^CONFIG_(\w+)=(".*"|\S+)$'
- 
- KconfigEntryBase = collections.namedtuple('KconfigEntry', ['name', 'value'])
- 
-
-base-commit: c0cc271173b2e1c2d8d0ceaef14e4dfa79eefc0d
--- 
-2.26.0.110.g2183baf09c-goog
-
+argh. 13 arguments to single function ?!
+Currently the call site looks like:
+                        trace_balance_dirty_pages(wb,
+                                                  sdtc->thresh,
+                                                  sdtc->bg_thresh,
+                                                  sdtc->dirty,
+                                                  sdtc->wb_thresh,
+                                                  sdtc->wb_dirty,
+                                                  dirty_ratelimit,
+                                                  task_ratelimit,
+                                                  pages_dirtied,
+                                                  period,
+                                                  min(pause, 0L),
+                                                  start_time);
+Just pass sdtc as a pointer instead.
+Then another wb argument will be fine.
