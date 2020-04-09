@@ -2,240 +2,101 @@ Return-Path: <SRS0=n+Ub=5Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E6BCC2BA19
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 19:12:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1DCCC2BA19
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 19:12:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 193B2206F5
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 19:12:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="q8W7U/8p"
+	by mail.kernel.org (Postfix) with ESMTP id 7876821473
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 19:12:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1586459573;
+	bh=w5tU/kCw38RyRoJYkhBQPrjFX7acMPUYMj5VnLDqmh0=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=jTsSM5GWCHZ3zdWGU4E0SKn5eGNYnzw1AzjssAVboq3+CYUUlM20kUhUNNXG5Fjrp
+	 K0PitQZUUtj0BG/9jhIDrGO3XptajUgaWTEElFSfAUQBifE5jv6keKRraROQwcHOQ3
+	 69z53SSUzPLA9pfPaZkY+2kP8jwz9UYM2xkvEuEw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726715AbgDITMN (ORCPT
+        id S1726734AbgDITMv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Apr 2020 15:12:13 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:46042 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726598AbgDITMN (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Apr 2020 15:12:13 -0400
-Received: by mail-io1-f65.google.com with SMTP id i19so654182ioh.12;
-        Thu, 09 Apr 2020 12:12:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:from:date:message-id:subject:to;
-        bh=Ntgh7ggRVyuTK7qYbcPinZghAPb2Fm06PKgbVvN1RvE=;
-        b=q8W7U/8pcYPRtd6rGVYf5YkCnHWc6GrAAcojXVxhKKIg6PUumFKbYS0c59k+DsSqvz
-         We45F23OlwIMWCngXFh04gSJP9ctlLpUPd86rVOe7Jpm0wv7YumBWVHCsbVpDXk+yO/j
-         7GkrBhmp+RtdQX4fmiUSKPhEgDoDoVAXFuuahkGa0/TUvEsbGGRZTGBtegNAbli0pKSj
-         t4uAc6ShrxlxGa1fPyQoSfQTPl16WtpgobgR7+JWSfnY27SXa3pECzidFsMFd1uiimGv
-         BDKOblegXhzr8rDZ3hRSGPCkl69MT0PFIQWQq259IzuxLGtjHfO17jC4NESm+FgI1wlD
-         n9OQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to;
-        bh=Ntgh7ggRVyuTK7qYbcPinZghAPb2Fm06PKgbVvN1RvE=;
-        b=uKw401/mKRuJchvW6eyu3Gs6g1eVwDh2XbzuahZsCZZpzC5hgUhwVV8O4fpGjrE35C
-         i6BMrSIXLG2rgXjFPiPrLe4rhPKyApzGjto1P9GeGmjGZdhjrGBYmoP9nJMajC5JDBbK
-         Wq8Gc4QYTX9NLm2mly702hl3I1xIoWrImD7vCLicktzgt6d/v5IFhlHEbpAfWay/RA6o
-         ofbQHvITv4lCxzw+2EOjaEp2blevoGChekys0WVJiTV9DcTJYu9CdDnhF3CLV/xsb7cN
-         GDG95p+ZjQHRiOPXyY5IoyRStHLQwFnsqm8i/ZBF4n+fCf2aFkvfXXd64pQzyF7u+eoI
-         9SHQ==
-X-Gm-Message-State: AGi0PuZyPd2rHWEWJoPaa5aqRXLUwbRk5lv8geEzQbCn6PHJtHlWZGB2
-        +XOEz1pMU2pBMnOLa2sw37I9Gg17x53uvmQP9bcdQBTry2i3Jw==
-X-Google-Smtp-Source: APiQypLgpUstaEz8/6gOw4FLChsJa3c6p1VXDui4wrbFATLOmMOPJkZRwm6qC54ibmu6jbUZth/+jtAzxx11F9NYQjk=
-X-Received: by 2002:a02:8445:: with SMTP id l5mr949692jah.43.1586459532202;
- Thu, 09 Apr 2020 12:12:12 -0700 (PDT)
-MIME-Version: 1.0
-From:   Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>
-Date:   Fri, 10 Apr 2020 00:12:01 +0500
-Message-ID: <CABXGCsPpD+ExaeA6v+gSPPgtxcVzpKLWJNwGPPDKGFkPCv5kDg@mail.gmail.com>
-Subject: [Bug report] Kernel 5.7 become unbootable
-To:     Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        linux-x86_64@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+        Thu, 9 Apr 2020 15:12:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52570 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726598AbgDITMv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Apr 2020 15:12:51 -0400
+Received: from localhost.localdomain (c-73-231-172-41.hsd1.ca.comcast.net [73.231.172.41])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C26C3206F5;
+        Thu,  9 Apr 2020 19:12:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1586459571;
+        bh=w5tU/kCw38RyRoJYkhBQPrjFX7acMPUYMj5VnLDqmh0=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=ew7YWipmFdFw4ZOnEXmu0u65SxULek0wfv6Jk8IjmIKOipMxjFau7kSH7UHYeTZJW
+         i67trMoIuv24VkZQR7FBSeXO5+RBTyTelyPHlv3RsCZ7st2lqoCM+AQpQ2Oo/iE4UL
+         ah9QPejmMx9hdvMjpr5OqvcZbIPm/sdAdp4q/tWc=
+Date:   Thu, 9 Apr 2020 12:12:50 -0700
+From:   Andrew Morton <akpm@linux-foundation.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Dmitry Vyukov <dvyukov@google.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Peter Xu <peterx@redhat.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux-MM <linux-mm@kvack.org>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
+        syzkaller <syzkaller@googlegroups.com>
+Subject: Re: [PATCH 0/2] mm: Two small fixes for recent syzbot reports
+Message-Id: <20200409121250.d6bba6965b86c8dfcf325fbc@linux-foundation.org>
+In-Reply-To: <CAHk-=wiU77DeNxQsU4XrDCk59asyTs=Hn+mnTx6-SHB1_fA2NQ@mail.gmail.com>
+References: <20200408014010.80428-1-peterx@redhat.com>
+        <20200408174732.bc448bbe41d190bfe5cc252e@linux-foundation.org>
+        <20200409114940.GT21484@bombadil.infradead.org>
+        <CACT4Y+ZvQ9UvVAwTjjD8Zxo0X_nfxa3+6n6TqWk2g+hahBwdCw@mail.gmail.com>
+        <20200409111604.c778ff091c00fab5db095e48@linux-foundation.org>
+        <CAHk-=wiU77DeNxQsU4XrDCk59asyTs=Hn+mnTx6-SHB1_fA2NQ@mail.gmail.com>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi folks.
-I use Fedora Rawhide and today's update came with the new kernel
-5.7.0-0.rc0.git6.1.
-As it turned out this kernel won't boot. Instead, I see the black
-screen and some times see messages:
-exit_boot() failed!
-efi_main() failed!
+On Thu, 9 Apr 2020 11:53:33 -0700 Linus Torvalds <torvalds@linux-foundation.org> wrote:
 
-The last working kernel is kernel-core-5.7.0-0.rc0.git2.1
+> On Thu, Apr 9, 2020 at 11:16 AM Andrew Morton <akpm@linux-foundation.org> wrote:
+> >
+> > Could I please direct attention back to my original question regarding
+> > the problems we've recently discovered in 4426e945df58 ("mm/gup: allow
+> > VM_FAULT_RETRY for multiple times") and 71335f37c5e8 ("mm/gup: allow to
+> > react to fatal signals")?
+> 
+> What earlier question? The "how could this happen" one?
+> 
+> Dmitry already answered that one - are you perhaps missing the emails?
 
-I looked at the spec file and found out that the last bootable kernel
-was related to the commit cad18da0afb1
-(https://src.fedoraproject.org/rpms/kernel/c/9949db6070c6ca501d7235760ca8aba120db7448?branch=master),
-and the first non-bootable kernel related to the commit a10c9c710f9e
-(https://src.fedoraproject.org/rpms/kernel/c/0561e0bf0e459dd4b27a77670de838128b87bd0e?branch=master)
+Yup, email threading got broken.
 
-Of course, knowing these two commits, I made bisecting with the vanilla kernel:
+> linux-next has apparently not worked at all for over a month. So it
+> got no testing at all, and thus also all the gup patches got no
+> testing in linux-next.
+> 
+> Only when they hit my tree, did they start getting testing. Not
+> because my tree is the only thing getting tested, but because my tree
+> is the only tree that _works_.
+> 
 
-$ git bisect log
-git bisect start
-# good: [cad18da0afb1bc7b37d73a74067ab7ff5974897c] Merge tag
-'please-pull-ia64_for_5.7' of
-git://git.kernel.org/pub/scm/linux/kernel/git/aegl/linux
-git bisect good cad18da0afb1bc7b37d73a74067ab7ff5974897c
-# bad: [a10c9c710f9ecea87b9f4bbb837467893b4bef01] Merge tag 'for-v5.7'
-of git://git.kernel.org/pub/scm/linux/kernel/git/sre/linux-power-supply
-git bisect bad a10c9c710f9ecea87b9f4bbb837467893b4bef01
-# bad: [f365ab31efacb70bed1e821f7435626e0b2528a6] Merge tag
-'drm-next-2020-04-01' of git://anongit.freedesktop.org/drm/drm
-git bisect bad f365ab31efacb70bed1e821f7435626e0b2528a6
-# good: [7f80ccfe996871ca69648efee74a60ae7ad0dcd9] net: ipv6:
-rpl_iptunnel: Fix potential memory leak in rpl_do_srh_inline
-git bisect good 7f80ccfe996871ca69648efee74a60ae7ad0dcd9
-# good: [9001b17698d86f842e2b13e0cafe8021d43209e9] Merge tag
-'drm-intel-next-2020-03-13' of
-git://anongit.freedesktop.org/drm/drm-intel into drm-next
-git bisect good 9001b17698d86f842e2b13e0cafe8021d43209e9
-# bad: [dfabb077d62552797ca0ae7756cb30d3e195ead5] Merge tag 'mmc-v5.7'
-of git://git.kernel.org/pub/scm/linux/kernel/git/ulfh/mmc
-git bisect bad dfabb077d62552797ca0ae7756cb30d3e195ead5
-# bad: [15c981d16d70e8a5be297fa4af07a64ab7e080ed] Merge tag
-'for-5.7-tag' of
-git://git.kernel.org/pub/scm/linux/kernel/git/kdave/linux
-git bisect bad 15c981d16d70e8a5be297fa4af07a64ab7e080ed
-# good: [dc9492c14c758639d7b2468d4ed3c77e785c1a35] btrfs: hold a ref
-on the root on the dead roots list
-git bisect good dc9492c14c758639d7b2468d4ed3c77e785c1a35
-# good: [3cd86a58f7734bf9cef38f6f899608ebcaa3da13] Merge tag
-'arm64-upstream' of
-git://git.kernel.org/pub/scm/linux/kernel/git/arm64/linux
-git bisect good 3cd86a58f7734bf9cef38f6f899608ebcaa3da13
-# bad: [fdf5563a720004199324371c08071b8ea27bd994] Merge branch
-'x86-cleanups-for-linus' of
-git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip
-git bisect bad fdf5563a720004199324371c08071b8ea27bd994
-# skip: [cf122cfba5b1d9daf64009d143f51dfec4b1705a] kill uaccess_try()
-git bisect skip cf122cfba5b1d9daf64009d143f51dfec4b1705a
-# skip: [4dd2a1b92b91b5f2acf853ee1dc0df135054698f] x86: Replace
-setup_irq() by request_irq()
-git bisect skip 4dd2a1b92b91b5f2acf853ee1dc0df135054698f
-# skip: [5c1f178094631e8b9acc67e4a9b6e03abfbc2529] x86:
-__setup_frame(): consolidate uaccess areas
-git bisect skip 5c1f178094631e8b9acc67e4a9b6e03abfbc2529
-# skip: [3add42c29cebb1d5f83c6205c59466a06ccf8da1] x86: get rid of
-get_user_ex() in restore_sigcontext()
-git bisect skip 3add42c29cebb1d5f83c6205c59466a06ccf8da1
-# skip: [ead8e4e7e2c75ced6fcd9a53d3e9a2ecd7368553] x86:
-__setup_rt_frame(): consolidate uaccess areas
-git bisect skip ead8e4e7e2c75ced6fcd9a53d3e9a2ecd7368553
-# skip: [31a9122058bc5f042cb04bcdb8cd9e6c77fdae8d] x86/mm: Drop
-pud_mknotpresent()
-git bisect skip 31a9122058bc5f042cb04bcdb8cd9e6c77fdae8d
-# skip: [791612e9668cecbf5dd24d13400ac74e099f005c] x86:
-x32_setup_rt_frame(): consolidate uaccess areas
-git bisect skip 791612e9668cecbf5dd24d13400ac74e099f005c
-# skip: [77f3c6166ddc7567455b244074b3ebb63862b56f] x86: kill
-get_user_{try,catch,ex}
-git bisect skip 77f3c6166ddc7567455b244074b3ebb63862b56f
-# skip: [b00d8f8f0b2b39223c3fd6713d318aba95420264] x86:
-setup_sigcontext(): list user_access_{begin,end}() into callers
-git bisect skip b00d8f8f0b2b39223c3fd6713d318aba95420264
-# skip: [0e79ad863df43b01090ae18c97de5c3787f069c6] x86/cpu: Fix a
--Wmissing-prototypes warning for init_ia32_feat_ctl()
-git bisect skip 0e79ad863df43b01090ae18c97de5c3787f069c6
-# skip: [b87df6594486626a9ae5944807307f2604cea3e2] x86:
-unsafe_put-style macro for sigmask
-git bisect skip b87df6594486626a9ae5944807307f2604cea3e2
-# skip: [a37d01ead405e3aa14d72d284721fe46422b3b63] x86: switch
-save_v86_state() to unsafe_put_user()
-git bisect skip a37d01ead405e3aa14d72d284721fe46422b3b63
-# skip: [119cd59fcfbe70fb3fcab4e64cd232bcc3807585] x86: get rid of
-put_user_try in __setup_rt_frame() (both 32bit and 64bit)
-git bisect skip 119cd59fcfbe70fb3fcab4e64cd232bcc3807585
-# skip: [119cd59fcfbe70fb3fcab4e64cd232bcc3807585] x86: get rid of
-put_user_try in __setup_rt_frame() (both 32bit and 64bit)
-git bisect skip 119cd59fcfbe70fb3fcab4e64cd232bcc3807585
-# bad: [9589351ccf47a85a75180a430627c16bc28da929] Merge branch
-'x86-boot-for-linus' of
-git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip
-git bisect bad 9589351ccf47a85a75180a430627c16bc28da929
-# skip: [003602ad5516e59940de42e44c8d8033387bb363] x86/*/Makefile: Use
--fno-asynchronous-unwind-tables to suppress .eh_frame sections
-git bisect skip 003602ad5516e59940de42e44c8d8033387bb363
-# skip: [0eea39a234dc52063d14541fabcb2c64516a2328]
-x86/boot/compressed: Remove .eh_frame section from bzImage
-git bisect skip 0eea39a234dc52063d14541fabcb2c64516a2328
-# skip: [bac59d18c7018a2fd5e800a1e72a8271bf404977] x86/setup: Fix
-static memory detection
-git bisect skip bac59d18c7018a2fd5e800a1e72a8271bf404977
-# skip: [3ee372ccce4d4e7c610748d0583979d3ed3a0cf4]
-x86/boot/compressed/64: Remove .bss/.pgtable from bzImage
-git bisect skip 3ee372ccce4d4e7c610748d0583979d3ed3a0cf4
-# skip: [a86255fe5258714e1f7c1bdfe95f08e4d098d450]
-x86/boot/compressed/64: Use 32-bit (zero-extended) MOV for
-z_output_len
-git bisect skip a86255fe5258714e1f7c1bdfe95f08e4d098d450
-# skip: [6f8f0dc980028e98ae339876a8403edae4d20e39] x86/vmlinux: Drop
-unneeded linker script discard of .eh_frame
-git bisect skip 6f8f0dc980028e98ae339876a8403edae4d20e39
-# skip: [48bfdb9deffdc6b683feb25e15f4f26aac503501]
-x86/boot/compressed/64: Use LEA to initialize boot stack pointer
-git bisect skip 48bfdb9deffdc6b683feb25e15f4f26aac503501
-# skip: [c90beea22a2bece4b0bbb39789bf835504421594]
-x86/boot/compressed: Fix debug_puthex() parameter type
-git bisect skip c90beea22a2bece4b0bbb39789bf835504421594
-# only skipped commits left to test
-# possible first bad commit:
-[9589351ccf47a85a75180a430627c16bc28da929] Merge branch
-'x86-boot-for-linus' of
-git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip
-# possible first bad commit:
-[c90beea22a2bece4b0bbb39789bf835504421594] x86/boot/compressed: Fix
-debug_puthex() parameter type
-# possible first bad commit:
-[bac59d18c7018a2fd5e800a1e72a8271bf404977] x86/setup: Fix static
-memory detection
-# possible first bad commit:
-[6f8f0dc980028e98ae339876a8403edae4d20e39] x86/vmlinux: Drop unneeded
-linker script discard of .eh_frame
-# possible first bad commit:
-[003602ad5516e59940de42e44c8d8033387bb363] x86/*/Makefile: Use
--fno-asynchronous-unwind-tables to suppress .eh_frame sections
-# possible first bad commit:
-[0eea39a234dc52063d14541fabcb2c64516a2328] x86/boot/compressed: Remove
-.eh_frame section from bzImage
-# possible first bad commit:
-[3ee372ccce4d4e7c610748d0583979d3ed3a0cf4] x86/boot/compressed/64:
-Remove .bss/.pgtable from bzImage
-# possible first bad commit:
-[a86255fe5258714e1f7c1bdfe95f08e4d098d450] x86/boot/compressed/64: Use
-32-bit (zero-extended) MOV for z_output_len
-# possible first bad commit:
-[48bfdb9deffdc6b683feb25e15f4f26aac503501] x86/boot/compressed/64: Use
-LEA to initialize boot stack pointer
+And now the challenge is to protect your tree from the bad patches.
 
-Unfortunately, kernel bisecting not telling exactly which commit is blame.
-In my bisecting a lot of skipping commits because of the unsuccessful builds:
-ld: arch/x86/boot/compressed/pgtable_64.o:(.bss+0x0): multiple
-definition of `__force_order';
-arch/x86/boot/compressed/kaslr_64.o:(.bss+0x0): first defined here
-make[2]: *** [arch/x86/boot/compressed/Makefile:120:
-arch/x86/boot/compressed/vmlinux] Error 1
-make[1]: *** [arch/x86/boot/Makefile:114:
-arch/x86/boot/compressed/vmlinux] Error 2
-make: *** [arch/x86/Makefile:283: bzImage] Error 2
+https://groups.google.com/forum/#!msg/syzkaller-bugs/phowYdNXHck/qU1P0TsjBAAJ
+points at
 
-Can anyone here help me with this issue?
+net/openvswitch/conntrack.c
+net/bluetooth/l2cap_sock.c
+sound/core/oss/pcm_plugin.c
 
-Thanks.
-
-Downstream bugreport:
-https://bugzilla.redhat.com/show_bug.cgi?id=1822731
-
---
-Best Regards,
-Mike Gavrilov.
+and other things, but it's 2+ weeks old.
