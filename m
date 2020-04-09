@@ -2,99 +2,140 @@ Return-Path: <SRS0=n+Ub=5Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5864C2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 20:16:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D161C2BA19
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 20:23:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A3DFE20757
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 20:16:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 34B1620757
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 20:23:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="PvHz7dF2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726980AbgDIUQ4 (ORCPT
+        id S1726916AbgDIUXS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Apr 2020 16:16:56 -0400
-Received: from outgoing-auth-1.mit.edu ([18.9.28.11]:54613 "EHLO
-        outgoing.mit.edu" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726796AbgDIUQ4 (ORCPT
+        Thu, 9 Apr 2020 16:23:18 -0400
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:47024 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726810AbgDIUXR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Apr 2020 16:16:56 -0400
-Received: from callcc.thunk.org (pool-72-93-95-157.bstnma.fios.verizon.net [72.93.95.157])
-        (authenticated bits=0)
-        (User authenticated as tytso@ATHENA.MIT.EDU)
-        by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id 039KGWaT016170
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 9 Apr 2020 16:16:33 -0400
-Received: by callcc.thunk.org (Postfix, from userid 15806)
-        id 9733A42013D; Thu,  9 Apr 2020 16:16:32 -0400 (EDT)
-Date:   Thu, 9 Apr 2020 16:16:32 -0400
-From:   "Theodore Y. Ts'o" <tytso@mit.edu>
-To:     Ard Biesheuvel <ardb@kernel.org>
-Cc:     linux-efi <linux-efi@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Arvind Sankar <nivedita@alum.mit.edu>,
-        Borislav Petkov <bp@suse.de>,
-        Colin Ian King <colin.king@canonical.com>,
-        Gary Lin <glin@suse.com>, Jiri Slaby <jslaby@suse.cz>,
-        Sergey Shatunov <me@prok.pw>, Takashi Iwai <tiwai@suse.de>
-Subject: Re: [GIT PULL 0/9] EFI fixes for v5.7-rc
-Message-ID: <20200409201632.GC45598@mit.edu>
-References: <20200409130434.6736-1-ardb@kernel.org>
- <20200409190109.GB45598@mit.edu>
- <CAMj1kXGiA3PAybR7r9tatL7WV5iU7B1OQxQok3d-JmRnhX1TnA@mail.gmail.com>
+        Thu, 9 Apr 2020 16:23:17 -0400
+Received: by mail-pl1-f196.google.com with SMTP id x2so1626539plv.13
+        for <linux-kernel@vger.kernel.org>; Thu, 09 Apr 2020 13:23:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:content-transfer-encoding:in-reply-to:references
+         :subject:from:cc:to:date:message-id:user-agent;
+        bh=sBJcOnwg24jleMutN+HP4yNIjd4URpK+S2uxHFb+3BM=;
+        b=PvHz7dF20As5sbbYhB4q2ZvdzPKLTHniMisQ6lTKn6fL1VKD9aT+MsurZd5T4Fv5ay
+         qj11BWf5ZcmpCRPmF20yYNN0PA7qRI6ovhUYTvUx37Fpt8ufd3xInESvlq9hOzs0Vx81
+         z7jN2AMxqMEh4XWww6NDXOnw+Cs/pYKSa+yM4=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:content-transfer-encoding
+         :in-reply-to:references:subject:from:cc:to:date:message-id
+         :user-agent;
+        bh=sBJcOnwg24jleMutN+HP4yNIjd4URpK+S2uxHFb+3BM=;
+        b=dUUYE/Gxt9kfTNT9bs7IwoTMCtCTkJfQjF7j8UXlTpqA8z0uydlSN5lSPkyHsignLI
+         TRZ5ZgeqS6sQzPjRJNR4cXgrq1aM/GjVs5ffz8gTlJ4MP3ZVoyQuFF87woxiooeQwUsN
+         /UX7nBku6iKsTV6eN4NjmgGcLkvoVR2lkTpCxwYHwuRHl7J1Qe8m1OFHeTMCdEN18Yim
+         tEmsbIz3La/ueQriCdIGw1XX++fpHSuAWV+9ggN71XtryZOxJrx1myeU3zNammML7gEw
+         KcFnfFJCDOaiE0B2kqIFh1zvABHeKxNLoFeuSTiFA0IQf9XnRXDFOBc5HCda/xz5D/CY
+         EDwA==
+X-Gm-Message-State: AGi0PuahsvngfsN7Gc8bRponNDmyRdTZJHpbkAVvwBjsjDygw1hoPHy8
+        VKsPcjC14Tv9bp4RI8/Lh0iyqzxHNtg=
+X-Google-Smtp-Source: APiQypLbn4cmz+FXdn7gXrnO7qPuX2QK1uwvFuORE9G27aRb5HAsQ3Iu8eAoYmuET7GFLdrJviAD2g==
+X-Received: by 2002:a17:902:14b:: with SMTP id 69mr1346044plb.121.1586463796146;
+        Thu, 09 Apr 2020 13:23:16 -0700 (PDT)
+Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
+        by smtp.gmail.com with ESMTPSA id h10sm18856937pgf.23.2020.04.09.13.23.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 09 Apr 2020 13:23:15 -0700 (PDT)
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAMj1kXGiA3PAybR7r9tatL7WV5iU7B1OQxQok3d-JmRnhX1TnA@mail.gmail.com>
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <1586154741-8293-4-git-send-email-mkshah@codeaurora.org>
+References: <1586154741-8293-1-git-send-email-mkshah@codeaurora.org> <1586154741-8293-4-git-send-email-mkshah@codeaurora.org>
+Subject: Re: [PATCH v16 3/6] soc: qcom: rpmh: Invalidate SLEEP and WAKE TCSes before flushing new data
+From:   Stephen Boyd <swboyd@chromium.org>
+Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        agross@kernel.org, mka@chromium.org, rnayak@codeaurora.org,
+        ilina@codeaurora.org, lsrao@codeaurora.org,
+        Maulik Shah <mkshah@codeaurora.org>
+To:     Maulik Shah <mkshah@codeaurora.org>, bjorn.andersson@linaro.org,
+        dianders@chromium.org, evgreen@chromium.org
+Date:   Thu, 09 Apr 2020 13:23:14 -0700
+Message-ID: <158646379456.77611.8638840660664120750@swboyd.mtv.corp.google.com>
+User-Agent: alot/0.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 09, 2020 at 09:04:42PM +0200, Ard Biesheuvel wrote:
-> 
-> > I'm currently building Linus's latest branch to see if it's been fixed
-> > since v5.6-11114-g9c94b39560c3 (which is where I first noticed it) and
-> > while I was waiting for v5.6-12349-g87ebc45d2d32 to finish building so
-> > I could test it, I noticed these patches, and so I figured I'd fire
-> > off this quick question.
-> >
-> 
-> I think we might be able to downright revert that patch if the
-> underlying assumption on my part is inaccurate, which was that the
-> fact that the boot code no longer uses the runtime table address
-> implies that there is no longer a reason to pass it.
+Quoting Maulik Shah (2020-04-05 23:32:18)
+> TCSes have previously programmed data when rpmh_flush is called.
 
-Unfortunately, it doesn't cleanly revert, which is why I started
-checking to see if it might be fixed already before trying to figure
-out how to do a manual revert.  I just tested and the tip of Linus's
-tree still has the failure.
+rpmh_flush()
 
-The short description of the failure: I'm using Debian Stable (Buster)
-with a 4.19 distro kernel and kexec-tools 2.0.18 to kexec into the
-kernel under test.  I'm using a Google Compute Engine VM, and the
-actual kexec command is here:
+> This can cause old data to trigger along with newly flushed.
+>=20
+> Fix this by cleaning SLEEP and WAKE TCSes before new data is flushed.
+>=20
+> With this there is no need to invoke rpmh_rsc_invalidate() call from
+> rpmh_invalidate().
+>=20
+> Simplify rpmh_invalidate() by moving invalidate_batch() inside.
+>=20
+> Fixes: 600513dfeef3 ("drivers: qcom: rpmh: cache sleep/wake state request=
+s")
+> Signed-off-by: Maulik Shah <mkshah@codeaurora.org>
+> Reviewed-by: Douglas Anderson <dianders@chromium.org>
+> ---
+>  drivers/soc/qcom/rpmh.c | 41 ++++++++++++++++++-----------------------
+>  1 file changed, 18 insertions(+), 23 deletions(-)
+>=20
+> diff --git a/drivers/soc/qcom/rpmh.c b/drivers/soc/qcom/rpmh.c
+> index 03630ae..a75f3df 100644
+> --- a/drivers/soc/qcom/rpmh.c
+> +++ b/drivers/soc/qcom/rpmh.c
+> @@ -498,24 +492,25 @@ int rpmh_flush(struct rpmh_ctrlr *ctrlr)
+>  }
+> =20
+>  /**
+> - * rpmh_invalidate: Invalidate all sleep and active sets
+> - * sets.
+> + * rpmh_invalidate: Invalidate sleep and wake sets in batch_cache
+>   *
+>   * @dev: The device making the request
+>   *
+> - * Invalidate the sleep and active values in the TCS blocks.
+> + * Invalidate the sleep and wake values in batch_cache.
+>   */
+>  int rpmh_invalidate(const struct device *dev)
+>  {
+>         struct rpmh_ctrlr *ctrlr =3D get_rpmh_ctrlr(dev);
+> -       int ret;
+> -
+> -       invalidate_batch(ctrlr);
+> +       struct batch_cache_req *req, *tmp;
+> +       unsigned long flags;
+> =20
+> -       do {
+> -               ret =3D rpmh_rsc_invalidate(ctrlr_to_drv(ctrlr));
+> -       } while (ret =3D=3D -EAGAIN);
+> +       spin_lock_irqsave(&ctrlr->cache_lock, flags);
+> +       list_for_each_entry_safe(req, tmp, &ctrlr->batch_cache, list)
+> +               kfree(req);
+> +       INIT_LIST_HEAD(&ctrlr->batch_cache);
+> +       ctrlr->dirty =3D true;
+> +       spin_unlock_irqrestore(&ctrlr->cache_lock, flags);
+> =20
+> -       return ret;
+> +       return 0;
 
-https://github.com/tytso/xfstests-bld/blob/master/kvm-xfstests/test-appliance/files/usr/local/lib/gce-kexec#L146
-
-What happens is that the kexec'ed kernel immediately crashes, at which
-point we drop back into the BIOS, and then it boots the Debain 4.19.0
-distro kernel instead of the kernel to be tested boot.  Since we lose
-the boot command line that was used from the kexec, the gce-xfstests
-image retries the kexec, which fails, and the failing kexec repeats
-until I manually kill the VM.
-
-The bisect fingred v5.6-rc1-59-g0a67361dcdaa ("efi/x86: Remove runtime
-table address from kexec EFI setup data") as the first failing commit.
-Its immediate parent commit, v5.6-rc1-58-g06c0bd93434c works just
-fine.
-
-Is there any further debugging information that would be useful?
-
-Thanks,
-
-						- Ted
+Now this always returns 0. Maybe it should become a void function, but
+doing that requires a change in the interconnect code so maybe do it
+later.
