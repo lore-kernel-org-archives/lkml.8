@@ -2,107 +2,100 @@ Return-Path: <SRS0=n+Ub=5Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 327ECC2BB86
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 12:30:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80B86C2BB86
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 12:36:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 132522078E
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 12:30:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 62BBB2078E
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 12:36:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726632AbgDIMaJ (ORCPT
+        id S1726621AbgDIMgW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Apr 2020 08:30:09 -0400
-Received: from mga12.intel.com ([192.55.52.136]:32630 "EHLO mga12.intel.com"
+        Thu, 9 Apr 2020 08:36:22 -0400
+Received: from mga02.intel.com ([134.134.136.20]:15362 "EHLO mga02.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725970AbgDIMaJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Apr 2020 08:30:09 -0400
-IronPort-SDR: tLcE/I/nyxdIntRi+kIFpwB43fynvVDm2JC34IXFaiNzWqh4X8nHQ0P3bP8zFqKEDPGGnrdsgG
- 0cqcL8Bo37OA==
+        id S1725970AbgDIMgW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Apr 2020 08:36:22 -0400
+IronPort-SDR: U1cjUZrrUJVeo79R3yhmcD9o0zbhRwzWNCdiw5WIn5taYYupLWbnqOM6dGZQvQxXxM1XuHPRtO
+ IwfVkUJEuJdA==
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Apr 2020 05:30:09 -0700
-IronPort-SDR: jNckGK922sv43RdgPwXtoSA0NNEQdR62cPtNEuay78mLz49CqmwXBAhFjv+7kH0lXUfRn2pGQ2
- DHLGdtuAjqJA==
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Apr 2020 05:36:22 -0700
+IronPort-SDR: JHmvK/8heplCA/1OkTxw8zcPViPkWtbLJkh2Q/88MdeEzo4LOa19MJFYnJUvQe+zpxjxTgeLzV
+ ydMzzR1C2XPw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.72,362,1580803200"; 
-   d="scan'208";a="362140105"
+   d="scan'208";a="398553773"
 Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by fmsmga001.fm.intel.com with ESMTP; 09 Apr 2020 05:30:03 -0700
+  by orsmga004.jf.intel.com with ESMTP; 09 Apr 2020 05:36:20 -0700
 Received: from andy by smile with local (Exim 4.93)
-        (envelope-from <andy.shevchenko@gmail.com>)
-        id 1jMWJp-00GxB8-3x; Thu, 09 Apr 2020 15:30:05 +0300
-Date:   Thu, 9 Apr 2020 15:30:05 +0300
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-To:     Alan Cooper <alcooperx@gmail.com>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>,
-        devicetree <devicetree@vger.kernel.org>,
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1jMWPu-00GxF6-Oe; Thu, 09 Apr 2020 15:36:22 +0300
+Date:   Thu, 9 Apr 2020 15:36:22 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Oliver Graute <oliver.graute@gmail.com>
+Cc:     Marco Felsch <m.felsch@pengutronix.de>, dmitry.torokhov@gmail.com,
+        Oliver Graute <oliver.graute@kococonnector.com>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jonathan =?iso-8859-1?Q?Neusch=E4fer?= <j.neuschaefer@gmx.net>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        USB <linux-usb@vger.kernel.org>,
-        Mathias Nyman <mathias.nyman@intel.com>,
-        Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH v3 4/4] usb: host: Add ability to build new Broadcom STB
- USB drivers
-Message-ID: <20200409123005.GZ3676135@smile.fi.intel.com>
-References: <20200408181406.40389-1-alcooperx@gmail.com>
- <20200408181406.40389-5-alcooperx@gmail.com>
- <CAHp75Vd_nbgwdE5Fbm3oxd_+51BJZ=67sVyjKiN2zLS+J4X-Fw@mail.gmail.com>
- <CAOGqxeXQE0z=+6yuEME48am__2vtJhBpetYd_sZamJmm1h_TLQ@mail.gmail.com>
+        Sasha Levin <sashal@kernel.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1] Input: edt-ft5x06 - fix crash on EDT EP0110M09
+Message-ID: <20200409123622.GA3676135@smile.fi.intel.com>
+References: <1586424425-27038-1-git-send-email-oliver.graute@gmail.com>
+ <20200409105253.qvezbikpbnrkig52@pengutronix.de>
+ <20200409120242.GA17410@portage>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <CAOGqxeXQE0z=+6yuEME48am__2vtJhBpetYd_sZamJmm1h_TLQ@mail.gmail.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200409120242.GA17410@portage>
 Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 09, 2020 at 07:49:52AM -0400, Alan Cooper wrote:
-> On Thu, Apr 9, 2020 at 5:08 AM Andy Shevchenko
-> <andy.shevchenko@gmail.com> wrote:
-> >
-> > On Thu, Apr 9, 2020 at 12:52 AM Al Cooper <alcooperx@gmail.com> wrote:
-> > >
-> > > Add the build system changes needed to get the Broadcom STB XHCI,
-> > > EHCI and OHCI functionality working. The OHCI support does not
-> > > require anything unique to Broadcom so the standard ohci-platform
-> > > driver is being used. The link order for XHCI was changed in the
-> > > Makefile because of the way STB XHCI, EHCI and OHCI controllers
-> > > share a port which requires that the XHCI driver be initialized
-> > > first. Also update MAINTAINERS.
-> >
-> > > --- a/MAINTAINERS
-> > > +++ b/MAINTAINERS
-> > > @@ -3477,6 +3477,14 @@ S:       Supported
-> > >  F:     drivers/i2c/busses/i2c-brcmstb.c
-> > >  F:     Documentation/devicetree/bindings/i2c/brcm,brcmstb-i2c.yaml
-> > >
-> > > +BROADCOM BRCMSTB USB EHCI DRIVER
-> > > +M:     Al Cooper <alcooperx@gmail.com>
-> > > +L:     linux-usb@vger.kernel.org
-> > > +L:     bcm-kernel-feedback-list@broadcom.com
-> > > +S:     Maintained
-> > > +F:     drivers/usb/host/ehci-brcm.*
-> > > +F:     Documentation/devicetree/bindings/usb/brcm,bcm7445-ehci.yaml
-> >
-> > This has ordering issues.
-> > Run parse-maintainer.pl to fix. (Note, it creates by default a new
-> > file, you might need to run diff manually to see the difference).
+On Thu, Apr 09, 2020 at 02:02:42PM +0200, Oliver Graute wrote:
+> On 09/04/20, Marco Felsch wrote:
+> > Hi Oliver,
+> > 
+> > thanks for your patch.
+> > 
+> > On 20-04-09 11:27, Oliver Graute wrote:
+> > > From: Oliver Graute <oliver.graute@kococonnector.com>
+> > 
+> > ...
+> > 
+> > >  drivers/input/touchscreen/edt-ft5x06.c | 4 ----
+> > >  1 file changed, 4 deletions(-)
+> > > 
+> > > diff --git a/drivers/input/touchscreen/edt-ft5x06.c b/drivers/input/touchscreen/edt-ft5x06.c
+> > > index 06aa8ba0b6d7..6fbc87d041a1 100644
+> > > --- a/drivers/input/touchscreen/edt-ft5x06.c
+> > > +++ b/drivers/input/touchscreen/edt-ft5x06.c
+> > > @@ -819,10 +819,6 @@ static int edt_ft5x06_ts_identify(struct i2c_client *client,
+> > >  	 * to have garbage in there
+> > >  	 */
+> > >  	memset(rdbuf, 0, sizeof(rdbuf));
+> > > -	error = edt_ft5x06_ts_readwrite(client, 1, "\xBB",
+> > > -					EDT_NAME_LEN - 1, rdbuf);
+> > > -	if (error)
+> > > -		return error;
+> > 
+> > 
+> > I don't see how this call can corrupt the stack..
 > 
-> I'm not sure what you mean.
-> I ran "./scripts/parse-maintainers.pl" and did "diff MAINTAINERS
-> MAINTAINERS.new" and there are no differences in or around my entry.
+> I admit that this is strange. The patch fixed my problems so I posted
+> it. Still interested in the root-cause.
 
-Perhaps --order should be added.
+I'm wondering how you nailed down to this function? Have you able to use kASAN?
+
+By the way, what I²C controller behind this? Maybe the bug in its driver?
 
 -- 
 With Best Regards,
