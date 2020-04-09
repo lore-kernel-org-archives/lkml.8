@@ -2,86 +2,89 @@ Return-Path: <SRS0=n+Ub=5Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C17F3C2D0EA
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 07:36:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93115C2D0EA
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 07:36:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9A7BE206F7
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 07:36:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 71AB1206F7
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 07:36:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726650AbgDIHga (ORCPT
+        id S1726676AbgDIHgg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Apr 2020 03:36:30 -0400
-Received: from spam01.hygon.cn ([110.188.70.11]:13396 "EHLO spam2.hygon.cn"
-        rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726082AbgDIHg3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Apr 2020 03:36:29 -0400
-X-Greylist: delayed 1219 seconds by postgrey-1.27 at vger.kernel.org; Thu, 09 Apr 2020 03:35:59 EDT
-Received: from spam2.hygon.cn (localhost [127.0.0.2] (may be forged))
-        by spam2.hygon.cn with ESMTP id 0397FbS0024891
-        for <linux-kernel@vger.kernel.org>; Thu, 9 Apr 2020 15:15:37 +0800 (GMT-8)
-        (envelope-from linjiasen@hygon.cn)
-Received: from MK-FE.hygon.cn ([172.23.18.61])
-        by spam2.hygon.cn with ESMTP id 0397CWCm024636;
-        Thu, 9 Apr 2020 15:12:32 +0800 (GMT-8)
-        (envelope-from linjiasen@hygon.cn)
-Received: from cncheex01.Hygon.cn ([172.23.18.10])
-        by MK-FE.hygon.cn with ESMTP id 0397Ccjr052279;
-        Thu, 9 Apr 2020 15:12:38 +0800 (GMT-8)
-        (envelope-from linjiasen@hygon.cn)
-Received: from ubuntu.localdomain (172.23.18.44) by cncheex01.Hygon.cn
- (172.23.18.10) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1466.3; Thu, 9 Apr 2020
- 15:12:16 +0800
-From:   Jiasen Lin <linjiasen@hygon.cn>
-To:     <linux-kernel@vger.kernel.org>, <linux-ntb@googlegroups.com>,
-        <jdmason@kudzu.us>, <dan.carpenter@oracle.com>
-CC:     <allenbh@gmail.com>, <dave.jiang@intel.com>,
-        <zhangpanyong@hygon.cn>, <linjiasen@hygon.cn>
-Subject: [PATCH] NTB: Fix static check warning in perf_clear_test
-Date:   Thu, 9 Apr 2020 00:11:24 -0700
-Message-ID: <1586416284-3246-1-git-send-email-linjiasen@hygon.cn>
-X-Mailer: git-send-email 2.7.4
+        Thu, 9 Apr 2020 03:36:36 -0400
+Received: from mx2.suse.de ([195.135.220.15]:57642 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726082AbgDIHgg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Apr 2020 03:36:36 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 37471ADA3;
+        Thu,  9 Apr 2020 07:36:35 +0000 (UTC)
+Date:   Thu, 9 Apr 2020 09:36:34 +0200
+From:   Daniel Wagner <dwagner@suse.de>
+To:     "Ewan D. Milne" <emilne@redhat.com>
+Cc:     linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>
+Subject: Re: [PATCH] scsi: core: Rate limit "rejecting I/O" messages
+Message-ID: <20200409073634.t2xgdhoyb4jmidnp@beryllium.lan>
+References: <20200408171012.76890-1-dwagner@suse.de>
+ <120ce7f4cd1fd070e1f7c353223c21b8e4f29337.camel@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [172.23.18.44]
-X-ClientProxiedBy: cncheex02.Hygon.cn (172.23.18.12) To cncheex01.Hygon.cn
- (172.23.18.10)
-X-MAIL: spam2.hygon.cn 0397CWCm024636
-X-DNSRBL: 
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <120ce7f4cd1fd070e1f7c353223c21b8e4f29337.camel@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-As pthr->dma_chan can't be NULL in this context, so there is
-no need to check pthr->dma_chan.
+Hi Ewan,
 
-Fixes: 99a06056124d ("NTB: ntb_perf: Fix address err in perf_copy_chunk")
-Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
-Signed-off-by: Jiasen Lin <linjiasen@hygon.cn>
----
- drivers/ntb/test/ntb_perf.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+On Wed, Apr 08, 2020 at 03:16:27PM -0400, Ewan D. Milne wrote:
+> On Wed, 2020-04-08 at 19:10 +0200, Daniel Wagner wrote:
+> > --- a/drivers/scsi/scsi_lib.c
+> > +++ b/drivers/scsi/scsi_lib.c
+> > @@ -1217,7 +1217,7 @@ scsi_prep_state_check(struct scsi_device *sdev,
+> > struct request *req)
+> >  		 */
+> >  		if (!sdev->offline_already) {
+> >  			sdev->offline_already = true;
+> > -			sdev_printk(KERN_ERR, sdev,
+> > +			sdev_printk_ratelimited(KERN_ERR, sdev,
+> >  				    "rejecting I/O to offline
+> > device\n");
+> 
+> I would really prefer we not do it this way if at all possible.
+> It loses information we may need to debug SAN outage problems.
 
-diff --git a/drivers/ntb/test/ntb_perf.c b/drivers/ntb/test/ntb_perf.c
-index 972f6d9..f73b126 100644
---- a/drivers/ntb/test/ntb_perf.c
-+++ b/drivers/ntb/test/ntb_perf.c
-@@ -1010,8 +1010,8 @@ static void perf_clear_test(struct perf_thread *pthr)
- 				   pthr->perf->test_peer->dma_dst_addr,
- 				   pthr->perf->test_peer->outbuf_size,
- 				   DMA_FROM_DEVICE, 0);
--	if (pthr->dma_chan)
--		dma_release_channel(pthr->dma_chan);
-+
-+	dma_release_channel(pthr->dma_chan);
- 
- no_dma_notify:
- 	atomic_dec(&perf->tsync);
--- 
-2.7.4
+Understood.
 
+> The reason I didn't use ratelimit is that the ratelimit structure is
+> per-instance of the ratelimit call here, not per-device.  So this
+> doesn't work right -- it will drop messages for other devices.
+
+I didn't really think this through. Sorry.
+
+> > -		sdev_printk(KERN_ERR, sdev,
+> > +		sdev_printk_ratelimited(KERN_ERR, sdev,
+> >  			    "rejecting I/O to dead device\n");
+> 
+> I practice I hardly see this message, do you actually have a case
+> where this happens?  If so perhaps add another flag similar to
+> offline_already?
+> 
+> The offline message happens a *lot*, we get a ton of them for each
+> active device when the queues are unblocked when a target goes away.
+
+I've missed commit b0962c53bde9 ("scsi: core: avoid repetitive logging
+of device offline messages") which should address the report I got in
+our enterprise kernel. I was over eager to rate limit the 'dead
+device' as well. It seem no need for this patch. Let me backport the
+commit and see what our customer has to say.
+
+Thanks for the help!
+Daniel
