@@ -2,170 +2,160 @@ Return-Path: <SRS0=n+Ub=5Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD0E2C2BA2B
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 15:29:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF3A5C2BB86
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 15:30:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9AB3B206E9
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 15:29:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C63B4206E9
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 15:30:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="d5ONUE0g"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728349AbgDIP3q (ORCPT
+        id S1728359AbgDIPaU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Apr 2020 11:29:46 -0400
-Received: from mga06.intel.com ([134.134.136.31]:25819 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728251AbgDIP3p (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Apr 2020 11:29:45 -0400
-IronPort-SDR: EAqBOIe7A8WuZBFNhpSADYFgv8RtMqLOO8LYbUuxTf2gl4oEa0pBId5PY5VPC6BIo0KinzWqWE
- 1GGvnWeJC/3w==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Apr 2020 08:29:45 -0700
-IronPort-SDR: VicGFp3oywAC4FzoKR8Eu5U9ZwW9zVzpVKjiSxXCh5g9tiamiE0eUd3nl+fKuSZ4hQgRPKbUVu
- e/BKwKKZUkaQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,363,1580803200"; 
-   d="scan'208";a="286922766"
-Received: from iweiny-desk2.sc.intel.com ([10.3.52.147])
-  by fmsmga002.fm.intel.com with ESMTP; 09 Apr 2020 08:29:45 -0700
-Date:   Thu, 9 Apr 2020 08:29:44 -0700
-From:   Ira Weiny <ira.weiny@intel.com>
-To:     "Darrick J. Wong" <darrick.wong@oracle.com>
-Cc:     Dave Chinner <david@fromorbit.com>, linux-kernel@vger.kernel.org,
-        Dan Williams <dan.j.williams@intel.com>,
-        Christoph Hellwig <hch@lst.de>,
-        "Theodore Y. Ts'o" <tytso@mit.edu>, Jan Kara <jack@suse.cz>,
-        Jeff Moyer <jmoyer@redhat.com>, linux-ext4@vger.kernel.org,
-        linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH V6 6/8] fs/xfs: Combine xfs_diflags_to_linux() and
- xfs_diflags_to_iflags()
-Message-ID: <20200409152944.GA801705@iweiny-DESK2.sc.intel.com>
-References: <20200407182958.568475-1-ira.weiny@intel.com>
- <20200407182958.568475-7-ira.weiny@intel.com>
- <20200408020827.GI24067@dread.disaster.area>
- <20200408170923.GC569068@iweiny-DESK2.sc.intel.com>
- <20200408210236.GK24067@dread.disaster.area>
- <20200408220734.GA664132@iweiny-DESK2.sc.intel.com>
- <20200408232106.GO24067@dread.disaster.area>
- <20200409001206.GD664132@iweiny-DESK2.sc.intel.com>
- <20200409003021.GJ6742@magnolia>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200409003021.GJ6742@magnolia>
-User-Agent: Mutt/1.11.1 (2018-12-01)
+        Thu, 9 Apr 2020 11:30:20 -0400
+Received: from mail-qk1-f193.google.com ([209.85.222.193]:38307 "EHLO
+        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728221AbgDIPaT (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Apr 2020 11:30:19 -0400
+Received: by mail-qk1-f193.google.com with SMTP id h14so4318334qke.5
+        for <linux-kernel@vger.kernel.org>; Thu, 09 Apr 2020 08:30:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=lca.pw; s=google;
+        h=mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=KqSuwj1Lnw+46mOu5HvLLZOQhrSTpPUDCk9ASXa3iQI=;
+        b=d5ONUE0gQuF4hk3cd/VSQKPVX4IwjmtsLuFUsGMclkB/xhBWg0Pty34wvNvc39ykJY
+         EeNCzEYGA7j2gcFtlgPiNjUWg8c6M0knlzWB6nESPIxtc+rgA5b7sSENhNQ6odJr7BZz
+         vEJ+caBJy71h0A3ced/bVeO/0yznbAH8hnAIqlR8XB9lGuhcqDF10KXkRO/0HYSlZihc
+         ZVaJfb0whw0kt/8yQWVRemzmsgloGMzzFFi0FNeM4wz24m15M+JDmlyhxmZSpwczlwci
+         rECKrsLhuRCPExqIiyyikfex584HV2NssvHiAUbdW146oHVg8609ybuqOMJVZfpFSI2x
+         8JCw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=KqSuwj1Lnw+46mOu5HvLLZOQhrSTpPUDCk9ASXa3iQI=;
+        b=XNmyeMh1Ycg169WhJS7fq+WjGWgGbnzZ5WVdZidYNn/rhROKPn8ydG40zUFaBqZ71J
+         BUvttGZNRrgMktOK7hzywTLPcDExNdF7TnZCmEitLpApuUHsiYuq2wIEMI5f0wqWnjJJ
+         ZATfuxk8rJV/yCFWXpFaqQfhsDiPBBKjOurIStAH7hzLvv+iXvLcpXmgu8Min5X9j2l+
+         0oaaDepIOeRj67TsUdgSgNh9vTD+mwe5Bi8vM++TTX9d+f+jDZEhelkkawknloxTBqwX
+         LwgqQHA6nZJV9RVI5IQxTSPkx+2TlD6OixhzKqFeG/PzvYlPNYCk8C4R5gFYCV4Qp7BG
+         vXLw==
+X-Gm-Message-State: AGi0PuaIgj19xeLdbC5kK5zX4Imh/jYmProQGg3fMUxnBp1yIuYZ0RV/
+        giQVw/VQbZPL7C7ICC5YX4TXnCCR2bv4eA==
+X-Google-Smtp-Source: APiQypJMWSnwBHUdttlGDzAqxcTAqgSmmePEX1OyQXfyS73FbkDipkvmd1HaJVn7qa3wYZyMldtW2Q==
+X-Received: by 2002:ae9:e80f:: with SMTP id a15mr352621qkg.367.1586446218111;
+        Thu, 09 Apr 2020 08:30:18 -0700 (PDT)
+Received: from [192.168.1.153] (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
+        by smtp.gmail.com with ESMTPSA id q5sm11214109qkn.59.2020.04.09.08.30.16
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 09 Apr 2020 08:30:17 -0700 (PDT)
+Content-Type: text/plain;
+        charset=utf-8
+Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.80.23.2.2\))
+Subject: Re: KCSAN + KVM = host reset
+From:   Qian Cai <cai@lca.pw>
+In-Reply-To: <CANpmjNMEgc=+bLU472jy37hYPYo5_c+Kbyti8-mubPsEGBrm3A@mail.gmail.com>
+Date:   Thu, 9 Apr 2020 11:30:14 -0400
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        "paul E. McKenney" <paulmck@kernel.org>,
+        kasan-dev <kasan-dev@googlegroups.com>,
+        LKML <linux-kernel@vger.kernel.org>, kvm@vger.kernel.org
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <2730C0CC-B8B5-4A65-A4ED-9DFAAE158AA6@lca.pw>
+References: <E180B225-BF1E-4153-B399-1DBF8C577A82@lca.pw>
+ <fb39d3d2-063e-b828-af1c-01f91d9be31c@redhat.com>
+ <017E692B-4791-46AD-B9ED-25B887ECB56B@lca.pw>
+ <CANpmjNMiHNVh3BVxZUqNo4jW3DPjoQPrn-KEmAJRtSYORuryEA@mail.gmail.com>
+ <B7F7F73E-EE27-48F4-A5D0-EBB29292913E@lca.pw>
+ <CANpmjNMEgc=+bLU472jy37hYPYo5_c+Kbyti8-mubPsEGBrm3A@mail.gmail.com>
+To:     Marco Elver <elver@google.com>
+X-Mailer: Apple Mail (2.3608.80.23.2.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 08, 2020 at 05:30:21PM -0700, Darrick J. Wong wrote:
 
-[snip]
 
-> 
-> But you're right, this thing keeps swirling around and around and around
-> because we can't ever get to agreement on this.  Maybe I'll just become
-> XFS BOFH MAINTAINER and make a decision like this:
-> 
->  1 Applications must call statx to discover the current S_DAX state.
-> 
->  2 There exists an advisory file inode flag FS_XFLAG_DAX that is set based on
->    the parent directory FS_XFLAG_DAX inode flag.  This advisory flag can be
->    changed after file creation, but it does not immediately affect the S_DAX
->    state.
-> 
->    If FS_XFLAG_DAX is set and the fs is on pmem then it will enable S_DAX at
->    inode load time; if FS_XFLAG_DAX is not set, it will not enable S_DAX.
->    Unless overridden...
-> 
->  3 There exists a dax= mount option.
-> 
->    "-o dax=never" means "never set S_DAX, ignore FS_XFLAG_DAX"
->    "-o dax=always" means "always set S_DAX (at least on pmem), ignore FS_XFLAG_DAX"
->         "-o dax" by itself means "dax=always"
->    "-o dax=iflag" means "follow FS_XFLAG_DAX" and is the default
+> On Apr 9, 2020, at 11:22 AM, Marco Elver <elver@google.com> wrote:
+>=20
+> On Thu, 9 Apr 2020 at 17:10, Qian Cai <cai@lca.pw> wrote:
+>>=20
+>>=20
+>>=20
+>>> On Apr 9, 2020, at 3:03 AM, Marco Elver <elver@google.com> wrote:
+>>>=20
+>>> On Wed, 8 Apr 2020 at 23:29, Qian Cai <cai@lca.pw> wrote:
+>>>>=20
+>>>>=20
+>>>>=20
+>>>>> On Apr 8, 2020, at 5:25 PM, Paolo Bonzini <pbonzini@redhat.com> =
+wrote:
+>>>>>=20
+>>>>> On 08/04/20 22:59, Qian Cai wrote:
+>>>>>> Running a simple thing on this AMD host would trigger a reset =
+right away.
+>>>>>> Unselect KCSAN kconfig makes everything work fine (the host would =
+also
+>>>>>> reset If only "echo off > /sys/kernel/debug/kcsan=E2=80=9D before =
+running qemu-kvm).
+>>>>>=20
+>>>>> Is this a regression or something you've just started to play =
+with?  (If
+>>>>> anything, the assembly language conversion of the AMD world switch =
+that
+>>>>> is in linux-next could have reduced the likelihood of such a =
+failure,
+>>>>> not increased it).
+>>>>=20
+>>>> I don=E2=80=99t remember I had tried this combination before, so =
+don=E2=80=99t know if it is a
+>>>> regression or not.
+>>>=20
+>>> What happens with KASAN? My guess is that, since it also happens =
+with
+>>> "off", something that should not be instrumented is being
+>>> instrumented.
+>>=20
+>> No, KASAN + KVM works fine.
+>>=20
+>>>=20
+>>> What happens if you put a 'KCSAN_SANITIZE :=3D n' into
+>>> arch/x86/kvm/Makefile? Since it's hard for me to reproduce on this
+>>=20
+>> Yes, that works, but this below alone does not work,
+>>=20
+>> KCSAN_SANITIZE_kvm-amd.o :=3D n
+>=20
+> There are some other files as well, that you could try until you hit
+> the right one.
+>=20
+> But since this is in arch, 'KCSAN_SANITIZE :=3D n' wouldn't be too bad
+> for now. If you can't narrow it down further, do you want to send a
+> patch?
 
-per-Dave '-o dax=inode'
+No, that would be pretty bad because it will disable KCSAN for Intel
+KVM as well which is working perfectly fine right now. It is only AMD
+is broken.
 
-> 
->  4 There exists an advisory directory inode flag FS_XFLAG_DAX that can be
->    changed at any time.  The flag state is copied into any files or
->    subdirectories when they are created within that directory.
+>=20
+> Thanks,
+> -- Marco
+>=20
+>> I have been able to reproduce this on a few AMD hosts.
+>>=20
+>>> exact system, I'd ask you to narrow it down by placing =
+'KCSAN_SANITIZE
+>>> :=3D n' into suspect subsystems' Makefiles. Once you get it to work =
+with
+>>> that, we can refine the solution.
+>>>=20
+>>> Thanks,
+>>> -- Marco
 
-Good.
-
->    If programs
->    require file access runs in S_DAX mode, they must create those files
->    inside a directory with FS_XFLAG_DAX set, or mount the fs with an
->    appropriate dax mount option.
-
-Why do we need this to be true?  If the FS_XFLAG_DAX flag can be cleared why
-not set it and allow the S_DAX change to occur later just like clearing it?
-The logic is exactly the same.
-
-> 
->  5 Programs that require a specific file access mode (DAX or not DAX) must
-
-s/must/can/
-
->    do one of the following:
-> 
->    (a) create files in directories with the FS_XFLAG_DAX flag set as needed;
-
-Again if we allow clearing the flag why not setting?  So this is 1 option they
-'can' do.
-
-> 
->    (b) have the administrator set an override via mount option;
-> 
->    (c) if they need to change a file's FS_XFLAG_DAX flag so that it does not
->        match the S_DAX state (as reported by statx), they must cause the
->        kernel to evict the inode from memory.  This can be done by:
-> 
->        i>   closing the file;
->        ii>  re-opening the file and using statx to see if the fs has
->             changed the S_DAX flag;
-
-i and ii need to be 1 step the user must follow.
-
->        iii> if not, either unmount and remount the filesystem, or
->             closing the file and using drop_caches.
-> 
->  6 I no longer think it's too wild to require that users who want to
->    squeeze every last bit of performance out of the particular rough and
->    tumble bits of their storage also be exposed to the difficulties of
->    what happens when the operating system can't totally virtualize those
->    hardware capabilities.  Your high performance sports car is not a
->    Toyota minivan, as it were.
-
-I'm good with this statement.  But I think we need to clean up the verbiage for
-the documentation...  ;-)
-
-Thanks for the summary.  I like these to get everyone on the same page.  :-D
-Ira
-
-> 
-> I think (like Dave said) that if you set XFS_IDONTCACHE on the inode
-> when you change the DAX flag, the VFS will kill the inode the instant
-> the last user close()s the file.  Then 5.c.ii will actually work.
-> 
-> --D
-> 
-> > > 
-> > > > Furthermore, if we did want an interface like that why not allow
-> > > > the on-disk flag to be set as well as cleared?
-> > > 
-> > > Well, why not - it's why I implemented the flag in the first place!
-> > > The only problem we have here is how to safely change the in-memory
-> > > DAX state, and that largely has nothing to do with setting/clearing
-> > > the on-disk flag....
-> > 
-> > With the above change to xfs_diflags_to_iflags() I think we are ok here.
-> > 
-> > Ira
-> > 
