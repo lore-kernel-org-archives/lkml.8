@@ -2,121 +2,161 @@ Return-Path: <SRS0=n+Ub=5Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6F28C2BB85
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 20:25:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 809E8C2BA19
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 20:25:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7C56F2082D
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 20:25:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586463921;
-	bh=8SJkx8N21llHOyD7xn6lLJPniYQK0j/NupG+z8JapQ0=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=iw58KtuY9jeoQJXM4cv55i7M/mI56WlmX+1GW/LwWwAcGSQcv7D/w9XVnaXVcNJ4/
-	 +pXmjnvfUQjI4dIlcFYnGsJEpXpxH9UPSrSwxLwkFCdYPs0lthPx8d9OgtUyQxFvQA
-	 C3W+nmS8XZlFPNgVs10Y6DznKdo653vw6GGPJZDY=
+	by mail.kernel.org (Postfix) with ESMTP id 4106C20757
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 20:25:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="CtodDgnm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727039AbgDIUZU (ORCPT
+        id S1727078AbgDIUZY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Apr 2020 16:25:20 -0400
-Received: from mail-il1-f196.google.com ([209.85.166.196]:40858 "EHLO
-        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726623AbgDIUZT (ORCPT
+        Thu, 9 Apr 2020 16:25:24 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:21420 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726681AbgDIUZX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Apr 2020 16:25:19 -0400
-Received: by mail-il1-f196.google.com with SMTP id o11so966341ilq.7;
-        Thu, 09 Apr 2020 13:25:18 -0700 (PDT)
+        Thu, 9 Apr 2020 16:25:23 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1586463922;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=L8axp0M5oMyn2GgLyL35ut9Src771+7B+nC1atGx9hE=;
+        b=CtodDgnmq14Flol6VGruMyhaU1bHSCY72jifTfhul+kYGHODaHiyY3/B/HBS+lTwR33Bj9
+        QkxqTti1MfRM5Na21hiRn7rdTJlK3HtcaDV5IEz1CnLAxZMEW9xIPjcsxgA+JXtCUeMVmh
+        9IakI0XvXCYw1Uc1ixVJsp1w3rfezkE=
+Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
+ [209.85.221.71]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-163-hDlMFfmkMGaXR6aCZ0CgOg-1; Thu, 09 Apr 2020 16:25:21 -0400
+X-MC-Unique: hDlMFfmkMGaXR6aCZ0CgOg-1
+Received: by mail-wr1-f71.google.com with SMTP id r17so1619703wrg.19
+        for <linux-kernel@vger.kernel.org>; Thu, 09 Apr 2020 13:25:20 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=qql7LMZDN/GlsmtXFLbpmj2338yu7zQz69wHu+w3jzc=;
-        b=L2grPdJSvKIzdI43JUEr27HQBgIIkXKLmHiRvkIi3LBDVpIRtAQZctay1/wgddkp4h
-         w8GqXM0f58HlpcU+GQuFUbotYI1aAja0p+jlgB0SULG3VURtO3kJ263ci5/Gkyu7Pshl
-         t8A8QnWM9UtW4pCW+YDJqdoMcc+/EIxp3zyRdfbD9WwsEnJW/ddBLGIvHp2ReKigLrjO
-         mflaN/Ri3bFmMx4XAFEAvxvP42GS5jL4NKLiuKXL0BWYgC9eNyL8rkcRzL9jQVLUH+f0
-         C6Vj8yAKd4ZjUH6xzk5JGUuxHfe71uVGnVApDm8rPQKPcpM8WvdFlYFA7W7lTceI9iD+
-         MqfQ==
-X-Gm-Message-State: AGi0Pua2VDPPRVUghRqYHp4WAEM74pQdsrQQ/tOlLQ0wq3RdsiqpyaA4
-        E6nQg2n5qAAXcgdzpbTWW6xQ0vU=
-X-Google-Smtp-Source: APiQypIFT8rqGvjqADkH8en1FLZx6WHUeR1Segx7uCrAwUPEqXOjwNZMSvlbLghQDdSTnV3uisyFwA==
-X-Received: by 2002:a92:8316:: with SMTP id f22mr1686531ild.169.1586463917475;
-        Thu, 09 Apr 2020 13:25:17 -0700 (PDT)
-Received: from xps15.herring.priv ([64.188.179.248])
-        by smtp.googlemail.com with ESMTPSA id j2sm4724567ioq.13.2020.04.09.13.25.16
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=L8axp0M5oMyn2GgLyL35ut9Src771+7B+nC1atGx9hE=;
+        b=GJXxAR/Kr4E6pH10orUima07Z3N1xnwhaN3jwk7J+a37qyMgu/l6L7pxDfCoLI5bCy
+         qWPLfsQmIT38CFkGH1vjePe0jcvS1AcFefwKRytkR2vE0eRgHiZtdFNmI6K90aDwoERG
+         0S9092ZotLRlxTx2IaBNCQ4S8Nf8mDL6r65LYoXuih1sZ+51CA0P/sWaQDS3wSaTbx2B
+         WQc+X5RkVKueyuBgPU81nVfuYy+N7Lt/DkIfKd3QS1leIY18tPfq6Hm768DHwy9GKeF4
+         sPhVQUW7DPE/aPFv0CKxkjek9MV4SsAWn56mDrOH3HjDC7OrE+mRLFbqbHphcdy/Nkpm
+         9KUA==
+X-Gm-Message-State: AGi0PuYKby5igyHNGEmtRdsH2baikEh5qs5oohG/Zqc02kdv6gbUomOu
+        Gh7N08y6Du4A7go2GxAkfv0i1oZ/jyDiSMfihsjVKV0kP0cOvxgaz6Qd1YLhWFdjVNssHOsvHK7
+        H4AHfec7j0nFbttPT27YyQ8C3
+X-Received: by 2002:a5d:5273:: with SMTP id l19mr962754wrc.42.1586463920112;
+        Thu, 09 Apr 2020 13:25:20 -0700 (PDT)
+X-Google-Smtp-Source: APiQypK9hgUgDJGxmm/80KKJjVxLtENNXunW/R8rpld3/YZUF/cp56xBd16lnX4CPWATeKNdabIvmw==
+X-Received: by 2002:a5d:5273:: with SMTP id l19mr962722wrc.42.1586463919863;
+        Thu, 09 Apr 2020 13:25:19 -0700 (PDT)
+Received: from redhat.com (bzq-109-67-97-76.red.bezeqint.net. [109.67.97.76])
+        by smtp.gmail.com with ESMTPSA id s13sm25438882wrw.20.2020.04.09.13.25.16
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 09 Apr 2020 13:25:16 -0700 (PDT)
-From:   Rob Herring <robh@kernel.org>
-To:     devicetree@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org,
-        =?UTF-8?q?Nuno=20S=C3=A1?= <nuno.sa@analog.com>,
-        Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>, linux-hwmon@vger.kernel.org
-Subject: [PATCH] dt-bindings: hwmon: Fix incorrect $id paths
-Date:   Thu,  9 Apr 2020 14:25:15 -0600
-Message-Id: <20200409202516.25282-1-robh@kernel.org>
-X-Mailer: git-send-email 2.20.1
+        Thu, 09 Apr 2020 13:25:19 -0700 (PDT)
+Date:   Thu, 9 Apr 2020 16:25:15 -0400
+From:   "Michael S. Tsirkin" <mst@redhat.com>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Jason Wang <jasowang@redhat.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        kvm list <kvm@vger.kernel.org>,
+        virtualization@lists.linux-foundation.org,
+        Networking <netdev@vger.kernel.org>,
+        Jason Gunthorpe <jgg@mellanox.com>, maxime.coquelin@redhat.com,
+        cunming.liang@intel.com, zhihong.wang@intel.com,
+        rob.miller@broadcom.com, xiao.w.wang@intel.com,
+        lingshan.zhu@intel.com, eperezma@redhat.com, lulu@redhat.com,
+        Parav Pandit <parav@mellanox.com>, kevin.tian@intel.com,
+        Stefan Hajnoczi <stefanha@redhat.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Christoph Hellwig <hch@infradead.org>, aadam@redhat.com,
+        Jiri Pirko <jiri@mellanox.com>, shahafs@mellanox.com,
+        hanand@xilinx.com, mhabets@solarflare.com, gdawar@xilinx.com,
+        saugatm@xilinx.com, vmireyno@marvell.com,
+        zhangweining@ruijie.com.cn, Bie Tiwei <tiwei.bie@intel.com>
+Subject: Re: [PATCH V9 9/9] virtio: Intel IFC VF driver for VDPA
+Message-ID: <20200409162427-mutt-send-email-mst@kernel.org>
+References: <20200326140125.19794-1-jasowang@redhat.com>
+ <20200326140125.19794-10-jasowang@redhat.com>
+ <CAK8P3a1RXUXs5oYjB=Jq5cpvG11eTnmJ+vc18_-0fzgTH6envA@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAK8P3a1RXUXs5oYjB=Jq5cpvG11eTnmJ+vc18_-0fzgTH6envA@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix the path warnings in the adi,axi-fan-control and adt7475 bindings:
+On Thu, Apr 09, 2020 at 12:41:13PM +0200, Arnd Bergmann wrote:
+> On Thu, Mar 26, 2020 at 3:08 PM Jason Wang <jasowang@redhat.com> wrote:
+> >
+> > From: Zhu Lingshan <lingshan.zhu@intel.com>
+> >
+> > This commit introduced two layers to drive IFC VF:
+> >
+> > (1) ifcvf_base layer, which handles IFC VF NIC hardware operations and
+> >     configurations.
+> >
+> > (2) ifcvf_main layer, which complies to VDPA bus framework,
+> >     implemented device operations for VDPA bus, handles device probe,
+> >     bus attaching, vring operations, etc.
+> >
+> > Signed-off-by: Zhu Lingshan <lingshan.zhu@intel.com>
+> > Signed-off-by: Bie Tiwei <tiwei.bie@intel.com>
+> > Signed-off-by: Wang Xiao <xiao.w.wang@intel.com>
+> > Signed-off-by: Jason Wang <jasowang@redhat.com>
+> 
+> > +
+> > +#define IFCVF_QUEUE_ALIGNMENT  PAGE_SIZE
+> > +#define IFCVF_QUEUE_MAX                32768
+> > +static u16 ifcvf_vdpa_get_vq_align(struct vdpa_device *vdpa_dev)
+> > +{
+> > +       return IFCVF_QUEUE_ALIGNMENT;
+> > +}
+> 
+> This fails to build on arm64 with 64kb page size (found in linux-next):
+> 
+> /drivers/vdpa/ifcvf/ifcvf_main.c: In function 'ifcvf_vdpa_get_vq_align':
+> arch/arm64/include/asm/page-def.h:17:20: error: conversion from 'long
+> unsigned int' to 'u16' {aka 'short unsigned int'} changes value from
+> '65536' to '0' [-Werror=overflow]
+>    17 | #define PAGE_SIZE  (_AC(1, UL) << PAGE_SHIFT)
+>       |                    ^
+> drivers/vdpa/ifcvf/ifcvf_base.h:37:31: note: in expansion of macro 'PAGE_SIZE'
+>    37 | #define IFCVF_QUEUE_ALIGNMENT PAGE_SIZE
+>       |                               ^~~~~~~~~
+> drivers/vdpa/ifcvf/ifcvf_main.c:231:9: note: in expansion of macro
+> 'IFCVF_QUEUE_ALIGNMENT'
+>   231 |  return IFCVF_QUEUE_ALIGNMENT;
+>       |         ^~~~~~~~~~~~~~~~~~~~~
+> 
+> It's probably good enough to just not allow the driver to be built in that
+> configuration as it's fairly rare but unfortunately there is no simple Kconfig
+> symbol for it.
+> 
+> In a similar driver, we did
+> 
+> config VMXNET3
+>         tristate "VMware VMXNET3 ethernet driver"
+>         depends on PCI && INET
+>         depends on !(PAGE_SIZE_64KB || ARM64_64K_PAGES || \
+>                      IA64_PAGE_SIZE_64KB || MICROBLAZE_64K_PAGES || \
+>                      PARISC_PAGE_SIZE_64KB || PPC_64K_PAGES)
+> 
+> I think we should probably make PAGE_SIZE_64KB a global symbol
+> in arch/Kconfig and have it selected by the other symbols so drivers
+> like yours can add a dependency for it.
+> 
+>          Arnd
 
-Documentation/devicetree/bindings/hwmon/adt7475.yaml: $id:
-  relative path/filename doesn't match actual path or filename
-  expected: http://devicetree.org/schemas/hwmon/adt7475.yaml#
-Documentation/devicetree/bindings/hwmon/adi,axi-fan-control.yaml: $id:
-  relative path/filename doesn't match actual path or filename
-  expected: http://devicetree.org/schemas/hwmon/adi,axi-fan-control.yaml#
-
-Cc: "Nuno Sá" <nuno.sa@analog.com>
-Cc: Jean Delvare <jdelvare@suse.com>
-Cc: Guenter Roeck <linux@roeck-us.net>
-Cc: linux-hwmon@vger.kernel.org
-Signed-off-by: Rob Herring <robh@kernel.org>
----
-Will take this via the DT tree.
-
-Rob
-
- .../devicetree/bindings/hwmon/adi,axi-fan-control.yaml          | 2 +-
- Documentation/devicetree/bindings/hwmon/adt7475.yaml            | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/hwmon/adi,axi-fan-control.yaml b/Documentation/devicetree/bindings/hwmon/adi,axi-fan-control.yaml
-index 29bb2c778c59..7db78767c02d 100644
---- a/Documentation/devicetree/bindings/hwmon/adi,axi-fan-control.yaml
-+++ b/Documentation/devicetree/bindings/hwmon/adi,axi-fan-control.yaml
-@@ -2,7 +2,7 @@
- # Copyright 2019 Analog Devices Inc.
- %YAML 1.2
- ---
--$id: http://devicetree.org/schemas/bindings/hwmon/adi,axi-fan-control.yaml#
-+$id: http://devicetree.org/schemas/hwmon/adi,axi-fan-control.yaml#
- $schema: http://devicetree.org/meta-schemas/core.yaml#
- 
- title: Analog Devices AXI FAN Control Device Tree Bindings
-diff --git a/Documentation/devicetree/bindings/hwmon/adt7475.yaml b/Documentation/devicetree/bindings/hwmon/adt7475.yaml
-index 76985034ea73..46c441574f98 100644
---- a/Documentation/devicetree/bindings/hwmon/adt7475.yaml
-+++ b/Documentation/devicetree/bindings/hwmon/adt7475.yaml
-@@ -1,7 +1,7 @@
- # SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
- %YAML 1.2
- ---
--$id: http://devicetree.org/schemas/adt7475.yaml#
-+$id: http://devicetree.org/schemas/hwmon/adt7475.yaml#
- $schema: http://devicetree.org/meta-schemas/core.yaml#
- 
- title: ADT7475 hwmon sensor
--- 
-2.20.1
+It's probably easier to make the alignment u32 - I don't really know why it's
+u16, all callers seem to assign the result to a u32 value.
 
