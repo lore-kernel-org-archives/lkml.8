@@ -2,196 +2,383 @@ Return-Path: <SRS0=n+Ub=5Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 456DDC2BB1D
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 08:10:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E682AC2BB54
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 08:11:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 12F5F20692
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 08:10:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B520D20692
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 08:11:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726638AbgDIIKa (ORCPT
+        id S1726650AbgDIILV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Apr 2020 04:10:30 -0400
-Received: from mx2.suse.de ([195.135.220.15]:43286 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725881AbgDIIK3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Apr 2020 04:10:29 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 849C7ACF2;
-        Thu,  9 Apr 2020 08:10:26 +0000 (UTC)
-Subject: Re: [PATCH 05/13] efi/x86: don't map the entire kernel text RW for
- mixed mode
-To:     Gary Lin <glin@suse.com>, Ard Biesheuvel <ardb@kernel.org>
-Cc:     linux-efi <linux-efi@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Anshuman Khandual <anshuman.khandual@arm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Dave Young <dyoung@redhat.com>,
-        Saravana Kannan <saravanak@google.com>
-References: <20200113172245.27925-1-ardb@kernel.org>
- <20200113172245.27925-6-ardb@kernel.org>
- <63b125a4-6c62-fcdf-de22-d3bebe2dcbf5@suse.cz>
- <CAMj1kXGiT_zYjc6X-msRXVozhpDAY0UesEW3_4fOgiH4FyMgDw@mail.gmail.com>
- <972b66a9-92c7-9a15-1aa1-e3236abe90df@suse.cz>
- <CAMj1kXFGkOM9fbqr44_TbdxqFjH1i3d8dkO64C1mQmH=AqrUSQ@mail.gmail.com>
- <20200409080626.GV5951@GaryWorkstation>
-From:   Jiri Slaby <jslaby@suse.cz>
-Autocrypt: addr=jslaby@suse.cz; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <984a2b3c-a9d4-e733-6372-4abf0f99be1f@suse.cz>
-Date:   Thu, 9 Apr 2020 10:10:25 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Thu, 9 Apr 2020 04:11:21 -0400
+Received: from mout-p-202.mailbox.org ([80.241.56.172]:28880 "EHLO
+        mout-p-202.mailbox.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725828AbgDIILU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Apr 2020 04:11:20 -0400
+Received: from smtp1.mailbox.org (smtp1.mailbox.org [IPv6:2001:67c:2050:105:465:1:1:0])
+        (using TLSv1.2 with cipher ECDHE-RSA-CHACHA20-POLY1305 (256/256 bits))
+        (No client certificate requested)
+        by mout-p-202.mailbox.org (Postfix) with ESMTPS id 48yYkY6q0fzQlD2;
+        Thu,  9 Apr 2020 10:11:17 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at heinlein-support.de
+Received: from smtp1.mailbox.org ([80.241.60.240])
+        by spamfilter03.heinlein-hosting.de (spamfilter03.heinlein-hosting.de [80.241.56.117]) (amavisd-new, port 10030)
+        with ESMTP id 9Q7EAP2wxF0K; Thu,  9 Apr 2020 10:11:12 +0200 (CEST)
+Date:   Thu, 9 Apr 2020 18:10:51 +1000
+From:   Aleksa Sarai <cyphar@cyphar.com>
+To:     Josh Triplett <josh@joshtriplett.org>
+Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        io-uring@vger.kernel.org, linux-arch@vger.kernel.org,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Arnd Bergmann <arnd@arndb.de>, Jens Axboe <axboe@kernel.dk>
+Subject: Re: [PATCH v3 2/3] fs: openat2: Extend open_how to allow
+ userspace-selected fds
+Message-ID: <20200409081051.el65ngp4cixyhdqd@yavin.dot.cyphar.com>
+References: <cover.1586321767.git.josh@joshtriplett.org>
+ <e598110f71a4e2346860b94e91de3e6e75a4b82a.1586321767.git.josh@joshtriplett.org>
+ <20200408122330.5vorg2bwtth2dp5k@yavin.dot.cyphar.com>
 MIME-Version: 1.0
-In-Reply-To: <20200409080626.GV5951@GaryWorkstation>
-Content-Type: text/plain; charset=iso-8859-2
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="cie7xeqd2msvbcgv"
+Content-Disposition: inline
+In-Reply-To: <20200408122330.5vorg2bwtth2dp5k@yavin.dot.cyphar.com>
+X-Rspamd-Queue-Id: 7817217EF
+X-Rspamd-Score: -7.75 / 15.00 / 15.00
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 09. 04. 20, 10:06, Gary Lin wrote:
-> On Thu, Apr 09, 2020 at 09:51:20AM +0200, Ard Biesheuvel wrote:
->> On Wed, 8 Apr 2020 at 12:51, Jiri Slaby <jslaby@suse.cz> wrote:
->>>
->>> Ccing Gary.
->>>
->>> On 08. 04. 20, 12:47, Ard Biesheuvel wrote:
->>>> On Wed, 8 Apr 2020 at 12:42, Jiri Slaby <jslaby@suse.cz> wrote:
->>>>>
->>>>> On 13. 01. 20, 18:22, Ard Biesheuvel wrote:
->>>>>> The mixed mode thunking routine requires a part of it to be
->>>>>> mapped 1:1, and for this reason, we currently map the entire
->>>>>> kernel .text read/write in the EFI page tables, which is bad.
->>>>>>
->>>>>> In fact, the kernel_map_pages_in_pgd() invocation that installs
->>>>>> this mapping is entirely redundant, since all of DRAM is already
->>>>>> 1:1 mapped read/write in the EFI page tables when we reach this
->>>>>> point, which means that .rodata is mapped read-write as well.
->>>>>>
->>>>>> So let's remap both .text and .rodata read-only in the EFI
->>>>>> page tables.
->>>>>
->>>>> This patch causes unhandled page faults in mixed mode:
->>>>>
->>>>>> BUG: unable to handle page fault for address: 000000001557ee88
->>>>>> #PF: supervisor write access in kernel mode
->>>>>> #PF: error_code(0x0003) - permissions violation
->>>>>> PGD fd52063 P4D fd52063 PUD fd53063 PMD 154000e1
->>>>>> Oops: 0003 [#1] SMP PTI
->>>>>> CPU: 1 PID: 191 Comm: systemd-escape Not tainted
->>>>> 5.6.2-20.gb22bc26-default #1 openSUSE Tumbleweed (unreleased)
->>>>>> Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 0.0.0
->>>>> 02/06/2015
->>>>>> RIP: 0008:0x3d2eed95
->>>>>> Code: 8b 45 d4 8b 4d 10 8b 40 04 89 01 89 3b 50 6a 00 8b 55 0c 6a 00
->>>>> 8b 45 08 0f b6 4d e4 6a 01 31 f6 e8 ee c5 fc ff 83 c4 10 eb 07 <89> 03
->>>>> be 05 00 00 80 a1 74 63 31 3d 83 c0 48 e8 44 d2 ff ff eb 05
->>>>>> RSP: 0018:000000000fd66fa0 EFLAGS: 00010002
->>>>>> RAX: 0000000000000001 RBX: 000000001557ee88 RCX: 000000003d1f1120
->>>>>> RDX: 0000000000000001 RSI: 0000000000000000 RDI: 0000000000000001
->>>>>> RBP: 000000000fd66fd8 R08: 000000001557ee88 R09: 0000000000000000
->>>>>> R10: 0000000000000055 R11: 0000000000000000 R12: 0000000015bcf000
->>>>>> R13: 0000000000000000 R14: 0000000000000000 R15: 0000000000000000
->>>>>> FS:  00007f36ee9dc940(0000) GS:ffff9b903d700000(0000)
->>>>> knlGS:0000000000000000
->>>>>> CS:  0008 DS: 0018 ES: 0018 CR0: 0000000080050033
->>>>>> CR2: 000000001557ee88 CR3: 000000000fd5e000 CR4: 00000000000006e0
->>>>>> DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
->>>>>> DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
->>>>>> Call Trace:
->>>>>> Modules linked in: efivarfs
->>>>>> CR2: 000000001557ee88
->>>>>
->>>>> EFI apparently tries to write to now read-only memory.
->>>>>
->>>>> See:
->>>>> https://bugzilla.suse.com/show_bug.cgi?id=1168645
->>>>>
->>>>> Reverting it on the top of 5.6 fixes the issue.
->>>>>
->>>>> I am using
->>>>> /usr/share/qemu/ovmf-ia32-code.bin
->>>>> /usr/share/qemu/ovmf-ia32-vars.bin
->>>>> from qemu-ovmf-ia32-202002-1.1.noarch rpm.
->>>>>
->>>>
->>>> Do you have a git tree for Suse's OVMF fork? I did a lot of testing
->>>> with upstream OVMF, and never ran into this issue.
->>>
->>> Not really a git tree, but the sources are here:
->>> https://build.opensuse.org/package/show/openSUSE:Factory/ovmf
->>>
->>
->>
->> Anywhere I can get an actual build? The src rpm only has the sources,
->> and the i586 rpm has nothing except
->>
->> $ rpm -qlp ~/Downloads/ovmf-202002-1.1.i586.rpm
->> warning: /home/ardbie01/Downloads/ovmf-202002-1.1.i586.rpm: Header V3
->> RSA/SHA256 Signature, key ID 3dbdc284: NOKEY
->> /usr/share/doc/packages/ovmf
->> /usr/share/doc/packages/ovmf/README
-> 
-> Hmmm, it's weird that OBS doesn't list all derived files.
-> Anyway, the ia32 ovmf is available in
-> http://download.opensuse.org/tumbleweed/repo/oss/noarch/qemu-ovmf-ia32-202002-1.1.noarch.rpm
 
-It indeed does:
-https://build.opensuse.org/package/binaries/openSUSE:Factory/ovmf/standard
+--cie7xeqd2msvbcgv
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Note that the ia32 version is noarch, built on i586.
+On 2020-04-08, Aleksa Sarai <cyphar@cyphar.com> wrote:
+> On 2020-04-07, Josh Triplett <josh@joshtriplett.org> wrote:
+> > Inspired by the X protocol's handling of XIDs, allow userspace to select
+> > the file descriptor opened by openat2, so that it can use the resulting
+> > file descriptor in subsequent system calls without waiting for the
+> > response to openat2.
+> >=20
+> > In io_uring, this allows sequences like openat2/read/close without
+> > waiting for the openat2 to complete. Multiple such sequences can
+> > overlap, as long as each uses a distinct file descriptor.
+> >=20
+> > Add a new O_SPECIFIC_FD open flag to enable this behavior, only accepted
+> > by openat2 for now (ignored by open/openat like all unknown flags). Add
+> > an fd field to struct open_how (along with appropriate padding, and
+> > verify that the padding is 0 to allow replacing the padding with a field
+> > in the future).
+> >=20
+> > The file table has a corresponding new function
+> > get_specific_unused_fd_flags, which gets the specified file descriptor
+> > if O_SPECIFIC_FD is set (and the fd isn't -1); otherwise it falls back
+> > to get_unused_fd_flags, to simplify callers.
+>=20
+> >=20
+> > The specified file descriptor must not already be open; if it is,
+> > get_specific_unused_fd_flags will fail with -EBUSY. This helps catch
+> > userspace errors.
+> >=20
+> > When O_SPECIFIC_FD is set, and fd is not -1, openat2 will use the
+> > specified file descriptor rather than finding the lowest available one.
+> >=20
+> > Test program:
+> >=20
+> >     #include <err.h>
+> >     #include <fcntl.h>
+> >     #include <stdio.h>
+> >     #include <unistd.h>
+> >=20
+> >     int main(void)
+> >     {
+> >         struct open_how how =3D {
+> > 	    .flags =3D O_RDONLY | O_SPECIFIC_FD,
+> > 	    .fd =3D 42
+> > 	};
+> >         int fd =3D openat2(AT_FDCWD, "/dev/null", &how, sizeof(how));
+> >         if (fd < 0)
+> >             err(1, "openat2");
+> >         printf("fd=3D%d\n", fd); // prints fd=3D42
+> >         return 0;
+> >     }
+> >=20
+> > Signed-off-by: Josh Triplett <josh@joshtriplett.org>
+> > Signed-off-by: Jens Axboe <axboe@kernel.dk>
+>=20
+> Maybe I'm misunderstanding something, but this Signed-off-by looks
+> strange -- was it Co-developed-by Jens?
+>=20
+> > ---
+> >  fs/fcntl.c                       |  2 +-
+> >  fs/file.c                        | 39 ++++++++++++++++++++++++++++++++
+> >  fs/io_uring.c                    |  3 ++-
+> >  fs/open.c                        |  6 +++--
+> >  include/linux/fcntl.h            |  5 ++--
+> >  include/linux/file.h             |  3 +++
+> >  include/uapi/asm-generic/fcntl.h |  4 ++++
+> >  include/uapi/linux/openat2.h     |  2 ++
+> >  8 files changed, 58 insertions(+), 6 deletions(-)
+> >=20
+> > diff --git a/fs/fcntl.c b/fs/fcntl.c
+> > index 2e4c0fa2074b..0357ad667563 100644
+> > --- a/fs/fcntl.c
+> > +++ b/fs/fcntl.c
+> > @@ -1033,7 +1033,7 @@ static int __init fcntl_init(void)
+> >  	 * Exceptions: O_NONBLOCK is a two bit define on parisc; O_NDELAY
+> >  	 * is defined as O_NONBLOCK on some platforms and not on others.
+> >  	 */
+> > -	BUILD_BUG_ON(21 - 1 /* for O_RDONLY being 0 */ !=3D
+> > +	BUILD_BUG_ON(22 - 1 /* for O_RDONLY being 0 */ !=3D
+> >  		HWEIGHT32(
+> >  			(VALID_OPEN_FLAGS & ~(O_NONBLOCK | O_NDELAY)) |
+> >  			__FMODE_EXEC | __FMODE_NONOTIFY));
+> > diff --git a/fs/file.c b/fs/file.c
+> > index ba06140d89af..0c34206314dc 100644
+> > --- a/fs/file.c
+> > +++ b/fs/file.c
+> > @@ -567,6 +567,45 @@ void put_unused_fd(unsigned int fd)
+> > =20
+> >  EXPORT_SYMBOL(put_unused_fd);
+> > =20
+> > +int __get_specific_unused_fd_flags(unsigned int fd, unsigned int flags,
+> > +				   unsigned long nofile)
+> > +{
+> > +	int ret;
+> > +	struct fdtable *fdt;
+> > +	struct files_struct *files =3D current->files;
+> > +
+> > +	if (!(flags & O_SPECIFIC_FD) || fd =3D=3D -1)
+> > +		return __get_unused_fd_flags(flags, nofile);
+>=20
+> This check should just be (flags & O_SPECIFIC_FD) -- see my comment
+> below about ->fd being negative.
 
-thanks,
--- 
-js
-suse labs
+Ah, I missed that the pipe2 patch allows you to choose which fd is being
+specifically chosen by setting it to -1. So this check is fine but my
+comment for openat2 still applies.
+
+> > +
+> > +	if (fd >=3D nofile)
+> > +		return -EBADF;
+> > +
+> > +	spin_lock(&files->file_lock);
+> > +	ret =3D expand_files(files, fd);
+> > +	if (unlikely(ret < 0))
+> > +		goto out_unlock;
+> > +	fdt =3D files_fdtable(files);
+> > +	if (fdt->fd[fd]) {
+> > +		ret =3D -EBUSY;
+> > +		goto out_unlock;
+>=20
+> It would be remiss of me to not mention that this is inconsistent with
+> the other way of explicitly picking a file descriptor on Unix -- the dup
+> family closes newfd if it's already used.
+>=20
+> But that being said, I do actually prefer this behaviour since it means
+> that two threads trying to open a file with the same specific file
+> descriptor won't see the file descriptor change underneath them (leading
+> to who knows how much head-scratching).
+>=20
+> > +	}
+> > +	__set_open_fd(fd, fdt);
+> > +	if (flags & O_CLOEXEC)
+> > +		__set_close_on_exec(fd, fdt);
+> > +	else
+> > +		__clear_close_on_exec(fd, fdt);
+> > +	ret =3D fd;
+> > +
+> > +out_unlock:
+> > +	spin_unlock(&files->file_lock);
+> > +	return ret;
+> > +}
+> > +
+> > +int get_specific_unused_fd_flags(unsigned int fd, unsigned int flags)
+> > +{
+> > +	return __get_specific_unused_fd_flags(fd, flags, rlimit(RLIMIT_NOFILE=
+));
+> > +}
+> > +
+> >  /*
+> >   * Install a file pointer in the fd array.
+> >   *
+> > diff --git a/fs/io_uring.c b/fs/io_uring.c
+> > index 358f97be9c7b..4a69e1daf3fe 100644
+> > --- a/fs/io_uring.c
+> > +++ b/fs/io_uring.c
+> > @@ -2997,7 +2997,8 @@ static int io_openat2(struct io_kiocb *req, bool =
+force_nonblock)
+> >  	if (ret)
+> >  		goto err;
+> > =20
+> > -	ret =3D __get_unused_fd_flags(req->open.how.flags, req->open.nofile);
+> > +	ret =3D __get_specific_unused_fd_flags(req->open.how.fd,
+> > +			req->open.how.flags, req->open.nofile);
+> >  	if (ret < 0)
+> >  		goto err;
+> > =20
+> > diff --git a/fs/open.c b/fs/open.c
+> > index 719b320ede52..d4225e6f9d4c 100644
+> > --- a/fs/open.c
+> > +++ b/fs/open.c
+> > @@ -958,7 +958,7 @@ EXPORT_SYMBOL(open_with_fake_path);
+> >  inline struct open_how build_open_how(int flags, umode_t mode)
+> >  {
+> >  	struct open_how how =3D {
+> > -		.flags =3D flags & VALID_OPEN_FLAGS,
+> > +		.flags =3D flags & VALID_OPEN_FLAGS & ~O_SPECIFIC_FD,
+>=20
+> This is getting a little ugly, maybe filter out O_SPECIFIC_FD later on
+> in build_open_how() -- where we handle O_PATH.
+>=20
+> >  		.mode =3D mode & S_IALLUGO,
+> >  	};
+> > =20
+> > @@ -1143,7 +1143,7 @@ static long do_sys_openat2(int dfd, const char __=
+user *filename,
+> >  	if (IS_ERR(tmp))
+> >  		return PTR_ERR(tmp);
+> > =20
+> > -	fd =3D get_unused_fd_flags(how->flags);
+> > +	fd =3D get_specific_unused_fd_flags(how->fd, how->flags);
+> >  	if (fd >=3D 0) {
+> >  		struct file *f =3D do_filp_open(dfd, tmp, &op);
+> >  		if (IS_ERR(f)) {
+> > @@ -1193,6 +1193,8 @@ SYSCALL_DEFINE4(openat2, int, dfd, const char __u=
+ser *, filename,
+> >  	err =3D copy_struct_from_user(&tmp, sizeof(tmp), how, usize);
+> >  	if (err)
+> >  		return err;
+> > +	if (tmp.pad !=3D 0)
+> > +		return -EINVAL;
+>=20
+> This check should be done in build_open_flags(), where the other sanity
+> checks are done. In addition, there must be an additional check like
+>=20
+>   if (!(flags & O_SPECIFIC_FD) && how->fd !=3D 0)
+>     return -EINVAL;
+>=20
+> Since we must not allow garbage values to be passed and ignored by us in
+> openat2().
+>=20
+> >  	/* O_LARGEFILE is only allowed for non-O_PATH. */
+> >  	if (!(tmp.flags & O_PATH) && force_o_largefile())
+> > diff --git a/include/linux/fcntl.h b/include/linux/fcntl.h
+> > index 7bcdcf4f6ab2..728849bcd8fa 100644
+> > --- a/include/linux/fcntl.h
+> > +++ b/include/linux/fcntl.h
+> > @@ -10,7 +10,7 @@
+> >  	(O_RDONLY | O_WRONLY | O_RDWR | O_CREAT | O_EXCL | O_NOCTTY | O_TRUNC=
+ | \
+> >  	 O_APPEND | O_NDELAY | O_NONBLOCK | O_NDELAY | __O_SYNC | O_DSYNC | \
+> >  	 FASYNC	| O_DIRECT | O_LARGEFILE | O_DIRECTORY | O_NOFOLLOW | \
+> > -	 O_NOATIME | O_CLOEXEC | O_PATH | __O_TMPFILE)
+> > +	 O_NOATIME | O_CLOEXEC | O_PATH | __O_TMPFILE | O_SPECIFIC_FD)
+> > =20
+> >  /* List of all valid flags for the how->upgrade_mask argument: */
+> >  #define VALID_UPGRADE_FLAGS \
+> > @@ -23,7 +23,8 @@
+> > =20
+> >  /* List of all open_how "versions". */
+> >  #define OPEN_HOW_SIZE_VER0	24 /* sizeof first published struct */
+> > -#define OPEN_HOW_SIZE_LATEST	OPEN_HOW_SIZE_VER0
+> > +#define OPEN_HOW_SIZE_VER1	32 /* added fd and pad */
+> > +#define OPEN_HOW_SIZE_LATEST	OPEN_HOW_SIZE_VER1
+> > =20
+> >  #ifndef force_o_largefile
+> >  #define force_o_largefile() (!IS_ENABLED(CONFIG_ARCH_32BIT_OFF_T))
+> > diff --git a/include/linux/file.h b/include/linux/file.h
+> > index b67986f818d2..a63301864a36 100644
+> > --- a/include/linux/file.h
+> > +++ b/include/linux/file.h
+> > @@ -87,6 +87,9 @@ extern void set_close_on_exec(unsigned int fd, int fl=
+ag);
+> >  extern bool get_close_on_exec(unsigned int fd);
+> >  extern int __get_unused_fd_flags(unsigned flags, unsigned long nofile);
+> >  extern int get_unused_fd_flags(unsigned flags);
+> > +extern int __get_specific_unused_fd_flags(unsigned int fd, unsigned in=
+t flags,
+> > +	unsigned long nofile);
+> > +extern int get_specific_unused_fd_flags(unsigned int fd, unsigned int =
+flags);
+> >  extern void put_unused_fd(unsigned int fd);
+> >  extern unsigned int increase_min_fd(unsigned int num);
+> > =20
+> > diff --git a/include/uapi/asm-generic/fcntl.h b/include/uapi/asm-generi=
+c/fcntl.h
+> > index 9dc0bf0c5a6e..d3de5b8b3955 100644
+> > --- a/include/uapi/asm-generic/fcntl.h
+> > +++ b/include/uapi/asm-generic/fcntl.h
+> > @@ -89,6 +89,10 @@
+> >  #define __O_TMPFILE	020000000
+> >  #endif
+> > =20
+> > +#ifndef O_SPECIFIC_FD
+> > +#define O_SPECIFIC_FD	01000000000	/* open as specified fd */
+> > +#endif
+>=20
+> Maybe you've already done this (since you skipped several bits in the
+> O_* flag space), but I would double-check that there is no conflict on
+> other architectures. I faintly recall that FMODE_NOTIFY has a different
+> value on sparc, and there was some oddness on alpha too... But as long
+> as fcntl.c builds on all the arches then it's fine.
+>=20
+> > +
+> >  /* a horrid kludge trying to make sure that this will fail on old kern=
+els */
+> >  #define O_TMPFILE (__O_TMPFILE | O_DIRECTORY)
+> >  #define O_TMPFILE_MASK (__O_TMPFILE | O_DIRECTORY | O_CREAT)     =20
+> > diff --git a/include/uapi/linux/openat2.h b/include/uapi/linux/openat2.h
+> > index 58b1eb711360..50d1206b64c2 100644
+> > --- a/include/uapi/linux/openat2.h
+> > +++ b/include/uapi/linux/openat2.h
+> > @@ -20,6 +20,8 @@ struct open_how {
+> >  	__u64 flags;
+> >  	__u64 mode;
+> >  	__u64 resolve;
+> > +	__s32 fd;
+> > +	__u32 pad; /* Must be 0 in the current version */
+>=20
+> I'm not sure I see why the new field is an s32 -- there should be no
+> situation where a user specifies O_SPECIFIC_FD and a negative file
+> descriptor (if we keep it as an s32, you should get an -EINVAL in that
+> case). If you don't want O_SPECIFIC_FD, don't specify it.
+>=20
+> But I think this should be a u32. I'm tempted to argue this should
+> actually be a u64, but nothing supports 64-bit file descriptor numbers
+> (including the return type of openat2).
+>=20
+> --=20
+> Aleksa Sarai
+> Senior Software Engineer (Containers)
+> SUSE Linux GmbH
+> <https://www.cyphar.com/>
+
+
+
+
+--=20
+Aleksa Sarai
+Senior Software Engineer (Containers)
+SUSE Linux GmbH
+<https://www.cyphar.com/>
+
+--cie7xeqd2msvbcgv
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQSxZm6dtfE8gxLLfYqdlLljIbnQEgUCXo7YhwAKCRCdlLljIbnQ
+EqoIAP9InkKje+n9HX4jnfDxB8IkdmrIR3vx46uVHdd6DXmIcgD/Z9uB8aBLbAc9
+X/4tWPlMbQMDw0vD1glyBV2ZYHjG2QM=
+=xlRb
+-----END PGP SIGNATURE-----
+
+--cie7xeqd2msvbcgv--
