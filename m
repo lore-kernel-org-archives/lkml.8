@@ -2,166 +2,149 @@ Return-Path: <SRS0=n+Ub=5Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3111C2BB54
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 09:10:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 812F9C2BB54
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 09:11:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7AFCF2084D
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 09:10:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b="YiyekxgM";
-	dkim=pass (1024-bit key) header.d=marvell.onmicrosoft.com header.i=@marvell.onmicrosoft.com header.b="SJGbUuHR"
+	by mail.kernel.org (Postfix) with ESMTP id 609C820CC7
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 09:11:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726651AbgDIJKx (ORCPT
+        id S1726657AbgDIJLm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Apr 2020 05:10:53 -0400
-Received: from mx0b-0016f401.pphosted.com ([67.231.156.173]:49926 "EHLO
-        mx0b-0016f401.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725783AbgDIJKw (ORCPT
+        Thu, 9 Apr 2020 05:11:42 -0400
+Received: from esa4.mentor.iphmx.com ([68.232.137.252]:40456 "EHLO
+        esa4.mentor.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725783AbgDIJLl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Apr 2020 05:10:52 -0400
-Received: from pps.filterd (m0045851.ppops.net [127.0.0.1])
-        by mx0b-0016f401.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0399AUck010249;
-        Thu, 9 Apr 2020 02:10:30 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=date : from : to :
- cc : subject : message-id : references : content-type :
- content-transfer-encoding : in-reply-to : mime-version; s=pfpt0818;
- bh=VYMWXZdDnpx2fNUap5BCtn+JUWTkSKaf+5QedQQqng0=;
- b=YiyekxgMG9DQHYNYPc+JMdk9qTuCYtjAVLHAj2FP8tqy8mTa4uuCSI2GYEAuyD2SnuqW
- 4gNtOL4i0cpQz6PaxlPLREcYzRGArKn+yFRBY5qPMH5BUSye7f8GW47eOf8dLEs9ln/+
- sJ+h1hfevFTeT7CtQrzA8fjhzkgnBsyGgACkRizdFIVdliNScw5aX4Kvh4bgFT4uo+A5
- UPohqsNR1opsPBue8omsh+TKIAstyaupYDqvrZyw117zasxBX9uBIWm8VGFOIlmR3Zhz
- bo+xxlRiQ9zFVmI2IINySeN++YkDjecOJFu2hq/WbG4zmt4BYZM/PCQRBVmxegvdsPkI Pg== 
-Received: from sc-exch03.marvell.com ([199.233.58.183])
-        by mx0b-0016f401.pphosted.com with ESMTP id 3091me7jpx-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
-        Thu, 09 Apr 2020 02:10:30 -0700
-Received: from DC5-EXCH02.marvell.com (10.69.176.39) by SC-EXCH03.marvell.com
- (10.93.176.83) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Thu, 9 Apr
- 2020 02:10:28 -0700
-Received: from SC-EXCH01.marvell.com (10.93.176.81) by DC5-EXCH02.marvell.com
- (10.69.176.39) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Thu, 9 Apr
- 2020 02:10:27 -0700
-Received: from NAM12-DM6-obe.outbound.protection.outlook.com (104.47.59.172)
- by SC-EXCH01.marvell.com (10.93.176.81) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2 via Frontend Transport; Thu, 9 Apr 2020 02:10:27 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=OfyPjtUHJ03Hms73eV3HrrKmWZjM2ZBlNn9plHZE3s+oUFjyqGmjGsGiiKKv8UvK85uiTVJmyJkO1Ohk8N2Bw4PzvDRsJ2Asezy1UL4pTjiJ24pMFj3B+LpKXeQpSbtgWNHi9TBaIIfYzLPN3rDwZsk/aQDPNxAQ0sszWo3sENt6wNubthWJDoj9BlK1RRgz+jNAQ83yBzzg323e9ZsC7+IS5kocw0YVikUvwWEcC5nKmZfxJ+t5/bCO/CG2MKwmEVyls7iA97jvcn0oWNYDejg5Rz9DFIYJbbDSJHS7S8ZLnYiaMsN0gcH/DW8gowGqzBeHvGltw3uLhM9rpt4kFA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=VYMWXZdDnpx2fNUap5BCtn+JUWTkSKaf+5QedQQqng0=;
- b=kP5lcajm984zi6OkWsaapvnOQ/YHu1TJOtVSpUxnIOuw3LNQ5/k4KFz0gbDLMBTEry4FYbFKEbzWYT5HBN9wCUGIDpxoLjGBXJEUlGoi1ZB/cJw0eG8KMTlBmKjPj4tHYYhLVipQMLInJb++aYApwMXwgYSr06yuXPwpj+v72XEACp4Jsha9fTNIKY+wNjOJyI/dzDlSATbnCo1X6FSONOd2fSiXm+dh5CYQvB1fPOC3SyZYfGHpjE2IMK286kGZbgblMTdf+W5L5tOH7S+CkynMcFlR4IKQ3B41O6QEe4NTwUCwpjPrF7ocfvUSC8ZgIvuoZZOujiffAGqh62Cddw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=marvell.com; dmarc=pass action=none header.from=marvell.com;
- dkim=pass header.d=marvell.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=marvell.onmicrosoft.com; s=selector1-marvell-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=VYMWXZdDnpx2fNUap5BCtn+JUWTkSKaf+5QedQQqng0=;
- b=SJGbUuHR6KZbI2HEuOXb3L83iUf48x0/5udD+7Y/5HstKJ4digCL4sCg74KW/25O1mTecV7Zyrcun9t9DXOOZ/ZWEjXlmPOfTvOFOFDX3tM9sV3Sgu70G+XuGVJ+aSJ0Jk6NoOf+0wpZbDhXofRBIqvY6P4vtwEhLx9BSjEcHGA=
-Received: from BYAPR18MB2661.namprd18.prod.outlook.com (2603:10b6:a03:136::26)
- by BYAPR18MB2375.namprd18.prod.outlook.com (2603:10b6:a03:12d::24) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2878.19; Thu, 9 Apr
- 2020 09:10:26 +0000
-Received: from BYAPR18MB2661.namprd18.prod.outlook.com
- ([fe80::78a2:38df:6c52:a953]) by BYAPR18MB2661.namprd18.prod.outlook.com
- ([fe80::78a2:38df:6c52:a953%3]) with mapi id 15.20.2878.023; Thu, 9 Apr 2020
- 09:10:26 +0000
-Date:   Thu, 9 Apr 2020 11:10:16 +0200
-From:   Robert Richter <rrichter@marvell.com>
-To:     Jason Yan <yanaijie@huawei.com>
-CC:     <khuong@os.amperecomputing.com>, <bp@alien8.de>,
-        <mchehab@kernel.org>, <tony.luck@intel.com>, <james.morse@arm.com>,
-        <linux-edac@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] EDAC, xgene: remove set but not used 'address'
-Message-ID: <20200409091016.d3uohmt2o3zwhmro@rric.localdomain>
-References: <20200409085237.46642-1-yanaijie@huawei.com>
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200409085237.46642-1-yanaijie@huawei.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-ClientProxiedBy: HE1PR0901CA0049.eurprd09.prod.outlook.com
- (2603:10a6:3:45::17) To BYAPR18MB2661.namprd18.prod.outlook.com
- (2603:10b6:a03:136::26)
+        Thu, 9 Apr 2020 05:11:41 -0400
+IronPort-SDR: ct4va3PXa6gQfQJrKzxknWr6fH1WT2JNNMAOzeV/1M1PsC/1mVNkhXuQIJWdJgyzmbPWZ77D+N
+ 3uVFVCRQr9jqWjYcGTRNA1blOzKTtupDioCFPL9QICYrMNL3uTeJWFatPYcFN0tB/lG5BPDJj9
+ wBowsRYKJo59K0taIx5dbL1B2ew4d6G7UQytJZo97gqEw65jS8aRxo7qRtAvDYh/6RpOunJgTB
+ W23lt5RDa4o32xFcLFgGdi93+bBymZFO6JY7OkHixQXuSOzJbFzeI4ek41VzzUvWqI7nx43+Qd
+ O4w=
+X-IronPort-AV: E=Sophos;i="5.72,362,1580803200"; 
+   d="scan'208";a="47642037"
+Received: from orw-gwy-02-in.mentorg.com ([192.94.38.167])
+  by esa4.mentor.iphmx.com with ESMTP; 09 Apr 2020 01:11:41 -0800
+IronPort-SDR: /UoAsK/CNHGHlgO2hG4TioUfunh1NUNLEFQIgZ+Wo5sclgKRILoC0zkz8qhgagkWBS4duRMpur
+ cqXAjXItpdvzSanhGo2+9IUV9r8kDhzBkxy7ZPpkfTgCm8hOor+bEOwq9Sb3eDLu0MocZgh625
+ 0REFH6kmnviSmCnaj6M6zCeeJOX9IDL5ZF/+IWer9ysbHj8e3TXHvNZzRZ1qwLUfpDI7qyx1eb
+ RvHV9wxa6kdqJ3W00kW7A0HhNIAUdjB1nDw1KZw/GheMKSBwgG9/qzzsxrUPV/TN3q+YrGV40R
+ kMg=
+Subject: Re: [PATCH v10 20/55] Input: atmel_mxt_ts - handle cfg filename via
+ pdata/sysfs
+To:     Dmitry Osipenko <digetx@gmail.com>, <nick@shmanahar.org>,
+        <dmitry.torokhov@gmail.com>, <jikos@kernel.org>,
+        <benjamin.tissoires@redhat.com>, <bsz@semihalf.com>
+CC:     <linux-input@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <erosca@de.adit-jv.com>, <Andrew_Gabbasov@mentor.com>
+References: <20200331105051.58896-1-jiada_wang@mentor.com>
+ <20200331105051.58896-21-jiada_wang@mentor.com>
+ <d926e4be-84ee-24f3-3523-776e763e6d4e@gmail.com>
+From:   "Wang, Jiada" <jiada_wang@mentor.com>
+Message-ID: <9dc72d14-f6fe-45b7-1550-f1f25d841ef2@mentor.com>
+Date:   Thu, 9 Apr 2020 18:11:35 +0900
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from rric.localdomain (31.208.96.227) by HE1PR0901CA0049.eurprd09.prod.outlook.com (2603:10a6:3:45::17) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2900.16 via Frontend Transport; Thu, 9 Apr 2020 09:10:24 +0000
-X-Originating-IP: [31.208.96.227]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 2567d6ec-e130-4133-666b-08d7dc65d768
-X-MS-TrafficTypeDiagnostic: BYAPR18MB2375:
-X-Microsoft-Antispam-PRVS: <BYAPR18MB237583794D6DD78F3ED66F35D9C10@BYAPR18MB2375.namprd18.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:514;
-X-Forefront-PRVS: 0368E78B5B
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR18MB2661.namprd18.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10009020)(4636009)(376002)(136003)(346002)(39850400004)(366004)(396003)(6506007)(9686003)(66476007)(81156014)(478600001)(186003)(55016002)(86362001)(6666004)(8936002)(8676002)(1076003)(53546011)(7696005)(66946007)(5660300002)(66556008)(52116002)(316002)(81166007)(956004)(16526019)(2906002)(6916009)(4326008)(26005);DIR:OUT;SFP:1101;
-Received-SPF: None (protection.outlook.com: marvell.com does not designate
- permitted sender hosts)
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 9P0lEIk2EoIf+kG5T6PDrUBlo5097Paf7Wg0dakt0qQqZOOiE6u0B8QWuA3muLVTVx8/XWqJo6r3S782MvXk7RgtnkAxaDxKyxxiCbDs/EftRKiwNfzVM+fS+rK7Fqw9p0Kn0cpOI95r4QH/mkTl7tb1esczau0nh73VZlFtcdncGzIGilvhr0tGI3sWHxTL+i/jYes2enUVYwoCAwwym5K4t7eVBzR7MdvoxFugm+UH3tjsbRGFsjKvEozaEprp0ZYvnSY3ZH+Y917F8kobOoMRe5H5NUqW/rlkm0IQUPBjciKU8Qww/hNTkwNxvuYW2gBo0sqUkl8tuT1XARRHNeHUnRIACxQtGlH5ex95RwKa6eouv1gbK1FpoRb8T6xpwpLWdZGnrmJWF5fH57wzdcC9k6jZCqGp+EHtNtF5jEyM9RH2LsguMso0Oe76gYiW
-X-MS-Exchange-AntiSpam-MessageData: lEJcO5YyshLHHC/ltM7u45QqOpXbLM29npVIYcxn0S3aMFoS5FIbv6wwpjx4ftl4K/4f2Ypy0gd/hFqGJ6QmEnsVWRusqhdlluurtxM9qVrcbQBsJPXOlJHM+/pkb0+oS+vBnj+jKk74cm7UH6c+TQ==
-X-MS-Exchange-CrossTenant-Network-Message-Id: 2567d6ec-e130-4133-666b-08d7dc65d768
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Apr 2020 09:10:26.1724
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 70e1fb47-1155-421d-87fc-2e58f638b6e0
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 0m6jfJSFVCAVedFmnUquvQUn/obektAPVD2ZrP/plF/RNNoGFqxl+iRVf2km5GcXSjzFWqUmzbruagwwUXOKfQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR18MB2375
-X-OriginatorOrg: marvell.com
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
- definitions=2020-04-09_03:2020-04-07,2020-04-09 signatures=0
+In-Reply-To: <d926e4be-84ee-24f3-3523-776e763e6d4e@gmail.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: SVR-ORW-MBX-06.mgc.mentorg.com (147.34.90.206) To
+ svr-orw-mbx-01.mgc.mentorg.com (147.34.90.201)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 09.04.20 16:52:37, Jason Yan wrote:
-> Fix the following gcc warning:
-> 
-> drivers/edac/xgene_edac.c:1486:7: warning: variable ‘address’ set but
-> not used [-Wunused-but-set-variable]
->    u32 address;
->        ^~~~~~~
-> 
-> Reported-by: Hulk Robot <hulkci@huawei.com>
-> Signed-off-by: Jason Yan <yanaijie@huawei.com>
-> ---
->  drivers/edac/xgene_edac.c | 2 --
->  1 file changed, 2 deletions(-)
-> 
-> diff --git a/drivers/edac/xgene_edac.c b/drivers/edac/xgene_edac.c
-> index e4a1032ba0b5..e5e0fbdeca29 100644
-> --- a/drivers/edac/xgene_edac.c
-> +++ b/drivers/edac/xgene_edac.c
-> @@ -1483,13 +1483,11 @@ static void xgene_edac_rb_report(struct edac_device_ctl_info *edac_dev)
->  		return;
->  	if (reg & STICKYERR_MASK) {
->  		bool write;
-> -		u32 address;
->  
->  		dev_err(edac_dev->dev, "IOB bus access error(s)\n");
->  		if (regmap_read(ctx->edac->rb_map, RBEIR, &reg))
->  			return;
->  		write = reg & WRITE_ACCESS_MASK ? 1 : 0;
-> -		address = RBERRADDR_RD(reg);
+Hi Dmitrij
 
-Please also remove that unused macro.
+On 2020/04/07 23:56, Dmitry Osipenko wrote:
+> 31.03.2020 13:50, Jiada Wang пишет:
+>> From: Nick Dyer <nick.dyer@itdev.co.uk>
+>>
+>> There may be multiple maXTouch chips on a single device which will require
+>> different configuration files. Add a platform data value for the
+>> configuration filename.
+>>
+>> Add sysfs entry to write configuration file if the platform data is not
+>> set.
+>>
+>> Split out the object initialisation code from mxt_initialize() into
+>> mxt_configure_objects() to allow this.
+>>
+>> Signed-off-by: Nick Dyer <nick.dyer@itdev.co.uk>
+>> Acked-by: Yufeng Shen <miletus@chromium.org>
+>> (cherry picked from ndyer/linux/for-upstream commit 71a2a4d1954460b949a16b607f72bafab294ca79)
+>> [gdavis: Resolve forward port conflicts due to applying upstream
+>> 	 commit 96a938aa214e ("Input: atmel_mxt_ts - remove platform
+>> 	 data support").]
+>> Signed-off-by: George G. Davis <george_davis@mentor.com>
+>> [gdavis: Squash fix from Vladimir Zapolskiy:
+>> 	 - Input: atmel_mxt_ts - fix error paths in mxt_configure_objects()]
+>> Signed-off-by: Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>
+>> [jiada: Separate Documentation/ portion change to another commit
+>> 	Rename mxt_update_cfg_store to update_cfg_store
+>> 	Replace DEVICE_ATTR with DEVICE_ATTR_WO]
+>> Signed-off-by: Jiada Wang <jiada_wang@mentor.com>
+>> ---
+>>   drivers/input/touchscreen/atmel_mxt_ts.c | 109 +++++++++++++++++++----
+>>   1 file changed, 94 insertions(+), 15 deletions(-)
+>>
+>> diff --git a/drivers/input/touchscreen/atmel_mxt_ts.c b/drivers/input/touchscreen/atmel_mxt_ts.c
+>> index 720574417219..d1865250f492 100644
+>> --- a/drivers/input/touchscreen/atmel_mxt_ts.c
+>> +++ b/drivers/input/touchscreen/atmel_mxt_ts.c
+>> @@ -34,7 +34,6 @@
+>>   #include <dt-bindings/input/atmel_mxt_ts.h>
+>>   
+>>   /* Configuration file */
+>> -#define MXT_CFG_NAME		"maxtouch.cfg"
+>>   #define MXT_CFG_MAGIC		"OBP_RAW V1"
+> ...
+> 
+>>   static void mxt_input_sync(struct mxt_data *data)
+>>   {
+>> -	input_mt_report_pointer_emulation(data->input_dev,
+>> -					  data->t19_num_keys);
+>> -	input_sync(data->input_dev);
+>> +	if (data->input_dev) {
+>> +		input_mt_report_pointer_emulation(data->input_dev,
+>> +						  data->t19_num_keys);
+>> +		input_sync(data->input_dev);
+>> +	}
+>>   }
+> 
+> Looks like this hunk shouldn't belong to this patch.
+yes, this part of change
+squash fix from ndyer/linux/for-upstream commit 
+c909ada856861f305653b127db3ea0fa60264331
+- Input: atmel_mxt_ts - check data->input_dev is not null in 
+mxt_input_sync()
+seems due to some mistake, commit description about the squash,
+start to be missing from v6 patch-set
+
+I will separate it back into a single commit
+> 
+> ...
+>> +	if (data->pcfg_name)
+>> +		mxt_update_file_name(&data->client->dev,
+>> +				     &data->cfg_name,
+>> +				     data->pcfg_name,
+>> +				     strlen(data->pcfg_name));
+> 
+> This looks wrong to me because I think the cfg_name should fall back to
+> "maxtouch.cfg" if atmel,cfg_name isn't specified in device-tree,
+> otherwise this commit may break devices that use an older device-tree.
+> 
+I agree with you, in next version,
+I will update this patch to also be compatible with legacy cfg name 
+"maxtouch.cfg"
 
 Thanks,
-
--Robert
-
->  		if (reg & AGENT_OFFLINE_ERR_MASK)
->  			dev_err(edac_dev->dev,
->  				"IOB bus %s access to offline agent error\n",
-> -- 
-> 2.17.2
-> 
+Jiada
