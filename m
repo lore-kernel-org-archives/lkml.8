@@ -2,206 +2,101 @@ Return-Path: <SRS0=n+Ub=5Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF400C2D0EA
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 08:09:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52C24C2D0EA
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 08:09:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9FEF620692
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 08:09:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0611C20692
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 08:09:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ub+cvW4q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726579AbgDIIJM (ORCPT
+        id S1726620AbgDIIJn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Apr 2020 04:09:12 -0400
-Received: from mx59.baidu.com ([61.135.168.59]:58021 "EHLO
-        tc-sys-mailedm04.tc.baidu.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726470AbgDIIJL (ORCPT
+        Thu, 9 Apr 2020 04:09:43 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:44533 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725972AbgDIIJm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Apr 2020 04:09:11 -0400
-X-Greylist: delayed 652 seconds by postgrey-1.27 at vger.kernel.org; Thu, 09 Apr 2020 04:09:10 EDT
-Received: from localhost (cp01-cos-dev01.cp01.baidu.com [10.92.119.46])
-        by tc-sys-mailedm04.tc.baidu.com (Postfix) with ESMTP id 3B2A1236C00A;
-        Thu,  9 Apr 2020 15:57:55 +0800 (CST)
-From:   Li RongQing <lirongqing@baidu.com>
-To:     peterz@infradead.org, frederic@kernel.org, tglx@linutronix.de,
-        mingo@kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH][RFC] sched/isolation: allow isolcpus and nohz_full for different cpus
-Date:   Thu,  9 Apr 2020 15:57:56 +0800
-Message-Id: <1586419076-6301-1-git-send-email-lirongqing@baidu.com>
-X-Mailer: git-send-email 1.7.1
+        Thu, 9 Apr 2020 04:09:42 -0400
+Received: by mail-wr1-f65.google.com with SMTP id c15so10776475wro.11
+        for <linux-kernel@vger.kernel.org>; Thu, 09 Apr 2020 01:09:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=8sy4G5azWTKdTXq+AdUl0zD/LRk0rxdNkxqKpvpQpIY=;
+        b=Ub+cvW4qPcoyju7stMqHNCY9mG4W16VmOP7o7wsid4KfyBJ7tVQAaip7m2mce5JNQO
+         ZrwGiw/DAe1iLK4MjTlUkU/Ipmgyle2egAlE1fpaqWT2ezJ/dG8aAgA1y0+daQ5XLlp1
+         8BmECLDJ6+QOgEn8Vjc5/iwsQmfLo0jgKyMgJUEedtTmKx+RK8J5Cs/puhxSzjzmRd/z
+         za+JZ+7oYtbTZocIiokPVzcKbyLHdY5vSn9Vn/YZSj9dHUp0bo1qSHBejrdmfcL+vX9G
+         o99r2crd17VMswUCfQ/rJJBTvuQcBBetCV3WXnkg7gRBTtUMn9qjD5XaWlivtFtYfoc9
+         jgJg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=8sy4G5azWTKdTXq+AdUl0zD/LRk0rxdNkxqKpvpQpIY=;
+        b=WUqTTrgUteBeKfDyerQNNLr6Zpok/Yu8g/00ca20zuV2zodCUreqJ7WIjd6wOGOgXZ
+         +B5x9jf6p+rKWnx2hzP9Kyq2ujB231O11zvHvdKO/NlJw+Bfkn4xP5phTuzxO7cIPqf7
+         GZrTH6CtfQBaFbbRA1EgrWAWiYh+tXYrXSOtSh3jZjEg8aO6j12AhV3gvGVkLUx5uk46
+         tKIY4ZHn75XTN9DCgE7ZEIizQjzTk7zeDk9h66znxxangQ/aYFcPIz8kQBrXU/IGTRmS
+         InEczNr4ZodJjsk923LgMekDoQVP7vQiijTRjctzw4ieCWxIAfpPHJDfb9w1DWg9ZM6z
+         1nWQ==
+X-Gm-Message-State: AGi0PuY3nJsRZcpXCcyL4VfgupYjm3KbyFOW9iZvyhXHPwBqB/NkZX3M
+        Sp2bThHzPNMbr4zvgk69L3o=
+X-Google-Smtp-Source: APiQypKOBXf1impEVnCXiydzFXK12RgSkh6b1k6ncuRlmPQvU/JwtvGTu4paHsopdxtGdAYzF8Nizg==
+X-Received: by 2002:a5d:43c6:: with SMTP id v6mr4059110wrr.395.1586419782074;
+        Thu, 09 Apr 2020 01:09:42 -0700 (PDT)
+Received: from localhost.localdomain (dslb-092-073-054-213.092.073.pools.vodafone-ip.de. [92.73.54.213])
+        by smtp.gmail.com with ESMTPSA id m15sm2648283wmc.35.2020.04.09.01.09.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 09 Apr 2020 01:09:41 -0700 (PDT)
+From:   Michael Straube <straube.linux@gmail.com>
+To:     gregkh@linuxfoundation.org
+Cc:     Larry.Finger@lwfinger.net, devel@driverdev.osuosl.org,
+        linux-kernel@vger.kernel.org,
+        Michael Straube <straube.linux@gmail.com>
+Subject: [PATCH] staging: rtl8188eu: remove 5 GHz if test
+Date:   Thu,  9 Apr 2020 10:08:02 +0200
+Message-Id: <20200409080802.16645-1-straube.linux@gmail.com>
+X-Mailer: git-send-email 2.26.0
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-when both isolcpus and nohz_full are set, their cpus must be
-same now, in fact isolcpus and nohz_full are not related, and
-different cpus are expected for some cases, for example, some
-cores for polling threads wants to isolcpus, and some cores for
-dedicated threads, only nohz_full is expected
+Cleanup a line over 80 characters by removing an if test that is valid
+only for 5 GHz. According to the TODO 5 GHz code should be removed.
 
-Signed-off-by: Li RongQing <lirongqing@baidu.com>
+- find and remove remaining code valid only for 5 GHz. Most of the obvious
+  ones have been removed, but things like channel > 14 still exist.
+
+Signed-off-by: Michael Straube <straube.linux@gmail.com>
 ---
- kernel/sched/isolation.c | 79 ++++++++++++++++++++++++++++++++----------------
- 1 file changed, 53 insertions(+), 26 deletions(-)
+ drivers/staging/rtl8188eu/core/rtw_mlme_ext.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/kernel/sched/isolation.c b/kernel/sched/isolation.c
-index 008d6ac2342b..6e6be34bb796 100644
---- a/kernel/sched/isolation.c
-+++ b/kernel/sched/isolation.c
-@@ -11,7 +11,8 @@
+diff --git a/drivers/staging/rtl8188eu/core/rtw_mlme_ext.c b/drivers/staging/rtl8188eu/core/rtw_mlme_ext.c
+index bce777e4bf6c..8d035f67ef61 100644
+--- a/drivers/staging/rtl8188eu/core/rtw_mlme_ext.c
++++ b/drivers/staging/rtl8188eu/core/rtw_mlme_ext.c
+@@ -1781,7 +1781,7 @@ static void issue_action_BSSCoexistPacket(struct adapter *padapter)
  
- DEFINE_STATIC_KEY_FALSE(housekeeping_overridden);
- EXPORT_SYMBOL_GPL(housekeeping_overridden);
--static cpumask_var_t housekeeping_mask;
-+static cpumask_var_t housekeeping_mask_isolcpus;
-+static cpumask_var_t housekeeping_mask_nohz_full;
- static unsigned int housekeeping_flags;
+ 			p = rtw_get_ie(pbss_network->ies + _FIXED_IE_LENGTH_, _HT_CAPABILITY_IE_, &len, pbss_network->ie_length - _FIXED_IE_LENGTH_);
+ 			if (!p || len == 0) { /* non-HT */
+-				if ((pbss_network->Configuration.DSConfig <= 0) || (pbss_network->Configuration.DSConfig > 14))
++				if (pbss_network->Configuration.DSConfig <= 0)
+ 					continue;
  
- bool housekeeping_enabled(enum hk_flags flags)
-@@ -20,12 +21,26 @@ bool housekeeping_enabled(enum hk_flags flags)
- }
- EXPORT_SYMBOL_GPL(housekeeping_enabled);
- 
-+static cpumask_var_t housekeeping_get_mask(enum hk_flags flags)
-+{
-+	if (flags & (HK_FLAG_DOMAIN | HK_FLAG_MANAGED_IRQ))
-+		return housekeeping_mask_isolcpus;
-+
-+	/* set by isolcpus=nohz only */
-+	if ((flags & HK_FLAG_TICK) && !(housekeeping_flags & HK_FLAG_RCU))
-+		return housekeeping_mask_isolcpus;
-+
-+	return housekeeping_mask_nohz_full;
-+}
-+
- int housekeeping_any_cpu(enum hk_flags flags)
- {
-+	cpumask_var_t housekeeping_mask;
- 	int cpu;
- 
- 	if (static_branch_unlikely(&housekeeping_overridden)) {
- 		if (housekeeping_flags & flags) {
-+			housekeeping_mask = housekeeping_get_mask(flags);
- 			cpu = sched_numa_find_closest(housekeeping_mask, smp_processor_id());
- 			if (cpu < nr_cpu_ids)
- 				return cpu;
-@@ -41,7 +56,7 @@ const struct cpumask *housekeeping_cpumask(enum hk_flags flags)
- {
- 	if (static_branch_unlikely(&housekeeping_overridden))
- 		if (housekeeping_flags & flags)
--			return housekeeping_mask;
-+			return housekeeping_get_mask(flags);
- 	return cpu_possible_mask;
- }
- EXPORT_SYMBOL_GPL(housekeeping_cpumask);
-@@ -49,16 +64,24 @@ EXPORT_SYMBOL_GPL(housekeeping_cpumask);
- void housekeeping_affine(struct task_struct *t, enum hk_flags flags)
- {
- 	if (static_branch_unlikely(&housekeeping_overridden))
--		if (housekeeping_flags & flags)
-+		if (housekeeping_flags & flags) {
-+			cpumask_var_t housekeeping_mask;
-+
-+			housekeeping_mask = housekeeping_get_mask(flags);
- 			set_cpus_allowed_ptr(t, housekeeping_mask);
-+		}
- }
- EXPORT_SYMBOL_GPL(housekeeping_affine);
- 
- bool housekeeping_test_cpu(int cpu, enum hk_flags flags)
- {
- 	if (static_branch_unlikely(&housekeeping_overridden))
--		if (housekeeping_flags & flags)
-+		if (housekeeping_flags & flags) {
-+			cpumask_var_t housekeeping_mask;
-+
-+			housekeeping_mask = housekeeping_get_mask(flags);
- 			return cpumask_test_cpu(cpu, housekeeping_mask);
-+		}
- 	return true;
- }
- EXPORT_SYMBOL_GPL(housekeeping_test_cpu);
-@@ -74,10 +97,14 @@ void __init housekeeping_init(void)
- 		sched_tick_offload_init();
- 
- 	/* We need at least one CPU to handle housekeeping work */
--	WARN_ON_ONCE(cpumask_empty(housekeeping_mask));
-+	if (housekeeping_mask_isolcpus)
-+		WARN_ON_ONCE(cpumask_empty(housekeeping_mask_isolcpus));
-+	if (housekeeping_mask_nohz_full)
-+		WARN_ON_ONCE(cpumask_empty(housekeeping_mask_nohz_full));
- }
- 
--static int __init housekeeping_setup(char *str, enum hk_flags flags)
-+static int __init housekeeping_setup(char *str, enum hk_flags flags,
-+		cpumask_var_t *housekeeping_mask)
- {
- 	cpumask_var_t non_housekeeping_mask;
- 	cpumask_var_t tmp;
-@@ -92,25 +119,25 @@ static int __init housekeeping_setup(char *str, enum hk_flags flags)
- 	}
- 
- 	alloc_bootmem_cpumask_var(&tmp);
--	if (!housekeeping_flags) {
--		alloc_bootmem_cpumask_var(&housekeeping_mask);
--		cpumask_andnot(housekeeping_mask,
--			       cpu_possible_mask, non_housekeeping_mask);
--
--		cpumask_andnot(tmp, cpu_present_mask, non_housekeeping_mask);
--		if (cpumask_empty(tmp)) {
--			pr_warn("Housekeeping: must include one present CPU, "
-+	alloc_bootmem_cpumask_var(housekeeping_mask);
-+	cpumask_andnot(*housekeeping_mask,
-+				   cpu_possible_mask, non_housekeeping_mask);
-+
-+	cpumask_andnot(tmp, cpu_present_mask, non_housekeeping_mask);
-+	if (cpumask_empty(tmp)) {
-+		pr_warn("Housekeeping: must include one present CPU, "
- 				"using boot CPU:%d\n", smp_processor_id());
--			__cpumask_set_cpu(smp_processor_id(), housekeeping_mask);
--			__cpumask_clear_cpu(smp_processor_id(), non_housekeeping_mask);
--		}
--	} else {
--		cpumask_andnot(tmp, cpu_present_mask, non_housekeeping_mask);
--		if (cpumask_empty(tmp))
--			__cpumask_clear_cpu(smp_processor_id(), non_housekeeping_mask);
--		cpumask_andnot(tmp, cpu_possible_mask, non_housekeeping_mask);
--		if (!cpumask_equal(tmp, housekeeping_mask)) {
--			pr_warn("Housekeeping: nohz_full= must match isolcpus=\n");
-+		__cpumask_set_cpu(smp_processor_id(), *housekeeping_mask);
-+		__cpumask_clear_cpu(smp_processor_id(), non_housekeeping_mask);
-+	}
-+
-+	/* cpus should match when both nohz_full and isolcpus
-+	 * with nohz are passed into kernel
-+	 */
-+	if (housekeeping_flags & flags & HK_FLAG_TICK) {
-+		if (!cpumask_equal(housekeeping_mask_nohz_full,
-+					housekeeping_mask_isolcpus)) {
-+			pr_warn("Housekeeping: nohz_full= must match isolcpus=nohz\n");
- 			free_bootmem_cpumask_var(tmp);
- 			free_bootmem_cpumask_var(non_housekeeping_mask);
- 			return 0;
-@@ -142,7 +169,7 @@ static int __init housekeeping_nohz_full_setup(char *str)
- 
- 	flags = HK_FLAG_TICK | HK_FLAG_WQ | HK_FLAG_TIMER | HK_FLAG_RCU | HK_FLAG_MISC;
- 
--	return housekeeping_setup(str, flags);
-+	return housekeeping_setup(str, flags, &housekeeping_mask_nohz_full);
- }
- __setup("nohz_full=", housekeeping_nohz_full_setup);
- 
-@@ -177,6 +204,6 @@ static int __init housekeeping_isolcpus_setup(char *str)
- 	if (!flags)
- 		flags |= HK_FLAG_DOMAIN;
- 
--	return housekeeping_setup(str, flags);
-+	return housekeeping_setup(str, flags, &housekeeping_mask_isolcpus);
- }
- __setup("isolcpus=", housekeeping_isolcpus_setup);
+ 				ICS[0][pbss_network->Configuration.DSConfig] = 1;
 -- 
-2.16.2
+2.26.0
 
