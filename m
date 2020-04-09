@@ -2,153 +2,105 @@ Return-Path: <SRS0=n+Ub=5Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5762C2BA19
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 17:32:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA2F8C2BA19
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 17:33:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B950F20753
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 17:32:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586453575;
-	bh=IBuZEgijyAZREsl+G4BQjvkNizxCg7cks8fO++AV2XA=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=KgJSmKzEDkezknUW18JPmEsN1QSAkIOjrYJ1PLHWS2LPHOYSbi4hzyrwvv//6uWkO
-	 HxV3TdTeqjjQzj0/MAOUZZGXk4yKoOW8Vhd0CfuyCOiykt19IYCvMSBURCK2VqrA+V
-	 pYRsjk/hKIjnXxsqRZcZ6vmGRGeWYUFpS93+IcEk=
+	by mail.kernel.org (Postfix) with ESMTP id AE19A20753
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 17:33:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="i33YDFJb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726679AbgDIRcy (ORCPT
+        id S1726692AbgDIRda (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Apr 2020 13:32:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56374 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726652AbgDIRcx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Apr 2020 13:32:53 -0400
-Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 57670208FE
-        for <linux-kernel@vger.kernel.org>; Thu,  9 Apr 2020 17:32:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586453573;
-        bh=IBuZEgijyAZREsl+G4BQjvkNizxCg7cks8fO++AV2XA=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=kFEzwXHDig+6mpRJP27Lvw+9no7VIbkjMrVguBlJqMoPADnJXy15cQD67IadXBR5u
-         fxXeDn5OkQ/p+8cSUhhW+LeX5Dh3Jgzhnb+ybqMccG8bSjw1lgwgksU/TZz20gZ/64
-         xInCI3KMBKixQaZsTEqS33BJKp2UqR6jeIxy3QGk=
-Received: by mail-wr1-f46.google.com with SMTP id k1so12887507wrm.3
-        for <linux-kernel@vger.kernel.org>; Thu, 09 Apr 2020 10:32:53 -0700 (PDT)
-X-Gm-Message-State: AGi0PuYSHOZT78G4g+3/AkX3ljsZ+N0uPo1VCjdLtkSbY3FCkOOtzKGA
-        S4RqdAlF4yqRp6lWceF1nI8Tqrh7tCfQEw8gTiCP/A==
-X-Google-Smtp-Source: APiQypLEiHQsMq8szXbLnpQbM1VupAPJctZFhnFSSXM3V5XoGXOx1XbOz0uCtxrbjmBSCYE2gAQxGXqRHjzPLG1/z74=
-X-Received: by 2002:adf:aad7:: with SMTP id i23mr254511wrc.184.1586453571673;
- Thu, 09 Apr 2020 10:32:51 -0700 (PDT)
+        Thu, 9 Apr 2020 13:33:30 -0400
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:34077 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726538AbgDIRda (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Apr 2020 13:33:30 -0400
+Received: by mail-lj1-f193.google.com with SMTP id m8so576279lji.1;
+        Thu, 09 Apr 2020 10:33:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=w6oua6pgdDdSLqZ3ElhE13JK0x2D0ixah/qXhh6Ol1s=;
+        b=i33YDFJbxAY1klyUDrn2OSxE4UVt9CzORk36sK2BG/j0PsNrBCtaMIKE+7iaPewQJt
+         PB4k7YFlnp7LTU0Rl9P9t+XEqXnQOuOK3m0fcKC7UBGcPKwDOD2KC7fYfGqZrpQqiLVH
+         4P4KUpeLgqtjuHbmkH1Kol4U6zu3/EtBcC+1xPcqiPY7gAU5/trfH4HZPStaH44Q8Ocj
+         YEDus66YJHWajYVDdHMSFW9zbAIi2/Ih9Q/AfLeqB6LGr/sWvSfOxRmv0X6c+6qh/n6u
+         Lt6BEuRkvBkEuU51VvtT34BKIta0ENM9TVh1jIjqxGeuypqu1VvVIaS6iPU0pIOy2M2U
+         Es3Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=w6oua6pgdDdSLqZ3ElhE13JK0x2D0ixah/qXhh6Ol1s=;
+        b=cdFW6oFBlGdCv1dN9alY+IrfSrbqlUmw89QuS8CtIoPz7aux/oTyxpsATBvuv4xTqb
+         GypLhejf51UX7khElaHEM0DFF3njAaky3KDK5mZ3ej90XJ0sI1rMm39wAeS+0kcyr5Ii
+         H1iHaEBeWKuYwlUzUPNfI/Mw5b0SvkYOIMeDiWqhf7VdooPi9fA/WEUjlWOX2EiejgWf
+         E/sE8vI/Yu/8vEFZl9KRsmGe6PPIcmQo8lCyZSeLUF3Ad0htfUNbxqcUgpYjDQBef7VL
+         pT8zMtDwR05si/+w85djwqPefODNwuYZgEj0A+49zWy9zqdhkNUQTbX0/2BQ00Q/hu4u
+         SGlA==
+X-Gm-Message-State: AGi0PuboZrUPPeWABNrd2orsI4ouRqBUgGzJNaGc9h03oFNj5pNwTyov
+        nAW4NAKtD+lSFfBPjNKQ1Xv1z9Vn
+X-Google-Smtp-Source: APiQypIFKzX2orBYpj3ZpvYChLybojahKGx4VgxULoLxhE1PIkc77vnIGEr1STj82ZoZhDpkUZ+Vhg==
+X-Received: by 2002:a2e:9757:: with SMTP id f23mr513176ljj.269.1586453606298;
+        Thu, 09 Apr 2020 10:33:26 -0700 (PDT)
+Received: from [192.168.2.145] (ppp91-78-208-152.pppoe.mtu-net.ru. [91.78.208.152])
+        by smtp.googlemail.com with ESMTPSA id y25sm10535877lfy.59.2020.04.09.10.33.25
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 09 Apr 2020 10:33:25 -0700 (PDT)
+Subject: Re: [PATCH v1 0/2] Support headset on Tegra boards that use WM8903
+To:     Mark Brown <broonie@kernel.org>
+Cc:     Stephen Warren <swarren@wwwdotorg.org>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
+        linux-tegra@vger.kernel.org, alsa-devel@alsa-project.org,
+        linux-kernel@vger.kernel.org
+References: <20200330204011.18465-1-digetx@gmail.com>
+ <5c9c995a-a571-e543-e680-30739cb1561c@gmail.com>
+ <848cc6c5-e8e4-2796-3ee1-3e12a3e92c54@wwwdotorg.org>
+ <a7159a8e-4987-0c08-ce3a-fa82d926218e@gmail.com>
+ <20200409172952.GG5399@sirena.org.uk>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <0a82ccac-7a4c-ca0c-9a88-3a77c7bc24e6@gmail.com>
+Date:   Thu, 9 Apr 2020 20:33:24 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-References: <c09dd91f-c280-85a6-c2a2-d44a0d378bbc@redhat.com>
- <4EB5D96F-F322-45BB-9169-6BF932D413D4@amacapital.net> <931f6e6d-ac17-05f9-0605-ac8f89f40b2b@redhat.com>
-In-Reply-To: <931f6e6d-ac17-05f9-0605-ac8f89f40b2b@redhat.com>
-From:   Andy Lutomirski <luto@kernel.org>
-Date:   Thu, 9 Apr 2020 10:32:39 -0700
-X-Gmail-Original-Message-ID: <CALCETrUpWBKHHyfMoqD2ZT3CnDdguNnK=KoZiTmN5PnbnD_k0A@mail.gmail.com>
-Message-ID: <CALCETrUpWBKHHyfMoqD2ZT3CnDdguNnK=KoZiTmN5PnbnD_k0A@mail.gmail.com>
-Subject: Re: [PATCH v2] x86/kvm: Disable KVM_ASYNC_PF_SEND_ALWAYS
-To:     Paolo Bonzini <pbonzini@redhat.com>,
-        Tony Luck <tony.luck@intel.com>
-Cc:     Andrew Cooper <andrew.cooper3@citrix.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Vivek Goyal <vgoyal@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
-        kvm list <kvm@vger.kernel.org>, stable <stable@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20200409172952.GG5399@sirena.org.uk>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi, Tony.  I'm adding you because, despite the fact that everyone in
-this thread is allergic to #MC, this seems to be one of your favorite
-topics :)
+09.04.2020 20:29, Mark Brown пишет:
+> On Thu, Apr 09, 2020 at 08:13:54PM +0300, Dmitry Osipenko wrote:
+> 
+>> The code change doesn't affect any of the old users, so it should be
+>> safe anyways.
+> 
+>> I understand that you don't feel comfortable to give an ACK if you're
+>> unsure, but I assume that Jon is in the same position, and thus, I'm not
+>> sure how to move forward.
+> 
+>> Mark, could you please help with reviewing this series?
+> 
+> It is currently the merge window.  Nothing other than bug fixes is going
+> to get applied until the merge window is over, probably Sunday or Monday.
+> 
 
-> On Apr 9, 2020, at 8:17 AM, Paolo Bonzini <pbonzini@redhat.com> wrote:
->
-> =EF=BB=BFOn 09/04/20 17:03, Andy Lutomirski wrote:
->>> No, I think we wouldn't use a paravirt #VE at this point, we would
->>> use the real thing if available.
->>>
->>> It would still be possible to switch from the IST to the main
->>> kernel stack before writing 0 to the reentrancy word.
->>
->> Almost but not quite. We do this for NMI-from-usermode, and it=E2=80=99s
->> ugly. But we can=E2=80=99t do this for NMI-from-kernel or #VE-from-kerne=
-l
->> because there might not be a kernel stack.  Trying to hack around
->> this won=E2=80=99t be pretty.
->>
->> Frankly, I think that we shouldn=E2=80=99t even try to report memory fai=
-lure
->> to the guest if it happens with interrupts off. Just kill the guest
->> cleanly and keep it simple. Or inject an intentionally unrecoverable
->> IST exception.
->
-> But it would be nice to use #VE for all host-side page faults, not just
-> for memory failure.
->
-> So the solution would be the same as for NMIs, duplicating the stack
-> frame and patching the outer handler's stack from the recursive #VE
-> (https://lwn.net/Articles/484932/).  It's ugly but it's a known ugliness.
->
->
-
-Believe me, I know all about how ugly it is, since I=E2=80=99m the one who
-fixed most of the bugs in the first few implementations.  And, before
-I wrote or ack any such thing for #VE, I want to know why.  What,
-exactly, is a sufficiently strong motivation for using #VE *at all*
-that Linux should implement a #VE handler?
-
-As I see it, #VE has several downsides:
-
-1. Intel only.
-
-2. Depending on precisely what it's used for, literally any memory
-access in the kernel can trigger it as a fault.  This means that it
-joins NMI and #MC (and, to a limited extent, #DB) in the horrible
-super-atomic-happens-in-bad-contexts camp.  IST is mandatory, and IST
-is not so great.
-
-3. Just like NMI and MCE, it comes with a fundamentally broken
-don't-recurse-me mechanism.
-
-If we do support #VE, I would suggest we do it roughly like this.  The
-#VE handler is a regular IST entry -- there's a single IST stack, and
-#VE from userspace stack-switches to the regular kernel stack.  The C
-handler (do_virtualization_exception?) is permitted to panic if
-something is horribly wrong, but is *not* permitted to clear the word
-at byte 4 to re-enable #VE.  Instead, it does something to trigger a
-deferred re-enable.  For example, it sends IPI to self and the IPI
-handler clears the magic re-enable flag.
-
-There are definitely horrible corner cases here.  For example, suppose
-user code mmaps() some kind of failable memory (due to NVDIMM hardware
-failures, truncation, whatever).  Then user code points RBP at it and
-we get a perf NMI.  Now the perf code tries to copy_from_user_nmi()
-the user stack and hits the failure.  It gets #MC or #VE or some
-paravirt thing.  Now we're in a situation where we got an IST
-exception in the middle of NMI processing and we're expected to do
-something intelligent about it.  Sure, we can invoke the extable
-handler, but it's not really clear how to recover if we somehow hit
-the same type of failure again in the same NMI.
-
-A model that could actually work, perhaps for #VE and #MC, is to have
-the extable code do the re-enabling.  So ex_handler_uaccess() and
-ex_handler_mcsafe() will call something like rearm_memory_failure(),
-and that will do whatever is needed to re-arm the specific memory
-failure reporting mechanism in use.
-
-But, before I touch that with a ten-foot pole, I want to know *why*.
-What's the benefit?  Why do we want convertible EPT violations?
+Will be awesome, thank you :)
