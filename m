@@ -2,107 +2,191 @@ Return-Path: <SRS0=n+Ub=5Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D0EAC2BB1D
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 00:41:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A16BC2BA80
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 00:43:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 55A0F2078E
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 00:41:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D64C72072F
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 00:43:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=aol.com header.i=@aol.com header.b="Nw9PSYl5"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Kc/5ZrJZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726534AbgDIAlx (ORCPT
+        id S1726609AbgDIAnM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Apr 2020 20:41:53 -0400
-Received: from sonic308-37.consmr.mail.ne1.yahoo.com ([66.163.187.60]:39082
-        "EHLO sonic308-37.consmr.mail.ne1.yahoo.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726536AbgDIAlx (ORCPT
+        Wed, 8 Apr 2020 20:43:12 -0400
+Received: from mail-pj1-f68.google.com ([209.85.216.68]:35640 "EHLO
+        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726527AbgDIAnL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Apr 2020 20:41:53 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aol.com; s=a2048; t=1586392912; bh=/6EYCRlfa2umBwyf6HMqnS88iYA4EIXadLKaqqSMGXc=; h=Date:From:To:Cc:Subject:References:In-Reply-To:From:Subject; b=Nw9PSYl5kPo55rK57kdK+1rouIyZmFH49XmlmNnt+EPGCmzv5/R562708lCkK9bcS1996WRvY6AWWRgP5phZau+eJxoQmqe+LtCwNJEbiYUjQhQT/OXacraRjiO5WRZ8qsSlVAMXGIKXGWVMix1s+I5tt6JSaqGsGWqa8zr1hJE6ZyAxPEoEYv5ZFlm/QM4zwfuDMMiG5yQiMafwtotoMJIbhnQ91EvX2WyiEWFjhDLOt5DLpnzrXKB58PBcZ/9RDKamP6jFx1FoPm8nUGivG9s/e+4lgHMoB8j5kGsRyJMdGA9c8cLBXg+peTceR8BZpBB9DLsp3YkeaGOsTusoSA==
-X-YMail-OSG: Kjs_hFQVM1mYR3Bbv__auOf2fhoaIk9dbexLkMUvZvDcgibPrEIH2uN_nb7TSk.
- AjTVDttprz38pf2agkDENCO9OlpstM6AKa5fqJSzz9g9BDnD9cEKZ6Kcqg9CatwzLNYThMuSUeYX
- 2yEgN2U8e5xgtZHtWmAFsIbznPJD_UPhljYJl2r_EoL5qqrqeJu9Nnd9Y.Ff.0cQ6SO_SlnVXMbj
- JYEgiFEkwq6TWViREF0oZDh5a7V1WTHk_fQL7mKo.zfkeUUkf9r2PC3YbrlM36YDrBNE7Vu_H_23
- 7SUm_oYUdCkn.imVzOSTsbg1UKej12C_c6DVKmb2bShJF7ckagBec7h.F7Pz2jADVU.RAf_SzeRw
- jnXQU.OYwZs7DtYvRPtgjcVfmgAxeq8RUp0VPoOeRchdyRoGHKkYEH1l0ufQv3CAgRqC9S3zsOd9
- fnhObZjDMfX58eXYxHjcxjHRReqFOhx5Hz6aq8FIq7jw8y8OEbWPMrjaCpR4FKEn_bozdR4qyDFm
- 4sbsu66FrZifwa3kj9UeUr.wGSL5S042VmSyGfETFpHOTRvx51GHTkDHF4kqnnRQjnt9cOY_TXoy
- 6ikjZzl8Rym8MnuDSY3t2UEnyXfrQM8zmKcZMaBXZA.1JruNMW__SZDUsuarZwJACQIZFjYaEYcB
- 6Fx2cC_OXlNG7d102FBbLxbbWE51eCCn6.Ao3BUdftIqkSfQqE8AmEChvpnb3Hjczsgr87hSe_ZY
- FNPGuabtMxRjTV5vOhJN9EVsFZjNMIpNdxApHaOp9BBa0mK8Hd4Y8_sLLzgFE_OX._p_ww8OgQCS
- _PZw5TJANZTRxfmtlnIT9WY8nJxFEz0ZzkRbyJrD7lBRVCuL2qRMMrbnVCU.d3atpGGNT71.FMTl
- XJp9kOjDwdiPhEHaNTf0wy9.286eHx9hDHZx13ycI4lCw.BNZVla9tTflJZSkBR622oDAvju0pYi
- chnjA_f0d_Rs3Y.w_0UWDDtsiqrp7Nd.ENOvnjBk3WtBBjbeqzYHxInpU0ICw.akO5xUiF4HXGRD
- NGu7bFyqgIPHiVSYVkpfC.PnR3fZmrfgYy1Ktc5D_y5Xh2Z7vFADl5LC6uRiCqJ9Y4yLuHo1ATrn
- PxNppKa486Nn86yT5d.pKQ3q49VQAxNEB7EGZ_QmK0uyT9X6oF2qpuwBBPhXWKUMiK3EbPuATGVw
- L.4MdTecfHCHslUWJtwrtw2v46CslPDJY3TtzPBEF3b6hKOBHSxZ.8CqTxF3S2_xcA64udxpFdja
- 9c_vKNU82cTswpLxDeBimIz._J7Xaum1i6dZEwCbc.uspehQ3L04kL45bX0fhpi7dDoUJat5aE3S
- p_Fl8AHbSq3P.bkBJGmoklW4vRdsCXSUz4v5SYoPxJ86d1eVDsQ0qrpylWpfgRvkXgRw467FBrzC
- _ECRk3ijYTNyDsC7idxPty4i4XJSa9KM2uH5RWvaV.R8phY0hHU.lO54DG8mygB9TxdZscMBwbtP
- JqFlYvAh9BGSO_QyxpGrs
-Received: from sonic.gate.mail.ne1.yahoo.com by sonic308.consmr.mail.ne1.yahoo.com with HTTP; Thu, 9 Apr 2020 00:41:52 +0000
-Received: by smtp412.mail.gq1.yahoo.com (Oath Hermes SMTP Server) with ESMTPA ID 07bc1f76d2033b5244ea2e327c66bf87;
-          Thu, 09 Apr 2020 00:39:51 +0000 (UTC)
-Date:   Thu, 9 Apr 2020 08:39:35 +0800
-From:   Gao Xiang <hsiangkao@aol.com>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>, x86@kernel.org,
+        Wed, 8 Apr 2020 20:43:11 -0400
+Received: by mail-pj1-f68.google.com with SMTP id mn19so566181pjb.0
+        for <linux-kernel@vger.kernel.org>; Wed, 08 Apr 2020 17:43:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=VJUF1SB/P+2GwzxWVksYTgRtuu1H7WnENANWehljizI=;
+        b=Kc/5ZrJZnJkC11ySxO/gJzQyEAk6OPdFPfkF5ZgjaSuNGTjG7wB+ioLu7Qvf6mKKzO
+         5tdTKmtw/7Z/YzkiO+vW2qRM442A9cvZP4QroD8pq5Ur8UHI0Pm57r/UYuDzAx+Xn+0P
+         lSim0dvF+QHWkMATuiS52pgYsBOsZDI8da5GR0Kn7cRz3H4mr9eKl0DHGv8QFoYAnUPM
+         +zgPbYzkniSuhrpKQrTfUFofwxNjO9gYoKm3QVHF+FpHuIXqlsCIMXEoSc80arSr2+ue
+         EnBiJOJxrnjQbiXgrTm4Br9TUD9/BLP39NAq3LL2oXb7rZJc/6hLFoD2d7flTL/LnRE0
+         dmNw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=VJUF1SB/P+2GwzxWVksYTgRtuu1H7WnENANWehljizI=;
+        b=Z2Xc2GnSFcP5xBSUh8wsrME3Vv7CVUahB9kinkKlB0a+InZY1zL5oj9CpD0STuwEJC
+         wDl9mh69vISo+GLr2Z06JrItDqpXCvZEhVIwGY0tMhjRdb8FLqad0/bJ89ypz+FTgtmp
+         /76XxTOac9cIM8XhQkqpDsQpUYm3jepeLbe0C/hYFkJNUO0pLsXHB9rifnbBdKfJxDhe
+         Veg86z8HFWxMVX1VSCIezW+eFi0gVOuwUROygmI4sLWvZnE4uIhm1IapTczsPQv+slw8
+         YJgN+xeVf3yfCN3bwlI0iAUeqbwuBE3gfU78/BNZtMTwR5dFKGSXpJkyzDl9EzC2yCCE
+         zLoA==
+X-Gm-Message-State: AGi0PuYoqcx0Q2ZY5YtU0vyAl4CAs9/HqOinUhLFzg/U3RXvRqzt0iu+
+        IGE5jE9T286TVy4wXTOCG0XJ2X0V5mY=
+X-Google-Smtp-Source: APiQypIFE2K88ws272Mk4HBlN//iOn6YSF2U0g12SuRati06xtmisiTS9XLJL76/Ccgl2aIj49TSJw==
+X-Received: by 2002:a17:90a:2e15:: with SMTP id q21mr8390108pjd.166.1586392991078;
+        Wed, 08 Apr 2020 17:43:11 -0700 (PDT)
+Received: from localhost.localdomain ([2601:1c2:680:1319:692:26ff:feda:3a81])
+        by smtp.gmail.com with ESMTPSA id d21sm17705783pfo.49.2020.04.08.17.43.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 08 Apr 2020 17:43:10 -0700 (PDT)
+From:   John Stultz <john.stultz@linaro.org>
+To:     lkml <linux-kernel@vger.kernel.org>
+Cc:     John Stultz <john.stultz@linaro.org>,
+        Xu YiPing <xuyiping@hisilicon.com>,
+        Rongrong Zou <zourongrong@gmail.com>,
+        Xinliang Liu <xinliang.liu@linaro.org>,
+        Xinwei Kong <kong.kongxinwei@hisilicon.com>,
+        Chen Feng <puck.chen@hisilicon.com>,
         David Airlie <airlied@linux.ie>,
         Daniel Vetter <daniel@ffwll.ch>,
-        Laura Abbott <labbott@redhat.com>,
-        Sumit Semwal <sumit.semwal@linaro.org>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Minchan Kim <minchan@kernel.org>,
-        Nitin Gupta <ngupta@vflare.org>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        Peter Zijlstra <peterz@infradead.org>,
-        linuxppc-dev@lists.ozlabs.org, linux-hyperv@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org,
-        linux-arch@vger.kernel.org, linux-mm@kvack.org,
-        iommu@lists.linux-foundation.org,
-        linux-arm-kernel@lists.infradead.org, linux-s390@vger.kernel.org,
-        bpf@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 17/28] mm: remove the prot argument from vm_map_ram
-Message-ID: <20200409003931.GA8418@hsiangkao-HP-ZHAN-66-Pro-G1>
-References: <20200408115926.1467567-1-hch@lst.de>
- <20200408115926.1467567-18-hch@lst.de>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200408115926.1467567-18-hch@lst.de>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Mailer: WebService/1.1.15620 hermes Apache-HttpAsyncClient/4.1.4 (Java/11.0.6)
+        Sam Ravnborg <sam@ravnborg.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>
+Subject: [PATCH] drm: kirin: Revert change to add register connect helper functions
+Date:   Thu,  9 Apr 2020 00:43:06 +0000
+Message-Id: <20200409004306.18541-1-john.stultz@linaro.org>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 08, 2020 at 01:59:15PM +0200, Christoph Hellwig wrote:
-> This is always GFP_KERNEL - for long term mappings with other properties
-> vmap should be used.
-> 
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
-> ---
->  drivers/gpu/drm/i915/gem/selftests/mock_dmabuf.c   | 2 +-
->  drivers/media/common/videobuf2/videobuf2-dma-sg.c  | 3 +--
->  drivers/media/common/videobuf2/videobuf2-vmalloc.c | 3 +--
->  fs/erofs/decompressor.c                            | 2 +-
+Daniel noted[1] that commit d606dc9a6323 ("drm: kirin: Add
+register connect helper functions in drm init") was unnecessary
+and incorrect, as drm_dev_register does register connectors for
+us.
 
-For EROFS part,
+Thus, this patch reverts the change as suggested by Daniel.
 
-Acked-by: Gao Xiang <xiang@kernel.org>
+[1]: https://lore.kernel.org/lkml/CAKMK7uHr5U-pPsxdQ4MpfK5v8iLjphDFug_3VTiUAf06nhS=yQ@mail.gmail.com/
 
-Thanks,
-Gao Xiang
+Cc: Xu YiPing <xuyiping@hisilicon.com>
+Cc: Rongrong Zou <zourongrong@gmail.com>
+Cc: Xinliang Liu <xinliang.liu@linaro.org>
+Cc: Xinwei Kong <kong.kongxinwei@hisilicon.com>
+Cc: Chen Feng <puck.chen@hisilicon.com>
+Cc: David Airlie <airlied@linux.ie>
+Cc: Daniel Vetter <daniel@ffwll.ch>
+Cc: Sam Ravnborg <sam@ravnborg.org>
+Cc: dri-devel <dri-devel@lists.freedesktop.org>
+Signed-off-by: John Stultz <john.stultz@linaro.org>
+---
+ .../gpu/drm/hisilicon/kirin/kirin_drm_ade.c   |  1 -
+ .../gpu/drm/hisilicon/kirin/kirin_drm_drv.c   | 43 -------------------
+ .../gpu/drm/hisilicon/kirin/kirin_drm_drv.h   |  1 -
+ 3 files changed, 45 deletions(-)
+
+diff --git a/drivers/gpu/drm/hisilicon/kirin/kirin_drm_ade.c b/drivers/gpu/drm/hisilicon/kirin/kirin_drm_ade.c
+index 86000127d4ee..c339e632522a 100644
+--- a/drivers/gpu/drm/hisilicon/kirin/kirin_drm_ade.c
++++ b/drivers/gpu/drm/hisilicon/kirin/kirin_drm_ade.c
+@@ -940,7 +940,6 @@ static struct drm_driver ade_driver = {
+ };
+ 
+ struct kirin_drm_data ade_driver_data = {
+-	.register_connects = false,
+ 	.num_planes = ADE_CH_NUM,
+ 	.prim_plane = ADE_CH1,
+ 	.channel_formats = channel_formats,
+diff --git a/drivers/gpu/drm/hisilicon/kirin/kirin_drm_drv.c b/drivers/gpu/drm/hisilicon/kirin/kirin_drm_drv.c
+index d3145ae877d7..4349da3e2379 100644
+--- a/drivers/gpu/drm/hisilicon/kirin/kirin_drm_drv.c
++++ b/drivers/gpu/drm/hisilicon/kirin/kirin_drm_drv.c
+@@ -219,40 +219,6 @@ static int kirin_drm_kms_cleanup(struct drm_device *dev)
+ 	return 0;
+ }
+ 
+-static int kirin_drm_connectors_register(struct drm_device *dev)
+-{
+-	struct drm_connector *connector;
+-	struct drm_connector *failed_connector;
+-	struct drm_connector_list_iter conn_iter;
+-	int ret;
+-
+-	mutex_lock(&dev->mode_config.mutex);
+-	drm_connector_list_iter_begin(dev, &conn_iter);
+-	drm_for_each_connector_iter(connector, &conn_iter) {
+-		ret = drm_connector_register(connector);
+-		if (ret) {
+-			failed_connector = connector;
+-			goto err;
+-		}
+-	}
+-	drm_connector_list_iter_end(&conn_iter);
+-	mutex_unlock(&dev->mode_config.mutex);
+-
+-	return 0;
+-
+-err:
+-	drm_connector_list_iter_begin(dev, &conn_iter);
+-	drm_for_each_connector_iter(connector, &conn_iter) {
+-		if (failed_connector == connector)
+-			break;
+-		drm_connector_unregister(connector);
+-	}
+-	drm_connector_list_iter_end(&conn_iter);
+-	mutex_unlock(&dev->mode_config.mutex);
+-
+-	return ret;
+-}
+-
+ static int kirin_drm_bind(struct device *dev)
+ {
+ 	struct kirin_drm_data *driver_data;
+@@ -279,17 +245,8 @@ static int kirin_drm_bind(struct device *dev)
+ 
+ 	drm_fbdev_generic_setup(drm_dev, 32);
+ 
+-	/* connectors should be registered after drm device register */
+-	if (driver_data->register_connects) {
+-		ret = kirin_drm_connectors_register(drm_dev);
+-		if (ret)
+-			goto err_drm_dev_unregister;
+-	}
+-
+ 	return 0;
+ 
+-err_drm_dev_unregister:
+-	drm_dev_unregister(drm_dev);
+ err_kms_cleanup:
+ 	kirin_drm_kms_cleanup(drm_dev);
+ err_drm_dev_put:
+diff --git a/drivers/gpu/drm/hisilicon/kirin/kirin_drm_drv.h b/drivers/gpu/drm/hisilicon/kirin/kirin_drm_drv.h
+index 4d5c05a24065..dee8ec2f7f2e 100644
+--- a/drivers/gpu/drm/hisilicon/kirin/kirin_drm_drv.h
++++ b/drivers/gpu/drm/hisilicon/kirin/kirin_drm_drv.h
+@@ -37,7 +37,6 @@ struct kirin_drm_data {
+ 	u32 channel_formats_cnt;
+ 	int config_max_width;
+ 	int config_max_height;
+-	bool register_connects;
+ 	u32 num_planes;
+ 	u32 prim_plane;
+ 
+-- 
+2.17.1
 
