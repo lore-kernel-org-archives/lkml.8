@@ -2,192 +2,217 @@ Return-Path: <SRS0=n+Ub=5Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,UNWANTED_LANGUAGE_BODY,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC6C2C2BA19
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 21:19:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB9ABC2BB85
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 21:24:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B70312074F
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 21:19:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8CCFF20679
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 21:24:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="1FvJ7IUi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727547AbgDIVT4 (ORCPT
+        id S1727593AbgDIVYq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Apr 2020 17:19:56 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:42166 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726964AbgDIVTz (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Apr 2020 17:19:55 -0400
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: eballetbo)
-        with ESMTPSA id 055ED297E47
-Subject: Re: [PATCH 2/3] platform/chrome: typec: Add struct for port data
-To:     Prashant Malani <pmalani@chromium.org>,
-        linux-kernel@vger.kernel.org
-Cc:     heikki.krogerus@linux.intel.com,
-        Benson Leung <bleung@chromium.org>,
-        Guenter Roeck <groeck@chromium.org>
-References: <20200407010940.155490-1-pmalani@chromium.org>
- <20200407010940.155490-3-pmalani@chromium.org>
-From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Message-ID: <e124df15-396b-8599-23ad-153196f6787f@collabora.com>
-Date:   Thu, 9 Apr 2020 23:19:51 +0200
+        Thu, 9 Apr 2020 17:24:46 -0400
+Received: from mail-eopbgr680059.outbound.protection.outlook.com ([40.107.68.59]:54247
+        "EHLO NAM04-BN3-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726964AbgDIVYp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Apr 2020 17:24:45 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=R4lL+zNrN2DFaCaXpOgHFyiMt5OCP2WP7gPbF75OaLwqKVhKVqsiBPUYwgUx2zzxZCXnM804OGVapPIJEMg8mxYsO1O60RpwCqnw45N+nSEQ8F74q+gHAzbfSUacExX2AVR4R+vP7s7WKOjSurcsDCM0C/bk63NXSqpDDS0F/dkwVKcGoPD/DKFBouzRBJ1htFNg90jpWoXUI23f9WGP6pUYjCVkRuxaiPw5Hb/YH03GbWWx3Euy3sWfvIPECpIlbpkF6ogJ22s1/lU8z0Fcmc2nY3cd1F1Xg4U17iQvX/ti3a72HqfrQxJc2GJbYIW0zxEbHILENYvUeokU3W/6Zw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=gGXLXZnZ+YSQczY6b7DJllJCuzsOUrQrrK+mivSWhHE=;
+ b=OrIwbVKkMTtU3mZwT04fcbUHEA0wvmP+rm5ueJjllgF7YST2rDER7FWfOxIv51XXwbl+bjtwsyJ5j0of9ddLq8WPiKCm2OEuis9RUsXyBNuwszBIMucVpHgFCBhFP9cNsxyxruhVe+Xn12uCbj7c3RU0TYdZYunvVG/hPfCC148hH+g7G80c7pQlBEAJameJz+CX00rcmwpHT0y0DcbWdbie+R5kcZEYqSoP4utGDBZMrpR8VdznbD/FidpZBWNsGeurVjEZnL/5CNYCWrZh/9dpzzL6KBJq3kd5zflMH8+i0iFbQXqOCVNwyI1n7gDfvPqJBYsP8vajSCEzDC4nkg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=gGXLXZnZ+YSQczY6b7DJllJCuzsOUrQrrK+mivSWhHE=;
+ b=1FvJ7IUiExe3P3Dm09WxhG+q9Rxu6mY6BKNiUtvOp0TQ1T/v/wFqgyhxh97qNeTUoUASKOKqie3dTdvw32w7tY/kmLkQJBaW7E9p7YCpWxiX/UEoUHIA5/aOGkcIJq/UFl4SYsqAIGLaW1qw/0ZSQM3pxDCO51yYNmhF6UL7muM=
+Authentication-Results: spf=none (sender IP is )
+ smtp.mailfrom=Thomas.Lendacky@amd.com; 
+Received: from DM6PR12MB3163.namprd12.prod.outlook.com (2603:10b6:5:15e::26)
+ by DM6PR12MB3097.namprd12.prod.outlook.com (2603:10b6:5:11d::25) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2900.15; Thu, 9 Apr
+ 2020 21:24:43 +0000
+Received: from DM6PR12MB3163.namprd12.prod.outlook.com
+ ([fe80::f0f9:a88f:f840:2733]) by DM6PR12MB3163.namprd12.prod.outlook.com
+ ([fe80::f0f9:a88f:f840:2733%7]) with mapi id 15.20.2878.022; Thu, 9 Apr 2020
+ 21:24:43 +0000
+Subject: Re: [rfc v2 4/6] dma-direct: atomic allocations must come from atomic
+ coherent pools
+To:     David Rientjes <rientjes@google.com>,
+        Christoph Hellwig <hch@lst.de>
+Cc:     "Singh, Brijesh" <brijesh.singh@amd.com>,
+        "Grimm, Jon" <jon.grimm@amd.com>, Joerg Roedel <joro@8bytes.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>
+References: <alpine.DEB.2.21.1912311738130.68206@chino.kir.corp.google.com>
+ <b22416ec-cc28-3fd2-3a10-89840be173fa@amd.com>
+ <alpine.DEB.2.21.2002280118461.165532@chino.kir.corp.google.com>
+ <alpine.DEB.2.21.2003011535510.213582@chino.kir.corp.google.com>
+ <alpine.DEB.2.21.2004081418490.19661@chino.kir.corp.google.com>
+ <alpine.DEB.2.21.2004081420060.19661@chino.kir.corp.google.com>
+From:   Tom Lendacky <thomas.lendacky@amd.com>
+Message-ID: <26df6b35-af63-bf17-0c21-51684afa6f67@amd.com>
+Date:   Thu, 9 Apr 2020 16:24:41 -0500
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
-MIME-Version: 1.0
-In-Reply-To: <20200407010940.155490-3-pmalani@chromium.org>
-Content-Type: text/plain; charset=utf-8
+ Thunderbird/68.4.1
+In-Reply-To: <alpine.DEB.2.21.2004081420060.19661@chino.kir.corp.google.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: SN6PR2101CA0011.namprd21.prod.outlook.com
+ (2603:10b6:805:106::21) To DM6PR12MB3163.namprd12.prod.outlook.com
+ (2603:10b6:5:15e::26)
+MIME-Version: 1.0
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from office-linux.texastahm.com (67.79.209.213) by SN6PR2101CA0011.namprd21.prod.outlook.com (2603:10b6:805:106::21) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2921.6 via Frontend Transport; Thu, 9 Apr 2020 21:24:42 +0000
+X-Originating-IP: [67.79.209.213]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: ff6c936e-96ad-4475-a839-08d7dccc6b56
+X-MS-TrafficTypeDiagnostic: DM6PR12MB3097:|DM6PR12MB3097:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <DM6PR12MB309745FACE7A20CC468F4651ECC10@DM6PR12MB3097.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:7691;
+X-Forefront-PRVS: 0368E78B5B
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR12MB3163.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10009020)(4636009)(136003)(39860400002)(376002)(346002)(366004)(396003)(54906003)(81156014)(16526019)(8936002)(81166007)(5660300002)(6486002)(4326008)(31696002)(66946007)(31686004)(86362001)(66556008)(478600001)(66476007)(186003)(110136005)(52116002)(53546011)(6506007)(26005)(2906002)(316002)(6512007)(2616005)(8676002)(956004)(36756003);DIR:OUT;SFP:1101;
+Received-SPF: None (protection.outlook.com: amd.com does not designate
+ permitted sender hosts)
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: xlPZ92xiPlcf/JMG9AANmtB9PJoqSzIkVIZywbyDexbpqyexUad4C9oU5x3pJRc1JizaoJfeXsBS+m6CIACoONORmn1r9157KlkZXMzU+WdymBRESj0YtkhEXerXOMzLG5l0Eboc1wy1eWqBxY0PoOGdh/no4pyB7Eubgi4XveF059Kti6pi3ybVCoZApRsHScV3cc/0JWvMwAIvJLrxEgOBebt7oiJ/7dWCIBPYRX8eYle4l2BrrXbekpYDqifhNA3tEXQmr28DIXRrY+lmA/SHe+f8ZLWYzBEaQGgTe0Tg+2yq5Gsd2Ewrji6zcPJqVQ1FDAUlsUeCebAEENc3J5IJznwJXPikIXuHJfNBP2wK12127TX84gEmyfI6a97OBjH/Poz9Y2eKEnc/GGFoxZIoKtptNrpfY/2FrT9tfIC+arTTBFgUq7CYk6tUZH8Q
+X-MS-Exchange-AntiSpam-MessageData: SmSYeAK4ShsOIg7GQu1Rn6WIWoU+X0NT4It9M8LA4yOcZUiyShvI8KxPpJhj02mU/O7P7Pc5BBT7Bd8H8Z8zNOOyXEVHPXT8kW6DLZjIRQPTfhZw7MLpnCO7/+d8iNp81Fh0eze/DdSWVt8M6W19Wg==
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: ff6c936e-96ad-4475-a839-08d7dccc6b56
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Apr 2020 21:24:42.9734
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: v9WXkSJMZ61tVPbEjo6KnNPvfd38HhO5QUzuiHUzN32UfU8P7IcBE77YUQ20JDYFt+6I6Iw8MFMGCDG0ZbZLig==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB3097
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Prashant,
+On 4/8/20 4:21 PM, David Rientjes wrote:
+> When a device required unencrypted memory and the context does not allow
 
-Thank you for the patch.
+required => requires
 
-On 7/4/20 3:09, Prashant Malani wrote:
-> Add a separate struct for storing port data, including Type C connector
-> class struct pointers and caps.
+> blocking, memory must be returned from the atomic coherent pools.
 > 
-> Signed-off-by: Prashant Malani <pmalani@chromium.org>
+> This avoids the remap when CONFIG_DMA_DIRECT_REMAP is not enabled and the
+> config only requires CONFIG_DMA_COHERENT_POOL.  This will be used for
+> CONFIG_AMD_MEM_ENCRYPT in a subsequent patch.
+> 
+> Keep all memory in these pools unencrypted.
+> 
+> Signed-off-by: David Rientjes <rientjes@google.com>
 > ---
->  drivers/platform/chrome/cros_ec_typec.c | 49 ++++++++++++++++---------
->  1 file changed, 32 insertions(+), 17 deletions(-)
+>   kernel/dma/direct.c | 16 ++++++++++++++++
+>   kernel/dma/pool.c   | 15 +++++++++++++--
+>   2 files changed, 29 insertions(+), 2 deletions(-)
 > 
-> diff --git a/drivers/platform/chrome/cros_ec_typec.c b/drivers/platform/chrome/cros_ec_typec.c
-> index cf7c2652a1d6d..1955e1dfebc6d 100644
-> --- a/drivers/platform/chrome/cros_ec_typec.c
-> +++ b/drivers/platform/chrome/cros_ec_typec.c
-> @@ -17,6 +17,13 @@
->  
->  #define DRV_NAME "cros-ec-typec"
->  
-> +/* Per port data. */
-> +struct cros_typec_port {
-> +	struct typec_port *port;
-> +	/* Initial capabilities for the port. */
-> +	struct typec_capability caps;
-> +};
-> +
->  /* Platform-specific data for the Chrome OS EC Type C controller. */
->  struct cros_typec_data {
->  	struct device *dev;
-> @@ -24,9 +31,7 @@ struct cros_typec_data {
->  	int num_ports;
->  	unsigned int cmd_ver;
->  	/* Array of ports, indexed by port number. */
-> -	struct typec_port *ports[EC_USB_PD_MAX_PORTS];
-> -	/* Initial capabilities for each port. */
-> -	struct typec_capability *caps[EC_USB_PD_MAX_PORTS];
-> +	struct cros_typec_port *ports[EC_USB_PD_MAX_PORTS];
->  	struct notifier_block nb;
->  };
->  
-> @@ -76,14 +81,26 @@ static int cros_typec_parse_port_props(struct typec_capability *cap,
->  	return 0;
->  }
->  
-> +static void cros_unregister_ports(struct cros_typec_data *typec)
-> +{
-> +	int i;
-> +
-> +	for (i = 0; i < typec->num_ports; i++) {
-> +		if (!typec->ports[i])
-> +			continue;
-> +		typec_unregister_port(typec->ports[i]->port);
-> +		devm_kfree(typec->dev, typec->ports[i]);
-
-This is not needed, the allocated memory is device managed, so will be freed on
-removal or error.
-
+> diff --git a/kernel/dma/direct.c b/kernel/dma/direct.c
+> index 70800ca64f13..44165263c185 100644
+> --- a/kernel/dma/direct.c
+> +++ b/kernel/dma/direct.c
+> @@ -124,6 +124,18 @@ void *dma_direct_alloc_pages(struct device *dev, size_t size,
+>   	struct page *page;
+>   	void *ret;
+>   
+> +	/*
+> +	 * Unencrypted memory must come directly from DMA atomic pools if
+> +	 * blocking is not allowed.
+> +	 */
+> +	if (IS_ENABLED(CONFIG_DMA_COHERENT_POOL) &&
+> +	    force_dma_unencrypted(dev) && !gfpflags_allow_blocking(gfp)) {
+> +		ret = dma_alloc_from_pool(dev, PAGE_ALIGN(size), &page, gfp);
+> +		if (!ret)
+> +			return NULL;
+> +		goto done;
 > +	}
-> +}
 > +
->  static int cros_typec_init_ports(struct cros_typec_data *typec)
->  {
->  	struct device *dev = typec->dev;
->  	struct typec_capability *cap;
->  	struct fwnode_handle *fwnode;
-> +	struct cros_typec_port *cros_port;
->  	const char *port_prop;
->  	int ret;
-> -	int i;
->  	int nports;
->  	u32 port_num = 0;
->  
-> @@ -115,22 +132,23 @@ static int cros_typec_init_ports(struct cros_typec_data *typec)
->  
->  		dev_dbg(dev, "Registering port %d\n", port_num);
->  
-> -		cap = devm_kzalloc(dev, sizeof(*cap), GFP_KERNEL);
-> -		if (!cap) {
-> +		cros_port = devm_kzalloc(dev, sizeof(*cros_port), GFP_KERNEL);
-> +		if (!cros_port) {
->  			ret = -ENOMEM;
->  			goto unregister_ports;
->  		}
->  
-> -		typec->caps[port_num] = cap;
-> +		typec->ports[port_num] = cros_port;
-> +		cap = &cros_port->caps;
->  
->  		ret = cros_typec_parse_port_props(cap, fwnode, dev);
->  		if (ret < 0)
->  			goto unregister_ports;
->  
-> -		typec->ports[port_num] = typec_register_port(dev, cap);
-> -		if (IS_ERR(typec->ports[port_num])) {
-> +		cros_port->port = typec_register_port(dev, cap);
-> +		if (IS_ERR(cros_port->port)) {
->  			dev_err(dev, "Failed to register port %d\n", port_num);
-> -			ret = PTR_ERR(typec->ports[port_num]);
-> +			ret = PTR_ERR(cros_port->port);
->  			goto unregister_ports;
->  		}
->  	}
-> @@ -138,8 +156,7 @@ static int cros_typec_init_ports(struct cros_typec_data *typec)
->  	return 0;
->  
->  unregister_ports:
-> -	for (i = 0; i < typec->num_ports; i++)
-> -		typec_unregister_port(typec->ports[i]);
-> +	cros_unregister_ports(typec);
->  	return ret;
->  }
->  
-> @@ -177,7 +194,7 @@ static int cros_typec_ec_command(struct cros_typec_data *typec,
->  static void cros_typec_set_port_params_v0(struct cros_typec_data *typec,
->  		int port_num, struct ec_response_usb_pd_control *resp)
->  {
-> -	struct typec_port *port = typec->ports[port_num];
-> +	struct typec_port *port = typec->ports[port_num]->port;
->  	enum typec_orientation polarity;
->  
->  	if (!resp->enabled)
-> @@ -194,7 +211,7 @@ static void cros_typec_set_port_params_v0(struct cros_typec_data *typec,
->  static void cros_typec_set_port_params_v1(struct cros_typec_data *typec,
->  		int port_num, struct ec_response_usb_pd_control_v1 *resp)
->  {
-> -	struct typec_port *port = typec->ports[port_num];
-> +	struct typec_port *port = typec->ports[port_num]->port;
->  	enum typec_orientation polarity;
->  
->  	if (!(resp->enabled & PD_CTRL_RESP_ENABLED_CONNECTED))
-> @@ -360,9 +377,7 @@ static int cros_typec_probe(struct platform_device *pdev)
->  	return 0;
->  
->  unregister_ports:
-> -	for (i = 0; i < typec->num_ports; i++)
-> -		if (typec->ports[i])
-> -			typec_unregister_port(typec->ports[i]);
-> +	cros_unregister_ports(typec);
->  	return ret;
->  }
->  
+>   	if (IS_ENABLED(CONFIG_DMA_DIRECT_REMAP) &&
+>   	    dma_alloc_need_uncached(dev, attrs) &&
+>   	    !gfpflags_allow_blocking(gfp)) {
+> @@ -203,6 +215,10 @@ void dma_direct_free_pages(struct device *dev, size_t size, void *cpu_addr,
+>   {
+>   	unsigned int page_order = get_order(size);
+>   
+> +	if (IS_ENABLED(CONFIG_DMA_COHERENT_POOL) &&
+> +	    dma_free_from_pool(dev, cpu_addr, PAGE_ALIGN(size)))
+> +		return;
+> +
+>   	if ((attrs & DMA_ATTR_NO_KERNEL_MAPPING) &&
+>   	    !force_dma_unencrypted(dev)) {
+>   		/* cpu_addr is a struct page cookie, not a kernel address */
+> diff --git a/kernel/dma/pool.c b/kernel/dma/pool.c
+> index e14c5a2da734..6685ab89cfa7 100644
+> --- a/kernel/dma/pool.c
+> +++ b/kernel/dma/pool.c
+> @@ -9,6 +9,7 @@
+>   #include <linux/dma-contiguous.h>
+>   #include <linux/init.h>
+>   #include <linux/genalloc.h>
+> +#include <linux/set_memory.h>
+>   #include <linux/slab.h>
+>   #include <linux/vmalloc.h>
+>   #include <linux/workqueue.h>
+> @@ -55,12 +56,20 @@ static int atomic_pool_expand(struct gen_pool *pool, size_t pool_size,
+>   
+>   	arch_dma_prep_coherent(page, pool_size);
+>   
+> +#ifdef CONFIG_DMA_DIRECT_REMAP
+>   	addr = dma_common_contiguous_remap(page, pool_size,
+>   					   pgprot_dmacoherent(PAGE_KERNEL),
+>   					   __builtin_return_address(0));
+>   	if (!addr)
+>   		goto free_page;
+> -
+> +#else
+> +	addr = page_to_virt(page);
+> +#endif
+> +	/*
+> +	 * Memory in the atomic DMA pools must be unencrypted, the pools do not
+> +	 * shrink so no re-encryption occurs in dma_direct_free_pages().
+> +	 */
+> +	set_memory_decrypted((unsigned long)page_to_virt(page), 1 << order);
+>   	ret = gen_pool_add_virt(pool, (unsigned long)addr, page_to_phys(page),
+>   				pool_size, NUMA_NO_NODE);
+>   	if (ret)
+> @@ -69,8 +78,10 @@ static int atomic_pool_expand(struct gen_pool *pool, size_t pool_size,
+>   	return 0;
+>   
+>   remove_mapping:
+> +#ifdef CONFIG_DMA_DIRECT_REMAP
+>   	dma_common_free_remap(addr, pool_size);
+
+You're about to free the memory, but you've called set_memory_decrypted() 
+against it, so you need to do a set_memory_encrypted() to bring it back to 
+a state ready for allocation again.
+
+Thanks,
+Tom
+
+> -free_page:
+> +#endif
+> +free_page: __maybe_unused
+>   	if (!dma_release_from_contiguous(NULL, page, 1 << order))
+>   		__free_pages(page, order);
+>   out:
 > 
