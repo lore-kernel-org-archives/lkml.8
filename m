@@ -8,62 +8,62 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1D69C2D0EA
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 08:58:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8868C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 08:58:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6F5AD20757
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 08:58:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 96E9820730
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 08:58:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KUnpqvor"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eQB1quuu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726681AbgDII6R (ORCPT
+        id S1726638AbgDII6V (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Apr 2020 04:58:17 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:38782 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725972AbgDII6R (ORCPT
+        Thu, 9 Apr 2020 04:58:21 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:45066 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725972AbgDII6U (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Apr 2020 04:58:17 -0400
-Received: by mail-pf1-f194.google.com with SMTP id c21so3831389pfo.5
-        for <linux-kernel@vger.kernel.org>; Thu, 09 Apr 2020 01:58:17 -0700 (PDT)
+        Thu, 9 Apr 2020 04:58:20 -0400
+Received: by mail-pg1-f194.google.com with SMTP id w11so516306pga.12
+        for <linux-kernel@vger.kernel.org>; Thu, 09 Apr 2020 01:58:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :in-reply-to:references;
-        bh=nr51atrKn1Az/ez7AUO/WBs2C0nP6WcScW/49wxP3BQ=;
-        b=KUnpqvorJVsFGhFoJRciP3xfW2yY5ecOmnEWt7K46Z5EFnG8aks7cEUBqK1LQdkYBq
-         P0xSVksaYYwapnPQg3TfYZ/+eTMMSuRDhbp1yeCYTs4dILJB+kKyZdYJ1YNmfmseEKNr
-         Tp9qQs41wU+07mp2/bCUa2Apmwps7ASDfHc+sFuRKm0W+sDVdT5bR/xkQVUYF/iS5aip
-         YEZmm6DUWMXiALgjVqBLxdFUnRLkwSdqLLml7bizikae49QHQJb62J0JPzq2LXpD6n7f
-         QZXIQ2FDsqiNgCj9xAS5PEvohU5XnG3cKPRM9yUzkJgiKSxyxJ60aD2qHGb0RL/jLCGY
-         J/yQ==
+        bh=oU1SD0/H2uFcMVlkfJZK0TPjnOK4yvBSFYiaVddiQBs=;
+        b=eQB1quuuNCnbuszNLZq5C4v9ObB3vpVxfyBN7YbqpY/tdFfJM0ZH+Z6kGaCU1KyCwA
+         oQL5ILPSOB8OLPRrcnzMepJq//HqoJj0BsKCZNoBphaIxrjWrjZOemIRzQs4AR8B8Y4n
+         xCTC0+VRhGafFP47eDaza5ZdZMKRU1A6pPswGprcH+9CjE94KA41CNnnDkx5/cYTaPBO
+         1s/ddv70jXS7M4oOKJ7sI+NEUhr7dP+aDrwaHip7Wcv1V0+aLuT5wUiRNOIJpSr5QeIJ
+         HRf6OdsuFaaycPp+oFN5iIE7SdShy4iyS5/y8vHsRnpa22DXMA/IC16N0/4kboa+x5dV
+         icMw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:in-reply-to:references;
-        bh=nr51atrKn1Az/ez7AUO/WBs2C0nP6WcScW/49wxP3BQ=;
-        b=ChSmtZFhbCwmG4Qwx/Z52DGe4Xa/m0cbUzhuKCxGvhRtdPzDkBw6XumlZB9bQmBX0K
-         FqIRBwMwq31JoI4rPfmqcioUrgoeqbp+wectcBUyGuRwXPloKnocvDU4W326Yur9catc
-         WNr43Ufw5+vwbFPcjAhzkhO9J+5tC600USqG2/2o5touxKYin42wcDGIsLUM6H01uzA1
-         kia6fng284Mh0U0IzjqtRWC5+1c0qq8/7ZJ5z7tUKKc/TnR6nnA/iOHM8GMFLUrf5eE0
-         Yw3XvHrgECefm4hU8f59HhbvPQD1i8gtnFd8VmVeJT5eKljNpmvX7/bwF59ceYmxfQJq
-         tTRQ==
-X-Gm-Message-State: AGi0PuYMsTm0qJML6h+LAYG2BfQRMuYCjl3489rxS3SCXQk12jd1Q8/J
-        HWV8v/HwZ9uKyT5pTsxZsfE=
-X-Google-Smtp-Source: APiQypKosFsA2VBNm7ieaOiBe5tl/O4B5VBtwuyBJSg3/LR/CqWg2U8asT28lp/iLKM9COBqswAsKg==
-X-Received: by 2002:a63:e56:: with SMTP id 22mr11000344pgo.173.1586422697267;
-        Thu, 09 Apr 2020 01:58:17 -0700 (PDT)
+        bh=oU1SD0/H2uFcMVlkfJZK0TPjnOK4yvBSFYiaVddiQBs=;
+        b=Iq0bVSYHPYub1zmpNWGA+VLC+lg78gIY1JjdPf1STpy4OlEFsLxk2GeRMYQinr1d3w
+         2zHqBcsCbQueOJXS//AdcHfsEi0h6muvgMLsdL74fjcTJVUSdIZkxzaHgW9qFJjd2hYC
+         2np353P7nlw9hh/l5JfukZtDRDIbOYJbxdkbyQU/8n5j/9bZ7zys21TvG0LkXyseKySe
+         WDhxB6Z7uEuKyjYNqod/r4KATOzZZkxtuesFoELyWuvuJMImqPkBkA9WhIHjmCzoDKG/
+         KQJYt+aS/nRcLLVyoRy4n8nXxBcsDb9QLnCIiHCb0DwN8THu2LLvUEuaDv4Pk14K8eaB
+         0yEQ==
+X-Gm-Message-State: AGi0Pub9+n8BMxyoFiZy6kGsVAjmEKw/KhUhvMtyqOxHX30s35TV9L9m
+        WmCburoPy2V+VQ5Fz8wCDywOIGqv
+X-Google-Smtp-Source: APiQypKLXbbNZP+LHdpL9FcYf++f9Mwp/jtMmbPtysRBYBA9SyTTilnrtKkSV1z/UavNWQP1Jif/Zw==
+X-Received: by 2002:a63:e708:: with SMTP id b8mr2703800pgi.128.1586422700609;
+        Thu, 09 Apr 2020 01:58:20 -0700 (PDT)
 Received: from sh03840pcu.spreadtrum.com ([117.18.48.82])
-        by smtp.gmail.com with ESMTPSA id s9sm1561712pjr.5.2020.04.09.01.58.13
+        by smtp.gmail.com with ESMTPSA id s9sm1561712pjr.5.2020.04.09.01.58.17
         (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 09 Apr 2020 01:58:16 -0700 (PDT)
+        Thu, 09 Apr 2020 01:58:20 -0700 (PDT)
 From:   Baolin Wang <baolin.wang7@gmail.com>
 To:     lee.jones@linaro.org, arnd@arndb.de, broonie@kernel.org
 Cc:     orsonzhai@gmail.com, zhang.lyra@gmail.com, baolin.wang7@gmail.com,
         linux-kernel@vger.kernel.org
-Subject: [RFC PATCH 1/3] mfd: syscon: Add reg_update_bits() callback support
-Date:   Thu,  9 Apr 2020 16:57:57 +0800
-Message-Id: <759f7471d03946ae273a06f7bcca8a54528ec08c.1586422035.git.baolin.wang7@gmail.com>
+Subject: [RFC PATCH 2/3] regmap: Add reg_update_bits() support
+Date:   Thu,  9 Apr 2020 16:57:58 +0800
+Message-Id: <f48d3b98debe5b2c1cc9a384874d6032b051a4c5.1586422035.git.baolin.wang7@gmail.com>
 X-Mailer: git-send-email 1.9.1
 In-Reply-To: <cover.1586422035.git.baolin.wang7@gmail.com>
 References: <cover.1586422035.git.baolin.wang7@gmail.com>
@@ -74,108 +74,88 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Some platforms such as Spreadtrum platform, define a special method to
-update bits of the registers instead of reading and writing, thus add
-a new reg_update_bits() callback for struct regmap_config and a helper
-for syscon driver to support this new feature.
+Add reg_update_bits() support in case some platforms use a special method
+to update bits of registers.
 
 Signed-off-by: Baolin Wang <baolin.wang7@gmail.com>
 ---
- drivers/mfd/syscon.c       | 10 ++++++++++
- include/linux/mfd/syscon.h |  8 ++++++++
- include/linux/regmap.h     |  4 ++++
- 3 files changed, 22 insertions(+)
+ drivers/base/regmap/regmap-mmio.c | 29 ++++++++++++++++++++++++++++-
+ drivers/base/regmap/regmap.c      |  1 +
+ 2 files changed, 29 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/mfd/syscon.c b/drivers/mfd/syscon.c
-index 3a97816..cf6efe2 100644
---- a/drivers/mfd/syscon.c
-+++ b/drivers/mfd/syscon.c
-@@ -34,6 +34,8 @@ struct syscon {
- 	struct list_head list;
+diff --git a/drivers/base/regmap/regmap-mmio.c b/drivers/base/regmap/regmap-mmio.c
+index af967d8..dae0d28 100644
+--- a/drivers/base/regmap/regmap-mmio.c
++++ b/drivers/base/regmap/regmap-mmio.c
+@@ -24,6 +24,8 @@ struct regmap_mmio_context {
+ 			  unsigned int reg, unsigned int val);
+ 	unsigned int (*reg_read)(struct regmap_mmio_context *ctx,
+ 			         unsigned int reg);
++	int (*reg_update_bits)(void *ctx, unsigned int reg,
++			       unsigned int mask, unsigned int val);
  };
  
-+static regmap_hw_reg_update_bits reg_update_bits;
-+
- static const struct regmap_config syscon_regmap_config = {
- 	.reg_bits = 32,
- 	.val_bits = 32,
-@@ -105,6 +107,7 @@ static struct syscon *of_syscon_register(struct device_node *np, bool check_clk)
- 	syscon_config.reg_stride = reg_io_width;
- 	syscon_config.val_bits = reg_io_width * 8;
- 	syscon_config.max_register = resource_size(&res) - reg_io_width;
-+	syscon_config.reg_update_bits = reg_update_bits;
- 
- 	regmap = regmap_init_mmio(NULL, base, &syscon_config);
- 	if (IS_ERR(regmap)) {
-@@ -172,6 +175,13 @@ static struct regmap *device_node_get_regmap(struct device_node *np,
- 	return syscon->regmap;
+ static int regmap_mmio_regbits_check(size_t reg_bits)
+@@ -188,6 +190,26 @@ static int regmap_mmio_read(void *context, unsigned int reg, unsigned int *val)
+ 	return 0;
  }
  
-+void syscon_register_reg_update_bits(regmap_hw_reg_update_bits hw_reg_update_bits)
++static int regmap_mmio_update_bits(void *context, unsigned int reg,
++				   unsigned int mask, unsigned int val)
 +{
-+	if (hw_reg_update_bits)
-+		reg_update_bits = hw_reg_update_bits;
-+}
-+EXPORT_SYMBOL_GPL(syscon_register_reg_update_bits);
++	struct regmap_mmio_context *ctx = context;
++	int ret;
 +
- struct regmap *device_node_to_regmap(struct device_node *np)
++	if (!IS_ERR(ctx->clk)) {
++		ret = clk_enable(ctx->clk);
++		if (ret < 0)
++			return ret;
++	}
++
++	ctx->reg_update_bits(ctx->regs, reg, mask, val);
++
++	if (!IS_ERR(ctx->clk))
++		clk_disable(ctx->clk);
++
++	return 0;
++}
++
+ static void regmap_mmio_free_context(void *context)
  {
- 	return device_node_get_regmap(np, false);
-diff --git a/include/linux/mfd/syscon.h b/include/linux/mfd/syscon.h
-index 7f20e9b..b64ef84 100644
---- a/include/linux/mfd/syscon.h
-+++ b/include/linux/mfd/syscon.h
-@@ -13,6 +13,7 @@
- 
- #include <linux/err.h>
- #include <linux/errno.h>
-+#include <linux/regmap.h>
- 
- struct device_node;
- 
-@@ -28,6 +29,8 @@ extern struct regmap *syscon_regmap_lookup_by_phandle_args(
- 					const char *property,
- 					int arg_count,
- 					unsigned int *out_args);
-+extern void
-+syscon_register_reg_update_bits(regmap_hw_reg_update_bits hw_reg_update_bits);
- #else
- static inline struct regmap *device_node_to_regmap(struct device_node *np)
- {
-@@ -59,6 +62,11 @@ static inline struct regmap *syscon_regmap_lookup_by_phandle_args(
- {
- 	return ERR_PTR(-ENOTSUPP);
+ 	struct regmap_mmio_context *ctx = context;
+@@ -200,7 +222,7 @@ static void regmap_mmio_free_context(void *context)
+ 	kfree(context);
  }
+ 
+-static const struct regmap_bus regmap_mmio = {
++static struct regmap_bus regmap_mmio = {
+ 	.fast_io = true,
+ 	.reg_write = regmap_mmio_write,
+ 	.reg_read = regmap_mmio_read,
+@@ -239,6 +261,11 @@ static struct regmap_mmio_context *regmap_mmio_gen_context(struct device *dev,
+ 	ctx->val_bytes = config->val_bits / 8;
+ 	ctx->clk = ERR_PTR(-ENODEV);
+ 
++	if (config->reg_update_bits) {
++		ctx->reg_update_bits = config->reg_update_bits;
++		regmap_mmio.reg_update_bits = regmap_mmio_update_bits;
++	}
 +
-+static inline void
-+syscon_register_reg_update_bits(regmap_hw_reg_update_bits hw_reg_update_bits)
-+{
-+}
- #endif
+ 	switch (regmap_get_val_endian(dev, &regmap_mmio, config)) {
+ 	case REGMAP_ENDIAN_DEFAULT:
+ 	case REGMAP_ENDIAN_LITTLE:
+diff --git a/drivers/base/regmap/regmap.c b/drivers/base/regmap/regmap.c
+index 59f911e..553d92a 100644
+--- a/drivers/base/regmap/regmap.c
++++ b/drivers/base/regmap/regmap.c
+@@ -827,6 +827,7 @@ struct regmap *__regmap_init(struct device *dev,
+ 	} else if (!bus->read || !bus->write) {
+ 		map->reg_read = _regmap_bus_reg_read;
+ 		map->reg_write = _regmap_bus_reg_write;
++		map->reg_update_bits = bus->reg_update_bits;
  
- #endif /* __LINUX_MFD_SYSCON_H__ */
-diff --git a/include/linux/regmap.h b/include/linux/regmap.h
-index 40b0716..78c1036 100644
---- a/include/linux/regmap.h
-+++ b/include/linux/regmap.h
-@@ -340,6 +340,8 @@ struct regmap_access_table {
-  *		  read operation on a bus such as SPI, I2C, etc. Most of the
-  *		  devices do not need this.
-  * @reg_write:	  Same as above for writing.
-+ * @reg_update_bits: Optional, should only be provided for devices whose update
-+ *		     operation cannot be represented as read and write.
-  * @fast_io:	  Register IO is fast. Use a spinlock instead of a mutex
-  *	     	  to perform locking. This field is ignored if custom lock/unlock
-  *	     	  functions are used (see fields lock/unlock of struct regmap_config).
-@@ -416,6 +418,8 @@ struct regmap_config {
- 
- 	int (*reg_read)(void *context, unsigned int reg, unsigned int *val);
- 	int (*reg_write)(void *context, unsigned int reg, unsigned int val);
-+	int (*reg_update_bits)(void *context, unsigned int reg,
-+			       unsigned int mask, unsigned int val);
- 
- 	bool fast_io;
- 
+ 		map->defer_caching = false;
+ 		goto skip_format_initialization;
 -- 
 1.9.1
 
