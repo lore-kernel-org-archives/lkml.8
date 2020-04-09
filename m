@@ -2,89 +2,107 @@ Return-Path: <SRS0=n+Ub=5Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CAECFC2BA80
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 09:16:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A9F1C2D0EA
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 09:16:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 99DF820B1F
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 09:16:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CE40620757
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 09:16:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726684AbgDIJP7 (ORCPT
+        id S1726706AbgDIJQU convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Apr 2020 05:15:59 -0400
-Received: from mout.kundenserver.de ([212.227.17.24]:46619 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726621AbgDIJP7 (ORCPT
+        Thu, 9 Apr 2020 05:16:20 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:42197 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726521AbgDIJQU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Apr 2020 05:15:59 -0400
-Received: from mail-qt1-f176.google.com ([209.85.160.176]) by
- mrelayeu.kundenserver.de (mreue109 [212.227.15.145]) with ESMTPSA (Nemesis)
- id 1Mnq0K-1ixZfo1qzi-00pIOx for <linux-kernel@vger.kernel.org>; Thu, 09 Apr
- 2020 11:15:58 +0200
-Received: by mail-qt1-f176.google.com with SMTP id m33so2221988qtb.3
-        for <linux-kernel@vger.kernel.org>; Thu, 09 Apr 2020 02:15:58 -0700 (PDT)
-X-Gm-Message-State: AGi0PuY9q7a2o9AUQOpsPIHz1+jrXktyDH/TbnTw99sAvY3/xAjkcqXi
-        BP8gOSvSNDWrylNNJTIu9ZzoeIBHsmTD4JxJoRg=
-X-Google-Smtp-Source: APiQypL7rQnHFaV/J6F3l245EdvqvQj9PERdkX/il6/aFT9qPOaOo3CSPC1MiajWcrHTUGea8JinG7bbRXX2zZD+/vM=
-X-Received: by 2002:ac8:7292:: with SMTP id v18mr11168094qto.304.1586423757348;
- Thu, 09 Apr 2020 02:15:57 -0700 (PDT)
-MIME-Version: 1.0
-References: <cover.1586422035.git.baolin.wang7@gmail.com>
-In-Reply-To: <cover.1586422035.git.baolin.wang7@gmail.com>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Thu, 9 Apr 2020 11:15:41 +0200
-X-Gmail-Original-Message-ID: <CAK8P3a1rWuL-mSeFBN0Dk7u3wnDmPgknEM3Em734KP64-Wv0ZQ@mail.gmail.com>
-Message-ID: <CAK8P3a1rWuL-mSeFBN0Dk7u3wnDmPgknEM3Em734KP64-Wv0ZQ@mail.gmail.com>
-Subject: Re: [RFC PATCH 0/3] Add new reg_update_bits() support
-To:     Baolin Wang <baolin.wang7@gmail.com>
-Cc:     Lee Jones <lee.jones@linaro.org>, Mark Brown <broonie@kernel.org>,
-        Orson Zhai <orsonzhai@gmail.com>,
-        Lyra Zhang <zhang.lyra@gmail.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:fUhXbTmZBtgfIdnCHrnbaNFrzDFemHcsnDPQJYaNGwA5wX13a/l
- 023S48tDTzi7qkGJ1uZdTe6djI+qnP9nM06NkXas8RdbSzUKlcVbs9hmIYA3ymRWOX2JZtG
- NVIjySDoPn97zDUqrPmkd2hYN8DfxSJdOgY/MoyYiTfSO9yFZ5zxe9Sxljm9tplOOYO4I9Y
- JPflSpvqCc4cETm/Ct38g==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:1u9vBiRz+RU=:FTWZ+MGzd54cIQJ/UsMI6c
- eR9j5KksWsUCBgS9KItox/2BJ+EaQFXpQSxL7z2Om9k/Y7+HOfDk/SxIYIHsRICvBBKNpVGHE
- 1I5NkucpIJMMR0boCdi7NJL98pw05FZQe4yKhUbRTss6f7l0mK2xDwp+4d74r5p5Fv6Tx9NyC
- 3/fHaAcEcwSwUT7qfip9zdltnaOTXuBnc7i+5TTWU1AuY8tt9npwqt6uAUSrqcI8f8Eez8Txu
- GaBAAR34H+EuQ0Y0Z53u8AuTpt9nDTxDzceg14pHQOhKLIcak6UXXxCWcLOQrDiQNZV4y/J3L
- XgiK+8oTrNaZ+gQ5a2HLbvR1pjFL+Gs19XAFkq4ggcKjztqpM1ZNh8INOcsgQr56arSi8QeWI
- a2sa1T0EpipOPXP8txlgPg2XoZGoIikmbbY4D0ogfmU3wYPKpwJHcVfnZwhNYwVt3jrMEV7Bi
- reGKVeHb1A/nV70GBYwkgSjpQZz7dGzuItojgDwM99AvjfDZwW6EqEYt12UlslFC3gjBD3W3u
- nE6nUCKsW+DzOSgHsIBrCLKIBKEAU08D+9bFswJroqBrZ+BwEpWue16i2cEMosNxGawxiS1Q0
- 8/14LRvnfQGj3Hi+w5s2WXTvXGm+ZJCerGzADac5mflXqwML0KhS8stnALlayOWX9aDVMSWhW
- JWQq8nIhdBau1oGKxJ8QYWGpC+CAaqTud2Z3vs3i1d/fqDg5FllLVOlFGr64Bxm9jCddL8QDK
- GRYWF0kb2fQmQyY+XpwrzkIIP7Y64m6YUKnXhMezXYeHV0ip6LcS76sBEWH9msl/oQdkc+nzD
- WCQWom1n2DOYVnmovAQ7cq5ADFabZk5XBItxVEbTcvf6f3GhD4=
+        Thu, 9 Apr 2020 05:16:20 -0400
+Received: from mail-pj1-f70.google.com ([209.85.216.70])
+        by youngberry.canonical.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <kai.heng.feng@canonical.com>)
+        id 1jMTIJ-0002bD-9r
+        for linux-kernel@vger.kernel.org; Thu, 09 Apr 2020 09:16:19 +0000
+Received: by mail-pj1-f70.google.com with SMTP id s10so2035147pjc.6
+        for <linux-kernel@vger.kernel.org>; Thu, 09 Apr 2020 02:16:19 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=I/aLOBCPPw94GG/u9hj9C2FG+LS8AZRo+ZKiDRcnxfs=;
+        b=Z+MG/YWqeTePeEHwzlYX089h6h1tOVFbvpF74cPVN87SPn91qWnC1GuExSe3LOKMzT
+         WAlYrSXsRpsHLM0no3BCWAjd1NP/jKh2tqhNtg/z551X7I2IAZGICPXOUtjzdsHZW+MI
+         X0EtqJeVUF42NY7mhXpYC8fhKaXzQDYBGtiBzesbQd9pdMYExlgemykyTItHJLv2OTmE
+         n8rtaYwJlV4GwwPt6He0uJH5gNz2H7BVSndeNkJvn8pr/Yw1yX2ynwr2SNK2UvutCB1S
+         h/M5xT758pjPay/XI7whcwcv8AitqskvhlPpqb3jdCM30j314cPlAyxZqUDfcXUcsJMU
+         pbtA==
+X-Gm-Message-State: AGi0Pubui4v7lzJkj3DrVfFt2Anj4HGnxZ6cHDc/x3ftfwh5GKuBfYfQ
+        NZa/JQBWIcBqB7QtAC8bxxYFUtVebd1EzzFgcobEJGPKXZmL2tJ+HHWpM13coenPqwwKYEX7/ID
+        BOLJ/MduAx9LNEOSh6uvDELO46z1vn+RnW9rkE3KCsw==
+X-Received: by 2002:a17:902:242:: with SMTP id 60mr11378509plc.245.1586423777939;
+        Thu, 09 Apr 2020 02:16:17 -0700 (PDT)
+X-Google-Smtp-Source: APiQypLJyMKRHAg8InQnK0BXiYiqShBnT1RbYLk74TbMNSG8JiX0/iAUbWhQOBWAi7mt/UsWbh2v1w==
+X-Received: by 2002:a17:902:242:: with SMTP id 60mr11378491plc.245.1586423777606;
+        Thu, 09 Apr 2020 02:16:17 -0700 (PDT)
+Received: from [192.168.1.208] (220-133-187-190.HINET-IP.hinet.net. [220.133.187.190])
+        by smtp.gmail.com with ESMTPSA id 6sm18624250pfx.69.2020.04.09.02.16.15
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 09 Apr 2020 02:16:17 -0700 (PDT)
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.80.23.2.2\))
+Subject: Re: [PATCH] ahci: Add Intel Comet Lake PCH RAID PCI ID
+From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
+In-Reply-To: <20191128081041.6948-1-jian-hong@endlessm.com>
+Date:   Thu, 9 Apr 2020 17:16:14 +0800
+Cc:     "open list:LIBATA SUBSYSTEM (Serial and Parallel ATA drivers)" 
+        <linux-ide@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>, linux@endlessm.com
+Content-Transfer-Encoding: 8BIT
+Message-Id: <EF580FD3-2C0F-4268-8B39-8B339D590353@canonical.com>
+References: <20191128081041.6948-1-jian-hong@endlessm.com>
+To:     Jens Axboe <axboe@kernel.dk>,
+        Jian-Hong Pan <jian-hong@endlessm.com>
+X-Mailer: Apple Mail (2.3608.80.23.2.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 9, 2020 at 10:58 AM Baolin Wang <baolin.wang7@gmail.com> wrote:
->
-> The Spreadtrum platform uses a special set/clear method to update
-> registers' bits, thus this patch set introduces a new reg_update_bits()
-> callback, as well as adding a helper in syscon driver to support
-> this feature.
->
-> Any comments are welcome. Thanks.
+Hi Jens,
 
-This looks like a good idea to me, both the concept and the implementation.
+> On Nov 28, 2019, at 16:10, Jian-Hong Pan <jian-hong@endlessm.com> wrote:
+> 
+> Intel Comet Lake should use the default LPM policy for mobile chipsets.
+> So, add the PCI ID to the driver list of supported devices.
+> 
+> Signed-off-by: Jian-Hong Pan <jian-hong@endlessm.com>
 
-The one thing I'd note is that we have a similar mechanism for devices made
-by Sigmatel and later Freescale after they acquired them.
-include/linux/stmp_device.h only holds a couple of definitions, so it's much
-less abstract than your approach, but the idea is similar.
+Would it be possible to also merge this patch?
+We also have some system that use this controller.
 
-It would be nice in theory to move the sigmatel devices over to
-reg_update_bits() in theory, but this seems unlikely to actually happen,
-given that these are mostly obsolete drivers at this point.
+Kai-Heng
 
-      Arnd
+> ---
+> drivers/ata/ahci.c | 1 +
+> 1 file changed, 1 insertion(+)
+> 
+> diff --git a/drivers/ata/ahci.c b/drivers/ata/ahci.c
+> index ec6c64fce74a..d9b3a9f7a4ee 100644
+> --- a/drivers/ata/ahci.c
+> +++ b/drivers/ata/ahci.c
+> @@ -405,6 +405,7 @@ static const struct pci_device_id ahci_pci_tbl[] = {
+> 	{ PCI_VDEVICE(INTEL, 0x22a3), board_ahci_mobile }, /* Cherry Tr. AHCI */
+> 	{ PCI_VDEVICE(INTEL, 0x5ae3), board_ahci_mobile }, /* ApolloLake AHCI */
+> 	{ PCI_VDEVICE(INTEL, 0x34d3), board_ahci_mobile }, /* Ice Lake LP AHCI */
+> +	{ PCI_VDEVICE(INTEL, 0x02d7), board_ahci_mobile }, /* Comet Lake PCH RAID */
+> 
+> 	/* JMicron 360/1/3/5/6, match class to avoid IDE function */
+> 	{ PCI_VENDOR_ID_JMICRON, PCI_ANY_ID, PCI_ANY_ID, PCI_ANY_ID,
+> -- 
+> 2.20.1
+> 
+
