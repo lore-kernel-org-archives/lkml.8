@@ -2,260 +2,221 @@ Return-Path: <SRS0=n+Ub=5Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80C77C2BBC7
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 14:34:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 716E5C2BA2B
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 14:36:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 53C3720771
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 14:34:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3C7912078E
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 14:36:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="O1vm9jno"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="cSUQhx7c"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727821AbgDIOe2 (ORCPT
+        id S1727724AbgDIOg3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Apr 2020 10:34:28 -0400
-Received: from mail-am6eur05on2079.outbound.protection.outlook.com ([40.107.22.79]:6158
-        "EHLO EUR05-AM6-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727104AbgDIOe1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Apr 2020 10:34:27 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=RQ+lOZikE5Bk1dE6R1GbvEgb4Jl4o48cJnwzSTASD4Ncbljtw87Fk982nRX+lrGZV8kFmF+Cx9QD6fGxsFnzZQWYuOiuRBvfmpAwjAnQ/bLx4sT5r6qAnlyFmVLEB0C/bt2ic/iPvMSjWVfvENEori/0iDRwu2Ui9GeN3gq0Mk5ik6NacfNAAC5r5S7lTzoTtvZsCx6torxwASXfpjpKF3cUeLK9hi7UFI65KLilRJIL7mRO6FoNC2c5ZZNQ9k76kRo11JUjAVTJN8gnjPFsPi5/g3kYG+F/BOZAHlYgX4H0MAZd/+VRIUa+iyEvKovbSaBqryl+rvN3zcHq31iAPQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=sbxFBM3q6AggP7jzj2h1Lr/XBoftt6xbZTf9G5NDZM0=;
- b=HEBffpuBEo2aiNVn9+eooygBsBCIIZloBWrwHAn3pa1bQlxq4PULulWwYW2ksFCnSOE6ri0I8sy43flEl/dUYk/zrJnOfTHG/+Us7b7tTBUhjUnxS50cj+Jdue+sbhiohe3O1dR+uEP74fOvy0hX9skEr1htSnGZ2NqvgorXwH79njLBUuUr3rffD3FArs5hfxNrY+/w/0cB7Y50iLEnV1QuMOwFrtf+EMpU69KyqSSIhHKkJS8hawoy4XsUF9Bek65cY7evWD7OTjbCKwTzW4tTlAtVfPJFGdnxDjebWpVuoAorN7a6HJUd+AGrtRJI7fOkOBdwsDZBw/+hzkfLIQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=sbxFBM3q6AggP7jzj2h1Lr/XBoftt6xbZTf9G5NDZM0=;
- b=O1vm9jnob/Drviw1WsUftd/465DQBcaOkZwUueEpd2FC5y60x9vNyYRqZE4Bf3swvvHiiGrfri/3bGxonvKp2hhkHklMlg5WMYkvvb6705V89uoBlHtP92Kmdrw3wTieZCodRLNGq/3xfnP+70mF6bwxOPCZ1dMHvXIYLtJmgHk=
-Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com (2603:10a6:8:10::18)
- by DB3PR0402MB3690.eurprd04.prod.outlook.com (2603:10a6:8:c::27) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2878.21; Thu, 9 Apr
- 2020 14:34:21 +0000
-Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com
- ([fe80::3143:c46:62e4:8a8b]) by DB3PR0402MB3916.eurprd04.prod.outlook.com
- ([fe80::3143:c46:62e4:8a8b%7]) with mapi id 15.20.2878.017; Thu, 9 Apr 2020
- 14:34:21 +0000
-From:   Anson Huang <anson.huang@nxp.com>
-To:     Amit Kucheria <amit.kucheria@verdurent.com>
-CC:     Zhang Rui <rui.zhang@intel.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        Linux PM list <linux-pm@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        lakml <linux-arm-kernel@lists.infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        dl-linux-imx <linux-imx@nxp.com>
-Subject: RE: [PATCH] dt-bindings: thermal: Convert i.MX to json-schema
-Thread-Topic: [PATCH] dt-bindings: thermal: Convert i.MX to json-schema
-Thread-Index: AQHWDiuxzN1tABlsX0ym+KN40NJHh6hwzuIAgAALCHA=
-Date:   Thu, 9 Apr 2020 14:34:21 +0000
-Message-ID: <DB3PR0402MB3916F4F4BD5B0DC083E76183F5C10@DB3PR0402MB3916.eurprd04.prod.outlook.com>
-References: <1586407908-27139-1-git-send-email-Anson.Huang@nxp.com>
- <CAHLCerPi36z4z4DLmP9czEp8aw8yQq7EHAtHdCFLO2ZVYBZsRA@mail.gmail.com>
-In-Reply-To: <CAHLCerPi36z4z4DLmP9czEp8aw8yQq7EHAtHdCFLO2ZVYBZsRA@mail.gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=anson.huang@nxp.com; 
-x-originating-ip: [183.192.13.100]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 832ffcf9-aefd-48c9-436b-08d7dc931824
-x-ms-traffictypediagnostic: DB3PR0402MB3690:|DB3PR0402MB3690:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <DB3PR0402MB36901A6DC8B786C37DE62A76F5C10@DB3PR0402MB3690.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8273;
-x-forefront-prvs: 0368E78B5B
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB3PR0402MB3916.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10009020)(4636009)(346002)(39860400002)(136003)(366004)(396003)(376002)(5660300002)(66556008)(478600001)(8936002)(76116006)(55016002)(52536014)(64756008)(6916009)(83080400001)(66446008)(66476007)(7416002)(81166007)(9686003)(71200400001)(66946007)(8676002)(26005)(81156014)(44832011)(33656002)(6506007)(54906003)(45080400002)(53546011)(186003)(7696005)(86362001)(2906002)(4326008)(316002);DIR:OUT;SFP:1101;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: vx8oF+PWYaEYx4gyqOHPUVjc9J4Q0VH74xx25wKuqqDQuLcEQz/sDTeTG5u1OjTfR6OI+nBqhGwFAcO7GerPV0Hw5PRqfbLEtTYzyAZfBywzOYVzwyYyaNtzmTGFt3EGO2dTvzaC7SNy0uyP1J1DBxJB3rs4oIoyJWc8Zi77CI7XlbXMZGOs1+ZIArfJx2oXQnkZAUMbjXmWBCjZdAZwuRXAIClcbR+ilpwM4sTT/Jz/I5omQTAzisCb7wLfBHSnFogCyXrkqrlO9SZc+FuMJOff/tMB70UAvAjmYEcgfTo1joKfGG14yI4draiavVA7TR+RsarJj9kwjWV2s9Fj1ootOE0q7ackIplmkQ5+Yga+KWMuhUL9SaF4lwSQgqZwujwOmuYTtzs3miOhMJMNb4bnBr5aJZJzfhCMocet5/A/0qkxHoUxk+UW+pN9Up87PkipcKjxlri0p1aZRb9yXnALw8duGJfB7dRGLAZa9F0U7uTj/87TGxCZcULig+8mSkvhFfxgB4i7bnPVAIlCGw==
-x-ms-exchange-antispam-messagedata: V3hOX6wmDXjVRPuyGy7ZUiiUX+LJHyNv808aWuRIpnBlV34JnMxrO2rp7f+117OPt4FWK0zE3kfmbTWZZQCvXzbiBV3ibIewX6EYy7fREx5WggKvgZpGWxD//LCKJ295+CXihzJ3zFzoFPV37vDdrw==
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Thu, 9 Apr 2020 10:36:29 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:27991 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727427AbgDIOg3 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Apr 2020 10:36:29 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1586442988;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=4TJHwU4QCtIzWKDnuGZ53w2sGjc1k4Ozm7+sDhV1TpY=;
+        b=cSUQhx7cxXFP7O8EM7uow1PprRfpUZdGeqwILI578Bgsz8G+IWxHIonZhboZzjr+zoj+z8
+        Lz+JCPxsCbUNkPvsI7EK4v0rRXV2X2OnZhU/ytnMl5lkn/V07+QMGM1o7zDRz7VsfUTrP4
+        +PWTzisxutaGPqlb1ur5AH3x6J3mrRM=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-379-71DlMV9PM0-K6HhJZMTCLA-1; Thu, 09 Apr 2020 10:36:24 -0400
+X-MC-Unique: 71DlMV9PM0-K6HhJZMTCLA-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id A774A1007275;
+        Thu,  9 Apr 2020 14:36:22 +0000 (UTC)
+Received: from file01.intranet.prod.int.rdu2.redhat.com (file01.intranet.prod.int.rdu2.redhat.com [10.11.5.7])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id C0C3719757;
+        Thu,  9 Apr 2020 14:36:19 +0000 (UTC)
+Received: from file01.intranet.prod.int.rdu2.redhat.com (localhost [127.0.0.1])
+        by file01.intranet.prod.int.rdu2.redhat.com (8.14.4/8.14.4) with ESMTP id 039EaJ0x021764;
+        Thu, 9 Apr 2020 10:36:19 -0400
+Received: from localhost (mpatocka@localhost)
+        by file01.intranet.prod.int.rdu2.redhat.com (8.14.4/8.14.4/Submit) with ESMTP id 039EaHUd021758;
+        Thu, 9 Apr 2020 10:36:17 -0400
+X-Authentication-Warning: file01.intranet.prod.int.rdu2.redhat.com: mpatocka owned process doing -bs
+Date:   Thu, 9 Apr 2020 10:36:17 -0400 (EDT)
+From:   Mikulas Patocka <mpatocka@redhat.com>
+X-X-Sender: mpatocka@file01.intranet.prod.int.rdu2.redhat.com
+To:     Dan Williams <dan.j.williams@intel.com>
+cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Peter Zijlstra <peterz@infradead.org>, X86 ML <x86@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        device-mapper development <dm-devel@redhat.com>
+Subject: Re: [PATCH] memcpy_flushcache: use cache flusing for larger
+ lengths
+In-Reply-To: <CAPcyv4grNHvyYEc4W6PkymhEJvLb17tXbC3JZdqvtFxmMZ8DCQ@mail.gmail.com>
+Message-ID: <alpine.LRH.2.02.2004090612320.27517@file01.intranet.prod.int.rdu2.redhat.com>
+References: <alpine.LRH.2.02.2004071029270.8662@file01.intranet.prod.int.rdu2.redhat.com> <CAPcyv4goJ2jbXNVZbMUKtRUominhuMhuTKrMh=fnhrfvC4jyjw@mail.gmail.com> <alpine.LRH.2.02.2004081439080.13932@file01.intranet.prod.int.rdu2.redhat.com>
+ <CAPcyv4grNHvyYEc4W6PkymhEJvLb17tXbC3JZdqvtFxmMZ8DCQ@mail.gmail.com>
+User-Agent: Alpine 2.02 (LRH 1266 2009-07-14)
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 832ffcf9-aefd-48c9-436b-08d7dc931824
-X-MS-Exchange-CrossTenant-originalarrivaltime: 09 Apr 2020 14:34:21.8508
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: pTBero+aWl2A3WTSI4nKJpc4jQ2Fb15cGkIBdy0f+NLfNYcdhsmQJ4HpKoDFyd3vAXsh/e+iKSFnbEYGdZICMg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB3PR0402MB3690
+Content-Type: TEXT/PLAIN; charset=US-ASCII
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGksIEFtaXQNCg0KPiBTdWJqZWN0OiBSZTogW1BBVENIXSBkdC1iaW5kaW5nczogdGhlcm1hbDog
-Q29udmVydCBpLk1YIHRvIGpzb24tc2NoZW1hDQo+IA0KPiBIaSBBbnNvbiwNCj4gDQo+IE9uIFRo
-dSwgQXByIDksIDIwMjAgYXQgMTA6MjkgQU0gQW5zb24gSHVhbmcgPEFuc29uLkh1YW5nQG54cC5j
-b20+DQo+IHdyb3RlOg0KPiA+DQo+ID4gQ29udmVydCB0aGUgaS5NWCB0aGVybWFsIGJpbmRpbmcg
-dG8gRFQgc2NoZW1hIGZvcm1hdCB1c2luZyBqc29uLXNjaGVtYQ0KPiA+DQo+ID4gU2lnbmVkLW9m
-Zi1ieTogQW5zb24gSHVhbmcgPEFuc29uLkh1YW5nQG54cC5jb20+DQo+ID4gLS0tDQo+ID4gIC4u
-Li9kZXZpY2V0cmVlL2JpbmRpbmdzL3RoZXJtYWwvaW14LXRoZXJtYWwudHh0ICAgIHwgNjEgLS0t
-LS0tLS0tLS0tLS0NCj4gPiAgLi4uL2RldmljZXRyZWUvYmluZGluZ3MvdGhlcm1hbC9pbXgtdGhl
-cm1hbC55YW1sICAgfCA5Nw0KPiArKysrKysrKysrKysrKysrKysrKysrDQo+ID4gIDIgZmlsZXMg
-Y2hhbmdlZCwgOTcgaW5zZXJ0aW9ucygrKSwgNjEgZGVsZXRpb25zKC0pICBkZWxldGUgbW9kZQ0K
-PiA+IDEwMDY0NCBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvdGhlcm1hbC9pbXgt
-dGhlcm1hbC50eHQNCj4gPiAgY3JlYXRlIG1vZGUgMTAwNjQ0DQo+ID4gRG9jdW1lbnRhdGlvbi9k
-ZXZpY2V0cmVlL2JpbmRpbmdzL3RoZXJtYWwvaW14LXRoZXJtYWwueWFtbA0KPiA+DQo+ID4gZGlm
-ZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy90aGVybWFsL2lteC10
-aGVybWFsLnR4dA0KPiA+IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3RoZXJt
-YWwvaW14LXRoZXJtYWwudHh0DQo+ID4gZGVsZXRlZCBmaWxlIG1vZGUgMTAwNjQ0DQo+ID4gaW5k
-ZXggODIzZTQxNy4uMDAwMDAwMA0KPiA+IC0tLSBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9i
-aW5kaW5ncy90aGVybWFsL2lteC10aGVybWFsLnR4dA0KPiA+ICsrKyAvZGV2L251bGwNCj4gPiBA
-QCAtMSw2MSArMCwwIEBADQo+ID4gLSogVGVtcGVyYXR1cmUgTW9uaXRvciAoVEVNUE1PTikgb24g
-RnJlZXNjYWxlIGkuTVggU29Dcw0KPiA+IC0NCj4gPiAtUmVxdWlyZWQgcHJvcGVydGllczoNCj4g
-PiAtLSBjb21wYXRpYmxlIDogbXVzdCBiZSBvbmUgb2YgZm9sbG93aW5nOg0KPiA+IC0gIC0gImZz
-bCxpbXg2cS10ZW1wbW9uIiBmb3IgaS5NWDZRLA0KPiA+IC0gIC0gImZzbCxpbXg2c3gtdGVtcG1v
-biIgZm9yIGkuTVg2U1gsDQo+ID4gLSAgLSAiZnNsLGlteDdkLXRlbXBtb24iIGZvciBpLk1YN1Mv
-RC4NCj4gPiAtLSBpbnRlcnJ1cHRzIDogdGhlIGludGVycnVwdCBvdXRwdXQgb2YgdGhlIGNvbnRy
-b2xsZXI6DQo+ID4gLSAgaS5NWDZRIGhhcyBvbmUgSVJRIHdoaWNoIHdpbGwgYmUgdHJpZ2dlcmVk
-IHdoZW4gdGVtcGVyYXR1cmUgaXMNCj4gPiBoaWdoZXIgdGhhbiBoaWdoIHRocmVzaG9sZCwNCj4g
-PiAtICBpLk1YNlNYIGFuZCBpLk1YN1MvRCBoYXZlIHR3byBtb3JlIElSUXMgdGhhbiBpLk1YNlEs
-IG9uZSBpcyBJUlFfTE9XDQo+ID4gYW5kIHRoZSBvdGhlciBpcyBJUlFfUEFOSUMsDQo+ID4gLSAg
-d2hlbiB0ZW1wZXJhdHVyZSBpcyBiZWxvdyB0aGFuIGxvdyB0aHJlc2hvbGQsIElSUV9MT1cgd2ls
-bCBiZQ0KPiA+IHRyaWdnZXJlZCwgd2hlbiB0ZW1wZXJhdHVyZQ0KPiA+IC0gIGlzIGhpZ2hlciB0
-aGFuIHBhbmljIHRocmVzaG9sZCwgc3lzdGVtIHdpbGwgYXV0byByZWJvb3QgYnkgU1JDIG1vZHVs
-ZS4NCj4gPiAtLSBmc2wsdGVtcG1vbiA6IHBoYW5kbGUgcG9pbnRlciB0byBzeXN0ZW0gY29udHJv
-bGxlciB0aGF0IGNvbnRhaW5zDQo+ID4gVEVNUE1PTg0KPiA+IC0gIGNvbnRyb2wgcmVnaXN0ZXJz
-LCBlLmcuIEFOQVRPUCBvbiBpbXg2cS4NCj4gPiAtLSBudm1lbS1jZWxsczogQSBwaGFuZGxlIHRv
-IHRoZSBjYWxpYnJhdGlvbiBjZWxscyBwcm92aWRlZCBieSBvY290cC4NCj4gPiAtLSBudm1lbS1j
-ZWxsLW5hbWVzOiBTaG91bGQgYmUgImNhbGliIiwgInRlbXBfZ3JhZGUiLg0KPiA+IC0NCj4gPiAt
-RGVwcmVjYXRlZCBwcm9wZXJ0aWVzOg0KPiA+IC0tIGZzbCx0ZW1wbW9uLWRhdGEgOiBwaGFuZGxl
-IHBvaW50ZXIgdG8gZnVzZSBjb250cm9sbGVyIHRoYXQgY29udGFpbnMNCj4gPiBURU1QTU9ODQo+
-ID4gLSAgY2FsaWJyYXRpb24gZGF0YSwgZS5nLiBPQ09UUCBvbiBpbXg2cS4gIFRoZSBkZXRhaWxz
-IGFib3V0DQo+ID4gY2FsaWJyYXRpb24gZGF0YQ0KPiA+IC0gIGNhbiBiZSBmb3VuZCBpbiBTb0Mg
-UmVmZXJlbmNlIE1hbnVhbC4NCj4gPiAtDQo+ID4gLURpcmVjdCBhY2Nlc3MgdG8gT0NPVFAgdmlh
-IGZzbCx0ZW1wbW9uLWRhdGEgaXMgaW5jb3JyZWN0IG9uIHNvbWUNCj4gPiBuZXdlciBjaGlwcyAt
-YmVjYXVzZSBpdCBkb2VzIG5vdCBoYW5kbGUgT0NPVFAgY2xvY2sgcmVxdWlyZW1lbnRzLg0KPiA+
-IC0NCj4gPiAtT3B0aW9uYWwgcHJvcGVydGllczoNCj4gPiAtLSBjbG9ja3MgOiB0aGVybWFsIHNl
-bnNvcidzIGNsb2NrIHNvdXJjZS4NCj4gPiAtDQo+ID4gLUV4YW1wbGU6DQo+ID4gLW9jb3RwOiBv
-Y290cEAyMWJjMDAwIHsNCj4gPiAtICAgICAgICNhZGRyZXNzLWNlbGxzID0gPDE+Ow0KPiA+IC0g
-ICAgICAgI3NpemUtY2VsbHMgPSA8MT47DQo+ID4gLSAgICAgICBjb21wYXRpYmxlID0gImZzbCxp
-bXg2c3gtb2NvdHAiLCAic3lzY29uIjsNCj4gPiAtICAgICAgIHJlZyA9IDwweDAyMWJjMDAwIDB4
-NDAwMD47DQo+ID4gLSAgICAgICBjbG9ja3MgPSA8JmNsa3MgSU1YNlNYX0NMS19PQ09UUD47DQo+
-ID4gLQ0KPiA+IC0gICAgICAgdGVtcG1vbl9jYWxpYjogY2FsaWJAMzggew0KPiA+IC0gICAgICAg
-ICAgICAgICByZWcgPSA8MHgzOCA0PjsNCj4gPiAtICAgICAgIH07DQo+ID4gLQ0KPiA+IC0gICAg
-ICAgdGVtcG1vbl90ZW1wX2dyYWRlOiB0ZW1wLWdyYWRlQDIwIHsNCj4gPiAtICAgICAgICAgICAg
-ICAgcmVnID0gPDB4MjAgND47DQo+ID4gLSAgICAgICB9Ow0KPiA+IC19Ow0KPiA+IC0NCj4gPiAt
-dGVtcG1vbjogdGVtcG1vbiB7DQo+ID4gLSAgICAgICBjb21wYXRpYmxlID0gImZzbCxpbXg2c3gt
-dGVtcG1vbiIsICJmc2wsaW14NnEtdGVtcG1vbiI7DQo+ID4gLSAgICAgICBpbnRlcnJ1cHRzID0g
-PEdJQ19TUEkgNDkgSVJRX1RZUEVfTEVWRUxfSElHSD47DQo+ID4gLSAgICAgICBmc2wsdGVtcG1v
-biA9IDwmYW5hdG9wPjsNCj4gPiAtICAgICAgIG52bWVtLWNlbGxzID0gPCZ0ZW1wbW9uX2NhbGli
-PiwgPCZ0ZW1wbW9uX3RlbXBfZ3JhZGU+Ow0KPiA+IC0gICAgICAgbnZtZW0tY2VsbC1uYW1lcyA9
-ICJjYWxpYiIsICJ0ZW1wX2dyYWRlIjsNCj4gPiAtICAgICAgIGNsb2NrcyA9IDwmY2xrcyBJTVg2
-U1hfQ0xLX1BMTDNfVVNCX09URz47DQo+ID4gLX07DQo+ID4gLQ0KPiA+IC1MZWdhY3kgbWV0aG9k
-IChEZXByZWNhdGVkKToNCj4gPiAtdGVtcG1vbiB7DQo+ID4gLSAgICAgICBjb21wYXRpYmxlID0g
-ImZzbCxpbXg2cS10ZW1wbW9uIjsNCj4gPiAtICAgICAgIGZzbCx0ZW1wbW9uID0gPCZhbmF0b3A+
-Ow0KPiA+IC0gICAgICAgZnNsLHRlbXBtb24tZGF0YSA9IDwmb2NvdHA+Ow0KPiA+IC0gICAgICAg
-Y2xvY2tzID0gPCZjbGtzIDE3Mj47DQo+ID4gLX07DQo+ID4gZGlmZiAtLWdpdA0KPiA+IGEvRG9j
-dW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3RoZXJtYWwvaW14LXRoZXJtYWwueWFtbA0K
-PiA+IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3RoZXJtYWwvaW14LXRoZXJt
-YWwueWFtbA0KPiA+IG5ldyBmaWxlIG1vZGUgMTAwNjQ0DQo+ID4gaW5kZXggMDAwMDAwMC4uYWQx
-MjYyMg0KPiA+IC0tLSAvZGV2L251bGwNCj4gPiArKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRy
-ZWUvYmluZGluZ3MvdGhlcm1hbC9pbXgtdGhlcm1hbC55YW1sDQo+ID4gQEAgLTAsMCArMSw5NyBA
-QA0KPiA+ICsjIFNQRFgtTGljZW5zZS1JZGVudGlmaWVyOiBHUEwtMi4wDQo+ID4gKyVZQU1MIDEu
-Mg0KPiA+ICstLS0NCj4gPiArJGlkOg0KPiA+ICtodHRwczovL2V1cjAxLnNhZmVsaW5rcy5wcm90
-ZWN0aW9uLm91dGxvb2suY29tLz91cmw9aHR0cCUzQSUyRiUyRmRldmkNCj4gPg0KPiArY2V0cmVl
-Lm9yZyUyRnNjaGVtYXMlMkZ0aGVybWFsJTJGaW14LXRoZXJtYWwueWFtbCUyMyZhbXA7ZGF0YT0w
-MiUNCj4gN0MwMQ0KPiA+DQo+ICslN0NhbnNvbi5odWFuZyU0MG54cC5jb20lN0M0MDg0OTQ0MzZk
-Y2E0NTBhYmI1ZDA4ZDdkYzhjYzcyNyU3DQo+IEM2ODZlYTFkDQo+ID4NCj4gKzNiYzJiNGM2ZmE5
-MmNkOTljNWMzMDE2MzUlN0MwJTdDMSU3QzYzNzIyMDM2OTUzOTExNTUxNyZhbXA7cw0KPiBkYXRh
-PWUzUjUNCj4gPiArcTFZaElSTFNPVmRMWUpXVmxiT2RxZGp4WUhOSk1jWHolMkJ4YjFramMlM0Qm
-YW1wO3Jlc2VydmVkPTANCj4gPiArJHNjaGVtYToNCj4gPiAraHR0cHM6Ly9ldXIwMS5zYWZlbGlu
-a3MucHJvdGVjdGlvbi5vdXRsb29rLmNvbS8/dXJsPWh0dHAlM0ElMkYlMkZkZXZpDQo+ID4NCj4g
-K2NldHJlZS5vcmclMkZtZXRhLXNjaGVtYXMlMkZjb3JlLnlhbWwlMjMmYW1wO2RhdGE9MDIlN0Mw
-MSU3Q2Fucw0KPiBvbi5odWENCj4gPg0KPiArbmclNDBueHAuY29tJTdDNDA4NDk0NDM2ZGNhNDUw
-YWJiNWQwOGQ3ZGM4Y2M3MjclN0M2ODZlYTFkM2JjDQo+IDJiNGM2ZmE5Mg0KPiA+DQo+ICtjZDk5
-YzVjMzAxNjM1JTdDMCU3QzElN0M2MzcyMjAzNjk1MzkxMjU1MDgmYW1wO3NkYXRhPVZqWiUyRlBK
-DQo+IEJWUWM5anBjDQo+ID4gK0gzSHZ2YzJmWXk3MEIlMkZtdW4wbXhkdlNISGt0RVUlM0QmYW1w
-O3Jlc2VydmVkPTANCj4gPiArDQo+ID4gK3RpdGxlOiBOWFAgaS5NWCBUaGVybWFsIEJpbmRpbmcN
-Cj4gPiArDQo+ID4gK21haW50YWluZXJzOg0KPiA+ICsgIC0gQW5zb24gSHVhbmcgPEFuc29uLkh1
-YW5nQG54cC5jb20+DQo+ID4gKw0KPiA+ICtwcm9wZXJ0aWVzOg0KPiA+ICsgIGNvbXBhdGlibGU6
-DQo+ID4gKyAgICBvbmVPZjoNCj4gPiArICAgICAgLSBpdGVtczoNCj4gPiArICAgICAgICAgIC0g
-ZW51bToNCj4gPiArICAgICAgICAgICAgICAtIGZzbCxpbXg2cS10ZW1wbW9uDQo+ID4gKyAgICAg
-ICAgICAgICAgLSBmc2wsaW14NnN4LXRlbXBtb24NCj4gPiArICAgICAgICAgICAgICAtIGZzbCxp
-bXg3ZC10ZW1wbW9uDQo+ID4gKw0KPiANCj4gPiArICBpbnRlcnJ1cHRzOg0KPiA+ICsgICAgZGVz
-Y3JpcHRpb246IHwNCj4gPiArICAgICAgVGhlIGludGVycnVwdCBvdXRwdXQgb2YgdGhlIGNvbnRy
-b2xsZXIsIHRoZSBJUlEgd2lsbCBiZSB0cmlnZ2VyZWQNCj4gPiArICAgICAgd2hlbiB0ZW1wZXJh
-dHVyZSBpcyBoaWdoZXIgdGhhbiBoaWdoIHRocmVzaG9sZC4NCj4gPiArICAgIG1heEl0ZW1zOiAx
-DQo+ID4gKw0KPiANCj4gaW14NnN4IGFuZCBpbXg3ZCBoYXZlIDMgaW50ZXJydXB0cyBlYWNoLiBT
-byB5b3UgbmVlZCBhbiBpZiBjbGF1c2UgdG8gY2hhbmdlDQo+IHRoZSBpbnRlcnJ1cHQgbnVtYmVy
-IGJhc2VkIG9uIHdoYXQgY29tcGF0aWJsZSBpcyBwcm92aWRlZC4gU2VlDQo+IHFjb20tdHNlbnMu
-eWFtbCBmb3IgYW4gZXhhbXBsZS4NCg0KSSBub3RpY2VkIHRoaXMsIHllcywgaS5NWDZTWC83RCBo
-YXMgMyBpbnRlcnJ1cHRzLCBidXQgdGhlIGRyaXZlciBhY3R1YWxseSBPTkxZIHVzZXMNCnRoZSBo
-aWdoIGlycSwgbG93IGFuZCBwYW5pYyBpcnEgYXJlIE5PVCB1c2VkLiBTbyBmb3Igc3VjaCBzY2Vu
-YXJpbywgYmluZGluZyBkb2Mgc2hvdWxkDQpzdGlsbCBtZW50aW9uIGFsbCBvZiB0aGVtPw0KDQo+
-IA0KPiA+ICsgIG52bWVtLWNlbGxzOg0KPiA+ICsgICAgZGVzY3JpcHRpb246IHwNCj4gPiArICAg
-ICAgUGhhbmRsZSB0byB0aGUgY2FsaWJyYXRpb24gY2VsbHMgcHJvdmlkZWQgYnkgb2NvdHAgZm9y
-IGNhbGlicmF0aW9uDQo+ID4gKyAgICAgIGRhdGEgYW5kIHRlbXBlcmF0dXJlIGdyYWRlLg0KPiA+
-ICsgICAgbWF4SXRlbXM6IDINCj4gPiArDQo+ID4gKyAgbnZtZW0tY2VsbC1uYW1lczoNCj4gPiAr
-ICAgIG1heEl0ZW1zOiAyDQo+ID4gKyAgICBpdGVtczoNCj4gPiArICAgICAgLSBjb25zdDogY2Fs
-aWINCj4gPiArICAgICAgLSBjb25zdDogdGVtcF9ncmFkZQ0KPiA+ICsNCj4gPiArICBmc2wsdGVt
-cG1vbjoNCj4gPiArICAgIGRlc2NyaXB0aW9uOiB8DQo+ID4gKyAgICAgIFBoYW5kbGUgcG9pbnRl
-ciB0byBzeXN0ZW0gY29udHJvbGxlciB0aGF0IGNvbnRhaW5zIFRFTVBNT04NCj4gY29udHJvbA0K
-PiA+ICsgICAgICByZWdpc3RlcnMsIGUuZy4gQU5BVE9QIG9uIGlteDZxLg0KPiA+ICsgICAgJHJl
-ZjogJy9zY2hlbWFzL3R5cGVzLnlhbWwjL2RlZmluaXRpb25zL3BoYW5kbGUnDQo+IA0KPiBOaXQ6
-IG1vdmUgJHJlZiBsaW5lIGFib3ZlIGRlc2NyaXB0aW9uLiBJTU8gaXQgbWFrZXMgdGhlIGJpbmRp
-bmcgZWFzaWVyIHRvIHJlYWQuDQoNCk9LLg0KDQo+IA0KPiA+ICsNCj4gPiArICBmc2wsdGVtcG1v
-bi1kYXRhOg0KPiA+ICsgICAgZGVzY3JpcHRpb246IHwNCj4gPiArICAgICAgRGVwcmVjYXRlZCBw
-cm9wZXJ0eSwgcGhhbmRsZSBwb2ludGVyIHRvIGZ1c2UgY29udHJvbGxlciB0aGF0DQo+IGNvbnRh
-aW5zDQo+ID4gKyAgICAgIFRFTVBNT04gY2FsaWJyYXRpb24gZGF0YSwgZS5nLiBPQ09UUCBvbiBp
-bXg2cS4gVGhlIGRldGFpbHMgYWJvdXQNCj4gPiArICAgICAgY2FsaWJyYXRpb24gZGF0YSBjYW4g
-YmUgZm91bmQgaW4gU29DIFJlZmVyZW5jZSBNYW51YWwuDQo+ID4gKyAgICAkcmVmOiAnL3NjaGVt
-YXMvdHlwZXMueWFtbCMvZGVmaW5pdGlvbnMvcGhhbmRsZScNCj4gDQo+IE5pdDogbW92ZSAkcmVm
-IGxpbmUgYWJvdmUgZGVzY3JpcHRpb24uIElNTyBpdCBtYWtlcyB0aGUgYmluZGluZyBlYXNpZXIg
-dG8gcmVhZC4NCg0KT0suDQoNCj4gDQo+ID4gKw0KPiA+ICsgIGNsb2NrczoNCj4gPiArICAgIGRl
-c2NyaXB0aW9uOiB8DQo+ID4gKyAgICAgIFRoZXJtYWwgc2Vuc29yJ3MgY2xvY2sgc291cmNlLg0K
-PiA+ICsgICAgbWF4SXRlbXM6IDENCj4gPiArDQo+ID4gK3JlcXVpcmVkOg0KPiA+ICsgIC0gY29t
-cGF0aWJsZQ0KPiA+ICsgIC0gaW50ZXJydXB0cw0KPiA+ICsgIC0gZnNsLHRlbXBtb24NCj4gPiAr
-ICAtIGNsb2Nrcw0KPiANCj4gQ2xvY2tzIHdhcyBhbiBvcHRpb25hbCBwcm9wZXJ0eSBiZWZvcmUs
-IGFyZSB5b3Ugc3VyZT8NCg0KSSBtaXN1bmRlcnN0YW5kIHRoZSAnb3B0aW9uYWwnLCB0aGUgY2xv
-Y2sgaXMgYWx3YXlzIG5lY2Vzc2FyeSwgT05MWSBmb3IgdGhvc2UgU29DcyBoYXZlDQpubyB0aGVy
-bWFsIGNsb2NrIGF2YWlsYWJsZSwgdGhlbiBpdCBpcyB1bm5lY2Vzc2FyeS4gTm93IEkgc2VlLCBJ
-IHdpbGwgbWFrZSBpdCBhcyBvcHRpb25hbC4NCg0KSSB3aWxsIGFkZCBleGFtcGxlIGZvciAjdGhl
-cm1hbC1zZW5zb3ItY2VsbHMgcHJvcGVydHkgeW91IG1lbnRpb25lZCBpbiB0aGUgb3RoZXIgbWFp
-bC4NCg0KVGhhbmtzLA0KQW5zb24NCg0KPiANCj4gPiArICAtIG52bWVtLWNlbGxzDQo+ID4gKyAg
-LSBudm1lbS1jZWxsLW5hbWVzDQo+ID4gKw0KPiA+ICthZGRpdGlvbmFsUHJvcGVydGllczogZmFs
-c2UNCj4gPiArDQo+ID4gK2V4YW1wbGVzOg0KPiA+ICsgIC0gfA0KPiA+ICsgICAgI2luY2x1ZGUg
-PGR0LWJpbmRpbmdzL2Nsb2NrL2lteDZzeC1jbG9jay5oPg0KPiA+ICsgICAgI2luY2x1ZGUgPGR0
-LWJpbmRpbmdzL2ludGVycnVwdC1jb250cm9sbGVyL2FybS1naWMuaD4NCj4gPiArDQo+ID4gKyAg
-ICBvY290cDogb2NvdHBAMjFiYzAwMCB7DQo+ID4gKyAgICAgICAgICNhZGRyZXNzLWNlbGxzID0g
-PDE+Ow0KPiA+ICsgICAgICAgICAjc2l6ZS1jZWxscyA9IDwxPjsNCj4gPiArICAgICAgICAgY29t
-cGF0aWJsZSA9ICJmc2wsaW14NnN4LW9jb3RwIiwgInN5c2NvbiI7DQo+ID4gKyAgICAgICAgIHJl
-ZyA9IDwweDAyMWJjMDAwIDB4NDAwMD47DQo+ID4gKyAgICAgICAgIGNsb2NrcyA9IDwmY2xrcyBJ
-TVg2U1hfQ0xLX09DT1RQPjsNCj4gPiArDQo+ID4gKyAgICAgICAgIHRlbXBtb25fY2FsaWI6IGNh
-bGliQDM4IHsNCj4gPiArICAgICAgICAgICAgIHJlZyA9IDwweDM4IDQ+Ow0KPiA+ICsgICAgICAg
-ICB9Ow0KPiA+ICsNCj4gPiArICAgICAgICAgdGVtcG1vbl90ZW1wX2dyYWRlOiB0ZW1wLWdyYWRl
-QDIwIHsNCj4gPiArICAgICAgICAgICAgIHJlZyA9IDwweDIwIDQ+Ow0KPiA+ICsgICAgICAgICB9
-Ow0KPiA+ICsgICAgfTsNCj4gPiArDQo+ID4gKyAgICB0ZW1wbW9uOiB0ZW1wbW9uIHsNCj4gPiAr
-ICAgICAgICAgY29tcGF0aWJsZSA9ICJmc2wsaW14NnN4LXRlbXBtb24iOw0KPiA+ICsgICAgICAg
-ICBpbnRlcnJ1cHRzID0gPEdJQ19TUEkgNDkgSVJRX1RZUEVfTEVWRUxfSElHSD47DQo+ID4gKyAg
-ICAgICAgIGZzbCx0ZW1wbW9uID0gPCZhbmF0b3A+Ow0KPiA+ICsgICAgICAgICBudm1lbS1jZWxs
-cyA9IDwmdGVtcG1vbl9jYWxpYj4sIDwmdGVtcG1vbl90ZW1wX2dyYWRlPjsNCj4gPiArICAgICAg
-ICAgbnZtZW0tY2VsbC1uYW1lcyA9ICJjYWxpYiIsICJ0ZW1wX2dyYWRlIjsNCj4gPiArICAgICAg
-ICAgY2xvY2tzID0gPCZjbGtzIElNWDZTWF9DTEtfUExMM19VU0JfT1RHPjsNCj4gPiArICAgIH07
-DQo+ID4gKw0KPiA+ICsuLi4NCj4gPiAtLQ0KPiA+IDIuNy40DQo+ID4NCg==
+
+
+On Wed, 8 Apr 2020, Dan Williams wrote:
+
+> On Wed, Apr 8, 2020 at 11:54 AM Mikulas Patocka <mpatocka@redhat.com> wrote:
+> >
+> >
+> >
+> > On Tue, 7 Apr 2020, Dan Williams wrote:
+> >
+> > > On Tue, Apr 7, 2020 at 8:02 AM Mikulas Patocka <mpatocka@redhat.com> wrote:
+> > > >
+> > > This should use clwb instead of clflushopt, the clwb macri
+> > > automatically converts back to clflushopt if clwb is not supported.
+> >
+> > But we want to invalidate cache, we do not expect CPU to access these data
+> > anymore (it will be accessed by a DMA engine during writeback).
+> 
+> The cluflushopt and clwb instructions should have identical overhead,
+> but clwb wins on the rare chance the written data is needed again
+> soon. If it is never needed again then the cost of dropping a clean
+> cache line is the same as if the line was invalidated in the first
+> instance. In both cases (clflushopt and clwb) the snoop traffic
+> overhead is still paid whether the written-back line is still present
+> in the cache or not.
+
+But my concern is that clflushopt removes the line from the cache and 
+makes room for another line (this is desired behavior) - clwb keeps the 
+line cached and the line would have to compete with other cache lines in 
+the same associative set.
+
+Do you know how does the CPU select the cache line to be replaced?
+
+dm-writecache is intended to be used for workloads like database logs that 
+need extra-low commit latency. The committed data is not read back during 
+normal workload.
+
+> > > > Other ideas - should we introduce memcpy_to_pmem instead of modifying
+> > > > memcpy_flushcache and move this logic there? Or should I modify the
+> > > > dm-writecache target directly to use clflushopt with no change to the
+> > > > architecture-specific code?
+> > >
+> > > This also needs to mention your analysis that showed that this can
+> > > have negative cache pollution effects [1], so I'm not sure how to
+> > > decide when to make the tradeoff. Once we have movdir64b the tradeoff
+> > > equation changes yet again:
+> > >
+> > > [1]: https://lore.kernel.org/linux-nvdimm/alpine.LRH.2.02.2004010941310.23210@file01.intranet.prod.int.rdu2.redhat.com/
+> >
+> > I analyzed it some more. I have created this program that tests writecache
+> > w.r.t. cache pollution:
+> >
+> > http://people.redhat.com/~mpatocka/testcases/pmem/misc/l1-test-2.c
+> >
+> > It fills the cache with a chain of random pointers and then walks these
+> > pointers to evaluate cache pollution. Between the walks, it writes data to
+> > the dm-writecache target.
+> >
+> > With the original kernel, the result is:
+> > 8503 - 11366
+> > real    0m7.985s
+> > user    0m0.585s
+> > sys     0m7.390s
+> >
+> > With dm-writecache hacked to use cached writes + clflushopt:
+> > 8513 - 11379
+> > real    0m5.045s
+> > user    0m0.670s
+> > sys     0m4.365s
+> >
+> > So, the hacked dm-writecache is significantly faster, while the cache
+> > micro-benchmark doesn't show any more cache pollution.
+> 
+> Nice. These are now the pmem numbers, or dram?
+
+pmem
+
+
+With dm-writecache on emulated pmem (with the memmap argument), we get
+
+With the original kernel:
+8508 - 11378
+real    0m4.960s
+user    0m0.638s
+sys     0m4.312s
+
+With dm-writecache hacked to use cached writes + clflushopt:
+8505 - 11378
+real    0m4.151s
+user    0m0.560s
+sys     0m3.582s
+
+So - clflushopt is still slightly better.
+
+> Otherwise, what changed that was making nt-writes on pmem perform better 
+> compared to your previous test? I'm just trying to track the results.
+
+I re-ran the previous test 
+( http://people.redhat.com/~mpatocka/testcases/pmem/misc/l1-test.c )
+and the result is this:
+
+Write + clflushopt:
+./l1-test /dev/ram0 f
+8502 - 22616
+./l1-test /dev/dax3.0 f
+8502 - 22902
+./l1-test /dev/dax4.0 f
+8500 - 11970
+
+Write + clwb:
+./l1-test /dev/ram0 w
+8502 - 22602
+./l1-test /dev/dax3.0 w
+8502 - 22454
+./l1-test /dev/dax4.0 w
+8502 - 11566
+
+Non-temporal stores:
+./l1-test /dev/ram0 n
+8504 - 22162
+./l1-test /dev/dax3.0 n
+8502 - 12336
+./l1-test /dev/dax4.0 n
+8502 - 10662
+
+(/dev/dax3.0 is the real persistent memory, /dev/dax4.0 is pmem emulated 
+with the memmap parameter)
+
+"./l1-test /dev/ram0 n" is slower than "./l1-test /dev/dax4.0 n" while 
+both of these tests are on RAM. The pmem is mapped with large pages and 
+mem map for ramdisk is not - perhaps this is making the difference?
+
+"./l1-test /dev/dax3.0 n" is better than "./l1-test /dev/dax3.0 w" and 
+"./l1-test /dev/dax3.0 f" - although the benchmaks done on dm-writecache 
+show that cached writes + clflushopt perform better. I don't know why 
+there is this disparity.
+
+> > That's for dm-writecache. Are there some other significant users of
+> > memcpy_flushcache that need to be checked?
+> 
+> The only other user is direct and dax-I/O to the pmem driver.
+
+Mikulas
+
