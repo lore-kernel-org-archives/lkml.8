@@ -2,81 +2,163 @@ Return-Path: <SRS0=n+Ub=5Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 923B5C2BB86
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 18:13:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26DD3C2BB85
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 18:15:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6980420757
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 18:13:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="fPxjZEHJ"
+	by mail.kernel.org (Postfix) with ESMTP id EF42120753
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 18:15:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1586456130;
+	bh=Vh/nEZmKyunglWKfJLO8V2/jVJZeYUVc1nRZToQfYJM=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=iFYKBpN8+0g11vpMxZ9vYZreGqwPMWjgo2xGDxKOlJtmY0Vi+J5kKaEgQOmK2U+uC
+	 ECXw5TTz+FE/Xtj8E/qflFhaOI6eBQYEyDy1lqmgXfzS9daBDdQlYBdDCZ3o/jhXvf
+	 ShIBDMyQr7Af/3DXCf8cMpuN8KEYL93iIlbo2VYc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726647AbgDISNL (ORCPT
+        id S1726595AbgDISP2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Apr 2020 14:13:11 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:50128 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725987AbgDISNL (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Apr 2020 14:13:11 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=VKu2GwHKdy776+Q+3ZafpPkMqFFXezhqf/z/GtNHOOo=; b=fPxjZEHJooPef0SzPRnhP1oPRV
-        nv4PSkiOgFB+lgZTQFT/9e1iVzo7GX5aCLua321EeMBoppIgDZUTH8wWRSnkdXm9wU+Ka3I8nWfYA
-        GzhFy4Bj5zIMVR1l92EloIo9878xYxSuMYKqjKy/SsRHfYr1obbIJ5KqB/v7KcreNfU6xKMZNpIKA
-        CsNJk3c4IQM+83kz3EBU7yJiy8LBIXFSSTfFI6zFNRA/P6PPGybmtAXsLw30VuC1DbDzC7HKFelBI
-        eAUKu00GJ3FQ++zKwztTyMj1CN/ZYjHWfQ6oYLtXc78DFnvLVNHPWvEdPscfso5uRa3IA6OsOniqI
-        /gqJuIdQ==;
-Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jMbfr-0004pk-KQ; Thu, 09 Apr 2020 18:13:11 +0000
-Date:   Thu, 9 Apr 2020 11:13:11 -0700
-From:   Matthew Wilcox <willy@infradead.org>
-To:     Cristian Souza <cristianmsbr@gmail.com>
-Cc:     linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
-        corbet@lwn.net
-Subject: Re: [PATCH v2] docs: admin-guide: Clarify sentences
-Message-ID: <20200409181311.GW21484@bombadil.infradead.org>
-References: <20200408144653.GA123268@darkstar>
+        Thu, 9 Apr 2020 14:15:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33684 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725970AbgDISP2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Apr 2020 14:15:28 -0400
+Received: from localhost (c-67-169-218-210.hsd1.or.comcast.net [67.169.218.210])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 64F4620753;
+        Thu,  9 Apr 2020 18:15:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1586456127;
+        bh=Vh/nEZmKyunglWKfJLO8V2/jVJZeYUVc1nRZToQfYJM=;
+        h=Date:From:To:Cc:Subject:From;
+        b=JrnwGAzOOtbxisYagljxGCFpNA6x4T9l9xygwGEQbJFCtvdSPlHle0qjfrmp03opp
+         IZDF24W/orZj3Jh5oQKgaNGkwO52y5137qoj+0MdJ2/zP79zhUw2OiVbwYZVhQc81w
+         xQtozQp1PN5BTGs/B4d9iYXqHVe3Vn1ICnl7Pf60=
+Date:   Thu, 9 Apr 2020 11:15:26 -0700
+From:   "Darrick J. Wong" <djwong@kernel.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     "Darrick J. Wong" <djwong@kernel.org>,
+        linux-fsdevel@vger.kernel.org, linux-xfs@vger.kernel.org,
+        david@fromorbit.com, linux-kernel@vger.kernel.org,
+        sandeen@sandeen.net, hch@lst.de
+Subject: [GIT PULL] xfs: new code for 5.7, part 2
+Message-ID: <20200409181526.GM6742@magnolia>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200408144653.GA123268@darkstar>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 08, 2020 at 11:46:53AM -0300, Cristian Souza wrote:
-> @@ -1,34 +1,30 @@
-> -Explaining the dreaded "No working init found." boot hang message
-> -=================================================================
-> +Explaining the "No working init found." boot hang message
-> +=========================================================
-> 
-> -OK, so you have got this pretty unintuitive message (currently located
-> -in init/main.c) and are wondering what went wrong.
-> -Some high-level reasons for failure (listed roughly in order of execution)
-> -to load the init binary are:
-> +Message location: ``init/main.c``
+Hi Linus,
 
-I don't think this should be the first paragraph ;-)
+Please pull this second batch of new changes for 5.7.  As promised last
+week, this batch changes how xfs interacts with memory reclaim; how the
+log batches and throttles log items; how hard writes near ENOSPC will
+try to squeeze more space out of the filesystem; and hopefully fix the
+last of the umount hangs after a catastrophic failure.
 
-Maybe just skip it altogether?  The sysadmin doesn't care where the
-message is located.
+This branch merges cleanly with master as of a few minutes ago, so
+please let me know if anything strange happens.
 
-> +5) **Binary cannot be loaded**: Make sure the binary's architecture matches your hardware.
+--D
 
-Line exceeds 80 characters (other occurrences of this)
+The following changes since commit 27fb5a72f50aa770dd38b0478c07acacef97e3e7:
 
->    e.g. by providing additional error messages at affected places.
-> 
->  Andreas Mohr <andi at lisas period de>
-> +Cristian Souza <cristianmsbr at gmail period com>
+  xfs: prohibit fs freezing when using empty transactions (2020-03-26 08:19:24 -0700)
 
-We tend to use :Author: at the top of the file instead of signatories at the
-bottom.
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/fs/xfs/xfs-linux.git tags/xfs-5.7-merge-12
+
+for you to fetch changes up to 5833112df7e9a306af9af09c60127b92ed723962:
+
+  xfs: reflink should force the log out if mounted with wsync (2020-04-06 08:44:39 -0700)
+
+----------------------------------------------------------------
+(More) new code for 5.7:
+- Validate the realtime geometry in the superblock when mounting
+- Refactor a bunch of tricky flag handling in the log code
+- Flush the CIL more judiciously so that we don't wait until there are
+  millions of log items consuming a lot of memory.
+- Throttle transaction commits to prevent the xfs frontend from flooding
+  the CIL with too many log items.
+- Account metadata buffers correctly for memory reclaim.
+- Mark slabs properly for memory reclaim.  These should help reclaim run
+  more effectively when XFS is using a lot of memory.
+- Don't write a garbage log record at unmount time if we're trying to
+  trigger summary counter recalculation at next mount.
+- Don't block the AIL on locked dquot/inode buffers; instead trigger its
+  backoff mechanism to give the lock holder a chance to finish up.
+- Ratelimit writeback flushing when buffered writes encounter ENOSPC.
+- Other minor cleanups.
+- Make reflink a synchronous operation when the fs is mounted with wsync
+  or sync, which means that now we force the log to disk to record the
+  changes.
+
+----------------------------------------------------------------
+Brian Foster (3):
+      xfs: trylock underlying buffer on dquot flush
+      xfs: return locked status of inode buffer on xfsaild push
+      xfs: fix inode number overflow in ifree cluster helper
+
+Christoph Hellwig (3):
+      xfs: split xlog_ticket_done
+      xfs: factor out a new xfs_log_force_inode helper
+      xfs: reflink should force the log out if mounted with wsync
+
+Darrick J. Wong (3):
+      xfs: validate the realtime geometry in xfs_validate_sb_common
+      xfs: don't write a corrupt unmount record to force summary counter recalc
+      xfs: ratelimit inode flush on buffered write ENOSPC
+
+Dave Chinner (15):
+      xfs: don't try to write a start record into every iclog
+      xfs: re-order initial space accounting checks in xlog_write
+      xfs: refactor and split xfs_log_done()
+      xfs: kill XLOG_TIC_INITED
+      xfs: merge xlog_commit_record with xlog_write_done
+      xfs: refactor unmount record writing
+      xfs: remove some stale comments from the log code
+      xfs: Lower CIL flush limit for large logs
+      xfs: Throttle commits on delayed background CIL push
+      xfs: don't allow log IO to be throttled
+      xfs: Improve metadata buffer reclaim accountability
+      xfs: correctly acount for reclaimable slabs
+      xfs: factor common AIL item deletion code
+      xfs: tail updates only need to occur when LSN changes
+      xfs: factor inode lookup from xfs_ifree_cluster
+
+Kaixu Xia (2):
+      xfs: remove unnecessary ternary from xfs_create
+      xfs: remove redundant variable assignment in xfs_symlink()
+
+ fs/xfs/libxfs/xfs_sb.c  |  32 +++++
+ fs/xfs/xfs_buf.c        |  11 +-
+ fs/xfs/xfs_dquot.c      |   6 +-
+ fs/xfs/xfs_dquot_item.c |   3 +-
+ fs/xfs/xfs_export.c     |  14 +-
+ fs/xfs/xfs_file.c       |  16 +--
+ fs/xfs/xfs_inode.c      | 174 +++++++++++++---------
+ fs/xfs/xfs_inode.h      |   1 +
+ fs/xfs/xfs_inode_item.c |  31 ++--
+ fs/xfs/xfs_log.c        | 372 +++++++++++++++++-------------------------------
+ fs/xfs/xfs_log.h        |   4 -
+ fs/xfs/xfs_log_cil.c    |  55 +++++--
+ fs/xfs/xfs_log_priv.h   |  75 +++++++---
+ fs/xfs/xfs_mount.h      |   1 +
+ fs/xfs/xfs_qm.c         |  14 +-
+ fs/xfs/xfs_super.c      |  17 ++-
+ fs/xfs/xfs_symlink.c    |   1 -
+ fs/xfs/xfs_trace.h      |  15 +-
+ fs/xfs/xfs_trans.c      |  27 ++--
+ fs/xfs/xfs_trans_ail.c  |  88 +++++++-----
+ fs/xfs/xfs_trans_priv.h |   6 +-
+ 21 files changed, 512 insertions(+), 451 deletions(-)
