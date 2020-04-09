@@ -2,176 +2,125 @@ Return-Path: <SRS0=n+Ub=5Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11B73C2BB85
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 22:18:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2732AC2BB86
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 22:18:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DBE0C206F7
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 22:18:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F3A0720B1F
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 22:18:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=cs.washington.edu header.i=@cs.washington.edu header.b="W9vJOxKo"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="cMUYiBy5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726871AbgDIWSF (ORCPT
+        id S1726951AbgDIWS1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Apr 2020 18:18:05 -0400
-Received: from mail-pj1-f68.google.com ([209.85.216.68]:36891 "EHLO
-        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726632AbgDIWSE (ORCPT
+        Thu, 9 Apr 2020 18:18:27 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:22275 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726872AbgDIWS1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Apr 2020 18:18:04 -0400
-Received: by mail-pj1-f68.google.com with SMTP id z9so63722pjd.2
-        for <linux-kernel@vger.kernel.org>; Thu, 09 Apr 2020 15:18:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cs.washington.edu; s=goo201206;
-        h=from:to:cc:subject:date:message-id;
-        bh=d7I79Px6oW+xidqJy+si2tmnAYd369ZVNNbYLDl32gU=;
-        b=W9vJOxKo91GTrNMNOMDe+CcYIVgw/SOaLir7ekED0M2QDlKPHJMg0FkVS8aK5M4xUT
-         wKcgwDjPlpAbpIDBkQwzvxwo3aVhwKRbg73R/ocWLnP1YHT83chblwRCKlYUk3f3QcHv
-         X6rglaZaHPq7Yu0iL3vU0s8SY7n3uOxzM0y4Y=
+        Thu, 9 Apr 2020 18:18:27 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1586470707;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=wak+4fOkmGwWiUN+MnpwHwLxfkg3pyB2FLjyHTCXGe0=;
+        b=cMUYiBy5gbI3t45FJRnkkIzfZtcnxa1+BeqSKPnKsKwhvVXzuZc/V4ePhuLBCZ03zBGQKR
+        PAknRmspyRa5UWWzJXoBCyHGQrjTHc4JJE7VgAdiWv6OZFWC+UvesvnLPUZEyauE0ZQtyJ
+        Wd7skqmyehUHZNRiplzgw4y+lyfaUJM=
+Received: from mail-qv1-f72.google.com (mail-qv1-f72.google.com
+ [209.85.219.72]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-93-k-EzJbwwMge0ZzZeFaSQhA-1; Thu, 09 Apr 2020 18:18:23 -0400
+X-MC-Unique: k-EzJbwwMge0ZzZeFaSQhA-1
+Received: by mail-qv1-f72.google.com with SMTP id f9so100308qvt.14
+        for <linux-kernel@vger.kernel.org>; Thu, 09 Apr 2020 15:18:23 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=d7I79Px6oW+xidqJy+si2tmnAYd369ZVNNbYLDl32gU=;
-        b=ugE6ZztoNWoeYLduc6MEWz7WH2pkxWja6IB4T0dEioDRIJoq4WLxaJfJwLDYtFxxPm
-         /VpTcstoKJco56Vx7ePEotPhXXTuf1KpxyEJ4H5pvfh6lZ02iO+wnE4XXrCKfpjY6KI0
-         cvyQNaaWLdDkGjiyN8BkQOExY5a7nvr3ZIIXFZjHiVL3iJ4vWzLi1/cxJ0vis9Jw2MwO
-         W/py71dz6F5vAWyMJsly7gjR2t0czSpLEwBdrUlHoV3g7zFUCwMNnm2aLyVI8rPL5Tt+
-         jTX22rPqnlhqXTYS56ZiXF0fVO2GYRUi78jxYlStsh9uBjU/U6xqWZMGmbu9sbK0hdeM
-         bxvA==
-X-Gm-Message-State: AGi0PuaapBLSpLZ4Z0J9ajRJxe4VGyv+q4jYvUA2rA6RBcGwe4RYKO3O
-        DHcK3Oe70QQcq8N7Tq4pnq2kaw==
-X-Google-Smtp-Source: APiQypLfv8Wd0dMcbnojJcRFpZ7fPcaUoNxEFntuU+I+4oPJFPCqFySEK9Ta/6QO6xIo+tI8+FNSxA==
-X-Received: by 2002:a17:90a:94c8:: with SMTP id j8mr1817350pjw.155.1586470682925;
-        Thu, 09 Apr 2020 15:18:02 -0700 (PDT)
-Received: from localhost.localdomain (c-73-53-94-119.hsd1.wa.comcast.net. [73.53.94.119])
-        by smtp.gmail.com with ESMTPSA id w29sm111547pge.25.2020.04.09.15.18.01
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=wak+4fOkmGwWiUN+MnpwHwLxfkg3pyB2FLjyHTCXGe0=;
+        b=nPFh3Hv+v2VCAcW5d8LCBVqqM7n5voWC8LbQlZMIDNmCAfHI1jIOB6B+H/goewEaIq
+         kykyANbFbTuKoxKyuyjr3/eRwXsEYPcMGG2HlHQHF0EjPVA/Zeis3fD4go73rXYH/oC6
+         2AC0TTRXnlZGlwko6mfjn3q7ckCSrjHkQOOpo+hvojAdBedj/bE3Ej71a6/MGZQBAjdK
+         opB0lEVQcn7LU1eqt1fVqsoMN61aRFcUhb7JR2wSPb7BkSTfHbIVXcmrpLgJRTCJqwyQ
+         WhyO7WFSugRSXbomfUhlpO7NMmPiBVhrO261YxH9i1CroAfdQDCdEUe0XoJ2L21cKTrk
+         6pqg==
+X-Gm-Message-State: AGi0Pub/7Ovsa8uJOeTLuwXpYNedvaeUe+W3A2P+U3oI3aN+MzZk2xqF
+        JolOgV4XeezJZje9GN3OXJpVB/SZ0I+mpZFMFjkj+SkewRTfpP2c4X3UaHH4vaEoyg4FX38kzla
+        kIq8WeX0s243opLHfEDIoHFu8
+X-Received: by 2002:a37:4117:: with SMTP id o23mr1141041qka.295.1586470702715;
+        Thu, 09 Apr 2020 15:18:22 -0700 (PDT)
+X-Google-Smtp-Source: APiQypIJD/iTRAWfSQIyFtDJJdk3323wKWVJn7GNTy0DpExPfZvgf67+NsccoV0ON/i9YnqzueJ/4g==
+X-Received: by 2002:a37:4117:: with SMTP id o23mr1141019qka.295.1586470702419;
+        Thu, 09 Apr 2020 15:18:22 -0700 (PDT)
+Received: from xz-x1 ([2607:9880:19c0:32::2])
+        by smtp.gmail.com with ESMTPSA id o18sm165603qkk.52.2020.04.09.15.18.21
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 09 Apr 2020 15:18:02 -0700 (PDT)
-From:   Luke Nelson <lukenels@cs.washington.edu>
-X-Google-Original-From: Luke Nelson <luke.r.nels@gmail.com>
-To:     bpf@vger.kernel.org
-Cc:     Luke Nelson <luke.r.nels@gmail.com>, Xi Wang <xi.wang@gmail.com>,
-        Shubham Bansal <illusionist.neo@gmail.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        Andrii Nakryiko <andriin@fb.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        KP Singh <kpsingh@chromium.org>, netdev@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH bpf] arm, bpf: Fix offset overflow for BPF_MEM BPF_DW
-Date:   Thu,  9 Apr 2020 15:17:52 -0700
-Message-Id: <20200409221752.28448-1-luke.r.nels@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        Thu, 09 Apr 2020 15:18:21 -0700 (PDT)
+Date:   Thu, 9 Apr 2020 18:18:19 -0400
+From:   Peter Xu <peterx@redhat.com>
+To:     Mike Kravetz <mike.kravetz@oracle.com>
+Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        Nitesh Narayan Lal <nitesh@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>
+Subject: Re: [PATCH] Documentation: hugetlb: Update hugetlb options
+Message-ID: <20200409221819.GA3172@xz-x1>
+References: <20200409215800.8967-1-peterx@redhat.com>
+ <ba5c87df-9a77-ebd2-e45e-f262a36fbf22@oracle.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <ba5c87df-9a77-ebd2-e45e-f262a36fbf22@oracle.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch fixes an incorrect check in how immediate memory offsets are
-computed for BPF_DW on arm.
+On Thu, Apr 09, 2020 at 03:08:07PM -0700, Mike Kravetz wrote:
+> On 4/9/20 2:58 PM, Peter Xu wrote:
+> > The hugepage options are not documented clearly.
+> > 
+> > Firstly, default_hugepagesz= should always be specified after the
+> > declaration of the same type of huge page using hugepagesz=.  For
+> > example, if we boot a x86_64 system with kernel cmdline
+> > "default_hugepagesz=2M", we'll get a very funny error message:
+> > 
+> > "HugeTLB: unsupported default_hugepagesz 2097152. Reverting to 2097152"
+> > 
+> > It's understandable from code-wise because when hugetlb_init() we
+> > didn't have the 2M page hstate registered, so it's unsupported.
+> > However 2M is actually the default huge page size on x86_64, so we'll
+> > register it right after the error message.  However it's very
+> > confusing if without these knowledges.
+> > 
+> > Secondly, hugepages= option must be used _after_ another hugepagesz=.
+> > The word "interleave" is fine but it didn't declare the fact that
+> > each of the hugepages= option will be applied to the previous parsed
+> > hugepagesz= option.
+> > 
+> > State all these clear.
+> > 
+> > Signed-off-by: Peter Xu <peterx@redhat.com>
+> 
+> Hi Peter,
+> 
+> Did you happen to see this patch series?
+> 
+> https://lore.kernel.org/linux-mm/20200401183819.20647-1-mike.kravetz@oracle.com/
+> 
+> That should address the documentation issue and more.
 
-For BPF_LDX/ST/STX + BPF_DW, the 32-bit arm JIT breaks down an 8-byte
-access into two separate 4-byte accesses using off+0 and off+4. If off
-fits in imm12, the JIT emits a ldr/str instruction with the immediate
-and avoids the use of a temporary register. While the current check off
-<= 0xfff ensures that the first immediate off+0 doesn't overflow imm12,
-it's not sufficient for the second immediate off+4, which may cause the
-second access of BPF_DW to read/write the wrong address.
+Great!
 
-This patch fixes the problem by changing the check to
-off <= 0xfff - 4 for BPF_DW, ensuring off+4 will never overflow.
+I missed that, but I'll definitely read it (probably tomorrow).  Let's
+ignore this patch then.
 
-A side effect of simplifying the check is that it now allows using
-negative immediate offsets in ldr/str. This means that small negative
-offsets can also avoid the use of a temporary register.
+Thanks,
 
-This patch introduces no new failures in test_verifier or test_bpf.c.
-
-Fixes: c5eae692571d6 ("ARM: net: bpf: improve 64-bit store implementation")
-Fixes: ec19e02b343db ("ARM: net: bpf: fix LDX instructions")
-Co-developed-by: Xi Wang <xi.wang@gmail.com>
-Signed-off-by: Xi Wang <xi.wang@gmail.com>
-Signed-off-by: Luke Nelson <luke.r.nels@gmail.com>
----
- arch/arm/net/bpf_jit_32.c | 40 +++++++++++++++++++++++----------------
- 1 file changed, 24 insertions(+), 16 deletions(-)
-
-diff --git a/arch/arm/net/bpf_jit_32.c b/arch/arm/net/bpf_jit_32.c
-index d124f78e20ac..bf85d6db4931 100644
---- a/arch/arm/net/bpf_jit_32.c
-+++ b/arch/arm/net/bpf_jit_32.c
-@@ -1000,21 +1000,35 @@ static inline void emit_a32_mul_r64(const s8 dst[], const s8 src[],
- 	arm_bpf_put_reg32(dst_hi, rd[0], ctx);
- }
- 
-+static bool is_ldst_imm(s16 off, const u8 size)
-+{
-+	s16 off_max = 0;
-+
-+	switch (size) {
-+	case BPF_B:
-+	case BPF_W:
-+		off_max = 0xfff;
-+		break;
-+	case BPF_H:
-+		off_max = 0xff;
-+		break;
-+	case BPF_DW:
-+		/* Need to make sure off+4 does not overflow. */
-+		off_max = 0xfff - 4;
-+		break;
-+	}
-+	return -off_max <= off && off <= off_max;
-+}
-+
- /* *(size *)(dst + off) = src */
- static inline void emit_str_r(const s8 dst, const s8 src[],
--			      s32 off, struct jit_ctx *ctx, const u8 sz){
-+			      s16 off, struct jit_ctx *ctx, const u8 sz){
- 	const s8 *tmp = bpf2a32[TMP_REG_1];
--	s32 off_max;
- 	s8 rd;
- 
- 	rd = arm_bpf_get_reg32(dst, tmp[1], ctx);
- 
--	if (sz == BPF_H)
--		off_max = 0xff;
--	else
--		off_max = 0xfff;
--
--	if (off < 0 || off > off_max) {
-+	if (!is_ldst_imm(off, sz)) {
- 		emit_a32_mov_i(tmp[0], off, ctx);
- 		emit(ARM_ADD_R(tmp[0], tmp[0], rd), ctx);
- 		rd = tmp[0];
-@@ -1043,18 +1057,12 @@ static inline void emit_str_r(const s8 dst, const s8 src[],
- 
- /* dst = *(size*)(src + off) */
- static inline void emit_ldx_r(const s8 dst[], const s8 src,
--			      s32 off, struct jit_ctx *ctx, const u8 sz){
-+			      s16 off, struct jit_ctx *ctx, const u8 sz){
- 	const s8 *tmp = bpf2a32[TMP_REG_1];
- 	const s8 *rd = is_stacked(dst_lo) ? tmp : dst;
- 	s8 rm = src;
--	s32 off_max;
--
--	if (sz == BPF_H)
--		off_max = 0xff;
--	else
--		off_max = 0xfff;
- 
--	if (off < 0 || off > off_max) {
-+	if (!is_ldst_imm(off, sz)) {
- 		emit_a32_mov_i(tmp[0], off, ctx);
- 		emit(ARM_ADD_R(tmp[0], tmp[0], src), ctx);
- 		rm = tmp[0];
 -- 
-2.17.1
+Peter Xu
 
