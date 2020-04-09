@@ -2,164 +2,182 @@ Return-Path: <SRS0=n+Ub=5Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CBFD6C2BA1B
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 05:25:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BCB67C2BA1B
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 05:39:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9C0A020936
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 05:25:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 95AFB2072F
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 05:39:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="l7TFWvGi"
+	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="r2lQzTZc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725971AbgDIFZj (ORCPT
+        id S1725997AbgDIFjZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Apr 2020 01:25:39 -0400
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:41678 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725765AbgDIFZi (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Apr 2020 01:25:38 -0400
-Received: by mail-lf1-f68.google.com with SMTP id z23so6932440lfh.8;
-        Wed, 08 Apr 2020 22:25:37 -0700 (PDT)
+        Thu, 9 Apr 2020 01:39:25 -0400
+Received: from mail-mw2nam12on2047.outbound.protection.outlook.com ([40.107.244.47]:44353
+        "EHLO NAM12-MW2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725785AbgDIFjZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Apr 2020 01:39:25 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=av8KWoeZp2Cif+QKdiLwtWUb7rHncJNlesgTcwEQsRCDFlULO1BICs4I+Nczwe7viAU88tFaycSOpEezXYG8QS1T44+mkPGJ7+unDFn21G9DwfrJXZ0ttRrWSrYBXSeKUwIyJd1XfA2SS/fkO+qkYxMkBSdDYFr9WAkN7+2+vCJOxTz7rknqi3nDv7kgTAZy20s7CGJ5XiNGQ86sjwj9dVORd6w9kHRZbb+33QaYmONWF2kIGgdGwnKrj1BfhDR4NwYZ5lK5gDR7rwAHgKRKq4xv0dQJq7kGztF8sSZgyRLO9MuptD04gPqoMfKvc8w8UPTxScJHakJIxGgsBO3VUg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=A9xaEK/87C76ykRRp7etPBrNdJP/aGkZcw1gxsXliCE=;
+ b=RqZ8hIhCfRO6QyZoYyJgnOLWgnK3F63kOnfMsDpY79//EmkuiL1eV590/eqUFDjA/CCioJlkTwucneU8I9iwTEBgqXKnYvTcAJVFDSyG8brtyeTme2owV5BNGVczDur1/SmvK14L/82EIlY6GHFtqmnk5mn9KkH6UAFQVR1CMHjMd+1rJ3C6FLLvc19O+AY0Ig6sOB8/durvq4OBPipu9tHYmezb41n1mCps4A5ywLOYrg6Deofbg31LQREbByqlzAa2mVoxqZi1gFguMgvvXAmpjolj23DmEJIR19mpvk5984jPR+yElnvl6IHt5QYdqosWa3xMlkhpOFb6I4ZfdA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=xilinx.com; dmarc=pass action=none header.from=xilinx.com;
+ dkim=pass header.d=xilinx.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=2EObYKcxXOo14ZEAFGp5CKeao58VtZX0sdCTJBkCdS0=;
-        b=l7TFWvGigna/uLL1qcqX6tb44ooCXWtYdeTpJUHU/lYgISjJG74xCoQ9NoTFl/J9oz
-         YqWptBgWww9khde7HO+hRWgCom9FrHtPIeOQtw7o83bp96n3IRhAM9kfGhcfpkIauZ3J
-         jFIEtQtTkjhnLX1ZiM2OXvtJu+q82VaBUrg0r4o8TIejPev7GmSMLZB1/NIxpH+/aOVa
-         gl9nEu8rWtrDKlvUOEfvioBpZt2kW6gCo0sO+g2iOTIQgy7GNaoZABTgy8RaN74kluVJ
-         kkvAwsfc+Mz1BKu5oeFYRD43Qo9cPeM5QJtCeJ4F/lrbNdM4+v8eOsw1RfVLuDs7urqr
-         WxHQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=2EObYKcxXOo14ZEAFGp5CKeao58VtZX0sdCTJBkCdS0=;
-        b=Ubc+DbYtw0dyBkOAb/BpXwDhp0JYQ0y3zx4WcG16xs0EvywIG5DjoiH9pyWv6NpL8h
-         vXp5zNoNLk2M5Z07e8138SmaNVIRpr9W9GRSZQtHkvNFB+EzfrAk2yQU2Dj/uNKhfNCG
-         zVUHjBYUADYdrgR24J87NH/T/6idQUqY6+XCywZp8bX6P3xebVSp2tfIx1E6HF1C6nxj
-         FPII1yMFBZW2nE+jwcos0kxO9XX/Mj2y1Cj1RoOPeaVWX7t0y3MxdMahT3Ndpt+dNeSN
-         PbFQgLgrYrarUdNCCpFw5BJroqanYWWIxc+p3JOqbQdJ3pb/COEMRThlTQuazw8MqEMi
-         Vuug==
-X-Gm-Message-State: AGi0Puay4pT+UabA7q4cK/W23pq1wRaW6owll4QkGIvwvmAGX2t8Y7gC
-        XqTmau7HAP6N5nve1XovDDMtH/Aw
-X-Google-Smtp-Source: APiQypJuRLQoxr1HZkyHjcWx26UEhVK/1CxcfEE08CwWCHMcP0PgqzSTSlgWPi4c5z7T0pSfzqYfFQ==
-X-Received: by 2002:a05:6512:1046:: with SMTP id c6mr6728040lfb.115.1586409936621;
-        Wed, 08 Apr 2020 22:25:36 -0700 (PDT)
-Received: from Vesas-MacBook-Pro.local (87-100-247-140.bb.dnainternet.fi. [87.100.247.140])
-        by smtp.googlemail.com with ESMTPSA id m18sm330883lfj.10.2020.04.08.22.25.35
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 08 Apr 2020 22:25:35 -0700 (PDT)
-Subject: Re: [PATCH v19 04/18] leds: multicolor: Introduce a multicolor class
- definition
-To:     Dan Murphy <dmurphy@ti.com>, jacek.anaszewski@gmail.com,
-        pavel@ucw.cz
-Cc:     linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200402204311.14998-1-dmurphy@ti.com>
- <20200402204311.14998-5-dmurphy@ti.com>
-From:   =?UTF-8?B?VmVzYSBKw6TDpHNrZWzDpGluZW4=?= <dachaac@gmail.com>
-Message-ID: <78a577ba-667e-804a-b59f-6cc442adb4eb@gmail.com>
-Date:   Thu, 9 Apr 2020 08:25:34 +0300
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
- Gecko/20100101 Thunderbird/68.6.0
-MIME-Version: 1.0
-In-Reply-To: <20200402204311.14998-5-dmurphy@ti.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+ d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=A9xaEK/87C76ykRRp7etPBrNdJP/aGkZcw1gxsXliCE=;
+ b=r2lQzTZchyuX9KM8tusa5lJUbq73RDajQd0A5HWhWoUnkgS8ZZFkHVDGpqpxi40ckGJ6w5fzh0DzfErKffAOfDmTEB35DKYTPukA5S3z/oYduxKl+xgpYt2ja9tLSyxRqscsPyZEiXq/I03LCNzDx5hm9FMDwlhenVLki9YQeH4=
+Received: from SN4PR0201MB3486.namprd02.prod.outlook.com
+ (2603:10b6:803:51::12) by SN4PR0201MB3549.namprd02.prod.outlook.com
+ (2603:10b6:803:44::23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2878.21; Thu, 9 Apr
+ 2020 05:39:18 +0000
+Received: from SN4PR0201MB3486.namprd02.prod.outlook.com
+ ([fe80::61b6:6bad:266b:d0da]) by SN4PR0201MB3486.namprd02.prod.outlook.com
+ ([fe80::61b6:6bad:266b:d0da%5]) with mapi id 15.20.2900.015; Thu, 9 Apr 2020
+ 05:39:18 +0000
+From:   Raviteja Narayanam <rna@xilinx.com>
+To:     Maarten Brock <m.brock@vanmierlo.com>
+CC:     "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "jslaby@suse.com" <jslaby@suse.com>,
+        Michal Simek <michals@xilinx.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        git <git@xilinx.com>,
+        "linux-serial-owner@vger.kernel.org" 
+        <linux-serial-owner@vger.kernel.org>
+Subject: RE: [PATCH] serial: uartps: Wait for tx_empty in console setup
+Thread-Topic: [PATCH] serial: uartps: Wait for tx_empty in console setup
+Thread-Index: AQHWDP0l3OgsBXnKvUufxZn7tcNQPqhvYOQAgADmX/A=
+Date:   Thu, 9 Apr 2020 05:39:18 +0000
+Message-ID: <SN4PR0201MB3486FECBFEA2271F2C6D0EA9CAC10@SN4PR0201MB3486.namprd02.prod.outlook.com>
+References: <1586278391-9061-1-git-send-email-raviteja.narayanam@xilinx.com>
+ <396bcf8a0068fc05e70cc439a4843b61@vanmierlo.com>
+In-Reply-To: <396bcf8a0068fc05e70cc439a4843b61@vanmierlo.com>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+X-MS-Has-Attach: 
+X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is ) smtp.mailfrom=rna@xilinx.com; 
+x-originating-ip: [106.212.235.169]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 4a76024f-5864-400c-8c38-08d7dc485929
+x-ms-traffictypediagnostic: SN4PR0201MB3549:|SN4PR0201MB3549:
+x-ld-processed: 657af505-d5df-48d0-8300-c31994686c5c,ExtAddr
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <SN4PR0201MB3549AA4F433B32E768611F45CAC10@SN4PR0201MB3549.namprd02.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:7691;
+x-forefront-prvs: 0368E78B5B
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN4PR0201MB3486.namprd02.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10009020)(4636009)(376002)(39860400002)(136003)(366004)(346002)(396003)(478600001)(26005)(186003)(81156014)(71200400001)(8936002)(6506007)(52536014)(9686003)(53546011)(55016002)(64756008)(66556008)(6916009)(66476007)(316002)(66446008)(5660300002)(54906003)(7696005)(81166007)(8676002)(76116006)(86362001)(2906002)(4326008)(33656002)(66946007);DIR:OUT;SFP:1101;
+received-spf: None (protection.outlook.com: xilinx.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: bOqGNC9Eh53IVVJ6PBqOH+F813uXl1hcnSrY47De9RFhMrSLYlpDYIYrW66lQ3VVyNfgZcuCoKNZS+J/VkvHmUDnpBx+dx24LoBTEtu8iuzRbTXI3IACU0Tw6ReSfuCsrQDCDwy2IRg1u5G7IJdwN/w4Sin2SlXeaMHsxs0ghClmSnssRyJHsFPHwtgQc4goIdGmY3qEpZ/x0o+tDtb6JXFauNQw+Crc3LlUYHkF5LCYHxequYFDcuiCwQihuxQyQTmNLBtezOsOJfqmJ/Ff3Mm2QDtQUmHfvOAc3g1QoP8JnFziRA6I/E8qPbCbRZtuv1e3G+3JipmMs8owqpU/Ckw0kTIwkb1JMD5Jga6pM85JIM6bqd2ZP5pbmb4/FiYELwgWod5cGzXKTSq1R0ghwaCJhnTpy3Cc76hKJzaEyvcD+b843xd+FOsgLg2INg+Z
+x-ms-exchange-antispam-messagedata: ZD6Tvup16IKzhLXrNoTKkjMXCI7g2DDO0w8annylY+7mN1DNmV/f8/Ep2PDuwTQECoH9QnIg1Bc7jBv7be62bjIFwpyxrccMVGLspVMO0Zg6z4Dssf/h/Lc/lNYmb/mgk1V1j7MKYruaH6Ym6LHkBg==
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: xilinx.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 4a76024f-5864-400c-8c38-08d7dc485929
+X-MS-Exchange-CrossTenant-originalarrivaltime: 09 Apr 2020 05:39:18.5886
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 657af505-d5df-48d0-8300-c31994686c5c
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 1qEgUUZoSiOCSIt1bGY3A8RQrBUZ1bw93FRzpOSoTfebEZv6XRa+NFYUl0gATTqS
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN4PR0201MB3549
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+Hi Maarten,
 
-On 2.4.2020 23.42, Dan Murphy wrote:
-> Introduce a multicolor class that groups colored LEDs
-> within a LED node.
-> 
-> The multi color class groups monochrome LEDs and allows controlling two
-> aspects of the final combined color: hue and lightness. The former is
-> controlled via <color>_intensity files and the latter is controlled
-> via brightness file.
-> 
-> Signed-off-by: Dan Murphy <dmurphy@ti.com>
-> ---
->   .../ABI/testing/sysfs-class-led-multicolor    |  42 ++++
->   Documentation/leds/index.rst                  |   1 +
->   Documentation/leds/leds-class-multicolor.rst  |  95 ++++++++
->   drivers/leds/Kconfig                          |  10 +
->   drivers/leds/Makefile                         |   1 +
->   drivers/leds/led-class-multicolor.c           | 206 ++++++++++++++++++
->   include/linux/led-class-multicolor.h          | 121 ++++++++++
->   7 files changed, 476 insertions(+)
->   create mode 100644 Documentation/ABI/testing/sysfs-class-led-multicolor
->   create mode 100644 Documentation/leds/leds-class-multicolor.rst
->   create mode 100644 drivers/leds/led-class-multicolor.c
->   create mode 100644 include/linux/led-class-multicolor.h
-> 
-> diff --git a/Documentation/ABI/testing/sysfs-class-led-multicolor b/Documentation/ABI/testing/sysfs-class-led-multicolor
-> new file mode 100644
-> index 000000000000..1f50324d24fd
-> --- /dev/null
-> +++ b/Documentation/ABI/testing/sysfs-class-led-multicolor
-> @@ -0,0 +1,42 @@
-> +What:		/sys/class/leds/<led>/brightness
-> +Date:		March 2020
-> +KernelVersion:	5.8
-> +Contact:	Dan Murphy <dmurphy@ti.com>
-> +Description:	read/write
-> +		Writing to this file will update all LEDs within the group to a
-> +		calculated percentage of what each color LED intensity is set
-> +		to. The percentage is calculated for each grouped LED via the
-> +		equation below:
-> +
-> +		led_brightness = brightness * color_intensity/max_brightness
-> +
-> +		For additional details please refer to
-> +		Documentation/leds/leds-class-multicolor.rst.
-> +
-> +		The value of the color is from 0 to
-> +		/sys/class/leds/<led>/max_brightness.
-> +
-> +What:		/sys/class/leds/<led>/color_index
-> +Date:		March 2020
-> +KernelVersion:	5.8
-> +Contact:	Dan Murphy <dmurphy@ti.com>
-> +Description:	read
-> +		The color_index array, when read, will output the LED colors
-> +		by name as they are indexed in the color_intensity array.
-> +
-> +What:		/sys/class/leds/<led>/num_colors
-> +Date:		March 2020
-> +KernelVersion:	5.8
-> +Contact:	Dan Murphy <dmurphy@ti.com>
-> +Description:	read
-> +		The num_colors indicates the number of LEDs defined in the
-> +		color_intensity and color_index arrays.
-> +
-> +What:		/sys/class/leds/<led>/color_intensity
-> +Date:		March 2020
-> +KernelVersion:	5.8
-> +Contact:	Dan Murphy <dmurphy@ti.com>
-> +Description:	read/write
-> +		Intensity level for the LED color within the array.
-> +		The intensities for each color must be entered based on the
-> +		color_index array.
+Thanks for the review.
 
-For what it is worth --
+> -----Original Message-----
+> From: linux-serial-owner@vger.kernel.org <linux-serial-
+> owner@vger.kernel.org> On Behalf Of Maarten Brock
+> Sent: Wednesday, April 8, 2020 9:21 PM
+> To: Raviteja Narayanam <rna@xilinx.com>
+> Cc: linux-serial@vger.kernel.org; gregkh@linuxfoundation.org;
+> jslaby@suse.com; Michal Simek <michals@xilinx.com>; linux-arm-
+> kernel@lists.infradead.org; linux-kernel@vger.kernel.org; git <git@xilinx=
+.com>;
+> linux-serial-owner@vger.kernel.org
+> Subject: Re: [PATCH] serial: uartps: Wait for tx_empty in console setup
+>=20
+> On 2020-04-07 18:53, Raviteja Narayanam wrote:
+> > On some platforms, the log is corrupted while console is being
+> > registered. It is observed that when set_termios is called, there are
+> > still some bytes in the FIFO to be transmitted.
+> >
+> > So, wait for tx_empty inside cdns_uart_console_setup before calling
+> > set_termios.
+> >
+> > Signed-off-by: Raviteja Narayanam <raviteja.narayanam@xilinx.com>
+> > ---
+> >  drivers/tty/serial/xilinx_uartps.c | 10 ++++++++++
+> >  1 file changed, 10 insertions(+)
+> >
+> > diff --git a/drivers/tty/serial/xilinx_uartps.c
+> > b/drivers/tty/serial/xilinx_uartps.c
+> > index 6b26f76..23468ff 100644
+> > --- a/drivers/tty/serial/xilinx_uartps.c
+> > +++ b/drivers/tty/serial/xilinx_uartps.c
+> > @@ -1260,6 +1260,8 @@ static int cdns_uart_console_setup(struct
+> > console *co, char *options)
+> >  	int bits =3D 8;
+> >  	int parity =3D 'n';
+> >  	int flow =3D 'n';
+> > +	unsigned long time_out =3D jiffies + usecs_to_jiffies(TX_TIMEOUT);
+> > +	int status;
+> >
+> >  	if (!port->membase) {
+> >  		pr_debug("console on " CDNS_UART_TTY_NAME "%i not
+> present\n", @@
+> > -1270,6 +1272,14 @@ static int cdns_uart_console_setup(struct console
+> > *co, char *options)
+> >  	if (options)
+> >  		uart_parse_options(options, &baud, &parity, &bits, &flow);
+> >
+> > +	/* Wait for tx_empty before setting up the console */
+> > +	while (time_before(jiffies, time_out)) {
+> > +		status =3D cdns_uart_tx_empty(port);
+> > +		if (status =3D=3D TIOCSER_TEMT)
+> > +			break;
+> > +		cpu_relax();
+> > +	}
+> > +
+> >  	return uart_set_options(port, co, baud, parity, bits, flow);  }
+> > #endif /* CONFIG_SERIAL_XILINX_PS_UART_CONSOLE */
+>=20
+> You could do without the status variable. You could even combine the whil=
+e
+> and if conditions.
+>=20
+> And while you're at it, you might as well also rewrite the lines
+> 1236-1238 to also use cdns_uart_tx_empty() for clarity.
 
-I see that this interface covers our use cases and I assume that GPIO 
-LED and PWM LED drivers can be implemented for this after this set is 
-integrated.
+Will send v2, addressing these.
+>=20
+> Maarten
 
-Thanks,
-Vesa Jääskeläinen
+Regards,
+Raviteja N
