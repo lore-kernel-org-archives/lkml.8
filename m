@@ -2,174 +2,135 @@ Return-Path: <SRS0=n+Ub=5Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61863C2BA19
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 21:16:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BE39C2BA19
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 21:18:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 24C2620753
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 21:16:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ai400M0N"
+	by mail.kernel.org (Postfix) with ESMTP id DA2E820753
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 21:18:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1586467083;
+	bh=iFJ2uXSUtewQGy/XQWzDbwdljeWyAp5lFEbtIqeww1M=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=e7gDIQktE7fVBVgiBtWPEr5aTz+7sSJP8x7jTh8FROBi/EcDQeTvxHHEntV8orTyd
+	 uSfEKY8vOga7P5RkSPzayIXjuGnczK8Xh/h2HFrR9oKnwNH1uCP/x/sJ2nV4Badhzp
+	 sopt/u6i3KvZT31rWZx0yebEo9N6M8I2gPxvd9P0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727489AbgDIVP6 (ORCPT
+        id S1727481AbgDIVSB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Apr 2020 17:15:58 -0400
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:24346 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726964AbgDIVP6 (ORCPT
+        Thu, 9 Apr 2020 17:18:01 -0400
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:34783 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726964AbgDIVSB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Apr 2020 17:15:58 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1586466957;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=glMQfLhnuqFKO//ayYwgmFp6X1dfi5Ixs/b/okGsMo4=;
-        b=ai400M0Nv+N3TjH4+nZGDE9K5zy8apC+25bkrQRy9axN/8aoUtHXpD9OTmSePGFowBFB+n
-        tB0z1EBxQ+cLB9BjDHn0qUwfdjNkddgL2wz3/DwulQCWrgvjJduFAQdMLVgXEGs5SQqc6w
-        MiY72GrYZDgHIX5iY86/wZCVT+ERObQ=
-Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
- [209.85.128.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-191-OdsH6cA6MuiBePJrR6csmg-1; Thu, 09 Apr 2020 17:15:56 -0400
-X-MC-Unique: OdsH6cA6MuiBePJrR6csmg-1
-Received: by mail-wm1-f72.google.com with SMTP id l13so64717wme.7
-        for <linux-kernel@vger.kernel.org>; Thu, 09 Apr 2020 14:15:55 -0700 (PDT)
+        Thu, 9 Apr 2020 17:18:01 -0400
+Received: by mail-lf1-f65.google.com with SMTP id x23so782137lfq.1
+        for <linux-kernel@vger.kernel.org>; Thu, 09 Apr 2020 14:17:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=y3ANlkc73xfE7W9i+/i/PzZhTTMot1WbopUumX0rZso=;
+        b=TxHSnl5hL9hBLbhzpFFxIIOfEr8Xnaemb9ujkuS20q7mBQjEQ06csx2hlFV+zrgpup
+         6dO7d2KwP2bItlzFl438olGyiqFuJzQzU5T7C+QmihScFUaRPswsPZ54xGuUwj654Q74
+         W0Ot8qmNDtMNw7H16o5lyW+WTWJ6YCHGAvMqQ=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=glMQfLhnuqFKO//ayYwgmFp6X1dfi5Ixs/b/okGsMo4=;
-        b=mpShSt9I3tiy8dZPT/1vfX82tgVnBafwwZAk3c6ltzgYWzZ93Tph6u53bcDJksL4J3
-         WvZZC9iHYLaCkVO/6CVTVZu3MJGwseOJGnab+t55ppy4bFl7FI+hv4BmXlg87GG8Tl0a
-         +JVdx8YgiSUMJNMJlOK3ujH0KkSDwN57ZT2YjXrpDu01uPhgI5cDO8K1z0XKcX0/ss/A
-         j3jGmaIJdW43paiy3BlAMZq7eTu6j8l6xurqFPuHiSJmbHX35kfUo4nbMq6gM1CO+N+s
-         +aGTWMnTPieCavjLtphkaedNnB93TYxXbXRzQxhk4bjUz39XMtVvfds3F3WEnZvrlHXX
-         4DxA==
-X-Gm-Message-State: AGi0PuYZdl3dLDrwOFQAu2JMNVKY+0R8zRaegR6aYcsONAB9fG/ZstYZ
-        EQjlvtWCOlxLArFAxRmK+ffJaPYXyTGu72fE91wlCve9A7P+MVzMbOUr0fIKfSj0d61G/GxHXtV
-        Xo6nr6ng8oIf2LbkAA4sfzT2k
-X-Received: by 2002:adf:b78b:: with SMTP id s11mr1032848wre.235.1586466954849;
-        Thu, 09 Apr 2020 14:15:54 -0700 (PDT)
-X-Google-Smtp-Source: APiQypLMAdaElmZsKiQALKptGrWU76Bno3HFcVUNiHk4skksmmErtPHf/B/2kmn10GMEjDCryFguIg==
-X-Received: by 2002:adf:b78b:: with SMTP id s11mr1032831wre.235.1586466954660;
-        Thu, 09 Apr 2020 14:15:54 -0700 (PDT)
-Received: from redhat.com (bzq-109-67-97-76.red.bezeqint.net. [109.67.97.76])
-        by smtp.gmail.com with ESMTPSA id k184sm5096224wmf.9.2020.04.09.14.15.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 09 Apr 2020 14:15:54 -0700 (PDT)
-Date:   Thu, 9 Apr 2020 17:15:51 -0400
-From:   "Michael S. Tsirkin" <mst@redhat.com>
-To:     Nathan Chancellor <natechancellor@gmail.com>
-Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Gerd Hoffmann <kraxel@redhat.com>,
-        clang-built-linux@googlegroups.com
-Subject: Re: linux-next: build failure after merge of the vhost tree
-Message-ID: <20200409170923-mutt-send-email-mst@kernel.org>
-References: <20200407130542.0e3b5d9d@canb.auug.org.au>
- <20200407185815.GA1805@ubuntu-s3-xlarge-x86>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=y3ANlkc73xfE7W9i+/i/PzZhTTMot1WbopUumX0rZso=;
+        b=jalHcjSK3avGFcds5HbbX9rL8eIQnEpFv28LSkKBqxcMDGvEpp0UzEPY1GT8doEPBY
+         v/KKGdQ0vQruHfeGmDEJWNnZVpt7609XPepfu5FP8Y9dQWYzCyN/KyQrAwwo2emkJIT+
+         pxEUgRf5C0IB0zHqN+1Rsy/oJ9qomr1byyg0HXOpNRpsh0mDRmI8/jAhUPacCYwfDgtw
+         U3IMKbszmMosJYlDcZ/Cxv+RF40xy+KFF5GWfcKt7QT/e6fVA9vMuuUaTT5lznE9OUgv
+         YD3ztBKWqrMo7cJHOC9XU/hVVmHuFPnce8m6hBmSrn2HqjNs2RUgN+tONPuXoNQlYMgK
+         UJPQ==
+X-Gm-Message-State: AGi0Puac6Z60FlvR/6TcTlb+XaODb+/2w7pO2TrF9Zn+u10tH3PKcEPt
+        eOOGLt+qdiGzwMNSJmq//3ldmShcnw4=
+X-Google-Smtp-Source: APiQypKxDJMFR7PjDUPYyEodmyzYF91/4JicIAbIzgWah1jse6jfu12DJ2le7+cFqnEKFh69a9qM+Q==
+X-Received: by 2002:a19:e00e:: with SMTP id x14mr714332lfg.111.1586467076718;
+        Thu, 09 Apr 2020 14:17:56 -0700 (PDT)
+Received: from mail-lf1-f51.google.com (mail-lf1-f51.google.com. [209.85.167.51])
+        by smtp.gmail.com with ESMTPSA id y29sm16102785ljd.26.2020.04.09.14.17.55
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 09 Apr 2020 14:17:55 -0700 (PDT)
+Received: by mail-lf1-f51.google.com with SMTP id 131so740769lfh.11
+        for <linux-kernel@vger.kernel.org>; Thu, 09 Apr 2020 14:17:55 -0700 (PDT)
+X-Received: by 2002:ac2:4466:: with SMTP id y6mr699561lfl.125.1586467075152;
+ Thu, 09 Apr 2020 14:17:55 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200407185815.GA1805@ubuntu-s3-xlarge-x86>
+References: <87blobnq02.fsf@x220.int.ebiederm.org> <87lfnda3w3.fsf@x220.int.ebiederm.org>
+ <CAHk-=wjxyGCj9675mf31uhoJCyHn74ON_+O6SjSqBSSvqWxC1Q@mail.gmail.com>
+ <87blo45keg.fsf@x220.int.ebiederm.org> <CAHk-=whES-KCO6Bs93-QBK1tS5CfiWSi+v5D1a7Sc1TD5RFoaA@mail.gmail.com>
+ <87v9maxb5q.fsf@x220.int.ebiederm.org> <CAHk-=wih4BqW7GTLaYxewynuT-iFHrXroip0wNo0CyPtmYGUow@mail.gmail.com>
+ <87y2r4so3i.fsf@x220.int.ebiederm.org> <CAHk-=wjhAvv6s_7OVeZJiHaY7bBrHyiPTkSpq-TLr6qxYqxUUw@mail.gmail.com>
+ <CAHk-=wi0jrKv9x6vJ9FDgTrSUbdbZYDX-79T-E87C48MGSn5=g@mail.gmail.com>
+ <87wo6or3pg.fsf@x220.int.ebiederm.org> <AM6PR03MB51708FD4226E07AB7CB0D6A7E4C10@AM6PR03MB5170.eurprd03.prod.outlook.com>
+ <CAHk-=wjaoYM4gXdAyYY=u8PaYj2LXUvcfp=8DKum8f1DM+Ws0A@mail.gmail.com>
+ <AM6PR03MB5170F924EA69A81D79BD0929E4C10@AM6PR03MB5170.eurprd03.prod.outlook.com>
+ <CAHk-=whMKC5F-=QQP=fCNRuTF+ZGiNtLEKvx7KekpK1JtrwDhw@mail.gmail.com>
+ <CAHk-=whJ8khGBqfqh6ZmHsKjcyyBLm5xgkgLW_AC_=82iFBWoQ@mail.gmail.com>
+ <AM6PR03MB51700B243E34BF4A59FF33CFE4C10@AM6PR03MB5170.eurprd03.prod.outlook.com>
+ <CAHk-=whJttTNFQn1fMYp91LZ90iHE7B2THZ8NjQ7fBwmWX9k6w@mail.gmail.com> <87imi8nzlw.fsf@x220.int.ebiederm.org>
+In-Reply-To: <87imi8nzlw.fsf@x220.int.ebiederm.org>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Thu, 9 Apr 2020 14:17:39 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wgh4zts+3hdkGzHLJ6pBGumcJ=23gRbMfubDrLstis2Bg@mail.gmail.com>
+Message-ID: <CAHk-=wgh4zts+3hdkGzHLJ6pBGumcJ=23gRbMfubDrLstis2Bg@mail.gmail.com>
+Subject: Re: [GIT PULL] Please pull proc and exec work for 5.7-rc1
+To:     "Eric W. Biederman" <ebiederm@xmission.com>
+Cc:     Bernd Edlinger <bernd.edlinger@hotmail.de>,
+        Waiman Long <longman@redhat.com>,
+        Ingo Molnar <mingo@kernel.org>, Will Deacon <will@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Alexey Gladkov <gladkov.alexey@gmail.com>,
+        Oleg Nesterov <oleg@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 07, 2020 at 11:58:15AM -0700, Nathan Chancellor wrote:
-> On Tue, Apr 07, 2020 at 01:05:42PM +1000, Stephen Rothwell wrote:
-> > Hi all,
-> > 
-> > After merging the vhost tree, today's linux-next build (x86_64
-> > allmodconfig) failed like this:
-> > 
-> > drivers/gpu/drm/virtio/virtgpu_kms.c: In function 'virtio_gpu_init':
-> > drivers/gpu/drm/virtio/virtgpu_kms.c:153:38: error: 'VIRTIO_RING_F_INDIRECT_DESC' undeclared (first use in this function)
-> >   153 |  if (virtio_has_feature(vgdev->vdev, VIRTIO_RING_F_INDIRECT_DESC)) {
-> >       |                                      ^~~~~~~~~~~~~~~~~~~~~~~~~~~
-> > drivers/gpu/drm/virtio/virtgpu_kms.c:153:38: note: each undeclared identifier is reported only once for each function it appears in
-> > 
-> > Caused by commit
-> > 
-> >   898952f9597e ("virtio: stop using legacy struct vring in kernel")
-> > 
-> > interacting with commit
-> > 
-> >   5edbb5608256 ("drm/virtio: fix ring free check")
-> > 
-> > from Linus' tree (post v5.6).
-> > 
-> > I have added the following merge fix patch for today.
-> > 
-> > From: Stephen Rothwell <sfr@canb.auug.org.au>
-> > Date: Tue, 7 Apr 2020 12:58:26 +1000
-> > Subject: [PATCH] drm/virtio: fix up for include file changes
-> > 
-> > Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
-> > ---
-> >  drivers/gpu/drm/virtio/virtgpu_kms.c | 1 +
-> >  1 file changed, 1 insertion(+)
-> > 
-> > diff --git a/drivers/gpu/drm/virtio/virtgpu_kms.c b/drivers/gpu/drm/virtio/virtgpu_kms.c
-> > index 023a030ca7b9..f4ea4cef5e23 100644
-> > --- a/drivers/gpu/drm/virtio/virtgpu_kms.c
-> > +++ b/drivers/gpu/drm/virtio/virtgpu_kms.c
-> > @@ -25,6 +25,7 @@
-> >  
-> >  #include <linux/virtio.h>
-> >  #include <linux/virtio_config.h>
-> > +#include <linux/virtio_ring.h>
-> >  
-> >  #include <drm/drm_file.h>
-> >  
-> > -- 
-> > 2.25.0
-> > 
-> > I do have to wonder why all this code has been added to the vhost tree
-> > during the second week of the merge window (especially when I see it
-> > rebased 4 times in one day :-().  Is it really intended for v5.7?
+On Thu, Apr 9, 2020 at 2:03 PM Eric W. Biederman <ebiederm@xmission.com> wrote:
+>
+> But no.  While you are goind a good job at spotting odd corner
+> cases that need to be fixed.  This also is not the cause of the
+> deadlock.  It is nothing that subtle.
 
-I pushed to next branch by mistake as I was publishing a tree for others to test, sorry.
-But yes the final version (which should be ok now hopefully) is intended
-for 5.7.
+So Eric, I'm now going to stop wasting my time on arguing with you.
 
-> > -- 
-> > Cheers,
-> > Stephen Rothwell
-> 
-> Linaro's CI also reports an issue with this patch with the remoteproc
-> drivers that were freshly merged in Linus' tree for 5.7-rc1 (seen with a
-> simple arm allyesconfig build):
-> 
-> drivers/rpmsg/mtk_rpmsg.c:68:2: error: implicit declaration of function 'kfree' [-Werror,-Wimplicit-function-declaration]
-> drivers/rpmsg/mtk_rpmsg.c:93:9: error: implicit declaration of function 'kzalloc' [-Werror,-Wimplicit-function-declaration]
-> drivers/rpmsg/mtk_rpmsg.c:170:2: error: implicit declaration of function 'kfree' [-Werror,-Wimplicit-function-declaration]
-> drivers/rpmsg/mtk_rpmsg.c:204:9: error: implicit declaration of function 'kzalloc' [-Werror,-Wimplicit-function-declaration]
-> drivers/rpmsg/mtk_rpmsg.c:223:3: error: implicit declaration of function 'kfree' [-Werror,-Wimplicit-function-declaration]
-> drivers/rpmsg/mtk_rpmsg.c:259:9: error: implicit declaration of function 'kzalloc' [-Werror,-Wimplicit-function-declaration]
-> drivers/rpmsg/mtk_rpmsg.c:376:3: error: implicit declaration of function 'kfree' [-Werror,-Wimplicit-function-declaration]
-> drivers/rpmsg/mtk_rpmsg.c:387:15: error: implicit declaration of function 'kzalloc' [-Werror,-Wimplicit-function-declaration]
-> drivers/rpmsg/mtk_rpmsg.c:409:2: error: implicit declaration of function 'kfree' [-Werror,-Wimplicit-function-declaration]
-> drivers/remoteproc/stm32_rproc.c:152:14: error: implicit declaration of function 'kcalloc' [-Werror,-Wimplicit-function-declaration]
-> drivers/remoteproc/stm32_rproc.c:179:2: error: implicit declaration of function 'kfree' [-Werror,-Wimplicit-function-declaration]
+Since both you and Bernd claimed to be too busy to even bother testing
+that thing, I just built it and booted it.
 
-Yes, this a virtio header change in -next exposes a bug: these are using slab.h
-but not including it. I posted fixes and also pushed them on my branch now.
+And guess what? That thing makes your non-deadlock thing go away.
 
-> It seems like this series shouldn't be in -next until after 5.7-rc1 (or
-> rebased on Linus' tree if it is intended for the merge window).
-> 
-> Cheers,
-> Nathan
+So it's _literally_ that simple.
 
-Exposing this kind of issue is what next is for, right?
+Now, does it make the tests "pass"? No.
 
--- 
-MST
+Because the "vmaccess" test fails because the open() now fails -
+because we simply don't wait for that dead thread any more, so the
+/proc/<pid>/mem thing doesn't exist.
 
+And for the same reason that "attach" test now no longer returns
+EAGAIN, it just attaches to the remaining execlp thing instead.
+
+So I'm not just good at "spotting odd corner cases". I told you why
+that bogus deadlock of yours failed - the execve was pointlessly
+waiting for a dead thread that had marked itself ptraced, and nobody
+was reaping it.
+
+And it appears you were too lazy to even try it out.
+
+Yes, that whole "notify_dead" count vs "tsk->exit_state" test is
+fundamentally racy. But that race happens to be irrelevant for the
+test case in question.
+
+So until you can actually add something to the discussion, I'm done
+with this thread.
+
+           Linus
