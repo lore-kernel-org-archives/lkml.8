@@ -2,93 +2,98 @@ Return-Path: <SRS0=n+Ub=5Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12FA3C2D0EA
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 06:53:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6585C2D0EA
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 06:53:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D34B0206F7
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 06:53:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aqvt+EJ6"
+	by mail.kernel.org (Postfix) with ESMTP id C554F2082D
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 06:53:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726819AbgDIGxj (ORCPT
+        id S1726821AbgDIGxw convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Apr 2020 02:53:39 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:43728 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726806AbgDIGxg (ORCPT
+        Thu, 9 Apr 2020 02:53:52 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:33745 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725892AbgDIGxv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Apr 2020 02:53:36 -0400
-Received: by mail-wr1-f68.google.com with SMTP id i10so4290496wrv.10
-        for <linux-kernel@vger.kernel.org>; Wed, 08 Apr 2020 23:53:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=j9PzzpDG4h7junY1ixG2pd2f9fKjZJKEYtrgYcTo//Y=;
-        b=aqvt+EJ6pRCu2iMeDVQQAKZB1yOW/KlH+6Tw65X4qEIwfbXOqsciX6oOI1Zyzh4bmM
-         xjpt+AapVuFOw2NYSTOsODgACD2fNwynUnE9W8SX7oYU0RudU9KlAswHd4p9LhQ8ckK8
-         VdIOoL1qo8HYOBKKoMHCIoSVVXGI/p3+3eIw3j5MeJ+FfAyx6osJT+8Q3fHIj3MZm+Ce
-         PUF4zgyvGoclR5KudvO/CUR1dW2OHvZxhLZP/unAQBCuzBNOtJxPj6iW561aiKJrKfKk
-         f/b20FTbk6dakM7dd/zRuROZ+n53irM03d1EuTiStjOdidX8kZO2G6lfRtvvh+a5m3PM
-         D/DA==
+        Thu, 9 Apr 2020 02:53:51 -0400
+Received: by mail-wm1-f66.google.com with SMTP id v8so1784479wma.0
+        for <linux-kernel@vger.kernel.org>; Wed, 08 Apr 2020 23:53:50 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=j9PzzpDG4h7junY1ixG2pd2f9fKjZJKEYtrgYcTo//Y=;
-        b=ab8KjuV7069eCf7xZVstsnSQ/YIQw+JCRX/1AlmNCsr5VxVNDrTjEiu6np+hLSUX/R
-         fCLpmYLvycJkAL18BrUCx3mGgua9frZ83RosrDGTSA6TaDMTrID4xxUzAibzieYpbCk2
-         mjRHQdVpvmDJ1DVEKp285emfRbf/IpImMDanr39h1eVbVKAYUen9f6klX0Pqe2JaHv8a
-         VqzJHSWbQ6wlbDE2ZxPZTNIR05m7sUgZSqVMvMwIKXy3nm/x7vYJ0+lZVhQpumIdDh0Y
-         Cl86+rE+WO30k67veiRwfbDoN02zW9sIoO08CVqefI08sZDCXoK3KwU5gM8LQINABT6x
-         YTEA==
-X-Gm-Message-State: AGi0PuZAnYHjadWb+klO1DSD+TwuKoZL/quREPqWL/pmNXaoSsyF/Haf
-        ckTvwPm9EFXP/UcK9QKqKIYHynd5TUGwBQjQqNI=
-X-Google-Smtp-Source: APiQypIEkLk4SIaqJp7AwmJjks3M/Fwjj35V75pGD46FliQMBDdYPJciiX/s0JpPTA7WmzT6dkR6If6P7hsqsyReD4A=
-X-Received: by 2002:a05:6000:187:: with SMTP id p7mr12210916wrx.196.1586415215105;
- Wed, 08 Apr 2020 23:53:35 -0700 (PDT)
+        h=x-gm-message-state:date:user-agent:in-reply-to:references
+         :mime-version:content-transfer-encoding:subject:to:cc:from
+         :message-id;
+        bh=t3JE+/sR3iLSFPRwnLZ9+4mg38UzzpABfn85lTFhzWo=;
+        b=LtVmB5emDcI4VOBOSSKJlPMQcj3jZgX1p68bYYraoWIRF/LMT2M8aWhbItr98D6GAJ
+         jHzMVeBKI007LVW/sGFyKN0H+3B8Y0ElIvf15HWaTm3P0+tQ6luW5qRUOjma/3mmIYwi
+         DnOupyTey+OWhKm6bL2oDL8chCXu4nLcro/M9b7rCO7c13lG8h8SzaPCysPRU84CZMWM
+         8gC0+tGIb57FiHWv602ekUXlx1zgeWPuz14kldhWkQD0w/t6GabD7SwQTtQNEnds9IHp
+         P5SWo37TneYn415YvwSYsjuqdlEkcaFSSw6Oz9S9ZJXTbh/TXd+fAaSSlVWgp5aErQF0
+         nT4g==
+X-Gm-Message-State: AGi0Pua1VLRZg8Moh/iT1ruWx9onqG+LCpWzof64aZb4esoXrvyPPZpr
+        esvMkeAUesry5GU40pRy6odwEQ==
+X-Google-Smtp-Source: APiQypKA5ttzv3gC9XiCNgckuIBpQ8MVI7lUcS4NpW3Q0zg37ISgSnyAnvrapszr7GD/eT+CgM02lA==
+X-Received: by 2002:a05:600c:2284:: with SMTP id 4mr8455866wmf.103.1586415230083;
+        Wed, 08 Apr 2020 23:53:50 -0700 (PDT)
+Received: from Google-Pixel-3a.fritz.box (ip5f5bd698.dynamic.kabel-deutschland.de. [95.91.214.152])
+        by smtp.gmail.com with ESMTPSA id s6sm2506614wmh.17.2020.04.08.23.53.49
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 08 Apr 2020 23:53:49 -0700 (PDT)
+Date:   Thu, 09 Apr 2020 08:53:47 +0200
+User-Agent: K-9 Mail for Android
+In-Reply-To: <2d00096f-94f7-753e-c05f-14860fed2abe@huawei.com>
+References: <f525fd08-1cf7-fb09-d20c-4359145eb940@huawei.com> <20200330084415.p4v5g6s24innsjrc@wittgenstein> <2d00096f-94f7-753e-c05f-14860fed2abe@huawei.com>
 MIME-Version: 1.0
-References: <02998bd4-0b82-2f15-2570-f86130304d1e@infradead.org>
-In-Reply-To: <02998bd4-0b82-2f15-2570-f86130304d1e@infradead.org>
-From:   Pankaj Gupta <pankaj.gupta.linux@gmail.com>
-Date:   Thu, 9 Apr 2020 08:53:24 +0200
-Message-ID: <CAM9Jb+jH7GvDyBjgPbOgOV0mAW0Zj9cAJCiR6ib4jHVSMcs+_w@mail.gmail.com>
-Subject: Re: [PATCH -next] mm: page_alloc: fix kernel-doc warning
-To:     Randy Dunlap <rdunlap@infradead.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>, Linux MM <linux-mm@kvack.org>,
-        Andrew Morton <akpm@linux-foundation.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: 8BIT
+Subject: Re: [PATCH] signal: check sig before setting info in kill_pid_usb_asyncio
+To:     Zhiqiang Liu <liuzhiqiang26@huawei.com>
+CC:     ebiederm@xmission.com, oleg@redhat.com, tj@kernel.org, guro@fb.com,
+        joel@joelfernandes.org, jannh@google.com,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Mingfangsen <mingfangsen@huawei.com>,
+        Yanxiaodan <yanxiaodan@huawei.com>,
+        linfeilong <linfeilong@huawei.com>
+From:   Christian Brauner <christian.brauner@ubuntu.com>
+Message-ID: <EFD902AA-B999-4E13-AC1E-1A28E93435BB@ubuntu.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> Add description of function parameter 'mt' to fix kernel-doc warning:
+On April 9, 2020 5:26:08 AM GMT+02:00, Zhiqiang Liu <liuzhiqiang26@huawei.com> wrote:
+>Friendly ping...
 >
-> ../mm/page_alloc.c:3246: warning: Function parameter or member 'mt' not described in '__putback_isolated_page'
->
-> Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
-> ---
->  mm/page_alloc.c |    1 +
->  1 file changed, 1 insertion(+)
->
-> --- linux-next-20200407.orig/mm/page_alloc.c
-> +++ linux-next-20200407/mm/page_alloc.c
-> @@ -3238,6 +3238,7 @@ int __isolate_free_page(struct page *pag
->   * __putback_isolated_page - Return a now-isolated page back where we got it
->   * @page: Page that was isolated
->   * @order: Order of the isolated page
-> + * @mt: The page's pageblock's migratetype
->   *
->   * This function is meant to return a page pulled from the free lists via
->   * __isolate_free_page back to the free lists they were pulled from.
+>On 2020/3/30 16:44, Christian Brauner wrote:
+>> On Mon, Mar 30, 2020 at 10:18:33AM +0800, Zhiqiang Liu wrote:
+>>>
+>>> In kill_pid_usb_asyncio, if signal is not valid, we do not need to
+>>> set info struct.
+>>>
+>>> Signed-off-by: Zhiqiang Liu <liuzhiqiang26@huawei.com>
+>> 
+>> I'd have done:
+>> 
+>> if (!valid_signal(sig))
+>> 	return -EINVAL;
+>> 
+>> instead of setting ret to EINVAL above but that's mostly a matter of
+>style.
+>> 
+>> Picking this up unless someone sees a problem with it.
+>> 
+>> Thank you!
+>> Acked-by: Christian Brauner <christian.brauner@ubuntu.com>
+>> 
+>> .
+>> 
 
-Acked-by: Pankaj Gupta <pankaj.gupta.linux@gmail.com>
+The patches are queued for after rc1. So around next week.
+They came too late to make it into the merge window.
 
->
->
+Christian
