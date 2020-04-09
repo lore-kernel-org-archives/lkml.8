@@ -2,142 +2,105 @@ Return-Path: <SRS0=n+Ub=5Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F6EAC2BA1A
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 03:12:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 408D5C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 03:13:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2136120730
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 03:12:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 07A66208FE
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 03:13:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="JfeFkrWM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726627AbgDIDMZ (ORCPT
+        id S1726650AbgDIDM7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Apr 2020 23:12:25 -0400
-Received: from smtprelay0078.hostedemail.com ([216.40.44.78]:45098 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726521AbgDIDMZ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Apr 2020 23:12:25 -0400
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay07.hostedemail.com (Postfix) with ESMTP id 8D166181D396F;
-        Thu,  9 Apr 2020 03:12:24 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: brick58_894f471779363
-X-Filterd-Recvd-Size: 4187
-Received: from XPS-9350.home (unknown [47.151.136.130])
-        (Authenticated sender: joe@perches.com)
-        by omf05.hostedemail.com (Postfix) with ESMTPA;
-        Thu,  9 Apr 2020 03:12:23 +0000 (UTC)
-Message-ID: <efb5a518fdc47f0120b94a7e8a95d275c0f4ad43.camel@perches.com>
-Subject: Re: [PATCH] checkpatch: check for missing \n at the end of logging
- message
-From:   Joe Perches <joe@perches.com>
-To:     Marion & Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-        apw@canonical.com, Andrew Morton <akpm@linux-foundation.org>
-Cc:     linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
-Date:   Wed, 08 Apr 2020 20:10:23 -0700
-In-Reply-To: <4b7e1cf3-6fa7-60af-a1d3-2457339dbe8a@wanadoo.fr>
-References: <20200407204908.10420-1-christophe.jaillet@wanadoo.fr>
-         <8617a6b94c0644bce1fd4ca77309d67a612e6300.camel@perches.com>
-         <4b7e1cf3-6fa7-60af-a1d3-2457339dbe8a@wanadoo.fr>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.34.1-2 
+        Wed, 8 Apr 2020 23:12:59 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:39985 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726521AbgDIDM7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Apr 2020 23:12:59 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 48yR6K01pzz9sSh;
+        Thu,  9 Apr 2020 13:12:56 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1586401978;
+        bh=a8wJcXOoSO96vrw4kf8n/9jQq4/HbjP3dnRcSeSQqSg=;
+        h=Date:From:To:Cc:Subject:From;
+        b=JfeFkrWMTgI4DUrgJEzI7zzictqFUcjkDb0NyNWSLWIYDjddP4aSFepFDzVX7Q9lU
+         fcgK0WZInCdk8SPKnp079Gc0bE/lr2BjApcKkG54crMlIgN1A/rsufJ/jbg0QylJqh
+         CBKEFKFEEnLWJqSpQSRyOkYs0mbaLd8lvUFcWwqnK5dg8y6qEnDd3Qi3d0UTetWgwZ
+         NHyP2yw2XTnLqQvd03Mo9ousSRpO9WzObPPWikfyVkqiA9qkR5afD/cktOieawrXi/
+         xlhiyk+Qzl9tGtCBPhuXgMd9sKw7xd5B3tcRIJRRL+5MboMlbSDEnwE7LTNJ7N7F4N
+         WPM1XDDpFxEBw==
+Date:   Thu, 9 Apr 2020 13:12:52 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Pavel Machek <pavel@ucw.cz>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Marek =?UTF-8?B?QmVow7pu?= <marek.behun@nic.cz>
+Subject: linux-next: manual merge of the leds tree with Linus' tree
+Message-ID: <20200409131252.2dfde0b7@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; boundary="Sig_/GPKmm5.xLW2paourexw5EdS";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2020-04-08 at 22:23 +0200, Marion & Christophe JAILLET wrote:
-> Le 08/04/2020 à 04:14, Joe Perches a écrit :
-> > This works rather better:
-> > 
-> > Perhaps you could test?
-> > ---
-> > 
-> > v2:
-> > 
-> > o Avoid pr_cont
-> > o Use only last format line if split across multiple lines
-> > 
-> >   scripts/checkpatch.pl | 22 ++++++++++++++++++++++
-> >   1 file changed, 22 insertions(+)
-> > 
-> > diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
-> > index d64c67..f00a6c8 100755
-> > --- a/scripts/checkpatch.pl
-> > +++ b/scripts/checkpatch.pl
-> > @@ -5673,6 +5673,28 @@ sub process {
-> >   			}
-> >   		}
-> >   
-> > +# check for possible missing newlines at the end of common logging functions
-> > +		if (defined($stat) &&
-> > +		    $stat =~ /^\+\s*($logFunctions)\s*\((?:\s*$FuncArg\s*,\s*){0,3}\s*$String/ &&
-> > +		    $1 !~ /_cont$/ && $1 =~ /^(?:pr|dev|netdev|netif|wiphy)_/) {
-> > +			my $cnt = statement_rawlines($stat);
-> > +			my $extracted_string = "";
-> > +			for (my $i = 0; $i < $cnt; $i++) {
-> > +				next if ($lines[$linenr + $i - 1] !~ /$String\s*[,\)]/);
-> > +				$extracted_string = get_quoted_string($lines[$linenr + $i - 1],
-> > +								      $rawlines[$linenr + $i - 1]);
-> > +				last if ($extracted_string ne "");
-> > +			}
-> > +			if ($extracted_string ne "" && $extracted_string !~ /\\n"$/) {
-> > +				my $herectx = $here . "\n";
-> > +				for (my $n = 0; $n < $cnt; $n++) {
-> > +					$herectx .=  raw_line($linenr, $n) . "\n";
-> > +				}
-> > +				WARN("MISSING_FORMAT_NEWLINE",
-> > +				     "Possible missing '\\n' at the end of a logging message format string\n" . $herectx);
-> > +			}
-> > +		}
-> > +
-> >   # check for logging functions with KERN_<LEVEL>
-> >   		if ($line !~ /printk(?:_ratelimited|_once)?\s*\(/ &&
-> >   		    $line =~ /\b$logFunctions\s*\(.*\b(KERN_[A-Z]+)\b/) {
-> > 
-> For what I wanted to check and according to the few tests I've made, it 
-> looks fine.
-> 
-> Thank you very much for sharing this much more robust (and working) 
-> alternative.
-> 
-> For what it worth: (i.e. much more tests should be done)
-> Tested-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+--Sig_/GPKmm5.xLW2paourexw5EdS
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-Then I think you really haven't tested it very thoroughly.
+Hi all,
 
-For instance:
+Today's linux-next merge of the leds tree got a conflict in:
 
-$ git ls-files -- 'drivers/*.[ch]' | \
-  xargs ./scripts/checkpatch.pl -f --quiet --no-summary --types=MISSING_FORMAT_NEWLINE
+  drivers/leds/Makefile
 
-emits many false positives.
+between commit:
 
-Some types of false positives:
+  457386350e6a ("leds: sort Makefile entries")
 
-o Many of the formats seem to end in a ':' or a ' '
-  maybe those should be excluded
-   #86: FILE: drivers/android/binder_alloc_selftest.c:86:
-   +	pr_err("free seq: ");
+from Linus' tree and commit:
 
-   o Split string formats should be excluded better
-     as only the first string fragment is checked:
-   #1001: FILE: drivers/ata/pata_octeon_cf.c:1001:
-   +	dev_info(&pdev->dev, "version " DRV_VERSION" %d bit%s.\n",
-   +		 is_16bit ? 16 : 8,
-   +		 cf_port->is_true_ide ? ", True IDE" : "");
+  3953d1908b2c ("From: Marek Beh=C3=BAn <marek.behun@nic.cz>")
+  53cb3df9dd2d ("Sort Makefile entries to reduce risk of rejects.")
 
-   probably a few others, including a desire to check
-   if a pr_cont is below the use within a few lines.
+from the leds tree.
 
-   > Maybe, at least a Suggested-By: would be appreciated.
+I fixed it up (I used the latter version) and can carry the fix as
+necessary. This is now fixed as far as linux-next is concerned, but any
+non trivial conflicts should be mentioned to your upstream maintainer
+when your tree is submitted for merging.  You may also want to consider
+cooperating with the maintainer of the conflicting tree to minimise any
+particularly complex conflicts.
 
-No worries, when it's cooked, it'll have that.
+BTW, commit 3953d1908b2c clearly did not get applied correctly :-(
 
-cheers, Joe
+--=20
+Cheers,
+Stephen Rothwell
 
+--Sig_/GPKmm5.xLW2paourexw5EdS
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl6OkrQACgkQAVBC80lX
+0Gy0aQf/c9NSIkhqI3H7e0exL3hHsZd54Ls7wOV0y98kK0pQ3rWrBzmXPIddBvhe
+zhNqVJWbB40lLNLsUlGI0P10NX7fBUcBmyNIubm3LrIcInXLqDDVd5bWqgpzqCGm
+7n3RiFgN7IIIUx5yW/gBte9EMZOG3YJcNjX7I18hq1NuU4mxbYw2/y8yauu8OqPg
+E4yu1uwBrHH1wIXgfCwIy8OjC7h+IBQBhd27ckjDMY96OsCOIUSEw8stsh/vhpb8
+V2WD25JoEUGZgmFPJZC3zMeX3Cc3xZZusw6But6mR81D0Qrc+mWtTHGCmYRrr0A5
+VXTDmJaFzzz3u5mYZBNdox51YcbkaA==
+=f5DQ
+-----END PGP SIGNATURE-----
+
+--Sig_/GPKmm5.xLW2paourexw5EdS--
