@@ -2,125 +2,144 @@ Return-Path: <SRS0=n+Ub=5Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2732AC2BB86
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 22:18:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43CA3C2BA19
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 22:18:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F3A0720B1F
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 22:18:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="cMUYiBy5"
+	by mail.kernel.org (Postfix) with ESMTP id 253052087E
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 22:18:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726951AbgDIWS1 (ORCPT
+        id S1726934AbgDIWS1 convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Thu, 9 Apr 2020 18:18:27 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:22275 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726872AbgDIWS1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
+Received: from mail.kernel.org ([198.145.29.99]:56360 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726632AbgDIWS1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 9 Apr 2020 18:18:27 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1586470707;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=wak+4fOkmGwWiUN+MnpwHwLxfkg3pyB2FLjyHTCXGe0=;
-        b=cMUYiBy5gbI3t45FJRnkkIzfZtcnxa1+BeqSKPnKsKwhvVXzuZc/V4ePhuLBCZ03zBGQKR
-        PAknRmspyRa5UWWzJXoBCyHGQrjTHc4JJE7VgAdiWv6OZFWC+UvesvnLPUZEyauE0ZQtyJ
-        Wd7skqmyehUHZNRiplzgw4y+lyfaUJM=
-Received: from mail-qv1-f72.google.com (mail-qv1-f72.google.com
- [209.85.219.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-93-k-EzJbwwMge0ZzZeFaSQhA-1; Thu, 09 Apr 2020 18:18:23 -0400
-X-MC-Unique: k-EzJbwwMge0ZzZeFaSQhA-1
-Received: by mail-qv1-f72.google.com with SMTP id f9so100308qvt.14
-        for <linux-kernel@vger.kernel.org>; Thu, 09 Apr 2020 15:18:23 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=wak+4fOkmGwWiUN+MnpwHwLxfkg3pyB2FLjyHTCXGe0=;
-        b=nPFh3Hv+v2VCAcW5d8LCBVqqM7n5voWC8LbQlZMIDNmCAfHI1jIOB6B+H/goewEaIq
-         kykyANbFbTuKoxKyuyjr3/eRwXsEYPcMGG2HlHQHF0EjPVA/Zeis3fD4go73rXYH/oC6
-         2AC0TTRXnlZGlwko6mfjn3q7ckCSrjHkQOOpo+hvojAdBedj/bE3Ej71a6/MGZQBAjdK
-         opB0lEVQcn7LU1eqt1fVqsoMN61aRFcUhb7JR2wSPb7BkSTfHbIVXcmrpLgJRTCJqwyQ
-         WhyO7WFSugRSXbomfUhlpO7NMmPiBVhrO261YxH9i1CroAfdQDCdEUe0XoJ2L21cKTrk
-         6pqg==
-X-Gm-Message-State: AGi0Pub/7Ovsa8uJOeTLuwXpYNedvaeUe+W3A2P+U3oI3aN+MzZk2xqF
-        JolOgV4XeezJZje9GN3OXJpVB/SZ0I+mpZFMFjkj+SkewRTfpP2c4X3UaHH4vaEoyg4FX38kzla
-        kIq8WeX0s243opLHfEDIoHFu8
-X-Received: by 2002:a37:4117:: with SMTP id o23mr1141041qka.295.1586470702715;
-        Thu, 09 Apr 2020 15:18:22 -0700 (PDT)
-X-Google-Smtp-Source: APiQypIJD/iTRAWfSQIyFtDJJdk3323wKWVJn7GNTy0DpExPfZvgf67+NsccoV0ON/i9YnqzueJ/4g==
-X-Received: by 2002:a37:4117:: with SMTP id o23mr1141019qka.295.1586470702419;
-        Thu, 09 Apr 2020 15:18:22 -0700 (PDT)
-Received: from xz-x1 ([2607:9880:19c0:32::2])
-        by smtp.gmail.com with ESMTPSA id o18sm165603qkk.52.2020.04.09.15.18.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 09 Apr 2020 15:18:21 -0700 (PDT)
-Date:   Thu, 9 Apr 2020 18:18:19 -0400
-From:   Peter Xu <peterx@redhat.com>
-To:     Mike Kravetz <mike.kravetz@oracle.com>
-Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        Nitesh Narayan Lal <nitesh@redhat.com>,
-        Andrew Morton <akpm@linux-foundation.org>
-Subject: Re: [PATCH] Documentation: hugetlb: Update hugetlb options
-Message-ID: <20200409221819.GA3172@xz-x1>
-References: <20200409215800.8967-1-peterx@redhat.com>
- <ba5c87df-9a77-ebd2-e45e-f262a36fbf22@oracle.com>
+Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E7509206F7;
+        Thu,  9 Apr 2020 22:18:24 +0000 (UTC)
+Date:   Thu, 9 Apr 2020 18:18:23 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     Nadav Amit <nadav.amit@gmail.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        mingo@redhat.com, bp@alien8.de, hpa@zytor.com, x86@kernel.org,
+        kenny@panix.com, jeyu@kernel.org, rasmus.villemoes@prevas.dk,
+        fenghua.yu@intel.com, xiaoyao.li@intel.com, thellstrom@vmware.com,
+        tony.luck@intel.com, gregkh@linuxfoundation.org, jannh@google.com,
+        keescook@chromium.org, David.Laight@aculab.com,
+        dcovelli@vmware.com, mhiramat@kernel.org
+Subject: Re: [PATCH 4/4] x86,module: Detect CRn and DRn manipulation
+Message-ID: <20200409181823.00bcd14a@gandalf.local.home>
+In-Reply-To: <87imi8pdl9.fsf@nanos.tec.linutronix.de>
+References: <20200407110236.930134290@infradead.org>
+        <20200407111007.429362016@infradead.org>
+        <20200408092726.7c2bda01@gandalf.local.home>
+        <20200408154419.GP20730@hirez.programming.kicks-ass.net>
+        <20200408154602.GA24869@infradead.org>
+        <2b0dc69c-f7f9-985d-fc40-8b7bbd927e4f@redhat.com>
+        <20200409085632.GB20713@hirez.programming.kicks-ass.net>
+        <9A25271A-71F7-4EA1-9D1C-23B53E35C281@gmail.com>
+        <87imi8pdl9.fsf@nanos.tec.linutronix.de>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <ba5c87df-9a77-ebd2-e45e-f262a36fbf22@oracle.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 09, 2020 at 03:08:07PM -0700, Mike Kravetz wrote:
-> On 4/9/20 2:58 PM, Peter Xu wrote:
-> > The hugepage options are not documented clearly.
-> > 
-> > Firstly, default_hugepagesz= should always be specified after the
-> > declaration of the same type of huge page using hugepagesz=.  For
-> > example, if we boot a x86_64 system with kernel cmdline
-> > "default_hugepagesz=2M", we'll get a very funny error message:
-> > 
-> > "HugeTLB: unsupported default_hugepagesz 2097152. Reverting to 2097152"
-> > 
-> > It's understandable from code-wise because when hugetlb_init() we
-> > didn't have the 2M page hstate registered, so it's unsupported.
-> > However 2M is actually the default huge page size on x86_64, so we'll
-> > register it right after the error message.  However it's very
-> > confusing if without these knowledges.
-> > 
-> > Secondly, hugepages= option must be used _after_ another hugepagesz=.
-> > The word "interleave" is fine but it didn't declare the fact that
-> > each of the hugepages= option will be applied to the previous parsed
-> > hugepagesz= option.
-> > 
-> > State all these clear.
-> > 
-> > Signed-off-by: Peter Xu <peterx@redhat.com>
-> 
-> Hi Peter,
-> 
-> Did you happen to see this patch series?
-> 
-> https://lore.kernel.org/linux-mm/20200401183819.20647-1-mike.kravetz@oracle.com/
-> 
-> That should address the documentation issue and more.
+On Thu, 09 Apr 2020 23:13:22 +0200
+Thomas Gleixner <tglx@linutronix.de> wrote:
 
-Great!
+> Nadav Amit <nadav.amit@gmail.com> writes:
+> >> On Apr 9, 2020, at 1:56 AM, Peter Zijlstra <peterz@infradead.org> wrote:
+> >> Speaking with my virt ignorance hat on, how impossible is it to provide
+> >> generic/useful VMLAUNCH/VMRESUME wrappers?
+> >> 
+> >> Because a lot of what happens around VMEXIT/VMENTER is very much like
+> >> the userspace entry crud, as per that series from Thomas that fixes all
+> >> that. And surely we don't need various broken copies of that in all the
+> >> out-of-tree hypervisors.
+> >> 
+> >> Also, I suppose if you have this, we no longer need to excempt CR2.  
+> >
+> > It depends on what you mean by “VMLAUNCH/VMRESUME”. If you only consider the
+> > instructions themselves, as Sean did in vmx_vmenter() and vmx_vmexit(),
+> > there is no problem. Even if you consider saving the general purpose
+> > registers as done in __vmx_vcpu_run() - that’s relatively easy.  
+> 
+> __vmx_vcpu_run() is roughly the scope, but that wont work.
+> 
+> Looking at the vmmon source:
+> 
+> Task_Switch()
+> 
+>     1) Mask all APIC LVTs which have NMI delivery mode enabled, e.g. PERF
+> 
+>     2) Disable interrupts
+> 
+>     3) Disable PEBS
+> 
+>     4) Disable PT
+> 
+>     5) Load a magic IDT
+> 
+>        According to comments these are stubs to catch any exception which
+>        happens while switching over.
+> 
+>     6) Write CR0 and CR4 directly which is "safe" as the the IDT is
+>        redirected to the monitor stubs.
+> 
+>     7) VMXON()
+> 
+>     8) Invoke monitor on some magic page which switches CR3 and GDT and
+>        clears CR4.PCIDE (at least thats what the comments claim)
+> 
+>        The monitor code is loaded from a binary only blob and that does
+>        the actual vmlaunch/vmresume ...
 
-I missed that, but I'll definitely read it (probably tomorrow).  Let's
-ignore this patch then.
+From what I understand (never looked at the code), is that this binary blob
+is the same for Windows and Apple. It's basically its own operating system
+that does all the work and vmmon is the way to switch to and from it. When
+this blob gets an interrupt that it doesn't know about, it assumes it
+belongs to the operating system its sharing the machine with and exits back
+to it, whether that's Linux, Windows or OSX.
 
-Thanks,
+It's not too unlike what jailhouse does with its hypervisor, to take over
+the machine and place the running Linux into its own "cell", except that it
+will switch full control of the machine back to Linux.
 
--- 
-Peter Xu
+-- Steve
+
+
+> 
+>        And as this runs with a completely different CR3 sharing that
+>        code is impossible.
+> 
+>     When returning the above is undone in reverse order and any catched
+>     exceptions / interrupts are replayed via "int $NR".
+> 
+> So it's pretty much the same mess as with vbox just different and
+> binary. Oh well...
+> 
+> The "good" news is that it's not involved in any of the context tracking
+> stuff so RCU wont ever be affected when a vmware vCPU runs. It's not
+> pretty, but TBH I don't care.
+> 
+> Thanks,
+> 
+>         tglx
+> 
 
