@@ -2,112 +2,136 @@ Return-Path: <SRS0=n+Ub=5Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL autolearn=no
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C601DC2BB1D
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 16:26:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA1F7C2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 16:26:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9CD8620768
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 16:26:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="SVIUfVQP"
+	by mail.kernel.org (Postfix) with ESMTP id A264E20678
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 16:26:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1586449605;
+	bh=DWmapTu1uPi9K9wv+YrjQ6SRSLsHT4q0j4ZJcz11uM4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=OdxvvDPRiEQjZbSrMGyP7c7uN93+5yivFVuw4VVJH3oVam4iER2iJpjPaFOCamDwi
+	 kBbg1+gOj/3uOSbLQrDnD8FQzDYfUROc/TkBiIJRBuL/DLEowPMYJOiGEcZ//8j3sy
+	 WAQXjYmG6hB41v9MVO8D72+d/uPp9yeUaVc106kw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726817AbgDIQZ7 (ORCPT
+        id S1726843AbgDIQ0o (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Apr 2020 12:25:59 -0400
-Received: from linux.microsoft.com ([13.77.154.182]:54992 "EHLO
-        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726621AbgDIQZ6 (ORCPT
+        Thu, 9 Apr 2020 12:26:44 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:37659 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726825AbgDIQ0n (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Apr 2020 12:25:58 -0400
-Received: from [10.137.106.115] (unknown [131.107.174.243])
-        by linux.microsoft.com (Postfix) with ESMTPSA id CC37A2007679;
-        Thu,  9 Apr 2020 09:25:57 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com CC37A2007679
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-        s=default; t=1586449558;
-        bh=mxgHZSJk9nY2+sfPQybAXK1hYlxOn5wF6OLSUaiTeXQ=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=SVIUfVQPfYXivTtnf81II2+cuX+VuuFT/cdRyrSfPQa/NspfBGhnRo9yWKcDnzRbk
-         LJ3Ki75Ows6uAhw3zh0yXVdiT1bgycAFmEUG1RPPnFEYcitcKAqCmE0Cd8qQo22Fey
-         1mwwxBUG5vr/LHYHNEZymvqJ6fmpTEryjbQU2kPw=
-Subject: Re: [RFC PATCH v2 00/12] Integrity Policy Enforcement LSM (IPE)
-To:     Nayna <nayna@linux.vnet.ibm.com>
-Cc:     agk@redhat.com, axboe@kernel.dk, snitzer@redhat.com,
-        jmorris@namei.org, serge@hallyn.com, zohar@linux.ibm.com,
-        linux-integrity@vger.kernel.org,
-        linux-security-module@vger.kernel.org, dm-devel@redhat.com,
-        linux-block@vger.kernel.org, tyhicks@linux.microsoft.com,
-        pasha.tatashin@soleen.com, sashal@kernel.org,
-        jaskarankhurana@linux.microsoft.com, nramas@linux.microsoft.com,
-        mdsakib@linux.microsoft.com, linux-kernel@vger.kernel.org
-References: <20200406221439.1469862-1-deven.desai@linux.microsoft.com>
- <c1466cc8-8a08-708a-4629-234485bb833e@linux.vnet.ibm.com>
-From:   Deven Bowers <deven.desai@linux.microsoft.com>
-Message-ID: <35afdffe-179c-aedd-333a-9dfc20635fc3@linux.microsoft.com>
-Date:   Thu, 9 Apr 2020 09:25:57 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Thu, 9 Apr 2020 12:26:43 -0400
+Received: by mail-wr1-f66.google.com with SMTP id w10so12636440wrm.4;
+        Thu, 09 Apr 2020 09:26:42 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=GD/oklGtk/+8gnrCm1T4EQmedNZZcJ/kYUIWVwvwJbI=;
+        b=ciWTq/eOSuM/zXCsthUw/IsF0d5STlA4PlibTBJhIA698y/UNO54mY02ryNE0axFtF
+         ime6dutlkip5YxYqGET2T47leWkfb1TexkPHBfNsL8ElijIShGGAkscfIfxXw2iCPv/n
+         pHLx+0LHnMtK5ecGPiGHEBiVv59x45UXcMTK9LtSL71qzA30NsRBk0KkNJw6cqx9W/i2
+         07K5E7hsP+YiMQpfxZakRRlqXUXT3Ka18JRbGmxDuTHNg5lQT5TbksxW5NOLq0ov+JRq
+         BUq+xmjfIJs6Z48d8uaKrKOdixGLAajhnTVEmeyhqHr/q2vyP3ygIeYVnU86+hwJ4tBg
+         OF6w==
+X-Gm-Message-State: AGi0PuazLjn2+2XoHlwSwsgww6QUIkDYdqK2F1cS3gfa8pbdXuPrl+qG
+        TCc6BwViWfg4qyD8aNbGsetZUM36xnY=
+X-Google-Smtp-Source: APiQypJIlaJ2ukaIbeO0I51ccQuZ+EjYxNmqV52bwIsPNgnA3QgyA2/AJ6WcFtR2RAeOn8QReuThTA==
+X-Received: by 2002:adf:ee12:: with SMTP id y18mr14291029wrn.289.1586449602377;
+        Thu, 09 Apr 2020 09:26:42 -0700 (PDT)
+Received: from debian (44.142.6.51.dyn.plus.net. [51.6.142.44])
+        by smtp.gmail.com with ESMTPSA id f3sm4578067wmj.24.2020.04.09.09.26.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 09 Apr 2020 09:26:41 -0700 (PDT)
+Date:   Thu, 9 Apr 2020 17:26:39 +0100
+From:   Wei Liu <wei.liu@kernel.org>
+To:     Vitaly Kuznetsov <vkuznets@redhat.com>
+Cc:     Olaf Hering <olaf@aepfle.de>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Wei Liu <wei.liu@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Michael Kelley <mikelley@microsoft.com>
+Subject: Re: [PATCH v1] x86: hyperv: report value of misc_features
+Message-ID: <20200409162639.x7vlj2z7h7wt5d4q@debian>
+References: <20200407172739.31371-1-olaf@aepfle.de>
+ <874ktu2csk.fsf@vitty.brq.redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <c1466cc8-8a08-708a-4629-234485bb833e@linux.vnet.ibm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <874ktu2csk.fsf@vitty.brq.redhat.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/7/2020 2:31 PM, Nayna wrote:
+On Wed, Apr 08, 2020 at 05:54:35PM +0200, Vitaly Kuznetsov wrote:
+> Olaf Hering <olaf@aepfle.de> writes:
+> 
+> > A few kernel features depend on ms_hyperv.misc_features, but unlike its
+> > siblings ->features and ->hints, the value was never reported during boot.
+> >
+> > Signed-off-by: Olaf Hering <olaf@aepfle.de>
+> > ---
+> >  arch/x86/kernel/cpu/mshyperv.c | 4 ++--
+> >  1 file changed, 2 insertions(+), 2 deletions(-)
+> >
+> > diff --git a/arch/x86/kernel/cpu/mshyperv.c b/arch/x86/kernel/cpu/mshyperv.c
+> > index caa032ce3fe3..53706fb56433 100644
+> > --- a/arch/x86/kernel/cpu/mshyperv.c
+> > +++ b/arch/x86/kernel/cpu/mshyperv.c
+> > @@ -227,8 +227,8 @@ static void __init ms_hyperv_init_platform(void)
+> >  	ms_hyperv.misc_features = cpuid_edx(HYPERV_CPUID_FEATURES);
+> >  	ms_hyperv.hints    = cpuid_eax(HYPERV_CPUID_ENLIGHTMENT_INFO);
+> >  
+> > -	pr_info("Hyper-V: features 0x%x, hints 0x%x\n",
+> > -		ms_hyperv.features, ms_hyperv.hints);
+> > +	pr_info("Hyper-V: features 0x%x, hints 0x%x, misc 0x%x\n",
+> > +		ms_hyperv.features, ms_hyperv.hints, ms_hyperv.misc_features);
+> 
+> Several spare thoughts:
+> 
+> I'm always struggling to remember what is what here as these names don't
+> correspond to TLFS, could we maybe come up with better naming, e.g.
+> 
+> "Features.EAX", "Features.EDX", "Recommendations.EAX",...
+> 
+> On the other hand, there is more, e.g. nested virtualization
+> features. How is it useful for all users to see this in dmesg every
+> time? If we need it for development purposes, we can always run 'cpuid'
+> so maybe let's drop this altogether or print only with pr_debug? 
+> 
+> (Honestly: no strong opinion here, deferring to Microsoft folks).
 
->
-> On 4/6/20 6:14 PM, deven.desai@linux.microsoft.com wrote:
->> From: Deven Bowers <deven.desai@linux.microsoft.com>
->>
->> Changelog:
->> ------------------------------------
->>
->> v1: Introduced
->>
->> v2:
->>    Split the second patch of the previous series into two.
->>    Minor corrections in the cover-letter and documentation
->>    comments regarding CAP_MAC_ADMIN checks in IPE.
->>
->> Overview:
->> ------------------------------------
->> IPE is a Linux Security Module, which allows for a configurable
->> policy to enforce integrity requirements on the whole system. It
->> attempts to solve the issue of Code Integrity: that any code being
->> executed (or files being read), are identical to the version that
->> was built by a trusted source.
->
-> Can you please clarify the "motivation" for this patch set more 
-> clearly? It seems to define a policy layer on top of dm-verity, which 
-> may be compiled into the kernel. In the motivation, can you please 
-> also make it explicit why existing mechanisms cannot be extended to 
-> achieve your purpose?
->
-This LSM was born out of a motivation to provide strong integrity 
-guarantees without a dependency on file-metadata, allow the integrity 
-claims to be configurable on a hot system, and allow for the mechanisms 
-for ensuring integrity to be extendable.
+I think making them closer to TLFS is a good idea.
 
-This naturally had to be an LSM, as controlling execution at the block 
-or filesystem layer does not make sense. Existing LSM implementations 
-use filesystem metadata, and since one of IPE's goals is to secure file 
-metadata, it is circular to depend on the file metadata itself to make 
-decisions about whether the file has been modified.
+Leaving them always printed is not a big concern to me. Sometimes you
+don't get to run `cpuid` if the kernel crashes early.
 
-Additionally, IPE while IPE currently provides dm-verity support and the 
-trust root support, it can be easily extended to other implementations 
-such as fs-verity. At it's core, IPE is attempting to separate mechanism 
-(dm-verity, fs-verity, etc.) from policy (IPE).
+Olaf's patch is fine as-is. I'm happy to take this patch (if not already
+taken by x86 maintainers) given it makes at least one developer's life
+easier.
 
-> Also, AFIK, the changelog should be moved to the end of the patch 
-> description.
->
-Thanks! I'll move the changelog.
+Wei.
+
+> 
+> >  
+> >  	ms_hyperv.max_vp_index = cpuid_eax(HYPERV_CPUID_IMPLEMENT_LIMITS);
+> >  	ms_hyperv.max_lp_index = cpuid_ebx(HYPERV_CPUID_IMPLEMENT_LIMITS);
+> >
+> 
+> -- 
+> Vitaly
+> 
