@@ -2,196 +2,206 @@ Return-Path: <SRS0=n+Ub=5Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17127C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 08:07:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF400C2D0EA
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 08:09:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D76E020757
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 08:07:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9FEF620692
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 08:09:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726523AbgDIIHZ (ORCPT
+        id S1726579AbgDIIJM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Apr 2020 04:07:25 -0400
-Received: from m9a0013g.houston.softwaregrp.com ([15.124.64.91]:35246 "EHLO
-        m9a0013g.houston.softwaregrp.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725828AbgDIIHY (ORCPT
+        Thu, 9 Apr 2020 04:09:12 -0400
+Received: from mx59.baidu.com ([61.135.168.59]:58021 "EHLO
+        tc-sys-mailedm04.tc.baidu.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726470AbgDIIJL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Apr 2020 04:07:24 -0400
-Received: FROM m9a0013g.houston.softwaregrp.com (15.121.0.190) BY m9a0013g.houston.softwaregrp.com WITH ESMTP;
- Thu,  9 Apr 2020 08:06:04 +0000
-Received: from M9W0067.microfocus.com (2002:f79:be::f79:be) by
- M9W0067.microfocus.com (2002:f79:be::f79:be) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.1591.10; Thu, 9 Apr 2020 08:06:36 +0000
-Received: from NAM11-BN8-obe.outbound.protection.outlook.com (15.124.72.14) by
- M9W0067.microfocus.com (15.121.0.190) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.1591.10 via Frontend Transport; Thu, 9 Apr 2020 08:06:36 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=iiIOWHKu+h2a7FN+QHD+e00RNruioCb+z8uNDfJ1431M589yRDqeO/GXiJC+Pk2rv5U05jexyMdXL5CI63z7fi6ccnnDZnrVKYHlNrXPNXvt3K6qF43KNos5sfoLd+zunkEark6LCZ2+LgQrjAmzjRlEyWSzIZLpT9OcJfEzv4n+wx6/WoHf1blt2RYHnJq5JgYTZRBDu8lKUEgz/SLRXstPrsiravZuVWnuFRk5Lh92t8BlvgM6wg6tu2GFnHYpWCe7/GGumThvH21uTl2U0RHp1vbGTeVM2jeHmsqz4UbJX4iU6Zts7KqKaWJr9JwbIR+gHiI2U11ogwXBheZ6Vg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=OPJlMU6kdQKG6PhnpLcrgbQltS/t4B9EHBdmt1CWM/0=;
- b=fst0hdRqUdDqTSKEUOLLgNGKaJldw+UXi7bhEGPzFOolxOfndxnlGMukr7KE6B+n9NOvlalrG9i8VhB7CCMADiNIJEt/gOzjo3AScHpS/xUNefSuPJhKGkfOYGTdibhZhpLK7A4STMF2NLp2eZQfejMfvX1K2cpMI3WSYokkywY/pFlXVK9TmyJ1H3dsqAd6agw5B0LYuPgqSfceJgjmOZHTPhWXQ/1uWhj+vjmjIDmKXGb+lifLz+9o+DYwDzLlEzj4IDgavwARsBLqzlOUv6qSPbov1fHJ9aBxd3l3FUYcJynfZ1sXXxPpca8SsoXB1dOoa08Nb3IE3QHuEpg6xQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=suse.com; dmarc=pass action=none header.from=suse.com;
- dkim=pass header.d=suse.com; arc=none
-Authentication-Results: spf=none (sender IP is ) smtp.mailfrom=GLin@suse.com; 
-Received: from DM6PR18MB3258.namprd18.prod.outlook.com (2603:10b6:5:1cd::31)
- by DM6PR18MB2458.namprd18.prod.outlook.com (2603:10b6:5:188::18) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2878.21; Thu, 9 Apr
- 2020 08:06:35 +0000
-Received: from DM6PR18MB3258.namprd18.prod.outlook.com
- ([fe80::5cdb:be43:a2bf:ca25]) by DM6PR18MB3258.namprd18.prod.outlook.com
- ([fe80::5cdb:be43:a2bf:ca25%6]) with mapi id 15.20.2878.021; Thu, 9 Apr 2020
- 08:06:35 +0000
-Date:   Thu, 9 Apr 2020 16:06:26 +0800
-From:   Gary Lin <glin@suse.com>
-To:     Ard Biesheuvel <ardb@kernel.org>
-CC:     Jiri Slaby <jslaby@suse.cz>, linux-efi <linux-efi@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Anshuman Khandual <anshuman.khandual@arm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Dave Young <dyoung@redhat.com>,
-        Saravana Kannan <saravanak@google.com>
-Subject: Re: [PATCH 05/13] efi/x86: don't map the entire kernel text RW for
- mixed mode
-Message-ID: <20200409080626.GV5951@GaryWorkstation>
-References: <20200113172245.27925-1-ardb@kernel.org>
- <20200113172245.27925-6-ardb@kernel.org>
- <63b125a4-6c62-fcdf-de22-d3bebe2dcbf5@suse.cz>
- <CAMj1kXGiT_zYjc6X-msRXVozhpDAY0UesEW3_4fOgiH4FyMgDw@mail.gmail.com>
- <972b66a9-92c7-9a15-1aa1-e3236abe90df@suse.cz>
- <CAMj1kXFGkOM9fbqr44_TbdxqFjH1i3d8dkO64C1mQmH=AqrUSQ@mail.gmail.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <CAMj1kXFGkOM9fbqr44_TbdxqFjH1i3d8dkO64C1mQmH=AqrUSQ@mail.gmail.com>
-X-ClientProxiedBy: SN6PR2101CA0008.namprd21.prod.outlook.com
- (2603:10b6:805:106::18) To DM6PR18MB3258.namprd18.prod.outlook.com
- (2603:10b6:5:1cd::31)
-MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from GaryWorkstation (60.251.47.115) by SN6PR2101CA0008.namprd21.prod.outlook.com (2603:10b6:805:106::18) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2921.6 via Frontend Transport; Thu, 9 Apr 2020 08:06:32 +0000
-X-Originating-IP: [60.251.47.115]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 6e072795-bd0d-4efe-1140-08d7dc5cebe1
-X-MS-TrafficTypeDiagnostic: DM6PR18MB2458:
-X-Microsoft-Antispam-PRVS: <DM6PR18MB2458A1DB335510A5FCA89319A9C10@DM6PR18MB2458.namprd18.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:8273;
-X-Forefront-PRVS: 0368E78B5B
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR18MB3258.namprd18.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10019020)(4636009)(396003)(346002)(136003)(366004)(39860400002)(376002)(86362001)(33656002)(316002)(2906002)(33716001)(7416002)(66476007)(66556008)(66946007)(4326008)(6666004)(54906003)(6916009)(55236004)(956004)(966005)(8936002)(6496006)(16526019)(26005)(1076003)(9686003)(52116002)(5660300002)(81166007)(478600001)(55016002)(81156014)(8676002)(45080400002)(186003);DIR:OUT;SFP:1102;
-Received-SPF: None (protection.outlook.com: suse.com does not designate
- permitted sender hosts)
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: yFSTnEPd41NIa1jDjSqutHxuPAz8fWJd3EuJUcclK3ntEaEoem7lhhOZf4NArtPjOqPuRUNwSQRu94b2T2yCgB4wQ5DN917eHO+8CxTpmLJ9ZWCoE4KdfVOGa7Pj1CRu5xRpywZbmv3+Zs6FRAb2Mxe6CV290lu9Wd7Q0LJiiLM1ec6JHLM59bCPkEPlRqs0vM9E+0pGFPB7Ybd5QfgXH/OrCX2UrdUPJyBkaohVEUUme7xc0yMQPkUxg07hluRcZf91OZDDwr0c2j0zUgL+ycPhJvjhzP6i6pazf/xmu3DnKesr3fL8MfmPcylSX26TEA69FjmRqy9LUfk6k6+cMjbKI40eYWAWbMTeBTm7t6vZHVTEyVwuNeM6cxytHhLFTE/6+gYINJqmmBI0QfU8ZRy5nyHeA7APGVUJuu8DwAkI7KmTwKMzQh711HbsihVy+MuAVPb/jb27zu/Vp9TzvrIvz+u8A/lqZsXlBjqi8RgHhmryUnqFNtTgWKXUco+AAwisjw/XWqOK2VmxXLdtDQ==
-X-MS-Exchange-AntiSpam-MessageData: WPT6SsvgaCpMPqpjVn6DXyhcI907y+OmJrQPFmcmvNPGBZJtLKV+XlmDCQKf/j64eYjr47TgH0ANI3fTCHNxo2VerSnLf3NY09mVmpGvVTgZu251OYvhNZAvnl4ZbH+xnukcEE2zoyVGzq9uatBXGg==
-X-MS-Exchange-CrossTenant-Network-Message-Id: 6e072795-bd0d-4efe-1140-08d7dc5cebe1
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Apr 2020 08:06:35.0081
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 856b813c-16e5-49a5-85ec-6f081e13b527
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: OZ/v9Dp98F8P01DdhMi9h7d42WlFM2flfihWn8HV40tVX+zl7yIhGRXMoM3osbHs
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR18MB2458
-X-OriginatorOrg: suse.com
+        Thu, 9 Apr 2020 04:09:11 -0400
+X-Greylist: delayed 652 seconds by postgrey-1.27 at vger.kernel.org; Thu, 09 Apr 2020 04:09:10 EDT
+Received: from localhost (cp01-cos-dev01.cp01.baidu.com [10.92.119.46])
+        by tc-sys-mailedm04.tc.baidu.com (Postfix) with ESMTP id 3B2A1236C00A;
+        Thu,  9 Apr 2020 15:57:55 +0800 (CST)
+From:   Li RongQing <lirongqing@baidu.com>
+To:     peterz@infradead.org, frederic@kernel.org, tglx@linutronix.de,
+        mingo@kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH][RFC] sched/isolation: allow isolcpus and nohz_full for different cpus
+Date:   Thu,  9 Apr 2020 15:57:56 +0800
+Message-Id: <1586419076-6301-1-git-send-email-lirongqing@baidu.com>
+X-Mailer: git-send-email 1.7.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 09, 2020 at 09:51:20AM +0200, Ard Biesheuvel wrote:
-> On Wed, 8 Apr 2020 at 12:51, Jiri Slaby <jslaby@suse.cz> wrote:
-> >
-> > Ccing Gary.
-> >
-> > On 08. 04. 20, 12:47, Ard Biesheuvel wrote:
-> > > On Wed, 8 Apr 2020 at 12:42, Jiri Slaby <jslaby@suse.cz> wrote:
-> > >>
-> > >> On 13. 01. 20, 18:22, Ard Biesheuvel wrote:
-> > >>> The mixed mode thunking routine requires a part of it to be
-> > >>> mapped 1:1, and for this reason, we currently map the entire
-> > >>> kernel .text read/write in the EFI page tables, which is bad.
-> > >>>
-> > >>> In fact, the kernel_map_pages_in_pgd() invocation that installs
-> > >>> this mapping is entirely redundant, since all of DRAM is already
-> > >>> 1:1 mapped read/write in the EFI page tables when we reach this
-> > >>> point, which means that .rodata is mapped read-write as well.
-> > >>>
-> > >>> So let's remap both .text and .rodata read-only in the EFI
-> > >>> page tables.
-> > >>
-> > >> This patch causes unhandled page faults in mixed mode:
-> > >>
-> > >>> BUG: unable to handle page fault for address: 000000001557ee88
-> > >>> #PF: supervisor write access in kernel mode
-> > >>> #PF: error_code(0x0003) - permissions violation
-> > >>> PGD fd52063 P4D fd52063 PUD fd53063 PMD 154000e1
-> > >>> Oops: 0003 [#1] SMP PTI
-> > >>> CPU: 1 PID: 191 Comm: systemd-escape Not tainted
-> > >> 5.6.2-20.gb22bc26-default #1 openSUSE Tumbleweed (unreleased)
-> > >>> Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 0.0.0
-> > >> 02/06/2015
-> > >>> RIP: 0008:0x3d2eed95
-> > >>> Code: 8b 45 d4 8b 4d 10 8b 40 04 89 01 89 3b 50 6a 00 8b 55 0c 6a 00
-> > >> 8b 45 08 0f b6 4d e4 6a 01 31 f6 e8 ee c5 fc ff 83 c4 10 eb 07 <89> 03
-> > >> be 05 00 00 80 a1 74 63 31 3d 83 c0 48 e8 44 d2 ff ff eb 05
-> > >>> RSP: 0018:000000000fd66fa0 EFLAGS: 00010002
-> > >>> RAX: 0000000000000001 RBX: 000000001557ee88 RCX: 000000003d1f1120
-> > >>> RDX: 0000000000000001 RSI: 0000000000000000 RDI: 0000000000000001
-> > >>> RBP: 000000000fd66fd8 R08: 000000001557ee88 R09: 0000000000000000
-> > >>> R10: 0000000000000055 R11: 0000000000000000 R12: 0000000015bcf000
-> > >>> R13: 0000000000000000 R14: 0000000000000000 R15: 0000000000000000
-> > >>> FS:  00007f36ee9dc940(0000) GS:ffff9b903d700000(0000)
-> > >> knlGS:0000000000000000
-> > >>> CS:  0008 DS: 0018 ES: 0018 CR0: 0000000080050033
-> > >>> CR2: 000000001557ee88 CR3: 000000000fd5e000 CR4: 00000000000006e0
-> > >>> DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-> > >>> DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-> > >>> Call Trace:
-> > >>> Modules linked in: efivarfs
-> > >>> CR2: 000000001557ee88
-> > >>
-> > >> EFI apparently tries to write to now read-only memory.
-> > >>
-> > >> See:
-> > >> https://bugzilla.suse.com/show_bug.cgi?id=1168645
-> > >>
-> > >> Reverting it on the top of 5.6 fixes the issue.
-> > >>
-> > >> I am using
-> > >> /usr/share/qemu/ovmf-ia32-code.bin
-> > >> /usr/share/qemu/ovmf-ia32-vars.bin
-> > >> from qemu-ovmf-ia32-202002-1.1.noarch rpm.
-> > >>
-> > >
-> > > Do you have a git tree for Suse's OVMF fork? I did a lot of testing
-> > > with upstream OVMF, and never ran into this issue.
-> >
-> > Not really a git tree, but the sources are here:
-> > https://build.opensuse.org/package/show/openSUSE:Factory/ovmf
-> >
-> 
-> 
-> Anywhere I can get an actual build? The src rpm only has the sources,
-> and the i586 rpm has nothing except
-> 
-> $ rpm -qlp ~/Downloads/ovmf-202002-1.1.i586.rpm
-> warning: /home/ardbie01/Downloads/ovmf-202002-1.1.i586.rpm: Header V3
-> RSA/SHA256 Signature, key ID 3dbdc284: NOKEY
-> /usr/share/doc/packages/ovmf
-> /usr/share/doc/packages/ovmf/README
+when both isolcpus and nohz_full are set, their cpus must be
+same now, in fact isolcpus and nohz_full are not related, and
+different cpus are expected for some cases, for example, some
+cores for polling threads wants to isolcpus, and some cores for
+dedicated threads, only nohz_full is expected
 
-Hmmm, it's weird that OBS doesn't list all derived files.
-Anyway, the ia32 ovmf is available in
-http://download.opensuse.org/tumbleweed/repo/oss/noarch/qemu-ovmf-ia32-202002-1.1.noarch.rpm
+Signed-off-by: Li RongQing <lirongqing@baidu.com>
+---
+ kernel/sched/isolation.c | 79 ++++++++++++++++++++++++++++++++----------------
+ 1 file changed, 53 insertions(+), 26 deletions(-)
 
-Gary Lin
+diff --git a/kernel/sched/isolation.c b/kernel/sched/isolation.c
+index 008d6ac2342b..6e6be34bb796 100644
+--- a/kernel/sched/isolation.c
++++ b/kernel/sched/isolation.c
+@@ -11,7 +11,8 @@
+ 
+ DEFINE_STATIC_KEY_FALSE(housekeeping_overridden);
+ EXPORT_SYMBOL_GPL(housekeeping_overridden);
+-static cpumask_var_t housekeeping_mask;
++static cpumask_var_t housekeeping_mask_isolcpus;
++static cpumask_var_t housekeeping_mask_nohz_full;
+ static unsigned int housekeeping_flags;
+ 
+ bool housekeeping_enabled(enum hk_flags flags)
+@@ -20,12 +21,26 @@ bool housekeeping_enabled(enum hk_flags flags)
+ }
+ EXPORT_SYMBOL_GPL(housekeeping_enabled);
+ 
++static cpumask_var_t housekeeping_get_mask(enum hk_flags flags)
++{
++	if (flags & (HK_FLAG_DOMAIN | HK_FLAG_MANAGED_IRQ))
++		return housekeeping_mask_isolcpus;
++
++	/* set by isolcpus=nohz only */
++	if ((flags & HK_FLAG_TICK) && !(housekeeping_flags & HK_FLAG_RCU))
++		return housekeeping_mask_isolcpus;
++
++	return housekeeping_mask_nohz_full;
++}
++
+ int housekeeping_any_cpu(enum hk_flags flags)
+ {
++	cpumask_var_t housekeeping_mask;
+ 	int cpu;
+ 
+ 	if (static_branch_unlikely(&housekeeping_overridden)) {
+ 		if (housekeeping_flags & flags) {
++			housekeeping_mask = housekeeping_get_mask(flags);
+ 			cpu = sched_numa_find_closest(housekeeping_mask, smp_processor_id());
+ 			if (cpu < nr_cpu_ids)
+ 				return cpu;
+@@ -41,7 +56,7 @@ const struct cpumask *housekeeping_cpumask(enum hk_flags flags)
+ {
+ 	if (static_branch_unlikely(&housekeeping_overridden))
+ 		if (housekeeping_flags & flags)
+-			return housekeeping_mask;
++			return housekeeping_get_mask(flags);
+ 	return cpu_possible_mask;
+ }
+ EXPORT_SYMBOL_GPL(housekeeping_cpumask);
+@@ -49,16 +64,24 @@ EXPORT_SYMBOL_GPL(housekeeping_cpumask);
+ void housekeeping_affine(struct task_struct *t, enum hk_flags flags)
+ {
+ 	if (static_branch_unlikely(&housekeeping_overridden))
+-		if (housekeeping_flags & flags)
++		if (housekeeping_flags & flags) {
++			cpumask_var_t housekeeping_mask;
++
++			housekeeping_mask = housekeeping_get_mask(flags);
+ 			set_cpus_allowed_ptr(t, housekeeping_mask);
++		}
+ }
+ EXPORT_SYMBOL_GPL(housekeeping_affine);
+ 
+ bool housekeeping_test_cpu(int cpu, enum hk_flags flags)
+ {
+ 	if (static_branch_unlikely(&housekeeping_overridden))
+-		if (housekeeping_flags & flags)
++		if (housekeeping_flags & flags) {
++			cpumask_var_t housekeeping_mask;
++
++			housekeeping_mask = housekeeping_get_mask(flags);
+ 			return cpumask_test_cpu(cpu, housekeeping_mask);
++		}
+ 	return true;
+ }
+ EXPORT_SYMBOL_GPL(housekeeping_test_cpu);
+@@ -74,10 +97,14 @@ void __init housekeeping_init(void)
+ 		sched_tick_offload_init();
+ 
+ 	/* We need at least one CPU to handle housekeeping work */
+-	WARN_ON_ONCE(cpumask_empty(housekeeping_mask));
++	if (housekeeping_mask_isolcpus)
++		WARN_ON_ONCE(cpumask_empty(housekeeping_mask_isolcpus));
++	if (housekeeping_mask_nohz_full)
++		WARN_ON_ONCE(cpumask_empty(housekeeping_mask_nohz_full));
+ }
+ 
+-static int __init housekeeping_setup(char *str, enum hk_flags flags)
++static int __init housekeeping_setup(char *str, enum hk_flags flags,
++		cpumask_var_t *housekeeping_mask)
+ {
+ 	cpumask_var_t non_housekeeping_mask;
+ 	cpumask_var_t tmp;
+@@ -92,25 +119,25 @@ static int __init housekeeping_setup(char *str, enum hk_flags flags)
+ 	}
+ 
+ 	alloc_bootmem_cpumask_var(&tmp);
+-	if (!housekeeping_flags) {
+-		alloc_bootmem_cpumask_var(&housekeeping_mask);
+-		cpumask_andnot(housekeeping_mask,
+-			       cpu_possible_mask, non_housekeeping_mask);
+-
+-		cpumask_andnot(tmp, cpu_present_mask, non_housekeeping_mask);
+-		if (cpumask_empty(tmp)) {
+-			pr_warn("Housekeeping: must include one present CPU, "
++	alloc_bootmem_cpumask_var(housekeeping_mask);
++	cpumask_andnot(*housekeeping_mask,
++				   cpu_possible_mask, non_housekeeping_mask);
++
++	cpumask_andnot(tmp, cpu_present_mask, non_housekeeping_mask);
++	if (cpumask_empty(tmp)) {
++		pr_warn("Housekeeping: must include one present CPU, "
+ 				"using boot CPU:%d\n", smp_processor_id());
+-			__cpumask_set_cpu(smp_processor_id(), housekeeping_mask);
+-			__cpumask_clear_cpu(smp_processor_id(), non_housekeeping_mask);
+-		}
+-	} else {
+-		cpumask_andnot(tmp, cpu_present_mask, non_housekeeping_mask);
+-		if (cpumask_empty(tmp))
+-			__cpumask_clear_cpu(smp_processor_id(), non_housekeeping_mask);
+-		cpumask_andnot(tmp, cpu_possible_mask, non_housekeeping_mask);
+-		if (!cpumask_equal(tmp, housekeeping_mask)) {
+-			pr_warn("Housekeeping: nohz_full= must match isolcpus=\n");
++		__cpumask_set_cpu(smp_processor_id(), *housekeeping_mask);
++		__cpumask_clear_cpu(smp_processor_id(), non_housekeeping_mask);
++	}
++
++	/* cpus should match when both nohz_full and isolcpus
++	 * with nohz are passed into kernel
++	 */
++	if (housekeeping_flags & flags & HK_FLAG_TICK) {
++		if (!cpumask_equal(housekeeping_mask_nohz_full,
++					housekeeping_mask_isolcpus)) {
++			pr_warn("Housekeeping: nohz_full= must match isolcpus=nohz\n");
+ 			free_bootmem_cpumask_var(tmp);
+ 			free_bootmem_cpumask_var(non_housekeeping_mask);
+ 			return 0;
+@@ -142,7 +169,7 @@ static int __init housekeeping_nohz_full_setup(char *str)
+ 
+ 	flags = HK_FLAG_TICK | HK_FLAG_WQ | HK_FLAG_TIMER | HK_FLAG_RCU | HK_FLAG_MISC;
+ 
+-	return housekeeping_setup(str, flags);
++	return housekeeping_setup(str, flags, &housekeeping_mask_nohz_full);
+ }
+ __setup("nohz_full=", housekeeping_nohz_full_setup);
+ 
+@@ -177,6 +204,6 @@ static int __init housekeeping_isolcpus_setup(char *str)
+ 	if (!flags)
+ 		flags |= HK_FLAG_DOMAIN;
+ 
+-	return housekeeping_setup(str, flags);
++	return housekeeping_setup(str, flags, &housekeeping_mask_isolcpus);
+ }
+ __setup("isolcpus=", housekeeping_isolcpus_setup);
+-- 
+2.16.2
+
