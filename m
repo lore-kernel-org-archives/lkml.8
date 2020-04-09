@@ -2,56 +2,56 @@ Return-Path: <SRS0=n+Ub=5Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16038C2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 21:45:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 415DDC352B6
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 21:45:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DEA9F2072F
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 21:45:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 16F412072F
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 21:45:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586468741;
-	bh=zBU7O5UNE0tLNvOMfbb4kBjbrL5rnOD8+jLVOOuS/0M=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=n+ajHKUjsIRgvOYMje8orLks7nNp7gJACwrc/iRPQ0XZufrtgelRHRL5IdVwSs35t
-	 w4G1ySRtDFgsiXOdGgb662EdxekbpmWM0uZFcKvPbo+hnVXzIQbkYj2fxi7lnd046w
-	 1RMwJar/RyXwlMBWOEJDOri7+5HJnX7cLuKEBaHM=
+	s=default; t=1586468744;
+	bh=vnvTMX8PW5Cw7IcRMN9r9u00xbab7XJRxdWhFTZgw9g=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=WZwnfzlAXLIJ1qNNBt9+fbYuZaL9E+aUNacZtmSalzhUI69Jwh2Cbgb66ambfe9Pp
+	 pZZVcY81SS8LWRLSeSUHu2+f9QegZU49wKfFG+icNgwTb3JtbZnZe7poDuLjfBiNO1
+	 hBZH+m41hGKEmyPs+Y6FunUAGfmwk6q3bpWDsGHE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727763AbgDIVpk (ORCPT
+        id S1727800AbgDIVpm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Apr 2020 17:45:40 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:41867 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726666AbgDIVpi (ORCPT
+        Thu, 9 Apr 2020 17:45:42 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:43883 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727738AbgDIVpk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Apr 2020 17:45:38 -0400
-Received: by mail-pf1-f193.google.com with SMTP id b8so133201pfp.8;
-        Thu, 09 Apr 2020 14:45:37 -0700 (PDT)
+        Thu, 9 Apr 2020 17:45:40 -0400
+Received: by mail-pf1-f195.google.com with SMTP id l1so129033pff.10;
+        Thu, 09 Apr 2020 14:45:39 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=Zps5dpYPJW545FaPYLeIjK5QW6MnaSH8AGIMhRszEiQ=;
-        b=ZfTe0U5SQPDNlQ+zDNnRPiqCpHPAwhYzHmI/Op3uG9TWjENYlTgDRmTT7G7JjxTgWo
-         zksDCIyf+6PFYxkmsHxeykJIeMRNaZahcwGWfANXKpDBlwPMBj9zqV3VG7mA9xnJU803
-         COwS11xdibc0EG/w+br9sLxPIumbvcA6DOL5zmVURtmqJJifXXt5EWWQW8PCcfEHruN+
-         nZCxRBsPH3kHe7G17piNVEDeU0FEqNBth8EKWBVuNsdWfRJ2vkKbcROXU/fAGg4QpQRX
-         onksLvJNJWzND3JuGK3q9RWYBWV27ZWw7v9ufIz51t6Kw9UUsyNZ4byc7coqGPUsM0Jb
-         MgIA==
-X-Gm-Message-State: AGi0Puap0ZJWDAyZvMvPYCGe63IOII+KaJiVpWs9zAhi0dIeuAoOIJdH
-        a8zd1D0JsmMgxivN3k7ezVc=
-X-Google-Smtp-Source: APiQypKG6gQPVfMD+0afCeX7kVugM0CXqtzTx9olvPQK5ZLuzXpo7Y7xI9ctxu781oEvpMwFytQxKA==
-X-Received: by 2002:a63:31c4:: with SMTP id x187mr1464572pgx.56.1586468737362;
-        Thu, 09 Apr 2020 14:45:37 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=gy1UfSr56zzS49pk3P0leehV/LFyixVBPxU1Vl/ddsw=;
+        b=qNGQhR0K1sHgMSL09FKzUNO0VDZhBunTcCuJmjYt09v4UY7O8LNb6IwgubOByrPSFX
+         prRWw7I/vwAo/O2noEteLWNnocEjay/PBZEOh4oirzr4PU7twQJn1wO52rdYH/+SeU3l
+         doLuBQ1oFixqlSimikeuiypbfdDepzje4dzLKGD2j1xhW9BP68rz1GK6x7QaD23cPJTD
+         4f1I7Cu4q7vcbiXMdLgxllpB2hnpxN8NlmFQG/zFvBrFamrEoPTDVZJK8AZM+1fbOeoL
+         1EYdu/ztS4iY1U1mmupe3Ht+QmGtMTbIUAYCzyok/uvb+oUGAOPOkww3hldXPn09lSHW
+         7MWQ==
+X-Gm-Message-State: AGi0PuY2hI0caNgSY1+JeAwAvabHEYEYwPe+6l4NP7fujmXZE0P3cL79
+        hsayvsKqcwglr3ofS3qUtJ8=
+X-Google-Smtp-Source: APiQypIRu35uCdJrL/5JzRDGZkG7eCJZdWSQQYH/I+boGDvDxSG5cHBQsRqIpIeV686q3aFn7ST2rg==
+X-Received: by 2002:aa7:8bda:: with SMTP id s26mr1667719pfd.142.1586468739160;
+        Thu, 09 Apr 2020 14:45:39 -0700 (PDT)
 Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
-        by smtp.gmail.com with ESMTPSA id mn18sm124100pjb.13.2020.04.09.14.45.32
+        by smtp.gmail.com with ESMTPSA id c15sm67565pgk.66.2020.04.09.14.45.33
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 09 Apr 2020 14:45:32 -0700 (PDT)
+        Thu, 09 Apr 2020 14:45:37 -0700 (PDT)
 Received: by 42.do-not-panic.com (Postfix, from userid 1000)
-        id 5DA2941DAA; Thu,  9 Apr 2020 21:45:32 +0000 (UTC)
+        id 1753940246; Thu,  9 Apr 2020 21:45:32 +0000 (UTC)
 From:   Luis Chamberlain <mcgrof@kernel.org>
 To:     axboe@kernel.dk, viro@zeniv.linux.org.uk,
         gregkh@linuxfoundation.org, rostedt@goodmis.org, mingo@redhat.com,
@@ -59,17 +59,11 @@ To:     axboe@kernel.dk, viro@zeniv.linux.org.uk,
         akpm@linux-foundation.org
 Cc:     mhocko@suse.com, yukuai3@huawei.com, linux-block@vger.kernel.org,
         linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, Luis Chamberlain <mcgrof@kernel.org>,
-        Bart Van Assche <bvanassche@acm.org>,
-        Omar Sandoval <osandov@fb.com>,
-        Hannes Reinecke <hare@suse.com>,
-        Michal Hocko <mhocko@kernel.org>
-Subject: [RFC v2 4/5] mm/swapfile: refcount block and queue before using blkcg_schedule_throttle()
-Date:   Thu,  9 Apr 2020 21:45:29 +0000
-Message-Id: <20200409214530.2413-5-mcgrof@kernel.org>
+        linux-kernel@vger.kernel.org, Luis Chamberlain <mcgrof@kernel.org>
+Subject: [RFC v2 0/5] blktrace: fix use after free
+Date:   Thu,  9 Apr 2020 21:45:25 +0000
+Message-Id: <20200409214530.2413-1-mcgrof@kernel.org>
 X-Mailer: git-send-email 2.23.0.rc1
-In-Reply-To: <20200409214530.2413-1-mcgrof@kernel.org>
-References: <20200409214530.2413-1-mcgrof@kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -77,68 +71,80 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-block device are refcounted so to ensure once its final user goes away it
-can be cleaned up by the lower layers properly. The block device's
-request_queue structure is also refcounted, however if the last
-blk_put_queue() is called under atomic context the block layer has
-to defer removal.
+This series fixes a use after free on block trace. This v2 adjusts the
+commit log feedback from the first iteration, and also expands on the
+series to include a few additional fixes which would be needed for us
+to continue with a synchronous request_queue removal. The refcount added
+for blktrace resolves the kobject issues pointed out by yukuai. Note
+that CONFIG_DEBUG_KOBJECT_RELEASE purposely was added to create
+situations where drivers misbehave, and so you should not use it to
+test expected userspace behaviour, but just to catch possible kernel
+issues. For details refer to the commit which introduced it, which
+actually helps a bit more than just reading the kconfig description,
+its commit was c817a67ecba7 ("kobject: delayed kobject release: help
+find buggy drivers"). This series also fixes a small build issue
+discovered by 0-day.
 
-By refcounting the block device during the use of blkcg_schedule_throttle(),
-we ensure ensure two things:
+The QUEUE_FLAG_DEFER_REMOVAL flag is added as part of the last patch,
+just in case for now. However, given creative use of refcounting
+I don't think we need it anymore. An example use case of creative
+use of refcounting is provided for mm/swapfile.
 
-1) the block device remains available during the call
-2) we ensure avoid having to deal with the fact we're using the
-   request_queue structure in atomic context, since the last
-   blk_put_queue() will be called upon disk_release(), *after*
-   our own bdput().
+I've extended break-blktrace [0] with 3 test cases which now pass
+for the most part:
 
-This means this code path is *not* going to remove the request_queue
-structure, as we are ensuring some later upper layer disk_release()
-will be the one to release the request_queue structure for us.
+run_0001.sh
+run_0002.sh
+run_0003.sh
 
-Cc: Bart Van Assche <bvanassche@acm.org>
-Cc: Omar Sandoval <osandov@fb.com>
-Cc: Hannes Reinecke <hare@suse.com>
-Cc: Nicolai Stange <nstange@suse.de>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Michal Hocko <mhocko@kernel.org>
-Cc: yu kuai <yukuai3@huawei.com>
-Signed-off-by: Luis Chamberlain <mcgrof@kernel.org>
----
- mm/swapfile.c | 11 +++++++++++
- 1 file changed, 11 insertions(+)
+The exception to this is when we get an EBUSY on loopback removal. This
+only happens every now and then, and upon further investigation, I
+suspect this is happening due to the same race Dave Chinner ran into
+with using loopback devices and fstests, which made explicit loopback
+destruction lazy via commit a1ecac3b0656 ("loop: Make explicit loop
+device destruction lazy"). Further eyeballs on this are appreciated,
+perhaps break-blktrace can be extended a bit to account for this.
 
-diff --git a/mm/swapfile.c b/mm/swapfile.c
-index 6659ab563448..5f6f3a61b5c0 100644
---- a/mm/swapfile.c
-+++ b/mm/swapfile.c
-@@ -3753,6 +3753,7 @@ static void free_swap_count_continuations(struct swap_info_struct *si)
- void mem_cgroup_throttle_swaprate(struct mem_cgroup *memcg, int node,
- 				  gfp_t gfp_mask)
- {
-+	struct block_device *bdev;
- 	struct swap_info_struct *si, *next;
- 	if (!(gfp_mask & __GFP_IO) || !memcg)
- 		return;
-@@ -3771,8 +3772,18 @@ void mem_cgroup_throttle_swaprate(struct mem_cgroup *memcg, int node,
- 	plist_for_each_entry_safe(si, next, &swap_avail_heads[node],
- 				  avail_lists[node]) {
- 		if (si->bdev) {
-+			bdev = bdgrab(si->bdev);
-+			if (!bdev)
-+				continue;
-+			/*
-+			 * By adding our own bdgrab() we ensure the queue
-+			 * sticks around until disk_release(), and so we ensure
-+			 * our release of the request_queue does not happen in
-+			 * atomic context.
-+			 */
- 			blkcg_schedule_throttle(bdev_get_queue(si->bdev),
- 						true);
-+			bdput(bdev);
- 			break;
- 		}
- 	}
+After a bit of brushing up, I am considering just upstreaming this
+as a self tests for blktrace, instead of keeping this out of tree.
+
+Worth noting as well was that it seems odd we didn't consider the
+userspace impact of commit dc9edc44de6c ("block: Fix a blk_exit_rl()
+regression") merged on v4.12 moved, as that deferral work sure did
+have an impact what userspace can expect upon device removal or races
+on addition/removal. Its not clear if mentioning any of this on the
+commit logs is worth it... Shouldn't have that deferral been a
+userspace regression?
+
+If you want this on a git tree you can find it on my 20200409-blktrace-fix-uaf
+branch on kernel.org based on linux-next next-20200409.
+
+Feedback, reviews, rants are all greatly appreciated.
+
+[0] https://github.com/mcgrof/break-blktrace
+[1] https://git.kernel.org/pub/scm/linux/kernel/git/mcgrof/linux-next.git/log/?h=20200409-blktrace-fix-uaf
+
+Luis Chamberlain (5):
+  block: move main block debugfs initialization to its own file
+  blktrace: fix debugfs use after free
+  blktrace: ref count the request_queue during ioctl
+  mm/swapfile: refcount block and queue before using
+    blkcg_schedule_throttle()
+  block: revert back to synchronous request_queue removal
+
+ block/Makefile               |  1 +
+ block/blk-core.c             |  9 +-------
+ block/blk-debugfs.c          | 27 ++++++++++++++++++++++
+ block/blk-mq-debugfs.c       |  5 -----
+ block/blk-sysfs.c            | 43 +++++++++++++++++++++++++++++-------
+ block/blk.h                  | 17 ++++++++++++++
+ include/linux/blkdev.h       |  7 +++++-
+ include/linux/blktrace_api.h |  1 -
+ kernel/trace/blktrace.c      | 25 ++++++++++++---------
+ mm/swapfile.c                | 11 +++++++++
+ 10 files changed, 112 insertions(+), 34 deletions(-)
+ create mode 100644 block/blk-debugfs.c
+
 -- 
 2.25.1
 
