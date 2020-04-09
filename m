@@ -2,138 +2,138 @@ Return-Path: <SRS0=n+Ub=5Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 331EEC2BA2B
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 11:08:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2999C2BB86
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 11:11:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 10EF420771
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 11:08:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A304E20B1F
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 11:11:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="i/wAPC2Y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726670AbgDILI5 (ORCPT
+        id S1726632AbgDILLh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Apr 2020 07:08:57 -0400
-Received: from foss.arm.com ([217.140.110.172]:48736 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726082AbgDILI4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Apr 2020 07:08:56 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D39B731B;
-        Thu,  9 Apr 2020 04:08:56 -0700 (PDT)
-Received: from bogus (unknown [10.37.12.63])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 92A433F73D;
-        Thu,  9 Apr 2020 04:08:50 -0700 (PDT)
-Date:   Thu, 9 Apr 2020 12:08:43 +0100
-From:   Sudeep Holla <sudeep.holla@arm.com>
-To:     Valentin Schneider <valentin.schneider@arm.com>
-Cc:     Cheng Jian <cj.chengjian@huawei.com>, vpillai@digitalocean.com,
-        aaron.lwe@gmail.com, aubrey.intel@gmail.com,
-        aubrey.li@linux.intel.com, fweisbec@gmail.com,
-        jdesfossez@digitalocean.com, joel@joelfernandes.org,
-        joelaf@google.com, keescook@chromium.org, kerrnel@google.com,
-        linux-kernel@vger.kernel.org, mgorman@techsingularity.net,
-        mingo@kernel.org, naravamudan@digitalocean.com, pauld@redhat.com,
-        pawan.kumar.gupta@linux.intel.com, pbonzini@redhat.com,
-        peterz@infradead.org, pjt@google.com, tglx@linutronix.de,
-        tim.c.chen@linux.intel.com, torvalds@linux-foundation.org,
-        xiexiuqi@huawei.com, huawei.libin@huawei.com, w.f@huawei.com,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH] sched/arm64: store cpu topology before
- notify_cpu_starting
-Message-ID: <20200409110843.GA8451@bogus>
-References: <855831b59e1b3774b11c3e33050eac4cc4639f06.1583332765.git.vpillai@digitalocean.com>
- <20200401114215.36640-1-cj.chengjian@huawei.com>
- <jhjwo6zjq5m.mognet@arm.com>
- <20200409095941.GA25948@bogus>
- <jhj5ze9t0er.mognet@arm.com>
+        Thu, 9 Apr 2020 07:11:37 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:56888 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725970AbgDILLg (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Apr 2020 07:11:36 -0400
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 039BBJcq106985;
+        Thu, 9 Apr 2020 06:11:19 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1586430679;
+        bh=E8tVnmNNO/6VeJ/pnizdaaUgKBPhHIA/HRlOTtiF0JQ=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=i/wAPC2YVcfdMrzt+LiAwyLGuDfxSYteoAx6ZWWevHYH2uXsA9oetr7TQF+Dm8wpI
+         +n+92Em4VqNYwUC+jt67NhODhNELjbcatkrJocY+uTc6EbWYu/c81PKKzC4JR6OptM
+         ECF8buK0rLt2enK/ZiDr5CvgM69VOwKHw1ABzNN4=
+Received: from DLEE111.ent.ti.com (dlee111.ent.ti.com [157.170.170.22])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 039BBJPI045541;
+        Thu, 9 Apr 2020 06:11:19 -0500
+Received: from DLEE109.ent.ti.com (157.170.170.41) by DLEE111.ent.ti.com
+ (157.170.170.22) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Thu, 9 Apr
+ 2020 06:11:18 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE109.ent.ti.com
+ (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Thu, 9 Apr 2020 06:11:18 -0500
+Received: from [10.250.100.73] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 039BBDME125366;
+        Thu, 9 Apr 2020 06:11:13 -0500
+Subject: Re: [PATCH] irqchip/ti-sci-inta: fix processing of masked irqs
+To:     Marc Zyngier <maz@kernel.org>
+CC:     Nishanth Menon <nm@ti.com>, Peter Ujfalusi <peter.ujfalusi@ti.com>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Lokesh Vutla <lokeshvutla@ti.com>,
+        Sekhar Nori <nsekhar@ti.com>, <linux-kernel@vger.kernel.org>,
+        Tero Kristo <t-kristo@ti.com>,
+        Santosh Shilimkar <ssantosh@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        <linux-arm-kernel@lists.infradead.org>,
+        Vignesh Raghavendra <vigneshr@ti.com>
+References: <20200408191532.31252-1-grygorii.strashko@ti.com>
+ <20200409103144.3b2169bf@why>
+From:   Grygorii Strashko <grygorii.strashko@ti.com>
+Message-ID: <851d5063-475e-ea7b-6609-684b08283550@ti.com>
+Date:   Thu, 9 Apr 2020 14:11:12 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <jhj5ze9t0er.mognet@arm.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200409103144.3b2169bf@why>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 09, 2020 at 11:32:12AM +0100, Valentin Schneider wrote:
->
-> On 09/04/20 10:59, Sudeep Holla wrote:
-> > On Wed, Apr 01, 2020 at 02:23:33PM +0100, Valentin Schneider wrote:
-> >>
-> >> (+LAKML, +Sudeep)
-> >>
-> >
-> > Thanks Valentin.
-> >
-> >> On Wed, Apr 01 2020, Cheng Jian wrote:
-> >> > when SCHED_CORE enabled, sched_cpu_starting() uses thread_sibling as
-> >> > SMT_MASK to initialize rq->core, but only after store_cpu_topology(),
-> >> > the thread_sibling is ready for use.
-> >> >
-> >> >       notify_cpu_starting()
-> >> >           -> sched_cpu_starting()	# use thread_sibling
-> >> >
-> >> >       store_cpu_topology(cpu)
-> >> >           -> update_siblings_masks	# set thread_sibling
-> >> >
-> >> > Fix this by doing notify_cpu_starting later, just like x86 do.
-> >> >
-> >>
-> >> I haven't been following the sched core stuff closely; can't this
-> >> rq->core assignment be done in sched_cpu_activate() instead? We already
-> >> look at the cpu_smt_mask() in there, and it is valid (we go through the
-> >> entirety of secondary_start_kernel() before getting anywhere near
-> >> CPUHP_AP_ACTIVE).
-> >>
-> >
-> > I too came to same conclusion. Did you see any issues ? Or is it
-> > just code inspection in parity with x86 ?
-> >
->
-> With mainline this isn't a problem; with the core scheduling stuff there is
-> an expectation that we can use the SMT masks in sched_cpu_starting().
->
 
-Ah, OK. I prefer this to be specified in the commit message as it is not
-obvious.
 
-> >> I don't think this breaks anything, but without this dependency in
-> >> sched_cpu_starting() then there isn't really a reason for this move.
-> >>
-> >
-> > Based on the commit message, had a quick look at x86 code and I agree
-> > this shouldn't break anything. However the commit message does make
-> > complete sense to me, especially reference to sched_cpu_starting
-> > while smt_masks are accessed in sched_cpu_activate. Or am I missing
-> > to understand something here ?
->
-> As stated above, it's not a problem for mainline, and AIUI we can change
-> the core scheduling bits to only use the SMT mask in sched_cpu_activate()
-> instead, therefore not requiring any change in the arch code.
->
+On 09/04/2020 12:31, Marc Zyngier wrote:
+> On Wed, 8 Apr 2020 22:15:32 +0300
+> Grygorii Strashko <grygorii.strashko@ti.com> wrote:
+> 
+>> The ti_sci_inta_irq_handler() does not take into account INTA IRQs state
+>> (masked/unmasked) as it uses INTA_STATUS_CLEAR_j register to get INTA IRQs
+>> status, which provides raw status value.
+>> This causes hard IRQ handlers to be called or threaded handlers to be
+>> scheduled many times even if corresponding INTA IRQ is masked.
+>> Above, first of all, affects the LEVEL interrupts processing and causes
+>> unexpected behavior up the system stack or crash.
+>>
+>> Fix it by using the Interrupt Masked Status INTA_STATUSM_j register which
+>> provides masked INTA IRQs status.
+>>
+>> Fixes: 9f1463b86c13 ("irqchip/ti-sci-inta: Add support for Interrupt Aggregator driver")
+>> Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
+> 
+> Given the failure mode, doesn't this deserve a Cc stable?
 
-Either way is fine. If it is already set expectation that SMT masks needs
-to be set before sched_cpu_starting, then let us just stick with that.
+Sorry, was not sure how it works here.
+"Fixes" tag now is usually enough to get included in stable.
+Any way, I'll track it and if not included will re-send for stable.
 
-> I'm not aware of any written rule that the topology masks should be usable
-> from a given hotplug state upwards, only that right now we need them in
-> sched_cpu_(de)activate() for SMT scheduling - and that is already working
-> fine.
->
+> 
+>> ---
+>>   drivers/irqchip/irq-ti-sci-inta.c | 3 ++-
+>>   1 file changed, 2 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/irqchip/irq-ti-sci-inta.c b/drivers/irqchip/irq-ti-sci-inta.c
+>> index 8f6e6b08eadf..7e3ebf6ed2cd 100644
+>> --- a/drivers/irqchip/irq-ti-sci-inta.c
+>> +++ b/drivers/irqchip/irq-ti-sci-inta.c
+>> @@ -37,6 +37,7 @@
+>>   #define VINT_ENABLE_SET_OFFSET	0x0
+>>   #define VINT_ENABLE_CLR_OFFSET	0x8
+>>   #define VINT_STATUS_OFFSET	0x18
+>> +#define VINT_STATUS_MASKED_OFFSET	0x20
+>>   
+>>   /**
+>>    * struct ti_sci_inta_event_desc - Description of an event coming to
+>> @@ -116,7 +117,7 @@ static void ti_sci_inta_irq_handler(struct irq_desc *desc)
+>>   	chained_irq_enter(irq_desc_get_chip(desc), desc);
+>>   
+>>   	val = readq_relaxed(inta->base + vint_desc->vint_id * 0x1000 +
+>> -			    VINT_STATUS_OFFSET);
+>> +			    VINT_STATUS_MASKED_OFFSET);
+>>   
+>>   	for_each_set_bit(bit, &val, MAX_EVENTS_PER_VINT) {
+>>   		virq = irq_find_mapping(domain, vint_desc->events[bit].hwirq);
+> 
+> 
+> Otherwise queued for post -rc1.
 
-Sure, we can at-least document as part of this change even if it is just
-in ARM64 so that someone need not wonder the same in future.
+Thanks.
 
-> So really this should be considering as a simple neutral cleanup; I don't
-> really have any opinion on picking it up or not.
-
-I am fine with the change too, just need some tweaking in the commit
-message.
-
---
-Regards,
-Sudeep
+-- 
+Best regards,
+grygorii
