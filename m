@@ -2,86 +2,102 @@ Return-Path: <SRS0=n+Ub=5Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF65EC2BA80
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 01:44:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CBFBC2BB1D
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 01:45:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AA7C320692
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 01:44:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="VtrovxK9"
+	by mail.kernel.org (Postfix) with ESMTP id 6DD6720857
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 01:45:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726571AbgDIBoX (ORCPT
+        id S1726627AbgDIBpT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Apr 2020 21:44:23 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:29571 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726510AbgDIBoX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Apr 2020 21:44:23 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1586396662;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=b2mtGi6r3BCSmkwLZaqpFPxWzlxVwSz47AyFQhgeBuQ=;
-        b=VtrovxK9+cVDxE2MN9fbQDQK2V2NC2jU/fZIjflRbmbsdqoGxOfiwirANw1xVQqWiM4+GD
-        FrP1JX47nfWgycTJ236pBnphcwiyKDCoMWM8mNG82jy14Lmh468qAcPwJZAjEFN5ppwtRB
-        t7Zb0FDged5LTOJXuTr+RAzxdYBvxBE=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-293-17zbROZEMUmtlVE77rpzDg-1; Wed, 08 Apr 2020 21:44:20 -0400
-X-MC-Unique: 17zbROZEMUmtlVE77rpzDg-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 024B78017F5;
-        Thu,  9 Apr 2020 01:44:19 +0000 (UTC)
-Received: from localhost.localdomain (ovpn-8-27.pek2.redhat.com [10.72.8.27])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id F11C19DD73;
-        Thu,  9 Apr 2020 01:44:11 +0000 (UTC)
-Date:   Thu, 9 Apr 2020 09:44:06 +0800
-From:   Ming Lei <ming.lei@redhat.com>
-To:     Tejun Heo <tj@kernel.org>
-Cc:     axboe@kernel.dk, linux-block@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kernel-team@vger.kernel.org,
-        cgroups@vger.kernel.org, newella@fb.com, josef@toxicpanda.com
-Subject: Re: [PATCH 2/5] block: add request->io_data_len
-Message-ID: <20200409014406.GA370295@localhost.localdomain>
-References: <20200408201450.3959560-1-tj@kernel.org>
- <20200408201450.3959560-3-tj@kernel.org>
+        Wed, 8 Apr 2020 21:45:19 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:37328 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726579AbgDIBpT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Apr 2020 21:45:19 -0400
+Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 9B416B59D0BA86C2FC1F;
+        Thu,  9 Apr 2020 09:45:10 +0800 (CST)
+Received: from [127.0.0.1] (10.63.139.185) by DGGEMS413-HUB.china.huawei.com
+ (10.3.19.213) with Microsoft SMTP Server id 14.3.487.0; Thu, 9 Apr 2020
+ 09:45:03 +0800
+Subject: Re: [PATCH] crypto: hisilicon: add more dependencies
+To:     Arnd Bergmann <arnd@arndb.de>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S. Miller" <davem@davemloft.net>,
+        Hongbo Yao <yaohongbo@huawei.com>
+References: <20200408162718.4004527-1-arnd@arndb.de>
+CC:     Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Zaibo Xu <xuzaibo@huawei.com>, Hao Fang <fanghao11@huawei.com>,
+        Eric Biggers <ebiggers@google.com>,
+        Mao Wenan <maowenan@huawei.com>,
+        <linux-crypto@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+From:   Zhou Wang <wangzhou1@hisilicon.com>
+Message-ID: <5E8E7E0D.4090702@hisilicon.com>
+Date:   Thu, 9 Apr 2020 09:44:45 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:38.0) Gecko/20100101
+ Thunderbird/38.5.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200408201450.3959560-3-tj@kernel.org>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+In-Reply-To: <20200408162718.4004527-1-arnd@arndb.de>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.63.139.185]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Tejun,
-
-On Wed, Apr 08, 2020 at 04:14:47PM -0400, Tejun Heo wrote:
-> Currently, at the time of completeion, there's no way of knowing how big a
-> request was. blk-iocost will need this information to account for IO size when
-> calculating expected latencies.
+On 2020/4/9 0:27, Arnd Bergmann wrote:
+> The added dependencies must be applied recursively to
+> other modules that select CRYPTO_DEV_HISI_QM, to avoid
+> running into the same problem again:
 > 
-> This patch adds rq->io_data_len which remembers blk_rq_bytes() at the time the
-> request gets issued. The field is enabled iff CONFIG_BLK_IO_DATA_LEN is set and
-> doesn't increase the size of the struct even when enabled.
+> WARNING: unmet direct dependencies detected for CRYPTO_DEV_HISI_QM
+>   Depends on [m]: CRYPTO [=y] && CRYPTO_HW [=y] && (ARM64 [=y] || COMPILE_TEST [=y]) && PCI [=y] && PCI_MSI [=y] && (UACCE [=m] || UACCE [=m]=n)
+>   Selected by [y]:
+>   - CRYPTO_DEV_HISI_SEC2 [=y] && CRYPTO [=y] && CRYPTO_HW [=y] && PCI [=y] && PCI_MSI [=y] && (ARM64 [=y] || COMPILE_TEST [=y] && 64BIT [=y])
+>   - CRYPTO_DEV_HISI_HPRE [=y] && CRYPTO [=y] && CRYPTO_HW [=y] && PCI [=y] && PCI_MSI [=y] && (ARM64 [=y] || COMPILE_TEST [=y] && 64BIT [=y])
+> ld: drivers/crypto/hisilicon/qm.o: in function `hisi_qm_uninit': qm.c:(.text+0x23b8): undefined reference to `uacce_remove'
+> 
+> Fixes: 47c16b449921 ("crypto: hisilicon - qm depends on UACCE")
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> ---
+>  drivers/crypto/hisilicon/Kconfig | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
+> diff --git a/drivers/crypto/hisilicon/Kconfig b/drivers/crypto/hisilicon/Kconfig
+> index 095850d01dcc..9c3004663fe8 100644
+> --- a/drivers/crypto/hisilicon/Kconfig
+> +++ b/drivers/crypto/hisilicon/Kconfig
+> @@ -28,6 +28,7 @@ config CRYPTO_DEV_HISI_SEC2
+>  	select CRYPTO_SHA512
+>  	depends on PCI && PCI_MSI
+>  	depends on ARM64 || (COMPILE_TEST && 64BIT)
+> +	depends on UACCE || UACCE=n
+>  	help
+>  	  Support for HiSilicon SEC Engine of version 2 in crypto subsystem.
+>  	  It provides AES, SM4, and 3DES algorithms with ECB
+> @@ -59,6 +60,7 @@ config CRYPTO_DEV_HISI_HPRE
+>  	tristate "Support for HISI HPRE accelerator"
+>  	depends on PCI && PCI_MSI
+>  	depends on ARM64 || (COMPILE_TEST && 64BIT)
+> +	depends on UACCE || UACCE=n
+>  	select CRYPTO_DEV_HISI_QM
+>  	select CRYPTO_DH
+>  	select CRYPTO_RSA
+> 
 
-Almost all __blk_mq_end_request() follow blk_update_request(), so the
-completed bytes can be passed to __blk_mq_end_request(), then we can
-avoid to introduce this field.
+Hi Arnd,
 
-Also there is just 20 callers of __blk_mq_end_request(), looks this kind
-of change shouldn't be too big.
+Seems we already have a fix: https://lkml.org/lkml/2020/3/30/173 with your reviewed-by :)
 
+Best,
+Zhou
 
-Thanks, 
-Ming
 
