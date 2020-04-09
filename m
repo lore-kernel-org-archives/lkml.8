@@ -2,137 +2,354 @@ Return-Path: <SRS0=n+Ub=5Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61C8BC2BA2B
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 14:41:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 716B8C2BA2B
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 14:42:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 389442078E
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 14:41:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3502A20A8B
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 14:42:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="WmixIhEA"
+	dkim=pass (2048-bit key) header.d=verdurent-com.20150623.gappssmtp.com header.i=@verdurent-com.20150623.gappssmtp.com header.b="BmZ6GULs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727841AbgDIOle (ORCPT
+        id S1727865AbgDIOmC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Apr 2020 10:41:34 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:60654 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727737AbgDIOle (ORCPT
+        Thu, 9 Apr 2020 10:42:02 -0400
+Received: from mail-vs1-f66.google.com ([209.85.217.66]:34597 "EHLO
+        mail-vs1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727115AbgDIOmC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Apr 2020 10:41:34 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1586443292;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=89GNIOSKjsOD8QJV6eCKtCzrS0MjyFeJYEzczikaUfM=;
-        b=WmixIhEAPyFwklTqe2cWyM/gqP7bbMkWxLW1zsOUbwnsQK0j7bVTPNIxHWzYUZYGleDfAY
-        Z9os8mmtSg8kd/sDxmSN7Qz19eYl/3zLcQR61fy9wI0AIr+OBQT+ZhRB8oPF1LLQlWaCbO
-        eq0g8yhX1cNKOMuXEuJwQ4HGioxH5/c=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-282-cRVUOBR5Nx2JHnnd5Bfdcg-1; Thu, 09 Apr 2020 10:41:26 -0400
-X-MC-Unique: cRVUOBR5Nx2JHnnd5Bfdcg-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 4E8F08017F3;
-        Thu,  9 Apr 2020 14:41:23 +0000 (UTC)
-Received: from localhost (ovpn-12-133.pek2.redhat.com [10.72.12.133])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 0F81E391;
-        Thu,  9 Apr 2020 14:41:22 +0000 (UTC)
-Date:   Thu, 9 Apr 2020 22:41:19 +0800
-From:   Baoquan He <bhe@redhat.com>
-To:     Mike Rapoport <rppt@linux.ibm.com>,
-        Michal Hocko <mhocko@kernel.org>
-Cc:     Hoan Tran <Hoan@os.amperecomputing.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Oscar Salvador <osalvador@suse.de>,
-        Pavel Tatashin <pavel.tatashin@microsoft.com>,
-        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        "open list:MEMORY MANAGEMENT" <linux-mm@kvack.org>,
-        linux-arm-kernel@lists.infradead.org, linux-s390@vger.kernel.org,
-        sparclinux@vger.kernel.org, x86@kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-        lho@amperecomputing.com, mmorana@amperecomputing.com
-Subject: Re: [PATCH RFC] mm: remove CONFIG_HAVE_MEMBLOCK_NODE_MAP (was: Re:
- [PATCH v3 0/5] mm: Enable CONFIG_NODES_SPAN_OTHER_NODES by default for NUMA)
-Message-ID: <20200409144119.GE2129@MiWiFi-R3L-srv>
-References: <1585420282-25630-1-git-send-email-Hoan@os.amperecomputing.com>
- <20200330074246.GA14243@dhcp22.suse.cz>
- <20200330092127.GB30942@linux.ibm.com>
- <20200330095843.GF14243@dhcp22.suse.cz>
- <20200331215618.GG30942@linux.ibm.com>
- <20200401054227.GC2129@MiWiFi-R3L-srv>
- <20200401075155.GH30942@linux.ibm.com>
- <20200402080144.GK22681@dhcp22.suse.cz>
+        Thu, 9 Apr 2020 10:42:02 -0400
+Received: by mail-vs1-f66.google.com with SMTP id b5so7055315vsb.1
+        for <linux-kernel@vger.kernel.org>; Thu, 09 Apr 2020 07:42:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=verdurent-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=f4mXwOzfoQFfmTyPdF7FI/nvZYzgTEkhsp/jnf7l374=;
+        b=BmZ6GULsIOlPMSeR4QFP6UMU8xiIGx++xbVXvG4Ec14xhXm9xO54PsRz2mxTHRE/zS
+         hpnnjFBGw3DoPCT4XJ7XPcvn+ZgD5Dgv4qo5ptYViWYP2VA8mdbkSTJBY4YTL2N3HfKg
+         NvMMJbwI124CbsUc49NgD5VNIjOLwitQnU4+iWusAWlVIN9V1lY+wZb1fxfzhVJg7Svf
+         tLTlb0SMJOEU8ESAlUSC4HYXZv0ZCbmYiIxUY8zyGJ4F3r8I0gnyw7/uXQt0DyZIpP3Q
+         oiGGkLLnrmCU41aWoN54rM9dBwhyKbJ7TaN+gyUI1YiyHTQd891cnjftlUVYLlc6ZDy5
+         DTcA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=f4mXwOzfoQFfmTyPdF7FI/nvZYzgTEkhsp/jnf7l374=;
+        b=qzfj4VjBwnCkRacFFnvB+Z5rCLGMsdx50rGQoY1zlra1PJuJOw0wm1gbA0l1H795sB
+         CKq9rxyl8scUu0r0r7ErMU6gg7xFcPuIq0gTGv3x2p0Vtv2fUS8JHMAE41Q8lJXaDgHv
+         7sKYQ9ZaGvi10DKMM/iI343iTsljzgqsPV50lUOFBL20FdRSJYgv07+t25332K1O5HbW
+         uFrnocAUhV7BEBXjr3yqzLj5uPylHXwYklT6cE0WBS9b8h9ITEMRax6ZSLz/eeJO6EoK
+         uqxhROGHR6raZDXCNfBVQ058bQi5LyUSQcc56HgMlRHpfrSsZjnqcF9mrDV3eXQr5uVn
+         iFHQ==
+X-Gm-Message-State: AGi0PuZaFCNIhAWNFfzJy1SmVmpvYfs4pDOz1MkmXXNBUJyIaicumzKV
+        dMlKI7H672nx8OaE2HiLFkzuoNdBFStvNUenKw5xqw==
+X-Google-Smtp-Source: APiQypIMwqo54G8PDp6x6bzZoYY0l/NI3qEPSUYHGLPzdzXdkZbfrZHq59Uacbj6+5+FPXnMW5l6fHqSuoOtciP+E30=
+X-Received: by 2002:a67:4242:: with SMTP id p63mr243113vsa.159.1586443321181;
+ Thu, 09 Apr 2020 07:42:01 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200402080144.GK22681@dhcp22.suse.cz>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+References: <1586407908-27139-1-git-send-email-Anson.Huang@nxp.com>
+ <CAHLCerPi36z4z4DLmP9czEp8aw8yQq7EHAtHdCFLO2ZVYBZsRA@mail.gmail.com> <DB3PR0402MB3916F4F4BD5B0DC083E76183F5C10@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+In-Reply-To: <DB3PR0402MB3916F4F4BD5B0DC083E76183F5C10@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+From:   Amit Kucheria <amit.kucheria@verdurent.com>
+Date:   Thu, 9 Apr 2020 20:11:50 +0530
+Message-ID: <CAHLCerOrto=3xXpU1Aimf0Zh197K-tQHuOou-VXg+W+Nf_eTWQ@mail.gmail.com>
+Subject: Re: [PATCH] dt-bindings: thermal: Convert i.MX to json-schema
+To:     Anson Huang <anson.huang@nxp.com>
+Cc:     Zhang Rui <rui.zhang@intel.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        Linux PM list <linux-pm@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        lakml <linux-arm-kernel@lists.infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        dl-linux-imx <linux-imx@nxp.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 04/02/20 at 10:01am, Michal Hocko wrote:
-> On Wed 01-04-20 10:51:55, Mike Rapoport wrote:
-> > Hi,
-> > 
-> > On Wed, Apr 01, 2020 at 01:42:27PM +0800, Baoquan He wrote:
-> [...]
-> > > From above information, we can remove HAVE_MEMBLOCK_NODE_MAP, and
-> > > replace it with CONFIG_NUMA. That sounds more sensible to store nid into
-> > > memblock when NUMA support is enabled.
-> >  
-> > Replacing CONFIG_HAVE_MEMBLOCK_NODE_MAP with CONFIG_NUMA will work, but
-> > this will not help cleaning up the whole node/zone initialization mess and
-> > we'll be stuck with two implementations.
-> 
-> Yeah, this is far from optimal.
-> 
-> > The overhead of enabling HAVE_MEMBLOCK_NODE_MAP is only for init time as
-> > most architectures will anyway discard the entire memblock, so having it in
-> > a UMA arch won't be a problem. The only exception is arm that uses
-> > memblock for pfn_valid(), here we may also think about a solution to
-> > compensate the addition of nid to the memblock structures. 
-> 
-> Well, we can make memblock_region->nid defined only for CONFIG_NUMA.
-> memblock_get_region_node would then unconditionally return 0 on UMA.
-> Essentially the same way we do NUMA for other MM code. I only see few
-> direct usage of region->nid.
+On Thu, Apr 9, 2020 at 8:04 PM Anson Huang <anson.huang@nxp.com> wrote:
+>
+> Hi, Amit
+>
+> > Subject: Re: [PATCH] dt-bindings: thermal: Convert i.MX to json-schema
+> >
+> > Hi Anson,
+> >
+> > On Thu, Apr 9, 2020 at 10:29 AM Anson Huang <Anson.Huang@nxp.com>
+> > wrote:
+> > >
+> > > Convert the i.MX thermal binding to DT schema format using json-schema
+> > >
+> > > Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+> > > ---
+> > >  .../devicetree/bindings/thermal/imx-thermal.txt    | 61 --------------
+> > >  .../devicetree/bindings/thermal/imx-thermal.yaml   | 97
+> > ++++++++++++++++++++++
+> > >  2 files changed, 97 insertions(+), 61 deletions(-)  delete mode
+> > > 100644 Documentation/devicetree/bindings/thermal/imx-thermal.txt
+> > >  create mode 100644
+> > > Documentation/devicetree/bindings/thermal/imx-thermal.yaml
+> > >
+> > > diff --git a/Documentation/devicetree/bindings/thermal/imx-thermal.txt
+> > > b/Documentation/devicetree/bindings/thermal/imx-thermal.txt
+> > > deleted file mode 100644
+> > > index 823e417..0000000
+> > > --- a/Documentation/devicetree/bindings/thermal/imx-thermal.txt
+> > > +++ /dev/null
+> > > @@ -1,61 +0,0 @@
+> > > -* Temperature Monitor (TEMPMON) on Freescale i.MX SoCs
+> > > -
+> > > -Required properties:
+> > > -- compatible : must be one of following:
+> > > -  - "fsl,imx6q-tempmon" for i.MX6Q,
+> > > -  - "fsl,imx6sx-tempmon" for i.MX6SX,
+> > > -  - "fsl,imx7d-tempmon" for i.MX7S/D.
+> > > -- interrupts : the interrupt output of the controller:
+> > > -  i.MX6Q has one IRQ which will be triggered when temperature is
+> > > higher than high threshold,
+> > > -  i.MX6SX and i.MX7S/D have two more IRQs than i.MX6Q, one is IRQ_LOW
+> > > and the other is IRQ_PANIC,
+> > > -  when temperature is below than low threshold, IRQ_LOW will be
+> > > triggered, when temperature
+> > > -  is higher than panic threshold, system will auto reboot by SRC module.
+> > > -- fsl,tempmon : phandle pointer to system controller that contains
+> > > TEMPMON
+> > > -  control registers, e.g. ANATOP on imx6q.
+> > > -- nvmem-cells: A phandle to the calibration cells provided by ocotp.
+> > > -- nvmem-cell-names: Should be "calib", "temp_grade".
+> > > -
+> > > -Deprecated properties:
+> > > -- fsl,tempmon-data : phandle pointer to fuse controller that contains
+> > > TEMPMON
+> > > -  calibration data, e.g. OCOTP on imx6q.  The details about
+> > > calibration data
+> > > -  can be found in SoC Reference Manual.
+> > > -
+> > > -Direct access to OCOTP via fsl,tempmon-data is incorrect on some
+> > > newer chips -because it does not handle OCOTP clock requirements.
+> > > -
+> > > -Optional properties:
+> > > -- clocks : thermal sensor's clock source.
+> > > -
+> > > -Example:
+> > > -ocotp: ocotp@21bc000 {
+> > > -       #address-cells = <1>;
+> > > -       #size-cells = <1>;
+> > > -       compatible = "fsl,imx6sx-ocotp", "syscon";
+> > > -       reg = <0x021bc000 0x4000>;
+> > > -       clocks = <&clks IMX6SX_CLK_OCOTP>;
+> > > -
+> > > -       tempmon_calib: calib@38 {
+> > > -               reg = <0x38 4>;
+> > > -       };
+> > > -
+> > > -       tempmon_temp_grade: temp-grade@20 {
+> > > -               reg = <0x20 4>;
+> > > -       };
+> > > -};
+> > > -
+> > > -tempmon: tempmon {
+> > > -       compatible = "fsl,imx6sx-tempmon", "fsl,imx6q-tempmon";
+> > > -       interrupts = <GIC_SPI 49 IRQ_TYPE_LEVEL_HIGH>;
+> > > -       fsl,tempmon = <&anatop>;
+> > > -       nvmem-cells = <&tempmon_calib>, <&tempmon_temp_grade>;
+> > > -       nvmem-cell-names = "calib", "temp_grade";
+> > > -       clocks = <&clks IMX6SX_CLK_PLL3_USB_OTG>;
+> > > -};
+> > > -
+> > > -Legacy method (Deprecated):
+> > > -tempmon {
+> > > -       compatible = "fsl,imx6q-tempmon";
+> > > -       fsl,tempmon = <&anatop>;
+> > > -       fsl,tempmon-data = <&ocotp>;
+> > > -       clocks = <&clks 172>;
+> > > -};
+> > > diff --git
+> > > a/Documentation/devicetree/bindings/thermal/imx-thermal.yaml
+> > > b/Documentation/devicetree/bindings/thermal/imx-thermal.yaml
+> > > new file mode 100644
+> > > index 0000000..ad12622
+> > > --- /dev/null
+> > > +++ b/Documentation/devicetree/bindings/thermal/imx-thermal.yaml
+> > > @@ -0,0 +1,97 @@
+> > > +# SPDX-License-Identifier: GPL-2.0
+> > > +%YAML 1.2
+> > > +---
+> > > +$id:
+> > > +https://eur01.safelinks.protection.outlook.com/?url=http%3A%2F%2Fdevi
+> > >
+> > +cetree.org%2Fschemas%2Fthermal%2Fimx-thermal.yaml%23&amp;data=02%
+> > 7C01
+> > >
+> > +%7Canson.huang%40nxp.com%7C408494436dca450abb5d08d7dc8cc727%7
+> > C686ea1d
+> > >
+> > +3bc2b4c6fa92cd99c5c301635%7C0%7C1%7C637220369539115517&amp;s
+> > data=e3R5
+> > > +q1YhIRLSOVdLYJWVlbOdqdjxYHNJMcXz%2Bxb1kjc%3D&amp;reserved=0
+> > > +$schema:
+> > > +https://eur01.safelinks.protection.outlook.com/?url=http%3A%2F%2Fdevi
+> > >
+> > +cetree.org%2Fmeta-schemas%2Fcore.yaml%23&amp;data=02%7C01%7Cans
+> > on.hua
+> > >
+> > +ng%40nxp.com%7C408494436dca450abb5d08d7dc8cc727%7C686ea1d3bc
+> > 2b4c6fa92
+> > >
+> > +cd99c5c301635%7C0%7C1%7C637220369539125508&amp;sdata=VjZ%2FPJ
+> > BVQc9jpc
+> > > +H3Hvvc2fYy70B%2Fmun0mxdvSHHktEU%3D&amp;reserved=0
+> > > +
+> > > +title: NXP i.MX Thermal Binding
+> > > +
+> > > +maintainers:
+> > > +  - Anson Huang <Anson.Huang@nxp.com>
+> > > +
+> > > +properties:
+> > > +  compatible:
+> > > +    oneOf:
+> > > +      - items:
+> > > +          - enum:
+> > > +              - fsl,imx6q-tempmon
+> > > +              - fsl,imx6sx-tempmon
+> > > +              - fsl,imx7d-tempmon
+> > > +
+> >
+> > > +  interrupts:
+> > > +    description: |
+> > > +      The interrupt output of the controller, the IRQ will be triggered
+> > > +      when temperature is higher than high threshold.
+> > > +    maxItems: 1
+> > > +
+> >
+> > imx6sx and imx7d have 3 interrupts each. So you need an if clause to change
+> > the interrupt number based on what compatible is provided. See
+> > qcom-tsens.yaml for an example.
+>
+> I noticed this, yes, i.MX6SX/7D has 3 interrupts, but the driver actually ONLY uses
+> the high irq, low and panic irq are NOT used. So for such scenario, binding doc should
+> still mention all of them?
 
-Checked code again, seems HAVE_MEMBLOCK_NODE_MAP is selected directly in
-all ARCHes which support it. Means HAVE_MEMBLOCK_NODE_MAP is enabled by
-default on those ARCHes, and has no dependency on CONFIG_NUMA at all.
-E.g on x86, it just calls free_area_init_nodes() in generic code path,
-while free_area_init_nodes() is defined in CONFIG_HAVE_MEMBLOCK_NODE_MAP
-ifdeffery scope. So I tend to agree with Mike to remove
-HAVE_MEMBLOCK_NODE_MAP firstly on all ARCHes. We can check if it's worth
-only defining memblock_region->nid for CONFIG_NUMA case after
-HAVE_MEMBLOCK_NODE_MAP is removed.
+No, just describe what the driver implements. If the driver doesn't
+implement that other two interrupts, leave it out.
 
-config X86
-        def_bool y
-	...
-	select HAVE_MEMBLOCK_NODE_MAP
-	...
+I was only comparing it to the old binding where those 3 interrupts
+are mentioned.
 
+Regards,
+Amit
+
+> >
+> > > +  nvmem-cells:
+> > > +    description: |
+> > > +      Phandle to the calibration cells provided by ocotp for calibration
+> > > +      data and temperature grade.
+> > > +    maxItems: 2
+> > > +
+> > > +  nvmem-cell-names:
+> > > +    maxItems: 2
+> > > +    items:
+> > > +      - const: calib
+> > > +      - const: temp_grade
+> > > +
+> > > +  fsl,tempmon:
+> > > +    description: |
+> > > +      Phandle pointer to system controller that contains TEMPMON
+> > control
+> > > +      registers, e.g. ANATOP on imx6q.
+> > > +    $ref: '/schemas/types.yaml#/definitions/phandle'
+> >
+> > Nit: move $ref line above description. IMO it makes the binding easier to read.
+>
+> OK.
+>
+> >
+> > > +
+> > > +  fsl,tempmon-data:
+> > > +    description: |
+> > > +      Deprecated property, phandle pointer to fuse controller that
+> > contains
+> > > +      TEMPMON calibration data, e.g. OCOTP on imx6q. The details about
+> > > +      calibration data can be found in SoC Reference Manual.
+> > > +    $ref: '/schemas/types.yaml#/definitions/phandle'
+> >
+> > Nit: move $ref line above description. IMO it makes the binding easier to read.
+>
+> OK.
+>
+> >
+> > > +
+> > > +  clocks:
+> > > +    description: |
+> > > +      Thermal sensor's clock source.
+> > > +    maxItems: 1
+> > > +
+> > > +required:
+> > > +  - compatible
+> > > +  - interrupts
+> > > +  - fsl,tempmon
+> > > +  - clocks
+> >
+> > Clocks was an optional property before, are you sure?
+>
+> I misunderstand the 'optional', the clock is always necessary, ONLY for those SoCs have
+> no thermal clock available, then it is unnecessary. Now I see, I will make it as optional.
+>
+> I will add example for #thermal-sensor-cells property you mentioned in the other mail.
+>
+> Thanks,
+> Anson
+>
+> >
+> > > +  - nvmem-cells
+> > > +  - nvmem-cell-names
+> > > +
+> > > +additionalProperties: false
+> > > +
+> > > +examples:
+> > > +  - |
+> > > +    #include <dt-bindings/clock/imx6sx-clock.h>
+> > > +    #include <dt-bindings/interrupt-controller/arm-gic.h>
+> > > +
+> > > +    ocotp: ocotp@21bc000 {
+> > > +         #address-cells = <1>;
+> > > +         #size-cells = <1>;
+> > > +         compatible = "fsl,imx6sx-ocotp", "syscon";
+> > > +         reg = <0x021bc000 0x4000>;
+> > > +         clocks = <&clks IMX6SX_CLK_OCOTP>;
+> > > +
+> > > +         tempmon_calib: calib@38 {
+> > > +             reg = <0x38 4>;
+> > > +         };
+> > > +
+> > > +         tempmon_temp_grade: temp-grade@20 {
+> > > +             reg = <0x20 4>;
+> > > +         };
+> > > +    };
+> > > +
+> > > +    tempmon: tempmon {
+> > > +         compatible = "fsl,imx6sx-tempmon";
+> > > +         interrupts = <GIC_SPI 49 IRQ_TYPE_LEVEL_HIGH>;
+> > > +         fsl,tempmon = <&anatop>;
+> > > +         nvmem-cells = <&tempmon_calib>, <&tempmon_temp_grade>;
+> > > +         nvmem-cell-names = "calib", "temp_grade";
+> > > +         clocks = <&clks IMX6SX_CLK_PLL3_USB_OTG>;
+> > > +    };
+> > > +
+> > > +...
+> > > --
+> > > 2.7.4
+> > >
