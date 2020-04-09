@@ -2,133 +2,210 @@ Return-Path: <SRS0=n+Ub=5Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34B94C2BA19
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 18:45:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59F1AC2BB85
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 18:45:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0744D20757
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 18:45:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Ct8S4Op5"
+	by mail.kernel.org (Postfix) with ESMTP id 32C8E20757
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 18:45:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726641AbgDISpF (ORCPT
+        id S1726701AbgDISpt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Apr 2020 14:45:05 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:40853 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726477AbgDISpF (ORCPT
+        Thu, 9 Apr 2020 14:45:49 -0400
+Received: from cloudserver094114.home.pl ([79.96.170.134]:56789 "EHLO
+        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726477AbgDISpt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Apr 2020 14:45:05 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1586457905;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=OMq2AN413rw3joBaxPqyBbjAP4rwGVS2rGQ+fmpuVd4=;
-        b=Ct8S4Op5ulO7a4WPAHQYJgIosWKxPB4YxqqH3qw3erGZpN0eul/y3UeJv8J3EBYLLOlu99
-        TWkvHI3KUvtI36eCCUmLSI2m0fdYdLTR4hnWHlCgMPglCQaRhvBCOFAo3R2nHeL7tD5ry/
-        rGbF1gxStSSJ1G8Bz+XE4HbdPk+Hu7c=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-52-H4e-n8gYPR6vbS3PfJMIZw-1; Thu, 09 Apr 2020 14:45:02 -0400
-X-MC-Unique: H4e-n8gYPR6vbS3PfJMIZw-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 2BF991085925;
-        Thu,  9 Apr 2020 18:45:01 +0000 (UTC)
-Received: from krava (unknown [10.40.196.41])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 25781277AD;
-        Thu,  9 Apr 2020 18:44:53 +0000 (UTC)
-Date:   Thu, 9 Apr 2020 20:44:51 +0200
-From:   Jiri Olsa <jolsa@redhat.com>
-To:     Masami Hiramatsu <mhiramat@kernel.org>
-Cc:     Jiri Olsa <jolsa@kernel.org>,
-        "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
-        Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Peter Zijlstra <peterz@infradead.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        "bibo,mao" <bibo.mao@intel.com>,
-        "Ziqian SUN (Zamir)" <zsun@redhat.com>
-Subject: Re: [RFC] kretprobe: Prevent triggering kretprobe from within
- kprobe_flush_task
-Message-ID: <20200409184451.GG3309111@krava>
-References: <20200408164641.3299633-1-jolsa@kernel.org>
- <20200409234101.8814f3cbead69337ac5a33fa@kernel.org>
+        Thu, 9 Apr 2020 14:45:49 -0400
+Received: from 185.80.35.16 (185.80.35.16) (HELO kreacher.localnet)
+ by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.341)
+ id 0829b55dba071591; Thu, 9 Apr 2020 20:45:46 +0200
+From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
+To:     Alan Stern <stern@rowland.harvard.edu>
+Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        Qais Yousef <qais.yousef@arm.com>,
+        USB list <linux-usb@vger.kernel.org>,
+        Linux-pm mailing list <linux-pm@vger.kernel.org>,
+        Kernel development list <linux-kernel@vger.kernel.org>
+Subject: Re: lockdep warning in urb.c:363 usb_submit_urb
+Date:   Thu, 09 Apr 2020 20:45:45 +0200
+Message-ID: <3100919.FSIbSBgRSq@kreacher>
+In-Reply-To: <Pine.LNX.4.44L0.2004061541080.26186-100000@netrider.rowland.org>
+References: <Pine.LNX.4.44L0.2004061541080.26186-100000@netrider.rowland.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200409234101.8814f3cbead69337ac5a33fa@kernel.org>
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 09, 2020 at 11:41:01PM +0900, Masami Hiramatsu wrote:
-
-SNIP
-
-> > ---
-> >  kernel/kprobes.c | 6 ++++++
-> >  1 file changed, 6 insertions(+)
+On Monday, April 6, 2020 10:25:08 PM CEST Alan Stern wrote:
+> On Mon, 6 Apr 2020, Rafael J. Wysocki wrote:
+> 
+> > In the meantime I have created a git branch with changes to simplify the code,
+> > rename some things and clarify the documentation a bit:
 > > 
-> > diff --git a/kernel/kprobes.c b/kernel/kprobes.c
-> > index 2625c241ac00..b13247cae752 100644
-> > --- a/kernel/kprobes.c
-> > +++ b/kernel/kprobes.c
-> > @@ -1236,6 +1236,10 @@ __releases(hlist_lock)
-> >  }
-> >  NOKPROBE_SYMBOL(kretprobe_table_unlock);
+> >  git://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git \
+> >  pm-sleep-core
+> > 
+> > (https://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git/log/?h=pm-sleep-core
+> > for web access).
+> > 
+> > I'm going to post these changes as patches soon.
+> 
+> All right, those are some significant changes.  It'll take me a little 
+> while to absorb them.
+> 
+> > On Friday, April 3, 2020 10:15:09 PM CEST Alan Stern wrote:
+> 
+> > > Let's put it like this: The resume-side callbacks should have the
+> > > overall effect of bringing the device back to its initial state, with
+> > > the following exceptions and complications:
+> > > 
+> > > 	Unless SMART_SUSPEND and LEAVE_SUSPEND are both set, a device
+> > > 	that was in runtime suspend before the suspend_late phase 
+> > > 	must end up being runtime-active after the matching RESUME.
+> > >
+> > > 	Unless SMART_SUSPEND is set, a device that was in runtime 
+> > > 	suspend before the freeze_late phase must end up being 
+> > > 	runtime-active after the matching THAW.
+> > 
+> > Correct.
 > >  
-> > +static struct kprobe kretprobe_dummy = {
-> > +        .addr = (void *)kretprobe_trampoline,
-> > +};
-> > +
-> >  /*
-> >   * This function is called from finish_task_switch when task tk becomes dead,
-> >   * so that we can recycle any function-return probe instances associated
-> > @@ -1256,12 +1260,14 @@ void kprobe_flush_task(struct task_struct *tk)
-> >  	INIT_HLIST_HEAD(&empty_rp);
-> >  	hash = hash_ptr(tk, KPROBE_HASH_BITS);
-> >  	head = &kretprobe_inst_table[hash];
-> > +	__this_cpu_write(current_kprobe, &kretprobe_dummy);
-> 
-> Can you also set the kcb->kprobe_state = KPROBE_HIT_ACTIVE?
-> 
-> BTW, we may be better to introduce a common kprobe_reject_section_start()
-> and kprobe_reject_section_end() so that the user don't need to prepare
-> dummy kprobes.
-
-sure, will do
-
-thank you both for review
-jirka
-
-> 
-> Thank you,
-> 
-> >  	kretprobe_table_lock(hash, &flags);
-> >  	hlist_for_each_entry_safe(ri, tmp, head, hlist) {
-> >  		if (ri->task == tk)
-> >  			recycle_rp_inst(ri, &empty_rp);
-> >  	}
-> >  	kretprobe_table_unlock(hash, &flags);
-> > +	__this_cpu_write(current_kprobe, NULL);
-> >  	hlist_for_each_entry_safe(ri, tmp, &empty_rp, hlist) {
-> >  		hlist_del(&ri->hlist);
-> >  		kfree(ri);
-> > -- 
-> > 2.25.2
+> > > [I'm not so sure about this.  Wouldn't it make more sense to treat
+> > > _every_ device as though SMART_SUSPEND was set for FREEZE/THAW
+> > > transitions, and require subsystems to do the same?]
 > > 
+> > Drivers may expect devices to be runtime-active when their suspend
+> > callbacks are invoked unless they set SMART_SUSPEND.  IOW, without
+> > SMART_SUSPEND set the device should not be left in runtime suspend
+> > during system-wide suspend at all unless direct-complete is applied
+> > to it.
 > 
+> [Let's confine this discussion to the not-direct-complete case.]
 > 
-> -- 
-> Masami Hiramatsu <mhiramat@kernel.org>
+> Okay, say that SMART_SUSPEND isn't set and the device is initially
+> runtime-suspended.  Since the core knows all this, shouldn't the core 
+> then call pm_runtime_resume() immediately before ->suspend?  Why leave 
+> this up to subsystems or drivers (which can easily get it wrong -- 
+> not to mention all the code duplication it would require)?
+
+I would agree in principle, but that has been done by subsystems forever and
+(at least in some cases) drivers on bus types like platform on i2c (where
+subsystem-level PM callbacks are not provided in general unless there is a PM
+domain doing that) don't expect the devices to be resumed and they
+decide whether or not to do that themselves.
+
+Making the core resume the runtime-suspended devices during system-wide
+suspend, would require those drivers to adapt and it is rather hard to
+even estimate how many of them there are.
+
+> Also, doesn't it make sense for some subsystems or drivers to want 
+> their devices to remain in runtime suspend throughout a FREEZE/THAW 
+> transition but not throughout a SUSPEND/RESUME transition?  With only a 
+> single SMART_SUSPEND flag, how can we accomodate this desire?
+
+That's a fair statement, but in general it is more desirable to optimize
+suspend/resume than to optimize hibernation, so the latter is not a priority.
+
+I'm not ruling out adding one more flag specific to hibernation or similar
+in the future.
+
+> Finally, my description above says that LEAVE_SUSPENDED matters for 
+> SUSPEND/RESUME but not for FREEZE/THAW.  Is that really what you have 
+> in mind?
+
+Yes, it is.  LEAVE_SUSPENDED really does not apply to hibernation at all.
+
+> > > 	After RESTORE, _every_ device must end up being runtime 
+> > > 	active.
+> > 
+> > Correct.
+> > 
+> > > 	In general, each resume-side callback should undo the effect
+> > > 	of the matching suspend-side callback.  However, because of
+> > > 	the requirements mentioned in the preceding sentences,
+> > > 	sometimes a resume-side callback will be issued even though
+> > > 	the matching suspend-side callback was skipped -- i.e., when
+> > > 	a device that starts out runtime-suspended ends up being
+> > > 	runtime-active.
+> > > 
+> > > How does that sound?
+> > 
+> > It is correct, but in general the other way around is possible too.
+> > That is, a suspend-side callback may be issued without the matching
+> > resume-side one and the device's PM runtime status may be changed
+> > if LEAVE_SUSPENDED is set and SMART_SUSPEND is unset.
 > 
+> This is inconsistent with what I wrote above (the "Unless SMART_SUSPEND
+> and LEAVE_SUSPENDED are both set" part).  Are you saying that text
+> should be changed?
+
+Yes, in fact SMART_SUSPEND need not be set for resume callbacks to be skipped.
+
+LEAVE_SUSPENDED must be set for that to happen (except for hibernation) and it
+may be sufficient if the subsystem sets power.may_skip_resume in addition.
+
+> > > Are you certain you want the subsystem callback to be responsible for
+> > > setting the runtime status to "active"?  Isn't this an example of
+> > > something the core could do in order to help simplify subsystems?
+> > 
+> > The rationale here is that whoever decides whether or not to skip the
+> > driver-level callbacks, should also set the PM-runtime status of the
+> > device to match that decision.
+> 
+> Well, that's not really a fair description.  The decision about
+> skipping driver-level callbacks is being made right here, by us, now.  
+> (Or if you prefer, by the developers who originally added the
+> SMART_SUSPEND flag.)  We require subsystems to obey the decisions being
+> outlined in this discussion.
+> 
+> Given that fact, this is again a case of having the core do something 
+> rather than forcing subsystems/drivers to do it (possibly getting it 
+> wrong and certainly creating a lot of code duplication).
+> 
+> If a subsystem really wants to override our decision, it can always
+> call pm_runtime_set_{active|suspended} to override the core's setting.
+
+OK, fair enough.
+
+I've incorporated this into the changes on the pm-sleep-core branch
+mentioned before.
+
+> > > And this brings up another thing the core might do to help simplify
+> > > drivers and subsystems: If SMART_SUSPEND isn't set and the device is in
+> > > runtime suspend, couldn't the core do a pm_runtime_resume before
+> > > issuing the ->suspend or ->suspend_late callback?
+> > 
+> > It could, but sometimes that is not desirable.  Like when the drivver points its
+> > suspend callback to pm_runtime_force_suspend().
+> 
+> This seems to contradict what you wrote above: "Drivers may expect
+> devices to be runtime-active when their suspend callbacks are invoked
+> unless they set SMART_SUSPEND.  IOW, without SMART_SUSPEND set the
+> device should not be left in runtime suspend during system-wide suspend
+> at all unless direct-complete is applied to it."
+> 
+> If you stand by that statement then drivers should never point their
+> suspend callback to pm_runtime_force_suspend() unless they also set
+> SMART_SUSPEND.
+
+OK, let me rephrase.
+
+Some drivers that don't use SMART_SUSPEND expect the devices to be runtime-active
+when their system-wide PM callbacks run, but the other drivers do not have such
+expectations, because the subsystems they work with have never resumed devices
+during system-wide suspend.
+
+SMART_SUSPEND is not needed for the latter category of drivers, but it is for
+the former and I want the behavior when SMART_SUSPEND *is* set to be consistent
+across the core and subsystems, while the other case have never been so.
+
+Cheers!
+
+
 
