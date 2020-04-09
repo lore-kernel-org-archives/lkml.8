@@ -2,213 +2,103 @@ Return-Path: <SRS0=n+Ub=5Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E42E3C2BB54
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 07:13:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9225AC2D0EA
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 07:17:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BB80B2075E
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 07:13:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4C35B20753
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 07:17:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="ZgflRxtb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726627AbgDIHNk (ORCPT
+        id S1726521AbgDIHRB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Apr 2020 03:13:40 -0400
-Received: from asavdk4.altibox.net ([109.247.116.15]:55786 "EHLO
-        asavdk4.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725795AbgDIHNj (ORCPT
+        Thu, 9 Apr 2020 03:17:01 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:45903 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725828AbgDIHRB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Apr 2020 03:13:39 -0400
-Received: from ravnborg.org (unknown [158.248.194.18])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by asavdk4.altibox.net (Postfix) with ESMTPS id EA82A8053D;
-        Thu,  9 Apr 2020 09:12:43 +0200 (CEST)
-Date:   Thu, 9 Apr 2020 09:12:37 +0200
-From:   Sam Ravnborg <sam@ravnborg.org>
-To:     "H. Nikolaus Schaller" <hns@goldelico.com>
-Cc:     Paul Cercueil <paul@crapouillou.net>,
-        Paul Boddie <paul@boddie.org.uk>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <paulburton@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Andi Kleen <ak@linux.intel.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Kees Cook <keescook@chromium.org>, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linux-mips@vger.kernel.org, linux-gpio@vger.kernel.org,
-        mips-creator-ci20-dev@googlegroups.com,
-        letux-kernel@openphoenux.org
-Subject: Re: [RFC v3 4/8] dt-bindings: display: add ingenic-jz4780-hdmi DT
- Schema
-Message-ID: <20200409071237.GA12367@ravnborg.org>
-References: <cover.1585503354.git.hns@goldelico.com>
- <a1a5075ae6c970e97fb74c8dd5c626c35421cd4d.1585503354.git.hns@goldelico.com>
+        Thu, 9 Apr 2020 03:17:01 -0400
+Received: by mail-pg1-f196.google.com with SMTP id w11so404212pga.12
+        for <linux-kernel@vger.kernel.org>; Thu, 09 Apr 2020 00:17:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:content-transfer-encoding:in-reply-to:references
+         :subject:from:cc:to:date:message-id:user-agent;
+        bh=iYpXbB+2GsvCwjKsECWDukpuW5ZXW1FAu5vdGFQwGEE=;
+        b=ZgflRxtbTc+6b4ilENSCoDXtvy7jk7YTfNcDWTxb3W6KhOlG3O5zKZc4QCdlOV1ffe
+         zV4tXWWZLwxyAC8u4LXoHdlq6/P3LIS+c8QljW6BF6Z3+UHxdk0pgcqTCAWdF0yCEmKL
+         dIXtWWgdvPIixHnzp2xtqGnu/ipQf1SzDbPh4=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:content-transfer-encoding
+         :in-reply-to:references:subject:from:cc:to:date:message-id
+         :user-agent;
+        bh=iYpXbB+2GsvCwjKsECWDukpuW5ZXW1FAu5vdGFQwGEE=;
+        b=R9/JuIUKNZxgRIvjLx5pOos805fuTNkvylLMcTe3nwP64j+yF7McCwcUjCi7Xpjefx
+         nkWiuwS2WMtQhivaA+/v1cy1jsbOQ73rZ/2PTmZ5RnYiDgLbO/6ElRMa5GprF344ueMJ
+         00aWgsUskAwje1Zx/FJYv9PLiDY9gpCrVzLNNyAV6MMnmMcoC8rkXfUSMD15Q+2ruEvL
+         JsFemlKSVQJUg7+sqdFP143VDgejj/fXLYcMboMc7QHF6GuT1O03OGzJPXaG2QNOdieO
+         CpK3Mvp72SAl0GaxGjJmistEb5nisTGX30Ro4tHoSrnjJOaYczFeF32uzrxP0/gDoYWx
+         CXmg==
+X-Gm-Message-State: AGi0PuZVp7cSavd8Y4qyMlYst4ehDtrgQnxcO0CRQhu2xm2aOjnLQkXe
+        Fsda1L6WQ09njrBrZYZ/ODI7wg==
+X-Google-Smtp-Source: APiQypKXx+N7ncEb0/fmCRSM1ldHSjKZvK5jY3qy9bLSvb50reXJFujfIv9LNDl8lR+wmuN1MU4RDw==
+X-Received: by 2002:a63:e443:: with SMTP id i3mr10565042pgk.436.1586416621418;
+        Thu, 09 Apr 2020 00:17:01 -0700 (PDT)
+Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
+        by smtp.gmail.com with ESMTPSA id e187sm17883679pfe.143.2020.04.09.00.17.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 09 Apr 2020 00:17:00 -0700 (PDT)
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <a1a5075ae6c970e97fb74c8dd5c626c35421cd4d.1585503354.git.hns@goldelico.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-CMAE-Score: 0
-X-CMAE-Analysis: v=2.3 cv=XpTUx2N9 c=1 sm=1 tr=0
-        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
-        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=7gkXJVJtAAAA:8
-        a=ztCEdXhiAAAA:8 a=VwQbUJbxAAAA:8 a=gEfo2CItAAAA:8 a=e5mUnYsNAAAA:8
-        a=_8fMXE9GZWbPDF1RzQ4A:9 a=NMQYXjR_ngKk-wD3:21 a=NsfBtDKyZ6-kNe2x:21
-        a=CjuIK1q_8ugA:10 a=E9Po1WZjFZOl8hwRPBS3:22 a=nCm3ceeH17rKjHWsMeRo:22
-        a=AjGcO6oz07-iQ99wixmX:22 a=sptkURWiP4Gy88Gu7hUp:22
-        a=Vxmtnl_E_bksehYqCbjh:22
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20200408224347.GA388414@ewhatever.cambridge.arm.com>
+References: <20200405102819.28460-1-saiprakash.ranjan@codeaurora.org> <CAJ9a7VgQzK1XSCvLwuqODwkWfvo=6Wwps7Db+pL5xYDeCuktrg@mail.gmail.com> <6c0f45488f8a44bf860759e00fcabd09@codeaurora.org> <906d374d-a4d6-f2f2-6845-88b97a5ff7d9@arm.com> <39a2b3fff165a108fa59d72b630b5f14@codeaurora.org> <bb209f80-ac02-6321-dac4-ebf9ee6fa9a0@arm.com> <bd05b31c2391edfff5044f22f2f83edf@codeaurora.org> <e9c299c4-caeb-9eb8-f019-b311bfce756a@arm.com> <a7074f44ebbde720b5e0189801eab7c9@codeaurora.org> <20200408224347.GA388414@ewhatever.cambridge.arm.com>
+Subject: Re: [RFC PATCH] coresight: dynamic-replicator: Fix handling of multiple connections
+From:   Stephen Boyd <swboyd@chromium.org>
+Cc:     mike.leach@linaro.org, mathieu.poirier@linaro.org,
+        leo.yan@linaro.org, alexander.shishkin@linux.intel.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, suzuki.poulose@arm.com
+To:     Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
+        Suzuki K Poulose <Suzuki.Poulose@arm.com>
+Date:   Thu, 09 Apr 2020 00:16:59 -0700
+Message-ID: <158641661949.126188.2854214876274328570@swboyd.mtv.corp.google.com>
+User-Agent: alot/0.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Nikolaus.
-
-On Sun, Mar 29, 2020 at 07:35:50PM +0200, H. Nikolaus Schaller wrote:
-> From: Sam Ravnborg <sam@ravnborg.org>
-> 
-> Add DT bindings for the hdmi driver for the Ingenic JZ4780 SoC.
-> Based on .txt binding from Zubair Lutfullah Kakakhel
-> 
-> Signed-off-by: Sam Ravnborg <sam@ravnborg.org>
-> Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
-> Cc: Rob Herring <robh@kernel.org>
-> Cc: devicetree@vger.kernel.org
-
-There is a few mistakes that originate from my original patch - sorry.
-
+Quoting Suzuki K Poulose (2020-04-08 15:43:47)
+> On Tue, Apr 07, 2020 at 08:48:54PM +0530, Sai Prakash Ranjan wrote:
+> >=20
+> > Thanks, I can test it out.
+>=20
+> Please find the untested patch below.
+>=20
+> ---8>---
+>=20
+> [untested] coresight: Fix support for sparse port numbers
+>=20
+> On some systems the firmware may not describe all the ports
+> connected to a component (e.g, for security reasons). This
+> could be especially problematic for "funnels" where we could
+> end up in modifying memory beyond the allocated space for
+> refcounts.
+>=20
+> e.g, for a funnel with input ports listed 0, 3, 5, nr_inport =3D 3.
+> However the we could access refcnts[5] while checking for
+> references.
+>=20
+> Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
 > ---
->  .../bindings/display/ingenic-jz4780-hdmi.yaml | 82 +++++++++++++++++++
->  1 file changed, 82 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/display/ingenic-jz4780-hdmi.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/display/ingenic-jz4780-hdmi.yaml b/Documentation/devicetree/bindings/display/ingenic-jz4780-hdmi.yaml
-> new file mode 100644
-> index 000000000000..a545ff8704eb
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/display/ingenic-jz4780-hdmi.yaml
-> @@ -0,0 +1,82 @@
-> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/display/ingenic-jz4780-hdmi.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Bindings for Ingenic JZ4780 HDMI Transmitter
-> +
-> +maintainers:
-> +  - H. Nikolaus Schaller <hns@goldelico.com>
-> +
-> +description: |
-> +  The HDMI Transmitter in the Ingenic JZ4780 is a Synopsys DesignWare HDMI 1.4
-> +  TX controller IP with accompanying PHY IP.
-> +
-> +allOf:
-> +  - $ref: panel/panel-common.yaml#
-panel-common is only supposed to be used by panels.
-There is a few users in display/ but this is bindings that are
-candidates to be moved to panel/ - and this binding describes a
-display controller and not a panel.
 
-> +
-> +properties:
-> +  compatible:
-> +    items:
-> +      - const: ingenic,jz4780-hdmi
-> +
-> +  reg:
-> +    maxItems: 1
-> +    description: the address & size of the LCD controller registers
-> +
-> +  reg-io-width:
-> +    const: 4
-> +
-> +  interrupts:
-> +    maxItems: 1
-> +    description: Specifies the interrupt provided by parent
-> +
-> +  clocks:
-> +    maxItems: 2
-> +    description: Clock specifiers for isrf and iahb clocks
-> +
-> +  clock-names:
-> +    items:
-> +      - const: isfr
-> +      - const: iahb
-> +
-> +  ddc-i2c-bus: true
-> +  ports: true
-As we no longer rely on panel-common this needs to be fully specified -
-for example like this:
+Things don't blow up for me anymore with KASAN, so feel free to add
 
-  ddc-i2c-bus:
-    $ref: /schemas/types.yaml#/definitions/phandle
-    description: phandle to the I2C bus that is connected to DDC
-
-  ports:
-    type: object
-    description: |
-      A ports node with endpoint definitions as defined in
-      Documentation/devicetree/bindings/media/video-interfaces.txt.
-
-
-Thanks for taking care of this binding.
-
-	Sam
-
-
-> +
-> +required:
-> +    - compatible
-> +    - clocks
-> +    - clock-names
-> +    - ports
-> +    - reg-io-width
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/clock/jz4780-cgu.h>
-> +
-> +    hdmi: hdmi@10180000 {
-> +        compatible = "ingenic,jz4780-hdmi";
-> +        reg = <0x10180000 0x8000>;
-> +        reg-io-width = <4>;
-> +        ddc-i2c-bus = <&i2c4>;
-> +        interrupt-parent = <&intc>;
-> +        interrupts = <3>;
-> +        clocks = <&cgu JZ4780_CLK_HDMI>, <&cgu JZ4780_CLK_AHB0>;
-> +        clock-names = "isfr", "iahb";
-> +
-> +        ports {
-> +            hdmi_in: port {
-> +                #address-cells = <1>;
-> +                #size-cells = <0>;
-> +                hdmi_in_lcd: endpoint@0 {
-> +                    reg = <0>;
-> +                    remote-endpoint = <&jz4780_out_hdmi>;
-> +                };
-> +            };
-> +        };
-> +    };
-> +
-> +...
-> -- 
-> 2.25.1
-> 
-> _______________________________________________
-> dri-devel mailing list
-> dri-devel@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/dri-devel
+Tested-by: Stephen Boyd <swboyd@chromium.org>
