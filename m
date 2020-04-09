@@ -2,209 +2,187 @@ Return-Path: <SRS0=n+Ub=5Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82909C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 09:01:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC137C2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 09:01:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4D5372075E
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 09:01:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 755972083E
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 09:01:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Mn4dIaBi"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="yit1NHNG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726679AbgDIJBk (ORCPT
+        id S1726699AbgDIJBm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Apr 2020 05:01:40 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:47699 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726082AbgDIJBk (ORCPT
+        Thu, 9 Apr 2020 05:01:42 -0400
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:38693 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725862AbgDIJBl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Apr 2020 05:01:40 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1586422899;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=msTkXhnouvwVtlF7/78TkiH9nVYNya7vCxTaw1gbKMk=;
-        b=Mn4dIaBiUGlkQQvGjJ50BEnVgvcmpzeZ/NjCnn7/pz8HCIjuWyQqx3OorYHtIUp6fIo2/n
-        Y3cCnd9rnOIqULb85bfdjbG1gRoYx3W+u4mSDQC11Q/p98WY5CQ81ueCLBZ75FsCwDJhWI
-        DexeS/qkuigD+QaBdx5ollJOwMN8Nno=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-20-4d7R36GENiiwKgaxvAcgYQ-1; Thu, 09 Apr 2020 05:01:37 -0400
-X-MC-Unique: 4d7R36GENiiwKgaxvAcgYQ-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 88F18107ACCA;
-        Thu,  9 Apr 2020 09:01:35 +0000 (UTC)
-Received: from [10.36.115.53] (ovpn-115-53.ams2.redhat.com [10.36.115.53])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 8122AA63D6;
-        Thu,  9 Apr 2020 09:01:26 +0000 (UTC)
-Subject: Re: [PATCH v1 5/8] vfio/type1: Report 1st-level/stage-1 format to
- userspace
-To:     Jean-Philippe Brucker <jean-philippe@linaro.org>
-Cc:     "Liu, Yi L" <yi.l.liu@intel.com>,
-        "alex.williamson@redhat.com" <alex.williamson@redhat.com>,
-        "Tian, Kevin" <kevin.tian@intel.com>,
-        "jacob.jun.pan@linux.intel.com" <jacob.jun.pan@linux.intel.com>,
-        "joro@8bytes.org" <joro@8bytes.org>,
-        "Raj, Ashok" <ashok.raj@intel.com>,
-        "Tian, Jun J" <jun.j.tian@intel.com>,
-        "Sun, Yi Y" <yi.y.sun@intel.com>,
-        "peterx@redhat.com" <peterx@redhat.com>,
-        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Wu, Hao" <hao.wu@intel.com>
-References: <1584880325-10561-1-git-send-email-yi.l.liu@intel.com>
- <1584880325-10561-6-git-send-email-yi.l.liu@intel.com>
- <cb68e9ab-77b0-7e97-a661-4836962041d9@redhat.com>
- <A2975661238FB949B60364EF0F2C25743A21DB4E@SHSMSX104.ccr.corp.intel.com>
- <b47891b1-ece6-c263-9c07-07c09c7d3752@redhat.com>
- <20200403082305.GA1269501@myrica>
- <A2975661238FB949B60364EF0F2C25743A2249DF@SHSMSX104.ccr.corp.intel.com>
- <acf8c809-8d29-92d6-2445-3a94fc8b82fd@redhat.com>
- <20200409081442.GD2435@myrica>
-From:   Auger Eric <eric.auger@redhat.com>
-Message-ID: <f9ed6639-35f2-af32-2d2c-78929d52b763@redhat.com>
-Date:   Thu, 9 Apr 2020 11:01:24 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.4.0
+        Thu, 9 Apr 2020 05:01:41 -0400
+Received: by mail-lf1-f65.google.com with SMTP id l11so7333024lfc.5
+        for <linux-kernel@vger.kernel.org>; Thu, 09 Apr 2020 02:01:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:from:date:message-id:subject:to:cc;
+        bh=bL9ifUNW59crmzsbt6dLo+loyDPtO9QCB/tGi8Xv10s=;
+        b=yit1NHNGe2LMUd6uNWHOj/JoYnC//4fbuMT69yswwnLXwr/x/l8GKovnWAwpEbD+fn
+         hHekbdd4URx8tlZPLkkaHboAvu8zSZYZ/SzQoxZG3AHKgiRS/cYIo2/qEORnXX0Vvvo5
+         mOOfG9pxdE2RcEgM3c64JAXbtPhrBhyxHg5uzfezcvr8ZAzCh2lk+yuZoxFGseUdaIE7
+         Q38il3/mkWwBj7pTVK9lacERVuhl/a+05OUEhMW5l9GHR8/l15N9q8o20HQmb1zanELy
+         bNxBgD6mvQmgGTzYDxND+ji8oAcQz1iBYZiKht+oWGgYYluryXuJwSgHyhp0/33CpMQ/
+         oW3w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
+        bh=bL9ifUNW59crmzsbt6dLo+loyDPtO9QCB/tGi8Xv10s=;
+        b=PhfVEeAcg2Chxvv+nu9Huj+/z0tggLev0jT80/PyS4GuVerkHyNLaED6QX7+KGQ4HU
+         ipIT5XC4EtYc43KHpC5AUb4KrxXsTWx2tV6B1jjzFBwIy1diYOUIGgvuT4HtFHR7mkq9
+         toGf0kV+u0pgHHWRF00PMJ+lgaJl4Yre8inHEnh0RHJenh63tI0/y4RKlnm++JCvXzh5
+         Ws0yWvbQfQA0eT2kogKXGH1eH8HsW95WFbmB3PULBcx0gqVy6e3DzFqLhzfzhMgZEGKC
+         ZV/pAVr8qnH05mDIbvDGNjFSm1yUJomc74U8cZz1j0nVCzghoxQPS93SyvKW8fHKq39Q
+         +g/g==
+X-Gm-Message-State: AGi0PuYIwGUQIYMS4D8D/Oa7vtgQWDIVRqA8MlphASK1oavX6SfI2JYR
+        6bd5UVZtaPeYG+4BLPA5pS98G+w7AZb6C3o5QbPDmA==
+X-Google-Smtp-Source: APiQypKELkgKiHNjicowPErrJEQbXbFPe6vvVay3gM3VtClfJFqU4xTmZR5uCDhTkctQxTqVbbHKgZL59q1r5hl9XvM=
+X-Received: by 2002:a19:c64b:: with SMTP id w72mr7087057lff.82.1586422896545;
+ Thu, 09 Apr 2020 02:01:36 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200409081442.GD2435@myrica>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+From:   Naresh Kamboju <naresh.kamboju@linaro.org>
+Date:   Thu, 9 Apr 2020 14:31:24 +0530
+Message-ID: <CA+G9fYtMupyHuEsdUwSGQu6czFO7xhe45Km_=DJ8P1v7wpto7Q@mail.gmail.com>
+Subject: memfd/fuse_test: BUG: kernel NULL pointer dereference, address: 00000041
+To:     "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        linux-mm <linux-mm@kvack.org>, linux-fsdevel@vger.kernel.org
+Cc:     Joel Fernandes <joel@joelfernandes.org>,
+        Hugh Dickins <hughd@google.com>, ngeoffray@google.com,
+        Shuah Khan <shuah@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>, miklos@szeredi.hu,
+        lkft-triage@lists.linaro.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jean,
+While running kselftest memfd fuse_test test case kernel BUG found on
+i386 kernel running x86_64 device running Linux-next
+5.6.0-next-20200408 kernel version.
 
-On 4/9/20 10:14 AM, Jean-Philippe Brucker wrote:
-> On Wed, Apr 08, 2020 at 12:27:58PM +0200, Auger Eric wrote:
->> Hi Yi,
->>
->> On 4/7/20 11:43 AM, Liu, Yi L wrote:
->>> Hi Jean,
->>>
->>>> From: Jean-Philippe Brucker <jean-philippe@linaro.org>
->>>> Sent: Friday, April 3, 2020 4:23 PM
->>>> To: Auger Eric <eric.auger@redhat.com>
->>>> userspace
->>>>
->>>> On Wed, Apr 01, 2020 at 03:01:12PM +0200, Auger Eric wrote:
->>>>>>>>  	header = vfio_info_cap_add(caps, sizeof(*nesting_cap),
->>>>>>>>  				   VFIO_IOMMU_TYPE1_INFO_CAP_NESTING, 1);
->>>> @@ -2254,6 +2309,7
->>>>>>>> @@ static int vfio_iommu_info_add_nesting_cap(struct
->>>>>>> vfio_iommu *iommu,
->>>>>>>>  		/* nesting iommu type supports PASID requests (alloc/free) */
->>>>>>>>  		nesting_cap->nesting_capabilities |= VFIO_IOMMU_PASID_REQS;
->>>>>>> What is the meaning for ARM?
->>>>>>
->>>>>> I think it's just a software capability exposed to userspace, on
->>>>>> userspace side, it has a choice to use it or not. :-) The reason
->>>>>> define it and report it in cap nesting is that I'd like to make the
->>>>>> pasid alloc/free be available just for IOMMU with type
->>>>>> VFIO_IOMMU_TYPE1_NESTING. Please feel free tell me if it is not good
->>>>>> for ARM. We can find a proper way to report the availability.
->>>>>
->>>>> Well it is more a question for jean-Philippe. Do we have a system wide
->>>>> PASID allocation on ARM?
->>>>
->>>> We don't, the PASID spaces are per-VM on Arm, so this function should consult the
->>>> IOMMU driver before setting flags. As you said on patch 3, nested doesn't
->>>> necessarily imply PASID support. The SMMUv2 does not support PASID but does
->>>> support nesting stages 1 and 2 for the IOVA space.
->>>> SMMUv3 support of PASID depends on HW capabilities. So I think this needs to be
->>>> finer grained:
->>>>
->>>> Does the container support:
->>>> * VFIO_IOMMU_PASID_REQUEST?
->>>>   -> Yes for VT-d 3
->>>>   -> No for Arm SMMU
->>>> * VFIO_IOMMU_{,UN}BIND_GUEST_PGTBL?
->>>>   -> Yes for VT-d 3
->>>>   -> Sometimes for SMMUv2
->>>>   -> No for SMMUv3 (if we go with BIND_PASID_TABLE, which is simpler due to
->>>>      PASID tables being in GPA space.)
->>>> * VFIO_IOMMU_BIND_PASID_TABLE?
->>>>   -> No for VT-d
->>>>   -> Sometimes for SMMUv3
->>>>
->>>> Any bind support implies VFIO_IOMMU_CACHE_INVALIDATE support.
->>>
->>> good summary. do you expect to see any 
->>>
->>>>
->>>>>>>> +	nesting_cap->stage1_formats = formats;
->>>>>>> as spotted by Kevin, since a single format is supported, rename
->>>>>>
->>>>>> ok, I was believing it may be possible on ARM or so. :-) will rename
->>>>>> it.
->>>>
->>>> Yes I don't think an u32 is going to cut it for Arm :( We need to describe all sorts of
->>>> capabilities for page and PASID tables (granules, GPA size, ASID/PASID size, HW
->>>> access/dirty, etc etc.) Just saying "Arm stage-1 format" wouldn't mean much. I
->>>> guess we could have a secondary vendor capability for these?
->>>
->>> Actually, I'm wondering if we can define some formats to stands for a set of
->>> capabilities. e.g. VTD_STAGE1_FORMAT_V1 which may indicates the 1st level
->>> page table related caps (aw, a/d, SRE, EA and etc.). And vIOMMU can parse
->>> the capabilities.
->>
->> But eventually do we really need all those capability getters? I mean
->> can't we simply rely on the actual call to VFIO_IOMMU_BIND_GUEST_PGTBL()
->> to detect any mismatch? Definitively the error handling may be heavier
->> on userspace but can't we manage.
-> 
-> I think we need to present these capabilities at boot time, long before
-> the guest triggers a bind(). For example if the host SMMU doesn't support
-> 16-bit ASID, we need to communicate that to the guest using vSMMU ID
-> registers or PROBE properties. Otherwise a bind() will succeed, but if the
-> guest uses 16-bit ASIDs in its CD, DMA will result in C_BAD_CD events
-> which we'll inject into the guest, for no apparent reason from their
-> perspective.
-OK I understand this case as in this situation we may be able to change
-the way to iommu is exposed to the guest.
-> 
-> In addition some VMMs may have fallbacks if shared page tables are not
-> available. They could fall back to a MAP/UNMAP interface, or simply not
-> present a vIOMMU to the guest.
-fair enough, there is a need for such capability checker in the mid
-term. But this patch introduces the capability to check whether system
-wide PASID alloc is supported and this may not be requested at that
-stage for the whole vSVM integration?
+Linux version 5.6.0-next-20200408 (oe-user@oe-host) (gcc version 7.3.0
+(GCC), GNU ld (GNU Binutils) 2.30.0.20180208) #1 SMP Wed Apr 8
+04:48:57 UTC 2020
+<>
+[  452.885727] kselftest: Running tests in memfd
+[  452.974683] audit: type=1701 audit(1586366703.840:87435):
+auid=4294967295 uid=0 gid=0 ses=4294967295 subj=kernel pid=13617
+comm=\"fuse_test\"
+exe=\"/opt/kselftests/default-in-kernel/memfd/fuse_test\" sig=6 res=1
+[  452.975400] BUG: kernel NULL pointer dereference, address: 00000041
+[  452.999344] #PF: supervisor read access in kernel mode
+[  453.004475] #PF: error_code(0x0000) - not-present page
+[  453.009605] *pde = 00000000
+[  453.012482] Oops: 0000 [#2] SMP
+[  453.015619] CPU: 1 PID: 13617 Comm: fuse_test Tainted: G      D W
+      5.6.0-next-20200408 #1
+[  453.024388] Hardware name: Supermicro SYS-5019S-ML/X11SSH-F, BIOS
+2.0b 07/27/2017
+[  453.031862] EIP: __kmalloc+0xa2/0x310
+[  453.035525] Code: 9c 01 00 00 89 75 e4 8b 07 64 8b 50 04 64 03 05
+d8 92 bd cb 8b 08 85 c9 89 4d f0 0f 84 07 02 00 00 8b 75 f0 8b 47 14
+8d 4a 01 <8b> 1c 06 89 f0 8b 37 64 0f c7 0e 75 d0 8b 75 e4 8b 47 14 0f
+18 04
+[  453.054264] EAX: 00000040 EBX: 00000cc0 ECX: 000045c3 EDX: 000045c2
+[  453.060519] ESI: 00000001 EDI: f5403680 EBP: e1effcb8 ESP: e1effc98
+[  453.066776] DS: 007b ES: 007b FS: 00d8 GS: 00e0 SS: 0068 EFLAGS: 00010202
+[  453.073555] CR0: 80050033 CR2: 00000041 CR3: 216ee000 CR4: 003406d0
+[  453.079812] DR0: 00000000 DR1: 00000000 DR2: 00000000 DR3: 00000000
+[  453.086067] DR6: fffe0ff0 DR7: 00000400
+[  453.089898] Call Trace:
+[  453.092345]  ? elf_core_dump+0x520/0x16a0
+[  453.096357]  elf_core_dump+0x520/0x16a0
+[  453.100215]  ? kmem_cache_free+0xeb/0x2e0
+[  453.104236]  do_coredump+0x617/0x1070
+[  453.107911]  ? trace_hardirqs_off+0x1d/0xf0
+[  453.112095]  ? lock_acquire+0x81/0x320
+[  453.115850]  get_signal+0xaa8/0xb40
+[  453.119341]  do_signal+0x23/0x630
+[  453.122659]  ? _raw_spin_unlock_irq+0x22/0x30
+[  453.127019]  ? __set_current_blocked+0x47/0x50
+[  453.131468]  exit_to_usermode_loop+0x6a/0xd0
+[  453.135736]  do_fast_syscall_32+0x297/0x330
+[  453.139914]  entry_SYSENTER_32+0xaa/0x102
+[  453.143916] EIP: 0xb7f1bce1
+[  453.146706] Code: 5e 5d c3 8d b6 00 00 00 00 b8 40 42 0f 00 eb c1
+8b 04 24 c3 8b 1c 24 c3 8b 34 24 c3 8b 3c 24 c3 90 51 52 55 89 e5 0f
+34 cd 80 <5d> 5a 59 c3 90 90 90 90 8d 76 00 58 b8 77 00 00 00 cd 80 90
+8d 76
+[  453.165444] EAX: 00000000 EBX: 00000002 ECX: bfb63cc0 EDX: 00000000
+[  453.171700] ESI: 00000008 EDI: 00000000 EBP: bfb63cc0 ESP: bfb63cb0
+[  453.177957] DS: 007b ES: 007b FS: 0000 GS: 0033 SS: 007b EFLAGS: 00000246
+[  453.184737] Modules linked in: test_printf(+) cls_bpf sch_fq
+sch_ingress algif_hash x86_pkg_temp_thermal fuse [last unloaded:
+test_strscpy]
+[  453.197292] CR2: 0000000000000041
+[  453.200612] ---[ end trace 4ae6b60cdb1cebfa ]---
+[  453.205222] EIP: ida_free+0x61/0x130
+[  453.208794] Code: 00 c7 45 e8 00 00 00 00 c7 45 ec 00 00 00 00 0f
+88 c4 00 00 00 89 d3 e8 6d 60 8a 00 89 c7 8d 45 d8 e8 c3 1a 01 00 a8
+01 75 3f <0f> a3 30 72 72 8b 45 d8 89 fa e8 40 62 8a 00 53 68 e8 db 80
+cb e8
+[  453.227529] EAX: 00000000 EBX: 00000000 ECX: f37c3540 EDX: 00000000
+[  453.233787] ESI: 00000000 EDI: 00000246 EBP: e1e75cdc ESP: e1e75cb0
+[  453.240043] DS: 007b ES: 007b FS: 00d8 GS: 00e0 SS: 0068 EFLAGS: 00010046
+[  453.246820] CR0: 80050033 CR2: 00000041 CR3: 216ee000 CR4: 003406d0
+[  453.253077] DR0: 00000000 DR1: 00000000 DR2: 00000000 DR3: 00000000
+[  453.259334] DR6: fffe0ff0 DR7: 00000400
+[  453.263176] BUG: sleeping function called from invalid context at
+/usr/src/kernel/include/linux/percpu-rwsem.h:49
+[  453.273445] in_atomic(): 0, irqs_disabled(): 1, non_block: 0, pid:
+13617, name: fuse_test
+[  453.281615] INFO: lockdep is turned off.
+[  453.285533] irq event stamp: 0
+[  453.288585] hardirqs last  enabled at (0): [<00000000>] 0x0
+[  453.294173] hardirqs last disabled at (0): [<ca6ed9ea>]
+copy_process+0x3ea/0x17d0
+[  453.301672] softirqs last  enabled at (0): [<ca6ed9ea>]
+copy_process+0x3ea/0x17d0
+[  453.309172] softirqs last disabled at (0): [<00000000>] 0x0
+[  453.314741] CPU: 1 PID: 13617 Comm: fuse_test Tainted: G      D W
+      5.6.0-next-20200408 #1
+[  453.323519] Hardware name: Supermicro SYS-5019S-ML/X11SSH-F, BIOS
+2.0b 07/27/2017
+[  453.330988] Call Trace:
+[  453.333435]  dump_stack+0x6e/0x96
+[  453.336754]  ___might_sleep+0x14d/0x240
+[  453.340592]  __might_sleep+0x33/0x80
+[  453.344173]  exit_signals+0x2a/0x2d0
+[  453.347750]  do_exit+0x8e/0xb40
+[  453.350889]  ? exit_to_usermode_loop+0x6a/0xd0
+[  453.355336]  rewind_stack_do_exit+0x11/0x13
+[  453.359519] EIP: 0xb7f1bce1
+[  453.362308] Code: 5e 5d c3 8d b6 00 00 00 00 b8 40 42 0f 00 eb c1
+8b 04 24 c3 8b 1c 24 c3 8b 34 24 c3 8b 3c 24 c3 90 51 52 55 89 e5 0f
+34 cd 80 <5d> 5a 59 c3 90 90 90 90 8d 76 00 58 b8 77 00 00 00 cd 80 90
+8d 76
+[  453.381044] EAX: 00000000 EBX: 00000002 ECX: bfb63cc0 EDX: 00000000
+[  453.387303] ESI: 00000008 EDI: 00000000 EBP: bfb63cc0 ESP: bfb63cb0
+[  453.393560] DS: 007b ES: 007b FS: 0000 GS: 0033 SS: 007b EFLAGS: 00000246
 
-Thanks
+metadata:
+  git branch: master
+  git repo: https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git
+  kernel-config:
+http://snapshots.linaro.org/openembedded/lkft/lkft/sumo/intel-core2-32/lkft/linux-next/745/config
 
-Eric
-> 
-> Thanks,
-> Jean
-> 
->> My fear is we end up with an overly
->> complex series. This capability getter may be interesting if we can
->> switch to a fallback implementation but here I guess we don't have any
->> fallback. With smmuv3 nested stage we don't have any fallback solution
->> either. For the versions, it is different because the userspace shall be
->> able to adapt (or not) to the max version supported by the kernel.
->>
->> Thanks
->>
->> Eric
->>>
->>> Regards,
->>> Yi Liu
->>>
->>
-> 
+Full test log,
+https://lkft.validation.linaro.org/scheduler/job/1352031#L10567
 
+-- 
+Linaro LKFT
+https://lkft.linaro.org
