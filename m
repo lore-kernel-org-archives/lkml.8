@@ -5,50 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8E6CC2BA19
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 19:36:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DFE4C2BA19
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 19:36:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8AE0E208E4
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 19:36:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2BEA0208FE
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 19:36:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="tBx8aRUw"
+	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="Hg/urOQp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727049AbgDITgS (ORCPT
+        id S1727104AbgDITgW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Apr 2020 15:36:18 -0400
-Received: from mail.efficios.com ([167.114.26.124]:47226 "EHLO
+        Thu, 9 Apr 2020 15:36:22 -0400
+Received: from mail.efficios.com ([167.114.26.124]:47182 "EHLO
         mail.efficios.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726882AbgDITgA (ORCPT
+        with ESMTP id S1726873AbgDITgA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 9 Apr 2020 15:36:00 -0400
 Received: from localhost (localhost [127.0.0.1])
-        by mail.efficios.com (Postfix) with ESMTP id 9AB86280F66;
-        Thu,  9 Apr 2020 15:36:00 -0400 (EDT)
+        by mail.efficios.com (Postfix) with ESMTP id BDEB528109B;
+        Thu,  9 Apr 2020 15:35:59 -0400 (EDT)
 Received: from mail.efficios.com ([127.0.0.1])
         by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id 5bU-wLzZK8f4; Thu,  9 Apr 2020 15:36:00 -0400 (EDT)
+        with ESMTP id WDzszhGAcDZT; Thu,  9 Apr 2020 15:35:59 -0400 (EDT)
 Received: from localhost (localhost [127.0.0.1])
-        by mail.efficios.com (Postfix) with ESMTP id A0F8C280AF0;
-        Thu,  9 Apr 2020 15:35:59 -0400 (EDT)
-DKIM-Filter: OpenDKIM Filter v2.10.3 mail.efficios.com A0F8C280AF0
+        by mail.efficios.com (Postfix) with ESMTP id EB0A828097D;
+        Thu,  9 Apr 2020 15:35:58 -0400 (EDT)
+DKIM-Filter: OpenDKIM Filter v2.10.3 mail.efficios.com EB0A828097D
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
         s=default; t=1586460959;
-        bh=dS2j/RfoCvb6S/7DuXu9SUgFlAK346t8v78OVR21ay0=;
+        bh=EHJTpZNwmXluZM9tJ0paz0S+w/SyA8cPGMPnFdU4nVg=;
         h=From:To:Date:Message-Id;
-        b=tBx8aRUw0PewCktQArATxmKEQoI8Hxs24WB5p4gBw8M0c920y4wKP8Xgd+pH6h+Qd
-         n8NulPyTFwH8IiiXuA7pqtW3jNtnMxSv7G0K41BZSGRC9gcFS2qyS+XOgdXs2u8vx6
-         Frgjs2ZCIPSo21ZjPgmfbI0l8BPFCaU4yXC37Sxt/q6LQVZzvmYALzL3wBKV3Ibpdj
-         5sW7Uilj9zSxtAWzhcVvKaWQ4LJBmucAuURlA/J8CUA+4Og426j3NHDFbNXtTlLlkL
-         6ej3KGMNcCUfEcFulkGchFBIYrAMrlEmSQh+CjzAXnA00No8G8bKfQVnQZBfChIm9N
-         E4QPnlnC03sFA==
+        b=Hg/urOQpvU32K5RZgS22WfDNNMnSLMkqzgQXsmAFmKXDHU+cZuMNLdfmffqnynXMY
+         v3X3Et1ys6H7xdZLL8yA7596mBLf7Zr2IwPzHZrdmIgwyjCKWauXEG4fLJaOIFfp9f
+         v1fe37a8vE84wyQSRTVos68E7Hl10/AlstIDGEDs/6tB9ZDRiZXBLrpRfdvU4eOc5P
+         JtBODCm3D3bEYg4ULA2G/dGNODFr0HPYaI81xg6BdgrjaTfzYvM5AgO7PCC2atorGR
+         o95CoH++uSmyS1fXQ9RFj3dERWesrpc6nGU0C30rE2nI9XEGCHxUYA6zJE9wsL6eH1
+         Hux8TDIXRlzLA==
 X-Virus-Scanned: amavisd-new at efficios.com
 Received: from mail.efficios.com ([127.0.0.1])
         by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10026)
-        with ESMTP id W2aLUYIx0DZj; Thu,  9 Apr 2020 15:35:59 -0400 (EDT)
+        with ESMTP id D4ck5yx4Fpqa; Thu,  9 Apr 2020 15:35:58 -0400 (EDT)
 Received: from localhost.localdomain (192-222-181-218.qc.cable.ebox.net [192.222.181.218])
-        by mail.efficios.com (Postfix) with ESMTPSA id F290D280F5C;
+        by mail.efficios.com (Postfix) with ESMTPSA id 20139280D6B;
         Thu,  9 Apr 2020 15:35:58 -0400 (EDT)
 From:   Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
 To:     Thomas Gleixner <tglx@linutronix.de>,
@@ -59,10 +59,12 @@ To:     Thomas Gleixner <tglx@linutronix.de>,
         Alexei Starovoitov <ast@kernel.org>
 Cc:     linux-kernel@vger.kernel.org,
         Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        linux-mm@kvack.org
-Subject: [RFC PATCH 6/9] mm: export-GPL get_pageblock_migratetype
-Date:   Thu,  9 Apr 2020 15:35:40 -0400
-Message-Id: <20200409193543.18115-7-mathieu.desnoyers@efficios.com>
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Ingo Molnar <mingo@redhat.com>, bpf@vger.kernel.org,
+        netdev@vger.kernel.org
+Subject: [RFC PATCH 3/9] writeback: tracing: pass global_wb_domain as tracepoint parameter
+Date:   Thu,  9 Apr 2020 15:35:37 -0400
+Message-Id: <20200409193543.18115-4-mathieu.desnoyers@efficios.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200409193543.18115-1-mathieu.desnoyers@efficios.com>
 References: <20200409193543.18115-1-mathieu.desnoyers@efficios.com>
@@ -71,34 +73,120 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The macro include/linux/mmzone.h:get_pageblock_migratetype() uses
-the symbol get_pfnblock_flags_mask, which is not exported. That macro is
-used within the kmem and page_ref trace events to trace the migrate type
-of the target page.
-
-Exporting this symbol to GPL modules allows GPL kernel tracers to be
-implemented as modules.
+The symbol global_wb_domain is not GPL-exported to modules. In order
+to allow kernel tracers implemented as GPL modules to access the
+global writeback domain dirty limit, as used within the
+global_dirty_state and balance_dirty_pages trace events, pass
+a pointer to the global writeback domain as a new parameter for
+those tracepoints.
 
 Signed-off-by: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Alexei Starovoitov <ast@kernel.org>
+Cc: Daniel Borkmann <daniel@iogearbox.net>
+Cc: Steven Rostedt <rostedt@goodmis.org>
+Cc: Ingo Molnar <mingo@redhat.com>
 Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: linux-mm@kvack.org
+Cc: bpf@vger.kernel.org
+Cc: netdev@vger.kernel.org
 ---
- mm/page_alloc.c | 1 +
- 1 file changed, 1 insertion(+)
+ include/trace/events/writeback.h | 17 ++++++++++-------
+ mm/page-writeback.c              |  9 +++++----
+ 2 files changed, 15 insertions(+), 11 deletions(-)
 
-diff --git a/mm/page_alloc.c b/mm/page_alloc.c
-index 114c56c3685d..390febb028a0 100644
---- a/mm/page_alloc.c
-+++ b/mm/page_alloc.c
-@@ -501,6 +501,7 @@ unsigned long get_pfnblock_flags_mask(struct page *page, unsigned long pfn,
- {
- 	return __get_pfnblock_flags_mask(page, pfn, end_bitidx, mask);
- }
-+EXPORT_SYMBOL_GPL(get_pfnblock_flags_mask);
+diff --git a/include/trace/events/writeback.h b/include/trace/events/writeback.h
+index d94def25e4dc..8fd774108c9c 100644
+--- a/include/trace/events/writeback.h
++++ b/include/trace/events/writeback.h
+@@ -531,11 +531,13 @@ TRACE_EVENT(writeback_queue_io,
  
- static __always_inline int get_pfnblock_migratetype(struct page *page, unsigned long pfn)
- {
+ TRACE_EVENT(global_dirty_state,
+ 
+-	TP_PROTO(unsigned long background_thresh,
++	TP_PROTO(struct wb_domain *domain,
++		 unsigned long background_thresh,
+ 		 unsigned long dirty_thresh
+ 	),
+ 
+-	TP_ARGS(background_thresh,
++	TP_ARGS(domain,
++		background_thresh,
+ 		dirty_thresh
+ 	),
+ 
+@@ -558,7 +560,7 @@ TRACE_EVENT(global_dirty_state,
+ 		__entry->nr_written	= global_node_page_state(NR_WRITTEN);
+ 		__entry->background_thresh = background_thresh;
+ 		__entry->dirty_thresh	= dirty_thresh;
+-		__entry->dirty_limit	= global_wb_domain.dirty_limit;
++		__entry->dirty_limit	= domain->dirty_limit;
+ 	),
+ 
+ 	TP_printk("dirty=%lu writeback=%lu unstable=%lu "
+@@ -625,7 +627,8 @@ TRACE_EVENT(bdi_dirty_ratelimit,
+ 
+ TRACE_EVENT(balance_dirty_pages,
+ 
+-	TP_PROTO(struct bdi_writeback *wb,
++	TP_PROTO(struct wb_domain *domain,
++		 struct bdi_writeback *wb,
+ 		 unsigned long thresh,
+ 		 unsigned long bg_thresh,
+ 		 unsigned long dirty,
+@@ -638,7 +641,7 @@ TRACE_EVENT(balance_dirty_pages,
+ 		 long pause,
+ 		 unsigned long start_time),
+ 
+-	TP_ARGS(wb, thresh, bg_thresh, dirty, bdi_thresh, bdi_dirty,
++	TP_ARGS(domain, wb, thresh, bg_thresh, dirty, bdi_thresh, bdi_dirty,
+ 		dirty_ratelimit, task_ratelimit,
+ 		dirtied, period, pause, start_time),
+ 
+@@ -664,8 +667,8 @@ TRACE_EVENT(balance_dirty_pages,
+ 		unsigned long freerun = (thresh + bg_thresh) / 2;
+ 		strscpy_pad(__entry->bdi, bdi_dev_name(wb->bdi), 32);
+ 
+-		__entry->limit		= global_wb_domain.dirty_limit;
+-		__entry->setpoint	= (global_wb_domain.dirty_limit +
++		__entry->limit		= domain->dirty_limit;
++		__entry->setpoint	= (domain->dirty_limit +
+ 						freerun) / 2;
+ 		__entry->dirty		= dirty;
+ 		__entry->bdi_setpoint	= __entry->setpoint *
+diff --git a/mm/page-writeback.c b/mm/page-writeback.c
+index 7326b54ab728..c76aae305360 100644
+--- a/mm/page-writeback.c
++++ b/mm/page-writeback.c
+@@ -443,9 +443,8 @@ static void domain_dirty_limits(struct dirty_throttle_control *dtc)
+ 	dtc->thresh = thresh;
+ 	dtc->bg_thresh = bg_thresh;
+ 
+-	/* we should eventually report the domain in the TP */
+ 	if (!gdtc)
+-		trace_global_dirty_state(bg_thresh, thresh);
++		trace_global_dirty_state(&global_wb_domain, bg_thresh, thresh);
+ }
+ 
+ /**
+@@ -1736,7 +1735,8 @@ static void balance_dirty_pages(struct bdi_writeback *wb,
+ 		 * do a reset, as it may be a light dirtier.
+ 		 */
+ 		if (pause < min_pause) {
+-			trace_balance_dirty_pages(wb,
++			trace_balance_dirty_pages(&global_wb_domain,
++						  wb,
+ 						  sdtc->thresh,
+ 						  sdtc->bg_thresh,
+ 						  sdtc->dirty,
+@@ -1765,7 +1765,8 @@ static void balance_dirty_pages(struct bdi_writeback *wb,
+ 		}
+ 
+ pause:
+-		trace_balance_dirty_pages(wb,
++		trace_balance_dirty_pages(&global_wb_domain,
++					  wb,
+ 					  sdtc->thresh,
+ 					  sdtc->bg_thresh,
+ 					  sdtc->dirty,
 -- 
 2.17.1
 
