@@ -2,124 +2,195 @@ Return-Path: <SRS0=n+Ub=5Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.8 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45284C2BB86
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 20:06:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D321CC2BB85
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 20:07:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 161B220730
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 20:06:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586462819;
-	bh=nSw3fUKbe9A+uOfnXkK+h2BbfLi5hDRgEXe0czQ71ug=;
-	h=In-Reply-To:References:Subject:From:Cc:To:Date:List-ID:From;
-	b=dqkJox1V+2PCD7LT+0xtrBJS+3jvX6LApPyQWh0oepERgJxUeM3FMymqdZF601OQo
-	 KNEIRjHEjXLuSAXAtXpH+7x9cOziPVonQF0B56YIGrV0H4JRuo4BD4EvP/5hXZ4Zgm
-	 n6LaowjSun2OyNgOOu8kzoNdyO2q+CKuB1lBeZTE=
+	by mail.kernel.org (Postfix) with ESMTP id A81342074F
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 20:07:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Wo8uwSUO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727028AbgDIUG5 (ORCPT
+        id S1727039AbgDIUHv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Apr 2020 16:06:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37700 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726819AbgDIUG4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Apr 2020 16:06:56 -0400
-Received: from kernel.org (unknown [104.132.0.74])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3D1D220730;
-        Thu,  9 Apr 2020 20:06:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586462816;
-        bh=nSw3fUKbe9A+uOfnXkK+h2BbfLi5hDRgEXe0czQ71ug=;
-        h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
-        b=1Qpn+b1agEH8hbIik8e1kXczOfzvnMN7DD+aM1LL1vgnk/8w39IGwoth91wsEUfhc
-         5GA3RvVynClZXrH/t+ZIgPuxUMzYONBaTfY+QoiDjavW8C5yHTwz8bijbNs9L+NMU3
-         SbNPS9Z3j+ooo8OWmp7SPL7eXB8mEwyHxqJjIh3s=
-Content-Type: text/plain; charset="utf-8"
+        Thu, 9 Apr 2020 16:07:51 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:40845 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726796AbgDIUHu (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Apr 2020 16:07:50 -0400
+Received: by mail-pg1-f195.google.com with SMTP id c5so5466422pgi.7;
+        Thu, 09 Apr 2020 13:07:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=gFbgLvA9IhNM6MS+duI6ZIiItgpmMayKTmOoqArHpEk=;
+        b=Wo8uwSUOk5gr4ciM3Mm7hxCSwPVI02l6a7YUFVcamVf9M9cFL8y+2yGQ+gBiRkwofK
+         OkSEHrjC3Fia+rWqSGFhCuAzYBdMVtvkvkJLbZNpvE0reNA7giBWAhcwkVi+nqsTnW9j
+         sj/3E7UsT66cxUBZ4ZLCrFk+jzupvF6CCMij3BpAo6efbn1/zt+9wHxC8gmURaf8j2qi
+         khwhA64g0MLeKbvQFNwYCp49SAgWa18G39YVWhwjOFiAkEbXsIQX8W10aTUcasc0kn/k
+         kDaEKK3QxzVDNP/hkpRBmXVRPxco3OyDUqMra8s8gr/uphlLzYd+OSlPQytznmplEz4m
+         3SXA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=gFbgLvA9IhNM6MS+duI6ZIiItgpmMayKTmOoqArHpEk=;
+        b=fJReW1WhnIo228O22F3O82lh6jTsD17bbZPnGUdMsdVI5YhTLGsZgTLUyGj4n0RMsU
+         VFwLJ1Dp5/Qtwref88WjCGw09eBSfwS2cGIvVQoexbvAaHAj62LjRs+83c84+qtoe0fH
+         zrLgxlufIDKpk1Zqyz8m+JQeN0wz7x7dp9rfP54p3pDkhMs/JiXeLSvX1zrMoZ0tGZbI
+         W5WrIUohBu9aaHWM8Uqow7cQczDwCL/+TLK9XnbkvEye7x+mdx4THqZ9i7W0Q1oTyxfR
+         ZzmAWXTtEV7FqmD/OYS0x/X6m9i+tcYvr4Sz/cMMaAWvRSXiQZPNokcgUmtvyTV/8ZOS
+         MhcA==
+X-Gm-Message-State: AGi0PuaqKBsQF7ho0DMWP651iVg0p9bz2TOjSFmv0p+3fDgbxclWsFUN
+        bayAvDC7iaVXPcxPpxZly7GZOzpo
+X-Google-Smtp-Source: APiQypJT/cplvpNA6ox65vRjd3FD8P4lnzxQa3HquewNsN63tHFVMvzR7A8Q+/Q0UIM10NOjYhgrKw==
+X-Received: by 2002:a63:ff53:: with SMTP id s19mr1129626pgk.247.1586462869353;
+        Thu, 09 Apr 2020 13:07:49 -0700 (PDT)
+Received: from dtor-ws ([2620:15c:202:201:3c2a:73a9:c2cf:7f45])
+        by smtp.gmail.com with ESMTPSA id k24sm93772pfk.164.2020.04.09.13.07.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 09 Apr 2020 13:07:48 -0700 (PDT)
+Date:   Thu, 9 Apr 2020 13:07:46 -0700
+From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To:     Bernd Edlinger <bernd.edlinger@hotmail.de>
+Cc:     Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        "Dave.Wang" <dave.wang@emc.com.tw>, jingle <jingle.wu@emc.com.tw>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>,
+        Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        Enrico Weigelt <info@metux.net>,
+        Allison Randal <allison@lohutok.net>,
+        Aaron Ma <aaron.ma@canonical.com>
+Subject: Re: [PATCH v2] Input: elantech - fix x_max/y_max values
+Message-ID: <20200409200746.GP75430@dtor-ws>
+References: <PR2PR03MB517975370D754EEF47E062BFE4EB0@PR2PR03MB5179.eurprd03.prod.outlook.com>
+ <CAO-hwJ+eua8-fNj9o8CxjFyM0i1+R9ZwPMroF9uLUH6NVu3Tdg@mail.gmail.com>
+ <PR2PR03MB51799BF709B3975A08F139F4E4EB0@PR2PR03MB5179.eurprd03.prod.outlook.com>
+ <AM6PR03MB5170F5FC30556BEF89C775C2E4EB0@AM6PR03MB5170.eurprd03.prod.outlook.com>
+ <AM6PR03MB5170D26019747F5090FE74B5E4C50@AM6PR03MB5170.eurprd03.prod.outlook.com>
+ <AM6PR03MB51702AF00C6BA06BBC9F517EE4C50@AM6PR03MB5170.eurprd03.prod.outlook.com>
+ <AM6PR03MB51705B32136F527B99CCD907E4C10@AM6PR03MB5170.eurprd03.prod.outlook.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <1585338485-31820-2-git-send-email-tdas@codeaurora.org>
-References: <1585338485-31820-1-git-send-email-tdas@codeaurora.org> <1585338485-31820-2-git-send-email-tdas@codeaurora.org>
-Subject: Re: [PATCH v1 1/4] clk: qcom: gdsc: Add support to enable retention of GSDCR
-From:   Stephen Boyd <sboyd@kernel.org>
-Cc:     David Brown <david.brown@linaro.org>,
-        Rajendra Nayak <rnayak@codeaurora.org>,
-        linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org,
-        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Andy Gross <agross@kernel.org>, devicetree@vger.kernel.org,
-        robh@kernel.org, robh+dt@kernel.org,
-        Taniya Das <tdas@codeaurora.org>
-To:     Michael Turquette <mturquette@baylibre.com>,
-        Taniya Das <tdas@codeaurora.org>
-Date:   Thu, 09 Apr 2020 13:06:55 -0700
-Message-ID: <158646281555.77611.13094729241703720869@swboyd.mtv.corp.google.com>
-User-Agent: alot/0.9
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <AM6PR03MB51705B32136F527B99CCD907E4C10@AM6PR03MB5170.eurprd03.prod.outlook.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Taniya Das (2020-03-27 12:48:02)
-> diff --git a/drivers/clk/qcom/gdsc.c b/drivers/clk/qcom/gdsc.c
-> index a250f59..cfe908f 100644
-> --- a/drivers/clk/qcom/gdsc.c
-> +++ b/drivers/clk/qcom/gdsc.c
-> @@ -28,6 +28,7 @@
->  /* CFG_GDSCR */
->  #define GDSC_POWER_UP_COMPLETE         BIT(16)
->  #define GDSC_POWER_DOWN_COMPLETE       BIT(15)
-> +#define GDSC_RETAIN_FF_ENABLE          BIT(11)
->  #define CFG_GDSCR_OFFSET               0x4
->=20
->  /* Wait 2^n CXO cycles between all states. Here, n=3D2 (4 cycles). */
-> @@ -202,6 +203,14 @@ static inline void gdsc_assert_reset_aon(struct gdsc=
- *sc)
->         regmap_update_bits(sc->regmap, sc->clamp_io_ctrl,
->                            GMEM_RESET_MASK, 0);
->  }
-> +
-> +static inline void gdsc_retain_ff_on(struct gdsc *sc)
+Hi Bernd,
 
-Drop inline please.
+On Thu, Apr 09, 2020 at 07:38:17PM +0200, Bernd Edlinger wrote:
+> Are you there?
+> 
+> Should I re-post the v2 patch, was that dropped somehow?
+> 
+> If I don't hear anything I'll assume I just repost, probably
+> as unchanged v3, right?
 
-> +{
-> +       u32 mask =3D RETAIN_FF_ENABLE;
+I do not think we ever got confirmation from Dave or Jingle; from my POV
+I really dislike arbitrary mangling of the data.
 
-Is this supposed to be GDSC_RETAIN_FF_ENABLE?
+I think you are right that the issue is with order of calls, and we need
+to switch the touchpad into absolute mode to get valid results from the
+ID query call. Dave, Jingle, any impot here?
 
-> +
-> +       regmap_update_bits(sc->regmap, sc->gdscr, mask, mask);
-> +}
-> +
->  static int gdsc_enable(struct generic_pm_domain *domain)
->  {
->         struct gdsc *sc =3D domain_to_gdsc(domain);
-> @@ -254,6 +263,9 @@ static int gdsc_enable(struct generic_pm_domain *doma=
-in)
->                 udelay(1);
->         }
->=20
-> +       if (sc->flags & RETAIN_FF_ENABLE)
-> +               gdsc_retain_ff_on(sc);
-> +
->         return 0;
->  }
->=20
-> diff --git a/drivers/clk/qcom/gdsc.h b/drivers/clk/qcom/gdsc.h
-> index 64cdc8c..8604d44 100644
-> --- a/drivers/clk/qcom/gdsc.h
-> +++ b/drivers/clk/qcom/gdsc.h
-> @@ -49,6 +49,7 @@ struct gdsc {
->  #define AON_RESET      BIT(4)
->  #define POLL_CFG_GDSCR BIT(5)
->  #define ALWAYS_ON      BIT(6)
-> +#define RETAIN_FF_ENABLE       BIT(7)
+Benjamin, Kai-Feng, do you know if we try to switch to absolute mode
+to begin with, will it cause issues with SMBus mode?
 
-This is a flag, not a register bit presumably.
+Thanks.
 
->         struct reset_controller_dev     *rcdev;
->         unsigned int                    *resets;
->         unsigned int                    reset_count;
+> 
+> Thanks,
+> Bernd.
+> 
+> 
+> On 4/5/20 7:54 AM, Bernd Edlinger wrote:
+> > And, furthermore, there is one thing I find really confusing,
+> > 
+> > I do not see the message v2 quoted below which had an updated commit message,
+> > due to that Benjamin Tissoires request.
+> > 
+> > It was from my point of view sent on 2/27/20 11:03 PM,
+> > but I cannot find it neither on spinics, nor on marc.info.
+> > That is funny.
+> > 
+> > Did it reach you guys at all?
+> > Or should I re-send it just in case?
+> > 
+> > 
+> > Thanks
+> > Bernd.
+> > 
+> > On 4/5/20 7:26 AM, Bernd Edlinger wrote:
+> >> Ping...
+> >>
+> >> This patch works fine for me since several weeks,
+> >> without it I would not be able to use my laptop any more.
+> >>
+> >> Could you please accept this patch?
+> >>
+> >>
+> >> Thanks
+> >> Bernd.
+> >>
+> >>
+> >> On 2/27/20 11:03 PM, Bernd Edlinger wrote:
+> >>> Since commit 37548659bb22 ("Input: elantech - query the min/max information beforehand too")
+> >>> moved the querying of the x_max/y_max values from
+> >>> elantech_set_input_params to elantech_query_info,
+> >>> the returned x_max/y_max values are different than before,
+> >>> at least for some firmware versions.
+> >>>
+> >>> The reason is likely that this is now done before
+> >>> elantech_set_absolute_mode does run.  So it may happen that
+> >>> the returned values are exactly half of what they used to be,
+> >>> which makes input_report_abs in PS/2 mode report ABS_X values which
+> >>> exceed the x_max value, which is very annoying since the mouse stops
+> >>> to move then, and ABS_Y value become negative, which is benign.
+> >>>
+> >>> This was observed with a MSI GX70 laptop:
+> >>>
+> >>> elantech: assuming hardware version 3 (with firmware version 0x250f01)
+> >>> elantech: Synaptics capabilities query result 0x18, 0x17, 0x0b.
+> >>> elantech: Elan sample query result 05, 0e, 00
+> >>> input: ETPS/2 Elantech Touchpad as /devices/platform/i8042/serio...
+> >>>
+> >>> Correct this by doubling the returned x_max and y_max
+> >>> value for this specific firmware version.
+> >>>
+> >>> Fixes: 37548659bb22 ("Input: elantech - query the min/max information beforehand too")
+> >>>
+> >>> Signed-off-by: Bernd Edlinger <bernd.edlinger@hotmail.de>
+> >>> ---
+> >>>  drivers/input/mouse/elantech.c | 4 ++++
+> >>>  1 file changed, 4 insertions(+)
+> >>>
+> >>> diff --git a/drivers/input/mouse/elantech.c b/drivers/input/mouse/elantech.c
+> >>> index 2d8434b..3399db8 100644
+> >>> --- a/drivers/input/mouse/elantech.c
+> >>> +++ b/drivers/input/mouse/elantech.c
+> >>> @@ -1720,6 +1720,10 @@ static int elantech_query_info(struct psmouse *psmouse,
+> >>>  
+> >>>  		info->x_max = (0x0f & param[0]) << 8 | param[1];
+> >>>  		info->y_max = (0xf0 & param[0]) << 4 | param[2];
+> >>> +		if (info->fw_version == 0x250f01) {
+> >>> +			info->x_max <<= 1;
+> >>> +			info->y_max <<= 1;
+> >>> +		}
+> >>>  		break;
+> >>>  
+> >>>  	case 4:
+> >>>
+
+-- 
+Dmitry
