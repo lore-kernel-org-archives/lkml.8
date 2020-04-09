@@ -2,281 +2,185 @@ Return-Path: <SRS0=n+Ub=5Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FA2EC2BB1D
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 07:32:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF699C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 07:35:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D6084206F7
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 07:32:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 95AFA206F7
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 07:35:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="dLMse1UF"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="K03CgJJL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726594AbgDIHcw (ORCPT
+        id S1726574AbgDIHfp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Apr 2020 03:32:52 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:58090 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725970AbgDIHcw (ORCPT
+        Thu, 9 Apr 2020 03:35:45 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:43939 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725972AbgDIHfo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Apr 2020 03:32:52 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1586417570;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-        bh=Y6qMltfal0fl2P6YWyS5WSepv82iHZRo2B97emGwRs0=;
-        b=dLMse1UFomkw9Q8Swyo7ez1wCIoenLrf9YcA8fFLI3NQNZKH2xbmn+KpXGhBHRuBezhTQE
-        SEEqiV1QcxEf5H5sMrgz3fgseksnUJ3Sy1LWtiBzcip+tTbEd4A2rjEKWpYZcehcfNxjFB
-        C5Sg1jAREkty/m5bPs43WtKxi5weS5M=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-399-NPJ8xQUvMS2eCihXJ5X4LQ-1; Thu, 09 Apr 2020 03:32:46 -0400
-X-MC-Unique: NPJ8xQUvMS2eCihXJ5X4LQ-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 107578018CD;
-        Thu,  9 Apr 2020 07:32:45 +0000 (UTC)
-Received: from [10.36.113.222] (ovpn-113-222.ams2.redhat.com [10.36.113.222])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id A0681A0A7B;
-        Thu,  9 Apr 2020 07:32:42 +0000 (UTC)
-Subject: Re: [PATCH v1 1/2] powerpc/pseries/hotplug-memory: stop checking
- is_mem_section_removable()
-To:     Michael Ellerman <mpe@ellerman.id.au>, linux-kernel@vger.kernel.org
-Cc:     linux-mm@kvack.org, linuxppc-dev@lists.ozlabs.org,
-        Nathan Fontenot <nfont@linux.vnet.ibm.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michal Hocko <mhocko@suse.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Oscar Salvador <osalvador@suse.de>,
-        Baoquan He <bhe@redhat.com>,
-        Wei Yang <richard.weiyang@gmail.com>
-References: <20200407135416.24093-1-david@redhat.com>
- <20200407135416.24093-2-david@redhat.com> <87sghdjf1y.fsf@mpe.ellerman.id.au>
-From:   David Hildenbrand <david@redhat.com>
-Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
- 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
-Organization: Red Hat GmbH
-Message-ID: <82376163-412f-e5bc-65f0-a37c129ecdf2@redhat.com>
-Date:   Thu, 9 Apr 2020 09:32:41 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Thu, 9 Apr 2020 03:35:44 -0400
+Received: by mail-wr1-f65.google.com with SMTP id i10so4407430wrv.10
+        for <linux-kernel@vger.kernel.org>; Thu, 09 Apr 2020 00:35:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=GbBkYdAto3GmeZ8k9ai+VjMEZHKuaYzsx51nNI90NCs=;
+        b=K03CgJJLcnFNPtjHLyANjALcNZtiKJw0Pz76kqGtl2qssgAoISCq+CWgldcUQwBXgl
+         Ftd5QsOcXkbpYsubrkra83D8gLwjU4vaIENnAaJTitETPgwcPkWOjVSOFRAW36NvpRLX
+         jXzg1d5oNc50sf+kklslawSSsNCiug0BgTGIVo3MdYqhM9baAa+56mHQ8h/ev70sDw1L
+         vsKAOC46H5xnIf7seKGsL4bJQuA5wSzvYZNiN6fnhoo1KPkWPhOWduPWxW0AXB6RJMSv
+         JogfP/pdt4XyHstvSK3uuF3NHUUv1pTptLp+jIfpiydLcgO7UFQ2whVX3qdrwIzhnKI2
+         ZRLA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=GbBkYdAto3GmeZ8k9ai+VjMEZHKuaYzsx51nNI90NCs=;
+        b=c6coE4XAwrSoYwg7Y8WoI5sNz78Gw9sEc8ceffVIZXZvsEHH6cQwkuVPGNY0Ev7hnd
+         llkLyV07C/GJHbNTKsZBLNUqvAj65GcYEUg/nvIfe9lnazhbmmQMo3Pn35zcyLw2cz80
+         ezdd6GsIV9aBf2cdnwe/q1+K27y4aERiL7Zt4/KjzqgRvpn4zkTDW6qIg+pXVRV06a57
+         q/pChu/W9IOlari0uaEQzNT7Q5Z+zfMfpFS9sdk2bWuRiV5vn361+TF+7ASd+pS0ku2b
+         QYKqnFJXS+v7kcUXtiz7iB6usSbNZac0ZGqKxxcss0hqayxoSaK/YttkG5YrOOG5pIaW
+         bT7Q==
+X-Gm-Message-State: AGi0PuaiT9KRPTGK0T6KJK3Mq+++AvocMb3i8rLk9zCORTF7DRSHaCIB
+        y8MBfb8ByTGT7nR/PPIGimPWeA==
+X-Google-Smtp-Source: APiQypIz+nbmA+BaiJDyHzloSsIZFWA0uygarvMoYqSYfnWro08ms2WONffA7OP5UIZr8Wh6a3bPpA==
+X-Received: by 2002:adf:ea06:: with SMTP id q6mr10006417wrm.301.1586417741859;
+        Thu, 09 Apr 2020 00:35:41 -0700 (PDT)
+Received: from myrica ([2001:171b:226b:54a0:116c:c27a:3e7f:5eaf])
+        by smtp.gmail.com with ESMTPSA id w66sm2795410wma.38.2020.04.09.00.35.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 09 Apr 2020 00:35:41 -0700 (PDT)
+Date:   Thu, 9 Apr 2020 09:35:33 +0200
+From:   Jean-Philippe Brucker <jean-philippe@linaro.org>
+To:     Alex Williamson <alex.williamson@redhat.com>
+Cc:     "Raj, Ashok" <ashok.raj@intel.com>,
+        "Tian, Kevin" <kevin.tian@intel.com>,
+        "Liu, Yi L" <yi.l.liu@intel.com>,
+        "eric.auger@redhat.com" <eric.auger@redhat.com>,
+        "jacob.jun.pan@linux.intel.com" <jacob.jun.pan@linux.intel.com>,
+        "joro@8bytes.org" <joro@8bytes.org>,
+        "Tian, Jun J" <jun.j.tian@intel.com>,
+        "Sun, Yi Y" <yi.y.sun@intel.com>,
+        "peterx@redhat.com" <peterx@redhat.com>,
+        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Wu, Hao" <hao.wu@intel.com>, Bjorn Helgaas <bhelgaas@google.com>,
+        Don Dutile <ddutile@redhat.com>
+Subject: Re: [PATCH v1 2/2] vfio/pci: Emulate PASID/PRI capability for VFs
+Message-ID: <20200409073533.GB2435@myrica>
+References: <1584880394-11184-1-git-send-email-yi.l.liu@intel.com>
+ <1584880394-11184-3-git-send-email-yi.l.liu@intel.com>
+ <20200402165954.48d941ee@w520.home>
+ <A2975661238FB949B60364EF0F2C25743A2204FE@SHSMSX104.ccr.corp.intel.com>
+ <20200403112545.6c115ba3@w520.home>
+ <AADFC41AFE54684AB9EE6CBC0274A5D19D80E13D@SHSMSX104.ccr.corp.intel.com>
+ <20200407095801.648b1371@w520.home>
+ <20200408040021.GS67127@otc-nc-03>
+ <20200408101940.3459943d@w520.home>
 MIME-Version: 1.0
-In-Reply-To: <87sghdjf1y.fsf@mpe.ellerman.id.au>
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200408101940.3459943d@w520.home>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> It's also not very pretty in dmesg.
->=20
-> Before:
->=20
->   pseries-hotplug-mem: Attempting to hot-add 10 LMB(s)
->   pseries-hotplug-mem: Memory hot-add failed, removing any added LMBs
->   dlpar: Could not handle DLPAR request "memory add count 10"
->=20
+On Wed, Apr 08, 2020 at 10:19:40AM -0600, Alex Williamson wrote:
+> On Tue, 7 Apr 2020 21:00:21 -0700
+> "Raj, Ashok" <ashok.raj@intel.com> wrote:
+> 
+> > Hi Alex
+> > 
+> > + Bjorn
+> 
+>  + Don
+> 
+> > FWIW I can't understand why PCI SIG went different ways with ATS, 
+> > where its enumerated on PF and VF. But for PASID and PRI its only
+> > in PF. 
+> > 
+> > I'm checking with our internal SIG reps to followup on that.
+> > 
+> > On Tue, Apr 07, 2020 at 09:58:01AM -0600, Alex Williamson wrote:
+> > > > Is there vendor guarantee that hidden registers will locate at the
+> > > > same offset between PF and VF config space?   
+> > > 
+> > > I'm not sure if the spec really precludes hidden registers, but the
+> > > fact that these registers are explicitly outside of the capability
+> > > chain implies they're only intended for device specific use, so I'd say
+> > > there are no guarantees about anything related to these registers.  
+> > 
+> > As you had suggested in the other thread, we could consider
+> > using the same offset as in PF, but even that's a better guess
+> > still not reliable.
+> > 
+> > The other option is to maybe extend driver ops in the PF to expose
+> > where the offsets should be. Sort of adding the quirk in the 
+> > implementation. 
+> > 
+> > I'm not sure how prevalent are PASID and PRI in VF devices. If SIG is resisting 
+> > making VF's first class citizen, we might ask them to add some verbiage
+> > to suggest leave the same offsets as PF open to help emulation software.
+> 
+> Even if we know where to expose these capabilities on the VF, it's not
+> clear to me how we can actually virtualize the capability itself.  If
+> the spec defines, for example, an enable bit as r/w then software that
+> interacts with that register expects the bit is settable.  There's no
+> protocol for "try to set the bit and re-read it to see if the hardware
+> accepted it".  Therefore a capability with a fixed enable bit
+> representing the state of the PF, not settable by the VF, is
+> disingenuous to the spec.
 
-Thanks for running it through the mill.
+Would it be OK to implement a lock down mechanism for the PF PASID
+capability, preventing changes to the PF cap when the VF is in use by
+VFIO?  The emulation would still break the spec: since the PF cap would
+always be enabled the VF configuration bits would have no effect, but it
+seems preferable to having the Enable bit not enable anything.
 
-Here you test "hotadd", below you test "hot-remove". But yeah, there is
-a change in the amount of dmesg.
+> 
+> If what we're trying to do is expose that PASID and PRI are enabled on
+> the PF to a VF driver, maybe duplicating the PF capabilities on the VF
+> without the ability to control it is not the right approach.  Maybe we
+> need new capabilities exposing these as slave features that cannot be
+> controlled?  We could define our own vendor capability for this, but of
+> course we have both the where to put it in config space issue, as well
+> as the issue of trying to push an ad-hoc standard.  vfio could expose
+> these as device features rather than emulating capabilities, but that
+> still leaves a big gap between vfio in the hypervisor and the driver in
+> the guest VM.  That might still help push the responsibility and policy
+> for how to expose it to the VM as a userspace problem though.
 
-> After:
->=20
->   pseries-hotplug-mem: Attempting to hot-remove 10 LMB(s)
->   page:c00c000001ca8200 refcount:1 mapcount:0 mapping:0000000018c4a547 =
-index:0xc00000072a080180
->   flags: 0x7ffff000000200(slab)
->   raw: 007ffff000000200 c00c000001cffd48 c000000781c51410 c000000793327=
-580
->   raw: c00000072a080180 0000000001550001 00000001ffffffff 0000000000000=
-000
->   page dumped because: unmovable page
->   page:c00c000001cc4a80 refcount:1 mapcount:0 mapping:0000000018c4a547 =
-index:0xc00000079b110080
->   flags: 0x7ffff000000000()
->   raw: 007ffff000000000 5deadbeef0000100 5deadbeef0000122 0000000000000=
-000
->   raw: c00000079b110080 0000000000000000 00000001ffffffff 0000000000000=
-000
->   page dumped because: unmovable page
->   page:c00c000001d08200 refcount:1 mapcount:0 mapping:0000000018c4a547 =
-index:0xc00000074208ff00
->   flags: 0x7ffff000000200(slab)
->   raw: 007ffff000000200 c000000781c5f150 c00c000001d37f88 c000000798a24=
-880
->   raw: c00000074208ff00 0000000001550002 00000001ffffffff 0000000000000=
-000
->   page dumped because: unmovable page
->   page:c00c000001d40140 refcount:1 mapcount:0 mapping:0000000018c4a547 =
-index:0xc000000750059c00
->   flags: 0x7ffff000000200(slab)
->   raw: 007ffff000000200 c00c000001dfcfc8 c00c000001d3c288 c0000007851c2=
-d00
->   raw: c000000750059c00 0000000001000003 00000001ffffffff 0000000000000=
-000
->   page dumped because: unmovable page
->   page:c00c000001d9c000 refcount:1 mapcount:0 mapping:0000000018c4a547 =
-index:0xc000000002370080
->   flags: 0x7ffff000000000()
->   raw: 007ffff000000000 5deadbeef0000100 5deadbeef0000122 0000000000000=
-000
->   raw: c000000002370080 0000000000000000 00000001ffffffff 0000000000000=
-000
->   page dumped because: unmovable page
->   page:c00c000001dc0200 refcount:1 mapcount:0 mapping:0000000018c4a547 =
-index:0xc000000002370080
->   flags: 0x7ffff000000000()
->   raw: 007ffff000000000 5deadbeef0000100 5deadbeef0000122 0000000000000=
-000
->   raw: c000000002370080 0000000000000000 00000001ffffffff 0000000000000=
-000
->   page dumped because: unmovable page
->   page:c00c000001e00000 refcount:1 mapcount:0 mapping:0000000018c4a547 =
-index:0x0
->   flags: 0x7ffff000000200(slab)
->   raw: 007ffff000000200 5deadbeef0000100 5deadbeef0000122 c0000007a801f=
-500
->   raw: 0000000000000000 0000000008000800 00000001ffffffff 0000000000000=
-000
->   page dumped because: unmovable page
->   page:c00c000001e40440 refcount:1 mapcount:0 mapping:0000000018c4a547 =
-index:0x0
->   flags: 0x7ffff000000200(slab)
->   raw: 007ffff000000200 5deadbeef0000100 5deadbeef0000122 c0000007a801e=
-380
->   raw: 0000000000000000 0000000000400040 00000001ffffffff 0000000000000=
-000
->   page dumped because: unmovable page
->   page:c00c000001e80000 refcount:1 mapcount:0 mapping:0000000018c4a547 =
-index:0xc0000007a0000640
->   flags: 0x7ffff000000200(slab)
->   raw: 007ffff000000200 c00c000001e5af48 c00c000001e80408 c000000f42d00=
-a00
->   raw: c0000007a0000640 00000000066600a2 00000001ffffffff 0000000000000=
-000
->   page dumped because: unmovable page
->   page:c00c000003c89d40 refcount:2 mapcount:1 mapping:0000000018c4a547 =
-index:0x10a41
->   anon flags: 0x17ffff000080024(uptodate|active|swapbacked)
->   raw: 017ffff000080024 5deadbeef0000100 5deadbeef0000122 c0000007986b0=
-3c9
->   raw: 0000000000010a41 0000000000000000 0000000200000000 c00000000340b=
-000
->   page dumped because: unmovable page
->   page->mem_cgroup:c00000000340b000
->   page:c00c000003cc0000 refcount:1 mapcount:0 mapping:0000000018c4a547 =
-index:0xc000000f3000fd38
->   flags: 0x17ffff000000200(slab)
->   raw: 017ffff000000200 c000000f3c911890 c000000f3c911890 c00000079fffd=
-980
->   raw: c000000f3000fd38 0000000000700003 00000001ffffffff 0000000000000=
-000
->   page dumped because: unmovable page
->   page:c00c000003d00000 refcount:1 mapcount:0 mapping:0000000018c4a547 =
-index:0xc0000007a2ec0000
->   flags: 0x17ffff000000000()
->   raw: 017ffff000000000 5deadbeef0000100 5deadbeef0000122 0000000000000=
-000
->   raw: c0000007a2ec0000 0000000000000000 00000001ffffffff 0000000000000=
-000
->   page dumped because: unmovable page
->   page:c00c000003e2c000 refcount:1 mapcount:0 mapping:0000000018c4a547 =
-index:0xc000000f8b008400
->   flags: 0x27ffff000000200(slab)
->   raw: 027ffff000000200 c000000f8e000190 c000000f8e000190 c0000007a801e=
-380
->   raw: c000000f8b008400 0000000000400038 00000001ffffffff 0000000000000=
-000
->   page dumped because: unmovable page
->   page:c00c000003fec000 refcount:1 mapcount:0 mapping:0000000018c4a547 =
-index:0x0
->   flags: 0x37ffff000000000()
->   raw: 037ffff000000000 5deadbeef0000100 5deadbeef0000122 0000000000000=
-000
->   raw: 0000000000000000 0000000000000000 00000001ffffffff 0000000000000=
-000
->   page dumped because: unmovable page
->   pseries-hotplug-mem: Memory hot-remove failed, adding LMB's back
->   dlpar: Could not handle DLPAR request "memory remove count 10"
->=20
->=20
->=20
-> It looks like set_migratetype_isolate() and start_isolate_page_range()
-> can be told not to report those warnings, but we're just calling
-> device_offline() which doesn't let us specify that.
+Userspace might have more difficulty working around the issues mentioned
+in this thread. They would still need a guarantee that the PF PASID
+configuration doesn't change at runtime, and they wouldn't have the
+ability to talk to a vendor driver to figure out where to place the fake
+PASID capability.
 
-Yeah, but these messages can easily pop up (to a more limited degree)
-with the current code as well, as checking for movable pages without
-isolating the page range gives you no guarantees that no unmovable data
-will end up on the lmb until you offline it. It's simply racy.
-
-I discussed this output with Michal when we changed the
-/sys/devices/system/memory/memoryX/removable behavior, and he had the
-opinion that dmesg (debug) output should not really be an issue.
-
-We could make this output
-
-a) configurable at runtime and let powerpc code disable it while calling
-device_offline(). So user space attempts will still trigger the messages
-
-b) configurable at compile time
-
-
---=20
 Thanks,
+Jean
 
-David / dhildenb
-
+> 
+> I agree though, I don't know why the SIG would preclude implementing
+> per VF control of these features.  Thanks,
+> 
+> Alex
+> 
+> > > FWIW, vfio started out being more strict about restricting config space
+> > > access to defined capabilities, until...
+> > > 
+> > > commit a7d1ea1c11b33bda2691f3294b4d735ed635535a
+> > > Author: Alex Williamson <alex.williamson@redhat.com>
+> > > Date:   Mon Apr 1 09:04:12 2013 -0600
+> > >   
+> > 
+> > Cheers,
+> > Ashok
+> > 
+> 
