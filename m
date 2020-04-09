@@ -2,173 +2,297 @@ Return-Path: <SRS0=n+Ub=5Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88D46C2BB85
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 16:59:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D17D4C2BB85
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 16:59:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 517DA20753
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 16:59:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A836120678
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 16:59:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="duYC2sW3"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="xKvnTo5b"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727960AbgDIQ7D (ORCPT
+        id S1727975AbgDIQ7q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Apr 2020 12:59:03 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:50402 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726728AbgDIQ7D (ORCPT
+        Thu, 9 Apr 2020 12:59:46 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:49242 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726728AbgDIQ7p (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Apr 2020 12:59:03 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1586451543;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=oIlNiJb3ausYuUxni1zU+nLq9ARdN6KgHNOnahfy3D8=;
-        b=duYC2sW3uk0LSqlj2ZNh0LdYBbf83vIqOqYsjTtTDm8Ot62JbddhkHSJS5afx2GsuQOkAf
-        QipAsl8pBdu+rCvxTLsQDBcIiZzjNziR/aQikIKb6Urx7Rz5jrem8O6vrd9BZu8cBMDWyl
-        Y/AasEJBMlotbvG+PGBHTf24y0NO430=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-447-cNAfnu6LPDSY90YRtKWIXg-1; Thu, 09 Apr 2020 12:58:54 -0400
-X-MC-Unique: cNAfnu6LPDSY90YRtKWIXg-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 6C213100727C;
-        Thu,  9 Apr 2020 16:58:53 +0000 (UTC)
-Received: from agerstmayr-thinkpad.redhat.com (unknown [10.40.193.205])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 46EB960BFB;
-        Thu,  9 Apr 2020 16:58:48 +0000 (UTC)
-From:   Andreas Gerstmayr <agerstmayr@redhat.com>
-To:     linux-perf-users@vger.kernel.org
-Cc:     Andreas Gerstmayr <agerstmayr@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] perf script flamegraph: python2 support, update cli args
-Date:   Thu,  9 Apr 2020 18:57:31 +0200
-Message-Id: <20200409165734.165260-1-agerstmayr@redhat.com>
-In-Reply-To: <20200406151118.GC32649@kernel.org>
-References: <20200406151118.GC32649@kernel.org>
+        Thu, 9 Apr 2020 12:59:45 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 039Gi6JY002917;
+        Thu, 9 Apr 2020 16:59:31 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2020-01-29;
+ bh=2vbxrvgNae4PvH58+vdCGOVIxMP0N5RBuClEHaxXJNk=;
+ b=xKvnTo5bcC8lhUbN1W6Pkt877W06I5m5K9sh5mqZG9i25ksVkM/TKL61eX1HVto3EFUd
+ Jl4pYSK7hpt/9LfhTfXf0+okBQjUXUuRQZOE1CGHuZUFaP9Fw9aPkxI6cw5mHDGckNMe
+ vEOzzuJaJg1IZRN+nA6lVmMYpKy0qmljq0xtRNXbvoID3jBLnvUd3GGefuSszEetAW4m
+ 1nbCB9oAm40GV+nX8mg2dKU9EWeirp1nAhXOnWq9kfIb//HnwbbNg/9JqzmjS5FAY+Y6
+ It7gr1+xAW3Lh6qDwRvGS92HthaG+WcptQkT5Jhu5O9OKoROM8L/CzK+hc6lo18uPNWB IQ== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by aserp2120.oracle.com with ESMTP id 3091m12qja-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 09 Apr 2020 16:59:31 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 039Ggc4F168728;
+        Thu, 9 Apr 2020 16:59:31 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by userp3020.oracle.com with ESMTP id 309gdc7ysq-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 09 Apr 2020 16:59:30 +0000
+Received: from abhmp0020.oracle.com (abhmp0020.oracle.com [141.146.116.26])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 039GxSSX028659;
+        Thu, 9 Apr 2020 16:59:29 GMT
+Received: from localhost (/10.159.158.178)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Thu, 09 Apr 2020 09:59:28 -0700
+Date:   Thu, 9 Apr 2020 09:59:27 -0700
+From:   "Darrick J. Wong" <darrick.wong@oracle.com>
+To:     Ira Weiny <ira.weiny@intel.com>
+Cc:     Dave Chinner <david@fromorbit.com>, linux-kernel@vger.kernel.org,
+        Dan Williams <dan.j.williams@intel.com>,
+        Christoph Hellwig <hch@lst.de>,
+        "Theodore Y. Ts'o" <tytso@mit.edu>, Jan Kara <jack@suse.cz>,
+        Jeff Moyer <jmoyer@redhat.com>, linux-ext4@vger.kernel.org,
+        linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH V6 6/8] fs/xfs: Combine xfs_diflags_to_linux() and
+ xfs_diflags_to_iflags()
+Message-ID: <20200409165927.GD6741@magnolia>
+References: <20200407182958.568475-1-ira.weiny@intel.com>
+ <20200407182958.568475-7-ira.weiny@intel.com>
+ <20200408020827.GI24067@dread.disaster.area>
+ <20200408170923.GC569068@iweiny-DESK2.sc.intel.com>
+ <20200408210236.GK24067@dread.disaster.area>
+ <20200408220734.GA664132@iweiny-DESK2.sc.intel.com>
+ <20200408232106.GO24067@dread.disaster.area>
+ <20200409001206.GD664132@iweiny-DESK2.sc.intel.com>
+ <20200409003021.GJ6742@magnolia>
+ <20200409152944.GA801705@iweiny-DESK2.sc.intel.com>
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200409152944.GA801705@iweiny-DESK2.sc.intel.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9586 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 malwarescore=0
+ adultscore=0 mlxscore=0 spamscore=0 bulkscore=0 phishscore=0
+ suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2004090121
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9586 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 mlxlogscore=999 mlxscore=0
+ priorityscore=1501 phishscore=0 suspectscore=0 bulkscore=0
+ lowpriorityscore=0 impostorscore=0 malwarescore=0 clxscore=1015
+ spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2004090121
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-* removed --indent argument
-* renamed -F to -f argument to be consistent with other arguments
+On Thu, Apr 09, 2020 at 08:29:44AM -0700, Ira Weiny wrote:
+> On Wed, Apr 08, 2020 at 05:30:21PM -0700, Darrick J. Wong wrote:
+> 
+> [snip]
+> 
+> > 
+> > But you're right, this thing keeps swirling around and around and around
+> > because we can't ever get to agreement on this.  Maybe I'll just become
+> > XFS BOFH MAINTAINER and make a decision like this:
+> > 
+> >  1 Applications must call statx to discover the current S_DAX state.
+> > 
+> >  2 There exists an advisory file inode flag FS_XFLAG_DAX that is set based on
+> >    the parent directory FS_XFLAG_DAX inode flag.  This advisory flag can be
+> >    changed after file creation, but it does not immediately affect the S_DAX
+> >    state.
+> > 
+> >    If FS_XFLAG_DAX is set and the fs is on pmem then it will enable S_DAX at
+> >    inode load time; if FS_XFLAG_DAX is not set, it will not enable S_DAX.
+> >    Unless overridden...
+> > 
+> >  3 There exists a dax= mount option.
+> > 
+> >    "-o dax=never" means "never set S_DAX, ignore FS_XFLAG_DAX"
+> >    "-o dax=always" means "always set S_DAX (at least on pmem), ignore FS_XFLAG_DAX"
+> >         "-o dax" by itself means "dax=always"
+> >    "-o dax=iflag" means "follow FS_XFLAG_DAX" and is the default
+> 
+> per-Dave '-o dax=inode'
 
-Signed-off-by: Andreas Gerstmayr <agerstmayr@redhat.com>
----
- tools/perf/scripts/python/flamegraph.py | 24 +++++++++++-------------
- 1 file changed, 11 insertions(+), 13 deletions(-)
+Ok.
 
-diff --git a/tools/perf/scripts/python/flamegraph.py b/tools/perf/scripts=
-/python/flamegraph.py
-index 5835d190ca42..61f3be9add6b 100755
---- a/tools/perf/scripts/python/flamegraph.py
-+++ b/tools/perf/scripts/python/flamegraph.py
-@@ -14,6 +14,7 @@
- # Flame Graphs invented by Brendan Gregg <bgregg@netflix.com>
- # Works in tandem with d3-flame-graph by Martin Spier <mspier@netflix.co=
-m>
-=20
-+from __future__ import print_function
- import sys
- import os
- import argparse
-@@ -43,11 +44,11 @@ class FlameGraphCLI:
-=20
-         if self.args.format =3D=3D "html" and \
-                 not os.path.isfile(self.args.template):
--            print(f"Flame Graph template {self.args.template} does not "=
- +
--                  f"exist. Please install the js-d3-flame-graph (RPM) or=
- " +
--                  f"libjs-d3-flame-graph (deb) package, specify an " +
--                  f"existing flame graph template (--template PATH) or "=
- +
--                  f"another output format (--format FORMAT).",
-+            print("Flame Graph template {} does not exist. Please instal=
-l "
-+                  "the js-d3-flame-graph (RPM) or libjs-d3-flame-graph (=
-deb) "
-+                  "package, specify an existing flame graph template "
-+                  "(--template PATH) or another output format "
-+                  "(--format FORMAT).".format(self.args.template),
-                   file=3Dsys.stderr)
-             sys.exit(1)
-=20
-@@ -76,8 +77,7 @@ class FlameGraphCLI:
-         node.value +=3D 1
-=20
-     def trace_end(self):
--        json_str =3D json.dumps(self.stack, default=3Dlambda x: x.toJSON=
-(),
--                              indent=3Dself.args.indent)
-+        json_str =3D json.dumps(self.stack, default=3Dlambda x: x.toJSON=
-())
-=20
-         if self.args.format =3D=3D "html":
-             try:
-@@ -85,7 +85,7 @@ class FlameGraphCLI:
-                     output_str =3D f.read().replace("/** @flamegraph_jso=
-n **/",
-                                                   json_str)
-             except IOError as e:
--                print(f"Error reading template file: {e}", file=3Dsys.st=
-derr)
-+                print("Error reading template file: {}".format(e), file=3D=
-sys.stderr)
-                 sys.exit(1)
-             output_fn =3D self.args.output or "flamegraph.html"
-         else:
-@@ -95,24 +95,22 @@ class FlameGraphCLI:
-         if output_fn =3D=3D "-":
-             sys.stdout.write(output_str)
-         else:
--            print(f"dumping data to {output_fn}")
-+            print("dumping data to {}".format(output_fn))
-             try:
-                 with open(output_fn, "w") as out:
-                     out.write(output_str)
-             except IOError as e:
--                print(f"Error writing output file: {e}", file=3Dsys.stde=
-rr)
-+                print("Error writing output file: {}".format(e), file=3D=
-sys.stderr)
-                 sys.exit(1)
-=20
-=20
- if __name__ =3D=3D "__main__":
-     parser =3D argparse.ArgumentParser(description=3D"Create flame graph=
-s.")
--    parser.add_argument("-F", "--format",
-+    parser.add_argument("-f", "--format",
-                         default=3D"html", choices=3D["json", "html"],
-                         help=3D"output file format")
-     parser.add_argument("-o", "--output",
-                         help=3D"output file name")
--    parser.add_argument("--indent",
--                        type=3Dint, help=3D"JSON indentation")
-     parser.add_argument("--template",
-                         default=3D"/usr/share/d3-flame-graph/d3-flamegra=
-ph-base.html",
-                         help=3D"path to flamegraph HTML template")
---=20
-2.25.2
+> > 
+> >  4 There exists an advisory directory inode flag FS_XFLAG_DAX that can be
+> >    changed at any time.  The flag state is copied into any files or
+> >    subdirectories when they are created within that directory.
+> 
+> Good.
+> 
+> >    If programs
+> >    require file access runs in S_DAX mode, they must create those files
+> >    inside a directory with FS_XFLAG_DAX set, or mount the fs with an
+> >    appropriate dax mount option.
+> 
+> Why do we need this to be true?  If the FS_XFLAG_DAX flag can be cleared why
+> not set it and allow the S_DAX change to occur later just like clearing it?
+> The logic is exactly the same.
 
+I think I'll just delete this sentence since I started pushing all that
+verbiage towards (5).
+
+To answer your question, yes, FS_XFLAG_DAX can be set on a file at any
+time, the same as it can be cleared at any time.  Sorry that was
+unclear, I'll fix that for the next draft (below).
+
+> > 
+> >  5 Programs that require a specific file access mode (DAX or not DAX) must
+> 
+> s/must/can/
+
+Ok.
+
+> >    do one of the following:
+> > 
+> >    (a) create files in directories with the FS_XFLAG_DAX flag set as needed;
+> 
+> Again if we allow clearing the flag why not setting?  So this is 1 option they
+> 'can' do.
+> 
+> > 
+> >    (b) have the administrator set an override via mount option;
+> > 
+> >    (c) if they need to change a file's FS_XFLAG_DAX flag so that it does not
+> >        match the S_DAX state (as reported by statx), they must cause the
+> >        kernel to evict the inode from memory.  This can be done by:
+> > 
+> >        i>   closing the file;
+> >        ii>  re-opening the file and using statx to see if the fs has
+> >             changed the S_DAX flag;
+> 
+> i and ii need to be 1 step the user must follow.
+
+Ok, I'll combine these.
+
+> >        iii> if not, either unmount and remount the filesystem, or
+> >             closing the file and using drop_caches.
+> > 
+> >  6 I no longer think it's too wild to require that users who want to
+> >    squeeze every last bit of performance out of the particular rough and
+> >    tumble bits of their storage also be exposed to the difficulties of
+> >    what happens when the operating system can't totally virtualize those
+> >    hardware capabilities.  Your high performance sports car is not a
+> >    Toyota minivan, as it were.
+> 
+> I'm good with this statement.  But I think we need to clean up the verbiage for
+> the documentation...  ;-)
+
+Heh. :)
+
+> Thanks for the summary.  I like these to get everyone on the same page.  :-D
+
+And today:
+
+ 1. There exists an in-kernel access mode flag S_DAX that is set when
+    file accesses go directly to persistent memory, bypassing the page
+    cache.  Applications must call statx to discover the current S_DAX
+    state (STATX_ATTR_DAX).
+
+ 2. There exists an advisory file inode flag FS_XFLAG_DAX that is
+    inherited from the parent directory FS_XFLAG_DAX inode flag at file
+    creation time.  This advisory flag can be set or cleared at any
+    time, but doing so does not immediately affect the S_DAX state.
+
+    Unless overridden by mount options (see (3)), if FS_XFLAG_DAX is set
+    and the fs is on pmem then it will enable S_DAX at inode load time;
+    if FS_XFLAG_DAX is not set, it will not enable S_DAX.
+
+ 3. There exists a dax= mount option.
+
+    "-o dax=never"  means "never set S_DAX, ignore FS_XFLAG_DAX."
+
+    "-o dax=always" means "always set S_DAX (at least on pmem),
+                    and ignore FS_XFLAG_DAX."
+
+    "-o dax"        is an alias for "dax=always".
+
+    "-o dax=inode"  means "follow FS_XFLAG_DAX" and is the default.
+
+ 4. There exists an advisory directory inode flag FS_XFLAG_DAX that can
+    be set or cleared at any time.  The flag state is copied into any
+    files or subdirectories when they are created within that directory.
+
+ 5. Programs that require a specific file access mode (DAX or not DAX)
+    can do one of the following:
+
+    (a) Create files in directories that the FS_XFLAG_DAX flag set as
+        needed; or
+
+    (b) Have the administrator set an override via mount option; or
+
+    (c) Set or clear the file's FS_XFLAG_DAX flag as needed.  Programs
+        must then cause the kernel to evict the inode from memory.  This
+        can be done by:
+
+        i>  Closing the file and re-opening the file and using statx to
+            see if the fs has changed the S_DAX flag; and
+
+        ii> If the file still does not have the desired S_DAX access
+            mode, either unmount and remount the filesystem, or close
+            the file and use drop_caches.
+
+ 6. It's not unreasonable that users who want to squeeze every last bit
+    of performance out of the particular rough and tumble bits of their
+    storage also be exposed to the difficulties of what happens when the
+    operating system can't totally virtualize those hardware
+    capabilities.  Your high performance sports car is not a Toyota
+    minivan, as it were.
+
+Given our overnight discussions, I don't think it'll be difficult to
+hoist XFS_IDONTCACHE to the VFS so that 5.c.i is enough to change the
+S_DAX state if nobody else is using the file.
+
+--D
+
+> > 
+> > > Furthermore, if we did want an interface like that why not allow
+> > > the on-disk flag to be set as well as cleared?
+> > 
+> > Well, why not - it's why I implemented the flag in the first place!
+> > The only problem we have here is how to safely change the in-memory
+> > DAX state, and that largely has nothing to do with setting/clearing
+> > the on-disk flag....
+> 
+> With the above change to xfs_diflags_to_iflags() I think we are ok here.
+> 
+> Ira
+> 
+--D
+
+> Ira
+> 
+> > 
+> > I think (like Dave said) that if you set XFS_IDONTCACHE on the inode
+> > when you change the DAX flag, the VFS will kill the inode the instant
+> > the last user close()s the file.  Then 5.c.ii will actually work.
+> > 
+> > --D
+> > 
+> > > > 
+> > > > > Furthermore, if we did want an interface like that why not allow
+> > > > > the on-disk flag to be set as well as cleared?
+> > > > 
+> > > > Well, why not - it's why I implemented the flag in the first place!
+> > > > The only problem we have here is how to safely change the in-memory
+> > > > DAX state, and that largely has nothing to do with setting/clearing
+> > > > the on-disk flag....
+> > > 
+> > > With the above change to xfs_diflags_to_iflags() I think we are ok here.
+> > > 
+> > > Ira
+> > > 
