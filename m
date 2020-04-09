@@ -2,129 +2,103 @@ Return-Path: <SRS0=n+Ub=5Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 135DAC2BA19
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 17:29:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 355B3C2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 17:29:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E096B20753
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 17:29:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 03C4C20769
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 17:29:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1586453398;
+	bh=gwCMVgI55oBxZeA/ZAEGuRvjk4DQBHRco/poNeClq98=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=OtA2bMTYEiTZ2DnNTN1oix96TfUeUwmyxJdmxNetdtsk63BMOVuUDFYCHYtqSLCSy
+	 hK49sYxoC48xrWScvlShWGz8pzPfdjvW83xAnWc+SfPNssTblOKnjtGHPdbPuUgVrG
+	 50Q4ggqhpUEpVuxegJpbb57PRHcjgt7u4AYI2SK0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726671AbgDIR3u (ORCPT
+        id S1726695AbgDIR34 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Apr 2020 13:29:50 -0400
-Received: from foss.arm.com ([217.140.110.172]:52786 "EHLO foss.arm.com"
+        Thu, 9 Apr 2020 13:29:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55452 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726583AbgDIR3t (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Apr 2020 13:29:49 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E390B31B;
-        Thu,  9 Apr 2020 10:29:49 -0700 (PDT)
-Received: from [192.168.1.19] (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 3C1E13F73D;
-        Thu,  9 Apr 2020 10:29:47 -0700 (PDT)
-Subject: Re: [PATCH 2/4] sched/deadline: Improve admission control for
- asymmetric CPU capacities
-To:     Valentin Schneider <valentin.schneider@arm.com>,
-        luca abeni <luca.abeni@santannapisa.it>
-Cc:     Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Daniel Bristot de Oliveira <bristot@redhat.com>,
-        Wei Wang <wvw@google.com>, Quentin Perret <qperret@google.com>,
-        Alessio Balsini <balsini@google.com>,
-        Pavan Kondeti <pkondeti@codeaurora.org>,
-        Patrick Bellasi <patrick.bellasi@matbug.net>,
-        Morten Rasmussen <morten.rasmussen@arm.com>,
-        Qais Yousef <qais.yousef@arm.com>, linux-kernel@vger.kernel.org
-References: <20200408095012.3819-1-dietmar.eggemann@arm.com>
- <20200408095012.3819-3-dietmar.eggemann@arm.com> <jhjeesyw96u.mognet@arm.com>
- <20200408153032.447e098d@nowhere> <jhjblo2vx60.mognet@arm.com>
-From:   Dietmar Eggemann <dietmar.eggemann@arm.com>
-Message-ID: <31620965-e1e7-6854-ad46-8192ee4b41af@arm.com>
-Date:   Thu, 9 Apr 2020 19:29:45 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        id S1726583AbgDIR3z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Apr 2020 13:29:55 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E22FD20753;
+        Thu,  9 Apr 2020 17:29:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1586453395;
+        bh=gwCMVgI55oBxZeA/ZAEGuRvjk4DQBHRco/poNeClq98=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=KkdOASzNiq2YKxftkzZx9j78sH3gxPhCTlGpCnRqbkDC13mBU2Wnc5AOSeCbBXjVE
+         7IOD/AJ4lvMVE8hNnDGwhMQP7kTdPfD24CW8SDOik2z8gjk/LHklzeYFuIVod9MGyx
+         g6J/6HB0KqtvYhAPRiiSsLoG9WpNJRliUCZE0hXI=
+Date:   Thu, 9 Apr 2020 18:29:52 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Dmitry Osipenko <digetx@gmail.com>
+Cc:     Stephen Warren <swarren@wwwdotorg.org>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
+        linux-tegra@vger.kernel.org, alsa-devel@alsa-project.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1 0/2] Support headset on Tegra boards that use WM8903
+Message-ID: <20200409172952.GG5399@sirena.org.uk>
+References: <20200330204011.18465-1-digetx@gmail.com>
+ <5c9c995a-a571-e543-e680-30739cb1561c@gmail.com>
+ <848cc6c5-e8e4-2796-3ee1-3e12a3e92c54@wwwdotorg.org>
+ <a7159a8e-4987-0c08-ce3a-fa82d926218e@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <jhjblo2vx60.mognet@arm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="OFj+1YLvsEfSXdCH"
+Content-Disposition: inline
+In-Reply-To: <a7159a8e-4987-0c08-ce3a-fa82d926218e@gmail.com>
+X-Cookie: HUGH BEAUMONT died in 1982!!
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 08.04.20 17:01, Valentin Schneider wrote:
-> 
-> On 08/04/20 14:30, luca abeni wrote:
->>>
->>> I don't think this is strictly equivalent to what we have now for the
->>> SMP case. 'cpus' used to come from dl_bw_cpus(), which is an ugly way
->>> of writing
->>>
->>>      cpumask_weight(rd->span AND cpu_active_mask);
->>>
->>> The rd->cpu_capacity_orig field you added gets set once per domain
->>> rebuild, so it also happens in sched_cpu_(de)activate() but is
->>> separate from touching cpu_active_mask. AFAICT this mean we can
->>> observe a CPU as !active but still see its capacity_orig accounted in
->>> a root_domain.
->>
->> Sorry, I suspect this is my fault, because the bug comes from my
->> original patch.
->> When I wrote the original code, I believed that when a CPU is
->> deactivated it is also removed from its root domain.
->>
->> I now see that I was wrong.
->>
-> 
-> Well it is indeed the case, but sadly it's not an atomic step - AFAICT with
-> cpusets we do hold some cpuset lock when calling __dl_overflow() and when
-> rebuilding the domains, but not when fiddling with the active mask.
-> 
-> I just realized it's even more obvious for dl_cpu_busy(): IIUC it is meant
-> to prevent the removal of a CPU if it would lead to a DL overflow - it
-> works now because the active mask is modified before it gets called, but
-> here it breaks because it's called before the sched_domain rebuild.
-> 
-> Perhaps re-computing the root domain capacity sum at every dl_bw_cpus()
-> call would be simpler. It's a bit more work, but then we already have a
-> for_each_cpu_*() loop, and we only rely on the masks being correct.
 
-Maybe we can do a hybrid. We have rd->span and rd->sum_cpu_capacity and
-with the help of an extra per-cpu cpumask we could just
+--OFj+1YLvsEfSXdCH
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-DEFINE_PER_CPU(cpumask_var_t, dl_bw_mask);
+On Thu, Apr 09, 2020 at 08:13:54PM +0300, Dmitry Osipenko wrote:
 
-dl_bw_cpus(int i) {
+> The code change doesn't affect any of the old users, so it should be
+> safe anyways.
 
-    struct cpumask *cpus = this_cpu_cpumask_var_ptr(dl_bw_mask);
-    ...
-    cpumask_and(cpus, rd->span, cpu_active_mask);
+> I understand that you don't feel comfortable to give an ACK if you're
+> unsure, but I assume that Jon is in the same position, and thus, I'm not
+> sure how to move forward.
 
-    return cpumask_weight(cpus);
-}
+> Mark, could you please help with reviewing this series?
 
-and
+It is currently the merge window.  Nothing other than bug fixes is going
+to get applied until the merge window is over, probably Sunday or Monday.
 
-dl_bw_capacity(int i) {
+--OFj+1YLvsEfSXdCH
+Content-Type: application/pgp-signature; name="signature.asc"
 
-    struct cpumask *cpus = this_cpu_cpumask_var_ptr(dl_bw_mask);
-    ...
-    cpumask_and(cpus, rd->span, cpu_active_mask);
-    if (cpumask_equal(cpus, rd->span))
-        return rd->sum_cpu_capacity;
+-----BEGIN PGP SIGNATURE-----
 
-    for_each_cpu(i, cpus)
-        cap += capacity_orig_of(i);
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl6PW5AACgkQJNaLcl1U
+h9Aipwf+N3qaJUOkv/KorzxIyIDYSsyZPSVUq0X/6TbEkyjM6GDU3cnm2Q1KI4PI
+hVwyBmoXuz87lGD9Xr46fpZ6J/Z0KX/wih9fsA/IEfas15FlfHG5Ps0wUPdgCFJV
+3k39OnaYCVcvr+9mTfqNDmZiaOUu/6S6NS3c6NQ19ZeIXDCJORE7Mu2jhw8QJFSe
+YRIYQUC3ftEKoKvJKca7dQdgwlmCt3QDml3vn3E6k3WqL2zeRciJ9lq+do/re+OR
+zUCxHfY8vcJwDhPPOx8SCAf98O3XbgRddqQNXVZ2hVW/gWX+RnD3so6MK6jfyeUW
+olmfljKWY4JZP+Uf/9LHZn5VEdGyyg==
+=U7om
+-----END PGP SIGNATURE-----
 
-    return cap;
-}
-
-So only in cases in which rd->span and cpu_active_mask differ we would
-have to sum up again.
+--OFj+1YLvsEfSXdCH--
