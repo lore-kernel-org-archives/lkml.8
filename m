@@ -2,251 +2,158 @@ Return-Path: <SRS0=n+Ub=5Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 369C7C2BBFD
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 12:41:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AD6FC2BA2B
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 12:44:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0F49D20B1F
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 12:41:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 59E742078E
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 12:44:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="RjNQBxxp"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="bZMAYl4Q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726736AbgDIMl4 (ORCPT
+        id S1726671AbgDIMoN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Apr 2020 08:41:56 -0400
-Received: from mo4-p02-ob.smtp.rzone.de ([81.169.146.171]:14138 "EHLO
-        mo4-p02-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726571AbgDIMl4 (ORCPT
+        Thu, 9 Apr 2020 08:44:13 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:38421 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726621AbgDIMoN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Apr 2020 08:41:56 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1586436113;
-        s=strato-dkim-0002; d=goldelico.com;
-        h=To:References:Message-Id:Cc:Date:In-Reply-To:From:Subject:
-        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
-        bh=g+8YAAOECGkBiw9PMz3cy2P+hO33ZDQIC++aXuokovE=;
-        b=RjNQBxxpg2em8nWJrJTy1qiWaT9wr8aCHzHNCRTWvE1e/1M0UkIB80uSfarb7/Sf1W
-        AI4FCw0dVn1R9BMQoqih29pgi/ZAxgQIme++AIJYgqPZhEDt89r7gQLQ00hb0oW2VW1r
-        G0y1HnTri+Qif1q59DqUEgAIX6vqOWhOANb2YG1Uki2ExNGVhxlSNyElu+4Kk0w2an3s
-        ECOYPuL99TYqK649iiwVn6aWJXxXOYd6afeG9zPo6BpIUyz5hKhUdeS8bJSsDpkJY30t
-        8zIwyo40G4LI8lsdjGdnbetg3G+/6E/UTDTdn8zYMGz0pzH32MPpTcG3Tm55d6Zzl3yM
-        ZjOQ==
-X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMgPgp8VKxflSZ1P34KBj7wpz8NMGH/zvwDCoFnA="
-X-RZG-CLASS-ID: mo00
-Received: from imac.fritz.box
-        by smtp.strato.de (RZmta 46.2.1 DYNA|AUTH)
-        with ESMTPSA id m02241w39CffwVS
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (curve X9_62_prime256v1 with 256 ECDH bits, eq. 3072 bits RSA))
-        (Client did not present a certificate);
-        Thu, 9 Apr 2020 14:41:41 +0200 (CEST)
-Subject: Re: [RFC v3 1/8] dt-bindings: display: convert ingenic, lcd.txt to ingenic, lcd.yaml
-Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
-Content-Type: text/plain; charset=us-ascii
-From:   "H. Nikolaus Schaller" <hns@goldelico.com>
-In-Reply-To: <20200409122054.GA5683@ravnborg.org>
-Date:   Thu, 9 Apr 2020 14:41:40 +0200
-Cc:     Paul Cercueil <paul@crapouillou.net>,
-        Paul Boddie <paul@boddie.org.uk>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <paulburton@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Andi Kleen <ak@linux.intel.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Kees Cook <keescook@chromium.org>, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linux-mips@vger.kernel.org, linux-gpio@vger.kernel.org,
-        mips-creator-ci20-dev@googlegroups.com,
-        letux-kernel@openphoenux.org
-Content-Transfer-Encoding: 7bit
-Message-Id: <C944CCDB-C1F5-4D6A-901A-B66D8B473E1B@goldelico.com>
-References: <cover.1585503354.git.hns@goldelico.com> <a75c77fa8528f44832993f9780ae4ea409125a90.1585503354.git.hns@goldelico.com> <20200409072559.GB12367@ravnborg.org> <F4F5D267-A538-444B-9DCA-EA87AC798FB3@goldelico.com> <20200409122054.GA5683@ravnborg.org>
-To:     Sam Ravnborg <sam@ravnborg.org>
-X-Mailer: Apple Mail (2.3124)
+        Thu, 9 Apr 2020 08:44:13 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1586436253;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=hCTyTHNIoa/f4FCOf5RUI76bLbl3BtD2rSWLrU8gW5Y=;
+        b=bZMAYl4QAGFPMpKROtpxLo8b7l2P34mC1ROPge8ll/H1nHUfZ7dhTbhygw/wO2lwrmmQBG
+        D5G1lAcvFuM2HkWdk+Vp1mB1XTjXnhtsDAqOA4CsY2mpiDr6RYMg830QfV94kGPGd+Xw+5
+        ZkN7oAN6tCSKyNMlF7xTYCuHy92DLI0=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-312-zWT1uXBlOtKpx36KjtI44w-1; Thu, 09 Apr 2020 08:44:11 -0400
+X-MC-Unique: zWT1uXBlOtKpx36KjtI44w-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 41F51DB61;
+        Thu,  9 Apr 2020 12:44:08 +0000 (UTC)
+Received: from [10.72.12.130] (ovpn-12-130.pek2.redhat.com [10.72.12.130])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 07E9119756;
+        Thu,  9 Apr 2020 12:43:50 +0000 (UTC)
+Subject: Re: [PATCH V9 9/9] virtio: Intel IFC VF driver for VDPA
+To:     Arnd Bergmann <arnd@arndb.de>, lingshan.zhu@intel.com
+Cc:     "Michael S. Tsirkin" <mst@redhat.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        kvm list <kvm@vger.kernel.org>,
+        virtualization@lists.linux-foundation.org,
+        Networking <netdev@vger.kernel.org>,
+        Jason Gunthorpe <jgg@mellanox.com>, maxime.coquelin@redhat.com,
+        cunming.liang@intel.com, zhihong.wang@intel.com,
+        rob.miller@broadcom.com, xiao.w.wang@intel.com,
+        eperezma@redhat.com, lulu@redhat.com,
+        Parav Pandit <parav@mellanox.com>, kevin.tian@intel.com,
+        Stefan Hajnoczi <stefanha@redhat.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Christoph Hellwig <hch@infradead.org>, aadam@redhat.com,
+        Jiri Pirko <jiri@mellanox.com>, shahafs@mellanox.com,
+        hanand@xilinx.com, mhabets@solarflare.com, gdawar@xilinx.com,
+        saugatm@xilinx.com, vmireyno@marvell.com,
+        zhangweining@ruijie.com.cn, Bie Tiwei <tiwei.bie@intel.com>
+References: <20200326140125.19794-1-jasowang@redhat.com>
+ <20200326140125.19794-10-jasowang@redhat.com>
+ <CAK8P3a1RXUXs5oYjB=Jq5cpvG11eTnmJ+vc18_-0fzgTH6envA@mail.gmail.com>
+From:   Jason Wang <jasowang@redhat.com>
+Message-ID: <ffc4c788-2319-efda-508c-275b9f7efb95@redhat.com>
+Date:   Thu, 9 Apr 2020 20:43:49 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
+MIME-Version: 1.0
+In-Reply-To: <CAK8P3a1RXUXs5oYjB=Jq5cpvG11eTnmJ+vc18_-0fzgTH6envA@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Sam,
 
-> Am 09.04.2020 um 14:20 schrieb Sam Ravnborg <sam@ravnborg.org>:
-> 
-> Hi Nikolaus.
-> 
->>>> +
->>>> +examples:
->>>> +  - |
->>>> +    #include <dt-bindings/clock/jz4725b-cgu.h>
->>>> +
->>>> +    panel {
->>>> +      compatible = "sharp,ls020b1dd01d";
->>>> +
->>>> +      backlight = <&backlight>;
->>>> +      power-supply = <&vcc>;
->>>> +
->>>> +      port {
->>>> +        panel_input: endpoint {
->>>> +          remote-endpoint = <&panel_output>;
->>>> +          };
->>>> +        };
->>>> +      };
->>> The panel part is not needed - better to drop it.
->> 
->> Well, it is needed to fulfill the remote-endpoint below.
-> 
-> Examples may have phandle that are not defined.
-> So the example will work fine without it.
-> See other similar examples.
-
-Ok.
-
-> 
->> 
->>> 
->>> 
->>>> +
->>>> +    lcd: lcd-controller@13050000 {
->>>> +      compatible = "ingenic,jz4725b-lcd";
->>>> +      reg = <0x13050000 0x1000>;
->>>> +
->>>> +      interrupt-parent = <&intc>;
->>>> +      interrupts = <31>;
->>>> +
->>>> +      clocks = <&cgu JZ4725B_CLK_LCD>;
->>>> +      clock-names = "lcd", "lcd_pclk";
->>>> +
->>>> +      port {
->>>> +        panel_output: endpoint {
->>>> +          remote-endpoint = <&panel_input>;
->>>> +          };
->>>> +        };
->>>> +      };
->>> We know this example will not pass the check, as there is only
->>> one clock specified.
->>> I suggest to drop this example.
->>> If it later turns out that jz4725b only have one clock,
->> 
->> Paul already reported that it only wants to see one clock.
->> 
->>> then the binding
->>> needs to be updated.
->> 
->> Yes, I have that on my to-do list to update the binding to reflect
->> this minItems/maxItems thing but I am not yet sure about how
->> to handle the clock-names in that case. I.e. make "lcd" optional
->> and enforce "lcd_pclk" only.
-> Look forward to next version.
-> 
->> 
->>> But the best guess is that the example is wrong.
->>> 
->>> The example below for jz4780-lcd cover all relevant parts - so
->>> just keep it as the only example.
->>> 
->>>> +
->>>> +  - |
->>>> +    #include <dt-bindings/clock/jz4780-cgu.h>
->>>> +
->>>> +    lcdc0: lcdc0@13050000 {
->>> Name this lcdc
->>> And drop "lcdc0@13050000" as this is not relevant for this example.
->>> 
->>> Remember - the examples exist to explain the binding. They are
->>> just examples.
->>> 
->>>> +        compatible = "ingenic,jz4780-lcd";
->>>> +        reg = <0x13050000 0x1800>;
->>>> +
->>>> +        clocks = <&cgu JZ4780_CLK_TVE>, <&cgu JZ4780_CLK_LCD0PIXCLK>;
->>>> +        clock-names = "lcd", "lcd_pclk";
->>>> +
->>>> +        interrupt-parent = <&intc>;
->>>> +        interrupts = <31>;
->>>> +
->>>> +        jz4780_lcd_out: port {
->>>> +            #address-cells = <1>;
->>>> +            #size-cells = <0>;
->>>> +
->>>> +            jz4780_out_hdmi: endpoint@0 {
->>>> +                reg = <0>;
->>>> +                remote-endpoint = <&hdmi_in_lcd>;
->>>> +            };
->>>> +        };
->>>> +    };
->>>> +
->>> 
->>> And drop this as it does not add anything extra.
->> 
->> Well, it demonstrates how to add a second lcdc which is disabled.
-> The purpose of the example is to show an example of the
-> binding specified in this file.
-> Adding a second disabled lcdc is a general thing, and not
-> something we want in all the individual examples.
-
-This is contrary to what I have expected. My assumption is
-that the example is some piece of code that you (and me and
-other readers of the bindings documentation) can easily
-understand and even copy&paste into a DTS. Like an example
-in a training book. This is how I always have used the
-.txt bindings when writing new DTS. This ease of use is
-lost if the examples are incomplete and show only part
-of what is needed to get a working DTS. If not here, where
-can one get the required information from?
-
-Or do you see this as unit-test-cases for the formal bindings
-definitions? Then, it should IMHO not be named "example".
-
-> Also the actual content, for example register values can be
-> random as they are not part of the binding.
-> This is not a documentation of the HW but a binding example.
-
-Here it is the bindings for a very specific SoC and the
-register values are well defined and there is no choice at
-all.
-
-So I'll simplify it for v4 although I don't like the concept
-behind.
-
-BR and thanks,
-Nikolaus
+On 2020/4/9 =E4=B8=8B=E5=8D=886:41, Arnd Bergmann wrote:
+> On Thu, Mar 26, 2020 at 3:08 PM Jason Wang <jasowang@redhat.com> wrote:
+>> From: Zhu Lingshan <lingshan.zhu@intel.com>
+>>
+>> This commit introduced two layers to drive IFC VF:
+>>
+>> (1) ifcvf_base layer, which handles IFC VF NIC hardware operations and
+>>      configurations.
+>>
+>> (2) ifcvf_main layer, which complies to VDPA bus framework,
+>>      implemented device operations for VDPA bus, handles device probe,
+>>      bus attaching, vring operations, etc.
+>>
+>> Signed-off-by: Zhu Lingshan <lingshan.zhu@intel.com>
+>> Signed-off-by: Bie Tiwei <tiwei.bie@intel.com>
+>> Signed-off-by: Wang Xiao <xiao.w.wang@intel.com>
+>> Signed-off-by: Jason Wang <jasowang@redhat.com>
+>> +
+>> +#define IFCVF_QUEUE_ALIGNMENT  PAGE_SIZE
+>> +#define IFCVF_QUEUE_MAX                32768
+>> +static u16 ifcvf_vdpa_get_vq_align(struct vdpa_device *vdpa_dev)
+>> +{
+>> +       return IFCVF_QUEUE_ALIGNMENT;
+>> +}
+> This fails to build on arm64 with 64kb page size (found in linux-next):
+>
+> /drivers/vdpa/ifcvf/ifcvf_main.c: In function 'ifcvf_vdpa_get_vq_align'=
+:
+> arch/arm64/include/asm/page-def.h:17:20: error: conversion from 'long
+> unsigned int' to 'u16' {aka 'short unsigned int'} changes value from
+> '65536' to '0' [-Werror=3Doverflow]
+>     17 | #define PAGE_SIZE  (_AC(1, UL) << PAGE_SHIFT)
+>        |                    ^
+> drivers/vdpa/ifcvf/ifcvf_base.h:37:31: note: in expansion of macro 'PAG=
+E_SIZE'
+>     37 | #define IFCVF_QUEUE_ALIGNMENT PAGE_SIZE
+>        |                               ^~~~~~~~~
+> drivers/vdpa/ifcvf/ifcvf_main.c:231:9: note: in expansion of macro
+> 'IFCVF_QUEUE_ALIGNMENT'
+>    231 |  return IFCVF_QUEUE_ALIGNMENT;
+>        |         ^~~~~~~~~~~~~~~~~~~~~
+>
+> It's probably good enough to just not allow the driver to be built in t=
+hat
+> configuration as it's fairly rare but unfortunately there is no simple =
+Kconfig
+> symbol for it.
 
 
-> 
-> 	Sam
-> 
->> 
->> Showing that it is possible to do so is IMHO the most important
->> part of the example because it is not at all obvious.
->> 
->> I have also added both SoC to show how differently they can
->> and should be.
->> 
->>>> +    lcdc1: lcdc1@130a0000 {
->>>> +        compatible = "ingenic,jz4780-lcd";
->>>> +        reg = <0x130a0000 0x1800>;
->>>> +
->>>> +        clocks = <&cgu JZ4780_CLK_TVE>, <&cgu JZ4780_CLK_LCD1PIXCLK>;
->>>> +        clock-names = "lcd", "lcd_pclk";
->>>> +
->>>> +        interrupt-parent = <&intc>;
->>>> +        interrupts = <31>;
->>>> +
->>>> +        status = "disabled";
->>>> +    };
->>> 
->>> 	Sam
->> 
->> BR and thanks,
->> Nikolaus
->> 
+Or I think the 64KB alignment is probably more than enough.
+
+Ling Shan, can we use smaller value here?
+
+Thanks
+
+
+>
+> In a similar driver, we did
+>
+> config VMXNET3
+>          tristate "VMware VMXNET3 ethernet driver"
+>          depends on PCI && INET
+>          depends on !(PAGE_SIZE_64KB || ARM64_64K_PAGES || \
+>                       IA64_PAGE_SIZE_64KB || MICROBLAZE_64K_PAGES || \
+>                       PARISC_PAGE_SIZE_64KB || PPC_64K_PAGES)
+>
+> I think we should probably make PAGE_SIZE_64KB a global symbol
+> in arch/Kconfig and have it selected by the other symbols so drivers
+> like yours can add a dependency for it.
+>
+>           Arnd
+>
 
