@@ -2,152 +2,152 @@ Return-Path: <SRS0=n+Ub=5Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02329C2BB85
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 18:16:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41665C2BA19
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 18:20:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C4B1A20753
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 18:16:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1789C20753
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 18:20:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="jV/bfpvv"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="eiWw9hPG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726689AbgDISQL (ORCPT
+        id S1726574AbgDISUY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Apr 2020 14:16:11 -0400
-Received: from mail-dm6nam12on2089.outbound.protection.outlook.com ([40.107.243.89]:6233
-        "EHLO NAM12-DM6-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725970AbgDISQK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Apr 2020 14:16:10 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=eNM75pZyCUwQ6N1uS+iHRjsRNmjfewWlqIaiehou1rTsmnwy8liFuGVdwk0VzP+Kl38Gn/rOEx4ndld/LcIDDw2r+g7ZDpfWiwn9MiqnifiDHCgU/EhSS5Ei9MiUracNSQCZz6kKReDEl3PbaRurg/0wemKbYm2nwuURwbsH7/WQDsosv6h0IoeIsAUPUc7NR04QzkhMNTzfHrCdygoY51kBTFYjM8+I2qnhFUFMaeYmTw4R7WhR0OavfwmOfwG8PckXoWlHat9JviRbr5C0756OdLcLYOSfgjsElLI2RFazn+PZYXF4q6DGr40NzRG9m3AjbJfIgte1dEg1hDLG3Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=XC608SPjh/qCs2rVchcDTLKP2krF6sZZARVRRszhzMU=;
- b=LxiLeBlfUBNaB2jwd/hDh06yX4gWwrz41RZKeIEvlDOah95I4px1PW+cLVJD/OYwQt/8ku4Apj/Io8U0xkgQXQM6rJu207wR6kq23hc/1uxiv44bpXmPBKVwvjezSk/LulNPtgaHB0i9ajv8gg3iIjvWcWHg+D40L+Nv01GSybQCFSIXXQ4c/8y9gYhHeal4loPqJ4wV/lmCu2NWjP2vlCvoSzfJo56FOcA1qLT0ObTw99xD+jPNcxXeuMGhLuPCSUDrf2qTHs2NxT4tt+HoMLdSKRE6Fd8WiXWDprqRNOUnWlOjrULkphTnFGVdaJ/qavEtfkxdCaKvBDq3pxX73g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
+        Thu, 9 Apr 2020 14:20:24 -0400
+Received: from mail-pj1-f66.google.com ([209.85.216.66]:55789 "EHLO
+        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725970AbgDISUY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Apr 2020 14:20:24 -0400
+Received: by mail-pj1-f66.google.com with SMTP id a32so1628703pje.5
+        for <linux-kernel@vger.kernel.org>; Thu, 09 Apr 2020 11:20:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=XC608SPjh/qCs2rVchcDTLKP2krF6sZZARVRRszhzMU=;
- b=jV/bfpvv8FyPmIkcFdYKUZptsyM+SvxOQLRjLcpDsKrTphJi6zyh6tjLnuut4Vq7uqSnBzL2PcjwWDvn4/9dKZD/QUpiiM7THgiXdAFeIR9tIFQzlRRtFw/JYx14xTCxr/ToTfKzsqr3MiHhUYCNWZ1QNICXl4FuK1MdJ5Sz55w=
-Authentication-Results: spf=none (sender IP is )
- smtp.mailfrom=Christian.Koenig@amd.com; 
-Received: from DM6PR12MB4401.namprd12.prod.outlook.com (2603:10b6:5:2a9::15)
- by DM6PR12MB4466.namprd12.prod.outlook.com (2603:10b6:5:2ae::10) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2878.15; Thu, 9 Apr
- 2020 18:16:07 +0000
-Received: from DM6PR12MB4401.namprd12.prod.outlook.com
- ([fe80::f164:85c4:1b51:14d2]) by DM6PR12MB4401.namprd12.prod.outlook.com
- ([fe80::f164:85c4:1b51:14d2%4]) with mapi id 15.20.2878.022; Thu, 9 Apr 2020
- 18:16:07 +0000
-Subject: Re: AMD DC graphics display code enables -mhard-float, -msse, -msse2
- without any visible FPU state protection
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Jann Horn <jannh@google.com>,
-        Harry Wentland <harry.wentland@amd.com>,
-        Leo Li <sunpeng.li@amd.com>, amd-gfx@lists.freedesktop.org,
-        Alex Deucher <alexander.deucher@amd.com>,
-        "David (ChunMing) Zhou" <David1.Zhou@amd.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        the arch/x86 maintainers <x86@kernel.org>,
-        kernel list <linux-kernel@vger.kernel.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        mhiramat@kernel.org
-References: <CAG48ez2Sx4ELkM94aD_h_J7K7KBOeuGmvZLKRkg3n_f2WoZ_cg@mail.gmail.com>
- <4c5fe55d-9db9-2f61-59b2-1fb2e1b45ed0@amd.com>
- <20200402141308.GB20730@hirez.programming.kicks-ass.net>
- <20200409155956.GQ20760@hirez.programming.kicks-ass.net>
- <20200409170916.GR20760@hirez.programming.kicks-ass.net>
-From:   =?UTF-8?Q?Christian_K=c3=b6nig?= <christian.koenig@amd.com>
-Message-ID: <87a2f2fc-972d-ab9b-a29d-72f02d94e60e@amd.com>
-Date:   Thu, 9 Apr 2020 20:15:57 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
-In-Reply-To: <20200409170916.GR20760@hirez.programming.kicks-ass.net>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-ClientProxiedBy: AM0PR06CA0099.eurprd06.prod.outlook.com
- (2603:10a6:208:fa::40) To DM6PR12MB4401.namprd12.prod.outlook.com
- (2603:10b6:5:2a9::15)
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=BeycGXQuoBVYG9ONaPHpfk62jXqpOs5+cJRriF7c/i8=;
+        b=eiWw9hPGWIX/zUVRY9wkUwIv1FnbbBOrbahsPi5dTo5e/FwwwapcN5dyzIuiSgY9mp
+         Ip1Ixj5snBlO6YG3cKudB8PLfCHgRRXnoRMswLYfbVE8jle0nx7NR5kBBGLjagEPSx9f
+         koHAPmeN6wPc3hT3KTb+hLuL7RlUjRVgdH+Oo=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=BeycGXQuoBVYG9ONaPHpfk62jXqpOs5+cJRriF7c/i8=;
+        b=WRU6mvYJsg5Q+65s6Sn3npVTLVoiMjP/6JfokctnJUJlmJuxFuipK4LS+dBP0QMM/U
+         WrZbsWaRqysRXVygkciuH5pvYI+gpn02ZOhnQTRR/DA5LbrCc3Jiutq7e72oBNnZvDn4
+         gTLQuni2FExduiq+yzxXBSxw3P5utrzNssLSOvTCkI9Tbn5P1pppgkZgI/CMDajBDkPk
+         e52VFbO/83LX/n+r6n31ryzfTUXRZwoRYdjTsvK5/bwymKF5bXRCG+hiHSb0nL0t1qdE
+         kxq0yqWEOkrPPdB0DAKFK8aEnmsiykNzydReuGhp7gbtq0e1Y7Uwl9nG3ydLm4FW8umf
+         Csrw==
+X-Gm-Message-State: AGi0Pub/HYvLs/fxM5t2huKlwoZMf30zYbJhY3jmApqXD08nQNogvg7C
+        VfaiIBkz4FHrixncAHhctS3lqBWpnKk=
+X-Google-Smtp-Source: APiQypLNbNT42VEJbPyenbCADnqH7UTIDCwf3AhvZbUz4pn+NCvzf8moNTIgUtBVxtsTfY0oYZ7a9w==
+X-Received: by 2002:a17:90a:198b:: with SMTP id 11mr879240pji.23.1586456423630;
+        Thu, 09 Apr 2020 11:20:23 -0700 (PDT)
+Received: from localhost ([2620:15c:202:1:4fff:7a6b:a335:8fde])
+        by smtp.gmail.com with ESMTPSA id h13sm6213736pfr.1.2020.04.09.11.20.22
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 09 Apr 2020 11:20:22 -0700 (PDT)
+Date:   Thu, 9 Apr 2020 11:20:21 -0700
+From:   Matthias Kaehlcke <mka@chromium.org>
+To:     Rajendra Nayak <rnayak@codeaurora.org>
+Cc:     viresh.kumar@linaro.org, sboyd@kernel.org,
+        bjorn.andersson@linaro.org, agross@kernel.org,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Alok Chauhan <alokc@codeaurora.org>,
+        Akash Asthana <akashast@codeaurora.org>,
+        linux-spi@vger.kernel.org
+Subject: Re: [PATCH 03/21] spi: spi-geni-qcom: Use OPP API to set clk/perf
+ state
+Message-ID: <20200409182021.GT199755@google.com>
+References: <1586353607-32222-1-git-send-email-rnayak@codeaurora.org>
+ <1586353607-32222-4-git-send-email-rnayak@codeaurora.org>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from [IPv6:2a02:908:1252:fb60:be8a:bd56:1f94:86e7] (2a02:908:1252:fb60:be8a:bd56:1f94:86e7) by AM0PR06CA0099.eurprd06.prod.outlook.com (2603:10a6:208:fa::40) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2900.16 via Frontend Transport; Thu, 9 Apr 2020 18:16:02 +0000
-X-Originating-IP: [2a02:908:1252:fb60:be8a:bd56:1f94:86e7]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 5f32cc5a-6d09-446a-4573-08d7dcb212a6
-X-MS-TrafficTypeDiagnostic: DM6PR12MB4466:|DM6PR12MB4466:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <DM6PR12MB446638BA8DD16B528CD4E19683C10@DM6PR12MB4466.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:9508;
-X-Forefront-PRVS: 0368E78B5B
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR12MB4401.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10009020)(4636009)(396003)(39860400002)(346002)(376002)(136003)(366004)(52116002)(8676002)(478600001)(86362001)(6916009)(66946007)(16526019)(5660300002)(66476007)(7416002)(186003)(66556008)(31686004)(316002)(6486002)(31696002)(54906003)(2616005)(36756003)(8936002)(4326008)(81166007)(81156014)(2906002)(6666004);DIR:OUT;SFP:1101;
-Received-SPF: None (protection.outlook.com: amd.com does not designate
- permitted sender hosts)
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: rdkpDusV0g2HgNlvnNOtZ4cKM9xx8+3RMjZKZcI0dp+BMKmXComMNN3ttWzfuA/zbktA8U0Q/uEPb+VqYZxnLd2jIDxQQ1GNoyIlUClJh05z/vU5ESA11o6ml5XiWwj7nShT8VqQUX3qfbRZVAo1ooFlir0ZsT05BBz6PRFclJbDZob+y3FbgNOqzwDF8fQay4n2hsECxNn48c3oeAQNxg8sRCDQO9G4GsxUDiDSoDaKWMYd7DQkU/UJWkO6Jauid2ra2Eiuqs5ZUMnkAcHQonfOtuG0+Kg0HH6YhhfNaevd5klS76Uf1ZZq4m7u+Y9z7zt2OzSAvqJ32NZOgsVD/eHscP5c3TRMBml5X+rgVFcL/QBvlwyau+9v2lJ4Tg+AeCdKZLIYsc3KeqYM1yOCdQeC60qex1Bi832hUEbfS3qMG6Cp9uBdFs5UaNbwRZvp
-X-MS-Exchange-AntiSpam-MessageData: bppcPA3BWUMMMlgAKgkLhMygxHe6i/AZRoiacTJh/YYSgc7mlbpXcSrdJ25FIGuL+jwM2zjJjdmGZ6+0KXnyNgzEYciU8nDVGiM3yA2JHr8gTK3aKg35sh+YdAvWh+PrRILLhU1eiXDo39U/1JsZ3hVDnmaR18VO925H3EjkBjLDuHEGwCWAJMfcK1ulBVm2AD0wo3uPlX/MlQEVU+aDEg==
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 5f32cc5a-6d09-446a-4573-08d7dcb212a6
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Apr 2020 18:16:07.4208
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: KHwy+qQltxj+HPyf886R2deNEQbSkpO7cz/WuL/QnopNoTS3RV93GDXL5v21BTdh
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB4466
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <1586353607-32222-4-git-send-email-rnayak@codeaurora.org>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Am 09.04.20 um 19:09 schrieb Peter Zijlstra:
-> On Thu, Apr 09, 2020 at 05:59:56PM +0200, Peter Zijlstra wrote:
-> [SNIP]
->> I'll need another approach, let me consider.
-> Christian; it says these files are generated, does that generator know
-> which functions are wholly in FPU context and which are not?
+Hi Rajendra,
 
-Well that "generator" is still a human being :)
+On Wed, Apr 08, 2020 at 07:16:29PM +0530, Rajendra Nayak wrote:
+> geni spi needs to express a perforamnce state requirement on CX
+> depending on the frequency of the clock rates. Use OPP table from
+> DT to register with OPP framework and use dev_pm_opp_set_rate() to
+> set the clk/perf state.
+> 
+> Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
+> Cc: Alok Chauhan <alokc@codeaurora.org>
+> Cc: Akash Asthana <akashast@codeaurora.org>
+> Cc: linux-spi@vger.kernel.org
+> ---
+>  drivers/spi/spi-geni-qcom.c | 14 +++++++++++---
+>  1 file changed, 11 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/spi/spi-geni-qcom.c b/drivers/spi/spi-geni-qcom.c
+> index c397242..ce387dc 100644
+> --- a/drivers/spi/spi-geni-qcom.c
+> +++ b/drivers/spi/spi-geni-qcom.c
+> @@ -7,6 +7,7 @@
+>  #include <linux/log2.h>
+>  #include <linux/module.h>
+>  #include <linux/platform_device.h>
+> +#include <linux/pm_opp.h>
+>  #include <linux/pm_runtime.h>
+>  #include <linux/qcom-geni-se.h>
+>  #include <linux/spi/spi.h>
+> @@ -95,7 +96,6 @@ static int get_spi_clk_cfg(unsigned int speed_hz,
+>  {
+>  	unsigned long sclk_freq;
+>  	unsigned int actual_hz;
+> -	struct geni_se *se = &mas->se;
+>  	int ret;
+>  
+>  	ret = geni_se_clk_freq_match(&mas->se,
+> @@ -112,9 +112,9 @@ static int get_spi_clk_cfg(unsigned int speed_hz,
+>  
+>  	dev_dbg(mas->dev, "req %u=>%u sclk %lu, idx %d, div %d\n", speed_hz,
+>  				actual_hz, sclk_freq, *clk_idx, *clk_div);
+> -	ret = clk_set_rate(se->clk, sclk_freq);
+> +	ret = dev_pm_opp_set_rate(mas->dev, sclk_freq);
+>  	if (ret)
+> -		dev_err(mas->dev, "clk_set_rate failed %d\n", ret);
+> +		dev_err(mas->dev, "dev_pm_opp_set_rate failed %d\n", ret);
+>  	return ret;
+>  }
+>  
+> @@ -553,6 +553,7 @@ static int spi_geni_probe(struct platform_device *pdev)
+>  	if (!spi)
+>  		return -ENOMEM;
+>  
+> +
+>  	platform_set_drvdata(pdev, spi);
+>  	mas = spi_master_get_devdata(spi);
+>  	mas->irq = irq;
+> @@ -561,6 +562,8 @@ static int spi_geni_probe(struct platform_device *pdev)
+>  	mas->se.wrapper = dev_get_drvdata(dev->parent);
+>  	mas->se.base = base;
+>  	mas->se.clk = clk;
+> +	mas->se.opp = dev_pm_opp_set_clkname(&pdev->dev, "se");
 
-It's just that the formulae for the calculation come from the hardware 
-team and we are not able to easily transcript them to fixed point 
-calculations.
+As commented on the serial patch, it seems an error check is needed
+and the OPP table saved in 'struct geni_se' is never used.
 
-> My current thinking is that if I annotate all functions that are wholly
-> inside kernel_fpu_start() with an __fpu function attribute, then I can
-> verify that any call from regular text to fpu text only happens inside
-> kernel_fpu_begin()/end(). And I can ensure that all !__fpu annotation
-> fuctions only contain !fpu instructions.
+> +	dev_pm_opp_of_add_table(&pdev->dev);
 
-Yeah, that sounds like a good idea to me and should be easily doable.
+This function could also fail for multiple reasons, so the return value
+should be checked.
 
-> Can that generator add the __fpu function attribute or is that something
-> that would need to be done manually (which seems like it would be
-> painful, since it is quite a bit of code) ?
-
-We are currently in the process of moving all the stuff which requires 
-floating point into a single C file(s) and then make sure that we only 
-call those within kernel_fpu_begin()/end() blocks.
-
-Annotating those function with __fpu or even saying to gcc that all code 
-of those files should go into a special text.fpu segment shouldn't be 
-much of a problem.
-
-Regards,
-Christian.
+From patch "[01/21] opp: Manage empty OPP tables with clk handle" it seems
+ignoring errors is intended to be able to operate when no OPP table is
+specified. But even with that you want to return in case of certain errors,
+like an invalid OPP table, out of memory or -EPROBE_DEFER.
