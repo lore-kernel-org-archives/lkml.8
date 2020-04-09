@@ -2,125 +2,132 @@ Return-Path: <SRS0=n+Ub=5Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB7B8C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 03:44:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E67BFC2BA19
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 03:59:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9B616206BE
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 03:44:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A8FBC206A1
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 03:59:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="WcfWA0De"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726621AbgDIDoU (ORCPT
+        id S1726626AbgDID70 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Apr 2020 23:44:20 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:46672 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726534AbgDIDoU (ORCPT
+        Wed, 8 Apr 2020 23:59:26 -0400
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:45990 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726579AbgDID7Z (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Apr 2020 23:44:20 -0400
-Received: by mail-pl1-f195.google.com with SMTP id x2so727786plv.13;
-        Wed, 08 Apr 2020 20:44:20 -0700 (PDT)
+        Wed, 8 Apr 2020 23:59:25 -0400
+Received: by mail-ot1-f65.google.com with SMTP id 60so6244555otl.12
+        for <linux-kernel@vger.kernel.org>; Wed, 08 Apr 2020 20:59:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=XmvlzvuP/vnjEDUAwKX6NbPh583pohCBXmnvTfFr87o=;
+        b=WcfWA0De+txeD+3/qwDi56IMDD7hs+I4DO8x9nTO8TIxgeXl/V6E/fN2vgTJLcstLM
+         886C43uVdfSX+4NagjIP3e0rIvnsIACoAp2qqqM5tvPsuRtdRo/dBdIGz6pgvqafbnCT
+         MsXHtdqENcOPqOgGtN1jR8qa4q/4FJvT2MDhcwQmEOSaIsCkJOoq9bfK6evwJJAQf9p3
+         5uXnh52JdhZywazugrRBkXfhasgQzdTE5rD/ltu3H/cGMygWVnIGBwyE9oE35OHCFXCd
+         +7FEkU/SMbmBstyAFQ85PLXt1sHRn/iZkz4um5cIC0b0Xfayi2XLvfYGZZPAN4AdQCTi
+         4iTQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=OXkeFG20skcc71TAGOC9c852SkMQODtXDz/IIRq3REQ=;
-        b=sG62G8MllzdO1LOIBfqJtr2czs0jMkVTAf7ofzaJV4s7nM9CHDXFDp9wl5SU3VJu8y
-         loWkQFmtaPetzzZYbQlYXXdAkhTqsz0dyLFxTpjEkDAvOMyhHubh/GNL+NCcXCRVgMEk
-         Y50WUFxaM6dtGLXlBoEY6MYDpNylglAsw5YRO3y0Z6CFlzOL0tgY9awo7JO/YIfjs8nQ
-         Nn+478UR689FzWfRteofpyZTjQcwxXEEG47hL+zlmpmOM7fzlm2YFHIX1Ems4RRsOnce
-         pGoqELUFNLAkzuMu2vMX5XOAyitd86QtoHYkfWmh7XxnjtwFQytvhDOWV0NrBfzv59Cv
-         C1Lw==
-X-Gm-Message-State: AGi0PuYs/S+p1Zy1ObdmoyzxddF50rBWJMpJ5aK3NRcQYjYKgWp2Qewy
-        U0+FZW1FKzIsaDdwT3ynG8I=
-X-Google-Smtp-Source: APiQypLDbgLY1AQ+vojJPnsjjGcyD/huzrXAih4H9fuA8yIo1VgDQM/6g/UO45JiZUOO8WT0t3IM6Q==
-X-Received: by 2002:a17:90a:254f:: with SMTP id j73mr8604897pje.11.1586403859224;
-        Wed, 08 Apr 2020 20:44:19 -0700 (PDT)
-Received: from ?IPv6:2601:647:4000:d7:bd77:8b6f:2298:c636? ([2601:647:4000:d7:bd77:8b6f:2298:c636])
-        by smtp.gmail.com with ESMTPSA id n100sm862024pjc.38.2020.04.08.20.44.17
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 08 Apr 2020 20:44:18 -0700 (PDT)
-Subject: Re: [PATCH 2/5] block: add request->io_data_len
-To:     Tejun Heo <tj@kernel.org>, axboe@kernel.dk
-Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel-team@vger.kernel.org, cgroups@vger.kernel.org,
-        newella@fb.com, josef@toxicpanda.com
-References: <20200408201450.3959560-1-tj@kernel.org>
- <20200408201450.3959560-3-tj@kernel.org>
-From:   Bart Van Assche <bvanassche@acm.org>
-Autocrypt: addr=bvanassche@acm.org; prefer-encrypt=mutual; keydata=
- mQENBFSOu4oBCADcRWxVUvkkvRmmwTwIjIJvZOu6wNm+dz5AF4z0FHW2KNZL3oheO3P8UZWr
- LQOrCfRcK8e/sIs2Y2D3Lg/SL7qqbMehGEYcJptu6mKkywBfoYbtBkVoJ/jQsi2H0vBiiCOy
- fmxMHIPcYxaJdXxrOG2UO4B60Y/BzE6OrPDT44w4cZA9DH5xialliWU447Bts8TJNa3lZKS1
- AvW1ZklbvJfAJJAwzDih35LxU2fcWbmhPa7EO2DCv/LM1B10GBB/oQB5kvlq4aA2PSIWkqz4
- 3SI5kCPSsygD6wKnbRsvNn2mIACva6VHdm62A7xel5dJRfpQjXj2snd1F/YNoNc66UUTABEB
- AAG0JEJhcnQgVmFuIEFzc2NoZSA8YnZhbmFzc2NoZUBhY20ub3JnPokBOQQTAQIAIwUCVI67
- igIbAwcLCQgHAwIBBhUIAgkKCwQWAgMBAh4BAheAAAoJEHFcPTXFzhAJ8QkH/1AdXblKL65M
- Y1Zk1bYKnkAb4a98LxCPm/pJBilvci6boefwlBDZ2NZuuYWYgyrehMB5H+q+Kq4P0IBbTqTa
- jTPAANn62A6jwJ0FnCn6YaM9TZQjM1F7LoDX3v+oAkaoXuq0dQ4hnxQNu792bi6QyVdZUvKc
- macVFVgfK9n04mL7RzjO3f+X4midKt/s+G+IPr4DGlrq+WH27eDbpUR3aYRk8EgbgGKvQFdD
- CEBFJi+5ZKOArmJVBSk21RHDpqyz6Vit3rjep7c1SN8s7NhVi9cjkKmMDM7KYhXkWc10lKx2
- RTkFI30rkDm4U+JpdAd2+tP3tjGf9AyGGinpzE2XY1K5AQ0EVI67igEIAKiSyd0nECrgz+H5
- PcFDGYQpGDMTl8MOPCKw/F3diXPuj2eql4xSbAdbUCJzk2ETif5s3twT2ER8cUTEVOaCEUY3
- eOiaFgQ+nGLx4BXqqGewikPJCe+UBjFnH1m2/IFn4T9jPZkV8xlkKmDUqMK5EV9n3eQLkn5g
- lco+FepTtmbkSCCjd91EfThVbNYpVQ5ZjdBCXN66CKyJDMJ85HVr5rmXG/nqriTh6cv1l1Js
- T7AFvvPjUPknS6d+BETMhTkbGzoyS+sywEsQAgA+BMCxBH4LvUmHYhpS+W6CiZ3ZMxjO8Hgc
- ++w1mLeRUvda3i4/U8wDT3SWuHcB3DWlcppECLkAEQEAAYkBHwQYAQIACQUCVI67igIbDAAK
- CRBxXD01xc4QCZ4dB/0QrnEasxjM0PGeXK5hcZMT9Eo998alUfn5XU0RQDYdwp6/kMEXMdmT
- oH0F0xB3SQ8WVSXA9rrc4EBvZruWQ+5/zjVrhhfUAx12CzL4oQ9Ro2k45daYaonKTANYG22y
- //x8dLe2Fv1By4SKGhmzwH87uXxbTJAUxiWIi1np0z3/RDnoVyfmfbbL1DY7zf2hYXLLzsJR
- mSsED/1nlJ9Oq5fALdNEPgDyPUerqHxcmIub+pF0AzJoYHK5punqpqfGmqPbjxrJLPJfHVKy
- goMj5DlBMoYqEgpbwdUYkH6QdizJJCur4icy8GUNbisFYABeoJ91pnD4IGei3MTdvINSZI5e
-Message-ID: <b027a718-1c76-6e34-1edb-5435a5605d35@acm.org>
-Date:   Wed, 8 Apr 2020 20:44:17 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=XmvlzvuP/vnjEDUAwKX6NbPh583pohCBXmnvTfFr87o=;
+        b=c0qwpKsH0eo2q6g6lgwWeMWnWU8adhAyYmsRr5+/6r1fTIVLnWSDalX6xbyMI9SAqY
+         8TlwewBcrBSvnw3IBIL174CmvCWz1tQipoBQh5qftDyVPvxhyMcDvDAV3s6fhZQHiz77
+         qmiyQ4YN8fF1JpW92w45I1HlOwtkU8cUcPi4vEfy5ewGiyCEdBdN1qar+W9TTcQcFPmQ
+         fR9LLn2sPLZqH6YDUdXqByBIXcVN4At0l4RSaUgTkHO3mDt6bCZPSyimycTT9/In/OVO
+         ztvFUk2Fd5Sdsh+Z9oiHq1wKermCtf8hfRLwH3UJR2v3f/6er/0Gz4swmgKGjzF2TRpm
+         nJ8w==
+X-Gm-Message-State: AGi0PuajSCIYIKeTzrfifYfft5lzSgh3S7KlrxTbcRyqpQV3SiB4pOPg
+        SGxHFZIcSqba93/im7ShiuVWbFrCMWGEMTsEv7irTQ==
+X-Google-Smtp-Source: APiQypIL+VSKtQqdwmZy4oiaXjGpHl/0mTLNWmmy5b0h+TbJd0NijtQXz9X0wf4utwLodwHw+mkZqIhkKaDKK9J/bMo=
+X-Received: by 2002:a05:6830:1e79:: with SMTP id m25mr8202815otr.36.1586404765365;
+ Wed, 08 Apr 2020 20:59:25 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200408201450.3959560-3-tj@kernel.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <7bcbe6fe-0b4b-87da-d003-b68a26eb4cf0@infradead.org>
+In-Reply-To: <7bcbe6fe-0b4b-87da-d003-b68a26eb4cf0@infradead.org>
+From:   Sumit Semwal <sumit.semwal@linaro.org>
+Date:   Thu, 9 Apr 2020 09:29:13 +0530
+Message-ID: <CAO_48GHuPAMgnbPDHgZs3kd=xDXssBD+H8-xi3zR4nSgsA1hdQ@mail.gmail.com>
+Subject: Re: [PATCH -next] dma-buf: fix documentation build warnings
+To:     Randy Dunlap <rdunlap@infradead.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        linux-media <linux-media@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        "moderated list:DMA BUFFER SHARING FRAMEWORK" 
+        <linaro-mm-sig@lists.linaro.org>,
+        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-04-08 13:14, Tejun Heo wrote:
-> diff --git a/include/linux/blkdev.h b/include/linux/blkdev.h
-> index 32868fbedc9e..bfd34c6a27ef 100644
-> --- a/include/linux/blkdev.h
-> +++ b/include/linux/blkdev.h
-> @@ -142,6 +142,14 @@ struct request {
->  
->  	/* the following two fields are internal, NEVER access directly */
->  	unsigned int __data_len;	/* total data len */
-> +#ifdef CONFIG_BLK_RQ_IO_DATA_LEN
-> +	/*
-> +	 * Total data len at the time of issue. This doesn't get deducted by
-> +	 * blk_update_request() and can be used by completion path to determine
-> +	 * the request size.
-> +	 */
-> +	unsigned int io_data_len;
-> +#endif
->  	sector_t __sector;		/* sector cursor */
->  
->  	struct bio *bio;
-
-So we have one struct member with the description "total data len" and
-another struct member with the description "total data len at the time
-of issue"? How could one not get confused by these descriptions?
-
-This change makes the comment above __data_len incorrect. Please update
-that comment or move io_data_len in front of that comment.
-
-How does this change interact with the code in drivers/scsi/sd.c that
-manipulates __data_len directly?
-
-Thanks,
-
-Bart.
+Hello Randy,
 
 
+On Wed, 8 Apr 2020 at 09:50, Randy Dunlap <rdunlap@infradead.org> wrote:
+>
+> From: Randy Dunlap <rdunlap@infradead.org>
+>
+> Fix documentation warnings in dma-buf.[hc]:
+
+Thank you for your patch; I will apply it to drm-misc tree.
+>
+> ../drivers/dma-buf/dma-buf.c:678: warning: Function parameter or member 'importer_ops' not described in 'dma_buf_dynamic_attach'
+> ../drivers/dma-buf/dma-buf.c:678: warning: Function parameter or member 'importer_priv' not described in 'dma_buf_dynamic_attach'
+> ../include/linux/dma-buf.h:339: warning: Incorrect use of kernel-doc format:          * @move_notify
+>
+> Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
+> Cc: Sumit Semwal <sumit.semwal@linaro.org>
+> Cc: linux-media@vger.kernel.org
+> Cc: dri-devel@lists.freedesktop.org
+> Cc: linaro-mm-sig@lists.linaro.org
+> ---
+>  drivers/dma-buf/dma-buf.c |    4 ++--
+>  include/linux/dma-buf.h   |    3 +--
+>  2 files changed, 3 insertions(+), 4 deletions(-)
+>
+> --- linux-next-20200407.orig/drivers/dma-buf/dma-buf.c
+> +++ linux-next-20200407/drivers/dma-buf/dma-buf.c
+> @@ -655,8 +655,8 @@ EXPORT_SYMBOL_GPL(dma_buf_put);
+>   * calls attach() of dma_buf_ops to allow device-specific attach functionality
+>   * @dmabuf:            [in]    buffer to attach device to.
+>   * @dev:               [in]    device to be attached.
+> - * @importer_ops       [in]    importer operations for the attachment
+> - * @importer_priv      [in]    importer private pointer for the attachment
+> + * @importer_ops:      [in]    importer operations for the attachment
+> + * @importer_priv:     [in]    importer private pointer for the attachment
+>   *
+>   * Returns struct dma_buf_attachment pointer for this attachment. Attachments
+>   * must be cleaned up by calling dma_buf_detach().
+> --- linux-next-20200407.orig/include/linux/dma-buf.h
+> +++ linux-next-20200407/include/linux/dma-buf.h
+> @@ -329,13 +329,12 @@ struct dma_buf {
+>
+>  /**
+>   * struct dma_buf_attach_ops - importer operations for an attachment
+> - * @move_notify: [optional] notification that the DMA-buf is moving
+>   *
+>   * Attachment operations implemented by the importer.
+>   */
+>  struct dma_buf_attach_ops {
+>         /**
+> -        * @move_notify
+> +        * @move_notify: [optional] notification that the DMA-buf is moving
+>          *
+>          * If this callback is provided the framework can avoid pinning the
+>          * backing store while mappings exists.
+>
+
+Best,
+Sumit.
