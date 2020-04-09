@@ -2,203 +2,211 @@ Return-Path: <SRS0=n+Ub=5Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 136DEC2BA2B
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 14:40:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AC5FC2BA2B
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 14:41:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D6DDB2078E
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 14:40:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="ThmeQBVE"
+	by mail.kernel.org (Postfix) with ESMTP id C5E142083E
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 14:41:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1586443268;
+	bh=ubVb0I2ai8nKLC8GF70Hzzlt+BYOLspkiVSoi7kI8V0=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=CJ3dvWrZ2KJCjN2YhfypZSOecRdiXASKu55CFpbWqda4JzzH/lKk4nJ0b+7u5q3xD
+	 PXkl+NJkThiVjCMzwp7F4eO7gYExw81ahWe3SaT6aAU4BNGewIT0HWQlOyze/es1Jt
+	 rGQYAOjxHxgk1gkN6uaFQlE/uwow20RH9DUm0nhA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727817AbgDIOkQ (ORCPT
+        id S1727829AbgDIOlH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Apr 2020 10:40:16 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:44564 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727327AbgDIOkP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Apr 2020 10:40:15 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 039EcF15058098;
-        Thu, 9 Apr 2020 14:40:08 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=content-type :
- mime-version : subject : from : in-reply-to : date : cc :
- content-transfer-encoding : message-id : references : to;
- s=corp-2020-01-29; bh=gIlObyBd/X6vtrruLSVOV91EVZH8HEpDqenNYw1Pv2s=;
- b=ThmeQBVEZA9YXGKybMhq5miGhOexi3IrV3yJJRDGq89msT8uA5OJJxW68UrrquA8sBWb
- mgxh547W2eQg6VjMGUGQ0+P3Cdu+J/6aCGWy7kt2aqi+0i7nO7z6RQtb3K9LgvaM2wgS
- fq1lgm/Q5Os56bZTINOtqvzno7lstZJ6p3af4JQ94PWb56VPU9f1Pa3aYnEIxLdQOfE2
- G0wUcOmiBOAQsrTf6so4NOo2zgr1A2Zu7dbk86++XCTG0WX3s8bM+J40WUIWU96/Q3ps
- +l8Lg4iiysyTcmoqY6B9302h91SVI0zXc+uO+ub8ed8tFHflWHsp35o8YQfLsrE0AVvT +A== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by userp2130.oracle.com with ESMTP id 3091m3hw3n-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 09 Apr 2020 14:40:08 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 039EbbiO008064;
-        Thu, 9 Apr 2020 14:38:08 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by userp3030.oracle.com with ESMTP id 3091m48k2u-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 09 Apr 2020 14:38:08 +0000
-Received: from abhmp0001.oracle.com (abhmp0001.oracle.com [141.146.116.7])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 039Ec6an031611;
-        Thu, 9 Apr 2020 14:38:06 GMT
-Received: from anon-dhcp-153.1015granger.net (/68.61.232.219)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 09 Apr 2020 07:38:06 -0700
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.11\))
-Subject: Re: [kbuild-all] Re: net/sunrpc/svcsock.c:527:32: warning: Variable
- 'uninitialized_var' is assigned a value that is never used. [unreadVariable]
-From:   Chuck Lever <chuck.lever@oracle.com>
-In-Reply-To: <2342285b-3bb6-32cd-2611-264bc0773150@intel.com>
-Date:   Thu, 9 Apr 2020 10:38:05 -0400
-Cc:     kbuild test robot <lkp@intel.com>, kbuild-all@lists.01.org,
-        linux-kernel@vger.kernel.org
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <997058C9-4AAE-4B70-93E0-4CC6E3DE4FA0@oracle.com>
-References: <202004090524.zHtJ3R2B%lkp@intel.com>
- <76A08BC7-C37A-495D-998A-2E9DADF454A7@oracle.com>
- <2342285b-3bb6-32cd-2611-264bc0773150@intel.com>
-To:     Rong Chen <rong.a.chen@intel.com>
-X-Mailer: Apple Mail (2.3445.104.11)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9586 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 malwarescore=0
- mlxlogscore=999 phishscore=0 spamscore=0 adultscore=0 suspectscore=0
- mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2004090115
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9586 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 adultscore=0
- impostorscore=0 malwarescore=0 lowpriorityscore=0 mlxlogscore=999
- priorityscore=1501 clxscore=1011 bulkscore=0 phishscore=0 mlxscore=0
- suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2004090115
+        Thu, 9 Apr 2020 10:41:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47888 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727327AbgDIOlG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Apr 2020 10:41:06 -0400
+Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 429C42078E;
+        Thu,  9 Apr 2020 14:41:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1586443266;
+        bh=ubVb0I2ai8nKLC8GF70Hzzlt+BYOLspkiVSoi7kI8V0=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=I6kL4V8jneQArdv0/VR5+Ajsnrqdl4EeY07NFGAr9eIvOnksVtB7e4t4p1znNEEgf
+         pkKJm8Xmn04IxwMUK5zcvFi61+79ueFvIgMCnV3cBx5KljLtN1cwTESlAzRPN6dwbQ
+         bF5+ivv/pC1cBKmPfMj13/q6+9T8thU4gHtISoc0=
+Date:   Thu, 9 Apr 2020 23:41:01 +0900
+From:   Masami Hiramatsu <mhiramat@kernel.org>
+To:     Jiri Olsa <jolsa@kernel.org>
+Cc:     "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
+        Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Peter Zijlstra <peterz@infradead.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        "bibo,mao" <bibo.mao@intel.com>,
+        "Ziqian SUN (Zamir)" <zsun@redhat.com>
+Subject: Re: [RFC] kretprobe: Prevent triggering kretprobe from within
+ kprobe_flush_task
+Message-Id: <20200409234101.8814f3cbead69337ac5a33fa@kernel.org>
+In-Reply-To: <20200408164641.3299633-1-jolsa@kernel.org>
+References: <20200408164641.3299633-1-jolsa@kernel.org>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed,  8 Apr 2020 18:46:41 +0200
+Jiri Olsa <jolsa@kernel.org> wrote:
+
+> hi,
+> Ziqian reported lockup when adding retprobe on _raw_spin_lock_irqsave.
+> My test was also able to trigger lockdep output:
+> 
+>  ============================================
+>  WARNING: possible recursive locking detected
+>  5.6.0-rc6+ #6 Not tainted
+>  --------------------------------------------
+>  sched-messaging/2767 is trying to acquire lock:
+>  ffffffff9a492798 (&(kretprobe_table_locks[i].lock)){-.-.}, at: kretprobe_hash_lock+0x52/0xa0
+> 
+>  but task is already holding lock:
+>  ffffffff9a491a18 (&(kretprobe_table_locks[i].lock)){-.-.}, at: kretprobe_trampoline+0x0/0x50
+> 
+>  other info that might help us debug this:
+>   Possible unsafe locking scenario:
+> 
+>         CPU0
+>         ----
+>    lock(&(kretprobe_table_locks[i].lock));
+>    lock(&(kretprobe_table_locks[i].lock));
+> 
+>   *** DEADLOCK ***
+> 
+>   May be due to missing lock nesting notation
+> 
+>  1 lock held by sched-messaging/2767:
+>   #0: ffffffff9a491a18 (&(kretprobe_table_locks[i].lock)){-.-.}, at: kretprobe_trampoline+0x0/0x50
+> 
+>  stack backtrace:
+>  CPU: 3 PID: 2767 Comm: sched-messaging Not tainted 5.6.0-rc6+ #6
+>  Call Trace:
+>   dump_stack+0x96/0xe0
+>   __lock_acquire.cold.57+0x173/0x2b7
+>   ? native_queued_spin_lock_slowpath+0x42b/0x9e0
+>   ? lockdep_hardirqs_on+0x590/0x590
+>   ? __lock_acquire+0xf63/0x4030
+>   lock_acquire+0x15a/0x3d0
+>   ? kretprobe_hash_lock+0x52/0xa0
+>   _raw_spin_lock_irqsave+0x36/0x70
+>   ? kretprobe_hash_lock+0x52/0xa0
+>   kretprobe_hash_lock+0x52/0xa0
+>   trampoline_handler+0xf8/0x940
+>   ? kprobe_fault_handler+0x380/0x380
+>   ? find_held_lock+0x3a/0x1c0
+>   kretprobe_trampoline+0x25/0x50
+>   ? lock_acquired+0x392/0xbc0
+>   ? _raw_spin_lock_irqsave+0x50/0x70
+>   ? __get_valid_kprobe+0x1f0/0x1f0
+>   ? _raw_spin_unlock_irqrestore+0x3b/0x40
+>   ? finish_task_switch+0x4b9/0x6d0
+>   ? __switch_to_asm+0x34/0x70
+>   ? __switch_to_asm+0x40/0x70
+> 
+> The code within the kretprobe handler checks for probe reentrancy,
+> so we won't trigger any _raw_spin_lock_irqsave probe in there.
+> 
+> The problem is in outside kprobe_flush_task, where we call:
+> 
+>   kprobe_flush_task
+>     kretprobe_table_lock
+>       raw_spin_lock_irqsave
+>         _raw_spin_lock_irqsave
+> 
+> where _raw_spin_lock_irqsave triggers the kretprobe and installs
+> kretprobe_trampoline handler on _raw_spin_lock_irqsave return.
+> 
+> The kretprobe_trampoline handler is then executed with already
+> locked kretprobe_table_locks, and first thing it does is to
+> lock kretprobe_table_locks ;-) the whole lockup path like:
+> 
+>   kprobe_flush_task
+>     kretprobe_table_lock
+>       raw_spin_lock_irqsave
+>         _raw_spin_lock_irqsave ---> probe triggered, kretprobe_trampoline installed
+> 
+>         ---> kretprobe_table_locks locked
+> 
+>         kretprobe_trampoline
+>           trampoline_handler
+>             kretprobe_hash_lock(current, &head, &flags);  <--- deadlock
+> 
+> The change below sets current_kprobe in kprobe_flush_task, so the probe
+> recursion protection check is hit and the probe is never set. It seems
+> to fix the deadlock.
+> 
+> I'm not sure this is the best fix, any ideas are welcome ;-)
+
+OK, I just have 1 comment. :)
+
+> 
+> thanks,
+> jirka
+> 
+> 
+> ---
+>  kernel/kprobes.c | 6 ++++++
+>  1 file changed, 6 insertions(+)
+> 
+> diff --git a/kernel/kprobes.c b/kernel/kprobes.c
+> index 2625c241ac00..b13247cae752 100644
+> --- a/kernel/kprobes.c
+> +++ b/kernel/kprobes.c
+> @@ -1236,6 +1236,10 @@ __releases(hlist_lock)
+>  }
+>  NOKPROBE_SYMBOL(kretprobe_table_unlock);
+>  
+> +static struct kprobe kretprobe_dummy = {
+> +        .addr = (void *)kretprobe_trampoline,
+> +};
+> +
+>  /*
+>   * This function is called from finish_task_switch when task tk becomes dead,
+>   * so that we can recycle any function-return probe instances associated
+> @@ -1256,12 +1260,14 @@ void kprobe_flush_task(struct task_struct *tk)
+>  	INIT_HLIST_HEAD(&empty_rp);
+>  	hash = hash_ptr(tk, KPROBE_HASH_BITS);
+>  	head = &kretprobe_inst_table[hash];
+> +	__this_cpu_write(current_kprobe, &kretprobe_dummy);
+
+Can you also set the kcb->kprobe_state = KPROBE_HIT_ACTIVE?
+
+BTW, we may be better to introduce a common kprobe_reject_section_start()
+and kprobe_reject_section_end() so that the user don't need to prepare
+dummy kprobes.
+
+Thank you,
+
+>  	kretprobe_table_lock(hash, &flags);
+>  	hlist_for_each_entry_safe(ri, tmp, head, hlist) {
+>  		if (ri->task == tk)
+>  			recycle_rp_inst(ri, &empty_rp);
+>  	}
+>  	kretprobe_table_unlock(hash, &flags);
+> +	__this_cpu_write(current_kprobe, NULL);
+>  	hlist_for_each_entry_safe(ri, tmp, &empty_rp, hlist) {
+>  		hlist_del(&ri->hlist);
+>  		kfree(ri);
+> -- 
+> 2.25.2
+> 
 
 
-> On Apr 8, 2020, at 11:04 PM, Rong Chen <rong.a.chen@intel.com> wrote:
->=20
->=20
->=20
-> On 4/9/20 5:35 AM, Chuck Lever wrote:
->>=20
->>> On Apr 8, 2020, at 5:32 PM, kbuild test robot <lkp@intel.com> wrote:
->>>=20
->>> tree:   =
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git =
-master
->>> head:   f5e94d10e4c468357019e5c28d48499f677b284f
->>> commit: da1661b93bf489cdbc8bcea919b165d31b4810bf SUNRPC: Teach =
-server to use xprt_sock_sendmsg for socket sends
->>> date:   3 weeks ago
->>>=20
->>> If you fix the issue, kindly add following tag as appropriate
->>> Reported-by: kbuild test robot <lkp@intel.com>
->>>=20
->>>=20
->>> cppcheck warnings: (new ones prefixed by >>)
->>>=20
->>>   net/sunrpc/svcsock.c:405:9: warning: union member =
-'Anonymous0::all' is never used. [unusedStructMember]
->>>     long  all[SVC_PKTINFO_SPACE / sizeof(long)];
->>>           ^
->>>   net/sunrpc/svcsock.c:518:9: warning: union member =
-'Anonymous1::all' is never used. [unusedStructMember]
->>>     long  all[SVC_PKTINFO_SPACE / sizeof(long)];
->>>           ^
->>>>> net/sunrpc/svcsock.c:527:32: warning: Variable 'uninitialized_var' =
-is assigned a value that is never used. [unreadVariable]
->>>    unsigned int uninitialized_var(sent);
->>>                                  ^
->>>=20
->>> vim +/uninitialized_var +527 net/sunrpc/svcsock.c
->>>=20
->>>   504=09
->>>   505	/**
->>>   506	 * svc_udp_sendto - Send out a reply on a UDP socket
->>>   507	 * @rqstp: completed svc_rqst
->>>   508	 *
->>>   509	 * Returns the number of bytes sent, or a negative =
-errno.
->>>   510	 */
->>>   511	static int svc_udp_sendto(struct svc_rqst *rqstp)
->>>   512	{
->>>   513		struct svc_xprt *xprt =3D rqstp->rq_xprt;
->>>   514		struct svc_sock	*svsk =3D container_of(xprt, =
-struct svc_sock, sk_xprt);
->>>   515		struct xdr_buf *xdr =3D &rqstp->rq_res;
->>>   516		union {
->>>   517			struct cmsghdr	hdr;
->>>   518			long		all[SVC_PKTINFO_SPACE / =
-sizeof(long)];
->>>   519		} buffer;
->>>   520		struct cmsghdr *cmh =3D &buffer.hdr;
->>>   521		struct msghdr msg =3D {
->>>   522			.msg_name	=3D &rqstp->rq_addr,
->>>   523			.msg_namelen	=3D rqstp->rq_addrlen,
->>>   524			.msg_control	=3D cmh,
->>>   525			.msg_controllen	=3D sizeof(buffer),
->>>   526		};
->>>> 527		unsigned int uninitialized_var(sent);
->>>   528		int err;
->>>   529=09
->>>   530		svc_set_cmsg_data(rqstp, cmh);
->>>   531=09
->>>   532		err =3D xprt_sock_sendmsg(svsk->sk_sock, &msg, =
-xdr, 0, 0, &sent);
->>>   533		xdr_free_bvec(xdr);
->>>   534		if (err =3D=3D -ECONNREFUSED) {
->>>   535			/* ICMP error on earlier request. */
->>>   536			err =3D xprt_sock_sendmsg(svsk->sk_sock, =
-&msg, xdr, 0, 0, &sent);
->>>   537			xdr_free_bvec(xdr);
->>>   538		}
->>>   539		if (err < 0)
->>>   540			return err;
->>>   541		return sent;
->> Wha? "sent" is used right here. Can someone explain this warning?
->=20
-> Hi Chuck,
->=20
-> Sorry for the inconvenience, it should be a false warning,
-> It's every odd that removing uninitialized_var can silence this =
-warning.
-
-Rong, thanks for your response! I will leave the code as-is, then.
-
-
-> Best Regards,
-> Rong Chen
->=20
->>=20
->>=20
->>>   542	}
->>>   543=09
->>>=20
->>> ---
->>> 0-DAY CI Kernel Test Service, Intel Corporation
->>> https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
->> --
->> Chuck Lever
->>=20
->>=20
->> _______________________________________________
->> kbuild-all mailing list -- kbuild-all@lists.01.org
->> To unsubscribe send an email to kbuild-all-leave@lists.01.org
-
---
-Chuck Lever
-
-
-
+-- 
+Masami Hiramatsu <mhiramat@kernel.org>
