@@ -2,169 +2,131 @@ Return-Path: <SRS0=n+Ub=5Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C94EC2BA19
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 21:28:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED4B7C2BB85
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 21:29:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3CE392074F
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 21:28:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="L3VCXeGZ"
+	by mail.kernel.org (Postfix) with ESMTP id C0225206A1
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 21:29:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1586467759;
+	bh=ScDbH132wmevlViehYSb3vPuHS7/Osy+J1p9xXpIiA8=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=oyQayGX7yTgmn/LQgDnpEk7KtOoLqVBzIijizylzLxQrYMBAG3I4Hor4dOJ6/ild7
+	 OwFHrJtLZnCY4U3P12wC0A2pGPBP5sdiyiBGQPcyNeC0FsB0DXl0m7ll68xgLzPLrd
+	 SF0pE/1PjnDeXb0vMOQbnjBdAA1uJP548WxPwebg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727549AbgDIV2t (ORCPT
+        id S1727629AbgDIV3S (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Apr 2020 17:28:49 -0400
-Received: from mail-qk1-f195.google.com ([209.85.222.195]:44859 "EHLO
-        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727441AbgDIV2t (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Apr 2020 17:28:49 -0400
-Received: by mail-qk1-f195.google.com with SMTP id j4so255844qkc.11
-        for <linux-kernel@vger.kernel.org>; Thu, 09 Apr 2020 14:28:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=KzqITVc/bBuEyLxzGIUIGtxALz12p2/0ce0mFYQIrPw=;
-        b=L3VCXeGZiWNM74gXaSrx+3mPzlGogn91XBElMPwwaPBjS06I2nPALy+i/MBQMdQvyu
-         oHYJTsUT3HqgCyDGpJmLO3XkpzojxVL0DhtI14l0WdUTwSyEbjx2c4Sx3TsvInCrj79j
-         8Hbf6MhVaotW6uceGggZuwA651T6eGKUd+eZwFO+43rZzmOT35qR859lkVgO0dQ0Ityu
-         2mrSOs/dNjE2LDMFxEi4hP/7hEsDQ6JlXuE0UH3YW5YGB5qqN3t6BXLC+9O5uzyPSx57
-         FLgHRTDlCX9hTMzViFFA3772sIZAZGil+/WGauSudUJWm/mvqxCn49ph+PwsEwynIfII
-         9Maw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=KzqITVc/bBuEyLxzGIUIGtxALz12p2/0ce0mFYQIrPw=;
-        b=UoAvnA6oJfSSHsj4jBWuOx9YN78cizG9cR5/IHO1IogchGCM1QmXWh19ReTkwgmd8w
-         OiC7aoZSv4cc1/qUrERyMBAfX1Tu+zhHGuh6qkWB2Csrqtbowirq+lmL0ncOOea3h5+J
-         XmpiHMAcRLW4nzp+F719o2dPEPChSRso/SZ2emwTA5pOCcbZdJLBc3HNCb8srLYbkiDX
-         W/i7XvFMxFoMhOppDXS5x6A4HpDf+QhgQJOjrEHrHExBTD8tctywfdhSt/O8ucAlNwcH
-         ouBY07nqVQr3YwDitS02SOtDKBdQGm99K9lMKTdqCAI7957lOspEU53vNeymouVJZ17g
-         9/8A==
-X-Gm-Message-State: AGi0Pub5njVvokXqbhus96uFgUMi5Nyt6AxZY0d31q9r4sxDbdFTzuqy
-        yx2cJqfPLWfWcAlq72qPWCBlLw==
-X-Google-Smtp-Source: APiQypIab/qD0/CzEmBueUxVI7cdP1cUNlLmljnFYFcTG79k7lQKDEA7S87fbH2i7ZyFknlD7TnBGw==
-X-Received: by 2002:a37:a84f:: with SMTP id r76mr1035709qke.370.1586467727251;
-        Thu, 09 Apr 2020 14:28:47 -0700 (PDT)
-Received: from [192.168.1.153] (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
-        by smtp.gmail.com with ESMTPSA id x68sm50341qka.129.2020.04.09.14.28.46
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 09 Apr 2020 14:28:46 -0700 (PDT)
-Content-Type: text/plain;
-        charset=utf-8
-Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.80.23.2.2\))
-Subject: Re: KCSAN + KVM = host reset
-From:   Qian Cai <cai@lca.pw>
-In-Reply-To: <CANpmjNNUn9_Q30CSeqbU_TNvaYrMqwXkKCA23xO4ZLr2zO0w9Q@mail.gmail.com>
-Date:   Thu, 9 Apr 2020 17:28:45 -0400
-Cc:     Paolo Bonzini <pbonzini@redhat.com>,
-        "paul E. McKenney" <paulmck@kernel.org>,
-        kasan-dev <kasan-dev@googlegroups.com>,
-        LKML <linux-kernel@vger.kernel.org>, kvm@vger.kernel.org
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <B5F0F530-911E-4B75-886A-9D8C54FF49C8@lca.pw>
-References: <E180B225-BF1E-4153-B399-1DBF8C577A82@lca.pw>
- <fb39d3d2-063e-b828-af1c-01f91d9be31c@redhat.com>
- <017E692B-4791-46AD-B9ED-25B887ECB56B@lca.pw>
- <CANpmjNMiHNVh3BVxZUqNo4jW3DPjoQPrn-KEmAJRtSYORuryEA@mail.gmail.com>
- <B7F7F73E-EE27-48F4-A5D0-EBB29292913E@lca.pw>
- <CANpmjNMEgc=+bLU472jy37hYPYo5_c+Kbyti8-mubPsEGBrm3A@mail.gmail.com>
- <2730C0CC-B8B5-4A65-A4ED-9DFAAE158AA6@lca.pw>
- <CANpmjNNUn9_Q30CSeqbU_TNvaYrMqwXkKCA23xO4ZLr2zO0w9Q@mail.gmail.com>
-To:     Marco Elver <elver@google.com>
-X-Mailer: Apple Mail (2.3608.80.23.2.2)
+        Thu, 9 Apr 2020 17:29:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44938 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726928AbgDIV3S (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Apr 2020 17:29:18 -0400
+Received: from mail-io1-f49.google.com (mail-io1-f49.google.com [209.85.166.49])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id AFB0620B1F;
+        Thu,  9 Apr 2020 21:29:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1586467757;
+        bh=ScDbH132wmevlViehYSb3vPuHS7/Osy+J1p9xXpIiA8=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=w2RqWeUVJ78hOhcm/TJInru4bbWjBYTaBM0fSwPDxNas3PeGhrcp3DeduHq1drjJ+
+         /ZNObBWtly5M1z0oxxWLxo6sbB94yEDw3x8tMqs6plwO8JQUBLaepC5RRKCvb0EDPR
+         SkDmOehHTmSdsLRf2YigWQWaWadwsZNEsZWlAkvo=
+Received: by mail-io1-f49.google.com with SMTP id w20so1126971iob.2;
+        Thu, 09 Apr 2020 14:29:17 -0700 (PDT)
+X-Gm-Message-State: AGi0PubuvBm6Na5dqscAiiKoDY2Fd3aJrR/UORary0BzyXJhlz7l8QXn
+        lLei9hUh5NfuiVuycU3rwO172HTCfw+ef+I7cTg=
+X-Google-Smtp-Source: APiQypKWBwnqQybIW4xlFVNQhFjET+Pm794MfxAc7HzWxprhbyIfqYLTa73CdHEguIc+eVUdm26A4hOgp58lmjJKw2Q=
+X-Received: by 2002:a05:6602:1550:: with SMTP id h16mr1244659iow.171.1586467756995;
+ Thu, 09 Apr 2020 14:29:16 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200409130434.6736-1-ardb@kernel.org> <20200409190109.GB45598@mit.edu>
+ <CAMj1kXGiA3PAybR7r9tatL7WV5iU7B1OQxQok3d-JmRnhX1TnA@mail.gmail.com> <20200409201632.GC45598@mit.edu>
+In-Reply-To: <20200409201632.GC45598@mit.edu>
+From:   Ard Biesheuvel <ardb@kernel.org>
+Date:   Thu, 9 Apr 2020 23:29:06 +0200
+X-Gmail-Original-Message-ID: <CAMj1kXFqKGSqm_y+ht4mmmu10TrhSyiTG8V3PxRYGodpZ=xNFQ@mail.gmail.com>
+Message-ID: <CAMj1kXFqKGSqm_y+ht4mmmu10TrhSyiTG8V3PxRYGodpZ=xNFQ@mail.gmail.com>
+Subject: Re: [GIT PULL 0/9] EFI fixes for v5.7-rc
+To:     "Theodore Y. Ts'o" <tytso@mit.edu>
+Cc:     linux-efi <linux-efi@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Arvind Sankar <nivedita@alum.mit.edu>,
+        Borislav Petkov <bp@suse.de>,
+        Colin Ian King <colin.king@canonical.com>,
+        Gary Lin <glin@suse.com>, Jiri Slaby <jslaby@suse.cz>,
+        Sergey Shatunov <me@prok.pw>, Takashi Iwai <tiwai@suse.de>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, 9 Apr 2020 at 22:16, Theodore Y. Ts'o <tytso@mit.edu> wrote:
+>
+> On Thu, Apr 09, 2020 at 09:04:42PM +0200, Ard Biesheuvel wrote:
+> >
+> > > I'm currently building Linus's latest branch to see if it's been fixed
+> > > since v5.6-11114-g9c94b39560c3 (which is where I first noticed it) and
+> > > while I was waiting for v5.6-12349-g87ebc45d2d32 to finish building so
+> > > I could test it, I noticed these patches, and so I figured I'd fire
+> > > off this quick question.
+> > >
+> >
+> > I think we might be able to downright revert that patch if the
+> > underlying assumption on my part is inaccurate, which was that the
+> > fact that the boot code no longer uses the runtime table address
+> > implies that there is no longer a reason to pass it.
+>
+> Unfortunately, it doesn't cleanly revert, which is why I started
+> checking to see if it might be fixed already before trying to figure
+> out how to do a manual revert.  I just tested and the tip of Linus's
+> tree still has the failure.
+>
+> The short description of the failure: I'm using Debian Stable (Buster)
+> with a 4.19 distro kernel and kexec-tools 2.0.18 to kexec into the
+> kernel under test.  I'm using a Google Compute Engine VM, and the
+> actual kexec command is here:
+>
+> https://github.com/tytso/xfstests-bld/blob/master/kvm-xfstests/test-appliance/files/usr/local/lib/gce-kexec#L146
+>
+> What happens is that the kexec'ed kernel immediately crashes, at which
+> point we drop back into the BIOS, and then it boots the Debain 4.19.0
+> distro kernel instead of the kernel to be tested boot.  Since we lose
+> the boot command line that was used from the kexec, the gce-xfstests
+> image retries the kexec, which fails, and the failing kexec repeats
+> until I manually kill the VM.
+>
+> The bisect fingred v5.6-rc1-59-g0a67361dcdaa ("efi/x86: Remove runtime
+> table address from kexec EFI setup data") as the first failing commit.
+> Its immediate parent commit, v5.6-rc1-58-g06c0bd93434c works just
+> fine.
+>
+> Is there any further debugging information that would be useful?
+>
 
+Does this help at all?
 
-> On Apr 9, 2020, at 12:03 PM, Marco Elver <elver@google.com> wrote:
->=20
-> On Thu, 9 Apr 2020 at 17:30, Qian Cai <cai@lca.pw> wrote:
->>=20
->>=20
->>=20
->>> On Apr 9, 2020, at 11:22 AM, Marco Elver <elver@google.com> wrote:
->>>=20
->>> On Thu, 9 Apr 2020 at 17:10, Qian Cai <cai@lca.pw> wrote:
->>>>=20
->>>>=20
->>>>=20
->>>>> On Apr 9, 2020, at 3:03 AM, Marco Elver <elver@google.com> wrote:
->>>>>=20
->>>>> On Wed, 8 Apr 2020 at 23:29, Qian Cai <cai@lca.pw> wrote:
->>>>>>=20
->>>>>>=20
->>>>>>=20
->>>>>>> On Apr 8, 2020, at 5:25 PM, Paolo Bonzini <pbonzini@redhat.com> =
-wrote:
->>>>>>>=20
->>>>>>> On 08/04/20 22:59, Qian Cai wrote:
->>>>>>>> Running a simple thing on this AMD host would trigger a reset =
-right away.
->>>>>>>> Unselect KCSAN kconfig makes everything work fine (the host =
-would also
->>>>>>>> reset If only "echo off > /sys/kernel/debug/kcsan=E2=80=9D =
-before running qemu-kvm).
->>>>>>>=20
->>>>>>> Is this a regression or something you've just started to play =
-with?  (If
->>>>>>> anything, the assembly language conversion of the AMD world =
-switch that
->>>>>>> is in linux-next could have reduced the likelihood of such a =
-failure,
->>>>>>> not increased it).
->>>>>>=20
->>>>>> I don=E2=80=99t remember I had tried this combination before, so =
-don=E2=80=99t know if it is a
->>>>>> regression or not.
->>>>>=20
->>>>> What happens with KASAN? My guess is that, since it also happens =
-with
->>>>> "off", something that should not be instrumented is being
->>>>> instrumented.
->>>>=20
->>>> No, KASAN + KVM works fine.
->>>>=20
->>>>>=20
->>>>> What happens if you put a 'KCSAN_SANITIZE :=3D n' into
->>>>> arch/x86/kvm/Makefile? Since it's hard for me to reproduce on this
->>>>=20
->>>> Yes, that works, but this below alone does not work,
->>>>=20
->>>> KCSAN_SANITIZE_kvm-amd.o :=3D n
->>>=20
->>> There are some other files as well, that you could try until you hit
->>> the right one.
->>>=20
->>> But since this is in arch, 'KCSAN_SANITIZE :=3D n' wouldn't be too =
-bad
->>> for now. If you can't narrow it down further, do you want to send a
->>> patch?
->>=20
->> No, that would be pretty bad because it will disable KCSAN for Intel
->> KVM as well which is working perfectly fine right now. It is only AMD
->> is broken.
->=20
-> Interesting. Unfortunately I don't have access to an AMD machine right =
-now.
->=20
-> Actually I think it should be:
->=20
->  KCSAN_SANITIZE_svm.o :=3D n
->  KCSAN_SANITIZE_pmu_amd.o :=3D n
->=20
-> If you want to disable KCSAN for kvm-amd.
+diff --git a/arch/x86/include/asm/efi.h b/arch/x86/include/asm/efi.h
+index 781170d36f50..52f8138243df 100644
+--- a/arch/x86/include/asm/efi.h
++++ b/arch/x86/include/asm/efi.h
+@@ -180,6 +180,7 @@ extern void __init
+efi_uv1_memmap_phys_epilog(pgd_t *save_pgd);
 
-KCSAN_SANITIZE_svm.o :=3D n
-
-That alone works fine. I am wondering which functions there could =
-trigger
-perhaps some kind of recursing with KCSAN?=
+ struct efi_setup_data {
+        u64 fw_vendor;
++       u64 __unused;
+        u64 tables;
+        u64 smbios;
+        u64 reserved[8];
