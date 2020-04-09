@@ -2,233 +2,529 @@ Return-Path: <SRS0=n+Ub=5Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DAF4C2BA80
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 00:12:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BFB44C2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 00:12:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 56C692084D
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 00:12:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7811C2084D
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 00:12:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="vW917R9g"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726609AbgDIAMI (ORCPT
+        id S1726637AbgDIAMN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Apr 2020 20:12:08 -0400
-Received: from mga07.intel.com ([134.134.136.100]:61592 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726527AbgDIAMH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Apr 2020 20:12:07 -0400
-IronPort-SDR: ND5DkgcL+z7gVwp3XABxUt63eoTIeZKdnsHqh0FdJ5Vp/E6CxN0XM4YilMarkFcIggPm6Aofzk
- HmZwWPOofR7g==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Apr 2020 17:12:07 -0700
-IronPort-SDR: C0qu+JybDG0QthltkoJTdCtv80Mb6QfdGXNwCVFyt5H3gZHhGU+0LzHSeJ7Zf5tdCc/C6gKDGD
- EghjE+0adNwg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,360,1580803200"; 
-   d="scan'208";a="240456460"
-Received: from iweiny-desk2.sc.intel.com ([10.3.52.147])
-  by orsmga007.jf.intel.com with ESMTP; 08 Apr 2020 17:12:07 -0700
-Date:   Wed, 8 Apr 2020 17:12:06 -0700
-From:   Ira Weiny <ira.weiny@intel.com>
-To:     Dave Chinner <david@fromorbit.com>
-Cc:     linux-kernel@vger.kernel.org,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Christoph Hellwig <hch@lst.de>,
-        "Theodore Y. Ts'o" <tytso@mit.edu>, Jan Kara <jack@suse.cz>,
-        Jeff Moyer <jmoyer@redhat.com>, linux-ext4@vger.kernel.org,
-        linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH V6 6/8] fs/xfs: Combine xfs_diflags_to_linux() and
- xfs_diflags_to_iflags()
-Message-ID: <20200409001206.GD664132@iweiny-DESK2.sc.intel.com>
-References: <20200407182958.568475-1-ira.weiny@intel.com>
- <20200407182958.568475-7-ira.weiny@intel.com>
- <20200408020827.GI24067@dread.disaster.area>
- <20200408170923.GC569068@iweiny-DESK2.sc.intel.com>
- <20200408210236.GK24067@dread.disaster.area>
- <20200408220734.GA664132@iweiny-DESK2.sc.intel.com>
- <20200408232106.GO24067@dread.disaster.area>
+        Wed, 8 Apr 2020 20:12:13 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:55698 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726527AbgDIAML (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Apr 2020 20:12:11 -0400
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 0390C2dp005178;
+        Wed, 8 Apr 2020 19:12:02 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1586391122;
+        bh=9i/GAF4Awy59qEaFva0CSCYrMZyXLcHnSjOjiKl9CU8=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=vW917R9gWvjoRlumgNZe1beM3s2W5JeH88gmxNPLnQh0kh/jMqDMB+KMfxiFf+aox
+         EZOjOWWg/uP/lEgfzdxL9WpIaiHP+hFMfphPd/PXyICPGK5vUDJkezJOC0sSokHhCH
+         vH84VpgwmR1W0MMWrxkmeQlvy9Pw6901K2C5C+NY=
+Received: from DFLE102.ent.ti.com (dfle102.ent.ti.com [10.64.6.23])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 0390C2Jv094469
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 8 Apr 2020 19:12:02 -0500
+Received: from DFLE102.ent.ti.com (10.64.6.23) by DFLE102.ent.ti.com
+ (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Wed, 8 Apr
+ 2020 19:12:01 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE102.ent.ti.com
+ (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Wed, 8 Apr 2020 19:12:01 -0500
+Received: from [10.250.86.212] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 0390C0BA018737;
+        Wed, 8 Apr 2020 19:12:01 -0500
+Subject: Re: [PATCH 3/7] dt-bindings: remoteproc: Add bindings for R5F
+ subsystem on TI K3 SoCs
+To:     Mathieu Poirier <mathieu.poirier@linaro.org>
+CC:     Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Lokesh Vutla <lokeshvutla@ti.com>,
+        <linux-remoteproc@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>
+References: <20200324201819.23095-1-s-anna@ti.com>
+ <20200324201819.23095-4-s-anna@ti.com> <20200406195915.GB11572@xps15>
+From:   Suman Anna <s-anna@ti.com>
+Message-ID: <761b34e4-b9c7-7c4c-540c-a917896a62ba@ti.com>
+Date:   Wed, 8 Apr 2020 19:12:00 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200408232106.GO24067@dread.disaster.area>
-User-Agent: Mutt/1.11.1 (2018-12-01)
+In-Reply-To: <20200406195915.GB11572@xps15>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 09, 2020 at 09:21:06AM +1000, Dave Chinner wrote:
-> On Wed, Apr 08, 2020 at 03:07:35PM -0700, Ira Weiny wrote:
-> > On Thu, Apr 09, 2020 at 07:02:36AM +1000, Dave Chinner wrote:
-> > > On Wed, Apr 08, 2020 at 10:09:23AM -0700, Ira Weiny wrote:
-> > 
-> > [snip]
-> > 
-> > > > 
-> > > > This sounds good but I think we need a slight modification to make the function equivalent in functionality.
-> > > > 
-> > > > void
-> > > > xfs_diflags_to_iflags(
-> > > >         struct xfs_inode        *ip,
-> > > >         bool init)
-> > > > {
-> > > >         struct inode            *inode = VFS_I(ip);
-> > > >         unsigned int            xflags = xfs_ip2xflags(ip);
-> > > >         unsigned int            flags = 0;
-> > > > 
-> > > >         inode->i_flags &= ~(S_IMMUTABLE | S_APPEND | S_SYNC | S_NOATIME |
-> > > >                             S_DAX);
-> > > 
-> > > We don't want to clear the dax flag here, ever, if it is already
-> > > set. That is an externally visible change and opens us up (again) to
-> > > races where IS_DAX() changes half way through a fault path. IOWs, avoiding
-> > > clearing the DAX flag was something I did explicitly in the above
-> > > code fragment.
-> > 
-> > <sigh> yes... you are correct.
-> > 
-> > But I don't like depending on the caller to clear the S_DAX flag if
-> > xfs_inode_enable_dax() is false.  IMO this function should clear the flag in
-> > that case for consistency...
+Hi Mathieu,
+
+On 4/6/20 2:59 PM, Mathieu Poirier wrote:
+> On Tue, Mar 24, 2020 at 03:18:15PM -0500, Suman Anna wrote:
+>> The Texas Instruments K3 family of SoCs have one or more dual-core
+>> Arm Cortex R5F processor subsystems/clusters (R5FSS). The clusters
+>> can be split between multiple voltage domains as well. Add the device
+>> tree bindings document for these R5F subsystem devices. These R5F
+>> processors do not have an MMU, and so require fixed memory carveout
+>> regions matching the firmware image addresses. The nodes require more
+>> than one memory region, with the first memory region used for DMA
+>> allocations at runtime. The remaining memory regions are reserved
+>> and are used for the loading and running of the R5F remote processors.
+>> The R5F processors can also optionally use any internal on-chip SRAM
+>> memories either for executing code or using it as fast-access data.
+>>
+>> The added example illustrates the DT nodes for the single R5FSS device
+>> present on K3 AM65x family of SoCs.
+>>
+>> Signed-off-by: Suman Anna <s-anna@ti.com>
+>> ---
+>> Hi Rob,
+>>
+>> The dt_bindings_check seems to throw couple of warnings around the
+>> usage of ranges because the tooling is adding the #address-cells
+>> and #size-cells of 1 by default, whereas our actual code uses 2.
+>> No issues are found with dtbs_check.
+>>
+>> regards
+>> Suman
+>>
+>>  .../bindings/remoteproc/ti,k3-r5f-rproc.yaml  | 338 ++++++++++++++++++
+>>  1 file changed, 338 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/remoteproc/ti,k3-r5f-rproc.yaml
+>>
+>> diff --git a/Documentation/devicetree/bindings/remoteproc/ti,k3-r5f-rproc.yaml b/Documentation/devicetree/bindings/remoteproc/ti,k3-r5f-rproc.yaml
+>> new file mode 100644
+>> index 000000000000..bbfc1e6ae884
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/remoteproc/ti,k3-r5f-rproc.yaml
+>> @@ -0,0 +1,338 @@
+>> +# SPDX-License-Identifier: (GPL-2.0-only or BSD-2-Clause)
+>> +%YAML 1.2
+>> +---
+>> +$id: http://devicetree.org/schemas/remoteproc/ti,k3-r5f-rproc.yaml#
+>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+>> +
+>> +title: TI K3 R5F processor subsystems
+>> +
+>> +maintainers:
+>> +  - Suman Anna <s-anna@ti.com>
+>> +
+>> +description: |
+>> +  The TI K3 family of SoCs usually have one or more dual-core Arm Cortex R5F
+>> +  processor subsystems/clusters (R5FSS). The dual core cluster can be used
+>> +  either in a LockStep mode providing safety/fault tolerance features or in a
+>> +  Split mode providing two individual compute cores for doubling the compute
+>> +  capacity. These are used together with other processors present on the SoC
+>> +  to achieve various system level goals.
+>> +
+>> +  Each Dual-Core R5F sub-system is represented as a single DTS node
+>> +  representing the cluster, with a pair of child DT nodes representing
+>> +  the individual R5F cores. Each node has a number of required or optional
+>> +  properties that enable the OS running on the host processor to perform
+>> +  the device management of the remote processor and to communicate with the
+>> +  remote processor.
+>> +
+>> +# Required properties:
+>> +# --------------------
+>> +# The following are the mandatory properties:
+>> +
+>> +properties:
+>> +  $nodename:
+>> +    pattern: "^r5fss(@.*)?"
+>> +
+>> +  compatible:
+>> +    enum:
+>> +      - ti,am654-r5fss
+>> +      - ti,j721e-r5fss
+>> +
+>> +  power-domains:
+>> +    description: |
+>> +      Should contain a phandle to a PM domain provider node and an args
+>> +      specifier containing the R5FSS device id value. This property is
+>> +      as per the binding,
+>> +      Documentation/devicetree/bindings/soc/ti/sci-pm-domain.txt
+>> +    maxItems: 1
+>> +
+>> +  "#address-cells":
+>> +    const: 1
+>> +
+>> +  "#size-cells":
+>> +    const: 1
+>> +
+>> +  ranges:
+>> +    description: |
+>> +      Standard ranges definition providing address translations for
+>> +      local R5F TCM address spaces to bus addresses.
+>> +
+>> +# Optional properties:
+>> +# --------------------
+>> +
+>> +  lockstep-mode:
+>> +    $ref: /schemas/types.yaml#/definitions/uint32
+>> +    enum: [0, 1]
+>> +    description: |
+>> +      Configuration Mode for the Dual R5F cores within the R5F
+>> +      cluster. Should be either a value of 1 (LockStep mode) or
+>> +      0 (Split mode), default is LockStep mode if omitted.
 > 
-> No. We simply cannot do that here except in the init case when the
-> inode is not yet visible to userspace. In which case, we know -for
-> certain- that the S_DAX is not set, and hence we do not need to
-> clear it. Initial conditions matter!
-> 
-> If you want to make sure of this, add this:
-> 
-> 	ASSERT(!(IS_DAX(inode) && init));
-> 
-> And now we'll catch inodes that incorrectly have S_DAX set at init
-> time.
+> Should I deduce lockstep means SMP and split mode two processors running in UP
+> mode?
 
-Ok, that will work.  Also documents that expected initial condition.
-
-> 
-> > > memory S_DAX flag, we can actually clear the on-disk flag
-> > > safely, so that next time the inode cycles into memory it won't
-> > > be using DAX. IOWs, admins can stop the applications, clear the
-> > > DAX flag and drop caches. This should result in the inode being
-> > > recycled and when the app is restarted it will run without DAX.
-> > > No ned for deleting files, copying large data sets, etc just to
-> > > turn off an inode flag.
-> > 
-> > We already discussed evicting the inode and it was determined to
-> > be too confusing.[*]
-> 
-> That discussion did not even consider how admins are supposed to
-> clear the inode flag once it is set on disk.
-
-I think this is a bit unfair.  I think we were all considering it...  and I
-still think this patch set is a step in the right direction.
-
-> It was entirely
-> focussed around "we can't change in memory S_DAX state"
-
-Not true.  There were many ideas on how to change the FS_XFLAG_DAX with some
-sort of delayed S_DAX state to avoid changing S_DAX on an in memory inode.
-
-I made the comment:
-
-	"... I want to clarify.  ...  we could have the flag change with an
-	appropriate error which could let the user know the change has been
-	delayed."
-
-	-- https://lore.kernel.org/lkml/20200402205518.GF3952565@iweiny-DESK2.sc.intel.com/
-
-Jan made multiple comments:
-
-	"I generally like the proposal but I think the fact that toggling
-	FS_XFLAG_DAX will not have immediate effect on S_DAX will cause quite
-	some confusion and ultimately bug reports."
-
-	-- https://lore.kernel.org/lkml/20200401102511.GC19466@quack2.suse.cz/
-
-
-	"Just switch FS_XFLAG_DAX flag, S_DAX flag will magically switch when
-	inode gets evicted and the inode gets reloaded from the disk again. Did
-	I misunderstand anything?
-
-	And my thinking was that this is surprising behavior for the user and
-	so it will likely generate lots of bug reports along the lines of "DAX
-	inode flag does not work!"."
-
-	-- https://lore.kernel.org/lkml/20200403170338.GD29920@quack2.suse.cz/
-
-Darrick also had similar ideas/comments.
-
-Christoph did say:
-
-	"A reasonably smart application can try to evict itself."
-
-	-- https://lore.kernel.org/lkml/20200403072731.GA24176@lst.de/
-
-Which I was unclear about???
-
-Christoph does this mean you would be ok with changing the FS_XFLAG_DAX on disk
-and letting S_DAX change later?
-
-> and how the
-> tri-state mount option to "override" the on-disk flag could be done.
-> 
-> Nobody noticed that being unable to rmeove the on-disk flag means
-> the admin's only option to turn off dax for an application is to
-> turn it off for everything, filesystem wide, which requires:
-
-No. This is not entirely true.  While I don't like the idea of having to copy
-data (and I agree with your points) it is possible to do.
+No, slightly different from SMP. It is a safety/fault-tolerance mode,
+the 2 cores run the same code, and then the output is compared, and an
+error is thrown if they yield different results.
 
 > 
-> 	1. stopping the app.
-> 	2. stopping every other app using the filesystem
-> 	3. unmounting the filesystem
-> 	4. changing to dax=never mount option
+>> +
+>> +# R5F Processor Child Nodes:
+>> +# ==========================
+>> +
+>> +patternProperties:
+>> +  "^r5f@[a-f0-9]+$":
+>> +    type: object
+>> +    description: |
+>> +        The R5F Sub-System device node should define two R5F child nodes, each
+>> +        node representing a TI instantiation of the Arm Cortex R5F core. There
+>> +        are some specific integration differences for the IP like the usage of
+>> +        a Region Address Translator (RAT) for translating the larger SoC bus
+>> +        addresses into a 32-bit address space for the processor.
+>> +
+>> +# Required properties:
+>> +# --------------------
+>> +# The following are the mandatory properties:
+>> +
+>> +    properties:
+>> +      compatible:
+>> +        enum:
+>> +          - ti,am654-r5f
+>> +          - ti,j721e-r5f
+>> +
+>> +      reg:
+>> +        description: |
+>> +          Should contain an entry for each value in 'reg-names'.
+>> +          Each entry should have the memory region's start address
+>> +          and the size of the region, the representation matching
+>> +          the parent node's '#address-cells' and '#size-cells' values.
+>> +        maxItems: 2
+>> +
+>> +      reg-names:
+>> +        description: |
+>> +          Should contain strings with the names of the specific internal
+>> +          internal memory regions, and should be defined in this order
+> 
+> There is two "internal" in a row.
 
-I don't understand why we need to unmount and mount with dax=never?
-
-> 	5. mounting the filesystem
-> 	6. restarting all apps.
-> 
-> It's a hard stop for everything using the filesystem, and it changes
-> the runtime environment for all applications, not just the one that
-> needs DAX turned off.  Not to mention that if it's the root
-> filesystem that is using DAX, then it's a full system reboot needed
-> to change the mount options.
-> 
-> IMO, this is a non-starter from a production point of view - testing
-> and qualification of all applications rather than just the affected
-> app is required to make this sort of change.  It simply does not
-> follow the "minimal change to fix the problem" rules for managing
-> issues in production environments.
-> 
-> So, pLease explain to me how this process:
-> 
-> 	1. stop the app
-> 	2. remove inode flags via xfs_io
-> 	3. run drop_caches
-> 	4. start the app
-> 
-> is worse than requiring admins to unmount the filesystem to turn off
-> DAX for an application.
-
-Jan?  Christoph?
+Thanks, will fix it up.
 
 > 
-> > Furthermore, if we did want an interface like that why not allow
-> > the on-disk flag to be set as well as cleared?
+>> +        maxItems: 2
+>> +        items:
+>> +          - const: atcm
+>> +          - const: btcm
+>> +
+>> +      ti,sci:
+>> +        $ref: /schemas/types.yaml#/definitions/phandle
+>> +        description:
+>> +          Should be a phandle to the TI-SCI System Controller node
+>> +
+>> +      ti,sci-dev-id:
+>> +        $ref: /schemas/types.yaml#/definitions/uint32
+>> +        description: |
+>> +          Should contain the TI-SCI device id corresponding to the R5F core.
+>> +          Please refer to the corresponding System Controller documentation
+>> +          for valid values for the R5F cores.
+>> +
+>> +      ti,sci-proc-ids:
+>> +        description: Should contain a single tuple of <proc_id host_id>.
+>> +        allOf:
+>> +          - $ref: /schemas/types.yaml#/definitions/uint32-matrix
+>> +          - maxItems: 1
+>> +            items:
+>> +              items:
+>> +                - description: TI-SCI processor id for the R5F core device
+>> +                - description: TI-SCI host id to which processor control
+>> +                               ownership should be transferred to
+>> +
+>> +      resets:
+>> +        description: |
+>> +          Should contain the phandle to the reset controller node
+>> +          managing the resets for this device, and a reset
+>> +          specifier. Please refer to the following reset bindings
+>> +          for the reset argument specifier,
+>> +          Documentation/devicetree/bindings/reset/ti,sci-reset.txt
+>> +            for AM65x and J721E SoCs
+>> +
+>> +      firmware-name:
+>> +        description: |
+>> +          Should contain the name of the default firmware image
+>> +          file located on the firmware search path
+>> +
+>> +# The following properties are mandatory for R5F Core0 in both LockStep and Split
+>> +# modes, and are mandatory for R5F Core1 _only_ in Split mode. They are unused for
+>> +# R5F Core1 in LockStep mode:
+>> +
+>> +      mboxes:
+>> +        description: |
+>> +          OMAP Mailbox specifier denoting the sub-mailbox, to be used for
+>> +          communication with the remote processor. This property should match
+>> +          with the sub-mailbox node used in the firmware image. The specifier
+>> +          format is as per the bindings,
+>> +          Documentation/devicetree/bindings/mailbox/omap-mailbox.txt
 > 
-> Well, why not - it's why I implemented the flag in the first place!
-> The only problem we have here is how to safely change the in-memory
-> DAX state, and that largely has nothing to do with setting/clearing
-> the on-disk flag....
+> In the example below node "mcu_r5f1" has a "mboxes" property despite being in lockstep mode.  I
+> haven't delved in the code yet, perharps I'll find an answer in there.
 
-With the above change to xfs_diflags_to_iflags() I think we are ok here.
+Yeah, it is defined, but won't be parsed or used if the cluster is in
+lockstep mode as my comment above says. The lockstep capability is an
+efuse bit, so on some SoC variants, which do not have the capability,
+the cluster is hard-wired for Split-mode only. And we detect that in the
+driver irrespective of the lockstep-mode value.
 
-Ira
+> 
+>> +
+>> +      memory-region:
+>> +        minItems: 2
+>> +        description: |
+>> +          phandle to the reserved memory nodes to be associated with the remoteproc
+>> +          device. There should be atleast two reserved memory nodes defined - the
+> 
+> s/atleast/at least
+
+OK
+
+> 
+>> +          first one would be used for dynamic DMA allocations like vrings and vring
+>> +          buffers, and the remaining ones used for the firmware image sections. The
+>> +          reserved memory nodes should be carveout nodes, and should be defined as
+>> +          per the bindings in
+>> +          Documentation/devicetree/bindings/reserved-memory/reserved-memory.txt
+>> +
+>> +# Optional properties:
+>> +# --------------------
+>> +# The following properties are optional properties for each of the R5F cores:
+>> +
+>> +      atcm-enable:
+>> +        $ref: /schemas/types.yaml#/definitions/uint32
+>> +        enum: [0, 1]
+>> +        description: |
+>> +          R5F core configuration mode dictating if ATCM should be enabled. R5F
+>> +          view of ATCM dictated by loczrama property. Should be either a value
+>> +          of 1 (enabled) or 0 (disabled), default is disabled if omitted.
+> 
+> What is ATCM and why would one want to enable the feature?
+
+TCM stands for Tightly Coupled Memory (an internal RAM memory
+essentially), and R5 supports two such bank interfaces called A and B.
+Some of the specs use TCMA or TCMB as well.
+
+> 
+>> +
+>> +      btcm-enable:
+>> +        $ref: /schemas/types.yaml#/definitions/uint32
+>> +        enum: [0, 1]
+>> +        description: |
+>> +          R5F core configuration mode dictating if BTCM should be enabled. R5F
+>> +          view of BTCM dictated by loczrama property. Should be either a value
+>> +          of 1 (enabled) or 0 (disabled), default is enabled if omitted.
+> 
+> Same here, there is no way to tell what BTCM is.
+> 
+>> +
+>> +      loczrama:
+>> +        $ref: /schemas/types.yaml#/definitions/uint32
+>> +        enum: [0, 1]
+>> +        description: |
+>> +          R5F core configuration mode dictating which TCM should appear at
+>> +          address 0 (from core's view). Should be either a value of 1 (ATCM
+>> +          at 0x0) or 0 (BTCM at 0x0), default value is 1 if omitted.
+> 
+> loczrama: Location Zero Ram Address? 
+
+Guess so. I never found the expansion.
+
+ Can both core show up at the address 0x0?
+> In the example below both cores have the same setting for atcm, btcm and
+> loczrama.
+
+Each core has their own ATCM, BTCM and loczrama settings and are
+effective in Split-mode. Only Core0 memories and settings are used in
+LockStep mode.
+
+> 
+>> +
+>> +      sram:
+>> +        $ref: /schemas/types.yaml#/definitions/phandle-array
+>> +        minItems: 1
+>> +        description: |
+>> +          pHandles to one or more reserved on-chip SRAM region. The regions
+>> +          should be defined as child nodes of the respective SRAM node, and
+>> +          should be defined as per the generic bindings in,
+>> +          Documentation/devicetree/bindings/sram/sram.yaml
+> 
+> Is the behaviour the same whether operating in locksetup mode and split mode?
+
+This is per core. So, just like mboxes, will be unused on Core1 if the
+cluster is configured for LockStep mode.
+
+regards
+Suman
+
+> 
+> Thanks,
+> Mathieu
+> 
+>> +
+>> +    required:
+>> +     - compatible
+>> +     - reg
+>> +     - reg-names
+>> +     - ti,sci
+>> +     - ti,sci-dev-id
+>> +     - ti,sci-proc-ids
+>> +     - resets
+>> +     - firmware-name
+>> +
+>> +    additionalProperties: false
+>> +
+>> +required:
+>> + - compatible
+>> + - power-domains
+>> + - "#address-cells"
+>> + - "#size-cells"
+>> + - ranges
+>> +
+>> +additionalProperties: false
+>> +
+>> +examples:
+>> +  - |
+>> +
+>> +    //Example: AM654 SoC
+>> +    /* R5F DDR Carveout reserved memory nodes */
+>> +    reserved-memory {
+>> +        #address-cells = <2>;
+>> +        #size-cells = <2>;
+>> +        ranges;
+>> +
+>> +        mcu_r5fss0_core1_dma_memory_region: r5f-dma-memory@9b000000 {
+>> +            compatible = "shared-dma-pool";
+>> +            reg = <0x00 0x9b000000 0x00 0x100000>;
+>> +            no-map;
+>> +        };
+>> +
+>> +        mcu_r5fss0_core1_memory_region: r5f-memory@9b100000 {
+>> +            compatible = "shared-dma-pool";
+>> +            reg = <0x00 0x9b100000 0x00 0xf00000>;
+>> +            no-map;
+>> +        };
+>> +
+>> +        mcu_r5fss0_core0_dma_memory_region: r5f-dma-memory@9c000000 {
+>> +            compatible = "shared-dma-pool";
+>> +            reg = <0x00 0x9c000000 0x00 0x100000>;
+>> +            no-map;
+>> +        };
+>> +
+>> +        mcu_r5fss0_core0_memory_region: r5f-memory@9c100000 {
+>> +            compatible = "shared-dma-pool";
+>> +            reg = <0x00 0x9c100000 0x00 0x700000>;
+>> +            no-map;
+>> +        };
+>> +    };
+>> +
+>> +    cbass_main: interconnect@100000 {
+>> +        compatible = "simple-bus";
+>> +        #address-cells = <2>;
+>> +        #size-cells = <2>;
+>> +        ranges = <0x00 0x41000000 0x00 0x41000000 0x00 0x00020000>,
+>> +                 <0x00 0x41400000 0x00 0x41400000 0x00 0x00020000>,
+>> +                 <0x00 0x41c00000 0x00 0x41c00000 0x00 0x00080000>;
+>> +
+>> +        cbass_mcu: interconnect@28380000 {
+>> +            compatible = "simple-bus";
+>> +            #address-cells = <2>;
+>> +            #size-cells = <2>;
+>> +            ranges = <0x00 0x41000000 0x00 0x41000000 0x00 0x00020000>, /* MCU R5F Core0 */
+>> +                     <0x00 0x41400000 0x00 0x41400000 0x00 0x00020000>, /* MCU R5F Core1 */
+>> +                     <0x00 0x41c00000 0x00 0x41c00000 0x00 0x00080000>; /* MCU SRAM */
+>> +
+>> +            /* MCU domain SRAM node */
+>> +            mcu_ram: mcu-ram@41c00000 {
+>> +                compatible = "mmio-sram";
+>> +                reg = <0x00 0x41c00000 0x00 0x80000>;
+>> +                ranges = <0x0 0x00 0x41c00000 0x80000>;
+>> +                #address-cells = <1>;
+>> +                #size-cells = <1>;
+>> +
+>> +                mcu_r5fss0_core0_sram: r5f-sram@0 {
+>> +                    reg = <0x0 0x40000>;
+>> +                };
+>> +            };
+>> +
+>> +            /* AM65x MCU R5FSS node */
+>> +            mcu_r5fss0: r5fss@41000000 {
+>> +                compatible = "ti,am654-r5fss";
+>> +                power-domains = <&k3_pds 129>;
+>> +                lockstep-mode = <1>;
+>> +                #address-cells = <1>;
+>> +                #size-cells = <1>;
+>> +                ranges = <0x41000000 0x00 0x41000000 0x20000>,
+>> +                         <0x41400000 0x00 0x41400000 0x20000>;
+>> +
+>> +                mcu_r5f0: r5f@41000000 {
+>> +                    compatible = "ti,am654-r5f";
+>> +                    reg = <0x41000000 0x00008000>,
+>> +                          <0x41010000 0x00008000>;
+>> +                    reg-names = "atcm", "btcm";
+>> +                    ti,sci = <&dmsc>;
+>> +                    ti,sci-dev-id = <159>;
+>> +                    ti,sci-proc-ids = <0x01 0xFF>;
+>> +                    resets = <&k3_reset 159 1>;
+>> +                    firmware-name = "am65x-mcu-r5f0_0-fw";
+>> +                    atcm-enable = <1>;
+>> +                    btcm-enable = <1>;
+>> +                    loczrama = <1>;
+>> +                    mboxes = <&mailbox0 &mbox_mcu_r5fss0_core0>;
+>> +                    memory-region = <&mcu_r5fss0_core0_dma_memory_region>,
+>> +                                    <&mcu_r5fss0_core0_memory_region>;
+>> +                    sram = <&mcu_r5fss0_core0_sram>;
+>> +                };
+>> +
+>> +                mcu_r5f1: r5f@41400000 {
+>> +                    compatible = "ti,am654-r5f";
+>> +                    reg = <0x41400000 0x00008000>,
+>> +                          <0x41410000 0x00008000>;
+>> +                    reg-names = "atcm", "btcm";
+>> +                    ti,sci = <&dmsc>;
+>> +                    ti,sci-dev-id = <245>;
+>> +                    ti,sci-proc-ids = <0x02 0xFF>;
+>> +                    resets = <&k3_reset 245 1>;
+>> +                    firmware-name = "am65x-mcu-r5f0_1-fw";
+>> +                    atcm-enable = <1>;
+>> +                    btcm-enable = <1>;
+>> +                    loczrama = <1>;
+>> +                    mboxes = <&mailbox1 &mbox_mcu_r5fss0_core1>;
+>> +               };
+>> +           };
+>> +        };
+>> +    };
+>> -- 
+>> 2.23.0
+>>
 
