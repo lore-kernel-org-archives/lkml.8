@@ -2,144 +2,107 @@ Return-Path: <SRS0=n+Ub=5Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43CA3C2BA19
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 22:18:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71E35C2BA19
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 22:19:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 253052087E
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 22:18:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3704F20692
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 22:19:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ayC55L88"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726934AbgDIWS1 convert rfc822-to-8bit (ORCPT
+        id S1726924AbgDIWTW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Apr 2020 18:18:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56360 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726632AbgDIWS1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Apr 2020 18:18:27 -0400
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E7509206F7;
-        Thu,  9 Apr 2020 22:18:24 +0000 (UTC)
-Date:   Thu, 9 Apr 2020 18:18:23 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     Nadav Amit <nadav.amit@gmail.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        mingo@redhat.com, bp@alien8.de, hpa@zytor.com, x86@kernel.org,
-        kenny@panix.com, jeyu@kernel.org, rasmus.villemoes@prevas.dk,
-        fenghua.yu@intel.com, xiaoyao.li@intel.com, thellstrom@vmware.com,
-        tony.luck@intel.com, gregkh@linuxfoundation.org, jannh@google.com,
-        keescook@chromium.org, David.Laight@aculab.com,
-        dcovelli@vmware.com, mhiramat@kernel.org
-Subject: Re: [PATCH 4/4] x86,module: Detect CRn and DRn manipulation
-Message-ID: <20200409181823.00bcd14a@gandalf.local.home>
-In-Reply-To: <87imi8pdl9.fsf@nanos.tec.linutronix.de>
-References: <20200407110236.930134290@infradead.org>
-        <20200407111007.429362016@infradead.org>
-        <20200408092726.7c2bda01@gandalf.local.home>
-        <20200408154419.GP20730@hirez.programming.kicks-ass.net>
-        <20200408154602.GA24869@infradead.org>
-        <2b0dc69c-f7f9-985d-fc40-8b7bbd927e4f@redhat.com>
-        <20200409085632.GB20713@hirez.programming.kicks-ass.net>
-        <9A25271A-71F7-4EA1-9D1C-23B53E35C281@gmail.com>
-        <87imi8pdl9.fsf@nanos.tec.linutronix.de>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Thu, 9 Apr 2020 18:19:22 -0400
+Received: from mail-qk1-f194.google.com ([209.85.222.194]:37907 "EHLO
+        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726714AbgDIWTW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Apr 2020 18:19:22 -0400
+Received: by mail-qk1-f194.google.com with SMTP id h14so442681qke.5
+        for <linux-kernel@vger.kernel.org>; Thu, 09 Apr 2020 15:19:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=yF+4ifTZpgac0AbgqyHYOhjvKVGLdZBmX5qyHKVLzpw=;
+        b=ayC55L881C6xg8HNUeEsEsdG+JjdxCnjA7UteuNLnWVIETAYJFL0syDwTwbXrwKNQL
+         aTbVmOYsLBPrcWQXkiUI0SCP1s+aJ1i08TjGVWGMvHeLKysNIYCnLC7eb32KIrzy/Tiu
+         v4nq50XzsOXfMouLuH1upugXdP8A3MXgtAKvbyjlMVcufRn2qSZiqRMbthmhcuouwzuC
+         7YsB3TGQSigp5bYimeU9pryCMNu2H2HJzm8+B0E5BHgrFb0VgT2CZTMzWvGtZIALp9g8
+         k/jv+Klv0FmpvLvIuFG3AKlNFlBeo3LnegGrWnxxKuEtfuZljPdSScQR/+iEm/RDMkzn
+         gCcA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:from:date:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to;
+        bh=yF+4ifTZpgac0AbgqyHYOhjvKVGLdZBmX5qyHKVLzpw=;
+        b=MKltCR+FBGsUkXJK63ufCUS/szqDa4o2JnjPdf7lWaVqN4aEFVcxvaz4vy2ycXsRH2
+         OpKrBsTIb+BBu1u+C1jfgI22EjRQ3QQEwj77EYS10nkb+qUXmG2JVosVSzAyfFCQbRtu
+         wh2bab+UuVim/jYddfITPEMV49swr5colVRVIZNbfY/SqiFsxaZUghXdPDUXJlNCei1n
+         OxSAFc/Bh90bB7I0iBxzOT93dv8wL55BJtpErjXbu8OSOi2Wgm82lmPrPQ5VeIAUjltw
+         JhvTBe+Mgr1HvpImrDjKX+hpvjhMhjxlnZXPlSbkRFcng6Q1hqhMCGT6WO0Za2WTIx5L
+         66zQ==
+X-Gm-Message-State: AGi0PualgO06LaU7sRzFs+hw4PgfcThRLbR4JlhaSHLaMfJy4IpO3hDN
+        e/swDlQCz6ubKavBrNUgHjc=
+X-Google-Smtp-Source: APiQypJrKv7Asjch32aD4xEpFDeOyjpzVmOBQiF/yaYfcx+nuoITzrJsRZSj7Udu9wt+ElHx97bWzQ==
+X-Received: by 2002:a37:ae04:: with SMTP id x4mr1187661qke.278.1586470762165;
+        Thu, 09 Apr 2020 15:19:22 -0700 (PDT)
+Received: from rani.riverdale.lan ([2001:470:1f07:5f3::b55f])
+        by smtp.gmail.com with ESMTPSA id z3sm180468qtq.7.2020.04.09.15.19.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 09 Apr 2020 15:19:21 -0700 (PDT)
+From:   Arvind Sankar <nivedita@alum.mit.edu>
+X-Google-Original-From: Arvind Sankar <arvind@rani.riverdale.lan>
+Date:   Thu, 9 Apr 2020 18:19:19 -0400
+To:     Arvind Sankar <nivedita@alum.mit.edu>
+Cc:     "Tobin C . Harding" <me@tobin.cc>, Tycho Andersen <tycho@tycho.ws>,
+        kernel-hardening@lists.openwall.com,
+        Kees Cook <keescook@chromium.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>, x86@kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] x86/mm/init: Stop printing pgt_buf addresses
+Message-ID: <20200409221919.GA1460035@rani.riverdale.lan>
+References: <20200229231120.1147527-1-nivedita@alum.mit.edu>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200229231120.1147527-1-nivedita@alum.mit.edu>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 09 Apr 2020 23:13:22 +0200
-Thomas Gleixner <tglx@linutronix.de> wrote:
-
-> Nadav Amit <nadav.amit@gmail.com> writes:
-> >> On Apr 9, 2020, at 1:56 AM, Peter Zijlstra <peterz@infradead.org> wrote:
-> >> Speaking with my virt ignorance hat on, how impossible is it to provide
-> >> generic/useful VMLAUNCH/VMRESUME wrappers?
-> >> 
-> >> Because a lot of what happens around VMEXIT/VMENTER is very much like
-> >> the userspace entry crud, as per that series from Thomas that fixes all
-> >> that. And surely we don't need various broken copies of that in all the
-> >> out-of-tree hypervisors.
-> >> 
-> >> Also, I suppose if you have this, we no longer need to excempt CR2.  
-> >
-> > It depends on what you mean by “VMLAUNCH/VMRESUME”. If you only consider the
-> > instructions themselves, as Sean did in vmx_vmenter() and vmx_vmexit(),
-> > there is no problem. Even if you consider saving the general purpose
-> > registers as done in __vmx_vcpu_run() - that’s relatively easy.  
+On Sat, Feb 29, 2020 at 06:11:20PM -0500, Arvind Sankar wrote:
+> This currently leaks kernel physical addresses into userspace.
 > 
-> __vmx_vcpu_run() is roughly the scope, but that wont work.
+> Signed-off-by: Arvind Sankar <nivedita@alum.mit.edu>
+> ---
+>  arch/x86/mm/init.c | 2 --
+>  1 file changed, 2 deletions(-)
 > 
-> Looking at the vmmon source:
-> 
-> Task_Switch()
-> 
->     1) Mask all APIC LVTs which have NMI delivery mode enabled, e.g. PERF
-> 
->     2) Disable interrupts
-> 
->     3) Disable PEBS
-> 
->     4) Disable PT
-> 
->     5) Load a magic IDT
-> 
->        According to comments these are stubs to catch any exception which
->        happens while switching over.
-> 
->     6) Write CR0 and CR4 directly which is "safe" as the the IDT is
->        redirected to the monitor stubs.
-> 
->     7) VMXON()
-> 
->     8) Invoke monitor on some magic page which switches CR3 and GDT and
->        clears CR4.PCIDE (at least thats what the comments claim)
-> 
->        The monitor code is loaded from a binary only blob and that does
->        the actual vmlaunch/vmresume ...
-
-From what I understand (never looked at the code), is that this binary blob
-is the same for Windows and Apple. It's basically its own operating system
-that does all the work and vmmon is the way to switch to and from it. When
-this blob gets an interrupt that it doesn't know about, it assumes it
-belongs to the operating system its sharing the machine with and exits back
-to it, whether that's Linux, Windows or OSX.
-
-It's not too unlike what jailhouse does with its hypervisor, to take over
-the machine and place the running Linux into its own "cell", except that it
-will switch full control of the machine back to Linux.
-
--- Steve
-
-
-> 
->        And as this runs with a completely different CR3 sharing that
->        code is impossible.
-> 
->     When returning the above is undone in reverse order and any catched
->     exceptions / interrupts are replayed via "int $NR".
-> 
-> So it's pretty much the same mess as with vbox just different and
-> binary. Oh well...
-> 
-> The "good" news is that it's not involved in any of the context tracking
-> stuff so RCU wont ever be affected when a vmware vCPU runs. It's not
-> pretty, but TBH I don't care.
-> 
-> Thanks,
-> 
->         tglx
+> diff --git a/arch/x86/mm/init.c b/arch/x86/mm/init.c
+> index e7bb483557c9..dc4711f09cdc 100644
+> --- a/arch/x86/mm/init.c
+> +++ b/arch/x86/mm/init.c
+> @@ -121,8 +121,6 @@ __ref void *alloc_low_pages(unsigned int num)
+>  	} else {
+>  		pfn = pgt_buf_end;
+>  		pgt_buf_end += num;
+> -		printk(KERN_DEBUG "BRK [%#010lx, %#010lx] PGTABLE\n",
+> -			pfn << PAGE_SHIFT, (pgt_buf_end << PAGE_SHIFT) - 1);
+>  	}
+>  
+>  	for (i = 0; i < num; i++) {
+> -- 
+> 2.24.1
 > 
 
+This was acked by Kees, is it ok for merge?
+
+Thanks.
