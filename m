@@ -2,138 +2,125 @@ Return-Path: <SRS0=n+Ub=5Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.3 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03535C2BA19
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 23:29:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D27D2C2BA19
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 23:29:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C885720757
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 23:28:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 782E72074F
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 23:29:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="B0EmNRpP"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="CMw1rUoM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726926AbgDIX26 (ORCPT
+        id S1726977AbgDIX34 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Apr 2020 19:28:58 -0400
-Received: from mail-pj1-f66.google.com ([209.85.216.66]:37976 "EHLO
-        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726726AbgDIX25 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Apr 2020 19:28:57 -0400
-Received: by mail-pj1-f66.google.com with SMTP id t40so129903pjb.3
-        for <linux-kernel@vger.kernel.org>; Thu, 09 Apr 2020 16:28:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=j6nOAWhXcgV50dfI2kOZff7IGheVzW2uE0Ud7W3fojM=;
-        b=B0EmNRpPG3qUZ3ki1VFuqMMc+PMOwSxu3W+99zScDTZqHZppWGVrXFypjNErcBcb7d
-         8su+rPppfd83ZmBiUPytOLnl4gEM7gf33O3I8Ox05Jc8EA3H3wCkqZ0HPDXom1Q4thVt
-         pRDSrZyUBqUTZ9sj4BnDE9pQO98BL1sBxGVaKQtHSUFFOIBQ0lcWLJvYjaNZrfq0q5O6
-         2BRBR3aKkqsYP9A0vqHGPHwx5TI2udc0xKgTFmNUMIvvB28/T85dkLmsEZGmM83SZPFC
-         zrGpQpiU+eYkjZ2k0+JOJQBWmrAqUaPcdCQ1lt7JzgrhfsFK5O3nQgRI9MEFtwWrlMfl
-         O/Nw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=j6nOAWhXcgV50dfI2kOZff7IGheVzW2uE0Ud7W3fojM=;
-        b=G8qx6V02RdEwZOcpxkG6CD7JNPRjQ6Y9dRCPQV0Co5dNzp1jiU3ozsAmbr/sH6dzTy
-         boOPgLLWniBPEJRtsG3cW/1qOWf8yWGt9jlVoYiPgZgzeMmAfiQikjQ0lieyaKUyxgbi
-         fd1N5RyocUcJuM2K4ziwuiTAbUVrW1XMr6gO6kTchfU03q+1SWdjpMiwVh2t7BBNdE/t
-         viLDeLDyAv4vb0Nz5DpyolusnO3NZELTUq8SjClczz4worljvjChj4injxqOb/4tjA5M
-         Kf+0Wi3Nn+XdW8CQS4tAenIJS+JoZcbZMzBnCfMgJGlretJjzNUmSg+DmXkiY4ORzXi8
-         1HoQ==
-X-Gm-Message-State: AGi0PuaY/yXStvQS/4GsrYYaQrUQNnumn1w5vQZKb8O5jeS/Brh22BFy
-        DQRwmSsRMWQyhnIpKMr9TSE=
-X-Google-Smtp-Source: APiQypJkOAJgzdjrZ5GN/MIDJIBjwRM9IlRGCSU88exDh+QlIZEQ6V2hqaTExMrzbHebhtP4DehuRw==
-X-Received: by 2002:a17:90b:3585:: with SMTP id mm5mr2132232pjb.168.1586474936962;
-        Thu, 09 Apr 2020 16:28:56 -0700 (PDT)
-Received: from jiancai.svl.corp.google.com ([2620:15c:2ce:0:b7ed:16a3:9dc0:21bb])
-        by smtp.googlemail.com with ESMTPSA id e14sm238783pjg.0.2020.04.09.16.28.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 09 Apr 2020 16:28:56 -0700 (PDT)
-From:   Jian Cai <caij2003@gmail.com>
-Cc:     caij2003@gmail.com, ndesaulniers@google.com, manojgupta@google.com,
-        Peter.Smith@arm.com, stefan@agner.ch, samitolvanen@google.com,
-        ilie.halip@gmail.com, jiancai@google.com,
-        Russell King <linux@armlinux.org.uk>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Linus Walleij <linus.walleij@linaro.org>,
+        Thu, 9 Apr 2020 19:29:56 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:42319 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726726AbgDIX34 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Apr 2020 19:29:56 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 48yy6T0V8cz9sQt;
+        Fri, 10 Apr 2020 09:29:52 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1586474993;
+        bh=TKjGe9gKiv6Kej7PZw0+u/oASCxTSPXYbxWhNVENMW0=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=CMw1rUoM3z/ZfPWNJw5dpEZ+0niu9Oioa18tVeD+7HHNpaUDiGNj0ahQyeA5Bqk25
+         f9pUJq32SmsxgBEAytupHNiCZm/5SNtjUicnAB78Qg9al+g05RaG3gqyoXpyDt2rqe
+         rI14D43JbOrlYKNz11Ywp/+kvtk03RLVfHf6/6HdOFcpKxZOD8DSLdZkziPKh8vRxg
+         WgHuiufz10BZqxGM0sfrNPeX8Vb7lBRpmqUC1GyHIWWbyOgI3OELXdWTPj8eBIbgxc
+         D3VEySgc5Nrq6vV7DAQdDMV76uv97n4DWJ0EFTe1JKbHMVbF3+2MOfllX8t1/YOhNF
+         Kd+YubpCBX/dQ==
+Date:   Fri, 10 Apr 2020 09:29:51 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Dmitry Vyukov <dvyukov@google.com>,
         Andrew Morton <akpm@linux-foundation.org>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Doug Anderson <armlinux@m.disordat.com>,
-        Benjamin Gaignard <benjamin.gaignard@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Tejun Heo <tj@kernel.org>,
-        "Joel Fernandes (Google)" <joel@joelfernandes.org>,
-        Patrick Bellasi <patrick.bellasi@arm.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        David Howells <dhowells@redhat.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        clang-built-linux@googlegroups.com
-Subject: [PATCH] ARM: do not assemble iwmmxt.S with LLVM toolchain
-Date:   Thu,  9 Apr 2020 16:27:26 -0700
-Message-Id: <20200409232728.231527-1-caij2003@gmail.com>
-X-Mailer: git-send-email 2.26.0.110.g2183baf09c-goog
+        Peter Xu <peterx@redhat.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux-MM <linux-mm@kvack.org>
+Subject: Re: [PATCH 0/2] mm: Two small fixes for recent syzbot reports
+Message-ID: <20200410092951.6db32bfe@canb.auug.org.au>
+In-Reply-To: <CAHk-=wgjGgfUfVm_DpTay5TS03pLCgUWqRpQS++90fSE2V-e=g@mail.gmail.com>
+References: <20200408014010.80428-1-peterx@redhat.com>
+        <20200408174732.bc448bbe41d190bfe5cc252e@linux-foundation.org>
+        <CACT4Y+bhQVcpSkSh_OZ5ZanfFZUqn2iypLhG_Z-nWKTkaYr1jw@mail.gmail.com>
+        <CAHk-=wgjGgfUfVm_DpTay5TS03pLCgUWqRpQS++90fSE2V-e=g@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To:     unlisted-recipients:; (no To-header on input)
+Content-Type: multipart/signed; boundary="Sig_/n_a=u.Ml/2pJE9BUl5munRl";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-iwmmxt.S contains XScale instructions LLVM ARM backend does not support.
-Skip this file if LLVM integrated assemmbler or LLD is used to build ARM
-kernel.
+--Sig_/n_a=u.Ml/2pJE9BUl5munRl
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Jian Cai <caij2003@gmail.com>
----
- arch/arm/Kconfig | 2 +-
- init/Kconfig     | 6 ++++++
- 2 files changed, 7 insertions(+), 1 deletion(-)
+Hi Linus,
 
-diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
-index 66a04f6f4775..39de8fc64a73 100644
---- a/arch/arm/Kconfig
-+++ b/arch/arm/Kconfig
-@@ -804,7 +804,7 @@ source "arch/arm/mm/Kconfig"
- 
- config IWMMXT
- 	bool "Enable iWMMXt support"
--	depends on CPU_XSCALE || CPU_XSC3 || CPU_MOHAWK || CPU_PJ4 || CPU_PJ4B
-+	depends on !AS_IS_CLANG && !LD_IS_LLD && (CPU_XSCALE || CPU_XSC3 || CPU_MOHAWK || CPU_PJ4 || CPU_PJ4B)
- 	default y if PXA27x || PXA3xx || ARCH_MMP || CPU_PJ4 || CPU_PJ4B
- 	help
- 	  Enable support for iWMMXt context switching at run time if
-diff --git a/init/Kconfig b/init/Kconfig
-index 1c12059e0f7e..b0ab3271e900 100644
---- a/init/Kconfig
-+++ b/init/Kconfig
-@@ -19,6 +19,12 @@ config GCC_VERSION
- config CC_IS_CLANG
- 	def_bool $(success,$(CC) --version | head -n 1 | grep -q clang)
- 
-+config AS_IS_CLANG
-+	def_bool $(success,$(AS) --version | head -n 1 | grep -q clang)
-+
-+config LD_IS_LLD
-+	def_bool $(success,$(LD) --version | head -n 1 | grep -q LLD)
-+
- config CLANG_VERSION
- 	int
- 	default $(shell,$(srctree)/scripts/clang-version.sh $(CC))
--- 
-2.26.0.110.g2183baf09c-goog
+On Thu, 9 Apr 2020 09:32:32 -0700 Linus Torvalds <torvalds@linux-foundation=
+.org> wrote:
+>
+> On Thu, Apr 9, 2020 at 5:55 AM Dmitry Vyukov <dvyukov@google.com> wrote:
+> >
+> > linux-next is boot-broken for more than a month and bugs are piling
+> > onto bugs, I've seen at least 3 different ones.
+> > syzbot can't get any working linux-next build for testing for a very
+> > long time now. =20
+>=20
+> Ouch.
+>=20
+> Ok, that's not good. It means that linux-next has basically only done
+> build-testing this whole cycle.
 
+Well, there are other CI's beyond syzbot .. Does syzbot only build/test
+a single kernel arch/config?
+
+> Stephen, Dmitry - is there some way linux-next could possibly kick out
+> trees more aggressively if syzbot can't even boot?
+
+Of course that could be done if I knew that there were problems.  From
+memory and my mail archives, I was only cc'd on 3 problems by sysbot
+since last November and they were all responded to by the appropriate
+maintainers/developers.
+
+Currently, when I am cc'd on reports, if they are also sent to who
+seem like the appropriate people, I just file the report assuming it
+will be dealt with.
+
+> Kicking trees out of linux-next and making noise if they cause syzbot
+> failures might also make some maintainers react more..
+
+That may be true, but in some cases I have carried fixups/reverts/older
+versions of trees for quite some time before things get fixed.  But at
+least if that happens, I do tend to remind people.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/n_a=u.Ml/2pJE9BUl5munRl
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl6Pr+8ACgkQAVBC80lX
+0GwCHgf/ZRqpSjhVVe+fYBrYmpnwfFnrL/Oh72lh7tck0j1YEjzwMCFBfN5pijAv
+WMI80UlZlDlj3L6ErGNnlkkHuQr+qDmXXPfPFGHXkVYKxf7Wm4653D+xjz5ON1qH
+ynkN7384PaKE/o23MokpEvxP8/l7pPMhT0nQeJtY76c/tPDaBVg5vN9cOH+4poZm
+KvExSzx242t12kd0m0tqCQSnnNVJKdOdZ5XJ/oCc8oaq8n8t095FfXM+TNffwHkg
+N+U17MlvBmmsOetOZ+MhV8BzKyixzKyYgDiNnn8FBgyhCcEae1LEeUaW0qM/um4V
+nPrJdvinKjPgPth7YtGGTcHG2iBMsw==
+=2xaa
+-----END PGP SIGNATURE-----
+
+--Sig_/n_a=u.Ml/2pJE9BUl5munRl--
