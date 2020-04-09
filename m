@@ -2,127 +2,81 @@ Return-Path: <SRS0=n+Ub=5Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6046C2BB54
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 07:59:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F7E6C2D0EA
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 07:59:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8EC3920678
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 07:59:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586419173;
-	bh=PnH5m1FDospWcQGC77SnK6HqxZHyM1JKFuCxGMduYno=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=16r1O++tpP1kUGP5lJdJRd89ctuz3J1xCTs4EnpKa0DFVaQWLGnC6GVA8QNuB39X8
-	 273FL1lh6wWfLG67i0dBm93BD8Y/LhXF1JA72j/vryzaWLePY1hmhGbcTvoWgW2d7h
-	 RMgxoEbF3BdQVXLbMwozVEkYEhlaqmv0iheUDQn4=
+	by mail.kernel.org (Postfix) with ESMTP id 4049420678
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 07:59:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726549AbgDIH7b (ORCPT
+        id S1726642AbgDIH7j (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Apr 2020 03:59:31 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:53703 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725828AbgDIH7b (ORCPT
+        Thu, 9 Apr 2020 03:59:39 -0400
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:36931 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725828AbgDIH7j (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Apr 2020 03:59:31 -0400
-Received: by mail-wm1-f68.google.com with SMTP id d77so2911314wmd.3
-        for <linux-kernel@vger.kernel.org>; Thu, 09 Apr 2020 00:59:30 -0700 (PDT)
+        Thu, 9 Apr 2020 03:59:39 -0400
+Received: by mail-ot1-f65.google.com with SMTP id g23so9616938otq.4
+        for <linux-kernel@vger.kernel.org>; Thu, 09 Apr 2020 00:59:39 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=7aTkrJXqv2ZbDFk7CEzBnxc6D6u1o+Ia6P0f4mFbFV8=;
-        b=RtBySiUDfA2Rebd9Q4iBdX15N5MYedefaju9wr4+DD+nv9V5/x5UqyfmWwkWuC1C33
-         4HMsuIIozI0v4xQvQJ3MsSbMi8n5EJgZIr9gnA0YB6bs4yA/PfeeRoQCB3VLaWrMnNJg
-         RbxATp88Vek9JZJZyuKYaWocI7LxpnV7NIYk1HKxhOS/jrgaQSWcr4kedJDfGNajUyO5
-         N7H/LkzoSR2u6ZXpHMHZBip/qDMA9u96yanq8hm0ZiyDOiNiLe+SgdlDekhpZa54j/Cj
-         HoCeuWRWaedDvpHW3Jgnb99ifcKbyTX52FNxh3u2t+LiwMZJ5V8dLTME8Wo+OWBjedZH
-         PPaw==
-X-Gm-Message-State: AGi0Pubgn2xVbf4Ykv2r6qjfhSgmpnT+NY8YLXAEM5CYCmYt14kTHITJ
-        fdq004jmMmqp4XllVzo2+iM=
-X-Google-Smtp-Source: APiQypLF3rX8q4/0ETJueh+0y6VY0OOa4Qm9U2dPCpWP+b4Cb0cvwVi9cfda2DXukoQvwZZcCvJTsQ==
-X-Received: by 2002:a7b:c8cd:: with SMTP id f13mr9019734wml.181.1586419170075;
-        Thu, 09 Apr 2020 00:59:30 -0700 (PDT)
-Received: from localhost (ip-37-188-180-223.eurotel.cz. [37.188.180.223])
-        by smtp.gmail.com with ESMTPSA id b82sm2901790wmh.1.2020.04.09.00.59.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 09 Apr 2020 00:59:28 -0700 (PDT)
-Date:   Thu, 9 Apr 2020 09:59:27 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Michael Ellerman <mpe@ellerman.id.au>
-Cc:     David Hildenbrand <david@redhat.com>, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, linuxppc-dev@lists.ozlabs.org,
-        Nathan Fontenot <nfont@linux.vnet.ibm.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Oscar Salvador <osalvador@suse.de>,
-        Baoquan He <bhe@redhat.com>,
-        Wei Yang <richard.weiyang@gmail.com>
-Subject: Re: [PATCH v1 1/2] powerpc/pseries/hotplug-memory: stop checking
- is_mem_section_removable()
-Message-ID: <20200409075927.GC18386@dhcp22.suse.cz>
-References: <20200407135416.24093-1-david@redhat.com>
- <20200407135416.24093-2-david@redhat.com>
- <87sghdjf1y.fsf@mpe.ellerman.id.au>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=odb2Q3M613rxo8OxAhrShA+WmuAEME3Qt4cAGc4SX3o=;
+        b=BTjvcRmVtr4B1hwHdox88ZHPDZcca7hdjvj1/FE2n1ZGPB7qGJu44jNUfImZBpw7po
+         p0lOTDvAv9CmcvIQ8vqfbcSaARloq4FZL4oWCqtWW2UCLNNigzxMwvLxyEsZFJxXIWWz
+         9UVElFX3biro47uaR/B0LLBlVRR5siiSsQUli2E4ekpAI21a56dwc8aUF1kJKOOc5v+6
+         Y2LHZPC5oD280QIQJhMKZAYrKdPqXEtT+5Zd69ejgWT2tcuU4pcTRFG8XfOdnUf8zojI
+         HKGbKwXHJfoxMzkbc8E2col2wOGCjsvIZynBU6nAaruO6P8Nfxgo8CFQ5efo67yq/+iy
+         SrHg==
+X-Gm-Message-State: AGi0PubPXKNfmcte41aXXox+YJ2KdxjfFYgwt2q60jW3yIDNUVRs4uZb
+        xZOU9FW0DVOQkVwh7W/EYiOk3o6orOLRXHKz1p5+oQ==
+X-Google-Smtp-Source: APiQypIwLGFr/jdWrggd9pMzZ8XzR9IDckoirhkGh/VmjMs+c/1i3ULZTSYcpQ0W+PMEd9n07j8F4mPg0hdjK9A8+Ds=
+X-Received: by 2002:a05:6830:1e0e:: with SMTP id s14mr1809269otr.107.1586419178787;
+ Thu, 09 Apr 2020 00:59:38 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87sghdjf1y.fsf@mpe.ellerman.id.au>
+References: <20200408143040.57458-1-max.krummenacher@toradex.com> <20200408143040.57458-3-max.krummenacher@toradex.com>
+In-Reply-To: <20200408143040.57458-3-max.krummenacher@toradex.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Thu, 9 Apr 2020 09:59:27 +0200
+Message-ID: <CAMuHMdV0Yj-ZbjfhhfmsYOfPo-D3ZOUyMJzpFV7n+5GNVLyZdQ@mail.gmail.com>
+Subject: Re: [PATCH v2 2/5] arm64: defconfig: add DRM_DISPLAY_CONNECTOR
+To:     Max Krummenacher <max.oss.09@gmail.com>
+Cc:     Max Krummenacher <max.krummenacher@toradex.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Will Deacon <will@kernel.org>, Olof Johansson <olof@lixom.net>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Anson Huang <Anson.Huang@nxp.com>,
+        Marcin Juszkiewicz <marcin.juszkiewicz@linaro.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Li Yang <leoyang.li@nxp.com>, Shawn Guo <shawnguo@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu 09-04-20 17:26:01, Michael Ellerman wrote:
-> David Hildenbrand <david@redhat.com> writes:
-> 
-> > In commit 53cdc1cb29e8 ("drivers/base/memory.c: indicate all memory
-> > blocks as removable"), the user space interface to compute whether a memory
-> > block can be offlined (exposed via
-> > /sys/devices/system/memory/memoryX/removable) has effectively been
-> > deprecated. We want to remove the leftovers of the kernel implementation.
-> >
-> > When offlining a memory block (mm/memory_hotplug.c:__offline_pages()),
-> > we'll start by:
-> > 1. Testing if it contains any holes, and reject if so
-> > 2. Testing if pages belong to different zones, and reject if so
-> > 3. Isolating the page range, checking if it contains any unmovable pages
-> >
-> > Using is_mem_section_removable() before trying to offline is not only racy,
-> > it can easily result in false positives/negatives. Let's stop manually
-> > checking is_mem_section_removable(), and let device_offline() handle it
-> > completely instead. We can remove the racy is_mem_section_removable()
-> > implementation next.
-> >
-> > We now take more locks (e.g., memory hotplug lock when offlining and the
-> > zone lock when isolating), but maybe we should optimize that
-> > implementation instead if this ever becomes a real problem (after all,
-> > memory unplug is already an expensive operation). We started using
-> > is_mem_section_removable() in commit 51925fb3c5c9 ("powerpc/pseries:
-> > Implement memory hotplug remove in the kernel"), with the initial
-> > hotremove support of lmbs.
-> 
-> It's also not very pretty in dmesg.
-> 
-> Before:
-> 
->   pseries-hotplug-mem: Attempting to hot-add 10 LMB(s)
->   pseries-hotplug-mem: Memory hot-add failed, removing any added LMBs
->   dlpar: Could not handle DLPAR request "memory add count 10"
+On Wed, Apr 8, 2020 at 4:30 PM Max Krummenacher <max.oss.09@gmail.com> wrote:
+> Add DRM_DISPLAY_CONNECTOR. This got introduced with the bridge rework
+> Which renamed among others DRM_DUMB_VGA_DAC.
+>
+> Signed-off-by: Max Krummenacher <max.krummenacher@toradex.com>
 
-Yeah, there is more output but isn't that useful? Or put it differently
-what is the actual problem from having those messages in the kernel log?
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-From the below you can clearly tell that there are kernel allocations
-which prevent hot remove from happening.
+Gr{oetje,eeting}s,
 
-If the overall size of the debugging output is a concern then we can
-think of a way to reduce it. E.g. once you have a couple of pages
-reported then all others from the same block are likely not interesting
-much.
+                        Geert
+
 -- 
-Michal Hocko
-SUSE Labs
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
