@@ -2,133 +2,135 @@ Return-Path: <SRS0=n+Ub=5Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4DC3C2BB86
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 15:10:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15FD3C2BA2B
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 15:10:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 79FBD2072F
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 15:10:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DE5502072F
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 15:10:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bHJ7fjU2"
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="rropwxWi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727993AbgDIPK2 (ORCPT
+        id S1728031AbgDIPKd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Apr 2020 11:10:28 -0400
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:36977 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727771AbgDIPK1 (ORCPT
+        Thu, 9 Apr 2020 11:10:33 -0400
+Received: from mail-qk1-f196.google.com ([209.85.222.196]:45598 "EHLO
+        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727771AbgDIPKc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Apr 2020 11:10:27 -0400
-Received: by mail-lf1-f67.google.com with SMTP id t11so8175818lfe.4;
-        Thu, 09 Apr 2020 08:10:26 -0700 (PDT)
+        Thu, 9 Apr 2020 11:10:32 -0400
+Received: by mail-qk1-f196.google.com with SMTP id m67so4208168qke.12
+        for <linux-kernel@vger.kernel.org>; Thu, 09 Apr 2020 08:10:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=AWu7ly8ItGyDOeD0JQxt2JEqPPHgsfp9FAGvOUGryC0=;
-        b=bHJ7fjU2KKm/uLVeVULQQO8yluAf/ZBYOIeESREXwzQ7ENmXgpIgP2E/mdosCcVgNl
-         YHOVjLinnf0vNl7UcZO3cfLASbNCoYcg4WNauMDNRiN2sWFmx8spWp+xoWXa32ZIn38e
-         y/DRc2TtqirXpiodV/UrfTtqm7G/ZyxgnXDTA6H4cW9TF4CEjXYqqhtsLcsz4X7DD8Fh
-         KWsE9/bjHDFgnwKgI+7cd14NHq64sxA/FEI3ixHsX6PqAZX5hLqkicOxa0MSptX9fzzP
-         ns3naKQ4RjPEGoiPzBWwI4b99+219kHMCbkX77VR1ULmWuOFDi10KqXYUQQF1t5RGqHv
-         lPIQ==
+        d=lca.pw; s=google;
+        h=mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=DIocbXZ/GrySYJM2qjlB0aVfLDG/I+8RC+5beeuDqKQ=;
+        b=rropwxWiFn2w4WZ/eqv8MdbJFi26bRLRbgBUG9wGB+0VCTjauS8nU81/N8kxvdyVnD
+         R4UvF4evvwf2RWu7qI44owvQYpgghZYQE7g2936Uc0Wamem2nJTvqwbKYpWxXMfBN+Td
+         ybZn1+3VDLyLj6y12q5q52UK0I+8kWOaMfyk1Y1+cZBFcK7KxU3yUcdtkJLu5puQIvp2
+         UMSRjN0cbdDNmQBCpno7rcnePcplHvCOKqxA3OuMF0VHiHnJaB2h0aZwVYX4sqrUAlpl
+         MD52i3KsjWHxtvJNSvCQrHlfU0D6H11iF7PJHSf3JJhA3QpS8Oq7MXAFkFIlltUtKJb6
+         1bTQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=AWu7ly8ItGyDOeD0JQxt2JEqPPHgsfp9FAGvOUGryC0=;
-        b=hJPoZ505KqbjmSttTJQmhnyeU9EZs4MEOpzVlL6+bCls5QwkVcadq3tmmdD6204ZLN
-         qbjXicikDhfNlIWRn7BRJzdREOGddYEudC/rynSP1FwHmTgUKwOh0av1A80P9O2c7wTb
-         7UMJcv/OPWlv0cPsgl2DcFYOQSpENVpr9mSDVba60hlTy7EaTLdjIz2QtzB86wiSm8rL
-         VJZnM2UmVr24PZHR6kp89lSyOIQ5MchYxSdO1Q0mRFEaphOsC34GvxEQs5KzMhWYbVVF
-         SdoKfCgznMIRTWO0buHlfZhCUFKA5z1s2nfIl6JB6YDE3tmkxDX/JGYNyijlL89qoptD
-         4ppQ==
-X-Gm-Message-State: AGi0Pub4KjZtle+Xu/q1R++zIziVKCg0hZ/Hv4687AhcTLdMB0art3tC
-        nRxDzaZ0OpZKZb++AKRMy3A=
-X-Google-Smtp-Source: APiQypLDC47vIOGr8lVid8MI2cb6itX013nqPaJKnLp50YsozlgcbkCfk6N4psyBu/80FEnGvBPbVQ==
-X-Received: by 2002:a19:c385:: with SMTP id t127mr8034817lff.117.1586445025848;
-        Thu, 09 Apr 2020 08:10:25 -0700 (PDT)
-Received: from [192.168.2.145] (ppp91-78-208-152.pppoe.mtu-net.ru. [91.78.208.152])
-        by smtp.googlemail.com with ESMTPSA id u10sm3707849ljd.24.2020.04.09.08.10.24
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 09 Apr 2020 08:10:25 -0700 (PDT)
-Subject: Re: [PATCH v10 43/55] dt-bindings: input: atmel: support to set max
- bytes transferred
-To:     "Wang, Jiada" <jiada_wang@mentor.com>, nick@shmanahar.org,
-        dmitry.torokhov@gmail.com, jikos@kernel.org,
-        benjamin.tissoires@redhat.com, bsz@semihalf.com
-Cc:     linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
-        erosca@de.adit-jv.com, Andrew_Gabbasov@mentor.com,
-        Balasubramani_Vivekanandan@mentor.com
-References: <20200331105051.58896-1-jiada_wang@mentor.com>
- <20200331105051.58896-44-jiada_wang@mentor.com>
- <a15d312d-587e-5b10-e031-dde1965f6f89@gmail.com>
- <9b98a3fc-b7ee-fc01-dc5c-248df507d4a2@mentor.com>
- <008d019c-2de7-4fe4-0c22-2668312f808b@gmail.com>
- <5abe310f-094c-9355-d533-fb64efcbf726@mentor.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <270812bc-8c2c-c564-be8e-4cc18de8670f@gmail.com>
-Date:   Thu, 9 Apr 2020 18:10:24 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
-MIME-Version: 1.0
-In-Reply-To: <5abe310f-094c-9355-d533-fb64efcbf726@mentor.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=DIocbXZ/GrySYJM2qjlB0aVfLDG/I+8RC+5beeuDqKQ=;
+        b=VKAMGx7aoZlKc4fZe0rZxY+ikTHEQUQjYaIkTDk7lST1dbfpcI7rbTG5rczXxVmtVc
+         JmKCs4mqW5mencGOkoDpiJ9iNeUj3of6Rvda5/JWJHheWgMCym25Z1K8q7VCaGf8yZFv
+         X66LlhHmSUnwhGDkSSueplKL39vcsjeUzRzyKeCkzuIJD8pEXODumL1zaE92Bx1IDQTu
+         j+6sNHgrHcrp0Aw2g/8RS7rpf3Qgju7d2LXQ49t6ikjtinKYwtj6W0ilNyQbuhn//DGo
+         aXGVGxqD5bzNO9TLeDxfES5EBB+rIVO/AWWnru92HQpiX6RNM8MMJctb2+9RGh8Vsaku
+         3cxg==
+X-Gm-Message-State: AGi0PuYaGruQ1gy0oX0R/etsQHS2yj2PTVY+3fNC3jcxCsJJ14hhjc/D
+        5F+A7ViuxyD8Z3w2om/3tSekPg==
+X-Google-Smtp-Source: APiQypLqKqGGiP1/sf/taBiiQNFrD+V9RPMvEkZHZME7janiP8RehwEHD0O/256zPiMPw8/rVadCwg==
+X-Received: by 2002:a05:620a:12fa:: with SMTP id f26mr282331qkl.374.1586445030295;
+        Thu, 09 Apr 2020 08:10:30 -0700 (PDT)
+Received: from [192.168.1.153] (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
+        by smtp.gmail.com with ESMTPSA id y21sm21347011qka.37.2020.04.09.08.10.29
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 09 Apr 2020 08:10:29 -0700 (PDT)
+Content-Type: text/plain;
+        charset=utf-8
+Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.80.23.2.2\))
+Subject: Re: KCSAN + KVM = host reset
+From:   Qian Cai <cai@lca.pw>
+In-Reply-To: <CANpmjNMiHNVh3BVxZUqNo4jW3DPjoQPrn-KEmAJRtSYORuryEA@mail.gmail.com>
+Date:   Thu, 9 Apr 2020 11:10:28 -0400
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        "paul E. McKenney" <paulmck@kernel.org>,
+        kasan-dev <kasan-dev@googlegroups.com>,
+        LKML <linux-kernel@vger.kernel.org>, kvm@vger.kernel.org
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <B7F7F73E-EE27-48F4-A5D0-EBB29292913E@lca.pw>
+References: <E180B225-BF1E-4153-B399-1DBF8C577A82@lca.pw>
+ <fb39d3d2-063e-b828-af1c-01f91d9be31c@redhat.com>
+ <017E692B-4791-46AD-B9ED-25B887ECB56B@lca.pw>
+ <CANpmjNMiHNVh3BVxZUqNo4jW3DPjoQPrn-KEmAJRtSYORuryEA@mail.gmail.com>
+To:     Marco Elver <elver@google.com>
+X-Mailer: Apple Mail (2.3608.80.23.2.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-09.04.2020 09:25, Wang, Jiada пишет:
-> Hi Dmitry
-> 
-> On 2020/04/07 23:47, Dmitry Osipenko wrote:
->> 07.04.2020 12:27, Wang, Jiada пишет:
->> ..
->>>> Is this a software (firmware) limitation which varies from version to
->>>> version?
->>>>
->>>
->>> the timeout issue trying to be addressed in this patch is from software,
->>> one of our board a Serializer/Deserializer bridge exists between the SoC
->>> (imx6) and the Atmel touch controller.
->>> imx6 i2c controller driver has a timeout value(100ms) for each i2c
->>> transaction,
->>> Large i2c read transaction failed to complete within this timeout value
->>> and therefore imx6 i2c controller driver aborts the transaction
->>> and returns failure.
->>>
->>> Therefore this patch was created to split the large i2c transaction into
->>> smaller chunks which can complete
->>> within the timeout defined by i2c controller driver.
->>
->> Isn't it possible to use the max_read/write_len of the generic struct
->> i2c_adapter_quirks for limiting the transfer size?
->>
->> BTW, it looks like the i.MX I2C driver doesn't specify the
->> i2c_adapter_quirks, which probably needs to be fixed.
->>
-> yes, i.MX I2C driver can specify i2c_adapter_quirks to limit the size be
-> transferred in one transaction.
-> 
-> But even in this case, mxt_process_messages_t44() fails when it tries to
-> transfer data count larger than max_read/write_len set in i.MX I2C
-> driver, which we would like to avoid.
 
-IIUC, the transfer's limitation is a part of I2C controller hardware and
-not the touch controller, so it should be wrong to describe that
-limitation in the maxtouch's DT node.
 
-I meant that we probably could set the data->mtu based on
-i2c_client->adapter->quirks->max_read and then the DT property shouldn't
-be needed, couldn't this be done?
+> On Apr 9, 2020, at 3:03 AM, Marco Elver <elver@google.com> wrote:
+>=20
+> On Wed, 8 Apr 2020 at 23:29, Qian Cai <cai@lca.pw> wrote:
+>>=20
+>>=20
+>>=20
+>>> On Apr 8, 2020, at 5:25 PM, Paolo Bonzini <pbonzini@redhat.com> =
+wrote:
+>>>=20
+>>> On 08/04/20 22:59, Qian Cai wrote:
+>>>> Running a simple thing on this AMD host would trigger a reset right =
+away.
+>>>> Unselect KCSAN kconfig makes everything work fine (the host would =
+also
+>>>> reset If only "echo off > /sys/kernel/debug/kcsan=E2=80=9D before =
+running qemu-kvm).
+>>>=20
+>>> Is this a regression or something you've just started to play with?  =
+(If
+>>> anything, the assembly language conversion of the AMD world switch =
+that
+>>> is in linux-next could have reduced the likelihood of such a =
+failure,
+>>> not increased it).
+>>=20
+>> I don=E2=80=99t remember I had tried this combination before, so =
+don=E2=80=99t know if it is a
+>> regression or not.
+>=20
+> What happens with KASAN? My guess is that, since it also happens with
+> "off", something that should not be instrumented is being
+> instrumented.
 
-The I2C core only rejects transfers that don't fit into the
-max_read/write_len and nothing more.
+No, KASAN + KVM works fine.
+
+>=20
+> What happens if you put a 'KCSAN_SANITIZE :=3D n' into
+> arch/x86/kvm/Makefile? Since it's hard for me to reproduce on this
+
+Yes, that works, but this below alone does not work,
+
+KCSAN_SANITIZE_kvm-amd.o :=3D n
+
+I have been able to reproduce this on a few AMD hosts.
+
+> exact system, I'd ask you to narrow it down by placing 'KCSAN_SANITIZE
+> :=3D n' into suspect subsystems' Makefiles. Once you get it to work =
+with
+> that, we can refine the solution.
+>=20
+> Thanks,
+> -- Marco
+
