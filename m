@@ -2,148 +2,158 @@ Return-Path: <SRS0=n+Ub=5Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16A61C2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 11:36:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A63DC2BA2B
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 11:36:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DF1AA20A8B
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 11:35:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 139AE20A8B
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 11:36:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="dr34AMpJ"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=citrix.com header.i=@citrix.com header.b="gtmbAwK4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726598AbgDILf6 (ORCPT
+        id S1726638AbgDILgd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Apr 2020 07:35:58 -0400
-Received: from mail27.static.mailgun.info ([104.130.122.27]:45224 "EHLO
-        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726502AbgDILf5 (ORCPT
+        Thu, 9 Apr 2020 07:36:33 -0400
+Received: from esa6.hc3370-68.iphmx.com ([216.71.155.175]:45266 "EHLO
+        esa6.hc3370-68.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725971AbgDILgd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Apr 2020 07:35:57 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1586432157; h=Content-Transfer-Encoding: MIME-Version:
- Message-Id: Date: Subject: Cc: To: From: Sender;
- bh=2nl8GwNziueLzCqZ1teRBsn+iOEVqe/mARGJerFZsdI=; b=dr34AMpJ0W5nb/rouSQ087Xwy5CPOaZaOGfasR4d2qdsQXjmunRknjxyIC0QmBdcLYNqwhdy
- RCWYsfPKpnLQ33el0Rs5j0NAMyLWfJukJTJqz+sLCZev8wzb8DnbJi6RCNXzAMbFc1MhvpVt
- fXtvP2yS4MMg8hKwT9Plx5aS2xk=
-X-Mailgun-Sending-Ip: 104.130.122.27
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e8f0898.7f02fd849ca8-smtp-out-n02;
- Thu, 09 Apr 2020 11:35:52 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id AA208C432C2; Thu,  9 Apr 2020 11:35:52 +0000 (UTC)
-Received: from blr-ubuntu-311.qualcomm.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: saiprakash.ranjan)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 37867C433CB;
-        Thu,  9 Apr 2020 11:35:48 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 37867C433CB
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=saiprakash.ranjan@codeaurora.org
-From:   Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-To:     Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        mike.leach@linaro.org, Stephen Boyd <swboyd@chromium.org>
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org,
-        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-Subject: [PATCH] coresight: tmc: Read TMC mode only when TMC hw is enabled
-Date:   Thu,  9 Apr 2020 17:05:38 +0530
-Message-Id: <20200409113538.5008-1-saiprakash.ranjan@codeaurora.org>
-X-Mailer: git-send-email 2.22.0
+        Thu, 9 Apr 2020 07:36:33 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=citrix.com; s=securemail; t=1586432193;
+  h=subject:to:cc:references:from:message-id:date:
+   mime-version:in-reply-to:content-transfer-encoding;
+  bh=dnROBck2MmsFtNlpz/IkbmQXUbQm4A1CETm+vG0i0OU=;
+  b=gtmbAwK4tlUUGWXNJuayaLq8UjFaR5meZ8Xargd0ZicpM/pd+JBtWPe9
+   2H8/Mtrkk14b688DrzgB+2L7pOK59Kd0Yh0exGLNSFUxvNn/7WgDS5Znw
+   I2GkUlDep2qgHOcfFEDx13LKoALEgp1uLn36xaueNTN1ND6nmLiPYSqCP
+   E=;
+Authentication-Results: esa6.hc3370-68.iphmx.com; dkim=none (message not signed) header.i=none; spf=None smtp.pra=andrew.cooper3@citrix.com; spf=Pass smtp.mailfrom=Andrew.Cooper3@citrix.com; spf=None smtp.helo=postmaster@mail.citrix.com
+Received-SPF: None (esa6.hc3370-68.iphmx.com: no sender
+  authenticity information available from domain of
+  andrew.cooper3@citrix.com) identity=pra;
+  client-ip=162.221.158.21; receiver=esa6.hc3370-68.iphmx.com;
+  envelope-from="Andrew.Cooper3@citrix.com";
+  x-sender="andrew.cooper3@citrix.com";
+  x-conformance=sidf_compatible
+Received-SPF: Pass (esa6.hc3370-68.iphmx.com: domain of
+  Andrew.Cooper3@citrix.com designates 162.221.158.21 as
+  permitted sender) identity=mailfrom;
+  client-ip=162.221.158.21; receiver=esa6.hc3370-68.iphmx.com;
+  envelope-from="Andrew.Cooper3@citrix.com";
+  x-sender="Andrew.Cooper3@citrix.com";
+  x-conformance=sidf_compatible; x-record-type="v=spf1";
+  x-record-text="v=spf1 ip4:209.167.231.154 ip4:178.63.86.133
+  ip4:195.66.111.40/30 ip4:85.115.9.32/28 ip4:199.102.83.4
+  ip4:192.28.146.160 ip4:192.28.146.107 ip4:216.52.6.88
+  ip4:216.52.6.188 ip4:162.221.158.21 ip4:162.221.156.83
+  ip4:168.245.78.127 ~all"
+Received-SPF: None (esa6.hc3370-68.iphmx.com: no sender
+  authenticity information available from domain of
+  postmaster@mail.citrix.com) identity=helo;
+  client-ip=162.221.158.21; receiver=esa6.hc3370-68.iphmx.com;
+  envelope-from="Andrew.Cooper3@citrix.com";
+  x-sender="postmaster@mail.citrix.com";
+  x-conformance=sidf_compatible
+IronPort-SDR: mMtBJu/58+SwnHmY2rBetlSq7vlbSSSqGjkKx2ICCOzCZF7qaw0N7dsxlOsNOPN1VAUsj2A3JI
+ ICGEpfkGBnyPiZqR7H+TUQWC1px3RqAfta/6HgJo0+H7omcD1vLEDihb9TLL1B5mRwvPPxUjkd
+ NKUWe+AOwuxyPSabiAwUg6bWJvjsqf0MMl+/rd/CM1NgUIVvQYMR1oyfLLLbzFS6VmBsf27c72
+ xY3+DJo3aFib0wW6oz3BnUpeEHLfX55cUkonXVg1grKmUKASfqzPoWqvlVcKACTAmZ2R5yXMnj
+ fEA=
+X-SBRS: 2.7
+X-MesageID: 15829938
+X-Ironport-Server: esa6.hc3370-68.iphmx.com
+X-Remote-IP: 162.221.158.21
+X-Policy: $RELAYED
+X-IronPort-AV: E=Sophos;i="5.72,362,1580792400"; 
+   d="scan'208";a="15829938"
+Subject: Re: [PATCH v2] x86/kvm: Disable KVM_ASYNC_PF_SEND_ALWAYS
+To:     Andy Lutomirski <luto@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>
+CC:     Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Vivek Goyal <vgoyal@redhat.com>,
+        "Peter Zijlstra" <peterz@infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
+        kvm list <kvm@vger.kernel.org>, stable <stable@vger.kernel.org>
+References: <20200407172140.GB64635@redhat.com>
+ <772A564B-3268-49F4-9AEA-CDA648F6131F@amacapital.net>
+ <87eeszjbe6.fsf@nanos.tec.linutronix.de>
+ <ce81c95f-8674-4012-f307-8f32d0e386c2@redhat.com>
+ <874ktukhku.fsf@nanos.tec.linutronix.de>
+ <274f3d14-08ac-e5cc-0b23-e6e0274796c8@redhat.com>
+ <20200408153413.GA11322@linux.intel.com>
+ <ce28e893-2ed0-ea6f-6c36-b08bb0d814f2@redhat.com>
+ <87d08hc0vz.fsf@nanos.tec.linutronix.de>
+ <CALCETrWG2Y4SPmVkugqgjZcMfpQiq=YgsYBmWBm1hj_qx3JNVQ@mail.gmail.com>
+From:   Andrew Cooper <andrew.cooper3@citrix.com>
+Message-ID: <5e79facb-292d-eeae-b860-81a0bee9ef4c@citrix.com>
+Date:   Thu, 9 Apr 2020 12:36:27 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
+In-Reply-To: <CALCETrWG2Y4SPmVkugqgjZcMfpQiq=YgsYBmWBm1hj_qx3JNVQ@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
+Content-Language: en-GB
+X-ClientProxiedBy: AMSPEX02CAS01.citrite.net (10.69.22.112) To
+ AMSPEX02CL01.citrite.net (10.69.22.125)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Reading TMC mode register in tmc_read_prepare_etb without
-enabling the TMC hardware leads to async exceptions like
-the one in the call trace below. This can happen if the
-user tries to read the TMC etf data via device node without
-setting up source and the sink first which enables the TMC
-hardware in the path. So make sure that the TMC is enabled
-before we try to read TMC data.
+On 09/04/2020 05:50, Andy Lutomirski wrote:
+> On Wed, Apr 8, 2020 at 11:01 AM Thomas Gleixner <tglx@linutronix.de> wrote:
+>> Paolo Bonzini <pbonzini@redhat.com> writes:
+>>> On 08/04/20 17:34, Sean Christopherson wrote:
+>>>> On Wed, Apr 08, 2020 at 10:23:58AM +0200, Paolo Bonzini wrote:
+>>>>> Page-not-present async page faults are almost a perfect match for the
+>>>>> hardware use of #VE (and it might even be possible to let the processor
+>>>>> deliver the exceptions).
+>>>> My "async" page fault knowledge is limited, but if the desired behavior is
+>>>> to reflect a fault into the guest for select EPT Violations, then yes,
+>>>> enabling EPT Violation #VEs in hardware is doable.  The big gotcha is that
+>>>> KVM needs to set the suppress #VE bit for all EPTEs when allocating a new
+>>>> MMU page, otherwise not-present faults on zero-initialized EPTEs will get
+>>>> reflected.
+>>>>
+>>>> Attached a patch that does the prep work in the MMU.  The VMX usage would be:
+>>>>
+>>>>      kvm_mmu_set_spte_init_value(VMX_EPT_SUPPRESS_VE_BIT);
+>>>>
+>>>> when EPT Violation #VEs are enabled.  It's 64-bit only as it uses stosq to
+>>>> initialize EPTEs.  32-bit could also be supported by doing memcpy() from
+>>>> a static page.
+>>> The complication is that (at least according to the current ABI) we
+>>> would not want #VE to kick if the guest currently has IF=0 (and possibly
+>>> CPL=0).  But the ABI is not set in stone, and anyway the #VE protocol is
+>>> a decent one and worth using as a base for whatever PV protocol we design.
+>> Forget the current pf async semantics (or the lack of). You really want
+>> to start from scratch and igore the whole thing.
+>>
+>> The charm of #VE is that the hardware can inject it and it's not nesting
+>> until the guest cleared the second word in the VE information area. If
+>> that word is not 0 then you get a regular vmexit where you suspend the
+>> vcpu until the nested problem is solved.
+> Can you point me at where the SDM says this?
 
- Kernel panic - not syncing: Asynchronous SError Interrupt
- CPU: 7 PID: 2605 Comm: hexdump Tainted: G S                5.4.30 #122
- Call trace:
-  dump_backtrace+0x0/0x188
-  show_stack+0x20/0x2c
-  dump_stack+0xdc/0x144
-  panic+0x168/0x36c
-  panic+0x0/0x36c
-  arm64_serror_panic+0x78/0x84
-  do_serror+0x130/0x138
-  el1_error+0x84/0xf8
-  tmc_read_prepare_etb+0x88/0xb8
-  tmc_open+0x40/0xd8
-  misc_open+0x120/0x158
-  chrdev_open+0xb8/0x1a4
-  do_dentry_open+0x268/0x3a0
-  vfs_open+0x34/0x40
-  path_openat+0x39c/0xdf4
-  do_filp_open+0x90/0x10c
-  do_sys_open+0x150/0x3e8
-  __arm64_compat_sys_openat+0x28/0x34
-  el0_svc_common+0xa8/0x160
-  el0_svc_compat_handler+0x2c/0x38
-  el0_svc_compat+0x8/0x10
+Vol3 25.5.6.1 Convertible EPT Violations
 
-Fixes: 4525412a5046 ("coresight: tmc: making prepare/unprepare functions generic")
-Reported-by: Stephen Boyd <swboyd@chromium.org>
-Signed-off-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
----
- drivers/hwtracing/coresight/coresight-tmc.c | 5 +++++
- drivers/hwtracing/coresight/coresight-tmc.h | 1 +
- 2 files changed, 6 insertions(+)
+> Anyway, I see two problems with #VE, one big and one small.  The small
+> (or maybe small) one is that any fancy protocol where the guest
+> returns from an exception by doing, logically:
+>
+> Hey I'm done;  /* MOV somewhere, hypercall, MOV to CR4, whatever */
+> IRET;
+>
+> is fundamentally racy.  After we say we're done and before IRET, we
+> can be recursively reentered.  Hi, NMI!
 
-diff --git a/drivers/hwtracing/coresight/coresight-tmc.c b/drivers/hwtracing/coresight/coresight-tmc.c
-index 1cf82fa58289..7bae69748ab7 100644
---- a/drivers/hwtracing/coresight/coresight-tmc.c
-+++ b/drivers/hwtracing/coresight/coresight-tmc.c
-@@ -62,11 +62,13 @@ void tmc_flush_and_stop(struct tmc_drvdata *drvdata)
- 
- void tmc_enable_hw(struct tmc_drvdata *drvdata)
- {
-+	drvdata->enable = true;
- 	writel_relaxed(TMC_CTL_CAPT_EN, drvdata->base + TMC_CTL);
- }
- 
- void tmc_disable_hw(struct tmc_drvdata *drvdata)
- {
-+	drvdata->enable = false;
- 	writel_relaxed(0x0, drvdata->base + TMC_CTL);
- }
- 
-@@ -102,6 +104,9 @@ static int tmc_read_prepare(struct tmc_drvdata *drvdata)
- {
- 	int ret = 0;
- 
-+	if (!drvdata->enable)
-+		return -EINVAL;
-+
- 	switch (drvdata->config_type) {
- 	case TMC_CONFIG_TYPE_ETB:
- 	case TMC_CONFIG_TYPE_ETF:
-diff --git a/drivers/hwtracing/coresight/coresight-tmc.h b/drivers/hwtracing/coresight/coresight-tmc.h
-index 71de978575f3..7c8712a6ed8d 100644
---- a/drivers/hwtracing/coresight/coresight-tmc.h
-+++ b/drivers/hwtracing/coresight/coresight-tmc.h
-@@ -191,6 +191,7 @@ struct tmc_drvdata {
- 	struct miscdevice	miscdev;
- 	spinlock_t		spinlock;
- 	pid_t			pid;
-+	bool			enable;
- 	bool			reading;
- 	union {
- 		char		*buf;		/* TMC ETB */
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-of Code Aurora Forum, hosted by The Linux Foundation
+Correct.  There is no way to atomically end the #VE handler.  (This
+causes "fun" even when using #VE for its intended purpose.)
+
+~Andrew
