@@ -2,181 +2,199 @@ Return-Path: <SRS0=n+Ub=5Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0046DC2BB85
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 08:24:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05906C2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 08:24:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C26C4217D8
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 08:17:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C81EF20CC7
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 08:14:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="sdP23vw+"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="vLrAAclO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726652AbgDIIRB (ORCPT
+        id S1726623AbgDIIOx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Apr 2020 04:17:01 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:33932 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726534AbgDIIRA (ORCPT
+        Thu, 9 Apr 2020 04:14:53 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:39660 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725828AbgDIIOw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Apr 2020 04:17:00 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0398D2q2150408;
-        Thu, 9 Apr 2020 08:16:30 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2020-01-29;
- bh=W3Fcv0vtVlBpP+vayNy1UphJ5VAFqs7bWIftYjvmokA=;
- b=sdP23vw+oDrhMFFx+SNitXNFmxPrcFcQmSLsHfK+hMESQUaUzGvc74EIg32sbubHnwWf
- WYNwDfO/vzqZFVVmXZJdGceh7+85U7AHf7hJPu/rsYhCJ/Sjd5AodX99PC5BhdZQAZD5
- Z4ei3NewcCwCtNzNE+84E2Hp5FyrDc6OPw0gB/NsmMIVTaKZL1WhoSZD0akhxKDzZ4ce
- Jfggv+FP/MaPyC0UgDfrtELH5h468pBWInL9N+ErcRt+GbOy60Cias06kU5quSoeVOaV
- cWykczdJ82SzQ+X1BHknh3uS3xfBs0pDyMTxQMuaCtM0z/XplRO68H7wpfIEIgfbRtrZ Dw== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by userp2120.oracle.com with ESMTP id 309gw4bxts-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 09 Apr 2020 08:16:30 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03987YNS096999;
-        Thu, 9 Apr 2020 08:14:30 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by userp3030.oracle.com with ESMTP id 3091m3dpt8-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 09 Apr 2020 08:14:29 +0000
-Received: from abhmp0013.oracle.com (abhmp0013.oracle.com [141.146.116.19])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 0398ESFE027101;
-        Thu, 9 Apr 2020 08:14:28 GMT
-Received: from linux-1.home (/92.157.90.160)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 09 Apr 2020 01:14:28 -0700
-Subject: Re: [PATCH V2 9/9] x86/speculation: Remove all
- ANNOTATE_NOSPEC_ALTERNATIVE directives
-To:     Peter Zijlstra <peterz@infradead.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>
-Cc:     x86@kernel.org, linux-kernel@vger.kernel.org, jthierry@redhat.com,
-        tglx@linutronix.de
-References: <20200407073142.20659-1-alexandre.chartre@oracle.com>
- <20200407073142.20659-10-alexandre.chartre@oracle.com>
- <20200407132837.GA20730@hirez.programming.kicks-ass.net>
- <20200407133454.n55u5nx33ruj73gx@treble>
- <89b10eb8-c030-b954-6be3-8830fc6a8daa@oracle.com>
- <3eb36fd2-9827-4c1b-681c-9c1d65c7582f@oracle.com>
- <20200407162838.5hlh6oom4oa45ugt@treble>
- <20200407172739.GI20730@hirez.programming.kicks-ass.net>
- <20200408213508.GA4496@worktop.programming.kicks-ass.net>
-From:   Alexandre Chartre <alexandre.chartre@oracle.com>
-Message-ID: <da6efbb5-2610-6721-77ca-9833d13b9398@oracle.com>
-Date:   Thu, 9 Apr 2020 10:18:56 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.0
+        Thu, 9 Apr 2020 04:14:52 -0400
+Received: by mail-wr1-f65.google.com with SMTP id p10so10824198wrt.6
+        for <linux-kernel@vger.kernel.org>; Thu, 09 Apr 2020 01:14:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=ZlTF/KafXlJgMPlRdN0G/mkK/4LzjBx/AGs4C/dxm9w=;
+        b=vLrAAclOkO4iGm6s+MQ5nyroD7N3UCquUO8bDswFNMDWivwTEnrCUSy9Bpax0xxEX+
+         zNeV3rAPs6TD8o1rfFyk9bhJeamRtxbDzwRdKSboiD3TpcxJ3OeE4wa2iTF/PR8NjWG4
+         ECsTsuZEMeV6KnrXb34BwmebUUPnTfRi8bjrslKQqitgVff8FRgMqDHVD4bL0DXrx+cy
+         BULpYVT7PNivcVyx1949ICtMl3Z/n8kw1WGOjcj1nBReB663wD+JH7Uy2mEDMqtXJwpn
+         6W7KRDRKpMZh0SBlcNtuItov0+c4MPFBXo+zRR8zH3ZgjQkPaikWSmpbRkAAmmUt9+fV
+         KSFw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=ZlTF/KafXlJgMPlRdN0G/mkK/4LzjBx/AGs4C/dxm9w=;
+        b=rtkQeyhzxjCcjVhjM+MkTFyNvJ1gIXQKiG7jn4H8iYyjkcjQ054qKtXEu2H7+yyk1E
+         6oafgMLPZqGfFKkTZsKeRRU3CrehIjpyy7HVkrdyoryiQHZEWKF9aVMQ/P9AwdJpH8xI
+         yJJq+MGoKEFfi2bwSEVMzSmfWcbXpB18IE4cxFSUCknwslIj00VqxUyf13qiQ/gN84gV
+         OExVldi5+phQAX4S+p4i9CY7qMi9lC82Vg+6UfTeC6JXGaJDpbWlN0TE5hHSbhft7TFE
+         MdK/DyP3ezUQCBkY4jj8XQJctVPU4bv3LPnyuAYAY66gkyDzqUdYepSatIo7m/Dd9Edj
+         WDOg==
+X-Gm-Message-State: AGi0PuaNEiG6mQkQvaKVmDU+yd69KCeaCuZ46wmoxIb0VQ8TJg1TJWF/
+        oeQPFNwu4Qo49zhxYR+t495Upg==
+X-Google-Smtp-Source: APiQypJemfydeaVCk96UzkWnWUlTWfH71DnX8DVMs/2o85G9/BiV9p3xiyhSRllpGeBIVPIEZJ8UfQ==
+X-Received: by 2002:a5d:4081:: with SMTP id o1mr13432498wrp.114.1586420091068;
+        Thu, 09 Apr 2020 01:14:51 -0700 (PDT)
+Received: from myrica ([2001:171b:226b:54a0:116c:c27a:3e7f:5eaf])
+        by smtp.gmail.com with ESMTPSA id o16sm39322467wrs.44.2020.04.09.01.14.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 09 Apr 2020 01:14:50 -0700 (PDT)
+Date:   Thu, 9 Apr 2020 10:14:42 +0200
+From:   Jean-Philippe Brucker <jean-philippe@linaro.org>
+To:     Auger Eric <eric.auger@redhat.com>
+Cc:     "Liu, Yi L" <yi.l.liu@intel.com>,
+        "alex.williamson@redhat.com" <alex.williamson@redhat.com>,
+        "Tian, Kevin" <kevin.tian@intel.com>,
+        "jacob.jun.pan@linux.intel.com" <jacob.jun.pan@linux.intel.com>,
+        "joro@8bytes.org" <joro@8bytes.org>,
+        "Raj, Ashok" <ashok.raj@intel.com>,
+        "Tian, Jun J" <jun.j.tian@intel.com>,
+        "Sun, Yi Y" <yi.y.sun@intel.com>,
+        "peterx@redhat.com" <peterx@redhat.com>,
+        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Wu, Hao" <hao.wu@intel.com>
+Subject: Re: [PATCH v1 5/8] vfio/type1: Report 1st-level/stage-1 format to
+ userspace
+Message-ID: <20200409081442.GD2435@myrica>
+References: <1584880325-10561-1-git-send-email-yi.l.liu@intel.com>
+ <1584880325-10561-6-git-send-email-yi.l.liu@intel.com>
+ <cb68e9ab-77b0-7e97-a661-4836962041d9@redhat.com>
+ <A2975661238FB949B60364EF0F2C25743A21DB4E@SHSMSX104.ccr.corp.intel.com>
+ <b47891b1-ece6-c263-9c07-07c09c7d3752@redhat.com>
+ <20200403082305.GA1269501@myrica>
+ <A2975661238FB949B60364EF0F2C25743A2249DF@SHSMSX104.ccr.corp.intel.com>
+ <acf8c809-8d29-92d6-2445-3a94fc8b82fd@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <20200408213508.GA4496@worktop.programming.kicks-ass.net>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9585 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 malwarescore=0
- mlxlogscore=999 phishscore=0 spamscore=0 adultscore=0 suspectscore=0
- mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2004090062
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9585 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 bulkscore=0
- phishscore=0 lowpriorityscore=0 impostorscore=0 clxscore=1015
- suspectscore=0 malwarescore=0 spamscore=0 mlxlogscore=999 mlxscore=0
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2004090062
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <acf8c809-8d29-92d6-2445-3a94fc8b82fd@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, Apr 08, 2020 at 12:27:58PM +0200, Auger Eric wrote:
+> Hi Yi,
+> 
+> On 4/7/20 11:43 AM, Liu, Yi L wrote:
+> > Hi Jean,
+> > 
+> >> From: Jean-Philippe Brucker <jean-philippe@linaro.org>
+> >> Sent: Friday, April 3, 2020 4:23 PM
+> >> To: Auger Eric <eric.auger@redhat.com>
+> >> userspace
+> >>
+> >> On Wed, Apr 01, 2020 at 03:01:12PM +0200, Auger Eric wrote:
+> >>>>>>  	header = vfio_info_cap_add(caps, sizeof(*nesting_cap),
+> >>>>>>  				   VFIO_IOMMU_TYPE1_INFO_CAP_NESTING, 1);
+> >> @@ -2254,6 +2309,7
+> >>>>>> @@ static int vfio_iommu_info_add_nesting_cap(struct
+> >>>>> vfio_iommu *iommu,
+> >>>>>>  		/* nesting iommu type supports PASID requests (alloc/free) */
+> >>>>>>  		nesting_cap->nesting_capabilities |= VFIO_IOMMU_PASID_REQS;
+> >>>>> What is the meaning for ARM?
+> >>>>
+> >>>> I think it's just a software capability exposed to userspace, on
+> >>>> userspace side, it has a choice to use it or not. :-) The reason
+> >>>> define it and report it in cap nesting is that I'd like to make the
+> >>>> pasid alloc/free be available just for IOMMU with type
+> >>>> VFIO_IOMMU_TYPE1_NESTING. Please feel free tell me if it is not good
+> >>>> for ARM. We can find a proper way to report the availability.
+> >>>
+> >>> Well it is more a question for jean-Philippe. Do we have a system wide
+> >>> PASID allocation on ARM?
+> >>
+> >> We don't, the PASID spaces are per-VM on Arm, so this function should consult the
+> >> IOMMU driver before setting flags. As you said on patch 3, nested doesn't
+> >> necessarily imply PASID support. The SMMUv2 does not support PASID but does
+> >> support nesting stages 1 and 2 for the IOVA space.
+> >> SMMUv3 support of PASID depends on HW capabilities. So I think this needs to be
+> >> finer grained:
+> >>
+> >> Does the container support:
+> >> * VFIO_IOMMU_PASID_REQUEST?
+> >>   -> Yes for VT-d 3
+> >>   -> No for Arm SMMU
+> >> * VFIO_IOMMU_{,UN}BIND_GUEST_PGTBL?
+> >>   -> Yes for VT-d 3
+> >>   -> Sometimes for SMMUv2
+> >>   -> No for SMMUv3 (if we go with BIND_PASID_TABLE, which is simpler due to
+> >>      PASID tables being in GPA space.)
+> >> * VFIO_IOMMU_BIND_PASID_TABLE?
+> >>   -> No for VT-d
+> >>   -> Sometimes for SMMUv3
+> >>
+> >> Any bind support implies VFIO_IOMMU_CACHE_INVALIDATE support.
+> > 
+> > good summary. do you expect to see any 
+> > 
+> >>
+> >>>>>> +	nesting_cap->stage1_formats = formats;
+> >>>>> as spotted by Kevin, since a single format is supported, rename
+> >>>>
+> >>>> ok, I was believing it may be possible on ARM or so. :-) will rename
+> >>>> it.
+> >>
+> >> Yes I don't think an u32 is going to cut it for Arm :( We need to describe all sorts of
+> >> capabilities for page and PASID tables (granules, GPA size, ASID/PASID size, HW
+> >> access/dirty, etc etc.) Just saying "Arm stage-1 format" wouldn't mean much. I
+> >> guess we could have a secondary vendor capability for these?
+> > 
+> > Actually, I'm wondering if we can define some formats to stands for a set of
+> > capabilities. e.g. VTD_STAGE1_FORMAT_V1 which may indicates the 1st level
+> > page table related caps (aw, a/d, SRE, EA and etc.). And vIOMMU can parse
+> > the capabilities.
+> 
+> But eventually do we really need all those capability getters? I mean
+> can't we simply rely on the actual call to VFIO_IOMMU_BIND_GUEST_PGTBL()
+> to detect any mismatch? Definitively the error handling may be heavier
+> on userspace but can't we manage.
 
-On 4/8/20 11:35 PM, Peter Zijlstra wrote:
-> On Tue, Apr 07, 2020 at 07:27:39PM +0200, Peter Zijlstra wrote:
->> On Tue, Apr 07, 2020 at 11:28:38AM -0500, Josh Poimboeuf wrote:
->>> Again, we should warn on stack changes inside alternatives, and then
->>> look at converting RSB and retpolines to use static branches so they
->>> have deterministic stacks.
->>
->> I don't think we need static brancher, we should just out-of-line the
->> whole thing.
->>
->> Let me sort this CFI error Thomas is getting and then I'll attempt a
->> patch along the lines I outlined in earlier emails.
-> 
-> Something like so.. seems to build and boot.
-> 
-> ---
-> From: Peter Zijlstra (Intel) <peterz@infradead.org>
-> Subject: x86: Out-of-line retpoline
-> 
-> Since GCC generated code already uses out-of-line retpolines and objtool
-> has trouble with retpolines in alternatives, out-of-line them entirely.
-> 
-> This will enable objtool (once it's been taught a few more tricks) to
-> generate valid ORC data for the out-of-line copies, which means we can
-> correctly and reliably unwind through a retpoline.
-> 
-> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-> ---
->   arch/x86/crypto/aesni-intel_asm.S            |  4 +--
->   arch/x86/crypto/camellia-aesni-avx-asm_64.S  |  2 +-
->   arch/x86/crypto/camellia-aesni-avx2-asm_64.S |  2 +-
->   arch/x86/crypto/crc32c-pcl-intel-asm_64.S    | 26 ++++++++---------
->   arch/x86/entry/entry_32.S                    |  6 ++--
->   arch/x86/entry/entry_64.S                    |  2 +-
->   arch/x86/include/asm/asm-prototypes.h        |  8 ++++--
->   arch/x86/include/asm/nospec-branch.h         | 42 ++++------------------------
->   arch/x86/kernel/ftrace_32.S                  |  2 +-
->   arch/x86/kernel/ftrace_64.S                  |  4 +--
->   arch/x86/lib/checksum_32.S                   |  4 +--
->   arch/x86/lib/retpoline.S                     | 27 +++++++++++++++---
->   arch/x86/platform/efi/efi_stub_64.S          |  2 +-
->   13 files changed, 62 insertions(+), 69 deletions(-)
-> 
-...
->   /*
->    * JMP_NOSPEC and CALL_NOSPEC macros can be used instead of a simple
->    * indirect jmp/call which may be susceptible to the Spectre variant 2
-> @@ -111,10 +83,9 @@
->    */
->   .macro JMP_NOSPEC reg:req
->   #ifdef CONFIG_RETPOLINE
-> -	ANNOTATE_NOSPEC_ALTERNATIVE
-> -	ALTERNATIVE_2 __stringify(ANNOTATE_RETPOLINE_SAFE; jmp *\reg),	\
-> -		__stringify(RETPOLINE_JMP \reg), X86_FEATURE_RETPOLINE,	\
-> -		__stringify(lfence; ANNOTATE_RETPOLINE_SAFE; jmp *\reg), X86_FEATURE_RETPOLINE_AMD
-> +	ALTERNATIVE_2 __stringify(ANNOTATE_RETPOLINE_SAFE; jmp *%\reg),	\
-> +		__stringify(jmp __x86_retpoline_\()\reg), X86_FEATURE_RETPOLINE,	\
-> +		__stringify(lfence; ANNOTATE_RETPOLINE_SAFE; jmp *%\reg), X86_FEATURE_RETPOLINE_AMD
->   #else
->   	jmp	*\reg
->   #endif
-> @@ -122,10 +93,9 @@
-> 
->   .macro CALL_NOSPEC reg:req
->   #ifdef CONFIG_RETPOLINE
-> -	ANNOTATE_NOSPEC_ALTERNATIVE
-> -	ALTERNATIVE_2 __stringify(ANNOTATE_RETPOLINE_SAFE; call *\reg),	\
-> -		__stringify(RETPOLINE_CALL \reg), X86_FEATURE_RETPOLINE,\
-> -		__stringify(lfence; ANNOTATE_RETPOLINE_SAFE; call *\reg), X86_FEATURE_RETPOLINE_AMD
-> +	ALTERNATIVE_2 __stringify(ANNOTATE_RETPOLINE_SAFE; call *%\reg),	\
-> +		__stringify(call __x86_retpoline_\()\reg), X86_FEATURE_RETPOLINE,\
-> +		__stringify(lfence; ANNOTATE_RETPOLINE_SAFE; call *%\reg), X86_FEATURE_RETPOLINE_AMD
+I think we need to present these capabilities at boot time, long before
+the guest triggers a bind(). For example if the host SMMU doesn't support
+16-bit ASID, we need to communicate that to the guest using vSMMU ID
+registers or PROBE properties. Otherwise a bind() will succeed, but if the
+guest uses 16-bit ASIDs in its CD, DMA will result in C_BAD_CD events
+which we'll inject into the guest, for no apparent reason from their
+perspective.
 
-For X86_FEATURE_RETPOLINE_AMD, the call won't be aligned like the others,
-it will be after the lfence instruction so ORC data won't be at the same
-place. I am adding some code in objtool to check that alternatives don't
-change the stack, but I should actually be checking if all alternatives
-have the same unwind instructions at the same place.
+In addition some VMMs may have fallbacks if shared page tables are not
+available. They could fall back to a MAP/UNMAP interface, or simply not
+present a vIOMMU to the guest.
 
-Other than that, my only question would be any impact on performances.
-Retpoline code was added with trying to limit performance impact.
-Here, JMP_NOSPEC has now an additional (long) jump, and CALL_NOSPEC
-is doing a long call instead of a near call. But I have no idea if this
-has a visible impact.
+Thanks,
+Jean
 
-alex.
+> My fear is we end up with an overly
+> complex series. This capability getter may be interesting if we can
+> switch to a fallback implementation but here I guess we don't have any
+> fallback. With smmuv3 nested stage we don't have any fallback solution
+> either. For the versions, it is different because the userspace shall be
+> able to adapt (or not) to the max version supported by the kernel.
+> 
+> Thanks
+> 
+> Eric
+> > 
+> > Regards,
+> > Yi Liu
+> > 
+> 
