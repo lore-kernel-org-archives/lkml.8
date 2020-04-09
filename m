@@ -2,102 +2,125 @@ Return-Path: <SRS0=n+Ub=5Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 849EFC2BB85
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 20:59:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11AAFC2BB85
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 20:59:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 589562084D
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 20:59:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DBD432082D
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 20:59:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586465966;
-	bh=zeSm3VWSkeI0+1hac4vtHaQ4P6AqMkUOps/HKCn16aA=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=zCXojwI4ZztTaDod/7hMzAFxL8W4Mrym11tdCwkE3TSsDD2CdHrZZ1Cm/Nl43J5SA
-	 n0AZJ8y6IWnHil4xApNlRdbwW0vpaZ2qnOmG4WOGqwHBmT1CYBt82la8IyI+9cNaRN
-	 REQqVoyfQsK7uYJNw2YmLKmrAzOhQoh+46FHE7Tw=
+	s=default; t=1586465986;
+	bh=/zoh9Bel3OVki0JgUa51ErfZPh3PKGwN0xm71H6gVlE=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=A+5QVX4mAFNW4vEAo2g0jl86VaSyUIoe8upOk57E5HZAz8warEjoDQwxwNLpSKlDg
+	 WbkUigepFH/HL9leafCto3vMOI0NCIyiSu3Wx7k6/EXyspoajQ3d+Y2JkUuQHscZFk
+	 ZuqTPO68OUTREdTXTgG5p8b2cYiUyelHUBOnGizQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727242AbgDIU7Y (ORCPT
+        id S1727331AbgDIU7p (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Apr 2020 16:59:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45750 "EHLO mail.kernel.org"
+        Thu, 9 Apr 2020 16:59:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46044 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726650AbgDIU7Y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Apr 2020 16:59:24 -0400
-Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1726650AbgDIU7p (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Apr 2020 16:59:45 -0400
+Received: from mail-ua1-f51.google.com (mail-ua1-f51.google.com [209.85.222.51])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 963EB20692;
-        Thu,  9 Apr 2020 20:59:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4F4F32082D;
+        Thu,  9 Apr 2020 20:59:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586465964;
-        bh=zeSm3VWSkeI0+1hac4vtHaQ4P6AqMkUOps/HKCn16aA=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=VGxfppb16xM0/UCELIL3TQXBAKKInB3c7R8gWVWdgvE4vwJxPB4kI3ewts8S0qSS+
-         MsuaoLQZX9VmoUWyJw09+v/0Br9KP86nFeY0BNBD/rlJfos/gL8eSRZ73NvAbaQcKZ
-         FXKM0R8awipSiR2aW3ldVaBYfc3df1YLY1te8TFQ=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id 6DB7E3522F44; Thu,  9 Apr 2020 13:59:24 -0700 (PDT)
-Date:   Thu, 9 Apr 2020 13:59:24 -0700
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     Jason Yan <yanaijie@huawei.com>
-Cc:     dave@stgolabs.net, josh@joshtriplett.org, rostedt@goodmis.org,
-        mathieu.desnoyers@efficios.com, jiangshanlai@gmail.com,
-        joel@joelfernandes.org, linux-kernel@vger.kernel.org,
-        rcu@vger.kernel.org
-Subject: Re: [PATCH] rcutorture: make rcu_fwds and rcu_fwd_emergency_stop
- static
-Message-ID: <20200409205924.GO17661@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <20200409114238.39765-1-yanaijie@huawei.com>
+        s=default; t=1586465984;
+        bh=/zoh9Bel3OVki0JgUa51ErfZPh3PKGwN0xm71H6gVlE=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=bJAJpPoprDQK92N85fpzG0cgNvz0uW5e2GuCCkn3PP348hQvPcVPLpsxEGBwIDmOe
+         1QFW0xWU0pO2wsvNKS4EEfebkJ6KlsEo0+gmu78w3ZBZtXz+apwLu8pyuGYs1Ec2EH
+         nWr6NEKRZpWA7DcYfEQAtGmxuemkzAn03uShNjvQ=
+Received: by mail-ua1-f51.google.com with SMTP id c7so504528uap.12;
+        Thu, 09 Apr 2020 13:59:44 -0700 (PDT)
+X-Gm-Message-State: AGi0PuYgbkSjEZ1xaIwkV5+Rx1MebEdjXUnUff0lar/+AkG6xiJjPKuD
+        DDqo9ts1XwqTwxEmXdS1D5o6Vvt8vQ34jgeghwQ=
+X-Google-Smtp-Source: APiQypLTqSBtxs7bQ0LuVti900RTFBk5ZczjHXpDHPi1M3iHr7okU6jbk0ejw87EuNLYNl/1repOvHUGiSiDx2g6XJ8=
+X-Received: by 2002:ab0:1e89:: with SMTP id o9mr829993uak.93.1586465983383;
+ Thu, 09 Apr 2020 13:59:43 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200409114238.39765-1-yanaijie@huawei.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <20200402000002.7442-1-mcgrof@kernel.org> <20200403081929.GC6887@ming.t460p>
+ <0e753195-72fb-ce83-16a1-176f2c3cea6a@huawei.com> <20200407190004.GG11244@42.do-not-panic.com>
+In-Reply-To: <20200407190004.GG11244@42.do-not-panic.com>
+From:   Luis Chamberlain <mcgrof@kernel.org>
+Date:   Thu, 9 Apr 2020 14:59:36 -0600
+X-Gmail-Original-Message-ID: <CAB=NE6VV1yCOHJC__qAXNmxfe45DB=JaUksLeXV=dp-VAa6jnA@mail.gmail.com>
+Message-ID: <CAB=NE6VV1yCOHJC__qAXNmxfe45DB=JaUksLeXV=dp-VAa6jnA@mail.gmail.com>
+Subject: Re: [RFC 0/3] block: address blktrace use-after-free
+To:     "yukuai (C)" <yukuai3@huawei.com>
+Cc:     Ming Lei <ming.lei@redhat.com>, Jens Axboe <axboe@kernel.dk>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ingo Molnar <mingo@redhat.com>, Jan Kara <jack@suse.cz>,
+        Nicolai Stange <nstange@suse.de>,
+        Michal Hocko <mhocko@suse.com>, linux-block@vger.kernel.org,
+        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 09, 2020 at 07:42:38PM +0800, Jason Yan wrote:
-> Fix the following sparse warning:
-> 
-> kernel/rcu/rcutorture.c:1695:16: warning: symbol 'rcu_fwds' was not
-> declared. Should it be static?
-> kernel/rcu/rcutorture.c:1696:6: warning: symbol 'rcu_fwd_emergency_stop'
-> was not declared. Should it be static?
-> 
-> Reported-by: Hulk Robot <hulkci@huawei.com>
-> Signed-off-by: Jason Yan <yanaijie@huawei.com>
+On Tue, Apr 7, 2020 at 1:00 PM Luis Chamberlain <mcgrof@kernel.org> wrote:
+>
+> On Tue, Apr 07, 2020 at 10:47:01AM +0800, yukuai (C) wrote:
+> > On 2020/4/3 16:19, Ming Lei wrote:
+> >
+> > > BTW, Yu Kuai posted one patch for this issue, looks that approach
+> > > is simpler:
+> > >
+> > > https://lore.kernel.org/linux-block/20200324132315.22133-1-yukuai3@hu=
+awei.com/
+> > >
+> > >
+> >
+> > I think the issue might not be fixed with the patch seires.
+> >
+> > At first, I think there are two key points for the issure:
+> > 1. The final release of queue is delayed in a workqueue
+> > 2. The creation of 'q->debugfs_dir' might failed(only if 1 exist)
+> > And if we can fix any of the above problem, the UAF issue will be fixed=
+.
+> > (BTW, I did not come up with a good idea for problem 1, and my approach
+> > is for problem 2.)
+> >
+> > The third patch "block: avoid deferral of blk_release_queue() work" is
+> > not enough to fix problem 1:
+> > a. if CONFIG_DEBUG_KOBJECT_RELEASE is enable:
+> > static void kobject_release(struct kref *kref)
+> > {
+> >         struct kobject *kobj =3D container_of(kref, struct kobject, kre=
+f);
+> > #ifdef CONFIG_DEBUG_KOBJECT_RELEASE
+> >         unsigned long delay =3D HZ + HZ * (get_random_int() & 0x3);
+> >         pr_info("kobject: '%s' (%p): %s, parent %p (delayed %ld)\n",
+> >                 =E2=94=8Akobject_name(kobj), kobj, __func__, kobj->pare=
+nt, delay);
+> >         INIT_DELAYED_WORK(&kobj->release, kobject_delayed_cleanup);
+> >
+> >         schedule_delayed_work(&kobj->release, delay);
+> > #else
+> >         kobject_cleanup(kobj);
+> > #endif
+> > }
+> > b. when 'kobject_put' is called from blk_cleanup_queue, can we make sur=
+e
+> > it is the last reference?
+>
+> You are right, I think I know the fix for this now. Will run some more
+> tests.
 
-Good catch, queued, thank you!
+Yeap, we were just not refcounting during blktrace. I'll send a fix as
+part of the series.
 
-							Thanx, Paul
-
-> ---
->  kernel/rcu/rcutorture.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/kernel/rcu/rcutorture.c b/kernel/rcu/rcutorture.c
-> index 5453bd557f43..d621a31de8a4 100644
-> --- a/kernel/rcu/rcutorture.c
-> +++ b/kernel/rcu/rcutorture.c
-> @@ -1692,8 +1692,8 @@ struct rcu_fwd {
->  	unsigned long rcu_launder_gp_seq_start;
->  };
->  
-> -struct rcu_fwd *rcu_fwds;
-> -bool rcu_fwd_emergency_stop;
-> +static struct rcu_fwd *rcu_fwds;
-> +static bool rcu_fwd_emergency_stop;
->  
->  static void rcu_torture_fwd_cb_hist(struct rcu_fwd *rfp)
->  {
-> -- 
-> 2.17.2
-> 
+  Luis
