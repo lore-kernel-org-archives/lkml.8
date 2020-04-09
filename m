@@ -2,290 +2,147 @@ Return-Path: <SRS0=n+Ub=5Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC05FC2BA2B
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 01:12:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ACF88C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 01:13:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 74B7120857
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 01:12:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586394777;
-	bh=2zHKbO+Qsg+s3myu/Dctq5cWqHCIJBg0kO1iky7QXUo=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=rHgY1uxPj/tt+Ylo6nQNyCyWKq0LkKum6KdXbjBapv6LYDZnUxBVnyFypIXXDfy89
-	 5b5UoFmRJOBv3oEMLXxKhKJ56R1LyJXdBpBgA0FsjIfX8TFgJMTikNvFjh6BaaGtmH
-	 SLIEcHvLU1eixl98fakBNrNBpc8A523txUPZ3YNk=
+	by mail.kernel.org (Postfix) with ESMTP id 8084D20857
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 01:13:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="RNI22t0c"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726622AbgDIBMz (ORCPT
+        id S1726652AbgDIBN1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Apr 2020 21:12:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46408 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726536AbgDIBMz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Apr 2020 21:12:55 -0400
-Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Wed, 8 Apr 2020 21:13:27 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:43420 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726536AbgDIBN0 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Apr 2020 21:13:26 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1586394805;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=r0cI23rv/CRPi00YuUefPu43DYEx/C8dlX+V/+YaZOc=;
+        b=RNI22t0cIgBe+sU/YrYJVafxbmF9mvC8w6e6CG+qEv2bzj0CMUxuiKk9ItEOegP8ev3kM+
+        CCzb/TNn0q20ReBhuYz/CKBMuSE+YLT9V33U8hipXGBtyzj/Go7gIzHXKx5X3cJIBXgjXu
+        5aAH9ojeUF4jLabLikuScDBcxQa39JI=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-87-XL7i7sUJOZCEc2DQIPo8NQ-1; Wed, 08 Apr 2020 21:13:20 -0400
+X-MC-Unique: XL7i7sUJOZCEc2DQIPo8NQ-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A6B9820857;
-        Thu,  9 Apr 2020 01:12:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586394774;
-        bh=2zHKbO+Qsg+s3myu/Dctq5cWqHCIJBg0kO1iky7QXUo=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=UX3gqTpZOI9MYmL0qiIW7VaH1bhW0NX8Dmp38ScnlkF4PnEkXzJiNqgafCx2SSn8G
-         pDQiIW+Tz7eGLBFzj82BSuPDtQ4DKly7skQgNZRpw63NYgQOg1wjFzTSQrC95GqwWO
-         hAla2cAViXndNZvKEaEe0HBwMEDgqbgL/k4y/0oA=
-Date:   Thu, 9 Apr 2020 10:12:50 +0900
-From:   Masami Hiramatsu <mhiramat@kernel.org>
-To:     Zong Li <zong.li@sifive.com>
-Cc:     palmer@dabbelt.com, paul.walmsley@sifive.com,
-        aou@eecs.berkeley.edu, linux-riscv@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v5 2/9] riscv: introduce interfaces to patch kernel code
-Message-Id: <20200409101250.211b698d63d9dade595aaac8@kernel.org>
-In-Reply-To: <6f145470ffdf83b303ecd83db4f6e06477b61220.1586332296.git.zong.li@sifive.com>
-References: <cover.1586332296.git.zong.li@sifive.com>
-        <6f145470ffdf83b303ecd83db4f6e06477b61220.1586332296.git.zong.li@sifive.com>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 191C218AB2CF;
+        Thu,  9 Apr 2020 01:13:17 +0000 (UTC)
+Received: from localhost.localdomain (ovpn-8-27.pek2.redhat.com [10.72.8.27])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 102B952735;
+        Thu,  9 Apr 2020 01:13:05 +0000 (UTC)
+Date:   Thu, 9 Apr 2020 09:13:01 +0800
+From:   Ming Lei <ming.lei@redhat.com>
+To:     Douglas Anderson <dianders@chromium.org>
+Cc:     axboe@kernel.dk, jejb@linux.ibm.com, martin.petersen@oracle.com,
+        paolo.valente@linaro.org, groeck@chromium.org,
+        Gwendal Grignou <gwendal@chromium.org>,
+        linux-scsi@vger.kernel.org, linux-block@vger.kernel.org,
+        sqazi@google.com,
+        =?iso-8859-1?Q?Andr=E9?= Almeida <andrealmeid@collabora.com>,
+        Bart Van Assche <bvanassche@acm.org>,
+        Damien Le Moal <damien.lemoal@wdc.com>,
+        John Garry <john.garry@huawei.com>,
+        Pavel Begunkov <asml.silence@gmail.com>,
+        Sagi Grimberg <sagi@grimberg.me>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 2/4] blk-mq: Add blk_mq_delay_run_hw_queues() API call
+Message-ID: <20200409011301.GA369792@localhost.localdomain>
+References: <20200408150402.21208-1-dianders@chromium.org>
+ <20200408080255.v4.2.I4c665d70212a5b33e103fec4d5019a59b4c05577@changeid>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200408080255.v4.2.I4c665d70212a5b33e103fec4d5019a59b4c05577@changeid>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed,  8 Apr 2020 15:56:57 +0800
-Zong Li <zong.li@sifive.com> wrote:
-
-> On strict kernel memory permission, we couldn't patch code without
-> writable permission. Preserve two holes in fixmap area, so we can map
-> the kernel code temporarily to fixmap area, then patch the instructions.
+On Wed, Apr 08, 2020 at 08:04:00AM -0700, Douglas Anderson wrote:
+> We have:
+> * blk_mq_run_hw_queue()
+> * blk_mq_delay_run_hw_queue()
+> * blk_mq_run_hw_queues()
 > 
-> We need two pages here because we support the compressed instruction, so
-> the instruction might be align to 2 bytes. When patching the 32-bit
-> length instruction which is 2 bytes alignment, it will across two pages.
+> ...but not blk_mq_delay_run_hw_queues(), presumably because nobody
+> needed it before now.  Since we need it for a later patch in this
+> series, add it.
 > 
-> Introduce two interfaces to patch kernel code:
-> riscv_patch_text_nosync:
->  - patch code without synchronization, it's caller's responsibility to
->    synchronize all CPUs if needed.
-> riscv_patch_text:
->  - patch code and always synchronize with stop_machine()
-> 
-
-Looks good to me.
-
-Reviewed-by: Masami Hiramatsu <mhiramat@kernel.org>
-
-Thank you,
-
-> Signed-off-by: Zong Li <zong.li@sifive.com>
-> Suggested-by: Masami Hiramatsu <mhiramat@kernel.org>
+> Signed-off-by: Douglas Anderson <dianders@chromium.org>
 > ---
->  arch/riscv/include/asm/fixmap.h |   2 +
->  arch/riscv/include/asm/patch.h  |  12 +++
->  arch/riscv/kernel/Makefile      |   4 +-
->  arch/riscv/kernel/patch.c       | 128 ++++++++++++++++++++++++++++++++
->  4 files changed, 145 insertions(+), 1 deletion(-)
->  create mode 100644 arch/riscv/include/asm/patch.h
->  create mode 100644 arch/riscv/kernel/patch.c
 > 
-> diff --git a/arch/riscv/include/asm/fixmap.h b/arch/riscv/include/asm/fixmap.h
-> index 42d2c42f3cc9..2368d49eb4ef 100644
-> --- a/arch/riscv/include/asm/fixmap.h
-> +++ b/arch/riscv/include/asm/fixmap.h
-> @@ -27,6 +27,8 @@ enum fixed_addresses {
->  	FIX_FDT = FIX_FDT_END + FIX_FDT_SIZE / PAGE_SIZE - 1,
->  	FIX_PTE,
->  	FIX_PMD,
-> +	FIX_TEXT_POKE1,
-> +	FIX_TEXT_POKE0,
->  	FIX_EARLYCON_MEM_BASE,
->  	__end_of_fixed_addresses
->  };
-> diff --git a/arch/riscv/include/asm/patch.h b/arch/riscv/include/asm/patch.h
-> new file mode 100644
-> index 000000000000..9a7d7346001e
-> --- /dev/null
-> +++ b/arch/riscv/include/asm/patch.h
-> @@ -0,0 +1,12 @@
-> +/* SPDX-License-Identifier: GPL-2.0-only */
-> +/*
-> + * Copyright (C) 2020 SiFive
+> Changes in v4: None
+> Changes in v3:
+> - ("blk-mq: Add blk_mq_delay_run_hw_queues() API call") new for v3
+> 
+> Changes in v2: None
+> 
+>  block/blk-mq.c         | 19 +++++++++++++++++++
+>  include/linux/blk-mq.h |  1 +
+>  2 files changed, 20 insertions(+)
+> 
+> diff --git a/block/blk-mq.c b/block/blk-mq.c
+> index 2cd8d2b49ff4..ea0cd970a3ff 100644
+> --- a/block/blk-mq.c
+> +++ b/block/blk-mq.c
+> @@ -1537,6 +1537,25 @@ void blk_mq_run_hw_queues(struct request_queue *q, bool async)
+>  }
+>  EXPORT_SYMBOL(blk_mq_run_hw_queues);
+>  
+> +/**
+> + * blk_mq_delay_run_hw_queues - Run all hardware queues asynchronously.
+> + * @q: Pointer to the request queue to run.
+> + * @msecs: Microseconds of delay to wait before running the queues.
 > + */
-> +
-> +#ifndef _ASM_RISCV_PATCH_H
-> +#define _ASM_RISCV_PATCH_H
-> +
-> +int patch_text_nosync(void *addr, const void *insns, size_t len);
-> +int patch_text(void *addr, u32 insn);
-> +
-> +#endif /* _ASM_RISCV_PATCH_H */
-> diff --git a/arch/riscv/kernel/Makefile b/arch/riscv/kernel/Makefile
-> index f40205cb9a22..d189bd3d8501 100644
-> --- a/arch/riscv/kernel/Makefile
-> +++ b/arch/riscv/kernel/Makefile
-> @@ -4,7 +4,8 @@
->  #
->  
->  ifdef CONFIG_FTRACE
-> -CFLAGS_REMOVE_ftrace.o = -pg
-> +CFLAGS_REMOVE_ftrace.o	= -pg
-> +CFLAGS_REMOVE_patch.o	= -pg
->  endif
->  
->  extra-y += head.o
-> @@ -26,6 +27,7 @@ obj-y	+= traps.o
->  obj-y	+= riscv_ksyms.o
->  obj-y	+= stacktrace.o
->  obj-y	+= cacheinfo.o
-> +obj-y	+= patch.o
->  obj-$(CONFIG_MMU) += vdso.o vdso/
->  
->  obj-$(CONFIG_RISCV_M_MODE)	+= clint.o
-> diff --git a/arch/riscv/kernel/patch.c b/arch/riscv/kernel/patch.c
-> new file mode 100644
-> index 000000000000..f16466123947
-> --- /dev/null
-> +++ b/arch/riscv/kernel/patch.c
-> @@ -0,0 +1,128 @@
-> +// SPDX-License-Identifier: GPL-2.0-only
-> +/*
-> + * Copyright (C) 2020 SiFive
-> + */
-> +
-> +#include <linux/mm.h>
-> +#include <linux/memory.h>
-> +#include <linux/uaccess.h>
-> +#include <linux/spinlock.h>
-> +#include <linux/stop_machine.h>
-> +#include <asm/fixmap.h>
-> +#include <asm/kprobes.h>
-> +#include <asm/cacheflush.h>
-> +
-> +struct patch_insn_patch {
-> +	void *addr;
-> +	u32 insn;
-> +	atomic_t cpu_count;
-> +};
-> +
-> +#ifdef CONFIG_MMU
-> +static void *patch_map(void *addr, int fixmap)
+> +void blk_mq_delay_run_hw_queues(struct request_queue *q, unsigned long msecs)
 > +{
-> +	uintptr_t uintaddr = (uintptr_t) addr;
-> +	struct page *page;
+> +	struct blk_mq_hw_ctx *hctx;
+> +	int i;
 > +
-> +	if (core_kernel_text(uintaddr))
-> +		page = phys_to_page(__pa_symbol(addr));
-> +	else if (IS_ENABLED(CONFIG_STRICT_MODULE_RWX))
-> +		page = vmalloc_to_page(addr);
-> +	else
-> +		return addr;
+> +	queue_for_each_hw_ctx(q, hctx, i) {
+> +		if (blk_mq_hctx_stopped(hctx))
+> +			continue;
 > +
-> +	BUG_ON(!page);
-> +
-> +	return (void *)set_fixmap_offset(fixmap, page_to_phys(page) +
-> +					 (uintaddr & ~PAGE_MASK));
-> +}
-> +NOKPROBE_SYMBOL(patch_map);
-> +
-> +static void patch_unmap(int fixmap)
-> +{
-> +	clear_fixmap(fixmap);
-> +}
-> +NOKPROBE_SYMBOL(patch_unmap);
-> +
-> +static int patch_insn_write(void *addr, const void *insn, size_t len)
-> +{
-> +	void *waddr = addr;
-> +	bool across_pages = (((uintptr_t) addr & ~PAGE_MASK) + len) > PAGE_SIZE;
-> +	int ret;
-> +
-> +	/*
-> +	 * Before reaching here, it was expected to lock the text_mutex
-> +	 * already, so we don't need to give another lock here and could
-> +	 * ensure that it was safe between each cores.
-> +	 */
-> +	lockdep_assert_held(&text_mutex);
-> +
-> +	if (across_pages)
-> +		patch_map(addr + len, FIX_TEXT_POKE1);
-> +
-> +	waddr = patch_map(addr, FIX_TEXT_POKE0);
-> +
-> +	ret = probe_kernel_write(waddr, insn, len);
-> +
-> +	patch_unmap(FIX_TEXT_POKE0);
-> +
-> +	if (across_pages)
-> +		patch_unmap(FIX_TEXT_POKE1);
-> +
-> +	return ret;
-> +}
-> +NOKPROBE_SYMBOL(patch_insn_write);
-> +#else
-> +static int patch_insn_write(void *addr, const void *insn, size_t len)
-> +{
-> +	return probe_kernel_write(addr, insn, len);
-> +}
-> +NOKPROBE_SYMBOL(patch_insn_write);
-> +#endif /* CONFIG_MMU */
-> +
-> +int patch_text_nosync(void *addr, const void *insns, size_t len)
-> +{
-> +	u32 *tp = addr;
-> +	int ret;
-> +
-> +	ret = patch_insn_write(tp, insns, len);
-> +
-> +	if (!ret)
-> +		flush_icache_range((uintptr_t) tp, (uintptr_t) tp + len);
-> +
-> +	return ret;
-> +}
-> +NOKPROBE_SYMBOL(patch_text_nosync);
-> +
-> +static int patch_text_cb(void *data)
-> +{
-> +	struct patch_insn_patch *patch = data;
-> +	int ret = 0;
-> +
-> +	if (atomic_inc_return(&patch->cpu_count) == 1) {
-> +		ret =
-> +		    patch_text_nosync(patch->addr, &patch->insn,
-> +					    GET_INSN_LENGTH(patch->insn));
-> +		atomic_inc(&patch->cpu_count);
-> +	} else {
-> +		while (atomic_read(&patch->cpu_count) <= num_online_cpus())
-> +			cpu_relax();
-> +		smp_mb();
+> +		blk_mq_delay_run_hw_queue(hctx, msecs);
 > +	}
-> +
-> +	return ret;
 > +}
-> +NOKPROBE_SYMBOL(patch_text_cb);
+> +EXPORT_SYMBOL(blk_mq_delay_run_hw_queues);
 > +
-> +int patch_text(void *addr, u32 insn)
-> +{
-> +	struct patch_insn_patch patch = {
-> +		.addr = addr,
-> +		.insn = insn,
-> +		.cpu_count = ATOMIC_INIT(0),
-> +	};
-> +
-> +	return stop_machine_cpuslocked(patch_text_cb,
-> +				       &patch, cpu_online_mask);
-> +}
-> +NOKPROBE_SYMBOL(patch_text);
+>  /**
+>   * blk_mq_queue_stopped() - check whether one or more hctxs have been stopped
+>   * @q: request queue.
+> diff --git a/include/linux/blk-mq.h b/include/linux/blk-mq.h
+> index 11cfd6470b1a..405f8c196517 100644
+> --- a/include/linux/blk-mq.h
+> +++ b/include/linux/blk-mq.h
+> @@ -503,6 +503,7 @@ void blk_mq_unquiesce_queue(struct request_queue *q);
+>  void blk_mq_delay_run_hw_queue(struct blk_mq_hw_ctx *hctx, unsigned long msecs);
+>  void blk_mq_run_hw_queue(struct blk_mq_hw_ctx *hctx, bool async);
+>  void blk_mq_run_hw_queues(struct request_queue *q, bool async);
+> +void blk_mq_delay_run_hw_queues(struct request_queue *q, unsigned long msecs);
+>  void blk_mq_tagset_busy_iter(struct blk_mq_tag_set *tagset,
+>  		busy_tag_iter_fn *fn, void *priv);
+>  void blk_mq_tagset_wait_completed_request(struct blk_mq_tag_set *tagset);
 > -- 
-> 2.26.0
+> 2.26.0.292.g33ef6b2f38-goog
 > 
 
+Reviewed-by: Ming Lei <ming.lei@redhat.com>
 
 -- 
-Masami Hiramatsu <mhiramat@kernel.org>
+Ming
+
