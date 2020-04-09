@@ -2,119 +2,108 @@ Return-Path: <SRS0=n+Ub=5Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F8B4C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 06:44:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B40AC2D0EA
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 06:45:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1D0C02082D
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 06:44:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586414696;
-	bh=J+GeXfiCzFFO7mDslriUKKDucExeUS2dHChanjrxLIk=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Opzya3A5LOnLRrooL0XCtKpA+13bPJt67MzvDc2Xw9dRfpgRQDH3qD6gDIq9J6BJt
-	 54gCpefuCbb+8s3hvUaoXLuzjAaahZHjlOL6RXQaPruwOCazruAZjHZnkFvpdgXsGE
-	 OEIXxo4/47s/rasDDOuGs8hCQtz9TB+tYlltjfPY=
+	by mail.kernel.org (Postfix) with ESMTP id D30562082D
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 06:45:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="IPfcJLrP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726795AbgDIGoy (ORCPT
+        id S1726809AbgDIGpO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Apr 2020 02:44:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37928 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725987AbgDIGoT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Apr 2020 02:44:19 -0400
-Received: from mail.kernel.org (unknown [104.132.0.74])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 05BB420B1F;
-        Thu,  9 Apr 2020 06:44:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586414659;
-        bh=J+GeXfiCzFFO7mDslriUKKDucExeUS2dHChanjrxLIk=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gisbdcRg0Zj7k1O4uKiNFoKUUSGs0uWX4AC/Xk372PjhTEF+AThaoex5uMHlonZei
-         1MHWLxJ5pa8o3Pl2Lgg/sd2U1xeXRNNwEmZ6m9A4gRfCvzq9DX6h1GeS+D9OKgguGU
-         cfFC/r9lX7PvbeFkRHq9hsP3k2SBBl8q7tc179tA=
-From:   Stephen Boyd <sboyd@kernel.org>
-To:     Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
-        Tony Prisk <linux@prisktech.co.nz>,
-        Russell King <linux@armlinux.org.uk>,
-        linux-arm-kernel@lists.infradead.org, Arnd Bergmann <arnd@arndb.de>
-Subject: [PATCH v2 02/10] ARM: Remove redundant CLKDEV_LOOKUP selects
-Date:   Wed,  8 Apr 2020 23:44:08 -0700
-Message-Id: <20200409064416.83340-3-sboyd@kernel.org>
-X-Mailer: git-send-email 2.26.0.292.g33ef6b2f38-goog
-In-Reply-To: <20200409064416.83340-1-sboyd@kernel.org>
-References: <20200409064416.83340-1-sboyd@kernel.org>
+        Thu, 9 Apr 2020 02:45:14 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:60640 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725987AbgDIGpN (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Apr 2020 02:45:13 -0400
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 0396ix9U027169;
+        Thu, 9 Apr 2020 01:44:59 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1586414699;
+        bh=vdhHAqjD6KP/c72S1QR0R+EvzV4ffIQ2S0zwlWNW4fI=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=IPfcJLrPfAQJk2ml4I0UtMDVqPON9fKBS/4V5zp26L/WrhwTcjxlQ0j2Dodf37xem
+         ljRWxQJe6iEb63WgvnS6PwK3aDUrBFQNOOqOtTtl2bZWPwJvx9Y6J/CVg1pthsIQI7
+         /8WaOvK3ygzM1KWGHNp2D/+9Utz3HurOPNDuCCpI=
+Received: from DFLE115.ent.ti.com (dfle115.ent.ti.com [10.64.6.36])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 0396ixNK088950
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 9 Apr 2020 01:44:59 -0500
+Received: from DFLE108.ent.ti.com (10.64.6.29) by DFLE115.ent.ti.com
+ (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Thu, 9 Apr
+ 2020 01:44:58 -0500
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE108.ent.ti.com
+ (10.64.6.29) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Thu, 9 Apr 2020 01:44:58 -0500
+Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 0396iu6b123222;
+        Thu, 9 Apr 2020 01:44:56 -0500
+Subject: Re: [PATCH] dmaengine: ti: k3-psil: fix deadlock on error path
+To:     Grygorii Strashko <grygorii.strashko@ti.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        <dmaengine@vger.kernel.org>
+CC:     Sekhar Nori <nsekhar@ti.com>, <linux-kernel@vger.kernel.org>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        <linux-arm-kernel@lists.infradead.org>
+References: <20200408185501.30776-1-grygorii.strashko@ti.com>
+From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
+Message-ID: <d4a71f25-8a25-76bc-bbf7-749e20268339@ti.com>
+Date:   Thu, 9 Apr 2020 09:45:14 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
+In-Reply-To: <20200408185501.30776-1-grygorii.strashko@ti.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-These platforms select COMMON_CLK indirectly through use of the
-ARCH_MULTIPLATFORM config option that they depend on implicitly via some
-V7/V6/V5 multi platform config option. The COMMON_CLK config option
-already selects CLKDEV_LOOKUP so it's redundant to have this selected
-again.
 
-Cc: Tony Prisk <linux@prisktech.co.nz>
-Cc: Russell King <linux@armlinux.org.uk>
-Cc: <linux-arm-kernel@lists.infradead.org>
-Cc: Arnd Bergmann <arnd@arndb.de>
-Signed-off-by: Stephen Boyd <sboyd@kernel.org>
----
- arch/arm/Kconfig             | 3 ---
- arch/arm/mach-vt8500/Kconfig | 1 -
- 2 files changed, 4 deletions(-)
 
-diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
-index 97864aabc2a6..eeabdc5a3dd2 100644
---- a/arch/arm/Kconfig
-+++ b/arch/arm/Kconfig
-@@ -435,7 +435,6 @@ config ARCH_PXA
- 	select ARM_CPU_SUSPEND if PM
- 	select AUTO_ZRELADDR
- 	select COMMON_CLK
--	select CLKDEV_LOOKUP
- 	select CLKSRC_PXA
- 	select CLKSRC_MMIO
- 	select TIMER_OF
-@@ -474,7 +473,6 @@ config ARCH_SA1100
- 	bool "SA1100-based"
- 	select ARCH_MTD_XIP
- 	select ARCH_SPARSEMEM_ENABLE
--	select CLKDEV_LOOKUP
- 	select CLKSRC_MMIO
- 	select CLKSRC_PXA
- 	select TIMER_OF if OF
-@@ -495,7 +493,6 @@ config ARCH_SA1100
- config ARCH_S3C24XX
- 	bool "Samsung S3C24XX SoCs"
- 	select ATAGS
--	select CLKDEV_LOOKUP
- 	select CLKSRC_SAMSUNG_PWM
- 	select GENERIC_CLOCKEVENTS
- 	select GPIO_SAMSUNG
-diff --git a/arch/arm/mach-vt8500/Kconfig b/arch/arm/mach-vt8500/Kconfig
-index 8841199058ea..d01cdd9ad9c7 100644
---- a/arch/arm/mach-vt8500/Kconfig
-+++ b/arch/arm/mach-vt8500/Kconfig
-@@ -2,7 +2,6 @@
- config ARCH_VT8500
- 	bool
- 	select GPIOLIB
--	select CLKDEV_LOOKUP
- 	select VT8500_TIMER
- 	select PINCTRL
- 	help
--- 
-Sent by a computer, using git, on the internet
+On 08/04/2020 21.55, Grygorii Strashko wrote:
+> The mutex_unlock() is missed on error path of psil_get_ep_config()
+> which causes deadlock, so add missed mutex_unlock().
 
+Ah, you are right, thanks for catching it!
+
+Acked-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+
+> Fixes: 8c6bb62f6b4a ("dmaengine: ti: k3 PSI-L remote endpoint configuration")
+> Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
+> ---
+>  drivers/dma/ti/k3-psil.c | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/drivers/dma/ti/k3-psil.c b/drivers/dma/ti/k3-psil.c
+> index d7b965049ccb..fb7c8150b0d1 100644
+> --- a/drivers/dma/ti/k3-psil.c
+> +++ b/drivers/dma/ti/k3-psil.c
+> @@ -27,6 +27,7 @@ struct psil_endpoint_config *psil_get_ep_config(u32 thread_id)
+>  			soc_ep_map = &j721e_ep_map;
+>  		} else {
+>  			pr_err("PSIL: No compatible machine found for map\n");
+> +			mutex_unlock(&ep_map_mutex);
+>  			return ERR_PTR(-ENOTSUPP);
+>  		}
+>  		pr_debug("%s: Using map for %s\n", __func__, soc_ep_map->name);
+> 
+
+- Péter
+
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
