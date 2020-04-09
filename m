@@ -2,118 +2,188 @@ Return-Path: <SRS0=n+Ub=5Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA105C2D0EA
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 07:03:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A7C4C2D0EA
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 07:03:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C117A20757
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 07:03:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586415781;
-	bh=cWppHrDhyWFUnpfgT1RCt8t5EmUW09svhMX8f9UIxGI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ujj+UGN6D/aJC8lCwLODeSKilQ9d1wVbIzDrOEV+ZeN49aT9dBe8Mzw7rhieBQvkp
-	 22ZaKBI1UnsY4KqFXsEnCaBedG7NwtYTFg6KHSIdjXm7OLdKVMZhwIvvHEWFqGj367
-	 yevSfRwf0hqDw69yidOfdWEkpmFEmdH7AtoO91Yw=
+	by mail.kernel.org (Postfix) with ESMTP id 1376620757
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 07:03:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="nh7PHjWt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726571AbgDIHDA (ORCPT
+        id S1726627AbgDIHDI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Apr 2020 03:03:00 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:39629 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725783AbgDIHDA (ORCPT
+        Thu, 9 Apr 2020 03:03:08 -0400
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:42044 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726579AbgDIHDH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Apr 2020 03:03:00 -0400
-Received: by mail-wr1-f67.google.com with SMTP id p10so10603487wrt.6
-        for <linux-kernel@vger.kernel.org>; Thu, 09 Apr 2020 00:02:57 -0700 (PDT)
+        Thu, 9 Apr 2020 03:03:07 -0400
+Received: by mail-qt1-f196.google.com with SMTP id b10so1997134qtt.9
+        for <linux-kernel@vger.kernel.org>; Thu, 09 Apr 2020 00:03:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=4T5kGWYuiWsD8ODG0rIT5wEJy5Zk5WzpdZY70XPYCsk=;
+        b=nh7PHjWteqz8nFiHSjdWnVP7s/XkAfF1ymz+SC5KOF7ff+qFavN9xWvQtCveEZumqP
+         Js0U5iOyiNiX0f5FDlsNU/xj0ioJRTCvg6fcTokSxpk7DAjMIOKJeDKLXT+qT5HauLa2
+         TxJ4oI7IdnA8l0vUXq6P86eg+pENHwdeX8GPbsjiYVxhUHFrZE2NH87nmZsThIsfDySq
+         6Ueeav8Fa2S+yIy+d31YRfW/Okz3ce8NTe6OSjELck4bUW2cYOTG3fiQl9ALKawhyAE/
+         xV36Y62LGGOK8uHb6JB+w+LBDuZKdqq6PsZG6sS1vtfczJ+vl5DyjI1bIY5y0SNmNFay
+         Uplg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=TOxDaT8KIKxTVyeGlG1DzjdQeiYJKvtYvDrAddTgvQ8=;
-        b=fuQJvivam8DeVSIQ27XAr3uCcN6eBdmNJdJJY/H5NvzhqsRjIHbylMm3H7U4caIGCo
-         RHe7evojXTHCLF6x6KlHH2vmrv7kTfA7a39Ils4bIfNdS9f8+7XZ6PvVsk+9rIyLp5B7
-         Tx+1cLIgd1biahLzMVzNvYfRQGUS495608zgmj1hbWMajvdVFC9Y4Dh/5NIwHIpopKrM
-         Irvwk5EOTPHkPzIlU/CqFCy1SbbdGldhkPZdtwCLqKn1iYPkK3Qrbr258kCxLuqIOj+d
-         u60OBwGV4yUsEHuZkIIFce+TcifsBhJBKvcQQ+jT1uTeHS30ZNAfe8v3JAH8V3V91qu/
-         4Lvw==
-X-Gm-Message-State: AGi0PuZfn/QdbLS1q0w/SbGakFAl3mMEuVfAJZS6PohgwLkN1JzFrJWK
-        gIR9AXm1mPfqZkqMefL+jOY=
-X-Google-Smtp-Source: APiQypIP8qkJwWE/4Q8GNBJ5qkqY5EM+Rw79dqUzcWC6hohz2gnvV0HVxwX8Lc5nsUDUozttdaXCHg==
-X-Received: by 2002:a5d:6a10:: with SMTP id m16mr13596846wru.371.1586415775488;
-        Thu, 09 Apr 2020 00:02:55 -0700 (PDT)
-Received: from localhost (ip-37-188-180-223.eurotel.cz. [37.188.180.223])
-        by smtp.gmail.com with ESMTPSA id 91sm33867682wrf.79.2020.04.09.00.02.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 09 Apr 2020 00:02:54 -0700 (PDT)
-Date:   Thu, 9 Apr 2020 09:02:53 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Peter Xu <peterx@redhat.com>
-Cc:     linux-kernel@vger.kernel.org,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
-        syzbot+693dc11fcb53120b5559@syzkaller.appspotmail.com
-Subject: Re: [PATCH 1/2] mm/mempolicy: Allow lookup_node() to handle fatal
- signal
-Message-ID: <20200409070253.GB18386@dhcp22.suse.cz>
-References: <20200408014010.80428-1-peterx@redhat.com>
- <20200408014010.80428-2-peterx@redhat.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=4T5kGWYuiWsD8ODG0rIT5wEJy5Zk5WzpdZY70XPYCsk=;
+        b=XdyRpPCnxmPaZIGXN0XAL+3F8GjZYec1JacoM+Akp1RvgcaanndztRGPqfshdGOLUF
+         OGwOF2AOxkNJXaPuJFrIxgokyRN+DW5ZO8VG2SkeEWthN88g8Zb34LnJPhEDdPM7kRf/
+         dQutadqU+NOEGaOe4qFypHOPE3yGq8yD9CEMawHoNUEU4Tl4lPCKKGA5nyqSVrV7ik1T
+         yGjqX69R1kXitMh79mu5wAsYZUDSZsR7UqHRQQ4wTbq0rZ1zqqSXTnDhQS4XMj8/hjc0
+         YFuB+Q8SZ/IXJQ48rEgyqcPNKbw9wquhY8VXHBsaPRclTS+RxPSrxMGkG8X5bDkvtPQ0
+         VgfA==
+X-Gm-Message-State: AGi0PuZYKPRjeUQw4YhYrhHds4ubZZ86LpyZ+tawiL9KGeeYDGPcIoX0
+        YtwS3WFfCOtmt6mMMqZeQjHP1uLor3kmOmwzHaE4Cw==
+X-Google-Smtp-Source: APiQypKJQ3a0N5JoQD3BUJRgBCjL9Mcwnw+lWcXfUjHl6fm5/ft1w+YZKYm17y/CnLUqFgVeQD/ed0MGFxfOHkB7mRE=
+X-Received: by 2002:ac8:6c24:: with SMTP id k4mr3078643qtu.257.1586415786173;
+ Thu, 09 Apr 2020 00:03:06 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200408014010.80428-2-peterx@redhat.com>
+References: <20200408152151.5780-1-christian.brauner@ubuntu.com>
+ <CAG48ez0KWgLMOp1d3X1AcRNc4-eF1YiCw=PgWiGjtM6PqQqawg@mail.gmail.com> <CA+enf=uhTi1yWtOe+iuv2FvdZzo69pwsP-NNU2775jN01aDcVQ@mail.gmail.com>
+In-Reply-To: <CA+enf=uhTi1yWtOe+iuv2FvdZzo69pwsP-NNU2775jN01aDcVQ@mail.gmail.com>
+From:   Dmitry Vyukov <dvyukov@google.com>
+Date:   Thu, 9 Apr 2020 09:02:54 +0200
+Message-ID: <CACT4Y+aDeSAARG0b9FjDFyWuhjb=YVxpGtsvBmoKnHo+0TF4gA@mail.gmail.com>
+Subject: Re: [PATCH 0/8] loopfs
+To:     =?UTF-8?Q?St=C3=A9phane_Graber?= <stgraber@ubuntu.com>
+Cc:     Jann Horn <jannh@google.com>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        Jens Axboe <axboe@kernel.dk>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        kernel list <linux-kernel@vger.kernel.org>,
+        linux-block <linux-block@vger.kernel.org>,
+        Linux API <linux-api@vger.kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Serge Hallyn <serge@hallyn.com>,
+        "Rafael J. Wysocki" <rafael@kernel.org>, Tejun Heo <tj@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Saravana Kannan <saravanak@google.com>,
+        Jan Kara <jack@suse.cz>, David Howells <dhowells@redhat.com>,
+        Seth Forshee <seth.forshee@canonical.com>,
+        David Rheinsberg <david.rheinsberg@gmail.com>,
+        Tom Gundersen <teg@jklm.no>,
+        Christian Kellner <ckellner@redhat.com>,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        Network Development <netdev@vger.kernel.org>,
+        Matthew Garrett <mjg59@google.com>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        syzkaller <syzkaller@googlegroups.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch has been merged and it is actually wrong after ae46d2aa6a7f
-has been merged. We can either revert or I suggest just handling >0,
-like the patch below:
+On Wed, Apr 8, 2020 at 6:41 PM St=C3=A9phane Graber <stgraber@ubuntu.com> w=
+rote:
+>
+> On Wed, Apr 8, 2020 at 12:24 PM Jann Horn <jannh@google.com> wrote:
+> >
+> > On Wed, Apr 8, 2020 at 5:23 PM Christian Brauner
+> > <christian.brauner@ubuntu.com> wrote:
+> > > One of the use-cases for loopfs is to allow to dynamically allocate l=
+oop
+> > > devices in sandboxed workloads without exposing /dev or
+> > > /dev/loop-control to the workload in question and without having to
+> > > implement a complex and also racy protocol to send around file
+> > > descriptors for loop devices. With loopfs each mount is a new instanc=
+e,
+> > > i.e. loop devices created in one loopfs instance are independent of a=
+ny
+> > > loop devices created in another loopfs instance. This allows
+> > > sufficiently privileged tools to have their own private stash of loop
+> > > device instances. Dmitry has expressed his desire to use this for
+> > > syzkaller in a private discussion. And various parties that want to u=
+se
+> > > it are Cced here too.
+> > >
+> > > In addition, the loopfs filesystem can be mounted by user namespace r=
+oot
+> > > and is thus suitable for use in containers. Combined with syscall
+> > > interception this makes it possible to securely delegate mounting of
+> > > images on loop devices, i.e. when a user calls mount -o loop <image>
+> > > <mountpoint> it will be possible to completely setup the loop device.
+> > > The final mount syscall to actually perform the mount will be handled
+> > > through syscall interception and be performed by a sufficiently
+> > > privileged process. Syscall interception is already supported through=
+ a
+> > > new seccomp feature we implemented in [1] and extended in [2] and is
+> > > actively used in production workloads. The additional loopfs work wil=
+l
+> > > be used there and in various other workloads too. You'll find a short
+> > > illustration how this works with syscall interception below in [4].
+> >
+> > Would that privileged process then allow you to mount your filesystem
+> > images with things like ext4? As far as I know, the filesystem
+> > maintainers don't generally consider "untrusted filesystem image" to
+> > be a strongly enforced security boundary; and worse, if an attacker
+> > has access to a loop device from which something like ext4 is mounted,
+> > things like "struct ext4_dir_entry_2" will effectively be in shared
+> > memory, and an attacker can trivially bypass e.g.
+> > ext4_check_dir_entry(). At the moment, that's not a huge problem (for
+> > anything other than kernel lockdown) because only root normally has
+> > access to loop devices.
+> >
+> > Ubuntu carries an out-of-tree patch that afaik blocks the shared
+> > memory thing: <https://git.launchpad.net/~ubuntu-kernel/ubuntu/+source/=
+linux/+git/eoan/commit?id=3D4bc428fdf5500b7366313f166b7c9c50ee43f2c4>
+> >
+> > But even with that patch, I'm not super excited about exposing
+> > filesystem image parsing attack surface to containers unless you run
+> > the filesystem in a sandboxed environment (at which point you don't
+> > need a loop device anymore either).
+>
+> So in general we certainly agree that you should never expose someone
+> that you wouldn't trust with root on the host to syscall interception
+> mounting of real kernel filesystems.
+>
+> But that's not all that our syscall interception logic can do. We have
+> support for rewriting a normal filesystem mount attempt to instead use
+> an available FUSE implementation. As far as the user is concerned,
+> they ran "mount /dev/sdaX /mnt" and got that ext4 filesystem mounted
+> on /mnt as requested, except that the container manager intercepted
+> the mount attempt and instead spawned fuse2fs for that mount. This
+> requires absolutely no change to the software the user is running.
+>
+> loopfs, with that interception mode, will let us also handle all cases
+> where a loop would be used, similarly without needing any change to
+> the software being run. If a piece of software calls the command
+> "mount -o loop blah.img /mnt", the "mount" command will setup a loop
+> device as it normally would (doing so through loopfs) and then will
+> call the "mount" syscall, which will get intercepted and redirected to
+> a FUSE implementation if so configured, resulting in the expected
+> filesystem being mounted for the user.
+>
+> LXD with syscall interception offers both straight up privileged
+> mounting using the kernel fs or using a FUSE based implementation.
+> This is configurable on a per-filesystem and per-container basis.
+>
+> I hope that clarifies what we're doing here :)
+>
+> St=C3=A9phane
 
-From 03fbe30ec61e65b0927d0d41bccc7dff5f7eafd8 Mon Sep 17 00:00:00 2001
-From: Michal Hocko <mhocko@suse.com>
-Date: Thu, 9 Apr 2020 08:26:57 +0200
-Subject: [PATCH] mm, mempolicy: fix up gup usage in lookup_node
 
-ba841078cd05 ("mm/mempolicy: Allow lookup_node() to handle fatal signal") has
-added a special casing for 0 return value because that was a possible
-gup return value when interrupted by fatal signal. This has been fixed
-by ae46d2aa6a7f ("mm/gup: Let __get_user_pages_locked() return -EINTR
-for fatal signal") in the mean time so ba841078cd05 can be reverted.
-This patch however doesn't go all the way to revert it because 0 return
-value is impossible. We always get an error or 1 for a single page
-request.
+Hi Christian,
 
-Fixes: ba841078cd05 ("mm/mempolicy: Allow lookup_node() to handle fatal signal")
-Signed-off-by: Michal Hocko <mhocko@suse.com>
----
- mm/mempolicy.c | 5 +----
- 1 file changed, 1 insertion(+), 4 deletions(-)
-
-diff --git a/mm/mempolicy.c b/mm/mempolicy.c
-index 48ba9729062e..1965e2681877 100644
---- a/mm/mempolicy.c
-+++ b/mm/mempolicy.c
-@@ -927,10 +927,7 @@ static int lookup_node(struct mm_struct *mm, unsigned long addr)
- 
- 	int locked = 1;
- 	err = get_user_pages_locked(addr & PAGE_MASK, 1, 0, &p, &locked);
--	if (err == 0) {
--		/* E.g. GUP interrupted by fatal signal */
--		err = -EFAULT;
--	} else if (err > 0) {
-+	if (err > 0) {
- 		err = page_to_nid(p);
- 		put_page(p);
- 	}
--- 
-2.25.1
-
--- 
-Michal Hocko
-SUSE Labs
+Our use case for loopfs in syzkaller would be isolation of several
+test processes from each other.
+Currently all loop devices and loop-control are global and cause test
+processes to collide, which in turn causes non-reproducible coverage
+and non-reproducible crashes. Ideally we give each test process its
+own loopfs instance.
