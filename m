@@ -2,59 +2,75 @@ Return-Path: <SRS0=n+Ub=5Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08ECDC2BBC7
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 06:44:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F20ADC2D0EA
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 06:44:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D3E9320771
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 06:44:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BA9D52082D
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 06:44:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586414685;
-	bh=pPnMeZ9CzhB/flZSg9Rx5zESoGByic5+qaFEBZTGzB4=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Y+zxo6irdL0FeVP97WS9Jtqb6+cP0291abRrJB+5EhncV+d+LurzQ67PzpRuppNmG
-	 0Gw9thFVdy4lIgF132jh2UH1cou6VZdc0FoBvTnPd4JNR3OifcgDlaVOWU17EDmrMs
-	 FMiZmOuoL1IL9UIQe45ctCa/X+nN8Uc5oTRq2ODs=
+	s=default; t=1586414688;
+	bh=F/JmU3GTrtOwoY/DqKHIQ/xPGXNoOD3KdlAlsXkovuw=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=MRYvH2buY6o2ufMZnS3JWx7bIqHNmv2dajX+uut2xMFm4ip5+95jmPSyLCIwpgfQH
+	 bJYOBWW7ObaymJfA8eScAPlYFhQj0u2uL5bSi6OkkGgpNkLyMLua4hPdx4ZlLYkKkd
+	 v0IDOI1JMdhGr+qmaz3k6SQR7EKQz90mEnLYSRR4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726626AbgDIGoT (ORCPT
+        id S1726589AbgDIGoT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Thu, 9 Apr 2020 02:44:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37880 "EHLO mail.kernel.org"
+Received: from mail.kernel.org ([198.145.29.99]:37838 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725985AbgDIGoS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1725283AbgDIGoS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 9 Apr 2020 02:44:18 -0400
 Received: from mail.kernel.org (unknown [104.132.0.74])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 837A42082D;
-        Thu,  9 Apr 2020 06:44:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5DD14206F7;
+        Thu,  9 Apr 2020 06:44:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1586414658;
-        bh=pPnMeZ9CzhB/flZSg9Rx5zESoGByic5+qaFEBZTGzB4=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=k+OQa4Yk2YcwcQqzV3RNGTuqVUE5DeyV+B3PqH7XEy2IXHvEEK62ycua1tSZG0M4G
-         U9xllOc2dyx4jYzFppwfg3DqlQ0C5lUpqPYN5+84mcZERZVT/icregelTQ1rb3hZAi
-         xvQn15wfW2sPNHZSVv7NHfzj/40aBZHn8otrTZ2Y=
+        bh=F/JmU3GTrtOwoY/DqKHIQ/xPGXNoOD3KdlAlsXkovuw=;
+        h=From:To:Cc:Subject:Date:From;
+        b=VIFA9hMRljgDWPtZhApOTUcSlKy7rTtE9Mmhq1LB5x7Likj7e2tXJaNJ9W8MXvE9t
+         CZL/0G5QvGLjZRcsREw1PN23JK4jeNSM9qcqHSNxNPdfDbvECcHtH0Wn8jZsGHrqU7
+         saKjrha9GrGBY38FOlE8Xe6y+RCzgknxI8nYenKE=
 From:   Stephen Boyd <sboyd@kernel.org>
 To:     Michael Turquette <mturquette@baylibre.com>,
         Stephen Boyd <sboyd@kernel.org>
 Cc:     linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
-        =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        Russell King <linux@armlinux.org.uk>,
         Alexander Shiyan <shc_work@mail.ru>,
-        Lubomir Rintel <lkundrak@v3.sk>,
-        linux-arm-kernel@lists.infradead.org, Arnd Bergmann <arnd@arndb.de>
-Subject: [PATCH v2 01/10] ARM: Remove redundant COMMON_CLK selects
-Date:   Wed,  8 Apr 2020 23:44:07 -0700
-Message-Id: <20200409064416.83340-2-sboyd@kernel.org>
+        =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Aurelien Jacquiot <jacquiot.aurelien@gmail.com>,
+        Catalin Marinas <catalin.marinas@arm.com>, chenhc@lemote.com,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Guan Xuetao <gxt@pku.edu.cn>,
+        Jiaxun Yang <jiaxun.yang@flygoat.com>,
+        linux-arm-kernel@lists.infradead.org, linux-c6x-dev@linux-c6x.org,
+        linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org,
+        linux-sh@vger.kernel.org, Lubomir Rintel <lkundrak@v3.sk>,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        Mark Brown <broonie@kernel.org>,
+        Mark Salter <msalter@redhat.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Paul Burton <paulburton@kernel.org>,
+        Paul Walmsley <paul@pwsan.com>, Rich Felker <dalias@libc.org>,
+        Russell King <linux@armlinux.org.uk>,
+        Thierry Reding <treding@nvidia.com>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Tony Prisk <linux@prisktech.co.nz>,
+        uclinux-h8-devel@lists.sourceforge.jp,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Will Deacon <will@kernel.org>,
+        Yoshinori Sato <ysato@users.sourceforge.jp>
+Subject: [PATCH v2 00/10] Allow COMMON_CLK to be selectable
+Date:   Wed,  8 Apr 2020 23:44:06 -0700
+Message-Id: <20200409064416.83340-1-sboyd@kernel.org>
 X-Mailer: git-send-email 2.26.0.292.g33ef6b2f38-goog
-In-Reply-To: <20200409064416.83340-1-sboyd@kernel.org>
-References: <20200409064416.83340-1-sboyd@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -63,60 +79,105 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The mulitplatform config already selects COMMON_CLK, so selecting it
-again is not useful. Remove these selects from ARM platforms that are
-part of the multiplatform build.
+This patch series cleans up a handful of selects that were redundant and
+deletes presumably dead code with the goal of making it possible to add
+kunit tests for the CCF in the future. To do that, we introduce a
+"legacy" clk Kconfig option to mark code that hasn't migrated to the
+common clk framework and then make the COMMON_CLK config option visible
+in the menuconfig as long as that legacy option isn't enabled. I've also
+included a couple patches at the end that may be more controversial but
+helped me consolidate all this logic/code.
 
-Reviewed-by: "Andreas Färber" <afaerber@suse.de> # actions
-Acked-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org> # actions
-Cc: Russell King <linux@armlinux.org.uk>
+I haven't done more than compile test a few configs for arm, arm64,
+h8300, and mips. More testing is welcome.
+
+The plan is that I'll just merge the whole pile through the clk tree. If
+the first five patches or the last three patches are better going
+through another tree like arm-soc or architecture trees that's fine too,
+but there are potential conflicts between trees so maybe it's better to
+just leave it all in one tree.
+
+Changes from v1:
+ * Fixed MIPS ralink build problem pointed out by Arnd
+ * Fixed meson mx sdio build due to bad Kconfig exposed by this change
+ * Picked up acks
+
+Stephen Boyd (10):
+  ARM: Remove redundant COMMON_CLK selects
+  ARM: Remove redundant CLKDEV_LOOKUP selects
+  arm64: tegra: Remove redundant CLKDEV_LOOKUP selects
+  h8300: Remove redundant CLKDEV_LOOKUP selects
+  MIPS: Remove redundant CLKDEV_LOOKUP selects
+  mmc: meson-mx-sdio: Depend on OF_ADDRESS and not just OF
+  clk: Allow the common clk framework to be selectable
+  ARM: mmp: Remove legacy clk code
+  MIPS: Loongson64: Drop asm/clock.h include
+  clk: Move HAVE_CLK config out of architecture layer
+
 Cc: Alexander Shiyan <shc_work@mail.ru>
-Cc: Lubomir Rintel <lkundrak@v3.sk>
-Cc: <linux-arm-kernel@lists.infradead.org>
+Cc: "Andreas Färber" <afaerber@suse.de>
 Cc: Arnd Bergmann <arnd@arndb.de>
-Signed-off-by: Stephen Boyd <sboyd@kernel.org>
----
- arch/arm/mach-actions/Kconfig  | 1 -
- arch/arm/mach-clps711x/Kconfig | 1 -
- arch/arm/mach-mmp/Kconfig      | 1 -
- 3 files changed, 3 deletions(-)
+Cc: Aurelien Jacquiot <jacquiot.aurelien@gmail.com>
+Cc: Catalin Marinas <catalin.marinas@arm.com>
+Cc: <chenhc@lemote.com>
+Cc: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Guan Xuetao <gxt@pku.edu.cn>
+Cc: Jiaxun Yang <jiaxun.yang@flygoat.com>
+Cc: <linux-arm-kernel@lists.infradead.org>
+Cc: <linux-c6x-dev@linux-c6x.org>
+Cc: <linux-m68k@lists.linux-m68k.org>
+Cc: <linux-mips@vger.kernel.org>
+Cc: <linux-sh@vger.kernel.org>
+Cc: Lubomir Rintel <lkundrak@v3.sk>
+Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc: Mark Brown <broonie@kernel.org>
+Cc: Mark Salter <msalter@redhat.com>
+Cc: Neil Armstrong <narmstrong@baylibre.com>
+Cc: Paul Burton <paulburton@kernel.org>
+Cc: Paul Walmsley <paul@pwsan.com>
+Cc: Rich Felker <dalias@libc.org>
+Cc: Russell King <linux@armlinux.org.uk>
+Cc: Thierry Reding <treding@nvidia.com>
+Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+Cc: Tony Prisk <linux@prisktech.co.nz>
+Cc: uclinux-h8-devel@lists.sourceforge.jp
+Cc: Ulf Hansson <ulf.hansson@linaro.org>
+Cc: Will Deacon <will@kernel.org>
+Cc: Yoshinori Sato <ysato@users.sourceforge.jp>
 
-diff --git a/arch/arm/mach-actions/Kconfig b/arch/arm/mach-actions/Kconfig
-index b5e0ac965ec0..00fb4babccdd 100644
---- a/arch/arm/mach-actions/Kconfig
-+++ b/arch/arm/mach-actions/Kconfig
-@@ -7,7 +7,6 @@ menuconfig ARCH_ACTIONS
- 	select ARM_GLOBAL_TIMER
- 	select CACHE_L2X0
- 	select CLKSRC_ARM_GLOBAL_TIMER_SCHED_CLOCK
--	select COMMON_CLK
- 	select GENERIC_IRQ_CHIP
- 	select HAVE_ARM_SCU if SMP
- 	select HAVE_ARM_TWD if SMP
-diff --git a/arch/arm/mach-clps711x/Kconfig b/arch/arm/mach-clps711x/Kconfig
-index fc9188b54dd6..ba497a2032e9 100644
---- a/arch/arm/mach-clps711x/Kconfig
-+++ b/arch/arm/mach-clps711x/Kconfig
-@@ -5,7 +5,6 @@ menuconfig ARCH_CLPS711X
- 	select AUTO_ZRELADDR
- 	select TIMER_OF
- 	select CLPS711X_TIMER
--	select COMMON_CLK
- 	select CPU_ARM720T
- 	select GENERIC_CLOCKEVENTS
- 	select GPIOLIB
-diff --git a/arch/arm/mach-mmp/Kconfig b/arch/arm/mach-mmp/Kconfig
-index b58a03b18bde..6fe1550f43ec 100644
---- a/arch/arm/mach-mmp/Kconfig
-+++ b/arch/arm/mach-mmp/Kconfig
-@@ -110,7 +110,6 @@ config MACH_MMP_DT
- 	depends on ARCH_MULTI_V5
- 	select PINCTRL
- 	select PINCTRL_SINGLE
--	select COMMON_CLK
- 	select ARCH_HAS_RESET_CONTROLLER
- 	select CPU_MOHAWK
- 	help
+ arch/Kconfig                     |   6 --
+ arch/arm/Kconfig                 |   5 +-
+ arch/arm/mach-actions/Kconfig    |   1 -
+ arch/arm/mach-clps711x/Kconfig   |   1 -
+ arch/arm/mach-mmp/Kconfig        |   1 -
+ arch/arm/mach-mmp/Makefile       |   6 --
+ arch/arm/mach-mmp/clock-mmp2.c   | 114 -------------------------------
+ arch/arm/mach-mmp/clock-pxa168.c |  94 -------------------------
+ arch/arm/mach-mmp/clock-pxa910.c |  70 -------------------
+ arch/arm/mach-mmp/clock.c        | 105 ----------------------------
+ arch/arm/mach-mmp/clock.h        |  65 ------------------
+ arch/arm/mach-vt8500/Kconfig     |   1 -
+ arch/arm64/Kconfig.platforms     |   1 -
+ arch/c6x/Kconfig                 |   1 +
+ arch/h8300/Kconfig               |   1 -
+ arch/m68k/Kconfig.cpu            |   2 +-
+ arch/mips/Kconfig                |   7 +-
+ arch/mips/loongson2ef/Kconfig    |   2 +-
+ arch/mips/loongson64/smp.c       |   1 -
+ arch/mips/ralink/Kconfig         |   4 ++
+ arch/sh/boards/Kconfig           |   5 ++
+ arch/unicore32/Kconfig           |   2 +-
+ drivers/clk/Kconfig              |  23 +++++--
+ drivers/mmc/host/Kconfig         |   2 +-
+ 24 files changed, 38 insertions(+), 482 deletions(-)
+ delete mode 100644 arch/arm/mach-mmp/clock-mmp2.c
+ delete mode 100644 arch/arm/mach-mmp/clock-pxa168.c
+ delete mode 100644 arch/arm/mach-mmp/clock-pxa910.c
+ delete mode 100644 arch/arm/mach-mmp/clock.c
+ delete mode 100644 arch/arm/mach-mmp/clock.h
+
+
+base-commit: 7111951b8d4973bda27ff663f2cf18b663d15b48
 -- 
 Sent by a computer, using git, on the internet
 
