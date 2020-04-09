@@ -2,99 +2,84 @@ Return-Path: <SRS0=n+Ub=5Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1763C2BB85
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 07:10:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F11E0C2D0EA
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 07:10:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BD6AC2072F
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 07:10:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=flygoat.com header.i=jiaxun.yang@flygoat.com header.b="Rn346rSU"
+	by mail.kernel.org (Postfix) with ESMTP id D689220784
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 07:10:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726594AbgDIHKC (ORCPT
+        id S1726626AbgDIHKF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Apr 2020 03:10:02 -0400
-Received: from sender3-op-o12.zoho.com.cn ([124.251.121.243]:17833 "EHLO
-        sender3-op-o12.zoho.com.cn" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725283AbgDIHKA (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Apr 2020 03:10:00 -0400
-ARC-Seal: i=1; a=rsa-sha256; t=1586416166; cv=none; 
-        d=zoho.com.cn; s=zohoarc; 
-        b=Wobei5WInAshMdDygBVluMCD7o9t7TapeJXQK82SdObVJZK7WIRu1ef+g0DEdPKAb4NihMBgGC95mH/COHr2mDwhK5ftrFhLjlahVBYZkoZVs/cWazRrKafjahLVFr1ah/9yzzKp9doKPad27EQVbEOkmLMCi2MEgFaYDi082GY=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zoho.com.cn; s=zohoarc; 
-        t=1586416166; h=Content-Type:Content-Transfer-Encoding:Cc:Date:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:To; 
-        bh=Qa2n9evYcQirCgCpxB3IDp9QTiqPYtFJmnGql3MTeb8=; 
-        b=P3bM1gBFwIY5AN1PVPkki5jLmeClwQNmRudkjeYe5Us0InylAecwEu/wVJfwqNBZy1boaYIOHWM8wEJFZ9tqUcuytIK3fKN9LR1VGJ5PQsfjiCagUsw2qtHdEhSH0YhM4a5oUbPV/s4ob/ayyxjpXQ5A7M8C2z9FsA8JRRQ17OU=
-ARC-Authentication-Results: i=1; mx.zoho.com.cn;
-        dkim=pass  header.i=flygoat.com;
-        spf=pass  smtp.mailfrom=jiaxun.yang@flygoat.com;
-        dmarc=pass header.from=<jiaxun.yang@flygoat.com> header.from=<jiaxun.yang@flygoat.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1586416166;
-        s=mail; d=flygoat.com; i=jiaxun.yang@flygoat.com;
-        h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:MIME-Version:Content-Type:Content-Transfer-Encoding;
-        bh=Qa2n9evYcQirCgCpxB3IDp9QTiqPYtFJmnGql3MTeb8=;
-        b=Rn346rSUB56UKQTyGi9/TAn+tnlZa9mO9YJECtbdJu0t56UJPKRZVzcnIidSCzze
-        VtIC9aWgAoJ3yr3d9ytiNbakVSw0tpzB3T+bgwQqaIxko6DwA1mvUyAWBT/XrjkPWdi
-        75y5QlFet0/84yqaveSQpLa0G2VRtG9Sol53OgRk=
-Received: from flygoat-x1e (122.235.212.87 [122.235.212.87]) by mx.zoho.com.cn
-        with SMTPS id 1586416164370380.5460093713225; Thu, 9 Apr 2020 15:09:24 +0800 (CST)
-Date:   Thu, 9 Apr 2020 15:09:23 +0800
-From:   Jiaxun Yang <jiaxun.yang@flygoat.com>
-To:     YunQiang Su <wzssyqa@gmail.com>
-Cc:     Tiezhu Yang <yangtiezhu@loongson.cn>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        linux-mips <linux-mips@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Xuefeng Li <lixuefeng@loongson.cn>
-Subject: Re: [PATCH] MIPS: Limit check_bugs32() under CONFIG_32BIT
-Message-ID: <20200409150923.5b224361@flygoat-x1e>
-In-Reply-To: <CAKcpw6XywbOs-rh5ko0uz9vLz9nkgrJ0LiRTSkQQaU9dZbg7oQ@mail.gmail.com>
-References: <1586401829-22242-1-git-send-email-yangtiezhu@loongson.cn>
-        <CAKcpw6XywbOs-rh5ko0uz9vLz9nkgrJ0LiRTSkQQaU9dZbg7oQ@mail.gmail.com>
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-ZohoCNMailClient: External
+        Thu, 9 Apr 2020 03:10:05 -0400
+Received: from mga14.intel.com ([192.55.52.115]:29893 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725795AbgDIHKB (ORCPT <rfc822;Linux-kernel@vger.kernel.org>);
+        Thu, 9 Apr 2020 03:10:01 -0400
+IronPort-SDR: LSmecBvBJAT6KiOL+jGpKh6J1VzRcLSZNXdFPaNcEwHgqotRpYPdlOpJK7b7xhV0LZ0CEvi7Tn
+ T5N5edKGaqLw==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Apr 2020 00:10:00 -0700
+IronPort-SDR: 4VB3nF+R5QKwZ0SsgQHo8Po3NfB4+eC6+4SN+qar5tuOsS14D9h3K4NnqKXgBJhi012eXam+Pq
+ C1nF8MBIwRaA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,361,1580803200"; 
+   d="scan'208";a="362078582"
+Received: from kbl-ppc.sh.intel.com ([10.239.159.118])
+  by fmsmga001.fm.intel.com with ESMTP; 09 Apr 2020 00:09:58 -0700
+From:   Jin Yao <yao.jin@linux.intel.com>
+To:     acme@kernel.org, jolsa@kernel.org, peterz@infradead.org,
+        mingo@redhat.com, alexander.shishkin@linux.intel.com
+Cc:     Linux-kernel@vger.kernel.org, ak@linux.intel.com,
+        kan.liang@intel.com, yao.jin@intel.com,
+        Jin Yao <yao.jin@linux.intel.com>
+Subject: [PATCH] perf stat: Zero ena and run for interval mode
+Date:   Thu,  9 Apr 2020 15:07:55 +0800
+Message-Id: <20200409070755.17261-1-yao.jin@linux.intel.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 9 Apr 2020 12:43:28 +0800
-YunQiang Su <wzssyqa@gmail.com> wrote:
+As the code comments in perf_stat_process_counter() say,
+we calculate counter's data every interval, and the display
+code shows ps->res_stats avg value. We need to zero the stats
+for interval mode.
 
-> Tiezhu Yang <yangtiezhu@loongson.cn> =E4=BA=8E2020=E5=B9=B44=E6=9C=889=E6=
-=97=A5=E5=91=A8=E5=9B=9B
-> =E4=B8=8A=E5=8D=8811:10=E5=86=99=E9=81=93=EF=BC=9A
-> >
-> > There is no need to build and call check_bugs32() under
-> > CONFIG_64BIT, just limit it under CONFIG_32BIT. =20
->=20
-> Since 32bit is subset of 64bit, and due to the code, I think that the
-> initial purpose
-> of check_bugs32() is also willing to run even with CONFIG_64BIT.
->=20
-> For example, if we have a CPU which is 64bit, and work well on 64bit
-> mode, while has a bug only on 32bit mode, check_bugs32 should be used
-> here.
->=20
-> Loongson's 3A 1000 is the example, I cannot support FP32 mode well.
+But the current code only zeros the res_stats[0], it doesn't
+zero the res_stats[1] and res_stats[2], which are for ena
+and run of counter.
 
-In this case bugs32 only contains a workaround for MIPS34K, which is a
-MIPS32 processor. It's safe to do so.
+This patch zeros the whole res_stats[] for interval mode.
 
-But my suggestion is if you're going to clean-up bugs and workarounds
-you'd better establish a file for silicon bugs and provide Kconfig
-options to enable & disable them. Manage bug dependencies by Kconfig
-will be easier.
+Signed-off-by: Jin Yao <yao.jin@linux.intel.com>
+---
+ tools/perf/util/stat.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-Thanks.
+diff --git a/tools/perf/util/stat.c b/tools/perf/util/stat.c
+index 5f26137b8d60..242476eb808c 100644
+--- a/tools/perf/util/stat.c
++++ b/tools/perf/util/stat.c
+@@ -368,8 +368,10 @@ int perf_stat_process_counter(struct perf_stat_config *config,
+ 	 * interval mode, otherwise overall avg running
+ 	 * averages will be shown for each interval.
+ 	 */
+-	if (config->interval)
+-		init_stats(ps->res_stats);
++	if (config->interval) {
++		for (i = 0; i < 3; i++)
++			init_stats(&ps->res_stats[i]);
++	}
+ 
+ 	if (counter->per_pkg)
+ 		zero_per_pkg(counter);
+-- 
+2.17.1
 
---
-Jiaxun Yang
