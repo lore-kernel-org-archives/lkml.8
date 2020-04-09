@@ -2,133 +2,204 @@ Return-Path: <SRS0=n+Ub=5Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43373C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 01:03:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BFCACC2BA2B
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 01:06:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 198DA2078E
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 01:03:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="nvnY+UsJ"
+	by mail.kernel.org (Postfix) with ESMTP id 8AD022078E
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 01:06:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726582AbgDIBD0 (ORCPT
+        id S1726597AbgDIBGo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Apr 2020 21:03:26 -0400
-Received: from ozlabs.org ([203.11.71.1]:48423 "EHLO ozlabs.org"
+        Wed, 8 Apr 2020 21:06:44 -0400
+Received: from foss.arm.com ([217.140.110.172]:44632 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726527AbgDIBDZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Apr 2020 21:03:25 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 48yNDq1rnxz9sSM;
-        Thu,  9 Apr 2020 11:03:22 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1586394203;
-        bh=FZpptNNsj2BTSupbP87BJKZWb2UD0XwPkOLhJMORMuQ=;
-        h=Date:From:To:Cc:Subject:From;
-        b=nvnY+UsJ+teefS3BjUG7hUF7mQUakrA9ZCgfAF4NYJ26LT9Mknn1zx2zKM6bSwgsD
-         uHNy2CBVfIrpwXeWBo+PCdaaI/D8MaTIlmIRNVCFvH9IPw50U5kkq3UDgFNdt4qWBj
-         wK+HauP9V2bbTXcCaUwswLgw376r2SkLFuQJ9eABISNdLnNr3Bg7JEX/XHcOlJgWkQ
-         atvsYUIuhw8cp2Dqq7Cf8ff3CUekYQkIJj36sPowAzKxtwNwjV/rmR86Zwyb8rwEeN
-         ytI58/bZrElq5eUnJ8pI7pnd3We8UIdLKJhtSvLZrZKcqEb4ORQswyczYMRF41K/ir
-         5gny7woK1weig==
-Date:   Thu, 9 Apr 2020 11:03:20 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Dominique Martinet <asmadeus@codewreck.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>
-Subject: linux-next: manual merge of the v9fs tree with Linus' tree
-Message-ID: <20200409110320.3de95e0b@canb.auug.org.au>
+        id S1726527AbgDIBGn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Apr 2020 21:06:43 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 371301FB;
+        Wed,  8 Apr 2020 18:06:43 -0700 (PDT)
+Received: from [10.163.1.2] (unknown [10.163.1.2])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 16C383F73D;
+        Wed,  8 Apr 2020 18:06:32 -0700 (PDT)
+From:   Anshuman Khandual <anshuman.khandual@arm.com>
+Subject: Re: [PATCH V2 0/3] mm/debug: Add more arch page table helper tests
+To:     Gerald Schaefer <gerald.schaefer@de.ibm.com>
+Cc:     linux-mm@kvack.org, christophe.leroy@c-s.fr,
+        Jonathan Corbet <corbet@lwn.net>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Vineet Gupta <vgupta@synopsys.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        "Kirill A . Shutemov" <kirill@shutemov.name>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        linux-snps-arc@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org,
+        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
+        linux-riscv@lists.infradead.org, x86@kernel.org,
+        linux-doc@vger.kernel.org, linux-arch@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <1585027375-9997-1-git-send-email-anshuman.khandual@arm.com>
+ <20200331143059.29fca8fa@thinkpad>
+ <e3e35885-6852-16aa-3889-e22750a0cc87@arm.com>
+ <20200407175440.41cc00a5@thinkpad>
+ <253cf5c8-e43e-5737-24e8-3eda3b6ba7b3@arm.com>
+ <20200408141500.75b2e1a7@thinkpad>
+Message-ID: <b35210ec-7084-9c77-bdf5-820cfc7f96bc@arm.com>
+Date:   Thu, 9 Apr 2020 06:36:23 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/7UzRnTtmIQ_7K+rYqm3JZaO";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+In-Reply-To: <20200408141500.75b2e1a7@thinkpad>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/7UzRnTtmIQ_7K+rYqm3JZaO
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
 
-Hi all,
+On 04/08/2020 05:45 PM, Gerald Schaefer wrote:
+> On Wed, 8 Apr 2020 12:41:51 +0530
+> Anshuman Khandual <anshuman.khandual@arm.com> wrote:
+> 
+> [...]
+>>>   
+>>>>
+>>>> Some thing like this instead.
+>>>>
+>>>> pte_t pte = READ_ONCE(*ptep);
+>>>> pte = pte_mkhuge(__pte((pte_val(pte) | RANDOM_ORVALUE) & PMD_MASK));
+>>>>
+>>>> We cannot use mk_pte_phys() as it is defined only on some platforms
+>>>> without any generic fallback for others.  
+>>>
+>>> Oh, didn't know that, sorry. What about using mk_pte() instead, at least
+>>> it would result in a present pte:
+>>>
+>>> pte = pte_mkhuge(mk_pte(phys_to_page(RANDOM_ORVALUE & PMD_MASK), prot));  
+>>
+>> Lets use mk_pte() here but can we do this instead
+>>
+>> paddr = (__pfn_to_phys(pfn) | RANDOM_ORVALUE) & PMD_MASK;
+>> pte = pte_mkhuge(mk_pte(phys_to_page(paddr), prot));
+>>
+> 
+> Sure, that will also work.
+> 
+> BTW, this RANDOM_ORVALUE is not really very random, the way it is
+> defined. For s390 we already changed it to mask out some arch bits,
+> but I guess there are other archs and bits that would always be
+> set with this "not so random" value, and I wonder if/how that would
+> affect all the tests using this value, see also below.
 
-Today's linux-next merge of the v9fs tree got a conflict in:
+RANDOM_ORVALUE is a constant which was added in order to make sure
+that the page table entries should have some non-zero value before
+getting called with pxx_clear() and followed by a pxx_none() check.
+This is currently used only in pxx_clear_tests() tests. Hence there
+is no impact for the existing tests.
 
-  Documentation/filesystems/9p.rst
+> 
+>>>
+>>> And if you also want to do some with the existing value, which seems
+>>> to be an empty pte, then maybe just check if writing and reading that
+>>> value with set_huge_pte_at() / huge_ptep_get() returns the same,
+>>> i.e. initially w/o RANDOM_ORVALUE.
+>>>
+>>> So, in combination, like this (BTW, why is the barrier() needed, it
+>>> is not used for the other set_huge_pte_at() calls later?):  
+>>
+>> Ahh missed, will add them. Earlier we faced problem without it after
+>> set_pte_at() for a test on powerpc (64) platform. Hence just added it
+>> here to be extra careful.
+>>
+>>>
+>>> @@ -733,24 +733,28 @@ static void __init hugetlb_advanced_test
+>>>         struct page *page = pfn_to_page(pfn);
+>>>         pte_t pte = READ_ONCE(*ptep);
+>>>  
+>>> -       pte = __pte(pte_val(pte) | RANDOM_ORVALUE);
+>>> +       set_huge_pte_at(mm, vaddr, ptep, pte);
+>>> +       WARN_ON(!pte_same(pte, huge_ptep_get(ptep)));
+>>> +
+>>> +       pte = pte_mkhuge(mk_pte(phys_to_page(RANDOM_ORVALUE & PMD_MASK), prot));
+>>>         set_huge_pte_at(mm, vaddr, ptep, pte);
+>>>         barrier();
+>>>         WARN_ON(!pte_same(pte, huge_ptep_get(ptep)));
+>>>
+>>> This would actually add a new test "write empty pte with
+>>> set_huge_pte_at(), then verify with huge_ptep_get()", which happens
+>>> to trigger a warning on s390 :-)  
+>>
+>> On arm64 as well which checks for pte_present() in set_huge_pte_at().
+>> But PTE present check is not really present in each set_huge_pte_at()
+>> implementation especially without __HAVE_ARCH_HUGE_SET_HUGE_PTE_AT.
+>> Hence wondering if we should add this new test here which will keep
+>> giving warnings on s390 and arm64 (at the least).
+> 
+> Hmm, interesting. I forgot about huge swap / migration, which is not
+> (and probably cannot be) supported on s390. The pte_present() check
+> on arm64 seems to check for such huge swap / migration entries,
+> according to the comment.
+> 
+> The new test "write empty pte with set_huge_pte_at(), then verify
+> with huge_ptep_get()" would then probably trigger the
+> WARN_ON(!pte_present(pte)) in arm64 code. So I guess "writing empty
+> ptes with set_huge_pte_at()" is not really a valid use case in practice,
+> or else you would have seen this warning before. In that case, it
+> might not be a good idea to add this test.
 
-between commit:
+Got it.
 
-  07d241fd66ba ("docs: filesystems: convert 9p.txt to ReST")
+> 
+> I also do wonder now, why the original test with
+> "pte = __pte(pte_val(pte) | RANDOM_ORVALUE);"
+> did not also trigger that warning on arm64. On s390 this test failed
+> exactly because the constructed pte was not present (initially empty,
+> or'ing RANDOM_ORVALUE does not make it present for s390). I guess this
+> just worked by chance on arm64, because the bits from RANDOM_ORVALUE
+> also happened to mark the pte present for arm64.
 
-from Linus' tree and commit:
+That is correct. RANDOM_ORVALUE has got PTE_PROT_NONE bit set that makes
+the PTE test for pte_present().
 
-  c6f141412d24 ("9p: document short read behaviour with O_NONBLOCK")
+On arm64 platform,
 
-from the v9fs tree.
+#define pte_present(pte)  (!!(pte_val(pte) & (PTE_VALID | PTE_PROT_NONE)))
 
-I fixed it up (see below) and can carry the fix as necessary. This
-is now fixed as far as linux-next is concerned, but any non trivial
-conflicts should be mentioned to your upstream maintainer when your tree
-is submitted for merging.  You may also want to consider cooperating
-with the maintainer of the conflicting tree to minimise any particularly
-complex conflicts.
+> 
+> This brings us back to the question above, regarding the "randomness"
+> of RANDOM_ORVALUE. Not really sure what the intention behind that was,
+> but maybe it would make sense to restrict this RANDOM_ORVALUE to
+> non-arch-specific bits, i.e. only bits that would be part of the
+> address value within a page table entry? Or was it intentionally
+> chosen to also mess with other bits?
 
---=20
-Cheers,
-Stephen Rothwell
+As mentioned before, RANDOM_ORVALUE just helped make a given page table
+entry contain non-zero values before getting cleared. AFAICS we should
+not need RANDOM_ORVALUE for HugeTLB test here. I believe the following
+'paddr' construct will just be fine instead.
 
-diff --cc Documentation/filesystems/9p.rst
-index f054d1c45e86,3fb780ffdf23..000000000000
---- a/Documentation/filesystems/9p.rst
-+++ b/Documentation/filesystems/9p.rst
-@@@ -156,9 -132,18 +156,19 @@@ Option
-    cachetag	cache tag to use the specified persistent cache.
-  		cache tags for existing cache sessions can be listed at
-  		/sys/fs/9p/caches. (applies only to cache=3Dfscache)
- +  =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D
- =20
- -BEHAVIOR
-++Behavior
-+ =3D=3D=3D=3D=3D=3D=3D=3D
-+=20
-+ This section aims at describing 9p 'quirks' that can be different
-+ from a local filesystem behaviors.
-+=20
-+  - Setting O_NONBLOCK on a file will make client reads return as early
-+    as the server returns some data instead of trying to fill the read
-+    buffer with the requested amount of bytes or end of file is reached.
-+=20
- -RESOURCES
- +Resources
-  =3D=3D=3D=3D=3D=3D=3D=3D=3D
- =20
-  Protocol specifications are maintained on github:
+paddr = __pfn_to_phys(pfn) & PMD_MASK;
+pte = pte_mkhuge(mk_pte(phys_to_page(paddr), prot));
 
---Sig_/7UzRnTtmIQ_7K+rYqm3JZaO
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl6OdFgACgkQAVBC80lX
-0Gzcggf/eMKJQ5GCmdyz/iulfFyjM+G6heVxzUT5Dej1oimPC/sfbE3S5CV5Apvo
-WcvjF3RogPFcMzHW9vx1J1VqTdN4drR/B0RbPgvbuR1QsrE8cL6DzWpoVyApI4l9
-8QSS7RfgfbPNjv3U2Ee6SRXryBqt3BA+5Vk8HSByGtERQqFeO464LB/ENWSTODDH
-KK6aAIDPnPpF6Zi6JKvE7D2uWJlB/icfmrEVSr/lJF8iWsmPdCaYDMG0l2jM7eZL
-lswgSdLtzYoTUyzfxsqoePnnPkMEt+w/w30X9fYJt/RijjyIwzDEPAroopvBt8dS
-/M220bR+kUKHGG29c5yww3VZPGFttw==
-=0dH9
------END PGP SIGNATURE-----
-
---Sig_/7UzRnTtmIQ_7K+rYqm3JZaO--
+> 
+> Regards,
+> Gerald
+> 
+> 
