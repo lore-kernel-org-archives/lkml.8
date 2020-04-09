@@ -2,93 +2,104 @@ Return-Path: <SRS0=n+Ub=5Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83D63C2BB86
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 10:53:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3B04C2BBC7
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 10:53:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5558520857
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 10:53:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C9854208FE
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 10:53:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1586429630;
+	bh=BZVpag0qQETEDSuxALqBEW3mh5PAYg0YPSQ6u6hT+os=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=j15RfDZFN54qk3iwlUA5zf0IFAlouZ9ugWuvB4C4TXN3dzHesWaY3OQWIn43Mov86
+	 U2egrPo7FczOysWO+iiupxNVtQEDGVpGG1ms+wggARHXISRXaLU8LFFh29KbxxQnGu
+	 Pv4X1YzRi0zSW+1xZN1Woui/RFlIFx20NmWIorrY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726597AbgDIKxA (ORCPT
+        id S1726646AbgDIKxt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Apr 2020 06:53:00 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:33153 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726470AbgDIKxA (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Apr 2020 06:53:00 -0400
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <mfe@pengutronix.de>)
-        id 1jMUnm-0007xF-UN; Thu, 09 Apr 2020 12:52:54 +0200
-Received: from mfe by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <mfe@pengutronix.de>)
-        id 1jMUnl-0001Ie-R9; Thu, 09 Apr 2020 12:52:53 +0200
-Date:   Thu, 9 Apr 2020 12:52:53 +0200
-From:   Marco Felsch <m.felsch@pengutronix.de>
-To:     Oliver Graute <oliver.graute@gmail.com>
-Cc:     dmitry.torokhov@gmail.com,
-        Oliver Graute <oliver.graute@kococonnector.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sasha Levin <sashal@kernel.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1] Input: edt-ft5x06 - fix crash on EDT EP0110M09
-Message-ID: <20200409105253.qvezbikpbnrkig52@pengutronix.de>
-References: <1586424425-27038-1-git-send-email-oliver.graute@gmail.com>
+        Thu, 9 Apr 2020 06:53:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36252 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725970AbgDIKxs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Apr 2020 06:53:48 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 29C1320857;
+        Thu,  9 Apr 2020 10:53:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1586429628;
+        bh=BZVpag0qQETEDSuxALqBEW3mh5PAYg0YPSQ6u6hT+os=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=tTiZNE4MZTrKG51Y9OasNhBTM4o2bQLbPf4Wf7/YAQELzNOT+AZAkgn2K0xhT4IA2
+         HuyI4p0Y0c92dYiCkVqvymJQgjD6EbHBHAoaHwPXk/+7v+O7zifx1qUnqixV55VStn
+         4PNGjE29VSHGt8vR/xAWJjchP4WQ81ol1wBUKig8=
+Date:   Thu, 9 Apr 2020 11:53:46 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Stephen Boyd <sboyd@kernel.org>
+Cc:     Michael Turquette <mturquette@baylibre.com>,
+        linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Mark Salter <msalter@redhat.com>,
+        Aurelien Jacquiot <jacquiot.aurelien@gmail.com>,
+        Jiaxun Yang <jiaxun.yang@flygoat.com>,
+        Guan Xuetao <gxt@pku.edu.cn>,
+        Russell King <linux@armlinux.org.uk>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Yoshinori Sato <ysato@users.sourceforge.jp>,
+        Rich Felker <dalias@libc.org>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        linux-mips@vger.kernel.org, linux-c6x-dev@linux-c6x.org,
+        linux-m68k@lists.linux-m68k.org,
+        linux-arm-kernel@lists.infradead.org, linux-sh@vger.kernel.org
+Subject: Re: [PATCH v2 07/10] clk: Allow the common clk framework to be
+ selectable
+Message-ID: <20200409105346.GC5399@sirena.org.uk>
+References: <20200409064416.83340-1-sboyd@kernel.org>
+ <20200409064416.83340-8-sboyd@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="8X7/QrJGcKSMr1RN"
 Content-Disposition: inline
-In-Reply-To: <1586424425-27038-1-git-send-email-oliver.graute@gmail.com>
-X-Sent-From: Pengutronix Hildesheim
-X-URL:  http://www.pengutronix.de/
-X-IRC:  #ptxdist @freenode
-X-Accept-Language: de,en
-X-Accept-Content-Type: text/plain
-X-Uptime: 12:45:47 up 146 days,  2:04, 166 users,  load average: 0.06, 0.06,
- 0.02
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: mfe@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+In-Reply-To: <20200409064416.83340-8-sboyd@kernel.org>
+X-Cookie: HUGH BEAUMONT died in 1982!!
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Oliver,
 
-thanks for your patch.
+--8X7/QrJGcKSMr1RN
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-On 20-04-09 11:27, Oliver Graute wrote:
-> From: Oliver Graute <oliver.graute@kococonnector.com>
+On Wed, Apr 08, 2020 at 11:44:13PM -0700, Stephen Boyd wrote:
+> Enable build testing and configuration control of the common clk
+> framework so that more code coverage and testing can be done on the
+> common clk framework across various architectures. This also nicely
+> removes the requirement that architectures must select the framework
+> when they don't use it in architecture code.
 
-...
+Reviwed-by: Mark Brown <broonie@kernel.org>
 
->  drivers/input/touchscreen/edt-ft5x06.c | 4 ----
->  1 file changed, 4 deletions(-)
-> 
-> diff --git a/drivers/input/touchscreen/edt-ft5x06.c b/drivers/input/touchscreen/edt-ft5x06.c
-> index 06aa8ba0b6d7..6fbc87d041a1 100644
-> --- a/drivers/input/touchscreen/edt-ft5x06.c
-> +++ b/drivers/input/touchscreen/edt-ft5x06.c
-> @@ -819,10 +819,6 @@ static int edt_ft5x06_ts_identify(struct i2c_client *client,
->  	 * to have garbage in there
->  	 */
->  	memset(rdbuf, 0, sizeof(rdbuf));
-> -	error = edt_ft5x06_ts_readwrite(client, 1, "\xBB",
-> -					EDT_NAME_LEN - 1, rdbuf);
-> -	if (error)
-> -		return error;
+--8X7/QrJGcKSMr1RN
+Content-Type: application/pgp-signature; name="signature.asc"
 
+-----BEGIN PGP SIGNATURE-----
 
-I don't see how this call can corrupt the stack..
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl6O/rkACgkQJNaLcl1U
+h9C8bAf/SJkvvbTRmpOunw3fAHei1NkJ2RUZ/Ax5l+NwzvC+fSezjkGHKH+2LVOV
+6vTimPH4EKoGc/4RRBVRSrlp20QY/mz4/7+/Ojsrfp9KsWdcH167Zd26sYP3kSy2
+8jxnHBccoWJ8B9p9YVYslrMb0+y1mjnfLOsBioILN1wa6R2vuv7/JXuu1FmaeYLl
+geaZWL7Aw8Knj421ywLqEbg57Zd7M/2ei5gI/plDWIS+UoeuPPPhsUCVkza76DOE
+pyvpA21x2ceFOmCTq0O5O2a/WlM8xwfklNLML6wx3NSS02WWiqnAbMS3sZ9Adk50
+k7m1LMdfWu/q1CQwp58kVOsZJVWZ4g==
+=+bDI
+-----END PGP SIGNATURE-----
 
-Regards,
-  Marco
+--8X7/QrJGcKSMr1RN--
