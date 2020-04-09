@@ -2,168 +2,165 @@ Return-Path: <SRS0=n+Ub=5Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.4 required=3.0 tests=FORGED_MUA_MOZILLA,
+	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2822EC2BA19
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 19:57:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 372D0C2BA19
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 19:57:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EA9A1208E4
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 19:57:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 075902084D
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 19:57:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726905AbgDIT5D (ORCPT
+        id S1726945AbgDIT5i (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Apr 2020 15:57:03 -0400
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:40865 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726812AbgDIT5D (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Apr 2020 15:57:03 -0400
-Received: by mail-lj1-f193.google.com with SMTP id 142so1016222ljj.7;
-        Thu, 09 Apr 2020 12:57:01 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:reply-to:subject:to:cc:references:from:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=IqFY640RbFLFwua6W1UXdOM8tCdMfQQ3d021gIPs3go=;
-        b=tT6UFnbBoPP9ZSTuTEKoSNyU0aO0fMTTGxJc3vscI1hI/aY86//1Z6rlzYe/zJ0mx0
-         c9AeRsLe5r1JiL+Cr/Ao7OZ4+IFdaMQk6sox9Z3FxDiaxXWSrmcdR0bSOQkTmsUqIodu
-         3WWS97fvKBszB/7f79DdG0w87NLkCpheqfG2tyHSPDVB0KgzIN4VfqRC8qF7wXxioYlE
-         QTP3SVZJ4NXlW99XbsgalWpHNFVdwAth+fFT/GYYvlhNLMP08gPLlqAKOERa8AH2xIYs
-         ++KIBzVfK+BP4dPNUpzOZRdlnCO6qRvwJTv4RF0WCCA0L5N8UhADOFAElOZm9VNFpoIO
-         qc6A==
-X-Gm-Message-State: AGi0PuZOfLhT/rWj6V1Irwlbmuio7dj2r1DwXRgJ8T+LkvMgfd7O3lMg
-        dHtDzCfRY7rGAz0oT/b1enc=
-X-Google-Smtp-Source: APiQypIQhgYoWlP25Frwc/RU2D37XrYS4VorSwK8yMLgBcXxoB5uwlgyIN2qRn1gUM0bJiwCkuLQXA==
-X-Received: by 2002:a2e:804a:: with SMTP id p10mr907437ljg.289.1586462220406;
-        Thu, 09 Apr 2020 12:57:00 -0700 (PDT)
-Received: from [192.168.42.234] ([213.87.131.218])
-        by smtp.gmail.com with ESMTPSA id h16sm15834846ljl.73.2020.04.09.12.56.58
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 09 Apr 2020 12:56:59 -0700 (PDT)
-Reply-To: alex.popov@linux.com
-Subject: Re: [Cocci] Coccinelle rule for CVE-2019-18683
-To:     Julia Lawall <julia.lawall@inria.fr>
-Cc:     Gilles Muller <Gilles.Muller@lip6.fr>,
-        Nicolas Palix <nicolas.palix@imag.fr>,
-        Michal Marek <michal.lkml@markovi.net>, cocci@systeme.lip6.fr,
-        "kernel-hardening@lists.openwall.com" 
-        <kernel-hardening@lists.openwall.com>,
-        Jann Horn <jannh@google.com>,
-        Kees Cook <keescook@chromium.org>,
-        Hans Verkuil <hverkuil@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Linux Media Mailing List <linux-media@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Markus Elfring <Markus.Elfring@web.de>
-References: <fff664e9-06c9-d2fb-738f-e8e591e09569@linux.com>
- <alpine.DEB.2.21.2004091248190.2403@hadrien>
-From:   Alexander Popov <alex.popov@linux.com>
-Autocrypt: addr=alex.popov@linux.com; prefer-encrypt=mutual; keydata=
- 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
- j3lCqPk=
-Message-ID: <3c92523d-4b3f-e805-84e6-6abd1eedd683@linux.com>
-Date:   Thu, 9 Apr 2020 22:56:57 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
-MIME-Version: 1.0
-In-Reply-To: <alpine.DEB.2.21.2004091248190.2403@hadrien>
+        Thu, 9 Apr 2020 15:57:38 -0400
+Received: from mail-db8eur05olkn2040.outbound.protection.outlook.com ([40.92.89.40]:44257
+        "EHLO EUR05-DB8-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725970AbgDIT5i (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Apr 2020 15:57:38 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=C2iR1F6CngUF0wzb0Mcg8Uwd5bxk1NkU0eC86y1NkjubbVDEsUHWAiXaen/x6o7MwzMOqCbmWDPdptRKODc7FTpnrs16mYVqhl9Fyj5KdUn+wGaI0YvFYKlOW4tS3EAuiE8WfvPuUsE6gBF1YLVH6fxu8rrX9BZINLFpTHUZL7s4ng6eOd4tPJgsAOHeUZvCambrL15jL4VeGTiu2j63ZKNYxGl9KpVDh+V4okOPBO3l4zv35T+xkr5xnxa71OonfLfXRSIoo4rkhckFm2jcMS1Tu/GLxbXnRHQ6LNTeFvRv5/TZfKO8Yd/2hSTTnYTY51QiSGh+kq9bg3yLRDDaOQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ujilNj+xQAricJA6P/3LpKeAdVz/8sqxfl3SRYLILKE=;
+ b=D6MAjtBTcVyUgdpEHV/ZKTVf+dwCtQgNo1hNrd41euA0Y6mY/pYAUFtbSJ4fg1xF4ZOTQ5qx2DozuidkG/PrzvqliTyx1Gy19vRa82vwLqGpJcJhWUlrdPEwOCl5R7kSarywYVxox/WHfGpUIt16tQ5MTit4hqso7pHAMPhqc93qHHc/IaryLj/TYkWQc5SP4gnvFnJ38oNBCyKRvZulKgQlD+9/fZdY9VqsCvwEJrnUn5q1UO/zFVmub7mS3LQWLirE2Ojr+O/g0nfHjHJ2s8YH3UScvxK3pxfTX/S23/gJFA40YnQ4inpSDiIxQZ4dZPNIKXJCrYXHi/HQtep/qg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=hotmail.de; dmarc=pass action=none header.from=hotmail.de;
+ dkim=pass header.d=hotmail.de; arc=none
+Received: from AM6EUR05FT066.eop-eur05.prod.protection.outlook.com
+ (2a01:111:e400:fc11::51) by
+ AM6EUR05HT216.eop-eur05.prod.protection.outlook.com (2a01:111:e400:fc11::200)
+ with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2900.15; Thu, 9 Apr
+ 2020 19:57:35 +0000
+Received: from AM6PR03MB5170.eurprd03.prod.outlook.com
+ (2a01:111:e400:fc11::40) by AM6EUR05FT066.mail.protection.outlook.com
+ (2a01:111:e400:fc11::108) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2900.15 via Frontend
+ Transport; Thu, 9 Apr 2020 19:57:35 +0000
+X-IncomingTopHeaderMarker: OriginalChecksum:7FA4B0336A9E5EC65D4A3B74675D1C47A82B8B17AC7BEC06ACF65DF99DAE4F7B;UpperCasedChecksum:25C76B282F54B76AEA786D46396B16EEF4E4A2E0DD83C6A56C3DF1657AB64ECF;SizeAsReceived:9994;Count:50
+Received: from AM6PR03MB5170.eurprd03.prod.outlook.com
+ ([fe80::d57:5853:a396:969d]) by AM6PR03MB5170.eurprd03.prod.outlook.com
+ ([fe80::d57:5853:a396:969d%7]) with mapi id 15.20.2878.022; Thu, 9 Apr 2020
+ 19:57:35 +0000
+Subject: Re: [GIT PULL] Please pull proc and exec work for 5.7-rc1
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     "Eric W. Biederman" <ebiederm@xmission.com>,
+        Waiman Long <longman@redhat.com>,
+        Ingo Molnar <mingo@kernel.org>, Will Deacon <will@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Alexey Gladkov <gladkov.alexey@gmail.com>,
+        Oleg Nesterov <oleg@redhat.com>
+References: <87blobnq02.fsf@x220.int.ebiederm.org>
+ <87lfnda3w3.fsf@x220.int.ebiederm.org>
+ <CAHk-=wjxyGCj9675mf31uhoJCyHn74ON_+O6SjSqBSSvqWxC1Q@mail.gmail.com>
+ <87blo45keg.fsf@x220.int.ebiederm.org>
+ <CAHk-=whES-KCO6Bs93-QBK1tS5CfiWSi+v5D1a7Sc1TD5RFoaA@mail.gmail.com>
+ <87v9maxb5q.fsf@x220.int.ebiederm.org>
+ <CAHk-=wih4BqW7GTLaYxewynuT-iFHrXroip0wNo0CyPtmYGUow@mail.gmail.com>
+ <87y2r4so3i.fsf@x220.int.ebiederm.org>
+ <CAHk-=wjhAvv6s_7OVeZJiHaY7bBrHyiPTkSpq-TLr6qxYqxUUw@mail.gmail.com>
+ <CAHk-=wi0jrKv9x6vJ9FDgTrSUbdbZYDX-79T-E87C48MGSn5=g@mail.gmail.com>
+ <87wo6or3pg.fsf@x220.int.ebiederm.org>
+ <AM6PR03MB51708FD4226E07AB7CB0D6A7E4C10@AM6PR03MB5170.eurprd03.prod.outlook.com>
+ <CAHk-=wjaoYM4gXdAyYY=u8PaYj2LXUvcfp=8DKum8f1DM+Ws0A@mail.gmail.com>
+ <AM6PR03MB5170F924EA69A81D79BD0929E4C10@AM6PR03MB5170.eurprd03.prod.outlook.com>
+ <CAHk-=whMKC5F-=QQP=fCNRuTF+ZGiNtLEKvx7KekpK1JtrwDhw@mail.gmail.com>
+ <CAHk-=whJ8khGBqfqh6ZmHsKjcyyBLm5xgkgLW_AC_=82iFBWoQ@mail.gmail.com>
+From:   Bernd Edlinger <bernd.edlinger@hotmail.de>
+Message-ID: <AM6PR03MB51700B243E34BF4A59FF33CFE4C10@AM6PR03MB5170.eurprd03.prod.outlook.com>
+Date:   Thu, 9 Apr 2020 21:57:33 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
+In-Reply-To: <CAHk-=whJ8khGBqfqh6ZmHsKjcyyBLm5xgkgLW_AC_=82iFBWoQ@mail.gmail.com>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: AM0PR02CA0081.eurprd02.prod.outlook.com
+ (2603:10a6:208:154::22) To AM6PR03MB5170.eurprd03.prod.outlook.com
+ (2603:10a6:20b:ca::23)
+X-Microsoft-Original-Message-ID: <604d1868-d302-30a0-9a65-94206cb5849f@hotmail.de>
+MIME-Version: 1.0
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from [192.168.1.101] (92.77.140.102) by AM0PR02CA0081.eurprd02.prod.outlook.com (2603:10a6:208:154::22) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2900.15 via Frontend Transport; Thu, 9 Apr 2020 19:57:35 +0000
+X-Microsoft-Original-Message-ID: <604d1868-d302-30a0-9a65-94206cb5849f@hotmail.de>
+X-TMN:  [2zh8pSd0Bu2fH+OIlwRWQsyHjIG9f8x/]
+X-MS-PublicTrafficType: Email
+X-IncomingHeaderCount: 50
+X-EOPAttributedMessage: 0
+X-MS-Office365-Filtering-Correlation-Id: fc526039-5eb9-462d-54cf-08d7dcc03f81
+X-MS-TrafficTypeDiagnostic: AM6EUR05HT216:
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: JIb1LTPi2xVNJ/N8aao/Puf/b1le6Vmhn8tySlQGgE0S4NDaMuBu3oFHpbKVNQ+YG9V6wBU9s6l/EJ1+Rjc3bOqcXL8BNlVblzMazTQ51xgbrCr0f5qjYLBU2J4rVx/0sESS5MkSTvss6tRZuEZgiPPUXFodqPG87YyaOGzjE+9k4/VW+ZSQR9mcUi9efOos
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:0;SRV:;IPV:NLI;SFV:NSPM;H:AM6PR03MB5170.eurprd03.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:;DIR:OUT;SFP:1901;
+X-MS-Exchange-AntiSpam-MessageData: X2ggqLg5fVMwm0CCTG/c/WmV22VvaLIiZTV6NK8bHp+eTHQyjdbXdpQJ2i/DtEPaNS/yStCJk/90+noPx+tzPOoN9iRaNCE9nt8daai1JGDNUmg3NnqLCXLnf0VM2lag1b+ESwKUkiGUzfE5APxZJw==
+X-OriginatorOrg: outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: fc526039-5eb9-462d-54cf-08d7dcc03f81
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Apr 2020 19:57:35.7584
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-CrossTenant-FromEntityHeader: Internet
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM6EUR05HT216
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 09.04.2020 13:53, Julia Lawall wrote:
-> On Thu, 9 Apr 2020, Alexander Popov wrote:
->> virtual report
+On 4/9/20 9:42 PM, Linus Torvalds wrote:
+> On Thu, Apr 9, 2020 at 11:36 AM Linus Torvalds
+> <torvalds@linux-foundation.org> wrote:
 >>
->> @race exists@
->> expression E;
->> position stop_p;
->> position unlock_p;
->> position lock_p;
->> @@
->>
->> mutex_unlock@unlock_p(E)
->> ...
+>> I guess I need to look at what that test is actually testing, because
+>> it wasn't what I thought.
 > 
-> It would be good to put when != mutex_lock(E) after the ... above.  Your
-> rule doesn't actually prevent the lock from being retaken.
+> Ahh.
+> 
+> The problem is that zap_other_threads() counts all threads.
+> 
+> But it doesn't bother notifying already dead threads, even if it counts them.
+> 
+> And then it waits for the threads to go away, but didn't do anything
+> to make that dead thread go away.
+> 
+> And the test case has an already dead thread that is just waiting to
+> be reaped by the same person who is now waiting for it to go away.
+> 
+> So it just stays around.
+> 
+> Honestly, I'm not entirely sure this is worth worrying about, since
+> it's all killable anyway and only happens if you do something stupid.
+> 
 
-Thanks Julia! I used this trick in the second version of the rule that I've just
-sent.
+The use case where this may happen with strace
+when you call strace with lots of -p <pid> arguments,
+and one of them is a bomb. strace stuck.
 
->> kthread_stop@stop_p(...)
->> ...
->> mutex_lock@lock_p(E)
->>
->> @script:python@
->> stop_p << race.stop_p;
->> unlock_p << race.unlock_p;
->> lock_p << race.lock_p;
->> E << race.E;
->> @@
->>
->> coccilib.report.print_report(unlock_p[0], 'mutex_unlock(' + E + ') here')
->> coccilib.report.print_report(stop_p[0], 'kthread_stop here')
->> coccilib.report.print_report(lock_p[0], 'mutex_lock(' + E + ') here\n')
+So when that happens in the beginning, it is not much
+work lost, but if you traced a megabyte of data to analyze
+and then that happens, you are not really amused.
 
-...
+Also slightly different things happen with PTRACE_O_TRACEEXIT
+then the tracer is supposed to continue the exit, and then
+to wait for the thread to die.  Which is twice as ugly...
 
-> Based on Jann's suggestion, it seem like it could be interesting to find
-> these locking pauses, and then collect functions that are used in locks
-> and in lock pauses.  If a function is mostly used with locks held, then
-> using it in a lock pause could be a sign of a bug.  I will see if it turns
-> up anything interesting.
 
-Do you mean collecting the behaviour that happens between unlocking and locking
-and then analysing it somehow?
+Bernd.
 
-Best regards,
-Alexander
+
+> I mean, you can get two threads to wait for each other more easily other ways.
+> 
+> Or maybe we just shouldn't count already dead threads? Yeah, they'd
+> share that current signal struct, but they're dead and can't do
+> anything about it, they can only be reaped.
+> 
+> But that would mean that we should also move the signal->notify_count
+> update to when we mark the EXIT_ZOMBIE or EXIT_DEAD in exit_state.
+> 
+>           Linus
+> 
