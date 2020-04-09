@@ -7,29 +7,29 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5E3DC2BA19
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE526C2BB85
 	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 19:13:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8FABF2084D
+	by mail.kernel.org (Postfix) with ESMTP id C0036215A4
 	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 19:13:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="S/fb9Xv2"
+	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="qMcC4lU2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726860AbgDITNB (ORCPT
+        id S1726872AbgDITND (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Apr 2020 15:13:01 -0400
-Received: from mail-co1nam11on2074.outbound.protection.outlook.com ([40.107.220.74]:6114
-        "EHLO NAM11-CO1-obe.outbound.protection.outlook.com"
+        Thu, 9 Apr 2020 15:13:03 -0400
+Received: from mail-dm6nam11on2072.outbound.protection.outlook.com ([40.107.223.72]:6093
+        "EHLO NAM11-DM6-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726736AbgDITMx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Apr 2020 15:12:53 -0400
+        id S1726752AbgDITMy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Apr 2020 15:12:54 -0400
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=W6XjQOlKCtZ4xmNPyKIGbUzcVm0XsOkdLFxmtWhg8RmIjulI7Ybzv+crGVXvUW3sTcBQwCRI+4XXTCA9FpFLACpC5wE6bJVs9OFuenS1es2kWZXqCs89MEg5wJkgjkHjzM0FUapzwd9aG+8jguwSmIe7VTUKsLUmsawxhE8lhRI5NisL0nsUjqsL3t0oHVJ41l8SY/zrFrdr897Ee6afCEaC0Fg6vHzo4JwiauoslBx0CRBPw5/K9hJcwcd0n/lQryHwE0uoDAkg5krfNmFLunGv3bZRW4dORm4EZw61qr0dLFAPtEBxTYIihwn6QcupjjJl/RxYoB8e5cq//oTP0Q==
+ b=MFsiEUn45GQ2skd7DxBlHDcHKcMAbPs5VXa/gk0FnsTg06EzWG5zrXoxUErWo0dB7QHbLvOEMITq3wf/v/N0zkNIve9NJexYvoIPlWk6T59hf3oGEbNkMkPLeyH/3PB5s0Q1+a5u1S11PnQZd5M2p1Rwss7LzYmk8KsuXB2iV7YjHSqr2FXjvu4rCTu9TTVJHY5foM6RQ85EOHFABkOWWLXe96M+V2fuq1AFZ9u9xjSStmr/McTueWtcRSAJH/LzB9USKXYqMu5Nsb2TohHsNuKIq4FfWPrJCucrP+mJqQ98eJC0pg05zAvpEVXHwNIm4hAn5jFvu8mRE4GlGftZDg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=T32OOAPHxyyBNEPv25Ih83UMrYS5F6JrbYgIF8E0JTg=;
- b=arLqtOTo2TDqGEOf7v5vFaOh8+GY6P20+q/yz+/E8j8P15RW//1hawNG74VKpN6+c6s1GmZmThC5HfKwEuFKY8wUXBhMHyZBaPVggqT4Hx4A2E2ImgtDjDBLt6qz9FJG7XCWXfGdC3Zfq3a2r3Z2H+fTE/eKBoK88SAEfIO620j2D7cQWPRDjLzZ1IV6coe8ToVn7xpcrGKIIYmDMMj6spCN51hHUarMD6pff4QWsstGmam58ZAzRs62oQD1A2/aEN/LZRGXH076bEFn50OX07YC0o7Jlgf8dh9wjWiiUsgDT0y8//5a4PQi/0+wYqHHNNGbieEeg7ynP12M5TUh5A==
+ bh=lAl5DV4g6pOCd56rFXeJcxsQII7ho7EKejt8SioNjd4=;
+ b=OLFkiSedjmOslNjB8wr2Ws0X26RUwmFRlYoI2yhxV5aIoaLcy88z2P6m+COy4651clv4O7CwSket1CsAiojWDi5kmZ+DapDXA9yXC9peeCX7xE4sQhhbM4+08R+APM0c1l92rhdkySH8/GfoaYKAZML3pK6C23StVt5tbWg3XPPgkYHAdyTyHX2ZowtKFLB/YmZ51rZjjg3A+v7gWQHmhfp73D9XyfBJs7qOvDBdFBnDut+k78FwMjxHKEMI6kH0Iyid2e28nnrODY271VygztjzGXYG2e48T71vwYihWVbkNP1TW0c0co6708qmAFByVl5YVWTGyCYrUMQaGqbAoQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
  149.199.60.83) smtp.rcpttodomain=linaro.org smtp.mailfrom=xilinx.com;
  dmarc=bestguesspass action=none header.from=xilinx.com; dkim=none (message
@@ -37,18 +37,18 @@ ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
  d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=T32OOAPHxyyBNEPv25Ih83UMrYS5F6JrbYgIF8E0JTg=;
- b=S/fb9Xv2UWMch4oantt8hgCvDBmfg++e1o30Jsc52hUJoqn44pVPYmBPrcXFqo9SA4JydcCJK6YPxFcuhpg1Szk43SPg0R99Nrmu7RQsQYjpKTszG9MJEmEr5X1sLT6OxcsixItU8MyuI+oaUd6avc7ypz4PVnvF45P+X1xbPUM=
-Received: from MN2PR19CA0017.namprd19.prod.outlook.com (2603:10b6:208:178::30)
- by SN4PR0201MB3630.namprd02.prod.outlook.com (2603:10b6:803:4e::17) with
+ bh=lAl5DV4g6pOCd56rFXeJcxsQII7ho7EKejt8SioNjd4=;
+ b=qMcC4lU2+FkdNProwcyiuoY/Aoih8+KavpEdBdoYwMma62AArRFK3/VVyxcab6TXN/mRu+NX+Tk3J1lm5XHK4GZpLt1ijf+cNJJodZXKtysEPZrRw5A3jFXjC1kMBkimw39GTltJ+j/PQP4geCw9gl4htw85zItZ08tJvV8614g=
+Received: from BL0PR02CA0042.namprd02.prod.outlook.com (2603:10b6:207:3d::19)
+ by DM6PR02MB4842.namprd02.prod.outlook.com (2603:10b6:5:fb::21) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2900.15; Thu, 9 Apr
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2900.17; Thu, 9 Apr
  2020 19:12:51 +0000
-Received: from BL2NAM02FT030.eop-nam02.prod.protection.outlook.com
- (2603:10b6:208:178:cafe::f9) by MN2PR19CA0017.outlook.office365.com
- (2603:10b6:208:178::30) with Microsoft SMTP Server (version=TLS1_2,
+Received: from BL2NAM02FT046.eop-nam02.prod.protection.outlook.com
+ (2603:10b6:207:3d:cafe::b5) by BL0PR02CA0042.outlook.office365.com
+ (2603:10b6:207:3d::19) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2900.15 via Frontend
- Transport; Thu, 9 Apr 2020 19:12:50 +0000
+ Transport; Thu, 9 Apr 2020 19:12:51 +0000
 Authentication-Results: spf=pass (sender IP is 149.199.60.83)
  smtp.mailfrom=xilinx.com; linaro.org; dkim=none (message not signed)
  header.d=none;linaro.org; dmarc=bestguesspass action=none
@@ -57,21 +57,21 @@ Received-SPF: Pass (protection.outlook.com: domain of xilinx.com designates
  149.199.60.83 as permitted sender) receiver=protection.outlook.com;
  client-ip=149.199.60.83; helo=xsj-pvapsmtpgw01;
 Received: from xsj-pvapsmtpgw01 (149.199.60.83) by
- BL2NAM02FT030.mail.protection.outlook.com (10.152.77.172) with Microsoft SMTP
+ BL2NAM02FT046.mail.protection.outlook.com (10.152.76.118) with Microsoft SMTP
  Server id 15.20.2900.15 via Frontend Transport; Thu, 9 Apr 2020 19:12:50
  +0000
-Received: from [149.199.38.66] (port=44322 helo=xsj-pvapsmtp01)
+Received: from [149.199.38.66] (port=44333 helo=xsj-pvapsmtp01)
         by xsj-pvapsmtpgw01 with esmtp (Exim 4.90)
         (envelope-from <jolly.shah@xilinx.com>)
-        id 1jMcb9-00060R-I1; Thu, 09 Apr 2020 12:12:23 -0700
+        id 1jMcb9-00060c-NS; Thu, 09 Apr 2020 12:12:23 -0700
 Received: from [127.0.0.1] (helo=localhost)
         by xsj-pvapsmtp01 with smtp (Exim 4.63)
         (envelope-from <jolly.shah@xilinx.com>)
-        id 1jMcbZ-0007NV-WE; Thu, 09 Apr 2020 12:12:50 -0700
+        id 1jMcba-0007NV-5v; Thu, 09 Apr 2020 12:12:50 -0700
 Received: from [172.19.2.91] (helo=xsjjollys50.xilinx.com)
         by xsj-pvapsmtp01 with esmtp (Exim 4.63)
         (envelope-from <jolly.shah@xilinx.com>)
-        id 1jMcbS-0007La-IQ; Thu, 09 Apr 2020 12:12:42 -0700
+        id 1jMcbR-0007La-Vz; Thu, 09 Apr 2020 12:12:42 -0700
 From:   Jolly Shah <jolly.shah@xilinx.com>
 To:     ard.biesheuvel@linaro.org, mingo@kernel.org,
         gregkh@linuxfoundation.org, matt@codeblueprint.co.uk,
@@ -80,9 +80,9 @@ To:     ard.biesheuvel@linaro.org, mingo@kernel.org,
 Cc:     rajanv@xilinx.com, linux-arm-kernel@lists.infradead.org,
         linux-kernel@vger.kernel.org, Rajan Vaja <rajan.vaja@xilinx.com>,
         Jolly Shah <jolly.shah@xilinx.com>
-Subject: [PATCH v4 14/25] firmware: xilinx: Remove eemi ops for init_finalize
-Date:   Thu,  9 Apr 2020 12:12:03 -0700
-Message-Id: <1586459534-8997-15-git-send-email-jolly.shah@xilinx.com>
+Subject: [PATCH v4 05/25] firmware: xilinx: Remove eemi ops for clock_disable
+Date:   Thu,  9 Apr 2020 12:11:54 -0700
+Message-Id: <1586459534-8997-6-git-send-email-jolly.shah@xilinx.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1586459534-8997-1-git-send-email-jolly.shah@xilinx.com>
 References: <1586459534-8997-1-git-send-email-jolly.shah@xilinx.com>
@@ -90,27 +90,27 @@ X-TM-AS-Product-Ver: IMSS-7.1.0.1224-8.2.0.1013-23620.005
 X-TM-AS-User-Approved-Sender: Yes;Yes
 X-EOPAttributedMessage: 0
 X-MS-Office365-Filtering-HT: Tenant
-X-Forefront-Antispam-Report: CIP:149.199.60.83;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:xsj-pvapsmtpgw01;PTR:unknown-60-83.xilinx.com;CAT:NONE;SFTY:;SFS:(10009020)(4636009)(39860400002)(136003)(376002)(346002)(396003)(46966005)(2906002)(5660300002)(82740400003)(426003)(7696005)(36756003)(26005)(54906003)(47076004)(7416002)(336012)(316002)(186003)(6636002)(81166007)(8936002)(6666004)(2616005)(70586007)(70206006)(107886003)(4326008)(356004)(81156014)(8676002)(44832011)(478600001)(9786002);DIR:OUT;SFP:1101;
+X-Forefront-Antispam-Report: CIP:149.199.60.83;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:xsj-pvapsmtpgw01;PTR:unknown-60-83.xilinx.com;CAT:NONE;SFTY:;SFS:(10009020)(4636009)(39860400002)(396003)(136003)(376002)(346002)(46966005)(4326008)(478600001)(356004)(6666004)(82740400003)(47076004)(107886003)(2906002)(70586007)(70206006)(36756003)(9786002)(316002)(7696005)(54906003)(2616005)(7416002)(81156014)(336012)(426003)(8676002)(8936002)(26005)(186003)(44832011)(81166007)(6636002)(5660300002);DIR:OUT;SFP:1101;
 MIME-Version: 1.0
 Content-Type: text/plain
 X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 039d5ba7-3ff9-4666-fc66-08d7dcb9ff30
-X-MS-TrafficTypeDiagnostic: SN4PR0201MB3630:
-X-Microsoft-Antispam-PRVS: <SN4PR0201MB36308C14CC0CD10BE1E7E261B8C10@SN4PR0201MB3630.namprd02.prod.outlook.com>
+X-MS-Office365-Filtering-Correlation-Id: 1c0659ac-7390-477e-ac62-08d7dcb9ff40
+X-MS-TrafficTypeDiagnostic: DM6PR02MB4842:
+X-Microsoft-Antispam-PRVS: <DM6PR02MB4842FABF9CF9C6846BDAC339B8C10@DM6PR02MB4842.namprd02.prod.outlook.com>
 X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
-X-MS-Oob-TLC-OOBClassifiers: OLM:252;
+X-MS-Oob-TLC-OOBClassifiers: OLM:107;
 X-Forefront-PRVS: 0368E78B5B
 X-MS-Exchange-SenderADCheck: 1
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: MvClq04AjOJrKFHD57TNobCKDFVYnsUnsWtSZPHZtWwuJyh4Qei95zElzptjd8W43cvfGsFDHYvTg4tZgTmElClAvpOVIUWW4sgbgdr5W5n1/EtyBkghiHD2yiYx1/p7Xnt5Z/okcTXhvL4xvghdNGCU4EuvwzDLAhvaJpfak3m/QXV5fSXWwi75UBB+ts4AIvPyFPdxCrDoEQrwifwQumfHhmshf/3HrA0krEJo/ZtBbLgwyaflq071MTWkqT5KFoSCE7QCErQTpMY+ZcvoMZlk0BPLgDMKmuin1ZYgm67q8Z/6mEor+X5TV6Mm3ZKyP6uAYIYlV1bJkYOwEcpyx1zihkndxwG7GUeYefzAnw6ggbvMJu0tsrymGDHKkQjqIyJaAPddODsAF0mu+ZA9muIVOp2velYtOsZOkonrM0JMTU7NxjAxmeyhiVbUvne50lC4pmJt2Vv9PcangzJ3UjgRU2U6cAp0P15DHSP9H7MVCl1FS/Q2XpnQp6GbcodgmoPO6wSBcBjvid0BiepeOw==
+X-Microsoft-Antispam-Message-Info: z0N05/3KMm1YBh7uFxILFyMCL+E4DGwi15ZX0xHbrvkEMZLOOK5n8CPnEhOqD2y/+X3XO5Q5JhLTJTmsd1CRGEr7bEeMy+4gA9EG0uw3gQeq4EhLs36YviKItkh3B+n8oHSmn4Ta+UjdlzUeaS5juCPungWHcrVtZYXmpMx9syP4hudTEe3D6KaN+cM8XMo7tvT2JI1GyHdHnomqoaL1Ygf5qZ5mIgZ2IJcB0XucBdqibTkVjPZmh/NLXsQGj0AevzSGPWD+C3nclGJ9OFYgjlHd6OBzs8lplRoCZQ8rkBRsv8intx/CFO00ojOUqohGJp8ZT+TeoxX/kRUReAiTAvW+uJOCrBXgajy3d1eWK5HJLV/IeVlcj09ESVn64Cii+cZCbkL8Ce9HYSVYNAg0QpFHSB1fV/g89C+om+C0bNmA032nfGFUp10bzPTCiNj11skrtOO71yk7MOwBlxLS0YHyAFdyhVO734GcYSdYnxZpfw7Ujs8cnxi2IDvFabvqLaZt21qSnllx48v7CVJAGA==
 X-OriginatorOrg: xilinx.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Apr 2020 19:12:50.4515
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Apr 2020 19:12:50.5543
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 039d5ba7-3ff9-4666-fc66-08d7dcb9ff30
+X-MS-Exchange-CrossTenant-Network-Message-Id: 1c0659ac-7390-477e-ac62-08d7dcb9ff40
 X-MS-Exchange-CrossTenant-Id: 657af505-d5df-48d0-8300-c31994686c5c
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=657af505-d5df-48d0-8300-c31994686c5c;Ip=[149.199.60.83];Helo=[xsj-pvapsmtpgw01]
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN4PR0201MB3630
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR02MB4842
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -118,86 +118,108 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Rajan Vaja <rajan.vaja@xilinx.com>
 
-Use direct function call instead of eemi ops for init_finalize.
+Use direct function call for clock_disable instead using of eemi ops.
 
 Signed-off-by: Rajan Vaja <rajan.vaja@xilinx.com>
 Signed-off-by: Jolly Shah <jolly.shah@xilinx.com>
 ---
+ drivers/clk/zynqmp/clk-gate-zynqmp.c | 4 +---
+ drivers/clk/zynqmp/pll.c             | 3 +--
  drivers/firmware/xilinx/zynqmp.c     | 4 ++--
- drivers/soc/xilinx/zynqmp_power.c    | 9 +--------
  include/linux/firmware/xlnx-zynqmp.h | 6 +++++-
- 3 files changed, 8 insertions(+), 11 deletions(-)
+ 4 files changed, 9 insertions(+), 8 deletions(-)
 
+diff --git a/drivers/clk/zynqmp/clk-gate-zynqmp.c b/drivers/clk/zynqmp/clk-gate-zynqmp.c
+index 437b921..11f1b97 100644
+--- a/drivers/clk/zynqmp/clk-gate-zynqmp.c
++++ b/drivers/clk/zynqmp/clk-gate-zynqmp.c
+@@ -37,7 +37,6 @@ static int zynqmp_clk_gate_enable(struct clk_hw *hw)
+ 	const char *clk_name = clk_hw_get_name(hw);
+ 	u32 clk_id = gate->clk_id;
+ 	int ret;
+-	const struct zynqmp_eemi_ops *eemi_ops = zynqmp_pm_get_eemi_ops();
+ 
+ 	ret = zynqmp_pm_clock_enable(clk_id);
+ 
+@@ -58,9 +57,8 @@ static void zynqmp_clk_gate_disable(struct clk_hw *hw)
+ 	const char *clk_name = clk_hw_get_name(hw);
+ 	u32 clk_id = gate->clk_id;
+ 	int ret;
+-	const struct zynqmp_eemi_ops *eemi_ops = zynqmp_pm_get_eemi_ops();
+ 
+-	ret = eemi_ops->clock_disable(clk_id);
++	ret = zynqmp_pm_clock_disable(clk_id);
+ 
+ 	if (ret)
+ 		pr_warn_once("%s() clock disable failed for %s, ret = %d\n",
+diff --git a/drivers/clk/zynqmp/pll.c b/drivers/clk/zynqmp/pll.c
+index 153aa67..38b8dbc 100644
+--- a/drivers/clk/zynqmp/pll.c
++++ b/drivers/clk/zynqmp/pll.c
+@@ -268,12 +268,11 @@ static void zynqmp_pll_disable(struct clk_hw *hw)
+ 	const char *clk_name = clk_hw_get_name(hw);
+ 	u32 clk_id = clk->clk_id;
+ 	int ret;
+-	const struct zynqmp_eemi_ops *eemi_ops = zynqmp_pm_get_eemi_ops();
+ 
+ 	if (!zynqmp_pll_is_enabled(hw))
+ 		return;
+ 
+-	ret = eemi_ops->clock_disable(clk_id);
++	ret = zynqmp_pm_clock_disable(clk_id);
+ 	if (ret)
+ 		pr_warn_once("%s() clock disable failed for %s, ret = %d\n",
+ 			     __func__, clk_name, ret);
 diff --git a/drivers/firmware/xilinx/zynqmp.c b/drivers/firmware/xilinx/zynqmp.c
-index 4380853..869366f 100644
+index da13627..d884805 100644
 --- a/drivers/firmware/xilinx/zynqmp.c
 +++ b/drivers/firmware/xilinx/zynqmp.c
-@@ -710,10 +710,11 @@ static int zynqmp_pm_fpga_get_status(u32 *value)
+@@ -366,10 +366,11 @@ EXPORT_SYMBOL_GPL(zynqmp_pm_clock_enable);
   *
   * Return: Returns status, either success or error+reason
   */
--static int zynqmp_pm_init_finalize(void)
-+int zynqmp_pm_init_finalize(void)
+-static int zynqmp_pm_clock_disable(u32 clock_id)
++int zynqmp_pm_clock_disable(u32 clock_id)
  {
- 	return zynqmp_pm_invoke_fn(PM_PM_INIT_FINALIZE, 0, 0, 0, 0, NULL);
+ 	return zynqmp_pm_invoke_fn(PM_CLOCK_DISABLE, clock_id, 0, 0, 0, NULL);
  }
-+EXPORT_SYMBOL_GPL(zynqmp_pm_init_finalize);
++EXPORT_SYMBOL_GPL(zynqmp_pm_clock_disable);
  
  /**
-  * zynqmp_pm_set_suspend_mode()	- Set system suspend mode
-@@ -808,7 +809,6 @@ static int zynqmp_pm_aes_engine(const u64 address, u32 *out)
+  * zynqmp_pm_clock_getstate() - Get the clock state for given id
+@@ -738,7 +739,6 @@ static int zynqmp_pm_aes_engine(const u64 address, u32 *out)
  }
  
  static const struct zynqmp_eemi_ops eemi_ops = {
--	.init_finalize = zynqmp_pm_init_finalize,
- 	.set_suspend_mode = zynqmp_pm_set_suspend_mode,
- 	.request_node = zynqmp_pm_request_node,
- 	.release_node = zynqmp_pm_release_node,
-diff --git a/drivers/soc/xilinx/zynqmp_power.c b/drivers/soc/xilinx/zynqmp_power.c
-index d327d9e..f4a9371 100644
---- a/drivers/soc/xilinx/zynqmp_power.c
-+++ b/drivers/soc/xilinx/zynqmp_power.c
-@@ -182,14 +182,7 @@ static int zynqmp_pm_probe(struct platform_device *pdev)
- 	u32 pm_api_version;
- 	struct mbox_client *client;
- 
--	eemi_ops = zynqmp_pm_get_eemi_ops();
--	if (IS_ERR(eemi_ops))
--		return PTR_ERR(eemi_ops);
--
--	if (!eemi_ops->init_finalize)
--		return -ENXIO;
--
--	eemi_ops->init_finalize();
-+	zynqmp_pm_init_finalize();
- 	zynqmp_pm_get_api_version(&pm_api_version);
- 
- 	/* Check PM API version number */
+-	.clock_disable = zynqmp_pm_clock_disable,
+ 	.clock_getstate = zynqmp_pm_clock_getstate,
+ 	.clock_setdivider = zynqmp_pm_clock_setdivider,
+ 	.clock_getdivider = zynqmp_pm_clock_getdivider,
 diff --git a/include/linux/firmware/xlnx-zynqmp.h b/include/linux/firmware/xlnx-zynqmp.h
-index 200f9e0..9aa5fe8 100644
+index 77365d1..f9a84d9 100644
 --- a/include/linux/firmware/xlnx-zynqmp.h
 +++ b/include/linux/firmware/xlnx-zynqmp.h
 @@ -296,7 +296,6 @@ struct zynqmp_pm_query_data {
  struct zynqmp_eemi_ops {
  	int (*fpga_load)(const u64 address, const u32 size, const u32 flags);
  	int (*fpga_get_status)(u32 *value);
--	int (*init_finalize)(void);
- 	int (*set_suspend_mode)(u32 mode);
- 	int (*request_node)(const u32 node,
- 			    const u32 capabilities,
-@@ -336,6 +335,7 @@ int zynqmp_pm_sd_dll_reset(u32 node_id, u32 type);
- int zynqmp_pm_reset_assert(const enum zynqmp_pm_reset reset,
- 			   const enum zynqmp_pm_reset_action assert_flag);
- int zynqmp_pm_reset_get_status(const enum zynqmp_pm_reset reset, u32 *status);
-+int zynqmp_pm_init_finalize(void);
+-	int (*clock_disable)(u32 clock_id);
+ 	int (*clock_getstate)(u32 clock_id, u32 *state);
+ 	int (*clock_setdivider)(u32 clock_id, u32 divider);
+ 	int (*clock_getdivider)(u32 clock_id, u32 *divider);
+@@ -331,6 +330,7 @@ int zynqmp_pm_get_api_version(u32 *version);
+ int zynqmp_pm_get_chipid(u32 *idcode, u32 *version);
+ int zynqmp_pm_query_data(struct zynqmp_pm_query_data qdata, u32 *out);
+ int zynqmp_pm_clock_enable(u32 clock_id);
++int zynqmp_pm_clock_disable(u32 clock_id);
  #else
  static inline struct zynqmp_eemi_ops *zynqmp_pm_get_eemi_ops(void)
  {
-@@ -424,6 +424,10 @@ static inline int zynqmp_pm_reset_get_status(const enum zynqmp_pm_reset reset,
+@@ -353,6 +353,10 @@ static inline int zynqmp_pm_clock_enable(u32 clock_id)
  {
  	return -ENODEV;
  }
-+static inline int zynqmp_pm_init_finalize(void)
++static inline int zynqmp_pm_clock_disable(u32 clock_id)
 +{
 +	return -ENODEV;
 +}
