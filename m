@@ -2,103 +2,219 @@ Return-Path: <SRS0=n+Ub=5Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9225AC2D0EA
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 07:17:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10B55C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 07:17:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4C35B20753
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 07:17:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D490D2075E
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 07:17:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="ZgflRxtb"
+	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="J3TnySVG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726521AbgDIHRB (ORCPT
+        id S1726574AbgDIHR4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Apr 2020 03:17:01 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:45903 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725828AbgDIHRB (ORCPT
+        Thu, 9 Apr 2020 03:17:56 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:32783 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725881AbgDIHR4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Apr 2020 03:17:01 -0400
-Received: by mail-pg1-f196.google.com with SMTP id w11so404212pga.12
-        for <linux-kernel@vger.kernel.org>; Thu, 09 Apr 2020 00:17:01 -0700 (PDT)
+        Thu, 9 Apr 2020 03:17:56 -0400
+Received: by mail-wr1-f66.google.com with SMTP id a25so10693127wrd.0
+        for <linux-kernel@vger.kernel.org>; Thu, 09 Apr 2020 00:17:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:content-transfer-encoding:in-reply-to:references
-         :subject:from:cc:to:date:message-id:user-agent;
-        bh=iYpXbB+2GsvCwjKsECWDukpuW5ZXW1FAu5vdGFQwGEE=;
-        b=ZgflRxtbTc+6b4ilENSCoDXtvy7jk7YTfNcDWTxb3W6KhOlG3O5zKZc4QCdlOV1ffe
-         zV4tXWWZLwxyAC8u4LXoHdlq6/P3LIS+c8QljW6BF6Z3+UHxdk0pgcqTCAWdF0yCEmKL
-         dIXtWWgdvPIixHnzp2xtqGnu/ipQf1SzDbPh4=
+        d=ffwll.ch; s=google;
+        h=date:from:to:cc:subject:message-id:mail-followup-to:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=XEywRyOXwpoRuTWlJ5j+LMEado440dnVx99CELnLolo=;
+        b=J3TnySVG7X0SRfOQujg6yOG3DavP+JDN0lkGk+UlvIFcT6iYa5Q8C65gCTkCAtE2Mo
+         kGmMZx6JLxF4erEc4I6K7rg8br6hzlz0f38KYmgt7Sh0IBzxOCuZ9JUe4h1rgeUm2VwD
+         exythHc/jTstzJ2Fb1HjOoqzOI1cfvOyGgXMg=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:content-transfer-encoding
-         :in-reply-to:references:subject:from:cc:to:date:message-id
-         :user-agent;
-        bh=iYpXbB+2GsvCwjKsECWDukpuW5ZXW1FAu5vdGFQwGEE=;
-        b=R9/JuIUKNZxgRIvjLx5pOos805fuTNkvylLMcTe3nwP64j+yF7McCwcUjCi7Xpjefx
-         nkWiuwS2WMtQhivaA+/v1cy1jsbOQ73rZ/2PTmZ5RnYiDgLbO/6ElRMa5GprF344ueMJ
-         00aWgsUskAwje1Zx/FJYv9PLiDY9gpCrVzLNNyAV6MMnmMcoC8rkXfUSMD15Q+2ruEvL
-         JsFemlKSVQJUg7+sqdFP143VDgejj/fXLYcMboMc7QHF6GuT1O03OGzJPXaG2QNOdieO
-         CpK3Mvp72SAl0GaxGjJmistEb5nisTGX30Ro4tHoSrnjJOaYczFeF32uzrxP0/gDoYWx
-         CXmg==
-X-Gm-Message-State: AGi0PuZVp7cSavd8Y4qyMlYst4ehDtrgQnxcO0CRQhu2xm2aOjnLQkXe
-        Fsda1L6WQ09njrBrZYZ/ODI7wg==
-X-Google-Smtp-Source: APiQypKXx+N7ncEb0/fmCRSM1ldHSjKZvK5jY3qy9bLSvb50reXJFujfIv9LNDl8lR+wmuN1MU4RDw==
-X-Received: by 2002:a63:e443:: with SMTP id i3mr10565042pgk.436.1586416621418;
-        Thu, 09 Apr 2020 00:17:01 -0700 (PDT)
-Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
-        by smtp.gmail.com with ESMTPSA id e187sm17883679pfe.143.2020.04.09.00.17.00
+        h=x-gm-message-state:date:from:to:cc:subject:message-id
+         :mail-followup-to:references:mime-version:content-disposition
+         :in-reply-to;
+        bh=XEywRyOXwpoRuTWlJ5j+LMEado440dnVx99CELnLolo=;
+        b=R7rZhp+ZnNbcWSe4vuP9X0UONXH4KhYiYqh1UtJ0zzEnwc3q7IVppmLj8hPAp5efKq
+         McmP3F2vsLb00kn1Mq71mOYqefbk4ddtZtzXlJG+P3U70ojZZGhchyTfzyX41/1p3NbA
+         XzbN8hHc6zRyZrNq3u8EiQs6ynIkJ47Off/JsadSCzN0gtGlbQerXCI5WxlZk/797kXc
+         aKh9O5VGMFW6H5xw+y2cP3laZucZVnXFEslUBekySEcuCcZQtRkMUbgVnb5h+9y+kimn
+         HUf3ZmO3ZwJdwWwBrxOB0oWtBrDf1XTFCheRUMzrbdiUgEIa+BGTQvLd8HmbhCgnHUtK
+         istA==
+X-Gm-Message-State: AGi0Pua4w6Pl2sLtMhilIo9fSPcRz3TxOhOqOQcy83Frp+MfuQOyC7sN
+        f8Tafh7A8DWHHrgKHodNhM/jeDES6uM=
+X-Google-Smtp-Source: APiQypKS89n1ukOHevM/fA/En9CkkMkPx2aqkN1GaCwQI3yncisvGnWmhFn0YJmrjhmGia2Bk2TIOQ==
+X-Received: by 2002:a5d:4081:: with SMTP id o1mr13176684wrp.114.1586416672112;
+        Thu, 09 Apr 2020 00:17:52 -0700 (PDT)
+Received: from phenom.ffwll.local ([2a02:168:57f4:0:efd0:b9e5:5ae6:c2fa])
+        by smtp.gmail.com with ESMTPSA id v7sm2294539wmg.3.2020.04.09.00.17.50
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 09 Apr 2020 00:17:00 -0700 (PDT)
-Content-Type: text/plain; charset="utf-8"
+        Thu, 09 Apr 2020 00:17:51 -0700 (PDT)
+Date:   Thu, 9 Apr 2020 09:17:49 +0200
+From:   Daniel Vetter <daniel@ffwll.ch>
+To:     John Stultz <john.stultz@linaro.org>
+Cc:     lkml <linux-kernel@vger.kernel.org>,
+        Xu YiPing <xuyiping@hisilicon.com>,
+        Rongrong Zou <zourongrong@gmail.com>,
+        Xinliang Liu <xinliang.liu@linaro.org>,
+        Xinwei Kong <kong.kongxinwei@hisilicon.com>,
+        Chen Feng <puck.chen@hisilicon.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>
+Subject: Re: [PATCH] drm: kirin: Revert change to add register connect helper
+ functions
+Message-ID: <20200409071749.GQ3456981@phenom.ffwll.local>
+Mail-Followup-To: John Stultz <john.stultz@linaro.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Xu YiPing <xuyiping@hisilicon.com>,
+        Rongrong Zou <zourongrong@gmail.com>,
+        Xinliang Liu <xinliang.liu@linaro.org>,
+        Xinwei Kong <kong.kongxinwei@hisilicon.com>,
+        Chen Feng <puck.chen@hisilicon.com>,
+        David Airlie <airlied@linux.ie>, Sam Ravnborg <sam@ravnborg.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>
+References: <20200409004306.18541-1-john.stultz@linaro.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20200408224347.GA388414@ewhatever.cambridge.arm.com>
-References: <20200405102819.28460-1-saiprakash.ranjan@codeaurora.org> <CAJ9a7VgQzK1XSCvLwuqODwkWfvo=6Wwps7Db+pL5xYDeCuktrg@mail.gmail.com> <6c0f45488f8a44bf860759e00fcabd09@codeaurora.org> <906d374d-a4d6-f2f2-6845-88b97a5ff7d9@arm.com> <39a2b3fff165a108fa59d72b630b5f14@codeaurora.org> <bb209f80-ac02-6321-dac4-ebf9ee6fa9a0@arm.com> <bd05b31c2391edfff5044f22f2f83edf@codeaurora.org> <e9c299c4-caeb-9eb8-f019-b311bfce756a@arm.com> <a7074f44ebbde720b5e0189801eab7c9@codeaurora.org> <20200408224347.GA388414@ewhatever.cambridge.arm.com>
-Subject: Re: [RFC PATCH] coresight: dynamic-replicator: Fix handling of multiple connections
-From:   Stephen Boyd <swboyd@chromium.org>
-Cc:     mike.leach@linaro.org, mathieu.poirier@linaro.org,
-        leo.yan@linaro.org, alexander.shishkin@linux.intel.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, suzuki.poulose@arm.com
-To:     Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
-        Suzuki K Poulose <Suzuki.Poulose@arm.com>
-Date:   Thu, 09 Apr 2020 00:16:59 -0700
-Message-ID: <158641661949.126188.2854214876274328570@swboyd.mtv.corp.google.com>
-User-Agent: alot/0.9
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200409004306.18541-1-john.stultz@linaro.org>
+X-Operating-System: Linux phenom 5.3.0-3-amd64 
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Suzuki K Poulose (2020-04-08 15:43:47)
-> On Tue, Apr 07, 2020 at 08:48:54PM +0530, Sai Prakash Ranjan wrote:
-> >=20
-> > Thanks, I can test it out.
->=20
-> Please find the untested patch below.
->=20
-> ---8>---
->=20
-> [untested] coresight: Fix support for sparse port numbers
->=20
-> On some systems the firmware may not describe all the ports
-> connected to a component (e.g, for security reasons). This
-> could be especially problematic for "funnels" where we could
-> end up in modifying memory beyond the allocated space for
-> refcounts.
->=20
-> e.g, for a funnel with input ports listed 0, 3, 5, nr_inport =3D 3.
-> However the we could access refcnts[5] while checking for
-> references.
->=20
-> Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
+On Thu, Apr 09, 2020 at 12:43:06AM +0000, John Stultz wrote:
+> Daniel noted[1] that commit d606dc9a6323 ("drm: kirin: Add
+> register connect helper functions in drm init") was unnecessary
+> and incorrect, as drm_dev_register does register connectors for
+> us.
+> 
+> Thus, this patch reverts the change as suggested by Daniel.
+> 
+> [1]: https://lore.kernel.org/lkml/CAKMK7uHr5U-pPsxdQ4MpfK5v8iLjphDFug_3VTiUAf06nhS=yQ@mail.gmail.com/
+> 
+> Cc: Xu YiPing <xuyiping@hisilicon.com>
+> Cc: Rongrong Zou <zourongrong@gmail.com>
+> Cc: Xinliang Liu <xinliang.liu@linaro.org>
+> Cc: Xinwei Kong <kong.kongxinwei@hisilicon.com>
+> Cc: Chen Feng <puck.chen@hisilicon.com>
+> Cc: David Airlie <airlied@linux.ie>
+> Cc: Daniel Vetter <daniel@ffwll.ch>
+> Cc: Sam Ravnborg <sam@ravnborg.org>
+> Cc: dri-devel <dri-devel@lists.freedesktop.org>
+> Signed-off-by: John Stultz <john.stultz@linaro.org>
+
+Reviewed-by: Daniel Vetter <daniel.vetter@ffwll.ch>
+
+Thanks for the quick fix!
+
+Cheers, Daniel
+
 > ---
+>  .../gpu/drm/hisilicon/kirin/kirin_drm_ade.c   |  1 -
+>  .../gpu/drm/hisilicon/kirin/kirin_drm_drv.c   | 43 -------------------
+>  .../gpu/drm/hisilicon/kirin/kirin_drm_drv.h   |  1 -
+>  3 files changed, 45 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/hisilicon/kirin/kirin_drm_ade.c b/drivers/gpu/drm/hisilicon/kirin/kirin_drm_ade.c
+> index 86000127d4ee..c339e632522a 100644
+> --- a/drivers/gpu/drm/hisilicon/kirin/kirin_drm_ade.c
+> +++ b/drivers/gpu/drm/hisilicon/kirin/kirin_drm_ade.c
+> @@ -940,7 +940,6 @@ static struct drm_driver ade_driver = {
+>  };
+>  
+>  struct kirin_drm_data ade_driver_data = {
+> -	.register_connects = false,
+>  	.num_planes = ADE_CH_NUM,
+>  	.prim_plane = ADE_CH1,
+>  	.channel_formats = channel_formats,
+> diff --git a/drivers/gpu/drm/hisilicon/kirin/kirin_drm_drv.c b/drivers/gpu/drm/hisilicon/kirin/kirin_drm_drv.c
+> index d3145ae877d7..4349da3e2379 100644
+> --- a/drivers/gpu/drm/hisilicon/kirin/kirin_drm_drv.c
+> +++ b/drivers/gpu/drm/hisilicon/kirin/kirin_drm_drv.c
+> @@ -219,40 +219,6 @@ static int kirin_drm_kms_cleanup(struct drm_device *dev)
+>  	return 0;
+>  }
+>  
+> -static int kirin_drm_connectors_register(struct drm_device *dev)
+> -{
+> -	struct drm_connector *connector;
+> -	struct drm_connector *failed_connector;
+> -	struct drm_connector_list_iter conn_iter;
+> -	int ret;
+> -
+> -	mutex_lock(&dev->mode_config.mutex);
+> -	drm_connector_list_iter_begin(dev, &conn_iter);
+> -	drm_for_each_connector_iter(connector, &conn_iter) {
+> -		ret = drm_connector_register(connector);
+> -		if (ret) {
+> -			failed_connector = connector;
+> -			goto err;
+> -		}
+> -	}
+> -	drm_connector_list_iter_end(&conn_iter);
+> -	mutex_unlock(&dev->mode_config.mutex);
+> -
+> -	return 0;
+> -
+> -err:
+> -	drm_connector_list_iter_begin(dev, &conn_iter);
+> -	drm_for_each_connector_iter(connector, &conn_iter) {
+> -		if (failed_connector == connector)
+> -			break;
+> -		drm_connector_unregister(connector);
+> -	}
+> -	drm_connector_list_iter_end(&conn_iter);
+> -	mutex_unlock(&dev->mode_config.mutex);
+> -
+> -	return ret;
+> -}
+> -
+>  static int kirin_drm_bind(struct device *dev)
+>  {
+>  	struct kirin_drm_data *driver_data;
+> @@ -279,17 +245,8 @@ static int kirin_drm_bind(struct device *dev)
+>  
+>  	drm_fbdev_generic_setup(drm_dev, 32);
+>  
+> -	/* connectors should be registered after drm device register */
+> -	if (driver_data->register_connects) {
+> -		ret = kirin_drm_connectors_register(drm_dev);
+> -		if (ret)
+> -			goto err_drm_dev_unregister;
+> -	}
+> -
+>  	return 0;
+>  
+> -err_drm_dev_unregister:
+> -	drm_dev_unregister(drm_dev);
+>  err_kms_cleanup:
+>  	kirin_drm_kms_cleanup(drm_dev);
+>  err_drm_dev_put:
+> diff --git a/drivers/gpu/drm/hisilicon/kirin/kirin_drm_drv.h b/drivers/gpu/drm/hisilicon/kirin/kirin_drm_drv.h
+> index 4d5c05a24065..dee8ec2f7f2e 100644
+> --- a/drivers/gpu/drm/hisilicon/kirin/kirin_drm_drv.h
+> +++ b/drivers/gpu/drm/hisilicon/kirin/kirin_drm_drv.h
+> @@ -37,7 +37,6 @@ struct kirin_drm_data {
+>  	u32 channel_formats_cnt;
+>  	int config_max_width;
+>  	int config_max_height;
+> -	bool register_connects;
+>  	u32 num_planes;
+>  	u32 prim_plane;
+>  
+> -- 
+> 2.17.1
+> 
 
-Things don't blow up for me anymore with KASAN, so feel free to add
-
-Tested-by: Stephen Boyd <swboyd@chromium.org>
+-- 
+Daniel Vetter
+Software Engineer, Intel Corporation
+http://blog.ffwll.ch
