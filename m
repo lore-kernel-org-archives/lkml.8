@@ -2,95 +2,92 @@ Return-Path: <SRS0=n+Ub=5Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A6EBC2BB86
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 12:55:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2525C2BA2B
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 12:57:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 318E02078E
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 12:55:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B5FD12078E
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 12:57:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="fjomRjM4"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="S/Xi80WE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726755AbgDIMzz (ORCPT
+        id S1726752AbgDIM5c (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Apr 2020 08:55:55 -0400
-Received: from mail-qk1-f195.google.com ([209.85.222.195]:41285 "EHLO
-        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726627AbgDIMzz (ORCPT
+        Thu, 9 Apr 2020 08:57:32 -0400
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:22238 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726627AbgDIM5b (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Apr 2020 08:55:55 -0400
-Received: by mail-qk1-f195.google.com with SMTP id y3so3741256qky.8
-        for <linux-kernel@vger.kernel.org>; Thu, 09 Apr 2020 05:55:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=jAXAQOk0ErVc2APrR6OinTn7FZoQNNgdHYwvSLGe2yc=;
-        b=fjomRjM4YA1sWzArY/6IvCLtRmgdXIsOkn+ejcLJ33W+TsvSbfN8V6vZqD8KEv9qcD
-         LKtS1OGfk7WKZ6S63AjKKpNbyLI0IJN//oK3icStX1HZl/UXYsg+xxmWFyuPCdGGqmKb
-         ukFQzIhW9gJx9WRhaPdP00U7BRTn2LvCEXyGmEdaC7Gvp3FEY+G03cReqaYBU61TViY6
-         R4twEnNB2lbUs9UH0lz8lPiFBIHGLBBQ6D1O+7tOU3GsY/q2672MRWe3Q6bsvR/5lBtE
-         PU6nBXTDuRdNnujb4SkdrR3qWmdF0nGZY4j8FYO1vRvMm6FVFJzMR9BDQWMHyxXbTgjX
-         IW7w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=jAXAQOk0ErVc2APrR6OinTn7FZoQNNgdHYwvSLGe2yc=;
-        b=T0nhthDgMqg38HNy+ePyM6IkMHDx/VqdarslCyXcXhA+oqw70SvpJeK/e5cBd7hMWh
-         WlO7pJy+lJMVuzyA17jwJQ3WjzvveOPTUp7jjPFGxgLLXLlB+jWO0d7RXdiBtQY/Hksw
-         kZK8DGGSBIcboymnrK0CRmNESuaKscEGLzxJ6ad19FOrWRZ/DNoTBSwvzll6T8nc/+og
-         thsYgkLVkNPuqggLNEGq2AydtYVmtGB1toLZTXHgJNC3EQSZ9WUgWDnt6gWnAMsnIsBF
-         4ObR7DqE/X2Esy1zy8//eiNCMzzwuNJHQfvNf//OeTdWvGJffGeiq9AXgJKTcAQZxNu4
-         PXOA==
-X-Gm-Message-State: AGi0PuaDC0Cw2/h8MkyvUJeDnUv//NEwg4DVQjduoYVV7f9LnezIMRPt
-        by2OSk4FGHzv1wohrWHZyDjY72EKaT2V2al5lx0wVA==
-X-Google-Smtp-Source: APiQypJgYrBXlCxuuAQfsdESu3sOZUB8jewml+8aR9cEdCQX8DHlXGwINB+Y0v2ChKiBtjQlmnBl37BBspufq/L7nls=
-X-Received: by 2002:a05:620a:348:: with SMTP id t8mr11010209qkm.407.1586436954251;
- Thu, 09 Apr 2020 05:55:54 -0700 (PDT)
+        Thu, 9 Apr 2020 08:57:31 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1586437051;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=O2CLuS3FEdpoO51mMdiV5dcccG5OKJkGsbzDxdCTFJc=;
+        b=S/Xi80WEpWmwWIAtuePSpP00yDxQZDtiEd8wZPUgE0yEn1Y8n/KwxygjtrE37gaP8yRi7Y
+        pscJqULCxQmsjIsfx9/5XjPtLwXxmqDMZ8VnvbLa9NxcDl8igjoG8x3toS4SV7+aeULF6D
+        FKOAvPPDl5cOtGCN48GMiV+xseW3Ejo=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-451-aCVDYKQlOD2fSBBkaINFYA-1; Thu, 09 Apr 2020 08:57:29 -0400
+X-MC-Unique: aCVDYKQlOD2fSBBkaINFYA-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 09FF0801E5E;
+        Thu,  9 Apr 2020 12:57:28 +0000 (UTC)
+Received: from localhost (ovpn-12-133.pek2.redhat.com [10.72.12.133])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id E19905C64E;
+        Thu,  9 Apr 2020 12:57:21 +0000 (UTC)
+Date:   Thu, 9 Apr 2020 20:57:19 +0800
+From:   Baoquan He <bhe@redhat.com>
+To:     Vitaly Kuznetsov <vkuznets@redhat.com>
+Cc:     Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kexec@lists.infradead.org,
+        dzickus@redhat.com, dyoung@redhat.com,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>
+Subject: Re: [PATCH v2 0/3] KVM: VMX: Fix for kexec VMCLEAR and VMXON cleanup
+Message-ID: <20200409125719.GV2402@MiWiFi-R3L-srv>
+References: <20200321193751.24985-1-sean.j.christopherson@intel.com>
+ <20200407110115.GA14381@MiWiFi-R3L-srv>
+ <87r1wzlcwn.fsf@vitty.brq.redhat.com>
+ <20200408151808.GS2402@MiWiFi-R3L-srv>
+ <87mu7l2256.fsf@vitty.brq.redhat.com>
+ <20200409012002.GT2402@MiWiFi-R3L-srv>
+ <87imi829o9.fsf@vitty.brq.redhat.com>
 MIME-Version: 1.0
-References: <20200408014010.80428-1-peterx@redhat.com> <20200408174732.bc448bbe41d190bfe5cc252e@linux-foundation.org>
-In-Reply-To: <20200408174732.bc448bbe41d190bfe5cc252e@linux-foundation.org>
-From:   Dmitry Vyukov <dvyukov@google.com>
-Date:   Thu, 9 Apr 2020 14:55:42 +0200
-Message-ID: <CACT4Y+bhQVcpSkSh_OZ5ZanfFZUqn2iypLhG_Z-nWKTkaYr1jw@mail.gmail.com>
-Subject: Re: [PATCH 0/2] mm: Two small fixes for recent syzbot reports
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     Peter Xu <peterx@redhat.com>, LKML <linux-kernel@vger.kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Linux-MM <linux-mm@kvack.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <87imi829o9.fsf@vitty.brq.redhat.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 9, 2020 at 2:49 AM Andrew Morton <akpm@linux-foundation.org> wrote:
->
-> On Tue,  7 Apr 2020 21:40:08 -0400 Peter Xu <peterx@redhat.com> wrote:
->
-> > The two patches should fix below syzbot reports:
+On 04/09/20 at 01:14pm, Vitaly Kuznetsov wrote:
+> Baoquan He <bhe@redhat.com> writes:
+> 
 > >
-> >   BUG: unable to handle kernel paging request in kernel_get_mempolicy
-> >   https://lore.kernel.org/lkml/0000000000002b25f105a2a3434d@google.com/
+> > While I would suggest adding kexec@lists.infradead.org when code changes
+> > are related to kexec/kdump since we usually watch this mailing list.
+> > LKML contains too many mails, we may miss this kind of change, have to
+> > debug and test again.
 > >
-> >   WARNING: bad unlock balance in __get_user_pages_remote
-> >   https://lore.kernel.org/lkml/00000000000005c65d05a2b90e70@google.com/
->
-> (Is there an email address for the syzbot operators?)
->
-> sysbot does test linux-next, yet these patches sat in linux-next for a
-> month without a peep, but all hell broke loose when they hit Linus's
-> tree.  How could this have happened?
+> 
+> Definitely makes sense and I'll try my best to remember doing this
+> myself next time but the problem is that scripts/checkpatch.pl is not
+> smart enough, kexec related bits are scattered all over kernel and
+> drivers so I'm afraid you're missing a lot in kexec@ :-(
 
-The same thing:
-https://groups.google.com/d/msg/syzkaller-bugs/phowYdNXHck/qU1P0TsjBAAJ
+Yeah, understand, thanks.
 
-linux-next is boot-broken for more than a month and bugs are piling
-onto bugs, I've seen at least 3 different ones.
-syzbot can't get any working linux-next build for testing for a very
-long time now.
