@@ -2,195 +2,76 @@ Return-Path: <SRS0=n+Ub=5Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.8 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D321CC2BB85
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 20:07:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39DC3C2BB85
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 20:08:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A81342074F
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 20:07:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Wo8uwSUO"
+	by mail.kernel.org (Postfix) with ESMTP id 0315520730
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 20:08:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1586462893;
+	bh=pX1yFzz3pFt10pbXAcR7vDj5Thmq7QVeIwvpaqgU98I=;
+	h=In-Reply-To:References:Subject:From:Cc:To:Date:List-ID:From;
+	b=lMT3SB7PhyFBCYhWREBtFZlcGrsj2cGGak9n8dgu0P3OkEM5q+WJmkLt0CDrJd/GR
+	 dua23bm9MP0A9OU+Be4Dl36Ktiv0mgUUug9FQvA+1i76+TuGrIdqbU+0sRKpIrBgYB
+	 iJWEMkhZG79uYFs+wWBTRHrVzLf5qEA72RlmoVEs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727039AbgDIUHv (ORCPT
+        id S1727079AbgDIUIL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Apr 2020 16:07:51 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:40845 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726796AbgDIUHu (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Apr 2020 16:07:50 -0400
-Received: by mail-pg1-f195.google.com with SMTP id c5so5466422pgi.7;
-        Thu, 09 Apr 2020 13:07:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=gFbgLvA9IhNM6MS+duI6ZIiItgpmMayKTmOoqArHpEk=;
-        b=Wo8uwSUOk5gr4ciM3Mm7hxCSwPVI02l6a7YUFVcamVf9M9cFL8y+2yGQ+gBiRkwofK
-         OkSEHrjC3Fia+rWqSGFhCuAzYBdMVtvkvkJLbZNpvE0reNA7giBWAhcwkVi+nqsTnW9j
-         sj/3E7UsT66cxUBZ4ZLCrFk+jzupvF6CCMij3BpAo6efbn1/zt+9wHxC8gmURaf8j2qi
-         khwhA64g0MLeKbvQFNwYCp49SAgWa18G39YVWhwjOFiAkEbXsIQX8W10aTUcasc0kn/k
-         kDaEKK3QxzVDNP/hkpRBmXVRPxco3OyDUqMra8s8gr/uphlLzYd+OSlPQytznmplEz4m
-         3SXA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=gFbgLvA9IhNM6MS+duI6ZIiItgpmMayKTmOoqArHpEk=;
-        b=fJReW1WhnIo228O22F3O82lh6jTsD17bbZPnGUdMsdVI5YhTLGsZgTLUyGj4n0RMsU
-         VFwLJ1Dp5/Qtwref88WjCGw09eBSfwS2cGIvVQoexbvAaHAj62LjRs+83c84+qtoe0fH
-         zrLgxlufIDKpk1Zqyz8m+JQeN0wz7x7dp9rfP54p3pDkhMs/JiXeLSvX1zrMoZ0tGZbI
-         W5WrIUohBu9aaHWM8Uqow7cQczDwCL/+TLK9XnbkvEye7x+mdx4THqZ9i7W0Q1oTyxfR
-         ZzmAWXTtEV7FqmD/OYS0x/X6m9i+tcYvr4Sz/cMMaAWvRSXiQZPNokcgUmtvyTV/8ZOS
-         MhcA==
-X-Gm-Message-State: AGi0PuaqKBsQF7ho0DMWP651iVg0p9bz2TOjSFmv0p+3fDgbxclWsFUN
-        bayAvDC7iaVXPcxPpxZly7GZOzpo
-X-Google-Smtp-Source: APiQypJT/cplvpNA6ox65vRjd3FD8P4lnzxQa3HquewNsN63tHFVMvzR7A8Q+/Q0UIM10NOjYhgrKw==
-X-Received: by 2002:a63:ff53:: with SMTP id s19mr1129626pgk.247.1586462869353;
-        Thu, 09 Apr 2020 13:07:49 -0700 (PDT)
-Received: from dtor-ws ([2620:15c:202:201:3c2a:73a9:c2cf:7f45])
-        by smtp.gmail.com with ESMTPSA id k24sm93772pfk.164.2020.04.09.13.07.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 09 Apr 2020 13:07:48 -0700 (PDT)
-Date:   Thu, 9 Apr 2020 13:07:46 -0700
-From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To:     Bernd Edlinger <bernd.edlinger@hotmail.de>
-Cc:     Benjamin Tissoires <benjamin.tissoires@redhat.com>,
-        "Dave.Wang" <dave.wang@emc.com.tw>, jingle <jingle.wu@emc.com.tw>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        Enrico Weigelt <info@metux.net>,
-        Allison Randal <allison@lohutok.net>,
-        Aaron Ma <aaron.ma@canonical.com>
-Subject: Re: [PATCH v2] Input: elantech - fix x_max/y_max values
-Message-ID: <20200409200746.GP75430@dtor-ws>
-References: <PR2PR03MB517975370D754EEF47E062BFE4EB0@PR2PR03MB5179.eurprd03.prod.outlook.com>
- <CAO-hwJ+eua8-fNj9o8CxjFyM0i1+R9ZwPMroF9uLUH6NVu3Tdg@mail.gmail.com>
- <PR2PR03MB51799BF709B3975A08F139F4E4EB0@PR2PR03MB5179.eurprd03.prod.outlook.com>
- <AM6PR03MB5170F5FC30556BEF89C775C2E4EB0@AM6PR03MB5170.eurprd03.prod.outlook.com>
- <AM6PR03MB5170D26019747F5090FE74B5E4C50@AM6PR03MB5170.eurprd03.prod.outlook.com>
- <AM6PR03MB51702AF00C6BA06BBC9F517EE4C50@AM6PR03MB5170.eurprd03.prod.outlook.com>
- <AM6PR03MB51705B32136F527B99CCD907E4C10@AM6PR03MB5170.eurprd03.prod.outlook.com>
+        Thu, 9 Apr 2020 16:08:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38002 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726796AbgDIUIL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Apr 2020 16:08:11 -0400
+Received: from kernel.org (unknown [104.132.0.74])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5F1D820730;
+        Thu,  9 Apr 2020 20:08:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1586462891;
+        bh=pX1yFzz3pFt10pbXAcR7vDj5Thmq7QVeIwvpaqgU98I=;
+        h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
+        b=t4//RAlFmxXq0i6O7cTwZ7qK1rgoLWcl1kSdh8/DiX5Q9JrzFvNSRZR1rRaQjsJ6R
+         ymBfkEmXJmQfnXFvsb7ZynbMSjr+UMVPBNEDHK7vPyi839/36fVtaSg5WxfN7iuUWg
+         Y5vlCIrHQdsODQ+yadrVBqsIFAqiSDiQqAWGT+Ug=
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <AM6PR03MB51705B32136F527B99CCD907E4C10@AM6PR03MB5170.eurprd03.prod.outlook.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <1585338485-31820-4-git-send-email-tdas@codeaurora.org>
+References: <1585338485-31820-1-git-send-email-tdas@codeaurora.org> <1585338485-31820-4-git-send-email-tdas@codeaurora.org>
+Subject: Re: [PATCH v1 3/4] clk: qcom: gcc: Add support for GCC LPASS clock for SC7180
+From:   Stephen Boyd <sboyd@kernel.org>
+Cc:     David Brown <david.brown@linaro.org>,
+        Rajendra Nayak <rnayak@codeaurora.org>,
+        linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Andy Gross <agross@kernel.org>, devicetree@vger.kernel.org,
+        robh@kernel.org, robh+dt@kernel.org,
+        Taniya Das <tdas@codeaurora.org>
+To:     Michael Turquette <mturquette@baylibre.com>,
+        Taniya Das <tdas@codeaurora.org>
+Date:   Thu, 09 Apr 2020 13:08:10 -0700
+Message-ID: <158646289064.77611.10114179517777308856@swboyd.mtv.corp.google.com>
+User-Agent: alot/0.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Bernd,
+Quoting Taniya Das (2020-03-27 12:48:04)
+> @@ -2406,6 +2419,7 @@ static struct clk_regmap *gcc_sc7180_clocks[] =3D {
+>         [GCC_MSS_NAV_AXI_CLK] =3D &gcc_mss_nav_axi_clk.clkr,
+>         [GCC_MSS_Q6_MEMNOC_AXI_CLK] =3D &gcc_mss_q6_memnoc_axi_clk.clkr,
+>         [GCC_MSS_SNOC_AXI_CLK] =3D &gcc_mss_snoc_axi_clk.clkr,
+> +       [GCC_LPASS_CFG_NOC_SWAY_CLK] =3D &gcc_lpass_cfg_noc_sway_clk.clkr,
 
-On Thu, Apr 09, 2020 at 07:38:17PM +0200, Bernd Edlinger wrote:
-> Are you there?
-> 
-> Should I re-post the v2 patch, was that dropped somehow?
-> 
-> If I don't hear anything I'll assume I just repost, probably
-> as unchanged v3, right?
+Sad to see that more defines are being added slowly to the header file.
+It would be better to have all the defines there so the binding header
+file isn't updated in small updates over months and months.
 
-I do not think we ever got confirmation from Dave or Jingle; from my POV
-I really dislike arbitrary mangling of the data.
-
-I think you are right that the issue is with order of calls, and we need
-to switch the touchpad into absolute mode to get valid results from the
-ID query call. Dave, Jingle, any impot here?
-
-Benjamin, Kai-Feng, do you know if we try to switch to absolute mode
-to begin with, will it cause issues with SMBus mode?
-
-Thanks.
-
-> 
-> Thanks,
-> Bernd.
-> 
-> 
-> On 4/5/20 7:54 AM, Bernd Edlinger wrote:
-> > And, furthermore, there is one thing I find really confusing,
-> > 
-> > I do not see the message v2 quoted below which had an updated commit message,
-> > due to that Benjamin Tissoires request.
-> > 
-> > It was from my point of view sent on 2/27/20 11:03 PM,
-> > but I cannot find it neither on spinics, nor on marc.info.
-> > That is funny.
-> > 
-> > Did it reach you guys at all?
-> > Or should I re-send it just in case?
-> > 
-> > 
-> > Thanks
-> > Bernd.
-> > 
-> > On 4/5/20 7:26 AM, Bernd Edlinger wrote:
-> >> Ping...
-> >>
-> >> This patch works fine for me since several weeks,
-> >> without it I would not be able to use my laptop any more.
-> >>
-> >> Could you please accept this patch?
-> >>
-> >>
-> >> Thanks
-> >> Bernd.
-> >>
-> >>
-> >> On 2/27/20 11:03 PM, Bernd Edlinger wrote:
-> >>> Since commit 37548659bb22 ("Input: elantech - query the min/max information beforehand too")
-> >>> moved the querying of the x_max/y_max values from
-> >>> elantech_set_input_params to elantech_query_info,
-> >>> the returned x_max/y_max values are different than before,
-> >>> at least for some firmware versions.
-> >>>
-> >>> The reason is likely that this is now done before
-> >>> elantech_set_absolute_mode does run.  So it may happen that
-> >>> the returned values are exactly half of what they used to be,
-> >>> which makes input_report_abs in PS/2 mode report ABS_X values which
-> >>> exceed the x_max value, which is very annoying since the mouse stops
-> >>> to move then, and ABS_Y value become negative, which is benign.
-> >>>
-> >>> This was observed with a MSI GX70 laptop:
-> >>>
-> >>> elantech: assuming hardware version 3 (with firmware version 0x250f01)
-> >>> elantech: Synaptics capabilities query result 0x18, 0x17, 0x0b.
-> >>> elantech: Elan sample query result 05, 0e, 00
-> >>> input: ETPS/2 Elantech Touchpad as /devices/platform/i8042/serio...
-> >>>
-> >>> Correct this by doubling the returned x_max and y_max
-> >>> value for this specific firmware version.
-> >>>
-> >>> Fixes: 37548659bb22 ("Input: elantech - query the min/max information beforehand too")
-> >>>
-> >>> Signed-off-by: Bernd Edlinger <bernd.edlinger@hotmail.de>
-> >>> ---
-> >>>  drivers/input/mouse/elantech.c | 4 ++++
-> >>>  1 file changed, 4 insertions(+)
-> >>>
-> >>> diff --git a/drivers/input/mouse/elantech.c b/drivers/input/mouse/elantech.c
-> >>> index 2d8434b..3399db8 100644
-> >>> --- a/drivers/input/mouse/elantech.c
-> >>> +++ b/drivers/input/mouse/elantech.c
-> >>> @@ -1720,6 +1720,10 @@ static int elantech_query_info(struct psmouse *psmouse,
-> >>>  
-> >>>  		info->x_max = (0x0f & param[0]) << 8 | param[1];
-> >>>  		info->y_max = (0xf0 & param[0]) << 4 | param[2];
-> >>> +		if (info->fw_version == 0x250f01) {
-> >>> +			info->x_max <<= 1;
-> >>> +			info->y_max <<= 1;
-> >>> +		}
-> >>>  		break;
-> >>>  
-> >>>  	case 4:
-> >>>
-
--- 
-Dmitry
+>  };
+>
