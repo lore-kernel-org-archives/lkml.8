@@ -2,340 +2,128 @@ Return-Path: <SRS0=n+Ub=5Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40CA9C2BA19
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 19:41:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90372C2BA19
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 19:42:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F38A820757
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 19:41:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 613C32082D
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 19:42:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1586461344;
+	bh=6XuC0xOKni4kfMMVbdgp0La+OSTgNbVXZZW+64vDnII=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=hOBRa9bbxMKc0pUkJ8VSqPYMJfgInoKJvdRt56KeSRtRIenD7DM8fkNcu8Z3Fkqa5
+	 yzqr5JfoYUKMmSO3Dr5i2p6FlM3wODhY825I1KuN/ELVzk4bbrt9et0sA3q+Olh/4+
+	 ZbPBR0IvMTekH12ZaQhMfmdP97UPcv2/8ZGYfN7s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726830AbgDITlI (ORCPT
+        id S1726867AbgDITmW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Apr 2020 15:41:08 -0400
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:35454 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725970AbgDITlI (ORCPT
+        Thu, 9 Apr 2020 15:42:22 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:34913 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726559AbgDITmW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Apr 2020 15:41:08 -0400
-Received: by mail-lf1-f65.google.com with SMTP id r17so581550lff.2;
-        Thu, 09 Apr 2020 12:41:04 -0700 (PDT)
+        Thu, 9 Apr 2020 15:42:22 -0400
+Received: by mail-lj1-f196.google.com with SMTP id k21so1004206ljh.2
+        for <linux-kernel@vger.kernel.org>; Thu, 09 Apr 2020 12:42:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=CAhys4LZKw/fGvqXf+XzDbKQt9prwZrHtJKIODHUk6s=;
+        b=IVm9Qr4x8CQxDDXrmryn2CokCeA9fQTy74TPtZ+nvLq2SMgFUb4GeZjE5/UxlR+KQ3
+         0TMI/YLAbzibepwVX2Bs/s8h6TJY0tRKtOfNnoXzCY64HGFrE2RpuMB2hx6SjBfZTv68
+         LWL2CPxJFCkmr6MgfcI+JaYyoATRThjnuau0o=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:reply-to:subject:to:cc:references:from:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=ERTd4mfk8JOS5WQBAswgbozE6klDjp263zhVMIMngac=;
-        b=ln524cEWT309D03x0SNEUemPf6lk/2y89syw1nGGqsGE/wpEWjTDHg4paIpX1a6VEp
-         PcNwft0xv+KuXWZJ4GfBJmOPn2OFa7r9PdL3nUTE0cTlBI9ZI6rcy79kMb+nP16/5rzZ
-         4kc3IgJx/d2wZpVeHSIZSfwoq/DDxW9kC7mCi1WZOfNhNutYzucvUCxAHBReUle2NH4u
-         ueYsBB5UM2U0k2VJOF/DJ8NW7+hnPLTOdh0rVOPKtiRmNEac/ih2R/wdpJdro9K+yYci
-         NC7QUN8d0exBI54/dzpfwoUxhYDRTMDjf9UuKa4l0SHw1359tjL6iIzbTtcUlAj8QDFP
-         FERA==
-X-Gm-Message-State: AGi0Pub8KgXRNZoNda279vRYeZjtRAUSb71fEqnQMsfb+nWR3o1wvwhG
-        Tmu4NX0nP6hD4g4Pw4Ugaq4=
-X-Google-Smtp-Source: APiQypJM8b4r5yXZv6f+xhnXlzrwyTBkfWyVPssfGZtnQh09uCrB6D+KWrqxVnY/46747UJGCzk5Yw==
-X-Received: by 2002:a19:b10:: with SMTP id 16mr220286lfl.133.1586461264044;
-        Thu, 09 Apr 2020 12:41:04 -0700 (PDT)
-Received: from [192.168.42.234] ([213.87.131.218])
-        by smtp.gmail.com with ESMTPSA id t81sm11021lff.52.2020.04.09.12.41.02
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=CAhys4LZKw/fGvqXf+XzDbKQt9prwZrHtJKIODHUk6s=;
+        b=p366cRDE7+MynRl7VX9SiSW4BTIf95K8MSV682U5wLpQNaSG21NCxgyxIJB9S+FEn7
+         f1QEatJ3XJZWQ3eIYdPneSSoLfa1mrP2DOKLiagWinCxTRWZMhzEH4baVwjRJWY6bSpe
+         csfMbatn+424ye4/Vot73/fZQvKRI2efZ9Q7ivEK8a5lt+C2lOixRSgoVER8Z31ahi3J
+         t7ywkSNqQX5ItleWR547KghhNaLUIzZ5IQghfGRuMWNBBYYWQKXyxZSU2Z9ZkbA/vgub
+         lY2j0bIw5t55nIAfJ0g1VIUL2eNjwhHwhyb4nbGDy+gZQ72KgOtrB+kcpqMp950Vn9c0
+         6XeA==
+X-Gm-Message-State: AGi0PuYzJf8t2aDxY2FmutdaFvdZhyXJbk9rlCl2dSJzPpYmiz+2ZtlM
+        UyzusJuiNIIyRQnqiULZphqITOpI7dM=
+X-Google-Smtp-Source: APiQypJfaIujWhoQMnlwgc+nl9eX42yqKTVFKTyQvYcbu4YvifyVOgd2K2mli8m00+GIlHNeB/0Dwg==
+X-Received: by 2002:a2e:9648:: with SMTP id z8mr872500ljh.169.1586461339283;
+        Thu, 09 Apr 2020 12:42:19 -0700 (PDT)
+Received: from mail-lj1-f175.google.com (mail-lj1-f175.google.com. [209.85.208.175])
+        by smtp.gmail.com with ESMTPSA id j13sm22035lfb.19.2020.04.09.12.42.17
+        for <linux-kernel@vger.kernel.org>
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 09 Apr 2020 12:41:03 -0700 (PDT)
-Reply-To: alex.popov@linux.com
-Subject: Re: Coccinelle rule for CVE-2019-18683
-To:     Jann Horn <jannh@google.com>
-Cc:     Julia Lawall <Julia.Lawall@lip6.fr>,
-        Gilles Muller <Gilles.Muller@lip6.fr>,
-        Nicolas Palix <nicolas.palix@imag.fr>,
-        Michal Marek <michal.lkml@markovi.net>, cocci@systeme.lip6.fr,
-        "kernel-hardening@lists.openwall.com" 
-        <kernel-hardening@lists.openwall.com>,
-        Kees Cook <keescook@chromium.org>,
-        Hans Verkuil <hverkuil@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Linux Media Mailing List <linux-media@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Markus Elfring <Markus.Elfring@web.de>
-References: <fff664e9-06c9-d2fb-738f-e8e591e09569@linux.com>
- <CAG48ez09gn1Abv-EwwW5Rgjqo2CQsbq6tjDeTfpr_FnJC7f5zA@mail.gmail.com>
-From:   Alexander Popov <alex.popov@linux.com>
-Autocrypt: addr=alex.popov@linux.com; prefer-encrypt=mutual; keydata=
- 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
- j3lCqPk=
-Message-ID: <e41fc912-0a4f-70c3-b924-50126f0f185a@linux.com>
-Date:   Thu, 9 Apr 2020 22:41:01 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Thu, 09 Apr 2020 12:42:17 -0700 (PDT)
+Received: by mail-lj1-f175.google.com with SMTP id b1so1006376ljp.3
+        for <linux-kernel@vger.kernel.org>; Thu, 09 Apr 2020 12:42:17 -0700 (PDT)
+X-Received: by 2002:a2e:a58e:: with SMTP id m14mr860929ljp.204.1586461337061;
+ Thu, 09 Apr 2020 12:42:17 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <CAG48ez09gn1Abv-EwwW5Rgjqo2CQsbq6tjDeTfpr_FnJC7f5zA@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <87blobnq02.fsf@x220.int.ebiederm.org> <CAHk-=whM3r7zrm8mSi7HJhuZbYiXx9PFU5VQYeKm6Low=r15eQ@mail.gmail.com>
+ <AM6PR03MB517003D5965F48AC5FE7283DE4C60@AM6PR03MB5170.eurprd03.prod.outlook.com>
+ <CAHk-=wg5LvjumW9PVQiF7jB8yig98K8XTk4tHo9W-sYmxzW+9g@mail.gmail.com>
+ <87lfnda3w3.fsf@x220.int.ebiederm.org> <CAHk-=wjxyGCj9675mf31uhoJCyHn74ON_+O6SjSqBSSvqWxC1Q@mail.gmail.com>
+ <87blo45keg.fsf@x220.int.ebiederm.org> <CAHk-=whES-KCO6Bs93-QBK1tS5CfiWSi+v5D1a7Sc1TD5RFoaA@mail.gmail.com>
+ <87v9maxb5q.fsf@x220.int.ebiederm.org> <CAHk-=wih4BqW7GTLaYxewynuT-iFHrXroip0wNo0CyPtmYGUow@mail.gmail.com>
+ <87y2r4so3i.fsf@x220.int.ebiederm.org> <CAHk-=wjhAvv6s_7OVeZJiHaY7bBrHyiPTkSpq-TLr6qxYqxUUw@mail.gmail.com>
+ <CAHk-=wi0jrKv9x6vJ9FDgTrSUbdbZYDX-79T-E87C48MGSn5=g@mail.gmail.com>
+ <87wo6or3pg.fsf@x220.int.ebiederm.org> <AM6PR03MB51708FD4226E07AB7CB0D6A7E4C10@AM6PR03MB5170.eurprd03.prod.outlook.com>
+ <CAHk-=wjaoYM4gXdAyYY=u8PaYj2LXUvcfp=8DKum8f1DM+Ws0A@mail.gmail.com>
+ <AM6PR03MB5170F924EA69A81D79BD0929E4C10@AM6PR03MB5170.eurprd03.prod.outlook.com>
+ <CAHk-=whMKC5F-=QQP=fCNRuTF+ZGiNtLEKvx7KekpK1JtrwDhw@mail.gmail.com>
+In-Reply-To: <CAHk-=whMKC5F-=QQP=fCNRuTF+ZGiNtLEKvx7KekpK1JtrwDhw@mail.gmail.com>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Thu, 9 Apr 2020 12:42:00 -0700
+X-Gmail-Original-Message-ID: <CAHk-=whJ8khGBqfqh6ZmHsKjcyyBLm5xgkgLW_AC_=82iFBWoQ@mail.gmail.com>
+Message-ID: <CAHk-=whJ8khGBqfqh6ZmHsKjcyyBLm5xgkgLW_AC_=82iFBWoQ@mail.gmail.com>
+Subject: Re: [GIT PULL] Please pull proc and exec work for 5.7-rc1
+To:     Bernd Edlinger <bernd.edlinger@hotmail.de>
+Cc:     "Eric W. Biederman" <ebiederm@xmission.com>,
+        Waiman Long <longman@redhat.com>,
+        Ingo Molnar <mingo@kernel.org>, Will Deacon <will@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Alexey Gladkov <gladkov.alexey@gmail.com>,
+        Oleg Nesterov <oleg@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Jann, thanks for your reply!
+On Thu, Apr 9, 2020 at 11:36 AM Linus Torvalds
+<torvalds@linux-foundation.org> wrote:
+>
+> I guess I need to look at what that test is actually testing, because
+> it wasn't what I thought.
 
-On 09.04.2020 01:26, Jann Horn wrote:
-> On Thu, Apr 9, 2020 at 12:01 AM Alexander Popov <alex.popov@linux.com> wrote:
->> CVE-2019-18683 refers to three similar vulnerabilities caused by the same
->> incorrect approach to locking that is used in vivid_stop_generating_vid_cap(),
->> vivid_stop_generating_vid_out(), and sdr_cap_stop_streaming().
->>
->> For fixes please see the commit 6dcd5d7a7a29c1e4 (media: vivid: Fix wrong
->> locking that causes race conditions on streaming stop).
->>
->> These three functions are called during streaming stopping with vivid_dev.mutex
->> locked. And they all do the same mistake while stopping their kthreads, which
->> need to lock this mutex as well. See the example from
->> vivid_stop_generating_vid_cap():
->>     /* shutdown control thread */
->>     vivid_grab_controls(dev, false);
->>     mutex_unlock(&dev->mutex);
->>     kthread_stop(dev->kthread_vid_cap);
->>     dev->kthread_vid_cap = NULL;
->>     mutex_lock(&dev->mutex);
->>
->> But when this mutex is unlocked, another vb2_fop_read() can lock it instead of
->> the kthread and manipulate the buffer queue. That causes use-after-free.
->>
->> I created a Coccinelle rule that detects mutex_unlock+kthread_stop+mutex_lock
->> within one function.
-> [...]
->> mutex_unlock@unlock_p(E)
->> ...
->> kthread_stop@stop_p(...)
->> ...
->> mutex_lock@lock_p(E)
-> 
-> Is the kthread_stop() really special here? It seems to me like it's
-> pretty much just a normal instance of the "temporarily dropping a
-> lock" pattern - which does tend to go wrong quite often, but can also
-> be correct.
+Ahh.
 
-Right, searching without kthread_stop() gives more cases.
+The problem is that zap_other_threads() counts all threads.
 
-> I think it would be interesting though to have a list of places that
-> drop and then re-acquire a mutex/spinlock/... that was not originally
-> acquired in the same block of code (but was instead originally
-> acquired in an outer block, or by a parent function, or something like
-> that). So things like this:
+But it doesn't bother notifying already dead threads, even if it counts them.
 
-It's a very good idea. I tried it and got first results (described below).
+And then it waits for the threads to go away, but didn't do anything
+to make that dead thread go away.
 
-> void X(...) {
->   mutex_lock(A);
->   for (...) {
->     ...
->     mutex_unlock(A);
->     ...
->     mutex_lock(A);
->     ...
->   }
->   mutex_unlock(A);
-> }
+And the test case has an already dead thread that is just waiting to
+be reaped by the same person who is now waiting for it to go away.
 
-I'm not an expert in SmPL yet. Don't know how to describe this case.
+So it just stays around.
 
-> or like this:
-> 
-> void X(...) {
->   ... [no mutex operations on A]
->   mutex_unlock(A);
->   ...
->   mutex_lock(A);
->   ...
-> }
+Honestly, I'm not entirely sure this is worth worrying about, since
+it's all killable anyway and only happens if you do something stupid.
 
-Yes, I adapted the rule for that easier case:
+I mean, you can get two threads to wait for each other more easily other ways.
 
-```
-virtual report
-virtual context
+Or maybe we just shouldn't count already dead threads? Yeah, they'd
+share that current signal struct, but they're dead and can't do
+anything about it, they can only be reaped.
 
-@race exists@
-expression E;
-position unlock_p;
-position lock_p;
-@@
+But that would mean that we should also move the signal->notify_count
+update to when we mark the EXIT_ZOMBIE or EXIT_DEAD in exit_state.
 
-... when != mutex_lock(E)
-* mutex_unlock@unlock_p(E)
-...
-* mutex_lock@lock_p(E)
-
-@script:python@
-unlock_p << race.unlock_p;
-lock_p << race.lock_p;
-E << race.E;
-@@
-
-coccilib.report.print_report(unlock_p[0], 'see mutex_unlock(' + E + ') here')
-coccilib.report.print_report(lock_p[0], 'see mutex_lock(' + E + ') here\n')
-```
-
-The command to run it:
-  COCCI=./scripts/coccinelle/kthread_race.cocci make coccicheck MODE=context
-It shows the code context around in a form of diff.
-
-This rule found 195 matches. Not that much!
-
-> But of course, there are places where this kind of behavior is
-> correct; so such a script wouldn't just return report code, just code
-> that could use a bit more scrutiny than normal. 
-
-I've spent some time looking through the results.
-Currently I see 3 types of cases.
-
-
-1. Cases that look legit: a mutex is unlocked for some waiting or sleeping.
-
-Example:
-./fs/io_uring.c:7908:2-14: see mutex_unlock(& ctx -> uring_lock) here
-./fs/io_uring.c:7910:2-12: see mutex_lock(& ctx -> uring_lock) here
-
-diff -u -p ./fs/io_uring.c /tmp/nothing/fs/io_uring.c
---- ./fs/io_uring.c
-+++ /tmp/nothing/fs/io_uring.c
-@@ -7905,9 +7905,7 @@ static int __io_uring_register(struct io
- 		 * to drop the mutex here, since no new references will come in
- 		 * after we've killed the percpu ref.
- 		 */
--		mutex_unlock(&ctx->uring_lock);
- 		ret = wait_for_completion_interruptible(&ctx->completions[0]);
--		mutex_lock(&ctx->uring_lock);
- 		if (ret) {
- 			percpu_ref_resurrect(&ctx->refs);
- 			ret = -EINTR;
-
-
-Another example that looks legit:
-./mm/ksm.c:2709:2-14: see mutex_unlock(& ksm_thread_mutex) here
-./mm/ksm.c:2712:2-12: see mutex_lock(& ksm_thread_mutex) here
-
-diff -u -p ./mm/ksm.c /tmp/nothing/mm/ksm.c
---- ./mm/ksm.c
-+++ /tmp/nothing/mm/ksm.c
-@@ -2706,10 +2706,8 @@ void ksm_migrate_page(struct page *newpa
- static void wait_while_offlining(void)
- {
- 	while (ksm_run & KSM_RUN_OFFLINE) {
--		mutex_unlock(&ksm_thread_mutex);
- 		wait_on_bit(&ksm_run, ilog2(KSM_RUN_OFFLINE),
- 			    TASK_UNINTERRUPTIBLE);
--		mutex_lock(&ksm_thread_mutex);
- 	}
- }
-
-
-2. Weird cases that look like just avoiding a deadlock.
-
-Example. This mutex is unlocked for a while by an interrupt handler:
-./sound/pci/pcxhr/pcxhr_core.c:1210:3-15: see mutex_unlock(& mgr -> lock) here
-./sound/pci/pcxhr/pcxhr_core.c:1212:3-13: see mutex_lock(& mgr -> lock) here
-
-diff -u -p ./sound/pci/pcxhr/pcxhr_core.c /tmp/nothing/sound/pci/pcxhr/pcxhr_core.c
---- ./sound/pci/pcxhr/pcxhr_core.c
-+++ /tmp/nothing/sound/pci/pcxhr/pcxhr_core.c
-@@ -1207,9 +1207,7 @@ static void pcxhr_update_timer_pos(struc
- 		}
-
- 		if (elapsed) {
--			mutex_unlock(&mgr->lock);
- 			snd_pcm_period_elapsed(stream->substream);
--			mutex_lock(&mgr->lock);
- 		}
- 	}
- }
-
-Another weird example. Looks a bit similar to V4L2 bugs.
-
-./drivers/net/wireless/broadcom/b43/main.c:4334:1-13: see mutex_unlock(& wl ->
-mutex) here
-./drivers/net/wireless/broadcom/b43/main.c:4338:1-11: see mutex_lock(& wl ->
-mutex) here
-
-diff -u -p ./drivers/net/wireless/broadcom/b43/main.c
-/tmp/nothing/drivers/net/wireless/broadcom/b43/main.c
---- ./drivers/net/wireless/broadcom/b43/main.c
-+++ /tmp/nothing/drivers/net/wireless/broadcom/b43/main.c
-@@ -4331,11 +4331,9 @@ redo:
- 		return dev;
-
- 	/* Cancel work. Unlock to avoid deadlocks. */
--	mutex_unlock(&wl->mutex);
- 	cancel_delayed_work_sync(&dev->periodic_work);
- 	cancel_work_sync(&wl->tx_work);
- 	b43_leds_stop(dev);
--	mutex_lock(&wl->mutex);
- 	dev = wl->current_dev;
- 	if (!dev || b43_status(dev) < B43_STAT_STARTED) {
- 		/* Whoops, aliens ate up the device while we were unlocked. */
-
-
-3. False positive cases.
-The pointer to mutex changes between unlocking and locking.
-
-Example:
-./fs/ceph/caps.c:2103:4-16: see mutex_unlock(& session -> s_mutex) here
-./fs/ceph/caps.c:2105:3-13: see mutex_lock(& session -> s_mutex) here
-
-@@ -2100,9 +2094,7 @@ retry_locked:
- 		if (session != cap->session) {
- 			spin_unlock(&ci->i_ceph_lock);
- 			if (session)
--				mutex_unlock(&session->s_mutex);
- 			session = cap->session;
--			mutex_lock(&session->s_mutex);
- 			goto retry;
- 		}
- 		if (cap->session->s_state < CEPH_MDS_SESSION_OPEN) {
-
-
-I would be grateful for your ideas and feedback.
-Alexander
+          Linus
