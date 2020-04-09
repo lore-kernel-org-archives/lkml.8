@@ -2,149 +2,119 @@ Return-Path: <SRS0=n+Ub=5Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DAD3C2BA19
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 22:06:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3629AC2BA19
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 22:08:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3CD722074F
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 22:06:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 055CE2083E
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 22:08:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HvapQdcE"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="K1VZhl35"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726871AbgDIWGb (ORCPT
+        id S1726917AbgDIWIQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Apr 2020 18:06:31 -0400
-Received: from mail-il1-f196.google.com ([209.85.166.196]:33886 "EHLO
-        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726797AbgDIWGb (ORCPT
+        Thu, 9 Apr 2020 18:08:16 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:52232 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726797AbgDIWIQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Apr 2020 18:06:31 -0400
-Received: by mail-il1-f196.google.com with SMTP id t11so260094ils.1
-        for <linux-kernel@vger.kernel.org>; Thu, 09 Apr 2020 15:06:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=CGEzotVnRaQT7yF2QaJvHPaB3shOSQ3vcyNarTslrC8=;
-        b=HvapQdcECFWw/ne9zn+KAqOvO4558LNtGEQ4kL6usWUSXTXPck/iGafSzERuAMrQvZ
-         yHo2ND8PSweIBvCw6iuIeTZWayhtPOQNMfxxVRsO2yfJCRWh1ZFyhUBtcD4lEJhecHHH
-         s/we+ObvnqCd2SjrfkaiF1WCL84JcFvVdq2ubrUvA7lYMp1m+dTJwoKF+XRh6ePzi/3y
-         3sL+QirO5q4RGTYAHyG90pflJN/QM8ZeSjJdCwklBzgiPAWPnc14XKcDdXFSup5OgIyC
-         Gdy9vIMCbc/Gb3XbVAoA5toHp+AbOnY6TyyN+KciMcgyTVh6NH7ZPg4sanYeV0C+/DU5
-         BJUA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=CGEzotVnRaQT7yF2QaJvHPaB3shOSQ3vcyNarTslrC8=;
-        b=AAueDYO/U8GUjMXkIsUuyKd5AsVEw5239Byk8VR7eF/TijpsDxbU5dIptbrNWMwz7V
-         czKrLPthR6nBliiTJK6hkl6+9Am/7feinW6BZcYlSirtxA705BmSGY+ToUGRwJuL89qu
-         BqsN+Rv2rLDBHUDOzMCYyi+eGAYhVAYrPPWJFrKjevndY0ckVxrmvSJcQ9TO0ezuxblu
-         87m+Az339SGceHjdINRTIbxSpvKDD99n3WQSeJ5sT7xzyTQ2V/5/7UJZ3poVJd3rN1T4
-         AvEtfbNnR5QyQ2OQ5+x6lDPys3SqjZGo42OF71pGiLo/EVpslUp04i84MGu1305MKhYB
-         Ltzw==
-X-Gm-Message-State: AGi0Pubn6XH0hMETx+DyrdV7JkdLBgfPDc6hsAooAdg2qb8V7202HAUM
-        316uBQ4zYKUI9QsBc4sz3p8Yz2aGnQrVWFxKkEk=
-X-Google-Smtp-Source: APiQypLnsRlAm0w0mpfuP1UYMQZW3TM7H42jhSIG7Glgjj1GugOTTUrhNbOA3SEOea0zGfzoyJX0coVDtzOrlEHFpS4=
-X-Received: by 2002:a92:d407:: with SMTP id q7mr2019917ilm.95.1586469988954;
- Thu, 09 Apr 2020 15:06:28 -0700 (PDT)
+        Thu, 9 Apr 2020 18:08:16 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 039M3jf0081816;
+        Thu, 9 Apr 2020 22:08:10 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2020-01-29;
+ bh=KJh07q7uvOkDoDWvPxD4kKvVu9QeaGoOd2hp5uE/ptE=;
+ b=K1VZhl35SODodLXB/ZzTyYKN/5naGz4OQx77cB58MUiTOIdU2OduyWbJLX6DUXpweRzI
+ KQWnNiMjLjZw7Bd4bjDo/fj0PwzSRBVyFrlv3bqhmU3C4MBjVSibVFPP/PuYu6XCq6gh
+ TMi9a67XCQHJGtMueZT0BIHdtQ0pIYkxKPLm9LIbumLqSTaUDP1FW9JNR+CghMhxk/2j
+ ucCWhR9mjRax1iFuqQk0eya3lnoQjJFbrHI3WCFQ+d4nChi78G3wEcuh5bFKsoxSwhHe
+ 8KE3LmRYfXEGmMGqU4P70+PIXKi6cq7Ag9/c9pILGQw8EwRMbZrLzEr8R8KoNQJtwEfy kg== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by userp2120.oracle.com with ESMTP id 309gw4fxde-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 09 Apr 2020 22:08:10 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 039M6umD116523;
+        Thu, 9 Apr 2020 22:08:09 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by aserp3030.oracle.com with ESMTP id 309ag5tgdw-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 09 Apr 2020 22:08:09 +0000
+Received: from abhmp0001.oracle.com (abhmp0001.oracle.com [141.146.116.7])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 039M88EO014851;
+        Thu, 9 Apr 2020 22:08:08 GMT
+Received: from [192.168.1.206] (/71.63.128.209)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Thu, 09 Apr 2020 15:08:08 -0700
+Subject: Re: [PATCH] Documentation: hugetlb: Update hugetlb options
+To:     Peter Xu <peterx@redhat.com>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+Cc:     Nitesh Narayan Lal <nitesh@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>
+References: <20200409215800.8967-1-peterx@redhat.com>
+From:   Mike Kravetz <mike.kravetz@oracle.com>
+Message-ID: <ba5c87df-9a77-ebd2-e45e-f262a36fbf22@oracle.com>
+Date:   Thu, 9 Apr 2020 15:08:07 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-References: <CA+G9fYtfG4nZs0ON=bBNarPaycNOgGNvhXxcdrGzM1epDDBt7A@mail.gmail.com>
- <20200406172525.GA338360@carbon.DHCP.thefacebook.com>
-In-Reply-To: <20200406172525.GA338360@carbon.DHCP.thefacebook.com>
-From:   Yang Li <pku.leo@gmail.com>
-Date:   Thu, 9 Apr 2020 17:06:17 -0500
-Message-ID: <CADRPPNTSOJsz3kihZ3vXK0i6zWpUY_C36GxqmMO6ehACPT=aBg@mail.gmail.com>
-Subject: Re: mm/hugetlb.c:5580:3: error: implicit declaration of function
- 'for_each_mem_pfn_range'; did you mean 'for_each_mem_range'
-To:     Roman Gushchin <guro@fb.com>
-Cc:     Naresh Kamboju <naresh.kamboju@linaro.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        andreas.schaufler@gmx.de,
-        "Kirill A. Shutemov" <kirill@shutemov.name>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Michal Hocko <mhocko@kernel.org>,
-        Rik van Riel <riel@surriel.com>, js1304@gmail.com,
-        lkft-triage@lists.linaro.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20200409215800.8967-1-peterx@redhat.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9586 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 spamscore=0 malwarescore=0
+ phishscore=0 mlxscore=0 bulkscore=0 mlxlogscore=999 suspectscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
+ definitions=main-2004090156
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9586 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 bulkscore=0
+ phishscore=0 lowpriorityscore=0 impostorscore=0 clxscore=1011
+ suspectscore=0 malwarescore=0 spamscore=0 mlxlogscore=999 mlxscore=0
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2004090155
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 6, 2020 at 12:37 PM Roman Gushchin <guro@fb.com> wrote:
->
-> On Mon, Apr 06, 2020 at 07:48:54PM +0530, Naresh Kamboju wrote:
-> > While building Linux-next master for arm beagle board x15 the following
-> > build error was noticed.
->
-> Hello Naresh!
->
-> There was a number of cleanups and fixes to the original hugetlb_cma
-> patch, and it looks like some parts were lost.
-> I'm going to gather all changes and resubmit a new version later today.
-> Sorry for the inconvenience.
+On 4/9/20 2:58 PM, Peter Xu wrote:
+> The hugepage options are not documented clearly.
+> 
+> Firstly, default_hugepagesz= should always be specified after the
+> declaration of the same type of huge page using hugepagesz=.  For
+> example, if we boot a x86_64 system with kernel cmdline
+> "default_hugepagesz=2M", we'll get a very funny error message:
+> 
+> "HugeTLB: unsupported default_hugepagesz 2097152. Reverting to 2097152"
+> 
+> It's understandable from code-wise because when hugetlb_init() we
+> didn't have the 2M page hstate registered, so it's unsupported.
+> However 2M is actually the default huge page size on x86_64, so we'll
+> register it right after the error message.  However it's very
+> confusing if without these knowledges.
+> 
+> Secondly, hugepages= option must be used _after_ another hugepagesz=.
+> The word "interleave" is fine but it didn't declare the fact that
+> each of the hugepages= option will be applied to the previous parsed
+> hugepagesz= option.
+> 
+> State all these clear.
+> 
+> Signed-off-by: Peter Xu <peterx@redhat.com>
 
-Hi Roman,
+Hi Peter,
 
-I'm still getting this compile issue with linux-next tag
-next-20200409.  If the current patch set is broken, can we remove them
-from the linux-next for now?
+Did you happen to see this patch series?
 
-Regards,
-Leo
->
-> Thanks!
->
-> >
-> > mm/hugetlb.c: In function 'hugetlb_cma_reserve':
-> > mm/hugetlb.c:5580:3: error: implicit declaration of function
-> > 'for_each_mem_pfn_range'; did you mean 'for_each_mem_range'?
-> > [-Werror=3Dimplicit-function-declaration]
-> >    for_each_mem_pfn_range(i, nid, &start_pfn, &end_pfn, NULL) {
-> >    ^~~~~~~~~~~~~~~~~~~~~~
-> >    for_each_mem_range
-> > mm/hugetlb.c:5580:62: error: expected ';' before '{' token
-> >    for_each_mem_pfn_range(i, nid, &start_pfn, &end_pfn, NULL) {
-> >                                                               ^
-> > Few more details about build test,
-> >
-> > CONFIG_HUGETLBFS=3Dy
-> > CONFIG_HUGETLB_PAGE=3Dy
-> > CONFIG_HAVE_ARCH_TRANSPARENT_HUGEPAGE=3Dy
-> > CONFIG_ARCH_WANT_HUGE_PMD_SHARE=3Dy
-> >
-> > # CONFIG_TRANSPARENT_HUGEPAGE is not set
-> > # CONFIG_CMA is not set
-> >
-> > Kernel config link,
-> > https://urldefense.proofpoint.com/v2/url?u=3Dhttp-3A__snapshots.linaro.=
-org_openembedded_lkft_lkft_sumo_intel-2Dcore2-2D32_lkft_linux-2Dmainline_25=
-91_config&d=3DDwIBaQ&c=3D5VD0RTtNlTh3ycd41b3MUw&r=3DjJYgtDM7QT-W-Fz_d29HYQ&=
-m=3DUExtNmMVvgxP1D5SQnPuvrZmT1KYfONSBf9zENyfrs4&s=3DO436GE4UqAvqVk0stawAOhO=
-Um1bNCFpZzxiVeNSs-ck&e=3D
-> >
-> > Build log,
-> > https://urldefense.proofpoint.com/v2/url?u=3Dhttps-3A__ci.linaro.org_vi=
-ew_lkft_job_openembedded-2Dlkft-2Dlinux-2Dnext_DISTRO-3Dlkft-2CMACHINE-3Dam=
-57xx-2Devm-2Clabel-3Ddocker-2Dlkft_743_consoleText&d=3DDwIBaQ&c=3D5VD0RTtNl=
-Th3ycd41b3MUw&r=3DjJYgtDM7QT-W-Fz_d29HYQ&m=3DUExtNmMVvgxP1D5SQnPuvrZmT1KYfO=
-NSBf9zENyfrs4&s=3DnuGZRu4xyY-99ohWh1uNDTo6NeV62n7kSsyoefxEGvI&e=3D
-> >
-> > --
-> > Linaro LKFT
-> > https://urldefense.proofpoint.com/v2/url?u=3Dhttps-3A__lkft.linaro.org&=
-d=3DDwIBaQ&c=3D5VD0RTtNlTh3ycd41b3MUw&r=3DjJYgtDM7QT-W-Fz_d29HYQ&m=3DUExtNm=
-MVvgxP1D5SQnPuvrZmT1KYfONSBf9zENyfrs4&s=3DuYemxk7TXD2Qie6H7zY9UjuE7zlN5ILjb=
-D_1UD3jo4A&e=3D
+https://lore.kernel.org/linux-mm/20200401183819.20647-1-mike.kravetz@oracle.com/
 
-
-
---=20
-- Leo
+That should address the documentation issue and more.
+-- 
+Mike Kravetz
