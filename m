@@ -2,109 +2,181 @@ Return-Path: <SRS0=n+Ub=5Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 907D7C2BA2B
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 15:44:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6C67C2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 15:44:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 71BED20771
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 15:44:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7E28B2072F
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 15:44:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="QzPSCCjx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728290AbgDIPoR (ORCPT
+        id S1728312AbgDIPoh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Apr 2020 11:44:17 -0400
-Received: from outbound-smtp55.blacknight.com ([46.22.136.239]:55477 "EHLO
-        outbound-smtp55.blacknight.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728020AbgDIPoR (ORCPT
+        Thu, 9 Apr 2020 11:44:37 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:37576 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728254AbgDIPog (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Apr 2020 11:44:17 -0400
-Received: from mail.blacknight.com (pemlinmail03.blacknight.ie [81.17.254.16])
-        by outbound-smtp55.blacknight.com (Postfix) with ESMTPS id B0947FADED
-        for <linux-kernel@vger.kernel.org>; Thu,  9 Apr 2020 16:44:15 +0100 (IST)
-Received: (qmail 25920 invoked from network); 9 Apr 2020 15:44:15 -0000
-Received: from unknown (HELO techsingularity.net) (mgorman@techsingularity.net@[84.203.18.57])
-  by 81.17.254.9 with ESMTPSA (AES256-SHA encrypted, authenticated); 9 Apr 2020 15:44:15 -0000
-Date:   Thu, 9 Apr 2020 16:44:13 +0100
-From:   Mel Gorman <mgorman@techsingularity.net>
-To:     Tejun Heo <tj@kernel.org>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Cgroup memory barrier usage and call frequency from scheduler
-Message-ID: <20200409154413.GK3818@techsingularity.net>
+        Thu, 9 Apr 2020 11:44:36 -0400
+Received: by mail-pf1-f193.google.com with SMTP id u65so4286720pfb.4
+        for <linux-kernel@vger.kernel.org>; Thu, 09 Apr 2020 08:44:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:references:from:message-id:date:user-agent:mime-version
+         :in-reply-to:content-language:content-transfer-encoding;
+        bh=A+392dlFffMR2Zs+A393uuNHfV4VZPU06/pi7V42CWo=;
+        b=QzPSCCjxge96HH4Z1pNDVxNSXwUJqh+j7B4xiHHJa0l5CW9u6HF6oYrhEeAHDG+Pcy
+         uwdqlVIbZRVvmuFK7iDLty12pv+IlKRZrgwOAvuxUltShrZ/UZwJEz/2RqMX58HiZGI8
+         IEkVbAsLxDrAd58J5A7mIc+EmqS9bDyfOr+XDMxQLKLKlONgFr32/6s59XOVLkJIUZha
+         lJ6Ga9jC7m5Y8sVBK1grNp22LMOcJvXlZLT9cu72BA4CTsrHttSI7PfJPOEjTHZjnky9
+         CItk90pdMO8goJ2ZqZ+VzidVE6oLlq92WGFbzgMGGmhRXPKaEvYczPPAusQlMEVhsCg+
+         SCTg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=A+392dlFffMR2Zs+A393uuNHfV4VZPU06/pi7V42CWo=;
+        b=mZ6TJqd/QtxsHx3nPCsR5+BT29aJQBk1/CtHhmtKzVV59ckT9m/6vjTmbu3WUJmT5t
+         N1EluJ9xQ9rixd1zWzMwotBSj3H+y3OkgQb++/i/CnZabsO0Oc2QQJoNzJgJ5JL0oN8A
+         E0hHDvd6BUmMoCB8L6MkjdPrTlp1t4RzCSkkkkB/nPGMewlVd+WZqMFOXOo0jBSkNBIW
+         OVWlrdHTEVWLslaEUbgYLDrlTipo208eI40YrGFHnTWH1vauGT31cQBz7Z02joDO4LFm
+         PjmKO9VeCfvOLc1BcR/n+A4EewmJms6VJy0laoNwB6hEzK7MShBvlRTj6ADnT4YCzB7r
+         vH+g==
+X-Gm-Message-State: AGi0Puau1VT48ga6D9FXHUvS+sn/ENaMMpGbvuj2ZtqO+2n3FbTthEqt
+        QWmgzjgbHsKwUg/qzw+zDjphWhwrhE4+Tw==
+X-Google-Smtp-Source: APiQypIjSwzOBqrE82xVArWQ+8D49YrVJaHLYvOy2PdLKBwNQX1oTmSbPPavNVc6xsV7URWcWhmV/Q==
+X-Received: by 2002:a63:a556:: with SMTP id r22mr16479pgu.429.1586447073271;
+        Thu, 09 Apr 2020 08:44:33 -0700 (PDT)
+Received: from ?IPv6:2605:e000:100e:8c61:70f8:a8e1:daca:d677? ([2605:e000:100e:8c61:70f8:a8e1:daca:d677])
+        by smtp.gmail.com with ESMTPSA id m9sm19123222pff.93.2020.04.09.08.44.31
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 09 Apr 2020 08:44:32 -0700 (PDT)
+Subject: Re: [PATCH 1/2] eventfd: Make wake counter work for single fd instead
+ of all
+To:     He Zhe <zhe.he@windriver.com>, viro@zeniv.linux.org.uk,
+        bcrl@kvack.org, linux-fsdevel@vger.kernel.org, linux-aio@kvack.org,
+        linux-kernel@vger.kernel.org
+References: <1586257192-58369-1-git-send-email-zhe.he@windriver.com>
+ <3f395813-a497-aa25-71cc-8aed345b9f75@kernel.dk>
+ <c4984e43-480c-3f9a-2316-249c61507bf2@windriver.com>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <3b4aa4cb-0e76-89c2-c48a-cf24e1a36bc2@kernel.dk>
+Date:   Thu, 9 Apr 2020 08:44:30 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-15
-Content-Disposition: inline
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <c4984e43-480c-3f9a-2316-249c61507bf2@windriver.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Tejun,
+On 4/9/20 3:37 AM, He Zhe wrote:
+> 
+> 
+> On 4/8/20 4:06 AM, Jens Axboe wrote:
+>> On 4/7/20 3:59 AM, zhe.he@windriver.com wrote:
+>>> From: He Zhe <zhe.he@windriver.com>
+>>>
+>>> commit b5e683d5cab8 ("eventfd: track eventfd_signal() recursion depth")
+>>> introduces a percpu counter that tracks the percpu recursion depth and
+>>> warn if it greater than one, to avoid potential deadlock and stack
+>>> overflow.
+>>>
+>>> However sometimes different eventfds may be used in parallel.
+>>> Specifically, when high network load goes through kvm and vhost, working
+>>> as below, it would trigger the following call trace.
+>>>
+>>> -  100.00%
+>>>    - 66.51%
+>>>         ret_from_fork
+>>>         kthread
+>>>       - vhost_worker
+>>>          - 33.47% handle_tx_kick
+>>>               handle_tx
+>>>               handle_tx_copy
+>>>               vhost_tx_batch.isra.0
+>>>               vhost_add_used_and_signal_n
+>>>               eventfd_signal
+>>>          - 33.05% handle_rx_net
+>>>               handle_rx
+>>>               vhost_add_used_and_signal_n
+>>>               eventfd_signal
+>>>    - 33.49%
+>>>         ioctl
+>>>         entry_SYSCALL_64_after_hwframe
+>>>         do_syscall_64
+>>>         __x64_sys_ioctl
+>>>         ksys_ioctl
+>>>         do_vfs_ioctl
+>>>         kvm_vcpu_ioctl
+>>>         kvm_arch_vcpu_ioctl_run
+>>>         vmx_handle_exit
+>>>         handle_ept_misconfig
+>>>         kvm_io_bus_write
+>>>         __kvm_io_bus_write
+>>>         eventfd_signal
+>>>
+>>> 001: WARNING: CPU: 1 PID: 1503 at fs/eventfd.c:73 eventfd_signal+0x85/0xa0
+>>> ---- snip ----
+>>> 001: Call Trace:
+>>> 001:  vhost_signal+0x15e/0x1b0 [vhost]
+>>> 001:  vhost_add_used_and_signal_n+0x2b/0x40 [vhost]
+>>> 001:  handle_rx+0xb9/0x900 [vhost_net]
+>>> 001:  handle_rx_net+0x15/0x20 [vhost_net]
+>>> 001:  vhost_worker+0xbe/0x120 [vhost]
+>>> 001:  kthread+0x106/0x140
+>>> 001:  ? log_used.part.0+0x20/0x20 [vhost]
+>>> 001:  ? kthread_park+0x90/0x90
+>>> 001:  ret_from_fork+0x35/0x40
+>>> 001: ---[ end trace 0000000000000003 ]---
+>>>
+>>> This patch moves the percpu counter into eventfd control structure and
+>>> does the clean-ups, so that eventfd can still be protected from deadlock
+>>> while allowing different ones to work in parallel.
+>>>
+>>> As to potential stack overflow, we might want to figure out a better
+>>> solution in the future to warn when the stack is about to overflow so it
+>>> can be better utilized, rather than break the working flow when just the
+>>> second one comes.
+>> This doesn't work for the infinite recursion case, the state has to be
+>> global, or per thread.
+> 
+> Thanks, but I'm not very clear about why the counter has to be global
+> or per thread.
+> 
+> If the recursion happens on the same eventfd, the attempt to re-grab
+> the same ctx->wqh.lock would be blocked by the fd-specific counter in
+> this patch.
+> 
+> If the recursion happens with a chain of different eventfds, that
+> might lead to a stack overflow issue. The issue should be handled but
+> it seems unnecessary to stop the just the second ring(when the counter
+> is going to be 2) of the chain.
+> 
+> Specifically in the vhost case, it runs very likely with heavy network
+> load which generates loads of eventfd_signal. Delaying the
+> eventfd_signal to worker threads will still end up violating the
+> global counter later and failing as above.
+> 
+> So we might want to take care of the potential overflow later,
+> hopefully with a measurement that can tell us if it's about to
+> overflow.
 
-Commit 9a9e97b2f1f2 ("cgroup: Add memory barriers to plug
-cgroup_rstat_updated() race window") introduced two full memory
-barriers to close a race. The one in cgroup_rstat_updated can be
-called at a high frequency from the scheduler from update_curr ->
-cgroup_account_cputime. The patch has no cc's, acks or reviews so I'm
-not sure how closely this was looked at. cgroup_rstat_updated shows up
-in profiles of netperf UDP_STREAM accounting for about 1% of overhead
-which doesn't sound a lot but that's about the same weight as some of
-the critical network paths. I have three questions about the patch
-
-1. Why were full barriers used?
-2. Why was it important that the data race be closed when the inaccuracy
-   is temporary?
-3. Why is it called from the context of update_curr()?
-
-For 1, the use of a full barrier seems unnecessary when it appears that
-you could have used a read barrier and a write barrier. The following
-patch drops the profile overhead to 0.1%
-
-diff --git a/kernel/cgroup/rstat.c b/kernel/cgroup/rstat.c
-index ca19b4c8acf5..bc3125949b4b 100644
---- a/kernel/cgroup/rstat.c
-+++ b/kernel/cgroup/rstat.c
-@@ -36,7 +36,7 @@ void cgroup_rstat_updated(struct cgroup *cgrp, int cpu)
- 	 * Paired with the one in cgroup_rstat_cpu_pop_upated().  Either we
- 	 * see NULL updated_next or they see our updated stat.
- 	 */
--	smp_mb();
-+	smp_rmb();
- 
- 	/*
- 	 * Because @parent's updated_children is terminated with @parent
-@@ -139,7 +139,7 @@ static struct cgroup *cgroup_rstat_cpu_pop_updated(struct cgroup *pos,
- 		 * Either they see NULL updated_next or we see their
- 		 * updated stat.
- 		 */
--		smp_mb();
-+		smp_wmb();
- 
- 		return pos;
- 	}
-
-For 2, the changelog says the barriers are necessary because "we plan to use
-rstat to track counters which need to be accurate". That is a bit vague.
-Under what circumstances is a transient inaccuracy a serious enough
-problem to justify additional barriers in the scheduler?
-
-For 3, update_curr() is called from a lot of places, some of which are
-quite hot -- e.g. task enqueue/dequeue. This is necessary information from
-the runqueue needs to be preserved. However, it's less clear that the cpu
-accounting information needs to be up to date on this granularity although
-it might be related to question 2. Why was the delta_exec not similarly
-accumulated in cpuacct_change() and defer the hierarchical update to
-be called from somewhere like entity_tick()? It would need tracking the
-CPU time at the last update as delta_exec would be lost so it's not very
-trivial but it does not look like it would be overly complicated.
-
-Thanks
+The worry is different eventfds, recursion on a single one could be
+detected by keeping state in the ctx itself. And yeah, I agree that one
+level isn't very deep, but wakeup chains can be deep and we can't allow
+a whole lot more. I'm sure folks would be open to increasing it, if some
+worst case kind of data was collected to prove it's fine to go deeper.
 
 -- 
-Mel Gorman
-SUSE Labs
+Jens Axboe
+
