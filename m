@@ -2,135 +2,192 @@ Return-Path: <SRS0=n+Ub=5Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,UNWANTED_LANGUAGE_BODY,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BE39C2BA19
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 21:18:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC6C2C2BA19
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 21:19:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DA2E820753
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 21:18:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586467083;
-	bh=iFJ2uXSUtewQGy/XQWzDbwdljeWyAp5lFEbtIqeww1M=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=e7gDIQktE7fVBVgiBtWPEr5aTz+7sSJP8x7jTh8FROBi/EcDQeTvxHHEntV8orTyd
-	 uSfEKY8vOga7P5RkSPzayIXjuGnczK8Xh/h2HFrR9oKnwNH1uCP/x/sJ2nV4Badhzp
-	 sopt/u6i3KvZT31rWZx0yebEo9N6M8I2gPxvd9P0=
+	by mail.kernel.org (Postfix) with ESMTP id B70312074F
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 21:19:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727481AbgDIVSB (ORCPT
+        id S1727547AbgDIVT4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Apr 2020 17:18:01 -0400
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:34783 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726964AbgDIVSB (ORCPT
+        Thu, 9 Apr 2020 17:19:56 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:42166 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726964AbgDIVTz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Apr 2020 17:18:01 -0400
-Received: by mail-lf1-f65.google.com with SMTP id x23so782137lfq.1
-        for <linux-kernel@vger.kernel.org>; Thu, 09 Apr 2020 14:17:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=y3ANlkc73xfE7W9i+/i/PzZhTTMot1WbopUumX0rZso=;
-        b=TxHSnl5hL9hBLbhzpFFxIIOfEr8Xnaemb9ujkuS20q7mBQjEQ06csx2hlFV+zrgpup
-         6dO7d2KwP2bItlzFl438olGyiqFuJzQzU5T7C+QmihScFUaRPswsPZ54xGuUwj654Q74
-         W0Ot8qmNDtMNw7H16o5lyW+WTWJ6YCHGAvMqQ=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=y3ANlkc73xfE7W9i+/i/PzZhTTMot1WbopUumX0rZso=;
-        b=jalHcjSK3avGFcds5HbbX9rL8eIQnEpFv28LSkKBqxcMDGvEpp0UzEPY1GT8doEPBY
-         v/KKGdQ0vQruHfeGmDEJWNnZVpt7609XPepfu5FP8Y9dQWYzCyN/KyQrAwwo2emkJIT+
-         pxEUgRf5C0IB0zHqN+1Rsy/oJ9qomr1byyg0HXOpNRpsh0mDRmI8/jAhUPacCYwfDgtw
-         U3IMKbszmMosJYlDcZ/Cxv+RF40xy+KFF5GWfcKt7QT/e6fVA9vMuuUaTT5lznE9OUgv
-         YD3ztBKWqrMo7cJHOC9XU/hVVmHuFPnce8m6hBmSrn2HqjNs2RUgN+tONPuXoNQlYMgK
-         UJPQ==
-X-Gm-Message-State: AGi0Puac6Z60FlvR/6TcTlb+XaODb+/2w7pO2TrF9Zn+u10tH3PKcEPt
-        eOOGLt+qdiGzwMNSJmq//3ldmShcnw4=
-X-Google-Smtp-Source: APiQypKxDJMFR7PjDUPYyEodmyzYF91/4JicIAbIzgWah1jse6jfu12DJ2le7+cFqnEKFh69a9qM+Q==
-X-Received: by 2002:a19:e00e:: with SMTP id x14mr714332lfg.111.1586467076718;
-        Thu, 09 Apr 2020 14:17:56 -0700 (PDT)
-Received: from mail-lf1-f51.google.com (mail-lf1-f51.google.com. [209.85.167.51])
-        by smtp.gmail.com with ESMTPSA id y29sm16102785ljd.26.2020.04.09.14.17.55
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 09 Apr 2020 14:17:55 -0700 (PDT)
-Received: by mail-lf1-f51.google.com with SMTP id 131so740769lfh.11
-        for <linux-kernel@vger.kernel.org>; Thu, 09 Apr 2020 14:17:55 -0700 (PDT)
-X-Received: by 2002:ac2:4466:: with SMTP id y6mr699561lfl.125.1586467075152;
- Thu, 09 Apr 2020 14:17:55 -0700 (PDT)
+        Thu, 9 Apr 2020 17:19:55 -0400
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: eballetbo)
+        with ESMTPSA id 055ED297E47
+Subject: Re: [PATCH 2/3] platform/chrome: typec: Add struct for port data
+To:     Prashant Malani <pmalani@chromium.org>,
+        linux-kernel@vger.kernel.org
+Cc:     heikki.krogerus@linux.intel.com,
+        Benson Leung <bleung@chromium.org>,
+        Guenter Roeck <groeck@chromium.org>
+References: <20200407010940.155490-1-pmalani@chromium.org>
+ <20200407010940.155490-3-pmalani@chromium.org>
+From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Message-ID: <e124df15-396b-8599-23ad-153196f6787f@collabora.com>
+Date:   Thu, 9 Apr 2020 23:19:51 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-References: <87blobnq02.fsf@x220.int.ebiederm.org> <87lfnda3w3.fsf@x220.int.ebiederm.org>
- <CAHk-=wjxyGCj9675mf31uhoJCyHn74ON_+O6SjSqBSSvqWxC1Q@mail.gmail.com>
- <87blo45keg.fsf@x220.int.ebiederm.org> <CAHk-=whES-KCO6Bs93-QBK1tS5CfiWSi+v5D1a7Sc1TD5RFoaA@mail.gmail.com>
- <87v9maxb5q.fsf@x220.int.ebiederm.org> <CAHk-=wih4BqW7GTLaYxewynuT-iFHrXroip0wNo0CyPtmYGUow@mail.gmail.com>
- <87y2r4so3i.fsf@x220.int.ebiederm.org> <CAHk-=wjhAvv6s_7OVeZJiHaY7bBrHyiPTkSpq-TLr6qxYqxUUw@mail.gmail.com>
- <CAHk-=wi0jrKv9x6vJ9FDgTrSUbdbZYDX-79T-E87C48MGSn5=g@mail.gmail.com>
- <87wo6or3pg.fsf@x220.int.ebiederm.org> <AM6PR03MB51708FD4226E07AB7CB0D6A7E4C10@AM6PR03MB5170.eurprd03.prod.outlook.com>
- <CAHk-=wjaoYM4gXdAyYY=u8PaYj2LXUvcfp=8DKum8f1DM+Ws0A@mail.gmail.com>
- <AM6PR03MB5170F924EA69A81D79BD0929E4C10@AM6PR03MB5170.eurprd03.prod.outlook.com>
- <CAHk-=whMKC5F-=QQP=fCNRuTF+ZGiNtLEKvx7KekpK1JtrwDhw@mail.gmail.com>
- <CAHk-=whJ8khGBqfqh6ZmHsKjcyyBLm5xgkgLW_AC_=82iFBWoQ@mail.gmail.com>
- <AM6PR03MB51700B243E34BF4A59FF33CFE4C10@AM6PR03MB5170.eurprd03.prod.outlook.com>
- <CAHk-=whJttTNFQn1fMYp91LZ90iHE7B2THZ8NjQ7fBwmWX9k6w@mail.gmail.com> <87imi8nzlw.fsf@x220.int.ebiederm.org>
-In-Reply-To: <87imi8nzlw.fsf@x220.int.ebiederm.org>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Thu, 9 Apr 2020 14:17:39 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wgh4zts+3hdkGzHLJ6pBGumcJ=23gRbMfubDrLstis2Bg@mail.gmail.com>
-Message-ID: <CAHk-=wgh4zts+3hdkGzHLJ6pBGumcJ=23gRbMfubDrLstis2Bg@mail.gmail.com>
-Subject: Re: [GIT PULL] Please pull proc and exec work for 5.7-rc1
-To:     "Eric W. Biederman" <ebiederm@xmission.com>
-Cc:     Bernd Edlinger <bernd.edlinger@hotmail.de>,
-        Waiman Long <longman@redhat.com>,
-        Ingo Molnar <mingo@kernel.org>, Will Deacon <will@kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Alexey Gladkov <gladkov.alexey@gmail.com>,
-        Oleg Nesterov <oleg@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200407010940.155490-3-pmalani@chromium.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 9, 2020 at 2:03 PM Eric W. Biederman <ebiederm@xmission.com> wrote:
->
-> But no.  While you are goind a good job at spotting odd corner
-> cases that need to be fixed.  This also is not the cause of the
-> deadlock.  It is nothing that subtle.
+Hi Prashant,
 
-So Eric, I'm now going to stop wasting my time on arguing with you.
+Thank you for the patch.
 
-Since both you and Bernd claimed to be too busy to even bother testing
-that thing, I just built it and booted it.
+On 7/4/20 3:09, Prashant Malani wrote:
+> Add a separate struct for storing port data, including Type C connector
+> class struct pointers and caps.
+> 
+> Signed-off-by: Prashant Malani <pmalani@chromium.org>
+> ---
+>  drivers/platform/chrome/cros_ec_typec.c | 49 ++++++++++++++++---------
+>  1 file changed, 32 insertions(+), 17 deletions(-)
+> 
+> diff --git a/drivers/platform/chrome/cros_ec_typec.c b/drivers/platform/chrome/cros_ec_typec.c
+> index cf7c2652a1d6d..1955e1dfebc6d 100644
+> --- a/drivers/platform/chrome/cros_ec_typec.c
+> +++ b/drivers/platform/chrome/cros_ec_typec.c
+> @@ -17,6 +17,13 @@
+>  
+>  #define DRV_NAME "cros-ec-typec"
+>  
+> +/* Per port data. */
+> +struct cros_typec_port {
+> +	struct typec_port *port;
+> +	/* Initial capabilities for the port. */
+> +	struct typec_capability caps;
+> +};
+> +
+>  /* Platform-specific data for the Chrome OS EC Type C controller. */
+>  struct cros_typec_data {
+>  	struct device *dev;
+> @@ -24,9 +31,7 @@ struct cros_typec_data {
+>  	int num_ports;
+>  	unsigned int cmd_ver;
+>  	/* Array of ports, indexed by port number. */
+> -	struct typec_port *ports[EC_USB_PD_MAX_PORTS];
+> -	/* Initial capabilities for each port. */
+> -	struct typec_capability *caps[EC_USB_PD_MAX_PORTS];
+> +	struct cros_typec_port *ports[EC_USB_PD_MAX_PORTS];
+>  	struct notifier_block nb;
+>  };
+>  
+> @@ -76,14 +81,26 @@ static int cros_typec_parse_port_props(struct typec_capability *cap,
+>  	return 0;
+>  }
+>  
+> +static void cros_unregister_ports(struct cros_typec_data *typec)
+> +{
+> +	int i;
+> +
+> +	for (i = 0; i < typec->num_ports; i++) {
+> +		if (!typec->ports[i])
+> +			continue;
+> +		typec_unregister_port(typec->ports[i]->port);
+> +		devm_kfree(typec->dev, typec->ports[i]);
 
-And guess what? That thing makes your non-deadlock thing go away.
+This is not needed, the allocated memory is device managed, so will be freed on
+removal or error.
 
-So it's _literally_ that simple.
-
-Now, does it make the tests "pass"? No.
-
-Because the "vmaccess" test fails because the open() now fails -
-because we simply don't wait for that dead thread any more, so the
-/proc/<pid>/mem thing doesn't exist.
-
-And for the same reason that "attach" test now no longer returns
-EAGAIN, it just attaches to the remaining execlp thing instead.
-
-So I'm not just good at "spotting odd corner cases". I told you why
-that bogus deadlock of yours failed - the execve was pointlessly
-waiting for a dead thread that had marked itself ptraced, and nobody
-was reaping it.
-
-And it appears you were too lazy to even try it out.
-
-Yes, that whole "notify_dead" count vs "tsk->exit_state" test is
-fundamentally racy. But that race happens to be irrelevant for the
-test case in question.
-
-So until you can actually add something to the discussion, I'm done
-with this thread.
-
-           Linus
+> +	}
+> +}
+> +
+>  static int cros_typec_init_ports(struct cros_typec_data *typec)
+>  {
+>  	struct device *dev = typec->dev;
+>  	struct typec_capability *cap;
+>  	struct fwnode_handle *fwnode;
+> +	struct cros_typec_port *cros_port;
+>  	const char *port_prop;
+>  	int ret;
+> -	int i;
+>  	int nports;
+>  	u32 port_num = 0;
+>  
+> @@ -115,22 +132,23 @@ static int cros_typec_init_ports(struct cros_typec_data *typec)
+>  
+>  		dev_dbg(dev, "Registering port %d\n", port_num);
+>  
+> -		cap = devm_kzalloc(dev, sizeof(*cap), GFP_KERNEL);
+> -		if (!cap) {
+> +		cros_port = devm_kzalloc(dev, sizeof(*cros_port), GFP_KERNEL);
+> +		if (!cros_port) {
+>  			ret = -ENOMEM;
+>  			goto unregister_ports;
+>  		}
+>  
+> -		typec->caps[port_num] = cap;
+> +		typec->ports[port_num] = cros_port;
+> +		cap = &cros_port->caps;
+>  
+>  		ret = cros_typec_parse_port_props(cap, fwnode, dev);
+>  		if (ret < 0)
+>  			goto unregister_ports;
+>  
+> -		typec->ports[port_num] = typec_register_port(dev, cap);
+> -		if (IS_ERR(typec->ports[port_num])) {
+> +		cros_port->port = typec_register_port(dev, cap);
+> +		if (IS_ERR(cros_port->port)) {
+>  			dev_err(dev, "Failed to register port %d\n", port_num);
+> -			ret = PTR_ERR(typec->ports[port_num]);
+> +			ret = PTR_ERR(cros_port->port);
+>  			goto unregister_ports;
+>  		}
+>  	}
+> @@ -138,8 +156,7 @@ static int cros_typec_init_ports(struct cros_typec_data *typec)
+>  	return 0;
+>  
+>  unregister_ports:
+> -	for (i = 0; i < typec->num_ports; i++)
+> -		typec_unregister_port(typec->ports[i]);
+> +	cros_unregister_ports(typec);
+>  	return ret;
+>  }
+>  
+> @@ -177,7 +194,7 @@ static int cros_typec_ec_command(struct cros_typec_data *typec,
+>  static void cros_typec_set_port_params_v0(struct cros_typec_data *typec,
+>  		int port_num, struct ec_response_usb_pd_control *resp)
+>  {
+> -	struct typec_port *port = typec->ports[port_num];
+> +	struct typec_port *port = typec->ports[port_num]->port;
+>  	enum typec_orientation polarity;
+>  
+>  	if (!resp->enabled)
+> @@ -194,7 +211,7 @@ static void cros_typec_set_port_params_v0(struct cros_typec_data *typec,
+>  static void cros_typec_set_port_params_v1(struct cros_typec_data *typec,
+>  		int port_num, struct ec_response_usb_pd_control_v1 *resp)
+>  {
+> -	struct typec_port *port = typec->ports[port_num];
+> +	struct typec_port *port = typec->ports[port_num]->port;
+>  	enum typec_orientation polarity;
+>  
+>  	if (!(resp->enabled & PD_CTRL_RESP_ENABLED_CONNECTED))
+> @@ -360,9 +377,7 @@ static int cros_typec_probe(struct platform_device *pdev)
+>  	return 0;
+>  
+>  unregister_ports:
+> -	for (i = 0; i < typec->num_ports; i++)
+> -		if (typec->ports[i])
+> -			typec_unregister_port(typec->ports[i]);
+> +	cros_unregister_ports(typec);
+>  	return ret;
+>  }
+>  
+> 
