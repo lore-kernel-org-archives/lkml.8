@@ -2,177 +2,89 @@ Return-Path: <SRS0=n+Ub=5Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,TVD_SUBJ_WIPE_DEBT,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E19AC38A29
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 09:49:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75F44C2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 09:52:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 801E2221E8
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 09:41:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="WXfJC2xv"
+	by mail.kernel.org (Postfix) with ESMTP id 54AE8214DB
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 09:52:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726740AbgDIJld (ORCPT
+        id S1726715AbgDIJww (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Apr 2020 05:41:33 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:42013 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726623AbgDIJld (ORCPT
+        Thu, 9 Apr 2020 05:52:52 -0400
+Received: from mout.kundenserver.de ([217.72.192.73]:44241 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726632AbgDIJww (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Apr 2020 05:41:33 -0400
-Received: by mail-ot1-f65.google.com with SMTP id t92so923669otb.9
-        for <linux-kernel@vger.kernel.org>; Thu, 09 Apr 2020 02:41:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ffwll.ch; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=AAmPcakirZ+49aStGKItq0c+j+VEsXqfcBH/BMyGspk=;
-        b=WXfJC2xvujS1NMEJmo8auNqU+zz3KoHNnFI/ZwIoQGqsenIlj1/rLp7i8g0wrHhNMA
-         tB4UaPYqL8fo1FBLJD1QspR85zqLl/OHQQ2XW2wZhxbVmnvXaj4OEg2HGRtpK4xkfIA5
-         QryyOXVdb1eBXsQfmBlDoe7W6QRuDag4YOw+c=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=AAmPcakirZ+49aStGKItq0c+j+VEsXqfcBH/BMyGspk=;
-        b=kowpc6XCYZvbzW+5awK96cfMJLZVrhdirwB6Vm2ybc1RZMf7vuAv/lWqMopIYrI2dt
-         nf1unBjaPAKv/AsIP3n+ZnwqFkwxLYNYaV/Ytz8TiukK8PdSVKpYMTX4GklSHDXmFWzt
-         awKBjY6ri2clmUkQsNtQsxonzbMMujkod+B9PIuGD0j1RckNbuKWM5U6j81w9JeQ4fFV
-         D/DPz6psK5FvH99UuNDrqkICZ7UjzMdbAirci3vKKC5qOotusK0xionuqBPuSj1hmEse
-         oUebLRNpxhZl4050v0W8uq+uByxkL2CQ6j46JYBDAKjfHvHlHLkbItPc8jxtT3VofV1G
-         hXgQ==
-X-Gm-Message-State: AGi0Pub6B3aK4yZOTJ2PE9whf0TQBQbhQyI/8o/EOtQEVEY9eUG5Bp5e
-        hD9CRDAYHq6zBUsICE8DA88DHYNiSaUiyoZKd9u7kA==
-X-Google-Smtp-Source: APiQypLHBVJAv55CZxyRjUHHZPFErxI7m2EAB+edMw28HekqHKAMU8pcbynFySqYUgFQY0OpR/l48dylQu4jTtXwGxw=
-X-Received: by 2002:a4a:4190:: with SMTP id x138mr9186341ooa.35.1586425291875;
- Thu, 09 Apr 2020 02:41:31 -0700 (PDT)
+        Thu, 9 Apr 2020 05:52:52 -0400
+Received: from mail-qt1-f176.google.com ([209.85.160.176]) by
+ mrelayeu.kundenserver.de (mreue106 [212.227.15.145]) with ESMTPSA (Nemesis)
+ id 1MUog3-1jn3Fy3czR-00Qhna for <linux-kernel@vger.kernel.org>; Thu, 09 Apr
+ 2020 11:52:52 +0200
+Received: by mail-qt1-f176.google.com with SMTP id o10so1117357qtr.6
+        for <linux-kernel@vger.kernel.org>; Thu, 09 Apr 2020 02:52:51 -0700 (PDT)
+X-Gm-Message-State: AGi0PubZ+QhTMV0IW/+5f9irbcFpQBZxi8Ct2qWwme70GX/RqBXUVvNf
+        5bDN9yapY9okY25egx01rfvndS+wXFNBOljc5Jg=
+X-Google-Smtp-Source: APiQypL+DwHH2ZguxZLXN8OA5ycsBeUoFtHigT4vFuKKbtUbT4QIjDNqDn6MdopgZgREkiqjW4wiglbzubeOCiv08nY=
+X-Received: by 2002:ac8:7292:: with SMTP id v18mr11264133qto.304.1586425970748;
+ Thu, 09 Apr 2020 02:52:50 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200408115926.1467567-1-hch@lst.de> <20200408115926.1467567-20-hch@lst.de>
- <20200408122504.GO3456981@phenom.ffwll.local> <eb48f7b6327e482ea9911b129210c0417ab48345.camel@kernel.crashing.org>
-In-Reply-To: <eb48f7b6327e482ea9911b129210c0417ab48345.camel@kernel.crashing.org>
-From:   Daniel Vetter <daniel@ffwll.ch>
-Date:   Thu, 9 Apr 2020 11:41:20 +0200
-Message-ID: <CAKMK7uHtkLvdsWFGiAtkzVa5mpnDvXkn3CHZQ6bgJ_enbyAc8A@mail.gmail.com>
-Subject: Re: [PATCH 19/28] gpu/drm: remove the powerpc hack in drm_legacy_sg_alloc
-To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Cc:     Christoph Hellwig <hch@lst.de>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>, X86 ML <x86@kernel.org>,
-        David Airlie <airlied@linux.ie>,
-        Laura Abbott <labbott@redhat.com>,
-        Sumit Semwal <sumit.semwal@linaro.org>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Minchan Kim <minchan@kernel.org>,
-        Nitin Gupta <ngupta@vflare.org>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        Peter Zijlstra <peterz@infradead.org>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        linux-hyperv@vger.kernel.org,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        "moderated list:DMA BUFFER SHARING FRAMEWORK" 
-        <linaro-mm-sig@lists.linaro.org>,
-        "open list:GENERIC INCLUDE/A..." <linux-arch@vger.kernel.org>,
-        Linux MM <linux-mm@kvack.org>,
-        "list@263.net:IOMMU DRIVERS <iommu@lists.linux-foundation.org>, Joerg
-        Roedel <joro@8bytes.org>," <iommu@lists.linux-foundation.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        linux-s390@vger.kernel.org, bpf <bpf@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <cover.1586422035.git.baolin.wang7@gmail.com> <CAK8P3a1rWuL-mSeFBN0Dk7u3wnDmPgknEM3Em734KP64-Wv0ZQ@mail.gmail.com>
+ <CADBw62qEfdLM9e2oyPKz1qRk4mZaFPbXRYpLfVHzxKj0Cz90kw@mail.gmail.com>
+In-Reply-To: <CADBw62qEfdLM9e2oyPKz1qRk4mZaFPbXRYpLfVHzxKj0Cz90kw@mail.gmail.com>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Thu, 9 Apr 2020 11:52:34 +0200
+X-Gmail-Original-Message-ID: <CAK8P3a3rFKVukWk7U1abHnW4a-5TV4e57f=9Lt9Xbfytm7H09A@mail.gmail.com>
+Message-ID: <CAK8P3a3rFKVukWk7U1abHnW4a-5TV4e57f=9Lt9Xbfytm7H09A@mail.gmail.com>
+Subject: Re: [RFC PATCH 0/3] Add new reg_update_bits() support
+To:     Baolin Wang <baolin.wang7@gmail.com>
+Cc:     Lee Jones <lee.jones@linaro.org>, Mark Brown <broonie@kernel.org>,
+        Orson Zhai <orsonzhai@gmail.com>,
+        Lyra Zhang <zhang.lyra@gmail.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:ukI8mr9iL59Bz0uuiB4N0ZZtSMVBLLSIhU44Wy8tIBCvQpQZ1cY
+ 5LbkevPtle+07lq9OGqfyPCDsBwtQtZ0CGjDuTieB2Ta4tHJOipPkPfycyIF11NTaaOUdIp
+ L6fdmsBpYgY0FnY6Nx+InqC69pNeT8M7dLSa7a6zFZlxMe8exe9ySNUMUssRmi/YNLp7h2Z
+ SuXTpV6KqHOcvm6tsQrPQ==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:BE3k4PoYWps=:Y+IOHy/sTJvz749kizmGjw
+ Eajge275lCu9WQ7iHmd4PSRjXowqMsAN3Xwk4YSEh00eQHzgNNZcTfdPN8oyMIiFDOf4NQVl2
+ cb4V66ASJmYsFrEITBiyLyOtqFgqXJi6XoWjwxJtIcss3sfXirB2dSxdgw59DdItj2gYVtVhR
+ qEh0dMZGJpIlG7agbKyLl2x4yC3/EbcQdQYnySPkc7hH94vN+8SHNUqS6P19KP/uoaESnUwuk
+ luu4qvf6o9UwDQQb382uOs9YpLzAF5soGM4i+bKDk9kbnwtf0QVGAyi2iCUvpwO2dhYQH0lM1
+ HUBZy7gXLOax5Y/Gxk5opkaS24HgED3n0SDjB0kacH52ZqvGMHbFUg2parS8JePTuZfRhSBmW
+ P9q6HaL71zt1d9yyRmFn9TgJ7uel2m92pJTKUTJxmcWzRf/1hC0h7WYmF22HE6hpYcN46+4wx
+ NQAN8QFyWfIqeLFP108xdwj/r6aqyo8lL+OvsJp1yuYJd5wHIl63kYfTdVPbrEdaWqPUcQVin
+ 8nHDl4Sqf9EY4VezTG04zwPINsoCx8oskOF/hhad9Nbh0Oj4FbCiAH12DPZ8eUf0/P5gxBck+
+ FOR1QE52SDxoo6p4lZVeLMjUurh7X8jgLwM38GUrVrSkKDgrj3K9kHysVjO1w1ol7X1+gJ52f
+ /ZfKowDL4pytu5o7LbmtH7A2aKIy3PFbFdHg8K++WvJg+1kBJldlsMnHZBLEBz/RM6oxRTYWr
+ 2dTeO5t76FmCrkoHKKJtmOk7oQhNtELA2JrKlm0v6lhWSpkryADkKOHbIEmyeQYe4qdI6br87
+ x4nv9PqqlYLTk3M0iJpsRKkvsfXKwzcU9OxyFbXLyyzdjErG9k=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 9, 2020 at 10:54 AM Benjamin Herrenschmidt
-<benh@kernel.crashing.org> wrote:
->
-> On Wed, 2020-04-08 at 14:25 +0200, Daniel Vetter wrote:
-> > On Wed, Apr 08, 2020 at 01:59:17PM +0200, Christoph Hellwig wrote:
-> > > If this code was broken for non-coherent caches a crude powerpc hack
-> > > isn't going to help anyone else.  Remove the hack as it is the last
-> > > user of __vmalloc passing a page protection flag other than PAGE_KERNEL.
-> >
-> > Well Ben added this to make stuff work on ppc, ofc the home grown dma
-> > layer in drm from back then isn't going to work in other places. I guess
-> > should have at least an ack from him, in case anyone still cares about
-> > this on ppc. Adding Ben to cc.
->
-> This was due to some drivers (radeon ?) trying to use vmalloc pages for
-> coherent DMA, which means on those 4xx powerpc's need to be non-cached.
->
-> There were machines using that (440 based iirc), though I honestly
-> can't tell if anybody still uses any of it.
+On Thu, Apr 9, 2020 at 11:40 AM Baolin Wang <baolin.wang7@gmail.com> wrote:
 
-agp subsystem still seems to happily do that (vmalloc memory for
-device access), never having been ported to dma apis (or well
-converted to iommu drivers, which they kinda are really). So I think
-this all still works exactly as back then, even with the kms radeon
-drivers. Question really is whether we have users left, and I have no
-clue about that either.
-
-Now if these boxes didn't ever have agp then I think we can get away
-with deleting this, since we've already deleted the legacy radeon
-driver. And that one used vmalloc for everything. The new kms one does
-use the dma-api if the gpu isn't connected through agp.
--Daniel
-
-> Cheers,
-> Ben.
+> > It would be nice in theory to move the sigmatel devices over to
+> > reg_update_bits() in theory, but this seems unlikely to actually happen,
+> > given that these are mostly obsolete drivers at this point.
 >
-> > -Daniel
-> >
-> > >
-> > > Signed-off-by: Christoph Hellwig <hch@lst.de>
-> > > ---
-> > >  drivers/gpu/drm/drm_scatter.c | 11 +----------
-> > >  1 file changed, 1 insertion(+), 10 deletions(-)
-> > >
-> > > diff --git a/drivers/gpu/drm/drm_scatter.c b/drivers/gpu/drm/drm_scatter.c
-> > > index ca520028b2cb..f4e6184d1877 100644
-> > > --- a/drivers/gpu/drm/drm_scatter.c
-> > > +++ b/drivers/gpu/drm/drm_scatter.c
-> > > @@ -43,15 +43,6 @@
-> > >
-> > >  #define DEBUG_SCATTER 0
-> > >
-> > > -static inline void *drm_vmalloc_dma(unsigned long size)
-> > > -{
-> > > -#if defined(__powerpc__) && defined(CONFIG_NOT_COHERENT_CACHE)
-> > > -   return __vmalloc(size, GFP_KERNEL, pgprot_noncached_wc(PAGE_KERNEL));
-> > > -#else
-> > > -   return vmalloc_32(size);
-> > > -#endif
-> > > -}
-> > > -
-> > >  static void drm_sg_cleanup(struct drm_sg_mem * entry)
-> > >  {
-> > >     struct page *page;
-> > > @@ -126,7 +117,7 @@ int drm_legacy_sg_alloc(struct drm_device *dev, void *data,
-> > >             return -ENOMEM;
-> > >     }
-> > >
-> > > -   entry->virtual = drm_vmalloc_dma(pages << PAGE_SHIFT);
-> > > +   entry->virtual = vmalloc_32(pages << PAGE_SHIFT);
-> > >     if (!entry->virtual) {
-> > >             kfree(entry->busaddr);
-> > >             kfree(entry->pagelist);
-> > > --
-> > > 2.25.1
-> > >
-> >
-> >
->
+> I checked all sigmatel devices (about 10 drivers), I think there will
+> be more work to change them to use syscon/regmap when changing to
+> reg_update_bits(). I am afraid I can not thelp to convert them without
+> a hardware, and as you said, some drivers are already dead. So I think
+> it would be nice if the driver owners can help to convert these
+> drivers, if we get a consensus about the reg_update_bits()
+> implementation at last.
 
+Thanks for taking a closer look. I didn't want to imply that you should
+fix them, just saying that it might have been nice if they had been
+done like this in the first place. Of course, when the drivers were
+written, we did not even have the regmap-mmio helpers at all.
 
--- 
-Daniel Vetter
-Software Engineer, Intel Corporation
-+41 (0) 79 365 57 48 - http://blog.ffwll.ch
+      Arnd
