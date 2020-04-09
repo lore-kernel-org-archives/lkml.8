@@ -2,201 +2,132 @@ Return-Path: <SRS0=n+Ub=5Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4198BC2D0EA
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 08:58:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3105AC2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 08:58:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0B8AE20757
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 08:58:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Tyq9CXmq"
+	by mail.kernel.org (Postfix) with ESMTP id 0FF4D20757
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 08:58:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726735AbgDII6Z (ORCPT
+        id S1726749AbgDII64 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Apr 2020 04:58:25 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:45069 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725972AbgDII6Y (ORCPT
+        Thu, 9 Apr 2020 04:58:56 -0400
+Received: from mout.kundenserver.de ([217.72.192.75]:50675 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726536AbgDII6z (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Apr 2020 04:58:24 -0400
-Received: by mail-pg1-f193.google.com with SMTP id w11so516355pga.12
-        for <linux-kernel@vger.kernel.org>; Thu, 09 Apr 2020 01:58:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :in-reply-to:references;
-        bh=F0ACReDDXyB1e3rDm9tW2ll6mYCnGmbPCAy1ftlmerU=;
-        b=Tyq9CXmqBwPpBB85O0EL/PpIkIK83jQRajU9LLThG/fQ7jCqLfeKIWUYufwkue4iYe
-         wE7eo4PelA4pYuPjGv32Cj51Kj61/yC/bvP1H2JxlBLmnuthevgMEb3+7sKwtPP07wWb
-         KT104WI1wT69I0wi70SG7VDQvxk1kDVfNYoet0gi/0zQDErt0L6qW8fRw0RLFpBgqQzo
-         gIQjHnBJspaHfRMBumWJl8AX10YG8+bn7krw6j806yERHIsHmD0chNV8I0MVsPh1S891
-         diM2cB/eDTo/aaII2ieCuGenav8mi3qNiesSwCQrHiLX+3Lw8gDxfHZdEM0DQDzZ8/6a
-         He8g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:in-reply-to:references;
-        bh=F0ACReDDXyB1e3rDm9tW2ll6mYCnGmbPCAy1ftlmerU=;
-        b=nyTAl3qFXoorMdRcKxCExfVwWnD14aoyYdiX8ryh29waaLz6HzM4jbXzj+nvPXZ7FI
-         tvw/gw3C86GVlZPm/Ek0ZxtHXp9sz0YvSz8NhB4c3sQsQ6/rPWPItDaUUE2To3VfbODq
-         gXu1bhBnuVNI+S0D5kYjAWXZwq8osvOwsxuZdWxvLcwQK6id+qs/X9vRnRLMpm3PpH8/
-         0smUi+LcmaWg6NPomecNfyqMbdSYpHsT7VMtQc87nbf9C5ZQ9hgJwgxTxqS6ayKJrymM
-         nqI6S3VwJsjoFfNAgvpPHjRes6+dld9eEBUYviqy2a1B8Z33MOZe/LWU/rmRlThJRxF1
-         x3LQ==
-X-Gm-Message-State: AGi0PuYoNd85Wd2JdH7BsMTC+gSfGjF+liH4ucBkrj+BnXvp33EJLmo0
-        SOr4r5u5KQK13qmSb/baYYY=
-X-Google-Smtp-Source: APiQypLrXqd8YDLICbl0unqbo3zgagVzPQmnCL5ybOdzS7ZysyLk50HJ/t0TvJgQE9tSYAb+DBRWIA==
-X-Received: by 2002:a62:3888:: with SMTP id f130mr11821952pfa.141.1586422703960;
-        Thu, 09 Apr 2020 01:58:23 -0700 (PDT)
-Received: from sh03840pcu.spreadtrum.com ([117.18.48.82])
-        by smtp.gmail.com with ESMTPSA id s9sm1561712pjr.5.2020.04.09.01.58.20
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 09 Apr 2020 01:58:23 -0700 (PDT)
-From:   Baolin Wang <baolin.wang7@gmail.com>
-To:     lee.jones@linaro.org, arnd@arndb.de, broonie@kernel.org
-Cc:     orsonzhai@gmail.com, zhang.lyra@gmail.com, baolin.wang7@gmail.com,
-        linux-kernel@vger.kernel.org
-Subject: [RFC PATCH 3/3] soc: sprd: Add Spreadtrum special bits updating support
-Date:   Thu,  9 Apr 2020 16:57:59 +0800
-Message-Id: <5abbab3c8c6a85c63e534a600190369b3539f016.1586422035.git.baolin.wang7@gmail.com>
-X-Mailer: git-send-email 1.9.1
-In-Reply-To: <cover.1586422035.git.baolin.wang7@gmail.com>
-References: <cover.1586422035.git.baolin.wang7@gmail.com>
-In-Reply-To: <cover.1586422035.git.baolin.wang7@gmail.com>
-References: <cover.1586422035.git.baolin.wang7@gmail.com>
+        Thu, 9 Apr 2020 04:58:55 -0400
+Received: from mail-qt1-f178.google.com ([209.85.160.178]) by
+ mrelayeu.kundenserver.de (mreue108 [212.227.15.145]) with ESMTPSA (Nemesis)
+ id 1MhDAi-1iqzpE2uFW-00eI3c; Thu, 09 Apr 2020 10:58:54 +0200
+Received: by mail-qt1-f178.google.com with SMTP id g7so2144406qtj.13;
+        Thu, 09 Apr 2020 01:58:54 -0700 (PDT)
+X-Gm-Message-State: AGi0PuZnwcp+Tqdgl47obk3LyDCyWlo4dBmaaM0KkS9BIjsXI+mDHzu3
+        XEwP+Ipc4/ubF7jRNKv0i7K/1IVuQPRS8ER+J7s=
+X-Google-Smtp-Source: APiQypJGQnSKvwEmA3Uxqr21N7C28AlJ4H4USNdYjJ7jBa7oUXIlp/5GQn3RknUCUlZR5y4GP5LLx3U/KPQi69ASHsQ=
+X-Received: by 2002:aed:3b4c:: with SMTP id q12mr10854453qte.18.1586422733282;
+ Thu, 09 Apr 2020 01:58:53 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200409064416.83340-1-sboyd@kernel.org>
+In-Reply-To: <20200409064416.83340-1-sboyd@kernel.org>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Thu, 9 Apr 2020 10:58:36 +0200
+X-Gmail-Original-Message-ID: <CAK8P3a1mOS4bVs+FQNcWPXuAdXpB-rKAuRE-at-Pr0m=43D68g@mail.gmail.com>
+Message-ID: <CAK8P3a1mOS4bVs+FQNcWPXuAdXpB-rKAuRE-at-Pr0m=43D68g@mail.gmail.com>
+Subject: Re: [PATCH v2 00/10] Allow COMMON_CLK to be selectable
+To:     Stephen Boyd <sboyd@kernel.org>
+Cc:     Michael Turquette <mturquette@baylibre.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        linux-clk <linux-clk@vger.kernel.org>,
+        Alexander Shiyan <shc_work@mail.ru>,
+        =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>,
+        Aurelien Jacquiot <jacquiot.aurelien@gmail.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Huacai Chen <chenhc@lemote.com>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Guan Xuetao <gxt@pku.edu.cn>,
+        Jiaxun Yang <jiaxun.yang@flygoat.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linux-c6x-dev@linux-c6x.org,
+        linux-m68k <linux-m68k@lists.linux-m68k.org>,
+        "open list:BROADCOM NVRAM DRIVER" <linux-mips@vger.kernel.org>,
+        Linux-sh list <linux-sh@vger.kernel.org>,
+        Lubomir Rintel <lkundrak@v3.sk>,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        Mark Brown <broonie@kernel.org>,
+        Mark Salter <msalter@redhat.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Paul Burton <paulburton@kernel.org>,
+        Paul Walmsley <paul@pwsan.com>, Rich Felker <dalias@libc.org>,
+        Russell King <linux@armlinux.org.uk>,
+        Thierry Reding <treding@nvidia.com>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Tony Prisk <linux@prisktech.co.nz>,
+        "moderated list:H8/300 ARCHITECTURE" 
+        <uclinux-h8-devel@lists.sourceforge.jp>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Will Deacon <will@kernel.org>,
+        Yoshinori Sato <ysato@users.sourceforge.jp>
+Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:O1q931hCZ40T0tLkpVu7G+bihKn8ZKa+7Q36I2aOnANCcD9rGPv
+ bNiYtUO1D51Vlkj+7/CjCy8tt3nrbLkCvViBQyHvFelIwFAPWhVlrNhVKKHjGdr9KoTxIlF
+ r67KKVv1oWwEiP5GAlv3JelwY2d3v8nfKlYfEbnhR2yCiAg42IaoG+JqXlsiN2+1/RZ1rE0
+ GY/sQddB5aPnMh3dufYOA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:2AqidcnxkcA=:Hgp3RZDeZIgahRHJ/yk7nE
+ Ulqh8jc6o/Z+yMvq7M10nOyZxnr7eip5vdx1DIfSMCTMELWDmZBF0lxuo/QJ8nUGK/29NfnXD
+ B6dIoA072qWvbBqMbk5tNevgw/s2qWs/QhQqdoeSbFP0Xs6TeAsjBF8gcNEKo3bdPhAapgMXF
+ tiBDTacTW3a701mf+Hf/iBvexQ81Ui7JIClEs/xmQfVwVMbur5WlTINhgZ6aXtnt/Qxz617A5
+ Gu25OVYlcy/+wOGROa38MQwR1RZZvpt73ioF9Te5bYZPp4sC038OgxbZeNkPoVMaWb0h1L/q4
+ aLGdyPWfuI7878M6nv6dokLnav68ecWblRGBsJJ1A33KqDYvibuUPSb2rfx0dWDy+flUbbcXB
+ yjUtTz5NCsGhx8Z7A/2ms1FIi7P7EWhY/dZpMjR6JgKVzKzVxq48t0bc1y2tkXA9wV8V2rrqF
+ xwGhxQcAe1u69AvnVWQTMX5dD9JyHgJvdszBeOQTcbIVMPKUrNrXf+UU0cmPxq8PNO0Xpl57V
+ rClHRH0l4oFV2EkyLf8GS/vCfVDJny3RAQ/AOKzP5vxaVsmNH4YagBWKwapsPjgXcbeq14S2u
+ JqxgZ3TD1NmODtlIF4dzEyP+fvgmeagmYPEy4wtLw50777om8U+8ObPsozZcdMOBJzlJW4NY/
+ D88RxxGlgB9nV2tn0QEOEXnJHnlpDDD7ofucFN3mAdp5KPz5g9NZEmh4vsqrk5ZBbbDxXmZkC
+ ebUgF7k8cBaIBjJejSYhrRUuLN+Z4ISdfTNh5VBGy64rJsBNqCf2Uh1Kb62WN8zbGzS4IBdxj
+ 1wjjdT2t6f8d2eOsrSnyIGAnST+ls5XOE4pAXXP7wjCyNPJ4rE=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The spreadtrum platform uses a special set/clear method to update
-registers' bits, which can remove the race of updating the global
-registers between the multiple subsystems.
+On Thu, Apr 9, 2020 at 8:44 AM Stephen Boyd <sboyd@kernel.org> wrote:
+>
+> This patch series cleans up a handful of selects that were redundant and
+> deletes presumably dead code with the goal of making it possible to add
+> kunit tests for the CCF in the future. To do that, we introduce a
+> "legacy" clk Kconfig option to mark code that hasn't migrated to the
+> common clk framework and then make the COMMON_CLK config option visible
+> in the menuconfig as long as that legacy option isn't enabled. I've also
+> included a couple patches at the end that may be more controversial but
+> helped me consolidate all this logic/code.
+>
+> I haven't done more than compile test a few configs for arm, arm64,
+> h8300, and mips. More testing is welcome.
+>
+> The plan is that I'll just merge the whole pile through the clk tree. If
+> the first five patches or the last three patches are better going
+> through another tree like arm-soc or architecture trees that's fine too,
+> but there are potential conflicts between trees so maybe it's better to
+> just leave it all in one tree.
+>
+> Changes from v1:
+>  * Fixed MIPS ralink build problem pointed out by Arnd
+>  * Fixed meson mx sdio build due to bad Kconfig exposed by this change
+>  * Picked up acks
 
-Signed-off-by: Baolin Wang <baolin.wang7@gmail.com>
----
- drivers/soc/Kconfig            |  1 +
- drivers/soc/Makefile           |  1 +
- drivers/soc/sprd/Kconfig       | 16 +++++++++++++
- drivers/soc/sprd/Makefile      |  2 ++
- drivers/soc/sprd/sprd_syscon.c | 51 ++++++++++++++++++++++++++++++++++++++++++
- 5 files changed, 71 insertions(+)
- create mode 100644 drivers/soc/sprd/Kconfig
- create mode 100644 drivers/soc/sprd/Makefile
- create mode 100644 drivers/soc/sprd/sprd_syscon.c
+Whole series
 
-diff --git a/drivers/soc/Kconfig b/drivers/soc/Kconfig
-index 1778f8c..a19cead 100644
---- a/drivers/soc/Kconfig
-+++ b/drivers/soc/Kconfig
-@@ -22,5 +22,6 @@ source "drivers/soc/ux500/Kconfig"
- source "drivers/soc/versatile/Kconfig"
- source "drivers/soc/xilinx/Kconfig"
- source "drivers/soc/zte/Kconfig"
-+source "drivers/soc/sprd/Kconfig"
- 
- endmenu
-diff --git a/drivers/soc/Makefile b/drivers/soc/Makefile
-index a39f17c..e3f6b1c 100644
---- a/drivers/soc/Makefile
-+++ b/drivers/soc/Makefile
-@@ -28,3 +28,4 @@ obj-$(CONFIG_ARCH_U8500)	+= ux500/
- obj-$(CONFIG_PLAT_VERSATILE)	+= versatile/
- obj-y				+= xilinx/
- obj-$(CONFIG_ARCH_ZX)		+= zte/
-+obj-$(CONFIG_ARCH_SPRD)		+= sprd/
-diff --git a/drivers/soc/sprd/Kconfig b/drivers/soc/sprd/Kconfig
-new file mode 100644
-index 0000000..38d1f59
---- /dev/null
-+++ b/drivers/soc/sprd/Kconfig
-@@ -0,0 +1,16 @@
-+# SPDX-License-Identifier: GPL-2.0-only
-+#
-+# SPRD SoC drivers
-+#
-+
-+menu "Spreadtrum SoC drivers"
-+	depends on ARCH_SPRD || COMPILE_TEST
-+
-+config SPRD_SYSCON
-+	tristate "Spreadtrum syscon support"
-+	depends on ARCH_SPRD || COMPILE_TEST
-+	help
-+	  Say yes here to add support for the Spreadtrum syscon driver,
-+	  which is used to implement the atomic method of bits updating.
-+
-+endmenu
-diff --git a/drivers/soc/sprd/Makefile b/drivers/soc/sprd/Makefile
-new file mode 100644
-index 0000000..4d77155
---- /dev/null
-+++ b/drivers/soc/sprd/Makefile
-@@ -0,0 +1,2 @@
-+# SPDX-License-Identifier: GPL-2.0-only
-+obj-$(CONFIG_SPRD_SYSCON) += sprd_syscon.o
-diff --git a/drivers/soc/sprd/sprd_syscon.c b/drivers/soc/sprd/sprd_syscon.c
-new file mode 100644
-index 0000000..00acf88
---- /dev/null
-+++ b/drivers/soc/sprd/sprd_syscon.c
-@@ -0,0 +1,51 @@
-+//SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright (C) 2020 Spreadtrum Communications Inc.
-+ */
-+#include <linux/io.h>
-+#include <linux/kernel.h>
-+#include <linux/module.h>
-+#include <linux/mfd/syscon.h>
-+
-+#define SPRD_REG_SET_OFFSET	0x1000
-+#define SPRD_REG_CLR_OFFSET	0x2000
-+
-+/*
-+ * The Spreadtrum platform defines a special set/clear method to update
-+ * registers' bits, which means it can write values to the register's SET
-+ * address (offset is 0x1000) to set bits, and write values to the register's
-+ * CLEAR address (offset is 0x2000) to clear bits.
-+ *
-+ * This set/clear method can help to remove the race of accessing the global
-+ * registers between the multiple subsystems instead of using hardware
-+ * spinlocks.
-+ */
-+static int sprd_syscon_update_bits(void *context, unsigned int reg,
-+				   unsigned int mask, unsigned int val)
-+{
-+	void __iomem *base = context;
-+	unsigned int set, clr;
-+
-+	set = val & mask;
-+	clr = ~set & mask;
-+
-+	if (set)
-+		writel(set, base + reg + SPRD_REG_SET_OFFSET);
-+
-+	if (clr)
-+		writel(clr, base + reg + SPRD_REG_CLR_OFFSET);
-+
-+	return 0;
-+}
-+
-+static int sprd_syscon_init(void)
-+{
-+	syscon_register_reg_update_bits(sprd_syscon_update_bits);
-+
-+	return 0;
-+}
-+core_initcall_sync(sprd_syscon_init);
-+
-+MODULE_DESCRIPTION("Spreadtrum syscon support");
-+MODULE_AUTHOR("Baolin Wang <baolin.wang@unisoc.com>");
-+MODULE_LICENSE("GPL v2");
--- 
-1.9.1
+Reviewed-by: Arnd Bergmann <arnd@arndb.de>
 
+I also made a patch to completely remove the private clk implementation
+for mips/loongson2f, but it obviously clashes with your series at the moment.
+
+I'll send you what I have today and you can decide if you want to
+add it to your series after it gets an Ack from the maintainers, or I'll
+send it separately later.
+
+     Arnd
