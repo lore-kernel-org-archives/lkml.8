@@ -2,98 +2,128 @@ Return-Path: <SRS0=n+Ub=5Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66863C2BB54
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 09:30:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 206F9C2D0EA
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 09:31:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3BDE52087E
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 09:30:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E1B49208FE
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 09:31:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1586424716;
+	bh=yu1DxhA5goDLvRx/GPY7agiWxznEHMQNlRX0ba5w0Mk=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=s4LW2XmX9cMGSMbbirfK+8Y3BsPJumhXUMdRPYLSVRY6iaC2aIT24GaYn8A9fLTJ/
+	 Pil/13lN6CqX5tO9QXBx2kdAHMK6B1i/JlNn/4BBaBz1HG16ZQIzRwAvAjWV1+ioFD
+	 lyekm5TTccEaZwM5GnUX7/NzqbbwSNGOS/TWKMo8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726621AbgDIJaj (ORCPT
+        id S1726597AbgDIJby (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Apr 2020 05:30:39 -0400
-Received: from mout.kundenserver.de ([212.227.126.131]:42561 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725783AbgDIJaj (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Apr 2020 05:30:39 -0400
-Received: from mail-qt1-f177.google.com ([209.85.160.177]) by
- mrelayeu.kundenserver.de (mreue010 [212.227.15.129]) with ESMTPSA (Nemesis)
- id 1Mi2eP-1irpap1Lwv-00e4zx; Thu, 09 Apr 2020 11:30:38 +0200
-Received: by mail-qt1-f177.google.com with SMTP id 14so2252573qtp.1;
-        Thu, 09 Apr 2020 02:30:38 -0700 (PDT)
-X-Gm-Message-State: AGi0PuZ2b5Pb7xTzUT4FnAA6YSZFxp7FzTFlMgLv4RorS8vIQCwortg4
-        +e/Bb3u+WTEoBCcCAn3EKGODOqRqXJ9WfSXNpgI=
-X-Google-Smtp-Source: APiQypLeWInEsRV0WKrdMUsAMwL5UXK2NYRqfW/x4jIjhbwpXqQB+5nF1GJW4mtRdXGTaGysVemV3g16soBD0GqaIYQ=
-X-Received: by 2002:aed:3b4c:: with SMTP id q12mr10945684qte.18.1586424637129;
- Thu, 09 Apr 2020 02:30:37 -0700 (PDT)
+        Thu, 9 Apr 2020 05:31:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43850 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725828AbgDIJbx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Apr 2020 05:31:53 -0400
+Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5518220730;
+        Thu,  9 Apr 2020 09:31:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1586424713;
+        bh=yu1DxhA5goDLvRx/GPY7agiWxznEHMQNlRX0ba5w0Mk=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=gSUHo4+B6MWf9VBolg2AvbN+t9D926yHPJkK5bSTa93ofzCplHB/Tgjl/uBT29NPL
+         FShJubWHD3/RVb6Eersg/7hprxFTloZioz9EWSAD75N2SEGcmCaF5QKHyCi0+mJsJ6
+         IeNija7yfMYeS2fVSiSWK2GSiQuRTHgDh6yUCyPE=
+Received: from 78.163-31-62.static.virginmediabusiness.co.uk ([62.31.163.78] helo=why)
+        by disco-boy.misterjones.org with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <maz@kernel.org>)
+        id 1jMTXG-001rlN-39; Thu, 09 Apr 2020 10:31:46 +0100
+Date:   Thu, 9 Apr 2020 10:31:44 +0100
+From:   Marc Zyngier <maz@kernel.org>
+To:     Grygorii Strashko <grygorii.strashko@ti.com>
+Cc:     Nishanth Menon <nm@ti.com>, Tero Kristo <t-kristo@ti.com>,
+        Santosh Shilimkar <ssantosh@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Lokesh Vutla <lokeshvutla@ti.com>,
+        Peter Ujfalusi <peter.ujfalusi@ti.com>,
+        Sekhar Nori <nsekhar@ti.com>, <linux-kernel@vger.kernel.org>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH] irqchip/ti-sci-inta: fix processing of masked irqs
+Message-ID: <20200409103144.3b2169bf@why>
+In-Reply-To: <20200408191532.31252-1-grygorii.strashko@ti.com>
+References: <20200408191532.31252-1-grygorii.strashko@ti.com>
+Organization: Approximate
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-References: <20200408162718.4004527-1-arnd@arndb.de> <5E8E7E0D.4090702@hisilicon.com>
-In-Reply-To: <5E8E7E0D.4090702@hisilicon.com>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Thu, 9 Apr 2020 11:30:21 +0200
-X-Gmail-Original-Message-ID: <CAK8P3a2U-fiDD34kKUVx-KCV3Vq9TtrA6nDkFc1tS_yVnMKa7Q@mail.gmail.com>
-Message-ID: <CAK8P3a2U-fiDD34kKUVx-KCV3Vq9TtrA6nDkFc1tS_yVnMKa7Q@mail.gmail.com>
-Subject: Re: [PATCH] crypto: hisilicon: add more dependencies
-To:     Zhou Wang <wangzhou1@hisilicon.com>
-Cc:     Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S. Miller" <davem@davemloft.net>,
-        Hongbo Yao <yaohongbo@huawei.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Zaibo Xu <xuzaibo@huawei.com>, Hao Fang <fanghao11@huawei.com>,
-        Eric Biggers <ebiggers@google.com>,
-        Mao Wenan <maowenan@huawei.com>,
-        "open list:HARDWARE RANDOM NUMBER GENERATOR CORE" 
-        <linux-crypto@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:ipoSbm2snF0HZUjDUsz1P2IdKQmaRjdB024Ocb/rGc9PdWCpxSn
- DY5ofMqGhWn+jGdAhTZ2ljzOE0ar/JiP0xOqq8KUNsMtsPOl9f1tZ9narkDRYOS/KxGbKi1
- Xjr1JjikPGZ8C9xc5Qd/+bA7MZRty9Vd1qUGnPmbhuM0NkeAu1oi2ItJauKiN/+Kt2ZJBmV
- Y7hsJfegNEVWvob7OJEsw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:3XunXxijaSg=:Nq7s6FrVrWhZ+/i09uiiqn
- 2PhFFHbwPb73ARUSRxckjXSCxYNs1rI81Ez2Xylxoath6D79mvPROFjpjXKqMn5gEoiCh34Uj
- 10qUoKY40SxfjLOOlp97MYdc9l0+ZHYi0z06LZ/ZDEd+9ICJRqJ0MhxM+tomTWTNHxNmY6ky5
- rSYEKrYo54LrsDo63gDoKcKpFEfrZ79wFTB0b5KmfEzA3/GMG+wpiwVoRGysINlXSbHXczglb
- GL/vg/nESedypEeusS0ME+KHQbGwddFHyMrBsWk0VxyTUoVOVPe24fpncca26qpv47Hd8be0S
- aZlcMXUxMTCdkxhe+3fgLRIwMVyTC7+mGMEE+cfMHCHFRz1HZc9rJVReh2Qe7puh6Q5wi76VS
- wciUBm6FxiHGvpUF5PQkk0QRMYjsSLI8RpYP7K6OHVerAG5KLaPKjDR+sWU9PdoN3SiNnB7GQ
- uU2+KQq0KG6Xf02ULdu0Ch5Erc6YyFyNGcD0kC9TSd8ixlYRsjb2lgAevfvuRHIkEW/5bvhGw
- XJam54XQKxhQawRkP6l3FCeSQjFbS+RQTj+SIOA1zweur/Fed2+5ybHgx84KSNF2GT3h4DbcD
- z2Ei3HaEHw6eXkhItan7trxwpa+8An+5GthYWyCec3mRwW7BDqYKkvZrN24fB7E/oQJPTqYPD
- 0RS2Te/caxIz/mrSG5AstQ2KRWJaUqxkM4f0RyfuVrk9mjHg8KgZ3RtL3NtEl7LQhy5tM8NKH
- oab/BN+QQ3cGnewHupi0VB9SYZrc5raElYsOWcRWStmr415+JPBSP505iukXnNuOGGoDQgff4
- epNzbjPXSIfpH23cr7JInrfFI3XxcFzKiysUH7CHybmMEr3AbI=
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 62.31.163.78
+X-SA-Exim-Rcpt-To: grygorii.strashko@ti.com, nm@ti.com, t-kristo@ti.com, ssantosh@kernel.org, tglx@linutronix.de, jason@lakedaemon.net, lokeshvutla@ti.com, peter.ujfalusi@ti.com, nsekhar@ti.com, linux-kernel@vger.kernel.org, vigneshr@ti.com, linux-arm-kernel@lists.infradead.org
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 9, 2020 at 3:45 AM Zhou Wang <wangzhou1@hisilicon.com> wrote:
->
-> On 2020/4/9 0:27, Arnd Bergmann wrote:
-> > The added dependencies must be applied recursively to
-> > other modules that select CRYPTO_DEV_HISI_QM, to avoid
-> > running into the same problem again:
-> >
-> > WARNING: unmet direct dependencies detected for CRYPTO_DEV_HISI_QM
-> >   Depends on [m]: CRYPTO [=y] && CRYPTO_HW [=y] && (ARM64 [=y] || COMPILE_TEST [=y]) && PCI [=y] && PCI_MSI [=y] && (UACCE [=m] || UACCE [=m]=n)
-> >   Selected by [y]:
-> >   - CRYPTO_DEV_HISI_SEC2 [=y] && CRYPTO [=y] && CRYPTO_HW [=y] && PCI [=y] && PCI_MSI [=y] && (ARM64 [=y] || COMPILE_TEST [=y] && 64BIT [=y])
-> >   - CRYPTO_DEV_HISI_HPRE [=y] && CRYPTO [=y] && CRYPTO_HW [=y] && PCI [=y] && PCI_MSI [=y] && (ARM64 [=y] || COMPILE_TEST [=y] && 64BIT [=y])
-> > ld: drivers/crypto/hisilicon/qm.o: in function `hisi_qm_uninit': qm.c:(.text+0x23b8): undefined reference to `uacce_remove'
-> >
-> > Fixes: 47c16b449921 ("crypto: hisilicon - qm depends on UACCE")
-> > Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-> > ---
->
-> Seems we already have a fix: https://lkml.org/lkml/2020/3/30/173 with your reviewed-by :)
+On Wed, 8 Apr 2020 22:15:32 +0300
+Grygorii Strashko <grygorii.strashko@ti.com> wrote:
 
-Ah, of course. I even remembered that patch when I saw the problem in mainline,
-but for some reason assumed it was yet another instance of the same bug, rather
-than a patch that had I was just missing in my tree.
+> The ti_sci_inta_irq_handler() does not take into account INTA IRQs state
+> (masked/unmasked) as it uses INTA_STATUS_CLEAR_j register to get INTA IRQs
+> status, which provides raw status value.
+> This causes hard IRQ handlers to be called or threaded handlers to be
+> scheduled many times even if corresponding INTA IRQ is masked.
+> Above, first of all, affects the LEVEL interrupts processing and causes
+> unexpected behavior up the system stack or crash.
+> 
+> Fix it by using the Interrupt Masked Status INTA_STATUSM_j register which
+> provides masked INTA IRQs status.
+> 
+> Fixes: 9f1463b86c13 ("irqchip/ti-sci-inta: Add support for Interrupt Aggregator driver")
+> Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
 
-      Arnd
+Given the failure mode, doesn't this deserve a Cc stable?
+
+> ---
+>  drivers/irqchip/irq-ti-sci-inta.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/irqchip/irq-ti-sci-inta.c b/drivers/irqchip/irq-ti-sci-inta.c
+> index 8f6e6b08eadf..7e3ebf6ed2cd 100644
+> --- a/drivers/irqchip/irq-ti-sci-inta.c
+> +++ b/drivers/irqchip/irq-ti-sci-inta.c
+> @@ -37,6 +37,7 @@
+>  #define VINT_ENABLE_SET_OFFSET	0x0
+>  #define VINT_ENABLE_CLR_OFFSET	0x8
+>  #define VINT_STATUS_OFFSET	0x18
+> +#define VINT_STATUS_MASKED_OFFSET	0x20
+>  
+>  /**
+>   * struct ti_sci_inta_event_desc - Description of an event coming to
+> @@ -116,7 +117,7 @@ static void ti_sci_inta_irq_handler(struct irq_desc *desc)
+>  	chained_irq_enter(irq_desc_get_chip(desc), desc);
+>  
+>  	val = readq_relaxed(inta->base + vint_desc->vint_id * 0x1000 +
+> -			    VINT_STATUS_OFFSET);
+> +			    VINT_STATUS_MASKED_OFFSET);
+>  
+>  	for_each_set_bit(bit, &val, MAX_EVENTS_PER_VINT) {
+>  		virq = irq_find_mapping(domain, vint_desc->events[bit].hwirq);
+
+
+Otherwise queued for post -rc1.
+
+Thanks,
+
+	M.
+-- 
+Jazz is not dead. It just smells funny...
