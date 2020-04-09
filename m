@@ -2,163 +2,139 @@ Return-Path: <SRS0=n+Ub=5Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34376C2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 20:53:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E1B2C2BA19
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 20:54:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 09C0B20730
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 20:53:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NwMCa4av"
+	by mail.kernel.org (Postfix) with ESMTP id 276D820730
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 20:54:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727221AbgDIUxS (ORCPT
+        id S1727258AbgDIUyw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Apr 2020 16:53:18 -0400
-Received: from mail-il1-f194.google.com ([209.85.166.194]:33102 "EHLO
-        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726623AbgDIUxS (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Apr 2020 16:53:18 -0400
-Received: by mail-il1-f194.google.com with SMTP id k29so91938ilg.0;
-        Thu, 09 Apr 2020 13:53:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=pQ2KOue7AiUFiMVC6lBYT2P156Hjtv9v6o05CFYH3f0=;
-        b=NwMCa4avnNI9EvBdolLgo1RH/LggIsv8aKFnMiyrYdBbzZniH1iVWn1dIUlB1dV4+L
-         edfkzxhZlCT3xCAawuh0X2nNFTbXjWFiODKV00Q0QwOyvM8D0n1ebyBUB8rzbkcvnJc4
-         1C51ByYwSc86nKEkD41fDFseJUFxhCRjA1sLkUej52PNzk2ph9rGus+u7tHIcSd0KwSn
-         FkNYX4Y+b0F67L7lZ02WW+pExOqTl060vfZ8VqDYuTib03TrCqJxafDrEQ51exsZ7UgD
-         gvpdwqwaNugEPUQjrYXx/brQAsED8KVP9QujJQVkqY9n0A4dE1OSta/25mPgwkKda4oo
-         Yj4Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=pQ2KOue7AiUFiMVC6lBYT2P156Hjtv9v6o05CFYH3f0=;
-        b=E0rSMSgwTIjlgxxvpXUo8AsDjrfyaOBDrYPi10Cu9xlxek47jFL0+T9rFS0+kP4zdv
-         rTkXx4NXk7MBm+jIRCgCRe8KPKOROFYOD+QDqP8oIy40cyC2PYDEWze0v60B/IfSu+H3
-         8bds8Z43dayxpmzFySX08MS0sQmcIZ8D8tn90+EE9iAbOa2O1HFBxEjKM/0XmKB8sSn7
-         sxCwvSQJuqMTjPqpKhjXyxaWpxlO0P2Vhxh+ENdvIZ/MxOtxZWFz38fuVcSa1Oa8xGqS
-         tx4plBlV+DX+LO45mKDB2le15+cnSub/w7s+UvPS734+wGf8NqtHeF+jbglbvxeyMFbd
-         q12g==
-X-Gm-Message-State: AGi0PuYAc1SqT1Ijbc0qrmw5gIugTadiGui+ACLRHf0qy0Rh7DOPJYiC
-        CJbmhMFWaoD4V1MQSOutNLvWjb4h7/bvV+PPpQ==
-X-Google-Smtp-Source: APiQypKEgeSzFh1XALIkLwZH2Vu9JegVgqL5GmYmFyQm4OX6+NZUQL3/XDVrY8WdCWgjDNR607tHuutVJUXr3+TUd2E=
-X-Received: by 2002:a92:41c7:: with SMTP id o190mr1777526ila.11.1586465598130;
- Thu, 09 Apr 2020 13:53:18 -0700 (PDT)
+        Thu, 9 Apr 2020 16:54:52 -0400
+Received: from mga02.intel.com ([134.134.136.20]:50906 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727035AbgDIUyw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Apr 2020 16:54:52 -0400
+IronPort-SDR: +yTMvB5HLnWNAuPol3OcjXZpyIgphh/Vw66LILsaOp7inwF0W4JA9Akgw8cks82Sd3tnmTftb4
+ T3Obrr0e82Jw==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Apr 2020 13:54:51 -0700
+IronPort-SDR: 8iz+ZbkWeR4tFmHL9Uxkk6dATcbBtgYmZ174jmuLk6GVWnSJx13NwbSQ/tD2XZ4EWD2ZvPk2Sd
+ 8uYkzMn9aDXQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,364,1580803200"; 
+   d="scan'208";a="425654165"
+Received: from iweiny-desk2.sc.intel.com ([10.3.52.147])
+  by orsmga005.jf.intel.com with ESMTP; 09 Apr 2020 13:54:51 -0700
+Date:   Thu, 9 Apr 2020 13:54:51 -0700
+From:   Ira Weiny <ira.weiny@intel.com>
+To:     "Darrick J. Wong" <darrick.wong@oracle.com>
+Cc:     Dave Chinner <david@fromorbit.com>, linux-kernel@vger.kernel.org,
+        Dan Williams <dan.j.williams@intel.com>,
+        Christoph Hellwig <hch@lst.de>,
+        "Theodore Y. Ts'o" <tytso@mit.edu>, Jan Kara <jack@suse.cz>,
+        Jeff Moyer <jmoyer@redhat.com>, linux-ext4@vger.kernel.org,
+        linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH V6 6/8] fs/xfs: Combine xfs_diflags_to_linux() and
+ xfs_diflags_to_iflags()
+Message-ID: <20200409205451.GC801897@iweiny-DESK2.sc.intel.com>
+References: <20200407182958.568475-7-ira.weiny@intel.com>
+ <20200408020827.GI24067@dread.disaster.area>
+ <20200408170923.GC569068@iweiny-DESK2.sc.intel.com>
+ <20200408210236.GK24067@dread.disaster.area>
+ <20200408220734.GA664132@iweiny-DESK2.sc.intel.com>
+ <20200408232106.GO24067@dread.disaster.area>
+ <20200409001206.GD664132@iweiny-DESK2.sc.intel.com>
+ <20200409003021.GJ6742@magnolia>
+ <20200409152944.GA801705@iweiny-DESK2.sc.intel.com>
+ <20200409165927.GD6741@magnolia>
 MIME-Version: 1.0
-References: <20200409130434.6736-1-ardb@kernel.org> <20200409130434.6736-4-ardb@kernel.org>
- <CAMzpN2gJWwVun1Kp6vGuza9LM5KpB=0EwsP8x8eOJQuDGh38Hg@mail.gmail.com>
-In-Reply-To: <CAMzpN2gJWwVun1Kp6vGuza9LM5KpB=0EwsP8x8eOJQuDGh38Hg@mail.gmail.com>
-From:   Brian Gerst <brgerst@gmail.com>
-Date:   Thu, 9 Apr 2020 16:53:07 -0400
-Message-ID: <CAMzpN2jFbf8k99pWaTYRBmSB+iNAKYsufjEhqO6Vv0qxAcHyGA@mail.gmail.com>
-Subject: Re: [PATCH 3/9] efi/x86: Move efi stub globals from .bss to .data
-To:     Ard Biesheuvel <ardb@kernel.org>
-Cc:     linux-efi@vger.kernel.org, Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Arvind Sankar <nivedita@alum.mit.edu>,
-        Borislav Petkov <bp@suse.de>,
-        Colin Ian King <colin.king@canonical.com>,
-        Gary Lin <glin@suse.com>, Jiri Slaby <jslaby@suse.cz>,
-        Sergey Shatunov <me@prok.pw>, Takashi Iwai <tiwai@suse.de>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200409165927.GD6741@magnolia>
+User-Agent: Mutt/1.11.1 (2018-12-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 9, 2020 at 4:05 PM Brian Gerst <brgerst@gmail.com> wrote:
->
-> On Thu, Apr 9, 2020 at 9:07 AM Ard Biesheuvel <ardb@kernel.org> wrote:
-> >
-> > From: Arvind Sankar <nivedita@alum.mit.edu>
-> >
-> > Commit
-> >
-> >   3ee372ccce4d ("x86/boot/compressed/64: Remove .bss/.pgtable from bzImage")
-> >
-> > removed the .bss section from the bzImage.
-> >
-> > However, while a PE loader is required to zero-initialize the .bss
-> > section before calling the PE entry point, the EFI handover protocol
-> > does not currently document any requirement that .bss be initialized by
-> > the bootloader prior to calling the handover entry.
-> >
-> > When systemd-boot is used to boot a unified kernel image [1], the image
-> > is constructed by embedding the bzImage as a .linux section in a PE
-> > executable that contains a small stub loader from systemd together with
-> > additional sections and potentially an initrd. As the .bss section
-> > within the bzImage is no longer explicitly present as part of the file,
-> > it is not initialized before calling the EFI handover entry.
-> > Furthermore, as the size of the embedded .linux section is only the size
-> > of the bzImage file itself, the .bss section's memory may not even have
-> > been allocated.
-> >
-> > In particular, this can result in efi_disable_pci_dma being true even
-> > when it was not specified via the command line or configuration option,
-> > which in turn causes crashes while booting on some systems.
-> >
-> > To avoid issues, place all EFI stub global variables into the .data
-> > section instead of .bss. As of this writing, only boolean flags for a
-> > few command line arguments and the sys_table pointer were in .bss and
-> > will now move into the .data section.
-> >
-> > [1] https://systemd.io/BOOT_LOADER_SPECIFICATION/#type-2-efi-unified-kernel-images
-> >
-> > Signed-off-by: Arvind Sankar <nivedita@alum.mit.edu>
-> > Reported-by: Sergey Shatunov <me@prok.pw>
-> > Fixes: 3ee372ccce4d ("x86/boot/compressed/64: Remove .bss/.pgtable from bzImage")
-> > Link: https://lore.kernel.org/r/20200406180614.429454-1-nivedita@alum.mit.edu
-> > Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
-> > ---
-> >  drivers/firmware/efi/libstub/efistub.h  | 2 +-
-> >  drivers/firmware/efi/libstub/x86-stub.c | 2 +-
-> >  2 files changed, 2 insertions(+), 2 deletions(-)
-> >
-> > diff --git a/drivers/firmware/efi/libstub/efistub.h b/drivers/firmware/efi/libstub/efistub.h
-> > index cc90a748bcf0..67d26949fd26 100644
-> > --- a/drivers/firmware/efi/libstub/efistub.h
-> > +++ b/drivers/firmware/efi/libstub/efistub.h
-> > @@ -25,7 +25,7 @@
-> >  #define EFI_ALLOC_ALIGN                EFI_PAGE_SIZE
-> >  #endif
-> >
-> > -#ifdef CONFIG_ARM
-> > +#if defined(CONFIG_ARM) || defined(CONFIG_X86)
-> >  #define __efistub_global       __section(.data)
-> >  #else
-> >  #define __efistub_global
-> > diff --git a/drivers/firmware/efi/libstub/x86-stub.c b/drivers/firmware/efi/libstub/x86-stub.c
-> > index e02ea51273ff..867a57e28980 100644
-> > --- a/drivers/firmware/efi/libstub/x86-stub.c
-> > +++ b/drivers/firmware/efi/libstub/x86-stub.c
-> > @@ -20,7 +20,7 @@
-> >  /* Maximum physical address for 64-bit kernel with 4-level paging */
-> >  #define MAXMEM_X86_64_4LEVEL (1ull << 46)
-> >
-> > -static efi_system_table_t *sys_table;
-> > +static efi_system_table_t *sys_table __efistub_global;
-> >  extern const bool efi_is64;
-> >  extern u32 image_offset;
-> >
-> > --
-> > 2.17.1
-> >
->
-> Can we use the -fno-zero-initialized-in-bss compiler flag instead of
-> explicitly marking global variables?
+On Thu, Apr 09, 2020 at 09:59:27AM -0700, Darrick J. Wong wrote:
 
-Scratch that.  Apparently it only works when a variable is explicitly
-initialized to zero.
+[snip]
+ 
+> And today:
+> 
+>  1. There exists an in-kernel access mode flag S_DAX that is set when
+>     file accesses go directly to persistent memory, bypassing the page
+>     cache.  Applications must call statx to discover the current S_DAX
+>     state (STATX_ATTR_DAX).
+> 
+>  2. There exists an advisory file inode flag FS_XFLAG_DAX that is
+>     inherited from the parent directory FS_XFLAG_DAX inode flag at file
+>     creation time.  This advisory flag can be set or cleared at any
+>     time, but doing so does not immediately affect the S_DAX state.
+> 
+>     Unless overridden by mount options (see (3)), if FS_XFLAG_DAX is set
+>     and the fs is on pmem then it will enable S_DAX at inode load time;
+>     if FS_XFLAG_DAX is not set, it will not enable S_DAX.
+> 
+>  3. There exists a dax= mount option.
+> 
+>     "-o dax=never"  means "never set S_DAX, ignore FS_XFLAG_DAX."
+> 
+>     "-o dax=always" means "always set S_DAX (at least on pmem),
+>                     and ignore FS_XFLAG_DAX."
+> 
+>     "-o dax"        is an alias for "dax=always".
+> 
+>     "-o dax=inode"  means "follow FS_XFLAG_DAX" and is the default.
+> 
+>  4. There exists an advisory directory inode flag FS_XFLAG_DAX that can
+>     be set or cleared at any time.  The flag state is copied into any
+>     files or subdirectories when they are created within that directory.
+> 
+>  5. Programs that require a specific file access mode (DAX or not DAX)
+>     can do one of the following:
+> 
+>     (a) Create files in directories that the FS_XFLAG_DAX flag set as
+>         needed; or
+> 
+>     (b) Have the administrator set an override via mount option; or
+> 
+>     (c) Set or clear the file's FS_XFLAG_DAX flag as needed.  Programs
+>         must then cause the kernel to evict the inode from memory.  This
+>         can be done by:
+> 
+>         i>  Closing the file and re-opening the file and using statx to
+>             see if the fs has changed the S_DAX flag; and
+> 
+>         ii> If the file still does not have the desired S_DAX access
+>             mode, either unmount and remount the filesystem, or close
+>             the file and use drop_caches.
+> 
+>  6. It's not unreasonable that users who want to squeeze every last bit
+>     of performance out of the particular rough and tumble bits of their
+>     storage also be exposed to the difficulties of what happens when the
+>     operating system can't totally virtualize those hardware
+>     capabilities.  Your high performance sports car is not a Toyota
+>     minivan, as it were.
+> 
+> Given our overnight discussions, I don't think it'll be difficult to
+> hoist XFS_IDONTCACHE to the VFS so that 5.c.i is enough to change the
+> S_DAX state if nobody else is using the file.
 
---
-Brian Gerst
+Agreed!
+
+One note on implementation, I plan to get XFS_IDONTCACHE tested with XFS and
+leave hoisting it to VFS for the series which enables ext4 as that is when we
+would need such hoisting.
+
+Thanks everyone for another round of discussions!  :-D
+
+Ira
