@@ -2,162 +2,96 @@ Return-Path: <SRS0=n+Ub=5Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA4EFC2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 17:57:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BE90C2BA19
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 17:58:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A587F206E9
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 17:57:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1661C206E9
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 17:58:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="aJOV2O28"
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="UM9XOL7v"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726650AbgDIR5d (ORCPT
+        id S1726595AbgDIR6b (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Apr 2020 13:57:33 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:57176 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725970AbgDIR5c (ORCPT
+        Thu, 9 Apr 2020 13:58:31 -0400
+Received: from mail-qv1-f67.google.com ([209.85.219.67]:44022 "EHLO
+        mail-qv1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725970AbgDIR6b (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Apr 2020 13:57:32 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 039HsSOG035049;
-        Thu, 9 Apr 2020 17:57:28 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2020-01-29;
- bh=Pg2OcDUKrQfVlPFmsJbhzB5QRTvU/ra77BrxPivOjCk=;
- b=aJOV2O28pGHnYxaGUOpq3gEQsm+KBTq0ovFCGerImenOU3OlEUNBR1kidQYxOuUrIigS
- NMttosRIXkYqgyqF8GVCFsxlRMl+7QiIZjmfR+oR0irLWSp8w5FOhRPQhgWN5L/1wslr
- +zAYnCciAIoK6EKu4IQf+9vVNIADnVJUNlU0p+eUkqSilbbhX9r3Sy9hqf5mfc+F8leZ
- DlmmxISYAy+Yyx+6EGIfcp3BCYOFI7f1lAjpI93e80Wkl1T+SedRlRqsTPylDqwozqu/
- SgKvoZe+UuDNvMwQp4QDUrg1mODBfnDd3pqX5AvBx/fpNKHMOFvRNrBLMVgYGFZjJ3kD Dg== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by userp2130.oracle.com with ESMTP id 3091m3k0cb-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 09 Apr 2020 17:57:28 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 039HucHx048444;
-        Thu, 9 Apr 2020 17:57:28 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by userp3020.oracle.com with ESMTP id 309gdcchrf-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 09 Apr 2020 17:57:27 +0000
-Received: from abhmp0004.oracle.com (abhmp0004.oracle.com [141.146.116.10])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 039HvQpw031931;
-        Thu, 9 Apr 2020 17:57:27 GMT
-Received: from localhost.localdomain (/10.159.147.179)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 09 Apr 2020 10:57:26 -0700
-Subject: Re: [PATCH v4 1/2] selftests: kvm: Add vm_get_fd() in kvm_util
-To:     Wainer dos Santos Moschetta <wainersm@redhat.com>,
-        pbonzini@redhat.com, kvm@vger.kernel.org
-Cc:     drjones@redhat.com, david@redhat.com, linux-kernel@vger.kernel.org,
-        linux-kselftest@vger.kernel.org
-References: <20200408220818.4306-1-wainersm@redhat.com>
- <20200408220818.4306-2-wainersm@redhat.com>
- <734ebc46-ff31-708b-5a2f-8bda248cd290@oracle.com>
- <a21f3ae5-fb4e-1b9d-c8e7-ac4628c763c2@redhat.com>
-From:   Krish Sadhukhan <krish.sadhukhan@oracle.com>
-Message-ID: <aed511d0-a51e-bc4c-a265-d9ede82e18f2@oracle.com>
-Date:   Thu, 9 Apr 2020 10:57:19 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
-MIME-Version: 1.0
-In-Reply-To: <a21f3ae5-fb4e-1b9d-c8e7-ac4628c763c2@redhat.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9586 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 malwarescore=0
- adultscore=0 mlxscore=0 spamscore=0 bulkscore=0 phishscore=0
- suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2004090130
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9586 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 adultscore=0
- impostorscore=0 malwarescore=0 lowpriorityscore=0 mlxlogscore=999
- priorityscore=1501 clxscore=1015 bulkscore=0 phishscore=0 mlxscore=0
- suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2004090129
+        Thu, 9 Apr 2020 13:58:31 -0400
+Received: by mail-qv1-f67.google.com with SMTP id w26so2409774qvd.10
+        for <linux-kernel@vger.kernel.org>; Thu, 09 Apr 2020 10:58:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=lca.pw; s=google;
+        h=content-transfer-encoding:from:mime-version:subject:date:message-id
+         :references:cc:in-reply-to:to;
+        bh=vbNs4CiSAfqXtDc3PCTnCp4GWX4m5dGAR4EoeOkQXUw=;
+        b=UM9XOL7vXw5YSDBrMqz1x5fbcySKBJPdcsGdK3G2BJ0HqC9qv+hf9slg74aPPBSGVt
+         dWVpnEb2iFLsR3tMVpiwkXnEfLBQlixQeVzoaRqb8OftsbFS1z6oqaZUt5iijh8CBmVa
+         5/7pZdIQoiOUGdSzlQw3Pcm9tVOHfFV1OtXxboM3HQxjRc5ItOJ8VyO0b39yy0FMuSDE
+         Gvq1/k6PB54y/pPH4dz0RiaYpvkS2lMxOoZ6d6/CvPvQUBM/vg01hFqEY828coijVZLt
+         bbfkmtMOisih9qOEkCB0mupjcrVt3roiDi56oBl/lah1LSsCj963Veb0DjFqBrXX9VOm
+         616A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:content-transfer-encoding:from:mime-version
+         :subject:date:message-id:references:cc:in-reply-to:to;
+        bh=vbNs4CiSAfqXtDc3PCTnCp4GWX4m5dGAR4EoeOkQXUw=;
+        b=b/eRm6enFFH0Yl1lNax8B4Rce3mGM7NZlXw6Q79ftlcaPxX4W53Sfgnbv5c3dl82L+
+         tA6ElIdpmHhuyd7UT7Gq/LXYLJ+0Sme7S49W4B+yPchpF6FqmxJ6Cfjl4xl29JtMWR/r
+         SdM3nF/mVoyyvi89GWKpOHkyve0XfZ+tRmIT2aChurQ0A64ms7kG5aogcjqjOydk21eK
+         BG6xu3yLl1A8DY51SYmJdAon5mUaCeUMvapQm3aagA56A+lcfLjPApGrks+DrDpENwXc
+         mXZtfuBqUBozXeS2+6Yn0RrraIYjNhEUTYX/BTQAQya05cbWKbZP/h4wLW6lYiqk0wBW
+         8DDw==
+X-Gm-Message-State: AGi0PubT/1X5uCGcsdvFuisR5l2EYvNkk4Yi9UXzcwtvcOENG2pQUdlq
+        ebte6ACEDcKcsCyvwp70LYeWkw==
+X-Google-Smtp-Source: APiQypJMAtakUPjlZdlWSuPXqIajVjJzQSZXFNNU6P6KqrKcxIi2dyKf4zVuhyyh1tJlmTDmVJkG/w==
+X-Received: by 2002:ad4:49c6:: with SMTP id j6mr1367309qvy.68.1586455108881;
+        Thu, 09 Apr 2020 10:58:28 -0700 (PDT)
+Received: from [192.168.1.183] (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
+        by smtp.gmail.com with ESMTPSA id e10sm9209798qtj.76.2020.04.09.10.58.27
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 09 Apr 2020 10:58:28 -0700 (PDT)
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: quoted-printable
+From:   Qian Cai <cai@lca.pw>
+Mime-Version: 1.0 (1.0)
+Subject: Re: [PATCH 0/2] mm: Two small fixes for recent syzbot reports
+Date:   Thu, 9 Apr 2020 13:58:27 -0400
+Message-Id: <AFD0DADD-0558-463F-B219-5F098E6C2EDF@lca.pw>
+References: <CAHk-=wjfngA7nHAsie7bW_JmKBhUyV9oV7zmDbZuchkJK3sR1w@mail.gmail.com>
+Cc:     Dmitry Vyukov <dvyukov@google.com>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Peter Xu <peterx@redhat.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux-MM <linux-mm@kvack.org>
+In-Reply-To: <CAHk-=wjfngA7nHAsie7bW_JmKBhUyV9oV7zmDbZuchkJK3sR1w@mail.gmail.com>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+X-Mailer: iPhone Mail (17D50)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
-On 4/8/20 7:45 PM, Wainer dos Santos Moschetta wrote:
->
-> On 4/8/20 10:25 PM, Krish Sadhukhan wrote:
->>
->> On 4/8/20 3:08 PM, Wainer dos Santos Moschetta wrote:
->>> Introduces the vm_get_fd() function in kvm_util which returns
->>> the VM file descriptor.
->>>
->>> Reviewed-by: Andrew Jones <drjones@redhat.com>
->>> Signed-off-by: Wainer dos Santos Moschetta <wainersm@redhat.com>
->>> ---
->>>   tools/testing/selftests/kvm/include/kvm_util.h | 1 +
->>>   tools/testing/selftests/kvm/lib/kvm_util.c     | 5 +++++
->>>   2 files changed, 6 insertions(+)
->>>
->>> diff --git a/tools/testing/selftests/kvm/include/kvm_util.h 
->>> b/tools/testing/selftests/kvm/include/kvm_util.h
->>> index a99b875f50d2..4e122819ee24 100644
->>> --- a/tools/testing/selftests/kvm/include/kvm_util.h
->>> +++ b/tools/testing/selftests/kvm/include/kvm_util.h
->>> @@ -254,6 +254,7 @@ bool vm_is_unrestricted_guest(struct kvm_vm *vm);
->>>   unsigned int vm_get_page_size(struct kvm_vm *vm);
->>>   unsigned int vm_get_page_shift(struct kvm_vm *vm);
->>>   unsigned int vm_get_max_gfn(struct kvm_vm *vm);
->>> +int vm_get_fd(struct kvm_vm *vm);
->>>     unsigned int vm_calc_num_guest_pages(enum vm_guest_mode mode, 
->>> size_t size);
->>>   unsigned int vm_num_host_pages(enum vm_guest_mode mode, unsigned 
->>> int num_guest_pages);
->>> diff --git a/tools/testing/selftests/kvm/lib/kvm_util.c 
->>> b/tools/testing/selftests/kvm/lib/kvm_util.c
->>> index 8a3523d4434f..3e36a1eb8771 100644
->>> --- a/tools/testing/selftests/kvm/lib/kvm_util.c
->>> +++ b/tools/testing/selftests/kvm/lib/kvm_util.c
->>> @@ -1734,6 +1734,11 @@ unsigned int vm_get_max_gfn(struct kvm_vm *vm)
->>>       return vm->max_gfn;
->>>   }
->>>   +int vm_get_fd(struct kvm_vm *vm)
->>> +{
->>> +        return vm->fd;
->>> +}
->>> +
->>
->>
->> I am just trying to understand why we need a separate function when 
->> the 'vm' variable is all local within the same file. There are a 
->> number of places in kvm_util.c where it is used directly.
->
->
-> The problem is to access of kvm_vm attributes outside of kvm_utils.c. 
-> For example, if I try to vm->fd in my test I get the compiler error:
->
-> mem_slot_test.c: In function ‘test_add_max_slots’:
-> mem_slot_test.c:62:16: error: dereferencing pointer to incomplete type 
-> ‘struct kvm_vm’
->   ret = ioctl(vm->fd, KVM_SET_USER_MEMORY_REGION,
->                 ^~
+
+> On Apr 9, 2020, at 1:05 PM, Linus Torvalds <torvalds@linux-foundation.org>=
+ wrote:
+>=20
+> Well, probably not very many people outside of robots.
+>=20
+> Which is fine, but is also why I'd like robot failures to then be a big de=
+al.
+
+Agree to make a big deal part. My point is that when kicking trees of linux-=
+next, it also could reduce the exposure of many patches (which could be bad)=
+ to linux-next and miss valuable early testing either from robots or human. T=
+hus, the same mistakes could happen again because maintainers could simply p=
+ush those little or none linux-next exposure patches to mainline with no res=
+trictions. There is a balance to strike.
 
 
-My bad !  I missed the fact that the structure is defined in 
-kvm_util_internal.h and not in kvm_util.h.
-
-
-Reviewed-by: Krish Sadhukhan <krish.sadhukhan@oracle.com>
-
->
->>
->>
->>>   static unsigned int vm_calc_num_pages(unsigned int num_pages,
->>>                         unsigned int page_shift,
->>>                         unsigned int new_page_shift,
->>
->
