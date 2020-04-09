@@ -6,61 +6,68 @@ X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
 	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB23BC2BA1B
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 04:55:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 582BFC2D0EA
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 04:55:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BF0E920757
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 04:55:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 264AE20757
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 04:55:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586408137;
-	bh=9Whta/9PHFzOg9U9UvavgWEtC9sqqrhNap+vynEs3oc=;
+	s=default; t=1586408141;
+	bh=nJh3It1f33AWj6QKhfbCSxlUGc9AwMrcvBA8sSIJW7k=;
 	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=w2x7W+EfLENIp1ezTwGPCGRl2wF8s52+2CPRpWTpotHnluGSZu4UufsRBXLEY/Jfj
-	 OxW4ux9wh1TFZBlql8+dgOLO2xFBD1vkD84lmRFUX2wdOfiJC0TK9Spgu0ckEmDHUd
-	 CI35CznsrbiQOg51vJwEMYl+kMxKpz+3tScKBNiU=
+	b=Wnnpr5bI3SPkHcXllFUS0Xtflu2e5/xC/BSWDDvlrV1U7C+dM62YRdfwMWRYDrtq5
+	 WA2C7hzxLa/yZEMxAZatOa1TqJFA/rx+cJUlRDfl1m4Py1veRDf0HrZR6RLCi82BFx
+	 kJbyPO5d1/Fnxz4lohKbQ/O97VzeMOyioentD6gw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726825AbgDIEzf (ORCPT
+        id S1726809AbgDIEze (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Apr 2020 00:55:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44690 "EHLO mail.kernel.org"
+        Thu, 9 Apr 2020 00:55:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44658 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726761AbgDIEzc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Apr 2020 00:55:32 -0400
-Subject: Re: [GIT PULL] Ceph updates for 5.7-rc1
+        id S1726767AbgDIEzb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Apr 2020 00:55:31 -0400
+Subject: Re: [GIT PULL] Crypto Fixes for 5.7
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586408133;
-        bh=9Whta/9PHFzOg9U9UvavgWEtC9sqqrhNap+vynEs3oc=;
+        s=default; t=1586408132;
+        bh=nJh3It1f33AWj6QKhfbCSxlUGc9AwMrcvBA8sSIJW7k=;
         h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=N6CFuWDUYwr3KbBGBjuYoBVjL3qqkJ8tqlboeyBFOvZhJyKZNKluyuIb5BAyiKZQ+
-         TIPYREjGpFJETVZnFm6NYqiZE1cVI/TB/IbQfpYuLRBV765ZiYK458ibXbdc5A2g/F
-         jBIhj73lab+0t2hsXrrhjmtenm/jnXwe5ylrqrVA=
+        b=10A1/aZNGFEu1NTORAeA5I2qLzII3QrZOYEbj7Ss6loEniLFEX87L6T9+UBXLP5Vl
+         bAF741J9j/nk5k1pYhH7SaKwP954CPkW3OiKwq8I0I0fXdmuNQaD+zkYwEG5SByPh2
+         C0hkvlBeu6Va6rc5TIlv83hJmcfwRHlV/+vB8r2Q=
 From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20200408183007.19305-1-idryomov@gmail.com>
-References: <20200408183007.19305-1-idryomov@gmail.com>
+In-Reply-To: <20200408061513.GA23636@gondor.apana.org.au>
+References: <20190916084901.GA20338@gondor.apana.org.au>
+ <20190923050515.GA6980@gondor.apana.org.au>
+ <20191202062017.ge4rz72ki3vczhgb@gondor.apana.org.au>
+ <20191214084749.jt5ekav5o5pd2dcp@gondor.apana.org.au>
+ <20200115150812.mo2eycc53lbsgvue@gondor.apana.org.au>
+ <20200213033231.xjwt6uf54nu26qm5@gondor.apana.org.au>
+ <20200408061513.GA23636@gondor.apana.org.au>
 X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20200408183007.19305-1-idryomov@gmail.com>
-X-PR-Tracked-Remote: https://github.com/ceph/ceph-client.git
- tags/ceph-for-5.7-rc1
-X-PR-Tracked-Commit-Id: ef9157259fb7bb3bc2c61df227e36f1b861a4753
+X-PR-Tracked-Message-Id: <20200408061513.GA23636@gondor.apana.org.au>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/herbert/crypto-2.6.git linus
+X-PR-Tracked-Commit-Id: 755bddd1e4eaf9178758bd554c60aaab46fc42ba
 X-PR-Merge-Tree: torvalds/linux.git
 X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: fcc95f06403c956e3f50ca4a82db12b66a3078e0
-Message-Id: <158640813310.3202.2935579625440754696.pr-tracker-bot@kernel.org>
-Date:   Thu, 09 Apr 2020 04:55:33 +0000
-To:     Ilya Dryomov <idryomov@gmail.com>
+X-PR-Merge-Commit-Id: d8fc9cde85d829eed6ca050d86799cc4cfa6a048
+Message-Id: <158640813200.3202.15552752765181066219.pr-tracker-bot@kernel.org>
+Date:   Thu, 09 Apr 2020 04:55:32 +0000
+To:     Herbert Xu <herbert@gondor.apana.org.au>
 Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        ceph-devel@vger.kernel.org, linux-kernel@vger.kernel.org
+        "David S. Miller" <davem@davemloft.net>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Wed,  8 Apr 2020 20:30:07 +0200:
+The pull request you sent on Wed, 8 Apr 2020 16:15:13 +1000:
 
-> https://github.com/ceph/ceph-client.git tags/ceph-for-5.7-rc1
+> git://git.kernel.org/pub/scm/linux/kernel/git/herbert/crypto-2.6.git linus
 
 has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/fcc95f06403c956e3f50ca4a82db12b66a3078e0
+https://git.kernel.org/torvalds/c/d8fc9cde85d829eed6ca050d86799cc4cfa6a048
 
 Thank you!
 
