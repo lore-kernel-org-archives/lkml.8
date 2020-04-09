@@ -4,52 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CF78C2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 19:36:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF4E5C2BA19
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 19:36:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 326E320BED
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 19:36:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C355A20CC7
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 19:36:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="TCZFEv3e"
+	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="dYQcBCM9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726898AbgDITgB (ORCPT
+        id S1726949AbgDITgH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Apr 2020 15:36:01 -0400
-Received: from mail.efficios.com ([167.114.26.124]:47112 "EHLO
+        Thu, 9 Apr 2020 15:36:07 -0400
+Received: from mail.efficios.com ([167.114.26.124]:47244 "EHLO
         mail.efficios.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726864AbgDITf6 (ORCPT
+        with ESMTP id S1726864AbgDITgD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Apr 2020 15:35:58 -0400
+        Thu, 9 Apr 2020 15:36:03 -0400
 Received: from localhost (localhost [127.0.0.1])
-        by mail.efficios.com (Postfix) with ESMTP id 4140E28097A;
-        Thu,  9 Apr 2020 15:35:58 -0400 (EDT)
+        by mail.efficios.com (Postfix) with ESMTP id C2231280F71;
+        Thu,  9 Apr 2020 15:36:03 -0400 (EDT)
 Received: from mail.efficios.com ([127.0.0.1])
         by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id IE779iNZWAwn; Thu,  9 Apr 2020 15:35:58 -0400 (EDT)
+        with ESMTP id lC_i8lCrEUZf; Thu,  9 Apr 2020 15:36:03 -0400 (EDT)
 Received: from localhost (localhost [127.0.0.1])
-        by mail.efficios.com (Postfix) with ESMTP id DFA12280E4B;
-        Thu,  9 Apr 2020 15:35:57 -0400 (EDT)
-DKIM-Filter: OpenDKIM Filter v2.10.3 mail.efficios.com DFA12280E4B
+        by mail.efficios.com (Postfix) with ESMTP id 579F7281090;
+        Thu,  9 Apr 2020 15:35:59 -0400 (EDT)
+DKIM-Filter: OpenDKIM Filter v2.10.3 mail.efficios.com 579F7281090
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
-        s=default; t=1586460957;
-        bh=0dePxRXcfutRxle9mYRPSErG+aeuVue92CDCEU7DCD8=;
+        s=default; t=1586460959;
+        bh=i7YJaBdodyswtMtM5mlqG58TPDPhAxSk6tVePqUUpaI=;
         h=From:To:Date:Message-Id;
-        b=TCZFEv3eAEJL+N2h18QkDUzQbP6X6tKngFQwxeFruCoqwE/NbEhHhvvcLlyEGWsMz
-         NQAb96Tw2CajvC/BMamNPsJBNOuAyZTA4yxwKVAfboF0n3lEcNbtlLHBDHwf98J8Fp
-         sO9pvzz2+EYOYJwfhFwve5cqm7VzcxFghn5SR/8O0hfrp5kke/IcuOvGbc0WYtlJRp
-         525UxHuVxnT+iJ21xk7kjpTgRJJnm3ESL4Rdiu6pJKZUIVFQhZ9UQQqQKOLBTy1BOV
-         4BIUAPoGIzrBDsFMsKUKuoevo1XElXPgTm5YMwYsEJwbrOjVUWYU2l/XXDGs87GAC2
-         z7fJVwRF4GJ3g==
+        b=dYQcBCM9EQc2bIwBBMuXoSUxgn7aHD4t36A9Jmv62ymw4frKBGk9dFqlykdbU/1e3
+         oxMQTjz3QSB1IV/QwNrMrF3x1GlErqgFy1+HEsejYb4791Odua4qhPEJHHPNhz//qJ
+         5xa41CLfOCEJOTQw7uscpzE+XeGMve/vH3vV+uC68U2oHMI7Poj+99FLw/M631E/bm
+         zZ3JJ/1zS5oHaqJJjEWA5LRCqmKjUK9rC45VKuX03vBM4cfylnvAAhv3dv0xaer5wH
+         yJb1T8OKvP7SENEUO4LXqk0i9XlPgs8RgNfK08/T5B6z9BXNpa296kK6aHO9K+h4Z8
+         A++4RrlcNu/fw==
 X-Virus-Scanned: amavisd-new at efficios.com
 Received: from mail.efficios.com ([127.0.0.1])
         by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10026)
-        with ESMTP id 4U-igWP0RGtR; Thu,  9 Apr 2020 15:35:57 -0400 (EDT)
+        with ESMTP id qGJct0Y9jzXT; Thu,  9 Apr 2020 15:35:59 -0400 (EDT)
 Received: from localhost.localdomain (192-222-181-218.qc.cable.ebox.net [192.222.181.218])
-        by mail.efficios.com (Postfix) with ESMTPSA id 84FFB280F50;
-        Thu,  9 Apr 2020 15:35:57 -0400 (EDT)
+        by mail.efficios.com (Postfix) with ESMTPSA id 6D36D28097B;
+        Thu,  9 Apr 2020 15:35:58 -0400 (EDT)
 From:   Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
 To:     Thomas Gleixner <tglx@linutronix.de>,
         Will Deacon <will@kernel.org>, akpm@linux-foundation.org,
@@ -59,10 +59,10 @@ To:     Thomas Gleixner <tglx@linutronix.de>,
         Alexei Starovoitov <ast@kernel.org>
 Cc:     linux-kernel@vger.kernel.org,
         Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Ingo Molnar <mingo@redhat.com>
-Subject: [RFC PATCH 1/9] tracepoint: call vmalloc_sync_mappings() on registration
-Date:   Thu,  9 Apr 2020 15:35:35 -0400
-Message-Id: <20200409193543.18115-2-mathieu.desnoyers@efficios.com>
+        Josh Poimboeuf <jpoimboe@redhat.com>
+Subject: [RFC PATCH 4/9] stacktrace: export-GPL stack_trace_save_user
+Date:   Thu,  9 Apr 2020 15:35:38 -0400
+Message-Id: <20200409193543.18115-5-mathieu.desnoyers@efficios.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200409193543.18115-1-mathieu.desnoyers@efficios.com>
 References: <20200409193543.18115-1-mathieu.desnoyers@efficios.com>
@@ -71,44 +71,30 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Similarly to register_die_notifier(), tracepoints register callbacks
-which can be invoked from execution contexts such as the page fault
-handler and NMIs which should not generate a page fault. Those callbacks
-can access virtual mappings and can be implemented in modules.
+The stack_trace_save symbol is already exported GPL. Add a GPL export
+for the stack_trace_save_user symbol as well.
 
-Calling vmalloc_sync_mappings() before registering a tracepoint callback
-ensures that the virtual mappings are synchronized within each process
-page tables, thus ensuring that no page fault will be triggered by the
-callback.
+This is useful for tracers implemented as kernel modules.
 
 Signed-off-by: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Cc: Steven Rostedt <rostedt@goodmis.org>
-Cc: Ingo Molnar <mingo@redhat.com>
 Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Josh Poimboeuf <jpoimboe@redhat.com>
 ---
- kernel/tracepoint.c | 2 ++
- 1 file changed, 2 insertions(+)
+ kernel/stacktrace.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/kernel/tracepoint.c b/kernel/tracepoint.c
-index 73956eaff8a9..82191a89c72e 100644
---- a/kernel/tracepoint.c
-+++ b/kernel/tracepoint.c
-@@ -14,6 +14,7 @@
- #include <linux/sched/signal.h>
- #include <linux/sched/task.h>
- #include <linux/static_key.h>
-+#include <linux/vmalloc.h>
+diff --git a/kernel/stacktrace.c b/kernel/stacktrace.c
+index 2af66e449aa6..c8c48444bd39 100644
+--- a/kernel/stacktrace.c
++++ b/kernel/stacktrace.c
+@@ -240,6 +240,7 @@ unsigned int stack_trace_save_user(unsigned long *store, unsigned int size)
  
- extern tracepoint_ptr_t __start___tracepoints_ptrs[];
- extern tracepoint_ptr_t __stop___tracepoints_ptrs[];
-@@ -308,6 +309,7 @@ int tracepoint_probe_register_prio(struct tracepoint *tp, void *probe,
- 	struct tracepoint_func tp_func;
- 	int ret;
+ 	return c.len;
+ }
++EXPORT_SYMBOL_GPL(stack_trace_save_user);
+ #endif
  
-+	vmalloc_sync_mappings();
- 	mutex_lock(&tracepoints_mutex);
- 	tp_func.func = probe;
- 	tp_func.data = data;
+ #else /* CONFIG_ARCH_STACKWALK */
 -- 
 2.17.1
 
