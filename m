@@ -2,91 +2,168 @@ Return-Path: <SRS0=n+Ub=5Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48DE4C2BB85
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 09:17:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8F28C2D0EA
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 09:19:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1E3BE212CC
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 09:17:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9CEB820B1F
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 09:19:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726714AbgDIJRT (ORCPT
+        id S1726648AbgDIJTl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Apr 2020 05:17:19 -0400
-Received: from inva021.nxp.com ([92.121.34.21]:58218 "EHLO inva021.nxp.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725997AbgDIJRT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Apr 2020 05:17:19 -0400
-Received: from inva021.nxp.com (localhost [127.0.0.1])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 9E85520039A;
-        Thu,  9 Apr 2020 11:17:18 +0200 (CEST)
-Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id E69302003BE;
-        Thu,  9 Apr 2020 11:17:12 +0200 (CEST)
-Received: from titan.ap.freescale.net (titan.ap.freescale.net [10.192.208.233])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id AD55B402E7;
-        Thu,  9 Apr 2020 17:17:05 +0800 (SGT)
-From:   Hui Song <hui.song_1@nxp.com>
-To:     Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
-        Rob Herring <robh+dt@kernel.org>,
+        Thu, 9 Apr 2020 05:19:41 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:22964 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726579AbgDIJTk (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Apr 2020 05:19:40 -0400
+Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03993Xd5109923
+        for <linux-kernel@vger.kernel.org>; Thu, 9 Apr 2020 05:19:39 -0400
+Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 309210ybs5-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Thu, 09 Apr 2020 05:19:39 -0400
+Received: from localhost
+        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <rppt@linux.ibm.com>;
+        Thu, 9 Apr 2020 10:19:10 +0100
+Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
+        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Thu, 9 Apr 2020 10:19:01 +0100
+Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
+        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 0399JRTc48169080
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 9 Apr 2020 09:19:27 GMT
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 24E3CA405D;
+        Thu,  9 Apr 2020 09:19:27 +0000 (GMT)
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 757FDA404D;
+        Thu,  9 Apr 2020 09:19:24 +0000 (GMT)
+Received: from linux.ibm.com (unknown [9.148.207.228])
+        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
+        Thu,  9 Apr 2020 09:19:24 +0000 (GMT)
+Date:   Thu, 9 Apr 2020 12:19:22 +0300
+From:   Mike Rapoport <rppt@linux.ibm.com>
+To:     Jiaxun Yang <jiaxun.yang@flygoat.com>
+Cc:     linux-mips@vger.kernel.org,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Huacai Chen <chenhc@lemote.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Cc:     linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-        Song Hui <hui.song_1@nxp.com>
-Subject: [PATCH] gpio: mpc8xxx: Add shutdown function.
-Date:   Thu,  9 Apr 2020 17:02:59 +0800
-Message-Id: <20200409090259.13126-1-hui.song_1@nxp.com>
-X-Mailer: git-send-email 2.9.5
-X-Virus-Scanned: ClamAV using ClamSMTP
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Robert Richter <rric@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>,
+        Paul Burton <paulburton@kernel.org>,
+        Allison Randal <allison@lohutok.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Vladimir Kondratiev <vladimir.kondratiev@intel.com>,
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        Alexios Zavras <alexios.zavras@intel.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        Matt Redfearn <matt.redfearn@mips.com>,
+        Steve Winslow <swinslow@gmail.com>,
+        Richard Fontana <rfontana@redhat.com>,
+        Oleksij Rempel <linux@rempel-privat.de>,
+        Kamal Dasu <kdasu.kdev@gmail.com>,
+        linux-kernel@vger.kernel.org,
+        bcm-kernel-feedback-list@broadcom.com, oprofile-list@lists.sf.net
+Subject: Re: [PATCH 12/12] MIPS: ip27: Fix includes
+References: <20200408113505.2528103-1-jiaxun.yang@flygoat.com>
+ <20200408130024.2529220-7-jiaxun.yang@flygoat.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200408130024.2529220-7-jiaxun.yang@flygoat.com>
+X-TM-AS-GCONF: 00
+x-cbid: 20040909-0016-0000-0000-000003014CE8
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 20040909-0017-0000-0000-000033653176
+Message-Id: <20200409091922.GA17293@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
+ definitions=2020-04-09_03:2020-04-07,2020-04-09 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 spamscore=0
+ mlxscore=0 impostorscore=0 suspectscore=1 adultscore=0 malwarescore=0
+ lowpriorityscore=0 phishscore=0 priorityscore=1501 mlxlogscore=423
+ bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2004090066
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Song Hui <hui.song_1@nxp.com>
+On Wed, Apr 08, 2020 at 08:59:54PM +0800, Jiaxun Yang wrote:
+> Somehow changes in topology messed up headers.
+> So just add necessary headers to make it compile again.
 
-When the kexec command is executed, the memory area will be re-paginated.
-The shutdown function needed to make interrupt handler to be NULL.If
-not, an interrupt will be generated during this period. When the interrupt
-handler is executed,the handler function address changed and crash will
-occur.
-
-Signed-off-by: Song Hui <hui.song_1@nxp.com>
----
- drivers/gpio/gpio-mpc8xxx.c | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
-
-diff --git a/drivers/gpio/gpio-mpc8xxx.c b/drivers/gpio/gpio-mpc8xxx.c
-index 604dfec..a24e6c5 100644
---- a/drivers/gpio/gpio-mpc8xxx.c
-+++ b/drivers/gpio/gpio-mpc8xxx.c
-@@ -446,9 +446,21 @@ static int mpc8xxx_remove(struct platform_device *pdev)
- 	return 0;
- }
+Please avoid aftermath build fixes because it breaks bisection.
+Each commit should be buildable, so this changes should go into the patches
+that actually require them.
  
-+static int mpc8xxx_shutdown(struct platform_device *pdev)
-+{
-+	struct mpc8xxx_gpio_chip *mpc8xxx_gc = platform_get_drvdata(pdev);
-+
-+	if (mpc8xxx_gc->irq) {
-+		irq_set_chained_handler_and_data(mpc8xxx_gc->irqn, NULL, NULL);
-+		irq_domain_remove(mpc8xxx_gc->irq);
-+	}
-+
-+	return 0;
-+}
- static struct platform_driver mpc8xxx_plat_driver = {
- 	.probe		= mpc8xxx_probe,
- 	.remove		= mpc8xxx_remove,
-+	.shutdown	= mpc8xxx_shutdown,
- 	.driver		= {
- 		.name = "gpio-mpc8xxx",
- 		.of_match_table	= mpc8xxx_gpio_ids,
+> Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
+> ---
+>  arch/mips/include/asm/mach-ip27/mmzone.h   | 2 ++
+>  arch/mips/include/asm/mach-ip27/topology.h | 2 ++
+>  arch/mips/include/asm/sn/addrs.h           | 1 +
+>  3 files changed, 5 insertions(+)
+> 
+> diff --git a/arch/mips/include/asm/mach-ip27/mmzone.h b/arch/mips/include/asm/mach-ip27/mmzone.h
+> index 08c36e50a860..e0a53b97b4a8 100644
+> --- a/arch/mips/include/asm/mach-ip27/mmzone.h
+> +++ b/arch/mips/include/asm/mach-ip27/mmzone.h
+> @@ -2,6 +2,8 @@
+>  #ifndef _ASM_MACH_MMZONE_H
+>  #define _ASM_MACH_MMZONE_H
+>  
+> +#include <linux/mmzone.h>
+> +
+>  #include <asm/sn/addrs.h>
+>  #include <asm/sn/arch.h>
+>  #include <asm/sn/agent.h>
+> diff --git a/arch/mips/include/asm/mach-ip27/topology.h b/arch/mips/include/asm/mach-ip27/topology.h
+> index d66cc53feab8..601e350908f7 100644
+> --- a/arch/mips/include/asm/mach-ip27/topology.h
+> +++ b/arch/mips/include/asm/mach-ip27/topology.h
+> @@ -2,6 +2,8 @@
+>  #ifndef _ASM_MACH_TOPOLOGY_H
+>  #define _ASM_MACH_TOPOLOGY_H	1
+>  
+> +#include <linux/numa.h>
+> +
+>  #include <asm/sn/types.h>
+>  #include <asm/mmzone.h>
+>  
+> diff --git a/arch/mips/include/asm/sn/addrs.h b/arch/mips/include/asm/sn/addrs.h
+> index 837d23e24976..1d3945ef2ca4 100644
+> --- a/arch/mips/include/asm/sn/addrs.h
+> +++ b/arch/mips/include/asm/sn/addrs.h
+> @@ -13,6 +13,7 @@
+>  #ifndef __ASSEMBLY__
+>  #include <linux/smp.h>
+>  #include <linux/types.h>
+> +#include <asm/io.h>
+>  #endif /* !__ASSEMBLY__ */
+>  
+>  #include <asm/addrspace.h>
+> -- 
+> 2.26.0.rc2
+> 
+> 
+
 -- 
-2.9.5
+Sincerely yours,
+Mike.
 
