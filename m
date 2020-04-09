@@ -6,133 +6,101 @@ X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54B9BC2BA2B
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 10:26:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 687C2C2BB86
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 10:30:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 28BE32082D
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 10:26:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3E62420757
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 10:30:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726609AbgDIK0D (ORCPT
+        id S1726622AbgDIKao (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Apr 2020 06:26:03 -0400
-Received: from foss.arm.com ([217.140.110.172]:48184 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725828AbgDIK0D (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Apr 2020 06:26:03 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0A09C31B;
-        Thu,  9 Apr 2020 03:26:03 -0700 (PDT)
-Received: from e107158-lin.cambridge.arm.com (e107158-lin.cambridge.arm.com [10.1.195.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 0F06D3F73D;
-        Thu,  9 Apr 2020 03:26:00 -0700 (PDT)
-Date:   Thu, 9 Apr 2020 11:25:58 +0100
-From:   Qais Yousef <qais.yousef@arm.com>
-To:     Dietmar Eggemann <dietmar.eggemann@arm.com>
-Cc:     Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Luca Abeni <luca.abeni@santannapisa.it>,
-        Daniel Bristot de Oliveira <bristot@redhat.com>,
-        Wei Wang <wvw@google.com>, Quentin Perret <qperret@google.com>,
-        Alessio Balsini <balsini@google.com>,
-        Pavan Kondeti <pkondeti@codeaurora.org>,
-        Patrick Bellasi <patrick.bellasi@matbug.net>,
-        Morten Rasmussen <morten.rasmussen@arm.com>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 4/4] sched/deadline: Implement fallback mechanism for
- !fit case
-Message-ID: <20200409102557.h4humnsa5dlwvlym@e107158-lin.cambridge.arm.com>
-References: <20200408095012.3819-1-dietmar.eggemann@arm.com>
- <20200408095012.3819-5-dietmar.eggemann@arm.com>
+        Thu, 9 Apr 2020 06:30:44 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:12705 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725783AbgDIKao (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Apr 2020 06:30:44 -0400
+Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 0DB98905BA12401A2919;
+        Thu,  9 Apr 2020 18:30:41 +0800 (CST)
+Received: from [127.0.0.1] (10.173.222.27) by DGGEMS408-HUB.china.huawei.com
+ (10.3.19.208) with Microsoft SMTP Server id 14.3.487.0; Thu, 9 Apr 2020
+ 18:30:34 +0800
+Subject: Re: [PATCH] irqchip/mbigen: Free msi_desc on device teardown
+To:     Marc Zyngier <maz@kernel.org>
+CC:     <linux-kernel@vger.kernel.org>, <tglx@linutronix.de>,
+        <jason@lakedaemon.net>, <wuyun.wu@huawei.com>,
+        <wanghaibin.wang@huawei.com>
+References: <20200408114352.1604-1-yuzenghui@huawei.com>
+ <20200409102718.73875cd9@why>
+From:   Zenghui Yu <yuzenghui@huawei.com>
+Message-ID: <c308446a-557f-8fe1-520e-45558dd3aac5@huawei.com>
+Date:   Thu, 9 Apr 2020 18:30:33 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200408095012.3819-5-dietmar.eggemann@arm.com>
-User-Agent: NeoMutt/20171215
+In-Reply-To: <20200409102718.73875cd9@why>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.173.222.27]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 04/08/20 11:50, Dietmar Eggemann wrote:
-> From: Luca Abeni <luca.abeni@santannapisa.it>
+Hi Marc,
+
+On 2020/4/9 17:27, Marc Zyngier wrote:
+> On Wed, 8 Apr 2020 19:43:52 +0800
+> Zenghui Yu <yuzenghui@huawei.com> wrote:
 > 
-> When a task has a runtime that cannot be served within the scheduling
-> deadline by any of the idle CPU (later_mask) the task is doomed to miss
-> its deadline.
+> Hi Zenghui,
 > 
-> This can happen since the SCHED_DEADLINE admission control guarantees
-> only bounded tardiness and not the hard respect of all deadlines.
-> In this case try to select the idle CPU with the largest CPU capacity
-> to minimize tardiness.
+>> Using irq_domain_free_irqs_common() on the irqdomain free path will
+>> leave the MSI descriptor unfreed when platform devices get removed.
+>> Properly free it by MSI domain free function.
+>>
+>> Signed-off-by: Zenghui Yu <yuzenghui@huawei.com>
+>> ---
+>>   drivers/irqchip/irq-mbigen.c | 8 +++++++-
+>>   1 file changed, 7 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/irqchip/irq-mbigen.c b/drivers/irqchip/irq-mbigen.c
+>> index 6b566bba263b..ff7627b57772 100644
+>> --- a/drivers/irqchip/irq-mbigen.c
+>> +++ b/drivers/irqchip/irq-mbigen.c
+>> @@ -220,10 +220,16 @@ static int mbigen_irq_domain_alloc(struct irq_domain *domain,
+>>   	return 0;
+>>   }
+>>   
+>> +static void mbigen_irq_domain_free(struct irq_domain *domain, unsigned int virq,
+>> +				   unsigned int nr_irqs)
+>> +{
+>> +	platform_msi_domain_free(domain, virq, nr_irqs);
+>> +}
+>> +
+>>   static const struct irq_domain_ops mbigen_domain_ops = {
+>>   	.translate	= mbigen_domain_translate,
+>>   	.alloc		= mbigen_irq_domain_alloc,
+>> -	.free		= irq_domain_free_irqs_common,
+>> +	.free		= mbigen_irq_domain_free,
+>>   };
+>>   
+>>   static int mbigen_of_create_domain(struct platform_device *pdev,
 > 
-> Signed-off-by: Luca Abeni <luca.abeni@santannapisa.it>
-> Signed-off-by: Dietmar Eggemann <dietmar.eggemann@arm.com>
-> ---
-
-Outside of the scope of this series. But does it make sense to make
-sched_setattr() fail to create a new deadline task if the system will be
-overcommitted, hence causing some dl tasks to miss their deadlines?
-
-If some overcommitting is fine (some deadlines are soft and are okay to fail
-every once in a while), does it make sense for this to be a tunable of how much
-the system can be overcommitted before disallowing new DL tasks to be created?
-
-Just thinking out loudly. This fallback is fine, but it made me think why did
-we have to end up in a situation that we can fail in the first place since the
-same info is available when a new DL task is created, and being preventative
-might be a better approach..
-
-Thanks
-
---
-Qais Yousef
-
->  kernel/sched/cpudeadline.c | 19 +++++++++++++++----
->  1 file changed, 15 insertions(+), 4 deletions(-)
+> Should this deserve a:
 > 
-> diff --git a/kernel/sched/cpudeadline.c b/kernel/sched/cpudeadline.c
-> index 8630f2a40a3f..8525d73e3de4 100644
-> --- a/kernel/sched/cpudeadline.c
-> +++ b/kernel/sched/cpudeadline.c
-> @@ -121,19 +121,30 @@ int cpudl_find(struct cpudl *cp, struct task_struct *p,
->  
->  	if (later_mask &&
->  	    cpumask_and(later_mask, cp->free_cpus, p->cpus_ptr)) {
-> -		int cpu;
-> +		unsigned long cap, max_cap = 0;
-> +		int cpu, max_cpu = -1;
->  
->  		if (!static_branch_unlikely(&sched_asym_cpucapacity))
->  			return 1;
->  
->  		/* Ensure the capacity of the CPUs fits the task. */
->  		for_each_cpu(cpu, later_mask) {
-> -			if (!dl_task_fits_capacity(p, cpu))
-> +			if (!dl_task_fits_capacity(p, cpu)) {
->  				cpumask_clear_cpu(cpu, later_mask);
-> +
-> +				cap = arch_scale_cpu_capacity(cpu);
-> +
-> +				if (cap > max_cap) {
-> +					max_cap = cap;
-> +					max_cpu = cpu;
-> +				}
-> +			}
->  		}
->  
-> -		if (!cpumask_empty(later_mask))
-> -			return 1;
-> +		if (cpumask_empty(later_mask))
-> +			cpumask_set_cpu(max_cpu, later_mask);
-> +
-> +		return 1;
->  	} else {
->  		int best_cpu = cpudl_maximum(cp);
->  
-> -- 
-> 2.17.1
+> Fixes: 9650c60ebfec0 ("irqchip/mbigen: Create irq domain for each
+> mbigen device")
+
+Yes, please help to add it.
+
 > 
+> Otherwise queued for post -rc1.
+
+Thanks!
+
+
+Zenghui
+
