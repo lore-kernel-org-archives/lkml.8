@@ -2,153 +2,133 @@ Return-Path: <SRS0=n+Ub=5Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99DF5C2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 13:49:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 843D9C2BA2B
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 13:50:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 64D2520678
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 13:49:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="afn5Tbxa"
+	by mail.kernel.org (Postfix) with ESMTP id 593EA2078E
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 13:50:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726975AbgDINtd (ORCPT
+        id S1726997AbgDINuP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Apr 2020 09:49:33 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:44396 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726641AbgDINtd (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Apr 2020 09:49:33 -0400
-Received: by mail-wr1-f65.google.com with SMTP id c15so11943682wro.11
-        for <linux-kernel@vger.kernel.org>; Thu, 09 Apr 2020 06:49:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=xI/13ahNFkzIs4fIOUGU+GiPaJZFLk48sQn0t25jaGY=;
-        b=afn5TbxaSodVr0dusUmbWTENkDb2K7KmcDYRZvC1s1/ABXD0YGMH+o0CUhuulFvK8D
-         TiiyY59rpWL2aj/8BFvJcBbzZd3kS72CwBWjKimtNHITiDCpdWPXbpMyrq9VIGeapAoZ
-         JFj9e9zNZjLMKip1oZo6xLrulUab5B0RopS2krK6YhQKUVhDJ6EV9zHcdxi/tlYmIp9P
-         VHDGc9RTvC9FU8xTekWP6oBJ5KhFJfwCMx5E5AR/Co0fbbo4lyQbXK0Xvl4OjHtuEn8I
-         +9cIQsqMGxquOA3ok8x7PkaJl2UIYpHP6F93Dfn0cMZrwnprNo9JjDjGiynZ3f4NEKRS
-         oxgg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=xI/13ahNFkzIs4fIOUGU+GiPaJZFLk48sQn0t25jaGY=;
-        b=Opehlyc4Ask68OWrAKce/5ev7m71P4fuFuCXDriKh1mlE3CIu4KogqItSEaxZO5u9M
-         tptHUDibqWfTMs6XuGi1+++bvrLSo1AkUIcNz9iCJxMH32bQYGg4L/+r+l0nb4QdTeEa
-         L3Vf1F7Qfen9KejJQcbyT9V6+2qukqqDtglCG3bDV7J0tWDaRXB7nAS8rQvNkyaadbpi
-         zNDHb2NTeSTQ1Gsis6XmxT5c1Bn/3t6mXaMkTaVZgPK1oYwDy7+xsHOQAsZhEsMNUI1q
-         5Oqw5x6z0P3CW5GSQTb9edhpCkrkN1/nmv4x8Z1HsDLN8bcAo9SOeWM3Hh/vUT+gs6QZ
-         5ygA==
-X-Gm-Message-State: AGi0PuY9T1hXugqJB5PsHJ21tlOcgNGJ+rrKklFXhXP+sBJ2hd7B6AHA
-        12n8dY4C6r17YhqHCzZqkN5Uym4KtMk=
-X-Google-Smtp-Source: APiQypLdC3AyJfiHJHy5bpqo/UY+01I+BfVknqM3QSrQr+ChtRt3Ew2TsNKjwXQyBVHN0NcAEWTNsg==
-X-Received: by 2002:adf:aacc:: with SMTP id i12mr15309250wrc.116.1586440171850;
-        Thu, 09 Apr 2020 06:49:31 -0700 (PDT)
-Received: from ?IPv6:2a01:e34:ed2f:f020:4e:2ab3:ef46:7bda? ([2a01:e34:ed2f:f020:4e:2ab3:ef46:7bda])
-        by smtp.googlemail.com with ESMTPSA id u17sm45525611wra.63.2020.04.09.06.49.30
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 09 Apr 2020 06:49:31 -0700 (PDT)
-Subject: Re: [PATCH v6 0/4] thermal: k3: Add support for bandgap sensors
-To:     Keerthy <j-keerthy@ti.com>, rui.zhang@intel.com, robh+dt@kernel.org
-Cc:     amit.kucheria@verdurent.com, t-kristo@ti.com,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-pm@vger.kernel.org,
-        mark.rutland@arm.com
-References: <20200407055116.16082-1-j-keerthy@ti.com>
-From:   Daniel Lezcano <daniel.lezcano@linaro.org>
-Message-ID: <3c69e3c6-5549-e891-fde6-95a2ecc49f77@linaro.org>
-Date:   Thu, 9 Apr 2020 15:49:30 +0200
+        Thu, 9 Apr 2020 09:50:15 -0400
+Received: from foss.arm.com ([217.140.110.172]:50404 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726597AbgDINuP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Apr 2020 09:50:15 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9CB7730E;
+        Thu,  9 Apr 2020 06:50:15 -0700 (PDT)
+Received: from [192.168.1.19] (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 7525A3F68F;
+        Thu,  9 Apr 2020 06:50:12 -0700 (PDT)
+Subject: Re: [PATCH 1/4] sched/topology: Store root domain CPU capacity sum
+To:     Vincent Guittot <vincent.guittot@linaro.org>
+Cc:     Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Luca Abeni <luca.abeni@santannapisa.it>,
+        Daniel Bristot de Oliveira <bristot@redhat.com>,
+        Wei Wang <wvw@google.com>, Quentin Perret <qperret@google.com>,
+        Alessio Balsini <balsini@google.com>,
+        Pavan Kondeti <pkondeti@codeaurora.org>,
+        Patrick Bellasi <patrick.bellasi@matbug.net>,
+        Morten Rasmussen <morten.rasmussen@arm.com>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Qais Yousef <qais.yousef@arm.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+References: <20200408095012.3819-1-dietmar.eggemann@arm.com>
+ <20200408095012.3819-2-dietmar.eggemann@arm.com>
+ <CAKfTPtC4_+dTddLdoFMdzUvsXwWyi3bUOXcg9kstC8RzZS_a+A@mail.gmail.com>
+ <42cc3878-4c57-96ba-3ebd-1b4d4ef87fae@arm.com>
+ <CAKfTPtDS_qwPH+TwoFWPz6QRzG1N=t46ZvGN=w6zbOtnGAdOeQ@mail.gmail.com>
+From:   Dietmar Eggemann <dietmar.eggemann@arm.com>
+Message-ID: <d2ace353-cdf3-c22a-2b19-7fa33281fe27@arm.com>
+Date:   Thu, 9 Apr 2020 15:50:10 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.4.1
 MIME-Version: 1.0
-In-Reply-To: <20200407055116.16082-1-j-keerthy@ti.com>
+In-Reply-To: <CAKfTPtDS_qwPH+TwoFWPz6QRzG1N=t46ZvGN=w6zbOtnGAdOeQ@mail.gmail.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 08.04.20 19:03, Vincent Guittot wrote:
+> On Wed, 8 Apr 2020 at 18:31, Dietmar Eggemann <dietmar.eggemann@arm.com> wrote:
+>>
+>> On 08.04.20 14:29, Vincent Guittot wrote:
+>>> On Wed, 8 Apr 2020 at 11:50, Dietmar Eggemann <dietmar.eggemann@arm.com> wrote:
+>>
+>> [...]
+>>
+>>>>  /**
+>>>> diff --git a/kernel/sched/topology.c b/kernel/sched/topology.c
+>>>> index 8344757bba6e..74b0c0fa4b1b 100644
+>>>> --- a/kernel/sched/topology.c
+>>>> +++ b/kernel/sched/topology.c
+>>>> @@ -2052,12 +2052,17 @@ build_sched_domains(const struct cpumask *cpu_map, struct sched_domain_attr *att
+>>>>         /* Attach the domains */
+>>>>         rcu_read_lock();
+>>>>         for_each_cpu(i, cpu_map) {
+>>>> +               unsigned long cap = arch_scale_cpu_capacity(i);
+>>>
+>>> Why do you replace the use of rq->cpu_capacity_orig by
+>>> arch_scale_cpu_capacity(i) ?
+>>> There is nothing about this change in the commit message
+>>
+>> True. And I can change this back.
+>>
+>> It seems though that the solution is not sufficient because of the
+>> 'rd->span &nsub cpu_active_mask' issue discussed under patch 2/4.
+>>ap
+>> But this remind me of another question I have.
+>>
+>> Currently we use arch_scale_cpu_capacity() more often (16 times) than
+>> capacity_orig_of()/rq->cpu_capacity_orig .
+>>
+>> What's hindering us to remove rq->cpu_capacity_orig and the code around
+>> it and solely rely on arch_scale_cpu_capacity()? I mean the arch
+>> implementation should be fast.
+> 
+> Or we can do the opposite and only use capacity_orig_of()/rq->cpu_capacity_orig.
+> 
+> Is there a case where the max cpu capacity changes over time ? So I
+> would prefer to use cpu_capacity_orig which is a field of scheduler
+> instead of always calling an external arch specific function
 
-Hi Keerthy,
+I see. So far it only changes during startup.
 
-On 07/04/2020 07:51, Keerthy wrote:
-> Add VTM thermal support. In the Voltage Thermal
-> Management Module(VTM), K3 AM654 supplies a voltage
-> reference and a temperature sensor feature that are gathered in the band
-> gap voltage and temperature sensor (VBGAPTS) module. The band
-> gap provides current and voltage reference for its internal
-> circuits and other analog IP blocks. The analog-to-digital
-> converter (ADC) produces an output value that is proportional
-> to the silicon temperature.
-> 
-> Add support for bandgap sensors. Currently reading temperatures
-> is supported.
+And it looks like that asym_cpu_capacity_level() [topology.c] would fail
+if we would use capacity_orig_of() instead of arch_scale_cpu_capacity().
 
-How do you want to proceed? Shall I take patches 1 & 2 ?
+post_init_entity_util_avg() [fair.c] and sugov_get_util()
+[cpufreq_schedutil.c] would be temporarily off until
+update_cpu_capacity() has updated cpu_rq(cpu)->cpu_capacity_orig.
 
+compute_energy() [fair.c] is guarded by sched_energy_enabled() from
+being used at startup.
 
-> Changes in v6:
-> 
->   * Removed bunch of unused #defines and couple of redundant variables.
->   * Reordered patches a bit.
->   * Minor reordering in dt binding patch.
-> 
-> Changes in v5:
-> 
->   * Removed thermal work function which was unused.
->   * Removed unused preve_tenmp and a couple more struct variables.
->   * Removed couple of redundant header function include.
-> 
-> Changes in v4:
-> 
->   * Fixed comments from Daniel to remove trend function.
->   * Mostly cleaned up all the unused variables.
->   * Driver from bool to tristate.
-> 
-> Changes in v3:
-> 
->   * Fixed errors seen with:
->     dt_binding_check DT_SCHEMA_FILES=Documentation/devicetree/bindings/thermal/ti,am654-thermal.yaml
-> 
-> Changes in v2:
-> 
->   * Fixed yaml errors
->   * renamed am654-industrial-thermal.dtsi to k3-am654-industrial-thermal.dtsi
->     to follow the convention for k3 family.  
-> 
-> Keerthy (4):
->   dt-bindings: thermal: k3: Add VTM bindings documentation
->   thermal: k3: Add support for bandgap sensors
->   arm64: dts: ti: am65-wakeup: Add VTM node
->   arm64: dts: ti: am654: Add thermal zones
-> 
->  .../bindings/thermal/ti,am654-thermal.yaml    |  56 ++++
->  arch/arm64/boot/dts/ti/k3-am65-wakeup.dtsi    |  11 +
->  .../dts/ti/k3-am654-industrial-thermal.dtsi   |  45 +++
->  drivers/thermal/Kconfig                       |  10 +
->  drivers/thermal/Makefile                      |   1 +
->  drivers/thermal/k3_bandgap.c                  | 264 ++++++++++++++++++
->  6 files changed, 387 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/thermal/ti,am654-thermal.yaml
->  create mode 100644 arch/arm64/boot/dts/ti/k3-am654-industrial-thermal.dtsi
->  create mode 100644 drivers/thermal/k3_bandgap.c
-> 
+scale_rt_capacity() could be changed in case we call it after the
+cpu_rq(cpu)->cpu_capacity_orig = arch_scale_cpu_capacity(cpu) in
+update_cpu_capacity().
 
+The Energy Model (and CPUfreq cooling) code would need
+capacity_orig_of() exported. arch_scale_cpu_capacity() currently is
+exported via include/linux/sched/topology.h.
 
--- 
-<http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+I guess Pelt and 'scale invariant Deadline bandwidth enforcement' should
+continue using arch_scale_cpu_capacity() in sync with
+arch_scale_freq_capacity().
 
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
+IMHO it's hard to give clear advice when to use the one or the other.
+
+We probably don't want to set cpu_rq(cpu)->cpu_capacity_orig in the arch
+cpu scale setter. We have arch_scale_cpu_capacity() to decouple that.
