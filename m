@@ -2,140 +2,310 @@ Return-Path: <SRS0=n+Ub=5Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09459C2BA2B
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 10:41:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1EF4C2BBFD
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 10:42:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D8E3220757
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 10:41:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B7B8220857
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 10:42:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726690AbgDIKld (ORCPT
+        id S1726707AbgDIKmN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Apr 2020 06:41:33 -0400
-Received: from mout.kundenserver.de ([217.72.192.75]:34085 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725828AbgDIKlc (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Apr 2020 06:41:32 -0400
-Received: from mail-qk1-f180.google.com ([209.85.222.180]) by
- mrelayeu.kundenserver.de (mreue107 [212.227.15.145]) with ESMTPSA (Nemesis)
- id 1M3UIe-1jLwOP22ni-000bUu; Thu, 09 Apr 2020 12:41:31 +0200
-Received: by mail-qk1-f180.google.com with SMTP id z15so3395725qki.7;
-        Thu, 09 Apr 2020 03:41:31 -0700 (PDT)
-X-Gm-Message-State: AGi0PuYB6P8o0aFEzfWoQU5AHd+quTzHr9uwJhbuRns7IN2hGas/tBj9
-        CPbMV3pCx+IvNRBQcqtrfu/63O9yGEyDmHLSGRg=
-X-Google-Smtp-Source: APiQypJ+MZNDx1nAeHQJUrsxI3ccDEBo8kCLAwyqI5SJ9WAba6/XBRqyHYyNfPORCxMsxCe8/yMMMt7xih71qKreb4o=
-X-Received: by 2002:a37:a52:: with SMTP id 79mr11506167qkk.3.1586428890169;
- Thu, 09 Apr 2020 03:41:30 -0700 (PDT)
+        Thu, 9 Apr 2020 06:42:13 -0400
+Received: from honk.sigxcpu.org ([24.134.29.49]:42986 "EHLO honk.sigxcpu.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726082AbgDIKmM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Apr 2020 06:42:12 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by honk.sigxcpu.org (Postfix) with ESMTP id D63B9FB05;
+        Thu,  9 Apr 2020 12:42:05 +0200 (CEST)
+X-Virus-Scanned: Debian amavisd-new at honk.sigxcpu.org
+Received: from honk.sigxcpu.org ([127.0.0.1])
+        by localhost (honk.sigxcpu.org [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id 5KggmE3PHPbQ; Thu,  9 Apr 2020 12:42:03 +0200 (CEST)
+Received: by bogon.sigxcpu.org (Postfix, from userid 1000)
+        id D9DDB400E8; Thu,  9 Apr 2020 12:42:02 +0200 (CEST)
+From:   =?UTF-8?q?Guido=20G=C3=BCnther?= <agx@sigxcpu.org>
+To:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        Lee Jones <lee.jones@linaro.org>,
+        =?UTF-8?q?Guido=20G=C3=BCnther?= <agx@sigxcpu.org>,
+        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Robert Chiras <robert.chiras@nxp.com>,
+        Sam Ravnborg <sam@ravnborg.org>, Arnd Bergmann <arnd@arndb.de>
+Subject: [PATCH v11 1/2] dt-bindings: display/bridge: Add binding for NWL mipi dsi host controller
+Date:   Thu,  9 Apr 2020 12:42:01 +0200
+Message-Id: <147ffc1e4dee3a623e5dca25d84565d386a34112.1586427783.git.agx@sigxcpu.org>
+X-Mailer: git-send-email 2.23.0
+In-Reply-To: <cover.1586427783.git.agx@sigxcpu.org>
+References: <cover.1586427783.git.agx@sigxcpu.org>
 MIME-Version: 1.0
-References: <20200326140125.19794-1-jasowang@redhat.com> <20200326140125.19794-10-jasowang@redhat.com>
-In-Reply-To: <20200326140125.19794-10-jasowang@redhat.com>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Thu, 9 Apr 2020 12:41:13 +0200
-X-Gmail-Original-Message-ID: <CAK8P3a1RXUXs5oYjB=Jq5cpvG11eTnmJ+vc18_-0fzgTH6envA@mail.gmail.com>
-Message-ID: <CAK8P3a1RXUXs5oYjB=Jq5cpvG11eTnmJ+vc18_-0fzgTH6envA@mail.gmail.com>
-Subject: Re: [PATCH V9 9/9] virtio: Intel IFC VF driver for VDPA
-To:     Jason Wang <jasowang@redhat.com>
-Cc:     "Michael S. Tsirkin" <mst@redhat.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        kvm list <kvm@vger.kernel.org>,
-        virtualization@lists.linux-foundation.org,
-        Networking <netdev@vger.kernel.org>,
-        Jason Gunthorpe <jgg@mellanox.com>, maxime.coquelin@redhat.com,
-        cunming.liang@intel.com, zhihong.wang@intel.com,
-        rob.miller@broadcom.com, xiao.w.wang@intel.com,
-        lingshan.zhu@intel.com, eperezma@redhat.com, lulu@redhat.com,
-        Parav Pandit <parav@mellanox.com>, kevin.tian@intel.com,
-        Stefan Hajnoczi <stefanha@redhat.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Christoph Hellwig <hch@infradead.org>, aadam@redhat.com,
-        Jiri Pirko <jiri@mellanox.com>, shahafs@mellanox.com,
-        hanand@xilinx.com, mhabets@solarflare.com, gdawar@xilinx.com,
-        saugatm@xilinx.com, vmireyno@marvell.com,
-        zhangweining@ruijie.com.cn, Bie Tiwei <tiwei.bie@intel.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:HWzbXodPWtj3796KNdOWac9tTnFw3sd83DCpZ4tYyN9oV/qgGKH
- fh9QCRbNS0utuTU9EQtqCO6ZMTIIvNcRuhL2cqr0k4HKzZhz+uiywiNmgaemhac/AwdFKEV
- 9zFmQgVG0n0f9ah0sZX3TABPeCExNtqJrKy6wBA2cT8/U8m02VlfUZ1IzMekJGmjApBy+WU
- WL7xd2t0u6StYdxj92ELg==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:FZrkDyo0urk=:LiTF4Hf9cz8JtqwzdwOHlC
- 7V9TCsJOYLCqqVJJo13Ie7d9LKCh8bV8SMM0SbMkYXJXKODaxUystJK7yjQuM5uEUTTDQLbt0
- 9A/e85+4X+QBIjN5zUkuVYPWJ2nZnFxYSDF+q/NpjUy515HKltJpmp5MF/che+ULTrLkLPrcq
- BxhrLOWxOlAb3R9PnzS8L/Nluk14VLNct3esVTMrAQfNS8Ri2DQNxcPhRMuBv737PXft0lsyQ
- D8RM1RHeGD4mTulcdYlppnNSLdcP3QkV6OakdtmVuvQdjuRHhITfoRTOna1S6DpttfhCLB3cM
- CCpf3k4qCPV7FJKVBkufBknimkXZIuiK72E2UQI8d5d9HJL7xH/7ASbhFD1f06oWednWvpmho
- FBma/1vv093R3IkpLh2May4rzttJnU5+XAYw2gigCHM26BgVJvnVU2xAggtliBp7v3YbEcK7I
- Xf/XHW+46yEV+yOJPUQGhKo+j5YJicEJk/DkBOfelTJFiaeF58EjmlAF9GCM6xbVv6kJPCm5p
- oB373GuFH9jSVGSTt6eSaUZ9dHvmDpnvwCitcdVPyFTUrLxq1dboPbDhnhUGJmZalPJarfTqH
- EGmnoInmTHXWexZY0PWxsvd9HXDgvkAAD8YxPl7/oQOLePUhEwqiAK9aGdkMnIa7oVIjF6Xls
- iVErHfLgKp8u2ZiWES7n61SzCHeb9JHudAhT9muDYsUSUzGnvVf1DI1wR3MLskPvF/M45CD8r
- cWQv9vKhv13MmdFpynWXOXFmL9mczotZpUKCUT7PxwBdnjh74LFYFIvG/LH9V3/Xq/Dyd+a4o
- x0fI0zggrorIi9rD7hqdDXISbeyaZ52nUZt+IRgXsFanzIjhu0=
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 26, 2020 at 3:08 PM Jason Wang <jasowang@redhat.com> wrote:
->
-> From: Zhu Lingshan <lingshan.zhu@intel.com>
->
-> This commit introduced two layers to drive IFC VF:
->
-> (1) ifcvf_base layer, which handles IFC VF NIC hardware operations and
->     configurations.
->
-> (2) ifcvf_main layer, which complies to VDPA bus framework,
->     implemented device operations for VDPA bus, handles device probe,
->     bus attaching, vring operations, etc.
->
-> Signed-off-by: Zhu Lingshan <lingshan.zhu@intel.com>
-> Signed-off-by: Bie Tiwei <tiwei.bie@intel.com>
-> Signed-off-by: Wang Xiao <xiao.w.wang@intel.com>
-> Signed-off-by: Jason Wang <jasowang@redhat.com>
+The Northwest Logic MIPI DSI IP core can be found in NXPs i.MX8 SoCs.
 
-> +
-> +#define IFCVF_QUEUE_ALIGNMENT  PAGE_SIZE
-> +#define IFCVF_QUEUE_MAX                32768
-> +static u16 ifcvf_vdpa_get_vq_align(struct vdpa_device *vdpa_dev)
-> +{
-> +       return IFCVF_QUEUE_ALIGNMENT;
-> +}
+Signed-off-by: Guido Günther <agx@sigxcpu.org>
+Tested-by: Robert Chiras <robert.chiras@nxp.com>
+Reviewed-by: Rob Herring <robh@kernel.org>
+Acked-by: Sam Ravnborg <sam@ravnborg.org>
+Reviewed-by: Fabio Estevam <festevam@gmail.com>
+---
+ .../bindings/display/bridge/nwl-dsi.yaml      | 226 ++++++++++++++++++
+ 1 file changed, 226 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/display/bridge/nwl-dsi.yaml
 
-This fails to build on arm64 with 64kb page size (found in linux-next):
+diff --git a/Documentation/devicetree/bindings/display/bridge/nwl-dsi.yaml b/Documentation/devicetree/bindings/display/bridge/nwl-dsi.yaml
+new file mode 100644
+index 000000000000..8aff2d68fc33
+--- /dev/null
++++ b/Documentation/devicetree/bindings/display/bridge/nwl-dsi.yaml
+@@ -0,0 +1,226 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/display/bridge/nwl-dsi.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Northwest Logic MIPI-DSI controller on i.MX SoCs
++
++maintainers:
++  - Guido Gúnther <agx@sigxcpu.org>
++  - Robert Chiras <robert.chiras@nxp.com>
++
++description: |
++  NWL MIPI-DSI host controller found on i.MX8 platforms. This is a dsi bridge for
++  the SOCs NWL MIPI-DSI host controller.
++
++properties:
++  compatible:
++    const: fsl,imx8mq-nwl-dsi
++
++  reg:
++    maxItems: 1
++
++  interrupts:
++    maxItems: 1
++
++  '#address-cells':
++    const: 1
++
++  '#size-cells':
++    const: 0
++
++  clocks:
++    items:
++      - description: DSI core clock
++      - description: RX_ESC clock (used in escape mode)
++      - description: TX_ESC clock (used in escape mode)
++      - description: PHY_REF clock
++      - description: LCDIF clock
++
++  clock-names:
++    items:
++      - const: core
++      - const: rx_esc
++      - const: tx_esc
++      - const: phy_ref
++      - const: lcdif
++
++  mux-controls:
++    description:
++      mux controller node to use for operating the input mux
++
++  phys:
++    maxItems: 1
++    description:
++      A phandle to the phy module representing the DPHY
++
++  phy-names:
++    items:
++      - const: dphy
++
++  power-domains:
++    maxItems: 1
++
++  resets:
++    items:
++      - description: dsi byte reset line
++      - description: dsi dpi reset line
++      - description: dsi esc reset line
++      - description: dsi pclk reset line
++
++  reset-names:
++    items:
++      - const: byte
++      - const: dpi
++      - const: esc
++      - const: pclk
++
++  ports:
++    type: object
++    description:
++      A node containing DSI input & output port nodes with endpoint
++      definitions as documented in
++      Documentation/devicetree/bindings/graph.txt.
++    properties:
++      port@0:
++        type: object
++        description:
++          Input port node to receive pixel data from the
++          display controller. Exactly one endpoint must be
++          specified.
++        properties:
++          '#address-cells':
++            const: 1
++
++          '#size-cells':
++            const: 0
++
++          endpoint@0:
++            description: sub-node describing the input from LCDIF
++            type: object
++
++          endpoint@1:
++            description: sub-node describing the input from DCSS
++            type: object
++
++          reg:
++            const: 0
++
++        required:
++          - '#address-cells'
++          - '#size-cells'
++          - reg
++
++        oneOf:
++          - required:
++              - endpoint@0
++          - required:
++              - endpoint@1
++
++        additionalProperties: false
++
++      port@1:
++        type: object
++        description:
++          DSI output port node to the panel or the next bridge
++          in the chain
++
++      '#address-cells':
++        const: 1
++
++      '#size-cells':
++        const: 0
++
++    required:
++      - '#address-cells'
++      - '#size-cells'
++      - port@0
++      - port@1
++
++    additionalProperties: false
++
++patternProperties:
++  "^panel@[0-9]+$":
++    type: object
++
++required:
++  - '#address-cells'
++  - '#size-cells'
++  - clock-names
++  - clocks
++  - compatible
++  - interrupts
++  - mux-controls
++  - phy-names
++  - phys
++  - ports
++  - reg
++  - reset-names
++  - resets
++
++additionalProperties: false
++
++examples:
++ - |
++
++   #include <dt-bindings/clock/imx8mq-clock.h>
++   #include <dt-bindings/interrupt-controller/arm-gic.h>
++   #include <dt-bindings/reset/imx8mq-reset.h>
++
++   mipi_dsi: mipi_dsi@30a00000 {
++              #address-cells = <1>;
++              #size-cells = <0>;
++              compatible = "fsl,imx8mq-nwl-dsi";
++              reg = <0x30A00000 0x300>;
++              clocks = <&clk IMX8MQ_CLK_DSI_CORE>,
++                       <&clk IMX8MQ_CLK_DSI_AHB>,
++                       <&clk IMX8MQ_CLK_DSI_IPG_DIV>,
++                       <&clk IMX8MQ_CLK_DSI_PHY_REF>,
++                       <&clk IMX8MQ_CLK_LCDIF_PIXEL>;
++              clock-names = "core", "rx_esc", "tx_esc", "phy_ref", "lcdif";
++              interrupts = <GIC_SPI 34 IRQ_TYPE_LEVEL_HIGH>;
++              mux-controls = <&mux 0>;
++              power-domains = <&pgc_mipi>;
++              resets = <&src IMX8MQ_RESET_MIPI_DSI_RESET_BYTE_N>,
++                       <&src IMX8MQ_RESET_MIPI_DSI_DPI_RESET_N>,
++                       <&src IMX8MQ_RESET_MIPI_DSI_ESC_RESET_N>,
++                       <&src IMX8MQ_RESET_MIPI_DSI_PCLK_RESET_N>;
++              reset-names = "byte", "dpi", "esc", "pclk";
++              phys = <&dphy>;
++              phy-names = "dphy";
++
++              panel@0 {
++                      #address-cells = <1>;
++                      #size-cells = <0>;
++                      compatible = "rocktech,jh057n00900";
++                      reg = <0>;
++                      port@0 {
++                           reg = <0>;
++                           panel_in: endpoint {
++                                     remote-endpoint = <&mipi_dsi_out>;
++                           };
++                      };
++              };
++
++              ports {
++                    #address-cells = <1>;
++                    #size-cells = <0>;
++
++                    port@0 {
++                           #size-cells = <0>;
++                           #address-cells = <1>;
++                           reg = <0>;
++                           mipi_dsi_in: endpoint@0 {
++                                        reg = <0>;
++                                        remote-endpoint = <&lcdif_mipi_dsi>;
++                           };
++                    };
++                    port@1 {
++                           reg = <1>;
++                           mipi_dsi_out: endpoint {
++                                         remote-endpoint = <&panel_in>;
++                           };
++                    };
++              };
++      };
+-- 
+2.23.0
 
-/drivers/vdpa/ifcvf/ifcvf_main.c: In function 'ifcvf_vdpa_get_vq_align':
-arch/arm64/include/asm/page-def.h:17:20: error: conversion from 'long
-unsigned int' to 'u16' {aka 'short unsigned int'} changes value from
-'65536' to '0' [-Werror=overflow]
-   17 | #define PAGE_SIZE  (_AC(1, UL) << PAGE_SHIFT)
-      |                    ^
-drivers/vdpa/ifcvf/ifcvf_base.h:37:31: note: in expansion of macro 'PAGE_SIZE'
-   37 | #define IFCVF_QUEUE_ALIGNMENT PAGE_SIZE
-      |                               ^~~~~~~~~
-drivers/vdpa/ifcvf/ifcvf_main.c:231:9: note: in expansion of macro
-'IFCVF_QUEUE_ALIGNMENT'
-  231 |  return IFCVF_QUEUE_ALIGNMENT;
-      |         ^~~~~~~~~~~~~~~~~~~~~
-
-It's probably good enough to just not allow the driver to be built in that
-configuration as it's fairly rare but unfortunately there is no simple Kconfig
-symbol for it.
-
-In a similar driver, we did
-
-config VMXNET3
-        tristate "VMware VMXNET3 ethernet driver"
-        depends on PCI && INET
-        depends on !(PAGE_SIZE_64KB || ARM64_64K_PAGES || \
-                     IA64_PAGE_SIZE_64KB || MICROBLAZE_64K_PAGES || \
-                     PARISC_PAGE_SIZE_64KB || PPC_64K_PAGES)
-
-I think we should probably make PAGE_SIZE_64KB a global symbol
-in arch/Kconfig and have it selected by the other symbols so drivers
-like yours can add a dependency for it.
-
-         Arnd
