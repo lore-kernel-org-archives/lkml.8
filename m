@@ -2,118 +2,98 @@ Return-Path: <SRS0=n+Ub=5Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66E86C2D0EA
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 09:27:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66863C2BB54
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 09:30:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2E0E520B1F
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 09:27:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586424444;
-	bh=HatT2IdEBwyftwxp9Qj7Ct8wNjI44BrpEB0SS+p2Wvc=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=Y7DBGs77ESUEHxK69Tk5H5V4SNk5+nF1aQHMhip5CtBjymBZ/1xkGp8zu+fyb+sjv
-	 Lq98h2IZelYfMMJeAe2yLlcKJjC68S45o1qZqyz+mfiiaQ9mYT+h3ahfd2hpYX9FYG
-	 LOF/F4ffHVLhHWAm4QAVZupO5DwuwNWWc5p9wTXc=
+	by mail.kernel.org (Postfix) with ESMTP id 3BDE52087E
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 09:30:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726620AbgDIJ1W (ORCPT
+        id S1726621AbgDIJaj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Apr 2020 05:27:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43082 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725783AbgDIJ1W (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Apr 2020 05:27:22 -0400
-Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1A3BD2084D;
-        Thu,  9 Apr 2020 09:27:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586424442;
-        bh=HatT2IdEBwyftwxp9Qj7Ct8wNjI44BrpEB0SS+p2Wvc=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=TLFe7cjISdDfygUXXw4Y6MFcf5o9XaOAqzIq9ONFlagDTpgXEeRc4gFBW9ptsjv8x
-         UIhFV3rYUZtIKwNrwy/3GJGODr+7nxupmFqxAr1HTXRv+sT1RuhlWvZE+Zo4yhYD0g
-         zGLj+0PWfupBIrp+Xl2z4GJR5YYgTjYoeoFrTpQA=
-Received: from 78.163-31-62.static.virginmediabusiness.co.uk ([62.31.163.78] helo=why)
-        by disco-boy.misterjones.org with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <maz@kernel.org>)
-        id 1jMTSy-001rhe-AC; Thu, 09 Apr 2020 10:27:20 +0100
-Date:   Thu, 9 Apr 2020 10:27:18 +0100
-From:   Marc Zyngier <maz@kernel.org>
-To:     Zenghui Yu <yuzenghui@huawei.com>
-Cc:     <linux-kernel@vger.kernel.org>, <tglx@linutronix.de>,
-        <jason@lakedaemon.net>, <wuyun.wu@huawei.com>,
-        <wanghaibin.wang@huawei.com>
-Subject: Re: [PATCH] irqchip/mbigen: Free msi_desc on device teardown
-Message-ID: <20200409102718.73875cd9@why>
-In-Reply-To: <20200408114352.1604-1-yuzenghui@huawei.com>
-References: <20200408114352.1604-1-yuzenghui@huawei.com>
-Organization: Approximate
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Thu, 9 Apr 2020 05:30:39 -0400
+Received: from mout.kundenserver.de ([212.227.126.131]:42561 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725783AbgDIJaj (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Apr 2020 05:30:39 -0400
+Received: from mail-qt1-f177.google.com ([209.85.160.177]) by
+ mrelayeu.kundenserver.de (mreue010 [212.227.15.129]) with ESMTPSA (Nemesis)
+ id 1Mi2eP-1irpap1Lwv-00e4zx; Thu, 09 Apr 2020 11:30:38 +0200
+Received: by mail-qt1-f177.google.com with SMTP id 14so2252573qtp.1;
+        Thu, 09 Apr 2020 02:30:38 -0700 (PDT)
+X-Gm-Message-State: AGi0PuZ2b5Pb7xTzUT4FnAA6YSZFxp7FzTFlMgLv4RorS8vIQCwortg4
+        +e/Bb3u+WTEoBCcCAn3EKGODOqRqXJ9WfSXNpgI=
+X-Google-Smtp-Source: APiQypLeWInEsRV0WKrdMUsAMwL5UXK2NYRqfW/x4jIjhbwpXqQB+5nF1GJW4mtRdXGTaGysVemV3g16soBD0GqaIYQ=
+X-Received: by 2002:aed:3b4c:: with SMTP id q12mr10945684qte.18.1586424637129;
+ Thu, 09 Apr 2020 02:30:37 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 62.31.163.78
-X-SA-Exim-Rcpt-To: yuzenghui@huawei.com, linux-kernel@vger.kernel.org, tglx@linutronix.de, jason@lakedaemon.net, wuyun.wu@huawei.com, wanghaibin.wang@huawei.com
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+References: <20200408162718.4004527-1-arnd@arndb.de> <5E8E7E0D.4090702@hisilicon.com>
+In-Reply-To: <5E8E7E0D.4090702@hisilicon.com>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Thu, 9 Apr 2020 11:30:21 +0200
+X-Gmail-Original-Message-ID: <CAK8P3a2U-fiDD34kKUVx-KCV3Vq9TtrA6nDkFc1tS_yVnMKa7Q@mail.gmail.com>
+Message-ID: <CAK8P3a2U-fiDD34kKUVx-KCV3Vq9TtrA6nDkFc1tS_yVnMKa7Q@mail.gmail.com>
+Subject: Re: [PATCH] crypto: hisilicon: add more dependencies
+To:     Zhou Wang <wangzhou1@hisilicon.com>
+Cc:     Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S. Miller" <davem@davemloft.net>,
+        Hongbo Yao <yaohongbo@huawei.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Zaibo Xu <xuzaibo@huawei.com>, Hao Fang <fanghao11@huawei.com>,
+        Eric Biggers <ebiggers@google.com>,
+        Mao Wenan <maowenan@huawei.com>,
+        "open list:HARDWARE RANDOM NUMBER GENERATOR CORE" 
+        <linux-crypto@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:ipoSbm2snF0HZUjDUsz1P2IdKQmaRjdB024Ocb/rGc9PdWCpxSn
+ DY5ofMqGhWn+jGdAhTZ2ljzOE0ar/JiP0xOqq8KUNsMtsPOl9f1tZ9narkDRYOS/KxGbKi1
+ Xjr1JjikPGZ8C9xc5Qd/+bA7MZRty9Vd1qUGnPmbhuM0NkeAu1oi2ItJauKiN/+Kt2ZJBmV
+ Y7hsJfegNEVWvob7OJEsw==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:3XunXxijaSg=:Nq7s6FrVrWhZ+/i09uiiqn
+ 2PhFFHbwPb73ARUSRxckjXSCxYNs1rI81Ez2Xylxoath6D79mvPROFjpjXKqMn5gEoiCh34Uj
+ 10qUoKY40SxfjLOOlp97MYdc9l0+ZHYi0z06LZ/ZDEd+9ICJRqJ0MhxM+tomTWTNHxNmY6ky5
+ rSYEKrYo54LrsDo63gDoKcKpFEfrZ79wFTB0b5KmfEzA3/GMG+wpiwVoRGysINlXSbHXczglb
+ GL/vg/nESedypEeusS0ME+KHQbGwddFHyMrBsWk0VxyTUoVOVPe24fpncca26qpv47Hd8be0S
+ aZlcMXUxMTCdkxhe+3fgLRIwMVyTC7+mGMEE+cfMHCHFRz1HZc9rJVReh2Qe7puh6Q5wi76VS
+ wciUBm6FxiHGvpUF5PQkk0QRMYjsSLI8RpYP7K6OHVerAG5KLaPKjDR+sWU9PdoN3SiNnB7GQ
+ uU2+KQq0KG6Xf02ULdu0Ch5Erc6YyFyNGcD0kC9TSd8ixlYRsjb2lgAevfvuRHIkEW/5bvhGw
+ XJam54XQKxhQawRkP6l3FCeSQjFbS+RQTj+SIOA1zweur/Fed2+5ybHgx84KSNF2GT3h4DbcD
+ z2Ei3HaEHw6eXkhItan7trxwpa+8An+5GthYWyCec3mRwW7BDqYKkvZrN24fB7E/oQJPTqYPD
+ 0RS2Te/caxIz/mrSG5AstQ2KRWJaUqxkM4f0RyfuVrk9mjHg8KgZ3RtL3NtEl7LQhy5tM8NKH
+ oab/BN+QQ3cGnewHupi0VB9SYZrc5raElYsOWcRWStmr415+JPBSP505iukXnNuOGGoDQgff4
+ epNzbjPXSIfpH23cr7JInrfFI3XxcFzKiysUH7CHybmMEr3AbI=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 8 Apr 2020 19:43:52 +0800
-Zenghui Yu <yuzenghui@huawei.com> wrote:
+On Thu, Apr 9, 2020 at 3:45 AM Zhou Wang <wangzhou1@hisilicon.com> wrote:
+>
+> On 2020/4/9 0:27, Arnd Bergmann wrote:
+> > The added dependencies must be applied recursively to
+> > other modules that select CRYPTO_DEV_HISI_QM, to avoid
+> > running into the same problem again:
+> >
+> > WARNING: unmet direct dependencies detected for CRYPTO_DEV_HISI_QM
+> >   Depends on [m]: CRYPTO [=y] && CRYPTO_HW [=y] && (ARM64 [=y] || COMPILE_TEST [=y]) && PCI [=y] && PCI_MSI [=y] && (UACCE [=m] || UACCE [=m]=n)
+> >   Selected by [y]:
+> >   - CRYPTO_DEV_HISI_SEC2 [=y] && CRYPTO [=y] && CRYPTO_HW [=y] && PCI [=y] && PCI_MSI [=y] && (ARM64 [=y] || COMPILE_TEST [=y] && 64BIT [=y])
+> >   - CRYPTO_DEV_HISI_HPRE [=y] && CRYPTO [=y] && CRYPTO_HW [=y] && PCI [=y] && PCI_MSI [=y] && (ARM64 [=y] || COMPILE_TEST [=y] && 64BIT [=y])
+> > ld: drivers/crypto/hisilicon/qm.o: in function `hisi_qm_uninit': qm.c:(.text+0x23b8): undefined reference to `uacce_remove'
+> >
+> > Fixes: 47c16b449921 ("crypto: hisilicon - qm depends on UACCE")
+> > Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> > ---
+>
+> Seems we already have a fix: https://lkml.org/lkml/2020/3/30/173 with your reviewed-by :)
 
-Hi Zenghui,
+Ah, of course. I even remembered that patch when I saw the problem in mainline,
+but for some reason assumed it was yet another instance of the same bug, rather
+than a patch that had I was just missing in my tree.
 
-> Using irq_domain_free_irqs_common() on the irqdomain free path will
-> leave the MSI descriptor unfreed when platform devices get removed.
-> Properly free it by MSI domain free function.
-> 
-> Signed-off-by: Zenghui Yu <yuzenghui@huawei.com>
-> ---
->  drivers/irqchip/irq-mbigen.c | 8 +++++++-
->  1 file changed, 7 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/irqchip/irq-mbigen.c b/drivers/irqchip/irq-mbigen.c
-> index 6b566bba263b..ff7627b57772 100644
-> --- a/drivers/irqchip/irq-mbigen.c
-> +++ b/drivers/irqchip/irq-mbigen.c
-> @@ -220,10 +220,16 @@ static int mbigen_irq_domain_alloc(struct irq_domain *domain,
->  	return 0;
->  }
->  
-> +static void mbigen_irq_domain_free(struct irq_domain *domain, unsigned int virq,
-> +				   unsigned int nr_irqs)
-> +{
-> +	platform_msi_domain_free(domain, virq, nr_irqs);
-> +}
-> +
->  static const struct irq_domain_ops mbigen_domain_ops = {
->  	.translate	= mbigen_domain_translate,
->  	.alloc		= mbigen_irq_domain_alloc,
-> -	.free		= irq_domain_free_irqs_common,
-> +	.free		= mbigen_irq_domain_free,
->  };
->  
->  static int mbigen_of_create_domain(struct platform_device *pdev,
-
-Should this deserve a:
-
-Fixes: 9650c60ebfec0 ("irqchip/mbigen: Create irq domain for each
-mbigen device")
-
-Otherwise queued for post -rc1.
-
-Thanks,
-
-	M.
--- 
-Jazz is not dead. It just smells funny...
+      Arnd
