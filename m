@@ -2,157 +2,124 @@ Return-Path: <SRS0=n+Ub=5Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF15BC2BB85
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 20:05:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45284C2BB86
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 20:06:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7BEEF20730
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 20:05:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="D84IgnWF"
+	by mail.kernel.org (Postfix) with ESMTP id 161B220730
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 20:06:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1586462819;
+	bh=nSw3fUKbe9A+uOfnXkK+h2BbfLi5hDRgEXe0czQ71ug=;
+	h=In-Reply-To:References:Subject:From:Cc:To:Date:List-ID:From;
+	b=dqkJox1V+2PCD7LT+0xtrBJS+3jvX6LApPyQWh0oepERgJxUeM3FMymqdZF601OQo
+	 KNEIRjHEjXLuSAXAtXpH+7x9cOziPVonQF0B56YIGrV0H4JRuo4BD4EvP/5hXZ4Zgm
+	 n6LaowjSun2OyNgOOu8kzoNdyO2q+CKuB1lBeZTE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726979AbgDIUFr (ORCPT
+        id S1727028AbgDIUG5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Apr 2020 16:05:47 -0400
-Received: from mail-il1-f195.google.com ([209.85.166.195]:37486 "EHLO
-        mail-il1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726638AbgDIUFq (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Apr 2020 16:05:46 -0400
-Received: by mail-il1-f195.google.com with SMTP id a6so931796ilr.4;
-        Thu, 09 Apr 2020 13:05:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=eY4NXfWdxU2CUwlEll88egn0KhohAKVRNqZHn1rtHs0=;
-        b=D84IgnWFav8SFYOz9KRCkia4lQVBPZRp0les6nxG/JqT03joqeJisIs/NINduHOlIS
-         Byot5Jb6lZjWzexapLrYDGroa/W6CZDSMoiubF2FbFqqMllFy+e3/WsmCGxijA4h2HAD
-         Z/n02O0025+PtcL93fQHrkxUjMPl48eAqQXI+ANwU76p4uruERr7nQI3kKS79MRARoQN
-         4AAGPL5iJ7i2agq8UeSdtkwEwphwUp7LpxIz3Lo3UoftnMKSxBIxM8bl7S+vPvw5yDzG
-         +5UhzR2Ceyo3xyD94QzpIjGNRRl2dd4GLxLddZO5uO/RALjxskbw7R6xQIj6vwwnJ7un
-         YOWQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=eY4NXfWdxU2CUwlEll88egn0KhohAKVRNqZHn1rtHs0=;
-        b=gzZ6kaT281/gdN7rh/V/9A6CTtc5F7eG+LLL36aXyrhhWCqmGubUca4eC3d9/rUVGM
-         jDmZaezmVhkywMkC+7nJyFtVaYRQovPt+Muw9o7xNLqhLVDu4kSfUmUhDTLPJstexVuI
-         q5jrTeJoWvfLiLOIpfeh14C/dOK3xgbxNA81qsE1Ld2NOPSTtsesnKBhXIUuk3qGqpTl
-         FWfZkDE+O8S8DwNKqDsgDmj243L0nBOpQ4hnB/0jAbMmJ0Vq6ce6gooGzjuv+OtG+RG4
-         8HrJl5/uBfUpWjVhTKGhE82C2Y9ypmub7XonkUvIfOjE2+TBKL9KOSEvjVrnxIWiLTgJ
-         MMWQ==
-X-Gm-Message-State: AGi0PuY+u2or/R+gW25NW/N5JjRtc/O+s1Kp7sG78SlGBC38WBSu8pX3
-        v3f7slthZasPSwvoj6IFPvM/LxzqOudRxWJ19g==
-X-Google-Smtp-Source: APiQypICxnCx+0c7cm22qQLPOolW5rvfQfgQHaWxlvxF+vJF9GXwvBC7P76mDWFhkSXFGlLHH6n0/6+7it/HkVP0GOQ=
-X-Received: by 2002:a92:d28a:: with SMTP id p10mr1456675ilp.191.1586462744487;
- Thu, 09 Apr 2020 13:05:44 -0700 (PDT)
+        Thu, 9 Apr 2020 16:06:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37700 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726819AbgDIUG4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Apr 2020 16:06:56 -0400
+Received: from kernel.org (unknown [104.132.0.74])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3D1D220730;
+        Thu,  9 Apr 2020 20:06:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1586462816;
+        bh=nSw3fUKbe9A+uOfnXkK+h2BbfLi5hDRgEXe0czQ71ug=;
+        h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
+        b=1Qpn+b1agEH8hbIik8e1kXczOfzvnMN7DD+aM1LL1vgnk/8w39IGwoth91wsEUfhc
+         5GA3RvVynClZXrH/t+ZIgPuxUMzYONBaTfY+QoiDjavW8C5yHTwz8bijbNs9L+NMU3
+         SbNPS9Z3j+ooo8OWmp7SPL7eXB8mEwyHxqJjIh3s=
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-References: <20200409130434.6736-1-ardb@kernel.org> <20200409130434.6736-4-ardb@kernel.org>
-In-Reply-To: <20200409130434.6736-4-ardb@kernel.org>
-From:   Brian Gerst <brgerst@gmail.com>
-Date:   Thu, 9 Apr 2020 16:05:33 -0400
-Message-ID: <CAMzpN2gJWwVun1Kp6vGuza9LM5KpB=0EwsP8x8eOJQuDGh38Hg@mail.gmail.com>
-Subject: Re: [PATCH 3/9] efi/x86: Move efi stub globals from .bss to .data
-To:     Ard Biesheuvel <ardb@kernel.org>
-Cc:     linux-efi@vger.kernel.org, Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Arvind Sankar <nivedita@alum.mit.edu>,
-        Borislav Petkov <bp@suse.de>,
-        Colin Ian King <colin.king@canonical.com>,
-        Gary Lin <glin@suse.com>, Jiri Slaby <jslaby@suse.cz>,
-        Sergey Shatunov <me@prok.pw>, Takashi Iwai <tiwai@suse.de>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <1585338485-31820-2-git-send-email-tdas@codeaurora.org>
+References: <1585338485-31820-1-git-send-email-tdas@codeaurora.org> <1585338485-31820-2-git-send-email-tdas@codeaurora.org>
+Subject: Re: [PATCH v1 1/4] clk: qcom: gdsc: Add support to enable retention of GSDCR
+From:   Stephen Boyd <sboyd@kernel.org>
+Cc:     David Brown <david.brown@linaro.org>,
+        Rajendra Nayak <rnayak@codeaurora.org>,
+        linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Andy Gross <agross@kernel.org>, devicetree@vger.kernel.org,
+        robh@kernel.org, robh+dt@kernel.org,
+        Taniya Das <tdas@codeaurora.org>
+To:     Michael Turquette <mturquette@baylibre.com>,
+        Taniya Das <tdas@codeaurora.org>
+Date:   Thu, 09 Apr 2020 13:06:55 -0700
+Message-ID: <158646281555.77611.13094729241703720869@swboyd.mtv.corp.google.com>
+User-Agent: alot/0.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 9, 2020 at 9:07 AM Ard Biesheuvel <ardb@kernel.org> wrote:
->
-> From: Arvind Sankar <nivedita@alum.mit.edu>
->
-> Commit
->
->   3ee372ccce4d ("x86/boot/compressed/64: Remove .bss/.pgtable from bzImage")
->
-> removed the .bss section from the bzImage.
->
-> However, while a PE loader is required to zero-initialize the .bss
-> section before calling the PE entry point, the EFI handover protocol
-> does not currently document any requirement that .bss be initialized by
-> the bootloader prior to calling the handover entry.
->
-> When systemd-boot is used to boot a unified kernel image [1], the image
-> is constructed by embedding the bzImage as a .linux section in a PE
-> executable that contains a small stub loader from systemd together with
-> additional sections and potentially an initrd. As the .bss section
-> within the bzImage is no longer explicitly present as part of the file,
-> it is not initialized before calling the EFI handover entry.
-> Furthermore, as the size of the embedded .linux section is only the size
-> of the bzImage file itself, the .bss section's memory may not even have
-> been allocated.
->
-> In particular, this can result in efi_disable_pci_dma being true even
-> when it was not specified via the command line or configuration option,
-> which in turn causes crashes while booting on some systems.
->
-> To avoid issues, place all EFI stub global variables into the .data
-> section instead of .bss. As of this writing, only boolean flags for a
-> few command line arguments and the sys_table pointer were in .bss and
-> will now move into the .data section.
->
-> [1] https://systemd.io/BOOT_LOADER_SPECIFICATION/#type-2-efi-unified-kernel-images
->
-> Signed-off-by: Arvind Sankar <nivedita@alum.mit.edu>
-> Reported-by: Sergey Shatunov <me@prok.pw>
-> Fixes: 3ee372ccce4d ("x86/boot/compressed/64: Remove .bss/.pgtable from bzImage")
-> Link: https://lore.kernel.org/r/20200406180614.429454-1-nivedita@alum.mit.edu
-> Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
-> ---
->  drivers/firmware/efi/libstub/efistub.h  | 2 +-
->  drivers/firmware/efi/libstub/x86-stub.c | 2 +-
->  2 files changed, 2 insertions(+), 2 deletions(-)
->
-> diff --git a/drivers/firmware/efi/libstub/efistub.h b/drivers/firmware/efi/libstub/efistub.h
-> index cc90a748bcf0..67d26949fd26 100644
-> --- a/drivers/firmware/efi/libstub/efistub.h
-> +++ b/drivers/firmware/efi/libstub/efistub.h
-> @@ -25,7 +25,7 @@
->  #define EFI_ALLOC_ALIGN                EFI_PAGE_SIZE
->  #endif
->
-> -#ifdef CONFIG_ARM
-> +#if defined(CONFIG_ARM) || defined(CONFIG_X86)
->  #define __efistub_global       __section(.data)
->  #else
->  #define __efistub_global
-> diff --git a/drivers/firmware/efi/libstub/x86-stub.c b/drivers/firmware/efi/libstub/x86-stub.c
-> index e02ea51273ff..867a57e28980 100644
-> --- a/drivers/firmware/efi/libstub/x86-stub.c
-> +++ b/drivers/firmware/efi/libstub/x86-stub.c
-> @@ -20,7 +20,7 @@
->  /* Maximum physical address for 64-bit kernel with 4-level paging */
->  #define MAXMEM_X86_64_4LEVEL (1ull << 46)
->
-> -static efi_system_table_t *sys_table;
-> +static efi_system_table_t *sys_table __efistub_global;
->  extern const bool efi_is64;
->  extern u32 image_offset;
->
-> --
-> 2.17.1
->
+Quoting Taniya Das (2020-03-27 12:48:02)
+> diff --git a/drivers/clk/qcom/gdsc.c b/drivers/clk/qcom/gdsc.c
+> index a250f59..cfe908f 100644
+> --- a/drivers/clk/qcom/gdsc.c
+> +++ b/drivers/clk/qcom/gdsc.c
+> @@ -28,6 +28,7 @@
+>  /* CFG_GDSCR */
+>  #define GDSC_POWER_UP_COMPLETE         BIT(16)
+>  #define GDSC_POWER_DOWN_COMPLETE       BIT(15)
+> +#define GDSC_RETAIN_FF_ENABLE          BIT(11)
+>  #define CFG_GDSCR_OFFSET               0x4
+>=20
+>  /* Wait 2^n CXO cycles between all states. Here, n=3D2 (4 cycles). */
+> @@ -202,6 +203,14 @@ static inline void gdsc_assert_reset_aon(struct gdsc=
+ *sc)
+>         regmap_update_bits(sc->regmap, sc->clamp_io_ctrl,
+>                            GMEM_RESET_MASK, 0);
+>  }
+> +
+> +static inline void gdsc_retain_ff_on(struct gdsc *sc)
 
-Can we use the -fno-zero-initialized-in-bss compiler flag instead of
-explicitly marking global variables?
+Drop inline please.
 
---
-Brian Gerst
+> +{
+> +       u32 mask =3D RETAIN_FF_ENABLE;
+
+Is this supposed to be GDSC_RETAIN_FF_ENABLE?
+
+> +
+> +       regmap_update_bits(sc->regmap, sc->gdscr, mask, mask);
+> +}
+> +
+>  static int gdsc_enable(struct generic_pm_domain *domain)
+>  {
+>         struct gdsc *sc =3D domain_to_gdsc(domain);
+> @@ -254,6 +263,9 @@ static int gdsc_enable(struct generic_pm_domain *doma=
+in)
+>                 udelay(1);
+>         }
+>=20
+> +       if (sc->flags & RETAIN_FF_ENABLE)
+> +               gdsc_retain_ff_on(sc);
+> +
+>         return 0;
+>  }
+>=20
+> diff --git a/drivers/clk/qcom/gdsc.h b/drivers/clk/qcom/gdsc.h
+> index 64cdc8c..8604d44 100644
+> --- a/drivers/clk/qcom/gdsc.h
+> +++ b/drivers/clk/qcom/gdsc.h
+> @@ -49,6 +49,7 @@ struct gdsc {
+>  #define AON_RESET      BIT(4)
+>  #define POLL_CFG_GDSCR BIT(5)
+>  #define ALWAYS_ON      BIT(6)
+> +#define RETAIN_FF_ENABLE       BIT(7)
+
+This is a flag, not a register bit presumably.
+
+>         struct reset_controller_dev     *rcdev;
+>         unsigned int                    *resets;
+>         unsigned int                    reset_count;
