@@ -2,148 +2,151 @@ Return-Path: <SRS0=n+Ub=5Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC189C2BA2B
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 10:14:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE694C2BB86
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 10:15:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9E2E92074F
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 10:14:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B513120771
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 10:15:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="G2eSLHEm"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iQL+Gq3Q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726641AbgDIKOp (ORCPT
+        id S1726651AbgDIKPH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Apr 2020 06:14:45 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:36351 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725783AbgDIKOo (ORCPT
+        Thu, 9 Apr 2020 06:15:07 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:43693 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725783AbgDIKPG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Apr 2020 06:14:44 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1586427284;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=2CTnIFk7SlnjgfgjAutkIHAGc8WK5Yz+a7QSuHJlIns=;
-        b=G2eSLHEmm/VJa3xLaUkPBNBR1SfOLNBkkX3Nv6j1MiEj9l3XUqt0zJTgHXjYig76r9ygMQ
-        fO2mjTeastPzNad4uFcl8MiYRPEa9ZgbvWTkfGqWxk6BKP5fTMUZYqunvHqUekrSGHhWXA
-        lM+aZxmRw7kDNUtbXIeDigybeLQhbL4=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-211-08xiuF_KNYOglmQhzs9DPA-1; Thu, 09 Apr 2020 06:14:40 -0400
-X-MC-Unique: 08xiuF_KNYOglmQhzs9DPA-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id A787B149C0;
-        Thu,  9 Apr 2020 10:14:38 +0000 (UTC)
-Received: from [10.36.115.53] (ovpn-115-53.ams2.redhat.com [10.36.115.53])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 231CAD766F;
-        Thu,  9 Apr 2020 10:14:32 +0000 (UTC)
-Subject: Re: [PATCH v11 08/10] iommu/vt-d: Cache virtual command capability
- register
-To:     Jacob Pan <jacob.jun.pan@linux.intel.com>,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        iommu@lists.linux-foundation.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        Joerg Roedel <joro@8bytes.org>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Jean-Philippe Brucker <jean-philippe@linaro.com>
-Cc:     Yi Liu <yi.l.liu@intel.com>, "Tian, Kevin" <kevin.tian@intel.com>,
-        Raj Ashok <ashok.raj@intel.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Jonathan Cameron <jic23@kernel.org>
-References: <1585939334-21396-1-git-send-email-jacob.jun.pan@linux.intel.com>
- <1585939334-21396-9-git-send-email-jacob.jun.pan@linux.intel.com>
-From:   Auger Eric <eric.auger@redhat.com>
-Message-ID: <43e7452c-dea8-934c-105e-05798cb1d225@redhat.com>
-Date:   Thu, 9 Apr 2020 12:14:31 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.4.0
+        Thu, 9 Apr 2020 06:15:06 -0400
+Received: by mail-ot1-f67.google.com with SMTP id n25so7286341otr.10;
+        Thu, 09 Apr 2020 03:15:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=/NSZZSKSu5WJt1RNoef9dBjCn8fIK10WqZ6WGC2+h/M=;
+        b=iQL+Gq3QA9xSB0G77RYT1DZl9zxaKwiQKV7PF57j5DmP4f7Z+K389I+vbjLtPG0pyw
+         TsgkfIqwbahrRJXW8+QzFOO4x6LTG5trpY7ZUktLi8S7PL9Ekma4X2V2Cx+W6nUc/hBP
+         o8WvUlKV5Pm80i7lOPwWp7H6C8ljw9sMS24M3L83ZVjo8e/XavF7iDhLPZJuU6P8JADJ
+         ROC17jM7JvA/1li4pUqoH2bNUu+g3zK4qs0i8GBIPfm6oJBciuxGe5xjvSUfcOJB1XQF
+         ZnBjsViCtVXvHYEeBNexwrm34bN3C5mE/kI0lc084QX8A9v2+w7IAa67TUTcdks1+NHE
+         UKFA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=/NSZZSKSu5WJt1RNoef9dBjCn8fIK10WqZ6WGC2+h/M=;
+        b=pw90wKgMwoIxtYdUcUHsBgOAwcvDYSe4Wr6vnRAAhDL6zesqJpmqf+/+g9xBUR5qwt
+         97ot9VL4Djn4C//HuMPV/+CJrThTwyaFJDTSbSWEfHptCSN6UZmI+crPPLoN00ZWQE2b
+         OTSI8Lf/ge3dKJsXk+3UL9YgIQjpkpOaN7AxF5+f2i8uAgPN+wdBkd6Br8FPrDX9Wrjv
+         JamGcXzHyB8uaw+Mu/9woybBzxAUO30G8e0m1wW1CiNBfFQTiM5D18YapWKB/e4PUD8p
+         flGhkGSX0LgINmYRh7lTChuJjN/mW9zr1f2EN6WQr8f3yiaKIsJ8odDxMb4Dvh/C6foY
+         tQng==
+X-Gm-Message-State: AGi0PuYt0N/PZ1sbSRhXPL2m1XLUcDJwvgPfijtuhR2AQhMtWkkDYYdi
+        obZ0487HEJnrCQNzxWt+BTi2C+PQEH0xzGlzXHE=
+X-Google-Smtp-Source: APiQypJZ7ipa4bMCkW9mI2xrPpPXDZ+7ffNf67WIS2NRxz3lWs1SiJCULWWWchWx+Is+aY4H+ame5VIgN7uLwHuVtno=
+X-Received: by 2002:a9d:895:: with SMTP id 21mr8780254otf.365.1586427305866;
+ Thu, 09 Apr 2020 03:15:05 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <1585939334-21396-9-git-send-email-jacob.jun.pan@linux.intel.com>
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+References: <1586360280-10956-7-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <20200408235133.GA151858@google.com>
+In-Reply-To: <20200408235133.GA151858@google.com>
+From:   "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+Date:   Thu, 9 Apr 2020 11:14:39 +0100
+Message-ID: <CA+V-a8taA-CYNC2vLoPPm9WHZwTOFoHe-c2zus_n5=qr4x32WQ@mail.gmail.com>
+Subject: Re: [PATCH v7 6/8] PCI: rcar: Add support for R-Car PCIe controller
+ in endpoint mode
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Andrew Murray <amurray@thegoodpenguin.co.uk>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Marek Vasut <marek.vasut+renesas@gmail.com>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Shawn Lin <shawn.lin@rock-chips.com>,
+        Tom Joseph <tjoseph@cadence.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+        LAK <linux-arm-kernel@lists.infradead.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        Chris Paterson <Chris.Paterson2@renesas.com>,
+        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jacob,
+Hi Bjorn,
 
-On 4/3/20 8:42 PM, Jacob Pan wrote:
-> Virtual command registers are used in the guest only, to prevent
-> vmexit cost, we cache the capability and store it during initialization.
-> 
-> Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
-> Reviewed-by: Eric Auger <eric.auger@redhat.com>
-> Reviewed-by: Lu Baolu <baolu.lu@linux.intel.com>
-nit: following Joerg's comment on 02/10, may be worth squashing it into
-the patch that uses it (10/10)
+Thank you for the review.
 
-Thanks
+On Thu, Apr 9, 2020 at 12:51 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
+>
+> Maybe:
+>
+>   PCI: rcar: Add endpoint mode support
+>
+> so the important "endpoint mode" part is early and doesn't get chopped
+> off or wrapped.  We already know it's PCIe and rcar-related.
+>
+Agreed will change it.
 
-Eric
-> 
-> ---
-> v7 Reviewed by Eric & Baolu
-> ---
-> 
-> Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
-> ---
->  drivers/iommu/dmar.c        | 1 +
->  include/linux/intel-iommu.h | 5 +++++
->  2 files changed, 6 insertions(+)
-> 
-> diff --git a/drivers/iommu/dmar.c b/drivers/iommu/dmar.c
-> index 4d6b7b5b37ee..3b36491c8bbb 100644
-> --- a/drivers/iommu/dmar.c
-> +++ b/drivers/iommu/dmar.c
-> @@ -963,6 +963,7 @@ static int map_iommu(struct intel_iommu *iommu, u64 phys_addr)
->  		warn_invalid_dmar(phys_addr, " returns all ones");
->  		goto unmap;
->  	}
-> +	iommu->vccap = dmar_readq(iommu->reg + DMAR_VCCAP_REG);
->  
->  	/* the registers might be more than one page */
->  	map_size = max_t(int, ecap_max_iotlb_offset(iommu->ecap),
-> diff --git a/include/linux/intel-iommu.h b/include/linux/intel-iommu.h
-> index f775bb825343..e02a96848586 100644
-> --- a/include/linux/intel-iommu.h
-> +++ b/include/linux/intel-iommu.h
-> @@ -194,6 +194,9 @@
->  #define ecap_max_handle_mask(e) ((e >> 20) & 0xf)
->  #define ecap_sc_support(e)	((e >> 7) & 0x1) /* Snooping Control */
->  
-> +/* Virtual command interface capability */
-> +#define vccap_pasid(v)		((v & DMA_VCS_PAS)) /* PASID allocation */
-> +
->  /* IOTLB_REG */
->  #define DMA_TLB_FLUSH_GRANU_OFFSET  60
->  #define DMA_TLB_GLOBAL_FLUSH (((u64)1) << 60)
-> @@ -287,6 +290,7 @@
->  
->  /* PRS_REG */
->  #define DMA_PRS_PPR	((u32)1)
-> +#define DMA_VCS_PAS	((u64)1)
->  
->  #define IOMMU_WAIT_OP(iommu, offset, op, cond, sts)			\
->  do {									\
-> @@ -562,6 +566,7 @@ struct intel_iommu {
->  	u64		reg_size; /* size of hw register set */
->  	u64		cap;
->  	u64		ecap;
-> +	u64		vccap;
->  	u32		gcmd; /* Holds TE, EAFL. Don't need SRTP, SFL, WBF */
->  	raw_spinlock_t	register_lock; /* protect register handling */
->  	int		seq_id;	/* sequence id of the iommu */
-> 
+> On Wed, Apr 08, 2020 at 04:37:58PM +0100, Lad Prabhakar wrote:
+> > This patch adds support for R-Car PCIe controller to work in endpoint mode.
+>
+> s/This patch adds/Add/
+>
+OK
 
+> > +static int rcar_pcie_ep_set_bar(struct pci_epc *epc, u8 func_no,
+> > +                             struct pci_epf_bar *epf_bar)
+> > +{
+> > +     int flags = epf_bar->flags | LAR_ENABLE | LAM_64BIT;
+> > +     struct rcar_pcie_endpoint *ep = epc_get_drvdata(epc);
+> > +     u64 size = 1ULL << fls64(epf_bar->size - 1);
+> > +     dma_addr_t cpu_addr = epf_bar->phys_addr;
+> > +     enum pci_barno bar = epf_bar->barno;
+> > +     struct rcar_pcie *pcie = &ep->pcie;
+> > +     u32 mask;
+> > +     int idx;
+> > +     int err;
+> > +
+> > +     idx = find_first_zero_bit(ep->ib_window_map, ep->num_ib_windows);
+> > +     if (idx >= ep->num_ib_windows) {
+> > +             dev_err(pcie->dev, "no free inbound window\n");
+> > +             return -EINVAL;
+> > +     }
+> > +
+> > +     if ((flags & PCI_BASE_ADDRESS_SPACE) == PCI_BASE_ADDRESS_SPACE_IO)
+> > +             flags |= IO_SPACE;
+> > +
+> > +     ep->bar_to_atu[bar] = idx;
+> > +     /* use 64 bit bars */
+>
+> s/64 bit bars/64-bit BARs/
+>
+OK shall replace it.
+
+> > +static const struct pci_epc_features rcar_pcie_epc_features = {
+> > +     .linkup_notifier = false,
+> > +     .msi_capable = true,
+> > +     .msix_capable = false,
+> > +     /* use 64-bit bars so mark bar1/3/5 as reserved */
+>
+> s/bar/BAR/g
+OK shall replace it.
+
+Cheers,
+--Prabhakar
