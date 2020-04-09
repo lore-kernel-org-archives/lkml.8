@@ -2,117 +2,146 @@ Return-Path: <SRS0=n+Ub=5Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88A8CC2BA2B
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 12:02:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7666BC2BA2B
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 12:03:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5CC8120771
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 12:02:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Wkdsn1+S"
+	by mail.kernel.org (Postfix) with ESMTP id 545FE20753
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 12:03:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726670AbgDIMCq (ORCPT
+        id S1726622AbgDIMDn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Apr 2020 08:02:46 -0400
-Received: from mail-ed1-f66.google.com ([209.85.208.66]:37027 "EHLO
-        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725987AbgDIMCq (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Apr 2020 08:02:46 -0400
-Received: by mail-ed1-f66.google.com with SMTP id de14so12969324edb.4;
-        Thu, 09 Apr 2020 05:02:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=twKaaVBKlEch0/x9uwA4gV1xi58wSqfI7HxuMOBeimU=;
-        b=Wkdsn1+SM7OgLx/h0cHV8CmfvQPdFnlInBuf1OYTnFQd3LIy0Ri7arIewbWep9cwB7
-         70yQK6r58MANNA0zYDjWqZFht43A1aoAMtsny3nuVomAELS+GDvB+5IV8Jqxj01na0Qz
-         xLzVUt3UWNt7fugpGpMWnyn7m/F9UsdM3QJdGJZ5uMibdnWUVspCYnmKj/v7K07THmH8
-         8bpTYtOE8aMjZw2RgUSzimY2+y/y5ykeM8mKRmN03kzuyfNOHGXrvwcCXlyUso08TkZC
-         Ht5QCkMfgF5mAH337OVnMcQhvRJO3y01vBZyL61UhrRktUmnh3+roWf4fi7iHOhXL7J+
-         cP6w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=twKaaVBKlEch0/x9uwA4gV1xi58wSqfI7HxuMOBeimU=;
-        b=ewHeaSLB7EHm3FIA0IsDBb3H09p1NiLWODyr6JsatpqJz3bayZOh3ChlJn8kNY63ay
-         YMOB7+YkUMlo50JMDHWJjg3PNZ9JGMvkYtaY/QzeVk7aG6I3gp70/tu8zNzDj30G5Vs8
-         +Ops9WYgOl/k+6EmD8bFid7UhzUcCvLlAmjT28ERp/K+4PO04dZN4DtYp1JsfhxsjK0y
-         T/swEHQaXU4eymh5yzspO++a0+4LheHBKoN8FUXUuzprIn4lzsTLFlLXdQ6NW/Qz+1BV
-         ph20Hd9hStA+YCV/YTaPF0nwDJ7VKi0udGMMW7Gy7m1zDMTKV63cCa8zbUuqzIINdMYE
-         okDw==
-X-Gm-Message-State: AGi0Pub9udIvrBbqYQs+9W49D92uQeYyNinbpNQihI0GAk3sT7B24jF7
-        pr1X1v6WrFR0tc9QzqIIUtQ=
-X-Google-Smtp-Source: APiQypIvNXmg6PpEovdL8+6IB7HmipuoGYaNts413NunzsPAJ7nxVRpY99Y83KsHl0wf8It1JrtMqA==
-X-Received: by 2002:aa7:dd0f:: with SMTP id i15mr11168556edv.8.1586433764021;
-        Thu, 09 Apr 2020 05:02:44 -0700 (PDT)
-Received: from localhost (ip1f115f16.dynamic.kabel-deutschland.de. [31.17.95.22])
-        by smtp.gmail.com with ESMTPSA id e10sm116551eds.2.2020.04.09.05.02.43
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 09 Apr 2020 05:02:43 -0700 (PDT)
-Date:   Thu, 9 Apr 2020 14:02:42 +0200
-From:   Oliver Graute <oliver.graute@gmail.com>
-To:     Marco Felsch <m.felsch@pengutronix.de>
-Cc:     dmitry.torokhov@gmail.com,
-        Oliver Graute <oliver.graute@kococonnector.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sasha Levin <sashal@kernel.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1] Input: edt-ft5x06 - fix crash on EDT EP0110M09
-Message-ID: <20200409120242.GA17410@portage>
-References: <1586424425-27038-1-git-send-email-oliver.graute@gmail.com>
- <20200409105253.qvezbikpbnrkig52@pengutronix.de>
+        Thu, 9 Apr 2020 08:03:43 -0400
+Received: from foss.arm.com ([217.140.110.172]:49336 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725987AbgDIMDn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Apr 2020 08:03:43 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 087B630E;
+        Thu,  9 Apr 2020 05:03:43 -0700 (PDT)
+Received: from [192.168.1.172] (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id BF9063F73D;
+        Thu,  9 Apr 2020 05:03:41 -0700 (PDT)
+Subject: Re: [PATCH v2 4/6] arm64/vdso: Handle faults on timens page
+To:     Andrei Vagin <avagin@gmail.com>
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Dmitry Safonov <dima@arista.com>
+References: <20200225073731.465270-1-avagin@gmail.com>
+ <20200225073731.465270-5-avagin@gmail.com>
+From:   Vincenzo Frascino <vincenzo.frascino@arm.com>
+Message-ID: <658a52bb-400e-46d2-bfe8-1718c5c5f613@arm.com>
+Date:   Thu, 9 Apr 2020 13:04:26 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200409105253.qvezbikpbnrkig52@pengutronix.de>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <20200225073731.465270-5-avagin@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 09/04/20, Marco Felsch wrote:
-> Hi Oliver,
+On 2/25/20 7:37 AM, Andrei Vagin wrote:
+> If a task belongs to a time namespace then the VVAR page which contains
+> the system wide VDSO data is replaced with a namespace specific page
+> which has the same layout as the VVAR page.
 > 
-> thanks for your patch.
-> 
-> On 20-04-09 11:27, Oliver Graute wrote:
-> > From: Oliver Graute <oliver.graute@kococonnector.com>
-> 
-> ...
-> 
-> >  drivers/input/touchscreen/edt-ft5x06.c | 4 ----
-> >  1 file changed, 4 deletions(-)
-> > 
-> > diff --git a/drivers/input/touchscreen/edt-ft5x06.c b/drivers/input/touchscreen/edt-ft5x06.c
-> > index 06aa8ba0b6d7..6fbc87d041a1 100644
-> > --- a/drivers/input/touchscreen/edt-ft5x06.c
-> > +++ b/drivers/input/touchscreen/edt-ft5x06.c
-> > @@ -819,10 +819,6 @@ static int edt_ft5x06_ts_identify(struct i2c_client *client,
-> >  	 * to have garbage in there
-> >  	 */
-> >  	memset(rdbuf, 0, sizeof(rdbuf));
-> > -	error = edt_ft5x06_ts_readwrite(client, 1, "\xBB",
-> > -					EDT_NAME_LEN - 1, rdbuf);
-> > -	if (error)
-> > -		return error;
-> 
-> 
-> I don't see how this call can corrupt the stack..
+> Signed-off-by: Andrei Vagin <avagin@gmail.com>
 
-I admit that this is strange. The patch fixed my problems so I posted
-it. Still interested in the root-cause.
+Reviewed-by: Vincenzo Frascino <vincenzo.frascino@arm.com>
 
-Best regards,
+> ---
+>  arch/arm64/kernel/vdso.c | 57 +++++++++++++++++++++++++++++++++++++---
+>  1 file changed, 53 insertions(+), 4 deletions(-)
+> 
+> diff --git a/arch/arm64/kernel/vdso.c b/arch/arm64/kernel/vdso.c
+> index b3e7ce24e59b..fb32c6f76078 100644
+> --- a/arch/arm64/kernel/vdso.c
+> +++ b/arch/arm64/kernel/vdso.c
+> @@ -18,6 +18,7 @@
+>  #include <linux/sched.h>
+>  #include <linux/signal.h>
+>  #include <linux/slab.h>
+> +#include <linux/time_namespace.h>
+>  #include <linux/timekeeper_internal.h>
+>  #include <linux/vmalloc.h>
+>  #include <vdso/datapage.h>
+> @@ -175,15 +176,63 @@ int vdso_join_timens(struct task_struct *task, struct time_namespace *ns)
+>  	up_write(&mm->mmap_sem);
+>  	return 0;
+>  }
+> +
+> +static struct page *find_timens_vvar_page(struct vm_area_struct *vma)
+> +{
+> +	if (likely(vma->vm_mm == current->mm))
+> +		return current->nsproxy->time_ns->vvar_page;
+> +
+> +	/*
+> +	 * VM_PFNMAP | VM_IO protect .fault() handler from being called
+> +	 * through interfaces like /proc/$pid/mem or
+> +	 * process_vm_{readv,writev}() as long as there's no .access()
+> +	 * in special_mapping_vmops().
+> +	 * For more details check_vma_flags() and __access_remote_vm()
+> +	 */
+> +
+> +	WARN(1, "vvar_page accessed remotely");
+> +
+> +	return NULL;
+> +}
+> +#else
+> +static inline struct page *find_timens_vvar_page(struct vm_area_struct *vma)
+> +{
+> +	return NULL;
+> +}
+>  #endif
+>  
+>  static vm_fault_t vvar_fault(const struct vm_special_mapping *sm,
+>  			     struct vm_area_struct *vma, struct vm_fault *vmf)
+>  {
+> -	if (vmf->pgoff == 0)
+> -		return vmf_insert_pfn(vma, vmf->address,
+> -				sym_to_pfn(vdso_data));
+> -	return VM_FAULT_SIGBUS;
+> +	struct page *timens_page = find_timens_vvar_page(vma);
+> +	unsigned long pfn;
+> +
+> +	switch (vmf->pgoff) {
+> +	case VVAR_DATA_PAGE_OFFSET:
+> +		if (timens_page)
+> +			pfn = page_to_pfn(timens_page);
+> +		else
+> +			pfn = sym_to_pfn(vdso_data);
+> +		break;
+> +#ifdef CONFIG_TIME_NS
+> +	case VVAR_TIMENS_PAGE_OFFSET:
+> +		/*
+> +		 * If a task belongs to a time namespace then a namespace
+> +		 * specific VVAR is mapped with the VVAR_DATA_PAGE_OFFSET and
+> +		 * the real VVAR page is mapped with the VVAR_TIMENS_PAGE_OFFSET
+> +		 * offset.
+> +		 * See also the comment near timens_setup_vdso_data().
+> +		 */
+> +		if (!timens_page)
+> +			return VM_FAULT_SIGBUS;
+> +		pfn = sym_to_pfn(vdso_data);
+> +		break;
+> +#endif /* CONFIG_TIME_NS */
+> +	default:
+> +		return VM_FAULT_SIGBUS;
+> +	}
+> +
+> +	return vmf_insert_pfn(vma, vmf->address, pfn);
+>  }
+>  
+>  static int __setup_additional_pages(enum arch_vdso_type arch_index,
+> 
 
-Oliver
+-- 
+Regards,
+Vincenzo
