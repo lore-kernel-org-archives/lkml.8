@@ -2,140 +2,138 @@ Return-Path: <SRS0=n+Ub=5Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED779C2BB86
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 11:08:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 331EEC2BA2B
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 11:08:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BEAE220BED
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 11:08:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586430511;
-	bh=nKcVNNbDsBhlfWYnZ08AXKiy6f8voXP4SBw/qoRDLGQ=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=PJkk3bQFMeEGha2usqHcpuHMnRd50ILOHCztHcLvvDt7BilsgYmpd2PFCA+lfVDnM
-	 ayrs6N353reAO9bzibmSw893L6O5ZEUcFWDE8RPIJDAGGjDDWDZ6iaoWbwkKIQ1Tjx
-	 XxxhQcLvdgQPig1eV6fysOd4YJnDBv+UMUDhME1c=
+	by mail.kernel.org (Postfix) with ESMTP id 10EF420771
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 11:08:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726663AbgDILI3 (ORCPT
+        id S1726670AbgDILI5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Apr 2020 07:08:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38176 "EHLO mail.kernel.org"
+        Thu, 9 Apr 2020 07:08:57 -0400
+Received: from foss.arm.com ([217.140.110.172]:48736 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726470AbgDILI3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Apr 2020 07:08:29 -0400
-Received: from mail-io1-f48.google.com (mail-io1-f48.google.com [209.85.166.48])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7D42721473;
-        Thu,  9 Apr 2020 11:08:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586430509;
-        bh=nKcVNNbDsBhlfWYnZ08AXKiy6f8voXP4SBw/qoRDLGQ=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=y12xfx2jHRcz7Xj8E4KiAetwNxAJMpYhu6JAGkfDwGc+VtDlb163jkT8V+hvG5UJZ
-         UutyhRP02DmPiGjvugQLGdOYiTlPCiQ/jyO8+5/3Ey0LngkDM02WqoBgCeUrAcEkHC
-         J6FLLRIW6gu5xCWuBL92O3RIwS1mHjeEvR45/6NI=
-Received: by mail-io1-f48.google.com with SMTP id f19so3407785iog.5;
-        Thu, 09 Apr 2020 04:08:29 -0700 (PDT)
-X-Gm-Message-State: AGi0PuZyw9Hkhycpxj1oqOqZ4OSkX4QvBsah9D6mci9lj5Ukj4zkbQbz
-        VWQH/qEwASrW7SaYEfAU3tXV3IoC8aABgy5E/uM=
-X-Google-Smtp-Source: APiQypKW3FSRiKcw5UcsWUzBp+isKHjGSYUGcHGHb7BrRprKjbiuQVYggD3evhNtKTrY8cXwlo+PdO4idv6EkgzLNXM=
-X-Received: by 2002:a02:969a:: with SMTP id w26mr2026088jai.71.1586430508859;
- Thu, 09 Apr 2020 04:08:28 -0700 (PDT)
+        id S1726082AbgDILI4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Apr 2020 07:08:56 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D39B731B;
+        Thu,  9 Apr 2020 04:08:56 -0700 (PDT)
+Received: from bogus (unknown [10.37.12.63])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 92A433F73D;
+        Thu,  9 Apr 2020 04:08:50 -0700 (PDT)
+Date:   Thu, 9 Apr 2020 12:08:43 +0100
+From:   Sudeep Holla <sudeep.holla@arm.com>
+To:     Valentin Schneider <valentin.schneider@arm.com>
+Cc:     Cheng Jian <cj.chengjian@huawei.com>, vpillai@digitalocean.com,
+        aaron.lwe@gmail.com, aubrey.intel@gmail.com,
+        aubrey.li@linux.intel.com, fweisbec@gmail.com,
+        jdesfossez@digitalocean.com, joel@joelfernandes.org,
+        joelaf@google.com, keescook@chromium.org, kerrnel@google.com,
+        linux-kernel@vger.kernel.org, mgorman@techsingularity.net,
+        mingo@kernel.org, naravamudan@digitalocean.com, pauld@redhat.com,
+        pawan.kumar.gupta@linux.intel.com, pbonzini@redhat.com,
+        peterz@infradead.org, pjt@google.com, tglx@linutronix.de,
+        tim.c.chen@linux.intel.com, torvalds@linux-foundation.org,
+        xiexiuqi@huawei.com, huawei.libin@huawei.com, w.f@huawei.com,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH] sched/arm64: store cpu topology before
+ notify_cpu_starting
+Message-ID: <20200409110843.GA8451@bogus>
+References: <855831b59e1b3774b11c3e33050eac4cc4639f06.1583332765.git.vpillai@digitalocean.com>
+ <20200401114215.36640-1-cj.chengjian@huawei.com>
+ <jhjwo6zjq5m.mognet@arm.com>
+ <20200409095941.GA25948@bogus>
+ <jhj5ze9t0er.mognet@arm.com>
 MIME-Version: 1.0
-References: <20200113172245.27925-1-ardb@kernel.org> <20200113172245.27925-6-ardb@kernel.org>
- <63b125a4-6c62-fcdf-de22-d3bebe2dcbf5@suse.cz> <CAMj1kXGiT_zYjc6X-msRXVozhpDAY0UesEW3_4fOgiH4FyMgDw@mail.gmail.com>
- <972b66a9-92c7-9a15-1aa1-e3236abe90df@suse.cz> <CAMj1kXFGkOM9fbqr44_TbdxqFjH1i3d8dkO64C1mQmH=AqrUSQ@mail.gmail.com>
- <20200409080626.GV5951@GaryWorkstation> <984a2b3c-a9d4-e733-6372-4abf0f99be1f@suse.cz>
- <CAMj1kXFHUusU9dDgqhU_qswDVgYWx_kpaDEroj4ZSt3hr-AFsA@mail.gmail.com>
- <d38fd829-b944-da10-58c0-180f80e8264d@suse.cz> <CAMj1kXG4F+WzJX8_FyRAxQmDwqvbQMzh3Ji1KcpH_eO3Zt3-WQ@mail.gmail.com>
- <b6006dd7-2ce0-0776-9a61-52377b8eef63@suse.cz> <CAMj1kXFsaoUoWbwRVFJX_ze+gJHOKRLyTL5kEecYJRPr84wWqw@mail.gmail.com>
-In-Reply-To: <CAMj1kXFsaoUoWbwRVFJX_ze+gJHOKRLyTL5kEecYJRPr84wWqw@mail.gmail.com>
-From:   Ard Biesheuvel <ardb@kernel.org>
-Date:   Thu, 9 Apr 2020 13:08:17 +0200
-X-Gmail-Original-Message-ID: <CAMj1kXEhLjh4NENkzfKmO=eLxEXmgU7MDyJsL51Ctas5XW40Sw@mail.gmail.com>
-Message-ID: <CAMj1kXEhLjh4NENkzfKmO=eLxEXmgU7MDyJsL51Ctas5XW40Sw@mail.gmail.com>
-Subject: Re: [PATCH 05/13] efi/x86: don't map the entire kernel text RW for
- mixed mode
-To:     Jiri Slaby <jslaby@suse.cz>
-Cc:     Gary Lin <glin@suse.com>, linux-efi <linux-efi@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Anshuman Khandual <anshuman.khandual@arm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Dave Young <dyoung@redhat.com>,
-        Saravana Kannan <saravanak@google.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <jhj5ze9t0er.mognet@arm.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 9 Apr 2020 at 12:45, Ard Biesheuvel <ardb@kernel.org> wrote:
+On Thu, Apr 09, 2020 at 11:32:12AM +0100, Valentin Schneider wrote:
 >
-> On Thu, 9 Apr 2020 at 12:09, Jiri Slaby <jslaby@suse.cz> wrote:
+> On 09/04/20 10:59, Sudeep Holla wrote:
+> > On Wed, Apr 01, 2020 at 02:23:33PM +0100, Valentin Schneider wrote:
+> >>
+> >> (+LAKML, +Sudeep)
+> >>
 > >
-> > On 09. 04. 20, 11:09, Ard Biesheuvel wrote:
-> > > On Thu, 9 Apr 2020 at 10:36, Jiri Slaby <jslaby@suse.cz> wrote:
-> > >>
-> > >> On 09. 04. 20, 10:19, Ard Biesheuvel wrote:
-> > >>>>>> $ rpm -qlp ~/Downloads/ovmf-202002-1.1.i586.rpm
-> > >>>>>> warning: /home/ardbie01/Downloads/ovmf-202002-1.1.i586.rpm: Header V3
-> > >>>>>> RSA/SHA256 Signature, key ID 3dbdc284: NOKEY
-> > >>>>>> /usr/share/doc/packages/ovmf
-> > >>>>>> /usr/share/doc/packages/ovmf/README
-> > >>>>>
-> > >>>>> Hmmm, it's weird that OBS doesn't list all derived files.
-> > >>>>> Anyway, the ia32 ovmf is available in
-> > >>>>> http://download.opensuse.org/tumbleweed/repo/oss/noarch/qemu-ovmf-ia32-202002-1.1.noarch.rpm
-> > >>>>
-> > >>>> It indeed does:
-> > >>>> https://build.opensuse.org/package/binaries/openSUSE:Factory/ovmf/standard
-> > >>>>
-> > >>>> Note that the ia32 version is noarch, built on i586.
-> > >>>>
-> > >>>
-> > >>> I am not able to reproduce this issue using the linked firmware image
-> > >>> and a 5.6 x86_64_defconfig with efivarfs built in.
-> > >>
-> > >> Yeah, I had to use the distro config too. Not sure what the trigger is.
-> > >> Maybe some NUMA configs or something.
-> > >>
-> > >>> Could anyone share the full log, please, along with the kernel config
-> > >>> that was used?
-> > >>
-> > >> Both uploaded:
-> > >> http://decibel.fi.muni.cz/~xslaby/err/
-> > >>
-> > >
-> > > With the same config, I am still not seeing the issue.
-> > >
-> > >
-> > >> Note that I switched the for-me-necessary =m configs to =y. So that it
-> > >> is enough to build bzImage, w/o modules...
-> > >>
-> > >
-> > > Could you please try running it again with CONFIG_EFI_PGT_DUMP=y enabled?
+> > Thanks Valentin.
 > >
-> > No problem:
-> > http://decibel.fi.muni.cz/~xslaby/err/dmesg2.txt
+> >> On Wed, Apr 01 2020, Cheng Jian wrote:
+> >> > when SCHED_CORE enabled, sched_cpu_starting() uses thread_sibling as
+> >> > SMT_MASK to initialize rq->core, but only after store_cpu_topology(),
+> >> > the thread_sibling is ready for use.
+> >> >
+> >> >       notify_cpu_starting()
+> >> >           -> sched_cpu_starting()	# use thread_sibling
+> >> >
+> >> >       store_cpu_topology(cpu)
+> >> >           -> update_siblings_masks	# set thread_sibling
+> >> >
+> >> > Fix this by doing notify_cpu_starting later, just like x86 do.
+> >> >
+> >>
+> >> I haven't been following the sched core stuff closely; can't this
+> >> rq->core assignment be done in sched_cpu_activate() instead? We already
+> >> look at the cpu_smt_mask() in there, and it is valid (we go through the
+> >> entirety of secondary_start_kernel() before getting anywhere near
+> >> CPUHP_AP_ACTIVE).
+> >>
 > >
-> > > In the mean time, I will try to install Tumbleweed from scratch. Do
-> > > you have any steps I could follow to reproduce your setup?
-> >
-> > Not really, just installed TW 64-bit and used efi and grub 32 bit.
+> > I too came to same conclusion. Did you see any issues ? Or is it
+> > just code inspection in parity with x86 ?
 > >
 >
-> OK, so you installed using a 64-bit EFI, and then switched to a 32-bit
-> one? Or is there a special mixed-mode capable installer?
+> With mainline this isn't a problem; with the core scheduling stuff there is
+> an expectation that we can use the SMT masks in sched_cpu_starting().
 >
-> (The ones I found are x86_64 only)
 
-OK, I have managed to install tumbleweed into a 64-bit VM with 64-bit GRUB.
+Ah, OK. I prefer this to be specified in the commit message as it is not
+obvious.
 
-Could you give any instructions how to convert to 32-bit GRUB please?
+> >> I don't think this breaks anything, but without this dependency in
+> >> sched_cpu_starting() then there isn't really a reason for this move.
+> >>
+> >
+> > Based on the commit message, had a quick look at x86 code and I agree
+> > this shouldn't break anything. However the commit message does make
+> > complete sense to me, especially reference to sched_cpu_starting
+> > while smt_masks are accessed in sched_cpu_activate. Or am I missing
+> > to understand something here ?
+>
+> As stated above, it's not a problem for mainline, and AIUI we can change
+> the core scheduling bits to only use the SMT mask in sched_cpu_activate()
+> instead, therefore not requiring any change in the arch code.
+>
+
+Either way is fine. If it is already set expectation that SMT masks needs
+to be set before sched_cpu_starting, then let us just stick with that.
+
+> I'm not aware of any written rule that the topology masks should be usable
+> from a given hotplug state upwards, only that right now we need them in
+> sched_cpu_(de)activate() for SMT scheduling - and that is already working
+> fine.
+>
+
+Sure, we can at-least document as part of this change even if it is just
+in ARM64 so that someone need not wonder the same in future.
+
+> So really this should be considering as a simple neutral cleanup; I don't
+> really have any opinion on picking it up or not.
+
+I am fine with the change too, just need some tweaking in the commit
+message.
+
+--
+Regards,
+Sudeep
