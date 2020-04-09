@@ -2,99 +2,97 @@ Return-Path: <SRS0=n+Ub=5Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8724CC2BA19
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 19:52:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D456C2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 19:55:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 577CD2084D
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 19:52:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=aurabindo.in header.i=@aurabindo.in header.b="GlLQA9Jr"
+	by mail.kernel.org (Postfix) with ESMTP id E798B2084D
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 19:55:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1586462139;
+	bh=w8kOwNf8SSxiuY6rSlwM6iiARoUIlHsuXczFkoIS32I=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=WcR7uWMUNqSROhKCWOPNCovYq6MKlyxrCv7cqRl7cmdQXG+eFxhg2hg8zJFzTdCao
+	 tMR2SQN+rVl7xkFQV74Ol+rqWDXrV97NVSjtc1mzV7R6+9YFx98LAHjzxArCQ528ip
+	 7KMI92RpMX7kfReCuKcTbOE50VFM+YqlaKXEzvHY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726878AbgDITwE (ORCPT
+        id S1726819AbgDITzh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Apr 2020 15:52:04 -0400
-Received: from mail-qv1-f68.google.com ([209.85.219.68]:39700 "EHLO
-        mail-qv1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726777AbgDITwE (ORCPT
+        Thu, 9 Apr 2020 15:55:37 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:37415 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725970AbgDITzh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Apr 2020 15:52:04 -0400
-Received: by mail-qv1-f68.google.com with SMTP id v38so6157946qvf.6
-        for <linux-kernel@vger.kernel.org>; Thu, 09 Apr 2020 12:52:04 -0700 (PDT)
+        Thu, 9 Apr 2020 15:55:37 -0400
+Received: by mail-lj1-f195.google.com with SMTP id r24so1032191ljd.4
+        for <linux-kernel@vger.kernel.org>; Thu, 09 Apr 2020 12:55:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=aurabindo.in; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=ANUP3YZD262275//lsq8+uVDyv1HIJJWCv3ypaHwBe0=;
-        b=GlLQA9JruJ0tDP/ebRypZKl/ikKfEo+JOM90JdeHPdeBOcNiPWMJwSr+1YolmG1PS+
-         7BYyw1Z5icRcs2+3+zYkCpLVRyI5xw/37dDee8aasMTWGvfj9OwyQ1iZcCFzncHcAUXa
-         FKmkv3176CI2m4sZUFc0SDaXmnL0cMN6cHmjCUgGgdxAkrwQ1SUtqGWeqOC3r5Bxm86G
-         /CxxfmOPFgbBWu/m0gZe8ZAZhukFxLcThVq0BLH4htf0rI4KefXWDriScFhg0w4FdfsB
-         bLX3tZSFEIVVfiow2ouIXVBo4E5sehfdl3M88t/3KVgUu0r5BV2nrxI9/Dk0IeQfT6yr
-         SO5Q==
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=FWqxa7IgEF9kjblzeGUACdh2V+Kc1/x9y1BsC32Ew80=;
+        b=aGkY8jiS6vcqO54+MzZBq6t09AZ9z9nNDAnW2XAwn+SlblvC8sObX5Tr+07IwPurpA
+         Tuaoiydplp3y51TfJ36L1C78h376noZYZ1tlNKwp67EXunNuIaFgvF6lyQsDZtvXg3TS
+         yiPcAguS17DgYZhWDB9geFPpXHoUef6RG+gCY=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=ANUP3YZD262275//lsq8+uVDyv1HIJJWCv3ypaHwBe0=;
-        b=qRkIo2A6a6CtkZMrrNtt3O1uRZ2YJEvGNBK8aHhjvQ3nW7kMjhKBi8H6eJrTG5edZk
-         blyvJkeqzgyN+1Ygk2kopobp8gbf14uhdCscaJZD0iLn4Q2Mt5BF/h/7TwnI1GW+TMAu
-         4uNNbfM+EABhfhKUFcvDEiTuLXw3YT7VPLWnfZXKp0C9y1Nd0IuR851k4Q6tp/4FYT+j
-         hN0aLGDgKk2YQVglk/i8X85E1v5SwA0cftMJ6PqAh5cdsU5N4Rjjq08JUCcFTuiBkvkx
-         udxzVHb6PyK/Fa1uUvB0rYrEmyZ4TfdSU6GMIs1pQaGoryNs4e2FpiR0tNFEv6S9EffP
-         5Plg==
-X-Gm-Message-State: AGi0PuaUbhTWZA90hPV9w4YrQPmLqbkjMNlYn8lLt+AYGKJwHt7/knjV
-        iXGcAUbvCzKE5WohtewL5IrZWg==
-X-Google-Smtp-Source: APiQypIARh6HRTAFS+noiNzYrXQBRkmIJ81vsg5CL3eyh6tX29IaEYqtTVgI116gGUn3k6ptFSFPOw==
-X-Received: by 2002:a0c:8326:: with SMTP id j35mr1792441qva.205.1586461923828;
-        Thu, 09 Apr 2020 12:52:03 -0700 (PDT)
-Received: from localhost.localdomain (135-23-249-169.cpe.pppoe.ca. [135.23.249.169])
-        by smtp.gmail.com with ESMTPSA id 189sm19775200qko.123.2020.04.09.12.52.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 09 Apr 2020 12:52:03 -0700 (PDT)
-From:   Aurabindo Pillai <mail@aurabindo.in>
-To:     maarten.lankhorst@linux.intel.com, mripard@kernel.org,
-        airlied@linux.ie, daniel@ffwll.ch
-Cc:     dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] drm: dpcd: Print more useful information during error
-Date:   Thu,  9 Apr 2020 15:52:00 -0400
-Message-Id: <20200409195200.5483-1-mail@aurabindo.in>
-X-Mailer: git-send-email 2.26.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=FWqxa7IgEF9kjblzeGUACdh2V+Kc1/x9y1BsC32Ew80=;
+        b=PKFDGz7eKJn32FMVMqWmRjBFaQ/5UkLvbTaNp5zIDHYXPf0mp9QvUjkL3q7cDM3Ej+
+         xbNO1G0YWnW1zidduS4bwM9arzuT4Qj7Mrubvuo5J5/oVyhEsUwvp385LKt5cKynmbI8
+         xZBgEYt6tvyZQnDWKtABX3rBh5srRI9cRvPzaiFqkEQMlFarhx1dUNelJ/dQ8TudyZdb
+         EnciFrTApumj149WWVy2UZB0tEH2aQsLKJ51yFF9cRySMG4VprS08l7sZjQ8JVz6EtdX
+         vRzbgNweCzCITp1w/rwpTpf4yGIVkt+MBxGWJN0MZsswpbSz+2CUVmH0cUv64jVqOJdm
+         a8RQ==
+X-Gm-Message-State: AGi0PuaUgTxzgP+8F8LvnToAjZ3WeOo8JuABf+PRre3u1GjIzQy+OcUQ
+        ITYyoV/7A2hRpz8vAQ6rS+LRm/+hzsM=
+X-Google-Smtp-Source: APiQypJ4I5TKqO4xPnShJirGJZpd8ibsjbD15EuyxOm7t+ZNB0Mvye2Zlrhyt3x8tbZi7S6Coa26qw==
+X-Received: by 2002:a2e:a176:: with SMTP id u22mr913260ljl.84.1586462134669;
+        Thu, 09 Apr 2020 12:55:34 -0700 (PDT)
+Received: from mail-lj1-f174.google.com (mail-lj1-f174.google.com. [209.85.208.174])
+        by smtp.gmail.com with ESMTPSA id o6sm15239060lji.15.2020.04.09.12.55.33
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 09 Apr 2020 12:55:33 -0700 (PDT)
+Received: by mail-lj1-f174.google.com with SMTP id i20so1020163ljn.6
+        for <linux-kernel@vger.kernel.org>; Thu, 09 Apr 2020 12:55:33 -0700 (PDT)
+X-Received: by 2002:a2e:8652:: with SMTP id i18mr901347ljj.265.1586462132767;
+ Thu, 09 Apr 2020 12:55:32 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20200409071133.31734-1-mhocko@kernel.org>
+In-Reply-To: <20200409071133.31734-1-mhocko@kernel.org>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Thu, 9 Apr 2020 12:55:17 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wg_vgcq6R_JXUq0+GXuSLFV8tvfSTzFWjGTimJN1pjF+A@mail.gmail.com>
+Message-ID: <CAHk-=wg_vgcq6R_JXUq0+GXuSLFV8tvfSTzFWjGTimJN1pjF+A@mail.gmail.com>
+Subject: Re: [PATCH] mm, gup: return EINTR when gup is interrupted by fatal signals
+To:     Michal Hocko <mhocko@kernel.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Peter Xu <peterx@redhat.com>, Hillf Danton <hdanton@sina.com>,
+        Linux-MM <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Michal Hocko <mhocko@suse.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When DPCD access errors occur, knowing the register and request
-associated with the error helps debugging, so print the
-details in the debug message.
+On Thu, Apr 9, 2020 at 12:11 AM Michal Hocko <mhocko@kernel.org> wrote:
+>
+> ERESTARTSYS is also quite confusing because the signal is fatal and so
+> no handling will happen before returning to the userspace.
 
-Signed-off-by: Aurabindo Pillai <mail@aurabindo.in>
----
- drivers/gpu/drm/drm_dp_helper.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+Ack. Except I'd rephrase that as "no restart" rather than "no handling".
 
-diff --git a/drivers/gpu/drm/drm_dp_helper.c b/drivers/gpu/drm/drm_dp_helper.c
-index a5364b519..545606aac 100644
---- a/drivers/gpu/drm/drm_dp_helper.c
-+++ b/drivers/gpu/drm/drm_dp_helper.c
-@@ -257,7 +257,9 @@ static int drm_dp_dpcd_access(struct drm_dp_aux *aux, u8 request,
- 			err = ret;
- 	}
- 
--	DRM_DEBUG_KMS("Too many retries, giving up. First error: %d\n", err);
-+	DRM_DEBUG_KMS("dpcd: Too many retries, giving up. First error: %d\t"
-+		      "address: %x\trequest: %x\t size:%zu\n",
-+		      err, msg.address, msg.request, msg.size);
- 	ret = err;
- 
- unlock:
--- 
-2.26.0
+We do end up handling the fatal signal, it's just that the handling
+doesn't involve restarting, it just involves dying.
 
+That said, I'll leave this to the usual channels, since it isn't
+exactly the same kind of urgent fix that I picked up directly..
+
+              Linus
