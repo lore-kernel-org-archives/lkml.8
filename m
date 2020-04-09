@@ -2,210 +2,441 @@ Return-Path: <SRS0=n+Ub=5Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 157BBC2D0EA
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 05:50:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 803A5C2D0EA
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 05:53:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D911320771
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 05:50:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="F1npRqch"
+	by mail.kernel.org (Postfix) with ESMTP id 4FF9C20771
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 05:53:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725985AbgDIFuW (ORCPT
+        id S1726549AbgDIFvt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Apr 2020 01:50:22 -0400
-Received: from mail-pl1-f179.google.com ([209.85.214.179]:41450 "EHLO
-        mail-pl1-f179.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725283AbgDIFuW (ORCPT
+        Thu, 9 Apr 2020 01:51:49 -0400
+Received: from relay7-d.mail.gandi.net ([217.70.183.200]:47603 "EHLO
+        relay7-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725765AbgDIFvt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Apr 2020 01:50:22 -0400
-Received: by mail-pl1-f179.google.com with SMTP id d24so3441565pll.8
-        for <linux-kernel@vger.kernel.org>; Wed, 08 Apr 2020 22:50:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=oD+3H5EUXyXsIZqvMLC6/CrJcPMIkJIU4sPceYOTfRs=;
-        b=F1npRqchyAr0X0Lz8WopTJ4+ES+oIcIfoiGvDxtYi2XSm8IP40UWH46FMGHafKnYGr
-         XB4qW92qvkHjtS+KUYVDdB62YtBL3aPuusfHH+Cf0KWY159W+Xj5RcIvtBa635UW7aab
-         d9HzZdAscSUZIsTJP7zcM9NPOrAbilWA6706Y=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=oD+3H5EUXyXsIZqvMLC6/CrJcPMIkJIU4sPceYOTfRs=;
-        b=ZvW3/P/MeNYIwsnLPQ5G1tblfXTYtg13ND7G9whaf7gLAYNFpW6Ne1lJzAvTSOr/Fm
-         YesGG8THfmnqXyMFzVDBcOR1kLNaTSGb61bWyBqUdLOSNg74DbiOJ6JFYp37R1bWeADJ
-         VCRO41P2jT85hUPNBaAJz2hzWnGzUAOSTFMPaqVheWyOkS5rzALbnRIipgCpXi54HjLk
-         8LPr+nXeWz3sGT8UE4LqmUDSoC1FXrjVfXEWA+0xefQffBRuxiFl/IJfx6Ne9mfgia4E
-         epGTLd7KlPAb4Ft2LszX98FP3Ah3pSX3p2gnveECGh8zzC0z1Akwn72Wa1tGvrpqLkPb
-         2EGw==
-X-Gm-Message-State: AGi0PuaxrtJEo8VhOUhxdfS9+9jAyrlnM+hv/LnHMlbmL6yOh63xIkMa
-        oQ2E9woaIArvNn3brye2FHvkTg==
-X-Google-Smtp-Source: APiQypLK+pYxgG3+6e6LhdOWp0EqgJ5nl8iuNInYwCrYi/OgrCelBK9E5/cYQjucscbvzheyUhVjbA==
-X-Received: by 2002:a17:902:7897:: with SMTP id q23mr10557900pll.312.1586411421919;
-        Wed, 08 Apr 2020 22:50:21 -0700 (PDT)
-Received: from hsinyi-z840.tpe.corp.google.com ([2401:fa00:1:10:b852:bd51:9305:4261])
-        by smtp.gmail.com with ESMTPSA id 198sm18471721pfa.87.2020.04.08.22.50.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 08 Apr 2020 22:50:21 -0700 (PDT)
-From:   Hsin-Yi Wang <hsinyi@chromium.org>
-To:     linux-arm-kernel@lists.infradead.org
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        devicetree@vger.kernel.org, linux-mediatek@lists.infradead.org,
-        linux-kernel@vger.kernel.org,
-        Chun-Kuang Hu <chunkuang.hu@kernel.org>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Subject: [PATCH v2] arm64: dts: mt8173: Add gce setting in mmsys and display node
-Date:   Thu,  9 Apr 2020 13:50:12 +0800
-Message-Id: <20200409055012.199320-1-hsinyi@chromium.org>
-X-Mailer: git-send-email 2.26.0.292.g33ef6b2f38-goog
+        Thu, 9 Apr 2020 01:51:49 -0400
+X-Originating-IP: 2.7.45.25
+Received: from [192.168.1.101] (lfbn-lyo-1-453-25.w2-7.abo.wanadoo.fr [2.7.45.25])
+        (Authenticated sender: alex@ghiti.fr)
+        by relay7-d.mail.gandi.net (Postfix) with ESMTPSA id 3655820002;
+        Thu,  9 Apr 2020 05:51:40 +0000 (UTC)
+Subject: Re: [PATCH RFC 4/8] riscv/kaslr: randomize the kernel image offset
+To:     Zong Li <zong.li@sifive.com>
+Cc:     Palmer Dabbelt <palmer@dabbelt.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        linux-riscv <linux-riscv@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org List" <linux-kernel@vger.kernel.org>
+References: <cover.1584352425.git.zong.li@sifive.com>
+ <16924c3f07b142688a3c0562d229cd67dc7bf8e6.1584352425.git.zong.li@sifive.com>
+ <71cc2070-e867-17e1-cc64-66b634e3f48e@ghiti.fr>
+ <CANXhq0rQ_YqmBBDEgOCcu8vr+5NWqNdnfZ+EX8ofaaD6PuBAFQ@mail.gmail.com>
+From:   Alex Ghiti <alex@ghiti.fr>
+Message-ID: <69a9ecc5-550e-24a0-6f91-d65af3e00f18@ghiti.fr>
+Date:   Thu, 9 Apr 2020 01:51:39 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <CANXhq0rQ_YqmBBDEgOCcu8vr+5NWqNdnfZ+EX8ofaaD6PuBAFQ@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In order to use GCE function, we need add some informations
-into display node (mboxes, mediatek,gce-client-reg, mediatek,gce-events).
 
-Signed-off-by: Hsin-Yi Wang <hsinyi@chromium.org>
-Reviewed-by: Bibby Hsieh <bibby.hsieh@mediatek.com>
----
-change log:
-v1->v2: align with
-19d8e335d58a ("dt-binding: gce: remove atomic_exec in mboxes property")
-60fa8c13ab1a ("drm/mediatek: Move gce event property to mutex device node")
----
- arch/arm64/boot/dts/mediatek/mt8173.dtsi | 18 +++++++++++++++++-
- 1 file changed, 17 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arm64/boot/dts/mediatek/mt8173.dtsi b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-index ccb8e88a60c5..8337ba42845d 100644
---- a/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-+++ b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-@@ -549,7 +549,7 @@ gce: mailbox@10212000 {
- 			interrupts = <GIC_SPI 135 IRQ_TYPE_LEVEL_LOW>;
- 			clocks = <&infracfg CLK_INFRA_GCE>;
- 			clock-names = "gce";
--			#mbox-cells = <3>;
-+			#mbox-cells = <2>;
- 		};
- 
- 		mipi_tx0: mipi-dphy@10215000 {
-@@ -916,6 +916,9 @@ mmsys: clock-controller@14000000 {
- 			assigned-clocks = <&topckgen CLK_TOP_MM_SEL>;
- 			assigned-clock-rates = <400000000>;
- 			#clock-cells = <1>;
-+			mboxes = <&gce 0 CMDQ_THR_PRIO_HIGHEST>,
-+				 <&gce 1 CMDQ_THR_PRIO_HIGHEST>;
-+			mediatek,gce-client-reg = <&gce SUBSYS_1400XXXX 0 0x1000>;
- 		};
- 
- 		mdp_rdma0: rdma@14001000 {
-@@ -996,6 +999,7 @@ ovl0: ovl@1400c000 {
- 			clocks = <&mmsys CLK_MM_DISP_OVL0>;
- 			iommus = <&iommu M4U_PORT_DISP_OVL0>;
- 			mediatek,larb = <&larb0>;
-+			mediatek,gce-client-reg = <&gce SUBSYS_1400XXXX 0xc000 0x1000>;
- 		};
- 
- 		ovl1: ovl@1400d000 {
-@@ -1006,6 +1010,7 @@ ovl1: ovl@1400d000 {
- 			clocks = <&mmsys CLK_MM_DISP_OVL1>;
- 			iommus = <&iommu M4U_PORT_DISP_OVL1>;
- 			mediatek,larb = <&larb4>;
-+			mediatek,gce-client-reg = <&gce SUBSYS_1400XXXX 0xd000 0x1000>;
- 		};
- 
- 		rdma0: rdma@1400e000 {
-@@ -1016,6 +1021,7 @@ rdma0: rdma@1400e000 {
- 			clocks = <&mmsys CLK_MM_DISP_RDMA0>;
- 			iommus = <&iommu M4U_PORT_DISP_RDMA0>;
- 			mediatek,larb = <&larb0>;
-+			mediatek,gce-client-reg = <&gce SUBSYS_1400XXXX 0xe000 0x1000>;
- 		};
- 
- 		rdma1: rdma@1400f000 {
-@@ -1026,6 +1032,7 @@ rdma1: rdma@1400f000 {
- 			clocks = <&mmsys CLK_MM_DISP_RDMA1>;
- 			iommus = <&iommu M4U_PORT_DISP_RDMA1>;
- 			mediatek,larb = <&larb4>;
-+			mediatek,gce-client-reg = <&gce SUBSYS_1400XXXX 0xf000 0x1000>;
- 		};
- 
- 		rdma2: rdma@14010000 {
-@@ -1036,6 +1043,7 @@ rdma2: rdma@14010000 {
- 			clocks = <&mmsys CLK_MM_DISP_RDMA2>;
- 			iommus = <&iommu M4U_PORT_DISP_RDMA2>;
- 			mediatek,larb = <&larb4>;
-+			mediatek,gce-client-reg = <&gce SUBSYS_1401XXXX 0 0x1000>;
- 		};
- 
- 		wdma0: wdma@14011000 {
-@@ -1046,6 +1054,7 @@ wdma0: wdma@14011000 {
- 			clocks = <&mmsys CLK_MM_DISP_WDMA0>;
- 			iommus = <&iommu M4U_PORT_DISP_WDMA0>;
- 			mediatek,larb = <&larb0>;
-+			mediatek,gce-client-reg = <&gce SUBSYS_1401XXXX 0x1000 0x1000>;
- 		};
- 
- 		wdma1: wdma@14012000 {
-@@ -1056,6 +1065,7 @@ wdma1: wdma@14012000 {
- 			clocks = <&mmsys CLK_MM_DISP_WDMA1>;
- 			iommus = <&iommu M4U_PORT_DISP_WDMA1>;
- 			mediatek,larb = <&larb4>;
-+			mediatek,gce-client-reg = <&gce SUBSYS_1401XXXX 0x2000 0x1000>;
- 		};
- 
- 		color0: color@14013000 {
-@@ -1064,6 +1074,7 @@ color0: color@14013000 {
- 			interrupts = <GIC_SPI 187 IRQ_TYPE_LEVEL_LOW>;
- 			power-domains = <&scpsys MT8173_POWER_DOMAIN_MM>;
- 			clocks = <&mmsys CLK_MM_DISP_COLOR0>;
-+			mediatek,gce-client-reg = <&gce SUBSYS_1401XXXX 0x3000 0x1000>;
- 		};
- 
- 		color1: color@14014000 {
-@@ -1072,6 +1083,7 @@ color1: color@14014000 {
- 			interrupts = <GIC_SPI 188 IRQ_TYPE_LEVEL_LOW>;
- 			power-domains = <&scpsys MT8173_POWER_DOMAIN_MM>;
- 			clocks = <&mmsys CLK_MM_DISP_COLOR1>;
-+			mediatek,gce-client-reg = <&gce SUBSYS_1401XXXX 0x4000 0x1000>;
- 		};
- 
- 		aal@14015000 {
-@@ -1080,6 +1092,7 @@ aal@14015000 {
- 			interrupts = <GIC_SPI 189 IRQ_TYPE_LEVEL_LOW>;
- 			power-domains = <&scpsys MT8173_POWER_DOMAIN_MM>;
- 			clocks = <&mmsys CLK_MM_DISP_AAL>;
-+			mediatek,gce-client-reg = <&gce SUBSYS_1401XXXX 0x5000 0x1000>;
- 		};
- 
- 		gamma@14016000 {
-@@ -1088,6 +1101,7 @@ gamma@14016000 {
- 			interrupts = <GIC_SPI 190 IRQ_TYPE_LEVEL_LOW>;
- 			power-domains = <&scpsys MT8173_POWER_DOMAIN_MM>;
- 			clocks = <&mmsys CLK_MM_DISP_GAMMA>;
-+			mediatek,gce-client-reg = <&gce SUBSYS_1401XXXX 0x6000 0x1000>;
- 		};
- 
- 		merge@14017000 {
-@@ -1193,6 +1207,8 @@ mutex: mutex@14020000 {
- 			interrupts = <GIC_SPI 169 IRQ_TYPE_LEVEL_LOW>;
- 			power-domains = <&scpsys MT8173_POWER_DOMAIN_MM>;
- 			clocks = <&mmsys CLK_MM_MUTEX_32K>;
-+			mediatek,gce-events = <CMDQ_EVENT_MUTEX0_STREAM_EOF>,
-+                                              <CMDQ_EVENT_MUTEX1_STREAM_EOF>;
- 		};
- 
- 		larb0: larb@14021000 {
--- 
-2.26.0.292.g33ef6b2f38-goog
+On 4/7/20 6:53 AM, Zong Li wrote:
+> On Tue, Apr 7, 2020 at 1:11 PM Alex Ghiti <alex@ghiti.fr> wrote:
+>>
+>>
+>> On 3/24/20 3:30 AM, Zong Li wrote:
+>>> Entropy is derived from the banner and timer, it is better than nothing
+>>> but not enough secure, so previous stage may pass entropy via the device
+>>> tree /chosen/kaslr-seed node.
+>>>
+>>> We limit randomization range within 1GB, so we can exploit early page
+>>> table to map new destination of kernel image. Additionally, the kernel
+>>> offset need 2M alignment to ensure it's good in PMD page table.
+>>>
+>>> We also checks the kernel offset whether it's safe by avoiding to
+>>> overlaps with dtb, initrd and reserved memory regions.
+>>>
+>>
+>> That maybe changes the way my sv48 patchset will be implemented: I can't
+>> get user preference (3-level or 4-level) by any means, device-tree or
+>> kernel parameter.
+>>
+>> But I don't see how you could get a random offset without info from the
+>> device tree anyway (reserved memory regions especially), so maybe I
+>> could parse dtb for allowing the user to choose. I'll move this
+>> discussion to the sv48 introduction.
+> 
+> Maybe I'm a little bit misunderstanding here, but I think I got the
+> random offset through some information by parsing dtb.
+> 
 
+I was just saying that I may use the dtb too in sv48 patchset to make it 
+possible for users to choose sv39 even if sv48 is supported by hardware 
+(which is not the case in my current patchset).
+
+>>
+>>> Signed-off-by: Zong Li <zong.li@sifive.com>
+>>> ---
+>>>    arch/riscv/kernel/kaslr.c | 274 +++++++++++++++++++++++++++++++++++++-
+>>>    arch/riscv/mm/init.c      |   2 +-
+>>>    2 files changed, 273 insertions(+), 3 deletions(-)
+>>>
+>>> diff --git a/arch/riscv/kernel/kaslr.c b/arch/riscv/kernel/kaslr.c
+>>> index 281b5fcca5c8..9ec2b608eb7f 100644
+>>> --- a/arch/riscv/kernel/kaslr.c
+>>> +++ b/arch/riscv/kernel/kaslr.c
+>>> @@ -11,23 +11,293 @@
+>>>    #include <asm/cacheflush.h>
+>>>
+>>>    extern char _start[], _end[];
+>>> +extern void *dtb_early_va;
+>>> +extern phys_addr_t dtb_early_pa;
+>>>    extern void secondary_random_target(void);
+>>>    extern void kaslr_create_page_table(uintptr_t start, uintptr_t end);
+>>>
+>>>    uintptr_t secondary_next_target __initdata;
+>>>    static uintptr_t kaslr_offset __initdata;
+>>>
+>>> +static const __init u32 *get_reg_address(int root_cells,
+>>> +                                      const u32 *value, u64 *result)
+>>> +{
+>>> +     int cell;
+>>> +     *result = 0;
+>>> +
+>>> +     for (cell = root_cells; cell > 0; --cell)
+>>> +             *result = (*result << 32) + fdt32_to_cpu(*value++);
+>>> +
+>>> +     return value;
+>>> +}
+>>> +
+>>> +static __init int get_node_addr_size_cells(const char *path, int *addr_cell,
+>>> +                                        int *size_cell)
+>>> +{
+>>> +     int node = fdt_path_offset(dtb_early_va, path);
+>>> +     fdt64_t *prop;
+>>> +
+>>> +     if (node < 0)
+>>> +             return -EINVAL;
+>>> +
+>>> +     prop = fdt_getprop_w(dtb_early_va, node, "#address-cells", NULL);
+>>> +     if (!prop)
+>>> +             return -EINVAL;
+>>> +     *addr_cell = fdt32_to_cpu(*prop);
+>>> +
+>>> +     prop = fdt_getprop_w(dtb_early_va, node, "#size-cells", NULL);
+>>> +     if (!prop)
+>>> +             return -EINVAL;
+>>> +     *size_cell = fdt32_to_cpu(*prop);
+>>> +
+>>> +     return node;
+>>> +}
+>>> +
+>>> +static __init void kaslr_get_mem_info(uintptr_t *mem_start,
+>>> +                                   uintptr_t *mem_size)
+>>> +{
+>>> +     int node, root, addr_cells, size_cells;
+>>> +     u64 base, size;
+>>> +
+>>> +     /* Get root node's address cells and size cells. */
+>>> +     root = get_node_addr_size_cells("/", &addr_cells, &size_cells);
+>>> +     if (root < 0)
+>>> +             return;
+>>> +
+>>> +     /* Get memory base address and size. */
+>>> +     fdt_for_each_subnode(node, dtb_early_va, root) {
+>>> +             const char *dev_type;
+>>> +             const u32 *reg;
+>>> +
+>>> +             dev_type = fdt_getprop(dtb_early_va, node, "device_type", NULL);
+>>> +             if (!dev_type)
+>>> +                     continue;
+>>> +
+>>> +             if (!strcmp(dev_type, "memory")) {
+>>> +                     reg = fdt_getprop(dtb_early_va, node, "reg", NULL);
+>>> +                     if (!reg)
+>>> +                             return;
+>>> +
+>>> +                     reg = get_reg_address(addr_cells, reg, &base);
+>>> +                     reg = get_reg_address(size_cells, reg, &size);
+>>> +
+>>> +                     *mem_start = base;
+>>> +                     *mem_size = size;
+>>> +
+>>> +                     break;
+>>> +             }
+>>> +     }
+>>> +}
+>>> +
+>>> +/* Return a default seed if there is no HW generator. */
+>>> +static u64 kaslr_default_seed = ULL(-1);
+>>> +static __init u64 kaslr_get_seed(void)
+>>> +{
+>>> +     int node, len;
+>>> +     fdt64_t *prop;
+>>> +     u64 ret;
+>>> +
+>>> +     node = fdt_path_offset(dtb_early_va, "/chosen");
+>>> +     if (node < 0)
+>>> +             return kaslr_default_seed++;
+>>> +
+>>> +     prop = fdt_getprop_w(dtb_early_va, node, "kaslr-seed", &len);
+>>> +     if (!prop || len != sizeof(u64))
+>>> +             return kaslr_default_seed++;
+>>> +
+>>> +     ret = fdt64_to_cpu(*prop);
+>>> +
+>>> +     /* Re-write to zero for checking whether get seed at second time */
+>>> +     *prop = 0;
+>>> +
+>>> +     return ret;
+>>> +}
+>>> +
+>>> +static __init bool is_overlap(uintptr_t s1, uintptr_t e1, uintptr_t s2,
+>>> +                           uintptr_t e2)
+>>> +{
+>>> +     return e1 >= s2 && e2 >= s1;
+>>> +}
+>>
+>> Inline this function or use a macro maybe.
+> 
+> Yes, sure. Thanks.
+> 
+>>
+>>> +
+>>> +static __init bool is_overlap_reserved_mem(uintptr_t start_addr,
+>>> +                                        uintptr_t end_addr)
+>>> +{
+>>> +     int node, rsv_mem, addr_cells, size_cells;
+>>> +
+>>> +     /* Get the reserved-memory node. */
+>>> +     rsv_mem = get_node_addr_size_cells("/reserved-memory",
+>>> +                                        &addr_cells,
+>>> +                                        &size_cells);
+>>> +     if (rsv_mem < 0)
+>>> +             return false;
+>>> +
+>>> +     /* Get memory base address and size. */
+>>> +     fdt_for_each_subnode(node, dtb_early_va, rsv_mem) {
+>>> +             uint64_t base, size;
+>>> +             const uint32_t *reg;
+>>> +
+>>> +             reg = fdt_getprop(dtb_early_va, node, "reg", NULL);
+>>> +             if (!reg)
+>>> +                     return 0;
+>>> +
+>>> +             reg = get_reg_address(addr_cells, reg, &base);
+>>> +             reg = get_reg_address(size_cells, reg, &size);
+>>> +
+>>> +             if (is_overlap(start_addr, end_addr, base, base + size))
+>>> +                     return true;
+>>> +     }
+>>> +
+>>> +     return false;
+>>> +}
+>>> +
+>>> +static __init bool is_overlap_initrd(uintptr_t start_addr, uintptr_t end_addr)
+>>> +{
+>>> +     int node;
+>>> +     uintptr_t initrd_start, initrd_end;
+>>> +     fdt64_t *prop;
+>>> +
+>>> +     node = fdt_path_offset(dtb_early_va, "/chosen");
+>>> +     if (node < 0)
+>>> +             return false;
+>>> +
+>>> +     prop = fdt_getprop_w(dtb_early_va, node, "linux,initrd-start", NULL);
+>>> +     if (!prop)
+>>> +             return false;
+>>> +
+>>> +     initrd_start = fdt64_to_cpu(*prop);
+>>> +
+>>> +     prop = fdt_getprop_w(dtb_early_va, node, "linux,initrd-end", NULL);
+>>> +     if (!prop)
+>>> +             return false;
+>>> +
+>>> +     initrd_end = fdt64_to_cpu(*prop);
+>>> +
+>>> +     return is_overlap(start_addr, end_addr, initrd_start, initrd_end);
+>>> +}
+>>> +
+>>> +static __init bool is_overlap_dtb(uintptr_t start_addr, uintptr_t end_addr)
+>>> +{
+>>> +     uintptr_t dtb_start = dtb_early_pa;
+>>> +     uintptr_t dtb_end = dtb_start + fdt_totalsize(dtb_early_va);
+>>> +
+>>> +     return is_overlap(start_addr, end_addr, dtb_start, dtb_end);
+>>> +}
+>>> +
+>>> +static __init bool has_regions_overlapping(uintptr_t start_addr,
+>>> +                                        uintptr_t end_addr)
+>>> +{
+>>> +     if (is_overlap_dtb(start_addr, end_addr))
+>>> +             return true;
+>>> +
+>>> +     if (is_overlap_initrd(start_addr, end_addr))
+>>> +             return true;
+>>> +
+>>> +     if (is_overlap_reserved_mem(start_addr, end_addr))
+>>> +             return true;
+>>> +
+>>> +     return false;
+>>> +}
+>>> +
+>>> +static inline __init unsigned long get_legal_offset(int random_index,
+>>> +                                                 int max_index,
+>>> +                                                 uintptr_t mem_start,
+>>> +                                                 uintptr_t kernel_size)
+>>> +{
+>>> +     uintptr_t start_addr, end_addr;
+>>> +     int idx, stop_idx;
+>>> +
+>>> +     idx = stop_idx = random_index;
+>>> +
+>>> +     do {
+>>> +             start_addr = mem_start + idx * SZ_2M + kernel_size;
+>>> +             end_addr = start_addr + kernel_size;
+>>> +
+>>> +             /* Check overlap to other regions. */
+>>> +             if (!has_regions_overlapping(start_addr, end_addr))
+>>> +                     return idx * SZ_2M + kernel_size;
+>>> +
+>>> +             if (idx-- < 0)
+>>> +                     idx = max_index;
+>>
+>> Isn't the fallback to max_index a security breach ? Because at some
+>> point, the kernel will be loaded at this specific address.
+> 
+> The max_index is the maximum safe index for destination of new kernel
+> image. Could you give more explain here?
+> 
+
+But max_index is not random at all. I really don't know if that's a 
+problem, I just found intriguing the fact the kernel could be loaded at 
+some specific location. Would it be more secure, instead of picking 
+max_index as fallback when reaching 0, to pick another random number 
+between random_index and max_index ?
+
+Alex
+
+>>
+>>> +
+>>> +     } while (idx != stop_idx);
+>>> +
+>>> +     return 0;
+>>> +}
+>>> +
+>>> +static inline __init u64 rotate_xor(u64 hash, const void *area, size_t size)
+>>> +{
+>>> +     size_t i;
+>>> +     uintptr_t *ptr = (uintptr_t *) area;
+>>> +
+>>> +     for (i = 0; i < size / sizeof(hash); i++) {
+>>> +             /* Rotate by odd number of bits and XOR. */
+>>> +             hash = (hash << ((sizeof(hash) * 8) - 7)) | (hash >> 7);
+>>> +             hash ^= ptr[i];
+>>> +     }
+>>> +
+>>> +     return hash;
+>>> +}
+>>> +
+>>> +#define MEM_RESERVE_START    __pa(PAGE_OFFSET)
+>>> +static __init uintptr_t get_random_offset(u64 seed, uintptr_t kernel_size)
+>>> +{
+>>> +     uintptr_t mem_start = 0, mem_size= 0, random_size;
+>>> +     uintptr_t kernel_size_align = round_up(kernel_size, SZ_2M);
+>>> +     int index;
+>>> +     u64 random = 0;
+>>> +     cycles_t time_base;
+>>> +
+>>> +     /* Attempt to create a simple but unpredictable starting entropy */
+>>> +     random = rotate_xor(random, linux_banner, strlen(linux_banner));
+>>> +
+>>> +     /*
+>>> +      * If there is no HW random number generator, use timer to get a random
+>>> +      * number. This is better than nothing but not enough secure.
+>>> +      */
+>>> +     time_base = get_cycles() << 32;
+>>> +     time_base ^= get_cycles();
+>>> +     random = rotate_xor(random, &time_base, sizeof(time_base));
+>>> +
+>>> +     if (seed)
+>>> +             random = rotate_xor(random, &seed, sizeof(seed));
+>>> +
+>>> +     kaslr_get_mem_info(&mem_start, &mem_size);
+>>> +     if (!mem_size)
+>>> +             return 0;
+>>> +
+>>> +     if (mem_start < MEM_RESERVE_START) {
+>>> +             mem_size -= MEM_RESERVE_START - mem_start;
+>>> +             mem_start = MEM_RESERVE_START;
+>>> +     }
+>>> +
+>>> +     /*
+>>> +      * Limit randomization range within 1G, so we can exploit
+>>> +      * early_pmd/early_pte during early page table phase.
+>>> +      */
+>>> +     random_size = min_t(u64,
+>>> +                         mem_size - (kernel_size_align * 2),
+>>> +                         SZ_1G - (kernel_size_align * 2));
+>>
+>> pgdir size is 30 bits in sv39, but it's 39 bits in sv48, you should use
+>> PGDIR_SIZE macro here.
+> 
+> OK, change it in the next version. Thanks.
+> 
+>>
+>>> +
+>>> +     /* The index of 2M block in whole avaliable region */
+>>> +     index = random % (random_size / SZ_2M);
+>>> +
+>>> +     return get_legal_offset(index, random_size / SZ_2M,
+>>> +                             mem_start, kernel_size_align);
+>>> +}
+>>> +
+>>>    uintptr_t __init kaslr_early_init(void)
+>>>    {
+>>> +     u64 seed;
+>>>        uintptr_t dest_start, dest_end;
+>>>        uintptr_t kernel_size = (uintptr_t) _end - (uintptr_t) _start;
+>>>
+>>>        /* Get zero value at second time to avoid doing randomization again. */
+>>> -     if (kaslr_offset)
+>>> +     seed = kaslr_get_seed();
+>>> +     if (!seed)
+>>>                return 0;
+>>>
+>>>        /* Get the random number for kaslr offset. */
+>>> -     kaslr_offset = 0x10000000;
+>>> +     kaslr_offset = get_random_offset(seed, kernel_size);
+>>>
+>>>        /* Update kernel_virt_addr for get_kaslr_offset. */
+>>>        kernel_virt_addr += kaslr_offset;
+>>> diff --git a/arch/riscv/mm/init.c b/arch/riscv/mm/init.c
+>>> index 2f5b25f02b6c..34c6ecf2c599 100644
+>>> --- a/arch/riscv/mm/init.c
+>>> +++ b/arch/riscv/mm/init.c
+>>> @@ -125,7 +125,7 @@ static void __init setup_initrd(void)
+>>>    }
+>>>    #endif /* CONFIG_BLK_DEV_INITRD */
+>>>
+>>> -static phys_addr_t dtb_early_pa __initdata;
+>>> +phys_addr_t dtb_early_pa __initdata;
+>>>
+>>>    void __init setup_bootmem(void)
+>>>    {
+>>>
+>>
+>> Alex
