@@ -2,162 +2,93 @@ Return-Path: <SRS0=n+Ub=5Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FE71C2BA80
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 09:12:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7447C2D0EA
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 09:13:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7597120A8B
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 09:12:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A4BC920CC7
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 09:13:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1586423609;
+	bh=aKSM79BkmxP5Uhkn0jXZmlAGRE85asa04JTnqLZ24V4=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=UVWyM/YUOQuYtCPnTzElbSyt+5CJGu09gES6So14A2kAeUj2wO/13UAtE3y0ULM2k
+	 2DxwUfZE5pmYSIp6t6t7MQ1XRlk+/d82SfFLymjtc/RbfXCnN3o0slPs9JW9/jT713
+	 acYvKxBLlkmMdbIoZjJXZGzMYqP/zPQemqrdBo7g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726666AbgDIJMX (ORCPT
+        id S1726627AbgDIJN1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Apr 2020 05:12:23 -0400
-Received: from foss.arm.com ([217.140.110.172]:47422 "EHLO foss.arm.com"
+        Thu, 9 Apr 2020 05:13:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39834 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725972AbgDIJMW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Apr 2020 05:12:22 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8850331B;
-        Thu,  9 Apr 2020 02:12:22 -0700 (PDT)
-Received: from [10.37.12.112] (unknown [10.37.12.112])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 6A2AC3F73D;
-        Thu,  9 Apr 2020 02:12:20 -0700 (PDT)
-Subject: Re: [RFC PATCH] coresight: dynamic-replicator: Fix handling of
- multiple connections
-To:     saiprakash.ranjan@codeaurora.org
-Cc:     mike.leach@linaro.org, mathieu.poirier@linaro.org,
-        leo.yan@linaro.org, alexander.shishkin@linux.intel.com,
-        swboyd@chromium.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
-References: <20200405102819.28460-1-saiprakash.ranjan@codeaurora.org>
- <CAJ9a7VgQzK1XSCvLwuqODwkWfvo=6Wwps7Db+pL5xYDeCuktrg@mail.gmail.com>
- <6c0f45488f8a44bf860759e00fcabd09@codeaurora.org>
- <906d374d-a4d6-f2f2-6845-88b97a5ff7d9@arm.com>
- <39a2b3fff165a108fa59d72b630b5f14@codeaurora.org>
- <bb209f80-ac02-6321-dac4-ebf9ee6fa9a0@arm.com>
- <bd05b31c2391edfff5044f22f2f83edf@codeaurora.org>
- <e9c299c4-caeb-9eb8-f019-b311bfce756a@arm.com>
- <a7074f44ebbde720b5e0189801eab7c9@codeaurora.org>
- <20200408224347.GA388414@ewhatever.cambridge.arm.com>
- <9ad167836b0a22694d58d24f39db89a6@codeaurora.org>
-From:   Suzuki K Poulose <suzuki.poulose@arm.com>
-Message-ID: <671892c3-b90d-73f0-4706-b74b40002260@arm.com>
-Date:   Thu, 9 Apr 2020 10:17:03 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.7.0
+        id S1725783AbgDIJN1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Apr 2020 05:13:27 -0400
+Received: from linux-8ccs (p3EE2C7AC.dip0.t-ipconnect.de [62.226.199.172])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id AEB1A20A8B;
+        Thu,  9 Apr 2020 09:13:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1586423607;
+        bh=aKSM79BkmxP5Uhkn0jXZmlAGRE85asa04JTnqLZ24V4=;
+        h=Date:From:To:Cc:Subject:From;
+        b=XMFAzdOjxs+WiA+TYbEFQU7Y4Peb0unmh8Uost7iKEpwIQzhqTh9NZb5DQedX1nuL
+         GlnK3DjCCw+WCEtK1qstSarl6rDqf8qS88wSJa2zq9se7wtYB2yIZOyQ5HqyjBLFtj
+         G1/qVuWN72/kKO0vDQEZQsMq5Z3G50/72qL+/kKE=
+Date:   Thu, 9 Apr 2020 11:13:23 +0200
+From:   Jessica Yu <jeyu@kernel.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-kernel@vger.kernel.org
+Subject: [GIT PULL] Modules updates for v5.7
+Message-ID: <20200409091323.GC26619@linux-8ccs>
 MIME-Version: 1.0
-In-Reply-To: <9ad167836b0a22694d58d24f39db89a6@codeaurora.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+X-OS:   Linux linux-8ccs 4.12.14-lp150.12.61-default x86_64
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Sai,
+Hi Linus,
 
+Please pull below to receive modules updates for the 5.7 merge window.
+Only a small cleanup this time around.
 
-Thanks for the quick testing ! Please see below for the
-tmc_etr probe failure.
+Thanks,
 
-On 04/09/2020 08:51 AM, Sai Prakash Ranjan wrote:
-> Hi Suzuki,
-> 
-> On 2020-04-09 04:13, Suzuki K Poulose wrote:
->> On Tue, Apr 07, 2020 at 08:48:54PM +0530, Sai Prakash Ranjan wrote:
->>
->> Please find the untested patch below.
->>
->> ---8>---
->>
->> [untested] coresight: Fix support for sparse port numbers
->>
->> On some systems the firmware may not describe all the ports
->> connected to a component (e.g, for security reasons). This
->> could be especially problematic for "funnels" where we could
->> end up in modifying memory beyond the allocated space for
->> refcounts.
->>
->> e.g, for a funnel with input ports listed 0, 3, 5, nr_inport = 3.
->> However the we could access refcnts[5] while checking for
->> references.
->>
->> Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
->> ---
->>  .../hwtracing/coresight/coresight-platform.c  | 74 ++++++++++++-------
->>  drivers/hwtracing/coresight/coresight.c       |  8 +-
->>  2 files changed, 56 insertions(+), 26 deletions(-)
->>
->> diff --git a/drivers/hwtracing/coresight/coresight-platform.c
->> b/drivers/hwtracing/coresight/coresight-platform.c
->> index 3c5bee429105..1c610d6e944b 100644
->> --- a/drivers/hwtracing/coresight/coresight-platform.c
->> +++ b/drivers/hwtracing/coresight/coresight-platform.c
->> @@ -67,6 +67,7 @@ static void of_coresight_get_ports_legacy(const
+Jessica
 
-[...]
+---
+The following changes since commit bb6d3fb354c5ee8d6bde2d576eb7220ea09862b9:
 
->> @@ -684,8 +702,13 @@ static int acpi_coresight_parse_graph(struct
->> acpi_device *adev,
->>          return rc;
->>
->>      /* Copy the connection information to the final location */
->> -    for (i = 0; i < pdata->nr_outport; i++)
->> -        pdata->conns[i] = conns[i];
->> +    for (i = 0; conns + i < ptr; i++) {
->> +        int port = conns[i].outport;
->> +
->> +        /* Duplicate output port */
->> +        WARN_ON(pdata->conns[port].child_fwnode);
->> +        pdata->conns[port] = conns[i];
->> +    }
->>
->>      devm_kfree(&adev->dev, conns);
->>      return 0;
->> @@ -787,6 +810,7 @@ coresight_get_platform_data(struct device *dev)
->>          goto error;
->>
->>      pdata = devm_kzalloc(dev, sizeof(*pdata), GFP_KERNEL);
->> +    pdata->nr_outport = pdata->nr_inport = -1;
+  Linux 5.6-rc1 (2020-02-09 16:08:48 -0800)
 
+are available in the Git repository at:
 
-Please could you remove this hunk and test it ? I forgot to update the
-commit before I sent this over.
+  git://git.kernel.org/pub/scm/linux/kernel/git/jeyu/linux.git tags/modules-for-v5.7
 
+for you to fetch changes up to 0f74226649fb2875a91b68f3750f55220aa73425:
 
->>              /* Does it match this newly added device? */
->> @@ -1029,6 +1032,9 @@ static void coresight_fixup_device_conns(struct
->> coresight_device *csdev)
->>          struct coresight_connection *conn = &csdev->pdata->conns[i];
->>          struct device *dev = NULL;
->>
->> +        if (!conn->child_fwnode)
->> +            continue;
->> +
->>          dev = bus_find_device_by_fwnode(&coresight_bustype, 
->> conn->child_fwnode);
->>          if (dev) {
->>              conn->child_dev = to_coresight_device(dev);
->> @@ -1061,7 +1067,7 @@ static int coresight_remove_match(struct device
->> *dev, void *data)
->>      for (i = 0; i < iterator->pdata->nr_outport; i++) {
->>          conn = &iterator->pdata->conns[i];
->>
->> -        if (conn->child_dev == NULL)
->> +        if (conn->child_dev == NULL || conn->child_fwnode == NULL)
->>              continue;
->>
->>          if (csdev->dev.fwnode == conn->child_fwnode) {
-> 
-> 
-> Thanks Suzuki, I don't see the KASAN warning anymore with this patch.
-> But somehow tmc_etr probe fails with error -12(ENOMEM).
+  kernel: module: Replace zero-length array with flexible-array member (2020-02-17 21:40:55 +0100)
 
-See the above suggestion.
+----------------------------------------------------------------
+Modules updates for v5.7
 
-Cheers
-Suzuki
+Summary of modules changes for the 5.7 merge window:
+
+- Trivial zero-length array to flexible-array cleanup
+
+Signed-off-by: Jessica Yu <jeyu@kernel.org>
+
+----------------------------------------------------------------
+Gustavo A. R. Silva (1):
+      kernel: module: Replace zero-length array with flexible-array member
+
+ kernel/module.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
