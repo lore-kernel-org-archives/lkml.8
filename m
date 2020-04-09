@@ -2,275 +2,207 @@ Return-Path: <SRS0=n+Ub=5Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62B8EC2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 15:05:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74732C2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 15:06:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2E50620692
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 15:05:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4A19120692
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 15:06:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=omnibond-com.20150623.gappssmtp.com header.i=@omnibond-com.20150623.gappssmtp.com header.b="zMrk9cTV"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="PuhKxnCS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727990AbgDIPFd (ORCPT
+        id S1727994AbgDIPGR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Apr 2020 11:05:33 -0400
-Received: from mail-vs1-f68.google.com ([209.85.217.68]:43716 "EHLO
-        mail-vs1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727826AbgDIPFd (ORCPT
+        Thu, 9 Apr 2020 11:06:17 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:39544 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727801AbgDIPGR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Apr 2020 11:05:33 -0400
-Received: by mail-vs1-f68.google.com with SMTP id u11so4966793vsu.10
-        for <linux-kernel@vger.kernel.org>; Thu, 09 Apr 2020 08:05:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=omnibond-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=8wOr4sIJG9MjIWb5gIasStL1/2RcZWGgASEM+cd6V4A=;
-        b=zMrk9cTVFfSASeJ/BOzeW53mSDwYDfZRsyn9ypQr27hkUJnGd57Bk1Fmtf2m8RWhU5
-         hFfSCmSS5Jp0Kal/Ga5SqGDuzxKa1KRYI9qqHIGL7SmpWcKlk8W6dDh340tKzTKBFZti
-         pXHxl8DqXw2khEOlv/ZoJmFytaCrUqb0Or4PnBKjjQgGJ16X06PFUP5SZlErKMr0aAi9
-         ADeQuWlSEPaMoecYeG7d7aIMc3XUPa7gPe4Of4IQREQe5bLfcAjGhn97BwfBu/MfNbsj
-         7IoJhJETiUf/9LUZYWYjV8r6oeKBe34MYjYVnzTfCntn3p9ZbGhAXVCenwCEksMluXLD
-         EpDQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=8wOr4sIJG9MjIWb5gIasStL1/2RcZWGgASEM+cd6V4A=;
-        b=Q5cQ7cvfUDJPXDSxbBbLcwd5Hc6GwJcfYMTl+s2wnY1cgA1EHe+3WSlJk3jGFBEXYQ
-         o+ny5K/9jhXr3wyxPtPGhwcUInDVNxJa/CZtK0yP0E6V/HrE9fBzcSyiwh2c93MqrABy
-         rKUEdbRmNf4D2bAfNCIL+lqfnDQykQHCUH67nhmYPkCPqEaJ0JWr2z6YCVj6/DqeQUh1
-         zvxUY1MOI3qqBvJQ/f3+XdMYTl0YLTTqM2tWa59J0htSbacUHeyshX/1I0CFJN50Tw1F
-         DI67aaFOuDjZFjVkaRA5j3HBHbcenx4rLOowPO1p4hsC3Qmuv9s5r5jRcQKpgEZ/v2U6
-         FyZA==
-X-Gm-Message-State: AGi0Pubxo6R1F5OOARn213mUARQPKLHPxMNSFOYzEAXsOF2Hcjt/A5yq
-        G2wM50sRnkleTjAtDLDA2CI/DmsPJreEfsPyMmXiww==
-X-Google-Smtp-Source: APiQypLshhcSaa4oPjvBf6sDo6HqRYfrNlqomIcbCtO1isz1E8qfdxx8DBUt7A0hRDnQc/O92NXtPf+hepSNxlS3QqU=
-X-Received: by 2002:a05:6102:146:: with SMTP id a6mr313242vsr.237.1586444730502;
- Thu, 09 Apr 2020 08:05:30 -0700 (PDT)
+        Thu, 9 Apr 2020 11:06:17 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1586444776;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=W2Ev3/S1C/3a4puTtGn9OVdridbzmbjLhCuT5UsL+Ig=;
+        b=PuhKxnCSaobelSUpOflzo6qXmXjGDpFFzDOrf2ADTYt/MIpxi2+vdKWnJ0eIKsQq1kXal7
+        YXPuzqq6dX8KEPxLvf9qAiq+zPSoX8Q33p3YGiXsdIsgSLfvSyXdPj9HL7019JNPhlNi1/
+        feb4sV5JOGTC7VIV3U+RIm/HPT01Jes=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-296-VSi-y48XO9igghdtVzCRuw-1; Thu, 09 Apr 2020 11:06:12 -0400
+X-MC-Unique: VSi-y48XO9igghdtVzCRuw-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 490928017F5;
+        Thu,  9 Apr 2020 15:06:10 +0000 (UTC)
+Received: from gondolin (ovpn-112-54.ams2.redhat.com [10.36.112.54])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 0246C19757;
+        Thu,  9 Apr 2020 15:06:04 +0000 (UTC)
+Date:   Thu, 9 Apr 2020 17:06:02 +0200
+From:   Cornelia Huck <cohuck@redhat.com>
+To:     Tony Krowiak <akrowiak@linux.ibm.com>
+Cc:     linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org, freude@linux.ibm.com, borntraeger@de.ibm.com,
+        mjrosato@linux.ibm.com, pmorel@linux.ibm.com, pasic@linux.ibm.com,
+        alex.williamson@redhat.com, kwankhede@nvidia.com,
+        jjherne@linux.ibm.com, fiuczy@linux.ibm.com
+Subject: Re: [PATCH v7 02/15] s390/vfio-ap: manage link between queue struct
+ and matrix mdev
+Message-ID: <20200409170602.4440be0f.cohuck@redhat.com>
+In-Reply-To: <20200407192015.19887-3-akrowiak@linux.ibm.com>
+References: <20200407192015.19887-1-akrowiak@linux.ibm.com>
+        <20200407192015.19887-3-akrowiak@linux.ibm.com>
+Organization: Red Hat GmbH
 MIME-Version: 1.0
-References: <20200409105253.1c86f4c8@canb.auug.org.au>
-In-Reply-To: <20200409105253.1c86f4c8@canb.auug.org.au>
-From:   Mike Marshall <hubcap@omnibond.com>
-Date:   Thu, 9 Apr 2020 11:05:19 -0400
-Message-ID: <CAOg9mSS0Kof75WpiGQtHPG4EZ8n_qK5yKF+h=Me2cD1CuaSe3g@mail.gmail.com>
-Subject: Re: linux-next: manual merge of the orangefs tree with Linus' tree
-To:     Stephen Rothwell <sfr@canb.auug.org.au>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-I see all the other rst files, but no orangefs.rst...
+On Tue,  7 Apr 2020 15:20:02 -0400
+Tony Krowiak <akrowiak@linux.ibm.com> wrote:
 
-I did see evidence on fs-devel a few months(?) ago that someone
-was converting txt files to rst and that orangefs.txt
-was one of them... perhaps there was something I should
-have done but didn't? Anywho... what next?
+> A vfio_ap_queue structure is created for each queue device probed. To
+> ensure that the matrix mdev to which a queue's APQN is assigned is linked
+> to the queue structure as long as the queue device is bound to the vfio_ap
+> device driver, let's go ahead and manage these links when the queue device
+> is probed and removed as well as whenever an adapter or domain is assigned
+> to or unassigned from the matrix mdev.
+> 
+> Signed-off-by: Tony Krowiak <akrowiak@linux.ibm.com>
+> ---
+>  drivers/s390/crypto/vfio_ap_ops.c | 75 ++++++++++++++++++++++++++++---
+>  1 file changed, 70 insertions(+), 5 deletions(-)
 
-[hubcap@hubcapsc linux]$ git log | grep ^commit | head -5
-commit aa317d3351dee7cb0b27db808af0cd2340dcbaef  |  my commits I'll
-commit 0e393a9a8f2a450862964451715d68e9a96a9c34  |  try to get pulled
-commit ec95f1dedc9c64ac5a8b0bdb7c276936c70fdedd  |  this time
-commit 7111951b8d4973bda27ff663f2cf18b663d15b48  <--- Linux 5.6
-commit 570203ec830dd451b8804cdef8036f7fca9f0311
-[hubcap@hubcapsc linux]$ find . -name orangefs.rst
-[hubcap@hubcapsc linux]$
+(...)
 
--Mike "only three more days in the merge window"
+> @@ -536,6 +531,31 @@ static int vfio_ap_mdev_verify_no_sharing(struct ap_matrix_mdev *matrix_mdev)
+>  	return 0;
+>  }
+>  
+> +/**
+> + * vfio_ap_mdev_qlinks_for_apid
 
-On Wed, Apr 8, 2020 at 8:53 PM Stephen Rothwell <sfr@canb.auug.org.au> wrote:
->
-> Hi all,
->
-> Today's linux-next merge of the orangefs tree got a conflict in:
->
->   Documentation/filesystems/orangefs.rst
->
-> between commit:
->
->   18ccb2233fc5 ("docs: filesystems: convert orangefs.txt to ReST")
->
-> from Linus' tree and commit:
->
->   aa317d3351de ("orangefs: clarify build steps for test server in orangefs.txt")
->
-> from the orangefs tree.
->
-> I fixed it up (see below) and can carry the fix as necessary. This
-> is now fixed as far as linux-next is concerned, but any non trivial
-> conflicts should be mentioned to your upstream maintainer when your tree
-> is submitted for merging.  You may also want to consider cooperating
-> with the maintainer of the conflicting tree to minimise any particularly
-> complex conflicts.
->
-> --
-> Cheers,
-> Stephen Rothwell
->
-> diff --cc Documentation/filesystems/orangefs.rst
-> index 7d6d4cad73c4,5a3865702a71..000000000000
-> --- a/Documentation/filesystems/orangefs.rst
-> +++ b/Documentation/filesystems/orangefs.rst
-> @@@ -41,17 -38,7 +41,7 @@@ Documentatio
->
->   http://www.orangefs.org/documentation/
->
-> -
-> - Userspace Filesystem Source
-> - ===========================
-> -
-> - http://www.orangefs.org/download
-> -
-> - Orangefs versions prior to 2.9.3 would not be compatible with the
-> - upstream version of the kernel client.
-> -
-> -
->  -RUNNING ORANGEFS ON A SINGLE SERVER
->  +Running ORANGEFS On a Single Server
->   ===================================
->
->   OrangeFS is usually run in large installations with multiple servers and
-> @@@ -73,29 -60,37 +63,37 @@@ single line.  Uncomment it and change t
->   controls clients which use libpvfs2.  This does not control the
->   pvfs2-client-core.
->
->  -Create the filesystem.
->  +Create the filesystem::
->
->  -pvfs2-server -f /etc/orangefs/orangefs.conf
->  +    pvfs2-server -f /etc/orangefs/orangefs.conf
->
->  -Start the server.
->  +Start the server::
->
->  -systemctl start orangefs-server
->  +    systemctl start orangefs-server
->
->  -Test the server.
->  +Test the server::
->
->  -pvfs2-ping -m /pvfsmnt
->  +    pvfs2-ping -m /pvfsmnt
->
->   Start the client.  The module must be compiled in or loaded before this
->  -point.
->  +point::
->
->  -systemctl start orangefs-client
->  +    systemctl start orangefs-client
->
->  -Mount the filesystem.
->  +Mount the filesystem::
->
->  -mount -t pvfs2 tcp://localhost:3334/orangefs /pvfsmnt
->  +    mount -t pvfs2 tcp://localhost:3334/orangefs /pvfsmnt
->
->  -USERSPACE FILESYSTEM SOURCE
-> ++Userspace Filesystem Source
-> + ===========================
+Hm... maybe the function name should express that there's some actual
+(un)linking going on?
+
+vfio_ap_mdev_link_by_apid?
+
+Or make this vfio_ap_mdev_link_queues() and pass in an indicator whether
+the passed value is an apid or an aqid? Both function names look so
+very similar to be easily confused (at least to me).
+
+> + *
+> + * @matrix_mdev: a matrix mediated device
+> + * @apqi:	 the APID of one or more APQNs assigned to @matrix_mdev
+> + *
+> + * Set the link to @matrix_mdev for each queue device bound to the vfio_ap
+> + * device driver with an APQN assigned to @matrix_mdev with the specified @apid.
+> + *
+> + * Note: If @matrix_mdev is NULL, the link to @matrix_mdev will be severed.
+> + */
+> +static void vfio_ap_mdev_qlinks_for_apid(struct ap_matrix_mdev *matrix_mdev,
+> +					 unsigned long apid)
+> +{
+> +	unsigned long apqi;
+> +	struct vfio_ap_queue *q;
 > +
-> + http://www.orangefs.org/download
+> +	for_each_set_bit_inv(apqi, matrix_mdev->matrix.aqm,
+> +			     matrix_mdev->matrix.aqm_max + 1) {
+> +		q = vfio_ap_get_queue(AP_MKQID(apid, apqi));
+> +		if (q)
+> +			q->matrix_mdev = matrix_mdev;
+> +	}
+> +}
 > +
-> + Orangefs versions prior to 2.9.3 would not be compatible with the
-> + upstream version of the kernel client.
+>  /**
+>   * assign_adapter_store
+>   *
+
+(...)
+
+> @@ -682,6 +704,31 @@ vfio_ap_mdev_verify_queues_reserved_for_apqi(struct ap_matrix_mdev *matrix_mdev,
+>  	return 0;
+>  }
+>  
+> +/**
+> + * vfio_ap_mdev_qlinks_for_apqi
+
+See my comment above.
+
+> + *
+> + * @matrix_mdev: a matrix mediated device
+> + * @apqi:	 the APQI of one or more APQNs assigned to @matrix_mdev
+> + *
+> + * Set the link to @matrix_mdev for each queue device bound to the vfio_ap
+> + * device driver with an APQN assigned to @matrix_mdev with the specified @apqi.
+> + *
+> + * Note: If @matrix_mdev is NULL, the link to @matrix_mdev will be severed.
+> + */
+> +static void vfio_ap_mdev_qlinks_for_apqi(struct ap_matrix_mdev *matrix_mdev,
+> +					 unsigned long apqi)
+> +{
+> +	unsigned long apid;
+> +	struct vfio_ap_queue *q;
 > +
->
->  -BUILDING ORANGEFS ON A SINGLE SERVER
->  +Building ORANGEFS on a Single Server
->   ====================================
->
->   Where OrangeFS cannot be installed from distribution packages, it may be
-> @@@ -105,51 -100,55 +103,57 @@@ You can omit --prefix if you don't car
->   in /usr/local.  As of version 2.9.6, OrangeFS uses Berkeley DB by
->   default, we will probably be changing the default to LMDB soon.
->
->  -./configure --prefix=/opt/ofs --with-db-backend=lmdb --disable-usrint
->  +::
->
-> -     ./configure --prefix=/opt/ofs --with-db-backend=lmdb
->  -make
-> ++    ./configure --prefix=/opt/ofs --with-db-backend=lmdb --disable-usrint
->
->  -make install
->  +    make
->  +
->  +    make install
->
-> - Create an orangefs config file::
-> + Create an orangefs config file by running pvfs2-genconfig and
-> + specifying a target config file. Pvfs2-genconfig will prompt you
-> + through. Generally it works fine to take the defaults, but you
-> + should use your server's hostname, rather than "localhost" when
->  -it comes to that question.
-> ++it comes to that question::
->
->  -/opt/ofs/bin/pvfs2-genconfig /etc/pvfs2.conf
->  +    /opt/ofs/bin/pvfs2-genconfig /etc/pvfs2.conf
->
->  -Create an /etc/pvfs2tab file.
->  +Create an /etc/pvfs2tab file::
->
->  -Localhost is fine for your pvfs2tab file:
-> ++    Localhost is fine for your pvfs2tab file.
+> +	for_each_set_bit_inv(apid, matrix_mdev->matrix.apm,
+> +			     matrix_mdev->matrix.apm_max + 1) {
+> +		q = vfio_ap_get_queue(AP_MKQID(apid, apqi));
+> +		if (q)
+> +			q->matrix_mdev = matrix_mdev;
+> +	}
+> +}
 > +
->  -echo tcp://localhost:3334/orangefs /pvfsmnt pvfs2 defaults,noauto 0 0 > \
->  -    /etc/pvfs2tab
->  +    echo tcp://localhost:3334/orangefs /pvfsmnt pvfs2 defaults,noauto 0 0 > \
->  +      /etc/pvfs2tab
->
->  -Create the mount point you specified in the tab file if needed.
->  +Create the mount point you specified in the tab file if needed::
->
->  -mkdir /pvfsmnt
->  +    mkdir /pvfsmnt
->
->  -Bootstrap the server.
->  +Bootstrap the server::
->
->  -/opt/ofs/sbin/pvfs2-server -f /etc/pvfs2.conf
->  +    /opt/ofs/sbin/pvfs2-server -f /etc/pvfs2.conf
->
->  -Start the server.
->  +Start the server::
->
-> -     /opt/osf/sbin/pvfs2-server /etc/pvfs2.conf
->  -/opt/ofs/sbin/pvfs2-server /etc/pvfs2.conf
-> ++    /opt/ofs/sbin/pvfs2-server /etc/pvfs2.conf
->
->   Now the server should be running. Pvfs2-ls is a simple
->  -test to verify that the server is running.
->  +test to verify that the server is running::
->
->  -/opt/ofs/bin/pvfs2-ls /pvfsmnt
->  +    /opt/ofs/bin/pvfs2-ls /pvfsmnt
->
->   If stuff seems to be working, load the kernel module and
->  -turn on the client core.
->  +turn on the client core::
->
-> -     /opt/ofs/sbin/pvfs2-client -p /opt/osf/sbin/pvfs2-client-core
->  -/opt/ofs/sbin/pvfs2-client -p /opt/ofs/sbin/pvfs2-client-core
-> ++    /opt/ofs/sbin/pvfs2-client -p /opt/ofs/sbin/pvfs2-client-core
->
->  -Mount your filesystem.
->  +Mount your filesystem::
->
-> -     mount -t pvfs2 tcp://localhost:3334/orangefs /pvfsmnt
->  -mount -t pvfs2 tcp://`hostname`:3334/orangefs /pvfsmnt
-> ++    mount -t pvfs2 tcp://`hostname`:3334/orangefs /pvfsmnt
->
->
->  -RUNNING XFSTESTS
->  +Running xfstests
->   ================
->
->   It is useful to use a scratch filesystem with xfstests.  This can be
+>  /**
+>   * assign_domain_store
+>   *
+
+(...)
+
+> @@ -1270,6 +1319,21 @@ void vfio_ap_mdev_unregister(void)
+>  	mdev_unregister_device(&matrix_dev->device);
+>  }
+>  
+> +static void vfio_ap_mdev_for_queue(struct vfio_ap_queue *q)
+
+vfio_ap_queue_link_mdev()? It is the other direction from the linking
+above.
+
+> +{
+> +	unsigned long apid = AP_QID_CARD(q->apqn);
+> +	unsigned long apqi = AP_QID_QUEUE(q->apqn);
+> +	struct ap_matrix_mdev *matrix_mdev;
+> +
+> +	list_for_each_entry(matrix_mdev, &matrix_dev->mdev_list, node) {
+> +		if (test_bit_inv(apid, matrix_mdev->matrix.apm) &&
+> +		    test_bit_inv(apqi, matrix_mdev->matrix.aqm)) {
+> +			q->matrix_mdev = matrix_mdev;
+> +			break;
+> +		}
+> +	}
+> +}
+> +
+>  int vfio_ap_mdev_probe_queue(struct ap_queue *queue)
+>  {
+>  	struct vfio_ap_queue *q;
+> @@ -1282,6 +1346,7 @@ int vfio_ap_mdev_probe_queue(struct ap_queue *queue)
+>  	dev_set_drvdata(&queue->ap_dev.device, q);
+>  	q->apqn = queue->qid;
+>  	q->saved_isc = VFIO_AP_ISC_INVALID;
+> +	vfio_ap_mdev_for_queue(q);
+>  	hash_add(matrix_dev->qtable, &q->qnode, q->apqn);
+>  	mutex_unlock(&matrix_dev->lock);
+>  
+
+In general, looks sane.
+
