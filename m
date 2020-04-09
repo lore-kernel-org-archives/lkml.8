@@ -2,100 +2,130 @@ Return-Path: <SRS0=n+Ub=5Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B9BFC2BA19
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 17:42:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF9CAC2BA19
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 17:42:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1413020771
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 17:42:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=sslab.ics.keio.ac.jp header.i=@sslab.ics.keio.ac.jp header.b="GxK81g5F"
+	by mail.kernel.org (Postfix) with ESMTP id AF3F920753
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 17:42:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726621AbgDIRmN (ORCPT
+        id S1726678AbgDIRmf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Apr 2020 13:42:13 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:38429 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726082AbgDIRmM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Apr 2020 13:42:12 -0400
-Received: by mail-pg1-f196.google.com with SMTP id p8so1860072pgi.5
-        for <linux-kernel@vger.kernel.org>; Thu, 09 Apr 2020 10:42:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sslab.ics.keio.ac.jp; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=0wmybZU2XYC2ZQZ6lGBEg07+Q6ic1u6zQ08/WgqtdVE=;
-        b=GxK81g5FBJ92hDAuB3j7A6f3OXdPrAuS646UimLd/yyBcfDvfcaSaqv6N3slbFBySb
-         7f5d1EolpYJ4Hg7bdcUtW4cH5UOE5WYQKSUPmCajFmfqivS6UOP2pbNO8ulvrNur29y0
-         QnKB1OBb7RJxn2hGmyYlD8MFlBiGU+GZQTgbQ=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=0wmybZU2XYC2ZQZ6lGBEg07+Q6ic1u6zQ08/WgqtdVE=;
-        b=lZgDKgUqmM1xcwbo9T85ptIt/wRd7AbtL2x/bStOzfwPaJau0isLkeD281qFHZyjtF
-         12G4/F2on3WL32huQdJIjid4cfkcezsBYWJM1DnXufsQ6hPKARgTZFoTLd1JEttmy7rY
-         wT0NcQOPHkVFeM8nBeilELVsCTcX9cA5XElnfZKrSlP7cOOmnFbginSQZbpWtTfWCYJJ
-         jzIAg6sxQr98C8QcWfL1OgLaWawVAlNnVWuHXyCSio/sIinu7IxNH8KUjxficDtbADR+
-         LQGQ1jM5+aaxMZNwncU6upFaR8OsvT57rRll5H7eh3ox8kZJ4aa5Uhe9nitASsrLAXQv
-         GE0g==
-X-Gm-Message-State: AGi0PuYU2066xp6TFCo/U518i9uBJDujt+0ebsiF959eZVO++FAVhUHF
-        3cE6TrqvtOxqFfqHHkTy0IqAgQ==
-X-Google-Smtp-Source: APiQypJ4shH8Bv2b1K68QcLJdeS1QZon1I4ElY5DpScBRbUghLnzZ2+fu/chvC9jeb2siGu3fNepeQ==
-X-Received: by 2002:a62:4ec4:: with SMTP id c187mr677435pfb.223.1586454132444;
-        Thu, 09 Apr 2020 10:42:12 -0700 (PDT)
-Received: from brooklyn.i.sslab.ics.keio.ac.jp (sslab-relay.ics.keio.ac.jp. [131.113.126.173])
-        by smtp.googlemail.com with ESMTPSA id e187sm19140287pfe.143.2020.04.09.10.42.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 09 Apr 2020 10:42:11 -0700 (PDT)
-From:   Keita Suzuki <keitasuzuki.park@sslab.ics.keio.ac.jp>
-Cc:     keitasuzuki.park@sslab.ics.keio.ac.jp,
-        takafumi.kubota1012@sslab.ics.keio.ac.jp, davem@davemloft.net,
-        Jakub Kicinski <kuba@kernel.org>,
-        oss-drivers@netronome.com (open list:NETRONOME ETHERNET DRIVERS),
-        netdev@vger.kernel.org (open list:NETWORKING DRIVERS),
-        linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH] nfp: Fix memory leak in nfp_resource_acquire()
-Date:   Thu,  9 Apr 2020 17:41:11 +0000
-Message-Id: <20200409174113.28635-1-keitasuzuki.park@sslab.ics.keio.ac.jp>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200409150210.15488-1-keitasuzuki.park@sslab.ics.keio.ac.jp>
-References: <20200409150210.15488-1-keitasuzuki.park@sslab.ics.keio.ac.jp>
-To:     unlisted-recipients:; (no To-header on input)
+        Thu, 9 Apr 2020 13:42:35 -0400
+Received: from mga02.intel.com ([134.134.136.20]:37967 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725987AbgDIRmf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Apr 2020 13:42:35 -0400
+IronPort-SDR: SylA84Z0KW8olGt8RouNqchdi3shocSTc2sdkPBF24ots+V2wcMkIu38l2iH6QNmmxTqpk1zya
+ OxIaZHnRT5Yg==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Apr 2020 10:42:33 -0700
+IronPort-SDR: v8mMBOGSho6jXgQYVkBnhThOfiLso799i5EjEBsMSGg4MCflJUfL6nlKyvFiMSQHbwQzoU2K6B
+ 3xDMEqtquTDQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,363,1580803200"; 
+   d="scan'208";a="398649802"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by orsmga004.jf.intel.com with ESMTP; 09 Apr 2020 10:42:31 -0700
+Received: from andy by smile with local (Exim 4.93)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1jMbCD-00H1dm-QZ; Thu, 09 Apr 2020 20:42:33 +0300
+Date:   Thu, 9 Apr 2020 20:42:33 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Cc:     mchehab+samsung@kernel.org, akpm@linux-foundation.org,
+        gregkh@linuxfoundation.org, tglx@linutronix.de,
+        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
+Subject: Re: [PATCH] lib/math: avoid trailing '\n' hidden in pr_fmt()
+Message-ID: <20200409174233.GL3676135@smile.fi.intel.com>
+References: <20200409163234.22830-1-christophe.jaillet@wanadoo.fr>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200409163234.22830-1-christophe.jaillet@wanadoo.fr>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch fixes a memory leak in nfp_resource_acquire(). res->mutex is
-alllocated in nfp_resource_try_acquire(). However, when
-msleep_interruptible() or time_is_before_eq_jiffies() fails, it falls
-into err_fails path where res is freed, but res->mutex is not.
+On Thu, Apr 09, 2020 at 06:32:34PM +0200, Christophe JAILLET wrote:
+> pr_xxx() functions usually have '\n' at the end of the logging message.
+> Here, this '\n' is added via the 'pr_fmt' macro.
+> 
+> In order to be more consistent with other files, use a more standard
+> convention and put these '\n' back in the messages themselves and remove it
+> from the pr_fmt macro.
+> 
+> While at it, use __func__ instead of hardcoding a function name in the
+> last message.
 
-Fix this by changing call to free to nfp_resource_release().
+FWIW,
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-Signed-off-by: Keita Suzuki <keitasuzuki.park@sslab.ics.keio.ac.jp>
----
- drivers/net/ethernet/netronome/nfp/nfpcore/nfp_resource.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+> ---
+>  lib/math/prime_numbers.c | 10 +++++-----
+>  1 file changed, 5 insertions(+), 5 deletions(-)
+> 
+> diff --git a/lib/math/prime_numbers.c b/lib/math/prime_numbers.c
+> index 052f5b727be7..d42cebf7407f 100644
+> --- a/lib/math/prime_numbers.c
+> +++ b/lib/math/prime_numbers.c
+> @@ -1,5 +1,5 @@
+>  // SPDX-License-Identifier: GPL-2.0-only
+> -#define pr_fmt(fmt) "prime numbers: " fmt "\n"
+> +#define pr_fmt(fmt) "prime numbers: " fmt
+>  
+>  #include <linux/module.h>
+>  #include <linux/mutex.h>
+> @@ -253,7 +253,7 @@ static void dump_primes(void)
+>  
+>  	if (buf)
+>  		bitmap_print_to_pagebuf(true, buf, p->primes, p->sz);
+> -	pr_info("primes.{last=%lu, .sz=%lu, .primes[]=...x%lx} = %s",
+> +	pr_info("primes.{last=%lu, .sz=%lu, .primes[]=...x%lx} = %s\n",
+>  		p->last, p->sz, p->primes[BITS_TO_LONGS(p->sz) - 1], buf);
+>  
+>  	rcu_read_unlock();
+> @@ -273,7 +273,7 @@ static int selftest(unsigned long max)
+>  		bool fast = is_prime_number(x);
+>  
+>  		if (slow != fast) {
+> -			pr_err("inconsistent result for is-prime(%lu): slow=%s, fast=%s!",
+> +			pr_err("inconsistent result for is-prime(%lu): slow=%s, fast=%s!\n",
+>  			       x, slow ? "yes" : "no", fast ? "yes" : "no");
+>  			goto err;
+>  		}
+> @@ -282,14 +282,14 @@ static int selftest(unsigned long max)
+>  			continue;
+>  
+>  		if (next_prime_number(last) != x) {
+> -			pr_err("incorrect result for next-prime(%lu): expected %lu, got %lu",
+> +			pr_err("incorrect result for next-prime(%lu): expected %lu, got %lu\n",
+>  			       last, x, next_prime_number(last));
+>  			goto err;
+>  		}
+>  		last = x;
+>  	}
+>  
+> -	pr_info("selftest(%lu) passed, last prime was %lu", x, last);
+> +	pr_info("%s(%lu) passed, last prime was %lu\n", __func__, x, last);
+>  	return 0;
+>  
+>  err:
+> -- 
+> 2.20.1
+> 
 
-diff --git a/drivers/net/ethernet/netronome/nfp/nfpcore/nfp_resource.c b/drivers/net/ethernet/netronome/nfp/nfpcore/nfp_resource.c
-index ce7492a6a98f..95e7bdc95652 100644
---- a/drivers/net/ethernet/netronome/nfp/nfpcore/nfp_resource.c
-+++ b/drivers/net/ethernet/netronome/nfp/nfpcore/nfp_resource.c
-@@ -200,7 +200,7 @@ nfp_resource_acquire(struct nfp_cpp *cpp, const char *name)
- 
- err_free:
- 	nfp_cpp_mutex_free(dev_mutex);
--	kfree(res);
-+	nfp_resource_release(res);
- 	return ERR_PTR(err);
- }
- 
 -- 
-2.17.1
+With Best Regards,
+Andy Shevchenko
+
 
