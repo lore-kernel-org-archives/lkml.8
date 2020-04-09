@@ -2,160 +2,162 @@ Return-Path: <SRS0=n+Ub=5Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F4C7C2BA19
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 17:56:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA4EFC2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 17:57:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 37F03206E9
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 17:56:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586454988;
-	bh=PqnGA18fbjWJ6jPpaALQpwlsOsX9WtYIEa3CMbgDX8Y=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=R3/tUeYn4HBB8fvjP4z4yEzohbX/BG3u6GUjdsEiA9qnz8d2hqZ7azFkSk4ZFXitK
-	 7tSfTwCQoA2hocJ9b8txDUuxJ7nY2r6Jh5Adc8zubggjt3QKt18G3mS7TrMsfDSUYf
-	 7D5CdytUoWUdLS2ywwNOII9I+08PniP1gwBZ3jvY=
+	by mail.kernel.org (Postfix) with ESMTP id A587F206E9
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 17:57:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="aJOV2O28"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726579AbgDIR40 (ORCPT
+        id S1726650AbgDIR5d (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Apr 2020 13:56:26 -0400
-Received: from mail-qk1-f193.google.com ([209.85.222.193]:33321 "EHLO
-        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725970AbgDIR40 (ORCPT
+        Thu, 9 Apr 2020 13:57:33 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:57176 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725970AbgDIR5c (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Apr 2020 13:56:26 -0400
-Received: by mail-qk1-f193.google.com with SMTP id v7so4942725qkc.0
-        for <linux-kernel@vger.kernel.org>; Thu, 09 Apr 2020 10:56:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=3gLm9c9BJkp5q7ogvl1hMr79wf7+tg3z7449OZ6CG6E=;
-        b=ILYODuX/tzwdF6uf10NHw7hbDVVLkx9CmAELs+PDiqL69d15eWKafKTOfqRmWwIYZ5
-         aT77ZTYREnawvoIWlZ40rT1ijMKmQcVS4nwccdviNA6AEK03pDSo0Wj0WxwrvNDeIdF9
-         YIeOFG50we74b24N5a2pao9P/XSzEdzZQQDprsWp3GrrmpuBBg5MCGual2uW0TBG2G2f
-         GKcg7v/PvP9KIPjg47HXxWPj+3wAFOBXf3uhfZEnki6wg1Lz/l6Q2o3Eh8ktGKbTtoqH
-         RD3gEdZ7jIAuw3Pfx09z2r6B8+a0uWmd/ng86sW412ejhGb8NYONUAfoyPbDKWKglNJu
-         8Ojg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to;
-        bh=3gLm9c9BJkp5q7ogvl1hMr79wf7+tg3z7449OZ6CG6E=;
-        b=iV2bIb0MJUSk1Ej7mxMwwi5pSEWaiTCja2kHFOK0ZbdvLLY+ie4WH5L5OB56rk9vA+
-         pFeNlmjiqsKXAoj9fAlvaPrtV8RaZC41amE/8n/YGHedmwwFzyhjgqvZe8uz1JQhnxlK
-         s1aDvFaavtHj/Z4Hf1SFCgigxWUvOnOCotyLTZkXhHyMxSc4R1mZSOkbvyCydUnu89oi
-         GDCALj7ioekyJlhR/3cqAqbUU6hcgZb3cMVGm16BF+vQKk3N5bAwDfrep9+fG59aJucW
-         qzw3VO/sxCPgwybNGOfZ2fZyUNklwv4Saaj05+qbAP1mnfs1TVydrKQ4a4Pc5uOE8H71
-         IHxw==
-X-Gm-Message-State: AGi0Puat6wI24fsQnCWR7Fqz/KVH8dL6Ybwn3Qc8xTjwlyNIrRdAfVBk
-        jJmAi16hWOSdiFZToxxVD54=
-X-Google-Smtp-Source: APiQypLyh1A1Qit1zcPSU8vU7ck8R3gN7tFBFmpJPUwAevwsJim1Wa63V+WOIast3+Fm1q73SjQQVw==
-X-Received: by 2002:a37:e312:: with SMTP id y18mr1060332qki.243.1586454983739;
-        Thu, 09 Apr 2020 10:56:23 -0700 (PDT)
-Received: from localhost ([2620:10d:c091:480::74a8])
-        by smtp.gmail.com with ESMTPSA id 207sm22546620qkf.69.2020.04.09.10.56.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 09 Apr 2020 10:56:23 -0700 (PDT)
-Date:   Thu, 9 Apr 2020 13:56:21 -0400
-From:   Tejun Heo <tj@kernel.org>
-To:     Mel Gorman <mgorman@techsingularity.net>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: Cgroup memory barrier usage and call frequency from scheduler
-Message-ID: <20200409175621.GA37608@mtj.thefacebook.com>
-References: <20200409154413.GK3818@techsingularity.net>
+        Thu, 9 Apr 2020 13:57:32 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 039HsSOG035049;
+        Thu, 9 Apr 2020 17:57:28 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2020-01-29;
+ bh=Pg2OcDUKrQfVlPFmsJbhzB5QRTvU/ra77BrxPivOjCk=;
+ b=aJOV2O28pGHnYxaGUOpq3gEQsm+KBTq0ovFCGerImenOU3OlEUNBR1kidQYxOuUrIigS
+ NMttosRIXkYqgyqF8GVCFsxlRMl+7QiIZjmfR+oR0irLWSp8w5FOhRPQhgWN5L/1wslr
+ +zAYnCciAIoK6EKu4IQf+9vVNIADnVJUNlU0p+eUkqSilbbhX9r3Sy9hqf5mfc+F8leZ
+ DlmmxISYAy+Yyx+6EGIfcp3BCYOFI7f1lAjpI93e80Wkl1T+SedRlRqsTPylDqwozqu/
+ SgKvoZe+UuDNvMwQp4QDUrg1mODBfnDd3pqX5AvBx/fpNKHMOFvRNrBLMVgYGFZjJ3kD Dg== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by userp2130.oracle.com with ESMTP id 3091m3k0cb-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 09 Apr 2020 17:57:28 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 039HucHx048444;
+        Thu, 9 Apr 2020 17:57:28 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by userp3020.oracle.com with ESMTP id 309gdcchrf-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 09 Apr 2020 17:57:27 +0000
+Received: from abhmp0004.oracle.com (abhmp0004.oracle.com [141.146.116.10])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 039HvQpw031931;
+        Thu, 9 Apr 2020 17:57:27 GMT
+Received: from localhost.localdomain (/10.159.147.179)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Thu, 09 Apr 2020 10:57:26 -0700
+Subject: Re: [PATCH v4 1/2] selftests: kvm: Add vm_get_fd() in kvm_util
+To:     Wainer dos Santos Moschetta <wainersm@redhat.com>,
+        pbonzini@redhat.com, kvm@vger.kernel.org
+Cc:     drjones@redhat.com, david@redhat.com, linux-kernel@vger.kernel.org,
+        linux-kselftest@vger.kernel.org
+References: <20200408220818.4306-1-wainersm@redhat.com>
+ <20200408220818.4306-2-wainersm@redhat.com>
+ <734ebc46-ff31-708b-5a2f-8bda248cd290@oracle.com>
+ <a21f3ae5-fb4e-1b9d-c8e7-ac4628c763c2@redhat.com>
+From:   Krish Sadhukhan <krish.sadhukhan@oracle.com>
+Message-ID: <aed511d0-a51e-bc4c-a265-d9ede82e18f2@oracle.com>
+Date:   Thu, 9 Apr 2020 10:57:19 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200409154413.GK3818@techsingularity.net>
+In-Reply-To: <a21f3ae5-fb4e-1b9d-c8e7-ac4628c763c2@redhat.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9586 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 malwarescore=0
+ adultscore=0 mlxscore=0 spamscore=0 bulkscore=0 phishscore=0
+ suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2004090130
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9586 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 adultscore=0
+ impostorscore=0 malwarescore=0 lowpriorityscore=0 mlxlogscore=999
+ priorityscore=1501 clxscore=1015 bulkscore=0 phishscore=0 mlxscore=0
+ suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2004090129
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello, Mel.
 
-On Thu, Apr 09, 2020 at 04:44:13PM +0100, Mel Gorman wrote:
-> Commit 9a9e97b2f1f2 ("cgroup: Add memory barriers to plug
-> cgroup_rstat_updated() race window") introduced two full memory
-> barriers to close a race. The one in cgroup_rstat_updated can be
-> called at a high frequency from the scheduler from update_curr ->
-> cgroup_account_cputime. The patch has no cc's, acks or reviews so I'm
-> not sure how closely this was looked at. cgroup_rstat_updated shows up
-> in profiles of netperf UDP_STREAM accounting for about 1% of overhead
+On 4/8/20 7:45 PM, Wainer dos Santos Moschetta wrote:
+>
+> On 4/8/20 10:25 PM, Krish Sadhukhan wrote:
+>>
+>> On 4/8/20 3:08 PM, Wainer dos Santos Moschetta wrote:
+>>> Introduces the vm_get_fd() function in kvm_util which returns
+>>> the VM file descriptor.
+>>>
+>>> Reviewed-by: Andrew Jones <drjones@redhat.com>
+>>> Signed-off-by: Wainer dos Santos Moschetta <wainersm@redhat.com>
+>>> ---
+>>>   tools/testing/selftests/kvm/include/kvm_util.h | 1 +
+>>>   tools/testing/selftests/kvm/lib/kvm_util.c     | 5 +++++
+>>>   2 files changed, 6 insertions(+)
+>>>
+>>> diff --git a/tools/testing/selftests/kvm/include/kvm_util.h 
+>>> b/tools/testing/selftests/kvm/include/kvm_util.h
+>>> index a99b875f50d2..4e122819ee24 100644
+>>> --- a/tools/testing/selftests/kvm/include/kvm_util.h
+>>> +++ b/tools/testing/selftests/kvm/include/kvm_util.h
+>>> @@ -254,6 +254,7 @@ bool vm_is_unrestricted_guest(struct kvm_vm *vm);
+>>>   unsigned int vm_get_page_size(struct kvm_vm *vm);
+>>>   unsigned int vm_get_page_shift(struct kvm_vm *vm);
+>>>   unsigned int vm_get_max_gfn(struct kvm_vm *vm);
+>>> +int vm_get_fd(struct kvm_vm *vm);
+>>>     unsigned int vm_calc_num_guest_pages(enum vm_guest_mode mode, 
+>>> size_t size);
+>>>   unsigned int vm_num_host_pages(enum vm_guest_mode mode, unsigned 
+>>> int num_guest_pages);
+>>> diff --git a/tools/testing/selftests/kvm/lib/kvm_util.c 
+>>> b/tools/testing/selftests/kvm/lib/kvm_util.c
+>>> index 8a3523d4434f..3e36a1eb8771 100644
+>>> --- a/tools/testing/selftests/kvm/lib/kvm_util.c
+>>> +++ b/tools/testing/selftests/kvm/lib/kvm_util.c
+>>> @@ -1734,6 +1734,11 @@ unsigned int vm_get_max_gfn(struct kvm_vm *vm)
+>>>       return vm->max_gfn;
+>>>   }
+>>>   +int vm_get_fd(struct kvm_vm *vm)
+>>> +{
+>>> +        return vm->fd;
+>>> +}
+>>> +
+>>
+>>
+>> I am just trying to understand why we need a separate function when 
+>> the 'vm' variable is all local within the same file. There are a 
+>> number of places in kvm_util.c where it is used directly.
+>
+>
+> The problem is to access of kvm_vm attributes outside of kvm_utils.c. 
+> For example, if I try to vm->fd in my test I get the compiler error:
+>
+> mem_slot_test.c: In function ‘test_add_max_slots’:
+> mem_slot_test.c:62:16: error: dereferencing pointer to incomplete type 
+> ‘struct kvm_vm’
+>   ret = ioctl(vm->fd, KVM_SET_USER_MEMORY_REGION,
+>                 ^~
 
-Oops, that's pretty high.
 
-> which doesn't sound a lot but that's about the same weight as some of
-> the critical network paths. I have three questions about the patch
-> 
-> 1. Why were full barriers used?
+My bad !  I missed the fact that the structure is defined in 
+kvm_util_internal.h and not in kvm_util.h.
 
-Given
 
-   A    C
-  ---  ---
-   B    D
+Reviewed-by: Krish Sadhukhan <krish.sadhukhan@oracle.com>
 
-the code is trying to guarantee that either B sees C or D sees A, so it does
-need full ordering.
-
-> 2. Why was it important that the data race be closed when the inaccuracy
->    is temporary?
-
-There was a pending patchset which converted memcg to use rstat and the
-conversion included the event counters which needed to be synchronous (e.g.
-for things like oom kill counts). The patchset didn't make it through due to
-the percpu memory overhead at the time. The memory overhead issue can be
-resolved now but in the meantime memcg got improved in a different way which
-made the rstat conversion not immediately necessary, so it fell through the
-cracks. In retrospect, this patch shouldn't have been committed on its own or
-at least the synchronous and pure state update paths should have been
-separate.
-
-> 3. Why is it called from the context of update_curr()?
-
-It's just being callled from the path which udpates sched statistics.
-
-> For 1, the use of a full barrier seems unnecessary when it appears that
-> you could have used a read barrier and a write barrier. The following
-> patch drops the profile overhead to 0.1%
-
-I'm not sure this is correct but that's kinda irrelevant.
-
-> For 2, the changelog says the barriers are necessary because "we plan to use
-> rstat to track counters which need to be accurate". That is a bit vague.
-> Under what circumstances is a transient inaccuracy a serious enough
-> problem to justify additional barriers in the scheduler?
-
-Hope this is explained now.
-
-> For 3, update_curr() is called from a lot of places, some of which are
-> quite hot -- e.g. task enqueue/dequeue. This is necessary information from
-> the runqueue needs to be preserved. However, it's less clear that the cpu
-> accounting information needs to be up to date on this granularity although
-> it might be related to question 2. Why was the delta_exec not similarly
-> accumulated in cpuacct_change() and defer the hierarchical update to
-> be called from somewhere like entity_tick()? It would need tracking the
-> CPU time at the last update as delta_exec would be lost so it's not very
-> trivial but it does not look like it would be overly complicated.
-
-Most likely historic. The code has been there for a long time and the only
-recent changes were plumbing around them. Nothing in cpuacct needs to be
-per-scheduling-event accurate, so yeah, for the longer term, it'd be a good
-idea to move them out of hot path.
-
-For now, I'll revert the patch. Nothing in tree needs that right now. If the
-need for synchronous counting comes back later, I'll make that a separate
-path.
-
-Thanks.
-
--- 
-tejun
+>
+>>
+>>
+>>>   static unsigned int vm_calc_num_pages(unsigned int num_pages,
+>>>                         unsigned int page_shift,
+>>>                         unsigned int new_page_shift,
+>>
+>
