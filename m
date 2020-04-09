@@ -2,144 +2,101 @@ Return-Path: <SRS0=n+Ub=5Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BCEB4C2BA2B
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 02:00:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2109FC2BA80
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 02:11:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 731472084D
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 02:00:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="t2gGyoUd"
+	by mail.kernel.org (Postfix) with ESMTP id E8E6E206C0
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 02:11:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1586398285;
+	bh=GA9a2/uAQ9YPaMNswPdlOkPg6vobi9RbIp96j/3SvVA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=PpJbRayG3xiDAkuc1Du7s1UCWNbtp8dJiEch/YmocECkarRIAEbNzi4WmWQpx/Uxo
+	 Lbo0V51vTOV/D+qIw0d7L7QTN5hnvkK4j0tCbLriyS3ErvjRusDik9A341Irdbj/DB
+	 bMc9E7oNZy4lnTrMP6+44v+PLItX33FfmvpIfACU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726647AbgDICA5 (ORCPT
+        id S1726589AbgDICLX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Apr 2020 22:00:57 -0400
-Received: from mail-io1-f48.google.com ([209.85.166.48]:43977 "EHLO
-        mail-io1-f48.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726523AbgDICA5 (ORCPT
+        Wed, 8 Apr 2020 22:11:23 -0400
+Received: from mail-qv1-f68.google.com ([209.85.219.68]:39304 "EHLO
+        mail-qv1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726521AbgDICLW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Apr 2020 22:00:57 -0400
-Received: by mail-io1-f48.google.com with SMTP id u2so2266522iop.10
-        for <linux-kernel@vger.kernel.org>; Wed, 08 Apr 2020 19:00:57 -0700 (PDT)
+        Wed, 8 Apr 2020 22:11:22 -0400
+Received: by mail-qv1-f68.google.com with SMTP id v38so4792894qvf.6;
+        Wed, 08 Apr 2020 19:11:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:in-reply-to:references:from:date:message-id:subject:to
-         :content-transfer-encoding;
-        bh=BV0RwnCaNmgxzA1hCBYYOULfJvjeOLI/tY/1za+ygYI=;
-        b=t2gGyoUdXHaLNExZO5uBjJ3GqFqREcWOs2ajNei0CD5Df4FhsRJ2O23n5o/wGUjfeJ
-         kqM0zxoVnrMfd0BHGhlWpGJcLDDckTVGlTozrYkttIeo+KWkTeVe7DPTUjgMdGU2ASkk
-         nWFpc4p7H7o7jLRSpHRT9ghzBur2lVE0cbYE1N6EuIXJEITFsiUt01fLrKEI9ig7WwUB
-         ZgY7oAI3h+/HoePBJxusSGPLuwVuQYGR0+XeoBGGgNi+ShpZAGa6UPR6PJOBvB3SmDA3
-         9k2AO8mPvzJ0PvvGxZIAfdfun6y3kOvpbvz0o1rlecqK+KG6xB55N1GKagDzDx/oAKtW
-         UWMA==
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=PORm90f1pekSo7bdM0jl5Wn3WR0naU3nSTdhyq8uYF0=;
+        b=T7Rj9zyj69ZjK6UUEO6kzWCkTN/EwkDBjftpLUmOoy9ZB1aMICdyUvPrhIq0blPOXg
+         a4mYkkazrJEhsteIcsHnJPqWFYq+z141WBvuBrxW8zrQqiX/C0Ys7B9XpXXKv9Hvzb/M
+         bJxcXhcS62pgMWyykdwMuckw9Bu0QbBtd4wyDLaXCLO3TNufqMnjv2odgNsWl5Vjd9mj
+         +OuDDXK11Z87WmD2bgPSFFTQKfbnTjJVF1ZUn0Tjl6Sl9rgvYCR6DrR3NPuOoZukSEMX
+         8pjlDSERna/H/T/2EikNzUzxvKbrn2zORX8dJ3+en8mV4cxuYQzhzYEl4rpXU/UTdSW4
+         ostQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:in-reply-to:references:from:date
-         :message-id:subject:to:content-transfer-encoding;
-        bh=BV0RwnCaNmgxzA1hCBYYOULfJvjeOLI/tY/1za+ygYI=;
-        b=R1QZ8PGTlh4Np5hJrx6qW8xxuEikjpOoVz22fpiMYurqfyb6TiIrH8SNnniW+CV9Kc
-         94hglqj8W6J/G0bZ+kAMbQ2hfS7NPzNpGC2xgxX8QruEHs6Pj0CtXbjGrHuD/fsx4xZk
-         aZ/y/n2o5ThSWTPucVO7RBOMx7f1rv54T3qAlRhZ7a8KYAq/M4lp/Qq/dSbspAUfUv6j
-         Qy8kpgLcT/qTxn8EZWjEAVpQ4EeExWXgAw7tEZZ4lJF28oTvBJ19x5CRE5QC9Ws2w5yp
-         G1wcqrLWgf55a2mwYEoClZuLLmNaUhf1ICT/cnTGpdZL6z2NgEGDrDgYisUWIH8a0T6G
-         CqDA==
-X-Gm-Message-State: AGi0PubhEyYse7OS9J2ExmJ5GeiLV0g2LQaYkVZsL8ifRMLjsh9Q7uOu
-        ZhF0Oom+fOlg7Fmd3938k5HPyOOxoriO11Vw7qLuCA==
-X-Google-Smtp-Source: APiQypJ9Bc0IU4lcg4aqwdl+rul/Hs0jNJJgLeUvQWBd8guHRSrw+gVIxBewbUxNckpp0ptxbveMAjsOE41KqUNzaes=
-X-Received: by 2002:a6b:cd4a:: with SMTP id d71mr9928757iog.5.1586397654498;
- Wed, 08 Apr 2020 19:00:54 -0700 (PDT)
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to;
+        bh=PORm90f1pekSo7bdM0jl5Wn3WR0naU3nSTdhyq8uYF0=;
+        b=ZS9OQMFqWEOpv6YEfvedEpfxry53ZE/IIcBLxNcZH3reiE8BAA5OA2pClkzW3fkBBj
+         rNnn6DYNb0TSbqkCJth434bd5P/vw/2cBnaq0Vbw+oLzhUbOe6/qk0D0JjvT1YdaN7Qd
+         W149TJGDI1Cxqm+DPmn3i6/CllsFtDfPR6RKL46glN2qHWlK7qY/IxpoHjcig+RoPaCM
+         sr2SmOUUyD9CVGopKqZiyckTiaW5LKZGT9ioEcY+T9SapBWSKQlPX7jXt6yOC/DSrVRC
+         F7f+8Uaa+6oTV7VmOKku1Fj7VPu3GmzznjYQx41yHPTPaG0ZwGuuxUvFNiv6jhR4C0kW
+         T1Fg==
+X-Gm-Message-State: AGi0PubUKkmxNOXHvw7BznNHrl1KX7l/m/fpjnMpjPnzJdXJ0941JetQ
+        tSUdeF5RKbGeLIwWTCPvntg=
+X-Google-Smtp-Source: APiQypJotzBtsOA9saexNnYizl0kD5h0AWOt1lJg0kifNPqcHGFPhU5tyn3VYJ9TDHlIrhHAjMFWlQ==
+X-Received: by 2002:a0c:85c6:: with SMTP id o64mr876015qva.11.1586398281764;
+        Wed, 08 Apr 2020 19:11:21 -0700 (PDT)
+Received: from localhost ([2620:10d:c091:480::36b2])
+        by smtp.gmail.com with ESMTPSA id c6sm4248088qka.58.2020.04.08.19.11.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 08 Apr 2020 19:11:21 -0700 (PDT)
+Date:   Wed, 8 Apr 2020 22:11:19 -0400
+From:   Tejun Heo <tj@kernel.org>
+To:     Ming Lei <ming.lei@redhat.com>
+Cc:     axboe@kernel.dk, linux-block@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kernel-team@vger.kernel.org,
+        cgroups@vger.kernel.org, newella@fb.com, josef@toxicpanda.com
+Subject: Re: [PATCH 2/5] block: add request->io_data_len
+Message-ID: <20200409021119.GJ162390@mtj.duckdns.org>
+References: <20200408201450.3959560-1-tj@kernel.org>
+ <20200408201450.3959560-3-tj@kernel.org>
+ <20200409014406.GA370295@localhost.localdomain>
 MIME-Version: 1.0
-Received: by 2002:ac0:a58b:0:0:0:0:0 with HTTP; Wed, 8 Apr 2020 19:00:53 -0700 (PDT)
-In-Reply-To: <CAOzgRdbWsKY7mXgiTx3um_gdJvgPN1O2p1vxmWv9eApQAy9UzQ@mail.gmail.com>
-References: <CAOzgRdbWsKY7mXgiTx3um_gdJvgPN1O2p1vxmWv9eApQAy9UzQ@mail.gmail.com>
-From:   youling 257 <youling257@gmail.com>
-Date:   Thu, 9 Apr 2020 10:00:53 +0800
-Message-ID: <CAOzgRdYkJMiQM9M-UHv5Z-6CLzaV0P8YTK5Ft-CmT5-JqCnYSA@mail.gmail.com>
-Subject: Re: Merge branch 'core-objtool-for-linus' of git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip
-To:     viro@zeniv.linux.org.uk, peterz@infradead.org, jpoimboe@redhat.com,
-        linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200409014406.GA370295@localhost.localdomain>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-d937a6dfc9428f470c3ce4d459c390944ddef538 caused 64bit kernel build
-failed on 32bit userspace.
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?=
-id=3Dd937a6dfc9428f470c3ce4d459c390944ddef538
+On Thu, Apr 09, 2020 at 09:44:06AM +0800, Ming Lei wrote:
+> Almost all __blk_mq_end_request() follow blk_update_request(), so the
+> completed bytes can be passed to __blk_mq_end_request(), then we can
+> avoid to introduce this field.
 
-2020-04-08 16:13 GMT+08:00, youling 257 <youling257@gmail.com>:
-> after this merge branch, build 64bit kernel failed on 32bit userspace.
->
->
->   CC       tools/objtool/builtin-check.o
->   CC       tools/objtool/builtin-orc.o
-> In file included from check.h:10,
->                  from builtin-check.c:18:
-> elf.h: In function =E2=80=98sec_offset_hash=E2=80=99:
-> elf.h:102:14: error: right shift count >=3D width of type
-> [-Werror=3Dshift-count-overflow]
->   102 |  oh =3D offset >> 32;
->       |              ^~
-> cc1: all warnings being treated as errors
-> mv: =E6=97=A0=E6=B3=95=E8=8E=B7=E5=8F=96'tools/objtool/.builtin-check.o.t=
-mp' =E7=9A=84=E6=96=87=E4=BB=B6=E7=8A=B6=E6=80=81(stat): =E6=B2=A1=E6=9C=89=
-=E9=82=A3=E4=B8=AA=E6=96=87=E4=BB=B6=E6=88=96=E7=9B=AE=E5=BD=95
-> make[6]: *** [/tools/build/Makefile.build:97=EF=BC=9Atools/objtool/builti=
-n-check.o]
-> =E9=94=99=E8=AF=AF 1
-> make[6]: *** =E6=AD=A3=E5=9C=A8=E7=AD=89=E5=BE=85=E6=9C=AA=E5=AE=8C=E6=88=
-=90=E7=9A=84=E4=BB=BB=E5=8A=A1....
->   HOSTCC  scripts/kallsyms
-> In file included from check.h:10,
->                  from builtin-orc.c:17:
-> elf.h: In function =E2=80=98sec_offset_hash=E2=80=99:
-> elf.h:102:14: error: right shift count >=3D width of type
-> [-Werror=3Dshift-count-overflow]
->   102 |  oh =3D offset >> 32;
->       |              ^~
-> In file included from arch/x86/decode.c:14:
-> arch/x86/../../elf.h: In function =E2=80=98sec_offset_hash=E2=80=99:
-> arch/x86/../../elf.h:102:14: error: right shift count >=3D width of type
-> [-Werror=3Dshift-count-overflow]
->   102 |  oh =3D offset >> 32;
->       |              ^~
-> cc1: all warnings being treated as errors
-> mv: =E6=97=A0=E6=B3=95=E8=8E=B7=E5=8F=96'tools/objtool/.builtin-orc.o.tmp=
-' =E7=9A=84=E6=96=87=E4=BB=B6=E7=8A=B6=E6=80=81(stat)  CC
-> tools/objtool/help.o
-> : =E6=B2=A1=E6=9C=89=E9=82=A3=E4=B8=AA=E6=96=87=E4=BB=B6=E6=88=96=E7=9B=
-=AE=E5=BD=95
-> make[6]: *** [/tools/build/Makefile.build:97=EF=BC=9Atools/objtool/builti=
-n-orc.o] =E9=94=99=E8=AF=AF
-> 1
->   CC       tools/objtool/pager.o
->   CC       tools/objtool/parse-options.o
->   CC       tools/objtool/run-command.o
->   CC       tools/objtool/sigchain.o
->   HOSTCC  scripts/recordmcount
->   CC       tools/objtool/subcmd-config.o
->   HOSTCC  scripts/sorttable
->   HOSTCC  scripts/asn1_compiler
->   HOSTCC  scripts/extract-cert
->   HOSTLD  scripts/genksyms/genksyms
-> cc1: all warnings being treated as errors
-> mv: =E6=97=A0=E6=B3=95=E8=8E=B7=E5=8F=96'tools/objtool/arch/x86/.decode.o=
-.tmp' =E7=9A=84=E6=96=87=E4=BB=B6=E7=8A=B6=E6=80=81(stat): =E6=B2=A1=E6=9C=
-=89=E9=82=A3=E4=B8=AA=E6=96=87=E4=BB=B6=E6=88=96=E7=9B=AE=E5=BD=95
-> make[7]: ***
-> [/tools/build/Makefile.build:97=EF=BC=9Atools/objtool/arch/x86/decode.o]
-> =E9=94=99=E8=AF=AF 1
-> make[6]: *** [/tools/build/Makefile.build:139=EF=BC=9Aarch/x86] =E9=94=99=
-=E8=AF=AF 2
-> make[5]: *** [Makefile:46=EF=BC=9Atools/objtool/objtool-in.o] =E9=94=99=
-=E8=AF=AF 2
-> make[5]: *** =E6=AD=A3=E5=9C=A8=E7=AD=89=E5=BE=85=E6=9C=AA=E5=AE=8C=E6=88=
-=90=E7=9A=84=E4=BB=BB=E5=8A=A1....
->
+But on some drivers blk_update_request() may be called multiple times before
+__blk_mq_end_request() is called and what's needed here is the total number of
+bytes in the whole request, not just in the final completion.
+
+> Also there is just 20 callers of __blk_mq_end_request(), looks this kind
+> of change shouldn't be too big.
+
+This would work iff we get rid of partial completions and if we get rid of
+partial completions, we might as well stop exposing blk_update_request() and
+__blk_mq_end_request().
+
+Thanks.
+
+-- 
+tejun
