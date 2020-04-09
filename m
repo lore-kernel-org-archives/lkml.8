@@ -2,194 +2,108 @@ Return-Path: <SRS0=n+Ub=5Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.4 required=3.0 tests=FORGED_MUA_MOZILLA,
-	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF07FC2BB85
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 17:38:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE298C2BA19
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 17:38:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B9DFD20753
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 17:38:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AEDD320753
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 17:38:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=sslab.ics.keio.ac.jp header.i=@sslab.ics.keio.ac.jp header.b="AGeMCB2R"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726666AbgDIRiY (ORCPT
+        id S1726690AbgDIRis (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Apr 2020 13:38:24 -0400
-Received: from mail-oln040092065092.outbound.protection.outlook.com ([40.92.65.92]:50574
-        "EHLO EUR01-HE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725970AbgDIRiX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Apr 2020 13:38:23 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Oa+S8g/w1ImOP4OOpOqhYdWIYe5tCwxlLDI7Qle0ILcqWVHvGIAe11rOwWTw7xm7JiE9/WFJSGX5qufHXpTgFQjuBpmtPeXIt/hcym3WZ4mmJPEyH7gVVjXJ2lmEqBwj+XPpYLEXsalgmg/SFKh3/zprZV1y4iMJNHeT53t7AZYCCsAJ68D2x7oxKFTEy3GgTcyBe2QJdHGeGnNV3DtuidDxw9BpYdOO0l+yXN4yOlAPE2U+AL9Zg2UkHkh7Ld/3e21mXweQqqIQXF6Na1fAQRhpHiK1dlYgkwHcBubWF0kQzjMko5PH1X3AHbYAm+my7xlIjTDCfxVFqnEW0Ol7lw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=LOozkK2+QO5oDAWsFNrE/yEo8MG6qRuSXbOhJ20S+e4=;
- b=SdqQ0bFiDi8yfsm385gghDPJtVF3m6SwQVBSR3eO3UfAsZHfc0LIPuFd3lwp/QYjgjOZW/nm1JyKczhx4FDnYFDCcbZz9QgYDDaNjPLL8Z0QkFvl8+Mv9+kxC5M7egfM3yHqnPmYe4vP8J+PXIEvrPQgHqWblxrp5t2+DXSAE9fVHRJsD39IXjfHydhAXQqP9Mux663cA9V8CWwl6k4itgM8F5hLsXv560bz2guXF8JQtvP3flj86HO/T5uhI7ubO03sLzPewOm7oegQ6URW0TdLDr3VTn2tM/JHFbR8rZQJIjQdcgefAd6sAdfmccWEkGgvbv4yOUm+mX2VWkbEIw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=hotmail.de; dmarc=pass action=none header.from=hotmail.de;
- dkim=pass header.d=hotmail.de; arc=none
-Received: from HE1EUR01FT059.eop-EUR01.prod.protection.outlook.com
- (2a01:111:e400:7e18::48) by
- HE1EUR01HT222.eop-EUR01.prod.protection.outlook.com (2a01:111:e400:7e18::400)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2900.15; Thu, 9 Apr
- 2020 17:38:20 +0000
-Received: from AM6PR03MB5170.eurprd03.prod.outlook.com
- (2a01:111:e400:7e18::51) by HE1EUR01FT059.mail.protection.outlook.com
- (2a01:111:e400:7e18::241) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2900.15 via Frontend
- Transport; Thu, 9 Apr 2020 17:38:20 +0000
-X-IncomingTopHeaderMarker: OriginalChecksum:BD0E0DA883FE934427513D795F10F4D91D108FFE883B35F6E53BE023884A3082;UpperCasedChecksum:0CEE1ADFF56F00355451C439DEEE618238EE2B6C00F363BBF65407907A0AF536;SizeAsReceived:9647;Count:50
-Received: from AM6PR03MB5170.eurprd03.prod.outlook.com
- ([fe80::d57:5853:a396:969d]) by AM6PR03MB5170.eurprd03.prod.outlook.com
- ([fe80::d57:5853:a396:969d%7]) with mapi id 15.20.2878.022; Thu, 9 Apr 2020
- 17:38:20 +0000
-Subject: Re: [PATCH v2] Input: elantech - fix x_max/y_max values
-From:   Bernd Edlinger <bernd.edlinger@hotmail.de>
-To:     Benjamin Tissoires <benjamin.tissoires@redhat.com>,
-        "Dave.Wang" <dave.wang@emc.com.tw>, jingle <jingle.wu@emc.com.tw>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        Enrico Weigelt <info@metux.net>,
-        Allison Randal <allison@lohutok.net>,
-        Aaron Ma <aaron.ma@canonical.com>
-References: <PR2PR03MB517975370D754EEF47E062BFE4EB0@PR2PR03MB5179.eurprd03.prod.outlook.com>
- <CAO-hwJ+eua8-fNj9o8CxjFyM0i1+R9ZwPMroF9uLUH6NVu3Tdg@mail.gmail.com>
- <PR2PR03MB51799BF709B3975A08F139F4E4EB0@PR2PR03MB5179.eurprd03.prod.outlook.com>
- <AM6PR03MB5170F5FC30556BEF89C775C2E4EB0@AM6PR03MB5170.eurprd03.prod.outlook.com>
- <AM6PR03MB5170D26019747F5090FE74B5E4C50@AM6PR03MB5170.eurprd03.prod.outlook.com>
- <AM6PR03MB51702AF00C6BA06BBC9F517EE4C50@AM6PR03MB5170.eurprd03.prod.outlook.com>
-Message-ID: <AM6PR03MB51705B32136F527B99CCD907E4C10@AM6PR03MB5170.eurprd03.prod.outlook.com>
-Date:   Thu, 9 Apr 2020 19:38:17 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
-In-Reply-To: <AM6PR03MB51702AF00C6BA06BBC9F517EE4C50@AM6PR03MB5170.eurprd03.prod.outlook.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: AM0PR01CA0084.eurprd01.prod.exchangelabs.com
- (2603:10a6:208:10e::25) To AM6PR03MB5170.eurprd03.prod.outlook.com
- (2603:10a6:20b:ca::23)
-X-Microsoft-Original-Message-ID: <bf55d540-bedc-5ec0-e387-1730d1a28ccc@hotmail.de>
+        Thu, 9 Apr 2020 13:38:48 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:35608 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725970AbgDIRir (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Apr 2020 13:38:47 -0400
+Received: by mail-wr1-f67.google.com with SMTP id g3so12902498wrx.2
+        for <linux-kernel@vger.kernel.org>; Thu, 09 Apr 2020 10:38:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=sslab.ics.keio.ac.jp; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=cB5yBSX4XmqsF1ppUkd5OJUCXOdbq3LIDZ0hfF3NUgw=;
+        b=AGeMCB2RRpgTqU0NyD8K0PMZxZc9+wdj85illkNZBFhXaDT9YCV/M4sHa4D+5pqg2O
+         xcFqG9jDLQZo3duKjJI2k43wS7IYfPKRw+rB0EmR0stDi++HHUpZETn74dUlqeETl/DK
+         2ldu2cXbWe1c/D5YBxpd4VpeItFyYoIF+U+tE=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=cB5yBSX4XmqsF1ppUkd5OJUCXOdbq3LIDZ0hfF3NUgw=;
+        b=sTXA9qQ8BsIoajKp/CYlKYnDimPHi/8Jn4cYxnD0VjypL/x+i1biCLA4aZAlnY7Kd4
+         yt9EFLYOyFdcwr7aX8lIiSTo3+/y/6i9UBUrTpzKSscc5z+TvXFvCkfTzxy3rFzgmhd4
+         k4LtLakS0ZEQzij/jm0wiDgzNS9/L0fWhLKUu8zySKmhddJz/jRBdogDmh7dJ4/S7H0G
+         RKAeR6gg7Dxp1kdy5CwIWFGi+LXRplGDL3IMlc7axmIVxnY8ybbmCP5nKevxiXJH8jLB
+         xIIwbZHeFm+jIQhfHWIfQsyPMzJ5Kz4reA7TKzL08Tdp/TlGh7cbEMRuZMZOyBBLrkfr
+         vOYQ==
+X-Gm-Message-State: AGi0PuY4CuzhqfVkeAyhZ2AsCgZHE1dpMKFGYkV+WNTF5sSOC1n3vOJE
+        Ej5PlSWtsnduw3WegSk+4rNgPv8crndfgJ7xVvMlgA==
+X-Google-Smtp-Source: APiQypKHuqryJeoz1PSWp+rhiE3ZzkNIIf6gabELUM2oO0fS6yQjNadMGyH6yBef5R2sSWoP37RfT6f3UF604jlXS8I=
+X-Received: by 2002:adf:fc4f:: with SMTP id e15mr219309wrs.415.1586453926274;
+ Thu, 09 Apr 2020 10:38:46 -0700 (PDT)
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from [192.168.1.101] (92.77.140.102) by AM0PR01CA0084.eurprd01.prod.exchangelabs.com (2603:10a6:208:10e::25) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2900.15 via Frontend Transport; Thu, 9 Apr 2020 17:38:19 +0000
-X-Microsoft-Original-Message-ID: <bf55d540-bedc-5ec0-e387-1730d1a28ccc@hotmail.de>
-X-TMN:  [uB2t+kqjyc4tIh+IC5coYO5n8c4NphG/]
-X-MS-PublicTrafficType: Email
-X-IncomingHeaderCount: 50
-X-EOPAttributedMessage: 0
-X-MS-Office365-Filtering-Correlation-Id: f9b79a9c-612e-4b46-05b3-08d7dcaccb2d
-X-MS-TrafficTypeDiagnostic: HE1EUR01HT222:
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: ohUyZhGPqy9Zvgkej6Mz3xa5su+eK/9OS+1KBvLL3l/gOnGODdfLDLKDKavh8Ba+JEluwpXqPMsZE5TOoSNXUXkzx2+bX0h5khVAz/Z3PKkUC8eBy5bx6yYm+tGR/JPtLEnaRFESn2L369KNKiuScjj87c1Ea+4tNZrS4t69NRnhV0Z6fZ5cICz5lZUNmhkT
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:0;SRV:;IPV:NLI;SFV:NSPM;H:AM6PR03MB5170.eurprd03.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:;DIR:OUT;SFP:1901;
-X-MS-Exchange-AntiSpam-MessageData: JhDbI+a+gf2jqiVVzGURza1gnFc7wVR0hxccQjcR/DeEk7YV3axbkM0TxK3jMRThAO9x3wseusQCn6KVY0rHhk92my7UxJCCPybIG8H6Bp8TTnENOV0WCpNbKJbc2gdoAnYAhTGH8OBkmgX+iOQBGA==
-X-OriginatorOrg: outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: f9b79a9c-612e-4b46-05b3-08d7dcaccb2d
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Apr 2020 17:38:20.0743
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-CrossTenant-FromEntityHeader: Internet
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: HE1EUR01HT222
+References: <20200409150210.15488-1-keitasuzuki.park@sslab.ics.keio.ac.jp> <20200409.101844.1655988786538703860.davem@davemloft.net>
+In-Reply-To: <20200409.101844.1655988786538703860.davem@davemloft.net>
+From:   Keita Suzuki <keitasuzuki.park@sslab.ics.keio.ac.jp>
+Date:   Fri, 10 Apr 2020 02:38:35 +0900
+Message-ID: <CAEYrHjkjYESXHG1x0Obnz+T5xv00vyZKHzUg=ZC70f0JymSU=g@mail.gmail.com>
+Subject: Re: [PATCH] nfp: Fix memory leak in nfp_resource_acquire()
+To:     David Miller <davem@davemloft.net>
+Cc:     Kubota Takafumi <takafumi.kubota1012@sslab.ics.keio.ac.jp>,
+        Jakub Kicinski <kuba@kernel.org>,
+        "open list:NETRONOME ETHERNET DRIVERS" <oss-drivers@netronome.com>,
+        "open list:NETWORKING DRIVERS" <netdev@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Are you there?
+Hi,
 
-Should I re-post the v2 patch, was that dropped somehow?
+So sorry about this. It seems like I accidentally touched the patch
+file after generating / testing the patch.
+I will resend the new patch immediately.
 
-If I don't hear anything I'll assume I just repost, probably
-as unchanged v3, right?
+I have tested the patch using kmemleak.
 
-Thanks,
-Bernd.
+Thanks.
 
-
-On 4/5/20 7:54 AM, Bernd Edlinger wrote:
-> And, furthermore, there is one thing I find really confusing,
-> 
-> I do not see the message v2 quoted below which had an updated commit message,
-> due to that Benjamin Tissoires request.
-> 
-> It was from my point of view sent on 2/27/20 11:03 PM,
-> but I cannot find it neither on spinics, nor on marc.info.
-> That is funny.
-> 
-> Did it reach you guys at all?
-> Or should I re-send it just in case?
-> 
-> 
-> Thanks
-> Bernd.
-> 
-> On 4/5/20 7:26 AM, Bernd Edlinger wrote:
->> Ping...
->>
->> This patch works fine for me since several weeks,
->> without it I would not be able to use my laptop any more.
->>
->> Could you please accept this patch?
->>
->>
->> Thanks
->> Bernd.
->>
->>
->> On 2/27/20 11:03 PM, Bernd Edlinger wrote:
->>> Since commit 37548659bb22 ("Input: elantech - query the min/max information beforehand too")
->>> moved the querying of the x_max/y_max values from
->>> elantech_set_input_params to elantech_query_info,
->>> the returned x_max/y_max values are different than before,
->>> at least for some firmware versions.
->>>
->>> The reason is likely that this is now done before
->>> elantech_set_absolute_mode does run.  So it may happen that
->>> the returned values are exactly half of what they used to be,
->>> which makes input_report_abs in PS/2 mode report ABS_X values which
->>> exceed the x_max value, which is very annoying since the mouse stops
->>> to move then, and ABS_Y value become negative, which is benign.
->>>
->>> This was observed with a MSI GX70 laptop:
->>>
->>> elantech: assuming hardware version 3 (with firmware version 0x250f01)
->>> elantech: Synaptics capabilities query result 0x18, 0x17, 0x0b.
->>> elantech: Elan sample query result 05, 0e, 00
->>> input: ETPS/2 Elantech Touchpad as /devices/platform/i8042/serio...
->>>
->>> Correct this by doubling the returned x_max and y_max
->>> value for this specific firmware version.
->>>
->>> Fixes: 37548659bb22 ("Input: elantech - query the min/max information beforehand too")
->>>
->>> Signed-off-by: Bernd Edlinger <bernd.edlinger@hotmail.de>
->>> ---
->>>  drivers/input/mouse/elantech.c | 4 ++++
->>>  1 file changed, 4 insertions(+)
->>>
->>> diff --git a/drivers/input/mouse/elantech.c b/drivers/input/mouse/elantech.c
->>> index 2d8434b..3399db8 100644
->>> --- a/drivers/input/mouse/elantech.c
->>> +++ b/drivers/input/mouse/elantech.c
->>> @@ -1720,6 +1720,10 @@ static int elantech_query_info(struct psmouse *psmouse,
->>>  
->>>  		info->x_max = (0x0f & param[0]) << 8 | param[1];
->>>  		info->y_max = (0xf0 & param[0]) << 4 | param[2];
->>> +		if (info->fw_version == 0x250f01) {
->>> +			info->x_max <<= 1;
->>> +			info->y_max <<= 1;
->>> +		}
->>>  		break;
->>>  
->>>  	case 4:
->>>
+2020=E5=B9=B44=E6=9C=8810=E6=97=A5(=E9=87=91) 2:18 David Miller <davem@dave=
+mloft.net>:
+>
+> From: Keita Suzuki <keitasuzuki.park@sslab.ics.keio.ac.jp>
+> Date: Thu,  9 Apr 2020 15:02:07 +0000
+>
+> > This patch fixes a memory leak in nfp_resource_acquire(). res->mutex is
+> > alllocated in nfp_resource_try_acquire(). However, when
+> > msleep_interruptible() or time_is_before_eq_jiffies() fails, it falls
+> > into err_fails path where res is freed, but res->mutex is not.
+> >
+> > Fix this by changing call to free to nfp_resource_release().
+> >
+> > Signed-off-by: Keita Suzuki <keitasuzuki.park@sslab.ics.keio.ac.jp>
+>
+> Did you test compile this?
+>
+> drivers/net/ethernet/netronome/nfp/nfpcore/nfp_resource.c: In function =
+=E2=80=98nfp_resource_acquire=E2=80=99:
+> drivers/net/ethernet/netronome/nfp/nfpcore/nfp_resource.c:203:2: error: i=
+mplicit declaration of function =E2=80=98nfp_resource_relase=E2=80=99; did =
+you mean =E2=80=98nfp_resource_release=E2=80=99? [-Werror=3Dimplicit-functi=
+on-declaration]
+>   nfp_resource_relase(res);
+>   ^~~~~~~~~~~~~~~~~~~
+>   nfp_resource_release
+>
+> And this makes me feel like the test was not runtime tested either.
