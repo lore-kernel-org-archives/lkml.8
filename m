@@ -2,176 +2,87 @@ Return-Path: <SRS0=n+Ub=5Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 038D2C2BA19
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 23:33:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97249C2BB85
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 23:34:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C0F072074F
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 23:33:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6E4792074F
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 23:34:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="eLkZUa7u"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="Pgwmf13c"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727049AbgDIXd3 (ORCPT
+        id S1727126AbgDIXeD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Apr 2020 19:33:29 -0400
-Received: from mail-qk1-f170.google.com ([209.85.222.170]:40494 "EHLO
-        mail-qk1-f170.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726858AbgDIXd3 (ORCPT
+        Thu, 9 Apr 2020 19:34:03 -0400
+Received: from mail27.static.mailgun.info ([104.130.122.27]:17068 "EHLO
+        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726924AbgDIXeC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Apr 2020 19:33:29 -0400
-Received: by mail-qk1-f170.google.com with SMTP id z15so600728qki.7
-        for <linux-kernel@vger.kernel.org>; Thu, 09 Apr 2020 16:33:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=from:content-transfer-encoding:mime-version:subject:message-id:date
-         :cc:to;
-        bh=wgkRZRi8nt7Sf7G72jvNnmXYWgvPJ9i4m7QAjv8A1Q4=;
-        b=eLkZUa7uSnG9us9m8iieDngtLxC+HG8pwltFYbdcs1NrzCJ1z3j+wxkNs3NqTPdiFP
-         MB5ptKIKgNVb9MAykm/y4xfy/zxJ6uC9yZIRf4ym7kjk420gx5der2gbEGnkHcTlAfW5
-         VFONC2kJFuzKqfWOxd3DsyyC9ADMR0PVZafQqj5DMAUNJomT2s8FjsnRTwDf8cjlEMCw
-         MjQv/woOdikoiIjG4NfBeicUqRY6QOBFzYkE3f/h58uQT+yc6yzDQ8MJVQUwS02YaFsM
-         LRDjjuAaYaaKPTWVlyERWBcaSg/wwEhfLVTeAk2WriI0eqtNkz+EZjrL2Q3cU9MaVTEV
-         2CaQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:content-transfer-encoding:mime-version
-         :subject:message-id:date:cc:to;
-        bh=wgkRZRi8nt7Sf7G72jvNnmXYWgvPJ9i4m7QAjv8A1Q4=;
-        b=l/UNPbRbDzqMGXlu+pkWXBfzqCvhc+bXLWB0rCdbfZEkLHjsanNcJJAJY75KQsV2Ws
-         S6UDhftYED7ZVhBNmF1CKza8XcJfXncQUQXjvGsQ7G+E/KlSWPsIaPjxC2bem3gEiiYE
-         V05C+dAcFfGJDvOFGn6MiHEzL99pA/P7NE5Fg8zuhNCHxZitdpFQnA9U/VbcLvcQ3Lou
-         ZGPAJUE3KBTRUkZCuOxSYzg1YlNF5mOkZVliwntJeMyFY4OY4CssEnI2IEB6WZT9Byn2
-         hi7rZDh2oWnw5w/3V9DM92TyGPbHeP/nXbn9iYKxaIeCi1TkGcJ26LquSPvqQHT5IFo4
-         8cog==
-X-Gm-Message-State: AGi0PuZIvFU+6zbDa5ESsa8z4hi+pFTDMrPc3lXxi0d08vfOm8bl/4TS
-        rfhWjgP/n6RnQBBaucM8ynsjlg==
-X-Google-Smtp-Source: APiQypIzSPzGROYB8GlTbojz86NPjyo4ppagaRVsPbtzp2x4iX5szJMdNvssk3f7fl49ywb/72hn2A==
-X-Received: by 2002:a37:b93:: with SMTP id 141mr1489123qkl.192.1586475208596;
-        Thu, 09 Apr 2020 16:33:28 -0700 (PDT)
-Received: from [192.168.1.153] (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
-        by smtp.gmail.com with ESMTPSA id o16sm281681qki.110.2020.04.09.16.33.27
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 09 Apr 2020 16:33:28 -0700 (PDT)
-From:   Qian Cai <cai@lca.pw>
-Content-Type: text/plain;
-        charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.80.23.2.2\))
-Subject: s390 boot woe due to "block: fix busy device checking in
- blk_drop_partitions"
-Message-Id: <AD16A450-794F-4EEA-A7BF-42452F18294A@lca.pw>
-Date:   Thu, 9 Apr 2020 19:33:25 -0400
-Cc:     Jens Axboe <axboe@kernel.dk>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        linux-block@vger.kernel.org, linux-s390@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>
-To:     Christoph Hellwig <hch@lst.de>
-X-Mailer: Apple Mail (2.3608.80.23.2.2)
+        Thu, 9 Apr 2020 19:34:02 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1586475242; h=References: In-Reply-To: Message-Id: Date:
+ Subject: Cc: To: From: Sender;
+ bh=LoEYHxHjJumMLwAkE0oLJJVPZMxtLaW944wQD+0R1kg=; b=Pgwmf13c5eEySOTYUnO0SmqMiY6MWW+oJzqGELM8oMP2ldkEU9ecH6oN62bE+x4NdB6MMfR8
+ v0iLNsk6LVvFPqAL5v/sM6HYfdR9ihMfkPNQjlQOjXbCnqm1lvWdAv/RasQRiyL1lmVQcMGr
+ 9kAqZm0Al/V5z5YZ83h1xJK/3ng=
+X-Mailgun-Sending-Ip: 104.130.122.27
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e8fb0ea.7f8ac2394dc0-smtp-out-n03;
+ Thu, 09 Apr 2020 23:34:02 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 6D06EC072B7; Thu,  9 Apr 2020 23:33:58 +0000 (UTC)
+Received: from localhost.localdomain (c-71-237-101-98.hsd1.co.comcast.net [71.237.101.98])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: jcrouse)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 60A7FC433CB;
+        Thu,  9 Apr 2020 23:33:57 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 60A7FC433CB
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=jcrouse@codeaurora.org
+From:   Jordan Crouse <jcrouse@codeaurora.org>
+To:     iommu@lists.linux-foundation.org
+Cc:     linux-arm-msm@vger.kernel.org, robin.murphy@arm.com,
+        will@kernel.org, linux-arm-kernel@lists.infradead.org,
+        Joerg Roedel <joro@8bytes.org>, linux-kernel@vger.kernel.org
+Subject: [PATCH v6 1/5] iommu: Add DOMAIN_ATTR_SPLIT_TABLES
+Date:   Thu,  9 Apr 2020 17:33:46 -0600
+Message-Id: <20200409233350.6343-2-jcrouse@codeaurora.org>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200409233350.6343-1-jcrouse@codeaurora.org>
+References: <20200409233350.6343-1-jcrouse@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Reverted the linux-next commit on today=E2=80=99s tree,
+Add a new attribute to enable and query the state of split pagetables
+for the domain.
 
-d3ef5536274f (=E2=80=9Cblock: fix busy device checking in =
-blk_drop_partitions=E2=80=9D)
+Acked-by: Will Deacon <will@kernel.org>
+Signed-off-by: Jordan Crouse <jcrouse@codeaurora.org>
+---
 
-makes IBM partition to be recognized again on s390 rootfs,
+ include/linux/iommu.h | 2 ++
+ 1 file changed, 2 insertions(+)
 
-01: [   83.443963]  dasda:VOL1/  0X0121: dasda1                          =
-      =20
-01: [   85.124667] qeth 0.0.8000 enc8000: renamed from eth0              =
-      =20
-01: [   85.731860] dasd-eckd 0.0.0120: DASD with 4 KB/block, 72122400 KB =
-total s
-01: ize, 48 KB/track, compatible disk layout                             =
-      =20
-01: [   86.076722]  dasdb:VOL1/  0X0120: dasdb1 dasdb2
-
-Otherwise, it is DOA,
-
-00:          Starting Show Plymouth Boot Screen...                       =
-      =20
-00: [   37.202263] qeth 0.0.8000: portname is deprecated and is ignored  =
-      =20
-00: [   37.677993] qdio: 0.0.8002 OSA on SC 4 using AI:1 QEBSM:0 PRI:1 =
-TDD:1 SIG
-00: A:RW A                                                               =
-      =20
-00: [   37.770970] qeth 0.0.8000: MAC address 02:de:ad:be:ef:87 =
-successfully reg
-00: istered                                                              =
-      =20
-00: [   37.771547] qeth 0.0.8000: Device is a Virtual NIC QDIO card =
-(level: V642
-00: )                                                                    =
-      =20
-00: [   37.771547] with link type Virt.NIC QDIO.                         =
-      =20
-00: [   38.036231] ccw_init (415) used greatest stack depth: 56496 bytes =
-left  =20
-00:          Starting dracut initqueue hook...                           =
-      =20
-00: [   39.176304] dasd-eckd 0.0.0120: A channel path to the device has =
-become o
-00: perational                                                           =
-      =20
-00: [   39.453273] dasd-eckd 0.0.0120: New DASD 3390/0E (CU 3990/01) =
-with 100170
-00:  cylinders, 15 heads, 224 sectors                                    =
-      =20
-00: [   39.655564] dasd-eckd 0.0.0121: A channel path to the device has =
-become o
-00: perational                                                           =
-      =20
-00: [   39.722706] dasd-eckd 0.0.0121: New DASD 3390/0E (CU 3990/01) =
-with 100170
-00:  cylinders, 15 heads, 224 sectors                                    =
-      =20
-01: [   41.133963] dasd-eckd 0.0.0121: DASD with 4 KB/block, 72122400 KB =
-total s
-01: ize, 48 KB/track, compatible disk layout                             =
-      =20
-01: [   41.145510] dasd-eckd 0.0.0120: DASD with 4 KB/block, 72122400 KB =
-total s
-01: ize, 48 KB/track, compatible disk layout                             =
-      =20
-01: [   41.609625] qeth 0.0.8000 enc8000: renamed from eth0 =20
-01: [   41.609625] qeth 0.0.8000 enc8000: renamed from eth0              =
-      =20
-01: Warning: /dev/mapper/rhel_ibm--z--135-root does not exist            =
-      =20
-01: Warning: /dev/rhel_ibm-z-135/root does not exist                     =
-      =20
-01: Warning: /dev/rhel_ibm-z-135/swap does not exist                     =
-      =20
-01:                                                                      =
-      =20
-01: Generating "/run/initramfs/rdsosreport.txt"                          =
-      =20
-01:                                                                      =
-      =20
-01:                                                                      =
-      =20
-01: Entering emergency mode. Exit the shell to continue.                 =
-      =20
-01: Type "journalctl" to view system logs.                               =
-      =20
-01: You might want to save "/run/initramfs/rdsosreport.txt" to a USB =
-stick or /b
-01: oot                                                                  =
-      =20
-01: after mounting them and attach it to a bug report.                   =
-      =20
-01:                                                                      =
-      =20
-01:                                                                      =
-      =20
-00: dracut:/#=20
-
+diff --git a/include/linux/iommu.h b/include/linux/iommu.h
+index 7ef8b0bda695..d0f96f748a00 100644
+--- a/include/linux/iommu.h
++++ b/include/linux/iommu.h
+@@ -126,6 +126,8 @@ enum iommu_attr {
+ 	DOMAIN_ATTR_FSL_PAMUV1,
+ 	DOMAIN_ATTR_NESTING,	/* two stages of translation */
+ 	DOMAIN_ATTR_DMA_USE_FLUSH_QUEUE,
++	/* Enable split pagetables (for example, TTBR1 on arm-smmu) */
++	DOMAIN_ATTR_SPLIT_TABLES,
+ 	DOMAIN_ATTR_MAX,
+ };
+ 
+-- 
+2.17.1
