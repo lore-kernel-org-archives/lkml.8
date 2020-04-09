@@ -2,52 +2,53 @@ Return-Path: <SRS0=n+Ub=5Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4BCDC2BA19
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 19:36:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CF78C2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 19:36:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 769562087E
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 19:36:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 326E320BED
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 19:36:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="I4TsXVgu"
+	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="TCZFEv3e"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726880AbgDITf7 (ORCPT
+        id S1726898AbgDITgB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Apr 2020 15:35:59 -0400
-Received: from mail.efficios.com ([167.114.26.124]:47080 "EHLO
+        Thu, 9 Apr 2020 15:36:01 -0400
+Received: from mail.efficios.com ([167.114.26.124]:47112 "EHLO
         mail.efficios.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725987AbgDITf6 (ORCPT
+        with ESMTP id S1726864AbgDITf6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 9 Apr 2020 15:35:58 -0400
 Received: from localhost (localhost [127.0.0.1])
-        by mail.efficios.com (Postfix) with ESMTP id D4BC0280E4A;
-        Thu,  9 Apr 2020 15:35:57 -0400 (EDT)
+        by mail.efficios.com (Postfix) with ESMTP id 4140E28097A;
+        Thu,  9 Apr 2020 15:35:58 -0400 (EDT)
 Received: from mail.efficios.com ([127.0.0.1])
         by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id Z3bz5x_ThC_U; Thu,  9 Apr 2020 15:35:57 -0400 (EDT)
+        with ESMTP id IE779iNZWAwn; Thu,  9 Apr 2020 15:35:58 -0400 (EDT)
 Received: from localhost (localhost [127.0.0.1])
-        by mail.efficios.com (Postfix) with ESMTP id 8C4A2280F9F;
+        by mail.efficios.com (Postfix) with ESMTP id DFA12280E4B;
         Thu,  9 Apr 2020 15:35:57 -0400 (EDT)
-DKIM-Filter: OpenDKIM Filter v2.10.3 mail.efficios.com 8C4A2280F9F
+DKIM-Filter: OpenDKIM Filter v2.10.3 mail.efficios.com DFA12280E4B
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
         s=default; t=1586460957;
-        bh=bFhrhpt5ayVzAtr+tHRZxRzvaCMpTrddBYhYmZJwKh8=;
+        bh=0dePxRXcfutRxle9mYRPSErG+aeuVue92CDCEU7DCD8=;
         h=From:To:Date:Message-Id;
-        b=I4TsXVgueNcO87QkVwS+xuOyaPnhPSoWCz2NIuSXPKbKIEy01I8/k69y9iJ0Vc3et
-         CSPVZ8BZSSAW42UTyOFsquOHTsg/S/w4kXhMZBkvhjP6Rgoak7hIBhIn8kxX0GTy9U
-         sXhV0p3Q7vT4L3JUhiMhC9VCAA9hWmWq2ecnLRZdKtcwWpRwz1m0FhT3/UWnhZrDBJ
-         SvMhQS8MIcnmUR6bwXsz69fj2zpHTIIFDgELOVXtAuzqiBKkO/FzCSGNbqbmkU449J
-         746cI//nRsDurw0B9wtY4z3HIu75tsLWYb64QJb51OiCVIc84N7NAJD8xfYk/1a3uD
-         SB0pm5ieeptrw==
+        b=TCZFEv3eAEJL+N2h18QkDUzQbP6X6tKngFQwxeFruCoqwE/NbEhHhvvcLlyEGWsMz
+         NQAb96Tw2CajvC/BMamNPsJBNOuAyZTA4yxwKVAfboF0n3lEcNbtlLHBDHwf98J8Fp
+         sO9pvzz2+EYOYJwfhFwve5cqm7VzcxFghn5SR/8O0hfrp5kke/IcuOvGbc0WYtlJRp
+         525UxHuVxnT+iJ21xk7kjpTgRJJnm3ESL4Rdiu6pJKZUIVFQhZ9UQQqQKOLBTy1BOV
+         4BIUAPoGIzrBDsFMsKUKuoevo1XElXPgTm5YMwYsEJwbrOjVUWYU2l/XXDGs87GAC2
+         z7fJVwRF4GJ3g==
 X-Virus-Scanned: amavisd-new at efficios.com
 Received: from mail.efficios.com ([127.0.0.1])
         by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10026)
-        with ESMTP id h5vuHugWsql6; Thu,  9 Apr 2020 15:35:57 -0400 (EDT)
+        with ESMTP id 4U-igWP0RGtR; Thu,  9 Apr 2020 15:35:57 -0400 (EDT)
 Received: from localhost.localdomain (192-222-181-218.qc.cable.ebox.net [192.222.181.218])
-        by mail.efficios.com (Postfix) with ESMTPSA id 3B04A280D67;
+        by mail.efficios.com (Postfix) with ESMTPSA id 84FFB280F50;
         Thu,  9 Apr 2020 15:35:57 -0400 (EDT)
 From:   Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
 To:     Thomas Gleixner <tglx@linutronix.de>,
@@ -57,67 +58,57 @@ To:     Thomas Gleixner <tglx@linutronix.de>,
         Masami Hiramatsu <mhiramat@kernel.org>, rostedt@goodmis.org,
         Alexei Starovoitov <ast@kernel.org>
 Cc:     linux-kernel@vger.kernel.org,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Subject: [RFC PATCH 0/9] Export information needed by the LTTng kernel tracer
-Date:   Thu,  9 Apr 2020 15:35:34 -0400
-Message-Id: <20200409193543.18115-1-mathieu.desnoyers@efficios.com>
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Ingo Molnar <mingo@redhat.com>
+Subject: [RFC PATCH 1/9] tracepoint: call vmalloc_sync_mappings() on registration
+Date:   Thu,  9 Apr 2020 15:35:35 -0400
+Message-Id: <20200409193543.18115-2-mathieu.desnoyers@efficios.com>
 X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200409193543.18115-1-mathieu.desnoyers@efficios.com>
+References: <20200409193543.18115-1-mathieu.desnoyers@efficios.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Recently commit 0bd476e6c6 "kallsyms: unexport kallsyms_lookup_name()
-and kallsyms_on_each_symbol()" was merged upstream. As discussed
-previously [1], LTTng-modules (a GPL kernel tracer module) currently
-uses kallsyms to lookup some missing symbols.
+Similarly to register_die_notifier(), tracepoints register callbacks
+which can be invoked from execution contexts such as the page fault
+handler and NMIs which should not generate a page fault. Those callbacks
+can access virtual mappings and can be implemented in modules.
 
-This patch set integrates the required changes to the kernel code
-wherever those changes are generally useful, and adds a few GPL-exports
-targeting the information currently missing so LTTng modules can be
-entirely free of kallsyms.
+Calling vmalloc_sync_mappings() before registering a tracepoint callback
+ensures that the virtual mappings are synchronized within each process
+page tables, thus ensuring that no page fault will be triggered by the
+callback.
 
-Feedback is welcome,
+Signed-off-by: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Cc: Steven Rostedt <rostedt@goodmis.org>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+---
+ kernel/tracepoint.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-Thanks,
-
-Mathieu
-
-[1] https://lore.kernel.org/r/20200302192811.n6o5645rsib44vco@localhost
-
-Mathieu Desnoyers (9):
-  tracepoint: call vmalloc_sync_mappings() on registration
-  bpf: allow up to 13 arguments for tracepoints
-  writeback: tracing: pass global_wb_domain as tracepoint parameter
-  stacktrace: export-GPL stack_trace_save_user
-  sched: export-GPL task_prio
-  mm: export-GPL get_pageblock_migratetype
-  block: genhd: export-GPL gendisk_name
-  block: genhd: export-GPL generic disk device type
-  block: genhd: export-GPL generic disk block class
-
- block/bio.c                      |  2 +-
- block/blk-settings.c             |  2 +-
- block/blk.h                      |  2 +-
- block/genhd.c                    | 38 ++++++++++++++++++++++++--------
- block/partitions/core.c          |  4 ++--
- drivers/base/class.c             |  2 +-
- drivers/base/core.c              | 15 +++++++------
- drivers/base/devtmpfs.c          |  2 +-
- include/linux/genhd.h            |  4 +++-
- include/linux/kernel.h           |  6 ++---
- include/linux/trace_events.h     |  3 +++
- include/trace/bpf_probe.h        |  3 ++-
- include/trace/events/writeback.h | 17 ++++++++------
- init/do_mounts.c                 |  4 ++--
- kernel/sched/core.c              |  1 +
- kernel/stacktrace.c              |  1 +
- kernel/trace/bpf_trace.c         |  8 ++++---
- kernel/tracepoint.c              |  2 ++
- mm/page-writeback.c              |  9 ++++----
- mm/page_alloc.c                  |  1 +
- 20 files changed, 82 insertions(+), 44 deletions(-)
-
+diff --git a/kernel/tracepoint.c b/kernel/tracepoint.c
+index 73956eaff8a9..82191a89c72e 100644
+--- a/kernel/tracepoint.c
++++ b/kernel/tracepoint.c
+@@ -14,6 +14,7 @@
+ #include <linux/sched/signal.h>
+ #include <linux/sched/task.h>
+ #include <linux/static_key.h>
++#include <linux/vmalloc.h>
+ 
+ extern tracepoint_ptr_t __start___tracepoints_ptrs[];
+ extern tracepoint_ptr_t __stop___tracepoints_ptrs[];
+@@ -308,6 +309,7 @@ int tracepoint_probe_register_prio(struct tracepoint *tp, void *probe,
+ 	struct tracepoint_func tp_func;
+ 	int ret;
+ 
++	vmalloc_sync_mappings();
+ 	mutex_lock(&tracepoints_mutex);
+ 	tp_func.func = probe;
+ 	tp_func.data = data;
 -- 
 2.17.1
 
