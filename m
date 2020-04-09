@@ -2,138 +2,105 @@ Return-Path: <SRS0=n+Ub=5Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1028DC2D0EA
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 08:28:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 549E0C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 08:29:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D639520784
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 08:28:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2A8512082D
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 08:29:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="EwT7A41K"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MUEXAxyo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726652AbgDII24 (ORCPT
+        id S1726691AbgDII3A (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Apr 2020 04:28:56 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:36146 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725828AbgDII24 (ORCPT
+        Thu, 9 Apr 2020 04:29:00 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:36121 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726663AbgDII3A (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Apr 2020 04:28:56 -0400
-Received: by mail-wr1-f65.google.com with SMTP id k1so10933426wrm.3
-        for <linux-kernel@vger.kernel.org>; Thu, 09 Apr 2020 01:28:55 -0700 (PDT)
+        Thu, 9 Apr 2020 04:29:00 -0400
+Received: by mail-pf1-f194.google.com with SMTP id n10so3808307pff.3;
+        Thu, 09 Apr 2020 01:29:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=WgrtA3z9gcCpvVtn+/QtJVLHi+wEpZ3q6REO1Dlhxjc=;
-        b=EwT7A41KDLkk8jDmuwXWJhwVkRRmXWA9OX4bUYtDtbxYJW+BezFqEYR2LyeY8NYE1n
-         qsISncWQMRghInp7uM9xVtUlfEZTQzsVHplk5XeWwX6PkZMXqZwF4UMtYgj3zaNm+RrD
-         tLmAnD7ijZbtkbWHYzv5URL/0X1eKDlkHVJzC329EMt0/pbrkBtiSa/dy1S0jYkDDbZD
-         8+g568tPwHC1C8QI/NhKp5kQqGO7edSzI4Gt3SfIt/ysuGcApiyrZMbxGdKzImTfyZZP
-         G2Sh69tPb6Gm1lN6ndVUe9rhMwabrdl5f/Q41dh8Js0FocrCVYBIK0HVBzk1FugewyrL
-         PNlA==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=0HXV8vx9Be0BBihyhMob71nh1LkIaEr5epGWg9GzRAU=;
+        b=MUEXAxyoTdSoolqIbRRVACRTGku/CrRdwrnfri3FU7m1CGWxvVxECyJzNjlzoqEsKx
+         3F4wPoUnPw9Kuzp/PVK1EZi9PKkRunyMAcxg9R/YOyGp5tIrKrpjXWEUrlpLOJOWBzUD
+         obPKIv5NLJclwMiHJMYvdi7BAiqeOxWl8X/mhTECRPJ9/Eld7HjSPlVuifZme/saoNlL
+         r7USy8sMvD85yB/97jF8qGDDQ2P63+yhXJqbcB5PJrASY94EGnAi3CmWe/DK9SxyfXu3
+         3EUfwTX31XHnMhbzoahy0Jh91k/5CiQiM9jr7e97x7EuVBBI/A0B6jKgznf21CII8MWK
+         pJ7A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=WgrtA3z9gcCpvVtn+/QtJVLHi+wEpZ3q6REO1Dlhxjc=;
-        b=dLXuagXEU2fOlsdk1UBCSgFD1kKLuyQItq1lbkAACJsdH71Zuh6We7r+SJCtGOlML0
-         RFZ6SJYETV29vMQkLdv4kkaSRIh5JYEEhuaRyN3s7toFKSzUill4OUcgvZ+1TLW0IDFQ
-         xqIgemvEroVw3O7QE6DK5hJXtPuhZ3w6oyn76OfviOTIzJQixAIOC+66wRf6NyjVILFq
-         hZr7zWj9Vf5QQRnvJDXPW9W+jcgS7cYjiu+4TG4V/RxYCBtos7/AFdNsYjtl2bFoGX5d
-         m2FZAMxT60MEqPHQXMbaOBuDtHEVRjvKOA0lG878io0Va0HI8Ux6Mc9zjO/wUNq9YNib
-         38Cg==
-X-Gm-Message-State: AGi0PubSHVFx2aFLmIxvzKUX+ZxgmV/HtX32jtu97npX31vbtyR2Pl2j
-        P1BEjY7uf9nJS6WEYqpihzy2gA==
-X-Google-Smtp-Source: APiQypJaUZjUm66IBuu3xDJVpLpWtuc3y+tz9J81OOkTIgI1piB2pLEQNhoBRvX1GGgS2ZUyboZgLw==
-X-Received: by 2002:adf:e641:: with SMTP id b1mr12714165wrn.299.1586420934729;
-        Thu, 09 Apr 2020 01:28:54 -0700 (PDT)
-Received: from myrica ([2001:171b:226b:54a0:116c:c27a:3e7f:5eaf])
-        by smtp.gmail.com with ESMTPSA id p5sm14167665wrn.93.2020.04.09.01.28.53
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=0HXV8vx9Be0BBihyhMob71nh1LkIaEr5epGWg9GzRAU=;
+        b=GGAF0G0KBZSdBn9vB6CdBJkZTzgEUzkWAxNLCJyn9v9AK0n0yfpMJZL3tyonJadkrS
+         /0WXo/hQzA97oVstCVoDweRjrYgu7AMYbC14+7c8xH42J9np48swbEBMwPMD1yM5CgyA
+         RsuGYw69xTocHkjl2jxakGEo6c5Ei7/Zehk2QhOjlxhUiQA60yS5kNYU37KyEymfdcVz
+         gOpwk8BeMx4Zec4s8eLW5uolNfEKwTadAqrwTClKCevgqcI1igV802QeZBta5q+mwG5N
+         QC6+8VZWsLkxL7yeHC4q2gMXfbZFEC2yPwsdtqPiyLW8fGzET9EReA2LOltbtiifB3k/
+         M9/Q==
+X-Gm-Message-State: AGi0PuZ9i4kXGn5z20vtYaNGMM4fl41XQ7LyxBgr8mW1hCutRoMDwJoo
+        1x9xQSIy+/C1Fu3woSfNyA==
+X-Google-Smtp-Source: APiQypJMUo7McfIjWzcXnjJmz+8h35KmF64lZDJ+qnUEu0I5lgVqNGuknsQBsn/cgMScS/uFl60oLQ==
+X-Received: by 2002:a63:e56:: with SMTP id 22mr10914839pgo.173.1586420939939;
+        Thu, 09 Apr 2020 01:28:59 -0700 (PDT)
+Received: from localhost.localdomain ([2402:3a80:13be:8fdf:25a2:66e2:761f:9d4c])
+        by smtp.gmail.com with ESMTPSA id h10sm17615674pgf.23.2020.04.09.01.28.55
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 09 Apr 2020 01:28:54 -0700 (PDT)
-Date:   Thu, 9 Apr 2020 10:28:46 +0200
-From:   Jean-Philippe Brucker <jean-philippe@linaro.org>
-To:     "Liu, Yi L" <yi.l.liu@intel.com>
-Cc:     "Tian, Kevin" <kevin.tian@intel.com>,
-        "alex.williamson@redhat.com" <alex.williamson@redhat.com>,
-        "eric.auger@redhat.com" <eric.auger@redhat.com>,
-        "jacob.jun.pan@linux.intel.com" <jacob.jun.pan@linux.intel.com>,
-        "joro@8bytes.org" <joro@8bytes.org>,
-        "Raj, Ashok" <ashok.raj@intel.com>,
-        "Tian, Jun J" <jun.j.tian@intel.com>,
-        "Sun, Yi Y" <yi.y.sun@intel.com>,
-        "peterx@redhat.com" <peterx@redhat.com>,
-        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Wu, Hao" <hao.wu@intel.com>
-Subject: Re: [PATCH v1 6/8] vfio/type1: Bind guest page tables to host
-Message-ID: <20200409082846.GE2435@myrica>
-References: <1584880325-10561-1-git-send-email-yi.l.liu@intel.com>
- <1584880325-10561-7-git-send-email-yi.l.liu@intel.com>
- <AADFC41AFE54684AB9EE6CBC0274A5D19D7FF98F@SHSMSX104.ccr.corp.intel.com>
- <A2975661238FB949B60364EF0F2C25743A21D8C6@SHSMSX104.ccr.corp.intel.com>
- <AADFC41AFE54684AB9EE6CBC0274A5D19D805F75@SHSMSX104.ccr.corp.intel.com>
- <A2975661238FB949B60364EF0F2C25743A21ED01@SHSMSX104.ccr.corp.intel.com>
- <20200403083407.GB1269501@myrica>
- <A2975661238FB949B60364EF0F2C25743A224C8F@SHSMSX104.ccr.corp.intel.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <A2975661238FB949B60364EF0F2C25743A224C8F@SHSMSX104.ccr.corp.intel.com>
+        Thu, 09 Apr 2020 01:28:59 -0700 (PDT)
+From:   madhuparnabhowmik10@gmail.com
+To:     johannes@sipsolutions.net, davem@davemloft.net, kuba@kernel.org
+Cc:     linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, frextrite@gmail.com,
+        joel@joelfernandes.org, paulmck@kernel.org,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
+Subject: [PATCH 2/4] net: mac80211: scan.c: Fix RCU list related warnings.
+Date:   Thu,  9 Apr 2020 13:58:49 +0530
+Message-Id: <20200409082849.27372-1-madhuparnabhowmik10@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 07, 2020 at 10:33:25AM +0000, Liu, Yi L wrote:
-> Hi Jean,
-> 
-> > From: Jean-Philippe Brucker < jean-philippe@linaro.org >
-> > Sent: Friday, April 3, 2020 4:35 PM
-> > Subject: Re: [PATCH v1 6/8] vfio/type1: Bind guest page tables to host
-> > 
-> > On Thu, Apr 02, 2020 at 08:05:29AM +0000, Liu, Yi L wrote:
-> > > > > > > static long vfio_iommu_type1_ioctl(void *iommu_data,
-> > > > > > >  		default:
-> > > > > > >  			return -EINVAL;
-> > > > > > >  		}
-> > > > > > > +
-> > > > > > > +	} else if (cmd == VFIO_IOMMU_BIND) {
-> > > > > >
-> > > > > > BIND what? VFIO_IOMMU_BIND_PASID sounds clearer to me.
-> > > > >
-> > > > > Emm, it's up to the flags to indicate bind what. It was proposed to
-> > > > > cover the three cases below:
-> > > > > a) BIND/UNBIND_GPASID
-> > > > > b) BIND/UNBIND_GPASID_TABLE
-> > > > > c) BIND/UNBIND_PROCESS
-> > > > > <only a) is covered in this patch>
-> > > > > So it's called VFIO_IOMMU_BIND.
-> > > >
-> > > > but aren't they all about PASID related binding?
-> > >
-> > > yeah, I can rename it. :-)
-> > 
-> > I don't know if anyone intends to implement it, but SMMUv2 supports
-> > nesting translation without any PASID support. For that case the name
-> > VFIO_IOMMU_BIND_GUEST_PGTBL without "PASID" anywhere makes more sense.
-> > Ideally we'd also use a neutral name for the IOMMU API instead of
-> > bind_gpasid(), but that's easier to change later.
-> 
-> I agree VFIO_IOMMU_BIND is somehow not straight-forward. Especially, it may
-> cause confusion when thinking about VFIO_SET_IOMMU. How about using
-> VFIO_NESTING_IOMMU_BIND_STAGE1 to cover a) and b)? And has another
-> VFIO_BIND_PROCESS in future for the SVA bind case.
+From: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
 
-I think minimizing the number of ioctls is more important than finding the
-ideal name. VFIO_IOMMU_BIND was fine to me, but if it's too vague then
-rename it to VFIO_IOMMU_BIND_PASID and we'll just piggy-back on it for
-non-PASID things (they should be rare enough).
+This patch fixes the following warning:
 
-Thanks,
-Jean
+WARNING: suspicious RCU usage
+[   84.530619] 5.6.0+ #4 Not tainted
+[   84.530637] -----------------------------
+[   84.530658] net/mac80211/scan.c:454 RCU-list traversed in non-reader section!!
+
+As local->mtx is held in __ieee80211_scan_completed(), no need to use
+list_for_each_entry_rcu() (use list_for_each_entry() instead.).
+
+Signed-off-by: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
+---
+ net/mac80211/scan.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/net/mac80211/scan.c b/net/mac80211/scan.c
+index fdac8192a519..0860f028ab2a 100644
+--- a/net/mac80211/scan.c
++++ b/net/mac80211/scan.c
+@@ -451,7 +451,7 @@ static void __ieee80211_scan_completed(struct ieee80211_hw *hw, bool aborted)
+ 	 * the scan was in progress; if there was none this will
+ 	 * just be a no-op for the particular interface.
+ 	 */
+-	list_for_each_entry_rcu(sdata, &local->interfaces, list) {
++	list_for_each_entry(sdata, &local->interfaces, list) {
+ 		if (ieee80211_sdata_running(sdata))
+ 			ieee80211_queue_work(&sdata->local->hw, &sdata->work);
+ 	}
+-- 
+2.17.1
+
