@@ -2,114 +2,97 @@ Return-Path: <SRS0=n+Ub=5Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=0.2 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	UPPERCASE_50_75 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9895C2BA2B
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 10:40:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D351C2BA2B
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 10:40:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7F29320757
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 10:40:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="T7D56jXv"
+	by mail.kernel.org (Postfix) with ESMTP id 3B88E2083E
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 10:40:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726582AbgDIKkR (ORCPT
+        id S1726627AbgDIKkZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Apr 2020 06:40:17 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:47802 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725828AbgDIKkR (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Apr 2020 06:40:17 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=bx+bEhrOCMKBgN3dLTzVqiIsNYJFlRJP4agNxc0F9uA=; b=T7D56jXvcYhf4/kuIDveNAQvH8
-        RF0ZQKWf81/04cgUjG2KgB9q9iUmV+KNWI5jJy8/GAoPjucXkeR91+gwWl5fnsd8Sh71XzFnwIjIQ
-        qy2437/dhG/IqBaRH6hPaK8/avIU3KuC9yjcNriuR42fmSOgkS/+lSFIl3uHEtqGKH26l0vyJGe/u
-        xY34Lv1w6iIcp5froTdVHwQuHdoZHJUEQBvswUw7mJ5q57m+T052lbIMphWP7rBGdC2dRjhH8gjLl
-        dvSn/RLE+BT3G+sP+V+2FsMyxl3IeUqCqOwAaGkjf8A6cMUuYLD5kcOhvx/8O/ucPZb8JiI9PWBOd
-        GnwzEwZA==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jMUbU-00072y-Nc; Thu, 09 Apr 2020 10:40:12 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 3329B3012D8;
-        Thu,  9 Apr 2020 12:40:08 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 1F6392BB332D0; Thu,  9 Apr 2020 12:40:08 +0200 (CEST)
-Date:   Thu, 9 Apr 2020 12:40:08 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Alexandre Chartre <alexandre.chartre@oracle.com>
-Cc:     Josh Poimboeuf <jpoimboe@redhat.com>, x86@kernel.org,
-        linux-kernel@vger.kernel.org, jthierry@redhat.com,
-        tglx@linutronix.de
-Subject: Re: [PATCH V2 9/9] x86/speculation: Remove all
- ANNOTATE_NOSPEC_ALTERNATIVE directives
-Message-ID: <20200409104008.GO20760@hirez.programming.kicks-ass.net>
-References: <20200407073142.20659-10-alexandre.chartre@oracle.com>
- <20200407132837.GA20730@hirez.programming.kicks-ass.net>
- <20200407133454.n55u5nx33ruj73gx@treble>
- <89b10eb8-c030-b954-6be3-8830fc6a8daa@oracle.com>
- <3eb36fd2-9827-4c1b-681c-9c1d65c7582f@oracle.com>
- <20200407162838.5hlh6oom4oa45ugt@treble>
- <20200407172739.GI20730@hirez.programming.kicks-ass.net>
- <20200408213508.GA4496@worktop.programming.kicks-ass.net>
- <da6efbb5-2610-6721-77ca-9833d13b9398@oracle.com>
- <20200409103424.GC20713@hirez.programming.kicks-ass.net>
+        Thu, 9 Apr 2020 06:40:25 -0400
+Received: from foss.arm.com ([217.140.110.172]:48398 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725828AbgDIKkZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Apr 2020 06:40:25 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6697631B;
+        Thu,  9 Apr 2020 03:40:25 -0700 (PDT)
+Received: from C02TD0UTHF1T.local (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E2E0E3F73D;
+        Thu,  9 Apr 2020 03:40:22 -0700 (PDT)
+Date:   Thu, 9 Apr 2020 11:40:16 +0100
+From:   Mark Rutland <mark.rutland@arm.com>
+To:     Wang Qing <wangqing@vivo.com>
+Cc:     Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        James Morse <james.morse@arm.com>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        jinho lim <jordan.lim@samsung.com>,
+        Dave Martin <Dave.Martin@arm.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        opensource.kernel@vivo.com
+Subject: Re: [PATCH] ARM64: fixed dump_backtrace() when task running on
+ another cpu
+Message-ID: <20200409104016.GA2183@C02TD0UTHF1T.local>
+References: <1586425106-7369-1-git-send-email-wangqing@vivo.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200409103424.GC20713@hirez.programming.kicks-ass.net>
+In-Reply-To: <1586425106-7369-1-git-send-email-wangqing@vivo.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 09, 2020 at 12:34:24PM +0200, Peter Zijlstra wrote:
-> @@ -111,23 +83,21 @@
->   */
->  .macro JMP_NOSPEC reg:req
->  #ifdef CONFIG_RETPOLINE
-> -	ANNOTATE_NOSPEC_ALTERNATIVE
-> -	ALTERNATIVE_2 __stringify(ANNOTATE_RETPOLINE_SAFE; jmp *\reg),	\
-> -		__stringify(RETPOLINE_JMP \reg), X86_FEATURE_RETPOLINE,	\
-> -		__stringify(lfence; ANNOTATE_RETPOLINE_SAFE; jmp *\reg), X86_FEATURE_RETPOLINE_AMD
-> +	ALTERNATIVE "", "lfence", X86_FEATURE_RETPOLINE_AMD
-> +	ALTERNATIVE __stringify(ANNOTATE_RETPOLINE_SAFE; jmp *%\reg), \
-> +		    __stringify(jmp __x86_retpoline_\reg), X86_FEATURE_RETPOLINE
+Hi,
 
-Still, I am being an idiot, only the call (below) needs this, this can
-stay what it was:
+On Thu, Apr 09, 2020 at 05:38:16PM +0800, Wang Qing wrote:
+> We cannot get FP and PC when the task is running on another CPU,
+> task->thread.cpu_context is the last time the task was switched out,
+> it's better to give a reminder than to provide wrong information.
+> 
+> Signed-off-by: Wang Qing <wangqing@vivo.com>
 
-+       ALTERNATIVE_2 __stringify(ANNOTATE_RETPOLINE_SAFE; jmp *%\reg), \
-+                     __stringify(jmp __x86_retpoline_\()\reg), X86_FEATURE_RETPOLINE, \
-+                     __stringify(lfence; ANNOTATE_RETPOLINE_SAFE; jmp *%\reg), X86_FEATURE_RETPOLINE_AMD
+Are you seeing this happen anywhere in particular today?
 
->  #else
-> -	jmp	*\reg
-> +	jmp	*%\reg
->  #endif
->  .endm
->  
->  .macro CALL_NOSPEC reg:req
->  #ifdef CONFIG_RETPOLINE
-> -	ANNOTATE_NOSPEC_ALTERNATIVE
-> -	ALTERNATIVE_2 __stringify(ANNOTATE_RETPOLINE_SAFE; call *\reg),	\
-> -		__stringify(RETPOLINE_CALL \reg), X86_FEATURE_RETPOLINE,\
-> -		__stringify(lfence; ANNOTATE_RETPOLINE_SAFE; call *\reg), X86_FEATURE_RETPOLINE_AMD
+> ---
+>  arch/arm64/kernel/traps.c | 8 ++++++++
+>  1 file changed, 8 insertions(+)
+> 
+> diff --git a/arch/arm64/kernel/traps.c b/arch/arm64/kernel/traps.c
+> index cf402be..c04e3e8 100644
+> --- a/arch/arm64/kernel/traps.c
+> +++ b/arch/arm64/kernel/traps.c
+> @@ -106,6 +106,14 @@ void dump_backtrace(struct pt_regs *regs, struct task_struct *tsk)
+>  		start_backtrace(&frame,
+>  				(unsigned long)__builtin_frame_address(0),
+>  				(unsigned long)dump_backtrace);
+> +	} else if (tsk->on_cpu) {
+> +		/*
+> +		 * The task is running in another cpu, so the call stack
+> +		 * is changing and we cannot get it.
+> +		 */
+> +		pr_warn("tsk: %s is running in CPU%d, Don't call trace!\n",
+> +			tsk->comm, tsk->cpu);
 
-And then this needs a comment on why it is not ALTERNATIVE_2 like above.
+I believe that we can race with a concurrent write to tsk->cpu in both
+cases above. We could use READ_ONCE() to get a snapshot, but we can
+still race and miss cases where the task was runnning as we backtrace
+it.
 
-> +	ALTERNATIVE "", "lfence", X86_FEATURE_RETPOLINE_AMD
-> +	ALTERNATIVE __stringify(ANNOTATE_RETPOLINE_SAFE; call *%\reg), \
-> +		    __stringify(call __x86_retpoline_\reg), X86_FEATURE_RETPOLINE
->  #else
-> -	call	*\reg
-> +	call	*%\reg
->  #endif
->  .endm
+Thanks,
+Mark.
+
+> +		return;
+>  	} else {
+>  		/*
+>  		 * task blocked in __switch_to
+> -- 
+> 2.7.4
+> 
