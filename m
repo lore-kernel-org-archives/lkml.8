@@ -2,128 +2,112 @@ Return-Path: <SRS0=n+Ub=5Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35C42C2BB86
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 12:50:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74CDFC2BA2B
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 12:51:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0BE272078E
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 12:50:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 424BF20771
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 12:51:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="aH9lC/5s"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="XNqd/rx4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726726AbgDIMuA (ORCPT
+        id S1726659AbgDIMvi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Apr 2020 08:50:00 -0400
-Received: from mailout3.samsung.com ([203.254.224.33]:41553 "EHLO
-        mailout3.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725987AbgDIMt7 (ORCPT
+        Thu, 9 Apr 2020 08:51:38 -0400
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:55922 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725971AbgDIMvi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Apr 2020 08:49:59 -0400
-Received: from epcas5p2.samsung.com (unknown [182.195.41.40])
-        by mailout3.samsung.com (KnoxPortal) with ESMTP id 20200409124957epoutp03a70acfe904bc40925a14aafe20ab8926~EJ64c2R001562515625epoutp034
-        for <linux-kernel@vger.kernel.org>; Thu,  9 Apr 2020 12:49:57 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20200409124957epoutp03a70acfe904bc40925a14aafe20ab8926~EJ64c2R001562515625epoutp034
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1586436597;
-        bh=k127lAaemQMj/UxuaYJHqu26q7MPrNgzRaknKbgSsf0=;
-        h=From:To:Cc:Subject:Date:References:From;
-        b=aH9lC/5sYSfdgu0FWppKJyeFctE7U9niFnQ5lD/3vYVSg2lg8F/TgO69aU3MPh7dy
-         xw6WUb2WG+aqtV77iACLwenOWc4q5v/mZ+w/4uDMkS4wNaDUKLJSBRZYlXs5tnCdcv
-         fA2ky4L/iXDZHy6l8FycjiF6QDylXZGM/mCzzAf4=
-Received: from epsmges5p3new.samsung.com (unknown [182.195.42.75]) by
-        epcas5p3.samsung.com (KnoxPortal) with ESMTP id
-        20200409124957epcas5p3dfbf7b1eda2f7fbb79cea1a1f234cfdf~EJ64IgjDX0948209482epcas5p3s;
-        Thu,  9 Apr 2020 12:49:57 +0000 (GMT)
-Received: from epcas5p3.samsung.com ( [182.195.41.41]) by
-        epsmges5p3new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        69.E7.04736.5F91F8E5; Thu,  9 Apr 2020 21:49:57 +0900 (KST)
-Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
-        epcas5p3.samsung.com (KnoxPortal) with ESMTPA id
-        20200409124013epcas5p33036c008f30327378a6ff02050261626~EJyY8LLLP3207032070epcas5p3i;
-        Thu,  9 Apr 2020 12:40:13 +0000 (GMT)
-Received: from epsmgms1p2new.samsung.com (unknown [182.195.42.42]) by
-        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20200409124013epsmtrp10b7baeb055849648c1ebca84be825506~EJyY7dqyu3224132241epsmtrp1J;
-        Thu,  9 Apr 2020 12:40:13 +0000 (GMT)
-X-AuditID: b6c32a4b-ae3ff70000001280-4a-5e8f19f5c79f
-Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
-        epsmgms1p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        69.B3.04158.DA71F8E5; Thu,  9 Apr 2020 21:40:13 +0900 (KST)
-Received: from localhost.localdomain (unknown [107.109.224.135]) by
-        epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
-        20200409124012epsmtip272daa145077cb78ee405e314a1f6a06a~EJyXWxDKh1242112421epsmtip2l;
-        Thu,  9 Apr 2020 12:40:12 +0000 (GMT)
-From:   Maninder Singh <maninder1.s@samsung.com>
-To:     casey@schaufler-ca.com, jmorris@namei.org, serge@hallyn.com
-Cc:     linux-security-module@vger.kernel.org,
-        linux-kernel@vger.kernel.org, a.sahrawat@samsung.com,
-        v.narang@samsung.com, Maninder Singh <maninder1.s@samsung.com>
-Subject: [PATCH 1/1] smack: remove redundant structure variable from header.
-Date:   Thu,  9 Apr 2020 18:09:58 +0530
-Message-Id: <1586435998-18921-1-git-send-email-maninder1.s@samsung.com>
-X-Mailer: git-send-email 2.7.4
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrGIsWRmVeSWpSXmKPExsWy7bCmpu5Xyf44g+d7WCwu7k61uLftF5vF
-        uvWLmSwu75rDZvGh5xGbxeH5bSwW5y+cY7c4dHIuowOHx7XdkR4935M9+rasYvQ4un8Rm8fn
-        TXIBrFFcNimpOZllqUX6dglcGf3HIwsms1V07dvJ3sDYxNrFyMkhIWAi8ar7JksXIxeHkMBu
-        RonVy7axQjifGCX+tv9hB6kSEvjGKDGvWwam483cFVAdexklnn46CeV8ZZRYt2gjE0gVm4Ce
-        xKpde1hAbBEBe4nJ2++xgdjMAosZJd42KoDYwgI+Ejt/LgKq5+BgEVCV2HarGiTMK+Au8fr0
-        R2aIZXISN891MoPMlxDoYJNY2rWNESLhInHnWhM7hC0s8er4FihbSuJlfxs7REMzo8SnfWsZ
-        IZwpjBJLL36E+tpe4nVzA9hmZgFNifW79CHCshJTT61jgjiUT6L39xMmiDivxI55MLaqRMvN
-        DVBjpCU+f/zIAmF7SEza9hFspJBArMTsf6kTGGVnISxYwMi4ilEytaA4Nz212LTAOC+1XK84
-        Mbe4NC9dLzk/dxMjOPa1vHcwbjrnc4hRgINRiYe3g6k/Tog1say4MvcQowQHs5IIr3dTb5wQ
-        b0piZVVqUX58UWlOavEhRmkOFiVx3kmsV2OEBNITS1KzU1MLUotgskwcnFINjJ7th3IWlTvY
-        P97yIG+yu/+dt32T+Ca5lh0XTUz7IvWS6YPGob4HvvLaJ7K3RV22OZqh9v7xwvcHrG52Wtfq
-        Rax1r1l7NP5VUlLn7x+yCzuDbum+O/4mzjR7gs41YSHZr0acm4IXdTatV1m0Y292YGxEWbR+
-        M9OBdkkzm7AjNxXdJlTxzw68oMRSnJFoqMVcVJwIAH46SEf5AgAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFuphluLIzCtJLcpLzFFi42LZdlhJXneteH+cwf8rphYXd6da3Nv2i81i
-        3frFTBaXd81hs/jQ84jN4vD8NhaL8xfOsVscOjmX0YHD49ruSI+e78kefVtWMXoc3b+IzePz
-        JrkA1igum5TUnMyy1CJ9uwSujP7jkQWT2Sq69u1kb2BsYu1i5OSQEDCReDN3BUsXIxeHkMBu
-        RolD+94zQiSkJX7+e88CYQtLrPz3nB2i6DOjxPqfh8GK2AT0JFbt2gNUxMEhIuAs8Ws5M0gN
-        s8ByRomDxx6BbRAW8JHY+XMRE0gNi4CqxLZb1SBhXgF3idenPzJDzJeTuHmuk3kCI88CRoZV
-        jJKpBcW56bnFhgVGeanlesWJucWleel6yfm5mxjBYaSltYPxxIn4Q4wCHIxKPLwGDP1xQqyJ
-        ZcWVuYcYJTiYlUR4vZt644R4UxIrq1KL8uOLSnNSiw8xSnOwKInzyucfixQSSE8sSc1OTS1I
-        LYLJMnFwSjUwys16bZCxzWfn3WmPpHQr8sysotY3BJR0LH3zpOLn7F93WxsXHRJ3qPtS/tak
-        +NQCoRszO9c+q9i4QOa9stXMPJuzzEz37m+RVp/J8s3229xFS8ubH7Dt2X0koZthJw9H7IUr
-        Sy4v/2cgbDljQtkUgYr5FbZXVFh3zIt8nZZ98ShzhNA8mY1dAUosxRmJhlrMRcWJAF/bcy8f
-        AgAA
-X-CMS-MailID: 20200409124013epcas5p33036c008f30327378a6ff02050261626
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: REQ_APPROVE
-CMS-TYPE: 105P
-X-CMS-RootMailID: 20200409124013epcas5p33036c008f30327378a6ff02050261626
-References: <CGME20200409124013epcas5p33036c008f30327378a6ff02050261626@epcas5p3.samsung.com>
+        Thu, 9 Apr 2020 08:51:38 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1586436697;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=TZmA4pg3k+dyxdTvM3mLXWLto6f/ClFLBXh8mPitEPY=;
+        b=XNqd/rx4YHhvsg8MElpjXixeAA22IWfeWEU2ihOLAJS9TYalgca9HPGExqkoCodeqpUqqA
+        3kgIMlVPIuPcticglP6/ijNBQdhAt9gtjNgZtXUxHvpjpXrKbtYJqBwttRbNjU/oyOCbZm
+        zpwx0iO4Pps9d+dgz8Z7bUoAjmDdJgU=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-325-3C-E88M4NfWluUW743yx3A-1; Thu, 09 Apr 2020 08:51:33 -0400
+X-MC-Unique: 3C-E88M4NfWluUW743yx3A-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 5899119067E4;
+        Thu,  9 Apr 2020 12:51:32 +0000 (UTC)
+Received: from bfoster (dhcp-41-2.bos.redhat.com [10.18.41.2])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 73F2A9DD87;
+        Thu,  9 Apr 2020 12:51:27 +0000 (UTC)
+Date:   Thu, 9 Apr 2020 08:51:25 -0400
+From:   Brian Foster <bfoster@redhat.com>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     "Darrick J. Wong" <darrick.wong@oracle.com>,
+        linux-xfs@vger.kernel.org, Christoph Hellwig <hch@infradead.org>,
+        Dave Chinner <dchinner@redhat.com>,
+        Eric Sandeen <sandeen@redhat.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] xfs: stop CONFIG_XFS_DEBUG from changing compiler flags
+Message-ID: <20200409125125.GA38767@bfoster>
+References: <20200409080909.3646059-1-arnd@arndb.de>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200409080909.3646059-1-arnd@arndb.de>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-commit afb1cbe37440 ("LSM: Infrastructure management
-of the inode security") removed usage of smk_rcu,
-thus removing it from structure.
+On Thu, Apr 09, 2020 at 10:08:56AM +0200, Arnd Bergmann wrote:
+> I ran into a linker warning in XFS that originates from a mismatch
+> between libelf, binutils and objtool when certain files in the kernel
+> are built with "gcc -g":
+> 
+> x86_64-linux-ld: fs/xfs/xfs_trace.o: unable to initialize decompress status for section .debug_info
+> 
+> After some discussion, nobody could identify why xfs sets this flag
+> here. CONFIG_XFS_DEBUG used to enable lots of unrelated settings, but
+> now its main purpose is to enable extra consistency checks and assertions
+> that are unrelated to the debug info.
+> 
+> Remove the Makefile logic to set the flag here. If anyone relies
+> on the debug info, this can simply be enabled again with the global
+> CONFIG_DEBUG_INFO option.
+> 
+> Suggested-by: Christoph Hellwig <hch@infradead.org>
+> Link: https://lore.kernel.org/lkml/20200409074130.GD21033@infradead.org/
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> ---
 
-Signed-off-by: Maninder Singh <maninder1.s@samsung.com>
-Signed-off-by: Vaneet Narang <v.narang@samsung.com>
----
- security/smack/smack.h | 1 -
- 1 file changed, 1 deletion(-)
+Seems reasonable.
 
-diff --git a/security/smack/smack.h b/security/smack/smack.h
-index 62529f3..5ebd0bb 100644
---- a/security/smack/smack.h
-+++ b/security/smack/smack.h
-@@ -111,7 +111,6 @@ struct inode_smack {
- 	struct smack_known	*smk_mmap;	/* label of the mmap domain */
- 	struct mutex		smk_lock;	/* initialization lock */
- 	int			smk_flags;	/* smack inode flags */
--	struct rcu_head         smk_rcu;	/* for freeing inode_smack */
- };
- 
- struct task_smack {
--- 
-1.9.1
+Reviewed-by: Brian Foster <bfoster@redhat.com>
+
+>  fs/xfs/Makefile | 2 --
+>  1 file changed, 2 deletions(-)
+> 
+> diff --git a/fs/xfs/Makefile b/fs/xfs/Makefile
+> index 4f95df476181..ff94fb90a2ee 100644
+> --- a/fs/xfs/Makefile
+> +++ b/fs/xfs/Makefile
+> @@ -7,8 +7,6 @@
+>  ccflags-y += -I $(srctree)/$(src)		# needed for trace events
+>  ccflags-y += -I $(srctree)/$(src)/libxfs
+>  
+> -ccflags-$(CONFIG_XFS_DEBUG) += -g
+> -
+>  obj-$(CONFIG_XFS_FS)		+= xfs.o
+>  
+>  # this one should be compiled first, as the tracing macros can easily blow up
+> -- 
+> 2.26.0
+> 
 
