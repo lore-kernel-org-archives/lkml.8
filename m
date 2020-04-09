@@ -2,100 +2,134 @@ Return-Path: <SRS0=n+Ub=5Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 411DEC2BA19
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 20:27:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9F49C2BA19
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 20:28:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 124D32082D
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 20:27:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586464075;
-	bh=rQn1E82s+Wz9eXHAjfpDkQrmhvgxgLdem6FaW3tpr9Y=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=s1AlDLl15WEQPCHf96DIXgA0N3NRXcfDPSK6EVtI+uIUinjx4zgjcHkrlvDl+og/K
-	 omKeI05gh8Q2Y7j7BSlU68MwEOOBqcwtS/XKAWfoqqasANIATZIMLchjsmUdyRjFd/
-	 CT+FUvendBz5pHUPgDnik8GKeibQ3sB+5kySeah0=
+	by mail.kernel.org (Postfix) with ESMTP id A55FD20757
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 20:28:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="HpHutjuL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726799AbgDIU1x (ORCPT
+        id S1726826AbgDIU2z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Apr 2020 16:27:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40926 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726291AbgDIU1x (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Apr 2020 16:27:53 -0400
-Received: from gmail.com (unknown [104.132.1.76])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0DCA220757;
-        Thu,  9 Apr 2020 20:27:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586464073;
-        bh=rQn1E82s+Wz9eXHAjfpDkQrmhvgxgLdem6FaW3tpr9Y=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Ffj940nkA1lIrJN5l+P3LzxRVEWe3smiiPZZOY9+OsfkgKJX80vkYoTUJKDY2MUH8
-         ebOerQPnpEedPCXKUPzFelsN0Ulsv5AGBjeQHMSyULhIGh/7l3ztMZ1XnEViB9XGpk
-         pT1SgC49kT5NfH2z964ePkVBFfjlog0PZX6XP8XI=
-Date:   Thu, 9 Apr 2020 13:27:51 -0700
-From:   Eric Biggers <ebiggers@kernel.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Matthew Wilcox <willy@infradead.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Peter Xu <peterx@redhat.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux-MM <linux-mm@kvack.org>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
-        Stephen Rothwell <sfr@canb.auug.org.au>
-Subject: Re: [PATCH 0/2] mm: Two small fixes for recent syzbot reports
-Message-ID: <20200409202751.GA7976@gmail.com>
-References: <20200408014010.80428-1-peterx@redhat.com>
- <20200408174732.bc448bbe41d190bfe5cc252e@linux-foundation.org>
- <20200409114940.GT21484@bombadil.infradead.org>
- <CACT4Y+ZvQ9UvVAwTjjD8Zxo0X_nfxa3+6n6TqWk2g+hahBwdCw@mail.gmail.com>
- <20200409111604.c778ff091c00fab5db095e48@linux-foundation.org>
- <CAHk-=wiU77DeNxQsU4XrDCk59asyTs=Hn+mnTx6-SHB1_fA2NQ@mail.gmail.com>
- <20200409121250.d6bba6965b86c8dfcf325fbc@linux-foundation.org>
- <CAHk-=wgy3XRiyRP7vdfF6bHwWGaB1RwyWJmyphh+Q3qYk6w27w@mail.gmail.com>
- <20200409195633.GZ21484@bombadil.infradead.org>
- <CAHk-=wi50jKXOFpsRkxrqu4upNnEKm1oRZ_SG1yJB9QVh=VJZQ@mail.gmail.com>
+        Thu, 9 Apr 2020 16:28:55 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:43320 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726291AbgDIU2z (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Apr 2020 16:28:55 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1586464134;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type;
+        bh=bMeEAF8ikRSF8tzmPg03tQqSmmh0LSA2vooaQUzRW3Q=;
+        b=HpHutjuLsSf8d6yUCwro5yMmEXTIYbS4+jinVF53BixOGTeBNiq1SdIfxvTcC7kE6cAwwp
+        LET1F/1Atd/Bksodk+CkAf61JJfWOQP1av5qh1qZayc83YnHIfY8wyuuPjbWqJf5b2mDcw
+        InLZAkWJc5ov+YlZ3SMkMiDeNv8dgQM=
+Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
+ [209.85.221.72]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-379-mOC_oU0-M8WCcjJY-inooA-1; Thu, 09 Apr 2020 16:28:53 -0400
+X-MC-Unique: mOC_oU0-M8WCcjJY-inooA-1
+Received: by mail-wr1-f72.google.com with SMTP id j22so4083035wrb.4
+        for <linux-kernel@vger.kernel.org>; Thu, 09 Apr 2020 13:28:53 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition;
+        bh=bMeEAF8ikRSF8tzmPg03tQqSmmh0LSA2vooaQUzRW3Q=;
+        b=rQsKA7pdrc0hhjvkUtOS81B9Nh43SU/wzQNgMLJYr3y0GvkbReGlfyOSrd+MMZkSwT
+         Wu5DU0hQYNhvGRaGTa6NhaCz1IsQ6kbHiFBpDgxSk+NaKmWVwjyuJiyB2Bbh+n0iDAyP
+         Op+xdHGQL520RNajiJZc0FUsfzIihs0j6dtvTEbDPuTVMruHkDEhiItLtUuBTW3F0dTC
+         UNzdLUgbXjChJ6CR2py44UHU+MdzNLfqsSlbSMAuS0Pm2EA4GyF6r20mhjtKXBi9q2dG
+         NCHaFgWviXs0y/S8D/L8y+0BeZDQOI7gxLVYBBVL8evNTTiholfkV/g9iTTGqkOB5dPT
+         RkjQ==
+X-Gm-Message-State: AGi0PuYrBgMt+uJgEbWWABDuq7tk5UPSLlIwSfMtsUCDgKH56HvTNwXw
+        lrH2FBtR5VeXcLwoCLXeq4x2Z/tgRsHvtfmrq4Qayg31CJAff5w/Fz8Ca9w71PlRD0svanyglM1
+        9JgyAxYdSRUl+AvYVGjzKnUrn
+X-Received: by 2002:adf:eed1:: with SMTP id a17mr879994wrp.287.1586464131938;
+        Thu, 09 Apr 2020 13:28:51 -0700 (PDT)
+X-Google-Smtp-Source: APiQypJNn3RyOEcDrD6y8m+kaEcsbwziqz3QQkLPQ+QKzSv0QJhgUW1mk0pmUaP+kkcnSLyMEA1ftw==
+X-Received: by 2002:adf:eed1:: with SMTP id a17mr879972wrp.287.1586464131731;
+        Thu, 09 Apr 2020 13:28:51 -0700 (PDT)
+Received: from redhat.com (bzq-109-67-97-76.red.bezeqint.net. [109.67.97.76])
+        by smtp.gmail.com with ESMTPSA id t67sm5404037wmg.40.2020.04.09.13.28.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 09 Apr 2020 13:28:51 -0700 (PDT)
+Date:   Thu, 9 Apr 2020 16:28:49 -0400
+From:   "Michael S. Tsirkin" <mst@redhat.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     Arnd Bergmann <arnd@arndb.de>, Jason Wang <jasowang@redhat.com>,
+        virtualization@lists.linux-foundation.org
+Subject: [PATCH] vdpa: allow a 32 bit vq alignment
+Message-ID: <20200409202825.10115-1-mst@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAHk-=wi50jKXOFpsRkxrqu4upNnEKm1oRZ_SG1yJB9QVh=VJZQ@mail.gmail.com>
+X-Mailer: git-send-email 2.24.1.751.gd10ce2899c
+X-Mutt-Fcc: =sent
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 09, 2020 at 12:58:48PM -0700, Linus Torvalds wrote:
-> On Thu, Apr 9, 2020 at 12:56 PM Matthew Wilcox <willy@infradead.org> wrote:
-> >
-> > We should probably give Stephen a cc here ...
-> 
-> Heh. I already did, but then that got broken because Andrew had lost
-> that part of the thread and the discussion re-started.
-> 
-> So Stephen was already cc'd for my original request to have linux-next
-> kick things out aggressively.
-> 
+get_vq_align returns u16 now, but that's not enough for
+systems/devices with 64K pages. All callers assign it to
+a u32 variable anyway, so let's just change the return
+value type to u32.
 
-Well, if (for example) we look at
-"linux-next test error: WARNING: suspicious RCU usage in ovs_ct_exit"
-(https://lkml.kernel.org/lkml/000000000000e642a905a0cbee6e@google.com/),
-it was sent to the maintainers of net/openvswitch/ where the warning occurred.
-It was then ignored.
+Cc: "Zhu, Lingshan" <lingshan.zhu@intel.com>
+Reported-by: Arnd Bergmann <arnd@arndb.de>
+Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
+---
+ drivers/vdpa/ifcvf/ifcvf_main.c  | 2 +-
+ drivers/vdpa/vdpa_sim/vdpa_sim.c | 2 +-
+ include/linux/vdpa.h             | 2 +-
+ 3 files changed, 3 insertions(+), 3 deletions(-)
 
-Would it help if bugs blocking testing on linux-next were Cc'ed to
-linux-next@vger.kernel.org, so that Stephen could investigate?
+diff --git a/drivers/vdpa/ifcvf/ifcvf_main.c b/drivers/vdpa/ifcvf/ifcvf_main.c
+index 28d9e5de5675..abf6a061cab6 100644
+--- a/drivers/vdpa/ifcvf/ifcvf_main.c
++++ b/drivers/vdpa/ifcvf/ifcvf_main.c
+@@ -226,7 +226,7 @@ static u32 ifcvf_vdpa_get_vendor_id(struct vdpa_device *vdpa_dev)
+ 	return IFCVF_SUBSYS_VENDOR_ID;
+ }
+ 
+-static u16 ifcvf_vdpa_get_vq_align(struct vdpa_device *vdpa_dev)
++static u32 ifcvf_vdpa_get_vq_align(struct vdpa_device *vdpa_dev)
+ {
+ 	return IFCVF_QUEUE_ALIGNMENT;
+ }
+diff --git a/drivers/vdpa/vdpa_sim/vdpa_sim.c b/drivers/vdpa/vdpa_sim/vdpa_sim.c
+index 72863d01a12a..7957d2d41fc4 100644
+--- a/drivers/vdpa/vdpa_sim/vdpa_sim.c
++++ b/drivers/vdpa/vdpa_sim/vdpa_sim.c
+@@ -435,7 +435,7 @@ static u64 vdpasim_get_vq_state(struct vdpa_device *vdpa, u16 idx)
+ 	return vrh->last_avail_idx;
+ }
+ 
+-static u16 vdpasim_get_vq_align(struct vdpa_device *vdpa)
++static u32 vdpasim_get_vq_align(struct vdpa_device *vdpa)
+ {
+ 	return VDPASIM_QUEUE_ALIGN;
+ }
+diff --git a/include/linux/vdpa.h b/include/linux/vdpa.h
+index 733acfb7ef84..5453af87a33e 100644
+--- a/include/linux/vdpa.h
++++ b/include/linux/vdpa.h
+@@ -164,7 +164,7 @@ struct vdpa_config_ops {
+ 	u64 (*get_vq_state)(struct vdpa_device *vdev, u16 idx);
+ 
+ 	/* Device ops */
+-	u16 (*get_vq_align)(struct vdpa_device *vdev);
++	u32 (*get_vq_align)(struct vdpa_device *vdev);
+ 	u64 (*get_features)(struct vdpa_device *vdev);
+ 	int (*set_features)(struct vdpa_device *vdev, u64 features);
+ 	void (*set_config_cb)(struct vdpa_device *vdev,
+-- 
+MST
 
-FWIW, the issue of "syzbot report sent and ignored for months/years" is actually
-a much broader one which applies to all bugs, not just build / test breakages.
-There are tons of open bugs on https://syzkaller.appspot.com/upstream which are
-definitely still valid (sort by "Last" occurred).  Long-term, to fix this we
-really need syzbot to start sending reminders.  But first there's work needed to
-make the noise level low enough so that people don't just tune them out.
-
-- Eric
