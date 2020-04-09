@@ -2,97 +2,144 @@ Return-Path: <SRS0=n+Ub=5Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D4D6C2BA2B
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 14:12:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 842A9C2BA2B
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 14:13:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E394720692
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 14:12:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4C7E62166E
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 14:13:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YO1DuASq"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=citrix.com header.i=@citrix.com header.b="RmW0ycWE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727368AbgDIOM4 (ORCPT
+        id S1727387AbgDIONu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Apr 2020 10:12:56 -0400
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:45430 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727181AbgDIOM4 (ORCPT
+        Thu, 9 Apr 2020 10:13:50 -0400
+Received: from esa4.hc3370-68.iphmx.com ([216.71.155.144]:39704 "EHLO
+        esa4.hc3370-68.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726977AbgDIONu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Apr 2020 10:12:56 -0400
-Received: by mail-lf1-f65.google.com with SMTP id f8so7969368lfe.12
-        for <linux-kernel@vger.kernel.org>; Thu, 09 Apr 2020 07:12:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Abtnmf2H4GjmeY7U38ZZMYXg4SwR9zyb96tOPx6/7Mc=;
-        b=YO1DuASqxyD8T6jRCEoTkDPIGIizldoTg6W3xyVx6PUTVg6wT2Q6ddzlZ3Cpv99Q4b
-         v26wRvuWJeGhBRJqhnsG3mc7cokRyt3/lrs0pJ9KYkDNIbaqHqft7lXb5S5K+T5+b9EO
-         l7X9Qyi1xi0nm2KRYST4v8kGSXv28UegtQn5c5o+bG19HcRlOioe1VYgUNxgohpcx0s5
-         Ym1USnQ2NgvKR6/FuYgzT115oVhiCZXAn9EZMEBnNBZfuYBPaa9dSBn7PkbOshltmcJG
-         ZwEo7BZq6qjJwPuQpeD+7v/TvTDK7s8vvz/nhpUMF0YUWrB6cB7oTC0dtDX03KPeVDar
-         LphQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Abtnmf2H4GjmeY7U38ZZMYXg4SwR9zyb96tOPx6/7Mc=;
-        b=NyOhliEsDH8dRQ5b3Xo9fFPsEwjA0E5UBhKJJWuhcmHAuPoraFGbdagV9Spf/buQul
-         kLKODvZakttrbTlKBaluIbWagC7+g+PmBn1nu+PzHf4ztBsk32F1pOanP/GaDHLVJ/q4
-         guj8MsUNmOLpyWvYjXdlrR0fDODCETjKw/N6bHSvqYyaGO9snqhFaCUljgafqRRe1lN6
-         O1iU6BGrpgLxs14OKTUE2qKxU1fGqzaYjiCzUchKFFRAw2ge6PDCgQPJ5QChRyyZVKtJ
-         DuPpvjTHlX92rdozqk45ljtzyJLGqZcNDbKey4coXosrKfYctxOqQgQuO5BQTdgSHLD0
-         ua6Q==
-X-Gm-Message-State: AGi0PuaxmI8FVgHGIZAg8Nyo/ew1ND298VkYVhsEW5ztt0Vca7W8BJBc
-        ilL68ZnXDqrppozs7y/JGhS2LB7SLpDFP0NM5Hw=
-X-Google-Smtp-Source: APiQypLPRfQADqALj4xrcoYDpTJKqlpVpYxFW6TD9eufyqdGlNTFvOBTDdeSt6pWxHv2niiQr+3Igr/2Ptd6d3vrOHk=
-X-Received: by 2002:ac2:57cb:: with SMTP id k11mr7908135lfo.19.1586441575243;
- Thu, 09 Apr 2020 07:12:55 -0700 (PDT)
+        Thu, 9 Apr 2020 10:13:50 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=citrix.com; s=securemail; t=1586441629;
+  h=subject:to:cc:references:from:message-id:date:
+   mime-version:in-reply-to:content-transfer-encoding;
+  bh=yrdagwIUFtKwt9MOyKCVl5M6aNY/cfIdCXlLoDli1mo=;
+  b=RmW0ycWECRy2O+5SUYHNrhL4uNdjFn65RoMiOZ3DjJAg0EgtIiXhyveJ
+   NIKJkEa46Axn+/0qoQBSeOgZgnFB/jWSDyMfslGq1qdLDfHXvHiWoQR/N
+   WkeE1tTIB381HV22INysfWtTXzN4TaytnuUfqdCBlXmcazt9vEh5tBGCU
+   s=;
+Authentication-Results: esa4.hc3370-68.iphmx.com; dkim=none (message not signed) header.i=none; spf=None smtp.pra=andrew.cooper3@citrix.com; spf=Pass smtp.mailfrom=Andrew.Cooper3@citrix.com; spf=None smtp.helo=postmaster@mail.citrix.com
+Received-SPF: None (esa4.hc3370-68.iphmx.com: no sender
+  authenticity information available from domain of
+  andrew.cooper3@citrix.com) identity=pra;
+  client-ip=162.221.158.21; receiver=esa4.hc3370-68.iphmx.com;
+  envelope-from="Andrew.Cooper3@citrix.com";
+  x-sender="andrew.cooper3@citrix.com";
+  x-conformance=sidf_compatible
+Received-SPF: Pass (esa4.hc3370-68.iphmx.com: domain of
+  Andrew.Cooper3@citrix.com designates 162.221.158.21 as
+  permitted sender) identity=mailfrom;
+  client-ip=162.221.158.21; receiver=esa4.hc3370-68.iphmx.com;
+  envelope-from="Andrew.Cooper3@citrix.com";
+  x-sender="Andrew.Cooper3@citrix.com";
+  x-conformance=sidf_compatible; x-record-type="v=spf1";
+  x-record-text="v=spf1 ip4:209.167.231.154 ip4:178.63.86.133
+  ip4:195.66.111.40/30 ip4:85.115.9.32/28 ip4:199.102.83.4
+  ip4:192.28.146.160 ip4:192.28.146.107 ip4:216.52.6.88
+  ip4:216.52.6.188 ip4:162.221.158.21 ip4:162.221.156.83
+  ip4:168.245.78.127 ~all"
+Received-SPF: None (esa4.hc3370-68.iphmx.com: no sender
+  authenticity information available from domain of
+  postmaster@mail.citrix.com) identity=helo;
+  client-ip=162.221.158.21; receiver=esa4.hc3370-68.iphmx.com;
+  envelope-from="Andrew.Cooper3@citrix.com";
+  x-sender="postmaster@mail.citrix.com";
+  x-conformance=sidf_compatible
+IronPort-SDR: zMk+TKhFbvmlTvoCJdMSK9a1ddjz6WkQv7BWesBz+ogcJU8kOEJKQncyCsihklOwhLbAH9bieq
+ ovx75BttbXMGRC2n5IP1+jzMc8rPHC+15aAyeMUUkyRwD/b57GZTH+wszLrtZxgm2PQymMTvUf
+ r1tL6PHFTbL/fTQvDQyVbUu9dJe5o+bSJqST5Q1Wx1gv8RB4xP5wa3GM9jIooKST7vc4ARc7pC
+ jnaUgAs9TAetgBX8EMdc5lphvZLvvA9lcVd9Fgyd2zEJ1wu7ewwYQ8pGs52v/Z9aM1g8DrATom
+ c9k=
+X-SBRS: 2.7
+X-MesageID: 16107785
+X-Ironport-Server: esa4.hc3370-68.iphmx.com
+X-Remote-IP: 162.221.158.21
+X-Policy: $RELAYED
+X-IronPort-AV: E=Sophos;i="5.72,363,1580792400"; 
+   d="scan'208";a="16107785"
+Subject: Re: [PATCH v2] x86/kvm: Disable KVM_ASYNC_PF_SEND_ALWAYS
+To:     Paolo Bonzini <pbonzini@redhat.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>
+CC:     Sean Christopherson <sean.j.christopherson@intel.com>,
+        Vivek Goyal <vgoyal@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
+        kvm list <kvm@vger.kernel.org>, stable <stable@vger.kernel.org>
+References: <20200407172140.GB64635@redhat.com>
+ <772A564B-3268-49F4-9AEA-CDA648F6131F@amacapital.net>
+ <87eeszjbe6.fsf@nanos.tec.linutronix.de>
+ <ce81c95f-8674-4012-f307-8f32d0e386c2@redhat.com>
+ <874ktukhku.fsf@nanos.tec.linutronix.de>
+ <274f3d14-08ac-e5cc-0b23-e6e0274796c8@redhat.com>
+ <20200408153413.GA11322@linux.intel.com>
+ <ce28e893-2ed0-ea6f-6c36-b08bb0d814f2@redhat.com>
+ <87d08hc0vz.fsf@nanos.tec.linutronix.de>
+ <CALCETrWG2Y4SPmVkugqgjZcMfpQiq=YgsYBmWBm1hj_qx3JNVQ@mail.gmail.com>
+ <04aca08a-cfce-b4db-559a-23aee0a0b7aa@redhat.com>
+From:   Andrew Cooper <andrew.cooper3@citrix.com>
+Message-ID: <0b632fb1-b662-89bf-2b95-6888bd64b3a9@citrix.com>
+Date:   Thu, 9 Apr 2020 15:13:41 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-References: <cover.1586422035.git.baolin.wang7@gmail.com> <f48d3b98debe5b2c1cc9a384874d6032b051a4c5.1586422035.git.baolin.wang7@gmail.com>
- <20200409104546.GA5399@sirena.org.uk>
-In-Reply-To: <20200409104546.GA5399@sirena.org.uk>
-From:   Baolin Wang <baolin.wang7@gmail.com>
-Date:   Thu, 9 Apr 2020 22:12:44 +0800
-Message-ID: <CADBw62p0O6dfiMF_r0SaN3cvrmcUdmnLm55gv_c=pywwzpTjoQ@mail.gmail.com>
-Subject: Re: [RFC PATCH 2/3] regmap: Add reg_update_bits() support
-To:     Mark Brown <broonie@kernel.org>
-Cc:     Lee Jones <lee.jones@linaro.org>, Arnd Bergmann <arnd@arndb.de>,
-        Orson Zhai <orsonzhai@gmail.com>,
-        Chunyan Zhang <zhang.lyra@gmail.com>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <04aca08a-cfce-b4db-559a-23aee0a0b7aa@redhat.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+Content-Language: en-GB
+X-ClientProxiedBy: AMSPEX02CAS02.citrite.net (10.69.22.113) To
+ AMSPEX02CL02.citrite.net (10.69.22.126)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Mark,
-
-On Thu, Apr 9, 2020 at 6:45 PM Mark Brown <broonie@kernel.org> wrote:
+On 09/04/2020 13:47, Paolo Bonzini wrote:
+> On 09/04/20 06:50, Andy Lutomirski wrote:
+>> The small
+>> (or maybe small) one is that any fancy protocol where the guest
+>> returns from an exception by doing, logically:
+>>
+>> Hey I'm done;  /* MOV somewhere, hypercall, MOV to CR4, whatever */
+>> IRET;
+>>
+>> is fundamentally racy.  After we say we're done and before IRET, we
+>> can be recursively reentered.  Hi, NMI!
+> That's possible in theory.  In practice there would be only two levels
+> of nesting, one for the original page being loaded and one for the tail
+> of the #VE handler.  The nested #VE would see IF=0, resolve the EPT
+> violation synchronously and both handlers would finish.  For the tail
+> page to be swapped out again, leading to more nesting, the host's LRU
+> must be seriously messed up.
 >
-> On Thu, Apr 09, 2020 at 04:57:58PM +0800, Baolin Wang wrote:
-> > Add reg_update_bits() support in case some platforms use a special method
-> > to update bits of registers.
-> >
-> > Signed-off-by: Baolin Wang <baolin.wang7@gmail.com>
-> > ---
-> >  drivers/base/regmap/regmap-mmio.c | 29 ++++++++++++++++++++++++++++-
-> >  drivers/base/regmap/regmap.c      |  1 +
->
-> MMIO devices clearly don't physically have an update_bits() operation so
-> this should be implemented further up the stack where it applies to all
-> buses without physical support.
+> With IST it would be much messier, and I haven't quite understood why
+> you believe the #VE handler should have an IST.
 
-I understood your concern. But the syscon driver need use the MMIO
-devices' resources (such as address mapping, clock management and so
-on), if move this to further up stack, I am afraid the update_bits()
-can not use the resources in 'struct regmap_mmio_context'. Do you have
-any good suggestion? Thanks.
+Any interrupt/exception which can possibly occur between a SYSCALL and
+re-establishing a kernel stack (several instructions), must be IST to
+avoid taking said exception on a user stack and being a trivial
+privilege escalation.
 
--- 
-Baolin Wang
+In terms of using #VE in its architecturally-expected way, this can
+occur in general before the kernel stack is established, so must be IST
+for safety.
+
+Therefore, it doesn't really matter if KVM's paravirt use of #VE does
+respect the interrupt flag.  It is not sensible to build a paravirt
+interface using #VE who's safety depends on never turning on
+hardware-induced #VE's.
+
+~Andrew
