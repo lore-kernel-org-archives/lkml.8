@@ -2,149 +2,101 @@ Return-Path: <SRS0=n+Ub=5Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B600C2D0EA
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 09:15:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2E6AC2BB54
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 09:16:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D8BB220757
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 09:15:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9A22820757
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 09:16:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726620AbgDIJPg convert rfc822-to-8bit (ORCPT
+        id S1726652AbgDIJP7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Apr 2020 05:15:36 -0400
-Received: from mga05.intel.com ([192.55.52.43]:2570 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725783AbgDIJPg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Apr 2020 05:15:36 -0400
-IronPort-SDR: YE+BXvrsLWuYVgaf4Gu4roxVU1q/OOKvm/V9Af2Q/X3Cln6wMKJQSr34u2D9dUBz8+2X1/hUff
- wcPAacJBbuNg==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Apr 2020 02:15:35 -0700
-IronPort-SDR: LKI2mMlF5gRpfCpUQKmtzZ9HxbE2ZCqbs8lOz4VEi0+4c9z2xO8vzNilg/v2NJuYCA6ZkGE25f
- Tbc1DvUcnVCA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,362,1580803200"; 
-   d="scan'208";a="270024062"
-Received: from fmsmsx107.amr.corp.intel.com ([10.18.124.205])
-  by orsmga002.jf.intel.com with ESMTP; 09 Apr 2020 02:15:35 -0700
-Received: from fmsmsx111.amr.corp.intel.com (10.18.116.5) by
- fmsmsx107.amr.corp.intel.com (10.18.124.205) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Thu, 9 Apr 2020 02:15:34 -0700
-Received: from shsmsx107.ccr.corp.intel.com (10.239.4.96) by
- fmsmsx111.amr.corp.intel.com (10.18.116.5) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Thu, 9 Apr 2020 02:15:33 -0700
-Received: from shsmsx104.ccr.corp.intel.com ([169.254.5.225]) by
- SHSMSX107.ccr.corp.intel.com ([169.254.9.191]) with mapi id 14.03.0439.000;
- Thu, 9 Apr 2020 17:15:30 +0800
-From:   "Liu, Yi L" <yi.l.liu@intel.com>
-To:     Jean-Philippe Brucker <jean-philippe@linaro.org>
-CC:     "Tian, Kevin" <kevin.tian@intel.com>,
-        "alex.williamson@redhat.com" <alex.williamson@redhat.com>,
-        "eric.auger@redhat.com" <eric.auger@redhat.com>,
-        "jacob.jun.pan@linux.intel.com" <jacob.jun.pan@linux.intel.com>,
-        "joro@8bytes.org" <joro@8bytes.org>,
-        "Raj, Ashok" <ashok.raj@intel.com>,
-        "Tian, Jun J" <jun.j.tian@intel.com>,
-        "Sun, Yi Y" <yi.y.sun@intel.com>,
-        "peterx@redhat.com" <peterx@redhat.com>,
-        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Wu, Hao" <hao.wu@intel.com>
-Subject: RE: [PATCH v1 6/8] vfio/type1: Bind guest page tables to host
-Thread-Topic: [PATCH v1 6/8] vfio/type1: Bind guest page tables to host
-Thread-Index: AQHWAEUdkW8K+/kg/06c7098DvJyv6hgm8wAgANYlCCAAK00AIAA6IawgAEUvACABu4SMIACfjcAgACRzFA=
-Date:   Thu, 9 Apr 2020 09:15:29 +0000
-Message-ID: <A2975661238FB949B60364EF0F2C25743A228CCA@SHSMSX104.ccr.corp.intel.com>
-References: <1584880325-10561-1-git-send-email-yi.l.liu@intel.com>
- <1584880325-10561-7-git-send-email-yi.l.liu@intel.com>
- <AADFC41AFE54684AB9EE6CBC0274A5D19D7FF98F@SHSMSX104.ccr.corp.intel.com>
- <A2975661238FB949B60364EF0F2C25743A21D8C6@SHSMSX104.ccr.corp.intel.com>
- <AADFC41AFE54684AB9EE6CBC0274A5D19D805F75@SHSMSX104.ccr.corp.intel.com>
- <A2975661238FB949B60364EF0F2C25743A21ED01@SHSMSX104.ccr.corp.intel.com>
- <20200403083407.GB1269501@myrica>
- <A2975661238FB949B60364EF0F2C25743A224C8F@SHSMSX104.ccr.corp.intel.com>
- <20200409082846.GE2435@myrica>
-In-Reply-To: <20200409082846.GE2435@myrica>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-dlp-product: dlpe-windows
-dlp-version: 11.2.0.6
-dlp-reaction: no-action
-x-originating-ip: [10.239.127.40]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+        Thu, 9 Apr 2020 05:15:59 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:59188 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725783AbgDIJP7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Apr 2020 05:15:59 -0400
+Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 8A1E04C48F3BE4C6B697;
+        Thu,  9 Apr 2020 17:15:55 +0800 (CST)
+Received: from [127.0.0.1] (10.173.221.195) by DGGEMS403-HUB.china.huawei.com
+ (10.3.19.203) with Microsoft SMTP Server id 14.3.487.0; Thu, 9 Apr 2020
+ 17:15:53 +0800
+Subject: Re: [PATCH] EDAC, xgene: remove set but not used 'address'
+To:     Robert Richter <rrichter@marvell.com>
+CC:     <khuong@os.amperecomputing.com>, <bp@alien8.de>,
+        <mchehab@kernel.org>, <tony.luck@intel.com>, <james.morse@arm.com>,
+        <linux-edac@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <20200409085237.46642-1-yanaijie@huawei.com>
+ <20200409091016.d3uohmt2o3zwhmro@rric.localdomain>
+From:   Jason Yan <yanaijie@huawei.com>
+Message-ID: <1185c697-026d-74c9-3f67-e95bebdc4c00@huawei.com>
+Date:   Thu, 9 Apr 2020 17:15:52 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.2
 MIME-Version: 1.0
+In-Reply-To: <20200409091016.d3uohmt2o3zwhmro@rric.localdomain>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.173.221.195]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> From: Jean-Philippe Brucker <jean-philippe@linaro.org>
-> Sent: Thursday, April 9, 2020 4:29 PM
-> To: Liu, Yi L <yi.l.liu@intel.com>
+
+
+在 2020/4/9 17:10, Robert Richter 写道:
+> On 09.04.20 16:52:37, Jason Yan wrote:
+>> Fix the following gcc warning:
+>>
+>> drivers/edac/xgene_edac.c:1486:7: warning: variable ‘address’ set but
+>> not used [-Wunused-but-set-variable]
+>>     u32 address;
+>>         ^~~~~~~
+>>
+>> Reported-by: Hulk Robot <hulkci@huawei.com>
+>> Signed-off-by: Jason Yan <yanaijie@huawei.com>
+>> ---
+>>   drivers/edac/xgene_edac.c | 2 --
+>>   1 file changed, 2 deletions(-)
+>>
+>> diff --git a/drivers/edac/xgene_edac.c b/drivers/edac/xgene_edac.c
+>> index e4a1032ba0b5..e5e0fbdeca29 100644
+>> --- a/drivers/edac/xgene_edac.c
+>> +++ b/drivers/edac/xgene_edac.c
+>> @@ -1483,13 +1483,11 @@ static void xgene_edac_rb_report(struct edac_device_ctl_info *edac_dev)
+>>   		return;
+>>   	if (reg & STICKYERR_MASK) {
+>>   		bool write;
+>> -		u32 address;
+>>   
+>>   		dev_err(edac_dev->dev, "IOB bus access error(s)\n");
+>>   		if (regmap_read(ctx->edac->rb_map, RBEIR, &reg))
+>>   			return;
+>>   		write = reg & WRITE_ACCESS_MASK ? 1 : 0;
+>> -		address = RBERRADDR_RD(reg);
 > 
-> On Tue, Apr 07, 2020 at 10:33:25AM +0000, Liu, Yi L wrote:
-> > Hi Jean,
-> >
-> > > From: Jean-Philippe Brucker < jean-philippe@linaro.org >
-> > > Sent: Friday, April 3, 2020 4:35 PM
-> > > Subject: Re: [PATCH v1 6/8] vfio/type1: Bind guest page tables to host
-> > >
-> > > On Thu, Apr 02, 2020 at 08:05:29AM +0000, Liu, Yi L wrote:
-> > > > > > > > static long vfio_iommu_type1_ioctl(void *iommu_data,
-> > > > > > > >  		default:
-> > > > > > > >  			return -EINVAL;
-> > > > > > > >  		}
-> > > > > > > > +
-> > > > > > > > +	} else if (cmd == VFIO_IOMMU_BIND) {
-> > > > > > >
-> > > > > > > BIND what? VFIO_IOMMU_BIND_PASID sounds clearer to me.
-> > > > > >
-> > > > > > Emm, it's up to the flags to indicate bind what. It was proposed to
-> > > > > > cover the three cases below:
-> > > > > > a) BIND/UNBIND_GPASID
-> > > > > > b) BIND/UNBIND_GPASID_TABLE
-> > > > > > c) BIND/UNBIND_PROCESS
-> > > > > > <only a) is covered in this patch>
-> > > > > > So it's called VFIO_IOMMU_BIND.
-> > > > >
-> > > > > but aren't they all about PASID related binding?
-> > > >
-> > > > yeah, I can rename it. :-)
-> > >
-> > > I don't know if anyone intends to implement it, but SMMUv2 supports
-> > > nesting translation without any PASID support. For that case the name
-> > > VFIO_IOMMU_BIND_GUEST_PGTBL without "PASID" anywhere makes more
-> sense.
-> > > Ideally we'd also use a neutral name for the IOMMU API instead of
-> > > bind_gpasid(), but that's easier to change later.
-> >
-> > I agree VFIO_IOMMU_BIND is somehow not straight-forward. Especially, it may
-> > cause confusion when thinking about VFIO_SET_IOMMU. How about using
-> > VFIO_NESTING_IOMMU_BIND_STAGE1 to cover a) and b)? And has another
-> > VFIO_BIND_PROCESS in future for the SVA bind case.
+> Please also remove that unused macro.
 > 
-> I think minimizing the number of ioctls is more important than finding the
-> ideal name. VFIO_IOMMU_BIND was fine to me, but if it's too vague then
-> rename it to VFIO_IOMMU_BIND_PASID and we'll just piggy-back on it for
-> non-PASID things (they should be rare enough).
-maybe we can start with VFIO_IOMMU_BIND_PASID. Actually, there is
-also a discussion on reusing the same ioctl and vfio structure for
-pasid_alloc/free, bind/unbind_gpasid. and cache_inv. how about your
-opinion?
 
-https://lkml.org/lkml/2020/4/3/833
+OK, thanks.
 
-Regards,
-Yi Liu
+Jason
 
-
+> Thanks,
+> 
+> -Robert
+> 
+>>   		if (reg & AGENT_OFFLINE_ERR_MASK)
+>>   			dev_err(edac_dev->dev,
+>>   				"IOB bus %s access to offline agent error\n",
+>> -- 
+>> 2.17.2
+>>
+> 
 
