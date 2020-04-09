@@ -2,132 +2,153 @@ Return-Path: <SRS0=n+Ub=5Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.4 required=3.0 tests=FORGED_MUA_MOZILLA,
+	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA8B5C2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 20:36:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B42C5C2BA19
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 20:36:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7EEFB2082D
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 20:36:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="K1cFSHTi"
+	by mail.kernel.org (Postfix) with ESMTP id 841D720753
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 20:36:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726918AbgDIUgF (ORCPT
+        id S1726937AbgDIUg2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Apr 2020 16:36:05 -0400
-Received: from mail-pj1-f67.google.com ([209.85.216.67]:51158 "EHLO
-        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726623AbgDIUgE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Apr 2020 16:36:04 -0400
-Received: by mail-pj1-f67.google.com with SMTP id b7so1783938pju.0;
-        Thu, 09 Apr 2020 13:36:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=dFIub08dv1QQq5SgcObGuR/DyrCleszAJVI9be3EdCA=;
-        b=K1cFSHTiOgekug/s67L3AghkWAlJq8b+yZbE5hI1GI+hEGEj25JWhP0qUA0QTDNMYA
-         BweoAnl7DRMHegPwITP+6vnaZPuWbpAwc7ExJR2rmdkFv3VF587cVh7/S0xqT6WFX/Fq
-         H7M75LG295cteN6e37Fgh0yFiFcJvocsPrUjeKni7uKgzqsBCH0x2+sSAebVURwwXntP
-         xfyx0iRNfbAYd6EHs851WBbzBSbX73ojIrHUW+ujEUZjHTbCJ/NxI3Nz7HXWt7+jacp2
-         KFq7EMJWE+H+B2yIuJtU5+bJ8LZ+0PKIhIW0YckEjHR/gta3f67E19wMddr6ksP79sTG
-         5oBw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=dFIub08dv1QQq5SgcObGuR/DyrCleszAJVI9be3EdCA=;
-        b=fVwpPN35x0evMHwaBC51AUOJZ0LEy2ufJ5jeY//lXPDfPxtC8YwKn6l2ZvamDN9fP7
-         UKCMl1OI5uP12Ez4zBkMJaWFCaHFLtMyCxWQL6O2DNK7mRUsE9oHuo2CWb2w9CJ1MYfI
-         hIiPMjMrvS6BJZRyIiugotOKPtFDmaf9vd07kiIz38PuI8D7scs63gqzDpaqHnyPonxX
-         9Qzzkznb/9WT8avp5QVe9i0NiObuDgMsjRzAsiE6XO6RgixNpRgfUupVQckdSJtc7E1T
-         7b476cOhku8BpW/DTpXvQnnulrxxhf+8KPtrByit6cYsOM7WKPu8bbPH6QeyjHrGtwD5
-         VetQ==
-X-Gm-Message-State: AGi0PuYzx5viZFF5uAtTsqF8XoZhP+bwDGvlxhApDm9obKFELaMHa1Ur
-        /tKNRtyUGxVYdM5D/GhSJzA=
-X-Google-Smtp-Source: APiQypIn3amnj/rWygPYz5aPM28w0LFg6zTOEBQT/lUYZ94DMZUxgOivrrJbNlYvlBUaX181p5yL/g==
-X-Received: by 2002:a17:902:7448:: with SMTP id e8mr1356414plt.115.1586464563816;
-        Thu, 09 Apr 2020 13:36:03 -0700 (PDT)
-Received: from dtor-ws ([2620:15c:202:201:3c2a:73a9:c2cf:7f45])
-        by smtp.gmail.com with ESMTPSA id bt19sm50710pjb.3.2020.04.09.13.36.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 09 Apr 2020 13:36:03 -0700 (PDT)
-Date:   Thu, 9 Apr 2020 13:36:01 -0700
-From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     Oliver Graute <oliver.graute@gmail.com>,
-        Marco Felsch <m.felsch@pengutronix.de>,
-        Oliver Graute <oliver.graute@kococonnector.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sasha Levin <sashal@kernel.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1] Input: edt-ft5x06 - fix crash on EDT EP0110M09
-Message-ID: <20200409203601.GQ75430@dtor-ws>
-References: <1586424425-27038-1-git-send-email-oliver.graute@gmail.com>
- <20200409105253.qvezbikpbnrkig52@pengutronix.de>
- <20200409120242.GA17410@portage>
- <20200409123622.GA3676135@smile.fi.intel.com>
+        Thu, 9 Apr 2020 16:36:28 -0400
+Received: from mail-db8eur05olkn2031.outbound.protection.outlook.com ([40.92.89.31]:3456
+        "EHLO EUR05-DB8-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726623AbgDIUg2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Apr 2020 16:36:28 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Y+hqzsOcsPNSqd3jcCb+ZTestW1QcqIAYdT6KfWw5Tx9dFz2knW3Kw/DMHcZm81VBEXXqMSpumUYFE+D9x04AZ9mtOt/Bv4q1KS4mSnpBDUhsUkQ4vV4MrJrMDP6Oh6krkso4Q+39EZyc41FD6OxX5/KXB+qhMHiLnlASY3P9fTNh8CGPaHNE7p6kFgiJ4u3eaGmaC/+Vy2JaGdkSx4Kh+KCmiRUDIPsh0SHV8CkV/73wSLFcKv69qLHM5TNvM/iOeLOB5334iPeuNz3826ZcwOaTuP+mMrKOsxrL/if47XKy/MgZZ26EwZ7ElugSiONyHPuIf/WpRgvni/vvakQBg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=RjgOdk/XLN4/zWKrIP5EI/CbXAwhJ8jakWruGG3/YHo=;
+ b=YlkAAD3r+KkcpGmgbhQf3WScJFBy0fu3Q9AwWbTukMZaPvFstXlclR7MBfcbCad2luGlwbMDis5OCuAc+Wd1pcKz5PfBCRRRDNvMe2wEkcv/0wz1ucjtxiHttAWFJSJdulaF9xXekN+Faxs2w+U/oACl9PXTPkoTy6xSO0ag8HTBzf+xvKG+6AGs9SAFbt2+48RemWi4n5U6FCbAYbDIwAd7PlDJlflhgPCCEokllZrXBFSQHfv1qgF2J9MGw3GDzFDlCU8qpUGAbe+0xZMzeIqgDMWg0+SbFiT4JC96slMpAVvozLwJ0xkiWvRdxiw0tgI4gloMnl3xHd+k2404tQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=hotmail.de; dmarc=pass action=none header.from=hotmail.de;
+ dkim=pass header.d=hotmail.de; arc=none
+Received: from DB8EUR05FT042.eop-eur05.prod.protection.outlook.com
+ (2a01:111:e400:fc0f::52) by
+ DB8EUR05HT148.eop-eur05.prod.protection.outlook.com (2a01:111:e400:fc0f::175)
+ with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2900.15; Thu, 9 Apr
+ 2020 20:36:26 +0000
+Received: from AM6PR03MB5170.eurprd03.prod.outlook.com
+ (2a01:111:e400:fc0f::4b) by DB8EUR05FT042.mail.protection.outlook.com
+ (2a01:111:e400:fc0f::328) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2900.15 via Frontend
+ Transport; Thu, 9 Apr 2020 20:36:26 +0000
+X-IncomingTopHeaderMarker: OriginalChecksum:D22402EA3F5027C3C4274605A6EC12483B73E052BCCCB8128B5868BB038DF3C7;UpperCasedChecksum:2ECADAD848B11E248AF783765E384E5E980FF23B7858055FD656D3168884EC64;SizeAsReceived:10015;Count:50
+Received: from AM6PR03MB5170.eurprd03.prod.outlook.com
+ ([fe80::d57:5853:a396:969d]) by AM6PR03MB5170.eurprd03.prod.outlook.com
+ ([fe80::d57:5853:a396:969d%7]) with mapi id 15.20.2878.022; Thu, 9 Apr 2020
+ 20:36:26 +0000
+Subject: Re: [GIT PULL] Please pull proc and exec work for 5.7-rc1
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     "Eric W. Biederman" <ebiederm@xmission.com>,
+        Waiman Long <longman@redhat.com>,
+        Ingo Molnar <mingo@kernel.org>, Will Deacon <will@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Alexey Gladkov <gladkov.alexey@gmail.com>,
+        Oleg Nesterov <oleg@redhat.com>
+References: <87blobnq02.fsf@x220.int.ebiederm.org>
+ <CAHk-=whES-KCO6Bs93-QBK1tS5CfiWSi+v5D1a7Sc1TD5RFoaA@mail.gmail.com>
+ <87v9maxb5q.fsf@x220.int.ebiederm.org>
+ <CAHk-=wih4BqW7GTLaYxewynuT-iFHrXroip0wNo0CyPtmYGUow@mail.gmail.com>
+ <87y2r4so3i.fsf@x220.int.ebiederm.org>
+ <CAHk-=wjhAvv6s_7OVeZJiHaY7bBrHyiPTkSpq-TLr6qxYqxUUw@mail.gmail.com>
+ <CAHk-=wi0jrKv9x6vJ9FDgTrSUbdbZYDX-79T-E87C48MGSn5=g@mail.gmail.com>
+ <87wo6or3pg.fsf@x220.int.ebiederm.org>
+ <AM6PR03MB51708FD4226E07AB7CB0D6A7E4C10@AM6PR03MB5170.eurprd03.prod.outlook.com>
+ <CAHk-=wjaoYM4gXdAyYY=u8PaYj2LXUvcfp=8DKum8f1DM+Ws0A@mail.gmail.com>
+ <AM6PR03MB5170F924EA69A81D79BD0929E4C10@AM6PR03MB5170.eurprd03.prod.outlook.com>
+ <CAHk-=whMKC5F-=QQP=fCNRuTF+ZGiNtLEKvx7KekpK1JtrwDhw@mail.gmail.com>
+ <CAHk-=whJ8khGBqfqh6ZmHsKjcyyBLm5xgkgLW_AC_=82iFBWoQ@mail.gmail.com>
+ <AM6PR03MB51700B243E34BF4A59FF33CFE4C10@AM6PR03MB5170.eurprd03.prod.outlook.com>
+ <CAHk-=whJttTNFQn1fMYp91LZ90iHE7B2THZ8NjQ7fBwmWX9k6w@mail.gmail.com>
+From:   Bernd Edlinger <bernd.edlinger@hotmail.de>
+Message-ID: <AM6PR03MB51708E5625468251BC75C799E4C10@AM6PR03MB5170.eurprd03.prod.outlook.com>
+Date:   Thu, 9 Apr 2020 22:36:24 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
+In-Reply-To: <CAHk-=whJttTNFQn1fMYp91LZ90iHE7B2THZ8NjQ7fBwmWX9k6w@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: AM0PR01CA0140.eurprd01.prod.exchangelabs.com
+ (2603:10a6:208:168::45) To AM6PR03MB5170.eurprd03.prod.outlook.com
+ (2603:10a6:20b:ca::23)
+X-Microsoft-Original-Message-ID: <e0f2ce75-c01d-320c-40b0-7baf70ae23e7@hotmail.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200409123622.GA3676135@smile.fi.intel.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from [192.168.1.101] (92.77.140.102) by AM0PR01CA0140.eurprd01.prod.exchangelabs.com (2603:10a6:208:168::45) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2900.15 via Frontend Transport; Thu, 9 Apr 2020 20:36:25 +0000
+X-Microsoft-Original-Message-ID: <e0f2ce75-c01d-320c-40b0-7baf70ae23e7@hotmail.de>
+X-TMN:  [3sOWdNKmVyUGjKP31fwW+zSD1r55U0cJ]
+X-MS-PublicTrafficType: Email
+X-IncomingHeaderCount: 50
+X-EOPAttributedMessage: 0
+X-MS-Office365-Filtering-Correlation-Id: 09810bb4-03fa-4b30-60a8-08d7dcc5acb7
+X-MS-TrafficTypeDiagnostic: DB8EUR05HT148:
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: ZwEWBzCz+0DnqTn/RaZrwrfxRmlZ7JEQHRZcmYfFFDX8Jq92bhIe+ZyFUYXvRow0A7+7x0pA3nEXrKt6U1ijV9bzXS489G27ELWWzQneW+yKCMvh7y+zNKYKGpW3QjCC746GkEpddnvqv3OZ0iTHEA+Me9hESFwDAQlY75P6Muc6obuUJIV7ym48At5fIzWv
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:0;SRV:;IPV:NLI;SFV:NSPM;H:AM6PR03MB5170.eurprd03.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:;DIR:OUT;SFP:1901;
+X-MS-Exchange-AntiSpam-MessageData: s8SNnUH7N1h4LS9tuFX14OVztd2bM5aMGVYKfzjpHBzWniraiSS3uMpi9wk5mOuTKy6FE8eg1YeboQRYYOk9cRPlYJEgPT8k2ntwfhO/+oX+x8D0oxw6OvQvpz3ACjZByjY10hCG4+OEV9pUjLsojw==
+X-OriginatorOrg: outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 09810bb4-03fa-4b30-60a8-08d7dcc5acb7
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Apr 2020 20:36:26.3769
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-CrossTenant-FromEntityHeader: Internet
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB8EUR05HT148
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 09, 2020 at 03:36:22PM +0300, Andy Shevchenko wrote:
-> On Thu, Apr 09, 2020 at 02:02:42PM +0200, Oliver Graute wrote:
-> > On 09/04/20, Marco Felsch wrote:
-> > > Hi Oliver,
-> > > 
-> > > thanks for your patch.
-> > > 
-> > > On 20-04-09 11:27, Oliver Graute wrote:
-> > > > From: Oliver Graute <oliver.graute@kococonnector.com>
-> > > 
-> > > ...
-> > > 
-> > > >  drivers/input/touchscreen/edt-ft5x06.c | 4 ----
-> > > >  1 file changed, 4 deletions(-)
-> > > > 
-> > > > diff --git a/drivers/input/touchscreen/edt-ft5x06.c b/drivers/input/touchscreen/edt-ft5x06.c
-> > > > index 06aa8ba0b6d7..6fbc87d041a1 100644
-> > > > --- a/drivers/input/touchscreen/edt-ft5x06.c
-> > > > +++ b/drivers/input/touchscreen/edt-ft5x06.c
-> > > > @@ -819,10 +819,6 @@ static int edt_ft5x06_ts_identify(struct i2c_client *client,
-> > > >  	 * to have garbage in there
-> > > >  	 */
-> > > >  	memset(rdbuf, 0, sizeof(rdbuf));
-> > > > -	error = edt_ft5x06_ts_readwrite(client, 1, "\xBB",
-> > > > -					EDT_NAME_LEN - 1, rdbuf);
-> > > > -	if (error)
-> > > > -		return error;
-> > > 
-> > > 
-> > > I don't see how this call can corrupt the stack..
-> > 
-> > I admit that this is strange. The patch fixed my problems so I posted
-> > it. Still interested in the root-cause.
+On 4/9/20 10:04 PM, Linus Torvalds wrote:
+> On Thu, Apr 9, 2020 at 12:57 PM Bernd Edlinger
+> <bernd.edlinger@hotmail.de> wrote:
+>>
+>> The use case where this may happen with strace
+>> when you call strace with lots of -p <pid> arguments,
+>> and one of them is a bomb. strace stuck.
 > 
-> I'm wondering how you nailed down to this function? Have you able to use kASAN?
+> Yeah, so from a convenience angle I do agree that it would be nicer to
+> just not count dead threads.
 > 
-> By the way, what I²C controller behind this? Maybe the bug in its driver?
+> You can test that by just moving the
+> 
+>                 /* Don't bother with already dead threads */
+>                 if (t->exit_state)
+>                         continue;
+> 
+> test in zap_other_threads() to above the
+> 
+>                 count++;
+> 
+> line instead.
+> 
+> NOTE! That is *NOT* the correct true fix. I'm just suggesting that you
 
-I would try instrumenting drivers/i2c/busses/i2c-imx-lpi2c.c to make
-sure it does not try to stuff into the rdbuf more data than requested...
+Eric, I think he means you, I am too busy with other work ;-) right now.
 
-Thanks.
-
--- 
-Dmitry
+> try if it fixes that particular test-case (I did not try it myself -
+> because .. lazy)
+> 
+> If Oleg agrees that we could take the approach that we can share a
+> signal struct with dead threads, we'd also need to change the
+> accounting to do that notify_count not when the signal struct is
+> unlinked, but when exit_state is first set.
+> 
+> I'm not convinced that's the right solution, but I do agree that it's
+> annoying how easily strace can get stuck, since one of the main uses
+> for strace is for debugging nasty situations.
+> 
+>                 Linus
+> 
