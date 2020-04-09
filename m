@@ -2,129 +2,109 @@ Return-Path: <SRS0=n+Ub=5Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AA1BC2BB1D
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 08:29:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94E3AC2BB54
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 08:30:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4CAF320784
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 08:29:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=yandex-team.ru header.i=@yandex-team.ru header.b="GP6qF0z7"
+	by mail.kernel.org (Postfix) with ESMTP id 58CD920BED
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 08:30:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1586421045;
+	bh=tecY0VJsbe8EdmmXXtksU0Y0zBQ4pnIaVfI2igeka+g=;
+	h=In-Reply-To:References:Subject:From:Cc:To:Date:List-ID:From;
+	b=mpS87GjVe66x4KNgk2QhkrmpCUtJv7mext01V16khlNtoGZfOdE0pXlCTx7imM1UL
+	 a7c1eaUnBAcCh1mFZtZtkJK43OXS3l17OS5Cm+6sd4n5cQkMwtVGHxjwGt2zHMdIKE
+	 ED1mmiaf+8P3rxfAIe5mtW0F0OjKOfvo/mVxGN88=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726783AbgDII3w (ORCPT
+        id S1726594AbgDIIan (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Apr 2020 04:29:52 -0400
-Received: from forwardcorp1p.mail.yandex.net ([77.88.29.217]:59390 "EHLO
-        forwardcorp1p.mail.yandex.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725987AbgDII3w (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Apr 2020 04:29:52 -0400
-Received: from mxbackcorp1j.mail.yandex.net (mxbackcorp1j.mail.yandex.net [IPv6:2a02:6b8:0:1619::162])
-        by forwardcorp1p.mail.yandex.net (Yandex) with ESMTP id 93B3E2E15DA;
-        Thu,  9 Apr 2020 11:29:48 +0300 (MSK)
-Received: from iva4-7c3d9abce76c.qloud-c.yandex.net (iva4-7c3d9abce76c.qloud-c.yandex.net [2a02:6b8:c0c:4e8e:0:640:7c3d:9abc])
-        by mxbackcorp1j.mail.yandex.net (mxbackcorp/Yandex) with ESMTP id GqCn8sLTpT-TmMCi06O;
-        Thu, 09 Apr 2020 11:29:48 +0300
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex-team.ru; s=default;
-        t=1586420988; bh=Exr15ikUjhv97D7PAm2dEuR590U9lF7khQ0dEL6Pu5k=;
-        h=Message-ID:Date:To:From:Subject:Cc;
-        b=GP6qF0z79yovoZlVP6LS0eHceAXLjNn4ARPNQQOvYo5lATOC6LKGDCLqKkHimQHbz
-         sLJe42tLgYOtpc25a2I749yIqkeW68L9ulr3EuNdk+pYub5v17YDVMtoqB1FWjtdtp
-         gV18IN2v8wV453m0+tdIpgfTykfr5gYyAVFeOvYE=
-Authentication-Results: mxbackcorp1j.mail.yandex.net; dkim=pass header.i=@yandex-team.ru
-Received: from unknown (unknown [2a02:6b8:b080:8808::1:4])
-        by iva4-7c3d9abce76c.qloud-c.yandex.net (smtpcorp/Yandex) with ESMTPSA id fpxAZ46gi9-TmWqv0ei;
-        Thu, 09 Apr 2020 11:29:48 +0300
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (Client certificate not present)
-Subject: [PATCH] ovl: skip overlayfs superblocks at global sync
-From:   Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
-To:     linux-fsdevel@vger.kernel.org, Miklos Szeredi <miklos@szeredi.hu>,
-        linux-kernel@vger.kernel.org,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        linux-unionfs@vger.kernel.org
-Cc:     Dmitry Monakhov <dmtrmonakhov@yandex-team.ru>
-Date:   Thu, 09 Apr 2020 11:29:47 +0300
-Message-ID: <158642098777.5635.10501704178160375549.stgit@buzz>
-User-Agent: StGit/0.17.1-dirty
-MIME-Version: 1.0
+        Thu, 9 Apr 2020 04:30:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58724 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725828AbgDIIan (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Apr 2020 04:30:43 -0400
+Received: from kernel.org (unknown [104.132.0.74])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8D2E620784;
+        Thu,  9 Apr 2020 08:30:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1586421042;
+        bh=tecY0VJsbe8EdmmXXtksU0Y0zBQ4pnIaVfI2igeka+g=;
+        h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
+        b=ptohimgNcSS6YVP6voh44L9Sg9U4vla0zIuPhH//YJlP0Pij9fyw2K+ZNUAEHVrPo
+         Ro/p1DceVy1DmnpHiLRWeBbTqOmFjwO56VpfspN5AASuHpAIJ7hqo6PYHpZolmT3RQ
+         PQprX0YetLoQeGYubZAI1tdqQfcS3ncgfxC7byN4=
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20200408160044.2550437-1-arnd@arndb.de>
+References: <20200408160044.2550437-1-arnd@arndb.de>
+Subject: Re: [PATCH] [RFC] clk: sprd: fix compile-testing
+From:   Stephen Boyd <sboyd@kernel.org>
+Cc:     gregkh@linuxfoundation.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
+        Arnd Bergmann <arnd@arndb.de>
+To:     Arnd Bergmann <arnd@arndb.de>, catalin.marinas@arm.com,
+        chunyan.zhang@unisoc.com, mturquette@baylibre.com, will@kernel.org
+Date:   Thu, 09 Apr 2020 01:30:41 -0700
+Message-ID: <158642104168.126188.8440219577017239983@swboyd.mtv.corp.google.com>
+User-Agent: alot/0.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Stacked filesystems like overlayfs has no own writeback, but they have to
-forward syncfs() requests to backend for keeping data integrity.
+Quoting Arnd Bergmann (2020-04-08 09:00:44)
+> I got a build failure with CONFIG_ARCH_SPRD=3Dm when the
+> main portion of the clock driver failed to get linked into
+> the kernel:
+>=20
+> ERROR: modpost: "sprd_pll_sc_gate_ops" [drivers/clk/sprd/sc9863a-clk.ko] =
+undefined!
+> ERROR: modpost: "sprd_pll_ops" [drivers/clk/sprd/sc9863a-clk.ko] undefine=
+d!
+> ERROR: modpost: "sprd_div_ops" [drivers/clk/sprd/sc9863a-clk.ko] undefine=
+d!
+> ERROR: modpost: "sprd_comp_ops" [drivers/clk/sprd/sc9863a-clk.ko] undefin=
+ed!
+> ERROR: modpost: "sprd_mux_ops" [drivers/clk/sprd/sc9863a-clk.ko] undefine=
+d!
+> ERROR: modpost: "sprd_gate_ops" [drivers/clk/sprd/sc9863a-clk.ko] undefin=
+ed!
+> ERROR: modpost: "sprd_sc_gate_ops" [drivers/clk/sprd/sc9863a-clk.ko] unde=
+fined!
+> ERROR: modpost: "sprd_clk_probe" [drivers/clk/sprd/sc9863a-clk.ko] undefi=
+ned!
+> ERROR: modpost: "sprd_clk_regmap_init" [drivers/clk/sprd/sc9863a-clk.ko] =
+undefined!
+> ERROR: modpost: "sprd_pll_ops" [drivers/clk/sprd/sc9860-clk.ko] undefined!
+> ERROR: modpost: "sprd_div_ops" [drivers/clk/sprd/sc9860-clk.ko] undefined!
+> ERROR: modpost: "sprd_mux_ops" [drivers/clk/sprd/sc9860-clk.ko] undefined!
+>=20
+> This is a combination of two trivial bugs:
+>=20
+> - A platform should not be 'tristate', it should be a 'bool' symbol
+>   like the other platforms, if only for consistency, and to avoid
+>   surprises like this one.
+>=20
+> - The clk Makefile does not traverse into the sprd subdirectory
+>   if the platform is disabled but the drivers are enabled for
+>   compile-testing.
+>=20
+> Fixing either of the two would be sufficient to address the link failure,
+> but for correctness, both need to be changed.
+>=20
+> Fixes: 2b1b799d7630 ("arm64: change ARCH_SPRD Kconfig to tristate")
+> Fixes: d41f59fd92f2 ("clk: sprd: Add common infrastructure")
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> ---
+>  arch/arm64/Kconfig.platforms | 2 +-
+>  drivers/clk/Makefile         | 2 +-
 
-During global sync() each overlayfs instance calls method ->sync_fs()
-for backend although it itself is in global list of superblocks too.
-As a result one syscall sync() could write one superblock several times
-and send multiple disk barriers.
+For clk part
 
-This patch adds flag SB_I_SKIP_SYNC into sb->sb_iflags to avoid that.
-
-Reported-by: Dmitry Monakhov <dmtrmonakhov@yandex-team.ru>
-Signed-off-by: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
----
- fs/overlayfs/super.c |    5 +++--
- fs/sync.c            |    3 ++-
- include/linux/fs.h   |    2 ++
- 3 files changed, 7 insertions(+), 3 deletions(-)
-
-diff --git a/fs/overlayfs/super.c b/fs/overlayfs/super.c
-index 732ad5495c92..59df13d16280 100644
---- a/fs/overlayfs/super.c
-+++ b/fs/overlayfs/super.c
-@@ -261,8 +261,8 @@ static int ovl_sync_fs(struct super_block *sb, int wait)
- 		return 0;
- 
- 	/*
--	 * If this is a sync(2) call or an emergency sync, all the super blocks
--	 * will be iterated, including upper_sb, so no need to do anything.
-+	 * Not called for sync(2) call or an emergency sync (SB_I_SKIP_SYNC).
-+	 * All the super blocks will be iterated, including upper_sb.
- 	 *
- 	 * If this is a syncfs(2) call, then we do need to call
- 	 * sync_filesystem() on upper_sb, but enough if we do it when being
-@@ -1818,6 +1818,7 @@ static int ovl_fill_super(struct super_block *sb, void *data, int silent)
- 	sb->s_xattr = ovl_xattr_handlers;
- 	sb->s_fs_info = ofs;
- 	sb->s_flags |= SB_POSIXACL;
-+	sb->s_iflags |= SB_I_SKIP_SYNC;
- 
- 	err = -ENOMEM;
- 	root_dentry = ovl_get_root(sb, upperpath.dentry, oe);
-diff --git a/fs/sync.c b/fs/sync.c
-index 4d1ff010bc5a..16c2630ee4bf 100644
---- a/fs/sync.c
-+++ b/fs/sync.c
-@@ -76,7 +76,8 @@ static void sync_inodes_one_sb(struct super_block *sb, void *arg)
- 
- static void sync_fs_one_sb(struct super_block *sb, void *arg)
- {
--	if (!sb_rdonly(sb) && sb->s_op->sync_fs)
-+	if (!sb_rdonly(sb) && !(sb->s_iflags & SB_I_SKIP_SYNC) &&
-+	    sb->s_op->sync_fs)
- 		sb->s_op->sync_fs(sb, *(int *)arg);
- }
- 
-diff --git a/include/linux/fs.h b/include/linux/fs.h
-index 4f6f59b4f22a..f186a966a36c 100644
---- a/include/linux/fs.h
-+++ b/include/linux/fs.h
-@@ -1409,6 +1409,8 @@ extern int send_sigurg(struct fown_struct *fown);
- #define SB_I_IMA_UNVERIFIABLE_SIGNATURE	0x00000020
- #define SB_I_UNTRUSTED_MOUNTER		0x00000040
- 
-+#define SB_I_SKIP_SYNC	0x00000100	/* Skip superblock at global sync */
-+
- /* Possible states of 'frozen' field */
- enum {
- 	SB_UNFROZEN = 0,		/* FS is unfrozen */
-
+Acked-by: Stephen Boyd <sboyd@kernel.org>
