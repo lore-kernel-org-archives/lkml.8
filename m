@@ -4,53 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0063BC2D0EA
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 07:24:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81386C2D0EA
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 07:24:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C1D092051A
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 07:24:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6561320753
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 07:24:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725997AbgDIHY0 (ORCPT
+        id S1726627AbgDIHY3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Apr 2020 03:24:26 -0400
-Received: from smtp01.smtpout.orange.fr ([80.12.242.123]:41028 "EHLO
-        smtp.smtpout.orange.fr" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726521AbgDIHYZ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Apr 2020 03:24:25 -0400
-Received: from [192.168.42.210] ([93.22.150.119])
-        by mwinf5d77 with ME
-        id QXQN2200T2aoYT903XQPU3; Thu, 09 Apr 2020 09:24:24 +0200
-X-ME-Helo: [192.168.42.210]
-X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
-X-ME-Date: Thu, 09 Apr 2020 09:24:24 +0200
-X-ME-IP: 93.22.150.119
+        Thu, 9 Apr 2020 03:24:29 -0400
+Received: from ciao.gmane.io ([159.69.161.202]:35756 "EHLO ciao.gmane.io"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726502AbgDIHY2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Apr 2020 03:24:28 -0400
+Received: from list by ciao.gmane.io with local (Exim 4.92)
+        (envelope-from <glk-linux-kernel-4@m.gmane-mx.org>)
+        id 1jMRY3-000RLK-Eh
+        for linux-kernel@vger.kernel.org; Thu, 09 Apr 2020 09:24:27 +0200
+X-Injected-Via-Gmane: http://gmane.org/
+To:     linux-kernel@vger.kernel.org
+From:   Christophe JAILLET <christophe.jaillet@wanadoo.fr>
 Subject: Re: [PATCH] checkpatch: check for missing \n at the end of logging
  message
-To:     Joe Perches <joe@perches.com>, apw@canonical.com,
-        Andrew Morton <akpm@linux-foundation.org>
-Cc:     linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
-Newsgroups: gmane.linux.kernel,gmane.linux.kernel.janitors
+Date:   Thu, 9 Apr 2020 09:24:22 +0200
+Message-ID: <60c732a1-aa4e-afab-d223-894a67713003@wanadoo.fr>
 References: <20200407204908.10420-1-christophe.jaillet@wanadoo.fr>
  <8617a6b94c0644bce1fd4ca77309d67a612e6300.camel@perches.com>
  <4b7e1cf3-6fa7-60af-a1d3-2457339dbe8a@wanadoo.fr>
  <efb5a518fdc47f0120b94a7e8a95d275c0f4ad43.camel@perches.com>
-From:   Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Message-ID: <60c732a1-aa4e-afab-d223-894a67713003@wanadoo.fr>
-Date:   Thu, 9 Apr 2020 09:24:22 +0200
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
-MIME-Version: 1.0
-In-Reply-To: <efb5a518fdc47f0120b94a7e8a95d275c0f4ad43.camel@perches.com>
+Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
+In-Reply-To: <efb5a518fdc47f0120b94a7e8a95d275c0f4ad43.camel@perches.com>
 Content-Language: en-US
+Cc:     kernel-janitors@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
+Message-ID: <20200409072422.j3TesoP8RxBs6VbU4i-Ij-LMF6-mZbDAEmkyQir_6fY@z>
 
 Le 09/04/2020 à 05:10, Joe Perches a écrit :
 > On Wed, 2020-04-08 at 22:23 +0200, Marion & Christophe JAILLET wrote:
@@ -155,4 +151,5 @@ Maybe those should be handled manually to be consistent and avoid a "\n"
 in pr_fmt which is not widely used in other files
 
 CJ
+
 
