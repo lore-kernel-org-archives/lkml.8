@@ -2,214 +2,97 @@ Return-Path: <SRS0=n+Ub=5Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7055C38A30
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 09:54:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EA42C2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 09:56:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3A2A020BED
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 09:44:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D585520730
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 09:56:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="ORcpdwju"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kH+iUENs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726819AbgDIJof (ORCPT
+        id S1726756AbgDIJ4m (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Apr 2020 05:44:35 -0400
-Received: from smtp-fw-4101.amazon.com ([72.21.198.25]:19563 "EHLO
-        smtp-fw-4101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726678AbgDIJof (ORCPT
+        Thu, 9 Apr 2020 05:56:42 -0400
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:47016 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726632AbgDIJ4m (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Apr 2020 05:44:35 -0400
+        Thu, 9 Apr 2020 05:56:42 -0400
+Received: by mail-lf1-f66.google.com with SMTP id m19so5415379lfq.13
+        for <linux-kernel@vger.kernel.org>; Thu, 09 Apr 2020 02:56:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1586425475; x=1617961475;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version;
-  bh=JM5sUrNXKRJcdMGMKqju9wpkLsnMHLh8mrvocthSOiA=;
-  b=ORcpdwju5i36mdlhScsr5feYqn7wswQiF7gNifwq4GdzTs6EOeQnPWL5
-   WHkNtin8tXavIu8lkDEwZ+XOqOuYhc3h9ESvpgUhHLhR3kcJ4uEnW+nN1
-   1scQ8HPCA/MH/YOczarcCztNrE4FJ+Lei7vSOIOqi8KvOAO9Va0BT6TP3
-   Q=;
-IronPort-SDR: GznbAMVH7ewBpKdtsJ3sQUEMtalWl/P2BFIN4vgfkQARSVI5kXIJ4bsAcXOgyKormsKvROOcNu
- Dt2pMSgWnnSw==
-X-IronPort-AV: E=Sophos;i="5.72,362,1580774400"; 
-   d="scan'208";a="24913339"
-Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-2a-6e2fc477.us-west-2.amazon.com) ([10.43.8.6])
-  by smtp-border-fw-out-4101.iad4.amazon.com with ESMTP; 09 Apr 2020 09:44:20 +0000
-Received: from EX13MTAUEA002.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan2.pdx.amazon.com [10.170.41.162])
-        by email-inbound-relay-2a-6e2fc477.us-west-2.amazon.com (Postfix) with ESMTPS id E2548A2391;
-        Thu,  9 Apr 2020 09:44:17 +0000 (UTC)
-Received: from EX13D31EUA001.ant.amazon.com (10.43.165.15) by
- EX13MTAUEA002.ant.amazon.com (10.43.61.77) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Thu, 9 Apr 2020 09:44:17 +0000
-Received: from u886c93fd17d25d.ant.amazon.com (10.43.161.115) by
- EX13D31EUA001.ant.amazon.com (10.43.165.15) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Thu, 9 Apr 2020 09:44:03 +0000
-From:   SeongJae Park <sjpark@amazon.com>
-To:     <akpm@linux-foundation.org>
-CC:     SeongJae Park <sjpark@amazon.de>, <Jonathan.Cameron@Huawei.com>,
-        <aarcange@redhat.com>, <acme@kernel.org>,
-        <alexander.shishkin@linux.intel.com>, <amit@kernel.org>,
-        <brendan.d.gregg@gmail.com>, <brendanhiggins@google.com>,
-        <cai@lca.pw>, <colin.king@canonical.com>, <corbet@lwn.net>,
-        <dwmw@amazon.com>, <irogers@google.com>, <jolsa@redhat.com>,
-        <kirill@shutemov.name>, <mark.rutland@arm.com>, <mgorman@suse.de>,
-        <minchan@kernel.org>, <mingo@redhat.com>, <namhyung@kernel.org>,
-        <peterz@infradead.org>, <rdunlap@infradead.org>,
-        <riel@surriel.com>, <rientjes@google.com>, <rostedt@goodmis.org>,
-        <shakeelb@google.com>, <shuah@kernel.org>, <sj38.park@gmail.com>,
-        <vbabka@suse.cz>, <vdavydov.dev@gmail.com>,
-        <yang.shi@linux.alibaba.com>, <ying.huang@intel.com>,
-        <linux-mm@kvack.org>, <linux-doc@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: [RFC PATCH 4/4] mm/damon: Make access check configurable
-Date:   Thu, 9 Apr 2020 11:42:32 +0200
-Message-ID: <20200409094232.29680-5-sjpark@amazon.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200409094232.29680-1-sjpark@amazon.com>
-References: <20200409094232.29680-1-sjpark@amazon.com>
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=RmpXYqbqn6hu5HmQg9baYh3BhcraoFFV2QM1waztJBc=;
+        b=kH+iUENsVoHCN21uy8fVrGIfDSBU4srBeYf5uN8s5rktiiZFZq65dEGOiTx4I0JYws
+         M7Ao+tMNId33nCNOXnkkOt9aUyq0joE45lLsYLACB3Vl8Csu6Gd9RXJpd9GIs2URyt/M
+         sXsXsGp0Z0eugPnv6oNvW82t0kY0oxQ9sk2I5V1UHU0xLk9f6DXJAUt4vX4630d6i+YO
+         nruY5dOcvHTzZv43i5QvrtdOk4K3JMCpk/1XVZfSi1V+xmHLsnY9rybSauzX4SM44Vrm
+         MzI/z8iqWFe3JGhAwMhR38UZ9K1M8f7bd/F9VekFo62XUU6Z5uIESluXN0lomRXqNjDb
+         vPtg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=RmpXYqbqn6hu5HmQg9baYh3BhcraoFFV2QM1waztJBc=;
+        b=bPBocGH5CkGLPUkbRIVU1YleCLVE/BApq7WOEVrzeSSEcU8OOKDsoLC1GXP5+fJegm
+         F/at6kTtQnSG4xq1XCijmrTimMd/ZNfM2gpQeekiRrs9UQ1kGxFvJCXdD0jGHNEbNj5A
+         ifwFodjLAehbaio9lDW+87QLCriZimMIpf1NhnLHWLJDxpI/6msKWRf+WQ5MwtrgD+mX
+         yUwvBs9Jg//Gb5sZoUzG7ZM6l6xHTwoYG3LpmXyInL+R7XrO8qeysZEBwga+US+OVBt2
+         PBTrUAUQqmJ6jCGLGa4UvprsmtvTN14k/enW2qUUb2bLpv3O7LRHLUB3WHRQ1Syy+S+o
+         9NkQ==
+X-Gm-Message-State: AGi0PuZQlYivAmO19yQV7ViJPuN2AQupxnnSm83ysCYZQqdQOxn8210G
+        Ap2l/gdv48xByikpUncsa1CzysqvCSG4xXs/s+A=
+X-Google-Smtp-Source: APiQypIE5oKLgR90Ki9XINj494PWwKFabwLLzVGjj6aGuRbmE+6+ELUABmPYlGoCyrvROb0rbcXvFOub4UsYC6aSZrk=
+X-Received: by 2002:ac2:4199:: with SMTP id z25mr7303909lfh.90.1586426197268;
+ Thu, 09 Apr 2020 02:56:37 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.43.161.115]
-X-ClientProxiedBy: EX13D15UWB003.ant.amazon.com (10.43.161.138) To
- EX13D31EUA001.ant.amazon.com (10.43.165.15)
+References: <cover.1586422035.git.baolin.wang7@gmail.com> <CAK8P3a1rWuL-mSeFBN0Dk7u3wnDmPgknEM3Em734KP64-Wv0ZQ@mail.gmail.com>
+ <CADBw62qEfdLM9e2oyPKz1qRk4mZaFPbXRYpLfVHzxKj0Cz90kw@mail.gmail.com> <CAK8P3a3rFKVukWk7U1abHnW4a-5TV4e57f=9Lt9Xbfytm7H09A@mail.gmail.com>
+In-Reply-To: <CAK8P3a3rFKVukWk7U1abHnW4a-5TV4e57f=9Lt9Xbfytm7H09A@mail.gmail.com>
+From:   Baolin Wang <baolin.wang7@gmail.com>
+Date:   Thu, 9 Apr 2020 17:56:25 +0800
+Message-ID: <CADBw62oGRPhhA4pRJXZ=1s5pt2FEYps=cSK+RG+doWE9owDqZw@mail.gmail.com>
+Subject: Re: [RFC PATCH 0/3] Add new reg_update_bits() support
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Lee Jones <lee.jones@linaro.org>, Mark Brown <broonie@kernel.org>,
+        Orson Zhai <orsonzhai@gmail.com>,
+        Lyra Zhang <zhang.lyra@gmail.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: SeongJae Park <sjpark@amazon.de>
+On Thu, Apr 9, 2020 at 5:52 PM Arnd Bergmann <arnd@arndb.de> wrote:
+>
+> On Thu, Apr 9, 2020 at 11:40 AM Baolin Wang <baolin.wang7@gmail.com> wrote:
+>
+> > > It would be nice in theory to move the sigmatel devices over to
+> > > reg_update_bits() in theory, but this seems unlikely to actually happen,
+> > > given that these are mostly obsolete drivers at this point.
+> >
+> > I checked all sigmatel devices (about 10 drivers), I think there will
+> > be more work to change them to use syscon/regmap when changing to
+> > reg_update_bits(). I am afraid I can not thelp to convert them without
+> > a hardware, and as you said, some drivers are already dead. So I think
+> > it would be nice if the driver owners can help to convert these
+> > drivers, if we get a consensus about the reg_update_bits()
+> > implementation at last.
+>
+> Thanks for taking a closer look. I didn't want to imply that you should
+> fix them, just saying that it might have been nice if they had been
+> done like this in the first place. Of course, when the drivers were
+> written, we did not even have the regmap-mmio helpers at all.
 
-DAMON assumes the target region is in virtual address space and
-therefore uses PTE Accessed bit checking for access checking.  However,
-some users might want to use architecture-specific, more accurate and
-light-weight access checking features.  Also, some users might want to
-use DAMON for different address spaces such as physical memory space,
-which needs different ways to check the access.
+Make sense. Thanks.
 
-This commit allows DAMON users to configure the access check function to
-their own version.
-
-Signed-off-by: SeongJae Park <sjpark@amazon.de>
----
- include/linux/damon.h |  2 ++
- mm/damon.c            | 22 +++++++++++++---------
- 2 files changed, 15 insertions(+), 9 deletions(-)
-
-diff --git a/include/linux/damon.h b/include/linux/damon.h
-index a051b5d966ed..188d5b89b303 100644
---- a/include/linux/damon.h
-+++ b/include/linux/damon.h
-@@ -95,6 +95,8 @@ struct damon_ctx {
- 	/* callbacks */
- 	void (*init_target_regions)(struct damon_ctx *context);
- 	void (*update_target_regions)(struct damon_ctx *context);
-+	void (*prepare_access_checks)(struct damon_ctx *context);
-+	unsigned int (*check_accesses)(struct damon_ctx *context);
- 	void (*sample_cb)(struct damon_ctx *context);
- 	void (*aggregate_cb)(struct damon_ctx *context);
- };
-diff --git a/mm/damon.c b/mm/damon.c
-index da0e7efdf1e1..20a66a6307d1 100644
---- a/mm/damon.c
-+++ b/mm/damon.c
-@@ -59,6 +59,8 @@
- 
- static void kdamond_init_vm_regions(struct damon_ctx *ctx);
- static void kdamond_update_vm_regions(struct damon_ctx *ctx);
-+static void kdamond_prepare_vm_access_checks(struct damon_ctx *ctx);
-+static unsigned int kdamond_check_vm_accesses(struct damon_ctx *ctx);
- 
- /* A monitoring context for debugfs interface users. */
- static struct damon_ctx damon_user_ctx = {
-@@ -70,6 +72,8 @@ static struct damon_ctx damon_user_ctx = {
- 
- 	.init_target_regions = kdamond_init_vm_regions,
- 	.update_target_regions = kdamond_update_vm_regions,
-+	.prepare_access_checks = kdamond_prepare_vm_access_checks,
-+	.check_accesses = kdamond_check_vm_accesses,
- };
- 
- /*
-@@ -506,7 +510,7 @@ static void damon_mkold(struct mm_struct *mm, unsigned long addr)
- #endif /* CONFIG_TRANSPARENT_HUGEPAGE */
- }
- 
--static void damon_prepare_access_check(struct damon_ctx *ctx,
-+static void damon_prepare_vm_access_check(struct damon_ctx *ctx,
- 			struct mm_struct *mm, struct damon_region *r)
- {
- 	r->sampling_addr = damon_rand(ctx, r->ar.start, r->ar.end);
-@@ -514,7 +518,7 @@ static void damon_prepare_access_check(struct damon_ctx *ctx,
- 	damon_mkold(mm, r->sampling_addr);
- }
- 
--static void kdamond_prepare_access_checks(struct damon_ctx *ctx)
-+static void kdamond_prepare_vm_access_checks(struct damon_ctx *ctx)
- {
- 	struct damon_task *t;
- 	struct mm_struct *mm;
-@@ -525,7 +529,7 @@ static void kdamond_prepare_access_checks(struct damon_ctx *ctx)
- 		if (!mm)
- 			continue;
- 		damon_for_each_region(r, t)
--			damon_prepare_access_check(ctx, mm, r);
-+			damon_prepare_vm_access_check(ctx, mm, r);
- 		mmput(mm);
- 	}
- }
-@@ -563,7 +567,7 @@ static bool damon_young(struct mm_struct *mm, unsigned long addr,
-  * mm	'mm_struct' for the given virtual address space
-  * r	the region to be checked
-  */
--static void damon_check_access(struct damon_ctx *ctx,
-+static void damon_check_vm_access(struct damon_ctx *ctx,
- 			struct mm_struct *mm, struct damon_region *r)
- {
- 	static struct mm_struct *last_mm;
-@@ -587,7 +591,7 @@ static void damon_check_access(struct damon_ctx *ctx,
- 	last_addr = r->sampling_addr;
- }
- 
--static unsigned int kdamond_check_accesses(struct damon_ctx *ctx)
-+static unsigned int kdamond_check_vm_accesses(struct damon_ctx *ctx)
- {
- 	struct damon_task *t;
- 	struct mm_struct *mm;
-@@ -599,12 +603,12 @@ static unsigned int kdamond_check_accesses(struct damon_ctx *ctx)
- 		if (!mm)
- 			continue;
- 		damon_for_each_region(r, t) {
--			damon_check_access(ctx, mm, r);
-+			damon_check_vm_access(ctx, mm, r);
- 			max_nr_accesses = max(r->nr_accesses, max_nr_accesses);
- 		}
--
- 		mmput(mm);
- 	}
-+
- 	return max_nr_accesses;
- }
- 
-@@ -1134,13 +1138,13 @@ static int kdamond_fn(void *data)
- 	pr_info("kdamond (%d) starts\n", ctx->kdamond->pid);
- 	ctx->init_target_regions(ctx);
- 	while (!kdamond_need_stop(ctx)) {
--		kdamond_prepare_access_checks(ctx);
-+		ctx->prepare_access_checks(ctx);
- 		if (ctx->sample_cb)
- 			ctx->sample_cb(ctx);
- 
- 		usleep_range(ctx->sample_interval, ctx->sample_interval + 1);
- 
--		max_nr_accesses = kdamond_check_accesses(ctx);
-+		max_nr_accesses = ctx->check_accesses(ctx);
- 
- 		if (kdamond_aggregate_interval_passed(ctx)) {
- 			kdamond_merge_regions(ctx, max_nr_accesses / 10);
 -- 
-2.17.1
-
+Baolin Wang
