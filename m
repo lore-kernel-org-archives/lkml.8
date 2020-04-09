@@ -2,120 +2,100 @@ Return-Path: <SRS0=n+Ub=5Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8528CC2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 14:33:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9F8BC2BA2B
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 14:33:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 65EDE21556
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 14:33:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 93B882166E
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 14:33:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1586442796;
+	bh=3+Zb6M1LO8bxSudxy74spWM89URB5+zxt0fMp+g2c2M=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=n0qCWy/Q0giDtR66WWZV+RJyXEk+fObFEbXsu1SFpDGSGS7LleGWwIkt+YPq0su8d
+	 ldJexAuEEVUwmc9XxOPbN0nRPQXwritO8JuTT7MK7Txy9za2HgaktN3Vs2OTgn4ZJt
+	 1usZLOmDiau3ExoIix7mRX/bIeD1fGwodjK2D/88=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727789AbgDIOdJ (ORCPT
+        id S1727801AbgDIOdO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Apr 2020 10:33:09 -0400
-Received: from raptor.unsafe.ru ([5.9.43.93]:45052 "EHLO raptor.unsafe.ru"
+        Thu, 9 Apr 2020 10:33:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45812 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727368AbgDIOdI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Apr 2020 10:33:08 -0400
-Received: from comp-core-i7-2640m-0182e6 (ip-89-102-33-211.net.upcbroadband.cz [89.102.33.211])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        id S1727368AbgDIOdN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Apr 2020 10:33:13 -0400
+Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by raptor.unsafe.ru (Postfix) with ESMTPSA id 9128E209C3;
-        Thu,  9 Apr 2020 14:32:56 +0000 (UTC)
-Date:   Thu, 9 Apr 2020 16:32:51 +0200
-From:   Alexey Gladkov <gladkov.alexey@gmail.com>
-To:     "Eric W. Biederman" <ebiederm@xmission.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Kernel Hardening <kernel-hardening@lists.openwall.com>,
-        Linux API <linux-api@vger.kernel.org>,
-        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
-        Linux Security Module <linux-security-module@vger.kernel.org>,
-        Akinobu Mita <akinobu.mita@gmail.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Daniel Micay <danielmicay@gmail.com>,
-        Djalal Harouni <tixxdz@gmail.com>,
-        "Dmitry V . Levin" <ldv@altlinux.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        "J . Bruce Fields" <bfields@fieldses.org>,
-        Jeff Layton <jlayton@poochiereds.net>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Kees Cook <keescook@chromium.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Oleg Nesterov <oleg@redhat.com>,
-        David Howells <dhowells@redhat.com>
-Subject: Re: [PATCH v10 8/9] proc: use human-readable values for hidehid
-Message-ID: <20200409143251.pqoprbjnetoup5vw@comp-core-i7-2640m-0182e6>
-References: <20200327172331.418878-1-gladkov.alexey@gmail.com>
- <20200327172331.418878-9-gladkov.alexey@gmail.com>
- <87d08pkh4u.fsf@x220.int.ebiederm.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87d08pkh4u.fsf@x220.int.ebiederm.org>
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.6.1 (raptor.unsafe.ru [5.9.43.93]); Thu, 09 Apr 2020 14:33:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0BA5221556;
+        Thu,  9 Apr 2020 14:33:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1586442793;
+        bh=3+Zb6M1LO8bxSudxy74spWM89URB5+zxt0fMp+g2c2M=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=lQZM+Yc7QY6xoJz3nXaEitzMyneYs8Qi987N/VjnZXaGKMvsQc68jXXQ7vHltWz65
+         ShQd87qd//MYMzErHlJIThsvkJMktMzE9LS+PUxy4tlikVOaMlAMF6tj+r0uBM8iwl
+         0TCDDazcYXz315dLJF9kJYL288u6P8zDaiqKMdzw=
+Date:   Thu, 9 Apr 2020 23:33:08 +0900
+From:   Masami Hiramatsu <mhiramat@kernel.org>
+To:     Masami Hiramatsu <mhiramat@kernel.org>
+Cc:     Ingo Molnar <mingo@kernel.org>,
+        Anders Roxell <anders.roxell@linaro.org>, paulmck@kernel.org,
+        joel@joelfernandes.org,
+        "Naveen N . Rao" <naveen.n.rao@linux.ibm.com>,
+        Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>,
+        David Miller <davem@davemloft.net>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ingo Molnar <mingo@elte.hu>
+Subject: Re: [PATCH -tip V5 0/4] kprobes: Fixes mutex, rcu-list warnings and
+ cleanups
+Message-Id: <20200409233308.d69c0545747dec2619f0156a@kernel.org>
+In-Reply-To: <158583483116.26060.10517933482238348979.stgit@devnote2>
+References: <158583483116.26060.10517933482238348979.stgit@devnote2>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 02, 2020 at 11:05:21AM -0500, Eric W. Biederman wrote:
-> Alexey Gladkov <gladkov.alexey@gmail.com> writes:
-> 
-> > The hidepid parameter values are becoming more and more and it becomes
-> > difficult to remember what each new magic number means.
-> 
-> In principle I like this change.  In practice I think you have just
-> broken ABI compatiblity with the new mount ABI.
-> 
-> In particular the following line seems broken.
-> 
-> > diff --git a/fs/proc/root.c b/fs/proc/root.c
-> > index dbcd96f07c7a..ba782d6e6197 100644
-> > --- a/fs/proc/root.c
-> > +++ b/fs/proc/root.c
-> > @@ -45,7 +45,7 @@ enum proc_param {
-> >  
-> >  static const struct fs_parameter_spec proc_fs_parameters[] = {
-> >  	fsparam_u32("gid",	Opt_gid),
-> > -	fsparam_u32("hidepid",	Opt_hidepid),
-> > +	fsparam_string("hidepid",	Opt_hidepid),
-> >  	fsparam_string("subset",	Opt_subset),
-> >  	{}
-> >  };
-> 
-> As I read fs_parser.c fs_param_is_u32 handles string inputs and turns them
-> into numbers, and it handles binary numbers.
+Hi Ingo,
 
-Yes, you can use: fsconfig(fsfd, FSCONFIG_SET_BINARY, ...); but in this
-case the type of parameter will be fs_value_is_blob [1]. This kind of
-parameters is handled by fs_param_is_blob(). The fs_param_is_u32 can
-handle only parametes with fs_value_is_string type [2].
+Could you pick this series or give me your comment?
 
-Am I missing something?
+Thank you,
 
-[1] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/fs/fsopen.c#n405
-[2] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/fs/fs_parser.c#n215
+On Thu,  2 Apr 2020 22:40:31 +0900
+Masami Hiramatsu <mhiramat@kernel.org> wrote:
 
-> However fs_param_is_string
-> appears to only handle strings.  It appears to have not capacity to turn
-> raw binary numbers into strings.
+> Hi,
 > 
-> So I think we probably need to fix fs_param_is_string to raw binary
-> numbers before we can safely make this change to fs/proc/root.c
+> Here is the 5th version of the series for kprobes.
+> I just updated the series on the latest tip/master branch and
+> add Fixes and Cc tag to [3/4].
 > 
-> David am I reading the fs_parser.c code correctly?  If I am are you ok
-> with a change like the above?
+> Thank you,
 > 
-> Eric
+> ---
 > 
+> Masami Hiramatsu (4):
+>       kprobes: Suppress the suspicious RCU warning on kprobes
+>       kprobes: Use non RCU traversal APIs on kprobe_tables if possible
+>       kprobes: Fix to protect kick_kprobe_optimizer() by kprobe_mutex
+>       kprobes: Remove redundant arch_disarm_kprobe() call
+> 
+> 
+>  kernel/kprobes.c |   37 ++++++++++++++++++++++++-------------
+>  1 file changed, 24 insertions(+), 13 deletions(-)
+> 
+> --
+> Masami Hiramatsu (Linaro) <mhiramat@kernel.org>
+
 
 -- 
-Rgrds, legion
-
+Masami Hiramatsu <mhiramat@kernel.org>
