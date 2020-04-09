@@ -2,78 +2,73 @@ Return-Path: <SRS0=n+Ub=5Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27930C2BB86
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 14:47:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2816CC2BA2B
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 14:48:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F2EDE2051A
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 14:47:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EE39520692
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 14:48:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="pPPYIThh"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="T8mPr/gR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727801AbgDIOrW (ORCPT
+        id S1727857AbgDIOsF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Apr 2020 10:47:22 -0400
-Received: from mail-wr1-f45.google.com ([209.85.221.45]:35131 "EHLO
-        mail-wr1-f45.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727354AbgDIOrW (ORCPT
+        Thu, 9 Apr 2020 10:48:05 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:36887 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727041AbgDIOsF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Apr 2020 10:47:22 -0400
-Received: by mail-wr1-f45.google.com with SMTP id g3so12274584wrx.2
-        for <linux-kernel@vger.kernel.org>; Thu, 09 Apr 2020 07:47:20 -0700 (PDT)
+        Thu, 9 Apr 2020 10:48:05 -0400
+Received: by mail-wr1-f67.google.com with SMTP id w10so12257143wrm.4
+        for <linux-kernel@vger.kernel.org>; Thu, 09 Apr 2020 07:48:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=subject:to:cc:references:from:message-id:date:user-agent
          :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=ZZS9U1ArwsTmsSPlfGJd5HeXSHO0SdvQfFd8dx+1UVk=;
-        b=pPPYIThhwzhDNkp6VOJ+CbRbSQJHdOGFcH+VYBuGxQPgg1cFdXyhYy0Y10a2nwGDrG
-         LaQ5HlQ4lKwgKEl37rk7qWOVSIrNnk1s3P6VBPxmBwXz+J8bXLpDfObMzOCsZL/Di4Yl
-         OlYOtrzoZrkE7LDvGnHaXNL+cimv0xXrBbz/CFq39SZjL+kIbuRdxY41dGh++w20t6Fg
-         BzklAUcwdMcaUoQKUISJuK83qod9vHrQApnRJ3LDtblxM40cSvVdBXaLtx/C0iF30rL5
-         r8BGtK6xTqAMDXmIDGud7+pxNot89WTdTL2d6IvihKpj272J310TY7FX8Io96nBNrIyp
-         4oQA==
+        bh=HYmlK0W0gB1RNgMfwFCbFrXo9v4YOOiFd6qMt5ytL4Y=;
+        b=T8mPr/gRVyyDK3eA20QB/OWR11cvu1aKOQGFpAGtT7qvjvjd3kRBGP+N3F/uPwc1JO
+         YiXlAWc8X1tUVkM14LyQepIvSrI/giiZN1pvDw3dcd2RJ39x5q4cRwNCQ2kE87cIVmD1
+         hW5IYGk5/dVBK4gXZ9vUtLSwOVyeJS6Rl4ptgfO5odfSpQCSzAZs1H1Bok4HMIHxncao
+         C/R3d7sf4TbUgvtMzdIFcOW0kEtlohr60MMaxEy/BmvF5Z2KDfodOJLbya+M5b8Nqnwy
+         bREop1HN9f0vHUly9ta9NjU9oQ2uTAaH5Q+fQgcIalYD3aPovNKS9t9Euj/6ZJK38vCW
+         vmwQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=ZZS9U1ArwsTmsSPlfGJd5HeXSHO0SdvQfFd8dx+1UVk=;
-        b=Nw0dU+02yN/yYB3PF0Y/EbCTboLxLr949OTt0knJ+DPHK97tRveXLBKJ7/wdb3MLtI
-         QIv/cyvLlA62D2f5nkfa0ki1awJKiWgxxAJvDH5gDQzQNa+yKQGPVqQNZgGXMUVJ319o
-         IGzdDGe17Ywj8bb6xvFBb5MXAaPFZOx9URwNU0D6Ba24DzDsR+mchjTnBNPjOeIfIZf2
-         FbTIZQrkKiTv/AnuiH2jD0cJPzj2bFesfHhv08B/ggIz6j/LZRZiBgaVZdevcGyLEpd9
-         nSK2vn5Rm3zhme3Vd0dDdy0PR1as6XwrqdO4C/BWwcjPUXkJVAXTDdD0mHiT4sRwmGqv
-         AwWA==
-X-Gm-Message-State: AGi0PuYVTjqVLkZKlcwuEIQnLwI2bY5ECj1+RMg5KkjLuHAaOlXl4c0K
-        mTXjcYqrBAKVd7UGLWYECtDtRA==
-X-Google-Smtp-Source: APiQypK/poVrrLLEc2SNT/FoCaqqeJDqSdaOa5up0mRVX6coNjeR1Ww0pzfAVxRyFxqkdfoGHAOMLQ==
-X-Received: by 2002:a5d:4d12:: with SMTP id z18mr14869150wrt.67.1586443639710;
-        Thu, 09 Apr 2020 07:47:19 -0700 (PDT)
+        bh=HYmlK0W0gB1RNgMfwFCbFrXo9v4YOOiFd6qMt5ytL4Y=;
+        b=YN49xLJSMMAV7fjcTgE8Z+7lpisA4hwHWied84HLnSLBuc1gAZvQyZW56P/ALEE4Kc
+         PI4GCFaTqPuODB60Qr1lwCiQqBIUSFW00aO5Ook1dxXLMP8HJDB4f5lDd0GFg6ahPz9p
+         Yid/IzJkbFkJH14DQGYJvuXLaUvUL+yuY63tuMgizyLSBOM34MoOEt0pDlQzcS1gJ8B0
+         l83x5wBcV2nTEcvWotPkdxu9rSEuMSucWfLvJBAyK2pUPuZgj51Mz2EvpWbzv0rOsln7
+         CdxxUeWn+AzyM6lgK/xDKw+i0iTX4rJbsW0RNSUK7xem1yLDEKRA9h8mccCMN0LRnEE3
+         103Q==
+X-Gm-Message-State: AGi0Puazsy3hmV2A2YAm0OArVrkBY3CbjoI+WoVkVt4aNTAk8Qt4IniZ
+        gMYCQznXPsIP7EcOmP4XbFDWFA==
+X-Google-Smtp-Source: APiQypJmJuYQlk8+ou0FMKHdNWId62VqEgmm0EGHTfau2iXTN5VxEVLxkXuova3ZZbnKrt83shczJw==
+X-Received: by 2002:a5d:4f08:: with SMTP id c8mr15115888wru.27.1586443682154;
+        Thu, 09 Apr 2020 07:48:02 -0700 (PDT)
 Received: from ?IPv6:2a01:e34:ed2f:f020:4e:2ab3:ef46:7bda? ([2a01:e34:ed2f:f020:4e:2ab3:ef46:7bda])
-        by smtp.googlemail.com with ESMTPSA id n4sm3897949wmi.20.2020.04.09.07.47.18
+        by smtp.googlemail.com with ESMTPSA id q9sm22696791wrp.61.2020.04.09.07.48.01
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 09 Apr 2020 07:47:19 -0700 (PDT)
-Subject: Re: [PATCH v6 0/4] thermal: k3: Add support for bandgap sensors
-To:     Tero Kristo <t-kristo@ti.com>, "J, KEERTHY" <j-keerthy@ti.com>,
-        rui.zhang@intel.com, robh+dt@kernel.org
-Cc:     amit.kucheria@verdurent.com, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-pm@vger.kernel.org, mark.rutland@arm.com
-References: <20200407055116.16082-1-j-keerthy@ti.com>
- <3c69e3c6-5549-e891-fde6-95a2ecc49f77@linaro.org>
- <0817f9ee-c72f-3e9f-00cf-e8ddaf608020@ti.com>
- <e7dd6470-5992-8d22-5d0c-7532a47a400c@ti.com>
+        Thu, 09 Apr 2020 07:48:01 -0700 (PDT)
+Subject: Re: [PATCH] clocksource: davinci: axe a pointless __GFP_NOFAIL
+To:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+        tglx@linutronix.de
+Cc:     linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
+References: <20200409101226.15432-1-christophe.jaillet@wanadoo.fr>
 From:   Daniel Lezcano <daniel.lezcano@linaro.org>
-Message-ID: <3221f241-7118-a586-1789-d427791215c6@linaro.org>
-Date:   Thu, 9 Apr 2020 16:47:18 +0200
+Message-ID: <e1ea1f7b-d5f6-d6bf-52da-32f2d3de7793@linaro.org>
+Date:   Thu, 9 Apr 2020 16:48:01 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.4.1
 MIME-Version: 1.0
-In-Reply-To: <e7dd6470-5992-8d22-5d0c-7532a47a400c@ti.com>
+In-Reply-To: <20200409101226.15432-1-christophe.jaillet@wanadoo.fr>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 8bit
@@ -82,50 +77,14 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 09/04/2020 16:37, Tero Kristo wrote:
-> On 09/04/2020 17:07, J, KEERTHY wrote:
->>
->>
->> On 4/9/2020 7:19 PM, Daniel Lezcano wrote:
->>>
->>> Hi Keerthy,
->>>
->>> On 07/04/2020 07:51, Keerthy wrote:
->>>> Add VTM thermal support. In the Voltage Thermal
->>>> Management Module(VTM), K3 AM654 supplies a voltage
->>>> reference and a temperature sensor feature that are gathered in the
->>>> band
->>>> gap voltage and temperature sensor (VBGAPTS) module. The band
->>>> gap provides current and voltage reference for its internal
->>>> circuits and other analog IP blocks. The analog-to-digital
->>>> converter (ADC) produces an output value that is proportional
->>>> to the silicon temperature.
->>>>
->>>> Add support for bandgap sensors. Currently reading temperatures
->>>> is supported.
->>>
->>> How do you want to proceed? Shall I take patches 1 & 2 ?
->>
->> +Tero
->>
->> Hi Tero,
->>
->> Can you pull 3 & 4? Or Daniel can take all 4?
+On 09/04/2020 12:12, Christophe JAILLET wrote:
+> There is no need to specify __GFP_NOFAIL when allocating memory here, so
+> axe it.
 > 
-> Let me pull the DT patches, that way we avoid any conflicts in the
-> arm64/dts tree. There has been quite a bit of traffic on that front
-> lately and we did mess up something with the current merge window already.
-> 
-> I believe you are picking the driver side changes to 5.8?
+> Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+> ---
 
-Applied patches 1 & 2
-
-Thanks
-
-  -- Daniel
-
-
-
+Applied, thanks
 -- 
 <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
 
