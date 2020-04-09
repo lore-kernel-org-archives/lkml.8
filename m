@@ -2,111 +2,176 @@ Return-Path: <SRS0=n+Ub=5Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C3C0C2BB55
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 16:32:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A539C2BB55
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 16:35:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6634D2082D
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 16:32:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586449974;
-	bh=DYwppOLwkfPa4XgwiQTeHVsrktiIcUD7bj7mMKlJKQo=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=me5Me4V7cS9RzYm0H8zDLYpAgzbX85MWxjVXtsz1RLm0JiLaZwlk1XwdTnXKfgI1G
-	 7bfbxDjycQ9zp2hd5/ficE9s5IdMrDHbtdz7WyL4UbcmtYT4h2WdJhgbYIwU1bIimx
-	 soitm+F0GPAjwudc0plgTPeqrH+DVURiHwG32GLQ=
+	by mail.kernel.org (Postfix) with ESMTP id EF428206F7
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Apr 2020 16:35:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oh4NE8Jx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727183AbgDIQcw (ORCPT
+        id S1727354AbgDIQfe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Apr 2020 12:32:52 -0400
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:41286 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726594AbgDIQcw (ORCPT
+        Thu, 9 Apr 2020 12:35:34 -0400
+Received: from mail-qk1-f195.google.com ([209.85.222.195]:35063 "EHLO
+        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726594AbgDIQfd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Apr 2020 12:32:52 -0400
-Received: by mail-lj1-f194.google.com with SMTP id n17so306330lji.8
-        for <linux-kernel@vger.kernel.org>; Thu, 09 Apr 2020 09:32:51 -0700 (PDT)
+        Thu, 9 Apr 2020 12:35:33 -0400
+Received: by mail-qk1-f195.google.com with SMTP id c63so4620561qke.2;
+        Thu, 09 Apr 2020 09:35:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=cC7kYJwRVzKHnxfAJY+zhOS/4IxZ14gUH4Q28+oWVVU=;
-        b=FN70qft0JxfpeYALHYDqEd3xGP4+0u0HEjyJLNo79lStaWLbzv3Pcrd7GYQ8RZEd5N
-         vlx0SX3NJL6lLlrGhUq5KKBbqWNS4G66iVTZEAvPYtKGSuNEJvo4jbc+ed1Ie4H/PR4v
-         kOpubErh88uFgUpLN+EKdwc3Va5WTKhYVDkeM=
+        d=gmail.com; s=20161025;
+        h=sender:from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=2c3b+sFRIs5t/mMN/hcINkKFhHzxooLvwWO9fVjznKU=;
+        b=oh4NE8Jx3DmdPRpNeLql6mpzfrwJrvTl+vtxB3eVSSV4aOzTvDb+50KO40hXwq7CqL
+         w9GNCAnD9FxKXG4TQnD8chjBpox8E2qDaWlUJqSBpvqChJbbUA+qDRhtC3uAEx5a4vfy
+         6dpIo4yYQg0kD6dlJJMi00eYhtxr8tHtJYE8PFlBkVOCPWHFIcYZgrMUNjzqCDm9fHvB
+         Jl2v3BEWOxc4oHZu10KIz3mfM5sIcpVKbFiYjSWOMJGmagqoOp/HXh6u8SotWBuyI3/y
+         J4VSBJDWTiCDygsDX2VdW26SthM/o7kbj68MKznR96WWIRhCKA5tJsIEAQ5XHb7OALz/
+         uLzA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=cC7kYJwRVzKHnxfAJY+zhOS/4IxZ14gUH4Q28+oWVVU=;
-        b=bKNEbBWrDUjIX1Qz4stUyXrfW5kL591B4KWmlsS8aNVpMC67t0yEGqXqO8O/ifC3Yj
-         m/6CROigOBTlzvcvbfR3x2Bt5CI1+kiw4D+5l2Ez3oEkoiaxRnHeK9IsaJOzr1FblVlG
-         oP2VIGZ9guOLlQVyxk3gMxz7q2flKRzPe7HuFILk596Hp0MH5dyRi0uF0KWw5Wnh2GCd
-         wIf1D9Pcie5WbAWX+jQIPzbSaOIanYJwas+qKg+27raQGKu5P5ObFmnd/gZuwutV0dNo
-         tHnwoPvI/FplJyuK1MjYicIbN1jimQFr+ddGnZgy1c7ObHoac0QrX2G/THWtjikq3iqU
-         xtmA==
-X-Gm-Message-State: AGi0PuaN8wY8UIR1m0PKuZh3Py1m8sfDo33hV7E2+q39ItEdCBXpm3qk
-        4GBkPsgjrOHLBWsYHI/SbDUEnvFMFRo=
-X-Google-Smtp-Source: APiQypIpYRWiPVf006NhZVRtKomAoLqBDGVuyXreL9m8ZWy6J10oXfQimK+kbM9cMhbI/sVTsaPKpQ==
-X-Received: by 2002:a2e:a362:: with SMTP id i2mr398266ljn.52.1586449969917;
-        Thu, 09 Apr 2020 09:32:49 -0700 (PDT)
-Received: from mail-lj1-f176.google.com (mail-lj1-f176.google.com. [209.85.208.176])
-        by smtp.gmail.com with ESMTPSA id c4sm17573672lfg.82.2020.04.09.09.32.48
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 09 Apr 2020 09:32:49 -0700 (PDT)
-Received: by mail-lj1-f176.google.com with SMTP id t17so279470ljc.12
-        for <linux-kernel@vger.kernel.org>; Thu, 09 Apr 2020 09:32:48 -0700 (PDT)
-X-Received: by 2002:a2e:8652:: with SMTP id i18mr370008ljj.265.1586449968616;
- Thu, 09 Apr 2020 09:32:48 -0700 (PDT)
+        h=x-gm-message-state:sender:from:date:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to;
+        bh=2c3b+sFRIs5t/mMN/hcINkKFhHzxooLvwWO9fVjznKU=;
+        b=m56DruYs+v6r1d1L+bUIjAJ19xhTQzcy1vh3GqjLv0kuKMZ4Bfu4G5KFDWFZkAbF8y
+         1LKiL67KjexkYVQ5c9N2Qk7DO4Uk1eCp8A3yubHJwxc32afhJgbecHnfTlLjPxPp3esP
+         lvdEr911emiC2g9WBFYBcJL8xr/j3cuQHOGC1MYmsO57bS9sn2dMZML0PbJGeZeC20F3
+         cgkYULmLNSvmwOlVqgzt5tJRkxzo+rWX2bC0WQxgUJPvGKsNYT3d0nylbMHYLbCngwun
+         C5vuvV1w8bXbdZlGuT1h0SamTb8+4ekc/US9AOv3Heal/YHXKjYwfLnFKJTBzzun3H0A
+         iskA==
+X-Gm-Message-State: AGi0Pua1lGZ/2KJTtdVTEDfVRvtwWeRSGuZrn5SZPo3g54GcVCjrBqB3
+        0w4Qalf8rEoINlFhwYZx4Kk=
+X-Google-Smtp-Source: APiQypJN6PuPBEyj4e7pYZGEQ4CM6aWCW9FwjSkz4Szc+KihfMtqkxAVbn7yjyJ/rUiCox8799Xoxw==
+X-Received: by 2002:a37:9684:: with SMTP id y126mr682823qkd.151.1586450133301;
+        Thu, 09 Apr 2020 09:35:33 -0700 (PDT)
+Received: from rani.riverdale.lan ([2001:470:1f07:5f3::b55f])
+        by smtp.gmail.com with ESMTPSA id 10sm21471275qtt.54.2020.04.09.09.35.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 09 Apr 2020 09:35:32 -0700 (PDT)
+From:   Arvind Sankar <nivedita@alum.mit.edu>
+X-Google-Original-From: Arvind Sankar <arvind@rani.riverdale.lan>
+Date:   Thu, 9 Apr 2020 12:35:30 -0400
+To:     Ard Biesheuvel <ardb@kernel.org>
+Cc:     Arvind Sankar <nivedita@alum.mit.edu>,
+        Dave Young <dyoung@redhat.com>, pjones@redhat.com,
+        daniel.kiper@oracle.com, Leif Lindholm <leif@nuviainc.com>,
+        Borislav Petkov <bp@alien8.de>, Sergey Shatunov <me@prok.pw>,
+        hpa@zytor.com,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        mingo@redhat.com, Thomas Gleixner <tglx@linutronix.de>,
+        X86 ML <x86@kernel.org>, linux-efi <linux-efi@vger.kernel.org>,
+        initramfs@vger.kernel.org,
+        Donovan Tremura <neurognostic@protonmail.ch>,
+        Harald Hoyer <harald@hoyer.xyz>
+Subject: Re: [PATCH 1/2] efi/x86: Move efi stub globals from .bss to .data
+Message-ID: <20200409163530.GA785575@rani.riverdale.lan>
+References: <CAMj1kXEUkJ1XJ9OTsijeq8tNNYC00bXqEV44OMtX5ugo9WoLKA@mail.gmail.com>
+ <20200406180614.429454-1-nivedita@alum.mit.edu>
+ <20200408074334.GA21886@dhcp-128-65.nay.redhat.com>
+ <CAMj1kXGPOZ6zWtgGScLy0ECrTtf1yhngDTNE1chW-MQw3XQp9Q@mail.gmail.com>
+ <20200409143910.GA727557@rani.riverdale.lan>
+ <CAMj1kXEm=E6B+kjZktG=sBPLQ=_HFfUz6KFLskNGzRnuMjn0gA@mail.gmail.com>
 MIME-Version: 1.0
-References: <20200408014010.80428-1-peterx@redhat.com> <20200408174732.bc448bbe41d190bfe5cc252e@linux-foundation.org>
- <CACT4Y+bhQVcpSkSh_OZ5ZanfFZUqn2iypLhG_Z-nWKTkaYr1jw@mail.gmail.com>
-In-Reply-To: <CACT4Y+bhQVcpSkSh_OZ5ZanfFZUqn2iypLhG_Z-nWKTkaYr1jw@mail.gmail.com>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Thu, 9 Apr 2020 09:32:32 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wgjGgfUfVm_DpTay5TS03pLCgUWqRpQS++90fSE2V-e=g@mail.gmail.com>
-Message-ID: <CAHk-=wgjGgfUfVm_DpTay5TS03pLCgUWqRpQS++90fSE2V-e=g@mail.gmail.com>
-Subject: Re: [PATCH 0/2] mm: Two small fixes for recent syzbot reports
-To:     Dmitry Vyukov <dvyukov@google.com>,
-        Stephen Rothwell <sfr@canb.auug.org.au>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Peter Xu <peterx@redhat.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux-MM <linux-mm@kvack.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <CAMj1kXEm=E6B+kjZktG=sBPLQ=_HFfUz6KFLskNGzRnuMjn0gA@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 9, 2020 at 5:55 AM Dmitry Vyukov <dvyukov@google.com> wrote:
->
-> linux-next is boot-broken for more than a month and bugs are piling
-> onto bugs, I've seen at least 3 different ones.
-> syzbot can't get any working linux-next build for testing for a very
-> long time now.
+On Thu, Apr 09, 2020 at 04:47:55PM +0200, Ard Biesheuvel wrote:
+> On Thu, 9 Apr 2020 at 16:39, Arvind Sankar <nivedita@alum.mit.edu> wrote:
+> >
+> > On Wed, Apr 08, 2020 at 09:49:15AM +0200, Ard Biesheuvel wrote:
+> > > (add Peter, Leif and Daniel)
+> > >
+> > > On Wed, 8 Apr 2020 at 09:43, Dave Young <dyoung@redhat.com> wrote:
+> > > >
+> > > > On 04/06/20 at 02:06pm, Arvind Sankar wrote:
+> > > > > Commit
+> > > > >
+> > > > >   3ee372ccce4d ("x86/boot/compressed/64: Remove .bss/.pgtable from
+> > > > >   bzImage")
+> > > > >
+> > > > > removed the .bss section from the bzImage.
+> > > > >
+> > > > > However, while a PE loader is required to zero-initialize the .bss
+> > > > > section before calling the PE entry point, the EFI handover protocol
+> > > > > does not currently document any requirement that .bss be initialized by
+> > > > > the bootloader prior to calling the handover entry.
+> > > > >
+> > > > > When systemd-boot is used to boot a unified kernel image [1], the image
+> > > > > is constructed by embedding the bzImage as a .linux section in a PE
+> > > > > executable that contains a small stub loader from systemd together with
+> > > > > additional sections and potentially an initrd. As the .bss section
+> > > > > within the bzImage is no longer explicitly present as part of the file,
+> > > > > it is not initialized before calling the EFI handover entry.
+> > > > > Furthermore, as the size of the embedded .linux section is only the size
+> > > > > of the bzImage file itself, the .bss section's memory may not even have
+> > > > > been allocated.
+> > > >
+> > > > I did not follow up the old report, maybe I missed something. But not
+> > > > sure why only systemd-boot is mentioned here.  I also have similar issue
+> > > > with early efi failure.  With these two patches applied, it works well
+> > > > then.
+> > > >
+> > > > BTW, I use Fedora 31 + Grub2
+> > > >
+> > >
+> > > OK, so I take it this means that GRUB's PE/COFF loader does not
+> > > zero-initialize BSS either? Does it honor the image size in memory if
+> > > it exceeds the file size?
+> >
+> > Dave, that comment was because the previous report was for systemd-boot
+> > stub.
+> >
+> > Ard, should I revise the commit message to make it clear it's not
+> > restricted to systemd-boot but anything using handover entry may be
+> > affected? Maybe just a "for example, when systemd-boot..." and then a
+> > line to say grub2 with the EFI stub patches is also impacted?
+> >
+> 
+> Well, the fact the /some/ piece of software is used in production that
+> relies on the ill-defined EFI handover protocol is sufficient
+> justification, so I don't think it is hugely important to update it.
+> 
+> > https://src.fedoraproject.org/rpms/grub2/blob/f31/f/0001-Add-support-for-Linux-EFI-stub-loading.patch#_743
+> >
+> > +  kernel_mem = grub_efi_allocate_pages_max(lh.pref_address,
+> > +                                          BYTES_TO_PAGES(lh.init_size));
+> >
+> > Looking at this, grub does allocate init_size for the image, but it
+> > doesn't zero it out.
+> >
+> > This call also looks wrong to me though. It allocates at max address of
+> > pref_address, which, if it succeeds, will guarantee that the kernel gets
+> > loaded entirely below pref_address == LOAD_PHYSICAL_ADDR. In native
+> > mode, if it weren't for the EFI stub copying the kernel again, this
+> > would cause the startup code to relocate the kernel into unallocated
+> > memory. On a mixed-mode boot, this would cause the early page tables
+> > setup prior to transitioning to 64-bit mode to be in unallocated memory
+> > and potentially get clobbered by the EFI stub.
+> >
+> > The first try to allocate pref_address should be calling
+> > grub_efi_allocate_fixed instead.
+> 
+> Thanks Arvind. I'm sure the Fedora/RedHat folks on cc should be able
+> to get these logged somewhere.
 
-Ouch.
+Ok. For dracut, the process for building the unified kernel image needs
+a check to make sure the kernel can fit in the space provided for it --
+there is 16MiB of space and the distro bzImage's are up to 10-11MiB in
+size, so there's some slack left at present.
 
-Ok, that's not good. It means that linux-next has basically only done
-build-testing this whole cycle.
-
-Stephen, Dmitry - is there some way linux-next could possibly kick out
-trees more aggressively if syzbot can't even boot?
-
-This merge window has seemed otherwise fairly smooth to me (famous
-last words), and it's really sad how the nice page fault cleanups
-ended up being such an ongoing pain when the problems _could_ have
-been caught earlier. We started to get syzbot reports very quickly
-after they got merged into my tree, so this is clearly something that
-gets exercised well - but it would have been oh-so-much better if it
-had gotten noticed in linux-next.
-
-Kicking trees out of linux-next and making noise if they cause syzbot
-failures might also make some maintainers react more..
-
-                Linus
+Additionally, in mixed-mode, the unified kernel images are quite likely
+to end up with early pgtables from startup_32 clobbering the initrd,
+independently of the recent kernel changes. Hopefully no-one actually
+uses these in mixed-mode.
