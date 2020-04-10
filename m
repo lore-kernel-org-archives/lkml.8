@@ -4,53 +4,55 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8136BC2D0EC
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 03:53:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D95BEC2BB1D
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 03:53:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 57BD62137B
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 03:53:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AD39D206C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 03:53:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586490795;
-	bh=b4IWSodilP/n6yol7fL8g/RGKl2d0kiQs1kpArRe4r0=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kXFYyygeftZW6htYrS165VM4zYsOYDGXTx9lhm0V9BKAsBLxGrk/O5iZQFBKSOx7x
-	 CxCEC3773DKqP9gkGiFr81mIUoj0gW5NNVI9ZLAbAzDRaAnD4r+6PKD1IfwFScQJ9r
-	 wIrakdIeS8+T9NExVwTswb/dGcjvZPqdXNtswMuQ=
+	s=default; t=1586490806;
+	bh=CUhphBtAFtIFGqL7EHek5SX7Pum9xxx4cL9J/+/RwY8=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=Z5Nxmyk2UrCKmJFGjOoBIgPCROzJX4lVCFVZS6d4hsc5dy5Z4wbEPfCKwZbBZ4n9q
+	 frSb02Gnt2UMbibeQeNHiP9YycPEM/ABIbvkjdA6AWCdT2zsOsFJ4UyaqdOFTAj+Cx
+	 e3EwyQAd0D3OSUBo43VesEHRkmdDF1PjJ4W97+Hc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729055AbgDJDxN (ORCPT
+        id S1728793AbgDJDxY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Apr 2020 23:53:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35752 "EHLO mail.kernel.org"
+        Thu, 9 Apr 2020 23:53:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35534 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729008AbgDJDux (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Apr 2020 23:50:53 -0400
+        id S1727801AbgDJDuq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Apr 2020 23:50:46 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A11ED21775;
-        Fri, 10 Apr 2020 03:50:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3C112206C0;
+        Fri, 10 Apr 2020 03:50:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586490653;
-        bh=b4IWSodilP/n6yol7fL8g/RGKl2d0kiQs1kpArRe4r0=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Wrd005U4bEXohk7SBhiyCq6GI1e9SVRIQgmKRro1VArngCUITvD30CfvVu5daniQ+
-         K+lKvkpRxnjMnBv0M6eQGfda7OjaqtMDfkIOWbGDu6YFHK0XLEqO/vZUnwWVf2egqs
-         w0kU+wnssD+QtsCj9217Kb8eGs3wR6iKhujuBAz8=
+        s=default; t=1586490646;
+        bh=CUhphBtAFtIFGqL7EHek5SX7Pum9xxx4cL9J/+/RwY8=;
+        h=From:To:Cc:Subject:Date:From;
+        b=ISQZEpj2KKQ9XOtocMPl9ZdeF0QuuVaGwYwG9py0Rk+126H0CQayr93UrTifgjZjq
+         L/CPQVPDg+ZaBa5lX+hZfGR6qmxYh9KYIXvW+5xm7HuJzEA54RdxTCapKtRybkT2qS
+         ibvjUvkjwBpRjzTdf9ptjawDfBXBfKog2NHy6O9A=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Michael Wang <yun.wang@linux.alibaba.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.14 07/22] sched: Avoid scale real weight down to zero
-Date:   Thu,  9 Apr 2020 23:50:29 -0400
-Message-Id: <20200410035044.9698-7-sashal@kernel.org>
+Cc:     Bart Van Assche <bvanassche@acm.org>,
+        Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>,
+        Johannes Thumshirn <jth@kernel.org>,
+        Hannes Reinecke <hare@suse.com>,
+        Ming Lei <ming.lei@redhat.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>,
+        linux-block@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 01/22] null_blk: Fix the null_add_dev() error path
+Date:   Thu,  9 Apr 2020 23:50:23 -0400
+Message-Id: <20200410035044.9698-1-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200410035044.9698-1-sashal@kernel.org>
-References: <20200410035044.9698-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -60,80 +62,95 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Michael Wang <yun.wang@linux.alibaba.com>
+From: Bart Van Assche <bvanassche@acm.org>
 
-[ Upstream commit 26cf52229efc87e2effa9d788f9b33c40fb3358a ]
+[ Upstream commit 2004bfdef945fe55196db6b9cdf321fbc75bb0de ]
 
-During our testing, we found a case that shares no longer
-working correctly, the cgroup topology is like:
+If null_add_dev() fails, clear dev->nullb.
 
-  /sys/fs/cgroup/cpu/A		(shares=102400)
-  /sys/fs/cgroup/cpu/A/B	(shares=2)
-  /sys/fs/cgroup/cpu/A/B/C	(shares=1024)
+This patch fixes the following KASAN complaint:
 
-  /sys/fs/cgroup/cpu/D		(shares=1024)
-  /sys/fs/cgroup/cpu/D/E	(shares=1024)
-  /sys/fs/cgroup/cpu/D/E/F	(shares=1024)
+BUG: KASAN: use-after-free in nullb_device_submit_queues_store+0xcf/0x160 [null_blk]
+Read of size 8 at addr ffff88803280fc30 by task check/8409
 
-The same benchmark is running in group C & F, no other tasks are
-running, the benchmark is capable to consumed all the CPUs.
+Call Trace:
+ dump_stack+0xa5/0xe6
+ print_address_description.constprop.0+0x26/0x260
+ __kasan_report.cold+0x7b/0x99
+ kasan_report+0x16/0x20
+ __asan_load8+0x58/0x90
+ nullb_device_submit_queues_store+0xcf/0x160 [null_blk]
+ configfs_write_file+0x1c4/0x250 [configfs]
+ __vfs_write+0x4c/0x90
+ vfs_write+0x145/0x2c0
+ ksys_write+0xd7/0x180
+ __x64_sys_write+0x47/0x50
+ do_syscall_64+0x6f/0x2f0
+ entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x7ff370926317
+Code: 64 89 02 48 c7 c0 ff ff ff ff eb bb 0f 1f 80 00 00 00 00 f3 0f 1e fa 64 8b 04 25 18 00 00 00 85 c0 75 10 b8 01 00 00 00 0f 05 <48> 3d 00 f0 ff ff 77 51 c3 48 83 ec 28 48 89 54 24 18 48 89 74 24
+RSP: 002b:00007fff2dd2da48 EFLAGS: 00000246 ORIG_RAX: 0000000000000001
+RAX: ffffffffffffffda RBX: 0000000000000002 RCX: 00007ff370926317
+RDX: 0000000000000002 RSI: 0000559437ef23f0 RDI: 0000000000000001
+RBP: 0000559437ef23f0 R08: 000000000000000a R09: 0000000000000001
+R10: 0000559436703471 R11: 0000000000000246 R12: 0000000000000002
+R13: 00007ff370a006a0 R14: 00007ff370a014a0 R15: 00007ff370a008a0
 
-We suppose the group C will win more CPU resources since it could
-enjoy all the shares of group A, but it's F who wins much more.
+Allocated by task 8409:
+ save_stack+0x23/0x90
+ __kasan_kmalloc.constprop.0+0xcf/0xe0
+ kasan_kmalloc+0xd/0x10
+ kmem_cache_alloc_node_trace+0x129/0x4c0
+ null_add_dev+0x24a/0xe90 [null_blk]
+ nullb_device_power_store+0x1b6/0x270 [null_blk]
+ configfs_write_file+0x1c4/0x250 [configfs]
+ __vfs_write+0x4c/0x90
+ vfs_write+0x145/0x2c0
+ ksys_write+0xd7/0x180
+ __x64_sys_write+0x47/0x50
+ do_syscall_64+0x6f/0x2f0
+ entry_SYSCALL_64_after_hwframe+0x49/0xbe
 
-The reason is because we have group B with shares as 2, since
-A->cfs_rq.load.weight == B->se.load.weight == B->shares/nr_cpus,
-so A->cfs_rq.load.weight become very small.
+Freed by task 8409:
+ save_stack+0x23/0x90
+ __kasan_slab_free+0x112/0x160
+ kasan_slab_free+0x12/0x20
+ kfree+0xdf/0x250
+ null_add_dev+0xaf3/0xe90 [null_blk]
+ nullb_device_power_store+0x1b6/0x270 [null_blk]
+ configfs_write_file+0x1c4/0x250 [configfs]
+ __vfs_write+0x4c/0x90
+ vfs_write+0x145/0x2c0
+ ksys_write+0xd7/0x180
+ __x64_sys_write+0x47/0x50
+ do_syscall_64+0x6f/0x2f0
+ entry_SYSCALL_64_after_hwframe+0x49/0xbe
 
-And in calc_group_shares() we calculate shares as:
-
-  load = max(scale_load_down(cfs_rq->load.weight), cfs_rq->avg.load_avg);
-  shares = (tg_shares * load) / tg_weight;
-
-Since the 'cfs_rq->load.weight' is too small, the load become 0
-after scale down, although 'tg_shares' is 102400, shares of the se
-which stand for group A on root cfs_rq become 2.
-
-While the se of D on root cfs_rq is far more bigger than 2, so it
-wins the battle.
-
-Thus when scale_load_down() scale real weight down to 0, it's no
-longer telling the real story, the caller will have the wrong
-information and the calculation will be buggy.
-
-This patch add check in scale_load_down(), so the real weight will
-be >= MIN_SHARES after scale, after applied the group C wins as
-expected.
-
-Suggested-by: Peter Zijlstra <peterz@infradead.org>
-Signed-off-by: Michael Wang <yun.wang@linux.alibaba.com>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Reviewed-by: Vincent Guittot <vincent.guittot@linaro.org>
-Link: https://lkml.kernel.org/r/38e8e212-59a1-64b2-b247-b6d0b52d8dc1@linux.alibaba.com
+Fixes: 2984c8684f96 ("nullb: factor disk parameters")
+Signed-off-by: Bart Van Assche <bvanassche@acm.org>
+Reviewed-by: Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>
+Cc: Johannes Thumshirn <jth@kernel.org>
+Cc: Hannes Reinecke <hare@suse.com>
+Cc: Ming Lei <ming.lei@redhat.com>
+Cc: Christoph Hellwig <hch@infradead.org>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/sched/sched.h | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+ drivers/block/null_blk.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
-index 268f560ec9986..391d73a12ad72 100644
---- a/kernel/sched/sched.h
-+++ b/kernel/sched/sched.h
-@@ -89,7 +89,13 @@ static inline void cpu_load_update_active(struct rq *this_rq) { }
- #ifdef CONFIG_64BIT
- # define NICE_0_LOAD_SHIFT	(SCHED_FIXEDPOINT_SHIFT + SCHED_FIXEDPOINT_SHIFT)
- # define scale_load(w)		((w) << SCHED_FIXEDPOINT_SHIFT)
--# define scale_load_down(w)	((w) >> SCHED_FIXEDPOINT_SHIFT)
-+# define scale_load_down(w) \
-+({ \
-+	unsigned long __w = (w); \
-+	if (__w) \
-+		__w = max(2UL, __w >> SCHED_FIXEDPOINT_SHIFT); \
-+	__w; \
-+})
- #else
- # define NICE_0_LOAD_SHIFT	(SCHED_FIXEDPOINT_SHIFT)
- # define scale_load(w)		(w)
+diff --git a/drivers/block/null_blk.c b/drivers/block/null_blk.c
+index f01d4a8a783ac..e9776ca0996b0 100644
+--- a/drivers/block/null_blk.c
++++ b/drivers/block/null_blk.c
+@@ -1919,6 +1919,7 @@ static int null_add_dev(struct nullb_device *dev)
+ 	cleanup_queues(nullb);
+ out_free_nullb:
+ 	kfree(nullb);
++	dev->nullb = NULL;
+ out:
+ 	return rv;
+ }
 -- 
 2.20.1
 
