@@ -2,124 +2,148 @@ Return-Path: <SRS0=VV4q=52=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A2B2C2BB86
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 11:07:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58161C2BB85
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 11:12:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3C6102078E
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 11:07:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 253A3208E4
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 11:12:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XowhG9RB"
+	dkim=pass (1024-bit key) header.d=luisgerhorst.de header.i=@luisgerhorst.de header.b="qIrPPVsb";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="W9Z+DKjh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726145AbgDJLHk (ORCPT
+        id S1726181AbgDJLMo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Apr 2020 07:07:40 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:35041 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725897AbgDJLHk (ORCPT
+        Fri, 10 Apr 2020 07:12:44 -0400
+Received: from new2-smtp.messagingengine.com ([66.111.4.224]:44013 "EHLO
+        new2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725897AbgDJLMo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Apr 2020 07:07:40 -0400
-Received: by mail-wm1-f65.google.com with SMTP id r26so2409126wmh.0;
-        Fri, 10 Apr 2020 04:07:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:references:in-reply-to:subject:date:message-id
-         :mime-version:content-transfer-encoding:content-language
-         :thread-index;
-        bh=VjzS9uW/4mzFpGFiK2xCLm+I4dAqpbLmOJp3GnXktwg=;
-        b=XowhG9RBP0WyRGId3Q6ohZqzB+zuM4Ys8Fzy6W5ATPU/fZz6ySR0985vQkRPY8BSde
-         +XGjyKdDSI0PCulzsS7J4kqV4AYyXsb5sPDeiuMz7np/1J3OAjH19u3/lxZ4NMJ+Ptv3
-         XxP66Bok4gXAmlv994lpFdQ68WgBkHYGphqVGlkMfXtsQ7c0/NliLYOOQLmiIhgHpzyR
-         1R7IxSvYKi6GE4DSL3oZ+sWgfMS8spLeLd8c4w5IOROPC09w1r7oo01HK2fX3inH2yUV
-         tmjBgrU6YnIw/lgmxZLaWcQV4wFvsRi1oI9hcuQqhbr7XEiHSXdtzmCXJEneoGGanCSq
-         IxPw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:references:in-reply-to:subject:date
-         :message-id:mime-version:content-transfer-encoding:content-language
-         :thread-index;
-        bh=VjzS9uW/4mzFpGFiK2xCLm+I4dAqpbLmOJp3GnXktwg=;
-        b=JdgGHSttJ38pQEKDNJuwuwSonSjMjL6KdSKRaqDeUPEQVZ1nkGZDWd+NsV+iPdnofW
-         VZGqMpkgT3JBcU97l+kv0qT+KI++zMfAfmtYD3pLaDvSXmrttZwa4+kU084fyfer/zzq
-         aEuCtcYdjCnKSbGpNUMae+95Brd0IdYnbl5kTQ64888ehFax1r59BhEPzV0Lr15tsi2I
-         V/yUFzJR41Nd/0boR1wnzm2+OLN4XGOGJ794iOO5rXq61GhaOD5up6bxm81yqUowk8Ha
-         0LmSdZEoDNvqgGIr5FrBGOqRCRJWm0yTZFdi9sB561LccplFYbiEOgiQ5rWBG5RKmrcl
-         oLRA==
-X-Gm-Message-State: AGi0PuYwXLBI3ChCwFWVlxDMSm4yuFnMbULs890x2fxq5XTxl25SqS8s
-        HQuKQB1WtsY0lePJDxv4yX8=
-X-Google-Smtp-Source: APiQypJ4cn6GX7eyEVI/qPrqPRf8DfkFFnLVwed6+Uxm5i3EPBBYP5BzsJmII0VFs/oldwPmIYYE6g==
-X-Received: by 2002:a1c:6241:: with SMTP id w62mr4569233wmb.27.1586516856778;
-        Fri, 10 Apr 2020 04:07:36 -0700 (PDT)
-Received: from AnsuelXPS (host117-205-dynamic.180-80-r.retail.telecomitalia.it. [80.180.205.117])
-        by smtp.gmail.com with ESMTPSA id b7sm2150988wrn.67.2020.04.10.04.07.34
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 10 Apr 2020 04:07:36 -0700 (PDT)
-From:   <ansuelsmth@gmail.com>
-To:     "'Fabio Estevam'" <festevam@gmail.com>
-Cc:     "'open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS'" 
-        <devicetree@vger.kernel.org>,
-        "'Richard Zhu'" <hongxing.zhu@nxp.com>,
-        "'Lucas Stach'" <l.stach@pengutronix.de>,
-        "'Bjorn Helgaas'" <bhelgaas@google.com>,
-        "'Rob Herring'" <robh+dt@kernel.org>,
-        "'Mark Rutland'" <mark.rutland@arm.com>,
-        "'Shawn Guo'" <shawnguo@kernel.org>,
-        "'Sascha Hauer'" <s.hauer@pengutronix.de>,
-        "'Pengutronix Kernel Team'" <kernel@pengutronix.de>,
-        "'NXP Linux Team'" <linux-imx@nxp.com>,
-        "'Lorenzo Pieralisi'" <lorenzo.pieralisi@arm.com>,
-        "'Andrew Murray'" <amurray@thegoodpenguin.co.uk>,
-        <linux-pci@vger.kernel.org>,
-        "'moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE'" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "'linux-kernel'" <linux-kernel@vger.kernel.org>
-References: <20200410004738.19668-1-ansuelsmth@gmail.com> <20200410004738.19668-3-ansuelsmth@gmail.com> <CAOMZO5AKYO3xLsp4k6_fJCV9qW=rAtRKEGWnxksixU794dOw8A@mail.gmail.com>
-In-Reply-To: <CAOMZO5AKYO3xLsp4k6_fJCV9qW=rAtRKEGWnxksixU794dOw8A@mail.gmail.com>
-Subject: R: [PATCH 2/4] drivers: pci: dwc: pci-imx6: update binding to generic name
-Date:   Fri, 10 Apr 2020 13:07:33 +0200
-Message-ID: <003401d60f28$3d045190$b70cf4b0$@gmail.com>
+        Fri, 10 Apr 2020 07:12:44 -0400
+Received: from compute7.internal (compute7.nyi.internal [10.202.2.47])
+        by mailnew.nyi.internal (Postfix) with ESMTP id D0C895808B7;
+        Fri, 10 Apr 2020 07:12:42 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute7.internal (MEProxy); Fri, 10 Apr 2020 07:12:42 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=luisgerhorst.de;
+         h=references:from:to:cc:subject:in-reply-to:date:message-id
+        :mime-version:content-type; s=mesmtp; bh=1XCTRzA4r6t+aW/YmemVZF7
+        K9mMd/HGoO3EIq2+dA90=; b=qIrPPVsbiwtiPCG914yDDwQbRVGekh653wn5tFg
+        3OXdht3GDey5g1KxO9bQPKJBaZjXrLahuzs7uwHaDn1hha4c8tqr9U6h/enmMfmq
+        axrVJWAkDeXqxnz5S/s0WX+23JNsmfvxG76MaCu5yoZ/10otB8aw6fJY8I0RJhAL
+        UKCE=
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=1XCTRz
+        A4r6t+aW/YmemVZF7K9mMd/HGoO3EIq2+dA90=; b=W9Z+DKjhWSrSdyvjUXQWV0
+        Ht2PBs1Ju8IyieMn6zSkkE0Ul7b4auQXJoekqKJj2FzKU9A+TGuBoFK1SeMMbtzb
+        8oMu2rI+B4LzmSkiLSgoieRYIg+B8B0W2HubEz8VgtrlMAXtwwV8LwPnsaNl7ENf
+        Hnjisw0YwgMkCsP9gyq9jSxPZWrZ9Ts2HPNybosCeGMKZtC5AH9R3c92CP8iSrSH
+        gHS5Yf6zBUWVLj0ZbW7UWf0jF0G8RyBbIZtZRddWT5nYI7Y5ITHyhHNZMoDcYH6U
+        Tdhl71Pqk4drxYS2/9BHw9I+ui37vmZMPZYDw+naFkx8jWWMgcUvkw4fFivbpqgw
+        ==
+X-ME-Sender: <xms:o1SQXtej93cVqf0lMq7BjSBnI80YT6WTnh_bM3bafOgyIiQWYNJntw>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedrvddvgdefjecutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpehffgfhvffujgffkfggtgesthdtredttdertdenucfhrhhomhepnfhuihhsucfi
+    vghrhhhorhhsthcuoehlihhnuhigqdhkvghrnhgvlheslhhuihhsghgvrhhhohhrshhtrd
+    guvgeqnecukfhppeelvddruddujedrudefiedrkeeknecuvehluhhsthgvrhfuihiivgep
+    tdenucfrrghrrghmpehmrghilhhfrhhomheplhhinhhugidqkhgvrhhnvghlsehluhhish
+    hgvghrhhhorhhsthdruggv
+X-ME-Proxy: <xmx:o1SQXsJqEEpdAVlBBNOrPjECiypCvsioWJAkkkqB7OV1k6G1cJ037Q>
+    <xmx:o1SQXm3GbM5jjQeq5Fw3vlWvqURZgDtwUCKygupmqpZPjSWL5fF5KQ>
+    <xmx:o1SQXlY0lL6nr4XO4VhiScv6QkQfeTRa26Q3bZiNQCcnAlci-1NBaA>
+    <xmx:qlSQXgnwI9ZSlZ3EtewA6ucmkah78uuNHQkFyCGi-HgqJe16QWXm_g>
+Received: from luis-debian.fastmail.com (unknown [92.117.136.88])
+        by mail.messagingengine.com (Postfix) with ESMTPA id DA33E3280060;
+        Fri, 10 Apr 2020 07:12:29 -0400 (EDT)
+References: <20200410084210.24932-1-lukasz.luba@arm.com> <20200410084210.24932-5-lukasz.luba@arm.com>
+User-agent: mu4e 1.0; emacs 26.1
+From:   Luis Gerhorst <linux-kernel@luisgerhorst.de>
+To:     Lukasz Luba <lukasz.luba@arm.com>
+Cc:     linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        dri-devel@lists.freedesktop.org, linux-omap@vger.kernel.org,
+        linux-mediatek@lists.infradead.org, linux-arm-msm@vger.kernel.org,
+        linux-imx@nxp.com, Dietmar.Eggemann@arm.com, cw00.choi@samsung.com,
+        b.zolnierkie@samsung.com, rjw@rjwysocki.net, sudeep.holla@arm.com,
+        viresh.kumar@linaro.org, nm@ti.com, sboyd@kernel.org,
+        rui.zhang@intel.com, amit.kucheria@verdurent.com,
+        daniel.lezcano@linaro.org, mingo@redhat.com, peterz@infradead.org,
+        juri.lelli@redhat.com, vincent.guittot@linaro.org,
+        rostedt@goodmis.org, qperret@google.com, bsegall@google.com,
+        mgorman@suse.de, shawnguo@kernel.org, s.hauer@pengutronix.de,
+        festevam@gmail.com, kernel@pengutronix.de, khilman@kernel.org,
+        agross@kernel.org, bjorn.andersson@linaro.org, robh@kernel.org,
+        matthias.bgg@gmail.com, steven.price@arm.com,
+        tomeu.vizoso@collabora.com, alyssa.rosenzweig@collabora.com,
+        airlied@linux.ie, daniel@ffwll.ch, liviu.dudau@arm.com,
+        lorenzo.pieralisi@arm.com, patrick.bellasi@matbug.net,
+        orjan.eide@arm.com, rdunlap@infradead.org, mka@chromium.org
+Subject: Re: [PATCH v6 04/10] PM / EM: add support for other devices than CPUs in Energy Model
+In-reply-to: <20200410084210.24932-5-lukasz.luba@arm.com>
+Date:   Fri, 10 Apr 2020 13:12:28 +0200
+Message-ID: <87ftdboaqr.fsf@luis-debian.luis-debian-domain>
 MIME-Version: 1.0
-Content-Type: text/plain;
-        charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: Microsoft Outlook 16.0
-Content-Language: it
-Thread-Index: AQJxOzeYiZkD8UITQ1/aTwnouqE5vAHrEXcAAuDSQDWnFXqbEA==
+Content-Type: text/plain; format=flowed
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> Hi Ansuel,
-> 
-> On Thu, Apr 9, 2020 at 9:47 PM Ansuel Smith <ansuelsmth@gmail.com>
-> wrote:
-> >
-> > Rename specific bindings to generic name.
-> >
-> > Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
-> > ---
-> >  drivers/pci/controller/dwc/pci-imx6.c | 12 ++++++------
-> >  1 file changed, 6 insertions(+), 6 deletions(-)
-> >
-> > diff --git a/drivers/pci/controller/dwc/pci-imx6.c
-> b/drivers/pci/controller/dwc/pci-imx6.c
-> > index acfbd34032a8..4ac140e007b4 100644
-> > --- a/drivers/pci/controller/dwc/pci-imx6.c
-> > +++ b/drivers/pci/controller/dwc/pci-imx6.c
-> > @@ -1146,28 +1146,28 @@ static int imx6_pcie_probe(struct
-> platform_device *pdev)
-> >         }
-> >
-> >         /* Grab PCIe PHY Tx Settings */
-> > -       if (of_property_read_u32(node, "fsl,tx-deemph-gen1",
-> > +       if (of_property_read_u32(node, "tx-deemph-gen1",
-> 
-> This breaks compatibility with older dtbs.
 
-so no chance of changing this? 
+Lukasz Luba writes:
 
+> +/**
+> + * em_dev_unregister_perf_domain() - Unregister Energy Model 
+> (EM) for a device
+> + * @dev		: Device for which the EM is registered
+> + *
+> + * Try to unregister the EM for the specified device (it checks 
+> current
+> + * reference counter). The EM for CPUs will not be freed.
+> + */
+> +void em_dev_unregister_perf_domain(struct device *dev)
+> +{
+> +	struct em_device *em_dev, *tmp;
+> +
+> +	if (IS_ERR_OR_NULL(dev))
+> +		return;
+> +
+> +	/* We don't support freeing CPU structures in hotplug */
+> +	if (_is_cpu_device(dev)) {
+> +		dev_dbg_once(dev, "EM: the structures are not going to be 
+> removed\n");
+> +		return;
+> +	}
+> +
+> +	mutex_lock(&em_pd_mutex);
+> +
+> +	if (list_empty(&em_pd_dev_list)) {
+> +		mutex_unlock(&em_pd_mutex);
+> +		return;
+> +	}
+> +
+> +	list_for_each_entry_safe(em_dev, tmp, &em_pd_dev_list, 
+> em_dev_list) {
+> +		if (em_dev->dev == dev) {
+> +			kref_put(&em_dev->kref, _em_release);
+> +			break;
+> +		}
+> +	}
+> +
+> +	mutex_unlock(&em_pd_mutex);
+> +}
+> +EXPORT_SYMBOL_GPL(em_dev_unregister_perf_domain);
+
+Ok, so em_dev_unregister_perf_domain() does not support the CPU 
+device
+and a subsequent em_register_perf_domain() will fail with EEXIST.
+
+Is there a way to unregister/change the CPU's energy model during
+runtime without restarting the whole system?
