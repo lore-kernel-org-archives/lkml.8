@@ -2,186 +2,168 @@ Return-Path: <SRS0=VV4q=52=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 163BBC2BB1D
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 18:19:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5295C2BB55
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 18:25:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E808A206C1
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 18:19:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B4B002082D
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 18:25:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="ak3NNOOB";
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="ak3NNOOB"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kuBRYMu3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726701AbgDJSTO (ORCPT
+        id S1726671AbgDJSZO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Apr 2020 14:19:14 -0400
-Received: from bedivere.hansenpartnership.com ([66.63.167.143]:56892 "EHLO
-        bedivere.hansenpartnership.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726142AbgDJSTO (ORCPT
+        Fri, 10 Apr 2020 14:25:14 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:38281 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726177AbgDJSZO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Apr 2020 14:19:14 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by bedivere.hansenpartnership.com (Postfix) with ESMTP id D91178EE39A;
-        Fri, 10 Apr 2020 11:19:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=hansenpartnership.com;
-        s=20151216; t=1586542753;
-        bh=2iTv1noPTW6+GEIMJCLq+M+/lZUkH7uo/dGX2q40SRQ=;
-        h=Subject:From:To:Cc:Date:From;
-        b=ak3NNOOBzlZ3bDEPKXM2BwY1dxY8OLnOvJrFOwyg6aY670zDQRFbgOHBnCnH6z5+w
-         FoGcqjpGTIW4A2gcTYlOaA1pG2dPtiLLq3G+H7dXtBiVDttlmpkvLc+PHX9iVBdmKK
-         sXw7psi3sgbmIJUKhBjvzkTezwItFFy4+/DGohBY=
-Received: from bedivere.hansenpartnership.com ([127.0.0.1])
-        by localhost (bedivere.hansenpartnership.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id 00zl8DJAY2XP; Fri, 10 Apr 2020 11:19:13 -0700 (PDT)
-Received: from [153.66.254.194] (unknown [50.35.76.230])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by bedivere.hansenpartnership.com (Postfix) with ESMTPSA id 5408F8EE0D2;
-        Fri, 10 Apr 2020 11:19:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=hansenpartnership.com;
-        s=20151216; t=1586542753;
-        bh=2iTv1noPTW6+GEIMJCLq+M+/lZUkH7uo/dGX2q40SRQ=;
-        h=Subject:From:To:Cc:Date:From;
-        b=ak3NNOOBzlZ3bDEPKXM2BwY1dxY8OLnOvJrFOwyg6aY670zDQRFbgOHBnCnH6z5+w
-         FoGcqjpGTIW4A2gcTYlOaA1pG2dPtiLLq3G+H7dXtBiVDttlmpkvLc+PHX9iVBdmKK
-         sXw7psi3sgbmIJUKhBjvzkTezwItFFy4+/DGohBY=
-Message-ID: <1586542752.4129.55.camel@HansenPartnership.com>
-Subject: [GIT PULL] final round of SCSI updates for the 5.6+ merge window
-From:   James Bottomley <James.Bottomley@HansenPartnership.com>
-To:     Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-scsi <linux-scsi@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Date:   Fri, 10 Apr 2020 11:19:12 -0700
+        Fri, 10 Apr 2020 14:25:14 -0400
+Received: by mail-lj1-f196.google.com with SMTP id v16so2796560ljg.5;
+        Fri, 10 Apr 2020 11:25:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=/8e9T1aA34gtipux6MRR5JeX22u4u6r+1ck6KMnDmCE=;
+        b=kuBRYMu3ElDdUOqhfqRSlgM/BaOIhxXtbQtiKml+rK+iyzUZA43MpO84UTIkfHrVN9
+         Dvn1KyBG5uOLPETwcDcKZnG+2R35EJiA+e4Zb/nzsqh2CmhAX76tnPzDqSMeu+A6dZ4V
+         gSL/kwpLt846Hk2vlz1vx+4AEg2KUVvde7y6jMWzwR3/kWVuECqx4qB4pbD0nQ5BLy6J
+         aTkFFVl7e6OlRAqzXKZjBP6gLuqP+gszOlydcDkyctpCR67a6J7vO2Y7ekvjS1s7QK3e
+         zNUmogZmUf665osEUT1X6SU0WhGtPtcXMRK06NMRCAXGf639kIUGjiThmt9k4RV3LFj3
+         UdeQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=/8e9T1aA34gtipux6MRR5JeX22u4u6r+1ck6KMnDmCE=;
+        b=YIAUh781wGb8DL6WJconsWsHNCm5bN7vKkRv3Q+O3KtJQXEE/4ceg5gF2lL02X/ebm
+         wJKdHSkSYknoxe9OjV2IJvDoQPgxl5C2Pf7+TNooqMUmAF7ORx+RrrymMToMrrjapuyi
+         USgg+tR+9Z8SEiJEysplsQ23rYung0yE6eeI8AJgz9GuiTjNlMQc6DuAu1kd3VrJWwPh
+         Nyup8Rsbzk8n2sfQS9S1dg++xZiK62HCQSTW3CmqfgegVpX40gxPi9VsQ3NIQoNVi+aw
+         7py09/4BHDci7iBgdcNbjGmDFQjE1dXvo6DBV+kJ6D4GjpAfof/b4otoky4lkETZWufq
+         Hr8g==
+X-Gm-Message-State: AGi0PuYMu8KwiRnHvFipYXlNYtYdyM0y7bzNT5SsV4qeJjiUIzDDU8zw
+        DN/Tlf/TtzGlQcsd4ih1o9x4Ir2kvo+C7L18rw==
+X-Google-Smtp-Source: APiQypJLhl8RsaXEReBMlt91OnPROxZF63+qBAZ8RukrkovkRVtTQ56I5ehkCEz6EsrUA0oYgsuMJr129K7uzU2Va6Q=
+X-Received: by 2002:a2e:2286:: with SMTP id i128mr3641945lji.109.1586543112254;
+ Fri, 10 Apr 2020 11:25:12 -0700 (PDT)
+MIME-Version: 1.0
+References: <CAEUGjKiLPQP9wp0AgLUvHgKBOe9We2a-RQaZ7cd7CvhnarwWiw@mail.gmail.com>
+In-Reply-To: <CAEUGjKiLPQP9wp0AgLUvHgKBOe9We2a-RQaZ7cd7CvhnarwWiw@mail.gmail.com>
+From:   Pavel Shilovsky <piastryyy@gmail.com>
+Date:   Fri, 10 Apr 2020 11:25:01 -0700
+Message-ID: <CAKywueT0Q9WkANNsg8cEDwGZSMaaE5c4LHuEeMhVDzJAzycroQ@mail.gmail.com>
+Subject: Re: [PATCH] cifs: improve read performance for page size 64KB &
+ cache=strict & vers=2.1+
+To:     Jones Syue <jonessyue@qnap.com>
+Cc:     linux-cifs <linux-cifs@vger.kernel.org>,
+        Samba Technical <samba-technical@lists.samba.org>,
+        Kernel Mailing List <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.26.6 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is a batch of changes that didn't make it in the initial pull
-request because the lpfc series had to be rebased to redo an incorrect
-split.  It's basically driver updates to lpfc, target, bnx2fc and ufs
-with the rest being minor updates except the sr_block_release one which
-fixes a use after free introduced by the removal of the global mutex in
-the first patch set.
+=D0=BF=D1=82, 10 =D0=B0=D0=BF=D1=80. 2020 =D0=B3. =D0=B2 09:50, Jones Syue =
+via samba-technical
+<samba-technical@lists.samba.org>:
+>
+> Hello list,
+>
+> please help review whether the attached patch is correct, thank you.
+>
+> Found a read performance issue when linux kernel page size is 64KB.
+> If linux kernel page size is 64KB and mount options cache=3Dstrict &
+> vers=3D2.1+,
+> it does not support cifs_readpages(). Instead, it is using cifs_readpage(=
+)
+> and
+> cifs_read() with maximum read IO size 16KB, which is much slower than rea=
+d
+> IO
+> size 1MB when negotiated SMB 2.1+. Since modern SMB server supported SMB
+> 2.1+
+> and Max Read Size can reach more than 64KB (for example 1MB ~ 8MB), this
+> patch
+> do one more check on max_read to determine whether server support
+> readpages()
+> and improve read performance for page size 64KB & cache=3Dstrict & vers=
+=3D2.1+.
+>
+> The client is a linux box with linux kernel 4.2.8,
+> page size 64KB (CONFIG_ARM64_64K_PAGES=3Dy),
+> cpu arm 1.7GHz, and use mount.cifs as smb client.
+> The server is another linux box with linux kernel 4.2.8,
+> share a file '10G.img' with size 10GB,
+> and use samba-4.7.12 as smb server.
+>
+> The client mount a share from the server with different
+> cache options: cache=3Dstrict and cache=3Dnone,
+> mount -tcifs //<server_ip>/Public /cache_strict
+> -overs=3D3.0,cache=3Dstrict,username=3D<xxx>,password=3D<yyy>
+> mount -tcifs //<server_ip>/Public /cache_none
+> -overs=3D3.0,cache=3Dnone,username=3D<xxx>,password=3D<yyy>
+>
+> The client download a 10GbE file from the server accross 1GbE network,
+> dd if=3D/cache_strict/10G.img of=3D/dev/null bs=3D1M count=3D10240
+> dd if=3D/cache_none/10G.img of=3D/dev/null bs=3D1M count=3D10240
+>
+> Found that cache=3Dstrict (without patch) is slower read throughput and
+> smaller
+> read IO size than cache=3Dnone.
+> cache=3Dstrict (without patch): read throughput 40MB/s, read IO size is 1=
+6KB
+> cache=3Dstrict (with patch): read throughput 113MB/s, read IO size is 1MB
+> cache=3Dnone: read throughput 109MB/s, read IO size is 1MB
+>
+> Looks like if page size is 64KB,
+> cifs_set_ops() would use cifs_addr_ops_smallbuf instead of cifs_addr_ops,
+>
+> /* check if server can support readpages */
+> if (cifs_sb_master_tcon(cifs_sb)->ses->server->maxBuf <
+> PAGE_SIZE + MAX_CIFS_HDR_SIZE)
+> inode->i_data.a_ops =3D &cifs_addr_ops_smallbuf;
+> else
+> inode->i_data.a_ops =3D &cifs_addr_ops;
+>
+> maxBuf is came from 2 places, SMB2_negotiate() and CIFSSMBNegotiate(),
+> (SMB2_MAX_BUFFER_SIZE is 64KB)
+> SMB2_negotiate():
+> /* set it to the maximum buffer size value we can send with 1 credit */
+> server->maxBuf =3D min_t(unsigned int, le32_to_cpu(rsp->MaxTransactSize),
+>       SMB2_MAX_BUFFER_SIZE);
+> CIFSSMBNegotiate():
+> server->maxBuf =3D le32_to_cpu(pSMBr->MaxBufferSize);
+>
+> Page size 64KB and cache=3Dstrict lead to read_pages() use cifs_readpage(=
+)
+> instead
+> of cifs_readpages(), and then cifs_read() using maximum read IO size 16KB=
+,
+> which is much slower than maximum read IO size 1MB.
+> (CIFSMaxBufSize is 16KB by default)
+>
+> /* FIXME: set up handlers for larger reads and/or convert to async */
+> rsize =3D min_t(unsigned int, cifs_sb->rsize, CIFSMaxBufSize);
+>
 
-The patch is available here:
+Hi Jones,
 
-git://git.kernel.org/pub/scm/linux/kernel/git/jejb/scsi.git scsi-misc
+Thanks for the patch!
 
-The short changelog is:
+It will work although it is probably a little bit cleaner to
+initialize server->max_read to server->maxBuf for SMB1 and use the
+server->max_read in the readpages condition check instead.
 
-Alex Dewar (1):
-      scsi: aic7xxx: Remove more FreeBSD-specific code
+@Others, thoughts?
 
-Bart Van Assche (1):
-      scsi: sr: Fix sr_block_release()
-
-Can Guo (1):
-      scsi: ufs: Use ufshcd_config_pwr_mode() when scaling gear
-
-David Disseldorp (5):
-      scsi: target: use the stack for XCOPY passthrough cmds
-      scsi: target: increase XCOPY I/O size
-      scsi: target: avoid per-loop XCOPY buffer allocations
-      scsi: target: drop xcopy DISK BLOCK LENGTH debug
-      scsi: target: use #define for xcopy descriptor len
-
-Dick Kennedy (1):
-      scsi: lpfc: Change default SCSI LUN QD to 64
-
-Hannes Reinecke (1):
-      scsi: aacraid: do not overwrite retval in aac_reset_adapter()
-
-James Smart (11):
-      scsi: lpfc: Update lpfc version to 12.8.0.0
-      scsi: lpfc: Remove prototype FIPS/DSS options from SLI-3
-      scsi: lpfc: Make debugfs ktime stats generic for NVME and SCSI
-      scsi: lpfc: Fix erroneous cpu limit of 128 on I/O statistics
-      scsi: lpfc: Fix crash in target side cable pulls hitting WAIT_FOR_UNREG
-      scsi: lpfc: Fix update of wq consumer index in lpfc_sli4_wq_release
-      scsi: lpfc: Fix crash after handling a pci error
-      scsi: lpfc: Fix scsi host template for SLI3 vports
-      scsi: lpfc: Fix lpfc overwrite of sg_cnt field in nvmefc_tgt_fcp_req
-      scsi: lpfc: Fix lockdep error - register non-static key
-      scsi: lpfc: Fix kasan slab-out-of-bounds error in lpfc_unreg_login
-
-Javed Hasan (3):
-      scsi: libfc: rport state move to PLOGI if all PRLI retry exhausted
-      scsi: libfc: If PRLI rejected, move rport to PLOGI state
-      scsi: bnx2fc: Process the RQE with CQE in interrupt context
-
-Joe Perches (1):
-      scsi: zfcp: use fallthrough;
-
-Nikhil Kshirsagar (1):
-      scsi: core: Add DID_ALLOC_FAILURE and DID_MEDIUM_ERROR to hostbyte_table
-
-Saurav Kashyap (2):
-      scsi: bnx2fc: Update the driver version to 2.12.13
-      scsi: bnx2fc: Fix SCSI command completion after cleanup is posted
-
-Sreekanth Reddy (1):
-      scsi: mpt3sas: Fix kernel panic observed on soft HBA unplug
-
-Stanley Chu (3):
-      scsi: ufs: set device as active power mode after resetting device
-      scsi: ufs-mediatek: add error recovery for suspend and resume
-      scsi: ufs: export ufshcd_link_recovery
-
-Subhash Jadavani (1):
-      scsi: ufs: Clean up ufshcd_scale_clks() and clock scaling error out path
-
-Wu Bo (1):
-      scsi: iscsi: Report unbind session event when the target has been removed
-
-kbuild test robot (1):
-      scsi: bnx2fc: fix boolreturn.cocci warnings
-
-And the diffstat:
-
- drivers/s390/scsi/zfcp_erp.c         |  10 +-
- drivers/s390/scsi/zfcp_fsf.c         |  23 ++-
- drivers/scsi/aacraid/commsup.c       |   7 +-
- drivers/scsi/aic7xxx/aic7xxx_core.c  |  23 ---
- drivers/scsi/bnx2fc/bnx2fc.h         |  13 +-
- drivers/scsi/bnx2fc/bnx2fc_fcoe.c    |   8 +-
- drivers/scsi/bnx2fc/bnx2fc_hwi.c     | 103 ++++++++---
- drivers/scsi/bnx2fc/bnx2fc_io.c      |  34 ++--
- drivers/scsi/constants.c             |   2 +-
- drivers/scsi/libfc/fc_rport.c        |  10 +-
- drivers/scsi/lpfc/lpfc.h             |  25 ++-
- drivers/scsi/lpfc/lpfc_attr.c        |  73 +-------
- drivers/scsi/lpfc/lpfc_crtn.h        |   3 +-
- drivers/scsi/lpfc/lpfc_debugfs.c     | 333 ++++++++++++++++++++++++-----------
- drivers/scsi/lpfc/lpfc_debugfs.h     |   3 +-
- drivers/scsi/lpfc/lpfc_hw.h          |  20 +--
- drivers/scsi/lpfc/lpfc_init.c        | 106 ++++++++---
- drivers/scsi/lpfc/lpfc_mbox.c        |   2 -
- drivers/scsi/lpfc/lpfc_nvme.c        | 147 ++++------------
- drivers/scsi/lpfc/lpfc_nvmet.c       |  62 ++++---
- drivers/scsi/lpfc/lpfc_scsi.c        |  90 +++-------
- drivers/scsi/lpfc/lpfc_sli.c         |  47 ++---
- drivers/scsi/lpfc/lpfc_sli.h         |   2 +-
- drivers/scsi/lpfc/lpfc_sli4.h        |  19 +-
- drivers/scsi/lpfc/lpfc_version.h     |   2 +-
- drivers/scsi/mpt3sas/mpt3sas_scsih.c |   8 +-
- drivers/scsi/scsi_transport_iscsi.c  |   4 +-
- drivers/scsi/sr.c                    |   4 +-
- drivers/scsi/ufs/ufs-mediatek.c      |  13 +-
- drivers/scsi/ufs/ufshcd.c            |  87 +++++----
- drivers/scsi/ufs/ufshcd.h            |  15 ++
- drivers/target/target_core_xcopy.c   | 187 +++++++-------------
- drivers/target/target_core_xcopy.h   |   9 +-
- 33 files changed, 723 insertions(+), 771 deletions(-)
-
-James
-
+--
+Best regards,
+Pavel Shilovsky
