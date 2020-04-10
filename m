@@ -2,115 +2,60 @@ Return-Path: <SRS0=VV4q=52=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BB27C2BA2B
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 09:32:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A0FCC2BA2B
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 09:33:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5B3E020769
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 09:32:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="CZPq7nfV"
+	by mail.kernel.org (Postfix) with ESMTP id 47A4820769
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 09:33:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726179AbgDJJcy (ORCPT
+        id S1726594AbgDJJc5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Apr 2020 05:32:54 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:55618 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725861AbgDJJcy (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Apr 2020 05:32:54 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03A9JBhs020013;
-        Fri, 10 Apr 2020 09:32:39 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2020-01-29;
- bh=Ums9rtORUoERTp+Sz6iCrEwniL6ascuI/F+Lp1A7/ic=;
- b=CZPq7nfVZcUVlHkIyoJG8scMCIvrBwYLJGNHvjq7v7oPL6CeT692fSrNnI3a4cf/2e2/
- nkiSWISFGfNfUKL1jJCEDin+hLjlnDcSskNlcamFKBCl3E3EJGlVIKWIEhv/4qsgwDtL
- j0SkHd0SRWkTW2Xr8PzQay6ZKoNzIOe/DhrEgcQSSlN4Ri9e0Ywr7iez/9bs1ZJ9yuWV
- jKMAq3d4a8bRDkcHjJYenh75w9qAjdW6WNPuABHlRvA4vmkyyopbQ6HjFngr6TmWNIT5
- F3HZC1+Rwh+W6OyNrHVRY97Gk7P+WeUmZenQutNR7hRUy4/u/W/+hZoa5pDcDvJCtHDn IA== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by userp2120.oracle.com with ESMTP id 309gw4hmbq-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 10 Apr 2020 09:32:39 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03A9HUTx162777;
-        Fri, 10 Apr 2020 09:32:39 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by userp3030.oracle.com with ESMTP id 3091m6wc8m-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 10 Apr 2020 09:32:39 +0000
-Received: from abhmp0020.oracle.com (abhmp0020.oracle.com [141.146.116.26])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 03A9WbL9024236;
-        Fri, 10 Apr 2020 09:32:37 GMT
-Received: from [10.159.147.187] (/10.159.147.187)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Fri, 10 Apr 2020 02:32:37 -0700
-Subject: Re: [RFC PATCH 00/26] Runtime paravirt patching
-To:     =?UTF-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>,
-        linux-kernel@vger.kernel.org, x86@kernel.org
-Cc:     peterz@infradead.org, hpa@zytor.com, jpoimboe@redhat.com,
-        namit@vmware.com, mhiramat@kernel.org, bp@alien8.de,
-        vkuznets@redhat.com, pbonzini@redhat.com,
-        boris.ostrovsky@oracle.com, mihai.carabas@oracle.com,
-        kvm@vger.kernel.org, xen-devel@lists.xenproject.org,
-        virtualization@lists.linux-foundation.org
-References: <20200408050323.4237-1-ankur.a.arora@oracle.com>
- <d7f8bff3-526a-6a84-2e81-677cfbac0111@suse.com>
-From:   Ankur Arora <ankur.a.arora@oracle.com>
-Message-ID: <37d755a7-8fc9-8cc8-5627-027a8479b6c7@oracle.com>
-Date:   Fri, 10 Apr 2020 02:32:35 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Fri, 10 Apr 2020 05:32:57 -0400
+Received: from wtarreau.pck.nerim.net ([62.212.114.60]:34476 "EHLO 1wt.eu"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725861AbgDJJc4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Apr 2020 05:32:56 -0400
+Received: (from willy@localhost)
+        by pcw.home.local (8.15.2/8.15.2/Submit) id 03A9WrBG014543;
+        Fri, 10 Apr 2020 11:32:53 +0200
+Date:   Fri, 10 Apr 2020 11:32:53 +0200
+From:   Willy Tarreau <w@1wt.eu>
+To:     Denis Efremov <efremov@linux.com>
+Cc:     Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 22/23] floppy: cleanup: do not iterate on current_fdc in
+ DMA grab/release functions
+Message-ID: <20200410093253.GF14199@1wt.eu>
+References: <20200331094054.24441-1-w@1wt.eu>
+ <20200331094054.24441-23-w@1wt.eu>
+ <f5fb363f-8c2c-3aca-6b71-4a45544d067a@linux.com>
+ <20200410084516.GD14199@1wt.eu>
+ <0bfa0ee0-e2f5-ff9e-b407-bb81d620df20@linux.com>
 MIME-Version: 1.0
-In-Reply-To: <d7f8bff3-526a-6a84-2e81-677cfbac0111@suse.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9586 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 malwarescore=0
- mlxlogscore=999 phishscore=0 spamscore=0 adultscore=0 suspectscore=0
- mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2004100078
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9586 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 bulkscore=0
- phishscore=0 lowpriorityscore=0 impostorscore=0 clxscore=1015
- suspectscore=0 malwarescore=0 spamscore=0 mlxlogscore=999 mlxscore=0
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2004100078
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <0bfa0ee0-e2f5-ff9e-b407-bb81d620df20@linux.com>
+User-Agent: Mutt/1.6.1 (2016-04-27)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-04-08 5:28 a.m., Jürgen Groß wrote:
-> On 08.04.20 07:02, Ankur Arora wrote:
-[ snip ]
+On Fri, Apr 10, 2020 at 11:48:21AM +0300, Denis Efremov wrote:
+> On 4/10/20 11:45 AM, Willy Tarreau wrote:
+> > Ah thanks, I missed these ones! Do you want me to respin this patch ?
 > 
-> Quite a lot of code churn and hacks for a problem which should not
-> occur on a well administrated machine.
-Yeah, I agree the patch set is pretty large and clearly the NMI or
-the stop_machine() are completely out. That said, as I wrote in my
-other mail I think the problem is still worth solving.
+> I think you can resend only this patch, or send an additional one 24/23.
 
-> Especially the NMI dependencies make me not wanting to Ack this series.
-The NMI solution did turn out to be pretty ugly.
+OK, now done as 24/23. Apparently we can now get rid of the code dealing
+with drive==-1 in lock_fdc()/set_fdc() etc. It's only used by
+user_reset_fdc() and the last call place is in floppy_resume() which
+even forgets to set the fdc number, so it only resets the current FDC,
+as many times as there are FDCs in the system. I'm going to fix this
+one and see make sure we drop this special case of -1.
 
-I was using it to solve two problems: avoid a deadlock where an NMI handler
-could use a lock while the stop_machine() thread is trying to rewrite the
-corresponding call-sites. And, needed to ensure that we don't lock
-and unlock using mismatched primitives.
-
-
-Thanks
-Ankur
-
-> 
-> 
-> Juergen
+Willy
