@@ -2,183 +2,221 @@ Return-Path: <SRS0=VV4q=52=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UPPERCASE_50_75,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91E9AC2BB55
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 22:18:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AD39C2BB86
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 22:18:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5FAD320801
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 22:18:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3AD3620801
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 22:18:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="UE0L9XV5"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="RF5Go9aJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726729AbgDJWSA (ORCPT
+        id S1726744AbgDJWSL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Apr 2020 18:18:00 -0400
-Received: from mail-bn8nam11on2111.outbound.protection.outlook.com ([40.107.236.111]:57441
-        "EHLO NAM11-BN8-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726594AbgDJWR7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Apr 2020 18:17:59 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=BrvVPiPTobMyjQjuytem5MLLhUefGDnLWDPxtiz9NxHjd7dW12blvyTAcUz0hfO2U+/WISgmyd0Q63sayRsepX+PSCkH98QNo+QraP751WvexPhMouafcO/bXvQGV0ADBrixps9BWOSuExX2Tb/tdKLfDPLQEJNTZJwNg25xmY5jRkEExShR8WIiVPraLp9j/SaQTNwBfslJUentmah6mFAVM1il4/JGkPWZyvF7s45vGRLaMKMG+TtOFIillzjiyhLDVL6ldTq/wVODVefquAxOg6P8Xz/vBpJFWypLRjqNdTeQmThwigLKeM0NdG8Xd57neunPfVPczcvWLFRdaw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=94oKViTZYfV255bKs841lRpVgakFZ99tR9nmqF+B94s=;
- b=OnS1pxZvhRK1OMe4A0kPdvAbg/5H7x5EUwVYANz+003SCzXoipAABU2Oqj9EWdmj2p3t+GXp0kn+9IF9h0IBbkW3mP/6+8CFMahwSPHrm85Ts9Mgu84zi5Wk5d7wMaD96qras6fuomzrgjKWyVf/HFRTSVhBIvVMjxXZaLrX2Vj8+yk3EXVhrH/HzNVHHax/wDV2GnnViQSDxruBkk2eP8T7IG0TmzubgyhjprlEcPPUZ4XD91/FOgBNdyJyiW7fzlyTEgERvGExCB2dggaL7XpKlpy6OdOXGcB4llW0YywfpzX6Gyc3vtozRksYuO85sbwDhJidZla1QQxUG5VFuA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microsoft.com; dmarc=pass action=none
- header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=94oKViTZYfV255bKs841lRpVgakFZ99tR9nmqF+B94s=;
- b=UE0L9XV5wybrs8jxIG/4JPiAtkq4RNg7Pn14PioKz6pTHp7P5pv/PSMwZuZApxeei4HW7AOqqmKcdYVNnX88C8xQM7lv22zjeY76MjBx57dBwEGf4XHHSHJu/yA4+IbPrwud2+WThfATI96K6M+pCROv34o29CfxegJ+q7Ie7hU=
-Authentication-Results: spf=none (sender IP is )
- smtp.mailfrom=decui@microsoft.com; 
-Received: from BN8PR21MB1139.namprd21.prod.outlook.com (2603:10b6:408:72::10)
- by BN8PR21MB1204.namprd21.prod.outlook.com (2603:10b6:408:76::16) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2921.6; Fri, 10 Apr
- 2020 22:17:57 +0000
-Received: from BN8PR21MB1139.namprd21.prod.outlook.com
- ([fe80::b01b:e85:784d:4581]) by BN8PR21MB1139.namprd21.prod.outlook.com
- ([fe80::b01b:e85:784d:4581%9]) with mapi id 15.20.2921.009; Fri, 10 Apr 2020
- 22:17:57 +0000
-From:   Dexuan Cui <decui@microsoft.com>
-To:     kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
-        wei.liu@kernel.org, linux-hyperv@vger.kernel.org,
-        linux-kernel@vger.kernel.org, mikelley@microsoft.com,
-        vkuznets@redhat.com
-Cc:     Dexuan Cui <decui@microsoft.com>, stable@vger.kernel.org
-Subject: [PATCH] Drivers: hv: vmbus: Fix Suspend-to-Idle for Generation-2 VM
-Date:   Fri, 10 Apr 2020 15:17:35 -0700
-Message-Id: <1586557055-13776-1-git-send-email-decui@microsoft.com>
-X-Mailer: git-send-email 1.8.3.1
-Reply-To: decui@microsoft.com
-Content-Type: text/plain
-X-ClientProxiedBy: MWHPR1201CA0023.namprd12.prod.outlook.com
- (2603:10b6:301:4a::33) To BN8PR21MB1139.namprd21.prod.outlook.com
- (2603:10b6:408:72::10)
+        Fri, 10 Apr 2020 18:18:11 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:34926 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726641AbgDJWSL (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Apr 2020 18:18:11 -0400
+Received: by mail-pf1-f195.google.com with SMTP id a13so1602228pfa.2
+        for <linux-kernel@vger.kernel.org>; Fri, 10 Apr 2020 15:18:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=eg7KB2UmJiacn5HMhVr3STCxlXC7Ncdbl28teyA/qnE=;
+        b=RF5Go9aJ2nuQ4sJRdmrw+wT5SZwrNy/InkqPYjDgpYTW2iSw1VH+4Jv+JF6QAeMePV
+         K/Hv+YvYhCqz0c8xAbzjbedG9Z/FrERSQmzjx0c1aTJJojWrAn0lIvqEdF1Af4oOArqn
+         SjtCA39xxKgApKVTqoPk8c56zrxfw0MiFRYW4BB70wsIUMGuTFR5kZtTWO2Un4WpJYOW
+         fdqHAlIbGHi/nggKl50By9FBuNfsGVU7uo9Dye7dSMUCvuLoPSTn7ElqOww1i2jrVqrS
+         qYn1Tez4IB9MU1lxkE70v3VZna2OTUQLCKtp3C9e6YGrwMMUPe3xgQb0TjvsUwFhyilx
+         LpCw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=eg7KB2UmJiacn5HMhVr3STCxlXC7Ncdbl28teyA/qnE=;
+        b=gJLe8rEt3GFvC/NwdKVcn/oamUSsXxAS7JvJQlXkIKJACff9pTFw42/f6i76TbG4ZL
+         lrV59F7X0G5BATthBfKcYV9OJTqA5xtCXu4nfRy6X+9z34lty17GSWKCLIY/Y75nQ4VU
+         Dm/jXNUFv+alnBNCZmxTm4xSjw1YGn8WS8PP6Q6K2Mt7UM5gSReWRi5BDha2GtJ4wqB2
+         QJUXQCoukVUgQTZilCoTRPKM2dAhWLN0K4fCKIPVVtycGhKmmdVHNGG8oPEnr59xo4RD
+         0T2DvGHAI3aZM7iqXm1CsHZVla7hHmD1lqgnlNMOAV9kvA8aa054kEeuiQnlM0cXUs1K
+         FvEA==
+X-Gm-Message-State: AGi0PubvX9mp4rVQ9mVm09QzBHLayztnDBthYkNOAPQRXL9Jpefpb4mv
+        CwoCp67HoAjK+h+/x6GlIKqQj3dftIk=
+X-Google-Smtp-Source: APiQypKuGog96mc6Yc47EvysrBnEd7V/DVsXoRgNLK+vUHBherAsLMJ/s5zJhZVcB+q1LdTVeX7W6w==
+X-Received: by 2002:a63:8c51:: with SMTP id q17mr6606761pgn.320.1586557088739;
+        Fri, 10 Apr 2020 15:18:08 -0700 (PDT)
+Received: from builder.lan (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id g4sm2629429pfb.169.2020.04.10.15.18.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 10 Apr 2020 15:18:08 -0700 (PDT)
+Date:   Fri, 10 Apr 2020 15:18:18 -0700
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Sivaprakash Murugesan <sivaprak@codeaurora.org>
+Cc:     agross@kernel.org, kishon@ti.com, robh+dt@kernel.org,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org,
+        Balaji Prakash J <bjagadee@codeaurora.org>
+Subject: Re: [PATCH 2/3] phy: qcom-qmp: Add USB QMP PHY support for IPQ8074
+Message-ID: <20200410221818.GE20625@builder.lan>
+References: <1586543372-13969-1-git-send-email-sivaprak@codeaurora.org>
+ <1586543372-13969-3-git-send-email-sivaprak@codeaurora.org>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net (13.77.154.182) by MWHPR1201CA0023.namprd12.prod.outlook.com (2603:10b6:301:4a::33) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2900.15 via Frontend Transport; Fri, 10 Apr 2020 22:17:55 +0000
-X-Mailer: git-send-email 1.8.3.1
-X-Originating-IP: [13.77.154.182]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: f4b8a624-5e37-4764-9453-08d7dd9d0508
-X-MS-TrafficTypeDiagnostic: BN8PR21MB1204:|BN8PR21MB1204:|BN8PR21MB1204:
-X-MS-Exchange-Transport-Forked: True
-X-LD-Processed: 72f988bf-86f1-41af-91ab-2d7cd011db47,ExtAddr
-X-Microsoft-Antispam-PRVS: <BN8PR21MB12045D104EBBA1E639B4C2A3BFDE0@BN8PR21MB1204.namprd21.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:8882;
-X-Forefront-PRVS: 0369E8196C
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN8PR21MB1139.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10019020)(4636009)(396003)(39860400002)(366004)(136003)(376002)(346002)(52116002)(6506007)(316002)(66946007)(16526019)(478600001)(186003)(10290500003)(2616005)(2906002)(66476007)(66556008)(956004)(3450700001)(6666004)(86362001)(4326008)(5660300002)(6486002)(8936002)(6512007)(15650500001)(82960400001)(8676002)(82950400001)(36756003)(81156014)(26005);DIR:OUT;SFP:1102;
-Received-SPF: None (protection.outlook.com: microsoft.com does not designate
- permitted sender hosts)
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: QLaYedKGN9rSIMenATmwN0WWnszgVLE3QSR925jQMQj/6hCQTAUipmkAdt6zohjUWaz72qz/fUizoMCN6JIV1ARq9xZ29nxB6L9jNfNZZCzh+dQBD8ZlG9tlsVLtKt2AVCTQlO7G/LzIafzZmnmkVdv5imoMUs2kVNyGQi2pKHiXnlOW8IC4IwkMX5rSxQwZ1WWhq2RSGYv/RkrQ+1TVhtz5vPGXxPGqhCJhXDXs3RjFN4g0EP7Oq1v12mtY7l0lZj8zRPbVGPmHwj4g/TolAFfwE9/YuTqCjsxssrCqD2JjyqQd+SGYOUJwW0Mw98+yAXtyWpeDRoGy25if//ATCuBNqd3evYXzjooPh0mZ++cgRa+ar++S87vBURWLKk2SyQCYldXK5ISEp4SsyB5TZaz3di4lKvVaKI80HmywUip92rSOu2vk8rO4t4vLXVmR
-X-MS-Exchange-AntiSpam-MessageData: K0qEpyo/SZwQku1rkwNdtO765VruqqyI9gXlcE1LrjX2L3uR2BGCzGlnGJ/Li9WfpjEb4Ce4hUdlLNQRvYvoZvPfzfhpcoKCT5QoMkTMw+Qi6l0zYPwOVLO/xpPzBRxdGTK5IBWe4rOXJVmwo9X8lw==
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: f4b8a624-5e37-4764-9453-08d7dd9d0508
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Apr 2020 22:17:56.8492
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: yvFbxO1+TJQb/2HeqedsNN2AQt6ATbw6lYDG7OWHvt6mTCV0XXPAP97oKNQxAtdiQctM+KFuBuZGXD7GncCK2Q==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN8PR21MB1204
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1586543372-13969-3-git-send-email-sivaprak@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Before the hibernation patchset (e.g. f53335e3289f), in a Generation-2
-Linux VM on Hyper-V, the user can run "echo freeze > /sys/power/state" to
-freeze the system, i.e. Suspend-to-Idle. The user can press the keyboard
-or move the mouse to wake up the VM.
+On Fri 10 Apr 11:29 PDT 2020, Sivaprakash Murugesan wrote:
 
-With the hibernation patchset, Linux VM on Hyper-V can hibernate to disk,
-but Suspend-to-Idle is broken: when the synthetic keyboard/mouse are
-suspended, there is no way to wake up the VM.
+> Add QMP USB PHY found in IPQ8074
+> 
 
-Fix the issue by not suspending and resuming the vmbus devices upon
-Suspend-to-Idle.
+Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 
-Fixes: f53335e3289f ("Drivers: hv: vmbus: Suspend/resume the vmbus itself for hibernation")
-Cc: stable@vger.kernel.org
-Signed-off-by: Dexuan Cui <decui@microsoft.com>
----
- drivers/hv/vmbus_drv.c | 37 ++++++++++++++++++++++++++++---------
- 1 file changed, 28 insertions(+), 9 deletions(-)
-
-diff --git a/drivers/hv/vmbus_drv.c b/drivers/hv/vmbus_drv.c
-index 029378c27421..821185d20cbd 100644
---- a/drivers/hv/vmbus_drv.c
-+++ b/drivers/hv/vmbus_drv.c
-@@ -969,11 +969,22 @@ static void vmbus_device_release(struct device *device)
- }
- 
- /*
-- * Note: we must use SET_NOIRQ_SYSTEM_SLEEP_PM_OPS rather than
-- * SET_SYSTEM_SLEEP_PM_OPS: see the comment before vmbus_bus_pm.
-+ * Note: we must use the "noirq" ops: see the comment before vmbus_bus_pm.
-+ *
-+ * suspend_noirq/resume_noirq are set to NULL to support Suspend-to-Idle: we
-+ * shouldn't suspend the vmbus devices upon Suspend-to-Idle, otherwise there
-+ * is no way to wake up a Generation-2 VM.
-+ *
-+ * The other 4 ops are for hibernation.
-  */
-+
- static const struct dev_pm_ops vmbus_pm = {
--	SET_NOIRQ_SYSTEM_SLEEP_PM_OPS(vmbus_suspend, vmbus_resume)
-+	.suspend_noirq	= NULL,
-+	.resume_noirq	= NULL,
-+	.freeze_noirq	= vmbus_suspend,
-+	.thaw_noirq	= vmbus_resume,
-+	.poweroff_noirq	= vmbus_suspend,
-+	.restore_noirq	= vmbus_resume,
- };
- 
- /* The one and only one */
-@@ -2263,16 +2274,24 @@ static const struct acpi_device_id vmbus_acpi_device_ids[] = {
- MODULE_DEVICE_TABLE(acpi, vmbus_acpi_device_ids);
- 
- /*
-- * Note: we must use SET_NOIRQ_SYSTEM_SLEEP_PM_OPS rather than
-- * SET_SYSTEM_SLEEP_PM_OPS, otherwise NIC SR-IOV can not work, because the
-- * "pci_dev_pm_ops" uses the "noirq" callbacks: in the resume path, the
-- * pci "noirq" restore callback runs before "non-noirq" callbacks (see
-+ * Note: we must use the "no_irq" ops, otherwise hibernation can not work with
-+ * PCI device assignment, because "pci_dev_pm_ops" uses the "noirq" ops: in
-+ * the resume path, the pci "noirq" restore op runs before "non-noirq" op (see
-  * resume_target_kernel() -> dpm_resume_start(), and hibernation_restore() ->
-  * dpm_resume_end()). This means vmbus_bus_resume() and the pci-hyperv's
-- * resume callback must also run via the "noirq" callbacks.
-+ * resume callback must also run via the "noirq" ops.
-+ *
-+ * Set suspend_noirq/resume_noirq to NULL for Suspend-to-Idle: see the comment
-+ * earlier in thie file before vmbus_pm.
-  */
-+
- static const struct dev_pm_ops vmbus_bus_pm = {
--	SET_NOIRQ_SYSTEM_SLEEP_PM_OPS(vmbus_bus_suspend, vmbus_bus_resume)
-+	.suspend_noirq	= NULL,
-+	.resume_noirq	= NULL,
-+	.freeze_noirq	= vmbus_bus_suspend,
-+	.thaw_noirq	= vmbus_bus_resume,
-+	.poweroff_noirq	= vmbus_bus_suspend,
-+	.restore_noirq	= vmbus_bus_resume
- };
- 
- static struct acpi_driver vmbus_acpi_driver = {
--- 
-2.19.1
-
+> Co-developed-by: Balaji Prakash J <bjagadee@codeaurora.org>
+> Signed-off-by: Balaji Prakash J <bjagadee@codeaurora.org>
+> Signed-off-by: Sivaprakash Murugesan <sivaprak@codeaurora.org>
+> ---
+>  drivers/phy/qualcomm/phy-qcom-qmp.c | 102 ++++++++++++++++++++++++++++++++++++
+>  1 file changed, 102 insertions(+)
+> 
+> diff --git a/drivers/phy/qualcomm/phy-qcom-qmp.c b/drivers/phy/qualcomm/phy-qcom-qmp.c
+> index c190406..8e9a8a4 100644
+> --- a/drivers/phy/qualcomm/phy-qcom-qmp.c
+> +++ b/drivers/phy/qualcomm/phy-qcom-qmp.c
+> @@ -188,6 +188,81 @@ static const unsigned int sm8150_ufsphy_regs_layout[] = {
+>  	[QPHY_SW_RESET]			= QPHY_V4_SW_RESET,
+>  };
+>  
+> +static const struct qmp_phy_init_tbl ipq8074_usb3_serdes_tbl[] = {
+> +	QMP_PHY_INIT_CFG(QSERDES_COM_SYSCLK_EN_SEL, 0x1a),
+> +	QMP_PHY_INIT_CFG(QSERDES_COM_BIAS_EN_CLKBUFLR_EN, 0x08),
+> +	QMP_PHY_INIT_CFG(QSERDES_COM_CLK_SELECT, 0x30),
+> +	QMP_PHY_INIT_CFG(QSERDES_COM_BG_TRIM, 0x0f),
+> +	QMP_PHY_INIT_CFG(QSERDES_RX_UCDR_FASTLOCK_FO_GAIN, 0x0b),
+> +	QMP_PHY_INIT_CFG(QSERDES_COM_SVS_MODE_CLK_SEL, 0x01),
+> +	QMP_PHY_INIT_CFG(QSERDES_COM_HSCLK_SEL, 0x00),
+> +	QMP_PHY_INIT_CFG(QSERDES_COM_CMN_CONFIG, 0x06),
+> +	QMP_PHY_INIT_CFG(QSERDES_COM_PLL_IVCO, 0x0f),
+> +	QMP_PHY_INIT_CFG(QSERDES_COM_SYS_CLK_CTRL, 0x06),
+> +	/* PLL and Loop filter settings */
+> +	QMP_PHY_INIT_CFG(QSERDES_COM_DEC_START_MODE0, 0x82),
+> +	QMP_PHY_INIT_CFG(QSERDES_COM_DIV_FRAC_START1_MODE0, 0x55),
+> +	QMP_PHY_INIT_CFG(QSERDES_COM_DIV_FRAC_START2_MODE0, 0x55),
+> +	QMP_PHY_INIT_CFG(QSERDES_COM_DIV_FRAC_START3_MODE0, 0x03),
+> +	QMP_PHY_INIT_CFG(QSERDES_COM_CP_CTRL_MODE0, 0x0b),
+> +	QMP_PHY_INIT_CFG(QSERDES_COM_PLL_RCTRL_MODE0, 0x16),
+> +	QMP_PHY_INIT_CFG(QSERDES_COM_PLL_CCTRL_MODE0, 0x28),
+> +	QMP_PHY_INIT_CFG(QSERDES_COM_INTEGLOOP_GAIN0_MODE0, 0x80),
+> +	QMP_PHY_INIT_CFG(QSERDES_COM_LOCK_CMP1_MODE0, 0x15),
+> +	QMP_PHY_INIT_CFG(QSERDES_COM_LOCK_CMP2_MODE0, 0x34),
+> +	QMP_PHY_INIT_CFG(QSERDES_COM_LOCK_CMP3_MODE0, 0x00),
+> +	QMP_PHY_INIT_CFG(QSERDES_COM_CORE_CLK_EN, 0x00),
+> +	QMP_PHY_INIT_CFG(QSERDES_COM_LOCK_CMP_CFG, 0x00),
+> +	QMP_PHY_INIT_CFG(QSERDES_COM_VCO_TUNE_MAP, 0x00),
+> +	QMP_PHY_INIT_CFG(QSERDES_COM_BG_TIMER, 0x0a),
+> +	/* SSC settings */
+> +	QMP_PHY_INIT_CFG(QSERDES_COM_SSC_EN_CENTER, 0x01),
+> +	QMP_PHY_INIT_CFG(QSERDES_COM_SSC_PER1, 0x31),
+> +	QMP_PHY_INIT_CFG(QSERDES_COM_SSC_PER2, 0x01),
+> +	QMP_PHY_INIT_CFG(QSERDES_COM_SSC_ADJ_PER1, 0x00),
+> +	QMP_PHY_INIT_CFG(QSERDES_COM_SSC_ADJ_PER2, 0x00),
+> +	QMP_PHY_INIT_CFG(QSERDES_COM_SSC_STEP_SIZE1, 0xde),
+> +	QMP_PHY_INIT_CFG(QSERDES_COM_SSC_STEP_SIZE2, 0x07),
+> +};
+> +
+> +static const struct qmp_phy_init_tbl ipq8074_usb3_rx_tbl[] = {
+> +	QMP_PHY_INIT_CFG(QSERDES_RX_UCDR_SO_GAIN, 0x06),
+> +	QMP_PHY_INIT_CFG(QSERDES_RX_RX_EQU_ADAPTOR_CNTRL2, 0x02),
+> +	QMP_PHY_INIT_CFG(QSERDES_RX_RX_EQU_ADAPTOR_CNTRL3, 0x4c),
+> +	QMP_PHY_INIT_CFG(QSERDES_RX_RX_EQU_ADAPTOR_CNTRL4, 0xb8),
+> +	QMP_PHY_INIT_CFG(QSERDES_RX_RX_EQ_OFFSET_ADAPTOR_CNTRL1, 0x77),
+> +	QMP_PHY_INIT_CFG(QSERDES_RX_RX_OFFSET_ADAPTOR_CNTRL2, 0x80),
+> +	QMP_PHY_INIT_CFG(QSERDES_RX_SIGDET_CNTRL, 0x03),
+> +	QMP_PHY_INIT_CFG(QSERDES_RX_SIGDET_DEGLITCH_CNTRL, 0x16),
+> +	QMP_PHY_INIT_CFG(QSERDES_RX_SIGDET_ENABLES, 0x0),
+> +};
+> +
+> +static const struct qmp_phy_init_tbl ipq8074_usb3_pcs_tbl[] = {
+> +	QMP_PHY_INIT_CFG(QPHY_V3_PCS_TXDEEMPH_M6DB_V0, 0x15),
+> +	QMP_PHY_INIT_CFG(QPHY_V3_PCS_TXDEEMPH_M3P5DB_V0, 0x0e),
+> +	QMP_PHY_INIT_CFG(QPHY_V3_PCS_FLL_CNTRL2, 0x83),
+> +	QMP_PHY_INIT_CFG(QPHY_V3_PCS_FLL_CNTRL1, 0x02),
+> +	QMP_PHY_INIT_CFG(QPHY_V3_PCS_FLL_CNT_VAL_L, 0x09),
+> +	QMP_PHY_INIT_CFG(QPHY_V3_PCS_FLL_CNT_VAL_H_TOL, 0xa2),
+> +	QMP_PHY_INIT_CFG(QPHY_V3_PCS_FLL_MAN_CODE, 0x85),
+> +	QMP_PHY_INIT_CFG(QPHY_V3_PCS_LOCK_DETECT_CONFIG1, 0xd1),
+> +	QMP_PHY_INIT_CFG(QPHY_V3_PCS_LOCK_DETECT_CONFIG2, 0x1f),
+> +	QMP_PHY_INIT_CFG(QPHY_V3_PCS_LOCK_DETECT_CONFIG3, 0x47),
+> +	QMP_PHY_INIT_CFG(QPHY_V3_PCS_POWER_STATE_CONFIG2, 0x1b),
+> +	QMP_PHY_INIT_CFG(QPHY_V3_PCS_RXEQTRAINING_WAIT_TIME, 0x75),
+> +	QMP_PHY_INIT_CFG(QPHY_V3_PCS_RXEQTRAINING_RUN_TIME, 0x13),
+> +	QMP_PHY_INIT_CFG(QPHY_V3_PCS_LFPS_TX_ECSTART_EQTLOCK, 0x86),
+> +	QMP_PHY_INIT_CFG(QPHY_V3_PCS_PWRUP_RESET_DLY_TIME_AUXCLK, 0x04),
+> +	QMP_PHY_INIT_CFG(QPHY_V3_PCS_TSYNC_RSYNC_TIME, 0x44),
+> +	QMP_PHY_INIT_CFG(QPHY_V3_PCS_RCVR_DTCT_DLY_P1U2_L, 0xe7),
+> +	QMP_PHY_INIT_CFG(QPHY_V3_PCS_RCVR_DTCT_DLY_P1U2_H, 0x03),
+> +	QMP_PHY_INIT_CFG(QPHY_V3_PCS_RCVR_DTCT_DLY_U3_L, 0x40),
+> +	QMP_PHY_INIT_CFG(QPHY_V3_PCS_RCVR_DTCT_DLY_U3_H, 0x00),
+> +	QMP_PHY_INIT_CFG(QPHY_V3_PCS_RX_SIGDET_LVL, 0x88),
+> +	QMP_PHY_INIT_CFG(QPHY_V3_PCS_TXDEEMPH_M6DB_V0, 0x17),
+> +	QMP_PHY_INIT_CFG(QPHY_V3_PCS_TXDEEMPH_M3P5DB_V0, 0x0f),
+> +};
+> +
+>  static const struct qmp_phy_init_tbl msm8996_pcie_serdes_tbl[] = {
+>  	QMP_PHY_INIT_CFG(QSERDES_COM_BIAS_EN_CLKBUFLR_EN, 0x1c),
+>  	QMP_PHY_INIT_CFG(QSERDES_COM_CLK_ENABLE1, 0x10),
+> @@ -1467,6 +1542,30 @@ static const char * const qmp_phy_vreg_l[] = {
+>  	"vdda-phy", "vdda-pll",
+>  };
+>  
+> +static const struct qmp_phy_cfg ipq8074_usb3phy_cfg = {
+> +	.type			= PHY_TYPE_USB3,
+> +	.nlanes			= 1,
+> +
+> +	.serdes_tbl		= ipq8074_usb3_serdes_tbl,
+> +	.serdes_tbl_num		= ARRAY_SIZE(ipq8074_usb3_serdes_tbl),
+> +	.tx_tbl			= msm8996_usb3_tx_tbl,
+> +	.tx_tbl_num		= ARRAY_SIZE(msm8996_usb3_tx_tbl),
+> +	.rx_tbl			= ipq8074_usb3_rx_tbl,
+> +	.rx_tbl_num		= ARRAY_SIZE(ipq8074_usb3_rx_tbl),
+> +	.pcs_tbl		= ipq8074_usb3_pcs_tbl,
+> +	.pcs_tbl_num		= ARRAY_SIZE(ipq8074_usb3_pcs_tbl),
+> +	.clk_list		= msm8996_phy_clk_l,
+> +	.num_clks		= ARRAY_SIZE(msm8996_phy_clk_l),
+> +	.reset_list		= msm8996_usb3phy_reset_l,
+> +	.num_resets		= ARRAY_SIZE(msm8996_usb3phy_reset_l),
+> +	.vreg_list		= qmp_phy_vreg_l,
+> +	.num_vregs		= ARRAY_SIZE(qmp_phy_vreg_l),
+> +	.regs			= usb3phy_regs_layout,
+> +
+> +	.start_ctrl		= SERDES_START | PCS_START,
+> +	.pwrdn_ctrl		= SW_PWRDN,
+> +};
+> +
+>  static const struct qmp_phy_cfg msm8996_pciephy_cfg = {
+>  	.type			= PHY_TYPE_PCIE,
+>  	.nlanes			= 3,
+> @@ -2498,6 +2597,9 @@ int qcom_qmp_phy_create(struct device *dev, struct device_node *np, int id)
+>  
+>  static const struct of_device_id qcom_qmp_phy_of_match_table[] = {
+>  	{
+> +		.compatible = "qcom,ipq8074-qmp-usb3-phy",
+> +		.data = &ipq8074_usb3phy_cfg,
+> +	}, {
+>  		.compatible = "qcom,msm8996-qmp-pcie-phy",
+>  		.data = &msm8996_pciephy_cfg,
+>  	}, {
+> -- 
+> 2.7.4
+> 
