@@ -2,197 +2,201 @@ Return-Path: <SRS0=VV4q=52=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B560C2BA19
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 03:16:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7593BC2BB1D
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 03:21:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CA63E20769
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 03:16:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 56D0320769
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 03:21:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726676AbgDJDQD (ORCPT
+        id S1726659AbgDJDVQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Apr 2020 23:16:03 -0400
-Received: from mga07.intel.com ([134.134.136.100]:30990 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726594AbgDJDQC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Apr 2020 23:16:02 -0400
-IronPort-SDR: PN9ikPB35N86S1TxQ1Y7iKKmRLqWdbur6JDEZcHDVGINu8KlteSPrVQybc7+IEkQzrpg8MBNWS
- E4L/unrmXNmQ==
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Apr 2020 20:16:02 -0700
-IronPort-SDR: mwdWbfioCrT9VIiCeFwnyiAwXxTS540MpfN+bFY47xMSgBGlLgy6waCrSFIv8sRAwtyPeKw0RS
- G9XpNPegE/pA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,364,1580803200"; 
-   d="scan'208,223";a="270284078"
-Received: from lingshan-mobl5.ccr.corp.intel.com (HELO [10.255.31.39]) ([10.255.31.39])
-  by orsmga002.jf.intel.com with ESMTP; 09 Apr 2020 20:15:54 -0700
-Subject: Re: [PATCH V9 9/9] virtio: Intel IFC VF driver for VDPA
-To:     "Michael S. Tsirkin" <mst@redhat.com>,
-        Arnd Bergmann <arnd@arndb.de>
-Cc:     Jason Wang <jasowang@redhat.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        kvm list <kvm@vger.kernel.org>,
-        virtualization@lists.linux-foundation.org,
-        Networking <netdev@vger.kernel.org>,
-        Jason Gunthorpe <jgg@mellanox.com>, maxime.coquelin@redhat.com,
-        cunming.liang@intel.com, zhihong.wang@intel.com,
-        rob.miller@broadcom.com, xiao.w.wang@intel.com,
-        eperezma@redhat.com, lulu@redhat.com,
-        Parav Pandit <parav@mellanox.com>, kevin.tian@intel.com,
-        Stefan Hajnoczi <stefanha@redhat.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Christoph Hellwig <hch@infradead.org>, aadam@redhat.com,
-        Jiri Pirko <jiri@mellanox.com>, shahafs@mellanox.com,
-        hanand@xilinx.com, mhabets@solarflare.com, gdawar@xilinx.com,
-        saugatm@xilinx.com, vmireyno@marvell.com,
-        zhangweining@ruijie.com.cn, Bie Tiwei <tiwei.bie@intel.com>
-References: <20200326140125.19794-1-jasowang@redhat.com>
- <20200326140125.19794-10-jasowang@redhat.com>
- <CAK8P3a1RXUXs5oYjB=Jq5cpvG11eTnmJ+vc18_-0fzgTH6envA@mail.gmail.com>
- <20200409162427-mutt-send-email-mst@kernel.org>
-From:   "Zhu, Lingshan" <lingshan.zhu@intel.com>
-Message-ID: <77962da1-b9ec-2eaf-21d0-9790e7f0366d@intel.com>
-Date:   Fri, 10 Apr 2020 11:15:53 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
-MIME-Version: 1.0
-In-Reply-To: <20200409162427-mutt-send-email-mst@kernel.org>
-Content-Type: multipart/mixed;
- boundary="------------6E5E274523B4D96E25AC383C"
-Content-Language: en-US
+        Thu, 9 Apr 2020 23:21:16 -0400
+Received: from mail.loongson.cn ([114.242.206.163]:34348 "EHLO loongson.cn"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726082AbgDJDVQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Apr 2020 23:21:16 -0400
+Received: from linux.localdomain (unknown [113.200.148.30])
+        by mail.loongson.cn (Coremail) with SMTP id AQAAf9Dxz2kd5o9etf8lAA--.35S2;
+        Fri, 10 Apr 2020 11:21:02 +0800 (CST)
+From:   Tiezhu Yang <yangtiezhu@loongson.cn>
+To:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+Cc:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Xuefeng Li <lixuefeng@loongson.cn>
+Subject: [PATCH v2] MIPS: Limit check_bugs32() to affected platform
+Date:   Fri, 10 Apr 2020 11:20:59 +0800
+Message-Id: <1586488859-18715-1-git-send-email-yangtiezhu@loongson.cn>
+X-Mailer: git-send-email 2.1.0
+X-CM-TRANSID: AQAAf9Dxz2kd5o9etf8lAA--.35S2
+X-Coremail-Antispam: 1UD129KBjvJXoWxJw4fGF13uF47ZFWxGF4kJFb_yoWrCryxpF
+        4qyan5Wr4DWFy7tFySyrykCrWaq34kWr4a9r12ga4UZ3WavFn8WFnaqr1fJryUAFZIga48
+        Wa4Sqr13tr4IyaUanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+        9KBjDU0xBIdaVrnRJUUUyC14x267AKxVWUJVW8JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+        rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+        1l84ACjcxK6xIIjxv20xvE14v26ryj6F1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26F4j
+        6r4UJwA2z4x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87Iv6xkF7I0E14v26F
+        4UJVW0owAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv
+        7VC0I7IYx2IY67AKxVWUGVWUXwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r
+        1j6r4UM4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwCF04k20xvY0x0E
+        wIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E74
+        80Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIxkGc2Ij64vIr41lIxAIcVC0
+        I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04
+        k26cxKx2IYs7xG6Fyj6rWUJwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF
+        7I0E14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x0JUdEfOUUUUU=
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is a multi-part message in MIME format.
---------------6E5E274523B4D96E25AC383C
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+In the current code, check_bugs32() only handles MIPS32 CPU type CPU_34K,
+it is better to build and call it on the affected platform.
 
+Move check_bugs32() to the new added 34k-bugs32.c to indicate the fact that
+the code is specific to the 34k CPU, and also add CONFIG_CPU_34K_BUGS32 to
+control whether or not check the bugs.
 
-On 4/10/2020 4:25 AM, Michael S. Tsirkin wrote:
-> On Thu, Apr 09, 2020 at 12:41:13PM +0200, Arnd Bergmann wrote:
->> On Thu, Mar 26, 2020 at 3:08 PM Jason Wang <jasowang@redhat.com> wrote:
->>> From: Zhu Lingshan <lingshan.zhu@intel.com>
->>>
->>> This commit introduced two layers to drive IFC VF:
->>>
->>> (1) ifcvf_base layer, which handles IFC VF NIC hardware operations and
->>>      configurations.
->>>
->>> (2) ifcvf_main layer, which complies to VDPA bus framework,
->>>      implemented device operations for VDPA bus, handles device probe,
->>>      bus attaching, vring operations, etc.
->>>
->>> Signed-off-by: Zhu Lingshan <lingshan.zhu@intel.com>
->>> Signed-off-by: Bie Tiwei <tiwei.bie@intel.com>
->>> Signed-off-by: Wang Xiao <xiao.w.wang@intel.com>
->>> Signed-off-by: Jason Wang <jasowang@redhat.com>
->>> +
->>> +#define IFCVF_QUEUE_ALIGNMENT  PAGE_SIZE
->>> +#define IFCVF_QUEUE_MAX                32768
->>> +static u16 ifcvf_vdpa_get_vq_align(struct vdpa_device *vdpa_dev)
->>> +{
->>> +       return IFCVF_QUEUE_ALIGNMENT;
->>> +}
->> This fails to build on arm64 with 64kb page size (found in linux-next):
->>
->> /drivers/vdpa/ifcvf/ifcvf_main.c: In function 'ifcvf_vdpa_get_vq_align':
->> arch/arm64/include/asm/page-def.h:17:20: error: conversion from 'long
->> unsigned int' to 'u16' {aka 'short unsigned int'} changes value from
->> '65536' to '0' [-Werror=overflow]
->>     17 | #define PAGE_SIZE  (_AC(1, UL) << PAGE_SHIFT)
->>        |                    ^
->> drivers/vdpa/ifcvf/ifcvf_base.h:37:31: note: in expansion of macro 'PAGE_SIZE'
->>     37 | #define IFCVF_QUEUE_ALIGNMENT PAGE_SIZE
->>        |                               ^~~~~~~~~
->> drivers/vdpa/ifcvf/ifcvf_main.c:231:9: note: in expansion of macro
->> 'IFCVF_QUEUE_ALIGNMENT'
->>    231 |  return IFCVF_QUEUE_ALIGNMENT;
->>        |         ^~~~~~~~~~~~~~~~~~~~~
->>
->> It's probably good enough to just not allow the driver to be built in that
->> configuration as it's fairly rare but unfortunately there is no simple Kconfig
->> symbol for it.
->>
->> In a similar driver, we did
->>
->> config VMXNET3
->>          tristate "VMware VMXNET3 ethernet driver"
->>          depends on PCI && INET
->>          depends on !(PAGE_SIZE_64KB || ARM64_64K_PAGES || \
->>                       IA64_PAGE_SIZE_64KB || MICROBLAZE_64K_PAGES || \
->>                       PARISC_PAGE_SIZE_64KB || PPC_64K_PAGES)
->>
->> I think we should probably make PAGE_SIZE_64KB a global symbol
->> in arch/Kconfig and have it selected by the other symbols so drivers
->> like yours can add a dependency for it.
->>
->>           Arnd
-> It's probably easier to make the alignment u32 - I don't really know why it's
-> u16, all callers seem to assign the result to a u32 value.
+Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+---
 
-Thanks Michael!
+v2:
+  - Add new 34k-bugs32.c
+  - Rename check_errata() to check_errata32()
+  - Add CONFIG_CPU_34K_BUGS32
+  - Modify commit message
 
-@ Arnd, would you please kindly have a try on the attached patch? I 
-failed to find an armv8 or above platform for now.
+ arch/mips/Kconfig             |  4 ++++
+ arch/mips/include/asm/bugs.h  |  4 +++-
+ arch/mips/kernel/34k-bugs32.c | 29 +++++++++++++++++++++++++++++
+ arch/mips/kernel/Makefile     |  1 +
+ arch/mips/kernel/cpu-probe.c  | 25 -------------------------
+ 5 files changed, 37 insertions(+), 26 deletions(-)
+ create mode 100644 arch/mips/kernel/34k-bugs32.c
 
-Thanks
-BR
-Zhu Lingshan
+diff --git a/arch/mips/Kconfig b/arch/mips/Kconfig
+index a1f973c..d95dc18 100644
+--- a/arch/mips/Kconfig
++++ b/arch/mips/Kconfig
+@@ -2619,6 +2619,10 @@ config CPU_R4X00_BUGS64
+ 	bool
+ 	default y if SYS_HAS_CPU_R4X00 && 64BIT && (TARGET_ISA_REV < 1)
+ 
++config CPU_34K_BUGS32
++	bool
++	default y if CPU_MIPS32_R2
++
+ config MIPS_ASID_SHIFT
+ 	int
+ 	default 6 if CPU_R3000 || CPU_TX39XX
+diff --git a/arch/mips/include/asm/bugs.h b/arch/mips/include/asm/bugs.h
+index d72dc6e..bbf843a 100644
+--- a/arch/mips/include/asm/bugs.h
++++ b/arch/mips/include/asm/bugs.h
+@@ -35,7 +35,9 @@ static inline void check_bugs(void)
+ 	unsigned int cpu = smp_processor_id();
+ 
+ 	cpu_data[cpu].udelay_val = loops_per_jiffy;
+-	check_bugs32();
++
++	if (IS_ENABLED(CONFIG_CPU_34K_BUGS32))
++		check_bugs32();
+ 
+ 	if (IS_ENABLED(CONFIG_CPU_R4X00_BUGS64))
+ 		check_bugs64();
+diff --git a/arch/mips/kernel/34k-bugs32.c b/arch/mips/kernel/34k-bugs32.c
+new file mode 100644
+index 0000000..dc3ac01
+--- /dev/null
++++ b/arch/mips/kernel/34k-bugs32.c
+@@ -0,0 +1,29 @@
++// SPDX-License-Identifier: GPL-2.0
++#include <asm/cpu.h>
++#include <asm/cpu-info.h>
++#include <asm/cpu-type.h>
++#include <asm/bugs.h>
++
++static inline void check_errata32(void)
++{
++	struct cpuinfo_mips *c = &current_cpu_data;
++
++	switch (current_cpu_type()) {
++	case CPU_34K:
++		/*
++		 * Erratum "RPS May Cause Incorrect Instruction Execution"
++		 * This code only handles VPE0, any SMP/RTOS code
++		 * making use of VPE1 will be responsable for that VPE.
++		 */
++		if ((c->processor_id & PRID_REV_MASK) <= PRID_REV_34K_V1_0_2)
++			write_c0_config7(read_c0_config7() | MIPS_CONF7_RPS);
++		break;
++	default:
++		break;
++	}
++}
++
++void __init check_bugs32(void)
++{
++	check_errata32();
++}
+diff --git a/arch/mips/kernel/Makefile b/arch/mips/kernel/Makefile
+index d6e97df..c2fd191 100644
+--- a/arch/mips/kernel/Makefile
++++ b/arch/mips/kernel/Makefile
+@@ -81,6 +81,7 @@ obj-$(CONFIG_PROC_FS)		+= proc.o
+ obj-$(CONFIG_MAGIC_SYSRQ)	+= sysrq.o
+ 
+ obj-$(CONFIG_CPU_R4X00_BUGS64)	+= r4k-bugs64.o
++obj-$(CONFIG_CPU_34K_BUGS32)	+= 34k-bugs32.o
+ 
+ obj-$(CONFIG_I8253)		+= i8253.o
+ 
+diff --git a/arch/mips/kernel/cpu-probe.c b/arch/mips/kernel/cpu-probe.c
+index f21a230..7179787 100644
+--- a/arch/mips/kernel/cpu-probe.c
++++ b/arch/mips/kernel/cpu-probe.c
+@@ -14,7 +14,6 @@
+ #include <linux/stddef.h>
+ #include <linux/export.h>
+ 
+-#include <asm/bugs.h>
+ #include <asm/cpu.h>
+ #include <asm/cpu-features.h>
+ #include <asm/cpu-type.h>
+@@ -461,30 +460,6 @@ static inline void cpu_set_mt_per_tc_perf(struct cpuinfo_mips *c)
+ 		c->options |= MIPS_CPU_MT_PER_TC_PERF_COUNTERS;
+ }
+ 
+-static inline void check_errata(void)
+-{
+-	struct cpuinfo_mips *c = &current_cpu_data;
+-
+-	switch (current_cpu_type()) {
+-	case CPU_34K:
+-		/*
+-		 * Erratum "RPS May Cause Incorrect Instruction Execution"
+-		 * This code only handles VPE0, any SMP/RTOS code
+-		 * making use of VPE1 will be responsable for that VPE.
+-		 */
+-		if ((c->processor_id & PRID_REV_MASK) <= PRID_REV_34K_V1_0_2)
+-			write_c0_config7(read_c0_config7() | MIPS_CONF7_RPS);
+-		break;
+-	default:
+-		break;
+-	}
+-}
+-
+-void __init check_bugs32(void)
+-{
+-	check_errata();
+-}
+-
+ /*
+  * Probe whether cpu has config register by trying to play with
+  * alternate cache bit and see whether it matters.
+-- 
+2.1.0
 
---------------6E5E274523B4D96E25AC383C
-Content-Type: text/plain; charset=UTF-8;
- name="0001-vdpa-change-get_vq_align-to-u32-alignment.patch"
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment;
- filename="0001-vdpa-change-get_vq_align-to-u32-alignment.patch"
-
-RnJvbSBiYjIwMTlmMDYyMDYwOWZiYmRjNjg1NGJjY2M1ZmVmZGI1M2YzZDlkIE1vbiBTZXAg
-MTcgMDA6MDA6MDAgMjAwMQpGcm9tOiBaaHUgTGluZ3NoYW4gPGxpbmdzaGFuLnpodUBpbnRl
-bC5jb20+CkRhdGU6IEZyaSwgMTAgQXByIDIwMjAgMTE6MDQ6MzggKzA4MDAKU3ViamVjdDog
-W1BBVENIXSB2ZHBhOiBjaGFuZ2UgZ2V0X3ZxX2FsaWduKCkgdG8gdTMyIGFsaWdubWVudAoK
-VGhpcyBjb21taXQgY2hhbmdlIHRoZSByZXR1cm4gdmFsdWUgb2YgZ2V0X3ZxX2FsaWduKCkg
-dG8gdTMyLiB0aGlzCmNhbiBoZWxwIHJlc29sdmUgYSBidWlsZCBpc3N1ZSBvZiBhcm02NCBw
-bGF0Zm9ybSwgYW5kIGFkYXB0aW5nIHRvCnRoZSBjYWxsZXJzLgoKU2lnbmVkLW9mZi1ieTog
-Wmh1IExpbmdzaGFuIDxsaW5nc2hhbi56aHVAaW50ZWwuY29tPgotLS0KIGRyaXZlcnMvdmRw
-YS9pZmN2Zi9pZmN2Zl9tYWluLmMgIHwgMiArLQogZHJpdmVycy92ZHBhL3ZkcGFfc2ltL3Zk
-cGFfc2ltLmMgfCAyICstCiBpbmNsdWRlL2xpbnV4L3ZkcGEuaCAgICAgICAgICAgICB8IDIg
-Ky0KIDMgZmlsZXMgY2hhbmdlZCwgMyBpbnNlcnRpb25zKCspLCAzIGRlbGV0aW9ucygtKQoK
-ZGlmZiAtLWdpdCBhL2RyaXZlcnMvdmRwYS9pZmN2Zi9pZmN2Zl9tYWluLmMgYi9kcml2ZXJz
-L3ZkcGEvaWZjdmYvaWZjdmZfbWFpbi5jCmluZGV4IDhkNTRkYzUuLjk3MDg5NWMgMTAwNjQ0
-Ci0tLSBhL2RyaXZlcnMvdmRwYS9pZmN2Zi9pZmN2Zl9tYWluLmMKKysrIGIvZHJpdmVycy92
-ZHBhL2lmY3ZmL2lmY3ZmX21haW4uYwpAQCAtMjI4LDcgKzIyOCw3IEBAIHN0YXRpYyB1MzIg
-aWZjdmZfdmRwYV9nZXRfdmVuZG9yX2lkKHN0cnVjdCB2ZHBhX2RldmljZSAqdmRwYV9kZXYp
-CiAJcmV0dXJuIElGQ1ZGX1NVQlNZU19WRU5ET1JfSUQ7CiB9CiAKLXN0YXRpYyB1MTYgaWZj
-dmZfdmRwYV9nZXRfdnFfYWxpZ24oc3RydWN0IHZkcGFfZGV2aWNlICp2ZHBhX2RldikKK3N0
-YXRpYyB1MzIgaWZjdmZfdmRwYV9nZXRfdnFfYWxpZ24oc3RydWN0IHZkcGFfZGV2aWNlICp2
-ZHBhX2RldikKIHsKIAlyZXR1cm4gSUZDVkZfUVVFVUVfQUxJR05NRU5UOwogfQpkaWZmIC0t
-Z2l0IGEvZHJpdmVycy92ZHBhL3ZkcGFfc2ltL3ZkcGFfc2ltLmMgYi9kcml2ZXJzL3ZkcGEv
-dmRwYV9zaW0vdmRwYV9zaW0uYwppbmRleCA2ZThhMGNmLi5hNGIzZjBkIDEwMDY0NAotLS0g
-YS9kcml2ZXJzL3ZkcGEvdmRwYV9zaW0vdmRwYV9zaW0uYworKysgYi9kcml2ZXJzL3ZkcGEv
-dmRwYV9zaW0vdmRwYV9zaW0uYwpAQCAtNDM1LDcgKzQzNSw3IEBAIHN0YXRpYyB1NjQgdmRw
-YXNpbV9nZXRfdnFfc3RhdGUoc3RydWN0IHZkcGFfZGV2aWNlICp2ZHBhLCB1MTYgaWR4KQog
-CXJldHVybiB2cmgtPmxhc3RfYXZhaWxfaWR4OwogfQogCi1zdGF0aWMgdTE2IHZkcGFzaW1f
-Z2V0X3ZxX2FsaWduKHN0cnVjdCB2ZHBhX2RldmljZSAqdmRwYSkKK3N0YXRpYyB1MzIgdmRw
-YXNpbV9nZXRfdnFfYWxpZ24oc3RydWN0IHZkcGFfZGV2aWNlICp2ZHBhKQogewogCXJldHVy
-biBWRFBBU0lNX1FVRVVFX0FMSUdOOwogfQpkaWZmIC0tZ2l0IGEvaW5jbHVkZS9saW51eC92
-ZHBhLmggYi9pbmNsdWRlL2xpbnV4L3ZkcGEuaAppbmRleCA3MzNhY2ZiLi41NDUzYWY4IDEw
-MDY0NAotLS0gYS9pbmNsdWRlL2xpbnV4L3ZkcGEuaAorKysgYi9pbmNsdWRlL2xpbnV4L3Zk
-cGEuaApAQCAtMTY0LDcgKzE2NCw3IEBAIHN0cnVjdCB2ZHBhX2NvbmZpZ19vcHMgewogCXU2
-NCAoKmdldF92cV9zdGF0ZSkoc3RydWN0IHZkcGFfZGV2aWNlICp2ZGV2LCB1MTYgaWR4KTsK
-IAogCS8qIERldmljZSBvcHMgKi8KLQl1MTYgKCpnZXRfdnFfYWxpZ24pKHN0cnVjdCB2ZHBh
-X2RldmljZSAqdmRldik7CisJdTMyICgqZ2V0X3ZxX2FsaWduKShzdHJ1Y3QgdmRwYV9kZXZp
-Y2UgKnZkZXYpOwogCXU2NCAoKmdldF9mZWF0dXJlcykoc3RydWN0IHZkcGFfZGV2aWNlICp2
-ZGV2KTsKIAlpbnQgKCpzZXRfZmVhdHVyZXMpKHN0cnVjdCB2ZHBhX2RldmljZSAqdmRldiwg
-dTY0IGZlYXR1cmVzKTsKIAl2b2lkICgqc2V0X2NvbmZpZ19jYikoc3RydWN0IHZkcGFfZGV2
-aWNlICp2ZGV2LAotLSAKMS44LjMuMQoK
---------------6E5E274523B4D96E25AC383C--
