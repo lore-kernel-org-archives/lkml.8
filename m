@@ -7,46 +7,49 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0276EC2D0EC
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 03:56:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AEBC9C2D0EC
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 03:56:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CA0A520BED
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 03:56:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8852121835
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 03:56:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586491011;
-	bh=7RdBcKbcSA8txvE3ou1/hXYhwhq2DHXO8rive13W17M=;
+	s=default; t=1586491014;
+	bh=cD3HNfjxwqG1X/QHqJC2nXVmCHZlJSzV9ZXuWKVzoYA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=sWTXmnzg6H7iv25ARDzN1b82YgmfSc/KORB4UI2VS1gejo5P7LPH/hCzuiX+UQ6fa
-	 WgxA5d3WlxY3i79NYN85eEEudERnm10UApcTY0iW7iY40f8q07t+kS4YcdICsoCHsf
-	 u2NWpmILrBAOHwjuTSwsrzT5Y1IGp27wm/LOEDpU=
+	b=msBO/k916m3+wXO9+QP8Kfdo0a10ldghj2DEohCpxbUso2n9P8Nvl1cxlW8NzkAQ1
+	 ObX8GpURaXp+tf6Hdj+RyPTVwOyxvDaiv+VXMArfUDFSCRpbSXohppJQpj3wrmM5Sz
+	 iLMLhIzXzSlU+h70I4CDGi4DzPZiJn3VqEjDO5Tw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728634AbgDJD4u (ORCPT
+        id S1728542AbgDJDtZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Apr 2020 23:56:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33516 "EHLO mail.kernel.org"
+        Thu, 9 Apr 2020 23:49:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33274 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728560AbgDJDt3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Apr 2020 23:49:29 -0400
+        id S1728517AbgDJDtW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Apr 2020 23:49:22 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0A3D5212CC;
-        Fri, 10 Apr 2020 03:49:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1A70420A8B;
+        Fri, 10 Apr 2020 03:49:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586490569;
-        bh=7RdBcKbcSA8txvE3ou1/hXYhwhq2DHXO8rive13W17M=;
+        s=default; t=1586490562;
+        bh=cD3HNfjxwqG1X/QHqJC2nXVmCHZlJSzV9ZXuWKVzoYA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RKuh0dL2nTJkhA5e5W6l/3UKKIE/ush1t2Zw8t3fa+M/DJiNEX8Alfr0vbUixJ0aW
-         k94c39NvK/76nwFdhYnbPFKsmhhPdAgZYtLiSRGYjOt+GKPScATlI5ecyg122P7aBw
-         xxE95ZbDAfi34DTB8VgH935p5GbBXPMTZjrt0iY0=
+        b=UMpHauiMSIjIWxAbN3dKrrk9e1HJ01gM98LTQ4j+xvVH2UKY2Y5Nb+gWWG0f56VeO
+         28jVjayFiFXp4H+AxQhGeHG6uvvdJ9HmDJV3f2oIGwaKaiY/iCeSYWU47wZ2BDuu3Z
+         xSoMPUkqIHeEqCi4/s/Wi5WsIvWrSGo/YOGb1ap8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Sungbo Eo <mans0n@gorani.run>, Marc Zyngier <maz@kernel.org>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.4 16/46] irqchip/versatile-fpga: Handle chained IRQs properly
-Date:   Thu,  9 Apr 2020 23:48:39 -0400
-Message-Id: <20200410034909.8922-16-sashal@kernel.org>
+Cc:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Rui Miguel Silva <rmfrfs@gmail.com>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org,
+        devel@driverdev.osuosl.org, linux-arm-kernel@lists.infradead.org
+Subject: [PATCH AUTOSEL 5.4 09/46] media: imx: imx7-media-csi: Fix video field handling
+Date:   Thu,  9 Apr 2020 23:48:32 -0400
+Message-Id: <20200410034909.8922-9-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200410034909.8922-1-sashal@kernel.org>
 References: <20200410034909.8922-1-sashal@kernel.org>
@@ -59,67 +62,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sungbo Eo <mans0n@gorani.run>
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 
-[ Upstream commit 486562da598c59e9f835b551d7cf19507de2d681 ]
+[ Upstream commit f7b8488bd39ae8feced4dfbb41cf1431277b893f ]
 
-Enclose the chained handler with chained_irq_{enter,exit}(), so that the
-muxed interrupts get properly acked.
+Commit 4791bd7d6adc ("media: imx: Try colorimetry at both sink and
+source pads") reworked the way that formats are set on the sink pad of
+the CSI subdevice, and accidentally removed video field handling.
+Restore it by defaulting to V4L2_FIELD_NONE if the field value isn't
+supported, with the only two supported value being V4L2_FIELD_NONE and
+V4L2_FIELD_INTERLACED.
 
-This patch also fixes a reboot bug on OX820 SoC, where the jiffies timer
-interrupt is never acked. The kernel waits a clock tick forever in
-calibrate_delay_converge(), which leads to a boot hang.
-
-Fixes: c41b16f8c9d9 ("ARM: integrator/versatile: consolidate FPGA IRQ handling code")
-Signed-off-by: Sungbo Eo <mans0n@gorani.run>
-Signed-off-by: Marc Zyngier <maz@kernel.org>
-Link: https://lore.kernel.org/r/20200319023448.1479701-1-mans0n@gorani.run
+Fixes: 4791bd7d6adc ("media: imx: Try colorimetry at both sink and source pads")
+Signed-off-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Reviewed-by: Rui Miguel Silva <rmfrfs@gmail.com>
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/irqchip/irq-versatile-fpga.c | 12 ++++++++++--
- 1 file changed, 10 insertions(+), 2 deletions(-)
+ drivers/staging/media/imx/imx7-media-csi.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/drivers/irqchip/irq-versatile-fpga.c b/drivers/irqchip/irq-versatile-fpga.c
-index 928858dada756..70e2cfff8175f 100644
---- a/drivers/irqchip/irq-versatile-fpga.c
-+++ b/drivers/irqchip/irq-versatile-fpga.c
-@@ -6,6 +6,7 @@
- #include <linux/irq.h>
- #include <linux/io.h>
- #include <linux/irqchip.h>
-+#include <linux/irqchip/chained_irq.h>
- #include <linux/irqchip/versatile-fpga.h>
- #include <linux/irqdomain.h>
- #include <linux/module.h>
-@@ -68,12 +69,16 @@ static void fpga_irq_unmask(struct irq_data *d)
+diff --git a/drivers/staging/media/imx/imx7-media-csi.c b/drivers/staging/media/imx/imx7-media-csi.c
+index bfd6b5fbf4841..d24897d06947f 100644
+--- a/drivers/staging/media/imx/imx7-media-csi.c
++++ b/drivers/staging/media/imx/imx7-media-csi.c
+@@ -1009,6 +1009,7 @@ static int imx7_csi_try_fmt(struct imx7_csi *csi,
+ 		sdformat->format.width = in_fmt->width;
+ 		sdformat->format.height = in_fmt->height;
+ 		sdformat->format.code = in_fmt->code;
++		sdformat->format.field = in_fmt->field;
+ 		*cc = in_cc;
  
- static void fpga_irq_handle(struct irq_desc *desc)
- {
-+	struct irq_chip *chip = irq_desc_get_chip(desc);
- 	struct fpga_irq_data *f = irq_desc_get_handler_data(desc);
--	u32 status = readl(f->base + IRQ_STATUS);
-+	u32 status;
+ 		sdformat->format.colorspace = in_fmt->colorspace;
+@@ -1023,6 +1024,9 @@ static int imx7_csi_try_fmt(struct imx7_csi *csi,
+ 							 false);
+ 			sdformat->format.code = (*cc)->codes[0];
+ 		}
 +
-+	chained_irq_enter(chip, desc);
- 
-+	status = readl(f->base + IRQ_STATUS);
- 	if (status == 0) {
- 		do_bad_IRQ(desc);
--		return;
-+		goto out;
- 	}
- 
- 	do {
-@@ -82,6 +87,9 @@ static void fpga_irq_handle(struct irq_desc *desc)
- 		status &= ~(1 << irq);
- 		generic_handle_irq(irq_find_mapping(f->domain, irq));
- 	} while (status);
-+
-+out:
-+	chained_irq_exit(chip, desc);
- }
- 
- /*
++		if (sdformat->format.field != V4L2_FIELD_INTERLACED)
++			sdformat->format.field = V4L2_FIELD_NONE;
+ 		break;
+ 	default:
+ 		return -EINVAL;
 -- 
 2.20.1
 
