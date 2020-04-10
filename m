@@ -2,101 +2,91 @@ Return-Path: <SRS0=VV4q=52=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BA61C2D0EC
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 17:36:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1E4FC2BB86
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 17:36:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 72CCE2078E
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 17:36:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Nj+6torI"
+	by mail.kernel.org (Postfix) with ESMTP id 84FC32082D
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 17:36:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1586540196;
+	bh=aY96hvBXNhiT65QU9KqPZPHlSXnFEDlVxamdD7LFtAo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=ctfeLW7GVBUtTiTbzP8fWmrouBPChBKWZWS8MyfFOCLJKjJC2ZLxn2cIWUlxU4vFV
+	 BgKyN+WSnwNsyNpi47j3//FvGCA2fCkIfkHxxLXDv8lMiaezhGy3Uuc4qdAKISKDAe
+	 wAyx/P0y6eRULA1HZQjMGAd5f6a2F86LMqNIMNWA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726691AbgDJRg2 (ORCPT
+        id S1726712AbgDJRgf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Apr 2020 13:36:28 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:54596 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726234AbgDJRg2 (ORCPT
+        Fri, 10 Apr 2020 13:36:35 -0400
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:40866 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726234AbgDJRge (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Apr 2020 13:36:28 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
-        Subject:Sender:Reply-To:Content-ID:Content-Description;
-        bh=TqxD4FVZo4dOcfqQaPBh6DPHt90KV13UBnTYi1QMeq4=; b=Nj+6torIbwq6yRqoFXRerdFJUA
-        KUL6OCi5Q4gRMD0EFQOkWXjGQP11KGfNw3pMS9DAQHCBv3l3CiD6/XTAXo+dmz3suojqHG11+nDYG
-        l6Q9P/qeP+PAuRGVyd3OKWj5Ab5y40eH8dgaJn1qmUp6oN5Aks4p9UNLu+2OoLAIXhVVAWzIfI/Ri
-        Qn8+WRm8AAZoQ170YeOMcK5lyoZT1UBOhCc+DK+3brjMgiLFktuZBmYZmPOOl5UWv0rbg+yyXer0T
-        EfS6n/BaJ/yaoFbExrvF4Zx9OoGbn6mBQxkyLRxtcn9nHVCDuxYrC5iklfnIYyee0yBdhsw0B7UHh
-        cKig3aHQ==;
-Received: from [2601:1c0:6280:3f0::19c2]
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jMxZs-0005zK-IY; Fri, 10 Apr 2020 17:36:28 +0000
-Subject: Re: [PATCH] scripts/config: allow colons in option strings for sed
-To:     "Jeremie Francois (on alpha)" <jeremie.francois@gmail.com>,
-        LKML <linux-kernel@vger.kernel.org>
-Cc:     linux-kbuild <linux-kbuild@vger.kernel.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>
-References: <20200410165741.27078-1-jeremie.francois@gmail.com>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <1b824b27-aa2d-91ca-5540-15695994ef9a@infradead.org>
-Date:   Fri, 10 Apr 2020 10:36:27 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Fri, 10 Apr 2020 13:36:34 -0400
+Received: by mail-ot1-f66.google.com with SMTP id q2so2488335otk.7;
+        Fri, 10 Apr 2020 10:36:34 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=kssj1wITYRFq+YYk9S6XmdagGwSQwnZ2pdBZ58b9W2U=;
+        b=umFyUYpLw848vZCa6db7JAOfh4RXh3/Jvlt/FLTvoUUh3Rb3on1+InRe16oSiU7AYN
+         wrMBP2oq++AzlYXXUzbsSY2gtWZq26E6i6oYval66gFggctbWMPAZjck5L8mofqSsWpD
+         v1jLzKpcQi3BMNoOrS2dfHXC0YtCdvP0lfo/IUMorYOyjf1v0jCMPNlD0w5JWnCdQEhy
+         LfyoDDTbq0mZc8M3LXT8w4HoQYq8W9Nm/+k6Rznj3BfXyCXS8DVOf3N6ULVyZIlsA5YA
+         bwpQQIiK/ebyMHnW3hxKPL0T5L7B+yVzCgpg0Uxqpu28qUCBLzRoS+PEDUPfVJS/8mVF
+         736g==
+X-Gm-Message-State: AGi0Pub1Ym/661Hoz1cBu+2Mf3u+ONxcooUDGK/+98tP25Su4/zhd7rB
+        btazZJOqc5PkuP1Y7SvLQw==
+X-Google-Smtp-Source: APiQypJRsXEEAdg3zxrOIYnNN3A/bp6+1SPF81f8l0UyoKWAhK5Elh8UzZPnGRQfKpe/JCDOyYnsdQ==
+X-Received: by 2002:a9d:6ac3:: with SMTP id m3mr4647264otq.175.1586540194370;
+        Fri, 10 Apr 2020 10:36:34 -0700 (PDT)
+Received: from rob-hp-laptop (ip-99-203-29-27.pools.cgn.spcsdns.net. [99.203.29.27])
+        by smtp.gmail.com with ESMTPSA id o128sm1536880oih.41.2020.04.10.10.36.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 10 Apr 2020 10:36:33 -0700 (PDT)
+Received: (nullmailer pid 7240 invoked by uid 1000);
+        Fri, 10 Apr 2020 17:11:02 -0000
+Date:   Fri, 10 Apr 2020 12:11:02 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Chunyan Zhang <zhang.lyra@gmail.com>
+Cc:     Stephen Boyd <sboyd@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Mark Rutland <mark.rutland@arm.com>, linux-clk@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Orson Zhai <orsonzhai@gmail.com>,
+        Baolin Wang <baolin.wang7@gmail.com>,
+        Chunyan Zhang <zhang.lyra@gmail.com>,
+        Chunyan Zhang <chunyan.zhang@unisoc.com>
+Subject: Re: [PATCH 2/4] dt-bindings: clk: sprd: add mipi_csi_xx clocks for
+ SC9863A
+Message-ID: <20200410171102.GA7186@bogus>
+References: <20200330071451.7899-1-zhang.lyra@gmail.com>
+ <20200330071451.7899-3-zhang.lyra@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20200410165741.27078-1-jeremie.francois@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200330071451.7899-3-zhang.lyra@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[adding Cc's]
-
-On 4/10/20 9:57 AM, Jeremie Francois (on alpha) wrote:
-> Sed broke on some strings as it used colon as a separator.
-> I made it more robust by using \001, which is legit POSIX AFAIK.
+On Mon, 30 Mar 2020 15:14:49 +0800, Chunyan Zhang wrote:
+> From: Chunyan Zhang <chunyan.zhang@unisoc.com>
 > 
-> E.g. ./config --set-str CONFIG_USBNET_DEVADDR "de:ad:be:ef:00:01"
-> failed with: sed: -e expression #1, char 55: unknown option to `s'
+> mipi_csi_xx clocks are used by camera sensors.
 > 
-> Signed-off-by: Jeremie Francois (on alpha) <jeremie.francois@gmail.com>
+> Signed-off-by: Chunyan Zhang <chunyan.zhang@unisoc.com>
 > ---
->  scripts/config | 5 ++++-
->  1 file changed, 4 insertions(+), 1 deletion(-)
-> 
-> diff --git a/scripts/config b/scripts/config
-> index e0e39826dae9..d365081b60b2 100755
-> --- a/scripts/config
-> +++ b/scripts/config
-> @@ -7,6 +7,9 @@ myname=${0##*/}
->  # If no prefix forced, use the default CONFIG_
->  CONFIG_="${CONFIG_-CONFIG_}"
->  
-> +# We use an uncommon delimiter for sed substitutions
-> +SED_DELIM=$(echo -en "\001")
-> +
->  usage() {
->  	cat >&2 <<EOL
->  Manipulate options in a .config file from the command line.
-> @@ -83,7 +86,7 @@ txt_subst() {
->  	local infile="$3"
->  	local tmpfile="$infile.swp"
->  
-> -	sed -e "s:$before:$after:" "$infile" >"$tmpfile"
-> +	sed -e "s$SED_DELIM$before$SED_DELIM$after$SED_DELIM" "$infile" >"$tmpfile"
->  	# replace original file with the edited one
->  	mv "$tmpfile" "$infile"
->  }
+>  Documentation/devicetree/bindings/clock/sprd,sc9863a-clk.yaml | 1 +
+>  1 file changed, 1 insertion(+)
 > 
 
-
--- 
-~Randy
-
+Acked-by: Rob Herring <robh@kernel.org>
