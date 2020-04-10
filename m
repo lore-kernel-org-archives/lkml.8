@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10330C2D0EC
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 04:01:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DD09C2D0EC
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 04:01:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DCB7B20936
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 04:01:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3BF8420936
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 04:01:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586491309;
-	bh=F82Aeypw6OM8mgKESuyYgGleTKbJ+gGMp9FjnyoILqw=;
+	s=default; t=1586491313;
+	bh=vDbC//cFoiarsCOyRPOI0FBifzs1I3USmWge+kKgjaU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mA98ZDeMmSDpN0g3xDXUdQiyuAPWwRfIZH8AlKj519zU/XbIfgOghc1XPylFiHU7e
-	 CBeKh7OKQ8HTDarVZqHXdqm+J+2uW92J0HeIt3SufyYkJi1pp4WmA8Kzl5Q3jAUZTX
-	 bVjfYmAEm12QtNnOR7bSedJI3oSIsfXVpkHFGIYs=
+	b=LhLpoMYkILQB6dMzR6/HU5I8sGvxojdYg+mhhfPSxOJq0KJb6qGL6CsSpcFSf//Ej
+	 fOpTKXekQaETcykJzvdJDCiMW2K45QFm5TWOONE8/l4C+C26cJdVjsat7fGFCiuQ3F
+	 LJndLAxu+mGoCH0MT9esV8dUovIgOdizs4wh4KQw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727331AbgDJDrV (ORCPT
+        id S1727954AbgDJEBv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Apr 2020 23:47:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58000 "EHLO mail.kernel.org"
+        Fri, 10 Apr 2020 00:01:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58044 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727199AbgDJDrT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Apr 2020 23:47:19 -0400
+        id S1727302AbgDJDrV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Apr 2020 23:47:21 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8761E20B1F;
-        Fri, 10 Apr 2020 03:47:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B44FA2145D;
+        Fri, 10 Apr 2020 03:47:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586490439;
-        bh=F82Aeypw6OM8mgKESuyYgGleTKbJ+gGMp9FjnyoILqw=;
+        s=default; t=1586490441;
+        bh=vDbC//cFoiarsCOyRPOI0FBifzs1I3USmWge+kKgjaU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=izmUR6+CR7agABBHWejUysp3JxU89y5ZzehyBg5UHuYQzqaEoOTdl75hCGh06d9z6
-         12/yyIWt/vhoe569SX6Itj02dsmo+vFWi6sSMghu/SG/feY023MQ7hab1LBg+MzmAI
-         phExfiwDW27iy5xzM6lJeKUlrqCCMsj1oGWzieco=
+        b=xTX2BKFCrxMfMz1YcLmWWFBdIm/7ehA5yTXbaBPkDKSk9uWaQCyHml4wiEXm7OtHL
+         nvFJN7Ek5aUlrMvMwRFdoT2TEDS0iUVO8nXPCtS5tWBrtEjq0mP8kXSkHj/jlsx6ZV
+         LuEtzVCxvXApklG7PyNtv47P/mIRyDG5rW4FzhFw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Michael Wang <yun.wang@linux.alibaba.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.6 36/68] sched: Avoid scale real weight down to zero
-Date:   Thu,  9 Apr 2020 23:46:01 -0400
-Message-Id: <20200410034634.7731-36-sashal@kernel.org>
+Cc:     Andy Lutomirski <luto@kernel.org>,
+        kbuild test robot <lkp@intel.com>,
+        Borislav Petkov <bp@suse.de>, Sasha Levin <sashal@kernel.org>,
+        linux-kselftest@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.6 38/68] selftests/x86/ptrace_syscall_32: Fix no-vDSO segfault
+Date:   Thu,  9 Apr 2020 23:46:03 -0400
+Message-Id: <20200410034634.7731-38-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200410034634.7731-1-sashal@kernel.org>
 References: <20200410034634.7731-1-sashal@kernel.org>
@@ -60,80 +60,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Michael Wang <yun.wang@linux.alibaba.com>
+From: Andy Lutomirski <luto@kernel.org>
 
-[ Upstream commit 26cf52229efc87e2effa9d788f9b33c40fb3358a ]
+[ Upstream commit 630b99ab60aa972052a4202a1ff96c7e45eb0054 ]
 
-During our testing, we found a case that shares no longer
-working correctly, the cgroup topology is like:
+If AT_SYSINFO is not present, don't try to call a NULL pointer.
 
-  /sys/fs/cgroup/cpu/A		(shares=102400)
-  /sys/fs/cgroup/cpu/A/B	(shares=2)
-  /sys/fs/cgroup/cpu/A/B/C	(shares=1024)
-
-  /sys/fs/cgroup/cpu/D		(shares=1024)
-  /sys/fs/cgroup/cpu/D/E	(shares=1024)
-  /sys/fs/cgroup/cpu/D/E/F	(shares=1024)
-
-The same benchmark is running in group C & F, no other tasks are
-running, the benchmark is capable to consumed all the CPUs.
-
-We suppose the group C will win more CPU resources since it could
-enjoy all the shares of group A, but it's F who wins much more.
-
-The reason is because we have group B with shares as 2, since
-A->cfs_rq.load.weight == B->se.load.weight == B->shares/nr_cpus,
-so A->cfs_rq.load.weight become very small.
-
-And in calc_group_shares() we calculate shares as:
-
-  load = max(scale_load_down(cfs_rq->load.weight), cfs_rq->avg.load_avg);
-  shares = (tg_shares * load) / tg_weight;
-
-Since the 'cfs_rq->load.weight' is too small, the load become 0
-after scale down, although 'tg_shares' is 102400, shares of the se
-which stand for group A on root cfs_rq become 2.
-
-While the se of D on root cfs_rq is far more bigger than 2, so it
-wins the battle.
-
-Thus when scale_load_down() scale real weight down to 0, it's no
-longer telling the real story, the caller will have the wrong
-information and the calculation will be buggy.
-
-This patch add check in scale_load_down(), so the real weight will
-be >= MIN_SHARES after scale, after applied the group C wins as
-expected.
-
-Suggested-by: Peter Zijlstra <peterz@infradead.org>
-Signed-off-by: Michael Wang <yun.wang@linux.alibaba.com>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Reviewed-by: Vincent Guittot <vincent.guittot@linaro.org>
-Link: https://lkml.kernel.org/r/38e8e212-59a1-64b2-b247-b6d0b52d8dc1@linux.alibaba.com
+Reported-by: kbuild test robot <lkp@intel.com>
+Signed-off-by: Andy Lutomirski <luto@kernel.org>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Link: https://lkml.kernel.org/r/faaf688265a7e1a5b944d6f8bc0f6368158306d3.1584052409.git.luto@kernel.org
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/sched/sched.h | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+ tools/testing/selftests/x86/ptrace_syscall.c | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
-diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
-index 9ea647835fd6f..b056149c228ba 100644
---- a/kernel/sched/sched.h
-+++ b/kernel/sched/sched.h
-@@ -118,7 +118,13 @@ extern long calc_load_fold_active(struct rq *this_rq, long adjust);
- #ifdef CONFIG_64BIT
- # define NICE_0_LOAD_SHIFT	(SCHED_FIXEDPOINT_SHIFT + SCHED_FIXEDPOINT_SHIFT)
- # define scale_load(w)		((w) << SCHED_FIXEDPOINT_SHIFT)
--# define scale_load_down(w)	((w) >> SCHED_FIXEDPOINT_SHIFT)
-+# define scale_load_down(w) \
-+({ \
-+	unsigned long __w = (w); \
-+	if (__w) \
-+		__w = max(2UL, __w >> SCHED_FIXEDPOINT_SHIFT); \
-+	__w; \
-+})
- #else
- # define NICE_0_LOAD_SHIFT	(SCHED_FIXEDPOINT_SHIFT)
- # define scale_load(w)		(w)
+diff --git a/tools/testing/selftests/x86/ptrace_syscall.c b/tools/testing/selftests/x86/ptrace_syscall.c
+index 6f22238f32173..12aaa063196e7 100644
+--- a/tools/testing/selftests/x86/ptrace_syscall.c
++++ b/tools/testing/selftests/x86/ptrace_syscall.c
+@@ -414,8 +414,12 @@ int main()
+ 
+ #if defined(__i386__) && (!defined(__GLIBC__) || __GLIBC__ > 2 || __GLIBC_MINOR__ >= 16)
+ 	vsyscall32 = (void *)getauxval(AT_SYSINFO);
+-	printf("[RUN]\tCheck AT_SYSINFO return regs\n");
+-	test_sys32_regs(do_full_vsyscall32);
++	if (vsyscall32) {
++		printf("[RUN]\tCheck AT_SYSINFO return regs\n");
++		test_sys32_regs(do_full_vsyscall32);
++	} else {
++		printf("[SKIP]\tAT_SYSINFO is not available\n");
++	}
+ #endif
+ 
+ 	test_ptrace_syscall_restart();
 -- 
 2.20.1
 
