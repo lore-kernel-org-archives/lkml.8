@@ -2,145 +2,313 @@ Return-Path: <SRS0=VV4q=52=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65E1CC2D0EC
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 18:15:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA7DAC2BB55
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 18:15:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 36165206C1
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 18:15:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6C8A52082D
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 18:15:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="a2TBBSft"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="evlYdaNP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726652AbgDJSO6 (ORCPT
+        id S1726690AbgDJSPD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Apr 2020 14:14:58 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:55397 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726142AbgDJSO6 (ORCPT
+        Fri, 10 Apr 2020 14:15:03 -0400
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:33600 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726654AbgDJSPC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Apr 2020 14:14:58 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1586542497;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=t4jnBv56iJyBMaSdpfyq8JNe1NXVm+rxJaqyJqBMPzM=;
-        b=a2TBBSft87afLssJo6QL0uFziQvtcEybhvnhCTcaHMM3HMdZQdlKlfICcIF4JqkLkhwnSm
-        rlt38qGLB/9ckwRqK8/UnbvuVisODJc2KFW2tfGwuYb94ykzdf0p3QXIjqiI40YAFHcOwh
-        OG9k8QGCO08SPDyUTF1ATTdqLL67puw=
-Received: from mail-qv1-f70.google.com (mail-qv1-f70.google.com
- [209.85.219.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-451-tC8-haXqPqGk-9v0-7Zp-Q-1; Fri, 10 Apr 2020 14:14:55 -0400
-X-MC-Unique: tC8-haXqPqGk-9v0-7Zp-Q-1
-Received: by mail-qv1-f70.google.com with SMTP id z16so2269713qvo.4
-        for <linux-kernel@vger.kernel.org>; Fri, 10 Apr 2020 11:14:55 -0700 (PDT)
+        Fri, 10 Apr 2020 14:15:02 -0400
+Received: by mail-lf1-f65.google.com with SMTP id h6so1951879lfc.0
+        for <linux-kernel@vger.kernel.org>; Fri, 10 Apr 2020 11:15:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Fkyk1ITWjzpb5RlyYkAT7CuTKLM6IyQoz7P2EWF52Xk=;
+        b=evlYdaNPTVNyGatfvY2ZxgzFETY9z5nVKOYnYWi6Qqp8V9jb+1CpGnED+KfQujRGn4
+         GO9tJsi+S2fM07fUraSJlbDZqFMBdMERvgi9vLviMJ0Hck1fmPTN41X8HfEfCuSW5bIk
+         8W1Vj2ONMVri9GJTE8g64lTcw7jeWUjz93zO9yn2JMQ1Q9Lyc/qSPFA5i3VtHdN5lOER
+         p8P17duzR0KdsyZ+y5RlNpAnMnaAkLYuwesn29kI915SkAKfNggEiAwH4x2SWEMsy5qs
+         Mq5P0rNhyQLHFhyK3u9qIPNuSYQshuSrEyaGoK5dKTUqwbv3DXKVwAbtQCZwG+JUSOuk
+         8gxg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=t4jnBv56iJyBMaSdpfyq8JNe1NXVm+rxJaqyJqBMPzM=;
-        b=IRPZ9GX7Mq/h9tNIN2fUBXR0SwiLfgkc1mh1sF2JpRICptRfBc+XsfQ6C4HFOwTdTh
-         RxA43Tc35PJcwwdlCfFvFOQ+pf8HCoUVW95FnfWsx1jK53XgswJ7TKRL8aOn0wRBrFJj
-         N0gXlGzaS/0FMc4wdPhcqNHxH9qJfS5gJodccXbDYGjrdjCzIXlSohkItCPOoaBSOGVD
-         xzvGQlH+jqSXAq+wNoZ+qL17x+TJVGFtGOrN5/fd2uNd3eaFv5O5bf7gJXmp09mdjmr0
-         COl56uo144nJn3i9BvVbX8ovW2CGZmM4JFnz+3JUrx/qRXV2g9ELTD7EEvSnx728snqF
-         7r8w==
-X-Gm-Message-State: AGi0PuZNILmD7zXgxJQMSnsSFntNWExP/AsKhc5skLjWsStCEgcMoN4w
-        Vcc1wZR1ETr38JnN1TceAQPgRaN3Ba9G9iu/+v0BtinCS17W3yap+6dsqTDxelnd29oyXttLbV/
-        V1CFIXyajbhPAm1Pw08KqFW+H
-X-Received: by 2002:ac8:4e8e:: with SMTP id 14mr439598qtp.3.1586542495030;
-        Fri, 10 Apr 2020 11:14:55 -0700 (PDT)
-X-Google-Smtp-Source: APiQypJdgNanx+iC1lJjnr/30Tw/VOyto9B36vj31bco1lYF5s/fzOgTxlfQtzsH9iXspsf0I8lCcQ==
-X-Received: by 2002:ac8:4e8e:: with SMTP id 14mr439561qtp.3.1586542494668;
-        Fri, 10 Apr 2020 11:14:54 -0700 (PDT)
-Received: from xz-x1 ([2607:9880:19c0:32::2])
-        by smtp.gmail.com with ESMTPSA id r6sm2130349qtp.61.2020.04.10.11.14.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 10 Apr 2020 11:14:53 -0700 (PDT)
-Date:   Fri, 10 Apr 2020 14:14:52 -0400
-From:   Peter Xu <peterx@redhat.com>
-To:     Matthew Wilcox <willy@infradead.org>
-Cc:     Hillf Danton <hdanton@sina.com>, kernel test robot <lkp@intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linux Memory Management List <linux-mm@kvack.org>,
-        linux-kernel@vger.kernel.org
-Subject: Re: f45ec5ff16 ("userfaultfd: wp: support swap and page migration"):
- [  140.777858] BUG: Bad rss-counter state mm:b278fc66 type:MM_ANONPAGES
- val:1
-Message-ID: <20200410181452.GC3172@xz-x1>
-References: <20200410002518.GG8179@shao2-debian>
- <20200410073209.11164-1-hdanton@sina.com>
- <20200410153234.GB3172@xz-x1>
- <20200410153805.GA21484@bombadil.infradead.org>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Fkyk1ITWjzpb5RlyYkAT7CuTKLM6IyQoz7P2EWF52Xk=;
+        b=XKkDJDVDkfEvpQ85bWPXj748EbXHeOc+LqwWA1UuARGyFIDx5SdAYNVCp6246CGoex
+         4p+Equp3gRfmy+JT9SlLskyt4pleo98WPF9aE6lATdYSrbud1E3Dbn0u2I7WSqZHhVkf
+         qUi1Tamgk833W7TL7+zDhJRj4xTp0V7BfXR9fQ+5vU0h8MZkyzoTScrim8aB0M9ZlIPr
+         /KxpRq5qoeneg3IoCkDLAK6v1lXhpaArKFS9nySpGV8JuK3x7Oq6tscMNUnvc7snq8h5
+         VKS4CTk1zYzoE81xHRDcLSQJvFfYbCGUycEd6jbzWgtCfAVm/nKac+uDzGPZkD6UfAyD
+         bHsA==
+X-Gm-Message-State: AGi0PuZ1WMDfVIgYj7bOSmGusXV5f5rU/ikWdbkF5ApccA3KrctGVDqd
+        K5C866KVpQaBh9KJGWRpdigSdCF4cBl+U6waLil8QQ==
+X-Google-Smtp-Source: APiQypIHY3qA4b1mpf8TNcB+eKnLRuy5F4QIcIk4AbDhBtrlaCPUtzV1dw4zz2GIoUyJfJiU+K0kLGJ95GEL0IayQ1I=
+X-Received: by 2002:a19:f20c:: with SMTP id q12mr3279944lfh.34.1586542499166;
+ Fri, 10 Apr 2020 11:14:59 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200410153805.GA21484@bombadil.infradead.org>
+References: <cover.1585548051.git.ashish.kalra@amd.com> <9e959ee134ad77f62c9881b8c54cd27e35055072.1585548051.git.ashish.kalra@amd.com>
+ <b77a4a1e-b8ca-57a2-d849-adda91bfeac7@oracle.com> <20200403214559.GB28747@ashkalra_ubuntu_server>
+ <65c09963-2027-22c1-e04d-4c8c3658b2c3@oracle.com> <CABayD+cf=Po-k7jqUQjq3AGopxk86d6bTcBhQxijnzpcUh90GA@mail.gmail.com>
+ <20200408015221.GB27608@ashkalra_ubuntu_server> <CABayD+f0qdS5akac8JiB_HU_pWefHDsF=xRNhzSv42w-PTXnyg@mail.gmail.com>
+ <20200410013418.GB19168@ashkalra_ubuntu_server>
+In-Reply-To: <20200410013418.GB19168@ashkalra_ubuntu_server>
+From:   Steve Rutherford <srutherford@google.com>
+Date:   Fri, 10 Apr 2020 11:14:21 -0700
+Message-ID: <CABayD+dDtjz7rJe1ujQ_sq88JRUzHaXXNP_hQVhD1vkXkPsXCw@mail.gmail.com>
+Subject: Re: [PATCH v6 12/14] KVM: x86: Introduce KVM_PAGE_ENC_BITMAP_RESET ioctl
+To:     Ashish Kalra <ashish.kalra@amd.com>
+Cc:     Krish Sadhukhan <krish.sadhukhan@oracle.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Joerg Roedel <joro@8bytes.org>,
+        Borislav Petkov <bp@suse.de>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        X86 ML <x86@kernel.org>, KVM list <kvm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        David Rientjes <rientjes@google.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Brijesh Singh <brijesh.singh@amd.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 10, 2020 at 08:38:05AM -0700, Matthew Wilcox wrote:
-> On Fri, Apr 10, 2020 at 11:32:34AM -0400, Peter Xu wrote:
-> > I'm still trying to digest on what's happened... It would be good too
-> > if more information on the test could be given, e.g., what is the
-> > behavior of trinity-c2. A reproducer is of course even better.
-> 
-> Trinity is a syscall fuzzer.  Don't expect what it's doing to make any
-> sense, it's just executing syscalls at random.
+On Thu, Apr 9, 2020 at 6:34 PM Ashish Kalra <ashish.kalra@amd.com> wrote:
+>
+> Hello Steve,
+>
+> On Thu, Apr 09, 2020 at 05:59:56PM -0700, Steve Rutherford wrote:
+> > On Tue, Apr 7, 2020 at 6:52 PM Ashish Kalra <ashish.kalra@amd.com> wrote:
+> > >
+> > > Hello Steve,
+> > >
+> > > On Tue, Apr 07, 2020 at 06:25:51PM -0700, Steve Rutherford wrote:
+> > > > On Mon, Apr 6, 2020 at 11:53 AM Krish Sadhukhan
+> > > > <krish.sadhukhan@oracle.com> wrote:
+> > > > >
+> > > > >
+> > > > > On 4/3/20 2:45 PM, Ashish Kalra wrote:
+> > > > > > On Fri, Apr 03, 2020 at 02:14:23PM -0700, Krish Sadhukhan wrote:
+> > > > > >> On 3/29/20 11:23 PM, Ashish Kalra wrote:
+> > > > > >>> From: Ashish Kalra <ashish.kalra@amd.com>
+> > > > > >>>
+> > > > > >>> This ioctl can be used by the application to reset the page
+> > > > > >>> encryption bitmap managed by the KVM driver. A typical usage
+> > > > > >>> for this ioctl is on VM reboot, on reboot, we must reinitialize
+> > > > > >>> the bitmap.
+> > > > > >>>
+> > > > > >>> Signed-off-by: Ashish Kalra <ashish.kalra@amd.com>
+> > > > > >>> ---
+> > > > > >>>    Documentation/virt/kvm/api.rst  | 13 +++++++++++++
+> > > > > >>>    arch/x86/include/asm/kvm_host.h |  1 +
+> > > > > >>>    arch/x86/kvm/svm.c              | 16 ++++++++++++++++
+> > > > > >>>    arch/x86/kvm/x86.c              |  6 ++++++
+> > > > > >>>    include/uapi/linux/kvm.h        |  1 +
+> > > > > >>>    5 files changed, 37 insertions(+)
+> > > > > >>>
+> > > > > >>> diff --git a/Documentation/virt/kvm/api.rst b/Documentation/virt/kvm/api.rst
+> > > > > >>> index 4d1004a154f6..a11326ccc51d 100644
+> > > > > >>> --- a/Documentation/virt/kvm/api.rst
+> > > > > >>> +++ b/Documentation/virt/kvm/api.rst
+> > > > > >>> @@ -4698,6 +4698,19 @@ During the guest live migration the outgoing guest exports its page encryption
+> > > > > >>>    bitmap, the KVM_SET_PAGE_ENC_BITMAP can be used to build the page encryption
+> > > > > >>>    bitmap for an incoming guest.
+> > > > > >>> +4.127 KVM_PAGE_ENC_BITMAP_RESET (vm ioctl)
+> > > > > >>> +-----------------------------------------
+> > > > > >>> +
+> > > > > >>> +:Capability: basic
+> > > > > >>> +:Architectures: x86
+> > > > > >>> +:Type: vm ioctl
+> > > > > >>> +:Parameters: none
+> > > > > >>> +:Returns: 0 on success, -1 on error
+> > > > > >>> +
+> > > > > >>> +The KVM_PAGE_ENC_BITMAP_RESET is used to reset the guest's page encryption
+> > > > > >>> +bitmap during guest reboot and this is only done on the guest's boot vCPU.
+> > > > > >>> +
+> > > > > >>> +
+> > > > > >>>    5. The kvm_run structure
+> > > > > >>>    ========================
+> > > > > >>> diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
+> > > > > >>> index d30f770aaaea..a96ef6338cd2 100644
+> > > > > >>> --- a/arch/x86/include/asm/kvm_host.h
+> > > > > >>> +++ b/arch/x86/include/asm/kvm_host.h
+> > > > > >>> @@ -1273,6 +1273,7 @@ struct kvm_x86_ops {
+> > > > > >>>                             struct kvm_page_enc_bitmap *bmap);
+> > > > > >>>     int (*set_page_enc_bitmap)(struct kvm *kvm,
+> > > > > >>>                             struct kvm_page_enc_bitmap *bmap);
+> > > > > >>> +   int (*reset_page_enc_bitmap)(struct kvm *kvm);
+> > > > > >>>    };
+> > > > > >>>    struct kvm_arch_async_pf {
+> > > > > >>> diff --git a/arch/x86/kvm/svm.c b/arch/x86/kvm/svm.c
+> > > > > >>> index 313343a43045..c99b0207a443 100644
+> > > > > >>> --- a/arch/x86/kvm/svm.c
+> > > > > >>> +++ b/arch/x86/kvm/svm.c
+> > > > > >>> @@ -7797,6 +7797,21 @@ static int svm_set_page_enc_bitmap(struct kvm *kvm,
+> > > > > >>>     return ret;
+> > > > > >>>    }
+> > > > > >>> +static int svm_reset_page_enc_bitmap(struct kvm *kvm)
+> > > > > >>> +{
+> > > > > >>> +   struct kvm_sev_info *sev = &to_kvm_svm(kvm)->sev_info;
+> > > > > >>> +
+> > > > > >>> +   if (!sev_guest(kvm))
+> > > > > >>> +           return -ENOTTY;
+> > > > > >>> +
+> > > > > >>> +   mutex_lock(&kvm->lock);
+> > > > > >>> +   /* by default all pages should be marked encrypted */
+> > > > > >>> +   if (sev->page_enc_bmap_size)
+> > > > > >>> +           bitmap_fill(sev->page_enc_bmap, sev->page_enc_bmap_size);
+> > > > > >>> +   mutex_unlock(&kvm->lock);
+> > > > > >>> +   return 0;
+> > > > > >>> +}
+> > > > > >>> +
+> > > > > >>>    static int svm_mem_enc_op(struct kvm *kvm, void __user *argp)
+> > > > > >>>    {
+> > > > > >>>     struct kvm_sev_cmd sev_cmd;
+> > > > > >>> @@ -8203,6 +8218,7 @@ static struct kvm_x86_ops svm_x86_ops __ro_after_init = {
+> > > > > >>>     .page_enc_status_hc = svm_page_enc_status_hc,
+> > > > > >>>     .get_page_enc_bitmap = svm_get_page_enc_bitmap,
+> > > > > >>>     .set_page_enc_bitmap = svm_set_page_enc_bitmap,
+> > > > > >>> +   .reset_page_enc_bitmap = svm_reset_page_enc_bitmap,
+> > > > > >>
+> > > > > >> We don't need to initialize the intel ops to NULL ? It's not initialized in
+> > > > > >> the previous patch either.
+> > > > > >>
+> > > > > >>>    };
+> > > > > > This struct is declared as "static storage", so won't the non-initialized
+> > > > > > members be 0 ?
+> > > > >
+> > > > >
+> > > > > Correct. Although, I see that 'nested_enable_evmcs' is explicitly
+> > > > > initialized. We should maintain the convention, perhaps.
+> > > > >
+> > > > > >
+> > > > > >>>    static int __init svm_init(void)
+> > > > > >>> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+> > > > > >>> index 05e953b2ec61..2127ed937f53 100644
+> > > > > >>> --- a/arch/x86/kvm/x86.c
+> > > > > >>> +++ b/arch/x86/kvm/x86.c
+> > > > > >>> @@ -5250,6 +5250,12 @@ long kvm_arch_vm_ioctl(struct file *filp,
+> > > > > >>>                     r = kvm_x86_ops->set_page_enc_bitmap(kvm, &bitmap);
+> > > > > >>>             break;
+> > > > > >>>     }
+> > > > > >>> +   case KVM_PAGE_ENC_BITMAP_RESET: {
+> > > > > >>> +           r = -ENOTTY;
+> > > > > >>> +           if (kvm_x86_ops->reset_page_enc_bitmap)
+> > > > > >>> +                   r = kvm_x86_ops->reset_page_enc_bitmap(kvm);
+> > > > > >>> +           break;
+> > > > > >>> +   }
+> > > > > >>>     default:
+> > > > > >>>             r = -ENOTTY;
+> > > > > >>>     }
+> > > > > >>> diff --git a/include/uapi/linux/kvm.h b/include/uapi/linux/kvm.h
+> > > > > >>> index b4b01d47e568..0884a581fc37 100644
+> > > > > >>> --- a/include/uapi/linux/kvm.h
+> > > > > >>> +++ b/include/uapi/linux/kvm.h
+> > > > > >>> @@ -1490,6 +1490,7 @@ struct kvm_enc_region {
+> > > > > >>>    #define KVM_GET_PAGE_ENC_BITMAP  _IOW(KVMIO, 0xc5, struct kvm_page_enc_bitmap)
+> > > > > >>>    #define KVM_SET_PAGE_ENC_BITMAP  _IOW(KVMIO, 0xc6, struct kvm_page_enc_bitmap)
+> > > > > >>> +#define KVM_PAGE_ENC_BITMAP_RESET  _IO(KVMIO, 0xc7)
+> > > > > >>>    /* Secure Encrypted Virtualization command */
+> > > > > >>>    enum sev_cmd_id {
+> > > > > >> Reviewed-by: Krish Sadhukhan <krish.sadhukhan@oracle.com>
+> > > >
+> > > >
+> > > > Doesn't this overlap with the set ioctl? Yes, obviously, you have to
+> > > > copy the new value down and do a bit more work, but I don't think
+> > > > resetting the bitmap is going to be the bottleneck on reboot. Seems
+> > > > excessive to add another ioctl for this.
+> > >
+> > > The set ioctl is generally available/provided for the incoming VM to setup
+> > > the page encryption bitmap, this reset ioctl is meant for the source VM
+> > > as a simple interface to reset the whole page encryption bitmap.
+> > >
+> > > Thanks,
+> > > Ashish
+> >
+> >
+> > Hey Ashish,
+> >
+> > These seem very overlapping. I think this API should be refactored a bit.
+> >
+> > 1) Use kvm_vm_ioctl_enable_cap to control whether or not this
+> > hypercall (and related feature bit) is offered to the VM, and also the
+> > size of the buffer.
+>
+> If you look at patch 13/14, i have added a new kvm para feature called
+> "KVM_FEATURE_SEV_LIVE_MIGRATION" which indicates host support for SEV
+> Live Migration and a new Custom MSR which the guest does a wrmsr to
+> enable the Live Migration feature, so this is like the enable cap
+> support.
+>
+> There are further extensions to this support i am adding, so patch 13/14
+> of this patch-set is still being enhanced and will have full support
+> when i repost next.
+>
+> > 2) Use set for manipulating values in the bitmap, including resetting
+> > the bitmap. Set the bitmap pointer to null if you want to reset to all
+> > 0xFFs. When the bitmap pointer is set, it should set the values to
+> > exactly what is pointed at, instead of only clearing bits, as is done
+> > currently.
+>
+> As i mentioned in my earlier email, the set api is supposed to be for
+> the incoming VM, but if you really need to use it for the outgoing VM
+> then it can be modified.
+>
+> > 3) Use get for fetching values from the kernel. Personally, I'd
+> > require alignment of the base GFN to a multiple of 8 (but the number
+> > of pages could be whatever), so you can just use a memcpy. Optionally,
+> > you may want some way to tell userspace the size of the existing
+> > buffer, so it can ensure that it can ask for the entire buffer without
+> > having to track the size in usermode (not strictly necessary, but nice
+> > to have since it ensures that there is only one place that has to
+> > manage this value).
+> >
+> > If you want to expand or contract the bitmap, you can use enable cap
+> > to adjust the size.
+>
+> As being discussed on the earlier mail thread, we are doing this
+> dynamically now by computing the guest RAM size when the
+> set_user_memory_region ioctl is invoked. I believe that should handle
+> the hot-plug and hot-unplug events too, as any hot memory updates will
+> need KVM memslots to be updated.
+Ahh, sorry, forgot you mentioned this: yes this can work. Host needs
+to be able to decide not to allocate, but this should be workable.
+>
+> > If you don't want to offer the hypercall to the guest, don't call the
+> > enable cap.
+> > This API avoids using up another ioctl. Ioctl space is somewhat
+> > scarce. It also gives userspace fine grained control over the buffer,
+> > so it can support both hot-plug and hot-unplug (or at the very least
+> > it is not obviously incompatible with those). It also gives userspace
+> > control over whether or not the feature is offered. The hypercall
+> > isn't free, and being able to tell guests to not call when the host
+> > wasn't going to migrate it anyway will be useful.
+> >
+>
+> As i mentioned above, now the host indicates if it supports the Live
+> Migration feature and the feature and the hypercall are only enabled on
+> the host when the guest checks for this support and does a wrmsr() to
+> enable the feature. Also the guest will not make the hypercall if the
+> host does not indicate support for it.
+If my read of those patches was correct, the host will always
+advertise support for the hypercall. And the only bit controlling
+whether or not the hypercall is advertised is essentially the kernel
+version. You need to rollout a new kernel to disable the hypercall.
 
-OK thanks.
+An enable cap could give the host control of this feature bit. It
+could also give the host control of whether or not the bitmaps are
+allocated. This is important since I assume not every SEV VM is
+planned to be migrated. And if the host does not plan to migrate it
+probably doesn't want to waste memory or cycles managing this bitmap.
 
-Though I just noticed that the original report is actually with some
-attachments which I totally missed initially.  There's the config file
-showing that we're with:
-
-CONFIG_MIGRATION=y
-CONFIG_MEMORY_FAILURE=y
-CONFIG_DEVICE_PRIVATE=n
-
-And even a reproducer.  However the reproducer script will fail at
-wget, until I fixed it using:
-
-initrd=openwrt-trinity-i386.cgz
-
-to replace:
-
-initrd=openwrt-i386-trinity.cgz
-
-Then I can download the initrd and boot the VM with a decent QEMU.
-However I didn't see any test running after the VM booted, and it will
-reboot/shutdown after 100 sec without any error triggered (I believe
-the rc.local tries to run something under /etc/kernel-tests/ but I'm
-not sure it's running the right thing).
-
-If there's any way to reproduce (I believe so because it can even
-bisect in the original report, I just don't know how...), I'm thinking
-maybe we can try to dump every swp entry change that could have been
-touched in change_pte_range(), which is the only place that I thought
-could be related to this in the commit, to see whether there's
-anything suspecious.
-
-8<----------------------------------------------
-diff --git a/mm/mprotect.c b/mm/mprotect.c
-index 1d823b050329..1b6daf7d03aa 100644
---- a/mm/mprotect.c
-+++ b/mm/mprotect.c
-@@ -173,6 +173,8 @@ static unsigned long change_pte_range(struct vm_area_struct *vma, pmd_t *pmd,
-                                newpte = pte_swp_clear_uffd_wp(newpte);
- 
-                        if (!pte_same(oldpte, newpte)) {
-+                               pr_info("%s: Update swp entry, 0x%lx -> 0x%lx\n",
-+                                       __func__, pte_val(oldpte), pte_val(newpte));
-                                set_pte_at(vma->vm_mm, addr, pte, newpte);
-                                pages++;
-                        }
-
--- 
-Peter Xu
-
+Thanks,
+Steve
