@@ -4,54 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E322DC2BB85
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 03:47:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E28CC2D0EC
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 03:47:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BB59620A8B
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 03:47:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 65A452145D
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 03:47:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586490425;
-	bh=jDt6vkUMyGZfura59hrrftwobQmgudUKhDGGO98R2Z4=;
+	s=default; t=1586490428;
+	bh=0XrRqotfepK3zUNWdd8fnIccrvPnNVyNdW6GWO8JWtQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GiFTZE1peEVpZTIc6CZvuHKvmj8tCMLV6kdv5I6bEhfzWlTWP0Ogx5C26R9zFyt2j
-	 2GsTGzD9adMJQbRU4QfirZ2wAubkzTaJRK/kmJHcmWqiUHB7eecpTQqfreY/4sslwt
-	 QVSftR9uyxAMO3ttEO22rmOSLDoItDn0FEK6DxXc=
+	b=X/Q8aqCYTdPPkPtceeMwLN5QxsZ4BABhMdhQBS0FkXPJbi3+1PisuJmOu6yX+QG9A
+	 auiIH39Hl7sdk5sybyi8a4yYFP/x8TzI/12b1T3oiq5d43rFoRgtf6zxGtpxd2K0yB
+	 0j6TkjzgdqDXH6ZPqtXKa8CsJWhHGeGn7czvQ/2o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726961AbgDJDrE (ORCPT
+        id S1727002AbgDJDrH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Apr 2020 23:47:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57316 "EHLO mail.kernel.org"
+        Thu, 9 Apr 2020 23:47:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57456 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726936AbgDJDrB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Apr 2020 23:47:01 -0400
+        id S1726936AbgDJDrE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Apr 2020 23:47:04 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D6EDB20936;
-        Fri, 10 Apr 2020 03:46:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D679520936;
+        Fri, 10 Apr 2020 03:47:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586490420;
-        bh=jDt6vkUMyGZfura59hrrftwobQmgudUKhDGGO98R2Z4=;
+        s=default; t=1586490424;
+        bh=0XrRqotfepK3zUNWdd8fnIccrvPnNVyNdW6GWO8JWtQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=AnnGdIDtdH4Xhfu4si4FWKzZRUqPmiBSIXPZOSOyOdXi4fKxkD5LhwRLTSP+dHjGL
-         4usWCNOOCLDTVGj6jGF5nLgrTfUmRCEByPcXdqAnocbBOoxE4ijoEz/zGEgH4NLQSU
-         8+hDyIVWdRteI9gGW7QyiAFN05UKdgFJApGPGtVk=
+        b=BEPx+sn6VxlAiSuPrayFu0yILO6oLDXaWA30ktXIusqG1/zHHwvNDQ45AaxZYZQHh
+         oCjbt/dRIpbTYNOyw8O37HZXmkycMOMNyc+5cJ6OYNAkv04p65QkkWF57tZqhXk73k
+         rp2k8lRU0IsnXraLBfDkYK4PjkiurJklDHKZWbn8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Bart Van Assche <bvanassche@acm.org>,
-        Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>,
-        Johannes Thumshirn <jth@kernel.org>,
-        Hannes Reinecke <hare@suse.com>,
-        Ming Lei <ming.lei@redhat.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>,
-        linux-block@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.6 20/68] null_blk: Suppress an UBSAN complaint triggered when setting 'memory_backed'
-Date:   Thu,  9 Apr 2020 23:45:45 -0400
-Message-Id: <20200410034634.7731-20-sashal@kernel.org>
+Cc:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Rui Miguel Silva <rmfrfs@gmail.com>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org,
+        devel@driverdev.osuosl.org, linux-arm-kernel@lists.infradead.org
+Subject: [PATCH AUTOSEL 5.6 23/68] media: imx: imx7-media-csi: Fix video field handling
+Date:   Thu,  9 Apr 2020 23:45:48 -0400
+Message-Id: <20200410034634.7731-23-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200410034634.7731-1-sashal@kernel.org>
 References: <20200410034634.7731-1-sashal@kernel.org>
@@ -64,56 +62,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bart Van Assche <bvanassche@acm.org>
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 
-[ Upstream commit b9853b4d6fb403ccb1d4d82e2d39fc17fc07519c ]
+[ Upstream commit f7b8488bd39ae8feced4dfbb41cf1431277b893f ]
 
-Although it is not clear to me why UBSAN complains when 'memory_backed'
-is set, this patch suppresses the UBSAN complaint that is triggered when
-setting that configfs attribute.
+Commit 4791bd7d6adc ("media: imx: Try colorimetry at both sink and
+source pads") reworked the way that formats are set on the sink pad of
+the CSI subdevice, and accidentally removed video field handling.
+Restore it by defaulting to V4L2_FIELD_NONE if the field value isn't
+supported, with the only two supported value being V4L2_FIELD_NONE and
+V4L2_FIELD_INTERLACED.
 
-UBSAN: Undefined behaviour in drivers/block/null_blk_main.c:327:1
-load of value 16 is not a valid value for type '_Bool'
-CPU: 2 PID: 8396 Comm: check Not tainted 5.6.0-rc1-dbg+ #14
-Hardware name: Bochs Bochs, BIOS Bochs 01/01/2011
-Call Trace:
- dump_stack+0xa5/0xe6
- ubsan_epilogue+0x9/0x26
- __ubsan_handle_load_invalid_value+0x6d/0x76
- nullb_device_memory_backed_store.cold+0x2c/0x38 [null_blk]
- configfs_write_file+0x1c4/0x250 [configfs]
- __vfs_write+0x4c/0x90
- vfs_write+0x145/0x2c0
- ksys_write+0xd7/0x180
- __x64_sys_write+0x47/0x50
- do_syscall_64+0x6f/0x2f0
- entry_SYSCALL_64_after_hwframe+0x49/0xbe
-
-Signed-off-by: Bart Van Assche <bvanassche@acm.org>
-Reviewed-by: Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>
-Cc: Johannes Thumshirn <jth@kernel.org>
-Cc: Hannes Reinecke <hare@suse.com>
-Cc: Ming Lei <ming.lei@redhat.com>
-Cc: Christoph Hellwig <hch@infradead.org>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Fixes: 4791bd7d6adc ("media: imx: Try colorimetry at both sink and source pads")
+Signed-off-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Reviewed-by: Rui Miguel Silva <rmfrfs@gmail.com>
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/block/null_blk_main.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/staging/media/imx/imx7-media-csi.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/drivers/block/null_blk_main.c b/drivers/block/null_blk_main.c
-index d5b4a92033d48..2b8b4cb447cfb 100644
---- a/drivers/block/null_blk_main.c
-+++ b/drivers/block/null_blk_main.c
-@@ -276,7 +276,7 @@ nullb_device_##NAME##_store(struct config_item *item, const char *page,	\
- {									\
- 	int (*apply_fn)(struct nullb_device *dev, TYPE new_value) = APPLY;\
- 	struct nullb_device *dev = to_nullb_device(item);		\
--	TYPE uninitialized_var(new_value);				\
-+	TYPE new_value = 0;						\
- 	int ret;							\
- 									\
- 	ret = nullb_device_##TYPE##_attr_store(&new_value, page, count);\
+diff --git a/drivers/staging/media/imx/imx7-media-csi.c b/drivers/staging/media/imx/imx7-media-csi.c
+index db30e2c70f2fe..f45920b3137e4 100644
+--- a/drivers/staging/media/imx/imx7-media-csi.c
++++ b/drivers/staging/media/imx/imx7-media-csi.c
+@@ -1009,6 +1009,7 @@ static int imx7_csi_try_fmt(struct imx7_csi *csi,
+ 		sdformat->format.width = in_fmt->width;
+ 		sdformat->format.height = in_fmt->height;
+ 		sdformat->format.code = in_fmt->code;
++		sdformat->format.field = in_fmt->field;
+ 		*cc = in_cc;
+ 
+ 		sdformat->format.colorspace = in_fmt->colorspace;
+@@ -1023,6 +1024,9 @@ static int imx7_csi_try_fmt(struct imx7_csi *csi,
+ 							 false);
+ 			sdformat->format.code = (*cc)->codes[0];
+ 		}
++
++		if (sdformat->format.field != V4L2_FIELD_INTERLACED)
++			sdformat->format.field = V4L2_FIELD_NONE;
+ 		break;
+ 	default:
+ 		return -EINVAL;
 -- 
 2.20.1
 
