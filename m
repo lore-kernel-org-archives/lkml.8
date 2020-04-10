@@ -2,122 +2,140 @@ Return-Path: <SRS0=VV4q=52=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01283C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 00:48:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E33E0C2BA19
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 00:55:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CA59C20CC7
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 00:48:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ACCF120768
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 00:55:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="T54WVr0f"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="d+cJsbwm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727696AbgDJAsB (ORCPT
+        id S1726980AbgDJAzi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Apr 2020 20:48:01 -0400
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:41887 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727593AbgDJAr7 (ORCPT
+        Thu, 9 Apr 2020 20:55:38 -0400
+Received: from mail27.static.mailgun.info ([104.130.122.27]:45489 "EHLO
+        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726327AbgDJAzi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Apr 2020 20:47:59 -0400
-Received: by mail-ed1-f65.google.com with SMTP id v1so532098edq.8;
-        Thu, 09 Apr 2020 17:47:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=a14CUzpnGpaGv5dqUvAXTePxj5EaRSdIRWci/5zAkWM=;
-        b=T54WVr0f4ocGL79xzwZP975p3f2YyA0/5A0mdP+YGo9pmXJJXsRDk7VPwQscwpAHx1
-         ZZppHBemzYJCtE2a+zH1yHdeKfugxwFT2mdIi+xKiYCCRjdMiIxyoMMx087hwYCA+4zj
-         /OlxiFd56bzU1CH6KU+079LWF5Bq5o2K2QCck2uIzqgvukSiLwNw2eHGiuJU+PhxcBO4
-         VJhEuRBJTelU7depw9VQqFRvtvm6uZJpm0Tw3b+D08jRWamOWnKWQH+Htft4MyLDwFrR
-         T+pX8yMu0s1SVAUczekj5wwpWK5bSHhCK72ESYuJppeFhhAgW5jP90N+OgJTFT0fG0tG
-         3y1Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=a14CUzpnGpaGv5dqUvAXTePxj5EaRSdIRWci/5zAkWM=;
-        b=mvEsrvuNw1XoCCNaOeWd7+pqp8WqP+UrqlXmz97IWXO3chOfwUZ9zoD12Z4YcJ2X/k
-         BOOk4hW52fHKwu/nsC6m49ojnGj8lUXOkYCp2G+UpmqC4vVcF2/P0itNozfrThcLNT31
-         E33b1Zv67WpqcKl82ee7tNFMwlIMNHbgqBQU1pTxaqyiX0wr+cA/eLhp8yH081CXn6Pf
-         u9XupcIXc4YVdx38s7KTQB5NeNV+/X4yoISTN4M8Pc8V0oCqc+5aYTAnQT+/505903OI
-         FZrAvUCFgIzBHugE0lgqYXaEI7jlt4jhzmVCNkgNLXKTm+KN//LMkBWm3rhyn+vyryGB
-         wT8A==
-X-Gm-Message-State: AGi0PuYKOaxTkFZsT2Atpfc2gbd1kauSQmyqkqui4dc1t1gRw7wkr3dQ
-        8QYZSjkHHBQCdA4YMMzTn+pBo8X3b/lo7Cba
-X-Google-Smtp-Source: APiQypLvgG31h2JAiJ4I9uBgeYyo/rkkcxrJMy4IA3mBlMc4DdltbrM21eJVNk/Yzl5aRHNkGsWTkg==
-X-Received: by 2002:a17:906:48c:: with SMTP id f12mr1637382eja.93.1586479675986;
-        Thu, 09 Apr 2020 17:47:55 -0700 (PDT)
-Received: from Ansuel-XPS.localdomain (host117-205-dynamic.180-80-r.retail.telecomitalia.it. [80.180.205.117])
-        by smtp.googlemail.com with ESMTPSA id z16sm30523edm.52.2020.04.09.17.47.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 09 Apr 2020 17:47:55 -0700 (PDT)
-From:   Ansuel Smith <ansuelsmth@gmail.com>
-To:     devicetree@vger.kernel.org
-Cc:     Ansuel Smith <ansuelsmth@gmail.com>,
-        Richard Zhu <hongxing.zhu@nxp.com>,
-        Lucas Stach <l.stach@pengutronix.de>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Andrew Murray <amurray@thegoodpenguin.co.uk>,
-        linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        Thu, 9 Apr 2020 20:55:38 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1586480138; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=U7DZcbslve7IXk4DQ4UcUwvrYxE7nmOSD3B0DRfj2Yo=; b=d+cJsbwmfxZpwtCklW/rDMMSAFew7G4w9fi5Ugu3+fvuTy+LMY0FU86wY4/fXd102fgJ7go/
+ gXPBDoQOfo/o3Cki0iCHsmOCGLbhSvzRWx5akb7rKS1aEgxvVwxD12XXUOTEoaaWtMmJVExO
+ jvFbPXi/d6Qj/qqcR8Lei0NaVdw=
+X-Mailgun-Sending-Ip: 104.130.122.27
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e8fc400.7fc5d239b688-smtp-out-n05;
+ Fri, 10 Apr 2020 00:55:28 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id D4B17C432C2; Fri, 10 Apr 2020 00:55:28 +0000 (UTC)
+Received: from [10.46.162.249] (i-global254.qualcomm.com [199.106.103.254])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: hemantk)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 12375C433D2;
+        Fri, 10 Apr 2020 00:55:28 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 12375C433D2
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=hemantk@codeaurora.org
+Subject: Re: [PATCH v2 1/5] bus: mhi: core: Handle syserr during power_up
+To:     Jeffrey Hugo <jhugo@codeaurora.org>,
+        manivannan.sadhasivam@linaro.org
+Cc:     "linux-arm-msm@vger.kernel.org; bbhatt"@codeaurora.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 4/4] devicetree: bindings: pci: fsl,imx6q-pcie: rename tx deemph and swing
-Date:   Fri, 10 Apr 2020 02:47:38 +0200
-Message-Id: <20200410004738.19668-5-ansuelsmth@gmail.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200410004738.19668-1-ansuelsmth@gmail.com>
-References: <20200410004738.19668-1-ansuelsmth@gmail.com>
+References: <1586278230-29565-1-git-send-email-jhugo@codeaurora.org>
+ <1586278230-29565-2-git-send-email-jhugo@codeaurora.org>
+From:   Hemant Kumar <hemantk@codeaurora.org>
+Message-ID: <1768ba6e-12c2-7b4f-0f17-44fecc6473b9@codeaurora.org>
+Date:   Thu, 9 Apr 2020 17:55:27 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
+In-Reply-To: <1586278230-29565-2-git-send-email-jhugo@codeaurora.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-TX Deemph and TX Swing are now defined in pci.txt, rename them to follow
-the new name.
 
-Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
----
- .../devicetree/bindings/pci/fsl,imx6q-pcie.txt       | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+On 4/7/20 9:50 AM, Jeffrey Hugo wrote:
+> The MHI device may be in the syserr state when we attempt to init it in
+> power_up().  Since we have no local state, the handling is simple -
+> reset the device and wait for it to transition out of the reset state.
+>
+> Signed-off-by: Jeffrey Hugo <jhugo@codeaurora.org>
+> ---
+>   drivers/bus/mhi/core/pm.c | 20 ++++++++++++++++++++
+>   1 file changed, 20 insertions(+)
+>
+> diff --git a/drivers/bus/mhi/core/pm.c b/drivers/bus/mhi/core/pm.c
+> index 52690cb..3285c9e 100644
+> --- a/drivers/bus/mhi/core/pm.c
+> +++ b/drivers/bus/mhi/core/pm.c
+> @@ -9,6 +9,7 @@
+>   #include <linux/dma-direction.h>
+>   #include <linux/dma-mapping.h>
+>   #include <linux/interrupt.h>
+> +#include <linux/iopoll.h>
+>   #include <linux/list.h>
+>   #include <linux/mhi.h>
+>   #include <linux/module.h>
+> @@ -760,6 +761,7 @@ static void mhi_deassert_dev_wake(struct mhi_controller *mhi_cntrl,
+>   
+>   int mhi_async_power_up(struct mhi_controller *mhi_cntrl)
+>   {
+> +	enum mhi_state state;
+>   	enum mhi_ee_type current_ee;
+>   	enum dev_st_transition next_state;
+>   	struct device *dev = &mhi_cntrl->mhi_dev->dev;
+> @@ -829,6 +831,24 @@ int mhi_async_power_up(struct mhi_controller *mhi_cntrl)
+>   		goto error_bhi_offset;
+>   	}
+>   
+> +	state = mhi_get_mhi_state(mhi_cntrl);
+> +	if (state == MHI_STATE_SYS_ERR) {
+> +		mhi_set_mhi_state(mhi_cntrl, MHI_STATE_RESET);
+> +		ret = readl_poll_timeout(mhi_cntrl->regs + MHICTRL, val,
+> +					 !(val & MHICTRL_RESET_MASK), 1000,
+> +					 mhi_cntrl->timeout_ms * 1000);
+can we use this instead of polling because MSI is configures and int_vec 
+handler is registered
 
-diff --git a/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.txt b/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.txt
-index de4b2baf91e8..937442a4c2ab 100644
---- a/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.txt
-+++ b/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.txt
-@@ -19,12 +19,12 @@ Required properties:
- 	- "pcie_phy"
- 
- Optional properties:
--- fsl,tx-deemph-gen1: Gen1 De-emphasis value. Default: 0
--- fsl,tx-deemph-gen2-3p5db: Gen2 (3.5db) De-emphasis value. Default: 0
--- fsl,tx-deemph-gen2-6db: Gen2 (6db) De-emphasis value. Default: 20
--- fsl,tx-swing-full: Gen2 TX SWING FULL value. Default: 127
--- fsl,tx-swing-low: TX launch amplitude swing_low value. Default: 127
--- fsl,max-link-speed: Specify PCI gen for link capability. Must be '2' for
-+- tx-deemph-gen1: Gen1 De-emphasis value. Default: 0
-+- tx-deemph-gen2-3p5db: Gen2 (3.5db) De-emphasis value. Default: 0
-+- tx-deemph-gen2-6db: Gen2 (6db) De-emphasis value. Default: 20
-+- tx-swing-full: Gen2 TX SWING FULL value. Default: 127
-+- tx-swing-low: TX launch amplitude swing_low value. Default: 127
-+- max-link-speed: Specify PCI gen for link capability. Must be '2' for
-   gen2, otherwise will default to gen1. Note that the IMX6 LVDS clock outputs
-   do not meet gen2 jitter requirements and thus for gen2 capability a gen2
-   compliant clock generator should be used and configured.
+     wait_event_timeout(mhi_cntrl->state_event,
+                MHI_PM_IN_FATAL_STATE(mhi_cntrl->pm_state) ||
+               mhi_read_reg_field(mhi_cntrl, base, MHICTRL,
+                           MHICTRL_RESET_MASK,
+                           MHICTRL_RESET_SHIFT, &reset) || !reset ,
+                msecs_to_jiffies(mhi_cntrl->timeout_ms));
+
+1) In case of MHI_PM_IN_FATAL_STATE we would not be accessing MHI reg
+2) Consistent with current MHI driver code.
+> +		if (ret) {
+> +			dev_info(dev, "Failed to reset MHI due to syserr state\n");
+> +			goto error_bhi_offset;
+> +		}
+> +
+> +		/*
+> +		 * device cleares INTVEC as part of RESET processing,
+> +		 * re-program it
+> +		 */
+> +		mhi_write_reg(mhi_cntrl, mhi_cntrl->bhi, BHI_INTVEC, 0);
+> +	}
+> +
+>   	/* Transition to next state */
+>   	next_state = MHI_IN_PBL(current_ee) ?
+>   		DEV_ST_TRANSITION_PBL : DEV_ST_TRANSITION_READY;
+
 -- 
-2.25.1
-
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
