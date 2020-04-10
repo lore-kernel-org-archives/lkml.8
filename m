@@ -6,26 +6,26 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EA59C2BB55
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 19:36:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4C32C2D0EC
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 19:36:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3F75D20769
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 19:36:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9829B20732
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 19:36:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726792AbgDJTgd (ORCPT
+        id S1726809AbgDJTgj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Apr 2020 15:36:33 -0400
-Received: from ex13-edg-ou-001.vmware.com ([208.91.0.189]:55124 "EHLO
+        Fri, 10 Apr 2020 15:36:39 -0400
+Received: from ex13-edg-ou-001.vmware.com ([208.91.0.189]:55131 "EHLO
         EX13-EDG-OU-001.vmware.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726702AbgDJTgd (ORCPT
+        by vger.kernel.org with ESMTP id S1726702AbgDJTgj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Apr 2020 15:36:33 -0400
-Received: from sc9-mailhost3.vmware.com (10.113.161.73) by
+        Fri, 10 Apr 2020 15:36:39 -0400
+Received: from sc9-mailhost2.vmware.com (10.113.161.72) by
  EX13-EDG-OU-001.vmware.com (10.113.208.155) with Microsoft SMTP Server id
- 15.0.1156.6; Fri, 10 Apr 2020 12:36:28 -0700
+ 15.0.1156.6; Fri, 10 Apr 2020 12:36:34 -0700
 Received: from sc9-mailhost3.vmware.com (unknown [10.166.69.226])
-        by sc9-mailhost3.vmware.com (Postfix) with ESMTP id A7E7940BB1;
-        Fri, 10 Apr 2020 12:36:32 -0700 (PDT)
+        by sc9-mailhost2.vmware.com (Postfix) with ESMTP id 58531B2C7E;
+        Fri, 10 Apr 2020 15:36:38 -0400 (EDT)
 From:   Matt Helsley <mhelsley@vmware.com>
 To:     <linux-kernel@vger.kernel.org>
 CC:     Josh Poimboeuf <jpoimboe@redhat.com>,
@@ -35,9 +35,9 @@ CC:     Josh Poimboeuf <jpoimboe@redhat.com>,
         Steven Rostedt <rostedt@goodmis.org>,
         Miroslav Benes <mbenes@suse.cz>,
         Matt Helsley <mhelsley@vmware.com>
-Subject: [RFC][PATCH 04/36] objtool: Report missing support for subcommands
-Date:   Fri, 10 Apr 2020 12:35:27 -0700
-Message-ID: <0e08a8c9e18e09906888357435b7acba8e0cbe2b.1586468801.git.mhelsley@vmware.com>
+Subject: [RFC][PATCH 05/36] objtool: Add support for relocations without addends
+Date:   Fri, 10 Apr 2020 12:35:28 -0700
+Message-ID: <e5335e88eee0a32d3bfc0592335e3577f081bdee.1586468801.git.mhelsley@vmware.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <cover.1586468801.git.mhelsley@vmware.com>
 References: <cover.1586468801.git.mhelsley@vmware.com>
@@ -51,206 +51,137 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The check and orc-related subcommands for objtool are x86-specific.
-To make this clear to anyone using the tool return a non-zero exit
-code and indicate in the help and usage output which commands are
-(and are not) available.
+Currently objtool only collects information about relocations with
+addends. In recordmcount, which we are about to merge into objtool,
+some supported architectures do not use rela relocations. Since
+object files use one or the other the list can be reused.
 
 Signed-off-by: Matt Helsley <mhelsley@vmware.com>
 ---
- tools/objtool/Build                   |  1 +
- tools/objtool/arch/missing/check.c    |  4 +++-
- tools/objtool/arch/missing/orc_dump.c |  4 +++-
- tools/objtool/builtin-check.c         |  5 ++++
- tools/objtool/builtin-orc.c           |  7 ++++++
- tools/objtool/builtin.h               |  2 ++
- tools/objtool/check.h                 |  1 +
- tools/objtool/objtool.c               | 34 +++++++++++++++++++++++----
- tools/objtool/orc.h                   |  1 +
- 9 files changed, 52 insertions(+), 7 deletions(-)
+ tools/objtool/elf.c | 55 ++++++++++++++++++++++++++++++++++++---------
+ tools/objtool/elf.h |  5 ++++-
+ 2 files changed, 49 insertions(+), 11 deletions(-)
 
-diff --git a/tools/objtool/Build b/tools/objtool/Build
-index 3178c00072f5..e372cddd86e0 100644
---- a/tools/objtool/Build
-+++ b/tools/objtool/Build
-@@ -1,3 +1,4 @@
-+objtool-y += arch/missing/
- objtool-y += arch/$(SRCARCH)/
- objtool-y += builtin-check.o
- objtool-y += builtin-orc.o
-diff --git a/tools/objtool/arch/missing/check.c b/tools/objtool/arch/missing/check.c
-index 5eac14c8c6a5..7f9deb0451bb 100644
---- a/tools/objtool/arch/missing/check.c
-+++ b/tools/objtool/arch/missing/check.c
-@@ -8,7 +8,9 @@
+diff --git a/tools/objtool/elf.c b/tools/objtool/elf.c
+index 09ddc8f1def3..88ce3efa394c 100644
+--- a/tools/objtool/elf.c
++++ b/tools/objtool/elf.c
+@@ -465,12 +465,14 @@ static int read_relas(struct elf *elf)
+ 	unsigned long nr_rela, max_rela = 0, tot_rela = 0;
  
- const char *objname;
- 
--int __attribute__ ((weak)) check(const char *_objname, bool orc)
-+int missing_check(const char *_objname, bool orc)
- {
- 	return 127;
- }
-+
-+int __attribute__ ((weak, alias("missing_check"))) check(const char *_objname, bool orc);
-diff --git a/tools/objtool/arch/missing/orc_dump.c b/tools/objtool/arch/missing/orc_dump.c
-index f7ebb3a2ce9e..45367ddd08a4 100644
---- a/tools/objtool/arch/missing/orc_dump.c
-+++ b/tools/objtool/arch/missing/orc_dump.c
-@@ -5,7 +5,9 @@
- 
- #include "../../orc.h"
- 
--int __attribute__ ((weak)) orc_dump(const char *_objname)
-+int missing_orc_dump(const char *_objname)
- {
- 	return 127;
- }
-+
-+int __attribute__ ((weak, alias("missing_orc_dump"))) orc_dump(const char *_objname);
-diff --git a/tools/objtool/builtin-check.c b/tools/objtool/builtin-check.c
-index 10fbe75ab43d..7e7ad576ebc0 100644
---- a/tools/objtool/builtin-check.c
-+++ b/tools/objtool/builtin-check.c
-@@ -35,6 +35,11 @@ const struct option check_options[] = {
- 	OPT_END(),
- };
- 
-+bool is_cmd_check_available(void)
-+{
-+	return check != missing_check;
-+}
-+
- int cmd_check(int argc, const char **argv)
- {
- 	const char *objname;
-diff --git a/tools/objtool/builtin-orc.c b/tools/objtool/builtin-orc.c
-index e6e54ae4ab75..043b93f68e83 100644
---- a/tools/objtool/builtin-orc.c
-+++ b/tools/objtool/builtin-orc.c
-@@ -23,6 +23,13 @@ static const char *orc_usage[] = {
- 	NULL,
- };
- 
-+bool is_cmd_orc_available(void)
-+{
-+	if (check == missing_check)
-+		return false;
-+	return orc_dump != missing_orc_dump;
-+}
-+
- int cmd_orc(int argc, const char **argv)
- {
- 	const char *objname;
-diff --git a/tools/objtool/builtin.h b/tools/objtool/builtin.h
-index 0b907902ee79..478558d38007 100644
---- a/tools/objtool/builtin.h
-+++ b/tools/objtool/builtin.h
-@@ -10,7 +10,9 @@
- extern const struct option check_options[];
- extern bool no_fp, no_unreachable, retpoline, module, backtrace, uaccess, stats;
- 
-+extern bool is_cmd_check_available(void);
- extern int cmd_check(int argc, const char **argv);
-+extern bool is_cmd_orc_available(void);
- extern int cmd_orc(int argc, const char **argv);
- 
- #endif /* _BUILTIN_H */
-diff --git a/tools/objtool/check.h b/tools/objtool/check.h
-index 4d34bfc84dc7..c54fb9f5c8e6 100644
---- a/tools/objtool/check.h
-+++ b/tools/objtool/check.h
-@@ -9,6 +9,7 @@
- #include <stdbool.h>
- #include "objtool.h"
- 
-+int missing_check(const char *objname, bool orc);
- int check(const char *objname, bool orc);
- 
- struct instruction *find_insn(struct objtool_file *file,
-diff --git a/tools/objtool/objtool.c b/tools/objtool/objtool.c
-index 593ec85915a9..e901c40c76ef 100644
---- a/tools/objtool/objtool.c
-+++ b/tools/objtool/objtool.c
-@@ -27,21 +27,22 @@ struct cmd_struct {
- 	const char *name;
- 	int (*fn)(int, const char **);
- 	const char *help;
-+	bool (*is_available)(void);
- };
- 
- static const char objtool_usage_string[] =
- 	"objtool COMMAND [ARGS]";
- 
- static struct cmd_struct objtool_cmds[] = {
--	{"check",	cmd_check,	"Perform stack metadata validation on an object file" },
--	{"orc",		cmd_orc,	"Generate in-place ORC unwind tables for an object file" },
-+	{"check",	cmd_check,	"Perform stack metadata validation on an object file", is_cmd_check_available },
-+	{"orc",		cmd_orc,	"Generate in-place ORC unwind tables for an object file", is_cmd_orc_available },
- };
- 
- bool help;
- 
- static void cmd_usage(void)
- {
--	unsigned int i, longest = 0;
-+	unsigned int i, longest = 0, num_unavail = 0;
- 
- 	printf("\n usage: %s\n\n", objtool_usage_string);
- 
-@@ -52,8 +53,26 @@ static void cmd_usage(void)
- 
- 	puts(" Commands:");
- 	for (i = 0; i < ARRAY_SIZE(objtool_cmds); i++) {
--		printf("   %-*s   ", longest, objtool_cmds[i].name);
--		puts(objtool_cmds[i].help);
-+		struct cmd_struct *p = objtool_cmds+i;
-+
-+		if (!p->is_available()) {
-+			num_unavail++;
-+			continue;
-+		}
-+		printf("   %-*s   ", longest, p->name);
-+		puts(p->help);
-+	}
-+
-+	if (num_unavail > 0) {
-+		puts("\n Unavailable commands on this architecture:");
-+		for (i = 0; i < ARRAY_SIZE(objtool_cmds); i++) {
-+			struct cmd_struct *p = objtool_cmds+i;
-+
-+			if (p->is_available())
-+				continue;
-+			printf("   %-*s   ", longest, p->name);
-+			puts(p->help);
-+		}
- 	}
- 
- 	printf("\n");
-@@ -96,6 +115,11 @@ static void handle_internal_command(int argc, const char **argv)
- 		if (strcmp(p->name, cmd))
+ 	list_for_each_entry(sec, &elf->sections, list) {
+-		if (sec->sh.sh_type != SHT_RELA)
++		if ((sec->sh.sh_type != SHT_RELA) &&
++		     (sec->sh.sh_type != SHT_REL))
  			continue;
  
-+		if (!p->is_available()) {
-+			fprintf(stderr, "command %s is not available on this architecture\n", cmd);
-+			exit(127);
+-		sec->base = find_section_by_name(elf, sec->name + 5);
++		sec->base = find_section_by_name(elf, sec->name +
++				((sec->sh.sh_type != SHT_REL) ? 5 : 4));
+ 		if (!sec->base) {
+-			WARN("can't find base section for rela section %s",
++			WARN("can't find base section for relocation section %s",
+ 			     sec->name);
+ 			return -1;
+ 		}
+@@ -486,13 +488,26 @@ static int read_relas(struct elf *elf)
+ 			}
+ 			memset(rela, 0, sizeof(*rela));
+ 
+-			if (!gelf_getrela(sec->data, i, &rela->rela)) {
+-				WARN_ELF("gelf_getrela");
+-				return -1;
++			switch(sec->sh.sh_type) {
++			case SHT_REL:
++				if (!gelf_getrel(sec->data, i, &rela->rel)) {
++					WARN_ELF("gelf_getrel");
++					return -1;
++				}
++				rela->addend = 0;
++				break;
++			case SHT_RELA:
++				if (!gelf_getrela(sec->data, i, &rela->rela)) {
++					WARN_ELF("gelf_getrela");
++					return -1;
++				}
++				rela->addend = rela->rela.r_addend;
++				break;
++			default:
++				break;
+ 			}
+ 
+ 			rela->type = GELF_R_TYPE(rela->rela.r_info);
+-			rela->addend = rela->rela.r_addend;
+ 			rela->offset = rela->rela.r_offset;
+ 			symndx = GELF_R_SYM(rela->rela.r_info);
+ 			rela->sym = find_symbol_by_index(elf, symndx);
+@@ -717,17 +732,27 @@ int elf_rebuild_rela_section(struct section *sec)
+ 	struct rela *rela;
+ 	int nr, idx = 0, size;
+ 	GElf_Rela *relas;
++	GElf_Rel *rels;
+ 
+ 	nr = 0;
+ 	list_for_each_entry(rela, &sec->rela_list, list)
+ 		nr++;
+ 
++	/*
++	 * Allocate a buffer for relocations with addends but also use
++	 * it for other relocations too. The section type determines
++	 * the size of the section, the buffer used, and the entries.
++	 */
+ 	size = nr * sizeof(*relas);
+ 	relas = malloc(size);
+ 	if (!relas) {
+ 		perror("malloc");
+ 		return -1;
+ 	}
++	rels = (void *)relas;
++	if (sec->sh.sh_type == SHT_REL) {
++		size = nr * sizeof(*rels);
++	}
+ 
+ 	sec->data->d_buf = relas;
+ 	sec->data->d_size = size;
+@@ -736,9 +761,19 @@ int elf_rebuild_rela_section(struct section *sec)
+ 
+ 	idx = 0;
+ 	list_for_each_entry(rela, &sec->rela_list, list) {
+-		relas[idx].r_offset = rela->offset;
+-		relas[idx].r_addend = rela->addend;
+-		relas[idx].r_info = GELF_R_INFO(rela->sym->idx, rela->type);
++		switch(sec->sh.sh_type) {
++		case SHT_REL:
++			rels[idx].r_offset = rela->offset;
++			rels[idx].r_info = GELF_R_INFO(rela->sym->idx, rela->type);
++			break;
++		case SHT_RELA:
++			relas[idx].r_addend = rela->addend;
++			relas[idx].r_offset = rela->offset;
++			relas[idx].r_info = GELF_R_INFO(rela->sym->idx, rela->type);
++			break;
++		default:
++			break;
 +		}
-+
- 		ret = p->fn(argc, argv);
+ 		idx++;
+ 	}
  
- 		exit(ret);
-diff --git a/tools/objtool/orc.h b/tools/objtool/orc.h
-index c67f451d7610..9174356ba0fa 100644
---- a/tools/objtool/orc.h
-+++ b/tools/objtool/orc.h
-@@ -11,6 +11,7 @@ struct objtool_file;
- int create_orc(struct objtool_file *file);
- int create_orc_sections(struct objtool_file *file);
- 
-+int missing_orc_dump(const char *objname);
- int orc_dump(const char *objname);
- 
- #endif /* _ORC_H */
+diff --git a/tools/objtool/elf.h b/tools/objtool/elf.h
+index ebbb10c61e24..5ad29bb84692 100644
+--- a/tools/objtool/elf.h
++++ b/tools/objtool/elf.h
+@@ -61,7 +61,10 @@ struct symbol {
+ struct rela {
+ 	struct list_head list;
+ 	struct hlist_node hash;
+-	GElf_Rela rela;
++	union {
++		GElf_Rela rela;
++		GElf_Rel  rel;
++	};
+ 	struct section *sec;
+ 	struct symbol *sym;
+ 	unsigned int type;
 -- 
 2.20.1
 
