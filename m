@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E550C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 03:54:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A016C2D0EC
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 03:54:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 662A120936
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 03:54:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F3FE120BED
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 03:54:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586490876;
-	bh=u7f2pqtpVNbs8a/p06LRN9rLRFe4gO8tJL2WMQuS9X0=;
+	s=default; t=1586490880;
+	bh=0dCjT5nFRePwKB1f0perCjVU+KxOZ4mV+cUHzcKpO9Q=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gSJaRatzktinId45uRdxtP3I7+Rk1+362rH1113K6uj6+ZQdk6b6fyviuXOfUqAZj
-	 LWHyoNB7Xe6yYJNXUWi1GqXHXhQXJH8NXwme3yeuJgrkui55yOD4iiEwmcMZzjIGWs
-	 DjQtajU5sWyMXjRME2fS61QzpQW5jLen8hdukCkQ=
+	b=ODE06GedIxAcnGJNadmjrxdKWHUzZSErYNRFg4ahr4cUkQ6C1HCpfy791phbNeCUE
+	 lKyN8Hed6TeSMj6IMxNN2kiyQdzCYZS9WIDGSaS1gIIcA1sahg6R+26q12ZsttQdaL
+	 2gjxy+Wqz65W4WSeOk0Diol45m4cuN4gyTXmfeqY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729142AbgDJDye (ORCPT
+        id S1728866AbgDJDuW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Apr 2020 23:54:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34906 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728865AbgDJDuW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 9 Apr 2020 23:50:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34738 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728851AbgDJDuQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Apr 2020 23:50:16 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DFEE320CC7;
-        Fri, 10 Apr 2020 03:50:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3555920CC7;
+        Fri, 10 Apr 2020 03:50:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586490622;
-        bh=u7f2pqtpVNbs8a/p06LRN9rLRFe4gO8tJL2WMQuS9X0=;
+        s=default; t=1586490617;
+        bh=0dCjT5nFRePwKB1f0perCjVU+KxOZ4mV+cUHzcKpO9Q=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Kxm5u+Xqh3aSAwYUXvE6nLJZAk5358CVPkXaKhNIBTCdFGqyLPHPXG0+jgS8E13XC
-         RbxJJkA1mpClVso1njbXhxznEG9KPCrLyTuI1fgMRzPjtnUylBbm9lk1Ac0oN7KlQY
-         c6IrKKvkY5HYyb49FYHpiSA91igQWSp3HRDkKbyg=
+        b=JTyXsYGDyeVxrAr2cMvuBOWp7p1QoJBLqXJ1kPxCabr7SojOd/OpimnRSlR2/0Exm
+         DmV9cxmtSlTiQs8PSUQS81TRRicQuUTHIU7yJ8tn3bqHqeUbShmfBqmQRCEMi9buAP
+         Tsjq1xgv8SbDXO5jmUADQGLMIDtbZFe3ZnjTe5Mg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Matt Ranostay <matt.ranostay@konsulko.com>, rdunlap@infradead.org,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 14/32] media: i2c: video-i2c: fix build errors due to 'imply hwmon'
-Date:   Thu,  9 Apr 2020 23:49:47 -0400
-Message-Id: <20200410035005.9371-14-sashal@kernel.org>
+Cc:     Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
+        Paul Menzel <pmenzel@molgen.mpg.de>,
+        Bob Liu <bob.liu@oracle.com>, Song Liu <songliubraving@fb.com>,
+        Sasha Levin <sashal@kernel.org>, linux-block@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 09/32] block: keep bdi->io_pages in sync with max_sectors_kb for stacked devices
+Date:   Thu,  9 Apr 2020 23:49:42 -0400
+Message-Id: <20200410035005.9371-9-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200410035005.9371-1-sashal@kernel.org>
 References: <20200410035005.9371-1-sashal@kernel.org>
@@ -60,41 +60,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Matt Ranostay <matt.ranostay@konsulko.com>
+From: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
 
-[ Upstream commit 64d4fc9926f09861a35d8f0f7d81f056e6d5af7b ]
+[ Upstream commit e74d93e96d721c4297f2a900ad0191890d2fc2b0 ]
 
-Fix build fault when CONFIG_HWMON is a module, and CONFIG_VIDEO_I2C
-as builtin. This is due to 'imply hwmon' in the respective Kconfig.
+Field bdi->io_pages added in commit 9491ae4aade6 ("mm: don't cap request
+size based on read-ahead setting") removes unneeded split of read requests.
 
-Issue build log:
+Stacked drivers do not call blk_queue_max_hw_sectors(). Instead they set
+limits of their devices by blk_set_stacking_limits() + disk_stack_limits().
+Field bio->io_pages stays zero until user set max_sectors_kb via sysfs.
 
-ld: drivers/media/i2c/video-i2c.o: in function `amg88xx_hwmon_init':
-video-i2c.c:(.text+0x2e1): undefined reference to `devm_hwmon_device_register_with_info
+This patch updates io_pages after merging limits in disk_stack_limits().
 
-Cc: rdunlap@infradead.org
-Fixes: acbea6798955 (media: video-i2c: add hwmon support for amg88xx)
-Signed-off-by: Matt Ranostay <matt.ranostay@konsulko.com>
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Commit c6d6e9b0f6b4 ("dm: do not allow readahead to limit IO size") fixed
+the same problem for device-mapper devices, this one fixes MD RAIDs.
+
+Fixes: 9491ae4aade6 ("mm: don't cap request size based on read-ahead setting")
+Reviewed-by: Paul Menzel <pmenzel@molgen.mpg.de>
+Reviewed-by: Bob Liu <bob.liu@oracle.com>
+Signed-off-by: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+Signed-off-by: Song Liu <songliubraving@fb.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/i2c/video-i2c.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ block/blk-settings.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/media/i2c/video-i2c.c b/drivers/media/i2c/video-i2c.c
-index f27d294dcbef5..dd50acc085d89 100644
---- a/drivers/media/i2c/video-i2c.c
-+++ b/drivers/media/i2c/video-i2c.c
-@@ -105,7 +105,7 @@ static int amg88xx_xfer(struct video_i2c_data *data, char *buf)
- 	return (ret == 2) ? 0 : -EIO;
+diff --git a/block/blk-settings.c b/block/blk-settings.c
+index be9b39caadbd2..01093b8f3e624 100644
+--- a/block/blk-settings.c
++++ b/block/blk-settings.c
+@@ -717,6 +717,9 @@ void disk_stack_limits(struct gendisk *disk, struct block_device *bdev,
+ 		printk(KERN_NOTICE "%s: Warning: Device %s is misaligned\n",
+ 		       top, bottom);
+ 	}
++
++	t->backing_dev_info->io_pages =
++		t->limits.max_sectors >> (PAGE_SHIFT - 9);
  }
+ EXPORT_SYMBOL(disk_stack_limits);
  
--#if IS_ENABLED(CONFIG_HWMON)
-+#if IS_REACHABLE(CONFIG_HWMON)
- 
- static const u32 amg88xx_temp_config[] = {
- 	HWMON_T_INPUT,
 -- 
 2.20.1
 
