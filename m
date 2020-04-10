@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9CE5C2BB85
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 03:49:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21700C2D0EC
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 03:49:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 74261206C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 03:49:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E0FE7214DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 03:49:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586490560;
-	bh=idCS/o2KJWKLuG5YYj/PRV53FPx4L/x7Hh2m9+2AenI=;
+	s=default; t=1586490566;
+	bh=FeXGNYdkirxuv81iCWK4RTDiAnC+H9pdUcHZk8JChQI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FOdswdpLNWPRpilpghKw568Sv1yhlfguwmZr3AJKDR+1dVVZ5bZtFDtgq/W2o9onY
-	 c8202GQSc5/qncc4BnMPloWv50GE/yGcNQ0w5KmQqZSLMf/5tXq/AWlkPqzTXbNbx5
-	 pW4Gi9ikdoFX8vU/K7wPmxc8jBbjztZKKgCc6YTY=
+	b=MfdjgDVpNmQYV1H2qgiELsBaTlBwNstwjU8vpUfM4JX9SAomRYIZia/cPcFD5uJhH
+	 6VNKn9C5AMtD5nh3jQR6cO8+zPuMYH1yjg2BsKGlYKZ4HnwnGoTdntl5FgGaFlBeCF
+	 siPNcCkQIq1CseItKa4ZEkrq6RmS52YTzpiNJLaM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728503AbgDJDtS (ORCPT
+        id S1728532AbgDJDtY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Apr 2020 23:49:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33058 "EHLO mail.kernel.org"
+        Thu, 9 Apr 2020 23:49:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33202 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728472AbgDJDtO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Apr 2020 23:49:14 -0400
+        id S1728507AbgDJDtT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Apr 2020 23:49:19 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 65A6521473;
-        Fri, 10 Apr 2020 03:49:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9BE4F20CC7;
+        Fri, 10 Apr 2020 03:49:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586490554;
-        bh=idCS/o2KJWKLuG5YYj/PRV53FPx4L/x7Hh2m9+2AenI=;
+        s=default; t=1586490559;
+        bh=FeXGNYdkirxuv81iCWK4RTDiAnC+H9pdUcHZk8JChQI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=H3SOtWtsGUPl4QH1dKlg9FzYEObfPZK8zd6doj0+NVJJs6KGhsiMtF7+YdP16mhGj
-         dTtSqYnQIS2zQfQ/HiaR7AziK8fuJpWuEENhj0pUpawWj081iOGJcnrLY8DQq+8+r9
-         rF8TNs+hMm/uAlfyVaymzmWjN/tb/m8H1AapbuIs=
+        b=PxEjvNcgULZDWXWQCWwPLBY1CnjbBAdYp/Mi81mGSb1Y+tFYM4TtZHDQlO72rQBAO
+         lz9AAR7odCRsffUucEawFpTsegPAr4m14v8fZG9jZjI1WqIG5KasVnFBEeKz33GQic
+         eJtEzvYWQewvxr5aE4Nv53lzVvVuQPHgrfTEsSxk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Stephan Gerhold <stephan@gerhold.net>,
-        Stanimir Varbanov <stanimir.varbanov@linaro.org>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 03/46] media: venus: hfi_parser: Ignore HEVC encoding for V1
-Date:   Thu,  9 Apr 2020 23:48:26 -0400
-Message-Id: <20200410034909.8922-3-sashal@kernel.org>
+Cc:     Alexey Dobriyan <adobriyan@gmail.com>,
+        Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>,
+        Sasha Levin <sashal@kernel.org>, linux-block@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 07/46] null_blk: fix spurious IO errors after failed past-wp access
+Date:   Thu,  9 Apr 2020 23:48:30 -0400
+Message-Id: <20200410034909.8922-7-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200410034909.8922-1-sashal@kernel.org>
 References: <20200410034909.8922-1-sashal@kernel.org>
@@ -61,38 +59,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Stephan Gerhold <stephan@gerhold.net>
+From: Alexey Dobriyan <adobriyan@gmail.com>
 
-[ Upstream commit c50cc6dc6c48300af63a6fbc71b647053c15fc80 ]
+[ Upstream commit ff77042296d0a54535ddf74412c5ae92cb4ec76a ]
 
-Some older MSM8916 Venus firmware versions also seem to indicate
-support for encoding HEVC, even though they really can't.
-This will lead to errors later because hfi_session_init() fails
-in this case.
+Steps to reproduce:
 
-HEVC is already ignored for "dec_codecs", so add the same for
-"enc_codecs" to make these old firmware versions work correctly.
+	BLKRESETZONE zone 0
 
-Signed-off-by: Stephan Gerhold <stephan@gerhold.net>
-Signed-off-by: Stanimir Varbanov <stanimir.varbanov@linaro.org>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+	// force EIO
+	pwrite(fd, buf, 4096, 4096);
+
+	[issue more IO including zone ioctls]
+
+It will start failing randomly including IO to unrelated zones because of
+->error "reuse". Trigger can be partition detection as well if test is not
+run immediately which is even more entertaining.
+
+The fix is of course to clear ->error where necessary.
+
+Reviewed-by: Christoph Hellwig <hch@lst.de>
+Signed-off-by: Alexey Dobriyan (SK hynix) <adobriyan@gmail.com>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/platform/qcom/venus/hfi_parser.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/block/null_blk_main.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/media/platform/qcom/venus/hfi_parser.c b/drivers/media/platform/qcom/venus/hfi_parser.c
-index 2293d936e49ca..7f515a4b9bd12 100644
---- a/drivers/media/platform/qcom/venus/hfi_parser.c
-+++ b/drivers/media/platform/qcom/venus/hfi_parser.c
-@@ -181,6 +181,7 @@ static void parse_codecs(struct venus_core *core, void *data)
- 	if (IS_V1(core)) {
- 		core->dec_codecs &= ~HFI_VIDEO_CODEC_HEVC;
- 		core->dec_codecs &= ~HFI_VIDEO_CODEC_SPARK;
-+		core->enc_codecs &= ~HFI_VIDEO_CODEC_HEVC;
+diff --git a/drivers/block/null_blk_main.c b/drivers/block/null_blk_main.c
+index 6603598b7bae9..c4454cfc6d530 100644
+--- a/drivers/block/null_blk_main.c
++++ b/drivers/block/null_blk_main.c
+@@ -579,6 +579,7 @@ static struct nullb_cmd *__alloc_cmd(struct nullb_queue *nq)
+ 	if (tag != -1U) {
+ 		cmd = &nq->cmds[tag];
+ 		cmd->tag = tag;
++		cmd->error = BLK_STS_OK;
+ 		cmd->nq = nq;
+ 		if (nq->dev->irqmode == NULL_IRQ_TIMER) {
+ 			hrtimer_init(&cmd->timer, CLOCK_MONOTONIC,
+@@ -1335,6 +1336,7 @@ static blk_status_t null_queue_rq(struct blk_mq_hw_ctx *hctx,
+ 		cmd->timer.function = null_cmd_timer_expired;
  	}
- }
+ 	cmd->rq = bd->rq;
++	cmd->error = BLK_STS_OK;
+ 	cmd->nq = nq;
  
+ 	blk_mq_start_request(bd->rq);
 -- 
 2.20.1
 
