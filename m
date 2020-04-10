@@ -2,126 +2,123 @@ Return-Path: <SRS0=VV4q=52=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E791DC2BB1D
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 02:33:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3D89C2BBFD
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 02:38:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BB3C920769
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 02:33:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9C58E20A8B
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 02:38:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hzo34WeH"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AVSNgz0e"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726836AbgDJCdE (ORCPT
+        id S1726637AbgDJCiv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Apr 2020 22:33:04 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:43212 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725987AbgDJCdC (ORCPT
+        Thu, 9 Apr 2020 22:38:51 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:32887 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725987AbgDJCiu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Apr 2020 22:33:02 -0400
-Received: by mail-lj1-f196.google.com with SMTP id h25so599718lja.10;
-        Thu, 09 Apr 2020 19:32:54 -0700 (PDT)
+        Thu, 9 Apr 2020 22:38:50 -0400
+Received: by mail-pl1-f194.google.com with SMTP id ay1so234785plb.0;
+        Thu, 09 Apr 2020 19:38:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=Jl9+MFoz9FOVeQYZvGEhfQsUzeR6H5+fWjwrI15x2z4=;
-        b=hzo34WeHzqF2MRVekRCB6qQ2to+82InUQzzrEI3aHJE38TD2HK0mkYL8XmXe5U8/Ug
-         dhkFmz32aonURvzYSQmBfDf4Y5bJgSRmK4c/7iZyejYluqqpH4j/cdkNAIVPEzkUNcEU
-         YJIXvLVax7P5GiAiNrZ8t86nFtsj3YK+PWZHSIsW6XIx+hHG0QQaG/fP+tDfiOeOD/d4
-         WeJXYjrHaWkGter4N//y0HIxIPAnlIfIB8R3jZC4kxgZx4ddyedcSUVXzBPuFem+41mw
-         i30TJGB5Bg+3URW5FqjCBBj8Tubreog0XYXPiXZoUcvH6VjSmEQwD40PZBHvtRG/JWhm
-         CjBw==
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=cm3qEVUblIBWQEP7R8pxH+eUa0WNyfWiM9J7eM+Fwmk=;
+        b=AVSNgz0eR/mu36t1jtB1pHxzPsuhsLJ5Dgmcn/9c7jPOTV+CNdcyL0zkXP7nLHQzQV
+         A10fzku8OWDIGvjGdvgdeH+jWjXzrllDIeVhKdprzXhQynX714rs3Td/tjGR+coEL5Aw
+         9O9rN2XFZJ5QvZNpH7rO2zchnfDG/1aaYCeqb4UwllljqxtOrpvrRcKDBEk9COBYQQFO
+         1jJAN0Hms3ovic+Bal9KAkQ1W5BRhoTGfKl7mwDWNfIHMcC8IP7152Er0GK1ixcZQijG
+         71dIgnkhRybaZPDMrOAJ7jaWMDsjZpbv/oC14bGuigw82SaeZ2oRTYvVKah0eRNKXHb0
+         NEUg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=Jl9+MFoz9FOVeQYZvGEhfQsUzeR6H5+fWjwrI15x2z4=;
-        b=YbIeg6alQIoT0HOQs21zl/a80TgndsLvLBI+DQpEup866Fy+SXBC2AP05fL7CiGJn3
-         3A5cEuwSPS6nYLJVWfOjAnCS6MgBlRMjOIjlQYFEQdeN4XFtb2sq6J4edwpAXXIAFTkA
-         WybErX7XDE4flRUD876gvbMtJ9JiumdH/v7FjIL0N15DnXWn16cvotDj1f6fYhIHEnG1
-         p28nFM+iEfMze2BXmfZLAezGkXpV9fDaRt7gDA8hlKWiv7EpcyHPaB7VFkfp/D5sISrW
-         EFBVx+e5fx4S5MH1ZxqFVuMx7/F1Fkk9iG6H+DHitcNij8bwMw2AUDD5ibJ4pIaJEK3i
-         Ikzg==
-X-Gm-Message-State: AGi0PuZQ5c+rSeTZ4B8CxMf1SBmXUd03H88C+aw8bpStoX2b1vvZLfIA
-        kZwV1wez6Ooy5PXnB8IYocIaG7SE9BT84Q==
-X-Google-Smtp-Source: APiQypJWofmM8Qlyb2FI7O0p2padX/aOtgYx9otx/2dnfLObyekNxIuKl5+r6b20D5ZTWeEQ44DyKw==
-X-Received: by 2002:a2e:b52f:: with SMTP id z15mr1642957ljm.38.1586485973083;
-        Thu, 09 Apr 2020 19:32:53 -0700 (PDT)
-Received: from localhost ([213.191.183.145])
-        by smtp.gmail.com with ESMTPSA id f7sm274127ljj.4.2020.04.09.19.32.51
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 09 Apr 2020 19:32:52 -0700 (PDT)
-From:   Iskren Chernev <iskren.chernev@gmail.com>
-To:     linux-arm-msm@vger.kernel.org
-Cc:     Daniele Debernardi <drebrez@gmail.com>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, ~postmarketos/upstreaming@lists.sr.ht
-Subject: [PATCH 6/6] ARM: dts: qcom: msm8974-klte: Add USB node
-Date:   Fri, 10 Apr 2020 05:32:03 +0300
-Message-Id: <20200410023203.192048-7-iskren.chernev@gmail.com>
-X-Mailer: git-send-email 2.26.0
-In-Reply-To: <20200410023203.192048-1-iskren.chernev@gmail.com>
-References: <20200410023203.192048-1-iskren.chernev@gmail.com>
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=cm3qEVUblIBWQEP7R8pxH+eUa0WNyfWiM9J7eM+Fwmk=;
+        b=GvUX1EMRNMGonWMDs6sl6S6tHfxa1eH2Pdx/Y8Wu1mWhfQ6khksEs1m+T9jE9kqE8u
+         gWv+F+cvKljaPfjuo5AE48O/yTmhzM2no0LblUDqUJMF3tT2ZC8Fo8tcVpfcGduKXy9z
+         qrr1VQ/q/BzSXrQBCSuczL6htWzih5ulw2FmEJdMudcqaVuGNn1ZPrvfSoYXlmA5P8SG
+         7ywxFF2MSi5O3igE+YnCRCFFZCk071L23YwRx6qB/1d+NH2teJCtwaw6GR8KZlJ4nmrL
+         7YHfPUjX1KHrTN4XdotQLprgHcbBgIi7sCSx3qr1FcW2WB8tL7w1NCMnOcpl0nl94mYa
+         roJQ==
+X-Gm-Message-State: AGi0PuY8bkPmAxijXmFIsqz3eeoYDsGpLBunDFu88olYd5rH7IP1/NHU
+        mOWJjbrJBuBU8kj43o9FWls=
+X-Google-Smtp-Source: APiQypJUNzW2Kf/YisQ7Gm6MjGoHraf0uboGBOm6Ai9D7kmeIiXDGo0t/+GLEITvv65wjz5MhoeSGg==
+X-Received: by 2002:a17:90a:628c:: with SMTP id d12mr2775900pjj.53.1586486329072;
+        Thu, 09 Apr 2020 19:38:49 -0700 (PDT)
+Received: from localhost (181.56.30.125.dy.iij4u.or.jp. [125.30.56.181])
+        by smtp.gmail.com with ESMTPSA id f4sm456109pjm.9.2020.04.09.19.38.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 09 Apr 2020 19:38:48 -0700 (PDT)
+From:   Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
+X-Google-Original-From: Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
+Date:   Fri, 10 Apr 2020 11:38:45 +0900
+To:     Minchan Kim <minchan@kernel.org>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Christoph Hellwig <hch@lst.de>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Wei Liu <wei.liu@kernel.org>, x86@kernel.org,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Laura Abbott <labbott@redhat.com>,
+        Sumit Semwal <sumit.semwal@linaro.org>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Nitin Gupta <ngupta@vflare.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        linuxppc-dev@lists.ozlabs.org, linux-hyperv@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org,
+        linux-arch@vger.kernel.org, linux-mm@kvack.org,
+        iommu@lists.linux-foundation.org,
+        linux-arm-kernel@lists.infradead.org, linux-s390@vger.kernel.org,
+        bpf@vger.kernel.org, linux-kernel@vger.kernel.org,
+        sergey.senozhatsky@gmail.com
+Subject: Re: [PATCH 10/28] mm: only allow page table mappings for built-in
+ zsmalloc
+Message-ID: <20200410023845.GA2354@jagdpanzerIV.localdomain>
+References: <20200408115926.1467567-1-hch@lst.de>
+ <20200408115926.1467567-11-hch@lst.de>
+ <20200409160826.GC247701@google.com>
+ <20200409165030.GG20713@hirez.programming.kicks-ass.net>
+ <20200409170813.GD247701@google.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200409170813.GD247701@google.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Daniele Debernardi <drebrez@gmail.com>
+On (20/04/09 10:08), Minchan Kim wrote:
+> > > Even though I don't know how many usecase we have using zsmalloc as
+> > > module(I heard only once by dumb reason), it could affect existing
+> > > users. Thus, please include concrete explanation in the patch to
+> > > justify when the complain occurs.
+> > 
+> > The justification is 'we can unexport functions that have no sane reason
+> > of being exported in the first place'.
+> > 
+> > The Changelog pretty much says that.
+> 
+> Okay, I hope there is no affected user since this patch.
+> If there are someone, they need to provide sane reason why they want
+> to have zsmalloc as module.
 
-This introduces the usb node which can be used e.g. for USB_ETH
+I'm one of those who use zsmalloc as a module - mainly because I use zram
+as a compressing general purpose block device, not as a swap device.
+I create zram0, mkfs, mount, checkout and compile code, once done -
+umount, rmmod. This reduces the number of writes to SSD. Some people use
+tmpfs, but zram device(-s) can be much larger in size. That's a niche use
+case and I'm not against the patch.
 
-Signed-off-by: Daniele Debernardi <drebrez@gmail.com>
----
- .../boot/dts/qcom-msm8974-samsung-klte.dts    | 25 +++++++++++++++++++
- 1 file changed, 25 insertions(+)
-
-diff --git a/arch/arm/boot/dts/qcom-msm8974-samsung-klte.dts b/arch/arm/boot/dts/qcom-msm8974-samsung-klte.dts
-index ad26c83fee81..691a3cf2dd96 100644
---- a/arch/arm/boot/dts/qcom-msm8974-samsung-klte.dts
-+++ b/arch/arm/boot/dts/qcom-msm8974-samsung-klte.dts
-@@ -264,6 +264,31 @@ sdhci@f9824900 {
- 		pinctrl-names = "default";
- 		pinctrl-0 = <&sdhc1_pin_a>;
- 	};
-+
-+	usb@f9a55000 {
-+		status = "ok";
-+
-+		phys = <&usb_hs1_phy>;
-+		phy-select = <&tcsr 0xb000 0>;
-+		/*extcon = <&smbb>, <&usb_id>;*/
-+		/*vbus-supply = <&chg_otg>;*/
-+
-+		hnp-disable;
-+		srp-disable;
-+		adp-disable;
-+
-+		ulpi {
-+			phy@a {
-+				status = "ok";
-+
-+				v1p8-supply = <&pma8084_l6>;
-+				v3p3-supply = <&pma8084_l24>;
-+
-+				/*extcon = <&smbb>;*/
-+				qcom,init-seq = /bits/ 8 <0x1 0x64>;
-+			};
-+		};
-+	};
- };
- 
- &spmi_bus {
--- 
-2.26.0
-
+	-ss
