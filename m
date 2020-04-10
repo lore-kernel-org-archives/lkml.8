@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55A70C2BA2B
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 16:32:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD69FC2BB86
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 16:33:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 326F320CC7
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 16:32:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C104E20769
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 16:33:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726663AbgDJQcQ (ORCPT
+        id S1726702AbgDJQdM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Apr 2020 12:32:16 -0400
-Received: from mail-il1-f197.google.com ([209.85.166.197]:44564 "EHLO
-        mail-il1-f197.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726181AbgDJQcQ (ORCPT
+        Fri, 10 Apr 2020 12:33:12 -0400
+Received: from mail-io1-f69.google.com ([209.85.166.69]:50582 "EHLO
+        mail-io1-f69.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726598AbgDJQdL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Apr 2020 12:32:16 -0400
-Received: by mail-il1-f197.google.com with SMTP id b15so2989245ilh.11
-        for <linux-kernel@vger.kernel.org>; Fri, 10 Apr 2020 09:32:16 -0700 (PDT)
+        Fri, 10 Apr 2020 12:33:11 -0400
+Received: by mail-io1-f69.google.com with SMTP id a12so2704037ioe.17
+        for <linux-kernel@vger.kernel.org>; Fri, 10 Apr 2020 09:33:11 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=Y0MqekMBiePxJvjoGJydSlkklIk8o/ZxoTDbFCFFc/8=;
-        b=W8AOllicFMLuHaeK4dEGgnhKBB1soTupotpH7KmHigZjQPv1uu4xlukJ6gyiC955eU
-         IB5Jej+TMbtqfsYz2lp5daGNey61obdlgFQhDjUyZJ1ye59Jopj+byLv21okDGYGMtcp
-         L/rqbD/uhqhBfA+KDzo5PNczFvD+Hd9FpUCGC9zErzN4bWoJs46CSOe+DudZ97bYgb+1
-         n/sqcpyoaGwNPIAQhnNUr7DQNynR+FJqm+UR2mZ/yst23/njRhG5FxU7O9tVh1E+qH6Q
-         POCntEbokLBSScsYCcmjkpu1p3kjH5juKiQCmoWa+h38WO2EK05ygA8hNQUfHxLTyiI5
-         dJjg==
-X-Gm-Message-State: AGi0PuYVAHjCqgdB6B3GmD0V9j6Fg74uICrhkdJ7bTy5Rc4DV0LKIYfg
-        ofMNY0xfYrdhfiZUNqmSw/NzeXixbMZXdtadefOEw6RQmoPz
-X-Google-Smtp-Source: APiQypJoFJORPYVAk6VZOkifbDZzcNgG0DvutrzmItImErAaHJ1BMnD1HhnCHZ3y8txFO9fEuAWT4N/3Vz76Wki8OvV4SXXrwplb
+        bh=kIdJgJjTI4XqE+TdSFWC6xj+EidlJj7aQNtd5Ye8kmA=;
+        b=sXLHKxERWK9uS095YhKGo2yuwGbWdhAmgiQwUroS3UrWdrrchXlC0ZRkfmyqVHwIZ+
+         FoodINAOz+UEqhFJFEJGbCe93Dak4MeN6u7zdIX7eGVpiNfehrXpcCh51Pn5JgEnqZLg
+         2+g8mBVkWMqK3gH8xMS4jBzZweGBGG0Dzv22IORPC2Z/CyumY2zyGL8AFZqxZP0Gzk0t
+         dan5If6gjFbCz5FwU9sZK0hFoeS4v4rSP4pcCzeh9p/z458h6kyeIlJXxrlk2ZmbzsBh
+         DVczP4kgdLANj7e4iG9rOJ1wrvw6VFvD0HRooFaesTeXTVG52oMN/SHbSqLfUQC/857Y
+         8ALw==
+X-Gm-Message-State: AGi0PubyanQqRuDrNdhDMGU0BTKg3sZx3uQHXdAhS5oJHLEpEZBuos8P
+        3lklOf13KRD0r+ZnTKc3CJRNlnSF9hKS56Z/21eRBggkOvV8
+X-Google-Smtp-Source: APiQypIJRgDOTiSttMKYXZXZ/f4Ee2yDiM27Fyq0eib8Eh6auNsuWFnDwTi0vDZ0XCNMS3d4ETyPDmZym0BFiCXv5iN6nsRp3wCC
 MIME-Version: 1.0
-X-Received: by 2002:a92:3408:: with SMTP id b8mr5273262ila.68.1586536336014;
- Fri, 10 Apr 2020 09:32:16 -0700 (PDT)
-Date:   Fri, 10 Apr 2020 09:32:16 -0700
+X-Received: by 2002:a5d:88ce:: with SMTP id i14mr5053399iol.184.1586536391140;
+ Fri, 10 Apr 2020 09:33:11 -0700 (PDT)
+Date:   Fri, 10 Apr 2020 09:33:11 -0700
 X-Google-Appengine-App-Id: s~syzkaller
 X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000bb471d05a2f246d7@google.com>
-Subject: WARNING in hwsim_new_radio_nl
-From:   syzbot <syzbot+a4aee3f42d7584d76761@syzkaller.appspotmail.com>
-To:     davem@davemloft.net, johannes@sipsolutions.net,
-        kvalo@codeaurora.org, linux-kernel@vger.kernel.org,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        syzkaller-bugs@googlegroups.com
+Message-ID: <000000000000046e4f05a2f24a4b@google.com>
+Subject: KASAN: slab-out-of-bounds Read in gfn_to_pfn
+From:   syzbot <syzbot+25a50e1a4e196faed650@syzkaller.appspotmail.com>
+To:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        pbonzini@redhat.com, syzkaller-bugs@googlegroups.com
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -59,72 +57,126 @@ Hello,
 
 syzbot found the following crash on:
 
-HEAD commit:    5d30bcac Merge tag '9p-for-5.7-2' of git://github.com/mart..
+HEAD commit:    f5e94d10 Merge tag 'drm-next-2020-04-08' of git://anongit...
 git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=119383b3e00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=65d386b867ba5289
-dashboard link: https://syzkaller.appspot.com/bug?extid=a4aee3f42d7584d76761
-compiler:       clang version 10.0.0 (https://github.com/llvm/llvm-project/ c2443155a0fb245c8f17f2c1c72b6ea391e86e81)
+console output: https://syzkaller.appspot.com/x/log.txt?x=1450c657e00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=ca75979eeebf06c2
+dashboard link: https://syzkaller.appspot.com/bug?extid=25a50e1a4e196faed650
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
 
 Unfortunately, I don't have any reproducer for this crash yet.
 
 IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+a4aee3f42d7584d76761@syzkaller.appspotmail.com
+Reported-by: syzbot+25a50e1a4e196faed650@syzkaller.appspotmail.com
 
-------------[ cut here ]------------
-precision 33020 too large
-WARNING: CPU: 0 PID: 25816 at lib/vsprintf.c:2471 set_precision lib/vsprintf.c:2471 [inline]
-WARNING: CPU: 0 PID: 25816 at lib/vsprintf.c:2471 vsnprintf+0x1467/0x1aa0 lib/vsprintf.c:2547
-Kernel panic - not syncing: panic_on_warn set ...
-CPU: 0 PID: 25816 Comm: syz-executor.0 Not tainted 5.6.0-syzkaller #0
+==================================================================
+BUG: KASAN: slab-out-of-bounds in search_memslots include/linux/kvm_host.h:1051 [inline]
+BUG: KASAN: slab-out-of-bounds in __gfn_to_memslot include/linux/kvm_host.h:1063 [inline]
+BUG: KASAN: slab-out-of-bounds in gfn_to_memslot arch/x86/kvm/../../../virt/kvm/kvm_main.c:1597 [inline]
+BUG: KASAN: slab-out-of-bounds in gfn_to_pfn+0x4a6/0x4c0 arch/x86/kvm/../../../virt/kvm/kvm_main.c:1977
+Read of size 8 at addr ffff88809ddb0468 by task syz-executor.2/22057
+
+CPU: 1 PID: 22057 Comm: syz-executor.2 Not tainted 5.6.0-syzkaller #0
 Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
 Call Trace:
  __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x1e9/0x30e lib/dump_stack.c:118
- panic+0x264/0x7a0 kernel/panic.c:221
- __warn+0x209/0x210 kernel/panic.c:582
- report_bug+0x1ac/0x2d0 lib/bug.c:195
- fixup_bug arch/x86/kernel/traps.c:175 [inline]
- do_error_trap+0xca/0x1c0 arch/x86/kernel/traps.c:267
- do_invalid_op+0x32/0x40 arch/x86/kernel/traps.c:286
- invalid_op+0x23/0x30 arch/x86/entry/entry_64.S:1027
-RIP: 0010:set_precision lib/vsprintf.c:2471 [inline]
-RIP: 0010:vsnprintf+0x1467/0x1aa0 lib/vsprintf.c:2547
-Code: f5 6e f9 48 8d 5c 24 48 e9 8e fc ff ff e8 81 f5 6e f9 c6 05 a6 4e 63 01 01 48 c7 c7 c1 69 0a 89 44 89 fe 31 c0 e8 29 09 41 f9 <0f> 0b e9 b7 f6 ff ff e8 5d f5 6e f9 c6 05 81 4e 63 01 01 48 c7 c7
-RSP: 0018:ffffc90016587780 EFLAGS: 00010246
-RAX: 2f3b2aeaadea7400 RBX: ffffc900165877c8 RCX: 0000000000040000
-RDX: ffffc90001f09000 RSI: 0000000000009177 RDI: 0000000000009178
-RBP: 80fc0000ffffff02 R08: dffffc0000000000 R09: fffffbfff162889d
-R10: fffffbfff162889d R11: 0000000000000000 R12: dffffc0000000000
-R13: 0000000000000000 R14: ffffffff88ea1fb0 R15: 00000000000080fc
- kvasprintf+0x59/0xf0 lib/kasprintf.c:22
- kasprintf+0x6a/0x90 lib/kasprintf.c:59
- hwsim_new_radio_nl+0x95c/0xf30 drivers/net/wireless/mac80211_hwsim.c:3672
- genl_family_rcv_msg_doit net/netlink/genetlink.c:673 [inline]
- genl_family_rcv_msg net/netlink/genetlink.c:718 [inline]
- genl_rcv_msg+0x1054/0x1530 net/netlink/genetlink.c:735
- netlink_rcv_skb+0x190/0x3a0 net/netlink/af_netlink.c:2469
- genl_rcv+0x24/0x40 net/netlink/genetlink.c:746
- netlink_unicast_kernel net/netlink/af_netlink.c:1303 [inline]
- netlink_unicast+0x786/0x940 net/netlink/af_netlink.c:1329
- netlink_sendmsg+0xa57/0xd70 net/netlink/af_netlink.c:1918
- sock_sendmsg_nosec net/socket.c:652 [inline]
- sock_sendmsg net/socket.c:672 [inline]
- ____sys_sendmsg+0x4f9/0x7c0 net/socket.c:2362
- ___sys_sendmsg net/socket.c:2416 [inline]
- __sys_sendmsg+0x2a6/0x360 net/socket.c:2449
- do_syscall_64+0xf3/0x1b0 arch/x86/entry/common.c:295
+ dump_stack+0x188/0x20d lib/dump_stack.c:118
+ print_address_description.constprop.0.cold+0xd3/0x315 mm/kasan/report.c:382
+ __kasan_report.cold+0x35/0x4d mm/kasan/report.c:511
+ kasan_report+0x33/0x50 mm/kasan/common.c:625
+ search_memslots include/linux/kvm_host.h:1051 [inline]
+ __gfn_to_memslot include/linux/kvm_host.h:1063 [inline]
+ gfn_to_memslot arch/x86/kvm/../../../virt/kvm/kvm_main.c:1597 [inline]
+ gfn_to_pfn+0x4a6/0x4c0 arch/x86/kvm/../../../virt/kvm/kvm_main.c:1977
+ reexecute_instruction arch/x86/kvm/x86.c:6521 [inline]
+ reexecute_instruction+0x1fa/0x430 arch/x86/kvm/x86.c:6486
+ x86_emulate_instruction+0x880/0x1c50 arch/x86/kvm/x86.c:6795
+ kvm_mmu_page_fault+0x308/0x15d0 arch/x86/kvm/mmu/mmu.c:5495
+ vmx_handle_exit+0x2b8/0x1700 arch/x86/kvm/vmx/vmx.c:5953
+ vcpu_enter_guest+0xfea/0x59d0 arch/x86/kvm/x86.c:8470
+ vcpu_run arch/x86/kvm/x86.c:8533 [inline]
+ kvm_arch_vcpu_ioctl_run+0x3fb/0x16a0 arch/x86/kvm/x86.c:8755
+ kvm_vcpu_ioctl+0x493/0xe60 arch/x86/kvm/../../../virt/kvm/kvm_main.c:3138
+ vfs_ioctl fs/ioctl.c:47 [inline]
+ ksys_ioctl+0x11a/0x180 fs/ioctl.c:763
+ __do_sys_ioctl fs/ioctl.c:772 [inline]
+ __se_sys_ioctl fs/ioctl.c:770 [inline]
+ __x64_sys_ioctl+0x6f/0xb0 fs/ioctl.c:770
+ do_syscall_64+0xf6/0x7d0 arch/x86/entry/common.c:295
  entry_SYSCALL_64_after_hwframe+0x49/0xb3
 RIP: 0033:0x45c889
 Code: ad b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 7b b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007fb9e5575c78 EFLAGS: 00000246 ORIG_RAX: 000000000000002e
-RAX: ffffffffffffffda RBX: 00007fb9e55766d4 RCX: 000000000045c889
-RDX: 0000000000000000 RSI: 0000000020000000 RDI: 0000000000000003
+RSP: 002b:00007fdba05c4c78 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
+RAX: ffffffffffffffda RBX: 00007fdba05c56d4 RCX: 000000000045c889
+RDX: 0000000000000000 RSI: 000000000000ae80 RDI: 0000000000000005
 RBP: 000000000076bf00 R08: 0000000000000000 R09: 0000000000000000
 R10: 0000000000000000 R11: 0000000000000246 R12: 00000000ffffffff
-R13: 00000000000009f5 R14: 00000000004ccb09 R15: 000000000076bf0c
-Kernel Offset: disabled
-Rebooting in 86400 seconds..
+R13: 00000000000003be R14: 00000000004c64be R15: 000000000076bf0c
+
+Allocated by task 22057:
+ save_stack+0x1b/0x40 mm/kasan/common.c:49
+ set_track mm/kasan/common.c:57 [inline]
+ __kasan_kmalloc mm/kasan/common.c:495 [inline]
+ __kasan_kmalloc.constprop.0+0xbf/0xd0 mm/kasan/common.c:468
+ kmalloc_node include/linux/slab.h:578 [inline]
+ kvmalloc_node+0x61/0xf0 mm/util.c:574
+ kvmalloc include/linux/mm.h:739 [inline]
+ kvzalloc include/linux/mm.h:747 [inline]
+ kvm_dup_memslots arch/x86/kvm/../../../virt/kvm/kvm_main.c:1101 [inline]
+ kvm_set_memslot+0x115/0x1530 arch/x86/kvm/../../../virt/kvm/kvm_main.c:1118
+ __kvm_set_memory_region+0xcf7/0x1320 arch/x86/kvm/../../../virt/kvm/kvm_main.c:1300
+ kvm_set_memory_region+0x29/0x50 arch/x86/kvm/../../../virt/kvm/kvm_main.c:1321
+ kvm_vm_ioctl_set_memory_region arch/x86/kvm/../../../virt/kvm/kvm_main.c:1333 [inline]
+ kvm_vm_ioctl+0x678/0x23e0 arch/x86/kvm/../../../virt/kvm/kvm_main.c:3604
+ vfs_ioctl fs/ioctl.c:47 [inline]
+ ksys_ioctl+0x11a/0x180 fs/ioctl.c:763
+ __do_sys_ioctl fs/ioctl.c:772 [inline]
+ __se_sys_ioctl fs/ioctl.c:770 [inline]
+ __x64_sys_ioctl+0x6f/0xb0 fs/ioctl.c:770
+ do_syscall_64+0xf6/0x7d0 arch/x86/entry/common.c:295
+ entry_SYSCALL_64_after_hwframe+0x49/0xb3
+
+Freed by task 21458:
+ save_stack+0x1b/0x40 mm/kasan/common.c:49
+ set_track mm/kasan/common.c:57 [inline]
+ kasan_set_free_info mm/kasan/common.c:317 [inline]
+ __kasan_slab_free+0xf7/0x140 mm/kasan/common.c:456
+ __cache_free mm/slab.c:3426 [inline]
+ kfree+0x109/0x2b0 mm/slab.c:3757
+ kvfree+0x42/0x50 mm/util.c:603
+ __free_fdtable+0x2d/0x70 fs/file.c:31
+ put_files_struct fs/file.c:420 [inline]
+ put_files_struct+0x248/0x2e0 fs/file.c:413
+ exit_files+0x7e/0xa0 fs/file.c:445
+ do_exit+0xb04/0x2dd0 kernel/exit.c:790
+ do_group_exit+0x125/0x340 kernel/exit.c:893
+ get_signal+0x47b/0x24e0 kernel/signal.c:2739
+ do_signal+0x81/0x2240 arch/x86/kernel/signal.c:784
+ exit_to_usermode_loop+0x26c/0x360 arch/x86/entry/common.c:161
+ prepare_exit_to_usermode arch/x86/entry/common.c:196 [inline]
+ syscall_return_slowpath arch/x86/entry/common.c:279 [inline]
+ do_syscall_64+0x6b1/0x7d0 arch/x86/entry/common.c:305
+ entry_SYSCALL_64_after_hwframe+0x49/0xb3
+
+The buggy address belongs to the object at ffff88809ddb0000
+ which belongs to the cache kmalloc-2k of size 2048
+The buggy address is located 1128 bytes inside of
+ 2048-byte region [ffff88809ddb0000, ffff88809ddb0800)
+The buggy address belongs to the page:
+page:ffffea0002776c00 refcount:1 mapcount:0 mapping:00000000cff1b606 index:0x0
+flags: 0xfffe0000000200(slab)
+raw: 00fffe0000000200 ffffea00028d7ec8 ffffea00023c1148 ffff8880aa000e00
+raw: 0000000000000000 ffff88809ddb0000 0000000100000001 0000000000000000
+page dumped because: kasan: bad access detected
+
+Memory state around the buggy address:
+ ffff88809ddb0300: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+ ffff88809ddb0380: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+>ffff88809ddb0400: 00 00 00 00 00 00 00 00 00 00 00 00 00 fc fc fc
+                                                          ^
+ ffff88809ddb0480: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
+ ffff88809ddb0500: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
+==================================================================
 
 
 ---
