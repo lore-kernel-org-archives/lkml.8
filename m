@@ -2,222 +2,171 @@ Return-Path: <SRS0=VV4q=52=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA481C2BB86
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 14:35:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A793CC2BA2B
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 14:37:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7ACA3206C1
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 14:35:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 763F3206C1
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 14:37:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="RKAyCJUE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726701AbgDJOfs (ORCPT
+        id S1726670AbgDJOhC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Apr 2020 10:35:48 -0400
-Received: from mga09.intel.com ([134.134.136.24]:15156 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726082AbgDJOfr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Apr 2020 10:35:47 -0400
-IronPort-SDR: 3McL4GqwpyXGBCwM11Hfyt6wfdzPzt4wi9bQxxz9oFbcuvJeYNYMAQodNAzzWfhbq0jLr/7WmQ
- FTQgihf/UDUA==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Apr 2020 07:35:47 -0700
-IronPort-SDR: zbr0ICL8riBJrAXbriEa/9w1ujdIoqqgAGMjnLyN9w4Nec3cKPTFsGtKgxVvoM//J3X4m11JrW
- N6k7oPxJliCw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,367,1580803200"; 
-   d="scan'208";a="260698530"
-Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
-  by orsmga008.jf.intel.com with ESMTP; 10 Apr 2020 07:35:36 -0700
-Received: from kbuild by lkp-server01 with local (Exim 4.89)
-        (envelope-from <lkp@intel.com>)
-        id 1jMukq-000Dv4-1O; Fri, 10 Apr 2020 22:35:36 +0800
-Date:   Fri, 10 Apr 2020 22:35:28 +0800
-From:   kbuild test robot <lkp@intel.com>
-To:     Lukasz Luba <lukasz.luba@arm.com>
-Cc:     kbuild-all@lists.01.org, linux-kernel@vger.kernel.org,
-        linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        dri-devel@lists.freedesktop.org, linux-omap@vger.kernel.org,
-        linux-mediatek@lists.infradead.org, linux-arm-msm@vger.kernel.org,
-        linux-imx@nxp.com, Dietmar.Eggemann@arm.com, cw00.choi@samsung.com,
-        b.zolnierkie@samsung.com, rjw@rjwysocki.net, sudeep.holla@arm.com,
-        viresh.kumar@linaro.org, nm@ti.com, sboyd@kernel.org,
-        rui.zhang@intel.com, amit.kucheria@verdurent.com,
-        daniel.lezcano@linaro.org, mingo@redhat.com, peterz@infradead.org,
-        juri.lelli@redhat.com, vincent.guittot@linaro.org,
-        rostedt@goodmis.org, qperret@google.com, bsegall@google.com,
-        mgorman@suse.de, shawnguo@kernel.org, s.hauer@pengutronix.de,
-        festevam@gmail.com, kernel@pengutronix.de, khilman@kernel.org,
-        agross@kernel.org, bjorn.andersson@linaro.org, robh@kernel.org,
-        matthias.bgg@gmail.com, steven.price@arm.com,
-        tomeu.vizoso@collabora.com, alyssa.rosenzweig@collabora.com,
-        airlied@linux.ie, daniel@ffwll.ch, liviu.dudau@arm.com,
-        lorenzo.pieralisi@arm.com, lukasz.luba@arm.com,
-        patrick.bellasi@matbug.net, orjan.eide@arm.com,
-        rdunlap@infradead.org, mka@chromium.org
-Subject: Re: [PATCH v6 04/10] PM / EM: add support for other devices than
- CPUs in Energy Model
-Message-ID: <202004102201.DHeSXu2d%lkp@intel.com>
-References: <20200410084210.24932-5-lukasz.luba@arm.com>
+        Fri, 10 Apr 2020 10:37:02 -0400
+Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:18478 "EHLO
+        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726009AbgDJOhB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Apr 2020 10:37:01 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5e9084240000>; Fri, 10 Apr 2020 07:35:16 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Fri, 10 Apr 2020 07:37:01 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Fri, 10 Apr 2020 07:37:01 -0700
+Received: from DRHQMAIL107.nvidia.com (10.27.9.16) by HQMAIL101.nvidia.com
+ (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 10 Apr
+ 2020 14:37:01 +0000
+Received: from [10.2.171.178] (10.124.1.5) by DRHQMAIL107.nvidia.com
+ (10.27.9.16) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 10 Apr
+ 2020 14:36:59 +0000
+From:   Zi Yan <ziy@nvidia.com>
+To:     "Kirill A. Shutemov" <kirill@shutemov.name>
+CC:     <akpm@linux-foundation.org>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        "Yang Shi" <yang.shi@linux.alibaba.com>, <linux-mm@kvack.org>,
+        <linux-kernel@vger.kernel.org>,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+Subject: Re: [PATCHv2 1/8] khugepaged: Add self test
+Date:   Fri, 10 Apr 2020 10:36:58 -0400
+X-Mailer: MailMate (1.13.1r5678)
+Message-ID: <DF6A7119-D6D6-4679-A4B6-9A7570984D97@nvidia.com>
+In-Reply-To: <20200410114739.b2ndracbyhsdmanv@box>
+References: <20200403112928.19742-1-kirill.shutemov@linux.intel.com>
+ <20200403112928.19742-2-kirill.shutemov@linux.intel.com>
+ <D55D6A3A-47A1-41F5-B939-36EEA740CF72@nvidia.com>
+ <20200410114739.b2ndracbyhsdmanv@box>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200410084210.24932-5-lukasz.luba@arm.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
+ DRHQMAIL107.nvidia.com (10.27.9.16)
+Content-Type: multipart/signed;
+        boundary="=_MailMate_6D75E586-D2D1-45A1-BC78-44F983EDECF0_=";
+        micalg=pgp-sha1; protocol="application/pgp-signature"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1586529316; bh=CxxryBNq6ZN+MdLakixZqIa48sGz/mt/RSvdsxSZ1xQ=;
+        h=X-PGP-Universal:From:To:CC:Subject:Date:X-Mailer:Message-ID:
+         In-Reply-To:References:MIME-Version:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type;
+        b=RKAyCJUEqcymf8YMGTiKX+dyXRhvN3jsEo/ItH5pSVg9KHGVpAnsJHiWlOUkgunex
+         Lpg02nSJ35cdyXWixqtpE5/39Cw8GbLl70LleHMY05NxSEz2Byj/MGrjCk204qFOG4
+         Doznmo5sIEE8g+Skvi2kBuVaUpu2CrmUUbadBhGTmABD5FylgI4UbugkE0hZ3m10XS
+         wwhZ45xQtOTvVSniZUv6EiNSAdlKv97DIbwmAMSHO91psUlBofa5zNJelvOiKzD8xd
+         7LcYU3KDdzE5GEuofyndHT8YYHAPVmeg5oJ7tgfmYN8nxaBtOnJ7D1094goYqEFUkN
+         vWv6IinnyOV+A==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Lukasz,
+--=_MailMate_6D75E586-D2D1-45A1-BC78-44F983EDECF0_=
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-I love your patch! Perhaps something to improve:
+On 10 Apr 2020, at 7:47, Kirill A. Shutemov wrote:
 
-[auto build test WARNING on next-20200409]
-[cannot apply to pm/linux-next tip/sched/core linus/master linux/master v5.6 v5.6-rc7 v5.6-rc6 v5.6]
-[if your patch is applied to the wrong git tree, please drop us a note to help
-improve the system. BTW, we also suggest to use '--base' option to specify the
-base tree in git format-patch, please see https://stackoverflow.com/a/37406982]
+> External email: Use caution opening links or attachments
+>
+>
+> On Mon, Apr 06, 2020 at 10:59:52AM -0400, Zi Yan wrote:
+>> I ran this test with all patches from this series applied to Linus=E2=80=
+=99s tree, but still see several failures. Is it expected?
+>> The config file is attached. Let me know if I miss anything. BTW, I am=
+ running in a VM.
+>>
+>> Thanks.
+>>
+>> The output:
+>>
+>> =E2=9E=9C  ~ sudo ./khugepaged
+>> Save THP and khugepaged settings... OK
+>> Adjust settings... OK
+>> Allocate huge page on fault... OK
+>> Split huge PMD on MADV_DONTNEED... OK
+>> Collapse fully populated PTE table.... Fail
+>
+> I was able to reproduce the issue. And it's fun failure mode.
+>
+> How did you get the test case inside the VM? Copy-paste source using 'c=
+at'
+> or something similar inside the VM?
 
-url:    https://github.com/0day-ci/linux/commits/Lukasz-Luba/Add-support-for-devices-in-the-Energy-Model/20200410-172456
-base:    873e37a44b1ee8ad4628ca257dc51c0c7c654326
+First of all, the failure above was from a bare metal and was the only fa=
+ilure I saw, whereas I saw more failures in my VM. The test program was n=
+ot messed up in either environment.
 
-If you fix the issue, kindly add following tag as appropriate
-Reported-by: kbuild test robot <lkp@intel.com>
+For VM failures I mentioned before, I used scp to copy the source code in=
+to the VM. My VM has its port 22 forwarded to host=E2=80=99s port 11022. =
+=E2=80=9C-net user,hostfwd=3Dtcp::11022-:22=E2=80=9D. I also copied a bin=
+ary into my VM and saw the same failures.
+
+I kinda think the failures are not related to your patches but something =
+else.
+
+>
+> It screwed up CHECK_HUGE_FMT and CHECK_SWAP_FMT for me. Double back sla=
+sh
+> was converted to single. As result check_huge() and check_swap() gave t=
+he
+> false-negative result all the time.
+
+It was not my case, since CHECK_HUGE_FMT and CHECK_SWAP_FMT from my khuge=
+paged.c match your patch code.
+
+>
+> Could you check that the source of the test-case is not mangled and
+> re-test if it is.
+
+I can confirm that the test-case is not mangled. I think it must be my VM=
+ setup or kernel configuration.
+
+Do you mind sharing your .config file with me and which kernel commit you=
+ apply the patches on top of in your setup? I can look into it and check =
+what the problem is.
+
+Thanks.
 
 
-cppcheck warnings: (new ones prefixed by >>)
+--
+Best Regards,
+Yan Zi
 
->> kernel/power/energy_model.c:394:15: warning: Variable 'ret' is assigned a value that is never used. [unreadVariable]
-    int cpu, ret = 0;
-                 ^
+--=_MailMate_6D75E586-D2D1-45A1-BC78-44F983EDECF0_=
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+Content-Type: application/pgp-signature; name="signature.asc"
 
-vim +/ret +394 kernel/power/energy_model.c
+-----BEGIN PGP SIGNATURE-----
 
-27871f7a8a341e Quentin Perret  2018-12-03  370  
-27871f7a8a341e Quentin Perret  2018-12-03  371  /**
-b4dc5cca354b8a Lukasz Luba     2020-04-10  372   * em_dev_register_perf_domain() - Register the Energy Model (EM) for a device
-b4dc5cca354b8a Lukasz Luba     2020-04-10  373   * @dev		: Device for which the EM is to register
-1ccc27ced21bf5 Lukasz Luba     2020-04-10  374   * @nr_states	: Number of performance states to register
-27871f7a8a341e Quentin Perret  2018-12-03  375   * @cb		: Callback functions providing the data of the Energy Model
-9cf8494b5f4eb8 Lukasz Luba     2020-04-10  376   * @cpus	: Pointer to cpumask_t, which in case of a CPU device is
-b4dc5cca354b8a Lukasz Luba     2020-04-10  377   *		obligatory. It can be taken from i.e. 'policy->cpus'. For other
-b4dc5cca354b8a Lukasz Luba     2020-04-10  378   *		type of devices this should be set to NULL.
-27871f7a8a341e Quentin Perret  2018-12-03  379   *
-27871f7a8a341e Quentin Perret  2018-12-03  380   * Create Energy Model tables for a performance domain using the callbacks
-27871f7a8a341e Quentin Perret  2018-12-03  381   * defined in cb.
-27871f7a8a341e Quentin Perret  2018-12-03  382   *
-27871f7a8a341e Quentin Perret  2018-12-03  383   * If multiple clients register the same performance domain, all but the first
-27871f7a8a341e Quentin Perret  2018-12-03  384   * registration will be ignored.
-27871f7a8a341e Quentin Perret  2018-12-03  385   *
-27871f7a8a341e Quentin Perret  2018-12-03  386   * Return 0 on success
-27871f7a8a341e Quentin Perret  2018-12-03  387   */
-b4dc5cca354b8a Lukasz Luba     2020-04-10  388  int em_dev_register_perf_domain(struct device *dev, unsigned int nr_states,
-9cf8494b5f4eb8 Lukasz Luba     2020-04-10  389  				struct em_data_callback *cb, cpumask_t *cpus)
-27871f7a8a341e Quentin Perret  2018-12-03  390  {
-27871f7a8a341e Quentin Perret  2018-12-03  391  	unsigned long cap, prev_cap = 0;
-27871f7a8a341e Quentin Perret  2018-12-03  392  	struct em_perf_domain *pd;
-9cf8494b5f4eb8 Lukasz Luba     2020-04-10  393  	struct em_device *em_dev;
-27871f7a8a341e Quentin Perret  2018-12-03 @394  	int cpu, ret = 0;
-27871f7a8a341e Quentin Perret  2018-12-03  395  
-9cf8494b5f4eb8 Lukasz Luba     2020-04-10  396  	if (!dev || !nr_states || !cb)
-27871f7a8a341e Quentin Perret  2018-12-03  397  		return -EINVAL;
-27871f7a8a341e Quentin Perret  2018-12-03  398  
-27871f7a8a341e Quentin Perret  2018-12-03  399  	/*
-27871f7a8a341e Quentin Perret  2018-12-03  400  	 * Use a mutex to serialize the registration of performance domains and
-27871f7a8a341e Quentin Perret  2018-12-03  401  	 * let the driver-defined callback functions sleep.
-27871f7a8a341e Quentin Perret  2018-12-03  402  	 */
-27871f7a8a341e Quentin Perret  2018-12-03  403  	mutex_lock(&em_pd_mutex);
-27871f7a8a341e Quentin Perret  2018-12-03  404  
-9cf8494b5f4eb8 Lukasz Luba     2020-04-10  405  	em_dev = _em_dev_find_existing(dev);
-9cf8494b5f4eb8 Lukasz Luba     2020-04-10  406  	if (em_dev) {
-9cf8494b5f4eb8 Lukasz Luba     2020-04-10  407  		mutex_unlock(&em_pd_mutex);
-9cf8494b5f4eb8 Lukasz Luba     2020-04-10  408  		dev_dbg(dev, "EM: found exisiting pd%d\n", em_dev->id);
-9cf8494b5f4eb8 Lukasz Luba     2020-04-10  409  		return -EEXIST;
-9cf8494b5f4eb8 Lukasz Luba     2020-04-10  410  	}
-9cf8494b5f4eb8 Lukasz Luba     2020-04-10  411  
-9cf8494b5f4eb8 Lukasz Luba     2020-04-10  412  	if (_is_cpu_device(dev)) {
-9cf8494b5f4eb8 Lukasz Luba     2020-04-10  413  		if (!cpus) {
-9cf8494b5f4eb8 Lukasz Luba     2020-04-10  414  			mutex_unlock(&em_pd_mutex);
-9cf8494b5f4eb8 Lukasz Luba     2020-04-10  415  			dev_err(dev, "EM: invalid CPU mask\n");
-9cf8494b5f4eb8 Lukasz Luba     2020-04-10  416  			return -EINVAL;
-27871f7a8a341e Quentin Perret  2018-12-03  417  		}
-27871f7a8a341e Quentin Perret  2018-12-03  418  
-9cf8494b5f4eb8 Lukasz Luba     2020-04-10  419  		/* Make sure we don't register domain for existing CPUs */
-9cf8494b5f4eb8 Lukasz Luba     2020-04-10  420  		if (em_cpus_pd_exist(cpus)) {
-9cf8494b5f4eb8 Lukasz Luba     2020-04-10  421  			mutex_unlock(&em_pd_mutex);
-9cf8494b5f4eb8 Lukasz Luba     2020-04-10  422  			return -EEXIST;
-9cf8494b5f4eb8 Lukasz Luba     2020-04-10  423  		}
-9cf8494b5f4eb8 Lukasz Luba     2020-04-10  424  
-9cf8494b5f4eb8 Lukasz Luba     2020-04-10  425  		for_each_cpu(cpu, cpus) {
-27871f7a8a341e Quentin Perret  2018-12-03  426  			/*
-9cf8494b5f4eb8 Lukasz Luba     2020-04-10  427  			 * All CPUs of a domain must have the same
-9cf8494b5f4eb8 Lukasz Luba     2020-04-10  428  			 * micro-architecture since they all share the same
-9cf8494b5f4eb8 Lukasz Luba     2020-04-10  429  			 * table.
-27871f7a8a341e Quentin Perret  2018-12-03  430  			 */
-8ec59c0f5f4966 Vincent Guittot 2019-06-17  431  			cap = arch_scale_cpu_capacity(cpu);
-27871f7a8a341e Quentin Perret  2018-12-03  432  			if (prev_cap && prev_cap != cap) {
-9cf8494b5f4eb8 Lukasz Luba     2020-04-10  433  				dev_err(dev, "EM: CPUs of %*pbl must have the same capacity\n",
-9cf8494b5f4eb8 Lukasz Luba     2020-04-10  434  					cpumask_pr_args(cpus));
-9cf8494b5f4eb8 Lukasz Luba     2020-04-10  435  
-9cf8494b5f4eb8 Lukasz Luba     2020-04-10  436  				mutex_unlock(&em_pd_mutex);
-9cf8494b5f4eb8 Lukasz Luba     2020-04-10  437  				return -EINVAL;
-27871f7a8a341e Quentin Perret  2018-12-03  438  			}
-27871f7a8a341e Quentin Perret  2018-12-03  439  			prev_cap = cap;
-27871f7a8a341e Quentin Perret  2018-12-03  440  		}
-9cf8494b5f4eb8 Lukasz Luba     2020-04-10  441  	}
-27871f7a8a341e Quentin Perret  2018-12-03  442  
-9cf8494b5f4eb8 Lukasz Luba     2020-04-10  443  	pd = em_create_pd(dev, nr_states, cb, cpus);
-27871f7a8a341e Quentin Perret  2018-12-03  444  	if (!pd) {
-9cf8494b5f4eb8 Lukasz Luba     2020-04-10  445  		mutex_unlock(&em_pd_mutex);
-9cf8494b5f4eb8 Lukasz Luba     2020-04-10  446  		return -EINVAL;
-27871f7a8a341e Quentin Perret  2018-12-03  447  	}
-27871f7a8a341e Quentin Perret  2018-12-03  448  
-9cf8494b5f4eb8 Lukasz Luba     2020-04-10  449  	em_dev = kzalloc(sizeof(struct em_device), GFP_KERNEL);
-9cf8494b5f4eb8 Lukasz Luba     2020-04-10  450  	if (!em_dev) {
-9cf8494b5f4eb8 Lukasz Luba     2020-04-10  451  		ret = -ENOMEM;
-9cf8494b5f4eb8 Lukasz Luba     2020-04-10  452  		goto free_pd;
-27871f7a8a341e Quentin Perret  2018-12-03  453  	}
-27871f7a8a341e Quentin Perret  2018-12-03  454  
-9cf8494b5f4eb8 Lukasz Luba     2020-04-10  455  	em_dev->id = ida_simple_get(&em_dev_ida, 0, 0, GFP_KERNEL);
-9cf8494b5f4eb8 Lukasz Luba     2020-04-10  456  	if (em_dev->id < 0) {
-9cf8494b5f4eb8 Lukasz Luba     2020-04-10  457  		ret = em_dev->id;
-9cf8494b5f4eb8 Lukasz Luba     2020-04-10  458  		goto free_em_dev;
-9cf8494b5f4eb8 Lukasz Luba     2020-04-10  459  	}
-9cf8494b5f4eb8 Lukasz Luba     2020-04-10  460  
-9cf8494b5f4eb8 Lukasz Luba     2020-04-10  461  	em_dev->em_pd = pd;
-9cf8494b5f4eb8 Lukasz Luba     2020-04-10  462  	em_dev->dev = dev;
-9cf8494b5f4eb8 Lukasz Luba     2020-04-10  463  
-9cf8494b5f4eb8 Lukasz Luba     2020-04-10  464  	kref_init(&em_dev->kref);
-9cf8494b5f4eb8 Lukasz Luba     2020-04-10  465  	list_add(&em_dev->em_dev_list, &em_pd_dev_list);
-9cf8494b5f4eb8 Lukasz Luba     2020-04-10  466  
-9cf8494b5f4eb8 Lukasz Luba     2020-04-10  467  	em_debug_create_pd(em_dev);
-9cf8494b5f4eb8 Lukasz Luba     2020-04-10  468  	dev_dbg(dev, "EM: created perf domain pd%d\n", em_dev->id);
-9cf8494b5f4eb8 Lukasz Luba     2020-04-10  469  
-27871f7a8a341e Quentin Perret  2018-12-03  470  	mutex_unlock(&em_pd_mutex);
-9cf8494b5f4eb8 Lukasz Luba     2020-04-10  471  	return 0;
-27871f7a8a341e Quentin Perret  2018-12-03  472  
-9cf8494b5f4eb8 Lukasz Luba     2020-04-10  473  free_em_dev:
-9cf8494b5f4eb8 Lukasz Luba     2020-04-10  474  	kfree(em_dev);
-9cf8494b5f4eb8 Lukasz Luba     2020-04-10  475  free_pd:
-9cf8494b5f4eb8 Lukasz Luba     2020-04-10  476  	kfree(pd->table);
-9cf8494b5f4eb8 Lukasz Luba     2020-04-10  477  	kfree(pd);
-9cf8494b5f4eb8 Lukasz Luba     2020-04-10  478  
-9cf8494b5f4eb8 Lukasz Luba     2020-04-10  479  	mutex_unlock(&em_pd_mutex);
-27871f7a8a341e Quentin Perret  2018-12-03  480  	return ret;
-27871f7a8a341e Quentin Perret  2018-12-03  481  }
-b4dc5cca354b8a Lukasz Luba     2020-04-10  482  EXPORT_SYMBOL_GPL(em_dev_register_perf_domain);
-b4dc5cca354b8a Lukasz Luba     2020-04-10  483  
+iQJDBAEBAgAtFiEEh7yFAW3gwjwQ4C9anbJR82th+ooFAl6QhIoPHHppeUBudmlk
+aWEuY29tAAoJEJ2yUfNrYfqKp3UP/2cv2KsIL9qtjLYeoEx8TDDzKusffRM+J/dT
+ijyD3KTyOPy/TRpTpXCgrdc5V+NoXiRUa1G4bltyGpSweFR0rrzqXYa1RZ0g62Yf
+bzoO8Ge3VOeSKauWAls3LUK10L+mHWKT4tWh+UclZeNL4qezCjkQ0TRgrG40NYxS
+utC0aAfyV6Qrlr3RfzKSt8S9UKM6lYriB4yiLfIQJFuz+CqdS3hwPCwuGNvBG5ds
+cK5xc7LrUg4n6pKNh/xcB0DR7VT/W9ml5MgSsA8cZr4m9yCIsks0z1Ppr/DJ6uJH
+g8NpCJ0fllKAFHJ4ixp28d9gyfFFwdAWsziHhyTai0mwmcg/8Er9q9Fg/0eLk4SN
++TZYoqPgVGcH5F0b+g6WhKTphdIQRAMfkKZy1oKawwbZ3vUQT0hbCRpUr7GweBM/
+/AcE7H1G61JCEgK6ehR66Fdg/rAzwZ65cxpGQaxJipYY5JIlExf5yX4vyRzuaSr6
+7x1JZaZvJAJt6drYWaZLL6d41rKKi6UlQjy5KjmdnEKNq8dXTS1Z3tBgRqKwbvC4
+k7IAueEa2vIz7fLCTedj77TRkNQJhTVbEXijogYcRIh6Ech6JpYfUB67FGgeEz0Y
+OEqKy2WqZumoVWdsOIBkqKLueG7tL7vYF48+xmNX8eAvmwOQ+Mhq4aXlfZj0muIk
+VP56DlkM
+=+EuX
+-----END PGP SIGNATURE-----
 
-:::::: The code at line 394 was first introduced by commit
-:::::: 27871f7a8a341ef5c636a337856369acf8013e4e PM: Introduce an Energy Model management framework
-
-:::::: TO: Quentin Perret <quentin.perret@arm.com>
-:::::: CC: Ingo Molnar <mingo@kernel.org>
-
----
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+--=_MailMate_6D75E586-D2D1-45A1-BC78-44F983EDECF0_=--
