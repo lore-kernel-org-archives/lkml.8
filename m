@@ -7,50 +7,49 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ECBEAC2BB85
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 03:52:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95F93C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 03:52:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BB9BE206C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 03:52:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6EED320936
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 03:52:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586490723;
-	bh=rXNVyeTWN1PwcxtA3YxF+ZGQmp65KQpCYuDUWuHLwSU=;
+	s=default; t=1586490729;
+	bh=ZYbwXhYowYbtrutQRkQ/iDxc67+bXJ9149QcEAIzph8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uuVnNyiwHa0q0EynT3derSPOJYZyajmuuHKMOpd+nPkWXnXpFty8/6a8KtfpEJ9Jy
-	 VKX7O7TqEfvIcV8xQyOsDoOIcI0uSzOvWZ6Y0f8/qLQTxP1QFJQP3z8qcJmjJcgiq4
-	 9DPAaF8lMPSg6osXorsg71hWL64x1bo9314FcE5A=
+	b=YuzL/kDZ5OSkFIaz18qUMl/KJ30n2oi+XQwdc/BCGbi/RPaAQhOvWW404jsmageoa
+	 IGcdy0rMLH+SnVacZlRvU6CcVDHwlkqjIuCO3WTRKrLT54gQG3qGk6dmK16LZOmkZ/
+	 NAQjV1DSrfZlNyau0XKrJ8i8/r0nrrYRh41yKmSU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728699AbgDJDwC (ORCPT
+        id S1728800AbgDJDwI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Apr 2020 23:52:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36672 "EHLO mail.kernel.org"
+        Thu, 9 Apr 2020 23:52:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36508 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729184AbgDJDvZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Apr 2020 23:51:25 -0400
+        id S1729163AbgDJDvU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Apr 2020 23:51:20 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 18F0B215A4;
-        Fri, 10 Apr 2020 03:51:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 56FAA2173E;
+        Fri, 10 Apr 2020 03:51:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586490684;
-        bh=rXNVyeTWN1PwcxtA3YxF+ZGQmp65KQpCYuDUWuHLwSU=;
+        s=default; t=1586490680;
+        bh=ZYbwXhYowYbtrutQRkQ/iDxc67+bXJ9149QcEAIzph8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WqzpMYVN1imC2Uj6RacOPWtHii+iFL1R9ndRW174JgqENgZ2QRNDYfuPhMVfnK4LJ
-         AupWoYv7MLH+/VP6Phz8rnHabjMFbud3vjqMc1O+lxu6ucZdYn0dKEdvAuJEko0DyY
-         vX3rykbDyIEqhY8g5fFp0PZWpsmajG8m5F8OHpNQ=
+        b=c+KP46RPIAOg4ZfQxAV/lMjT9gkgStufsaCfW/IQh5yXFHdgpRSY1Mvbntw3q3yUZ
+         AbBgseJqByQoe/pJFdB3aQLgF5Y4SP0rrmgcQ0F3pAUux9B6qi84B9TJ83veACpUZ6
+         aYc2hzgMJcF1oNlmj8m6wLWj81p31MqYQQZV+RvQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Andy Lutomirski <luto@kernel.org>,
-        kbuild test robot <lkp@intel.com>,
-        Borislav Petkov <bp@suse.de>, Sasha Levin <sashal@kernel.org>,
-        linux-kselftest@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 2/8] selftests/x86/ptrace_syscall_32: Fix no-vDSO segfault
-Date:   Thu,  9 Apr 2020 23:51:15 -0400
-Message-Id: <20200410035122.10065-2-sashal@kernel.org>
+Cc:     Josef Bacik <josef@toxicpanda.com>, Qu Wenruo <wqu@suse.com>,
+        David Sterba <dsterba@suse.com>,
+        Sasha Levin <sashal@kernel.org>, linux-btrfs@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 8/9] btrfs: remove a BUG_ON() from merge_reloc_roots()
+Date:   Thu,  9 Apr 2020 23:51:09 -0400
+Message-Id: <20200410035111.9938-8-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200410035122.10065-1-sashal@kernel.org>
-References: <20200410035122.10065-1-sashal@kernel.org>
+In-Reply-To: <20200410035111.9938-1-sashal@kernel.org>
+References: <20200410035111.9938-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -60,40 +59,75 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andy Lutomirski <luto@kernel.org>
+From: Josef Bacik <josef@toxicpanda.com>
 
-[ Upstream commit 630b99ab60aa972052a4202a1ff96c7e45eb0054 ]
+[ Upstream commit 7b7b74315b24dc064bc1c683659061c3d48f8668 ]
 
-If AT_SYSINFO is not present, don't try to call a NULL pointer.
+This was pretty subtle, we default to reloc roots having 0 root refs, so
+if we crash in the middle of the relocation they can just be deleted.
+If we successfully complete the relocation operations we'll set our root
+refs to 1 in prepare_to_merge() and then go on to merge_reloc_roots().
 
-Reported-by: kbuild test robot <lkp@intel.com>
-Signed-off-by: Andy Lutomirski <luto@kernel.org>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Link: https://lkml.kernel.org/r/faaf688265a7e1a5b944d6f8bc0f6368158306d3.1584052409.git.luto@kernel.org
+At prepare_to_merge() time if any of the reloc roots have a 0 reference
+still, we will remove that reloc root from our reloc root rb tree, and
+then clean it up later.
+
+However this only happens if we successfully start a transaction.  If
+we've aborted previously we will skip this step completely, and only
+have reloc roots with a reference count of 0, but were never properly
+removed from the reloc control's rb tree.
+
+This isn't a problem per-se, our references are held by the list the
+reloc roots are on, and by the original root the reloc root belongs to.
+If we end up in this situation all the reloc roots will be added to the
+dirty_reloc_list, and then properly dropped at that point.  The reloc
+control will be free'd and the rb tree is no longer used.
+
+There were two options when fixing this, one was to remove the BUG_ON(),
+the other was to make prepare_to_merge() handle the case where we
+couldn't start a trans handle.
+
+IMO this is the cleaner solution.  I started with handling the error in
+prepare_to_merge(), but it turned out super ugly.  And in the end this
+BUG_ON() simply doesn't matter, the cleanup was happening properly, we
+were just panicing because this BUG_ON() only matters in the success
+case.  So I've opted to just remove it and add a comment where it was.
+
+Reviewed-by: Qu Wenruo <wqu@suse.com>
+Signed-off-by: Josef Bacik <josef@toxicpanda.com>
+Signed-off-by: David Sterba <dsterba@suse.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/testing/selftests/x86/ptrace_syscall.c | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ fs/btrfs/relocation.c | 16 +++++++++++++++-
+ 1 file changed, 15 insertions(+), 1 deletion(-)
 
-diff --git a/tools/testing/selftests/x86/ptrace_syscall.c b/tools/testing/selftests/x86/ptrace_syscall.c
-index 5105b49cd8aa5..8b3c1236f04dc 100644
---- a/tools/testing/selftests/x86/ptrace_syscall.c
-+++ b/tools/testing/selftests/x86/ptrace_syscall.c
-@@ -284,8 +284,12 @@ int main()
+diff --git a/fs/btrfs/relocation.c b/fs/btrfs/relocation.c
+index b106d365257d3..97bc85ca508c2 100644
+--- a/fs/btrfs/relocation.c
++++ b/fs/btrfs/relocation.c
+@@ -2457,7 +2457,21 @@ void merge_reloc_roots(struct reloc_control *rc)
+ 			free_reloc_roots(&reloc_roots);
+ 	}
  
- #if defined(__i386__) && (!defined(__GLIBC__) || __GLIBC__ > 2 || __GLIBC_MINOR__ >= 16)
- 	vsyscall32 = (void *)getauxval(AT_SYSINFO);
--	printf("[RUN]\tCheck AT_SYSINFO return regs\n");
--	test_sys32_regs(do_full_vsyscall32);
-+	if (vsyscall32) {
-+		printf("[RUN]\tCheck AT_SYSINFO return regs\n");
-+		test_sys32_regs(do_full_vsyscall32);
-+	} else {
-+		printf("[SKIP]\tAT_SYSINFO is not available\n");
-+	}
- #endif
+-	BUG_ON(!RB_EMPTY_ROOT(&rc->reloc_root_tree.rb_root));
++	/*
++	 * We used to have
++	 *
++	 * BUG_ON(!RB_EMPTY_ROOT(&rc->reloc_root_tree.rb_root));
++	 *
++	 * here, but it's wrong.  If we fail to start the transaction in
++	 * prepare_to_merge() we will have only 0 ref reloc roots, none of which
++	 * have actually been removed from the reloc_root_tree rb tree.  This is
++	 * fine because we're bailing here, and we hold a reference on the root
++	 * for the list that holds it, so these roots will be cleaned up when we
++	 * do the reloc_dirty_list afterwards.  Meanwhile the root->reloc_root
++	 * will be cleaned up on unmount.
++	 *
++	 * The remaining nodes will be cleaned up by free_reloc_control.
++	 */
+ }
  
- 	test_ptrace_syscall_restart();
+ static void free_block_list(struct rb_root *blocks)
 -- 
 2.20.1
 
