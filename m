@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8ABD0C2D0EC
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 03:58:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0F4EC2D0EC
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 03:58:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5DB4C2063A
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 03:58:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A9C0A20936
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 03:58:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586491106;
-	bh=kgB0fWHWLd8OQi91eKRL0HlRnAwZjRg96qiPO2GbR5I=;
+	s=default; t=1586491112;
+	bh=8A6e/2fKQdaiQBJoePBchJCjphxGBAVEWwqunLihCsU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=L4PcF6o+jcnqrt1cbwFbA3qL5QaAtmzkGx8rCUfRoIy0xzNUFpEa/aElu+9jpeg2a
-	 QYzcFmbIFmnkH+3fwsCbJKQMYNjwuBnG4GOi0CeaxVzLzmrwz6eim38NbboeySc7EM
-	 t+DtZ48n41V8CfzOGR5g3zF01AF1YTIOvrt6k+YE=
+	b=0o3ycfibuIRhjab+nOlirYfeDoWy3UlRPgag8FnZ/82aU4FZdHuVYOjCxZ9NSR3r8
+	 i7cloP0cSOWsV56GOxElqu3QpJT+HsvpU8lICVJoLwqa0kBFEuI0EUBqAexHyohOwU
+	 NTFEMXYxPNOjN6zAHIG5raQymPihjoEbm9T1xj+Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729050AbgDJD6Y (ORCPT
+        id S1728692AbgDJD6b (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Apr 2020 23:58:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60602 "EHLO mail.kernel.org"
+        Thu, 9 Apr 2020 23:58:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60442 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728349AbgDJDst (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Apr 2020 23:48:49 -0400
+        id S1728333AbgDJDsp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Apr 2020 23:48:45 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 550C321556;
-        Fri, 10 Apr 2020 03:48:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A390B21473;
+        Fri, 10 Apr 2020 03:48:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586490529;
-        bh=kgB0fWHWLd8OQi91eKRL0HlRnAwZjRg96qiPO2GbR5I=;
+        s=default; t=1586490525;
+        bh=8A6e/2fKQdaiQBJoePBchJCjphxGBAVEWwqunLihCsU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=eVO7JCbuZmAygjNgbDz+HkuDN/YQxFAp+6l72kKHDypJRoyy402f9Oiz/TeZyJMcg
-         B1rhHzSLEZbS8O1Ez5hqIYBrJBTbeH3wrlqrVmxlHr4De1AItHY6TILoXVG5jijOBN
-         KOCbIly0FeA8MmKT34fwO0oXlr1C74qsECfHYGVg=
+        b=0x5Lxwd+aAiTqYi64gzL662rvj2xk77qBzPGLw7qhC6bZ1gDBSTV0WOM+XcGzBebP
+         WIVEFl1NJ2NVjfLCEhB2Twd1lc2sceOwvZaV14KFJQvyLtydcbJLizrtqBMjGWbdkG
+         8ued/EXpKSBXOsZl+jNzm8dpAA39ImsJbRTOaI5g=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Sahitya Tummala <stummala@codeaurora.org>,
-        Pradeep P V K <ppvk@codeaurora.org>,
-        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>,
-        linux-block@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.5 41/56] block: Fix use-after-free issue accessing struct io_cq
-Date:   Thu,  9 Apr 2020 23:47:45 -0400
-Message-Id: <20200410034800.8381-41-sashal@kernel.org>
+Cc:     Ard Biesheuvel <ardb@kernel.org>,
+        Arvind Sankar <nivedita@alum.mit.edu>,
+        Ingo Molnar <mingo@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-efi@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.5 38/56] efi/x86: Ignore the memory attributes table on i386
+Date:   Thu,  9 Apr 2020 23:47:42 -0400
+Message-Id: <20200410034800.8381-38-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200410034800.8381-1-sashal@kernel.org>
 References: <20200410034800.8381-1-sashal@kernel.org>
@@ -60,113 +60,75 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sahitya Tummala <stummala@codeaurora.org>
+From: Ard Biesheuvel <ardb@kernel.org>
 
-[ Upstream commit 30a2da7b7e225ef6c87a660419ea04d3cef3f6a7 ]
+[ Upstream commit dd09fad9d2caad2325a39b766ce9e79cfc690184 ]
 
-There is a potential race between ioc_release_fn() and
-ioc_clear_queue() as shown below, due to which below kernel
-crash is observed. It also can result into use-after-free
-issue.
+Commit:
 
-context#1:				context#2:
-ioc_release_fn()			__ioc_clear_queue() gets the same icq
-->spin_lock(&ioc->lock);		->spin_lock(&ioc->lock);
-->ioc_destroy_icq(icq);
-  ->list_del_init(&icq->q_node);
-  ->call_rcu(&icq->__rcu_head,
-  	icq_free_icq_rcu);
-->spin_unlock(&ioc->lock);
-					->ioc_destroy_icq(icq);
-					  ->hlist_del_init(&icq->ioc_node);
-					  This results into below crash as this memory
-					  is now used by icq->__rcu_head in context#1.
-					  There is a chance that icq could be free'd
-					  as well.
+  3a6b6c6fb23667fa ("efi: Make EFI_MEMORY_ATTRIBUTES_TABLE initialization common across all architectures")
 
-22150.386550:   <6> Unable to handle kernel write to read-only memory
-at virtual address ffffffaa8d31ca50
-...
-Call trace:
-22150.607350:   <2>  ioc_destroy_icq+0x44/0x110
-22150.611202:   <2>  ioc_clear_queue+0xac/0x148
-22150.615056:   <2>  blk_cleanup_queue+0x11c/0x1a0
-22150.619174:   <2>  __scsi_remove_device+0xdc/0x128
-22150.623465:   <2>  scsi_forget_host+0x2c/0x78
-22150.627315:   <2>  scsi_remove_host+0x7c/0x2a0
-22150.631257:   <2>  usb_stor_disconnect+0x74/0xc8
-22150.635371:   <2>  usb_unbind_interface+0xc8/0x278
-22150.639665:   <2>  device_release_driver_internal+0x198/0x250
-22150.644897:   <2>  device_release_driver+0x24/0x30
-22150.649176:   <2>  bus_remove_device+0xec/0x140
-22150.653204:   <2>  device_del+0x270/0x460
-22150.656712:   <2>  usb_disable_device+0x120/0x390
-22150.660918:   <2>  usb_disconnect+0xf4/0x2e0
-22150.664684:   <2>  hub_event+0xd70/0x17e8
-22150.668197:   <2>  process_one_work+0x210/0x480
-22150.672222:   <2>  worker_thread+0x32c/0x4c8
+moved the call to efi_memattr_init() from ARM specific to the generic
+EFI init code, in order to be able to apply the restricted permissions
+described in that table on x86 as well.
 
-Fix this by adding a new ICQ_DESTROYED flag in ioc_destroy_icq() to
-indicate this icq is once marked as destroyed. Also, ensure
-__ioc_clear_queue() is accessing icq within rcu_read_lock/unlock so
-that icq doesn't get free'd up while it is still using it.
+We never enabled this feature fully on i386, and so mapping and
+reserving this table is pointless. However, due to the early call to
+memblock_reserve(), the memory bookkeeping gets confused to the point
+where it produces the splat below when we try to map the memory later
+on:
 
-Signed-off-by: Sahitya Tummala <stummala@codeaurora.org>
-Co-developed-by: Pradeep P V K <ppvk@codeaurora.org>
-Signed-off-by: Pradeep P V K <ppvk@codeaurora.org>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+  ------------[ cut here ]------------
+  ioremap on RAM at 0x3f251000 - 0x3fa1afff
+  WARNING: CPU: 0 PID: 0 at arch/x86/mm/ioremap.c:166 __ioremap_caller ...
+  Modules linked in:
+  CPU: 0 PID: 0 Comm: swapper/0 Not tainted 4.20.0 #48
+  Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 0.0.0 02/06/2015
+  EIP: __ioremap_caller.constprop.0+0x249/0x260
+  Code: 90 0f b7 05 4e 38 40 de 09 45 e0 e9 09 ff ff ff 90 8d 45 ec c6 05 ...
+  EAX: 00000029 EBX: 00000000 ECX: de59c228 EDX: 00000001
+  ESI: 3f250fff EDI: 00000000 EBP: de3edf20 ESP: de3edee0
+  DS: 007b ES: 007b FS: 00d8 GS: 00e0 SS: 0068 EFLAGS: 00200296
+  CR0: 80050033 CR2: ffd17000 CR3: 1e58c000 CR4: 00040690
+  Call Trace:
+   ioremap_cache+0xd/0x10
+   ? old_map_region+0x72/0x9d
+   old_map_region+0x72/0x9d
+   efi_map_region+0x8/0xa
+   efi_enter_virtual_mode+0x260/0x43b
+   start_kernel+0x329/0x3aa
+   i386_start_kernel+0xa7/0xab
+   startup_32_smp+0x164/0x168
+  ---[ end trace e15ccf6b9f356833 ]---
+
+Let's work around this by disregarding the memory attributes table
+altogether on i386, which does not result in a loss of functionality
+or protection, given that we never consumed the contents.
+
+Fixes: 3a6b6c6fb23667fa ("efi: Make EFI_MEMORY_ATTRIBUTES_TABLE ... ")
+Tested-by: Arvind Sankar <nivedita@alum.mit.edu>
+Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Link: https://lore.kernel.org/r/20200304165917.5893-1-ardb@kernel.org
+Link: https://lore.kernel.org/r/20200308080859.21568-21-ardb@kernel.org
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- block/blk-ioc.c           | 7 +++++++
- include/linux/iocontext.h | 1 +
- 2 files changed, 8 insertions(+)
+ drivers/firmware/efi/efi.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/block/blk-ioc.c b/block/blk-ioc.c
-index 5ed59ac6ae58b..9df50fb507caf 100644
---- a/block/blk-ioc.c
-+++ b/block/blk-ioc.c
-@@ -84,6 +84,7 @@ static void ioc_destroy_icq(struct io_cq *icq)
- 	 * making it impossible to determine icq_cache.  Record it in @icq.
- 	 */
- 	icq->__rcu_icq_cache = et->icq_cache;
-+	icq->flags |= ICQ_DESTROYED;
- 	call_rcu(&icq->__rcu_head, icq_free_icq_rcu);
- }
- 
-@@ -212,15 +213,21 @@ static void __ioc_clear_queue(struct list_head *icq_list)
- {
- 	unsigned long flags;
- 
-+	rcu_read_lock();
- 	while (!list_empty(icq_list)) {
- 		struct io_cq *icq = list_entry(icq_list->next,
- 						struct io_cq, q_node);
- 		struct io_context *ioc = icq->ioc;
- 
- 		spin_lock_irqsave(&ioc->lock, flags);
-+		if (icq->flags & ICQ_DESTROYED) {
-+			spin_unlock_irqrestore(&ioc->lock, flags);
-+			continue;
-+		}
- 		ioc_destroy_icq(icq);
- 		spin_unlock_irqrestore(&ioc->lock, flags);
+diff --git a/drivers/firmware/efi/efi.c b/drivers/firmware/efi/efi.c
+index a9778591341bb..8c32054a266c9 100644
+--- a/drivers/firmware/efi/efi.c
++++ b/drivers/firmware/efi/efi.c
+@@ -570,7 +570,7 @@ int __init efi_config_parse_tables(void *config_tables, int count, int sz,
+ 		}
  	}
-+	rcu_read_unlock();
- }
  
- /**
-diff --git a/include/linux/iocontext.h b/include/linux/iocontext.h
-index dba15ca8e60bc..1dcd9198beb7f 100644
---- a/include/linux/iocontext.h
-+++ b/include/linux/iocontext.h
-@@ -8,6 +8,7 @@
+-	if (efi_enabled(EFI_MEMMAP))
++	if (!IS_ENABLED(CONFIG_X86_32) && efi_enabled(EFI_MEMMAP))
+ 		efi_memattr_init();
  
- enum {
- 	ICQ_EXITED		= 1 << 2,
-+	ICQ_DESTROYED		= 1 << 3,
- };
- 
- /*
+ 	efi_tpm_eventlog_init();
 -- 
 2.20.1
 
