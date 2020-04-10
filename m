@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08689C2BB85
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 03:56:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E13DC2BB85
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 03:56:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D4C672145D
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 03:56:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 366E12063A
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 03:56:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586490976;
-	bh=HeFoJtQMHA3FTTcjMfTXMgiQSyrQtjY1Nu2+TAJH6kg=;
+	s=default; t=1586490980;
+	bh=Ikc0AYvLKTZZv4VYpqWl7cUBvSOW5ZMNjoOQKDLh2aA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dG3xo/Pnc2lItjiMKqdTYiMbVdPxg17LwMn77l7gGvUGFTPev51hjmhk90E9Kd+s8
-	 sfduSKGF3QsucDOwwg3b8YFPFnzG3JlxNbkzSCW5qeHmIJG8kSmQbbIn8BVbSiuwfl
-	 4uo8x3BqxRO1cM4/T5wT8GxwRexA8Ji8bBdJ/1b0=
+	b=fKlKD/KPhwvee+cXeSVLzb4qlp1j1W/GO1v4NJ9zQqNHA8HhdUeS0y9DzxPYxx0FI
+	 Sl0tjOSa3qdIMz2kiNebpSeR7yVUU01TLMie+mmg7z2tsbwRE2vxd8XVN/5Tx+maox
+	 95cuQRVBLqYem8rdW55wdcObumyyR8Axs/etA6Y0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728632AbgDJDto (ORCPT
+        id S1728004AbgDJD4S (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Apr 2020 23:49:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33712 "EHLO mail.kernel.org"
+        Thu, 9 Apr 2020 23:56:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33814 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728585AbgDJDtg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Apr 2020 23:49:36 -0400
+        id S1728624AbgDJDtm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Apr 2020 23:49:42 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9A2CF2137B;
-        Fri, 10 Apr 2020 03:49:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2004E20B1F;
+        Fri, 10 Apr 2020 03:49:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586490576;
-        bh=HeFoJtQMHA3FTTcjMfTXMgiQSyrQtjY1Nu2+TAJH6kg=;
+        s=default; t=1586490582;
+        bh=Ikc0AYvLKTZZv4VYpqWl7cUBvSOW5ZMNjoOQKDLh2aA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TTTy5YoJ5A6V1JGZI9bwSVxjfyA/hT+1IVH6dWPVF3654oBPjIh8h7PvWlwrT4Xfq
-         wxdulwjQF+GPbvGbeTLLloOahNVGImKEQ0aKe6czOqFcyZ/ibWdk64I2ZygCjw3vGX
-         mS/ZfMCaAd4kMIW9cKYGggOXuDvtZny/KL/a4/j4=
+        b=RlS3E8Sn4wqddE2IZtsQpsCJq0t6fvsG6COpxD5wyIAH1tvcGLDIt8bFN8qm2eSYb
+         AfZqdFL+YyC7i+05KiIBkTSmXn415/vUB/OPrfryk4RxUHuJ5NxIoN9R7eQbSl7Rgb
+         yTajNtPvxPC8uTiDJKx0/RFvx9q5MUnqmYmPmHkU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Paolo Valente <paolo.valente@linaro.org>, cki-project@redhat.com,
-        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>,
-        cgroups@vger.kernel.org, linux-block@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 22/46] block, bfq: move forward the getting of an extra ref in bfq_bfqq_move
-Date:   Thu,  9 Apr 2020 23:48:45 -0400
-Message-Id: <20200410034909.8922-22-sashal@kernel.org>
+Cc:     Peng Fan <peng.fan@nxp.com>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Sasha Levin <sashal@kernel.org>, linux-pm@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH AUTOSEL 5.4 28/46] cpufreq: imx6q: fix error handling
+Date:   Thu,  9 Apr 2020 23:48:51 -0400
+Message-Id: <20200410034909.8922-28-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200410034909.8922-1-sashal@kernel.org>
 References: <20200410034909.8922-1-sashal@kernel.org>
@@ -59,71 +60,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Paolo Valente <paolo.valente@linaro.org>
+From: Peng Fan <peng.fan@nxp.com>
 
-[ Upstream commit fd1bb3ae54a9a2e0c42709de861c69aa146b8955 ]
+[ Upstream commit 3646f50a3838c5949a89ecbdb868497cdc05b8fd ]
 
-Commit ecedd3d7e199 ("block, bfq: get extra ref to prevent a queue
-from being freed during a group move") gets an extra reference to a
-bfq_queue before possibly deactivating it (temporarily), in
-bfq_bfqq_move(). This prevents the bfq_queue from disappearing before
-being reactivated in its new group.
+When speed checking failed, direclty jumping to put_node label
+is not correct. Need jump to out_free_opp to avoid resources leak.
 
-Yet, the bfq_queue may also be expired (i.e., its service may be
-stopped) before the bfq_queue is deactivated. And also an expiration
-may lead to a premature freeing. This commit fixes this issue by
-simply moving forward the getting of the extra reference already
-introduced by commit ecedd3d7e199 ("block, bfq: get extra ref to
-prevent a queue from being freed during a group move").
-
-Reported-by: cki-project@redhat.com
-Tested-by: cki-project@redhat.com
-Signed-off-by: Paolo Valente <paolo.valente@linaro.org>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Fixes: 2733fb0d0699 ("cpufreq: imx6q: read OCOTP through nvmem for imx6ul/imx6ull")
+Signed-off-by: Peng Fan <peng.fan@nxp.com>
+Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- block/bfq-cgroup.c | 14 +++++++-------
- 1 file changed, 7 insertions(+), 7 deletions(-)
+ drivers/cpufreq/imx6q-cpufreq.c | 9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
 
-diff --git a/block/bfq-cgroup.c b/block/bfq-cgroup.c
-index 86cd718e0380b..5611769e15690 100644
---- a/block/bfq-cgroup.c
-+++ b/block/bfq-cgroup.c
-@@ -625,6 +625,12 @@ void bfq_bfqq_move(struct bfq_data *bfqd, struct bfq_queue *bfqq,
- {
- 	struct bfq_entity *entity = &bfqq->entity;
+diff --git a/drivers/cpufreq/imx6q-cpufreq.c b/drivers/cpufreq/imx6q-cpufreq.c
+index 1fcbbd53a48a2..edef3399c9794 100644
+--- a/drivers/cpufreq/imx6q-cpufreq.c
++++ b/drivers/cpufreq/imx6q-cpufreq.c
+@@ -381,23 +381,24 @@ static int imx6q_cpufreq_probe(struct platform_device *pdev)
+ 		goto put_reg;
+ 	}
  
-+	/*
-+	 * Get extra reference to prevent bfqq from being freed in
-+	 * next possible expire or deactivate.
-+	 */
-+	bfqq->ref++;
++	/* Because we have added the OPPs here, we must free them */
++	free_opp = true;
 +
- 	/* If bfqq is empty, then bfq_bfqq_expire also invokes
- 	 * bfq_del_bfqq_busy, thereby removing bfqq and its entity
- 	 * from data structures related to current group. Otherwise we
-@@ -635,12 +641,6 @@ void bfq_bfqq_move(struct bfq_data *bfqd, struct bfq_queue *bfqq,
- 		bfq_bfqq_expire(bfqd, bfqd->in_service_queue,
- 				false, BFQQE_PREEMPTED);
+ 	if (of_machine_is_compatible("fsl,imx6ul") ||
+ 	    of_machine_is_compatible("fsl,imx6ull")) {
+ 		ret = imx6ul_opp_check_speed_grading(cpu_dev);
+ 		if (ret) {
+ 			if (ret == -EPROBE_DEFER)
+-				goto put_node;
++				goto out_free_opp;
  
--	/*
--	 * get extra reference to prevent bfqq from being freed in
--	 * next possible deactivate
--	 */
--	bfqq->ref++;
--
- 	if (bfq_bfqq_busy(bfqq))
- 		bfq_deactivate_bfqq(bfqd, bfqq, false, false);
- 	else if (entity->on_st)
-@@ -660,7 +660,7 @@ void bfq_bfqq_move(struct bfq_data *bfqd, struct bfq_queue *bfqq,
+ 			dev_err(cpu_dev, "failed to read ocotp: %d\n",
+ 				ret);
+-			goto put_node;
++			goto out_free_opp;
+ 		}
+ 	} else {
+ 		imx6q_opp_check_speed_grading(cpu_dev);
+ 	}
  
- 	if (!bfqd->in_service_queue && !bfqd->rq_in_driver)
- 		bfq_schedule_dispatch(bfqd);
--	/* release extra ref taken above */
-+	/* release extra ref taken above, bfqq may happen to be freed now */
- 	bfq_put_queue(bfqq);
- }
- 
+-	/* Because we have added the OPPs here, we must free them */
+-	free_opp = true;
+ 	num = dev_pm_opp_get_opp_count(cpu_dev);
+ 	if (num < 0) {
+ 		ret = num;
 -- 
 2.20.1
 
