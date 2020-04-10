@@ -7,46 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA050C2D0EC
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 04:00:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2FE8C2D0EC
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 04:00:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B19B020936
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 04:00:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 784AF20936
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 04:00:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586491201;
-	bh=zMBCe1mPTUuYlis/A+ipA59U/N5RLtlx/E7hzsEDSls=;
+	s=default; t=1586491204;
+	bh=YDlUlH9cxoPoePJ/BVt1VLVyGDJmuuZt3f/vtA5eHsQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pcl52ieFrHh+x9p+gYsi2/vAsk4ZubjsEvcSJK8r8qXdlRB+dCT7Z+Lf6AmGeE+xf
-	 JMuWg74zZBpupp+Ce7ZBQ7Gp1vhLVrHSeTUuyrc4Z3a1S/wu143p1BYmqX5z9Pgaun
-	 SmkHxbSlZ3npwv0NMQzHkdBjhJD9aQefKc0dT9ZY=
+	b=vuvOrOAjW4U7cgR34mzH6K59++oJov7Cj9WvY4Ryxb8WWqQ3h6PBEG9iSE7siVVbA
+	 VGG+D1JWxoFJPQhWlfQufMLl//31cucodtbMiJ6oEi1tENOOEaWAsUUBHE9YPynz5G
+	 Y1v7LduQQpdiFnAb3J/+AWHmPpav/qMZ9s04WpPk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726648AbgDJD77 (ORCPT
+        id S1725776AbgDJEAC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Apr 2020 23:59:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59438 "EHLO mail.kernel.org"
+        Fri, 10 Apr 2020 00:00:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59408 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728057AbgDJDsK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Apr 2020 23:48:10 -0400
+        id S1728045AbgDJDsJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Apr 2020 23:48:09 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B252F2145D;
-        Fri, 10 Apr 2020 03:48:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9090C21655;
+        Fri, 10 Apr 2020 03:48:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586490490;
-        bh=zMBCe1mPTUuYlis/A+ipA59U/N5RLtlx/E7hzsEDSls=;
+        s=default; t=1586490489;
+        bh=YDlUlH9cxoPoePJ/BVt1VLVyGDJmuuZt3f/vtA5eHsQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0GoGjbdAVIgxKX+PKf/JcAfRnvG1I6J4omUXbWIRGAGhWOL95M4eAPtd75jwa9Lse
-         ep+8xrfscB+l/KwVXealqFPO1elkGTwFWS3uZN1x2/xIaGfZhPs99Mg0G87zFIsD2r
-         8lZflzPEL/b7FDkWSpQtDBgBmJ97LGjJZUonZ0aM=
+        b=IxV2wZ0bDIN16CYiGu9MniE6X5RsuWB+prrre4TtyzHf7h+lfRz3v8lJSs9ez8Cra
+         lpAWhvk6OJDAu+kVufn+pl0s0Drl+/cjnnC5q664iqbCA6NtNp1O4cAvCSTW0MYrFB
+         SF6rQkq8YGqLmHF0QQgD5in4DyTVCb0nI+QiNYoc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Saravana Kannan <saravanak@google.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.5 08/56] driver core: Reevaluate dev->links.need_for_probe as suppliers are added
-Date:   Thu,  9 Apr 2020 23:47:12 -0400
-Message-Id: <20200410034800.8381-8-sashal@kernel.org>
+Cc:     James Morse <james.morse@arm.com>,
+        Liguang Zhang <zhangliguang@linux.alibaba.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH AUTOSEL 5.5 07/56] firmware: arm_sdei: fix double-lock on hibernate with shared events
+Date:   Thu,  9 Apr 2020 23:47:11 -0400
+Message-Id: <20200410034800.8381-7-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200410034800.8381-1-sashal@kernel.org>
 References: <20200410034800.8381-1-sashal@kernel.org>
@@ -59,69 +61,116 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Saravana Kannan <saravanak@google.com>
+From: James Morse <james.morse@arm.com>
 
-[ Upstream commit 1745d299af5b373abad08fa29bff0d31dc6aff21 ]
+[ Upstream commit 6ded0b61cf638bf9f8efe60ab8ba23db60ea9763 ]
 
-A previous patch 03324507e66c ("driver core: Allow
-fwnode_operations.add_links to differentiate errors") forgot to update
-all call sites to fwnode_operations.add_links. This patch fixes that.
+SDEI has private events that must be registered on each CPU. When
+CPUs come and go they must re-register and re-enable their private
+events. Each event has flags to indicate whether this should happen
+to protect against an event being registered on a CPU coming online,
+while all the others are unregistering the event.
 
-Legend:
--> Denotes RHS is an optional/potential supplier for LHS
-=> Denotes RHS is a mandatory supplier for LHS
+These flags are protected by the sdei_list_lock spinlock, because
+the cpuhp callbacks can't take the mutex.
 
-Example:
+Hibernate needs to unregister all events, but keep the in-memory
+re-register and re-enable as they are. sdei_unregister_shared()
+takes the spinlock to walk the list, then calls _sdei_event_unregister()
+on each shared event. _sdei_event_unregister() tries to take the
+same spinlock to update re-register and re-enable. This doesn't go
+so well.
 
-Device A => Device X
-Device A -> Device Y
+Push the re-register and re-enable updates out to their callers.
+sdei_unregister_shared() doesn't want these values updated, so
+doesn't need to do anything.
 
-Before this patch:
-1. Device A is added.
-2. Device A is marked as waiting for mandatory suppliers
-3. Device X is added
-4. Device A is left marked as waiting for mandatory suppliers
+This also fixes shared events getting lost over hibernate as this
+path made them look unregistered.
 
-Step 4 is wrong since all mandatory suppliers of Device A have been
-added.
-
-After this patch:
-1. Device A is added.
-2. Device A is marked as waiting for mandatory suppliers
-3. Device X is added
-4. Device A is no longer considered as waiting for mandatory suppliers
-
-This is the correct behavior.
-
-Fixes: 03324507e66c ("driver core: Allow fwnode_operations.add_links to differentiate errors")
-Signed-off-by: Saravana Kannan <saravanak@google.com>
-Link: https://lore.kernel.org/r/20200222014038.180923-2-saravanak@google.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Fixes: da351827240e ("firmware: arm_sdei: Add support for CPU and system power states")
+Reported-by: Liguang Zhang <zhangliguang@linux.alibaba.com>
+Signed-off-by: James Morse <james.morse@arm.com>
+Signed-off-by: Catalin Marinas <catalin.marinas@arm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/base/core.c | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ drivers/firmware/arm_sdei.c | 32 +++++++++++++++-----------------
+ 1 file changed, 15 insertions(+), 17 deletions(-)
 
-diff --git a/drivers/base/core.c b/drivers/base/core.c
-index dbb0f9130f42d..d32a3aefff32f 100644
---- a/drivers/base/core.c
-+++ b/drivers/base/core.c
-@@ -523,9 +523,13 @@ static void device_link_add_missing_supplier_links(void)
+diff --git a/drivers/firmware/arm_sdei.c b/drivers/firmware/arm_sdei.c
+index a479023fa036e..77eaa9a2fd156 100644
+--- a/drivers/firmware/arm_sdei.c
++++ b/drivers/firmware/arm_sdei.c
+@@ -491,11 +491,6 @@ static int _sdei_event_unregister(struct sdei_event *event)
+ {
+ 	lockdep_assert_held(&sdei_events_lock);
  
- 	mutex_lock(&wfs_lock);
- 	list_for_each_entry_safe(dev, tmp, &wait_for_suppliers,
--				 links.needs_suppliers)
--		if (!fwnode_call_int_op(dev->fwnode, add_links, dev))
-+				 links.needs_suppliers) {
-+		int ret = fwnode_call_int_op(dev->fwnode, add_links, dev);
-+		if (!ret)
- 			list_del_init(&dev->links.needs_suppliers);
-+		else if (ret != -ENODEV)
-+			dev->links.need_for_probe = false;
-+	}
- 	mutex_unlock(&wfs_lock);
+-	spin_lock(&sdei_list_lock);
+-	event->reregister = false;
+-	event->reenable = false;
+-	spin_unlock(&sdei_list_lock);
+-
+ 	if (event->type == SDEI_EVENT_TYPE_SHARED)
+ 		return sdei_api_event_unregister(event->event_num);
+ 
+@@ -518,6 +513,11 @@ int sdei_event_unregister(u32 event_num)
+ 			break;
+ 		}
+ 
++		spin_lock(&sdei_list_lock);
++		event->reregister = false;
++		event->reenable = false;
++		spin_unlock(&sdei_list_lock);
++
+ 		err = _sdei_event_unregister(event);
+ 		if (err)
+ 			break;
+@@ -585,26 +585,15 @@ static int _sdei_event_register(struct sdei_event *event)
+ 
+ 	lockdep_assert_held(&sdei_events_lock);
+ 
+-	spin_lock(&sdei_list_lock);
+-	event->reregister = true;
+-	spin_unlock(&sdei_list_lock);
+-
+ 	if (event->type == SDEI_EVENT_TYPE_SHARED)
+ 		return sdei_api_event_register(event->event_num,
+ 					       sdei_entry_point,
+ 					       event->registered,
+ 					       SDEI_EVENT_REGISTER_RM_ANY, 0);
+ 
+-
+ 	err = sdei_do_cross_call(_local_event_register, event);
+-	if (err) {
+-		spin_lock(&sdei_list_lock);
+-		event->reregister = false;
+-		event->reenable = false;
+-		spin_unlock(&sdei_list_lock);
+-
++	if (err)
+ 		sdei_do_cross_call(_local_event_unregister, event);
+-	}
+ 
+ 	return err;
  }
+@@ -632,8 +621,17 @@ int sdei_event_register(u32 event_num, sdei_event_callback *cb, void *arg)
+ 			break;
+ 		}
  
++		spin_lock(&sdei_list_lock);
++		event->reregister = true;
++		spin_unlock(&sdei_list_lock);
++
+ 		err = _sdei_event_register(event);
+ 		if (err) {
++			spin_lock(&sdei_list_lock);
++			event->reregister = false;
++			event->reenable = false;
++			spin_unlock(&sdei_list_lock);
++
+ 			sdei_event_destroy(event);
+ 			pr_warn("Failed to register event %u: %d\n", event_num,
+ 				err);
 -- 
 2.20.1
 
