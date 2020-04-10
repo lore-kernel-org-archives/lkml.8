@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA75BC2BB1D
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 04:02:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CC89C2D0EC
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 04:02:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A8A6C2063A
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 04:02:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E8A042063A
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 04:02:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586491331;
-	bh=7RdBcKbcSA8txvE3ou1/hXYhwhq2DHXO8rive13W17M=;
+	s=default; t=1586491334;
+	bh=KaHfIVIHtR3Eir+Dk/EI3yLkcAOUT+psbNvlaMLf7UA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LjK9TKH2S0M40R8fv2wg4Kw4cjThjbZNfEqyU8tr07iV/k1hasZNQB3kZM/QKYLfQ
-	 Ox1xvbApAhguwE3Q7cxDHDeOcLOGoP+lHUiqP+3grSENA5GHhFwa3JfrFexrB2Kt9l
-	 UimRP0Q64z4tcg3n/0j8bc8aq7rQSsS2ghqPo27c=
+	b=036/pRWkdISbhFs/SAjB3bPIk/6mZgss+k9LTyEBEpDlEVu/TBAqKP8iAKJNJSIwX
+	 9+Y56aiva82mtxhcOwuKMqwBSM2GycbddrfGmLV0C2++DzLb+c5zxyCiigwCrnHevF
+	 h5Akkxj/nZ8QcG0KGwo9xfP/833VS7je/9A65Ar0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728060AbgDJECK (ORCPT
+        id S1728102AbgDJECL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Apr 2020 00:02:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57844 "EHLO mail.kernel.org"
+        Fri, 10 Apr 2020 00:02:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57740 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727109AbgDJDrO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Apr 2020 23:47:14 -0400
+        id S1727073AbgDJDrN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Apr 2020 23:47:13 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3CB69215A4;
-        Fri, 10 Apr 2020 03:47:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EADD220B1F;
+        Fri, 10 Apr 2020 03:47:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586490434;
-        bh=7RdBcKbcSA8txvE3ou1/hXYhwhq2DHXO8rive13W17M=;
+        s=default; t=1586490432;
+        bh=KaHfIVIHtR3Eir+Dk/EI3yLkcAOUT+psbNvlaMLf7UA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hRR44KqzT/z1K05T0tXTHPKu7SczVblR6k1ugwXlISv1HyYAnmbVwqoZCWzGayQ8k
-         zUmWykpDlPqbYd0kV7h9/QG1oV/dcKQ8LdF1vyoeT825hZOvbmMUHuE8Hx/wzjSqEV
-         z9M55cWyVJPmZYRl4GyabTOj5qUsGif/bI67ibBg=
+        b=DMvunDb9SFG79KJM/PQlBXnsInrkVw3oBQGwtjOI/+uxmD/xDOr7wrLOFm5QwhrGM
+         icN964L9nDxv6W1Nbwp8qt3z5mpq9mFyZ8H8hF8oKkhbtLtx/Yp36QmdOFGrKeuAXp
+         yHYhsZppfFUOSubpfdJ7XckClAJDubqV54Z3gOZo=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Sungbo Eo <mans0n@gorani.run>, Marc Zyngier <maz@kernel.org>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.6 32/68] irqchip/versatile-fpga: Handle chained IRQs properly
-Date:   Thu,  9 Apr 2020 23:45:57 -0400
-Message-Id: <20200410034634.7731-32-sashal@kernel.org>
+Cc:     Taehee Yoo <ap420073@gmail.com>, kbuild test robot <lkp@intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.6 30/68] debugfs: Check module state before warning in {full/open}_proxy_open()
+Date:   Thu,  9 Apr 2020 23:45:55 -0400
+Message-Id: <20200410034634.7731-30-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200410034634.7731-1-sashal@kernel.org>
 References: <20200410034634.7731-1-sashal@kernel.org>
@@ -59,67 +59,115 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sungbo Eo <mans0n@gorani.run>
+From: Taehee Yoo <ap420073@gmail.com>
 
-[ Upstream commit 486562da598c59e9f835b551d7cf19507de2d681 ]
+[ Upstream commit 275678e7a9be6a0ea9c1bb493e48abf2f4a01be5 ]
 
-Enclose the chained handler with chained_irq_{enter,exit}(), so that the
-muxed interrupts get properly acked.
+When the module is being removed, the module state is set to
+MODULE_STATE_GOING. At this point, try_module_get() fails.
+And when {full/open}_proxy_open() is being called,
+it calls try_module_get() to try to hold module reference count.
+If it fails, it warns about the possibility of debugfs file leak.
 
-This patch also fixes a reboot bug on OX820 SoC, where the jiffies timer
-interrupt is never acked. The kernel waits a clock tick forever in
-calibrate_delay_converge(), which leads to a boot hang.
+If {full/open}_proxy_open() is called while the module is being removed,
+it fails to hold the module.
+So, It warns about debugfs file leak. But it is not the debugfs file
+leak case. So, this patch just adds module state checking routine
+in the {full/open}_proxy_open().
 
-Fixes: c41b16f8c9d9 ("ARM: integrator/versatile: consolidate FPGA IRQ handling code")
-Signed-off-by: Sungbo Eo <mans0n@gorani.run>
-Signed-off-by: Marc Zyngier <maz@kernel.org>
-Link: https://lore.kernel.org/r/20200319023448.1479701-1-mans0n@gorani.run
+Test commands:
+    #SHELL1
+    while :
+    do
+        modprobe netdevsim
+        echo 1 > /sys/bus/netdevsim/new_device
+        modprobe -rv netdevsim
+    done
+
+    #SHELL2
+    while :
+    do
+        cat /sys/kernel/debug/netdevsim/netdevsim1/ports/0/ipsec
+    done
+
+Splat looks like:
+[  298.766738][T14664] debugfs file owner did not clean up at exit: ipsec
+[  298.766766][T14664] WARNING: CPU: 2 PID: 14664 at fs/debugfs/file.c:312 full_proxy_open+0x10f/0x650
+[  298.768595][T14664] Modules linked in: netdevsim(-) openvswitch nsh nf_conncount nf_nat nf_conntrack nf_defrag_ipv6 n][  298.771343][T14664] CPU: 2 PID: 14664 Comm: cat Tainted: G        W         5.5.0+ #1
+[  298.772373][T14664] Hardware name: innotek GmbH VirtualBox/VirtualBox, BIOS VirtualBox 12/01/2006
+[  298.773545][T14664] RIP: 0010:full_proxy_open+0x10f/0x650
+[  298.774247][T14664] Code: 48 c1 ea 03 80 3c 02 00 0f 85 c1 04 00 00 49 8b 3c 24 e8 e4 b5 78 ff 84 c0 75 2d 4c 89 ee 48
+[  298.776782][T14664] RSP: 0018:ffff88805b7df9b8 EFLAGS: 00010282[  298.777583][T14664] RAX: dffffc0000000008 RBX: ffff8880511725c0 RCX: 0000000000000000
+[  298.778610][T14664] RDX: 0000000000000000 RSI: 0000000000000006 RDI: ffff8880540c5c14
+[  298.779637][T14664] RBP: 0000000000000000 R08: fffffbfff15235ad R09: 0000000000000000
+[  298.780664][T14664] R10: 0000000000000001 R11: 0000000000000000 R12: ffffffffc06b5000
+[  298.781702][T14664] R13: ffff88804c234a88 R14: ffff88804c22dd00 R15: ffffffff8a1b5660
+[  298.782722][T14664] FS:  00007fafa13a8540(0000) GS:ffff88806c800000(0000) knlGS:0000000000000000
+[  298.783845][T14664] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[  298.784672][T14664] CR2: 00007fafa0e9cd10 CR3: 000000004b286005 CR4: 00000000000606e0
+[  298.785739][T14664] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+[  298.786769][T14664] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+[  298.787785][T14664] Call Trace:
+[  298.788237][T14664]  do_dentry_open+0x63c/0xf50
+[  298.788872][T14664]  ? open_proxy_open+0x270/0x270
+[  298.789524][T14664]  ? __x64_sys_fchdir+0x180/0x180
+[  298.790169][T14664]  ? inode_permission+0x65/0x390
+[  298.790832][T14664]  path_openat+0xc45/0x2680
+[  298.791425][T14664]  ? save_stack+0x69/0x80
+[  298.791988][T14664]  ? save_stack+0x19/0x80
+[  298.792544][T14664]  ? path_mountpoint+0x2e0/0x2e0
+[  298.793233][T14664]  ? check_chain_key+0x236/0x5d0
+[  298.793910][T14664]  ? sched_clock_cpu+0x18/0x170
+[  298.794527][T14664]  ? find_held_lock+0x39/0x1d0
+[  298.795153][T14664]  do_filp_open+0x16a/0x260
+[ ... ]
+
+Fixes: 9fd4dcece43a ("debugfs: prevent access to possibly dead file_operations at file open")
+Reported-by: kbuild test robot <lkp@intel.com>
+Signed-off-by: Taehee Yoo <ap420073@gmail.com>
+Link: https://lore.kernel.org/r/20200218043150.29447-1-ap420073@gmail.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/irqchip/irq-versatile-fpga.c | 12 ++++++++++--
- 1 file changed, 10 insertions(+), 2 deletions(-)
+ fs/debugfs/file.c | 18 ++++++++++++++----
+ 1 file changed, 14 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/irqchip/irq-versatile-fpga.c b/drivers/irqchip/irq-versatile-fpga.c
-index 928858dada756..70e2cfff8175f 100644
---- a/drivers/irqchip/irq-versatile-fpga.c
-+++ b/drivers/irqchip/irq-versatile-fpga.c
-@@ -6,6 +6,7 @@
- #include <linux/irq.h>
- #include <linux/io.h>
- #include <linux/irqchip.h>
-+#include <linux/irqchip/chained_irq.h>
- #include <linux/irqchip/versatile-fpga.h>
- #include <linux/irqdomain.h>
- #include <linux/module.h>
-@@ -68,12 +69,16 @@ static void fpga_irq_unmask(struct irq_data *d)
+diff --git a/fs/debugfs/file.c b/fs/debugfs/file.c
+index db987b5110a99..f34757e8f25f8 100644
+--- a/fs/debugfs/file.c
++++ b/fs/debugfs/file.c
+@@ -175,8 +175,13 @@ static int open_proxy_open(struct inode *inode, struct file *filp)
+ 	if (r)
+ 		goto out;
  
- static void fpga_irq_handle(struct irq_desc *desc)
- {
-+	struct irq_chip *chip = irq_desc_get_chip(desc);
- 	struct fpga_irq_data *f = irq_desc_get_handler_data(desc);
--	u32 status = readl(f->base + IRQ_STATUS);
-+	u32 status;
+-	real_fops = fops_get(real_fops);
+-	if (!real_fops) {
++	if (!fops_get(real_fops)) {
++#ifdef MODULE
++		if (real_fops->owner &&
++		    real_fops->owner->state == MODULE_STATE_GOING)
++			goto out;
++#endif
 +
-+	chained_irq_enter(chip, desc);
+ 		/* Huh? Module did not clean up after itself at exit? */
+ 		WARN(1, "debugfs file owner did not clean up at exit: %pd",
+ 			dentry);
+@@ -305,8 +310,13 @@ static int full_proxy_open(struct inode *inode, struct file *filp)
+ 	if (r)
+ 		goto out;
  
-+	status = readl(f->base + IRQ_STATUS);
- 	if (status == 0) {
- 		do_bad_IRQ(desc);
--		return;
-+		goto out;
- 	}
- 
- 	do {
-@@ -82,6 +87,9 @@ static void fpga_irq_handle(struct irq_desc *desc)
- 		status &= ~(1 << irq);
- 		generic_handle_irq(irq_find_mapping(f->domain, irq));
- 	} while (status);
+-	real_fops = fops_get(real_fops);
+-	if (!real_fops) {
++	if (!fops_get(real_fops)) {
++#ifdef MODULE
++		if (real_fops->owner &&
++		    real_fops->owner->state == MODULE_STATE_GOING)
++			goto out;
++#endif
 +
-+out:
-+	chained_irq_exit(chip, desc);
- }
- 
- /*
+ 		/* Huh? Module did not cleanup after itself at exit? */
+ 		WARN(1, "debugfs file owner did not clean up at exit: %pd",
+ 			dentry);
 -- 
 2.20.1
 
