@@ -4,49 +4,55 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1414AC2BB1D
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 03:48:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95D4DC2D0EC
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 03:48:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E1C28212CC
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 03:48:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6A13E2145D
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 03:48:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586490528;
-	bh=EXFUdSo/r/oSwfIUvXFfA30O8QdIYkWbR4l9z4yReIY=;
+	s=default; t=1586490533;
+	bh=ILBexfunqW4Rk3vCQKONkC5vXgBaBzCpnGtoBUoYB6g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MAnH+Zb/4eaOJmyrJz2azRKTS9hAg+qRKIGRM4RVJB22KUXoTr4tb2EXRmgHJLegj
-	 27lK7KAPsj1t9W3BzHi/HfdreMigOsKXiyppAIWsrqim95ylGY2K/KkvLOuH3ZYxR6
-	 1UKNQt2lzpyMDOsFLAk1btRkwa0ORUIIAIMZqPLg=
+	b=e/CRhzRjtRX/WxxMOJY/XZx87DgHLIwa+WDa658927jEjR/PfaZcD2/CiV4c/QhPi
+	 qcTl4btfRFYXqPlkEokgDB4tdHjivuOMp9Lu7cpDGMkWJAqwFImMLPUkwgpO7EqU47
+	 /9W7xiNk0wknaZ0DD6mu79qluGlpwUyAP3TdUd1Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728343AbgDJDsr (ORCPT
+        id S1728367AbgDJDsv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Apr 2020 23:48:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60424 "EHLO mail.kernel.org"
+        Thu, 9 Apr 2020 23:48:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60538 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728321AbgDJDso (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Apr 2020 23:48:44 -0400
+        id S1728321AbgDJDsr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Apr 2020 23:48:47 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 970EB214D8;
-        Fri, 10 Apr 2020 03:48:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B9A0920CC7;
+        Fri, 10 Apr 2020 03:48:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586490524;
-        bh=EXFUdSo/r/oSwfIUvXFfA30O8QdIYkWbR4l9z4yReIY=;
+        s=default; t=1586490527;
+        bh=ILBexfunqW4Rk3vCQKONkC5vXgBaBzCpnGtoBUoYB6g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XLRSiEkJ30EOUWBX6jOjZZpHa69v2noqmPzXMfGSCr1c8iKQZpqFBoEI/fZeG/BYE
-         ZAPjqDqfiuMw7/HGo621xUTvLuPpBZZHGDpNtShZ79se0vTtCv2LTw9ba3mrJ4YPeY
-         uAGKMqxgZL75Ws4wJwvoh/SgHrf1pwen02qJ9XQk=
+        b=EIDM+/Fl7kVPyZdVyK/52PGGKlQ6Dr32yoCX2tTewwc0uLcAaxM9Mf6Hp2QepGivZ
+         PHk7egE9PSoZtrbP71yXckkdojTzD5CM9R1Q+JYTV0JtpCx+kF2CQ563kVCKlOh78Y
+         bQ/yrLeArMZkjLahRHq45hOkUHJ2RZ2VZlyJUIIk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Arvind Sankar <nivedita@alum.mit.edu>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.5 37/56] x86/boot: Use unsigned comparison for addresses
-Date:   Thu,  9 Apr 2020 23:47:41 -0400
-Message-Id: <20200410034800.8381-37-sashal@kernel.org>
+Cc:     Bart Van Assche <bvanassche@acm.org>,
+        syzbot+d44e1b26ce5c3e77458d@syzkaller.appspotmail.com,
+        Ming Lei <ming.lei@redhat.com>,
+        Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>,
+        Johannes Thumshirn <jth@kernel.org>,
+        Hannes Reinecke <hare@suse.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>,
+        linux-block@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.5 40/56] blk-mq: Keep set->nr_hw_queues and set->map[].nr_queues in sync
+Date:   Thu,  9 Apr 2020 23:47:44 -0400
+Message-Id: <20200410034800.8381-40-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200410034800.8381-1-sashal@kernel.org>
 References: <20200410034800.8381-1-sashal@kernel.org>
@@ -59,69 +65,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arvind Sankar <nivedita@alum.mit.edu>
+From: Bart Van Assche <bvanassche@acm.org>
 
-[ Upstream commit 81a34892c2c7c809f9c4e22c5ac936ae673fb9a2 ]
+[ Upstream commit 6e66b49392419f3fe134e1be583323ef75da1e4b ]
 
-The load address is compared with LOAD_PHYSICAL_ADDR using a signed
-comparison currently (using jge instruction).
+blk_mq_map_queues() and multiple .map_queues() implementations expect that
+set->map[HCTX_TYPE_DEFAULT].nr_queues is set to the number of hardware
+queues. Hence set .nr_queues before calling these functions. This patch
+fixes the following kernel warning:
 
-When loading a 64-bit kernel using the new efi32_pe_entry() point added by:
+WARNING: CPU: 0 PID: 2501 at include/linux/cpumask.h:137
+Call Trace:
+ blk_mq_run_hw_queue+0x19d/0x350 block/blk-mq.c:1508
+ blk_mq_run_hw_queues+0x112/0x1a0 block/blk-mq.c:1525
+ blk_mq_requeue_work+0x502/0x780 block/blk-mq.c:775
+ process_one_work+0x9af/0x1740 kernel/workqueue.c:2269
+ worker_thread+0x98/0xe40 kernel/workqueue.c:2415
+ kthread+0x361/0x430 kernel/kthread.c:255
 
-  97aa276579b2 ("efi/x86: Add true mixed mode entry point into .compat section")
-
-using Qemu with -m 3072, the firmware actually loads us above 2Gb,
-resulting in a very early crash.
-
-Use the JAE instruction to perform a unsigned comparison instead, as physical
-addresses should be considered unsigned.
-
-Signed-off-by: Arvind Sankar <nivedita@alum.mit.edu>
-Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Link: https://lore.kernel.org/r/20200301230436.2246909-6-nivedita@alum.mit.edu
-Link: https://lore.kernel.org/r/20200308080859.21568-14-ardb@kernel.org
+Fixes: ed76e329d74a ("blk-mq: abstract out queue map") # v5.0
+Reported-by: syzbot+d44e1b26ce5c3e77458d@syzkaller.appspotmail.com
+Signed-off-by: Bart Van Assche <bvanassche@acm.org>
+Reviewed-by: Ming Lei <ming.lei@redhat.com>
+Reviewed-by: Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>
+Cc: Johannes Thumshirn <jth@kernel.org>
+Cc: Hannes Reinecke <hare@suse.com>
+Cc: Ming Lei <ming.lei@redhat.com>
+Cc: Christoph Hellwig <hch@infradead.org>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/boot/compressed/head_32.S | 2 +-
- arch/x86/boot/compressed/head_64.S | 4 ++--
- 2 files changed, 3 insertions(+), 3 deletions(-)
+ block/blk-mq.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/arch/x86/boot/compressed/head_32.S b/arch/x86/boot/compressed/head_32.S
-index f2dfd6d083ef2..777cf7d659cea 100644
---- a/arch/x86/boot/compressed/head_32.S
-+++ b/arch/x86/boot/compressed/head_32.S
-@@ -106,7 +106,7 @@ SYM_FUNC_START(startup_32)
- 	notl	%eax
- 	andl    %eax, %ebx
- 	cmpl	$LOAD_PHYSICAL_ADDR, %ebx
--	jge	1f
-+	jae	1f
- #endif
- 	movl	$LOAD_PHYSICAL_ADDR, %ebx
- 1:
-diff --git a/arch/x86/boot/compressed/head_64.S b/arch/x86/boot/compressed/head_64.S
-index ee60b81944a77..f5ee513f0195c 100644
---- a/arch/x86/boot/compressed/head_64.S
-+++ b/arch/x86/boot/compressed/head_64.S
-@@ -106,7 +106,7 @@ SYM_FUNC_START(startup_32)
- 	notl	%eax
- 	andl	%eax, %ebx
- 	cmpl	$LOAD_PHYSICAL_ADDR, %ebx
--	jge	1f
-+	jae	1f
- #endif
- 	movl	$LOAD_PHYSICAL_ADDR, %ebx
- 1:
-@@ -297,7 +297,7 @@ SYM_CODE_START(startup_64)
- 	notq	%rax
- 	andq	%rax, %rbp
- 	cmpq	$LOAD_PHYSICAL_ADDR, %rbp
--	jge	1f
-+	jae	1f
- #endif
- 	movq	$LOAD_PHYSICAL_ADDR, %rbp
- 1:
+diff --git a/block/blk-mq.c b/block/blk-mq.c
+index 51ff4852d34bc..8391e8e2a5044 100644
+--- a/block/blk-mq.c
++++ b/block/blk-mq.c
+@@ -2964,6 +2964,14 @@ static int blk_mq_alloc_rq_maps(struct blk_mq_tag_set *set)
+ 
+ static int blk_mq_update_queue_map(struct blk_mq_tag_set *set)
+ {
++	/*
++	 * blk_mq_map_queues() and multiple .map_queues() implementations
++	 * expect that set->map[HCTX_TYPE_DEFAULT].nr_queues is set to the
++	 * number of hardware queues.
++	 */
++	if (set->nr_maps == 1)
++		set->map[HCTX_TYPE_DEFAULT].nr_queues = set->nr_hw_queues;
++
+ 	if (set->ops->map_queues && !is_kdump_kernel()) {
+ 		int i;
+ 
 -- 
 2.20.1
 
