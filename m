@@ -2,137 +2,134 @@ Return-Path: <SRS0=VV4q=52=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EDEAC2BB55
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 21:52:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 966ECC2D0EC
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 21:58:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 19E37207FF
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 21:52:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 55E01207FF
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 21:58:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="0/0P+/1p"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726692AbgDJVwO (ORCPT
+        id S1726682AbgDJV6c (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Apr 2020 17:52:14 -0400
-Received: from mail-il1-f197.google.com ([209.85.166.197]:52797 "EHLO
-        mail-il1-f197.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726648AbgDJVwO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Apr 2020 17:52:14 -0400
-Received: by mail-il1-f197.google.com with SMTP id a79so3739659ill.19
-        for <linux-kernel@vger.kernel.org>; Fri, 10 Apr 2020 14:52:13 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
-         :from:to;
-        bh=T7YM+n2o30irCMiquDxbhwJ3TtAy+TuePhxU1RwrqII=;
-        b=iCVs/misaRXCYyJHstgh/taO4z7b6QJ83uJoQR3YpZ491HKUuqSWRF1A4gGENDJdAw
-         SgXa66u8zUsZ0nOiaD2lMfff+I2klmFAs2BWev1es2CchHGk7eqHeuN3Pr5V20pwJPQH
-         TbQ9v+ITnxDffw3OvoC/sXQaNn66L1ieSwWDgn05QiuGL5b438qxeq1Qck5SjJSu9ESC
-         AeI0ZHtK08+y+zzmLP0arXM0wmIqrazd5tNVlBFYacL5n2+3vhpEbi4SFpF97ps5/WGK
-         LRaPDqfI2H710oIH+kFKjq5fhSkuEfgU+YgLfK1UZDdcUySZX1+ppAqLjt3+T0nMdX+o
-         uoIw==
-X-Gm-Message-State: AGi0Puac7yzXd+HszMesd/6Vp0XCiU2mj6/+mYU+SpL25DTC1Efl1mk2
-        +DFbfDGLP/kx6UFwYdItvkvIA6T0/WvHC1g3pExOSiW7ZSVl
-X-Google-Smtp-Source: APiQypINnu5lH2n9SpdEblVQq2DMRmIg7wGuhAA0xfhRZraUiiJYq6nudVRFoaoVTRN6TR6pWaGWkM5Z84b6qTD3dFC+6hQherk+
+        Fri, 10 Apr 2020 17:58:32 -0400
+Received: from mail-mw2nam12on2083.outbound.protection.outlook.com ([40.107.244.83]:6226
+        "EHLO NAM12-MW2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726594AbgDJV6c (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Apr 2020 17:58:32 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=H+petqu4e3v867LlkbgGaEENueZMMMTjEpZ8ds2IJ/ZWvd2GrPzM2t67rb3M3uWYRVB1YLCYhrLDI+6PHvj1KEAciZx0kux7G7+aKlGECdv7VP0ppLJIJd/tqcVDFgRxMzdxl7wFPjvEKKkbDEGNEOahTan2D02hfC8JZX96BRJ8n1o4SjWarYHqbCGtpckf/FWKjq2N2a0z6jYgS7DINB/8PdxGkJBnRvdSbY0dZwBJ5FvLR65v2HADwpskdwJrnroapVfa2cz/o0r/wdUdkz+NDUiwS+ZPuCfYEUqNyYucQMPjcUnbJ3XlzOtk6+KKawHW90Cs06afgmptH1iSzQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=BRE+5IYlhQtMIAVL16Une/k4KS7BpmJyuDoOyQsrb8Q=;
+ b=kTtktru0ScOuqhlMpa8ZtTIovmIOgTniZx/5330+M+ln1BrqHrHjAlmHWO7UbIJx6PzrCpwUZzIAu21hMsGBuvxAekGc3s+Dok8UkLTxEDvf9t2D0MjLLU2C7o90eG1dlnAB3ODKjRZMSbGxWZwOEKR1OFqVy5sWciD+PzhNQkAqQlYKAoEQaWuHBO48cCGXhqCIyFZH66EVETb2kvxVOyymviktyyl+AXFXPMKWDUTs1+7bjgXw7ZuqQoqqfCE6nSEgvTyDy6AvYyHRihk5lQXAt1zz+PX3QRciKFhjghTFpytFH4tp8nWTsz2GP6WF9BVih0WkJTI8GPYSzvhsfA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=BRE+5IYlhQtMIAVL16Une/k4KS7BpmJyuDoOyQsrb8Q=;
+ b=0/0P+/1p+rVdDUPI/fnAeP+v7KDu2jh95ih177fK8DyAzTlyKvWeMRsg7BHUMyHISLCNi54YIjTyCxp2gLuwJw5J5VfAuCpDbXFfE+n9pN5xM+uzfhrH8WZ0plhMPqKXlOpJV2PGXixgYa/R/TigOSGTkJueVFphGjNW3kTiXY0=
+Authentication-Results: spf=none (sender IP is )
+ smtp.mailfrom=brijesh.singh@amd.com; 
+Received: from SA0PR12MB4400.namprd12.prod.outlook.com (2603:10b6:806:95::13)
+ by SA0PR12MB4414.namprd12.prod.outlook.com (2603:10b6:806:9a::11) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2878.17; Fri, 10 Apr
+ 2020 21:58:28 +0000
+Received: from SA0PR12MB4400.namprd12.prod.outlook.com
+ ([fe80::38b5:63c2:6c7c:d03d]) by SA0PR12MB4400.namprd12.prod.outlook.com
+ ([fe80::38b5:63c2:6c7c:d03d%7]) with mapi id 15.20.2900.015; Fri, 10 Apr 2020
+ 21:58:28 +0000
+Cc:     brijesh.singh@amd.com, "Kalra, Ashish" <Ashish.Kalra@amd.com>,
+        Steve Rutherford <srutherford@google.com>,
+        Krish Sadhukhan <krish.sadhukhan@oracle.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Joerg Roedel <joro@8bytes.org>,
+        Borislav Petkov <bp@suse.de>,
+        "Lendacky, Thomas" <Thomas.Lendacky@amd.com>,
+        X86 ML <x86@kernel.org>, KVM list <kvm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        David Rientjes <rientjes@google.com>,
+        Andy Lutomirski <luto@kernel.org>
+Subject: Re: [PATCH v6 12/14] KVM: x86: Introduce KVM_PAGE_ENC_BITMAP_RESET
+ ioctl
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+References: <65c09963-2027-22c1-e04d-4c8c3658b2c3@oracle.com>
+ <CABayD+cf=Po-k7jqUQjq3AGopxk86d6bTcBhQxijnzpcUh90GA@mail.gmail.com>
+ <20200408015221.GB27608@ashkalra_ubuntu_server>
+ <CABayD+f0qdS5akac8JiB_HU_pWefHDsF=xRNhzSv42w-PTXnyg@mail.gmail.com>
+ <20200410013418.GB19168@ashkalra_ubuntu_server>
+ <CABayD+dDtjz7rJe1ujQ_sq88JRUzHaXXNP_hQVhD1vkXkPsXCw@mail.gmail.com>
+ <CABayD+dwJeu+o+TG843XX1nWHWMz=iwW0uWBKPaG0uJEsxCYGw@mail.gmail.com>
+ <CABayD+cuHv6chBT5wWHqaZWXSHaOtaOQyBrxgRj2Y=q_fOheuA@mail.gmail.com>
+ <DM5PR12MB1386C01E72A71F3AB6EB1F068EDE0@DM5PR12MB1386.namprd12.prod.outlook.com>
+ <4be6c1a8-de3f-1e83-23d4-e0213a1acd24@amd.com>
+ <20200410214644.GL22482@linux.intel.com>
+From:   Brijesh Singh <brijesh.singh@amd.com>
+Message-ID: <89962d15-1048-a7f6-1443-8b66a016f8c1@amd.com>
+Date:   Fri, 10 Apr 2020 16:58:56 -0500
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:68.0)
+ Gecko/20100101 Thunderbird/68.7.0
+In-Reply-To: <20200410214644.GL22482@linux.intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-ClientProxiedBy: DM5PR17CA0068.namprd17.prod.outlook.com
+ (2603:10b6:3:13f::30) To SA0PR12MB4400.namprd12.prod.outlook.com
+ (2603:10b6:806:95::13)
 MIME-Version: 1.0
-X-Received: by 2002:a92:d209:: with SMTP id y9mr7031801ily.3.1586555533203;
- Fri, 10 Apr 2020 14:52:13 -0700 (PDT)
-Date:   Fri, 10 Apr 2020 14:52:13 -0700
-In-Reply-To: <0000000000001fdbd605a00712b1@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000f9205905a2f6be8e@google.com>
-Subject: Re: WARNING: locking bug in finish_lock_switch
-From:   syzbot <syzbot+91e3de3393c461e632ee@syzkaller.appspotmail.com>
-To:     davem@davemloft.net, johan.hedberg@gmail.com, kuba@kernel.org,
-        linux-bluetooth@vger.kernel.org, linux-kernel@vger.kernel.org,
-        marcel@holtmann.org, netdev@vger.kernel.org,
-        syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from Brijeshs-MacBook-Pro.local (165.204.77.11) by DM5PR17CA0068.namprd17.prod.outlook.com (2603:10b6:3:13f::30) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2900.15 via Frontend Transport; Fri, 10 Apr 2020 21:58:25 +0000
+X-Originating-IP: [165.204.77.11]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: 24d63d7f-f411-4881-3791-08d7dd9a4cea
+X-MS-TrafficTypeDiagnostic: SA0PR12MB4414:|SA0PR12MB4414:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <SA0PR12MB44145E1E57F85E34560C40FCE5DE0@SA0PR12MB4414.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:530;
+X-Forefront-PRVS: 0369E8196C
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA0PR12MB4400.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10009020)(4636009)(396003)(346002)(39860400002)(366004)(136003)(376002)(478600001)(4744005)(66946007)(36756003)(52116002)(66476007)(45080400002)(66556008)(186003)(16526019)(31686004)(26005)(7416002)(6916009)(4326008)(54906003)(5660300002)(8936002)(86362001)(956004)(81156014)(8676002)(2906002)(53546011)(6486002)(6666004)(2616005)(6506007)(44832011)(6512007)(316002)(31696002);DIR:OUT;SFP:1101;
+Received-SPF: None (protection.outlook.com: amd.com does not designate
+ permitted sender hosts)
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: Y55cFWAdUTDvIUuaoRoQRmhVlYYu05TcLSDHp14EccVDtElOQklyYfYRmTeVjAJAGOzzoHf4lffS/Ar9qT6GxKUIufzqp3yYTm9e0pV1BKnR4RxvIqhMaJe++O+j7gEwt6tJHvFT6A0S/rXQ8PDB8rH7G2RhYK6Ea9uTT+fxDNBCm/PiqGAawHC2n3Fek9rA83eo21zIvRMQvKkI023XV4BIdehFvjmEV3OMQLISg9cjMrHUewkuxkoHpYjzNFldHj4YYEW4DaAjy6abnInmQ3icY6Cq6K7PJ99W4ZphTm8bgFMyrCpbFmolz8a+ng0EuK3MNDf38Lx7cjZxtp6Ix3yoorVjTzibUrrEJHHMVN81zIFvJ7gvSOuydbvIEwk611oqqb70Gk3xr9cmFOF4Vnwbi01Vc7UAXOMxsIM43nH6EWqdWJSe9FIF3VNVi2La
+X-MS-Exchange-AntiSpam-MessageData: XLVHMkV2/sKUg4mr5y32jGY0NDFGMPoQeIv0PU98kLEloQeyddK58CyPPsOW1nt32dYau50WsWvk3BxBjjkJJIX+UG3wxctz57gATLUt9urCWVIWwRBb57lZQ1fJyqyh24eNUqwZRmnXDfLcroXc5Q==
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 24d63d7f-f411-4881-3791-08d7dd9a4cea
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Apr 2020 21:58:28.2857
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: CdKGMbG6zz+oFiwqdJn7CBHntIHzPS9IQVolSf6osRBEFHRdXBmRXdGiL18L4VlYVxJEcVUEDVj9G04SE9iNag==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA0PR12MB4414
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-syzbot has found a reproducer for the following crash on:
 
-HEAD commit:    c0cc2711 Merge tag 'modules-for-v5.7' of git://git.kernel...
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=1688f9e7e00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=3010ccb0f380f660
-dashboard link: https://syzkaller.appspot.com/bug?extid=91e3de3393c461e632ee
-compiler:       clang version 10.0.0 (https://github.com/llvm/llvm-project/ c2443155a0fb245c8f17f2c1c72b6ea391e86e81)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=14e8bdb3e00000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=137d4743e00000
+On 4/10/20 4:46 PM, Sean Christopherson wrote:
+> On Fri, Apr 10, 2020 at 04:42:29PM -0500, Brijesh Singh wrote:
+>> On 4/10/20 3:55 PM, Kalra, Ashish wrote:
+>>> [AMD Official Use Only - Internal Distribution Only]
+> Can you please resend the original mail without the above header, so us
+> non-AMD folks can follow along?  :-)
 
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+91e3de3393c461e632ee@syzkaller.appspotmail.com
-
-------------[ cut here ]------------
-DEBUG_LOCKS_WARN_ON(1)
-WARNING: CPU: 1 PID: 12239 at kernel/locking/lockdep.c:183 hlock_class kernel/locking/lockdep.c:183 [inline]
-WARNING: CPU: 1 PID: 12239 at kernel/locking/lockdep.c:183 check_wait_context kernel/locking/lockdep.c:4043 [inline]
-WARNING: CPU: 1 PID: 12239 at kernel/locking/lockdep.c:183 __lock_acquire+0x8e4/0x2b90 kernel/locking/lockdep.c:4294
-Kernel panic - not syncing: panic_on_warn set ...
-CPU: 1 PID: 12239 Comm: syz-executor479 Not tainted 5.6.0-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x1e9/0x30e lib/dump_stack.c:118
- panic+0x264/0x7a0 kernel/panic.c:221
- __warn+0x209/0x210 kernel/panic.c:582
- report_bug+0x1ac/0x2d0 lib/bug.c:195
- fixup_bug arch/x86/kernel/traps.c:175 [inline]
- do_error_trap+0xca/0x1c0 arch/x86/kernel/traps.c:267
- do_invalid_op+0x32/0x40 arch/x86/kernel/traps.c:286
- invalid_op+0x23/0x30 arch/x86/entry/entry_64.S:1027
-RIP: 0010:hlock_class kernel/locking/lockdep.c:183 [inline]
-RIP: 0010:check_wait_context kernel/locking/lockdep.c:4043 [inline]
-RIP: 0010:__lock_acquire+0x8e4/0x2b90 kernel/locking/lockdep.c:4294
-Code: 25 53 13 08 00 0f 85 bf fe ff ff 48 c7 c7 c9 4a e5 88 48 c7 c6 0b 16 ea 88 31 c0 e8 96 e8 ec ff 48 ba 00 00 00 00 00 fc ff df <0f> 0b 31 db e9 bb fe ff ff 31 db e9 aa fe ff ff 48 c7 c1 b4 d0 6b
-RSP: 0018:ffffc90004157790 EFLAGS: 00010046
-RAX: a6653ee74a817d00 RBX: 000000000000063f RCX: ffff8880a161c200
-RDX: dffffc0000000000 RSI: 0000000000000001 RDI: ffffffff815cab06
-RBP: ffffc900041578f8 R08: ffffffff8178eeb6 R09: fffffbfff125c9c9
-R10: fffffbfff125c9c9 R11: 0000000000000000 R12: 0000000000000004
-R13: 1ffffffff16aa39e R14: ffff8880a161cb10 R15: 0000000000000001
- lock_acquire+0x169/0x480 kernel/locking/lockdep.c:4923
- finish_lock_switch+0x21/0x30 kernel/sched/core.c:3116
- finish_task_switch+0x24f/0x550 kernel/sched/core.c:3217
- context_switch kernel/sched/core.c:3381 [inline]
- __schedule+0x80d/0xc90 kernel/sched/core.c:4094
- preempt_schedule_irq+0xca/0x150 kernel/sched/core.c:4351
- retint_kernel+0x1b/0x2b
-RIP: 0010:arch_local_irq_restore arch/x86/include/asm/paravirt.h:759 [inline]
-RIP: 0010:lock_acquire+0x1c7/0x480 kernel/locking/lockdep.c:4926
-Code: c1 e8 03 80 3c 10 00 74 0c 48 c7 c7 30 a0 2b 89 e8 5e a2 58 00 48 83 3d f6 2f d3 07 00 0f 84 8e 02 00 00 48 8b 7c 24 20 57 9d <0f> 1f 44 00 00 65 48 8b 04 25 28 00 00 00 48 3b 44 24 58 0f 85 70
-RSP: 0018:ffffc90004157ba0 EFLAGS: 00000286 ORIG_RAX: ffffffffffffff13
-RAX: 1ffffffff1257406 RBX: 1ffff110142c3958 RCX: dffffc0000000000
-RDX: dffffc0000000000 RSI: ffffffff8ad6a208 RDI: 0000000000000286
-RBP: 0000000000000000 R08: dffffc0000000000 R09: fffffbfff16a99d9
-R10: fffffbfff16a99d9 R11: 0000000000000000 R12: 0000000000000000
-R13: 0000000000000000 R14: ffff8880a161cac4 R15: ffff88809e15a138
- flush_workqueue+0x125/0x15a0 kernel/workqueue.c:2777
- hci_dev_open+0x205/0x2d0 net/bluetooth/hci_core.c:1651
- hci_sock_bind+0x15ba/0x1aa0 net/bluetooth/hci_sock.c:1200
- __sys_bind+0x283/0x360 net/socket.c:1662
- __do_sys_bind net/socket.c:1673 [inline]
- __se_sys_bind net/socket.c:1671 [inline]
- __x64_sys_bind+0x76/0x80 net/socket.c:1671
- do_syscall_64+0xf3/0x1b0 arch/x86/entry/common.c:295
- entry_SYSCALL_64_after_hwframe+0x49/0xb3
-RIP: 0033:0x4469f9
-Code: e8 6c e7 ff ff 48 83 c4 18 c3 0f 1f 80 00 00 00 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 db 07 fc ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007fe4cbb32d88 EFLAGS: 00000246 ORIG_RAX: 0000000000000031
-RAX: ffffffffffffffda RBX: 00000000006dbc38 RCX: 00000000004469f9
-RDX: 0000000000000006 RSI: 0000000020000080 RDI: 0000000000000005
-RBP: 00000000006dbc30 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 00000000006dbc3c
-R13: 0000000000000005 R14: 0000000000000004 R15: 00007fe4cbb336d0
-Shutting down cpus with NMI
-Kernel Offset: disabled
-Rebooting in 86400 seconds..
+Haha :) looks like one of us probably used outlook for responding. These
+days IT have been auto add some of those tags. Let me resend with it
+removed.
 
