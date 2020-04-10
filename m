@@ -2,107 +2,225 @@ Return-Path: <SRS0=VV4q=52=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47D41C2BB55
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 21:30:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 234B8C2D0EC
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 21:40:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1B7BF20753
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 21:30:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E492A20801
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 21:40:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="irNfIkj8"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="JdloRyDd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726691AbgDJVaz (ORCPT
+        id S1726657AbgDJVkR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Apr 2020 17:30:55 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:37939 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726582AbgDJVaz (ORCPT
+        Fri, 10 Apr 2020 17:40:17 -0400
+Received: from mail26.static.mailgun.info ([104.130.122.26]:63413 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726626AbgDJVkR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Apr 2020 17:30:55 -0400
-Received: by mail-wr1-f65.google.com with SMTP id k11so3171733wrp.5;
-        Fri, 10 Apr 2020 14:30:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=googlemail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=wK7oayicow+Oht7E02uI/I6DTaomuoaw7CVzUaD0zFw=;
-        b=irNfIkj8z+RIbvc8pcYIslLg7vVNd6XevVz0DH/xawFlaJVD0HkjMHb9E0XePXTa0s
-         tRysnuwMaNQJxsUJEGKOxWOqaE+uC1BfNK6Nemg5kKWMR+wVXgID0uTuzziqvUR75py9
-         Vo1jCACsoIjRm1riMzQ3sMBJ+GuBHKCU0DL57TNGV1MoUGKYlIyB5RQzKn2AJBaN64u7
-         Je1U8AJTA10Hvb/ArOe8PW/N82d8my5NaLuR140WSUDHte0NnWG6qxdIgGGVFM9pySaY
-         qKQks+sLpaeHRMCyyzRd8gzpYLSMmftg9y9TnrObiYgF78WbHqmhQ0+JXi9rkEV4jxsq
-         RfQw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=wK7oayicow+Oht7E02uI/I6DTaomuoaw7CVzUaD0zFw=;
-        b=caUOBeK+EFE9Y11nCp0S0Il+6/BNsgRYYwCUAztui94Y01FFhEF29JlWF8WIy+EL/7
-         cJl0uOWYSATP3bMZc+O8ZPnkO7I7NVKMy1JgilD15M9UpTKATI7H+mBarh76LpA2ULar
-         jTLop+URQBLK3QlOir7iycdSmZtb8/oArY/M5ibJFi+7eHHAOY/aiKS8oBzmCx/hGmAa
-         UA5OVfOZvEQAd2JwlNY7S9TDXzb1FCRQw7KmWvZLxruxVonmjbGv5EERTxhOrscW2H6j
-         Y6O6bZjxW2H4aSoK+o6Cb84zHnJsV4Vt1z0Rdw08BXzQDqYOeaM6gtwyG18GNqFfNUdi
-         VgdA==
-X-Gm-Message-State: AGi0Pubr9HVorIU27khftCY6LC5jpWmRHE0MqlfTzvKC0AohpmaFQ+JM
-        AKyYk5GR2bxpQzbpbM0XbYg=
-X-Google-Smtp-Source: APiQypKuWx1zdhzfEOly6Y8HlYpRbiAGOhUn0awSbvgFIK6ZislxpRGqBXRDOz0/kdAWLKA09Fqcog==
-X-Received: by 2002:a5d:460c:: with SMTP id t12mr6340769wrq.75.1586554251923;
-        Fri, 10 Apr 2020 14:30:51 -0700 (PDT)
-Received: from localhost.localdomain (p200300F13710ED00428D5CFFFEB99DB8.dip0.t-ipconnect.de. [2003:f1:3710:ed00:428d:5cff:feb9:9db8])
-        by smtp.googlemail.com with ESMTPSA id v21sm4238463wmj.8.2020.04.10.14.30.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 10 Apr 2020 14:30:51 -0700 (PDT)
-From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-To:     ulf.hansson@linaro.org, linux-mmc@vger.kernel.org,
-        linux-amlogic@lists.infradead.org
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Subject: [PATCH 1/1] mmc: meson-mx-sdio: Set MMC_CAP_WAIT_WHILE_BUSY
-Date:   Fri, 10 Apr 2020 23:30:43 +0200
-Message-Id: <20200410213043.1091851-1-martin.blumenstingl@googlemail.com>
-X-Mailer: git-send-email 2.26.0
+        Fri, 10 Apr 2020 17:40:17 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1586554816; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=T37VHLlLldnIiGR1QAOhXo/GncEFS2PoFRvDQOtUStM=; b=JdloRyDdAEVVH6fxtkzxtz8wwfvmQL0h3eqFDXKK9wgp/VB7uvB2mWnRBONP8B67xhpNonKP
+ wggdkAOLFebltjFiFh1ozZkt0BTeoLFg2o4FQ5KyfXemyBxw+VipvVLKPpWI0Tkz0m5peV5x
+ s2PVhEc/0fbu7Lj1ftXPXgkTcoY=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e90e7b0.7f950ee034c8-smtp-out-n03;
+ Fri, 10 Apr 2020 21:40:00 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 1F6EAC433BA; Fri, 10 Apr 2020 21:40:00 +0000 (UTC)
+Received: from [10.226.58.28] (i-global254.qualcomm.com [199.106.103.254])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: jhugo)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id BDBF0C433CB;
+        Fri, 10 Apr 2020 21:39:58 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org BDBF0C433CB
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=jhugo@codeaurora.org
+Subject: Re: [PATCH v2 1/5] bus: mhi: core: Handle syserr during power_up
+To:     Bhaumik Vasav Bhatt <bbhatt@codeaurora.org>,
+        Hemant Kumar <hemantk@codeaurora.org>,
+        manivannan.sadhasivam@linaro.org
+Cc:     "linux-arm-msm@vger.kernel.org; bbhatt"@codeaurora.org,
+        linux-kernel@vger.kernel.org
+References: <1586278230-29565-1-git-send-email-jhugo@codeaurora.org>
+ <1586278230-29565-2-git-send-email-jhugo@codeaurora.org>
+ <1768ba6e-12c2-7b4f-0f17-44fecc6473b9@codeaurora.org>
+ <11d9f35b-b911-7985-8846-0a45904ceed1@codeaurora.org>
+ <5c4efe13-42a4-e802-4070-5d9d30b8cac2@codeaurora.org>
+From:   Jeffrey Hugo <jhugo@codeaurora.org>
+Message-ID: <79feeb0b-0837-c5b6-087d-856c3e238c67@codeaurora.org>
+Date:   Fri, 10 Apr 2020 15:39:57 -0600
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.2
 MIME-Version: 1.0
+In-Reply-To: <5c4efe13-42a4-e802-4070-5d9d30b8cac2@codeaurora.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The Meson SDIO controller uses the DAT0 lane for hardware busy
-detection. Set MMC_CAP_WAIT_WHILE_BUSY accordingly. This fixes
-the following error observed with Linux 5.7 (pre-rc-1):
-  mmc1: Card stuck being busy! __mmc_poll_for_busy
-  blk_update_request: I/O error, dev mmcblk1, sector 17111080 op
-   0x3:(DISCARD) flags 0x0 phys_seg 1 prio class 0
+On 4/10/2020 2:37 PM, Bhaumik Vasav Bhatt wrote:
+> Hi Jeff,
+> 
+> We will always have the mhi_intvec_handler registered and trigger your 
+> wake_up state event when you write MHI RESET. BHI INTVEC IRQ using 
+> mhi_cntrl->irq[0] is _not_ unregistered once you enter AMSS EE.
 
-Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
----
-I'm sending this as RFC because I'm not sure if this is a proper fix.
-It "fixes" the issue for me but I want the MMC maintainers to double-
-check this.
+I understand it is not unregistered.  However mhi_cntrl->irq[0] may be 
+reserved for BHI, and thus only exercised by PBL EE.  Where as, 
+mhi_cntrl->irq[1..N] may be only exercised by AMSS EE. 
+mhi_intvec_handler is not called in response to mhi_cntrl->irq[1..N].
+
+Additionally, I re-reviewed the MHI spec, and I don't see where the spec 
+requires the device to issue an interrupt upon completion of the RESET 
+request.
+
+Under section 3.5, step 11 states -
+
+"The host must poll for the value of the RESET bit to detect the 
+completion of the reset procedure by the device (RESET is set to 0)."
+
+So, by this, my proposed solution appears to be spec compliant, where as 
+what Hemant proposed is not.
+
+> 
+> So, your below assumption is not true:
+>  >>>So, if we are in the PBL EE, we would expect to see the BHI 
+> interrupt, but if we are in the AMSS EE, we would expect to see a MHI 
+> interrupt.
+> 
+> At the start of mhi_async_power_up(), you've already registered for the 
+> BHI interrupt as we do setup for IRQ and it is only unregistered from 
+> power down if power up on the same cycle was a success.
+
+You seem to have misunderstood my point.  If the BHI irq is only for BHI 
+activity, which is activity restricted to the PBL EE, and the MHI 
+interrupt(s) are restricted to MHI activity, which for the purposes of 
+this discussion only occur in the AMSS EE, then my assumption is 
+correct.  When the device is in PBL EE, we should only observe BHI irqs, 
+and when the device is in AMSS EE, we should only observe MHI irqs.
+
+This is a statement of what IRQ lines the device is raising, and not a 
+statement of what handlers the host has, or has not registered.
+
+Again, if the BHI irq is only generated in the PBL EE, and we rely on 
+the BHI irq for "sensing" the state_event - we will never see the 
+state_event in the AMSS EE, unless the same IRQ line is used for both 
+MHI and BHI (which is only a select set of usecases, and not universal).
+
+> 
+> On 4/10/20 8:03 AM, Jeffrey Hugo wrote:
+>> On 4/9/2020 6:55 PM, Hemant Kumar wrote:
+>>>
+>>> On 4/7/20 9:50 AM, Jeffrey Hugo wrote:
+>>>> The MHI device may be in the syserr state when we attempt to init it in
+>>>> power_up().  Since we have no local state, the handling is simple -
+>>>> reset the device and wait for it to transition out of the reset state.
+>>>>
+>>>> Signed-off-by: Jeffrey Hugo <jhugo@codeaurora.org>
+>>>> ---
+>>>>   drivers/bus/mhi/core/pm.c | 20 ++++++++++++++++++++
+>>>>   1 file changed, 20 insertions(+)
+>>>>
+>>>> diff --git a/drivers/bus/mhi/core/pm.c b/drivers/bus/mhi/core/pm.c
+>>>> index 52690cb..3285c9e 100644
+>>>> --- a/drivers/bus/mhi/core/pm.c
+>>>> +++ b/drivers/bus/mhi/core/pm.c
+>>>> @@ -9,6 +9,7 @@
+>>>>   #include <linux/dma-direction.h>
+>>>>   #include <linux/dma-mapping.h>
+>>>>   #include <linux/interrupt.h>
+>>>> +#include <linux/iopoll.h>
+>>>>   #include <linux/list.h>
+>>>>   #include <linux/mhi.h>
+>>>>   #include <linux/module.h>
+>>>> @@ -760,6 +761,7 @@ static void mhi_deassert_dev_wake(struct 
+>>>> mhi_controller *mhi_cntrl,
+>>>>   int mhi_async_power_up(struct mhi_controller *mhi_cntrl)
+>>>>   {
+>>>> +    enum mhi_state state;
+>>>>       enum mhi_ee_type current_ee;
+>>>>       enum dev_st_transition next_state;
+>>>>       struct device *dev = &mhi_cntrl->mhi_dev->dev;
+>>>> @@ -829,6 +831,24 @@ int mhi_async_power_up(struct mhi_controller 
+>>>> *mhi_cntrl)
+>>>>           goto error_bhi_offset;
+>>>>       }
+>>>> +    state = mhi_get_mhi_state(mhi_cntrl);
+>>>> +    if (state == MHI_STATE_SYS_ERR) {
+>>>> +        mhi_set_mhi_state(mhi_cntrl, MHI_STATE_RESET);
+>>>> +        ret = readl_poll_timeout(mhi_cntrl->regs + MHICTRL, val,
+>>>> +                     !(val & MHICTRL_RESET_MASK), 1000,
+>>>> +                     mhi_cntrl->timeout_ms * 1000);
+>>> can we use this instead of polling because MSI is configures and 
+>>> int_vec handler is registered
+>>>
+>>>      wait_event_timeout(mhi_cntrl->state_event,
+>>>                 MHI_PM_IN_FATAL_STATE(mhi_cntrl->pm_state) ||
+>>>                mhi_read_reg_field(mhi_cntrl, base, MHICTRL,
+>>>                            MHICTRL_RESET_MASK,
+>>>                            MHICTRL_RESET_SHIFT, &reset) || !reset ,
+>>>                 msecs_to_jiffies(mhi_cntrl->timeout_ms));
+>>>
+>>> 1) In case of MHI_PM_IN_FATAL_STATE we would not be accessing MHI reg
+>>> 2) Consistent with current MHI driver code.
+>>
+>> I'm not sure this works in the way you intend.
+>>
+>> state_event is linked to the intvec, which is the BHI interrupt. I 
+>> don't see that the state_event is triggered in the MHI interrupt path 
+>> (mhi_irq_handler).  So, if we are in the PBL EE, we would expect to 
+>> see the BHI interrupt, but if we are in the AMSS EE, we would expect 
+>> to see a MHI interrupt.
+>>
+>> Now, for my concerned usecase, those two interrupts happen to be the 
+>> same interrupt, so both will get triggered, but I don't expect that to 
+>> be the same for all usecases.
+>>
+>> So, with the solution I propose, we exit the wait (poll loop) as soon 
+>> as we see the register change values.
+>>
+>> With the solution you propose, if we only get the MHI interrupt, we'll 
+>> have to wait out the entire timeout value, and then check the 
+>> register. In this scenario, we are almost guaranteed to wait for 
+>> longer than necessary.
+>>
+>> Did I miss something?
+>>
+>>>> +        if (ret) {
+>>>> +            dev_info(dev, "Failed to reset MHI due to syserr 
+>>>> state\n");
+>>>> +            goto error_bhi_offset;
+>>>> +        }
+>>>> +
+>>>> +        /*
+>>>> +         * device cleares INTVEC as part of RESET processing,
+>>>> +         * re-program it
+>>>> +         */
+>>>> +        mhi_write_reg(mhi_cntrl, mhi_cntrl->bhi, BHI_INTVEC, 0);
+>>>> +    }
+>>>> +
+>>>>       /* Transition to next state */
+>>>>       next_state = MHI_IN_PBL(current_ee) ?
+>>>>           DEV_ST_TRANSITION_PBL : DEV_ST_TRANSITION_READY;
+>>>
+>>
+>>
 
 
- drivers/mmc/host/meson-mx-sdio.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/mmc/host/meson-mx-sdio.c b/drivers/mmc/host/meson-mx-sdio.c
-index 8b038e7b2cd3..fe02130237a8 100644
---- a/drivers/mmc/host/meson-mx-sdio.c
-+++ b/drivers/mmc/host/meson-mx-sdio.c
-@@ -570,7 +570,7 @@ static int meson_mx_mmc_add_host(struct meson_mx_mmc_host *host)
- 	mmc->f_max = clk_round_rate(host->cfg_div_clk,
- 				    clk_get_rate(host->parent_clk));
- 
--	mmc->caps |= MMC_CAP_ERASE | MMC_CAP_CMD23;
-+	mmc->caps |= MMC_CAP_ERASE | MMC_CAP_CMD23 | MMC_CAP_WAIT_WHILE_BUSY;
- 	mmc->ops = &meson_mx_mmc_ops;
- 
- 	ret = mmc_of_parse(mmc);
 -- 
-2.26.0
-
+Jeffrey Hugo
+Qualcomm Technologies, Inc. is a member of the
+Code Aurora Forum, a Linux Foundation Collaborative Project.
