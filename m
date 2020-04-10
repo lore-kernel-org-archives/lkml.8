@@ -2,36 +2,36 @@ Return-Path: <SRS0=VV4q=52=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A4A4C2D0EC
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 23:17:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B02D7C2BB55
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 23:17:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 15A65207FF
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 23:17:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 910FA20936
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 23:17:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726720AbgDJXRK (ORCPT
+        id S1726786AbgDJXRL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Apr 2020 19:17:10 -0400
+        Fri, 10 Apr 2020 19:17:11 -0400
 Received: from mga02.intel.com ([134.134.136.20]:20811 "EHLO mga02.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726594AbgDJXRJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Apr 2020 19:17:09 -0400
-IronPort-SDR: ahf9yIAgh/ID6BGvLPmenEdIkx/8CIib5Jtcm+PHcI/7Tw/JitCHla3DvKUe8fluB3BD0G7t4v
- 0aMJVRHmHt/Q==
+        id S1726754AbgDJXRK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Apr 2020 19:17:10 -0400
+IronPort-SDR: IUrfL5n6FXBtaDOgVCNZRDYchVhfxiYlg4+kkvjwIyxZNlbJJ1SYJBMKQk+R2PwJxIiLBZyDQs
+ k4V3qHI9HXrg==
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Apr 2020 16:17:09 -0700
-IronPort-SDR: Qgfe9naeb34lG70i2WpvN2GvpcCtEKlhfeoLFGPZ46o+IWaseikUsxvwSz1infoc5k/gX8XofK
- 2fw/jbzN1JXA==
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Apr 2020 16:17:10 -0700
+IronPort-SDR: BwcLt5QGh5kMNt1wqqaSRoYMpzNagewl3mo7adf+zrWY7rB2o2KfIlmUNIBBy3CBQ5QzkAMmDW
+ FmN6Oc9n38+A==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.72,368,1580803200"; 
-   d="scan'208";a="452542213"
+   d="scan'208";a="452542229"
 Received: from sjchrist-coffee.jf.intel.com ([10.54.74.202])
-  by fmsmga005.fm.intel.com with ESMTP; 10 Apr 2020 16:17:08 -0700
+  by fmsmga005.fm.intel.com with ESMTP; 10 Apr 2020 16:17:10 -0700
 From:   Sean Christopherson <sean.j.christopherson@intel.com>
 To:     Paolo Bonzini <pbonzini@redhat.com>,
         Christian Borntraeger <borntraeger@de.ibm.com>,
@@ -43,10 +43,12 @@ Cc:     David Hildenbrand <david@redhat.com>,
         Peter Xu <peterx@redhat.com>,
         Andrew Jones <drjones@redhat.com>,
         Wainer dos Santos Moschetta <wainersm@redhat.com>
-Subject: [PATCH 00/10] KVM: selftests: Add KVM_SET_MEMORY_REGION tests
-Date:   Fri, 10 Apr 2020 16:16:57 -0700
-Message-Id: <20200410231707.7128-1-sean.j.christopherson@intel.com>
+Subject: [PATCH 04/10] KVM: selftests: Add GUEST_ASSERT variants to pass values to host
+Date:   Fri, 10 Apr 2020 16:17:01 -0700
+Message-Id: <20200410231707.7128-5-sean.j.christopherson@intel.com>
 X-Mailer: git-send-email 2.26.0
+In-Reply-To: <20200410231707.7128-1-sean.j.christopherson@intel.com>
+References: <20200410231707.7128-1-sean.j.christopherson@intel.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -54,65 +56,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is v2-ish of my series to add a "delete" testcase[1], and v5.1 of
-Wainer's series to add a "max" testcase[2].
+Add variants of GUEST_ASSERT to pass values back to the host, e.g. to
+help debug/understand a failure when the the cause of the assert isn't
+necessarily binary.
 
-I've only tested on x86_64.  I fudged compile testing on !x86_64 by
-inverting the ifdefs, e.g. to squish unused var warnings, but by no means
-is the code actually tested on other architectures.
+It'd probably be possible to auto-calculate the number of arguments and
+just have a single GUEST_ASSERT, but there are a limited number of
+variants and silently eating arguments could lead to subtle code bugs.
 
-I kept Andrew's review for the "max" test.  Other than the 1MB->2MB
-change (see below), it was basically a straight copy-paste of code.
+Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+---
+ .../testing/selftests/kvm/include/kvm_util.h  | 25 +++++++++++++++----
+ 1 file changed, 20 insertions(+), 5 deletions(-)
 
-v1->v2 of delete:
-  - Drop patch to expose primary memslot. [Peter]
-  - Add explicit synchronization to MOVE and DELETE tests. [Peter]
-  - Use list.h instead of open coding linked lists. [Peter]
-  - Clean up the code and separate the testcases into separate functions.
-  - Expand GUEST_ASSERT() to allow passing a value back to the host for
-    printing.
-  - Move to common KVM, with ifdefs to hide the x86_64-only stuff (which
-    is a lot at this point).
-  - Do KVM_SET_NR_MMU_PAGES in the "zero" testcase to get less obscure
-    behavior for KVM_RUN. [Christian]
-
-v5.1 of max:
-  - Fix a whitespace issue in vm_get_fd(). [checkpatch]
-  - Move the code to set_memory_region_test.  The only _intended_
-    functional change is to create 2MB regions instead of 1MB regions.
-    The only motivation for doing so was to reuse an existing define in
-    set_memory_region_test.
-
-[1] https://lkml.kernel.org/r/20200320205546.2396-1-sean.j.christopherson@intel.com
-[2] https://lkml.kernel.org/r/20200409220905.26573-1-wainersm@redhat.com
-
-Sean Christopherson (8):
-  KVM: selftests: Take vcpu pointer instead of id in vm_vcpu_rm()
-  KVM: selftests: Use kernel's list instead of homebrewed replacement
-  KVM: selftests: Add util to delete memory region
-  KVM: selftests: Add GUEST_ASSERT variants to pass values to host
-  KVM: sefltests: Add explicit synchronization to move mem region test
-  KVM: selftests: Add "delete" testcase to set_memory_region_test
-  KVM: selftests: Add "zero" testcase to set_memory_region_test
-  KVM: selftests: Make set_memory_region_test common to all
-    architectures
-
-Wainer dos Santos Moschetta (2):
-  selftests: kvm: Add vm_get_fd() in kvm_util
-  selftests: kvm: Add testcase for creating max number of memslots
-
- tools/testing/selftests/kvm/.gitignore        |   2 +-
- tools/testing/selftests/kvm/Makefile          |   4 +-
- .../testing/selftests/kvm/include/kvm_util.h  |  28 +-
- tools/testing/selftests/kvm/lib/kvm_util.c    | 154 +++----
- .../selftests/kvm/lib/kvm_util_internal.h     |   8 +-
- .../selftests/kvm/lib/s390x/processor.c       |   5 +-
- .../selftests/kvm/set_memory_region_test.c    | 403 ++++++++++++++++++
- .../kvm/x86_64/set_memory_region_test.c       | 141 ------
- 8 files changed, 520 insertions(+), 225 deletions(-)
- create mode 100644 tools/testing/selftests/kvm/set_memory_region_test.c
- delete mode 100644 tools/testing/selftests/kvm/x86_64/set_memory_region_test.c
-
+diff --git a/tools/testing/selftests/kvm/include/kvm_util.h b/tools/testing/selftests/kvm/include/kvm_util.h
+index d4c3e4d9cd92..e38d91bd8ec1 100644
+--- a/tools/testing/selftests/kvm/include/kvm_util.h
++++ b/tools/testing/selftests/kvm/include/kvm_util.h
+@@ -313,11 +313,26 @@ uint64_t get_ucall(struct kvm_vm *vm, uint32_t vcpu_id, struct ucall *uc);
+ 
+ #define GUEST_SYNC(stage)	ucall(UCALL_SYNC, 2, "hello", stage)
+ #define GUEST_DONE()		ucall(UCALL_DONE, 0)
+-#define GUEST_ASSERT(_condition) do {			\
+-	if (!(_condition))				\
+-		ucall(UCALL_ABORT, 2,			\
+-			"Failed guest assert: "		\
+-			#_condition, __LINE__);		\
++#define __GUEST_ASSERT(_condition, _nargs, _args...) do {	\
++	if (!(_condition))					\
++		ucall(UCALL_ABORT, 2 + _nargs,			\
++			"Failed guest assert: "			\
++			#_condition, __LINE__, _args);		\
+ } while (0)
+ 
++#define GUEST_ASSERT(_condition) \
++	__GUEST_ASSERT((_condition), 0, 0)
++
++#define GUEST_ASSERT_1(_condition, arg1) \
++	__GUEST_ASSERT((_condition), 1, (arg1))
++
++#define GUEST_ASSERT_2(_condition, arg1, arg2) \
++	__GUEST_ASSERT((_condition), 2, (arg1), (arg2))
++
++#define GUEST_ASSERT_3(_condition, arg1, arg2, arg3) \
++	__GUEST_ASSERT((_condition), 3, (arg1), (arg2), (arg3))
++
++#define GUEST_ASSERT_4(_condition, arg1, arg2, arg3, arg4) \
++	__GUEST_ASSERT((_condition), 4, (arg1), (arg2), (arg3), (arg4))
++
+ #endif /* SELFTEST_KVM_UTIL_H */
 -- 
 2.26.0
 
