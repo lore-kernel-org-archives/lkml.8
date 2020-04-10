@@ -2,111 +2,193 @@ Return-Path: <SRS0=VV4q=52=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AC3DC2BB85
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 20:50:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83D30C2D0EC
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 20:59:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6EBBB2078E
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 20:50:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3F3722078E
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 20:59:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nMJR2f+U"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="YR5eyfo8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726708AbgDJUu6 (ORCPT
+        id S1726657AbgDJU7Y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Apr 2020 16:50:58 -0400
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:43311 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726177AbgDJUu5 (ORCPT
+        Fri, 10 Apr 2020 16:59:24 -0400
+Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:11642 "EHLO
+        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726626AbgDJU7Y (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Apr 2020 16:50:57 -0400
-Received: by mail-ot1-f67.google.com with SMTP id n25so2972417otr.10;
-        Fri, 10 Apr 2020 13:50:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ewCXAds0/Tx9yG0Y/dWTq5Eu5IfI4LrFYqbMl7UoUlU=;
-        b=nMJR2f+Uu9/PNKJ0GuOQ2PkCB1cyFm5FHsnsOsm2d8xTlKfTFcPmLTmiBOtFJ8BTf2
-         JpYHfSsYXOq0YcH3G2NcgXfnVLRbqfqFKHQB4hxOqMU/9DBd0LkChTH7QjZRBqtPjCRl
-         r8KdsVhrQFddf1kBW67rBEO770j++HT2xhmBLnedX9q4gIxr3f9N2uI3BXlNHVQyQ9ct
-         AVxOCocmdqPcFiBlfqM2L/RZK0IUuDnIvDSOU7G9JVodErzRT9ukb8YsUYp1gmoANz7J
-         vPwaKMhkIR340GRWc+qsTWidwlpvPwTadokxHi4td76k1Or4lUNh19J3sMJk9crmv1F9
-         MdcA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ewCXAds0/Tx9yG0Y/dWTq5Eu5IfI4LrFYqbMl7UoUlU=;
-        b=OvgaUsdl0UzVVqniKReQo0MgiLFmerFF9wk66bl7jyU9DjbXcKg2zWoLxFl7yY3pxK
-         lgFqg+mrvsg1tgFXdJ1M7y0fjwWxgXoWRirwu1eUcaczoOBT71oKGAbPyHsqxYxWoLPN
-         j4SKc6ccmDpV/N4em3i5mzuNGW7QBD7Ua/ETdYBvKGXZ2Yr3+UJftGPyARiOU2trnmS9
-         iFrvwLwfvOMDFRUv27mmOEIiFelhLK5XZLxIIUj4zRf5ZyHuUKmZQBUqMDX71UpL2rgW
-         FRV+t/YRJvETQbqPDYk3m9cIWkkpmslLz0SXB+ubP1WsUfKfVMKZgMxc9gqOPNzGuqXr
-         OHKA==
-X-Gm-Message-State: AGi0PubqhwdsDbFJhsm0Lg5MmICUd/47ojObXsjwK6biwXpxJFBvSqdY
-        pm5Q54XCAu4iwE9aCWPjaHFsAp6NhwoLbhMF3Bo=
-X-Google-Smtp-Source: APiQypIVa2LfjgeNBVItEHbjs1Wcrz/CM/OdP2ZKbNx7AI3QlFbE65FClqWj+Pg/ADsxUXsbjxJXK5cekR3Tzk4XZYY=
-X-Received: by 2002:a9d:7845:: with SMTP id c5mr231157otm.319.1586551856800;
- Fri, 10 Apr 2020 13:50:56 -0700 (PDT)
+        Fri, 10 Apr 2020 16:59:24 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5e90ddc30000>; Fri, 10 Apr 2020 13:57:39 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Fri, 10 Apr 2020 13:59:24 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Fri, 10 Apr 2020 13:59:24 -0700
+Received: from DRHQMAIL107.nvidia.com (10.27.9.16) by HQMAIL101.nvidia.com
+ (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 10 Apr
+ 2020 20:59:24 +0000
+Received: from [10.2.58.92] (10.124.1.5) by DRHQMAIL107.nvidia.com
+ (10.27.9.16) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 10 Apr
+ 2020 20:59:23 +0000
+Subject: Re: [PATCHv2 5/8] khugepaged: Allow to callapse a page shared across
+ fork
+To:     "Kirill A. Shutemov" <kirill@shutemov.name>
+CC:     <akpm@linux-foundation.org>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        "Zi Yan" <ziy@nvidia.com>, Yang Shi <yang.shi@linux.alibaba.com>,
+        <linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+References: <20200403112928.19742-1-kirill.shutemov@linux.intel.com>
+ <20200403112928.19742-6-kirill.shutemov@linux.intel.com>
+ <5a57635b-ed75-8f09-6f0c-5623f557fc55@nvidia.com>
+ <20200410155543.i66uz6pbynfvkhak@box>
+From:   John Hubbard <jhubbard@nvidia.com>
+X-Nvconfidentiality: public
+Message-ID: <df772934-b5e5-8578-9b47-3f17bf9b8896@nvidia.com>
+Date:   Fri, 10 Apr 2020 13:59:22 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-References: <CA+G9fYt7-R-_fVDeiwj=sVvBQ-456Pm1oFFtM5Hm_94nN-tA+w@mail.gmail.com>
-In-Reply-To: <CA+G9fYt7-R-_fVDeiwj=sVvBQ-456Pm1oFFtM5Hm_94nN-tA+w@mail.gmail.com>
-From:   Cong Wang <xiyou.wangcong@gmail.com>
-Date:   Fri, 10 Apr 2020 13:50:44 -0700
-Message-ID: <CAM_iQpXQdgwFwUONX+za5vJbcXP9krwz_--pG+z_Etf_v8K2mw@mail.gmail.com>
-Subject: Re: x86_64: 5.6.0: locking/lockdep.c:1155 lockdep_register_key
-To:     Naresh Kamboju <naresh.kamboju@linaro.org>
-Cc:     open list <linux-kernel@vger.kernel.org>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>, Borislav Petkov <bp@suse.de>,
-        Netdev <netdev@vger.kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Brian Gerst <brgerst@gmail.com>, lkft-triage@lists.linaro.org,
-        Alexei Starovoitov <ast@kernel.org>,
-        Andrii Nakryiko <andriin@fb.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200410155543.i66uz6pbynfvkhak@box>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL111.nvidia.com (172.20.187.18) To
+ DRHQMAIL107.nvidia.com (10.27.9.16)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1586552259; bh=dHoA1k9mKwqUEJvIqE8t2lTAlLxHEnsPs/2JvY1QEfA=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:X-Nvconfidentiality:
+         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
+         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=YR5eyfo8yuM8+eBqGSdQf/vGo9aFZN/X4/sU2R8SNHDn8Xr/EWvcCAu+v1As6IdPB
+         VUGphyaMMVjhV/TztbSJQQzR8922URTiUq8ik1oisCOpzFTpNGDeUd1PQTP6+7bwhE
+         /dOquuMHWHiPzrhf008TSdtaYvD24OFiWHNckLTfv9SWL/k4Q6et1GmXpMA9UZOztu
+         ioQwEklmD7N8e4Q6MV4Cbe6D1WTmLXNQQ0DMPEVNcJqSGnY9CYV8/fZQbSfRWFMQMV
+         W9O/Q56JGFlRYJn+DpdHCsBVVFAIYWTPTP2RpA+2nlW2DE3yApWYdEfpEOUd8n9AXB
+         D3n0aCxXrfdwg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 7, 2020 at 2:58 AM Naresh Kamboju <naresh.kamboju@linaro.org> wrote:
->
-> On Linux mainline kernel 5.6.0 running kselftest on i386 kernel running on
-> x86_64 devices we have noticed this kernel warning.
->
-> [ 0.000000] Linux version 5.6.0 (oe-user@oe-host) (gcc version 7.3.0
-> (GCC)) #1 SMP Mon Apr 6 17:31:22 UTC 2020
-> <>
-> [  143.321511] ------------[ cut here ]------------
-> [  143.326180] WARNING: CPU: 1 PID: 1515 at
-> /usr/src/kernel/kernel/locking/lockdep.c:1155
-> lockdep_register_key+0x150/0x180
-> [  143.336958] Modules linked in: sch_ingress veth algif_hash
-> x86_pkg_temp_thermal fuse
-> [  143.344698] CPU: 1 PID: 1515 Comm: ip Tainted: G        W         5.6.0 #1
-> [  143.351562] Hardware name: Supermicro SYS-5019S-ML/X11SSH-F, BIOS
-> 2.0b 07/27/2017
-> [  143.359034] EIP: lockdep_register_key+0x150/0x180
-> [  143.363739] Code: ff ff a1 88 4c 2a dc 85 c0 0f 85 ef fe ff ff 68
-> 27 02 f9 db 68 a5 7a f7 db e8 0c 5b fa ff 0f 0b 59 58 e9 d7 fe ff ff
-> 8d 76 00 <0f> 0b 8d 65 f8 5b 5e 5d c3 8d b4 26 00 00 00 00 89 c2 b8 68
-> 68 99
-> [  143.382485] EAX: 00000001 EBX: dc329ea8 ECX: 00000001 EDX: dc3299a8
-> [  143.388751] ESI: 00000001 EDI: c7316000 EBP: c610fe10 ESP: c610fe08
-> [  143.395014] DS: 007b ES: 007b FS: 00d8 GS: 00e0 SS: 0068 EFLAGS: 00010202
-> [  143.401792] CR0: 80050033 CR2: b7dd70c0 CR3: 20672000 CR4: 003406d0
-> [  143.408051] DR0: 00000000 DR1: 00000000 DR2: 00000000 DR3: 00000000
-> [  143.414315] DR6: fffe0ff0 DR7: 00000400
-> [  143.418144] Call Trace:
-> [  143.420592]  alloc_netdev_mqs+0xc6/0x3c0
+On 4/10/20 8:55 AM, Kirill A. Shutemov wrote:
+...
+>>> diff --git a/mm/khugepaged.c b/mm/khugepaged.c
+>>> index 57ff287caf6b..1e7e6543ebca 100644
+>>> --- a/mm/khugepaged.c
+>>> +++ b/mm/khugepaged.c
+>>> @@ -581,11 +581,18 @@ static int __collapse_huge_page_isolate(struct vm_area_struct *vma,
+>>>    		}
+>>>    		/*
+>>> -		 * cannot use mapcount: can't collapse if there's a gup pin.
+>>> -		 * The page must only be referenced by the scanned process
+>>> -		 * and page swap cache.
+>>> +		 * Check if the page has any GUP (or other external) pins.
+>>> +		 *
+>>> +		 * The page table that maps the page has been already unlinked
+>>> +		 * from the page table tree and this process cannot get
+>>> +		 * additinal pin on the page.
+>>
+>>
+>> I'd recommend this wording instead, for the last two lines:
+>>
+>> 		 * from the page table tree. Therefore, this page will not
+>> 		 * normally receive any additional pins.
+> 
+> I guess I'm not clear enough.
+> 
+> The point is that the page cannot get any new pins from this process. It
+> can get new pin from other process after the check. But it is fine because
+> if the page is mapped multiple times it has to be write-protected (CoW
+> after fork()) and we can rely that page's content will not change under
+> us.
+> 
+> Does it make sense? Wording suggestions are welcome.
 
-This is odd, the warning complains a lockdep key is static, but
-all of the 3 lockdep keys in netdev_register_lockdep_key() are
-dynamic. I don't see how this warning could happen.
 
-Thanks.
+I think I understood what you were saying. The problem is that was ignoring
+a couple of points, especially in an RDMA situation: 1) the page can be
+pinned by various drivers, on behalf of other processes, even if the original
+process is being torn down, and 2) it doesn't really matter which process pins
+a page--the end result is that it's pinned.
+
+So that's why I changed the comment to be much milder: "this page will not
+normally receive any additional pins". "Normally" means "in a non-RDMA
+setup, for example".
+
+Or am I missing some other point here?
+
+> 
+>>> +		 *
+>>> +		 * New pins can come later if the page is shared across fork,
+>>> +		 * but not for the this process. It is fine. The other process
+>>> +		 * cannot write to the page, only trigger CoW.
+>>>    		 */
+>>> -		if (page_count(page) != 1 + PageSwapCache(page)) {
+>>> +		if (total_mapcount(page) + PageSwapCache(page) !=
+>>> +				page_count(page)) {
+>>
+>>
+>> I think it's time to put that logic ( "does this page have any extra references")
+>> into a small function. It's already duplicated once below. And the documentation is
+>> duplicated as well.
+> 
+> Fair enough.
+> 
+> But comments have to stay where they are. Because the context is
+> different. The first time we check speculatively, before the page table is
+> unlinked from the page table tree and this check is inherintly racy.
+> Unlike the second one.
+
+
+Right. Let's take another look at them after you point out to me why my response above
+is all wrong... :)
+
+> 
+>> I took a quick peek at this patch because, after adding pin_user_pages*() APIs earlier
+>> to complement get_user_pages*(), I had a moment of doubt here: what if I'd done  it in
+>> a way that required additional logic here? Fortunately, that's not the case: all
+>> pin_user_pages() calls on huge pages take a "primary/real" refcount, in addition
+>> to scribbling into the compound_pincount_ptr() area. whew. :)
+>>
+>>
+>>
+>>>    			unlock_page(page);
+>>>    			result = SCAN_PAGE_COUNT;
+>>>    			goto out;
+>>> @@ -672,7 +679,6 @@ static void __collapse_huge_page_copy(pte_t *pte, struct page *page,
+>>>    		} else {
+>>>    			src_page = pte_page(pteval);
+>>>    			copy_user_highpage(page, src_page, address, vma);
+>>> -			VM_BUG_ON_PAGE(page_mapcount(src_page) != 1, src_page);
+>>>    			release_pte_page(src_page);
+>>>    			/*
+>>>    			 * ptl mostly unnecessary, but preempt has to
+>>> @@ -1206,12 +1212,9 @@ static int khugepaged_scan_pmd(struct mm_struct *mm,
+>>>    			goto out_unmap;
+>>>    		}
+>>> -		/*
+>>> -		 * cannot use mapcount: can't collapse if there's a gup pin.
+>>> -		 * The page must only be referenced by the scanned process
+>>> -		 * and page swap cache.
+>>> -		 */
+>>> -		if (page_count(page) != 1 + PageSwapCache(page)) {
+>>> +		/* Check if the page has any GUP (or other external) pins */
+>>> +		if (total_mapcount(page) + PageSwapCache(page) !=
+>>> +				page_count(page)) {>   			result = SCAN_PAGE_COUNT;
+>>>    			goto out_unmap;
+>>>    		}
+>>>
+
+thanks,
+-- 
+John Hubbard
+NVIDIA
