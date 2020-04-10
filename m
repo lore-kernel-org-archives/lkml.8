@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2120C2BB85
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 03:55:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D577C2BB86
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 03:55:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CA6FD20BED
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 03:55:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D9ACB20936
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 03:55:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586490936;
-	bh=lb20TAWB1L8o9R9POCRdfn3ZTAVt4zIsBHpavNxlDo0=;
+	s=default; t=1586490939;
+	bh=EkOBFVCYfHMSHV79LZ+glFm4WQ53lVX1OwA+34TvyF0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=EtF9WR5OhjS+kV6BZ1W2Bdc2H+HKgfYbNwtAn/4+RV8b7CEnb2jgYYASZi9lXwUv0
-	 HozebPABXEyh6C51NQKS0XzHdlFH8hUYEVKYHvKICx1MIwah5lgXLgsW+zdN/Dy4Tz
-	 G8ooYSIsg4lk/WH622YYwFUy2cRzjf7vLnvdwPa4=
+	b=g8jFLWs3Gswua+VEmyqonggKLwukb+kmnqLFSErSa70UAMJX3/Kva3waq8SOs1Jn9
+	 YXr7T7ppbI1MxskrnwwvW4ZGrNXEPjB/vC3IqtWpUqumtBcJjcF7dGdOI5v79mwWuk
+	 7PW07bH3v0UuRse0HMqwTuw96yS6laewdwJOjNpg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728750AbgDJDuA (ORCPT
+        id S1728738AbgDJDt7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Apr 2020 23:50:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34148 "EHLO mail.kernel.org"
+        Thu, 9 Apr 2020 23:49:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34084 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726689AbgDJDty (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Apr 2020 23:49:54 -0400
+        id S1728703AbgDJDtx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Apr 2020 23:49:53 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C0B7820BED;
-        Fri, 10 Apr 2020 03:49:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BF82520CC7;
+        Fri, 10 Apr 2020 03:49:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586490594;
-        bh=lb20TAWB1L8o9R9POCRdfn3ZTAVt4zIsBHpavNxlDo0=;
+        s=default; t=1586490593;
+        bh=EkOBFVCYfHMSHV79LZ+glFm4WQ53lVX1OwA+34TvyF0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=j0c4GB/AWxMviLRoBZV8gBGU/hKka0ZgZMUVHGjQ6pQKS0R1GJ+5JPi//Ge42G4lw
-         0ImmFYk7Z0XRX7p6lQdOQpPpaoH9QdEXWpPaKB8KXiaB6r/U7Mp7sm+/en497IXySb
-         5kdkrBkV17KnG8k63fmUVNb4qIIkicCAHSdAnRw0=
+        b=kXwOgSLlqNEqU9+/dqrT2ISCk+F7BoFVPLN1VOPJAn5yPFBUIM7l7I0P5JymzOsLB
+         lB+VVo2RC+cKkvKtDSRz2stiAjOV/P7yhaprLB/bTNL9v5S5F360vk005F6gHb17y8
+         ThwEN8X1M5y9Nz+crCKOJiVXA6iaJ0uVugIcuTbk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Junyong Sun <sunjy516@gmail.com>,
-        Junyong Sun <sunjunyong@xiaomi.com>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.4 38/46] firmware: fix a double abort case with fw_load_sysfs_fallback
-Date:   Thu,  9 Apr 2020 23:49:01 -0400
-Message-Id: <20200410034909.8922-38-sashal@kernel.org>
+Cc:     Guoqing Jiang <guoqing.jiang@cloud.ionos.com>,
+        Song Liu <songliubraving@fb.com>,
+        Sasha Levin <sashal@kernel.org>, linux-raid@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 37/46] md: check arrays is suspended in mddev_detach before call quiesce operations
+Date:   Thu,  9 Apr 2020 23:49:00 -0400
+Message-Id: <20200410034909.8922-37-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200410034909.8922-1-sashal@kernel.org>
 References: <20200410034909.8922-1-sashal@kernel.org>
@@ -61,79 +59,63 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Junyong Sun <sunjy516@gmail.com>
+From: Guoqing Jiang <guoqing.jiang@cloud.ionos.com>
 
-[ Upstream commit bcfbd3523f3c6eea51a74d217a8ebc5463bcb7f4 ]
+[ Upstream commit 6b40bec3b13278d21fa6c1ae7a0bdf2e550eed5f ]
 
-fw_sysfs_wait_timeout may return err with -ENOENT
-at fw_load_sysfs_fallback and firmware is already
-in abort status, no need to abort again, so skip it.
+Don't call quiesce(1) and quiesce(0) if array is already suspended,
+otherwise in level_store, the array is writable after mddev_detach
+in below part though the intention is to make array writable after
+resume.
 
-This issue is caused by concurrent situation like below:
-when thread 1# wait firmware loading, thread 2# may write
--1 to abort loading and wakeup thread 1# before it timeout.
-so wait_for_completion_killable_timeout of thread 1# would
-return remaining time which is != 0 with fw_st->status
-FW_STATUS_ABORTED.And the results would be converted into
-err -ENOENT in __fw_state_wait_common and transfered to
-fw_load_sysfs_fallback in thread 1#.
-The -ENOENT means firmware status is already at ABORTED,
-so fw_load_sysfs_fallback no need to get mutex to abort again.
------------------------------
-thread 1#,wait for loading
-fw_load_sysfs_fallback
- ->fw_sysfs_wait_timeout
-    ->__fw_state_wait_common
-       ->wait_for_completion_killable_timeout
+	mddev_suspend(mddev);
+	mddev_detach(mddev);
+	...
+	mddev_resume(mddev);
 
-in __fw_state_wait_common,
-...
-93    ret = wait_for_completion_killable_timeout(&fw_st->completion, timeout);
-94    if (ret != 0 && fw_st->status == FW_STATUS_ABORTED)
-95       return -ENOENT;
-96    if (!ret)
-97	 return -ETIMEDOUT;
-98
-99    return ret < 0 ? ret : 0;
------------------------------
-thread 2#, write -1 to abort loading
-firmware_loading_store
- ->fw_load_abort
-   ->__fw_load_abort
-     ->fw_state_aborted
-       ->__fw_state_set
-         ->complete_all
+And it also causes calltrace as follows in [1].
 
-in __fw_state_set,
-...
-111    if (status == FW_STATUS_DONE || status == FW_STATUS_ABORTED)
-112       complete_all(&fw_st->completion);
--------------------------------------------
-BTW,the double abort issue would not cause kernel panic or create an issue,
-but slow down it sometimes.The change is just a minor optimization.
+[48005.653834] WARNING: CPU: 1 PID: 45380 at kernel/kthread.c:510 kthread_park+0x77/0x90
+[...]
+[48005.653976] CPU: 1 PID: 45380 Comm: mdadm Tainted: G           OE     5.4.10-arch1-1 #1
+[48005.653979] Hardware name: To Be Filled By O.E.M. To Be Filled By O.E.M./J4105-ITX, BIOS P1.40 08/06/2018
+[48005.653984] RIP: 0010:kthread_park+0x77/0x90
+[48005.654015] Call Trace:
+[48005.654039]  r5l_quiesce+0x3c/0x70 [raid456]
+[48005.654052]  raid5_quiesce+0x228/0x2e0 [raid456]
+[48005.654073]  mddev_detach+0x30/0x70 [md_mod]
+[48005.654090]  level_store+0x202/0x670 [md_mod]
+[48005.654099]  ? security_capable+0x40/0x60
+[48005.654114]  md_attr_store+0x7b/0xc0 [md_mod]
+[48005.654123]  kernfs_fop_write+0xce/0x1b0
+[48005.654132]  vfs_write+0xb6/0x1a0
+[48005.654138]  ksys_write+0x67/0xe0
+[48005.654146]  do_syscall_64+0x4e/0x140
+[48005.654155]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+[48005.654161] RIP: 0033:0x7fa0c8737497
 
-Signed-off-by: Junyong Sun <sunjunyong@xiaomi.com>
-Acked-by: Luis Chamberlain <mcgrof@kernel.org>
-Link: https://lore.kernel.org/r/1583202968-28792-1-git-send-email-sunjunyong@xiaomi.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+[1]: https://bugzilla.kernel.org/show_bug.cgi?id=206161
+
+Signed-off-by: Guoqing Jiang <guoqing.jiang@cloud.ionos.com>
+Signed-off-by: Song Liu <songliubraving@fb.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/base/firmware_loader/fallback.c | 2 +-
+ drivers/md/md.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/base/firmware_loader/fallback.c b/drivers/base/firmware_loader/fallback.c
-index 62ee90b4db56e..70efbb22dfc30 100644
---- a/drivers/base/firmware_loader/fallback.c
-+++ b/drivers/base/firmware_loader/fallback.c
-@@ -525,7 +525,7 @@ static int fw_load_sysfs_fallback(struct fw_sysfs *fw_sysfs,
+diff --git a/drivers/md/md.c b/drivers/md/md.c
+index 4e7c9f398bc66..6b69a12ca2d80 100644
+--- a/drivers/md/md.c
++++ b/drivers/md/md.c
+@@ -6040,7 +6040,7 @@ EXPORT_SYMBOL_GPL(md_stop_writes);
+ static void mddev_detach(struct mddev *mddev)
+ {
+ 	md_bitmap_wait_behind_writes(mddev);
+-	if (mddev->pers && mddev->pers->quiesce) {
++	if (mddev->pers && mddev->pers->quiesce && !mddev->suspended) {
+ 		mddev->pers->quiesce(mddev, 1);
+ 		mddev->pers->quiesce(mddev, 0);
  	}
- 
- 	retval = fw_sysfs_wait_timeout(fw_priv, timeout);
--	if (retval < 0) {
-+	if (retval < 0 && retval != -ENOENT) {
- 		mutex_lock(&fw_lock);
- 		fw_load_abort(fw_sysfs);
- 		mutex_unlock(&fw_lock);
 -- 
 2.20.1
 
