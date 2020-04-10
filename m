@@ -2,281 +2,133 @@ Return-Path: <SRS0=VV4q=52=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BDDDC2BA2B
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 15:35:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A38CC2BA2B
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 15:37:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D421620CC7
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 15:35:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7775120857
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 15:37:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726670AbgDJPfk (ORCPT
+        id S1726666AbgDJPhk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Apr 2020 11:35:40 -0400
-Received: from mga02.intel.com ([134.134.136.20]:54397 "EHLO mga02.intel.com"
+        Fri, 10 Apr 2020 11:37:40 -0400
+Received: from mga12.intel.com ([192.55.52.136]:15988 "EHLO mga12.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726009AbgDJPfj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Apr 2020 11:35:39 -0400
-IronPort-SDR: wNCj1aBuv82jBABk6SduVyGxaclEuovYgNezRJk/3gKbpiBZAVd09UVDji56/Rrb6elFtdSbrT
- ZAj9BVi5GXEA==
+        id S1726080AbgDJPhk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Apr 2020 11:37:40 -0400
+IronPort-SDR: KIjv452/LQ9/fgoZSpd++LTAnZtKZ/59Y2AXbKCdIFaMg0OZ+T4lUtdMywpkJwja1hoRYV4X63
+ mld0Ns9+90Mw==
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Apr 2020 08:35:39 -0700
-IronPort-SDR: 0qzb4equE8alWcIEYcRDAw7+hsh0diCKuAveWpvUzI5ER2F+uodgLsjmVyarxAR0pnBOZ0BneQ
- LBsRsmROXsZQ==
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Apr 2020 08:37:40 -0700
+IronPort-SDR: J6Dax/bXvKp8e/PrJgA2I2XzuLfvfINEOIs3cyvbW3ArQHG7+oGiWVR519yfHikfr0irB+EU8k
+ 0HEG6rozXItQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.72,367,1580803200"; 
-   d="scan'208";a="240969201"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
-  by orsmga007.jf.intel.com with ESMTP; 10 Apr 2020 08:35:39 -0700
-Date:   Fri, 10 Apr 2020 08:35:39 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Wanpeng Li <kernellwp@gmail.com>
-Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Haiwei Li <lihaiwei@tencent.com>
-Subject: Re: [PATCH v2] KVM: X86: Ultra fast single target IPI fastpath
-Message-ID: <20200410153539.GD22482@linux.intel.com>
-References: <1586480607-5408-1-git-send-email-wanpengli@tencent.com>
+   d="scan'208";a="252229219"
+Received: from jacob-builder.jf.intel.com (HELO jacob-builder) ([10.7.199.155])
+  by orsmga003.jf.intel.com with ESMTP; 10 Apr 2020 08:37:40 -0700
+Date:   Fri, 10 Apr 2020 08:43:32 -0700
+From:   Jacob Pan <jacob.jun.pan@linux.intel.com>
+To:     Jean-Philippe Brucker <jean-philippe@linaro.org>
+Cc:     Joerg Roedel <joro@8bytes.org>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        iommu@lists.linux-foundation.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Jean-Philippe Brucker <jean-philippe@linaro.com>,
+        Yi Liu <yi.l.liu@intel.com>,
+        "Tian, Kevin" <kevin.tian@intel.com>,
+        Raj Ashok <ashok.raj@intel.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Eric Auger <eric.auger@redhat.com>,
+        jacob.jun.pan@linux.intel.com
+Subject: Re: [PATCH 08/10] iommu/ioasid: Introduce notifier APIs
+Message-ID: <20200410084332.6a35a8ca@jacob-builder>
+In-Reply-To: <20200401140006.GI882512@myrica>
+References: <1585158931-1825-1-git-send-email-jacob.jun.pan@linux.intel.com>
+        <1585158931-1825-9-git-send-email-jacob.jun.pan@linux.intel.com>
+        <20200401140006.GI882512@myrica>
+Organization: OTC
+X-Mailer: Claws Mail 3.13.2 (GTK+ 2.24.30; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1586480607-5408-1-git-send-email-wanpengli@tencent.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 10, 2020 at 09:03:27AM +0800, Wanpeng Li wrote:
-> From: Wanpeng Li <wanpengli@tencent.com>
+On Wed, 1 Apr 2020 16:00:06 +0200
+Jean-Philippe Brucker <jean-philippe@linaro.org> wrote:
+
+> On Wed, Mar 25, 2020 at 10:55:29AM -0700, Jacob Pan wrote:
+> > IOASID users fit into the publisher-subscriber pattern, a system
+> > wide blocking notifier chain can be used to inform subscribers of
+> > state changes. Notifier mechanism also abstracts publisher from
+> > knowing the private context each subcriber may have.
+> > 
+> > This patch adds APIs and a global notifier chain, a further
+> > optimization might be per set notifier for ioasid_set aware users.
+> > 
+> > Usage example:
+> > KVM register notifier block such that it can keep its guest-host
+> > PASID translation table in sync with any IOASID updates.  
 > 
-> IPI and Timer cause the main MSRs write vmexits in cloud environment 
-> observation, let's optimize virtual IPI latency more aggressively to 
-> inject target IPI as soon as possible.
+> When you talk about KVM, is it for
 > 
-> Running kvm-unit-tests/vmexit.flat IPI testing on SKX server, disable 
-> adaptive advance lapic timer and adaptive halt-polling to avoid the 
-> interference, this patch can give another 7% improvement.
+>   [PATCH 0/7] x86: tag application address space for devices
 > 
-> w/o fastpath -> fastpath            4238 -> 3543  16.4%
-> fastpath     -> ultra fastpath      3543 -> 3293     7%
-> w/o fastpath -> ultra fastpath      4238 -> 3293  22.3% 
+> or something else as well? (I don't see mentions of KVM in that
+> series)
 > 
-> This also revises the performance data in commit 1e9e2622a1 (KVM: VMX: 
-> FIXED+PHYSICAL mode single target IPI fastpath), that testing adds
-> --overcommit cpu-pm=on to kvm-unit-tests guest which is unnecessary.
+Yes, related to this set. This is set is for native ENQCMD support.
+VMCS use of IOASID notifier is for the guest SVA + ENQCMD.
+We need to maintain a G-H PASID translation in VMCS PASID translation
+table. When guest binds a GPASID to a host PASID, this translation
+table can be updated such that subsequent ENQCMD in the guest can
+resolve to a host PASID.
+
+CH 7.3.1 of DSA spec.
+https://software.intel.com/sites/default/files/341204-intel-data-streaming-accelerator-spec.pdf 
+> > 
+> > VFIO publish IOASID change by performing alloc/free, bind/unbind
+> > operations.  
 > 
-> Tested-by: Haiwei Li <lihaiwei@tencent.com>
-> Cc: Haiwei Li <lihaiwei@tencent.com>
-> Signed-off-by: Wanpeng Li <wanpengli@tencent.com>
-> ---
-> v1 -> v2:
->  * rebase on latest kvm/queue
->  * update patch description
+> I was rather seeing IOASID as the end of the VFIO-IOMMU-IOASID chain,
+> putting it in the middle complicates locking. If you only need to FREE
+> notifier for this calse, maybe VFIO could talk directly to the IOMMU
+> driver before freeing an IOASID?  gpasid_unbind() should already
+> clear the PASID contexts, no?
 > 
->  arch/x86/include/asm/kvm_host.h |  6 +++---
->  arch/x86/kvm/svm/svm.c          | 21 ++++++++++++++-------
->  arch/x86/kvm/vmx/vmx.c          | 19 +++++++++++++------
->  arch/x86/kvm/x86.c              |  4 ++--
->  4 files changed, 32 insertions(+), 18 deletions(-)
+Yes, VFIO can track all the PASIDs and make sure they do unbind before
+free. But that might be more complicated in VFIO, whereas here, when a
+guest exits, VFIO can just free the entire IOASID set, IOASID will
+notify IOMMU and do all the cleanup.
+
+For maintaining VMCS pasid translation table, KVM still need to know
+bind/unbind in addition to free events.
+
+In addition, we also have VDCM (virtual device composition module) that
+needs to perform G-H PASID translation and sanity check. VDCM needs the
+free event only. This is also in the DSA spec above. The use is that
+when the guest programs a GPASID into a virtual device, VDCM (similar
+to SRIOV PDEV driver) needs to intercept (via vfio mdev) and translate
+GPASID to HPASID.
+
+> Thanks,
+> Jean
 > 
-> diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
-> index c7da23a..e667cf3 100644
-> --- a/arch/x86/include/asm/kvm_host.h
-> +++ b/arch/x86/include/asm/kvm_host.h
-> @@ -1124,7 +1124,8 @@ struct kvm_x86_ops {
->  	 */
->  	void (*tlb_flush_guest)(struct kvm_vcpu *vcpu);
->  
-> -	void (*run)(struct kvm_vcpu *vcpu);
-> +	void (*run)(struct kvm_vcpu *vcpu,
-> +		enum exit_fastpath_completion *exit_fastpath);
->  	int (*handle_exit)(struct kvm_vcpu *vcpu,
->  		enum exit_fastpath_completion exit_fastpath);
->  	int (*skip_emulated_instruction)(struct kvm_vcpu *vcpu);
-> @@ -1174,8 +1175,7 @@ struct kvm_x86_ops {
->  			       struct x86_instruction_info *info,
->  			       enum x86_intercept_stage stage,
->  			       struct x86_exception *exception);
-> -	void (*handle_exit_irqoff)(struct kvm_vcpu *vcpu,
-> -		enum exit_fastpath_completion *exit_fastpath);
-> +	void (*handle_exit_irqoff)(struct kvm_vcpu *vcpu);
->  
->  	int (*check_nested_events)(struct kvm_vcpu *vcpu);
->  	void (*request_immediate_exit)(struct kvm_vcpu *vcpu);
-> diff --git a/arch/x86/kvm/svm/svm.c b/arch/x86/kvm/svm/svm.c
-> index 27f4684..c019332 100644
-> --- a/arch/x86/kvm/svm/svm.c
-> +++ b/arch/x86/kvm/svm/svm.c
-> @@ -3283,9 +3283,20 @@ static void svm_cancel_injection(struct kvm_vcpu *vcpu)
->  	svm_complete_interrupts(svm);
->  }
->  
-> +static enum exit_fastpath_completion svm_exit_handlers_fastpath(struct kvm_vcpu *vcpu)
-> +{
-> +	if (!is_guest_mode(vcpu) &&
-> +	    to_svm(vcpu)->vmcb->control.exit_code == SVM_EXIT_MSR &&
-> +	    to_svm(vcpu)->vmcb->control.exit_info_1)
-> +		return handle_fastpath_set_msr_irqoff(vcpu);
-> +
-> +	return EXIT_FASTPATH_NONE;
-> +}
-> +
->  bool __svm_vcpu_run(unsigned long vmcb_pa, unsigned long *regs);
->  
-> -static void svm_vcpu_run(struct kvm_vcpu *vcpu)
-> +static void svm_vcpu_run(struct kvm_vcpu *vcpu,
-> +	enum exit_fastpath_completion *exit_fastpath)
->  {
->  	struct vcpu_svm *svm = to_svm(vcpu);
->  
-> @@ -3388,6 +3399,7 @@ static void svm_vcpu_run(struct kvm_vcpu *vcpu)
->  	kvm_load_host_xsave_state(vcpu);
->  	stgi();
->  
-> +	*exit_fastpath = svm_exit_handlers_fastpath(vcpu);
->  	/* Any pending NMI will happen here */
->  
->  	if (unlikely(svm->vmcb->control.exit_code == SVM_EXIT_NMI))
-> @@ -3719,13 +3731,8 @@ static int svm_check_intercept(struct kvm_vcpu *vcpu,
->  	return ret;
->  }
->  
-> -static void svm_handle_exit_irqoff(struct kvm_vcpu *vcpu,
-> -	enum exit_fastpath_completion *exit_fastpath)
-> +static void svm_handle_exit_irqoff(struct kvm_vcpu *vcpu)
->  {
-> -	if (!is_guest_mode(vcpu) &&
-> -	    to_svm(vcpu)->vmcb->control.exit_code == SVM_EXIT_MSR &&
-> -	    to_svm(vcpu)->vmcb->control.exit_info_1)
-> -		*exit_fastpath = handle_fastpath_set_msr_irqoff(vcpu);
->  }
->  
->  static void svm_sched_in(struct kvm_vcpu *vcpu, int cpu)
-> diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-> index 1d2bb57..61a1725 100644
-> --- a/arch/x86/kvm/vmx/vmx.c
-> +++ b/arch/x86/kvm/vmx/vmx.c
-> @@ -6354,8 +6354,7 @@ static void handle_external_interrupt_irqoff(struct kvm_vcpu *vcpu)
->  }
->  STACK_FRAME_NON_STANDARD(handle_external_interrupt_irqoff);
->  
-> -static void vmx_handle_exit_irqoff(struct kvm_vcpu *vcpu,
-> -	enum exit_fastpath_completion *exit_fastpath)
-> +static void vmx_handle_exit_irqoff(struct kvm_vcpu *vcpu)
->  {
->  	struct vcpu_vmx *vmx = to_vmx(vcpu);
->  
-> @@ -6363,9 +6362,6 @@ static void vmx_handle_exit_irqoff(struct kvm_vcpu *vcpu,
->  		handle_external_interrupt_irqoff(vcpu);
->  	else if (vmx->exit_reason == EXIT_REASON_EXCEPTION_NMI)
->  		handle_exception_nmi_irqoff(vmx);
-> -	else if (!is_guest_mode(vcpu) &&
-> -		vmx->exit_reason == EXIT_REASON_MSR_WRITE)
-> -		*exit_fastpath = handle_fastpath_set_msr_irqoff(vcpu);
->  }
->  
->  static bool vmx_has_emulated_msr(int index)
-> @@ -6570,9 +6566,19 @@ void vmx_update_host_rsp(struct vcpu_vmx *vmx, unsigned long host_rsp)
->  	}
->  }
->  
-> +static enum exit_fastpath_completion vmx_exit_handlers_fastpath(struct kvm_vcpu *vcpu)
-> +{
-> +	if (!is_guest_mode(vcpu) &&
-> +		to_vmx(vcpu)->exit_reason == EXIT_REASON_MSR_WRITE)
+> > IOMMU driver gets notified when IOASID is freed by VFIO or core mm
+> > code such that PASID context can be cleaned up.
+> > 
+> > Signed-off-by: Liu Yi L <yi.l.liu@intel.com>
+> > Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>  
 
-Bad indentation.
-
-> +		return handle_fastpath_set_msr_irqoff(vcpu);
-> +
-> +	return EXIT_FASTPATH_NONE;
-> +}
-> +
->  bool __vmx_vcpu_run(struct vcpu_vmx *vmx, unsigned long *regs, bool launched);
->  
-> -static void vmx_vcpu_run(struct kvm_vcpu *vcpu)
-> +static void vmx_vcpu_run(struct kvm_vcpu *vcpu,
-> +	enum exit_fastpath_completion *exit_fastpath)
-
-Why pass a pointer instead of returning the enum?
-
->  {
->  	struct vcpu_vmx *vmx = to_vmx(vcpu);
->  	unsigned long cr3, cr4;
-> @@ -6737,6 +6743,7 @@ static void vmx_vcpu_run(struct kvm_vcpu *vcpu)
->  	vmx->idt_vectoring_info = 0;
->  
->  	vmx->exit_reason = vmx->fail ? 0xdead : vmcs_read32(VM_EXIT_REASON);
-> +	*exit_fastpath = vmx_exit_handlers_fastpath(vcpu);
-
-IMO, this should come at the very end of vmx_vcpu_run().  At a minimum, it
-needs to be moved below the #MC handling and below
-
-	if (vmx->fail || (vmx->exit_reason & VMX_EXIT_REASONS_FAILED_VMENTRY))
-		return;
-
-KVM more or less assumes vmx->idt_vectoring_info is always valid, and it's
-not obvious that a generic fastpath call can safely run before
-vmx_complete_interrupts(), e.g. the kvm_clear_interrupt_queue() call.
-
-In a normal scenario, the added latency is <50 cycles.  ~30 for the VMREAD
-of IDT_VECTORING_INFO_FIELD, a handful of zeroing instructions, and a few
-CMP+Jcc style uops to skip NMI blocking and interrupt completion.
-
-And if the result is returned, it means VMX won't need a local variable, e.g.:
-
-	vmx->exit_reason = vmx->fail ? 0xdead : vmcs_read32(VM_EXIT_REASON);
-	if ((u16)vmx->exit_reason == EXIT_REASON_MCE_DURING_VMENTRY)
-		kvm_machine_check();
-
-	if (vmx->fail || (vmx->exit_reason & VMX_EXIT_REASONS_FAILED_VMENTRY))
-		return EXIT_FASTPATH_NONE;
-
-	vmx->loaded_vmcs->launched = 1;
-	vmx->idt_vectoring_info = vmcs_read32(IDT_VECTORING_INFO_FIELD);
-
-	vmx_recover_nmi_blocking(vmx);
-	vmx_complete_interrupts(vmx);
-
-	return vmx_exit_handlers_fastpath(vcpu);
-}
-
->  	if ((u16)vmx->exit_reason == EXIT_REASON_MCE_DURING_VMENTRY)
->  		kvm_machine_check();
->  
-> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-> index 3089aa4..eed31e2 100644
-> --- a/arch/x86/kvm/x86.c
-> +++ b/arch/x86/kvm/x86.c
-> @@ -8409,7 +8409,7 @@ static int vcpu_enter_guest(struct kvm_vcpu *vcpu)
->  		vcpu->arch.switch_db_regs &= ~KVM_DEBUGREG_RELOAD;
->  	}
->  
-> -	kvm_x86_ops.run(vcpu);
-> +	kvm_x86_ops.run(vcpu, &exit_fastpath);
-
-Pretty sre 
->  
->  	/*
->  	 * Do this here before restoring debug registers on the host.  And
-> @@ -8441,7 +8441,7 @@ static int vcpu_enter_guest(struct kvm_vcpu *vcpu)
->  	vcpu->mode = OUTSIDE_GUEST_MODE;
->  	smp_wmb();
->  
-> -	kvm_x86_ops.handle_exit_irqoff(vcpu, &exit_fastpath);
-> +	kvm_x86_ops.handle_exit_irqoff(vcpu);
->  
->  	/*
->  	 * Consume any pending interrupts, including the possible source of
-> -- 
-> 2.7.4
-> 
+[Jacob Pan]
