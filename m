@@ -7,90 +7,85 @@ X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41FE0C2BB86
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 17:36:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8088C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 17:37:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1400D2082D
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 17:36:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A9CA42078E
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 17:37:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586540217;
-	bh=BOqhR4vTHabaDF5ma1ebkMXr4dKMQ1/YM7Y2KhJfLbA=;
+	s=default; t=1586540223;
+	bh=8dCKzn+hbFkRQcW5NMF+sp5pbh4END6ZVNioovpi2QY=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=wwqxZJ+nzLdgE/0WZWZCuAWwQEdejFIH9r6ZNBmK4wg19kdT9G7Pa0i48YE/g2S3Z
-	 HUu2a/38AvWYRtJAR9HvMjyS7QemDSQpfLYhlHFJ7ng3DmbwyFAtP3s3ZUuHNXNEun
-	 S1swB+hKsUf+4RNrP8nQoJ9Cbc0z8lyobNfNc1C4=
+	b=JrRuvV1utRrMwmK/3n6xzA5GojxSPGy/+WwcaDLMhXkLAbFLafPVi5N3GxkMWoH1d
+	 4bPToW40G26bhYDMo5jfJM3lwbWDNOuCgvXw/bY7i9ZWjElJdsW5al64s58jmfBIq5
+	 RuykVAHH7KffVD6HEsdnUj2mNqpBsJ+YtLmHzbao=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726789AbgDJRgz (ORCPT
+        id S1726809AbgDJRhC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Apr 2020 13:36:55 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:40918 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726234AbgDJRgz (ORCPT
+        Fri, 10 Apr 2020 13:37:02 -0400
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:33622 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726203AbgDJRhB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Apr 2020 13:36:55 -0400
-Received: by mail-ot1-f65.google.com with SMTP id q2so2489275otk.7;
-        Fri, 10 Apr 2020 10:36:55 -0700 (PDT)
+        Fri, 10 Apr 2020 13:37:01 -0400
+Received: by mail-ot1-f68.google.com with SMTP id 103so2537292otv.0;
+        Fri, 10 Apr 2020 10:37:02 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=MzwM/gQ/NLaRvDFMI25L91K+i3EhNsGz95soTyWuQBo=;
-        b=WCAbFeh/+b8aiImco+FcjemeUmUjLuH7pSK3E8H/CC9dnOB2DjOatVw/kXjZgLkrGe
-         FLuNW+hcRyh4BlHgz0aSQRYUcxIFZHBuE91bwhRF/xlOTb72sRqDGxTf5cfMYxR+NKbH
-         ZPL+hQJh3WCpaIbzJxDJFeyIcXDGTh2f5ptJSihmiw7mnnDlo9hTrYe0LH4dWOom12VT
-         7kKCuRcFbFt/EF0gK86SEWNqTJ0PudWpFctKR/8ZJnj5WVbG4z1VSo/JNWMqFLAiSPy4
-         SxxEhzM24qZqXEQJwhXCCA0dSwERA9L8JMXBO6avJ/T1AmotlIvNLi8SF06VjFYh7+cO
-         TmJg==
-X-Gm-Message-State: AGi0PuYyslzXsjDds9AkvAeScoCAKxfAur09hvknncm0vRxnS+VHzOSj
-        hEo3UeLoRBd1NEP1LDwkhA==
-X-Google-Smtp-Source: APiQypLnAMIYEtn1snzAX7XsnL8YdEKpMgCeNLiH6hW+fVNoQm1scqQIshatQunCogs3B6D0xJoNWA==
-X-Received: by 2002:a4a:c819:: with SMTP id s25mr4930618ooq.6.1586540215007;
-        Fri, 10 Apr 2020 10:36:55 -0700 (PDT)
-Received: from rob-hp-laptop (ip-99-203-29-27.pools.cgn.spcsdns.net. [99.203.29.27])
-        by smtp.gmail.com with ESMTPSA id d25sm1625369ooh.34.2020.04.10.10.36.51
+        bh=cBvs5LwqUO7S5M6QR4lxvxc0bJWFJ0sqPahnnM7+10g=;
+        b=XHte53IBXQ0nR1dXP5G4BYhZ6yp4AjKU1+zPZVVeTciDv9WSidNLhj+SVq9Hp5w9tf
+         JqjIPL2FIWPDIOqsj6NukGPZd7kEMkpPyyyowS8LUio09M8Ut0qFqz7pvHeilrvyqGAe
+         1ZqiwFkWEAJPa8MJuMzO0P3mcavNHwi2RvaWdjoUM55r/JlRkdrGOGZcVs6rLMvZHWKP
+         bG3X6wIlt4fxLsX2eO8zHQ1rPNPgBqtnU/uSDl9U6EdVhlOnDeRXcLBk7B+xPG4kt4pn
+         PkW2Cpeo/9OwKh24rHnYUpJcfQhvjrqMpF8ZIUQqM1/my4xqNv7XWjCGrhLwdyDq9daK
+         D3Rw==
+X-Gm-Message-State: AGi0PuYqVaKzfUFiDjoIIZcHZv0Jek/vab+QD2BmJW36jmizp7rt4F5R
+        zysprLPrE10o/mov3DR+mA==
+X-Google-Smtp-Source: APiQypL+sqymxMXjAk1Aso5m19W5p4BkuIoCN8DUgQmzzZdht2Km+Hfi4ZRxdegF8sh6WjgrkukfbQ==
+X-Received: by 2002:a9d:5b4:: with SMTP id 49mr4807406otd.210.1586540221606;
+        Fri, 10 Apr 2020 10:37:01 -0700 (PDT)
+Received: from rob-hp-laptop (ip-99-203-29-27.pools.spcsdns.net. [99.203.29.27])
+        by smtp.gmail.com with ESMTPSA id g18sm1566538oib.36.2020.04.10.10.36.57
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 10 Apr 2020 10:36:54 -0700 (PDT)
-Received: (nullmailer pid 13792 invoked by uid 1000);
-        Fri, 10 Apr 2020 16:31:08 -0000
-Date:   Fri, 10 Apr 2020 11:31:08 -0500
+        Fri, 10 Apr 2020 10:37:01 -0700 (PDT)
+Received: (nullmailer pid 31953 invoked by uid 1000);
+        Fri, 10 Apr 2020 17:06:06 -0000
+Date:   Fri, 10 Apr 2020 12:06:06 -0500
 From:   Rob Herring <robh@kernel.org>
-To:     Geert Uytterhoeven <geert+renesas@glider.be>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        linux-usb@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: Re: [PATCH 1/2] dt-bindings: usb: generic-ehci: Document
- power-domains property
-Message-ID: <20200410163108.GA13579@bogus>
-References: <20200326163807.23216-1-geert+renesas@glider.be>
- <20200326163807.23216-2-geert+renesas@glider.be>
+To:     Dmitry Osipenko <digetx@gmail.com>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Artur =?utf-8?B?xZp3aWdvxYQ=?= <a.swigon@samsung.com>,
+        Georgi Djakov <georgi.djakov@linaro.org>,
+        linux-tegra@vger.kernel.org, linux-pm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        devicetree@vger.kernel.org
+Subject: Re: [PATCH v2 02/22] dt-bindings: memory: tegra20: emc: Document new
+ interconnect property
+Message-ID: <20200410170606.GA31915@bogus>
+References: <20200330010904.27643-1-digetx@gmail.com>
+ <20200330010904.27643-3-digetx@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200326163807.23216-2-geert+renesas@glider.be>
+In-Reply-To: <20200330010904.27643-3-digetx@gmail.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 26 Mar 2020 17:38:05 +0100, Geert Uytterhoeven wrote:
-> It is quite common for a generic EHCI block to be embedded in an SoC in
-> its own power domain.  Hence allow the DTS writer to describe the
-> controller's position in the power hierarchy, by documenting the
-> optional presence of a "power-domains" property.
+On Mon, 30 Mar 2020 04:08:44 +0300, Dmitry Osipenko wrote:
+> External memory controller is interconnected with memory controller and
+> with external memory. Document new interconnect property which turns
+> external memory controller into interconnect provider.
 > 
-> This gets rid of "make dtbs_check" warnings like:
-> 
->     arch/arm64/boot/dts/renesas/r8a774a1-hihope-rzg2m.dt.yaml: usb@ee080100: 'power-domains' does not match any of the regexes: 'pinctrl-[0-9]+'
-> 
-> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
 > ---
->  Documentation/devicetree/bindings/usb/generic-ehci.yaml | 3 +++
->  1 file changed, 3 insertions(+)
+>  .../bindings/memory-controllers/nvidia,tegra20-emc.txt          | 2 ++
+>  1 file changed, 2 insertions(+)
 > 
 
-Applied, thanks.
-
-Rob
+Acked-by: Rob Herring <robh@kernel.org>
