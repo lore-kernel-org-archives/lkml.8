@@ -7,51 +7,49 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C897C2BBFD
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 03:57:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE67AC2D0EC
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 03:57:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E7CAB2063A
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 03:57:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8A6FC20BED
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 03:57:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586491031;
-	bh=84yi219yIB6wGwTclf+OOqJ3CLOYEdw/w/MldiC3Rdg=;
+	s=default; t=1586491034;
+	bh=zkoCdeQNCnljh/Pk2J3iQ5iD97vNPeJM7BkIKOX2p88=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DsVs1itlY3DfyfG9e1a05JXRjf0d2HIPRqKo1tEtquw+OJ63NP6KiX+X0I3kEQ21B
-	 Tp/TOZZ6jhBX7jIkYvJDhxwFlT4g37xrP9xRX8LtGIHwKww/C5FGxoTg1uOfG3Mbcc
-	 NN8HtqY5pXMzCX3lu3NIVI75O8EX9RcuLNOMrlHw=
+	b=Q1fhQHvMOujYzjlpJ+mXO19JCYSqaNxtAZJgK0FfBLvhf8+LLIUMFZ0O15fGKCPh7
+	 7SFo9qVrDt/K+fFPVVASnGNSMaKNOVQWLXGc1GazXvIKXAzDntiQpVMtHjX4l9666R
+	 gp2KiK7MbPZyL0yh2+w4kQTmyvMaeWK0sjSf3EeI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728519AbgDJDtV (ORCPT
+        id S1728900AbgDJD5M (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Apr 2020 23:49:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33150 "EHLO mail.kernel.org"
+        Thu, 9 Apr 2020 23:57:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33230 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728496AbgDJDtR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Apr 2020 23:49:17 -0400
+        id S1728513AbgDJDtU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Apr 2020 23:49:20 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B81E320A8B;
-        Fri, 10 Apr 2020 03:49:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B89CB20B1F;
+        Fri, 10 Apr 2020 03:49:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586490556;
-        bh=84yi219yIB6wGwTclf+OOqJ3CLOYEdw/w/MldiC3Rdg=;
+        s=default; t=1586490560;
+        bh=zkoCdeQNCnljh/Pk2J3iQ5iD97vNPeJM7BkIKOX2p88=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0i4TgLjZbFXPP9QXWxEp+J5mv2CSueHlH81LduMfY9N9x1bJABdSbD5t5o8v4nXeU
-         KScgnVEGqfjGRT7b1Gsf6WxP8EUtWZ+DcOqTJiM0ImwNHB+1Ci0GM/3dtoPWurGfqJ
-         wsZwRIAkDql4zYBtuUVf3pIMrFxfrHRuawv3K7kk=
+        b=s94Is37SvwfK0BkfLORz5MVEiZRFYtHmQ/P/Upq4h570E/5jbNYUfK5I7YySho+LH
+         1ob1eKPBovRyqPO+oq9rwPUKrEfwtNtjbviEcNyAMc03tl7AGOBkqorm+wfMhcjyPE
+         PSgo31wHksz6UFLSWs3cr6E2xZH3675Z9FTq39As=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Bart Van Assche <bvanassche@acm.org>,
-        Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>,
-        Johannes Thumshirn <jth@kernel.org>,
-        Hannes Reinecke <hare@suse.com>,
-        Ming Lei <ming.lei@redhat.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>,
-        linux-block@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 05/46] null_blk: Fix the null_add_dev() error path
-Date:   Thu,  9 Apr 2020 23:48:28 -0400
-Message-Id: <20200410034909.8922-5-sashal@kernel.org>
+Cc:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Rui Miguel Silva <rmfrfs@gmail.com>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org,
+        devel@driverdev.osuosl.org, linux-arm-kernel@lists.infradead.org
+Subject: [PATCH AUTOSEL 5.4 08/46] media: imx: imx7_mipi_csis: Power off the source when stopping streaming
+Date:   Thu,  9 Apr 2020 23:48:31 -0400
+Message-Id: <20200410034909.8922-8-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200410034909.8922-1-sashal@kernel.org>
 References: <20200410034909.8922-1-sashal@kernel.org>
@@ -64,95 +62,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bart Van Assche <bvanassche@acm.org>
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 
-[ Upstream commit 2004bfdef945fe55196db6b9cdf321fbc75bb0de ]
+[ Upstream commit 770cbf89f90b0663499dbb3f03aa81b3322757ec ]
 
-If null_add_dev() fails, clear dev->nullb.
+The .s_stream() implementation incorrectly powers on the source when
+stopping the stream. Power it off instead.
 
-This patch fixes the following KASAN complaint:
-
-BUG: KASAN: use-after-free in nullb_device_submit_queues_store+0xcf/0x160 [null_blk]
-Read of size 8 at addr ffff88803280fc30 by task check/8409
-
-Call Trace:
- dump_stack+0xa5/0xe6
- print_address_description.constprop.0+0x26/0x260
- __kasan_report.cold+0x7b/0x99
- kasan_report+0x16/0x20
- __asan_load8+0x58/0x90
- nullb_device_submit_queues_store+0xcf/0x160 [null_blk]
- configfs_write_file+0x1c4/0x250 [configfs]
- __vfs_write+0x4c/0x90
- vfs_write+0x145/0x2c0
- ksys_write+0xd7/0x180
- __x64_sys_write+0x47/0x50
- do_syscall_64+0x6f/0x2f0
- entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x7ff370926317
-Code: 64 89 02 48 c7 c0 ff ff ff ff eb bb 0f 1f 80 00 00 00 00 f3 0f 1e fa 64 8b 04 25 18 00 00 00 85 c0 75 10 b8 01 00 00 00 0f 05 <48> 3d 00 f0 ff ff 77 51 c3 48 83 ec 28 48 89 54 24 18 48 89 74 24
-RSP: 002b:00007fff2dd2da48 EFLAGS: 00000246 ORIG_RAX: 0000000000000001
-RAX: ffffffffffffffda RBX: 0000000000000002 RCX: 00007ff370926317
-RDX: 0000000000000002 RSI: 0000559437ef23f0 RDI: 0000000000000001
-RBP: 0000559437ef23f0 R08: 000000000000000a R09: 0000000000000001
-R10: 0000559436703471 R11: 0000000000000246 R12: 0000000000000002
-R13: 00007ff370a006a0 R14: 00007ff370a014a0 R15: 00007ff370a008a0
-
-Allocated by task 8409:
- save_stack+0x23/0x90
- __kasan_kmalloc.constprop.0+0xcf/0xe0
- kasan_kmalloc+0xd/0x10
- kmem_cache_alloc_node_trace+0x129/0x4c0
- null_add_dev+0x24a/0xe90 [null_blk]
- nullb_device_power_store+0x1b6/0x270 [null_blk]
- configfs_write_file+0x1c4/0x250 [configfs]
- __vfs_write+0x4c/0x90
- vfs_write+0x145/0x2c0
- ksys_write+0xd7/0x180
- __x64_sys_write+0x47/0x50
- do_syscall_64+0x6f/0x2f0
- entry_SYSCALL_64_after_hwframe+0x49/0xbe
-
-Freed by task 8409:
- save_stack+0x23/0x90
- __kasan_slab_free+0x112/0x160
- kasan_slab_free+0x12/0x20
- kfree+0xdf/0x250
- null_add_dev+0xaf3/0xe90 [null_blk]
- nullb_device_power_store+0x1b6/0x270 [null_blk]
- configfs_write_file+0x1c4/0x250 [configfs]
- __vfs_write+0x4c/0x90
- vfs_write+0x145/0x2c0
- ksys_write+0xd7/0x180
- __x64_sys_write+0x47/0x50
- do_syscall_64+0x6f/0x2f0
- entry_SYSCALL_64_after_hwframe+0x49/0xbe
-
-Fixes: 2984c8684f96 ("nullb: factor disk parameters")
-Signed-off-by: Bart Van Assche <bvanassche@acm.org>
-Reviewed-by: Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>
-Cc: Johannes Thumshirn <jth@kernel.org>
-Cc: Hannes Reinecke <hare@suse.com>
-Cc: Ming Lei <ming.lei@redhat.com>
-Cc: Christoph Hellwig <hch@infradead.org>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Fixes: 7807063b862b ("media: staging/imx7: add MIPI CSI-2 receiver subdev for i.MX7")
+Signed-off-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Reviewed-by: Rui Miguel Silva <rmfrfs@gmail.com>
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/block/null_blk_main.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/staging/media/imx/imx7-mipi-csis.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/block/null_blk_main.c b/drivers/block/null_blk_main.c
-index 0e7da5015ccd5..0b504989d09d9 100644
---- a/drivers/block/null_blk_main.c
-+++ b/drivers/block/null_blk_main.c
-@@ -1736,6 +1736,7 @@ static int null_add_dev(struct nullb_device *dev)
- 	cleanup_queues(nullb);
- out_free_nullb:
- 	kfree(nullb);
-+	dev->nullb = NULL;
- out:
- 	return rv;
- }
+diff --git a/drivers/staging/media/imx/imx7-mipi-csis.c b/drivers/staging/media/imx/imx7-mipi-csis.c
+index e50b1f88e25b5..6f628195c4daa 100644
+--- a/drivers/staging/media/imx/imx7-mipi-csis.c
++++ b/drivers/staging/media/imx/imx7-mipi-csis.c
+@@ -579,7 +579,7 @@ static int mipi_csis_s_stream(struct v4l2_subdev *mipi_sd, int enable)
+ 		state->flags |= ST_STREAMING;
+ 	} else {
+ 		v4l2_subdev_call(state->src_sd, video, s_stream, 0);
+-		ret = v4l2_subdev_call(state->src_sd, core, s_power, 1);
++		ret = v4l2_subdev_call(state->src_sd, core, s_power, 0);
+ 		mipi_csis_stop_stream(state);
+ 		state->flags &= ~ST_STREAMING;
+ 		if (state->debug)
 -- 
 2.20.1
 
