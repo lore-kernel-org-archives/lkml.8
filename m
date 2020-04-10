@@ -7,52 +7,49 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02293C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 03:57:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DBB2C2D0EC
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 03:57:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C2CA62063A
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 03:57:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 020AC2063A
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 03:57:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586491049;
-	bh=Kxg+6mNL0fU0Qz97sBuOPhNXN09NkF4B2vPqrXgEL0w=;
+	s=default; t=1586491058;
+	bh=+zL9Z42z3qju4i+RETPlxX+oG7p28F/w61HbX2PFbYU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=srFX+Rd2/Xw22uikoCXnp7c+DcFA8mYy0eQgA5X/o1mZHHb5nlPe1mnp3aO59R7nm
-	 d6YpCiGH1/thZjJftFh9Mzb6WQFKy9rUN7shIN2p3aNxfQHtqfyy2+JpLadwIDml0f
-	 yKD7jFY4v/JcKPwAQUhXGoHpeTUf+psfCOfAPqs0=
+	b=CJec2iDq5bxsRPNKX4UmR6G+07Wh4a/J6TmJBcq2vcVkSd5A6hpKqh8gK0d+aqTtj
+	 t6d21IVQbIOzLBFMTEsjIGI+jeY41ajDBTNkJmLfl/mviNwqjdN5fvWzumsiB7+yr9
+	 jyJGQbam2MegVrSDymkHWlV1nAv5mjI2brAcojhQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728938AbgDJD52 (ORCPT
+        id S1728948AbgDJD5g (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Apr 2020 23:57:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33020 "EHLO mail.kernel.org"
+        Thu, 9 Apr 2020 23:57:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:32778 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726791AbgDJDtM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Apr 2020 23:49:12 -0400
+        id S1727220AbgDJDtF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Apr 2020 23:49:05 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1E5162145D;
-        Fri, 10 Apr 2020 03:49:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CA8ED20B1F;
+        Fri, 10 Apr 2020 03:49:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586490553;
-        bh=Kxg+6mNL0fU0Qz97sBuOPhNXN09NkF4B2vPqrXgEL0w=;
+        s=default; t=1586490545;
+        bh=+zL9Z42z3qju4i+RETPlxX+oG7p28F/w61HbX2PFbYU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DdodCpMjN3LJB/G0n2hf8dezhzhoq/IMCR4CnPdcqQIdyEbO/tBgjPLFaDfRo9dum
-         zeTRoqJ1qCsYSGJSqGzMbsHh9f7Dm6mxGVRpWL/4fyKAFqexlV0QR6mxwjMzMTnXzL
-         GaTAxekzszAZKC+2lnGS4h41qbtnIpGevwzKjH4U=
+        b=JMj3C28tWvQFPn5oC5CAcyHVDGpJKRiDuPJ51iYiDZgyCM4B/GTzcAwdp2lFAXF7A
+         tvePrL8y+zpCPMVev+CPxEW6toGyPfAHbVCYtLUY+jOmGeF5NEOFmEjzI+gjqIWvX1
+         Ji4kerAMiC+ReNgfNtdvDDV8bme9ddXPgvum1Pv8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Ajay Singh <ajay.kathat@microchip.com>,
-        kbuild test robot <lkp@intel.com>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-wireless@vger.kernel.org, devel@driverdev.osuosl.org
-Subject: [PATCH AUTOSEL 5.4 02/46] staging: wilc1000: avoid double unlocking of 'wilc->hif_cs' mutex
-Date:   Thu,  9 Apr 2020 23:48:25 -0400
-Message-Id: <20200410034909.8922-2-sashal@kernel.org>
+Cc:     Josef Bacik <josef@toxicpanda.com>,
+        David Sterba <dsterba@suse.com>,
+        Sasha Levin <sashal@kernel.org>, linux-btrfs@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.5 55/56] btrfs: restart relocate_tree_blocks properly
+Date:   Thu,  9 Apr 2020 23:47:59 -0400
+Message-Id: <20200410034800.8381-55-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200410034909.8922-1-sashal@kernel.org>
-References: <20200410034909.8922-1-sashal@kernel.org>
+In-Reply-To: <20200410034800.8381-1-sashal@kernel.org>
+References: <20200410034800.8381-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -62,39 +59,68 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ajay Singh <ajay.kathat@microchip.com>
+From: Josef Bacik <josef@toxicpanda.com>
 
-[ Upstream commit 6c411581caef6e3b2c286871641018364c6db50a ]
+[ Upstream commit 50dbbb71c79df89532ec41d118d59386e5a877e3 ]
 
-Possible double unlocking of 'wilc->hif_cs' mutex was identified by
-smatch [1]. Removed the extra call to release_bus() in
-wilc_wlan_handle_txq() which was missed in earlier commit fdc2ac1aafc6
-("staging: wilc1000: support suspend/resume functionality").
+There are two bugs here, but fixing them independently would just result
+in pain if you happened to bisect between the two patches.
 
-[1]. https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org/thread/NOEVW7C3GV74EWXJO3XX6VT2NKVB2HMT/
+First is how we handle the -EAGAIN from relocate_tree_block().  We don't
+set error, unless we happen to be the first node, which makes no sense,
+I have no idea what the code was trying to accomplish here.
 
-Reported-by: kbuild test robot <lkp@intel.com>
-Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
-Signed-off-by: Ajay Singh <ajay.kathat@microchip.com>
-Link: https://lore.kernel.org/r/20200221170120.15739-1-ajay.kathat@microchip.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+We in fact _do_ want err set here so that we know we need to restart in
+relocate_block_group().  Also we need finish_pending_nodes() to not
+actually call link_to_upper(), because we didn't actually relocate the
+block.
+
+And then if we do get -EAGAIN we do not want to set our backref cache
+last_trans to the one before ours.  This would force us to update our
+backref cache if we didn't cross transaction ids, which would mean we'd
+have some nodes updated to their new_bytenr, but still able to find
+their old bytenr because we're searching the same commit root as the
+last time we went through relocate_tree_blocks.
+
+Fixing these two things keeps us from panicing when we start breaking
+out of relocate_tree_blocks() either for delayed ref flushing or enospc.
+
+Signed-off-by: Josef Bacik <josef@toxicpanda.com>
+Signed-off-by: David Sterba <dsterba@suse.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/staging/wilc1000/wilc_wlan.c | 1 -
- 1 file changed, 1 deletion(-)
+ fs/btrfs/relocation.c | 11 ++---------
+ 1 file changed, 2 insertions(+), 9 deletions(-)
 
-diff --git a/drivers/staging/wilc1000/wilc_wlan.c b/drivers/staging/wilc1000/wilc_wlan.c
-index 771d8cb68dc17..02f551536e18b 100644
---- a/drivers/staging/wilc1000/wilc_wlan.c
-+++ b/drivers/staging/wilc1000/wilc_wlan.c
-@@ -578,7 +578,6 @@ int wilc_wlan_handle_txq(struct wilc *wilc, u32 *txq_count)
- 				entries = ((reg >> 3) & 0x3f);
- 				break;
- 			}
--			release_bus(wilc, WILC_BUS_RELEASE_ALLOW_SLEEP);
- 		} while (--timeout);
- 		if (timeout <= 0) {
- 			ret = func->hif_write_reg(wilc, WILC_HOST_VMM_CTL, 0x0);
+diff --git a/fs/btrfs/relocation.c b/fs/btrfs/relocation.c
+index e350706b483f1..43a559adf7b16 100644
+--- a/fs/btrfs/relocation.c
++++ b/fs/btrfs/relocation.c
+@@ -3175,9 +3175,8 @@ int relocate_tree_blocks(struct btrfs_trans_handle *trans,
+ 		ret = relocate_tree_block(trans, rc, node, &block->key,
+ 					  path);
+ 		if (ret < 0) {
+-			if (ret != -EAGAIN || &block->rb_node == rb_first(blocks))
+-				err = ret;
+-			goto out;
++			err = ret;
++			break;
+ 		}
+ 	}
+ out:
+@@ -4151,12 +4150,6 @@ static noinline_for_stack int relocate_block_group(struct reloc_control *rc)
+ 		if (!RB_EMPTY_ROOT(&blocks)) {
+ 			ret = relocate_tree_blocks(trans, rc, &blocks);
+ 			if (ret < 0) {
+-				/*
+-				 * if we fail to relocate tree blocks, force to update
+-				 * backref cache when committing transaction.
+-				 */
+-				rc->backref_cache.last_trans = trans->transid - 1;
+-
+ 				if (ret != -EAGAIN) {
+ 					err = ret;
+ 					break;
 -- 
 2.20.1
 
