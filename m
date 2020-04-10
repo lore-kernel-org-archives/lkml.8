@@ -2,78 +2,69 @@ Return-Path: <SRS0=VV4q=52=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5B02C2BA2B
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 10:08:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A93F5C2BB85
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 10:09:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 815A220801
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 10:08:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 89ABD20757
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 10:09:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726184AbgDJKIE (ORCPT
+        id S1726191AbgDJKJp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Apr 2020 06:08:04 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:47994 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725893AbgDJKIE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Apr 2020 06:08:04 -0400
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: eballetbo)
-        with ESMTPSA id A98152A0160
-Subject: Re: [PATCH v3 0/3] platform/chrome: typec: Add port partner
- registration
-To:     Prashant Malani <pmalani@chromium.org>,
-        linux-kernel@vger.kernel.org
-Cc:     heikki.krogerus@linux.intel.com,
-        Benson Leung <bleung@chromium.org>,
-        Guenter Roeck <groeck@chromium.org>
-References: <20200410002316.202107-1-pmalani@chromium.org>
-From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Message-ID: <85643207-bb30-55d4-1a10-d3c9a6266269@collabora.com>
-Date:   Fri, 10 Apr 2020 12:08:00 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Fri, 10 Apr 2020 06:09:45 -0400
+Received: from mx2.suse.de ([195.135.220.15]:42708 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725893AbgDJKJp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Apr 2020 06:09:45 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 86C23AB5F;
+        Fri, 10 Apr 2020 10:09:43 +0000 (UTC)
+Received: by ds.suse.cz (Postfix, from userid 10065)
+        id 965AEDA72D; Fri, 10 Apr 2020 12:09:06 +0200 (CEST)
+Date:   Fri, 10 Apr 2020 12:09:06 +0200
+From:   David Sterba <dsterba@suse.cz>
+To:     Sasha Levin <sashal@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        Josef Bacik <josef@toxicpanda.com>,
+        David Sterba <dsterba@suse.com>, linux-btrfs@vger.kernel.org
+Subject: Re: [PATCH AUTOSEL 5.6 64/68] btrfs: hold a ref on the root in
+ btrfs_recover_relocation
+Message-ID: <20200410100906.GH5920@suse.cz>
+Reply-To: dsterba@suse.cz
+Mail-Followup-To: dsterba@suse.cz, Sasha Levin <sashal@kernel.org>,
+        linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        Josef Bacik <josef@toxicpanda.com>, David Sterba <dsterba@suse.com>,
+        linux-btrfs@vger.kernel.org
+References: <20200410034634.7731-1-sashal@kernel.org>
+ <20200410034634.7731-64-sashal@kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20200410002316.202107-1-pmalani@chromium.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200410034634.7731-64-sashal@kernel.org>
+User-Agent: Mutt/1.5.23.1-rc1 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Prashant,
+On Thu, Apr 09, 2020 at 11:46:29PM -0400, Sasha Levin wrote:
+> From: Josef Bacik <josef@toxicpanda.com>
+> 
+> [ Upstream commit 932fd26df8125a5b14438563c4d3e33f59ba80f7 ]
+> 
+> We look up the fs root in various places in here when recovering from a
+> crashed relcoation.  Make sure we hold a ref on the root whenever we
+> look them up.
+> 
+> Signed-off-by: Josef Bacik <josef@toxicpanda.com>
+> Reviewed-by: David Sterba <dsterba@suse.com>
+> Signed-off-by: David Sterba <dsterba@suse.com>
+> Signed-off-by: Sasha Levin <sashal@kernel.org>
 
-Thanks for your patches.
-
-On 10/4/20 2:23, Prashant Malani wrote:
-> The following series adds port-partner registration when
-> connects/disconnects are detected. In order to do that, we also register
-> a listener for the cros-usbpd-notifier, which will inform the driver of
-> EC PD events. While we are here, separate out the Type C port data
-> objects into a separate struct.
-> 
-> v2: https://lkml.org/lkml/2020/4/9/861
-> v1: https://lkml.org/lkml/2020/4/6/1155
-> 
-> Changes in v3:
-> - Fixed trivial Kconfig dependency ordering error.
-> 
-> Prashant Malani (3):
->   platform/chrome: typec: Use notifier for updates
->   platform/chrome: typec: Add struct for port data
->   platform/chrome: typec: Register port partner
-> 
->  drivers/platform/chrome/Kconfig         |   1 +
->  drivers/platform/chrome/cros_ec_typec.c | 119 ++++++++++++++++++++----
->  2 files changed, 103 insertions(+), 17 deletions(-)
-> 
-
-Would be nice have the Heikki review on those.
-
-Thanks,
- Enric
+Please drop this patch from all stable versions. It's part of a
+larger series that is preparatory switching from SRCU to refcounts, so
+the patch on itself does not fix anything.
