@@ -2,147 +2,140 @@ Return-Path: <SRS0=VV4q=52=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25A18C2BA2B
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 06:40:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C4B9C2BA2B
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 06:46:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E94B420732
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 06:40:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2449B20732
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 06:46:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="mIA3G4FT"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="KXeuZ0Y3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725930AbgDJGke (ORCPT
+        id S1726009AbgDJGqo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Apr 2020 02:40:34 -0400
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:33609 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725816AbgDJGke (ORCPT
+        Fri, 10 Apr 2020 02:46:44 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:28376 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725816AbgDJGqo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Apr 2020 02:40:34 -0400
-Received: by mail-oi1-f196.google.com with SMTP id m14so729650oic.0
-        for <linux-kernel@vger.kernel.org>; Thu, 09 Apr 2020 23:40:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=NSAoS9toyPmhYfkY6R5ARK3rs6pR2Bcii1AAeaa8Lm0=;
-        b=mIA3G4FTs5HtWAytS3ZkCmCG9EwB44uBIf/owTiSz98CsSKn/j+h+LhOZgC/w9ojs9
-         6FWrnvMj6EF4YFozGRIV5Vd7gjm/IbrCmOeWbInX74M96Eg86ZuLrzMZb1e/fwic9LhT
-         2Y/3WWdenXfD4s+fdRF84HkRZr1WTbjNqqg4rDxth5+VAVxjj+rzWA9+F7bgZCA9TpNa
-         BxtKGechxC/yFiUEkONXPd/j6lOiBAE9KKizuv8OLXRUVRwIOOzAcfEd+nEGZWcvubMx
-         ZR99GNbJB1lYyvkRmr7OER1MFVDE3JqGHtTjzX1GVZyqfPWtiUvOeAD1NbCRgcixsFDc
-         SNGQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=NSAoS9toyPmhYfkY6R5ARK3rs6pR2Bcii1AAeaa8Lm0=;
-        b=GwEWFFE7xXxj4k2bzLuM+9TTAv7UBWP3zFS/5LkjF1OS9jnd/7HEz3aQ9Zh7fZwJ5E
-         eDHcU6ARpVh21HnOnc9fUX3/ChCPW0pYqFAH1C/bUGZQ5OxcloCBiNiW5igY9nW1rTzu
-         yvu4PwSK0eoJ5tXE3lrWuyc/QJhDG5vQdr7pGWyAAAZXxreHjU3F/d5UqDBG9Pf/NHnD
-         qtQIR2I/C1midAC5THBAoQBP3gF0SFCyZU62PjT8DTXmynNAM8xAY+hbbwuDYHuJ/a08
-         wedYB87DghbwUWJsRYzfD98VcVZ9Je0pQ62eIYlS9FlsZfACihL5+4c4QoQEZeRIFiZq
-         CsCw==
-X-Gm-Message-State: AGi0PuaRseTdK+FEkvyUwMkkmFZ0Tr/A4MiTPk08qc1igeLx+3pcEgEF
-        1AEXAQlmC3LZF2CDxP5n3wpM0OtGur+E5mIUax6Lem+PxWI=
-X-Google-Smtp-Source: APiQypKfFxcWISJ4H1ctOzUL+actgjwCLINqmzsMbdEijDv+1lg6aY+i2kxW4Szt6U/Hxz1c9R7x5ZWx+YYaoa3X8qY=
-X-Received: by 2002:a54:481a:: with SMTP id j26mr2386493oij.172.1586500831834;
- Thu, 09 Apr 2020 23:40:31 -0700 (PDT)
+        Fri, 10 Apr 2020 02:46:44 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1586501201;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=0zUfVt7mgJNJCuwkZj/ZTQSIXiHqwpNQ3G1o5Vhakx4=;
+        b=KXeuZ0Y3Q4Fd1oRBxZdrCmwCr9pXYjt0e6MhyYKis8OyQqQr8KWvmUAOrdc70aWeFHfF9M
+        KLhAI9PihDHgf0aaW9zMDYUVEPA6dJ1CAMSoXtCORYwLJsc/atu6GrOlNL8OCNgtZFOOQ1
+        YkBGCIYXta3WoMzYn0TjRL6M31G9pXM=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-43-Z0rWAvSEOYaWut_WfuFMDw-1; Fri, 10 Apr 2020 02:46:36 -0400
+X-MC-Unique: Z0rWAvSEOYaWut_WfuFMDw-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 854D6107ACC4;
+        Fri, 10 Apr 2020 06:46:31 +0000 (UTC)
+Received: from localhost (ovpn-13-236.pek2.redhat.com [10.72.13.236])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 21183272A6;
+        Fri, 10 Apr 2020 06:46:29 +0000 (UTC)
+Date:   Fri, 10 Apr 2020 14:46:26 +0800
+From:   Baoquan He <bhe@redhat.com>
+To:     Michal Hocko <mhocko@kernel.org>
+Cc:     Mike Rapoport <rppt@linux.ibm.com>,
+        Hoan Tran <Hoan@os.amperecomputing.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Oscar Salvador <osalvador@suse.de>,
+        Pavel Tatashin <pavel.tatashin@microsoft.com>,
+        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        "open list:MEMORY MANAGEMENT" <linux-mm@kvack.org>,
+        linux-arm-kernel@lists.infradead.org, linux-s390@vger.kernel.org,
+        sparclinux@vger.kernel.org, x86@kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+        lho@amperecomputing.com, mmorana@amperecomputing.com
+Subject: Re: [PATCH RFC] mm: remove CONFIG_HAVE_MEMBLOCK_NODE_MAP (was: Re:
+ [PATCH v3 0/5] mm: Enable CONFIG_NODES_SPAN_OTHER_NODES by default for NUMA)
+Message-ID: <20200410064626.GF2129@MiWiFi-R3L-srv>
+References: <1585420282-25630-1-git-send-email-Hoan@os.amperecomputing.com>
+ <20200330074246.GA14243@dhcp22.suse.cz>
+ <20200330092127.GB30942@linux.ibm.com>
+ <20200330095843.GF14243@dhcp22.suse.cz>
+ <20200331215618.GG30942@linux.ibm.com>
+ <20200401054227.GC2129@MiWiFi-R3L-srv>
+ <20200401075155.GH30942@linux.ibm.com>
+ <20200402080144.GK22681@dhcp22.suse.cz>
+ <20200409144119.GE2129@MiWiFi-R3L-srv>
+ <20200409153321.GQ18386@dhcp22.suse.cz>
 MIME-Version: 1.0
-References: <20200410034634.7731-1-sashal@kernel.org> <20200410034634.7731-14-sashal@kernel.org>
- <20200410062931.GD1663372@kroah.com>
-In-Reply-To: <20200410062931.GD1663372@kroah.com>
-From:   Saravana Kannan <saravanak@google.com>
-Date:   Thu, 9 Apr 2020 23:39:55 -0700
-Message-ID: <CAGETcx9Kp6JvuyF770XKsMTCY6=rC2zuBTG07oB18bya0owgWw@mail.gmail.com>
-Subject: Re: [PATCH AUTOSEL 5.6 14/68] driver core: Reevaluate
- dev->links.need_for_probe as suppliers are added
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Sasha Levin <sashal@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        stable <stable@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200409153321.GQ18386@dhcp22.suse.cz>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 9, 2020 at 11:29 PM Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
->
-> On Thu, Apr 09, 2020 at 11:45:39PM -0400, Sasha Levin wrote:
-> > From: Saravana Kannan <saravanak@google.com>
-> >
-> > [ Upstream commit 1745d299af5b373abad08fa29bff0d31dc6aff21 ]
-> >
-> > A previous patch 03324507e66c ("driver core: Allow
-> > fwnode_operations.add_links to differentiate errors") forgot to update
-> > all call sites to fwnode_operations.add_links. This patch fixes that.
-> >
-> > Legend:
-> > -> Denotes RHS is an optional/potential supplier for LHS
-> > => Denotes RHS is a mandatory supplier for LHS
-> >
-> > Example:
-> >
-> > Device A => Device X
-> > Device A -> Device Y
-> >
-> > Before this patch:
-> > 1. Device A is added.
-> > 2. Device A is marked as waiting for mandatory suppliers
-> > 3. Device X is added
-> > 4. Device A is left marked as waiting for mandatory suppliers
-> >
-> > Step 4 is wrong since all mandatory suppliers of Device A have been
-> > added.
-> >
-> > After this patch:
-> > 1. Device A is added.
-> > 2. Device A is marked as waiting for mandatory suppliers
-> > 3. Device X is added
-> > 4. Device A is no longer considered as waiting for mandatory suppliers
-> >
-> > This is the correct behavior.
-> >
-> > Fixes: 03324507e66c ("driver core: Allow fwnode_operations.add_links to differentiate errors")
-> > Signed-off-by: Saravana Kannan <saravanak@google.com>
-> > Link: https://lore.kernel.org/r/20200222014038.180923-2-saravanak@google.com
-> > Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> > Signed-off-by: Sasha Levin <sashal@kernel.org>
-> > ---
-> >  drivers/base/core.c | 8 ++++++--
-> >  1 file changed, 6 insertions(+), 2 deletions(-)
-> >
-> > diff --git a/drivers/base/core.c b/drivers/base/core.c
-> > index dbb0f9130f42d..d32a3aefff32f 100644
-> > --- a/drivers/base/core.c
-> > +++ b/drivers/base/core.c
-> > @@ -523,9 +523,13 @@ static void device_link_add_missing_supplier_links(void)
-> >
-> >       mutex_lock(&wfs_lock);
-> >       list_for_each_entry_safe(dev, tmp, &wait_for_suppliers,
-> > -                              links.needs_suppliers)
-> > -             if (!fwnode_call_int_op(dev->fwnode, add_links, dev))
-> > +                              links.needs_suppliers) {
-> > +             int ret = fwnode_call_int_op(dev->fwnode, add_links, dev);
-> > +             if (!ret)
-> >                       list_del_init(&dev->links.needs_suppliers);
-> > +             else if (ret != -ENODEV)
-> > +                     dev->links.need_for_probe = false;
-> > +     }
-> >       mutex_unlock(&wfs_lock);
-> >  }
->
-> For some reason this wasn't for stable kernels, but I can't remember.
+On 04/09/20 at 05:33pm, Michal Hocko wrote:
+> On Thu 09-04-20 22:41:19, Baoquan He wrote:
+> > On 04/02/20 at 10:01am, Michal Hocko wrote:
+> > > On Wed 01-04-20 10:51:55, Mike Rapoport wrote:
+> > > > Hi,
+> > > > 
+> > > > On Wed, Apr 01, 2020 at 01:42:27PM +0800, Baoquan He wrote:
+> > > [...]
+> > > > > From above information, we can remove HAVE_MEMBLOCK_NODE_MAP, and
+> > > > > replace it with CONFIG_NUMA. That sounds more sensible to store nid into
+> > > > > memblock when NUMA support is enabled.
+> > > >  
+> > > > Replacing CONFIG_HAVE_MEMBLOCK_NODE_MAP with CONFIG_NUMA will work, but
+> > > > this will not help cleaning up the whole node/zone initialization mess and
+> > > > we'll be stuck with two implementations.
+> > > 
+> > > Yeah, this is far from optimal.
+> > > 
+> > > > The overhead of enabling HAVE_MEMBLOCK_NODE_MAP is only for init time as
+> > > > most architectures will anyway discard the entire memblock, so having it in
+> > > > a UMA arch won't be a problem. The only exception is arm that uses
+> > > > memblock for pfn_valid(), here we may also think about a solution to
+> > > > compensate the addition of nid to the memblock structures. 
+> > > 
+> > > Well, we can make memblock_region->nid defined only for CONFIG_NUMA.
+> > > memblock_get_region_node would then unconditionally return 0 on UMA.
+> > > Essentially the same way we do NUMA for other MM code. I only see few
+> > > direct usage of region->nid.
+> > 
+> > Checked code again, seems HAVE_MEMBLOCK_NODE_MAP is selected directly in
+> > all ARCHes which support it. Means HAVE_MEMBLOCK_NODE_MAP is enabled by
+> > default on those ARCHes, and has no dependency on CONFIG_NUMA at all.
+> > E.g on x86, it just calls free_area_init_nodes() in generic code path,
+> > while free_area_init_nodes() is defined in CONFIG_HAVE_MEMBLOCK_NODE_MAP
+> > ifdeffery scope. So I tend to agree with Mike to remove
+> > HAVE_MEMBLOCK_NODE_MAP firstly on all ARCHes. We can check if it's worth
+> > only defining memblock_region->nid for CONFIG_NUMA case after
+> > HAVE_MEMBLOCK_NODE_MAP is removed.
+> 
+> This can surely go in separate patches. What I meant to say is the
+> region->nid is by definition 0 on !CONFIG_NUMA.
 
-It *is* for stable kernels too. It is an actual bug that's fixable in
-stable kernels. I think this might have been the one patch that I
-bundled into an unrelated series, but called it out as an unrelated
-bug. Maybe my wording in that email threw you off?
+I see, thanks.
 
--Saravana
