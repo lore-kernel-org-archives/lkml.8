@@ -7,86 +7,82 @@ X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5939C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 17:44:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 959C2C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 17:47:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 74115206F7
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 17:44:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6EA3C2082D
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 17:47:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586540661;
-	bh=NzY5vOWWuQUYRQgthUZFnpFjROcRtToCuD2grSEo0xk=;
+	s=default; t=1586540822;
+	bh=e4T6wr8Q4Nw+PsS/Yni6kuiQWpNyp462Qaw7cdynGDU=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=g9YX6uQybh9k4gF4i2lchZFAWxFBRwzT+QA7ucpziBYW5SEMhghE11R5yK+gjt4L3
-	 q7oPo4PyaMV1N+InIV2gXiuZ0CkPF07TAiaXhx6n3usEHA9crICXJKKO2uookYxymc
-	 HbiL/AjKqR5LecRG5lhZ2jy5kJKOtGXPiGFzKYGo=
+	b=gEhNHaictfcKscC51xir4E2/gTm7+2oUCTsJrVC8zv4fJhug5Oh7DsKSayfkO+zJ4
+	 jG6HZo53q5Mvr9HYWPJZFlkcegMvfBEFKUGRA1PXNC6FqjSC3vYBKnl6fYUBJaOF1b
+	 smo3pNvUGfu/IbExFTchtqU0BMsYRTiJCM55UaWs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726663AbgDJRoT (ORCPT
+        id S1726678AbgDJRrA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Apr 2020 13:44:19 -0400
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:38120 "EHLO
+        Fri, 10 Apr 2020 13:47:00 -0400
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:40560 "EHLO
         mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726177AbgDJRoT (ORCPT
+        with ESMTP id S1726203AbgDJRrA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Apr 2020 13:44:19 -0400
-Received: by mail-oi1-f194.google.com with SMTP id w2so1982405oic.5;
-        Fri, 10 Apr 2020 10:44:17 -0700 (PDT)
+        Fri, 10 Apr 2020 13:47:00 -0400
+Received: by mail-oi1-f194.google.com with SMTP id a7so1979135oid.7;
+        Fri, 10 Apr 2020 10:47:00 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=gSwNy1tJz4LnthkNz4eu29xiKtjPqkQs8epKrYetAcA=;
-        b=P/XoaKpbxh4nWdAoXnFFv6hQicq5t+5xe13Fpvmxa4Z9s+Luoow31b+yFb5CFzU8D7
-         DltVUMZzCeTeWj20RljyWE+tDSzeCAs87/LhTGjblyCHPYVZDIojpbAds7LaCQcCvMe+
-         2IXrBw5LRQeAWhzwwB+aCwxMDeNZbnhXmMWHtioqPe7klIcF228cvMrXaaBO1tE9ohyT
-         /IwFIaLsOdZZlEI9lt6uhUyh2EQIJfqKWkddERmucC5qD5CJ49uKJHvRrFBS+vd5VGN6
-         fVr93Ngm5aSFmZFxyUApT0Sj5/gP+OB1UsSGHjYDQWxEMIXltaad67qvOpA4ifWGani7
-         yWXQ==
-X-Gm-Message-State: AGi0Pua1Th+EukpIMjXcbSbA4jh2IkckPalBwhK6+EiZHmiLd1nTFS77
-        zjGMluTUMnz7Zb5nvrf/Yw==
-X-Google-Smtp-Source: APiQypL2ZJu/xdLEJ0I6dA8ilTA3Y6JVALbbZMRVcfLcQccXYD6tcxnLAOWU7dYVvd9Ls/XBydO1gg==
-X-Received: by 2002:aca:d68a:: with SMTP id n132mr4324743oig.40.1586540657449;
-        Fri, 10 Apr 2020 10:44:17 -0700 (PDT)
-Received: from rob-hp-laptop (ip-99-203-29-27.pools.cgn.spcsdns.net. [99.203.29.27])
-        by smtp.gmail.com with ESMTPSA id m13sm1270005otf.15.2020.04.10.10.44.13
+        bh=YOlnayCpN0x6fsTC4gjjNKTPcCx7CoULGGzJuytpQFg=;
+        b=AiHs1HaJ2/kw4hHO9LuAUOnrosulrYIWvSYs5qRKMH/JdpHJfSOfdYHyURpP/dEbTj
+         ek7o4TH+GfurmIc5cDnWrjmsIuXMOdw9twGP5ccMTXXRj80jEZkDxI/e0xATq5kL6Cwu
+         RWPfLqSyhiOHnrL8fA/nCssRu6I5UKx2V5IAhi3Y2qM8Qj4w1OTQK0fF941xaSwLjKcy
+         9v/lBvBx8jZSUmZ9blqGTd1Z0NdC6ztciFoJu3QHpf+zpO/hh+dPCPO7gpMlbMDG5gka
+         wkFSLYXYymDvchvL4XiTLagyOwO3xQZpG+xQJsqjvrvKqoaDTqaQIavidwxEdTu9J9b6
+         hsLA==
+X-Gm-Message-State: AGi0PuZ1oYmGK5zlipIF2/FBBJzWTh+jLoSHGRfcfE8HjzUQouQ9Ho93
+        THoFUfAwrNpr8lIjUqbhxGQsuDk=
+X-Google-Smtp-Source: APiQypI+q90EcJYQgIP5foBVizKnUwxg5NykGbL2hgbN/7Z9tebeDhCVPgGy4H9xSz9z9wr3rhbSRQ==
+X-Received: by 2002:a54:4519:: with SMTP id l25mr4255258oil.92.1586540819869;
+        Fri, 10 Apr 2020 10:46:59 -0700 (PDT)
+Received: from rob-hp-laptop (ip-173-126-55-226.ftwttx.spcsdns.net. [173.126.55.226])
+        by smtp.gmail.com with ESMTPSA id d3sm1596066oib.15.2020.04.10.10.46.58
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 10 Apr 2020 10:44:16 -0700 (PDT)
-Received: (nullmailer pid 21853 invoked by uid 1000);
-        Fri, 10 Apr 2020 17:44:11 -0000
-Date:   Fri, 10 Apr 2020 12:44:11 -0500
+        Fri, 10 Apr 2020 10:46:59 -0700 (PDT)
+Received: (nullmailer pid 25668 invoked by uid 1000);
+        Fri, 10 Apr 2020 17:46:58 -0000
+Date:   Fri, 10 Apr 2020 12:46:58 -0500
 From:   Rob Herring <robh@kernel.org>
-To:     Dmitry Osipenko <digetx@gmail.com>
-Cc:     Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Stephen Warren <swarren@wwwdotorg.org>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        devicetree@vger.kernel.org, linux-tegra@vger.kernel.org,
-        alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1 1/2] dt-bindings: sound: tegra-wm8903: Document new
- nvidia,headset property
-Message-ID: <20200410174411.GA21788@bogus>
-References: <20200330204011.18465-1-digetx@gmail.com>
- <20200330204011.18465-2-digetx@gmail.com>
+To:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Cc:     linux-amlogic@lists.infradead.org, jbrunet@baylibre.com,
+        narmstrong@baylibre.com, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-clk@vger.kernel.org,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Subject: Re: [PATCH 1/2] clk: meson8b: export the HDMI system clock
+Message-ID: <20200410174658.GA25608@bogus>
+References: <20200330234535.3327513-1-martin.blumenstingl@googlemail.com>
+ <20200330234535.3327513-2-martin.blumenstingl@googlemail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200330204011.18465-2-digetx@gmail.com>
+In-Reply-To: <20200330234535.3327513-2-martin.blumenstingl@googlemail.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 30 Mar 2020 23:40:10 +0300, Dmitry Osipenko wrote:
-> Some devices have a 4-pin headset jack instead of 3-pin microphone jack.
-> The new boolean nvidia,headset property tells that the Mic Jack represents
-> the state of a headset microphone. This additional hardware description is
-> needed because microphone detection procedure differs in a case of a 4-pin
-> jack from a 3-pin jack.
+On Tue, 31 Mar 2020 01:45:34 +0200, Martin Blumenstingl wrote:
+> Export the HDMI system clock (used by the HDMI transmitter) so it can be
+> used in the dt-bindings.
 > 
-> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+> Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 > ---
->  .../devicetree/bindings/sound/nvidia,tegra-audio-wm8903.txt      | 1 +
->  1 file changed, 1 insertion(+)
+>  drivers/clk/meson/meson8b.h              | 1 -
+>  include/dt-bindings/clock/meson8b-clkc.h | 1 +
+>  2 files changed, 1 insertion(+), 1 deletion(-)
 > 
 
 Acked-by: Rob Herring <robh@kernel.org>
