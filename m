@@ -7,48 +7,49 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9FFAC2BB85
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 03:59:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1176C2D0EC
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 03:59:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B070920BED
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 03:59:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 87E2020BED
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 03:59:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586491170;
-	bh=bLaYknW8xJkpruAeW9vzpZ0HesbH5LKBqP1T/qNO/0I=;
+	s=default; t=1586491177;
+	bh=0XrRqotfepK3zUNWdd8fnIccrvPnNVyNdW6GWO8JWtQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pu1G0VxwNkfPGPBT8UXVq2hOYYG8V4mZ/7onuGVbzCzjX9/t/egI04yOv6QurnWOi
-	 QvA8mruqlakmLwr7uxLt5C38usR30nMpL6Q40WOdrdjjFMcyea3vMRcOc9Zj6Ysa9l
-	 kGFL8AzYFPLiqg0SrrmdT4uqaM/tUVbGNfx4ev3U=
+	b=pP3wndAdxDetnRoU4T1JQybjFe+1Jv+99uT3h0n0Jk81RP4GaGKbAqsHdvog5mxjE
+	 OKN4+K9UQoc/sYyhcqFaoOwyEe6R23r207q36XxOWG3QuyZuE/5jbMI6wpRdfKieVm
+	 rap1EC0kIImA3J1It8agrSOBLDwcvyBKeAXjeN+o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728773AbgDJD7Z (ORCPT
+        id S1728501AbgDJD7f (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Apr 2020 23:59:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59838 "EHLO mail.kernel.org"
+        Thu, 9 Apr 2020 23:59:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59654 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728172AbgDJDsY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Apr 2020 23:48:24 -0400
+        id S1728137AbgDJDsT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Apr 2020 23:48:19 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6C7D320936;
-        Fri, 10 Apr 2020 03:48:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D244420CC7;
+        Fri, 10 Apr 2020 03:48:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586490504;
-        bh=bLaYknW8xJkpruAeW9vzpZ0HesbH5LKBqP1T/qNO/0I=;
+        s=default; t=1586490499;
+        bh=0XrRqotfepK3zUNWdd8fnIccrvPnNVyNdW6GWO8JWtQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=f3SrJ2/1DJAQ6a1cHbfvF8A8WkiJB5CXODmLx8v/oB2VyuztXdo1lYd5K8jDgN0jF
-         9Z2ny94tz4d6hniUxTF9Xz/015POXDREyUKOl8ZzlUe3MjW8ZSdhoib04MJA+F2b3h
-         JpnL+TRafV2g0tCb1vZORLvlRC4EnOUQwY97ES9Q=
+        b=fkS9Ecexy10VU35f198dJ0j5M2XOSQ9xkohSIUGYVr0F0wl6hPcxdWoV9XV+kENAc
+         W0c5OZD0ehqDHddM9gb932nzxTpneQdIDE9caopAFIkkckxkmRl/agn8asP2yqKVXQ
+         kxarXbwIypMmi0/KDkCDh+eEu4HZQLHMStONewao=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Thomas Hellstrom <thellstrom@vmware.com>,
-        Borislav Petkov <bp@suse.de>, Christoph Hellwig <hch@lst.de>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        Sasha Levin <sashal@kernel.org>,
-        iommu@lists.linux-foundation.org
-Subject: [PATCH AUTOSEL 5.5 19/56] dma-mapping: Fix dma_pgprot() for unencrypted coherent pages
-Date:   Thu,  9 Apr 2020 23:47:23 -0400
-Message-Id: <20200410034800.8381-19-sashal@kernel.org>
+Cc:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Rui Miguel Silva <rmfrfs@gmail.com>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org,
+        devel@driverdev.osuosl.org, linux-arm-kernel@lists.infradead.org
+Subject: [PATCH AUTOSEL 5.5 15/56] media: imx: imx7-media-csi: Fix video field handling
+Date:   Thu,  9 Apr 2020 23:47:19 -0400
+Message-Id: <20200410034800.8381-15-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200410034800.8381-1-sashal@kernel.org>
 References: <20200410034800.8381-1-sashal@kernel.org>
@@ -61,45 +62,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Thomas Hellstrom <thellstrom@vmware.com>
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 
-[ Upstream commit 17c4a2ae15a7aaefe84bdb271952678c5c9cd8e1 ]
+[ Upstream commit f7b8488bd39ae8feced4dfbb41cf1431277b893f ]
 
-When dma_mmap_coherent() sets up a mapping to unencrypted coherent memory
-under SEV encryption and sometimes under SME encryption, it will actually
-set up an encrypted mapping rather than an unencrypted, causing devices
-that DMAs from that memory to read encrypted contents. Fix this.
+Commit 4791bd7d6adc ("media: imx: Try colorimetry at both sink and
+source pads") reworked the way that formats are set on the sink pad of
+the CSI subdevice, and accidentally removed video field handling.
+Restore it by defaulting to V4L2_FIELD_NONE if the field value isn't
+supported, with the only two supported value being V4L2_FIELD_NONE and
+V4L2_FIELD_INTERLACED.
 
-When force_dma_unencrypted() returns true, the linear kernel map of the
-coherent pages have had the encryption bit explicitly cleared and the
-page content is unencrypted. Make sure that any additional PTEs we set
-up to these pages also have the encryption bit cleared by having
-dma_pgprot() return a protection with the encryption bit cleared in this
-case.
-
-Signed-off-by: Thomas Hellstrom <thellstrom@vmware.com>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Reviewed-by: Christoph Hellwig <hch@lst.de>
-Acked-by: Tom Lendacky <thomas.lendacky@amd.com>
-Link: https://lkml.kernel.org/r/20200304114527.3636-3-thomas_os@shipmail.org
+Fixes: 4791bd7d6adc ("media: imx: Try colorimetry at both sink and source pads")
+Signed-off-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Reviewed-by: Rui Miguel Silva <rmfrfs@gmail.com>
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/dma/mapping.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/staging/media/imx/imx7-media-csi.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/kernel/dma/mapping.c b/kernel/dma/mapping.c
-index 12ff766ec1fa3..98e3d873792ea 100644
---- a/kernel/dma/mapping.c
-+++ b/kernel/dma/mapping.c
-@@ -154,6 +154,8 @@ EXPORT_SYMBOL(dma_get_sgtable_attrs);
-  */
- pgprot_t dma_pgprot(struct device *dev, pgprot_t prot, unsigned long attrs)
- {
-+	if (force_dma_unencrypted(dev))
-+		prot = pgprot_decrypted(prot);
- 	if (dev_is_dma_coherent(dev) ||
- 	    (IS_ENABLED(CONFIG_DMA_NONCOHERENT_CACHE_SYNC) &&
-              (attrs & DMA_ATTR_NON_CONSISTENT)))
+diff --git a/drivers/staging/media/imx/imx7-media-csi.c b/drivers/staging/media/imx/imx7-media-csi.c
+index db30e2c70f2fe..f45920b3137e4 100644
+--- a/drivers/staging/media/imx/imx7-media-csi.c
++++ b/drivers/staging/media/imx/imx7-media-csi.c
+@@ -1009,6 +1009,7 @@ static int imx7_csi_try_fmt(struct imx7_csi *csi,
+ 		sdformat->format.width = in_fmt->width;
+ 		sdformat->format.height = in_fmt->height;
+ 		sdformat->format.code = in_fmt->code;
++		sdformat->format.field = in_fmt->field;
+ 		*cc = in_cc;
+ 
+ 		sdformat->format.colorspace = in_fmt->colorspace;
+@@ -1023,6 +1024,9 @@ static int imx7_csi_try_fmt(struct imx7_csi *csi,
+ 							 false);
+ 			sdformat->format.code = (*cc)->codes[0];
+ 		}
++
++		if (sdformat->format.field != V4L2_FIELD_INTERLACED)
++			sdformat->format.field = V4L2_FIELD_NONE;
+ 		break;
+ 	default:
+ 		return -EINVAL;
 -- 
 2.20.1
 
