@@ -4,57 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F2FEC2D0EC
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 03:54:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01D3BC2D0EC
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 03:55:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5844120936
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 03:54:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CE66D20CC7
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 03:55:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586490898;
-	bh=NxJmxBFM/dLNxv4o9zmDD2dXHVxsxW8x7R2phYHfe1c=;
+	s=default; t=1586490902;
+	bh=UvqpvL2EV4UnpoXXEwi/oSxZiUT7lftlgu3mMdrpfkc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cIz4w5RqXjCaDNH9hVg/VzbyzULioy2IXBJRGsPN84zG2n1Nkxtr9S8qww3TeHNbv
-	 p9sWvFM/flNgF8dSehOMcz4ZiFqSXbN7smZgG/QNo/6CxPSy8sgmMRKAZ/z2N5ZJ74
-	 /imPt+dRak1aWxbV062dQaGqAsDejtJViWhG7YTg=
+	b=btX9FNLN6ZvTFZpY6kjWSySfR0hbLR5bZ+6SBz5Pmxhf4HLJ42RL8En+AmnqOtlQJ
+	 CM6lGmHe38384IkWQhQfqjWjf0V82G0gy1NpnTlYuX+wkFQcCA2HBqQBx0k9HUF/Xt
+	 H5Phsru5IDCtyBvTJ0Srz25GDWCCzBkbufcTT1J0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729225AbgDJDyw (ORCPT
+        id S1728825AbgDJDuL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Apr 2020 23:54:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34624 "EHLO mail.kernel.org"
+        Thu, 9 Apr 2020 23:50:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34382 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728831AbgDJDuM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Apr 2020 23:50:12 -0400
+        id S1728752AbgDJDuB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Apr 2020 23:50:01 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 763A12137B;
-        Fri, 10 Apr 2020 03:50:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7353120BED;
+        Fri, 10 Apr 2020 03:50:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586490612;
-        bh=NxJmxBFM/dLNxv4o9zmDD2dXHVxsxW8x7R2phYHfe1c=;
+        s=default; t=1586490601;
+        bh=UvqpvL2EV4UnpoXXEwi/oSxZiUT7lftlgu3mMdrpfkc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zTyQIH71SKZMjm34oYpDwhPcbb94T3onzoVO009lRhmeRDg/rGUT7L04xOpe0mZLr
-         VJqY5c8ROabAyme/+KXdNUpYvY2yvAVw8X+xifRnsq8ApVAp6GT0K1kfkQs4S03StU
-         Ap82IBMUYoYm6K0zUTlKFaCU3NpTZWO+t5CtIE54=
+        b=tzihmek2iJTqeOgeWC+b8cOj2TRgr62GR8MKULDQNmD3V6Mqd9VRG/9DQmepmRznm
+         xkIv6XYfm7lXDBVAfhQLTKLBqUTfNLg32gLIAgRFd7sBZYc2JsvyaKH8bmE6qydMEp
+         +vIhp5B+o44NMtIKNi0mze59PVI9L9ZiMGjH0qLs=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Bart Van Assche <bvanassche@acm.org>,
-        Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>,
-        Johannes Thumshirn <jth@kernel.org>,
-        Hannes Reinecke <hare@suse.com>,
-        Ming Lei <ming.lei@redhat.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>,
-        linux-block@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 05/32] null_blk: Handle null_add_dev() failures properly
-Date:   Thu,  9 Apr 2020 23:49:38 -0400
-Message-Id: <20200410035005.9371-5-sashal@kernel.org>
+Cc:     Josef Bacik <josef@toxicpanda.com>, Qu Wenruo <wqu@suse.com>,
+        David Sterba <dsterba@suse.com>,
+        Sasha Levin <sashal@kernel.org>, linux-btrfs@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 44/46] btrfs: remove a BUG_ON() from merge_reloc_roots()
+Date:   Thu,  9 Apr 2020 23:49:07 -0400
+Message-Id: <20200410034909.8922-44-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200410035005.9371-1-sashal@kernel.org>
-References: <20200410035005.9371-1-sashal@kernel.org>
+In-Reply-To: <20200410034909.8922-1-sashal@kernel.org>
+References: <20200410034909.8922-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -64,62 +59,75 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bart Van Assche <bvanassche@acm.org>
+From: Josef Bacik <josef@toxicpanda.com>
 
-[ Upstream commit 9b03b713082a31a5b90e0a893c72aa620e255c26 ]
+[ Upstream commit 7b7b74315b24dc064bc1c683659061c3d48f8668 ]
 
-If null_add_dev() fails then null_del_dev() is called with a NULL argument.
-Make null_del_dev() handle this scenario correctly. This patch fixes the
-following KASAN complaint:
+This was pretty subtle, we default to reloc roots having 0 root refs, so
+if we crash in the middle of the relocation they can just be deleted.
+If we successfully complete the relocation operations we'll set our root
+refs to 1 in prepare_to_merge() and then go on to merge_reloc_roots().
 
-null-ptr-deref in null_del_dev+0x28/0x280 [null_blk]
-Read of size 8 at addr 0000000000000000 by task find/1062
+At prepare_to_merge() time if any of the reloc roots have a 0 reference
+still, we will remove that reloc root from our reloc root rb tree, and
+then clean it up later.
 
-Call Trace:
- dump_stack+0xa5/0xe6
- __kasan_report.cold+0x65/0x99
- kasan_report+0x16/0x20
- __asan_load8+0x58/0x90
- null_del_dev+0x28/0x280 [null_blk]
- nullb_group_drop_item+0x7e/0xa0 [null_blk]
- client_drop_item+0x53/0x80 [configfs]
- configfs_rmdir+0x395/0x4e0 [configfs]
- vfs_rmdir+0xb6/0x220
- do_rmdir+0x238/0x2c0
- __x64_sys_unlinkat+0x75/0x90
- do_syscall_64+0x6f/0x2f0
- entry_SYSCALL_64_after_hwframe+0x49/0xbe
+However this only happens if we successfully start a transaction.  If
+we've aborted previously we will skip this step completely, and only
+have reloc roots with a reference count of 0, but were never properly
+removed from the reloc control's rb tree.
 
-Signed-off-by: Bart Van Assche <bvanassche@acm.org>
-Reviewed-by: Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>
-Cc: Johannes Thumshirn <jth@kernel.org>
-Cc: Hannes Reinecke <hare@suse.com>
-Cc: Ming Lei <ming.lei@redhat.com>
-Cc: Christoph Hellwig <hch@infradead.org>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+This isn't a problem per-se, our references are held by the list the
+reloc roots are on, and by the original root the reloc root belongs to.
+If we end up in this situation all the reloc roots will be added to the
+dirty_reloc_list, and then properly dropped at that point.  The reloc
+control will be free'd and the rb tree is no longer used.
+
+There were two options when fixing this, one was to remove the BUG_ON(),
+the other was to make prepare_to_merge() handle the case where we
+couldn't start a trans handle.
+
+IMO this is the cleaner solution.  I started with handling the error in
+prepare_to_merge(), but it turned out super ugly.  And in the end this
+BUG_ON() simply doesn't matter, the cleanup was happening properly, we
+were just panicing because this BUG_ON() only matters in the success
+case.  So I've opted to just remove it and add a comment where it was.
+
+Reviewed-by: Qu Wenruo <wqu@suse.com>
+Signed-off-by: Josef Bacik <josef@toxicpanda.com>
+Signed-off-by: David Sterba <dsterba@suse.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/block/null_blk_main.c | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+ fs/btrfs/relocation.c | 16 +++++++++++++++-
+ 1 file changed, 15 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/block/null_blk_main.c b/drivers/block/null_blk_main.c
-index 002072429290e..78355a0e61db6 100644
---- a/drivers/block/null_blk_main.c
-+++ b/drivers/block/null_blk_main.c
-@@ -1480,7 +1480,12 @@ static void cleanup_queues(struct nullb *nullb)
+diff --git a/fs/btrfs/relocation.c b/fs/btrfs/relocation.c
+index 4abdf3ec81c18..e1337598d15ea 100644
+--- a/fs/btrfs/relocation.c
++++ b/fs/btrfs/relocation.c
+@@ -2562,7 +2562,21 @@ void merge_reloc_roots(struct reloc_control *rc)
+ 			free_reloc_roots(&reloc_roots);
+ 	}
  
- static void null_del_dev(struct nullb *nullb)
- {
--	struct nullb_device *dev = nullb->dev;
-+	struct nullb_device *dev;
-+
-+	if (!nullb)
-+		return;
-+
-+	dev = nullb->dev;
+-	BUG_ON(!RB_EMPTY_ROOT(&rc->reloc_root_tree.rb_root));
++	/*
++	 * We used to have
++	 *
++	 * BUG_ON(!RB_EMPTY_ROOT(&rc->reloc_root_tree.rb_root));
++	 *
++	 * here, but it's wrong.  If we fail to start the transaction in
++	 * prepare_to_merge() we will have only 0 ref reloc roots, none of which
++	 * have actually been removed from the reloc_root_tree rb tree.  This is
++	 * fine because we're bailing here, and we hold a reference on the root
++	 * for the list that holds it, so these roots will be cleaned up when we
++	 * do the reloc_dirty_list afterwards.  Meanwhile the root->reloc_root
++	 * will be cleaned up on unmount.
++	 *
++	 * The remaining nodes will be cleaned up by free_reloc_control.
++	 */
+ }
  
- 	ida_simple_remove(&nullb_indexes, nullb->index);
- 
+ static void free_block_list(struct rb_root *blocks)
 -- 
 2.20.1
 
