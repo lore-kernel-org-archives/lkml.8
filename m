@@ -4,55 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82F87C2D0EC
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 03:56:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8D1AC2BB85
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 03:56:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 575472063A
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 03:56:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 960922063A
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 03:56:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586490966;
-	bh=MDjQnBTuj10hq8TT9O84r+Mc5y0Rp29mQWABAjHG7nc=;
+	s=default; t=1586490970;
+	bh=MnuWYLFkdb1YHimhXS6d0CxSVI1WAlx/FlXUz917YfU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=x/pjFabPioA5jrqkrDv5p4yUilHSFEFiJOlDZ9TE25wCBtAa2jsIQHS+Nn6avSpi7
-	 xhLEV+szMRu5OLRJxdau/ZPKYHlqn4JxwOgGiGsIv5aoMw9N4QuT8i1pLtzud2iC+K
-	 maU0fEnsOPzU/51DfK5WhPqF4MjInxjARv6UY5wk=
+	b=aKEkYTLaMQFxupbJE1pa2nlfir/nNws/PMU870GQgpe1zMKHYUq2SOTDdQ/daYO9g
+	 NGKFK2zopiZM10tGR4DW8mlMkS4YG1Pq8PK+M+H5YcXJ4NaKqXwg0D/YMvZ7tPL0rM
+	 B4hiPIdF94GY8x7hRamd/DOtVOHbBLhaTmAgwdsc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728667AbgDJD4E (ORCPT
+        id S1728641AbgDJDtp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Apr 2020 23:56:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33906 "EHLO mail.kernel.org"
+        Thu, 9 Apr 2020 23:49:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33744 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728652AbgDJDtr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Apr 2020 23:49:47 -0400
+        id S1727771AbgDJDth (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Apr 2020 23:49:37 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 59D2A20B1F;
-        Fri, 10 Apr 2020 03:49:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C72CB2173E;
+        Fri, 10 Apr 2020 03:49:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586490587;
-        bh=MDjQnBTuj10hq8TT9O84r+Mc5y0Rp29mQWABAjHG7nc=;
+        s=default; t=1586490577;
+        bh=MnuWYLFkdb1YHimhXS6d0CxSVI1WAlx/FlXUz917YfU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kBvgMQSH2+W1ChuC+QIigd79K9f75zAv5ibcG5Fv46LlZjheymAjLFatb8xP67RWT
-         AJMjSrLzHhBzc6BJvENf1j28IZgg+2pqt7HE62FZe4yLKU8wYCDZvhER4XlkVmhA8p
-         cXzpwVU6H3F1Bo+QYFsD4pJ+YO4u9N5A2QDUchwM=
+        b=R4TV6pinPuye/0j0tc6gi9o4pKGB5MTjJ3GBSud+rR09AeQnZwy6iLfne8Sj4aAON
+         237xbLkAFBu2yhQgUpSiVWy+PPM3kI8nfyxP86KPnfDyD35McKUJTvMaW7/jJ5TzuA
+         kCnvemC92SO7p7QfIqegpPQyWbe11A5eJfgoBmMs=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Bart Van Assche <bvanassche@acm.org>,
-        syzbot+d44e1b26ce5c3e77458d@syzkaller.appspotmail.com,
-        Ming Lei <ming.lei@redhat.com>,
-        Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>,
-        Johannes Thumshirn <jth@kernel.org>,
-        Hannes Reinecke <hare@suse.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>,
-        linux-block@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 32/46] blk-mq: Keep set->nr_hw_queues and set->map[].nr_queues in sync
-Date:   Thu,  9 Apr 2020 23:48:55 -0400
-Message-Id: <20200410034909.8922-32-sashal@kernel.org>
+Cc:     Matt Ranostay <matt.ranostay@konsulko.com>, rdunlap@infradead.org,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 23/46] media: i2c: video-i2c: fix build errors due to 'imply hwmon'
+Date:   Thu,  9 Apr 2020 23:48:46 -0400
+Message-Id: <20200410034909.8922-23-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200410034909.8922-1-sashal@kernel.org>
 References: <20200410034909.8922-1-sashal@kernel.org>
@@ -65,58 +60,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bart Van Assche <bvanassche@acm.org>
+From: Matt Ranostay <matt.ranostay@konsulko.com>
 
-[ Upstream commit 6e66b49392419f3fe134e1be583323ef75da1e4b ]
+[ Upstream commit 64d4fc9926f09861a35d8f0f7d81f056e6d5af7b ]
 
-blk_mq_map_queues() and multiple .map_queues() implementations expect that
-set->map[HCTX_TYPE_DEFAULT].nr_queues is set to the number of hardware
-queues. Hence set .nr_queues before calling these functions. This patch
-fixes the following kernel warning:
+Fix build fault when CONFIG_HWMON is a module, and CONFIG_VIDEO_I2C
+as builtin. This is due to 'imply hwmon' in the respective Kconfig.
 
-WARNING: CPU: 0 PID: 2501 at include/linux/cpumask.h:137
-Call Trace:
- blk_mq_run_hw_queue+0x19d/0x350 block/blk-mq.c:1508
- blk_mq_run_hw_queues+0x112/0x1a0 block/blk-mq.c:1525
- blk_mq_requeue_work+0x502/0x780 block/blk-mq.c:775
- process_one_work+0x9af/0x1740 kernel/workqueue.c:2269
- worker_thread+0x98/0xe40 kernel/workqueue.c:2415
- kthread+0x361/0x430 kernel/kthread.c:255
+Issue build log:
 
-Fixes: ed76e329d74a ("blk-mq: abstract out queue map") # v5.0
-Reported-by: syzbot+d44e1b26ce5c3e77458d@syzkaller.appspotmail.com
-Signed-off-by: Bart Van Assche <bvanassche@acm.org>
-Reviewed-by: Ming Lei <ming.lei@redhat.com>
-Reviewed-by: Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>
-Cc: Johannes Thumshirn <jth@kernel.org>
-Cc: Hannes Reinecke <hare@suse.com>
-Cc: Ming Lei <ming.lei@redhat.com>
-Cc: Christoph Hellwig <hch@infradead.org>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+ld: drivers/media/i2c/video-i2c.o: in function `amg88xx_hwmon_init':
+video-i2c.c:(.text+0x2e1): undefined reference to `devm_hwmon_device_register_with_info
+
+Cc: rdunlap@infradead.org
+Fixes: acbea6798955 (media: video-i2c: add hwmon support for amg88xx)
+Signed-off-by: Matt Ranostay <matt.ranostay@konsulko.com>
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- block/blk-mq.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ drivers/media/i2c/video-i2c.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/block/blk-mq.c b/block/blk-mq.c
-index 3c1abab1fdf52..a8c1a45cedde0 100644
---- a/block/blk-mq.c
-+++ b/block/blk-mq.c
-@@ -3007,6 +3007,14 @@ static int blk_mq_alloc_rq_maps(struct blk_mq_tag_set *set)
+diff --git a/drivers/media/i2c/video-i2c.c b/drivers/media/i2c/video-i2c.c
+index 078141712c887..0b977e73ceb29 100644
+--- a/drivers/media/i2c/video-i2c.c
++++ b/drivers/media/i2c/video-i2c.c
+@@ -255,7 +255,7 @@ static int amg88xx_set_power(struct video_i2c_data *data, bool on)
+ 	return amg88xx_set_power_off(data);
+ }
  
- static int blk_mq_update_queue_map(struct blk_mq_tag_set *set)
- {
-+	/*
-+	 * blk_mq_map_queues() and multiple .map_queues() implementations
-+	 * expect that set->map[HCTX_TYPE_DEFAULT].nr_queues is set to the
-+	 * number of hardware queues.
-+	 */
-+	if (set->nr_maps == 1)
-+		set->map[HCTX_TYPE_DEFAULT].nr_queues = set->nr_hw_queues;
-+
- 	if (set->ops->map_queues && !is_kdump_kernel()) {
- 		int i;
+-#if IS_ENABLED(CONFIG_HWMON)
++#if IS_REACHABLE(CONFIG_HWMON)
  
+ static const u32 amg88xx_temp_config[] = {
+ 	HWMON_T_INPUT,
 -- 
 2.20.1
 
