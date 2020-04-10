@@ -2,409 +2,342 @@ Return-Path: <SRS0=VV4q=52=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0B61C2BA2B
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 10:32:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9061DC2BA2B
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 10:35:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 85A632087E
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 10:32:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 531DC2064A
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 10:35:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="n8wOhbtN"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hIlL8gb0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726059AbgDJKcE (ORCPT
+        id S1726179AbgDJKfL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Apr 2020 06:32:04 -0400
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:6110 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725912AbgDJKcD (ORCPT
+        Fri, 10 Apr 2020 06:35:11 -0400
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:43188 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725955AbgDJKfL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Apr 2020 06:32:03 -0400
-Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03AAMZ3m007421;
-        Fri, 10 Apr 2020 12:31:56 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=STMicroelectronics;
- bh=sg5ayxKKvPFwvHMd1WH8pdZDDGNp5mGn5bou/g0GxK8=;
- b=n8wOhbtNpCMxxnuhmEKnYjNTL9Rkk83ean1Vj7YrrSOZbJJ9XVQOa3xu7/DZEn1cxcFw
- ki8ilwhinO2wUwxaDWhhIKjavSTyrl0GIQOEhLvi/mtxYTWZb0jTGVvlOmCHjTpdE9zH
- 3R8WW6dd8Yba+EXnvuhJVRtbJcAVNP0kAIVYk5AOPCdVBF99MJIYCeqNimWl5nHoTsIX
- OhyAMwKKtBbAUlh3ItR/Ih/X8NKOHjO0wRpqki4WghFINstk8dBq5KIwm9YHHajfjWfl
- OeWVxrzSvEeSCxGgwLklOGAD+sB+QiGWLt1nzK67/v/y2ES0X15N+0C2I/cg/J/YN5LK Pg== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 3091mb02kq-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 10 Apr 2020 12:31:56 +0200
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 17574100034;
-        Fri, 10 Apr 2020 12:31:51 +0200 (CEST)
-Received: from Webmail-eu.st.com (sfhdag3node1.st.com [10.75.127.7])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id BDF192AD9FC;
-        Fri, 10 Apr 2020 12:31:51 +0200 (CEST)
-Received: from lmecxl0889.tpe.st.com (10.75.127.48) by SFHDAG3NODE1.st.com
- (10.75.127.7) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 10 Apr
- 2020 12:31:50 +0200
-Subject: Re: [PATCH] remoteproc: core: Add a memory efficient coredump
- function
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>
-CC:     Rishabh Bhatnagar <rishabhb@codeaurora.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-remoteproc <linux-remoteproc@vger.kernel.org>,
-        Ohad Ben-Cohen <ohad@wizery.com>, <psodagud@codeaurora.org>,
-        <tsoni@codeaurora.org>, Siddharth Gupta <sidgup@codeaurora.org>
-References: <1585353412-19644-1-git-send-email-rishabhb@codeaurora.org>
- <20200401195114.GD267644@minitux> <20200402172435.GA2785@xps15>
- <20200403051611.GJ663905@yoga>
- <CANLsYkzqg=ksv46ZO7=2Vd1Li8sbSwD2uzSjSPfxFj0BQgPNvA@mail.gmail.com>
- <20200409202714.GT20625@builder.lan>
-From:   Arnaud POULIQUEN <arnaud.pouliquen@st.com>
-Message-ID: <bb11115e-ce13-eeda-9b29-a75a030f4c98@st.com>
-Date:   Fri, 10 Apr 2020 12:31:49 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Fri, 10 Apr 2020 06:35:11 -0400
+Received: by mail-pl1-f196.google.com with SMTP id z6so540278plk.10;
+        Fri, 10 Apr 2020 03:35:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=os03ga9iMHnxoeBIW2QNUc5cfGpv9mh6v9GueIcmG6U=;
+        b=hIlL8gb0AJbI2Rzgjr9/x2AoTLWdtmCBDfgBLIZkQxfE/GeyCK4osF0+J49IqcX/W9
+         9Yef5iti2pBgoYrl2vdvb3G4LdOGkF47Cm2V5VSpvc+xg/MWHi4ewjIoV+uQHKNGDWsu
+         k7mM2E0Demkw2hmj2IAhKtQGXLJmJH6rW+uqGrsWuR+RI0UmRascgpI2hEoyCssYls3K
+         VPVoZ9TahZi34igU/yyeS4Gzgapwb34lFjF+T4uPsXbZb37iZ7lpDBJXu+xZhWWs4PH2
+         61lMD1JnIYpOmeS3QY8YK5nD/U2AlqJu+f8tvb3PNK2RGwzYmzi0hj9yTxFwrZRIDGQg
+         fjYQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=os03ga9iMHnxoeBIW2QNUc5cfGpv9mh6v9GueIcmG6U=;
+        b=tq6p6X5rKsQml9zI21Vzzb4hCQ2fWtikvXCaAwclYK/XvGWOofuoq/SzPaoRVV3Q8F
+         QA9TJz1PzNLM+L8d7lxsfZl/3NHRDLqDO8Od0NuadC1SpAKK0triffumJs2IuarCXMXZ
+         OX19wdpbQem+QXe7ONVUetHonjtFKUvfPiddgLgVc11GnKZ1pgpd6k83bc7IUiXp9bEs
+         qY2BrUWJYlau+IC2dcOuRTKqez4D6leFHoqCT7Fxp7oESvmXt+8ahu8GoZ1n4PQOJLu4
+         hWIzl/5NbjnHpJmU22s+GnMGNG07JfibIw5aIRv7xw6xNlaQ/dnDCmBnxNtc9sqINdpT
+         CRRQ==
+X-Gm-Message-State: AGi0Pua78A2oVs6+9R7nPb4HmkRpYbXSwEDpOpML4yRqEYOOliri8by0
+        9u7xDmbN9UQcKjIBgJaC+Ls=
+X-Google-Smtp-Source: APiQypKA2z82A0G3XtZKt3T9f7+30TiQUEILCtFaauYMqUVI8RlhlBBfCGfFrHc2k/ddo+YjgLsTbw==
+X-Received: by 2002:a17:902:b283:: with SMTP id u3mr3941396plr.311.1586514910229;
+        Fri, 10 Apr 2020 03:35:10 -0700 (PDT)
+Received: from localhost.localdomain (181.56.30.125.dy.iij4u.or.jp. [125.30.56.181])
+        by smtp.gmail.com with ESMTPSA id 198sm1454236pfa.87.2020.04.10.03.35.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 10 Apr 2020 03:35:09 -0700 (PDT)
+From:   Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
+To:     Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Cc:     Tomasz Figa <tfiga@chromium.org>, linux-media@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
+Subject: [RFC][PATCH] media: v4l2-ctrls: add more NULL pointer checks
+Date:   Fri, 10 Apr 2020 19:35:01 +0900
+Message-Id: <20200410103501.1083-1-sergey.senozhatsky@gmail.com>
+X-Mailer: git-send-email 2.26.0
 MIME-Version: 1.0
-In-Reply-To: <20200409202714.GT20625@builder.lan>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.75.127.48]
-X-ClientProxiedBy: SFHDAG5NODE2.st.com (10.75.127.14) To SFHDAG3NODE1.st.com
- (10.75.127.7)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
- definitions=2020-04-10_03:2020-04-09,2020-04-10 signatures=0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+A number of v4l2-ctrls functions gracefully handle NULL ctrl pointers,
+for instance, v4l2_g_ctrl(), v4l2_ctrl_activate(), __v4l2_ctrl_grab()
+to name a few. But not all of them. It is relatively easy to crash the
+kernel with the NULL pointer dereference:
 
+	# modprobe vivid node_types=0x60000
+	$ v4l2-compliance
 
-On 4/9/20 10:27 PM, Bjorn Andersson wrote:
-> On Fri 03 Apr 13:53 PDT 2020, Mathieu Poirier wrote:
-> 
->> On Thu, 2 Apr 2020 at 23:16, Bjorn Andersson <bjorn.andersson@linaro.org> wrote:
->>>
->>> On Thu 02 Apr 10:24 PDT 2020, Mathieu Poirier wrote:
->>>
->>>> On Wed, Apr 01, 2020 at 12:51:14PM -0700, Bjorn Andersson wrote:
->>>>> On Fri 27 Mar 16:56 PDT 2020, Rishabh Bhatnagar wrote:
->>>>>
->>>>>> The current coredump implementation uses vmalloc area to copy
->>>>>> all the segments. But this might put a lot of strain on low memory
->>>>>> targets as the firmware size sometimes is in ten's of MBs.
->>>>>> The situation becomes worse if there are multiple remote processors
->>>>>> undergoing recovery at the same time.
->>>>>> This patch directly copies the device memory to userspace buffer
->>>>>> and avoids extra memory usage. This requires recovery to be halted
->>>>>> until data is read by userspace and free function is called.
->>>>>>
->>>>>> Signed-off-by: Rishabh Bhatnagar <rishabhb@codeaurora.org>
->>>>>> ---
->>>>>>  drivers/remoteproc/remoteproc_core.c | 107 +++++++++++++++++++++++++++++------
->>>>>>  include/linux/remoteproc.h           |   4 ++
->>>>>>  2 files changed, 94 insertions(+), 17 deletions(-)
->>>>>>
->>>>>> diff --git a/drivers/remoteproc/remoteproc_core.c b/drivers/remoteproc/remoteproc_core.c
->>>>>> index 097f33e..2d881e5 100644
->>>>>> --- a/drivers/remoteproc/remoteproc_core.c
->>>>>> +++ b/drivers/remoteproc/remoteproc_core.c
->>>>>> @@ -1516,6 +1516,86 @@ int rproc_coredump_add_segment(struct rproc *rproc, dma_addr_t da, size_t size)
->>>>>>  }
->>>>>>  EXPORT_SYMBOL(rproc_coredump_add_segment);
->>>>>>
->>>>>> +
->>>>>> +void rproc_free_dump(void *data)
->>>>>
->>>>> static
->>>>>
->>>>>> +{
->>>>>> + struct rproc *rproc = data;
->>>>>> +
->>>>>> + dev_info(&rproc->dev, "Userspace done reading rproc dump\n");
->>>>>
->>>>> Please drop the info prints throughout.
->>>>>
->>>>>> + complete(&rproc->dump_done);
->>>>>> +}
->>>>>> +
->>>>>> +static unsigned long get_offset(loff_t user_offset, struct list_head *segments,
->>>>>> +                         unsigned long *data_left)
->>>>>
->>>>> Please rename this rproc_coredump_resolve_segment(), or something along
->>>>> those lines.
->>>>>
->>>>>> +{
->>>>>> + struct rproc_dump_segment *segment;
->>>>>> +
->>>>>> + list_for_each_entry(segment, segments, node) {
->>>>>> +         if (user_offset >= segment->size)
->>>>>> +                 user_offset -= segment->size;
->>>>>> +         else
->>>>>> +                 break;
->>>>>> + }
->>>>>> +
->>>>>> + if (&segment->node == segments) {
->>>>>> +         *data_left = 0;
->>>>>> +         return 0;
->>>>>> + }
->>>>>> +
->>>>>> + *data_left = segment->size - user_offset;
->>>>>> +
->>>>>> + return segment->da + user_offset;
->>>>>> +}
->>>>>> +
->>>>>> +static ssize_t rproc_read_dump(char *buffer, loff_t offset, size_t count,
->>>>>> +                         void *data, size_t elfcorelen)
->>>>>> +{
->>>>>> + void *device_mem = NULL;
->>>>>> + unsigned long data_left = 0;
->>>>>> + unsigned long bytes_left = count;
->>>>>> + unsigned long addr = 0;
->>>>>> + size_t copy_size = 0;
->>>>>> + struct rproc *rproc = data;
->>>>>> +
->>>>>> + if (offset < elfcorelen) {
->>>>>> +         copy_size = elfcorelen - offset;
->>>>>> +         copy_size = min(copy_size, bytes_left);
->>>>>> +
->>>>>> +         memcpy(buffer, rproc->elfcore + offset, copy_size);
->>>>>> +         offset += copy_size;
->>>>>> +         bytes_left -= copy_size;
->>>>>> +         buffer += copy_size;
->>>>>> + }
->>>>>> +
->>>>>> + while (bytes_left) {
->>>>>> +         addr = get_offset(offset - elfcorelen, &rproc->dump_segments,
->>>>>> +                         &data_left);
->>>>>> + /* EOF check */
->>>>>
->>>>> Indentation, and "if no data left" does indicate that this is the end of
->>>>> the loop already.
->>>>>
->>>>>> +         if (data_left == 0) {
->>>>>> +                 pr_info("Ramdump complete. %lld bytes read.", offset);
->>>>>> +                 return 0;
->>>>>
->>>>> You might have copied data to the buffer, so returning 0 here doesn't
->>>>> seem right. Presumably instead you should break and return offset -
->>>>> original offset or something like that.
->>>>>
->>>>>> +         }
->>>>>> +
->>>>>> +         copy_size = min_t(size_t, bytes_left, data_left);
->>>>>> +
->>>>>> +         device_mem = rproc->ops->da_to_va(rproc, addr, copy_size);
->>>>>> +         if (!device_mem) {
->>>>>> +                 pr_err("Unable to ioremap: addr %lx, size %zd\n",
->>>>>> +                          addr, copy_size);
->>>>>> +                 return -ENOMEM;
->>>>>> +         }
->>>>>> +         memcpy(buffer, device_mem, copy_size);
->>>>>> +
->>>>>> +         offset += copy_size;
->>>>>> +         buffer += copy_size;
->>>>>> +         bytes_left -= copy_size;
->>>>>> +         dev_dbg(&rproc->dev, "Copied %d bytes to userspace\n",
->>>>>> +                 copy_size);
->>>>>> + }
->>>>>> +
->>>>>> + return count;
->>>>>
->>>>> This should be the number of bytes actually returned, so if count is
->>>>> larger than the sum of the segment sizes this will be wrong.
->>>>>
->>>>>> +}
->>>>>> +
->>>>>>  /**
->>>>>>   * rproc_coredump_add_custom_segment() - add custom coredump segment
->>>>>>   * @rproc:       handle of a remote processor
->>>>>> @@ -1566,27 +1646,27 @@ static void rproc_coredump(struct rproc *rproc)
->>>>>>   struct rproc_dump_segment *segment;
->>>>>>   struct elf32_phdr *phdr;
->>>>>>   struct elf32_hdr *ehdr;
->>>>>> - size_t data_size;
->>>>>> + size_t header_size;
->>>>>>   size_t offset;
->>>>>>   void *data;
->>>>>> - void *ptr;
->>>>>>   int phnum = 0;
->>>>>>
->>>>>>   if (list_empty(&rproc->dump_segments))
->>>>>>           return;
->>>>>>
->>>>>> - data_size = sizeof(*ehdr);
->>>>>> + header_size = sizeof(*ehdr);
->>>>>>   list_for_each_entry(segment, &rproc->dump_segments, node) {
->>>>>> -         data_size += sizeof(*phdr) + segment->size;
->>>>>> +         header_size += sizeof(*phdr);
->>>>>>
->>>>>>           phnum++;
->>>>>>   }
->>>>>>
->>>>>> - data = vmalloc(data_size);
->>>>>> + data = vmalloc(header_size);
->>>>>>   if (!data)
->>>>>>           return;
->>>>>>
->>>>>>   ehdr = data;
->>>>>> + rproc->elfcore = data;
->>>>>
->>>>> Rather than using a rproc-global variable I would prefer that you create
->>>>> a new rproc_coredump_state struct that carries the header pointer and
->>>>> the information needed by the read & free functions.
->>>>>
->>>>>>
->>>>>>   memset(ehdr, 0, sizeof(*ehdr));
->>>>>>   memcpy(ehdr->e_ident, ELFMAG, SELFMAG);
->>>>>> @@ -1618,23 +1698,14 @@ static void rproc_coredump(struct rproc *rproc)
->>>>>>
->>>>>>           if (segment->dump) {
->>>>>>                   segment->dump(rproc, segment, data + offset);
->>>>
->>>> I'm not exactly sure why custom segments can be copied to the elf image but not
->>>> generic ones... And as far as I can tell accessing "data + offset" will blow up
->>>> because only the memory for the program headers has been allocated, not for the
->>>> program segments.
->>>>
->>>
->>> Thanks, I missed that, but you're correct.
->>>
->>>>
->>>>>> -         } else {
->>>>>> -                 ptr = rproc_da_to_va(rproc, segment->da, segment->size);
->>>>>> -                 if (!ptr) {
->>>>>> -                         dev_err(&rproc->dev,
->>>>>> -                                 "invalid coredump segment (%pad, %zu)\n",
->>>>>> -                                 &segment->da, segment->size);
->>>>>> -                         memset(data + offset, 0xff, segment->size);
->>>>>> -                 } else {
->>>>>> -                         memcpy(data + offset, ptr, segment->size);
->>>>>> -                 }
->>>>>> -         }
->>>>>>
->>>>>>           offset += phdr->p_filesz;
->>>>>>           phdr++;
->>>>>>   }
->>>>>> + dev_coredumpm(&rproc->dev, NULL, rproc, header_size, GFP_KERNEL,
->>>>>> +                 rproc_read_dump, rproc_free_dump);
->>>>>>
->>>>>> - dev_coredumpv(&rproc->dev, data, data_size, GFP_KERNEL);
->>>>>> + wait_for_completion(&rproc->dump_done);
->>>>>
->>>>> This will mean that recovery handling will break on installations that
->>>>> doesn't have your ramdump collector - as it will just sit here forever
->>>>> (5 minutes) waiting for userspace to do its job.
->>>>
->>>> Right, that problem also came to mind.
->>>>
->>>>>
->>>>> I think we need to device a new sysfs attribute, through which you can
->>>>> enable the "inline" coredump mechanism. That way recovery would work for
->>>>> all systems and in your specific case you could reconfigure it - perhaps
->>>>> once the ramdump collector starts.
->>>>
->>>> Another option is to make rproc_coredump() customizable, as with all the other
->>>> functions in remoteproc_internal.h.  That way the current rproc_coredump() is
->>>> kept intact and we don't need a new sysfs entry.
->>>>
->>>
->>> Rishabh suggested this in a discussion we had earlier this week as well,
->>> but we still have the problem that the same platform driver will need to
->>> support both modes, depending on which user space is running. So even if
->>> we push this out to the platform driver we still need some mechanism
->>> for userspace to enable the "inline" mode.
->>
->> So is this something that needs to be done on the fly in response to
->> some system event?  Any possibility to use the DT?
->>
-> 
-> Designing this as a dynamic property would mean that the kernel doesn't
-> have to be recompiled between different variants of the same software
-> solution for a piece of hardware.
-> 
-> Putting a flag in DT would mean that you need to flash different DT
-> depending on what apps your running in userspace.
-> 
->> We are currently discussing the addition of a character driver [1]...
->> The file_operations could be platform specific so any scenario can be
->> implemented, whether it is switching on/off a remote processor in the
->> open/release() callback or setting the behavior of the coredump
->> functionality in an ioctl().
-> 
-> The main benefit of tying this to the character device would be that the
-> behavior could be reverted on release(). But this would imply that the
-> application starting and stopping the remoteproc is also the one
-> collecting ramdumps and it would also imply that there exists such an
-> application (e.g. this functionality is still desirable for auto_booted
-> remoteprocs).
+BUG: kernel NULL pointer dereference, address: 0000000000000020
+PF: supervisor read access in kernel mode
+PF: error_code(0x0000) - not-present page
+PGD 0 P4D 0
+Oops: 0000 [#1] SMP PTI
+RIP: 0010:v4l2_ctrl_s_ctrl.isra.0+0x4/0x30 [vivid]
+Call Trace:
+ vidioc_s_input.cold+0x1a8/0x38d [vivid]
+ __video_do_ioctl+0x372/0x3a0 [videodev]
+ ? v4l_enumstd+0x20/0x20 [videodev]
+ ? v4l_enumstd+0x20/0x20 [videodev]
+ video_usercopy+0x1cb/0x450 [videodev]
+ v4l2_ioctl+0x3f/0x50 [videodev]
+ ksys_ioctl+0x3f1/0x7e0
+ ? vfs_write+0x1c4/0x1f0
+ __x64_sys_ioctl+0x11/0x20
+ do_syscall_64+0x49/0x2c0
+ entry_SYSCALL_64_after_hwframe+0x44/0xa9
 
-What about to have a dedicated sub device for the coredump, with its own
-interface (sysfs or char dev)?
-Then kernel configs could enable/disable the driver and set the mode.
-This could help to decorrelate the coredump and the recovery and manage
-different behaviors for debug, production and final product.
+vivid driver crashes the kernel in various places, for instance,
 
-> 
-> Finally I think it's likely that the existing tools for collecting
-> devcoredump artifacts are expected to just continue to work after this
-> change - in both modes.
-agree
-> 
-> 
-> 
-> On the functionality Rishabh proposes, it would be very interesting to
-> hear from others on their usage and need for coredumps.
-Concerning the stm32 platform the usage will depend on customer choice,
-as they implement their own remote firmware. So i suppose that the needs would be:
-- to enable /disable the coredump depending onproject phases(dev, production,
-  final product)
-- to perform a post-mortem analysis:
-   - remote proc trace
-   - code and associated data section analysis
+	v4l2_ctrl_modify_range(dev->brightness, ...);
+or
+	v4l2_ctrl_s_ctrl(dev->brightness, ...);
+
+because ->brightness (and quite likely some more controls) is NULL.
+While we may fix the vivid driver, it would be safer to fix core
+API. This patch adds more NULL pointer checks to ctrl API.
+
+Signed-off-by: Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
+---
+ drivers/media/v4l2-core/v4l2-ctrls.c | 22 ++++++++++++++++-
+ include/media/v4l2-ctrls.h           | 37 ++++++++++++++++++++++++++--
+ 2 files changed, 56 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/media/v4l2-core/v4l2-ctrls.c b/drivers/media/v4l2-core/v4l2-ctrls.c
+index 93d33d1db4e8..02a60f67c2ee 100644
+--- a/drivers/media/v4l2-core/v4l2-ctrls.c
++++ b/drivers/media/v4l2-core/v4l2-ctrls.c
+@@ -2869,6 +2869,9 @@ EXPORT_SYMBOL(v4l2_ctrl_add_handler);
  
-> 
-> E.g. are Qualcomm really the only ones that has issues with
-> vmalloc(sizeof(firmware)) failing and preventing post mortem debugging
-> in low-memory scenarios? Or does others simply not care to debug
-> remoteproc firmware in these cases? Is debugging only done using JTAG?
-> 
->> I think there is value in exploring different opportunities so that we
->> keep the core as clean and simple as possible.
->>
-> 
-> I agree, but hadn't considered this fully. In particular with the
-> changes I'm asking Rishabh to make we have a few screen fulls of code
-> involved in the coredump handling. So I think it would be beneficial to
-> move this into a remoteproc_coredump.c.
+ bool v4l2_ctrl_radio_filter(const struct v4l2_ctrl *ctrl)
+ {
++	if (WARN_ON(!ctrl))
++		return false;
++
+ 	if (V4L2_CTRL_ID2WHICH(ctrl->id) == V4L2_CTRL_CLASS_FM_TX)
+ 		return true;
+ 	if (V4L2_CTRL_ID2WHICH(ctrl->id) == V4L2_CTRL_CLASS_FM_RX)
+@@ -3794,7 +3797,9 @@ s32 v4l2_ctrl_g_ctrl(struct v4l2_ctrl *ctrl)
+ 	struct v4l2_ext_control c;
+ 
+ 	/* It's a driver bug if this happens. */
+-	WARN_ON(!ctrl->is_int);
++	if (WARN_ON(!ctrl || !ctrl->is_int))
++		return -EINVAL;
++
+ 	c.value = 0;
+ 	get_ctrl(ctrl, &c);
+ 	return c.value;
+@@ -4212,6 +4217,9 @@ EXPORT_SYMBOL(v4l2_s_ctrl);
+ 
+ int __v4l2_ctrl_s_ctrl(struct v4l2_ctrl *ctrl, s32 val)
+ {
++	if (!ctrl)
++		return -EINVAL;
++
+ 	lockdep_assert_held(ctrl->handler->lock);
+ 
+ 	/* It's a driver bug if this happens. */
+@@ -4223,6 +4231,9 @@ EXPORT_SYMBOL(__v4l2_ctrl_s_ctrl);
+ 
+ int __v4l2_ctrl_s_ctrl_int64(struct v4l2_ctrl *ctrl, s64 val)
+ {
++	if (!ctrl)
++		return -EINVAL;
++
+ 	lockdep_assert_held(ctrl->handler->lock);
+ 
+ 	/* It's a driver bug if this happens. */
+@@ -4234,6 +4245,9 @@ EXPORT_SYMBOL(__v4l2_ctrl_s_ctrl_int64);
+ 
+ int __v4l2_ctrl_s_ctrl_string(struct v4l2_ctrl *ctrl, const char *s)
+ {
++	if (!ctrl)
++		return -EINVAL;
++
+ 	lockdep_assert_held(ctrl->handler->lock);
+ 
+ 	/* It's a driver bug if this happens. */
+@@ -4246,6 +4260,9 @@ EXPORT_SYMBOL(__v4l2_ctrl_s_ctrl_string);
+ int __v4l2_ctrl_s_ctrl_area(struct v4l2_ctrl *ctrl,
+ 			    const struct v4l2_area *area)
+ {
++	if (!ctrl)
++		return -EINVAL;
++
+ 	lockdep_assert_held(ctrl->handler->lock);
+ 
+ 	/* It's a driver bug if this happens. */
+@@ -4447,6 +4464,9 @@ int __v4l2_ctrl_modify_range(struct v4l2_ctrl *ctrl,
+ 	bool range_changed = false;
+ 	int ret;
+ 
++	if (!ctrl)
++		return -EINVAL;
++
+ 	lockdep_assert_held(ctrl->handler->lock);
+ 
+ 	switch (ctrl->type) {
+diff --git a/include/media/v4l2-ctrls.h b/include/media/v4l2-ctrls.h
+index 7db9e719a583..22d7ea500f96 100644
+--- a/include/media/v4l2-ctrls.h
++++ b/include/media/v4l2-ctrls.h
+@@ -755,6 +755,8 @@ int v4l2_ctrl_add_handler(struct v4l2_ctrl_handler *hdl,
+  * transmitter class controls.
+  *
+  * This function is to be used with v4l2_ctrl_add_handler().
++ *
++ * Returns false if ctrl == NULL.
+  */
+ bool v4l2_ctrl_radio_filter(const struct v4l2_ctrl *ctrl);
+ 
+@@ -884,7 +886,7 @@ static inline void v4l2_ctrl_grab(struct v4l2_ctrl *ctrl, bool grabbed)
+  * @step value is interpreted as a menu_skip_mask.
+  *
+  * An error is returned if one of the range arguments is invalid for this
+- * control type.
++ * control type. Returns -EINVAL if ctrl == NULL.
+  *
+  * The caller is responsible for acquiring the control handler mutex on behalf
+  * of __v4l2_ctrl_modify_range().
+@@ -906,7 +908,7 @@ int __v4l2_ctrl_modify_range(struct v4l2_ctrl *ctrl,
+  * @step value is interpreted as a menu_skip_mask.
+  *
+  * An error is returned if one of the range arguments is invalid for this
+- * control type.
++ * control type. Returns -EINVAL if ctrl == NULL.
+  *
+  * This function assumes that the control handler is not locked and will
+  * take the lock itself.
+@@ -916,6 +918,9 @@ static inline int v4l2_ctrl_modify_range(struct v4l2_ctrl *ctrl,
+ {
+ 	int rval;
+ 
++	if (!ctrl)
++		return -EINVAL;
++
+ 	v4l2_ctrl_lock(ctrl);
+ 	rval = __v4l2_ctrl_modify_range(ctrl, min, max, step, def);
+ 	v4l2_ctrl_unlock(ctrl);
+@@ -982,6 +987,8 @@ const s64 *v4l2_ctrl_get_int_menu(u32 id, u32 *len);
+  * used from within the &v4l2_ctrl_ops functions.
+  *
+  * This function is for integer type controls only.
++ *
++ * Returns -EINVAL if ctrl == NULL.
+  */
+ s32 v4l2_ctrl_g_ctrl(struct v4l2_ctrl *ctrl);
+ 
+@@ -996,6 +1003,8 @@ s32 v4l2_ctrl_g_ctrl(struct v4l2_ctrl *ctrl);
+  * allowing it to be used from within the &v4l2_ctrl_ops functions.
+  *
+  * This function is for integer type controls only.
++ *
++ * Returns -EINVAL is ctrl == NULL.
+  */
+ int __v4l2_ctrl_s_ctrl(struct v4l2_ctrl *ctrl, s32 val);
+ 
+@@ -1010,11 +1019,16 @@ int __v4l2_ctrl_s_ctrl(struct v4l2_ctrl *ctrl, s32 val);
+  * used from within the &v4l2_ctrl_ops functions.
+  *
+  * This function is for integer type controls only.
++ *
++ * Return -EINVAL is ctrl == NULL.
+  */
+ static inline int v4l2_ctrl_s_ctrl(struct v4l2_ctrl *ctrl, s32 val)
+ {
+ 	int rval;
+ 
++	if (!ctrl)
++		return -EINVAL;
++
+ 	v4l2_ctrl_lock(ctrl);
+ 	rval = __v4l2_ctrl_s_ctrl(ctrl, val);
+ 	v4l2_ctrl_unlock(ctrl);
+@@ -1062,11 +1076,16 @@ int __v4l2_ctrl_s_ctrl_int64(struct v4l2_ctrl *ctrl, s64 val);
+  * used from within the &v4l2_ctrl_ops functions.
+  *
+  * This function is for 64-bit integer type controls only.
++ *
++ * Returns -EINVAL if ctrl == NULL.
+  */
+ static inline int v4l2_ctrl_s_ctrl_int64(struct v4l2_ctrl *ctrl, s64 val)
+ {
+ 	int rval;
+ 
++	if (!ctrl)
++		return -EINVAL;
++
+ 	v4l2_ctrl_lock(ctrl);
+ 	rval = __v4l2_ctrl_s_ctrl_int64(ctrl, val);
+ 	v4l2_ctrl_unlock(ctrl);
+@@ -1085,6 +1104,8 @@ static inline int v4l2_ctrl_s_ctrl_int64(struct v4l2_ctrl *ctrl, s64 val)
+  * allowing it to be used from within the &v4l2_ctrl_ops functions.
+  *
+  * This function is for string type controls only.
++ *
++ * Returns -EINVAL if ctrl == NULL.
+  */
+ int __v4l2_ctrl_s_ctrl_string(struct v4l2_ctrl *ctrl, const char *s);
+ 
+@@ -1100,11 +1121,16 @@ int __v4l2_ctrl_s_ctrl_string(struct v4l2_ctrl *ctrl, const char *s);
+  * used from within the &v4l2_ctrl_ops functions.
+  *
+  * This function is for string type controls only.
++ *
++ * Returns -EINVAL if ctrl == NULL.
+  */
+ static inline int v4l2_ctrl_s_ctrl_string(struct v4l2_ctrl *ctrl, const char *s)
+ {
+ 	int rval;
+ 
++	if (!ctrl)
++		return -EINVAL;
++
+ 	v4l2_ctrl_lock(ctrl);
+ 	rval = __v4l2_ctrl_s_ctrl_string(ctrl, s);
+ 	v4l2_ctrl_unlock(ctrl);
+@@ -1123,6 +1149,8 @@ static inline int v4l2_ctrl_s_ctrl_string(struct v4l2_ctrl *ctrl, const char *s)
+  * allowing it to be used from within the &v4l2_ctrl_ops functions.
+  *
+  * This function is for area type controls only.
++ *
++ * Returns -EINVAL if ctrl == NULL.
+  */
+ int __v4l2_ctrl_s_ctrl_area(struct v4l2_ctrl *ctrl,
+ 			    const struct v4l2_area *area);
+@@ -1139,12 +1167,17 @@ int __v4l2_ctrl_s_ctrl_area(struct v4l2_ctrl *ctrl,
+  * used from within the &v4l2_ctrl_ops functions.
+  *
+  * This function is for area type controls only.
++ *
++ * Returns -EINVAL if ctrl == NULL.
+  */
+ static inline int v4l2_ctrl_s_ctrl_area(struct v4l2_ctrl *ctrl,
+ 					const struct v4l2_area *area)
+ {
+ 	int rval;
+ 
++	if (!ctrl)
++		return -EINVAL;
++
+ 	v4l2_ctrl_lock(ctrl);
+ 	rval = __v4l2_ctrl_s_ctrl_area(ctrl, area);
+ 	v4l2_ctrl_unlock(ctrl);
+-- 
+2.26.0
 
-Agree, i would also consider a separate device (but perhaps in a second step). 
-
-One challenge of having a separate device is that we need to ensure that
-everything is ready(probed) before starting the firmware especially for the
-autoboot mode.
-Component bind/unbind mechanism could help to synchronize sub device with
-rproc device on start and stop.
-FYI, I plan to sent a RFC soon (internal review on going) about the 
-de-correlation of the rproc virtio that also introduces the component
-bind/unbind mechanism in rproc core.
-
-Regards,
-Arnaud
-
-> 
-> Thanks,
-> Bjorn
-> 
->> Thanks,
->> Mathieu
->>
->> [1]. https://patchwork.kernel.org/project/linux-remoteproc/list/?series=264603
->>
->>>
->>> Regards,
->>> Bjorn
