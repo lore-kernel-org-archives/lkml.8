@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 079EFC2BB1D
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 03:49:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BC2EC2BB85
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 03:49:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D2DC520936
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 03:49:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 10C7120936
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 03:49:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586490548;
-	bh=r65/TYB8Ccha+sCKUQZvULK/TNluLgy1aezJp9O5X5A=;
+	s=default; t=1586490550;
+	bh=aeHeMHHANQ0739RszKBFxz1ghhvV5+d2/m2J+5MqJbk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ik8xe4L0VH/gOwwlcOyJoxirWZ++3XdljRnZD8Wt5TiLbJcv2gN2JT2cSNDf00/0L
-	 Kau4/DrfBzGRgqdU14xgyyw8iCQs7PMOAJ0B8jKycrNvMpCgb36ANjJaPNBjuG0BYO
-	 VulCN7+CjjXvYgbrk/6CCLB3vZmN7cTJIWd9t0tY=
+	b=dHhLFwCtLFy4UXys1leNk9uOkKHEjWxpwlzXMLtk5mKmriyIafCVBKPLRTiWclWLk
+	 otT7WkO7j3sLe1TBdC3V6GcbeIAzdvKW3ksPtmsiLTHj30POrWxRLkzbzUyFzrRu5m
+	 ZCJAKphLQjJ6T5RfnqnPUhyasnlekS7c4D4fjgKE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728474AbgDJDtG (ORCPT
+        id S1728486AbgDJDtI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Apr 2020 23:49:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60956 "EHLO mail.kernel.org"
+        Thu, 9 Apr 2020 23:49:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:32880 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728434AbgDJDtE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Apr 2020 23:49:04 -0400
+        id S1728472AbgDJDtG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Apr 2020 23:49:06 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AF1722145D;
-        Fri, 10 Apr 2020 03:49:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DE7B821473;
+        Fri, 10 Apr 2020 03:49:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586490544;
-        bh=r65/TYB8Ccha+sCKUQZvULK/TNluLgy1aezJp9O5X5A=;
+        s=default; t=1586490546;
+        bh=aeHeMHHANQ0739RszKBFxz1ghhvV5+d2/m2J+5MqJbk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0YwzV/zDK11w7U+Rg6Kb4ws3zHZ1luWpQLs/+W2Qkaw1E2cbZyS3GueGJcwBHrM1E
-         GsLfPNNyUth7EgNt+aM6n2eQJncWO4+bHD4KYBxp+xTY7Vurg0jLHTn2vtdjXDRCaC
-         edV7iafVeBp2n3r2jeIeYtHnAbV3ULR5RMS+EaYY=
+        b=Cp6CC6F8BGRKAivlWSzTxMo28XI3k3wzTZ28ZaFr46e+PvkruZIeDnat4o+RBCpLE
+         q8t+IcvBHDNl8rNNCCC4mpm5tcmMhx81FSfjV0HbcBA3Ba8QuD3XhUm/5uC0L67kQp
+         ElR5Q1JuSkCyOrhSE227LBu94fDEN6/xYKHPBYYI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Josef Bacik <josef@toxicpanda.com>, Qu Wenruo <wqu@suse.com>,
+Cc:     Josef Bacik <josef@toxicpanda.com>,
         David Sterba <dsterba@suse.com>,
         Sasha Levin <sashal@kernel.org>, linux-btrfs@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.5 54/56] btrfs: remove a BUG_ON() from merge_reloc_roots()
-Date:   Thu,  9 Apr 2020 23:47:58 -0400
-Message-Id: <20200410034800.8381-54-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.5 56/56] btrfs: track reloc roots based on their commit root bytenr
+Date:   Thu,  9 Apr 2020 23:48:00 -0400
+Message-Id: <20200410034800.8381-56-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200410034800.8381-1-sashal@kernel.org>
 References: <20200410034800.8381-1-sashal@kernel.org>
@@ -61,73 +61,117 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Josef Bacik <josef@toxicpanda.com>
 
-[ Upstream commit 7b7b74315b24dc064bc1c683659061c3d48f8668 ]
+[ Upstream commit ea287ab157c2816bf12aad4cece41372f9d146b4 ]
 
-This was pretty subtle, we default to reloc roots having 0 root refs, so
-if we crash in the middle of the relocation they can just be deleted.
-If we successfully complete the relocation operations we'll set our root
-refs to 1 in prepare_to_merge() and then go on to merge_reloc_roots().
+We always search the commit root of the extent tree for looking up back
+references, however we track the reloc roots based on their current
+bytenr.
 
-At prepare_to_merge() time if any of the reloc roots have a 0 reference
-still, we will remove that reloc root from our reloc root rb tree, and
-then clean it up later.
+This is wrong, if we commit the transaction between relocating tree
+blocks we could end up in this code in build_backref_tree
 
-However this only happens if we successfully start a transaction.  If
-we've aborted previously we will skip this step completely, and only
-have reloc roots with a reference count of 0, but were never properly
-removed from the reloc control's rb tree.
+  if (key.objectid == key.offset) {
+	  /*
+	   * Only root blocks of reloc trees use backref
+	   * pointing to itself.
+	   */
+	  root = find_reloc_root(rc, cur->bytenr);
+	  ASSERT(root);
+	  cur->root = root;
+	  break;
+  }
 
-This isn't a problem per-se, our references are held by the list the
-reloc roots are on, and by the original root the reloc root belongs to.
-If we end up in this situation all the reloc roots will be added to the
-dirty_reloc_list, and then properly dropped at that point.  The reloc
-control will be free'd and the rb tree is no longer used.
+find_reloc_root() is looking based on the bytenr we had in the commit
+root, but if we've COWed this reloc root we will not find that bytenr,
+and we will trip over the ASSERT(root).
 
-There were two options when fixing this, one was to remove the BUG_ON(),
-the other was to make prepare_to_merge() handle the case where we
-couldn't start a trans handle.
+Fix this by using the commit_root->start bytenr for indexing the commit
+root.  Then we change the __update_reloc_root() caller to be used when
+we switch the commit root for the reloc root during commit.
 
-IMO this is the cleaner solution.  I started with handling the error in
-prepare_to_merge(), but it turned out super ugly.  And in the end this
-BUG_ON() simply doesn't matter, the cleanup was happening properly, we
-were just panicing because this BUG_ON() only matters in the success
-case.  So I've opted to just remove it and add a comment where it was.
+This fixes the panic I was seeing when we started throttling relocation
+for delayed refs.
 
-Reviewed-by: Qu Wenruo <wqu@suse.com>
 Signed-off-by: Josef Bacik <josef@toxicpanda.com>
 Signed-off-by: David Sterba <dsterba@suse.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/btrfs/relocation.c | 16 +++++++++++++++-
- 1 file changed, 15 insertions(+), 1 deletion(-)
+ fs/btrfs/relocation.c | 17 +++++++----------
+ 1 file changed, 7 insertions(+), 10 deletions(-)
 
 diff --git a/fs/btrfs/relocation.c b/fs/btrfs/relocation.c
-index 9546ce3c86dc4..e350706b483f1 100644
+index 43a559adf7b16..993d6109bdd39 100644
 --- a/fs/btrfs/relocation.c
 +++ b/fs/btrfs/relocation.c
-@@ -2561,7 +2561,21 @@ void merge_reloc_roots(struct reloc_control *rc)
- 			free_reloc_roots(&reloc_roots);
+@@ -1298,7 +1298,7 @@ static int __must_check __add_reloc_root(struct btrfs_root *root)
+ 	if (!node)
+ 		return -ENOMEM;
+ 
+-	node->bytenr = root->node->start;
++	node->bytenr = root->commit_root->start;
+ 	node->data = root;
+ 
+ 	spin_lock(&rc->reloc_root_tree.lock);
+@@ -1329,10 +1329,11 @@ static void __del_reloc_root(struct btrfs_root *root)
+ 	if (rc && root->node) {
+ 		spin_lock(&rc->reloc_root_tree.lock);
+ 		rb_node = tree_search(&rc->reloc_root_tree.rb_root,
+-				      root->node->start);
++				      root->commit_root->start);
+ 		if (rb_node) {
+ 			node = rb_entry(rb_node, struct mapping_node, rb_node);
+ 			rb_erase(&node->rb_node, &rc->reloc_root_tree.rb_root);
++			RB_CLEAR_NODE(&node->rb_node);
+ 		}
+ 		spin_unlock(&rc->reloc_root_tree.lock);
+ 		if (!node)
+@@ -1350,7 +1351,7 @@ static void __del_reloc_root(struct btrfs_root *root)
+  * helper to update the 'address of tree root -> reloc tree'
+  * mapping
+  */
+-static int __update_reloc_root(struct btrfs_root *root, u64 new_bytenr)
++static int __update_reloc_root(struct btrfs_root *root)
+ {
+ 	struct btrfs_fs_info *fs_info = root->fs_info;
+ 	struct rb_node *rb_node;
+@@ -1359,7 +1360,7 @@ static int __update_reloc_root(struct btrfs_root *root, u64 new_bytenr)
+ 
+ 	spin_lock(&rc->reloc_root_tree.lock);
+ 	rb_node = tree_search(&rc->reloc_root_tree.rb_root,
+-			      root->node->start);
++			      root->commit_root->start);
+ 	if (rb_node) {
+ 		node = rb_entry(rb_node, struct mapping_node, rb_node);
+ 		rb_erase(&node->rb_node, &rc->reloc_root_tree.rb_root);
+@@ -1371,7 +1372,7 @@ static int __update_reloc_root(struct btrfs_root *root, u64 new_bytenr)
+ 	BUG_ON((struct btrfs_root *)node->data != root);
+ 
+ 	spin_lock(&rc->reloc_root_tree.lock);
+-	node->bytenr = new_bytenr;
++	node->bytenr = root->node->start;
+ 	rb_node = tree_insert(&rc->reloc_root_tree.rb_root,
+ 			      node->bytenr, &node->rb_node);
+ 	spin_unlock(&rc->reloc_root_tree.lock);
+@@ -1529,6 +1530,7 @@ int btrfs_update_reloc_root(struct btrfs_trans_handle *trans,
  	}
  
--	BUG_ON(!RB_EMPTY_ROOT(&rc->reloc_root_tree.rb_root));
-+	/*
-+	 * We used to have
-+	 *
-+	 * BUG_ON(!RB_EMPTY_ROOT(&rc->reloc_root_tree.rb_root));
-+	 *
-+	 * here, but it's wrong.  If we fail to start the transaction in
-+	 * prepare_to_merge() we will have only 0 ref reloc roots, none of which
-+	 * have actually been removed from the reloc_root_tree rb tree.  This is
-+	 * fine because we're bailing here, and we hold a reference on the root
-+	 * for the list that holds it, so these roots will be cleaned up when we
-+	 * do the reloc_dirty_list afterwards.  Meanwhile the root->reloc_root
-+	 * will be cleaned up on unmount.
-+	 *
-+	 * The remaining nodes will be cleaned up by free_reloc_control.
-+	 */
- }
+ 	if (reloc_root->commit_root != reloc_root->node) {
++		__update_reloc_root(reloc_root);
+ 		btrfs_set_root_node(root_item, reloc_root->node);
+ 		free_extent_buffer(reloc_root->commit_root);
+ 		reloc_root->commit_root = btrfs_root_node(reloc_root);
+@@ -4730,11 +4732,6 @@ int btrfs_reloc_cow_block(struct btrfs_trans_handle *trans,
+ 	BUG_ON(rc->stage == UPDATE_DATA_PTRS &&
+ 	       root->root_key.objectid == BTRFS_DATA_RELOC_TREE_OBJECTID);
  
- static void free_block_list(struct rb_root *blocks)
+-	if (root->root_key.objectid == BTRFS_TREE_RELOC_OBJECTID) {
+-		if (buf == root->node)
+-			__update_reloc_root(root, cow->start);
+-	}
+-
+ 	level = btrfs_header_level(buf);
+ 	if (btrfs_header_generation(buf) <=
+ 	    btrfs_root_last_snapshot(&root->root_item))
 -- 
 2.20.1
 
