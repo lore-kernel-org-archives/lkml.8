@@ -2,123 +2,106 @@ Return-Path: <SRS0=VV4q=52=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66588C2BB55
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 19:45:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36BB8C2D0EC
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 19:46:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4356720801
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 19:45:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 10A462083E
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 19:46:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FKBdXp6e"
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="RdcC29kc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726695AbgDJTpe (ORCPT
+        id S1726701AbgDJTqc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Apr 2020 15:45:34 -0400
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:34366 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726142AbgDJTpe (ORCPT
+        Fri, 10 Apr 2020 15:46:32 -0400
+Received: from mail-qt1-f195.google.com ([209.85.160.195]:36381 "EHLO
+        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726142AbgDJTqc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Apr 2020 15:45:34 -0400
-Received: by mail-lj1-f195.google.com with SMTP id m8so3010146lji.1;
-        Fri, 10 Apr 2020 12:45:30 -0700 (PDT)
+        Fri, 10 Apr 2020 15:46:32 -0400
+Received: by mail-qt1-f195.google.com with SMTP id w29so1922595qtv.3
+        for <linux-kernel@vger.kernel.org>; Fri, 10 Apr 2020 12:46:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=WmpyDrH3/Z1ArRlEY0K8VHiqZidN8GFc86xX3wY/+WQ=;
-        b=FKBdXp6ePaKSTrAVJhlKMKicO0i7xHQtV+9ZTL4XF31qUhQ/AAYEe3RL090ZqE+ZBO
-         3awpkYttC3Kvp5XYu98L1pEAWkUgpbGUAjN2OvQxbSAVXhVBP+qvHFkpGPkRJ3KzsBuZ
-         GQ2+eraY4worAlGNbTmPtt3iW0TXsjYPtHEAYcf1YG2jFHcmlYRpFA36rmXmpkFYnpzG
-         dHAuPDXb09dI/ginIO1Y8Yd1BOqs9sFlNv8t79j1SaWTsGIkacGy4Tt9lHCO4S7IH7XA
-         qfAqJhAGRAMHyDrg2uGgbHyiRg4diJomBWtGpfXWKZO7wzm0rQV4LJR92A/pwPOzQHGQ
-         BAMQ==
+        d=lca.pw; s=google;
+        h=mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=F5y8G2ip4xuhyU3WnBDbQ1uPS5AxvvCzzzUjKWHG9gc=;
+        b=RdcC29kc5rL57CBoaT4QFEsJaBb9aP5kNW/84IgWgru4NTv2z1oN/vpUwgEn4E27Hd
+         IYKtm19F7wu2McF10fcwc0YtUcVhxSrSmIJxfszq5+Dxo77bHgdGhXIo6zWNs01RnWTw
+         xQA7zR5uP40nHyp6EeefSUtcERNO9FJ4VmVvwKwXFgvVr/v3xmu/cDlZtydiTZG4gNXD
+         tdVa1z8SU1h5RHXegOFlFfqf6VMfyU7cJItiCoO7k22wx05eQDaXniz3iL4N3X5S9bEB
+         dyadyCxdxxdQYR/E1lVVjFuy2zXdMGnegb9s/MqpuYcqxFAdn8NDfJSD/YbN73foU7Sg
+         ROYg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=WmpyDrH3/Z1ArRlEY0K8VHiqZidN8GFc86xX3wY/+WQ=;
-        b=rcmk4w3q7lWK3wgYWF281+oJGSBhvJz/cKsoT5MI3hqqM1fKScuYmMcQtUQz5thpYt
-         B4B3K+ynCE3LUXdAevOW053/iwSGV1q589CmuBZ4BBhQZcrcRcc64Ll7bDsfVim+iTa/
-         eTtq4sx23zuYW2XamKDhpknQw0m+eYQzBvHQ6zi6oxrCfu+pQZMpEOpoX5v6so7aLqWF
-         zyorhGTujp8Scwqt48d3mVsM060FbxhSx+rkvSVoICVPXnd73mYeF6TuDtoHmE354tx2
-         PX6AcPg5qdq81AdBK4j1SCqLqdZSke6R4Fm7fOfWcfOxyxhL1YwaLj/tZQtkmXA3a3Lo
-         QCQw==
-X-Gm-Message-State: AGi0PuaHcxtcb6p6+XQpIDz5tnWGVBje2bXzuxzVSlqPdxEoCx9a5Fke
-        813SPDoQAhSdJi+/rv7Fbt5iA2IE
-X-Google-Smtp-Source: APiQypLLzBS7621tO3Wel2SfE0Xjvt7RUjgBgFXwgQ2nsbvqvN7qClIRoOKGe4DBy0C+g/hMhI3PQA==
-X-Received: by 2002:a2e:7e09:: with SMTP id z9mr3974602ljc.18.1586547929691;
-        Fri, 10 Apr 2020 12:45:29 -0700 (PDT)
-Received: from [192.168.2.145] (ppp91-78-208-152.pppoe.mtu-net.ru. [91.78.208.152])
-        by smtp.googlemail.com with ESMTPSA id o25sm1478102lfg.41.2020.04.10.12.45.28
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 10 Apr 2020 12:45:28 -0700 (PDT)
-Subject: Re: [RFC PATCH v6 6/9] media: tegra: Add Tegra210 Video input driver
-To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
-        thierry.reding@gmail.com, jonathanh@nvidia.com, frankc@nvidia.com,
-        hverkuil@xs4all.nl, sakari.ailus@iki.fi, helen.koike@collabora.com
-Cc:     sboyd@kernel.org, linux-media@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <1585963507-12610-1-git-send-email-skomatineni@nvidia.com>
- <97b35910-4c93-123a-43a0-eb14476ed0f3@nvidia.com>
- <84ad4e2d-6ac1-e1f4-1c55-5edaae850631@nvidia.com>
- <15a879b3-8fb9-6821-3cdc-104ba583ac12@gmail.com>
- <0c425505-347f-7418-af7e-d121fe0d06dc@nvidia.com>
- <db7c7051-5674-cdb9-0aa4-ee94125b3024@gmail.com>
- <1a31cd60-739f-0660-1c45-31487d2f2128@nvidia.com>
- <603084a5-249a-4fe2-3646-e9335ef9ab43@nvidia.com>
- <7895b9c6-f27d-8939-73d7-67d785e1a8b7@nvidia.com>
- <ea60b489-990e-4b15-e215-d93381a1371e@nvidia.com>
- <b2405c2a-73c0-ad69-ccea-0388caf8045c@gmail.com>
- <15d8b525-67b5-b437-f7fd-89f80cd0d9f6@nvidia.com>
- <a638bb8e-bb50-7aa5-05a0-8de1c6207ba7@nvidia.com>
- <ced73258-6f4b-e970-4ca5-ecdf1808a4c3@nvidia.com>
- <ad646fde-2eed-eeeb-4d85-ec36d6613eb1@nvidia.com>
- <7288cacd-badc-cb01-1f4c-286dd024ca10@gmail.com>
- <77c88717-618f-b366-2b6a-f8b4abaa66cc@nvidia.com>
- <00708f34-cf45-e248-c6b0-c3d2286671ca@gmail.com>
- <ab010164-e8ea-89e9-a7e9-d7213841fa90@nvidia.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <34d9baa0-fa1e-0b67-fb9b-343b3cba0066@gmail.com>
-Date:   Fri, 10 Apr 2020 22:45:27 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
-MIME-Version: 1.0
-In-Reply-To: <ab010164-e8ea-89e9-a7e9-d7213841fa90@nvidia.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=F5y8G2ip4xuhyU3WnBDbQ1uPS5AxvvCzzzUjKWHG9gc=;
+        b=NoIg6GUmZ7alU5YKwqegohgKG8lvhGVypOVphU2YlW92/s+b94c1Am6KJJl3Xb6VcL
+         zfus3bCyyHLSUjrV4Xz2KSdZocBOSNstKDg/s4qNngajk0CaEwClkXTxMryz8O7VrY3J
+         khiB0cA/CHeAwXi11YYBVbEpqrZl8Af6cqgpjCceb55UFA3OXUBu7NS6VvQfM5S1w1bC
+         ngVas3KACVXJRNFAYiM6BZq2LIgeZAnx0nKWvZCRJup8PDL80g0OmPbq+TaMQJOPpwxO
+         bRKCyaYqCK9CPdCIzrjh5snSqc4j5b+S4+VrcBB4DwgRUy1pGyejZoe1A+l0Gdzr+S+9
+         +GOw==
+X-Gm-Message-State: AGi0PuZ2lgC+Wo+cSFsjtlHJDE2lMZaoZUN9qTQAzkE2VVBtnU6utk2c
+        Zuh8MYydio4reN84KjNnharGgg==
+X-Google-Smtp-Source: APiQypLzUx9NLNu8LTprK3q7/R9+mSDTk92NE6bqb0JzWoLhJXFKnE4hoN4DQl4jVYoZ8afqSwfZfw==
+X-Received: by 2002:aed:370a:: with SMTP id i10mr840704qtb.114.1586547991375;
+        Fri, 10 Apr 2020 12:46:31 -0700 (PDT)
+Received: from [192.168.1.153] (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
+        by smtp.gmail.com with ESMTPSA id d23sm2258415qtj.9.2020.04.10.12.46.30
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 10 Apr 2020 12:46:30 -0700 (PDT)
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.80.23.2.2\))
+Subject: Re: [PATCH 0/2] mm: Two small fixes for recent syzbot reports
+From:   Qian Cai <cai@lca.pw>
+In-Reply-To: <20200410102609.245f93639ece2667c3f70e5c@linux-foundation.org>
+Date:   Fri, 10 Apr 2020 15:46:29 -0400
+Cc:     Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Peter Xu <peterx@redhat.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux-MM <linux-mm@kvack.org>
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <9846F450-528E-4690-9A34-9EF4FA151B7A@lca.pw>
+References: <CAHk-=wjfngA7nHAsie7bW_JmKBhUyV9oV7zmDbZuchkJK3sR1w@mail.gmail.com>
+ <AFD0DADD-0558-463F-B219-5F098E6C2EDF@lca.pw>
+ <CAHk-=wgFn4rHZM8ttPWvdSzV3pL1nS3EDcAh+83OObObkot4-g@mail.gmail.com>
+ <9C21961E-24D3-4C97-A5AB-B70451E4F952@lca.pw>
+ <76e8bbed-21d1-22e1-4148-5a5766652c0d@I-love.SAKURA.ne.jp>
+ <22DAFAC7-9F39-4042-BC79-B27963A13E3D@lca.pw>
+ <20200410102609.245f93639ece2667c3f70e5c@linux-foundation.org>
+To:     Andrew Morton <akpm@linux-foundation.org>
+X-Mailer: Apple Mail (2.3608.80.23.2.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-10.04.2020 21:59, Sowjanya Komatineni пишет:
-...
->> It's still not clear to me how the "pre-queued buffers" will be limited.
->> I'll take another look at the v7.
-> 
-> OK, but I don't understand what you mean by limit on pre-queued buffers.
-> 
-> I was saying vb2 queue has min_buffers_needed which was set to 3 where
-> streaming will start only after 3 buffers got queued up.
-> 
-> Regarding outstanding condition check to make sure no more than 2 syncpt
-> trigger requests are in FIFO I added it to be safe where mostly we may
-> not hit and also I only see capture start thread holding for it during
-> initial frame capture as it issues single shot for 1st 2 buffers capture
-> and holds 3 buffers which is already queued till at least one of those 2
-> issued capture is done to make sure of not triggering syncpt condition
-> when fifo already has 2 pending.
-> 
-> In v7, will remove setting min_buffers_needed and also outstanding
-> syncpt trigger check.
 
-Okay, seems I got what you're saying. Yes, the check should be removed.
-It's impossible to get the frame-start event while capture of the
-previous buffer is in-progress.
+
+> On Apr 10, 2020, at 1:26 PM, Andrew Morton <akpm@linux-foundation.org> =
+wrote:
+>=20
+> On Fri, 10 Apr 2020 10:26:23 -0400 Qian Cai <cai@lca.pw> wrote:
+>=20
+>> I don't set panic_on_warn. I'll deal with warnings afterwards.
+>=20
+> I'm not understanding why sysbot sets panic_on_warn.  This decision
+> will needlessly turn many kernel errors into wont-boot situations and
+> will block further testing?
+
+I can feel that it is very reasonable to set panic_on_warn for the fully
+automatic systems because once those warnings happen, the rest of
+things can no longer to be trusted, so the goal to kill the first enemy
+on sight, and then deal the next one.
+
+It could be a good idea for some trees more stable like the mainline,
+but for linux-next, I could only dream of set it one day.=
