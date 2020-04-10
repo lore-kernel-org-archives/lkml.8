@@ -4,143 +4,70 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B618C2BB86
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 11:51:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02A98C2BA2B
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 11:51:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5D5A2206F7
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 11:51:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CA9F82084D
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 11:51:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726145AbgDJLvc (ORCPT
+        id S1726663AbgDJLvh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Apr 2020 07:51:32 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:49038 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725913AbgDJLvb (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Apr 2020 07:51:31 -0400
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: ezequiel)
-        with ESMTPSA id 1B42C2A0E84
-From:   Ezequiel Garcia <ezequiel@collabora.com>
-To:     linux-media@vger.kernel.org, linux-rockchip@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Cc:     Tomasz Figa <tfiga@chromium.org>, kernel@collabora.com,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Hans Verkuil <hverkuil@xs4all.nl>,
-        Alexandre Courbot <acourbot@chromium.org>,
-        Jeffrey Kardatzke <jkardatzke@chromium.org>,
-        Boris Brezillon <boris.brezillon@collabora.com>,
-        Ezequiel Garcia <ezequiel@collabora.com>
-Subject: [PATCH v2 1/3] media: v4l2-ctrls: Add the [__]v4l2_ctrl_s_ctrl_compound() helpers
-Date:   Fri, 10 Apr 2020 08:51:11 -0300
-Message-Id: <20200410115113.31728-2-ezequiel@collabora.com>
-X-Mailer: git-send-email 2.26.0.rc2
-In-Reply-To: <20200410115113.31728-1-ezequiel@collabora.com>
-References: <20200410115113.31728-1-ezequiel@collabora.com>
+        Fri, 10 Apr 2020 07:51:37 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:58554 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725913AbgDJLvg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Apr 2020 07:51:36 -0400
+Received: from DGGEMS401-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 5BD10F7AA6D541B079DB;
+        Fri, 10 Apr 2020 19:51:32 +0800 (CST)
+Received: from localhost (10.173.223.234) by DGGEMS401-HUB.china.huawei.com
+ (10.3.19.201) with Microsoft SMTP Server id 14.3.487.0; Fri, 10 Apr 2020
+ 19:51:24 +0800
+From:   YueHaibing <yuehaibing@huawei.com>
+To:     <harveyhuntnexus@gmail.com>, <paul@crapouillou.net>,
+        <miquel.raynal@bootlin.com>, <richard@nod.at>, <vigneshr@ti.com>
+CC:     <linux-mtd@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+        YueHaibing <yuehaibing@huawei.com>
+Subject: [PATCH -next] mtd: rawnand: ingenic: Make qi_lb60_ooblayout_ops static
+Date:   Fri, 10 Apr 2020 19:51:21 +0800
+Message-ID: <20200410115121.11852-1-yuehaibing@huawei.com>
+X-Mailer: git-send-email 2.10.2.windows.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Originating-IP: [10.173.223.234]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Boris Brezillon <boris.brezillon@collabora.com>
+Fix sparse warning:
 
-VP9 codec drivers will need to set some of their frame context compound
-controls. Let's provide the [__]v4l2_ctrl_s_ctrl_compound() helpers to
-allow that.
+drivers/mtd/nand/raw/ingenic/ingenic_nand_drv.c:105:32:
+ warning: symbol 'qi_lb60_ooblayout_ops' was not declared. Should it be static?
 
-Signed-off-by: Boris Brezillon <boris.brezillon@collabora.com>
-Signed-off-by: Ezequiel Garcia <ezequiel@collabora.com>
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
 ---
- drivers/media/v4l2-core/v4l2-ctrls.c | 15 ++++++++++
- include/media/v4l2-ctrls.h           | 43 ++++++++++++++++++++++++++++
- 2 files changed, 58 insertions(+)
+ drivers/mtd/nand/raw/ingenic/ingenic_nand_drv.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/media/v4l2-core/v4l2-ctrls.c b/drivers/media/v4l2-core/v4l2-ctrls.c
-index 93d33d1db4e8..9a8445a9e788 100644
---- a/drivers/media/v4l2-core/v4l2-ctrls.c
-+++ b/drivers/media/v4l2-core/v4l2-ctrls.c
-@@ -4255,6 +4255,21 @@ int __v4l2_ctrl_s_ctrl_area(struct v4l2_ctrl *ctrl,
- }
- EXPORT_SYMBOL(__v4l2_ctrl_s_ctrl_area);
- 
-+int __v4l2_ctrl_s_ctrl_compound(struct v4l2_ctrl *ctrl, const void *data,
-+				size_t len)
-+{
-+	lockdep_assert_held(ctrl->handler->lock);
-+
-+	/* It's a driver bug if this happens. */
-+	WARN_ON(!ctrl->is_ptr || ctrl->type < V4L2_CTRL_COMPOUND_TYPES);
-+	if (WARN_ON(len != (ctrl->elem_size * ctrl->elems)))
-+		return -EINVAL;
-+
-+	memcpy(ctrl->p_new.p, data, len);
-+	return set_ctrl(NULL, ctrl, 0);
-+}
-+EXPORT_SYMBOL(__v4l2_ctrl_s_ctrl_compound);
-+
- void v4l2_ctrl_request_complete(struct media_request *req,
- 				struct v4l2_ctrl_handler *main_hdl)
- {
-diff --git a/include/media/v4l2-ctrls.h b/include/media/v4l2-ctrls.h
-index 7db9e719a583..30c3be7f5efc 100644
---- a/include/media/v4l2-ctrls.h
-+++ b/include/media/v4l2-ctrls.h
-@@ -1152,6 +1152,49 @@ static inline int v4l2_ctrl_s_ctrl_area(struct v4l2_ctrl *ctrl,
- 	return rval;
+diff --git a/drivers/mtd/nand/raw/ingenic/ingenic_nand_drv.c b/drivers/mtd/nand/raw/ingenic/ingenic_nand_drv.c
+index 935c4902ada7..e7bd845fdbf5 100644
+--- a/drivers/mtd/nand/raw/ingenic/ingenic_nand_drv.c
++++ b/drivers/mtd/nand/raw/ingenic/ingenic_nand_drv.c
+@@ -102,7 +102,7 @@ static int qi_lb60_ooblayout_free(struct mtd_info *mtd, int section,
+ 	return 0;
  }
  
-+/**
-+ * __v4l2_ctrl_s_ctrl_compound() - Unlocked variant of
-+ *				   v4l2_ctrl_s_ctrl_compound().
-+ *
-+ * @ctrl:	The control.
-+ * @data:	The object pointer.
-+ * @len:	The object length.
-+ *
-+ * This sets the control's new compound safely by going through the control
-+ * framework. This function assumes the control's handler is already locked,
-+ * allowing it to be used from within the &v4l2_ctrl_ops functions.
-+ *
-+ * This function is for compound type controls only.
-+ */
-+int __v4l2_ctrl_s_ctrl_compound(struct v4l2_ctrl *ctrl, const void *data,
-+				size_t len);
-+
-+/**
-+ * v4l2_ctrl_s_ctrl_compound() - Helper function to set a control's compound
-+ *				 value from within a driver.
-+ *
-+ * @ctrl:	The control.
-+ * @data:	The object pointer.
-+ * @len:	The object length.
-+ *
-+ * This sets the control's new compound safely by going through the control
-+ * framework. This function will lock the control's handler, so it cannot be
-+ * used from within the &v4l2_ctrl_ops functions.
-+ *
-+ * This function is for compound type controls only.
-+ */
-+static inline int v4l2_ctrl_s_ctrl_compound(struct v4l2_ctrl *ctrl,
-+					    const void *data, size_t len)
-+{
-+	int rval;
-+
-+	v4l2_ctrl_lock(ctrl);
-+	rval = __v4l2_ctrl_s_ctrl_compound(ctrl, data, len);
-+	v4l2_ctrl_unlock(ctrl);
-+
-+	return rval;
-+}
-+
- /* Internal helper functions that deal with control events. */
- extern const struct v4l2_subscribed_event_ops v4l2_ctrl_sub_ev_ops;
- 
+-const struct mtd_ooblayout_ops qi_lb60_ooblayout_ops = {
++static const struct mtd_ooblayout_ops qi_lb60_ooblayout_ops = {
+ 	.ecc = qi_lb60_ooblayout_ecc,
+ 	.free = qi_lb60_ooblayout_free,
+ };
 -- 
-2.26.0.rc2
+2.17.1
+
 
