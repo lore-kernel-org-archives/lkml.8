@@ -2,128 +2,186 @@ Return-Path: <SRS0=VV4q=52=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8ED0AC2D0EC
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 20:33:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90E63C2BB55
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 20:37:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4C90720732
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 20:33:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 643972087E
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 20:37:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="jrzlTQ4z"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="d98pZwJ0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726650AbgDJUdW (ORCPT
+        id S1726654AbgDJUhs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Apr 2020 16:33:22 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:36766 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726177AbgDJUdW (ORCPT
+        Fri, 10 Apr 2020 16:37:48 -0400
+Received: from mail26.static.mailgun.info ([104.130.122.26]:53982 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726263AbgDJUhs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Apr 2020 16:33:22 -0400
-Received: by mail-pf1-f196.google.com with SMTP id n10so1499145pff.3
-        for <linux-kernel@vger.kernel.org>; Fri, 10 Apr 2020 13:33:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=3VeSa8pV4LRZev++4MmnF0GN7JR51rFLh2o6ZJifmAs=;
-        b=jrzlTQ4zdnZt7yMEIDuwDMWO3hz3GVEpyJPo5quceb4/5aZLT5RQmyhbVKwifjEEUG
-         hURrfWz3QIOt/M/ZYhkHMhC6hKM11ZkN4eNEJM+OnVnsoZKW6aWbFSXinKOjgS1VdfLc
-         XzE74MI0cKHp4GYbHA/Z7kI+HejX/8cS+hYqo=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=3VeSa8pV4LRZev++4MmnF0GN7JR51rFLh2o6ZJifmAs=;
-        b=XzdtOiOTdtawZdH3Cj8XOKn02Z62IG2rBBPk0P93yQcSUDQgU6qUpvvaGlYyo0jto+
-         x1UGJVXf5OgXGGsLFkLKpHMYbYJYZ/reUYJ1/LuiDI+oZA3AkGJ2MLPVXzCJgZ06ENbt
-         DttdI1vXiLPtB1kmcnym62z/Q6ydaPPudUwRgqhlyiMi7TkXwh1EfHW/c2U/Rx1lbl4y
-         8ojHDhxy6U2bVEXnPOpCML2YRdQeFnGwYh7MZjKO3pkp6NIo66xNLVs0GCXZDRZ0NCQw
-         yCTR6uP/I4S0kAEZAbhgI7PYgLPzHMtBpPT2OIqVlXz8GGtiOqiiigtoL4HdYRwmHdHg
-         QBmw==
-X-Gm-Message-State: AGi0PubEBXRiMfLnedy3GYVwVx/uV3xGQa6a92Erqs6ZTuj4y8vn+yuT
-        Hqv4tCrdslZmRw9PhLBqIlU5bQ==
-X-Google-Smtp-Source: APiQypKwWhdj3p5I+4a9Tpd3IaQXmZGUjW4MMH2e1m01FpwA4MOY4JVpvA3oJd2g521/IWyAeRdhzA==
-X-Received: by 2002:a63:cd03:: with SMTP id i3mr5827120pgg.395.1586550801789;
-        Fri, 10 Apr 2020 13:33:21 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id c15sm2214815pgk.66.2020.04.10.13.33.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 10 Apr 2020 13:33:20 -0700 (PDT)
-Date:   Fri, 10 Apr 2020 13:33:19 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Andrea Righi <andrea.righi@canonical.com>
-Cc:     Shuah Khan <shuah@kernel.org>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Will Drewry <wad@chromium.org>,
-        linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] kselftest/runner: allow to properly deliver signals to
- tests
-Message-ID: <202004101330.1E1963B5C2@keescook>
-References: <20200410100259.GA457752@xps-13>
+        Fri, 10 Apr 2020 16:37:48 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1586551068; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=T2fbWw6zwXJ0P7g5074NZ7pZhPP1gkSEW7pXyoFPiWI=; b=d98pZwJ0Ib//HKNIJAF/sLML5MDW8SmSISlFNOOypI9o5PFJbXEzYEEMTTW1N4JwgOThxzjP
+ qvTkY+2saZZyfEMkhMhUTKwlvQcUIdX1O4YEXrldqTv0KIkm2Loe5MNs4TROqr647IcnV+0L
+ xIrCwSkk0Ui98ie+7AkC9VMnrlQ=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e90d911.7f8e7c01ce30-smtp-out-n02;
+ Fri, 10 Apr 2020 20:37:37 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id D5F21C433BA; Fri, 10 Apr 2020 20:37:37 +0000 (UTC)
+Received: from [10.46.162.179] (i-global254.qualcomm.com [199.106.103.254])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: bbhatt)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id DC14EC433F2;
+        Fri, 10 Apr 2020 20:37:36 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org DC14EC433F2
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=bbhatt@codeaurora.org
+Subject: Re: [PATCH v2 1/5] bus: mhi: core: Handle syserr during power_up
+To:     Jeffrey Hugo <jhugo@codeaurora.org>,
+        Hemant Kumar <hemantk@codeaurora.org>,
+        manivannan.sadhasivam@linaro.org
+Cc:     "linux-arm-msm@vger.kernel.org; bbhatt"@codeaurora.org,
+        linux-kernel@vger.kernel.org
+References: <1586278230-29565-1-git-send-email-jhugo@codeaurora.org>
+ <1586278230-29565-2-git-send-email-jhugo@codeaurora.org>
+ <1768ba6e-12c2-7b4f-0f17-44fecc6473b9@codeaurora.org>
+ <11d9f35b-b911-7985-8846-0a45904ceed1@codeaurora.org>
+From:   Bhaumik Vasav Bhatt <bbhatt@codeaurora.org>
+Message-ID: <5c4efe13-42a4-e802-4070-5d9d30b8cac2@codeaurora.org>
+Date:   Fri, 10 Apr 2020 13:37:36 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200410100259.GA457752@xps-13>
+In-Reply-To: <11d9f35b-b911-7985-8846-0a45904ceed1@codeaurora.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 10, 2020 at 12:02:59PM +0200, Andrea Righi wrote:
-> While running seccomp_bpf, kill_after_ptrace() gets stuck if we run it
-> via /usr/bin/timeout (that is the default), until the timeout expires.
-> 
-> This is because /usr/bin/timeout is preventing to properly deliver
-> signals to ptrace'd children (SIGSYS in this case).
-> 
-> This problem can be easily reproduced by running:
-> 
->  $ sudo make TARGETS=seccomp kselftest
->  ...
-> 
->  # [ RUN      ] TRACE_syscall.skip_a#
->  not ok 1 selftests: seccomp: seccomp_bpf # TIMEOUT
-> 
-> The test is hanging at this point until the timeout expires and then it
-> reports the timeout error.
-> 
-> Prevent this problem by passing --foreground to /usr/bin/timeout,
-> allowing to properly deliver signals to children processes.
+Hi Jeff,
 
-Interesting! This seems a poor behavior on "timeout"'s part. Is it
-setting a signal mask? Hmpf. Thanks for tracking this down!  This seems
-like the best solution now, so:
+We will always have the mhi_intvec_handler registered and trigger your 
+wake_up state event when you write MHI RESET. BHI INTVEC IRQ using 
+mhi_cntrl->irq[0] is _not_ unregistered once you enter AMSS EE.
 
-Acked-by: Kees Cook <keescook@chromium.org>
+So, your below assumption is not true:
+ >>>So, if we are in the PBL EE, we would expect to see the BHI 
+interrupt, but if we are in the AMSS EE, we would expect to see a MHI 
+interrupt.
 
--Kees
+At the start of mhi_async_power_up(), you've already registered for the 
+BHI interrupt as we do setup for IRQ and it is only unregistered from 
+power down if power up on the same cycle was a success.
 
-> 
-> Signed-off-by: Andrea Righi <andrea.righi@canonical.com>
-> ---
->  tools/testing/selftests/kselftest/runner.sh | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/tools/testing/selftests/kselftest/runner.sh b/tools/testing/selftests/kselftest/runner.sh
-> index e84d901f8567..676b3a8b114d 100644
-> --- a/tools/testing/selftests/kselftest/runner.sh
-> +++ b/tools/testing/selftests/kselftest/runner.sh
-> @@ -33,7 +33,7 @@ tap_timeout()
->  {
->  	# Make sure tests will time out if utility is available.
->  	if [ -x /usr/bin/timeout ] ; then
-> -		/usr/bin/timeout "$kselftest_timeout" "$1"
-> +		/usr/bin/timeout --foreground "$kselftest_timeout" "$1"
->  	else
->  		"$1"
->  	fi
-> -- 
-> 2.25.1
-> 
-
+On 4/10/20 8:03 AM, Jeffrey Hugo wrote:
+> On 4/9/2020 6:55 PM, Hemant Kumar wrote:
+>>
+>> On 4/7/20 9:50 AM, Jeffrey Hugo wrote:
+>>> The MHI device may be in the syserr state when we attempt to init it in
+>>> power_up().  Since we have no local state, the handling is simple -
+>>> reset the device and wait for it to transition out of the reset state.
+>>>
+>>> Signed-off-by: Jeffrey Hugo <jhugo@codeaurora.org>
+>>> ---
+>>>   drivers/bus/mhi/core/pm.c | 20 ++++++++++++++++++++
+>>>   1 file changed, 20 insertions(+)
+>>>
+>>> diff --git a/drivers/bus/mhi/core/pm.c b/drivers/bus/mhi/core/pm.c
+>>> index 52690cb..3285c9e 100644
+>>> --- a/drivers/bus/mhi/core/pm.c
+>>> +++ b/drivers/bus/mhi/core/pm.c
+>>> @@ -9,6 +9,7 @@
+>>>   #include <linux/dma-direction.h>
+>>>   #include <linux/dma-mapping.h>
+>>>   #include <linux/interrupt.h>
+>>> +#include <linux/iopoll.h>
+>>>   #include <linux/list.h>
+>>>   #include <linux/mhi.h>
+>>>   #include <linux/module.h>
+>>> @@ -760,6 +761,7 @@ static void mhi_deassert_dev_wake(struct 
+>>> mhi_controller *mhi_cntrl,
+>>>   int mhi_async_power_up(struct mhi_controller *mhi_cntrl)
+>>>   {
+>>> +    enum mhi_state state;
+>>>       enum mhi_ee_type current_ee;
+>>>       enum dev_st_transition next_state;
+>>>       struct device *dev = &mhi_cntrl->mhi_dev->dev;
+>>> @@ -829,6 +831,24 @@ int mhi_async_power_up(struct mhi_controller 
+>>> *mhi_cntrl)
+>>>           goto error_bhi_offset;
+>>>       }
+>>> +    state = mhi_get_mhi_state(mhi_cntrl);
+>>> +    if (state == MHI_STATE_SYS_ERR) {
+>>> +        mhi_set_mhi_state(mhi_cntrl, MHI_STATE_RESET);
+>>> +        ret = readl_poll_timeout(mhi_cntrl->regs + MHICTRL, val,
+>>> +                     !(val & MHICTRL_RESET_MASK), 1000,
+>>> +                     mhi_cntrl->timeout_ms * 1000);
+>> can we use this instead of polling because MSI is configures and 
+>> int_vec handler is registered
+>>
+>>      wait_event_timeout(mhi_cntrl->state_event,
+>>                 MHI_PM_IN_FATAL_STATE(mhi_cntrl->pm_state) ||
+>>                mhi_read_reg_field(mhi_cntrl, base, MHICTRL,
+>>                            MHICTRL_RESET_MASK,
+>>                            MHICTRL_RESET_SHIFT, &reset) || !reset ,
+>>                 msecs_to_jiffies(mhi_cntrl->timeout_ms));
+>>
+>> 1) In case of MHI_PM_IN_FATAL_STATE we would not be accessing MHI reg
+>> 2) Consistent with current MHI driver code.
+>
+> I'm not sure this works in the way you intend.
+>
+> state_event is linked to the intvec, which is the BHI interrupt. I 
+> don't see that the state_event is triggered in the MHI interrupt path 
+> (mhi_irq_handler).  So, if we are in the PBL EE, we would expect to 
+> see the BHI interrupt, but if we are in the AMSS EE, we would expect 
+> to see a MHI interrupt.
+>
+> Now, for my concerned usecase, those two interrupts happen to be the 
+> same interrupt, so both will get triggered, but I don't expect that to 
+> be the same for all usecases.
+>
+> So, with the solution I propose, we exit the wait (poll loop) as soon 
+> as we see the register change values.
+>
+> With the solution you propose, if we only get the MHI interrupt, we'll 
+> have to wait out the entire timeout value, and then check the 
+> register. In this scenario, we are almost guaranteed to wait for 
+> longer than necessary.
+>
+> Did I miss something?
+>
+>>> +        if (ret) {
+>>> +            dev_info(dev, "Failed to reset MHI due to syserr 
+>>> state\n");
+>>> +            goto error_bhi_offset;
+>>> +        }
+>>> +
+>>> +        /*
+>>> +         * device cleares INTVEC as part of RESET processing,
+>>> +         * re-program it
+>>> +         */
+>>> +        mhi_write_reg(mhi_cntrl, mhi_cntrl->bhi, BHI_INTVEC, 0);
+>>> +    }
+>>> +
+>>>       /* Transition to next state */
+>>>       next_state = MHI_IN_PBL(current_ee) ?
+>>>           DEV_ST_TRANSITION_PBL : DEV_ST_TRANSITION_READY;
+>>
+>
+>
 -- 
-Kees Cook
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
