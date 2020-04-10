@@ -4,53 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 902D5C2D0EC
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 03:52:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05FF6C2BB86
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 03:53:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 67D9D2137B
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 03:52:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D3850212CC
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 03:53:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586490776;
-	bh=r/6PfOnKx679vpIeclauonjb+bhMjbDtN0wHoFr2PCM=;
+	s=default; t=1586490783;
+	bh=JtG7o5h48XOzSVX3DUWhC8Yos/wnFX6Hq89NJDx6q9Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=yvGP3RljrmKWTAo5nTOhVYjTyz9EMp7yWL0Ff6rd/Je7ejRRsLiudp0dHYO+Lm4DQ
-	 F670RaCeG/qPpcv0weg+3rcg7zRsDCMXcPADd57kuPNqpY6V9rZhg4ftOYeuZ4o9mq
-	 /8/Y9ymKELCrngKaaRdJaibKPzvWPA1yfpVbptjI=
+	b=J+oFfFapGqZ73WLCtYwECRw+CJvQB+q5fxsYhkROJp5/B6HwakSwFb5QrV0x12z3e
+	 kTNJHl1cBVuxHf4TeVN3bOqr/c8FFE8QgktWaPHsbOvWwVnVlP/Ij6epO2XUmute0m
+	 u21r3QRwCvLQelyB4QWZbMmOfIzJ4hP6JhB2ltKY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729061AbgDJDwy (ORCPT
+        id S1729277AbgDJDxB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Apr 2020 23:52:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36076 "EHLO mail.kernel.org"
+        Thu, 9 Apr 2020 23:53:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36024 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726666AbgDJDvD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Apr 2020 23:51:03 -0400
+        id S1729051AbgDJDvA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Apr 2020 23:51:00 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7EE6E215A4;
-        Fri, 10 Apr 2020 03:51:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6141E2192A;
+        Fri, 10 Apr 2020 03:51:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586490663;
-        bh=r/6PfOnKx679vpIeclauonjb+bhMjbDtN0wHoFr2PCM=;
+        s=default; t=1586490660;
+        bh=JtG7o5h48XOzSVX3DUWhC8Yos/wnFX6Hq89NJDx6q9Y=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OnKZkn3Sn3cYHYg+mzhoLodP0ma4D7nUNeophb2pqT2coVJe1WUk5pCrTs2M1/DQ0
-         rMvRHQSAqA3NxvPMowCbJs9bYzaQ6POEDzL0uSGmacc3cqZdHVy44DAe+pM1a7o3fe
-         fREceiu4wSCBT9yB+Sy1Ihb5ax0DyKEcFYHKzaFs=
+        b=aW4ROpaaCOLCs8Ftwv8EFqpEmiVQq/hPk7ocYsMV03EwPxDdVGC9bfUr3KR/cFOn4
+         gM69Xm/cIyzZ/DKrIMxN3brFzUidN57vjgbdIkFIdwpoE1nH9Kmj6r4ViuOVvAF5Nq
+         JLW3gduTfF+S6i2evBG1tvwmMGZtcWxjmxQDjfkM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Neil Armstrong <narmstrong@baylibre.com>,
-        Dongjin Kim <tobetter@gmail.com>,
-        Jianxin Pan <jianxin.pan@amlogic.com>,
-        Thinh Nguyen <thinhn@synopsys.com>,
-        Jun Li <lijun.kernel@gmail.com>, Tim <elatllat@gmail.com>,
-        Felipe Balbi <balbi@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-usb@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 16/22] usb: dwc3: core: add support for disabling SS instances in park mode
-Date:   Thu,  9 Apr 2020 23:50:38 -0400
-Message-Id: <20200410035044.9698-16-sashal@kernel.org>
+Cc:     Alexander Sverdlin <alexander.sverdlin@nokia.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 14/22] genirq/irqdomain: Check pointer in irq_domain_alloc_irqs_hierarchy()
+Date:   Thu,  9 Apr 2020 23:50:36 -0400
+Message-Id: <20200410035044.9698-14-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200410035044.9698-1-sashal@kernel.org>
 References: <20200410035044.9698-1-sashal@kernel.org>
@@ -63,97 +59,64 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Neil Armstrong <narmstrong@baylibre.com>
+From: Alexander Sverdlin <alexander.sverdlin@nokia.com>
 
-[ Upstream commit 7ba6b09fda5e0cb741ee56f3264665e0edc64822 ]
+[ Upstream commit 87f2d1c662fa1761359fdf558246f97e484d177a ]
 
-In certain circumstances, the XHCI SuperSpeed instance in park mode
-can fail to recover, thus on Amlogic G12A/G12B/SM1 SoCs when there is high
-load on the single XHCI SuperSpeed instance, the controller can crash like:
- xhci-hcd xhci-hcd.0.auto: xHCI host not responding to stop endpoint command.
- xhci-hcd xhci-hcd.0.auto: Host halt failed, -110
- xhci-hcd xhci-hcd.0.auto: xHCI host controller not responding, assume dead
- xhci-hcd xhci-hcd.0.auto: xHCI host not responding to stop endpoint command.
- hub 2-1.1:1.0: hub_ext_port_status failed (err = -22)
- xhci-hcd xhci-hcd.0.auto: HC died; cleaning up
- usb 2-1.1-port1: cannot reset (err = -22)
+irq_domain_alloc_irqs_hierarchy() has 3 call sites in the compilation unit
+but only one of them checks for the pointer which is being dereferenced
+inside the called function. Move the check into the function. This allows
+for catching the error instead of the following crash:
 
-Setting the PARKMODE_DISABLE_SS bit in the DWC3_USB3_GUCTL1 mitigates
-the issue. The bit is described as :
-"When this bit is set to '1' all SS bus instances in park mode are disabled"
+Unable to handle kernel NULL pointer dereference at virtual address 00000000
+PC is at 0x0
+LR is at gpiochip_hierarchy_irq_domain_alloc+0x11f/0x140
+...
+[<c06c23ff>] (gpiochip_hierarchy_irq_domain_alloc)
+[<c0462a89>] (__irq_domain_alloc_irqs)
+[<c0462dad>] (irq_create_fwspec_mapping)
+[<c06c2251>] (gpiochip_to_irq)
+[<c06c1c9b>] (gpiod_to_irq)
+[<bf973073>] (gpio_irqs_init [gpio_irqs])
+[<bf974048>] (gpio_irqs_exit+0xecc/0xe84 [gpio_irqs])
+Code: bad PC value
 
-Synopsys explains:
-The GUCTL1.PARKMODE_DISABLE_SS is only available in
-dwc_usb3 controller running in host mode.
-This should not be set for other IPs.
-This can be disabled by default based on IP, but I recommend to have a
-property to enable this feature for devices that need this.
-
-CC: Dongjin Kim <tobetter@gmail.com>
-Cc: Jianxin Pan <jianxin.pan@amlogic.com>
-Cc: Thinh Nguyen <thinhn@synopsys.com>
-Cc: Jun Li <lijun.kernel@gmail.com>
-Reported-by: Tim <elatllat@gmail.com>
-Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
-Signed-off-by: Felipe Balbi <balbi@kernel.org>
+Signed-off-by: Alexander Sverdlin <alexander.sverdlin@nokia.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Link: https://lkml.kernel.org/r/20200306174720.82604-1-alexander.sverdlin@nokia.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/dwc3/core.c | 5 +++++
- drivers/usb/dwc3/core.h | 4 ++++
- 2 files changed, 9 insertions(+)
+ kernel/irq/irqdomain.c | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/usb/dwc3/core.c b/drivers/usb/dwc3/core.c
-index 021899c580288..010201dbd029a 100644
---- a/drivers/usb/dwc3/core.c
-+++ b/drivers/usb/dwc3/core.c
-@@ -867,6 +867,9 @@ static int dwc3_core_init(struct dwc3 *dwc)
- 		if (dwc->dis_tx_ipgap_linecheck_quirk)
- 			reg |= DWC3_GUCTL1_TX_IPGAP_LINECHECK_DIS;
- 
-+		if (dwc->parkmode_disable_ss_quirk)
-+			reg |= DWC3_GUCTL1_PARKMODE_DISABLE_SS;
+diff --git a/kernel/irq/irqdomain.c b/kernel/irq/irqdomain.c
+index b269ae16b10cd..0d54f8256b9f4 100644
+--- a/kernel/irq/irqdomain.c
++++ b/kernel/irq/irqdomain.c
+@@ -1372,6 +1372,11 @@ int irq_domain_alloc_irqs_hierarchy(struct irq_domain *domain,
+ 				    unsigned int irq_base,
+ 				    unsigned int nr_irqs, void *arg)
+ {
++	if (!domain->ops->alloc) {
++		pr_debug("domain->ops->alloc() is NULL\n");
++		return -ENOSYS;
++	}
 +
- 		dwc3_writel(dwc->regs, DWC3_GUCTL1, reg);
+ 	return domain->ops->alloc(domain, irq_base, nr_irqs, arg);
+ }
+ 
+@@ -1409,11 +1414,6 @@ int __irq_domain_alloc_irqs(struct irq_domain *domain, int irq_base,
+ 			return -EINVAL;
  	}
  
-@@ -1107,6 +1110,8 @@ static void dwc3_get_properties(struct dwc3 *dwc)
- 				"snps,dis-del-phy-power-chg-quirk");
- 	dwc->dis_tx_ipgap_linecheck_quirk = device_property_read_bool(dev,
- 				"snps,dis-tx-ipgap-linecheck-quirk");
-+	dwc->parkmode_disable_ss_quirk = device_property_read_bool(dev,
-+				"snps,parkmode-disable-ss-quirk");
- 
- 	dwc->tx_de_emphasis_quirk = device_property_read_bool(dev,
- 				"snps,tx_de_emphasis_quirk");
-diff --git a/drivers/usb/dwc3/core.h b/drivers/usb/dwc3/core.h
-index 40bf0e0768d96..8747f9f02229e 100644
---- a/drivers/usb/dwc3/core.h
-+++ b/drivers/usb/dwc3/core.h
-@@ -206,6 +206,7 @@
- #define DWC3_GCTL_DSBLCLKGTNG		BIT(0)
- 
- /* Global User Control 1 Register */
-+#define DWC3_GUCTL1_PARKMODE_DISABLE_SS	BIT(17)
- #define DWC3_GUCTL1_TX_IPGAP_LINECHECK_DIS	BIT(28)
- #define DWC3_GUCTL1_DEV_L1_EXIT_BY_HW	BIT(24)
- 
-@@ -863,6 +864,8 @@ struct dwc3_scratchpad_array {
-  *			change quirk.
-  * @dis_tx_ipgap_linecheck_quirk: set if we disable u2mac linestate
-  *			check during HS transmit.
-+ * @parkmode_disable_ss_quirk: set if we need to disable all SuperSpeed
-+ *			instances in park mode.
-  * @tx_de_emphasis_quirk: set if we enable Tx de-emphasis quirk
-  * @tx_de_emphasis: Tx de-emphasis value
-  * 	0	- -6dB de-emphasis
-@@ -1022,6 +1025,7 @@ struct dwc3 {
- 	unsigned		dis_u2_freeclk_exists_quirk:1;
- 	unsigned		dis_del_phy_power_chg_quirk:1;
- 	unsigned		dis_tx_ipgap_linecheck_quirk:1;
-+	unsigned		parkmode_disable_ss_quirk:1;
- 
- 	unsigned		tx_de_emphasis_quirk:1;
- 	unsigned		tx_de_emphasis:2;
+-	if (!domain->ops->alloc) {
+-		pr_debug("domain->ops->alloc() is NULL\n");
+-		return -ENOSYS;
+-	}
+-
+ 	if (realloc && irq_base >= 0) {
+ 		virq = irq_base;
+ 	} else {
 -- 
 2.20.1
 
