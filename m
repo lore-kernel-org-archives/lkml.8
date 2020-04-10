@@ -2,190 +2,321 @@ Return-Path: <SRS0=VV4q=52=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08BB3C2BB86
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 14:48:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CEEFFC2BB1D
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 14:51:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C7D7F20A8B
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 14:48:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9F3FD20A8B
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 14:51:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ItJsMQ8U"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="g2khOrPE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726650AbgDJOsC (ORCPT
+        id S1726650AbgDJOvh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Apr 2020 10:48:02 -0400
-Received: from mail-qk1-f195.google.com ([209.85.222.195]:36476 "EHLO
-        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726080AbgDJOsB (ORCPT
+        Fri, 10 Apr 2020 10:51:37 -0400
+Received: from mx08-00178001.pphosted.com ([91.207.212.93]:34372 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726009AbgDJOvg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Apr 2020 10:48:01 -0400
-Received: by mail-qk1-f195.google.com with SMTP id l25so2329164qkk.3;
-        Fri, 10 Apr 2020 07:48:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=8vE9g+7G14NTraPEo7qqZPXqFetbj6StRkDYo8Di7S4=;
-        b=ItJsMQ8UP9u/v19m5LXrQk14pb/p5hjHsk+q1dpzGdrKs5FxywhBjq6HADivqPY30M
-         tbTBIj5r4WAkpSTP4ai3CxPQ8gEHp0FqsSh57HO9nWBPEKIe30MerjxWLLWX9JP4uf92
-         uVvoDr+aLoV1lFbhqRvZmYqgJXXNjD7gEwGIyGAQDWSqZ1cQP8oDy3bkPzRIMShT8YGt
-         Wxp5rtDLOl1nyX1a0kjZGHTUJJ7eOJ6kwzqd0R7Ab+eXNm40/JVQ5NifVtp70g3fiz7Z
-         0UtXMnbvgz1JXRnl/GnW5toD8TfO3t3Vq6wXF97w0T4CpMCwBonpMhbC20V289cYRahA
-         LYEg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:date:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to;
-        bh=8vE9g+7G14NTraPEo7qqZPXqFetbj6StRkDYo8Di7S4=;
-        b=i7hmW9klZr7p4syQXuEOYgx/njKsBsHlLnwJRM/VVVcWujBHa1/LGdeZ6xyc0EZICG
-         i7YNlYRg9f4iA9vFuQBqRqqXYXrpZ53sexhycSG8XhLW2VrNXqrI7DqOe/lRBtv1ecXq
-         UssRrflVuVI900PPntogqG0b0dHrwkyjJFvXrhPHxb2ebY0L073qbZT2LzX+tJqEQCD/
-         BpekSoGUUF5OkHASVAmqwaaK+NIQTHIQW6hzqriVzBtA/oIAP3cnAMF4qGG4umdr9S31
-         NJ1VrBMgRg0wunU+eZvW6il3QQWD0ONA8StE9bGZ8j49xkX0Pndx189Z/tTQX57b/WCs
-         /ibA==
-X-Gm-Message-State: AGi0PuZqcDbQraGizEH/WV/N5oZA1vZBT+d7fImDNJLQ7BgPUpkLBrLa
-        5xzCZ76XCdNu6ceuZ45Ytx4=
-X-Google-Smtp-Source: APiQypLS87JbMByJeSOtfg6i2aNZqHQfBUIqa65J6N/2hi8O24oxVu5CcIyl0QiGvcPhXy9zXVqQbA==
-X-Received: by 2002:a37:a702:: with SMTP id q2mr4301032qke.150.1586530081092;
-        Fri, 10 Apr 2020 07:48:01 -0700 (PDT)
-Received: from rani.riverdale.lan ([2001:470:1f07:5f3::b55f])
-        by smtp.gmail.com with ESMTPSA id d24sm1731426qkl.8.2020.04.10.07.48.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 10 Apr 2020 07:48:00 -0700 (PDT)
-From:   Arvind Sankar <nivedita@alum.mit.edu>
-X-Google-Original-From: Arvind Sankar <arvind@rani.riverdale.lan>
-Date:   Fri, 10 Apr 2020 10:47:58 -0400
-To:     Arvind Sankar <nivedita@alum.mit.edu>
-Cc:     Ard Biesheuvel <ardb@kernel.org>, Dave Young <dyoung@redhat.com>,
-        pjones@redhat.com, daniel.kiper@oracle.com,
-        Leif Lindholm <leif@nuviainc.com>,
-        Borislav Petkov <bp@alien8.de>, Sergey Shatunov <me@prok.pw>,
-        hpa@zytor.com,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        mingo@redhat.com, Thomas Gleixner <tglx@linutronix.de>,
-        X86 ML <x86@kernel.org>, linux-efi <linux-efi@vger.kernel.org>,
-        initramfs@vger.kernel.org,
-        Donovan Tremura <neurognostic@protonmail.ch>,
-        Harald Hoyer <harald@hoyer.xyz>
-Subject: Re: [PATCH 1/2] efi/x86: Move efi stub globals from .bss to .data
-Message-ID: <20200410144758.GC936997@rani.riverdale.lan>
-References: <CAMj1kXEUkJ1XJ9OTsijeq8tNNYC00bXqEV44OMtX5ugo9WoLKA@mail.gmail.com>
- <20200406180614.429454-1-nivedita@alum.mit.edu>
- <20200408074334.GA21886@dhcp-128-65.nay.redhat.com>
- <CAMj1kXGPOZ6zWtgGScLy0ECrTtf1yhngDTNE1chW-MQw3XQp9Q@mail.gmail.com>
- <20200409143910.GA727557@rani.riverdale.lan>
- <CAMj1kXEm=E6B+kjZktG=sBPLQ=_HFfUz6KFLskNGzRnuMjn0gA@mail.gmail.com>
- <20200409163530.GA785575@rani.riverdale.lan>
+        Fri, 10 Apr 2020 10:51:36 -0400
+Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03AElMPO031008;
+        Fri, 10 Apr 2020 16:51:22 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=STMicroelectronics;
+ bh=JG4ggwAOInAaaLwQnOLLQb7wIvHrZssGt6cM8gL6As4=;
+ b=g2khOrPEW9SV32ZRwNQEVtKl9rFy53QAfsod6e1fR77Snt412upXOFgqFr1LDpfwZu8Y
+ UyZZXPfBaOq7yn/ZoCInN+yyUyiCkTZT+C65Ty5kTVqa7ToVK3TM0aF6emIeMJ/m4vSZ
+ ooKAlqpOtmKm4iCj/DsYnZ0byfe+2mgScnc5l20b5SFajc8wIsmm13GqBS7Z5HMSLbZS
+ eLob+emRzQRVy5zXp/nCLuq2giqtPkh2ci+TKPzSbzpH0Mt9NERuM9xq1Y8N+W/ZNyFT
+ xVnpmn8LgXQVfVEjdgvuVo6AvR6KbypSbhYeRhZw4CnOWEeVkTkhm1hfSVQcT6YSyY1e HA== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 309vr9dumc-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 10 Apr 2020 16:51:22 +0200
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id C518A10002A;
+        Fri, 10 Apr 2020 16:51:17 +0200 (CEST)
+Received: from Webmail-eu.st.com (sfhdag3node1.st.com [10.75.127.7])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id AC5802AE6DC;
+        Fri, 10 Apr 2020 16:51:17 +0200 (CEST)
+Received: from lmecxl0889.tpe.st.com (10.75.127.44) by SFHDAG3NODE1.st.com
+ (10.75.127.7) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 10 Apr
+ 2020 16:51:16 +0200
+Subject: Re: [PATCH v2 1/2] remoteproc: Add character device interface
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>
+CC:     <rishabhb@codeaurora.org>, Cl?ment Leger <cleger@kalrayinc.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-remoteproc <linux-remoteproc@vger.kernel.org>,
+        psodagud <psodagud@codeaurora.org>, tsoni <tsoni@codeaurora.org>,
+        sidgup <sidgup@codeaurora.org>,
+        <linux-remoteproc-owner@vger.kernel.org>
+References: <1585699438-14394-1-git-send-email-rishabhb@codeaurora.org>
+ <5b1c8287-0077-87e7-9364-b1f5a104c9e3@st.com>
+ <6261646b2e0c4d9c8a30900b2f475890@codeaurora.org>
+ <730c75c9-15e2-19c5-d97a-190bf1e6ffaa@st.com>
+ <634144036.14036712.1586174761552.JavaMail.zimbra@kalray.eu>
+ <8379238a-a9e0-da4e-330a-18dffba5f841@st.com>
+ <1331212923.14096350.1586188737626.JavaMail.zimbra@kalray.eu>
+ <877ed3c91c8f140a08a743f03cafc633@codeaurora.org>
+ <d1ccddc1-c97b-7573-74eb-ff0f09337cce@st.com>
+ <20200410020035.GX20625@builder.lan>
+From:   Arnaud POULIQUEN <arnaud.pouliquen@st.com>
+Message-ID: <9ce02bc3-0203-aa07-b29f-97f4fea718c4@st.com>
+Date:   Fri, 10 Apr 2020 16:51:15 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200409163530.GA785575@rani.riverdale.lan>
+In-Reply-To: <20200410020035.GX20625@builder.lan>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.75.127.44]
+X-ClientProxiedBy: SFHDAG1NODE3.st.com (10.75.127.3) To SFHDAG3NODE1.st.com
+ (10.75.127.7)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
+ definitions=2020-04-10_05:2020-04-09,2020-04-10 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 09, 2020 at 12:35:30PM -0400, Arvind Sankar wrote:
-> On Thu, Apr 09, 2020 at 04:47:55PM +0200, Ard Biesheuvel wrote:
-> > On Thu, 9 Apr 2020 at 16:39, Arvind Sankar <nivedita@alum.mit.edu> wrote:
-> > >
-> > > On Wed, Apr 08, 2020 at 09:49:15AM +0200, Ard Biesheuvel wrote:
-> > > > (add Peter, Leif and Daniel)
-> > > >
-> > > > On Wed, 8 Apr 2020 at 09:43, Dave Young <dyoung@redhat.com> wrote:
-> > > > >
-> > > > > On 04/06/20 at 02:06pm, Arvind Sankar wrote:
-> > > > > > Commit
-> > > > > >
-> > > > > >   3ee372ccce4d ("x86/boot/compressed/64: Remove .bss/.pgtable from
-> > > > > >   bzImage")
-> > > > > >
-> > > > > > removed the .bss section from the bzImage.
-> > > > > >
-> > > > > > However, while a PE loader is required to zero-initialize the .bss
-> > > > > > section before calling the PE entry point, the EFI handover protocol
-> > > > > > does not currently document any requirement that .bss be initialized by
-> > > > > > the bootloader prior to calling the handover entry.
-> > > > > >
-> > > > > > When systemd-boot is used to boot a unified kernel image [1], the image
-> > > > > > is constructed by embedding the bzImage as a .linux section in a PE
-> > > > > > executable that contains a small stub loader from systemd together with
-> > > > > > additional sections and potentially an initrd. As the .bss section
-> > > > > > within the bzImage is no longer explicitly present as part of the file,
-> > > > > > it is not initialized before calling the EFI handover entry.
-> > > > > > Furthermore, as the size of the embedded .linux section is only the size
-> > > > > > of the bzImage file itself, the .bss section's memory may not even have
-> > > > > > been allocated.
-> > > > >
-> > > > > I did not follow up the old report, maybe I missed something. But not
-> > > > > sure why only systemd-boot is mentioned here.  I also have similar issue
-> > > > > with early efi failure.  With these two patches applied, it works well
-> > > > > then.
-> > > > >
-> > > > > BTW, I use Fedora 31 + Grub2
-> > > > >
-> > > >
-> > > > OK, so I take it this means that GRUB's PE/COFF loader does not
-> > > > zero-initialize BSS either? Does it honor the image size in memory if
-> > > > it exceeds the file size?
-> > >
-> > > Dave, that comment was because the previous report was for systemd-boot
-> > > stub.
-> > >
-> > > Ard, should I revise the commit message to make it clear it's not
-> > > restricted to systemd-boot but anything using handover entry may be
-> > > affected? Maybe just a "for example, when systemd-boot..." and then a
-> > > line to say grub2 with the EFI stub patches is also impacted?
-> > >
-> > 
-> > Well, the fact the /some/ piece of software is used in production that
-> > relies on the ill-defined EFI handover protocol is sufficient
-> > justification, so I don't think it is hugely important to update it.
-> > 
-> > > https://src.fedoraproject.org/rpms/grub2/blob/f31/f/0001-Add-support-for-Linux-EFI-stub-loading.patch#_743
-> > >
-> > > +  kernel_mem = grub_efi_allocate_pages_max(lh.pref_address,
-> > > +                                          BYTES_TO_PAGES(lh.init_size));
-> > >
-> > > Looking at this, grub does allocate init_size for the image, but it
-> > > doesn't zero it out.
-> > >
-> > > This call also looks wrong to me though. It allocates at max address of
-> > > pref_address, which, if it succeeds, will guarantee that the kernel gets
-> > > loaded entirely below pref_address == LOAD_PHYSICAL_ADDR. In native
-> > > mode, if it weren't for the EFI stub copying the kernel again, this
-> > > would cause the startup code to relocate the kernel into unallocated
-> > > memory. On a mixed-mode boot, this would cause the early page tables
-> > > setup prior to transitioning to 64-bit mode to be in unallocated memory
-> > > and potentially get clobbered by the EFI stub.
-> > >
-> > > The first try to allocate pref_address should be calling
-> > > grub_efi_allocate_fixed instead.
-> > 
-> > Thanks Arvind. I'm sure the Fedora/RedHat folks on cc should be able
-> > to get these logged somewhere.
-> 
-> Ok. For dracut, the process for building the unified kernel image needs
-> a check to make sure the kernel can fit in the space provided for it --
-> there is 16MiB of space and the distro bzImage's are up to 10-11MiB in
-> size, so there's some slack left at present.
-> 
-> Additionally, in mixed-mode, the unified kernel images are quite likely
-> to end up with early pgtables from startup_32 clobbering the initrd,
-> independently of the recent kernel changes. Hopefully no-one actually
-> uses these in mixed-mode.
 
-The grub EFI handover entry patch is busted in mixed-mode for another
-reason -- while it allocates init_size, it doesn't use the correct
-alignment. I tested on a Debian buster VM in mixed-mode (that was the
-one I was able to get to install/boot with mixed-mode), and the early
-pagetable from startup_32 ends up in unallocated memory due to the
-rounding up of the bzImage address to account for kernel alignment. This
-would be an existing problem prior to these patches.
 
-Should we try to handle this in the kernel? At some point KASLR is going
-to pick that memory for the kernel and overwrite the pagetables I would
-think, resulting in sporadic crashes that are almost unreproducible.
+On 4/10/20 4:00 AM, Bjorn Andersson wrote:
+> On Thu 09 Apr 01:29 PDT 2020, Arnaud POULIQUEN wrote:
+> 
+>>
+>> On 4/8/20 8:34 PM, rishabhb@codeaurora.org wrote:
+>>> On 2020-04-06 08:58, Clément Leger wrote:
+>>>> Hi Arnaud,
+>>>>
+>>>> ----- On 6 Apr, 2020, at 16:17, Arnaud Pouliquen arnaud.pouliquen@st.com wrote:
+>>>>
+>>>>> Hi Clément,
+>>>>>
+>>>>> On 4/6/20 2:06 PM, Clément Leger wrote:
+>>>>>> Hi Arnaud,
+>>>>>>
+>>>>>> ----- On 6 Apr, 2020, at 11:01, Arnaud Pouliquen arnaud.pouliquen@st.com wrote:
+>>>>>>
+>>>>>>> On 4/3/20 9:13 PM, rishabhb@codeaurora.org wrote:
+>>>>>>>> On 2020-04-02 10:28, Arnaud POULIQUEN wrote:
+>>>>>>>>> Hi
+>>>>>>>>>
+>>>>>>>>> On 4/1/20 2:03 AM, Rishabh Bhatnagar wrote:
+>>>>>>>>>> Add the character device interface for userspace applications.
+>>>>>>>>>> This interface can be used in order to boot up and shutdown
+>>>>>>>>>> remote subsystems. Currently there is only a sysfs interface
+>>>>>>>>>> which the userspace clients can use. If a usersapce application
+>>>>>>>>>> crashes after booting the remote processor does not get any
+>>>>>>>>>> indication about the crash. It might still assume that the
+>>>>>>>>>> application is running. For example modem uses remotefs service
+>>>>>>>>>> to fetch data from disk/flash memory. If the remotefs service
+>>>>>>>>>> crashes, modem keeps on requesting data which might lead to a
+>>>>>>>>>> crash. Adding a character device interface makes the remote
+>>>>>>>>>> processor tightly coupled with the user space application.
+>>>>>>>>>> A crash of the application leads to a close on the file descriptors
+>>>>>>>>>> therefore shutting down the remoteproc.
+>>>>>>>>>
+>>>>>>>>> Sorry I'm late in the discussion, I hope I've gone through the whole
+>>>>>>>>> discussion so I don't reopen a closed point...
+>>>>>>>>>
+>>>>>>>>> Something here is not crystal clear to me so I'd rather share it...
+>>>>>>>>>
+>>>>>>>>> I suppose that you the automatic restart of the application is not possible to
+>>>>>>>>> stop and restart the remote processor...
+>>>>>>>> Yes correct, while we wait for the application to restart we might observe a
+>>>>>>>> fatal crash.
+>>>>>>>>>
+>>>>>>>>> Why this use case can not be solved by a process monitor or a service
+>>>>>>>>> in userland that detects the application crash and stop the remote
+>>>>>>>>> firmware using
+>>>>>>>>> the sysfs interface?
+>>>>>>>>>
+>>>>>>>> What happens in the case where the process monitor itself crashes? This is
+>>>>>>>> actually the approach we follow in our downstream code. We have a central entity
+>>>>>>>> in userspace that controls bootup/shutdown of some remote processors based on
+>>>>>>>> the
+>>>>>>>> votes from userspace clients. We have observed cases where this entity
+>>>>>>>> itself crashes and remote processors are left hanging.
+>>>>>>>
+>>>>>>> Your description makes me feel like this patch is only a workaround of something
+>>>>>>> that
+>>>>>>> should be fixed in the userland, even if i understand that hanging is one of the
+>>>>>>> most
+>>>>>>> critical problem and have to be fixed.
+>>>>>>> For instance, how to handle several applications that interact with the remote
+>>>>>>> processor
+>>>>>>> ( e.g. rpmsg service applications) how to stop and restart everything. Using the
+>>>>>>> char
+>>>>>>> device would probaly resolve only a part of the issue...
+>>>>>>>
+>>>>>>> I'm not aware about your environment and i'm not a userland expert. But what i
+>>>>>>> still not
+>>>>>>> understand why a parent process can not do the job...
+>>>>>>> I just test a simple script on my side that treat the kill -9 of an application
+>>>>>>> ("cat" in my case).
+>>>>>>
+>>>>>> This is not entirely true, if the parent process is killed with a SIGKILL, then
+>>>>>> the process will not be able to handle anything and the remoteproc will still
+>>>>>> be running.
+>>>>>>
+>>>>>> What I understood from Rishabh patch is a way to allow a single process handling
+>>>>>> the rproc state. We have the same kind of need and currently, if the
+>>>>>> user application crashes, then the rproc is still running (which happens).
+>>>>>>
+>>>>>>>
+>>>>>>> #start the remote firmware
+>>>>>>> cp  $1 /lib/firmware/
+>>>>>>> echo $1> /sys/class/remoteproc/remoteproc0/firmware
+>>>>>>> echo start >/sys/class/remoteproc/remoteproc0/state
+>>>>>>> #your binary
+>>>>>>> cat /dev/kmsg
+>>>>>>> # stop the remote firmware in case of crash (and potentially some other apps)
+>>>>>>> echo stop >/sys/class/remoteproc/remoteproc0/state
+>>>>>>>
+>>>>>>
+>>>>>> This is not really "production proof" and what happens if the application is
+>>>>>> responsible of setting the firmware which might be jitted ?
+>>>>>> And if the script receives the SIGKILL, then we are back to the same problem.
+>>>>> Yes this is just a basic example, not an implementation which would depend on
+>>>>> the
+>>>>> environment. i'm just trying here to  put forward a multi-process solution...and
+>>>>> that I'm not an userland expert :).
+>>>>>
+>>>>>>
+>>>>>> I really think, this is a step forward an easier and reliable use of the
+>>>>>> remoteproc
+>>>>>> on userland to guarantee a coherent rproc state even if host application
+>>>>>> crashes.
+>>> Yes what we want is simple mechanism where a single userspace process can boot/
+>>> shutdown the remote processor in all scenarios. Adding more processes to monitor
+>>> the already existing process might have 2 issues. One is there might be a delay
+>>> between the application crash and process monitor getting to know about it and taking
+>>> action. This might prove to be fatal in our case. Second, possibly the monitor can hang
+>>> or get killed and is not deterministic.
+>>>>>
+>>>>> I can see 3 ways of handling an application crash:
+>>>>> - just shutdown the firmware
+>>>>> => can be done through char device
+>>>>> - stop some other related processes and/or generate a remote proc crash dump for
+>>>>> debug
+>>>>> => /sysfs and/or debugfs
+>>>>> - do nothing as you want a silence application reboot and re-attach to the
+>>>>> running firmware
+>>>>> => use sysfs
+>>>>>
+>>>>> I'm challenging the solution because splitting the API seems to me not a good
+>>>>> solution.
+>>>>
+>>>> Completely ok with that, we have to fully understand the targeted usecase to
+>>>> avoid implemented a flawed interface.
+>>>>
+>>>>> Now i wonder how it works for the other applications that are relying on some
+>>>>> other
+>>>>> kernel frameworks...
+>>>>
+>>>> For some other device, there is a chardev. The watchdog for intance uses a
+>>>> /dev/watchdog. Regarding the gpio, it seems they are also using a chardev
+>>>> and the sysfs interface is deprecated.
+>>>>
+>>>>> Perhaps the answer is that these frameworks don't use sysfs but char device.
+>>>>> That would means that the sysfs solution is not the more adapted solution and
+>>>>> perhaps we should migrate to a char device.
+>>>>> But in this case, i think that it should implement the whole API and be
+>>>>> exclusive with
+>>>>> the syfs legacy API (so no sysfs or sysfs in read-only).
+>>>>
+>>>> I agree with that, if another interface must be defined, then it should
+>>>> implement everything that is supported right now with the sysfs.
+>>>>
+>>> The other fields that sysfs exposes right now are firmware_name, name(rproc name),
+>>> state. The targeted usecase was that these are configuration parameters specific
+>>> to the remoteproc and should stay in the sysfs interface. Whereas char device
+>>> should provide direct access to remoteproc device.
+>>> It would make sense to use this interface in conjunction with sysfs
+>>> interface, where you use /dev/remoteproc0 to boot/shutdown the remote processor
+>>> sysfs entries to fine tune the parameters.
+>>> Adding ioctls to implement all sysfs functionality seems like overkill to me. Let
+>>> me know what you guys think.
+>>
+>> In my opinion if we open the possibility of accessing to remoteproc through a char
+>> device, we should move torwards a solution that would replace the sysfs. 
+>> In this case sysfs fields could be read-only, and the char devices would have to
+>> support the different shutdown modes. This means that the auto shutdown should be
+>> configurable (IOCTL?).
+>> But I assume that the minimum could be to only disable write access on the "state" field
+>> and handle the "auto shutdown" as an option of the char device.
+>>
+>> Anyway it only my opinion, let Bjorn an Mathieu comment and decide :)
+>>
+> 
+> I have two concerns with migrating things to a character device:
+> 
+> 1) Operating an ioctl based interface requires specialized tooling. E.g.
+> today whatever your installation is you can change firmware name and
+> start a core with the user space tools you have. Further more allowing
+> you to change firmware name before powering on the core would imply that
+> both of these would have to be ioctls (we can't just boot the core on
+> open) - so we would end up duplicating all parts of the sysfs interface
+> in ioctls.
+> 
+> 2) Reducing the functionality of the sysfs interface would break
+> compatibility with existing user space, which is verboten. So we would
+> at best duplicate the existing features.
+
+Agree with your concerns.
+But could we consider that an application using this char dev, is no more
+compatible with existing interface? 
+And it would make sense that it requests exclusivity on
+the remote firmware lice cycle. In this case the sysfs state should be
+read only to protect from an unexpected shutdown.
+
+> 
+> 
+> That said, per the same argument I don't really like duplicating the
+> state controls in a character device (i.e. Rishabh's patch), but this
+> really does provide something that we can't do with the current
+> interface.
+
+Yes, that why it could be nice to make it scalable to integrate
+future extension that can not be implemented using sysfs.
+
+One of my main concern is that forcing the boot on open and shutdown on
+close limits the usage of this device for some other future purposes. 
+Coming back in the future to a generic solution will be not possible
+as case of impact on the open close behaviour.
+Using ioctls would avoid this limitation...
+Ioctl could be used to enable the boot/shutdown on open/close
+
+Then this char device could be also used to generate an event for application
+on crash.
+In this case the char device could be used only for the event, and sysfs
+state would be used to manage the remoteproc firmware. So sysfs state should
+be in read write access...
+
+Concerning the firmware name, today sysfs interface imposes only one firmware
+what's happen if more that one firmware loading is requested (for instance 
+a core firmware with of some processing or rpc modules...).
+In this case the sysfs firmware field could not be used.
+
+These examples make me think that sysfs could be to manage through
+remoteproc_cdev instead of directly calling core function.
+This would help to define dynamic rules for the sysfs access. 
+
+To sum up, nothing against opening interface with the char device.
+I'm just wondering if this device should not be designed to allow some future
+extensions of the API, and not only for this use case.  
+
+Regards
+Arnaud
+
+> 
+> Regards,
+> Bjorn
+> 
