@@ -2,188 +2,472 @@ Return-Path: <SRS0=VV4q=52=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08F4DC2BB86
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 15:56:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09249C2BA2B
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 15:59:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CB76F20CC7
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 15:56:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=shutemov-name.20150623.gappssmtp.com header.i=@shutemov-name.20150623.gappssmtp.com header.b="t2Hk/GfO"
+	by mail.kernel.org (Postfix) with ESMTP id C928120769
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 15:59:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726679AbgDJP4R (ORCPT
+        id S1726654AbgDJP7A (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Apr 2020 11:56:17 -0400
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:41391 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726080AbgDJP4Q (ORCPT
+        Fri, 10 Apr 2020 11:59:00 -0400
+Received: from relay7-d.mail.gandi.net ([217.70.183.200]:49447 "EHLO
+        relay7-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726145AbgDJP67 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Apr 2020 11:56:16 -0400
-Received: by mail-lf1-f66.google.com with SMTP id u10so499394lfo.8
-        for <linux-kernel@vger.kernel.org>; Fri, 10 Apr 2020 08:56:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=shutemov-name.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=5oXzzweU9+b1N5+cGj6pvbd+Y8KpBQDkz61NLnD/b7c=;
-        b=t2Hk/GfOBLvuuJ342Lrin5iCn8jW7Hdl70kSAp5chiaxVe3jyF6APhVBUz0JD9wR9C
-         csCdUGmml/oC1rstoIwryKphaM37BYtFVKrv+Uz5ib0rljmOqRayvK04I+Ux3bBdZVZU
-         gidlwxUtSxfhwE5i6DHR013lTGAu27xnhQ61ditOHV5ZRlPksyJtrt/KC9KC72u32hLC
-         kNju4qiF4rOQOszUwaVQAvaZHVMM6+RuNrCa79UvgBzMyJnW/j3sAZ75qtAnkjiJi0UK
-         86ipF3Ny/DWYDMNdjEAFMrqs73wIyoWWxB3kkB9oq5Xhs5ZNcQ/4IMxXsnqzS5Xf1218
-         gnjA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=5oXzzweU9+b1N5+cGj6pvbd+Y8KpBQDkz61NLnD/b7c=;
-        b=HbyuL72orRpxUdim6X8fuTh2T7CxciAgnunAju3y9NL+G1oizeQigKKb8CV7apteJD
-         58DvpLkwjOS7MGXpp09Y75PUHmyG0s6Ihbb81m4fY8uBCQO2OMS5uCsCinJIEPdgQ4Ef
-         RZmf5PYZGayga6K5za/8p/WUhhtWSqIZH/QagdK12bk6pJfB/hdRmDXkAtn2WFvP4o4l
-         PzOdIki+UaRjbz11QVFnLC7dKYfmSHps2l3uXosk735M0fsmonBIwTWzWP+71Wo1+zRk
-         LiWtt86iJMpty+etfFTVGAj26SwO82ncc4rlxNMZFbjxuimF1z08fL1Ctbmq7HocLrXL
-         Kpmw==
-X-Gm-Message-State: AGi0PuaIXWXqk1wKO4OyAI4Horb1xAn0Eoo1/t96BZRsWVd1rIsrQc0M
-        K4nENjzNxdkzld0pcy5+kyIkvA==
-X-Google-Smtp-Source: APiQypI9qvle8foeI1LCtXi2mzT1MhdY9shhQWtO1nZMume9pEjCI8OG2k/lFRxBm7w9FG5W1mkOMw==
-X-Received: by 2002:a05:6512:686:: with SMTP id t6mr3048293lfe.163.1586534174501;
-        Fri, 10 Apr 2020 08:56:14 -0700 (PDT)
-Received: from box.localdomain ([86.57.175.117])
-        by smtp.gmail.com with ESMTPSA id w10sm1264769ljh.85.2020.04.10.08.56.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 10 Apr 2020 08:56:13 -0700 (PDT)
-Received: by box.localdomain (Postfix, from userid 1000)
-        id DA8EE102110; Fri, 10 Apr 2020 18:56:13 +0300 (+03)
-Date:   Fri, 10 Apr 2020 18:56:13 +0300
-From:   "Kirill A. Shutemov" <kirill@shutemov.name>
-To:     Yang Shi <yang.shi@linux.alibaba.com>
-Cc:     akpm@linux-foundation.org, Andrea Arcangeli <aarcange@redhat.com>,
-        Zi Yan <ziy@nvidia.com>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-Subject: Re: [PATCHv2 5/8] khugepaged: Allow to callapse a page shared across
- fork
-Message-ID: <20200410155613.cxqplrmwckezx3hl@box>
-References: <20200403112928.19742-1-kirill.shutemov@linux.intel.com>
- <20200403112928.19742-6-kirill.shutemov@linux.intel.com>
- <b03643ba-8411-8486-737c-1bc29dd10a74@linux.alibaba.com>
- <20200408131044.xzlheacvslrbwrja@box>
- <107630f5-bbde-3f78-23e9-6f6b3113d709@linux.alibaba.com>
- <61569ead-2bbd-6d18-c04c-3251218a3fcd@linux.alibaba.com>
+        Fri, 10 Apr 2020 11:58:59 -0400
+X-Originating-IP: 90.112.45.105
+Received: from [192.168.1.101] (lfbn-gre-1-325-105.w90-112.abo.wanadoo.fr [90.112.45.105])
+        (Authenticated sender: alex@ghiti.fr)
+        by relay7-d.mail.gandi.net (Postfix) with ESMTPSA id C1D9C20007;
+        Fri, 10 Apr 2020 15:58:57 +0000 (UTC)
+Subject: Re: [PATCH RFC 4/8] riscv/kaslr: randomize the kernel image offset
+To:     Zong Li <zong.li@sifive.com>
+Cc:     Palmer Dabbelt <palmer@dabbelt.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        linux-riscv <linux-riscv@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org List" <linux-kernel@vger.kernel.org>
+References: <cover.1584352425.git.zong.li@sifive.com>
+ <16924c3f07b142688a3c0562d229cd67dc7bf8e6.1584352425.git.zong.li@sifive.com>
+ <71cc2070-e867-17e1-cc64-66b634e3f48e@ghiti.fr>
+ <CANXhq0rQ_YqmBBDEgOCcu8vr+5NWqNdnfZ+EX8ofaaD6PuBAFQ@mail.gmail.com>
+ <69a9ecc5-550e-24a0-6f91-d65af3e00f18@ghiti.fr>
+ <CANXhq0q62t3nZgqbYJzW9p1ntaNAFFX5LQFB65fkO5KCCv-RHA@mail.gmail.com>
+From:   Alex Ghiti <alex@ghiti.fr>
+Message-ID: <c68dacf1-eca1-9d28-3c04-dd6793fe3274@ghiti.fr>
+Date:   Fri, 10 Apr 2020 11:58:57 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <61569ead-2bbd-6d18-c04c-3251218a3fcd@linux.alibaba.com>
+In-Reply-To: <CANXhq0q62t3nZgqbYJzW9p1ntaNAFFX5LQFB65fkO5KCCv-RHA@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 09, 2020 at 05:03:00PM -0700, Yang Shi wrote:
-> 
-> 
-> On 4/8/20 11:51 AM, Yang Shi wrote:
-> > 
-> > 
-> > On 4/8/20 6:10 AM, Kirill A. Shutemov wrote:
-> > > On Mon, Apr 06, 2020 at 01:50:56PM -0700, Yang Shi wrote:
-> > > > 
-> > > > On 4/3/20 4:29 AM, Kirill A. Shutemov wrote:
-> > > > > The page can be included into collapse as long as it doesn't
-> > > > > have extra
-> > > > > pins (from GUP or otherwise).
-> > > > > 
-> > > > > Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
-> > > > > ---
-> > > > >    mm/khugepaged.c | 25 ++++++++++++++-----------
-> > > > >    1 file changed, 14 insertions(+), 11 deletions(-)
-> > > > > 
-> > > > > diff --git a/mm/khugepaged.c b/mm/khugepaged.c
-> > > > > index 57ff287caf6b..1e7e6543ebca 100644
-> > > > > --- a/mm/khugepaged.c
-> > > > > +++ b/mm/khugepaged.c
-> > > > > @@ -581,11 +581,18 @@ static int
-> > > > > __collapse_huge_page_isolate(struct vm_area_struct *vma,
-> > > > >            }
-> > > > >            /*
-> > > > > -         * cannot use mapcount: can't collapse if there's a gup pin.
-> > > > > -         * The page must only be referenced by the scanned process
-> > > > > -         * and page swap cache.
-> > > > > +         * Check if the page has any GUP (or other external) pins.
-> > > > > +         *
-> > > > > +         * The page table that maps the page has been
-> > > > > already unlinked
-> > > > > +         * from the page table tree and this process cannot get
-> > > > > +         * additinal pin on the page.
-> > > > > +         *
-> > > > > +         * New pins can come later if the page is shared across fork,
-> > > > > +         * but not for the this process. It is fine. The
-> > > > > other process
-> > > > > +         * cannot write to the page, only trigger CoW.
-> > > > >             */
-> > > > > -        if (page_count(page) != 1 + PageSwapCache(page)) {
-> > > > > +        if (total_mapcount(page) + PageSwapCache(page) !=
-> > > > > +                page_count(page)) {
-> > > > This check looks fine for base page, but what if the page is
-> > > > PTE-mapped THP?
-> > > > The following patch made this possible.
-> > > > 
-> > > > If it is PTE-mapped THP and the page is in swap cache, the
-> > > > refcount would be
-> > > > 512 + the number of PTE-mapped pages.
-> > > > 
-> > > > Shall we do the below change in the following patch?
-> > > > 
-> > > > extra_pins = PageSwapCache(page) ? nr_ccompound(page) - 1 : 0;
-> > > > if (total_mapcount(page) + PageSwapCache(page) != page_count(page) -
-> > > > extra_pins) {
-> > > > ...
-> > > Looks like you're right.
-> > > 
-> > > It would be nice to have a test case to demonstrate the issue.
-> > > 
-> > > Is there any way to trigger moving the page to swap cache? I don't
-> > > see it
-> > > immediately.
-> > 
-> > It sounds not easy to trigger since it totally depends on timing, I'm
-> > wondering we may have to use MADV_PAGEOUT? Something below off the top
-> > of my head may trigger this?
-> > 
-> > 
-> >     CPU       A                                    CPU    B            
-> >         CPU    C
-> > In parent:
-> > MADV_HUGEPAGE
-> > page fault to fill with THP
-> > fork
-> >                                                     In Child:
-> > MADV_NOHUGEPAGE
-> > MADV_DONTNEED (split pmd)
-> > MADV_PAGEOUT
-> >                                                             ->
-> > add_to_swap
-> >                                 khugepaged scan parent and try to
-> > collapse PTE-mapped
-> > 
-> >                                                             ->
-> > try_to_unmap
-> > 
-> > When doing MADV_DONTNEED we need make sure head page is unmapped since
-> > MADV_PAGEOUT would call page_mapcount(page) to skip shared mapping.
-> 
-> This can't trigger it since MADV_PAGEOUT would isolate the page from lru so
-> khugepaged_scan_pmd() can't reach the refcount check at all.
-> 
-> If try_to_unmap() or pageout() fails, the page may stay in swap cache. But I
-> didn't think of an easy way to make this happen.
+Hi Zong,
 
-Okay, I'll fix it without a test case.
+On 4/9/20 6:31 AM, Zong Li wrote:
+> On Thu, Apr 9, 2020 at 1:51 PM Alex Ghiti <alex@ghiti.fr> wrote:
+>>
+>>
+>>
+>> On 4/7/20 6:53 AM, Zong Li wrote:
+>>> On Tue, Apr 7, 2020 at 1:11 PM Alex Ghiti <alex@ghiti.fr> wrote:
+>>>>
+>>>>
+>>>> On 3/24/20 3:30 AM, Zong Li wrote:
+>>>>> Entropy is derived from the banner and timer, it is better than nothing
+>>>>> but not enough secure, so previous stage may pass entropy via the device
+>>>>> tree /chosen/kaslr-seed node.
+>>>>>
+>>>>> We limit randomization range within 1GB, so we can exploit early page
+>>>>> table to map new destination of kernel image. Additionally, the kernel
+>>>>> offset need 2M alignment to ensure it's good in PMD page table.
+>>>>>
+>>>>> We also checks the kernel offset whether it's safe by avoiding to
+>>>>> overlaps with dtb, initrd and reserved memory regions.
+>>>>>
+>>>>
+>>>> That maybe changes the way my sv48 patchset will be implemented: I can't
+>>>> get user preference (3-level or 4-level) by any means, device-tree or
+>>>> kernel parameter.
+>>>>
+>>>> But I don't see how you could get a random offset without info from the
+>>>> device tree anyway (reserved memory regions especially), so maybe I
+>>>> could parse dtb for allowing the user to choose. I'll move this
+>>>> discussion to the sv48 introduction.
+>>>
+>>> Maybe I'm a little bit misunderstanding here, but I think I got the
+>>> random offset through some information by parsing dtb.
+>>>
+>>
+>> I was just saying that I may use the dtb too in sv48 patchset to make it
+>> possible for users to choose sv39 even if sv48 is supported by hardware
+>> (which is not the case in my current patchset).
+>>
+>>>>
+>>>>> Signed-off-by: Zong Li <zong.li@sifive.com>
+>>>>> ---
+>>>>>     arch/riscv/kernel/kaslr.c | 274 +++++++++++++++++++++++++++++++++++++-
+>>>>>     arch/riscv/mm/init.c      |   2 +-
+>>>>>     2 files changed, 273 insertions(+), 3 deletions(-)
+>>>>>
+>>>>> diff --git a/arch/riscv/kernel/kaslr.c b/arch/riscv/kernel/kaslr.c
+>>>>> index 281b5fcca5c8..9ec2b608eb7f 100644
+>>>>> --- a/arch/riscv/kernel/kaslr.c
+>>>>> +++ b/arch/riscv/kernel/kaslr.c
+>>>>> @@ -11,23 +11,293 @@
+>>>>>     #include <asm/cacheflush.h>
+>>>>>
+>>>>>     extern char _start[], _end[];
+>>>>> +extern void *dtb_early_va;
+>>>>> +extern phys_addr_t dtb_early_pa;
+>>>>>     extern void secondary_random_target(void);
+>>>>>     extern void kaslr_create_page_table(uintptr_t start, uintptr_t end);
+>>>>>
+>>>>>     uintptr_t secondary_next_target __initdata;
+>>>>>     static uintptr_t kaslr_offset __initdata;
+>>>>>
+>>>>> +static const __init u32 *get_reg_address(int root_cells,
+>>>>> +                                      const u32 *value, u64 *result)
+>>>>> +{
+>>>>> +     int cell;
+>>>>> +     *result = 0;
+>>>>> +
+>>>>> +     for (cell = root_cells; cell > 0; --cell)
+>>>>> +             *result = (*result << 32) + fdt32_to_cpu(*value++);
+>>>>> +
+>>>>> +     return value;
+>>>>> +}
+>>>>> +
+>>>>> +static __init int get_node_addr_size_cells(const char *path, int *addr_cell,
+>>>>> +                                        int *size_cell)
+>>>>> +{
+>>>>> +     int node = fdt_path_offset(dtb_early_va, path);
+>>>>> +     fdt64_t *prop;
+>>>>> +
+>>>>> +     if (node < 0)
+>>>>> +             return -EINVAL;
+>>>>> +
+>>>>> +     prop = fdt_getprop_w(dtb_early_va, node, "#address-cells", NULL);
+>>>>> +     if (!prop)
+>>>>> +             return -EINVAL;
+>>>>> +     *addr_cell = fdt32_to_cpu(*prop);
+>>>>> +
+>>>>> +     prop = fdt_getprop_w(dtb_early_va, node, "#size-cells", NULL);
+>>>>> +     if (!prop)
+>>>>> +             return -EINVAL;
+>>>>> +     *size_cell = fdt32_to_cpu(*prop);
+>>>>> +
+>>>>> +     return node;
+>>>>> +}
+>>>>> +
+>>>>> +static __init void kaslr_get_mem_info(uintptr_t *mem_start,
+>>>>> +                                   uintptr_t *mem_size)
+>>>>> +{
+>>>>> +     int node, root, addr_cells, size_cells;
+>>>>> +     u64 base, size;
+>>>>> +
+>>>>> +     /* Get root node's address cells and size cells. */
+>>>>> +     root = get_node_addr_size_cells("/", &addr_cells, &size_cells);
+>>>>> +     if (root < 0)
+>>>>> +             return;
+>>>>> +
+>>>>> +     /* Get memory base address and size. */
+>>>>> +     fdt_for_each_subnode(node, dtb_early_va, root) {
+>>>>> +             const char *dev_type;
+>>>>> +             const u32 *reg;
+>>>>> +
+>>>>> +             dev_type = fdt_getprop(dtb_early_va, node, "device_type", NULL);
+>>>>> +             if (!dev_type)
+>>>>> +                     continue;
+>>>>> +
+>>>>> +             if (!strcmp(dev_type, "memory")) {
+>>>>> +                     reg = fdt_getprop(dtb_early_va, node, "reg", NULL);
+>>>>> +                     if (!reg)
+>>>>> +                             return;
+>>>>> +
+>>>>> +                     reg = get_reg_address(addr_cells, reg, &base);
+>>>>> +                     reg = get_reg_address(size_cells, reg, &size);
+>>>>> +
+>>>>> +                     *mem_start = base;
+>>>>> +                     *mem_size = size;
+>>>>> +
+>>>>> +                     break;
+>>>>> +             }
+>>>>> +     }
+>>>>> +}
+>>>>> +
+>>>>> +/* Return a default seed if there is no HW generator. */
+>>>>> +static u64 kaslr_default_seed = ULL(-1);
+>>>>> +static __init u64 kaslr_get_seed(void)
+>>>>> +{
+>>>>> +     int node, len;
+>>>>> +     fdt64_t *prop;
+>>>>> +     u64 ret;
+>>>>> +
+>>>>> +     node = fdt_path_offset(dtb_early_va, "/chosen");
+>>>>> +     if (node < 0)
+>>>>> +             return kaslr_default_seed++;
+>>>>> +
+>>>>> +     prop = fdt_getprop_w(dtb_early_va, node, "kaslr-seed", &len);
+>>>>> +     if (!prop || len != sizeof(u64))
+>>>>> +             return kaslr_default_seed++;
+>>>>> +
+>>>>> +     ret = fdt64_to_cpu(*prop);
+>>>>> +
+>>>>> +     /* Re-write to zero for checking whether get seed at second time */
+>>>>> +     *prop = 0;
+>>>>> +
+>>>>> +     return ret;
+>>>>> +}
+>>>>> +
+>>>>> +static __init bool is_overlap(uintptr_t s1, uintptr_t e1, uintptr_t s2,
+>>>>> +                           uintptr_t e2)
+>>>>> +{
+>>>>> +     return e1 >= s2 && e2 >= s1;
+>>>>> +}
+>>>>
+>>>> Inline this function or use a macro maybe.
+>>>
+>>> Yes, sure. Thanks.
+>>>
+>>>>
+>>>>> +
+>>>>> +static __init bool is_overlap_reserved_mem(uintptr_t start_addr,
+>>>>> +                                        uintptr_t end_addr)
+>>>>> +{
+>>>>> +     int node, rsv_mem, addr_cells, size_cells;
+>>>>> +
+>>>>> +     /* Get the reserved-memory node. */
+>>>>> +     rsv_mem = get_node_addr_size_cells("/reserved-memory",
+>>>>> +                                        &addr_cells,
+>>>>> +                                        &size_cells);
+>>>>> +     if (rsv_mem < 0)
+>>>>> +             return false;
+>>>>> +
+>>>>> +     /* Get memory base address and size. */
+>>>>> +     fdt_for_each_subnode(node, dtb_early_va, rsv_mem) {
+>>>>> +             uint64_t base, size;
+>>>>> +             const uint32_t *reg;
+>>>>> +
+>>>>> +             reg = fdt_getprop(dtb_early_va, node, "reg", NULL);
+>>>>> +             if (!reg)
+>>>>> +                     return 0;
+>>>>> +
+>>>>> +             reg = get_reg_address(addr_cells, reg, &base);
+>>>>> +             reg = get_reg_address(size_cells, reg, &size);
+>>>>> +
+>>>>> +             if (is_overlap(start_addr, end_addr, base, base + size))
+>>>>> +                     return true;
+>>>>> +     }
+>>>>> +
+>>>>> +     return false;
+>>>>> +}
+>>>>> +
+>>>>> +static __init bool is_overlap_initrd(uintptr_t start_addr, uintptr_t end_addr)
+>>>>> +{
+>>>>> +     int node;
+>>>>> +     uintptr_t initrd_start, initrd_end;
+>>>>> +     fdt64_t *prop;
+>>>>> +
+>>>>> +     node = fdt_path_offset(dtb_early_va, "/chosen");
+>>>>> +     if (node < 0)
+>>>>> +             return false;
+>>>>> +
+>>>>> +     prop = fdt_getprop_w(dtb_early_va, node, "linux,initrd-start", NULL);
+>>>>> +     if (!prop)
+>>>>> +             return false;
+>>>>> +
+>>>>> +     initrd_start = fdt64_to_cpu(*prop);
+>>>>> +
+>>>>> +     prop = fdt_getprop_w(dtb_early_va, node, "linux,initrd-end", NULL);
+>>>>> +     if (!prop)
+>>>>> +             return false;
+>>>>> +
+>>>>> +     initrd_end = fdt64_to_cpu(*prop);
+>>>>> +
+>>>>> +     return is_overlap(start_addr, end_addr, initrd_start, initrd_end);
+>>>>> +}
+>>>>> +
+>>>>> +static __init bool is_overlap_dtb(uintptr_t start_addr, uintptr_t end_addr)
+>>>>> +{
+>>>>> +     uintptr_t dtb_start = dtb_early_pa;
+>>>>> +     uintptr_t dtb_end = dtb_start + fdt_totalsize(dtb_early_va);
+>>>>> +
+>>>>> +     return is_overlap(start_addr, end_addr, dtb_start, dtb_end);
+>>>>> +}
+>>>>> +
+>>>>> +static __init bool has_regions_overlapping(uintptr_t start_addr,
+>>>>> +                                        uintptr_t end_addr)
+>>>>> +{
+>>>>> +     if (is_overlap_dtb(start_addr, end_addr))
+>>>>> +             return true;
+>>>>> +
+>>>>> +     if (is_overlap_initrd(start_addr, end_addr))
+>>>>> +             return true;
+>>>>> +
+>>>>> +     if (is_overlap_reserved_mem(start_addr, end_addr))
+>>>>> +             return true;
+>>>>> +
+>>>>> +     return false;
+>>>>> +}
+>>>>> +
+>>>>> +static inline __init unsigned long get_legal_offset(int random_index,
+>>>>> +                                                 int max_index,
+>>>>> +                                                 uintptr_t mem_start,
+>>>>> +                                                 uintptr_t kernel_size)
+>>>>> +{
+>>>>> +     uintptr_t start_addr, end_addr;
+>>>>> +     int idx, stop_idx;
+>>>>> +
+>>>>> +     idx = stop_idx = random_index;
+>>>>> +
+>>>>> +     do {
+>>>>> +             start_addr = mem_start + idx * SZ_2M + kernel_size;
+>>>>> +             end_addr = start_addr + kernel_size;
+>>>>> +
+>>>>> +             /* Check overlap to other regions. */
+>>>>> +             if (!has_regions_overlapping(start_addr, end_addr))
+>>>>> +                     return idx * SZ_2M + kernel_size;
+>>>>> +
+>>>>> +             if (idx-- < 0)
+>>>>> +                     idx = max_index;
+>>>>
+>>>> Isn't the fallback to max_index a security breach ? Because at some
+>>>> point, the kernel will be loaded at this specific address.
+>>>
+>>> The max_index is the maximum safe index for destination of new kernel
+>>> image. Could you give more explain here?
+>>>
+>>
+>> But max_index is not random at all. I really don't know if that's a
+>> problem, I just found intriguing the fact the kernel could be loaded at
+>> some specific location. Would it be more secure, instead of picking
+>> max_index as fallback when reaching 0, to pick another random number
+>> between random_index and max_index ?
+> 
+> ok, I can get your point. The original idea here is that we get a
+> random index first, then we decrease the index to retry to find a good
+> place if there are overlapping with other regions. A bit like the ring
+> buffer, the end of index traversing is not zero, but the random_index
+> - 1, we might consider it as continuity, so we don't know where is the
+> end point because the start point is random, whether we stop at zero
+> or random_index - 1.
+> 
+> Pick another random number is more secure when occurring overlapping,
+> but I a little bit worry that it would take very long time to retry
+> many times in the worst case. for example, there is just only one
+> index could fit kernel image in (except for original location). In the
+> meantime, we don't need to wait the index being decreased to zero,
+> because it seems to me that they are the same to stop at zero or
+> random_index - 1, so if we decide to re-calculate a new random number,
+> maybe we could remove the index decreasing here.
 
--- 
- Kirill A. Shutemov
+But you're right that it could take some time before converging to a 
+"good" index. Maybe we could restrict the index range to indexes that we 
+know for sure will be good ?
+
+Alex
+
+> 
+>>
+>> Alex
+>>
+>>>>
+>>>>> +
+>>>>> +     } while (idx != stop_idx);
+>>>>> +
+>>>>> +     return 0;
+>>>>> +}
+>>>>> +
+>>>>> +static inline __init u64 rotate_xor(u64 hash, const void *area, size_t size)
+>>>>> +{
+>>>>> +     size_t i;
+>>>>> +     uintptr_t *ptr = (uintptr_t *) area;
+>>>>> +
+>>>>> +     for (i = 0; i < size / sizeof(hash); i++) {
+>>>>> +             /* Rotate by odd number of bits and XOR. */
+>>>>> +             hash = (hash << ((sizeof(hash) * 8) - 7)) | (hash >> 7);
+>>>>> +             hash ^= ptr[i];
+>>>>> +     }
+>>>>> +
+>>>>> +     return hash;
+>>>>> +}
+>>>>> +
+>>>>> +#define MEM_RESERVE_START    __pa(PAGE_OFFSET)
+>>>>> +static __init uintptr_t get_random_offset(u64 seed, uintptr_t kernel_size)
+>>>>> +{
+>>>>> +     uintptr_t mem_start = 0, mem_size= 0, random_size;
+>>>>> +     uintptr_t kernel_size_align = round_up(kernel_size, SZ_2M);
+>>>>> +     int index;
+>>>>> +     u64 random = 0;
+>>>>> +     cycles_t time_base;
+>>>>> +
+>>>>> +     /* Attempt to create a simple but unpredictable starting entropy */
+>>>>> +     random = rotate_xor(random, linux_banner, strlen(linux_banner));
+>>>>> +
+>>>>> +     /*
+>>>>> +      * If there is no HW random number generator, use timer to get a random
+>>>>> +      * number. This is better than nothing but not enough secure.
+>>>>> +      */
+>>>>> +     time_base = get_cycles() << 32;
+>>>>> +     time_base ^= get_cycles();
+>>>>> +     random = rotate_xor(random, &time_base, sizeof(time_base));
+>>>>> +
+>>>>> +     if (seed)
+>>>>> +             random = rotate_xor(random, &seed, sizeof(seed));
+>>>>> +
+>>>>> +     kaslr_get_mem_info(&mem_start, &mem_size);
+>>>>> +     if (!mem_size)
+>>>>> +             return 0;
+>>>>> +
+>>>>> +     if (mem_start < MEM_RESERVE_START) {
+>>>>> +             mem_size -= MEM_RESERVE_START - mem_start;
+>>>>> +             mem_start = MEM_RESERVE_START;
+>>>>> +     }
+>>>>> +
+>>>>> +     /*
+>>>>> +      * Limit randomization range within 1G, so we can exploit
+>>>>> +      * early_pmd/early_pte during early page table phase.
+>>>>> +      */
+>>>>> +     random_size = min_t(u64,
+>>>>> +                         mem_size - (kernel_size_align * 2),
+>>>>> +                         SZ_1G - (kernel_size_align * 2));
+>>>>
+>>>> pgdir size is 30 bits in sv39, but it's 39 bits in sv48, you should use
+>>>> PGDIR_SIZE macro here.
+>>>
+>>> OK, change it in the next version. Thanks.
+>>>
+>>>>
+>>>>> +
+>>>>> +     /* The index of 2M block in whole avaliable region */
+>>>>> +     index = random % (random_size / SZ_2M);
+>>>>> +
+>>>>> +     return get_legal_offset(index, random_size / SZ_2M,
+>>>>> +                             mem_start, kernel_size_align);
+>>>>> +}
+>>>>> +
+>>>>>     uintptr_t __init kaslr_early_init(void)
+>>>>>     {
+>>>>> +     u64 seed;
+>>>>>         uintptr_t dest_start, dest_end;
+>>>>>         uintptr_t kernel_size = (uintptr_t) _end - (uintptr_t) _start;
+>>>>>
+>>>>>         /* Get zero value at second time to avoid doing randomization again. */
+>>>>> -     if (kaslr_offset)
+>>>>> +     seed = kaslr_get_seed();
+>>>>> +     if (!seed)
+>>>>>                 return 0;
+>>>>>
+>>>>>         /* Get the random number for kaslr offset. */
+>>>>> -     kaslr_offset = 0x10000000;
+>>>>> +     kaslr_offset = get_random_offset(seed, kernel_size);
+>>>>>
+>>>>>         /* Update kernel_virt_addr for get_kaslr_offset. */
+>>>>>         kernel_virt_addr += kaslr_offset;
+>>>>> diff --git a/arch/riscv/mm/init.c b/arch/riscv/mm/init.c
+>>>>> index 2f5b25f02b6c..34c6ecf2c599 100644
+>>>>> --- a/arch/riscv/mm/init.c
+>>>>> +++ b/arch/riscv/mm/init.c
+>>>>> @@ -125,7 +125,7 @@ static void __init setup_initrd(void)
+>>>>>     }
+>>>>>     #endif /* CONFIG_BLK_DEV_INITRD */
+>>>>>
+>>>>> -static phys_addr_t dtb_early_pa __initdata;
+>>>>> +phys_addr_t dtb_early_pa __initdata;
+>>>>>
+>>>>>     void __init setup_bootmem(void)
+>>>>>     {
+>>>>>
+>>>>
+>>>> Alex
