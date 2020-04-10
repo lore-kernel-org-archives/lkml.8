@@ -4,53 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E4C6C2BB85
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 03:52:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95C97C2D0EC
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 03:52:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 45BE12137B
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 03:52:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 60FB921473
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 03:52:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586490747;
-	bh=nVOpzHyiyppnNvj1+1Etp1vvzi0VnZVACvXG8DhwaHo=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Pl5A6GwyAqIwGuJ/yX7FDaYHk+RchmgjX26S4pblU1Ufh30nEzrev3eW5AXc37PZe
-	 Ibnoo1jpSrbS9QjTJRcia4A+kYFWJnH0TjKo6ogiIP1mRhVkkZl8n7BhSpCBTn8ycK
-	 btABFCDZMHosi4N5/MKLVcmiLOW3k16Sqcb/dhjQ=
+	s=default; t=1586490749;
+	bh=KT2yBYzFcnG6X4wReHanZXpSDB758iWo6MWEDYasil8=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=KHIFJbayvR0yAE19B8KzI1FSp+tjzoHb54KyFGU98bVcBHtudotkme5gb8IORfiDJ
+	 eY2zNZkzNXtjXp7fQBEGIuiqSdDyHLbkpo5SmiNFvZtz4ATmnbECtNc2WyyflpHxD/
+	 jG2aL9NtZypA6bJ5tUGJadWihkzpPNDdmnQSGb4o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729184AbgDJDwZ (ORCPT
+        id S1729267AbgDJDw1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Apr 2020 23:52:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36316 "EHLO mail.kernel.org"
+        Thu, 9 Apr 2020 23:52:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36272 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729128AbgDJDvN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Apr 2020 23:51:13 -0400
+        id S1729121AbgDJDvM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Apr 2020 23:51:12 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 157E421655;
-        Fri, 10 Apr 2020 03:51:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1020C214DB;
+        Fri, 10 Apr 2020 03:51:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586490673;
-        bh=nVOpzHyiyppnNvj1+1Etp1vvzi0VnZVACvXG8DhwaHo=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OA3Mw06A9tgkbsIiPWXUqILxPYxb/EJRToG5uKRziXoF5wRivbWoEosEovAuFRBdD
-         HN9APHmEvzO0o5VUkTjKYifySDuJoOw1YVuntmgQkuaF/MLxxNl6SYCbvKs7uxyGbG
-         iJxPx3Qat7dQb6Wk04RANHdmKY/kdArMFlrj7OaM=
+        s=default; t=1586490672;
+        bh=KT2yBYzFcnG6X4wReHanZXpSDB758iWo6MWEDYasil8=;
+        h=From:To:Cc:Subject:Date:From;
+        b=1DAfRrmKbS4SMnu7iz3GDvyNbsY09k5nXa1eOQr4Y5bYggFhkoSSutHeUGvxEQjnj
+         +6o35rny+8HGvbldACoyqOfcjn7bgD+/GElqnKBA4lwXnpqKfFY686jPniSC5tVdO4
+         /q5splXGSg4/FeevOZ+L/sJb+8lZFcaCeKwc2SGE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Michael Wang <yun.wang@linux.alibaba.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.9 2/9] sched: Avoid scale real weight down to zero
-Date:   Thu,  9 Apr 2020 23:51:03 -0400
-Message-Id: <20200410035111.9938-2-sashal@kernel.org>
+Cc:     Sungbo Eo <mans0n@gorani.run>, Marc Zyngier <maz@kernel.org>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH AUTOSEL 4.9 1/9] irqchip/versatile-fpga: Handle chained IRQs properly
+Date:   Thu,  9 Apr 2020 23:51:02 -0400
+Message-Id: <20200410035111.9938-1-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200410035111.9938-1-sashal@kernel.org>
-References: <20200410035111.9938-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -60,80 +57,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Michael Wang <yun.wang@linux.alibaba.com>
+From: Sungbo Eo <mans0n@gorani.run>
 
-[ Upstream commit 26cf52229efc87e2effa9d788f9b33c40fb3358a ]
+[ Upstream commit 486562da598c59e9f835b551d7cf19507de2d681 ]
 
-During our testing, we found a case that shares no longer
-working correctly, the cgroup topology is like:
+Enclose the chained handler with chained_irq_{enter,exit}(), so that the
+muxed interrupts get properly acked.
 
-  /sys/fs/cgroup/cpu/A		(shares=102400)
-  /sys/fs/cgroup/cpu/A/B	(shares=2)
-  /sys/fs/cgroup/cpu/A/B/C	(shares=1024)
+This patch also fixes a reboot bug on OX820 SoC, where the jiffies timer
+interrupt is never acked. The kernel waits a clock tick forever in
+calibrate_delay_converge(), which leads to a boot hang.
 
-  /sys/fs/cgroup/cpu/D		(shares=1024)
-  /sys/fs/cgroup/cpu/D/E	(shares=1024)
-  /sys/fs/cgroup/cpu/D/E/F	(shares=1024)
-
-The same benchmark is running in group C & F, no other tasks are
-running, the benchmark is capable to consumed all the CPUs.
-
-We suppose the group C will win more CPU resources since it could
-enjoy all the shares of group A, but it's F who wins much more.
-
-The reason is because we have group B with shares as 2, since
-A->cfs_rq.load.weight == B->se.load.weight == B->shares/nr_cpus,
-so A->cfs_rq.load.weight become very small.
-
-And in calc_group_shares() we calculate shares as:
-
-  load = max(scale_load_down(cfs_rq->load.weight), cfs_rq->avg.load_avg);
-  shares = (tg_shares * load) / tg_weight;
-
-Since the 'cfs_rq->load.weight' is too small, the load become 0
-after scale down, although 'tg_shares' is 102400, shares of the se
-which stand for group A on root cfs_rq become 2.
-
-While the se of D on root cfs_rq is far more bigger than 2, so it
-wins the battle.
-
-Thus when scale_load_down() scale real weight down to 0, it's no
-longer telling the real story, the caller will have the wrong
-information and the calculation will be buggy.
-
-This patch add check in scale_load_down(), so the real weight will
-be >= MIN_SHARES after scale, after applied the group C wins as
-expected.
-
-Suggested-by: Peter Zijlstra <peterz@infradead.org>
-Signed-off-by: Michael Wang <yun.wang@linux.alibaba.com>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Reviewed-by: Vincent Guittot <vincent.guittot@linaro.org>
-Link: https://lkml.kernel.org/r/38e8e212-59a1-64b2-b247-b6d0b52d8dc1@linux.alibaba.com
+Fixes: c41b16f8c9d9 ("ARM: integrator/versatile: consolidate FPGA IRQ handling code")
+Signed-off-by: Sungbo Eo <mans0n@gorani.run>
+Signed-off-by: Marc Zyngier <maz@kernel.org>
+Link: https://lore.kernel.org/r/20200319023448.1479701-1-mans0n@gorani.run
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/sched/sched.h | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+ drivers/irqchip/irq-versatile-fpga.c | 12 ++++++++++--
+ 1 file changed, 10 insertions(+), 2 deletions(-)
 
-diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
-index 15c08752926b0..819bd5fb02647 100644
---- a/kernel/sched/sched.h
-+++ b/kernel/sched/sched.h
-@@ -73,7 +73,13 @@ static inline void update_idle_core(struct rq *rq) { }
- #ifdef CONFIG_64BIT
- # define NICE_0_LOAD_SHIFT	(SCHED_FIXEDPOINT_SHIFT + SCHED_FIXEDPOINT_SHIFT)
- # define scale_load(w)		((w) << SCHED_FIXEDPOINT_SHIFT)
--# define scale_load_down(w)	((w) >> SCHED_FIXEDPOINT_SHIFT)
-+# define scale_load_down(w) \
-+({ \
-+	unsigned long __w = (w); \
-+	if (__w) \
-+		__w = max(2UL, __w >> SCHED_FIXEDPOINT_SHIFT); \
-+	__w; \
-+})
- #else
- # define NICE_0_LOAD_SHIFT	(SCHED_FIXEDPOINT_SHIFT)
- # define scale_load(w)		(w)
+diff --git a/drivers/irqchip/irq-versatile-fpga.c b/drivers/irqchip/irq-versatile-fpga.c
+index 37dd4645bf188..66502bdefdf78 100644
+--- a/drivers/irqchip/irq-versatile-fpga.c
++++ b/drivers/irqchip/irq-versatile-fpga.c
+@@ -5,6 +5,7 @@
+ #include <linux/irq.h>
+ #include <linux/io.h>
+ #include <linux/irqchip.h>
++#include <linux/irqchip/chained_irq.h>
+ #include <linux/irqchip/versatile-fpga.h>
+ #include <linux/irqdomain.h>
+ #include <linux/module.h>
+@@ -67,12 +68,16 @@ static void fpga_irq_unmask(struct irq_data *d)
+ 
+ static void fpga_irq_handle(struct irq_desc *desc)
+ {
++	struct irq_chip *chip = irq_desc_get_chip(desc);
+ 	struct fpga_irq_data *f = irq_desc_get_handler_data(desc);
+-	u32 status = readl(f->base + IRQ_STATUS);
++	u32 status;
++
++	chained_irq_enter(chip, desc);
+ 
++	status = readl(f->base + IRQ_STATUS);
+ 	if (status == 0) {
+ 		do_bad_IRQ(desc);
+-		return;
++		goto out;
+ 	}
+ 
+ 	do {
+@@ -81,6 +86,9 @@ static void fpga_irq_handle(struct irq_desc *desc)
+ 		status &= ~(1 << irq);
+ 		generic_handle_irq(irq_find_mapping(f->domain, irq));
+ 	} while (status);
++
++out:
++	chained_irq_exit(chip, desc);
+ }
+ 
+ /*
 -- 
 2.20.1
 
