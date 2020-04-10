@@ -2,95 +2,86 @@ Return-Path: <SRS0=VV4q=52=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B180C2BA2B
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 07:17:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2C6DC2BB55
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 07:19:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DBE0C20692
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 07:17:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9790520692
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 07:19:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726647AbgDJHRe (ORCPT
+        id S1726263AbgDJHTL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Apr 2020 03:17:34 -0400
-Received: from alexa-out-blr-02.qualcomm.com ([103.229.18.198]:2025 "EHLO
-        alexa-out-blr-02.qualcomm.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725858AbgDJHRd (ORCPT
+        Fri, 10 Apr 2020 03:19:11 -0400
+Received: from mail-il1-f200.google.com ([209.85.166.200]:48114 "EHLO
+        mail-il1-f200.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725893AbgDJHTK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Apr 2020 03:17:33 -0400
-Received: from ironmsg01-blr.qualcomm.com ([10.86.208.130])
-  by alexa-out-blr-02.qualcomm.com with ESMTP/TLS/AES256-SHA; 10 Apr 2020 12:47:31 +0530
-Received: from c-mansur-linux.qualcomm.com ([10.204.90.208])
-  by ironmsg01-blr.qualcomm.com with ESMTP; 10 Apr 2020 12:47:29 +0530
-Received: by c-mansur-linux.qualcomm.com (Postfix, from userid 461723)
-        id D5F69218D0; Fri, 10 Apr 2020 12:47:27 +0530 (IST)
-From:   Mansur Alisha Shaik <mansur@codeaurora.org>
-To:     linux-media@vger.kernel.org, stanimir.varbanov@linaro.org
-Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        vgarodia@codeaurora.org, mansur@codeaurora.org
-Subject: [PATCH V2] venus: core: remove CNOC voting while device suspend
-Date:   Fri, 10 Apr 2020 12:47:25 +0530
-Message-Id: <1586503045-18630-1-git-send-email-mansur@codeaurora.org>
-X-Mailer: git-send-email 2.7.4
+        Fri, 10 Apr 2020 03:19:10 -0400
+Received: by mail-il1-f200.google.com with SMTP id a15so1504202ild.14
+        for <linux-kernel@vger.kernel.org>; Fri, 10 Apr 2020 00:19:09 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=AWCYTsHSW0yJ17/5HMEeHipQ6Is1Ho9NfuX7dL3ko0A=;
+        b=MNkxwtiKXPW4G2YI+75pvYaYKjM0FK/Sz9DpelxuCfEpy6D1KXhcqdMYTfRXbb87h5
+         I5moGtssNZ7La2eM4FWS3bzjqa9LAZE6UHfiDqRdh7ZVPNK5ptWw3ui9TqrSR1jKgrL3
+         HG8dSBwdYpwHLs7QUtiHhlYuHH6/zs0SqLTb2cIA1OlHPIKzUp4xwESYVoPZfn0tbMYH
+         diQTOT2h4SBVqmPQSwAiPce8Am9IKrFV69MMPxwCbkdusBkq1VFna20MxWkhgVuPXl0f
+         EosGkoXmNFVReCZPkPwEnV5XHTqu9h0lZxkqbdn3ZokKi5lGb65EiPwP1NQo0M+Gi8Lm
+         eD1g==
+X-Gm-Message-State: AGi0PubZtNwWrJQ2eKrDfyNZfkmksRABNtK1Or5Mh4CptM0j9hnuVIAq
+        0p14yU2eLyTbekHLbZkfcZxGEt2m8abHmNwpydOfwE4XYVw0
+X-Google-Smtp-Source: APiQypKpG4lnPBoibieMDt1bo8p1Tm+qQf3i1FZDphmqCl2Dhkk+D4B0g79fTYP8iCKKNW7/6xMHdA1piCHWHWmiijbFBCL257Lt
+MIME-Version: 1.0
+X-Received: by 2002:a92:49db:: with SMTP id k88mr3923230ilg.293.1586503149105;
+ Fri, 10 Apr 2020 00:19:09 -0700 (PDT)
+Date:   Fri, 10 Apr 2020 00:19:09 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000a3376f05a2ea8c22@google.com>
+Subject: net test error: BUG: mismatching fuzzer/executor system call
+ descriptions: ADDR vs ADDR (2)
+From:   syzbot <syzbot+564b4e9875b107591b55@syzkaller.appspotmail.com>
+To:     linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The Venus driver is voting Configuration NoC during .probe but not clear
-voting in .suspend. Because of this NoC is up during shutdown also. As a
-consequence the whole device could leak energy while in .suspend.
+Hello,
 
-So correct this by moving voting in .resume and unvoting
-in .suspend
+syzbot found the following crash on:
 
-signed-off-by: mansur alisha shaik <mansur@codeaurora.org>
+HEAD commit:    aa81700c macsec: fix NULL dereference in macsec_upd_offloa..
+git tree:       net
+console output: https://syzkaller.appspot.com/x/log.txt?x=15cff49fe00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=8c1e98458335a7d1
+dashboard link: https://syzkaller.appspot.com/bug?extid=564b4e9875b107591b55
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+
+Unfortunately, I don't have any reproducer for this crash yet.
+
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+564b4e9875b107591b55@syzkaller.appspotmail.com
+
+Warning: Permanently added '10.128.1.4' (ECDSA) to the list of known hosts.
+2020/04/06 18:39:32 fuzzer started
+2020/04/06 18:39:33 connecting to host at 10.128.0.26:41717
+2020/04/06 18:39:34 checking machine...
+2020/04/06 18:39:34 checking revisions...
+2020/04/06 18:39:34 BUG: mismatching fuzzer/executor system call descriptions: 670a1e865c0bc7d60e9886acf4666ee3677e346e vs f787d115f9efa49fdd59261850f5c05f43fbe327
+syzkaller login: 
+
+
 ---
-Changes in V2:
-- As per stanimir comment changed the commit message.
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
- drivers/media/platform/qcom/venus/core.c | 12 ++++++++----
- 1 file changed, 8 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/media/platform/qcom/venus/core.c b/drivers/media/platform/qcom/venus/core.c
-index 194b10b9..13fa507 100644
---- a/drivers/media/platform/qcom/venus/core.c
-+++ b/drivers/media/platform/qcom/venus/core.c
-@@ -242,10 +242,6 @@ static int venus_probe(struct platform_device *pdev)
- 	if (ret)
- 		return ret;
- 
--	ret = icc_set_bw(core->cpucfg_path, 0, kbps_to_icc(1000));
--	if (ret)
--		return ret;
--
- 	ret = hfi_create(core, &venus_core_ops);
- 	if (ret)
- 		return ret;
-@@ -350,6 +346,10 @@ static __maybe_unused int venus_runtime_suspend(struct device *dev)
- 	if (ret)
- 		return ret;
- 
-+	ret = icc_set_bw(core->cpucfg_path, 0, 0);
-+	if (ret)
-+		return ret;
-+
- 	if (pm_ops->core_power)
- 		ret = pm_ops->core_power(dev, POWER_OFF);
- 
-@@ -368,6 +368,10 @@ static __maybe_unused int venus_runtime_resume(struct device *dev)
- 			return ret;
- 	}
- 
-+	ret = icc_set_bw(core->cpucfg_path, 0, kbps_to_icc(1000));
-+	if (ret)
-+		return ret;
-+
- 	return hfi_core_resume(core, false);
- }
- 
--- 
-2.7.4
-
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
