@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2FE8C2D0EC
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 04:00:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BD10C2D0EC
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 04:00:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 784AF20936
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 04:00:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D8B7520936
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 04:00:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586491204;
-	bh=YDlUlH9cxoPoePJ/BVt1VLVyGDJmuuZt3f/vtA5eHsQ=;
+	s=default; t=1586491213;
+	bh=idCS/o2KJWKLuG5YYj/PRV53FPx4L/x7Hh2m9+2AenI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vuvOrOAjW4U7cgR34mzH6K59++oJov7Cj9WvY4Ryxb8WWqQ3h6PBEG9iSE7siVVbA
-	 VGG+D1JWxoFJPQhWlfQufMLl//31cucodtbMiJ6oEi1tENOOEaWAsUUBHE9YPynz5G
-	 Y1v7LduQQpdiFnAb3J/+AWHmPpav/qMZ9s04WpPk=
+	b=hBhNDo8FLxOc8nBtpEgFmVg21w8Q6LQNc5hNEvUBmrgiu2RWakfd+ZECI9SwiU/vf
+	 aCTtYMLidSFk7wP6ox9Gdpc7mTUIY0S1XE39a3kUGM8cKJswcUJrVxO7NEB4QiA8dM
+	 +GxrBMnhb7SjpyVCW2/8xxj3rB1WExqkIqzuziBI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725776AbgDJEAC (ORCPT
+        id S1727377AbgDJEAL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Apr 2020 00:00:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59408 "EHLO mail.kernel.org"
+        Fri, 10 Apr 2020 00:00:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59350 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728045AbgDJDsJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Apr 2020 23:48:09 -0400
+        id S1727993AbgDJDsI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Apr 2020 23:48:08 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9090C21655;
-        Fri, 10 Apr 2020 03:48:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5683220BED;
+        Fri, 10 Apr 2020 03:48:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586490489;
-        bh=YDlUlH9cxoPoePJ/BVt1VLVyGDJmuuZt3f/vtA5eHsQ=;
+        s=default; t=1586490488;
+        bh=idCS/o2KJWKLuG5YYj/PRV53FPx4L/x7Hh2m9+2AenI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=IxV2wZ0bDIN16CYiGu9MniE6X5RsuWB+prrre4TtyzHf7h+lfRz3v8lJSs9ez8Cra
-         lpAWhvk6OJDAu+kVufn+pl0s0Drl+/cjnnC5q664iqbCA6NtNp1O4cAvCSTW0MYrFB
-         SF6rQkq8YGqLmHF0QQgD5in4DyTVCb0nI+QiNYoc=
+        b=pbmt/27JTeEMvfRqR7gpXjHFul340AlA/lp07Js8O7FNI++iUEKfCOFAZA+A6/UBw
+         gXdxOE54MKYu119EtynTvAXnJkqB5rde8NyvoZxw/qbt1BmoMCcdwN3X6cFLzTpe//
+         bb/QefoJj1+jsbcGCI7CjehmuYkj2YZT3OQgG5Lk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     James Morse <james.morse@arm.com>,
-        Liguang Zhang <zhangliguang@linux.alibaba.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.5 07/56] firmware: arm_sdei: fix double-lock on hibernate with shared events
-Date:   Thu,  9 Apr 2020 23:47:11 -0400
-Message-Id: <20200410034800.8381-7-sashal@kernel.org>
+Cc:     Stephan Gerhold <stephan@gerhold.net>,
+        Stanimir Varbanov <stanimir.varbanov@linaro.org>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.5 06/56] media: venus: hfi_parser: Ignore HEVC encoding for V1
+Date:   Thu,  9 Apr 2020 23:47:10 -0400
+Message-Id: <20200410034800.8381-6-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200410034800.8381-1-sashal@kernel.org>
 References: <20200410034800.8381-1-sashal@kernel.org>
@@ -61,116 +61,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: James Morse <james.morse@arm.com>
+From: Stephan Gerhold <stephan@gerhold.net>
 
-[ Upstream commit 6ded0b61cf638bf9f8efe60ab8ba23db60ea9763 ]
+[ Upstream commit c50cc6dc6c48300af63a6fbc71b647053c15fc80 ]
 
-SDEI has private events that must be registered on each CPU. When
-CPUs come and go they must re-register and re-enable their private
-events. Each event has flags to indicate whether this should happen
-to protect against an event being registered on a CPU coming online,
-while all the others are unregistering the event.
+Some older MSM8916 Venus firmware versions also seem to indicate
+support for encoding HEVC, even though they really can't.
+This will lead to errors later because hfi_session_init() fails
+in this case.
 
-These flags are protected by the sdei_list_lock spinlock, because
-the cpuhp callbacks can't take the mutex.
+HEVC is already ignored for "dec_codecs", so add the same for
+"enc_codecs" to make these old firmware versions work correctly.
 
-Hibernate needs to unregister all events, but keep the in-memory
-re-register and re-enable as they are. sdei_unregister_shared()
-takes the spinlock to walk the list, then calls _sdei_event_unregister()
-on each shared event. _sdei_event_unregister() tries to take the
-same spinlock to update re-register and re-enable. This doesn't go
-so well.
-
-Push the re-register and re-enable updates out to their callers.
-sdei_unregister_shared() doesn't want these values updated, so
-doesn't need to do anything.
-
-This also fixes shared events getting lost over hibernate as this
-path made them look unregistered.
-
-Fixes: da351827240e ("firmware: arm_sdei: Add support for CPU and system power states")
-Reported-by: Liguang Zhang <zhangliguang@linux.alibaba.com>
-Signed-off-by: James Morse <james.morse@arm.com>
-Signed-off-by: Catalin Marinas <catalin.marinas@arm.com>
+Signed-off-by: Stephan Gerhold <stephan@gerhold.net>
+Signed-off-by: Stanimir Varbanov <stanimir.varbanov@linaro.org>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/firmware/arm_sdei.c | 32 +++++++++++++++-----------------
- 1 file changed, 15 insertions(+), 17 deletions(-)
+ drivers/media/platform/qcom/venus/hfi_parser.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/firmware/arm_sdei.c b/drivers/firmware/arm_sdei.c
-index a479023fa036e..77eaa9a2fd156 100644
---- a/drivers/firmware/arm_sdei.c
-+++ b/drivers/firmware/arm_sdei.c
-@@ -491,11 +491,6 @@ static int _sdei_event_unregister(struct sdei_event *event)
- {
- 	lockdep_assert_held(&sdei_events_lock);
- 
--	spin_lock(&sdei_list_lock);
--	event->reregister = false;
--	event->reenable = false;
--	spin_unlock(&sdei_list_lock);
--
- 	if (event->type == SDEI_EVENT_TYPE_SHARED)
- 		return sdei_api_event_unregister(event->event_num);
- 
-@@ -518,6 +513,11 @@ int sdei_event_unregister(u32 event_num)
- 			break;
- 		}
- 
-+		spin_lock(&sdei_list_lock);
-+		event->reregister = false;
-+		event->reenable = false;
-+		spin_unlock(&sdei_list_lock);
-+
- 		err = _sdei_event_unregister(event);
- 		if (err)
- 			break;
-@@ -585,26 +585,15 @@ static int _sdei_event_register(struct sdei_event *event)
- 
- 	lockdep_assert_held(&sdei_events_lock);
- 
--	spin_lock(&sdei_list_lock);
--	event->reregister = true;
--	spin_unlock(&sdei_list_lock);
--
- 	if (event->type == SDEI_EVENT_TYPE_SHARED)
- 		return sdei_api_event_register(event->event_num,
- 					       sdei_entry_point,
- 					       event->registered,
- 					       SDEI_EVENT_REGISTER_RM_ANY, 0);
- 
--
- 	err = sdei_do_cross_call(_local_event_register, event);
--	if (err) {
--		spin_lock(&sdei_list_lock);
--		event->reregister = false;
--		event->reenable = false;
--		spin_unlock(&sdei_list_lock);
--
-+	if (err)
- 		sdei_do_cross_call(_local_event_unregister, event);
--	}
- 
- 	return err;
+diff --git a/drivers/media/platform/qcom/venus/hfi_parser.c b/drivers/media/platform/qcom/venus/hfi_parser.c
+index 2293d936e49ca..7f515a4b9bd12 100644
+--- a/drivers/media/platform/qcom/venus/hfi_parser.c
++++ b/drivers/media/platform/qcom/venus/hfi_parser.c
+@@ -181,6 +181,7 @@ static void parse_codecs(struct venus_core *core, void *data)
+ 	if (IS_V1(core)) {
+ 		core->dec_codecs &= ~HFI_VIDEO_CODEC_HEVC;
+ 		core->dec_codecs &= ~HFI_VIDEO_CODEC_SPARK;
++		core->enc_codecs &= ~HFI_VIDEO_CODEC_HEVC;
+ 	}
  }
-@@ -632,8 +621,17 @@ int sdei_event_register(u32 event_num, sdei_event_callback *cb, void *arg)
- 			break;
- 		}
  
-+		spin_lock(&sdei_list_lock);
-+		event->reregister = true;
-+		spin_unlock(&sdei_list_lock);
-+
- 		err = _sdei_event_register(event);
- 		if (err) {
-+			spin_lock(&sdei_list_lock);
-+			event->reregister = false;
-+			event->reenable = false;
-+			spin_unlock(&sdei_list_lock);
-+
- 			sdei_event_destroy(event);
- 			pr_warn("Failed to register event %u: %d\n", event_num,
- 				err);
 -- 
 2.20.1
 
