@@ -4,53 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BAA77C2BB86
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 03:48:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 048EFC2BB1D
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 03:49:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 93DB220936
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 03:48:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D16742145D
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 03:49:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586490537;
-	bh=BTli6aEC2oh+s7XOlwZLRxiWjvJO69p9yn9ye5/6N5M=;
+	s=default; t=1586490542;
+	bh=nUyyFBPLL/D22YbTWaXKhSr8m7tLa7bkRcmk4XL9nQk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qwopv0tx3BEDxjCSb60SPMtxpIXebSaC8VaF9stpNXLPT2K4ThuI5iGCD6ItrfqTo
-	 shx7UqoLy9iBYMDx9Hfc0WTT9Lo3oMheLYCWBZcp8+4yUlye1rvpcv1lgDe90DcZ1/
-	 NfFmi9I50PQG6rtxWpJ0HSAMZWTBFNv7O4ckoxS0=
+	b=ER5whJ8whr3fA7jOc8NztD4gdSC8lsnSwJgjNeUC+1toqhrhzQ+LcsYop0GgK79pN
+	 QNsnR6uiMeMZBgCnriH9rGt9qz2mbVF79fH788CHWaQZaOoWLcp1oDJjQZUtD5AhY/
+	 pPRCVsiEYbu6AtdOFuVX6I/MnY1JsVEPpLANXam0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728391AbgDJDs4 (ORCPT
+        id S1728438AbgDJDtA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Apr 2020 23:48:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60644 "EHLO mail.kernel.org"
+        Thu, 9 Apr 2020 23:49:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60838 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726989AbgDJDsx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Apr 2020 23:48:53 -0400
+        id S1728420AbgDJDs7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Apr 2020 23:48:59 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1080221473;
-        Fri, 10 Apr 2020 03:48:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 15D262145D;
+        Fri, 10 Apr 2020 03:48:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586490533;
-        bh=BTli6aEC2oh+s7XOlwZLRxiWjvJO69p9yn9ye5/6N5M=;
+        s=default; t=1586490539;
+        bh=nUyyFBPLL/D22YbTWaXKhSr8m7tLa7bkRcmk4XL9nQk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=AvFyVLLrVrk778FdPu5XOqbkAVHB+HQmGz6ghB63IgJx0GPTQTnprIZM6IrrNzX9w
-         IBFHdB4ENdJkoQ8joUISZ0xS0mBIW9QN7NXyspaFQeDkXHAgO/Ls9zZHN0knEGKw1T
-         qxRPlGGBMKpI+RPJcanEZ8duuRLRoZohiuJgS1vY=
+        b=OAoIpAJ2HBjnlIoDgDth4S8FWmVT4ALtLLK08aUNnGkcDr6gnohfmKoJtO7qFfJe/
+         cCFy/Ow6s5PFn3q36/VwWPUIKdCOjcjLt0PgUekYSpE3xxo9FKOx3+lTy8uscm4Fra
+         FT+caiEp76PO3g5/2R6jYcTl+qBA+MMZjqUE5Oz4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Dongchun Zhu <dongchun.zhu@mediatek.com>,
-        Tomasz Figa <tfiga@chromium.org>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.5 44/56] media: i2c: ov5695: Fix power on and off sequences
-Date:   Thu,  9 Apr 2020 23:47:48 -0400
-Message-Id: <20200410034800.8381-44-sashal@kernel.org>
+Cc:     Boqun Feng <boqun.feng@gmail.com>, Qian Cai <cai@lca.pw>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.5 50/56] locking/lockdep: Avoid recursion in lockdep_count_{for,back}ward_deps()
+Date:   Thu,  9 Apr 2020 23:47:54 -0400
+Message-Id: <20200410034800.8381-50-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200410034800.8381-1-sashal@kernel.org>
 References: <20200410034800.8381-1-sashal@kernel.org>
@@ -63,132 +59,77 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dongchun Zhu <dongchun.zhu@mediatek.com>
+From: Boqun Feng <boqun.feng@gmail.com>
 
-[ Upstream commit f1a64f56663e9d03e509439016dcbddd0166b2da ]
+[ Upstream commit 25016bd7f4caf5fc983bbab7403d08e64cba3004 ]
 
-From the measured hardware signal, OV5695 reset pin goes high for a
-short period of time during boot-up. From the sensor specification, the
-reset pin is active low and the DT binding defines the pin as active
-low, which means that the values set by the driver are inverted and thus
-the value requested in probe ends up high.
+Qian Cai reported a bug when PROVE_RCU_LIST=y, and read on /proc/lockdep
+triggered a warning:
 
-Fix it by changing probe to request the reset GPIO initialized to high,
-which makes the initial state of the physical signal low.
+  [ ] DEBUG_LOCKS_WARN_ON(current->hardirqs_enabled)
+  ...
+  [ ] Call Trace:
+  [ ]  lock_is_held_type+0x5d/0x150
+  [ ]  ? rcu_lockdep_current_cpu_online+0x64/0x80
+  [ ]  rcu_read_lock_any_held+0xac/0x100
+  [ ]  ? rcu_read_lock_held+0xc0/0xc0
+  [ ]  ? __slab_free+0x421/0x540
+  [ ]  ? kasan_kmalloc+0x9/0x10
+  [ ]  ? __kmalloc_node+0x1d7/0x320
+  [ ]  ? kvmalloc_node+0x6f/0x80
+  [ ]  __bfs+0x28a/0x3c0
+  [ ]  ? class_equal+0x30/0x30
+  [ ]  lockdep_count_forward_deps+0x11a/0x1a0
 
-In addition, DOVDD rising must occur before DVDD rising from spec., but
-regulator_bulk_enable() API enables all the regulators asynchronously.
-Use an explicit loops of regulator_enable() instead.
+The warning got triggered because lockdep_count_forward_deps() call
+__bfs() without current->lockdep_recursion being set, as a result
+a lockdep internal function (__bfs()) is checked by lockdep, which is
+unexpected, and the inconsistency between the irq-off state and the
+state traced by lockdep caused the warning.
 
-For power off sequence, it is required that DVDD falls first. Given the
-bulk API does not give any guarantee about the order of regulators,
-change the driver to use regulator_disable() instead.
+Apart from this warning, lockdep internal functions like __bfs() should
+always be protected by current->lockdep_recursion to avoid potential
+deadlocks and data inconsistency, therefore add the
+current->lockdep_recursion on-and-off section to protect __bfs() in both
+lockdep_count_forward_deps() and lockdep_count_backward_deps()
 
-The sensor also requires a delay between reset high and first I2C
-transaction, which was assumed to be 8192 XVCLK cycles, but 1ms is
-recommended by the vendor. Fix this as well.
-
-Signed-off-by: Dongchun Zhu <dongchun.zhu@mediatek.com>
-Signed-off-by: Tomasz Figa <tfiga@chromium.org>
-Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Reported-by: Qian Cai <cai@lca.pw>
+Signed-off-by: Boqun Feng <boqun.feng@gmail.com>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Link: https://lkml.kernel.org/r/20200312151258.128036-1-boqun.feng@gmail.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/i2c/ov5695.c | 49 ++++++++++++++++++++++++--------------
- 1 file changed, 31 insertions(+), 18 deletions(-)
+ kernel/locking/lockdep.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/drivers/media/i2c/ov5695.c b/drivers/media/i2c/ov5695.c
-index d6cd15bb699ac..cc678d9d2e0da 100644
---- a/drivers/media/i2c/ov5695.c
-+++ b/drivers/media/i2c/ov5695.c
-@@ -971,16 +971,9 @@ static int ov5695_s_stream(struct v4l2_subdev *sd, int on)
- 	return ret;
- }
+diff --git a/kernel/locking/lockdep.c b/kernel/locking/lockdep.c
+index 32406ef0d6a2d..5142a6b11bf5b 100644
+--- a/kernel/locking/lockdep.c
++++ b/kernel/locking/lockdep.c
+@@ -1719,9 +1719,11 @@ unsigned long lockdep_count_forward_deps(struct lock_class *class)
+ 	this.class = class;
  
--/* Calculate the delay in us by clock rate and clock cycles */
--static inline u32 ov5695_cal_delay(u32 cycles)
--{
--	return DIV_ROUND_UP(cycles, OV5695_XVCLK_FREQ / 1000 / 1000);
--}
--
- static int __ov5695_power_on(struct ov5695 *ov5695)
- {
--	int ret;
--	u32 delay_us;
-+	int i, ret;
- 	struct device *dev = &ov5695->client->dev;
- 
- 	ret = clk_prepare_enable(ov5695->xvclk);
-@@ -991,21 +984,28 @@ static int __ov5695_power_on(struct ov5695 *ov5695)
- 
- 	gpiod_set_value_cansleep(ov5695->reset_gpio, 1);
- 
--	ret = regulator_bulk_enable(OV5695_NUM_SUPPLIES, ov5695->supplies);
--	if (ret < 0) {
--		dev_err(dev, "Failed to enable regulators\n");
--		goto disable_clk;
-+	/*
-+	 * The hardware requires the regulators to be powered on in order,
-+	 * so enable them one by one.
-+	 */
-+	for (i = 0; i < OV5695_NUM_SUPPLIES; i++) {
-+		ret = regulator_enable(ov5695->supplies[i].consumer);
-+		if (ret) {
-+			dev_err(dev, "Failed to enable %s: %d\n",
-+				ov5695->supplies[i].supply, ret);
-+			goto disable_reg_clk;
-+		}
- 	}
- 
- 	gpiod_set_value_cansleep(ov5695->reset_gpio, 0);
- 
--	/* 8192 cycles prior to first SCCB transaction */
--	delay_us = ov5695_cal_delay(8192);
--	usleep_range(delay_us, delay_us * 2);
-+	usleep_range(1000, 1200);
- 
- 	return 0;
- 
--disable_clk:
-+disable_reg_clk:
-+	for (--i; i >= 0; i--)
-+		regulator_disable(ov5695->supplies[i].consumer);
- 	clk_disable_unprepare(ov5695->xvclk);
+ 	raw_local_irq_save(flags);
++	current->lockdep_recursion = 1;
+ 	arch_spin_lock(&lockdep_lock);
+ 	ret = __lockdep_count_forward_deps(&this);
+ 	arch_spin_unlock(&lockdep_lock);
++	current->lockdep_recursion = 0;
+ 	raw_local_irq_restore(flags);
  
  	return ret;
-@@ -1013,9 +1013,22 @@ static int __ov5695_power_on(struct ov5695 *ov5695)
+@@ -1746,9 +1748,11 @@ unsigned long lockdep_count_backward_deps(struct lock_class *class)
+ 	this.class = class;
  
- static void __ov5695_power_off(struct ov5695 *ov5695)
- {
-+	struct device *dev = &ov5695->client->dev;
-+	int i, ret;
-+
- 	clk_disable_unprepare(ov5695->xvclk);
- 	gpiod_set_value_cansleep(ov5695->reset_gpio, 1);
--	regulator_bulk_disable(OV5695_NUM_SUPPLIES, ov5695->supplies);
-+
-+	/*
-+	 * The hardware requires the regulators to be powered off in order,
-+	 * so disable them one by one.
-+	 */
-+	for (i = OV5695_NUM_SUPPLIES - 1; i >= 0; i--) {
-+		ret = regulator_disable(ov5695->supplies[i].consumer);
-+		if (ret)
-+			dev_err(dev, "Failed to disable %s: %d\n",
-+				ov5695->supplies[i].supply, ret);
-+	}
- }
+ 	raw_local_irq_save(flags);
++	current->lockdep_recursion = 1;
+ 	arch_spin_lock(&lockdep_lock);
+ 	ret = __lockdep_count_backward_deps(&this);
+ 	arch_spin_unlock(&lockdep_lock);
++	current->lockdep_recursion = 0;
+ 	raw_local_irq_restore(flags);
  
- static int __maybe_unused ov5695_runtime_resume(struct device *dev)
-@@ -1285,7 +1298,7 @@ static int ov5695_probe(struct i2c_client *client,
- 	if (clk_get_rate(ov5695->xvclk) != OV5695_XVCLK_FREQ)
- 		dev_warn(dev, "xvclk mismatched, modes are based on 24MHz\n");
- 
--	ov5695->reset_gpio = devm_gpiod_get(dev, "reset", GPIOD_OUT_LOW);
-+	ov5695->reset_gpio = devm_gpiod_get(dev, "reset", GPIOD_OUT_HIGH);
- 	if (IS_ERR(ov5695->reset_gpio)) {
- 		dev_err(dev, "Failed to get reset-gpios\n");
- 		return -EINVAL;
+ 	return ret;
 -- 
 2.20.1
 
