@@ -2,37 +2,37 @@ Return-Path: <SRS0=VV4q=52=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95DB1C2BB85
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 23:17:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EEDA9C2D0EC
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 23:17:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 75D5E2084D
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 23:17:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C7C5E2084D
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 23:17:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726761AbgDJXRK (ORCPT
+        id S1726872AbgDJXRT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Apr 2020 19:17:10 -0400
-Received: from mga02.intel.com ([134.134.136.20]:20811 "EHLO mga02.intel.com"
+        Fri, 10 Apr 2020 19:17:19 -0400
+Received: from mga02.intel.com ([134.134.136.20]:20816 "EHLO mga02.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726626AbgDJXRK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Apr 2020 19:17:10 -0400
-IronPort-SDR: z+5CrFAHYBue1LjQlCLbgJYfqWOj3/r2umJ3dI1axca0Jp/DBrr9NO2CKEE2h4UnoS8CpOT3Up
- L+tv90tJ+O3g==
+        id S1726806AbgDJXRN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Apr 2020 19:17:13 -0400
+IronPort-SDR: 29D+sTUQ3xyntsLL/V83JwwcMd8Lj1FJAamtzpTaPWr2bdMuIZqbwt0qNPCZAEEwfHlBq4TwEO
+ Tl8JT+eAg7Sw==
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Apr 2020 16:17:09 -0700
-IronPort-SDR: FzvuNvvKZpOwvgY8K4862XFoE/gFd82xETllZcB01RLxQodqpBf1+Pv7IFARofVwbABdJEa1xq
- ozdin/MY6IqA==
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Apr 2020 16:17:12 -0700
+IronPort-SDR: 1z1Is419uA7ZWd1ZZMMa72LoAPlHer1krhvVdwX4j8FVpnJU6vKkymUaDFgJz4CRlpv2qDcgtk
+ g6g7QWUYYx/A==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.72,368,1580803200"; 
-   d="scan'208";a="452542216"
+   d="scan'208";a="452542247"
 Received: from sjchrist-coffee.jf.intel.com ([10.54.74.202])
-  by fmsmga005.fm.intel.com with ESMTP; 10 Apr 2020 16:17:09 -0700
+  by fmsmga005.fm.intel.com with ESMTP; 10 Apr 2020 16:17:12 -0700
 From:   Sean Christopherson <sean.j.christopherson@intel.com>
 To:     Paolo Bonzini <pbonzini@redhat.com>,
         Christian Borntraeger <borntraeger@de.ibm.com>,
@@ -44,9 +44,9 @@ Cc:     David Hildenbrand <david@redhat.com>,
         Peter Xu <peterx@redhat.com>,
         Andrew Jones <drjones@redhat.com>,
         Wainer dos Santos Moschetta <wainersm@redhat.com>
-Subject: [PATCH 01/10] KVM: selftests: Take vcpu pointer instead of id in vm_vcpu_rm()
-Date:   Fri, 10 Apr 2020 16:16:58 -0700
-Message-Id: <20200410231707.7128-2-sean.j.christopherson@intel.com>
+Subject: [PATCH 08/10] KVM: selftests: Add "zero" testcase to set_memory_region_test
+Date:   Fri, 10 Apr 2020 16:17:05 -0700
+Message-Id: <20200410231707.7128-9-sean.j.christopherson@intel.com>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200410231707.7128-1-sean.j.christopherson@intel.com>
 References: <20200410231707.7128-1-sean.j.christopherson@intel.com>
@@ -57,47 +57,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The sole caller of vm_vcpu_rm() already has the vcpu pointer, take it
-directly instead of doing an extra lookup.
+Add a testcase for running a guest with no memslots to the memory region
+test.  The expected result on x86_64 is that the guest will trigger an
+internal KVM error due to the initial code fetch encountering a
+non-existent memslot and resulting in an emulation failure.
 
 Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
 ---
- tools/testing/selftests/kvm/lib/kvm_util.c | 7 +++----
- 1 file changed, 3 insertions(+), 4 deletions(-)
+ .../kvm/x86_64/set_memory_region_test.c       | 24 +++++++++++++++++++
+ 1 file changed, 24 insertions(+)
 
-diff --git a/tools/testing/selftests/kvm/lib/kvm_util.c b/tools/testing/selftests/kvm/lib/kvm_util.c
-index 8a3523d4434f..9a783c20dd26 100644
---- a/tools/testing/selftests/kvm/lib/kvm_util.c
-+++ b/tools/testing/selftests/kvm/lib/kvm_util.c
-@@ -393,7 +393,7 @@ struct vcpu *vcpu_find(struct kvm_vm *vm, uint32_t vcpuid)
-  *
-  * Input Args:
-  *   vm - Virtual Machine
-- *   vcpuid - VCPU ID
-+ *   vcpu - VCPU to remove
-  *
-  * Output Args: None
-  *
-@@ -401,9 +401,8 @@ struct vcpu *vcpu_find(struct kvm_vm *vm, uint32_t vcpuid)
-  *
-  * Within the VM specified by vm, removes the VCPU given by vcpuid.
-  */
--static void vm_vcpu_rm(struct kvm_vm *vm, uint32_t vcpuid)
-+static void vm_vcpu_rm(struct kvm_vm *vm, struct vcpu *vcpu)
+diff --git a/tools/testing/selftests/kvm/x86_64/set_memory_region_test.c b/tools/testing/selftests/kvm/x86_64/set_memory_region_test.c
+index b556024af683..c274ce6b4ba2 100644
+--- a/tools/testing/selftests/kvm/x86_64/set_memory_region_test.c
++++ b/tools/testing/selftests/kvm/x86_64/set_memory_region_test.c
+@@ -289,6 +289,28 @@ static void test_delete_memory_region(void)
+ 	kvm_vm_free(vm);
+ }
+ 
++static void test_zero_memory_regions(void)
++{
++	struct kvm_run *run;
++	struct kvm_vm *vm;
++
++	pr_info("Testing KVM_RUN with zero added memory regions\n");
++
++	vm = vm_create(VM_MODE_DEFAULT, 0, O_RDWR);
++	vm_vcpu_add(vm, VCPU_ID);
++
++	TEST_ASSERT(!ioctl(vm_get_fd(vm), KVM_SET_NR_MMU_PAGES, 64),
++		    "KVM_SET_NR_MMU_PAGES failed, errno = %d\n", errno);
++
++	vcpu_run(vm, VCPU_ID);
++
++	run = vcpu_state(vm, VCPU_ID);
++	TEST_ASSERT(run->exit_reason == KVM_EXIT_INTERNAL_ERROR,
++		    "Unexpected exit_reason = %u\n", run->exit_reason);
++
++	kvm_vm_free(vm);
++}
++
+ int main(int argc, char *argv[])
  {
--	struct vcpu *vcpu = vcpu_find(vm, vcpuid);
- 	int ret;
+ 	int i, loops;
+@@ -296,6 +318,8 @@ int main(int argc, char *argv[])
+ 	/* Tell stdout not to buffer its content */
+ 	setbuf(stdout, NULL);
  
- 	ret = munmap(vcpu->state, sizeof(*vcpu->state));
-@@ -427,7 +426,7 @@ void kvm_vm_release(struct kvm_vm *vmp)
- 	int ret;
- 
- 	while (vmp->vcpu_head)
--		vm_vcpu_rm(vmp, vmp->vcpu_head->id);
-+		vm_vcpu_rm(vmp, vmp->vcpu_head);
- 
- 	ret = close(vmp->fd);
- 	TEST_ASSERT(ret == 0, "Close of vm fd failed,\n"
++	test_zero_memory_regions();
++
+ 	if (argc > 1)
+ 		loops = atoi(argv[1]);
+ 	else
 -- 
 2.26.0
 
