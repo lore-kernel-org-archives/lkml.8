@@ -2,122 +2,159 @@ Return-Path: <SRS0=VV4q=52=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6957C2BB86
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 16:03:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EDB8C2BA2B
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 16:05:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7DA1320CC7
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 16:03:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586534631;
-	bh=BdB60nUXn9u2TACtpWcd00QkWUVoCM7XwHfa5QxDaDA=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=SvJDJEw7S5LWq3SxyQylSM70UeH3fhQC9vvUukSokM89ZuPXKOgqb+4onLYq69JuL
-	 QD82LOX7jf2WTP8/WsXD2UI9K+JDWSSxIElYQH9uIyl6c8COkduXKuJAv2PLEfMgUn
-	 M/Oh7OWG9828jmhImkgl9EFY1NYagVjoevmq+QHQ=
+	by mail.kernel.org (Postfix) with ESMTP id 0F34B2078E
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 16:05:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Kcjra8yw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726659AbgDJQDu (ORCPT
+        id S1726691AbgDJQE7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Apr 2020 12:03:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45486 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726145AbgDJQDu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Apr 2020 12:03:50 -0400
-Received: from mail-il1-f172.google.com (mail-il1-f172.google.com [209.85.166.172])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D5EAC20CC7;
-        Fri, 10 Apr 2020 16:03:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586534629;
-        bh=BdB60nUXn9u2TACtpWcd00QkWUVoCM7XwHfa5QxDaDA=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=mmOI4iypZSjrrhzKzzTiGYLWosQ+A4Gc6krVGIC3hfqWktkg1y0f1+Wrq9HRJBo4n
-         MQut9uhi4AmU6jr8Md9jtplSmempAazKmG8Ll+TT/SykqrNHuupCKDmddFwPcxFOnE
-         KFGuzOM8ZdcEVzUP9P1dGDONSWUQDmAKC+Xjonrg=
-Received: by mail-il1-f172.google.com with SMTP id i75so2194134ild.13;
-        Fri, 10 Apr 2020 09:03:49 -0700 (PDT)
-X-Gm-Message-State: AGi0PubLLCxhKfFH8drQQamUEIpU5M7OOaGKFTE5+0USaHBkXaKMJSI8
-        AmmGjJ0SYTTFd5forIkD7fHQHyPLQhT1rrsS7xU=
-X-Google-Smtp-Source: APiQypLcQDYp4amLwYnTaARjQHhwHmsDFGf5tAAH/ESw6u2ocPuIw6EkPhdNATpjcr9xniuYFEEZneq3fS/9UVzYoLo=
-X-Received: by 2002:a92:443:: with SMTP id 64mr238786ile.258.1586534629266;
- Fri, 10 Apr 2020 09:03:49 -0700 (PDT)
+        Fri, 10 Apr 2020 12:04:59 -0400
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:50163 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726177AbgDJQE7 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Apr 2020 12:04:59 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1586534698;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=cxOJV+PXw0OWe981JdPu+MdBwKVnkcb6yaLM9gtV+Uw=;
+        b=Kcjra8ywv9Jjuzx6WXeliOahC2e5rWyCJ4bd4zZKa7KNnvaFrTKnk0h0q4bhvVC/EdL0Kg
+        PNMKq9p1p8cTK5d5JQJeF3yLTGyedzjooC9jaL5piiwiy5xBDNagXRQC3ovhoso2InTXIs
+        3K4PMS72I95j/yNM+UY5BLqGU2itUe0=
+Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
+ [209.85.221.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-472-Glr7dZZ0Nu6Pp-bi6MoPdw-1; Fri, 10 Apr 2020 12:04:57 -0400
+X-MC-Unique: Glr7dZZ0Nu6Pp-bi6MoPdw-1
+Received: by mail-wr1-f70.google.com with SMTP id j12so1404391wrr.18
+        for <linux-kernel@vger.kernel.org>; Fri, 10 Apr 2020 09:04:56 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=cxOJV+PXw0OWe981JdPu+MdBwKVnkcb6yaLM9gtV+Uw=;
+        b=TNnZJJRN7mlc1wZSSyJfmu37b0VhD4+4TYeJCre2RoU4W1Ziq87xNOCK9IEo5pdnju
+         M88XbtQhX6uCi6J8Qq2d7iekTaFunqZm7iuJBO0BJcd9g9xfyOtu4lxQ5IaWvxbxX11T
+         xz5Khq4RvkZeHSCx3ELGXhTPLJ46TbWxaaXrLyNKarqutNUiaOVIhLJn5KLnqagqiQtZ
+         bXtaG5/MxNUsbt4Juq7oIPt2AVYBucPtNxNcYczaSFH2xi2jzH//ITNHCcoaYCgyvFvD
+         3aAGsGOgfZwZuFBUPShliTEOoS2o2OvZIJixfv8WiPQ44YPDC9V1JFx+eTSct02g83Q5
+         rH8A==
+X-Gm-Message-State: AGi0PuYvP+EZ3ZymejkKfaRDpLIhQjeRN/cWo4ZlyLvi5XFzGSslf3RF
+        CggfRhyLV/aNm/+3B3pBThFwaZh5ncR3IRuXwjLF9H09F5Qc0sMjYGCxyYnpacFWGcEDL/+Fmq/
+        lP6OG9E2Iau3M+czUwYkUYJeU
+X-Received: by 2002:a1c:6545:: with SMTP id z66mr5590630wmb.81.1586534695911;
+        Fri, 10 Apr 2020 09:04:55 -0700 (PDT)
+X-Google-Smtp-Source: APiQypIUoTNzgT8EHUupmSiQmqAgjl7+0TQSoQpIjhsdXJ4SNG1cJk937+fQ4caZS5evjdxQhgMaNA==
+X-Received: by 2002:a1c:6545:: with SMTP id z66mr5590603wmb.81.1586534695605;
+        Fri, 10 Apr 2020 09:04:55 -0700 (PDT)
+Received: from ?IPv6:2001:b07:6468:f312:f4b7:b34c:3ace:efb6? ([2001:b07:6468:f312:f4b7:b34c:3ace:efb6])
+        by smtp.gmail.com with ESMTPSA id j10sm3249165wru.85.2020.04.10.09.04.54
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 10 Apr 2020 09:04:54 -0700 (PDT)
+Subject: Re: KCSAN + KVM = host reset
+To:     Qian Cai <cai@lca.pw>, Marco Elver <elver@google.com>
+Cc:     "paul E. McKenney" <paulmck@kernel.org>,
+        kasan-dev <kasan-dev@googlegroups.com>,
+        LKML <linux-kernel@vger.kernel.org>, kvm@vger.kernel.org
+References: <CANpmjNMR4BgfCxL9qXn0sQrJtQJbEPKxJ5_HEa2VXWi6UY4wig@mail.gmail.com>
+ <AC8A5393-B817-4868-AA85-B3019A1086F9@lca.pw>
+ <CANpmjNPqQHKUjqAzcFym5G8kHX0mjProOpGu8e4rBmuGRykAUg@mail.gmail.com>
+ <B798749E-F2F0-4A14-AFE3-F386AB632AEB@lca.pw>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Message-ID: <1d6db024-82d1-5530-2e78-478ee333173e@redhat.com>
+Date:   Fri, 10 Apr 2020 18:04:54 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-References: <20200409130434.6736-1-ardb@kernel.org> <20200409130434.6736-4-ardb@kernel.org>
- <CAMzpN2gJWwVun1Kp6vGuza9LM5KpB=0EwsP8x8eOJQuDGh38Hg@mail.gmail.com>
- <CAMzpN2jFbf8k99pWaTYRBmSB+iNAKYsufjEhqO6Vv0qxAcHyGA@mail.gmail.com>
- <20200409210847.GA1312580@rani.riverdale.lan> <CAMj1kXFhtK=FRDKBE5OtenNEtpK=kVwyo+0nqJZ_K80RmtYxEg@mail.gmail.com>
- <20200410151612.GA970420@rani.riverdale.lan>
-In-Reply-To: <20200410151612.GA970420@rani.riverdale.lan>
-From:   Ard Biesheuvel <ardb@kernel.org>
-Date:   Fri, 10 Apr 2020 18:03:38 +0200
-X-Gmail-Original-Message-ID: <CAMj1kXGMNMdgjinYNgrN2wGRFG4rKE2YHo-=3s4Ofv2KPUMqKQ@mail.gmail.com>
-Message-ID: <CAMj1kXGMNMdgjinYNgrN2wGRFG4rKE2YHo-=3s4Ofv2KPUMqKQ@mail.gmail.com>
-Subject: Re: [PATCH 3/9] efi/x86: Move efi stub globals from .bss to .data
-To:     Arvind Sankar <nivedita@alum.mit.edu>
-Cc:     Brian Gerst <brgerst@gmail.com>,
-        linux-efi <linux-efi@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>, Borislav Petkov <bp@suse.de>,
-        Colin Ian King <colin.king@canonical.com>,
-        Gary Lin <glin@suse.com>, Jiri Slaby <jslaby@suse.cz>,
-        Sergey Shatunov <me@prok.pw>, Takashi Iwai <tiwai@suse.de>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <B798749E-F2F0-4A14-AFE3-F386AB632AEB@lca.pw>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 10 Apr 2020 at 17:16, Arvind Sankar <nivedita@alum.mit.edu> wrote:
->
-> On Fri, Apr 10, 2020 at 10:20:42AM +0200, Ard Biesheuvel wrote:
-> > On Thu, 9 Apr 2020 at 23:08, Arvind Sankar <nivedita@alum.mit.edu> wrote:
-> > >
-> > > On Thu, Apr 09, 2020 at 04:53:07PM -0400, Brian Gerst wrote:
-> > > > > Can we use the -fno-zero-initialized-in-bss compiler flag instead of
-> > > > > explicitly marking global variables?
-> > > >
-> > > > Scratch that.  Apparently it only works when a variable is explicitly
-> > > > initialized to zero.
-> > > >
-> > > > --
-> > > > Brian Gerst
-> > >
-> > > Right, there doesn't seem to be a compiler option to turn off the use of
-> > > .bss altogether.
-> >
-> > Yeah. I'll try to come up with a way to consolidate this a bit across
-> > architectures (which is a bit easier now that all of the EFI stub C
-> > code lives in the same place). It is probably easiest to use a section
-> > renaming trick similar to the one I added for ARM (as Arvind suggested
-> > as well, IIRC), and get rid of the per-symbol annotations altogether.
->
-> Does that work for 32-bit ARM, or does it need to be .data to tell the
-> compiler to avoid generating GOT references? If that's fine, we don't
-> actually need to rename sections -- linker script magic is enough. For
-> eg, the below pulls the EFI stub bss into .data for x86 without the need
-> for the annotations.
->
-> diff --git a/arch/x86/boot/compressed/vmlinux.lds.S b/arch/x86/boot/compressed/vmlinux.lds.S
-> index 508cfa6828c5..e324819c95bc 100644
-> --- a/arch/x86/boot/compressed/vmlinux.lds.S
-> +++ b/arch/x86/boot/compressed/vmlinux.lds.S
-> @@ -52,6 +52,7 @@ SECTIONS
->                 _data = . ;
->                 *(.data)
->                 *(.data.*)
-> +               drivers/firmware/efi/libstub/lib.a:(.bss .bss.*)
->                 _edata = . ;
->         }
->         . = ALIGN(L1_CACHE_BYTES);
+On 10/04/20 17:50, Qian Cai wrote:
+> This works,
+> 
+> --- a/arch/x86/kvm/svm/svm.c
+> +++ b/arch/x86/kvm/svm/svm.c
+> @@ -3278,7 +3278,7 @@ static void svm_cancel_injection(struct kvm_vcpu *vcpu)
+>  
+>  bool __svm_vcpu_run(unsigned long vmcb_pa, unsigned long *regs);
+>  
+> -static void svm_vcpu_run(struct kvm_vcpu *vcpu)
+> +static __no_kcsan void svm_vcpu_run(struct kvm_vcpu *vcpu)
+>  {
+>         struct vcpu_svm *svm = to_svm(vcpu);
+> 
+> Does anyone has any idea why svm_vcpu_run() would be a problem for KCSAN_INTERRUPT_WATCHER=y?
 
-No, we can add this to ARM as well, and get rid of the
-__efistub_global annotations entirely.
+All of svm_vcpu_run() has interrupts disabled anyway, but perhaps KCSAN
+checks the interrupt flag?  That could be a problem because
+svm_vcpu_run() disables the interrupts with GIF not IF (and in fact
+IF=1).
 
-We'll still need .data.efistub for the .data pieces, but that is a
-separate issue.
+You can try this patch which moves the problematic section inside
+the assembly language trampoline:
+
+ 
+diff --git a/arch/x86/kvm/svm/svm.c b/arch/x86/kvm/svm/svm.c
+index 27f4684a4c20..6ffa07d42e5e 100644
+--- a/arch/x86/kvm/svm/svm.c
++++ b/arch/x86/kvm/svm/svm.c
+@@ -3337,8 +3337,6 @@ static void svm_vcpu_run(struct kvm_vcpu *vcpu)
+ 	 */
+ 	x86_spec_ctrl_set_guest(svm->spec_ctrl, svm->virt_spec_ctrl);
+ 
+-	local_irq_enable();
+-
+ 	__svm_vcpu_run(svm->vmcb_pa, (unsigned long *)&svm->vcpu.arch.regs);
+ 
+	/* Eliminate branch target predictions from guest mode */
+@@ -3373,8 +3368,6 @@ static void svm_vcpu_run(struct kvm_vcpu *vcpu)
+ 
+ 	reload_tss(vcpu);
+ 
+-	local_irq_disable();
+-
+ 	x86_spec_ctrl_restore_host(svm->spec_ctrl, svm->virt_spec_ctrl);
+ 
+ 	vcpu->arch.cr2 = svm->vmcb->save.cr2;
+diff --git a/arch/x86/kvm/svm/vmenter.S b/arch/x86/kvm/svm/vmenter.S
+index fa1af90067e9..a2608ede0975 100644
+--- a/arch/x86/kvm/svm/vmenter.S
++++ b/arch/x86/kvm/svm/vmenter.S
+@@ -78,6 +78,7 @@ SYM_FUNC_START(__svm_vcpu_run)
+ 	pop %_ASM_AX
+ 
+ 	/* Enter guest mode */
++	sti
+ 1:	vmload %_ASM_AX
+ 	jmp 3f
+ 2:	cmpb $0, kvm_rebooting
+@@ -99,6 +100,8 @@ SYM_FUNC_START(__svm_vcpu_run)
+ 	ud2
+ 	_ASM_EXTABLE(5b, 6b)
+ 7:
++	cli
++
+ 	/* "POP" @regs to RAX. */
+ 	pop %_ASM_AX
+ 
+
+Paolo
+
