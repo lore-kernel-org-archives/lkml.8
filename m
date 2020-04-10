@@ -7,52 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7DD3C2BB86
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 03:59:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C992DC2D0EC
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 03:59:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6E9192082D
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 03:59:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9CD0720936
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 03:59:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586491196;
-	bh=3UjQVSicJ7z1E7lK3tpNSkw0cHKIFbCY3jGJKT13Kv0=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=D4myT+SobiTJ7edeU+l0csFionIO8xoOMVBp8L0wioT1Q59j/oxN+SIpXaGeMsCp0
-	 jepe4jXB93Qwn3pOt5Gp1roOeyiaSf3K06f/TkmMMcG++qXmuJzhtrhIHXWYj7pcSC
-	 pjRFhfXEIIwT0bUuJVWC1go8PtvgKFLsyMyc/QiE=
+	s=default; t=1586491198;
+	bh=AL4Duf7m5IvoTTD4d2+gCaDhn7bLAW1D0iwX6syCWJw=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=cFgWNItsn2hI500ysFbGH3oBsXUMx0Et0/DgDWhXDMUPorFOv5RZAZWVgqRvMw3Gh
+	 pYNOys2LLt67LNyLltwI421bhjPVnlT7uDjpny6/cIAqyp03skpdJH7qFeH5KT+hgT
+	 wcmIhKvbyFVXE5VHgFpLx8GfIkSC+gOa/VWGOKVA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728071AbgDJDsL (ORCPT
+        id S1728056AbgDJDsJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Apr 2020 23:48:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59266 "EHLO mail.kernel.org"
+        Thu, 9 Apr 2020 23:48:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59146 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728018AbgDJDsF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Apr 2020 23:48:05 -0400
+        id S1727966AbgDJDsC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Apr 2020 23:48:02 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C774C2145D;
-        Fri, 10 Apr 2020 03:48:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 72E2820936;
+        Fri, 10 Apr 2020 03:48:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586490485;
-        bh=3UjQVSicJ7z1E7lK3tpNSkw0cHKIFbCY3jGJKT13Kv0=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DldbQVnm+vifTLWBeZlD02unaXCic91E2+1YSMtZ1Xz2FWUntkj8Q/ctV6ICKF0yj
-         WCBlfE20kDvAXABU2wEKVdoWzcbEjyK5Y0+RvSDdXzoNNMoRS0Efm6GvtY5PX9aQTQ
-         IdFcRLBh6nA+sNoiPHQlJwtZCz4tVt/W42G80SwQ=
+        s=default; t=1586490482;
+        bh=AL4Duf7m5IvoTTD4d2+gCaDhn7bLAW1D0iwX6syCWJw=;
+        h=From:To:Cc:Subject:Date:From;
+        b=mu0zhZRCFYC8XA5tuxEFEI4YHxlT/fO8t1EOSb9i/y3LRQOxt36vLtZSi72o4Ctmt
+         HThkZFfP48KnPx8TOkpjC4Rj0DeMoZQOvarVHODApH7oxYdimyH/NDk5yXXlwarGOd
+         oHSl0sUayDB20F+Zf77CDOQmYA3jr5kC1nUF8xQA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Ajay Singh <ajay.kathat@microchip.com>,
-        kbuild test robot <lkp@intel.com>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-wireless@vger.kernel.org, devel@driverdev.osuosl.org
-Subject: [PATCH AUTOSEL 5.5 04/56] staging: wilc1000: avoid double unlocking of 'wilc->hif_cs' mutex
-Date:   Thu,  9 Apr 2020 23:47:08 -0400
-Message-Id: <20200410034800.8381-4-sashal@kernel.org>
+Cc:     Christoph Niedermaier <cniedermaier@dh-electronics.com>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Sasha Levin <sashal@kernel.org>, linux-pm@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH AUTOSEL 5.5 01/56] cpufreq: imx6q: Fixes unwanted cpu overclocking on i.MX6ULL
+Date:   Thu,  9 Apr 2020 23:47:05 -0400
+Message-Id: <20200410034800.8381-1-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200410034800.8381-1-sashal@kernel.org>
-References: <20200410034800.8381-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -62,39 +58,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ajay Singh <ajay.kathat@microchip.com>
+From: Christoph Niedermaier <cniedermaier@dh-electronics.com>
 
-[ Upstream commit 6c411581caef6e3b2c286871641018364c6db50a ]
+[ Upstream commit 36eb7dc1bd42fe5f850329c893768ff89b696fba ]
 
-Possible double unlocking of 'wilc->hif_cs' mutex was identified by
-smatch [1]. Removed the extra call to release_bus() in
-wilc_wlan_handle_txq() which was missed in earlier commit fdc2ac1aafc6
-("staging: wilc1000: support suspend/resume functionality").
+imx6ul_opp_check_speed_grading is called for both i.MX6UL and i.MX6ULL.
+Since the i.MX6ULL was introduced to a separate ocotp compatible node
+later, it is possible that the i.MX6ULL has also dtbs with
+"fsl,imx6ull-ocotp". On a system without nvmem-cell speed grade a
+missing check on this node causes a driver fail without considering
+the cpu speed grade.
 
-[1]. https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org/thread/NOEVW7C3GV74EWXJO3XX6VT2NKVB2HMT/
+This patch prevents unwanted cpu overclocking on i.MX6ULL with compatible
+node "fsl,imx6ull-ocotp" in old dtbs without nvmem-cell speed grade.
 
-Reported-by: kbuild test robot <lkp@intel.com>
-Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
-Signed-off-by: Ajay Singh <ajay.kathat@microchip.com>
-Link: https://lore.kernel.org/r/20200221170120.15739-1-ajay.kathat@microchip.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Fixes: 2733fb0d0699 ("cpufreq: imx6q: read OCOTP through nvmem for imx6ul/imx6ull")
+Signed-off-by: Christoph Niedermaier <cniedermaier@dh-electronics.com>
+Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/staging/wilc1000/wlan.c | 1 -
- 1 file changed, 1 deletion(-)
+ drivers/cpufreq/imx6q-cpufreq.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/staging/wilc1000/wlan.c b/drivers/staging/wilc1000/wlan.c
-index d3de76126b787..3098399741d7b 100644
---- a/drivers/staging/wilc1000/wlan.c
-+++ b/drivers/staging/wilc1000/wlan.c
-@@ -578,7 +578,6 @@ int wilc_wlan_handle_txq(struct wilc *wilc, u32 *txq_count)
- 				entries = ((reg >> 3) & 0x3f);
- 				break;
- 			}
--			release_bus(wilc, WILC_BUS_RELEASE_ALLOW_SLEEP);
- 		} while (--timeout);
- 		if (timeout <= 0) {
- 			ret = func->hif_write_reg(wilc, WILC_HOST_VMM_CTL, 0x0);
+diff --git a/drivers/cpufreq/imx6q-cpufreq.c b/drivers/cpufreq/imx6q-cpufreq.c
+index 648a09a1778a3..1fcbbd53a48a2 100644
+--- a/drivers/cpufreq/imx6q-cpufreq.c
++++ b/drivers/cpufreq/imx6q-cpufreq.c
+@@ -280,6 +280,9 @@ static int imx6ul_opp_check_speed_grading(struct device *dev)
+ 		void __iomem *base;
+ 
+ 		np = of_find_compatible_node(NULL, NULL, "fsl,imx6ul-ocotp");
++		if (!np)
++			np = of_find_compatible_node(NULL, NULL,
++						     "fsl,imx6ull-ocotp");
+ 		if (!np)
+ 			return -ENOENT;
+ 
 -- 
 2.20.1
 
