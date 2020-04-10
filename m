@@ -2,109 +2,132 @@ Return-Path: <SRS0=VV4q=52=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 060ACC2BB55
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 20:26:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A66DC2BB55
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 20:26:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C039920801
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 20:26:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586550370;
-	bh=QP+3yBIEMTRQgOdOYKbUyPaKKRDowEcXxfvHia4gRAc=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=XXmd5JTcxMQ6y6gK83sxVv1urP253tDhmesXPtq3gFTIMN6sk4DJKxVbEcz0RZxcU
-	 TFOhvyngDP83J3Qumc9TbsdDt6E6nemy+NSY9Or2PMLoE9cYW0c79Wsrs9WNn8DayW
-	 r7uAKPRUXTjRW1VinqKGU5tyB4+Cf2NUZqmq6FPo=
+	by mail.kernel.org (Postfix) with ESMTP id C8A9620732
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 20:26:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Rb6Q1NVn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726654AbgDJU0J (ORCPT
+        id S1726707AbgDJU0Y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Apr 2020 16:26:09 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:36869 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726594AbgDJU0J (ORCPT
+        Fri, 10 Apr 2020 16:26:24 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:38092 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726659AbgDJU0U (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Apr 2020 16:26:09 -0400
-Received: by mail-lj1-f196.google.com with SMTP id r24so3103363ljd.4
-        for <linux-kernel@vger.kernel.org>; Fri, 10 Apr 2020 13:26:08 -0700 (PDT)
+        Fri, 10 Apr 2020 16:26:20 -0400
+Received: by mail-pf1-f196.google.com with SMTP id c21so1487195pfo.5
+        for <linux-kernel@vger.kernel.org>; Fri, 10 Apr 2020 13:26:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=VL5G+feLpx+wDhm+cmewwW7uP4NJGohhURRIHJyNA5g=;
-        b=aIMiwRDsWaUzyY5lHMTHg1j4RJqrDex4FJ60YJcBuy+jRWovody2HZlxK+o2RIqO1S
-         80/xhFpE6dAHEbmgGjIsTUsOachersAnIL8wwBbnEbFh9iwbx60G20XadHndczVNkHr7
-         x3daGlDhxgT25W5BJwOrK6PI6Ue2SzcK/l8kA=
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=pcawoXzVUnVmK13P4l97Pnws9LJgqOmSgo+Ma/dSWps=;
+        b=Rb6Q1NVncgv/6LrQjHpG/fCd/Eq6dDMbjtn14iX378Is2HtKxpf1KzcdRcUJQKpAjE
+         3jcUokjzBmfZ9DcloypWm67fUYTHSXQ6SvuNJv4raI7UAROw25onxDiiZ9BSo6QulpKp
+         4p05bqg7iV9Mh551htKgXjmTu+kRXOvAM+ZfI=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=VL5G+feLpx+wDhm+cmewwW7uP4NJGohhURRIHJyNA5g=;
-        b=q0BItLLRgAt1OXHThXFCvw/0aM7F8su6U1Aayle7UnXUdc6MBdbv/Ekjq5IICRzkRd
-         uyQ7OEL7hOCnxR+Gn15p58aUL581at+2Kbxh2l26TYIxF0Atp4kTdPfFo+jW9awFxOhW
-         W86vRAgbD10xyvviUr7PytGSgwq75wM8HOB6ahUY/B0mSMRTDoCb8mekMHsm94Oju7BU
-         RimW8+Vlo5z6yyIQBWAEntK6PjcHzohn5rRtEwEE2cKSsyJnFGVlVu2q6eJil7YiwQgy
-         HUopStJO4ywyiZR11hUjZIsK9rqI8aC/PxEOmaNHo4oHxa/US/NSo9vtWp/JL2sx+Y/v
-         VJnA==
-X-Gm-Message-State: AGi0Puap3PbV9dPWWVGJQpC4WWVCjmUQU+IpJO+wIwuQ3BKVHFYNdbaV
-        PhNDqDZQ73UlbgSnDUF3Wrr+T09Bq9g=
-X-Google-Smtp-Source: APiQypLmycSzU09OveMAoaN3E7qGET3QfcGT8w4rAaB/cQzczJJFAKwrF5qhJVhfcIQNpmY9g+nqeQ==
-X-Received: by 2002:a2e:3612:: with SMTP id d18mr4047484lja.97.1586550366019;
-        Fri, 10 Apr 2020 13:26:06 -0700 (PDT)
-Received: from mail-lf1-f43.google.com (mail-lf1-f43.google.com. [209.85.167.43])
-        by smtp.gmail.com with ESMTPSA id a14sm1716305ljn.60.2020.04.10.13.26.03
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 10 Apr 2020 13:26:04 -0700 (PDT)
-Received: by mail-lf1-f43.google.com with SMTP id m19so2137916lfq.13
-        for <linux-kernel@vger.kernel.org>; Fri, 10 Apr 2020 13:26:03 -0700 (PDT)
-X-Received: by 2002:a05:6512:14a:: with SMTP id m10mr3550865lfo.152.1586550363330;
- Fri, 10 Apr 2020 13:26:03 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=pcawoXzVUnVmK13P4l97Pnws9LJgqOmSgo+Ma/dSWps=;
+        b=uVtsXBp8snDzSp5Ufe+SI4S0yvoYdKX2kBNZC5hSSLgg3jMf1z+noRhtFyIBN9UWSG
+         5w94ZHxoL9+IA/CRL8dK2snXZO9u/LBvQlkyWipmFiMceydl92f2pfM59YPjycFudNN4
+         YSQ0mRklRHWGzx631GnKxTs3GegczzcIXcYFNXT//6BHZ77VIdS75MWN7xTImHJ38MD8
+         65nwRjvYIzPXCTQ93gBVgRJiULGiAerSixC9SOckC3lU+cnSnT8YD43sXgdxEwK9wC00
+         C+FEpMJaQTYydzjpMf443Mik5oBY+3fLT7TdWJ+tP9SGBLru0YBHX9sKVONseRYgb+Qo
+         GKqw==
+X-Gm-Message-State: AGi0PuYQoWWIt6Sd5vJfkFX9ct5KOulfmkP8qzODhGZ729XxlBplE6JW
+        Pa/4mtXkN6i2NvJw4ApFFbr8Kg==
+X-Google-Smtp-Source: APiQypK9ltyvL2bWmmEFCII0i4yr4OAUIQsB6jy+736q8Ru3rDmgBOTO/4ND99RcHfaRdLuItB72Rw==
+X-Received: by 2002:aa7:9f98:: with SMTP id z24mr6906759pfr.122.1586550380256;
+        Fri, 10 Apr 2020 13:26:20 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id u13sm2582831pjb.45.2020.04.10.13.26.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 10 Apr 2020 13:26:19 -0700 (PDT)
+Date:   Fri, 10 Apr 2020 13:26:18 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Thadeu Lima de Souza Cascardo <cascardo@canonical.com>
+Cc:     bpf@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
+        luto@amacapital.net, wad@chromium.org, shuah@kernel.org
+Subject: Re: [PATCH] selftests/seccomp: allow clock_nanosleep instead of
+ nanosleep
+Message-ID: <202004101325.CF69610F77@keescook>
+References: <20200408235753.8566-1-cascardo@canonical.com>
 MIME-Version: 1.0
-References: <20200407072047.GA18532@amd.ucw.cz> <158624426770.4794.6070200474948860768@build.alporthouse.com>
- <20200407074841.GB18673@amd.ucw.cz>
-In-Reply-To: <20200407074841.GB18673@amd.ucw.cz>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Fri, 10 Apr 2020 13:25:47 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wixvbCie+EQ-vTPdyrzmdopM_BQc=uetneuSSa7PtCt2g@mail.gmail.com>
-Message-ID: <CAHk-=wixvbCie+EQ-vTPdyrzmdopM_BQc=uetneuSSa7PtCt2g@mail.gmail.com>
-Subject: Re: Linus, please revert 7dc8f11437: regression in 5.7-rc0, hangs
- while attempting to run X
-To:     Pavel Machek <pavel@ucw.cz>
-Cc:     Chris Wilson <chris@chris-wilson.co.uk>,
-        Dave Airlie <airlied@redhat.com>,
-        intel-gfx@lists.freedesktop.org,
-        Jani Nikula <jani.nikula@linux.intel.com>,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        kernel list <linux-kernel@vger.kernel.org>,
-        matthew.auld@intel.com, Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Peter Anvin <hpa@zytor.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200408235753.8566-1-cascardo@canonical.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 7, 2020 at 12:48 AM Pavel Machek <pavel@ucw.cz> wrote:
->
-> >
-> > Beyond the fix already submitted?
->
-> I did not get that one, can I have a pointer?
+On Wed, Apr 08, 2020 at 08:57:53PM -0300, Thadeu Lima de Souza Cascardo wrote:
+> glibc 2.31 calls clock_nanosleep when its nanosleep function is used. So
+> the restart_syscall fails after that. In order to deal with it, we trace
+> clock_nanosleep and nanosleep. Then we check for either.
+> 
+> This works just fine on systems with both glibc 2.30 and glibc 2.31,
+> whereas it failed before on a system with glibc 2.31.
+> 
+> Signed-off-by: Thadeu Lima de Souza Cascardo <cascardo@canonical.com>
 
-What's the status of this one?
+Thanks for this! I'm trying to determine if all architectures have
+__NR_clock_nanosleep ... got some test builds running now, but if it all
+builds fine, then I'll get this sent to Linus for -rc2.
 
-I'm assuming the fix is commit 721017cf4bd8 ("drm/i915/gem: Ignore
-readonly failures when updating relics"), but didn't see a reply to
-the query or a confirmation of things working..
+-Kees
 
-Btw, Chris, that __put_user() not testing the error should at least
-have a comment. We don't have a working "__must_check" for those
-things (because they are subtle macros, not functions), but if we did,
-we'd get a compiler warning for not checking the error value.
+> ---
+>  tools/testing/selftests/seccomp/seccomp_bpf.c | 14 ++++++++------
+>  1 file changed, 8 insertions(+), 6 deletions(-)
+> 
+> diff --git a/tools/testing/selftests/seccomp/seccomp_bpf.c b/tools/testing/selftests/seccomp/seccomp_bpf.c
+> index 89fb3e0b552e..c0aa46ce14f6 100644
+> --- a/tools/testing/selftests/seccomp/seccomp_bpf.c
+> +++ b/tools/testing/selftests/seccomp/seccomp_bpf.c
+> @@ -2803,12 +2803,13 @@ TEST(syscall_restart)
+>  			 offsetof(struct seccomp_data, nr)),
+>  
+>  #ifdef __NR_sigreturn
+> -		BPF_JUMP(BPF_JMP|BPF_JEQ|BPF_K, __NR_sigreturn, 6, 0),
+> +		BPF_JUMP(BPF_JMP|BPF_JEQ|BPF_K, __NR_sigreturn, 7, 0),
+>  #endif
+> -		BPF_JUMP(BPF_JMP|BPF_JEQ|BPF_K, __NR_read, 5, 0),
+> -		BPF_JUMP(BPF_JMP|BPF_JEQ|BPF_K, __NR_exit, 4, 0),
+> -		BPF_JUMP(BPF_JMP|BPF_JEQ|BPF_K, __NR_rt_sigreturn, 3, 0),
+> -		BPF_JUMP(BPF_JMP|BPF_JEQ|BPF_K, __NR_nanosleep, 4, 0),
+> +		BPF_JUMP(BPF_JMP|BPF_JEQ|BPF_K, __NR_read, 6, 0),
+> +		BPF_JUMP(BPF_JMP|BPF_JEQ|BPF_K, __NR_exit, 5, 0),
+> +		BPF_JUMP(BPF_JMP|BPF_JEQ|BPF_K, __NR_rt_sigreturn, 4, 0),
+> +		BPF_JUMP(BPF_JMP|BPF_JEQ|BPF_K, __NR_nanosleep, 5, 0),
+> +		BPF_JUMP(BPF_JMP|BPF_JEQ|BPF_K, __NR_clock_nanosleep, 4, 0),
+>  		BPF_JUMP(BPF_JMP|BPF_JEQ|BPF_K, __NR_restart_syscall, 4, 0),
+>  
+>  		/* Allow __NR_write for easy logging. */
+> @@ -2895,7 +2896,8 @@ TEST(syscall_restart)
+>  	ASSERT_EQ(PTRACE_EVENT_SECCOMP, (status >> 16));
+>  	ASSERT_EQ(0, ptrace(PTRACE_GETEVENTMSG, child_pid, NULL, &msg));
+>  	ASSERT_EQ(0x100, msg);
+> -	EXPECT_EQ(__NR_nanosleep, get_syscall(_metadata, child_pid));
+> +	ret = get_syscall(_metadata, child_pid);
+> +	EXPECT_TRUE(ret == __NR_nanosleep || ret == __NR_clock_nanosleep);
+>  
+>  	/* Might as well check siginfo for sanity while we're here. */
+>  	ASSERT_EQ(0, ptrace(PTRACE_GETSIGINFO, child_pid, NULL, &info));
+> -- 
+> 2.20.1
+> 
 
-            Linus
+-- 
+Kees Cook
