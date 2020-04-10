@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC143C2BB85
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 03:47:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71EB3C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 03:47:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 94B8F20936
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 03:47:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4A29320BED
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 03:47:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586490437;
-	bh=rcjh3l3DjFWYTa13HVk4wQSTUrOgmQ2s6RvdNQnB9Cg=;
+	s=default; t=1586490444;
+	bh=GjPeH6JpRUsDpjzBE8PwMZtO+xG1P4rvrLtffBmCaqQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=AQ+ILy9cZpq04kvMpfkJ6EniNosA0zhxYSxYYeLr8esBoDWoXy2d7nKTnsMdBg+lz
-	 M3QdFQ7cMc6LjW1YFty19+FxWv51hc6b7bj6t3+3WRSZ9XwPH0q7p0KuCjrfq3t9Bh
-	 RjVfr4Ri3nOFG23Px4KtjvF5047WYJjlFrjYMoHc=
+	b=DjkkDql2QBnycknbSEzwdwLSCnmpywLwrNT2R1fGxbA00oHsBg2R9Hhpy0skxtSoI
+	 /jMwbGDbgyoabcFNrw3TVrZX5UCsGIUsSpOd5GzE2AnuLYGiqhHOHT7X9A9Eepo1xd
+	 +PHDw6qCIA5Wo3DAfN5rWXzJxLUsECbWvlWPmNeM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727180AbgDJDrP (ORCPT
+        id S1727387AbgDJDrW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Apr 2020 23:47:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57692 "EHLO mail.kernel.org"
+        Thu, 9 Apr 2020 23:47:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58018 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727048AbgDJDrL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Apr 2020 23:47:11 -0400
+        id S1726659AbgDJDrU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Apr 2020 23:47:20 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A221920A8B;
-        Fri, 10 Apr 2020 03:47:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 99A4B20BED;
+        Fri, 10 Apr 2020 03:47:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586490431;
-        bh=rcjh3l3DjFWYTa13HVk4wQSTUrOgmQ2s6RvdNQnB9Cg=;
+        s=default; t=1586490440;
+        bh=GjPeH6JpRUsDpjzBE8PwMZtO+xG1P4rvrLtffBmCaqQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hnU9b8Kl6dn7Taxm7puHO+W5UDMzFuMwEuDW0AJKnsSDiK03xTXFyuIZLZewbBOQW
-         M3x/YEFs7qEDSmrHesQhYMaYvgH1edSQNX0T7TGRF+qFSQMN5D9UcE9/1GpSWYPe2H
-         NviBVvsuVy/QZrMYI/BMYQmQB+Gzn5bnu6vVnngs=
+        b=Zzmrkv+voMUvVzSO2njOYEC0S+rT1IZjM/wvvt2aseDX4O5Z287CFboe0F3WCOyQi
+         /fQIftpy3anwmcjoZs4dgpSbd0FRmL8g16yvo2H9Duvcfb6D0bOGvFmZq3BlTM88Du
+         WYWa0xZTAz0qM0NjHDtebqdBV9dyLFsPyTGNrmT8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
-        Paul Menzel <pmenzel@molgen.mpg.de>,
-        Bob Liu <bob.liu@oracle.com>, Song Liu <songliubraving@fb.com>,
-        Sasha Levin <sashal@kernel.org>, linux-block@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.6 29/68] block: keep bdi->io_pages in sync with max_sectors_kb for stacked devices
-Date:   Thu,  9 Apr 2020 23:45:54 -0400
-Message-Id: <20200410034634.7731-29-sashal@kernel.org>
+Cc:     Tao Zhou <ouwen210@hotmail.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Mel Gorman <mgorman@suse.de>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.6 37/68] sched/fair: Fix condition of avg_load calculation
+Date:   Thu,  9 Apr 2020 23:46:02 -0400
+Message-Id: <20200410034634.7731-37-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200410034634.7731-1-sashal@kernel.org>
 References: <20200410034634.7731-1-sashal@kernel.org>
@@ -60,46 +60,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+From: Tao Zhou <ouwen210@hotmail.com>
 
-[ Upstream commit e74d93e96d721c4297f2a900ad0191890d2fc2b0 ]
+[ Upstream commit 6c8116c914b65be5e4d6f66d69c8142eb0648c22 ]
 
-Field bdi->io_pages added in commit 9491ae4aade6 ("mm: don't cap request
-size based on read-ahead setting") removes unneeded split of read requests.
+In update_sg_wakeup_stats(), the comment says:
 
-Stacked drivers do not call blk_queue_max_hw_sectors(). Instead they set
-limits of their devices by blk_set_stacking_limits() + disk_stack_limits().
-Field bio->io_pages stays zero until user set max_sectors_kb via sysfs.
+Computing avg_load makes sense only when group is fully
+busy or overloaded.
 
-This patch updates io_pages after merging limits in disk_stack_limits().
+But, the code below this comment does not check like this.
 
-Commit c6d6e9b0f6b4 ("dm: do not allow readahead to limit IO size") fixed
-the same problem for device-mapper devices, this one fixes MD RAIDs.
+From reading the code about avg_load in other functions, I
+confirm that avg_load should be calculated in fully busy or
+overloaded case. The comment is correct and the checking
+condition is wrong. So, change that condition.
 
-Fixes: 9491ae4aade6 ("mm: don't cap request size based on read-ahead setting")
-Reviewed-by: Paul Menzel <pmenzel@molgen.mpg.de>
-Reviewed-by: Bob Liu <bob.liu@oracle.com>
-Signed-off-by: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
-Signed-off-by: Song Liu <songliubraving@fb.com>
+Fixes: 57abff067a08 ("sched/fair: Rework find_idlest_group()")
+Signed-off-by: Tao Zhou <ouwen210@hotmail.com>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Reviewed-by: Vincent Guittot <vincent.guittot@linaro.org>
+Acked-by: Mel Gorman <mgorman@suse.de>
+Link: https://lkml.kernel.org/r/Message-ID:
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- block/blk-settings.c | 3 +++
- 1 file changed, 3 insertions(+)
+ kernel/sched/fair.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/block/blk-settings.c b/block/blk-settings.c
-index c8eda2e7b91e4..be1dca0103a45 100644
---- a/block/blk-settings.c
-+++ b/block/blk-settings.c
-@@ -664,6 +664,9 @@ void disk_stack_limits(struct gendisk *disk, struct block_device *bdev,
- 		printk(KERN_NOTICE "%s: Warning: Device %s is misaligned\n",
- 		       top, bottom);
- 	}
-+
-+	t->backing_dev_info->io_pages =
-+		t->limits.max_sectors >> (PAGE_SHIFT - 9);
+diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+index c1217bfe5e819..7f895d5139948 100644
+--- a/kernel/sched/fair.c
++++ b/kernel/sched/fair.c
+@@ -8345,7 +8345,8 @@ static inline void update_sg_wakeup_stats(struct sched_domain *sd,
+ 	 * Computing avg_load makes sense only when group is fully busy or
+ 	 * overloaded
+ 	 */
+-	if (sgs->group_type < group_fully_busy)
++	if (sgs->group_type == group_fully_busy ||
++		sgs->group_type == group_overloaded)
+ 		sgs->avg_load = (sgs->group_load * SCHED_CAPACITY_SCALE) /
+ 				sgs->group_capacity;
  }
- EXPORT_SYMBOL(disk_stack_limits);
- 
 -- 
 2.20.1
 
