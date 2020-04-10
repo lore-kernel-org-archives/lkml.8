@@ -6,26 +6,26 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DF49C2D0EC
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 19:41:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC208C2BB85
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 19:41:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6057B20801
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 19:41:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B2F4F20801
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 19:41:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726843AbgDJTlb (ORCPT
+        id S1726867AbgDJTlc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Apr 2020 15:41:31 -0400
+        Fri, 10 Apr 2020 15:41:32 -0400
 Received: from ex13-edg-ou-002.vmware.com ([208.91.0.190]:36243 "EHLO
         EX13-EDG-OU-002.vmware.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726203AbgDJTl2 (ORCPT
+        by vger.kernel.org with ESMTP id S1726783AbgDJTl3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Apr 2020 15:41:28 -0400
-Received: from sc9-mailhost3.vmware.com (10.113.161.73) by
+        Fri, 10 Apr 2020 15:41:29 -0400
+Received: from sc9-mailhost2.vmware.com (10.113.161.72) by
  EX13-EDG-OU-002.vmware.com (10.113.208.156) with Microsoft SMTP Server id
- 15.0.1156.6; Fri, 10 Apr 2020 12:39:27 -0700
+ 15.0.1156.6; Fri, 10 Apr 2020 12:39:39 -0700
 Received: from sc9-mailhost3.vmware.com (unknown [10.166.69.226])
-        by sc9-mailhost3.vmware.com (Postfix) with ESMTP id 0C8B240BC0;
-        Fri, 10 Apr 2020 12:39:32 -0700 (PDT)
+        by sc9-mailhost2.vmware.com (Postfix) with ESMTP id 68E18B2D1A;
+        Fri, 10 Apr 2020 15:39:43 -0400 (EDT)
 From:   Matt Helsley <mhelsley@vmware.com>
 To:     <linux-kernel@vger.kernel.org>
 CC:     Josh Poimboeuf <jpoimboe@redhat.com>,
@@ -35,9 +35,9 @@ CC:     Josh Poimboeuf <jpoimboe@redhat.com>,
         Steven Rostedt <rostedt@goodmis.org>,
         Miroslav Benes <mbenes@suse.cz>,
         Matt Helsley <mhelsley@vmware.com>
-Subject: [RFC][PATCH 34/36] objtool: mcount: Remove wrapper for ELF relocation type
-Date:   Fri, 10 Apr 2020 12:35:57 -0700
-Message-ID: <d3f91be1b3be23c1647750fa4bdb534192d4fbb9.1586468801.git.mhelsley@vmware.com>
+Subject: [RFC][PATCH 36/36] objtool: mcount: Remove wordsized endian wrappers
+Date:   Fri, 10 Apr 2020 12:35:59 -0700
+Message-ID: <a08788c1bcb5a0a67906b15cf68a936ed48bc970.1586468801.git.mhelsley@vmware.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <cover.1586468801.git.mhelsley@vmware.com>
 References: <cover.1586468801.git.mhelsley@vmware.com>
@@ -51,70 +51,107 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Remove the last use of the Elf_Rela wrapper #defines by passing
-the size of the relocations we're dealing with as a parameter.
+Now that they're no longer used we can remove these endian wrappers.
 
 Signed-off-by: Matt Helsley <mhelsley@vmware.com>
 ---
- tools/objtool/recordmcount.c | 4 ++--
- tools/objtool/recordmcount.h | 7 ++-----
- 2 files changed, 4 insertions(+), 7 deletions(-)
+ tools/objtool/recordmcount.c | 63 ------------------------------------
+ 1 file changed, 63 deletions(-)
 
 diff --git a/tools/objtool/recordmcount.c b/tools/objtool/recordmcount.c
-index a16611a352e5..e6aa1feb234d 100644
+index 50834b065e16..fd66e26f21a8 100644
 --- a/tools/objtool/recordmcount.c
 +++ b/tools/objtool/recordmcount.c
-@@ -574,7 +574,7 @@ static int do_file(char const *const fname)
- 			is_fake_mcount = MIPS_is_fake_mcount;
- 		}
- 		loc_size = 4;
--		rc = do32(reltype);
-+		rc = do32(reltype, sizeof(Elf32_Rela));
- 		break;
- 	case ELFCLASS64: {
- 		if (lf->ehdr.e_ehsize != sizeof(Elf64_Ehdr)
-@@ -592,7 +592,7 @@ static int do_file(char const *const fname)
- 			is_fake_mcount = MIPS_is_fake_mcount;
- 		}
- 		loc_size = 8;
--		rc = do64(reltype);
-+		rc = do64(reltype, sizeof(Elf64_Rela));
- 		break;
- 	}
- 	}  /* end switch */
-diff --git a/tools/objtool/recordmcount.h b/tools/objtool/recordmcount.h
-index 7db08ad9b4a7..d116032522e1 100644
---- a/tools/objtool/recordmcount.h
-+++ b/tools/objtool/recordmcount.h
-@@ -18,18 +18,15 @@
-  * Copyright 2010 Steven Rostedt <srostedt@redhat.com>, Red Hat Inc.
-  */
- #undef do_func
--#undef Elf_Rela
+@@ -149,53 +149,6 @@ static int make_nop_arm64(struct section *txts, size_t const offset)
+ 	return 0;
+ }
  
- #ifdef RECORD_MCOUNT_64
- # define do_func		do64
--# define Elf_Rela		Elf64_Rela
- #else
- # define do_func		do32
--# define Elf_Rela		Elf32_Rela
- #endif
- 
- /* Overall supervision for Elf32 ET_REL file. */
--static int do_func(unsigned const reltype)
-+static int do_func(unsigned const reltype, size_t rela_size)
+-/* w8rev, w8nat, ...: Handle endianness. */
+-
+-static uint64_t w8rev(uint64_t const x)
+-{
+-	return   ((0xff & (x >> (0 * 8))) << (7 * 8))
+-	       | ((0xff & (x >> (1 * 8))) << (6 * 8))
+-	       | ((0xff & (x >> (2 * 8))) << (5 * 8))
+-	       | ((0xff & (x >> (3 * 8))) << (4 * 8))
+-	       | ((0xff & (x >> (4 * 8))) << (3 * 8))
+-	       | ((0xff & (x >> (5 * 8))) << (2 * 8))
+-	       | ((0xff & (x >> (6 * 8))) << (1 * 8))
+-	       | ((0xff & (x >> (7 * 8))) << (0 * 8));
+-}
+-
+-static uint32_t w4rev(uint32_t const x)
+-{
+-	return   ((0xff & (x >> (0 * 8))) << (3 * 8))
+-	       | ((0xff & (x >> (1 * 8))) << (2 * 8))
+-	       | ((0xff & (x >> (2 * 8))) << (1 * 8))
+-	       | ((0xff & (x >> (3 * 8))) << (0 * 8));
+-}
+-
+-static uint32_t w2rev(uint16_t const x)
+-{
+-	return   ((0xff & (x >> (0 * 8))) << (1 * 8))
+-	       | ((0xff & (x >> (1 * 8))) << (0 * 8));
+-}
+-
+-static uint64_t w8nat(uint64_t const x)
+-{
+-	return x;
+-}
+-
+-static uint32_t w4nat(uint32_t const x)
+-{
+-	return x;
+-}
+-
+-static uint32_t w2nat(uint16_t const x)
+-{
+-	return x;
+-}
+-
+-static uint64_t (*w8)(uint64_t);
+-static uint32_t (*w)(uint32_t);
+-static uint32_t (*w2)(uint16_t);
+-
+ /* Names of the sections that could contain calls to mcount. */
+ static int is_mcounted_section_name(char const *const txtname)
  {
- 	/* Upper bound on space: assume all relevant relocs are for mcount. */
- 	unsigned       totrelsz;
-@@ -70,7 +67,7 @@ static int do_func(unsigned const reltype)
- 		return -1;
+@@ -579,22 +532,12 @@ static int do_file(char const *const fname)
+ 		goto out;
  	}
  
--	is_rela = (sizeof(Elf_Rela) == rel_entsize);
-+	is_rela = (rela_size == rel_entsize);
- 	mc_name = is_rela
- 			? ".rela__mcount_loc"
- 			:  ".rel__mcount_loc";
+-	w = w4nat;
+-	w2 = w2nat;
+-	w8 = w8nat;
+ 	switch (lf->ehdr.e_ident[EI_DATA]) {
+-		static unsigned int const endian = 1;
+ 	default:
+ 		fprintf(stderr, "unrecognized ELF data encoding %d: %s\n",
+ 			lf->ehdr.e_ident[EI_DATA], fname);
+ 		goto out;
+ 	case ELFDATA2LSB:
+-		if (*(unsigned char const *)&endian != 1) {
+-			/* objtool is big endian, file.o is little endian. */
+-			w = w4rev;
+-			w2 = w2rev;
+-			w8 = w8rev;
+-		}
+ 		ideal_nop4_arm = ideal_nop4_arm_le;
+ 		bl_mcount_arm = bl_mcount_arm_le;
+ 		push_arm = push_arm_le;
+@@ -602,12 +545,6 @@ static int do_file(char const *const fname)
+ 		push_bl_mcount_thumb = push_bl_mcount_thumb_le;
+ 		break;
+ 	case ELFDATA2MSB:
+-		if (*(unsigned char const *)&endian != 0) {
+-			/*  objtool is little endian, file.o is big endian. */
+-			w = w4rev;
+-			w2 = w2rev;
+-			w8 = w8rev;
+-		}
+ 		ideal_nop4_arm = ideal_nop4_arm_be;
+ 		bl_mcount_arm = bl_mcount_arm_be;
+ 		push_arm = push_arm_be;
 -- 
 2.20.1
 
