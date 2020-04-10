@@ -4,52 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90068C2BB85
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 04:01:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D988C2BB86
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 04:01:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5FC8D2063A
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 04:01:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EAE8C212CC
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 04:01:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586491260;
-	bh=16VA5YD9gqxCaD7D986dD/QokR9l5L2qPbIUntmanD8=;
+	s=default; t=1586491266;
+	bh=kkvZbA2vkPiq5mVjy9hdXDb2Jqew+F4v57ty+HGHEU4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NUnHv0EcndJqN0uFnVvvUKRIblH6J8xpwckcc635tkCe6GBijpRsBvLJu+4arK0Yr
-	 8qD2w6hc1GL0/d/g2ltrvNoSF7ZSfts2epyl0sdfCephjpYA1e1Ou9YMEOFTuaafVi
-	 vStsvUJcNQgKrTlCAyR4lXFD+ft49ZnUYB0T+J2U=
+	b=N58nmQN1u20IOTpU5/u+7EHOk6/vc7RqknE1gDANpfDrDIrplK7E/A8tMcIm9Gw89
+	 annv50xdaWFOeTMrF6f/2PVIkLKez79lJsUQh32zIiFnDtNfncxQWD7UyQHqijJxR6
+	 TPKW/yctV3kMJzpRrIy2GypRA8q5/BtrquE1XUFk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727841AbgDJDrn (ORCPT
+        id S1727789AbgDJDrj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Apr 2020 23:47:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58572 "EHLO mail.kernel.org"
+        Thu, 9 Apr 2020 23:47:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58412 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727800AbgDJDrl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Apr 2020 23:47:41 -0400
+        id S1727699AbgDJDrc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Apr 2020 23:47:32 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 91A2C20936;
-        Fri, 10 Apr 2020 03:47:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 48DEC20CC7;
+        Fri, 10 Apr 2020 03:47:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586490460;
-        bh=16VA5YD9gqxCaD7D986dD/QokR9l5L2qPbIUntmanD8=;
+        s=default; t=1586490452;
+        bh=kkvZbA2vkPiq5mVjy9hdXDb2Jqew+F4v57ty+HGHEU4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fsPvj1kk/F2hs2LOu6P24mUbyxjsat4AvkV5GGM1Kl8bT/71d815X2eV6h4/ZjjHp
-         B+YZ71gvcNJ7UNSsC7dy/ZAT1IWt1kypayWT+WXG/5FO2RmMni+MKvPb3jNla9UVB8
-         z5XuLZlExxPXNM/sCAMRTGBk4IMk1drGGBX2uinE=
+        b=X/c6OG+6b3/oMHFuMrQQzIWi60l7XmEh4b7Iv+0ITEVmOTIWB39bzsIWMnT6fNreN
+         9rD/fj+fZsTzlwCZX410zSKdke3pyCgxycAPGC4+J0loA7+GatKpyLkcRCTTTSgAxN
+         JlVwxOCqXyHeAEnPDJLylAvpq4Bzlxmrv0985650=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Hsin-Yi Wang <hsinyi@chromium.org>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.6 54/68] media: mtk-vpu: avoid unaligned access to DTCM buffer.
-Date:   Thu,  9 Apr 2020 23:46:19 -0400
-Message-Id: <20200410034634.7731-54-sashal@kernel.org>
+Cc:     Arvind Sankar <nivedita@alum.mit.edu>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.6 48/68] x86/boot: Use unsigned comparison for addresses
+Date:   Thu,  9 Apr 2020 23:46:13 -0400
+Message-Id: <20200410034634.7731-48-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200410034634.7731-1-sashal@kernel.org>
 References: <20200410034634.7731-1-sashal@kernel.org>
@@ -62,247 +59,69 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hsin-Yi Wang <hsinyi@chromium.org>
+From: Arvind Sankar <nivedita@alum.mit.edu>
 
-[ Upstream commit e6599adfad30c340d06574e49a86afa7015c5c60 ]
+[ Upstream commit 81a34892c2c7c809f9c4e22c5ac936ae673fb9a2 ]
 
-Previously, vpu->recv_buf and send_buf are forced cast from
-void __iomem *tcm. vpu->recv_buf->share_buf is passed to
-vpu_ipi_desc.handler(). It's not able to do unaligned access. Otherwise
-kernel would crash due to unable to handle kernel paging request.
+The load address is compared with LOAD_PHYSICAL_ADDR using a signed
+comparison currently (using jge instruction).
 
-struct vpu_run {
-	u32 signaled;
-	char fw_ver[VPU_FW_VER_LEN];
-	unsigned int	dec_capability;
-	unsigned int	enc_capability;
-	wait_queue_head_t wq;
-};
+When loading a 64-bit kernel using the new efi32_pe_entry() point added by:
 
-fw_ver starts at 4 byte boundary. If system enables
-CONFIG_HAVE_EFFICIENT_UNALIGNED_ACCESS, strscpy() will do
-read_word_at_a_time(), which tries to read 8-byte: *(unsigned long *)addr
+  97aa276579b2 ("efi/x86: Add true mixed mode entry point into .compat section")
 
-vpu_init_ipi_handler() calls strscpy(), which would lead to crash.
+using Qemu with -m 3072, the firmware actually loads us above 2Gb,
+resulting in a very early crash.
 
-vpu_init_ipi_handler() and several other handlers (eg.
-vpu_dec_ipi_handler) only do read access to this data, so they can be
-const, and we can use memcpy_fromio() to copy the buf to another non iomem
-buffer then pass to handler.
+Use the JAE instruction to perform a unsigned comparison instead, as physical
+addresses should be considered unsigned.
 
-Fixes: 85709cbf1524 ("media: replace strncpy() by strscpy()")
-Signed-off-by: Hsin-Yi Wang <hsinyi@chromium.org>
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Signed-off-by: Arvind Sankar <nivedita@alum.mit.edu>
+Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Link: https://lore.kernel.org/r/20200301230436.2246909-6-nivedita@alum.mit.edu
+Link: https://lore.kernel.org/r/20200308080859.21568-14-ardb@kernel.org
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/platform/mtk-mdp/mtk_mdp_vpu.c  |  9 ++--
- .../media/platform/mtk-vcodec/vdec_vpu_if.c   |  6 +--
- .../media/platform/mtk-vcodec/venc_vpu_if.c   | 12 ++---
- drivers/media/platform/mtk-vpu/mtk_vpu.c      | 45 ++++++++++---------
- drivers/media/platform/mtk-vpu/mtk_vpu.h      |  2 +-
- 5 files changed, 38 insertions(+), 36 deletions(-)
+ arch/x86/boot/compressed/head_32.S | 2 +-
+ arch/x86/boot/compressed/head_64.S | 4 ++--
+ 2 files changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/media/platform/mtk-mdp/mtk_mdp_vpu.c b/drivers/media/platform/mtk-mdp/mtk_mdp_vpu.c
-index 6720d11f50cf6..b065ccd069140 100644
---- a/drivers/media/platform/mtk-mdp/mtk_mdp_vpu.c
-+++ b/drivers/media/platform/mtk-mdp/mtk_mdp_vpu.c
-@@ -15,7 +15,7 @@ static inline struct mtk_mdp_ctx *vpu_to_ctx(struct mtk_mdp_vpu *vpu)
- 	return container_of(vpu, struct mtk_mdp_ctx, vpu);
- }
- 
--static void mtk_mdp_vpu_handle_init_ack(struct mdp_ipi_comm_ack *msg)
-+static void mtk_mdp_vpu_handle_init_ack(const struct mdp_ipi_comm_ack *msg)
- {
- 	struct mtk_mdp_vpu *vpu = (struct mtk_mdp_vpu *)
- 					(unsigned long)msg->ap_inst;
-@@ -26,10 +26,11 @@ static void mtk_mdp_vpu_handle_init_ack(struct mdp_ipi_comm_ack *msg)
- 	vpu->inst_addr = msg->vpu_inst_addr;
- }
- 
--static void mtk_mdp_vpu_ipi_handler(void *data, unsigned int len, void *priv)
-+static void mtk_mdp_vpu_ipi_handler(const void *data, unsigned int len,
-+				    void *priv)
- {
--	unsigned int msg_id = *(unsigned int *)data;
--	struct mdp_ipi_comm_ack *msg = (struct mdp_ipi_comm_ack *)data;
-+	const struct mdp_ipi_comm_ack *msg = data;
-+	unsigned int msg_id = msg->msg_id;
- 	struct mtk_mdp_vpu *vpu = (struct mtk_mdp_vpu *)
- 					(unsigned long)msg->ap_inst;
- 	struct mtk_mdp_ctx *ctx;
-diff --git a/drivers/media/platform/mtk-vcodec/vdec_vpu_if.c b/drivers/media/platform/mtk-vcodec/vdec_vpu_if.c
-index 70abfd4cd4b9f..948a12fd9d46a 100644
---- a/drivers/media/platform/mtk-vcodec/vdec_vpu_if.c
-+++ b/drivers/media/platform/mtk-vcodec/vdec_vpu_if.c
-@@ -9,7 +9,7 @@
- #include "vdec_ipi_msg.h"
- #include "vdec_vpu_if.h"
- 
--static void handle_init_ack_msg(struct vdec_vpu_ipi_init_ack *msg)
-+static void handle_init_ack_msg(const struct vdec_vpu_ipi_init_ack *msg)
- {
- 	struct vdec_vpu_inst *vpu = (struct vdec_vpu_inst *)
- 					(unsigned long)msg->ap_inst_addr;
-@@ -34,9 +34,9 @@ static void handle_init_ack_msg(struct vdec_vpu_ipi_init_ack *msg)
-  * This function runs in interrupt context and it means there's an IPI MSG
-  * from VPU.
-  */
--static void vpu_dec_ipi_handler(void *data, unsigned int len, void *priv)
-+static void vpu_dec_ipi_handler(const void *data, unsigned int len, void *priv)
- {
--	struct vdec_vpu_ipi_ack *msg = data;
-+	const struct vdec_vpu_ipi_ack *msg = data;
- 	struct vdec_vpu_inst *vpu = (struct vdec_vpu_inst *)
- 					(unsigned long)msg->ap_inst_addr;
- 
-diff --git a/drivers/media/platform/mtk-vcodec/venc_vpu_if.c b/drivers/media/platform/mtk-vcodec/venc_vpu_if.c
-index 3e931b0ed0965..9540709c19058 100644
---- a/drivers/media/platform/mtk-vcodec/venc_vpu_if.c
-+++ b/drivers/media/platform/mtk-vcodec/venc_vpu_if.c
-@@ -8,26 +8,26 @@
- #include "venc_ipi_msg.h"
- #include "venc_vpu_if.h"
- 
--static void handle_enc_init_msg(struct venc_vpu_inst *vpu, void *data)
-+static void handle_enc_init_msg(struct venc_vpu_inst *vpu, const void *data)
- {
--	struct venc_vpu_ipi_msg_init *msg = data;
-+	const struct venc_vpu_ipi_msg_init *msg = data;
- 
- 	vpu->inst_addr = msg->vpu_inst_addr;
- 	vpu->vsi = vpu_mapping_dm_addr(vpu->dev, msg->vpu_inst_addr);
- }
- 
--static void handle_enc_encode_msg(struct venc_vpu_inst *vpu, void *data)
-+static void handle_enc_encode_msg(struct venc_vpu_inst *vpu, const void *data)
- {
--	struct venc_vpu_ipi_msg_enc *msg = data;
-+	const struct venc_vpu_ipi_msg_enc *msg = data;
- 
- 	vpu->state = msg->state;
- 	vpu->bs_size = msg->bs_size;
- 	vpu->is_key_frm = msg->is_key_frm;
- }
- 
--static void vpu_enc_ipi_handler(void *data, unsigned int len, void *priv)
-+static void vpu_enc_ipi_handler(const void *data, unsigned int len, void *priv)
- {
--	struct venc_vpu_ipi_msg_common *msg = data;
-+	const struct venc_vpu_ipi_msg_common *msg = data;
- 	struct venc_vpu_inst *vpu =
- 		(struct venc_vpu_inst *)(unsigned long)msg->venc_inst;
- 
-diff --git a/drivers/media/platform/mtk-vpu/mtk_vpu.c b/drivers/media/platform/mtk-vpu/mtk_vpu.c
-index a768707abb942..2fbccc9b247b0 100644
---- a/drivers/media/platform/mtk-vpu/mtk_vpu.c
-+++ b/drivers/media/platform/mtk-vpu/mtk_vpu.c
-@@ -203,8 +203,8 @@ struct mtk_vpu {
- 	struct vpu_run run;
- 	struct vpu_wdt wdt;
- 	struct vpu_ipi_desc ipi_desc[IPI_MAX];
--	struct share_obj *recv_buf;
--	struct share_obj *send_buf;
-+	struct share_obj __iomem *recv_buf;
-+	struct share_obj __iomem *send_buf;
- 	struct device *dev;
- 	struct clk *clk;
- 	bool fw_loaded;
-@@ -292,7 +292,7 @@ int vpu_ipi_send(struct platform_device *pdev,
- 		 unsigned int len)
- {
- 	struct mtk_vpu *vpu = platform_get_drvdata(pdev);
--	struct share_obj *send_obj = vpu->send_buf;
-+	struct share_obj __iomem *send_obj = vpu->send_buf;
- 	unsigned long timeout;
- 	int ret = 0;
- 
-@@ -325,9 +325,9 @@ int vpu_ipi_send(struct platform_device *pdev,
- 		}
- 	} while (vpu_cfg_readl(vpu, HOST_TO_VPU));
- 
--	memcpy((void *)send_obj->share_buf, buf, len);
--	send_obj->len = len;
--	send_obj->id = id;
-+	memcpy_toio(send_obj->share_buf, buf, len);
-+	writel(len, &send_obj->len);
-+	writel(id, &send_obj->id);
- 
- 	vpu->ipi_id_ack[id] = false;
- 	/* send the command to VPU */
-@@ -600,10 +600,10 @@ int vpu_load_firmware(struct platform_device *pdev)
- }
- EXPORT_SYMBOL_GPL(vpu_load_firmware);
- 
--static void vpu_init_ipi_handler(void *data, unsigned int len, void *priv)
-+static void vpu_init_ipi_handler(const void *data, unsigned int len, void *priv)
- {
--	struct mtk_vpu *vpu = (struct mtk_vpu *)priv;
--	struct vpu_run *run = (struct vpu_run *)data;
-+	struct mtk_vpu *vpu = priv;
-+	const struct vpu_run *run = data;
- 
- 	vpu->run.signaled = run->signaled;
- 	strscpy(vpu->run.fw_ver, run->fw_ver, sizeof(vpu->run.fw_ver));
-@@ -700,19 +700,21 @@ static int vpu_alloc_ext_mem(struct mtk_vpu *vpu, u32 fw_type)
- 
- static void vpu_ipi_handler(struct mtk_vpu *vpu)
- {
--	struct share_obj *rcv_obj = vpu->recv_buf;
-+	struct share_obj __iomem *rcv_obj = vpu->recv_buf;
- 	struct vpu_ipi_desc *ipi_desc = vpu->ipi_desc;
--
--	if (rcv_obj->id < IPI_MAX && ipi_desc[rcv_obj->id].handler) {
--		ipi_desc[rcv_obj->id].handler(rcv_obj->share_buf,
--					      rcv_obj->len,
--					      ipi_desc[rcv_obj->id].priv);
--		if (rcv_obj->id > IPI_VPU_INIT) {
--			vpu->ipi_id_ack[rcv_obj->id] = true;
-+	unsigned char data[SHARE_BUF_SIZE];
-+	s32 id = readl(&rcv_obj->id);
-+
-+	memcpy_fromio(data, rcv_obj->share_buf, sizeof(data));
-+	if (id < IPI_MAX && ipi_desc[id].handler) {
-+		ipi_desc[id].handler(data, readl(&rcv_obj->len),
-+				     ipi_desc[id].priv);
-+		if (id > IPI_VPU_INIT) {
-+			vpu->ipi_id_ack[id] = true;
- 			wake_up(&vpu->ack_wq);
- 		}
- 	} else {
--		dev_err(vpu->dev, "No such ipi id = %d\n", rcv_obj->id);
-+		dev_err(vpu->dev, "No such ipi id = %d\n", id);
- 	}
- }
- 
-@@ -722,11 +724,10 @@ static int vpu_ipi_init(struct mtk_vpu *vpu)
- 	vpu_cfg_writel(vpu, 0x0, VPU_TO_HOST);
- 
- 	/* shared buffer initialization */
--	vpu->recv_buf = (__force struct share_obj *)(vpu->reg.tcm +
--						     VPU_DTCM_OFFSET);
-+	vpu->recv_buf = vpu->reg.tcm + VPU_DTCM_OFFSET;
- 	vpu->send_buf = vpu->recv_buf + 1;
--	memset(vpu->recv_buf, 0, sizeof(struct share_obj));
--	memset(vpu->send_buf, 0, sizeof(struct share_obj));
-+	memset_io(vpu->recv_buf, 0, sizeof(struct share_obj));
-+	memset_io(vpu->send_buf, 0, sizeof(struct share_obj));
- 
- 	return 0;
- }
-diff --git a/drivers/media/platform/mtk-vpu/mtk_vpu.h b/drivers/media/platform/mtk-vpu/mtk_vpu.h
-index d4453b4bcee92..ee7c552ce9289 100644
---- a/drivers/media/platform/mtk-vpu/mtk_vpu.h
-+++ b/drivers/media/platform/mtk-vpu/mtk_vpu.h
-@@ -15,7 +15,7 @@
-  * VPU interfaces with other blocks by share memory and interrupt.
-  **/
- 
--typedef void (*ipi_handler_t) (void *data,
-+typedef void (*ipi_handler_t) (const void *data,
- 			       unsigned int len,
- 			       void *priv);
- 
+diff --git a/arch/x86/boot/compressed/head_32.S b/arch/x86/boot/compressed/head_32.S
+index 73f17d0544dd5..7f7e8b8518fec 100644
+--- a/arch/x86/boot/compressed/head_32.S
++++ b/arch/x86/boot/compressed/head_32.S
+@@ -106,7 +106,7 @@ SYM_FUNC_START(startup_32)
+ 	notl	%eax
+ 	andl    %eax, %ebx
+ 	cmpl	$LOAD_PHYSICAL_ADDR, %ebx
+-	jge	1f
++	jae	1f
+ #endif
+ 	movl	$LOAD_PHYSICAL_ADDR, %ebx
+ 1:
+diff --git a/arch/x86/boot/compressed/head_64.S b/arch/x86/boot/compressed/head_64.S
+index 1f1f6c8139b38..afde2aa8382e9 100644
+--- a/arch/x86/boot/compressed/head_64.S
++++ b/arch/x86/boot/compressed/head_64.S
+@@ -106,7 +106,7 @@ SYM_FUNC_START(startup_32)
+ 	notl	%eax
+ 	andl	%eax, %ebx
+ 	cmpl	$LOAD_PHYSICAL_ADDR, %ebx
+-	jge	1f
++	jae	1f
+ #endif
+ 	movl	$LOAD_PHYSICAL_ADDR, %ebx
+ 1:
+@@ -296,7 +296,7 @@ SYM_CODE_START(startup_64)
+ 	notq	%rax
+ 	andq	%rax, %rbp
+ 	cmpq	$LOAD_PHYSICAL_ADDR, %rbp
+-	jge	1f
++	jae	1f
+ #endif
+ 	movq	$LOAD_PHYSICAL_ADDR, %rbp
+ 1:
 -- 
 2.20.1
 
