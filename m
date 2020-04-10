@@ -4,54 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A76C2C2BB86
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 03:48:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EF4DC2D0EC
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 03:48:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8147920BED
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 03:48:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DC8F720BED
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 03:48:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586490498;
-	bh=zndEF5nbEyrafOSfKLd+VqjCVDUNvwtQObFN7ypRggA=;
+	s=default; t=1586490500;
+	bh=4FfjHUzoXOQuHsFmCwjdJHNFyyAOjk/AM8IR/EFRMnM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1lXkucAOX2hIQjyWYRAa8RQJDYvLQa1jcUF5zZyufCTd2hJxBLRZ9bj8+krFwPy3l
-	 h6gP/ibd3gaU0689Mj/c/DQXtukvg/Azje1qGj0fVzKYxd+tVPlmI+KbKIyTfWAqTi
-	 mOkiY1Hc2I96nNTRssXs/wh3VxR0v37r0rj0LpJ8=
+	b=QibyoExrqbTnAIiTJsJcdijSJ/70dgTs0wi1nL6LIwnBTnx3EppUCXdGrWNN6rcvy
+	 V/IcE9Wn5ANQGhok0KB01MS9c7zQrHqkLKEOOIofrNdirKAStwFV4EGDkMKslTdaYL
+	 VholFdbrs/4/QK/sU4Bv8Ovz4ZQxQmUrnf6s9B+o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728114AbgDJDsR (ORCPT
+        id S1728134AbgDJDsT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Apr 2020 23:48:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59488 "EHLO mail.kernel.org"
+        Thu, 9 Apr 2020 23:48:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59512 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728086AbgDJDsO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Apr 2020 23:48:14 -0400
+        id S1726684AbgDJDsQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Apr 2020 23:48:16 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4D6AF20936;
-        Fri, 10 Apr 2020 03:48:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CB77A21473;
+        Fri, 10 Apr 2020 03:48:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586490494;
-        bh=zndEF5nbEyrafOSfKLd+VqjCVDUNvwtQObFN7ypRggA=;
+        s=default; t=1586490495;
+        bh=4FfjHUzoXOQuHsFmCwjdJHNFyyAOjk/AM8IR/EFRMnM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XedX5TzBrbXu5gcy6jnx0XaJVFYJj8cI5QD4hl0Q4Xof7JwltC4qECDiffU+jTYX6
-         XmVUPBtG+Je+G431nuGSKpibgEfck7+0YY0hOcaHT4tDvOJbIHGM+Ccb1DsAcQuQA7
-         4j97ER2rOyifbhH4z/wm8EGGpS3MgPV+0iZdBWOQ=
+        b=rEKgPRhEzmQMazvEKBDDjz7vetyHuO6cfPtvFsmePtb2ww8rn4bnom4cw2r2paL8K
+         xAy5zs+LIkL76JrBsFQjdtQdAex44dXC35InrKSt28iT9OVzvb3VOuns/O3jtRxxKq
+         KxWjpoOsITVdwwxF2z7GwLBf57KN+gOrzXwWbFnY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Bart Van Assche <bvanassche@acm.org>,
-        Ming Lei <ming.lei@redhat.com>,
-        Keith Busch <kbusch@kernel.org>,
+        Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>,
         Johannes Thumshirn <jth@kernel.org>,
         Hannes Reinecke <hare@suse.com>,
+        Ming Lei <ming.lei@redhat.com>,
         Christoph Hellwig <hch@infradead.org>,
         Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>,
         linux-block@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.5 11/56] blk-mq: Fix a recently introduced regression in blk_mq_realloc_hw_ctxs()
-Date:   Thu,  9 Apr 2020 23:47:15 -0400
-Message-Id: <20200410034800.8381-11-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.5 12/56] null_blk: Handle null_add_dev() failures properly
+Date:   Thu,  9 Apr 2020 23:47:16 -0400
+Message-Id: <20200410034800.8381-12-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200410034800.8381-1-sashal@kernel.org>
 References: <20200410034800.8381-1-sashal@kernel.org>
@@ -66,61 +66,60 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Bart Van Assche <bvanassche@acm.org>
 
-[ Upstream commit d0930bb8f46b8fb4a7d429c0bf1c91b3ed00a7cf ]
+[ Upstream commit 9b03b713082a31a5b90e0a893c72aa620e255c26 ]
 
-q->nr_hw_queues must only be updated once it is known that
-blk_mq_realloc_hw_ctxs() has succeeded. Otherwise it can happen that
-reallocation fails and that q->nr_hw_queues is larger than the number of
-allocated hardware queues. This patch fixes the following crash if
-increasing the number of hardware queues fails:
+If null_add_dev() fails then null_del_dev() is called with a NULL argument.
+Make null_del_dev() handle this scenario correctly. This patch fixes the
+following KASAN complaint:
 
-BUG: KASAN: null-ptr-deref in blk_mq_map_swqueue+0x775/0x810
-Write of size 8 at addr 0000000000000118 by task check/977
+null-ptr-deref in null_del_dev+0x28/0x280 [null_blk]
+Read of size 8 at addr 0000000000000000 by task find/1062
 
-CPU: 3 PID: 977 Comm: check Not tainted 5.6.0-rc1-dbg+ #8
-Hardware name: Bochs Bochs, BIOS Bochs 01/01/2011
 Call Trace:
  dump_stack+0xa5/0xe6
  __kasan_report.cold+0x65/0x99
  kasan_report+0x16/0x20
- check_memory_region+0x140/0x1b0
- memset+0x28/0x40
- blk_mq_map_swqueue+0x775/0x810
- blk_mq_update_nr_hw_queues+0x468/0x710
- nullb_device_submit_queues_store+0xf7/0x1a0 [null_blk]
- configfs_write_file+0x1c4/0x250 [configfs]
- __vfs_write+0x4c/0x90
- vfs_write+0x145/0x2c0
- ksys_write+0xd7/0x180
- __x64_sys_write+0x47/0x50
+ __asan_load8+0x58/0x90
+ null_del_dev+0x28/0x280 [null_blk]
+ nullb_group_drop_item+0x7e/0xa0 [null_blk]
+ client_drop_item+0x53/0x80 [configfs]
+ configfs_rmdir+0x395/0x4e0 [configfs]
+ vfs_rmdir+0xb6/0x220
+ do_rmdir+0x238/0x2c0
+ __x64_sys_unlinkat+0x75/0x90
  do_syscall_64+0x6f/0x2f0
  entry_SYSCALL_64_after_hwframe+0x49/0xbe
 
-Fixes: ac0d6b926e74 ("block: Reduce the amount of memory required per request queue")
 Signed-off-by: Bart Van Assche <bvanassche@acm.org>
-Reviewed-by: Ming Lei <ming.lei@redhat.com>
-Cc: Keith Busch <kbusch@kernel.org>
+Reviewed-by: Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>
 Cc: Johannes Thumshirn <jth@kernel.org>
 Cc: Hannes Reinecke <hare@suse.com>
+Cc: Ming Lei <ming.lei@redhat.com>
 Cc: Christoph Hellwig <hch@infradead.org>
 Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- block/blk-mq.c | 1 -
- 1 file changed, 1 deletion(-)
+ drivers/block/null_blk_main.c | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
-diff --git a/block/blk-mq.c b/block/blk-mq.c
-index 329df7986bf60..51ff4852d34bc 100644
---- a/block/blk-mq.c
-+++ b/block/blk-mq.c
-@@ -2766,7 +2766,6 @@ static void blk_mq_realloc_hw_ctxs(struct blk_mq_tag_set *set,
- 			memcpy(new_hctxs, hctxs, q->nr_hw_queues *
- 			       sizeof(*hctxs));
- 		q->queue_hw_ctx = new_hctxs;
--		q->nr_hw_queues = set->nr_hw_queues;
- 		kfree(hctxs);
- 		hctxs = new_hctxs;
- 	}
+diff --git a/drivers/block/null_blk_main.c b/drivers/block/null_blk_main.c
+index 97bb53d7fa348..635904bfcf777 100644
+--- a/drivers/block/null_blk_main.c
++++ b/drivers/block/null_blk_main.c
+@@ -1432,7 +1432,12 @@ static void cleanup_queues(struct nullb *nullb)
+ 
+ static void null_del_dev(struct nullb *nullb)
+ {
+-	struct nullb_device *dev = nullb->dev;
++	struct nullb_device *dev;
++
++	if (!nullb)
++		return;
++
++	dev = nullb->dev;
+ 
+ 	ida_simple_remove(&nullb_indexes, nullb->index);
+ 
 -- 
 2.20.1
 
