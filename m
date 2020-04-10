@@ -4,125 +4,108 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7094DC2BA2B
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 09:56:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BCE43C2BB55
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 10:03:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4D8B220801
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 09:56:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9918A20753
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 10:03:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726203AbgDJJ4f (ORCPT
+        id S1726080AbgDJKDD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Apr 2020 05:56:35 -0400
-Received: from mout.kundenserver.de ([212.227.17.10]:53153 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726111AbgDJJ4f (ORCPT
+        Fri, 10 Apr 2020 06:03:03 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:60105 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725861AbgDJKDD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Apr 2020 05:56:35 -0400
-Received: from mail-qv1-f46.google.com ([209.85.219.46]) by
- mrelayeu.kundenserver.de (mreue108 [212.227.15.145]) with ESMTPSA (Nemesis)
- id 1MTiLj-1jqnSZ2iz7-00U6HF for <linux-kernel@vger.kernel.org>; Fri, 10 Apr
- 2020 11:56:34 +0200
-Received: by mail-qv1-f46.google.com with SMTP id q73so706294qvq.2
-        for <linux-kernel@vger.kernel.org>; Fri, 10 Apr 2020 02:56:34 -0700 (PDT)
-X-Gm-Message-State: AGi0PuYBcsuhhGiFyV0b3zM52lgqMhGjkfPJABoOB3v5TZflnswZFexa
-        vzhoQ4Qba10YwDgyPQSSTLQ+5X8QP4P5HCh51ys=
-X-Google-Smtp-Source: APiQypLw2PXwmHxk8QgHqeU3RcBbtV6euI1esOFx9zEJPY5o7F0Ij0rYCC5ouON3eLKeJevW89lM7yEDk3rY7mzaHVE=
-X-Received: by 2002:a0c:fc03:: with SMTP id z3mr4142553qvo.210.1586512593511;
- Fri, 10 Apr 2020 02:56:33 -0700 (PDT)
+        Fri, 10 Apr 2020 06:03:03 -0400
+Received: from mail-wm1-f71.google.com ([209.85.128.71])
+        by youngberry.canonical.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <andrea.righi@canonical.com>)
+        id 1jMqV4-0003SV-Aq
+        for linux-kernel@vger.kernel.org; Fri, 10 Apr 2020 10:03:02 +0000
+Received: by mail-wm1-f71.google.com with SMTP id f8so640841wmh.4
+        for <linux-kernel@vger.kernel.org>; Fri, 10 Apr 2020 03:03:02 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition;
+        bh=Z3P5ra7nIgSjErTUHVmG2gVsvgQADuW5sfZ4PtTp618=;
+        b=GxWkhB7Wy3Igiw72UkP/nkR3jq7za2kszsrQbmj7XiWYv+0Ks8cQrhS1ovGSbs9iq8
+         NQAuP8vwlPzU2OXvBNH6qihzfUc0msP+FxRulgWSwTfVOvKMfwvkdYCmZx4OzZlWbyjc
+         7aDwOlk/l1XtsE6UE1b+WoNQGegT3ccHqroiKLwfMln6EmJjqjmttuTkpmh9ss7n3Yck
+         rZyBn1nUS6Aw+g9a4W239JaYFZhl7yC24HWnGJcRYE9v3AKu66G/kkESdBmZ4aDnVOcN
+         KhztPdwtKSizOYkXy7mn3gwdzqgcX5GwH5mEwpwUNwF8a2GDYjk9+fymcnX9xqqcuOZC
+         GsyA==
+X-Gm-Message-State: AGi0PubGlsb8qfDZoVoJcYaWDbf18FfMomsW8ZkqOJyMhaApca+3hYFZ
+        XjRs4uPJ3N4HYS9lv3YNFL9uDSWYBnZlf/PL6ELuWO9bH6iIT4lNbJNSJPviDYABVnd07KreDt0
+        mjC2DlM4tq3j2JAkfJHdH2U9XSKC6bZ60tnKeDltmRQ==
+X-Received: by 2002:a1c:6787:: with SMTP id b129mr4574991wmc.165.1586512981979;
+        Fri, 10 Apr 2020 03:03:01 -0700 (PDT)
+X-Google-Smtp-Source: APiQypJk4lRxcFGUzlhlWkYg2asplSW+TWRRfdgc31OMNALo4BRjm4RdCfBoPSErXWDJWfmQ9WWwhQ==
+X-Received: by 2002:a1c:6787:: with SMTP id b129mr4574957wmc.165.1586512981640;
+        Fri, 10 Apr 2020 03:03:01 -0700 (PDT)
+Received: from localhost (host123-127-dynamic.36-79-r.retail.telecomitalia.it. [79.36.127.123])
+        by smtp.gmail.com with ESMTPSA id k84sm2243972wmk.2.2020.04.10.03.03.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 10 Apr 2020 03:03:01 -0700 (PDT)
+Date:   Fri, 10 Apr 2020 12:02:59 +0200
+From:   Andrea Righi <andrea.righi@canonical.com>
+To:     Shuah Khan <shuah@kernel.org>
+Cc:     Kees Cook <keescook@chromium.org>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Will Drewry <wad@chromium.org>,
+        linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] kselftest/runner: allow to properly deliver signals to tests
+Message-ID: <20200410100259.GA457752@xps-13>
 MIME-Version: 1.0
-References: <20200409232728.231527-1-caij2003@gmail.com>
-In-Reply-To: <20200409232728.231527-1-caij2003@gmail.com>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Fri, 10 Apr 2020 11:56:16 +0200
-X-Gmail-Original-Message-ID: <CAK8P3a3uj7AHbAo4sNzr6KQx5Fk6v99k4ZixCgKo1tUuGoat9Q@mail.gmail.com>
-Message-ID: <CAK8P3a3uj7AHbAo4sNzr6KQx5Fk6v99k4ZixCgKo1tUuGoat9Q@mail.gmail.com>
-Subject: Re: [PATCH] ARM: do not assemble iwmmxt.S with LLVM toolchain
-To:     Jian Cai <caij2003@gmail.com>
-Cc:     Nick Desaulniers <ndesaulniers@google.com>,
-        Manoj Gupta <manojgupta@google.com>, Peter.Smith@arm.com,
-        Stefan Agner <stefan@agner.ch>,
-        Sami Tolvanen <samitolvanen@google.com>,
-        Ilie Halip <ilie.halip@gmail.com>, jiancai@google.com,
-        Russell King <linux@armlinux.org.uk>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Doug Anderson <armlinux@m.disordat.com>,
-        Benjamin Gaignard <benjamin.gaignard@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Tejun Heo <tj@kernel.org>,
-        "Joel Fernandes (Google)" <joel@joelfernandes.org>,
-        Patrick Bellasi <patrick.bellasi@arm.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        David Howells <dhowells@redhat.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:1Dxc3cpHZpOhCp274aTD5GzKXjubUve7Eh+PYVOqYWehQcDvLa2
- tQKllDt7QZVaGFwp27Zg2pkp+AaVPCibj8ggY2ERd3E7sZOD6kMtiGAxBor/ix0Q2vosc5F
- gtqtkLa9Be7JXxK1cmkk0WSwB3D6hDZOLBMOmBLAGe/x9KRNtJhjxp/No+oXnomsK/k4muo
- 3Y/plueMV+7bSX0ADYVCQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:WsMgX1qVOp4=:bveoDfjzjuN06LRP63iTfC
- 3okN6nIRfPjZCxpyXH2nhJjHj1HeCRYCdQSgAdI7s1Vf/KDuG9Mqv6MIK+X6BemXEfZ0SV2Yo
- AO7gkqPrPj81o7SgDON66kXiLGf1mBUhQ+i9NhI3B3VrxR0EFyCcKzueqps3YbbvZgr2h3PVc
- 9CSLqUkYxTbahoTC8WqbHWYVXE8t2JJZe+o6QTvJH4aRoFAJAizWmdP7YvMB1lbQrmhg1gH7q
- uWpQ+M+1HJhEmwPngSyTnWbZ1BMOSGoZiImj8eougrBCZiEOsbKmEi6wtFUmalz1SQZavxrIg
- /FNUTvzFveR3fQA85v0J2kuQgxqPXvnlS7SZSbODUJqJrLLVZbfR1WRtmr9iqvBEp0im2MNzg
- WlEsHKRHEqv4OgHi/2fOphlJ+9MnFJ/7ZQqf+ElZt4vf5TEowlUidHZGYLiW6w0/Ko1Ou6lqk
- lHLh3oo/dorigj7HtCJTNCaFUDsR943dNffQD633dRTbVfk9KN7TOHjrFrFofnpV6ZIandXwP
- JCfB0Mn6m1eon0qjdvBDMCUngmgvnorYVVaVU97qs4m/7ZWamZT2Tm6N2ettQ2+3bN+lqvGPI
- Yqy7qqgKUIwzLs78UQ/OhTpn4n6fnAhw2stoBOOyc/XK0K1u5B8D/vtEaUoRAyGQk1lFHTIbS
- mAoE5+mPFpxUTcb+oaZ1/L9ayTq6ql56vdFtXPTpv0WwRHtpOQnWHFn/aSrPibtXBdxlaEyXn
- EpVzPVefpH66pxladF67ibSuHKJS/mSBr8D04iXcHefBJI0kdy3MiR+RTZQEIbL5CVqxazb38
- EvlrvVw88P5eX+7OYlOWWSA6pYFxlXQD08dEiK/hcBvcbSf1Uc=
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 10, 2020 at 1:28 AM Jian Cai <caij2003@gmail.com> wrote:
->
-> iwmmxt.S contains XScale instructions LLVM ARM backend does not support.
-> Skip this file if LLVM integrated assemmbler or LLD is used to build ARM
-> kernel.
->
-> Signed-off-by: Jian Cai <caij2003@gmail.com>
+While running seccomp_bpf, kill_after_ptrace() gets stuck if we run it
+via /usr/bin/timeout (that is the default), until the timeout expires.
 
-It clearly makes sense to limit the Kconfig option to compilers that
-can actually build it.
-A few questions though:
+This is because /usr/bin/timeout is preventing to properly deliver
+signals to ptrace'd children (SIGSYS in this case).
 
-- Given that Armada XP with its PJ4B was still marketed until fairly
-recently[1],
-  wouldn't it make sense to still add support for it? Is it a lot of work?
+This problem can be easily reproduced by running:
 
-- Why does the linker have to understand it, rather than just the assembler?
+ $ sudo make TARGETS=seccomp kselftest
+ ...
 
-> diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
-> index 66a04f6f4775..39de8fc64a73 100644
-> --- a/arch/arm/Kconfig
-> +++ b/arch/arm/Kconfig
-> @@ -804,7 +804,7 @@ source "arch/arm/mm/Kconfig"
->
->  config IWMMXT
->         bool "Enable iWMMXt support"
-> -       depends on CPU_XSCALE || CPU_XSC3 || CPU_MOHAWK || CPU_PJ4 || CPU_PJ4B
-> +       depends on !AS_IS_CLANG && !LD_IS_LLD && (CPU_XSCALE || CPU_XSC3 || CPU_MOHAWK || CPU_PJ4 || CPU_PJ4B)
+ # [ RUN      ] TRACE_syscall.skip_a#
+ not ok 1 selftests: seccomp: seccomp_bpf # TIMEOUT
 
-I would suggest splitting it into two lines for readability:
+The test is hanging at this point until the timeout expires and then it
+reports the timeout error.
 
-       depends on  CPU_XSCALE || CPU_XSC3 || CPU_MOHAWK || CPU_PJ4 || CPU_PJ4B
-       depends on !AS_IS_CLANG && !LD_IS_LLD
+Prevent this problem by passing --foreground to /usr/bin/timeout,
+allowing to properly deliver signals to children processes.
 
-    Arnd
+Signed-off-by: Andrea Righi <andrea.righi@canonical.com>
+---
+ tools/testing/selftests/kselftest/runner.sh | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-[1] http://web.archive.org/web/20191015165247/https://www.marvell.com/embedded-processors/armada/index.jsp
+diff --git a/tools/testing/selftests/kselftest/runner.sh b/tools/testing/selftests/kselftest/runner.sh
+index e84d901f8567..676b3a8b114d 100644
+--- a/tools/testing/selftests/kselftest/runner.sh
++++ b/tools/testing/selftests/kselftest/runner.sh
+@@ -33,7 +33,7 @@ tap_timeout()
+ {
+ 	# Make sure tests will time out if utility is available.
+ 	if [ -x /usr/bin/timeout ] ; then
+-		/usr/bin/timeout "$kselftest_timeout" "$1"
++		/usr/bin/timeout --foreground "$kselftest_timeout" "$1"
+ 	else
+ 		"$1"
+ 	fi
+-- 
+2.25.1
+
