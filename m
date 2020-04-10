@@ -2,137 +2,74 @@ Return-Path: <SRS0=VV4q=52=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26B06C2BA2B
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 17:23:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 408F0C2BA2B
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 17:26:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D43752087E
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 17:23:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="FNV0Xi5K"
+	by mail.kernel.org (Postfix) with ESMTP id 110692082D
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 17:26:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1586539572;
+	bh=BmcySnDEYGRj7rC1MSQD497Gs7G319rAZivMgHsxh60=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=JXP1b0SRlQ7re/o1t2yl76GnCTKsN/GqtBIvH6z6L1hNABdR7WTFDtlN5UcAoZAf4
+	 pm8gRS9fKPvWynqiSPGLRJFjseqeUWNkbo7VxwYbB9MgW1FYXAt8tYTB9WKYy/m5Vs
+	 aG+q7e8HwUVKiKISIlwqQFsPh4jqwBndqJ7kRU1M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726651AbgDJRXN (ORCPT
+        id S1726666AbgDJR0K (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Apr 2020 13:23:13 -0400
-Received: from mail-co1nam11on2138.outbound.protection.outlook.com ([40.107.220.138]:40417
-        "EHLO NAM11-CO1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726203AbgDJRXM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Apr 2020 13:23:12 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=EX7GCnRx11ZU4MuvqUWTBxdCGBOE7E6W1zWghRezX2swCTAKGaHBsQnh34O0fIAYDwPywbspNowRSkBnEvGpxvb3qxfQwGC9OeMitQT9FkS/T2rVerOSBf+ANNM6+Q5Xy1LRgKKkEkYn4GAm4RTIeIwMcGqbzrWI19qxbgpn+HGyFK3toGsopCvajZ6OoEOZOJyB5Zzfmti6FEBS95NdjK5JVQXJpv1Op6xpmxm9c+pFdoFGL/9zteuLoSsSL8uzAa19ZNN9kl3Ep2Rn2mf3xLFRm+VDWdrFQKc7Zwc09e3fdpOomv6eOkTRHhlKBciHbzbwuuqyF4cQDf+MaOSdOQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=4rv/gZo5cludzf6uwfAsAz+BuO0ZTGhfHqdBIFmDPH0=;
- b=PdZHVoVc4clnOFQegj9D8JXhUezoJKokRnG2SnwehMfJQGH1rf5z9jPPW15nL6KYPrFFeYJ02eyKgs/BekMQJupJGV0bGgvL6ffRE8S3culNkLkI40OLJnpQn2Jxas9AJUcD2uzzUviGYhdIJG//hUEFtyOP3BMG9vXBAhlMofouMOhwcSz8GteTcJYLTs6JTFH33vhtssOAt/Y2paeAEHiFCubCT/RzL6GY9KTEm5odqEqHVgCXlZnY4x7f+MQx5HtFYUQG8Y1ot9pSyxOqBj6nlCih93RH1trxnqW6rq18aKOFaupZPQPptrnSJazyCUceC6G/Cvn4nfkLdQJdtg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microsoft.com; dmarc=pass action=none
- header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=4rv/gZo5cludzf6uwfAsAz+BuO0ZTGhfHqdBIFmDPH0=;
- b=FNV0Xi5KAipQLDmDS6Xw4ghmzDkmNcJKaUN7fu+ofh5MgyU+viGi+LH5stJupVci4K++yDZhVc/j4BZjDqXRkn6HwCErBuPRfxdIqaANOXnn/7Svi++tLfF7pYEshHBMfQWo8I+ar2tCub8nwA+Qaf83eA/IegaFOsFM9Lq7mvQ=
-Received: from MW2PR2101MB1052.namprd21.prod.outlook.com (2603:10b6:302:a::16)
- by MW2PR2101MB0905.namprd21.prod.outlook.com (2603:10b6:302:10::25) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2921.6; Fri, 10 Apr
- 2020 17:23:10 +0000
-Received: from MW2PR2101MB1052.namprd21.prod.outlook.com
- ([fe80::71ee:121:71bd:6156]) by MW2PR2101MB1052.namprd21.prod.outlook.com
- ([fe80::71ee:121:71bd:6156%9]) with mapi id 15.20.2900.015; Fri, 10 Apr 2020
- 17:23:10 +0000
-From:   Michael Kelley <mikelley@microsoft.com>
-To:     "Andrea Parri (Microsoft)" <parri.andrea@gmail.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-CC:     KY Srinivasan <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        Dexuan Cui <decui@microsoft.com>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        vkuznets <vkuznets@redhat.com>
-Subject: RE: [PATCH 02/11] Drivers: hv: vmbus: Don't bind the offer&rescind
- works to a specific CPU
-Thread-Topic: [PATCH 02/11] Drivers: hv: vmbus: Don't bind the offer&rescind
- works to a specific CPU
-Thread-Index: AQHWC6inmB58fyPCCEyte1k68AwF1ahyoOXQ
-Date:   Fri, 10 Apr 2020 17:23:10 +0000
-Message-ID: <MW2PR2101MB1052924E440C151A43065D0AD7DE0@MW2PR2101MB1052.namprd21.prod.outlook.com>
-References: <20200406001514.19876-1-parri.andrea@gmail.com>
- <20200406001514.19876-3-parri.andrea@gmail.com>
-In-Reply-To: <20200406001514.19876-3-parri.andrea@gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=mikelley@ntdev.microsoft.com;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2020-04-10T17:23:04.4922826Z;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
- Information Protection;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=bf90aa89-def3-4350-9f8e-6bb810bb623d;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=mikelley@microsoft.com; 
-x-originating-ip: [24.22.167.197]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: f9748f66-a198-4170-eaff-08d7dd73d7b6
-x-ms-traffictypediagnostic: MW2PR2101MB0905:|MW2PR2101MB0905:|MW2PR2101MB0905:
-x-ms-exchange-transport-forked: True
-x-ld-processed: 72f988bf-86f1-41af-91ab-2d7cd011db47,ExtAddr
-x-microsoft-antispam-prvs: <MW2PR2101MB090580CD34A382CA1A5EE97FD7DE0@MW2PR2101MB0905.namprd21.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:7691;
-x-forefront-prvs: 0369E8196C
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MW2PR2101MB1052.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10019020)(4636009)(136003)(346002)(39860400002)(366004)(396003)(376002)(316002)(86362001)(7696005)(55016002)(10290500003)(6506007)(9686003)(4744005)(54906003)(2906002)(26005)(4326008)(110136005)(186003)(478600001)(66556008)(82960400001)(66446008)(5660300002)(64756008)(8990500004)(33656002)(71200400001)(8676002)(8936002)(81156014)(76116006)(82950400001)(66946007)(52536014)(66476007);DIR:OUT;SFP:1102;
-received-spf: None (protection.outlook.com: microsoft.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: eMQzHfwt6Ko8ihpyvnIkpanslLOOU6O3SZhrx58mPqW/9LiEIudXw0Jp9nU8RnvHfrcLSlL0VdOBl9dQz7AAAXskC78W32tGE7+syBnifgMEfb6nX6+h1oOUhL6cDb0FxgxISiQkp9rknfuhohFnD6wt67kny/PlO5A13LlIExeskFKtxxHAUfHeqkqe30zk31ZudDUCoSlCdvCBPO6u7tzs5t0921/waQq2OHpVX1fwFJzPO2VvSOGlEruSu3jTGu/EYLcz71W7iQz2tlcP5q0Q+SD6S59iuhDsYVz7Fm88uxVXoKfdz7/9j0JgGCC1eRCD9lmLLP9r6W9p454R721N5KqRNGSTSkYLxhPbVqiJJEpRFmysSJNBB2XsO9Y4kJDHKdXc49p+r3Gl0IYWYLQ9JyqmVkPcyy5AeZfJneSKk2qmhrOEHVhxRQ/CfJGi
-x-ms-exchange-antispam-messagedata: 3ubuCEOOeSOAE58zJtXsr5TtSH7+j7Qx4l3/uRBcg5iZf22EYj/bgzYXVx1N6KRirwkbHr5PyWikm7DR+6aJY/ucLk7G7FBQIzG9uYzJKSNHS69KtpRMYA0tMcusHtYa7E4mdvTQNWn7g5LZXpvNOw==
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
-MIME-Version: 1.0
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: f9748f66-a198-4170-eaff-08d7dd73d7b6
-X-MS-Exchange-CrossTenant-originalarrivaltime: 10 Apr 2020 17:23:10.4862
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: ROxHXYRYnrJf8SbrNpJN/+EEccwvVktX9wMKDNnwIvQOPILJJCKRKED+e7zCZoiMc25k7K8FTACwCJSp2oIALQxi/FYiv4t/QifqcDIyIvE=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW2PR2101MB0905
+        Fri, 10 Apr 2020 13:26:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54052 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726142AbgDJR0K (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Apr 2020 13:26:10 -0400
+Received: from localhost.localdomain (c-73-231-172-41.hsd1.ca.comcast.net [73.231.172.41])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id F258820801;
+        Fri, 10 Apr 2020 17:26:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1586539570;
+        bh=BmcySnDEYGRj7rC1MSQD497Gs7G319rAZivMgHsxh60=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=mD2OKIQ6zIch+bCUwBx4o/3x8StzS9Uvd9RHV2xSIvqDwzUO45SaeSFN6xIm2Hqr4
+         KXR9XWD/Gl4paRTiy7VjgeDpoAzRfgRl9H8By9Sgf/iWMy0pYwmWxZinheOB12z98h
+         F5NM8jP79+A6kU2nv4Gsh9S19xDxoXEGAA9aDcCs=
+Date:   Fri, 10 Apr 2020 10:26:09 -0700
+From:   Andrew Morton <akpm@linux-foundation.org>
+To:     Qian Cai <cai@lca.pw>
+Cc:     Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Peter Xu <peterx@redhat.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux-MM <linux-mm@kvack.org>
+Subject: Re: [PATCH 0/2] mm: Two small fixes for recent syzbot reports
+Message-Id: <20200410102609.245f93639ece2667c3f70e5c@linux-foundation.org>
+In-Reply-To: <22DAFAC7-9F39-4042-BC79-B27963A13E3D@lca.pw>
+References: <CAHk-=wjfngA7nHAsie7bW_JmKBhUyV9oV7zmDbZuchkJK3sR1w@mail.gmail.com>
+        <AFD0DADD-0558-463F-B219-5F098E6C2EDF@lca.pw>
+        <CAHk-=wgFn4rHZM8ttPWvdSzV3pL1nS3EDcAh+83OObObkot4-g@mail.gmail.com>
+        <9C21961E-24D3-4C97-A5AB-B70451E4F952@lca.pw>
+        <76e8bbed-21d1-22e1-4148-5a5766652c0d@I-love.SAKURA.ne.jp>
+        <22DAFAC7-9F39-4042-BC79-B27963A13E3D@lca.pw>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andrea Parri (Microsoft) <parri.andrea@gmail.com> Sent: Sunday, April=
- 5, 2020 5:15 PM
->=20
-> The offer and rescind works are currently scheduled on the so called
-> "connect CPU".  However, this is not really needed: we can synchronize
-> the works by relying on the usage of the offer_in_progress counter and
-> of the channel_mutex mutex.  This synchronization is already in place.
-> So, remove this unnecessary "bind to the connect CPU" constraint and
-> update the inline comments accordingly.
->=20
-> Suggested-by: Dexuan Cui <decui@microsoft.com>
-> Signed-off-by: Andrea Parri (Microsoft) <parri.andrea@gmail.com>
-> ---
->  drivers/hv/channel_mgmt.c | 21 ++++++++++++++++-----
->  drivers/hv/vmbus_drv.c    | 39 ++++++++++++++++++++++++++++-----------
->  2 files changed, 44 insertions(+), 16 deletions(-)
->=20
+On Fri, 10 Apr 2020 10:26:23 -0400 Qian Cai <cai@lca.pw> wrote:
 
-Reviewed-by: Michael Kelley <mikelley@microsoft.com>
+> I don't set panic_on_warn. I'll deal with warnings afterwards.
+
+I'm not understanding why sysbot sets panic_on_warn.  This decision
+will needlessly turn many kernel errors into wont-boot situations and
+will block further testing?
