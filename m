@@ -7,49 +7,50 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 210B8C2D0EC
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 03:48:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A865CC2BB86
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 03:48:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EF4452137B
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 03:48:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 77B2821473
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 03:48:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586490483;
-	bh=kL6G3/ayMij2CqJ8JV2gKiPLDNMXwZ0nMDPpdkCpaYU=;
+	s=default; t=1586490487;
+	bh=waxjwsUxMpAJQV3TodVhI9ljrf0utE6GoyP7N1UZFnE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bgbYmXYvQAGXg9d2KKCa695O4fieleNFJj/x4EYaORIwVx0sqOTCxG42k3Ls3ewYe
-	 zst9ii7gU8IOzS3R+84XC1Zrk0Zz+2m/4GqDFW65OWaO0a98qqRlVsl/DXafA1l8Gn
-	 fer1qUe3TU6M/BMviVGJnWhA0I4USKJwZZjLFWNQ=
+	b=MyUcUIWTvwGZshrHRhaML6YxyJGwvTiL+HKtBUyGonl2+aqa5qKrqgqiNUhZBnQk2
+	 uEuxKDCHHsjiyauQJqrPn5N8XQtDt5M/rRFgXJpe3KU4I1+kqvtuf9hScK//kG14tH
+	 odAkPa6VutDzFxLMjWzL6+Mxab0o3JZqWJMOM/Xw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727992AbgDJDsB (ORCPT
+        id S1728019AbgDJDsF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Apr 2020 23:48:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59072 "EHLO mail.kernel.org"
+        Thu, 9 Apr 2020 23:48:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59238 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727966AbgDJDr4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Apr 2020 23:47:56 -0400
+        id S1726687AbgDJDsE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Apr 2020 23:48:04 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DDBFF2145D;
-        Fri, 10 Apr 2020 03:47:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AC55A2137B;
+        Fri, 10 Apr 2020 03:48:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586490476;
-        bh=kL6G3/ayMij2CqJ8JV2gKiPLDNMXwZ0nMDPpdkCpaYU=;
+        s=default; t=1586490484;
+        bh=waxjwsUxMpAJQV3TodVhI9ljrf0utE6GoyP7N1UZFnE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=w/clrej8oLdVZEXc5gstYCILjPSyH5c2q1MWAUlj/T6JkvoZSQYkpfTKB1T6or0Ed
-         5dQ5n7B9tEC0uXt63NPYMYqJfplvrium1CwoJWkreWokeHaOJ0DelfB2MsKAgpXSC8
-         CimbHUdRJTRrbJxredvPCqGrkA9kBoS3/R+HaF7U=
+        b=zYVxAW3g9xPBnNZikz0T2jy/rWpH3ZmyR8U/ca376sItnnRgFJsTmMjZKe2pyvXXu
+         HZZesHVC1IduKo1qiW3wnL+3qVZesP4ivAuij+C2XG6VYQvscIsbonDYvjyvVLU3J3
+         8KaO4CHNNoGZVtfT1bO7/bh79t2sIUVLY/HKHrQk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Josef Bacik <josef@toxicpanda.com>,
-        David Sterba <dsterba@suse.com>,
-        Sasha Levin <sashal@kernel.org>, linux-btrfs@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.6 68/68] btrfs: track reloc roots based on their commit root bytenr
-Date:   Thu,  9 Apr 2020 23:46:33 -0400
-Message-Id: <20200410034634.7731-68-sashal@kernel.org>
+Cc:     Ajay Gupta <ajayg@nvidia.com>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sasha Levin <sashal@kernel.org>, linux-usb@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.5 03/56] usb: ucsi: ccg: disable runtime pm during fw flashing
+Date:   Thu,  9 Apr 2020 23:47:07 -0400
+Message-Id: <20200410034800.8381-3-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200410034634.7731-1-sashal@kernel.org>
-References: <20200410034634.7731-1-sashal@kernel.org>
+In-Reply-To: <20200410034800.8381-1-sashal@kernel.org>
+References: <20200410034800.8381-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -59,119 +60,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Josef Bacik <josef@toxicpanda.com>
+From: Ajay Gupta <ajayg@nvidia.com>
 
-[ Upstream commit ea287ab157c2816bf12aad4cece41372f9d146b4 ]
+[ Upstream commit 57a5e5f936be583d2c6cef3661c169e3ea4bf922 ]
 
-We always search the commit root of the extent tree for looking up back
-references, however we track the reloc roots based on their current
-bytenr.
+Ucsi ppm is unregistered during fw flashing so disable
+runtime pm also and reenable after fw flashing is completed
+and ppm is re-registered.
 
-This is wrong, if we commit the transaction between relocating tree
-blocks we could end up in this code in build_backref_tree
-
-  if (key.objectid == key.offset) {
-	  /*
-	   * Only root blocks of reloc trees use backref
-	   * pointing to itself.
-	   */
-	  root = find_reloc_root(rc, cur->bytenr);
-	  ASSERT(root);
-	  cur->root = root;
-	  break;
-  }
-
-find_reloc_root() is looking based on the bytenr we had in the commit
-root, but if we've COWed this reloc root we will not find that bytenr,
-and we will trip over the ASSERT(root).
-
-Fix this by using the commit_root->start bytenr for indexing the commit
-root.  Then we change the __update_reloc_root() caller to be used when
-we switch the commit root for the reloc root during commit.
-
-This fixes the panic I was seeing when we started throttling relocation
-for delayed refs.
-
-Signed-off-by: Josef Bacik <josef@toxicpanda.com>
-Signed-off-by: David Sterba <dsterba@suse.com>
+Signed-off-by: Ajay Gupta <ajayg@nvidia.com>
+Signed-off-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Link: https://lore.kernel.org/r/20200217144913.55330-3-heikki.krogerus@linux.intel.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/btrfs/relocation.c | 17 +++++++----------
- 1 file changed, 7 insertions(+), 10 deletions(-)
+ drivers/usb/typec/ucsi/ucsi_ccg.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/fs/btrfs/relocation.c b/fs/btrfs/relocation.c
-index 4779a3a542f08..fae3e341658a3 100644
---- a/fs/btrfs/relocation.c
-+++ b/fs/btrfs/relocation.c
-@@ -1298,7 +1298,7 @@ static int __must_check __add_reloc_root(struct btrfs_root *root)
- 	if (!node)
- 		return -ENOMEM;
- 
--	node->bytenr = root->node->start;
-+	node->bytenr = root->commit_root->start;
- 	node->data = root;
- 
- 	spin_lock(&rc->reloc_root_tree.lock);
-@@ -1329,10 +1329,11 @@ static void __del_reloc_root(struct btrfs_root *root)
- 	if (rc && root->node) {
- 		spin_lock(&rc->reloc_root_tree.lock);
- 		rb_node = tree_search(&rc->reloc_root_tree.rb_root,
--				      root->node->start);
-+				      root->commit_root->start);
- 		if (rb_node) {
- 			node = rb_entry(rb_node, struct mapping_node, rb_node);
- 			rb_erase(&node->rb_node, &rc->reloc_root_tree.rb_root);
-+			RB_CLEAR_NODE(&node->rb_node);
- 		}
- 		spin_unlock(&rc->reloc_root_tree.lock);
- 		if (!node)
-@@ -1350,7 +1351,7 @@ static void __del_reloc_root(struct btrfs_root *root)
-  * helper to update the 'address of tree root -> reloc tree'
-  * mapping
-  */
--static int __update_reloc_root(struct btrfs_root *root, u64 new_bytenr)
-+static int __update_reloc_root(struct btrfs_root *root)
- {
- 	struct btrfs_fs_info *fs_info = root->fs_info;
- 	struct rb_node *rb_node;
-@@ -1359,7 +1360,7 @@ static int __update_reloc_root(struct btrfs_root *root, u64 new_bytenr)
- 
- 	spin_lock(&rc->reloc_root_tree.lock);
- 	rb_node = tree_search(&rc->reloc_root_tree.rb_root,
--			      root->node->start);
-+			      root->commit_root->start);
- 	if (rb_node) {
- 		node = rb_entry(rb_node, struct mapping_node, rb_node);
- 		rb_erase(&node->rb_node, &rc->reloc_root_tree.rb_root);
-@@ -1371,7 +1372,7 @@ static int __update_reloc_root(struct btrfs_root *root, u64 new_bytenr)
- 	BUG_ON((struct btrfs_root *)node->data != root);
- 
- 	spin_lock(&rc->reloc_root_tree.lock);
--	node->bytenr = new_bytenr;
-+	node->bytenr = root->node->start;
- 	rb_node = tree_insert(&rc->reloc_root_tree.rb_root,
- 			      node->bytenr, &node->rb_node);
- 	spin_unlock(&rc->reloc_root_tree.lock);
-@@ -1529,6 +1530,7 @@ int btrfs_update_reloc_root(struct btrfs_trans_handle *trans,
+diff --git a/drivers/usb/typec/ucsi/ucsi_ccg.c b/drivers/usb/typec/ucsi/ucsi_ccg.c
+index 3370b3fc37b10..bd374cea3ba6c 100644
+--- a/drivers/usb/typec/ucsi/ucsi_ccg.c
++++ b/drivers/usb/typec/ucsi/ucsi_ccg.c
+@@ -1032,6 +1032,7 @@ static int ccg_restart(struct ucsi_ccg *uc)
+ 		return status;
  	}
  
- 	if (reloc_root->commit_root != reloc_root->node) {
-+		__update_reloc_root(reloc_root);
- 		btrfs_set_root_node(root_item, reloc_root->node);
- 		free_extent_buffer(reloc_root->commit_root);
- 		reloc_root->commit_root = btrfs_root_node(reloc_root);
-@@ -4742,11 +4744,6 @@ int btrfs_reloc_cow_block(struct btrfs_trans_handle *trans,
- 	BUG_ON(rc->stage == UPDATE_DATA_PTRS &&
- 	       root->root_key.objectid == BTRFS_DATA_RELOC_TREE_OBJECTID);
++	pm_runtime_enable(uc->dev);
+ 	return 0;
+ }
  
--	if (root->root_key.objectid == BTRFS_TREE_RELOC_OBJECTID) {
--		if (buf == root->node)
--			__update_reloc_root(root, cow->start);
--	}
--
- 	level = btrfs_header_level(buf);
- 	if (btrfs_header_generation(buf) <=
- 	    btrfs_root_last_snapshot(&root->root_item))
+@@ -1047,6 +1048,7 @@ static void ccg_update_firmware(struct work_struct *work)
+ 
+ 	if (flash_mode != FLASH_NOT_NEEDED) {
+ 		ucsi_unregister(uc->ucsi);
++		pm_runtime_disable(uc->dev);
+ 		free_irq(uc->irq, uc);
+ 
+ 		ccg_fw_update(uc, flash_mode);
 -- 
 2.20.1
 
