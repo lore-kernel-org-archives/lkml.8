@@ -4,48 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DEB73C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 03:48:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09E0EC2D0EC
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 03:48:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ADE762137B
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 03:48:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D015920B1F
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 03:48:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586490506;
-	bh=t6NJkxg/UoyJvKDLvCs0NmGB1mpeIXUzCQ01MywZPuk=;
+	s=default; t=1586490519;
+	bh=kRzMbY3EgV4E6Qm3X/KDl19rd8PRqtZJwSZTVXijMQk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JJJg4CVafdCs8y8VZ4RSRhnz8jfP6fBoXJvRLi8t1j5nIftbcsBwCpNtnznU8b2d7
-	 NMAeorGyg7QrBVHJxeqpyFCPckm8QXajZa7BrGiAhOIEpM74Ls842dksg5ESBrF5lj
-	 Vjvso+bsEsEI2UqDBrXIlg8l1tyNjGQIuR7Vqeh4=
+	b=SXWX6LtxbDDHjtN/xO0MbKN3Li37kThdxGmxere7Djbv4oV3HNEXi+lhJAU+FIjH4
+	 fpWdFEzuyV6Eec06fLIlMcpzUv7xDRM/j8siIwzIK2EbVJhq/uASauGodbTjkVMxZe
+	 hvoF8/ZNXBkyfYPRLUC13pRffEksWLok9QNgJts8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728179AbgDJDsZ (ORCPT
+        id S1728279AbgDJDsi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Apr 2020 23:48:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59738 "EHLO mail.kernel.org"
+        Thu, 9 Apr 2020 23:48:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60222 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728164AbgDJDsV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Apr 2020 23:48:21 -0400
+        id S1728248AbgDJDsg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Apr 2020 23:48:36 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4D6902137B;
-        Fri, 10 Apr 2020 03:48:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D66D120B1F;
+        Fri, 10 Apr 2020 03:48:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586490501;
-        bh=t6NJkxg/UoyJvKDLvCs0NmGB1mpeIXUzCQ01MywZPuk=;
+        s=default; t=1586490516;
+        bh=kRzMbY3EgV4E6Qm3X/KDl19rd8PRqtZJwSZTVXijMQk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FdvhQe10lSgI4+YM29HMFuJUIRPMVTySAo173DnqOqa09c5CoYbpYNOfrMyocuo0t
-         p3kex69uqC+R9IZ0hDhNeb0eJoq8NhwPF7XiMme9KyqKOcs3Fw0rSFUm9zn0PBQasO
-         jOw8V2I7t1XYZ5c2nOcSq2D9vaRAjNjrvFUBjq4k=
+        b=Ou76GEutbHPYvOXZCQMe5VdiEGGF0KQaqL9Nx6CUD44ac/iPSoq8qWkaV960qMuDE
+         nuGl8W205d5Nz4NhhxM0NM4VhqNXq09zF9tON1r2Zn9Q/QPUveZr5dWG7ojNOAeog4
+         By6ht53HsR2ZhOUmVBeAf2eq3P83EoTy/U9aKuzQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Sasha Levin <sashal@kernel.org>, linux-acpi@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.5 17/56] ACPI: EC: Do not clear boot_ec_is_ecdt in acpi_ec_add()
-Date:   Thu,  9 Apr 2020 23:47:21 -0400
-Message-Id: <20200410034800.8381-17-sashal@kernel.org>
+Cc:     Paolo Valente <paolo.valente@linaro.org>, cki-project@redhat.com,
+        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>,
+        linux-block@vger.kernel.org, cgroups@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.5 30/56] block, bfq: move forward the getting of an extra ref in bfq_bfqq_move
+Date:   Thu,  9 Apr 2020 23:47:34 -0400
+Message-Id: <20200410034800.8381-30-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200410034800.8381-1-sashal@kernel.org>
 References: <20200410034800.8381-1-sashal@kernel.org>
@@ -58,56 +59,71 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+From: Paolo Valente <paolo.valente@linaro.org>
 
-[ Upstream commit 65a691f5f8f0bb63d6a82eec7b0ffd193d8d8a5f ]
+[ Upstream commit fd1bb3ae54a9a2e0c42709de861c69aa146b8955 ]
 
-The reason for clearing boot_ec_is_ecdt in acpi_ec_add() (if a
-PNP0C09 device object matching the ECDT boot EC had been found in
-the namespace) was to cause acpi_ec_ecdt_start() to return early,
-but since the latter does not look at boot_ec_is_ecdt any more,
-acpi_ec_add() need not clear it.
+Commit ecedd3d7e199 ("block, bfq: get extra ref to prevent a queue
+from being freed during a group move") gets an extra reference to a
+bfq_queue before possibly deactivating it (temporarily), in
+bfq_bfqq_move(). This prevents the bfq_queue from disappearing before
+being reactivated in its new group.
 
-Moreover, doing that may be confusing as it may cause "DSDT" to be
-printed instead of "ECDT" in the EC initialization completion
-message, so stop doing it.
+Yet, the bfq_queue may also be expired (i.e., its service may be
+stopped) before the bfq_queue is deactivated. And also an expiration
+may lead to a premature freeing. This commit fixes this issue by
+simply moving forward the getting of the extra reference already
+introduced by commit ecedd3d7e199 ("block, bfq: get extra ref to
+prevent a queue from being freed during a group move").
 
-While at it, split the EC initialization completion message into
-two messages, one regarding the boot EC and another one printed
-regardless of whether or not the EC at hand is the boot one.
-
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Reported-by: cki-project@redhat.com
+Tested-by: cki-project@redhat.com
+Signed-off-by: Paolo Valente <paolo.valente@linaro.org>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/acpi/ec.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ block/bfq-cgroup.c | 14 +++++++-------
+ 1 file changed, 7 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/acpi/ec.c b/drivers/acpi/ec.c
-index bd74c78366759..f351d0711e495 100644
---- a/drivers/acpi/ec.c
-+++ b/drivers/acpi/ec.c
-@@ -1649,7 +1649,6 @@ static int acpi_ec_add(struct acpi_device *device)
+diff --git a/block/bfq-cgroup.c b/block/bfq-cgroup.c
+index 5a64607ce7744..a6d42339fb342 100644
+--- a/block/bfq-cgroup.c
++++ b/block/bfq-cgroup.c
+@@ -641,6 +641,12 @@ void bfq_bfqq_move(struct bfq_data *bfqd, struct bfq_queue *bfqq,
+ {
+ 	struct bfq_entity *entity = &bfqq->entity;
  
- 		if (boot_ec && ec->command_addr == boot_ec->command_addr &&
- 		    ec->data_addr == boot_ec->data_addr) {
--			boot_ec_is_ecdt = false;
- 			/*
- 			 * Trust PNP0C09 namespace location rather than
- 			 * ECDT ID. But trust ECDT GPE rather than _GPE
-@@ -1669,9 +1668,12 @@ static int acpi_ec_add(struct acpi_device *device)
- 
- 	if (ec == boot_ec)
- 		acpi_handle_info(boot_ec->handle,
--				 "Boot %s EC used to handle transactions and events\n",
-+				 "Boot %s EC initialization complete\n",
- 				 boot_ec_is_ecdt ? "ECDT" : "DSDT");
- 
-+	acpi_handle_info(ec->handle,
-+			 "EC: Used to handle transactions and events\n");
++	/*
++	 * Get extra reference to prevent bfqq from being freed in
++	 * next possible expire or deactivate.
++	 */
++	bfqq->ref++;
 +
- 	device->driver_data = ec;
+ 	/* If bfqq is empty, then bfq_bfqq_expire also invokes
+ 	 * bfq_del_bfqq_busy, thereby removing bfqq and its entity
+ 	 * from data structures related to current group. Otherwise we
+@@ -651,12 +657,6 @@ void bfq_bfqq_move(struct bfq_data *bfqd, struct bfq_queue *bfqq,
+ 		bfq_bfqq_expire(bfqd, bfqd->in_service_queue,
+ 				false, BFQQE_PREEMPTED);
  
- 	ret = !!request_region(ec->data_addr, 1, "EC data");
+-	/*
+-	 * get extra reference to prevent bfqq from being freed in
+-	 * next possible deactivate
+-	 */
+-	bfqq->ref++;
+-
+ 	if (bfq_bfqq_busy(bfqq))
+ 		bfq_deactivate_bfqq(bfqd, bfqq, false, false);
+ 	else if (entity->on_st)
+@@ -676,7 +676,7 @@ void bfq_bfqq_move(struct bfq_data *bfqd, struct bfq_queue *bfqq,
+ 
+ 	if (!bfqd->in_service_queue && !bfqd->rq_in_driver)
+ 		bfq_schedule_dispatch(bfqd);
+-	/* release extra ref taken above */
++	/* release extra ref taken above, bfqq may happen to be freed now */
+ 	bfq_put_queue(bfqq);
+ }
+ 
 -- 
 2.20.1
 
