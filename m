@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F8B9C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 03:51:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74C97C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 03:51:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2DD4121556
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 03:51:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4807A215A4
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 03:51:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586490683;
-	bh=vbESkDHBh4yFSWsX62jVfb3pKRSU4GYw/tznxABimHk=;
+	s=default; t=1586490686;
+	bh=TwbeNkf9wh9yqk/pHfVPa0QM9C0aKBP8I7YXCSMXwFk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=V3WjyeMPvV62VjspM4NgYFltqWWv12kNrJz+36ss8bb2EZurLfNa5R5wb11GAorQZ
-	 Cx7fJza8eMUis8GXDp2K+I2vFmXA7QSfVM994c4Uh2U9SzgPrngyrlUSIfboIwa/5h
-	 I6bPjPGZTHuBKcjUTqQ4fTL1bsf3/6XwEhO99Gv4=
+	b=spIB7+oHBPLtguLlcHBYNntavWtK7mGnR5Jg3/CMGlSBlaKRzdlr69gzs2JDxGgDY
+	 g8mmFt3M4XElUrgu/Bqbdt3BRL31v85EwugCv+iFSakuAJE5TzQjqdoOV9RVySHdMu
+	 oMUV4EtRg8jyI3dN8MNOU8LlP520aq+KFhAnsRkk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729176AbgDJDvV (ORCPT
+        id S1729183AbgDJDvY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Apr 2020 23:51:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36326 "EHLO mail.kernel.org"
+        Thu, 9 Apr 2020 23:51:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36398 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729132AbgDJDvP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Apr 2020 23:51:15 -0400
+        id S1729150AbgDJDvR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Apr 2020 23:51:17 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1AE04206C0;
-        Fri, 10 Apr 2020 03:51:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4BB58206C0;
+        Fri, 10 Apr 2020 03:51:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586490674;
-        bh=vbESkDHBh4yFSWsX62jVfb3pKRSU4GYw/tznxABimHk=;
+        s=default; t=1586490677;
+        bh=TwbeNkf9wh9yqk/pHfVPa0QM9C0aKBP8I7YXCSMXwFk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VDfHYAFz7n0O+5lEiSEv7zZFZVjL/glVFIly2bc9QqCzyaFmEMoOyMDgBO/q26O+O
-         RA7eNAV7UvAPBRNA/Tn3g9ZbSzQmMphju7krIvKaah1rKJ1goTTQg8xa/a+nAdCCYy
-         yln33i5392mT3F2CO3mY+0E1t92iR2aPwNG0Gb4Q=
+        b=Z9KKZT6w3qHSUx6xs6oBoP80yfHxZaOHfxOkH10toJjUMNyABfEKFUxu7YBInvjRZ
+         YDkB3kXCFVLwLUYfjFaLeYfimsI/+gBRLSjaQgm8GsLAqnoF4D0gpEPWDDpdfdj5j9
+         DZhTF7AyWY3F0rDhXs+Qiqv0ZqtYjid8iTsjCHIg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Andy Lutomirski <luto@kernel.org>,
-        kbuild test robot <lkp@intel.com>,
-        Borislav Petkov <bp@suse.de>, Sasha Levin <sashal@kernel.org>,
-        linux-kselftest@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 3/9] selftests/x86/ptrace_syscall_32: Fix no-vDSO segfault
-Date:   Thu,  9 Apr 2020 23:51:04 -0400
-Message-Id: <20200410035111.9938-3-sashal@kernel.org>
+Cc:     Arvind Sankar <nivedita@alum.mit.edu>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.9 6/9] x86/boot: Use unsigned comparison for addresses
+Date:   Thu,  9 Apr 2020 23:51:07 -0400
+Message-Id: <20200410035111.9938-6-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200410035111.9938-1-sashal@kernel.org>
 References: <20200410035111.9938-1-sashal@kernel.org>
@@ -60,40 +59,69 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andy Lutomirski <luto@kernel.org>
+From: Arvind Sankar <nivedita@alum.mit.edu>
 
-[ Upstream commit 630b99ab60aa972052a4202a1ff96c7e45eb0054 ]
+[ Upstream commit 81a34892c2c7c809f9c4e22c5ac936ae673fb9a2 ]
 
-If AT_SYSINFO is not present, don't try to call a NULL pointer.
+The load address is compared with LOAD_PHYSICAL_ADDR using a signed
+comparison currently (using jge instruction).
 
-Reported-by: kbuild test robot <lkp@intel.com>
-Signed-off-by: Andy Lutomirski <luto@kernel.org>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Link: https://lkml.kernel.org/r/faaf688265a7e1a5b944d6f8bc0f6368158306d3.1584052409.git.luto@kernel.org
+When loading a 64-bit kernel using the new efi32_pe_entry() point added by:
+
+  97aa276579b2 ("efi/x86: Add true mixed mode entry point into .compat section")
+
+using Qemu with -m 3072, the firmware actually loads us above 2Gb,
+resulting in a very early crash.
+
+Use the JAE instruction to perform a unsigned comparison instead, as physical
+addresses should be considered unsigned.
+
+Signed-off-by: Arvind Sankar <nivedita@alum.mit.edu>
+Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Link: https://lore.kernel.org/r/20200301230436.2246909-6-nivedita@alum.mit.edu
+Link: https://lore.kernel.org/r/20200308080859.21568-14-ardb@kernel.org
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/testing/selftests/x86/ptrace_syscall.c | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ arch/x86/boot/compressed/head_32.S | 2 +-
+ arch/x86/boot/compressed/head_64.S | 4 ++--
+ 2 files changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/tools/testing/selftests/x86/ptrace_syscall.c b/tools/testing/selftests/x86/ptrace_syscall.c
-index 1e3da137a8bb9..5390c827a359e 100644
---- a/tools/testing/selftests/x86/ptrace_syscall.c
-+++ b/tools/testing/selftests/x86/ptrace_syscall.c
-@@ -413,8 +413,12 @@ int main()
- 
- #if defined(__i386__) && (!defined(__GLIBC__) || __GLIBC__ > 2 || __GLIBC_MINOR__ >= 16)
- 	vsyscall32 = (void *)getauxval(AT_SYSINFO);
--	printf("[RUN]\tCheck AT_SYSINFO return regs\n");
--	test_sys32_regs(do_full_vsyscall32);
-+	if (vsyscall32) {
-+		printf("[RUN]\tCheck AT_SYSINFO return regs\n");
-+		test_sys32_regs(do_full_vsyscall32);
-+	} else {
-+		printf("[SKIP]\tAT_SYSINFO is not available\n");
-+	}
+diff --git a/arch/x86/boot/compressed/head_32.S b/arch/x86/boot/compressed/head_32.S
+index fd0b6a272dd5b..7532f6f536774 100644
+--- a/arch/x86/boot/compressed/head_32.S
++++ b/arch/x86/boot/compressed/head_32.S
+@@ -170,7 +170,7 @@ preferred_addr:
+ 	notl	%eax
+ 	andl    %eax, %ebx
+ 	cmpl	$LOAD_PHYSICAL_ADDR, %ebx
+-	jge	1f
++	jae	1f
  #endif
- 
- 	test_ptrace_syscall_restart();
+ 	movl	$LOAD_PHYSICAL_ADDR, %ebx
+ 1:
+diff --git a/arch/x86/boot/compressed/head_64.S b/arch/x86/boot/compressed/head_64.S
+index 9e3a183561a9a..3fac2d133e4ec 100644
+--- a/arch/x86/boot/compressed/head_64.S
++++ b/arch/x86/boot/compressed/head_64.S
+@@ -104,7 +104,7 @@ ENTRY(startup_32)
+ 	notl	%eax
+ 	andl	%eax, %ebx
+ 	cmpl	$LOAD_PHYSICAL_ADDR, %ebx
+-	jge	1f
++	jae	1f
+ #endif
+ 	movl	$LOAD_PHYSICAL_ADDR, %ebx
+ 1:
+@@ -339,7 +339,7 @@ preferred_addr:
+ 	notq	%rax
+ 	andq	%rax, %rbp
+ 	cmpq	$LOAD_PHYSICAL_ADDR, %rbp
+-	jge	1f
++	jae	1f
+ #endif
+ 	movq	$LOAD_PHYSICAL_ADDR, %rbp
+ 1:
 -- 
 2.20.1
 
