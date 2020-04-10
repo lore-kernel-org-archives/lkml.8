@@ -2,75 +2,78 @@ Return-Path: <SRS0=VV4q=52=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21A1EC2BB85
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 10:06:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8612FC2BA2B
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 10:07:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 01F7220801
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 10:06:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 60F8C20757
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 10:07:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726101AbgDJKGf (ORCPT
+        id S1726145AbgDJKHe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Apr 2020 06:06:35 -0400
-Received: from cmccmta1.chinamobile.com ([221.176.66.79]:35837 "EHLO
-        cmccmta1.chinamobile.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725861AbgDJKGf (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Apr 2020 06:06:35 -0400
-Received: from spf.mail.chinamobile.com (unknown[172.16.121.1]) by rmmx-syy-dmz-app03-12003 (RichMail) with SMTP id 2ee35e904511a46-04c7f; Fri, 10 Apr 2020 18:06:10 +0800 (CST)
-X-RM-TRANSID: 2ee35e904511a46-04c7f
-X-RM-TagInfo: emlType=0                                       
-X-RM-SPAM-FLAG: 00000000
-Received: from [172.20.21.224] (unknown[112.25.154.146])
-        by rmsmtp-syy-appsvr01-12001 (RichMail) with SMTP id 2ee15e904511e7f-1e29e;
-        Fri, 10 Apr 2020 18:06:10 +0800 (CST)
-X-RM-TRANSID: 2ee15e904511e7f-1e29e
-Subject: Re: [PATCH] EDAC/altera:Use platform_get_irq_optional()
-To:     Borislav Petkov <bp@alien8.de>
-Cc:     rrichter <rrichter@marvell.com>,
-        "thor.thayer" <thor.thayer@linux.intel.com>,
-        mchehab <mchehab@kernel.org>, "tony.luck" <tony.luck@intel.com>,
-        "james.morse" <james.morse@arm.com>,
-        linux-edac <linux-edac@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-References: <20200402112740.15580-1-tangbin@cmss.chinamobile.com>
- <20200402123001.obgzqmlure4cfvh7@rric.localdomain>
- <202004022106312118022@cmss.chinamobile.com>
- <20200408071022.ft6aamptrxlaz23f@rric.localdomain>
- <2020040819334451781313@cmss.chinamobile.com>
- <20200408113658.GE24663@zn.tnic>
- <1b9a872f-f616-8eaf-1cca-d73647f696e3@cmss.chinamobile.com>
- <20200410095206.GA8205@zn.tnic>
-From:   Tang Bin <tangbin@cmss.chinamobile.com>
-Message-ID: <e9c88384-f807-4f9f-a3c1-d35675c3dd7d@cmss.chinamobile.com>
-Date:   Fri, 10 Apr 2020 18:07:59 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Fri, 10 Apr 2020 06:07:34 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:48524 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725893AbgDJKHe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Apr 2020 06:07:34 -0400
+Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id B0C7AB7B63F072865E4C;
+        Fri, 10 Apr 2020 18:07:32 +0800 (CST)
+Received: from szvp000203569.huawei.com (10.120.216.130) by
+ DGGEMS413-HUB.china.huawei.com (10.3.19.213) with Microsoft SMTP Server id
+ 14.3.487.0; Fri, 10 Apr 2020 18:07:23 +0800
+From:   Chao Yu <yuchao0@huawei.com>
+To:     <jaegeuk@kernel.org>
+CC:     <linux-f2fs-devel@lists.sourceforge.net>,
+        <linux-kernel@vger.kernel.org>, <chao@kernel.org>,
+        Chao Yu <yuchao0@huawei.com>
+Subject: [PATCH] f2fs: fix to handle error path of f2fs_ra_meta_pages()
+Date:   Fri, 10 Apr 2020 18:07:20 +0800
+Message-ID: <20200410100720.65723-1-yuchao0@huawei.com>
+X-Mailer: git-send-email 2.18.0.rc1
 MIME-Version: 1.0
-In-Reply-To: <20200410095206.GA8205@zn.tnic>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Content-Type: text/plain
+X-Originating-IP: [10.120.216.130]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Borislav:
+In f2fs_ra_meta_pages(), if f2fs_submit_page_bio() failed, we need to
+unlock page, fix it.
 
-On 2020/4/10 17:52, Borislav Petkov wrote:
-> On Fri, Apr 10, 2020 at 04:25:24PM +0800, Tang Bin wrote:
->> I am sorry for the previous writing mistake(top-post). I have consulted
->> others and hope it's right this time. Sorry again and thanks for teaching. I
->> hope to continuously improve myself and regulate myself under your guidance.
-> That looks better, thanks!
+Signed-off-by: Chao Yu <yuchao0@huawei.com>
+---
+ fs/f2fs/checkpoint.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-Thanks for your patienct, thank you.
-
-Tang Bin
-
-
+diff --git a/fs/f2fs/checkpoint.c b/fs/f2fs/checkpoint.c
+index 852890b72d6a..6be357c8e002 100644
+--- a/fs/f2fs/checkpoint.c
++++ b/fs/f2fs/checkpoint.c
+@@ -220,6 +220,7 @@ int f2fs_ra_meta_pages(struct f2fs_sb_info *sbi, block_t start, int nrpages,
+ 		.is_por = (type == META_POR),
+ 	};
+ 	struct blk_plug plug;
++	int err;
+ 
+ 	if (unlikely(type == META_POR))
+ 		fio.op_flags &= ~REQ_META;
+@@ -263,8 +264,8 @@ int f2fs_ra_meta_pages(struct f2fs_sb_info *sbi, block_t start, int nrpages,
+ 		}
+ 
+ 		fio.page = page;
+-		f2fs_submit_page_bio(&fio);
+-		f2fs_put_page(page, 0);
++		err = f2fs_submit_page_bio(&fio);
++		f2fs_put_page(page, err ? 1 : 0);
+ 	}
+ out:
+ 	blk_finish_plug(&plug);
+-- 
+2.18.0.rc1
 
