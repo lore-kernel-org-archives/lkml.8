@@ -4,64 +4,64 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EEEAFC2D0EC
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 20:40:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB1BFC2D0EC
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 20:40:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BB50F216FD
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 20:40:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B54112166E
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 20:40:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586551236;
-	bh=UKehqYH0jwSXHXbwhE6DMiYSwP6eu4/Bu+uliwUKjH8=;
+	s=default; t=1586551243;
+	bh=ewwpttksibnWt2lPjf6N6ZRQTUiPO4o7ICNlguMjiVw=;
 	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=Pxvep/IkYiGVjmU6A5XOODOuPB1aq67oR+608YYKu+Ny9p44MOt36XBfKdhB0BVe/
-	 LOxvhfWTAsoGkFGKQPwqaHXyO+vN5O6lLGfsNPhi04KfDSVx3IXA7nyQzjiAQ0bo7h
-	 d/yh3w14yadgr0mUY9MwVbK+jJvXzihl01ewD6V8=
+	b=2MrscK/D4K4e08bLF4TtHnx9Jyfn2Q03UTNm6sUo0mT47q2d9LYq74hDAWI+M8CbD
+	 COV/mbq/sN16iM2Ef4vfhBL+KOlOwIycaLNJ4vwX2OIFydxvcMmv1j+GGR24GOFvVg
+	 p90w+FZCxi1qmG/YLsH9mET1Z6zsVoXYUpno4MGQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726860AbgDJUke (ORCPT
+        id S1726874AbgDJUkm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Apr 2020 16:40:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47864 "EHLO mail.kernel.org"
+        Fri, 10 Apr 2020 16:40:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47846 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726690AbgDJUkc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Apr 2020 16:40:32 -0400
-Subject: Re: [GIT PULL] final round of SCSI updates for the 5.6+ merge window
+        id S1726825AbgDJUka (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Apr 2020 16:40:30 -0400
+Subject: Re: SUBJECT: [GIT PULL] IPMI bug fixes for 5.7
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586551232;
-        bh=UKehqYH0jwSXHXbwhE6DMiYSwP6eu4/Bu+uliwUKjH8=;
+        s=default; t=1586551230;
+        bh=ewwpttksibnWt2lPjf6N6ZRQTUiPO4o7ICNlguMjiVw=;
         h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=NACs1Fz6UBNHGWye6MdhTCnBqTZuJxvG7vNvPE4UAVwuLXpmCKOQIuwt1pR9kzf63
-         tA/POr66+KAvoANWnjb7WhLa4ObSiJ/h69bKkXquiwrJCUraSy6hpBp5PlEmpYr/K5
-         WhgiG/viuOeoqxZ8zsN+QYi8f9y7VOvs1ppsYUh4=
+        b=C9xXCRlVQJQN51ImMT+dbmi2cIU2AjMdNmg8AuCVBMZ9MbdSsJA5PGwbGuT/Rv5Is
+         aIGDoQKQuakwj7Ni0uI8NZ36HzkiPZcxN0SVbAbHhc223Kfe4qp7OLWjpJ0P5ZqbDS
+         Pf1VahCqHbERrSFF7BfPLeVVw5GzPqys6dcHV9PI=
 From:   pr-tracker-bot@kernel.org
-In-Reply-To: <1586542752.4129.55.camel@HansenPartnership.com>
-References: <1586542752.4129.55.camel@HansenPartnership.com>
+In-Reply-To: <20200410132856.GI6130@minyard.net>
+References: <20200410132856.GI6130@minyard.net>
 X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <1586542752.4129.55.camel@HansenPartnership.com>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/jejb/scsi.git scsi-misc
-X-PR-Tracked-Commit-Id: 1b55940b9bcc64acb7336224b0e49203ff7987c6
+X-PR-Tracked-Message-Id: <20200410132856.GI6130@minyard.net>
+X-PR-Tracked-Remote: https://github.com/cminyard/linux-ipmi.git
+ tags/for-linus-5.7-1
+X-PR-Tracked-Commit-Id: e96387677c2a4a35a0c8b16cd517696a04050062
 X-PR-Merge-Tree: torvalds/linux.git
 X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 93f3321f650c5e700478ee8ed2e118d8255095cd
-Message-Id: <158655123244.24997.6752350097309620095.pr-tracker-bot@kernel.org>
-Date:   Fri, 10 Apr 2020 20:40:32 +0000
-To:     James Bottomley <James.Bottomley@HansenPartnership.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-scsi <linux-scsi@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
+X-PR-Merge-Commit-Id: 6900433e0fbca146d8170bdf876271cdf3053021
+Message-Id: <158655123088.24997.5213845863425323885.pr-tracker-bot@kernel.org>
+Date:   Fri, 10 Apr 2020 20:40:30 +0000
+To:     Corey Minyard <minyard@acm.org>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        openipmi-developer@lists.sourceforge.net
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Fri, 10 Apr 2020 11:19:12 -0700:
+The pull request you sent on Fri, 10 Apr 2020 08:28:56 -0500:
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/jejb/scsi.git scsi-misc
+> https://github.com/cminyard/linux-ipmi.git tags/for-linus-5.7-1
 
 has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/93f3321f650c5e700478ee8ed2e118d8255095cd
+https://git.kernel.org/torvalds/c/6900433e0fbca146d8170bdf876271cdf3053021
 
 Thank you!
 
