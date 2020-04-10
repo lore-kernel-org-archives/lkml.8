@@ -4,50 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E35DC2D0EC
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 03:59:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EB5FC2D0EC
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 03:59:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 770182063A
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 03:59:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2A6C82063A
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 03:59:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586491140;
-	bh=JuRk7IwZErEkQs154JWgYaEIehaHU2r9Jj03bNGW2qc=;
+	s=default; t=1586491143;
+	bh=6tEfhxHQDVSqkJDQqa2VuTVPtNeSt/QR1WgPANJ7ZMk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GwbhyWCVCSJnymYN7FvVBn/nJVhSHN93F5DdNOseAk8cftznIuMTZ0R4BMZ4zE6ZB
-	 t9FzWiwI5x9rVg7l+gBsQBawIT138grXwBJf0Su/ShSmVA9NQJTxOAJQ3IU5uySGQ+
-	 fsjL551Q8Fuw4cGobSoXTa8qWr+GYepyvqWHKPMQ=
+	b=XRCdqHeYdvCCNl3LWyOnAoR2iv8cVOWYtXAECLtAmAp842f/BjbFrVlMlkrrSBwDS
+	 Y0EPOnyukQ44YM69ddk8cIHcVdEp+vHEYrqK2eacA/78z4GY97rE3pZ0Hr0PPlFvt6
+	 NpeIJW+71LGxGy6vSVeWp6qad3KgJR51gKog8AOo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728239AbgDJDsf (ORCPT
+        id S1728614AbgDJD7B (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Apr 2020 23:48:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60116 "EHLO mail.kernel.org"
+        Thu, 9 Apr 2020 23:59:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60204 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726878AbgDJDsc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Apr 2020 23:48:32 -0400
+        id S1728230AbgDJDsf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Apr 2020 23:48:35 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 42E8D21556;
-        Fri, 10 Apr 2020 03:48:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 884FD214D8;
+        Fri, 10 Apr 2020 03:48:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586490511;
-        bh=JuRk7IwZErEkQs154JWgYaEIehaHU2r9Jj03bNGW2qc=;
+        s=default; t=1586490515;
+        bh=6tEfhxHQDVSqkJDQqa2VuTVPtNeSt/QR1WgPANJ7ZMk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=A20o1UNHqc69sdWaiqDGWbENp4kJ466HBGwJ3V1NRtYJzOPwJbhsU1eSgWEwzddK/
-         kugDGhjxdmTULuGHCqZskiiemW8h3waEX1UNJ+ss+FXYwGwKzr7zVi0GYFo8IhQXHo
-         pjLneP1IWPOfMK83/5NpgRbij0ZaBAU+exLmabL0=
+        b=CUn6PDpA3p2cup7XU4BCOO6SKh95uQ86c3E6GCoTXA6KbD4ZofocicFTMdxYV4fuh
+         H2Rv0KZW6l60R4T50+IAz1rTNvvpuBzVvR3r4AVWk0BDwq88Xo+G6/e2gGYnFKI4Ne
+         xHEQztC31svdazSmypthEuRT2l6RmZJg/3bTnOBY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Michael Wang <yun.wang@linux.alibaba.com>,
+Cc:     Logan Gunthorpe <logang@deltatee.com>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
         Peter Zijlstra <peterz@infradead.org>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.5 26/56] sched: Avoid scale real weight down to zero
-Date:   Thu,  9 Apr 2020 23:47:30 -0400
-Message-Id: <20200410034800.8381-26-sashal@kernel.org>
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Sasha Levin <sashal@kernel.org>, linux-pci@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.5 29/56] PCI/switchtec: Fix init_completion race condition with poll_wait()
+Date:   Thu,  9 Apr 2020 23:47:33 -0400
+Message-Id: <20200410034800.8381-29-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200410034800.8381-1-sashal@kernel.org>
 References: <20200410034800.8381-1-sashal@kernel.org>
@@ -60,80 +62,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Michael Wang <yun.wang@linux.alibaba.com>
+From: Logan Gunthorpe <logang@deltatee.com>
 
-[ Upstream commit 26cf52229efc87e2effa9d788f9b33c40fb3358a ]
+[ Upstream commit efbdc769601f4d50018bf7ca50fc9f7c67392ece ]
 
-During our testing, we found a case that shares no longer
-working correctly, the cgroup topology is like:
+The call to init_completion() in mrpc_queue_cmd() can theoretically
+race with the call to poll_wait() in switchtec_dev_poll().
 
-  /sys/fs/cgroup/cpu/A		(shares=102400)
-  /sys/fs/cgroup/cpu/A/B	(shares=2)
-  /sys/fs/cgroup/cpu/A/B/C	(shares=1024)
+  poll()			write()
+    switchtec_dev_poll()   	  switchtec_dev_write()
+      poll_wait(&s->comp.wait);      mrpc_queue_cmd()
+			               init_completion(&s->comp)
+				         init_waitqueue_head(&s->comp.wait)
 
-  /sys/fs/cgroup/cpu/D		(shares=1024)
-  /sys/fs/cgroup/cpu/D/E	(shares=1024)
-  /sys/fs/cgroup/cpu/D/E/F	(shares=1024)
+To my knowledge, no one has hit this bug.
 
-The same benchmark is running in group C & F, no other tasks are
-running, the benchmark is capable to consumed all the CPUs.
+Fix this by using reinit_completion() instead of init_completion() in
+mrpc_queue_cmd().
 
-We suppose the group C will win more CPU resources since it could
-enjoy all the shares of group A, but it's F who wins much more.
+Fixes: 080b47def5e5 ("MicroSemi Switchtec management interface driver")
 
-The reason is because we have group B with shares as 2, since
-A->cfs_rq.load.weight == B->se.load.weight == B->shares/nr_cpus,
-so A->cfs_rq.load.weight become very small.
-
-And in calc_group_shares() we calculate shares as:
-
-  load = max(scale_load_down(cfs_rq->load.weight), cfs_rq->avg.load_avg);
-  shares = (tg_shares * load) / tg_weight;
-
-Since the 'cfs_rq->load.weight' is too small, the load become 0
-after scale down, although 'tg_shares' is 102400, shares of the se
-which stand for group A on root cfs_rq become 2.
-
-While the se of D on root cfs_rq is far more bigger than 2, so it
-wins the battle.
-
-Thus when scale_load_down() scale real weight down to 0, it's no
-longer telling the real story, the caller will have the wrong
-information and the calculation will be buggy.
-
-This patch add check in scale_load_down(), so the real weight will
-be >= MIN_SHARES after scale, after applied the group C wins as
-expected.
-
-Suggested-by: Peter Zijlstra <peterz@infradead.org>
-Signed-off-by: Michael Wang <yun.wang@linux.alibaba.com>
+Reported-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Reviewed-by: Vincent Guittot <vincent.guittot@linaro.org>
-Link: https://lkml.kernel.org/r/38e8e212-59a1-64b2-b247-b6d0b52d8dc1@linux.alibaba.com
+Acked-by: Bjorn Helgaas <bhelgaas@google.com>
+Link: https://lkml.kernel.org/r/20200313183608.2646-1-logang@deltatee.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/sched/sched.h | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+ drivers/pci/switch/switchtec.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
-index 280a3c7359355..0502ea8e0e62a 100644
---- a/kernel/sched/sched.h
-+++ b/kernel/sched/sched.h
-@@ -118,7 +118,13 @@ extern long calc_load_fold_active(struct rq *this_rq, long adjust);
- #ifdef CONFIG_64BIT
- # define NICE_0_LOAD_SHIFT	(SCHED_FIXEDPOINT_SHIFT + SCHED_FIXEDPOINT_SHIFT)
- # define scale_load(w)		((w) << SCHED_FIXEDPOINT_SHIFT)
--# define scale_load_down(w)	((w) >> SCHED_FIXEDPOINT_SHIFT)
-+# define scale_load_down(w) \
-+({ \
-+	unsigned long __w = (w); \
-+	if (__w) \
-+		__w = max(2UL, __w >> SCHED_FIXEDPOINT_SHIFT); \
-+	__w; \
-+})
- #else
- # define NICE_0_LOAD_SHIFT	(SCHED_FIXEDPOINT_SHIFT)
- # define scale_load(w)		(w)
+diff --git a/drivers/pci/switch/switchtec.c b/drivers/pci/switch/switchtec.c
+index 9c3ad09d30222..fb4602d44eb10 100644
+--- a/drivers/pci/switch/switchtec.c
++++ b/drivers/pci/switch/switchtec.c
+@@ -175,7 +175,7 @@ static int mrpc_queue_cmd(struct switchtec_user *stuser)
+ 	kref_get(&stuser->kref);
+ 	stuser->read_len = sizeof(stuser->data);
+ 	stuser_set_state(stuser, MRPC_QUEUED);
+-	init_completion(&stuser->comp);
++	reinit_completion(&stuser->comp);
+ 	list_add_tail(&stuser->list, &stdev->mrpc_queue);
+ 
+ 	mrpc_cmd_submit(stdev);
 -- 
 2.20.1
 
