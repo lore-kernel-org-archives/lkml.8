@@ -2,60 +2,137 @@ Return-Path: <SRS0=VV4q=52=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A0FCC2BA2B
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 09:33:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88114C2BB85
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 09:35:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 47A4820769
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 09:33:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 66D2F20787
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 09:35:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726594AbgDJJc5 (ORCPT
+        id S1726101AbgDJJfj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Apr 2020 05:32:57 -0400
-Received: from wtarreau.pck.nerim.net ([62.212.114.60]:34476 "EHLO 1wt.eu"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725861AbgDJJc4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Apr 2020 05:32:56 -0400
-Received: (from willy@localhost)
-        by pcw.home.local (8.15.2/8.15.2/Submit) id 03A9WrBG014543;
-        Fri, 10 Apr 2020 11:32:53 +0200
-Date:   Fri, 10 Apr 2020 11:32:53 +0200
-From:   Willy Tarreau <w@1wt.eu>
-To:     Denis Efremov <efremov@linux.com>
-Cc:     Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 22/23] floppy: cleanup: do not iterate on current_fdc in
- DMA grab/release functions
-Message-ID: <20200410093253.GF14199@1wt.eu>
-References: <20200331094054.24441-1-w@1wt.eu>
- <20200331094054.24441-23-w@1wt.eu>
- <f5fb363f-8c2c-3aca-6b71-4a45544d067a@linux.com>
- <20200410084516.GD14199@1wt.eu>
- <0bfa0ee0-e2f5-ff9e-b407-bb81d620df20@linux.com>
+        Fri, 10 Apr 2020 05:35:39 -0400
+Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:54948 "EHLO
+        mx0a-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725861AbgDJJfj (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Apr 2020 05:35:39 -0400
+Received: from pps.filterd (m0167088.ppops.net [127.0.0.1])
+        by mx0a-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03A9Yncg031470;
+        Fri, 10 Apr 2020 05:35:26 -0400
+Received: from nwd2mta3.analog.com ([137.71.173.56])
+        by mx0a-00128a01.pphosted.com with ESMTP id 3091nb0pu5-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 10 Apr 2020 05:35:26 -0400
+Received: from ASHBMBX9.ad.analog.com (ashbmbx9.ad.analog.com [10.64.17.10])
+        by nwd2mta3.analog.com (8.14.7/8.14.7) with ESMTP id 03A9ZPGV027798
+        (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=FAIL);
+        Fri, 10 Apr 2020 05:35:25 -0400
+Received: from ASHBMBX9.ad.analog.com (10.64.17.10) by ASHBMBX9.ad.analog.com
+ (10.64.17.10) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1779.2; Fri, 10 Apr
+ 2020 05:35:24 -0400
+Received: from zeus.spd.analog.com (10.64.82.11) by ASHBMBX9.ad.analog.com
+ (10.64.17.10) with Microsoft SMTP Server id 15.1.1779.2 via Frontend
+ Transport; Fri, 10 Apr 2020 05:35:23 -0400
+Received: from localhost.localdomain ([10.48.65.12])
+        by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 03A9ZK1G018489;
+        Fri, 10 Apr 2020 05:35:21 -0400
+From:   Alexandru Ardelean <alexandru.ardelean@analog.com>
+To:     <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+CC:     <jic23@kernel.org>, <lars@metafoo.de>,
+        Alexandru Ardelean <alexandru.ardelean@analog.com>
+Subject: [PATCH][RFC] iio: buffer: remove 'scan_el_attrs' attribute group from buffer struct
+Date:   Fri, 10 Apr 2020 12:36:07 +0300
+Message-ID: <20200410093607.74516-1-alexandru.ardelean@analog.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <0bfa0ee0-e2f5-ff9e-b407-bb81d620df20@linux.com>
-User-Agent: Mutt/1.6.1 (2016-04-27)
+Content-Type: text/plain
+X-ADIRoutedOnPrem: True
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
+ definitions=2020-04-10_03:2020-04-07,2020-04-10 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ malwarescore=0 mlxlogscore=999 bulkscore=0 clxscore=1015 suspectscore=2
+ mlxscore=0 phishscore=0 adultscore=0 priorityscore=1501 spamscore=0
+ impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2004100079
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 10, 2020 at 11:48:21AM +0300, Denis Efremov wrote:
-> On 4/10/20 11:45 AM, Willy Tarreau wrote:
-> > Ah thanks, I missed these ones! Do you want me to respin this patch ?
-> 
-> I think you can resend only this patch, or send an additional one 24/23.
+This field doesn't seem used. It seems that only 'buffer->attrs' was ever
+used to extend sysfs attributes for an IIO buffer.
 
-OK, now done as 24/23. Apparently we can now get rid of the code dealing
-with drive==-1 in lock_fdc()/set_fdc() etc. It's only used by
-user_reset_fdc() and the last call place is in floppy_resume() which
-even forgets to set the fdc number, so it only resets the current FDC,
-as many times as there are FDCs in the system. I'm going to fix this
-one and see make sure we drop this special case of -1.
+Moving forward, it may not make sense to keep it. This patch removes the
+field and it's initialization code.
 
-Willy
+Since we want to rework IIO buffer, to be able to add more buffers per IIO
+device, we will merge [somehow] the 'buffer' & 'scan_elements' groups, and
+we will continue to add the attributes to the 'buffer' group.
+
+Removing it here, will also make the rework here a bit smaller, since
+this code will not be present.
+
+Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
+---
+
+I have no idea whether removing this is acceptable or not.
+If it is acceptable, then this can be applied.
+I am a bit vague on how this was ever used, of if it was ever used, but
+it looks like dead code.
+
+
+ drivers/iio/industrialio-buffer.c | 8 --------
+ include/linux/iio/buffer_impl.h   | 6 ------
+ 2 files changed, 14 deletions(-)
+
+diff --git a/drivers/iio/industrialio-buffer.c b/drivers/iio/industrialio-buffer.c
+index e6fa1a4e135d..221157136af6 100644
+--- a/drivers/iio/industrialio-buffer.c
++++ b/drivers/iio/industrialio-buffer.c
+@@ -1283,11 +1283,6 @@ int iio_buffer_alloc_sysfs_and_mask(struct iio_dev *indio_dev)
+ 
+ 	indio_dev->groups[indio_dev->groupcounter++] = &buffer->buffer_group;
+ 
+-	if (buffer->scan_el_attrs != NULL) {
+-		attr = buffer->scan_el_attrs->attrs;
+-		while (*attr++ != NULL)
+-			attrcount_orig++;
+-	}
+ 	attrcount = attrcount_orig;
+ 	INIT_LIST_HEAD(&buffer->scan_el_dev_attr_list);
+ 	channels = indio_dev->channels;
+@@ -1325,9 +1320,6 @@ int iio_buffer_alloc_sysfs_and_mask(struct iio_dev *indio_dev)
+ 		ret = -ENOMEM;
+ 		goto error_free_scan_mask;
+ 	}
+-	if (buffer->scan_el_attrs)
+-		memcpy(buffer->scan_el_group.attrs, buffer->scan_el_attrs,
+-		       sizeof(buffer->scan_el_group.attrs[0])*attrcount_orig);
+ 	attrn = attrcount_orig;
+ 
+ 	list_for_each_entry(p, &buffer->scan_el_dev_attr_list, l)
+diff --git a/include/linux/iio/buffer_impl.h b/include/linux/iio/buffer_impl.h
+index 1e7edf6bed96..a63dc07b7350 100644
+--- a/include/linux/iio/buffer_impl.h
++++ b/include/linux/iio/buffer_impl.h
+@@ -94,12 +94,6 @@ struct iio_buffer {
+ 	unsigned int watermark;
+ 
+ 	/* private: */
+-	/*
+-	 * @scan_el_attrs: Control of scan elements if that scan mode
+-	 * control method is used.
+-	 */
+-	struct attribute_group *scan_el_attrs;
+-
+ 	/* @scan_timestamp: Does the scan mode include a timestamp. */
+ 	bool scan_timestamp;
+ 
+-- 
+2.17.1
+
