@@ -2,95 +2,124 @@ Return-Path: <SRS0=VV4q=52=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C593C2BA2B
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 05:21:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 175E0C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 05:24:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 35EB7207FF
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 05:21:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=sslab.ics.keio.ac.jp header.i=@sslab.ics.keio.ac.jp header.b="fHqdymfb"
+	by mail.kernel.org (Postfix) with ESMTP id EDF66207FF
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 05:24:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725893AbgDJFVj (ORCPT
+        id S1725993AbgDJFYF convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Apr 2020 01:21:39 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:36207 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725816AbgDJFVj (ORCPT
+        Fri, 10 Apr 2020 01:24:05 -0400
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:42940 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725208AbgDJFYF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Apr 2020 01:21:39 -0400
-Received: by mail-wm1-f67.google.com with SMTP id a201so1186817wme.1
-        for <linux-kernel@vger.kernel.org>; Thu, 09 Apr 2020 22:21:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sslab.ics.keio.ac.jp; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=k9bnCNibGTTNZ8RfqJKKqIRm03Js0FIJzOCaGoNQsuc=;
-        b=fHqdymfbkjjLYvSs+zmDnvKHLnbVPWjV8BrXSrAyodywDHjTW3EWchSZZUi7fvMS4k
-         YrhSlnC09aPDPKVbTxgSyUrAXMJBZbbpIYJYbTA3waCo2MH4Y+9C2mow1qkuESFEdug8
-         5ITcoGDMvO6R5XpSNA1pmXivaUIXUEQF4Tlpk=
+        Fri, 10 Apr 2020 01:24:05 -0400
+Received: by mail-ot1-f65.google.com with SMTP id j20so183518otl.9;
+        Thu, 09 Apr 2020 22:24:05 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc:content-transfer-encoding;
-        bh=k9bnCNibGTTNZ8RfqJKKqIRm03Js0FIJzOCaGoNQsuc=;
-        b=T+KtuYA9mXE/fhSsw/8Kd9Ag9ZHgsit2+xqzcfscNAx3UEyZ+fm5RA+i0cKI4SNVEl
-         cj72cddPr7N2E0uNKEp39ZuNqsKlAOWWCBvWiDXxzh78JnC2tyckB3+nELWqyoi9rt1C
-         V4LtD0nOKLXm735fwplg426hS+c1qF8NN/I7Yo2rV6CQXIp4eFcErkNIpdNMVtNTTIIT
-         6UHyYEZdzXRiwAzvgcZ3g548Wf7BxEKH2bZjQHkM/BP0iRUkYcd8h1ZMauJpTAq/rieU
-         B3rm2Xt5/+Ff6vWwkVn51Cvg3TZYsgrYPj+eqcLhBD278Pw1bQjjY7ksSNkGK1vT1e1D
-         kkAg==
-X-Gm-Message-State: AGi0Pub96nNrAxJVCWkzM5XFhnm2vMmoxRGmger02ffhZgPgthUeo3za
-        4oC9Wf/GqXlNXKfxu2l9g406mI9ouaKf8qawfUfLcg==
-X-Google-Smtp-Source: APiQypI1GNpcvuB391atB3Y+MsS7V92B8mhbmt+Th68wpnYqHV5ThzvOTFL1P1/F60xBajq5y7FUWUz7uEriVPLW89U=
-X-Received: by 2002:a1c:2705:: with SMTP id n5mr3217827wmn.94.1586496097819;
- Thu, 09 Apr 2020 22:21:37 -0700 (PDT)
+        bh=G7Vs6kbIU7vDoe0PVtVhOXYoT49lemDbcQnLgW0gxPY=;
+        b=so8FAPcR1CMo+/j4f39k765yjz6XskK4I3NVUgyEHYwGN5YNTekFPNcz14Jou3Un62
+         tFnG9pXrujpeplebshGhRKOQEA0LiP2m9vo3TRDa08NT4es9zRpzXBPKBue2yUayy+yF
+         A53nVAaRFaji02dXGp5YX5V/FLOsnWh6YAxGwpimX4HFMOujoiEB9Wy4Zh7of4JhPYjF
+         ADK8PoRljqLGcAICa36MbiIzzL1Ynj8EZklEUz1CPL4i/XKEHneH0to/nfhf2bdkwyGw
+         AECC+WGn9+3kOtSM30t8zEY9TfUEz/pxPn0c/DuzGqTFBYTwdGtp73rASDh298aJ+zm4
+         l93w==
+X-Gm-Message-State: AGi0PuaGBWJLxlP6omLfY8fYsIuw0/mU1yJVjFEdsSHREU54hE44HBam
+        Ky5R7luNA3PyF6xaUMAJtTACuPqh2aaq7QItbQw=
+X-Google-Smtp-Source: APiQypI0vs7WpqePP2PloLl2p5qMbNw++RNcXkUrcByTbojM92sZ4ZvW8TPwDaJ3eAYzfjx2GHuD0QSZavcCS4qkIsY=
+X-Received: by 2002:a4a:c595:: with SMTP id x21mr2952338oop.10.1586496244370;
+ Thu, 09 Apr 2020 22:24:04 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200409150210.15488-1-keitasuzuki.park@sslab.ics.keio.ac.jp>
- <20200409174113.28635-1-keitasuzuki.park@sslab.ics.keio.ac.jp> <20200409123203.1b5f6534@kicinski-fedora-PC1C0HJN>
-In-Reply-To: <20200409123203.1b5f6534@kicinski-fedora-PC1C0HJN>
-From:   Keita Suzuki <keitasuzuki.park@sslab.ics.keio.ac.jp>
-Date:   Fri, 10 Apr 2020 14:21:26 +0900
-Message-ID: <CAEYrHjmy=R0x+zAcANDcTqx2qOhoUjy0Z2okxkjX1JHC3CgZ_A@mail.gmail.com>
-Subject: Re: [PATCH] nfp: Fix memory leak in nfp_resource_acquire()
-To:     Jakub Kicinski <kuba@kernel.org>
-Cc:     Kubota Takafumi <takafumi.kubota1012@sslab.ics.keio.ac.jp>,
-        "David S. Miller" <davem@davemloft.net>,
-        "open list:NETRONOME ETHERNET DRIVERS" <oss-drivers@netronome.com>,
-        "open list:NETWORKING DRIVERS" <netdev@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
+References: <703440af-031c-16b5-c1ff-54fb4bb5e10c@gmail.com>
+ <CANaxB-y0ZB223dQgvxvUHRzkn4f-_B2vTzYxe_mi=o+3SJ4yVw@mail.gmail.com> <87a73kny56.fsf@x220.int.ebiederm.org>
+In-Reply-To: <87a73kny56.fsf@x220.int.ebiederm.org>
+From:   Andrey Vagin <avagin@openvz.org>
+Date:   Thu, 9 Apr 2020 22:23:49 -0700
+Message-ID: <CANaxB-y2wWz9tnpoKfvoSOGW=WxeNkSgX+bvsFQO_79JqYMsZw@mail.gmail.com>
+Subject: Re: A further though on /proc/PID/timens_offsets
+To:     "Eric W. Biederman" <ebiederm@xmission.com>
+Cc:     Dmitry Safonov <dima@arista.com>,
+        Linux API <linux-api@vger.kernel.org>,
+        Containers <containers@lists.linux-foundation.org>,
+        Dmitry Safonov <0x7f454c46@gmail.com>,
+        lkml <linux-kernel@vger.kernel.org>,
+        "Michael Kerrisk (man-pages)" <mtk.manpages@gmail.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Adrian Reber <adrian@lisas.de>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
-
-Thanks for reviewing.
-
-I'll check back the runtime log and see what I can do.
-Thanks.
-
-
-2020=E5=B9=B44=E6=9C=8810=E6=97=A5(=E9=87=91) 4:32 Jakub Kicinski <kuba@ker=
-nel.org>:
+On Thu, Apr 9, 2020 at 2:35 PM Eric W. Biederman <ebiederm@xmission.com> wrote:
 >
-> On Thu,  9 Apr 2020 17:41:11 +0000 Keita Suzuki wrote:
-> > This patch fixes a memory leak in nfp_resource_acquire(). res->mutex is
-> > alllocated in nfp_resource_try_acquire(). However, when
-> > msleep_interruptible() or time_is_before_eq_jiffies() fails, it falls
-> > into err_fails path where res is freed, but res->mutex is not.
+> Andrey Vagin <avagin@openvz.org> writes:
+>
+> > On Tue, Apr 7, 2020 at 6:24 AM Michael Kerrisk (man-pages)
+> > <mtk.manpages@gmail.com> wrote:
 > >
-> > Fix this by changing call to free to nfp_resource_release().
+> >>        The  clock-id  identifies the clock whose offsets are being shown.
+> >>        This field is either 1, for CLOCK_MONOTONIC, or 7, for CLOCK_BOOT‐
+> >>        TIME.
+> >>
+> >> What was the reason for exposing numeric clock IDs in the
+> >> timens_offsets file? In API terms, that seems a little ugly.
+> >>
+> >> I think it would have been much nicer if the clocks were defined
+> >> symbolically in this file. I.e., that reading the file would have
+> >> shown something like
+> >>
+> >> monotonic    x    y
+> >> boottime     x    y
+> >>
+> >> And that records similarly with symbolic clock names could have
+> >> been written to the file. Was there a reason not to do this?
+> >
+> > No, there was not except that I haven't thought about this. I agree
+> > that symbolic clock names looks nicer for humans, but numeric clock
+> > IDs are a bit more convenient when we  need to set/read offsets from
+> > code. This interface is in the released kernel, so I think we can't
+> > change the format of the content of this file. But we can add support
+> > of symbolic clock names for setting clock offsets. What do you think?
 >
-> I don't see a leak here. Maybe you could rephrase the description to
-> make things clearer?
+> The rule is we can change things as long as userspace doesn't care.  For
+> very new interfaces like this it is possible there are few enough
+> userspace programs that nothing cares.
 >
-> AFAICS nfp_resource_try_acquire() calls nfp_cpp_mutex_free(res->mutex)
-> if it's about to return an error. We can only hit msleep or time check
-> if it returned an error.
+> Do you know if someone is using this interface yet?
+
+CRIU has the support of time namespace, but these changes are in the
+devel branch and have not been released yet.
+
+I know two more project:
+* The util-linux (unshare and nsenter tools):
+https://github.com/karelzak/util-linux/commit/7f1f0584c24a77909a7c96e62e30f63f4c1b10ad
+https://github.com/karelzak/util-linux/commit/ef0341c9be441b834848d260ba0dbeb47a20f7a3
+
+The last release of util-linux was at the end of January, so these
+changes have not been released.
+
+* crun
+https://github.com/containers/crun/commit/a669dc64f70f71423a0ee1bb977f2d77e473649a
+
+These changes have been released in the crun v0.13.
+
+All these projects only set offsets, so I think following the rule
+that you described, we can start showing symbolic clock names and
+accept both variants for setting offsets. If everyone agrees with
+this, I can prepare a patch tomorrow.
+
+Thanks,
+Andrei
