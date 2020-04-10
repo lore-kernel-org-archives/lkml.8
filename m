@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16A4EC2D0EC
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 04:02:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA75BC2BB1D
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 04:02:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E157C20936
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 04:02:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A8A6C2063A
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 04:02:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586491325;
-	bh=5bhloHPnrNHAR4ad/nOF2Gk2uA2DsAT4mfeZhfveWNY=;
+	s=default; t=1586491331;
+	bh=7RdBcKbcSA8txvE3ou1/hXYhwhq2DHXO8rive13W17M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wFmMZEAasM8D2e3h7fGv0yjCPAGZSXvVEdOipXG1SvQjg2oDWN7/c0eDJfPnolN1d
-	 Xrty8HYmnEwJ1tHfwGE03Ovse2QFlMQF49qX6L9oiDVeeU5QO2jNbOWyxJnBQoV0RS
-	 oY1OVuE68UWLM7dbBLQWA/yUYQcJymwSBNCGmZNY=
+	b=LjK9TKH2S0M40R8fv2wg4Kw4cjThjbZNfEqyU8tr07iV/k1hasZNQB3kZM/QKYLfQ
+	 Ox1xvbApAhguwE3Q7cxDHDeOcLOGoP+lHUiqP+3grSENA5GHhFwa3JfrFexrB2Kt9l
+	 UimRP0Q64z4tcg3n/0j8bc8aq7rQSsS2ghqPo27c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728015AbgDJEB7 (ORCPT
+        id S1728060AbgDJECK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Apr 2020 00:01:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57978 "EHLO mail.kernel.org"
+        Fri, 10 Apr 2020 00:02:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57844 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727192AbgDJDrR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Apr 2020 23:47:17 -0400
+        id S1727109AbgDJDrO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Apr 2020 23:47:14 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 53659214DB;
-        Fri, 10 Apr 2020 03:47:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3CB69215A4;
+        Fri, 10 Apr 2020 03:47:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586490438;
-        bh=5bhloHPnrNHAR4ad/nOF2Gk2uA2DsAT4mfeZhfveWNY=;
+        s=default; t=1586490434;
+        bh=7RdBcKbcSA8txvE3ou1/hXYhwhq2DHXO8rive13W17M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=t3L3/8rJ25Nu+T4KRXmM97IFNRT6DcEN4Gb6Ctrqf7LyUscPL14YbZsLAW0HmGYr9
-         Z+bLLdBuoCREb/MVJnb8yf2qQpZfnaGYPgGdGwTcotnbqoI3Xq5OVL+3Sz4GvFpORL
-         V9XuEZFPaBQbUsQNBQb/q0QSJehMBKQeupEFp5xQ=
+        b=hRR44KqzT/z1K05T0tXTHPKu7SczVblR6k1ugwXlISv1HyYAnmbVwqoZCWzGayQ8k
+         zUmWykpDlPqbYd0kV7h9/QG1oV/dcKQ8LdF1vyoeT825hZOvbmMUHuE8Hx/wzjSqEV
+         z9M55cWyVJPmZYRl4GyabTOj5qUsGif/bI67ibBg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Michael Tretter <m.tretter@pengutronix.de>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org,
-        devel@driverdev.osuosl.org
-Subject: [PATCH AUTOSEL 5.6 35/68] media: allegro: fix type of gop_length in channel_create message
-Date:   Thu,  9 Apr 2020 23:46:00 -0400
-Message-Id: <20200410034634.7731-35-sashal@kernel.org>
+Cc:     Sungbo Eo <mans0n@gorani.run>, Marc Zyngier <maz@kernel.org>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH AUTOSEL 5.6 32/68] irqchip/versatile-fpga: Handle chained IRQs properly
+Date:   Thu,  9 Apr 2020 23:45:57 -0400
+Message-Id: <20200410034634.7731-32-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200410034634.7731-1-sashal@kernel.org>
 References: <20200410034634.7731-1-sashal@kernel.org>
@@ -61,42 +59,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Michael Tretter <m.tretter@pengutronix.de>
+From: Sungbo Eo <mans0n@gorani.run>
 
-[ Upstream commit 8277815349327b8e65226eb58ddb680f90c2c0c0 ]
+[ Upstream commit 486562da598c59e9f835b551d7cf19507de2d681 ]
 
-The gop_length field is actually only u16 and there are two more u8
-fields in the message:
+Enclose the chained handler with chained_irq_{enter,exit}(), so that the
+muxed interrupts get properly acked.
 
-- the number of consecutive b-frames
-- frequency of golden frames
+This patch also fixes a reboot bug on OX820 SoC, where the jiffies timer
+interrupt is never acked. The kernel waits a clock tick forever in
+calibrate_delay_converge(), which leads to a boot hang.
 
-Fix the message and thus fix the configuration of the GOP length.
-
-Signed-off-by: Michael Tretter <m.tretter@pengutronix.de>
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Fixes: c41b16f8c9d9 ("ARM: integrator/versatile: consolidate FPGA IRQ handling code")
+Signed-off-by: Sungbo Eo <mans0n@gorani.run>
+Signed-off-by: Marc Zyngier <maz@kernel.org>
+Link: https://lore.kernel.org/r/20200319023448.1479701-1-mans0n@gorani.run
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/staging/media/allegro-dvt/allegro-core.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ drivers/irqchip/irq-versatile-fpga.c | 12 ++++++++++--
+ 1 file changed, 10 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/staging/media/allegro-dvt/allegro-core.c b/drivers/staging/media/allegro-dvt/allegro-core.c
-index 3be41698df4c8..8d8d144f40ac2 100644
---- a/drivers/staging/media/allegro-dvt/allegro-core.c
-+++ b/drivers/staging/media/allegro-dvt/allegro-core.c
-@@ -393,7 +393,10 @@ struct mcu_msg_create_channel {
- 	u32 freq_ird;
- 	u32 freq_lt;
- 	u32 gdr_mode;
--	u32 gop_length;
-+	u16 gop_length;
-+	u8 num_b;
-+	u8 freq_golden_ref;
-+
- 	u32 unknown39;
+diff --git a/drivers/irqchip/irq-versatile-fpga.c b/drivers/irqchip/irq-versatile-fpga.c
+index 928858dada756..70e2cfff8175f 100644
+--- a/drivers/irqchip/irq-versatile-fpga.c
++++ b/drivers/irqchip/irq-versatile-fpga.c
+@@ -6,6 +6,7 @@
+ #include <linux/irq.h>
+ #include <linux/io.h>
+ #include <linux/irqchip.h>
++#include <linux/irqchip/chained_irq.h>
+ #include <linux/irqchip/versatile-fpga.h>
+ #include <linux/irqdomain.h>
+ #include <linux/module.h>
+@@ -68,12 +69,16 @@ static void fpga_irq_unmask(struct irq_data *d)
  
- 	u32 subframe_latency;
+ static void fpga_irq_handle(struct irq_desc *desc)
+ {
++	struct irq_chip *chip = irq_desc_get_chip(desc);
+ 	struct fpga_irq_data *f = irq_desc_get_handler_data(desc);
+-	u32 status = readl(f->base + IRQ_STATUS);
++	u32 status;
++
++	chained_irq_enter(chip, desc);
+ 
++	status = readl(f->base + IRQ_STATUS);
+ 	if (status == 0) {
+ 		do_bad_IRQ(desc);
+-		return;
++		goto out;
+ 	}
+ 
+ 	do {
+@@ -82,6 +87,9 @@ static void fpga_irq_handle(struct irq_desc *desc)
+ 		status &= ~(1 << irq);
+ 		generic_handle_irq(irq_find_mapping(f->domain, irq));
+ 	} while (status);
++
++out:
++	chained_irq_exit(chip, desc);
+ }
+ 
+ /*
 -- 
 2.20.1
 
