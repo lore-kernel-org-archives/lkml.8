@@ -4,49 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F605C2BB85
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 03:50:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31EEFC2D0EC
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 03:50:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 64AB820B1F
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 03:50:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0623B206C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 03:50:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586490638;
-	bh=A8vFarPiiiN5fEyJQtwwxUwgpvTAUNBhJo0Irej3s90=;
+	s=default; t=1586490643;
+	bh=ZcpYVsCP/XLAJuphgVNQRaUYJF/lasso5Ft3WcK6x/0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=iyRx4JKvCPYNNBgm6PuxwZ8rBUCwjQwFEQxtA+c63V9lOqo7yFDHuDuJjV0x8Bhg4
-	 oiuxvfQsc078Sdx+v+bEZyblpZChfMIYHcVugQJpxjA23eJ6r17+gG8j3xKpsRPmI5
-	 M+QDtfbChEofuAtMnFIoVjyQT7tsXcdu/smQzwq0=
+	b=MoZKwaMD2geLNdW6J500kCj8y6IrvWoKCYRW8pg9nkumvz35Kgn9+X8qFHJkob18/
+	 L7VJ0FoYsjc57we0a1Bcs7w1XZigPqYGY6m3NKBk5p4WX4QeZsCplfKG3sJwelu4Xw
+	 Nu9SHuCQq9ok4mA8+jKUNMu/rhnZeSynKoNRDhZA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728935AbgDJDug (ORCPT
+        id S1728957AbgDJDuk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Apr 2020 23:50:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35090 "EHLO mail.kernel.org"
+        Thu, 9 Apr 2020 23:50:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35288 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728909AbgDJDu2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Apr 2020 23:50:28 -0400
+        id S1728930AbgDJDuh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Apr 2020 23:50:37 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4E2A520CC7;
-        Fri, 10 Apr 2020 03:50:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2545121841;
+        Fri, 10 Apr 2020 03:50:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586490628;
-        bh=A8vFarPiiiN5fEyJQtwwxUwgpvTAUNBhJo0Irej3s90=;
+        s=default; t=1586490635;
+        bh=ZcpYVsCP/XLAJuphgVNQRaUYJF/lasso5Ft3WcK6x/0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DkZwIeH2uv4tM3VqV4upBI60CKW/GX0E9FrTsiOiWOD/8mXAg2BydYuD91EfKNZYU
-         uUTuDeuL/v/8KVT1eloPrzw0+7tQxtILOorTlayf29DggoqGU4AzdzBsVEuplYJEbA
-         Bts1o+wJbxzlQmLzal/Qek5LDLRTuK5YfZLIgB7A=
+        b=XDzq4+GD9r5JgmiEeSqJBkQLRYksw7ByL1v+AjddmFuIGrbBgFtmNTvi1doXCOcNr
+         ASa2/DhVESFhWil0kPTbQTmIai7ooLEYPVM3tfp96vYh/49trTnK1VRxKwVZXjiXc+
+         vGE0mHePOLH+HeSPZMhRM+M5Xv+g7kfvSw7tNVuw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Alexander Sverdlin <alexander.sverdlin@nokia.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
+Cc:     Junyong Sun <sunjy516@gmail.com>,
+        Junyong Sun <sunjunyong@xiaomi.com>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.19 20/32] genirq/irqdomain: Check pointer in irq_domain_alloc_irqs_hierarchy()
-Date:   Thu,  9 Apr 2020 23:49:53 -0400
-Message-Id: <20200410035005.9371-20-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 26/32] firmware: fix a double abort case with fw_load_sysfs_fallback
+Date:   Thu,  9 Apr 2020 23:49:59 -0400
+Message-Id: <20200410035005.9371-26-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200410035005.9371-1-sashal@kernel.org>
 References: <20200410035005.9371-1-sashal@kernel.org>
@@ -59,64 +61,79 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alexander Sverdlin <alexander.sverdlin@nokia.com>
+From: Junyong Sun <sunjy516@gmail.com>
 
-[ Upstream commit 87f2d1c662fa1761359fdf558246f97e484d177a ]
+[ Upstream commit bcfbd3523f3c6eea51a74d217a8ebc5463bcb7f4 ]
 
-irq_domain_alloc_irqs_hierarchy() has 3 call sites in the compilation unit
-but only one of them checks for the pointer which is being dereferenced
-inside the called function. Move the check into the function. This allows
-for catching the error instead of the following crash:
+fw_sysfs_wait_timeout may return err with -ENOENT
+at fw_load_sysfs_fallback and firmware is already
+in abort status, no need to abort again, so skip it.
 
-Unable to handle kernel NULL pointer dereference at virtual address 00000000
-PC is at 0x0
-LR is at gpiochip_hierarchy_irq_domain_alloc+0x11f/0x140
+This issue is caused by concurrent situation like below:
+when thread 1# wait firmware loading, thread 2# may write
+-1 to abort loading and wakeup thread 1# before it timeout.
+so wait_for_completion_killable_timeout of thread 1# would
+return remaining time which is != 0 with fw_st->status
+FW_STATUS_ABORTED.And the results would be converted into
+err -ENOENT in __fw_state_wait_common and transfered to
+fw_load_sysfs_fallback in thread 1#.
+The -ENOENT means firmware status is already at ABORTED,
+so fw_load_sysfs_fallback no need to get mutex to abort again.
+-----------------------------
+thread 1#,wait for loading
+fw_load_sysfs_fallback
+ ->fw_sysfs_wait_timeout
+    ->__fw_state_wait_common
+       ->wait_for_completion_killable_timeout
+
+in __fw_state_wait_common,
 ...
-[<c06c23ff>] (gpiochip_hierarchy_irq_domain_alloc)
-[<c0462a89>] (__irq_domain_alloc_irqs)
-[<c0462dad>] (irq_create_fwspec_mapping)
-[<c06c2251>] (gpiochip_to_irq)
-[<c06c1c9b>] (gpiod_to_irq)
-[<bf973073>] (gpio_irqs_init [gpio_irqs])
-[<bf974048>] (gpio_irqs_exit+0xecc/0xe84 [gpio_irqs])
-Code: bad PC value
+93    ret = wait_for_completion_killable_timeout(&fw_st->completion, timeout);
+94    if (ret != 0 && fw_st->status == FW_STATUS_ABORTED)
+95       return -ENOENT;
+96    if (!ret)
+97	 return -ETIMEDOUT;
+98
+99    return ret < 0 ? ret : 0;
+-----------------------------
+thread 2#, write -1 to abort loading
+firmware_loading_store
+ ->fw_load_abort
+   ->__fw_load_abort
+     ->fw_state_aborted
+       ->__fw_state_set
+         ->complete_all
 
-Signed-off-by: Alexander Sverdlin <alexander.sverdlin@nokia.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lkml.kernel.org/r/20200306174720.82604-1-alexander.sverdlin@nokia.com
+in __fw_state_set,
+...
+111    if (status == FW_STATUS_DONE || status == FW_STATUS_ABORTED)
+112       complete_all(&fw_st->completion);
+-------------------------------------------
+BTW,the double abort issue would not cause kernel panic or create an issue,
+but slow down it sometimes.The change is just a minor optimization.
+
+Signed-off-by: Junyong Sun <sunjunyong@xiaomi.com>
+Acked-by: Luis Chamberlain <mcgrof@kernel.org>
+Link: https://lore.kernel.org/r/1583202968-28792-1-git-send-email-sunjunyong@xiaomi.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/irq/irqdomain.c | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+ drivers/base/firmware_loader/fallback.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/kernel/irq/irqdomain.c b/kernel/irq/irqdomain.c
-index e0eda2bd39753..0a76c44eb6b29 100644
---- a/kernel/irq/irqdomain.c
-+++ b/kernel/irq/irqdomain.c
-@@ -1255,6 +1255,11 @@ int irq_domain_alloc_irqs_hierarchy(struct irq_domain *domain,
- 				    unsigned int irq_base,
- 				    unsigned int nr_irqs, void *arg)
- {
-+	if (!domain->ops->alloc) {
-+		pr_debug("domain->ops->alloc() is NULL\n");
-+		return -ENOSYS;
-+	}
-+
- 	return domain->ops->alloc(domain, irq_base, nr_irqs, arg);
- }
- 
-@@ -1292,11 +1297,6 @@ int __irq_domain_alloc_irqs(struct irq_domain *domain, int irq_base,
- 			return -EINVAL;
+diff --git a/drivers/base/firmware_loader/fallback.c b/drivers/base/firmware_loader/fallback.c
+index 818d8c37d70a9..3b7b748c4d4f2 100644
+--- a/drivers/base/firmware_loader/fallback.c
++++ b/drivers/base/firmware_loader/fallback.c
+@@ -572,7 +572,7 @@ static int fw_load_sysfs_fallback(struct fw_sysfs *fw_sysfs,
  	}
  
--	if (!domain->ops->alloc) {
--		pr_debug("domain->ops->alloc() is NULL\n");
--		return -ENOSYS;
--	}
--
- 	if (realloc && irq_base >= 0) {
- 		virq = irq_base;
- 	} else {
+ 	retval = fw_sysfs_wait_timeout(fw_priv, timeout);
+-	if (retval < 0) {
++	if (retval < 0 && retval != -ENOENT) {
+ 		mutex_lock(&fw_lock);
+ 		fw_load_abort(fw_sysfs);
+ 		mutex_unlock(&fw_lock);
 -- 
 2.20.1
 
