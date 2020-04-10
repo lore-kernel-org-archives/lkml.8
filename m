@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DB2FC2BB1D
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 03:53:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DC72C2BB85
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 03:53:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 420D620BED
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 03:53:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5576B20936
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 03:53:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586490822;
-	bh=XjXYzZA3Blto0KWDpihAXvG8nbtE6sMohic1rqCj6FI=;
+	s=default; t=1586490828;
+	bh=Gv4oa5x5E7YXqPDsRigVE4FB0OcWbjPy/wOZslMaZx0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mWam80XtdDwZYVmx0xAZBmq7qVv52bmGR07Yka2dSpcxIjpG182DG5r4in/IJHiDu
-	 d+pmc9cAmdccNxm86LAu3TQus/LMVKyJuls6Qns8npMpSc2tv5ocWy5dLAiGFgGMJw
-	 1un+JS/O+9aY5zT70G8NbG6szvqdbQlOWVZlRwuc=
+	b=UbEfh71TseE9Vm7M+QeZj+DM9N7f6vEUhf0aUBlgwqyX3dgHQpNHPKfsYI/dIhpN+
+	 sN56oJaxPsaiBOtotT0Ak3uSPPWtvkE5jnFn4a+8FN1/+0vKJ/iN6gA+B0tWOBmi38
+	 XjhylLX+B9ZtMn5uz0XLsm0uoLTZenjcX+c1vIXQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728868AbgDJDxg (ORCPT
+        id S1727700AbgDJDud (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Apr 2020 23:53:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35350 "EHLO mail.kernel.org"
+        Thu, 9 Apr 2020 23:50:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35038 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728946AbgDJDuj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Apr 2020 23:50:39 -0400
+        id S1728894AbgDJDu0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Apr 2020 23:50:26 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8DA5B2137B;
-        Fri, 10 Apr 2020 03:50:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2A8F821924;
+        Fri, 10 Apr 2020 03:50:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586490639;
-        bh=XjXYzZA3Blto0KWDpihAXvG8nbtE6sMohic1rqCj6FI=;
+        s=default; t=1586490626;
+        bh=Gv4oa5x5E7YXqPDsRigVE4FB0OcWbjPy/wOZslMaZx0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OaTeNasiwsux7DhKGzDGKPpG47NYqvn0UD60o5aTobdkMF/QRP3ZKAHXOO+d8T/ru
-         BjlaSkFqeW19IzuqduYueOVlKpexeBqw32URyNm/oMEoro7LpFrZWtlV0YYEimIjGh
-         f+QJDRUpUUJQt+HrhoWVivuS8OVi7NTn9tYsECI4=
+        b=uOFfhX6xvYlpcs1y1trJ/2VDOIGMuwwpBjDozIDtZuIAQxh3XWg/9V7+cuRtidX+G
+         76AJuBk0pidBorSHOZkT++IxvnuXmqsjpBSxCWzGAU+eOQrGijw1pPCJ8ipc25FplM
+         JqQt8gsZOoBv7hc84X+n/KaTztsOlahxIZEfgmZo=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Josef Bacik <josef@toxicpanda.com>,
-        David Sterba <dsterba@suse.com>,
-        Sasha Levin <sashal@kernel.org>, linux-btrfs@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 29/32] btrfs: hold a ref on the root in btrfs_recover_relocation
-Date:   Thu,  9 Apr 2020 23:50:02 -0400
-Message-Id: <20200410035005.9371-29-sashal@kernel.org>
+Cc:     Arvind Sankar <nivedita@alum.mit.edu>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 18/32] x86/boot: Use unsigned comparison for addresses
+Date:   Thu,  9 Apr 2020 23:49:51 -0400
+Message-Id: <20200410035005.9371-18-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200410035005.9371-1-sashal@kernel.org>
 References: <20200410035005.9371-1-sashal@kernel.org>
@@ -59,73 +59,69 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Josef Bacik <josef@toxicpanda.com>
+From: Arvind Sankar <nivedita@alum.mit.edu>
 
-[ Upstream commit 932fd26df8125a5b14438563c4d3e33f59ba80f7 ]
+[ Upstream commit 81a34892c2c7c809f9c4e22c5ac936ae673fb9a2 ]
 
-We look up the fs root in various places in here when recovering from a
-crashed relcoation.  Make sure we hold a ref on the root whenever we
-look them up.
+The load address is compared with LOAD_PHYSICAL_ADDR using a signed
+comparison currently (using jge instruction).
 
-Signed-off-by: Josef Bacik <josef@toxicpanda.com>
-Reviewed-by: David Sterba <dsterba@suse.com>
-Signed-off-by: David Sterba <dsterba@suse.com>
+When loading a 64-bit kernel using the new efi32_pe_entry() point added by:
+
+  97aa276579b2 ("efi/x86: Add true mixed mode entry point into .compat section")
+
+using Qemu with -m 3072, the firmware actually loads us above 2Gb,
+resulting in a very early crash.
+
+Use the JAE instruction to perform a unsigned comparison instead, as physical
+addresses should be considered unsigned.
+
+Signed-off-by: Arvind Sankar <nivedita@alum.mit.edu>
+Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Link: https://lore.kernel.org/r/20200301230436.2246909-6-nivedita@alum.mit.edu
+Link: https://lore.kernel.org/r/20200308080859.21568-14-ardb@kernel.org
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/btrfs/relocation.c | 21 ++++++++++++++++++---
- 1 file changed, 18 insertions(+), 3 deletions(-)
+ arch/x86/boot/compressed/head_32.S | 2 +-
+ arch/x86/boot/compressed/head_64.S | 4 ++--
+ 2 files changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/fs/btrfs/relocation.c b/fs/btrfs/relocation.c
-index f98913061a40c..377cf3785fbbd 100644
---- a/fs/btrfs/relocation.c
-+++ b/fs/btrfs/relocation.c
-@@ -4428,6 +4428,12 @@ int btrfs_recover_relocation(struct btrfs_root *root)
- 					err = ret;
- 					goto out;
- 				}
-+			} else {
-+				if (!btrfs_grab_fs_root(fs_root)) {
-+					err = -ENOENT;
-+					goto out;
-+				}
-+				btrfs_put_fs_root(fs_root);
- 			}
- 		}
- 
-@@ -4477,10 +4483,15 @@ int btrfs_recover_relocation(struct btrfs_root *root)
- 			list_add_tail(&reloc_root->root_list, &reloc_roots);
- 			goto out_free;
- 		}
-+		if (!btrfs_grab_fs_root(fs_root)) {
-+			err = -ENOENT;
-+			goto out_free;
-+		}
- 
- 		err = __add_reloc_root(reloc_root);
- 		BUG_ON(err < 0); /* -ENOMEM or logic error */
- 		fs_root->reloc_root = reloc_root;
-+		btrfs_put_fs_root(fs_root);
- 	}
- 
- 	err = btrfs_commit_transaction(trans);
-@@ -4508,10 +4519,14 @@ int btrfs_recover_relocation(struct btrfs_root *root)
- 	if (err == 0) {
- 		/* cleanup orphan inode in data relocation tree */
- 		fs_root = read_fs_root(fs_info, BTRFS_DATA_RELOC_TREE_OBJECTID);
--		if (IS_ERR(fs_root))
-+		if (IS_ERR(fs_root)) {
- 			err = PTR_ERR(fs_root);
--		else
--			err = btrfs_orphan_cleanup(fs_root);
-+		} else {
-+			if (btrfs_grab_fs_root(fs_root)) {
-+				err = btrfs_orphan_cleanup(fs_root);
-+				btrfs_put_fs_root(fs_root);
-+			}
-+		}
- 	}
- 	return err;
- }
+diff --git a/arch/x86/boot/compressed/head_32.S b/arch/x86/boot/compressed/head_32.S
+index 37380c0d59996..01d628ea34024 100644
+--- a/arch/x86/boot/compressed/head_32.S
++++ b/arch/x86/boot/compressed/head_32.S
+@@ -106,7 +106,7 @@ ENTRY(startup_32)
+ 	notl	%eax
+ 	andl    %eax, %ebx
+ 	cmpl	$LOAD_PHYSICAL_ADDR, %ebx
+-	jge	1f
++	jae	1f
+ #endif
+ 	movl	$LOAD_PHYSICAL_ADDR, %ebx
+ 1:
+diff --git a/arch/x86/boot/compressed/head_64.S b/arch/x86/boot/compressed/head_64.S
+index 4eaa724afce34..9fa644c62839f 100644
+--- a/arch/x86/boot/compressed/head_64.S
++++ b/arch/x86/boot/compressed/head_64.S
+@@ -106,7 +106,7 @@ ENTRY(startup_32)
+ 	notl	%eax
+ 	andl	%eax, %ebx
+ 	cmpl	$LOAD_PHYSICAL_ADDR, %ebx
+-	jge	1f
++	jae	1f
+ #endif
+ 	movl	$LOAD_PHYSICAL_ADDR, %ebx
+ 1:
+@@ -297,7 +297,7 @@ ENTRY(startup_64)
+ 	notq	%rax
+ 	andq	%rax, %rbp
+ 	cmpq	$LOAD_PHYSICAL_ADDR, %rbp
+-	jge	1f
++	jae	1f
+ #endif
+ 	movq	$LOAD_PHYSICAL_ADDR, %rbp
+ 1:
 -- 
 2.20.1
 
