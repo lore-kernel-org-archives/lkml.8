@@ -2,102 +2,76 @@ Return-Path: <SRS0=VV4q=52=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 171E1C2BA2B
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 09:51:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EE69C2BB55
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 09:52:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E78982064A
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 09:51:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C757E20801
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 09:52:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="iDl6k1Yu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726141AbgDJJvf (ORCPT
+        id S1726652AbgDJJwJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Apr 2020 05:51:35 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:45344 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725861AbgDJJvf (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Apr 2020 05:51:35 -0400
-Received: by mail-ot1-f65.google.com with SMTP id 60so1345731otl.12
-        for <linux-kernel@vger.kernel.org>; Fri, 10 Apr 2020 02:51:34 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Ne1I5N3/wwuCfWlSTIbXPwHMGfTFfxhjkMy1Sgth4kw=;
-        b=GCxr70EgnIaS4wOYLFrEFW1adtHs3PgidfK1oj5KD8FMo1vTBwWQly5nXkjuSeSmWF
-         rbeMvRRU/MkzVJ8/1/QLBqSaSuwbjC+Ah/K6OpCLsZW0wi4D1I098mwees/yyx+EkN7P
-         S76HIh2hUT53UR1Xmeb6OoziwN8oH/oQSDzDswn4RS5qAGCbu99x0XF7YK0Zbs7b/b1C
-         T8uyzKHtbdY5cYuBeUTJqvSi1LCcQNE5EYCsRXyXvnHg/3dcDOSU8nVHEbzVhCs/tDFC
-         QOGtMIH/Yxra42gckq8xlbdX3Ib2DwpOENp+uw289/JL3P+/GR8spS/oi2fv5WWYS4LO
-         YI9g==
-X-Gm-Message-State: AGi0PuZoBC72wxtHBNwPZaulP7XVC7TW/6T7fGynP+8MQQytzRUaeCK1
-        40L2RmBuATUEPDZA+xfIXsoLqigo3dmiPVV/lkUruA==
-X-Google-Smtp-Source: APiQypLelDB1zoePDN1AZwr/IomIMzDCxsIWWOt5sev9LXyBBr/1uuDSUDuLoi1OAti/KVSHWW08qdSrZW5MvcOcb9U=
-X-Received: by 2002:a4a:a442:: with SMTP id w2mr3477255ool.90.1586512294559;
- Fri, 10 Apr 2020 02:51:34 -0700 (PDT)
+        Fri, 10 Apr 2020 05:52:09 -0400
+Received: from mail.skyhub.de ([5.9.137.197]:58822 "EHLO mail.skyhub.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726101AbgDJJwJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Apr 2020 05:52:09 -0400
+Received: from zn.tnic (p200300EC2F0CB7007559D7B1A4FC9407.dip0.t-ipconnect.de [IPv6:2003:ec:2f0c:b700:7559:d7b1:a4fc:9407])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 2FF791EC0CF2;
+        Fri, 10 Apr 2020 11:52:08 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1586512328;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=WQuZtTSg9+0XoEeNCCeYTfWr/6/2aZzT/q4rHTrDrUg=;
+        b=iDl6k1YusnWxVkjJj16BFkPkqYl+cpCd+SgWQ4sN5VuLyE7F9c5SGWQGxRSdyOPKHBRBCm
+        QpO2Mjv05s0hkx2lAg0bEV2tJafvnEV7LQXhxEp28DhvyMEcptpjXJjuExeAwj+WS6gyRc
+        GZ31CKOMAgaNKgA1mXvbMbhKSV6UYR0=
+Date:   Fri, 10 Apr 2020 11:52:06 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     Tang Bin <tangbin@cmss.chinamobile.com>
+Cc:     rrichter <rrichter@marvell.com>,
+        "thor.thayer" <thor.thayer@linux.intel.com>,
+        mchehab <mchehab@kernel.org>, "tony.luck" <tony.luck@intel.com>,
+        "james.morse" <james.morse@arm.com>,
+        linux-edac <linux-edac@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] EDAC/altera:Use platform_get_irq_optional()
+Message-ID: <20200410095206.GA8205@zn.tnic>
+References: <20200402112740.15580-1-tangbin@cmss.chinamobile.com>
+ <20200402123001.obgzqmlure4cfvh7@rric.localdomain>
+ <202004022106312118022@cmss.chinamobile.com>
+ <20200408071022.ft6aamptrxlaz23f@rric.localdomain>
+ <2020040819334451781313@cmss.chinamobile.com>
+ <20200408113658.GE24663@zn.tnic>
+ <1b9a872f-f616-8eaf-1cca-d73647f696e3@cmss.chinamobile.com>
 MIME-Version: 1.0
-References: <20200405081355.2870-1-mst@redhat.com>
-In-Reply-To: <20200405081355.2870-1-mst@redhat.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Fri, 10 Apr 2020 11:51:22 +0200
-Message-ID: <CAMuHMdXedy2knwgW7-tYB8-d=RaqpvQcoL-MQp3WAED-g1Xpkw@mail.gmail.com>
-Subject: Re: [PATCH] vdpa-sim: depend on HAS_DMA
-To:     "Michael S. Tsirkin" <mst@redhat.com>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Jason Wang <jasowang@redhat.com>,
-        virtualization@lists.linux-foundation.org,
-        Christoph Hellwig <hch@infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <1b9a872f-f616-8eaf-1cca-d73647f696e3@cmss.chinamobile.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Michael,
+On Fri, Apr 10, 2020 at 04:25:24PM +0800, Tang Bin wrote:
+> I am sorry for the previous writing mistake(top-post). I have consulted
+> others and hope it's right this time. Sorry again and thanks for teaching. I
+> hope to continuously improve myself and regulate myself under your guidance.
 
-On Sun, Apr 5, 2020 at 10:17 AM Michael S. Tsirkin <mst@redhat.com> wrote:
->
-> set_dma_ops isn't available on all architectures:
->
->         make ARCH=um
-> ...
->
->    drivers/vdpa/vdpa_sim/vdpa_sim.c: In function 'vdpasim_create':
-> >> drivers/vdpa/vdpa_sim/vdpa_sim.c:324:2: error: implicit declaration of function 'set_dma_ops'; did you mean 'set_groups'?
-> +[-Werror=implicit-function-declaration]
->      set_dma_ops(dev, &vdpasim_dma_ops);
->      ^~~~~~~~~~~
->      set_groups
->
-> Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
-
-As this fixes the Sun-3 all{mod,yes}-config build, which has NO_DMA=y:
-Acked-by: Geert Uytterhoeven <geert@linux-m68k.org>
-
-However, you may want to follow Christoph's suggestion instead.
-
-> --- a/drivers/vdpa/Kconfig
-> +++ b/drivers/vdpa/Kconfig
-> @@ -14,7 +14,7 @@ if VDPA_MENU
->
->  config VDPA_SIM
->         tristate "vDPA device simulator"
-> -       depends on RUNTIME_TESTING_MENU
-> +       depends on RUNTIME_TESTING_MENU && HAS_DMA
->         select VDPA
->         select VHOST_RING
->         select VHOST_IOTLB
-
-Gr{oetje,eeting}s,
-
-                        Geert
+That looks better, thanks!
 
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+Regards/Gruss,
+    Boris.
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+https://people.kernel.org/tglx/notes-about-netiquette
