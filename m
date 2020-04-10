@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CC91C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 03:56:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BBE1BC2BB85
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 03:56:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 324FB2063A
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 03:56:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 94A5D2063A
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 03:56:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586490990;
-	bh=Gv1blBVWcIK/uI0Db68QmL3UwA9eP1qgRn/wp2cF4Pw=;
+	s=default; t=1586490992;
+	bh=0Lo7CKmDANSyxdZ2yOhcCNB85j0IE61I8BCTf6STT7M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Z6P5sJNK+O07BRQoGbqs/vAqdM5zxjKyM64P8zHagDj2niwmG9tfwCbWNxvQgPbf+
-	 a4ypl8XrhqiHUvoHpE1DCCR3D58ZTmuwnD5PzuCNhftE30z+x+LRdrTtohNsvOj6Rl
-	 Elo86WRrDN1cqBX9HKfkd4Dd5ju670FJJ8AXuCcw=
+	b=m+LqQvDS+PGQCLtLRyBsrOmPxdWbWGkQ1UgcF+hYP3hrG0tYAR7v3/PS2vcGi9JnL
+	 NJK7BOHV3hQvNBuM1EjAvY+lz1YYkdrUIU4tLM2odBliCBjqrU+cfMaG/SWIPF7zmH
+	 ThK8BhtlIYncGPJ7guOIB0XmAoYn/5NSF6T+usb4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728888AbgDJD42 (ORCPT
+        id S1728603AbgDJDtk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Apr 2020 23:56:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33792 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728605AbgDJDtk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 9 Apr 2020 23:49:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33622 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728564AbgDJDtd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Apr 2020 23:49:33 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 18F362137B;
-        Fri, 10 Apr 2020 03:49:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 333CA20A8B;
+        Fri, 10 Apr 2020 03:49:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586490580;
-        bh=Gv1blBVWcIK/uI0Db68QmL3UwA9eP1qgRn/wp2cF4Pw=;
+        s=default; t=1586490572;
+        bh=0Lo7CKmDANSyxdZ2yOhcCNB85j0IE61I8BCTf6STT7M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YA6+9BxxbATwJ05X5OT60vJT5d4EzLIqazbo8QjG5KxzLfy8WqaVliXofCWMxN2MM
-         +wiw3NbIsTcAp7t5swBa4O1Ahkt9jLbizbLdZ4XSAbZA7EuTcLiM6LyC/q3BgWD8KI
-         uX9h1Mq8vGc/PCYyCr467PRGTa7nMmIJFuExitRA=
+        b=GcaBRntt7nFJxG8ZbKrjtAXb1araSu/i3GwLNk7ppkJMeX/CtqNssGOl8LcIV2EeT
+         eyKMqYxgoffnIBGg7jrdWK62XKLP6CYt7KdHnUvludboy0ZbfMMMpA+wGaDbTzl33U
+         8nXyzkXmIXNtcPFfZjH1KMK+bsSLl6QiWa3KNra4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Bob Peterson <rpeterso@redhat.com>,
-        Andreas Gruenbacher <agruenba@redhat.com>,
-        Sasha Levin <sashal@kernel.org>, cluster-devel@redhat.com
-Subject: [PATCH AUTOSEL 5.4 26/46] gfs2: Do log_flush in gfs2_ail_empty_gl even if ail list is empty
-Date:   Thu,  9 Apr 2020 23:48:49 -0400
-Message-Id: <20200410034909.8922-26-sashal@kernel.org>
+Cc:     Michael Wang <yun.wang@linux.alibaba.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.4 19/46] sched: Avoid scale real weight down to zero
+Date:   Thu,  9 Apr 2020 23:48:42 -0400
+Message-Id: <20200410034909.8922-19-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200410034909.8922-1-sashal@kernel.org>
 References: <20200410034909.8922-1-sashal@kernel.org>
@@ -59,107 +60,80 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bob Peterson <rpeterso@redhat.com>
+From: Michael Wang <yun.wang@linux.alibaba.com>
 
-[ Upstream commit 9ff78289356af640941bbb0dd3f46af2063f0046 ]
+[ Upstream commit 26cf52229efc87e2effa9d788f9b33c40fb3358a ]
 
-Before this patch, if gfs2_ail_empty_gl saw there was nothing on
-the ail list, it would return and not flush the log. The problem
-is that there could still be a revoke for the rgrp sitting on the
-sd_log_le_revoke list that's been recently taken off the ail list.
-But that revoke still needs to be written, and the rgrp_go_inval
-still needs to call log_flush_wait to ensure the revokes are all
-properly written to the journal before we relinquish control of
-the glock to another node. If we give the glock to another node
-before we have this knowledge, the node might crash and its journal
-replayed, in which case the missing revoke would allow the journal
-replay to replay the rgrp over top of the rgrp we already gave to
-another node, thus overwriting its changes and corrupting the
-file system.
+During our testing, we found a case that shares no longer
+working correctly, the cgroup topology is like:
 
-This patch makes gfs2_ail_empty_gl still call gfs2_log_flush rather
-than returning.
+  /sys/fs/cgroup/cpu/A		(shares=102400)
+  /sys/fs/cgroup/cpu/A/B	(shares=2)
+  /sys/fs/cgroup/cpu/A/B/C	(shares=1024)
 
-Signed-off-by: Bob Peterson <rpeterso@redhat.com>
-Reviewed-by: Andreas Gruenbacher <agruenba@redhat.com>
+  /sys/fs/cgroup/cpu/D		(shares=1024)
+  /sys/fs/cgroup/cpu/D/E	(shares=1024)
+  /sys/fs/cgroup/cpu/D/E/F	(shares=1024)
+
+The same benchmark is running in group C & F, no other tasks are
+running, the benchmark is capable to consumed all the CPUs.
+
+We suppose the group C will win more CPU resources since it could
+enjoy all the shares of group A, but it's F who wins much more.
+
+The reason is because we have group B with shares as 2, since
+A->cfs_rq.load.weight == B->se.load.weight == B->shares/nr_cpus,
+so A->cfs_rq.load.weight become very small.
+
+And in calc_group_shares() we calculate shares as:
+
+  load = max(scale_load_down(cfs_rq->load.weight), cfs_rq->avg.load_avg);
+  shares = (tg_shares * load) / tg_weight;
+
+Since the 'cfs_rq->load.weight' is too small, the load become 0
+after scale down, although 'tg_shares' is 102400, shares of the se
+which stand for group A on root cfs_rq become 2.
+
+While the se of D on root cfs_rq is far more bigger than 2, so it
+wins the battle.
+
+Thus when scale_load_down() scale real weight down to 0, it's no
+longer telling the real story, the caller will have the wrong
+information and the calculation will be buggy.
+
+This patch add check in scale_load_down(), so the real weight will
+be >= MIN_SHARES after scale, after applied the group C wins as
+expected.
+
+Suggested-by: Peter Zijlstra <peterz@infradead.org>
+Signed-off-by: Michael Wang <yun.wang@linux.alibaba.com>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Reviewed-by: Vincent Guittot <vincent.guittot@linaro.org>
+Link: https://lkml.kernel.org/r/38e8e212-59a1-64b2-b247-b6d0b52d8dc1@linux.alibaba.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/gfs2/glops.c | 27 ++++++++++++++++++++++++++-
- fs/gfs2/log.c   |  2 +-
- fs/gfs2/log.h   |  1 +
- 3 files changed, 28 insertions(+), 2 deletions(-)
+ kernel/sched/sched.h | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
-diff --git a/fs/gfs2/glops.c b/fs/gfs2/glops.c
-index ff213690e3648..83cf64da474cb 100644
---- a/fs/gfs2/glops.c
-+++ b/fs/gfs2/glops.c
-@@ -89,8 +89,32 @@ static void gfs2_ail_empty_gl(struct gfs2_glock *gl)
- 	INIT_LIST_HEAD(&tr.tr_databuf);
- 	tr.tr_revokes = atomic_read(&gl->gl_ail_count);
- 
--	if (!tr.tr_revokes)
-+	if (!tr.tr_revokes) {
-+		bool have_revokes;
-+		bool log_in_flight;
-+
-+		/*
-+		 * We have nothing on the ail, but there could be revokes on
-+		 * the sdp revoke queue, in which case, we still want to flush
-+		 * the log and wait for it to finish.
-+		 *
-+		 * If the sdp revoke list is empty too, we might still have an
-+		 * io outstanding for writing revokes, so we should wait for
-+		 * it before returning.
-+		 *
-+		 * If none of these conditions are true, our revokes are all
-+		 * flushed and we can return.
-+		 */
-+		gfs2_log_lock(sdp);
-+		have_revokes = !list_empty(&sdp->sd_log_revokes);
-+		log_in_flight = atomic_read(&sdp->sd_log_in_flight);
-+		gfs2_log_unlock(sdp);
-+		if (have_revokes)
-+			goto flush;
-+		if (log_in_flight)
-+			log_flush_wait(sdp);
- 		return;
-+	}
- 
- 	/* A shortened, inline version of gfs2_trans_begin()
-          * tr->alloced is not set since the transaction structure is
-@@ -105,6 +129,7 @@ static void gfs2_ail_empty_gl(struct gfs2_glock *gl)
- 	__gfs2_ail_flush(gl, 0, tr.tr_revokes);
- 
- 	gfs2_trans_end(sdp);
-+flush:
- 	gfs2_log_flush(sdp, NULL, GFS2_LOG_HEAD_FLUSH_NORMAL |
- 		       GFS2_LFC_AIL_EMPTY_GL);
- }
-diff --git a/fs/gfs2/log.c b/fs/gfs2/log.c
-index 2aed73666a657..47bc27d4169e6 100644
---- a/fs/gfs2/log.c
-+++ b/fs/gfs2/log.c
-@@ -513,7 +513,7 @@ static void log_pull_tail(struct gfs2_sbd *sdp, unsigned int new_tail)
- }
- 
- 
--static void log_flush_wait(struct gfs2_sbd *sdp)
-+void log_flush_wait(struct gfs2_sbd *sdp)
- {
- 	DEFINE_WAIT(wait);
- 
-diff --git a/fs/gfs2/log.h b/fs/gfs2/log.h
-index c762da4945468..52b9bf27e918f 100644
---- a/fs/gfs2/log.h
-+++ b/fs/gfs2/log.h
-@@ -73,6 +73,7 @@ extern void gfs2_log_flush(struct gfs2_sbd *sdp, struct gfs2_glock *gl,
- 			   u32 type);
- extern void gfs2_log_commit(struct gfs2_sbd *sdp, struct gfs2_trans *trans);
- extern void gfs2_ail1_flush(struct gfs2_sbd *sdp, struct writeback_control *wbc);
-+extern void log_flush_wait(struct gfs2_sbd *sdp);
- 
- extern void gfs2_log_shutdown(struct gfs2_sbd *sdp);
- extern int gfs2_logd(void *data);
+diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
+index e5e2605778c97..c7e7481968bfa 100644
+--- a/kernel/sched/sched.h
++++ b/kernel/sched/sched.h
+@@ -118,7 +118,13 @@ extern long calc_load_fold_active(struct rq *this_rq, long adjust);
+ #ifdef CONFIG_64BIT
+ # define NICE_0_LOAD_SHIFT	(SCHED_FIXEDPOINT_SHIFT + SCHED_FIXEDPOINT_SHIFT)
+ # define scale_load(w)		((w) << SCHED_FIXEDPOINT_SHIFT)
+-# define scale_load_down(w)	((w) >> SCHED_FIXEDPOINT_SHIFT)
++# define scale_load_down(w) \
++({ \
++	unsigned long __w = (w); \
++	if (__w) \
++		__w = max(2UL, __w >> SCHED_FIXEDPOINT_SHIFT); \
++	__w; \
++})
+ #else
+ # define NICE_0_LOAD_SHIFT	(SCHED_FIXEDPOINT_SHIFT)
+ # define scale_load(w)		(w)
 -- 
 2.20.1
 
