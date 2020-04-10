@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19DB9C2D0EC
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 03:54:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EED6CC2D0EC
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 03:54:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D5C532063A
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 03:54:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C5D1920936
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 03:54:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586490864;
-	bh=JVBQ4mJiai4SFGqM9hpLiYzHjPgT+kxE4i+UwDn0DQY=;
+	s=default; t=1586490867;
+	bh=7RdBcKbcSA8txvE3ou1/hXYhwhq2DHXO8rive13W17M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1FoLxAJeTRQCh8jkYBXi7YMQD4uvJoD+5OgWrNg0PNf1RlylCQLQBYYUsxS1itqqM
-	 TjyhlCNyalyOgdhkX8flcvlh1pOeD9njd9soPVkWY+kP7lVMUwO1uL7oJAWIxTsx4g
-	 r0V55N3E07QHY0Qf6VInLLqWTzV7oSEY1fNgHZJk=
+	b=mXOILoXVZDCXZZLnlLUB2phmmj2+x58sHlc4AdguFfWzLYfmBGj6Rtuhwn8UWCE28
+	 FEFo5zC8fsJoatKmd/apwDwgq975PIi/KkafCsW2n73FZUpNgA2xWZF47qT7jqj3Uv
+	 OGxXKapbPSeAETcYxq/5dKQ9fsIKwtCIv5yp1ylg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728899AbgDJDyX (ORCPT
+        id S1728874AbgDJDuX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Apr 2020 23:54:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34994 "EHLO mail.kernel.org"
+        Thu, 9 Apr 2020 23:50:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34750 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728888AbgDJDuZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Apr 2020 23:50:25 -0400
+        id S1728101AbgDJDuR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Apr 2020 23:50:17 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1ADC221655;
-        Fri, 10 Apr 2020 03:50:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 689402137B;
+        Fri, 10 Apr 2020 03:50:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586490625;
-        bh=JVBQ4mJiai4SFGqM9hpLiYzHjPgT+kxE4i+UwDn0DQY=;
+        s=default; t=1586490618;
+        bh=7RdBcKbcSA8txvE3ou1/hXYhwhq2DHXO8rive13W17M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2q7Piw78gdro0AS5pTvf6QO1LwvBpXxNHLgxJdbC/KrTSBDhj9GUh+/XMuFUjj+xu
-         hBO4X9GLvjBJLbcCToPH9qfj5Ajp+TlC2TrYmX+ZQNnsI+8vT+TdEBnQ80fAgzEvND
-         vOwV8W5ApRUEAP52QFwmwiR0GwOpD9mAvZJjmpqQ=
+        b=Ow2HXu/gfv440Yy/s0b/uopCglegvQEfX9hqciTIbKW0mCW+B2I4QImvgEIg2ez4B
+         yzinylgt5DMsoJMOQeLeYePoX0Q+AE54mncWsyYobhitJ3PzA22iDIimWSA1b0E50w
+         oqxYW+z1BQjCVs0n14fJAngbsJCwK1FYqkstk704=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Bob Peterson <rpeterso@redhat.com>,
-        Andreas Gruenbacher <agruenba@redhat.com>,
-        Sasha Levin <sashal@kernel.org>, cluster-devel@redhat.com
-Subject: [PATCH AUTOSEL 4.19 17/32] gfs2: Don't demote a glock until its revokes are written
-Date:   Thu,  9 Apr 2020 23:49:50 -0400
-Message-Id: <20200410035005.9371-17-sashal@kernel.org>
+Cc:     Sungbo Eo <mans0n@gorani.run>, Marc Zyngier <maz@kernel.org>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH AUTOSEL 4.19 10/32] irqchip/versatile-fpga: Handle chained IRQs properly
+Date:   Thu,  9 Apr 2020 23:49:43 -0400
+Message-Id: <20200410035005.9371-10-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200410035005.9371-1-sashal@kernel.org>
 References: <20200410035005.9371-1-sashal@kernel.org>
@@ -59,44 +59,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bob Peterson <rpeterso@redhat.com>
+From: Sungbo Eo <mans0n@gorani.run>
 
-[ Upstream commit df5db5f9ee112e76b5202fbc331f990a0fc316d6 ]
+[ Upstream commit 486562da598c59e9f835b551d7cf19507de2d681 ]
 
-Before this patch, run_queue would demote glocks based on whether
-there are any more holders. But if the glock has pending revokes that
-haven't been written to the media, giving up the glock might end in
-file system corruption if the revokes never get written due to
-io errors, node crashes and fences, etc. In that case, another node
-will replay the metadata blocks associated with the glock, but
-because the revoke was never written, it could replay that block
-even though the glock had since been granted to another node who
-might have made changes.
+Enclose the chained handler with chained_irq_{enter,exit}(), so that the
+muxed interrupts get properly acked.
 
-This patch changes the logic in run_queue so that it never demotes
-a glock until its count of pending revokes reaches zero.
+This patch also fixes a reboot bug on OX820 SoC, where the jiffies timer
+interrupt is never acked. The kernel waits a clock tick forever in
+calibrate_delay_converge(), which leads to a boot hang.
 
-Signed-off-by: Bob Peterson <rpeterso@redhat.com>
-Reviewed-by: Andreas Gruenbacher <agruenba@redhat.com>
+Fixes: c41b16f8c9d9 ("ARM: integrator/versatile: consolidate FPGA IRQ handling code")
+Signed-off-by: Sungbo Eo <mans0n@gorani.run>
+Signed-off-by: Marc Zyngier <maz@kernel.org>
+Link: https://lore.kernel.org/r/20200319023448.1479701-1-mans0n@gorani.run
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/gfs2/glock.c | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/irqchip/irq-versatile-fpga.c | 12 ++++++++++--
+ 1 file changed, 10 insertions(+), 2 deletions(-)
 
-diff --git a/fs/gfs2/glock.c b/fs/gfs2/glock.c
-index ccdd8c821abd7..f8a5eef3d014b 100644
---- a/fs/gfs2/glock.c
-+++ b/fs/gfs2/glock.c
-@@ -636,6 +636,9 @@ __acquires(&gl->gl_lockref.lock)
- 			goto out_unlock;
- 		if (nonblock)
- 			goto out_sched;
-+		smp_mb();
-+		if (atomic_read(&gl->gl_revokes) != 0)
-+			goto out_sched;
- 		set_bit(GLF_DEMOTE_IN_PROGRESS, &gl->gl_flags);
- 		GLOCK_BUG_ON(gl, gl->gl_demote_state == LM_ST_EXCLUSIVE);
- 		gl->gl_target = gl->gl_demote_state;
+diff --git a/drivers/irqchip/irq-versatile-fpga.c b/drivers/irqchip/irq-versatile-fpga.c
+index 928858dada756..70e2cfff8175f 100644
+--- a/drivers/irqchip/irq-versatile-fpga.c
++++ b/drivers/irqchip/irq-versatile-fpga.c
+@@ -6,6 +6,7 @@
+ #include <linux/irq.h>
+ #include <linux/io.h>
+ #include <linux/irqchip.h>
++#include <linux/irqchip/chained_irq.h>
+ #include <linux/irqchip/versatile-fpga.h>
+ #include <linux/irqdomain.h>
+ #include <linux/module.h>
+@@ -68,12 +69,16 @@ static void fpga_irq_unmask(struct irq_data *d)
+ 
+ static void fpga_irq_handle(struct irq_desc *desc)
+ {
++	struct irq_chip *chip = irq_desc_get_chip(desc);
+ 	struct fpga_irq_data *f = irq_desc_get_handler_data(desc);
+-	u32 status = readl(f->base + IRQ_STATUS);
++	u32 status;
++
++	chained_irq_enter(chip, desc);
+ 
++	status = readl(f->base + IRQ_STATUS);
+ 	if (status == 0) {
+ 		do_bad_IRQ(desc);
+-		return;
++		goto out;
+ 	}
+ 
+ 	do {
+@@ -82,6 +87,9 @@ static void fpga_irq_handle(struct irq_desc *desc)
+ 		status &= ~(1 << irq);
+ 		generic_handle_irq(irq_find_mapping(f->domain, irq));
+ 	} while (status);
++
++out:
++	chained_irq_exit(chip, desc);
+ }
+ 
+ /*
 -- 
 2.20.1
 
