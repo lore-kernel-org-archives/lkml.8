@@ -2,140 +2,109 @@ Return-Path: <SRS0=VV4q=52=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63797C2BA19
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 00:47:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1770FC2BB85
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 00:47:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3991B20769
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 00:47:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586479654;
-	bh=enGM3Zk5ckxO6YjhHclG/EyDxbe/4faXeT7uJSpIT3M=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=a5JOTksISrvYwmIy6q4GxnVjNUwwei93ZpGmWmex1WpGgGhvTOknooankGxWjzPnG
-	 krKTaEgy+84qV06l7clitXn9B2u7xTwkQVSyJlMkDFHm4OSMutRJyw51SjArGJlSry
-	 fRC+b35OJJB2ohy2HX8e4qgljZcoAc4vjj10PHE4=
+	by mail.kernel.org (Postfix) with ESMTP id DE12720768
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 00:47:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rlX6YEU9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727187AbgDJArc (ORCPT
+        id S1727302AbgDJArt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Apr 2020 20:47:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40354 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726859AbgDJArc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Apr 2020 20:47:32 -0400
-Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6D9DF20768;
-        Fri, 10 Apr 2020 00:47:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586479652;
-        bh=enGM3Zk5ckxO6YjhHclG/EyDxbe/4faXeT7uJSpIT3M=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=taEFXAPgJjLCfnupDKhIlGYKK6UO3ZzxKmeDDnETQjIy6FCNAMjjXf0BeZH6jSqkQ
-         PL1cRbyDaRAqoFPgYZP5SFgT8lPdbhYOOHRqj5F4KFmCPQz8hozPzS8nkxybBlU/ko
-         BrA61BTbYo1FXoBNn6EUVLgz1PURBOAoMCGS81dw=
-Date:   Fri, 10 Apr 2020 09:47:26 +0900
-From:   Masami Hiramatsu <mhiramat@kernel.org>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Christian =?UTF-8?B?S8O2bmln?= <christian.koenig@amd.com>,
-        Jann Horn <jannh@google.com>,
-        Harry Wentland <harry.wentland@amd.com>,
-        Leo Li <sunpeng.li@amd.com>, amd-gfx@lists.freedesktop.org,
-        Alex Deucher <alexander.deucher@amd.com>,
-        David Zhou <David1.Zhou@amd.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H . Peter Anvin" <hpa@zytor.com>,
-        the arch/x86 maintainers <x86@kernel.org>,
-        kernel list <linux-kernel@vger.kernel.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: Re: [PATCH v2] x86: insn: Add insn_is_fpu()
-Message-Id: <20200410094726.f9885bafa730fe2a8b3b3c3a@kernel.org>
-In-Reply-To: <20200409143212.GW20696@hirez.programming.kicks-ass.net>
-References: <20200407155449.GF20730@hirez.programming.kicks-ass.net>
-        <158636215075.6641.10786116450376715657.stgit@devnote2>
-        <20200409143212.GW20696@hirez.programming.kicks-ass.net>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Thu, 9 Apr 2020 20:47:49 -0400
+Received: from mail-ed1-f66.google.com ([209.85.208.66]:38795 "EHLO
+        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726859AbgDJArt (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Apr 2020 20:47:49 -0400
+Received: by mail-ed1-f66.google.com with SMTP id e5so556966edq.5;
+        Thu, 09 Apr 2020 17:47:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=AaXKqqNhWwXTEhyoNjhEC/wZ5IBgda9BijmlHrsyAzs=;
+        b=rlX6YEU9uaIFZ8ZG6zqSY97HPpxFwjg8LybI2X+embhgop3KgGzATQRsGQwNSfDQ7a
+         VZu9Eh8ZQtzQ+O7iooYPpAsdzCgUvQ9uqz83rrrhC7DOGgejll1BoyqsB4/ttHFCmGgP
+         8fUyKOkmEzER5DlcJpUfau8Hh4gBy46CktuIR1nSXmI4s4zC3oXHHPKZU30Q1XO63rVk
+         YrgfBJPbZwdYhuu4G4qCtXV7gmoStSKSemfQCt2kM4ks1UzMJI04G7CeVAjV0uguRA9Z
+         DVrZZoZRM8RTidVfCzcc0m1ypTJNYBrLdVaMrsHffulpw1xNU0U2CCxRpaECGy/KbGXS
+         3ZeQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=AaXKqqNhWwXTEhyoNjhEC/wZ5IBgda9BijmlHrsyAzs=;
+        b=DkQsQQQsiEt+12/erGS7CQ+Niv3xTTHcXJrI7of1mHlpQgjBNL9nQvR8soCjGA46B1
+         cCaw4tAUnGNCKO00/VyVUf0HekALPvxGN97y/E96kdyNXV9qx7NfTOw64JJUHJRNd0xt
+         jnwOi9qWI5AkeyzaHxClpNGiWUoYZ/bgiR17qqYYZcJK36wEFsZ+alje9+vJgfQIX1ze
+         6LJK5mL1OfxfLr5V/DZhV1VEMHiyYFcfz9N12/q4OUoDULrYANGx3B+H36r/vUxNGE3x
+         Rt0/vECGx+kzc/hkc3yJtKvpxIO1qHBe+y1LWPwNYweX1hfGFZsNc0xWj3KMyh5Y8yJ8
+         4hdg==
+X-Gm-Message-State: AGi0Pub5bg8EKDKGeQl7EQmDuDcckzTwcxEb4Qdyh+qQV7vooNzmmv65
+        mgAPLLEYmv9N8jQMcoMfvj4Uhcd6UVPa2CF9
+X-Google-Smtp-Source: APiQypIDgPP5SYnSGNGLtJlzJvRK3ujDA4LiVyVvMnB5ny2rpXt+EMRELOoEoRsm95Z4o7IVoL/mEA==
+X-Received: by 2002:aa7:c893:: with SMTP id p19mr2597008eds.19.1586479666469;
+        Thu, 09 Apr 2020 17:47:46 -0700 (PDT)
+Received: from Ansuel-XPS.localdomain (host117-205-dynamic.180-80-r.retail.telecomitalia.it. [80.180.205.117])
+        by smtp.googlemail.com with ESMTPSA id z16sm30523edm.52.2020.04.09.17.47.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 09 Apr 2020 17:47:45 -0700 (PDT)
+From:   Ansuel Smith <ansuelsmth@gmail.com>
+To:     devicetree@vger.kernel.org
+Cc:     Ansuel Smith <ansuelsmth@gmail.com>,
+        Richard Zhu <hongxing.zhu@nxp.com>,
+        Lucas Stach <l.stach@pengutronix.de>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Andrew Murray <amurray@thegoodpenguin.co.uk>,
+        linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 0/4] Move tx-deempth and tx swing to pci.txt
+Date:   Fri, 10 Apr 2020 02:47:34 +0200
+Message-Id: <20200410004738.19668-1-ansuelsmth@gmail.com>
+X-Mailer: git-send-email 2.25.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 9 Apr 2020 16:32:12 +0200
-Peter Zijlstra <peterz@infradead.org> wrote:
+In pushing some fixes to pcie qcom driver, one of the patch had to make
+some fixes to tx deempth and tx swing. It was suggested to propose this
+to the generic pci.txt as they are actually standard parameter than can
+be tuned per board. I also notice these property are already used in
+imx6 driver so this would also help to generalize it.
 
-> On Thu, Apr 09, 2020 at 01:09:11AM +0900, Masami Hiramatsu wrote:
-> > Add insn_is_fpu(insn) which tells that the insn is
-> > whether touch the FPU/SSE/MMX register or the instruction
-> > of FP coprocessor.
-> > 
-> > Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
-> > ---
-> 
-> Sadly, it turns out I need "FWAIT" too, which I tried adding like the
-> below, but that comes apart most mighty :/
+Ansuel Smith (4):
+  devicetree: bindings: pci: document tx-deempth tx swing and rx-eq
+    property
+  drivers: pci: dwc: pci-imx6: update binding to generic name
+  arm: dts: imx6: update pci binding to generic name
+  devicetree: bindings: pci: fsl,imx6q-pcie: rename tx deemph and swing
 
-Thanks for pointing it out. Now I understand the FWAIT/WAIT is used
-to wait for FPU...
-
-> 
-> The trouble is that FWAIT doesn't take a MODRM, so the previous
-> assumption that INAT_FPU implied INAT_MODRM needs to be broken, and I
-> think that ripples through somewhere.
-
-Oops, I missed it.
-
-> 
-> (also, your patch adds some whitespace to convert_operands(), not sure
-> that was intended)
-
-Ah, that's my typo.
-
-> 
-> --- a/arch/x86/lib/x86-opcode-map.txt
-> +++ b/arch/x86/lib/x86-opcode-map.txt
-> @@ -206,7 +206,7 @@ Table: one byte opcode
->  98: CBW/CWDE/CDQE
->  99: CWD/CDQ/CQO
->  9a: CALLF Ap (i64)
-> -9b: FWAIT/WAIT
-> +9b: FWAIT/WAIT {FPU}
->  9c: PUSHF/D/Q Fv (d64)
->  9d: POPF/D/Q Fv (d64)
->  9e: SAHF
-> --- a/arch/x86/tools/gen-insn-attr-x86.awk
-> +++ b/arch/x86/tools/gen-insn-attr-x86.awk
-> @@ -331,9 +331,13 @@ function convert_operands(count,opnd,
->  		if (match(opcode, rex_expr))
->  			flags = add_flags(flags, "INAT_MAKE_PREFIX(INAT_PFX_REX)")
->  
-> +		# check coprocessor escape
-> +		if (match(ext, "^ESC"))
-> +			flags = add_flags(flags, "INAT_MODRM")
-> +
->  		# check FPU/MMX/SSE superscripts
->  		if (match(ext, fpu_expr))
-> -			flags = add_flags(flags, "INAT_MODRM | INAT_FPU")
-> +			flags = add_flags(flags, "INAT_FPU")
-
-
-OK, I'll include this.
-
-Thank you,
-
->  
->  		# check VEX codes
->  		if (match(ext, evexonly_expr))
-
+ .../devicetree/bindings/pci/fsl,imx6q-pcie.txt | 12 ++++++------
+ Documentation/devicetree/bindings/pci/pci.txt  | 18 ++++++++++++++++++
+ arch/arm/boot/dts/imx6q-ba16.dtsi              |  4 ++--
+ arch/arm/boot/dts/imx6qdl-var-dart.dtsi        |  4 ++--
+ arch/arm/boot/dts/imx7d.dtsi                   |  2 +-
+ drivers/pci/controller/dwc/pci-imx6.c          | 12 ++++++------
+ 6 files changed, 35 insertions(+), 17 deletions(-)
 
 -- 
-Masami Hiramatsu <mhiramat@kernel.org>
+2.25.1
+
