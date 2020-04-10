@@ -2,89 +2,131 @@ Return-Path: <SRS0=VV4q=52=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C0AAC2BA2B
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 14:27:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6358AC2BB86
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 14:28:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 082AF2082D
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 14:27:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3C5562082D
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 14:28:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1586528884;
+	bh=iPnJwxj/zh15jDkcbvOskjKfHVz2jq5sOt65N8EXtgg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=mWsT5xWxsaS7zn77P83bATchx+qq2+d+XnXO/626OvWWe6kTjefJ+qeLv5ydjrkVu
+	 7TutQLQw0xiqoqsDgAJMei7+f1R+7/KHqO66ZFUGcaWaggsQxQSojhdmHZRr/UbOP8
+	 zPFDPl+M1t0vtWbgqFLrL257qeW0te3g/L3WTGjg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726680AbgDJO1A (ORCPT
+        id S1726694AbgDJO2C (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Apr 2020 10:27:00 -0400
-Received: from albert.telenet-ops.be ([195.130.137.90]:36832 "EHLO
-        albert.telenet-ops.be" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726145AbgDJO1A (ORCPT
+        Fri, 10 Apr 2020 10:28:02 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:52374 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726145AbgDJO2C (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Apr 2020 10:27:00 -0400
-Received: from ramsan ([84.195.182.253])
-        by albert.telenet-ops.be with bizsmtp
-        id R2Sq2200B5USYZQ062SqQ2; Fri, 10 Apr 2020 16:26:58 +0200
-Received: from rox.of.borg ([192.168.97.57])
-        by ramsan with esmtp (Exim 4.90_1)
-        (envelope-from <geert@linux-m68k.org>)
-        id 1jMucM-0004qD-Ci; Fri, 10 Apr 2020 16:26:50 +0200
-Received: from geert by rox.of.borg with local (Exim 4.90_1)
-        (envelope-from <geert@linux-m68k.org>)
-        id 1jMucM-0004qj-9Q; Fri, 10 Apr 2020 16:26:50 +0200
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-To:     Joerg Roedel <joro@8bytes.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>
-Cc:     iommu@lists.linux-foundation.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: [PATCH] netfilter: nft_fwd_netdev: Fix CONFIG_NET_CLS_ACT=n build
-Date:   Fri, 10 Apr 2020 16:26:48 +0200
-Message-Id: <20200410142648.18599-1-geert@linux-m68k.org>
-X-Mailer: git-send-email 2.17.1
+        Fri, 10 Apr 2020 10:28:02 -0400
+Received: by mail-wm1-f65.google.com with SMTP id t203so2659391wmt.2;
+        Fri, 10 Apr 2020 07:28:01 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=1h7a3vS//NbeSVSR69QjDDkWStoO28u5a03MyeOIDUQ=;
+        b=gZJanZVLqrkNmVq2xLW4m+0cp0Ui3KdYD2t1p1IWYcgSjVXSpFnt8Ko3Kdf5lu5FTY
+         8bCosUloRM5bMy8zd2ZDQTfz95BDQXz+qY7ikiOOVpIZRw3/kYgFZAyXszA/AJOvf/mJ
+         9/X82Qf4XwbNQBS2wOqrF2avPivO9rP0+0IE26lkUsZOrwvP6kWbGqv61+fp5tryXUVT
+         Am1Pl1zEclN0H1TtxSm1w5lV6IONcNV8aFkx44m9nsI91xV1iOgLWXZMt7wfAurm73wg
+         iMwNhABZt4GUINJqNzrohOinoOnvCbXneRCufEumrZN3lxyk4PixB77lTG7LOesO4zS0
+         sUbg==
+X-Gm-Message-State: AGi0Puam8thUI6nTrdje4tLFmAQCc0l8vr66qg62eZMVvBs8PqvU8ptB
+        zKTKB4Wt3APDelfGF3gvEuc=
+X-Google-Smtp-Source: APiQypJS/BHR4OpTWldVzMwwd5r/4pmCwUCUgFlEcdZW6trEUIoq5+pEucSTAdzC5GRD5V9eDg6hqg==
+X-Received: by 2002:a7b:cd02:: with SMTP id f2mr5250030wmj.97.1586528880476;
+        Fri, 10 Apr 2020 07:28:00 -0700 (PDT)
+Received: from debian (44.142.6.51.dyn.plus.net. [51.6.142.44])
+        by smtp.gmail.com with ESMTPSA id e23sm3250395wra.43.2020.04.10.07.27.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 10 Apr 2020 07:27:59 -0700 (PDT)
+Date:   Fri, 10 Apr 2020 15:27:57 +0100
+From:   Wei Liu <wei.liu@kernel.org>
+To:     Michael Kelley <mikelley@microsoft.com>
+Cc:     Wei Liu <wei.liu@kernel.org>,
+        "ltykernel@gmail.com" <ltykernel@gmail.com>,
+        KY Srinivasan <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Wei Liu <liuwe@microsoft.com>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "mingo@redhat.com" <mingo@redhat.com>,
+        "bp@alien8.de" <bp@alien8.de>, "hpa@zytor.com" <hpa@zytor.com>,
+        "x86@kernel.org" <x86@kernel.org>, "arnd@arndb.de" <arnd@arndb.de>,
+        Tianyu Lan <Tianyu.Lan@microsoft.com>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>,
+        vkuznets <vkuznets@redhat.com>
+Subject: Re: [PATCH V4 6/6] x86/Hyper-V: Report crash data in die() when
+ panic_on_oops is set
+Message-ID: <20200410142757.comrxjvnf3akllmc@debian>
+References: <20200406155331.2105-1-Tianyu.Lan@microsoft.com>
+ <20200406155331.2105-7-Tianyu.Lan@microsoft.com>
+ <MW2PR2101MB10524CB8CBF3FE49C2EDAA8DD7C00@MW2PR2101MB1052.namprd21.prod.outlook.com>
+ <20200409164054.72es2ykmbef3jbui@debian>
+ <MW2PR2101MB10525BA673D7FA81073B9F65D7C10@MW2PR2101MB1052.namprd21.prod.outlook.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <MW2PR2101MB10525BA673D7FA81073B9F65D7C10@MW2PR2101MB1052.namprd21.prod.outlook.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If CONFIG_NET_CLS_ACT=n:
+On Thu, Apr 09, 2020 at 11:06:13PM +0000, Michael Kelley wrote:
+> From: Wei Liu <wei.liu@kernel.org>  Sent: Thursday, April 9, 2020 9:41 AM
+> > 
+> > On Wed, Apr 08, 2020 at 08:19:47PM +0000, Michael Kelley wrote:
+> > > From: Tianyu Lan <Tianyu.Lan@microsoft.com> Sent: Monday, April 6, 2020 8:54 AM
+> > > >
+> > > > When oops happens with panic_on_oops unset, the oops
+> > > > thread is killed by die() and system continues to run.
+> > > > In such case, guest should not report crash register
+> > > > data to host since system still runs. Check panic_on_oops
+> > > > and return directly in hyperv_report_panic() when the function
+> > > > is called in the die() and panic_on_oops is unset. Fix it.
+> > > >
+> > > > Fixes: 7ed4325a44ea ("Drivers: hv: vmbus: Make panic reporting to be more useful")
+> > > > Signed-off-by: Tianyu Lan <Tianyu.Lan@microsoft.com>
+> > > > ---
+> > > > Change since v3:
+> > > > 	- Fix compile error.
+> > > >         - Add fix commit in the change log
+> > > > ---
+> > > >  arch/x86/hyperv/hv_init.c      | 6 +++++-
+> > > >  drivers/hv/vmbus_drv.c         | 5 +++--
+> > > >  include/asm-generic/mshyperv.h | 2 +-
+> > > >  3 files changed, 9 insertions(+), 4 deletions(-)
+> > >
+> > > Reviewed-by: Michael Kelley <mikelley@microsoft.com>
+> > 
+> > It seems to me only the last patch is new, others are already in my
+> > tree, so I only apply the last one.
+> > 
+> > Let me know if my understanding is wrong.
+> > 
+> 
+> Tianyu added "Fixes:" tags to some of the other patches in
+> the series.  It appears the version you had already queued doesn't
+> have those "Fixes:" tags.
 
-    net/netfilter/nft_fwd_netdev.c: In function ‘nft_fwd_netdev_eval’:
-    net/netfilter/nft_fwd_netdev.c:32:10: error: ‘struct sk_buff’ has no member named ‘tc_redirected’
-      pkt->skb->tc_redirected = 1;
-	      ^~
-    net/netfilter/nft_fwd_netdev.c:33:10: error: ‘struct sk_buff’ has no member named ‘tc_from_ingress’
-      pkt->skb->tc_from_ingress = 1;
-	      ^~
+Oh, I only read the subject lines and checked the Reviewed-by tags. I
+will queue the new series instead.
 
-Fix this by protecting this code hunk with the appropriate #ifdef.
+Wei.
 
-Reported-by: noreply@ellerman.id.au
-Fixes: bcfabee1afd99484 ("netfilter: nft_fwd_netdev: allow to redirect to ifb via ingress")
-Signed-off-by: Geert Uytterhoeven <geert@linux-m68k.org>
----
- net/netfilter/nft_fwd_netdev.c | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/net/netfilter/nft_fwd_netdev.c b/net/netfilter/nft_fwd_netdev.c
-index 74f050ba6badc9dc..ebcaf5c325712f30 100644
---- a/net/netfilter/nft_fwd_netdev.c
-+++ b/net/netfilter/nft_fwd_netdev.c
-@@ -28,9 +28,11 @@ static void nft_fwd_netdev_eval(const struct nft_expr *expr,
- 	struct nft_fwd_netdev *priv = nft_expr_priv(expr);
- 	int oif = regs->data[priv->sreg_dev];
- 
-+#ifdef CONFIG_NET_CLS_ACT
- 	/* These are used by ifb only. */
- 	pkt->skb->tc_redirected = 1;
- 	pkt->skb->tc_from_ingress = 1;
-+#endif
- 
- 	nf_fwd_netdev_egress(pkt, oif);
- 	regs->verdict.code = NF_STOLEN;
--- 
-2.17.1
-
+> 
+> Michael
