@@ -2,423 +2,112 @@ Return-Path: <SRS0=VV4q=52=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B0A4C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 12:39:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06B5BC2BB86
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 12:40:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4B84C206E9
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 12:39:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D280420769
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 12:40:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BSJ/l1Pu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726721AbgDJMjT (ORCPT
+        id S1726726AbgDJMke (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Apr 2020 08:39:19 -0400
-Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:6354 "EHLO
-        mx0a-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726009AbgDJMjS (ORCPT
+        Fri, 10 Apr 2020 08:40:34 -0400
+Received: from mail-wr1-f53.google.com ([209.85.221.53]:34685 "EHLO
+        mail-wr1-f53.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726009AbgDJMke (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Apr 2020 08:39:18 -0400
-Received: from pps.filterd (m0167089.ppops.net [127.0.0.1])
-        by mx0a-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03ACVxPA012542;
-        Fri, 10 Apr 2020 08:39:05 -0400
-Received: from nwd2mta3.analog.com ([137.71.173.56])
-        by mx0a-00128a01.pphosted.com with ESMTP id 3091pqsa0t-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 10 Apr 2020 08:39:05 -0400
-Received: from SCSQMBX10.ad.analog.com (scsqmbx10.ad.analog.com [10.77.17.5])
-        by nwd2mta3.analog.com (8.14.7/8.14.7) with ESMTP id 03ACd3Eb054950
-        (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=FAIL);
-        Fri, 10 Apr 2020 08:39:03 -0400
-Received: from SCSQMBX10.ad.analog.com (10.77.17.5) by SCSQMBX10.ad.analog.com
- (10.77.17.5) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1779.2; Fri, 10 Apr
- 2020 05:39:01 -0700
-Received: from zeus.spd.analog.com (10.64.82.11) by SCSQMBX10.ad.analog.com
- (10.77.17.5) with Microsoft SMTP Server id 15.1.1779.2 via Frontend
- Transport; Fri, 10 Apr 2020 05:39:01 -0700
-Received: from localhost.localdomain ([10.48.65.12])
-        by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 03ACcqPR021764;
-        Fri, 10 Apr 2020 08:38:59 -0400
-From:   Alexandru Ardelean <alexandru.ardelean@analog.com>
-To:     <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-CC:     <jic23@kernel.org>, <lars@metafoo.de>,
-        Alexandru Ardelean <alexandru.ardelean@analog.com>
-Subject: [PATCH v2 5/5] iio: event: move event-only chardev in industrialio-event.c
-Date:   Fri, 10 Apr 2020 15:39:48 +0300
-Message-ID: <20200410123948.80578-6-alexandru.ardelean@analog.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200410123948.80578-1-alexandru.ardelean@analog.com>
-References: <20200410123948.80578-1-alexandru.ardelean@analog.com>
+        Fri, 10 Apr 2020 08:40:34 -0400
+Received: by mail-wr1-f53.google.com with SMTP id 65so2203324wrl.1;
+        Fri, 10 Apr 2020 05:40:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:references:in-reply-to:subject:date:message-id
+         :mime-version:content-transfer-encoding:content-language
+         :thread-index;
+        bh=rm/s7Of5tyiM3zBV6IUST0jMSM8VLFZiHF+K3kYVCJw=;
+        b=BSJ/l1PudXUHxgJ3jPBzuENUygdCyWz27ohvFWFDHoudALwA8wTcuI5Ws/mJRKjfxQ
+         KFy7R/fm0FmiatMUVZXWmsawe/WcZAfp/idX+z6VtOU1J6LVqtUcR47/Lsa8l7wjJA2l
+         ihXQmWDe8APPC3O/Cr9rqdUG4npr5CR7dl8xxz+8foS2Wr3DK5J3Ff3JVJwEkE4LUbk9
+         t6W2pHthVbNnMC9NSWxpePgw8YS2GPvqiViBpaCpuZKH0Q3WY2+wdfltfN03fEvxpr8C
+         75eChcP6epNvkEx36E4bQ0mYPvknBJGhQXVy58LF7Gb+CIuVcqJleT/RAiqbhm5enxUh
+         fUQA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:references:in-reply-to:subject:date
+         :message-id:mime-version:content-transfer-encoding:content-language
+         :thread-index;
+        bh=rm/s7Of5tyiM3zBV6IUST0jMSM8VLFZiHF+K3kYVCJw=;
+        b=XXmMXw4N9PqEkXB8OKd4tqdD9nnTtidOyVasMok6xZBTtvEj95kQxF9CWokJ/9Ch+Z
+         kg2FPP9l+j2O6iQV210aOIMnSnb3uQYztrJOw3Ui453aW4Ynskf73qlkDShkpv9c7faN
+         7j35/Uia2Ez27Ya9ettaFLi2s77HDDnogBHk6Cr79HHafLR6b5EtHWnWPGwP3jp5ke8U
+         6zbGRlZs1dL4tOG75y7MgER1bAsH7HmGIY3bh1dFSv1HtuhD2XW4UiuR+oMHuTnlrcSp
+         lRtW0CXfCbIkFsczqXiJJmhpipJpkqiHBmQJQUVk6+givdk+WbzEdEhVObOUzM17mxXg
+         CEZA==
+X-Gm-Message-State: AGi0PuaO7Q9LljRGheDrSBHV0Oj1REVwNPTPwmw4KBFxEF/xmOnkK7Pv
+        QYPDUhv02BCisKBul2AgYmk=
+X-Google-Smtp-Source: APiQypKRraFyHTo4V8xqIzuuT41OSHDs2OlgLliaDYIUobI3879HHQGLibiZAYUnd/WQxF4++G+kvA==
+X-Received: by 2002:adf:fecb:: with SMTP id q11mr4590057wrs.350.1586522430447;
+        Fri, 10 Apr 2020 05:40:30 -0700 (PDT)
+Received: from AnsuelXPS (host117-205-dynamic.180-80-r.retail.telecomitalia.it. [80.180.205.117])
+        by smtp.gmail.com with ESMTPSA id k3sm2642805wmf.16.2020.04.10.05.40.28
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 10 Apr 2020 05:40:29 -0700 (PDT)
+From:   <ansuelsmth@gmail.com>
+To:     "'Fabio Estevam'" <festevam@gmail.com>
+Cc:     "'open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS'" 
+        <devicetree@vger.kernel.org>,
+        "'Richard Zhu'" <hongxing.zhu@nxp.com>,
+        "'Lucas Stach'" <l.stach@pengutronix.de>,
+        "'Bjorn Helgaas'" <bhelgaas@google.com>,
+        "'Rob Herring'" <robh+dt@kernel.org>,
+        "'Mark Rutland'" <mark.rutland@arm.com>,
+        "'Shawn Guo'" <shawnguo@kernel.org>,
+        "'Sascha Hauer'" <s.hauer@pengutronix.de>,
+        "'Pengutronix Kernel Team'" <kernel@pengutronix.de>,
+        "'NXP Linux Team'" <linux-imx@nxp.com>,
+        "'Lorenzo Pieralisi'" <lorenzo.pieralisi@arm.com>,
+        "'Andrew Murray'" <amurray@thegoodpenguin.co.uk>,
+        <linux-pci@vger.kernel.org>,
+        "'moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE'" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "'linux-kernel'" <linux-kernel@vger.kernel.org>
+References: <20200410004738.19668-1-ansuelsmth@gmail.com> <20200410004738.19668-3-ansuelsmth@gmail.com> <CAOMZO5AKYO3xLsp4k6_fJCV9qW=rAtRKEGWnxksixU794dOw8A@mail.gmail.com> <003401d60f28$3d045190$b70cf4b0$@gmail.com> <CAOMZO5B+rEoQD_ujt9cx9VXO-i2oqfW2UN2cVeB5hZB3aVpGeQ@mail.gmail.com>
+In-Reply-To: <CAOMZO5B+rEoQD_ujt9cx9VXO-i2oqfW2UN2cVeB5hZB3aVpGeQ@mail.gmail.com>
+Subject: R: [PATCH 2/4] drivers: pci: dwc: pci-imx6: update binding to generic name
+Date:   Fri, 10 Apr 2020 14:40:26 +0200
+Message-ID: <003401d60f35$3725b630$a5712290$@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-ADIRoutedOnPrem: True
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
- definitions=2020-04-10_04:2020-04-09,2020-04-10 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999 bulkscore=0
- adultscore=0 impostorscore=0 clxscore=1015 priorityscore=1501 phishscore=0
- suspectscore=2 malwarescore=0 mlxscore=0 lowpriorityscore=0 spamscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
- definitions=main-2004100104
+Content-Type: text/plain;
+        charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Mailer: Microsoft Outlook 16.0
+Content-Language: it
+Thread-Index: AQJxOzeYiZkD8UITQ1/aTwnouqE5vAHrEXcAAuDSQDUBZHmnXgI2W/cjpvi8vAA=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-At this point, we should be able to move the IIO device's chardev from the
-iio_dev struct to the event_interface struct.
+> Hi Ansuel,
+>=20
+> On Fri, Apr 10, 2020 at 8:07 AM <ansuelsmth@gmail.com> wrote:
+>=20
+> > so no chance of changing this?
+>=20
+> Reading the commit log I don't see any explanation as to why you need
+> to change the current bindings.
+>=20
+> What is the motivation for doing this? Is this really worth it?
 
-The IIO buffer chardev will also take-care of event ioctl() (if it is
-initialized. The chardev for the event_interface (which has been moved to
-industrialio-event.c) will be initialized only if iio_device_buffers_init()
-returns -ENOTSUPP.
+It's really to not have the same exact binding to 2 different driver.
+If this would cause problem I will use qcom,tx-deemph...... but still it =
+looks
+wrong to me having this. How should I proceed?
 
-This does require an extra pair of iio_device_register_event_chrdev() &
-iio_device_unregister_event_chrdev() functions. The
-iio_device_register_event_chrdev() should (and will) be  only called if
-iio_device_buffers_init() returns -ENOTSUPP.
-
-Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
----
- drivers/iio/iio_core.h           |   5 +-
- drivers/iio/industrialio-core.c  |  94 +----------------------
- drivers/iio/industrialio-event.c | 124 ++++++++++++++++++++++++++++++-
- include/linux/iio/iio.h          |   6 --
- 4 files changed, 130 insertions(+), 99 deletions(-)
-
-diff --git a/drivers/iio/iio_core.h b/drivers/iio/iio_core.h
-index 1d69071e1426..2249e5b28023 100644
---- a/drivers/iio/iio_core.h
-+++ b/drivers/iio/iio_core.h
-@@ -68,10 +68,13 @@ static inline void iio_buffer_wakeup_poll(struct iio_dev *indio_dev) {}
- 
- #endif
- 
-+int iio_device_register_event_chrdev(struct iio_dev *indio_dev,
-+				     struct module *this_mod);
-+void iio_device_unregister_event_chrdev(struct iio_dev *indio_dev);
-+
- int iio_device_register_eventset(struct iio_dev *indio_dev);
- void iio_device_unregister_eventset(struct iio_dev *indio_dev);
- void iio_device_wakeup_eventset(struct iio_dev *indio_dev);
--int iio_event_getfd(struct iio_dev *indio_dev);
- 
- struct iio_event_interface;
- bool iio_event_enabled(const struct iio_event_interface *ev_int);
-diff --git a/drivers/iio/industrialio-core.c b/drivers/iio/industrialio-core.c
-index 794aaa4be832..7d3258f4528b 100644
---- a/drivers/iio/industrialio-core.c
-+++ b/drivers/iio/industrialio-core.c
-@@ -1609,76 +1609,6 @@ void devm_iio_device_free(struct device *dev, struct iio_dev *iio_dev)
- }
- EXPORT_SYMBOL_GPL(devm_iio_device_free);
- 
--/**
-- * iio_chrdev_open() - chrdev file open for event ioctls
-- * @inode:	Inode structure for identifying the device in the file system
-- * @filp:	File structure for iio device used to keep and later access
-- *		private data
-- *
-- * Return: 0 on success or -EBUSY if the device is already opened
-- **/
--static int iio_chrdev_open(struct inode *inode, struct file *filp)
--{
--	struct iio_dev *indio_dev = container_of(inode->i_cdev,
--						struct iio_dev, chrdev);
--
--	if (test_and_set_bit(IIO_BUSY_BIT_POS, &indio_dev->flags))
--		return -EBUSY;
--
--	iio_device_get(indio_dev);
--
--	filp->private_data = indio_dev;
--
--	return 0;
--}
--
--/**
-- * iio_chrdev_release() - chrdev file close for event ioctls
-- * @inode:	Inode structure pointer for the char device
-- * @filp:	File structure pointer for the char device
-- *
-- * Return: 0 for successful release
-- */
--static int iio_chrdev_release(struct inode *inode, struct file *filp)
--{
--	struct iio_dev *indio_dev = container_of(inode->i_cdev,
--						struct iio_dev, chrdev);
--	clear_bit(IIO_BUSY_BIT_POS, &indio_dev->flags);
--	iio_device_put(indio_dev);
--
--	return 0;
--}
--
--long iio_device_event_ioctl(struct iio_dev *indio_dev, struct file *filp,
--			    unsigned int cmd, unsigned long arg)
--{
--	int __user *ip = (int __user *)arg;
--	int fd;
--
--	if (!indio_dev->info)
--		return -ENODEV;
--
--	if (cmd == IIO_GET_EVENT_FD_IOCTL) {
--		fd = iio_event_getfd(indio_dev);
--		if (fd < 0)
--			return fd;
--		if (copy_to_user(ip, &fd, sizeof(fd)))
--			return -EFAULT;
--		return 0;
--	}
--	return -EINVAL;
--}
--
--/* Somewhat of a cross file organization violation - ioctls here are actually
-- * event related */
--static long iio_event_ioctl_wrapper(struct file *filp, unsigned int cmd,
--				    unsigned long arg)
--{
--	struct iio_dev *indio_dev = filp->private_data;
--
--	return iio_device_event_ioctl(indio_dev, filp, cmd, arg);
--}
--
- static int iio_check_unique_scan_index(struct iio_dev *indio_dev)
- {
- 	int i, j;
-@@ -1704,15 +1634,6 @@ static int iio_check_unique_scan_index(struct iio_dev *indio_dev)
- 
- static const struct iio_buffer_setup_ops noop_ring_setup_ops;
- 
--static const struct file_operations iio_event_fileops = {
--	.release = iio_chrdev_release,
--	.open = iio_chrdev_open,
--	.owner = THIS_MODULE,
--	.llseek = noop_llseek,
--	.unlocked_ioctl = iio_event_ioctl_wrapper,
--	.compat_ioctl = compat_ptr_ioctl,
--};
--
- int __iio_device_register(struct iio_dev *indio_dev, struct module *this_mod)
- {
- 	int ret;
-@@ -1761,15 +1682,9 @@ int __iio_device_register(struct iio_dev *indio_dev, struct module *this_mod)
- 		if (ret != -ENOTSUPP)
- 			goto error_unreg_eventset;
- 
--		cdev_init(&indio_dev->chrdev, &iio_event_fileops);
--
--		indio_dev->chrdev.owner = this_mod;
--
--		ret = cdev_device_add(&indio_dev->chrdev, &indio_dev->dev);
--		if (ret < 0)
-+		ret = iio_device_register_event_chrdev(indio_dev, this_mod);
-+		if (ret)
- 			goto error_unreg_eventset;
--
--		indio_dev->chrdev_initialized = true;
- 	}
- 
- 	return 0;
-@@ -1789,10 +1704,7 @@ EXPORT_SYMBOL(__iio_device_register);
-  **/
- void iio_device_unregister(struct iio_dev *indio_dev)
- {
--	if (indio_dev->chrdev_initialized)
--		cdev_device_del(&indio_dev->chrdev, &indio_dev->dev);
--
--	indio_dev->chrdev_initialized = false;
-+	iio_device_unregister_event_chrdev(indio_dev);
- 
- 	iio_device_buffers_uninit(indio_dev);
- 
-diff --git a/drivers/iio/industrialio-event.c b/drivers/iio/industrialio-event.c
-index 5b17c92d3b50..1e74ccfaa512 100644
---- a/drivers/iio/industrialio-event.c
-+++ b/drivers/iio/industrialio-event.c
-@@ -30,6 +30,9 @@
-  * @flags:		file operations related flags including busy flag.
-  * @group:		event interface sysfs attribute group
-  * @read_lock:		lock to protect kfifo read operations
-+ * @chrdev:		associated chardev for this event
-+ * @chrdev_initialized:	true if this @chrdev was initialized
-+ * @indio_dev:		IIO device to which this event interface belongs to
-  */
- struct iio_event_interface {
- 	wait_queue_head_t	wait;
-@@ -39,6 +42,10 @@ struct iio_event_interface {
- 	unsigned long		flags;
- 	struct attribute_group	group;
- 	struct mutex		read_lock;
-+
-+	struct cdev		chrdev;
-+	bool			chrdev_initialized;
-+	struct iio_dev		*indio_dev;
- };
- 
- bool iio_event_enabled(const struct iio_event_interface *ev_int)
-@@ -182,7 +189,7 @@ static const struct file_operations iio_event_chrdev_fileops = {
- 	.llseek = noop_llseek,
- };
- 
--int iio_event_getfd(struct iio_dev *indio_dev)
-+static int iio_event_getfd(struct iio_dev *indio_dev)
- {
- 	struct iio_event_interface *ev_int = indio_dev->event_interface;
- 	int fd;
-@@ -215,6 +222,121 @@ int iio_event_getfd(struct iio_dev *indio_dev)
- 	return fd;
- }
- 
-+/**
-+ * iio_chrdev_open() - chrdev file open for event ioctls
-+ * @inode:	Inode structure for identifying the device in the file system
-+ * @filp:	File structure for iio device used to keep and later access
-+ *		private data
-+ *
-+ * Return: 0 on success or -EBUSY if the device is already opened
-+ **/
-+static int iio_chrdev_open(struct inode *inode, struct file *filp)
-+{
-+	struct iio_event_interface *ev =
-+		container_of(inode->i_cdev, struct iio_event_interface, chrdev);
-+
-+	if (test_and_set_bit(IIO_BUSY_BIT_POS, &ev->flags))
-+		return -EBUSY;
-+
-+	iio_device_get(ev->indio_dev);
-+
-+	filp->private_data = ev;
-+
-+	return 0;
-+}
-+
-+/**
-+ * iio_chrdev_release() - chrdev file close for event ioctls
-+ * @inode:	Inode structure pointer for the char device
-+ * @filp:	File structure pointer for the char device
-+ *
-+ * Return: 0 for successful release
-+ */
-+static int iio_chrdev_release(struct inode *inode, struct file *filp)
-+{
-+	struct iio_event_interface *ev =
-+		container_of(inode->i_cdev, struct iio_event_interface, chrdev);
-+
-+	clear_bit(IIO_BUSY_BIT_POS, &ev->flags);
-+	iio_device_put(ev->indio_dev);
-+
-+	return 0;
-+}
-+
-+long iio_device_event_ioctl(struct iio_dev *indio_dev, struct file *filp,
-+			    unsigned int cmd, unsigned long arg)
-+{
-+	int __user *ip = (int __user *)arg;
-+	int fd;
-+
-+	if (!indio_dev->info)
-+		return -ENODEV;
-+
-+	if (cmd == IIO_GET_EVENT_FD_IOCTL) {
-+		fd = iio_event_getfd(indio_dev);
-+		if (fd < 0)
-+			return fd;
-+		if (copy_to_user(ip, &fd, sizeof(fd)))
-+			return -EFAULT;
-+		return 0;
-+	}
-+	return -EINVAL;
-+}
-+
-+static long iio_event_ioctl_wrapper(struct file *filp, unsigned int cmd,
-+				    unsigned long arg)
-+{
-+	struct iio_event_interface *ev = filp->private_data;
-+
-+	return iio_device_event_ioctl(ev->indio_dev, filp, cmd, arg);
-+}
-+
-+static const struct file_operations iio_device_event_fileops = {
-+	.release = iio_chrdev_release,
-+	.open = iio_chrdev_open,
-+	.owner = THIS_MODULE,
-+	.llseek = noop_llseek,
-+	.unlocked_ioctl = iio_event_ioctl_wrapper,
-+	.compat_ioctl = compat_ptr_ioctl,
-+};
-+
-+int iio_device_register_event_chrdev(struct iio_dev *indio_dev,
-+				     struct module *this_mod)
-+{
-+	struct iio_event_interface *ev = indio_dev->event_interface;
-+	int ret;
-+
-+	if (!ev)
-+		return 0;
-+
-+	cdev_init(&ev->chrdev, &iio_device_event_fileops);
-+
-+	ev->chrdev.owner = this_mod;
-+
-+	ret = cdev_device_add(&ev->chrdev, &indio_dev->dev);
-+	if (ret < 0)
-+		return ret;
-+
-+	ev->chrdev_initialized = true;
-+
-+	return 0;
-+}
-+
-+void iio_device_unregister_event_chrdev(struct iio_dev *indio_dev)
-+{
-+	struct iio_event_interface *ev = indio_dev->event_interface;
-+
-+	if (!ev)
-+		return;
-+
-+	ev = indio_dev->event_interface;
-+
-+	if (ev->chrdev_initialized)
-+		cdev_device_del(&ev->chrdev, &indio_dev->dev);
-+
-+	ev->chrdev_initialized = false;
-+}
-+
- static const char * const iio_ev_type_text[] = {
- 	[IIO_EV_TYPE_THRESH] = "thresh",
- 	[IIO_EV_TYPE_MAG] = "mag",
-diff --git a/include/linux/iio/iio.h b/include/linux/iio/iio.h
-index e93497f483f7..8fa22e4e246f 100644
---- a/include/linux/iio/iio.h
-+++ b/include/linux/iio/iio.h
-@@ -516,11 +516,8 @@ struct iio_buffer_setup_ops {
-  * @info_exist_lock:	[INTERN] lock to prevent use during removal
-  * @setup_ops:		[DRIVER] callbacks to call before and after buffer
-  *			enable/disable
-- * @chrdev:		[INTERN] associated character device
-- * @chrdev_initialized:	[INTERN] true if @chrdev device has been initialized
-  * @groups:		[INTERN] attribute groups
-  * @groupcounter:	[INTERN] index of next attribute group
-- * @flags:		[INTERN] file ops related flags including busy flag.
-  * @debugfs_dentry:	[INTERN] device specific debugfs dentry.
-  * @cached_reg_addr:	[INTERN] cached register address for debugfs reads.
-  */
-@@ -560,13 +557,10 @@ struct iio_dev {
- 	clockid_t			clock_id;
- 	struct mutex			info_exist_lock;
- 	const struct iio_buffer_setup_ops	*setup_ops;
--	struct cdev			chrdev;
--	int				chrdev_initialized;
- #define IIO_MAX_GROUPS 6
- 	const struct attribute_group	*groups[IIO_MAX_GROUPS + 1];
- 	int				groupcounter;
- 
--	unsigned long			flags;
- #if defined(CONFIG_DEBUG_FS)
- 	struct dentry			*debugfs_dentry;
- 	unsigned			cached_reg_addr;
--- 
-2.17.1
 
