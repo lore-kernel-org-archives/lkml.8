@@ -7,58 +7,58 @@ X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
 	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9495BC2D0EC
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 22:52:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D039C2D0EC
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 22:52:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5C0582083E
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 22:52:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 15BAC2083E
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 22:52:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="XMwmJJcW"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="YcTgBQBc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726817AbgDJWwm (ORCPT
+        id S1726829AbgDJWwr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Apr 2020 18:52:42 -0400
-Received: from mail-pg1-f201.google.com ([209.85.215.201]:46096 "EHLO
-        mail-pg1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726626AbgDJWwm (ORCPT
+        Fri, 10 Apr 2020 18:52:47 -0400
+Received: from mail-pj1-f73.google.com ([209.85.216.73]:57720 "EHLO
+        mail-pj1-f73.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726626AbgDJWwr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Apr 2020 18:52:42 -0400
-Received: by mail-pg1-f201.google.com with SMTP id q8so2758066pgv.13
-        for <linux-kernel@vger.kernel.org>; Fri, 10 Apr 2020 15:52:40 -0700 (PDT)
+        Fri, 10 Apr 2020 18:52:47 -0400
+Received: by mail-pj1-f73.google.com with SMTP id np3so3260609pjb.7
+        for <linux-kernel@vger.kernel.org>; Fri, 10 Apr 2020 15:52:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc;
-        bh=uSNGUFb7mp7G5fKDIDq1t6EYFHHo2JDseFHb/Cjwrgs=;
-        b=XMwmJJcWq+WuXEsl0kZpCSNqa+BXkCe4oSZ4pLOkNkAiDZKQP24avRiZQGZHy3rOsg
-         OJyukeDkwIiDp9vS+oMmNbXlgdcRqSZzE22XOArgpt6uphG4MVawA7XcMYpgZZPd3x7L
-         Ufk0ZN7iNcEt7YQbKEZWsFdExPEx+c8sfNb1FdPpph+IWl8LU6ceC+rzA2YwN64d2lsy
-         mO9fbIvMwO2VDvlc0R4+snG/RiklOrfJVPJPl5KyjURHOASt0HEJm/y0c1KO/JmxHoQe
-         v6/XWh4SggUww1TnemHcjWXtBctz0vCKzXDBqnat3HMKybdH6JRzF6q9ntwEXV1e4onZ
-         V+cg==
+        bh=TmIZI9TKT7lpeEk8rdIESevHF4Y3KmeRZOML5Cjbcoo=;
+        b=YcTgBQBc97ZnvmKzuQ1nw5UtfFGflk+DgqC4Sf44g4BgnrJ12h7U5NrA+H3u/TDrsr
+         O8NaSIs/hv66VjYoFwpn9x71IkZ5/uOirTw4EH1sDLX0mzr+h5fCCJ4YU63S6Bf8IuoQ
+         gG/QhhUIFaaqRjuV3MtnN04gOuYn8AmTXVnAYhvAFY4jRv/twYbI+SBNAm4n4g16NFXw
+         cK3du3oFp2ikvUPTXpLxmzPVxOj96eRGFPOZAkGSiyLd+pYoDD1oQcgivHuUBAwqVuCl
+         QqG7HjRStQVfjkon2azhobVAh65pRW79OFov+GEjtVo4K9tUit5+fo7MRBBDhy1Qr72B
+         Galw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=uSNGUFb7mp7G5fKDIDq1t6EYFHHo2JDseFHb/Cjwrgs=;
-        b=mIN5PYClsmxuc9tkq8hGVNQBxl5HTPul56abvP2jQDuF9RfIfP4Zv4LnJAdiFzGCYW
-         plWUe2FpNnDSJ70XoeiP+GCqpRoECx/02w1ZEKwGu8zcrIsPTBCWgzn6bq1tDN8atigB
-         pHXfp00Y9Y6sz6enSTojSrn6UrNPsCEXFXOYdTjK9v3aCMjjHvaza3FNp9IUt6cdbl9N
-         ldvwfTS6rbllj0M/CBhQI+RXP3/Lihy3ZjIk5RpA505SKsLr6Xst/mTCTyTHAw7ZVJKg
-         /8VINvZl1swQ3ekndBgE5/UbDnTCprPFwwVspZL1H3wYw8emV4q2YxkcRHZAU9D+mku2
-         9a/Q==
-X-Gm-Message-State: AGi0PubW/+Gq8dQVdlJRdrVp2vsZTy5o+vUHo0i0xg1QOqWMh7RixdCH
-        STtYHHt/9Nb9GzjM6BBeUhdCizEt22fE
-X-Google-Smtp-Source: APiQypIwezuUMvBIcKWw/vXD4vi420iXS7LltpTcruA9Ns5LwVF20J3FApXwnYKMA4p8JUFjBsee5uYWmqZC
-X-Received: by 2002:a17:90a:de0e:: with SMTP id m14mr7980344pjv.54.1586559159851;
- Fri, 10 Apr 2020 15:52:39 -0700 (PDT)
-Date:   Fri, 10 Apr 2020 15:52:07 -0700
+        bh=TmIZI9TKT7lpeEk8rdIESevHF4Y3KmeRZOML5Cjbcoo=;
+        b=OdrzPLrAvyhaCQbD2L4ej2x6pOX1zQCXug6Dki7YkLdUbDZ6WhS0p87Ijk4c5j9tAv
+         mZ1lMUdK0kiHM8PA4LL35ZqS2MUHua62opvvle4LQMF212CDk9MiKqAuRoixjjRkpJYi
+         os6iFd8dx/5f2APSdBkqNkOBKHJsrLCGuUsrJPuJHuohPrR+/6KSB94q8H+cKNfeBHR7
+         18VYmVbO/Ovh7hRhb10ahaCBZ99i692oUbwS0LJeFHNuNVWEeR5g/W4vhMeBUxmHyfOv
+         pnvkmxBjYVj0fiEpVHIrrtYFy4O7s1uqo3EnKTPAF8unYgBOYSvsxgvhdwVpFoTDdY3A
+         XHLA==
+X-Gm-Message-State: AGi0PuYiLKyUhmfWqo+GXXqKqgmHY/u5uiIMRqy+60oTI53esYt0yHGy
+        f09nMEE1ElmQCtlyd0T4Fos97tIcTN2d
+X-Google-Smtp-Source: APiQypIQ1zvPjtacOPKpElUEuTgnIhqM2AYaVckwuzP/Cl52UlxYC2mjNrZQ8rRJTZTyD3nUWtVKRZBkMwG4
+X-Received: by 2002:a17:90a:1954:: with SMTP id 20mr8315510pjh.106.1586559165180;
+ Fri, 10 Apr 2020 15:52:45 -0700 (PDT)
+Date:   Fri, 10 Apr 2020 15:52:08 -0700
 In-Reply-To: <20200410225208.109717-1-joshdon@google.com>
-Message-Id: <20200410225208.109717-2-joshdon@google.com>
+Message-Id: <20200410225208.109717-3-joshdon@google.com>
 Mime-Version: 1.0
 References: <20200410225208.109717-1-joshdon@google.com>
 X-Mailer: git-send-email 2.26.0.110.g2183baf09c-goog
-Subject: [PATCH 1/2] sched: eliminate bandwidth race between throttling and distribution
+Subject: [PATCH 2/2] sched: remove distribute_running from CFS bandwidth
 From:   Josh Don <joshdon@google.com>
 To:     Ingo Molnar <mingo@redhat.com>,
         Peter Zijlstra <peterz@infradead.org>,
@@ -77,169 +77,93 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Paul Turner <pjt@google.com>
+This is mostly a revert of baa9be4ff.
 
-There is a race window in which an entity begins throttling before quota
-is added to the pool, but does not finish throttling until after we have
-finished with distribute_cfs_runtime(). This entity is not observed by
-distribute_cfs_runtime() because it was not on the throttled list at the
-time that distribution was running. This race manifests as rare
-period-length statlls for such entities.
+The primary use of distribute_running was to determine whether to add
+throttled entities to the head or the tail of the throttled list. Now
+that we always add to the tail, we can remove this field.
 
-Rather than heavy-weight the synchronization with the progress of
-distribution, we can fix this by aborting throttling if bandwidth has
-become available. Otherwise, we immediately add the entity to the
-throttled list so that it can be observed by a subsequent distribution.
+The other use of distribute_running is in the slack_timer, so that we
+don't start a distribution while one is already running. However, even
+in the event that this race occurs, it is fine to have two distributions
+running (especially now that distribute grabs the cfs_b->lock to
+determine remaining quota before assigning).
 
-Additionally, we can remove the case of adding the throttled entity to
-the head of the throttled list, and simply always add to the tail.
-Thanks to 26a8b12747c97, distribute_cfs_runtime() no longer holds onto
-its own pool of runtime. This means that if we do hit the !assign and
-distribute_running case, we know that distribution is about to end.
-
-Signed-off-by: Paul Turner <pjt@google.com>
-Co-developed-by: Ben Segall <bsegall@google.com>
-Signed-off-by: Ben Segall <bsegall@google.com>
 Signed-off-by: Josh Don <joshdon@google.com>
 ---
- kernel/sched/fair.c | 78 ++++++++++++++++++++++++++-------------------
- 1 file changed, 46 insertions(+), 32 deletions(-)
+ kernel/sched/fair.c  | 13 +------------
+ kernel/sched/sched.h |  1 -
+ 2 files changed, 1 insertion(+), 13 deletions(-)
 
 diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-index 02f323b85b6d..3fb986c52825 100644
+index 3fb986c52825..24b5e12efb40 100644
 --- a/kernel/sched/fair.c
 +++ b/kernel/sched/fair.c
-@@ -4587,17 +4587,15 @@ static inline struct cfs_bandwidth *tg_cfs_bandwidth(struct task_group *tg)
- 	return &tg->cfs_bandwidth;
- }
- 
--/* returns 0 on failure to allocate runtime */
--static int assign_cfs_rq_runtime(struct cfs_rq *cfs_rq)
-+/* returns 0 on failure to allocate runtime, called with cfs_b->lock held */
-+static int __assign_cfs_rq_runtime(struct cfs_bandwidth *cfs_b,
-+				   struct cfs_rq *cfs_rq, u64 target_runtime)
- {
--	struct task_group *tg = cfs_rq->tg;
--	struct cfs_bandwidth *cfs_b = tg_cfs_bandwidth(tg);
- 	u64 amount = 0, min_amount;
- 
- 	/* note: this is a positive sum as runtime_remaining <= 0 */
--	min_amount = sched_cfs_bandwidth_slice() - cfs_rq->runtime_remaining;
-+	min_amount = target_runtime - cfs_rq->runtime_remaining;
- 
--	raw_spin_lock(&cfs_b->lock);
- 	if (cfs_b->quota == RUNTIME_INF)
- 		amount = min_amount;
- 	else {
-@@ -4609,13 +4607,26 @@ static int assign_cfs_rq_runtime(struct cfs_rq *cfs_rq)
- 			cfs_b->idle = 0;
- 		}
- 	}
--	raw_spin_unlock(&cfs_b->lock);
- 
- 	cfs_rq->runtime_remaining += amount;
- 
- 	return cfs_rq->runtime_remaining > 0;
- }
- 
-+/* returns 0 on failure to allocate runtime */
-+static int assign_cfs_rq_runtime(struct cfs_rq *cfs_rq)
-+{
-+	int ret;
-+	struct cfs_bandwidth *cfs_b = tg_cfs_bandwidth(cfs_rq->tg);
-+
-+	raw_spin_lock(&cfs_b->lock);
-+	ret = __assign_cfs_rq_runtime(cfs_b, cfs_rq,
-+				      sched_cfs_bandwidth_slice());
-+	raw_spin_unlock(&cfs_b->lock);
-+
-+	return ret;
-+}
-+
- static void __account_cfs_rq_runtime(struct cfs_rq *cfs_rq, u64 delta_exec)
- {
- 	/* dock delta_exec before expiring quota (as it could span periods) */
-@@ -4704,13 +4715,33 @@ static int tg_throttle_down(struct task_group *tg, void *data)
- 	return 0;
- }
- 
--static void throttle_cfs_rq(struct cfs_rq *cfs_rq)
-+static bool throttle_cfs_rq(struct cfs_rq *cfs_rq)
- {
- 	struct rq *rq = rq_of(cfs_rq);
- 	struct cfs_bandwidth *cfs_b = tg_cfs_bandwidth(cfs_rq->tg);
- 	struct sched_entity *se;
- 	long task_delta, idle_task_delta, dequeue = 1;
--	bool empty;
-+
-+	raw_spin_lock(&cfs_b->lock);
-+	/* This will start the period timer if necessary */
-+	if (__assign_cfs_rq_runtime(cfs_b, cfs_rq, 1)) {
-+		/*
-+		 * We have raced with bandwidth becoming available, and if we
-+		 * actually throttled the timer might not unthrottle us for an
-+		 * entire period. We additionally needed to make sure that any
-+		 * subsequent check_cfs_rq_runtime calls agree not to throttle
-+		 * us, as we may commit to do cfs put_prev+pick_next, so we ask
-+		 * for 1ns of runtime rather than just check cfs_b.
-+		 */
-+		dequeue = 0;
-+	} else {
-+		list_add_tail_rcu(&cfs_rq->throttled_list,
-+				  &cfs_b->throttled_cfs_rq);
-+	}
-+	raw_spin_unlock(&cfs_b->lock);
-+
-+	if (!dequeue)
-+		return false;  /* Throttle no longer required. */
- 
- 	se = cfs_rq->tg->se[cpu_of(rq_of(cfs_rq))];
- 
-@@ -4744,29 +4775,13 @@ static void throttle_cfs_rq(struct cfs_rq *cfs_rq)
- 	if (!se)
- 		sub_nr_running(rq, task_delta);
- 
--	cfs_rq->throttled = 1;
--	cfs_rq->throttled_clock = rq_clock(rq);
--	raw_spin_lock(&cfs_b->lock);
--	empty = list_empty(&cfs_b->throttled_cfs_rq);
--
+@@ -4930,14 +4930,12 @@ static int do_sched_cfs_period_timer(struct cfs_bandwidth *cfs_b, int overrun, u
  	/*
--	 * Add to the _head_ of the list, so that an already-started
--	 * distribute_cfs_runtime will not see us. If disribute_cfs_runtime is
--	 * not running add to the tail so that later runqueues don't get starved.
-+	 * Note: distribution will already see us throttled via the
-+	 * throttled-list.  rq->lock protects completion.
+ 	 * This check is repeated as we release cfs_b->lock while we unthrottle.
  	 */
--	if (cfs_b->distribute_running)
--		list_add_rcu(&cfs_rq->throttled_list, &cfs_b->throttled_cfs_rq);
--	else
--		list_add_tail_rcu(&cfs_rq->throttled_list, &cfs_b->throttled_cfs_rq);
+-	while (throttled && cfs_b->runtime > 0 && !cfs_b->distribute_running) {
+-		cfs_b->distribute_running = 1;
++	while (throttled && cfs_b->runtime > 0) {
+ 		raw_spin_unlock_irqrestore(&cfs_b->lock, flags);
+ 		/* we can't nest cfs_b->lock while distributing bandwidth */
+ 		distribute_cfs_runtime(cfs_b);
+ 		raw_spin_lock_irqsave(&cfs_b->lock, flags);
+ 
+-		cfs_b->distribute_running = 0;
+ 		throttled = !list_empty(&cfs_b->throttled_cfs_rq);
+ 	}
+ 
+@@ -5051,10 +5049,6 @@ static void do_sched_cfs_slack_timer(struct cfs_bandwidth *cfs_b)
+ 	/* confirm we're still not at a refresh boundary */
+ 	raw_spin_lock_irqsave(&cfs_b->lock, flags);
+ 	cfs_b->slack_started = false;
+-	if (cfs_b->distribute_running) {
+-		raw_spin_unlock_irqrestore(&cfs_b->lock, flags);
+-		return;
+-	}
+ 
+ 	if (runtime_refresh_within(cfs_b, min_bandwidth_expiration)) {
+ 		raw_spin_unlock_irqrestore(&cfs_b->lock, flags);
+@@ -5064,9 +5058,6 @@ static void do_sched_cfs_slack_timer(struct cfs_bandwidth *cfs_b)
+ 	if (cfs_b->quota != RUNTIME_INF && cfs_b->runtime > slice)
+ 		runtime = cfs_b->runtime;
+ 
+-	if (runtime)
+-		cfs_b->distribute_running = 1;
 -
--	/*
--	 * If we're the first throttled task, make sure the bandwidth
--	 * timer is running.
--	 */
--	if (empty)
--		start_cfs_bandwidth(cfs_b);
--
--	raw_spin_unlock(&cfs_b->lock);
-+	cfs_rq->throttled = 1;
-+	cfs_rq->throttled_clock = rq_clock(rq);
-+	return true;
+ 	raw_spin_unlock_irqrestore(&cfs_b->lock, flags);
+ 
+ 	if (!runtime)
+@@ -5075,7 +5066,6 @@ static void do_sched_cfs_slack_timer(struct cfs_bandwidth *cfs_b)
+ 	distribute_cfs_runtime(cfs_b);
+ 
+ 	raw_spin_lock_irqsave(&cfs_b->lock, flags);
+-	cfs_b->distribute_running = 0;
+ 	raw_spin_unlock_irqrestore(&cfs_b->lock, flags);
  }
  
- void unthrottle_cfs_rq(struct cfs_rq *cfs_rq)
-@@ -5121,8 +5136,7 @@ static bool check_cfs_rq_runtime(struct cfs_rq *cfs_rq)
- 	if (cfs_rq_throttled(cfs_rq))
- 		return true;
- 
--	throttle_cfs_rq(cfs_rq);
--	return true;
-+	return throttle_cfs_rq(cfs_rq);
+@@ -5217,7 +5207,6 @@ void init_cfs_bandwidth(struct cfs_bandwidth *cfs_b)
+ 	cfs_b->period_timer.function = sched_cfs_period_timer;
+ 	hrtimer_init(&cfs_b->slack_timer, CLOCK_MONOTONIC, HRTIMER_MODE_REL);
+ 	cfs_b->slack_timer.function = sched_cfs_slack_timer;
+-	cfs_b->distribute_running = 0;
+ 	cfs_b->slack_started = false;
  }
  
- static enum hrtimer_restart sched_cfs_slack_timer(struct hrtimer *timer)
+diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
+index db3a57675ccf..7198683b2869 100644
+--- a/kernel/sched/sched.h
++++ b/kernel/sched/sched.h
+@@ -349,7 +349,6 @@ struct cfs_bandwidth {
+ 
+ 	u8			idle;
+ 	u8			period_active;
+-	u8			distribute_running;
+ 	u8			slack_started;
+ 	struct hrtimer		period_timer;
+ 	struct hrtimer		slack_timer;
 -- 
 2.26.0.110.g2183baf09c-goog
 
