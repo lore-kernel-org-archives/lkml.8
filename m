@@ -7,51 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C857C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 03:50:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6D87C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 03:50:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 230E320BED
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 03:50:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B2F4621655
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 03:50:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586490652;
-	bh=qjQazNArWeNAA7WhoMO2JjCBRNq1jnnEvi3X36L9kf0=;
+	s=default; t=1586490654;
+	bh=7Wrp0PSfQ8AxYH33MglpUgdu3eVad235QHlg9qT66K0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MiAAuU6WRCCYBDz3JkBecZZDqASzbDLd4/s4yZGyWK+dEeClhlB15xBy0c36Q5Cz/
-	 8A0nixosTME7z5YUbKCh1OajMgvOw6c7qCsNFrM+ciGjpR4+136PPsUy6u+RI4F3Io
-	 uUc+liJbKCz5zw6LOz6pBRo/Tii2DDreU0s5+VqQ=
+	b=EmwFARsIHTxMc/K5fBfjIKR/fuYJewMJadulXpJrnmesmR/7j2P9/zKqNE99a9Y2Z
+	 y7DKC/91FcpMiweuTac9uy3tT/2PP0t4cnlydUvatRywbSGkiGK+QK/5dlByXa3KSW
+	 vqdU99EOrgsPq/onlYCYCNy77d2xgqMLF/sIrrGY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728338AbgDJDuu (ORCPT
+        id S1728350AbgDJDux (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Apr 2020 23:50:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35584 "EHLO mail.kernel.org"
+        Thu, 9 Apr 2020 23:50:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35672 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728311AbgDJDur (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Apr 2020 23:50:47 -0400
+        id S1728311AbgDJDuv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Apr 2020 23:50:51 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A687620CC7;
-        Fri, 10 Apr 2020 03:50:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6B6DD20B1F;
+        Fri, 10 Apr 2020 03:50:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586490647;
-        bh=qjQazNArWeNAA7WhoMO2JjCBRNq1jnnEvi3X36L9kf0=;
+        s=default; t=1586490651;
+        bh=7Wrp0PSfQ8AxYH33MglpUgdu3eVad235QHlg9qT66K0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Zlc9A6naEWWqI+pC1nN5iyJ6b5AMh7Ll92R2DSc01j1kvTcIE7kVIprmkiwxRrkVr
-         qZke5JylxOF3oCbipC2NyVis+y4XyUArYQ4LkKV8IjtyyYWDB33U9TDSaL3hyQX0tA
-         pNRhf1ehQ2I3aISUCeKwXLYxB7lqf9aHtlygI9J8=
+        b=uehDIw9SmERhey9olpbKPQS6ap9JXMKkvO/cOwWXPUdcuaru1Zw1FJv1aniesKYbT
+         yRroMoeaihPzvEUMlPOorSZXfZoMj0yVRR+e5dCACw1MF4a0ngxjR/bllvMAZg7N6Y
+         hd4MRySlkclzD1x0HoV0jC8cSA3WlYe6DYwfoUzE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Bart Van Assche <bvanassche@acm.org>,
-        Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>,
-        Johannes Thumshirn <jth@kernel.org>,
-        Hannes Reinecke <hare@suse.com>,
-        Ming Lei <ming.lei@redhat.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>,
-        linux-block@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 02/22] null_blk: Handle null_add_dev() failures properly
-Date:   Thu,  9 Apr 2020 23:50:24 -0400
-Message-Id: <20200410035044.9698-2-sashal@kernel.org>
+Cc:     Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
+        Paul Menzel <pmenzel@molgen.mpg.de>,
+        Bob Liu <bob.liu@oracle.com>, Song Liu <songliubraving@fb.com>,
+        Sasha Levin <sashal@kernel.org>, linux-block@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 05/22] block: keep bdi->io_pages in sync with max_sectors_kb for stacked devices
+Date:   Thu,  9 Apr 2020 23:50:27 -0400
+Message-Id: <20200410035044.9698-5-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200410035044.9698-1-sashal@kernel.org>
 References: <20200410035044.9698-1-sashal@kernel.org>
@@ -64,61 +60,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bart Van Assche <bvanassche@acm.org>
+From: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
 
-[ Upstream commit 9b03b713082a31a5b90e0a893c72aa620e255c26 ]
+[ Upstream commit e74d93e96d721c4297f2a900ad0191890d2fc2b0 ]
 
-If null_add_dev() fails then null_del_dev() is called with a NULL argument.
-Make null_del_dev() handle this scenario correctly. This patch fixes the
-following KASAN complaint:
+Field bdi->io_pages added in commit 9491ae4aade6 ("mm: don't cap request
+size based on read-ahead setting") removes unneeded split of read requests.
 
-null-ptr-deref in null_del_dev+0x28/0x280 [null_blk]
-Read of size 8 at addr 0000000000000000 by task find/1062
+Stacked drivers do not call blk_queue_max_hw_sectors(). Instead they set
+limits of their devices by blk_set_stacking_limits() + disk_stack_limits().
+Field bio->io_pages stays zero until user set max_sectors_kb via sysfs.
 
-Call Trace:
- dump_stack+0xa5/0xe6
- __kasan_report.cold+0x65/0x99
- kasan_report+0x16/0x20
- __asan_load8+0x58/0x90
- null_del_dev+0x28/0x280 [null_blk]
- nullb_group_drop_item+0x7e/0xa0 [null_blk]
- client_drop_item+0x53/0x80 [configfs]
- configfs_rmdir+0x395/0x4e0 [configfs]
- vfs_rmdir+0xb6/0x220
- do_rmdir+0x238/0x2c0
- __x64_sys_unlinkat+0x75/0x90
- do_syscall_64+0x6f/0x2f0
- entry_SYSCALL_64_after_hwframe+0x49/0xbe
+This patch updates io_pages after merging limits in disk_stack_limits().
 
-Signed-off-by: Bart Van Assche <bvanassche@acm.org>
-Reviewed-by: Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>
-Cc: Johannes Thumshirn <jth@kernel.org>
-Cc: Hannes Reinecke <hare@suse.com>
-Cc: Ming Lei <ming.lei@redhat.com>
-Cc: Christoph Hellwig <hch@infradead.org>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Commit c6d6e9b0f6b4 ("dm: do not allow readahead to limit IO size") fixed
+the same problem for device-mapper devices, this one fixes MD RAIDs.
+
+Fixes: 9491ae4aade6 ("mm: don't cap request size based on read-ahead setting")
+Reviewed-by: Paul Menzel <pmenzel@molgen.mpg.de>
+Reviewed-by: Bob Liu <bob.liu@oracle.com>
+Signed-off-by: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+Signed-off-by: Song Liu <songliubraving@fb.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/block/null_blk.c | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+ block/blk-settings.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/block/null_blk.c b/drivers/block/null_blk.c
-index e9776ca0996b0..b4078901dbcb9 100644
---- a/drivers/block/null_blk.c
-+++ b/drivers/block/null_blk.c
-@@ -1593,7 +1593,12 @@ static void null_nvm_unregister(struct nullb *nullb) {}
- 
- static void null_del_dev(struct nullb *nullb)
- {
--	struct nullb_device *dev = nullb->dev;
-+	struct nullb_device *dev;
+diff --git a/block/blk-settings.c b/block/blk-settings.c
+index 6c2faaa38cc1e..e0a744921ed3d 100644
+--- a/block/blk-settings.c
++++ b/block/blk-settings.c
+@@ -717,6 +717,9 @@ void disk_stack_limits(struct gendisk *disk, struct block_device *bdev,
+ 		printk(KERN_NOTICE "%s: Warning: Device %s is misaligned\n",
+ 		       top, bottom);
+ 	}
 +
-+	if (!nullb)
-+		return;
-+
-+	dev = nullb->dev;
- 
- 	ida_simple_remove(&nullb_indexes, nullb->index);
++	t->backing_dev_info->io_pages =
++		t->limits.max_sectors >> (PAGE_SHIFT - 9);
+ }
+ EXPORT_SYMBOL(disk_stack_limits);
  
 -- 
 2.20.1
