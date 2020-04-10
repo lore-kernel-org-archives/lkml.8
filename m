@@ -4,50 +4,47 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB082C2BB85
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 03:47:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7494C2D0EC
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 03:47:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A2CCE20B1F
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 03:47:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D5C120936
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 03:47:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586490462;
-	bh=kgB0fWHWLd8OQi91eKRL0HlRnAwZjRg96qiPO2GbR5I=;
+	s=default; t=1586490467;
+	bh=30hy3yBwfYpGQ3YmwExCQUUPvJUTtZHkZv+HN2q/6M4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CGSQ3n83PqOTR9mGwkn3MbgEEDCfncTIy6I11Oe3+19QNrE7jlOIj7o5dmYW2hN2G
-	 bxYW6pU/3EdAeIF34zq6GV6k/6vE1YNUxSYUy3vJgklVa5GJtG6gk7nrFVmu+ldd6N
-	 n4P5XQo5q/rlY7SC8UMGEW9T0/fQIWFOM366F32w=
+	b=HPF9AFNu0xhlUZxh4kzX20mFXMF0oanA87ANvfnyoTx8seOcEvxrV1NN6xbUvrLN/
+	 uE6logjO/WtrOJbnSZhlO7KGlfwAC/bTYnWePR5NlgIod9d1/3Y/PcJ3YPI4UPp+Y7
+	 x7mdBT+03EOkhaQwJqkaGwUe12OnLWYbsxhXsTUM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727813AbgDJDrl (ORCPT
+        id S1727883AbgDJDrq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Apr 2020 23:47:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58554 "EHLO mail.kernel.org"
+        Thu, 9 Apr 2020 23:47:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58722 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727770AbgDJDri (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Apr 2020 23:47:38 -0400
+        id S1727847AbgDJDro (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Apr 2020 23:47:44 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1005B20BED;
-        Fri, 10 Apr 2020 03:47:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C5AE521655;
+        Fri, 10 Apr 2020 03:47:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586490457;
-        bh=kgB0fWHWLd8OQi91eKRL0HlRnAwZjRg96qiPO2GbR5I=;
+        s=default; t=1586490464;
+        bh=30hy3yBwfYpGQ3YmwExCQUUPvJUTtZHkZv+HN2q/6M4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0PF6ClzvpjE9Ic265jMc6kI2Iw9a/bViLikGlFLCm8uqTchQveMcUNhFlrQ7x1h4I
-         g13ZUfOFGZ0eTeYSoj4wVRFFzQEzm9M8K69nqd6G61XmknNqT+Dij99Ps7WUVDL/H1
-         Q1+oM3kR543GA55LuSw6h56bb7Xyfq5zDGQmqAKk=
+        b=QfcjtCQuWq5xX4jLjk8yXLzXtMTDzGD+CI+Zi2TVaX/vV0hmMLNMrCg4nX0h8O3EQ
+         q24/2F02gDNfNTv4CiNDSWJQXy2FTWtPHKMW6XCFyxFFN8cjwO+3eOiEh7d2rQz8Kw
+         p+DXDxFmkMjKfZp3/5dE+lRIyFVv/PADheYw9/YA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Sahitya Tummala <stummala@codeaurora.org>,
-        Pradeep P V K <ppvk@codeaurora.org>,
-        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>,
-        linux-block@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.6 52/68] block: Fix use-after-free issue accessing struct io_cq
-Date:   Thu,  9 Apr 2020 23:46:17 -0400
-Message-Id: <20200410034634.7731-52-sashal@kernel.org>
+Cc:     Marc Zyngier <maz@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.6 57/68] irqchip/gic-v4: Provide irq_retrigger to avoid circular locking dependency
+Date:   Thu,  9 Apr 2020 23:46:22 -0400
+Message-Id: <20200410034634.7731-57-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200410034634.7731-1-sashal@kernel.org>
 References: <20200410034634.7731-1-sashal@kernel.org>
@@ -60,113 +57,143 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sahitya Tummala <stummala@codeaurora.org>
+From: Marc Zyngier <maz@kernel.org>
 
-[ Upstream commit 30a2da7b7e225ef6c87a660419ea04d3cef3f6a7 ]
+[ Upstream commit 7809f7011c3bce650e502a98afeb05961470d865 ]
 
-There is a potential race between ioc_release_fn() and
-ioc_clear_queue() as shown below, due to which below kernel
-crash is observed. It also can result into use-after-free
-issue.
+On a very heavily loaded D05 with GICv4, I managed to trigger the
+following lockdep splat:
 
-context#1:				context#2:
-ioc_release_fn()			__ioc_clear_queue() gets the same icq
-->spin_lock(&ioc->lock);		->spin_lock(&ioc->lock);
-->ioc_destroy_icq(icq);
-  ->list_del_init(&icq->q_node);
-  ->call_rcu(&icq->__rcu_head,
-  	icq_free_icq_rcu);
-->spin_unlock(&ioc->lock);
-					->ioc_destroy_icq(icq);
-					  ->hlist_del_init(&icq->ioc_node);
-					  This results into below crash as this memory
-					  is now used by icq->__rcu_head in context#1.
-					  There is a chance that icq could be free'd
-					  as well.
+[ 6022.598864] ======================================================
+[ 6022.605031] WARNING: possible circular locking dependency detected
+[ 6022.611200] 5.6.0-rc4-00026-geee7c7b0f498 #680 Tainted: G            E
+[ 6022.618061] ------------------------------------------------------
+[ 6022.624227] qemu-system-aar/7569 is trying to acquire lock:
+[ 6022.629789] ffff042f97606808 (&p->pi_lock){-.-.}, at: try_to_wake_up+0x54/0x7a0
+[ 6022.637102]
+[ 6022.637102] but task is already holding lock:
+[ 6022.642921] ffff002fae424cf0 (&irq_desc_lock_class){-.-.}, at: __irq_get_desc_lock+0x5c/0x98
+[ 6022.651350]
+[ 6022.651350] which lock already depends on the new lock.
+[ 6022.651350]
+[ 6022.659512]
+[ 6022.659512] the existing dependency chain (in reverse order) is:
+[ 6022.666980]
+[ 6022.666980] -> #2 (&irq_desc_lock_class){-.-.}:
+[ 6022.672983]        _raw_spin_lock_irqsave+0x50/0x78
+[ 6022.677848]        __irq_get_desc_lock+0x5c/0x98
+[ 6022.682453]        irq_set_vcpu_affinity+0x40/0xc0
+[ 6022.687236]        its_make_vpe_non_resident+0x6c/0xb8
+[ 6022.692364]        vgic_v4_put+0x54/0x70
+[ 6022.696273]        vgic_v3_put+0x20/0xd8
+[ 6022.700183]        kvm_vgic_put+0x30/0x48
+[ 6022.704182]        kvm_arch_vcpu_put+0x34/0x50
+[ 6022.708614]        kvm_sched_out+0x34/0x50
+[ 6022.712700]        __schedule+0x4bc/0x7f8
+[ 6022.716697]        schedule+0x50/0xd8
+[ 6022.720347]        kvm_arch_vcpu_ioctl_run+0x5f0/0x978
+[ 6022.725473]        kvm_vcpu_ioctl+0x3d4/0x8f8
+[ 6022.729820]        ksys_ioctl+0x90/0xd0
+[ 6022.733642]        __arm64_sys_ioctl+0x24/0x30
+[ 6022.738074]        el0_svc_common.constprop.3+0xa8/0x1e8
+[ 6022.743373]        do_el0_svc+0x28/0x88
+[ 6022.747198]        el0_svc+0x14/0x40
+[ 6022.750761]        el0_sync_handler+0x124/0x2b8
+[ 6022.755278]        el0_sync+0x140/0x180
+[ 6022.759100]
+[ 6022.759100] -> #1 (&rq->lock){-.-.}:
+[ 6022.764143]        _raw_spin_lock+0x38/0x50
+[ 6022.768314]        task_fork_fair+0x40/0x128
+[ 6022.772572]        sched_fork+0xe0/0x210
+[ 6022.776484]        copy_process+0x8c4/0x18d8
+[ 6022.780742]        _do_fork+0x88/0x6d8
+[ 6022.784478]        kernel_thread+0x64/0x88
+[ 6022.788563]        rest_init+0x30/0x270
+[ 6022.792390]        arch_call_rest_init+0x14/0x1c
+[ 6022.796995]        start_kernel+0x498/0x4c4
+[ 6022.801164]
+[ 6022.801164] -> #0 (&p->pi_lock){-.-.}:
+[ 6022.806382]        __lock_acquire+0xdd8/0x15c8
+[ 6022.810813]        lock_acquire+0xd0/0x218
+[ 6022.814896]        _raw_spin_lock_irqsave+0x50/0x78
+[ 6022.819761]        try_to_wake_up+0x54/0x7a0
+[ 6022.824018]        wake_up_process+0x1c/0x28
+[ 6022.828276]        wakeup_softirqd+0x38/0x40
+[ 6022.832533]        __tasklet_schedule_common+0xc4/0xf0
+[ 6022.837658]        __tasklet_schedule+0x24/0x30
+[ 6022.842176]        check_irq_resend+0xc8/0x158
+[ 6022.846609]        irq_startup+0x74/0x128
+[ 6022.850606]        __enable_irq+0x6c/0x78
+[ 6022.854602]        enable_irq+0x54/0xa0
+[ 6022.858431]        its_make_vpe_non_resident+0xa4/0xb8
+[ 6022.863557]        vgic_v4_put+0x54/0x70
+[ 6022.867469]        kvm_arch_vcpu_blocking+0x28/0x38
+[ 6022.872336]        kvm_vcpu_block+0x48/0x490
+[ 6022.876594]        kvm_handle_wfx+0x18c/0x310
+[ 6022.880938]        handle_exit+0x138/0x198
+[ 6022.885022]        kvm_arch_vcpu_ioctl_run+0x4d4/0x978
+[ 6022.890148]        kvm_vcpu_ioctl+0x3d4/0x8f8
+[ 6022.894494]        ksys_ioctl+0x90/0xd0
+[ 6022.898317]        __arm64_sys_ioctl+0x24/0x30
+[ 6022.902748]        el0_svc_common.constprop.3+0xa8/0x1e8
+[ 6022.908046]        do_el0_svc+0x28/0x88
+[ 6022.911871]        el0_svc+0x14/0x40
+[ 6022.915434]        el0_sync_handler+0x124/0x2b8
+[ 6022.919951]        el0_sync+0x140/0x180
+[ 6022.923773]
+[ 6022.923773] other info that might help us debug this:
+[ 6022.923773]
+[ 6022.931762] Chain exists of:
+[ 6022.931762]   &p->pi_lock --> &rq->lock --> &irq_desc_lock_class
+[ 6022.931762]
+[ 6022.942101]  Possible unsafe locking scenario:
+[ 6022.942101]
+[ 6022.948007]        CPU0                    CPU1
+[ 6022.952523]        ----                    ----
+[ 6022.957039]   lock(&irq_desc_lock_class);
+[ 6022.961036]                                lock(&rq->lock);
+[ 6022.966595]                                lock(&irq_desc_lock_class);
+[ 6022.973109]   lock(&p->pi_lock);
+[ 6022.976324]
+[ 6022.976324]  *** DEADLOCK ***
 
-22150.386550:   <6> Unable to handle kernel write to read-only memory
-at virtual address ffffffaa8d31ca50
-...
-Call trace:
-22150.607350:   <2>  ioc_destroy_icq+0x44/0x110
-22150.611202:   <2>  ioc_clear_queue+0xac/0x148
-22150.615056:   <2>  blk_cleanup_queue+0x11c/0x1a0
-22150.619174:   <2>  __scsi_remove_device+0xdc/0x128
-22150.623465:   <2>  scsi_forget_host+0x2c/0x78
-22150.627315:   <2>  scsi_remove_host+0x7c/0x2a0
-22150.631257:   <2>  usb_stor_disconnect+0x74/0xc8
-22150.635371:   <2>  usb_unbind_interface+0xc8/0x278
-22150.639665:   <2>  device_release_driver_internal+0x198/0x250
-22150.644897:   <2>  device_release_driver+0x24/0x30
-22150.649176:   <2>  bus_remove_device+0xec/0x140
-22150.653204:   <2>  device_del+0x270/0x460
-22150.656712:   <2>  usb_disable_device+0x120/0x390
-22150.660918:   <2>  usb_disconnect+0xf4/0x2e0
-22150.664684:   <2>  hub_event+0xd70/0x17e8
-22150.668197:   <2>  process_one_work+0x210/0x480
-22150.672222:   <2>  worker_thread+0x32c/0x4c8
+This is happening because we have a pending doorbell that requires
+retrigger. As SW retriggering is done in a tasklet, we trigger the
+circular dependency above.
 
-Fix this by adding a new ICQ_DESTROYED flag in ioc_destroy_icq() to
-indicate this icq is once marked as destroyed. Also, ensure
-__ioc_clear_queue() is accessing icq within rcu_read_lock/unlock so
-that icq doesn't get free'd up while it is still using it.
+The easy cop-out is to provide a retrigger callback that doesn't
+require acquiring any extra lock.
 
-Signed-off-by: Sahitya Tummala <stummala@codeaurora.org>
-Co-developed-by: Pradeep P V K <ppvk@codeaurora.org>
-Signed-off-by: Pradeep P V K <ppvk@codeaurora.org>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Signed-off-by: Marc Zyngier <maz@kernel.org>
+Link: https://lore.kernel.org/r/20200310184921.23552-5-maz@kernel.org
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- block/blk-ioc.c           | 7 +++++++
- include/linux/iocontext.h | 1 +
- 2 files changed, 8 insertions(+)
+ drivers/irqchip/irq-gic-v3-its.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/block/blk-ioc.c b/block/blk-ioc.c
-index 5ed59ac6ae58b..9df50fb507caf 100644
---- a/block/blk-ioc.c
-+++ b/block/blk-ioc.c
-@@ -84,6 +84,7 @@ static void ioc_destroy_icq(struct io_cq *icq)
- 	 * making it impossible to determine icq_cache.  Record it in @icq.
- 	 */
- 	icq->__rcu_icq_cache = et->icq_cache;
-+	icq->flags |= ICQ_DESTROYED;
- 	call_rcu(&icq->__rcu_head, icq_free_icq_rcu);
+diff --git a/drivers/irqchip/irq-gic-v3-its.c b/drivers/irqchip/irq-gic-v3-its.c
+index da883a6910284..7c8f65c9c32de 100644
+--- a/drivers/irqchip/irq-gic-v3-its.c
++++ b/drivers/irqchip/irq-gic-v3-its.c
+@@ -3679,12 +3679,18 @@ static int its_vpe_set_irqchip_state(struct irq_data *d,
+ 	return 0;
  }
  
-@@ -212,15 +213,21 @@ static void __ioc_clear_queue(struct list_head *icq_list)
- {
- 	unsigned long flags;
- 
-+	rcu_read_lock();
- 	while (!list_empty(icq_list)) {
- 		struct io_cq *icq = list_entry(icq_list->next,
- 						struct io_cq, q_node);
- 		struct io_context *ioc = icq->ioc;
- 
- 		spin_lock_irqsave(&ioc->lock, flags);
-+		if (icq->flags & ICQ_DESTROYED) {
-+			spin_unlock_irqrestore(&ioc->lock, flags);
-+			continue;
-+		}
- 		ioc_destroy_icq(icq);
- 		spin_unlock_irqrestore(&ioc->lock, flags);
- 	}
-+	rcu_read_unlock();
- }
- 
- /**
-diff --git a/include/linux/iocontext.h b/include/linux/iocontext.h
-index dba15ca8e60bc..1dcd9198beb7f 100644
---- a/include/linux/iocontext.h
-+++ b/include/linux/iocontext.h
-@@ -8,6 +8,7 @@
- 
- enum {
- 	ICQ_EXITED		= 1 << 2,
-+	ICQ_DESTROYED		= 1 << 3,
++static int its_vpe_retrigger(struct irq_data *d)
++{
++	return !its_vpe_set_irqchip_state(d, IRQCHIP_STATE_PENDING, true);
++}
++
+ static struct irq_chip its_vpe_irq_chip = {
+ 	.name			= "GICv4-vpe",
+ 	.irq_mask		= its_vpe_mask_irq,
+ 	.irq_unmask		= its_vpe_unmask_irq,
+ 	.irq_eoi		= irq_chip_eoi_parent,
+ 	.irq_set_affinity	= its_vpe_set_affinity,
++	.irq_retrigger		= its_vpe_retrigger,
+ 	.irq_set_irqchip_state	= its_vpe_set_irqchip_state,
+ 	.irq_set_vcpu_affinity	= its_vpe_set_vcpu_affinity,
  };
- 
- /*
 -- 
 2.20.1
 
