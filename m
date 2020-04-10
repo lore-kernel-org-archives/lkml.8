@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DD09C2D0EC
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 04:01:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A082C2BB85
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 04:01:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3BF8420936
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 04:01:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D463820936
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 04:01:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586491313;
-	bh=vDbC//cFoiarsCOyRPOI0FBifzs1I3USmWge+kKgjaU=;
+	s=default; t=1586491315;
+	bh=sMaKLDHuSGb03d76wtSoUZJF0vZ1jrMZoochBfYH8rI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LhLpoMYkILQB6dMzR6/HU5I8sGvxojdYg+mhhfPSxOJq0KJb6qGL6CsSpcFSf//Ej
-	 fOpTKXekQaETcykJzvdJDCiMW2K45QFm5TWOONE8/l4C+C26cJdVjsat7fGFCiuQ3F
-	 LJndLAxu+mGoCH0MT9esV8dUovIgOdizs4wh4KQw=
+	b=0l2RBznRcVF0b6o7wfpbkTD0MuTycFenkWuU5s24U4k7oyx0XnAP1pgqsg0JaoZAC
+	 zhypKtw15/3eK6Nb6y9KKmWe5t6AkXAz8bzqSA3MNeWsmvwvRqekPQ71mibTpcXwCC
+	 CtizTZr9bRruIoEuCLFL39y2xHM2Z6fiEYuEFtNU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727954AbgDJEBv (ORCPT
+        id S1727242AbgDJDrU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Apr 2020 00:01:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58044 "EHLO mail.kernel.org"
+        Thu, 9 Apr 2020 23:47:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57874 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727302AbgDJDrV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Apr 2020 23:47:21 -0400
+        id S1727173AbgDJDrP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Apr 2020 23:47:15 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B44FA2145D;
-        Fri, 10 Apr 2020 03:47:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 455B621744;
+        Fri, 10 Apr 2020 03:47:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586490441;
-        bh=vDbC//cFoiarsCOyRPOI0FBifzs1I3USmWge+kKgjaU=;
+        s=default; t=1586490435;
+        bh=sMaKLDHuSGb03d76wtSoUZJF0vZ1jrMZoochBfYH8rI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xTX2BKFCrxMfMz1YcLmWWFBdIm/7ehA5yTXbaBPkDKSk9uWaQCyHml4wiEXm7OtHL
-         nvFJN7Ek5aUlrMvMwRFdoT2TEDS0iUVO8nXPCtS5tWBrtEjq0mP8kXSkHj/jlsx6ZV
-         LuEtzVCxvXApklG7PyNtv47P/mIRyDG5rW4FzhFw=
+        b=JEno1kA0Mi0Mibs9ODyDs3nwr5vtxG8qguJqjn9RcckrBV+LJUg23fMsvwkpjgw1U
+         gSuBSgqRpamkl45+wpfycNRMfMXCXHE27yP6VQFsuqI+lNGNjfNDw4e7ggudnuPJhm
+         3MBXIjgRYUTD27L7tZF9LE+FM3gFQiJKD+MBQzLs=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Andy Lutomirski <luto@kernel.org>,
-        kbuild test robot <lkp@intel.com>,
-        Borislav Petkov <bp@suse.de>, Sasha Levin <sashal@kernel.org>,
-        linux-kselftest@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.6 38/68] selftests/x86/ptrace_syscall_32: Fix no-vDSO segfault
-Date:   Thu,  9 Apr 2020 23:46:03 -0400
-Message-Id: <20200410034634.7731-38-sashal@kernel.org>
+Cc:     "Ahmed S. Darwish" <a.darwish@linutronix.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.6 33/68] time/sched_clock: Expire timer in hardirq context
+Date:   Thu,  9 Apr 2020 23:45:58 -0400
+Message-Id: <20200410034634.7731-33-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200410034634.7731-1-sashal@kernel.org>
 References: <20200410034634.7731-1-sashal@kernel.org>
@@ -60,40 +59,63 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andy Lutomirski <luto@kernel.org>
+From: "Ahmed S. Darwish" <a.darwish@linutronix.de>
 
-[ Upstream commit 630b99ab60aa972052a4202a1ff96c7e45eb0054 ]
+[ Upstream commit 2c8bd58812ee3dbf0d78b566822f7eacd34bdd7b ]
 
-If AT_SYSINFO is not present, don't try to call a NULL pointer.
+To minimize latency, PREEMPT_RT kernels expires hrtimers in preemptible
+softirq context by default. This can be overriden by marking the timer's
+expiry with HRTIMER_MODE_HARD.
 
-Reported-by: kbuild test robot <lkp@intel.com>
-Signed-off-by: Andy Lutomirski <luto@kernel.org>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Link: https://lkml.kernel.org/r/faaf688265a7e1a5b944d6f8bc0f6368158306d3.1584052409.git.luto@kernel.org
+sched_clock_timer is missing this annotation: if its callback is preempted
+and the duration of the preemption exceeds the wrap around time of the
+underlying clocksource, sched clock will get out of sync.
+
+Mark the sched_clock_timer for expiry in hard interrupt context.
+
+Signed-off-by: Ahmed S. Darwish <a.darwish@linutronix.de>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Link: https://lkml.kernel.org/r/20200309181529.26558-1-a.darwish@linutronix.de
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/testing/selftests/x86/ptrace_syscall.c | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ kernel/time/sched_clock.c | 9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
 
-diff --git a/tools/testing/selftests/x86/ptrace_syscall.c b/tools/testing/selftests/x86/ptrace_syscall.c
-index 6f22238f32173..12aaa063196e7 100644
---- a/tools/testing/selftests/x86/ptrace_syscall.c
-+++ b/tools/testing/selftests/x86/ptrace_syscall.c
-@@ -414,8 +414,12 @@ int main()
+diff --git a/kernel/time/sched_clock.c b/kernel/time/sched_clock.c
+index e4332e3e2d569..fa3f800d7d763 100644
+--- a/kernel/time/sched_clock.c
++++ b/kernel/time/sched_clock.c
+@@ -208,7 +208,8 @@ sched_clock_register(u64 (*read)(void), int bits, unsigned long rate)
  
- #if defined(__i386__) && (!defined(__GLIBC__) || __GLIBC__ > 2 || __GLIBC_MINOR__ >= 16)
- 	vsyscall32 = (void *)getauxval(AT_SYSINFO);
--	printf("[RUN]\tCheck AT_SYSINFO return regs\n");
--	test_sys32_regs(do_full_vsyscall32);
-+	if (vsyscall32) {
-+		printf("[RUN]\tCheck AT_SYSINFO return regs\n");
-+		test_sys32_regs(do_full_vsyscall32);
-+	} else {
-+		printf("[SKIP]\tAT_SYSINFO is not available\n");
-+	}
- #endif
+ 	if (sched_clock_timer.function != NULL) {
+ 		/* update timeout for clock wrap */
+-		hrtimer_start(&sched_clock_timer, cd.wrap_kt, HRTIMER_MODE_REL);
++		hrtimer_start(&sched_clock_timer, cd.wrap_kt,
++			      HRTIMER_MODE_REL_HARD);
+ 	}
  
- 	test_ptrace_syscall_restart();
+ 	r = rate;
+@@ -254,9 +255,9 @@ void __init generic_sched_clock_init(void)
+ 	 * Start the timer to keep sched_clock() properly updated and
+ 	 * sets the initial epoch.
+ 	 */
+-	hrtimer_init(&sched_clock_timer, CLOCK_MONOTONIC, HRTIMER_MODE_REL);
++	hrtimer_init(&sched_clock_timer, CLOCK_MONOTONIC, HRTIMER_MODE_REL_HARD);
+ 	sched_clock_timer.function = sched_clock_poll;
+-	hrtimer_start(&sched_clock_timer, cd.wrap_kt, HRTIMER_MODE_REL);
++	hrtimer_start(&sched_clock_timer, cd.wrap_kt, HRTIMER_MODE_REL_HARD);
+ }
+ 
+ /*
+@@ -293,7 +294,7 @@ void sched_clock_resume(void)
+ 	struct clock_read_data *rd = &cd.read_data[0];
+ 
+ 	rd->epoch_cyc = cd.actual_read_sched_clock();
+-	hrtimer_start(&sched_clock_timer, cd.wrap_kt, HRTIMER_MODE_REL);
++	hrtimer_start(&sched_clock_timer, cd.wrap_kt, HRTIMER_MODE_REL_HARD);
+ 	rd->read_sched_clock = cd.actual_read_sched_clock;
+ }
+ 
 -- 
 2.20.1
 
