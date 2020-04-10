@@ -2,65 +2,229 @@ Return-Path: <SRS0=VV4q=52=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44336C2BA2B
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 15:38:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8385C2BA2B
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 15:41:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1A47620CC7
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 15:38:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="g8Vghjl/"
+	by mail.kernel.org (Postfix) with ESMTP id 7B13F20857
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 15:41:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726695AbgDJPiW (ORCPT
+        id S1726669AbgDJPlb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Apr 2020 11:38:22 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:50218 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726049AbgDJPiW (ORCPT
+        Fri, 10 Apr 2020 11:41:31 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:44068 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726080AbgDJPla (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Apr 2020 11:38:22 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=l8VIsmPRPr8v5kMqS/+p4+AvU2dJrNR5q5j6y6m9bss=; b=g8Vghjl/BN/1ByHXoBndldGfIQ
-        DESR63bbRPlCYQN4u+cDrCG5aOJSvXg4PQdiD3RF4mlgKFgQ5ib3u59SMl0C8ybOcAzs73ejoRV6d
-        r8JjSoBKP8dwYDH65B/gOcTcf5U7UH/hhFaP3UkyKHuIImsP9xrDkiXDAhPNDljnqnXJGr8a+R57A
-        zMRC8wqi6ccE1Ve+0frtLJlqLz0stxIgjialP8aWo6b+HksDUE8yrPoJtdeZ2bZN19/gCzM/yO9c3
-        NHWFo3a4wzj2r0zeP5NFdhM3nwm6JNZfuV/9Rxy8hLy5Igws6fPJ8tfdQCrJrO5c8QTv9nj4KuHUb
-        lbpEi2IQ==;
-Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jMvjJ-0007BR-Bq; Fri, 10 Apr 2020 15:38:05 +0000
-Date:   Fri, 10 Apr 2020 08:38:05 -0700
-From:   Matthew Wilcox <willy@infradead.org>
-To:     Peter Xu <peterx@redhat.com>
-Cc:     Hillf Danton <hdanton@sina.com>, kernel test robot <lkp@intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linux Memory Management List <linux-mm@kvack.org>,
-        linux-kernel@vger.kernel.org
-Subject: Re: f45ec5ff16 ("userfaultfd: wp: support swap and page migration"):
- [  140.777858] BUG: Bad rss-counter state mm:b278fc66 type:MM_ANONPAGES
- val:1
-Message-ID: <20200410153805.GA21484@bombadil.infradead.org>
-References: <20200410002518.GG8179@shao2-debian>
- <20200410073209.11164-1-hdanton@sina.com>
- <20200410153234.GB3172@xz-x1>
+        Fri, 10 Apr 2020 11:41:30 -0400
+Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03AFXsbQ062721;
+        Fri, 10 Apr 2020 11:41:26 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 30au5cgukg-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 10 Apr 2020 11:41:25 -0400
+Received: from m0098420.ppops.net (m0098420.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 03AFYDjc063764;
+        Fri, 10 Apr 2020 11:41:25 -0400
+Received: from ppma01wdc.us.ibm.com (fd.55.37a9.ip4.static.sl-reverse.com [169.55.85.253])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 30au5cguk9-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 10 Apr 2020 11:41:25 -0400
+Received: from pps.filterd (ppma01wdc.us.ibm.com [127.0.0.1])
+        by ppma01wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 03AFf1xK016592;
+        Fri, 10 Apr 2020 15:41:24 GMT
+Received: from b01cxnp23034.gho.pok.ibm.com (b01cxnp23034.gho.pok.ibm.com [9.57.198.29])
+        by ppma01wdc.us.ibm.com with ESMTP id 3091me5h82-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 10 Apr 2020 15:41:24 +0000
+Received: from b01ledav005.gho.pok.ibm.com (b01ledav005.gho.pok.ibm.com [9.57.199.110])
+        by b01cxnp23034.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 03AFfNRf53805552
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 10 Apr 2020 15:41:23 GMT
+Received: from b01ledav005.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 1EA6DAE05F;
+        Fri, 10 Apr 2020 15:41:23 +0000 (GMT)
+Received: from b01ledav005.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 73F50AE064;
+        Fri, 10 Apr 2020 15:41:22 +0000 (GMT)
+Received: from cpe-172-100-173-215.stny.res.rr.com (unknown [9.85.170.119])
+        by b01ledav005.gho.pok.ibm.com (Postfix) with ESMTP;
+        Fri, 10 Apr 2020 15:41:22 +0000 (GMT)
+Subject: Re: [PATCH v7 02/15] s390/vfio-ap: manage link between queue struct
+ and matrix mdev
+To:     Cornelia Huck <cohuck@redhat.com>
+Cc:     linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org, freude@linux.ibm.com, borntraeger@de.ibm.com,
+        mjrosato@linux.ibm.com, pmorel@linux.ibm.com, pasic@linux.ibm.com,
+        alex.williamson@redhat.com, kwankhede@nvidia.com,
+        jjherne@linux.ibm.com, fiuczy@linux.ibm.com
+References: <20200407192015.19887-1-akrowiak@linux.ibm.com>
+ <20200407192015.19887-3-akrowiak@linux.ibm.com>
+ <20200409170602.4440be0f.cohuck@redhat.com>
+From:   Tony Krowiak <akrowiak@linux.ibm.com>
+Message-ID: <20ddfc7a-873d-2de6-2a69-70d94f2ff930@linux.ibm.com>
+Date:   Fri, 10 Apr 2020 11:41:22 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200410153234.GB3172@xz-x1>
+In-Reply-To: <20200409170602.4440be0f.cohuck@redhat.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
+ definitions=2020-04-10_05:2020-04-09,2020-04-10 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=3
+ priorityscore=1501 mlxscore=0 malwarescore=0 phishscore=0 adultscore=0
+ spamscore=0 clxscore=1015 lowpriorityscore=0 bulkscore=0 impostorscore=0
+ mlxlogscore=999 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2004100127
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 10, 2020 at 11:32:34AM -0400, Peter Xu wrote:
-> I'm still trying to digest on what's happened... It would be good too
-> if more information on the test could be given, e.g., what is the
-> behavior of trinity-c2. A reproducer is of course even better.
 
-Trinity is a syscall fuzzer.  Don't expect what it's doing to make any
-sense, it's just executing syscalls at random.
+
+On 4/9/20 11:06 AM, Cornelia Huck wrote:
+> On Tue,  7 Apr 2020 15:20:02 -0400
+> Tony Krowiak <akrowiak@linux.ibm.com> wrote:
+>
+>> A vfio_ap_queue structure is created for each queue device probed. To
+>> ensure that the matrix mdev to which a queue's APQN is assigned is linked
+>> to the queue structure as long as the queue device is bound to the vfio_ap
+>> device driver, let's go ahead and manage these links when the queue device
+>> is probed and removed as well as whenever an adapter or domain is assigned
+>> to or unassigned from the matrix mdev.
+>>
+>> Signed-off-by: Tony Krowiak <akrowiak@linux.ibm.com>
+>> ---
+>>   drivers/s390/crypto/vfio_ap_ops.c | 75 ++++++++++++++++++++++++++++---
+>>   1 file changed, 70 insertions(+), 5 deletions(-)
+> (...)
+>
+>> @@ -536,6 +531,31 @@ static int vfio_ap_mdev_verify_no_sharing(struct ap_matrix_mdev *matrix_mdev)
+>>   	return 0;
+>>   }
+>>   
+>> +/**
+>> + * vfio_ap_mdev_qlinks_for_apid
+> Hm... maybe the function name should express that there's some actual
+> (un)linking going on?
+>
+> vfio_ap_mdev_link_by_apid?
+>
+> Or make this vfio_ap_mdev_link_queues() and pass in an indicator whether
+> the passed value is an apid or an aqid? Both function names look so
+> very similar to be easily confused (at least to me).
+
+Forget my last response, I like your function names better.
+
+>
+>> + *
+>> + * @matrix_mdev: a matrix mediated device
+>> + * @apqi:	 the APID of one or more APQNs assigned to @matrix_mdev
+>> + *
+>> + * Set the link to @matrix_mdev for each queue device bound to the vfio_ap
+>> + * device driver with an APQN assigned to @matrix_mdev with the specified @apid.
+>> + *
+>> + * Note: If @matrix_mdev is NULL, the link to @matrix_mdev will be severed.
+>> + */
+>> +static void vfio_ap_mdev_qlinks_for_apid(struct ap_matrix_mdev *matrix_mdev,
+>> +					 unsigned long apid)
+>> +{
+>> +	unsigned long apqi;
+>> +	struct vfio_ap_queue *q;
+>> +
+>> +	for_each_set_bit_inv(apqi, matrix_mdev->matrix.aqm,
+>> +			     matrix_mdev->matrix.aqm_max + 1) {
+>> +		q = vfio_ap_get_queue(AP_MKQID(apid, apqi));
+>> +		if (q)
+>> +			q->matrix_mdev = matrix_mdev;
+>> +	}
+>> +}
+>> +
+>>   /**
+>>    * assign_adapter_store
+>>    *
+> (...)
+>
+>> @@ -682,6 +704,31 @@ vfio_ap_mdev_verify_queues_reserved_for_apqi(struct ap_matrix_mdev *matrix_mdev,
+>>   	return 0;
+>>   }
+>>   
+>> +/**
+>> + * vfio_ap_mdev_qlinks_for_apqi
+> See my comment above.
+>
+>> + *
+>> + * @matrix_mdev: a matrix mediated device
+>> + * @apqi:	 the APQI of one or more APQNs assigned to @matrix_mdev
+>> + *
+>> + * Set the link to @matrix_mdev for each queue device bound to the vfio_ap
+>> + * device driver with an APQN assigned to @matrix_mdev with the specified @apqi.
+>> + *
+>> + * Note: If @matrix_mdev is NULL, the link to @matrix_mdev will be severed.
+>> + */
+>> +static void vfio_ap_mdev_qlinks_for_apqi(struct ap_matrix_mdev *matrix_mdev,
+>> +					 unsigned long apqi)
+>> +{
+>> +	unsigned long apid;
+>> +	struct vfio_ap_queue *q;
+>> +
+>> +	for_each_set_bit_inv(apid, matrix_mdev->matrix.apm,
+>> +			     matrix_mdev->matrix.apm_max + 1) {
+>> +		q = vfio_ap_get_queue(AP_MKQID(apid, apqi));
+>> +		if (q)
+>> +			q->matrix_mdev = matrix_mdev;
+>> +	}
+>> +}
+>> +
+>>   /**
+>>    * assign_domain_store
+>>    *
+> (...)
+>
+>> @@ -1270,6 +1319,21 @@ void vfio_ap_mdev_unregister(void)
+>>   	mdev_unregister_device(&matrix_dev->device);
+>>   }
+>>   
+>> +static void vfio_ap_mdev_for_queue(struct vfio_ap_queue *q)
+> vfio_ap_queue_link_mdev()? It is the other direction from the linking
+> above.
+
+See my comment above.
+
+>
+>> +{
+>> +	unsigned long apid = AP_QID_CARD(q->apqn);
+>> +	unsigned long apqi = AP_QID_QUEUE(q->apqn);
+>> +	struct ap_matrix_mdev *matrix_mdev;
+>> +
+>> +	list_for_each_entry(matrix_mdev, &matrix_dev->mdev_list, node) {
+>> +		if (test_bit_inv(apid, matrix_mdev->matrix.apm) &&
+>> +		    test_bit_inv(apqi, matrix_mdev->matrix.aqm)) {
+>> +			q->matrix_mdev = matrix_mdev;
+>> +			break;
+>> +		}
+>> +	}
+>> +}
+>> +
+>>   int vfio_ap_mdev_probe_queue(struct ap_queue *queue)
+>>   {
+>>   	struct vfio_ap_queue *q;
+>> @@ -1282,6 +1346,7 @@ int vfio_ap_mdev_probe_queue(struct ap_queue *queue)
+>>   	dev_set_drvdata(&queue->ap_dev.device, q);
+>>   	q->apqn = queue->qid;
+>>   	q->saved_isc = VFIO_AP_ISC_INVALID;
+>> +	vfio_ap_mdev_for_queue(q);
+>>   	hash_add(matrix_dev->qtable, &q->qnode, q->apqn);
+>>   	mutex_unlock(&matrix_dev->lock);
+>>   
+> In general, looks sane.
+>
+
