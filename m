@@ -2,102 +2,85 @@ Return-Path: <SRS0=VV4q=52=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53505C2BB55
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 07:29:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9C1EC2BA2B
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 07:29:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2620320753
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 07:29:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ONMTUtxD"
+	by mail.kernel.org (Postfix) with ESMTP id A8F4A20757
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 07:29:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726648AbgDJH3E (ORCPT
+        id S1726669AbgDJH3Q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Apr 2020 03:29:04 -0400
-Received: from mail-qt1-f193.google.com ([209.85.160.193]:45048 "EHLO
-        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725839AbgDJH3D (ORCPT
+        Fri, 10 Apr 2020 03:29:16 -0400
+Received: from mail-il1-f200.google.com ([209.85.166.200]:44770 "EHLO
+        mail-il1-f200.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725839AbgDJH3P (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Apr 2020 03:29:03 -0400
-Received: by mail-qt1-f193.google.com with SMTP id w24so832417qts.11
-        for <linux-kernel@vger.kernel.org>; Fri, 10 Apr 2020 00:29:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=2Fp4kHLta6ZgyzAdMRrwqjvqnCNaMnOLJwog4i1Ni3k=;
-        b=ONMTUtxDuiccw4fzD/0N/48iQgXvRiaZsq3i8CKsQktOIikk2rF9mNM+MiN1ng5pO4
-         bsTyXbsatmp4t9tj1gftdN1Uj081H9qv03b93tQcmPRTOuXo7ivIBj5LETU7dq5iNnTL
-         nfEKNW36UJrVkkRhJz4ccwT6h77vKAujJhgXsB6sTiFcYYNTLvOKEfaMhnRmS0UtiSfA
-         DtDi/zvOnERz2+4SsmnwcLmxEguHKcZnJtgnjmH80oQPZWL6yFtrNdom+k6O7TpLc7yd
-         4L/n6txrcaFs0Oen1soYK0aEmv3GU11TI+xVmsD7hQiGFadeN+O+uUExq30CzRWnYshp
-         XHtw==
+        Fri, 10 Apr 2020 03:29:15 -0400
+Received: by mail-il1-f200.google.com with SMTP id b15so1527219ilh.11
+        for <linux-kernel@vger.kernel.org>; Fri, 10 Apr 2020 00:29:16 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=2Fp4kHLta6ZgyzAdMRrwqjvqnCNaMnOLJwog4i1Ni3k=;
-        b=d+A2E38FcKhb9tk4N8F5g1y6xUgjiNV11aTIJDBaoMcxswfF3KCdJFUyEUU/X0BCs3
-         ofzHR45n/37C8scEwemGQDaJWX8xZzGnxEUDNC53Ytl73ryxfLfacmZGXs39Ke8tB3S8
-         n2xpVZfaPqkU9meElmoxaplkyuRerFYUwJ/YiZ0onX9E2o+6bSroFfg3IYR9b0j7XZnx
-         5pj+wDemrsQ2/D2G88UOz5K+uBjLoVU0XdRimHaU8AFuegnwirYSoQ+x+7h69cgdCWZB
-         od1wFh8u8xQzTluGtqZq8nNXQnvLbaqKtr25brCkdwtZGhKVAXzqKdwziSZsVAFqoIGi
-         92Gw==
-X-Gm-Message-State: AGi0Pubwqqwih99Gh94Xnlww00thlEo9DcLBNbOJitApDS2yLT311FuN
-        KtpC0d/es3VK+E72abs79BdRcnw1IR0t35ed1nTs/ygYATYahg==
-X-Google-Smtp-Source: APiQypKgexf1MRhqFtGwGLtyDFygeWcyBxQLuAy1Yt2jgWfPBQNFN7i7rTc2h0FfRwURoicccMa82rMzWhtTl0NKjXo=
-X-Received: by 2002:ac8:3581:: with SMTP id k1mr3290521qtb.50.1586503741490;
- Fri, 10 Apr 2020 00:29:01 -0700 (PDT)
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=ZEtJ68JHU8/OIJRonC4xVc3Pym01HCuSitUn68likVk=;
+        b=Hqe232EdIzT6ejSmRC02yJXi47348RgwHDK6EhUFPTlZ/SVa44zkinibq80fygPyA/
+         vVqAu1yVb1WXwcVl6GEQEnxJjv3MFq8LHiuufjsvlWl+1TcZLenGTuqTjjAfJJILC82Q
+         PCm0jraOJTNczPtckBilLgeo4beh44AyTOAUWxuaHfodeRTOpPKeyMoXN5j9gdjHoZu/
+         W9cVWQkDNixhxKCkitd6R6y8or54gx+O2Ey5XxbgID7pJcdhKdZwhrJo69Iu6hK6LNQF
+         UpRrDPTLcAzpUhvFeMbxRIQjl/9a63550GgMt4xgCmAzStXUVS9joFAB/R++LbyJYzHk
+         vDIA==
+X-Gm-Message-State: AGi0PuaNGBXpw7IB5LUMoyxbwCwEHJXwzz52/IJ+fCzP2wn4AeRmjhTp
+        ChhrajoeoAYMSWTwAIvo3LEywy6Z7lInaegfABevkWPuHUoO
+X-Google-Smtp-Source: APiQypIjWg6hLMs3p4xJRpGBBx00pRQSTkRZTX/BiIObYHxN09XPRe7/NygsbgIBXVd1Gg8HRiUB+/RfD96RWBibmji3f8JO2DCs
 MIME-Version: 1.0
-References: <000000000000a3376f05a2ea8c22@google.com>
-In-Reply-To: <000000000000a3376f05a2ea8c22@google.com>
-From:   Dmitry Vyukov <dvyukov@google.com>
-Date:   Fri, 10 Apr 2020 09:28:50 +0200
-Message-ID: <CACT4Y+ZfP7zDOOCksy=NY161ddiKiOzsSty1JfA8+JaP1zacUw@mail.gmail.com>
-Subject: Re: net test error: BUG: mismatching fuzzer/executor system call
- descriptions: ADDR vs ADDR (2)
-To:     syzbot <syzbot+564b4e9875b107591b55@syzkaller.appspotmail.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        netdev <netdev@vger.kernel.org>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
+X-Received: by 2002:a02:b0d7:: with SMTP id w23mr3540560jah.63.1586503755746;
+ Fri, 10 Apr 2020 00:29:15 -0700 (PDT)
+Date:   Fri, 10 Apr 2020 00:29:15 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000cbd2ec05a2eab0a3@google.com>
+Subject: linux-next test error: BUG: mismatching fuzzer/executor system call
+ descriptions: ADDR vs ADDR (3)
+From:   syzbot <syzbot+528253fcf7f3c9d2747a@syzkaller.appspotmail.com>
+To:     linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 10, 2020 at 9:19 AM syzbot
-<syzbot+564b4e9875b107591b55@syzkaller.appspotmail.com> wrote:
->
-> Hello,
->
-> syzbot found the following crash on:
->
-> HEAD commit:    aa81700c macsec: fix NULL dereference in macsec_upd_offloa..
-> git tree:       net
-> console output: https://syzkaller.appspot.com/x/log.txt?x=15cff49fe00000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=8c1e98458335a7d1
-> dashboard link: https://syzkaller.appspot.com/bug?extid=564b4e9875b107591b55
-> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
->
-> Unfortunately, I don't have any reproducer for this crash yet.
->
-> IMPORTANT: if you fix the bug, please add the following tag to the commit:
-> Reported-by: syzbot+564b4e9875b107591b55@syzkaller.appspotmail.com
->
-> Warning: Permanently added '10.128.1.4' (ECDSA) to the list of known hosts.
-> 2020/04/06 18:39:32 fuzzer started
-> 2020/04/06 18:39:33 connecting to host at 10.128.0.26:41717
-> 2020/04/06 18:39:34 checking machine...
-> 2020/04/06 18:39:34 checking revisions...
-> 2020/04/06 18:39:34 BUG: mismatching fuzzer/executor system call descriptions: 670a1e865c0bc7d60e9886acf4666ee3677e346e vs f787d115f9efa49fdd59261850f5c05f43fbe327
-> syzkaller login:
+Hello,
 
-This is now fixed with:
-https://github.com/google/syzkaller/commit/2f886fb32cd97875de4a67dfb04c90d925b7d73d
+syzbot found the following crash on:
 
-#syz invalid
+HEAD commit:    b2e2a818 Add linux-next specific files for 20200406
+git tree:       linux-next
+console output: https://syzkaller.appspot.com/x/log.txt?x=12ff05fbe00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=595413e7170f444b
+dashboard link: https://syzkaller.appspot.com/bug?extid=528253fcf7f3c9d2747a
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+
+Unfortunately, I don't have any reproducer for this crash yet.
+
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+528253fcf7f3c9d2747a@syzkaller.appspotmail.com
+
+Warning: Permanently added '10.128.1.24' (ECDSA) to the list of known hosts.
+2020/04/06 07:22:58 fuzzer started
+2020/04/06 07:22:59 connecting to host at 10.128.0.26:46701
+2020/04/06 07:22:59 checking machine...
+2020/04/06 07:22:59 checking revisions...
+2020/04/06 07:22:59 BUG: mismatching fuzzer/executor system call descriptions: 670a1e865c0bc7d60e9886acf4666ee3677e346e vs f787d115f9efa49fdd59261850f5c05f43fbe327
+syzkaller login: 
+
+
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
