@@ -4,48 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F6ADC2D0EC
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 03:47:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB082C2BB85
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 03:47:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 475A520936
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 03:47:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A2CCE20B1F
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 03:47:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586490457;
-	bh=otK5x4Ls3x9usVl63svp8ToBMJhcukjNtYux7ORX/Ps=;
+	s=default; t=1586490462;
+	bh=kgB0fWHWLd8OQi91eKRL0HlRnAwZjRg96qiPO2GbR5I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=oNBciPpicRMT7aDVqct/Q6FWfTEjUvN44fZ/Jhr7h6NufpM6ZSPWArf0O66GeN9vb
-	 JxjrqASHBWRThUr7BRDfAWJwSUgiyILlP2F/m4uyPmXjoIJJnr7A4rRVWHaGKekhf6
-	 07fYCmcy7gWAT4JGUoNkJGbrkJEaAGCKI/j61+Ng=
+	b=CGSQ3n83PqOTR9mGwkn3MbgEEDCfncTIy6I11Oe3+19QNrE7jlOIj7o5dmYW2hN2G
+	 bxYW6pU/3EdAeIF34zq6GV6k/6vE1YNUxSYUy3vJgklVa5GJtG6gk7nrFVmu+ldd6N
+	 n4P5XQo5q/rlY7SC8UMGEW9T0/fQIWFOM366F32w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727755AbgDJDrf (ORCPT
+        id S1727813AbgDJDrl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Apr 2020 23:47:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58252 "EHLO mail.kernel.org"
+        Thu, 9 Apr 2020 23:47:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58554 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727548AbgDJDr2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Apr 2020 23:47:28 -0400
+        id S1727770AbgDJDri (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Apr 2020 23:47:38 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0EB0E2137B;
-        Fri, 10 Apr 2020 03:47:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1005B20BED;
+        Fri, 10 Apr 2020 03:47:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586490448;
-        bh=otK5x4Ls3x9usVl63svp8ToBMJhcukjNtYux7ORX/Ps=;
+        s=default; t=1586490457;
+        bh=kgB0fWHWLd8OQi91eKRL0HlRnAwZjRg96qiPO2GbR5I=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XdvdLheplKy6o4pDIGqA5mmCZg1kge1fIqaMc92EjSswwEwu4ru6Q0PSqws9y77Tf
-         2DpPQE7WIjrP+gjdmE9YKbi+M+HDdjXdDgJ2sNA+SgAK+qHVExjxaOUuLV4JhKvTZV
-         Vevs0atuc75BEIzLmkEfYSqVuEwBo1OYvCtLZWQE=
+        b=0PF6ClzvpjE9Ic265jMc6kI2Iw9a/bViLikGlFLCm8uqTchQveMcUNhFlrQ7x1h4I
+         g13ZUfOFGZ0eTeYSoj4wVRFFzQEzm9M8K69nqd6G61XmknNqT+Dij99Ps7WUVDL/H1
+         Q1+oM3kR543GA55LuSw6h56bb7Xyfq5zDGQmqAKk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     chenqiwu <chenqiwu@xiaomi.com>, Kees Cook <keescook@chromium.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.6 44/68] pstore/platform: fix potential mem leak if pstore_init_fs failed
-Date:   Thu,  9 Apr 2020 23:46:09 -0400
-Message-Id: <20200410034634.7731-44-sashal@kernel.org>
+Cc:     Sahitya Tummala <stummala@codeaurora.org>,
+        Pradeep P V K <ppvk@codeaurora.org>,
+        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>,
+        linux-block@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.6 52/68] block: Fix use-after-free issue accessing struct io_cq
+Date:   Thu,  9 Apr 2020 23:46:17 -0400
+Message-Id: <20200410034634.7731-52-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200410034634.7731-1-sashal@kernel.org>
 References: <20200410034634.7731-1-sashal@kernel.org>
@@ -58,39 +60,113 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: chenqiwu <chenqiwu@xiaomi.com>
+From: Sahitya Tummala <stummala@codeaurora.org>
 
-[ Upstream commit 8a57d6d4ddfa41c49014e20493152c41a38fcbf8 ]
+[ Upstream commit 30a2da7b7e225ef6c87a660419ea04d3cef3f6a7 ]
 
-There is a potential mem leak when pstore_init_fs failed,
-since the pstore compression maybe unlikey to initialized
-successfully. We must clean up the allocation once this
-unlikey issue happens.
+There is a potential race between ioc_release_fn() and
+ioc_clear_queue() as shown below, due to which below kernel
+crash is observed. It also can result into use-after-free
+issue.
 
-Signed-off-by: chenqiwu <chenqiwu@xiaomi.com>
-Link: https://lore.kernel.org/r/1581068800-13817-1-git-send-email-qiwuchen55@gmail.com
-Signed-off-by: Kees Cook <keescook@chromium.org>
+context#1:				context#2:
+ioc_release_fn()			__ioc_clear_queue() gets the same icq
+->spin_lock(&ioc->lock);		->spin_lock(&ioc->lock);
+->ioc_destroy_icq(icq);
+  ->list_del_init(&icq->q_node);
+  ->call_rcu(&icq->__rcu_head,
+  	icq_free_icq_rcu);
+->spin_unlock(&ioc->lock);
+					->ioc_destroy_icq(icq);
+					  ->hlist_del_init(&icq->ioc_node);
+					  This results into below crash as this memory
+					  is now used by icq->__rcu_head in context#1.
+					  There is a chance that icq could be free'd
+					  as well.
+
+22150.386550:   <6> Unable to handle kernel write to read-only memory
+at virtual address ffffffaa8d31ca50
+...
+Call trace:
+22150.607350:   <2>  ioc_destroy_icq+0x44/0x110
+22150.611202:   <2>  ioc_clear_queue+0xac/0x148
+22150.615056:   <2>  blk_cleanup_queue+0x11c/0x1a0
+22150.619174:   <2>  __scsi_remove_device+0xdc/0x128
+22150.623465:   <2>  scsi_forget_host+0x2c/0x78
+22150.627315:   <2>  scsi_remove_host+0x7c/0x2a0
+22150.631257:   <2>  usb_stor_disconnect+0x74/0xc8
+22150.635371:   <2>  usb_unbind_interface+0xc8/0x278
+22150.639665:   <2>  device_release_driver_internal+0x198/0x250
+22150.644897:   <2>  device_release_driver+0x24/0x30
+22150.649176:   <2>  bus_remove_device+0xec/0x140
+22150.653204:   <2>  device_del+0x270/0x460
+22150.656712:   <2>  usb_disable_device+0x120/0x390
+22150.660918:   <2>  usb_disconnect+0xf4/0x2e0
+22150.664684:   <2>  hub_event+0xd70/0x17e8
+22150.668197:   <2>  process_one_work+0x210/0x480
+22150.672222:   <2>  worker_thread+0x32c/0x4c8
+
+Fix this by adding a new ICQ_DESTROYED flag in ioc_destroy_icq() to
+indicate this icq is once marked as destroyed. Also, ensure
+__ioc_clear_queue() is accessing icq within rcu_read_lock/unlock so
+that icq doesn't get free'd up while it is still using it.
+
+Signed-off-by: Sahitya Tummala <stummala@codeaurora.org>
+Co-developed-by: Pradeep P V K <ppvk@codeaurora.org>
+Signed-off-by: Pradeep P V K <ppvk@codeaurora.org>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/pstore/platform.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ block/blk-ioc.c           | 7 +++++++
+ include/linux/iocontext.h | 1 +
+ 2 files changed, 8 insertions(+)
 
-diff --git a/fs/pstore/platform.c b/fs/pstore/platform.c
-index d896457e7c117..408277ee3cdb9 100644
---- a/fs/pstore/platform.c
-+++ b/fs/pstore/platform.c
-@@ -823,9 +823,9 @@ static int __init pstore_init(void)
- 
- 	ret = pstore_init_fs();
- 	if (ret)
--		return ret;
-+		free_buf_for_compression();
- 
--	return 0;
-+	return ret;
+diff --git a/block/blk-ioc.c b/block/blk-ioc.c
+index 5ed59ac6ae58b..9df50fb507caf 100644
+--- a/block/blk-ioc.c
++++ b/block/blk-ioc.c
+@@ -84,6 +84,7 @@ static void ioc_destroy_icq(struct io_cq *icq)
+ 	 * making it impossible to determine icq_cache.  Record it in @icq.
+ 	 */
+ 	icq->__rcu_icq_cache = et->icq_cache;
++	icq->flags |= ICQ_DESTROYED;
+ 	call_rcu(&icq->__rcu_head, icq_free_icq_rcu);
  }
- late_initcall(pstore_init);
  
+@@ -212,15 +213,21 @@ static void __ioc_clear_queue(struct list_head *icq_list)
+ {
+ 	unsigned long flags;
+ 
++	rcu_read_lock();
+ 	while (!list_empty(icq_list)) {
+ 		struct io_cq *icq = list_entry(icq_list->next,
+ 						struct io_cq, q_node);
+ 		struct io_context *ioc = icq->ioc;
+ 
+ 		spin_lock_irqsave(&ioc->lock, flags);
++		if (icq->flags & ICQ_DESTROYED) {
++			spin_unlock_irqrestore(&ioc->lock, flags);
++			continue;
++		}
+ 		ioc_destroy_icq(icq);
+ 		spin_unlock_irqrestore(&ioc->lock, flags);
+ 	}
++	rcu_read_unlock();
+ }
+ 
+ /**
+diff --git a/include/linux/iocontext.h b/include/linux/iocontext.h
+index dba15ca8e60bc..1dcd9198beb7f 100644
+--- a/include/linux/iocontext.h
++++ b/include/linux/iocontext.h
+@@ -8,6 +8,7 @@
+ 
+ enum {
+ 	ICQ_EXITED		= 1 << 2,
++	ICQ_DESTROYED		= 1 << 3,
+ };
+ 
+ /*
 -- 
 2.20.1
 
