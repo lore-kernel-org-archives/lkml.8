@@ -2,79 +2,116 @@ Return-Path: <SRS0=VV4q=52=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2708C2D0EC
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 21:46:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 441C0C2BB55
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 21:47:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9294D207FF
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 21:46:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1CD6F207FF
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 21:47:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NIt+x5Eu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726669AbgDJVqq (ORCPT
+        id S1726694AbgDJVq6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Apr 2020 17:46:46 -0400
-Received: from mga14.intel.com ([192.55.52.115]:1061 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726582AbgDJVqp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Apr 2020 17:46:45 -0400
-IronPort-SDR: MFj3otIwkIT6wF4+RX2pzIc/lrRJAcZ6nO1g6CPnClKPDwotubRkUJBuUUDsJU+8MbJG9ClxVc
- xmArp3V46/dg==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Apr 2020 14:46:45 -0700
-IronPort-SDR: XOwwXQ28PsYhUo6/7ervTyDE+kdD92wM0ZGvxLylqum3Zx2ytrDlKvaOLzutEpLKfKw7h6wz3n
- jKnojMs2AW0Q==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,368,1580803200"; 
-   d="scan'208";a="452515861"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
-  by fmsmga005.fm.intel.com with ESMTP; 10 Apr 2020 14:46:45 -0700
-Date:   Fri, 10 Apr 2020 14:46:45 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Brijesh Singh <brijesh.singh@amd.com>
-Cc:     "Kalra, Ashish" <Ashish.Kalra@amd.com>,
-        Steve Rutherford <srutherford@google.com>,
-        Krish Sadhukhan <krish.sadhukhan@oracle.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Joerg Roedel <joro@8bytes.org>,
-        Borislav Petkov <bp@suse.de>,
-        "Lendacky, Thomas" <Thomas.Lendacky@amd.com>,
-        X86 ML <x86@kernel.org>, KVM list <kvm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        David Rientjes <rientjes@google.com>,
-        Andy Lutomirski <luto@kernel.org>
-Subject: Re: [PATCH v6 12/14] KVM: x86: Introduce KVM_PAGE_ENC_BITMAP_RESET
- ioctl
-Message-ID: <20200410214644.GL22482@linux.intel.com>
-References: <65c09963-2027-22c1-e04d-4c8c3658b2c3@oracle.com>
- <CABayD+cf=Po-k7jqUQjq3AGopxk86d6bTcBhQxijnzpcUh90GA@mail.gmail.com>
- <20200408015221.GB27608@ashkalra_ubuntu_server>
- <CABayD+f0qdS5akac8JiB_HU_pWefHDsF=xRNhzSv42w-PTXnyg@mail.gmail.com>
- <20200410013418.GB19168@ashkalra_ubuntu_server>
- <CABayD+dDtjz7rJe1ujQ_sq88JRUzHaXXNP_hQVhD1vkXkPsXCw@mail.gmail.com>
- <CABayD+dwJeu+o+TG843XX1nWHWMz=iwW0uWBKPaG0uJEsxCYGw@mail.gmail.com>
- <CABayD+cuHv6chBT5wWHqaZWXSHaOtaOQyBrxgRj2Y=q_fOheuA@mail.gmail.com>
- <DM5PR12MB1386C01E72A71F3AB6EB1F068EDE0@DM5PR12MB1386.namprd12.prod.outlook.com>
- <4be6c1a8-de3f-1e83-23d4-e0213a1acd24@amd.com>
+        Fri, 10 Apr 2020 17:46:58 -0400
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:39839 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726676AbgDJVq6 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Apr 2020 17:46:58 -0400
+Received: by mail-lj1-f193.google.com with SMTP id i20so3256848ljn.6;
+        Fri, 10 Apr 2020 14:46:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=7DRxr8UXPXMC8ZZ6lywET8o4n8MINsf5hUII1rWJ+Io=;
+        b=NIt+x5EuT+0R01CG45BZ7hqAJFsmmCQTaDB4Kuc+WLsSIq5DqfYZa1I6NuC4Y5oKX1
+         ru0lnIL/RiBSN10StfSLpENKSFwqho1m8HE6LFCi6oEEfssGuM9QyyCGiIpHFtJ6a0DS
+         41tpl6dQlx8ssnX0ImUy6Gbqs3iLabRGcRF/89mT61LH7so6+ZLPxEdSwtgNuaL+WQnY
+         QLU1pQNaBRLRcnwYjA87QuuEjBuXbgL6XoKo8QKLhIMTSmBxh8Zsxe3Iaa8qR5nOuvgZ
+         5DzdYKAfamTR9pME5VwowbJ1OZnIPtbJgrxlqOVAHkYQUxBwDdFiDu45yp8f7F7TgYLh
+         rtBg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=7DRxr8UXPXMC8ZZ6lywET8o4n8MINsf5hUII1rWJ+Io=;
+        b=bEpOL4ovKF24O/2MG8poCg7Bxbb5+jd9HbvEE9NDNZJFOC20N7YUT/rrI1Iifix2lN
+         2oa3v5AYol6806tNZP70xc5/OEWkyPED/afVc0s4K+OSrUjxG5coYEMqVHUVdZBckOFd
+         qkvJtdBW0baozzSz7dIxO7Is2z4049DAqsyWdqaRlVKOZgoP5YeeCeJd3SSyWVK8xGm9
+         Y+DdIeUYyq6kGZmScv6purGELb1sybJJ1y48JknPfOyo98u4S68aYnU5OwcqyzHohFNp
+         u4Rhot6Y+dq7fyxNNNhYLQduJIfn9Cs1sJWjtM0yZpae7LHdFB3pUGJ+IOQCfc6tc5Fu
+         iDrw==
+X-Gm-Message-State: AGi0PuYmsoyeP8nOT8zZhs0Uu274zaEHVGwa/QyxFJLdZEKdnPjYdyei
+        iJjXn49nuiKmXf7/DCR3OMI=
+X-Google-Smtp-Source: APiQypLaPwaeGLjp5KfZEURvyCJPwfq93DAW2oYcpxxSJ5CD45lDBZJa6FivhkxOkPSKwuhr/aY/qg==
+X-Received: by 2002:a2e:b558:: with SMTP id a24mr3895853ljn.56.1586555216468;
+        Fri, 10 Apr 2020 14:46:56 -0700 (PDT)
+Received: from [192.168.2.145] (ppp91-78-208-152.pppoe.mtu-net.ru. [91.78.208.152])
+        by smtp.googlemail.com with ESMTPSA id i25sm1860234ljg.82.2020.04.10.14.46.55
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 10 Apr 2020 14:46:55 -0700 (PDT)
+Subject: Re: [PATCH v10 18/55] Input: atmel_mxt_ts: Rename mxt_hw_version_show
+ to hw_version_show
+To:     Jiada Wang <jiada_wang@mentor.com>, nick@shmanahar.org,
+        dmitry.torokhov@gmail.com, jikos@kernel.org,
+        benjamin.tissoires@redhat.com, bsz@semihalf.com
+Cc:     linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
+        erosca@de.adit-jv.com, Andrew_Gabbasov@mentor.com
+References: <20200331105051.58896-1-jiada_wang@mentor.com>
+ <20200331105051.58896-19-jiada_wang@mentor.com>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <aae29974-7a8f-404b-b115-59416021ff61@gmail.com>
+Date:   Sat, 11 Apr 2020 00:46:54 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <4be6c1a8-de3f-1e83-23d4-e0213a1acd24@amd.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <20200331105051.58896-19-jiada_wang@mentor.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 10, 2020 at 04:42:29PM -0500, Brijesh Singh wrote:
+31.03.2020 13:50, Jiada Wang пишет:
+> Rename mxt_hw_version_show to hw_version_show to address checkpatch warning
 > 
-> On 4/10/20 3:55 PM, Kalra, Ashish wrote:
-> > [AMD Official Use Only - Internal Distribution Only]
+> Signed-off-by: Jiada Wang <jiada_wang@mentor.com>
+> ---
+>  drivers/input/touchscreen/atmel_mxt_ts.c | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/input/touchscreen/atmel_mxt_ts.c b/drivers/input/touchscreen/atmel_mxt_ts.c
+> index b2a37a9597f3..cec823de4096 100644
+> --- a/drivers/input/touchscreen/atmel_mxt_ts.c
+> +++ b/drivers/input/touchscreen/atmel_mxt_ts.c
+> @@ -3114,8 +3114,8 @@ static ssize_t fw_version_show(struct device *dev,
+>  }
+>  
+>  /* Hardware Version is returned as FamilyID.VariantID */
+> -static ssize_t mxt_hw_version_show(struct device *dev,
+> -				   struct device_attribute *attr, char *buf)
+> +static ssize_t hw_version_show(struct device *dev,
+> +			       struct device_attribute *attr, char *buf)
+>  {
+>  	struct mxt_data *data = dev_get_drvdata(dev);
+>  	struct mxt_info *info = data->info;
+> @@ -3404,7 +3404,7 @@ static const struct attribute_group mxt_fw_attr_group = {
+>  };
+>  
+>  static DEVICE_ATTR_RO(fw_version);
+> -static DEVICE_ATTR(hw_version, S_IRUGO, mxt_hw_version_show, NULL);
+> +static DEVICE_ATTR_RO(hw_version);
+>  static DEVICE_ATTR(object, S_IRUGO, mxt_object_show, NULL);
 
-Can you please resend the original mail without the above header, so us
-non-AMD folks can follow along?  :-)
+What about to add a patch to convert the mxt_object_show to
+DEVICE_ATTR_RO(object_show)?
