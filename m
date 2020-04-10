@@ -2,237 +2,281 @@ Return-Path: <SRS0=VV4q=52=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E3ABC2BB86
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 15:32:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BDDDC2BA2B
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 15:35:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1DC8320857
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 15:32:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="SigXccs2"
+	by mail.kernel.org (Postfix) with ESMTP id D421620CC7
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 15:35:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726682AbgDJPcn (ORCPT
+        id S1726670AbgDJPfk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Apr 2020 11:32:43 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:35221 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726049AbgDJPcn (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Apr 2020 11:32:43 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1586532761;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=JLUYil4vS5Pi2voMRT5GlnG+2xlYeMU6lI0hTtfZyHg=;
-        b=SigXccs2K9pe/9Xdcri1ZWeflKwaSbwDLUxXPhphAn/LrkbIkAWp7BiHE1ehL7HE4iP0OK
-        4m/fZUFSynhaSM99z0J/XQn81yZ5puKc5+FrpqpKIUmWhPvsktlbXVWqAdjPYyz3GgI9XH
-        vCxi+doHBvQEftj+BQFEw6wXDfW0XcY=
-Received: from mail-qt1-f200.google.com (mail-qt1-f200.google.com
- [209.85.160.200]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-9-dxXpj57eNduAYlS-2spIzg-1; Fri, 10 Apr 2020 11:32:38 -0400
-X-MC-Unique: dxXpj57eNduAYlS-2spIzg-1
-Received: by mail-qt1-f200.google.com with SMTP id x4so2063606qti.8
-        for <linux-kernel@vger.kernel.org>; Fri, 10 Apr 2020 08:32:38 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=JLUYil4vS5Pi2voMRT5GlnG+2xlYeMU6lI0hTtfZyHg=;
-        b=QxQxeaaPqg56Dzdi7sPQERHMsBmnDP5koHyu5fxNkB5uXKjX3yILjWa/p4Z5TZjHfq
-         EE+HuzL5BZLrAq4wFS293SzB5kiwNawWIRfqLMneHgKgIHS978R+MaSmTLaVbT6qBgtG
-         g31vi6b6QNuX9PLtdsiAPu1LXccABsBieD0Ku9djgbLC9VUeEX+b+rx7ml85NsHzFuCT
-         RlP7TLYVF/peVS7zN2o527X/dS4+fv6Wm1saK9VWuOXOeo25RNeVYt050fpW/797JMdE
-         g6+zyoHg+BGOQSzU51QAap7V76VBNNpr1lhe56SoFqBOt/Zl4YL516lLUXodc8f0fGDr
-         9T2Q==
-X-Gm-Message-State: AGi0Pua0O7S58PaY1VnEkq/qJ9lT1+Mzs2+XmNYfJan4Hz7o6ya+Ykug
-        amxgAN9t/2vZe2wJHyfaOCyMku4SPnfu+DdA4pcWe1GdfRZcdzEJXTRWHRNrYX99rdZbWSb62XZ
-        7yQaT0MrkoX0UpplBZRIC8hh0
-X-Received: by 2002:ac8:3665:: with SMTP id n34mr2692985qtb.227.1586532757740;
-        Fri, 10 Apr 2020 08:32:37 -0700 (PDT)
-X-Google-Smtp-Source: APiQypJNTP/hRSUYK1gpIDXWD5qj/bfCDgNQdDXyuxcvwIhEitGO6BGt9wACWBPTyIeIwHtWKc3Lrw==
-X-Received: by 2002:ac8:3665:: with SMTP id n34mr2692949qtb.227.1586532757277;
-        Fri, 10 Apr 2020 08:32:37 -0700 (PDT)
-Received: from xz-x1 ([2607:9880:19c0:32::2])
-        by smtp.gmail.com with ESMTPSA id y126sm1838024qke.28.2020.04.10.08.32.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 10 Apr 2020 08:32:36 -0700 (PDT)
-Date:   Fri, 10 Apr 2020 11:32:34 -0400
-From:   Peter Xu <peterx@redhat.com>
-To:     Hillf Danton <hdanton@sina.com>
-Cc:     kernel test robot <lkp@intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linux Memory Management List <linux-mm@kvack.org>,
-        linux-kernel@vger.kernel.org
-Subject: Re: f45ec5ff16 ("userfaultfd: wp: support swap and page migration"):
- [  140.777858] BUG: Bad rss-counter state mm:b278fc66 type:MM_ANONPAGES
- val:1
-Message-ID: <20200410153234.GB3172@xz-x1>
-References: <20200410002518.GG8179@shao2-debian>
- <20200410073209.11164-1-hdanton@sina.com>
+        Fri, 10 Apr 2020 11:35:40 -0400
+Received: from mga02.intel.com ([134.134.136.20]:54397 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726009AbgDJPfj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Apr 2020 11:35:39 -0400
+IronPort-SDR: wNCj1aBuv82jBABk6SduVyGxaclEuovYgNezRJk/3gKbpiBZAVd09UVDji56/Rrb6elFtdSbrT
+ ZAj9BVi5GXEA==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Apr 2020 08:35:39 -0700
+IronPort-SDR: 0qzb4equE8alWcIEYcRDAw7+hsh0diCKuAveWpvUzI5ER2F+uodgLsjmVyarxAR0pnBOZ0BneQ
+ LBsRsmROXsZQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,367,1580803200"; 
+   d="scan'208";a="240969201"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
+  by orsmga007.jf.intel.com with ESMTP; 10 Apr 2020 08:35:39 -0700
+Date:   Fri, 10 Apr 2020 08:35:39 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Wanpeng Li <kernellwp@gmail.com>
+Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Haiwei Li <lihaiwei@tencent.com>
+Subject: Re: [PATCH v2] KVM: X86: Ultra fast single target IPI fastpath
+Message-ID: <20200410153539.GD22482@linux.intel.com>
+References: <1586480607-5408-1-git-send-email-wanpengli@tencent.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200410073209.11164-1-hdanton@sina.com>
+In-Reply-To: <1586480607-5408-1-git-send-email-wanpengli@tencent.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi, Hillf,
-
-On Fri, Apr 10, 2020 at 03:32:09PM +0800, Hillf Danton wrote:
+On Fri, Apr 10, 2020 at 09:03:27AM +0800, Wanpeng Li wrote:
+> From: Wanpeng Li <wanpengli@tencent.com>
 > 
-> On Fri, 10 Apr 2020 08:25:18 +0800
-> > Greetings,
-> > 
-> > 0day kernel testing robot got the below dmesg and the first bad commit is
-> > 
-> > https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
-> > 
-> > commit f45ec5ff16a75f96dac8c89862d75f1d8739efd4
-> > Author:     Peter Xu <peterx@redhat.com>
-> > AuthorDate: Mon Apr 6 20:06:01 2020 -0700
-> > Commit:     Linus Torvalds <torvalds@linux-foundation.org>
-> > CommitDate: Tue Apr 7 10:43:39 2020 -0700
-> > 
-> >     userfaultfd: wp: support swap and page migration
-> >     
-> >     For either swap and page migration, we all use the bit 2 of the entry to
-> >     identify whether this entry is uffd write-protected.  It plays a similar
-> >     role as the existing soft dirty bit in swap entries but only for keeping
-> >     the uffd-wp tracking for a specific PTE/PMD.
-> >     
-> >     Something special here is that when we want to recover the uffd-wp bit
-> >     from a swap/migration entry to the PTE bit we'll also need to take care of
-> >     the _PAGE_RW bit and make sure it's cleared, otherwise even with the
-> >     _PAGE_UFFD_WP bit we can't trap it at all.
-> >     
-> >     In change_pte_range() we do nothing for uffd if the PTE is a swap entry.
-> >     That can lead to data mismatch if the page that we are going to write
-> >     protect is swapped out when sending the UFFDIO_WRITEPROTECT.  This patch
-> >     also applies/removes the uffd-wp bit even for the swap entries.
-> >
-> Have trouble understanding the last sentence in the paragraph above and
-> particularly linking it to the first one.
-
-This patch handles the swap entry tracking for userfault-wp.  I wanted
-to express the fact that we didn't do that before.  Sorry if my
-wording is confusing.
-
+> IPI and Timer cause the main MSRs write vmexits in cloud environment 
+> observation, let's optimize virtual IPI latency more aggressively to 
+> inject target IPI as soon as possible.
 > 
-> > If you fix the issue, kindly add following tag
-> > Reported-by: kernel test robot <lkp@intel.com>
-> > 
-> > [child3:925] eventfd (323) returned ENOSYS, marking as inactive.
-> > [  132.014801] can: request_module (can-proto-2) failed.
-> > [  132.063717] can: request_module (can-proto-2) failed.
-> > [  137.186037] trinity-c2 (943) used greatest stack depth: 5804 bytes left
-> > [  140.771486] MCE: Killing trinity-c2:956 due to hardware memory corruption fault at 8bd2060
-> > [  140.777858] BUG: Bad rss-counter state mm:b278fc66 type:MM_ANONPAGES val:1
-> > [  140.778736] BUG: Bad rss-counter state mm:b278fc66 type:MM_SHMEMPAGES val:2
-> > [  141.589424] MCE: Killing trinity-c3:940 due to hardware memory corruption fault at 8a8c860
-> > [  141.590730] swap_info_get: Bad swap file entry 700b8216
-
-Should be a 32bit guest, swap type == 11100b.  I guess this also means
-MAX_SWAPFILES is bigger than 11100b.
-
-> > [  141.591400] BUG: Bad page map in process trinity-c3  pte:17042c3c pmd:b1809067
-> > [  141.592304] addr:08bcf000 vm_flags:00100073 anon_vma:f1f29528 mapping:00000000 index:8bcf
-> > [  141.593399] file:(null) fault:0x0 mmap:0x0 readpage:0x0
-> > [  141.594065] CPU: 0 PID: 940 Comm: trinity-c3 Not tainted 5.6.0-11490-gf45ec5ff16a75 #1
-> > [  141.595055] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.12.0-1 04/01/2014
-> > [  141.596093] Call Trace:
-> > [  141.596443]  dump_stack+0x16/0x18
-> > [  141.596868]  print_bad_pte+0x13f/0x159
-> > [  141.597367]  unmap_page_range+0x2a7/0x3e7
-> > [  141.597893]  unmap_single_vma+0x53/0x5d
-> > [  141.598383]  unmap_vmas+0x2c/0x3b
-> > [  141.598811]  exit_mmap+0x81/0xfc
-> > [  141.599238]  __mmput+0x25/0x8d
-> > [  141.599633]  mmput+0x28/0x2b
-> > [  141.600007]  do_exit+0x2f0/0x84a
-> > [  141.600449]  ? ___might_sleep+0x3f/0x11f
-> > [  141.600949]  do_group_exit+0x86/0x86
-> > [  141.601421]  __ia32_sys_exit_group+0x15/0x15
-> > [  141.601965]  do_fast_syscall_32+0x86/0xbf
-> > [  141.602481]  entry_SYSENTER_32+0xaf/0x101
+> Running kvm-unit-tests/vmexit.flat IPI testing on SKX server, disable 
+> adaptive advance lapic timer and adaptive halt-polling to avoid the 
+> interference, this patch can give another 7% improvement.
 > 
+> w/o fastpath -> fastpath            4238 -> 3543  16.4%
+> fastpath     -> ultra fastpath      3543 -> 3293     7%
+> w/o fastpath -> ultra fastpath      4238 -> 3293  22.3% 
 > 
-> Because is_swap_pte(oldpte) != IS_ENABLED(CONFIG_MIGRATION)), restore the
-> old behavior by modifying uffd_wp only for pte that is __not__ swap entry,
-> as the commit log says.
+> This also revises the performance data in commit 1e9e2622a1 (KVM: VMX: 
+> FIXED+PHYSICAL mode single target IPI fastpath), that testing adds
+> --overcommit cpu-pm=on to kvm-unit-tests guest which is unnecessary.
 > 
-> --- b/mm/mprotect.c
-> +++ c/mm/mprotect.c
-> @@ -139,7 +139,7 @@ static unsigned long change_pte_range(st
->  			}
->  			ptep_modify_prot_commit(vma, addr, pte, oldpte, ptent);
->  			pages++;
-> -		} else if (is_swap_pte(oldpte)) {
-> +		} else if (IS_ENABLED(CONFIG_MIGRATION)) {
->  			swp_entry_t entry = pte_to_swp_entry(oldpte);
->  			pte_t newpte;
+> Tested-by: Haiwei Li <lihaiwei@tencent.com>
+> Cc: Haiwei Li <lihaiwei@tencent.com>
+> Signed-off-by: Wanpeng Li <wanpengli@tencent.com>
+> ---
+> v1 -> v2:
+>  * rebase on latest kvm/queue
+>  * update patch description
+> 
+>  arch/x86/include/asm/kvm_host.h |  6 +++---
+>  arch/x86/kvm/svm/svm.c          | 21 ++++++++++++++-------
+>  arch/x86/kvm/vmx/vmx.c          | 19 +++++++++++++------
+>  arch/x86/kvm/x86.c              |  4 ++--
+>  4 files changed, 32 insertions(+), 18 deletions(-)
+> 
+> diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
+> index c7da23a..e667cf3 100644
+> --- a/arch/x86/include/asm/kvm_host.h
+> +++ b/arch/x86/include/asm/kvm_host.h
+> @@ -1124,7 +1124,8 @@ struct kvm_x86_ops {
+>  	 */
+>  	void (*tlb_flush_guest)(struct kvm_vcpu *vcpu);
 >  
-> @@ -154,7 +154,9 @@ static unsigned long change_pte_range(st
->  					newpte = pte_swp_mksoft_dirty(newpte);
->  				if (pte_swp_uffd_wp(oldpte))
->  					newpte = pte_swp_mkuffd_wp(newpte);
-> -			} else if (is_write_device_private_entry(entry)) {
-> +			}
+> -	void (*run)(struct kvm_vcpu *vcpu);
+> +	void (*run)(struct kvm_vcpu *vcpu,
+> +		enum exit_fastpath_completion *exit_fastpath);
+>  	int (*handle_exit)(struct kvm_vcpu *vcpu,
+>  		enum exit_fastpath_completion exit_fastpath);
+>  	int (*skip_emulated_instruction)(struct kvm_vcpu *vcpu);
+> @@ -1174,8 +1175,7 @@ struct kvm_x86_ops {
+>  			       struct x86_instruction_info *info,
+>  			       enum x86_intercept_stage stage,
+>  			       struct x86_exception *exception);
+> -	void (*handle_exit_irqoff)(struct kvm_vcpu *vcpu,
+> -		enum exit_fastpath_completion *exit_fastpath);
+> +	void (*handle_exit_irqoff)(struct kvm_vcpu *vcpu);
+>  
+>  	int (*check_nested_events)(struct kvm_vcpu *vcpu);
+>  	void (*request_immediate_exit)(struct kvm_vcpu *vcpu);
+> diff --git a/arch/x86/kvm/svm/svm.c b/arch/x86/kvm/svm/svm.c
+> index 27f4684..c019332 100644
+> --- a/arch/x86/kvm/svm/svm.c
+> +++ b/arch/x86/kvm/svm/svm.c
+> @@ -3283,9 +3283,20 @@ static void svm_cancel_injection(struct kvm_vcpu *vcpu)
+>  	svm_complete_interrupts(svm);
+>  }
+>  
+> +static enum exit_fastpath_completion svm_exit_handlers_fastpath(struct kvm_vcpu *vcpu)
+> +{
+> +	if (!is_guest_mode(vcpu) &&
+> +	    to_svm(vcpu)->vmcb->control.exit_code == SVM_EXIT_MSR &&
+> +	    to_svm(vcpu)->vmcb->control.exit_info_1)
+> +		return handle_fastpath_set_msr_irqoff(vcpu);
 > +
-> +			if (is_write_device_private_entry(entry)) {
->  				/*
->  				 * We do not preserve soft-dirtiness. See
->  				 * copy_one_pte() for explanation.
-> @@ -163,11 +165,18 @@ static unsigned long change_pte_range(st
->  				newpte = swp_entry_to_pte(entry);
->  				if (pte_swp_uffd_wp(oldpte))
->  					newpte = pte_swp_mkuffd_wp(newpte);
-> -			} else {
-> -				newpte = oldpte;
->  			}
+> +	return EXIT_FASTPATH_NONE;
+> +}
+> +
+>  bool __svm_vcpu_run(unsigned long vmcb_pa, unsigned long *regs);
 >  
-> -			if (uffd_wp)
-> +			/*
-> +			 * do nothing for changing uffd_wp if oldpte is a
-> +			 * swap entry.
-> +			 * That can lead to data mismatch if the page we
-> +			 * are going to write protect is swapped out when
-> +			 * sending the UFFDIO_WRITEPROTECT.
-> +			 */
-> +			if (is_swap_pte(oldpte))
-> +				newpte = oldpte;
-> +			else if (uffd_wp)
->  				newpte = pte_swp_mkuffd_wp(newpte);
->  			else if (uffd_wp_resolve)
->  				newpte = pte_swp_clear_uffd_wp(newpte);
+> -static void svm_vcpu_run(struct kvm_vcpu *vcpu)
+> +static void svm_vcpu_run(struct kvm_vcpu *vcpu,
+> +	enum exit_fastpath_completion *exit_fastpath)
+>  {
+>  	struct vcpu_svm *svm = to_svm(vcpu);
+>  
+> @@ -3388,6 +3399,7 @@ static void svm_vcpu_run(struct kvm_vcpu *vcpu)
+>  	kvm_load_host_xsave_state(vcpu);
+>  	stgi();
+>  
+> +	*exit_fastpath = svm_exit_handlers_fastpath(vcpu);
+>  	/* Any pending NMI will happen here */
+>  
+>  	if (unlikely(svm->vmcb->control.exit_code == SVM_EXIT_NMI))
+> @@ -3719,13 +3731,8 @@ static int svm_check_intercept(struct kvm_vcpu *vcpu,
+>  	return ret;
+>  }
+>  
+> -static void svm_handle_exit_irqoff(struct kvm_vcpu *vcpu,
+> -	enum exit_fastpath_completion *exit_fastpath)
+> +static void svm_handle_exit_irqoff(struct kvm_vcpu *vcpu)
+>  {
+> -	if (!is_guest_mode(vcpu) &&
+> -	    to_svm(vcpu)->vmcb->control.exit_code == SVM_EXIT_MSR &&
+> -	    to_svm(vcpu)->vmcb->control.exit_info_1)
+> -		*exit_fastpath = handle_fastpath_set_msr_irqoff(vcpu);
+>  }
+>  
+>  static void svm_sched_in(struct kvm_vcpu *vcpu, int cpu)
+> diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+> index 1d2bb57..61a1725 100644
+> --- a/arch/x86/kvm/vmx/vmx.c
+> +++ b/arch/x86/kvm/vmx/vmx.c
+> @@ -6354,8 +6354,7 @@ static void handle_external_interrupt_irqoff(struct kvm_vcpu *vcpu)
+>  }
+>  STACK_FRAME_NON_STANDARD(handle_external_interrupt_irqoff);
+>  
+> -static void vmx_handle_exit_irqoff(struct kvm_vcpu *vcpu,
+> -	enum exit_fastpath_completion *exit_fastpath)
+> +static void vmx_handle_exit_irqoff(struct kvm_vcpu *vcpu)
+>  {
+>  	struct vcpu_vmx *vmx = to_vmx(vcpu);
+>  
+> @@ -6363,9 +6362,6 @@ static void vmx_handle_exit_irqoff(struct kvm_vcpu *vcpu,
+>  		handle_external_interrupt_irqoff(vcpu);
+>  	else if (vmx->exit_reason == EXIT_REASON_EXCEPTION_NMI)
+>  		handle_exception_nmi_irqoff(vmx);
+> -	else if (!is_guest_mode(vcpu) &&
+> -		vmx->exit_reason == EXIT_REASON_MSR_WRITE)
+> -		*exit_fastpath = handle_fastpath_set_msr_irqoff(vcpu);
+>  }
+>  
+>  static bool vmx_has_emulated_msr(int index)
+> @@ -6570,9 +6566,19 @@ void vmx_update_host_rsp(struct vcpu_vmx *vmx, unsigned long host_rsp)
+>  	}
+>  }
+>  
+> +static enum exit_fastpath_completion vmx_exit_handlers_fastpath(struct kvm_vcpu *vcpu)
+> +{
+> +	if (!is_guest_mode(vcpu) &&
+> +		to_vmx(vcpu)->exit_reason == EXIT_REASON_MSR_WRITE)
 
-I'm not sure this is correct.  As I mentioned, the commit wanted to
-apply the uffd-wp bit even for the swap entries so that even the swap
-entries got swapped in, the page will still be write protected.  So
-IIUC think we can't remove that.
+Bad indentation.
 
-Above report happened at __swap_info_get() where we should have
-triggered type >= READ_ONCE(nr_swapfiles) in swap_type_to_swap_info(),
-which, iiuc, means the type is considered wrong.  The mistery to me is
-how did the swap type went wrong.  E.g., iiuc the
-"is_swap_pte(oldpte)" replacement to "IS_ENABLED(CONFIG_MIGRATION)"
-shouldn't affect this, because even if MIGRATION is not enabled, both
-is_write_migration_entry() and is_write_device_private_entry() should
-return constant zero after all, so they shouldn't be thouching the
-swap type.
+> +		return handle_fastpath_set_msr_irqoff(vcpu);
+> +
+> +	return EXIT_FASTPATH_NONE;
+> +}
+> +
+>  bool __vmx_vcpu_run(struct vcpu_vmx *vmx, unsigned long *regs, bool launched);
+>  
+> -static void vmx_vcpu_run(struct kvm_vcpu *vcpu)
+> +static void vmx_vcpu_run(struct kvm_vcpu *vcpu,
+> +	enum exit_fastpath_completion *exit_fastpath)
 
-I'm still trying to digest on what's happened... It would be good too
-if more information on the test could be given, e.g., what is the
-behavior of trinity-c2. A reproducer is of course even better.
+Why pass a pointer instead of returning the enum?
 
-Thanks,
+>  {
+>  	struct vcpu_vmx *vmx = to_vmx(vcpu);
+>  	unsigned long cr3, cr4;
+> @@ -6737,6 +6743,7 @@ static void vmx_vcpu_run(struct kvm_vcpu *vcpu)
+>  	vmx->idt_vectoring_info = 0;
+>  
+>  	vmx->exit_reason = vmx->fail ? 0xdead : vmcs_read32(VM_EXIT_REASON);
+> +	*exit_fastpath = vmx_exit_handlers_fastpath(vcpu);
 
--- 
-Peter Xu
+IMO, this should come at the very end of vmx_vcpu_run().  At a minimum, it
+needs to be moved below the #MC handling and below
 
+	if (vmx->fail || (vmx->exit_reason & VMX_EXIT_REASONS_FAILED_VMENTRY))
+		return;
+
+KVM more or less assumes vmx->idt_vectoring_info is always valid, and it's
+not obvious that a generic fastpath call can safely run before
+vmx_complete_interrupts(), e.g. the kvm_clear_interrupt_queue() call.
+
+In a normal scenario, the added latency is <50 cycles.  ~30 for the VMREAD
+of IDT_VECTORING_INFO_FIELD, a handful of zeroing instructions, and a few
+CMP+Jcc style uops to skip NMI blocking and interrupt completion.
+
+And if the result is returned, it means VMX won't need a local variable, e.g.:
+
+	vmx->exit_reason = vmx->fail ? 0xdead : vmcs_read32(VM_EXIT_REASON);
+	if ((u16)vmx->exit_reason == EXIT_REASON_MCE_DURING_VMENTRY)
+		kvm_machine_check();
+
+	if (vmx->fail || (vmx->exit_reason & VMX_EXIT_REASONS_FAILED_VMENTRY))
+		return EXIT_FASTPATH_NONE;
+
+	vmx->loaded_vmcs->launched = 1;
+	vmx->idt_vectoring_info = vmcs_read32(IDT_VECTORING_INFO_FIELD);
+
+	vmx_recover_nmi_blocking(vmx);
+	vmx_complete_interrupts(vmx);
+
+	return vmx_exit_handlers_fastpath(vcpu);
+}
+
+>  	if ((u16)vmx->exit_reason == EXIT_REASON_MCE_DURING_VMENTRY)
+>  		kvm_machine_check();
+>  
+> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+> index 3089aa4..eed31e2 100644
+> --- a/arch/x86/kvm/x86.c
+> +++ b/arch/x86/kvm/x86.c
+> @@ -8409,7 +8409,7 @@ static int vcpu_enter_guest(struct kvm_vcpu *vcpu)
+>  		vcpu->arch.switch_db_regs &= ~KVM_DEBUGREG_RELOAD;
+>  	}
+>  
+> -	kvm_x86_ops.run(vcpu);
+> +	kvm_x86_ops.run(vcpu, &exit_fastpath);
+
+Pretty sre 
+>  
+>  	/*
+>  	 * Do this here before restoring debug registers on the host.  And
+> @@ -8441,7 +8441,7 @@ static int vcpu_enter_guest(struct kvm_vcpu *vcpu)
+>  	vcpu->mode = OUTSIDE_GUEST_MODE;
+>  	smp_wmb();
+>  
+> -	kvm_x86_ops.handle_exit_irqoff(vcpu, &exit_fastpath);
+> +	kvm_x86_ops.handle_exit_irqoff(vcpu);
+>  
+>  	/*
+>  	 * Consume any pending interrupts, including the possible source of
+> -- 
+> 2.7.4
+> 
