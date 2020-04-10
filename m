@@ -2,171 +2,85 @@ Return-Path: <SRS0=VV4q=52=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F518C2BA2B
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 310A6C2BB55
 	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 08:29:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 78D9121835
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 08:24:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="SbPFVbLg"
+	by mail.kernel.org (Postfix) with ESMTP id CFEB7214D8
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 08:23:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726177AbgDJIYL (ORCPT
+        id S1725991AbgDJIXv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Apr 2020 04:24:11 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:43016 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726007AbgDJIYL (ORCPT
+        Fri, 10 Apr 2020 04:23:51 -0400
+Received: from cmccmta3.chinamobile.com ([221.176.66.81]:52378 "EHLO
+        cmccmta3.chinamobile.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725839AbgDJIXv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Apr 2020 04:24:11 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1586507050;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=jhbDWM/COmRzn52zE0cD200v2Q1E5S+PCb8ygVpftN0=;
-        b=SbPFVbLgc7HgyREdbYOlM4AxdxFZCYuJxMhftIJVC+gPzcKpYfJ7KHhGVBWkbRKSzDMxdu
-        7SYakwNFWh8gl0e2UIDXs9mk/Mp7H0DLwq1KKGlAG4nn5qXI0vcDOaX8lk07p6Cbe6zici
-        aEvCK7ZaTz8nN3nLAFxtaLd1v/8mFoY=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-402-jQWAT0sWMkGl3PDpjBe6gA-1; Fri, 10 Apr 2020 04:24:05 -0400
-X-MC-Unique: jQWAT0sWMkGl3PDpjBe6gA-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id B4DD6DB60;
-        Fri, 10 Apr 2020 08:24:02 +0000 (UTC)
-Received: from [10.72.12.205] (ovpn-12-205.pek2.redhat.com [10.72.12.205])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id CB11760BFB;
-        Fri, 10 Apr 2020 08:23:40 +0000 (UTC)
-Subject: Re: [PATCH V9 8/9] vdpasim: vDPA device simulator
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     "Michael S. Tsirkin" <mst@redhat.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        KVM list <kvm@vger.kernel.org>,
-        virtualization@lists.linux-foundation.org,
-        netdev <netdev@vger.kernel.org>,
-        Jason Gunthorpe <jgg@mellanox.com>, maxime.coquelin@redhat.com,
-        cunming.liang@intel.com, zhihong.wang@intel.com,
-        rob.miller@broadcom.com, xiao.w.wang@intel.com,
-        lingshan.zhu@intel.com, eperezma@redhat.com, lulu@redhat.com,
-        parav@mellanox.com, kevin.tian@intel.com, stefanha@redhat.com,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Christoph Hellwig <hch@infradead.org>, aadam@redhat.com,
-        Jiri Pirko <jiri@mellanox.com>, shahafs@mellanox.com,
-        hanand@xilinx.com, Martin Habets <mhabets@solarflare.com>,
-        gdawar@xilinx.com, saugatm@xilinx.com, vmireyno@marvell.com,
-        zhangweining@ruijie.com.cn
-References: <20200326140125.19794-1-jasowang@redhat.com>
- <20200326140125.19794-9-jasowang@redhat.com>
- <CAMuHMdUis3O_mJKOb2s=_=Zs61iHus5Aq74N3-xs7kmjN+egoQ@mail.gmail.com>
-From:   Jason Wang <jasowang@redhat.com>
-Message-ID: <108f65dd-f1b1-54ec-ae26-49842f3686b6@redhat.com>
-Date:   Fri, 10 Apr 2020 16:23:38 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Fri, 10 Apr 2020 04:23:51 -0400
+Received: from spf.mail.chinamobile.com (unknown[172.16.121.3]) by rmmx-syy-dmz-app11-12011 (RichMail) with SMTP id 2eeb5e902d07bec-00d91; Fri, 10 Apr 2020 16:23:36 +0800 (CST)
+X-RM-TRANSID: 2eeb5e902d07bec-00d91
+X-RM-TagInfo: emlType=0                                       
+X-RM-SPAM-FLAG: 00000000
+Received: from [172.20.21.224] (unknown[112.25.154.146])
+        by rmsmtp-syy-appsvr02-12002 (RichMail) with SMTP id 2ee25e902d07967-23973;
+        Fri, 10 Apr 2020 16:23:36 +0800 (CST)
+X-RM-TRANSID: 2ee25e902d07967-23973
+Subject: Re: [PATCH] EDAC/altera:Use platform_get_irq_optional()
+To:     Borislav Petkov <bp@alien8.de>, rrichter <rrichter@marvell.com>
+Cc:     "thor.thayer" <thor.thayer@linux.intel.com>,
+        mchehab <mchehab@kernel.org>, "tony.luck" <tony.luck@intel.com>,
+        "james.morse" <james.morse@arm.com>,
+        linux-edac <linux-edac@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+References: <20200402112740.15580-1-tangbin@cmss.chinamobile.com>
+ <20200402123001.obgzqmlure4cfvh7@rric.localdomain>
+ <202004022106312118022@cmss.chinamobile.com>
+ <20200408071022.ft6aamptrxlaz23f@rric.localdomain>
+ <2020040819334451781313@cmss.chinamobile.com>
+ <20200408113658.GE24663@zn.tnic>
+From:   Tang Bin <tangbin@cmss.chinamobile.com>
+Message-ID: <1b9a872f-f616-8eaf-1cca-d73647f696e3@cmss.chinamobile.com>
+Date:   Fri, 10 Apr 2020 16:25:24 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-In-Reply-To: <CAMuHMdUis3O_mJKOb2s=_=Zs61iHus5Aq74N3-xs7kmjN+egoQ@mail.gmail.com>
+In-Reply-To: <20200408113658.GE24663@zn.tnic>
 Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Borislav & Robert:
 
-On 2020/4/10 =E4=B8=8B=E5=8D=883:45, Geert Uytterhoeven wrote:
-> Hi Jason,
+On 2020/4/8 19:36, Borislav Petkov wrote:
+> On Wed, Apr 08, 2020 at 07:33:44PM +0800, Tang Bin wrote:
+>>    I know what you mean, Thanks.
+> I don't think you do because you still top-post.
 >
-> On Thu, Mar 26, 2020 at 3:07 PM Jason Wang <jasowang@redhat.com> wrote:
->> This patch implements a software vDPA networking device. The datapath
->> is implemented through vringh and workqueue. The device has an on-chip
->> IOMMU which translates IOVA to PA. For kernel virtio drivers, vDPA
->> simulator driver provides dma_ops. For vhost driers, set_map() methods
->> of vdpa_config_ops is implemented to accept mappings from vhost.
->>
->> Currently, vDPA device simulator will loopback TX traffic to RX. So
->> the main use case for the device is vDPA feature testing, prototyping
->> and development.
->>
->> Note, there's no management API implemented, a vDPA device will be
->> registered once the module is probed. We need to handle this in the
->> future development.
->>
->> Signed-off-by: Jason Wang <jasowang@redhat.com>
-> This is now commit 2c53d0f64c06f458 ("vdpasim: vDPA device simulator").
+> A: Because it messes up the order in which people normally read text.
+> Q: Why is top-posting such a bad thing?
+> A: Top-posting.
+> Q: What is the most annoying thing in e-mail?
 >
->> --- a/drivers/virtio/vdpa/Kconfig
->> +++ b/drivers/virtio/vdpa/Kconfig
->> @@ -5,3 +5,22 @@ config VDPA
->>            Enable this module to support vDPA device that uses a
->>            datapath which complies with virtio specifications with
->>            vendor specific control path.
->> +
->> +menuconfig VDPA_MENU
->> +       bool "VDPA drivers"
->> +       default n
->      *
->      * VDPA drivers
->      *
->      VDPA drivers (VDPA_MENU) [N/y/?] (NEW) ?
+> A: No.
+> Q: Should I include quotations after my reply?
 >
->      There is no help available for this option.
->      Symbol: VDPA_MENU [=3Dn]
->      Type  : bool
->      Defined at drivers/vdpa/Kconfig:9
->       Prompt: VDPA drivers
->       Location:
->         -> Device Drivers
->
-> I think this deserves a help text, so users know if they want to enable=
- this
-> option or not.
+> http://daringfireball.net/2007/07/on_top
+
+I am sorry for the previous writing mistake(top-post). I have consulted 
+others and hope it's right this time. Sorry again and thanks for 
+teaching. I hope to continuously improve myself and regulate myself 
+under your guidance.
+
+Thanks.
+
+Tang Bin
 
 
-Will add a help text for this.
-
-
->
-> I had a quick look, but couldn't find the meaning of "vdpa" in the whol=
-e kernel
-> source tree.
-
-
-The meaning was explained in the commit log of=20
-961e9c84077f6c8579d7a628cbe94a675cb67ae4 and help text for CONFIG_VDPA.
-
-Thanks
-
-
->
-> Thanks!
->
->> +
->> +if VDPA_MENU
->> +
->> +config VDPA_SIM
->> +       tristate "vDPA device simulator"
->> +       depends on RUNTIME_TESTING_MENU
->> +       select VDPA
->> +       select VHOST_RING
->> +       default n
->> +       help
->> +         vDPA networking device simulator which loop TX traffic back
->> +         to RX. This device is used for testing, prototyping and
->> +         development of vDPA.
->> +
->> +endif # VDPA_MENU
-> Gr{oetje,eeting}s,
->
->                          Geert
->
 
