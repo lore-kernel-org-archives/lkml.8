@@ -2,129 +2,88 @@ Return-Path: <SRS0=VV4q=52=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 684E9C2BA2B
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 16:40:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08464C2BA2B
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 16:43:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 31FDF20769
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 16:40:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CC5FB20CC7
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 16:43:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rsK67ak/"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="i3fRgdHS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726654AbgDJQk5 (ORCPT
+        id S1726648AbgDJQn4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Apr 2020 12:40:57 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:46327 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726177AbgDJQk5 (ORCPT
+        Fri, 10 Apr 2020 12:43:56 -0400
+Received: from esa1.microchip.iphmx.com ([68.232.147.91]:9933 "EHLO
+        esa1.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726181AbgDJQn4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Apr 2020 12:40:57 -0400
-Received: by mail-wr1-f67.google.com with SMTP id f13so2822333wrm.13
-        for <linux-kernel@vger.kernel.org>; Fri, 10 Apr 2020 09:40:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=hQN/YbSH1U0Hdym1a0eKmIzW7Vl10c/CjDwiNW+YpC8=;
-        b=rsK67ak/QIkS4dSW//qtxUdMlLEkfnTtXsElMGAefgL1zRabCq092PAXFJ6rYPp8Mf
-         1ZtA8SMpgWt7ur5BK1il8bVz0DavyiJWhvyRzNBlkcRH56kL9WBOPs/TEjvaFdX8IQPp
-         DpllDqyn7Wq4uOBw0e5KpJINVdRtcQGk+f8ecePPV3ogN5Q/TYOjBn3m0VonYMFliE6q
-         WfhTt8Wx4MKSkcPKo61NHhbrneNzzgDrqZ3nMOXOU8qOhA6tCBPsbETAJoXfaQ9AGuOb
-         ML2MWSu7+njetBcevS5hqh5Fhh1euE4SFRKY68P37FVQETyKdWKLrUxibvtNIVoRj53d
-         0MmA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=hQN/YbSH1U0Hdym1a0eKmIzW7Vl10c/CjDwiNW+YpC8=;
-        b=f7O2lEeifuYKVmIIH5z00Tbmns17Ch0VY1XUksxlSCAWb6YyCrry+EgLe4rJd8YbwH
-         K6zqf1aeVf+LDLKA2hoenkRt1D5FuphFDHJdPW4e55ptKgYIES0xN2LjvcpHkoo7A893
-         QIuGk0iIgvYRRLdgcdlkpUwvreBsEmY5fjEFlAb5BBNRkI9ZxsjfwAUtjvhruBcDLKYb
-         laBpdQSxICDrngZLinHOjHVzdOHjkXkUgBUitzuCIcs+85D3Y//3/Z+K8uBQU3TTgOeo
-         du1H8VMMfd05RSlzcOGiiayRFOyumPFOOXTcL255p/fFFMXWmOJtraCB1ANFrTbcLRSA
-         EWTQ==
-X-Gm-Message-State: AGi0PuaPX6xYRcCCDQO4gFbpTW5GveaTsdShLZh3p23qczB08j37RoNA
-        9TYCcucCb+jd7e563qsGz6GkI3un
-X-Google-Smtp-Source: APiQypIDNW4vIKXpG+QLg0z43/iuXFAou/wGZaok0x+1OLRghgU5g1By6zyECCQVBjFTlxOUm5wGKw==
-X-Received: by 2002:a5d:688f:: with SMTP id h15mr5486012wru.352.1586536855546;
-        Fri, 10 Apr 2020 09:40:55 -0700 (PDT)
-Received: from [192.168.43.227] (94.197.121.102.threembb.co.uk. [94.197.121.102])
-        by smtp.gmail.com with ESMTPSA id z3sm3309100wma.22.2020.04.10.09.40.54
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 10 Apr 2020 09:40:55 -0700 (PDT)
-Subject: Re: [PATCH 1/2] staging: vt6656: Refactor the assignment of the
- phy->signal variable
-To:     Oscar Carter <oscar.carter@gmx.com>
-Cc:     Forest Bond <forest@alittletooquiet.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Quentin Deslandes <quentin.deslandes@itdev.co.uk>,
-        Amir Mahdi Ghorbanian <indigoomega021@gmail.com>,
-        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
-References: <20200410112834.17490-1-oscar.carter@gmx.com>
- <20200410112834.17490-2-oscar.carter@gmx.com>
- <986e8e5e-245a-cc70-2c6f-8ac3a4a485c9@gmail.com>
- <20200410155911.GA3426@ubuntu>
-From:   Malcolm Priestley <tvboxspy@gmail.com>
-Message-ID: <fcc434e9-9da4-4f24-19cc-bac8fc7166ec@gmail.com>
-Date:   Fri, 10 Apr 2020 17:40:52 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Fri, 10 Apr 2020 12:43:56 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1586537036; x=1618073036;
+  h=from:to:cc:subject:date:message-id:mime-version;
+  bh=IZtgr281NErrC4ObsXh3MQXKvxHUfMzv2fvTAErzi5s=;
+  b=i3fRgdHSLlxLX8yvx8K1kCDJS3Izh5vJc/eZnR4UjlD/zD4DO8fkz0UJ
+   a4rEeoDZRvKyAoXMP9f3X8l3OPtW7MSFSGLO6ysMeZrWgG13sVdPMjDE6
+   z1Sg4ZC4cVrX5Rh1nKoTEfsuic5X7m0BLgXKdFdtULGelqCDS9nt++14l
+   XupSn5R10CFe2IWPPR+aDOW7kuwPS3jWHQ+hYMklvu7LHduubdhercA6G
+   +7rduybxGppHTUr5pYZLbaPruQcxe3nid7acMQ1dsNaBUT2aaGGjifJ4y
+   fauZsC9HTf1opLmjPoDyFf51NqC/TKo5GwbRMsOTtgQLO84fCCQKv1Xqb
+   w==;
+IronPort-SDR: PXJOqZSFecMhn6NVignQpMzVGcP3WR0oAaJwMXHXQjJZXUM0iCdbt094IHyDB21H6SVQdf0Uo7
+ 2ALtn/JsADLBdmOwTP1XTMIbqbjdpHib3ranqxO0PuRIMTaPtV6Od8G2JKiyzakdJOjbWpI2mU
+ QVVQEVu7tYcbGJmsYU7WlA8aoLsV9H8/hYNZMBLfbEnTlXHmyaOdj5FPM4EkfGD05IgEevYSKa
+ eYYcAg56gZdXQKFGTaBXAtqOWzSLEdpSW1s6iBd4yhJHxqfmsv6JWmedSy+SF1iizx/oS/WRgT
+ Dwg=
+X-IronPort-AV: E=Sophos;i="5.72,367,1580799600"; 
+   d="scan'208";a="75501639"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa1.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 10 Apr 2020 09:43:50 -0700
+Received: from chn-vm-ex02.mchp-main.com (10.10.85.144) by
+ chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Fri, 10 Apr 2020 09:43:50 -0700
+Received: from cristi-P53.amer.actel.com (10.10.115.15) by
+ chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server id
+ 15.1.1713.5 via Frontend Transport; Fri, 10 Apr 2020 09:43:43 -0700
+From:   <cristian.birsan@microchip.com>
+To:     <nicolas.ferre@microchip.com>, <alexandre.belloni@bootlin.com>,
+        <ludovic.desroches@microchip.com>, <robh+dt@kernel.org>,
+        <mark.rutland@arm.com>, <linux-arm-kernel@lists.infradead.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+CC:     Cristian Birsan <cristian.birsan@microchip.com>
+Subject: [PATCH 0/2] ARM: at91: Add initial support for SAMA5D2-ICP
+Date:   Fri, 10 Apr 2020 19:43:18 +0300
+Message-ID: <20200410164320.7658-1-cristian.birsan@microchip.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-In-Reply-To: <20200410155911.GA3426@ubuntu>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Cristian Birsan <cristian.birsan@microchip.com>
 
+This patch series adds initial support for SAMA5D2 Industrial
+Communication Platform.
 
-On 10/04/2020 16:59, Oscar Carter wrote:
-> On Fri, Apr 10, 2020 at 04:37:59PM +0100, Malcolm Priestley wrote:
->>
->>
->> On 10/04/2020 12:28, Oscar Carter wrote:
->>> Create a constant array with the values of the "phy->signal" for every
->>> rate. Remove all "phy->signal" assignments inside the switch statement
->>> and replace these with a single reading from the new vnt_phy_signal
->>> array.
->>>
->>> Signed-off-by: Oscar Carter <oscar.carter@gmx.com>
->>> ---
->>>    drivers/staging/vt6656/baseband.c | 101 +++++++-----------------------
->>>    1 file changed, 21 insertions(+), 80 deletions(-)
->>>
->>> diff --git a/drivers/staging/vt6656/baseband.c b/drivers/staging/vt6656/baseband.c
->>> index a19a563d8bcc..47f93bf6e07b 100644
->>> --- a/drivers/staging/vt6656/baseband.c
->>> +++ b/drivers/staging/vt6656/baseband.c
->>> @@ -115,6 +115,21 @@ static const u16 vnt_frame_time[MAX_RATE] = {
->>>    	10, 20, 55, 110, 24, 36, 48, 72, 96, 144, 192, 216
->>>    };
->>
->> Actually you don't need the second values
-> 
-> Great.
->>>
->>> +static const u8 vnt_phy_signal[][2] = {
->>> +	{0x00, 0x00},	/* RATE_1M  */
->> The driver would never attempt use preamble at this rate
->> so it's safe to include in with the next 3 rates
-Sorry got this wrong the driver is trying to do preamble (short)
-at this rate and it is not working.
+Codrin Ciubotariu (1):
+  dt-bindings: ARM: Document SAMA5D2-ICP
 
-So don't apply it to RATE_1M rate.
+Cristian Birsan (1):
+  ARM: dts: at91: sama5d2-icp: add SAMA5D2-ICP
 
-Regards
+ .../devicetree/bindings/arm/atmel-at91.yaml   |   7 +
+ arch/arm/boot/dts/Makefile                    |   1 +
+ arch/arm/boot/dts/at91-sama5d2_icp.dts        | 797 ++++++++++++++++++
+ 3 files changed, 805 insertions(+)
+ create mode 100644 arch/arm/boot/dts/at91-sama5d2_icp.dts
 
-Malcolm
-
+-- 
+2.17.1
 
