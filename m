@@ -2,429 +2,123 @@ Return-Path: <SRS0=VV4q=52=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 364B0C2BB55
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 19:44:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66588C2BB55
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 19:45:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EB17F20801
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 19:44:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4356720801
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 19:45:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FKBdXp6e"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726678AbgDJToo (ORCPT
+        id S1726695AbgDJTpe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Apr 2020 15:44:44 -0400
-Received: from mail.baikalelectronics.com ([87.245.175.226]:41604 "EHLO
-        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726142AbgDJTon (ORCPT
+        Fri, 10 Apr 2020 15:45:34 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:34366 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726142AbgDJTpe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Apr 2020 15:44:43 -0400
-Received: from localhost (unknown [127.0.0.1])
-        by mail.baikalelectronics.ru (Postfix) with ESMTP id 88A348030791;
-        Fri, 10 Apr 2020 19:44:39 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at baikalelectronics.ru
-Received: from mail.baikalelectronics.ru ([127.0.0.1])
-        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id huB9Io0Nb37F; Fri, 10 Apr 2020 22:44:38 +0300 (MSK)
-Date:   Fri, 10 Apr 2020 22:45:13 +0300
-From:   Sergey Semin <Sergey.Semin@baikalelectronics.ru>
-To:     Guenter Roeck <linux@roeck-us.net>
-CC:     Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Paul Burton <paulburton@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        <linux-watchdog@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 4/7] watchdog: dw_wdt: Support devices with non-fixed TOP
- values
-Message-ID: <20200410194513.tdnhmrpo7sgupn35@ubsrv2.baikal.int>
-References: <20200306132747.14701-1-Sergey.Semin@baikalelectronics.ru>
- <20200306132829.E508B8030705@mail.baikalelectronics.ru>
- <20200315141238.GA7245@roeck-us.net>
- <20200410125904.bdrr3jpi47mwvfkf@ubsrv2.baikal.int>
- <9dd40847-a2c7-d30c-0af4-07ff606a61f8@roeck-us.net>
+        Fri, 10 Apr 2020 15:45:34 -0400
+Received: by mail-lj1-f195.google.com with SMTP id m8so3010146lji.1;
+        Fri, 10 Apr 2020 12:45:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=WmpyDrH3/Z1ArRlEY0K8VHiqZidN8GFc86xX3wY/+WQ=;
+        b=FKBdXp6ePaKSTrAVJhlKMKicO0i7xHQtV+9ZTL4XF31qUhQ/AAYEe3RL090ZqE+ZBO
+         3awpkYttC3Kvp5XYu98L1pEAWkUgpbGUAjN2OvQxbSAVXhVBP+qvHFkpGPkRJ3KzsBuZ
+         GQ2+eraY4worAlGNbTmPtt3iW0TXsjYPtHEAYcf1YG2jFHcmlYRpFA36rmXmpkFYnpzG
+         dHAuPDXb09dI/ginIO1Y8Yd1BOqs9sFlNv8t79j1SaWTsGIkacGy4Tt9lHCO4S7IH7XA
+         qfAqJhAGRAMHyDrg2uGgbHyiRg4diJomBWtGpfXWKZO7wzm0rQV4LJR92A/pwPOzQHGQ
+         BAMQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=WmpyDrH3/Z1ArRlEY0K8VHiqZidN8GFc86xX3wY/+WQ=;
+        b=rcmk4w3q7lWK3wgYWF281+oJGSBhvJz/cKsoT5MI3hqqM1fKScuYmMcQtUQz5thpYt
+         B4B3K+ynCE3LUXdAevOW053/iwSGV1q589CmuBZ4BBhQZcrcRcc64Ll7bDsfVim+iTa/
+         eTtq4sx23zuYW2XamKDhpknQw0m+eYQzBvHQ6zi6oxrCfu+pQZMpEOpoX5v6so7aLqWF
+         zyorhGTujp8Scwqt48d3mVsM060FbxhSx+rkvSVoICVPXnd73mYeF6TuDtoHmE354tx2
+         PX6AcPg5qdq81AdBK4j1SCqLqdZSke6R4Fm7fOfWcfOxyxhL1YwaLj/tZQtkmXA3a3Lo
+         QCQw==
+X-Gm-Message-State: AGi0PuaHcxtcb6p6+XQpIDz5tnWGVBje2bXzuxzVSlqPdxEoCx9a5Fke
+        813SPDoQAhSdJi+/rv7Fbt5iA2IE
+X-Google-Smtp-Source: APiQypLLzBS7621tO3Wel2SfE0Xjvt7RUjgBgFXwgQ2nsbvqvN7qClIRoOKGe4DBy0C+g/hMhI3PQA==
+X-Received: by 2002:a2e:7e09:: with SMTP id z9mr3974602ljc.18.1586547929691;
+        Fri, 10 Apr 2020 12:45:29 -0700 (PDT)
+Received: from [192.168.2.145] (ppp91-78-208-152.pppoe.mtu-net.ru. [91.78.208.152])
+        by smtp.googlemail.com with ESMTPSA id o25sm1478102lfg.41.2020.04.10.12.45.28
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 10 Apr 2020 12:45:28 -0700 (PDT)
+Subject: Re: [RFC PATCH v6 6/9] media: tegra: Add Tegra210 Video input driver
+To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
+        thierry.reding@gmail.com, jonathanh@nvidia.com, frankc@nvidia.com,
+        hverkuil@xs4all.nl, sakari.ailus@iki.fi, helen.koike@collabora.com
+Cc:     sboyd@kernel.org, linux-media@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <1585963507-12610-1-git-send-email-skomatineni@nvidia.com>
+ <97b35910-4c93-123a-43a0-eb14476ed0f3@nvidia.com>
+ <84ad4e2d-6ac1-e1f4-1c55-5edaae850631@nvidia.com>
+ <15a879b3-8fb9-6821-3cdc-104ba583ac12@gmail.com>
+ <0c425505-347f-7418-af7e-d121fe0d06dc@nvidia.com>
+ <db7c7051-5674-cdb9-0aa4-ee94125b3024@gmail.com>
+ <1a31cd60-739f-0660-1c45-31487d2f2128@nvidia.com>
+ <603084a5-249a-4fe2-3646-e9335ef9ab43@nvidia.com>
+ <7895b9c6-f27d-8939-73d7-67d785e1a8b7@nvidia.com>
+ <ea60b489-990e-4b15-e215-d93381a1371e@nvidia.com>
+ <b2405c2a-73c0-ad69-ccea-0388caf8045c@gmail.com>
+ <15d8b525-67b5-b437-f7fd-89f80cd0d9f6@nvidia.com>
+ <a638bb8e-bb50-7aa5-05a0-8de1c6207ba7@nvidia.com>
+ <ced73258-6f4b-e970-4ca5-ecdf1808a4c3@nvidia.com>
+ <ad646fde-2eed-eeeb-4d85-ec36d6613eb1@nvidia.com>
+ <7288cacd-badc-cb01-1f4c-286dd024ca10@gmail.com>
+ <77c88717-618f-b366-2b6a-f8b4abaa66cc@nvidia.com>
+ <00708f34-cf45-e248-c6b0-c3d2286671ca@gmail.com>
+ <ab010164-e8ea-89e9-a7e9-d7213841fa90@nvidia.com>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <34d9baa0-fa1e-0b67-fb9b-343b3cba0066@gmail.com>
+Date:   Fri, 10 Apr 2020 22:45:27 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <9dd40847-a2c7-d30c-0af4-07ff606a61f8@roeck-us.net>
-X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
+In-Reply-To: <ab010164-e8ea-89e9-a7e9-d7213841fa90@nvidia.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 10, 2020 at 09:21:35AM -0700, Guenter Roeck wrote:
-> On 4/10/20 5:59 AM, Sergey Semin wrote:
-> > On Sun, Mar 15, 2020 at 07:12:38AM -0700, Guenter Roeck wrote:
-> >> On Fri, Mar 06, 2020 at 04:27:44PM +0300, Sergey.Semin@baikalelectronics.ru wrote:
-> >>> From: Serge Semin <Sergey.Semin@baikalelectronics.ru>
-> >>>
-> >>> In case if the DW Watchdog IP core is synthesised with
-> >>> WDT_USE_FIX_TOP == false, the TOP interval indexes make the device
-> >>> to load a custom periods to the counter. These periods are hardwired
-> >>> at the synthesis stage and can be within [2^8, 2^(WDT_CNT_WIDTH - 1)].
-> >>> Alas their values can't be detected at runtime and must be somehow
-> >>> supplied to the driver so one could properly determine the watchdog
-> >>> timeout intervals. For this purpose we suggest to have a vendor-
-> >>> specific dts property "snps,watchdog-tops" utilized, which would
-> >>> provide an array of sixteen counter values. At device probe stage they
-> >>> will be used to initialize the watchdog device timeouts determined
-> >>> from the array values and current clocks source rate.
-> >>>
-> >>> In order to have custom TOP values supported the driver must be
-> >>> altered in the following way. First of all the fixed-top values
-> >>> ready-to-use array must be determined for compatibility with currently
-> >>> supported devices, which were synthesised with WDT_USE_FIX_TOP == true.
-> >>> Secondly we must redefine the timer period search functions. For
-> >>> generality they are redesigned in a way to support the TOP array with
-> >>> no limitations on the items order or value. Finally an array with
-> >>> pre-defined timeouts must be calculated at probe stage from either
-> >>> the custom or fixed TOP values depending on the DW watchdog component
-> >>> parameter WDT_USE_FIX_TOP value.
-> >>>
-> >>> Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
-> >>> Signed-off-by: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
-> >>> Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-> >>> Cc: Paul Burton <paulburton@kernel.org>
-> >>> Cc: Ralf Baechle <ralf@linux-mips.org>
-> >>> ---
-> >>>  drivers/watchdog/dw_wdt.c | 145 +++++++++++++++++++++++++++++++-------
-> >>>  1 file changed, 119 insertions(+), 26 deletions(-)
-> >>>
-> >>> diff --git a/drivers/watchdog/dw_wdt.c b/drivers/watchdog/dw_wdt.c
-> >>> index fba21de2bbad..4a57b7d777dc 100644
-> >>> --- a/drivers/watchdog/dw_wdt.c
-> >>> +++ b/drivers/watchdog/dw_wdt.c
-> >>> @@ -13,6 +13,7 @@
-> >>>   */
-> >>>  
-> >>>  #include <linux/bitops.h>
-> >>> +#include <linux/limits.h>
-> >>>  #include <linux/clk.h>
-> >>>  #include <linux/delay.h>
-> >>>  #include <linux/err.h>
-> >>> @@ -34,12 +35,24 @@
-> >>>  #define WDOG_CURRENT_COUNT_REG_OFFSET	    0x08
-> >>>  #define WDOG_COUNTER_RESTART_REG_OFFSET     0x0c
-> >>>  #define WDOG_COUNTER_RESTART_KICK_VALUE	    0x76
-> >>> +#define WDOG_COMP_PARAMS_1_REG_OFFSET       0xf4
-> >>> +#define WDOG_COMP_PARAMS_1_USE_FIX_TOP      BIT(6)
-> >>>  
-> >>> -/* The maximum TOP (timeout period) value that can be set in the watchdog. */
-> >>> -#define DW_WDT_MAX_TOP		15
-> >>> +/* There are sixteen TOPs (timeout periods) that can be set in the watchdog. */
-> >>> +#define DW_WDT_NUM_TOPS		16
-> >>> +#define DW_WDT_FIX_TOP(_idx)	(1U << (16 + _idx))
-> >>>  
-> >>>  #define DW_WDT_DEFAULT_SECONDS	30
-> >>>  
-> >>> +static const u32 dw_wdt_fix_tops[DW_WDT_NUM_TOPS] = {
-> >>> +	DW_WDT_FIX_TOP(0), DW_WDT_FIX_TOP(1), DW_WDT_FIX_TOP(2),
-> >>> +	DW_WDT_FIX_TOP(3), DW_WDT_FIX_TOP(4), DW_WDT_FIX_TOP(5),
-> >>> +	DW_WDT_FIX_TOP(6), DW_WDT_FIX_TOP(7), DW_WDT_FIX_TOP(8),
-> >>> +	DW_WDT_FIX_TOP(9), DW_WDT_FIX_TOP(10), DW_WDT_FIX_TOP(11),
-> >>> +	DW_WDT_FIX_TOP(12), DW_WDT_FIX_TOP(13), DW_WDT_FIX_TOP(14),
-> >>> +	DW_WDT_FIX_TOP(15)
-> >>> +};
-> >>> +
-> >>>  static bool nowayout = WATCHDOG_NOWAYOUT;
-> >>>  module_param(nowayout, bool, 0);
-> >>>  MODULE_PARM_DESC(nowayout, "Watchdog cannot be stopped once started "
-> >>> @@ -49,6 +62,8 @@ struct dw_wdt {
-> >>>  	void __iomem		*regs;
-> >>>  	struct clk		*clk;
-> >>>  	unsigned long		rate;
-> >>> +	unsigned int		max_top;
-> >>> +	unsigned int		timeouts[DW_WDT_NUM_TOPS];
-> >>>  	struct watchdog_device	wdd;
-> >>>  	struct reset_control	*rst;
-> >>>  	/* Save/restore */
-> >>> @@ -64,20 +79,68 @@ static inline int dw_wdt_is_enabled(struct dw_wdt *dw_wdt)
-> >>>  		WDOG_CONTROL_REG_WDT_EN_MASK;
-> >>>  }
-> >>>  
-> >>> -static inline int dw_wdt_top_in_seconds(struct dw_wdt *dw_wdt, unsigned top)
-> >>> +static unsigned int dw_wdt_find_best_top(struct dw_wdt *dw_wdt,
-> >>> +					 unsigned int timeout, u32 *top)
-> >>>  {
-> >>> +	u32 diff = UINT_MAX, tmp;
-> >>> +	int idx;
-> >>> +
-> >>>  	/*
-> >>> -	 * There are 16 possible timeout values in 0..15 where the number of
-> >>> -	 * cycles is 2 ^ (16 + i) and the watchdog counts down.
-> >>> +	 * In general case of non-fixed timeout values they can be arranged in
-> >>> +	 * any order so we have to traverse all the array values. We also try
-> >>> +	 * to find a closest timeout number and make sure its value is greater
-> >>> +	 * than the requested timeout. Note we'll return a maximum timeout
-> >>> +	 * if reachable value couldn't be found.
-> >>>  	 */
-> >>> -	return (1U << (16 + top)) / dw_wdt->rate;
-> >>> +	for (*top = dw_wdt->max_top, idx = 0; idx < DW_WDT_NUM_TOPS; ++idx) {
-> >>> +		if (dw_wdt->timeouts[idx] < timeout)
-> >>> +			continue;
-> >>> +
-> >>> +		tmp = dw_wdt->timeouts[idx] - timeout;
-> >>> +		if (tmp < diff) {
-> >>> +			diff = tmp;
-> >>> +			*top = idx;
-> >>> +		}
-> >>> +	}
-> >>> +
-> >>> +	return dw_wdt->timeouts[*top];
-> >>> +}
-> >>> +
-> >>> +static unsigned int dw_wdt_find_min_timeout(struct dw_wdt *dw_wdt)
-> >>
-> >> I would appreciate if the names of functions returning ms end with _ms
-> >> to avoid confusion.
-> > 
-> > Ok. I'll also modify the functions a bit, so only the
-> > dw_wdt_find_best_top_ms() and dw_wdt_find_max_top_ms() methods would
-> > return timeouts in milliseconds. Though if you insist in keeping seconds
-> > in the timeouts array (see the comment after the next one), it'll be
-> > dw_wdt_find_max_top_ms() only.
-> > 
-> >>
-> >>> +{
-> >>> +	u32 min_timeout = UINT_MAX, top;
-> >>> +	int idx;
-> >>> +
-> >>> +	for (top = 0, idx = 0; idx < DW_WDT_NUM_TOPS; ++idx) {
-> >>> +		if (dw_wdt->timeouts[idx] <= min_timeout) {
-> >>> +			min_timeout = dw_wdt->timeouts[idx];
-> >>> +			top = idx;
-> >>> +		}
-> >>> +	}
-> >>> +
-> >>> +	return dw_wdt->timeouts[top];
-> >>> +}
-> >>> +
-> >>> +static unsigned int dw_wdt_find_max_top(struct dw_wdt *dw_wdt, u32 *top)
-> >>> +{
-> >>> +	u32 max_timeout = 0;
-> >>> +	int idx;
-> >>> +
-> >>> +	for (*top = 0, idx = 0; idx < DW_WDT_NUM_TOPS; ++idx) {
-> >>> +		if (dw_wdt->timeouts[idx] >= max_timeout) {
-> >>> +			max_timeout = dw_wdt->timeouts[idx];
-> >>> +			*top = idx;
-> >>> +		}
-> >>> +	}
-> >>> +
-> >>> +	return dw_wdt->timeouts[*top];
-> >>>  }
-> >>>  
-> >>> -static int dw_wdt_get_top(struct dw_wdt *dw_wdt)
-> >>> +static unsigned int dw_wdt_get_timeout(struct dw_wdt *dw_wdt)
-> >>>  {
-> >>>  	int top = readl(dw_wdt->regs + WDOG_TIMEOUT_RANGE_REG_OFFSET) & 0xF;
-> >>>  
-> >>> -	return dw_wdt_top_in_seconds(dw_wdt, top);
-> >>> +	return dw_wdt->timeouts[top];
-> >>>  }
-> >>>  
-> >>>  static int dw_wdt_ping(struct watchdog_device *wdd)
-> >>> @@ -90,20 +153,13 @@ static int dw_wdt_ping(struct watchdog_device *wdd)
-> >>>  	return 0;
-> >>>  }
-> >>>  
-> >>> -static int dw_wdt_set_timeout(struct watchdog_device *wdd, unsigned int top_s)
-> >>> +static int dw_wdt_set_timeout(struct watchdog_device *wdd, unsigned int req)
-> >>>  {
-> >>>  	struct dw_wdt *dw_wdt = to_dw_wdt(wdd);
-> >>> -	int i, top_val = DW_WDT_MAX_TOP;
-> >>> +	unsigned int timeout;
-> >>> +	u32 top;
-> >>>  
-> >>> -	/*
-> >>> -	 * Iterate over the timeout values until we find the closest match. We
-> >>> -	 * always look for >=.
-> >>> -	 */
-> >>> -	for (i = 0; i <= DW_WDT_MAX_TOP; ++i)
-> >>> -		if (dw_wdt_top_in_seconds(dw_wdt, i) >= top_s) {
-> >>> -			top_val = i;
-> >>> -			break;
-> >>> -		}
-> >>> +	timeout = dw_wdt_find_best_top(dw_wdt, req * MSEC_PER_SEC, &top);
-> >>>  
-> >>>  	/*
-> >>>  	 * Set the new value in the watchdog.  Some versions of dw_wdt
-> >>> @@ -111,7 +167,7 @@ static int dw_wdt_set_timeout(struct watchdog_device *wdd, unsigned int top_s)
-> >>>  	 * CP_WDT_DUAL_TOP in WDT_COMP_PARAMS_1).  On those we
-> >>>  	 * effectively get a pat of the watchdog right here.
-> >>>  	 */
-> >>> -	writel(top_val | top_val << WDOG_TIMEOUT_RANGE_TOPINIT_SHIFT,
-> >>> +	writel(top | top << WDOG_TIMEOUT_RANGE_TOPINIT_SHIFT,
-> >>>  	       dw_wdt->regs + WDOG_TIMEOUT_RANGE_REG_OFFSET);
-> >>>  
-> >>>  	/*
-> >>> @@ -119,10 +175,10 @@ static int dw_wdt_set_timeout(struct watchdog_device *wdd, unsigned int top_s)
-> >>>  	 * kernel(watchdog_dev.c) helps to feed watchdog before
-> >>>  	 * wdd->max_hw_heartbeat_ms
-> >>>  	 */
-> >>> -	if (top_s * 1000 <= wdd->max_hw_heartbeat_ms)
-> >>> -		wdd->timeout = dw_wdt_top_in_seconds(dw_wdt, top_val);
-> >>> +	if (req * MSEC_PER_SEC > wdd->max_hw_heartbeat_ms)
-> >>> +		wdd->timeout = req;
-> >>>  	else
-> >>> -		wdd->timeout = top_s;
-> >>> +		wdd->timeout = timeout / MSEC_PER_SEC;
-> >>>  
-> >>>  	return 0;
-> >>>  }
-> >>> @@ -238,6 +294,41 @@ static int dw_wdt_resume(struct device *dev)
-> >>>  
-> >>>  static SIMPLE_DEV_PM_OPS(dw_wdt_pm_ops, dw_wdt_suspend, dw_wdt_resume);
-> >>>  
-> >>> +static void dw_wdt_init_timeouts(struct dw_wdt *dw_wdt, struct device *dev)
-> >>> +{
-> >>> +	u32 data, of_tops[DW_WDT_NUM_TOPS];
-> >>> +	const u32 *tops;
-> >>> +	int ret, idx;
-> >>> +
-> >>> +	/*
-> >>> +	 * Retrieve custom or fixed counter values depending on the
-> >>> +	 * WDT_USE_FIX_TOP flag found in the component specific parameters
-> >>> +	 * #1 register.
-> >>> +	 */
-> >>> +	data = readl(dw_wdt->regs + WDOG_COMP_PARAMS_1_REG_OFFSET);
-> >>> +	if (data & WDOG_COMP_PARAMS_1_USE_FIX_TOP) {
-> >>> +		tops = dw_wdt_fix_tops;
-> >>> +	} else {
-> >>> +		ret = of_property_read_variable_u32_array(dev_of_node(dev),
-> >>> +			"snps,watchdog-tops", of_tops, DW_WDT_NUM_TOPS,
-> >>> +			DW_WDT_NUM_TOPS);
-> >>> +		if (ret < 0) {
-> >>> +			dev_warn(dev, "No valid TOPs array specified\n");
-> >>> +			tops = dw_wdt_fix_tops;
-> >>> +		} else {
-> >>> +			tops = of_tops;
-> >>> +		}
-> >>> +	}
-> >>> +
-> >>> +	/*
-> >>> +	 * We'll keep the timeout values in ms to approximate requested
-> >>> +	 * timeouts with better accuracy.
-> >>> +	 */
-> >>> +	for (idx = 0; idx < DW_WDT_NUM_TOPS; ++idx)
-> >>> +		dw_wdt->timeouts[idx] =
-> >>> +			mult_frac(tops[idx], MSEC_PER_SEC, dw_wdt->rate);
-> >>
-> >> tops[idx] type is u32. Its value can be up to 0xffffffff. That means
-> >> dw_wdt->rate must be >= 1000 to avoid overflow, which you should check.
-> > 
-> > Right. I don't think that TOPs with timeouts bigger than
-> > 0xffffffff milliseconds have any valuable usecases, so I'll just round
-> > the overflows down to FFs.
-> > 
+10.04.2020 21:59, Sowjanya Komatineni пишет:
+...
+>> It's still not clear to me how the "pre-queued buffers" will be limited.
+>> I'll take another look at the v7.
 > 
-> Neither do unsorted random timeouts milli-seconds apart. You see the need
-> to address one, so addressing other weaknesses is appropriate.
-
-Don't really understand what you mean. Do you intend to filter the
-unreachable timeouts out from the timeouts array? If so this isn't
-possible with current design. I would have to implement a more complex
-data structure, like an array of pairs {TOP, timeout} and refactor the
-timeout search algorithm. Don't really think this optimization is required
-seeing watchdog timeout set operation is normally performed just a few times
-per watchdog usage session.
-
+> OK, but I don't understand what you mean by limit on pre-queued buffers.
 > 
-> >>
-> >> Note that I don't see the point of keeping the timeout values in ms.
-> >> The code selects a larger value (in seconds) anyway. All this does is
-> >> to add a lot of multiply and divide operations, plus a source of bugs
-> >> and confusion, for little if any gain.
-> > 
-> > As I said in the comment to the code the idea of keeping values in ms was
-> > to better approximate the requested timeouts. This is necessary since
-> > unlike the fixed TOPs case in which each next timeout is doubled with
-> > respect to a previous one (65536, 131072, etc), the unfixed TOPs set may
-> > have any values within [2^8; (2^WDT_CNT_WIDTH - 1)]. Actual numerical
-> > values of the set are defined by a SoC engineer at the moment of the
-> > IP-core synthesis. So in general they can be unordered and can differ one
-> > from another in very small time deltas, like ms and even us. It depends
-> > on the ways the watchdog was supposed to be utilized in accordance with
-> > the system requirements and the reference clock rate. In this case how to
-> > distinguish the values if we had only seconds array? In this patch I
-> > suggest an approach to at least cover the case of the TOPs with
-> > milliseconds granularity.
-> > 
-> > I don't deny that this might be not that much gain seeing the watchdog
-> > core supports the timeouts in seconds only, but at least it provides a
-> > way to distinguish one TOP from another instead of picking a first found
-> > one. As I see it there aren't that much multiplication and division
-> > caused by such solution and it's a small prices with respect to an
-> > ability to find a better timeout approximation. A few tens nsecs of
-> > the code execution is much smaller than milliseconds accuracy of the
-> > watchdog timeout. Though OS-wise such accuracy might be redundant.
-> > 
-> > Regarding bugs and confusion. Well I find confusing a numerical literals
-> > usage while there are self-documented macros in the kernel available,
-> > which would better represent the code context and would point out what
-> > they are used for.) That's why I've sent the previous patch in the first
-> > place. But as I said in the response to your review comments there, while
-> > it doesn't contradict to the kernel requirements with ceteris paribus
-> > it's up to you which approach to choose since you are the subsystem
-> > maintainer and it will be your duty to continue the code maintenance in
-> > future. The same thing is here. It's up to you what approach to choose.
-> > So if my reasoning above didn't make you to change your mind, could you
-> > please explicitly respond to this message that you'd better see the
-> > timeouts array having seconds instead of milliseconds?
-> > 
-> Please include a summary of the above in the driver to explain the need
-> for the complexity for others in the future.
-
-Ok.
-
--Sergey
-
+> I was saying vb2 queue has min_buffers_needed which was set to 3 where
+> streaming will start only after 3 buffers got queued up.
 > 
-> Guenter
+> Regarding outstanding condition check to make sure no more than 2 syncpt
+> trigger requests are in FIFO I added it to be safe where mostly we may
+> not hit and also I only see capture start thread holding for it during
+> initial frame capture as it issues single shot for 1st 2 buffers capture
+> and holds 3 buffers which is already queued till at least one of those 2
+> issued capture is done to make sure of not triggering syncpt condition
+> when fifo already has 2 pending.
 > 
-> >>
-> >>> +}
-> >>> +
-> >>>  static int dw_wdt_drv_probe(struct platform_device *pdev)
-> >>>  {
-> >>>  	struct device *dev = &pdev->dev;
-> >>> @@ -275,12 +366,14 @@ static int dw_wdt_drv_probe(struct platform_device *pdev)
-> >>>  
-> >>>  	reset_control_deassert(dw_wdt->rst);
-> >>>  
-> >>> +	dw_wdt_init_timeouts(dw_wdt, dev);
-> >>> +
-> >>>  	wdd = &dw_wdt->wdd;
-> >>>  	wdd->info = &dw_wdt_ident;
-> >>>  	wdd->ops = &dw_wdt_ops;
-> >>> -	wdd->min_timeout = 1;
-> >>> +	wdd->min_timeout = dw_wdt_find_min_timeout(dw_wdt) / MSEC_PER_SEC;
-> >>
-> >> dw_wdt_find_min_timeout can return a value < 1000. In that case min_timeout
-> >> would be 0, ie unspecified.
-> > 
-> > Ok. I'll implement this limitation in the dw_wdt_find_min_timeout()
-> > method. It will return seconds in v2.
-> > 
-> > Regards,
-> > -Sergey
-> > 
-> >>
-> >>>  	wdd->max_hw_heartbeat_ms =
-> >>> -		dw_wdt_top_in_seconds(dw_wdt, DW_WDT_MAX_TOP) * 1000;
-> >>> +		dw_wdt_find_max_top(dw_wdt, &dw_wdt->max_top);
-> >>>  	wdd->parent = dev;
-> >>>  
-> >>>  	watchdog_set_drvdata(wdd, dw_wdt);
-> >>> @@ -293,7 +386,7 @@ static int dw_wdt_drv_probe(struct platform_device *pdev)
-> >>>  	 * devicetree.
-> >>>  	 */
-> >>>  	if (dw_wdt_is_enabled(dw_wdt)) {
-> >>> -		wdd->timeout = dw_wdt_get_top(dw_wdt);
-> >>> +		wdd->timeout = dw_wdt_get_timeout(dw_wdt) / MSEC_PER_SEC;
-> >>>  		set_bit(WDOG_HW_RUNNING, &wdd->status);
-> >>>  	} else {
-> >>>  		wdd->timeout = DW_WDT_DEFAULT_SECONDS;
-> 
+> In v7, will remove setting min_buffers_needed and also outstanding
+> syncpt trigger check.
+
+Okay, seems I got what you're saying. Yes, the check should be removed.
+It's impossible to get the frame-start event while capture of the
+previous buffer is in-progress.
