@@ -2,114 +2,177 @@ Return-Path: <SRS0=VV4q=52=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01097C2BB55
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 19:37:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29698C2D0EC
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 19:37:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D1EA720732
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 19:37:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="XelkJSeZ"
+	by mail.kernel.org (Postfix) with ESMTP id 0909920732
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 19:37:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726921AbgDJThY (ORCPT
+        id S1726936AbgDJTh2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Apr 2020 15:37:24 -0400
-Received: from mail-pg1-f176.google.com ([209.85.215.176]:41797 "EHLO
-        mail-pg1-f176.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726646AbgDJThX (ORCPT
+        Fri, 10 Apr 2020 15:37:28 -0400
+Received: from ex13-edg-ou-002.vmware.com ([208.91.0.190]:17492 "EHLO
+        EX13-EDG-OU-002.vmware.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726646AbgDJTh0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Apr 2020 15:37:23 -0400
-Received: by mail-pg1-f176.google.com with SMTP id m13so1370776pgd.8
-        for <linux-kernel@vger.kernel.org>; Fri, 10 Apr 2020 12:37:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:from:to:cc:subject:in-reply-to:message-id:references
-         :user-agent:mime-version;
-        bh=eY+CI9YUMAjOh4YqmN7BSzI+LQc+sWyi0ugJbjXN5uQ=;
-        b=XelkJSeZVTY87SNnF2pKDT8Yg39E+gB8zoKeQ8MPaxZqUDd978lszegCGThMWc7fTW
-         JhoatwplKpp+4hzFROpAZlqL/SeW9RSGw0hdpiKlmNOix5QRrvezLXVzSqQI3lxWwETC
-         IQ1pPPDJiF3e5GyK3vOcz7UlNAW/bZK1jPyCe0P1hmWuYt5fj7fKHdtaJ0hpXf0PZKIf
-         9p7CEOtWTub3VLD4phzxv1Ut1/kfFoMI+NPHc7YztpEGULG6rXcGbU0pDNs/bisWZqqM
-         OFxDfNir4pgu8QctwGDEynFvUJY3BlVHvoKe3SHiz4sqzSEAm3vQYzPG7jWNsF68C9VI
-         3Vsg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
-         :references:user-agent:mime-version;
-        bh=eY+CI9YUMAjOh4YqmN7BSzI+LQc+sWyi0ugJbjXN5uQ=;
-        b=NsSELx4ioJ8r6jGJxnbP5sxyc/ZZjyQb25Izf/BH/qjpu9mGfXWUGWBtaXvpJC5JWo
-         zcO0HTevuAT/Wj+txlSyDi9Rm47bs+YH9grx/KwacmzbpcwnqjdaxZFLFc8bbnNiSlbh
-         tpW6gWqN8Y6iwTCuG1Y5nxMiX5sVj3/J9J2fbV+/pOINAHkZfBu3EbasTSRjGu98qUbz
-         KXbL79+bJFq+PpB8gVg1s6MLDp0L3eTuCoZnZXIhQdGMtieneVUyAuTNM1heX+GPXJVZ
-         HzBuA0qIbWQxmZfA0cZrPIWPPaFAF1KmbzznBcE9kL6BbK1OdwUBdtFlt5rs0bJIoogK
-         Hhow==
-X-Gm-Message-State: AGi0PuY4Dm5h7664zRcvCjlqj00i3qAnsSmpINI2d5a0v6t/3tuRso9z
-        KjF91Nz5NbD0TJMQjM9ZfWR91w==
-X-Google-Smtp-Source: APiQypJap4XYb6OLfN6N3dmdOCNtdz9IVqLUzAY0Gi5Syeddt2+rDTEaLZ+aoQkdrBGcOUnmAt+dkg==
-X-Received: by 2002:a62:5cc2:: with SMTP id q185mr6421328pfb.125.1586547441997;
-        Fri, 10 Apr 2020 12:37:21 -0700 (PDT)
-Received: from [2620:15c:17:3:3a5:23a7:5e32:4598] ([2620:15c:17:3:3a5:23a7:5e32:4598])
-        by smtp.gmail.com with ESMTPSA id n21sm2282025pgf.36.2020.04.10.12.37.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 10 Apr 2020 12:37:21 -0700 (PDT)
-Date:   Fri, 10 Apr 2020 12:37:20 -0700 (PDT)
-From:   David Rientjes <rientjes@google.com>
-X-X-Sender: rientjes@chino.kir.corp.google.com
-To:     Hillf Danton <hdanton@sina.com>
-cc:     Christoph Hellwig <hch@lst.de>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        "Singh, Brijesh" <brijesh.singh@amd.com>,
-        "Grimm, Jon" <jon.grimm@amd.com>, Joerg Roedel <joro@8bytes.org>,
-        linux <linux-kernel@vger.kernel.org>,
-        iommu <iommu@lists.linux-foundation.org>
-Subject: Re: [rfc v2 3/6] dma-pool: dynamically expanding atomic pools
-In-Reply-To: <20200410145520.17864-1-hdanton@sina.com>
-Message-ID: <alpine.DEB.2.21.2004101231240.249689@chino.kir.corp.google.com>
-References: <alpine.DEB.2.21.1912311738130.68206@chino.kir.corp.google.com> <b22416ec-cc28-3fd2-3a10-89840be173fa@amd.com> <alpine.DEB.2.21.2002280118461.165532@chino.kir.corp.google.com> <alpine.DEB.2.21.2003011535510.213582@chino.kir.corp.google.com>
- <alpine.DEB.2.21.2004081418490.19661@chino.kir.corp.google.com> <20200410145520.17864-1-hdanton@sina.com>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Fri, 10 Apr 2020 15:37:26 -0400
+Received: from sc9-mailhost3.vmware.com (10.113.161.73) by
+ EX13-EDG-OU-002.vmware.com (10.113.208.156) with Microsoft SMTP Server id
+ 15.0.1156.6; Fri, 10 Apr 2020 12:37:21 -0700
+Received: from sc9-mailhost3.vmware.com (unknown [10.166.69.226])
+        by sc9-mailhost3.vmware.com (Postfix) with ESMTP id 28B3D40BBE;
+        Fri, 10 Apr 2020 12:37:25 -0700 (PDT)
+From:   Matt Helsley <mhelsley@vmware.com>
+To:     <linux-kernel@vger.kernel.org>
+CC:     Josh Poimboeuf <jpoimboe@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Julien Thierry <jthierry@redhat.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Miroslav Benes <mbenes@suse.cz>,
+        Matt Helsley <mhelsley@vmware.com>
+Subject: [RFC][PATCH 13/36] objtool: mcount: Walk objtool Elf structs in find_secsym_ndx
+Date:   Fri, 10 Apr 2020 12:35:36 -0700
+Message-ID: <96b6c87aae0c10198640e998cb77d5c811d31db9.1586468801.git.mhelsley@vmware.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <cover.1586468801.git.mhelsley@vmware.com>
+References: <cover.1586468801.git.mhelsley@vmware.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+Received-SPF: None (EX13-EDG-OU-002.vmware.com: mhelsley@vmware.com does not
+ designate permitted sender hosts)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 10 Apr 2020, Hillf Danton wrote:
+Rather than using indices into raw ELF32/64 tables mapped for the
+wrapper, use the objtool and libelf structures.
 
-> 
-> On Wed, 8 Apr 2020 14:21:06 -0700 (PDT) David Rientjes wrote:
-> > 
-> > When an atomic pool becomes fully depleted because it is now relied upon
-> > for all non-blocking allocations through the DMA API, allow background
-> > expansion of each pool by a kworker.
-> > 
-> > When an atomic pool has less than the default size of memory left, kick
-> > off a kworker to dynamically expand the pool in the background.  The pool
-> > is doubled in size, up to MAX_ORDER-1.  If memory cannot be allocated at
-> > the requested order, smaller allocation(s) are attempted.
-> > 
-> What is proposed looks like a path of single lane without how to
-> dynamically shrink the pool taken into account. Thus the risk may
-> rise in corner cases where pools are over-expanded in long run
-> after one-off peak allocation requests.
-> 
+Also take advantage of this commit to rename the function to
+something that reads more easily.
 
-To us, this is actually a benefit: we prefer the peak size to be 
-maintained so that we do not need to dynamic resize the pool later at the 
-cost of throughput.  Genpool also does not have great support for 
-scavenging and freeing unused chunks.
+Signed-off-by: Matt Helsley <mhelsley@vmware.com>
+---
+ tools/objtool/recordmcount.c |  2 ++
+ tools/objtool/recordmcount.h | 42 ++++++++++++++++--------------------
+ 2 files changed, 21 insertions(+), 23 deletions(-)
 
-Perhaps we could enforce a maximum size on the pools just as we allow the 
-default size to be defined by coherent_size= on the command line.  Our use 
-case would not set this, however, since we have not seen egregious genpool 
-sizes as the result of non-blockable DMA allocations (perhaps the drivers 
-we use just play friendlier and you have seen excessive usage?).
+diff --git a/tools/objtool/recordmcount.c b/tools/objtool/recordmcount.c
+index e69d2cccce2d..5a05a08f0e28 100644
+--- a/tools/objtool/recordmcount.c
++++ b/tools/objtool/recordmcount.c
+@@ -422,6 +422,8 @@ static int is_mcounted_section_name(char const *const txtname)
+ 		strcmp(".cpuidle.text", txtname) == 0;
+ }
+ 
++static const unsigned int missing_sym = (unsigned int)-1;
++
+ /* 32 bit and 64 bit are very similar */
+ #include "recordmcount.h"
+ #define RECORD_MCOUNT_64
+diff --git a/tools/objtool/recordmcount.h b/tools/objtool/recordmcount.h
+index b487308992ce..dba1c385106f 100644
+--- a/tools/objtool/recordmcount.h
++++ b/tools/objtool/recordmcount.h
+@@ -24,7 +24,7 @@
+ #undef mcount_adjust
+ #undef sift_rel_mcount
+ #undef nop_mcount
+-#undef find_secsym_ndx
++#undef find_section_sym_index
+ #undef has_rel_mcount
+ #undef tot_relsize
+ #undef get_mcountsym
+@@ -53,7 +53,7 @@
+ # define append_func		append64
+ # define sift_rel_mcount	sift64_rel_mcount
+ # define nop_mcount		nop_mcount_64
+-# define find_secsym_ndx	find64_secsym_ndx
++# define find_section_sym_index	find64_section_sym_index
+ # define has_rel_mcount		has64_rel_mcount
+ # define tot_relsize		tot64_relsize
+ # define get_sym_str_and_relp	get_sym_str_and_relp_64
+@@ -85,7 +85,7 @@
+ # define append_func		append32
+ # define sift_rel_mcount	sift32_rel_mcount
+ # define nop_mcount		nop_mcount_32
+-# define find_secsym_ndx	find32_secsym_ndx
++# define find_section_sym_index	find32_section_sym_index
+ # define has_rel_mcount		has32_rel_mcount
+ # define tot_relsize		tot32_relsize
+ # define get_sym_str_and_relp	get_sym_str_and_relp_32
+@@ -427,38 +427,36 @@ static int nop_mcount(const struct section * const rels,
+  *    Num:    Value  Size Type    Bind   Vis      Ndx Name
+  *      2: 00000000     0 SECTION LOCAL  DEFAULT    1
+  */
+-static int find_secsym_ndx(unsigned const txtndx,
++static int find_section_sym_index(unsigned const txtndx,
+ 				char const *const txtname,
+ 				uint_t *const recvalp,
+ 				unsigned int *sym_index,
+-				Elf_Shdr const *const symhdr,
+ 				Elf_Ehdr const *const ehdr)
+ {
+-	Elf_Sym const *const sym0 = (Elf_Sym const *)(_w(symhdr->sh_offset)
+-		+ (void *)ehdr);
+-	unsigned const nsym = _w(symhdr->sh_size) / _w(symhdr->sh_entsize);
+-	Elf_Sym const *symp;
+-	unsigned t;
++	struct symbol *sym;
++	struct section *txts = find_section_by_index(lf, txtndx);
+ 
+-	for (symp = sym0, t = nsym; t; --t, ++symp) {
+-		unsigned int const st_bind = ELF_ST_BIND(symp->st_info);
++	if (!txts) {
++		fprintf(stderr, "Cannot find section %u: %s.\n",
++			txtndx, txtname);
++		return missing_sym;
++	}
+ 
+-		if (txtndx == w2(symp->st_shndx)
+-			/* avoid STB_WEAK */
+-		    && (STB_LOCAL == st_bind || STB_GLOBAL == st_bind)) {
++	list_for_each_entry(sym, &txts->symbol_list, list) {
++		if ((sym->bind == STB_LOCAL) || (sym->bind == STB_GLOBAL)) {
+ 			/* function symbols on ARM have quirks, avoid them */
+ 			if (w2(ehdr->e_machine) == EM_ARM
+-			    && ELF_ST_TYPE(symp->st_info) == STT_FUNC)
++			    && sym->type == STT_FUNC)
+ 				continue;
+ 
+-			*recvalp = _w(symp->st_value);
+-			*sym_index = symp - sym0;
++			*recvalp = sym->sym.st_value;
++			*sym_index = sym->idx;
+ 			return 0;
+ 		}
+ 	}
+ 	fprintf(stderr, "Cannot find symbol for section %u: %s.\n",
+ 		txtndx, txtname);
+-	return -1;
++	return missing_sym;
+ }
+ 
+ static char const *has_rel_mcount(const struct section * const rels)
+@@ -540,10 +538,8 @@ static int do_func(Elf_Ehdr *const ehdr,
+ 			uint_t recval = 0;
+ 
+ 			symsec_sh_link = sec->sh.sh_link;
+-			result = find_secsym_ndx(sec->sh.sh_info, txtname,
+-						&recval, &recsym,
+-						&shdr0[symsec_sh_link],
+-						ehdr);
++			result = find_section_sym_index(sec->sh.sh_info,
++						txtname, &recval, &recsym, ehdr);
+ 			if (result)
+ 				goto out;
+ 
+-- 
+2.20.1
 
-I'll rely on Christoph to determine whether it makes sense to add some 
-periodic scavening of the atomic pools, whether that's needed for this to 
-be merged, or wheter we should enforce some maximum pool size.
