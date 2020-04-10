@@ -2,313 +2,416 @@ Return-Path: <SRS0=VV4q=52=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA7DAC2BB55
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 18:15:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35001C2D0EC
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 18:17:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6C8A52082D
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 18:15:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E6BE4206C1
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 18:17:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="evlYdaNP"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="CZUd7qge"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726690AbgDJSPD (ORCPT
+        id S1726699AbgDJSRu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Apr 2020 14:15:03 -0400
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:33600 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726654AbgDJSPC (ORCPT
+        Fri, 10 Apr 2020 14:17:50 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:38562 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726594AbgDJSRu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Apr 2020 14:15:02 -0400
-Received: by mail-lf1-f65.google.com with SMTP id h6so1951879lfc.0
-        for <linux-kernel@vger.kernel.org>; Fri, 10 Apr 2020 11:15:00 -0700 (PDT)
+        Fri, 10 Apr 2020 14:17:50 -0400
+Received: by mail-pf1-f193.google.com with SMTP id c21so1351934pfo.5
+        for <linux-kernel@vger.kernel.org>; Fri, 10 Apr 2020 11:17:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Fkyk1ITWjzpb5RlyYkAT7CuTKLM6IyQoz7P2EWF52Xk=;
-        b=evlYdaNPTVNyGatfvY2ZxgzFETY9z5nVKOYnYWi6Qqp8V9jb+1CpGnED+KfQujRGn4
-         GO9tJsi+S2fM07fUraSJlbDZqFMBdMERvgi9vLviMJ0Hck1fmPTN41X8HfEfCuSW5bIk
-         8W1Vj2ONMVri9GJTE8g64lTcw7jeWUjz93zO9yn2JMQ1Q9Lyc/qSPFA5i3VtHdN5lOER
-         p8P17duzR0KdsyZ+y5RlNpAnMnaAkLYuwesn29kI915SkAKfNggEiAwH4x2SWEMsy5qs
-         Mq5P0rNhyQLHFhyK3u9qIPNuSYQshuSrEyaGoK5dKTUqwbv3DXKVwAbtQCZwG+JUSOuk
-         8gxg==
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=ONQr1o5afMzZCc/yY5ISG7WZ6CofvcuUc7zxDzV7MHM=;
+        b=CZUd7qge2u8lP+5A2CFYbP8GqcWr6nsRqjnX2/Wx1qCRxbW9lmXzKD2p75KuiGollr
+         z5VZxaKweBe3SC9vGGZy5RXT0OdVhmotxXEGqQKWIZgDYJz6NVERYZkGAk9Ar244fW2W
+         V7a+WWesAwrQ94LJE7zb+Y6PjFs8kgVVRSlDP1SkRCG1dvSCUBGZseeV1Sp/vF3ncPD0
+         eIfaOmUrAr/FDn78ypCPPiP7h+X5bY+GWD5uYrCVwihmx12xaDll3tu6ufSdBQ0hYjez
+         9xRjGrRXwAbXrVT7Tv4hH6Ym+cc5Tp3ewDIFPg8pno4P16RPNs/stvjoyd3qYcykurK5
+         ZRWQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Fkyk1ITWjzpb5RlyYkAT7CuTKLM6IyQoz7P2EWF52Xk=;
-        b=XKkDJDVDkfEvpQ85bWPXj748EbXHeOc+LqwWA1UuARGyFIDx5SdAYNVCp6246CGoex
-         4p+Equp3gRfmy+JT9SlLskyt4pleo98WPF9aE6lATdYSrbud1E3Dbn0u2I7WSqZHhVkf
-         qUi1Tamgk833W7TL7+zDhJRj4xTp0V7BfXR9fQ+5vU0h8MZkyzoTScrim8aB0M9ZlIPr
-         /KxpRq5qoeneg3IoCkDLAK6v1lXhpaArKFS9nySpGV8JuK3x7Oq6tscMNUnvc7snq8h5
-         VKS4CTk1zYzoE81xHRDcLSQJvFfYbCGUycEd6jbzWgtCfAVm/nKac+uDzGPZkD6UfAyD
-         bHsA==
-X-Gm-Message-State: AGi0PuZ1WMDfVIgYj7bOSmGusXV5f5rU/ikWdbkF5ApccA3KrctGVDqd
-        K5C866KVpQaBh9KJGWRpdigSdCF4cBl+U6waLil8QQ==
-X-Google-Smtp-Source: APiQypIHY3qA4b1mpf8TNcB+eKnLRuy5F4QIcIk4AbDhBtrlaCPUtzV1dw4zz2GIoUyJfJiU+K0kLGJ95GEL0IayQ1I=
-X-Received: by 2002:a19:f20c:: with SMTP id q12mr3279944lfh.34.1586542499166;
- Fri, 10 Apr 2020 11:14:59 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=ONQr1o5afMzZCc/yY5ISG7WZ6CofvcuUc7zxDzV7MHM=;
+        b=WnPhTFVnJkgaunjSplCU/EEuvs8YD6gEJg6EfbdLErFtfloHVVNJsZhFOwUjsLksx+
+         mKalmabe4XDe+wLbgCj1B7v1np/dPbaZQjSeb3x0RQX5AgsG/htb8MQJqUv/3NRADrwq
+         weDn5GW74K6Jlw4I5xkOjkprFnn+4EyXJgr5JuQ12UANLRKIQELsOPm+ulsfJ8NFXeej
+         jtB9WDp4PvRFwbtmGStoBV7uU6754tEsKM7aWXfmprOZzaywY9Y8YE7/cZ/JdC2mYrMB
+         BwPkX8M4DQv2EcyDH8sTbFGWscnBGPUOq8p8zBNxOGg3GfrUhiclJHkrzkln5j4v1aCy
+         g3PA==
+X-Gm-Message-State: AGi0PuZlVxC1YFQmPbZQSJNI8AYt//+AvVAk7sqlsackTCXusu6DdvxA
+        lRyglCJAZbkY7duDPAM4XyaLXA==
+X-Google-Smtp-Source: APiQypL52DjnSCNtUYpsLH+pRBgE8UJHt0b1dWHNdC3BokbWlW/fD7XAy21pIdhugLesDRkmxAS7dw==
+X-Received: by 2002:a62:2b05:: with SMTP id r5mr5822275pfr.120.1586542668722;
+        Fri, 10 Apr 2020 11:17:48 -0700 (PDT)
+Received: from xps15 (S0106002369de4dac.cg.shawcable.net. [68.147.8.254])
+        by smtp.gmail.com with ESMTPSA id j96sm2304705pje.32.2020.04.10.11.17.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 10 Apr 2020 11:17:47 -0700 (PDT)
+Date:   Fri, 10 Apr 2020 12:17:45 -0600
+From:   Mathieu Poirier <mathieu.poirier@linaro.org>
+To:     Suzuki K Poulose <suzuki.poulose@arm.com>
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        coresight@lists.linaro.org, saiprakash.ranjan@codeaurora.org,
+        leo.yan@linaro.org, linux-arm-msm@vger.kernel.org,
+        swboyd@chromium.org, Mike Leach <mike.leach@linaro.org>
+Subject: Re: [PATCH] coresight: Fix support for sparsely populated ports
+Message-ID: <20200410181745.GA13684@xps15>
+References: <20200409110316.409148-1-suzuki.poulose@arm.com>
 MIME-Version: 1.0
-References: <cover.1585548051.git.ashish.kalra@amd.com> <9e959ee134ad77f62c9881b8c54cd27e35055072.1585548051.git.ashish.kalra@amd.com>
- <b77a4a1e-b8ca-57a2-d849-adda91bfeac7@oracle.com> <20200403214559.GB28747@ashkalra_ubuntu_server>
- <65c09963-2027-22c1-e04d-4c8c3658b2c3@oracle.com> <CABayD+cf=Po-k7jqUQjq3AGopxk86d6bTcBhQxijnzpcUh90GA@mail.gmail.com>
- <20200408015221.GB27608@ashkalra_ubuntu_server> <CABayD+f0qdS5akac8JiB_HU_pWefHDsF=xRNhzSv42w-PTXnyg@mail.gmail.com>
- <20200410013418.GB19168@ashkalra_ubuntu_server>
-In-Reply-To: <20200410013418.GB19168@ashkalra_ubuntu_server>
-From:   Steve Rutherford <srutherford@google.com>
-Date:   Fri, 10 Apr 2020 11:14:21 -0700
-Message-ID: <CABayD+dDtjz7rJe1ujQ_sq88JRUzHaXXNP_hQVhD1vkXkPsXCw@mail.gmail.com>
-Subject: Re: [PATCH v6 12/14] KVM: x86: Introduce KVM_PAGE_ENC_BITMAP_RESET ioctl
-To:     Ashish Kalra <ashish.kalra@amd.com>
-Cc:     Krish Sadhukhan <krish.sadhukhan@oracle.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Joerg Roedel <joro@8bytes.org>,
-        Borislav Petkov <bp@suse.de>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        X86 ML <x86@kernel.org>, KVM list <kvm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        David Rientjes <rientjes@google.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Brijesh Singh <brijesh.singh@amd.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200409110316.409148-1-suzuki.poulose@arm.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 9, 2020 at 6:34 PM Ashish Kalra <ashish.kalra@amd.com> wrote:
->
-> Hello Steve,
->
-> On Thu, Apr 09, 2020 at 05:59:56PM -0700, Steve Rutherford wrote:
-> > On Tue, Apr 7, 2020 at 6:52 PM Ashish Kalra <ashish.kalra@amd.com> wrote:
-> > >
-> > > Hello Steve,
-> > >
-> > > On Tue, Apr 07, 2020 at 06:25:51PM -0700, Steve Rutherford wrote:
-> > > > On Mon, Apr 6, 2020 at 11:53 AM Krish Sadhukhan
-> > > > <krish.sadhukhan@oracle.com> wrote:
-> > > > >
-> > > > >
-> > > > > On 4/3/20 2:45 PM, Ashish Kalra wrote:
-> > > > > > On Fri, Apr 03, 2020 at 02:14:23PM -0700, Krish Sadhukhan wrote:
-> > > > > >> On 3/29/20 11:23 PM, Ashish Kalra wrote:
-> > > > > >>> From: Ashish Kalra <ashish.kalra@amd.com>
-> > > > > >>>
-> > > > > >>> This ioctl can be used by the application to reset the page
-> > > > > >>> encryption bitmap managed by the KVM driver. A typical usage
-> > > > > >>> for this ioctl is on VM reboot, on reboot, we must reinitialize
-> > > > > >>> the bitmap.
-> > > > > >>>
-> > > > > >>> Signed-off-by: Ashish Kalra <ashish.kalra@amd.com>
-> > > > > >>> ---
-> > > > > >>>    Documentation/virt/kvm/api.rst  | 13 +++++++++++++
-> > > > > >>>    arch/x86/include/asm/kvm_host.h |  1 +
-> > > > > >>>    arch/x86/kvm/svm.c              | 16 ++++++++++++++++
-> > > > > >>>    arch/x86/kvm/x86.c              |  6 ++++++
-> > > > > >>>    include/uapi/linux/kvm.h        |  1 +
-> > > > > >>>    5 files changed, 37 insertions(+)
-> > > > > >>>
-> > > > > >>> diff --git a/Documentation/virt/kvm/api.rst b/Documentation/virt/kvm/api.rst
-> > > > > >>> index 4d1004a154f6..a11326ccc51d 100644
-> > > > > >>> --- a/Documentation/virt/kvm/api.rst
-> > > > > >>> +++ b/Documentation/virt/kvm/api.rst
-> > > > > >>> @@ -4698,6 +4698,19 @@ During the guest live migration the outgoing guest exports its page encryption
-> > > > > >>>    bitmap, the KVM_SET_PAGE_ENC_BITMAP can be used to build the page encryption
-> > > > > >>>    bitmap for an incoming guest.
-> > > > > >>> +4.127 KVM_PAGE_ENC_BITMAP_RESET (vm ioctl)
-> > > > > >>> +-----------------------------------------
-> > > > > >>> +
-> > > > > >>> +:Capability: basic
-> > > > > >>> +:Architectures: x86
-> > > > > >>> +:Type: vm ioctl
-> > > > > >>> +:Parameters: none
-> > > > > >>> +:Returns: 0 on success, -1 on error
-> > > > > >>> +
-> > > > > >>> +The KVM_PAGE_ENC_BITMAP_RESET is used to reset the guest's page encryption
-> > > > > >>> +bitmap during guest reboot and this is only done on the guest's boot vCPU.
-> > > > > >>> +
-> > > > > >>> +
-> > > > > >>>    5. The kvm_run structure
-> > > > > >>>    ========================
-> > > > > >>> diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
-> > > > > >>> index d30f770aaaea..a96ef6338cd2 100644
-> > > > > >>> --- a/arch/x86/include/asm/kvm_host.h
-> > > > > >>> +++ b/arch/x86/include/asm/kvm_host.h
-> > > > > >>> @@ -1273,6 +1273,7 @@ struct kvm_x86_ops {
-> > > > > >>>                             struct kvm_page_enc_bitmap *bmap);
-> > > > > >>>     int (*set_page_enc_bitmap)(struct kvm *kvm,
-> > > > > >>>                             struct kvm_page_enc_bitmap *bmap);
-> > > > > >>> +   int (*reset_page_enc_bitmap)(struct kvm *kvm);
-> > > > > >>>    };
-> > > > > >>>    struct kvm_arch_async_pf {
-> > > > > >>> diff --git a/arch/x86/kvm/svm.c b/arch/x86/kvm/svm.c
-> > > > > >>> index 313343a43045..c99b0207a443 100644
-> > > > > >>> --- a/arch/x86/kvm/svm.c
-> > > > > >>> +++ b/arch/x86/kvm/svm.c
-> > > > > >>> @@ -7797,6 +7797,21 @@ static int svm_set_page_enc_bitmap(struct kvm *kvm,
-> > > > > >>>     return ret;
-> > > > > >>>    }
-> > > > > >>> +static int svm_reset_page_enc_bitmap(struct kvm *kvm)
-> > > > > >>> +{
-> > > > > >>> +   struct kvm_sev_info *sev = &to_kvm_svm(kvm)->sev_info;
-> > > > > >>> +
-> > > > > >>> +   if (!sev_guest(kvm))
-> > > > > >>> +           return -ENOTTY;
-> > > > > >>> +
-> > > > > >>> +   mutex_lock(&kvm->lock);
-> > > > > >>> +   /* by default all pages should be marked encrypted */
-> > > > > >>> +   if (sev->page_enc_bmap_size)
-> > > > > >>> +           bitmap_fill(sev->page_enc_bmap, sev->page_enc_bmap_size);
-> > > > > >>> +   mutex_unlock(&kvm->lock);
-> > > > > >>> +   return 0;
-> > > > > >>> +}
-> > > > > >>> +
-> > > > > >>>    static int svm_mem_enc_op(struct kvm *kvm, void __user *argp)
-> > > > > >>>    {
-> > > > > >>>     struct kvm_sev_cmd sev_cmd;
-> > > > > >>> @@ -8203,6 +8218,7 @@ static struct kvm_x86_ops svm_x86_ops __ro_after_init = {
-> > > > > >>>     .page_enc_status_hc = svm_page_enc_status_hc,
-> > > > > >>>     .get_page_enc_bitmap = svm_get_page_enc_bitmap,
-> > > > > >>>     .set_page_enc_bitmap = svm_set_page_enc_bitmap,
-> > > > > >>> +   .reset_page_enc_bitmap = svm_reset_page_enc_bitmap,
-> > > > > >>
-> > > > > >> We don't need to initialize the intel ops to NULL ? It's not initialized in
-> > > > > >> the previous patch either.
-> > > > > >>
-> > > > > >>>    };
-> > > > > > This struct is declared as "static storage", so won't the non-initialized
-> > > > > > members be 0 ?
-> > > > >
-> > > > >
-> > > > > Correct. Although, I see that 'nested_enable_evmcs' is explicitly
-> > > > > initialized. We should maintain the convention, perhaps.
-> > > > >
-> > > > > >
-> > > > > >>>    static int __init svm_init(void)
-> > > > > >>> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-> > > > > >>> index 05e953b2ec61..2127ed937f53 100644
-> > > > > >>> --- a/arch/x86/kvm/x86.c
-> > > > > >>> +++ b/arch/x86/kvm/x86.c
-> > > > > >>> @@ -5250,6 +5250,12 @@ long kvm_arch_vm_ioctl(struct file *filp,
-> > > > > >>>                     r = kvm_x86_ops->set_page_enc_bitmap(kvm, &bitmap);
-> > > > > >>>             break;
-> > > > > >>>     }
-> > > > > >>> +   case KVM_PAGE_ENC_BITMAP_RESET: {
-> > > > > >>> +           r = -ENOTTY;
-> > > > > >>> +           if (kvm_x86_ops->reset_page_enc_bitmap)
-> > > > > >>> +                   r = kvm_x86_ops->reset_page_enc_bitmap(kvm);
-> > > > > >>> +           break;
-> > > > > >>> +   }
-> > > > > >>>     default:
-> > > > > >>>             r = -ENOTTY;
-> > > > > >>>     }
-> > > > > >>> diff --git a/include/uapi/linux/kvm.h b/include/uapi/linux/kvm.h
-> > > > > >>> index b4b01d47e568..0884a581fc37 100644
-> > > > > >>> --- a/include/uapi/linux/kvm.h
-> > > > > >>> +++ b/include/uapi/linux/kvm.h
-> > > > > >>> @@ -1490,6 +1490,7 @@ struct kvm_enc_region {
-> > > > > >>>    #define KVM_GET_PAGE_ENC_BITMAP  _IOW(KVMIO, 0xc5, struct kvm_page_enc_bitmap)
-> > > > > >>>    #define KVM_SET_PAGE_ENC_BITMAP  _IOW(KVMIO, 0xc6, struct kvm_page_enc_bitmap)
-> > > > > >>> +#define KVM_PAGE_ENC_BITMAP_RESET  _IO(KVMIO, 0xc7)
-> > > > > >>>    /* Secure Encrypted Virtualization command */
-> > > > > >>>    enum sev_cmd_id {
-> > > > > >> Reviewed-by: Krish Sadhukhan <krish.sadhukhan@oracle.com>
-> > > >
-> > > >
-> > > > Doesn't this overlap with the set ioctl? Yes, obviously, you have to
-> > > > copy the new value down and do a bit more work, but I don't think
-> > > > resetting the bitmap is going to be the bottleneck on reboot. Seems
-> > > > excessive to add another ioctl for this.
-> > >
-> > > The set ioctl is generally available/provided for the incoming VM to setup
-> > > the page encryption bitmap, this reset ioctl is meant for the source VM
-> > > as a simple interface to reset the whole page encryption bitmap.
-> > >
-> > > Thanks,
-> > > Ashish
-> >
-> >
-> > Hey Ashish,
-> >
-> > These seem very overlapping. I think this API should be refactored a bit.
-> >
-> > 1) Use kvm_vm_ioctl_enable_cap to control whether or not this
-> > hypercall (and related feature bit) is offered to the VM, and also the
-> > size of the buffer.
->
-> If you look at patch 13/14, i have added a new kvm para feature called
-> "KVM_FEATURE_SEV_LIVE_MIGRATION" which indicates host support for SEV
-> Live Migration and a new Custom MSR which the guest does a wrmsr to
-> enable the Live Migration feature, so this is like the enable cap
-> support.
->
-> There are further extensions to this support i am adding, so patch 13/14
-> of this patch-set is still being enhanced and will have full support
-> when i repost next.
->
-> > 2) Use set for manipulating values in the bitmap, including resetting
-> > the bitmap. Set the bitmap pointer to null if you want to reset to all
-> > 0xFFs. When the bitmap pointer is set, it should set the values to
-> > exactly what is pointed at, instead of only clearing bits, as is done
-> > currently.
->
-> As i mentioned in my earlier email, the set api is supposed to be for
-> the incoming VM, but if you really need to use it for the outgoing VM
-> then it can be modified.
->
-> > 3) Use get for fetching values from the kernel. Personally, I'd
-> > require alignment of the base GFN to a multiple of 8 (but the number
-> > of pages could be whatever), so you can just use a memcpy. Optionally,
-> > you may want some way to tell userspace the size of the existing
-> > buffer, so it can ensure that it can ask for the entire buffer without
-> > having to track the size in usermode (not strictly necessary, but nice
-> > to have since it ensures that there is only one place that has to
-> > manage this value).
-> >
-> > If you want to expand or contract the bitmap, you can use enable cap
-> > to adjust the size.
->
-> As being discussed on the earlier mail thread, we are doing this
-> dynamically now by computing the guest RAM size when the
-> set_user_memory_region ioctl is invoked. I believe that should handle
-> the hot-plug and hot-unplug events too, as any hot memory updates will
-> need KVM memslots to be updated.
-Ahh, sorry, forgot you mentioned this: yes this can work. Host needs
-to be able to decide not to allocate, but this should be workable.
->
-> > If you don't want to offer the hypercall to the guest, don't call the
-> > enable cap.
-> > This API avoids using up another ioctl. Ioctl space is somewhat
-> > scarce. It also gives userspace fine grained control over the buffer,
-> > so it can support both hot-plug and hot-unplug (or at the very least
-> > it is not obviously incompatible with those). It also gives userspace
-> > control over whether or not the feature is offered. The hypercall
-> > isn't free, and being able to tell guests to not call when the host
-> > wasn't going to migrate it anyway will be useful.
-> >
->
-> As i mentioned above, now the host indicates if it supports the Live
-> Migration feature and the feature and the hypercall are only enabled on
-> the host when the guest checks for this support and does a wrmsr() to
-> enable the feature. Also the guest will not make the hypercall if the
-> host does not indicate support for it.
-If my read of those patches was correct, the host will always
-advertise support for the hypercall. And the only bit controlling
-whether or not the hypercall is advertised is essentially the kernel
-version. You need to rollout a new kernel to disable the hypercall.
+Hi Suzuki,
 
-An enable cap could give the host control of this feature bit. It
-could also give the host control of whether or not the bitmaps are
-allocated. This is important since I assume not every SEV VM is
-planned to be migrated. And if the host does not plan to migrate it
-probably doesn't want to waste memory or cycles managing this bitmap.
+On Thu, Apr 09, 2020 at 12:03:16PM +0100, Suzuki K Poulose wrote:
+> On some systems the firmware may not describe all the ports
+> connected to a component (e.g, for security reasons). This
+> could be especially problematic for "funnels" where we could
+> end up in modifying memory beyond the allocated space for
+> refcounts.
+> 
+> e.g, for a funnel with input ports listed 0, 3, 5, nr_inport = 3.
+> However the we could access refcnts[5] while checking for
+> references, like :
+> 
+>  [  526.110401] ==================================================================
+>  [  526.117988] BUG: KASAN: slab-out-of-bounds in funnel_enable+0x54/0x1b0
+>  [  526.124706] Read of size 4 at addr ffffff8135f9549c by task bash/1114
+>  [  526.131324]
+>  [  526.132886] CPU: 3 PID: 1114 Comm: bash Tainted: G S                5.4.25 #232
+>  [  526.140397] Hardware name: Qualcomm Technologies, Inc. SC7180 IDP (DT)
+>  [  526.147113] Call trace:
+>  [  526.149653]  dump_backtrace+0x0/0x188
+>  [  526.153431]  show_stack+0x20/0x2c
+>  [  526.156852]  dump_stack+0xdc/0x144
+>  [  526.160370]  print_address_description+0x3c/0x494
+>  [  526.165211]  __kasan_report+0x144/0x168
+>  [  526.169170]  kasan_report+0x10/0x18
+>  [  526.172769]  check_memory_region+0x1a4/0x1b4
+>  [  526.177164]  __kasan_check_read+0x18/0x24
+>  [  526.181292]  funnel_enable+0x54/0x1b0
+>  [  526.185072]  coresight_enable_path+0x104/0x198
+>  [  526.189649]  coresight_enable+0x118/0x26c
+> 
+>   ...
+> 
+>  [  526.237782] Allocated by task 280:
+>  [  526.241298]  __kasan_kmalloc+0xf0/0x1ac
+>  [  526.245249]  kasan_kmalloc+0xc/0x14
+>  [  526.248849]  __kmalloc+0x28c/0x3b4
+>  [  526.252361]  coresight_register+0x88/0x250
+>  [  526.256587]  funnel_probe+0x15c/0x228
+>  [  526.260365]  dynamic_funnel_probe+0x20/0x2c
+>  [  526.264679]  amba_probe+0xbc/0x158
+>  [  526.268193]  really_probe+0x144/0x408
+>  [  526.271970]  driver_probe_device+0x70/0x140
+> 
+>  ...
+> 
+>  [  526.316810]
+>  [  526.318364] Freed by task 0:
+>  [  526.321344] (stack is not available)
+>  [  526.325024]
+>  [  526.326580] The buggy address belongs to the object at ffffff8135f95480
+>  [  526.326580]  which belongs to the cache kmalloc-128 of size 128
+>  [  526.339439] The buggy address is located 28 bytes inside of
+>  [  526.339439]  128-byte region [ffffff8135f95480, ffffff8135f95500)
+>  [  526.351399] The buggy address belongs to the page:
+>  [  526.356342] page:ffffffff04b7e500 refcount:1 mapcount:0 mapping:ffffff814b00c380 index:0x0 compound_mapcount: 0
+>  [  526.366711] flags: 0x4000000000010200(slab|head)
+>  [  526.371475] raw: 4000000000010200 ffffffff05034008 ffffffff0501eb08 ffffff814b00c380
+>  [  526.379435] raw: 0000000000000000 0000000000190019 00000001ffffffff 0000000000000000
+>  [  526.387393] page dumped because: kasan: bad access detected
+>  [  526.393128]
+>  [  526.394681] Memory state around the buggy address:
+>  [  526.399619]  ffffff8135f95380: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
+>  [  526.407046]  ffffff8135f95400: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
+>  [  526.414473] >ffffff8135f95480: 04 fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
+>  [  526.421900]                             ^
+>  [  526.426029]  ffffff8135f95500: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
+>  [  526.433456]  ffffff8135f95580: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
+>  [  526.440883] ==================================================================
+> 
+> To keep the code simple, we now track the maximum number of
+> possible input/output connections to/from this component
+> @ nr_inport and nr_outport in platform_data, respectively.
+> Thus the output connections could be sparse and code is
+> adjusted to skip the unspecified connections.
+> 
+> Cc: Mathieu Poirier <mathieu.poirier@linaro.org>
+> Cc: Mike Leach <mike.leach@linaro.org>
+> Reported-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+> Tested-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+> Tested-by: Stephen Boyd <swboyd@chromium.org>
+> Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
+> ---
+>  .../hwtracing/coresight/coresight-platform.c  | 74 ++++++++++++-------
+>  drivers/hwtracing/coresight/coresight.c       |  8 +-
+>  include/linux/coresight.h                     | 10 ++-
+>  3 files changed, 62 insertions(+), 30 deletions(-)
+> 
+> diff --git a/drivers/hwtracing/coresight/coresight-platform.c b/drivers/hwtracing/coresight/coresight-platform.c
+> index 3c5bee429105..c57373b49b42 100644
+> --- a/drivers/hwtracing/coresight/coresight-platform.c
+> +++ b/drivers/hwtracing/coresight/coresight-platform.c
+> @@ -67,6 +67,7 @@ static void of_coresight_get_ports_legacy(const struct device_node *node,
+>  					  int *nr_inport, int *nr_outport)
+>  {
+>  	struct device_node *ep = NULL;
+> +	struct of_endpoint endpoint;
+>  	int in = 0, out = 0;
+>  
+>  	do {
+> @@ -74,10 +75,16 @@ static void of_coresight_get_ports_legacy(const struct device_node *node,
+>  		if (!ep)
+>  			break;
+>  
+> -		if (of_coresight_legacy_ep_is_input(ep))
+> -			in++;
+> -		else
+> -			out++;
+> +		if (of_graph_parse_endpoint(ep, &endpoint))
+> +			continue;
+> +
+> +		if (of_coresight_legacy_ep_is_input(ep)) {
+> +			in = (endpoint.port + 1 > in) ?
+> +				endpoint.port + 1 : in;
+> +		} else {
+> +			out = (endpoint.port + 1) > out ?
+> +				endpoint.port + 1 : out;
+> +		}
+>  
+>  	} while (ep);
+>  
+> @@ -117,9 +124,16 @@ of_coresight_count_ports(struct device_node *port_parent)
+>  {
+>  	int i = 0;
+>  	struct device_node *ep = NULL;
+> +	struct of_endpoint endpoint;
+> +
+> +	while ((ep = of_graph_get_next_endpoint(port_parent, ep))) {
+> +		/* Defer error handling to parsing */
+> +		if (of_graph_parse_endpoint(ep, &endpoint))
+> +			continue;
+> +		if (endpoint.port + 1 > i)
+> +			i = endpoint.port + 1;
+> +	}
+>  
+> -	while ((ep = of_graph_get_next_endpoint(port_parent, ep)))
+> -		i++;
+>  	return i;
+>  }
+>  
+> @@ -171,14 +185,12 @@ static int of_coresight_get_cpu(struct device *dev)
+>   * Parses the local port, remote device name and the remote port.
+>   *
+>   * Returns :
+> - *	 1	- If the parsing is successful and a connection record
+> - *		  was created for an output connection.
+>   *	 0	- If the parsing completed without any fatal errors.
+>   *	-Errno	- Fatal error, abort the scanning.
+>   */
+>  static int of_coresight_parse_endpoint(struct device *dev,
+>  				       struct device_node *ep,
+> -				       struct coresight_connection *conn)
+> +				       struct coresight_platform_data *pdata)
+>  {
+>  	int ret = 0;
+>  	struct of_endpoint endpoint, rendpoint;
+> @@ -186,6 +198,7 @@ static int of_coresight_parse_endpoint(struct device *dev,
+>  	struct device_node *rep = NULL;
+>  	struct device *rdev = NULL;
+>  	struct fwnode_handle *rdev_fwnode;
+> +	struct coresight_connection *conn;
+>  
+>  	do {
+>  		/* Parse the local port details */
+> @@ -212,6 +225,13 @@ static int of_coresight_parse_endpoint(struct device *dev,
+>  			break;
+>  		}
+>  
+> +		conn = &pdata->conns[endpoint.port];
+> +		if (conn->child_fwnode) {
+> +			dev_warn(dev, "Duplicate output port %d\n",
+> +				 endpoint.port);
+> +			ret = -EINVAL;
+> +			break;
+> +		}
+>  		conn->outport = endpoint.port;
+>  		/*
+>  		 * Hold the refcount to the target device. This could be
+> @@ -224,7 +244,6 @@ static int of_coresight_parse_endpoint(struct device *dev,
+>  		conn->child_fwnode = fwnode_handle_get(rdev_fwnode);
+>  		conn->child_port = rendpoint.port;
+>  		/* Connection record updated */
+> -		ret = 1;
+>  	} while (0);
+>  
+>  	of_node_put(rparent);
+> @@ -238,7 +257,6 @@ static int of_get_coresight_platform_data(struct device *dev,
+>  					  struct coresight_platform_data *pdata)
+>  {
+>  	int ret = 0;
+> -	struct coresight_connection *conn;
+>  	struct device_node *ep = NULL;
+>  	const struct device_node *parent = NULL;
+>  	bool legacy_binding = false;
+> @@ -267,8 +285,6 @@ static int of_get_coresight_platform_data(struct device *dev,
+>  		dev_warn_once(dev, "Uses obsolete Coresight DT bindings\n");
+>  	}
+>  
+> -	conn = pdata->conns;
+> -
+>  	/* Iterate through each output port to discover topology */
+>  	while ((ep = of_graph_get_next_endpoint(parent, ep))) {
+>  		/*
+> @@ -280,15 +296,9 @@ static int of_get_coresight_platform_data(struct device *dev,
+>  		if (legacy_binding && of_coresight_legacy_ep_is_input(ep))
+>  			continue;
+>  
+> -		ret = of_coresight_parse_endpoint(dev, ep, conn);
+> -		switch (ret) {
+> -		case 1:
+> -			conn++;		/* Fall through */
+> -		case 0:
+> -			break;
+> -		default:
+> +		ret = of_coresight_parse_endpoint(dev, ep, pdata);
+> +		if (ret)
+>  			return ret;
+> -		}
+>  	}
+>  
+>  	return 0;
+> @@ -627,6 +637,11 @@ static int acpi_coresight_parse_link(struct acpi_device *adev,
+>  		 *    coresight_remove_match().
+>  		 */
+>  		conn->child_fwnode = fwnode_handle_get(&r_adev->fwnode);
+> +	} else if (dir == ACPI_CORESIGHT_LINK_SLAVE) {
+> +		conn->child_port = fields[0].integer.value;
+> +	} else {
+> +		/* Invalid direction */
+> +		return -EINVAL;
+>  	}
+>  
+>  	return dir;
+> @@ -672,10 +687,14 @@ static int acpi_coresight_parse_graph(struct acpi_device *adev,
+>  			return dir;
+>  
+>  		if (dir == ACPI_CORESIGHT_LINK_MASTER) {
+> -			pdata->nr_outport++;
+> +			if (ptr->outport > pdata->nr_outport)
+> +				pdata->nr_outport = ptr->outport;
+>  			ptr++;
+>  		} else {
+> -			pdata->nr_inport++;
+> +			WARN_ON(pdata->nr_inport == ptr->child_port);
+> +			/* Do not move the ptr for input connections */
+> +			if (ptr->child_port > pdata->nr_inport)
+> +				pdata->nr_inport = ptr->child_port;
+
+How you are using the current ptr as a scratch pad for input port was definitely
+a brain twister this morning...  I would certainly appreciate a richer comment
+so that I (or anyone else) doesn't have to go through the same process the next
+time around.
+
+>  		}
+>  	}
+>  
+> @@ -684,8 +703,13 @@ static int acpi_coresight_parse_graph(struct acpi_device *adev,
+>  		return rc;
+>  
+>  	/* Copy the connection information to the final location */
+> -	for (i = 0; i < pdata->nr_outport; i++)
+> -		pdata->conns[i] = conns[i];
+> +	for (i = 0; conns + i < ptr; i++) {
+> +		int port = conns[i].outport;
+> +
+> +		/* Duplicate output port */
+> +		WARN_ON(pdata->conns[port].child_fwnode);
+> +		pdata->conns[port] = conns[i];
+> +	}
+>  
+>  	devm_kfree(&adev->dev, conns);
+>  	return 0;
+> diff --git a/drivers/hwtracing/coresight/coresight.c b/drivers/hwtracing/coresight/coresight.c
+> index ef20f74c85fa..f07bc0a7ab88 100644
+> --- a/drivers/hwtracing/coresight/coresight.c
+> +++ b/drivers/hwtracing/coresight/coresight.c
+> @@ -990,6 +990,9 @@ static int coresight_orphan_match(struct device *dev, void *data)
+>  	for (i = 0; i < i_csdev->pdata->nr_outport; i++) {
+>  		conn = &i_csdev->pdata->conns[i];
+>  
+> +		/* Skip the port if FW doesn't describe it */
+> +		if (!conn->child_fwnode)
+> +			continue;
+>  		/* We have found at least one orphan connection */
+>  		if (conn->child_dev == NULL) {
+>  			/* Does it match this newly added device? */
+> @@ -1029,6 +1032,9 @@ static void coresight_fixup_device_conns(struct coresight_device *csdev)
+>  		struct coresight_connection *conn = &csdev->pdata->conns[i];
+>  		struct device *dev = NULL;
+>  
+> +		if (!conn->child_fwnode)
+> +			continue;
+> +
+>  		dev = bus_find_device_by_fwnode(&coresight_bustype, conn->child_fwnode);
+>  		if (dev) {
+>  			conn->child_dev = to_coresight_device(dev);
+> @@ -1061,7 +1067,7 @@ static int coresight_remove_match(struct device *dev, void *data)
+>  	for (i = 0; i < iterator->pdata->nr_outport; i++) {
+>  		conn = &iterator->pdata->conns[i];
+>  
+> -		if (conn->child_dev == NULL)
+> +		if (conn->child_dev == NULL || conn->child_fwnode == NULL)
+>  			continue;
+>  
+>  		if (csdev->dev.fwnode == conn->child_fwnode) {
+> diff --git a/include/linux/coresight.h b/include/linux/coresight.h
+> index 44e552de419c..7f8d2b39aee2 100644
+> --- a/include/linux/coresight.h
+> +++ b/include/linux/coresight.h
+> @@ -90,10 +90,12 @@ union coresight_dev_subtype {
+>  };
+>  
+>  /**
+> - * struct coresight_platform_data - data harvested from the DT specification
+> - * @nr_inport:	number of input ports for this component.
+> - * @nr_outport:	number of output ports for this component.
+> - * @conns:	Array of nr_outport connections from this component
+> + * struct coresight_platform_data - data harvested from the firmware
+> + * specification.
+> + *
+> + * @nr_inport:	Number of elements for the input connections.
+> + * @nr_outport:	Number of elements for the output connections.
+> + * @conns:	Sparse arrray of nr_outport connections from this component.
+
+s/arrray/array
+
+Please rebase your work on my the coresight-next branch.  Other than the above
+this patch looks fine to me.
 
 Thanks,
-Steve
+Mathieu
+
+>   */
+>  struct coresight_platform_data {
+>  	int nr_inport;
+> -- 
+> 2.24.1
+> 
