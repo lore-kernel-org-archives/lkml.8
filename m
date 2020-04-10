@@ -2,99 +2,125 @@ Return-Path: <SRS0=VV4q=52=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97C7AC2D0EC
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 19:00:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DE80C2BB55
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 19:02:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 756DE20732
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 19:00:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1E2AD20732
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 19:02:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="QDmuuTca"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RSyEvYJv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726759AbgDJTAn (ORCPT
+        id S1726734AbgDJTCj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Apr 2020 15:00:43 -0400
-Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:1954 "EHLO
-        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726695AbgDJTAn (ORCPT
+        Fri, 10 Apr 2020 15:02:39 -0400
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:38770 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726646AbgDJTCj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Apr 2020 15:00:43 -0400
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5e90c24e0000>; Fri, 10 Apr 2020 12:00:30 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Fri, 10 Apr 2020 12:00:43 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Fri, 10 Apr 2020 12:00:43 -0700
-Received: from DRHQMAIL107.nvidia.com (10.27.9.16) by HQMAIL101.nvidia.com
- (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 10 Apr
- 2020 19:00:43 +0000
-Received: from rcampbell-dev.nvidia.com (10.124.1.5) by DRHQMAIL107.nvidia.com
- (10.27.9.16) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 10 Apr
- 2020 19:00:42 +0000
-Subject: Re: [PATCH] mm: mmap: Fix a typo in comment
- "compatbility"->"compatibility"
-To:     Ethon Paul <ethp@qq.com>, <akpm@linux-foundation.org>,
-        <linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>
-References: <20200410163206.14016-1-ethp@qq.com>
-X-Nvconfidentiality: public
-From:   Ralph Campbell <rcampbell@nvidia.com>
-Message-ID: <fe7aba6e-3fc0-1c9d-c18e-d1179a7e9dfe@nvidia.com>
-Date:   Fri, 10 Apr 2020 12:00:42 -0700
+        Fri, 10 Apr 2020 15:02:39 -0400
+Received: by mail-lj1-f193.google.com with SMTP id v16so2894056ljg.5;
+        Fri, 10 Apr 2020 12:02:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=PYKcTVIV4hyvh7eYr2ZVXran4rltE2Q1T3gTm8AMtDs=;
+        b=RSyEvYJvOqY0KhhjOQhe7BPWwgzk38OSAtjb4e86Zn6ANKrVOq2V4auUZJvD4Q3y2x
+         QkeWukpU82Xz48weMvWTAtLlRh4hhxR9naz+TXzRyH6STBreqv1nqvcUnvySEo5XESR3
+         hmTcNtzVuniuGue7H4AtHOuql4Hd8hY9zGUdiAcuMVyC/9EjDdNNgkyuqelJACt2zBjt
+         pRXqK/sRVqNfhmgYiC0KWBLwQ5606XyFwqBin/lduMQ0YdrvIGVwjEp0G2mwjbRyeG2Q
+         NjXDK951Y8D1tMy0aCFif/paZrqO9PrIk6RYkezrRnz4bTqeuQggGjrF0yiU/PddrrmP
+         Yu5w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=PYKcTVIV4hyvh7eYr2ZVXran4rltE2Q1T3gTm8AMtDs=;
+        b=Vs0yBr0gSW7q6gwYsI+9ZGzjeXcj1HURO/8ks3GPvhpv1Ocyq5fXbsxaUZRfkuTWeA
+         IdmXK5mIm/KJAF3k9a7whPCch0nx70P9tPnwTo79a0zi/e4P7ztYGEM7kTxnWza9fgvp
+         tH+1ZcwmQ/Inzq5ODrr0q4/vmsySvsD2VX8vXXzYIx4hr64SdEXS8dTij8j/d8vdMxAF
+         +qKYB8XJdCwtOuy8shweU70jrC2Rd39v+28xbQZAzNrt5qxcUPo2P3cwPVtni9vy2IIH
+         2MoES9bzkCHsaZ4v5wAR/Ow3Y+7UtweW/GPbyUnYR8NcoO/XX6/+ldbQ5yVMil/oXLlU
+         xfOw==
+X-Gm-Message-State: AGi0PuaDsz0eJIb9iov/mqbHd8K4PUV7eRTkLTRMdEVF40p1VyYhK7jZ
+        FplGv72GuwPxsx1hmgJgaGO2gmfE
+X-Google-Smtp-Source: APiQypJ7yEEZbmoRR3GUh5umTAf4/y8qh40+fhTFXAvoCq/oM8h7IMbGYuCADkYMUfcoKj0dLKvlTQ==
+X-Received: by 2002:a2e:9605:: with SMTP id v5mr3691202ljh.258.1586545357403;
+        Fri, 10 Apr 2020 12:02:37 -0700 (PDT)
+Received: from [192.168.2.145] (ppp91-78-208-152.pppoe.mtu-net.ru. [91.78.208.152])
+        by smtp.googlemail.com with ESMTPSA id k11sm2132420ljj.36.2020.04.10.12.02.36
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 10 Apr 2020 12:02:36 -0700 (PDT)
+Subject: Re: [PATCH 4/9] dt-bindings: power: supply: Add device-tree binding
+ for Summit SMB3xx
+To:     Rob Herring <robh@kernel.org>, David Heidelberg <david@ixit.cz>
+Cc:     Sebastian Reichel <sre@kernel.org>,
+        Jonghwa Lee <jonghwa3.lee@samsung.com>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        Myungjoo Ham <myungjoo.ham@samsung.com>,
+        Sumit Semwal <sumit.semwal@linaro.org>,
+        John Stultz <john.stultz@linaro.org>,
+        Vinay Simha BN <simhavcs@gmail.com>,
+        mika.westerberg@linux.intel.com, ramakrishna.pallala@intel.com,
+        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org
+References: <20200329161552.215075-1-david@ixit.cz>
+ <20200329162128.218584-5-david@ixit.cz> <20200410164905.GA719@bogus>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <8c4ab1ce-1947-ab38-3f8c-9055406428e4@gmail.com>
+Date:   Fri, 10 Apr 2020 22:02:35 +0300
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-In-Reply-To: <20200410163206.14016-1-ethp@qq.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
- DRHQMAIL107.nvidia.com (10.27.9.16)
-Content-Type: text/plain; charset="utf-8"; format=flowed
+In-Reply-To: <20200410164905.GA719@bogus>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1586545230; bh=8kdNTTwtIm8EhuVGWiIb+CzxLfpi2hgYnUNz95DqTuU=;
-        h=X-PGP-Universal:Subject:To:References:X-Nvconfidentiality:From:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=QDmuuTcaaVKtW/VCiLZUT2KLttqzbJ8KKT5nBnoX2bdQp/rawpfuuX+ZtzjlZADi0
-         JbUnN4B9UMZ7//4y3GLVkp2sP25L4oq5s4ZoJIPwJITGLDoUOQ16fnEogCmUhsGavL
-         11ulyVS1yI0iJO7EKcE1yoaRqKAmOv1AVsylRHKaesJIEteX3InKC2Q378g3ZeGeVD
-         y3l/j7+59SYOeTe54tVIwS+mChRJMnhLrwARh/vATNyRZWSEuUiY2YUrPP6oyJ+8IH
-         qGCU9X630R+dZH23vckoEi2jF254dNaSo/fAHydzvd92+sx5RWJ15+ngVEYhzjfkaM
-         9Ka+8BtYuJX1A==
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+10.04.2020 19:49, Rob Herring пишет:
+...
+>> +  summit,max-chg-curr:
+>> +    description: Maximum current for charging (in uA)
+>> +    allOf:
+>> +      - $ref: /schemas/types.yaml#/definitions/uint32
+>> +
+>> +  summit,max-chg-volt:
+>> +    description: Maximum voltage for charging (in uV)
+>> +    allOf:
+>> +      - $ref: /schemas/types.yaml#/definitions/uint32
+>> +    minimum: 3500000
+>> +    maximum: 4500000
+>> +
+>> +  summit,pre-chg-curr:
+>> +    description: Pre-charging current for charging (in uA)
+>> +    allOf:
+>> +      - $ref: /schemas/types.yaml#/definitions/uint32
+>> +
+>> +  summit,term-curr:
+>> +    description: Charging cycle termination current (in uA)
+>> +    allOf:
+>> +      - $ref: /schemas/types.yaml#/definitions/uint32
+...
+> These are all properties of the battery attached and we have standard 
+> properties for some/all of these.
 
-On 4/10/20 9:32 AM, Ethon Paul wrote:
-> There is a typo in comment, fix it.
-> 
-> Signed-off-by: Ethon Paul <ethp@qq.com>
+Looks like only four properties seem to be matching the properties of
+the battery.txt binding.
 
-Reviewed-by: Ralph Campbell <rcampbell@nvidia.com>
+Are you suggesting that these matching properties should be renamed
+after the properties in battery.txt?
 
-> ---
->   mm/mmap.c | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/mm/mmap.c b/mm/mmap.c
-> index 8d77dbbb80fe..e14230d11845 100644
-> --- a/mm/mmap.c
-> +++ b/mm/mmap.c
-> @@ -1207,7 +1207,7 @@ struct vm_area_struct *vma_merge(struct mm_struct *mm,
->   }
->   
->   /*
-> - * Rough compatbility check to quickly see if it's even worth looking
-> + * Rough compatibility check to quickly see if it's even worth looking
->    * at sharing an anon_vma.
->    *
->    * They need to have the same vm_file, and the flags can only differ
-> 
+> Also, any property with units should have a unit suffix as defined in 
+> property-units.txt. And with that, you don't need to define the type.
+
+Indeed, thank you for the suggestion.
