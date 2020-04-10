@@ -2,148 +2,179 @@ Return-Path: <SRS0=VV4q=52=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 428E6C2BB85
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 05:46:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C07E5C2BA2B
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 05:54:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 120C52082D
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 05:46:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="LO8g6kQA"
+	by mail.kernel.org (Postfix) with ESMTP id 9FFFF20801
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 05:54:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726184AbgDJFqO (ORCPT
+        id S1725924AbgDJFyp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Apr 2020 01:46:14 -0400
-Received: from mout.web.de ([212.227.17.12]:58643 "EHLO mout.web.de"
+        Fri, 10 Apr 2020 01:54:45 -0400
+Received: from mga03.intel.com ([134.134.136.65]:35347 "EHLO mga03.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725818AbgDJFqO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Apr 2020 01:46:14 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
-        s=dbaedf251592; t=1586497549;
-        bh=wQZi1jYN0PwblJDRsNWeVp5mEL4bCN76eORdDMpxpKU=;
-        h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
-        b=LO8g6kQAzRndI9NHzALC+pdY0tcKChLFkdo7l/Y7JZeKs3qFtzopg2i0edjgNl3pY
-         oi7AQgoY8tfyWD3800ngfjdQGiMRZK+4aLif6I8DiK0oNWn1foSFHrHh214PqYjZHL
-         /cpMtGy5ExkQc51S3d+rALZ2zlkxz6lZw4nNWXzI=
-X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
-Received: from [192.168.1.3] ([78.48.110.107]) by smtp.web.de (mrweb101
- [213.165.67.124]) with ESMTPSA (Nemesis) id 0MCqsR-1jWRXK18fT-009j5J; Fri, 10
- Apr 2020 07:45:49 +0200
-Subject: Re: Input: ep93xx_keypad: Checking for a failed platform_get_irq()
- call in ep93xx_keypad_probe()
-To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        linux-input@vger.kernel.org
-Cc:     Allison Randal <allison@lohutok.net>,
-        Arnd Bergmann <arnd@arndb.de>,
-        H Hartley Sweeten <hsweeten@visionengravers.com>,
-        Olof Johansson <olof@lixom.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Tang Bin <tangbin@cmss.chinamobile.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        kernel-janitors@vger.kernel.org, linux-doc@vger.kernel.org
-References: <11aecb68-d243-2eeb-0cc8-50e1ec22bd71@web.de>
- <20200409204819.GR75430@dtor-ws>
-From:   Markus Elfring <Markus.Elfring@web.de>
-Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
- 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 FEE=
-Message-ID: <279dd87a-bbc4-685d-b557-7914e4132b15@web.de>
-Date:   Fri, 10 Apr 2020 07:45:40 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        id S1725839AbgDJFyp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Apr 2020 01:54:45 -0400
+IronPort-SDR: ynbHn0OZQEf6/IbWgb4DejDaRHB2+0xaYb9NZFsXM8Su+ffUQXvVhBB4Ht8dZeJ2RQM8P03LnR
+ gMvp+y5pKi7w==
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Apr 2020 22:54:44 -0700
+IronPort-SDR: neQ7V9BrtVs+lpG9al2irFFnbVHHjZ/ITmulTc10fSr/Ts1diyctt1UOZJ8ozUdvILKsu1W89J
+ v9yq1WSKecDw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,364,1580803200"; 
+   d="asc'?scan'208";a="255386528"
+Received: from zhen-hp.sh.intel.com (HELO zhen-hp) ([10.239.160.147])
+  by orsmga006.jf.intel.com with ESMTP; 09 Apr 2020 22:54:41 -0700
+Date:   Fri, 10 Apr 2020 13:41:08 +0800
+From:   Zhenyu Wang <zhenyuw@linux.intel.com>
+To:     Jani Nikula <jani.nikula@linux.intel.com>
+Cc:     Masahiro Yamada <masahiroy@kernel.org>,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        intel-gfx@lists.freedesktop.org, Daniel Vetter <daniel@ffwll.ch>,
+        David Airlie <airlied@linux.ie>,
+        Zhenyu Wang <zhenyuw@linux.intel.com>,
+        Zhi Wang <zhi.a.wang@intel.com>,
+        dri-devel@lists.freedesktop.org,
+        intel-gvt-dev@lists.freedesktop.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/2] drm/i915: remove gvt/Makefile
+Message-ID: <20200410054108.GK11247@zhen-hp.sh.intel.com>
+Reply-To: Zhenyu Wang <zhenyuw@linux.intel.com>
+References: <20200409150627.29205-1-masahiroy@kernel.org>
+ <20200409150627.29205-2-masahiroy@kernel.org>
+ <87h7xsgw3r.fsf@intel.com>
 MIME-Version: 1.0
-In-Reply-To: <20200409204819.GR75430@dtor-ws>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-X-Provags-ID: V03:K1:7tYjIm2pshBCa29VjlTdSvU5pYyQgsGM2gi6MjhAv42N0tkojqm
- BMYa/bdCW6UNxeqybZ9wz16HIhMyPWnA6X7e+6zMpF8OwTwWH27oyQvxRADCY2BXT3Xv8/v
- 9mS7l9ywnLCZ7gCUcswRszERXi1iuv9yU2T0ln9s75iNfkAU34x3ha42NPk3C8dBDxuBM2s
- 650hkKX4HKf69vd8W/pZw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:KxkKTFxAaqQ=:gq0AzYy1p7GHhfFjV8fvVS
- KuoS3bhcCAgwCgnl7BZNFrHBiqPBiLqu8onxXpiDOQZA9gGEEE1AvGuAdyNuKR5j/hG0od+xw
- TgdbmyvQi4MET8T+/IiOAsH4C0qRzpNXAKMBsUyopc5MugXS904Hwsyt9CyRRvWRIagcw2g5Z
- RXfmqEvXfVpAJvq5tuK/bOUFUv91nskNSleGkg4gZDJqBXWQV8wlkaIbMou6bol+bo24lcOkg
- iJ6aU2yg0O73SHZiucgPxFt91l9lV9tYlYBOsOWixKjmrpxfDz0d/MsdgLBiqjx47uBTvPCBk
- sfjLTUhiJ7PsCLgV3twSgbZ1DE0EsRTE4mSHY2hQ5qSMKiZJBxLuf4iimkAthMYWcYPdFHQ8P
- NPmAdd+zDjQFKEsCIEzwpU5PwOoM1ods3Aypwj0Wca8dSeAgXstU4DPauZFsTRZ0EDlbvNdDT
- 0WvY00xTe3SnwBxrngl8h9kLFXFNSHiC6GWBc/an7vzU3TtYT2dbyyC4NIDiOFgLuRJw96rph
- 5y/bSwYw91cR0BfzFq/RqyOi8YYQXnKKJDTgoAVLHsGFM8SqytRF5qh5/9c694tYV6k2qUyCw
- BfsWs12t5QRaVn/mYVag8+0GZ29Al+b1JJPs/bGTfzSYS23vkYW7efymIdu4dsVWmxiholLIB
- WNdueioqveRIbAjAMI3H3c3Mljr1TaTJAWqb5FKwOp0TPMDDJXzDJYBndhMmSpRkPeYRO6XbC
- WvZAQImA9xs2lfI7CNgEhLVmrJqMbLs3MnSY/RSaRAaiL4v5u/OjBVgWJLHPFVbOZhpFLNQ3c
- Fh8iiYwITqvplM+rPDbk3Xv5XbpGxFNQBZ8IDEimiNTv+36irvL75OGa9FyLV6JOcpnFD2lcE
- LjfPTPBvLvYdyUT/1kQDrPrggLz0JUHnrtubgNiJdauzCsO2GOUzAQe/pDIbseBTWL3KxNFAG
- hKC5GvuUkrqUSTL8xX5EJoWdBRu/2nFoJIYwNlhji3bBr/j38zzAEHfvqLX91A92f9nAt0Xol
- tW6Rr1VXefQqaAijU7UkA+4TqUdXvqD06yq5knvSUu5JPgOjLZ2QGXiGvdjUf1MwKB2JOfp3p
- WqIFhW9TowY2Gff6+0U7LWOya/EZNjjO/DhGnRl8QXzfbZEf8a3F1vH/z8+VaQSfS9PSg9SIT
- 7ZuF9oBgPe3c2oPjTC2TU+c48Ky7oznKm7RfUOKVWNz9C83Dz85C91UVpv7caaMO3T4fflRja
- fgXcJeBSPxa+PkE6G
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="KIzF6Cje4W/osXrF"
+Content-Disposition: inline
+In-Reply-To: <87h7xsgw3r.fsf@intel.com>
+User-Agent: Mutt/1.10.0 (2018-05-17)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> Platform code historically allowed creating IRQ resources with IRQ
-> number 0 to indicate "no interrupt assigned", so this driver tries to
-> filter out such conditions. The negative IRQs (errors) will be rejected
-> by request_irq() but I guess we can lose -EPROBE_DEFER.
 
-Thanks for this explanation.
+--KIzF6Cje4W/osXrF
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-* Should such information be better represented in the description for
-  these programming interfaces?
+On 2020.04.10 00:58:16 +0300, Jani Nikula wrote:
+> On Fri, 10 Apr 2020, Masahiro Yamada <masahiroy@kernel.org> wrote:
+> > Including subdirectory Makefile from the driver main Makefile does not
+> > buy us much because this is not real isolation.
+>=20
+> The isolation it does buy us is that gvt/ subdirectory is developed and
+> maintained on a separate mailing list and separate git repo. I think at
+> some point there were plans to make it an actual module too.
+>=20
+> So while you could quip about Conway's law here, I think it might be
+> better to keep this as it is.
+>=20
+> Zhenyu, Zhi, what do you think?
 
-* Can the software documentation become clearer anyhow?
+Yeah, I have the same feeling, maybe we can add some comment in gvt Makefile
+to state that point.
 
+Thanks
 
-> or, maybe we should take a look at platform_get_irq() and see if we can
-> stop it returning 0 interrupt numbers and clean up the drivers.
+> >
+> > Having a single Makefile at the top of the module is clearer, and
+> > it is what this driver almost does.
+> >
+> > Move all gvt objects to the i915 main Makefile.
+> >
+> > Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+> > ---
+> >
+> >  drivers/gpu/drm/i915/Makefile     | 28 ++++++++++++++++++++++++----
+> >  drivers/gpu/drm/i915/gvt/Makefile |  8 --------
+> >  2 files changed, 24 insertions(+), 12 deletions(-)
+> >  delete mode 100644 drivers/gpu/drm/i915/gvt/Makefile
+> >
+> > diff --git a/drivers/gpu/drm/i915/Makefile b/drivers/gpu/drm/i915/Makef=
+ile
+> > index 6cd1f6253814..74e965882a98 100644
+> > --- a/drivers/gpu/drm/i915/Makefile
+> > +++ b/drivers/gpu/drm/i915/Makefile
+> > @@ -275,10 +275,30 @@ i915-$(CONFIG_DRM_I915_SELFTEST) +=3D \
+> >  # virtual gpu code
+> >  i915-y +=3D i915_vgpu.o
+> > =20
+> > -ifeq ($(CONFIG_DRM_I915_GVT),y)
+> > -i915-y +=3D intel_gvt.o
+> > -include $(src)/gvt/Makefile
+> > -endif
+> > +i915-$(CONFIG_DRM_I915_GVT) +=3D \
+> > +	intel_gvt.o \
+> > +	gvt/gvt.o \
+> > +	gvt/aperture_gm.o \
+> > +	gvt/handlers.o \
+> > +	gvt/vgpu.o \
+> > +	gvt/trace_points.o \
+> > +	gvt/firmware.o \
+> > +	gvt/interrupt.o \
+> > +	gvt/gtt.o \
+> > +	gvt/cfg_space.o \
+> > +	gvt/opregion.o \
+> > +	gvt/mmio.o \
+> > +	gvt/display.o \
+> > +	gvt/edid.o \
+> > +	gvt/execlist.o \
+> > +	gvt/scheduler.o \
+> > +	gvt/sched_policy.o \
+> > +	gvt/mmio_context.o \
+> > +	gvt/cmd_parser.o \
+> > +	gvt/debugfs.o \
+> > +	gvt/fb_decoder.o \
+> > +	gvt/dmabuf.o \
+> > +	gvt/page_track.o
+> > =20
+> >  obj-$(CONFIG_DRM_I915) +=3D i915.o
+> >  obj-$(CONFIG_DRM_I915_GVT_KVMGT) +=3D gvt/kvmgt.o
+> > diff --git a/drivers/gpu/drm/i915/gvt/Makefile b/drivers/gpu/drm/i915/g=
+vt/Makefile
+> > deleted file mode 100644
+> > index 4d70f4689479..000000000000
+> > --- a/drivers/gpu/drm/i915/gvt/Makefile
+> > +++ /dev/null
+> > @@ -1,8 +0,0 @@
+> > -# SPDX-License-Identifier: GPL-2.0
+> > -GVT_DIR :=3D gvt
+> > -GVT_SOURCE :=3D gvt.o aperture_gm.o handlers.o vgpu.o trace_points.o f=
+irmware.o \
+> > -	interrupt.o gtt.o cfg_space.o opregion.o mmio.o display.o edid.o \
+> > -	execlist.o scheduler.o sched_policy.o mmio_context.o cmd_parser.o deb=
+ugfs.o \
+> > -	fb_decoder.o dmabuf.o page_track.o
+> > -
+> > -i915-y					+=3D $(addprefix $(GVT_DIR)/, $(GVT_SOURCE))
+>=20
+> --=20
+> Jani Nikula, Intel Open Source Graphics Center
 
-Will further collateral evolution become interesting?
+--=20
+Open Source Technology Center, Intel ltd.
 
-Regards,
-Markus
+$gpg --keyserver wwwkeys.pgp.net --recv-keys 4D781827
+
+--KIzF6Cje4W/osXrF
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iF0EARECAB0WIQTXuabgHDW6LPt9CICxBBozTXgYJwUCXpAG9AAKCRCxBBozTXgY
+J5rLAJ45nWTbStFQsqc5yvlIr+XX8Ig8YACdFQ67J8jqCGmeYx/Y196ZAH2skGM=
+=Zhzu
+-----END PGP SIGNATURE-----
+
+--KIzF6Cje4W/osXrF--
