@@ -2,171 +2,215 @@ Return-Path: <SRS0=VV4q=52=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C2D6C2BA19
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 00:09:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 992E7C2BA19
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 00:12:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 34F5F20768
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 00:09:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5BA1520769
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 00:12:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="LDzvZ55V"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZRsrd9fo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727197AbgDJAJ0 (ORCPT
+        id S1727015AbgDJAMG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Apr 2020 20:09:26 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:42673 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726916AbgDJAJ0 (ORCPT
+        Thu, 9 Apr 2020 20:12:06 -0400
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:40783 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726327AbgDJAMG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Apr 2020 20:09:26 -0400
-Received: by mail-pf1-f195.google.com with SMTP id 22so302820pfa.9
-        for <linux-kernel@vger.kernel.org>; Thu, 09 Apr 2020 17:09:25 -0700 (PDT)
+        Thu, 9 Apr 2020 20:12:06 -0400
+Received: by mail-oi1-f193.google.com with SMTP id a7so157804oid.7
+        for <linux-kernel@vger.kernel.org>; Thu, 09 Apr 2020 17:12:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=FktJwm2OPRHpI6XA+yK8L2f0u3LGxLEirESOa8TomJs=;
-        b=LDzvZ55VXfQ6Vrmx01H+DfAkSsKvOyLjRJZiTwYjVXGKyabEpZOPdNxAs3+aE5QNyb
-         FOqrRHIqE0mBC88842JJLZwdTVBDGYpmbelMhxJuIedtkiYfNW+fcyizWYNFnhKOlobk
-         8Nj7CzSM4pv7UlP7NOZiRiiFV9LpMm3XnO6bI=
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=JjCg+0ZKVUEU3m1mtuE7C2U4b9dMYk265cCmLvmPh20=;
+        b=ZRsrd9foGs0GWEd9amU602pwhj9SzLnjEnilwCYt8UiT2smbNEbJlYImi6QRkHncC8
+         AaS9xP6V3zjvdz1p8XPHlz+BL+on5msn1cCcROxTzceDs5y54LB6YEJxRJ6bYZNCQT1V
+         SrS4DieBPjvUhoQnk6YbFcJf0LPyQw4d13Djak7JeOyYl/CUlfSqpZZFr4pQgp7TTHP8
+         umlC6iW+1U7zKs5p0/2D8Z/R6mO263qt1PvyDno367L24yUnOcLbk5EBLnHhUkh8xewV
+         tpGCi6ZwJO8yqZfZ9nsskBfoG1zMklLNkGnH2+5bQdTeOY/021d+DsTPRx+2qGOIDiv5
+         zf1A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=FktJwm2OPRHpI6XA+yK8L2f0u3LGxLEirESOa8TomJs=;
-        b=n4+VRMgLMqkBRFPN2IWt/h1QJXhoL2G6pPvfIcHHo06P273utAD7IBIegYmc/4ex0v
-         Rde6fjeENMfS7yhZHs08xvMAp0QkfCfROpQfWfKluJaiwi+EjrgzedNnVxI4w2qJB6AL
-         lkoH7IX0pBGxfoONyWShqYCI4rV8LowTELakcV17fS4d8MGX/qEJBavGNUUQrhRMRae9
-         hdmY1Kwiu/UWhi/av44jgBZQMn6+SUE/iUBCmgVwQPfTV6n5Eyi0gsIpWw6sh6Ok0UMF
-         Oi1r/jO4W/Lb8lFvPZ/hiWs2nbawrXZJI+AIZeDNetuqaWIZVZ+qogQe1YzEEBFnqDTh
-         h0ug==
-X-Gm-Message-State: AGi0Pubnr/ggtWSvYo59FY9FPuPnw7QBrzOve47wvmEaBKFxqjUGwJhm
-        ySDhY4Lx4XJxG1hN1rCyFMduXkZc5uE=
-X-Google-Smtp-Source: APiQypIIZ1nc0vw0jGi60L2KF+XRy2nUuVF5eC6mHQxHJRNNl1SbdO0p5/Z5OzyDoBHTsxgL4Ko0rg==
-X-Received: by 2002:aa7:9a98:: with SMTP id w24mr2257097pfi.182.1586477364958;
-        Thu, 09 Apr 2020 17:09:24 -0700 (PDT)
-Received: from pmalani2.mtv.corp.google.com ([2620:15c:202:201:476b:691:abc3:38db])
-        by smtp.gmail.com with ESMTPSA id 6sm216421pgm.51.2020.04.09.17.09.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 09 Apr 2020 17:09:24 -0700 (PDT)
-From:   Prashant Malani <pmalani@chromium.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     heikki.krogerus@linux.intel.com,
-        Prashant Malani <pmalani@chromium.org>,
-        Jon Flatley <jflat@chromium.org>,
-        Benson Leung <bleung@chromium.org>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Guenter Roeck <groeck@chromium.org>
-Subject: [PATCH v2 3/3] platform/chrome: typec: Register port partner
-Date:   Thu,  9 Apr 2020 17:08:23 -0700
-Message-Id: <20200410000819.198668-4-pmalani@chromium.org>
-X-Mailer: git-send-email 2.26.0.110.g2183baf09c-goog
-In-Reply-To: <20200410000819.198668-1-pmalani@chromium.org>
-References: <20200410000819.198668-1-pmalani@chromium.org>
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=JjCg+0ZKVUEU3m1mtuE7C2U4b9dMYk265cCmLvmPh20=;
+        b=HBEJ+VZJmFR//yqGkBkBO7YXHF/yTt2GA47KV+jO/Tm7dXaVxXDFdvR/njVtUW8l4Z
+         0cnQGfuk8eBcmZj5HxC3yGCOjuG6ZhTkKG1pv4nGsxozT/J3PILF43K8BPKaD2R3QzKK
+         Nb+BjMhbzUySrnldvfUsODTCCPyISoNVpT+uTvk5Q/MME3BBV4l9khMN7+9ukGo3iEFU
+         /fIfd1oectWxW4xGJuspj6tjm0ArAqfFE/1I1fvMHNul/A8fKCEQRKY1sOkQdb6oKXI9
+         UQClq5kf/rVo6CownCXJM0iZBKFLQkQSY/s/AcDgqNXpqIN2wxGF9FAOsN6gQv2N6i1c
+         GKxQ==
+X-Gm-Message-State: AGi0PuYSN8pqQ9+Aqccil3m2WleP6kLYPsnmj3898iZVPbUQaYJP338v
+        uDhQAQ4rEb60JXH95EgurJc=
+X-Google-Smtp-Source: APiQypLi1t8vlbkrqsMgkH03bKYkFF/ExZPKQY8Aok71iKZxs/zkBasvqvoTdonteG/ffgwudiljlQ==
+X-Received: by 2002:aca:c311:: with SMTP id t17mr1528797oif.169.1586477524193;
+        Thu, 09 Apr 2020 17:12:04 -0700 (PDT)
+Received: from ubuntu-s3-xlarge-x86 ([2604:1380:4111:8b00::3])
+        by smtp.gmail.com with ESMTPSA id 186sm307290ooi.30.2020.04.09.17.12.03
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 09 Apr 2020 17:12:03 -0700 (PDT)
+Date:   Thu, 9 Apr 2020 17:12:01 -0700
+From:   Nathan Chancellor <natechancellor@gmail.com>
+To:     Nick Desaulniers <ndesaulniers@google.com>
+Cc:     Jian Cai <caij2003@gmail.com>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Manoj Gupta <manojgupta@google.com>,
+        Peter Smith <Peter.Smith@arm.com>,
+        Stefan Agner <stefan@agner.ch>,
+        Sami Tolvanen <samitolvanen@google.com>,
+        Ilie Halip <ilie.halip@gmail.com>,
+        Jian Cai <jiancai@google.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Doug Anderson <armlinux@m.disordat.com>,
+        Benjamin Gaignard <benjamin.gaignard@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Tejun Heo <tj@kernel.org>,
+        "Joel Fernandes (Google)" <joel@joelfernandes.org>,
+        Patrick Bellasi <patrick.bellasi@arm.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        David Howells <dhowells@redhat.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>
+Subject: Re: [PATCH] ARM: do not assemble iwmmxt.S with LLVM toolchain
+Message-ID: <20200410001201.GA15303@ubuntu-s3-xlarge-x86>
+References: <20200409232728.231527-1-caij2003@gmail.com>
+ <CAKwvOdkot0Q7FSCMKGm6ti4hhvD3N+AMUK4Xv2Xxiiu3+pURgQ@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAKwvOdkot0Q7FSCMKGm6ti4hhvD3N+AMUK4Xv2Xxiiu3+pURgQ@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Register (and unregister) the port partner when a connect (and
-disconnect) is detected.
+On Thu, Apr 09, 2020 at 05:01:33PM -0700, 'Nick Desaulniers' via Clang Built Linux wrote:
+> On Thu, Apr 9, 2020 at 4:28 PM Jian Cai <caij2003@gmail.com> wrote:
+> >
+> > iwmmxt.S contains XScale instructions LLVM ARM backend does not support.
+> > Skip this file if LLVM integrated assemmbler or LLD is used to build ARM
+> 
+> Hi Jian, thank you for the patch.  It's pretty much spot on for what I
+> was looking for.  Some notes below:
+> 
+> s/assemmbler/assembler
+> 
+> :set spell
+> 
+> ;)
+> 
+> Also, could use a link tag, ie.
+> 
+> Link: https://github.com/ClangBuiltLinux/linux/issues/975
+> 
+> (Always include the link tag to help us track when and where patches land).
+> 
+> Finally, I think the hunks for the two different files should be
+> split; the init/Kconfig change should be it's own dedicated change
+> that goes to Masahiro, the maintainer of the Kbuild tree.  Then when
+> we have that, the dependent configs should go separately.  Would you
+> mind splitting this patch in two, and re-sending just the Kbuild patch
+> for now?  Since you used Sami's patch for inspiration
+> (https://github.com/ClangBuiltLinux/linux/issues/975#issuecomment-611694153,
+> https://github.com/samitolvanen/linux/commit/fe9786cb52a0100273c75117dcea8b8e07006fde),
+> it would be polite to Sami to add a tag like:
+> 
+> Suggested-by: Sami Tolvanen <samitolvanen@google.com>
+> 
+> or maybe better yet, take Sami's patch, add your signed off by tag
+> (maintaining him as the git author, see `git log --pretty=fuller`),
+> then rebase your AS_IS_CLANG hunk on top, make that a second patch,
+> then finally have the arm change as a third patch.
+> 
+> This change is exactly what I'm looking for, so these are just process concerns.
 
-Co-developed-by: Jon Flatley <jflat@chromium.org>
-Signed-off-by: Prashant Malani <pmalani@chromium.org>
----
+I think that they can be sent as a series that is picked up by Masahiro
+with an ack from an ARM maintainer.
 
-Changes in v2:
-- Fixed error pointer return value.
+> > kernel.
+> >
+> > Signed-off-by: Jian Cai <caij2003@gmail.com>
+> > ---
+> >  arch/arm/Kconfig | 2 +-
+> >  init/Kconfig     | 6 ++++++
+> >  2 files changed, 7 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
+> > index 66a04f6f4775..39de8fc64a73 100644
+> > --- a/arch/arm/Kconfig
+> > +++ b/arch/arm/Kconfig
+> > @@ -804,7 +804,7 @@ source "arch/arm/mm/Kconfig"
+> >
+> >  config IWMMXT
+> >         bool "Enable iWMMXt support"
+> > -       depends on CPU_XSCALE || CPU_XSC3 || CPU_MOHAWK || CPU_PJ4 || CPU_PJ4B
+> > +       depends on !AS_IS_CLANG && !LD_IS_LLD && (CPU_XSCALE || CPU_XSC3 || CPU_MOHAWK || CPU_PJ4 || CPU_PJ4B)
+> >         default y if PXA27x || PXA3xx || ARCH_MMP || CPU_PJ4 || CPU_PJ4B
+> >         help
+> >           Enable support for iWMMXt context switching at run time if
+> > diff --git a/init/Kconfig b/init/Kconfig
+> > index 1c12059e0f7e..b0ab3271e900 100644
+> > --- a/init/Kconfig
+> > +++ b/init/Kconfig
+> > @@ -19,6 +19,12 @@ config GCC_VERSION
+> >  config CC_IS_CLANG
+> >         def_bool $(success,$(CC) --version | head -n 1 | grep -q clang)
+> >
+> > +config AS_IS_CLANG
+> > +       def_bool $(success,$(AS) --version | head -n 1 | grep -q clang)
 
- drivers/platform/chrome/cros_ec_typec.c | 48 +++++++++++++++++++++++++
- 1 file changed, 48 insertions(+)
+$(AS) is being replaced with $(LLVM_IAS). That line should be:
 
-diff --git a/drivers/platform/chrome/cros_ec_typec.c b/drivers/platform/chrome/cros_ec_typec.c
-index 56ded09a60ffb..304e0b20f279b 100644
---- a/drivers/platform/chrome/cros_ec_typec.c
-+++ b/drivers/platform/chrome/cros_ec_typec.c
-@@ -22,6 +22,9 @@ struct cros_typec_port {
- 	struct typec_port *port;
- 	/* Initial capabilities for the port. */
- 	struct typec_capability caps;
-+	struct typec_partner *partner;
-+	/* Port partner PD identity info. */
-+	struct usb_pd_identity p_identity;
- };
- 
- /* Platform-specific data for the Chrome OS EC Type C controller. */
-@@ -190,6 +193,30 @@ static int cros_typec_ec_command(struct cros_typec_data *typec,
- 	return ret;
- }
- 
-+static int cros_typec_add_partner(struct cros_typec_data *typec, int port_num,
-+				  bool pd_en)
-+{
-+	struct cros_typec_port *port = typec->ports[port_num];
-+	struct typec_partner_desc p_desc = {
-+		.usb_pd = pd_en,
-+	};
-+	int ret = 0;
-+
-+	/*
-+	 * Fill an initial PD identity, which will then be updated with info
-+	 * from the EC.
-+	 */
-+	p_desc.identity = &port->p_identity;
-+
-+	port->partner = typec_register_partner(port->port, &p_desc);
-+	if (IS_ERR_OR_NULL(port->partner)) {
-+		ret = PTR_ERR(port->partner);
-+		port->partner = NULL;
-+	}
-+
-+	return ret;
-+}
-+
- static void cros_typec_set_port_params_v0(struct cros_typec_data *typec,
- 		int port_num, struct ec_response_usb_pd_control *resp)
- {
-@@ -212,6 +239,8 @@ static void cros_typec_set_port_params_v1(struct cros_typec_data *typec,
- {
- 	struct typec_port *port = typec->ports[port_num]->port;
- 	enum typec_orientation polarity;
-+	bool pd_en;
-+	int ret;
- 
- 	if (!(resp->enabled & PD_CTRL_RESP_ENABLED_CONNECTED))
- 		polarity = TYPEC_ORIENTATION_NONE;
-@@ -226,6 +255,25 @@ static void cros_typec_set_port_params_v1(struct cros_typec_data *typec,
- 			TYPEC_SOURCE : TYPEC_SINK);
- 	typec_set_vconn_role(port, resp->role & PD_CTRL_RESP_ROLE_VCONN ?
- 			TYPEC_SOURCE : TYPEC_SINK);
-+
-+	/* Register/remove partners when a connect/disconnect occurs. */
-+	if (resp->enabled & PD_CTRL_RESP_ENABLED_CONNECTED) {
-+		if (typec->ports[port_num]->partner)
-+			return;
-+
-+		pd_en = resp->enabled & PD_CTRL_RESP_ENABLED_PD_CAPABLE;
-+		ret = cros_typec_add_partner(typec, port_num, pd_en);
-+		if (!ret)
-+			dev_warn(typec->dev,
-+				 "Failed to register partner on port: %d\n",
-+				 port_num);
-+	} else {
-+		if (!typec->ports[port_num]->partner)
-+			return;
-+
-+		typec_unregister_partner(typec->ports[port_num]->partner);
-+		typec->ports[port_num]->partner = NULL;
-+	}
- }
- 
- static int cros_typec_port_update(struct cros_typec_data *typec, int port_num)
--- 
-2.26.0.110.g2183baf09c-goog
+    def_bool $(success,test $(LLVM_IAS) -eq 1)
 
+I think. That depends on a commit in Masahiro's for-next branch [1] so
+it should be based/tested against that.
+
+Otherwise, I agree with Nick's comment about being split into two
+patches (one for the init/Kconfig change and one for the ARM change) and
+adding the Link tag.
+
+I ran about 75 randconfigs with LD=ld.lld and LLVM_IAS=1 and I did not
+see any Kconfig warnings from this and CONFIG_IWMMXT was unset in every
+one. Should prevent the errors that you encountered. Feel free to apply
+the following tags to any follow up revisions.
+
+Tested-by: Nathan Chancellor <natechancellor@gmail.com> # randconfig
+Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
+
+[1]: https://git.kernel.org/pub/scm/linux/kernel/git/masahiroy/linux-kbuild.git
+
+> > +config LD_IS_LLD
+> > +       def_bool $(success,$(LD) --version | head -n 1 | grep -q LLD)
+> > +
+> >  config CLANG_VERSION
+> >         int
+> >         default $(shell,$(srctree)/scripts/clang-version.sh $(CC))
+> > --
+> 
+> -- 
+> Thanks,
+> ~Nick Desaulniers
+> 
+
+Cheers,
+Nathan
