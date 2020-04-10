@@ -2,115 +2,147 @@ Return-Path: <SRS0=VV4q=52=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0754FC2BB55
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 22:05:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DEB0C2D0EC
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 22:12:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D311F2083E
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 22:05:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 337FB2083E
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 22:12:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="bTMY0271"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="sTjcXYGX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726716AbgDJWFc (ORCPT
+        id S1726680AbgDJWMi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Apr 2020 18:05:32 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:43213 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726676AbgDJWFc (ORCPT
+        Fri, 10 Apr 2020 18:12:38 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:44704 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726582AbgDJWMh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Apr 2020 18:05:32 -0400
-Received: by mail-pf1-f196.google.com with SMTP id l1so1567363pff.10
-        for <linux-kernel@vger.kernel.org>; Fri, 10 Apr 2020 15:05:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=WJPAqjvaGysQuB90nzKXpbDUa7LF339sB+AetSfbwOI=;
-        b=bTMY0271bIDACX85sLdIjwrpr38A6MyN24d/CCWrHTx0/XKvE8MUzZEFf14gdPz2oZ
-         AVjkCPW5j5X+xfwOAoO0IxhCJUD2CpItPvdzElCUv285RgWWnseoU00xPNDpamK0AMd/
-         OaSeO90jVwzwuIFX6Vd8sPEykKepXxxnQypwx3PMk2GmR3lbo3FGjSCawqv4GO3BvCFR
-         tDFFx4Ye0OsTkuQ2Z1/tVIO0X0ggnQrUdX2PLrLgFjyCdjHfVYZP+0C2FBXf7V0mI6nK
-         NuMLZmB8r2XAlyDG9/2HrLHMv5VH4Rr4kfns84hCoRXWAAgtERBhZ98X91pgkQlNxDbM
-         mKnA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=WJPAqjvaGysQuB90nzKXpbDUa7LF339sB+AetSfbwOI=;
-        b=j7Y4XpoZnfsJyGmuHOiG1swhcX5iR97s32qZiGTW4Q8u6M81sEXPhTJz9GgnQ+2PgP
-         R5FjlYpULzi3TX2+pkN4Y+m2C4B7EPzC8V/vTBSu1OM9/RvzkT2/9sGIcRwrrmeS4dYE
-         rKdgt2UTwrdsRolX4qHDBJudFkTWKD/17xFdW570W9oq9A32eZ2QvWAa2zfudAq8ArOP
-         /IbO/Q4D524j02gBJdlvV8dLK6egywlUMbIRfbwkTR+J+7F8BAY4Fm00GBcLYPNL1+Od
-         tPPTFaANeheGGAHYH85ptFmNVLBs3/yawjcy2mBzM3JoXx6xLTHLkca+CVLw+M2BAWgL
-         kMGQ==
-X-Gm-Message-State: AGi0PubBokhoBJnn7H0C+ySC5sCsS8oXsaaZExE5/Un4bXzQUAnW2ski
-        I8dJEobB7+UrW6OMxehbDHWQfQ==
-X-Google-Smtp-Source: APiQypLe08RXuFzmmwjUjIbmVyTfuoHtXvruSQlyRMlPzYCGDdLB6bl5Wq6T5eCwFT1SoVHnG6sY5w==
-X-Received: by 2002:a63:d709:: with SMTP id d9mr6189744pgg.82.1586556331029;
-        Fri, 10 Apr 2020 15:05:31 -0700 (PDT)
-Received: from builder.lan (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id 203sm2684025pfw.25.2020.04.10.15.05.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 10 Apr 2020 15:05:30 -0700 (PDT)
-Date:   Fri, 10 Apr 2020 15:05:40 -0700
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Sivaprakash Murugesan <sivaprak@codeaurora.org>
-Cc:     agross@kernel.org, kishon@ti.com, robh+dt@kernel.org,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org
-Subject: Re: [PATCH 1/3] dt-bindings: phy: qcom,qmp: Add ipq8074 usb dt
- bindings
-Message-ID: <20200410220540.GC20625@builder.lan>
-References: <1586543372-13969-1-git-send-email-sivaprak@codeaurora.org>
- <1586543372-13969-2-git-send-email-sivaprak@codeaurora.org>
+        Fri, 10 Apr 2020 18:12:37 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03AMA1nx187200;
+        Fri, 10 Apr 2020 22:12:35 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2020-01-29;
+ bh=D0Y+sCK6rKCNXMeoxaoYpvvgm89nbthtQcMvcu2PWx4=;
+ b=sTjcXYGXMzAriDNrMtQYWAjqAtwfPbt1mkCR0DwcW8TTP5BgToI6FUFXL+o8s9sxT2S1
+ /DTUkNNO7SwzQxjx0ZVUvgFL6QF8i4fjXKQ1rcBK+bzo30ZTAObZajkVYQfO1bia1CcQ
+ aKSqrxC88psP07VDdCVEdbBQlHdaiQ7mBKzKCnRvPwITpj7FfZACtpmrNsObSpAHawak
+ tBOkmMMIOxKvNt+ZfoJ73WAZigxIypyKMmPlYR2ZRMquLSSrndCho11bmCOsqND2JRKl
+ I1GCObFdKVAJ88sOw7m9mwhuL2JDbfXv+Smz8RQ/kNqzl3hAMdqOk0dAgJzAEXQEsq3G fw== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by aserp2120.oracle.com with ESMTP id 3091m186ka-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 10 Apr 2020 22:12:35 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03AM7ZKM098900;
+        Fri, 10 Apr 2020 22:12:34 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by userp3030.oracle.com with ESMTP id 3091m8mj65-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 10 Apr 2020 22:12:34 +0000
+Received: from abhmp0006.oracle.com (abhmp0006.oracle.com [141.146.116.12])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 03AMCXUD024840;
+        Fri, 10 Apr 2020 22:12:33 GMT
+Received: from [10.159.140.158] (/10.159.140.158)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Fri, 10 Apr 2020 15:12:33 -0700
+Subject: Re: [PATCH] efi/libstub/arm64: Enable __efistub_global define in
+ .data section
+To:     Ard Biesheuvel <ardb@kernel.org>
+Cc:     linux-efi <linux-efi@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <1586468669-21456-1-git-send-email-victor.erminpour@oracle.com>
+ <CAMj1kXGgYYx=9rq-Ficw3vS6FX_0nb-hRStXijh7H4zdD=+Gaw@mail.gmail.com>
+From:   Victor Erminpour <victor.erminpour@oracle.com>
+Organization: Oracle America
+Message-ID: <aee6c7cc-24c7-2822-47d5-1e05413a8024@oracle.com>
+Date:   Fri, 10 Apr 2020 15:12:13 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1586543372-13969-2-git-send-email-sivaprak@codeaurora.org>
+In-Reply-To: <CAMj1kXGgYYx=9rq-Ficw3vS6FX_0nb-hRStXijh7H4zdD=+Gaw@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9587 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 malwarescore=0
+ mlxlogscore=999 phishscore=0 spamscore=0 adultscore=0 suspectscore=0
+ mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2004100156
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9587 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 mlxlogscore=999 mlxscore=0
+ priorityscore=1501 phishscore=0 suspectscore=0 bulkscore=0
+ lowpriorityscore=0 impostorscore=0 malwarescore=0 clxscore=1015
+ spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2004100156
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri 10 Apr 11:29 PDT 2020, Sivaprakash Murugesan wrote:
 
-> Add ipq8074 qmp phy device compatible for usb super speed usb support.
-> 
-> Signed-off-by: Sivaprakash Murugesan <sivaprak@codeaurora.org>
-> ---
->  Documentation/devicetree/bindings/phy/qcom,qmp-phy.yaml | 2 ++
->  1 file changed, 2 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/phy/qcom,qmp-phy.yaml b/Documentation/devicetree/bindings/phy/qcom,qmp-phy.yaml
-> index 18a8985..d60c845 100644
-> --- a/Documentation/devicetree/bindings/phy/qcom,qmp-phy.yaml
-> +++ b/Documentation/devicetree/bindings/phy/qcom,qmp-phy.yaml
-> @@ -18,6 +18,7 @@ properties:
->    compatible:
->      enum:
->        - qcom,ipq8074-qmp-pcie-phy
-> +      - qcom,ipq8074-qmp-usb-phy
 
-I believe you're missing a "3" here.
+On 4/10/20 1:09 AM, Ard Biesheuvel wrote:
+> On Thu, 9 Apr 2020 at 23:44, Victor Erminpour
+> <victor.erminpour@oracle.com> wrote:
+>>
+>> Enable the __efistub_global define to place variables in the
+>> .data section for both CONFIG_ARM and CONFIG_ARM64.
+>>
+>> This places the EFIstub sys_table variable and other EFIstub
+>> static variables in the .data section for both CONFIG_ARM and
+>> CONFIG_ARM64.
+>>
+> 
+> What does that achieve?
+
+Hi Ard,
+
+Without placing these global variables in .data, I get the
+following errors when booting an ARM64 EFI system:
+
+EFI stub: ERROR: Exit boot services failed.
+EFI stub: ERROR: Failed to update FDT and exit boot services
+
+
+I know that the ARM64 linker script is supposed to put the
+.init.bss into the .init.data section, but I don't think this
+is happening for all systems.
+
+Having it explicitly enabled for CONFIG_ARM64 worked for me.
+
 
 Regards,
-Bjorn
+--Victor
 
->        - qcom,msm8996-qmp-pcie-phy
->        - qcom,msm8996-qmp-ufs-phy
->        - qcom,msm8996-qmp-usb3-phy
-> @@ -166,6 +167,7 @@ allOf:
->          compatible:
->            contains:
->              enum:
-> +              - qcom,ipq8074-qmp-usb3-phy
->                - qcom,msm8996-qmp-usb3-phy
->                - qcom,msm8998-qmp-pcie-phy
->                - qcom,msm8998-qmp-usb3-phy
-> -- 
-> 2.7.4
+
 > 
+>> Signed-off-by: Victor Erminpour <victor.erminpour@oracle.com>
+>> ---
+>>   drivers/firmware/efi/libstub/efistub.h | 2 +-
+>>   1 file changed, 1 insertion(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/firmware/efi/libstub/efistub.h b/drivers/firmware/efi/libstub/efistub.h
+>> index c244b16..59932d6 100644
+>> --- a/drivers/firmware/efi/libstub/efistub.h
+>> +++ b/drivers/firmware/efi/libstub/efistub.h
+>> @@ -25,7 +25,7 @@
+>>   #define EFI_ALLOC_ALIGN                EFI_PAGE_SIZE
+>>   #endif
+>>
+>> -#ifdef CONFIG_ARM
+>> +#if defined(CONFIG_ARM) || defined(CONFIG_ARM64)
+>>   #define __efistub_global       __section(.data)
+>>   #else
+>>   #define __efistub_global
+
+-- 
+Victor Hugo Erminpour
+Principal Member of Technical Staff
+Oracle America
