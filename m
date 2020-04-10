@@ -2,72 +2,107 @@ Return-Path: <SRS0=VV4q=52=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00416C2BA19
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 02:21:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DF8BC2BB1D
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 02:23:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BBA3820936
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 02:21:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 35CA220A8B
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 02:23:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JFVBcnHt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726680AbgDJCVh (ORCPT
+        id S1726648AbgDJCXr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Apr 2020 22:21:37 -0400
-Received: from [106.54.107.2] ([106.54.107.2]:60556 "EHLO mail.kaowomen.cn"
-        rhost-flags-FAIL-FAIL-OK-OK) by vger.kernel.org with ESMTP
-        id S1726082AbgDJCVg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Apr 2020 22:21:36 -0400
-Received: by mail.kaowomen.cn (Postfix, from userid 1001)
-        id 2783D41329; Fri, 10 Apr 2020 10:21:33 +0800 (CST)
-Date:   Fri, 10 Apr 2020 10:21:33 +0800
-From:   Bo YU <tsu.yubo@gmail.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     tsu.yubo@gmail.com
-Subject: [PATCH -next] include/linux: remove duplicated kernel.h from
- nodemask.h
-Message-ID: <20200410022133.mx3xyqb4f3l6asjb@kaowomen.cn>
+        Thu, 9 Apr 2020 22:23:47 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:34548 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725987AbgDJCXr (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Apr 2020 22:23:47 -0400
+Received: by mail-lj1-f196.google.com with SMTP id m8so637419lji.1;
+        Thu, 09 Apr 2020 19:23:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=C7nub2iC7HflOtCQHAAafbgeNv5reSfX1ICVh/feaUg=;
+        b=JFVBcnHtGbIdWIzex5YH9WvtY0JYL61bG3IWoWHDvhab8sS7zyKzabEW+N1KhP6CDJ
+         o//t4xh1c9ED3fWEGmYjw8T9ATBMJ/HsSaaCo2OzTHaNWXgova2j3RPoUf7Jcb/KRTfd
+         thrhVzgcQM1Cdxy4FaObzOCGdPDYBMaTZAh9N14VKmxdNK2cxmxyAuU5S+jBoK6qlwH9
+         SdXdmi1R2j4UVjl94PbHzLTiGa8dXQ+8UN2Tj2PggHIHyEcZC9GQblO15j3CWmobYXZQ
+         C2ZtS8XrVOnIW0U/pRCtlF/VPDHqKhnaU/byLhjlQEN/YjHPMXbO8ctaE6Hs/jQceDBx
+         YdHQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=C7nub2iC7HflOtCQHAAafbgeNv5reSfX1ICVh/feaUg=;
+        b=n4G6UUqCEOwFvUajwDSbGJJPrEP+oQpcAixfc1+MFZ6dFQ0Iy1V+ldKMxIMiT/j/Qy
+         ABqR6kU/NQACLDCqdmIOW3RVRvlYCXSrCPlY7BUWpS/G3xMw6n2UkNbQz0287tNX04Yk
+         eLgYJk0PwLyPib5veJK2XhUEWWQz2MsZetd5F8fV2zXB3pBYNfHPhUd5CE91ijlDNwd3
+         y8GBGmxz2rZkn5dyfP/PkRLNGrAhl9JPXvzqLXOvsZNlyp2NlpETQPVzeKgvF4Ax+guN
+         Gu72Ifpyp1NVrJnUuCmlty01WzEADhaWUfx6wF2SbzrNsng729W34Fc2aLDboFjVs2/u
+         ug4g==
+X-Gm-Message-State: AGi0PubsqSAgavwT35JvSnmqBgb2eGSDrKcMdj02tlajLkJSWkZyGnl5
+        NMwq0wEoXPVvxP9YO2SX3o5TEgA3yrIbxO1MVtQ=
+X-Google-Smtp-Source: APiQypLnZGTvqOGESVBjKQo4/Lj3hRB1ay/3mDXASjqrLo7VK00BjILY9FTR5FqYsL8gYvGI1WpmBu69VNNGszWlHjI=
+X-Received: by 2002:a2e:974d:: with SMTP id f13mr1694240ljj.178.1586485424861;
+ Thu, 09 Apr 2020 19:23:44 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Disposition: inline
-User-Agent: NeoMutt/20171215
+References: <20200410004738.19668-1-ansuelsmth@gmail.com> <20200410004738.19668-3-ansuelsmth@gmail.com>
+In-Reply-To: <20200410004738.19668-3-ansuelsmth@gmail.com>
+From:   Fabio Estevam <festevam@gmail.com>
+Date:   Thu, 9 Apr 2020 23:24:12 -0300
+Message-ID: <CAOMZO5AKYO3xLsp4k6_fJCV9qW=rAtRKEGWnxksixU794dOw8A@mail.gmail.com>
+Subject: Re: [PATCH 2/4] drivers: pci: dwc: pci-imx6: update binding to
+ generic name
+To:     Ansuel Smith <ansuelsmth@gmail.com>
+Cc:     "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, Richard Zhu <hongxing.zhu@nxp.com>,
+        Lucas Stach <l.stach@pengutronix.de>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Andrew Murray <amurray@thegoodpenguin.co.uk>,
+        linux-pci@vger.kernel.org,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-It has included kernel.h in bitmap.h,so maybe it is safe to remove
-kernel.h here
+Hi Ansuel,
 
-Signed-off-by: Bo YU <tsu.yubo@gmail.com>
----
- include/linux/nodemask.h | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+On Thu, Apr 9, 2020 at 9:47 PM Ansuel Smith <ansuelsmth@gmail.com> wrote:
+>
+> Rename specific bindings to generic name.
+>
+> Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
+> ---
+>  drivers/pci/controller/dwc/pci-imx6.c | 12 ++++++------
+>  1 file changed, 6 insertions(+), 6 deletions(-)
+>
+> diff --git a/drivers/pci/controller/dwc/pci-imx6.c b/drivers/pci/controller/dwc/pci-imx6.c
+> index acfbd34032a8..4ac140e007b4 100644
+> --- a/drivers/pci/controller/dwc/pci-imx6.c
+> +++ b/drivers/pci/controller/dwc/pci-imx6.c
+> @@ -1146,28 +1146,28 @@ static int imx6_pcie_probe(struct platform_device *pdev)
+>         }
+>
+>         /* Grab PCIe PHY Tx Settings */
+> -       if (of_property_read_u32(node, "fsl,tx-deemph-gen1",
+> +       if (of_property_read_u32(node, "tx-deemph-gen1",
 
-diff --git a/include/linux/nodemask.h b/include/linux/nodemask.h
-index 27e7fa36f707..980b48e05d05 100644
---- a/include/linux/nodemask.h
-+++ b/include/linux/nodemask.h
-@@ -46,7 +46,7 @@
-  * int next_node(node, mask)		Next node past 'node', or MAX_NUMNODES
-  * int next_node_in(node, mask)		Next node past 'node', or wrap to first,
-  *					or MAX_NUMNODES
-- * int first_unset_node(mask)		First node not set in mask, or
-+ * int first_unset_node(mask)		First node not set in mask, or
-  *					MAX_NUMNODES
-  *
-  * nodemask_t nodemask_of_node(node)	Return nodemask with bit 'node' set
-@@ -90,7 +90,6 @@
-  * for such situations. See below and CPUMASK_ALLOC also.
-  */
-
--#include <linux/kernel.h>
- #include <linux/threads.h>
- #include <linux/bitmap.h>
- #include <linux/numa.h>
---
-2.11.0
-
+This breaks compatibility with older dtbs.
