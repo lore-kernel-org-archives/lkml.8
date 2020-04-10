@@ -2,215 +2,137 @@ Return-Path: <SRS0=VV4q=52=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 992E7C2BA19
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 00:12:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA2F7C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 00:12:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5BA1520769
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 00:12:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C1873212CC
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 00:12:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZRsrd9fo"
+	dkim=pass (1024-bit key) header.d=renesasgroup.onmicrosoft.com header.i=@renesasgroup.onmicrosoft.com header.b="Im4t3OeU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727015AbgDJAMG (ORCPT
+        id S1727126AbgDJAMy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Apr 2020 20:12:06 -0400
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:40783 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726327AbgDJAMG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Apr 2020 20:12:06 -0400
-Received: by mail-oi1-f193.google.com with SMTP id a7so157804oid.7
-        for <linux-kernel@vger.kernel.org>; Thu, 09 Apr 2020 17:12:04 -0700 (PDT)
+        Thu, 9 Apr 2020 20:12:54 -0400
+Received: from mail-eopbgr1400132.outbound.protection.outlook.com ([40.107.140.132]:56192
+        "EHLO JPN01-TY1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726327AbgDJAMy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Apr 2020 20:12:54 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=lyPeTa2pgapM49Eq8Dro0JQ/LIRuKVHbUOtykT2HY+/EHyqh5uxyXIjCPzLG3ZNIHp50/zf3DST8M3GD63HejkVpudlDkFI2BtzXeDOVgVXbX5OvIAD03DFeFTbYU8LWWoN3Ils0OUMJONdkPyRGVDBQr+rgGo8FHuZpWi+7hiT8PTUXidhEI+L7aZUzDinSv5niHktOtfy0BDvgYAjaWKzJpY1yDoTweS9bMwEko0tnxWh1iM4UCwLWoZpuMBXHMsJUKnBjKPQNOPRMNQP7DlKNADmmCKMIgNAdJR1QM1oD76dD1Lr5O4Tyh+xsSmR/R1mIJyldzg11Gbh4OWkVRw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=zJMS4nAd3SiJk7CDzJfRcf2i1k2/+5drd5ueJ9cxo9I=;
+ b=awNvRB2m2kgr1aDC+4nXovcCF/N6JSKu1QreNg2GZDGaHpyyvMVm6NQvgSLXfh6VUcEOdWcMCbpkmRdC/1QhaPYGD7UgTdP6+OTXmeZ//N7THgFsnxNQKgvTwJc8xl8ZQaYuJNg+KeUFJbvNKNIt8FqCcJnUl9TRYXQEAMSiFVcHTtVzLGQI1GMO3tBeJWgs40yzq2+TyWY36v7KrMpdn8KsIFysE9sBBglUZQelVgakU8Lr21c2C1ndm7qKrbHcb21/RSwhWS0fwzJx30GNcOJGukulhSkGoogoyck0wo4Ahoj/cwFYpvdHIqXLeQ6eIbJk/T/iqXY/tf0XvyLMVg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=renesas.com; dmarc=pass action=none header.from=renesas.com;
+ dkim=pass header.d=renesas.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=JjCg+0ZKVUEU3m1mtuE7C2U4b9dMYk265cCmLvmPh20=;
-        b=ZRsrd9foGs0GWEd9amU602pwhj9SzLnjEnilwCYt8UiT2smbNEbJlYImi6QRkHncC8
-         AaS9xP6V3zjvdz1p8XPHlz+BL+on5msn1cCcROxTzceDs5y54LB6YEJxRJ6bYZNCQT1V
-         SrS4DieBPjvUhoQnk6YbFcJf0LPyQw4d13Djak7JeOyYl/CUlfSqpZZFr4pQgp7TTHP8
-         umlC6iW+1U7zKs5p0/2D8Z/R6mO263qt1PvyDno367L24yUnOcLbk5EBLnHhUkh8xewV
-         tpGCi6ZwJO8yqZfZ9nsskBfoG1zMklLNkGnH2+5bQdTeOY/021d+DsTPRx+2qGOIDiv5
-         zf1A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=JjCg+0ZKVUEU3m1mtuE7C2U4b9dMYk265cCmLvmPh20=;
-        b=HBEJ+VZJmFR//yqGkBkBO7YXHF/yTt2GA47KV+jO/Tm7dXaVxXDFdvR/njVtUW8l4Z
-         0cnQGfuk8eBcmZj5HxC3yGCOjuG6ZhTkKG1pv4nGsxozT/J3PILF43K8BPKaD2R3QzKK
-         Nb+BjMhbzUySrnldvfUsODTCCPyISoNVpT+uTvk5Q/MME3BBV4l9khMN7+9ukGo3iEFU
-         /fIfd1oectWxW4xGJuspj6tjm0ArAqfFE/1I1fvMHNul/A8fKCEQRKY1sOkQdb6oKXI9
-         UQClq5kf/rVo6CownCXJM0iZBKFLQkQSY/s/AcDgqNXpqIN2wxGF9FAOsN6gQv2N6i1c
-         GKxQ==
-X-Gm-Message-State: AGi0PuYSN8pqQ9+Aqccil3m2WleP6kLYPsnmj3898iZVPbUQaYJP338v
-        uDhQAQ4rEb60JXH95EgurJc=
-X-Google-Smtp-Source: APiQypLi1t8vlbkrqsMgkH03bKYkFF/ExZPKQY8Aok71iKZxs/zkBasvqvoTdonteG/ffgwudiljlQ==
-X-Received: by 2002:aca:c311:: with SMTP id t17mr1528797oif.169.1586477524193;
-        Thu, 09 Apr 2020 17:12:04 -0700 (PDT)
-Received: from ubuntu-s3-xlarge-x86 ([2604:1380:4111:8b00::3])
-        by smtp.gmail.com with ESMTPSA id 186sm307290ooi.30.2020.04.09.17.12.03
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 09 Apr 2020 17:12:03 -0700 (PDT)
-Date:   Thu, 9 Apr 2020 17:12:01 -0700
-From:   Nathan Chancellor <natechancellor@gmail.com>
-To:     Nick Desaulniers <ndesaulniers@google.com>
-Cc:     Jian Cai <caij2003@gmail.com>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Manoj Gupta <manojgupta@google.com>,
-        Peter Smith <Peter.Smith@arm.com>,
-        Stefan Agner <stefan@agner.ch>,
-        Sami Tolvanen <samitolvanen@google.com>,
-        Ilie Halip <ilie.halip@gmail.com>,
-        Jian Cai <jiancai@google.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Doug Anderson <armlinux@m.disordat.com>,
-        Benjamin Gaignard <benjamin.gaignard@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Tejun Heo <tj@kernel.org>,
-        "Joel Fernandes (Google)" <joel@joelfernandes.org>,
-        Patrick Bellasi <patrick.bellasi@arm.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        David Howells <dhowells@redhat.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>
-Subject: Re: [PATCH] ARM: do not assemble iwmmxt.S with LLVM toolchain
-Message-ID: <20200410001201.GA15303@ubuntu-s3-xlarge-x86>
-References: <20200409232728.231527-1-caij2003@gmail.com>
- <CAKwvOdkot0Q7FSCMKGm6ti4hhvD3N+AMUK4Xv2Xxiiu3+pURgQ@mail.gmail.com>
+ d=renesasgroup.onmicrosoft.com; s=selector2-renesasgroup-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=zJMS4nAd3SiJk7CDzJfRcf2i1k2/+5drd5ueJ9cxo9I=;
+ b=Im4t3OeUhSs6Z2iPzzL6ApfcYdCQs70Ml/efk4VXKtUkRSfVMpIk/1GMtaVAfrY32cw/J2m76DP3cUISVDRAGZ348WoTUIzA0gO1jbLTikk7W27uaIX+xNAAjmaqBiCrf/YBC+liA8ZafYtu/z8qnBRyRIePTTG+gDf6VvyzyIw=
+Received: from TYAPR01MB4544.jpnprd01.prod.outlook.com (20.179.175.203) by
+ TYAPR01MB2559.jpnprd01.prod.outlook.com (20.177.105.83) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2900.15; Fri, 10 Apr 2020 00:12:39 +0000
+Received: from TYAPR01MB4544.jpnprd01.prod.outlook.com
+ ([fe80::ed7f:1268:55a9:fc06]) by TYAPR01MB4544.jpnprd01.prod.outlook.com
+ ([fe80::ed7f:1268:55a9:fc06%4]) with mapi id 15.20.2900.015; Fri, 10 Apr 2020
+ 00:12:39 +0000
+From:   Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+To:     "Lad, Prabhakar" <prabhakar.csengg@gmail.com>,
+        Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>,
+        Bjorn Helgaas <bhelgaas@google.com>
+CC:     Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Andrew Murray <amurray@thegoodpenguin.co.uk>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Marek Vasut <marek.vasut+renesas@gmail.com>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Shawn Lin <shawn.lin@rock-chips.com>,
+        Tom Joseph <tjoseph@cadence.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+        LAK <linux-arm-kernel@lists.infradead.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        Chris Paterson <Chris.Paterson2@renesas.com>,
+        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>
+Subject: RE: [PATCH v7 7/8] PCI: Add Renesas R8A774C0 device ID
+Thread-Topic: [PATCH v7 7/8] PCI: Add Renesas R8A774C0 device ID
+Thread-Index: AQHWDbvP66ahBIzixkep7RDyHrjTa6hwiR4AgAAICQCAAOwwQA==
+Date:   Fri, 10 Apr 2020 00:12:38 +0000
+Message-ID: <TYAPR01MB4544313471DD93D131E82EF5D8DE0@TYAPR01MB4544.jpnprd01.prod.outlook.com>
+References: <1586360280-10956-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <1586360280-10956-8-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <e3f5fa77-f78e-edbf-9efc-53b5ea620460@cogentembedded.com>
+ <CA+V-a8s1E_kq_GENBTw3zGxKSPFnVKNY-ta9+c8W8nV4JFyEEw@mail.gmail.com>
+In-Reply-To: <CA+V-a8s1E_kq_GENBTw3zGxKSPFnVKNY-ta9+c8W8nV4JFyEEw@mail.gmail.com>
+Accept-Language: ja-JP, en-US
+Content-Language: ja-JP
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=yoshihiro.shimoda.uh@renesas.com; 
+x-originating-ip: [124.210.22.195]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: b7930e37-21f2-4db9-f51c-08d7dce3e157
+x-ms-traffictypediagnostic: TYAPR01MB2559:|TYAPR01MB2559:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <TYAPR01MB2559DCE47DACF5B447986E99D8DE0@TYAPR01MB2559.jpnprd01.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:7691;
+x-forefront-prvs: 0369E8196C
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TYAPR01MB4544.jpnprd01.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10019020)(4636009)(136003)(39860400002)(366004)(376002)(346002)(396003)(8676002)(71200400001)(54906003)(316002)(110136005)(478600001)(81166007)(33656002)(7416002)(2906002)(4744005)(76116006)(66446008)(186003)(26005)(55236004)(66476007)(52536014)(66946007)(55016002)(6506007)(66556008)(5660300002)(8936002)(7696005)(86362001)(9686003)(4326008)(64756008)(81156014);DIR:OUT;SFP:1102;
+received-spf: None (protection.outlook.com: renesas.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: 7bVv7ATNQrwzzsutT6PHd8Ocsq8cT58KLlfceEF7FQtxshIJdJlbpnuE/VF47cm5Ths/U4XIWFggwmDDr0yJZLWwcuwGyZOWbcGmh/+foyZaehH07Md8THldB7ORJMWQPPdADJyeFsDLBCvETcHjP54i7kaea+Da42IHPEMZiWGAhXkumoZ+H5cdMrc9C2HCT2374EGFcpiwaMUEv9QUaGpWpfB2X3fjsjJATXCUzUGst0H3SSTi9nZx2QCdiz2A2tp9GvcOQUJWVvcfNSdm/iAE/T8Ui/qUJV4P0SH8LD+bn8XFljNE2pKaqulNnFJT4Hi1Qi+hEyjRGQytHjpb6euFFFQXgDDsXd86TFCSJJnkerOayMBukkt0HjXQvGkRw6vRaFk0PBKZ7w3D9zV+/qgx0YmLlIGJyHzbsti1UJ0RvOTVowlKnfr+MA2OzZVz
+x-ms-exchange-antispam-messagedata: Y20TwZ9Ft+zMWl7pnsCLL8gkvC79CCwOqHdbHMX+gDN8/reG+/hBlYvGUM3AH6hRGKu/3dRQgUR/ed+8+QFwo3jNRSw8yHA++rmpR9rO2EIKUUrIzF4D6QmsQ+I2xJDdvkRVncxG5lKIdvVay64QyA==
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAKwvOdkot0Q7FSCMKGm6ti4hhvD3N+AMUK4Xv2Xxiiu3+pURgQ@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+X-OriginatorOrg: renesas.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: b7930e37-21f2-4db9-f51c-08d7dce3e157
+X-MS-Exchange-CrossTenant-originalarrivaltime: 10 Apr 2020 00:12:39.0540
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 53d82571-da19-47e4-9cb4-625a166a4a2a
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: f87/bCPE86htyXT3bVCRnx2IlQtb8bYWEYF7B4Py1L/E68j0UI/u7BNQ3z+GTZmImKIBMefPMmmThFzmyMqJi6Au16nwkVNVrHZ49intYn7HNuo8Ia7dH91Kswp7AXgU
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYAPR01MB2559
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 09, 2020 at 05:01:33PM -0700, 'Nick Desaulniers' via Clang Built Linux wrote:
-> On Thu, Apr 9, 2020 at 4:28 PM Jian Cai <caij2003@gmail.com> wrote:
-> >
-> > iwmmxt.S contains XScale instructions LLVM ARM backend does not support.
-> > Skip this file if LLVM integrated assemmbler or LLD is used to build ARM
-> 
-> Hi Jian, thank you for the patch.  It's pretty much spot on for what I
-> was looking for.  Some notes below:
-> 
-> s/assemmbler/assembler
-> 
-> :set spell
-> 
-> ;)
-> 
-> Also, could use a link tag, ie.
-> 
-> Link: https://github.com/ClangBuiltLinux/linux/issues/975
-> 
-> (Always include the link tag to help us track when and where patches land).
-> 
-> Finally, I think the hunks for the two different files should be
-> split; the init/Kconfig change should be it's own dedicated change
-> that goes to Masahiro, the maintainer of the Kbuild tree.  Then when
-> we have that, the dependent configs should go separately.  Would you
-> mind splitting this patch in two, and re-sending just the Kbuild patch
-> for now?  Since you used Sami's patch for inspiration
-> (https://github.com/ClangBuiltLinux/linux/issues/975#issuecomment-611694153,
-> https://github.com/samitolvanen/linux/commit/fe9786cb52a0100273c75117dcea8b8e07006fde),
-> it would be polite to Sami to add a tag like:
-> 
-> Suggested-by: Sami Tolvanen <samitolvanen@google.com>
-> 
-> or maybe better yet, take Sami's patch, add your signed off by tag
-> (maintaining him as the git author, see `git log --pretty=fuller`),
-> then rebase your AS_IS_CLANG hunk on top, make that a second patch,
-> then finally have the arm change as a third patch.
-> 
-> This change is exactly what I'm looking for, so these are just process concerns.
-
-I think that they can be sent as a series that is picked up by Masahiro
-with an ack from an ARM maintainer.
-
-> > kernel.
-> >
-> > Signed-off-by: Jian Cai <caij2003@gmail.com>
-> > ---
-> >  arch/arm/Kconfig | 2 +-
-> >  init/Kconfig     | 6 ++++++
-> >  2 files changed, 7 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
-> > index 66a04f6f4775..39de8fc64a73 100644
-> > --- a/arch/arm/Kconfig
-> > +++ b/arch/arm/Kconfig
-> > @@ -804,7 +804,7 @@ source "arch/arm/mm/Kconfig"
-> >
-> >  config IWMMXT
-> >         bool "Enable iWMMXt support"
-> > -       depends on CPU_XSCALE || CPU_XSC3 || CPU_MOHAWK || CPU_PJ4 || CPU_PJ4B
-> > +       depends on !AS_IS_CLANG && !LD_IS_LLD && (CPU_XSCALE || CPU_XSC3 || CPU_MOHAWK || CPU_PJ4 || CPU_PJ4B)
-> >         default y if PXA27x || PXA3xx || ARCH_MMP || CPU_PJ4 || CPU_PJ4B
-> >         help
-> >           Enable support for iWMMXt context switching at run time if
-> > diff --git a/init/Kconfig b/init/Kconfig
-> > index 1c12059e0f7e..b0ab3271e900 100644
-> > --- a/init/Kconfig
-> > +++ b/init/Kconfig
-> > @@ -19,6 +19,12 @@ config GCC_VERSION
-> >  config CC_IS_CLANG
-> >         def_bool $(success,$(CC) --version | head -n 1 | grep -q clang)
-> >
-> > +config AS_IS_CLANG
-> > +       def_bool $(success,$(AS) --version | head -n 1 | grep -q clang)
-
-$(AS) is being replaced with $(LLVM_IAS). That line should be:
-
-    def_bool $(success,test $(LLVM_IAS) -eq 1)
-
-I think. That depends on a commit in Masahiro's for-next branch [1] so
-it should be based/tested against that.
-
-Otherwise, I agree with Nick's comment about being split into two
-patches (one for the init/Kconfig change and one for the ARM change) and
-adding the Link tag.
-
-I ran about 75 randconfigs with LD=ld.lld and LLVM_IAS=1 and I did not
-see any Kconfig warnings from this and CONFIG_IWMMXT was unset in every
-one. Should prevent the errors that you encountered. Feel free to apply
-the following tags to any follow up revisions.
-
-Tested-by: Nathan Chancellor <natechancellor@gmail.com> # randconfig
-Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
-
-[1]: https://git.kernel.org/pub/scm/linux/kernel/git/masahiroy/linux-kbuild.git
-
-> > +config LD_IS_LLD
-> > +       def_bool $(success,$(LD) --version | head -n 1 | grep -q LLD)
-> > +
-> >  config CLANG_VERSION
-> >         int
-> >         default $(shell,$(srctree)/scripts/clang-version.sh $(CC))
-> > --
-> 
-> -- 
-> Thanks,
-> ~Nick Desaulniers
-> 
-
-Cheers,
-Nathan
+SGkgUHJhYmhha2FyLCBTZXJnZWksIEJqb3JuLA0KDQo+IEZyb206IExhZCwgUHJhYmhha2FyLCBT
+ZW50OiBUaHVyc2RheSwgQXByaWwgOSwgMjAyMCA3OjA1IFBNDQo8c25pcD4gDQo+ID4gPiBkaWZm
+IC0tZ2l0IGEvaW5jbHVkZS9saW51eC9wY2lfaWRzLmggYi9pbmNsdWRlL2xpbnV4L3BjaV9pZHMu
+aA0KPiA+ID4gaW5kZXggMWRmYzRlMWRjYjk0Li45ZTk1N2MxOGFiZWIgMTAwNjQ0DQo+ID4gPiAt
+LS0gYS9pbmNsdWRlL2xpbnV4L3BjaV9pZHMuaA0KPiA+ID4gKysrIGIvaW5jbHVkZS9saW51eC9w
+Y2lfaWRzLmgNCj4gPiA+IEBAIC0yNDYwLDYgKzI0NjAsNyBAQA0KPiA+ID4gICAjZGVmaW5lIFBD
+SV9ERVZJQ0VfSURfUkVORVNBU19TSDc3NjMgICAgICAgIDB4MDAwNA0KPiA+ID4gICAjZGVmaW5l
+IFBDSV9ERVZJQ0VfSURfUkVORVNBU19TSDc3ODUgICAgICAgIDB4MDAwNw0KPiA+ID4gICAjZGVm
+aW5lIFBDSV9ERVZJQ0VfSURfUkVORVNBU19TSDc3ODYgICAgICAgIDB4MDAxMA0KPiA+ID4gKyNk
+ZWZpbmUgUENJX0RFVklDRV9JRF9SRU5FU0FTX1I4QTc3NEMwICAgICAgIDB4MDAyZA0KPiA+DQo+
+ID4gICAgIFdlIGRvbid0IGFkZCB0aGUgZGV2aWNlIElEcyBpbiB0aGlzIGZpbGUsIHVubGVzcyB1
+c2VkIGluIHNldmVyYWwgcGxhY2VzLg0KPiA+IElzIGl0Pw0KPiA+DQo+IE15IGJhZCBJIHNob3Vs
+ZCBoYXZlIGNoZWNrZWQgaXQgYmVmb3JlIG1ha2luZyB0aGlzIGNoYW5nZSBhY3R1YWxseSBpdA0K
+PiB3YXMgc3VnZ2VzdGVkIGluIG15IHByZXZpb3VzIHZlcnNpb24gb2YgdGhlIHNlcmllcyBidXQg
+YW55d2F5IGF0bSB0aGlzDQo+IHdhcyBwbGFubmVkIHRvIGJlICB1c2VkIG9ubHkgaW4gcGNpX2Vu
+ZHBvaW50X3Rlc3QgZHJpdmVyLCBzbyBpbiB0aGF0DQo+IGNhc2UgSWxsIGRyb3AgdGhpcyBwYXRj
+aC4NCg0KSSdtIHZlcnkgc29ycnksIHRoaXMgaXMgbXkgZmF1bHQuIEkgc3VnZ2VzdGVkIHRoaXMg
+YnV0IEkgZGlkbid0IGNoZWNrDQp0aGlzIHBjaV9pZHMuaCdzIHJ1bGUuLi4NCg0KQmVzdCByZWdh
+cmRzLA0KWW9zaGloaXJvIFNoaW1vZGENCg0K
