@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9289C2D0EC
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 04:01:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19969C2D0EC
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 04:01:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7ECE920936
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 04:01:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D5D242082D
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 04:01:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586491282;
-	bh=qGGHLgI69/UcAs4ENrIAU9SzHDP6u/Wk4UVoOLBeRrk=;
+	s=default; t=1586491289;
+	bh=Ikc0AYvLKTZZv4VYpqWl7cUBvSOW5ZMNjoOQKDLh2aA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=aUND6AdwD2zxgLrCDsKrqOoe4ZpZIBWLMgN0jVPpHxKhH0/mcWRkdNCoDTymaAX4J
-	 nF7JcwgjGQJCnrldhuuEZRx9xIU5sKT/GMB61fnm5nB6rjcfZOK8aSAIscqznS8aHi
-	 kJrlhhomE1uqLcRMC5yeCyDgBWEzZghSoWc1efgA=
+	b=LyC+btYyoSt4ugyF07golwj0pn0f3gt95U+bRhJE2juGMcRy7Qnx7sU+UBx7kXy1p
+	 Yn9R7F8CgnxI1VxS7tAFt7tEAN8pW59wGILr9SyY6PpVfRE3PcqoulVhNwNAQDgpwk
+	 qWDdiUldhthL7TckMRua3Y9QSDnHPQGIQPM43eow=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726263AbgDJEBU (ORCPT
+        id S1726955AbgDJEB2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Apr 2020 00:01:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58432 "EHLO mail.kernel.org"
+        Fri, 10 Apr 2020 00:01:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58390 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727732AbgDJDre (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Apr 2020 23:47:34 -0400
+        id S1727620AbgDJDrb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Apr 2020 23:47:31 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 56BAC20B1F;
-        Fri, 10 Apr 2020 03:47:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 22D6620936;
+        Fri, 10 Apr 2020 03:47:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586490454;
-        bh=qGGHLgI69/UcAs4ENrIAU9SzHDP6u/Wk4UVoOLBeRrk=;
+        s=default; t=1586490451;
+        bh=Ikc0AYvLKTZZv4VYpqWl7cUBvSOW5ZMNjoOQKDLh2aA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HvlX7oqSGsjjE6ArTb+6GyeFNIZgF9sIJ2ZB+R9dJz9fxLsLVTfKoI1bXSgl7ugfc
-         F8IKScY3IsUcx8Lpw6AWHXLcSntsBihUp+lX8mvgTKjBzcMiWg8d+l0ok4oDn1q/Om
-         mTMaVoNfXHm1fDP8tztYaRAnEe2Fcsi6ffvyQmq0=
+        b=ymtYnl6AOTrebE6S9gSnzVF3wayEAzH3Rr3PrL4uYs3KB20TOpXOKVEM/AdqoBFLJ
+         sRyQlgHkBqFAvMOXliMpm4FN9JpGQ1uRiyI+YUrEeWjdSKeTRK2u4ETMOGlT8055qv
+         hBNvc8pSUYm+wI3SYEqRMcBeKz/lfZwmnOS4jQtQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Ard Biesheuvel <ardb@kernel.org>,
-        Arvind Sankar <nivedita@alum.mit.edu>,
-        Ingo Molnar <mingo@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-efi@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.6 49/68] efi/x86: Ignore the memory attributes table on i386
-Date:   Thu,  9 Apr 2020 23:46:14 -0400
-Message-Id: <20200410034634.7731-49-sashal@kernel.org>
+Cc:     Peng Fan <peng.fan@nxp.com>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Sasha Levin <sashal@kernel.org>, linux-pm@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH AUTOSEL 5.6 47/68] cpufreq: imx6q: fix error handling
+Date:   Thu,  9 Apr 2020 23:46:12 -0400
+Message-Id: <20200410034634.7731-47-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200410034634.7731-1-sashal@kernel.org>
 References: <20200410034634.7731-1-sashal@kernel.org>
@@ -60,75 +60,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ard Biesheuvel <ardb@kernel.org>
+From: Peng Fan <peng.fan@nxp.com>
 
-[ Upstream commit dd09fad9d2caad2325a39b766ce9e79cfc690184 ]
+[ Upstream commit 3646f50a3838c5949a89ecbdb868497cdc05b8fd ]
 
-Commit:
+When speed checking failed, direclty jumping to put_node label
+is not correct. Need jump to out_free_opp to avoid resources leak.
 
-  3a6b6c6fb23667fa ("efi: Make EFI_MEMORY_ATTRIBUTES_TABLE initialization common across all architectures")
-
-moved the call to efi_memattr_init() from ARM specific to the generic
-EFI init code, in order to be able to apply the restricted permissions
-described in that table on x86 as well.
-
-We never enabled this feature fully on i386, and so mapping and
-reserving this table is pointless. However, due to the early call to
-memblock_reserve(), the memory bookkeeping gets confused to the point
-where it produces the splat below when we try to map the memory later
-on:
-
-  ------------[ cut here ]------------
-  ioremap on RAM at 0x3f251000 - 0x3fa1afff
-  WARNING: CPU: 0 PID: 0 at arch/x86/mm/ioremap.c:166 __ioremap_caller ...
-  Modules linked in:
-  CPU: 0 PID: 0 Comm: swapper/0 Not tainted 4.20.0 #48
-  Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 0.0.0 02/06/2015
-  EIP: __ioremap_caller.constprop.0+0x249/0x260
-  Code: 90 0f b7 05 4e 38 40 de 09 45 e0 e9 09 ff ff ff 90 8d 45 ec c6 05 ...
-  EAX: 00000029 EBX: 00000000 ECX: de59c228 EDX: 00000001
-  ESI: 3f250fff EDI: 00000000 EBP: de3edf20 ESP: de3edee0
-  DS: 007b ES: 007b FS: 00d8 GS: 00e0 SS: 0068 EFLAGS: 00200296
-  CR0: 80050033 CR2: ffd17000 CR3: 1e58c000 CR4: 00040690
-  Call Trace:
-   ioremap_cache+0xd/0x10
-   ? old_map_region+0x72/0x9d
-   old_map_region+0x72/0x9d
-   efi_map_region+0x8/0xa
-   efi_enter_virtual_mode+0x260/0x43b
-   start_kernel+0x329/0x3aa
-   i386_start_kernel+0xa7/0xab
-   startup_32_smp+0x164/0x168
-  ---[ end trace e15ccf6b9f356833 ]---
-
-Let's work around this by disregarding the memory attributes table
-altogether on i386, which does not result in a loss of functionality
-or protection, given that we never consumed the contents.
-
-Fixes: 3a6b6c6fb23667fa ("efi: Make EFI_MEMORY_ATTRIBUTES_TABLE ... ")
-Tested-by: Arvind Sankar <nivedita@alum.mit.edu>
-Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Link: https://lore.kernel.org/r/20200304165917.5893-1-ardb@kernel.org
-Link: https://lore.kernel.org/r/20200308080859.21568-21-ardb@kernel.org
+Fixes: 2733fb0d0699 ("cpufreq: imx6q: read OCOTP through nvmem for imx6ul/imx6ull")
+Signed-off-by: Peng Fan <peng.fan@nxp.com>
+Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/firmware/efi/efi.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/cpufreq/imx6q-cpufreq.c | 9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/firmware/efi/efi.c b/drivers/firmware/efi/efi.c
-index 21ea99f651134..77cb95f70ed66 100644
---- a/drivers/firmware/efi/efi.c
-+++ b/drivers/firmware/efi/efi.c
-@@ -570,7 +570,7 @@ int __init efi_config_parse_tables(void *config_tables, int count, int sz,
- 		}
+diff --git a/drivers/cpufreq/imx6q-cpufreq.c b/drivers/cpufreq/imx6q-cpufreq.c
+index 1fcbbd53a48a2..edef3399c9794 100644
+--- a/drivers/cpufreq/imx6q-cpufreq.c
++++ b/drivers/cpufreq/imx6q-cpufreq.c
+@@ -381,23 +381,24 @@ static int imx6q_cpufreq_probe(struct platform_device *pdev)
+ 		goto put_reg;
  	}
  
--	if (efi_enabled(EFI_MEMMAP))
-+	if (!IS_ENABLED(CONFIG_X86_32) && efi_enabled(EFI_MEMMAP))
- 		efi_memattr_init();
++	/* Because we have added the OPPs here, we must free them */
++	free_opp = true;
++
+ 	if (of_machine_is_compatible("fsl,imx6ul") ||
+ 	    of_machine_is_compatible("fsl,imx6ull")) {
+ 		ret = imx6ul_opp_check_speed_grading(cpu_dev);
+ 		if (ret) {
+ 			if (ret == -EPROBE_DEFER)
+-				goto put_node;
++				goto out_free_opp;
  
- 	efi_tpm_eventlog_init();
+ 			dev_err(cpu_dev, "failed to read ocotp: %d\n",
+ 				ret);
+-			goto put_node;
++			goto out_free_opp;
+ 		}
+ 	} else {
+ 		imx6q_opp_check_speed_grading(cpu_dev);
+ 	}
+ 
+-	/* Because we have added the OPPs here, we must free them */
+-	free_opp = true;
+ 	num = dev_pm_opp_get_opp_count(cpu_dev);
+ 	if (num < 0) {
+ 		ret = num;
 -- 
 2.20.1
 
