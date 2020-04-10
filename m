@@ -2,86 +2,109 @@ Return-Path: <SRS0=VV4q=52=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2C6DC2BB55
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 07:19:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4123C2BB85
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 07:26:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9790520692
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 07:19:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8570D20753
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 07:26:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726263AbgDJHTL (ORCPT
+        id S1726173AbgDJH0v (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Apr 2020 03:19:11 -0400
-Received: from mail-il1-f200.google.com ([209.85.166.200]:48114 "EHLO
-        mail-il1-f200.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725893AbgDJHTK (ORCPT
+        Fri, 10 Apr 2020 03:26:51 -0400
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:35783 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725776AbgDJH0u (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Apr 2020 03:19:10 -0400
-Received: by mail-il1-f200.google.com with SMTP id a15so1504202ild.14
-        for <linux-kernel@vger.kernel.org>; Fri, 10 Apr 2020 00:19:09 -0700 (PDT)
+        Fri, 10 Apr 2020 03:26:50 -0400
+Received: by mail-ot1-f68.google.com with SMTP id v2so1132327oto.2;
+        Fri, 10 Apr 2020 00:26:50 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=AWCYTsHSW0yJ17/5HMEeHipQ6Is1Ho9NfuX7dL3ko0A=;
-        b=MNkxwtiKXPW4G2YI+75pvYaYKjM0FK/Sz9DpelxuCfEpy6D1KXhcqdMYTfRXbb87h5
-         I5moGtssNZ7La2eM4FWS3bzjqa9LAZE6UHfiDqRdh7ZVPNK5ptWw3ui9TqrSR1jKgrL3
-         HG8dSBwdYpwHLs7QUtiHhlYuHH6/zs0SqLTb2cIA1OlHPIKzUp4xwESYVoPZfn0tbMYH
-         diQTOT2h4SBVqmPQSwAiPce8Am9IKrFV69MMPxwCbkdusBkq1VFna20MxWkhgVuPXl0f
-         EosGkoXmNFVReCZPkPwEnV5XHTqu9h0lZxkqbdn3ZokKi5lGb65EiPwP1NQo0M+Gi8Lm
-         eD1g==
-X-Gm-Message-State: AGi0PubZtNwWrJQ2eKrDfyNZfkmksRABNtK1Or5Mh4CptM0j9hnuVIAq
-        0p14yU2eLyTbekHLbZkfcZxGEt2m8abHmNwpydOfwE4XYVw0
-X-Google-Smtp-Source: APiQypKpG4lnPBoibieMDt1bo8p1Tm+qQf3i1FZDphmqCl2Dhkk+D4B0g79fTYP8iCKKNW7/6xMHdA1piCHWHWmiijbFBCL257Lt
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=wGqUDkMyUDGl7VVhXa8WG/REtqhU4iY/2ocjn64gPfM=;
+        b=BMQrUUhqdlYPjlEmvICjtVVt7Sb8NynK1VcgdrW+rHu1wVmasxhERdfiiKkiGjBLvG
+         p/tTMgDRG7A/6TroNlZzYq0H+H8wYAtiEDpoHhLLrkUFgsNfmlAD21Cv44UIny0gaMVV
+         /dNYf1L92DEy9bStiatfuaMp4XTpPn0WytEayZ+57dyN/KYkTAQ6WJ6gzgkVt8uoKajT
+         bY/uoly4ygrDJmUBR2U0B1QzeVH8Jp2+THePo7TWa1e9JC6Qo4z2EVBokXeUnb3148PG
+         IIAcUVN0H7nkwsYSyD7RcurOYiWQtReoeG6+1upnVoasRm35SqBJFbSFZFK3zHvx3Vfa
+         vDxQ==
+X-Gm-Message-State: AGi0Puadhc72Zm2QTvsWlaOFnMZtinIIrzPv/jEb0+Lbu1iS4cJaWsjc
+        t4ERlzt+7w8ytsURPCCDleo03JZ/8zTgGxMEswE=
+X-Google-Smtp-Source: APiQypLr/sjrnpwB9pQixWC8DWS5YZ4U3S4bp7uZRbD2EmxXJKK1SVMTlqAkvYa8eK2CJywp2s4W8K/RnCjoFP80X8o=
+X-Received: by 2002:a05:6830:1e0e:: with SMTP id s14mr3054376otr.107.1586503609934;
+ Fri, 10 Apr 2020 00:26:49 -0700 (PDT)
 MIME-Version: 1.0
-X-Received: by 2002:a92:49db:: with SMTP id k88mr3923230ilg.293.1586503149105;
- Fri, 10 Apr 2020 00:19:09 -0700 (PDT)
-Date:   Fri, 10 Apr 2020 00:19:09 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000a3376f05a2ea8c22@google.com>
-Subject: net test error: BUG: mismatching fuzzer/executor system call
- descriptions: ADDR vs ADDR (2)
-From:   syzbot <syzbot+564b4e9875b107591b55@syzkaller.appspotmail.com>
-To:     linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        syzkaller-bugs@googlegroups.com
+References: <20200408202711.1198966-1-arnd@arndb.de> <nycvar.YSQ.7.76.2004081633260.2671@knanqh.ubzr>
+ <CAK8P3a2frDf4BzEpEF0uwPTV2dv6Jve+6N97z1sSuSBUAPJquA@mail.gmail.com>
+ <20200408224224.GD11886@ziepe.ca> <87k12pgifv.fsf@intel.com> <7d9410a4b7d0ef975f7cbd8f0b6762df114df539.camel@mellanox.com>
+In-Reply-To: <7d9410a4b7d0ef975f7cbd8f0b6762df114df539.camel@mellanox.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Fri, 10 Apr 2020 09:26:38 +0200
+Message-ID: <CAMuHMdXnGdxqy6KUnJW69zwmNvHZhSpfXz0PancNrK91SMZp_g@mail.gmail.com>
+Subject: Re: [RFC 0/6] Regressions for "imply" behavior change
+To:     Saeed Mahameed <saeedm@mellanox.com>
+Cc:     "jani.nikula@linux.intel.com" <jani.nikula@linux.intel.com>,
+        "jgg@ziepe.ca" <jgg@ziepe.ca>, "arnd@arndb.de" <arnd@arndb.de>,
+        "narmstrong@baylibre.com" <narmstrong@baylibre.com>,
+        "masahiroy@kernel.org" <masahiroy@kernel.org>,
+        "leon@kernel.org" <leon@kernel.org>,
+        "Laurent.pinchart@ideasonboard.com" 
+        <Laurent.pinchart@ideasonboard.com>,
+        "kieran.bingham+renesas@ideasonboard.com" 
+        <kieran.bingham+renesas@ideasonboard.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "nico@fluxnic.net" <nico@fluxnic.net>,
+        "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
+        "linux-renesas-soc@vger.kernel.org" 
+        <linux-renesas-soc@vger.kernel.org>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "a.hajda@samsung.com" <a.hajda@samsung.com>,
+        "jonas@kwiboo.se" <jonas@kwiboo.se>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "airlied@linux.ie" <airlied@linux.ie>,
+        "jernej.skrabec@siol.net" <jernej.skrabec@siol.net>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+Hi Saeed,
 
-syzbot found the following crash on:
+On Fri, Apr 10, 2020 at 4:41 AM Saeed Mahameed <saeedm@mellanox.com> wrote:
+> On Thu, 2020-04-09 at 11:41 +0300, Jani Nikula wrote:
+> > For example, you have two graphics drivers, one builtin and another
+> > module. Then you have backlight as a module. Using IS_REACHABLE(),
+> > backlight would work in one driver, but not the other. I'm sure there
+> > is
+> > the oddball person who finds this desirable, but the overwhelming
+> > majority would just make the deps such that either you make all of
+> > them
+> > modules, or also require backlight to be builtin.
+>
+> the previous imply semantics handled this by forcing backlight to be
+> built-in, which worked nicely.
 
-HEAD commit:    aa81700c macsec: fix NULL dereference in macsec_upd_offloa..
-git tree:       net
-console output: https://syzkaller.appspot.com/x/log.txt?x=15cff49fe00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=8c1e98458335a7d1
-dashboard link: https://syzkaller.appspot.com/bug?extid=564b4e9875b107591b55
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+Which may have worked fine for backlight, but not for other symbols
+with dependencies that are not always met.
 
-Unfortunately, I don't have any reproducer for this crash yet.
+=> Use "select" to enable something unconditionally, but this can only
+    be used if the target's dependencies are met.
+=> Use "imply" to enable an optional feature conditionally.
 
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+564b4e9875b107591b55@syzkaller.appspotmail.com
+Gr{oetje,eeting}s,
 
-Warning: Permanently added '10.128.1.4' (ECDSA) to the list of known hosts.
-2020/04/06 18:39:32 fuzzer started
-2020/04/06 18:39:33 connecting to host at 10.128.0.26:41717
-2020/04/06 18:39:34 checking machine...
-2020/04/06 18:39:34 checking revisions...
-2020/04/06 18:39:34 BUG: mismatching fuzzer/executor system call descriptions: 670a1e865c0bc7d60e9886acf4666ee3677e346e vs f787d115f9efa49fdd59261850f5c05f43fbe327
-syzkaller login: 
+                        Geert
 
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
