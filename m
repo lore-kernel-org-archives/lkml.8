@@ -7,62 +7,62 @@ X-Spam-Status: No, score=-7.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8261C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 01:07:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 917A6C2BA19
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 01:09:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7C9072074F
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 01:07:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 698FC2074F
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 01:09:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="mvPT5Z9O"
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="lTex8KY3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726595AbgDJBHK (ORCPT
+        id S1726647AbgDJBJB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Apr 2020 21:07:10 -0400
-Received: from mail-pj1-f44.google.com ([209.85.216.44]:51602 "EHLO
-        mail-pj1-f44.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726327AbgDJBHK (ORCPT
+        Thu, 9 Apr 2020 21:09:01 -0400
+Received: from mail-pg1-f180.google.com ([209.85.215.180]:44918 "EHLO
+        mail-pg1-f180.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726327AbgDJBJA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Apr 2020 21:07:10 -0400
-Received: by mail-pj1-f44.google.com with SMTP id n4so215696pjp.1
-        for <linux-kernel@vger.kernel.org>; Thu, 09 Apr 2020 18:07:10 -0700 (PDT)
+        Thu, 9 Apr 2020 21:09:00 -0400
+Received: by mail-pg1-f180.google.com with SMTP id n13so307864pgp.11
+        for <linux-kernel@vger.kernel.org>; Thu, 09 Apr 2020 18:08:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=kernel-dk.20150623.gappssmtp.com; s=20150623;
         h=from:subject:to:cc:message-id:date:user-agent:mime-version
          :content-language:content-transfer-encoding;
-        bh=yLwIvsPpTjuwRCf4XNooqSkmxioNK/7m8vjoArRxTZ0=;
-        b=mvPT5Z9OG0KJgS380cKv5XsSTm+AXs9ZGgk8uPXMUN1HHLD4YNGbWzX0t922f6wxWP
-         txcLIIY0FdopzVyR32en3fegco4CBpzULTJLn6g3n+SLYh/Rl0ty9DLU5COYfAvFNzxf
-         NO702+BSFderQQ1RUykzNdv0bsP5mxYJSFx8O3WIrKbFpt43qw8Wu5GyfShZaGf/hmIg
-         gIDtU+LK0dsOgxiy1i/89ipMFENJl6k/EDq7AZEafVm206R5KJEItifGEu2+YS68vCGJ
-         X9hU3ZooxGul7/E6EA+LC6dAG92Q7AHW9aYGQIhHEHOoGgWIHHiuVYuqooeUoiqDQS0L
-         bIOg==
+        bh=KfeRNbGADcVsLhmDY1KvOUg8WlCqSZouokcF6WhZTMU=;
+        b=lTex8KY33AjDWXhOXsO1vslYWVZ+gPbYc6N+1/ZjxiGto1ITyd0UzcDpLuXrvxPMdn
+         rFLiuRH0wvDfNTKzWnMW6W0/hRlTkrp62O0FS8QUrKy9m/bLJrQdiP0vLBLh31jaur8w
+         W8vhcdvN9MYR/iGEPB79IBuAvRIgLfIaKfz3r55KlnzUUUH7+YcbEG9JSOJwdi9OzrB1
+         7ZBw6pE+vXtGjWjzIl+++2n5h+BDP5IWVTdIMjIe8uF2PNtvrN6AQdOHvzc/qz0u8LgO
+         2qfKJXnuej6IEHlmRwUPPgigVW4fd9YmYv5lkX+o3xglNpvHoAiqvPN39YedZQYbc35Y
+         A0pA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:subject:to:cc:message-id:date:user-agent
          :mime-version:content-language:content-transfer-encoding;
-        bh=yLwIvsPpTjuwRCf4XNooqSkmxioNK/7m8vjoArRxTZ0=;
-        b=r/OwDxVAsTHNEy4Pl4UzXI0CWbq6/kK1GyZsJObdaSLy2WX2UglJVvDuRqqYUbgnqs
-         daQYsvSecFUwLNmkr8dLbYTzIqQF1B4o9gKvhaSsO3zuZl/dq4QxsUkKpujzNGgKLOFc
-         WVMEeVJfnlFs/WQFWekVPsgPM8o0OPI6JOT7RnsziiGb6qQCLLzDAJb3CS83RtvS0Sfw
-         P9e/qeKlosky2hP5uFx4XyiwTYOasvMNb3typcm2fV2KECCfr/bx6LW037K0QEDo5Q8U
-         VTMsNNcPpq92MEM0drLWOfSmMPqNCG7czmTqC/gcTRJh8bD8lChqqQ/rRzUQstw4T7Nk
-         WFLg==
-X-Gm-Message-State: AGi0Publ5bakoXRcBHu6tdI0K4gSwB7HaWRP5/h4gyN25uVLJrNcQ1o2
-        u3n2Y4MYgv+EF6ckzM30YQteL/Yh7QppbA==
-X-Google-Smtp-Source: APiQypLIJ+Dhf59k+8OQPCX2c2q0LPEAUz+EP3lACoNIulH8RC0DwTAhvLMDJp8QNhMafodx+z0omg==
-X-Received: by 2002:a17:90b:1b01:: with SMTP id nu1mr2430864pjb.129.1586480829129;
-        Thu, 09 Apr 2020 18:07:09 -0700 (PDT)
+        bh=KfeRNbGADcVsLhmDY1KvOUg8WlCqSZouokcF6WhZTMU=;
+        b=giW/pLMpM+C2g3wwOj4JLgVfXzDnbKsQotxQYPMruqB4vah1hxGFTao9sqw8wtkktS
+         ZdtapVW05qEWHlfFv+BvLGk/eD8ZewOH5/jfSV1xn9toBNAIaXuFKwC97X3E7tABVB7N
+         3akS+I+/0DGYxZVTJ5wXaVWIUSx2KAvMs6S721Wh4UWuz+oHPLvJRqeN/kVMnVOSYEWE
+         JXqyMZSWDTD345pONVJrhOnyH/54tP/r+mqRR/TBi2GGa3DewlXxqWpikSC0OvoNs5uG
+         iCmSkCEzYvpuM1Uh92uhRteKJU9lYruGBAOzviSw+Lv7PrYRqROGOXcWfVCyGKP2YwFG
+         R2Uw==
+X-Gm-Message-State: AGi0PubezAYYdrA+U4qIISEeaAN290sSYj1vbqUEhWfPvAWAFfUFeSNx
+        wAgXNLbLsHJUD691qYRXVeMARV7e7hmfdA==
+X-Google-Smtp-Source: APiQypLVulUqW1wgrq3Mj+B5fZrkY1FyQ4M65TayaKEINqqBPlMJL64hWNTU6RppcYiLk9VlviRtTA==
+X-Received: by 2002:a63:5955:: with SMTP id j21mr2098029pgm.16.1586480938383;
+        Thu, 09 Apr 2020 18:08:58 -0700 (PDT)
 Received: from ?IPv6:2605:e000:100e:8c61:70f8:a8e1:daca:d677? ([2605:e000:100e:8c61:70f8:a8e1:daca:d677])
-        by smtp.gmail.com with ESMTPSA id c59sm146152pje.10.2020.04.09.18.07.08
+        by smtp.gmail.com with ESMTPSA id t63sm281645pgc.85.2020.04.09.18.08.57
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 09 Apr 2020 18:07:08 -0700 (PDT)
+        Thu, 09 Apr 2020 18:08:57 -0700 (PDT)
 From:   Jens Axboe <axboe@kernel.dk>
-Subject: [GIT PULL] io_uring fixes for 5.7-rc1
+Subject: [GIT PULL] libata fixes for 5.7-rc1
 To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     io-uring <io-uring@vger.kernel.org>,
+Cc:     IDE/ATA development list <linux-ide@vger.kernel.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Message-ID: <9739a06d-728e-1d6b-d511-ad4eefdd19b5@kernel.dk>
-Date:   Thu, 9 Apr 2020 18:07:06 -0700
+Message-ID: <9069bb0a-c338-4516-52d7-99d85aca5297@kernel.dk>
+Date:   Thu, 9 Apr 2020 18:08:55 -0700
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.4.1
 MIME-Version: 1.0
@@ -76,67 +76,38 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 Hi Linus,
 
-Here's a set of fixes that either weren't quite ready for the first, or
-came about from some intensive testing on memcached with 350K+ sockets.
-In particular, this pull request contains:
+A few followup changes/fixes for libata for this merge window.
 
-- Fixes for races or deadlocks around poll handling
+- PMP removal fix (Kai-Heng)
 
-- Don't double account fixed files against RLIMIT_NOFILE
+- Add remapped NVMe device attribute to sysfs (Kai-Heng)
 
-- IORING_OP_OPENAT LFS fix
+- Remove redundant assignment (Colin)
 
-- Poll retry handling (Bijan)
-
-- Missing finish_wait() for SQPOLL (Hillf)
-
-- Cleanup/split of io_kiocb alloc vs ctx references (Pavel)
-
-- Fixed file unregistration and init fixes (Xiaoguang)
-
-- Various little fixes (Xiaoguang, Pavel, Colin)
+- Add yet another Comet Lake ID (Jian-Hong)
 
 Please pull!
 
 
-  git://git.kernel.dk/linux-block.git io_uring-5.7-2020-04-09
+  git://git.kernel.dk/linux-block.git tags/libata-5.7-2020-04-09
 
 
 ----------------------------------------------------------------
-Bijan Mottahedeh (1):
-      io_uring: process requests completed with -EAGAIN on poll list
-
 Colin Ian King (1):
-      io_uring: remove redundant variable pointer nxt and io_wq_assign_next call
+      ata: ahci-imx: remove redundant assignment to ret
 
-Hillf Danton (1):
-      io_uring: add missing finish_wait() in io_sq_thread()
+Jian-Hong Pan (1):
+      ahci: Add Intel Comet Lake PCH RAID PCI ID
 
-Jens Axboe (6):
-      io_uring: retry poll if we got woken with non-matching mask
-      io_uring: grab task reference for poll requests
-      io_uring: use io-wq manager as backup task if task is exiting
-      io_uring: remove bogus RLIMIT_NOFILE check in file registration
-      io_uring: ensure openat sets O_LARGEFILE if needed
-      io_uring: punt final io_ring_ctx wait-and-free to workqueue
+Kai-Heng Feng (2):
+      libata: Return correct status in sata_pmp_eh_recover_pm() when ATA_DFLAG_DETACH is set
+      ata: ahci: Add sysfs attribute to show remapped NVMe device count
 
-Pavel Begunkov (6):
-      io_uring: fix ctx refcounting in io_submit_sqes()
-      io_uring: simplify io_get_sqring
-      io_uring: alloc req only after getting sqe
-      io_uring: remove req init from io_get_req()
-      io_uring: don't read user-shared sqe flags twice
-      io_uring: fix fs cleanup on cqe overflow
-
-Xiaoguang Wang (3):
-      io_uring: refactor file register/unregister/update handling
-      io_uring: initialize fixed_file_data lock
-      io_uring: do not always copy iovec in io_req_map_rw()
-
- fs/io-wq.c    |  12 ++
- fs/io-wq.h    |   2 +
- fs/io_uring.c | 428 ++++++++++++++++++++++++++++++++++------------------------
- 3 files changed, 269 insertions(+), 173 deletions(-)
+ drivers/ata/ahci.c       | 29 +++++++++++++++++++++++++----
+ drivers/ata/ahci.h       |  1 +
+ drivers/ata/ahci_imx.c   |  2 +-
+ drivers/ata/libata-pmp.c |  1 +
+ 4 files changed, 28 insertions(+), 5 deletions(-)
 
 -- 
 Jens Axboe
