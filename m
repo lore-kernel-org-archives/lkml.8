@@ -4,48 +4,55 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5006CC2BB1D
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 03:56:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82F87C2D0EC
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 03:56:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 28D81214D8
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 03:56:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 575472063A
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 03:56:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586490964;
-	bh=QSSGrsx/jMeT0/9tWBypb7x/p6plGQ0B+Kwg+JKNt14=;
+	s=default; t=1586490966;
+	bh=MDjQnBTuj10hq8TT9O84r+Mc5y0Rp29mQWABAjHG7nc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2ZcdzCTdUjPSvucCyr5w9CwZfto+4bXk4XF6zDmwhmD4ZNx++7rTgKwh7H9rtb5rI
-	 xDL09USKMkSaegjjhzUkWdDxiiU6hw7Q4nqpo1osuO2pd091f4vyTItcm6+y1BPZCg
-	 NIEY+MKVG+C77G7pbPpYHFt35nRC10kS11ftFXBk=
+	b=x/pjFabPioA5jrqkrDv5p4yUilHSFEFiJOlDZ9TE25wCBtAa2jsIQHS+Nn6avSpi7
+	 xhLEV+szMRu5OLRJxdau/ZPKYHlqn4JxwOgGiGsIv5aoMw9N4QuT8i1pLtzud2iC+K
+	 maU0fEnsOPzU/51DfK5WhPqF4MjInxjARv6UY5wk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727940AbgDJDtq (ORCPT
+        id S1728667AbgDJD4E (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Apr 2020 23:49:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33756 "EHLO mail.kernel.org"
+        Thu, 9 Apr 2020 23:56:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33906 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726594AbgDJDti (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Apr 2020 23:49:38 -0400
+        id S1728652AbgDJDtr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Apr 2020 23:49:47 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0FA4F20A8B;
-        Fri, 10 Apr 2020 03:49:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 59D2A20B1F;
+        Fri, 10 Apr 2020 03:49:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586490578;
-        bh=QSSGrsx/jMeT0/9tWBypb7x/p6plGQ0B+Kwg+JKNt14=;
+        s=default; t=1586490587;
+        bh=MDjQnBTuj10hq8TT9O84r+Mc5y0Rp29mQWABAjHG7nc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=j5Mg+sdj5WeIr/yoAxRy6NLmXJTzgcDUOpySA+6dLLPISu20yIjwdsAME52JBDNZu
-         YM3tD5BDbcAfJ5wndjv0L4tS+vJ6maYp4FmPksXmEk1H9zMF51TlKvlJtWvT6O53Rb
-         l9ujmCbzb7yOm0MyDEfoLqkem3dzUHKp3MN14wmw=
+        b=kBvgMQSH2+W1ChuC+QIigd79K9f75zAv5ibcG5Fv46LlZjheymAjLFatb8xP67RWT
+         AJMjSrLzHhBzc6BJvENf1j28IZgg+2pqt7HE62FZe4yLKU8wYCDZvhER4XlkVmhA8p
+         cXzpwVU6H3F1Bo+QYFsD4pJ+YO4u9N5A2QDUchwM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     John Garry <john.garry@huawei.com>, Jens Axboe <axboe@kernel.dk>,
-        Sasha Levin <sashal@kernel.org>, linux-ide@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 24/46] libata: Remove extra scsi_host_put() in ata_scsi_add_hosts()
-Date:   Thu,  9 Apr 2020 23:48:47 -0400
-Message-Id: <20200410034909.8922-24-sashal@kernel.org>
+Cc:     Bart Van Assche <bvanassche@acm.org>,
+        syzbot+d44e1b26ce5c3e77458d@syzkaller.appspotmail.com,
+        Ming Lei <ming.lei@redhat.com>,
+        Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>,
+        Johannes Thumshirn <jth@kernel.org>,
+        Hannes Reinecke <hare@suse.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>,
+        linux-block@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 32/46] blk-mq: Keep set->nr_hw_queues and set->map[].nr_queues in sync
+Date:   Thu,  9 Apr 2020 23:48:55 -0400
+Message-Id: <20200410034909.8922-32-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200410034909.8922-1-sashal@kernel.org>
 References: <20200410034909.8922-1-sashal@kernel.org>
@@ -58,156 +65,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: John Garry <john.garry@huawei.com>
+From: Bart Van Assche <bvanassche@acm.org>
 
-[ Upstream commit 1d72f7aec3595249dbb83291ccac041a2d676c57 ]
+[ Upstream commit 6e66b49392419f3fe134e1be583323ef75da1e4b ]
 
-If the call to scsi_add_host_with_dma() in ata_scsi_add_hosts() fails,
-then we may get use-after-free KASAN warns:
+blk_mq_map_queues() and multiple .map_queues() implementations expect that
+set->map[HCTX_TYPE_DEFAULT].nr_queues is set to the number of hardware
+queues. Hence set .nr_queues before calling these functions. This patch
+fixes the following kernel warning:
 
-==================================================================
-BUG: KASAN: use-after-free in kobject_put+0x24/0x180
-Read of size 1 at addr ffff0026b8c80364 by task swapper/0/1
-CPU: 1 PID: 1 Comm: swapper/0 Tainted: G        W         5.6.0-rc3-00004-g5a71b206ea82-dirty #1765
-Hardware name: Huawei TaiShan 200 (Model 2280)/BC82AMDD, BIOS 2280-V2 CS V3.B160.01 02/24/2020
-Call trace:
-dump_backtrace+0x0/0x298
-show_stack+0x14/0x20
-dump_stack+0x118/0x190
-print_address_description.isra.9+0x6c/0x3b8
-__kasan_report+0x134/0x23c
-kasan_report+0xc/0x18
-__asan_load1+0x5c/0x68
-kobject_put+0x24/0x180
-put_device+0x10/0x20
-scsi_host_put+0x10/0x18
-ata_devres_release+0x74/0xb0
-release_nodes+0x2d0/0x470
-devres_release_all+0x50/0x78
-really_probe+0x2d4/0x560
-driver_probe_device+0x7c/0x148
-device_driver_attach+0x94/0xa0
-__driver_attach+0xa8/0x110
-bus_for_each_dev+0xe8/0x158
-driver_attach+0x30/0x40
-bus_add_driver+0x220/0x2e0
-driver_register+0xbc/0x1d0
-__pci_register_driver+0xbc/0xd0
-ahci_pci_driver_init+0x20/0x28
-do_one_initcall+0xf0/0x608
-kernel_init_freeable+0x31c/0x384
-kernel_init+0x10/0x118
-ret_from_fork+0x10/0x18
+WARNING: CPU: 0 PID: 2501 at include/linux/cpumask.h:137
+Call Trace:
+ blk_mq_run_hw_queue+0x19d/0x350 block/blk-mq.c:1508
+ blk_mq_run_hw_queues+0x112/0x1a0 block/blk-mq.c:1525
+ blk_mq_requeue_work+0x502/0x780 block/blk-mq.c:775
+ process_one_work+0x9af/0x1740 kernel/workqueue.c:2269
+ worker_thread+0x98/0xe40 kernel/workqueue.c:2415
+ kthread+0x361/0x430 kernel/kthread.c:255
 
-Allocated by task 5:
-save_stack+0x28/0xc8
-__kasan_kmalloc.isra.8+0xbc/0xd8
-kasan_kmalloc+0xc/0x18
-__kmalloc+0x1a8/0x280
-scsi_host_alloc+0x44/0x678
-ata_scsi_add_hosts+0x74/0x268
-ata_host_register+0x228/0x488
-ahci_host_activate+0x1c4/0x2a8
-ahci_init_one+0xd18/0x1298
-local_pci_probe+0x74/0xf0
-work_for_cpu_fn+0x2c/0x48
-process_one_work+0x488/0xc08
-worker_thread+0x330/0x5d0
-kthread+0x1c8/0x1d0
-ret_from_fork+0x10/0x18
-
-Freed by task 5:
-save_stack+0x28/0xc8
-__kasan_slab_free+0x118/0x180
-kasan_slab_free+0x10/0x18
-slab_free_freelist_hook+0xa4/0x1a0
-kfree+0xd4/0x3a0
-scsi_host_dev_release+0x100/0x148
-device_release+0x7c/0xe0
-kobject_put+0xb0/0x180
-put_device+0x10/0x20
-scsi_host_put+0x10/0x18
-ata_scsi_add_hosts+0x210/0x268
-ata_host_register+0x228/0x488
-ahci_host_activate+0x1c4/0x2a8
-ahci_init_one+0xd18/0x1298
-local_pci_probe+0x74/0xf0
-work_for_cpu_fn+0x2c/0x48
-process_one_work+0x488/0xc08
-worker_thread+0x330/0x5d0
-kthread+0x1c8/0x1d0
-ret_from_fork+0x10/0x18
-
-There is also refcount issue, as well:
-WARNING: CPU: 1 PID: 1 at lib/refcount.c:28 refcount_warn_saturate+0xf8/0x170
-
-The issue is that we make an erroneous extra call to scsi_host_put()
-for that host:
-
-So in ahci_init_one()->ata_host_alloc_pinfo()->ata_host_alloc(), we setup
-a device release method - ata_devres_release() - which intends to release
-the SCSI hosts:
-
-static void ata_devres_release(struct device *gendev, void *res)
-{
-	...
-	for (i = 0; i < host->n_ports; i++) {
-		struct ata_port *ap = host->ports[i];
-
-		if (!ap)
-			continue;
-
-		if (ap->scsi_host)
-			scsi_host_put(ap->scsi_host);
-
-	}
-	...
-}
-
-However in the ata_scsi_add_hosts() error path, we also call
-scsi_host_put() for the SCSI hosts.
-
-Fix by removing the the scsi_host_put() calls in ata_scsi_add_hosts() and
-leave this to ata_devres_release().
-
-Fixes: f31871951b38 ("libata: separate out ata_host_alloc() and ata_host_register()")
-Signed-off-by: John Garry <john.garry@huawei.com>
+Fixes: ed76e329d74a ("blk-mq: abstract out queue map") # v5.0
+Reported-by: syzbot+d44e1b26ce5c3e77458d@syzkaller.appspotmail.com
+Signed-off-by: Bart Van Assche <bvanassche@acm.org>
+Reviewed-by: Ming Lei <ming.lei@redhat.com>
+Reviewed-by: Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>
+Cc: Johannes Thumshirn <jth@kernel.org>
+Cc: Hannes Reinecke <hare@suse.com>
+Cc: Ming Lei <ming.lei@redhat.com>
+Cc: Christoph Hellwig <hch@infradead.org>
 Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/ata/libata-scsi.c | 9 +++------
- 1 file changed, 3 insertions(+), 6 deletions(-)
+ block/blk-mq.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/drivers/ata/libata-scsi.c b/drivers/ata/libata-scsi.c
-index 58e09ffe8b9cb..5af34a3201ed2 100644
---- a/drivers/ata/libata-scsi.c
-+++ b/drivers/ata/libata-scsi.c
-@@ -4553,22 +4553,19 @@ int ata_scsi_add_hosts(struct ata_host *host, struct scsi_host_template *sht)
- 		 */
- 		shost->max_host_blocked = 1;
+diff --git a/block/blk-mq.c b/block/blk-mq.c
+index 3c1abab1fdf52..a8c1a45cedde0 100644
+--- a/block/blk-mq.c
++++ b/block/blk-mq.c
+@@ -3007,6 +3007,14 @@ static int blk_mq_alloc_rq_maps(struct blk_mq_tag_set *set)
  
--		rc = scsi_add_host_with_dma(ap->scsi_host,
--						&ap->tdev, ap->host->dev);
-+		rc = scsi_add_host_with_dma(shost, &ap->tdev, ap->host->dev);
- 		if (rc)
--			goto err_add;
-+			goto err_alloc;
- 	}
+ static int blk_mq_update_queue_map(struct blk_mq_tag_set *set)
+ {
++	/*
++	 * blk_mq_map_queues() and multiple .map_queues() implementations
++	 * expect that set->map[HCTX_TYPE_DEFAULT].nr_queues is set to the
++	 * number of hardware queues.
++	 */
++	if (set->nr_maps == 1)
++		set->map[HCTX_TYPE_DEFAULT].nr_queues = set->nr_hw_queues;
++
+ 	if (set->ops->map_queues && !is_kdump_kernel()) {
+ 		int i;
  
- 	return 0;
- 
-- err_add:
--	scsi_host_put(host->ports[i]->scsi_host);
-  err_alloc:
- 	while (--i >= 0) {
- 		struct Scsi_Host *shost = host->ports[i]->scsi_host;
- 
-+		/* scsi_host_put() is in ata_devres_release() */
- 		scsi_remove_host(shost);
--		scsi_host_put(shost);
- 	}
- 	return rc;
- }
 -- 
 2.20.1
 
