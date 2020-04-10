@@ -2,121 +2,108 @@ Return-Path: <SRS0=VV4q=52=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DF10C2BB85
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 20:13:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D719C2D0EC
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 20:15:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 85BBE20692
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 20:13:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2562820936
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 20:15:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1586549706;
+	bh=yo+6fYCu0++Y9+eNTxSwJiBUzd4rBhPyaXFFLb325J0=;
+	h=From:To:Subject:Date:List-ID:From;
+	b=z8S/xGEb6+P1yNV8+OfxbLD3yWmyIG8XQZ9oord06z0PEVsSE1NU+T+1TI2INJU10
+	 xkipTlTfyMUSzHIemKR0fX9ZcGb62sRkfayXZMFeMHc/xupwtyndwjwnjeh8B2RJ7p
+	 Vgy9F0dAwNpKAO9yCNiE+rqG3PLLwhcUn9DiAwNc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726687AbgDJUN4 (ORCPT
+        id S1726699AbgDJUPE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Apr 2020 16:13:56 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:35484 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726669AbgDJUNz (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Apr 2020 16:13:55 -0400
-Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03AK67oH035954
-        for <linux-kernel@vger.kernel.org>; Fri, 10 Apr 2020 16:13:55 -0400
-Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 309212bu75-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Fri, 10 Apr 2020 16:13:54 -0400
-Received: from localhost
-        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <nayna@linux.ibm.com>;
-        Fri, 10 Apr 2020 21:13:33 +0100
-Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
-        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Fri, 10 Apr 2020 21:13:30 +0100
-Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
-        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 03AKDhSw54132968
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 10 Apr 2020 20:13:43 GMT
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 18D02AE04D;
-        Fri, 10 Apr 2020 20:13:43 +0000 (GMT)
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id D51E4AE045;
-        Fri, 10 Apr 2020 20:13:41 +0000 (GMT)
-Received: from swastik.ibm.com (unknown [9.160.47.14])
-        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Fri, 10 Apr 2020 20:13:41 +0000 (GMT)
-From:   Nayna Jain <nayna@linux.ibm.com>
-To:     linux-integrity@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-Cc:     linux-kernel@vger.kernel.org, Mimi Zohar <zohar@linux.ibm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Nayna Jain <nayna@linux.ibm.com>
-Subject: [PATCH] powerpc/ima: fix secure boot rules in ima arch policy
-Date:   Fri, 10 Apr 2020 16:13:38 -0400
-X-Mailer: git-send-email 1.8.3.1
-X-TM-AS-GCONF: 00
-x-cbid: 20041020-0012-0000-0000-000003A22E08
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 20041020-0013-0000-0000-000021DF5C38
-Message-Id: <1586549618-6106-1-git-send-email-nayna@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
- definitions=2020-04-10_08:2020-04-09,2020-04-10 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 spamscore=0
- mlxscore=0 impostorscore=0 suspectscore=0 adultscore=0 malwarescore=0
- lowpriorityscore=0 phishscore=0 priorityscore=1501 mlxlogscore=999
- bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2004100144
+        Fri, 10 Apr 2020 16:15:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35564 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726203AbgDJUPE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Apr 2020 16:15:04 -0400
+Received: from localhost.localdomain (c-98-220-238-81.hsd1.il.comcast.net [98.220.238.81])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9694A20732;
+        Fri, 10 Apr 2020 20:15:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1586549704;
+        bh=yo+6fYCu0++Y9+eNTxSwJiBUzd4rBhPyaXFFLb325J0=;
+        h=From:To:Subject:Date:From;
+        b=bmJPmlxGsoRCIPO9DE5a6GNFyOGl/qxnFT8YIhHg7V+Wu1Y09N72dEwtv1rUyi++i
+         fGp7baLEn7NgVNQT/oAB6L+kftFQ/zu/vvBxRduRl+kXnmEA+cCsm47C4IWqxk/GCd
+         +MXV8i6F4STug8eiOq+X7PL6EOK7GfFGl9iBsu0Y=
+From:   zanussi@kernel.org
+To:     LKML <linux-kernel@vger.kernel.org>,
+        linux-rt-users <linux-rt-users@vger.kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Carsten Emde <C.Emde@osadl.org>,
+        John Kacur <jkacur@redhat.com>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Daniel Wagner <wagi@monom.org>,
+        Tom Zanussi <zanussi@kernel.org>
+Subject: [PATCH RT 0/2] Linux v4.14.175-rt81-rc1
+Date:   Fri, 10 Apr 2020 15:15:00 -0500
+Message-Id: <cover.1586549682.git.zanussi@kernel.org>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-To prevent verifying the kernel module appended signature twice
-(finit_module), once by the module_sig_check() and again by IMA, powerpc
-IMA secure boot rules define an IMA architecture specific policy rule
-only if CONFIG_MODULE_SIG_FORCE is not enabled. This, unfortunately, does
-not take into account the ability of enabling "sig_enforce" on the boot
-command line (module.sig_enforce=1).
+From: Tom Zanussi <zanussi@kernel.org>
 
-This patch fixes secure boot policy rules to be based on CONFIG_MODULE_SIG
-instead.
+Dear RT Folks,
 
-Fixes: 4238fad366a6 ("powerpc/ima: Add support to initialize ima policy rules")
-Signed-off-by: Nayna Jain <nayna@linux.ibm.com>
----
- arch/powerpc/kernel/ima_arch.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+This is the RT stable review cycle of patch 4.14.175-rt81-rc1.
 
-diff --git a/arch/powerpc/kernel/ima_arch.c b/arch/powerpc/kernel/ima_arch.c
-index e34116255ced..957abd592075 100644
---- a/arch/powerpc/kernel/ima_arch.c
-+++ b/arch/powerpc/kernel/ima_arch.c
-@@ -19,12 +19,12 @@ bool arch_ima_get_secureboot(void)
-  * to be stored as an xattr or as an appended signature.
-  *
-  * To avoid duplicate signature verification as much as possible, the IMA
-- * policy rule for module appraisal is added only if CONFIG_MODULE_SIG_FORCE
-+ * policy rule for module appraisal is added only if CONFIG_MODULE_SIG
-  * is not enabled.
-  */
- static const char *const secure_rules[] = {
- 	"appraise func=KEXEC_KERNEL_CHECK appraise_flag=check_blacklist appraise_type=imasig|modsig",
--#ifndef CONFIG_MODULE_SIG_FORCE
-+#ifndef CONFIG_MODULE_SIG
- 	"appraise func=MODULE_CHECK appraise_flag=check_blacklist appraise_type=imasig|modsig",
- #endif
- 	NULL
-@@ -50,7 +50,7 @@ static const char *const secure_and_trusted_rules[] = {
- 	"measure func=KEXEC_KERNEL_CHECK template=ima-modsig",
- 	"measure func=MODULE_CHECK template=ima-modsig",
- 	"appraise func=KEXEC_KERNEL_CHECK appraise_flag=check_blacklist appraise_type=imasig|modsig",
--#ifndef CONFIG_MODULE_SIG_FORCE
-+#ifndef CONFIG_MODULE_SIG
- 	"appraise func=MODULE_CHECK appraise_flag=check_blacklist appraise_type=imasig|modsig",
- #endif
- 	NULL
+Please scream at me if I messed something up. Please test the patches
+too.
+
+The -rc release will be uploaded to kernel.org and will be deleted
+when the final release is out. This is just a review release (or
+release candidate).
+
+The pre-releases will not be pushed to the git repository, only the
+final release is.
+
+If all goes well, this patch will be converted to the next main
+release on 2020-04-17.
+
+To build 4.14.175-rt81-rc1 directly, the following patches should be applied:
+
+  https://www.kernel.org/pub/linux/kernel/v4.x/linux-4.14.tar.xz
+
+  https://www.kernel.org/pub/linux/kernel/v4.x/patch-4.14.175.xz
+
+  https://www.kernel.org/pub/linux/kernel/projects/rt/4.14/patch-4.14.175-rt81-rc1.patch.xz
+
+You can also build from 4.14.175-rt80 by applying the incremental patch:
+
+  https://www.kernel.org/pub/linux/kernel/projects/rt/4.14/incr/patch-4.14.175-rt80-rt81-rc1.patch.xz
+
+
+Enjoy,
+
+-- Tom
+
+
+Steven Rostedt (VMware) (1):
+  irq_work: Fix checking of IRQ_WORK_LAZY flag set on non PREEMPT_RT
+
+Tom Zanussi (1):
+  Linux 4.14.175-rt81-rc1
+
+ kernel/irq_work.c | 12 +++++++++---
+ localversion-rt   |  2 +-
+ 2 files changed, 10 insertions(+), 4 deletions(-)
+
 -- 
-2.25.1
+2.17.1
 
