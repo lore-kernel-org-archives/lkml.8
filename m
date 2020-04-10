@@ -2,148 +2,74 @@ Return-Path: <SRS0=VV4q=52=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58161C2BB85
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 11:12:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2B15C2BA2B
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 11:15:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 253A3208E4
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 11:12:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=luisgerhorst.de header.i=@luisgerhorst.de header.b="qIrPPVsb";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="W9Z+DKjh"
+	by mail.kernel.org (Postfix) with ESMTP id 72C0E2084D
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 11:15:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726181AbgDJLMo (ORCPT
+        id S1726145AbgDJLPD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Apr 2020 07:12:44 -0400
-Received: from new2-smtp.messagingengine.com ([66.111.4.224]:44013 "EHLO
-        new2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725897AbgDJLMo (ORCPT
+        Fri, 10 Apr 2020 07:15:03 -0400
+Received: from smtp.domeneshop.no ([194.63.252.55]:34741 "EHLO
+        smtp.domeneshop.no" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725913AbgDJLPC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Apr 2020 07:12:44 -0400
-Received: from compute7.internal (compute7.nyi.internal [10.202.2.47])
-        by mailnew.nyi.internal (Postfix) with ESMTP id D0C895808B7;
-        Fri, 10 Apr 2020 07:12:42 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute7.internal (MEProxy); Fri, 10 Apr 2020 07:12:42 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=luisgerhorst.de;
-         h=references:from:to:cc:subject:in-reply-to:date:message-id
-        :mime-version:content-type; s=mesmtp; bh=1XCTRzA4r6t+aW/YmemVZF7
-        K9mMd/HGoO3EIq2+dA90=; b=qIrPPVsbiwtiPCG914yDDwQbRVGekh653wn5tFg
-        3OXdht3GDey5g1KxO9bQPKJBaZjXrLahuzs7uwHaDn1hha4c8tqr9U6h/enmMfmq
-        axrVJWAkDeXqxnz5S/s0WX+23JNsmfvxG76MaCu5yoZ/10otB8aw6fJY8I0RJhAL
-        UKCE=
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=1XCTRz
-        A4r6t+aW/YmemVZF7K9mMd/HGoO3EIq2+dA90=; b=W9Z+DKjhWSrSdyvjUXQWV0
-        Ht2PBs1Ju8IyieMn6zSkkE0Ul7b4auQXJoekqKJj2FzKU9A+TGuBoFK1SeMMbtzb
-        8oMu2rI+B4LzmSkiLSgoieRYIg+B8B0W2HubEz8VgtrlMAXtwwV8LwPnsaNl7ENf
-        Hnjisw0YwgMkCsP9gyq9jSxPZWrZ9Ts2HPNybosCeGMKZtC5AH9R3c92CP8iSrSH
-        gHS5Yf6zBUWVLj0ZbW7UWf0jF0G8RyBbIZtZRddWT5nYI7Y5ITHyhHNZMoDcYH6U
-        Tdhl71Pqk4drxYS2/9BHw9I+ui37vmZMPZYDw+naFkx8jWWMgcUvkw4fFivbpqgw
-        ==
-X-ME-Sender: <xms:o1SQXtej93cVqf0lMq7BjSBnI80YT6WTnh_bM3bafOgyIiQWYNJntw>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedrvddvgdefjecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpehffgfhvffujgffkfggtgesthdtredttdertdenucfhrhhomhepnfhuihhsucfi
-    vghrhhhorhhsthcuoehlihhnuhigqdhkvghrnhgvlheslhhuihhsghgvrhhhohhrshhtrd
-    guvgeqnecukfhppeelvddruddujedrudefiedrkeeknecuvehluhhsthgvrhfuihiivgep
-    tdenucfrrghrrghmpehmrghilhhfrhhomheplhhinhhugidqkhgvrhhnvghlsehluhhish
-    hgvghrhhhorhhsthdruggv
-X-ME-Proxy: <xmx:o1SQXsJqEEpdAVlBBNOrPjECiypCvsioWJAkkkqB7OV1k6G1cJ037Q>
-    <xmx:o1SQXm3GbM5jjQeq5Fw3vlWvqURZgDtwUCKygupmqpZPjSWL5fF5KQ>
-    <xmx:o1SQXlY0lL6nr4XO4VhiScv6QkQfeTRa26Q3bZiNQCcnAlci-1NBaA>
-    <xmx:qlSQXgnwI9ZSlZ3EtewA6ucmkah78uuNHQkFyCGi-HgqJe16QWXm_g>
-Received: from luis-debian.fastmail.com (unknown [92.117.136.88])
-        by mail.messagingengine.com (Postfix) with ESMTPA id DA33E3280060;
-        Fri, 10 Apr 2020 07:12:29 -0400 (EDT)
-References: <20200410084210.24932-1-lukasz.luba@arm.com> <20200410084210.24932-5-lukasz.luba@arm.com>
-User-agent: mu4e 1.0; emacs 26.1
-From:   Luis Gerhorst <linux-kernel@luisgerhorst.de>
-To:     Lukasz Luba <lukasz.luba@arm.com>
-Cc:     linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        dri-devel@lists.freedesktop.org, linux-omap@vger.kernel.org,
-        linux-mediatek@lists.infradead.org, linux-arm-msm@vger.kernel.org,
-        linux-imx@nxp.com, Dietmar.Eggemann@arm.com, cw00.choi@samsung.com,
-        b.zolnierkie@samsung.com, rjw@rjwysocki.net, sudeep.holla@arm.com,
-        viresh.kumar@linaro.org, nm@ti.com, sboyd@kernel.org,
-        rui.zhang@intel.com, amit.kucheria@verdurent.com,
-        daniel.lezcano@linaro.org, mingo@redhat.com, peterz@infradead.org,
-        juri.lelli@redhat.com, vincent.guittot@linaro.org,
-        rostedt@goodmis.org, qperret@google.com, bsegall@google.com,
-        mgorman@suse.de, shawnguo@kernel.org, s.hauer@pengutronix.de,
-        festevam@gmail.com, kernel@pengutronix.de, khilman@kernel.org,
-        agross@kernel.org, bjorn.andersson@linaro.org, robh@kernel.org,
-        matthias.bgg@gmail.com, steven.price@arm.com,
-        tomeu.vizoso@collabora.com, alyssa.rosenzweig@collabora.com,
-        airlied@linux.ie, daniel@ffwll.ch, liviu.dudau@arm.com,
-        lorenzo.pieralisi@arm.com, patrick.bellasi@matbug.net,
-        orjan.eide@arm.com, rdunlap@infradead.org, mka@chromium.org
-Subject: Re: [PATCH v6 04/10] PM / EM: add support for other devices than CPUs in Energy Model
-In-reply-to: <20200410084210.24932-5-lukasz.luba@arm.com>
-Date:   Fri, 10 Apr 2020 13:12:28 +0200
-Message-ID: <87ftdboaqr.fsf@luis-debian.luis-debian-domain>
+        Fri, 10 Apr 2020 07:15:02 -0400
+Received: from [2a02:fe0:c700:2:781f:1a82:338:d2b7] (port=49454)
+        by smtp.domeneshop.no with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.92)
+        (envelope-from <Sami_Lands_Media@samilands.eu>)
+        id 1jMrcj-0001ys-4O
+        for linux-kernel@vger.kernel.org; Fri, 10 Apr 2020 13:15:01 +0200
+To:     linux-kernel@vger.kernel.org
+From:   Sami Lands Media <Sami_Lands_Media@samilands.eu>
+Subject: Fair Pay: Some afterthoughts on Ubuntu
+Message-ID: <bd5def08-4194-5c98-bf0e-e2966bc556bc@samilands.eu>
+Date:   Fri, 10 Apr 2020 13:14:42 +0200
+User-Agent: Mozilla/5.0 (Windows NT 6.1; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-Content-Type: text/plain; format=flowed
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Ubuntu Karmic Koala was a very influental release. It seemed Linux was 
+going to happen on the desktop. But with incremental releases, it seemed 
+politics went wrong here aswell. Reminiscent of Amiga.
 
-Lukasz Luba writes:
+Mir, not Mir.
+Loading scripts, that obscured things, such as kernel compilation.
+Linux Audio generally suits more a tracker idea, rather than "pro" 
+sequencers, and from the things we see on KvR, that is a good way to go. 
+A compact fileformat, including the pop DSP, is really better. And many 
+were much more famous here, than any KvR artist (who?).
 
-> +/**
-> + * em_dev_unregister_perf_domain() - Unregister Energy Model 
-> (EM) for a device
-> + * @dev		: Device for which the EM is registered
-> + *
-> + * Try to unregister the EM for the specified device (it checks 
-> current
-> + * reference counter). The EM for CPUs will not be freed.
-> + */
-> +void em_dev_unregister_perf_domain(struct device *dev)
-> +{
-> +	struct em_device *em_dev, *tmp;
-> +
-> +	if (IS_ERR_OR_NULL(dev))
-> +		return;
-> +
-> +	/* We don't support freeing CPU structures in hotplug */
-> +	if (_is_cpu_device(dev)) {
-> +		dev_dbg_once(dev, "EM: the structures are not going to be 
-> removed\n");
-> +		return;
-> +	}
-> +
-> +	mutex_lock(&em_pd_mutex);
-> +
-> +	if (list_empty(&em_pd_dev_list)) {
-> +		mutex_unlock(&em_pd_mutex);
-> +		return;
-> +	}
-> +
-> +	list_for_each_entry_safe(em_dev, tmp, &em_pd_dev_list, 
-> em_dev_list) {
-> +		if (em_dev->dev == dev) {
-> +			kref_put(&em_dev->kref, _em_release);
-> +			break;
-> +		}
-> +	}
-> +
-> +	mutex_unlock(&em_pd_mutex);
-> +}
-> +EXPORT_SYMBOL_GPL(em_dev_unregister_perf_domain);
+So really things just needs tightening up, and intergration with digital 
+euro, or similar, and a good related Linux distro may finally conquer 
+the desktop. As Apple also have used BSD. And Apple & Pear cider, being 
+mesopotamian influence viking fuel to support.
 
-Ok, so em_dev_unregister_perf_domain() does not support the CPU 
-device
-and a subsequent em_register_perf_domain() will fail with EEXIST.
+And the satanic element seems the worst. Mesopotamian gods are out 
+though the drinking habits still are in.
 
-Is there a way to unregister/change the CPU's energy model during
-runtime without restarting the whole system?
+As a thought experiment I constructed a pseudoidol for "satan", "Xin". 
+That states just this, and has properties of an optimal linux distribution.
+
+For those who like that side of things. Satan will never be right 
+ofcourse, so I am hoping for something better in my research.
+
+Serene Greetings.
+Ywe.
+The Fair Pay Initiative.
+youtube.com/channel/UCR3gmLVjHS5A702wo4bol_Q
+
+
+
