@@ -7,49 +7,51 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42BAAC2D0EC
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 03:55:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40D68C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 03:55:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1725A2063A
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 03:55:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1A93F20936
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 03:55:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586490906;
-	bh=7Ql8jN5IVFBcmKMaya88oj+bZnJkVi7b4wev68WvYQ8=;
+	s=default; t=1586490910;
+	bh=TjFmNk6idyfIeYrGysZ/y2DkV1ouIOtNI5z9UXMVK0U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0Z5O/MeANY2zD+jfewcFWlm2XioHlGY7UuKiFlNVn8N7PcMljiH/y2/TTl9JbSTZq
-	 etB2rzDMymYPlMEgvbCHkr9eaoW7gi8enc4gizbZR/MMaJQ8mu/Q0VwwjwgMH53JjS
-	 PlCfyMdEtstPU0n4Dpz1mzTd2ksDVJorFHF/fWe4=
+	b=z+EIPYBZ6agQO2Ku9d72BHqKNG5oBE3I5n+j2FFR2oLEJqLHA55CL8JYM5873wV8y
+	 QiVes7+doey+BxR7M7/DDJUwKjTOBPVHN63vZTWd/2lH4iYBJLw/4ZACMFhjbHQphO
+	 7acQsf+arfsUEKVt0KQK53XcyZWIrEyPygDfmwvE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728815AbgDJDuK (ORCPT
+        id S1729037AbgDJDzG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Apr 2020 23:50:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34374 "EHLO mail.kernel.org"
+        Thu, 9 Apr 2020 23:55:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34596 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728736AbgDJDuA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Apr 2020 23:50:00 -0400
+        id S1727018AbgDJDuK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Apr 2020 23:50:10 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 58ECB214D8;
-        Fri, 10 Apr 2020 03:49:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DC0A221655;
+        Fri, 10 Apr 2020 03:50:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586490600;
-        bh=7Ql8jN5IVFBcmKMaya88oj+bZnJkVi7b4wev68WvYQ8=;
+        s=default; t=1586490609;
+        bh=TjFmNk6idyfIeYrGysZ/y2DkV1ouIOtNI5z9UXMVK0U=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2jhv8CHnSt3jbzK39eW/EOabm7dF4OmAsp3QR37nq07zFkH8PitsLUZvti4ZtAdhI
-         U1g87Y49A5nvt0CLLsVarz5z1Tbqbq/94LxJHBvPzlSSG22BCvTQDqaTTLC0F9z6Sf
-         mpzxyLGcALF6ZD+r10NZt9MZBDsQ8sRwtV06E+Ao=
+        b=WizPvJQiMB0nfby//3jWCPrmgAeu51f0k99MZlbCd3pqm9FiaJa7iFjOZJfUw463f
+         RN64+CZf92oU7BGCugHQmz0WJ/ZQnNyeD2qiJOlKy1711YrKDvTDWIQORctzDIlilW
+         owP//5ndLwU1BDmOtKJHhsu5AgkISrDYTu9h9Rns=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Qu Wenruo <wqu@suse.com>, Jeff Mahoney <jeffm@suse.com>,
-        David Sterba <dsterba@suse.com>,
-        Sasha Levin <sashal@kernel.org>, linux-btrfs@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 43/46] btrfs: qgroup: ensure qgroup_rescan_running is only set when the worker is at least queued
-Date:   Thu,  9 Apr 2020 23:49:06 -0400
-Message-Id: <20200410034909.8922-43-sashal@kernel.org>
+Cc:     James Morse <james.morse@arm.com>,
+        Liguang Zhang <zhangliguang@linux.alibaba.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH AUTOSEL 4.19 03/32] firmware: arm_sdei: fix double-lock on hibernate with shared events
+Date:   Thu,  9 Apr 2020 23:49:36 -0400
+Message-Id: <20200410035005.9371-3-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200410034909.8922-1-sashal@kernel.org>
-References: <20200410034909.8922-1-sashal@kernel.org>
+In-Reply-To: <20200410035005.9371-1-sashal@kernel.org>
+References: <20200410035005.9371-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -59,138 +61,116 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Qu Wenruo <wqu@suse.com>
+From: James Morse <james.morse@arm.com>
 
-[ Upstream commit d61acbbf54c612ea9bf67eed609494cda0857b3a ]
+[ Upstream commit 6ded0b61cf638bf9f8efe60ab8ba23db60ea9763 ]
 
-[BUG]
-There are some reports about btrfs wait forever to unmount itself, with
-the following call trace:
+SDEI has private events that must be registered on each CPU. When
+CPUs come and go they must re-register and re-enable their private
+events. Each event has flags to indicate whether this should happen
+to protect against an event being registered on a CPU coming online,
+while all the others are unregistering the event.
 
-  INFO: task umount:4631 blocked for more than 491 seconds.
-        Tainted: G               X  5.3.8-2-default #1
-  "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
-  umount          D    0  4631   3337 0x00000000
-  Call Trace:
-  ([<00000000174adf7a>] __schedule+0x342/0x748)
-   [<00000000174ae3ca>] schedule+0x4a/0xd8
-   [<00000000174b1f08>] schedule_timeout+0x218/0x420
-   [<00000000174af10c>] wait_for_common+0x104/0x1d8
-   [<000003ff804d6994>] btrfs_qgroup_wait_for_completion+0x84/0xb0 [btrfs]
-   [<000003ff8044a616>] close_ctree+0x4e/0x380 [btrfs]
-   [<0000000016fa3136>] generic_shutdown_super+0x8e/0x158
-   [<0000000016fa34d6>] kill_anon_super+0x26/0x40
-   [<000003ff8041ba88>] btrfs_kill_super+0x28/0xc8 [btrfs]
-   [<0000000016fa39f8>] deactivate_locked_super+0x68/0x98
-   [<0000000016fcb198>] cleanup_mnt+0xc0/0x140
-   [<0000000016d6a846>] task_work_run+0xc6/0x110
-   [<0000000016d04f76>] do_notify_resume+0xae/0xb8
-   [<00000000174b30ae>] system_call+0xe2/0x2c8
+These flags are protected by the sdei_list_lock spinlock, because
+the cpuhp callbacks can't take the mutex.
 
-[CAUSE]
-The problem happens when we have called qgroup_rescan_init(), but
-not queued the worker. It can be caused mostly by error handling.
+Hibernate needs to unregister all events, but keep the in-memory
+re-register and re-enable as they are. sdei_unregister_shared()
+takes the spinlock to walk the list, then calls _sdei_event_unregister()
+on each shared event. _sdei_event_unregister() tries to take the
+same spinlock to update re-register and re-enable. This doesn't go
+so well.
 
-	Qgroup ioctl thread		|	Unmount thread
-----------------------------------------+-----------------------------------
-					|
-btrfs_qgroup_rescan()			|
-|- qgroup_rescan_init()			|
-|  |- qgroup_rescan_running = true;	|
-|					|
-|- trans = btrfs_join_transaction()	|
-|  Some error happened			|
-|					|
-|- btrfs_qgroup_rescan() returns error	|
-   But qgroup_rescan_running == true;	|
-					| close_ctree()
-					| |- btrfs_qgroup_wait_for_completion()
-					|    |- running == true;
-					|    |- wait_for_completion();
+Push the re-register and re-enable updates out to their callers.
+sdei_unregister_shared() doesn't want these values updated, so
+doesn't need to do anything.
 
-btrfs_qgroup_rescan_worker is never queued, thus no one is going to wake
-up close_ctree() and we get a deadlock.
+This also fixes shared events getting lost over hibernate as this
+path made them look unregistered.
 
-All involved qgroup_rescan_init() callers are:
-
-- btrfs_qgroup_rescan()
-  The example above. It's possible to trigger the deadlock when error
-  happened.
-
-- btrfs_quota_enable()
-  Not possible. Just after qgroup_rescan_init() we queue the work.
-
-- btrfs_read_qgroup_config()
-  It's possible to trigger the deadlock. It only init the work, the
-  work queueing happens in btrfs_qgroup_rescan_resume().
-  Thus if error happened in between, deadlock is possible.
-
-We shouldn't set fs_info->qgroup_rescan_running just in
-qgroup_rescan_init(), as at that stage we haven't yet queued qgroup
-rescan worker to run.
-
-[FIX]
-Set qgroup_rescan_running before queueing the work, so that we ensure
-the rescan work is queued when we wait for it.
-
-Fixes: 8d9eddad1946 ("Btrfs: fix qgroup rescan worker initialization")
-Signed-off-by: Jeff Mahoney <jeffm@suse.com>
-[ Change subject and cause analyse, use a smaller fix ]
-Signed-off-by: Qu Wenruo <wqu@suse.com>
-Reviewed-by: David Sterba <dsterba@suse.com>
-Signed-off-by: David Sterba <dsterba@suse.com>
+Fixes: da351827240e ("firmware: arm_sdei: Add support for CPU and system power states")
+Reported-by: Liguang Zhang <zhangliguang@linux.alibaba.com>
+Signed-off-by: James Morse <james.morse@arm.com>
+Signed-off-by: Catalin Marinas <catalin.marinas@arm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/btrfs/qgroup.c | 11 +++++++++--
- 1 file changed, 9 insertions(+), 2 deletions(-)
+ drivers/firmware/arm_sdei.c | 32 +++++++++++++++-----------------
+ 1 file changed, 15 insertions(+), 17 deletions(-)
 
-diff --git a/fs/btrfs/qgroup.c b/fs/btrfs/qgroup.c
-index 286c8c11c8d32..590defdf88609 100644
---- a/fs/btrfs/qgroup.c
-+++ b/fs/btrfs/qgroup.c
-@@ -1030,6 +1030,7 @@ int btrfs_quota_enable(struct btrfs_fs_info *fs_info)
- 	ret = qgroup_rescan_init(fs_info, 0, 1);
- 	if (!ret) {
- 	        qgroup_rescan_zero_tracking(fs_info);
-+		fs_info->qgroup_rescan_running = true;
- 	        btrfs_queue_work(fs_info->qgroup_rescan_workers,
- 	                         &fs_info->qgroup_rescan_work);
- 	}
-@@ -3276,7 +3277,6 @@ qgroup_rescan_init(struct btrfs_fs_info *fs_info, u64 progress_objectid,
- 		sizeof(fs_info->qgroup_rescan_progress));
- 	fs_info->qgroup_rescan_progress.objectid = progress_objectid;
- 	init_completion(&fs_info->qgroup_rescan_completion);
--	fs_info->qgroup_rescan_running = true;
- 
- 	spin_unlock(&fs_info->qgroup_lock);
- 	mutex_unlock(&fs_info->qgroup_rescan_lock);
-@@ -3341,8 +3341,11 @@ btrfs_qgroup_rescan(struct btrfs_fs_info *fs_info)
- 
- 	qgroup_rescan_zero_tracking(fs_info);
- 
-+	mutex_lock(&fs_info->qgroup_rescan_lock);
-+	fs_info->qgroup_rescan_running = true;
- 	btrfs_queue_work(fs_info->qgroup_rescan_workers,
- 			 &fs_info->qgroup_rescan_work);
-+	mutex_unlock(&fs_info->qgroup_rescan_lock);
- 
- 	return 0;
- }
-@@ -3378,9 +3381,13 @@ int btrfs_qgroup_wait_for_completion(struct btrfs_fs_info *fs_info,
- void
- btrfs_qgroup_rescan_resume(struct btrfs_fs_info *fs_info)
+diff --git a/drivers/firmware/arm_sdei.c b/drivers/firmware/arm_sdei.c
+index c64c7da738297..05b528c7ed8fd 100644
+--- a/drivers/firmware/arm_sdei.c
++++ b/drivers/firmware/arm_sdei.c
+@@ -489,11 +489,6 @@ static int _sdei_event_unregister(struct sdei_event *event)
  {
--	if (fs_info->qgroup_flags & BTRFS_QGROUP_STATUS_FLAG_RESCAN)
-+	if (fs_info->qgroup_flags & BTRFS_QGROUP_STATUS_FLAG_RESCAN) {
-+		mutex_lock(&fs_info->qgroup_rescan_lock);
-+		fs_info->qgroup_rescan_running = true;
- 		btrfs_queue_work(fs_info->qgroup_rescan_workers,
- 				 &fs_info->qgroup_rescan_work);
-+		mutex_unlock(&fs_info->qgroup_rescan_lock);
-+	}
- }
+ 	lockdep_assert_held(&sdei_events_lock);
  
- /*
+-	spin_lock(&sdei_list_lock);
+-	event->reregister = false;
+-	event->reenable = false;
+-	spin_unlock(&sdei_list_lock);
+-
+ 	if (event->type == SDEI_EVENT_TYPE_SHARED)
+ 		return sdei_api_event_unregister(event->event_num);
+ 
+@@ -516,6 +511,11 @@ int sdei_event_unregister(u32 event_num)
+ 			break;
+ 		}
+ 
++		spin_lock(&sdei_list_lock);
++		event->reregister = false;
++		event->reenable = false;
++		spin_unlock(&sdei_list_lock);
++
+ 		err = _sdei_event_unregister(event);
+ 		if (err)
+ 			break;
+@@ -583,26 +583,15 @@ static int _sdei_event_register(struct sdei_event *event)
+ 
+ 	lockdep_assert_held(&sdei_events_lock);
+ 
+-	spin_lock(&sdei_list_lock);
+-	event->reregister = true;
+-	spin_unlock(&sdei_list_lock);
+-
+ 	if (event->type == SDEI_EVENT_TYPE_SHARED)
+ 		return sdei_api_event_register(event->event_num,
+ 					       sdei_entry_point,
+ 					       event->registered,
+ 					       SDEI_EVENT_REGISTER_RM_ANY, 0);
+ 
+-
+ 	err = sdei_do_cross_call(_local_event_register, event);
+-	if (err) {
+-		spin_lock(&sdei_list_lock);
+-		event->reregister = false;
+-		event->reenable = false;
+-		spin_unlock(&sdei_list_lock);
+-
++	if (err)
+ 		sdei_do_cross_call(_local_event_unregister, event);
+-	}
+ 
+ 	return err;
+ }
+@@ -630,8 +619,17 @@ int sdei_event_register(u32 event_num, sdei_event_callback *cb, void *arg)
+ 			break;
+ 		}
+ 
++		spin_lock(&sdei_list_lock);
++		event->reregister = true;
++		spin_unlock(&sdei_list_lock);
++
+ 		err = _sdei_event_register(event);
+ 		if (err) {
++			spin_lock(&sdei_list_lock);
++			event->reregister = false;
++			event->reenable = false;
++			spin_unlock(&sdei_list_lock);
++
+ 			sdei_event_destroy(event);
+ 			pr_warn("Failed to register event %u: %d\n", event_num,
+ 				err);
 -- 
 2.20.1
 
