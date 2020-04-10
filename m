@@ -4,51 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C992DC2D0EC
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 03:59:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA050C2D0EC
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 04:00:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9CD0720936
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 03:59:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B19B020936
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 04:00:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586491198;
-	bh=AL4Duf7m5IvoTTD4d2+gCaDhn7bLAW1D0iwX6syCWJw=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=cFgWNItsn2hI500ysFbGH3oBsXUMx0Et0/DgDWhXDMUPorFOv5RZAZWVgqRvMw3Gh
-	 pYNOys2LLt67LNyLltwI421bhjPVnlT7uDjpny6/cIAqyp03skpdJH7qFeH5KT+hgT
-	 wcmIhKvbyFVXE5VHgFpLx8GfIkSC+gOa/VWGOKVA=
+	s=default; t=1586491201;
+	bh=zMBCe1mPTUuYlis/A+ipA59U/N5RLtlx/E7hzsEDSls=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=pcl52ieFrHh+x9p+gYsi2/vAsk4ZubjsEvcSJK8r8qXdlRB+dCT7Z+Lf6AmGeE+xf
+	 JMuWg74zZBpupp+Ce7ZBQ7Gp1vhLVrHSeTUuyrc4Z3a1S/wu143p1BYmqX5z9Pgaun
+	 SmkHxbSlZ3npwv0NMQzHkdBjhJD9aQefKc0dT9ZY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728056AbgDJDsJ (ORCPT
+        id S1726648AbgDJD77 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Apr 2020 23:48:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59146 "EHLO mail.kernel.org"
+        Thu, 9 Apr 2020 23:59:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59438 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727966AbgDJDsC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Apr 2020 23:48:02 -0400
+        id S1728057AbgDJDsK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Apr 2020 23:48:10 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 72E2820936;
-        Fri, 10 Apr 2020 03:48:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B252F2145D;
+        Fri, 10 Apr 2020 03:48:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586490482;
-        bh=AL4Duf7m5IvoTTD4d2+gCaDhn7bLAW1D0iwX6syCWJw=;
-        h=From:To:Cc:Subject:Date:From;
-        b=mu0zhZRCFYC8XA5tuxEFEI4YHxlT/fO8t1EOSb9i/y3LRQOxt36vLtZSi72o4Ctmt
-         HThkZFfP48KnPx8TOkpjC4Rj0DeMoZQOvarVHODApH7oxYdimyH/NDk5yXXlwarGOd
-         oHSl0sUayDB20F+Zf77CDOQmYA3jr5kC1nUF8xQA=
+        s=default; t=1586490490;
+        bh=zMBCe1mPTUuYlis/A+ipA59U/N5RLtlx/E7hzsEDSls=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=0GoGjbdAVIgxKX+PKf/JcAfRnvG1I6J4omUXbWIRGAGhWOL95M4eAPtd75jwa9Lse
+         ep+8xrfscB+l/KwVXealqFPO1elkGTwFWS3uZN1x2/xIaGfZhPs99Mg0G87zFIsD2r
+         8lZflzPEL/b7FDkWSpQtDBgBmJ97LGjJZUonZ0aM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Christoph Niedermaier <cniedermaier@dh-electronics.com>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Sasha Levin <sashal@kernel.org>, linux-pm@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.5 01/56] cpufreq: imx6q: Fixes unwanted cpu overclocking on i.MX6ULL
-Date:   Thu,  9 Apr 2020 23:47:05 -0400
-Message-Id: <20200410034800.8381-1-sashal@kernel.org>
+Cc:     Saravana Kannan <saravanak@google.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.5 08/56] driver core: Reevaluate dev->links.need_for_probe as suppliers are added
+Date:   Thu,  9 Apr 2020 23:47:12 -0400
+Message-Id: <20200410034800.8381-8-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200410034800.8381-1-sashal@kernel.org>
+References: <20200410034800.8381-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -58,41 +59,68 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christoph Niedermaier <cniedermaier@dh-electronics.com>
+From: Saravana Kannan <saravanak@google.com>
 
-[ Upstream commit 36eb7dc1bd42fe5f850329c893768ff89b696fba ]
+[ Upstream commit 1745d299af5b373abad08fa29bff0d31dc6aff21 ]
 
-imx6ul_opp_check_speed_grading is called for both i.MX6UL and i.MX6ULL.
-Since the i.MX6ULL was introduced to a separate ocotp compatible node
-later, it is possible that the i.MX6ULL has also dtbs with
-"fsl,imx6ull-ocotp". On a system without nvmem-cell speed grade a
-missing check on this node causes a driver fail without considering
-the cpu speed grade.
+A previous patch 03324507e66c ("driver core: Allow
+fwnode_operations.add_links to differentiate errors") forgot to update
+all call sites to fwnode_operations.add_links. This patch fixes that.
 
-This patch prevents unwanted cpu overclocking on i.MX6ULL with compatible
-node "fsl,imx6ull-ocotp" in old dtbs without nvmem-cell speed grade.
+Legend:
+-> Denotes RHS is an optional/potential supplier for LHS
+=> Denotes RHS is a mandatory supplier for LHS
 
-Fixes: 2733fb0d0699 ("cpufreq: imx6q: read OCOTP through nvmem for imx6ul/imx6ull")
-Signed-off-by: Christoph Niedermaier <cniedermaier@dh-electronics.com>
-Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
+Example:
+
+Device A => Device X
+Device A -> Device Y
+
+Before this patch:
+1. Device A is added.
+2. Device A is marked as waiting for mandatory suppliers
+3. Device X is added
+4. Device A is left marked as waiting for mandatory suppliers
+
+Step 4 is wrong since all mandatory suppliers of Device A have been
+added.
+
+After this patch:
+1. Device A is added.
+2. Device A is marked as waiting for mandatory suppliers
+3. Device X is added
+4. Device A is no longer considered as waiting for mandatory suppliers
+
+This is the correct behavior.
+
+Fixes: 03324507e66c ("driver core: Allow fwnode_operations.add_links to differentiate errors")
+Signed-off-by: Saravana Kannan <saravanak@google.com>
+Link: https://lore.kernel.org/r/20200222014038.180923-2-saravanak@google.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/cpufreq/imx6q-cpufreq.c | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/base/core.c | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/cpufreq/imx6q-cpufreq.c b/drivers/cpufreq/imx6q-cpufreq.c
-index 648a09a1778a3..1fcbbd53a48a2 100644
---- a/drivers/cpufreq/imx6q-cpufreq.c
-+++ b/drivers/cpufreq/imx6q-cpufreq.c
-@@ -280,6 +280,9 @@ static int imx6ul_opp_check_speed_grading(struct device *dev)
- 		void __iomem *base;
+diff --git a/drivers/base/core.c b/drivers/base/core.c
+index dbb0f9130f42d..d32a3aefff32f 100644
+--- a/drivers/base/core.c
++++ b/drivers/base/core.c
+@@ -523,9 +523,13 @@ static void device_link_add_missing_supplier_links(void)
  
- 		np = of_find_compatible_node(NULL, NULL, "fsl,imx6ul-ocotp");
-+		if (!np)
-+			np = of_find_compatible_node(NULL, NULL,
-+						     "fsl,imx6ull-ocotp");
- 		if (!np)
- 			return -ENOENT;
+ 	mutex_lock(&wfs_lock);
+ 	list_for_each_entry_safe(dev, tmp, &wait_for_suppliers,
+-				 links.needs_suppliers)
+-		if (!fwnode_call_int_op(dev->fwnode, add_links, dev))
++				 links.needs_suppliers) {
++		int ret = fwnode_call_int_op(dev->fwnode, add_links, dev);
++		if (!ret)
+ 			list_del_init(&dev->links.needs_suppliers);
++		else if (ret != -ENODEV)
++			dev->links.need_for_probe = false;
++	}
+ 	mutex_unlock(&wfs_lock);
+ }
  
 -- 
 2.20.1
