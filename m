@@ -2,364 +2,215 @@ Return-Path: <SRS0=VV4q=52=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46A52C2BBC7
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 12:45:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69CA8C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 12:52:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 20CDF2082D
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 12:45:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 37E6E20769
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 12:52:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="u0zd2s0a"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726626AbgDJMpW (ORCPT
+        id S1726594AbgDJMwe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Apr 2020 08:45:22 -0400
-Received: from honk.sigxcpu.org ([24.134.29.49]:46556 "EHLO honk.sigxcpu.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725930AbgDJMpW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Apr 2020 08:45:22 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by honk.sigxcpu.org (Postfix) with ESMTP id 5F938FB03;
-        Fri, 10 Apr 2020 14:45:19 +0200 (CEST)
-X-Virus-Scanned: Debian amavisd-new at honk.sigxcpu.org
-Received: from honk.sigxcpu.org ([127.0.0.1])
-        by localhost (honk.sigxcpu.org [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id MpJ0efOYkIFJ; Fri, 10 Apr 2020 14:45:16 +0200 (CEST)
-Received: by bogon.sigxcpu.org (Postfix, from userid 1000)
-        id 5573540601; Fri, 10 Apr 2020 14:45:16 +0200 (CEST)
-Date:   Fri, 10 Apr 2020 14:45:16 +0200
-From:   Guido =?iso-8859-1?Q?G=FCnther?= <agx@sigxcpu.org>
-To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
-        Lee Jones <lee.jones@linaro.org>,
-        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Robert Chiras <robert.chiras@nxp.com>,
-        Sam Ravnborg <sam@ravnborg.org>, Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v11 1/2] dt-bindings: display/bridge: Add binding for NWL
- mipi dsi host controller
-Message-ID: <20200410124516.GA27532@bogon.m.sigxcpu.org>
-References: <cover.1586427783.git.agx@sigxcpu.org>
- <147ffc1e4dee3a623e5dca25d84565d386a34112.1586427783.git.agx@sigxcpu.org>
- <20200410112342.GB4751@pendragon.ideasonboard.com>
+        Fri, 10 Apr 2020 08:52:34 -0400
+Received: from mail26.static.mailgun.info ([104.130.122.26]:34843 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726082AbgDJMwd (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Apr 2020 08:52:33 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1586523153; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: References: Cc: To: From:
+ Subject: Sender; bh=M6+dhOPemioJOqKTwLQya2KFKVQnF9Zhjj6/C0JA9QQ=; b=u0zd2s0akRV5Dmu1pkpf6Ynmj1jES7tKxEwzg3wBThIlq2atXirJdFzd6WN1EdmiJsu96EU5
+ 9788ie6aRrs7ybPrvLIdnD8C+VpaAdb/whTwpPjYYJGWDV28iGm1OMh49zsHaPu3bNkJ23iI
+ V+4hg//73gJTMJ7BEDU8XTJ6Iwo=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e906c0d.7fb1fd3b24c8-smtp-out-n05;
+ Fri, 10 Apr 2020 12:52:29 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id F2E9DC433BA; Fri, 10 Apr 2020 12:52:28 +0000 (UTC)
+Received: from [192.168.0.10] (unknown [183.83.138.47])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: akashast)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id E6E2EC433F2;
+        Fri, 10 Apr 2020 12:52:24 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org E6E2EC433F2
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=akashast@codeaurora.org
+Subject: Re: [PATCH 02/21] tty: serial: qcom_geni_serial: Use OPP API to set
+ clk/perf state
+From:   Akash Asthana <akashast@codeaurora.org>
+To:     Rajendra Nayak <rnayak@codeaurora.org>, viresh.kumar@linaro.org,
+        sboyd@kernel.org, bjorn.andersson@linaro.org, agross@kernel.org
+Cc:     linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org
+References: <1586353607-32222-1-git-send-email-rnayak@codeaurora.org>
+ <1586353607-32222-3-git-send-email-rnayak@codeaurora.org>
+ <5eb6c05e-893a-ef8a-c53e-a775b2f837d1@codeaurora.org>
+Message-ID: <575b7c8f-6b77-3da2-824e-3f128efeb466@codeaurora.org>
+Date:   Fri, 10 Apr 2020 18:22:11 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
+In-Reply-To: <5eb6c05e-893a-ef8a-c53e-a775b2f837d1@codeaurora.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200410112342.GB4751@pendragon.ideasonboard.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Laurent,
-On Fri, Apr 10, 2020 at 02:23:42PM +0300, Laurent Pinchart wrote:
-> Hi Guido,
-> 
-> Thank you for the patch.
-> 
-> On Thu, Apr 09, 2020 at 12:42:01PM +0200, Guido G�nther wrote:
-> > The Northwest Logic MIPI DSI IP core can be found in NXPs i.MX8 SoCs.
-> > 
-> > Signed-off-by: Guido G�nther <agx@sigxcpu.org>
-> > Tested-by: Robert Chiras <robert.chiras@nxp.com>
-> > Reviewed-by: Rob Herring <robh@kernel.org>
-> > Acked-by: Sam Ravnborg <sam@ravnborg.org>
-> > Reviewed-by: Fabio Estevam <festevam@gmail.com>
-> > ---
-> >  .../bindings/display/bridge/nwl-dsi.yaml      | 226 ++++++++++++++++++
-> >  1 file changed, 226 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/display/bridge/nwl-dsi.yaml
-> > 
-> > diff --git a/Documentation/devicetree/bindings/display/bridge/nwl-dsi.yaml b/Documentation/devicetree/bindings/display/bridge/nwl-dsi.yaml
-> > new file mode 100644
-> > index 000000000000..8aff2d68fc33
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/display/bridge/nwl-dsi.yaml
-> > @@ -0,0 +1,226 @@
-> > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> > +%YAML 1.2
-> > +---
-> > +$id: http://devicetree.org/schemas/display/bridge/nwl-dsi.yaml#
-> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > +
-> > +title: Northwest Logic MIPI-DSI controller on i.MX SoCs
-> > +
-> > +maintainers:
-> > +  - Guido G�nther <agx@sigxcpu.org>
-> > +  - Robert Chiras <robert.chiras@nxp.com>
-> > +
-> > +description: |
-> > +  NWL MIPI-DSI host controller found on i.MX8 platforms. This is a dsi bridge for
-> > +  the SOCs NWL MIPI-DSI host controller.
-> > +
-> > +properties:
-> > +  compatible:
-> > +    const: fsl,imx8mq-nwl-dsi
-> > +
-> > +  reg:
-> > +    maxItems: 1
-> > +
-> > +  interrupts:
-> > +    maxItems: 1
-> > +
-> > +  '#address-cells':
-> > +    const: 1
-> > +
-> > +  '#size-cells':
-> > +    const: 0
-> > +
-> > +  clocks:
-> > +    items:
-> > +      - description: DSI core clock
-> > +      - description: RX_ESC clock (used in escape mode)
-> > +      - description: TX_ESC clock (used in escape mode)
-> > +      - description: PHY_REF clock
-> > +      - description: LCDIF clock
-> > +
-> > +  clock-names:
-> > +    items:
-> > +      - const: core
-> > +      - const: rx_esc
-> > +      - const: tx_esc
-> > +      - const: phy_ref
-> > +      - const: lcdif
-> > +
-> > +  mux-controls:
-> > +    description:
-> > +      mux controller node to use for operating the input mux
-> > +
-> > +  phys:
-> > +    maxItems: 1
-> > +    description:
-> > +      A phandle to the phy module representing the DPHY
-> > +
-> > +  phy-names:
-> > +    items:
-> > +      - const: dphy
-> > +
-> > +  power-domains:
-> > +    maxItems: 1
-> > +
-> > +  resets:
-> > +    items:
-> > +      - description: dsi byte reset line
-> > +      - description: dsi dpi reset line
-> > +      - description: dsi esc reset line
-> > +      - description: dsi pclk reset line
-> > +
-> > +  reset-names:
-> > +    items:
-> > +      - const: byte
-> > +      - const: dpi
-> > +      - const: esc
-> > +      - const: pclk
-> > +
-> > +  ports:
-> > +    type: object
-> > +    description:
-> > +      A node containing DSI input & output port nodes with endpoint
-> > +      definitions as documented in
-> > +      Documentation/devicetree/bindings/graph.txt.
-> > +    properties:
-> > +      port@0:
-> > +        type: object
-> > +        description:
-> > +          Input port node to receive pixel data from the
-> > +          display controller. Exactly one endpoint must be
-> > +          specified.
-> > +        properties:
-> > +          '#address-cells':
-> > +            const: 1
-> > +
-> > +          '#size-cells':
-> > +            const: 0
-> > +
-> > +          endpoint@0:
-> > +            description: sub-node describing the input from LCDIF
-> > +            type: object
-> > +
-> > +          endpoint@1:
-> > +            description: sub-node describing the input from DCSS
-> > +            type: object
-> 
-> This models the two inputs to the IP core, that are connected to a mux
-> internally, controlled through mux-controls, right ? Why is a single
-> endpoint supported then, if there are two connections at the hardware
-> level, and why is this using endpoints instead of ports as there are
-> really two input ports ?
+Hi Rajendra,
 
-That came out of
+On 4/10/2020 12:26 PM, Akash Asthana wrote:
+> Hi Rajendra,
+>
+> On 4/8/2020 7:16 PM, Rajendra Nayak wrote:
+>> geni serial needs to express a perforamnce state requirement on CX
+> *performance
+>> depending on the frequency of the clock rates. Use OPP table from
+>> DT to register with OPP framework and use dev_pm_opp_set_rate() to
+>> set the clk/perf state.
+>>
+>> Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
+>> Cc: Akash Asthana <akashast@codeaurora.org>
+>> Cc: linux-serial@vger.kernel.org
+>> ---
+>>   drivers/tty/serial/qcom_geni_serial.c | 20 +++++++++++++++-----
+>>   include/linux/qcom-geni-se.h          |  2 ++
+>>   2 files changed, 17 insertions(+), 5 deletions(-)
+>>
+>> diff --git a/drivers/tty/serial/qcom_geni_serial.c 
+>> b/drivers/tty/serial/qcom_geni_serial.c
+>> index 6119090..754eaf6 100644
+>> --- a/drivers/tty/serial/qcom_geni_serial.c
+>> +++ b/drivers/tty/serial/qcom_geni_serial.c
+>> @@ -9,6 +9,7 @@
+>>   #include <linux/module.h>
+>>   #include <linux/of.h>
+>>   #include <linux/of_device.h>
+>> +#include <linux/pm_opp.h>
+>>   #include <linux/platform_device.h>
+>>   #include <linux/pm_runtime.h>
+>>   #include <linux/pm_wakeirq.h>
+>> @@ -961,7 +962,7 @@ static void qcom_geni_serial_set_termios(struct 
+>> uart_port *uport,
+>>           goto out_restart_rx;
+>>         uport->uartclk = clk_rate;
+>> -    clk_set_rate(port->se.clk, clk_rate);
+>> +    dev_pm_opp_set_rate(uport->dev, clk_rate);
+>
+> Is this change not intended for backward compatibility? If I don't 
+> pick DT change for Geni drivers,  dev_pm_opp_set_rate is failing and 
+> causing functionality issues.
 
-https://lore.kernel.org/linux-arm-kernel/c86b7ca2-7799-eafd-c380-e4b551520837@samsung.com/
+oops Sorry, 1st patch is intended for backward compatibility. Which I 
+missed earlier.
 
-# If the ip has separate lines for DCSS and LCDIF you should distinguish
-# by port number. If they are shared
-# you can use endpoint number to specify DCSS or LCDIF, in both cases
-# bindings should be adjusted.
+Regards,
 
-I read that as
+Akash
 
-- distinguish by endpoint number:
-
-    eLCDIF--\    |
-             ----| nwl
-    DCSS----/    |
-
-- distinguish by port number:
-
-    eLCDIF-------|
-                 | nwl
-    DCSS --------|
-
-From the imx8mq ref manual i didn't see separate input lines for DCSS vs
-eLCDIF the the NWL IP so i went with endpoints instead of ports.  I'm
-happy to change that if i got it wrong.
-
-Cheers,
- -- Guido
-
-> 
-> Apart from that the bindings look ok to me.
-> 
-> > +
-> > +          reg:
-> > +            const: 0
-> > +
-> > +        required:
-> > +          - '#address-cells'
-> > +          - '#size-cells'
-> > +          - reg
-> > +
-> > +        oneOf:
-> > +          - required:
-> > +              - endpoint@0
-> > +          - required:
-> > +              - endpoint@1
-> > +
-> > +        additionalProperties: false
-> > +
-> > +      port@1:
-> > +        type: object
-> > +        description:
-> > +          DSI output port node to the panel or the next bridge
-> > +          in the chain
-> > +
-> > +      '#address-cells':
-> > +        const: 1
-> > +
-> > +      '#size-cells':
-> > +        const: 0
-> > +
-> > +    required:
-> > +      - '#address-cells'
-> > +      - '#size-cells'
-> > +      - port@0
-> > +      - port@1
-> > +
-> > +    additionalProperties: false
-> > +
-> > +patternProperties:
-> > +  "^panel@[0-9]+$":
-> > +    type: object
-> > +
-> > +required:
-> > +  - '#address-cells'
-> > +  - '#size-cells'
-> > +  - clock-names
-> > +  - clocks
-> > +  - compatible
-> > +  - interrupts
-> > +  - mux-controls
-> > +  - phy-names
-> > +  - phys
-> > +  - ports
-> > +  - reg
-> > +  - reset-names
-> > +  - resets
-> > +
-> > +additionalProperties: false
-> > +
-> > +examples:
-> > + - |
-> > +
-> > +   #include <dt-bindings/clock/imx8mq-clock.h>
-> > +   #include <dt-bindings/interrupt-controller/arm-gic.h>
-> > +   #include <dt-bindings/reset/imx8mq-reset.h>
-> > +
-> > +   mipi_dsi: mipi_dsi@30a00000 {
-> > +              #address-cells = <1>;
-> > +              #size-cells = <0>;
-> > +              compatible = "fsl,imx8mq-nwl-dsi";
-> > +              reg = <0x30A00000 0x300>;
-> > +              clocks = <&clk IMX8MQ_CLK_DSI_CORE>,
-> > +                       <&clk IMX8MQ_CLK_DSI_AHB>,
-> > +                       <&clk IMX8MQ_CLK_DSI_IPG_DIV>,
-> > +                       <&clk IMX8MQ_CLK_DSI_PHY_REF>,
-> > +                       <&clk IMX8MQ_CLK_LCDIF_PIXEL>;
-> > +              clock-names = "core", "rx_esc", "tx_esc", "phy_ref", "lcdif";
-> > +              interrupts = <GIC_SPI 34 IRQ_TYPE_LEVEL_HIGH>;
-> > +              mux-controls = <&mux 0>;
-> > +              power-domains = <&pgc_mipi>;
-> > +              resets = <&src IMX8MQ_RESET_MIPI_DSI_RESET_BYTE_N>,
-> > +                       <&src IMX8MQ_RESET_MIPI_DSI_DPI_RESET_N>,
-> > +                       <&src IMX8MQ_RESET_MIPI_DSI_ESC_RESET_N>,
-> > +                       <&src IMX8MQ_RESET_MIPI_DSI_PCLK_RESET_N>;
-> > +              reset-names = "byte", "dpi", "esc", "pclk";
-> > +              phys = <&dphy>;
-> > +              phy-names = "dphy";
-> > +
-> > +              panel@0 {
-> > +                      #address-cells = <1>;
-> > +                      #size-cells = <0>;
-> > +                      compatible = "rocktech,jh057n00900";
-> > +                      reg = <0>;
-> > +                      port@0 {
-> > +                           reg = <0>;
-> > +                           panel_in: endpoint {
-> > +                                     remote-endpoint = <&mipi_dsi_out>;
-> > +                           };
-> > +                      };
-> > +              };
-> > +
-> > +              ports {
-> > +                    #address-cells = <1>;
-> > +                    #size-cells = <0>;
-> > +
-> > +                    port@0 {
-> > +                           #size-cells = <0>;
-> > +                           #address-cells = <1>;
-> > +                           reg = <0>;
-> > +                           mipi_dsi_in: endpoint@0 {
-> > +                                        reg = <0>;
-> > +                                        remote-endpoint = <&lcdif_mipi_dsi>;
-> > +                           };
-> > +                    };
-> > +                    port@1 {
-> > +                           reg = <1>;
-> > +                           mipi_dsi_out: endpoint {
-> > +                                         remote-endpoint = <&panel_in>;
-> > +                           };
-> > +                    };
-> > +              };
-> > +      };
-> 
-> -- 
+>
+>>       ser_clk_cfg = SER_CLK_EN;
+>>       ser_clk_cfg |= clk_div << CLK_DIV_SHFT;
+>>   @@ -1198,8 +1199,10 @@ static void qcom_geni_serial_pm(struct 
+>> uart_port *uport,
+>>       if (new_state == UART_PM_STATE_ON && old_state == 
+>> UART_PM_STATE_OFF)
+>>           geni_se_resources_on(&port->se);
+>>       else if (new_state == UART_PM_STATE_OFF &&
+>> -            old_state == UART_PM_STATE_ON)
+>> +            old_state == UART_PM_STATE_ON) {
+>> +        dev_pm_opp_set_rate(uport->dev, 0);
+>>           geni_se_resources_off(&port->se);
+>> +    }
+>>   }
+>>     static const struct uart_ops qcom_geni_console_pops = {
+>> @@ -1318,13 +1321,16 @@ static int qcom_geni_serial_probe(struct 
+>> platform_device *pdev)
+>>       if (of_property_read_bool(pdev->dev.of_node, "cts-rts-swap"))
+>>           port->cts_rts_swap = true;
+>>   +    port->se.opp = dev_pm_opp_set_clkname(&pdev->dev, "se");
+>> +    dev_pm_opp_of_add_table(&pdev->dev);
+>> +
+>>       uport->private_data = drv;
+>>       platform_set_drvdata(pdev, port);
+>>       port->handle_rx = console ? handle_rx_console : handle_rx_uart;
+>>         ret = uart_add_one_port(drv, uport);
+>>       if (ret)
+>> -        return ret;
+>> +        goto err;
+>>         irq_set_status_flags(uport->irq, IRQ_NOAUTOEN);
+>>       ret = devm_request_irq(uport->dev, uport->irq, 
+>> qcom_geni_serial_isr,
+>> @@ -1332,7 +1338,7 @@ static int qcom_geni_serial_probe(struct 
+>> platform_device *pdev)
+>>       if (ret) {
+>>           dev_err(uport->dev, "Failed to get IRQ ret %d\n", ret);
+>>           uart_remove_one_port(drv, uport);
+>> -        return ret;
+>> +        goto err;
+>>       }
+>>         /*
+>> @@ -1349,11 +1355,14 @@ static int qcom_geni_serial_probe(struct 
+>> platform_device *pdev)
+>>           if (ret) {
+>>               device_init_wakeup(&pdev->dev, false);
+>>               uart_remove_one_port(drv, uport);
+>> -            return ret;
+>> +            goto err;
+>>           }
+>>       }
+>>         return 0;
+>> +err:
+>> +    dev_pm_opp_of_remove_table(&pdev->dev);
+> do we need to call "dev_pm_opp_put_clkname" here and in remove to 
+> release clk resource grabbed by
+>
+> dev_pm_opp_set_clkname(&pdev->dev, "se");?
+>
 > Regards,
-> 
-> Laurent Pinchart
-> 
+> Akash
+>
+>> +    return ret;
+>>   }
+>>     static int qcom_geni_serial_remove(struct platform_device *pdev)
+>> @@ -1361,6 +1370,7 @@ static int qcom_geni_serial_remove(struct 
+>> platform_device *pdev)
+>>       struct qcom_geni_serial_port *port = platform_get_drvdata(pdev);
+>>       struct uart_driver *drv = port->uport.private_data;
+>>   +    dev_pm_opp_of_remove_table(&pdev->dev);
+>>       dev_pm_clear_wake_irq(&pdev->dev);
+>>       device_init_wakeup(&pdev->dev, false);
+>>       uart_remove_one_port(drv, &port->uport);
+>> diff --git a/include/linux/qcom-geni-se.h b/include/linux/qcom-geni-se.h
+>> index dd46494..737e713 100644
+>> --- a/include/linux/qcom-geni-se.h
+>> +++ b/include/linux/qcom-geni-se.h
+>> @@ -24,6 +24,7 @@ enum geni_se_protocol_type {
+>>     struct geni_wrapper;
+>>   struct clk;
+>> +struct opp_table;
+>>     /**
+>>    * struct geni_se - GENI Serial Engine
+>> @@ -39,6 +40,7 @@ struct geni_se {
+>>       struct device *dev;
+>>       struct geni_wrapper *wrapper;
+>>       struct clk *clk;
+>> +    struct opp_table *opp;
+>>       unsigned int num_clk_levels;
+>>       unsigned long *clk_perf_tbl;
+>>   };
+>
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,\na Linux Foundation Collaborative Project
