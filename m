@@ -4,52 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05C41C2D0EC
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 03:55:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A380AC2BB1D
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 03:55:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D10CE2063A
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 03:55:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 71B992063A
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 03:55:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586490913;
-	bh=Nt6HnPG8US2WoIQ/AddHcN7oFr4OwpjsIl0UXaEifGM=;
+	s=default; t=1586490918;
+	bh=idCS/o2KJWKLuG5YYj/PRV53FPx4L/x7Hh2m9+2AenI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YAiZSvVR9jDIUZsz4j6Aimbj6yBGo9HgGSgjr4xBZnnMIWrYFwL0KZ3UT5EjOU+Ci
-	 5O57JD/uzI3SVyOt2u04/Mu+v3qsLdMWIVwvorg65SX47AhjCyFJX9fPj/0NUIz7eM
-	 VyO7KaZXzMauTTyTJdS1BKy4YTksIXUJZz+rehBA=
+	b=1UcfwFwOTnLrE3oQiFJgt1pXbUW/BTAFQ+UXn6sbX576/GVd/6tov4UafXEX1Xr6+
+	 IQdiy5zwb/lRVXi1QGjN9kBfRYd/Hz9a/s7RbPagaMAdJ8NEMrM5LK6pR/r5YqPJtd
+	 mzs9Rfr1MD56a0btZUziyAHFftG+81NhInoqsWvs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728076AbgDJDuJ (ORCPT
+        id S1729027AbgDJDzQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Apr 2020 23:50:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34352 "EHLO mail.kernel.org"
+        Thu, 9 Apr 2020 23:55:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34546 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728729AbgDJDt6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Apr 2020 23:49:58 -0400
+        id S1728804AbgDJDuI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Apr 2020 23:50:08 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4F8C3206C0;
-        Fri, 10 Apr 2020 03:49:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A8FAE206C0;
+        Fri, 10 Apr 2020 03:50:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586490599;
-        bh=Nt6HnPG8US2WoIQ/AddHcN7oFr4OwpjsIl0UXaEifGM=;
+        s=default; t=1586490608;
+        bh=idCS/o2KJWKLuG5YYj/PRV53FPx4L/x7Hh2m9+2AenI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ICZkK26xPe9OXFQmbeQZUkFZpwLUE5U0nQ66lulIq5qRyXu93KmeDiMdVMnQNaato
-         otOMZcbobtwyS0NlhuhPINWK48iblc2ENNLYwhHGoaI6RXzip5TXHYbyjP/Nn1rJEW
-         meTk/N9nGiZqIwmFcXQkftxK6yJtCBShb0yjjNbc=
+        b=mDaj48GyZCeDH6l5bpl1MQcRNeYZnGQ2p37mKYVUg3bt2gbgOUOKlqfj0z0zEAnCK
+         8xPZv3f6VqzfWtySS6iV1kaWPSOfsVDHwyEOELbl86sw3rIaW+d6AGDx1AOKgE1OaN
+         G00U5DbDBjkmB6EOLtrIUwXDGHQCGKnYfL++fbJE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Josef Bacik <josef@toxicpanda.com>,
-        David Sterba <dsterba@suse.com>,
-        Sasha Levin <sashal@kernel.org>, linux-btrfs@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 42/46] btrfs: hold a ref on the root in btrfs_recover_relocation
-Date:   Thu,  9 Apr 2020 23:49:05 -0400
-Message-Id: <20200410034909.8922-42-sashal@kernel.org>
+Cc:     Stephan Gerhold <stephan@gerhold.net>,
+        Stanimir Varbanov <stanimir.varbanov@linaro.org>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 02/32] media: venus: hfi_parser: Ignore HEVC encoding for V1
+Date:   Thu,  9 Apr 2020 23:49:35 -0400
+Message-Id: <20200410035005.9371-2-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200410034909.8922-1-sashal@kernel.org>
-References: <20200410034909.8922-1-sashal@kernel.org>
+In-Reply-To: <20200410035005.9371-1-sashal@kernel.org>
+References: <20200410035005.9371-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -59,73 +61,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Josef Bacik <josef@toxicpanda.com>
+From: Stephan Gerhold <stephan@gerhold.net>
 
-[ Upstream commit 932fd26df8125a5b14438563c4d3e33f59ba80f7 ]
+[ Upstream commit c50cc6dc6c48300af63a6fbc71b647053c15fc80 ]
 
-We look up the fs root in various places in here when recovering from a
-crashed relcoation.  Make sure we hold a ref on the root whenever we
-look them up.
+Some older MSM8916 Venus firmware versions also seem to indicate
+support for encoding HEVC, even though they really can't.
+This will lead to errors later because hfi_session_init() fails
+in this case.
 
-Signed-off-by: Josef Bacik <josef@toxicpanda.com>
-Reviewed-by: David Sterba <dsterba@suse.com>
-Signed-off-by: David Sterba <dsterba@suse.com>
+HEVC is already ignored for "dec_codecs", so add the same for
+"enc_codecs" to make these old firmware versions work correctly.
+
+Signed-off-by: Stephan Gerhold <stephan@gerhold.net>
+Signed-off-by: Stanimir Varbanov <stanimir.varbanov@linaro.org>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/btrfs/relocation.c | 21 ++++++++++++++++++---
- 1 file changed, 18 insertions(+), 3 deletions(-)
+ drivers/media/platform/qcom/venus/hfi_parser.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/fs/btrfs/relocation.c b/fs/btrfs/relocation.c
-index bc1d7f144ace9..4abdf3ec81c18 100644
---- a/fs/btrfs/relocation.c
-+++ b/fs/btrfs/relocation.c
-@@ -4550,6 +4550,12 @@ int btrfs_recover_relocation(struct btrfs_root *root)
- 					err = ret;
- 					goto out;
- 				}
-+			} else {
-+				if (!btrfs_grab_fs_root(fs_root)) {
-+					err = -ENOENT;
-+					goto out;
-+				}
-+				btrfs_put_fs_root(fs_root);
- 			}
- 		}
- 
-@@ -4599,10 +4605,15 @@ int btrfs_recover_relocation(struct btrfs_root *root)
- 			list_add_tail(&reloc_root->root_list, &reloc_roots);
- 			goto out_free;
- 		}
-+		if (!btrfs_grab_fs_root(fs_root)) {
-+			err = -ENOENT;
-+			goto out_free;
-+		}
- 
- 		err = __add_reloc_root(reloc_root);
- 		BUG_ON(err < 0); /* -ENOMEM or logic error */
- 		fs_root->reloc_root = reloc_root;
-+		btrfs_put_fs_root(fs_root);
+diff --git a/drivers/media/platform/qcom/venus/hfi_parser.c b/drivers/media/platform/qcom/venus/hfi_parser.c
+index 2293d936e49ca..7f515a4b9bd12 100644
+--- a/drivers/media/platform/qcom/venus/hfi_parser.c
++++ b/drivers/media/platform/qcom/venus/hfi_parser.c
+@@ -181,6 +181,7 @@ static void parse_codecs(struct venus_core *core, void *data)
+ 	if (IS_V1(core)) {
+ 		core->dec_codecs &= ~HFI_VIDEO_CODEC_HEVC;
+ 		core->dec_codecs &= ~HFI_VIDEO_CODEC_SPARK;
++		core->enc_codecs &= ~HFI_VIDEO_CODEC_HEVC;
  	}
- 
- 	err = btrfs_commit_transaction(trans);
-@@ -4634,10 +4645,14 @@ int btrfs_recover_relocation(struct btrfs_root *root)
- 	if (err == 0) {
- 		/* cleanup orphan inode in data relocation tree */
- 		fs_root = read_fs_root(fs_info, BTRFS_DATA_RELOC_TREE_OBJECTID);
--		if (IS_ERR(fs_root))
-+		if (IS_ERR(fs_root)) {
- 			err = PTR_ERR(fs_root);
--		else
--			err = btrfs_orphan_cleanup(fs_root);
-+		} else {
-+			if (btrfs_grab_fs_root(fs_root)) {
-+				err = btrfs_orphan_cleanup(fs_root);
-+				btrfs_put_fs_root(fs_root);
-+			}
-+		}
- 	}
- 	return err;
  }
+ 
 -- 
 2.20.1
 
