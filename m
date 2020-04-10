@@ -2,99 +2,206 @@ Return-Path: <SRS0=VV4q=52=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 070A1C2BB85
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 18:48:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9B65C2BB85
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 18:59:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DB66D20801
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 18:48:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="mT8ZqmB5"
+	by mail.kernel.org (Postfix) with ESMTP id CA28920732
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 18:59:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726725AbgDJSs3 (ORCPT
+        id S1726689AbgDJS7H (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Apr 2020 14:48:29 -0400
-Received: from mail-pj1-f66.google.com ([209.85.216.66]:50561 "EHLO
-        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726203AbgDJSs2 (ORCPT
+        Fri, 10 Apr 2020 14:59:07 -0400
+Received: from mail.baikalelectronics.com ([87.245.175.226]:41510 "EHLO
+        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726582AbgDJS7H (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Apr 2020 14:48:28 -0400
-Received: by mail-pj1-f66.google.com with SMTP id b7so1096000pju.0
-        for <linux-kernel@vger.kernel.org>; Fri, 10 Apr 2020 11:48:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=GDlhvc737A1B7cqsgBD4sqvBWI/XRw9Xyu07r8MIXfc=;
-        b=mT8ZqmB5a9bl0OGDjI6ftL1heRzJQ9Muiz3UgW+QH/iqaDz7TeV23rAllAwKs6NKFb
-         KKJgab8ftLZAuE4FwVh2LzuvDvQssOBccrT30WDH8S4YkF9QABOr3C+q28elqXqNlW6D
-         4F7BLE/acJZgPQvH/PP0Kqh10ygzz/WnfBGpFgHyyhZ7alb7OuyHvBUVzI5ayt0RRnII
-         2ko1H0m+scD6lIcYskm5P/WewB6mVnWOpIWgnUXK8sTbXB3SgVAPPPGmmixva4s2F1Db
-         n+VrYaxpY4+Mg5VOoMXoAVjXNF9MzD0azmeAhN7kPuUF9Z2/NIFO3TQTFAXAQsvdoHN6
-         jd7A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=GDlhvc737A1B7cqsgBD4sqvBWI/XRw9Xyu07r8MIXfc=;
-        b=CIDVziHJJ4qlMKUCbT7zGji59APoGyx25uT4qLSngndlt/SZiT6H4TmDZ+SzSiGJ3Z
-         Sp/+/qt4+L6FSV0ZQpk2FL9Hjv3h4AYv+VUSpwbb0tZhRvhfWm8zNd+/6TSxckeKC0rF
-         SoR/twKdRcNjbv8l3y8STe7+n3qrQw4GAGrIH4NdOJlMCUqVJ1ynHQftr/vYQcNL9Rg0
-         cTj7zx8GClspkAB1N427d+OOQ7j35zGqN9Z1MCPhLKfksG0eidDHY5uh50MiCKZYLzMx
-         zvV4/6/k5KF+nWItgRO5ZoDa911TWS57btHh58hMQprBgw+fP0hLtjmctCK1hEp20zPE
-         yAwA==
-X-Gm-Message-State: AGi0PubjEdP3aTTLSW/jfZ4TJccywKAThXwOjN0YZP/01e1gQP919eM3
-        MURTLNb/pu5OxtPZezwnsSdRufG2b1s=
-X-Google-Smtp-Source: APiQypITCmOjMlF7oMcP8hYQCto8Gc0uxLeigoyYZ68+fhV9ErbYZsK+3ARklA9XJdGzoj4RtmXEZA==
-X-Received: by 2002:a17:902:9f8f:: with SMTP id g15mr5742612plq.221.1586544508317;
-        Fri, 10 Apr 2020 11:48:28 -0700 (PDT)
-Received: from nuc7.sifive.com (c-24-5-48-146.hsd1.ca.comcast.net. [24.5.48.146])
-        by smtp.gmail.com with ESMTPSA id u10sm2382619pjd.13.2020.04.10.11.48.26
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 10 Apr 2020 11:48:27 -0700 (PDT)
-From:   Alan Mikhak <alan.mikhak@sifive.com>
-X-Google-Original-From: Alan Mikhak < alan.mikhak@sifive.com >
-To:     linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-        kernel-janitors@vger.kernel.org, kishon@ti.com,
-        bhelgaas@google.com, martin.petersen@oracle.com, vidyas@nvidia.com,
-        efremov@linux.com, kjlu@umn.edu, paul.walmsley@sifive.com
-Cc:     Alan Mikhak <alan.mikhak@sifive.com>
-Subject: [PATCH][next] PCI: endpoint: functions/pci-epf-test: fix leak of buf in pci_epf_test_write()
-Date:   Fri, 10 Apr 2020 11:48:18 -0700
-Message-Id: <1586544498-29978-1-git-send-email-alan.mikhak@sifive.com>
-X-Mailer: git-send-email 2.7.4
+        Fri, 10 Apr 2020 14:59:07 -0400
+Received: from localhost (unknown [127.0.0.1])
+        by mail.baikalelectronics.ru (Postfix) with ESMTP id 979BE8030791;
+        Fri, 10 Apr 2020 18:59:01 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at baikalelectronics.ru
+Received: from mail.baikalelectronics.ru ([127.0.0.1])
+        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id 9ygsVCdspucH; Fri, 10 Apr 2020 21:58:59 +0300 (MSK)
+Date:   Fri, 10 Apr 2020 21:59:34 +0300
+From:   Sergey Semin <Sergey.Semin@baikalelectronics.ru>
+To:     Guenter Roeck <linux@roeck-us.net>
+CC:     Stephen Boyd <sboyd@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Paul Burton <paulburton@kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        <linux-watchdog@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 5/7] watchdog: dw_wdt: Support devices with asynch clocks
+Message-ID: <20200410185934.o4aucef2xhbradlp@ubsrv2.baikal.int>
+References: <20200306132747.14701-1-Sergey.Semin@baikalelectronics.ru>
+ <20200306132831.89B658030706@mail.baikalelectronics.ru>
+ <20200315142207.GA8424@roeck-us.net>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20200315142207.GA8424@roeck-us.net>
+X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alan Mikhak <alan.mikhak@sifive.com>
+Michael, Stephen, could you take a look at the issue we've got here?
 
-In the case where pci_epf_test_write() cannot transfer using DMA, the
-allocation of 'buf' leaks on the error return path. Fix by jumping to
-the label err_dma_map to free the 'buf' before returning.
+Guenter, my comment is below.
 
-Fixes: a558357b1b34 ("PCI: endpoint: functions/pci-epf-test: Add DMA support to transfer data")
-Signed-off-by: Alan Mikhak <alan.mikhak@sifive.com>
----
- drivers/pci/endpoint/functions/pci-epf-test.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+On Sun, Mar 15, 2020 at 07:22:07AM -0700, Guenter Roeck wrote:
+> On Fri, Mar 06, 2020 at 04:27:45PM +0300, Sergey.Semin@baikalelectronics.ru wrote:
+> > From: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+> > 
+> > DW Watchdog IP core can be synthesised with asynchronous timer/APB
+> > clocks support (WDT_ASYNC_CLK_MODE_ENABLE == 1). In this case
+> > separate clock signals are supposed to be used to feed watchdog timer
+> > and APB interface of the device. Currently the driver supports
+> > the synchronous mode only. Since there is no way to determine which
+> > mode was actually activated for device from its registers, we have to
+> > rely on the platform device configuration data. If optional "pclk"
+> > clock source is supplied, we consider the device working in asynchronous
+> > mode, otherwise the driver falls back to the synchronous configuration.
+> > 
+> > Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+> > Signed-off-by: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
+> > Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+> > Cc: Paul Burton <paulburton@kernel.org>
+> > Cc: Ralf Baechle <ralf@linux-mips.org>
+> > ---
+> >  drivers/watchdog/dw_wdt.c | 48 +++++++++++++++++++++++++++++++++++----
+> >  1 file changed, 43 insertions(+), 5 deletions(-)
+> > 
+> > diff --git a/drivers/watchdog/dw_wdt.c b/drivers/watchdog/dw_wdt.c
+> > index 4a57b7d777dc..eb909c63a1b5 100644
+> > --- a/drivers/watchdog/dw_wdt.c
+> > +++ b/drivers/watchdog/dw_wdt.c
+> > @@ -61,6 +61,7 @@ MODULE_PARM_DESC(nowayout, "Watchdog cannot be stopped once started "
+> >  struct dw_wdt {
+> >  	void __iomem		*regs;
+> >  	struct clk		*clk;
+> > +	struct clk		*pclk;
+> >  	unsigned long		rate;
+> >  	unsigned int		max_top;
+> >  	unsigned int		timeouts[DW_WDT_NUM_TOPS];
+> > @@ -270,6 +271,7 @@ static int dw_wdt_suspend(struct device *dev)
+> >  	dw_wdt->control = readl(dw_wdt->regs + WDOG_CONTROL_REG_OFFSET);
+> >  	dw_wdt->timeout = readl(dw_wdt->regs + WDOG_TIMEOUT_RANGE_REG_OFFSET);
+> >  
+> > +	clk_disable_unprepare(dw_wdt->pclk);
+> >  	clk_disable_unprepare(dw_wdt->clk);
+> >  
+> >  	return 0;
+> > @@ -283,6 +285,12 @@ static int dw_wdt_resume(struct device *dev)
+> >  	if (err)
+> >  		return err;
+> >  
+> > +	err = clk_prepare_enable(dw_wdt->pclk);
+> > +	if (err) {
+> > +		clk_disable_unprepare(dw_wdt->clk);
+> > +		return err;
+> > +	}
+> > +
+> >  	writel(dw_wdt->timeout, dw_wdt->regs + WDOG_TIMEOUT_RANGE_REG_OFFSET);
+> >  	writel(dw_wdt->control, dw_wdt->regs + WDOG_CONTROL_REG_OFFSET);
+> >  
+> > @@ -344,9 +352,18 @@ static int dw_wdt_drv_probe(struct platform_device *pdev)
+> >  	if (IS_ERR(dw_wdt->regs))
+> >  		return PTR_ERR(dw_wdt->regs);
+> >  
+> > -	dw_wdt->clk = devm_clk_get(dev, NULL);
+> > -	if (IS_ERR(dw_wdt->clk))
+> > -		return PTR_ERR(dw_wdt->clk);
+> > +	/*
+> > +	 * Try to request the watchdog dedicated timer clock source. It must
+> > +	 * be supplied if asynchronous mode is enabled. Otherwise fallback
+> > +	 * to the common timer/bus clocks configuration, in which the very first
+> > +	 * found clocks supply both timer and APB signals.
+> > +	 */
+> > +	dw_wdt->clk = devm_clk_get(dev, "tclk");
+> > +	if (IS_ERR(dw_wdt->clk)) {
+> > +		dw_wdt->clk = devm_clk_get(dev, NULL);
+> > +		if (IS_ERR(dw_wdt->clk))
+> > +			return PTR_ERR(dw_wdt->clk);
+> > +	}
+> >  
+> >  	ret = clk_prepare_enable(dw_wdt->clk);
+> >  	if (ret)
+> > @@ -358,10 +375,27 @@ static int dw_wdt_drv_probe(struct platform_device *pdev)
+> >  		goto out_disable_clk;
+> >  	}
+> >  
+> > +	/*
+> > +	 * Request APB clocks if device is configured with async clocks mode.
+> > +	 * In this case both tclk and pclk clocks are supposed to be specified.
+> > +	 * Alas we can't know for sure whether async mode was really activated,
+> > +	 * so the pclk reference is left optional. If it it's failed to be
+> > +	 * found we consider the device configured in synchronous clocks mode.
+> > +	 */
+> > +	dw_wdt->pclk = devm_clk_get_optional(dev, "pclk");
+> > +	if (IS_ERR(dw_wdt->pclk)) {
+> > +		ret = PTR_ERR(dw_wdt->pclk);
+> > +		goto out_disable_clk;
+> > +	}
+> > +
+> > +	ret = clk_prepare_enable(dw_wdt->pclk);
+> 
+> Not every implementation of clk_enable() checks for a NULL parameter.
+> Some return an error. This can not be trusted to work on all platforms /
+> architectures.
 
-diff --git a/drivers/pci/endpoint/functions/pci-epf-test.c b/drivers/pci/endpoint/functions/pci-epf-test.c
-index 60330f3e3751..22fb2858f20a 100644
---- a/drivers/pci/endpoint/functions/pci-epf-test.c
-+++ b/drivers/pci/endpoint/functions/pci-epf-test.c
-@@ -438,7 +438,7 @@ static int pci_epf_test_write(struct pci_epf_test *epf_test)
- 		if (!epf_test->dma_supported) {
- 			dev_err(dev, "Cannot transfer data using DMA\n");
- 			ret = -EINVAL;
--			goto err_map_addr;
-+			goto err_dma_map;
- 		}
- 
- 		src_phys_addr = dma_map_single(dma_dev, buf, reg->size,
--- 
-2.7.4
+Hm, this was unexpected twist. I've submitted not a single patch with optional
+clock API usage. It was first time I've got a comment like this, that the
+API isn't cross-platform. As I see it this isn't the patch problem, but the
+platforms/common clock bug. The platforms code must have been submitted before
+the optional clock API was introduced or the API hasn't been properly
+implemented or we don't understand something.
 
+Stephen, Michael could you clarify the situation with the
+cross-platformness of the optional clock API.
+
+-Sergey
+
+> 
+> > +	if (ret)
+> > +		goto out_disable_clk;
+> > +
+> >  	dw_wdt->rst = devm_reset_control_get_optional_shared(&pdev->dev, NULL);
+> >  	if (IS_ERR(dw_wdt->rst)) {
+> >  		ret = PTR_ERR(dw_wdt->rst);
+> > -		goto out_disable_clk;
+> > +		goto out_disable_pclk;
+> >  	}
+> >  
+> >  	reset_control_deassert(dw_wdt->rst);
+> > @@ -399,10 +433,13 @@ static int dw_wdt_drv_probe(struct platform_device *pdev)
+> >  
+> >  	ret = watchdog_register_device(wdd);
+> >  	if (ret)
+> > -		goto out_disable_clk;
+> > +		goto out_disable_pclk;
+> >  
+> >  	return 0;
+> >  
+> > +out_disable_pclk:
+> > +	clk_disable_unprepare(dw_wdt->pclk);
+> > +
+> >  out_disable_clk:
+> >  	clk_disable_unprepare(dw_wdt->clk);
+> >  	return ret;
+> > @@ -414,6 +451,7 @@ static int dw_wdt_drv_remove(struct platform_device *pdev)
+> >  
+> >  	watchdog_unregister_device(&dw_wdt->wdd);
+> >  	reset_control_assert(dw_wdt->rst);
+> > +	clk_disable_unprepare(dw_wdt->pclk);
+> >  	clk_disable_unprepare(dw_wdt->clk);
+> >  
+> >  	return 0;
