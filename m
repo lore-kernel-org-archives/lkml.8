@@ -7,46 +7,51 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5586BC2D0EC
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 03:47:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E322DC2BB85
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 03:47:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2E04920BED
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 03:47:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BB59620A8B
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 03:47:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586490422;
-	bh=qnKjeRFljIsmqkFccDcOzXGYVkd2gtcV3xBaAQ+3WqM=;
+	s=default; t=1586490425;
+	bh=jDt6vkUMyGZfura59hrrftwobQmgudUKhDGGO98R2Z4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=M+F3idm7t/hn5g6jU4L2B7ilDsyC5AVEynQZtL2SBQo/cIX/77HvlkvnXRVbx8zAw
-	 RS8VZty/3EGxkctQO2nEtekbB2wNFB4nrq+7LlBbtdUp3LuDf73UIWJEgwpAQf8Zqn
-	 xdHFDsHR5r/oMyLFG5PmihqpGsyBhnGxaqIHaFO8=
+	b=GiFTZE1peEVpZTIc6CZvuHKvmj8tCMLV6kdv5I6bEhfzWlTWP0Ogx5C26R9zFyt2j
+	 2GsTGzD9adMJQbRU4QfirZ2wAubkzTaJRK/kmJHcmWqiUHB7eecpTQqfreY/4sslwt
+	 QVSftR9uyxAMO3ttEO22rmOSLDoItDn0FEK6DxXc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726934AbgDJDrA (ORCPT
+        id S1726961AbgDJDrE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Apr 2020 23:47:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57104 "EHLO mail.kernel.org"
+        Thu, 9 Apr 2020 23:47:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57316 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726882AbgDJDqy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Apr 2020 23:46:54 -0400
+        id S1726936AbgDJDrB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Apr 2020 23:47:01 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4382A21473;
-        Fri, 10 Apr 2020 03:46:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D6EDB20936;
+        Fri, 10 Apr 2020 03:46:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586490414;
-        bh=qnKjeRFljIsmqkFccDcOzXGYVkd2gtcV3xBaAQ+3WqM=;
+        s=default; t=1586490420;
+        bh=jDt6vkUMyGZfura59hrrftwobQmgudUKhDGGO98R2Z4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nzJWqgz59/0IzM6zAaL8Zy82k2FSOyprfxfZqocnjLyMh3Bd2pMUhHFtWRxpUZjak
-         vdvS46IdEi45OuGvZPZ8UutL1YPjEV/RK8dNjPJo0VFYbJsFmS3FiG0PzS5SAgtKWV
-         E2Kv3tmpZvuhavfzJ53bTtuFl6iSPgFtb6MvtB5M=
+        b=AnnGdIDtdH4Xhfu4si4FWKzZRUqPmiBSIXPZOSOyOdXi4fKxkD5LhwRLTSP+dHjGL
+         4usWCNOOCLDTVGj6jGF5nLgrTfUmRCEByPcXdqAnocbBOoxE4ijoEz/zGEgH4NLQSU
+         8+hDyIVWdRteI9gGW7QyiAFN05UKdgFJApGPGtVk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Lorenzo Bianconi <lorenzo@kernel.org>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Sasha Levin <sashal@kernel.org>, linux-iio@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.6 16/68] iio: imu: st_lsm6dsx: check return value from st_lsm6dsx_sensor_set_enable
-Date:   Thu,  9 Apr 2020 23:45:41 -0400
-Message-Id: <20200410034634.7731-16-sashal@kernel.org>
+Cc:     Bart Van Assche <bvanassche@acm.org>,
+        Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>,
+        Johannes Thumshirn <jth@kernel.org>,
+        Hannes Reinecke <hare@suse.com>,
+        Ming Lei <ming.lei@redhat.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>,
+        linux-block@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.6 20/68] null_blk: Suppress an UBSAN complaint triggered when setting 'memory_backed'
+Date:   Thu,  9 Apr 2020 23:45:45 -0400
+Message-Id: <20200410034634.7731-20-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200410034634.7731-1-sashal@kernel.org>
 References: <20200410034634.7731-1-sashal@kernel.org>
@@ -59,43 +64,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Lorenzo Bianconi <lorenzo@kernel.org>
+From: Bart Van Assche <bvanassche@acm.org>
 
-[ Upstream commit f20dbe11e2e904547597ae7371c1f635e3be9cad ]
+[ Upstream commit b9853b4d6fb403ccb1d4d82e2d39fc17fc07519c ]
 
-Add missing return value check in st_lsm6dsx_shub_read_oneshot disabling
-the slave device connected to the st_lsm6dsx i2c controller.
-The issue is reported by coverity with the following error:
+Although it is not clear to me why UBSAN complains when 'memory_backed'
+is set, this patch suppresses the UBSAN complaint that is triggered when
+setting that configfs attribute.
 
-Unchecked return value:
-If the function returns an error value, the error value may be mistaken
-for a normal value.
+UBSAN: Undefined behaviour in drivers/block/null_blk_main.c:327:1
+load of value 16 is not a valid value for type '_Bool'
+CPU: 2 PID: 8396 Comm: check Not tainted 5.6.0-rc1-dbg+ #14
+Hardware name: Bochs Bochs, BIOS Bochs 01/01/2011
+Call Trace:
+ dump_stack+0xa5/0xe6
+ ubsan_epilogue+0x9/0x26
+ __ubsan_handle_load_invalid_value+0x6d/0x76
+ nullb_device_memory_backed_store.cold+0x2c/0x38 [null_blk]
+ configfs_write_file+0x1c4/0x250 [configfs]
+ __vfs_write+0x4c/0x90
+ vfs_write+0x145/0x2c0
+ ksys_write+0xd7/0x180
+ __x64_sys_write+0x47/0x50
+ do_syscall_64+0x6f/0x2f0
+ entry_SYSCALL_64_after_hwframe+0x49/0xbe
 
-Addresses-Coverity-ID: 1456767 ("Unchecked return value")
-Signed-off-by: Lorenzo Bianconi <lorenzo@kernel.org>
-Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Signed-off-by: Bart Van Assche <bvanassche@acm.org>
+Reviewed-by: Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>
+Cc: Johannes Thumshirn <jth@kernel.org>
+Cc: Hannes Reinecke <hare@suse.com>
+Cc: Ming Lei <ming.lei@redhat.com>
+Cc: Christoph Hellwig <hch@infradead.org>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_shub.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ drivers/block/null_blk_main.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_shub.c b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_shub.c
-index eea555617d4aa..95ddd19d1aa7c 100644
---- a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_shub.c
-+++ b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_shub.c
-@@ -464,9 +464,10 @@ st_lsm6dsx_shub_read_oneshot(struct st_lsm6dsx_sensor *sensor,
- 
- 	len = min_t(int, sizeof(data), ch->scan_type.realbits >> 3);
- 	err = st_lsm6dsx_shub_read(sensor, ch->address, data, len);
-+	if (err < 0)
-+		return err;
- 
--	st_lsm6dsx_shub_set_enable(sensor, false);
--
-+	err = st_lsm6dsx_shub_set_enable(sensor, false);
- 	if (err < 0)
- 		return err;
- 
+diff --git a/drivers/block/null_blk_main.c b/drivers/block/null_blk_main.c
+index d5b4a92033d48..2b8b4cb447cfb 100644
+--- a/drivers/block/null_blk_main.c
++++ b/drivers/block/null_blk_main.c
+@@ -276,7 +276,7 @@ nullb_device_##NAME##_store(struct config_item *item, const char *page,	\
+ {									\
+ 	int (*apply_fn)(struct nullb_device *dev, TYPE new_value) = APPLY;\
+ 	struct nullb_device *dev = to_nullb_device(item);		\
+-	TYPE uninitialized_var(new_value);				\
++	TYPE new_value = 0;						\
+ 	int ret;							\
+ 									\
+ 	ret = nullb_device_##TYPE##_attr_store(&new_value, page, count);\
 -- 
 2.20.1
 
