@@ -6,26 +6,26 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BBE4EC2D0EC
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 19:37:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D335DC2D0EC
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 19:37:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A065B20769
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 19:37:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B86C320769
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 19:37:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726955AbgDJThm (ORCPT
+        id S1726965AbgDJTht (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Apr 2020 15:37:42 -0400
-Received: from ex13-edg-ou-001.vmware.com ([208.91.0.189]:28677 "EHLO
+        Fri, 10 Apr 2020 15:37:49 -0400
+Received: from ex13-edg-ou-001.vmware.com ([208.91.0.189]:28684 "EHLO
         EX13-EDG-OU-001.vmware.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726646AbgDJThm (ORCPT
+        by vger.kernel.org with ESMTP id S1726646AbgDJThs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Apr 2020 15:37:42 -0400
+        Fri, 10 Apr 2020 15:37:48 -0400
 Received: from sc9-mailhost3.vmware.com (10.113.161.73) by
  EX13-EDG-OU-001.vmware.com (10.113.208.155) with Microsoft SMTP Server id
- 15.0.1156.6; Fri, 10 Apr 2020 12:37:38 -0700
+ 15.0.1156.6; Fri, 10 Apr 2020 12:37:43 -0700
 Received: from sc9-mailhost3.vmware.com (unknown [10.166.69.226])
-        by sc9-mailhost3.vmware.com (Postfix) with ESMTP id 2FE0140BC3;
-        Fri, 10 Apr 2020 12:37:42 -0700 (PDT)
+        by sc9-mailhost3.vmware.com (Postfix) with ESMTP id D9E6F40BC0;
+        Fri, 10 Apr 2020 12:37:47 -0700 (PDT)
 From:   Matt Helsley <mhelsley@vmware.com>
 To:     <linux-kernel@vger.kernel.org>
 CC:     Josh Poimboeuf <jpoimboe@redhat.com>,
@@ -35,9 +35,9 @@ CC:     Josh Poimboeuf <jpoimboe@redhat.com>,
         Steven Rostedt <rostedt@goodmis.org>,
         Miroslav Benes <mbenes@suse.cz>,
         Matt Helsley <mhelsley@vmware.com>
-Subject: [RFC][PATCH 16/36] objtool: mcount: Move get_mcountsym
-Date:   Fri, 10 Apr 2020 12:35:39 -0700
-Message-ID: <ff3e65c8d4c53537b235fb866a048394e65f0d3f.1586468801.git.mhelsley@vmware.com>
+Subject: [RFC][PATCH 17/36] objtool: mcount: Replace MIPS offset types
+Date:   Fri, 10 Apr 2020 12:35:40 -0700
+Message-ID: <0a1ccd4cc3fbf0dfb0b9b912d9af5d5ee759f028.1586468801.git.mhelsley@vmware.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <cover.1586468801.git.mhelsley@vmware.com>
 References: <cover.1586468801.git.mhelsley@vmware.com>
@@ -51,95 +51,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Now that it's been stripped of using the old recordmcount ELF
-wrapper get_mcountsym() is ready to be promoted out of the
-double-included wrapper header. If we don't move it to
-recordmcount.c we will get multiple definitions of the function.
+Replace MIPS is_fake_mcount code using Elf_Addr with
+unsigned long for the offsets. This is consistent with the way
+that objtool more generally treats offsets and removes the
+last use of the Elf_Addr wrapper.
 
 Signed-off-by: Matt Helsley <mhelsley@vmware.com>
 ---
- tools/objtool/recordmcount.c | 16 ++++++++++++++++
- tools/objtool/recordmcount.h | 19 -------------------
- 2 files changed, 16 insertions(+), 19 deletions(-)
+ tools/objtool/recordmcount.h | 9 +++------
+ 1 file changed, 3 insertions(+), 6 deletions(-)
 
-diff --git a/tools/objtool/recordmcount.c b/tools/objtool/recordmcount.c
-index f0edc9ed6021..91d14743218a 100644
---- a/tools/objtool/recordmcount.c
-+++ b/tools/objtool/recordmcount.c
-@@ -422,6 +422,22 @@ static int is_mcounted_section_name(char const *const txtname)
- 		strcmp(".cpuidle.text", txtname) == 0;
- }
- 
-+static unsigned get_mcountsym(struct rela *rela)
-+{
-+	struct symbol *sym = rela->sym;
-+	char const *symname = sym->name;
-+	char const *mcount = gpfx == '_' ? "_mcount" : "mcount";
-+	char const *fentry = "__fentry__";
-+
-+	if (symname[0] == '.')
-+		++symname;  /* ppc64 hack */
-+	if (strcmp(mcount, symname) == 0 ||
-+	    (altmcount && strcmp(altmcount, symname) == 0) ||
-+	    (strcmp(fentry, symname) == 0))
-+		return GELF_R_INFO(rela->sym->idx, rela->type);
-+	return 0;
-+}
-+
- static const unsigned int missing_sym = (unsigned int)-1;
- 
- /* 32 bit and 64 bit are very similar */
 diff --git a/tools/objtool/recordmcount.h b/tools/objtool/recordmcount.h
-index 5fa51118cab0..9bba41ee2db2 100644
+index 9bba41ee2db2..f99851034fa8 100644
 --- a/tools/objtool/recordmcount.h
 +++ b/tools/objtool/recordmcount.h
-@@ -27,7 +27,6 @@
- #undef find_section_sym_index
+@@ -28,7 +28,6 @@
  #undef has_rel_mcount
  #undef tot_relsize
--#undef get_mcountsym
  #undef do_func
- #undef Elf_Addr
+-#undef Elf_Addr
  #undef Elf_Ehdr
-@@ -50,7 +49,6 @@
- # define has_rel_mcount		has64_rel_mcount
- # define tot_relsize		tot64_relsize
- # define do_func		do64
--# define get_mcountsym		get_mcountsym_64
- # define is_fake_mcount		is_fake_mcount64
+ #undef Elf_Shdr
+ #undef Elf_Rel
+@@ -53,7 +52,6 @@
  # define fn_is_fake_mcount	fn_is_fake_mcount64
  # define MIPS_is_fake_mcount	MIPS64_is_fake_mcount
-@@ -75,7 +73,6 @@
- # define has_rel_mcount		has32_rel_mcount
- # define tot_relsize		tot32_relsize
- # define do_func		do32
--# define get_mcountsym		get_mcountsym_32
- # define is_fake_mcount		is_fake_mcount32
+ # define mcount_adjust		mcount_adjust_64
+-# define Elf_Addr		Elf64_Addr
+ # define Elf_Ehdr		Elf64_Ehdr
+ # define Elf_Shdr		Elf64_Shdr
+ # define Elf_Rel		Elf64_Rel
+@@ -77,7 +75,6 @@
  # define fn_is_fake_mcount	fn_is_fake_mcount32
  # define MIPS_is_fake_mcount	MIPS32_is_fake_mcount
-@@ -234,22 +231,6 @@ static int append_func(Elf_Ehdr *const ehdr,
- 	return elf_write(lf);
- }
+ # define mcount_adjust		mcount_adjust_32
+-# define Elf_Addr		Elf32_Addr
+ # define Elf_Ehdr		Elf32_Ehdr
+ # define Elf_Shdr		Elf32_Shdr
+ # define Elf_Rel		Elf32_Rel
+@@ -129,11 +126,11 @@ static int mcount_adjust = 0;
  
--static unsigned get_mcountsym(struct rela *rela)
--{
--	struct symbol *sym = rela->sym;
--	char const *symname = sym->name;
--	char const *mcount = gpfx == '_' ? "_mcount" : "mcount";
--	char const *fentry = "__fentry__";
--
--	if (symname[0] == '.')
--		++symname;  /* ppc64 hack */
--	if (strcmp(mcount, symname) == 0 ||
--	    (altmcount && strcmp(altmcount, symname) == 0) ||
--	    (strcmp(fentry, symname) == 0))
--		return GELF_R_INFO(rela->sym->idx, rela->type);
--	return 0;
--}
--
- /*
-  * Look at the relocations in order to find the calls to mcount.
-  * Accumulate the section offsets that are found, and their relocation info,
+ static int MIPS_is_fake_mcount(struct rela const *rela)
+ {
+-	static Elf_Addr old_r_offset = ~(Elf_Addr)0;
+-	Elf_Addr current_r_offset = rela->offset;
++	static unsigned long old_r_offset = ~0UL;
++	unsigned long current_r_offset = rela->offset;
+ 	int is_fake;
+ 
+-	is_fake = (old_r_offset != ~(Elf_Addr)0) &&
++	is_fake = (old_r_offset != ~0UL) &&
+ 		(current_r_offset - old_r_offset == MIPS_FAKEMCOUNT_OFFSET);
+ 	old_r_offset = current_r_offset;
+ 
 -- 
 2.20.1
 
