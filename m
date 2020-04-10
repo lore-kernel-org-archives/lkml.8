@@ -4,52 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A1A8C2BB85
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 03:47:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B71ACC2BB86
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 03:47:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D4549214D8
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 03:47:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8FA4320CC7
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 03:47:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586490446;
-	bh=RNwFNWBjhyFKt/046IiLuAMSumi5DABqIaiGdEpHIl4=;
+	s=default; t=1586490449;
+	bh=JAM8Anmk5de6aKDdGnzSs1IdSmz8uxl2HUNp4pHbp6s=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BYEsHIIERH3OiiXFr90n5eJ3Qrnfx6K/b3XF6LSATBCJLz5Lv/A31ICnKy+WTng3K
-	 K5ckR03x1Q2/W3utK9FfUrpaDVgW+OjRVjxnXVJ897A3bsvQBaOYKnTJy6WfAmqeWq
-	 cCwnjSkDQjuDdEGTUfiM7PSSrKK+RMsGD08yoc+Q=
+	b=mUk6CHUQe6n9gXXNwo8e9bLVM2MaDKIXbx0/v5kxTcLemKcGutC0PLJWx5oMo25if
+	 SMPYPo8nkCNXa1dPMhgrorIz5f4RbP/LLbYVD1eRl3bAv0evQ0nt7MN4NVKhpmHcxJ
+	 8ZSiajEJAuEsjKx9waUwfnC99oYgBGDmN0jmuSUY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727469AbgDJDrY (ORCPT
+        id S1727549AbgDJDr2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Apr 2020 23:47:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58068 "EHLO mail.kernel.org"
+        Thu, 9 Apr 2020 23:47:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58132 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727368AbgDJDrX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Apr 2020 23:47:23 -0400
+        id S1727464AbgDJDrZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Apr 2020 23:47:25 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DCD0520936;
-        Fri, 10 Apr 2020 03:47:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 628E2212CC;
+        Fri, 10 Apr 2020 03:47:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586490442;
-        bh=RNwFNWBjhyFKt/046IiLuAMSumi5DABqIaiGdEpHIl4=;
+        s=default; t=1586490445;
+        bh=JAM8Anmk5de6aKDdGnzSs1IdSmz8uxl2HUNp4pHbp6s=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=l/L5goQQX/7W1ELNxj+ODJsOWNjSLVcPjFxI4ogFTXx0pDaIfgmkx+tLOW34VkhMZ
-         LArrk9Fr52OZsfNyVgi9lzpydo6afIZ7CZfWs6s4jg3C2Fz0bZvut7hIpiknRkzbwv
-         d1bmPko5qtJebJd+LIEcnQWuXY7jOJoHPCeiYmgI=
+        b=AbPEMvQMTLVKhohnc6w6d5KpJ8Yb51of2ijRIPniFVJTWXH7jkM5UGm1iamKYX031
+         qJNfn81O1FFKVTX4hgGAoJSKybVvUmcaPNSV3tqnXWTioBa+518w2O6nTg/YMBfvH0
+         +p5bpRdYtCetOmbSajFfrUyr++DsZzlUXji0mx4A=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Logan Gunthorpe <logang@deltatee.com>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Sasha Levin <sashal@kernel.org>, linux-pci@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.6 39/68] PCI/switchtec: Fix init_completion race condition with poll_wait()
-Date:   Thu,  9 Apr 2020 23:46:04 -0400
-Message-Id: <20200410034634.7731-39-sashal@kernel.org>
+Cc:     Hillf Danton <hdanton@sina.com>,
+        syzbot <syzbot+538d1957ce178382a394@syzkaller.appspotmail.com>,
+        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>,
+        linux-fsdevel@vger.kernel.org, io-uring@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.6 41/68] io-uring: drop completion when removing file
+Date:   Thu,  9 Apr 2020 23:46:06 -0400
+Message-Id: <20200410034634.7731-41-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200410034634.7731-1-sashal@kernel.org>
 References: <20200410034634.7731-1-sashal@kernel.org>
@@ -62,50 +60,107 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Logan Gunthorpe <logang@deltatee.com>
+From: Hillf Danton <hdanton@sina.com>
 
-[ Upstream commit efbdc769601f4d50018bf7ca50fc9f7c67392ece ]
+[ Upstream commit 4afdb733b1606c6cb86e7833f9335f4870cf7ddd ]
 
-The call to init_completion() in mrpc_queue_cmd() can theoretically
-race with the call to poll_wait() in switchtec_dev_poll().
+A case of task hung was reported by syzbot,
 
-  poll()			write()
-    switchtec_dev_poll()   	  switchtec_dev_write()
-      poll_wait(&s->comp.wait);      mrpc_queue_cmd()
-			               init_completion(&s->comp)
-				         init_waitqueue_head(&s->comp.wait)
+INFO: task syz-executor975:9880 blocked for more than 143 seconds.
+      Not tainted 5.6.0-rc6-syzkaller #0
+"echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
+syz-executor975 D27576  9880   9878 0x80004000
+Call Trace:
+ schedule+0xd0/0x2a0 kernel/sched/core.c:4154
+ schedule_timeout+0x6db/0xba0 kernel/time/timer.c:1871
+ do_wait_for_common kernel/sched/completion.c:83 [inline]
+ __wait_for_common kernel/sched/completion.c:104 [inline]
+ wait_for_common kernel/sched/completion.c:115 [inline]
+ wait_for_completion+0x26a/0x3c0 kernel/sched/completion.c:136
+ io_queue_file_removal+0x1af/0x1e0 fs/io_uring.c:5826
+ __io_sqe_files_update.isra.0+0x3a1/0xb00 fs/io_uring.c:5867
+ io_sqe_files_update fs/io_uring.c:5918 [inline]
+ __io_uring_register+0x377/0x2c00 fs/io_uring.c:7131
+ __do_sys_io_uring_register fs/io_uring.c:7202 [inline]
+ __se_sys_io_uring_register fs/io_uring.c:7184 [inline]
+ __x64_sys_io_uring_register+0x192/0x560 fs/io_uring.c:7184
+ do_syscall_64+0xf6/0x7d0 arch/x86/entry/common.c:294
+ entry_SYSCALL_64_after_hwframe+0x49/0xbe
 
-To my knowledge, no one has hit this bug.
+and bisect pointed to 05f3fb3c5397 ("io_uring: avoid ring quiesce for
+fixed file set unregister and update").
 
-Fix this by using reinit_completion() instead of init_completion() in
-mrpc_queue_cmd().
+It is down to the order that we wait for work done before flushing it
+while nobody is likely going to wake us up.
 
-Fixes: 080b47def5e5 ("MicroSemi Switchtec management interface driver")
+We can drop that completion on stack as flushing work itself is a sync
+operation we need and no more is left behind it.
 
-Reported-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Acked-by: Bjorn Helgaas <bhelgaas@google.com>
-Link: https://lkml.kernel.org/r/20200313183608.2646-1-logang@deltatee.com
+To that end, io_file_put::done is re-used for indicating if it can be
+freed in the workqueue worker context.
+
+Reported-and-Inspired-by: syzbot <syzbot+538d1957ce178382a394@syzkaller.appspotmail.com>
+Signed-off-by: Hillf Danton <hdanton@sina.com>
+
+Rename ->done to ->free_pfile
+
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pci/switch/switchtec.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/io_uring.c | 13 +++++--------
+ 1 file changed, 5 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/pci/switch/switchtec.c b/drivers/pci/switch/switchtec.c
-index a823b4b8ef8a9..81dc7ac013817 100644
---- a/drivers/pci/switch/switchtec.c
-+++ b/drivers/pci/switch/switchtec.c
-@@ -175,7 +175,7 @@ static int mrpc_queue_cmd(struct switchtec_user *stuser)
- 	kref_get(&stuser->kref);
- 	stuser->read_len = sizeof(stuser->data);
- 	stuser_set_state(stuser, MRPC_QUEUED);
--	init_completion(&stuser->comp);
-+	reinit_completion(&stuser->comp);
- 	list_add_tail(&stuser->list, &stdev->mrpc_queue);
+diff --git a/fs/io_uring.c b/fs/io_uring.c
+index 3affd96a98ba7..bdcffd78fbb93 100644
+--- a/fs/io_uring.c
++++ b/fs/io_uring.c
+@@ -5607,7 +5607,7 @@ static void io_ring_file_put(struct io_ring_ctx *ctx, struct file *file)
+ struct io_file_put {
+ 	struct llist_node llist;
+ 	struct file *file;
+-	struct completion *done;
++	bool free_pfile;
+ };
  
- 	mrpc_cmd_submit(stdev);
+ static void io_ring_file_ref_flush(struct fixed_file_data *data)
+@@ -5618,9 +5618,7 @@ static void io_ring_file_ref_flush(struct fixed_file_data *data)
+ 	while ((node = llist_del_all(&data->put_llist)) != NULL) {
+ 		llist_for_each_entry_safe(pfile, tmp, node, llist) {
+ 			io_ring_file_put(data->ctx, pfile->file);
+-			if (pfile->done)
+-				complete(pfile->done);
+-			else
++			if (pfile->free_pfile)
+ 				kfree(pfile);
+ 		}
+ 	}
+@@ -5820,7 +5818,6 @@ static bool io_queue_file_removal(struct fixed_file_data *data,
+ 				  struct file *file)
+ {
+ 	struct io_file_put *pfile, pfile_stack;
+-	DECLARE_COMPLETION_ONSTACK(done);
+ 
+ 	/*
+ 	 * If we fail allocating the struct we need for doing async reomval
+@@ -5829,15 +5826,15 @@ static bool io_queue_file_removal(struct fixed_file_data *data,
+ 	pfile = kzalloc(sizeof(*pfile), GFP_KERNEL);
+ 	if (!pfile) {
+ 		pfile = &pfile_stack;
+-		pfile->done = &done;
+-	}
++		pfile->free_pfile = false;
++	} else
++		pfile->free_pfile = true;
+ 
+ 	pfile->file = file;
+ 	llist_add(&pfile->llist, &data->put_llist);
+ 
+ 	if (pfile == &pfile_stack) {
+ 		percpu_ref_switch_to_atomic(&data->refs, io_atomic_switch);
+-		wait_for_completion(&done);
+ 		flush_work(&data->ref_work);
+ 		return false;
+ 	}
 -- 
 2.20.1
 
