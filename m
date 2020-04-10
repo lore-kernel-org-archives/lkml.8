@@ -6,26 +6,26 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4C32C2D0EC
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 19:36:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4250DC2D0EC
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 19:36:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9829B20732
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 19:36:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1EC1C20769
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 19:36:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726809AbgDJTgj (ORCPT
+        id S1726822AbgDJTgp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Apr 2020 15:36:39 -0400
-Received: from ex13-edg-ou-001.vmware.com ([208.91.0.189]:55131 "EHLO
+        Fri, 10 Apr 2020 15:36:45 -0400
+Received: from ex13-edg-ou-001.vmware.com ([208.91.0.189]:55137 "EHLO
         EX13-EDG-OU-001.vmware.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726702AbgDJTgj (ORCPT
+        by vger.kernel.org with ESMTP id S1726702AbgDJTgp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Apr 2020 15:36:39 -0400
+        Fri, 10 Apr 2020 15:36:45 -0400
 Received: from sc9-mailhost2.vmware.com (10.113.161.72) by
  EX13-EDG-OU-001.vmware.com (10.113.208.155) with Microsoft SMTP Server id
- 15.0.1156.6; Fri, 10 Apr 2020 12:36:34 -0700
+ 15.0.1156.6; Fri, 10 Apr 2020 12:36:40 -0700
 Received: from sc9-mailhost3.vmware.com (unknown [10.166.69.226])
-        by sc9-mailhost2.vmware.com (Postfix) with ESMTP id 58531B2C7E;
-        Fri, 10 Apr 2020 15:36:38 -0400 (EDT)
+        by sc9-mailhost2.vmware.com (Postfix) with ESMTP id 1626EB2C87;
+        Fri, 10 Apr 2020 15:36:44 -0400 (EDT)
 From:   Matt Helsley <mhelsley@vmware.com>
 To:     <linux-kernel@vger.kernel.org>
 CC:     Josh Poimboeuf <jpoimboe@redhat.com>,
@@ -35,9 +35,9 @@ CC:     Josh Poimboeuf <jpoimboe@redhat.com>,
         Steven Rostedt <rostedt@goodmis.org>,
         Miroslav Benes <mbenes@suse.cz>,
         Matt Helsley <mhelsley@vmware.com>
-Subject: [RFC][PATCH 05/36] objtool: Add support for relocations without addends
-Date:   Fri, 10 Apr 2020 12:35:28 -0700
-Message-ID: <e5335e88eee0a32d3bfc0592335e3577f081bdee.1586468801.git.mhelsley@vmware.com>
+Subject: [RFC][PATCH 06/36] objtool: Prepare to merge recordmcount
+Date:   Fri, 10 Apr 2020 12:35:29 -0700
+Message-ID: <d6dc160104731b30b364d9f9fb78261736f44d4e.1586468801.git.mhelsley@vmware.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <cover.1586468801.git.mhelsley@vmware.com>
 References: <cover.1586468801.git.mhelsley@vmware.com>
@@ -51,137 +51,188 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently objtool only collects information about relocations with
-addends. In recordmcount, which we are about to merge into objtool,
-some supported architectures do not use rela relocations. Since
-object files use one or the other the list can be reused.
+Move recordmcount into the objtool directory. We keep this step separate
+so changes which turn recordmcount into a subcommand of objtool don't
+get obscured.
 
 Signed-off-by: Matt Helsley <mhelsley@vmware.com>
 ---
- tools/objtool/elf.c | 55 ++++++++++++++++++++++++++++++++++++---------
- tools/objtool/elf.h |  5 ++++-
- 2 files changed, 49 insertions(+), 11 deletions(-)
+ Documentation/trace/ftrace-design.rst      |  4 ++--
+ Documentation/trace/ftrace.rst             |  2 +-
+ scripts/.gitignore                         |  1 -
+ scripts/Makefile                           |  1 -
+ scripts/Makefile.build                     | 11 ++++++-----
+ tools/objtool/.gitignore                   |  1 +
+ tools/objtool/Build                        |  2 ++
+ tools/objtool/Makefile                     | 13 ++++++++++++-
+ {scripts => tools/objtool}/recordmcount.c  |  0
+ {scripts => tools/objtool}/recordmcount.h  |  0
+ {scripts => tools/objtool}/recordmcount.pl |  0
+ 11 files changed, 24 insertions(+), 11 deletions(-)
+ rename {scripts => tools/objtool}/recordmcount.c (100%)
+ rename {scripts => tools/objtool}/recordmcount.h (100%)
+ rename {scripts => tools/objtool}/recordmcount.pl (100%)
 
-diff --git a/tools/objtool/elf.c b/tools/objtool/elf.c
-index 09ddc8f1def3..88ce3efa394c 100644
---- a/tools/objtool/elf.c
-+++ b/tools/objtool/elf.c
-@@ -465,12 +465,14 @@ static int read_relas(struct elf *elf)
- 	unsigned long nr_rela, max_rela = 0, tot_rela = 0;
+diff --git a/Documentation/trace/ftrace-design.rst b/Documentation/trace/ftrace-design.rst
+index a8e22e0db63c..dea8db5e79d0 100644
+--- a/Documentation/trace/ftrace-design.rst
++++ b/Documentation/trace/ftrace-design.rst
+@@ -261,7 +261,7 @@ You need very few things to get the syscalls tracing in an arch.
+ HAVE_FTRACE_MCOUNT_RECORD
+ -------------------------
  
- 	list_for_each_entry(sec, &elf->sections, list) {
--		if (sec->sh.sh_type != SHT_RELA)
-+		if ((sec->sh.sh_type != SHT_RELA) &&
-+		     (sec->sh.sh_type != SHT_REL))
- 			continue;
+-See scripts/recordmcount.pl for more info.  Just fill in the arch-specific
++See tools/objtool/recordmcount.pl for more info.  Just fill in the arch-specific
+ details for how to locate the addresses of mcount call sites via objdump.
+ This option doesn't make much sense without also implementing dynamic ftrace.
  
--		sec->base = find_section_by_name(elf, sec->name + 5);
-+		sec->base = find_section_by_name(elf, sec->name +
-+				((sec->sh.sh_type != SHT_REL) ? 5 : 4));
- 		if (!sec->base) {
--			WARN("can't find base section for rela section %s",
-+			WARN("can't find base section for relocation section %s",
- 			     sec->name);
- 			return -1;
- 		}
-@@ -486,13 +488,26 @@ static int read_relas(struct elf *elf)
- 			}
- 			memset(rela, 0, sizeof(*rela));
+@@ -379,7 +379,7 @@ linux/ftrace.h for the functions::
+ 	ftrace_make_call()
  
--			if (!gelf_getrela(sec->data, i, &rela->rela)) {
--				WARN_ELF("gelf_getrela");
--				return -1;
-+			switch(sec->sh.sh_type) {
-+			case SHT_REL:
-+				if (!gelf_getrel(sec->data, i, &rela->rel)) {
-+					WARN_ELF("gelf_getrel");
-+					return -1;
-+				}
-+				rela->addend = 0;
-+				break;
-+			case SHT_RELA:
-+				if (!gelf_getrela(sec->data, i, &rela->rela)) {
-+					WARN_ELF("gelf_getrela");
-+					return -1;
-+				}
-+				rela->addend = rela->rela.r_addend;
-+				break;
-+			default:
-+				break;
- 			}
+ The rec->ip value is the address of the mcount call site that was collected
+-by the scripts/recordmcount.pl during build time.
++by the tools/objtool/recordmcount.pl during build time.
  
- 			rela->type = GELF_R_TYPE(rela->rela.r_info);
--			rela->addend = rela->rela.r_addend;
- 			rela->offset = rela->rela.r_offset;
- 			symndx = GELF_R_SYM(rela->rela.r_info);
- 			rela->sym = find_symbol_by_index(elf, symndx);
-@@ -717,17 +732,27 @@ int elf_rebuild_rela_section(struct section *sec)
- 	struct rela *rela;
- 	int nr, idx = 0, size;
- 	GElf_Rela *relas;
-+	GElf_Rel *rels;
+ The last function is used to do runtime patching of the active tracer.  This
+ will be modifying the assembly code at the location of the ftrace_call symbol
+diff --git a/Documentation/trace/ftrace.rst b/Documentation/trace/ftrace.rst
+index 3b5614b1d1a5..9adefcc3c7a8 100644
+--- a/Documentation/trace/ftrace.rst
++++ b/Documentation/trace/ftrace.rst
+@@ -2685,7 +2685,7 @@ starts of pointing to a simple return. (Enabling FTRACE will
+ include the -pg switch in the compiling of the kernel.)
  
- 	nr = 0;
- 	list_for_each_entry(rela, &sec->rela_list, list)
- 		nr++;
+ At compile time every C file object is run through the
+-recordmcount program (located in the scripts directory). This
++recordmcount program (located in the tools/objtool directory). This
+ program will parse the ELF headers in the C object to find all
+ the locations in the .text section that call mcount. Starting
+ with gcc version 4.6, the -mfentry has been added for x86, which
+diff --git a/scripts/.gitignore b/scripts/.gitignore
+index 0d1c8e217cd7..dafda6d2c306 100644
+--- a/scripts/.gitignore
++++ b/scripts/.gitignore
+@@ -2,7 +2,6 @@
+ bin2c
+ kallsyms
+ unifdef
+-recordmcount
+ sorttable
+ asn1_compiler
+ extract-cert
+diff --git a/scripts/Makefile b/scripts/Makefile
+index 5e75802b1a44..f0f869364e5a 100644
+--- a/scripts/Makefile
++++ b/scripts/Makefile
+@@ -9,7 +9,6 @@ HOST_EXTRACFLAGS += -I$(srctree)/tools/include
  
-+	/*
-+	 * Allocate a buffer for relocations with addends but also use
-+	 * it for other relocations too. The section type determines
-+	 * the size of the section, the buffer used, and the entries.
-+	 */
- 	size = nr * sizeof(*relas);
- 	relas = malloc(size);
- 	if (!relas) {
- 		perror("malloc");
- 		return -1;
- 	}
-+	rels = (void *)relas;
-+	if (sec->sh.sh_type == SHT_REL) {
-+		size = nr * sizeof(*rels);
-+	}
+ always-$(CONFIG_BUILD_BIN2C)			+= bin2c
+ always-$(CONFIG_KALLSYMS)			+= kallsyms
+-always-$(BUILD_C_RECORDMCOUNT)			+= recordmcount
+ always-$(CONFIG_BUILDTIME_TABLE_SORT)		+= sorttable
+ always-$(CONFIG_ASN1)				+= asn1_compiler
+ always-$(CONFIG_MODULE_SIG_FORMAT)		+= sign-file
+diff --git a/scripts/Makefile.build b/scripts/Makefile.build
+index a1730d42e5f3..5bc668dbfb61 100644
+--- a/scripts/Makefile.build
++++ b/scripts/Makefile.build
+@@ -175,18 +175,19 @@ endif
+ # files, including recordmcount.
+ sub_cmd_record_mcount =					\
+ 	if [ $(@) != "scripts/mod/empty.o" ]; then	\
+-		$(objtree)/scripts/recordmcount $(RECORDMCOUNT_FLAGS) "$(@)";	\
++		$(objtree)/tools/objtool/recordmcount $(RECORDMCOUNT_FLAGS) "$(@)";	\
+ 	fi;
+-recordmcount_source := $(srctree)/scripts/recordmcount.c \
+-		    $(srctree)/scripts/recordmcount.h
++
++recordmcount_source := $(srctree)/tools/objtool/recordmcount.c \
++		    $(srctree)/tools/objtool/recordmcount.h
+ else
+-sub_cmd_record_mcount = perl $(srctree)/scripts/recordmcount.pl "$(ARCH)" \
++sub_cmd_record_mcount = perl $(srctree)/tools/objtool/recordmcount.pl "$(ARCH)" \
+ 	"$(if $(CONFIG_CPU_BIG_ENDIAN),big,little)" \
+ 	"$(if $(CONFIG_64BIT),64,32)" \
+ 	"$(OBJDUMP)" "$(OBJCOPY)" "$(CC) $(KBUILD_CPPFLAGS) $(KBUILD_CFLAGS)" \
+ 	"$(LD) $(KBUILD_LDFLAGS)" "$(NM)" "$(RM)" "$(MV)" \
+ 	"$(if $(part-of-module),1,0)" "$(@)";
+-recordmcount_source := $(srctree)/scripts/recordmcount.pl
++recordmcount_source := $(srctree)/tools/objtool/recordmcount.pl
+ endif # BUILD_C_RECORDMCOUNT
+ cmd_record_mcount = $(if $(findstring $(strip $(CC_FLAGS_FTRACE)),$(_c_flags)),	\
+ 	$(sub_cmd_record_mcount))
+diff --git a/tools/objtool/.gitignore b/tools/objtool/.gitignore
+index 45cefda24c7b..ea441abcd1d3 100644
+--- a/tools/objtool/.gitignore
++++ b/tools/objtool/.gitignore
+@@ -1,4 +1,5 @@
+ # SPDX-License-Identifier: GPL-2.0-only
+ arch/x86/lib/inat-tables.c
+ objtool
++recordmcount
+ fixdep
+diff --git a/tools/objtool/Build b/tools/objtool/Build
+index e372cddd86e0..35385b1bf313 100644
+--- a/tools/objtool/Build
++++ b/tools/objtool/Build
+@@ -27,3 +27,5 @@ $(OUTPUT)str_error_r.o: ../lib/str_error_r.c FORCE
+ $(OUTPUT)librbtree.o: ../lib/rbtree.c FORCE
+ 	$(call rule_mkdir)
+ 	$(call if_changed_dep,cc_o_c)
++
++recordmcount-y += recordmcount.o
+diff --git a/tools/objtool/Makefile b/tools/objtool/Makefile
+index ee08aeff30a1..e9cbf8728e67 100644
+--- a/tools/objtool/Makefile
++++ b/tools/objtool/Makefile
+@@ -25,6 +25,12 @@ OBJTOOL_IN := $(OBJTOOL)-in.o
+ LIBELF_FLAGS := $(shell pkg-config libelf --cflags 2>/dev/null)
+ LIBELF_LIBS  := $(shell pkg-config libelf --libs 2>/dev/null || echo -lelf)
  
- 	sec->data->d_buf = relas;
- 	sec->data->d_size = size;
-@@ -736,9 +761,19 @@ int elf_rebuild_rela_section(struct section *sec)
++RECORDMCOUNT := $(OUTPUT)recordmcount
++RECORDMCOUNT_IN := $(RECORDMCOUNT)-in.o
++ifeq ($(BUILD_C_RECORDMCOUNT),y)
++all:  $(RECORDMCOUNT)
++endif
++
+ all: $(OBJTOOL)
  
- 	idx = 0;
- 	list_for_each_entry(rela, &sec->rela_list, list) {
--		relas[idx].r_offset = rela->offset;
--		relas[idx].r_addend = rela->addend;
--		relas[idx].r_info = GELF_R_INFO(rela->sym->idx, rela->type);
-+		switch(sec->sh.sh_type) {
-+		case SHT_REL:
-+			rels[idx].r_offset = rela->offset;
-+			rels[idx].r_info = GELF_R_INFO(rela->sym->idx, rela->type);
-+			break;
-+		case SHT_RELA:
-+			relas[idx].r_addend = rela->addend;
-+			relas[idx].r_offset = rela->offset;
-+			relas[idx].r_info = GELF_R_INFO(rela->sym->idx, rela->type);
-+			break;
-+		default:
-+			break;
-+		}
- 		idx++;
- 	}
+ INCLUDES := -I$(srctree)/tools/include \
+@@ -45,16 +51,21 @@ include $(srctree)/tools/build/Makefile.include
+ $(OBJTOOL_IN): fixdep FORCE
+ 	@$(MAKE) $(build)=objtool
  
-diff --git a/tools/objtool/elf.h b/tools/objtool/elf.h
-index ebbb10c61e24..5ad29bb84692 100644
---- a/tools/objtool/elf.h
-+++ b/tools/objtool/elf.h
-@@ -61,7 +61,10 @@ struct symbol {
- struct rela {
- 	struct list_head list;
- 	struct hlist_node hash;
--	GElf_Rela rela;
-+	union {
-+		GElf_Rela rela;
-+		GElf_Rel  rel;
-+	};
- 	struct section *sec;
- 	struct symbol *sym;
- 	unsigned int type;
++$(RECORDMCOUNT_IN): fixdep FORCE
++	@$(MAKE) $(build)=recordmcount
++
+ $(OBJTOOL): $(LIBSUBCMD) $(OBJTOOL_IN)
+ 	@$(CONFIG_SHELL) ./sync-check.sh
+ 	$(QUIET_LINK)$(CC) $(OBJTOOL_IN) $(LDFLAGS) -o $@
+ 
++$(RECORDMCOUNT): $(RECORDMCOUNT_IN)
++	$(QUIET_LINK)$(CC) $(RECORDMCOUNT_IN) $(KBUILD_HOSTLDFLAGS) -o $@
+ 
+ $(LIBSUBCMD): fixdep FORCE
+ 	$(Q)$(MAKE) -C $(SUBCMD_SRCDIR) OUTPUT=$(LIBSUBCMD_OUTPUT)
+ 
+ clean:
+-	$(call QUIET_CLEAN, objtool) $(RM) $(OBJTOOL)
++	$(call QUIET_CLEAN, objtool) $(RM) $(OBJTOOL) $(RECORDMCOUNT)
+ 	$(Q)find $(OUTPUT) -name '*.o' -delete -o -name '\.*.cmd' -delete -o -name '\.*.d' -delete
+ 	$(Q)$(RM) $(OUTPUT)arch/x86/inat-tables.c $(OUTPUT)fixdep
+ 
+diff --git a/scripts/recordmcount.c b/tools/objtool/recordmcount.c
+similarity index 100%
+rename from scripts/recordmcount.c
+rename to tools/objtool/recordmcount.c
+diff --git a/scripts/recordmcount.h b/tools/objtool/recordmcount.h
+similarity index 100%
+rename from scripts/recordmcount.h
+rename to tools/objtool/recordmcount.h
+diff --git a/scripts/recordmcount.pl b/tools/objtool/recordmcount.pl
+similarity index 100%
+rename from scripts/recordmcount.pl
+rename to tools/objtool/recordmcount.pl
 -- 
 2.20.1
 
