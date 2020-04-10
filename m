@@ -2,148 +2,95 @@ Return-Path: <SRS0=VV4q=52=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A729C2BB86
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 12:29:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99F92C2BB86
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 12:30:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 324CD20769
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 12:29:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 70DA0208E4
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 12:30:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dFATq622"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UhdOUThD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726263AbgDJM3X (ORCPT
+        id S1726648AbgDJMad (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Apr 2020 08:29:23 -0400
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:45999 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725926AbgDJM3X (ORCPT
+        Fri, 10 Apr 2020 08:30:33 -0400
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:47047 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725926AbgDJMad (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Apr 2020 08:29:23 -0400
-Received: by mail-lf1-f65.google.com with SMTP id f8so1226398lfe.12;
-        Fri, 10 Apr 2020 05:29:21 -0700 (PDT)
+        Fri, 10 Apr 2020 08:30:33 -0400
+Received: by mail-lf1-f66.google.com with SMTP id m19so1226324lfq.13;
+        Fri, 10 Apr 2020 05:30:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=sender:from:to:cc:subject:date:message-id;
-        bh=dyzXmKu6IT/Un75AvtMcFm0MmYMRWfAsrqCi/hItOfE=;
-        b=dFATq6225UkB+ndW1q0MUtbxWax/bpYH/lVDUCCZoR/bytXFFKlAvqU0ogKu1vZkRm
-         Z6XEBY73WGQruhzmC+P0je0W9srJO1Z6H90Agqn9j/HblTKoTAedwlex9pfEoXdektBt
-         3WzuqQc6zlXYYXGFaYsi7xtfRtvltqXZKDzp8FcIldCIcbB1814nLAAkO43RlBgacEEh
-         YLisjYAFkDbbqJ6j4J/cYb9EYVLwKzJZxbllMRaYEVwKD6xJvGwHhpm5Juy8lRMlCeeS
-         3J6P5l+ycqOcAU+tLO6wBVUi5d+Au10o//CznthQiwSjQOmqC5w0eAyaypyjtstLY78I
-         Zv0w==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=/wxc7mReIW0I/9bGXTr0ixTFqsRHmu5x96+RkLeeN6c=;
+        b=UhdOUThDXUsEVxm+BcFPoLrZbBISCqLbMnOIO/+ksl/iwGQHXK3T1IW0amcnMn/D7o
+         b7WR7IVdaR1vh0IEOCs7T3aESfBr8WerWgHuOqOfwflaChJolVe2Q+1zMXQW3mwqvbkN
+         hpa9JCs3OxbAtaB9qBquyWPyGIapVOVmhE5VzYsmd21eAqaHIXeZMlZ06TfMD/CMsKU5
+         brdw62stUhFRn2sTkPcSf76O5ane6G7uKY+5oDpe/vwLH0R6CITKNsFX0iJL2PTjk6b5
+         GZtH4lbj1RCvXIdLUmj70Y55HAF2B1rI6d4fJN459gL1mfBMRaXAq0AhE09Ux8rxpvBx
+         VFPw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id;
-        bh=dyzXmKu6IT/Un75AvtMcFm0MmYMRWfAsrqCi/hItOfE=;
-        b=LlnmE1MnWnoQQYcDlwk7IcqHbEnTSCvylPyhLiQBoqWfnO970g3hDuDyQvB9XP0lPe
-         WH8z6AplEnKV3qsW2eGhaLItF08tQ8Y/7+nHn+yhTnr5pLgs2djESpqX/imvLQbaqypt
-         iiswSRl6xEgFBjKtxs7ULZ1nptFwLHy8ReC/eH2XR47dnJ/bnEnWiWKiN8Slz/Ciq75w
-         wr5LM2k1zildEGt6E676AmhawjfvGd7ZsUunNEFJTvlVimcbXsdLhcY1AMo4UpSbeL59
-         6fhBkCqY33USI6vNDggrtrPJbR32QurPGDbZLXLceSZywIN/GIA3qUyem74H9FvisI1H
-         ctSg==
-X-Gm-Message-State: AGi0Puagx6oFSmgy34G5EpGoWcvbUSM99Bb1uN9Euglz0MTpMCz8ey72
-        H67C7Tc2TPOGsRusNOPwRSc=
-X-Google-Smtp-Source: APiQypJ59syTnwhr8k42RVJGDg6iEEJkC7GLZ1DlgJlnvdwUdJtTLQ/W3A8JB7VDaL0cqCJ4blofZA==
-X-Received: by 2002:ac2:4a9d:: with SMTP id l29mr2420626lfp.4.1586521760984;
-        Fri, 10 Apr 2020 05:29:20 -0700 (PDT)
-Received: from work.bb.dnainternet.fi (dffyyyyyyyyyyyysyd4py-3.rev.dnainternet.fi. [2001:14ba:2100::1e0:1e18])
-        by smtp.gmail.com with ESMTPSA id x17sm1012977ljc.33.2020.04.10.05.29.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 10 Apr 2020 05:29:20 -0700 (PDT)
-From:   Tuomas Tynkkynen <tuomas.tynkkynen@iki.fi>
-To:     axboe@kernel.dk, josef@toxicpanda.com
-Cc:     linux-block@vger.kernel.org, nbd@other.debian.org,
-        linux-kernel@vger.kernel.org,
-        syzbot+934037347002901b8d2a@syzkaller.appspotmail.com,
-        Tuomas Tynkkynen <tuomas.tynkkynen@iki.fi>, stable@kernel.org
-Subject: [PATCH] nbd: Fix memory leak from krealloc() if another allocation fails
-Date:   Fri, 10 Apr 2020 15:29:13 +0300
-Message-Id: <20200410122913.14339-1-tuomas.tynkkynen@iki.fi>
-X-Mailer: git-send-email 2.17.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=/wxc7mReIW0I/9bGXTr0ixTFqsRHmu5x96+RkLeeN6c=;
+        b=Y32xGH1IuMy/QAhLQGuQ9BKJsyuuumVoWcyAuuF3rr0o2xIIUczZSP1bilF9l/A2IY
+         PjFmRn2zAV41mTblR29YLuLLJQdO6ky4iU7/zEq7r9/ctVJznRZqWuzoe9pxIugCbbZU
+         Utv8ObYrsc+iJIukj3DJ5JAIKEZNNUr7QQpbx0eTUieldQQho/nUcrcTCZs1uTYG1QtE
+         8gyy93DOEZDvTTgl1Svw6MjnIbptOwdmdaZ/TdMvxZi4bqgSM4wnS4b+TDvz9sSEif6B
+         y37OeOoCagKTRhcoaEZfJEdqfGICASIsJlbW14oEE6xm7CTnrP/hn3U4fupOwuBTKtA2
+         MFVg==
+X-Gm-Message-State: AGi0PuaR9jU4mbrhrjcMd2pnETxpJcsEOvEHIFosbi4tpuibWc4Kw++y
+        Lva1+3tDeq5jN9ieSqRjUN3IULzEeVX8CxwIDh8IjKGp
+X-Google-Smtp-Source: APiQypKbT1f0FIBVJXC+bXz14yNA1I+1UT6w/M7bmkAigetfHQuvslFLulfIjNzdwy6W3aAIolbWZMQR+WwhVNs5wLc=
+X-Received: by 2002:ac2:57cc:: with SMTP id k12mr2456508lfo.69.1586521831805;
+ Fri, 10 Apr 2020 05:30:31 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200410004738.19668-1-ansuelsmth@gmail.com> <20200410004738.19668-3-ansuelsmth@gmail.com>
+ <CAOMZO5AKYO3xLsp4k6_fJCV9qW=rAtRKEGWnxksixU794dOw8A@mail.gmail.com> <003401d60f28$3d045190$b70cf4b0$@gmail.com>
+In-Reply-To: <003401d60f28$3d045190$b70cf4b0$@gmail.com>
+From:   Fabio Estevam <festevam@gmail.com>
+Date:   Fri, 10 Apr 2020 09:31:00 -0300
+Message-ID: <CAOMZO5B+rEoQD_ujt9cx9VXO-i2oqfW2UN2cVeB5hZB3aVpGeQ@mail.gmail.com>
+Subject: Re: [PATCH 2/4] drivers: pci: dwc: pci-imx6: update binding to
+ generic name
+To:     Ansuel Smith <ansuelsmth@gmail.com>
+Cc:     "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, Richard Zhu <hongxing.zhu@nxp.com>,
+        Lucas Stach <l.stach@pengutronix.de>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Andrew Murray <amurray@thegoodpenguin.co.uk>,
+        linux-pci@vger.kernel.org,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-syzkaller reports a memory leak when injecting allocation failures:
+Hi Ansuel,
 
-FAULT_INJECTION: forcing a failure.
-name failslab, interval 1, probability 0, space 0, times 0
-...
- kmem_cache_alloc_trace+0x26/0x2c0
- nbd_add_socket+0xa8/0x1e0
- nbd_ioctl+0x175/0x430
-...
-BUG: memory leak
-    [<0000000090cb73c8>] __do_krealloc mm/slab_common.c:1671 [inline]
-    [<0000000090cb73c8>] krealloc+0x7c/0xa0 mm/slab_common.c:1700
-    [<00000000cf9e6ba7>] nbd_add_socket+0x7d/0x1e0 drivers/block/nbd.c:1040
-    ...
+On Fri, Apr 10, 2020 at 8:07 AM <ansuelsmth@gmail.com> wrote:
 
-This happens when krealloc() succeeds but the kzalloc() fails:
-1040         socks = krealloc(config->socks, (config->num_connections + 1) *
-1041                          sizeof(struct nbd_sock *), GFP_KERNEL);
-1042         if (!socks) {
-1043                 sockfd_put(sock);
-1044                 return -ENOMEM;
-1045         }
-1046
-1047         config->socks = socks;
-1048
-1049         nsock = kzalloc(sizeof(struct nbd_sock), GFP_KERNEL);
-1050         if (!nsock) {
-1051                 sockfd_put(sock);
-1052                 return -ENOMEM;
-1053         }
+> so no chance of changing this?
 
-as then config->num_connections is not incremented and the cleanup code
-freeing config->socks is skipped. Just make it run always.
+Reading the commit log I don't see any explanation as to why you need
+to change the current bindings.
 
-Reported-by: syzbot+934037347002901b8d2a@syzkaller.appspotmail.com
-Cc: stable@kernel.org
-Signed-off-by: Tuomas Tynkkynen <tuomas.tynkkynen@iki.fi>
----
-Compile tested only.
----
- drivers/block/nbd.c | 13 ++++++-------
- 1 file changed, 6 insertions(+), 7 deletions(-)
-
-diff --git a/drivers/block/nbd.c b/drivers/block/nbd.c
-index 43cff01a5a67..f851883ef9f4 100644
---- a/drivers/block/nbd.c
-+++ b/drivers/block/nbd.c
-@@ -1199,6 +1199,8 @@ static void nbd_config_put(struct nbd_device *nbd)
- 	if (refcount_dec_and_mutex_lock(&nbd->config_refs,
- 					&nbd->config_lock)) {
- 		struct nbd_config *config = nbd->config;
-+		int i;
-+
- 		nbd_dev_dbg_close(nbd);
- 		nbd_size_clear(nbd);
- 		if (test_and_clear_bit(NBD_RT_HAS_PID_FILE,
-@@ -1206,14 +1208,11 @@ static void nbd_config_put(struct nbd_device *nbd)
- 			device_remove_file(disk_to_dev(nbd->disk), &pid_attr);
- 		nbd->task_recv = NULL;
- 		nbd_clear_sock(nbd);
--		if (config->num_connections) {
--			int i;
--			for (i = 0; i < config->num_connections; i++) {
--				sockfd_put(config->socks[i]->sock);
--				kfree(config->socks[i]);
--			}
--			kfree(config->socks);
-+		for (i = 0; i < config->num_connections; i++) {
-+			sockfd_put(config->socks[i]->sock);
-+			kfree(config->socks[i]);
- 		}
-+		kfree(config->socks);
- 		kfree(nbd->config);
- 		nbd->config = NULL;
- 
--- 
-2.17.1
-
+What is the motivation for doing this? Is this really worth it?
