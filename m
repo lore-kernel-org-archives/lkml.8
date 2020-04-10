@@ -2,141 +2,240 @@ Return-Path: <SRS0=VV4q=52=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE0CEC2BB86
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 19:41:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6FDFC2D0EC
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 19:41:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8D81020732
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 19:41:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="K5H6j5Z8"
+	by mail.kernel.org (Postfix) with ESMTP id 9467D20801
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 19:41:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726891AbgDJTlk (ORCPT
+        id S1726729AbgDJTl0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Apr 2020 15:41:40 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:37594 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726773AbgDJTlh (ORCPT
+        Fri, 10 Apr 2020 15:41:26 -0400
+Received: from ex13-edg-ou-002.vmware.com ([208.91.0.190]:36243 "EHLO
+        EX13-EDG-OU-002.vmware.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726683AbgDJTlY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Apr 2020 15:41:37 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
-        Subject:Sender:Reply-To:Content-ID:Content-Description;
-        bh=POIx3XHs+z1B1LYmbchLvd+6mRZG4jjVrzB1XvFaETU=; b=K5H6j5Z8UAjUqgnZal2eZP5NdF
-        8pu9HK6BV/ZEhIieqpKOXdk68oFiI4nbhRz2MI/Uwpfujyjt6vQLnEWT/9LN2igNpanJvPAC7t2S5
-        R9w13AOCdEc/ifa0GmlR2HWuM/jDnQa0/7GHk1Va9Q7lfAsIUYt6/lgxhQ0CdpNjWWyKCfTllO9vK
-        NuMHm2hxTf4yj+7kwjDE86avOS51voEMAGm81QUuHSau3Si7EUc1pkcPZhPqClC9h++d7z/UU0ILG
-        eOOihowmxiMDHtTOTz10tCt/Uo/UhdPwrEs7HpAK32RLIyZRE9aPj/1k4sPDqL/taDiUmX/bU9Eiz
-        G4i41mtA==;
-Received: from [2601:1c0:6280:3f0::19c2]
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jMzWy-0000T1-MB; Fri, 10 Apr 2020 19:41:36 +0000
-Subject: Re: linux-next: Tree for Apr 10 (lib/test_printf.ko)
-To:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>
-Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>
-References: <20200410132706.170811b7@canb.auug.org.au>
- <27c212c4-b522-561d-411c-e74dc0ff0b74@infradead.org>
- <CAHk-=wjhsM-n_NzSh=cSdpThX+62-x3EmyKjhMqGHFYEyG0nPg@mail.gmail.com>
- <2b0f5d2e-3fe5-10c9-2a9a-9a0b341a52d5@infradead.org>
- <CAHk-=wjXZSPPWzPs=KBDsLZWuq8qO=9qWfiKHw=yV10fFrDv9Q@mail.gmail.com>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <bfbcaa67-9656-3a80-fc66-c937297c8be0@infradead.org>
-Date:   Fri, 10 Apr 2020 12:41:35 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Fri, 10 Apr 2020 15:41:24 -0400
+Received: from sc9-mailhost2.vmware.com (10.113.161.72) by
+ EX13-EDG-OU-002.vmware.com (10.113.208.156) with Microsoft SMTP Server id
+ 15.0.1156.6; Fri, 10 Apr 2020 12:38:53 -0700
+Received: from sc9-mailhost3.vmware.com (unknown [10.166.69.226])
+        by sc9-mailhost2.vmware.com (Postfix) with ESMTP id 8BFB0B2C9B;
+        Fri, 10 Apr 2020 15:38:57 -0400 (EDT)
+From:   Matt Helsley <mhelsley@vmware.com>
+To:     <linux-kernel@vger.kernel.org>
+CC:     Josh Poimboeuf <jpoimboe@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Julien Thierry <jthierry@redhat.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Miroslav Benes <mbenes@suse.cz>,
+        Matt Helsley <mhelsley@vmware.com>
+Subject: [RFC][PATCH 28/36] objtool: mcount: Remove unused file mapping
+Date:   Fri, 10 Apr 2020 12:35:51 -0700
+Message-ID: <07c49b8d3b040b70821f44fbdef882ef5c977728.1586468801.git.mhelsley@vmware.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <cover.1586468801.git.mhelsley@vmware.com>
+References: <cover.1586468801.git.mhelsley@vmware.com>
 MIME-Version: 1.0
-In-Reply-To: <CAHk-=wjXZSPPWzPs=KBDsLZWuq8qO=9qWfiKHw=yV10fFrDv9Q@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+Received-SPF: None (EX13-EDG-OU-002.vmware.com: mhelsley@vmware.com does not
+ designate permitted sender hosts)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/10/20 12:05 PM, Linus Torvalds wrote:
-> On Fri, Apr 10, 2020 at 11:29 AM Randy Dunlap <rdunlap@infradead.org> wrote:
->>
->>> I wonder if these scripts aren't well enough known, I see a lot of raw
->>> dumps that could be immensely improved with a little scripting - but
->>> they need the original vmlinux binary with debug info, so you can't do
->>> it after-the-fact somewhere else..
->>
+The ELF data is now accessed completely through objtool's
+ELF code. We can remove the mapping of the original ELF
+file and propagate elf_open(), elf_close(), and malloc()
+up in place of mmap_file(), mmap_cleanup(), and umalloc()
+respectively. This also eliminates the last use of the
+umalloc() wrapper, reduces the number of global
+variables, and limits the use of globals to:
 
-> But even dump_stack.sh can't sort out how it got from test_printf_init
-> to software_node_unregister_nodes even though it usually is good about
-> following all the inlining (in this case selftest -> test_pointer ->
-> fwnode_pointer).
-> 
-> That may be because of something like a DEBUG_INFO_REDUCED option.
+	The struct elf for the file we're working on. This
+	saves passing it to nearly every function as a parameter.
 
-No, that's enabled. (see below)
+	Variables set depending on the ELF file endian, wordsize,
+	and arch so that the appropriate relocation structures,
+	offset sizes, architecture quirks, and nop encodings will
+	be used.
 
+	One command-line option
 
->> [  561.071144] _raw_spin_lock_irqsave (linux-next-20200410/rdd64/../include/linux/instrumented.h:71 linux-next-20200410/rdd64/../include/asm-generic/atomic-instrumented.h:695 linux-next-20200410/rdd64/../include/asm-generic/qspinlock.h:78 linux-next-20200410/rdd64/../include/linux/spinlock.h:194 linux-next-20200410/rdd64/../include/linux/spinlock_api_smp.h:119 linux-next-20200410/rdd64/../kernel/locking/spinlock.c:159)
->> [  561.074868] ? _raw_write_unlock_bh (linux-next-20200410/rdd64/../kernel/locking/spinlock.c:158)
->> [  561.078495] ? ida_destroy (linux-next-20200410/rdd64/../lib/idr.c:538)
->> [  561.082144] ida_free (linux-next-20200410/rdd64/../lib/idr.c:495 (discriminator 2))
->> [  561.085694] ? fprop_new_period.cold (linux-next-20200410/rdd64/../lib/idr.c:486)
->> [  561.089228] ? kasan_slab_free (linux-next-20200410/rdd64/../mm/kasan/common.c:466)
->> [  561.092738] ? kfree (linux-next-20200410/rdd64/../mm/slub.c:1478 linux-next-20200410/rdd64/../mm/slub.c:3035 linux-next-20200410/rdd64/../mm/slub.c:4003)
->> [  561.096183] software_node_release (linux-next-20200410/rdd64/../include/linux/list.h:132 linux-next-20200410/rdd64/../include/linux/list.h:146 linux-next-20200410/rdd64/../drivers/base/swnode.c:613)
->> [  561.099644] kobject_put (linux-next-20200410/rdd64/../lib/kobject.c:697 linux-next-20200410/rdd64/../lib/kobject.c:722 linux-next-20200410/rdd64/../include/linux/kref.h:65 linux-next-20200410/rdd64/../lib/kobject.c:739)
->> [  561.103109] kobject_del (linux-next-20200410/rdd64/../lib/kobject.c:629)
->> [  561.106457] kobject_put (linux-next-20200410/rdd64/../lib/kobject.c:690 linux-next-20200410/rdd64/../lib/kobject.c:722 linux-next-20200410/rdd64/../include/linux/kref.h:65 linux-next-20200410/rdd64/../lib/kobject.c:739)
->> [  561.109785] fwnode_remove_software_node (linux-next-20200410/rdd64/../drivers/base/swnode.c:784)
->> [  561.113061] software_node_unregister_nodes (linux-next-20200410/rdd64/../drivers/base/swnode.c:721 (discriminator 2))
->> [  561.116274] test_printf_init (linux-next-20200410/rdd64/../lib/test_printf.c:685 linux-next-20200410/rdd64/../lib/test_printf.c:688) test_printf
-> 
-> It does print out those multiple lines for some things, but doesn't
-> have the nice "inlined by XYZ" I sometimes see that makes it really
-> obvious.
-> 
+Note that we're still using the recordmcount wrapper to change
+variable sizes and structure definitions we use to build the
+mcount relocation data and call instruction offsets.
 
-This is with FRAME_POINTER, not UNWIND_ORC. Maybe that's the difference?
+RFC Reviewer Question: Should these arch bits be broken out to fit
+	objtool's arch directories similar to the way instruction
+	parsing is done? (e.g. arch-specific nop insn writes)
 
+Signed-off-by: Matt Helsley <mhelsley@vmware.com>
+---
+ tools/objtool/recordmcount.c | 99 +++---------------------------------
+ tools/objtool/recordmcount.h |  4 +-
+ 2 files changed, 9 insertions(+), 94 deletions(-)
 
-> So it ends up still just looking like ida_free -> _raw_spin_lock_irqsave.
-> 
-> Strange. But it's all the same freeing path:
-> 
->> [  561.278921] Freed by task 1454:
->> [  561.289528] kfree (linux-next-20200410/rdd64/../mm/slub.c:1478 linux-next-20200410/rdd64/../mm/slub.c:3035 linux-next-20200410/rdd64/../mm/slub.c:4003)
->> [  561.292183] software_node_release (linux-next-20200410/rdd64/../drivers/base/swnode.c:624)
->> [  561.294865] kobject_put (linux-next-20200410/rdd64/../lib/kobject.c:697 linux-next-20200410/rdd64/../lib/kobject.c:722 linux-next-20200410/rdd64/../include/linux/kref.h:65 linux-next-20200410/rdd64/../lib/kobject.c:739)
->> [  561.297501] kobject_del (linux-next-20200410/rdd64/../lib/kobject.c:629)
->> [  561.300154] kobject_put (linux-next-20200410/rdd64/../lib/kobject.c:690 linux-next-20200410/rdd64/../lib/kobject.c:722 linux-next-20200410/rdd64/../include/linux/kref.h:65 linux-next-20200410/rdd64/../lib/kobject.c:739)
->> [  561.302784] kobject_del (linux-next-20200410/rdd64/../lib/kobject.c:629)
->> [  561.305344] kobject_put (linux-next-20200410/rdd64/../lib/kobject.c:690 linux-next-20200410/rdd64/../lib/kobject.c:722 linux-next-20200410/rdd64/../include/linux/kref.h:65 linux-next-20200410/rdd64/../lib/kobject.c:739)
->> [  561.307914] fwnode_remove_software_node (linux-next-20200410/rdd64/../drivers/base/swnode.c:784)
-> 
-> so it at least superficially looks like software_node_release() might
-> be called twice.
-> 
-> Maybe the child node is released after the parent node - and the child
-> node seems to do the
-> 
->         ida_simple_remove(&swnode->parent->child_ids, swnode->id);
-> 
-> and maybe it's that the parent->child_ids was already free'd by the
-> previous software_node_release() call? Do children not keep a refcount
-> to their parent, perhaps?
-> 
-> Somebody who knows the driver core thing needs to look at it. And
-> since I don't play with linux-next apart from checking when I pull, I
-> don't know what might have happened in this area..
-> 
-> Adding some driver core people to the cc.
-> 
->                 Linus-- 
-~Randy
+diff --git a/tools/objtool/recordmcount.c b/tools/objtool/recordmcount.c
+index 409f0ef82211..5fdef8b2ac28 100644
+--- a/tools/objtool/recordmcount.c
++++ b/tools/objtool/recordmcount.c
+@@ -41,104 +41,14 @@
+ #define R_AARCH64_ABS64	257
+ #endif
+ 
+-#define R_ARM_PC24		1
+ #define R_ARM_THM_CALL		10
+-#define R_ARM_CALL		28
+ 
+-static int fd_map;	/* File descriptor for file being modified. */
+-static int mmap_failed; /* Boolean flag. */
+ static char gpfx;	/* prefix for global symbol name (sometimes '_') */
+ static const char *altmcount;	/* alternate mcount symbol name */
+ extern int warn_on_notrace_sect; /* warn when section has mcount not being recorded */
+-static void *file_map;	/* pointer of the mapped file */
+-static size_t file_map_size; /* original ELF file size */
+ 
+ static struct elf *lf;
+ 
+-static void mmap_cleanup(void)
+-{
+-	if (!mmap_failed)
+-		munmap(file_map, file_map_size);
+-	else
+-		free(file_map);
+-	file_map = NULL;
+-	if (lf)
+-		elf_close(lf);
+-	lf = NULL;
+-}
+-
+-static void * umalloc(size_t size)
+-{
+-	void *const addr = malloc(size);
+-	if (addr == 0) {
+-		fprintf(stderr, "malloc failed: %zu bytes\n", size);
+-		mmap_cleanup();
+-		return NULL;
+-	}
+-	return addr;
+-}
+-
+-/*
+- * Get the whole file as a programming convenience in order to avoid
+- * malloc+lseek+read+free of many pieces.  If successful, then mmap
+- * avoids copying unused pieces; else just read the whole file.
+- * Open for both read and write; new info will be appended to the file.
+- * Use MAP_PRIVATE so that a few changes to the in-memory ElfXX_Ehdr
+- * do not propagate to the file until an explicit overwrite at the last.
+- * This preserves most aspects of consistency (all except .st_size)
+- * for simultaneous readers of the file while we are appending to it.
+- * However, multiple writers still are bad.  We choose not to use
+- * locking because it is expensive and the use case of kernel build
+- * makes multiple writers unlikely.
+- */
+-static void *mmap_file(char const *fname)
+-{
+-	struct stat sb;
+-
+-	/* Avoid problems if early cleanup() */
+-	fd_map = -1;
+-	mmap_failed = 1;
+-	file_map = NULL;
+-	file_map_size = 0;
+-
+-	lf = elf_read(fname, O_RDWR);
+-	if (!lf) {
+-		perror(fname);
+-		return NULL;
+-	}
+-	fd_map = lf->fd;
+-	if (fstat(fd_map, &sb) < 0) {
+-		perror(fname);
+-		goto out;
+-	}
+-	if (!S_ISREG(sb.st_mode)) {
+-		fprintf(stderr, "not a regular file: %s\n", fname);
+-		goto out;
+-	}
+-	file_map = mmap(0, sb.st_size, PROT_READ|PROT_WRITE, MAP_PRIVATE,
+-			fd_map, 0);
+-	if (file_map == MAP_FAILED) {
+-		mmap_failed = 1;
+-		file_map = umalloc(sb.st_size);
+-		if (!file_map) {
+-			perror(fname);
+-			goto out;
+-		}
+-		if (read(fd_map, file_map, sb.st_size) != sb.st_size) {
+-			perror(fname);
+-			mmap_cleanup();
+-			goto out;
+-		}
+-	} else
+-		mmap_failed = 0;
+-	file_map_size = sb.st_size;
+-out:
+-	fd_map = -1;
+-
+-	return file_map;
+-}
+-
+-
+ static unsigned char ideal_nop5_x86_64[5] = { 0x0f, 0x1f, 0x44, 0x00, 0x00 };
+ static unsigned char ideal_nop5_x86_32[5] = { 0x3e, 0x8d, 0x74, 0x26, 0x00 };
+ static unsigned char *ideal_nop;
+@@ -525,8 +435,11 @@ static int do_file(char const *const fname)
+ 	unsigned int reltype = 0;
+ 	int rc = -1;
+ 
+-	if (!mmap_file(fname))
++	lf = elf_read(fname, O_RDWR);
++	if (!lf) {
++		perror(fname);
+ 		goto out;
++	}
+ 
+ 	w = w4nat;
+ 	w2 = w2nat;
+@@ -656,7 +569,9 @@ static int do_file(char const *const fname)
+ 	}  /* end switch */
+ 
+ out:
+-	mmap_cleanup();
++	if (lf)
++		elf_close(lf);
++	lf = NULL;
+ 	return rc;
+ }
+ 
+diff --git a/tools/objtool/recordmcount.h b/tools/objtool/recordmcount.h
+index 084f1eff0df0..9ce2d74df89a 100644
+--- a/tools/objtool/recordmcount.h
++++ b/tools/objtool/recordmcount.h
+@@ -188,13 +188,13 @@ static int do_func(unsigned const reltype)
+ 	totrelsz = tot_relsize(&rel_entsize);
+ 	if (totrelsz == 0)
+ 		return 0;
+-	mrel0 = umalloc(totrelsz);
++	mrel0 = malloc(totrelsz);
+ 	mrelp = mrel0;
+ 	if (!mrel0)
+ 		return -1;
+ 
+ 	/* 2*sizeof(address) <= sizeof(Elf_Rel) */
+-	mloc0 = umalloc(totrelsz>>1);
++	mloc0 = malloc(totrelsz>>1);
+ 	mlocp = mloc0;
+ 	if (!mloc0) {
+ 		free(mrel0);
+-- 
+2.20.1
 
