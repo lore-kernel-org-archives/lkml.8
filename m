@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AAD33C2BB85
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 03:59:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7267FC2D0EC
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 03:59:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7999A2082D
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 03:59:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3F114206A1
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 03:59:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586491154;
-	bh=r3EaPMwV0p6JcapleCkt9G0+Er8yoqBCX2k8wvPVHwc=;
+	s=default; t=1586491162;
+	bh=rcjh3l3DjFWYTa13HVk4wQSTUrOgmQ2s6RvdNQnB9Cg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ibz78F+wM2O4Hijz/lJoqTpZYOvLZ/k0HdXUKE508/pqGNf8zf+F1Lrj7igELFj6V
-	 MzxVOGYqXU6TcHzMRvNJvAcLlsbgokmbpju6mqVZUXYr3h5+KyR1YIaKOAMR+8hFh0
-	 7p3lcbPM8I+DuPzW1rYl9bAnxTMnYKpe6o3Orfuo=
+	b=mNKury5+eZdZYwT6j1Na3/neOrRgwZba0pA0fN9gq1jWYxa+63x7Gy3LeVfwKCH8U
+	 HZvEff6zt2Wq2LCM45I8KdQyBXCDHvhXWxPSopf2kBVcIirDd/Z8VfKQ6eSGNWs7m2
+	 t66l2ja7c5IJBk1a7QR54kook7MWulok4JZ/5Puw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728595AbgDJD7N (ORCPT
+        id S1726793AbgDJD7T (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Apr 2020 23:59:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60090 "EHLO mail.kernel.org"
+        Thu, 9 Apr 2020 23:59:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59880 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728188AbgDJDsa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Apr 2020 23:48:30 -0400
+        id S1726864AbgDJDsZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Apr 2020 23:48:25 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0FC81214D8;
-        Fri, 10 Apr 2020 03:48:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A097C20BED;
+        Fri, 10 Apr 2020 03:48:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586490510;
-        bh=r3EaPMwV0p6JcapleCkt9G0+Er8yoqBCX2k8wvPVHwc=;
+        s=default; t=1586490505;
+        bh=rcjh3l3DjFWYTa13HVk4wQSTUrOgmQ2s6RvdNQnB9Cg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=E0SXrltMnBi8Egu3vVqda/q4A5/Kuou4Pxtl2VsBGES+iiW8/GqT6NlyKtQ/JTJrp
-         7UDNUmVQaOhQJjG7V+RmdpLjAmLJZo8ceOsUuW21io3JJUpA99cdvJTqcf7pinoLaX
-         JhMI/Idqmkd0+zQLv/83IwvoiCM/z2wPGHtPQRrk=
+        b=vcPUQvRCP2u6oPw6h4/pgP2zIdw7zKt6Pyowe6/STSR1bq52SRucvrueg/65rRASP
+         ILh5KVzkw2qpU95nDRoC7OtgfzeorcYud5tNPLmUO/Xd8PSjdYmugkKXEhX1dRpWoV
+         edEVs3Na9B7U/lLGSj5EGR3jtGPvgp5ubpR0yGYQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Michael Tretter <m.tretter@pengutronix.de>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org,
-        devel@driverdev.osuosl.org
-Subject: [PATCH AUTOSEL 5.5 25/56] media: allegro: fix type of gop_length in channel_create message
-Date:   Thu,  9 Apr 2020 23:47:29 -0400
-Message-Id: <20200410034800.8381-25-sashal@kernel.org>
+Cc:     Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
+        Paul Menzel <pmenzel@molgen.mpg.de>,
+        Bob Liu <bob.liu@oracle.com>, Song Liu <songliubraving@fb.com>,
+        Sasha Levin <sashal@kernel.org>, linux-block@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.5 20/56] block: keep bdi->io_pages in sync with max_sectors_kb for stacked devices
+Date:   Thu,  9 Apr 2020 23:47:24 -0400
+Message-Id: <20200410034800.8381-20-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200410034800.8381-1-sashal@kernel.org>
 References: <20200410034800.8381-1-sashal@kernel.org>
@@ -61,42 +60,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Michael Tretter <m.tretter@pengutronix.de>
+From: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
 
-[ Upstream commit 8277815349327b8e65226eb58ddb680f90c2c0c0 ]
+[ Upstream commit e74d93e96d721c4297f2a900ad0191890d2fc2b0 ]
 
-The gop_length field is actually only u16 and there are two more u8
-fields in the message:
+Field bdi->io_pages added in commit 9491ae4aade6 ("mm: don't cap request
+size based on read-ahead setting") removes unneeded split of read requests.
 
-- the number of consecutive b-frames
-- frequency of golden frames
+Stacked drivers do not call blk_queue_max_hw_sectors(). Instead they set
+limits of their devices by blk_set_stacking_limits() + disk_stack_limits().
+Field bio->io_pages stays zero until user set max_sectors_kb via sysfs.
 
-Fix the message and thus fix the configuration of the GOP length.
+This patch updates io_pages after merging limits in disk_stack_limits().
 
-Signed-off-by: Michael Tretter <m.tretter@pengutronix.de>
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Commit c6d6e9b0f6b4 ("dm: do not allow readahead to limit IO size") fixed
+the same problem for device-mapper devices, this one fixes MD RAIDs.
+
+Fixes: 9491ae4aade6 ("mm: don't cap request size based on read-ahead setting")
+Reviewed-by: Paul Menzel <pmenzel@molgen.mpg.de>
+Reviewed-by: Bob Liu <bob.liu@oracle.com>
+Signed-off-by: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+Signed-off-by: Song Liu <songliubraving@fb.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/staging/media/allegro-dvt/allegro-core.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ block/blk-settings.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/staging/media/allegro-dvt/allegro-core.c b/drivers/staging/media/allegro-dvt/allegro-core.c
-index 6f0cd07847863..c5a262a12e401 100644
---- a/drivers/staging/media/allegro-dvt/allegro-core.c
-+++ b/drivers/staging/media/allegro-dvt/allegro-core.c
-@@ -393,7 +393,10 @@ struct mcu_msg_create_channel {
- 	u32 freq_ird;
- 	u32 freq_lt;
- 	u32 gdr_mode;
--	u32 gop_length;
-+	u16 gop_length;
-+	u8 num_b;
-+	u8 freq_golden_ref;
+diff --git a/block/blk-settings.c b/block/blk-settings.c
+index c8eda2e7b91e4..be1dca0103a45 100644
+--- a/block/blk-settings.c
++++ b/block/blk-settings.c
+@@ -664,6 +664,9 @@ void disk_stack_limits(struct gendisk *disk, struct block_device *bdev,
+ 		printk(KERN_NOTICE "%s: Warning: Device %s is misaligned\n",
+ 		       top, bottom);
+ 	}
 +
- 	u32 unknown39;
++	t->backing_dev_info->io_pages =
++		t->limits.max_sectors >> (PAGE_SHIFT - 9);
+ }
+ EXPORT_SYMBOL(disk_stack_limits);
  
- 	u32 subframe_latency;
 -- 
 2.20.1
 
