@@ -2,168 +2,199 @@ Return-Path: <SRS0=VV4q=52=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60D86C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 15:03:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44238C2BB86
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 15:03:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 31A142082D
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 15:03:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1633E20A8B
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 15:03:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="xl9vbv52"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="Q2Y6PoDD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726657AbgDJPDM (ORCPT
+        id S1726679AbgDJPDP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Apr 2020 11:03:12 -0400
-Received: from mail26.static.mailgun.info ([104.130.122.26]:64387 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726049AbgDJPDM (ORCPT
+        Fri, 10 Apr 2020 11:03:15 -0400
+Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:1862 "EHLO
+        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726049AbgDJPDO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Apr 2020 11:03:12 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1586530991; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=foCeyV/z0t49w5bVxOJQj4+zK6wslN2wsA7w5SqlfIs=; b=xl9vbv527bPXxsyZJNE34VFf+2tdvHDJ3HOt5aE3I12tL4tlsfjydh5DlmFihKi9xQ1DGjx5
- VvsUKHrrhFdvVgeQVBLPLKg1K6skWjVpvDfti31eve9T5vxaJSTEjWmf0ucyfIIODctkbYG9
- FJ9NCO2zCa/c9Z8poPUyoCJs+fU=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e908aaf.7f4ab081d490-smtp-out-n03;
- Fri, 10 Apr 2020 15:03:11 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 539EDC433BA; Fri, 10 Apr 2020 15:03:11 +0000 (UTC)
-Received: from [10.226.58.28] (i-global254.qualcomm.com [199.106.103.254])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: jhugo)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 042EAC433F2;
-        Fri, 10 Apr 2020 15:03:09 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 042EAC433F2
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=jhugo@codeaurora.org
-Subject: Re: [PATCH v2 1/5] bus: mhi: core: Handle syserr during power_up
-To:     Hemant Kumar <hemantk@codeaurora.org>,
-        manivannan.sadhasivam@linaro.org
-Cc:     "linux-arm-msm@vger.kernel.org; bbhatt"@codeaurora.org,
-        linux-kernel@vger.kernel.org
-References: <1586278230-29565-1-git-send-email-jhugo@codeaurora.org>
- <1586278230-29565-2-git-send-email-jhugo@codeaurora.org>
- <1768ba6e-12c2-7b4f-0f17-44fecc6473b9@codeaurora.org>
-From:   Jeffrey Hugo <jhugo@codeaurora.org>
-Message-ID: <11d9f35b-b911-7985-8846-0a45904ceed1@codeaurora.org>
-Date:   Fri, 10 Apr 2020 09:03:08 -0600
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.2
+        Fri, 10 Apr 2020 11:03:14 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5e908aa40000>; Fri, 10 Apr 2020 08:03:00 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Fri, 10 Apr 2020 08:03:13 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Fri, 10 Apr 2020 08:03:13 -0700
+Received: from DRHQMAIL107.nvidia.com (10.27.9.16) by HQMAIL101.nvidia.com
+ (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 10 Apr
+ 2020 15:03:13 +0000
+Received: from [10.2.174.146] (10.124.1.5) by DRHQMAIL107.nvidia.com
+ (10.27.9.16) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 10 Apr
+ 2020 15:03:11 +0000
+From:   Zi Yan <ziy@nvidia.com>
+To:     "Kirill A. Shutemov" <kirill@shutemov.name>
+CC:     <akpm@linux-foundation.org>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        "Yang Shi" <yang.shi@linux.alibaba.com>, <linux-mm@kvack.org>,
+        <linux-kernel@vger.kernel.org>,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+Subject: Re: [PATCHv2 1/8] khugepaged: Add self test
+Date:   Fri, 10 Apr 2020 11:03:09 -0400
+X-Mailer: MailMate (1.13.1r5680)
+Message-ID: <511724CE-3FF3-4535-BDB1-D4B9ACE9F3DA@nvidia.com>
+In-Reply-To: <20200410145804.fczyvec4pngpep6t@box>
+References: <20200403112928.19742-1-kirill.shutemov@linux.intel.com>
+ <20200403112928.19742-2-kirill.shutemov@linux.intel.com>
+ <D55D6A3A-47A1-41F5-B939-36EEA740CF72@nvidia.com>
+ <20200410114739.b2ndracbyhsdmanv@box>
+ <DF6A7119-D6D6-4679-A4B6-9A7570984D97@nvidia.com>
+ <20200410145804.fczyvec4pngpep6t@box>
 MIME-Version: 1.0
-In-Reply-To: <1768ba6e-12c2-7b4f-0f17-44fecc6473b9@codeaurora.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
+ DRHQMAIL107.nvidia.com (10.27.9.16)
+Content-Type: multipart/signed;
+        boundary="=_MailMate_F5C90A71-D4C8-4685-BD1F-D7672BFC44C2_=";
+        micalg=pgp-sha512; protocol="application/pgp-signature"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1586530980; bh=t7Roxh2dq5kHW/gcPZo2nKgAR8NeX0t1Xl/1SxTSRnY=;
+        h=X-PGP-Universal:From:To:CC:Subject:Date:X-Mailer:Message-ID:
+         In-Reply-To:References:MIME-Version:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type;
+        b=Q2Y6PoDD/Xck4L6x6EN4ohXjDTKTNoxJGUA0bFh/oZpKDJNOA4Q4rpjS32ygsmJxs
+         GjYUtcXrg6HOkNTYl2sTcLgQtAaIQVObKy4DARbg88rar8ZxXPGrBQ4J86BRno6JOA
+         BLbJqeg11v2zT8lbpFwYW7Ru9oZpe4XodL8Ju2T2zyHEP4lJ2XQytbQa9Wv3RvO8V7
+         ybCYBS9OPUMtC6wH6bCVk40wp7a6d8NSgeoBMkv49n4+lSePyM/sqi9jTQjKKKzC9r
+         q0+A6y4FOa2mSsnAt48aox6MmX9jnEmrJtNQeWPJRCXXcGFueQ45ocnKnqTgEtriqG
+         l+kKOFeBio5+Q==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/9/2020 6:55 PM, Hemant Kumar wrote:
-> 
-> On 4/7/20 9:50 AM, Jeffrey Hugo wrote:
->> The MHI device may be in the syserr state when we attempt to init it in
->> power_up().  Since we have no local state, the handling is simple -
->> reset the device and wait for it to transition out of the reset state.
+--=_MailMate_F5C90A71-D4C8-4685-BD1F-D7672BFC44C2_=
+Content-Type: text/plain; charset="UTF-8"; markup=markdown
+Content-Transfer-Encoding: quoted-printable
+
+On 10 Apr 2020, at 10:58, Kirill A. Shutemov wrote:
+
+> External email: Use caution opening links or attachments
+>
+>
+> On Fri, Apr 10, 2020 at 10:36:58AM -0400, Zi Yan wrote:
+>> On 10 Apr 2020, at 7:47, Kirill A. Shutemov wrote:
 >>
->> Signed-off-by: Jeffrey Hugo <jhugo@codeaurora.org>
->> ---
->>   drivers/bus/mhi/core/pm.c | 20 ++++++++++++++++++++
->>   1 file changed, 20 insertions(+)
+>>> External email: Use caution opening links or attachments
+>>>
+>>>
+>>> On Mon, Apr 06, 2020 at 10:59:52AM -0400, Zi Yan wrote:
+>>>> I ran this test with all patches from this series applied to Linus=E2=
+=80=99s tree, but still see several failures. Is it expected?
+>>>> The config file is attached. Let me know if I miss anything. BTW, I =
+am running in a VM.
+>>>>
+>>>> Thanks.
+>>>>
+>>>> The output:
+>>>>
+>>>> =E2=9E=9C  ~ sudo ./khugepaged
+>>>> Save THP and khugepaged settings... OK
+>>>> Adjust settings... OK
+>>>> Allocate huge page on fault... OK
+>>>> Split huge PMD on MADV_DONTNEED... OK
+>>>> Collapse fully populated PTE table.... Fail
+>>>
+>>> I was able to reproduce the issue. And it's fun failure mode.
+>>>
+>>> How did you get the test case inside the VM? Copy-paste source using =
+'cat'
+>>> or something similar inside the VM?
 >>
->> diff --git a/drivers/bus/mhi/core/pm.c b/drivers/bus/mhi/core/pm.c
->> index 52690cb..3285c9e 100644
->> --- a/drivers/bus/mhi/core/pm.c
->> +++ b/drivers/bus/mhi/core/pm.c
->> @@ -9,6 +9,7 @@
->>   #include <linux/dma-direction.h>
->>   #include <linux/dma-mapping.h>
->>   #include <linux/interrupt.h>
->> +#include <linux/iopoll.h>
->>   #include <linux/list.h>
->>   #include <linux/mhi.h>
->>   #include <linux/module.h>
->> @@ -760,6 +761,7 @@ static void mhi_deassert_dev_wake(struct 
->> mhi_controller *mhi_cntrl,
->>   int mhi_async_power_up(struct mhi_controller *mhi_cntrl)
->>   {
->> +    enum mhi_state state;
->>       enum mhi_ee_type current_ee;
->>       enum dev_st_transition next_state;
->>       struct device *dev = &mhi_cntrl->mhi_dev->dev;
->> @@ -829,6 +831,24 @@ int mhi_async_power_up(struct mhi_controller 
->> *mhi_cntrl)
->>           goto error_bhi_offset;
->>       }
->> +    state = mhi_get_mhi_state(mhi_cntrl);
->> +    if (state == MHI_STATE_SYS_ERR) {
->> +        mhi_set_mhi_state(mhi_cntrl, MHI_STATE_RESET);
->> +        ret = readl_poll_timeout(mhi_cntrl->regs + MHICTRL, val,
->> +                     !(val & MHICTRL_RESET_MASK), 1000,
->> +                     mhi_cntrl->timeout_ms * 1000);
-> can we use this instead of polling because MSI is configures and int_vec 
-> handler is registered
-> 
->      wait_event_timeout(mhi_cntrl->state_event,
->                 MHI_PM_IN_FATAL_STATE(mhi_cntrl->pm_state) ||
->                mhi_read_reg_field(mhi_cntrl, base, MHICTRL,
->                            MHICTRL_RESET_MASK,
->                            MHICTRL_RESET_SHIFT, &reset) || !reset ,
->                 msecs_to_jiffies(mhi_cntrl->timeout_ms));
-> 
-> 1) In case of MHI_PM_IN_FATAL_STATE we would not be accessing MHI reg
-> 2) Consistent with current MHI driver code.
+>> First of all, the failure above was from a bare metal and was the only=
 
-I'm not sure this works in the way you intend.
+>> failure I saw, whereas I saw more failures in my VM. The test program
+>> was not messed up in either environment.
+>
+> Hm. In the quote you are saying "BTW, I am running in a VM".
 
-state_event is linked to the intvec, which is the BHI interrupt.  I 
-don't see that the state_event is triggered in the MHI interrupt path 
-(mhi_irq_handler).  So, if we are in the PBL EE, we would expect to see 
-the BHI interrupt, but if we are in the AMSS EE, we would expect to see 
-a MHI interrupt.
+Sorry, misread the email thread. I was referring to another my email on r=
+unning
+tests on a bare metal, where only =E2=80=9CCollapse with max_ptes_swap pa=
+ges swapped out=E2=80=9D
+failed.
 
-Now, for my concerned usecase, those two interrupts happen to be the 
-same interrupt, so both will get triggered, but I don't expect that to 
-be the same for all usecases.
+Here is the link to the email:
+https://lore.kernel.org/linux-mm/C66E1309-2069-495B-BACD-7F3282C6EC7D@nvi=
+dia.com/
 
-So, with the solution I propose, we exit the wait (poll loop) as soon as 
-we see the register change values.
+>
+>>
+>> For VM failures I mentioned before, I used scp to copy the source code=
 
-With the solution you propose, if we only get the MHI interrupt, we'll 
-have to wait out the entire timeout value, and then check the register. 
-In this scenario, we are almost guaranteed to wait for longer than 
-necessary.
+>> into the VM. My VM has its port 22 forwarded to host=E2=80=99s port 11=
+022. =E2=80=9C-net
+>> user,hostfwd=3Dtcp::11022-:22=E2=80=9D. I also copied a binary into my=
+ VM and saw
+>> the same failures.
+>>
+>> I kinda think the failures are not related to your patches but somethi=
+ng else.
+>>
+>>>
+>>> It screwed up CHECK_HUGE_FMT and CHECK_SWAP_FMT for me. Double back s=
+lash
+>>> was converted to single. As result check_huge() and check_swap() gave=
+ the
+>>> false-negative result all the time.
+>>
+>> It was not my case, since CHECK_HUGE_FMT and CHECK_SWAP_FMT from my
+>> khugepaged.c match your patch code.
+>>
+>>>
+>>> Could you check that the source of the test-case is not mangled and
+>>> re-test if it is.
+>>
+>> I can confirm that the test-case is not mangled. I think it must be my=
 
-Did I miss something?
+>> VM setup or kernel configuration.
+>>
+>> Do you mind sharing your .config file with me and which kernel commit
+>> you apply the patches on top of in your setup? I can look into it and
+>> check what the problem is.
+>
+> My config is attached.
 
->> +        if (ret) {
->> +            dev_info(dev, "Failed to reset MHI due to syserr state\n");
->> +            goto error_bhi_offset;
->> +        }
->> +
->> +        /*
->> +         * device cleares INTVEC as part of RESET processing,
->> +         * re-program it
->> +         */
->> +        mhi_write_reg(mhi_cntrl, mhi_cntrl->bhi, BHI_INTVEC, 0);
->> +    }
->> +
->>       /* Transition to next state */
->>       next_state = MHI_IN_PBL(current_ee) ?
->>           DEV_ST_TRANSITION_PBL : DEV_ST_TRANSITION_READY;
-> 
+Thanks.
 
+=E2=80=94
+Best Regards,
+Yan Zi
 
--- 
-Jeffrey Hugo
-Qualcomm Technologies, Inc. is a member of the
-Code Aurora Forum, a Linux Foundation Collaborative Project.
+--=_MailMate_F5C90A71-D4C8-4685-BD1F-D7672BFC44C2_=
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQJDBAEBCgAtFiEEh7yFAW3gwjwQ4C9anbJR82th+ooFAl6Qiq0PHHppeUBudmlk
+aWEuY29tAAoJEJ2yUfNrYfqKYxMQAK7hFwrejSYKpOivQJfnpv1snqqWVAdbAWDy
+cnBOv+l2qhuaiBfO45u8UlIsOGBFG7VFvmlrPI/l0ti3wJZj+E8jV4PJgrDCzuWc
+I10V4p7VC3Z/MLkPl2F4f4yi8s0rXQiDatpBIawN0L2+QjIDtv5wSj5Rte3QkTLs
+dwZtKMASSgpI8PORBbl3tiuihrq+Z2ISlshUfqVjlC4SmTixZx5aQrs0QAKJbNkN
+oSuM6QKzwlxdoCnhMfm+jO0uOC7Aj3LNSrTGfVBk3UgEKvSOEur40VPnhKhS/0F2
+Jzl2B+Hd2svSO0Z5QY595pwhiOobVm6POSOUmJg5Vx1UQLAlCyeInYNWDye4y8oh
+zPcJcxYYmgjxbX8f15JZP7IEXYdLrhmeuMrr3ErbU3r2f89agBLsXsiEzLv2CAde
+Bg2Z533gRHVFf3+jqeVkolh+L4GQBFvsfTjl3u/irpahAvwTwhCUCWONbqj0S7hu
+hzekJJwpxHaqWA+nk3vOXM9RJ6Zoof9zt9mwO4caD/I+UCGovdkgy7p46lQiZAAM
+F+7oxuetbRjLO6Kq2Hbxxph2J2dR5P0lLQHZ2MXpBLqF91l7nBnKKQwVUXa9ccmT
+bnEOZitGEN7HEqdePReo7oQMXPLT9rzwFgMIPSDJjpfB1do7nWhbyfGujnes5jrl
+BySuU9pe
+=ix0J
+-----END PGP SIGNATURE-----
+
+--=_MailMate_F5C90A71-D4C8-4685-BD1F-D7672BFC44C2_=--
