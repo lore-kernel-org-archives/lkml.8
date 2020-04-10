@@ -2,260 +2,152 @@ Return-Path: <SRS0=VV4q=52=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BDF53C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 16:12:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16A5CC2BA2B
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 16:12:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8EBC5212CC
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 16:12:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586535151;
-	bh=160JUGp3x1fpb1yme+uQZZt6RXsBzoX4rWwBvTmptUk=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=PHU75ZNRvCz6VUzFcD9TKhgUFVX8WP8cMxR52KtWJvvsS7ghToYjoCzMsmdQahCrJ
-	 E523CF/dagz1SNRs9kspQytR/oEtjG1seVgjtLnnw5MsehAo5ARMkxejAJyvIX8h48
-	 3GQJ25DwnDRPEUKquiuCzd3LEKpkObSLL5Nug2SI=
+	by mail.kernel.org (Postfix) with ESMTP id BE49D2078E
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 16:12:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="RlSz1zaD";
+	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="HGwljF9z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726595AbgDJQMa (ORCPT
+        id S1726669AbgDJQMe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Apr 2020 12:12:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51674 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726082AbgDJQM3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Apr 2020 12:12:29 -0400
-Received: from mail-ed1-f43.google.com (mail-ed1-f43.google.com [209.85.208.43])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D3384212CC;
-        Fri, 10 Apr 2020 16:12:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586535149;
-        bh=160JUGp3x1fpb1yme+uQZZt6RXsBzoX4rWwBvTmptUk=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=W5wYd2EuxFFOf5RELEUzJliKZesmTsdbiM43S8uvK0l++0HiMbTrQt6XsIAGL4Wns
-         y5YgMtu5OtZuC8hYq66rdGRTGWADpy/5wnBH0STWqvG+EhEbo54Rmbhq57vNgA9HDU
-         l8ZFGOzumzy1DTerTfgkolsxj0YgGOA/Su1sveIQ=
-Received: by mail-ed1-f43.google.com with SMTP id de14so3003852edb.4;
-        Fri, 10 Apr 2020 09:12:28 -0700 (PDT)
-X-Gm-Message-State: AGi0PuarZuxW884ZAWJt+uvSrSFP3DRcHEmhaK7mY32AFp7VoA3Iy1Kq
-        gRG6mKzdhP4Ti01kDR+ocIi5p/yZji2YxccyyA==
-X-Google-Smtp-Source: APiQypKcvCktS/0AVOVss/azeh/f4lcTILgqeqaAL4onaaElSMhRA6mYYv8/89RCCzeYggvhT45miRzpgBtQ4McZm4g=
-X-Received: by 2002:a05:6402:335:: with SMTP id q21mr5420732edw.47.1586535147130;
- Fri, 10 Apr 2020 09:12:27 -0700 (PDT)
+        Fri, 10 Apr 2020 12:12:34 -0400
+Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:50238 "EHLO
+        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726082AbgDJQMd (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Apr 2020 12:12:33 -0400
+Received: from pps.filterd (m0109334.ppops.net [127.0.0.1])
+        by mx0a-00082601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03AG9JtI007696;
+        Fri, 10 Apr 2020 09:12:24 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=date : from : to : cc :
+ subject : message-id : references : content-type : in-reply-to :
+ mime-version; s=facebook; bh=KDNfhckYWP49Ui+2lXtDPnFRmlDB4xKR7zRugAqpZmg=;
+ b=RlSz1zaDCO45xRBtbKbUYcgwHrA87BSOJYoAHephwTT2OPYNjA/wkQ7hBveNvDYq5fHa
+ M46YwDa01yQAzh4ciYUmKc8TMJ7jYQL/Qcg7ShPMs9XKWg881wHD2giG5wpOoepbMyxM
+ 9UC2L+VJi72G+yPskcuJs3c03S6518FTfQo= 
+Received: from mail.thefacebook.com ([163.114.132.120])
+        by mx0a-00082601.pphosted.com with ESMTP id 309sgx1phh-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
+        Fri, 10 Apr 2020 09:12:24 -0700
+Received: from NAM11-CO1-obe.outbound.protection.outlook.com (100.104.98.9) by
+ o365-in.thefacebook.com (100.104.94.197) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1847.3; Fri, 10 Apr 2020 09:12:23 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=I6FWivsx5ZFXbh74Jn7uc8aKw8QX3G+T4IPaHyk62Uaq8pKLpgxrX1k1A5I75FH5B0XPdrfSAGnbvBAZhb6SbmYdzwlV1PGB4Skrd6M5yEJJuuoD1yrt8hl17ZbDF2piVfq+2ZRBR/q9hUWoz8Lc+FVMgdW1X3UBt1ndqDWOwqfw8iOMDa1ryZYzCgkS7luAaMwyCuxTk3ujVbWrcnbq/acKnBLnOqwWDBOGcbvVm2dz5JZSTX8EPL6+5yg3oYLclXaGmHQB2YSkMKLtd994kT09avkTmnqGeLu05jQH6s5AW701iSvm3FEcu3865qX2HwEg9dl6N9308GztSkfHcw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=KDNfhckYWP49Ui+2lXtDPnFRmlDB4xKR7zRugAqpZmg=;
+ b=kHM0bFhTZ5wKKJxmHgCJCKocBadAEIV11UgiFlZ+kfETZ9jutqsaZES4oNBKUy4vtROYgCfKndKtgPuNa6ZF6mVgjtfPyAjeiVrW/xFXMhkXrg71PeJtqFLtXfLta1yJVpyOPlGSq6cPf/xuM5bZ+xJsk72+pjDSyojhK9l9MfA2o3A38CUKKVuMcgkBl3DKc39FUKPKrq3moG+onPj8ZxA7L/lAZ+qYZyTez0s5tN+2RZ82GssY2yr5HgmT9UucDgEQauY2KHUcw7nEdnvx1CGV1hKfBiZvjGq9h8V/ZMIRspyPoJZuph+1+c2ORZT8IIxKeLR9h76HvQ6OCdArYA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=fb.com; dmarc=pass action=none header.from=fb.com; dkim=pass
+ header.d=fb.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
+ s=selector2-fb-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=KDNfhckYWP49Ui+2lXtDPnFRmlDB4xKR7zRugAqpZmg=;
+ b=HGwljF9zDo845dVSkULgZNueGd8UXCWP7BQb4QR6ktrDkt2EZfapbJybdWTpE5A3JIjvImV3gGxi0VAcClKckfr915RcBGKWV4Ye//Cu6Dn7LpW982h+pUztkecK5bnP6pGqngX+lP6pPxx4Rk40976ZZn9Ci7e3WZtmyvkRTic=
+Received: from BYAPR15MB4136.namprd15.prod.outlook.com (2603:10b6:a03:96::24)
+ by BYAPR15MB3224.namprd15.prod.outlook.com (2603:10b6:a03:105::30) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2900.20; Fri, 10 Apr
+ 2020 16:12:22 +0000
+Received: from BYAPR15MB4136.namprd15.prod.outlook.com
+ ([fe80::bdf9:6577:1d2a:a275]) by BYAPR15MB4136.namprd15.prod.outlook.com
+ ([fe80::bdf9:6577:1d2a:a275%7]) with mapi id 15.20.2878.023; Fri, 10 Apr 2020
+ 16:12:22 +0000
+Date:   Fri, 10 Apr 2020 09:12:18 -0700
+From:   Roman Gushchin <guro@fb.com>
+To:     "Theodore Y. Ts'o" <tytso@mit.edu>
+CC:     <linux-fsdevel@vger.kernel.org>, <linux-ext4@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Andreas Dilger <adilger.kernel@dilger.ca>,
+        Andrew Perepechko <andrew.perepechko@seagate.com>,
+        Gioh Kim <gioh.kim@lge.com>, Jan Kara <jack@suse.cz>
+Subject: Re: [PATCH v2] ext4: use non-movable memory for superblock readahead
+Message-ID: <20200410161218.GA14685@carbon.lan>
+References: <20200229001411.128010-1-guro@fb.com>
+ <20200410032344.GI45598@mit.edu>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200410032344.GI45598@mit.edu>
+X-ClientProxiedBy: MWHPR10CA0069.namprd10.prod.outlook.com
+ (2603:10b6:300:2c::31) To BYAPR15MB4136.namprd15.prod.outlook.com
+ (2603:10b6:a03:96::24)
 MIME-Version: 1.0
-References: <20200410043248.114384-1-jitao.shi@mediatek.com> <20200410043248.114384-5-jitao.shi@mediatek.com>
-In-Reply-To: <20200410043248.114384-5-jitao.shi@mediatek.com>
-From:   Chun-Kuang Hu <chunkuang.hu@kernel.org>
-Date:   Sat, 11 Apr 2020 00:12:16 +0800
-X-Gmail-Original-Message-ID: <CAAOTY_-ZiMKn5wVuhECnL4E6BM_=QoF9goorHB-GK-hRL40gyA@mail.gmail.com>
-Message-ID: <CAAOTY_-ZiMKn5wVuhECnL4E6BM_=QoF9goorHB-GK-hRL40gyA@mail.gmail.com>
-Subject: Re: [PATCH v5 4/4] drm/mediatek: config mipitx impedance with
- calibration data
-To:     Jitao Shi <jitao.shi@mediatek.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        David Airlie <airlied@linux.ie>,
-        DRI Development <dri-devel@lists.freedesktop.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        devicetree@vger.kernel.org, srv_heupstream@mediatek.com,
-        huijuan.xie@mediatek.com, stonea168@163.com,
-        cawa.cheng@mediatek.com,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>, yingjoe.chen@mediatek.com,
-        eddie.huang@mediatek.com,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from carbon.lan (2620:10d:c090:400::5:438e) by MWHPR10CA0069.namprd10.prod.outlook.com (2603:10b6:300:2c::31) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2900.20 via Frontend Transport; Fri, 10 Apr 2020 16:12:21 +0000
+X-Originating-IP: [2620:10d:c090:400::5:438e]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 954499bb-389c-49af-6efb-08d7dd69f370
+X-MS-TrafficTypeDiagnostic: BYAPR15MB3224:
+X-Microsoft-Antispam-PRVS: <BYAPR15MB322438599EF0E67FFCCFCF3FBEDE0@BYAPR15MB3224.namprd15.prod.outlook.com>
+X-FB-Source: Internal
+X-MS-Oob-TLC-OOBClassifiers: OLM:1443;
+X-Forefront-PRVS: 0369E8196C
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR15MB4136.namprd15.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10019020)(346002)(376002)(39860400002)(396003)(366004)(136003)(478600001)(16526019)(186003)(36756003)(8676002)(8936002)(52116002)(7696005)(6666004)(6506007)(86362001)(81156014)(5660300002)(8886007)(316002)(54906003)(2906002)(4326008)(55016002)(9686003)(1076003)(6916009)(33656002)(66476007)(66556008)(66946007);DIR:OUT;SFP:1102;
+Received-SPF: None (protection.outlook.com: fb.com does not designate
+ permitted sender hosts)
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: blpYXd2+pnODBa1xTRFfvsc+17HVfB+Dxc6i0YK+gAI+3ixXDKlO3+6vyccpwtgei+hm0Rng0QuZmKzAk6EPLirSDPNdAF5d9Vol1ryg93uMe3M2S06Zw8owwcO8et3CLvQ7dfAuBzcaKc0MbjzYx4KPTdnubTj17Dv+fbhca/l6jxUCIi8Er+/JnF6MGr1sa1AYage5EdtQN7qOoNhAS1VsTTniZRzNhL+Ns8FzHkFay0b9NoiGBGbazp5GqIfFcbS+5Zh4+kf8H31nHfmqqazCDdvf9RWuoded8Feo3Ccvrru+oHWkH+xocJ5m6ZOoL4CNCKftOkidwoEw3yHii8BT9eg8DAbTLMZwkTmfwJkmxSnn6z2+dbsMgFq7vF3X5cwqXWrzLLhnqOXwB/ZeofTE1vl32WC6pxg6avxG3YblRVNIK33bKlEoIt3Wvc5Z
+X-MS-Exchange-AntiSpam-MessageData: TLAtU8QAQBoUtjaLFTFC7HNyOIDRaQqBoGWv1/a2Z4Nh7eQMzZXY0+8ESpqngxLnOXEZTU3ZvCYqVg9JZbnBdFhxxl03d99NcpkFzXy7klf4MLyyRW3L7wdGHdvHtBnru12nqhTTqQjY5dnaPtvOCnKdB1OkBYWNoCmIqLy/P101MsHctYh5vQJXtlWPwz53
+X-MS-Exchange-CrossTenant-Network-Message-Id: 954499bb-389c-49af-6efb-08d7dd69f370
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Apr 2020 16:12:22.5009
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: EqXsgfbj7BMEimCYAu8dqvvPzp8vnB0W1oT5IKAGEAQpH91F95PnorbTHhf1PHpp
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR15MB3224
+X-OriginatorOrg: fb.com
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
+ definitions=2020-04-10_06:2020-04-09,2020-04-10 signatures=0
+X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 mlxlogscore=935
+ clxscore=1011 impostorscore=0 phishscore=0 priorityscore=1501 bulkscore=0
+ spamscore=0 malwarescore=0 adultscore=0 lowpriorityscore=0 suspectscore=1
+ mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2004100135
+X-FB-Internal: deliver
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi, Jitao:
+On Thu, Apr 09, 2020 at 11:23:44PM -0400, Theodore Y. Ts'o wrote:
+> On Fri, Feb 28, 2020 at 04:14:11PM -0800, Roman Gushchin wrote:
+> > Since commit a8ac900b8163 ("ext4: use non-movable memory for the
+> > superblock") buffers for ext4 superblock were allocated using
+> > the sb_bread_unmovable() helper which allocated buffer heads
+> > out of non-movable memory blocks. It was necessarily to not block
+> > page migrations and do not cause cma allocation failures.
+> > 
+> > However commit 85c8f176a611 ("ext4: preload block group descriptors")
+> > broke this by introducing pre-reading of the ext4 superblock.
+> > The problem is that __breadahead() is using __getblk() underneath,
+> > which allocates buffer heads out of movable memory.
+> > 
+> > It resulted in page migration failures I've seen on a machine
+> > with an ext4 partition and a preallocated cma area.
+> > 
+> > Fix this by introducing sb_breadahead_unmovable() and
+> > __breadahead_gfp() helpers which use non-movable memory for buffer
+> > head allocations and use them for the ext4 superblock readahead.
+> 
+> Applied, thanks.  Apologies for not picking this up earlier.
+> 
+> 	 	  	    	    	    - Ted
 
-Jitao Shi <jitao.shi@mediatek.com> =E6=96=BC 2020=E5=B9=B44=E6=9C=8810=E6=
-=97=A5 =E9=80=B1=E4=BA=94 =E4=B8=8B=E5=8D=8812:33=E5=AF=AB=E9=81=93=EF=BC=
-=9A
->
-> Read calibration data from nvmem, and config mipitx impedance with
-> calibration data to make sure their impedance are 100ohm.
->
-> Signed-off-by: Jitao Shi <jitao.shi@mediatek.com>
-> ---
->  drivers/gpu/drm/mediatek/mtk_mipi_tx.c        | 40 +++++++++++++++++++
->  drivers/gpu/drm/mediatek/mtk_mipi_tx.h        |  3 ++
->  drivers/gpu/drm/mediatek/mtk_mt8183_mipi_tx.c | 21 ++++++++++
->  3 files changed, 64 insertions(+)
->
-> diff --git a/drivers/gpu/drm/mediatek/mtk_mipi_tx.c b/drivers/gpu/drm/med=
-iatek/mtk_mipi_tx.c
-> index e301af64809e..5e91fc2c1318 100644
-> --- a/drivers/gpu/drm/mediatek/mtk_mipi_tx.c
-> +++ b/drivers/gpu/drm/mediatek/mtk_mipi_tx.c
-> @@ -88,6 +88,44 @@ static const struct phy_ops mtk_mipi_tx_ops =3D {
->         .owner =3D THIS_MODULE,
->  };
->
-> +static void mtk_mipi_tx_get_calibration_datal(struct mtk_mipi_tx *mipi_t=
-x)
-> +{
-> +       struct nvmem_cell *cell;
-> +       size_t len;
-> +       u32 *buf;
-> +
-> +       memset(mipi_tx->rt_code, 0, sizeof(mipi_tx->rt_code));
+Thank you!
 
-You use kzalloc() to allocate mipi_tx, so this is already zero-initialized.
-
-> +       cell =3D nvmem_cell_get(mipi_tx->dev, "calibration-data");
-> +       if (IS_ERR(cell)) {
-> +               dev_info(mipi_tx->dev, "can't get nvmem_cell_get, ignore =
-it\n");
-> +       } else {
-
-If you return when error, you could get rid of the 'else', so you
-could reduce many 'tab' and reduce the probability of one line over 80
-character.
-
-> +               buf =3D (u32 *)nvmem_cell_read(cell, &len);
-> +               nvmem_cell_put(cell);
-> +
-> +               if (IS_ERR(buf)) {
-> +                       dev_info(mipi_tx->dev, "can't get data, ignore it=
-\n");
-> +               } else {
-
-Ditto.
-
-Regards,
-Chun-Kuang.
-
-> +                       if (len < 3 * sizeof(u32)) {
-> +                               dev_info(mipi_tx->dev, "invalid calibrati=
-on data\n");
-> +                               kfree(buf);
-> +                               return;
-> +                       }
-> +
-> +                       mipi_tx->rt_code[0] =3D ((buf[0] >> 6 & 0x1f) << =
-5) |
-> +                                              (buf[0] >> 11 & 0x1f);
-> +                       mipi_tx->rt_code[1] =3D ((buf[1] >> 27 & 0x1f) <<=
- 5) |
-> +                                              (buf[0] >> 1 & 0x1f);
-> +                       mipi_tx->rt_code[2] =3D ((buf[1] >> 17 & 0x1f) <<=
- 5) |
-> +                                              (buf[1] >> 22 & 0x1f);
-> +                       mipi_tx->rt_code[3] =3D ((buf[1] >> 7 & 0x1f) << =
-5) |
-> +                                              (buf[1] >> 12 & 0x1f);
-> +                       mipi_tx->rt_code[4] =3D ((buf[2] >> 27 & 0x1f) <<=
- 5) |
-> +                                              (buf[1] >> 2 & 0x1f);
-> +                       kfree(buf);
-> +               }
-> +       }
-> +}
-> +
->  static int mtk_mipi_tx_probe(struct platform_device *pdev)
->  {
->         struct device *dev =3D &pdev->dev;
-> @@ -174,6 +212,8 @@ static int mtk_mipi_tx_probe(struct platform_device *=
-pdev)
->
->         mipi_tx->dev =3D dev;
->
-> +       mtk_mipi_tx_get_calibration_datal(mipi_tx);
-> +
->         return of_clk_add_provider(dev->of_node, of_clk_src_simple_get,
->                                    mipi_tx->pll);
->  }
-> diff --git a/drivers/gpu/drm/mediatek/mtk_mipi_tx.h b/drivers/gpu/drm/med=
-iatek/mtk_mipi_tx.h
-> index eea44327fe9f..c76f07c3fdeb 100644
-> --- a/drivers/gpu/drm/mediatek/mtk_mipi_tx.h
-> +++ b/drivers/gpu/drm/mediatek/mtk_mipi_tx.h
-> @@ -12,9 +12,11 @@
->  #include <linux/delay.h>
->  #include <linux/io.h>
->  #include <linux/module.h>
-> +#include <linux/nvmem-consumer.h>
->  #include <linux/of_device.h>
->  #include <linux/platform_device.h>
->  #include <linux/phy/phy.h>
-> +#include <linux/slab.h>
->
->  struct mtk_mipitx_data {
->         const u32 mppll_preserve;
-> @@ -28,6 +30,7 @@ struct mtk_mipi_tx {
->         void __iomem *regs;
->         u32 data_rate;
->         u32 mipitx_drive;
-> +       u32 rt_code[5];
->         const struct mtk_mipitx_data *driver_data;
->         struct clk_hw pll_hw;
->         struct clk *pll;
-> diff --git a/drivers/gpu/drm/mediatek/mtk_mt8183_mipi_tx.c b/drivers/gpu/=
-drm/mediatek/mtk_mt8183_mipi_tx.c
-> index e4cc967750cb..9f3e55aeebb2 100644
-> --- a/drivers/gpu/drm/mediatek/mtk_mt8183_mipi_tx.c
-> +++ b/drivers/gpu/drm/mediatek/mtk_mt8183_mipi_tx.c
-> @@ -28,6 +28,7 @@
->  #define MIPITX_PLL_CON4                0x003c
->  #define RG_DSI_PLL_IBIAS               (3 << 10)
->
-> +#define MIPITX_D2P_RTCODE      0x0100
->  #define MIPITX_D2_SW_CTL_EN    0x0144
->  #define MIPITX_D0_SW_CTL_EN    0x0244
->  #define MIPITX_CK_CKMODE_EN    0x0328
-> @@ -108,6 +109,24 @@ static const struct clk_ops mtk_mipi_tx_pll_ops =3D =
-{
->         .recalc_rate =3D mtk_mipi_tx_pll_recalc_rate,
->  };
->
-> +static void mtk_mipi_tx_config_calibration_data(struct mtk_mipi_tx *mipi=
-_tx)
-> +{
-> +       int i, j;
-> +
-> +       for (i =3D 0; i < 5; i++) {
-> +               if ((mipi_tx->rt_code[i] & 0x1f) =3D=3D 0)
-> +                       mipi_tx->rt_code[i] |=3D 0x10;
-> +
-> +               if ((mipi_tx->rt_code[i] >> 5 & 0x1f) =3D=3D 0)
-> +                       mipi_tx->rt_code[i] |=3D 0x10 << 5;
-> +
-> +               for (j =3D 0; j < 10; j++)
-> +                       mtk_mipi_tx_update_bits(mipi_tx,
-> +                               MIPITX_D2P_RTCODE * (i + 1) + j * 4,
-> +                               1, mipi_tx->rt_code[i] >> j & 1);
-> +       }
-> +}
-> +
->  static void mtk_mipi_tx_power_on_signal(struct phy *phy)
->  {
->         struct mtk_mipi_tx *mipi_tx =3D phy_get_drvdata(phy);
-> @@ -130,6 +149,8 @@ static void mtk_mipi_tx_power_on_signal(struct phy *p=
-hy)
->                                 RG_DSI_HSTX_LDO_REF_SEL,
->                                 (mipi_tx->mipitx_drive - 3000) / 200 << 6=
-);
->
-> +       mtk_mipi_tx_config_calibration_data(mipi_tx);
-> +
->         mtk_mipi_tx_set_bits(mipi_tx, MIPITX_CK_CKMODE_EN, DSI_CK_CKMODE_=
-EN);
->  }
->
-> --
-> 2.21.0
-> _______________________________________________
-> dri-devel mailing list
-> dri-devel@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/dri-devel
+Roman
