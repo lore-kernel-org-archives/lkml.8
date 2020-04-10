@@ -2,374 +2,401 @@ Return-Path: <SRS0=VV4q=52=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EFBF7C2BB86
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 12:57:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C0A9C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 12:58:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B72382082D
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 12:57:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="pkttQCJg"
+	by mail.kernel.org (Postfix) with ESMTP id 57B9A20769
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 12:58:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726651AbgDJM5q (ORCPT
+        id S1726663AbgDJM6g (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Apr 2020 08:57:46 -0400
-Received: from perceval.ideasonboard.com ([213.167.242.64]:40774 "EHLO
-        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726080AbgDJM5q (ORCPT
+        Fri, 10 Apr 2020 08:58:36 -0400
+Received: from mail.baikalelectronics.com ([87.245.175.226]:40726 "EHLO
+        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726080AbgDJM6g (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Apr 2020 08:57:46 -0400
-Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id DA103329;
-        Fri, 10 Apr 2020 14:57:42 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1586523463;
-        bh=wpQ82QATi4alR1bb+eXRfi5VKbVrOyAy7Q4s86mBDgE=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=pkttQCJgLw+HsTn71GwKJ2kr/Hx31jj5l726KgpmktJcHgaqMs0LAHGhD110tqV6y
-         kmy3FVOug6AnJ2Pc1xubcJ5grgbi9a/MQSoK4lLjPbXMTDk3KeK7HUMRmw21jRj1AT
-         Fgt8r+RDTs5UDkbAV/s3mjjxmZipiId5v5NuwrJw=
-Date:   Fri, 10 Apr 2020 15:57:32 +0300
-From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To:     Guido =?utf-8?Q?G=C3=BCnther?= <agx@sigxcpu.org>
-Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
-        Lee Jones <lee.jones@linaro.org>,
-        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Robert Chiras <robert.chiras@nxp.com>,
-        Sam Ravnborg <sam@ravnborg.org>, Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v11 1/2] dt-bindings: display/bridge: Add binding for NWL
- mipi dsi host controller
-Message-ID: <20200410125732.GE4751@pendragon.ideasonboard.com>
-References: <cover.1586427783.git.agx@sigxcpu.org>
- <147ffc1e4dee3a623e5dca25d84565d386a34112.1586427783.git.agx@sigxcpu.org>
- <20200410112342.GB4751@pendragon.ideasonboard.com>
- <20200410124516.GA27532@bogon.m.sigxcpu.org>
+        Fri, 10 Apr 2020 08:58:36 -0400
+Received: from localhost (unknown [127.0.0.1])
+        by mail.baikalelectronics.ru (Postfix) with ESMTP id AE82D8030786;
+        Fri, 10 Apr 2020 12:58:32 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at baikalelectronics.ru
+Received: from mail.baikalelectronics.ru ([127.0.0.1])
+        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id 0N0sv5NSMwqc; Fri, 10 Apr 2020 15:58:31 +0300 (MSK)
+Date:   Fri, 10 Apr 2020 15:59:04 +0300
+From:   Sergey Semin <Sergey.Semin@baikalelectronics.ru>
+To:     Guenter Roeck <linux@roeck-us.net>
+CC:     Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Paul Burton <paulburton@kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        <linux-watchdog@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 4/7] watchdog: dw_wdt: Support devices with non-fixed TOP
+ values
+Message-ID: <20200410125904.bdrr3jpi47mwvfkf@ubsrv2.baikal.int>
+References: <20200306132747.14701-1-Sergey.Semin@baikalelectronics.ru>
+ <20200306132829.E508B8030705@mail.baikalelectronics.ru>
+ <20200315141238.GA7245@roeck-us.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200410124516.GA27532@bogon.m.sigxcpu.org>
+In-Reply-To: <20200315141238.GA7245@roeck-us.net>
+X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Guido,
-
-On Fri, Apr 10, 2020 at 02:45:16PM +0200, Guido Günther wrote:
-> On Fri, Apr 10, 2020 at 02:23:42PM +0300, Laurent Pinchart wrote:
-> > On Thu, Apr 09, 2020 at 12:42:01PM +0200, Guido Günther wrote:
-> > > The Northwest Logic MIPI DSI IP core can be found in NXPs i.MX8 SoCs.
-> > > 
-> > > Signed-off-by: Guido Günther <agx@sigxcpu.org>
-> > > Tested-by: Robert Chiras <robert.chiras@nxp.com>
-> > > Reviewed-by: Rob Herring <robh@kernel.org>
-> > > Acked-by: Sam Ravnborg <sam@ravnborg.org>
-> > > Reviewed-by: Fabio Estevam <festevam@gmail.com>
-> > > ---
-> > >  .../bindings/display/bridge/nwl-dsi.yaml      | 226 ++++++++++++++++++
-> > >  1 file changed, 226 insertions(+)
-> > >  create mode 100644 Documentation/devicetree/bindings/display/bridge/nwl-dsi.yaml
-> > > 
-> > > diff --git a/Documentation/devicetree/bindings/display/bridge/nwl-dsi.yaml b/Documentation/devicetree/bindings/display/bridge/nwl-dsi.yaml
-> > > new file mode 100644
-> > > index 000000000000..8aff2d68fc33
-> > > --- /dev/null
-> > > +++ b/Documentation/devicetree/bindings/display/bridge/nwl-dsi.yaml
-> > > @@ -0,0 +1,226 @@
-> > > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> > > +%YAML 1.2
-> > > +---
-> > > +$id: http://devicetree.org/schemas/display/bridge/nwl-dsi.yaml#
-> > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > > +
-> > > +title: Northwest Logic MIPI-DSI controller on i.MX SoCs
-> > > +
-> > > +maintainers:
-> > > +  - Guido Gúnther <agx@sigxcpu.org>
-> > > +  - Robert Chiras <robert.chiras@nxp.com>
-> > > +
-> > > +description: |
-> > > +  NWL MIPI-DSI host controller found on i.MX8 platforms. This is a dsi bridge for
-> > > +  the SOCs NWL MIPI-DSI host controller.
-> > > +
-> > > +properties:
-> > > +  compatible:
-> > > +    const: fsl,imx8mq-nwl-dsi
-> > > +
-> > > +  reg:
-> > > +    maxItems: 1
-> > > +
-> > > +  interrupts:
-> > > +    maxItems: 1
-> > > +
-> > > +  '#address-cells':
-> > > +    const: 1
-> > > +
-> > > +  '#size-cells':
-> > > +    const: 0
-> > > +
-> > > +  clocks:
-> > > +    items:
-> > > +      - description: DSI core clock
-> > > +      - description: RX_ESC clock (used in escape mode)
-> > > +      - description: TX_ESC clock (used in escape mode)
-> > > +      - description: PHY_REF clock
-> > > +      - description: LCDIF clock
-> > > +
-> > > +  clock-names:
-> > > +    items:
-> > > +      - const: core
-> > > +      - const: rx_esc
-> > > +      - const: tx_esc
-> > > +      - const: phy_ref
-> > > +      - const: lcdif
-> > > +
-> > > +  mux-controls:
-> > > +    description:
-> > > +      mux controller node to use for operating the input mux
-> > > +
-> > > +  phys:
-> > > +    maxItems: 1
-> > > +    description:
-> > > +      A phandle to the phy module representing the DPHY
-> > > +
-> > > +  phy-names:
-> > > +    items:
-> > > +      - const: dphy
-> > > +
-> > > +  power-domains:
-> > > +    maxItems: 1
-> > > +
-> > > +  resets:
-> > > +    items:
-> > > +      - description: dsi byte reset line
-> > > +      - description: dsi dpi reset line
-> > > +      - description: dsi esc reset line
-> > > +      - description: dsi pclk reset line
-> > > +
-> > > +  reset-names:
-> > > +    items:
-> > > +      - const: byte
-> > > +      - const: dpi
-> > > +      - const: esc
-> > > +      - const: pclk
-> > > +
-> > > +  ports:
-> > > +    type: object
-> > > +    description:
-> > > +      A node containing DSI input & output port nodes with endpoint
-> > > +      definitions as documented in
-> > > +      Documentation/devicetree/bindings/graph.txt.
-> > > +    properties:
-> > > +      port@0:
-> > > +        type: object
-> > > +        description:
-> > > +          Input port node to receive pixel data from the
-> > > +          display controller. Exactly one endpoint must be
-> > > +          specified.
-> > > +        properties:
-> > > +          '#address-cells':
-> > > +            const: 1
-> > > +
-> > > +          '#size-cells':
-> > > +            const: 0
-> > > +
-> > > +          endpoint@0:
-> > > +            description: sub-node describing the input from LCDIF
-> > > +            type: object
-> > > +
-> > > +          endpoint@1:
-> > > +            description: sub-node describing the input from DCSS
-> > > +            type: object
+On Sun, Mar 15, 2020 at 07:12:38AM -0700, Guenter Roeck wrote:
+> On Fri, Mar 06, 2020 at 04:27:44PM +0300, Sergey.Semin@baikalelectronics.ru wrote:
+> > From: Serge Semin <Sergey.Semin@baikalelectronics.ru>
 > > 
-> > This models the two inputs to the IP core, that are connected to a mux
-> > internally, controlled through mux-controls, right ? Why is a single
-> > endpoint supported then, if there are two connections at the hardware
-> > level, and why is this using endpoints instead of ports as there are
-> > really two input ports ?
-> 
-> That came out of
-> 
-> https://lore.kernel.org/linux-arm-kernel/c86b7ca2-7799-eafd-c380-e4b551520837@samsung.com/
-> 
-> # If the ip has separate lines for DCSS and LCDIF you should distinguish
-> # by port number. If they are shared
-> # you can use endpoint number to specify DCSS or LCDIF, in both cases
-> # bindings should be adjusted.
-> 
-> I read that as
-> 
-> - distinguish by endpoint number:
-> 
->     eLCDIF--\    |
->              ----| nwl
->     DCSS----/    |
-> 
-> - distinguish by port number:
-> 
->     eLCDIF-------|
->                  | nwl
->     DCSS --------|
-
-I fully agree with you here, but in the first case I would expect the
-mux to be outside of the NWL, while in the second case it would be
-inside. If I understand the issue correctly, the mux is not part of the
-NWL, right ? The endpoint model would then be good, but leaves the issue
-of where to control the mux. There's a DT binding for video muxes in
-Documentation/devicetree/bindings/media/video-mux.txt, but that would
-require some support on the driver side. Do you think it would be a good
-way forward ?
-
-The alternative is to consider the mux + NWL as one device (more or less
-an i.MX8M-specific integration wrapper of the NWL), but in that case
-there should be two ports I believe.
-
-> From the imx8mq ref manual i didn't see separate input lines for DCSS vs
-> eLCDIF the the NWL IP so i went with endpoints instead of ports.  I'm
-> happy to change that if i got it wrong.
-> 
-> > Apart from that the bindings look ok to me.
+> > In case if the DW Watchdog IP core is synthesised with
+> > WDT_USE_FIX_TOP == false, the TOP interval indexes make the device
+> > to load a custom periods to the counter. These periods are hardwired
+> > at the synthesis stage and can be within [2^8, 2^(WDT_CNT_WIDTH - 1)].
+> > Alas their values can't be detected at runtime and must be somehow
+> > supplied to the driver so one could properly determine the watchdog
+> > timeout intervals. For this purpose we suggest to have a vendor-
+> > specific dts property "snps,watchdog-tops" utilized, which would
+> > provide an array of sixteen counter values. At device probe stage they
+> > will be used to initialize the watchdog device timeouts determined
+> > from the array values and current clocks source rate.
 > > 
-> > > +
-> > > +          reg:
-> > > +            const: 0
-> > > +
-> > > +        required:
-> > > +          - '#address-cells'
-> > > +          - '#size-cells'
-> > > +          - reg
-> > > +
-> > > +        oneOf:
-> > > +          - required:
-> > > +              - endpoint@0
-> > > +          - required:
-> > > +              - endpoint@1
-> > > +
-> > > +        additionalProperties: false
-> > > +
-> > > +      port@1:
-> > > +        type: object
-> > > +        description:
-> > > +          DSI output port node to the panel or the next bridge
-> > > +          in the chain
-> > > +
-> > > +      '#address-cells':
-> > > +        const: 1
-> > > +
-> > > +      '#size-cells':
-> > > +        const: 0
-> > > +
-> > > +    required:
-> > > +      - '#address-cells'
-> > > +      - '#size-cells'
-> > > +      - port@0
-> > > +      - port@1
-> > > +
-> > > +    additionalProperties: false
-> > > +
-> > > +patternProperties:
-> > > +  "^panel@[0-9]+$":
-> > > +    type: object
-> > > +
-> > > +required:
-> > > +  - '#address-cells'
-> > > +  - '#size-cells'
-> > > +  - clock-names
-> > > +  - clocks
-> > > +  - compatible
-> > > +  - interrupts
-> > > +  - mux-controls
-> > > +  - phy-names
-> > > +  - phys
-> > > +  - ports
-> > > +  - reg
-> > > +  - reset-names
-> > > +  - resets
-> > > +
-> > > +additionalProperties: false
-> > > +
-> > > +examples:
-> > > + - |
-> > > +
-> > > +   #include <dt-bindings/clock/imx8mq-clock.h>
-> > > +   #include <dt-bindings/interrupt-controller/arm-gic.h>
-> > > +   #include <dt-bindings/reset/imx8mq-reset.h>
-> > > +
-> > > +   mipi_dsi: mipi_dsi@30a00000 {
-> > > +              #address-cells = <1>;
-> > > +              #size-cells = <0>;
-> > > +              compatible = "fsl,imx8mq-nwl-dsi";
-> > > +              reg = <0x30A00000 0x300>;
-> > > +              clocks = <&clk IMX8MQ_CLK_DSI_CORE>,
-> > > +                       <&clk IMX8MQ_CLK_DSI_AHB>,
-> > > +                       <&clk IMX8MQ_CLK_DSI_IPG_DIV>,
-> > > +                       <&clk IMX8MQ_CLK_DSI_PHY_REF>,
-> > > +                       <&clk IMX8MQ_CLK_LCDIF_PIXEL>;
-> > > +              clock-names = "core", "rx_esc", "tx_esc", "phy_ref", "lcdif";
-> > > +              interrupts = <GIC_SPI 34 IRQ_TYPE_LEVEL_HIGH>;
-> > > +              mux-controls = <&mux 0>;
-> > > +              power-domains = <&pgc_mipi>;
-> > > +              resets = <&src IMX8MQ_RESET_MIPI_DSI_RESET_BYTE_N>,
-> > > +                       <&src IMX8MQ_RESET_MIPI_DSI_DPI_RESET_N>,
-> > > +                       <&src IMX8MQ_RESET_MIPI_DSI_ESC_RESET_N>,
-> > > +                       <&src IMX8MQ_RESET_MIPI_DSI_PCLK_RESET_N>;
-> > > +              reset-names = "byte", "dpi", "esc", "pclk";
-> > > +              phys = <&dphy>;
-> > > +              phy-names = "dphy";
-> > > +
-> > > +              panel@0 {
-> > > +                      #address-cells = <1>;
-> > > +                      #size-cells = <0>;
-> > > +                      compatible = "rocktech,jh057n00900";
-> > > +                      reg = <0>;
-> > > +                      port@0 {
-> > > +                           reg = <0>;
-> > > +                           panel_in: endpoint {
-> > > +                                     remote-endpoint = <&mipi_dsi_out>;
-> > > +                           };
-> > > +                      };
-> > > +              };
-> > > +
-> > > +              ports {
-> > > +                    #address-cells = <1>;
-> > > +                    #size-cells = <0>;
-> > > +
-> > > +                    port@0 {
-> > > +                           #size-cells = <0>;
-> > > +                           #address-cells = <1>;
-> > > +                           reg = <0>;
-> > > +                           mipi_dsi_in: endpoint@0 {
-> > > +                                        reg = <0>;
-> > > +                                        remote-endpoint = <&lcdif_mipi_dsi>;
-> > > +                           };
-> > > +                    };
-> > > +                    port@1 {
-> > > +                           reg = <1>;
-> > > +                           mipi_dsi_out: endpoint {
-> > > +                                         remote-endpoint = <&panel_in>;
-> > > +                           };
-> > > +                    };
-> > > +              };
-> > > +      };
+> > In order to have custom TOP values supported the driver must be
+> > altered in the following way. First of all the fixed-top values
+> > ready-to-use array must be determined for compatibility with currently
+> > supported devices, which were synthesised with WDT_USE_FIX_TOP == true.
+> > Secondly we must redefine the timer period search functions. For
+> > generality they are redesigned in a way to support the TOP array with
+> > no limitations on the items order or value. Finally an array with
+> > pre-defined timeouts must be calculated at probe stage from either
+> > the custom or fixed TOP values depending on the DW watchdog component
+> > parameter WDT_USE_FIX_TOP value.
+> > 
+> > Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+> > Signed-off-by: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
+> > Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+> > Cc: Paul Burton <paulburton@kernel.org>
+> > Cc: Ralf Baechle <ralf@linux-mips.org>
+> > ---
+> >  drivers/watchdog/dw_wdt.c | 145 +++++++++++++++++++++++++++++++-------
+> >  1 file changed, 119 insertions(+), 26 deletions(-)
+> > 
+> > diff --git a/drivers/watchdog/dw_wdt.c b/drivers/watchdog/dw_wdt.c
+> > index fba21de2bbad..4a57b7d777dc 100644
+> > --- a/drivers/watchdog/dw_wdt.c
+> > +++ b/drivers/watchdog/dw_wdt.c
+> > @@ -13,6 +13,7 @@
+> >   */
+> >  
+> >  #include <linux/bitops.h>
+> > +#include <linux/limits.h>
+> >  #include <linux/clk.h>
+> >  #include <linux/delay.h>
+> >  #include <linux/err.h>
+> > @@ -34,12 +35,24 @@
+> >  #define WDOG_CURRENT_COUNT_REG_OFFSET	    0x08
+> >  #define WDOG_COUNTER_RESTART_REG_OFFSET     0x0c
+> >  #define WDOG_COUNTER_RESTART_KICK_VALUE	    0x76
+> > +#define WDOG_COMP_PARAMS_1_REG_OFFSET       0xf4
+> > +#define WDOG_COMP_PARAMS_1_USE_FIX_TOP      BIT(6)
+> >  
+> > -/* The maximum TOP (timeout period) value that can be set in the watchdog. */
+> > -#define DW_WDT_MAX_TOP		15
+> > +/* There are sixteen TOPs (timeout periods) that can be set in the watchdog. */
+> > +#define DW_WDT_NUM_TOPS		16
+> > +#define DW_WDT_FIX_TOP(_idx)	(1U << (16 + _idx))
+> >  
+> >  #define DW_WDT_DEFAULT_SECONDS	30
+> >  
+> > +static const u32 dw_wdt_fix_tops[DW_WDT_NUM_TOPS] = {
+> > +	DW_WDT_FIX_TOP(0), DW_WDT_FIX_TOP(1), DW_WDT_FIX_TOP(2),
+> > +	DW_WDT_FIX_TOP(3), DW_WDT_FIX_TOP(4), DW_WDT_FIX_TOP(5),
+> > +	DW_WDT_FIX_TOP(6), DW_WDT_FIX_TOP(7), DW_WDT_FIX_TOP(8),
+> > +	DW_WDT_FIX_TOP(9), DW_WDT_FIX_TOP(10), DW_WDT_FIX_TOP(11),
+> > +	DW_WDT_FIX_TOP(12), DW_WDT_FIX_TOP(13), DW_WDT_FIX_TOP(14),
+> > +	DW_WDT_FIX_TOP(15)
+> > +};
+> > +
+> >  static bool nowayout = WATCHDOG_NOWAYOUT;
+> >  module_param(nowayout, bool, 0);
+> >  MODULE_PARM_DESC(nowayout, "Watchdog cannot be stopped once started "
+> > @@ -49,6 +62,8 @@ struct dw_wdt {
+> >  	void __iomem		*regs;
+> >  	struct clk		*clk;
+> >  	unsigned long		rate;
+> > +	unsigned int		max_top;
+> > +	unsigned int		timeouts[DW_WDT_NUM_TOPS];
+> >  	struct watchdog_device	wdd;
+> >  	struct reset_control	*rst;
+> >  	/* Save/restore */
+> > @@ -64,20 +79,68 @@ static inline int dw_wdt_is_enabled(struct dw_wdt *dw_wdt)
+> >  		WDOG_CONTROL_REG_WDT_EN_MASK;
+> >  }
+> >  
+> > -static inline int dw_wdt_top_in_seconds(struct dw_wdt *dw_wdt, unsigned top)
+> > +static unsigned int dw_wdt_find_best_top(struct dw_wdt *dw_wdt,
+> > +					 unsigned int timeout, u32 *top)
+> >  {
+> > +	u32 diff = UINT_MAX, tmp;
+> > +	int idx;
+> > +
+> >  	/*
+> > -	 * There are 16 possible timeout values in 0..15 where the number of
+> > -	 * cycles is 2 ^ (16 + i) and the watchdog counts down.
+> > +	 * In general case of non-fixed timeout values they can be arranged in
+> > +	 * any order so we have to traverse all the array values. We also try
+> > +	 * to find a closest timeout number and make sure its value is greater
+> > +	 * than the requested timeout. Note we'll return a maximum timeout
+> > +	 * if reachable value couldn't be found.
+> >  	 */
+> > -	return (1U << (16 + top)) / dw_wdt->rate;
+> > +	for (*top = dw_wdt->max_top, idx = 0; idx < DW_WDT_NUM_TOPS; ++idx) {
+> > +		if (dw_wdt->timeouts[idx] < timeout)
+> > +			continue;
+> > +
+> > +		tmp = dw_wdt->timeouts[idx] - timeout;
+> > +		if (tmp < diff) {
+> > +			diff = tmp;
+> > +			*top = idx;
+> > +		}
+> > +	}
+> > +
+> > +	return dw_wdt->timeouts[*top];
+> > +}
+> > +
+> > +static unsigned int dw_wdt_find_min_timeout(struct dw_wdt *dw_wdt)
+> 
+> I would appreciate if the names of functions returning ms end with _ms
+> to avoid confusion.
 
--- 
+Ok. I'll also modify the functions a bit, so only the
+dw_wdt_find_best_top_ms() and dw_wdt_find_max_top_ms() methods would
+return timeouts in milliseconds. Though if you insist in keeping seconds
+in the timeouts array (see the comment after the next one), it'll be
+dw_wdt_find_max_top_ms() only.
+
+> 
+> > +{
+> > +	u32 min_timeout = UINT_MAX, top;
+> > +	int idx;
+> > +
+> > +	for (top = 0, idx = 0; idx < DW_WDT_NUM_TOPS; ++idx) {
+> > +		if (dw_wdt->timeouts[idx] <= min_timeout) {
+> > +			min_timeout = dw_wdt->timeouts[idx];
+> > +			top = idx;
+> > +		}
+> > +	}
+> > +
+> > +	return dw_wdt->timeouts[top];
+> > +}
+> > +
+> > +static unsigned int dw_wdt_find_max_top(struct dw_wdt *dw_wdt, u32 *top)
+> > +{
+> > +	u32 max_timeout = 0;
+> > +	int idx;
+> > +
+> > +	for (*top = 0, idx = 0; idx < DW_WDT_NUM_TOPS; ++idx) {
+> > +		if (dw_wdt->timeouts[idx] >= max_timeout) {
+> > +			max_timeout = dw_wdt->timeouts[idx];
+> > +			*top = idx;
+> > +		}
+> > +	}
+> > +
+> > +	return dw_wdt->timeouts[*top];
+> >  }
+> >  
+> > -static int dw_wdt_get_top(struct dw_wdt *dw_wdt)
+> > +static unsigned int dw_wdt_get_timeout(struct dw_wdt *dw_wdt)
+> >  {
+> >  	int top = readl(dw_wdt->regs + WDOG_TIMEOUT_RANGE_REG_OFFSET) & 0xF;
+> >  
+> > -	return dw_wdt_top_in_seconds(dw_wdt, top);
+> > +	return dw_wdt->timeouts[top];
+> >  }
+> >  
+> >  static int dw_wdt_ping(struct watchdog_device *wdd)
+> > @@ -90,20 +153,13 @@ static int dw_wdt_ping(struct watchdog_device *wdd)
+> >  	return 0;
+> >  }
+> >  
+> > -static int dw_wdt_set_timeout(struct watchdog_device *wdd, unsigned int top_s)
+> > +static int dw_wdt_set_timeout(struct watchdog_device *wdd, unsigned int req)
+> >  {
+> >  	struct dw_wdt *dw_wdt = to_dw_wdt(wdd);
+> > -	int i, top_val = DW_WDT_MAX_TOP;
+> > +	unsigned int timeout;
+> > +	u32 top;
+> >  
+> > -	/*
+> > -	 * Iterate over the timeout values until we find the closest match. We
+> > -	 * always look for >=.
+> > -	 */
+> > -	for (i = 0; i <= DW_WDT_MAX_TOP; ++i)
+> > -		if (dw_wdt_top_in_seconds(dw_wdt, i) >= top_s) {
+> > -			top_val = i;
+> > -			break;
+> > -		}
+> > +	timeout = dw_wdt_find_best_top(dw_wdt, req * MSEC_PER_SEC, &top);
+> >  
+> >  	/*
+> >  	 * Set the new value in the watchdog.  Some versions of dw_wdt
+> > @@ -111,7 +167,7 @@ static int dw_wdt_set_timeout(struct watchdog_device *wdd, unsigned int top_s)
+> >  	 * CP_WDT_DUAL_TOP in WDT_COMP_PARAMS_1).  On those we
+> >  	 * effectively get a pat of the watchdog right here.
+> >  	 */
+> > -	writel(top_val | top_val << WDOG_TIMEOUT_RANGE_TOPINIT_SHIFT,
+> > +	writel(top | top << WDOG_TIMEOUT_RANGE_TOPINIT_SHIFT,
+> >  	       dw_wdt->regs + WDOG_TIMEOUT_RANGE_REG_OFFSET);
+> >  
+> >  	/*
+> > @@ -119,10 +175,10 @@ static int dw_wdt_set_timeout(struct watchdog_device *wdd, unsigned int top_s)
+> >  	 * kernel(watchdog_dev.c) helps to feed watchdog before
+> >  	 * wdd->max_hw_heartbeat_ms
+> >  	 */
+> > -	if (top_s * 1000 <= wdd->max_hw_heartbeat_ms)
+> > -		wdd->timeout = dw_wdt_top_in_seconds(dw_wdt, top_val);
+> > +	if (req * MSEC_PER_SEC > wdd->max_hw_heartbeat_ms)
+> > +		wdd->timeout = req;
+> >  	else
+> > -		wdd->timeout = top_s;
+> > +		wdd->timeout = timeout / MSEC_PER_SEC;
+> >  
+> >  	return 0;
+> >  }
+> > @@ -238,6 +294,41 @@ static int dw_wdt_resume(struct device *dev)
+> >  
+> >  static SIMPLE_DEV_PM_OPS(dw_wdt_pm_ops, dw_wdt_suspend, dw_wdt_resume);
+> >  
+> > +static void dw_wdt_init_timeouts(struct dw_wdt *dw_wdt, struct device *dev)
+> > +{
+> > +	u32 data, of_tops[DW_WDT_NUM_TOPS];
+> > +	const u32 *tops;
+> > +	int ret, idx;
+> > +
+> > +	/*
+> > +	 * Retrieve custom or fixed counter values depending on the
+> > +	 * WDT_USE_FIX_TOP flag found in the component specific parameters
+> > +	 * #1 register.
+> > +	 */
+> > +	data = readl(dw_wdt->regs + WDOG_COMP_PARAMS_1_REG_OFFSET);
+> > +	if (data & WDOG_COMP_PARAMS_1_USE_FIX_TOP) {
+> > +		tops = dw_wdt_fix_tops;
+> > +	} else {
+> > +		ret = of_property_read_variable_u32_array(dev_of_node(dev),
+> > +			"snps,watchdog-tops", of_tops, DW_WDT_NUM_TOPS,
+> > +			DW_WDT_NUM_TOPS);
+> > +		if (ret < 0) {
+> > +			dev_warn(dev, "No valid TOPs array specified\n");
+> > +			tops = dw_wdt_fix_tops;
+> > +		} else {
+> > +			tops = of_tops;
+> > +		}
+> > +	}
+> > +
+> > +	/*
+> > +	 * We'll keep the timeout values in ms to approximate requested
+> > +	 * timeouts with better accuracy.
+> > +	 */
+> > +	for (idx = 0; idx < DW_WDT_NUM_TOPS; ++idx)
+> > +		dw_wdt->timeouts[idx] =
+> > +			mult_frac(tops[idx], MSEC_PER_SEC, dw_wdt->rate);
+> 
+> tops[idx] type is u32. Its value can be up to 0xffffffff. That means
+> dw_wdt->rate must be >= 1000 to avoid overflow, which you should check.
+
+Right. I don't think that TOPs with timeouts bigger than
+0xffffffff milliseconds have any valuable usecases, so I'll just round
+the overflows down to FFs.
+
+> 
+> Note that I don't see the point of keeping the timeout values in ms.
+> The code selects a larger value (in seconds) anyway. All this does is
+> to add a lot of multiply and divide operations, plus a source of bugs
+> and confusion, for little if any gain.
+
+As I said in the comment to the code the idea of keeping values in ms was
+to better approximate the requested timeouts. This is necessary since
+unlike the fixed TOPs case in which each next timeout is doubled with
+respect to a previous one (65536, 131072, etc), the unfixed TOPs set may
+have any values within [2^8; (2^WDT_CNT_WIDTH - 1)]. Actual numerical
+values of the set are defined by a SoC engineer at the moment of the
+IP-core synthesis. So in general they can be unordered and can differ one
+from another in very small time deltas, like ms and even us. It depends
+on the ways the watchdog was supposed to be utilized in accordance with
+the system requirements and the reference clock rate. In this case how to
+distinguish the values if we had only seconds array? In this patch I
+suggest an approach to at least cover the case of the TOPs with
+milliseconds granularity.
+
+I don't deny that this might be not that much gain seeing the watchdog
+core supports the timeouts in seconds only, but at least it provides a
+way to distinguish one TOP from another instead of picking a first found
+one. As I see it there aren't that much multiplication and division
+caused by such solution and it's a small prices with respect to an
+ability to find a better timeout approximation. A few tens nsecs of
+the code execution is much smaller than milliseconds accuracy of the
+watchdog timeout. Though OS-wise such accuracy might be redundant.
+
+Regarding bugs and confusion. Well I find confusing a numerical literals
+usage while there are self-documented macros in the kernel available,
+which would better represent the code context and would point out what
+they are used for.) That's why I've sent the previous patch in the first
+place. But as I said in the response to your review comments there, while
+it doesn't contradict to the kernel requirements with ceteris paribus
+it's up to you which approach to choose since you are the subsystem
+maintainer and it will be your duty to continue the code maintenance in
+future. The same thing is here. It's up to you what approach to choose.
+So if my reasoning above didn't make you to change your mind, could you
+please explicitly respond to this message that you'd better see the
+timeouts array having seconds instead of milliseconds?
+
+> 
+> > +}
+> > +
+> >  static int dw_wdt_drv_probe(struct platform_device *pdev)
+> >  {
+> >  	struct device *dev = &pdev->dev;
+> > @@ -275,12 +366,14 @@ static int dw_wdt_drv_probe(struct platform_device *pdev)
+> >  
+> >  	reset_control_deassert(dw_wdt->rst);
+> >  
+> > +	dw_wdt_init_timeouts(dw_wdt, dev);
+> > +
+> >  	wdd = &dw_wdt->wdd;
+> >  	wdd->info = &dw_wdt_ident;
+> >  	wdd->ops = &dw_wdt_ops;
+> > -	wdd->min_timeout = 1;
+> > +	wdd->min_timeout = dw_wdt_find_min_timeout(dw_wdt) / MSEC_PER_SEC;
+> 
+> dw_wdt_find_min_timeout can return a value < 1000. In that case min_timeout
+> would be 0, ie unspecified.
+
+Ok. I'll implement this limitation in the dw_wdt_find_min_timeout()
+method. It will return seconds in v2.
+
 Regards,
+-Sergey
 
-Laurent Pinchart
+> 
+> >  	wdd->max_hw_heartbeat_ms =
+> > -		dw_wdt_top_in_seconds(dw_wdt, DW_WDT_MAX_TOP) * 1000;
+> > +		dw_wdt_find_max_top(dw_wdt, &dw_wdt->max_top);
+> >  	wdd->parent = dev;
+> >  
+> >  	watchdog_set_drvdata(wdd, dw_wdt);
+> > @@ -293,7 +386,7 @@ static int dw_wdt_drv_probe(struct platform_device *pdev)
+> >  	 * devicetree.
+> >  	 */
+> >  	if (dw_wdt_is_enabled(dw_wdt)) {
+> > -		wdd->timeout = dw_wdt_get_top(dw_wdt);
+> > +		wdd->timeout = dw_wdt_get_timeout(dw_wdt) / MSEC_PER_SEC;
+> >  		set_bit(WDOG_HW_RUNNING, &wdd->status);
+> >  	} else {
+> >  		wdd->timeout = DW_WDT_DEFAULT_SECONDS;
