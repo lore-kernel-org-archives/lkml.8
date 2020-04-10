@@ -4,49 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BDA8EC2BBFD
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 03:49:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2672C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 03:49:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8CEB120A8B
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 03:49:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 97FF521655
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 03:49:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586490569;
-	bh=6udrQF6+eqNb7J8MjuaEbwbF3uzk3PjNir0m9HPYV3M=;
+	s=default; t=1586490572;
+	bh=4bivpDyeSrRjIegv2VxT7NaQn8LF0IPGydFQ8umUCrw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=C2e2GU84sj9IZAi5GCrbLKNPA8zAarDk1sqPHtagulpSsOevRDOOI+RzQwRavW+ez
-	 BRxUNunklq/dw8KdhTU+LuYu8SpJIVM0g1dtKBI7V0f9/cR9hvu06a/NhkFIo8Exkb
-	 rLcM2xPoLKaOWW+vxubSnk0C+qXhLWR5eKFIgPtg=
+	b=W4Fq8r5jW1Ui+9/PhVRkoy2PubNUdWgQ01FW3NoTtT0X8++PzxIQnGSSKPl2FBkVl
+	 JNtJbry/y+ljzc7+dgXmpHzD98XCoC9FCoPDLBAYoc2NRLE75TKqkB2a5T5XNzg37L
+	 QbxTssc0ENBu4IEix7N73yH2+4gC0+KHNLLmtiqk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728556AbgDJDt1 (ORCPT
+        id S1728566AbgDJDta (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Apr 2020 23:49:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33308 "EHLO mail.kernel.org"
+        Thu, 9 Apr 2020 23:49:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33340 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728525AbgDJDtX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Apr 2020 23:49:23 -0400
+        id S1728534AbgDJDtZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Apr 2020 23:49:25 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 72952214DB;
-        Fri, 10 Apr 2020 03:49:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 753372137B;
+        Fri, 10 Apr 2020 03:49:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586490563;
-        bh=6udrQF6+eqNb7J8MjuaEbwbF3uzk3PjNir0m9HPYV3M=;
+        s=default; t=1586490565;
+        bh=4bivpDyeSrRjIegv2VxT7NaQn8LF0IPGydFQ8umUCrw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vRuaCZN9H4vBiD1T4Nnu20LBwUQrioVcqvZKqsgkiui+x9qADToIg3Fo8KSIAPqoN
-         hHqhF2xUhDFmvOLE1AkHfahXI9D3vhyTN1jc0M5OAsIlY02fyqVKW1S60GBiS4dWJy
-         tbvgt/NWDDWRP09/Xgw6zuM6cMDTI8drf4JTMeMo=
+        b=U5/YhGVWZ9QQzHsv3StRxD+glgc0SBEJkn/kAm7DtYj80FlanNpT1yM8xPKzEhRsP
+         573HI+eFhiU2mz64fpYRV3I9cEUnDUWlDIZeSxbAILPJo54Du46CorRAoIGqRKkwiu
+         61XU/ZLvHldyqfxfUE9j+S2HZtLqLWREqPUCpeGM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Mathias Nyman <mathias.nyman@linux.intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sasha Levin <sashal@kernel.org>, linux-usb@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 10/46] xhci: bail out early if driver can't accress host in resume
-Date:   Thu,  9 Apr 2020 23:48:33 -0400
-Message-Id: <20200410034909.8922-10-sashal@kernel.org>
+Cc:     Thomas Hellstrom <thellstrom@vmware.com>,
+        Borislav Petkov <bp@suse.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.4 12/46] x86: Don't let pgprot_modify() change the page encryption bit
+Date:   Thu,  9 Apr 2020 23:48:35 -0400
+Message-Id: <20200410034909.8922-12-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200410034909.8922-1-sashal@kernel.org>
 References: <20200410034909.8922-1-sashal@kernel.org>
@@ -59,43 +61,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mathias Nyman <mathias.nyman@linux.intel.com>
+From: Thomas Hellstrom <thellstrom@vmware.com>
 
-[ Upstream commit 72ae194704da212e2ec312ab182a96799d070755 ]
+[ Upstream commit 6db73f17c5f155dbcfd5e48e621c706270b84df0 ]
 
-Bail out early if the xHC host needs to be reset at resume
-but driver can't access xHC PCI registers.
+When SEV or SME is enabled and active, vm_get_page_prot() typically
+returns with the encryption bit set. This means that users of
+pgprot_modify(, vm_get_page_prot()) (mprotect_fixup(), do_mmap()) end up
+with a value of vma->vm_pg_prot that is not consistent with the intended
+protection of the PTEs.
 
-If xhci driver already fails to reset the controller then there
-is no point in attempting to free, re-initialize, re-allocate and
-re-start the host. If failure to access the host is detected later,
-failing the resume, xhci interrupts will be double freed
-when remove is called.
+This is also important for fault handlers that rely on the VMA
+vm_page_prot to set the page protection. Fix this by not allowing
+pgprot_modify() to change the encryption bit, similar to how it's done
+for PAT bits.
 
-Signed-off-by: Mathias Nyman <mathias.nyman@linux.intel.com>
-Link: https://lore.kernel.org/r/20200312144517.1593-2-mathias.nyman@linux.intel.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Thomas Hellstrom <thellstrom@vmware.com>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Reviewed-by: Dave Hansen <dave.hansen@linux.intel.com>
+Acked-by: Tom Lendacky <thomas.lendacky@amd.com>
+Link: https://lkml.kernel.org/r/20200304114527.3636-2-thomas_os@shipmail.org
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/host/xhci.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ arch/x86/include/asm/pgtable.h       | 7 +++++--
+ arch/x86/include/asm/pgtable_types.h | 2 +-
+ 2 files changed, 6 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/usb/host/xhci.c b/drivers/usb/host/xhci.c
-index 9b3b1b16eafba..2f49a7b3ce854 100644
---- a/drivers/usb/host/xhci.c
-+++ b/drivers/usb/host/xhci.c
-@@ -1157,8 +1157,10 @@ int xhci_resume(struct xhci_hcd *xhci, bool hibernated)
- 		xhci_dbg(xhci, "Stop HCD\n");
- 		xhci_halt(xhci);
- 		xhci_zero_64b_regs(xhci);
--		xhci_reset(xhci);
-+		retval = xhci_reset(xhci);
- 		spin_unlock_irq(&xhci->lock);
-+		if (retval)
-+			return retval;
- 		xhci_cleanup_msix(xhci);
+diff --git a/arch/x86/include/asm/pgtable.h b/arch/x86/include/asm/pgtable.h
+index 0bc530c4eb134..1e6bb4c253342 100644
+--- a/arch/x86/include/asm/pgtable.h
++++ b/arch/x86/include/asm/pgtable.h
+@@ -624,12 +624,15 @@ static inline pmd_t pmd_modify(pmd_t pmd, pgprot_t newprot)
+ 	return __pmd(val);
+ }
  
- 		xhci_dbg(xhci, "// Disabling event ring interrupts\n");
+-/* mprotect needs to preserve PAT bits when updating vm_page_prot */
++/*
++ * mprotect needs to preserve PAT and encryption bits when updating
++ * vm_page_prot
++ */
+ #define pgprot_modify pgprot_modify
+ static inline pgprot_t pgprot_modify(pgprot_t oldprot, pgprot_t newprot)
+ {
+ 	pgprotval_t preservebits = pgprot_val(oldprot) & _PAGE_CHG_MASK;
+-	pgprotval_t addbits = pgprot_val(newprot);
++	pgprotval_t addbits = pgprot_val(newprot) & ~_PAGE_CHG_MASK;
+ 	return __pgprot(preservebits | addbits);
+ }
+ 
+diff --git a/arch/x86/include/asm/pgtable_types.h b/arch/x86/include/asm/pgtable_types.h
+index b5e49e6bac635..8267dd426b152 100644
+--- a/arch/x86/include/asm/pgtable_types.h
++++ b/arch/x86/include/asm/pgtable_types.h
+@@ -123,7 +123,7 @@
+  */
+ #define _PAGE_CHG_MASK	(PTE_PFN_MASK | _PAGE_PCD | _PAGE_PWT |		\
+ 			 _PAGE_SPECIAL | _PAGE_ACCESSED | _PAGE_DIRTY |	\
+-			 _PAGE_SOFT_DIRTY | _PAGE_DEVMAP)
++			 _PAGE_SOFT_DIRTY | _PAGE_DEVMAP | _PAGE_ENC)
+ #define _HPAGE_CHG_MASK (_PAGE_CHG_MASK | _PAGE_PSE)
+ 
+ /*
 -- 
 2.20.1
 
