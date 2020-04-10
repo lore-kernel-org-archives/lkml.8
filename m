@@ -4,52 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62E9EC2BB85
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 03:51:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78F2BC2D0EC
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 03:51:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3B5A321556
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 03:51:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4423320BED
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 03:51:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586490689;
-	bh=2ysPOcU4eG5VZaaWZplLGws6Gl0xgfw0JPR9mog2OUs=;
+	s=default; t=1586490694;
+	bh=QKMcaEVYytCyf1hqsXW7L2gDGVX8IfnY0Ttlq6wcg+E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zoNcqNeiQIY1Zr+a0wMv22y566C1MGw1KP7UsqTLTia3qji27KC5WAM0/joUjOs1a
-	 krdb6VVw80BFKdpQLNrv8z94xcqsxbodCicZq7yh5yMcbteUaKnAWj2Ni5XX/d1MBS
-	 0lkWcDfkDCsrfa/tgZLZ/L8RzNPMmP4f1q3sEki0=
+	b=BEESb/B6maBE3D1hsCP20ppP81LRmClJqeJ6I7Ayw30X5+HEpjAZEmfLLNg0Gcol+
+	 qna6NDogaXI4bfTOuxsB1EP4Iu5QhycPEo2dzN6DJ7jdgNYJ4e12UB05wkzW452E57
+	 gop6trpFoJqbO3WCRkJE2jW5s98ZtqnpJ8evCDho=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729191AbgDJDv1 (ORCPT
+        id S1729235AbgDJDvc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Apr 2020 23:51:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36436 "EHLO mail.kernel.org"
+        Thu, 9 Apr 2020 23:51:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36762 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729157AbgDJDvS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Apr 2020 23:51:18 -0400
+        id S1726942AbgDJDv0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Apr 2020 23:51:26 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5016C21835;
-        Fri, 10 Apr 2020 03:51:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4048E2173E;
+        Fri, 10 Apr 2020 03:51:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586490679;
-        bh=2ysPOcU4eG5VZaaWZplLGws6Gl0xgfw0JPR9mog2OUs=;
+        s=default; t=1586490686;
+        bh=QKMcaEVYytCyf1hqsXW7L2gDGVX8IfnY0Ttlq6wcg+E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=13Qu8uXJNn+2CuThRoKYfy7eiEa9i4i3OELxqW9cJSqobbUTaeZiZTT62SNcJo8hx
-         6YG3+iOGpCCPTj3fuakGXIW47bvPD2UEvtPQczH9CVdiv0Qej9wlfam5qrhZ7EFIOV
-         5dxsDtV53gc4U+ClP1xNJfzzLwuGozJ/5/PHsOnk=
+        b=QBgSpQp4I0o9juh3XSSdDt9Ze8zzZXyrX5LgUIKqHSlN0+K4K9xBM5oa3AzAWR9hQ
+         SZEP+b4Wl+nz4LY2Egux+0agpkugvPxLGqeaWAi8MUE0l9eUdcf1IRNMLpZU6dzRKN
+         QBukgeEg2fvc9/AjUDej8tgQ70p0wLrwSKUdGR7Y=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Boqun Feng <boqun.feng@gmail.com>, Qian Cai <cai@lca.pw>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.9 7/9] locking/lockdep: Avoid recursion in lockdep_count_{for,back}ward_deps()
-Date:   Thu,  9 Apr 2020 23:51:08 -0400
-Message-Id: <20200410035111.9938-7-sashal@kernel.org>
+Cc:     Bob Peterson <rpeterso@redhat.com>,
+        Andreas Gruenbacher <agruenba@redhat.com>,
+        Sasha Levin <sashal@kernel.org>, cluster-devel@redhat.com
+Subject: [PATCH AUTOSEL 4.4 4/8] gfs2: Don't demote a glock until its revokes are written
+Date:   Thu,  9 Apr 2020 23:51:17 -0400
+Message-Id: <20200410035122.10065-4-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200410035111.9938-1-sashal@kernel.org>
-References: <20200410035111.9938-1-sashal@kernel.org>
+In-Reply-To: <20200410035122.10065-1-sashal@kernel.org>
+References: <20200410035122.10065-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -59,77 +59,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Boqun Feng <boqun.feng@gmail.com>
+From: Bob Peterson <rpeterso@redhat.com>
 
-[ Upstream commit 25016bd7f4caf5fc983bbab7403d08e64cba3004 ]
+[ Upstream commit df5db5f9ee112e76b5202fbc331f990a0fc316d6 ]
 
-Qian Cai reported a bug when PROVE_RCU_LIST=y, and read on /proc/lockdep
-triggered a warning:
+Before this patch, run_queue would demote glocks based on whether
+there are any more holders. But if the glock has pending revokes that
+haven't been written to the media, giving up the glock might end in
+file system corruption if the revokes never get written due to
+io errors, node crashes and fences, etc. In that case, another node
+will replay the metadata blocks associated with the glock, but
+because the revoke was never written, it could replay that block
+even though the glock had since been granted to another node who
+might have made changes.
 
-  [ ] DEBUG_LOCKS_WARN_ON(current->hardirqs_enabled)
-  ...
-  [ ] Call Trace:
-  [ ]  lock_is_held_type+0x5d/0x150
-  [ ]  ? rcu_lockdep_current_cpu_online+0x64/0x80
-  [ ]  rcu_read_lock_any_held+0xac/0x100
-  [ ]  ? rcu_read_lock_held+0xc0/0xc0
-  [ ]  ? __slab_free+0x421/0x540
-  [ ]  ? kasan_kmalloc+0x9/0x10
-  [ ]  ? __kmalloc_node+0x1d7/0x320
-  [ ]  ? kvmalloc_node+0x6f/0x80
-  [ ]  __bfs+0x28a/0x3c0
-  [ ]  ? class_equal+0x30/0x30
-  [ ]  lockdep_count_forward_deps+0x11a/0x1a0
+This patch changes the logic in run_queue so that it never demotes
+a glock until its count of pending revokes reaches zero.
 
-The warning got triggered because lockdep_count_forward_deps() call
-__bfs() without current->lockdep_recursion being set, as a result
-a lockdep internal function (__bfs()) is checked by lockdep, which is
-unexpected, and the inconsistency between the irq-off state and the
-state traced by lockdep caused the warning.
-
-Apart from this warning, lockdep internal functions like __bfs() should
-always be protected by current->lockdep_recursion to avoid potential
-deadlocks and data inconsistency, therefore add the
-current->lockdep_recursion on-and-off section to protect __bfs() in both
-lockdep_count_forward_deps() and lockdep_count_backward_deps()
-
-Reported-by: Qian Cai <cai@lca.pw>
-Signed-off-by: Boqun Feng <boqun.feng@gmail.com>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Link: https://lkml.kernel.org/r/20200312151258.128036-1-boqun.feng@gmail.com
+Signed-off-by: Bob Peterson <rpeterso@redhat.com>
+Reviewed-by: Andreas Gruenbacher <agruenba@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/locking/lockdep.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ fs/gfs2/glock.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/kernel/locking/lockdep.c b/kernel/locking/lockdep.c
-index d7f425698a4a1..9f56e3fac795a 100644
---- a/kernel/locking/lockdep.c
-+++ b/kernel/locking/lockdep.c
-@@ -1241,9 +1241,11 @@ unsigned long lockdep_count_forward_deps(struct lock_class *class)
- 	this.class = class;
- 
- 	raw_local_irq_save(flags);
-+	current->lockdep_recursion = 1;
- 	arch_spin_lock(&lockdep_lock);
- 	ret = __lockdep_count_forward_deps(&this);
- 	arch_spin_unlock(&lockdep_lock);
-+	current->lockdep_recursion = 0;
- 	raw_local_irq_restore(flags);
- 
- 	return ret;
-@@ -1268,9 +1270,11 @@ unsigned long lockdep_count_backward_deps(struct lock_class *class)
- 	this.class = class;
- 
- 	raw_local_irq_save(flags);
-+	current->lockdep_recursion = 1;
- 	arch_spin_lock(&lockdep_lock);
- 	ret = __lockdep_count_backward_deps(&this);
- 	arch_spin_unlock(&lockdep_lock);
-+	current->lockdep_recursion = 0;
- 	raw_local_irq_restore(flags);
- 
- 	return ret;
+diff --git a/fs/gfs2/glock.c b/fs/gfs2/glock.c
+index 1eb737c466ddc..f80ffccb03160 100644
+--- a/fs/gfs2/glock.c
++++ b/fs/gfs2/glock.c
+@@ -541,6 +541,9 @@ __acquires(&gl->gl_lockref.lock)
+ 			goto out_unlock;
+ 		if (nonblock)
+ 			goto out_sched;
++		smp_mb();
++		if (atomic_read(&gl->gl_revokes) != 0)
++			goto out_sched;
+ 		set_bit(GLF_DEMOTE_IN_PROGRESS, &gl->gl_flags);
+ 		GLOCK_BUG_ON(gl, gl->gl_demote_state == LM_ST_EXCLUSIVE);
+ 		gl->gl_target = gl->gl_demote_state;
 -- 
 2.20.1
 
