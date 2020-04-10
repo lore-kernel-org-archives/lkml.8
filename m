@@ -2,87 +2,214 @@ Return-Path: <SRS0=VV4q=52=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D285C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 01:01:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12CE5C2BB85
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 01:03:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0D9D82074F
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 01:01:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C903D2074F
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 01:03:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=alpsgroup.onmicrosoft.com header.i=@alpsgroup.onmicrosoft.com header.b="jh6xTWNO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726646AbgDJBBH (ORCPT
+        id S1726579AbgDJBDT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Apr 2020 21:01:07 -0400
-Received: from mail105.syd.optusnet.com.au ([211.29.132.249]:57692 "EHLO
-        mail105.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726082AbgDJBBH (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Apr 2020 21:01:07 -0400
-Received: from dread.disaster.area (pa49-180-167-53.pa.nsw.optusnet.com.au [49.180.167.53])
-        by mail105.syd.optusnet.com.au (Postfix) with ESMTPS id 68F383A3C08;
-        Fri, 10 Apr 2020 11:01:02 +1000 (AEST)
-Received: from dave by dread.disaster.area with local (Exim 4.92.3)
-        (envelope-from <david@fromorbit.com>)
-        id 1jMi2X-0006FQ-OF; Fri, 10 Apr 2020 11:01:01 +1000
-Date:   Fri, 10 Apr 2020 11:01:01 +1000
-From:   Dave Chinner <david@fromorbit.com>
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     "Darrick J. Wong" <darrick.wong@oracle.com>,
-        linux-xfs@vger.kernel.org, Christoph Hellwig <hch@infradead.org>,
-        Brian Foster <bfoster@redhat.com>,
-        Dave Chinner <dchinner@redhat.com>,
-        Eric Sandeen <sandeen@redhat.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] xfs: stop CONFIG_XFS_DEBUG from changing compiler flags
-Message-ID: <20200410010101.GV24067@dread.disaster.area>
-References: <20200409080909.3646059-1-arnd@arndb.de>
+        Thu, 9 Apr 2020 21:03:19 -0400
+Received: from mail-eopbgr1410047.outbound.protection.outlook.com ([40.107.141.47]:42838
+        "EHLO JPN01-OS2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725970AbgDJBDS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Apr 2020 21:03:18 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=kgE5oZB3cf1fDZjZNldOUhQxzM4Y1iI7UtzkHetBqfvA2i5UaBGwTc/rRSkBBJq3cOf5WwFJqGO+qVB60492Y1QWcif8o09J0QbmajLtbo3fz6UJLnfGTTCppV0L7tpDigVrzJDNTrn3f5YDwbVt06k12/PrB57MRBQOlxq6K9tT5UICs0AvtgiX4bvDyUEFOKTq2JbwhII/+fXZV8Dplb/0XhgfpnutWL1aJhEfZynZhvQi+IJjB6Gx36I/9W3aMHA/xIhffdPF6dSZiwb4TwdInhtudpvLtjJKW1pX5cFHA7QMd1A/2bRJi78VsHel4iSuM9hlPvm0KzWaz2Nm1w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=jFIMbk4Pzofl14SAran5PEcjL3Z6wE9zpJyIrYEL7FY=;
+ b=GeZuEMJZsp76hsaNR1U2YWTrYNgORVXW1Hv+6TwjMLFg59M9mseH9bmx7H1btOJxCzwbVKUXXOR3p2wso/wSj+KsSplzqJJoDGabciytw+usLachOQmWorWm5DMoz68aWi57gACNGsnYFViMSgITwwCkAVLHlOEausJ6gWVwb3RXhHqmjqTrDMyjkWLcbtCCS89AOrCbo7NhXrduEYMjNOSnWrFUPXhrGj1Alh373HI3BfQZjt7HSk5f+7cCyTD+Xamo9g/Ek15GgF/XC6TePhnbA3bqnG9wOD05nBr/TrtBwJbifoUw4ipkrPRYk66VE/JStzlUNW5UGTCcAsBQXw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=cn.alps.com; dmarc=pass action=none header.from=cn.alps.com;
+ dkim=pass header.d=cn.alps.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=alpsgroup.onmicrosoft.com; s=selector2-alpsgroup-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=jFIMbk4Pzofl14SAran5PEcjL3Z6wE9zpJyIrYEL7FY=;
+ b=jh6xTWNOpwxRQBgK+tAVuPNxlSeqTaDSMkt11sqPzrOnSaveclrHtwb64biwclIgcluUKtF5o6htqOnMXZBUoBZ+o0DRyQ+aTNC6FXRAa3+MV31JdxYXDQqeN3xRu8NEqQaftNevtaP3E8Zn6JxtZ7511Z02BADwykDymLHajkg=
+Received: from OSAPR01MB3057.jpnprd01.prod.outlook.com (52.134.248.141) by
+ OSAPR01MB4097.jpnprd01.prod.outlook.com (20.178.128.82) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2900.17; Fri, 10 Apr 2020 01:03:13 +0000
+Received: from OSAPR01MB3057.jpnprd01.prod.outlook.com
+ ([fe80::c41b:4bf7:2ad1:6fc7]) by OSAPR01MB3057.jpnprd01.prod.outlook.com
+ ([fe80::c41b:4bf7:2ad1:6fc7%3]) with mapi id 15.20.2900.015; Fri, 10 Apr 2020
+ 01:03:13 +0000
+From:   Xiaojian Cao <xiaojian.cao@cn.alps.com>
+To:     Masaki Ota <masaki.ota@alpsalpine.com>,
+        Artem Borisov <dedsa2002@gmail.com>
+CC:     "jikos@kernel.org" <jikos@kernel.org>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        Henrik Rydberg <rydberg@bitmath.org>,
+        "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH 2/2] HID: alps: Refactor axis resolution logic
+Thread-Topic: [PATCH 2/2] HID: alps: Refactor axis resolution logic
+Thread-Index: AQHWDr0x2NbbGmh+BEarMrC/TfssrKhxZ8AAgAAQo0CAAA8hsA==
+Date:   Fri, 10 Apr 2020 01:03:11 +0000
+Message-ID: <OSAPR01MB3057C2FB967974B98B224610C8DE0@OSAPR01MB3057.jpnprd01.prod.outlook.com>
+References: <nycvar.YFH.7.76.2004100019450.19713@cbobk.fhfr.pm>
+ <20200409230009.22551-1-dedsa2002@gmail.com>
+ <TYAPR01MB3871E974EFE06EBF40074470ECDE0@TYAPR01MB3871.jpnprd01.prod.outlook.com>
+In-Reply-To: <TYAPR01MB3871E974EFE06EBF40074470ECDE0@TYAPR01MB3871.jpnprd01.prod.outlook.com>
+Accept-Language: en-US, zh-CN
+Content-Language: zh-CN
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=xiaojian.cao@cn.alps.com; 
+x-originating-ip: [58.247.0.86]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 8aba6a49-a560-444a-5528-08d7dceaf199
+x-ms-traffictypediagnostic: OSAPR01MB4097:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <OSAPR01MB4097CBDAC28389BC06848713C8DE0@OSAPR01MB4097.jpnprd01.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:6430;
+x-forefront-prvs: 0369E8196C
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:OSAPR01MB3057.jpnprd01.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10009020)(4636009)(346002)(376002)(136003)(396003)(39860400002)(366004)(7696005)(6506007)(53546011)(316002)(33656002)(54906003)(110136005)(26005)(81166007)(85182001)(5660300002)(186003)(8936002)(8676002)(52536014)(81156014)(86362001)(4326008)(478600001)(66446008)(9686003)(2906002)(66946007)(76116006)(66476007)(66556008)(55016002)(64756008)(71200400001);DIR:OUT;SFP:1101;
+received-spf: None (protection.outlook.com: cn.alps.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: /3WX2H6VUwuUq4173+f5HbwFi3GStUoB4ix/4SLN9v42YQZPAttE0y8M5nT5/TrPf46cWoTqOzfzoxoXPj51ZJl3ImijOsngSzxpv5CFm6eZiUcbmDbzKHpseOraX5bA1n6/prKeSUCzXMb69iELVdAZRCoa/BnY44jyjcQ2316hVR+YGRUj+2Y0EjaKwaJvEwrxtCEtks/wx5m7Md6ottyj1SB1Eh38uufOkk68Ie3Ai/ssVOI5P7KmFyDks42vMoW5OUVMUgA+9Jv6KH0gSCniVGgQTFyCa6wfpLIJm4VvptPqnmjs6VsY+xlWiR3DfNUw7+OEmbPIwOoJV21XpYJy7xYNHfPQWLlTLc/F8YGlblKx/52boOnP4Dx6ll3fqOK41xdimFEycqz9vue6UQFlJeUwyT0ELMOrj8n1O7rS54dBi+bQC5ak2vW386c+
+x-ms-exchange-antispam-messagedata: qJc2/WEiPgQwAhJAAvN1zEQ4FucEHwNGVqSv8FHzMhR3Y1VUMH8eq3qRulvBoH4TKPfcPD/8p8lBtoE560riGOaEU52dy+pcq0/17EIOvX/p59Wg0kCTHmA/LXJiK4yHIXdGdSHGR5P4Ia2ea7MauQ==
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200409080909.3646059-1-arnd@arndb.de>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Optus-CM-Score: 0
-X-Optus-CM-Analysis: v=2.3 cv=X6os11be c=1 sm=1 tr=0
-        a=2xmR08VVv0jSFCMMkhec0Q==:117 a=2xmR08VVv0jSFCMMkhec0Q==:17
-        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=cl8xLZFz6L8A:10
-        a=20KFwNOVAAAA:8 a=7-415B0cAAAA:8 a=VK9ohqNZyv40iBll5AsA:9
-        a=CjuIK1q_8ugA:10 a=biEYGPWJfzWAr4FL6Ov7:22 a=pHzHmUro8NiASowvMSCR:22
-        a=nt3jZW36AmriUCFCBwmW:22
+X-OriginatorOrg: cn.alps.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 8aba6a49-a560-444a-5528-08d7dceaf199
+X-MS-Exchange-CrossTenant-originalarrivaltime: 10 Apr 2020 01:03:12.5163
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 57e76998-77bd-4b82-a424-198f46eb2254
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: OV8EOHsIPZG0/Rkxc06lBfR1qXXtlSPepsOnGeqvKYMXPDd3McX5RCwBebLwcxhPBCZws84+VpwztVYvllH4QxjqykhBrKihiGA+yOWTesE=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: OSAPR01MB4097
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 09, 2020 at 10:08:56AM +0200, Arnd Bergmann wrote:
-> I ran into a linker warning in XFS that originates from a mismatch
-> between libelf, binutils and objtool when certain files in the kernel
-> are built with "gcc -g":
-> 
-> x86_64-linux-ld: fs/xfs/xfs_trace.o: unable to initialize decompress status for section .debug_info
-> 
-> After some discussion, nobody could identify why xfs sets this flag
-> here. CONFIG_XFS_DEBUG used to enable lots of unrelated settings, but
-> now its main purpose is to enable extra consistency checks and assertions
-> that are unrelated to the debug info.
-
-I'm pretty sure it was needed for the original kgdb integration back
-in the early 2000s. That was when SGI used to patch their XFS dev
-tree with kgdb and debug symbols were needed by the custom kgdb
-modules that were ported across from the Irix kernel debugger.
-
-ISTR that the early kcrash kernel dump analysis tools (again,
-originated from the Irix "icrash" kernel dump tools) had custom XFS
-debug scripts that needed also the debug info to work correctly...
-
-Which is a long way of saying "we don't need it anymore" instead of
-"nobody knows why it was set"... :)
-
-With an update to commit message:
-
-Reviewed-by: Dave Chinner <dchinner@redhat.com>
--- 
-Dave Chinner
-david@fromorbit.com
+SGkgT3RhLXNhbiwNCg0KVGhhbmtzIGZvciB5b3VyIGNoZWNraW5nLg0KSW4gZmFjdCwgc29tZSBv
+ZiB0aGUgVTEgZGV2aWNlcyB3b3JrIGFzIG5vbi1QVFAuDQpBVUkxNjU3IGlzIHVzaW5nIFUxKEtH
+REJDSEEwMDRBKSB3aG9zZSBmaXJtd2FyZSBqdXN0IHN1cHBvcnRzIG1vdXNlIG1vZGUgYW5kIGxl
+Z2FjeSBtb2RlLiANCg0KQmVzdCBSZWdhcmRzLA0KLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLQ0KSmFzb24gQ2FvKOabueaZk+W7uikNCg0KDQotLS0tLU9yaWdp
+bmFsIE1lc3NhZ2UtLS0tLQ0KRnJvbTog5aSq55SwIOecn+WWnCBNYXNha2kgT3RhIDxtYXNha2ku
+b3RhQGFscHNhbHBpbmUuY29tPiANClNlbnQ6IEZyaWRheSwgQXByaWwgMTAsIDIwMjAgODoyOSBB
+TQ0KVG86IOabuSDmm4nlu7ogWGlhb2ppYW4gQ2FvIDx4aWFvamlhbi5jYW9AY24uYWxwcy5jb20+
+OyBBcnRlbSBCb3Jpc292IDxkZWRzYTIwMDJAZ21haWwuY29tPg0KQ2M6IGppa29zQGtlcm5lbC5v
+cmc7IEJlbmphbWluIFRpc3NvaXJlcyA8YmVuamFtaW4udGlzc29pcmVzQHJlZGhhdC5jb20+OyBI
+ZW5yaWsgUnlkYmVyZyA8cnlkYmVyZ0BiaXRtYXRoLm9yZz47IGxpbnV4LWlucHV0QHZnZXIua2Vy
+bmVsLm9yZzsgbGludXgta2VybmVsQHZnZXIua2VybmVsLm9yZw0KU3ViamVjdDogUkU6IFtQQVRD
+SCAyLzJdIEhJRDogYWxwczogUmVmYWN0b3IgYXhpcyByZXNvbHV0aW9uIGxvZ2ljDQoNCkhpLCBD
+YW8tc2FuLA0KDQpEbyB5b3Uga25vdyBBVUkxNjU3IGRldmljZT8gVGhpcyBkZXZpY2UgbG9va3Mg
+VTEuDQpJIHRoaW5rIHJlY2VudCBhbGwgVTEgZGV2aWNlcyB3b3JrIGFzIFBUUC4NCkxpbnV4IGFs
+c28gc3VwcG9ydHMgUFRQLCBzbyBJIHRoaW5rIHdlIHNob3VsZCBhZGQgc29tZXRoaW5nIElEIHRv
+IExpbnV4IHNvdXJjZSBjb2RlLiAoSSByZW1lbWJlciBhIHNvbWV0aGluZyBmbGFnIGlzIGFscmVh
+ZHkgZXhpc3QuKQ0KDQpCZXN0IFJlZ2FyZHMsDQpNYXNha2kgT3RhDQotLS0tLU9yaWdpbmFsIE1l
+c3NhZ2UtLS0tLQ0KRnJvbTogQXJ0ZW0gQm9yaXNvdiA8ZGVkc2EyMDAyQGdtYWlsLmNvbT4gDQpT
+ZW50OiBGcmlkYXksIEFwcmlsIDEwLCAyMDIwIDg6MDAgQU0NCkNjOiBqaWtvc0BrZXJuZWwub3Jn
+OyDlpKrnlLAg55yf5ZacIE1hc2FraSBPdGEgPG1hc2FraS5vdGFAYWxwc2FscGluZS5jb20+OyBB
+cnRlbSBCb3Jpc292IDxkZWRzYTIwMDJAZ21haWwuY29tPjsgQmVuamFtaW4gVGlzc29pcmVzIDxi
+ZW5qYW1pbi50aXNzb2lyZXNAcmVkaGF0LmNvbT47IEhlbnJpayBSeWRiZXJnIDxyeWRiZXJnQGJp
+dG1hdGgub3JnPjsgbGludXgtaW5wdXRAdmdlci5rZXJuZWwub3JnOyBsaW51eC1rZXJuZWxAdmdl
+ci5rZXJuZWwub3JnDQpTdWJqZWN0OiBbUEFUQ0ggMi8yXSBISUQ6IGFscHM6IFJlZmFjdG9yIGF4
+aXMgcmVzb2x1dGlvbiBsb2dpYw0KDQpBVUkxNjU3IGRvZXNuJ3QgZm9sbG93IHRoZSBzYW1lIGxv
+Z2ljIGZvciByZXNvbHV0aW9uIGNhbGN1bGF0aW9uLCBzaW5jZSB0aGUgcmVzdWx0aW5nIHZhbHVl
+cyBhcmUgaW5jb3JyZWN0LiBJbnN0ZWFkLCBpdCByZXBvcnRzIHRoZSBhY3R1YWwgcmVzb2x1dGlv
+biB2YWx1ZXMgaW4gcGxhY2Ugb2YgdGhlIHBpdGNoIG9uZXMuDQpXaGlsZSB3ZSdyZSBhdCBpdCwg
+YWxzbyByZWZhY3RvciB0aGUgd2hvbGUgcmVzb2x1dGlvbiBsb2dpYyB0byBtYWtlIGl0IG1vcmUg
+Z2VuZXJpYyBhbmQgc2Vuc2libGUgZm9yIG11bHRpcGxlIGRldmljZSBzdXBwb3J0Lg0KDQpUaGVy
+ZSBhcmUgdHdvIG1haW4gbG9naWNhbCBwcm9ibGVtcyB3aXRoIHRoZSBjdXJyZW50IGNvZGU6DQox
+LiBhY3RpdmVfbGVuX21tIHZhbHVlcyBhcmUgb25seSB1c2VkIGZvciByZXNvbHV0aW9uIGNhbGN1
+bGF0aW9uIG9uIFUxLCB5ZXQgYXJlIGV4cG9zZWQgZ2xvYmFsbHkgYXMgcGFydCBvZiBhbHBzX2Rl
+diBzdHJ1Y3R1cmUuDQoyLiBUaGUgcmVzb2x1dGlvbiBjYWxjdWxhdGlvbiBwcm9jZXNzIGhhcHBl
+bnMgaW4gYWxwc19pbnB1dF9jb25maWd1cmVkLCB3aGlsZSBldmVyeXRoaW5nIGVsc2UgaXMgY2Fs
+Y3VsYXRlZCBpbiB1MV9pbml0IGZ1bmN0aW9uLg0KDQpUaGVzZSBwcm9ibGVtcyBiZWNvbWUgbW9y
+ZSBhcHBhcmVudCB3aGVuIHdlIHRyeSB0byBzdXBwb3J0IGEgZGV2aWNlIHRoYXQgZG9lc24ndCBm
+b2xsb3cgdGhlIHNhbWUgcmVzb2x1dGlvbiBjYWxjdWxhdGlvbiBsb2dpYyBhcyBVMS4NClNpbmNl
+IGFscHNfaW5wdXRfY29uZmlndXJlZCBpcyBhIGRldmljZS1hZ25vc3RpYyBmdW5jdGlvbiwgd2Ug
+c2hvdWxkIGF2b2lkIGRvaW5nIGFueSBtZWFzdXJlbWVudHMgdGhlcmUgYW5kIGhhbmRsZSB0aGVt
+IGluIGRldmljZS1zcGVjaWZpYyBpbml0IGZ1bmN0aW9ucyBsaWtlIHUxL1Q0X2luaXQgaW5zdGVh
+ZC4NCg0KVG8gZWxpbWluYXRlIHRoZXNlIHByb2JsZW1zIHdlIGFkZCBnbG9iYWwgeF9yZXMgYW5k
+IHlfcmVzIHZhbHVlcyBhbmQgcG9wdWxhdGUgdGhlbSBvbiBhIGRldmljZS1zcGVjaWZpYyBiYXNp
+cyBpbiB0aGUgYWNjb3JkaW5nIGluaXQgZnVuY3Rpb25zLg0KDQpTaWduZWQtb2ZmLWJ5OiBBcnRl
+bSBCb3Jpc292IDxkZWRzYTIwMDJAZ21haWwuY29tPg0KLS0tDQogZHJpdmVycy9oaWQvaGlkLWFs
+cHMuYyB8IDQxICsrKysrKysrKysrKysrKysrKysrKysrKystLS0tLS0tLS0tLS0tLS0tDQogMSBm
+aWxlIGNoYW5nZWQsIDI1IGluc2VydGlvbnMoKyksIDE2IGRlbGV0aW9ucygtKQ0KDQpkaWZmIC0t
+Z2l0IGEvZHJpdmVycy9oaWQvaGlkLWFscHMuYyBiL2RyaXZlcnMvaGlkL2hpZC1hbHBzLmMgaW5k
+ZXggYzJhMmJkNTI4ODkwLi40OTRjMDhjY2E2NDUgMTAwNjQ0DQotLS0gYS9kcml2ZXJzL2hpZC9o
+aWQtYWxwcy5jDQorKysgYi9kcml2ZXJzL2hpZC9oaWQtYWxwcy5jDQpAQCAtODMsOCArODMsOCBA
+QCBlbnVtIGRldl9udW0gew0KICAqIEBtYXhfZmluZ2VyczogdG90YWwgbnVtYmVyIG9mIGZpbmdl
+cnMNCiAgKiBAaGFzX3NwOiBib29sZWFuIG9mIHNwIGV4aXN0ZW5zZQ0KICAqIEBzcF9idG5faW5m
+bzogYnV0dG9uIGluZm9ybWF0aW9uDQotICogQHhfYWN0aXZlX2xlbl9tbTogYWN0aXZlIGFyZWEg
+bGVuZ3RoIG9mIFggKG1tKQ0KLSAqIEB5X2FjdGl2ZV9sZW5fbW06IGFjdGl2ZSBhcmVhIGxlbmd0
+aCBvZiBZIChtbSkNCisgKiBAeF9yZXM6IHJlc29sdXRpb24gb2YgWA0KKyAqIEB5X3JlczogcmVz
+b2x1dGlvbiBvZiBZDQogICogQHhfbWF4OiBtYXhpbXVtIHggY29vcmRpbmF0ZSB2YWx1ZQ0KICAq
+IEB5X21heDogbWF4aW11bSB5IGNvb3JkaW5hdGUgdmFsdWUNCiAgKiBAeF9taW46IG1pbmltdW0g
+eCBjb29yZGluYXRlIHZhbHVlDQpAQCAtMTAwLDkgKzEwMCwxMCBAQCBzdHJ1Y3QgYWxwc19kZXYg
+ew0KIAllbnVtIGRldl9udW0gZGV2X3R5cGU7DQogCXU4ICBtYXhfZmluZ2VyczsNCiAJdTggIGhh
+c19zcDsNCisJdTggIG5vX3BpdGNoOw0KIAl1OAlzcF9idG5faW5mbzsNCi0JdTMyCXhfYWN0aXZl
+X2xlbl9tbTsNCi0JdTMyCXlfYWN0aXZlX2xlbl9tbTsNCisJdTMyCXhfcmVzOw0KKwl1MzIJeV9y
+ZXM7DQogCXUzMgl4X21heDsNCiAJdTMyCXlfbWF4Ow0KIAl1MzIJeF9taW47DQpAQCAtNTUwLDEw
+ICs1NTEsNiBAQCBzdGF0aWMgaW50IHUxX2luaXQoc3RydWN0IGhpZF9kZXZpY2UgKmhkZXYsIHN0
+cnVjdCBhbHBzX2RldiAqcHJpX2RhdGEpDQogCQlkZXZfZXJyKCZoZGV2LT5kZXYsICJmYWlsZWQg
+VTFfUkVTT19EV05fQUJTICglZClcbiIsIHJldCk7DQogCQlnb3RvIGV4aXQ7DQogCX0NCi0JcHJp
+X2RhdGEtPnhfYWN0aXZlX2xlbl9tbSA9DQotCQkocGl0Y2hfeCAqIChzZW5fbGluZV9udW1feCAt
+IDEpKSAvIDEwOw0KLQlwcmlfZGF0YS0+eV9hY3RpdmVfbGVuX21tID0NCi0JCShwaXRjaF95ICog
+KHNlbl9saW5lX251bV95IC0gMSkpIC8gMTA7DQogDQogCXByaV9kYXRhLT54X21heCA9DQogCQko
+cmVzb2x1dGlvbiA8PCAyKSAqIChzZW5fbGluZV9udW1feCAtIDEpOyBAQCAtNTYyLDYgKzU1OSwx
+OCBAQCBzdGF0aWMgaW50IHUxX2luaXQoc3RydWN0IGhpZF9kZXZpY2UgKmhkZXYsIHN0cnVjdCBh
+bHBzX2RldiAqcHJpX2RhdGEpDQogCQkocmVzb2x1dGlvbiA8PCAyKSAqIChzZW5fbGluZV9udW1f
+eSAtIDEpOw0KIAlwcmlfZGF0YS0+eV9taW4gPSAxOw0KIA0KKwlpZiAocHJpX2RhdGEtPm5vX3Bp
+dGNoKSB7DQorCQlwcmlfZGF0YS0+eF9yZXMgPSBwaXRjaF94Ow0KKwkJcHJpX2RhdGEtPnlfcmVz
+ID0gcGl0Y2hfeTsNCisJfSBlbHNlIHsNCisJCXByaV9kYXRhLT54X3JlcyA9DQorCQkJKHByaV9k
+YXRhLT54X21heCAtIDEpIC8NCisJCQkoKHBpdGNoX3ggKiAoc2VuX2xpbmVfbnVtX3ggLSAxKSkg
+LyAxMCk7DQorCQlwcmlfZGF0YS0+eV9yZXMgPQ0KKwkJCShwcmlfZGF0YS0+eV9tYXggLSAxKSAv
+DQorCQkJKChwaXRjaF95ICogKHNlbl9saW5lX251bV95IC0gMSkpIC8gMTApOw0KKwl9DQorDQog
+CXJldCA9IHUxX3JlYWRfd3JpdGVfcmVnaXN0ZXIoaGRldiwgQUREUkVTU19VMV9QQURfQlROLA0K
+IAkJCSZ0bXAsIDAsIHRydWUpOw0KIAlpZiAocmV0IDwgMCkgew0KQEAgLTYyMiw3ICs2MzEsNyBA
+QCBzdGF0aWMgaW50IFQ0X2luaXQoc3RydWN0IGhpZF9kZXZpY2UgKmhkZXYsIHN0cnVjdCBhbHBz
+X2RldiAqcHJpX2RhdGEpDQogCXByaV9kYXRhLT54X21pbiA9IFQ0X0NPVU5UX1BFUl9FTEVDVFJP
+REU7DQogCXByaV9kYXRhLT55X21heCA9IHNlbl9saW5lX251bV95ICogVDRfQ09VTlRfUEVSX0VM
+RUNUUk9ERTsNCiAJcHJpX2RhdGEtPnlfbWluID0gVDRfQ09VTlRfUEVSX0VMRUNUUk9ERTsNCi0J
+cHJpX2RhdGEtPnhfYWN0aXZlX2xlbl9tbSA9IHByaV9kYXRhLT55X2FjdGl2ZV9sZW5fbW0gPSAw
+Ow0KKwlwcmlfZGF0YS0+eF9yZXMgPSBwcmlfZGF0YS0+eV9yZXMgPSAwOw0KIAlwcmlfZGF0YS0+
+YnRuX2NudCA9IDE7DQogDQogCXJldCA9IHQ0X3JlYWRfd3JpdGVfcmVnaXN0ZXIoaGRldiwgUFJN
+X1NZU19DT05GSUdfMSwgJnRtcCwgMCwgdHJ1ZSk7IEBAIC02NzUsNyArNjg0LDcgQEAgc3RhdGlj
+IGludCBhbHBzX2lucHV0X2NvbmZpZ3VyZWQoc3RydWN0IGhpZF9kZXZpY2UgKmhkZXYsIHN0cnVj
+dCBoaWRfaW5wdXQgKmhpKQ0KIAlzdHJ1Y3QgYWxwc19kZXYgKmRhdGEgPSBoaWRfZ2V0X2RydmRh
+dGEoaGRldik7DQogCXN0cnVjdCBpbnB1dF9kZXYgKmlucHV0ID0gaGktPmlucHV0LCAqaW5wdXQy
+Ow0KIAlpbnQgcmV0Ow0KLQlpbnQgcmVzX3gsIHJlc195LCBpOw0KKwlpbnQgaTsNCiANCiAJZGF0
+YS0+aW5wdXQgPSBpbnB1dDsNCiANCkBAIC03MDYsMTIgKzcxNSw5IEBAIHN0YXRpYyBpbnQgYWxw
+c19pbnB1dF9jb25maWd1cmVkKHN0cnVjdCBoaWRfZGV2aWNlICpoZGV2LCBzdHJ1Y3QgaGlkX2lu
+cHV0ICpoaSkNCiAJaW5wdXRfc2V0X2Fic19wYXJhbXMoaW5wdXQsIEFCU19NVF9QT1NJVElPTl9Z
+LA0KIAkJCQkJCWRhdGEtPnlfbWluLCBkYXRhLT55X21heCwgMCwgMCk7DQogDQotCWlmIChkYXRh
+LT54X2FjdGl2ZV9sZW5fbW0gJiYgZGF0YS0+eV9hY3RpdmVfbGVuX21tKSB7DQotCQlyZXNfeCA9
+IChkYXRhLT54X21heCAtIDEpIC8gZGF0YS0+eF9hY3RpdmVfbGVuX21tOw0KLQkJcmVzX3kgPSAo
+ZGF0YS0+eV9tYXggLSAxKSAvIGRhdGEtPnlfYWN0aXZlX2xlbl9tbTsNCi0NCi0JCWlucHV0X2Fi
+c19zZXRfcmVzKGlucHV0LCBBQlNfTVRfUE9TSVRJT05fWCwgcmVzX3gpOw0KLQkJaW5wdXRfYWJz
+X3NldF9yZXMoaW5wdXQsIEFCU19NVF9QT1NJVElPTl9ZLCByZXNfeSk7DQorCWlmIChkYXRhLT54
+X3JlcyAmJiBkYXRhLT55X3Jlcykgew0KKwkJaW5wdXRfYWJzX3NldF9yZXMoaW5wdXQsIEFCU19N
+VF9QT1NJVElPTl9YLCBkYXRhLT54X3Jlcyk7DQorCQlpbnB1dF9hYnNfc2V0X3JlcyhpbnB1dCwg
+QUJTX01UX1BPU0lUSU9OX1ksIGRhdGEtPnlfcmVzKTsNCiAJfQ0KIA0KIAlpbnB1dF9zZXRfYWJz
+X3BhcmFtcyhpbnB1dCwgQUJTX01UX1BSRVNTVVJFLCAwLCA2NCwgMCwgMCk7IEBAIC04MDIsOCAr
+ODA4LDExIEBAIHN0YXRpYyBpbnQgYWxwc19wcm9iZShzdHJ1Y3QgaGlkX2RldmljZSAqaGRldiwg
+Y29uc3Qgc3RydWN0IGhpZF9kZXZpY2VfaWQgKmlkKQ0KIAkJYnJlYWs7DQogCWNhc2UgSElEX0RF
+VklDRV9JRF9BTFBTX1UxX0RVQUw6DQogCWNhc2UgSElEX0RFVklDRV9JRF9BTFBTX1UxOg0KKwkJ
+ZGF0YS0+ZGV2X3R5cGUgPSBVMTsNCisJCWJyZWFrOw0KIAljYXNlIEhJRF9ERVZJQ0VfSURfQUxQ
+U18xNjU3Og0KIAkJZGF0YS0+ZGV2X3R5cGUgPSBVMTsNCisJCWRhdGEtPm5vX3BpdGNoID0gMTsN
+CiAJCWJyZWFrOw0KIAlkZWZhdWx0Og0KIAkJZGF0YS0+ZGV2X3R5cGUgPSBVTktOT1dOOw0KLS0N
+CjIuMjYuMA0KDQo=
