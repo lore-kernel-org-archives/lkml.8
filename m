@@ -2,206 +2,123 @@ Return-Path: <SRS0=VV4q=52=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EECBDC2BB86
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 06:56:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FB6FC2BB85
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 06:57:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BD70420757
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 06:56:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1568B20757
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 06:57:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="IoSCfIFZ"
+	dkim=pass (1024-bit key) header.d=Synaptics.onmicrosoft.com header.i=@Synaptics.onmicrosoft.com header.b="Jbt1SNno"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726670AbgDJG4j (ORCPT
+        id S1726679AbgDJG5d (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Apr 2020 02:56:39 -0400
-Received: from mail27.static.mailgun.info ([104.130.122.27]:35610 "EHLO
-        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726647AbgDJG4i (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Apr 2020 02:56:38 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1586501798; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=/7DOlq/mZIuFniPGwb6fsgLKfPBaw3AbbYqpvORj+k8=; b=IoSCfIFZ9wdUOtlUBQ4ZTWLxOE+QnOnGqmWpk3QtUZjkJxFTM9JA6hRm7anlgNaibFgVgDDE
- J4PcU/eBL8/qyvfSVQ5ZEaD4s8yQAQe25KRTl0gPEdTAzK0OfbSjfoD5Y9U0EAz3+UyDFAG8
- JAfWlct9vHgcyWGomNHhO008tnY=
-X-Mailgun-Sending-Ip: 104.130.122.27
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e9018a5.7f5008108ea0-smtp-out-n02;
- Fri, 10 Apr 2020 06:56:37 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 153FEC433BA; Fri, 10 Apr 2020 06:56:37 +0000 (UTC)
-Received: from [192.168.0.10] (unknown [183.83.138.47])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: akashast)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id D623CC433D2;
-        Fri, 10 Apr 2020 06:56:32 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org D623CC433D2
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=akashast@codeaurora.org
-Subject: Re: [PATCH 02/21] tty: serial: qcom_geni_serial: Use OPP API to set
- clk/perf state
-To:     Rajendra Nayak <rnayak@codeaurora.org>, viresh.kumar@linaro.org,
-        sboyd@kernel.org, bjorn.andersson@linaro.org, agross@kernel.org
-Cc:     linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org
-References: <1586353607-32222-1-git-send-email-rnayak@codeaurora.org>
- <1586353607-32222-3-git-send-email-rnayak@codeaurora.org>
-From:   Akash Asthana <akashast@codeaurora.org>
-Message-ID: <5eb6c05e-893a-ef8a-c53e-a775b2f837d1@codeaurora.org>
-Date:   Fri, 10 Apr 2020 12:26:18 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Fri, 10 Apr 2020 02:57:33 -0400
+Received: from mail-eopbgr750082.outbound.protection.outlook.com ([40.107.75.82]:62478
+        "EHLO NAM02-BL2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725858AbgDJG5d (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Apr 2020 02:57:33 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=IJacz07x4lXTgVHDDXyxJb8vmg1YUnPBP/xwnvXLqzIZGwZJVEhrHGAvPmnWgWXorg6kXsL7mWwePICBg4or301YSdosM6WuZ3tb5Yyt2lht+se17enzzebiPs9MWDI+L5lQeKH7+QI21t0aem/OPYvMZSDhhOfYRKmv7ck80h/LkvOKfLNO95mh/4ViwZFcwLrCRt8+QMy2TtWN3S4FcVDyyEQUQv6RbXOPir+cLGd6jEegc45N+O4Np/s6BdgHGrXLIusEgY3E0efPgDwIJ0EvHkjY4dB/jG2lAmowf487CmryXWf0F22iVmPIkfInGC/kUL7eVa+tWgrrGzdm+g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=dCCDBuxeoMLuySe7Kgg6v3LWqFCKhJcN/FtZK+jb4mc=;
+ b=hwW/AFREum6olPzqYjfo2B/bbw++jTTuj0SIz3I4mSr+H1peuIuhqwIYAhH3azyg40Pjv0yTF6ecZU19xF4fw8LpoAOeyrsLaw+J/Duox7RaB86v0g6S4lPb4jt/9CN3/+DCDz8JJRwHx2FxmXRDWQnDIPKeiQOnoBqzCmjKYa368Lx7TXSOLd4pQ0fOhB9fTzDeYraMUxQM/tgYDQn//9gnY5V//kdog6MVvtlhCZ3EtdbhVd+T1+CLlS2bDHMq+GwUwTzbopCyvL64sW/JCDITxnMepfULQSzo3QnknyfYgQc3TBKTWg2rVUoTSuCzMbRncuzvMxV5/JAmTIwSdA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=synaptics.com; dmarc=pass action=none
+ header.from=synaptics.com; dkim=pass header.d=synaptics.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=Synaptics.onmicrosoft.com; s=selector2-Synaptics-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=dCCDBuxeoMLuySe7Kgg6v3LWqFCKhJcN/FtZK+jb4mc=;
+ b=Jbt1SNnoopuXjh5Hn4AaPhh+NZHwR8OCADpnbP7Omnzf9xegyqr97H1PowIsEVQdLEEOkhb7dBmBgwwrzV6F3HhvtAHe29tFXM5mooqIZrVV4l/jo3Av0Wi2cnx77Hvw/WoxipCQ/Q3P2XwOeEbUT7faVx/YpzsXsidxl674Zrs=
+Authentication-Results: spf=none (sender IP is )
+ smtp.mailfrom=Jisheng.Zhang@synaptics.com; 
+Received: from BYAPR03MB3573.namprd03.prod.outlook.com (2603:10b6:a02:ae::15)
+ by BYAPR03MB3525.namprd03.prod.outlook.com (2603:10b6:a02:ab::23) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2900.17; Fri, 10 Apr
+ 2020 06:57:30 +0000
+Received: from BYAPR03MB3573.namprd03.prod.outlook.com
+ ([fe80::d8fb:de22:43b7:fcb7]) by BYAPR03MB3573.namprd03.prod.outlook.com
+ ([fe80::d8fb:de22:43b7:fcb7%7]) with mapi id 15.20.2900.015; Fri, 10 Apr 2020
+ 06:57:29 +0000
+Date:   Fri, 10 Apr 2020 14:57:12 +0800
+From:   Jisheng Zhang <Jisheng.Zhang@synaptics.com>
+To:     Ulf Hansson <ulf.hansson@linaro.org>
+Cc:     linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] mmc: sd: use HIGH_SPEED_BUS_SPEED in mmc_sd_switch_hs()
+Message-ID: <20200410145643.630b0731@xhacker.debian>
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: HK0PR03CA0120.apcprd03.prod.outlook.com
+ (2603:1096:203:b0::36) To BYAPR03MB3573.namprd03.prod.outlook.com
+ (2603:10b6:a02:ae::15)
 MIME-Version: 1.0
-In-Reply-To: <1586353607-32222-3-git-send-email-rnayak@codeaurora.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from xhacker.debian (124.74.246.114) by HK0PR03CA0120.apcprd03.prod.outlook.com (2603:1096:203:b0::36) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2900.16 via Frontend Transport; Fri, 10 Apr 2020 06:57:28 +0000
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+X-Originating-IP: [124.74.246.114]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 7776f193-9e55-4915-db22-08d7dd1c6f6f
+X-MS-TrafficTypeDiagnostic: BYAPR03MB3525:
+X-Microsoft-Antispam-PRVS: <BYAPR03MB3525524AE8DF95ABF14E952BEDDE0@BYAPR03MB3525.namprd03.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:3513;
+X-Forefront-PRVS: 0369E8196C
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR03MB3573.namprd03.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10009020)(136003)(366004)(396003)(346002)(376002)(39860400002)(5660300002)(956004)(9686003)(1076003)(7696005)(8936002)(16526019)(8676002)(316002)(81156014)(66556008)(6916009)(186003)(52116002)(66476007)(66946007)(6506007)(86362001)(478600001)(4326008)(6666004)(26005)(4744005)(2906002)(55016002);DIR:OUT;SFP:1101;
+Received-SPF: None (protection.outlook.com: synaptics.com does not designate
+ permitted sender hosts)
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: TIuZnQ4erIMSAbFYG8xDCApQvzEtKpSzF/V8SNbDQkpxstX55rnGOdAwdxt8/8H1mlNEyNNDtLFsgPQuyksYcKH8/TJ2l5n/JXU2C2E9vfDu7ZVBF+lt4cN8DxFkEyZt/dz609qHVerxKQIvD7RiyaSb92DmhjWtiUrb2WaeOC7rSHTWS0esB25rKP7RtwpL3W99QcIcZQfSHWdd17umEb/IvwzpoGFY/QINosyF/Smmf8iLuoVBCSaKEGNLn5SKk7/tuWHzMgAPTpNShvC1CUACV1XlWvEdcP4FZY9gri/nCBGZk8L8Ir4qf1z6hZWzSXGlh4f1XycRXxkp6NmVjyXZNnIs+Tno+TFq3E+pWGG3jLVtXH4qoPvR9d/aMpDnCShnaXiSJ+9mvxdWrNnnCwGFRPofvtNyw7oSgB+S/MZkCpR52T8+EqTfz+rWHtYT
+X-MS-Exchange-AntiSpam-MessageData: ygsherBEcPaEu6NiEmHwsF4oq7/CiC5/X1n8BtqqYPh5OMYnEZGk0pPPWRqsIyYQ8N/7wDls3Ge7Jg+w07fnSjTLmhuHx9c7yrtbErAznLz8zlHWrqslvAU0vFWVxrxAhBkiKZf89IzJMy38ebY41Q==
+X-OriginatorOrg: synaptics.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 7776f193-9e55-4915-db22-08d7dd1c6f6f
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Apr 2020 06:57:29.8406
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 335d1fbc-2124-4173-9863-17e7051a2a0e
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: nUG4cM5Mne9wCqisTnNTD8wf1ZBCkAS64M4RU9epwT6fZw1S51zLGGAYmo83IdH2tcWPU0PwgDRm8YDc26Gq6g==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR03MB3525
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Rajendra,
+Use the well defined HIGH_SPEED_BUS_SPEED macro in mmc_sd_switch_hs()
+to make code more readable.
 
-On 4/8/2020 7:16 PM, Rajendra Nayak wrote:
-> geni serial needs to express a perforamnce state requirement on CX
-*performance
-> depending on the frequency of the clock rates. Use OPP table from
-> DT to register with OPP framework and use dev_pm_opp_set_rate() to
-> set the clk/perf state.
->
-> Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
-> Cc: Akash Asthana <akashast@codeaurora.org>
-> Cc: linux-serial@vger.kernel.org
-> ---
->   drivers/tty/serial/qcom_geni_serial.c | 20 +++++++++++++++-----
->   include/linux/qcom-geni-se.h          |  2 ++
->   2 files changed, 17 insertions(+), 5 deletions(-)
->
-> diff --git a/drivers/tty/serial/qcom_geni_serial.c b/drivers/tty/serial/qcom_geni_serial.c
-> index 6119090..754eaf6 100644
-> --- a/drivers/tty/serial/qcom_geni_serial.c
-> +++ b/drivers/tty/serial/qcom_geni_serial.c
-> @@ -9,6 +9,7 @@
->   #include <linux/module.h>
->   #include <linux/of.h>
->   #include <linux/of_device.h>
-> +#include <linux/pm_opp.h>
->   #include <linux/platform_device.h>
->   #include <linux/pm_runtime.h>
->   #include <linux/pm_wakeirq.h>
-> @@ -961,7 +962,7 @@ static void qcom_geni_serial_set_termios(struct uart_port *uport,
->   		goto out_restart_rx;
->   
->   	uport->uartclk = clk_rate;
-> -	clk_set_rate(port->se.clk, clk_rate);
-> +	dev_pm_opp_set_rate(uport->dev, clk_rate);
+Signed-off-by: Jisheng Zhang <Jisheng.Zhang@synaptics.com>
+---
+ drivers/mmc/core/sd.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-Is this change not intended for backward compatibility? If I don't pick 
-DT change for Geni drivers,  dev_pm_opp_set_rate is failing and causing 
-functionality issues.
-
->   	ser_clk_cfg = SER_CLK_EN;
->   	ser_clk_cfg |= clk_div << CLK_DIV_SHFT;
->   
-> @@ -1198,8 +1199,10 @@ static void qcom_geni_serial_pm(struct uart_port *uport,
->   	if (new_state == UART_PM_STATE_ON && old_state == UART_PM_STATE_OFF)
->   		geni_se_resources_on(&port->se);
->   	else if (new_state == UART_PM_STATE_OFF &&
-> -			old_state == UART_PM_STATE_ON)
-> +			old_state == UART_PM_STATE_ON) {
-> +		dev_pm_opp_set_rate(uport->dev, 0);
->   		geni_se_resources_off(&port->se);
-> +	}
->   }
->   
->   static const struct uart_ops qcom_geni_console_pops = {
-> @@ -1318,13 +1321,16 @@ static int qcom_geni_serial_probe(struct platform_device *pdev)
->   	if (of_property_read_bool(pdev->dev.of_node, "cts-rts-swap"))
->   		port->cts_rts_swap = true;
->   
-> +	port->se.opp = dev_pm_opp_set_clkname(&pdev->dev, "se");
-> +	dev_pm_opp_of_add_table(&pdev->dev);
-> +
->   	uport->private_data = drv;
->   	platform_set_drvdata(pdev, port);
->   	port->handle_rx = console ? handle_rx_console : handle_rx_uart;
->   
->   	ret = uart_add_one_port(drv, uport);
->   	if (ret)
-> -		return ret;
-> +		goto err;
->   
->   	irq_set_status_flags(uport->irq, IRQ_NOAUTOEN);
->   	ret = devm_request_irq(uport->dev, uport->irq, qcom_geni_serial_isr,
-> @@ -1332,7 +1338,7 @@ static int qcom_geni_serial_probe(struct platform_device *pdev)
->   	if (ret) {
->   		dev_err(uport->dev, "Failed to get IRQ ret %d\n", ret);
->   		uart_remove_one_port(drv, uport);
-> -		return ret;
-> +		goto err;
->   	}
->   
->   	/*
-> @@ -1349,11 +1355,14 @@ static int qcom_geni_serial_probe(struct platform_device *pdev)
->   		if (ret) {
->   			device_init_wakeup(&pdev->dev, false);
->   			uart_remove_one_port(drv, uport);
-> -			return ret;
-> +			goto err;
->   		}
->   	}
->   
->   	return 0;
-> +err:
-> +	dev_pm_opp_of_remove_table(&pdev->dev);
-do we need to call "dev_pm_opp_put_clkname" here and in remove to 
-release clk resource grabbed by
-
-dev_pm_opp_set_clkname(&pdev->dev, "se");?
-
-Regards,
-Akash
-
-> +	return ret;
->   }
->   
->   static int qcom_geni_serial_remove(struct platform_device *pdev)
-> @@ -1361,6 +1370,7 @@ static int qcom_geni_serial_remove(struct platform_device *pdev)
->   	struct qcom_geni_serial_port *port = platform_get_drvdata(pdev);
->   	struct uart_driver *drv = port->uport.private_data;
->   
-> +	dev_pm_opp_of_remove_table(&pdev->dev);
->   	dev_pm_clear_wake_irq(&pdev->dev);
->   	device_init_wakeup(&pdev->dev, false);
->   	uart_remove_one_port(drv, &port->uport);
-> diff --git a/include/linux/qcom-geni-se.h b/include/linux/qcom-geni-se.h
-> index dd46494..737e713 100644
-> --- a/include/linux/qcom-geni-se.h
-> +++ b/include/linux/qcom-geni-se.h
-> @@ -24,6 +24,7 @@ enum geni_se_protocol_type {
->   
->   struct geni_wrapper;
->   struct clk;
-> +struct opp_table;
->   
->   /**
->    * struct geni_se - GENI Serial Engine
-> @@ -39,6 +40,7 @@ struct geni_se {
->   	struct device *dev;
->   	struct geni_wrapper *wrapper;
->   	struct clk *clk;
-> +	struct opp_table *opp;
->   	unsigned int num_clk_levels;
->   	unsigned long *clk_perf_tbl;
->   };
-
+diff --git a/drivers/mmc/core/sd.c b/drivers/mmc/core/sd.c
+index 76c7add367d5..43de3190d718 100644
+--- a/drivers/mmc/core/sd.c
++++ b/drivers/mmc/core/sd.c
+@@ -376,11 +376,11 @@ int mmc_sd_switch_hs(struct mmc_card *card)
+ 	if (!status)
+ 		return -ENOMEM;
+ 
+-	err = mmc_sd_switch(card, 1, 0, 1, status);
++	err = mmc_sd_switch(card, 1, 0, HIGH_SPEED_BUS_SPEED, status);
+ 	if (err)
+ 		goto out;
+ 
+-	if ((status[16] & 0xF) != 1) {
++	if ((status[16] & 0xF) != HIGH_SPEED_BUS_SPEED) {
+ 		pr_warn("%s: Problem switching card into high-speed mode!\n",
+ 			mmc_hostname(card->host));
+ 		err = 0;
 -- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,\na Linux Foundation Collaborative Project
+2.26.0
+
