@@ -2,93 +2,261 @@ Return-Path: <SRS0=VV4q=52=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	HK_RANDOM_FROM,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E144C3815B
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 04:34:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50C7FC2BB55
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 04:39:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DA37D2082D
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 04:34:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="fNbaJMpF"
+	by mail.kernel.org (Postfix) with ESMTP id 22C6D20CC7
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 04:39:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726670AbgDJEeO (ORCPT
+        id S1725924AbgDJEjJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Apr 2020 00:34:14 -0400
-Received: from mailgw02.mediatek.com ([1.203.163.81]:27110 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725830AbgDJEeO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Apr 2020 00:34:14 -0400
-X-UUID: a3480a9eb0a345a1b31aa15d6eb22c20-20200410
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=oXyxi7IUgBNHR+VYtiCeIx+6ezK7zPDvVd2okeNBTBs=;
-        b=fNbaJMpFO/cnuCk/GkyGsyGISC98jzF228UYLBiRljwq00+vnhPW/4UrBpLv5iheq3yBmWst6DRnSV0Ax774YsGgTX4nGozF729mq1J5kfuEBgkBxVdw7H8SjivcvUImlWIsAdpFeo6vZxx94pnp7d35YGZ2WSSfkxzEeDCQeAs=;
-X-UUID: a3480a9eb0a345a1b31aa15d6eb22c20-20200410
-Received: from mtkcas35.mediatek.inc [(172.27.4.253)] by mailgw02.mediatek.com
-        (envelope-from <jitao.shi@mediatek.com>)
-        (mailgw01.mediatek.com ESMTP with TLS)
-        with ESMTP id 486658226; Fri, 10 Apr 2020 12:32:56 +0800
-Received: from MTKCAS36.mediatek.inc (172.27.4.186) by MTKMBS33DR.mediatek.inc
- (172.27.6.106) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Fri, 10 Apr
- 2020 12:32:53 +0800
-Received: from mszsdclx1018.gcn.mediatek.inc (10.16.6.18) by
- MTKCAS36.mediatek.inc (172.27.4.170) with Microsoft SMTP Server id
- 15.0.1497.2 via Frontend Transport; Fri, 10 Apr 2020 12:32:50 +0800
-From:   Jitao Shi <jitao.shi@mediatek.com>
-To:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        David Airlie <airlied@linux.ie>,
-        <dri-devel@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>
-CC:     <linux-mediatek@lists.infradead.org>, <devicetree@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <srv_heupstream@mediatek.com>, <yingjoe.chen@mediatek.com>,
-        <eddie.huang@mediatek.com>, <cawa.cheng@mediatek.com>,
-        <bibby.hsieh@mediatek.com>, <ck.hu@mediatek.com>,
-        <stonea168@163.com>, <huijuan.xie@mediatek.com>,
-        Jitao Shi <jitao.shi@mediatek.com>,
-        Chun-Kuang Hu <chunkuang.hu@kernel.org>
-Subject: [PATCH v5 1/4] dt-bindings: display: mediatek: add property to control mipi tx drive current
-Date:   Fri, 10 Apr 2020 12:32:45 +0800
-Message-ID: <20200410043248.114384-2-jitao.shi@mediatek.com>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20200410043248.114384-1-jitao.shi@mediatek.com>
-References: <20200410043248.114384-1-jitao.shi@mediatek.com>
+        Fri, 10 Apr 2020 00:39:09 -0400
+Received: from mga03.intel.com ([134.134.136.65]:30517 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725816AbgDJEjJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Apr 2020 00:39:09 -0400
+IronPort-SDR: 2BJ+npPKlQq6zmJk0s+5XiJqXGTsEFsKE36dKcewe+xXvj5qn8VJkFKmV7KYyGippxSd0S04z2
+ tctqwxVNqvrw==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Apr 2020 21:39:08 -0700
+IronPort-SDR: Jex1LB4E6zchpFErZFN8+QynTiqL4KPnMsJWsneV7BzINT8v7kXR7vUkJw5FqYxQ48Z3rzUN3D
+ u/k47D0ACMjg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,364,1580803200"; 
+   d="scan'208";a="276067089"
+Received: from xiaoyaol-mobl.ccr.corp.intel.com (HELO [10.255.28.169]) ([10.255.28.169])
+  by fmsmga004.fm.intel.com with ESMTP; 09 Apr 2020 21:39:04 -0700
+Subject: Re: [PATCH 2/3] x86/split_lock: Refactor and export
+ handle_user_split_lock() for KVM
+To:     Thomas Gleixner <tglx@linutronix.de>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Paolo Bonzini <pbonzini@redhat.com>
+Cc:     x86@kernel.org, "Kenneth R . Crudup" <kenny@panix.com>,
+        Fenghua Yu <fenghua.yu@intel.com>,
+        Nadav Amit <namit@vmware.com>,
+        Thomas Hellstrom <thellstrom@vmware.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Jessica Yu <jeyu@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20200402124205.334622628@linutronix.de>
+ <20200402155554.27705-1-sean.j.christopherson@intel.com>
+ <20200402155554.27705-3-sean.j.christopherson@intel.com>
+ <87v9mhn7nf.fsf@nanos.tec.linutronix.de>
+ <20200402171946.GH13879@linux.intel.com>
+ <87mu7tn1w8.fsf@nanos.tec.linutronix.de>
+From:   Xiaoyao Li <xiaoyao.li@intel.com>
+Message-ID: <716f5824-8d47-24cc-4935-c2dd32ed4629@intel.com>
+Date:   Fri, 10 Apr 2020 12:39:03 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-TM-SNTS-SMTP: 2F6DC314AAFFE7325705D7A5029BA7AB77B87FFA4ED9EE4DC05F3445E42225E72000:8
-X-MTK:  N
-Content-Transfer-Encoding: base64
+In-Reply-To: <87mu7tn1w8.fsf@nanos.tec.linutronix.de>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-QWRkIGEgcHJvcGVydHkgdG8gY29udHJvbCBtaXBpIHR4IGRyaXZlIGN1cnJlbnQ6DQoiZHJpdmUt
-c3RyZW5ndGgtbWljcm9hbXAiDQoNClJldmlld2VkLWJ5OiBDaHVuLUt1YW5nIEh1IDxjaHVua3Vh
-bmcuaHVAa2VybmVsLm9yZz4NClNpZ25lZC1vZmYtYnk6IEppdGFvIFNoaSA8aml0YW8uc2hpQG1l
-ZGlhdGVrLmNvbT4NCi0tLQ0KIC4uLi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvbWVkaWF0
-ZWsvbWVkaWF0ZWssZHNpLnR4dCAgICB8IDUgKysrKysNCiAxIGZpbGUgY2hhbmdlZCwgNSBpbnNl
-cnRpb25zKCspDQoNCmRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGlu
-Z3MvZGlzcGxheS9tZWRpYXRlay9tZWRpYXRlayxkc2kudHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZp
-Y2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvbWVkaWF0ZWsvbWVkaWF0ZWssZHNpLnR4dA0KaW5kZXgg
-YTE5YTZjYzM3NWVkLi5kNzhiNmQ2ZDhmYWIgMTAwNjQ0DQotLS0gYS9Eb2N1bWVudGF0aW9uL2Rl
-dmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9tZWRpYXRlay9tZWRpYXRlayxkc2kudHh0DQorKysg
-Yi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9tZWRpYXRlay9tZWRp
-YXRlayxkc2kudHh0DQpAQCAtMzMsNiArMzMsMTAgQEAgUmVxdWlyZWQgcHJvcGVydGllczoNCiAt
-ICNjbG9jay1jZWxsczogbXVzdCBiZSA8MD47DQogLSAjcGh5LWNlbGxzOiBtdXN0IGJlIDwwPi4N
-CiANCitPcHRpb25hbCBwcm9wZXJ0aWVzOg0KKy0gZHJpdmUtc3RyZW5ndGgtbWljcm9hbXA6IGFk
-anVzdCBkcml2aW5nIGN1cnJlbnQsIHNob3VsZCBiZSAzMDAwIH4gNjAwMC4gQW5kDQorCQkJCQkJ
-ICAgdGhlIHN0ZXAgaXMgMjAwLg0KKw0KIEV4YW1wbGU6DQogDQogbWlwaV90eDA6IG1pcGktZHBo
-eUAxMDIxNTAwMCB7DQpAQCAtNDIsNiArNDYsNyBAQCBtaXBpX3R4MDogbWlwaS1kcGh5QDEwMjE1
-MDAwIHsNCiAJY2xvY2stb3V0cHV0LW5hbWVzID0gIm1pcGlfdHgwX3BsbCI7DQogCSNjbG9jay1j
-ZWxscyA9IDwwPjsNCiAJI3BoeS1jZWxscyA9IDwwPjsNCisJZHJpdmUtc3RyZW5ndGgtbWljcm9h
-bXAgPSA8NDYwMD47DQogfTsNCiANCiBkc2kwOiBkc2lAMTQwMWIwMDAgew0KLS0gDQoyLjIxLjAN
-Cg==
+On 4/3/2020 3:06 AM, Thomas Gleixner wrote:
+> Sean Christopherson <sean.j.christopherson@intel.com> writes:
+>> On Thu, Apr 02, 2020 at 07:01:56PM +0200, Thomas Gleixner wrote:
+>>>>   static inline void __init cpu_set_core_cap_bits(struct cpuinfo_x86 *c) {}
+>>>>   static inline void switch_to_sld(unsigned long tifn) {}
+>>>> -static inline bool handle_user_split_lock(struct pt_regs *regs, long error_code)
+>>>> +static inline bool handle_user_split_lock(unsigned long ip)
+>>>
+>>> This is necessary because VMX can be compiled without CPU_SUP_INTEL?
+>>
+>> Ya, it came about when cleaning up the IA32_FEATURE_CONTROL MSR handling
+>> to consolidate duplicate code.
+>>
+>> config KVM_INTEL
+>>          tristate "KVM for Intel (and compatible) processors support"
+>>          depends on KVM && IA32_FEAT_CTL
+>>
+>> config IA32_FEAT_CTL
+>>          def_bool y
+>>          depends on CPU_SUP_INTEL || CPU_SUP_CENTAUR || CPU_SUP_ZHAOXIN
+> 
+> Ah, indeed. So something like the below would make sense. Hmm?
+> 
+> Of course that can be mangled into Xiaoyao's patches, I'm not worried
+> about my patch count :)
+> 
+
+I don't mind using yours in my next version.
+
+Hi Paolo,
+
+Are you OK with the kvm part below?
+
+If no objection, I can spin the next version using tglx's.
+
+> 
+> 8<----------------
+> --- a/arch/x86/include/asm/cpu.h
+> +++ b/arch/x86/include/asm/cpu.h
+> @@ -43,14 +43,14 @@ unsigned int x86_stepping(unsigned int s
+>   #ifdef CONFIG_CPU_SUP_INTEL
+>   extern void __init cpu_set_core_cap_bits(struct cpuinfo_x86 *c);
+>   extern void switch_to_sld(unsigned long tifn);
+> -extern bool handle_user_split_lock(struct pt_regs *regs, long error_code);
+> +extern int handle_ac_split_lock(unsigned long ip);
+>   extern void split_lock_validate_module_text(struct module *me, void *text, void *text_end);
+>   #else
+>   static inline void __init cpu_set_core_cap_bits(struct cpuinfo_x86 *c) {}
+>   static inline void switch_to_sld(unsigned long tifn) {}
+> -static inline bool handle_user_split_lock(struct pt_regs *regs, long error_code)
+> +static int handle_ac_split_lock(unsigned long ip)
+>   {
+> -	return false;
+> +	return -ENOSYS;
+>   }
+>   static inline void split_lock_validate_module_text(struct module *me, void *text, void *text_end) {}
+>   #endif
+> 
+> --- a/arch/x86/kernel/cpu/intel.c
+> +++ b/arch/x86/kernel/cpu/intel.c
+> @@ -1102,13 +1102,20 @@ static void split_lock_init(void)
+>   	split_lock_verify_msr(sld_state != sld_off);
+>   }
+>   
+> -bool handle_user_split_lock(struct pt_regs *regs, long error_code)
+> +int handle_ac_split_lock(unsigned long ip)
+>   {
+> -	if ((regs->flags & X86_EFLAGS_AC) || sld_state == sld_fatal)
+> -		return false;
+> +	switch (sld_state) {
+> +	case sld_warn:
+> +		break;
+> +	case sld_off:
+> +		pr_warn_once("#AC: Spurious trap at address: 0x%lx\n", ip);
+> +		return -ENOSYS;
+> +	case sld_fatal:
+> +		return -EFAULT;
+> +	}
+>   
+>   	pr_warn_ratelimited("#AC: %s/%d took a split_lock trap at address: 0x%lx\n",
+> -			    current->comm, current->pid, regs->ip);
+> +			    current->comm, current->pid, ip);
+>   
+>   	/*
+>   	 * Disable the split lock detection for this task so it can make
+> @@ -1117,8 +1124,9 @@ bool handle_user_split_lock(struct pt_re
+>   	 */
+>   	sld_update_msr(false);
+>   	set_tsk_thread_flag(current, TIF_SLD);
+> -	return true;
+> +	return 0;
+>   }
+> +EXPORT_SYMBOL_GPL(handle_ac_split_lock);
+>   
+>   /*
+>    * This function is called only when switching between tasks with
+> --- a/arch/x86/kernel/traps.c
+> +++ b/arch/x86/kernel/traps.c
+> @@ -304,7 +304,7 @@ dotraplinkage void do_alignment_check(st
+>   
+>   	local_irq_enable();
+>   
+> -	if (handle_user_split_lock(regs, error_code))
+> +	if (!(regs->flags & X86_EFLAGS_AC) && !handle_ac_split_lock(regs->ip))
+>   		return;
+>   
+>   	do_trap(X86_TRAP_AC, SIGBUS, "alignment check", regs,
+> --- a/arch/x86/kvm/vmx/vmx.c
+> +++ b/arch/x86/kvm/vmx/vmx.c
+> @@ -65,6 +65,7 @@
+>   
+>   MODULE_AUTHOR("Qumranet");
+>   MODULE_LICENSE("GPL");
+> +MODULE_INFO(sld_safe, "Y");
+>   
+>   #ifdef MODULE
+>   static const struct x86_cpu_id vmx_cpu_id[] = {
+> @@ -4623,6 +4624,22 @@ static int handle_machine_check(struct k
+>   	return 1;
+>   }
+>   
+> +static bool guest_handles_ac(struct kvm_vcpu *vcpu)
+> +{
+> +	/*
+> +	 * If guest has alignment checking enabled in CR0 and activated in
+> +	 * eflags, then the #AC originated from CPL3 and the guest is able
+> +	 * to handle it. It does not matter whether this is a regular or
+> +	 * a split lock operation induced #AC.
+> +	 */
+> +	if (vmx_get_cpl(vcpu) == 3 && kvm_read_cr0_bits(vcpu, X86_CR0_AM) &&
+> +	    kvm_get_rflags(vcpu) & X86_EFLAGS_AC)
+> +		return true;
+> +
+> +	/* Add guest SLD handling checks here once it's supported */
+> +	return false;
+> +}
+> +
+>   static int handle_exception_nmi(struct kvm_vcpu *vcpu)
+>   {
+>   	struct vcpu_vmx *vmx = to_vmx(vcpu);
+> @@ -4630,6 +4647,7 @@ static int handle_exception_nmi(struct k
+>   	u32 intr_info, ex_no, error_code;
+>   	unsigned long cr2, rip, dr6;
+>   	u32 vect_info;
+> +	int err;
+>   
+>   	vect_info = vmx->idt_vectoring_info;
+>   	intr_info = vmx->exit_intr_info;
+> @@ -4688,9 +4706,6 @@ static int handle_exception_nmi(struct k
+>   		return handle_rmode_exception(vcpu, ex_no, error_code);
+>   
+>   	switch (ex_no) {
+> -	case AC_VECTOR:
+> -		kvm_queue_exception_e(vcpu, AC_VECTOR, error_code);
+> -		return 1;
+>   	case DB_VECTOR:
+>   		dr6 = vmcs_readl(EXIT_QUALIFICATION);
+>   		if (!(vcpu->guest_debug &
+> @@ -4719,6 +4734,29 @@ static int handle_exception_nmi(struct k
+>   		kvm_run->debug.arch.pc = vmcs_readl(GUEST_CS_BASE) + rip;
+>   		kvm_run->debug.arch.exception = ex_no;
+>   		break;
+> +	case AC_VECTOR:
+> +		if (guest_handles_ac(vcpu)) {
+> +			kvm_queue_exception_e(vcpu, AC_VECTOR, error_code);
+> +			return 1;
+> +		}
+> +		/*
+> +		 * Handle #AC caused by split lock detection. If the host
+> +		 * mode is sld_warn, then it warns, marks current with
+> +		 * TIF_SLD and disables split lock detection. So the guest
+> +		 * can just continue.
+> +		 *
+> +		 * If the host mode is fatal, the handling code warned. Let
+> +		 * qemu kill itself.
+> +		 *
+> +		 * If the host mode is off, then this #AC is bonkers and
+> +		 * something is badly wrong. Let it fail as well.
+> +		 */
+> +		err = handle_ac_split_lock(kvm_rip_read(vcpu));
+> +		if (!err)
+> +			return 1;
+> +		/* Propagate the error type to user space */
+> +		error_code = err == -EFAULT ? 0x100 : 0x200;
+> +		fallthrough;
+>   	default:
+>   		kvm_run->exit_reason = KVM_EXIT_EXCEPTION;
+>   		kvm_run->ex.exception = ex_no;
+> 
 
