@@ -2,232 +2,217 @@ Return-Path: <SRS0=VV4q=52=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64EC8C2D0EC
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 03:57:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F0E1C2D0EC
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 03:58:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2D58D20B1F
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 03:57:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586491075;
-	bh=ZZEvwv/7QaI1Z8uPWGtyRONbxofPAuVPX/Mue39BQYI=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=I5OFMFNAz+iV8Y3FYSNlQZ7d/lLwBsIHXR2nyhod3nFppJm4aJcv3sWGZIF5VLJLF
-	 Xm+sfyUs520LYf23opGTCOSl7PxttIB6oA5hmC5kOYFSV/hAhomEOW+DTroxJHF1/B
-	 Jhi6Gi1NsRwJh1RhJuXmF4e38OLbG97yhWhFeg8A=
+	by mail.kernel.org (Postfix) with ESMTP id 33C912063A
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 03:58:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728826AbgDJD5x (ORCPT
+        id S1728968AbgDJD56 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Apr 2020 23:57:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60820 "EHLO mail.kernel.org"
+        Thu, 9 Apr 2020 23:57:58 -0400
+Received: from mga17.intel.com ([192.55.52.151]:5030 "EHLO mga17.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728412AbgDJDs7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Apr 2020 23:48:59 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EACAE21556;
-        Fri, 10 Apr 2020 03:48:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586490538;
-        bh=ZZEvwv/7QaI1Z8uPWGtyRONbxofPAuVPX/Mue39BQYI=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RrEihmLFoTqu0zx3JlQGo4PVyTAFgZ45WP70G5po+/mkwAOsFNPjoynEBLKJjlS96
-         PgHqRaGpRLC59s/B5+B+aR+5PuVdOZYoPH/xrV3BwIUZME+hvNL9UBCMwADSi8bOgy
-         CvqgkmnSvanTfqLNFsXKFl9gvgRb8fBpZQ+I0OWM=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Vladimir Oltean <vladimir.oltean@nxp.com>,
-        Michael Walle <michael@walle.cc>,
-        Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-spi@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.5 49/56] spi: spi-fsl-dspi: Replace interruptible wait queue with a simple completion
-Date:   Thu,  9 Apr 2020 23:47:53 -0400
-Message-Id: <20200410034800.8381-49-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200410034800.8381-1-sashal@kernel.org>
-References: <20200410034800.8381-1-sashal@kernel.org>
+        id S1728408AbgDJDs6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Apr 2020 23:48:58 -0400
+IronPort-SDR: XNx1GpO2L9lxGagdJXXiqYj3WeLtPDwNu6KEceVUrON+8VZTuKuRDYQKSQRj7n9bh7Na/8l/9j
+ 593OG0gWYorw==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Apr 2020 20:48:58 -0700
+IronPort-SDR: PMJlktvkLL+qA2z9GAk5PCuStScGWDR9cIT7sYx6Dmxj1zZGJjhOW3OqpZuvIpOJFcUpN9/ede
+ FtRAMdL+l5rg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,364,1580803200"; 
+   d="scan'208";a="331068532"
+Received: from fmsmsx103.amr.corp.intel.com ([10.18.124.201])
+  by orsmga001.jf.intel.com with ESMTP; 09 Apr 2020 20:48:57 -0700
+Received: from fmsmsx111.amr.corp.intel.com (10.18.116.5) by
+ FMSMSX103.amr.corp.intel.com (10.18.124.201) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Thu, 9 Apr 2020 20:48:57 -0700
+Received: from shsmsx151.ccr.corp.intel.com (10.239.6.50) by
+ fmsmsx111.amr.corp.intel.com (10.18.116.5) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Thu, 9 Apr 2020 20:48:57 -0700
+Received: from shsmsx104.ccr.corp.intel.com ([169.254.5.225]) by
+ SHSMSX151.ccr.corp.intel.com ([169.254.3.22]) with mapi id 14.03.0439.000;
+ Fri, 10 Apr 2020 11:48:53 +0800
+From:   "Liu, Yi L" <yi.l.liu@intel.com>
+To:     Auger Eric <eric.auger@redhat.com>,
+        Jean-Philippe Brucker <jean-philippe@linaro.org>,
+        "jacob.jun.pan@linux.intel.com" <jacob.jun.pan@linux.intel.com>
+CC:     "alex.williamson@redhat.com" <alex.williamson@redhat.com>,
+        "Tian, Kevin" <kevin.tian@intel.com>,
+        "joro@8bytes.org" <joro@8bytes.org>,
+        "Raj, Ashok" <ashok.raj@intel.com>,
+        "Tian, Jun J" <jun.j.tian@intel.com>,
+        "Sun, Yi Y" <yi.y.sun@intel.com>,
+        "peterx@redhat.com" <peterx@redhat.com>,
+        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Wu, Hao" <hao.wu@intel.com>
+Subject: RE: [PATCH v1 5/8] vfio/type1: Report 1st-level/stage-1 format to
+ userspace
+Thread-Topic: [PATCH v1 5/8] vfio/type1: Report 1st-level/stage-1 format to
+ userspace
+Thread-Index: AQHWAEUcqZEEdiOKbEGofjWp2Yic+6hjfq+AgAC/vLD//4YrAIAC1vWAgAbjh1CAARsGAIABbRkAgADQzoCAAHFwgIAAhnyw
+Date:   Fri, 10 Apr 2020 03:48:52 +0000
+Message-ID: <A2975661238FB949B60364EF0F2C25743A229ABC@SHSMSX104.ccr.corp.intel.com>
+References: <1584880325-10561-1-git-send-email-yi.l.liu@intel.com>
+ <1584880325-10561-6-git-send-email-yi.l.liu@intel.com>
+ <cb68e9ab-77b0-7e97-a661-4836962041d9@redhat.com>
+ <A2975661238FB949B60364EF0F2C25743A21DB4E@SHSMSX104.ccr.corp.intel.com>
+ <b47891b1-ece6-c263-9c07-07c09c7d3752@redhat.com>
+ <20200403082305.GA1269501@myrica>
+ <A2975661238FB949B60364EF0F2C25743A2249DF@SHSMSX104.ccr.corp.intel.com>
+ <acf8c809-8d29-92d6-2445-3a94fc8b82fd@redhat.com>
+ <20200409081442.GD2435@myrica>
+ <A2975661238FB949B60364EF0F2C25743A229013@SHSMSX104.ccr.corp.intel.com>
+ <194923cd-666c-2244-bfc6-95a1c61d4d99@redhat.com>
+In-Reply-To: <194923cd-666c-2244-bfc6-95a1c61d4d99@redhat.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+dlp-product: dlpe-windows
+dlp-version: 11.2.0.6
+dlp-reaction: no-action
+x-originating-ip: [10.239.127.40]
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vladimir Oltean <vladimir.oltean@nxp.com>
-
-[ Upstream commit 4f5ee75ea1718a09149460b3df993f389a67b56a ]
-
-Currently the driver puts the process in interruptible sleep waiting for
-the interrupt train to finish transfer to/from the tx_buf and rx_buf.
-
-But exiting the process with ctrl-c may make the kernel panic: the
-wait_event_interruptible call will return -ERESTARTSYS, which a proper
-driver implementation is perhaps supposed to handle, but nonetheless
-this one doesn't, and aborts the transfer altogether.
-
-Actually when the task is interrupted, there is still a high chance that
-the dspi_interrupt is still triggering. And if dspi_transfer_one_message
-returns execution all the way to the spi_device driver, that can free
-the spi_message and spi_transfer structures, leaving the interrupts to
-access a freed tx_buf and rx_buf.
-
-hexdump -C /dev/mtd0
-00000000  00 75 68 75 0a ff ff ff  ff ff ff ff ff ff ff ff
-|.uhu............|
-00000010  ff ff ff ff ff ff ff ff  ff ff ff ff ff ff ff ff
-|................|
-*
-^C[   38.495955] fsl-dspi 2120000.spi: Waiting for transfer to complete failed!
-[   38.503097] spi_master spi2: failed to transfer one message from queue
-[   38.509729] Unable to handle kernel paging request at virtual address ffff800095ab3377
-[   38.517676] Mem abort info:
-[   38.520474]   ESR = 0x96000045
-[   38.523533]   EC = 0x25: DABT (current EL), IL = 32 bits
-[   38.528861]   SET = 0, FnV = 0
-[   38.531921]   EA = 0, S1PTW = 0
-[   38.535067] Data abort info:
-[   38.537952]   ISV = 0, ISS = 0x00000045
-[   38.541797]   CM = 0, WnR = 1
-[   38.544771] swapper pgtable: 4k pages, 48-bit VAs, pgdp=0000000082621000
-[   38.551494] [ffff800095ab3377] pgd=00000020fffff003, p4d=00000020fffff003, pud=0000000000000000
-[   38.560229] Internal error: Oops: 96000045 [#1] PREEMPT SMP
-[   38.565819] Modules linked in:
-[   38.568882] CPU: 0 PID: 2729 Comm: hexdump Not tainted 5.6.0-rc4-next-20200306-00052-gd8730cdc8a0b-dirty #193
-[   38.578834] Hardware name: Kontron SMARC-sAL28 (Single PHY) on SMARC Eval 2.0 carrier (DT)
-[   38.587129] pstate: 20000085 (nzCv daIf -PAN -UAO)
-[   38.591941] pc : ktime_get_real_ts64+0x3c/0x110
-[   38.596487] lr : spi_take_timestamp_pre+0x40/0x90
-[   38.601203] sp : ffff800010003d90
-[   38.604525] x29: ffff800010003d90 x28: ffff80001200e000
-[   38.609854] x27: ffff800011da9000 x26: ffff002079c40400
-[   38.615184] x25: ffff8000117fe018 x24: ffff800011daa1a0
-[   38.620513] x23: ffff800015ab3860 x22: ffff800095ab3377
-[   38.625841] x21: 000000000000146e x20: ffff8000120c3000
-[   38.631170] x19: ffff0020795f6e80 x18: ffff800011da9948
-[   38.636498] x17: 0000000000000000 x16: 0000000000000000
-[   38.641826] x15: ffff800095ab3377 x14: 0720072007200720
-[   38.647155] x13: 0720072007200765 x12: 0775076507750771
-[   38.652483] x11: 0720076d076f0772 x10: 0000000000000040
-[   38.657812] x9 : ffff8000108e2100 x8 : ffff800011dcabe8
-[   38.663139] x7 : 0000000000000000 x6 : ffff800015ab3a60
-[   38.668468] x5 : 0000000007200720 x4 : ffff800095ab3377
-[   38.673796] x3 : 0000000000000000 x2 : 0000000000000ab0
-[   38.679125] x1 : ffff800011daa000 x0 : 0000000000000026
-[   38.684454] Call trace:
-[   38.686905]  ktime_get_real_ts64+0x3c/0x110
-[   38.691100]  spi_take_timestamp_pre+0x40/0x90
-[   38.695470]  dspi_fifo_write+0x58/0x2c0
-[   38.699315]  dspi_interrupt+0xbc/0xd0
-[   38.702987]  __handle_irq_event_percpu+0x78/0x2c0
-[   38.707706]  handle_irq_event_percpu+0x3c/0x90
-[   38.712161]  handle_irq_event+0x4c/0xd0
-[   38.716008]  handle_fasteoi_irq+0xbc/0x170
-[   38.720115]  generic_handle_irq+0x2c/0x40
-[   38.724135]  __handle_domain_irq+0x68/0xc0
-[   38.728243]  gic_handle_irq+0xc8/0x160
-[   38.732000]  el1_irq+0xb8/0x180
-[   38.735149]  spi_nor_spimem_read_data+0xe0/0x140
-[   38.739779]  spi_nor_read+0xc4/0x120
-[   38.743364]  mtd_read_oob+0xa8/0xc0
-[   38.746860]  mtd_read+0x4c/0x80
-[   38.750007]  mtdchar_read+0x108/0x2a0
-[   38.753679]  __vfs_read+0x20/0x50
-[   38.757002]  vfs_read+0xa4/0x190
-[   38.760237]  ksys_read+0x6c/0xf0
-[   38.763471]  __arm64_sys_read+0x20/0x30
-[   38.767319]  el0_svc_common.constprop.3+0x90/0x160
-[   38.772125]  do_el0_svc+0x28/0x90
-[   38.775449]  el0_sync_handler+0x118/0x190
-[   38.779468]  el0_sync+0x140/0x180
-[   38.782793] Code: 91000294 1400000f d50339bf f9405e80 (f90002c0)
-[   38.788910] ---[ end trace 55da560db4d6bef7 ]---
-[   38.793540] Kernel panic - not syncing: Fatal exception in interrupt
-[   38.799914] SMP: stopping secondary CPUs
-[   38.803849] Kernel Offset: disabled
-[   38.807344] CPU features: 0x10002,20006008
-[   38.811451] Memory Limit: none
-[   38.814513] ---[ end Kernel panic - not syncing: Fatal exception in interrupt ]---
-
-So it is clear that the "interruptible" part isn't handled correctly.
-When the process receives a signal, one could either attempt a clean
-abort (which appears to be difficult with this hardware) or just keep
-restarting the sleep until the wait queue really completes. But checking
-in a loop for -ERESTARTSYS is a bit too complicated for this driver, so
-just make the sleep uninterruptible, to avoid all that nonsense.
-
-The wait queue was actually restructured as a completion, after polling
-other drivers for the most "popular" approach.
-
-Fixes: 349ad66c0ab0 ("spi:Add Freescale DSPI driver for Vybrid VF610 platform")
-Reported-by: Michael Walle <michael@walle.cc>
-Signed-off-by: Vladimir Oltean <vladimir.oltean@nxp.com>
-Tested-by: Michael Walle <michael@walle.cc>
-Link: https://lore.kernel.org/r/20200318001603.9650-7-olteanv@gmail.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/spi/spi-fsl-dspi.c | 19 ++++++-------------
- 1 file changed, 6 insertions(+), 13 deletions(-)
-
-diff --git a/drivers/spi/spi-fsl-dspi.c b/drivers/spi/spi-fsl-dspi.c
-index a534b8af27b8d..f9d44bb1040f8 100644
---- a/drivers/spi/spi-fsl-dspi.c
-+++ b/drivers/spi/spi-fsl-dspi.c
-@@ -196,8 +196,7 @@ struct fsl_dspi {
- 	u8					bytes_per_word;
- 	const struct fsl_dspi_devtype_data	*devtype_data;
- 
--	wait_queue_head_t			waitq;
--	u32					waitflags;
-+	struct completion			xfer_done;
- 
- 	struct fsl_dspi_dma			*dma;
- };
-@@ -714,10 +713,8 @@ static irqreturn_t dspi_interrupt(int irq, void *dev_id)
- 	if (!(spi_sr & SPI_SR_EOQF))
- 		return IRQ_NONE;
- 
--	if (dspi_rxtx(dspi) == 0) {
--		dspi->waitflags = 1;
--		wake_up_interruptible(&dspi->waitq);
--	}
-+	if (dspi_rxtx(dspi) == 0)
-+		complete(&dspi->xfer_done);
- 
- 	return IRQ_HANDLED;
- }
-@@ -815,13 +812,9 @@ static int dspi_transfer_one_message(struct spi_controller *ctlr,
- 				status = dspi_poll(dspi);
- 			} while (status == -EINPROGRESS);
- 		} else if (trans_mode != DSPI_DMA_MODE) {
--			status = wait_event_interruptible(dspi->waitq,
--							  dspi->waitflags);
--			dspi->waitflags = 0;
-+			wait_for_completion(&dspi->xfer_done);
-+			reinit_completion(&dspi->xfer_done);
- 		}
--		if (status)
--			dev_err(&dspi->pdev->dev,
--				"Waiting for transfer to complete failed!\n");
- 
- 		spi_transfer_delay_exec(transfer);
- 	}
-@@ -1161,7 +1154,7 @@ static int dspi_probe(struct platform_device *pdev)
- 		goto out_clk_put;
- 	}
- 
--	init_waitqueue_head(&dspi->waitq);
-+	init_completion(&dspi->xfer_done);
- 
- poll_mode:
- 
--- 
-2.20.1
-
+SGkgRXJpYywNCg0KPiBGcm9tOiBBdWdlciBFcmljIDxlcmljLmF1Z2VyQHJlZGhhdC5jb20+DQo+
+IFNlbnQ6IEZyaWRheSwgQXByaWwgMTAsIDIwMjAgMTE6MjggQU0NCj4gVG86IExpdSwgWWkgTCA8
+eWkubC5saXVAaW50ZWwuY29tPjsgSmVhbi1QaGlsaXBwZSBCcnVja2VyIDxqZWFuLQ0KPiBTdWJq
+ZWN0OiBSZTogW1BBVENIIHYxIDUvOF0gdmZpby90eXBlMTogUmVwb3J0IDFzdC1sZXZlbC9zdGFn
+ZS0xIGZvcm1hdCB0bw0KPiB1c2Vyc3BhY2UNCj4gDQo+IEhpIFlpLA0KPiANCj4gT24gNC85LzIw
+IDI6NDcgUE0sIExpdSwgWWkgTCB3cm90ZToNCj4gPiBIaSBKZWFuLA0KPiA+DQo+ID4+IEZyb206
+IEplYW4tUGhpbGlwcGUgQnJ1Y2tlciA8amVhbi1waGlsaXBwZUBsaW5hcm8ub3JnPg0KPiA+PiBT
+ZW50OiBUaHVyc2RheSwgQXByaWwgOSwgMjAyMCA0OjE1IFBNDQo+ID4+IFN1YmplY3Q6IFJlOiBb
+UEFUQ0ggdjEgNS84XSB2ZmlvL3R5cGUxOiBSZXBvcnQgMXN0LWxldmVsL3N0YWdlLTENCj4gPj4g
+Zm9ybWF0IHRvIHVzZXJzcGFjZQ0KPiA+Pg0KPiA+PiBPbiBXZWQsIEFwciAwOCwgMjAyMCBhdCAx
+MjoyNzo1OFBNICswMjAwLCBBdWdlciBFcmljIHdyb3RlOg0KPiA+Pj4gSGkgWWksDQo+ID4+Pg0K
+PiA+Pj4gT24gNC83LzIwIDExOjQzIEFNLCBMaXUsIFlpIEwgd3JvdGU6DQo+ID4+Pj4gSGkgSmVh
+biwNCj4gPj4+Pg0KPiA+Pj4+PiBGcm9tOiBKZWFuLVBoaWxpcHBlIEJydWNrZXIgPGplYW4tcGhp
+bGlwcGVAbGluYXJvLm9yZz4NCj4gPj4+Pj4gU2VudDogRnJpZGF5LCBBcHJpbCAzLCAyMDIwIDQ6
+MjMgUE0NCj4gPj4+Pj4gVG86IEF1Z2VyIEVyaWMgPGVyaWMuYXVnZXJAcmVkaGF0LmNvbT4gdXNl
+cnNwYWNlDQo+ID4+Pj4+DQo+ID4+Pj4+IE9uIFdlZCwgQXByIDAxLCAyMDIwIGF0IDAzOjAxOjEy
+UE0gKzAyMDAsIEF1Z2VyIEVyaWMgd3JvdGU6DQo+ID4+Pj4+Pj4+PiAgCWhlYWRlciA9IHZmaW9f
+aW5mb19jYXBfYWRkKGNhcHMsIHNpemVvZigqbmVzdGluZ19jYXApLA0KPiA+Pj4+Pj4+Pj4NCj4g
+Pj4gVkZJT19JT01NVV9UWVBFMV9JTkZPX0NBUF9ORVNUSU5HLCAxKTsNCj4gPj4+Pj4gQEAgLTIy
+NTQsNiArMjMwOSw3DQo+ID4+Pj4+Pj4+PiBAQCBzdGF0aWMgaW50IHZmaW9faW9tbXVfaW5mb19h
+ZGRfbmVzdGluZ19jYXAoc3RydWN0DQo+ID4+Pj4+Pj4+IHZmaW9faW9tbXUgKmlvbW11LA0KPiA+
+Pj4+Pj4+Pj4gIAkJLyogbmVzdGluZyBpb21tdSB0eXBlIHN1cHBvcnRzIFBBU0lEIHJlcXVlc3Rz
+DQo+IChhbGxvYy9mcmVlKQ0KPiA+PiAqLw0KPiA+Pj4+Pj4+Pj4gIAkJbmVzdGluZ19jYXAtPm5l
+c3RpbmdfY2FwYWJpbGl0aWVzIHw9DQo+ID4+IFZGSU9fSU9NTVVfUEFTSURfUkVRUzsNCj4gPj4+
+Pj4+Pj4gV2hhdCBpcyB0aGUgbWVhbmluZyBmb3IgQVJNPw0KPiA+Pj4+Pj4+DQo+ID4+Pj4+Pj4g
+SSB0aGluayBpdCdzIGp1c3QgYSBzb2Z0d2FyZSBjYXBhYmlsaXR5IGV4cG9zZWQgdG8gdXNlcnNw
+YWNlLCBvbg0KPiA+Pj4+Pj4+IHVzZXJzcGFjZSBzaWRlLCBpdCBoYXMgYSBjaG9pY2UgdG8gdXNl
+IGl0IG9yIG5vdC4gOi0pIFRoZSByZWFzb24NCj4gPj4+Pj4+PiBkZWZpbmUgaXQgYW5kIHJlcG9y
+dCBpdCBpbiBjYXAgbmVzdGluZyBpcyB0aGF0IEknZCBsaWtlIHRvIG1ha2UNCj4gPj4+Pj4+PiB0
+aGUgcGFzaWQgYWxsb2MvZnJlZSBiZSBhdmFpbGFibGUganVzdCBmb3IgSU9NTVUgd2l0aCB0eXBl
+DQo+ID4+Pj4+Pj4gVkZJT19JT01NVV9UWVBFMV9ORVNUSU5HLiBQbGVhc2UgZmVlbCBmcmVlIHRl
+bGwgbWUgaWYgaXQgaXMgbm90DQo+ID4+Pj4+Pj4gZ29vZCBmb3IgQVJNLiBXZSBjYW4gZmluZCBh
+IHByb3BlciB3YXkgdG8gcmVwb3J0IHRoZSBhdmFpbGFiaWxpdHkuDQo+ID4+Pj4+Pg0KPiA+Pj4+
+Pj4gV2VsbCBpdCBpcyBtb3JlIGEgcXVlc3Rpb24gZm9yIGplYW4tUGhpbGlwcGUuIERvIHdlIGhh
+dmUgYSBzeXN0ZW0NCj4gPj4+Pj4+IHdpZGUgUEFTSUQgYWxsb2NhdGlvbiBvbiBBUk0/DQo+ID4+
+Pj4+DQo+ID4+Pj4+IFdlIGRvbid0LCB0aGUgUEFTSUQgc3BhY2VzIGFyZSBwZXItVk0gb24gQXJt
+LCBzbyB0aGlzIGZ1bmN0aW9uDQo+ID4+Pj4+IHNob3VsZCBjb25zdWx0DQo+ID4+IHRoZQ0KPiA+
+Pj4+PiBJT01NVSBkcml2ZXIgYmVmb3JlIHNldHRpbmcgZmxhZ3MuIEFzIHlvdSBzYWlkIG9uIHBh
+dGNoIDMsIG5lc3RlZA0KPiA+Pj4+PiBkb2Vzbid0IG5lY2Vzc2FyaWx5IGltcGx5IFBBU0lEIHN1
+cHBvcnQuIFRoZSBTTU1VdjIgZG9lcyBub3QNCj4gPj4+Pj4gc3VwcG9ydCBQQVNJRCBidXQgZG9l
+cyBzdXBwb3J0IG5lc3Rpbmcgc3RhZ2VzIDEgYW5kIDIgZm9yIHRoZSBJT1ZBIHNwYWNlLg0KPiA+
+Pj4+PiBTTU1VdjMgc3VwcG9ydCBvZiBQQVNJRCBkZXBlbmRzIG9uIEhXIGNhcGFiaWxpdGllcy4g
+U28gSSB0aGluaw0KPiA+Pj4+PiB0aGlzIG5lZWRzIHRvDQo+ID4+IGJlDQo+ID4+Pj4+IGZpbmVy
+IGdyYWluZWQ6DQo+ID4+Pj4+DQo+ID4+Pj4+IERvZXMgdGhlIGNvbnRhaW5lciBzdXBwb3J0Og0K
+PiA+Pj4+PiAqIFZGSU9fSU9NTVVfUEFTSURfUkVRVUVTVD8NCj4gPj4+Pj4gICAtPiBZZXMgZm9y
+IFZULWQgMw0KPiA+Pj4+PiAgIC0+IE5vIGZvciBBcm0gU01NVQ0KPiA+Pj4+PiAqIFZGSU9fSU9N
+TVVfeyxVTn1CSU5EX0dVRVNUX1BHVEJMPw0KPiA+Pj4+PiAgIC0+IFllcyBmb3IgVlQtZCAzDQo+
+ID4+Pj4+ICAgLT4gU29tZXRpbWVzIGZvciBTTU1VdjINCj4gPj4+Pj4gICAtPiBObyBmb3IgU01N
+VXYzIChpZiB3ZSBnbyB3aXRoIEJJTkRfUEFTSURfVEFCTEUsIHdoaWNoIGlzIHNpbXBsZXINCj4g
+ZHVlIHRvDQo+ID4+Pj4+ICAgICAgUEFTSUQgdGFibGVzIGJlaW5nIGluIEdQQSBzcGFjZS4pDQo+
+ID4+Pj4+ICogVkZJT19JT01NVV9CSU5EX1BBU0lEX1RBQkxFPw0KPiA+Pj4+PiAgIC0+IE5vIGZv
+ciBWVC1kDQo+ID4+Pj4+ICAgLT4gU29tZXRpbWVzIGZvciBTTU1VdjMNCj4gPj4+Pj4NCj4gPj4+
+Pj4gQW55IGJpbmQgc3VwcG9ydCBpbXBsaWVzIFZGSU9fSU9NTVVfQ0FDSEVfSU5WQUxJREFURSBz
+dXBwb3J0Lg0KPiA+Pj4+DQo+ID4+Pj4gZ29vZCBzdW1tYXJ5LiBkbyB5b3UgZXhwZWN0IHRvIHNl
+ZSBhbnkNCj4gPj4+Pg0KPiA+Pj4+Pg0KPiA+Pj4+Pj4+Pj4gKwluZXN0aW5nX2NhcC0+c3RhZ2Ux
+X2Zvcm1hdHMgPSBmb3JtYXRzOw0KPiA+Pj4+Pj4+PiBhcyBzcG90dGVkIGJ5IEtldmluLCBzaW5j
+ZSBhIHNpbmdsZSBmb3JtYXQgaXMgc3VwcG9ydGVkLCByZW5hbWUNCj4gPj4+Pj4+Pg0KPiA+Pj4+
+Pj4+IG9rLCBJIHdhcyBiZWxpZXZpbmcgaXQgbWF5IGJlIHBvc3NpYmxlIG9uIEFSTSBvciBzby4g
+Oi0pIHdpbGwNCj4gPj4+Pj4+PiByZW5hbWUgaXQuDQo+ID4+Pj4+DQo+ID4+Pj4+IFllcyBJIGRv
+bid0IHRoaW5rIGFuIHUzMiBpcyBnb2luZyB0byBjdXQgaXQgZm9yIEFybSA6KCBXZSBuZWVkIHRv
+DQo+ID4+Pj4+IGRlc2NyaWJlIGFsbCBzb3J0cw0KPiA+PiBvZg0KPiA+Pj4+PiBjYXBhYmlsaXRp
+ZXMgZm9yIHBhZ2UgYW5kIFBBU0lEIHRhYmxlcyAoZ3JhbnVsZXMsIEdQQSBzaXplLA0KPiA+Pj4+
+PiBBU0lEL1BBU0lEIHNpemUsIEhXIGFjY2Vzcy9kaXJ0eSwgZXRjIGV0Yy4pIEp1c3Qgc2F5aW5n
+ICJBcm0NCj4gPj4+Pj4gc3RhZ2UtMSBmb3JtYXQiIHdvdWxkbid0IG1lYW4gbXVjaC4gSSBndWVz
+cyB3ZSBjb3VsZCBoYXZlIGEgc2Vjb25kYXJ5DQo+IHZlbmRvciBjYXBhYmlsaXR5IGZvciB0aGVz
+ZT8NCj4gPj4+Pg0KPiA+Pj4+IEFjdHVhbGx5LCBJJ20gd29uZGVyaW5nIGlmIHdlIGNhbiBkZWZp
+bmUgc29tZSBmb3JtYXRzIHRvIHN0YW5kcyBmb3INCj4gPj4+PiBhIHNldCBvZiBjYXBhYmlsaXRp
+ZXMuIGUuZy4gVlREX1NUQUdFMV9GT1JNQVRfVjEgd2hpY2ggbWF5DQo+ID4+Pj4gaW5kaWNhdGVz
+IHRoZSAxc3QgbGV2ZWwgcGFnZSB0YWJsZSByZWxhdGVkIGNhcHMgKGF3LCBhL2QsIFNSRSwgRUEN
+Cj4gPj4+PiBhbmQgZXRjLikuIEFuZCB2SU9NTVUgY2FuIHBhcnNlIHRoZSBjYXBhYmlsaXRpZXMu
+DQo+ID4+Pg0KPiA+Pj4gQnV0IGV2ZW50dWFsbHkgZG8gd2UgcmVhbGx5IG5lZWQgYWxsIHRob3Nl
+IGNhcGFiaWxpdHkgZ2V0dGVycz8gSQ0KPiA+Pj4gbWVhbiBjYW4ndCB3ZSBzaW1wbHkgcmVseSBv
+biB0aGUgYWN0dWFsIGNhbGwgdG8NCj4gPj4+IFZGSU9fSU9NTVVfQklORF9HVUVTVF9QR1RCTCgp
+IHRvIGRldGVjdCBhbnkgbWlzbWF0Y2g/IERlZmluaXRpdmVseQ0KPiA+Pj4gdGhlIGVycm9yIGhh
+bmRsaW5nIG1heSBiZSBoZWF2aWVyIG9uIHVzZXJzcGFjZSBidXQgY2FuJ3Qgd2UgbWFuYWdlLg0K
+PiA+Pg0KPiA+PiBJIHRoaW5rIHdlIG5lZWQgdG8gcHJlc2VudCB0aGVzZSBjYXBhYmlsaXRpZXMg
+YXQgYm9vdCB0aW1lLCBsb25nDQo+ID4+IGJlZm9yZSB0aGUgZ3Vlc3QgdHJpZ2dlcnMgYSBiaW5k
+KCkuIEZvciBleGFtcGxlIGlmIHRoZSBob3N0IFNNTVUNCj4gPj4gZG9lc24ndCBzdXBwb3J0IDE2
+LWJpdCBBU0lELCB3ZSBuZWVkIHRvIGNvbW11bmljYXRlIHRoYXQgdG8gdGhlIGd1ZXN0DQo+ID4+
+IHVzaW5nIHZTTU1VIElEIHJlZ2lzdGVycyBvciBQUk9CRSBwcm9wZXJ0aWVzLiBPdGhlcndpc2Ug
+YSBiaW5kKCkgd2lsbA0KPiA+PiBzdWNjZWVkLCBidXQgaWYgdGhlIGd1ZXN0IHVzZXMgMTYtYml0
+IEFTSURzIGluIGl0cyBDRCwgRE1BIHdpbGwNCj4gPj4gcmVzdWx0IGluIENfQkFEX0NEIGV2ZW50
+cyB3aGljaCB3ZSdsbCBpbmplY3QgaW50byB0aGUgZ3Vlc3QsIGZvciBubw0KPiA+PiBhcHBhcmVu
+dCByZWFzb24gZnJvbSB0aGVpciBwZXJzcGVjdGl2ZS4NCj4gPj4NCj4gPj4gSW4gYWRkaXRpb24g
+c29tZSBWTU1zIG1heSBoYXZlIGZhbGxiYWNrcyBpZiBzaGFyZWQgcGFnZSB0YWJsZXMgYXJlDQo+
+ID4+IG5vdCBhdmFpbGFibGUuIFRoZXkgY291bGQgZmFsbCBiYWNrIHRvIGEgTUFQL1VOTUFQIGlu
+dGVyZmFjZSwgb3INCj4gPj4gc2ltcGx5IG5vdCBwcmVzZW50IGEgdklPTU1VIHRvIHRoZSBndWVz
+dC4NCj4gPj4NCj4gPg0KPiA+IEJhc2VkIG9uIHRoZSBjb21tZW50cywgSSB0aGluayBpdCB3b3Vs
+ZCBiZSBhIG5lZWQgdG8gcmVwb3J0IGlvbW11IGNhcHMNCj4gPiBpbiBkZXRhaWwuIFNvIEkgZ3Vl
+c3MgaW9tbXUgdWFwaSBuZWVkcyB0byBwcm92aWRlIHNvbWV0aGluZyBhbGlrZSB2ZmlvDQo+ID4g
+Y2FwIGNoYWluIGluIGlvbW11IHVhcGkuIFBsZWFzZSBmZWVsIGZyZWUgbGV0IG1lIGtub3cgeW91
+ciB0aG91Z2h0cy4NCj4gPiA6LSkNCj4gDQo+IFllcyB0byBtZSBpdCBzb3VuZHMgc2Vuc2libGUu
+DQo+ID4NCj4gPiBJbiB2ZmlvLCB3ZSBjYW4gZGVmaW5lIGEgY2FwIGFzIGJlbG93Og0KPiA+DQo+
+ID4gc3RydWN0IHZmaW9faW9tbXVfdHlwZTFfaW5mb19jYXBfbmVzdGluZyB7DQo+ID4gCXN0cnVj
+dCAgdmZpb19pbmZvX2NhcF9oZWFkZXIgaGVhZGVyOw0KPiA+IAlfX3U2NAlpb21tdV9tb2RlbDsN
+Cj4gPiAjZGVmaW5lIFZGSU9fSU9NTVVfUEFTSURfUkVRUwkJKDEgPDwgMCkNCj4gSSBzdGlsbCB0
+aGluayB0aGUgbmFtZSBzaGFsbCBiZSBjaGFuZ2VkDQoNCnllcywgSSdsbCByZW5hbWUgaXQgcGVy
+IHlvdXIgc3VnZ2VzdGlvbi46LSkNCg0KPiA+ICNkZWZpbmUgVkZJT19JT01NVV9CSU5EX0dQQVNJ
+RAkJKDEgPDwgMSkNCj4gPiAjZGVmaW5lIFZGSU9fSU9NTVVfQ0FDSEVfSU5WCQkoMSA8PCAyKQ0K
+PiB0aGlzIG9wZXJhdGlvbiBzZWVtcyBtYW5kYXRlZCBhcyBzb29uIGFzIHdlIGhhdmUgYSBuZXN0
+ZWQgcGFnaW5nIGJhc2VkDQo+IGltcGxlbWVudGF0aW9uPw0KDQpvaCwgeWVzLCBzaG91bGQgYmUu
+IHdpbGwgcmVtb3ZlIGl0IGFuZCBjb21tZW50IGluIHRoZSBjb2RlLg0KDQpSZWdhcmRzLA0KWWkg
+TGl1DQoNCj4gPiAJX191MzIJbmVzdGluZ19jYXBhYmlsaXRpZXM7DQo+ID4gCV9fdTMyCXBhc2lk
+X2JpdHM7DQo+ID4gI2RlZmluZSBWRklPX0lPTU1VX1ZFTkRPUl9TVUJfQ0FQCSgxIDw8IDMpDQo+
+ID4gCV9fdTMyCWZsYWdzOw0KPiA+IAlfX3UzMglkYXRhX3NpemU7DQo+ID4gCV9fdTgJZGF0YVtd
+OyAgLyppb21tdSBpbmZvIGNhcHMgZGVmaW5lZCBieSBpb21tdSB1YXBpICovDQo+ID4gfTsNCj4g
+Pg0KPiA+IFZGSU8gbmVlZHMgbmV3IGlvbW11IEFQSXMgdG8gYXNrIGlvbW11IGRyaXZlciB3aGV0
+aGVyDQo+ID4gUEFTSUQvYmluZF9ncGFzaWQvIGNhY2hlX2ludi9iaW5kX2dwYXNpZF90YWJsZSBp
+cyBhdmFpbGFibGUgb3Igbm90IGFuZA0KPiA+IGFsc28gdGhlIHBhc2lkIGJpdHMuIEFmdGVyIHRo
+YXQgVkZJTyB3aWxsIGFzayBpb21tdSBkcml2ZXIgYWJvdXQgdGhlDQo+ID4gaW9tbXVfY2FwX2lu
+Zm8gYW5kIGZpbGwgaW4gdGhlIEBkYXRhW10gZmllbGQuDQo+ID4NCj4gPiBpb21tdSB1YXBpOg0K
+PiA+IHN0cnVjdCBpb21tdV9pbmZvX2NhcF9oZWFkZXIgew0KPiA+IAlfX3UxNglpZDsJCS8qIElk
+ZW50aWZpZXMgY2FwYWJpbGl0eSAqLw0KPiA+IAlfX3UxNgl2ZXJzaW9uOwkJLyogVmVyc2lvbiBz
+cGVjaWZpYyB0byB0aGUgY2FwYWJpbGl0eSBJRCAqLw0KPiA+IAlfX3UzMgluZXh0OwkJLyogT2Zm
+c2V0IG9mIG5leHQgY2FwYWJpbGl0eSAqLw0KPiA+IH07DQo+ID4NCj4gPiAjZGVmaW5lIElPTU1V
+X0lORk9fQ0FQX0lOVEVMX1ZURCAxDQo+ID4gc3RydWN0IGlvbW11X2luZm9fY2FwX2ludGVsX3Z0
+ZCB7DQo+ID4gCXN0cnVjdAlpb21tdV9pbmZvX2NhcF9oZWFkZXIgaGVhZGVyOw0KPiA+IAlfX3Uz
+MiAgIHZhZGRyX3dpZHRoOyAgIC8qIFZBIGFkZHJfd2lkdGgqLw0KPiA+IAlfX3UzMiAgIGlwYWRk
+cl93aWR0aDsgLyogSVBBIGFkZHJfd2lkdGgsIGlucHV0IG9mIFNMIHBhZ2UgdGFibGUgKi8NCj4g
+PiAJLyogc2FtZSBkZWZpbml0aW9uIHdpdGggQGZsYWdzIGluc3RydWN0IGlvbW11X2dwYXNpZF9i
+aW5kX2RhdGFfdnRkICovDQo+ID4gCV9fdTY0CWZsYWdzOw0KPiA+IH07DQo+ID4NCj4gPiAjZGVm
+aW5lIElPTU1VX0lORk9fQ0FQX0FSTV9TTU1VdjMgMg0KPiA+IHN0cnVjdCBpb21tdV9pbmZvX2Nh
+cF9hcm1fc21tdXYzIHsNCj4gPiAJc3RydWN0CWlvbW11X2luZm9fY2FwX2hlYWRlciBoZWFkZXI7
+DQo+ID4gCS4uLg0KPiA+IH07DQo+IA0KPiBUaGFua3MNCj4gDQo+IEVyaWMNCj4gPg0KPiA+IFJl
+Z2FyZHMsDQo+ID4gWWkgTGl1DQo+ID4NCg0K
