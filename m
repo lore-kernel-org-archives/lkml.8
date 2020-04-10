@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EFF68C2BB85
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 03:49:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F1B4C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 03:49:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C7DCA20BED
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 03:49:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5770820936
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 03:49:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586490591;
-	bh=Gf392KoCBUhgkrXocXreLB3YDk6gRHSO655nXvCucgw=;
+	s=default; t=1586490593;
+	bh=skWxrDeaTk6+jv+cXjW6TzCDWVjh/oty9QB9S9uiJkE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0OlE04tebV2fqtJiZp4uYLvSnY7/hQYkpMVjhww9oCEvTkZ0YbVXtqxbd38xDCkU8
-	 EsptxErDAHb1ySUagMwlzCrpKDZ3eNdtyq52b3DMDBTUBAhN0Q/YHm0zMXdOIGUU43
-	 3TuWphPx9qHlVCRSdE9ViDBgA+brB9z3ESvMgcVY=
+	b=Qcu2sUr/HeSrE7dC7CZ8HKik8q1Hc9rNQCwPMOLbMswHrYWXMdMWntk49We2C1gLf
+	 4n6vPzLNggbOFoa0/4GAmNvSWMgs0V3VS4Utu07f7gbJMhitidhbFnBYvwmsSfq3Er
+	 Qjcw0ZmvAoQWs+cWfkFjpRv7GXv9LHbZefgo5SXM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728684AbgDJDtu (ORCPT
+        id S1726926AbgDJDtv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Apr 2020 23:49:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33864 "EHLO mail.kernel.org"
+        Thu, 9 Apr 2020 23:49:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33894 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728631AbgDJDto (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Apr 2020 23:49:44 -0400
+        id S1728644AbgDJDtp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Apr 2020 23:49:45 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 408B020936;
-        Fri, 10 Apr 2020 03:49:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 638E620936;
+        Fri, 10 Apr 2020 03:49:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586490583;
-        bh=Gf392KoCBUhgkrXocXreLB3YDk6gRHSO655nXvCucgw=;
+        s=default; t=1586490586;
+        bh=skWxrDeaTk6+jv+cXjW6TzCDWVjh/oty9QB9S9uiJkE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=aUKL5Q8fz39zfTP25OOlOs1GOgNB+D1oBUHwcz4WbqT33wtLO5NoM7G4tn7cXJGTz
-         eKdY0c6rAIJupfFRSaP0ACcuUwUIVvGPzNIDGZBJL20VlVOABMArIidxtPlVyVbSab
-         bFNpxHHgFaQqLCyuxNOsatAzKzpVKQMCoZY79keI=
+        b=CpzwYY7Gr48uD+s4goV7mgIAIPZ+b06Eh5mtKzADW7PYWkz1qltrkW6Zn+0npPmol
+         SPg4Gu7+oR2fZ6L7X8zoH5kDsfKODaVV2VZIyt75483cWTCAdjr5Y+Aa0jQ1/19z+8
+         wVIOusIk+fAoaDov9f8xXJIrr/TLAWYfIILzWVHc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Arvind Sankar <nivedita@alum.mit.edu>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.4 29/46] x86/boot: Use unsigned comparison for addresses
-Date:   Thu,  9 Apr 2020 23:48:52 -0400
-Message-Id: <20200410034909.8922-29-sashal@kernel.org>
+Cc:     Alexander Sverdlin <alexander.sverdlin@nokia.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.4 31/46] genirq/irqdomain: Check pointer in irq_domain_alloc_irqs_hierarchy()
+Date:   Thu,  9 Apr 2020 23:48:54 -0400
+Message-Id: <20200410034909.8922-31-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200410034909.8922-1-sashal@kernel.org>
 References: <20200410034909.8922-1-sashal@kernel.org>
@@ -59,69 +59,64 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arvind Sankar <nivedita@alum.mit.edu>
+From: Alexander Sverdlin <alexander.sverdlin@nokia.com>
 
-[ Upstream commit 81a34892c2c7c809f9c4e22c5ac936ae673fb9a2 ]
+[ Upstream commit 87f2d1c662fa1761359fdf558246f97e484d177a ]
 
-The load address is compared with LOAD_PHYSICAL_ADDR using a signed
-comparison currently (using jge instruction).
+irq_domain_alloc_irqs_hierarchy() has 3 call sites in the compilation unit
+but only one of them checks for the pointer which is being dereferenced
+inside the called function. Move the check into the function. This allows
+for catching the error instead of the following crash:
 
-When loading a 64-bit kernel using the new efi32_pe_entry() point added by:
+Unable to handle kernel NULL pointer dereference at virtual address 00000000
+PC is at 0x0
+LR is at gpiochip_hierarchy_irq_domain_alloc+0x11f/0x140
+...
+[<c06c23ff>] (gpiochip_hierarchy_irq_domain_alloc)
+[<c0462a89>] (__irq_domain_alloc_irqs)
+[<c0462dad>] (irq_create_fwspec_mapping)
+[<c06c2251>] (gpiochip_to_irq)
+[<c06c1c9b>] (gpiod_to_irq)
+[<bf973073>] (gpio_irqs_init [gpio_irqs])
+[<bf974048>] (gpio_irqs_exit+0xecc/0xe84 [gpio_irqs])
+Code: bad PC value
 
-  97aa276579b2 ("efi/x86: Add true mixed mode entry point into .compat section")
-
-using Qemu with -m 3072, the firmware actually loads us above 2Gb,
-resulting in a very early crash.
-
-Use the JAE instruction to perform a unsigned comparison instead, as physical
-addresses should be considered unsigned.
-
-Signed-off-by: Arvind Sankar <nivedita@alum.mit.edu>
-Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Link: https://lore.kernel.org/r/20200301230436.2246909-6-nivedita@alum.mit.edu
-Link: https://lore.kernel.org/r/20200308080859.21568-14-ardb@kernel.org
+Signed-off-by: Alexander Sverdlin <alexander.sverdlin@nokia.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Link: https://lkml.kernel.org/r/20200306174720.82604-1-alexander.sverdlin@nokia.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/boot/compressed/head_32.S | 2 +-
- arch/x86/boot/compressed/head_64.S | 4 ++--
- 2 files changed, 3 insertions(+), 3 deletions(-)
+ kernel/irq/irqdomain.c | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
-diff --git a/arch/x86/boot/compressed/head_32.S b/arch/x86/boot/compressed/head_32.S
-index 5e30eaaf8576f..70ffce98c5683 100644
---- a/arch/x86/boot/compressed/head_32.S
-+++ b/arch/x86/boot/compressed/head_32.S
-@@ -106,7 +106,7 @@ ENTRY(startup_32)
- 	notl	%eax
- 	andl    %eax, %ebx
- 	cmpl	$LOAD_PHYSICAL_ADDR, %ebx
--	jge	1f
-+	jae	1f
- #endif
- 	movl	$LOAD_PHYSICAL_ADDR, %ebx
- 1:
-diff --git a/arch/x86/boot/compressed/head_64.S b/arch/x86/boot/compressed/head_64.S
-index e9a7f7cadb121..07d2002da642a 100644
---- a/arch/x86/boot/compressed/head_64.S
-+++ b/arch/x86/boot/compressed/head_64.S
-@@ -106,7 +106,7 @@ ENTRY(startup_32)
- 	notl	%eax
- 	andl	%eax, %ebx
- 	cmpl	$LOAD_PHYSICAL_ADDR, %ebx
--	jge	1f
-+	jae	1f
- #endif
- 	movl	$LOAD_PHYSICAL_ADDR, %ebx
- 1:
-@@ -297,7 +297,7 @@ ENTRY(startup_64)
- 	notq	%rax
- 	andq	%rax, %rbp
- 	cmpq	$LOAD_PHYSICAL_ADDR, %rbp
--	jge	1f
-+	jae	1f
- #endif
- 	movq	$LOAD_PHYSICAL_ADDR, %rbp
- 1:
+diff --git a/kernel/irq/irqdomain.c b/kernel/irq/irqdomain.c
+index 480df36597206..c776b8e86fbcc 100644
+--- a/kernel/irq/irqdomain.c
++++ b/kernel/irq/irqdomain.c
+@@ -1293,6 +1293,11 @@ int irq_domain_alloc_irqs_hierarchy(struct irq_domain *domain,
+ 				    unsigned int irq_base,
+ 				    unsigned int nr_irqs, void *arg)
+ {
++	if (!domain->ops->alloc) {
++		pr_debug("domain->ops->alloc() is NULL\n");
++		return -ENOSYS;
++	}
++
+ 	return domain->ops->alloc(domain, irq_base, nr_irqs, arg);
+ }
+ 
+@@ -1330,11 +1335,6 @@ int __irq_domain_alloc_irqs(struct irq_domain *domain, int irq_base,
+ 			return -EINVAL;
+ 	}
+ 
+-	if (!domain->ops->alloc) {
+-		pr_debug("domain->ops->alloc() is NULL\n");
+-		return -ENOSYS;
+-	}
+-
+ 	if (realloc && irq_base >= 0) {
+ 		virq = irq_base;
+ 	} else {
 -- 
 2.20.1
 
