@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12553C2D0EC
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 03:46:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FCADC2BB86
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 03:46:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E024B20A8B
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 03:46:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CF40220A8B
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 03:46:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586490400;
-	bh=UrwSOr4h2UrF7KC5Oh4oX+BltuND9X9C5BW/wnK2KGY=;
+	s=default; t=1586490407;
+	bh=dJFglhfHc6uw1MvFL015uE8KnyDBVoyTg7s0lOxDLDQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TDfifQH3XWDCKN82n+xqkh33BOo1u4NnNboGAcYh/jZjt04C5nrIQEouXWTFqhN2m
-	 ke3e506MIVE+tYswIpL4mqPXEd04g5ppIJK/v/qgbjdHvMFr2MpVxJJlbpgvxgkjB6
-	 tXmyvdNI1IE2BIdW1tDk7JgwMFjiNMSUoUvKATuU=
+	b=fRz45MoD42lJ/SEuPLrvDW7P+LppyvXL2gK0xbYnX/m92M61R/ju5Su6HPhjy4suU
+	 OtJUfc4Iouy1EnKNNk9SNj6Y4jGOUUSwAL2hk9hdW52xEnTAZ2JKaQ8HJpGHx/aM9F
+	 KgGP5HjqVwRGgRK3afcfEq1WtLVnLNOOQ0+/7jEc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726699AbgDJDqj (ORCPT
+        id S1726791AbgDJDqq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Apr 2020 23:46:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56504 "EHLO mail.kernel.org"
+        Thu, 9 Apr 2020 23:46:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56590 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726082AbgDJDqi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726626AbgDJDqi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 9 Apr 2020 23:46:38 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1C08D20B1F;
-        Fri, 10 Apr 2020 03:46:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 39B4B212CC;
+        Fri, 10 Apr 2020 03:46:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586490397;
-        bh=UrwSOr4h2UrF7KC5Oh4oX+BltuND9X9C5BW/wnK2KGY=;
+        s=default; t=1586490399;
+        bh=dJFglhfHc6uw1MvFL015uE8KnyDBVoyTg7s0lOxDLDQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=K3w8uxR0ySjPqG+66MfVK3p60pz+mpnLcGmE4zz3xmLj5KlYUEvdILkQ7sijctetD
-         xCWKmHBjn6esCocdrCmse0Or7gcUQ957L+MKxMQuQMsjAARWAw9cwz5Z0LAoqbGl62
-         JlpN0Kf7EAQ673z3hDwBJSnbZ6KH4FZ/yM5o86mI=
+        b=k9MIzdcu9Yhyl302JPTHJ2mMkKGMU27pfurbFnAN7sJKHkb9zMbEdP9RHEWERun8L
+         mCzBJXF998dCPw7X0pR8oaJ5RZZOUz2nrSimBuq0ABWthr/keRRxqYLBExqkpgGdvj
+         bKMsNy+3iXii3YK+SLHbt9t9WN6XGC73TSn7iB+U=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Robert Richter <rrichter@marvell.com>,
-        Borislav Petkov <bp@suse.de>,
-        Aristeu Rozanski <aris@redhat.com>,
-        Sasha Levin <sashal@kernel.org>, linux-edac@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.6 02/68] EDAC/mc: Report "unknown memory" on too many DIMM labels found
-Date:   Thu,  9 Apr 2020 23:45:27 -0400
-Message-Id: <20200410034634.7731-2-sashal@kernel.org>
+Cc:     Ajay Gupta <ajayg@nvidia.com>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sasha Levin <sashal@kernel.org>, linux-usb@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.6 03/68] usb: ucsi: ccg: disable runtime pm during fw flashing
+Date:   Thu,  9 Apr 2020 23:45:28 -0400
+Message-Id: <20200410034634.7731-3-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200410034634.7731-1-sashal@kernel.org>
 References: <20200410034634.7731-1-sashal@kernel.org>
@@ -60,69 +60,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Robert Richter <rrichter@marvell.com>
+From: Ajay Gupta <ajayg@nvidia.com>
 
-[ Upstream commit 65bb4d1af92cf007adc0a0c59dadcc393c5cada6 ]
+[ Upstream commit 57a5e5f936be583d2c6cef3661c169e3ea4bf922 ]
 
-There is a limitation to report only EDAC_MAX_LABELS in e->label of
-the error descriptor. This is to prevent a potential string overflow.
+Ucsi ppm is unregistered during fw flashing so disable
+runtime pm also and reenable after fw flashing is completed
+and ppm is re-registered.
 
-The current implementation falls back to "any memory" in this case and
-also stops all further processing to find a unique row and channel of
-the possible error location.
-
-Reporting "any memory" is wrong as the memory controller reported an
-error location for one of the layers. Instead, report "unknown memory"
-and also do not break early in the loop to further check row and channel
-for uniqueness.
-
- [ bp: Massage commit message. ]
-
-Signed-off-by: Robert Richter <rrichter@marvell.com>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Acked-by: Aristeu Rozanski <aris@redhat.com>
-Link: https://lkml.kernel.org/r/20200123090210.26933-7-rrichter@marvell.com
+Signed-off-by: Ajay Gupta <ajayg@nvidia.com>
+Signed-off-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Link: https://lore.kernel.org/r/20200217144913.55330-3-heikki.krogerus@linux.intel.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/edac/edac_mc.c | 21 +++++++++++----------
- 1 file changed, 11 insertions(+), 10 deletions(-)
+ drivers/usb/typec/ucsi/ucsi_ccg.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/edac/edac_mc.c b/drivers/edac/edac_mc.c
-index 69e0d90460e6c..2349f2ad946bb 100644
---- a/drivers/edac/edac_mc.c
-+++ b/drivers/edac/edac_mc.c
-@@ -1180,20 +1180,21 @@ void edac_mc_handle_error(const enum hw_event_mc_err_type type,
- 		 * channel/memory controller/...  may be affected.
- 		 * Also, don't show errors for empty DIMM slots.
- 		 */
--		if (!e->enable_per_layer_report || !dimm->nr_pages)
-+		if (!dimm->nr_pages)
- 			continue;
+diff --git a/drivers/usb/typec/ucsi/ucsi_ccg.c b/drivers/usb/typec/ucsi/ucsi_ccg.c
+index a5b8530490dba..2658cda5da116 100644
+--- a/drivers/usb/typec/ucsi/ucsi_ccg.c
++++ b/drivers/usb/typec/ucsi/ucsi_ccg.c
+@@ -1219,6 +1219,7 @@ static int ccg_restart(struct ucsi_ccg *uc)
+ 		return status;
+ 	}
  
--		if (n_labels >= EDAC_MAX_LABELS) {
--			e->enable_per_layer_report = false;
--			break;
--		}
- 		n_labels++;
--		if (p != e->label) {
--			strcpy(p, OTHER_LABEL);
--			p += strlen(OTHER_LABEL);
-+		if (n_labels > EDAC_MAX_LABELS) {
-+			p = e->label;
-+			*p = '\0';
-+		} else {
-+			if (p != e->label) {
-+				strcpy(p, OTHER_LABEL);
-+				p += strlen(OTHER_LABEL);
-+			}
-+			strcpy(p, dimm->label);
-+			p += strlen(p);
- 		}
--		strcpy(p, dimm->label);
--		p += strlen(p);
++	pm_runtime_enable(uc->dev);
+ 	return 0;
+ }
  
- 		/*
- 		 * get csrow/channel of the DIMM, in order to allow
+@@ -1234,6 +1235,7 @@ static void ccg_update_firmware(struct work_struct *work)
+ 
+ 	if (flash_mode != FLASH_NOT_NEEDED) {
+ 		ucsi_unregister(uc->ucsi);
++		pm_runtime_disable(uc->dev);
+ 		free_irq(uc->irq, uc);
+ 
+ 		ccg_fw_update(uc, flash_mode);
 -- 
 2.20.1
 
