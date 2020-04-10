@@ -2,105 +2,121 @@ Return-Path: <SRS0=VV4q=52=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF966C2BB85
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 22:27:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F7ADC2BB85
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 22:38:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C16E120801
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 22:27:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 568E1207FF
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 22:38:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qMHOVxEf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726684AbgDJW1C (ORCPT
+        id S1726695AbgDJWiO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Apr 2020 18:27:02 -0400
-Received: from relay1-d.mail.gandi.net ([217.70.183.193]:28127 "EHLO
-        relay1-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726582AbgDJW1C (ORCPT
+        Fri, 10 Apr 2020 18:38:14 -0400
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:41500 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726582AbgDJWiO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Apr 2020 18:27:02 -0400
-X-Originating-IP: 86.202.105.35
-Received: from localhost (lfbn-lyo-1-9-35.w86-202.abo.wanadoo.fr [86.202.105.35])
-        (Authenticated sender: alexandre.belloni@bootlin.com)
-        by relay1-d.mail.gandi.net (Postfix) with ESMTPSA id 56E6F240006;
-        Fri, 10 Apr 2020 22:26:59 +0000 (UTC)
-Date:   Sat, 11 Apr 2020 00:26:58 +0200
-From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
-To:     Claudiu Beznea <claudiu.beznea@microchip.com>
-Cc:     a.zummo@towertech.it, robh+dt@kernel.org, mark.rutland@arm.com,
-        nicolas.ferre@microchip.com, ludovic.desroches@microchip.com,
-        tglx@linutronix.de, jason@lakedaemon.net, maz@kernel.org,
-        linux-rtc@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 4/5] ARM: dts: sam9x60: add rtt
-Message-ID: <20200410222658.GB3628@piout.net>
-References: <1586536019-12348-1-git-send-email-claudiu.beznea@microchip.com>
- <1586536019-12348-5-git-send-email-claudiu.beznea@microchip.com>
+        Fri, 10 Apr 2020 18:38:14 -0400
+Received: by mail-lj1-f193.google.com with SMTP id n17so3318043lji.8;
+        Fri, 10 Apr 2020 15:38:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=LAO+gCgHL5tTHaVD3gJ8zq/eeHn13spJLxGQ7uaKoOM=;
+        b=qMHOVxEfYN1XaWkmcDCFbkIq4O53uvNfdUiG/B+GNfY45U/if37tu6zjeNrLnyVFW5
+         Q7QNMaPDEBPAggujB0vlILbGUVcPImGQrpVEtWRsNIjs3Q2soITlhTn0+lc/cugALtFT
+         i6CAtCgxDDtIvjaq82i8iAygVNKl6fIJHh/jO3WaTYdk2IJjmRanErCrTNmABdj1XCIz
+         hoGwwJZcUVvaQWg3lCCWyMAynRaPeM6tdBnBUzDzSdwFwUyVqxnOKVcreAcoUdXpV9ev
+         mhfvNbhFvXukO5t3egEX3XTjA7yuW3dmSfhGfoeiOwdwjSXbBEdlP5HSQhvB4tOqCiQY
+         atnA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=LAO+gCgHL5tTHaVD3gJ8zq/eeHn13spJLxGQ7uaKoOM=;
+        b=QuRtyRKhTGR9z/mTsSab+tW7vBTC6SZlFAwpo/Nle5kfFvlgybQP84UbdZ60bCwBQw
+         W1b4rho/60XLYAov2eBkg1ncJPfzXYHLxy0bapgLixcqnqDQaghI/ldlZ3T/6M58rsVs
+         XkX7TX5ng7Wy3XPGgnW8oZ+rMVYytfUQ0n7wv1D23eWzc0XQ/wgLJmHasvSDg7eaaKIv
+         MEDP0Iz1Z9AUge77/91IgY7b4xntWXSUWYAChPtB6mS3IT25FEhNNL804AD9Ut+DIA0w
+         osU2NxT/gxle9OmXAyw4TT/hH9pewgHns9tjL4Oq8ISuNJnBkHnuPYJKk59BjY2yQohd
+         lfrg==
+X-Gm-Message-State: AGi0PubtImfl1YdsyZkrTF4HJi69wl246Nm1sYxr/M+5ZRV4UbiWrQk7
+        RFf6RnAYluq0ZuaYdSxGpQ0=
+X-Google-Smtp-Source: APiQypJ3gmntpSbsD+xUBIc3kPpOQltKKOtIwSqFCuAhjgL+4LyWO8H3eV7t+f4tchX93ZtEWjao5w==
+X-Received: by 2002:a2e:b54c:: with SMTP id a12mr4184606ljn.86.1586558291061;
+        Fri, 10 Apr 2020 15:38:11 -0700 (PDT)
+Received: from [192.168.2.145] (ppp91-78-208-152.pppoe.mtu-net.ru. [91.78.208.152])
+        by smtp.googlemail.com with ESMTPSA id u19sm1919503lju.83.2020.04.10.15.38.09
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 10 Apr 2020 15:38:10 -0700 (PDT)
+Subject: Re: [PATCH v10 31/55] Input: atmel_mxt_ts - delay enabling IRQ when
+ not using regulators
+To:     Jiada Wang <jiada_wang@mentor.com>, nick@shmanahar.org,
+        dmitry.torokhov@gmail.com, jikos@kernel.org,
+        benjamin.tissoires@redhat.com, bsz@semihalf.com
+Cc:     linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
+        erosca@de.adit-jv.com, Andrew_Gabbasov@mentor.com
+References: <20200331105051.58896-1-jiada_wang@mentor.com>
+ <20200331105051.58896-32-jiada_wang@mentor.com>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <46e0b0cf-63f1-4b46-dc3e-0e6610e72d75@gmail.com>
+Date:   Sat, 11 Apr 2020 01:38:07 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1586536019-12348-5-git-send-email-claudiu.beznea@microchip.com>
+In-Reply-To: <20200331105051.58896-32-jiada_wang@mentor.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/04/2020 19:26:58+0300, Claudiu Beznea wrote:
-> Add RTT.
+31.03.2020 13:50, Jiada Wang пишет:
+> From: Nick Dyer <nick.dyer@itdev.co.uk>
 > 
-> Signed-off-by: Claudiu Beznea <claudiu.beznea@microchip.com>
-> ---
->  arch/arm/boot/dts/at91-sam9x60ek.dts | 5 +++++
->  arch/arm/boot/dts/sam9x60.dtsi       | 7 +++++++
->  2 files changed, 12 insertions(+)
+> The path of enabling the IRQ in the probe function is not safe in level
+> triggered operation, if it was already powered up and there is a message
+> waiting on the device (eg finger down) because the object table has not yet
+> been read. This forces the ISR into a hard loop.
 > 
-> diff --git a/arch/arm/boot/dts/at91-sam9x60ek.dts b/arch/arm/boot/dts/at91-sam9x60ek.dts
-> index ab3d2d9a420a..4020e79a958e 100644
-> --- a/arch/arm/boot/dts/at91-sam9x60ek.dts
-> +++ b/arch/arm/boot/dts/at91-sam9x60ek.dts
-> @@ -617,6 +617,11 @@
->  	};
->  };
->  
-> +&rtt {
-> +	atmel,rtt-rtc-time-reg = <&gpbr 0x0>;
-> +	status = "okay";
+> Delay enabling the interrupt until it is first needed.
 
-Is there any point using a gpbr register while there is already a much
-better RTC in the system?
 
-In any case, this diff should be merge with the other at91-sam9x60ek.dts
-change instead of being with the dtsi change.
-
-> +};
-> +
->  &shutdown_controller {
->  	atmel,shdwc-debouncer = <976>;
->  	status = "okay";
-> diff --git a/arch/arm/boot/dts/sam9x60.dtsi b/arch/arm/boot/dts/sam9x60.dtsi
-> index 326b39328b58..e1d8e3a4cb0b 100644
-> --- a/arch/arm/boot/dts/sam9x60.dtsi
-> +++ b/arch/arm/boot/dts/sam9x60.dtsi
-> @@ -661,6 +661,13 @@
->  				status = "disabled";
->  			};
->  
-> +			rtt: rtt@fffffe20 {
-> +				compatible = "microchip,sam9x60-rtt";
-> +				reg = <0xfffffe20 0x20>;
-> +				interrupts = <1 IRQ_TYPE_LEVEL_HIGH 7>;
-> +				clocks = <&clk32k 0>;
-> +			};
-> +
->  			pit: timer@fffffe40 {
->  				compatible = "atmel,at91sam9260-pit";
->  				reg = <0xfffffe40 0x10>;
-> -- 
-> 2.7.4
 > 
+> -	if (data->use_retrigen_workaround) {
+> +		/* Presence of data->irq means IRQ initialised */
+> +		data->irq = data->client->irq;
 
--- 
-Alexandre Belloni, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+IIRC, IRQ=0 could be a valid interrupt since this is a "virtual"
+interrupt number.
+
+...
+>  	init_completion(&data->chg_completion);
+> @@ -3826,26 +3842,22 @@ static int mxt_probe(struct i2c_client *client, const struct i2c_device_id *id)
+>  		return error;
+>  	}
+
+What about just to tell the IRQ core not to enable the interrupt
+handling during of the devm_request_threaded_irq()?
+
+To achieve that, add this line here:
+
+	irq_set_status_flags(client->irq, IRQ_NOAUTOEN);
+
+> -	error = devm_request_threaded_irq(&client->dev, client->irq,
+> -					  NULL, mxt_interrupt, IRQF_ONESHOT,
+> -					  client->name, data);
+...
+
+Then the interrupt will be requested in the disabled state and it will
+be enabled only after the first enable_irq() invocation.
