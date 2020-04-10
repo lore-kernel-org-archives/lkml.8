@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A469C2D0EC
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 03:50:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C565C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 03:50:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 13FE720B1F
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 03:50:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E55A120936
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 03:50:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586490629;
-	bh=vSXvfk+ZBHDHOnvNignHEMR/sPicw9FxaumxDke6jfU=;
+	s=default; t=1586490631;
+	bh=xPCg/qppnNYd0X4wUKky/6es7Ms3c9iMxBzuit/N0Qg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lq/cZMs9RsfoMWcm2/1EkkmLi0YV99MJlr6AQ8hVeJJxCkj8SEfKfzOejvd4mSMZ5
-	 HmXMaZghuXiCSJpBhQ3sFzDB3H/H4g13yB0i42+lNBXYLXnHv/Ipk8+AUBY7T4CIA4
-	 6N2bgppTXcGkeQMJDJieCH/eu3DDjm8EDn5OfgV4=
+	b=AWgkIpu/Zd0fXz6HbIm95ztXgfr/0UpxScf7Dhu2Lh2TkrVAH7nrY+s2Z0L2iEai3
+	 f0+3d6BEn7fbS1BSehk9PIvC9amrSsDl5mqjjv4VVXkYMGJq3VHW9GAGzBwZhSp5MV
+	 xMFyazrNBcL/moAaRt5yeQIDpNVUXgHcrI1eacYU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728159AbgDJDu1 (ORCPT
+        id S1727199AbgDJDu2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Apr 2020 23:50:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34696 "EHLO mail.kernel.org"
+        Thu, 9 Apr 2020 23:50:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34838 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728846AbgDJDuP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Apr 2020 23:50:15 -0400
+        id S1726843AbgDJDuV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Apr 2020 23:50:21 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1625220BED;
-        Fri, 10 Apr 2020 03:50:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7066E21655;
+        Fri, 10 Apr 2020 03:50:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586490615;
-        bh=vSXvfk+ZBHDHOnvNignHEMR/sPicw9FxaumxDke6jfU=;
+        s=default; t=1586490619;
+        bh=xPCg/qppnNYd0X4wUKky/6es7Ms3c9iMxBzuit/N0Qg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VRXEZB6hA5Kl3aDgzxY7FqtMlqd+4HH8MAvQyMG3SIRJvZpROlfMhHCMG4YS3irXy
-         Bgph8WJ8vGH12eMzEE3w8HbfOGYOvkN+/QjXF21PYoT6HqModcDK9S9mM/tVTiwIP3
-         kaVYdT7qXZM/nn5NvcFVsrwDpaoZAhapT+GiAN10=
+        b=uNharNftHohPaLEwIzryFAGLT8TpHAji0/c/iJZ7JfvjzJnbVgT27zTpDYuHYbK/G
+         nveTujM/saFkAhk0Fa0qIMCcHkCbKeArmune0CeJoOuqwC74iimF7+RJCt3bqMUE1m
+         iqape14eI821XSSYvggGnV6QJReEDcoQokIZpm1w=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Thomas Hellstrom <thellstrom@vmware.com>,
-        Borislav Petkov <bp@suse.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
+Cc:     Michael Wang <yun.wang@linux.alibaba.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.19 08/32] x86: Don't let pgprot_modify() change the page encryption bit
-Date:   Thu,  9 Apr 2020 23:49:41 -0400
-Message-Id: <20200410035005.9371-8-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 11/32] sched: Avoid scale real weight down to zero
+Date:   Thu,  9 Apr 2020 23:49:44 -0400
+Message-Id: <20200410035005.9371-11-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200410035005.9371-1-sashal@kernel.org>
 References: <20200410035005.9371-1-sashal@kernel.org>
@@ -61,67 +60,80 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Thomas Hellstrom <thellstrom@vmware.com>
+From: Michael Wang <yun.wang@linux.alibaba.com>
 
-[ Upstream commit 6db73f17c5f155dbcfd5e48e621c706270b84df0 ]
+[ Upstream commit 26cf52229efc87e2effa9d788f9b33c40fb3358a ]
 
-When SEV or SME is enabled and active, vm_get_page_prot() typically
-returns with the encryption bit set. This means that users of
-pgprot_modify(, vm_get_page_prot()) (mprotect_fixup(), do_mmap()) end up
-with a value of vma->vm_pg_prot that is not consistent with the intended
-protection of the PTEs.
+During our testing, we found a case that shares no longer
+working correctly, the cgroup topology is like:
 
-This is also important for fault handlers that rely on the VMA
-vm_page_prot to set the page protection. Fix this by not allowing
-pgprot_modify() to change the encryption bit, similar to how it's done
-for PAT bits.
+  /sys/fs/cgroup/cpu/A		(shares=102400)
+  /sys/fs/cgroup/cpu/A/B	(shares=2)
+  /sys/fs/cgroup/cpu/A/B/C	(shares=1024)
 
-Signed-off-by: Thomas Hellstrom <thellstrom@vmware.com>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Reviewed-by: Dave Hansen <dave.hansen@linux.intel.com>
-Acked-by: Tom Lendacky <thomas.lendacky@amd.com>
-Link: https://lkml.kernel.org/r/20200304114527.3636-2-thomas_os@shipmail.org
+  /sys/fs/cgroup/cpu/D		(shares=1024)
+  /sys/fs/cgroup/cpu/D/E	(shares=1024)
+  /sys/fs/cgroup/cpu/D/E/F	(shares=1024)
+
+The same benchmark is running in group C & F, no other tasks are
+running, the benchmark is capable to consumed all the CPUs.
+
+We suppose the group C will win more CPU resources since it could
+enjoy all the shares of group A, but it's F who wins much more.
+
+The reason is because we have group B with shares as 2, since
+A->cfs_rq.load.weight == B->se.load.weight == B->shares/nr_cpus,
+so A->cfs_rq.load.weight become very small.
+
+And in calc_group_shares() we calculate shares as:
+
+  load = max(scale_load_down(cfs_rq->load.weight), cfs_rq->avg.load_avg);
+  shares = (tg_shares * load) / tg_weight;
+
+Since the 'cfs_rq->load.weight' is too small, the load become 0
+after scale down, although 'tg_shares' is 102400, shares of the se
+which stand for group A on root cfs_rq become 2.
+
+While the se of D on root cfs_rq is far more bigger than 2, so it
+wins the battle.
+
+Thus when scale_load_down() scale real weight down to 0, it's no
+longer telling the real story, the caller will have the wrong
+information and the calculation will be buggy.
+
+This patch add check in scale_load_down(), so the real weight will
+be >= MIN_SHARES after scale, after applied the group C wins as
+expected.
+
+Suggested-by: Peter Zijlstra <peterz@infradead.org>
+Signed-off-by: Michael Wang <yun.wang@linux.alibaba.com>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Reviewed-by: Vincent Guittot <vincent.guittot@linaro.org>
+Link: https://lkml.kernel.org/r/38e8e212-59a1-64b2-b247-b6d0b52d8dc1@linux.alibaba.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/include/asm/pgtable.h       | 7 +++++--
- arch/x86/include/asm/pgtable_types.h | 2 +-
- 2 files changed, 6 insertions(+), 3 deletions(-)
+ kernel/sched/sched.h | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
-diff --git a/arch/x86/include/asm/pgtable.h b/arch/x86/include/asm/pgtable.h
-index 690c0307afed0..2e1ed12c65f82 100644
---- a/arch/x86/include/asm/pgtable.h
-+++ b/arch/x86/include/asm/pgtable.h
-@@ -608,12 +608,15 @@ static inline pmd_t pmd_modify(pmd_t pmd, pgprot_t newprot)
- 	return __pmd(val);
- }
- 
--/* mprotect needs to preserve PAT bits when updating vm_page_prot */
-+/*
-+ * mprotect needs to preserve PAT and encryption bits when updating
-+ * vm_page_prot
-+ */
- #define pgprot_modify pgprot_modify
- static inline pgprot_t pgprot_modify(pgprot_t oldprot, pgprot_t newprot)
- {
- 	pgprotval_t preservebits = pgprot_val(oldprot) & _PAGE_CHG_MASK;
--	pgprotval_t addbits = pgprot_val(newprot);
-+	pgprotval_t addbits = pgprot_val(newprot) & ~_PAGE_CHG_MASK;
- 	return __pgprot(preservebits | addbits);
- }
- 
-diff --git a/arch/x86/include/asm/pgtable_types.h b/arch/x86/include/asm/pgtable_types.h
-index 106b7d0e2dae5..71ea49e7db747 100644
---- a/arch/x86/include/asm/pgtable_types.h
-+++ b/arch/x86/include/asm/pgtable_types.h
-@@ -124,7 +124,7 @@
-  */
- #define _PAGE_CHG_MASK	(PTE_PFN_MASK | _PAGE_PCD | _PAGE_PWT |		\
- 			 _PAGE_SPECIAL | _PAGE_ACCESSED | _PAGE_DIRTY |	\
--			 _PAGE_SOFT_DIRTY | _PAGE_DEVMAP)
-+			 _PAGE_SOFT_DIRTY | _PAGE_DEVMAP | _PAGE_ENC)
- #define _HPAGE_CHG_MASK (_PAGE_CHG_MASK | _PAGE_PSE)
- 
- /*
+diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
+index 94bec97bd5e28..5f0eb4565957f 100644
+--- a/kernel/sched/sched.h
++++ b/kernel/sched/sched.h
+@@ -123,7 +123,13 @@ static inline void cpu_load_update_active(struct rq *this_rq) { }
+ #ifdef CONFIG_64BIT
+ # define NICE_0_LOAD_SHIFT	(SCHED_FIXEDPOINT_SHIFT + SCHED_FIXEDPOINT_SHIFT)
+ # define scale_load(w)		((w) << SCHED_FIXEDPOINT_SHIFT)
+-# define scale_load_down(w)	((w) >> SCHED_FIXEDPOINT_SHIFT)
++# define scale_load_down(w) \
++({ \
++	unsigned long __w = (w); \
++	if (__w) \
++		__w = max(2UL, __w >> SCHED_FIXEDPOINT_SHIFT); \
++	__w; \
++})
+ #else
+ # define NICE_0_LOAD_SHIFT	(SCHED_FIXEDPOINT_SHIFT)
+ # define scale_load(w)		(w)
 -- 
 2.20.1
 
