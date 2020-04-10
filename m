@@ -2,159 +2,319 @@ Return-Path: <SRS0=VV4q=52=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB120C2BB55
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 20:18:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81FEBC2BB55
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 20:19:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8615120801
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 20:18:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 387B5206A1
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 20:19:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="S053X/y+"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="IrzIdtmk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726689AbgDJUSN (ORCPT
+        id S1726690AbgDJUTS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Apr 2020 16:18:13 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:38003 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726177AbgDJUSM (ORCPT
+        Fri, 10 Apr 2020 16:19:18 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:39359 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726263AbgDJUTS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Apr 2020 16:18:12 -0400
-Received: by mail-wr1-f67.google.com with SMTP id k11so2921573wrp.5;
-        Fri, 10 Apr 2020 13:18:10 -0700 (PDT)
+        Fri, 10 Apr 2020 16:19:18 -0400
+Received: by mail-lj1-f194.google.com with SMTP id i20so3078935ljn.6
+        for <linux-kernel@vger.kernel.org>; Fri, 10 Apr 2020 13:19:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=cc:subject:to:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=LirB/PVqDgbE/D2KaEucIjmXEfNOl2FdUxp75VSmgWE=;
-        b=S053X/y+NH90mhlB5TvqX63DVsl/Lc1yRGm0DWqWlZImLn+KezB6cOWo6TWueeZ8IG
-         4SIf90nikPeanX9PTUHmFwwDP8X9SqfBKH/o/lycd7pixNk/nQPr//+IFLLbynFNlbm9
-         M39etzBJ9gWDsxJ3qNI8p+i3QNY6C0gZfEsJrgvM4ofhOZt+fvAAu0P/Nq6V7zOv05kz
-         An5152US6IlZbufK6mSq9CyVe/iRwJvNVTUX0KRENF1D+Xj4YHq9G8lm5CpjLzGaJjmj
-         PJX3VbPrP4P87dDLht6loOfdfEgjL4y1AjNK4gi6eZDbYWB5wtIGr6nzu/hYqYRMC66t
-         XKrA==
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=s00vWxZiMFv7sIeUz4sCBW8H5Ld38bGP5NjecrSGQr4=;
+        b=IrzIdtmkuN4ludWrmbgCqGXCZd1uw4SDcHHwGkmEBFm7qq94yUGdWHxiSNvq7lBwV6
+         k/2ZuxI5O05UjvGJ5+gVuqnF0pq9CUvhm/Jno90jaAIIC65/fuPlEU4hfiiEFDkRSmx6
+         S/bMUXRSRY3lOFG+oIUgFIR/bTN0liThDZaRlUVLqujD9IZ8Jd6utuWMVnzNaBexavVy
+         +IUZYXiXiNNFpNQ2K2u1zvusmvJHLvL2ye5LUsDfnfeYRohHu2jl16s0PdjpFHllSy2K
+         H8Hy926HBmtEuJ/aCppR+RHvL5KdQil9eTwSfsUFaxE5jC4RXbWUdI/RRg148mldDlWr
+         lnsQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:cc:subject:to:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=LirB/PVqDgbE/D2KaEucIjmXEfNOl2FdUxp75VSmgWE=;
-        b=D+Dkhv4jqY0mGuWy7i97oq2pX8KAXk5W6z0PmgOkHIBG72PgLq5tB1+M4fbXfD9FEk
-         lC4fkkySG7Cj+QtYv0iDNB7AJNYwXhawiYWQnDGQjF/gVm/rBcVwhvSq2yGoUDnqBtMU
-         c0AWWJ9bkTP1evsyD65QVso4tNsPWBKLV+7eHklPB3YTi+OWdtVdSGqfF8JMTXrseNxo
-         XVNWbbPTNwTTkMliyvtf5fnXCIIeg+QCY6ZRthMCVyOJpXJOrX1ALmES7XCSmXSUpcnV
-         lSkf0NPjwMPYzHsbDw04AmWkb+JimHN6bb9htPPX94rpNZGY45DpCoeMpg0J8kK6CzS3
-         +NHA==
-X-Gm-Message-State: AGi0PuZJrBLyPoXHo/S9E853ifkXNOFP+1vZfyEYnENx4Ba88jewVPZR
-        rwP8ed8WvC7ivfGcInHfURt8VwHP
-X-Google-Smtp-Source: APiQypJJZOIPvHdzHvYIayF6B94aL6PrGar63+56dmk6qwKH1KDDM4ArCh3MtMFvbv9cYkRH/qqWZw==
-X-Received: by 2002:adf:e744:: with SMTP id c4mr5867370wrn.133.1586549889297;
-        Fri, 10 Apr 2020 13:18:09 -0700 (PDT)
-Received: from ?IPv6:2001:a61:2482:101:3351:6160:8173:cc31? ([2001:a61:2482:101:3351:6160:8173:cc31])
-        by smtp.gmail.com with ESMTPSA id a7sm4085832wmj.12.2020.04.10.13.18.08
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 10 Apr 2020 13:18:08 -0700 (PDT)
-Cc:     mtk.manpages@gmail.com, cgroups@vger.kernel.org,
-        christian.brauner@ubuntu.com, linux-api@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-man@vger.kernel.org,
-        oleg@redhat.com, tj@kernel.org
-Subject: Re: [PATCH] clone.2: Document CLONE_INTO_CGROUP
-To:     Christian Brauner <christian@brauner.io>
-References: <CAKgNAkhL0zCj11LS9vfae872YVeRsxdz20sZWuXdi+UjH21=0g@mail.gmail.com>
- <20200410104132.294639-1-christian@brauner.io>
-From:   "Michael Kerrisk (man-pages)" <mtk.manpages@gmail.com>
-Message-ID: <b7550fcd-ba12-e64a-3228-e6668b31a8a7@gmail.com>
-Date:   Fri, 10 Apr 2020 22:18:05 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=s00vWxZiMFv7sIeUz4sCBW8H5Ld38bGP5NjecrSGQr4=;
+        b=TeMSP4cCB3dk3lUoUqY3QeIK8Y1sSIlYMjKjn39EGt7HkRxW/mXRYUAYynScoOn/R+
+         2Qs6sXf7qdnwJhSTNGhJhvk9yspV+jYYjjloky+TtOdIDh2Wf/Tdp747MH4mf+RjI/lE
+         42xnh38oe2nVPR/CuqFAZQ1Yc9Wz4EJjBcR969M5Cs5ymjEOW58MI4KSQ1iJm5xItx3/
+         CSvU+KP6sG8omNlJhw1IBg453VXP10eHe4jI/0n7caAiV7zQk1JJkHYXQp156WUiF3ge
+         /4XWyX3z7zGf1p5jaG1Vj0iyoOBal0q1KYVYOJWLA1i7MoSAtmw5DUlBaf5C0Mt1IzgY
+         L1gg==
+X-Gm-Message-State: AGi0PubYKwJRJBGdnNr5/hD7A9DKjlIGFOqefg/ukf14cbNXDr9L3eCD
+        rtaefgARdw4I8/hh5efzskhocSEvfxGQ8WsfSeRIZg==
+X-Google-Smtp-Source: APiQypKCf9nMgLfhza51/e0RM8+Lz+wLjSFXmGNc5hrEWvP5fLnAj4qzctcAsYxZvN+A4pHyCFCPLri1WA6luwQnGwU=
+X-Received: by 2002:a05:651c:c7:: with SMTP id 7mr3884058ljr.124.1586549953114;
+ Fri, 10 Apr 2020 13:19:13 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200410104132.294639-1-christian@brauner.io>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <cover.1585548051.git.ashish.kalra@amd.com> <9e959ee134ad77f62c9881b8c54cd27e35055072.1585548051.git.ashish.kalra@amd.com>
+ <b77a4a1e-b8ca-57a2-d849-adda91bfeac7@oracle.com> <20200403214559.GB28747@ashkalra_ubuntu_server>
+ <65c09963-2027-22c1-e04d-4c8c3658b2c3@oracle.com> <CABayD+cf=Po-k7jqUQjq3AGopxk86d6bTcBhQxijnzpcUh90GA@mail.gmail.com>
+ <20200408015221.GB27608@ashkalra_ubuntu_server> <CABayD+f0qdS5akac8JiB_HU_pWefHDsF=xRNhzSv42w-PTXnyg@mail.gmail.com>
+ <20200410013418.GB19168@ashkalra_ubuntu_server> <CABayD+dDtjz7rJe1ujQ_sq88JRUzHaXXNP_hQVhD1vkXkPsXCw@mail.gmail.com>
+ <CABayD+dwJeu+o+TG843XX1nWHWMz=iwW0uWBKPaG0uJEsxCYGw@mail.gmail.com>
+In-Reply-To: <CABayD+dwJeu+o+TG843XX1nWHWMz=iwW0uWBKPaG0uJEsxCYGw@mail.gmail.com>
+From:   Steve Rutherford <srutherford@google.com>
+Date:   Fri, 10 Apr 2020 13:18:36 -0700
+Message-ID: <CABayD+cuHv6chBT5wWHqaZWXSHaOtaOQyBrxgRj2Y=q_fOheuA@mail.gmail.com>
+Subject: Re: [PATCH v6 12/14] KVM: x86: Introduce KVM_PAGE_ENC_BITMAP_RESET ioctl
+To:     Ashish Kalra <ashish.kalra@amd.com>
+Cc:     Krish Sadhukhan <krish.sadhukhan@oracle.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Joerg Roedel <joro@8bytes.org>,
+        Borislav Petkov <bp@suse.de>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        X86 ML <x86@kernel.org>, KVM list <kvm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        David Rientjes <rientjes@google.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Brijesh Singh <brijesh.singh@amd.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Christian,
-
-Thank you for writing this!
-
-On 4/10/20 12:41 PM, Christian Brauner wrote:
-> From: Christian Brauner <christian.brauner@ubuntu.com>
-> 
-> Signed-off-by: Christian Brauner <christian.brauner@ubuntu.com>
-> ---
->  man2/clone.2 | 20 ++++++++++++++++++++
->  1 file changed, 20 insertions(+)
-> 
-> diff --git a/man2/clone.2 b/man2/clone.2
-> index 39cec4c86..8d9aa9f99 100644
-> --- a/man2/clone.2
-> +++ b/man2/clone.2
-> @@ -197,6 +197,7 @@ struct clone_args {
->      u64 tls;          /* Location of new TLS */
->      u64 set_tid;      /* Pointer to a \fIpid_t\fP array */
->      u64 set_tid_size; /* Number of elements in \fIset_tid\fP */
-> +    u64 cgroup;       /* Target cgroup file descriptor for the child process */
->  };
->  .EE
->  .in
-> @@ -448,6 +449,25 @@ Specifying this flag together with
->  .B CLONE_SIGHAND
->  is nonsensical and disallowed.
->  .TP
-> +.BR CLONE_INTO_CGROUP " (since Linux 5.7)"
-> +.\" commit ef2c41cf38a7559bbf91af42d5b6a4429db8fc68
-> +By default, the child process will belong to the same cgroup as its parent.
-
-s/belong to/be placed in/
-
-s/cgroup/version 2 cgroup/
-
-> +If this flag is specified the child process will be created in a
-> +different cgroup than its parent.
-> +
-> +When using
-> +.RB clone3 ()
-> +the target cgroup can be specified by setting the
-> +.I cl_args.cgroup
-> +member to the file descriptor of the target cgroup. The cgroup file
-
-We need to say something about how this file descriptor is
-obtained. Is it by opening a directory in the v2 cgroup hierarchy?
-With what flags? O_RDONLY? or is O_PATH also possible? Yes, these
-are some rhetorical questions (I read your nice commit message);
-these things need to be explicit in the manual page though.
-
-Also, your commit message mentions a nice list of use cases.
-I think it would be well worth capturing those in a paragraph
-in the manual page text.
-
-> +descriptor must refer to a cgroup in a cgroup v2 hierarchy
-> +(see
-> +.BR cgroup (2)).
-
-s/cgroup/cgroups/
-s/2/7/
-
-> +
-> +Note that all usual cgroup v2 process migration restrictions apply. See
-> +.BR cgroup (2)
-
-s/cgroup/cgroups/
-s/2/7/
-
-Thanks,
-
-Michael
-
--- 
-Michael Kerrisk
-Linux man-pages maintainer; http://www.kernel.org/doc/man-pages/
-Linux/UNIX System Programming Training: http://man7.org/training/
+On Fri, Apr 10, 2020 at 1:16 PM Steve Rutherford <srutherford@google.com> wrote:
+>
+> On Fri, Apr 10, 2020 at 11:14 AM Steve Rutherford
+> <srutherford@google.com> wrote:
+> >
+> > On Thu, Apr 9, 2020 at 6:34 PM Ashish Kalra <ashish.kalra@amd.com> wrote:
+> > >
+> > > Hello Steve,
+> > >
+> > > On Thu, Apr 09, 2020 at 05:59:56PM -0700, Steve Rutherford wrote:
+> > > > On Tue, Apr 7, 2020 at 6:52 PM Ashish Kalra <ashish.kalra@amd.com> wrote:
+> > > > >
+> > > > > Hello Steve,
+> > > > >
+> > > > > On Tue, Apr 07, 2020 at 06:25:51PM -0700, Steve Rutherford wrote:
+> > > > > > On Mon, Apr 6, 2020 at 11:53 AM Krish Sadhukhan
+> > > > > > <krish.sadhukhan@oracle.com> wrote:
+> > > > > > >
+> > > > > > >
+> > > > > > > On 4/3/20 2:45 PM, Ashish Kalra wrote:
+> > > > > > > > On Fri, Apr 03, 2020 at 02:14:23PM -0700, Krish Sadhukhan wrote:
+> > > > > > > >> On 3/29/20 11:23 PM, Ashish Kalra wrote:
+> > > > > > > >>> From: Ashish Kalra <ashish.kalra@amd.com>
+> > > > > > > >>>
+> > > > > > > >>> This ioctl can be used by the application to reset the page
+> > > > > > > >>> encryption bitmap managed by the KVM driver. A typical usage
+> > > > > > > >>> for this ioctl is on VM reboot, on reboot, we must reinitialize
+> > > > > > > >>> the bitmap.
+> > > > > > > >>>
+> > > > > > > >>> Signed-off-by: Ashish Kalra <ashish.kalra@amd.com>
+> > > > > > > >>> ---
+> > > > > > > >>>    Documentation/virt/kvm/api.rst  | 13 +++++++++++++
+> > > > > > > >>>    arch/x86/include/asm/kvm_host.h |  1 +
+> > > > > > > >>>    arch/x86/kvm/svm.c              | 16 ++++++++++++++++
+> > > > > > > >>>    arch/x86/kvm/x86.c              |  6 ++++++
+> > > > > > > >>>    include/uapi/linux/kvm.h        |  1 +
+> > > > > > > >>>    5 files changed, 37 insertions(+)
+> > > > > > > >>>
+> > > > > > > >>> diff --git a/Documentation/virt/kvm/api.rst b/Documentation/virt/kvm/api.rst
+> > > > > > > >>> index 4d1004a154f6..a11326ccc51d 100644
+> > > > > > > >>> --- a/Documentation/virt/kvm/api.rst
+> > > > > > > >>> +++ b/Documentation/virt/kvm/api.rst
+> > > > > > > >>> @@ -4698,6 +4698,19 @@ During the guest live migration the outgoing guest exports its page encryption
+> > > > > > > >>>    bitmap, the KVM_SET_PAGE_ENC_BITMAP can be used to build the page encryption
+> > > > > > > >>>    bitmap for an incoming guest.
+> > > > > > > >>> +4.127 KVM_PAGE_ENC_BITMAP_RESET (vm ioctl)
+> > > > > > > >>> +-----------------------------------------
+> > > > > > > >>> +
+> > > > > > > >>> +:Capability: basic
+> > > > > > > >>> +:Architectures: x86
+> > > > > > > >>> +:Type: vm ioctl
+> > > > > > > >>> +:Parameters: none
+> > > > > > > >>> +:Returns: 0 on success, -1 on error
+> > > > > > > >>> +
+> > > > > > > >>> +The KVM_PAGE_ENC_BITMAP_RESET is used to reset the guest's page encryption
+> > > > > > > >>> +bitmap during guest reboot and this is only done on the guest's boot vCPU.
+> > > > > > > >>> +
+> > > > > > > >>> +
+> > > > > > > >>>    5. The kvm_run structure
+> > > > > > > >>>    ========================
+> > > > > > > >>> diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
+> > > > > > > >>> index d30f770aaaea..a96ef6338cd2 100644
+> > > > > > > >>> --- a/arch/x86/include/asm/kvm_host.h
+> > > > > > > >>> +++ b/arch/x86/include/asm/kvm_host.h
+> > > > > > > >>> @@ -1273,6 +1273,7 @@ struct kvm_x86_ops {
+> > > > > > > >>>                             struct kvm_page_enc_bitmap *bmap);
+> > > > > > > >>>     int (*set_page_enc_bitmap)(struct kvm *kvm,
+> > > > > > > >>>                             struct kvm_page_enc_bitmap *bmap);
+> > > > > > > >>> +   int (*reset_page_enc_bitmap)(struct kvm *kvm);
+> > > > > > > >>>    };
+> > > > > > > >>>    struct kvm_arch_async_pf {
+> > > > > > > >>> diff --git a/arch/x86/kvm/svm.c b/arch/x86/kvm/svm.c
+> > > > > > > >>> index 313343a43045..c99b0207a443 100644
+> > > > > > > >>> --- a/arch/x86/kvm/svm.c
+> > > > > > > >>> +++ b/arch/x86/kvm/svm.c
+> > > > > > > >>> @@ -7797,6 +7797,21 @@ static int svm_set_page_enc_bitmap(struct kvm *kvm,
+> > > > > > > >>>     return ret;
+> > > > > > > >>>    }
+> > > > > > > >>> +static int svm_reset_page_enc_bitmap(struct kvm *kvm)
+> > > > > > > >>> +{
+> > > > > > > >>> +   struct kvm_sev_info *sev = &to_kvm_svm(kvm)->sev_info;
+> > > > > > > >>> +
+> > > > > > > >>> +   if (!sev_guest(kvm))
+> > > > > > > >>> +           return -ENOTTY;
+> > > > > > > >>> +
+> > > > > > > >>> +   mutex_lock(&kvm->lock);
+> > > > > > > >>> +   /* by default all pages should be marked encrypted */
+> > > > > > > >>> +   if (sev->page_enc_bmap_size)
+> > > > > > > >>> +           bitmap_fill(sev->page_enc_bmap, sev->page_enc_bmap_size);
+> > > > > > > >>> +   mutex_unlock(&kvm->lock);
+> > > > > > > >>> +   return 0;
+> > > > > > > >>> +}
+> > > > > > > >>> +
+> > > > > > > >>>    static int svm_mem_enc_op(struct kvm *kvm, void __user *argp)
+> > > > > > > >>>    {
+> > > > > > > >>>     struct kvm_sev_cmd sev_cmd;
+> > > > > > > >>> @@ -8203,6 +8218,7 @@ static struct kvm_x86_ops svm_x86_ops __ro_after_init = {
+> > > > > > > >>>     .page_enc_status_hc = svm_page_enc_status_hc,
+> > > > > > > >>>     .get_page_enc_bitmap = svm_get_page_enc_bitmap,
+> > > > > > > >>>     .set_page_enc_bitmap = svm_set_page_enc_bitmap,
+> > > > > > > >>> +   .reset_page_enc_bitmap = svm_reset_page_enc_bitmap,
+> > > > > > > >>
+> > > > > > > >> We don't need to initialize the intel ops to NULL ? It's not initialized in
+> > > > > > > >> the previous patch either.
+> > > > > > > >>
+> > > > > > > >>>    };
+> > > > > > > > This struct is declared as "static storage", so won't the non-initialized
+> > > > > > > > members be 0 ?
+> > > > > > >
+> > > > > > >
+> > > > > > > Correct. Although, I see that 'nested_enable_evmcs' is explicitly
+> > > > > > > initialized. We should maintain the convention, perhaps.
+> > > > > > >
+> > > > > > > >
+> > > > > > > >>>    static int __init svm_init(void)
+> > > > > > > >>> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+> > > > > > > >>> index 05e953b2ec61..2127ed937f53 100644
+> > > > > > > >>> --- a/arch/x86/kvm/x86.c
+> > > > > > > >>> +++ b/arch/x86/kvm/x86.c
+> > > > > > > >>> @@ -5250,6 +5250,12 @@ long kvm_arch_vm_ioctl(struct file *filp,
+> > > > > > > >>>                     r = kvm_x86_ops->set_page_enc_bitmap(kvm, &bitmap);
+> > > > > > > >>>             break;
+> > > > > > > >>>     }
+> > > > > > > >>> +   case KVM_PAGE_ENC_BITMAP_RESET: {
+> > > > > > > >>> +           r = -ENOTTY;
+> > > > > > > >>> +           if (kvm_x86_ops->reset_page_enc_bitmap)
+> > > > > > > >>> +                   r = kvm_x86_ops->reset_page_enc_bitmap(kvm);
+> > > > > > > >>> +           break;
+> > > > > > > >>> +   }
+> > > > > > > >>>     default:
+> > > > > > > >>>             r = -ENOTTY;
+> > > > > > > >>>     }
+> > > > > > > >>> diff --git a/include/uapi/linux/kvm.h b/include/uapi/linux/kvm.h
+> > > > > > > >>> index b4b01d47e568..0884a581fc37 100644
+> > > > > > > >>> --- a/include/uapi/linux/kvm.h
+> > > > > > > >>> +++ b/include/uapi/linux/kvm.h
+> > > > > > > >>> @@ -1490,6 +1490,7 @@ struct kvm_enc_region {
+> > > > > > > >>>    #define KVM_GET_PAGE_ENC_BITMAP  _IOW(KVMIO, 0xc5, struct kvm_page_enc_bitmap)
+> > > > > > > >>>    #define KVM_SET_PAGE_ENC_BITMAP  _IOW(KVMIO, 0xc6, struct kvm_page_enc_bitmap)
+> > > > > > > >>> +#define KVM_PAGE_ENC_BITMAP_RESET  _IO(KVMIO, 0xc7)
+> > > > > > > >>>    /* Secure Encrypted Virtualization command */
+> > > > > > > >>>    enum sev_cmd_id {
+> > > > > > > >> Reviewed-by: Krish Sadhukhan <krish.sadhukhan@oracle.com>
+> > > > > >
+> > > > > >
+> > > > > > Doesn't this overlap with the set ioctl? Yes, obviously, you have to
+> > > > > > copy the new value down and do a bit more work, but I don't think
+> > > > > > resetting the bitmap is going to be the bottleneck on reboot. Seems
+> > > > > > excessive to add another ioctl for this.
+> > > > >
+> > > > > The set ioctl is generally available/provided for the incoming VM to setup
+> > > > > the page encryption bitmap, this reset ioctl is meant for the source VM
+> > > > > as a simple interface to reset the whole page encryption bitmap.
+> > > > >
+> > > > > Thanks,
+> > > > > Ashish
+> > > >
+> > > >
+> > > > Hey Ashish,
+> > > >
+> > > > These seem very overlapping. I think this API should be refactored a bit.
+> > > >
+> > > > 1) Use kvm_vm_ioctl_enable_cap to control whether or not this
+> > > > hypercall (and related feature bit) is offered to the VM, and also the
+> > > > size of the buffer.
+> > >
+> > > If you look at patch 13/14, i have added a new kvm para feature called
+> > > "KVM_FEATURE_SEV_LIVE_MIGRATION" which indicates host support for SEV
+> > > Live Migration and a new Custom MSR which the guest does a wrmsr to
+> > > enable the Live Migration feature, so this is like the enable cap
+> > > support.
+> > >
+> > > There are further extensions to this support i am adding, so patch 13/14
+> > > of this patch-set is still being enhanced and will have full support
+> > > when i repost next.
+> > >
+> > > > 2) Use set for manipulating values in the bitmap, including resetting
+> > > > the bitmap. Set the bitmap pointer to null if you want to reset to all
+> > > > 0xFFs. When the bitmap pointer is set, it should set the values to
+> > > > exactly what is pointed at, instead of only clearing bits, as is done
+> > > > currently.
+> > >
+> > > As i mentioned in my earlier email, the set api is supposed to be for
+> > > the incoming VM, but if you really need to use it for the outgoing VM
+> > > then it can be modified.
+> > >
+> > > > 3) Use get for fetching values from the kernel. Personally, I'd
+> > > > require alignment of the base GFN to a multiple of 8 (but the number
+> > > > of pages could be whatever), so you can just use a memcpy. Optionally,
+> > > > you may want some way to tell userspace the size of the existing
+> > > > buffer, so it can ensure that it can ask for the entire buffer without
+> > > > having to track the size in usermode (not strictly necessary, but nice
+> > > > to have since it ensures that there is only one place that has to
+> > > > manage this value).
+> > > >
+> > > > If you want to expand or contract the bitmap, you can use enable cap
+> > > > to adjust the size.
+> > >
+> > > As being discussed on the earlier mail thread, we are doing this
+> > > dynamically now by computing the guest RAM size when the
+> > > set_user_memory_region ioctl is invoked. I believe that should handle
+> > > the hot-plug and hot-unplug events too, as any hot memory updates will
+> > > need KVM memslots to be updated.
+> > Ahh, sorry, forgot you mentioned this: yes this can work. Host needs
+> > to be able to decide not to allocate, but this should be workable.
+> > >
+> > > > If you don't want to offer the hypercall to the guest, don't call the
+> > > > enable cap.
+> > > > This API avoids using up another ioctl. Ioctl space is somewhat
+> > > > scarce. It also gives userspace fine grained control over the buffer,
+> > > > so it can support both hot-plug and hot-unplug (or at the very least
+> > > > it is not obviously incompatible with those). It also gives userspace
+> > > > control over whether or not the feature is offered. The hypercall
+> > > > isn't free, and being able to tell guests to not call when the host
+> > > > wasn't going to migrate it anyway will be useful.
+> > > >
+> > >
+> > > As i mentioned above, now the host indicates if it supports the Live
+> > > Migration feature and the feature and the hypercall are only enabled on
+> > > the host when the guest checks for this support and does a wrmsr() to
+> > > enable the feature. Also the guest will not make the hypercall if the
+> > > host does not indicate support for it.
+> > If my read of those patches was correct, the host will always
+> > advertise support for the hypercall. And the only bit controlling
+> > whether or not the hypercall is advertised is essentially the kernel
+> > version. You need to rollout a new kernel to disable the hypercall.
+>
+> Ahh, awesome, I see I misunderstood how the CPUID bits get passed
+> through: usermode can still override them. Forgot about the back and
+> forth for CPUID with usermode. My point about informing the guest
+> kernel is clearly moot. The host still needs the ability to prevent
+> allocations, but that is more minor. Maybe use a flag on the memslots
+> directly?
+On second thought: burning the memslot flag for 30mb per tb of VM
+seems like a waste.
