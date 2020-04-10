@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97E66C2BBFD
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 03:47:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F012C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 03:47:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7031320CC7
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 03:47:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2D3A72145D
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 03:47:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586490450;
-	bh=bZPiNyvVGdaJKBKZrFOz0pBhySVoMImQT9fF9e1eZP4=;
+	s=default; t=1586490454;
+	bh=KWxq6ZrFrO8jPWH9ZCMnZoxwcvM3QWIjNinxvnDkmIE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dgHfmcXMG3Q/q7jfnr+bOnaV0wgJc2lJejwuwLrS6Iod8H0lV5HupeM2SDDczBSNi
-	 daMtvbmR1hl6KoEGuvzvf9Lt52H5RzQnOJSg1bPIUA5sm5UkcjNQtLA3gahfIRp6f/
-	 Rneqg6tLSPbquFLYjWomqj3uPhEFAqS6sdgv7P08=
+	b=zfTiuejfXyB5QQwb61f/RHHonjiDmVaipKfC7DwsCynMIpRf8+27DQbRy9VHBvCKb
+	 5iUSzqwGpNj74VSlXu0hCN5KGFrV1EU47PMeeFIuzMpCRKrtnodNuBqXnNKHp4rjkp
+	 T7mlVTcs09eqS+Y1oKVCZTxOC36a+YbBtJIVf6Zo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727611AbgDJDr2 (ORCPT
+        id S1727696AbgDJDrc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Apr 2020 23:47:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58080 "EHLO mail.kernel.org"
+        Thu, 9 Apr 2020 23:47:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58338 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727435AbgDJDrX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Apr 2020 23:47:23 -0400
+        id S1726598AbgDJDra (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Apr 2020 23:47:30 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3267320B1F;
-        Fri, 10 Apr 2020 03:47:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 18DFC2145D;
+        Fri, 10 Apr 2020 03:47:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586490444;
-        bh=bZPiNyvVGdaJKBKZrFOz0pBhySVoMImQT9fF9e1eZP4=;
+        s=default; t=1586490450;
+        bh=KWxq6ZrFrO8jPWH9ZCMnZoxwcvM3QWIjNinxvnDkmIE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=h6U4SCiBUP8aRkTqLiM8MPfi1XifpHsabye4o65xbcfRtSHnBhgn5kr0MOBXXmBE2
-         pFNVOkgKov+54jJSvO0ZAOesLiif2r/joFbhdhtH3HHqdXF7RELG6K823e8WFhXRfT
-         avbdbEsjQmzTDwCj8TpWCUhU20lA9FZzcvuxH6T4=
+        b=p9R2Tnb1dF2GpaU4RzRFJZXzXBibCuBSOLrtbfq/BGkBMW5MEf+6c/jYdvgwsSuGJ
+         kRQuPCBN2SqOpglVWSsep+UTVmEO7By5fR9iSxbDcrfI2Be+BKt4C2QNwTgPpbPAFl
+         ozgIXxEhkGn3DMOep+yrXqe7zyfcY8ioVWE0LD/I=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Paolo Valente <paolo.valente@linaro.org>, cki-project@redhat.com,
-        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>,
-        linux-block@vger.kernel.org, cgroups@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.6 40/68] block, bfq: move forward the getting of an extra ref in bfq_bfqq_move
-Date:   Thu,  9 Apr 2020 23:46:05 -0400
-Message-Id: <20200410034634.7731-40-sashal@kernel.org>
+Cc:     Bob Peterson <rpeterso@redhat.com>,
+        Andreas Gruenbacher <agruenba@redhat.com>,
+        Sasha Levin <sashal@kernel.org>, cluster-devel@redhat.com
+Subject: [PATCH AUTOSEL 5.6 46/68] gfs2: Don't demote a glock until its revokes are written
+Date:   Thu,  9 Apr 2020 23:46:11 -0400
+Message-Id: <20200410034634.7731-46-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200410034634.7731-1-sashal@kernel.org>
 References: <20200410034634.7731-1-sashal@kernel.org>
@@ -59,71 +59,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Paolo Valente <paolo.valente@linaro.org>
+From: Bob Peterson <rpeterso@redhat.com>
 
-[ Upstream commit fd1bb3ae54a9a2e0c42709de861c69aa146b8955 ]
+[ Upstream commit df5db5f9ee112e76b5202fbc331f990a0fc316d6 ]
 
-Commit ecedd3d7e199 ("block, bfq: get extra ref to prevent a queue
-from being freed during a group move") gets an extra reference to a
-bfq_queue before possibly deactivating it (temporarily), in
-bfq_bfqq_move(). This prevents the bfq_queue from disappearing before
-being reactivated in its new group.
+Before this patch, run_queue would demote glocks based on whether
+there are any more holders. But if the glock has pending revokes that
+haven't been written to the media, giving up the glock might end in
+file system corruption if the revokes never get written due to
+io errors, node crashes and fences, etc. In that case, another node
+will replay the metadata blocks associated with the glock, but
+because the revoke was never written, it could replay that block
+even though the glock had since been granted to another node who
+might have made changes.
 
-Yet, the bfq_queue may also be expired (i.e., its service may be
-stopped) before the bfq_queue is deactivated. And also an expiration
-may lead to a premature freeing. This commit fixes this issue by
-simply moving forward the getting of the extra reference already
-introduced by commit ecedd3d7e199 ("block, bfq: get extra ref to
-prevent a queue from being freed during a group move").
+This patch changes the logic in run_queue so that it never demotes
+a glock until its count of pending revokes reaches zero.
 
-Reported-by: cki-project@redhat.com
-Tested-by: cki-project@redhat.com
-Signed-off-by: Paolo Valente <paolo.valente@linaro.org>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Signed-off-by: Bob Peterson <rpeterso@redhat.com>
+Reviewed-by: Andreas Gruenbacher <agruenba@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- block/bfq-cgroup.c | 14 +++++++-------
- 1 file changed, 7 insertions(+), 7 deletions(-)
+ fs/gfs2/glock.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/block/bfq-cgroup.c b/block/bfq-cgroup.c
-index f0ff6654af289..9d963ed518d1f 100644
---- a/block/bfq-cgroup.c
-+++ b/block/bfq-cgroup.c
-@@ -642,6 +642,12 @@ void bfq_bfqq_move(struct bfq_data *bfqd, struct bfq_queue *bfqq,
- {
- 	struct bfq_entity *entity = &bfqq->entity;
- 
-+	/*
-+	 * Get extra reference to prevent bfqq from being freed in
-+	 * next possible expire or deactivate.
-+	 */
-+	bfqq->ref++;
-+
- 	/* If bfqq is empty, then bfq_bfqq_expire also invokes
- 	 * bfq_del_bfqq_busy, thereby removing bfqq and its entity
- 	 * from data structures related to current group. Otherwise we
-@@ -652,12 +658,6 @@ void bfq_bfqq_move(struct bfq_data *bfqd, struct bfq_queue *bfqq,
- 		bfq_bfqq_expire(bfqd, bfqd->in_service_queue,
- 				false, BFQQE_PREEMPTED);
- 
--	/*
--	 * get extra reference to prevent bfqq from being freed in
--	 * next possible deactivate
--	 */
--	bfqq->ref++;
--
- 	if (bfq_bfqq_busy(bfqq))
- 		bfq_deactivate_bfqq(bfqd, bfqq, false, false);
- 	else if (entity->on_st_or_in_serv)
-@@ -677,7 +677,7 @@ void bfq_bfqq_move(struct bfq_data *bfqd, struct bfq_queue *bfqq,
- 
- 	if (!bfqd->in_service_queue && !bfqd->rq_in_driver)
- 		bfq_schedule_dispatch(bfqd);
--	/* release extra ref taken above */
-+	/* release extra ref taken above, bfqq may happen to be freed now */
- 	bfq_put_queue(bfqq);
- }
- 
+diff --git a/fs/gfs2/glock.c b/fs/gfs2/glock.c
+index d0eceaff3cea9..19ebc6cd0f2ba 100644
+--- a/fs/gfs2/glock.c
++++ b/fs/gfs2/glock.c
+@@ -645,6 +645,9 @@ __acquires(&gl->gl_lockref.lock)
+ 			goto out_unlock;
+ 		if (nonblock)
+ 			goto out_sched;
++		smp_mb();
++		if (atomic_read(&gl->gl_revokes) != 0)
++			goto out_sched;
+ 		set_bit(GLF_DEMOTE_IN_PROGRESS, &gl->gl_flags);
+ 		GLOCK_BUG_ON(gl, gl->gl_demote_state == LM_ST_EXCLUSIVE);
+ 		gl->gl_target = gl->gl_demote_state;
 -- 
 2.20.1
 
