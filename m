@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F31DEC2D0EC
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 04:03:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 610DFC2D0EC
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 04:03:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C1C842063A
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 04:03:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 356602082D
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 04:03:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586491392;
-	bh=fpNrlUUTJSSi/PQgLIPLo6vQitr48svphV9IQte/vuY=;
+	s=default; t=1586491396;
+	bh=YDlUlH9cxoPoePJ/BVt1VLVyGDJmuuZt3f/vtA5eHsQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=I7fOiFc8kYOcqe4jOCma/AWU6g26+WnuYZvpt8VtEcSvKqk1FTpJIgoMF3Iaimnw/
-	 nzhIs5IPTqB2eYvyxd3g5N8BObM7nMWqdqGTL6sQfb6M8xmcCeHH0WkKHWHfhQOBuO
-	 V+XnGDqmXR71/vf1uNbazW8kWz/+xGg2tSMYfYDc=
+	b=NbfWl9l/eg/2YxrcRie9nUuvZK1DIHpe86/ESfA0yeE43LHd4mx7HAY8JDqaKIgsg
+	 67ul6sbA1QgtbavLn5BKY7WdilDjSp6BsPnTBeKK2ieTyiIUNcXQUUOJI4yUIu2FIl
+	 jIaTvOFV7b1Q6/PwGsv1jVCUIqNUTaQx9Vc/pUxc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726828AbgDJDqt (ORCPT
+        id S1727823AbgDJEDO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Apr 2020 23:46:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56776 "EHLO mail.kernel.org"
+        Fri, 10 Apr 2020 00:03:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56884 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726759AbgDJDqo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Apr 2020 23:46:44 -0400
+        id S1726810AbgDJDqr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Apr 2020 23:46:47 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4C1E721473;
-        Fri, 10 Apr 2020 03:46:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0F301215A4;
+        Fri, 10 Apr 2020 03:46:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586490404;
-        bh=fpNrlUUTJSSi/PQgLIPLo6vQitr48svphV9IQte/vuY=;
+        s=default; t=1586490407;
+        bh=YDlUlH9cxoPoePJ/BVt1VLVyGDJmuuZt3f/vtA5eHsQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=k1yYXVGZ30yvktbIV0HYRPY0jycocQPrHhNeVxt5Px1c0dwY34ZYUAw93D93XRYqJ
-         IQwvMqQTe3zCTTTmllAPl0+s97T0zr6lmsh34W6eSTnSnHQxQevBXwYWPKw2dkqf8Q
-         BqKWhvO8NNtuKblyHlWVdRx2HR/QDk/FxAMYr/24=
+        b=KBI8znHO9SpKB8M/7w//kYSOEbZQSujUGMyS0EcZWbBWrjEZqsdpkHaVUjEGfEbvY
+         sbS6wU1uH1ZDuRm2ndN6E0hJTiiMNdhXoUSLz2aUve3uTbvunzgWSEUvf6+fUsawDm
+         xxjtHYB0lZSZmXTOfjCwEDduVSeuy+PdhxNcaqtc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Helen Koike <helen.koike@collabora.com>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org,
-        devel@driverdev.osuosl.org
-Subject: [PATCH AUTOSEL 5.6 07/68] media: staging: rkisp1: use consistent bus_info string for media_dev
-Date:   Thu,  9 Apr 2020 23:45:32 -0400
-Message-Id: <20200410034634.7731-7-sashal@kernel.org>
+Cc:     James Morse <james.morse@arm.com>,
+        Liguang Zhang <zhangliguang@linux.alibaba.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH AUTOSEL 5.6 10/68] firmware: arm_sdei: fix double-lock on hibernate with shared events
+Date:   Thu,  9 Apr 2020 23:45:35 -0400
+Message-Id: <20200410034634.7731-10-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200410034634.7731-1-sashal@kernel.org>
 References: <20200410034634.7731-1-sashal@kernel.org>
@@ -61,39 +61,116 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Helen Koike <helen.koike@collabora.com>
+From: James Morse <james.morse@arm.com>
 
-[ Upstream commit 12d3d8090bc5e8cdda2f56caed2a2a0d70009456 ]
+[ Upstream commit 6ded0b61cf638bf9f8efe60ab8ba23db60ea9763 ]
 
-Media device is using a slightly different bus_info string
-"platform: rkisp1" (with a space) instead of "platform:rkisp1" used by
-the rest of rkisp1 code.
-This causes errors when using v4l2-util tools that uses the bus_info
-string to identify the device.
+SDEI has private events that must be registered on each CPU. When
+CPUs come and go they must re-register and re-enable their private
+events. Each event has flags to indicate whether this should happen
+to protect against an event being registered on a CPU coming online,
+while all the others are unregistering the event.
 
-Fixes: d65dd85281fb ("media: staging: rkisp1: add Rockchip ISP1 base driver")
-Signed-off-by: Helen Koike <helen.koike@collabora.com>
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+These flags are protected by the sdei_list_lock spinlock, because
+the cpuhp callbacks can't take the mutex.
+
+Hibernate needs to unregister all events, but keep the in-memory
+re-register and re-enable as they are. sdei_unregister_shared()
+takes the spinlock to walk the list, then calls _sdei_event_unregister()
+on each shared event. _sdei_event_unregister() tries to take the
+same spinlock to update re-register and re-enable. This doesn't go
+so well.
+
+Push the re-register and re-enable updates out to their callers.
+sdei_unregister_shared() doesn't want these values updated, so
+doesn't need to do anything.
+
+This also fixes shared events getting lost over hibernate as this
+path made them look unregistered.
+
+Fixes: da351827240e ("firmware: arm_sdei: Add support for CPU and system power states")
+Reported-by: Liguang Zhang <zhangliguang@linux.alibaba.com>
+Signed-off-by: James Morse <james.morse@arm.com>
+Signed-off-by: Catalin Marinas <catalin.marinas@arm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/staging/media/rkisp1/rkisp1-dev.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ drivers/firmware/arm_sdei.c | 32 +++++++++++++++-----------------
+ 1 file changed, 15 insertions(+), 17 deletions(-)
 
-diff --git a/drivers/staging/media/rkisp1/rkisp1-dev.c b/drivers/staging/media/rkisp1/rkisp1-dev.c
-index 558126e66465c..9b47f41b36e94 100644
---- a/drivers/staging/media/rkisp1/rkisp1-dev.c
-+++ b/drivers/staging/media/rkisp1/rkisp1-dev.c
-@@ -502,8 +502,7 @@ static int rkisp1_probe(struct platform_device *pdev)
- 	strscpy(rkisp1->media_dev.model, RKISP1_DRIVER_NAME,
- 		sizeof(rkisp1->media_dev.model));
- 	rkisp1->media_dev.dev = &pdev->dev;
--	strscpy(rkisp1->media_dev.bus_info,
--		"platform: " RKISP1_DRIVER_NAME,
-+	strscpy(rkisp1->media_dev.bus_info, RKISP1_BUS_INFO,
- 		sizeof(rkisp1->media_dev.bus_info));
- 	media_device_init(&rkisp1->media_dev);
+diff --git a/drivers/firmware/arm_sdei.c b/drivers/firmware/arm_sdei.c
+index a479023fa036e..77eaa9a2fd156 100644
+--- a/drivers/firmware/arm_sdei.c
++++ b/drivers/firmware/arm_sdei.c
+@@ -491,11 +491,6 @@ static int _sdei_event_unregister(struct sdei_event *event)
+ {
+ 	lockdep_assert_held(&sdei_events_lock);
  
+-	spin_lock(&sdei_list_lock);
+-	event->reregister = false;
+-	event->reenable = false;
+-	spin_unlock(&sdei_list_lock);
+-
+ 	if (event->type == SDEI_EVENT_TYPE_SHARED)
+ 		return sdei_api_event_unregister(event->event_num);
+ 
+@@ -518,6 +513,11 @@ int sdei_event_unregister(u32 event_num)
+ 			break;
+ 		}
+ 
++		spin_lock(&sdei_list_lock);
++		event->reregister = false;
++		event->reenable = false;
++		spin_unlock(&sdei_list_lock);
++
+ 		err = _sdei_event_unregister(event);
+ 		if (err)
+ 			break;
+@@ -585,26 +585,15 @@ static int _sdei_event_register(struct sdei_event *event)
+ 
+ 	lockdep_assert_held(&sdei_events_lock);
+ 
+-	spin_lock(&sdei_list_lock);
+-	event->reregister = true;
+-	spin_unlock(&sdei_list_lock);
+-
+ 	if (event->type == SDEI_EVENT_TYPE_SHARED)
+ 		return sdei_api_event_register(event->event_num,
+ 					       sdei_entry_point,
+ 					       event->registered,
+ 					       SDEI_EVENT_REGISTER_RM_ANY, 0);
+ 
+-
+ 	err = sdei_do_cross_call(_local_event_register, event);
+-	if (err) {
+-		spin_lock(&sdei_list_lock);
+-		event->reregister = false;
+-		event->reenable = false;
+-		spin_unlock(&sdei_list_lock);
+-
++	if (err)
+ 		sdei_do_cross_call(_local_event_unregister, event);
+-	}
+ 
+ 	return err;
+ }
+@@ -632,8 +621,17 @@ int sdei_event_register(u32 event_num, sdei_event_callback *cb, void *arg)
+ 			break;
+ 		}
+ 
++		spin_lock(&sdei_list_lock);
++		event->reregister = true;
++		spin_unlock(&sdei_list_lock);
++
+ 		err = _sdei_event_register(event);
+ 		if (err) {
++			spin_lock(&sdei_list_lock);
++			event->reregister = false;
++			event->reenable = false;
++			spin_unlock(&sdei_list_lock);
++
+ 			sdei_event_destroy(event);
+ 			pr_warn("Failed to register event %u: %d\n", event_num,
+ 				err);
 -- 
 2.20.1
 
