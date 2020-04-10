@@ -2,208 +2,197 @@ Return-Path: <SRS0=VV4q=52=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.7 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A39B3C2BA2B
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 13:06:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DEB6C2BA2B
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 13:09:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 71F17208E4
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 13:06:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EC40520692
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 13:09:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1586524173;
+	bh=5WEAdeZ8NM+kR6JK6kOLkmqphGERh/J8AVjGUV+iPQY=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=MdkIpxaANv3zGHcW+4Kyehz6Aj2ScTuwm1fbQNwKx+VGFiExioAZDoL8ELJAQwHqg
+	 Q0V81RYd55NqFap/zebO69fuxyrFtFwGKH7Un8ghpghmxQjmQj42HjoMnwNe6kuG8j
+	 iszU+jXNb2sVjOG1izI3MfB8oVLh4KRa9gkAiWKc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726191AbgDJNGC (ORCPT
+        id S1726173AbgDJNJb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Apr 2020 09:06:02 -0400
-Received: from out01.mta.xmission.com ([166.70.13.231]:45600 "EHLO
-        out01.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725926AbgDJNGC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Apr 2020 09:06:02 -0400
-Received: from in01.mta.xmission.com ([166.70.13.51])
-        by out01.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.90_1)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1jMtM9-0005XH-Ka; Fri, 10 Apr 2020 07:06:01 -0600
-Received: from ip68-227-160-95.om.om.cox.net ([68.227.160.95] helo=x220.xmission.com)
-        by in01.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.87)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1jMtM8-0001Jt-FR; Fri, 10 Apr 2020 07:06:01 -0600
-From:   ebiederm@xmission.com (Eric W. Biederman)
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     <linux-kernel@vger.kernel.org>,
-        Alexey Gladkov <gladkov.alexey@gmail.com>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Christian Brauner <christian.brauner@ubuntu.com>
-References: <87blobnq02.fsf@x220.int.ebiederm.org>
-Date:   Fri, 10 Apr 2020 08:03:04 -0500
-In-Reply-To: <87blobnq02.fsf@x220.int.ebiederm.org> (Eric W. Biederman's
-        message of "Wed, 01 Apr 2020 11:13:17 -0500")
-Message-ID: <87sghbmr1z.fsf@x220.int.ebiederm.org>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
+        Fri, 10 Apr 2020 09:09:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51398 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725926AbgDJNJb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Apr 2020 09:09:31 -0400
+Received: from mail-io1-f44.google.com (mail-io1-f44.google.com [209.85.166.44])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 82D3720A8B
+        for <linux-kernel@vger.kernel.org>; Fri, 10 Apr 2020 13:09:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1586524170;
+        bh=5WEAdeZ8NM+kR6JK6kOLkmqphGERh/J8AVjGUV+iPQY=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=caS+XUIlsZgEBCk0w81MRE5mbSZtdXe4yqVEt0cnPlu52QuX5bmImMK2nkajPiSo9
+         YB+AH+b0GrSlS7Utesplob7Zd5ITab82QMoiOSvCGvEU/Xq2pDlmRjpATmKKQdEBKH
+         2xFxh5W3oLDva3TuIdNahMQWYQ5yedELcEbj1z+s=
+Received: by mail-io1-f44.google.com with SMTP id i19so1647091ioh.12
+        for <linux-kernel@vger.kernel.org>; Fri, 10 Apr 2020 06:09:30 -0700 (PDT)
+X-Gm-Message-State: AGi0PubbMLqWxNnWvQqdJA8wWLGTkZqMJ8pngeTgBSpPevsigreK+aML
+        knhrOTYRHsLjZk0odlL5YV3zYedF09KvljAkSzM=
+X-Google-Smtp-Source: APiQypJzjP70bMJVA9Led2HH6Kvs7dSVTDdgeJwjrGG2MlqETHUYaT3ZORmi/8MXQCOjZehGXh7uYslJtOjfoYtPCkM=
+X-Received: by 2002:a6b:f413:: with SMTP id i19mr4216512iog.203.1586524169887;
+ Fri, 10 Apr 2020 06:09:29 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-XM-SPF: eid=1jMtM8-0001Jt-FR;;;mid=<87sghbmr1z.fsf@x220.int.ebiederm.org>;;;hst=in01.mta.xmission.com;;;ip=68.227.160.95;;;frm=ebiederm@xmission.com;;;spf=neutral
-X-XM-AID: U2FsdGVkX18gW2WaviSeFrVKDX1mAWUGDxDqLmZvAN8=
-X-SA-Exim-Connect-IP: 68.227.160.95
-X-SA-Exim-Mail-From: ebiederm@xmission.com
-Subject: [GIT PULL] proc fix for 5.7-rc1
-X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
-X-SA-Exim-Scanned: Yes (on in01.mta.xmission.com)
+References: <20200409232728.231527-1-caij2003@gmail.com> <CAK8P3a3uj7AHbAo4sNzr6KQx5Fk6v99k4ZixCgKo1tUuGoat9Q@mail.gmail.com>
+ <CAMj1kXGXNxXGiC4dmNXHkZ6n=J0Fhim3oSwNx4Bz5m9fEphJvQ@mail.gmail.com> <20200410123301.GX25745@shell.armlinux.org.uk>
+In-Reply-To: <20200410123301.GX25745@shell.armlinux.org.uk>
+From:   Ard Biesheuvel <ardb@kernel.org>
+Date:   Fri, 10 Apr 2020 15:09:18 +0200
+X-Gmail-Original-Message-ID: <CAMj1kXFpknCfwb6JMdk_SHopnGqMswgSqaQUeAUEh5yaV10vJg@mail.gmail.com>
+Message-ID: <CAMj1kXFpknCfwb6JMdk_SHopnGqMswgSqaQUeAUEh5yaV10vJg@mail.gmail.com>
+Subject: Re: [PATCH] ARM: do not assemble iwmmxt.S with LLVM toolchain
+To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
+Cc:     Arnd Bergmann <arnd@arndb.de>, Jian Cai <caij2003@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Peter Smith <Peter.Smith@arm.com>,
+        Stefan Agner <stefan@agner.ch>,
+        David Howells <dhowells@redhat.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Manoj Gupta <manojgupta@google.com>,
+        Benjamin Gaignard <benjamin.gaignard@linaro.org>,
+        "Joel Fernandes (Google)" <joel@joelfernandes.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Ilie Halip <ilie.halip@gmail.com>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Sami Tolvanen <samitolvanen@google.com>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
+        jiancai@google.com, Doug Anderson <armlinux@m.disordat.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Patrick Bellasi <patrick.bellasi@arm.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Tejun Heo <tj@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-Linus,
-
-Please pull the for-linus branch from the git tree:
-
-   git://git.kernel.org/pub/scm/linux/kernel/git/ebiederm/user-namespace.git for-linus
-
-   HEAD: 63f818f46af9f8b3f17b9695501e8d08959feb60 proc: Use a dedicated lock in struct pid
-
-A brown paper bag slipped through my proc changes, and syzcaller caught
-it when the code ended up in your tree.  I have opted to fix it the
-simplest cleanest way I know how.  So there is no reasonable chance
-for the bug to repeat.
-
-Eric
-
-From 63f818f46af9f8b3f17b9695501e8d08959feb60 Mon Sep 17 00:00:00 2001
-From: "Eric W. Biederman" <ebiederm@xmission.com>
-Date: Tue, 7 Apr 2020 09:43:04 -0500
-Subject: [PATCH] proc: Use a dedicated lock in struct pid
-
-syzbot wrote:
-> ========================================================
-> WARNING: possible irq lock inversion dependency detected
-> 5.6.0-syzkaller #0 Not tainted
-> --------------------------------------------------------
-> swapper/1/0 just changed the state of lock:
-> ffffffff898090d8 (tasklist_lock){.+.?}-{2:2}, at: send_sigurg+0x9f/0x320 fs/fcntl.c:840
-> but this lock took another, SOFTIRQ-unsafe lock in the past:
->  (&pid->wait_pidfd){+.+.}-{2:2}
+On Fri, 10 Apr 2020 at 14:33, Russell King - ARM Linux admin
+<linux@armlinux.org.uk> wrote:
 >
+> On Fri, Apr 10, 2020 at 01:15:08PM +0200, Ard Biesheuvel wrote:
+> > On Fri, 10 Apr 2020 at 11:56, Arnd Bergmann <arnd@arndb.de> wrote:
+> > >
+> > > On Fri, Apr 10, 2020 at 1:28 AM Jian Cai <caij2003@gmail.com> wrote:
+> > > >
+> > > > iwmmxt.S contains XScale instructions LLVM ARM backend does not support.
+> > > > Skip this file if LLVM integrated assemmbler or LLD is used to build ARM
+> > > > kernel.
+> > > >
+> > > > Signed-off-by: Jian Cai <caij2003@gmail.com>
+> > >
+> > > It clearly makes sense to limit the Kconfig option to compilers that
+> > > can actually build it.
+> > > A few questions though:
+> > >
+> > > - Given that Armada XP with its PJ4B was still marketed until fairly
+> > > recently[1],
+> > >   wouldn't it make sense to still add support for it? Is it a lot of work?
+> > >
+> >
+> > The part of that file that the assembler chokes on hasn't been touched
+> > by anyone since Nico added it 15+ years ago. It can only be built in
+> > ARM mode, and it disassembles to the sequence below (the ld/st fe/fp
+> > mnemonics are not document in recent versions of the ARM ARM, and
+> > aren't understood by Clang either)
 >
-> and interrupts could create inverse lock ordering between them.
+> For older CPUs, it doesn't matter what the latest ARM ARM says, the
+> appropriate version of the ARM ARM is the one relevant for the CPU
+> architecture.  This is a mistake frequently made, and it's been pointed
+> out by Arm Ltd in the past (before ARMv6 even came on the scene) that
+> keeping older revisions is necessary if you want to be interested in
+> the older architectures.
 >
+> However, there's an additional complication here: DEC's license from
+> Arm Ltd back in the days of StrongARM allowed them to make changes to
+> the architecture - that was passed over to Intel when they bought that
+> part of DEC.  Consequently, these "non-Arm vendor" cores contain
+> extensions that are not part of the ARM ARM.  iWMMXT is one such
+> example, which first appeared in the Intel PXA270 SoC (an ARMv5
+> derived CPU).
 >
-> other info that might help us debug this:
->  Possible interrupt unsafe locking scenario:
+> In fact, several of the features found in later versions of the ARM
+> architecture came from DEC and Intel enhancements.
 >
->        CPU0                    CPU1
->        ----                    ----
->   lock(&pid->wait_pidfd);
->                                local_irq_disable();
->                                lock(tasklist_lock);
->                                lock(&pid->wait_pidfd);
->   <Interrupt>
->     lock(tasklist_lock);
+> If your compiler/assembler only implements what is in the latest ARM
+> ARM, then it is not going to be suitable for these older CPUs and
+> alternate vendor "ARM compatible" CPUs.
 >
->  *** DEADLOCK ***
+
+Indeed, and I'm a bit disappointed at the willingness to leave stuff
+by the wayside, especially since Clang's integrated assembler has no
+other benefit to it than being built into the compiler.
+
+> > Instead of playing all these tricks with Kconfig, couldn't we simply
+> > insert the bare opcodes and be done with it?
 >
-> 4 locks held by swapper/1/0:
+> That gets close to a GPL violation; the GPL requires that source code
+> be in the preferred form for making modifications. Encoding raw opcodes
+> can in no way be argued to be the preferred form. Arguing that raw
+> opcodes is acceptable sets a precedent that makes it acceptable for
+> other "works" to do the same, which makes arguments against firmware
+> supplied as a hexdump null and void.
+>
+> Using macros to emulate the instructions and create the appropriate
+> opcodes is an alternative; we already have that for some of the VFP
+> code as early toolchains had no support for the VFP instructions.
+>
+> So no, bare opcodes are unacceptable.
+>
 
-The problem is that because wait_pidfd.lock is taken under the tasklist
-lock.  It must always be taken with irqs disabled as tasklist_lock can be
-taken from interrupt context and if wait_pidfd.lock was already taken this
-would create a lock order inversion.
+Fair enough.
 
-Oleg suggested just disabling irqs where I have added extra calls to
-wait_pidfd.lock.  That should be safe and I think the code will eventually
-do that.  It was rightly pointed out by Christian that sharing the
-wait_pidfd.lock was a premature optimization.
+The following set of macros appears to emit the opcodes correctly,
+assuming we're willing to tweak the source code somewhat, i.e., drop
+square brackets and leading # for immediate offsets. (The tmcr/tmrc
+instructions are left as an exercise for the reader)
 
-It is also true that my pre-merge window testing was insufficient.  So
-remove the premature optimization and give struct pid a dedicated lock of
-it's own for struct pid things.  I have verified that lockdep sees all 3
-paths where we take the new pid->lock and lockdep does not complain.
 
-It is my current day dream that one day pid->lock can be used to guard the
-task lists as well and then the tasklist_lock won't need to be held to
-deliver signals.  That will require taking pid->lock with irqs disabled.
+.irp b, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15
+.set .LwR\b, \b
+.set .Lr\b, \b
+.endr
 
-Acked-by: Christian Brauner <christian.brauner@ubuntu.com>
-Link: https://lore.kernel.org/lkml/00000000000011d66805a25cd73f@google.com/
-Cc: Oleg Nesterov <oleg@redhat.com>
-Cc: Christian Brauner <christian.brauner@ubuntu.com>
-Reported-by: syzbot+343f75cdeea091340956@syzkaller.appspotmail.com
-Reported-by: syzbot+832aabf700bc3ec920b9@syzkaller.appspotmail.com
-Reported-by: syzbot+f675f964019f884dbd0f@syzkaller.appspotmail.com
-Reported-by: syzbot+a9fb1457d720a55d6dc5@syzkaller.appspotmail.com
-Fixes: 7bc3e6e55acf ("proc: Use a list of inodes to flush from proc")
-Signed-off-by: "Eric W. Biederman" <ebiederm@xmission.com>
----
- fs/proc/base.c      | 10 +++++-----
- include/linux/pid.h |  1 +
- kernel/pid.c        |  1 +
- 3 files changed, 7 insertions(+), 5 deletions(-)
+.set .LwCSSF, 0x2
+.set .LwCASF, 0x3
+.set .LwCGR0, 0x8
+.set .LwCGR1, 0x9
+.set .LwCGR2, 0xa
+.set .LwCGR3, 0xb
 
-diff --git a/fs/proc/base.c b/fs/proc/base.c
-index 74f948a6b621..6042b646ab27 100644
---- a/fs/proc/base.c
-+++ b/fs/proc/base.c
-@@ -1839,9 +1839,9 @@ void proc_pid_evict_inode(struct proc_inode *ei)
- 	struct pid *pid = ei->pid;
- 
- 	if (S_ISDIR(ei->vfs_inode.i_mode)) {
--		spin_lock(&pid->wait_pidfd.lock);
-+		spin_lock(&pid->lock);
- 		hlist_del_init_rcu(&ei->sibling_inodes);
--		spin_unlock(&pid->wait_pidfd.lock);
-+		spin_unlock(&pid->lock);
- 	}
- 
- 	put_pid(pid);
-@@ -1877,9 +1877,9 @@ struct inode *proc_pid_make_inode(struct super_block * sb,
- 	/* Let the pid remember us for quick removal */
- 	ei->pid = pid;
- 	if (S_ISDIR(mode)) {
--		spin_lock(&pid->wait_pidfd.lock);
-+		spin_lock(&pid->lock);
- 		hlist_add_head_rcu(&ei->sibling_inodes, &pid->inodes);
--		spin_unlock(&pid->wait_pidfd.lock);
-+		spin_unlock(&pid->lock);
- 	}
- 
- 	task_dump_owner(task, 0, &inode->i_uid, &inode->i_gid);
-@@ -3273,7 +3273,7 @@ static const struct inode_operations proc_tgid_base_inode_operations = {
- 
- void proc_flush_pid(struct pid *pid)
- {
--	proc_invalidate_siblings_dcache(&pid->inodes, &pid->wait_pidfd.lock);
-+	proc_invalidate_siblings_dcache(&pid->inodes, &pid->lock);
- 	put_pid(pid);
- }
- 
-diff --git a/include/linux/pid.h b/include/linux/pid.h
-index 01a0d4e28506..cc896f0fc4e3 100644
---- a/include/linux/pid.h
-+++ b/include/linux/pid.h
-@@ -60,6 +60,7 @@ struct pid
- {
- 	refcount_t count;
- 	unsigned int level;
-+	spinlock_t lock;
- 	/* lists of tasks that use this pid */
- 	struct hlist_head tasks[PIDTYPE_MAX];
- 	struct hlist_head inodes;
-diff --git a/kernel/pid.c b/kernel/pid.c
-index efd34874b3d1..517d0855d4cf 100644
---- a/kernel/pid.c
-+++ b/kernel/pid.c
-@@ -246,6 +246,7 @@ struct pid *alloc_pid(struct pid_namespace *ns, pid_t *set_tid,
- 
- 	get_pid_ns(ns);
- 	refcount_set(&pid->count, 1);
-+	spin_lock_init(&pid->lock);
- 	for (type = 0; type < PIDTYPE_MAX; ++type)
- 		INIT_HLIST_HEAD(&pid->tasks[type]);
- 
--- 
-2.20.1
+.macro wldrd, reg:req, base:req, offset:req
+.inst 0xedd00100 | (.L\reg << 12) | (.L\base << 16) | (\offset >> 2)
+.endm
 
+.macro wldrw, reg:req, base:req, offset:req
+.inst 0xfd900100 | (.L\reg << 12) | (.L\base << 16) | (\offset >> 2)
+.endm
+
+.macro wstrd, reg:req, base:req, offset:req
+.inst 0xedc00100 | (.L\reg << 12) | (.L\base << 16) | (\offset >> 2)
+.endm
+
+.macro wstrw, reg:req, base:req, offset:req
+.inst 0xfd800100 | (.L\reg << 12) | (.L\base << 16) | (\offset >> 2)
+.endm
