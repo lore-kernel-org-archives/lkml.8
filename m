@@ -2,260 +2,141 @@ Return-Path: <SRS0=VV4q=52=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 097D1C2D0EC
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 19:41:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE0CEC2BB86
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 19:41:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DAB4F20732
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 19:41:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8D81020732
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 19:41:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="K5H6j5Z8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726794AbgDJTla (ORCPT
+        id S1726891AbgDJTlk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Apr 2020 15:41:30 -0400
-Received: from ex13-edg-ou-002.vmware.com ([208.91.0.190]:36243 "EHLO
-        EX13-EDG-OU-002.vmware.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726715AbgDJTl1 (ORCPT
+        Fri, 10 Apr 2020 15:41:40 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:37594 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726773AbgDJTlh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Apr 2020 15:41:27 -0400
-Received: from sc9-mailhost3.vmware.com (10.113.161.73) by
- EX13-EDG-OU-002.vmware.com (10.113.208.156) with Microsoft SMTP Server id
- 15.0.1156.6; Fri, 10 Apr 2020 12:39:10 -0700
-Received: from sc9-mailhost3.vmware.com (unknown [10.166.69.226])
-        by sc9-mailhost3.vmware.com (Postfix) with ESMTP id 118DC40BC0;
-        Fri, 10 Apr 2020 12:39:15 -0700 (PDT)
-From:   Matt Helsley <mhelsley@vmware.com>
-To:     <linux-kernel@vger.kernel.org>
-CC:     Josh Poimboeuf <jpoimboe@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Julien Thierry <jthierry@redhat.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Miroslav Benes <mbenes@suse.cz>,
-        Matt Helsley <mhelsley@vmware.com>
-Subject: [RFC][PATCH 31/36] objtool: mcount: Pre-allocate new ELF sections
-Date:   Fri, 10 Apr 2020 12:35:54 -0700
-Message-ID: <d1f8a580ee30d85ace0ac2dcb1938302aaf91c3c.1586468801.git.mhelsley@vmware.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <cover.1586468801.git.mhelsley@vmware.com>
-References: <cover.1586468801.git.mhelsley@vmware.com>
+        Fri, 10 Apr 2020 15:41:37 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
+        Subject:Sender:Reply-To:Content-ID:Content-Description;
+        bh=POIx3XHs+z1B1LYmbchLvd+6mRZG4jjVrzB1XvFaETU=; b=K5H6j5Z8UAjUqgnZal2eZP5NdF
+        8pu9HK6BV/ZEhIieqpKOXdk68oFiI4nbhRz2MI/Uwpfujyjt6vQLnEWT/9LN2igNpanJvPAC7t2S5
+        R9w13AOCdEc/ifa0GmlR2HWuM/jDnQa0/7GHk1Va9Q7lfAsIUYt6/lgxhQ0CdpNjWWyKCfTllO9vK
+        NuMHm2hxTf4yj+7kwjDE86avOS51voEMAGm81QUuHSau3Si7EUc1pkcPZhPqClC9h++d7z/UU0ILG
+        eOOihowmxiMDHtTOTz10tCt/Uo/UhdPwrEs7HpAK32RLIyZRE9aPj/1k4sPDqL/taDiUmX/bU9Eiz
+        G4i41mtA==;
+Received: from [2601:1c0:6280:3f0::19c2]
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jMzWy-0000T1-MB; Fri, 10 Apr 2020 19:41:36 +0000
+Subject: Re: linux-next: Tree for Apr 10 (lib/test_printf.ko)
+To:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>
+Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>
+References: <20200410132706.170811b7@canb.auug.org.au>
+ <27c212c4-b522-561d-411c-e74dc0ff0b74@infradead.org>
+ <CAHk-=wjhsM-n_NzSh=cSdpThX+62-x3EmyKjhMqGHFYEyG0nPg@mail.gmail.com>
+ <2b0f5d2e-3fe5-10c9-2a9a-9a0b341a52d5@infradead.org>
+ <CAHk-=wjXZSPPWzPs=KBDsLZWuq8qO=9qWfiKHw=yV10fFrDv9Q@mail.gmail.com>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <bfbcaa67-9656-3a80-fc66-c937297c8be0@infradead.org>
+Date:   Fri, 10 Apr 2020 12:41:35 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-Received-SPF: None (EX13-EDG-OU-002.vmware.com: mhelsley@vmware.com does not
- designate permitted sender hosts)
+In-Reply-To: <CAHk-=wjXZSPPWzPs=KBDsLZWuq8qO=9qWfiKHw=yV10fFrDv9Q@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Rather than allocating the ELF sections after collecting the
-mcount locations and building the relocation entries, create
-the empty sections beforehand. This has the benefit of
-removing the memcpy() and just using the resulting buffers
-directly.
+On 4/10/20 12:05 PM, Linus Torvalds wrote:
+> On Fri, Apr 10, 2020 at 11:29 AM Randy Dunlap <rdunlap@infradead.org> wrote:
+>>
+>>> I wonder if these scripts aren't well enough known, I see a lot of raw
+>>> dumps that could be immensely improved with a little scripting - but
+>>> they need the original vmlinux binary with debug info, so you can't do
+>>> it after-the-fact somewhere else..
+>>
 
-Signed-off-by: Matt Helsley <mhelsley@vmware.com>
----
- tools/objtool/recordmcount.h | 122 +++++++++++++++--------------------
- 1 file changed, 52 insertions(+), 70 deletions(-)
+> But even dump_stack.sh can't sort out how it got from test_printf_init
+> to software_node_unregister_nodes even though it usually is good about
+> following all the inlining (in this case selftest -> test_pointer ->
+> fwnode_pointer).
+> 
+> That may be because of something like a DEBUG_INFO_REDUCED option.
 
-diff --git a/tools/objtool/recordmcount.h b/tools/objtool/recordmcount.h
-index b4d3c55f2c9c..cee5bc91d666 100644
---- a/tools/objtool/recordmcount.h
-+++ b/tools/objtool/recordmcount.h
-@@ -17,7 +17,6 @@
-  * This conversion to macros was done by:
-  * Copyright 2010 Steven Rostedt <srostedt@redhat.com>, Red Hat Inc.
-  */
--#undef append_func
- #undef sift_rel_mcount
- #undef do_func
- #undef Elf_Shdr
-@@ -31,7 +30,6 @@
- #undef _size
- 
- #ifdef RECORD_MCOUNT_64
--# define append_func		append64
- # define sift_rel_mcount	sift64_rel_mcount
- # define do_func		do64
- # define Elf_Rel		Elf64_Rel
-@@ -43,7 +41,6 @@
- # define _w			w8
- # define _size			8
- #else
--# define append_func		append32
- # define sift_rel_mcount	sift32_rel_mcount
- # define do_func		do32
- # define Elf_Rel		Elf32_Rel
-@@ -62,60 +59,6 @@ static void fn_ELF_R_INFO(Elf_Rel *const rp, unsigned sym, unsigned type)
- }
- static void (*Elf_r_info)(Elf_Rel *const rp, unsigned sym, unsigned type) = fn_ELF_R_INFO;
- 
--/* Append the new  __mcount_loc and its relocations. */
--static int append_func(uint_t const *const mloc0,
--			uint_t const *const mlocp,
--			Elf_Rel const *const mrel0,
--			Elf_Rel const *const mrelp,
--			unsigned int const loc_size,
--			unsigned int const rel_entsize,
--			unsigned int const symsec_sh_link)
--{
--	/* Begin constructing output file */
--	struct section *sec;
--	char const *mc_name = (sizeof(Elf_Rela) == rel_entsize)
--		? ".rela__mcount_loc"
--		:  ".rel__mcount_loc";
--	unsigned const old_shnum = lf->ehdr.e_shnum;
--
--	/* add section: __mcount_loc */
--	sec = elf_create_section(lf, mc_name + (sizeof(Elf_Rela) == rel_entsize) + strlen(".rel"), loc_size, mlocp - mloc0);
--	if (!sec)
--		return -1;
--
--	// created sec->sh.sh_size = (void *)mlocp - (void *)mloc0;
--	sec->sh.sh_link = 0;/* TODO objtool uses this? */
--	sec->sh.sh_info = 0;/* TODO objtool uses this? */
--	sec->sh.sh_addralign = loc_size;
--	// created sec->sh.sh_entsize = _size;
--
--	// assert sec->data->d_size == (void *)mlocp - (void *)mloc0
--	memcpy(sec->data->d_buf, mloc0, sec->data->d_size);
--	/* HACK link in Pre-assembled buffer ?
--	sec->data->d_buf = mloc0;
--	sec->data->d_size = sec->sh.sh_size;*/
--
--	/* add section .rel[a]__mcount_loc */
--	sec = elf_create_section(lf, mc_name, rel_entsize, mrelp - mrel0);
--	if (!sec)
--		return -1;
--	sec->sh.sh_type = (sizeof(Elf_Rela) == rel_entsize)
--				? SHT_RELA
--				: SHT_REL;
--	sec->sh.sh_flags = 0;
--	sec->sh.sh_link = find_section_by_name(lf, ".symtab")->idx;
--	sec->sh.sh_info = old_shnum;
--	sec->sh.sh_addralign = loc_size;
--
--	// assert sec->data->d_size == (void *)mrelp - (void *)mrel0
--	memcpy(sec->data->d_buf, mrel0, sec->data->d_size);
--	/* HACK link in Pre-assembled buffer ?
--	sec->data->d_buf = mrel0;
--	sec->data->d_size = sec->sh.sh_size;*/
--
--	return elf_write(lf);
--}
--
- /*
-  * Look at the relocations in order to find the calls to mcount.
-  * Accumulate the section offsets that are found, and their relocation info,
-@@ -172,11 +115,13 @@ static int do_func(unsigned const reltype)
- 	uint_t *      mlocp;
- 
- 	unsigned int rel_entsize = 0;
--	unsigned symsec_sh_link = 0;
- 
--	struct section *sec;
-+	struct section *sec, *mlocs, *mrels;
-+	unsigned int const old_shnum = lf->ehdr.e_shnum;
- 
--	int result = 0;
-+	int result = -1;
-+	char const *mc_name;
-+	bool is_rela;
- 
- 	if (find_section_by_name(lf, "__mcount_loc") != NULL)
- 		return 0;
-@@ -184,6 +129,7 @@ static int do_func(unsigned const reltype)
- 	totrelsz = tot_relsize(&rel_entsize);
- 	if (totrelsz == 0)
- 		return 0;
-+
- 	mrel0 = malloc(totrelsz);
- 	mrelp = mrel0;
- 	if (!mrel0)
-@@ -197,6 +143,32 @@ static int do_func(unsigned const reltype)
- 		return -1;
- 	}
- 
-+	is_rela = (sizeof(Elf_Rela) == rel_entsize);
-+	mc_name = is_rela
-+			? ".rela__mcount_loc"
-+			:  ".rel__mcount_loc";
-+
-+	/* add section: __mcount_loc */
-+	mlocs = elf_create_section(lf, mc_name + (is_rela ? 1 : 0) + strlen(".rel"), _size, 0);
-+	if (!mlocs)
-+		goto out;
-+
-+	mlocs->sh.sh_link = 0;
-+	mlocs->sh.sh_info = 0;
-+	mlocs->sh.sh_addralign = _size;
-+
-+	/* add section .rel[a]__mcount_loc */
-+	mrels = elf_create_section(lf, mc_name, rel_entsize, 0);
-+	if (!mrels)
-+		goto out;
-+	mrels->sh.sh_type = is_rela
-+				? SHT_RELA
-+				: SHT_REL;
-+	mrels->sh.sh_flags = 0;
-+	mrels->sh.sh_link = find_section_by_name(lf, ".symtab")->idx;
-+	mrels->sh.sh_info = old_shnum;
-+	mrels->sh.sh_addralign = _size;
-+
- 	list_for_each_entry(sec, &lf->sections, list) {
- 		char const *txtname;
- 
-@@ -205,10 +177,8 @@ static int do_func(unsigned const reltype)
- 			unsigned long recval = 0;
- 			unsigned int recsym;
- 
--			symsec_sh_link = sec->sh.sh_link;
--			result = find_section_sym_index(sec->sh.sh_info,
--						txtname, &recval, &recsym);
--			if (result)
-+			if (find_section_sym_index(sec->sh.sh_info,
-+						txtname, &recval, &recsym))
- 				goto out;
- 
- 			mlocp = sift_rel_mcount(mlocp,
-@@ -219,15 +189,27 @@ static int do_func(unsigned const reltype)
- 			 * This section is ignored by ftrace, but still
- 			 * has mcount calls. Convert them to nops now.
- 			 */
--			if (nop_mcount(sec, txtname) < 0) {
--				result = -1;
-+			if (nop_mcount(sec, txtname) < 0)
- 				goto out;
--			}
- 		}
- 	}
--	if (!result && mloc0 != mlocp)
--		result = append_func(mloc0, mlocp, mrel0, mrelp,
--				     _size, rel_entsize, symsec_sh_link);
-+
-+	if (mloc0 != mlocp) {
-+		/* Update the section sizes */
-+		mlocs->sh.sh_size = (void *)mlocp - (void *)mloc0;
-+		mlocs->len = mlocs->sh.sh_size;
-+		mlocs->data->d_size = mlocs->len;
-+		mlocs->data->d_buf = mloc0;
-+
-+		mrels->sh.sh_size = (void *)mrelp - (void *)mrel0;
-+		mrels->len = mrels->sh.sh_size;
-+		mrels->data->d_size = mrels->len;
-+		mrels->data->d_buf = mrel0;
-+
-+		/* overwrite the ELF file */
-+		result = elf_write(lf);
-+	} else
-+		result = 0;
- out:
- 	free(mrel0);
- 	free(mloc0);
--- 
-2.20.1
+No, that's enabled. (see below)
+
+
+>> [  561.071144] _raw_spin_lock_irqsave (linux-next-20200410/rdd64/../include/linux/instrumented.h:71 linux-next-20200410/rdd64/../include/asm-generic/atomic-instrumented.h:695 linux-next-20200410/rdd64/../include/asm-generic/qspinlock.h:78 linux-next-20200410/rdd64/../include/linux/spinlock.h:194 linux-next-20200410/rdd64/../include/linux/spinlock_api_smp.h:119 linux-next-20200410/rdd64/../kernel/locking/spinlock.c:159)
+>> [  561.074868] ? _raw_write_unlock_bh (linux-next-20200410/rdd64/../kernel/locking/spinlock.c:158)
+>> [  561.078495] ? ida_destroy (linux-next-20200410/rdd64/../lib/idr.c:538)
+>> [  561.082144] ida_free (linux-next-20200410/rdd64/../lib/idr.c:495 (discriminator 2))
+>> [  561.085694] ? fprop_new_period.cold (linux-next-20200410/rdd64/../lib/idr.c:486)
+>> [  561.089228] ? kasan_slab_free (linux-next-20200410/rdd64/../mm/kasan/common.c:466)
+>> [  561.092738] ? kfree (linux-next-20200410/rdd64/../mm/slub.c:1478 linux-next-20200410/rdd64/../mm/slub.c:3035 linux-next-20200410/rdd64/../mm/slub.c:4003)
+>> [  561.096183] software_node_release (linux-next-20200410/rdd64/../include/linux/list.h:132 linux-next-20200410/rdd64/../include/linux/list.h:146 linux-next-20200410/rdd64/../drivers/base/swnode.c:613)
+>> [  561.099644] kobject_put (linux-next-20200410/rdd64/../lib/kobject.c:697 linux-next-20200410/rdd64/../lib/kobject.c:722 linux-next-20200410/rdd64/../include/linux/kref.h:65 linux-next-20200410/rdd64/../lib/kobject.c:739)
+>> [  561.103109] kobject_del (linux-next-20200410/rdd64/../lib/kobject.c:629)
+>> [  561.106457] kobject_put (linux-next-20200410/rdd64/../lib/kobject.c:690 linux-next-20200410/rdd64/../lib/kobject.c:722 linux-next-20200410/rdd64/../include/linux/kref.h:65 linux-next-20200410/rdd64/../lib/kobject.c:739)
+>> [  561.109785] fwnode_remove_software_node (linux-next-20200410/rdd64/../drivers/base/swnode.c:784)
+>> [  561.113061] software_node_unregister_nodes (linux-next-20200410/rdd64/../drivers/base/swnode.c:721 (discriminator 2))
+>> [  561.116274] test_printf_init (linux-next-20200410/rdd64/../lib/test_printf.c:685 linux-next-20200410/rdd64/../lib/test_printf.c:688) test_printf
+> 
+> It does print out those multiple lines for some things, but doesn't
+> have the nice "inlined by XYZ" I sometimes see that makes it really
+> obvious.
+> 
+
+This is with FRAME_POINTER, not UNWIND_ORC. Maybe that's the difference?
+
+
+> So it ends up still just looking like ida_free -> _raw_spin_lock_irqsave.
+> 
+> Strange. But it's all the same freeing path:
+> 
+>> [  561.278921] Freed by task 1454:
+>> [  561.289528] kfree (linux-next-20200410/rdd64/../mm/slub.c:1478 linux-next-20200410/rdd64/../mm/slub.c:3035 linux-next-20200410/rdd64/../mm/slub.c:4003)
+>> [  561.292183] software_node_release (linux-next-20200410/rdd64/../drivers/base/swnode.c:624)
+>> [  561.294865] kobject_put (linux-next-20200410/rdd64/../lib/kobject.c:697 linux-next-20200410/rdd64/../lib/kobject.c:722 linux-next-20200410/rdd64/../include/linux/kref.h:65 linux-next-20200410/rdd64/../lib/kobject.c:739)
+>> [  561.297501] kobject_del (linux-next-20200410/rdd64/../lib/kobject.c:629)
+>> [  561.300154] kobject_put (linux-next-20200410/rdd64/../lib/kobject.c:690 linux-next-20200410/rdd64/../lib/kobject.c:722 linux-next-20200410/rdd64/../include/linux/kref.h:65 linux-next-20200410/rdd64/../lib/kobject.c:739)
+>> [  561.302784] kobject_del (linux-next-20200410/rdd64/../lib/kobject.c:629)
+>> [  561.305344] kobject_put (linux-next-20200410/rdd64/../lib/kobject.c:690 linux-next-20200410/rdd64/../lib/kobject.c:722 linux-next-20200410/rdd64/../include/linux/kref.h:65 linux-next-20200410/rdd64/../lib/kobject.c:739)
+>> [  561.307914] fwnode_remove_software_node (linux-next-20200410/rdd64/../drivers/base/swnode.c:784)
+> 
+> so it at least superficially looks like software_node_release() might
+> be called twice.
+> 
+> Maybe the child node is released after the parent node - and the child
+> node seems to do the
+> 
+>         ida_simple_remove(&swnode->parent->child_ids, swnode->id);
+> 
+> and maybe it's that the parent->child_ids was already free'd by the
+> previous software_node_release() call? Do children not keep a refcount
+> to their parent, perhaps?
+> 
+> Somebody who knows the driver core thing needs to look at it. And
+> since I don't play with linux-next apart from checking when I pull, I
+> don't know what might have happened in this area..
+> 
+> Adding some driver core people to the cc.
+> 
+>                 Linus-- 
+~Randy
 
