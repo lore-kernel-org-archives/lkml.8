@@ -2,206 +2,220 @@ Return-Path: <SRS0=VV4q=52=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44B07C2BB55
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 08:42:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E5D1C2BB86
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 08:42:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1EF27206A1
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 08:42:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 188CB206A1
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 08:42:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=flygoat.com header.i=@flygoat.com header.b="szLRbkR9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726059AbgDJIm3 (ORCPT
+        id S1726173AbgDJImb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Apr 2020 04:42:29 -0400
-Received: from foss.arm.com ([217.140.110.172]:58752 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725858AbgDJIm3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Apr 2020 04:42:29 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8BDA131B;
-        Fri, 10 Apr 2020 01:42:28 -0700 (PDT)
-Received: from e123648.arm.com (unknown [10.37.12.30])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 4884D3F68F;
-        Fri, 10 Apr 2020 01:42:18 -0700 (PDT)
-From:   Lukasz Luba <lukasz.luba@arm.com>
-To:     linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        dri-devel@lists.freedesktop.org, linux-omap@vger.kernel.org,
-        linux-mediatek@lists.infradead.org, linux-arm-msm@vger.kernel.org,
-        linux-imx@nxp.com
-Cc:     Dietmar.Eggemann@arm.com, cw00.choi@samsung.com,
-        b.zolnierkie@samsung.com, rjw@rjwysocki.net, sudeep.holla@arm.com,
-        viresh.kumar@linaro.org, nm@ti.com, sboyd@kernel.org,
-        rui.zhang@intel.com, amit.kucheria@verdurent.com,
-        daniel.lezcano@linaro.org, mingo@redhat.com, peterz@infradead.org,
-        juri.lelli@redhat.com, vincent.guittot@linaro.org,
-        rostedt@goodmis.org, qperret@google.com, bsegall@google.com,
-        mgorman@suse.de, shawnguo@kernel.org, s.hauer@pengutronix.de,
-        festevam@gmail.com, kernel@pengutronix.de, khilman@kernel.org,
-        agross@kernel.org, bjorn.andersson@linaro.org, robh@kernel.org,
-        matthias.bgg@gmail.com, steven.price@arm.com,
-        tomeu.vizoso@collabora.com, alyssa.rosenzweig@collabora.com,
-        airlied@linux.ie, daniel@ffwll.ch, liviu.dudau@arm.com,
-        lorenzo.pieralisi@arm.com, lukasz.luba@arm.com,
-        patrick.bellasi@matbug.net, orjan.eide@arm.com,
-        rdunlap@infradead.org, mka@chromium.org
-Subject: [PATCH v6 00/10] Add support for devices in the Energy Model
-Date:   Fri, 10 Apr 2020 09:42:00 +0100
-Message-Id: <20200410084210.24932-1-lukasz.luba@arm.com>
-X-Mailer: git-send-email 2.17.1
+        Fri, 10 Apr 2020 04:42:31 -0400
+Received: from vultr.net.flygoat.com ([149.28.68.211]:54496 "EHLO
+        vultr.net.flygoat.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725858AbgDJIma (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Apr 2020 04:42:30 -0400
+X-Greylist: delayed 379 seconds by postgrey-1.27 at vger.kernel.org; Fri, 10 Apr 2020 04:42:30 EDT
+Received: from flygoat-x1e (unknown [IPv6:240e:390:499:a20::d68])
+        by vultr.net.flygoat.com (Postfix) with ESMTPSA id 26A9F2022B;
+        Fri, 10 Apr 2020 08:36:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=flygoat.com; s=vultr;
+        t=1586507771; bh=0pgFuS6hYGazgfoGgXda4UZJLUuB0sacJswLmnmRtd8=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=szLRbkR91sIV3aJsYTHGrKj797pe2U+qLc4H0X0mMgiiM4K+wnMuEibbc33zdNCjj
+         Z6sSYW+hbPxqYt5WhV41fSkx5xe5oCqb+k1duEO16E1fa/jqxLSMp0tgE8fMjhKgu0
+         T42oAPfcQPPVy+ZOF/GzNJcz77ouKk9SDRNHYRsqxopLFqH5S0JDPKDJNfQ8G/Pg7X
+         KXc0kNgRI7TnrICkl2uylVgk7GCqsuf47KyRshb2dZ5VcyHRC41qrG9O+QteikVA7p
+         M5rrTtm0fxUWI4YDvRU3a+bKs/olJqsb2R/kQjQaunZkL4JpPIE8HRZBZkS9IVRVjw
+         aQB3O0DIvVPkQ==
+Date:   Fri, 10 Apr 2020 16:36:03 +0800
+From:   Jiaxun Yang <jiaxun.yang@flygoat.com>
+To:     Tiezhu Yang <yangtiezhu@loongson.cn>
+Cc:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Xuefeng Li <lixuefeng@loongson.cn>,
+        "Maciej W. Rozycki" <macro@linux-mips.org>
+Subject: Re: [PATCH v2] MIPS: Limit check_bugs32() to affected platform
+Message-ID: <20200410163603.22cc8b93@flygoat-x1e>
+In-Reply-To: <1586488859-18715-1-git-send-email-yangtiezhu@loongson.cn>
+References: <1586488859-18715-1-git-send-email-yangtiezhu@loongson.cn>
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi all,
+On Fri, 10 Apr 2020 11:20:59 +0800
+Tiezhu Yang <yangtiezhu@loongson.cn> wrote:
 
-This patch set introduces support for devices in the Energy Model (EM)
-framework. It will unify the power model for thermal subsystem. It will
-make simpler to add support for new devices willing to use more
-advanced features (like Intelligent Power Allocation). Now it should
-require less knowledge and effort for driver developer to add e.g.
-GPU driver with simple energy model. A more sophisticated energy model
-in the thermal framework is also possible, driver needs to provide
-a dedicated callback function. More information can be found in the
-updated documentation file.
+> In the current code, check_bugs32() only handles MIPS32 CPU type
+> CPU_34K, it is better to build and call it on the affected platform.
+> 
+> Move check_bugs32() to the new added 34k-bugs32.c to indicate the
+> fact that the code is specific to the 34k CPU, and also add
+> CONFIG_CPU_34K_BUGS32 to control whether or not check the bugs.
+> 
+> Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
 
-First 7 patches are refactoring Energy Model framework to add support
-of other devices that CPUs. They change:
-- naming convention from 'capacity' to 'performance' state,
-- API arguments adding device pointer and not rely only on cpumask,
-- change naming when 'cpu' was used, now it's a 'device'
-- internal structure to maintain registered devices
-- update users to the new API
-Patch 8 updates OPP framework helper function to be more generic, not
-CPU specific.
-Patch 9 changes devfreq cooling, dropping part of old power model and
-adding registration with Energy Model via exported GPL function. It uses
-as a base the new PM QoS mechanism which is now in thermal-next.
-Patch 10 is a simple change for Panfrost GPU driver.
+Reviewed-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
 
-The patch set is based on linux-next tag next-20200409.
++Maciej, that's basically what I want.
 
-Changes:
-v6:
-- split patch 1/5 from v5 into smaller patches as requested by Daniel
-  and dropped ACK from Quentin which was in the old there
-- added function em_dev_register_perf_domain as suggested by Daniel, which
-  would help transition into the new API
-- changed 'cs' (capacity state) in different places into 'ps' (performance state),
-  since now there are many smaller patches (previously skipped because
-  of too big size of the patch with main features and left to do later)
-- changed cpumask_equal() to cpumask_intersects() when checking if 'cpus' coming
-  as an argument to registration function might overlap with already known;
-  this shouldn't be an issue when cpufreq policy is OK, but a check doesn't harm
-- added Reviewed-by from Alyssa into Panfrost related patch
-- dropped Matthias patch with PM QoS from the series since it's in the next now
-v5 [5]:
-- devfreq cooling: rebased on top of pending patch introducing PM QoS limits
-- devfreq cooling: added Matthias's patch to make this series build check pass
-- devfreq cooling: removed OPP disable code and switched to PM QoS
-- devfreq cooling: since thermal code always used a pointer to devfreq_dev_status,
-  switched to work on a local copy and avoid potential race when either busy_time or
-  total_time could change in the background
-- devfreq cooling: added _normalize_load() and handle all scenarios when
-  busy_time and total_time could have odd values (even raw counters)
-- Energy Model patch 2/4: removed prints from cpufreq drivers and added print inside
-  dev_pm_opp_of_register_em()
-- update patch 2/4 description to better reflect upcoming changes
-- collected ACK from Quentin for patch 1/4 and Reviewed-by from Steven for 4/4
-v4 [4]:
-- devfreq cooling: added two new registration functions, which will take care
-  of registering EM for the device and simplify drivers code
-  (suggested by Robin and Rob)
-- Energy Model: changed unregistering code, added kref to track usage, added
-  code freeing tables, added helper function
-- added return value to function dev_pm_opp_of_register_em() and updated
-  CPUFreq drivers code, added debug prints in case of failure
-- updated comments in devfreq cooling removing statement that only
-  simple_ondemand devfreq governor is supported to work with power extentions
-- fixed spelling in the documentation (reported by Randy)
-v3 [3]:
-- added back the cpumask 'cpus' in the em_perf_domain due potential cache misses
-- removed _is_cpu_em() since there is no need for it
-- changed function name from em_pd_energy() to em_cpu_energy(), which is
-  optimized for usage from the scheduler making some assumptions and not
-  validating arguments to speed-up, there is a comment stressing that it should
-  be used only for CPUs em_perf_domain
-- changed em_get_pd() to em_pd_get() which is now aligned with em_cpu_get()
-  naming
-- Energy Model: add code which checks if the EM is already registered for the
-  devfreq device
-- extended comment in em_cpu_get() describing the need for this function
-- fixed build warning reported on x86 by kbuild test robot in devfreq_cooling.c
-- updated documentation in the energy-model.rst
-- changed print messages from 'energy_model' to 'EM'
-- changed dev_warn to dev_dbg, should calm down test scripts in case the
-  platform has OPPs less efficient in the OPP table (some of them are there for
-  cooling reasons, we shouldn't warn in this case, debug info is enough)
-v2 [2]:
-- changed EM API em_register_perf_domain() adding cpumask_t pointer
-  as last argument (which was discussed with Dietmar and Quentin)
-- removed dependency on PM_OPP, thanks to the cpumask_t argument
-- removed enum em_type and em->type dependent code
-- em_get_pd() can handle CPU device as well as devfreq device
-- updated EM documentation
-- in devfreq cooling added code which prevents from race condition with
-  devfreq governors which are trying to use OPPs while thermal is in the middle
-  of disabling them.
-- in devfreq cooling added code which updates state of the devfreq device to
-  avoid working on stale data when governor has not updated it for a long time
-- in devfreq cooling added backward compatibility frequency table for drivers
-  which did not provide EM
-- added Steven's Reviewed-by to trace code in thermal
-- added another CPUFreq driver which needs to be updated to the new API
+Thanks.
 
-The v1 can be found here [1].
-
-Regards,
-Lukasz Luba
-
-[1] https://lkml.org/lkml/2020/1/16/619
-[2] https://lkml.org/lkml/2020/2/6/377
-[3] https://lkml.org/lkml/2020/2/21/1910
-[4] https://lkml.org/lkml/2020/3/9/471
-[5] https://lkml.org/lkml/2020/3/18/351
-
-Lukasz Luba (10):
-  PM / EM: change naming convention from 'capacity' to 'performance'
-  PM / EM: introduce em_dev_register_perf_domain function
-  PM / EM: update callback structure and add device pointer
-  PM / EM: add support for other devices than CPUs in Energy Model
-  PM / EM: remove em_register_perf_domain
-  PM / EM: change name of em_pd_energy to em_cpu_energy
-  Documentation: power: update Energy Model description
-  OPP: refactor dev_pm_opp_of_register_em() and update related drivers
-  thermal: devfreq_cooling: Refactor code and switch to use Energy Model
-  drm/panfrost: Register devfreq cooling and attempt to add Energy Model
-
- Documentation/power/energy-model.rst        | 135 +++---
- drivers/cpufreq/cpufreq-dt.c                |   2 +-
- drivers/cpufreq/imx6q-cpufreq.c             |   2 +-
- drivers/cpufreq/mediatek-cpufreq.c          |   2 +-
- drivers/cpufreq/omap-cpufreq.c              |   2 +-
- drivers/cpufreq/qcom-cpufreq-hw.c           |   2 +-
- drivers/cpufreq/scmi-cpufreq.c              |  11 +-
- drivers/cpufreq/scpi-cpufreq.c              |   2 +-
- drivers/cpufreq/vexpress-spc-cpufreq.c      |   2 +-
- drivers/gpu/drm/panfrost/panfrost_devfreq.c |   2 +-
- drivers/opp/of.c                            |  76 ++--
- drivers/thermal/cpufreq_cooling.c           |  12 +-
- drivers/thermal/devfreq_cooling.c           | 474 +++++++++----------
- include/linux/devfreq_cooling.h             |  39 +-
- include/linux/energy_model.h                | 152 ++++---
- include/linux/pm_opp.h                      |  15 +-
- include/trace/events/thermal.h              |  19 +-
- kernel/power/energy_model.c                 | 477 ++++++++++++++++----
- kernel/sched/fair.c                         |   2 +-
- kernel/sched/topology.c                     |  20 +-
- 20 files changed, 918 insertions(+), 530 deletions(-)
-
--- 
-2.17.1
+> ---
+> 
+> v2:
+>   - Add new 34k-bugs32.c
+>   - Rename check_errata() to check_errata32()
+>   - Add CONFIG_CPU_34K_BUGS32
+>   - Modify commit message
+> 
+>  arch/mips/Kconfig             |  4 ++++
+>  arch/mips/include/asm/bugs.h  |  4 +++-
+>  arch/mips/kernel/34k-bugs32.c | 29 +++++++++++++++++++++++++++++
+>  arch/mips/kernel/Makefile     |  1 +
+>  arch/mips/kernel/cpu-probe.c  | 25 -------------------------
+>  5 files changed, 37 insertions(+), 26 deletions(-)
+>  create mode 100644 arch/mips/kernel/34k-bugs32.c
+> 
+> diff --git a/arch/mips/Kconfig b/arch/mips/Kconfig
+> index a1f973c..d95dc18 100644
+> --- a/arch/mips/Kconfig
+> +++ b/arch/mips/Kconfig
+> @@ -2619,6 +2619,10 @@ config CPU_R4X00_BUGS64
+>  	bool
+>  	default y if SYS_HAS_CPU_R4X00 && 64BIT && (TARGET_ISA_REV <
+> 1) 
+> +config CPU_34K_BUGS32
+> +	bool
+> +	default y if CPU_MIPS32_R2
+> +
+>  config MIPS_ASID_SHIFT
+>  	int
+>  	default 6 if CPU_R3000 || CPU_TX39XX
+> diff --git a/arch/mips/include/asm/bugs.h
+> b/arch/mips/include/asm/bugs.h index d72dc6e..bbf843a 100644
+> --- a/arch/mips/include/asm/bugs.h
+> +++ b/arch/mips/include/asm/bugs.h
+> @@ -35,7 +35,9 @@ static inline void check_bugs(void)
+>  	unsigned int cpu = smp_processor_id();
+>  
+>  	cpu_data[cpu].udelay_val = loops_per_jiffy;
+> -	check_bugs32();
+> +
+> +	if (IS_ENABLED(CONFIG_CPU_34K_BUGS32))
+> +		check_bugs32();
+>  
+>  	if (IS_ENABLED(CONFIG_CPU_R4X00_BUGS64))
+>  		check_bugs64();
+> diff --git a/arch/mips/kernel/34k-bugs32.c
+> b/arch/mips/kernel/34k-bugs32.c new file mode 100644
+> index 0000000..dc3ac01
+> --- /dev/null
+> +++ b/arch/mips/kernel/34k-bugs32.c
+> @@ -0,0 +1,29 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +#include <asm/cpu.h>
+> +#include <asm/cpu-info.h>
+> +#include <asm/cpu-type.h>
+> +#include <asm/bugs.h>
+> +
+> +static inline void check_errata32(void)
+> +{
+> +	struct cpuinfo_mips *c = &current_cpu_data;
+> +
+> +	switch (current_cpu_type()) {
+> +	case CPU_34K:
+> +		/*
+> +		 * Erratum "RPS May Cause Incorrect Instruction
+> Execution"
+> +		 * This code only handles VPE0, any SMP/RTOS code
+> +		 * making use of VPE1 will be responsable for that
+> VPE.
+> +		 */
+> +		if ((c->processor_id & PRID_REV_MASK) <=
+> PRID_REV_34K_V1_0_2)
+> +			write_c0_config7(read_c0_config7() |
+> MIPS_CONF7_RPS);
+> +		break;
+> +	default:
+> +		break;
+> +	}
+> +}
+> +
+> +void __init check_bugs32(void)
+> +{
+> +	check_errata32();
+> +}
+> diff --git a/arch/mips/kernel/Makefile b/arch/mips/kernel/Makefile
+> index d6e97df..c2fd191 100644
+> --- a/arch/mips/kernel/Makefile
+> +++ b/arch/mips/kernel/Makefile
+> @@ -81,6 +81,7 @@ obj-$(CONFIG_PROC_FS)		+= proc.o
+>  obj-$(CONFIG_MAGIC_SYSRQ)	+= sysrq.o
+>  
+>  obj-$(CONFIG_CPU_R4X00_BUGS64)	+= r4k-bugs64.o
+> +obj-$(CONFIG_CPU_34K_BUGS32)	+= 34k-bugs32.o
+>  
+>  obj-$(CONFIG_I8253)		+= i8253.o
+>  
+> diff --git a/arch/mips/kernel/cpu-probe.c
+> b/arch/mips/kernel/cpu-probe.c index f21a230..7179787 100644
+> --- a/arch/mips/kernel/cpu-probe.c
+> +++ b/arch/mips/kernel/cpu-probe.c
+> @@ -14,7 +14,6 @@
+>  #include <linux/stddef.h>
+>  #include <linux/export.h>
+>  
+> -#include <asm/bugs.h>
+>  #include <asm/cpu.h>
+>  #include <asm/cpu-features.h>
+>  #include <asm/cpu-type.h>
+> @@ -461,30 +460,6 @@ static inline void cpu_set_mt_per_tc_perf(struct
+> cpuinfo_mips *c) c->options |= MIPS_CPU_MT_PER_TC_PERF_COUNTERS;
+>  }
+>  
+> -static inline void check_errata(void)
+> -{
+> -	struct cpuinfo_mips *c = &current_cpu_data;
+> -
+> -	switch (current_cpu_type()) {
+> -	case CPU_34K:
+> -		/*
+> -		 * Erratum "RPS May Cause Incorrect Instruction
+> Execution"
+> -		 * This code only handles VPE0, any SMP/RTOS code
+> -		 * making use of VPE1 will be responsable for that
+> VPE.
+> -		 */
+> -		if ((c->processor_id & PRID_REV_MASK) <=
+> PRID_REV_34K_V1_0_2)
+> -			write_c0_config7(read_c0_config7() |
+> MIPS_CONF7_RPS);
+> -		break;
+> -	default:
+> -		break;
+> -	}
+> -}
+> -
+> -void __init check_bugs32(void)
+> -{
+> -	check_errata();
+> -}
+> -
+>  /*
+>   * Probe whether cpu has config register by trying to play with
+>   * alternate cache bit and see whether it matters.
 
