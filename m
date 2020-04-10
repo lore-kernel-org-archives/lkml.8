@@ -2,201 +2,217 @@ Return-Path: <SRS0=VV4q=52=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7593BC2BB1D
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 03:21:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AC56C2D0EC
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 03:22:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 56D0320769
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 03:21:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9BB0A20769
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 03:22:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="mT+9dbCE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726659AbgDJDVQ (ORCPT
+        id S1726689AbgDJDWd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Apr 2020 23:21:16 -0400
-Received: from mail.loongson.cn ([114.242.206.163]:34348 "EHLO loongson.cn"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726082AbgDJDVQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Apr 2020 23:21:16 -0400
-Received: from linux.localdomain (unknown [113.200.148.30])
-        by mail.loongson.cn (Coremail) with SMTP id AQAAf9Dxz2kd5o9etf8lAA--.35S2;
-        Fri, 10 Apr 2020 11:21:02 +0800 (CST)
-From:   Tiezhu Yang <yangtiezhu@loongson.cn>
-To:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-Cc:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Xuefeng Li <lixuefeng@loongson.cn>
-Subject: [PATCH v2] MIPS: Limit check_bugs32() to affected platform
-Date:   Fri, 10 Apr 2020 11:20:59 +0800
-Message-Id: <1586488859-18715-1-git-send-email-yangtiezhu@loongson.cn>
-X-Mailer: git-send-email 2.1.0
-X-CM-TRANSID: AQAAf9Dxz2kd5o9etf8lAA--.35S2
-X-Coremail-Antispam: 1UD129KBjvJXoWxJw4fGF13uF47ZFWxGF4kJFb_yoWrCryxpF
-        4qyan5Wr4DWFy7tFySyrykCrWaq34kWr4a9r12ga4UZ3WavFn8WFnaqr1fJryUAFZIga48
-        Wa4Sqr13tr4IyaUanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-        9KBjDU0xBIdaVrnRJUUUyC14x267AKxVWUJVW8JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-        rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-        1l84ACjcxK6xIIjxv20xvE14v26ryj6F1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26F4j
-        6r4UJwA2z4x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87Iv6xkF7I0E14v26F
-        4UJVW0owAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv
-        7VC0I7IYx2IY67AKxVWUGVWUXwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r
-        1j6r4UM4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwCF04k20xvY0x0E
-        wIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E74
-        80Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIxkGc2Ij64vIr41lIxAIcVC0
-        I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04
-        k26cxKx2IYs7xG6Fyj6rWUJwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF
-        7I0E14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x0JUdEfOUUUUU=
-X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
+        Thu, 9 Apr 2020 23:22:33 -0400
+Received: from mailgw02.mediatek.com ([1.203.163.81]:53538 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726598AbgDJDWc (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Apr 2020 23:22:32 -0400
+X-UUID: 58031c72e6e64991b222db4fdd3197fa-20200410
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:Content-Type:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=8OzjROGkHfg1CooU6NBX4B+qS/5k+TWJfoCWP6Iz6tc=;
+        b=mT+9dbCEciYUnrQn2Ayc2mon+XhMNQJxbGhGiOcTSVTI4aXWUDhuVY6Md84XsuAx76Zfhx4mD5VLNYxKtF9bT/47isqWsRXdbA+gqDLCym9a092VZfWveUisXgH3DVhAkAw7XNzfN3RH2t0VrURbAjF/EmAD6ovdzRnKHhtrX7k=;
+X-UUID: 58031c72e6e64991b222db4fdd3197fa-20200410
+Received: from mtkcas34.mediatek.inc [(172.27.4.253)] by mailgw02.mediatek.com
+        (envelope-from <jitao.shi@mediatek.com>)
+        (mailgw01.mediatek.com ESMTP with TLS)
+        with ESMTP id 279052769; Fri, 10 Apr 2020 11:20:04 +0800
+Received: from MTKCAS36.mediatek.inc (172.27.4.186) by MTKMBS33DR.mediatek.inc
+ (172.27.6.106) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Fri, 10 Apr
+ 2020 11:20:03 +0800
+Received: from mszsdclx1018.gcn.mediatek.inc (10.16.6.18) by
+ MTKCAS36.mediatek.inc (172.27.4.170) with Microsoft SMTP Server id
+ 15.0.1497.2 via Frontend Transport; Fri, 10 Apr 2020 11:19:58 +0800
+From:   Jitao Shi <jitao.shi@mediatek.com>
+To:     Thierry Reding <thierry.reding@gmail.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>
+CC:     <linux-pwm@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <srv_heupstream@mediatek.com>,
+        <yingjoe.chen@mediatek.com>, <eddie.huang@mediatek.com>,
+        <cawa.cheng@mediatek.com>, <bibby.hsieh@mediatek.com>,
+        <ck.hu@mediatek.com>, <stonea168@163.com>,
+        <huijuan.xie@mediatek.com>, Jitao Shi <jitao.shi@mediatek.com>
+Subject: [PATCH 1/1] pwm: mtk_disp: implement .apply()
+Date:   Fri, 10 Apr 2020 11:19:55 +0800
+Message-ID: <20200410031955.111392-1-jitao.shi@mediatek.com>
+X-Mailer: git-send-email 2.21.0
+MIME-Version: 1.0
+Content-Type: text/plain
+X-TM-SNTS-SMTP: 1D83F094F6E15C6AE36EBCFB8D0EB957F322BB0E739695B42E2692AAB36440532000:8
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In the current code, check_bugs32() only handles MIPS32 CPU type CPU_34K,
-it is better to build and call it on the affected platform.
-
-Move check_bugs32() to the new added 34k-bugs32.c to indicate the fact that
-the code is specific to the 34k CPU, and also add CONFIG_CPU_34K_BUGS32 to
-control whether or not check the bugs.
-
-Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
----
-
-v2:
-  - Add new 34k-bugs32.c
-  - Rename check_errata() to check_errata32()
-  - Add CONFIG_CPU_34K_BUGS32
-  - Modify commit message
-
- arch/mips/Kconfig             |  4 ++++
- arch/mips/include/asm/bugs.h  |  4 +++-
- arch/mips/kernel/34k-bugs32.c | 29 +++++++++++++++++++++++++++++
- arch/mips/kernel/Makefile     |  1 +
- arch/mips/kernel/cpu-probe.c  | 25 -------------------------
- 5 files changed, 37 insertions(+), 26 deletions(-)
- create mode 100644 arch/mips/kernel/34k-bugs32.c
-
-diff --git a/arch/mips/Kconfig b/arch/mips/Kconfig
-index a1f973c..d95dc18 100644
---- a/arch/mips/Kconfig
-+++ b/arch/mips/Kconfig
-@@ -2619,6 +2619,10 @@ config CPU_R4X00_BUGS64
- 	bool
- 	default y if SYS_HAS_CPU_R4X00 && 64BIT && (TARGET_ISA_REV < 1)
- 
-+config CPU_34K_BUGS32
-+	bool
-+	default y if CPU_MIPS32_R2
-+
- config MIPS_ASID_SHIFT
- 	int
- 	default 6 if CPU_R3000 || CPU_TX39XX
-diff --git a/arch/mips/include/asm/bugs.h b/arch/mips/include/asm/bugs.h
-index d72dc6e..bbf843a 100644
---- a/arch/mips/include/asm/bugs.h
-+++ b/arch/mips/include/asm/bugs.h
-@@ -35,7 +35,9 @@ static inline void check_bugs(void)
- 	unsigned int cpu = smp_processor_id();
- 
- 	cpu_data[cpu].udelay_val = loops_per_jiffy;
--	check_bugs32();
-+
-+	if (IS_ENABLED(CONFIG_CPU_34K_BUGS32))
-+		check_bugs32();
- 
- 	if (IS_ENABLED(CONFIG_CPU_R4X00_BUGS64))
- 		check_bugs64();
-diff --git a/arch/mips/kernel/34k-bugs32.c b/arch/mips/kernel/34k-bugs32.c
-new file mode 100644
-index 0000000..dc3ac01
---- /dev/null
-+++ b/arch/mips/kernel/34k-bugs32.c
-@@ -0,0 +1,29 @@
-+// SPDX-License-Identifier: GPL-2.0
-+#include <asm/cpu.h>
-+#include <asm/cpu-info.h>
-+#include <asm/cpu-type.h>
-+#include <asm/bugs.h>
-+
-+static inline void check_errata32(void)
-+{
-+	struct cpuinfo_mips *c = &current_cpu_data;
-+
-+	switch (current_cpu_type()) {
-+	case CPU_34K:
-+		/*
-+		 * Erratum "RPS May Cause Incorrect Instruction Execution"
-+		 * This code only handles VPE0, any SMP/RTOS code
-+		 * making use of VPE1 will be responsable for that VPE.
-+		 */
-+		if ((c->processor_id & PRID_REV_MASK) <= PRID_REV_34K_V1_0_2)
-+			write_c0_config7(read_c0_config7() | MIPS_CONF7_RPS);
-+		break;
-+	default:
-+		break;
-+	}
-+}
-+
-+void __init check_bugs32(void)
-+{
-+	check_errata32();
-+}
-diff --git a/arch/mips/kernel/Makefile b/arch/mips/kernel/Makefile
-index d6e97df..c2fd191 100644
---- a/arch/mips/kernel/Makefile
-+++ b/arch/mips/kernel/Makefile
-@@ -81,6 +81,7 @@ obj-$(CONFIG_PROC_FS)		+= proc.o
- obj-$(CONFIG_MAGIC_SYSRQ)	+= sysrq.o
- 
- obj-$(CONFIG_CPU_R4X00_BUGS64)	+= r4k-bugs64.o
-+obj-$(CONFIG_CPU_34K_BUGS32)	+= 34k-bugs32.o
- 
- obj-$(CONFIG_I8253)		+= i8253.o
- 
-diff --git a/arch/mips/kernel/cpu-probe.c b/arch/mips/kernel/cpu-probe.c
-index f21a230..7179787 100644
---- a/arch/mips/kernel/cpu-probe.c
-+++ b/arch/mips/kernel/cpu-probe.c
-@@ -14,7 +14,6 @@
- #include <linux/stddef.h>
- #include <linux/export.h>
- 
--#include <asm/bugs.h>
- #include <asm/cpu.h>
- #include <asm/cpu-features.h>
- #include <asm/cpu-type.h>
-@@ -461,30 +460,6 @@ static inline void cpu_set_mt_per_tc_perf(struct cpuinfo_mips *c)
- 		c->options |= MIPS_CPU_MT_PER_TC_PERF_COUNTERS;
- }
- 
--static inline void check_errata(void)
--{
--	struct cpuinfo_mips *c = &current_cpu_data;
--
--	switch (current_cpu_type()) {
--	case CPU_34K:
--		/*
--		 * Erratum "RPS May Cause Incorrect Instruction Execution"
--		 * This code only handles VPE0, any SMP/RTOS code
--		 * making use of VPE1 will be responsable for that VPE.
--		 */
--		if ((c->processor_id & PRID_REV_MASK) <= PRID_REV_34K_V1_0_2)
--			write_c0_config7(read_c0_config7() | MIPS_CONF7_RPS);
--		break;
--	default:
--		break;
--	}
--}
--
--void __init check_bugs32(void)
--{
--	check_errata();
--}
--
- /*
-  * Probe whether cpu has config register by trying to play with
-  * alternate cache bit and see whether it matters.
--- 
-2.1.0
+aW1wbGVtZW50IHRoZSBhcHBseSgpIGZvciBwd20uDQoNCkZpeCB0aGUgY2xvY2sgY2xrX3ByZXBh
+cmVfZW5hYmxlIGFuZCBjbGtfZGlzYWJsZV91bnByZXBhcmUgbWlzbWF0Y2gsDQpzd2l0Y2ggdGhl
+IGRyaXZlciB0byBzdXBwb3J0IHRoZSAtPmFwcGx5KCkgbWV0aG9kLg0KDQpTaWduZWQtb2ZmLWJ5
+OiBKaXRhbyBTaGkgPGppdGFvLnNoaUBtZWRpYXRlay5jb20+DQotLS0NCiBkcml2ZXJzL3B3bS9w
+d20tbXRrLWRpc3AuYyB8IDE3OSArKysrKysrKysrKysrKysrKysrKystLS0tLS0tLS0tLS0tLS0t
+DQogMSBmaWxlIGNoYW5nZWQsIDEwNCBpbnNlcnRpb25zKCspLCA3NSBkZWxldGlvbnMoLSkNCg0K
+ZGlmZiAtLWdpdCBhL2RyaXZlcnMvcHdtL3B3bS1tdGstZGlzcC5jIGIvZHJpdmVycy9wd20vcHdt
+LW10ay1kaXNwLmMNCmluZGV4IDgzYjhiZTAyMDliNy4uYzFiMGVkMjdmMjc4IDEwMDY0NA0KLS0t
+IGEvZHJpdmVycy9wd20vcHdtLW10ay1kaXNwLmMNCisrKyBiL2RyaXZlcnMvcHdtL3B3bS1tdGst
+ZGlzcC5jDQpAQCAtMjAsNiArMjAsNyBAQA0KICNkZWZpbmUgUFdNX0NMS0RJVl9TSElGVAkxNg0K
+ICNkZWZpbmUgUFdNX0NMS0RJVl9NQVgJCTB4M2ZmDQogI2RlZmluZSBQV01fQ0xLRElWX01BU0sJ
+CShQV01fQ0xLRElWX01BWCA8PCBQV01fQ0xLRElWX1NISUZUKQ0KKyNkZWZpbmUgUFdNX1BPTEFS
+SVRZCUJJVCgyKQ0KIA0KICNkZWZpbmUgUFdNX1BFUklPRF9CSVRfV0lEVEgJMTINCiAjZGVmaW5l
+IFBXTV9QRVJJT0RfTUFTSwkJKCgxIDw8IFBXTV9QRVJJT0RfQklUX1dJRFRIKSAtIDEpDQpAQCAt
+NDcsNiArNDgsNyBAQCBzdHJ1Y3QgbXRrX2Rpc3BfcHdtIHsNCiAJc3RydWN0IGNsayAqY2xrX21h
+aW47DQogCXN0cnVjdCBjbGsgKmNsa19tbTsNCiAJdm9pZCBfX2lvbWVtICpiYXNlOw0KKwlib29s
+IGVuYWJsZWQ7DQogfTsNCiANCiBzdGF0aWMgaW5saW5lIHN0cnVjdCBtdGtfZGlzcF9wd20gKnRv
+X210a19kaXNwX3B3bShzdHJ1Y3QgcHdtX2NoaXAgKmNoaXApDQpAQCAtNjYsMTEgKzY4LDExIEBA
+IHN0YXRpYyB2b2lkIG10a19kaXNwX3B3bV91cGRhdGVfYml0cyhzdHJ1Y3QgbXRrX2Rpc3BfcHdt
+ICptZHAsIHUzMiBvZmZzZXQsDQogCXdyaXRlbCh2YWx1ZSwgYWRkcmVzcyk7DQogfQ0KIA0KLXN0
+YXRpYyBpbnQgbXRrX2Rpc3BfcHdtX2NvbmZpZyhzdHJ1Y3QgcHdtX2NoaXAgKmNoaXAsIHN0cnVj
+dCBwd21fZGV2aWNlICpwd20sDQotCQkJICAgICAgIGludCBkdXR5X25zLCBpbnQgcGVyaW9kX25z
+KQ0KK3N0YXRpYyBpbnQgbXRrX2Rpc3BfcHdtX2VuYWJsZShzdHJ1Y3QgcHdtX2NoaXAgKmNoaXAs
+DQorCQkJICAgICAgIGNvbnN0IHN0cnVjdCBwd21fc3RhdGUgKnN0YXRlKQ0KIHsNCiAJc3RydWN0
+IG10a19kaXNwX3B3bSAqbWRwID0gdG9fbXRrX2Rpc3BfcHdtKGNoaXApOw0KLQl1MzIgY2xrX2Rp
+diwgcGVyaW9kLCBoaWdoX3dpZHRoLCB2YWx1ZTsNCisJdTMyIGNsa19kaXYsIHBlcmlvZCwgaGln
+aF93aWR0aCwgdmFsdWUsIHBvbGFyaXR5Ow0KIAl1NjQgZGl2LCByYXRlOw0KIAlpbnQgZXJyOw0K
+IA0KQEAgLTg0LDMzICs4Niw0NyBAQCBzdGF0aWMgaW50IG10a19kaXNwX3B3bV9jb25maWcoc3Ry
+dWN0IHB3bV9jaGlwICpjaGlwLCBzdHJ1Y3QgcHdtX2RldmljZSAqcHdtLA0KIAkgKiBwZXJpb2Qg
+PSAoUFdNX0NMS19SQVRFICogcGVyaW9kX25zKSAvICgxMF45ICogKGNsa19kaXYgKyAxKSkgLSAx
+DQogCSAqIGhpZ2hfd2lkdGggPSAoUFdNX0NMS19SQVRFICogZHV0eV9ucykgLyAoMTBeOSAqIChj
+bGtfZGl2ICsgMSkpDQogCSAqLw0KKwlpZiAoIW1kcC0+ZW5hYmxlZCkgew0KKwkJZXJyID0gY2xr
+X3ByZXBhcmVfZW5hYmxlKG1kcC0+Y2xrX21haW4pOw0KKwkJaWYgKGVyciA8IDApIHsNCisJCQlk
+ZXZfZXJyKGNoaXAtPmRldiwgIkNhbid0IGVuYWJsZSBtZHAtPmNsa19tYWluOiAlZFxuIiwNCisJ
+CQkJZXJyKTsNCisJCQlyZXR1cm4gZXJyOw0KKwkJfQ0KKwkJZXJyID0gY2xrX3ByZXBhcmVfZW5h
+YmxlKG1kcC0+Y2xrX21tKTsNCisJCWlmIChlcnIgPCAwKSB7DQorCQkJZGV2X2VycihjaGlwLT5k
+ZXYsICJDYW4ndCBlbmFibGUgbWRwLT5jbGtfbW06ICVkXG4iLA0KKwkJCQllcnIpOw0KKwkJCWNs
+a19kaXNhYmxlX3VucHJlcGFyZShtZHAtPmNsa19tYWluKTsNCisJCQlyZXR1cm4gZXJyOw0KKwkJ
+fQ0KKwl9DQogCXJhdGUgPSBjbGtfZ2V0X3JhdGUobWRwLT5jbGtfbWFpbik7DQotCWNsa19kaXYg
+PSBkaXZfdTY0KHJhdGUgKiBwZXJpb2RfbnMsIE5TRUNfUEVSX1NFQykgPj4NCisJY2xrX2RpdiA9
+IGRpdl91NjQocmF0ZSAqIHN0YXRlLT5wZXJpb2QsIE5TRUNfUEVSX1NFQykgPj4NCiAJCQkgIFBX
+TV9QRVJJT0RfQklUX1dJRFRIOw0KLQlpZiAoY2xrX2RpdiA+IFBXTV9DTEtESVZfTUFYKQ0KKwlp
+ZiAoY2xrX2RpdiA+IFBXTV9DTEtESVZfTUFYKSB7DQorCQlkZXZfZXJyKGNoaXAtPmRldiwgImNs
+b2NrIHJhdGUgaXMgdG9vIGhpZ2g6IHJhdGUgPSAlZCBIelxuIiwNCisJCQlyYXRlKTsNCisJCWNs
+a19kaXNhYmxlX3VucHJlcGFyZShtZHAtPmNsa19tbSk7DQorCQljbGtfZGlzYWJsZV91bnByZXBh
+cmUobWRwLT5jbGtfbWFpbik7DQogCQlyZXR1cm4gLUVJTlZBTDsNCi0NCisJfQ0KIAlkaXYgPSBO
+U0VDX1BFUl9TRUMgKiAoY2xrX2RpdiArIDEpOw0KLQlwZXJpb2QgPSBkaXY2NF91NjQocmF0ZSAq
+IHBlcmlvZF9ucywgZGl2KTsNCisJcGVyaW9kID0gZGl2NjRfdTY0KHJhdGUgKiBzdGF0ZS0+cGVy
+aW9kLCBkaXYpOw0KIAlpZiAocGVyaW9kID4gMCkNCiAJCXBlcmlvZC0tOw0KIA0KLQloaWdoX3dp
+ZHRoID0gZGl2NjRfdTY0KHJhdGUgKiBkdXR5X25zLCBkaXYpOw0KKwloaWdoX3dpZHRoID0gZGl2
+NjRfdTY0KHJhdGUgKiBzdGF0ZS0+ZHV0eV9jeWNsZSwgZGl2KTsNCiAJdmFsdWUgPSBwZXJpb2Qg
+fCAoaGlnaF93aWR0aCA8PCBQV01fSElHSF9XSURUSF9TSElGVCk7DQotDQotCWVyciA9IGNsa19l
+bmFibGUobWRwLT5jbGtfbWFpbik7DQotCWlmIChlcnIgPCAwKQ0KLQkJcmV0dXJuIGVycjsNCi0N
+Ci0JZXJyID0gY2xrX2VuYWJsZShtZHAtPmNsa19tbSk7DQotCWlmIChlcnIgPCAwKSB7DQotCQlj
+bGtfZGlzYWJsZShtZHAtPmNsa19tYWluKTsNCi0JCXJldHVybiBlcnI7DQotCX0NCisJcG9sYXJp
+dHkgPSAwOw0KKwlpZiAoc3RhdGUtPnBvbGFyaXR5ID09IFBXTV9QT0xBUklUWV9JTlZFUlNFRCkN
+CisJCXBvbGFyaXR5ID0gUFdNX1BPTEFSSVRZOw0KIA0KIAltdGtfZGlzcF9wd21fdXBkYXRlX2Jp
+dHMobWRwLCBtZHAtPmRhdGEtPmNvbjAsDQogCQkJCSBQV01fQ0xLRElWX01BU0ssDQogCQkJCSBj
+bGtfZGl2IDw8IFBXTV9DTEtESVZfU0hJRlQpOw0KKwltdGtfZGlzcF9wd21fdXBkYXRlX2JpdHMo
+bWRwLCBtZHAtPmRhdGEtPmNvbjAsDQorCQkJCSBQV01fUE9MQVJJVFksIHBvbGFyaXR5KTsNCiAJ
+bXRrX2Rpc3BfcHdtX3VwZGF0ZV9iaXRzKG1kcCwgbWRwLT5kYXRhLT5jb24xLA0KIAkJCQkgUFdN
+X1BFUklPRF9NQVNLIHwgUFdNX0hJR0hfV0lEVEhfTUFTSywNCiAJCQkJIHZhbHVlKTsNCkBAIC0x
+MjIsNTAgKzEzOCw5NSBAQCBzdGF0aWMgaW50IG10a19kaXNwX3B3bV9jb25maWcoc3RydWN0IHB3
+bV9jaGlwICpjaGlwLCBzdHJ1Y3QgcHdtX2RldmljZSAqcHdtLA0KIAkJbXRrX2Rpc3BfcHdtX3Vw
+ZGF0ZV9iaXRzKG1kcCwgbWRwLT5kYXRhLT5jb21taXQsDQogCQkJCQkgbWRwLT5kYXRhLT5jb21t
+aXRfbWFzaywNCiAJCQkJCSAweDApOw0KKwl9IGVsc2Ugew0KKwkJbXRrX2Rpc3BfcHdtX3VwZGF0
+ZV9iaXRzKG1kcCwgbWRwLT5kYXRhLT5ibHNfZGVidWcsDQorCQkJCQkgbWRwLT5kYXRhLT5ibHNf
+ZGVidWdfbWFzaywNCisJCQkJCSBtZHAtPmRhdGEtPmJsc19kZWJ1Z19tYXNrKTsNCisJCW10a19k
+aXNwX3B3bV91cGRhdGVfYml0cyhtZHAsIG1kcC0+ZGF0YS0+Y29uMCwNCisJCQkJCSBtZHAtPmRh
+dGEtPmNvbjBfc2VsLA0KKwkJCQkJIG1kcC0+ZGF0YS0+Y29uMF9zZWwpOw0KIAl9DQogDQotCWNs
+a19kaXNhYmxlKG1kcC0+Y2xrX21tKTsNCi0JY2xrX2Rpc2FibGUobWRwLT5jbGtfbWFpbik7DQot
+DQorCW10a19kaXNwX3B3bV91cGRhdGVfYml0cyhtZHAsIERJU1BfUFdNX0VOLCBtZHAtPmRhdGEt
+PmVuYWJsZV9tYXNrLA0KKwkJCQkgbWRwLT5kYXRhLT5lbmFibGVfbWFzayk7DQorCW1kcC0+ZW5h
+YmxlZCA9IHRydWU7DQogCXJldHVybiAwOw0KIH0NCiANCi1zdGF0aWMgaW50IG10a19kaXNwX3B3
+bV9lbmFibGUoc3RydWN0IHB3bV9jaGlwICpjaGlwLCBzdHJ1Y3QgcHdtX2RldmljZSAqcHdtKQ0K
+K3N0YXRpYyBpbnQgbXRrX2Rpc3BfcHdtX2Rpc2FibGUoc3RydWN0IHB3bV9jaGlwICpjaGlwLA0K
+KwkJCQljb25zdCBzdHJ1Y3QgcHdtX3N0YXRlICpzdGF0ZSkNCiB7DQogCXN0cnVjdCBtdGtfZGlz
+cF9wd20gKm1kcCA9IHRvX210a19kaXNwX3B3bShjaGlwKTsNCi0JaW50IGVycjsNCi0NCi0JZXJy
+ID0gY2xrX2VuYWJsZShtZHAtPmNsa19tYWluKTsNCi0JaWYgKGVyciA8IDApDQotCQlyZXR1cm4g
+ZXJyOw0KIA0KLQllcnIgPSBjbGtfZW5hYmxlKG1kcC0+Y2xrX21tKTsNCi0JaWYgKGVyciA8IDAp
+IHsNCi0JCWNsa19kaXNhYmxlKG1kcC0+Y2xrX21haW4pOw0KLQkJcmV0dXJuIGVycjsNCisJbXRr
+X2Rpc3BfcHdtX3VwZGF0ZV9iaXRzKG1kcCwgRElTUF9QV01fRU4sIG1kcC0+ZGF0YS0+ZW5hYmxl
+X21hc2ssDQorCQkJCSAweDApOw0KKwlpZiAobWRwLT5lbmFibGVkKSB7DQorCQljbGtfZGlzYWJs
+ZV91bnByZXBhcmUobWRwLT5jbGtfbW0pOw0KKwkJY2xrX2Rpc2FibGVfdW5wcmVwYXJlKG1kcC0+
+Y2xrX21haW4pOw0KIAl9DQogDQotCW10a19kaXNwX3B3bV91cGRhdGVfYml0cyhtZHAsIERJU1Bf
+UFdNX0VOLCBtZHAtPmRhdGEtPmVuYWJsZV9tYXNrLA0KLQkJCQkgbWRwLT5kYXRhLT5lbmFibGVf
+bWFzayk7DQorCW1kcC0+ZW5hYmxlZCA9IGZhbHNlOw0KIA0KIAlyZXR1cm4gMDsNCiB9DQogDQot
+c3RhdGljIHZvaWQgbXRrX2Rpc3BfcHdtX2Rpc2FibGUoc3RydWN0IHB3bV9jaGlwICpjaGlwLCBz
+dHJ1Y3QgcHdtX2RldmljZSAqcHdtKQ0KK3N0YXRpYyBpbnQgbXRrX2Rpc3BfcHdtX2FwcGx5KHN0
+cnVjdCBwd21fY2hpcCAqY2hpcCwgc3RydWN0IHB3bV9kZXZpY2UgKnB3bSwNCisJCQkgICAgICBj
+b25zdCBzdHJ1Y3QgcHdtX3N0YXRlICpzdGF0ZSkNCit7DQorCWlmICghc3RhdGUtPmVuYWJsZWQp
+DQorCQlyZXR1cm4gbXRrX2Rpc3BfcHdtX2Rpc2FibGUoY2hpcCwgc3RhdGUpOw0KKw0KKwlyZXR1
+cm4gbXRrX2Rpc3BfcHdtX2VuYWJsZShjaGlwLCBzdGF0ZSk7DQorfQ0KKw0KK3N0YXRpYyB2b2lk
+IG10a19kaXNwX3B3bV9nZXRfc3RhdGUoc3RydWN0IHB3bV9jaGlwICpjaGlwLA0KKwkJCQkgICBz
+dHJ1Y3QgcHdtX2RldmljZSAqcHdtLA0KKwkJCQkgICBzdHJ1Y3QgcHdtX3N0YXRlICpzdGF0ZSkN
+CiB7DQogCXN0cnVjdCBtdGtfZGlzcF9wd20gKm1kcCA9IHRvX210a19kaXNwX3B3bShjaGlwKTsN
+CisJdTMyIGNsa19kaXYsIHBlcmlvZCwgaGlnaF93aWR0aCwgY29uMCwgY29uMTsNCisJdTY0IHJh
+dGU7DQorCWludCBlcnI7DQogDQotCW10a19kaXNwX3B3bV91cGRhdGVfYml0cyhtZHAsIERJU1Bf
+UFdNX0VOLCBtZHAtPmRhdGEtPmVuYWJsZV9tYXNrLA0KLQkJCQkgMHgwKTsNCisJZXJyID0gY2xr
+X3ByZXBhcmVfZW5hYmxlKG1kcC0+Y2xrX21haW4pOw0KKwlpZiAoZXJyIDwgMCkgew0KKwkJZGV2
+X2VycihjaGlwLT5kZXYsICJDYW4ndCBlbmFibGUgbWRwLT5jbGtfbWFpbjogJWRcbiIsIGVycik7
+DQorCQlyZXR1cm47DQorCX0NCisJZXJyID0gY2xrX3ByZXBhcmVfZW5hYmxlKG1kcC0+Y2xrX21t
+KTsNCisJaWYgKGVyciA8IDApIHsNCisJCWRldl9lcnIoY2hpcC0+ZGV2LCAiQ2FuJ3QgZW5hYmxl
+IG1kcC0+Y2xrX21tOiAlZFxuIiwgZXJyKTsNCisJCWNsa19kaXNhYmxlX3VucHJlcGFyZShtZHAt
+PmNsa19tYWluKTsNCisJCXJldHVybjsNCisJfQ0KKw0KKwlyYXRlID0gY2xrX2dldF9yYXRlKG1k
+cC0+Y2xrX21haW4pOw0KKw0KKwljb24wID0gcmVhZGwobWRwLT5iYXNlICsgbWRwLT5kYXRhLT5j
+b24wKTsNCisJY29uMSA9IHJlYWRsKG1kcC0+YmFzZSArIG1kcC0+ZGF0YS0+Y29uMSk7DQogDQot
+CWNsa19kaXNhYmxlKG1kcC0+Y2xrX21tKTsNCi0JY2xrX2Rpc2FibGUobWRwLT5jbGtfbWFpbik7
+DQorCXN0YXRlLT5wb2xhcml0eSA9IGNvbjAgJiBQV01fUE9MQVJJVFkgPw0KKwkJCSAgUFdNX1BP
+TEFSSVRZX0lOVkVSU0VEIDogUFdNX1BPTEFSSVRZX05PUk1BTDsNCisJc3RhdGUtPmVuYWJsZWQg
+PSAhIShjb24wICYgQklUKDApKTsNCisNCisJY2xrX2RpdiA9IChjb24wICYgUFdNX0NMS0RJVl9N
+QVNLKSA+PiBQV01fQ0xLRElWX1NISUZUOw0KKwlwZXJpb2QgPSBjb24xICYgUFdNX1BFUklPRF9N
+QVNLOw0KKwlzdGF0ZS0+cGVyaW9kID0gZGl2X3U2NChwZXJpb2QgKiAoY2xrX2RpdiArIDEpICog
+TlNFQ19QRVJfU0VDLCByYXRlKTsNCisJaGlnaF93aWR0aCA9IChjb24xICYgUFdNX0hJR0hfV0lE
+VEhfTUFTSykgPj4gUFdNX0hJR0hfV0lEVEhfU0hJRlQ7DQorCXN0YXRlLT5kdXR5X2N5Y2xlID0g
+ZGl2X3U2NChoaWdoX3dpZHRoICogKGNsa19kaXYgKyAxKSAqIE5TRUNfUEVSX1NFQywNCisJCQkJ
+ICAgIHJhdGUpOw0KKw0KKwlpZiAoIXN0YXRlLT5lbmFibGVkKSB7DQorCQljbGtfZGlzYWJsZV91
+bnByZXBhcmUobWRwLT5jbGtfbW0pOw0KKwkJY2xrX2Rpc2FibGVfdW5wcmVwYXJlKG1kcC0+Y2xr
+X21haW4pOw0KKwl9DQorDQorCW1kcC0+ZW5hYmxlZCA9IHN0YXRlLT5lbmFibGVkOw0KIH0NCiAN
+CiBzdGF0aWMgY29uc3Qgc3RydWN0IHB3bV9vcHMgbXRrX2Rpc3BfcHdtX29wcyA9IHsNCi0JLmNv
+bmZpZyA9IG10a19kaXNwX3B3bV9jb25maWcsDQotCS5lbmFibGUgPSBtdGtfZGlzcF9wd21fZW5h
+YmxlLA0KLQkuZGlzYWJsZSA9IG10a19kaXNwX3B3bV9kaXNhYmxlLA0KKwkuYXBwbHkgPSBtdGtf
+ZGlzcF9wd21fYXBwbHksDQorCS5nZXRfc3RhdGUgPSBtdGtfZGlzcF9wd21fZ2V0X3N0YXRlLA0K
+IAkub3duZXIgPSBUSElTX01PRFVMRSwNCiB9Ow0KIA0KQEAgLTE5NCwxNCArMjU1LDYgQEAgc3Rh
+dGljIGludCBtdGtfZGlzcF9wd21fcHJvYmUoc3RydWN0IHBsYXRmb3JtX2RldmljZSAqcGRldikN
+CiAJaWYgKElTX0VSUihtZHAtPmNsa19tbSkpDQogCQlyZXR1cm4gUFRSX0VSUihtZHAtPmNsa19t
+bSk7DQogDQotCXJldCA9IGNsa19wcmVwYXJlKG1kcC0+Y2xrX21haW4pOw0KLQlpZiAocmV0IDwg
+MCkNCi0JCXJldHVybiByZXQ7DQotDQotCXJldCA9IGNsa19wcmVwYXJlKG1kcC0+Y2xrX21tKTsN
+Ci0JaWYgKHJldCA8IDApDQotCQlnb3RvIGRpc2FibGVfY2xrX21haW47DQotDQogCW1kcC0+Y2hp
+cC5kZXYgPSAmcGRldi0+ZGV2Ow0KIAltZHAtPmNoaXAub3BzID0gJm10a19kaXNwX3B3bV9vcHM7
+DQogCW1kcC0+Y2hpcC5iYXNlID0gLTE7DQpAQCAtMjEwLDQzICsyNjMsMTkgQEAgc3RhdGljIGlu
+dCBtdGtfZGlzcF9wd21fcHJvYmUoc3RydWN0IHBsYXRmb3JtX2RldmljZSAqcGRldikNCiAJcmV0
+ID0gcHdtY2hpcF9hZGQoJm1kcC0+Y2hpcCk7DQogCWlmIChyZXQgPCAwKSB7DQogCQlkZXZfZXJy
+KCZwZGV2LT5kZXYsICJwd21jaGlwX2FkZCgpIGZhaWxlZDogJWRcbiIsIHJldCk7DQotCQlnb3Rv
+IGRpc2FibGVfY2xrX21tOw0KKwkJcmV0dXJuIHJldDsNCiAJfQ0KIA0KIAlwbGF0Zm9ybV9zZXRf
+ZHJ2ZGF0YShwZGV2LCBtZHApOw0KIA0KLQkvKg0KLQkgKiBGb3IgTVQyNzAxLCBkaXNhYmxlIGRv
+dWJsZSBidWZmZXIgYmVmb3JlIHdyaXRpbmcgcmVnaXN0ZXINCi0JICogYW5kIHNlbGVjdCBtYW51
+YWwgbW9kZSBhbmQgdXNlIFBXTV9QRVJJT0QvUFdNX0hJR0hfV0lEVEguDQotCSAqLw0KLQlpZiAo
+IW1kcC0+ZGF0YS0+aGFzX2NvbW1pdCkgew0KLQkJbXRrX2Rpc3BfcHdtX3VwZGF0ZV9iaXRzKG1k
+cCwgbWRwLT5kYXRhLT5ibHNfZGVidWcsDQotCQkJCQkgbWRwLT5kYXRhLT5ibHNfZGVidWdfbWFz
+aywNCi0JCQkJCSBtZHAtPmRhdGEtPmJsc19kZWJ1Z19tYXNrKTsNCi0JCW10a19kaXNwX3B3bV91
+cGRhdGVfYml0cyhtZHAsIG1kcC0+ZGF0YS0+Y29uMCwNCi0JCQkJCSBtZHAtPmRhdGEtPmNvbjBf
+c2VsLA0KLQkJCQkJIG1kcC0+ZGF0YS0+Y29uMF9zZWwpOw0KLQl9DQotDQogCXJldHVybiAwOw0K
+LQ0KLWRpc2FibGVfY2xrX21tOg0KLQljbGtfdW5wcmVwYXJlKG1kcC0+Y2xrX21tKTsNCi1kaXNh
+YmxlX2Nsa19tYWluOg0KLQljbGtfdW5wcmVwYXJlKG1kcC0+Y2xrX21haW4pOw0KLQlyZXR1cm4g
+cmV0Ow0KIH0NCiANCiBzdGF0aWMgaW50IG10a19kaXNwX3B3bV9yZW1vdmUoc3RydWN0IHBsYXRm
+b3JtX2RldmljZSAqcGRldikNCiB7DQogCXN0cnVjdCBtdGtfZGlzcF9wd20gKm1kcCA9IHBsYXRm
+b3JtX2dldF9kcnZkYXRhKHBkZXYpOw0KLQlpbnQgcmV0Ow0KLQ0KLQlyZXQgPSBwd21jaGlwX3Jl
+bW92ZSgmbWRwLT5jaGlwKTsNCi0JY2xrX3VucHJlcGFyZShtZHAtPmNsa19tbSk7DQotCWNsa191
+bnByZXBhcmUobWRwLT5jbGtfbWFpbik7DQogDQotCXJldHVybiByZXQ7DQorCXJldHVybiBwd21j
+aGlwX3JlbW92ZSgmbWRwLT5jaGlwKTsNCiB9DQogDQogc3RhdGljIGNvbnN0IHN0cnVjdCBtdGtf
+cHdtX2RhdGEgbXQyNzAxX3B3bV9kYXRhID0gew0KLS0gDQoyLjIxLjANCg==
 
