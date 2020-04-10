@@ -2,115 +2,99 @@ Return-Path: <SRS0=VV4q=52=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA648C2BA2B
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 13:34:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 394E9C2BA2B
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 13:44:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 767AC214DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 13:34:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=silabs.onmicrosoft.com header.i=@silabs.onmicrosoft.com header.b="ZsaMrTm1"
+	by mail.kernel.org (Postfix) with ESMTP id 067052078E
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 13:44:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727417AbgDJNez (ORCPT
+        id S1726595AbgDJNo3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Apr 2020 09:34:55 -0400
-Received: from mail-dm6nam12on2082.outbound.protection.outlook.com ([40.107.243.82]:31903
-        "EHLO NAM12-DM6-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726801AbgDJNdR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Apr 2020 09:33:17 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=WTHjElsALF1Gt0AhXSaoGIaUGY+fiCY0amaedpjphvjxfDirnFyKtelV7eswOAmFREHnQYsr5YFhxNAOFZsCBM18fagXkQY9p4mkw3qbMb29KIDW5ylGyfE64rHoMgmOhH9REqRXe1St9+reAttbZrSKtUWTaPMIY0+tLjkHD9EhdXtuD/JwtxQeHkuV4Cvvc1Vase/rPb+eizcbeuVZa5ecoprQAeerIFwHD+uOr3nn9I36DqHOOR+LTxGNpcy9lJkmLA0QrQ4cGsERYhCZV2a6/sv85nwzRpiJfWNQ97qKstv5hsN0xT3fsAjli6YhWsmjsmubUlwQ6EnLKSQvuw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=gIZUy/h6rYzymHnG1QdL8KvuWbTsGwdnnb/NhWHB+MY=;
- b=EAzjcKlXqnPSEPMQA4rZM6PJvgklml498lVLyMfL3PzfAJgsq71G7lpXN42vcMHgrgqPLWMh57vskawM8nBpr+dae0KnzicS83dHKlsjecTaW0cIC+2IMRWLjdLnrRzDGQ7nixsdlknrbDYGuA4msELxRg1ceXkeAZz3SQ1EyIa+Nn1acivysCPvZgBgUJAimWKtuL271EP/XQRhBLsPNWIbU5J2dCHvAj1A1WoM4vV1ls5RBf7jEtgci06BbeNAHvSHOAbC+ikjWdBd+U2mb3iHQfPZoS2bOMfZsVQoVn8BidOZhAuuscA+qGI7g2FfnSSftraOZv4jlf3qmLs3ow==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=silabs.com; dmarc=pass action=none header.from=silabs.com;
- dkim=pass header.d=silabs.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=silabs.onmicrosoft.com; s=selector2-silabs-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=gIZUy/h6rYzymHnG1QdL8KvuWbTsGwdnnb/NhWHB+MY=;
- b=ZsaMrTm1F05fpJyefqKxmjCE9to8EBCNIGp3BItNJaykdrRCMHr8pzf4dspiAgVqXpAyJiZanl4y41KnjlW7kNCmMVtToUI3KATZaCJjp22MYsiE0tDhikErXRKBKbtOMmHxtJ71pBljuSPbjqS6aAtAsNmNe1Fvi6Tca73vdWg=
-Authentication-Results: spf=none (sender IP is )
- smtp.mailfrom=Jerome.Pouiller@silabs.com; 
-Received: from MN2PR11MB4063.namprd11.prod.outlook.com (2603:10b6:208:13f::22)
- by MN2PR11MB4398.namprd11.prod.outlook.com (2603:10b6:208:18b::31) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2878.20; Fri, 10 Apr
- 2020 13:33:12 +0000
-Received: from MN2PR11MB4063.namprd11.prod.outlook.com
- ([fe80::3d0a:d9ac:3df4:8b1]) by MN2PR11MB4063.namprd11.prod.outlook.com
- ([fe80::3d0a:d9ac:3df4:8b1%6]) with mapi id 15.20.2878.021; Fri, 10 Apr 2020
- 13:33:12 +0000
-From:   Jerome Pouiller <Jerome.Pouiller@silabs.com>
-To:     devel@driverdev.osuosl.org, linux-wireless@vger.kernel.org
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        "David S . Miller" <davem@davemloft.net>,
-        =?UTF-8?q?J=C3=A9r=C3=B4me=20Pouiller?= 
-        <jerome.pouiller@silabs.com>
-Subject: [PATCH 07/19] staging: wfx: remove useless call to wfx_tx_flush()
-Date:   Fri, 10 Apr 2020 15:32:27 +0200
-Message-Id: <20200410133239.438347-8-Jerome.Pouiller@silabs.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200410133239.438347-1-Jerome.Pouiller@silabs.com>
-References: <20200410133239.438347-1-Jerome.Pouiller@silabs.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: base64
-X-ClientProxiedBy: DM5PR15CA0056.namprd15.prod.outlook.com
- (2603:10b6:3:ae::18) To MN2PR11MB4063.namprd11.prod.outlook.com
- (2603:10b6:208:13f::22)
+        Fri, 10 Apr 2020 09:44:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56948 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726009AbgDJNo3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Apr 2020 09:44:29 -0400
+Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id ECC8420679;
+        Fri, 10 Apr 2020 13:44:28 +0000 (UTC)
+Date:   Fri, 10 Apr 2020 09:44:27 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Jason Yan <yanaijie@huawei.com>, Tom Zanussi <zanussi@kernel.org>
+Cc:     <mingo@redhat.com>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] tracing: make some symbols static in tracing_map.c
+Message-ID: <20200410094427.1f1ede4d@gandalf.local.home>
+In-Reply-To: <20200410073312.38855-1-yanaijie@huawei.com>
+References: <20200410073312.38855-1-yanaijie@huawei.com>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from pc-42.silabs.com (2a01:e35:2435:66a0:1265:30ff:fefd:6e7f) by DM5PR15CA0056.namprd15.prod.outlook.com (2603:10b6:3:ae::18) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2900.15 via Frontend Transport; Fri, 10 Apr 2020 13:33:10 +0000
-X-Mailer: git-send-email 2.25.1
-X-Originating-IP: [2a01:e35:2435:66a0:1265:30ff:fefd:6e7f]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: c02af5d3-a0a2-425c-b035-08d7dd53b71e
-X-MS-TrafficTypeDiagnostic: MN2PR11MB4398:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <MN2PR11MB4398D38CA9ABCE1B1DFD174293DE0@MN2PR11MB4398.namprd11.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:169;
-X-Forefront-PRVS: 0369E8196C
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN2PR11MB4063.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10009020)(366004)(346002)(396003)(136003)(39850400004)(376002)(107886003)(81156014)(54906003)(8676002)(86362001)(1076003)(4744005)(6666004)(8936002)(4326008)(52116002)(66574012)(7696005)(316002)(66556008)(66946007)(186003)(478600001)(2906002)(6486002)(2616005)(66476007)(16526019)(5660300002)(36756003);DIR:OUT;SFP:1101;
-Received-SPF: None (protection.outlook.com: silabs.com does not designate
- permitted sender hosts)
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 2nN0t1b3gOWheFtt7aWWG9QQUw72G3p8iKFH39lFEHWBlQ0b7VWhxSotjLzPhUaJokeeq7HDA07/IhFBNwY20d/FmvpzWIw7pEixhjysQrLO2SrKJMYZNGQfwDo+mz2KMzMu80N9A2Oacs3Kl+EFEGgJf+eerKeX6fSVIjvi94u97odJn1yw/EGe8GZcjQa0a2NXx7WsKOKYb4T2UIfEAwX5z25dfrWW/RgR16eyNWgRx/zny3TKs76sM1rm8WjUyaiL0N3+05kmtBDG/Qm+glIpNWwzeuKzXPpWSr6QXxXuG9P1TIVqj8LYo1x2cCd2/ugrPqs4QBwT75erP3QKYzZ8E7fwSDVvakiO4+thGv2ukbxm9yqwPnIn0KdhcASIpkHpk0hoYB4eeHFHAMejt/Peyu2tCcbIZcFNAGaEHOa9HFKoNZjoFsO1y8IT4FtH
-X-MS-Exchange-AntiSpam-MessageData: 6IbbNJoRZpQUaDOUszOkW7jVPdJ220NNGJp/Uh8BeJerbndm2hHqkFSDL3xKQGXwarmc2m1ZDgRlMPoKf2OqvFhgEeoqzgtSz2LwhFzHQ9NrIj49QGfPQjnuO2NzciPvX40ZfeYYt6MGkOqY68ZgIVuRl47EFTrK18MEAZ/BxIE7d3NIBEVrr/HVff1ACkDiQirP3VpAoP6PKXlS2QzsvQ==
-X-OriginatorOrg: silabs.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: c02af5d3-a0a2-425c-b035-08d7dd53b71e
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Apr 2020 13:33:12.3538
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 54dbd822-5231-4b20-944d-6f4abcd541fb
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: Qb/wJvDMCnNregBVOfwizXOCpZS4lHPbsir4Rne4WoUkVFyI5AAn8B487uNPuGZn4q1Kug6hXXpQHNc4EYox6w==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR11MB4398
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-RnJvbTogSsOpcsO0bWUgUG91aWxsZXIgPGplcm9tZS5wb3VpbGxlckBzaWxhYnMuY29tPgoKd2Z4
-X2RvX2pvaW4oKSBjYWxscyB3ZnhfdHhfbG9ja19mbHVzaCgpIGF0ZSBiZWdpbm5pbmcgb2YgdGhl
-IGZ1bmN0aW9uLgpUaGVyZWZvcmUsIHRoZSBzdWJzZXF1ZW50IGNhbGwgdG8gd2Z4X3R4X2ZsdXNo
-KCkgaXMgdXNlbGVzcy4KClNpZ25lZC1vZmYtYnk6IErDqXLDtG1lIFBvdWlsbGVyIDxqZXJvbWUu
-cG91aWxsZXJAc2lsYWJzLmNvbT4KLS0tCiBkcml2ZXJzL3N0YWdpbmcvd2Z4L3N0YS5jIHwgMiAt
-LQogMSBmaWxlIGNoYW5nZWQsIDIgZGVsZXRpb25zKC0pCgpkaWZmIC0tZ2l0IGEvZHJpdmVycy9z
-dGFnaW5nL3dmeC9zdGEuYyBiL2RyaXZlcnMvc3RhZ2luZy93Zngvc3RhLmMKaW5kZXggYWNiYmMz
-YTQ0NzMzLi43NjkzY2UyMmYzMDAgMTAwNjQ0Ci0tLSBhL2RyaXZlcnMvc3RhZ2luZy93Zngvc3Rh
-LmMKKysrIGIvZHJpdmVycy9zdGFnaW5nL3dmeC9zdGEuYwpAQCAtNDkzLDggKzQ5Myw2IEBAIHN0
-YXRpYyB2b2lkIHdmeF9kb19qb2luKHN0cnVjdCB3ZnhfdmlmICp3dmlmKQogCX0KIAlyY3VfcmVh
-ZF91bmxvY2soKTsKIAotCXdmeF90eF9mbHVzaCh3dmlmLT53ZGV2KTsKLQogCWlmICh3dmlmX2Nv
-dW50KHd2aWYtPndkZXYpIDw9IDEpCiAJCWhpZl9zZXRfYmxvY2tfYWNrX3BvbGljeSh3dmlmLCAw
-eEZGLCAweEZGKTsKIAotLSAKMi4yNS4xCgo=
+Tom,
+
+Care to ack this?
+
+-- Steve
+
+
+On Fri, 10 Apr 2020 15:33:12 +0800
+Jason Yan <yanaijie@huawei.com> wrote:
+
+> Fix the following sparse warning:
+> 
+> kernel/trace/tracing_map.c:286:6: warning: symbol
+> 'tracing_map_array_clear' was not declared. Should it be static?
+> kernel/trace/tracing_map.c:297:6: warning: symbol
+> 'tracing_map_array_free' was not declared. Should it be static?
+> kernel/trace/tracing_map.c:319:26: warning: symbol
+> 'tracing_map_array_alloc' was not declared. Should it be static?
+> 
+> Reported-by: Hulk Robot <hulkci@huawei.com>
+> Signed-off-by: Jason Yan <yanaijie@huawei.com>
+> ---
+>  kernel/trace/tracing_map.c | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
+> 
+> diff --git a/kernel/trace/tracing_map.c b/kernel/trace/tracing_map.c
+> index 9e31bfc818ff..74738c9856f1 100644
+> --- a/kernel/trace/tracing_map.c
+> +++ b/kernel/trace/tracing_map.c
+> @@ -283,7 +283,7 @@ int tracing_map_add_key_field(struct tracing_map *map,
+>  	return idx;
+>  }
+>  
+> -void tracing_map_array_clear(struct tracing_map_array *a)
+> +static void tracing_map_array_clear(struct tracing_map_array *a)
+>  {
+>  	unsigned int i;
+>  
+> @@ -294,7 +294,7 @@ void tracing_map_array_clear(struct tracing_map_array *a)
+>  		memset(a->pages[i], 0, PAGE_SIZE);
+>  }
+>  
+> -void tracing_map_array_free(struct tracing_map_array *a)
+> +static void tracing_map_array_free(struct tracing_map_array *a)
+>  {
+>  	unsigned int i;
+>  
+> @@ -316,7 +316,7 @@ void tracing_map_array_free(struct tracing_map_array *a)
+>  	kfree(a);
+>  }
+>  
+> -struct tracing_map_array *tracing_map_array_alloc(unsigned int n_elts,
+> +static struct tracing_map_array *tracing_map_array_alloc(unsigned int n_elts,
+>  						  unsigned int entry_size)
+>  {
+>  	struct tracing_map_array *a;
+
