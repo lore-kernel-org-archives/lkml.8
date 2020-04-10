@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E3ABC2BB1D
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 04:01:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10330C2D0EC
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 04:01:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F16EC2082D
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 04:01:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DCB7B20936
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 04:01:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586491304;
-	bh=MnuWYLFkdb1YHimhXS6d0CxSVI1WAlx/FlXUz917YfU=;
+	s=default; t=1586491309;
+	bh=F82Aeypw6OM8mgKESuyYgGleTKbJ+gGMp9FjnyoILqw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=h5yak0kC20jRQmpwBfb+fYFLjKFAe5hBC1cG1rWMc+o1qcS+5DaLbCi/cRdRC6Ku3
-	 QKKrBU1A6ntL7VCU9mxwElnC/cmidDpKMh0enEWLPwQ15pKe6H5pGMVAX+mHrRmaYs
-	 tPFPcSlYRBaREKaImZTMjX/98brunCYWvhqMJGhs=
+	b=mA98ZDeMmSDpN0g3xDXUdQiyuAPWwRfIZH8AlKj519zU/XbIfgOghc1XPylFiHU7e
+	 CBeKh7OKQ8HTDarVZqHXdqm+J+2uW92J0HeIt3SufyYkJi1pp4WmA8Kzl5Q3jAUZTX
+	 bVjfYmAEm12QtNnOR7bSedJI3oSIsfXVpkHFGIYs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727481AbgDJEBm (ORCPT
+        id S1727331AbgDJDrV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Apr 2020 00:01:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58164 "EHLO mail.kernel.org"
+        Thu, 9 Apr 2020 23:47:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58000 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726650AbgDJDr0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Apr 2020 23:47:26 -0400
+        id S1727199AbgDJDrT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Apr 2020 23:47:19 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9A4FC214DB;
-        Fri, 10 Apr 2020 03:47:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8761E20B1F;
+        Fri, 10 Apr 2020 03:47:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586490446;
-        bh=MnuWYLFkdb1YHimhXS6d0CxSVI1WAlx/FlXUz917YfU=;
+        s=default; t=1586490439;
+        bh=F82Aeypw6OM8mgKESuyYgGleTKbJ+gGMp9FjnyoILqw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ReroZd5ySQK0xS1Kgv1IK+3YgMYzeMXYzYRids5u71oK47smkxSlLAoAd2WSJpSm5
-         VoDg2UvWxV9WQxMmRdDZx9S/0qwvmYggRDDkKectDdhc4Zc3HCu4maEknJAigILXLV
-         s+6YwieRjJq8KP8KUwE2LKQ+lIWlD0j7e+cNhhdA=
+        b=izmUR6+CR7agABBHWejUysp3JxU89y5ZzehyBg5UHuYQzqaEoOTdl75hCGh06d9z6
+         12/yyIWt/vhoe569SX6Itj02dsmo+vFWi6sSMghu/SG/feY023MQ7hab1LBg+MzmAI
+         phExfiwDW27iy5xzM6lJeKUlrqCCMsj1oGWzieco=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Matt Ranostay <matt.ranostay@konsulko.com>, rdunlap@infradead.org,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.6 42/68] media: i2c: video-i2c: fix build errors due to 'imply hwmon'
-Date:   Thu,  9 Apr 2020 23:46:07 -0400
-Message-Id: <20200410034634.7731-42-sashal@kernel.org>
+Cc:     Michael Wang <yun.wang@linux.alibaba.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.6 36/68] sched: Avoid scale real weight down to zero
+Date:   Thu,  9 Apr 2020 23:46:01 -0400
+Message-Id: <20200410034634.7731-36-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200410034634.7731-1-sashal@kernel.org>
 References: <20200410034634.7731-1-sashal@kernel.org>
@@ -60,41 +60,80 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Matt Ranostay <matt.ranostay@konsulko.com>
+From: Michael Wang <yun.wang@linux.alibaba.com>
 
-[ Upstream commit 64d4fc9926f09861a35d8f0f7d81f056e6d5af7b ]
+[ Upstream commit 26cf52229efc87e2effa9d788f9b33c40fb3358a ]
 
-Fix build fault when CONFIG_HWMON is a module, and CONFIG_VIDEO_I2C
-as builtin. This is due to 'imply hwmon' in the respective Kconfig.
+During our testing, we found a case that shares no longer
+working correctly, the cgroup topology is like:
 
-Issue build log:
+  /sys/fs/cgroup/cpu/A		(shares=102400)
+  /sys/fs/cgroup/cpu/A/B	(shares=2)
+  /sys/fs/cgroup/cpu/A/B/C	(shares=1024)
 
-ld: drivers/media/i2c/video-i2c.o: in function `amg88xx_hwmon_init':
-video-i2c.c:(.text+0x2e1): undefined reference to `devm_hwmon_device_register_with_info
+  /sys/fs/cgroup/cpu/D		(shares=1024)
+  /sys/fs/cgroup/cpu/D/E	(shares=1024)
+  /sys/fs/cgroup/cpu/D/E/F	(shares=1024)
 
-Cc: rdunlap@infradead.org
-Fixes: acbea6798955 (media: video-i2c: add hwmon support for amg88xx)
-Signed-off-by: Matt Ranostay <matt.ranostay@konsulko.com>
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+The same benchmark is running in group C & F, no other tasks are
+running, the benchmark is capable to consumed all the CPUs.
+
+We suppose the group C will win more CPU resources since it could
+enjoy all the shares of group A, but it's F who wins much more.
+
+The reason is because we have group B with shares as 2, since
+A->cfs_rq.load.weight == B->se.load.weight == B->shares/nr_cpus,
+so A->cfs_rq.load.weight become very small.
+
+And in calc_group_shares() we calculate shares as:
+
+  load = max(scale_load_down(cfs_rq->load.weight), cfs_rq->avg.load_avg);
+  shares = (tg_shares * load) / tg_weight;
+
+Since the 'cfs_rq->load.weight' is too small, the load become 0
+after scale down, although 'tg_shares' is 102400, shares of the se
+which stand for group A on root cfs_rq become 2.
+
+While the se of D on root cfs_rq is far more bigger than 2, so it
+wins the battle.
+
+Thus when scale_load_down() scale real weight down to 0, it's no
+longer telling the real story, the caller will have the wrong
+information and the calculation will be buggy.
+
+This patch add check in scale_load_down(), so the real weight will
+be >= MIN_SHARES after scale, after applied the group C wins as
+expected.
+
+Suggested-by: Peter Zijlstra <peterz@infradead.org>
+Signed-off-by: Michael Wang <yun.wang@linux.alibaba.com>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Reviewed-by: Vincent Guittot <vincent.guittot@linaro.org>
+Link: https://lkml.kernel.org/r/38e8e212-59a1-64b2-b247-b6d0b52d8dc1@linux.alibaba.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/i2c/video-i2c.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ kernel/sched/sched.h | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/media/i2c/video-i2c.c b/drivers/media/i2c/video-i2c.c
-index 078141712c887..0b977e73ceb29 100644
---- a/drivers/media/i2c/video-i2c.c
-+++ b/drivers/media/i2c/video-i2c.c
-@@ -255,7 +255,7 @@ static int amg88xx_set_power(struct video_i2c_data *data, bool on)
- 	return amg88xx_set_power_off(data);
- }
- 
--#if IS_ENABLED(CONFIG_HWMON)
-+#if IS_REACHABLE(CONFIG_HWMON)
- 
- static const u32 amg88xx_temp_config[] = {
- 	HWMON_T_INPUT,
+diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
+index 9ea647835fd6f..b056149c228ba 100644
+--- a/kernel/sched/sched.h
++++ b/kernel/sched/sched.h
+@@ -118,7 +118,13 @@ extern long calc_load_fold_active(struct rq *this_rq, long adjust);
+ #ifdef CONFIG_64BIT
+ # define NICE_0_LOAD_SHIFT	(SCHED_FIXEDPOINT_SHIFT + SCHED_FIXEDPOINT_SHIFT)
+ # define scale_load(w)		((w) << SCHED_FIXEDPOINT_SHIFT)
+-# define scale_load_down(w)	((w) >> SCHED_FIXEDPOINT_SHIFT)
++# define scale_load_down(w) \
++({ \
++	unsigned long __w = (w); \
++	if (__w) \
++		__w = max(2UL, __w >> SCHED_FIXEDPOINT_SHIFT); \
++	__w; \
++})
+ #else
+ # define NICE_0_LOAD_SHIFT	(SCHED_FIXEDPOINT_SHIFT)
+ # define scale_load(w)		(w)
 -- 
 2.20.1
 
