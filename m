@@ -2,159 +2,151 @@ Return-Path: <SRS0=VV4q=52=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
 	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4ACCAC2D0EC
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 19:04:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E94AC2D0EC
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 19:04:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1F52D20732
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 19:04:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D1A5920732
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 19:04:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EMTd2UMA"
+	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="Da7wUhQL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726740AbgDJTED (ORCPT
+        id S1726789AbgDJTEd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Apr 2020 15:04:03 -0400
-Received: from mail-qv1-f68.google.com ([209.85.219.68]:46213 "EHLO
-        mail-qv1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726626AbgDJTED (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Apr 2020 15:04:03 -0400
-Received: by mail-qv1-f68.google.com with SMTP id bu9so1383686qvb.13;
-        Fri, 10 Apr 2020 12:04:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=SFkGxqtAivlmP1kSIm6+6p6UaAADFeDKZ3fmGmbrPP4=;
-        b=EMTd2UMAl56Aemho4y1bPbJP5nBQMSLteXHIQIuIoWFmlW+IfWompuKnPq5ZVm3NF4
-         YIvi+8si+Q2/+Vn3qYeXOOJbZMolHK5gP5aonBIqNIUKpudyfdVgQW995QZm0eRUy3dR
-         hlZMzpHcE2S5LmkO9p/kJn45N2v8Gx3LaoKth2eDuG7RhTH7fm27HVET9z9GjtkODUBF
-         zdneMxSsONEF4yOWJzB9QH6+rC3n1M6oNx1Jv0g23xla2S0PlBlCptRsYGHxYZ61Dibf
-         FP6OGkl2PriY92WGTrvoF3V5fSeib0ztAJYxt5ZtLvhY32NIAHMP4s1Q95+eSrYexaAF
-         2L+A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:date:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to;
-        bh=SFkGxqtAivlmP1kSIm6+6p6UaAADFeDKZ3fmGmbrPP4=;
-        b=qV5xjcL+BsGM5kPihWNitbo5R7ri338XrZBIp6GeArnuSqw00KVn5xCSIeMGIBDA+F
-         oLXr4drkMuN+WPuzqmo/Wo+Y6rYNMgqWLgi9Y8w4icVfGH/K3GmHesthAm9VdpZ+AnM5
-         0/S5GR4DwYeRKHlNAKRSzlk5hbwz90WkIVx6OJuykaMEvJiQaRAvAZAbIeHaSShV0Fk1
-         Jxi3CdUaVoZ8FFaB3nC4567/OI/H9Nb3pcVmXEFLoLlWHNIps/fGLJjJH6lh8vSAmfLS
-         stcKoBPLB8CsbWAvLZzYaH4KqmXCdDk02UDC+kP/60ec5ec9CEk43WpsnSbk9sYoayoJ
-         w8yQ==
-X-Gm-Message-State: AGi0PuavPCtOl6xIh8UVpxRXQKK40XG7lBYAlpDcE8VAGSRpr//DLTGC
-        VrkfaIabqle0I8t16sYQP3M=
-X-Google-Smtp-Source: APiQypJzbuvJQY0FtqjCzRMUlWsREiod30TngxIzTSzHMubOcr9lZ6n1DSaYCUYJOwXIohn4nIbwZQ==
-X-Received: by 2002:ad4:43c1:: with SMTP id o1mr6566948qvs.56.1586545439433;
-        Fri, 10 Apr 2020 12:03:59 -0700 (PDT)
-Received: from rani.riverdale.lan ([2001:470:1f07:5f3::b55f])
-        by smtp.gmail.com with ESMTPSA id q7sm2202362qti.58.2020.04.10.12.03.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 10 Apr 2020 12:03:58 -0700 (PDT)
-From:   Arvind Sankar <nivedita@alum.mit.edu>
-X-Google-Original-From: Arvind Sankar <arvind@rani.riverdale.lan>
-Date:   Fri, 10 Apr 2020 15:03:56 -0400
-To:     Ard Biesheuvel <ardb@kernel.org>
-Cc:     Arvind Sankar <nivedita@alum.mit.edu>,
-        Brian Gerst <brgerst@gmail.com>,
-        linux-efi <linux-efi@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>, Borislav Petkov <bp@suse.de>,
-        Colin Ian King <colin.king@canonical.com>,
-        Gary Lin <glin@suse.com>, Jiri Slaby <jslaby@suse.cz>,
-        Sergey Shatunov <me@prok.pw>, Takashi Iwai <tiwai@suse.de>
-Subject: Re: [PATCH 3/9] efi/x86: Move efi stub globals from .bss to .data
-Message-ID: <20200410190356.GA1213308@rani.riverdale.lan>
-References: <20200409130434.6736-1-ardb@kernel.org>
- <20200409130434.6736-4-ardb@kernel.org>
- <CAMzpN2gJWwVun1Kp6vGuza9LM5KpB=0EwsP8x8eOJQuDGh38Hg@mail.gmail.com>
- <CAMzpN2jFbf8k99pWaTYRBmSB+iNAKYsufjEhqO6Vv0qxAcHyGA@mail.gmail.com>
- <20200409210847.GA1312580@rani.riverdale.lan>
- <CAMj1kXFhtK=FRDKBE5OtenNEtpK=kVwyo+0nqJZ_K80RmtYxEg@mail.gmail.com>
- <20200410151612.GA970420@rani.riverdale.lan>
- <CAMj1kXGMNMdgjinYNgrN2wGRFG4rKE2YHo-=3s4Ofv2KPUMqKQ@mail.gmail.com>
- <20200410180123.GA1155098@rani.riverdale.lan>
- <CAMj1kXGW6V8Zif7-95MbivNgtDoufVt=uMDtYuFvEJCzOub+sA@mail.gmail.com>
+        Fri, 10 Apr 2020 15:04:33 -0400
+Received: from mail-eopbgr60062.outbound.protection.outlook.com ([40.107.6.62]:47049
+        "EHLO EUR04-DB3-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726203AbgDJTEc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Apr 2020 15:04:32 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Xh+zoKCxqI8Mf8cPX007AbeUwa3mZQpnVxm0WezUWcRwdCYr0vFxwBq5Smxe2W1a4pF1HGP+EPuVI+LAaidZC9I8QWjbYgGpzgWs6ZNWZE4vUEULLNILOLanMB8V52Bni8AD7GQXk+rg8RVVEqZRyy6g/FeTHZc+27f6udac5Ol/2Rdnfs+I0rgLaemAKoXwRdCghsmUPdSJK9/nnKleQWvdyXwL8t7VbIcUNBGO72xQsTEMhDfboaRSdMmwFpz3lSkto9vjJfXh6IsbJPcLNFhr2qFpTUvCe9iuOg0OH6S3NMYw5DYKp5CkkWm9H+XpiIEzoVwKAv57vSUXs28clg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=qREnRW9ITHwIv0VmfQhKf0SU7+cAcX76d6f6wyC33Q0=;
+ b=cqzbf9l1/ogm5fyfbeqmjVmHHGMM/BH0qdkYgkUCT5QIcD5khi1Hl8ToVMd44If6sT863+xDSr5x2WvojYCO+D+xb0oJ93kC5B1pLspJgiA/67HA7U+uBAOJyKu5aLc+eidR39UdXIp0f9EMr4ywAjO0tCCYay8uOD4qSPuma9THNFl7MeuxwlrAdoOar0GVKi0H+n90YyC2rMeje+4ZbaWMALyqj1sAMMJp5NkoIdlJjuyPu4lbqW/9dVjM8AcpsmGOFcKop+f+KHvLxUpHiHOyyOOiRlkUydlh2B7ZZpHY5QtWAnou3l2SJvfz5XD70LAG9bYFsDt1joSNAxr/wA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=mellanox.com; dmarc=pass action=none header.from=mellanox.com;
+ dkim=pass header.d=mellanox.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=qREnRW9ITHwIv0VmfQhKf0SU7+cAcX76d6f6wyC33Q0=;
+ b=Da7wUhQLBzrVWdsbTF45GZB05me//iP7OIZsJ49df5+a2chZY3FJljWQLikCiW4ewhOjCFsktJpRL1HXe9uDX0PEWHiuNaxeh+S8G2muzPzangCJHvM4YcN5xO9esvpnYp+DaDnix8XJtVeDv2M6UojWSZb6TeXw7P02L/YiHkw=
+Received: from VI1PR05MB5102.eurprd05.prod.outlook.com (2603:10a6:803:5e::23)
+ by VI1PR05MB6464.eurprd05.prod.outlook.com (2603:10a6:803:f4::19) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2900.15; Fri, 10 Apr
+ 2020 19:04:27 +0000
+Received: from VI1PR05MB5102.eurprd05.prod.outlook.com
+ ([fe80::9d19:a564:b84e:7c19]) by VI1PR05MB5102.eurprd05.prod.outlook.com
+ ([fe80::9d19:a564:b84e:7c19%7]) with mapi id 15.20.2878.021; Fri, 10 Apr 2020
+ 19:04:27 +0000
+From:   Saeed Mahameed <saeedm@mellanox.com>
+To:     "jgg@ziepe.ca" <jgg@ziepe.ca>
+CC:     "narmstrong@baylibre.com" <narmstrong@baylibre.com>,
+        "masahiroy@kernel.org" <masahiroy@kernel.org>,
+        "Laurent.pinchart@ideasonboard.com" 
+        <Laurent.pinchart@ideasonboard.com>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "leon@kernel.org" <leon@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "nico@fluxnic.net" <nico@fluxnic.net>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "linux-renesas-soc@vger.kernel.org" 
+        <linux-renesas-soc@vger.kernel.org>,
+        "kieran.bingham+renesas@ideasonboard.com" 
+        <kieran.bingham+renesas@ideasonboard.com>,
+        "arnd@arndb.de" <arnd@arndb.de>,
+        "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
+        "jani.nikula@linux.intel.com" <jani.nikula@linux.intel.com>,
+        "a.hajda@samsung.com" <a.hajda@samsung.com>,
+        "jonas@kwiboo.se" <jonas@kwiboo.se>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "airlied@linux.ie" <airlied@linux.ie>,
+        "jernej.skrabec@siol.net" <jernej.skrabec@siol.net>
+Subject: Re: [RFC 0/6] Regressions for "imply" behavior change
+Thread-Topic: [RFC 0/6] Regressions for "imply" behavior change
+Thread-Index: AQHWDeQiJzc7TgrcN0yUMWAEU5j98qhvr4mAgAADKgCAAB92AIAAp0gAgAEtnwCAAPPSAIAAHv4A
+Date:   Fri, 10 Apr 2020 19:04:27 +0000
+Message-ID: <16441479b793077cdef9658f35773739038c39dc.camel@mellanox.com>
+References: <20200408202711.1198966-1-arnd@arndb.de>
+         <nycvar.YSQ.7.76.2004081633260.2671@knanqh.ubzr>
+         <CAK8P3a2frDf4BzEpEF0uwPTV2dv6Jve+6N97z1sSuSBUAPJquA@mail.gmail.com>
+         <20200408224224.GD11886@ziepe.ca> <87k12pgifv.fsf@intel.com>
+         <7d9410a4b7d0ef975f7cbd8f0b6762df114df539.camel@mellanox.com>
+         <20200410171320.GN11886@ziepe.ca>
+In-Reply-To: <20200410171320.GN11886@ziepe.ca>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+user-agent: Evolution 3.34.4 (3.34.4-1.fc31) 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=saeedm@mellanox.com; 
+x-originating-ip: [73.15.39.150]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 604cbf34-e6de-480d-3b6a-08d7dd81fdee
+x-ms-traffictypediagnostic: VI1PR05MB6464:
+x-microsoft-antispam-prvs: <VI1PR05MB64645727AC499AC722926512BEDE0@VI1PR05MB6464.eurprd05.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8882;
+x-forefront-prvs: 0369E8196C
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VI1PR05MB5102.eurprd05.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10009020)(4636009)(396003)(346002)(376002)(39860400002)(136003)(366004)(66946007)(71200400001)(478600001)(6512007)(36756003)(66476007)(2906002)(316002)(66446008)(66556008)(6486002)(81156014)(76116006)(91956017)(8936002)(2616005)(64756008)(8676002)(26005)(6506007)(4326008)(7416002)(6916009)(86362001)(186003)(5660300002)(54906003);DIR:OUT;SFP:1101;
+received-spf: None (protection.outlook.com: mellanox.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: Sk7LWu09ZwoByjIkmEQvlLQxqiH4RnuIMEtq/nKvClwtDup+cg/MnOZeo3XzsmVxtjERbGPfXzf6oYuK37UG5LqOyyTn+bgLI030iA83xYLd2zDtcrLUvV86hNgTYXTgUiqcwjOOHu77v8f0NovbBVSfSnbE79N5R3L1iw3ZcqOgW4cFHt1Z7pxLZeVXtbEm1PA0mkXAQbKbMIvm+FbSIj4OXo9dKNjXD/xTWrKtVmhQUJglYayCmbt5SQ5BMsdGLCNl2ww4DJK476m9xoUaD7yPiUmEOoR720JX4m+a66OBsyOcOR44E7LBF55F7/euhU5ZVO5XI5gPa0ZodXqTl6M1gQ9QlQOAZXcl1JxQOZ0lPAvqsFPMmjkZLa/un7Hxv+pJC4C6yHMQPL5rpy+chuoRidHN9tMjyF0UOyRFAFG0JaBL1vsB1MCmjxApk2eN
+x-ms-exchange-antispam-messagedata: fRQRQ8i7wmC+3vtBoyMYeekeUdQoSpgPVRQipw7kyIsHXSlOhW2jhWSnv4RBi2axI5vyBCdqO7xCaxauTeMDlsP2XrmTgkJnMhYDf3ja4fNNLQfSy8fHU/cdKo0ff2XyDDG1Ufb6NJdTZXOo3ugDJQ==
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <127F1870F5B4654CB5433164FF4CFAA0@eurprd05.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <CAMj1kXGW6V8Zif7-95MbivNgtDoufVt=uMDtYuFvEJCzOub+sA@mail.gmail.com>
+X-OriginatorOrg: Mellanox.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 604cbf34-e6de-480d-3b6a-08d7dd81fdee
+X-MS-Exchange-CrossTenant-originalarrivaltime: 10 Apr 2020 19:04:27.5793
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: XSqGcjR4gDuk13O12RhpESN0GjCOS9QCAV6UySkbBvWeWDsTQ4NoiFvRJVRRO4+iiH7j27O5w0Plz65dwzXynw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR05MB6464
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 10, 2020 at 08:03:15PM +0200, Ard Biesheuvel wrote:
-> On Fri, 10 Apr 2020 at 20:01, Arvind Sankar <nivedita@alum.mit.edu> wrote:
-> >
-> > On Fri, Apr 10, 2020 at 06:03:38PM +0200, Ard Biesheuvel wrote:
-> > > On Fri, 10 Apr 2020 at 17:16, Arvind Sankar <nivedita@alum.mit.edu> wrote:
-> > > >
-> > > > On Fri, Apr 10, 2020 at 10:20:42AM +0200, Ard Biesheuvel wrote:
-> > > > > On Thu, 9 Apr 2020 at 23:08, Arvind Sankar <nivedita@alum.mit.edu> wrote:
-> > > > > >
-> > > > > > On Thu, Apr 09, 2020 at 04:53:07PM -0400, Brian Gerst wrote:
-> > > > > > > > Can we use the -fno-zero-initialized-in-bss compiler flag instead of
-> > > > > > > > explicitly marking global variables?
-> > > > > > >
-> > > > > > > Scratch that.  Apparently it only works when a variable is explicitly
-> > > > > > > initialized to zero.
-> > > > > > >
-> > > > > > > --
-> > > > > > > Brian Gerst
-> > > > > >
-> > > > > > Right, there doesn't seem to be a compiler option to turn off the use of
-> > > > > > .bss altogether.
-> > > > >
-> > > > > Yeah. I'll try to come up with a way to consolidate this a bit across
-> > > > > architectures (which is a bit easier now that all of the EFI stub C
-> > > > > code lives in the same place). It is probably easiest to use a section
-> > > > > renaming trick similar to the one I added for ARM (as Arvind suggested
-> > > > > as well, IIRC), and get rid of the per-symbol annotations altogether.
-> > > >
-> > > > Does that work for 32-bit ARM, or does it need to be .data to tell the
-> > > > compiler to avoid generating GOT references? If that's fine, we don't
-> > > > actually need to rename sections -- linker script magic is enough. For
-> > > > eg, the below pulls the EFI stub bss into .data for x86 without the need
-> > > > for the annotations.
-> > > >
-> > > > diff --git a/arch/x86/boot/compressed/vmlinux.lds.S b/arch/x86/boot/compressed/vmlinux.lds.S
-> > > > index 508cfa6828c5..e324819c95bc 100644
-> > > > --- a/arch/x86/boot/compressed/vmlinux.lds.S
-> > > > +++ b/arch/x86/boot/compressed/vmlinux.lds.S
-> > > > @@ -52,6 +52,7 @@ SECTIONS
-> > > >                 _data = . ;
-> > > >                 *(.data)
-> > > >                 *(.data.*)
-> > > > +               drivers/firmware/efi/libstub/lib.a:(.bss .bss.*)
-> > > >                 _edata = . ;
-> > > >         }
-> > > >         . = ALIGN(L1_CACHE_BYTES);
-> > >
-> > > No, we can add this to ARM as well, and get rid of the
-> > > __efistub_global annotations entirely.
-> >
-> > Cool.
-> >
-> > >
-> > > We'll still need .data.efistub for the .data pieces, but that is a
-> > > separate issue.
-> >
-> > You can avoid that by using an archive specification like above. i.e.
-> > adding
-> >         drivers/firmware/efi/libstub/lib.a:(.data .data.*)
-> > to the .init.data output section will pull in just the .data input
-> > sections from the EFI stub into the .init.data section.
-> 
-> Sure. But the ARM decompressor linker script currently discards .data
-> before this point in the linker script, and relies on this as a safety
-> net to ensure that no new .data items get added to the decompressor
-> binary (which runs after the stub)
-
-Ah.
+T24gRnJpLCAyMDIwLTA0LTEwIGF0IDE0OjEzIC0wMzAwLCBKYXNvbiBHdW50aG9ycGUgd3JvdGU6
+DQo+IE9uIEZyaSwgQXByIDEwLCAyMDIwIGF0IDAyOjQwOjQyQU0gKzAwMDAsIFNhZWVkIE1haGFt
+ZWVkIHdyb3RlOg0KPiANCj4gPiBUaGlzIGFzc3VtZXMgdGhhdCB0aGUgbW9kdWxlIHVzaW5nIEZP
+TyBoYXMgaXRzIG93biBmbGFnDQo+ID4gcmVwcmVzZW50aW5nDQo+ID4gRk9PIHdoaWNoIGlzIG5v
+dCBhbHdheXMgdGhlIGNhc2UuDQo+ID4gDQo+ID4gZm9yIGV4YW1wbGUgaW4gbWx4NSB3ZSB1c2Ug
+VlhMQU4gY29uZmlnIGZsYWcgZGlyZWN0bHkgdG8gY29tcGlsZQ0KPiA+IFZYTEFODQo+ID4gcmVs
+YXRlZCBmaWxlczoNCj4gPiANCj4gPiBtbHg1L2NvcmUvTWFrZWZpbGU6DQo+ID4gDQo+ID4gb2Jq
+LSQoQ09ORklHX01MWDVfQ09SRSkgKz0gbWx4NV9jb3JlLm8NCj4gPiANCj4gPiBtbHg1X2NvcmUt
+eSA6PSBtbHg1X2NvcmUubw0KPiA+IG1seDVfY29yZS0kKFZYTEFOKSArPSBtbHg1X3Z4bGFuLm8N
+Cj4gPiANCj4gPiBhbmQgaW4gbWx4NV9tYWluLm8gd2UgZG86DQo+IA0KPiBEb2VzIHRoaXMgd29y
+ayBpZiBWWExBTiA9IG0gPw0KDQpZZXMsIGlmIFZYTEFOIElTX1JFQUNIQUJMRSB0byBNTFg1LCBt
+bHg1X3Z4bGFuLm8gd2lsbCBiZQ0KY29tcGlsZWQvbGlua2VkLg0KDQo+IA0KPiA+IGlmIChJU19F
+TkFCTEVEKFZYTEFOKSkNCj4gPiAgICAgICAgbWx4NV92eGxhbl9pbml0KCkNCj4gPiANCj4gPiBh
+ZnRlciB0aGUgY2hhbmdlIGluIGltcGx5IHNlbWFudGljczoNCj4gPiBvdXIgb3B0aW9ucyBhcmU6
+DQo+ID4gDQo+ID4gMSkgdXNlIElTX1JFQUNIQUJMRShWWExBTikgaW5zdGVhZCBvZiBJU19FTkFC
+TEVEKFZYTEFOKQ0KPiA+IA0KPiA+IDIpIGhhdmUgTUxYNV9WWExBTiBpbiBtbHg1IEtjb25maWcg
+YW5kIHVzZSBJU19FTkFCTEVEKE1MWDVfVlhMQU4pIA0KPiA+IGNvbmZpZyBNTFg1X1ZYTEFODQo+
+ID4gCWRlcGVuZHMgb24gVlhMQU4gfHwgIVZYTEFODQo+ID4gCWJvb2wNCj4gDQo+IERvZXMgdGhp
+cyB0cmljayB3b3JrIHdoZW4gdnhsYW4gaXMgYSBib29sIG5vdCBhIHRyaXN0YXRlPw0KPiANCj4g
+V2h5IG5vdCBqdXN0IHB1dCB0aGUgVlhMQU4gfHwgIVZYTEFOIGRpcmVjdGx5IG9uIE1MWDVfQ09S
+RT8NCj4gDQoNCnNvIGZvcmNlIE1MWDVfQ09SRSB0byBuIGlmIHZ4bGFuIGlzIG5vdCByZWFjaGFi
+bGUgPyB3aHkgPyBtbHg1X2NvcmUgY2FuDQpwZXJmZWN0bHkgbGl2ZSB3aXRob3V0IHZ4bGFuIC4u
+IGFsbCB3ZSBuZWVkIHRvIGtub3cgaXMgaWYgVlhMQU4gaXMNCnN1cHBvcnRlZCBhbmQgcmVhY2hh
+YmxlLCBpZiBzbywgdGhlbiB3ZSB3YW50IHRvIGFsc28gc3VwcG9ydCB2eGxhbiBpbg0KbWx4NSAo
+aS5lIGNvbXBpbGUgbWx4NV92eGxhbi5vKSANCg0KYW5kIGhvdyBkbyB3ZSBjb21waWxlIG1seDVf
+dnhsYW4ubyB3aWhvdXQgYSBzaW5nbGUgZmxhZyANCmNhbiBpIGRvIGluIE1ha2VmaWxlIDoNCm1s
+eDVfY29yZS0kKFZYTEFOIHx8ICFWWExBTikgKz0gbWx4NV92eGxhbi5vID8/IA0KDQoNCj4gSmFz
+b24NCg==
