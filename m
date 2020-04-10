@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2672C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 03:49:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B1E4C2D0EC
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 03:49:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 97FF521655
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 03:49:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E82EE212CC
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 03:49:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586490572;
-	bh=4bivpDyeSrRjIegv2VxT7NaQn8LF0IPGydFQ8umUCrw=;
+	s=default; t=1586490575;
+	bh=8LTmd6JUlMihxqUDuTkjRkz1pyjSdNwMgCWlWgkyDm8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=W4Fq8r5jW1Ui+9/PhVRkoy2PubNUdWgQ01FW3NoTtT0X8++PzxIQnGSSKPl2FBkVl
-	 JNtJbry/y+ljzc7+dgXmpHzD98XCoC9FCoPDLBAYoc2NRLE75TKqkB2a5T5XNzg37L
-	 QbxTssc0ENBu4IEix7N73yH2+4gC0+KHNLLmtiqk=
+	b=rwWmebK4dmPpU3/yZfzUHwYPW1JO50HlaFyVpP0in3SUXlbBh0KWAl6kNQ5Z/xNWB
+	 72XMpBhVFEXoeZYSu8aKpDxsiCfAskdC43Iu9CINABH2LqOOuSMvY6MGts27t7XHCS
+	 w/6feWLJfzW794Da3cCOnwSoKuGvXc/EmhE1VMak=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728566AbgDJDta (ORCPT
+        id S1728571AbgDJDtd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Apr 2020 23:49:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33340 "EHLO mail.kernel.org"
+        Thu, 9 Apr 2020 23:49:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33464 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728534AbgDJDtZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Apr 2020 23:49:25 -0400
+        id S1728557AbgDJDt2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Apr 2020 23:49:28 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 753372137B;
-        Fri, 10 Apr 2020 03:49:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 03636214DB;
+        Fri, 10 Apr 2020 03:49:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586490565;
-        bh=4bivpDyeSrRjIegv2VxT7NaQn8LF0IPGydFQ8umUCrw=;
+        s=default; t=1586490568;
+        bh=8LTmd6JUlMihxqUDuTkjRkz1pyjSdNwMgCWlWgkyDm8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=U5/YhGVWZ9QQzHsv3StRxD+glgc0SBEJkn/kAm7DtYj80FlanNpT1yM8xPKzEhRsP
-         573HI+eFhiU2mz64fpYRV3I9cEUnDUWlDIZeSxbAILPJo54Du46CorRAoIGqRKkwiu
-         61XU/ZLvHldyqfxfUE9j+S2HZtLqLWREqPUCpeGM=
+        b=oOCjJiiYyI3yZxgrRDtQdvh0/gPTj43fETsQavkqrF3p3EhrMnPYi2NAhEvI5LhMh
+         ICngZoJ27skz8vuO7PwnL16Cfxf3mSgOdjPa56J0XMYMptwOjcCzBQAoj7nEaatXnJ
+         VNVnS8RWR/tCTcZHwk7Jjkwt6/nh2xivZz8egh58=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Thomas Hellstrom <thellstrom@vmware.com>,
-        Borislav Petkov <bp@suse.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
+Cc:     Taehee Yoo <ap420073@gmail.com>, kbuild test robot <lkp@intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.4 12/46] x86: Don't let pgprot_modify() change the page encryption bit
-Date:   Thu,  9 Apr 2020 23:48:35 -0400
-Message-Id: <20200410034909.8922-12-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.4 15/46] debugfs: Check module state before warning in {full/open}_proxy_open()
+Date:   Thu,  9 Apr 2020 23:48:38 -0400
+Message-Id: <20200410034909.8922-15-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200410034909.8922-1-sashal@kernel.org>
 References: <20200410034909.8922-1-sashal@kernel.org>
@@ -61,67 +59,115 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Thomas Hellstrom <thellstrom@vmware.com>
+From: Taehee Yoo <ap420073@gmail.com>
 
-[ Upstream commit 6db73f17c5f155dbcfd5e48e621c706270b84df0 ]
+[ Upstream commit 275678e7a9be6a0ea9c1bb493e48abf2f4a01be5 ]
 
-When SEV or SME is enabled and active, vm_get_page_prot() typically
-returns with the encryption bit set. This means that users of
-pgprot_modify(, vm_get_page_prot()) (mprotect_fixup(), do_mmap()) end up
-with a value of vma->vm_pg_prot that is not consistent with the intended
-protection of the PTEs.
+When the module is being removed, the module state is set to
+MODULE_STATE_GOING. At this point, try_module_get() fails.
+And when {full/open}_proxy_open() is being called,
+it calls try_module_get() to try to hold module reference count.
+If it fails, it warns about the possibility of debugfs file leak.
 
-This is also important for fault handlers that rely on the VMA
-vm_page_prot to set the page protection. Fix this by not allowing
-pgprot_modify() to change the encryption bit, similar to how it's done
-for PAT bits.
+If {full/open}_proxy_open() is called while the module is being removed,
+it fails to hold the module.
+So, It warns about debugfs file leak. But it is not the debugfs file
+leak case. So, this patch just adds module state checking routine
+in the {full/open}_proxy_open().
 
-Signed-off-by: Thomas Hellstrom <thellstrom@vmware.com>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Reviewed-by: Dave Hansen <dave.hansen@linux.intel.com>
-Acked-by: Tom Lendacky <thomas.lendacky@amd.com>
-Link: https://lkml.kernel.org/r/20200304114527.3636-2-thomas_os@shipmail.org
+Test commands:
+    #SHELL1
+    while :
+    do
+        modprobe netdevsim
+        echo 1 > /sys/bus/netdevsim/new_device
+        modprobe -rv netdevsim
+    done
+
+    #SHELL2
+    while :
+    do
+        cat /sys/kernel/debug/netdevsim/netdevsim1/ports/0/ipsec
+    done
+
+Splat looks like:
+[  298.766738][T14664] debugfs file owner did not clean up at exit: ipsec
+[  298.766766][T14664] WARNING: CPU: 2 PID: 14664 at fs/debugfs/file.c:312 full_proxy_open+0x10f/0x650
+[  298.768595][T14664] Modules linked in: netdevsim(-) openvswitch nsh nf_conncount nf_nat nf_conntrack nf_defrag_ipv6 n][  298.771343][T14664] CPU: 2 PID: 14664 Comm: cat Tainted: G        W         5.5.0+ #1
+[  298.772373][T14664] Hardware name: innotek GmbH VirtualBox/VirtualBox, BIOS VirtualBox 12/01/2006
+[  298.773545][T14664] RIP: 0010:full_proxy_open+0x10f/0x650
+[  298.774247][T14664] Code: 48 c1 ea 03 80 3c 02 00 0f 85 c1 04 00 00 49 8b 3c 24 e8 e4 b5 78 ff 84 c0 75 2d 4c 89 ee 48
+[  298.776782][T14664] RSP: 0018:ffff88805b7df9b8 EFLAGS: 00010282[  298.777583][T14664] RAX: dffffc0000000008 RBX: ffff8880511725c0 RCX: 0000000000000000
+[  298.778610][T14664] RDX: 0000000000000000 RSI: 0000000000000006 RDI: ffff8880540c5c14
+[  298.779637][T14664] RBP: 0000000000000000 R08: fffffbfff15235ad R09: 0000000000000000
+[  298.780664][T14664] R10: 0000000000000001 R11: 0000000000000000 R12: ffffffffc06b5000
+[  298.781702][T14664] R13: ffff88804c234a88 R14: ffff88804c22dd00 R15: ffffffff8a1b5660
+[  298.782722][T14664] FS:  00007fafa13a8540(0000) GS:ffff88806c800000(0000) knlGS:0000000000000000
+[  298.783845][T14664] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[  298.784672][T14664] CR2: 00007fafa0e9cd10 CR3: 000000004b286005 CR4: 00000000000606e0
+[  298.785739][T14664] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+[  298.786769][T14664] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+[  298.787785][T14664] Call Trace:
+[  298.788237][T14664]  do_dentry_open+0x63c/0xf50
+[  298.788872][T14664]  ? open_proxy_open+0x270/0x270
+[  298.789524][T14664]  ? __x64_sys_fchdir+0x180/0x180
+[  298.790169][T14664]  ? inode_permission+0x65/0x390
+[  298.790832][T14664]  path_openat+0xc45/0x2680
+[  298.791425][T14664]  ? save_stack+0x69/0x80
+[  298.791988][T14664]  ? save_stack+0x19/0x80
+[  298.792544][T14664]  ? path_mountpoint+0x2e0/0x2e0
+[  298.793233][T14664]  ? check_chain_key+0x236/0x5d0
+[  298.793910][T14664]  ? sched_clock_cpu+0x18/0x170
+[  298.794527][T14664]  ? find_held_lock+0x39/0x1d0
+[  298.795153][T14664]  do_filp_open+0x16a/0x260
+[ ... ]
+
+Fixes: 9fd4dcece43a ("debugfs: prevent access to possibly dead file_operations at file open")
+Reported-by: kbuild test robot <lkp@intel.com>
+Signed-off-by: Taehee Yoo <ap420073@gmail.com>
+Link: https://lore.kernel.org/r/20200218043150.29447-1-ap420073@gmail.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/include/asm/pgtable.h       | 7 +++++--
- arch/x86/include/asm/pgtable_types.h | 2 +-
- 2 files changed, 6 insertions(+), 3 deletions(-)
+ fs/debugfs/file.c | 18 ++++++++++++++----
+ 1 file changed, 14 insertions(+), 4 deletions(-)
 
-diff --git a/arch/x86/include/asm/pgtable.h b/arch/x86/include/asm/pgtable.h
-index 0bc530c4eb134..1e6bb4c253342 100644
---- a/arch/x86/include/asm/pgtable.h
-+++ b/arch/x86/include/asm/pgtable.h
-@@ -624,12 +624,15 @@ static inline pmd_t pmd_modify(pmd_t pmd, pgprot_t newprot)
- 	return __pmd(val);
- }
+diff --git a/fs/debugfs/file.c b/fs/debugfs/file.c
+index 8fd45eb894243..b43960794922d 100644
+--- a/fs/debugfs/file.c
++++ b/fs/debugfs/file.c
+@@ -175,8 +175,13 @@ static int open_proxy_open(struct inode *inode, struct file *filp)
+ 	if (r)
+ 		goto out;
  
--/* mprotect needs to preserve PAT bits when updating vm_page_prot */
-+/*
-+ * mprotect needs to preserve PAT and encryption bits when updating
-+ * vm_page_prot
-+ */
- #define pgprot_modify pgprot_modify
- static inline pgprot_t pgprot_modify(pgprot_t oldprot, pgprot_t newprot)
- {
- 	pgprotval_t preservebits = pgprot_val(oldprot) & _PAGE_CHG_MASK;
--	pgprotval_t addbits = pgprot_val(newprot);
-+	pgprotval_t addbits = pgprot_val(newprot) & ~_PAGE_CHG_MASK;
- 	return __pgprot(preservebits | addbits);
- }
+-	real_fops = fops_get(real_fops);
+-	if (!real_fops) {
++	if (!fops_get(real_fops)) {
++#ifdef MODULE
++		if (real_fops->owner &&
++		    real_fops->owner->state == MODULE_STATE_GOING)
++			goto out;
++#endif
++
+ 		/* Huh? Module did not clean up after itself at exit? */
+ 		WARN(1, "debugfs file owner did not clean up at exit: %pd",
+ 			dentry);
+@@ -305,8 +310,13 @@ static int full_proxy_open(struct inode *inode, struct file *filp)
+ 	if (r)
+ 		goto out;
  
-diff --git a/arch/x86/include/asm/pgtable_types.h b/arch/x86/include/asm/pgtable_types.h
-index b5e49e6bac635..8267dd426b152 100644
---- a/arch/x86/include/asm/pgtable_types.h
-+++ b/arch/x86/include/asm/pgtable_types.h
-@@ -123,7 +123,7 @@
-  */
- #define _PAGE_CHG_MASK	(PTE_PFN_MASK | _PAGE_PCD | _PAGE_PWT |		\
- 			 _PAGE_SPECIAL | _PAGE_ACCESSED | _PAGE_DIRTY |	\
--			 _PAGE_SOFT_DIRTY | _PAGE_DEVMAP)
-+			 _PAGE_SOFT_DIRTY | _PAGE_DEVMAP | _PAGE_ENC)
- #define _HPAGE_CHG_MASK (_PAGE_CHG_MASK | _PAGE_PSE)
- 
- /*
+-	real_fops = fops_get(real_fops);
+-	if (!real_fops) {
++	if (!fops_get(real_fops)) {
++#ifdef MODULE
++		if (real_fops->owner &&
++		    real_fops->owner->state == MODULE_STATE_GOING)
++			goto out;
++#endif
++
+ 		/* Huh? Module did not cleanup after itself at exit? */
+ 		WARN(1, "debugfs file owner did not clean up at exit: %pd",
+ 			dentry);
 -- 
 2.20.1
 
