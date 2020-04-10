@@ -4,52 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18ED8C2D0EC
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 03:59:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F198C2D0EC
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 03:59:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D5FC82063A
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 03:59:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 350D32063A
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 03:59:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586491183;
-	bh=gWKi+M4ukqnEuUHDdXxPRoNAqrcK8KTNaaTDcH/tEEU=;
+	s=default; t=1586491190;
+	bh=YoydgxVY04JUElx6pTX1WVnIwMMo7Gnp01oStplhfd0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HbkYPYKcYNR8HJ1pUSqMg1pYsxLvYo7tG6n1uP1xNSBdEmk11Ygg/vo87MLwvnfka
-	 2Qwl9/MSOtqlD5uFgJtwQyZBzUy83AMAtFpdmgpD+77oigI+TmcFkEd9urC6zE5iHu
-	 CoTIEfItsORiyBU47otlRHCUqAphbyS3jhbe9Ghs=
+	b=Op7vDjXri2uVRLDxtDqlK38gqduMQYl+XCTisk4Wwd1sN/ke0YLZFGjQA8XMw9mmu
+	 ToKP76rI4fM+2F9mpN537mMGNxYLWa1Yn0WpKaZvumREZrDjwaP67qSL+0sEbgDkZx
+	 OuMU5gA0zwliEZx7vUOjdjchmYvpBst9RIVFr4Jo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728351AbgDJD7l (ORCPT
+        id S1728083AbgDJDsN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Apr 2020 23:59:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59602 "EHLO mail.kernel.org"
+        Thu, 9 Apr 2020 23:48:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59306 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728118AbgDJDsS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Apr 2020 23:48:18 -0400
+        id S1728026AbgDJDsH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Apr 2020 23:48:07 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 70BDC20936;
-        Fri, 10 Apr 2020 03:48:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1CD8D2137B;
+        Fri, 10 Apr 2020 03:48:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586490498;
-        bh=gWKi+M4ukqnEuUHDdXxPRoNAqrcK8KTNaaTDcH/tEEU=;
+        s=default; t=1586490487;
+        bh=YoydgxVY04JUElx6pTX1WVnIwMMo7Gnp01oStplhfd0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xM9laWuAmu3XGI1070zymbPndZ7gSAFvay7jdXQc22rgc7io600urieKmJpfCfoN+
-         whixbINC/GIQzLF6GxXUxZQ6xYVfsQeX+sQfCnQgZmesRBeuJYop02gct94BGNccrE
-         fW94aqUrWrlI1TriDIxxo+qkYJlGU8dvP12mQdh0=
+        b=umX94EActgL+MRzkXOPr6b2e9o6sUOS2uvFwdXcpSkHK4aYAcZYFEoTwijVPL3K6N
+         oP6O2OODH+leialma88Hc+bVpa60oVpc9S7NXvckVvZpBha7djnQp+v+AnZ96159Tl
+         lALL25ormbSKLE/PQ9vTbVXp0vzCmGpPb0Z1SB3A=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Rui Miguel Silva <rmfrfs@gmail.com>,
+Cc:     Dafna Hirschfeld <dafna.hirschfeld@collabora.com>,
+        Helen Koike <helen.koike@collabora.com>,
         Hans Verkuil <hverkuil-cisco@xs4all.nl>,
         Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org,
-        devel@driverdev.osuosl.org, linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.5 14/56] media: imx: imx7_mipi_csis: Power off the source when stopping streaming
-Date:   Thu,  9 Apr 2020 23:47:18 -0400
-Message-Id: <20200410034800.8381-14-sashal@kernel.org>
+        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.5 05/56] media: vimc: streamer: fix memory leak in vimc subdevs if kthread_run fails
+Date:   Thu,  9 Apr 2020 23:47:09 -0400
+Message-Id: <20200410034800.8381-5-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200410034800.8381-1-sashal@kernel.org>
 References: <20200410034800.8381-1-sashal@kernel.org>
@@ -62,36 +61,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+From: Dafna Hirschfeld <dafna.hirschfeld@collabora.com>
 
-[ Upstream commit 770cbf89f90b0663499dbb3f03aa81b3322757ec ]
+[ Upstream commit ceeb2e6166dddf3c9757abbbf84032027e2fa2d2 ]
 
-The .s_stream() implementation incorrectly powers on the source when
-stopping the stream. Power it off instead.
+In case kthread_run fails, the vimc subdevices
+should be notified that streaming stopped so they can
+release the memory for the streaming. Also, kthread should be
+set to NULL.
 
-Fixes: 7807063b862b ("media: staging/imx7: add MIPI CSI-2 receiver subdev for i.MX7")
-Signed-off-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Reviewed-by: Rui Miguel Silva <rmfrfs@gmail.com>
+Signed-off-by: Dafna Hirschfeld <dafna.hirschfeld@collabora.com>
+Acked-by: Helen Koike <helen.koike@collabora.com>
 Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
 Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/staging/media/imx/imx7-mipi-csis.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/media/platform/vimc/vimc-streamer.c | 9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/staging/media/imx/imx7-mipi-csis.c b/drivers/staging/media/imx/imx7-mipi-csis.c
-index 99166afca071b..aa1749b1e28fc 100644
---- a/drivers/staging/media/imx/imx7-mipi-csis.c
-+++ b/drivers/staging/media/imx/imx7-mipi-csis.c
-@@ -579,7 +579,7 @@ static int mipi_csis_s_stream(struct v4l2_subdev *mipi_sd, int enable)
- 		state->flags |= ST_STREAMING;
+diff --git a/drivers/media/platform/vimc/vimc-streamer.c b/drivers/media/platform/vimc/vimc-streamer.c
+index cd6b55433c9ee..43e494df61d88 100644
+--- a/drivers/media/platform/vimc/vimc-streamer.c
++++ b/drivers/media/platform/vimc/vimc-streamer.c
+@@ -207,8 +207,13 @@ int vimc_streamer_s_stream(struct vimc_stream *stream,
+ 		stream->kthread = kthread_run(vimc_streamer_thread, stream,
+ 					      "vimc-streamer thread");
+ 
+-		if (IS_ERR(stream->kthread))
+-			return PTR_ERR(stream->kthread);
++		if (IS_ERR(stream->kthread)) {
++			ret = PTR_ERR(stream->kthread);
++			dev_err(ved->dev, "kthread_run failed with %d\n", ret);
++			vimc_streamer_pipeline_terminate(stream);
++			stream->kthread = NULL;
++			return ret;
++		}
+ 
  	} else {
- 		v4l2_subdev_call(state->src_sd, video, s_stream, 0);
--		ret = v4l2_subdev_call(state->src_sd, core, s_power, 1);
-+		ret = v4l2_subdev_call(state->src_sd, core, s_power, 0);
- 		mipi_csis_stop_stream(state);
- 		state->flags &= ~ST_STREAMING;
- 		if (state->debug)
+ 		if (!stream->kthread)
 -- 
 2.20.1
 
