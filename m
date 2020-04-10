@@ -2,72 +2,125 @@ Return-Path: <SRS0=VV4q=52=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B609CC2BA2B
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 11:52:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19A2FC2BB85
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 11:54:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 91D6B206F7
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 11:52:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E51D1206F7
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 11:54:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="mrrR35HU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726689AbgDJLwn (ORCPT
+        id S1726654AbgDJLyL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Apr 2020 07:52:43 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:41990 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725990AbgDJLwm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Apr 2020 07:52:42 -0400
-Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 943DABBDCEB1263387E0;
-        Fri, 10 Apr 2020 19:52:41 +0800 (CST)
-Received: from localhost (10.173.223.234) by DGGEMS413-HUB.china.huawei.com
- (10.3.19.213) with Microsoft SMTP Server id 14.3.487.0; Fri, 10 Apr 2020
- 19:52:34 +0800
-From:   YueHaibing <yuehaibing@huawei.com>
-To:     <piotrs@cadence.com>, <miquel.raynal@bootlin.com>,
-        <richard@nod.at>, <vigneshr@ti.com>
-CC:     <linux-mtd@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
-        YueHaibing <yuehaibing@huawei.com>
-Subject: [PATCH -next] mtd: rawnand: cadence: Make cadence_nand_attach_chip static
-Date:   Fri, 10 Apr 2020 19:52:28 +0800
-Message-ID: <20200410115228.30440-1-yuehaibing@huawei.com>
-X-Mailer: git-send-email 2.10.2.windows.1
+        Fri, 10 Apr 2020 07:54:11 -0400
+Received: from mail.efficios.com ([167.114.26.124]:56282 "EHLO
+        mail.efficios.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726007AbgDJLyK (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Apr 2020 07:54:10 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by mail.efficios.com (Postfix) with ESMTP id 65477286A26;
+        Fri, 10 Apr 2020 07:54:10 -0400 (EDT)
+Received: from mail.efficios.com ([127.0.0.1])
+        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id OhLL-sJwWh0w; Fri, 10 Apr 2020 07:54:10 -0400 (EDT)
+Received: from localhost (localhost [127.0.0.1])
+        by mail.efficios.com (Postfix) with ESMTP id E8B8E2869AC;
+        Fri, 10 Apr 2020 07:54:09 -0400 (EDT)
+DKIM-Filter: OpenDKIM Filter v2.10.3 mail.efficios.com E8B8E2869AC
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
+        s=default; t=1586519650;
+        bh=Kx29Iw92OSXy/7Br9e44Ry8pSnBhQoTqdlzG5LH6z+I=;
+        h=Date:From:To:Message-ID:MIME-Version;
+        b=mrrR35HUGZSzy+NZ0lff/kgO/vY/SPCeCemzFSZwzT2Xido3zbebm8VooRF5JGH5w
+         K/mcB46yYWlgjHx2KzzSPOk1jDe8g6GEN2EVunnnO6z1gfCXMvwhPiJVj0wXrgD2w7
+         rDNeNfwOSjluxTVqkt9UEy2Wvd7NVEkIi92PU7HF16u5AahMBXW87wbza3ErQ5Gnrz
+         3JFE04nAM5/PDTpIOV+gwXiWuIAR81DlrqYsBGaoWFk9OmMl4OdUdQj420XkWjGR7P
+         8FGFRfzUlkfFY8OyX6QfTpIlBdPZPD35GNmZYA986NcEKmR2JsFn3rplbx6z0z5yHw
+         XfgQOjDjpdmUw==
+X-Virus-Scanned: amavisd-new at efficios.com
+Received: from mail.efficios.com ([127.0.0.1])
+        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10026)
+        with ESMTP id 6dCVKayr5x8p; Fri, 10 Apr 2020 07:54:09 -0400 (EDT)
+Received: from mail03.efficios.com (mail03.efficios.com [167.114.26.124])
+        by mail.efficios.com (Postfix) with ESMTP id D7DE42869AB;
+        Fri, 10 Apr 2020 07:54:09 -0400 (EDT)
+Date:   Fri, 10 Apr 2020 07:54:09 -0400 (EDT)
+From:   Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+To:     Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Will Deacon <will@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        K <prasad@linux.vnet.ibm.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        rostedt <rostedt@goodmis.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Ingo Molnar <mingo@redhat.com>, bpf <bpf@vger.kernel.org>,
+        netdev <netdev@vger.kernel.org>
+Message-ID: <1752398220.29905.1586519649766.JavaMail.zimbra@efficios.com>
+In-Reply-To: <20200409223335.ovetfovkm2d2ca36@ast-mbp.dhcp.thefacebook.com>
+References: <20200409193543.18115-1-mathieu.desnoyers@efficios.com> <20200409193543.18115-4-mathieu.desnoyers@efficios.com> <20200409223335.ovetfovkm2d2ca36@ast-mbp.dhcp.thefacebook.com>
+Subject: Re: [RFC PATCH 3/9] writeback: tracing: pass global_wb_domain as
+ tracepoint parameter
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.173.223.234]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [167.114.26.124]
+X-Mailer: Zimbra 8.8.15_GA_3918 (ZimbraWebClient - FF74 (Linux)/8.8.15_GA_3895)
+Thread-Topic: writeback: tracing: pass global_wb_domain as tracepoint parameter
+Thread-Index: e+wVNcVKwMIZDlfQgTHJ8mySzrviLA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix sparse warning:
+----- On Apr 9, 2020, at 6:33 PM, Alexei Starovoitov alexei.starovoitov@gmail.com wrote:
 
-drivers/mtd/nand/raw/cadence-nand-controller.c:2595:5:
- warning: symbol 'cadence_nand_attach_chip' was not declared. Should it be static?
+> On Thu, Apr 09, 2020 at 03:35:37PM -0400, Mathieu Desnoyers wrote:
+>>  		if (pause < min_pause) {
+>> -			trace_balance_dirty_pages(wb,
+>> +			trace_balance_dirty_pages(&global_wb_domain,
+>> +						  wb,
+>>  						  sdtc->thresh,
+>>  						  sdtc->bg_thresh,
+>>  						  sdtc->dirty,
+> 
+> argh. 13 arguments to single function ?!
+> Currently the call site looks like:
+>                        trace_balance_dirty_pages(wb,
+>                                                  sdtc->thresh,
+>                                                  sdtc->bg_thresh,
+>                                                  sdtc->dirty,
+>                                                  sdtc->wb_thresh,
+>                                                  sdtc->wb_dirty,
+>                                                  dirty_ratelimit,
+>                                                  task_ratelimit,
+>                                                  pages_dirtied,
+>                                                  period,
+>                                                  min(pause, 0L),
+>                                                  start_time);
+> Just pass sdtc as a pointer instead.
+> Then another wb argument will be fine.
 
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
----
- drivers/mtd/nand/raw/cadence-nand-controller.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Good point! In order to do that I would need to move the declaration
+of struct dirty_throttle_control from mm/page-writeback.c to
+include/linux/writeback.h so it can be used from the tracepoint.
 
-diff --git a/drivers/mtd/nand/raw/cadence-nand-controller.c b/drivers/mtd/nand/raw/cadence-nand-controller.c
-index efddc5c68afb..acc0a24e5816 100644
---- a/drivers/mtd/nand/raw/cadence-nand-controller.c
-+++ b/drivers/mtd/nand/raw/cadence-nand-controller.c
-@@ -2592,7 +2592,7 @@ cadence_nand_setup_data_interface(struct nand_chip *chip, int chipnr,
- 	return 0;
- }
- 
--int cadence_nand_attach_chip(struct nand_chip *chip)
-+static int cadence_nand_attach_chip(struct nand_chip *chip)
- {
- 	struct cdns_nand_ctrl *cdns_ctrl = to_cdns_nand_ctrl(chip->controller);
- 	struct cdns_nand_chip *cdns_chip = to_cdns_nand_chip(chip);
+Seems fair ?
+
+Thanks,
+
+Mathieu
+
+
 -- 
-2.17.1
-
-
+Mathieu Desnoyers
+EfficiOS Inc.
+http://www.efficios.com
