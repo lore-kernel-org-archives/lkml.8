@@ -2,111 +2,139 @@ Return-Path: <SRS0=VV4q=52=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1490FC2BB85
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 11:29:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC0E8C2BB85
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 11:35:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DB3BF206E9
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 11:29:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="BJJD/x4j"
+	by mail.kernel.org (Postfix) with ESMTP id 9D93E20A8B
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 11:35:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726682AbgDJL33 (ORCPT
+        id S1726203AbgDJLfK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Apr 2020 07:29:29 -0400
-Received: from mout.gmx.net ([212.227.15.19]:34231 "EHLO mout.gmx.net"
+        Fri, 10 Apr 2020 07:35:10 -0400
+Received: from foss.arm.com ([217.140.110.172]:60514 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726648AbgDJL32 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Apr 2020 07:29:28 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1586518164;
-        bh=sWYYu3vMxv+gaoLrrDxDuwL+UgyJB+3aK94jNvqAN2Q=;
-        h=X-UI-Sender-Class:From:To:Cc:Subject:Date:In-Reply-To:References;
-        b=BJJD/x4jqvq8NcP0wyK/pY2vf35HluMdDC/CRo2x4vNPk1INvVbmM1P45Dg8ktR5t
-         0K98hBx4DsqcxZ1DxdcBs6y2ByhlQDZSTp2RyXhuf/GtgonQAWX9Y0QemAf1toHdZz
-         eeGzFriMDkuXGFNF/ojelaf8tu6DKp4P5hzljEA0=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from localhost.localdomain ([83.52.229.196]) by mail.gmx.com
- (mrgmx005 [212.227.17.184]) with ESMTPSA (Nemesis) id
- 1M8ykW-1jK6gn3GvW-0069YE; Fri, 10 Apr 2020 13:29:23 +0200
-From:   Oscar Carter <oscar.carter@gmx.com>
-To:     Forest Bond <forest@alittletooquiet.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Oscar Carter <oscar.carter@gmx.com>,
-        Malcolm Priestley <tvboxspy@gmail.com>,
-        Quentin Deslandes <quentin.deslandes@itdev.co.uk>,
-        Amir Mahdi Ghorbanian <indigoomega021@gmail.com>,
-        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 2/2] staging: vt6656: Remove duplicate code for the phy->service assignment
-Date:   Fri, 10 Apr 2020 13:28:34 +0200
-Message-Id: <20200410112834.17490-3-oscar.carter@gmx.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200410112834.17490-1-oscar.carter@gmx.com>
-References: <20200410112834.17490-1-oscar.carter@gmx.com>
+        id S1725990AbgDJLfJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Apr 2020 07:35:09 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7B4F11FB;
+        Fri, 10 Apr 2020 04:35:09 -0700 (PDT)
+Received: from [10.37.12.30] (unknown [10.37.12.30])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id EB3573F73D;
+        Fri, 10 Apr 2020 04:34:58 -0700 (PDT)
+Subject: Re: [PATCH v6 04/10] PM / EM: add support for other devices than CPUs
+ in Energy Model
+To:     Luis Gerhorst <linux-kernel@luisgerhorst.de>
+Cc:     linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        dri-devel@lists.freedesktop.org, linux-omap@vger.kernel.org,
+        linux-mediatek@lists.infradead.org, linux-arm-msm@vger.kernel.org,
+        linux-imx@nxp.com, Dietmar.Eggemann@arm.com, cw00.choi@samsung.com,
+        b.zolnierkie@samsung.com, rjw@rjwysocki.net, sudeep.holla@arm.com,
+        viresh.kumar@linaro.org, nm@ti.com, sboyd@kernel.org,
+        rui.zhang@intel.com, amit.kucheria@verdurent.com,
+        daniel.lezcano@linaro.org, mingo@redhat.com, peterz@infradead.org,
+        juri.lelli@redhat.com, vincent.guittot@linaro.org,
+        rostedt@goodmis.org, qperret@google.com, bsegall@google.com,
+        mgorman@suse.de, shawnguo@kernel.org, s.hauer@pengutronix.de,
+        festevam@gmail.com, kernel@pengutronix.de, khilman@kernel.org,
+        agross@kernel.org, bjorn.andersson@linaro.org, robh@kernel.org,
+        matthias.bgg@gmail.com, steven.price@arm.com,
+        tomeu.vizoso@collabora.com, alyssa.rosenzweig@collabora.com,
+        airlied@linux.ie, daniel@ffwll.ch, liviu.dudau@arm.com,
+        lorenzo.pieralisi@arm.com, patrick.bellasi@matbug.net,
+        orjan.eide@arm.com, rdunlap@infradead.org, mka@chromium.org
+References: <20200410084210.24932-1-lukasz.luba@arm.com>
+ <20200410084210.24932-5-lukasz.luba@arm.com>
+ <87ftdboaqr.fsf@luis-debian.luis-debian-domain>
+From:   Lukasz Luba <lukasz.luba@arm.com>
+Message-ID: <56053904-0314-340e-fdaa-4a8f649d7b6f@arm.com>
+Date:   Fri, 10 Apr 2020 12:34:56 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:NjWxbGtEZJAAq5q9d0g2t52pyLQL1cNj7YfLf+Ywk7tnZX8Z8KN
- 2L7jusOoUGtMZ3F+D+HvU/4v/Y2MJvSrSsCwkMmdN2Vaa7ZySflHMSQksANCnXHsiYoGW01
- aTfO/HAQ3gVRnIU5cY1Sq3mswAmE33pYsOjybyVw4MXUaQMxpS39YCg4py91AvMMduKgN+T
- RwEVZ5LjVyW7eiKMft81w==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:Wy3xv9jGFSk=:iAyDj2NhE+ynqdygNhH/Ct
- lZQnd11jEtK6UzJ4SewJPHxNRA4JXoKiHjrwX7pUE5qartSUu3m8EpylNCFZpjMd620UnfHBR
- UltOpJtACX1h3ajBGnLpHpPOJEzjvb+2vZX6vdMS56TKtGrV/4UGutYOA0m6sh4LdSVW3WL3p
- Bk3tRzv2YXSK7xo6W1Nh7kFg3SGAFk4en3oKPDh2WtS9hALqvo55in/McWaEDvtRP9/44hnz9
- bYD9smU8rGdctYXcQgoHK/fYyFIZKmm/tUhqcjXJwJ/dIepOHrH0KdiS79BWc9Jktw5KNQq4R
- Rt+VPMPJmiQAmYxAxWe6R+msp3rWoJQq4YXNPT6j7wq9OejXClghKig35O1oEKXbqh5/L4LMB
- 7AWKUCjGgtz9kMCW1SWSOOkXNmLqpM13Yl2mo1+DIo+cdrOcC4hkAHJp9HwkO8fojWCL5nsZk
- JSdokShKYloxHY7fM/SvHeV+bM45boJNQ1t/o2M5Rfxajf7elqFX6T11OLwv81TTls6QxIhjw
- 6yQ+NQYXyLYX3P8vyBxbHiQ5FgmqWZzZsaiLksJvsT5wg2HLif6+061lF7h8hQ9i/J0w7+raL
- jZgI2a1maJmiYw+FZVHhUFoA6gSqq6KiTa7CtQN78jiAFeQlN+dCPVaOLKi3OprYe2XrSFii5
- OqpwEdTaITiZgc8AIaz4tTX47kF7KM/yO6XUXMPZrPw4gvRwZjx3w9A8iPpSGSR1cA6WqnnlL
- ZfuyCbeWlyVUqtNbpd83KcFO7/usoNRWUFwAGXWgdQzwYIJK1qA3mWiNEIpukg5slgSJgGnJo
- H/Nr3jqoj0CeqsI0EqkdfdwZEy3yWqQwlNgzJbnNddaGL2fa8UdHkX98oF1DGKYQHSU/OWb8W
- r4+8/tTcDzWDulK/40SxRrqmSxtv5IRz0DQJl60G5QsOAuqZhVxaf8WWiBTR0m0WLLjtr5W+Y
- EPSezMjas8FlTk1I2f7ny9cDpJHMQxBoUepkoVTZs4R6q97J95d/hPuUTf58UCX8AUnLOzifL
- iFsamqG94K+vyaLRRFdRpHeu5HXLHiB19xyRZUcvkWSRf4U7Jx8ZB8BdDm49XD9dJ42MkfByy
- T301XQhMWWaegvyetpTrB1K8me4afHvSv/CxOxC8PNYLQpeC1IV/ir8C3cZstvCYBdOjn6ueZ
- l8OR/Mua4jaeUVseenZ9ykHfQs0neyAA3vpqqKveIMS5PlBjKptE3vvjrYOLu62rh3r1ATME4
- PUrhHEoHzvXUIu2vi
+In-Reply-To: <87ftdboaqr.fsf@luis-debian.luis-debian-domain>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Take out the "phy->service" assignment from the if-else statement due to
-it's the same for the two branches.
 
-Signed-off-by: Oscar Carter <oscar.carter@gmx.com>
-=2D--
- drivers/staging/vt6656/baseband.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/drivers/staging/vt6656/baseband.c b/drivers/staging/vt6656/ba=
-seband.c
-index 47f93bf6e07b..b0054f6c07e6 100644
-=2D-- a/drivers/staging/vt6656/baseband.c
-+++ b/drivers/staging/vt6656/baseband.c
-@@ -233,14 +233,13 @@ void vnt_get_phy_field(struct vnt_private *priv, u32=
- frame_length,
- 			       : preamble_type =3D=3D PREAMBLE_SHORT;
+On 4/10/20 12:12 PM, Luis Gerhorst wrote:
+> 
+> Lukasz Luba writes:
+> 
+>> +/**
+>> + * em_dev_unregister_perf_domain() - Unregister Energy Model (EM) for 
+>> a device
+>> + * @dev        : Device for which the EM is registered
+>> + *
+>> + * Try to unregister the EM for the specified device (it checks current
+>> + * reference counter). The EM for CPUs will not be freed.
+>> + */
+>> +void em_dev_unregister_perf_domain(struct device *dev)
+>> +{
+>> +    struct em_device *em_dev, *tmp;
+>> +
+>> +    if (IS_ERR_OR_NULL(dev))
+>> +        return;
+>> +
+>> +    /* We don't support freeing CPU structures in hotplug */
+>> +    if (_is_cpu_device(dev)) {
+>> +        dev_dbg_once(dev, "EM: the structures are not going to be 
+>> removed\n");
+>> +        return;
+>> +    }
+>> +
+>> +    mutex_lock(&em_pd_mutex);
+>> +
+>> +    if (list_empty(&em_pd_dev_list)) {
+>> +        mutex_unlock(&em_pd_mutex);
+>> +        return;
+>> +    }
+>> +
+>> +    list_for_each_entry_safe(em_dev, tmp, &em_pd_dev_list, 
+>> em_dev_list) {
+>> +        if (em_dev->dev == dev) {
+>> +            kref_put(&em_dev->kref, _em_release);
+>> +            break;
+>> +        }
+>> +    }
+>> +
+>> +    mutex_unlock(&em_pd_mutex);
+>> +}
+>> +EXPORT_SYMBOL_GPL(em_dev_unregister_perf_domain);
+> 
+> Ok, so em_dev_unregister_perf_domain() does not support the CPU device
+> and a subsequent em_register_perf_domain() will fail with EEXIST.
 
- 	phy->signal =3D vnt_phy_signal[i][j];
-+	phy->service =3D 0x00;
+Correct. At the current mainline Energy Model we don't even have
+em_unregister_perf_domain function. I had to introduce it in order
+to support other devices which might have drivers loaded/unloaded
+as modules.
 
- 	if (pkt_type =3D=3D PK_TYPE_11B) {
--		phy->service =3D 0x00;
- 		if (ext_bit)
- 			phy->service |=3D 0x80;
- 		phy->len =3D cpu_to_le16((u16)count);
- 	} else {
--		phy->service =3D 0x00;
- 		phy->len =3D cpu_to_le16((u16)frame_length);
- 	}
- }
-=2D-
-2.20.1
+
+> 
+> Is there a way to unregister/change the CPU's energy model during
+> runtime without restarting the whole system?
+
+Not for the CPU for now.
+
+It is possible for other devices. When you have i.e. a module driver for
+a device and in your code there is a (*active_power)(), then it is
+possible to change EM by unloading/loading the module.
+
+For the CPU we don't have this requirement for production code. I will
+add you to CC list when something like this would pop-up for a
+prototyping/experimentation code. We have been analyzing some options.
+
+Regards,
+Lukasz
 
