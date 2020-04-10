@@ -2,156 +2,76 @@ Return-Path: <SRS0=VV4q=52=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A9ECC2BB85
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 10:14:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8379C2BA2B
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 10:14:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3CC0A20757
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 10:14:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AD62C2166E
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 10:14:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726007AbgDJKOL (ORCPT
+        id S1726177AbgDJKOq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Apr 2020 06:14:11 -0400
-Received: from mga02.intel.com ([134.134.136.20]:35404 "EHLO mga02.intel.com"
+        Fri, 10 Apr 2020 06:14:46 -0400
+Received: from mx2.suse.de ([195.135.220.15]:45500 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725893AbgDJKOL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Apr 2020 06:14:11 -0400
-IronPort-SDR: lEAAHwxNYLaVaWCPPSMq63WM/1ghUIAhBnoOJFhfyHCPMklvbFQ+311Ioh9yqqWLcHEIbOaQTa
- +X/iECOtrvgg==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Apr 2020 03:14:10 -0700
-IronPort-SDR: znwmLGqGF7fBrxbjOQHuDL9fIjHD9nBDwbGOgyLlWixbox6ihlAJtbZRPT8E9bvFR1EixwvFk2
- MGfV9tIeJbrA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,366,1580803200"; 
-   d="scan'208";a="255435504"
-Received: from qjbian-mobl.amr.corp.intel.com ([10.255.31.146])
-  by orsmga006.jf.intel.com with ESMTP; 10 Apr 2020 03:14:09 -0700
-Message-ID: <8e4c2825d71e5bf5602b92937a49c04187c68e17.camel@intel.com>
-Subject: Re: [PATCH 1/2] thermal: core: Move thermal_cdev_update next to
- updated=false
-From:   Zhang Rui <rui.zhang@intel.com>
-To:     Daniel Lezcano <daniel.lezcano@linaro.org>
-Cc:     linux-kernel@vger.kernel.org, amit.kucheria@verdurent.com,
-        "open list:THERMAL" <linux-pm@vger.kernel.org>
-Date:   Fri, 10 Apr 2020 18:14:08 +0800
-In-Reply-To: <20200409151515.6607-1-daniel.lezcano@linaro.org>
-References: <20200409151515.6607-1-daniel.lezcano@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        id S1725893AbgDJKOp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Apr 2020 06:14:45 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 55CB3AB5F;
+        Fri, 10 Apr 2020 10:14:44 +0000 (UTC)
+Received: by ds.suse.cz (Postfix, from userid 10065)
+        id 5FC56DA72D; Fri, 10 Apr 2020 12:14:06 +0200 (CEST)
+Date:   Fri, 10 Apr 2020 12:14:06 +0200
+From:   David Sterba <dsterba@suse.cz>
+To:     Qu Wenruo <wqu@suse.com>
+Cc:     Xing Zhengjun <zhengjun.xing@linux.intel.com>,
+        kernel test robot <rong.a.chen@intel.com>,
+        David Sterba <dsterba@suse.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Leonard Lausen <leonard@lausen.nl>,
+        LKML <linux-kernel@vger.kernel.org>, lkp@01.org
+Subject: Re: [LKP] [btrfs] 8d47a0d8f7: fio.write_bw_MBps -28.6% regression
+Message-ID: <20200410101406.GI5920@suse.cz>
+Reply-To: dsterba@suse.cz
+Mail-Followup-To: dsterba@suse.cz, Qu Wenruo <wqu@suse.com>,
+        Xing Zhengjun <zhengjun.xing@linux.intel.com>,
+        kernel test robot <rong.a.chen@intel.com>,
+        David Sterba <dsterba@suse.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Leonard Lausen <leonard@lausen.nl>,
+        LKML <linux-kernel@vger.kernel.org>, lkp@01.org
+References: <20190513031733.GI31424@shao2-debian>
+ <d82835ec-c99c-bb40-be9f-f49f8101e921@linux.intel.com>
+ <a52f10f7-cdf6-9b00-9e49-b1344c17a190@suse.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <a52f10f7-cdf6-9b00-9e49-b1344c17a190@suse.com>
+User-Agent: Mutt/1.5.23.1-rc1 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi, Daniel,
-
-On Thu, 2020-04-09 at 17:15 +0200, Daniel Lezcano wrote:
-> The call to the thermal_cdev_update() function is done after browsing
-> the thermal instances which sets the updated flag by browsing them
-> again.
+On Fri, Apr 10, 2020 at 02:44:55PM +0800, Qu Wenruo wrote:
+> On 2020/4/10 下午2:34, Xing Zhengjun wrote:
+> > Hi Wenruo,
+> > 
+> >    We test it in v5.6, the issue still exist, do you have time to take a
+> > look at this? Thanks.
 > 
-> Instead of doing this, let's move the call right after setting the
-> cooling device 'updated' flag as it is done in the other governors.
-
-The reason we do this in two steps is that we want to avoid redundant
-cooling device state changes.
-
-Further more, I think it is better to move the thermal_cdev_update out
-of .throllte() callback, to thermal_zone_device_update(). So that we do
-not need to update the cooling device for each trip point.
-
-is there any specific reason we need to do thermal_cdev_update() for
-every potential change?
-
-thanks,
-rui
+> This is expected.
 > 
-> Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
-> ---
->  drivers/thermal/gov_bang_bang.c | 10 +---------
->  drivers/thermal/step_wise.c     | 10 +---------
->  2 files changed, 2 insertions(+), 18 deletions(-)
+> The extra check brings new overhead mostly equal to another CRC32 run.
 > 
-> diff --git a/drivers/thermal/gov_bang_bang.c
-> b/drivers/thermal/gov_bang_bang.c
-> index 991a1c54296d..c292a69845bb 100644
-> --- a/drivers/thermal/gov_bang_bang.c
-> +++ b/drivers/thermal/gov_bang_bang.c
-> @@ -64,6 +64,7 @@ static void thermal_zone_trip_update(struct
-> thermal_zone_device *tz, int trip)
->  		mutex_lock(&instance->cdev->lock);
->  		instance->cdev->updated = false; /* cdev needs update
-> */
->  		mutex_unlock(&instance->cdev->lock);
-> +		thermal_cdev_update(instance->cdev);
->  	}
->  
->  	mutex_unlock(&tz->lock);
-> @@ -98,17 +99,8 @@ static void thermal_zone_trip_update(struct
-> thermal_zone_device *tz, int trip)
->   */
->  static int bang_bang_control(struct thermal_zone_device *tz, int
-> trip)
->  {
-> -	struct thermal_instance *instance;
-> -
->  	thermal_zone_trip_update(tz, trip);
->  
-> -	mutex_lock(&tz->lock);
-> -
-> -	list_for_each_entry(instance, &tz->thermal_instances, tz_node)
-> -		thermal_cdev_update(instance->cdev);
-> -
-> -	mutex_unlock(&tz->lock);
-> -
->  	return 0;
->  }
->  
-> diff --git a/drivers/thermal/step_wise.c
-> b/drivers/thermal/step_wise.c
-> index 2ae7198d3067..298eedac0293 100644
-> --- a/drivers/thermal/step_wise.c
-> +++ b/drivers/thermal/step_wise.c
-> @@ -167,6 +167,7 @@ static void thermal_zone_trip_update(struct
-> thermal_zone_device *tz, int trip)
->  		mutex_lock(&instance->cdev->lock);
->  		instance->cdev->updated = false; /* cdev needs update
-> */
->  		mutex_unlock(&instance->cdev->lock);
-> +		thermal_cdev_update(instance->cdev);
->  	}
->  
->  	mutex_unlock(&tz->lock);
-> @@ -185,20 +186,11 @@ static void thermal_zone_trip_update(struct
-> thermal_zone_device *tz, int trip)
->   */
->  static int step_wise_throttle(struct thermal_zone_device *tz, int
-> trip)
->  {
-> -	struct thermal_instance *instance;
-> -
->  	thermal_zone_trip_update(tz, trip);
->  
->  	if (tz->forced_passive)
->  		thermal_zone_trip_update(tz, THERMAL_TRIPS_NONE);
->  
-> -	mutex_lock(&tz->lock);
-> -
-> -	list_for_each_entry(instance, &tz->thermal_instances, tz_node)
-> -		thermal_cdev_update(instance->cdev);
-> -
-> -	mutex_unlock(&tz->lock);
-> -
->  	return 0;
->  }
->  
+> We believe it's worthy, as our read time tree checker has exposed quite
+> some bit flip corruption.
 
+The test probably runs on a PMEM device so there's no slowdown from the
+actual IO and the in-memory checks are measurable, though 28% is a lot,
+I'd expect something like 5-10% at most.
