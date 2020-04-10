@@ -2,70 +2,106 @@ Return-Path: <SRS0=VV4q=52=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.3 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0916CC2BA2B
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 16:46:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15D42C2BA2B
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 16:58:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D25DA20769
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 16:46:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A313C2078E
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 16:58:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ffZOsTYG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726669AbgDJQqN (ORCPT
+        id S1726654AbgDJQ6q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Apr 2020 12:46:13 -0400
-Received: from mx2.suse.de ([195.135.220.15]:55786 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726177AbgDJQqN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Apr 2020 12:46:13 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 00588AB64;
-        Fri, 10 Apr 2020 16:46:10 +0000 (UTC)
-Received: by ds.suse.cz (Postfix, from userid 10065)
-        id 9BE3ADA72D; Fri, 10 Apr 2020 18:45:33 +0200 (CEST)
-Date:   Fri, 10 Apr 2020 18:45:33 +0200
-From:   David Sterba <dsterba@suse.cz>
-To:     Eugene Syromiatnikov <esyr@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, linux-btrfs@vger.kernel.org,
-        David Sterba <dsterba@suse.com>,
-        Nikolay Borisov <nborisov@suse.com>,
-        Josef Bacik <josef@toxicpanda.com>, Chris Mason <clm@fb.com>,
-        "Dmitry V. Levin" <ldv@altlinux.org>
-Subject: Re: [PATCH] btrfs: re-instantiate the removed
- BTRFS_SUBVOL_CREATE_ASYNC definition
-Message-ID: <20200410164533.GP5920@twin.jikos.cz>
-Reply-To: dsterba@suse.cz
-Mail-Followup-To: dsterba@suse.cz, Eugene Syromiatnikov <esyr@redhat.com>,
-        linux-kernel@vger.kernel.org, linux-btrfs@vger.kernel.org,
-        David Sterba <dsterba@suse.com>,
-        Nikolay Borisov <nborisov@suse.com>,
-        Josef Bacik <josef@toxicpanda.com>, Chris Mason <clm@fb.com>,
-        "Dmitry V. Levin" <ldv@altlinux.org>
-References: <20200401032650.GA24378@asgard.redhat.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200401032650.GA24378@asgard.redhat.com>
-User-Agent: Mutt/1.5.23.1-rc1 (2014-03-12)
+        Fri, 10 Apr 2020 12:58:46 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:35985 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726177AbgDJQ6p (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Apr 2020 12:58:45 -0400
+Received: by mail-wr1-f68.google.com with SMTP id u13so2428338wrp.3
+        for <linux-kernel@vger.kernel.org>; Fri, 10 Apr 2020 09:58:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=Zm05jd4ot0twDY3U5DXhTVZzlsMPv7YB8r5JVuqwQjg=;
+        b=ffZOsTYGz/StbWDLUX0KA2AQwF8oHIZNK9OCUV3Hi3cSqeu8+4ozvFAzBItDez1BCS
+         z9+Q6pTm9RbfdD9R1S2GdHjAD4/Htv7w1z8SMqAP+U4cju8GmBlU/t8vOCIV0GBe8Zgt
+         Si5XWr68lO9U9RARDidTtfaPlRXMoIfbJKXgxRbPPn070P/mR6pU/87St5VVuDbWjwlj
+         oFdwL5iC2PuRhvvdNer7N328Ub4wx5ldnQq7fNeyZ+9g3bnAupa01rOpm5+ckMV7Ga5Q
+         90YW76TpzWn3RPVNlZDwG95pTq8Uv3m9eJDs4nSq3FOPTEj503zXOAI/U9kOFUgmIaZ4
+         Owzg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=Zm05jd4ot0twDY3U5DXhTVZzlsMPv7YB8r5JVuqwQjg=;
+        b=P+9l09gM5ptre9qnj1WGbc8keKyplZXH2M4bmuZ8IBfq7wb8cKSc95Pwa2xN8OCGv3
+         CU6/9NfakX6UwfzyShAPhmcg9WeK+956MeNjybj3Nbpez8WK+hcWoSANlpqQhu0wh72Y
+         CEfRvow1/786BCNkkxyKmLq3FWkdLSnDPMGDdDYBEZ8GF12WPbUnknnfN91vP5kY9nL3
+         F/5eUPVrcd75g1V0AGVdGGnD9kP26GXND4xN7Z7xOmY4SSPkRPUXhxPfRB7A57UV9Y5T
+         r+XPicZw9gN8w57k6C2Wh00G67i99GrdYgioi31vRnOq4GAHMUAZP1LJSXyk4xkvULWM
+         EKEA==
+X-Gm-Message-State: AGi0PuY+7Aqf/vU8m8w0BzrN48CJTvYxYYgqaUfQrUQfaZULBJuwfyZo
+        L/XJn+TTh6J8yuv/Z5DHCraY45Si3vM=
+X-Google-Smtp-Source: APiQypJMja2F44giBKNUW30QzuB9XjIVxLOR3Fk2Hdoz2b3uEFN39IZZ5XD2IK2fhFVATq2hFgrDKQ==
+X-Received: by 2002:adf:ec50:: with SMTP id w16mr5743042wrn.95.1586537924222;
+        Fri, 10 Apr 2020 09:58:44 -0700 (PDT)
+Received: from alpha.lan (176-149-93-98.abo.bbox.fr. [176.149.93.98])
+        by smtp.googlemail.com with ESMTPSA id a15sm3423008wme.17.2020.04.10.09.58.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 10 Apr 2020 09:58:43 -0700 (PDT)
+From:   "Jeremie Francois (on alpha)" <jeremie.francois@gmail.com>
+Cc:     "Jeremie Francois (on alpha)" <jeremie.francois@gmail.com>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] scripts/config: allow colons in option strings for sed
+Date:   Fri, 10 Apr 2020 18:57:40 +0200
+Message-Id: <20200410165741.27078-1-jeremie.francois@gmail.com>
+X-Mailer: git-send-email 2.17.1
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 01, 2020 at 05:26:50AM +0200, Eugene Syromiatnikov wrote:
-> The commit 9c1036fdb1d1ff1b ("btrfs: Remove BTRFS_SUBVOL_CREATE_ASYNC
-> support") breaks strace build with the kernel headers from git:
-> 
->     btrfs.c: In function "btrfs_test_subvol_ioctls":
->     btrfs.c:531:23: error: "BTRFS_SUBVOL_CREATE_ASYNC" undeclared (first use
->     in this function)
->        vol_args_v2.flags = BTRFS_SUBVOL_CREATE_ASYNC;
-> 
-> Moreover, it is improper to break UAPI anyway.
+Sed broke on some strings as it used colon as a separator.
+I made it more robust by using \001, which is legit POSIX AFAIK.
 
-IIRC the reason for the UAPI exports was to let strace use the includes
-to decode the ioctls, so for that I agree it's improper to break the
-build, sorry. The ioctls are a public interface so it's an ABI.  Patch
-added to 5.7 queue, thanks.
+E.g. ./config --set-str CONFIG_USBNET_DEVADDR "de:ad:be:ef:00:01"
+failed with: sed: -e expression #1, char 55: unknown option to `s'
+
+Signed-off-by: Jeremie Francois (on alpha) <jeremie.francois@gmail.com>
+---
+ scripts/config | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
+
+diff --git a/scripts/config b/scripts/config
+index e0e39826dae9..d365081b60b2 100755
+--- a/scripts/config
++++ b/scripts/config
+@@ -7,6 +7,9 @@ myname=${0##*/}
+ # If no prefix forced, use the default CONFIG_
+ CONFIG_="${CONFIG_-CONFIG_}"
+ 
++# We use an uncommon delimiter for sed substitutions
++SED_DELIM=$(echo -en "\001")
++
+ usage() {
+ 	cat >&2 <<EOL
+ Manipulate options in a .config file from the command line.
+@@ -83,7 +86,7 @@ txt_subst() {
+ 	local infile="$3"
+ 	local tmpfile="$infile.swp"
+ 
+-	sed -e "s:$before:$after:" "$infile" >"$tmpfile"
++	sed -e "s$SED_DELIM$before$SED_DELIM$after$SED_DELIM" "$infile" >"$tmpfile"
+ 	# replace original file with the edited one
+ 	mv "$tmpfile" "$infile"
+ }
+-- 
+2.17.1
+
