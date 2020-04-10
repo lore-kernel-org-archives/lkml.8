@@ -2,114 +2,155 @@ Return-Path: <SRS0=VV4q=52=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C22FC2D0EC
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 19:38:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81517C2D0EC
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 19:38:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 52CC020769
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 19:38:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5F71920732
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 19:38:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1586547486;
+	bh=76FW6bsyi+GvI3cA1295vPvYzfcdLfIdfR/uMK0cqIM=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=z4jKy/Uqzo6ttQ87sC1oM2mNqN8tPbWxwjjapYeIeeNbe1GDdzK+mMzzbmeGfTEdM
+	 Kt0xaG3yVi184MuSLaDgTmQ0bJb+gTxRAXLHinDQH5RcrvUe5k+U6rD+et4pABtDyE
+	 /DmWRQLz1Vs9mM4jNNYbiAFKlJLxLN0d2liw+h2Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727002AbgDJTiB (ORCPT
+        id S1726740AbgDJTiE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Apr 2020 15:38:01 -0400
-Received: from ex13-edg-ou-002.vmware.com ([208.91.0.190]:36216 "EHLO
-        EX13-EDG-OU-002.vmware.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726203AbgDJTiA (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Apr 2020 15:38:00 -0400
-Received: from sc9-mailhost2.vmware.com (10.113.161.72) by
- EX13-EDG-OU-002.vmware.com (10.113.208.156) with Microsoft SMTP Server id
- 15.0.1156.6; Fri, 10 Apr 2020 12:37:55 -0700
-Received: from sc9-mailhost3.vmware.com (unknown [10.166.69.226])
-        by sc9-mailhost2.vmware.com (Postfix) with ESMTP id 5BA62B2C87;
-        Fri, 10 Apr 2020 15:37:59 -0400 (EDT)
-From:   Matt Helsley <mhelsley@vmware.com>
-To:     <linux-kernel@vger.kernel.org>
-CC:     Josh Poimboeuf <jpoimboe@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Julien Thierry <jthierry@redhat.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Miroslav Benes <mbenes@suse.cz>,
-        Matt Helsley <mhelsley@vmware.com>
-Subject: [RFC][PATCH 19/36] objtool: mcount: Stop using ehdr in find_section_sym_index
-Date:   Fri, 10 Apr 2020 12:35:42 -0700
-Message-ID: <985196946be640697625c93a5744e66ca10b6493.1586468801.git.mhelsley@vmware.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <cover.1586468801.git.mhelsley@vmware.com>
-References: <cover.1586468801.git.mhelsley@vmware.com>
+        Fri, 10 Apr 2020 15:38:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52560 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726203AbgDJTiD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Apr 2020 15:38:03 -0400
+Received: from localhost (mobile-166-170-220-109.mycingular.net [166.170.220.109])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id BB1CC20732;
+        Fri, 10 Apr 2020 19:38:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1586547482;
+        bh=76FW6bsyi+GvI3cA1295vPvYzfcdLfIdfR/uMK0cqIM=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=f5aqyeY5H8P+Dg0VtR5VXhNEaIBxx4R/gGzchOa7w+V/JIMrsYuYNV7aLVSvrZntH
+         WWv3dp0kGmlDxfECQgMchX8GExkaXAsoMWQhr1nrjc+24qlq2ngw+8X5Yw7mD9qxHN
+         rCJAnLyi2B0qmE9qQBazZ/B4H3+CIp6g7so4MwFk=
+Date:   Fri, 10 Apr 2020 14:38:00 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Cc:     Linux PM <linux-pm@vger.kernel.org>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        Linux ACPI <linux-acpi@vger.kernel.org>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Hans De Goede <hdegoede@redhat.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        DRI-devel <dri-devel@lists.freedesktop.org>,
+        Intel Graphics <intel-gfx@lists.freedesktop.org>,
+        intel-wired-lan@lists.osuosl.org
+Subject: Re: [PATCH 5/7] PM: sleep: core: Rename DPM_FLAG_NEVER_SKIP
+Message-ID: <20200410193800.GA5202@google.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-Received-SPF: None (EX13-EDG-OU-002.vmware.com: mhelsley@vmware.com does not
- designate permitted sender hosts)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <5092680.jloV5Ae5OO@kreacher>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We can use the objtool GElf_Ehdr structure to access ehdr here.
-This makes the function completely independent of the old
-recordmcount ELF wrapper. The next step will be to promote it
-to the C file.
+On Fri, Apr 10, 2020 at 05:56:13PM +0200, Rafael J. Wysocki wrote:
+> From: "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+> 
+> Rename DPM_FLAG_NEVER_SKIP to DPM_FLAG_NO_DIRECT_COMPLETE which
+> matches its purpose more closely.
+> 
+> No functional impact.
+> 
+> Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 
-Signed-off-by: Matt Helsley <mhelsley@vmware.com>
----
- tools/objtool/recordmcount.h | 13 ++++++-------
- 1 file changed, 6 insertions(+), 7 deletions(-)
+Acked-by: Bjorn Helgaas <bhelgaas@google.com> # for PCI parts
 
-diff --git a/tools/objtool/recordmcount.h b/tools/objtool/recordmcount.h
-index d61892597731..066923dd70a9 100644
---- a/tools/objtool/recordmcount.h
-+++ b/tools/objtool/recordmcount.h
-@@ -188,7 +188,7 @@ static uint_t *sift_rel_mcount(uint_t *mlocp,
- 			       Elf_Rel **const mrelpp,
- 			       const struct section * const rels,
- 			       unsigned const recsym_index,
--			       uint_t const recval,
-+			       unsigned long const recval,
- 			       unsigned const reltype)
- {
- 	uint_t *const mloc0 = mlocp;
-@@ -282,9 +282,8 @@ static int nop_mcount(struct section * const rels,
-  */
- static int find_section_sym_index(unsigned const txtndx,
- 				char const *const txtname,
--				uint_t *const recvalp,
--				unsigned int *sym_index,
--				Elf_Ehdr const *const ehdr)
-+				unsigned long *const recvalp,
-+				unsigned int *sym_index)
- {
- 	struct symbol *sym;
- 	struct section *txts = find_section_by_index(lf, txtndx);
-@@ -298,7 +297,7 @@ static int find_section_sym_index(unsigned const txtndx,
- 	list_for_each_entry(sym, &txts->symbol_list, list) {
- 		if ((sym->bind == STB_LOCAL) || (sym->bind == STB_GLOBAL)) {
- 			/* function symbols on ARM have quirks, avoid them */
--			if (w2(ehdr->e_machine) == EM_ARM
-+			if (lf->ehdr.e_machine == EM_ARM
- 			    && sym->type == STT_FUNC)
- 				continue;
- 
-@@ -387,12 +386,12 @@ static int do_func(Elf_Ehdr *const ehdr,
- 
- 		txtname = has_rel_mcount(sec);
- 		if (txtname && is_mcounted_section_name(txtname)) {
-+			unsigned long recval = 0;
- 			unsigned int recsym;
--			uint_t recval = 0;
- 
- 			symsec_sh_link = sec->sh.sh_link;
- 			result = find_section_sym_index(sec->sh.sh_info,
--						txtname, &recval, &recsym, ehdr);
-+						txtname, &recval, &recsym);
- 			if (result)
- 				goto out;
- 
--- 
-2.20.1
+> ---
+>  Documentation/driver-api/pm/devices.rst    |  6 +++---
+>  Documentation/power/pci.rst                | 10 +++++-----
+>  drivers/base/power/main.c                  |  2 +-
+>  drivers/gpu/drm/amd/amdgpu/amdgpu_kms.c    |  2 +-
+>  drivers/gpu/drm/i915/intel_runtime_pm.c    |  2 +-
+>  drivers/gpu/drm/radeon/radeon_kms.c        |  2 +-
+>  drivers/misc/mei/pci-me.c                  |  2 +-
+>  drivers/misc/mei/pci-txe.c                 |  2 +-
+>  drivers/net/ethernet/intel/e1000e/netdev.c |  2 +-
+>  drivers/net/ethernet/intel/igb/igb_main.c  |  2 +-
+>  drivers/net/ethernet/intel/igc/igc_main.c  |  2 +-
+>  drivers/pci/pcie/portdrv_pci.c             |  2 +-
+>  include/linux/pm.h                         |  6 +++---
+>  13 files changed, 21 insertions(+), 21 deletions(-)
+> 
+> diff --git a/Documentation/driver-api/pm/devices.rst b/Documentation/driver-api/pm/devices.rst
+> index f66c7b9126ea..4ace0eba4506 100644
+> --- a/Documentation/driver-api/pm/devices.rst
+> +++ b/Documentation/driver-api/pm/devices.rst
+> @@ -361,9 +361,9 @@ the phases are: ``prepare``, ``suspend``, ``suspend_late``, ``suspend_noirq``.
+>  	runtime PM disabled.
 
+Minor question about a preceding paragraph that ends:
+
+  In that case, the ``->complete`` callback will be invoked directly
+  after the ``->prepare`` callback and is entirely responsible for
+  putting the device into a consistent state as appropriate.
+
+What does" a consistent state as appropriate" mean?  I know this is
+generic documentation at a high level, so maybe there's no good
+explanation for "consistent state," but I don't know what to imagine
+there.
+
+And what does "as appropriate" mean?  Would it change the meaning to
+drop those two words, or are there situations where it's not
+appropriate to put the device into a consistent state?  Or maybe it's
+just that the type of device determines what the consistent state is?
+
+>  	This feature also can be controlled by device drivers by using the
+> -	``DPM_FLAG_NEVER_SKIP`` and ``DPM_FLAG_SMART_PREPARE`` driver power
+> -	management flags.  [Typically, they are set at the time the driver is
+> -	probed against the device in question by passing them to the
+> +	``DPM_FLAG_NO_DIRECT_COMPLETE`` and ``DPM_FLAG_SMART_PREPARE`` driver
+> +	power management flags.  [Typically, they are set at the time the driver
+> +	is probed against the device in question by passing them to the
+>  	:c:func:`dev_pm_set_driver_flags` helper function.]  If the first of
+>  	these flags is set, the PM core will not apply the direct-complete
+>  	procedure described above to the given device and, consequenty, to any
+
+s/consequenty/consequently/
+
+Drive-by comment: I looked for a definition of "direct-complete".  The
+closest I found is a couple paragraphs above this, where it says "Note
+that this direct-complete procedure ...," but that leaves me to try to
+reconstruct the definition from the preceding text.
+
+AFAICT, going to freeze, standby, or memory sleep includes these
+callbacks:
+
+  ->prepare
+  ->suspend
+  ->suspend_late
+  ->suspend_noirq
+  ->complete         (not mentioned in the list of phases)
+
+And "direct-complete" means we skip the suspend, suspend_late,
+and suspend_noirq callbacks so we only use these:
+
+  ->prepare
+  ->complete
+
+And apparently we skip those callbacks for device X if ->prepare() for
+X and all its descendents returns a positive value AND they are all
+runtime-suspended, except if a driver for X or a descendent sets
+DPM_FLAG_NO_DIRECT_COMPLETE.
+
+Bjorn
