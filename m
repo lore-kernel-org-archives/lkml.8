@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB8B4C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 04:02:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BE57C2D0EC
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 04:02:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 769462063A
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 04:02:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 33B212063A
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 04:02:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586491359;
-	bh=zMBCe1mPTUuYlis/A+ipA59U/N5RLtlx/E7hzsEDSls=;
+	s=default; t=1586491361;
+	bh=oo8k5WceXRjdNhrIZURPloY5o+v2rdHZpBp5cNa6Cy0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WKzSyAnJayrhLczVWct7gt1IwtabO1JkngllvaztD8MG6ELZ6vCD5/OkD2e3LqaeG
-	 G7BJZCl2KnLHZ/YgVW92hjuqjuL9h1AUc+eoPNRXr6im/RzflqUoNvEJ59JgdQN6sQ
-	 ZUp2jWJJaihqr37GvUzOQwWRHkDfjkzIUndkHjWs=
+	b=wKxHBUSNweezqbUNE2YCAn8Ot8la/4RrJ5GcYQEIE2TfXkCyV7X9SLqGi72g6RXep
+	 HLw/b0DtyXik8MZF5uCiQjqGeT1G9VC3cA8kM3ViQQq1RmczhXZKTxaSozAi7/jpqV
+	 Lc4Jt3hchUL1qMAef5qMWrljpz4of2lRkeSnsO+Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726918AbgDJDq7 (ORCPT
+        id S1728118AbgDJECj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Apr 2020 23:46:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57066 "EHLO mail.kernel.org"
+        Fri, 10 Apr 2020 00:02:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57366 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726865AbgDJDqw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Apr 2020 23:46:52 -0400
+        id S1726882AbgDJDrB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Apr 2020 23:47:01 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1C76220936;
-        Fri, 10 Apr 2020 03:46:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5297C20CC7;
+        Fri, 10 Apr 2020 03:47:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586490412;
-        bh=zMBCe1mPTUuYlis/A+ipA59U/N5RLtlx/E7hzsEDSls=;
+        s=default; t=1586490422;
+        bh=oo8k5WceXRjdNhrIZURPloY5o+v2rdHZpBp5cNa6Cy0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Sz4mxHQAv83/DjecPhz2IR9QGftRbQ7wckAFphdoKAVRQ7EAtNIA36fEuaiqwyAWw
-         jeMOqji13bjyS8TXdWeViFAtLNv0t2KqFp0tSzHPgbc2a2GmRTwE621BUiooNFPN0x
-         QtidM9FCRbEXmAi5mTpPj/hWltooXIAat5F/O86I=
+        b=LHV6hI1VOYA8Al5IMTZswfejyAjNnHqgdhwLybFbA8Bjr28HUjNv01tk4UJ0kop0g
+         eoueemem0EVa90v9za/WsLzkCMOduNdFtZ3BFFgVjCsPcPT7ZVRLM8dQirEHxHvxHU
+         ZwR1md6rLotc4gTFjfOD7OxsP7gal5aPQF22ONkY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Saravana Kannan <saravanak@google.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.6 14/68] driver core: Reevaluate dev->links.need_for_probe as suppliers are added
-Date:   Thu,  9 Apr 2020 23:45:39 -0400
-Message-Id: <20200410034634.7731-14-sashal@kernel.org>
+Cc:     Alexey Dobriyan <adobriyan@gmail.com>,
+        Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>,
+        Sasha Levin <sashal@kernel.org>, linux-block@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.6 21/68] null_blk: fix spurious IO errors after failed past-wp access
+Date:   Thu,  9 Apr 2020 23:45:46 -0400
+Message-Id: <20200410034634.7731-21-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200410034634.7731-1-sashal@kernel.org>
 References: <20200410034634.7731-1-sashal@kernel.org>
@@ -59,69 +59,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Saravana Kannan <saravanak@google.com>
+From: Alexey Dobriyan <adobriyan@gmail.com>
 
-[ Upstream commit 1745d299af5b373abad08fa29bff0d31dc6aff21 ]
+[ Upstream commit ff77042296d0a54535ddf74412c5ae92cb4ec76a ]
 
-A previous patch 03324507e66c ("driver core: Allow
-fwnode_operations.add_links to differentiate errors") forgot to update
-all call sites to fwnode_operations.add_links. This patch fixes that.
+Steps to reproduce:
 
-Legend:
--> Denotes RHS is an optional/potential supplier for LHS
-=> Denotes RHS is a mandatory supplier for LHS
+	BLKRESETZONE zone 0
 
-Example:
+	// force EIO
+	pwrite(fd, buf, 4096, 4096);
 
-Device A => Device X
-Device A -> Device Y
+	[issue more IO including zone ioctls]
 
-Before this patch:
-1. Device A is added.
-2. Device A is marked as waiting for mandatory suppliers
-3. Device X is added
-4. Device A is left marked as waiting for mandatory suppliers
+It will start failing randomly including IO to unrelated zones because of
+->error "reuse". Trigger can be partition detection as well if test is not
+run immediately which is even more entertaining.
 
-Step 4 is wrong since all mandatory suppliers of Device A have been
-added.
+The fix is of course to clear ->error where necessary.
 
-After this patch:
-1. Device A is added.
-2. Device A is marked as waiting for mandatory suppliers
-3. Device X is added
-4. Device A is no longer considered as waiting for mandatory suppliers
-
-This is the correct behavior.
-
-Fixes: 03324507e66c ("driver core: Allow fwnode_operations.add_links to differentiate errors")
-Signed-off-by: Saravana Kannan <saravanak@google.com>
-Link: https://lore.kernel.org/r/20200222014038.180923-2-saravanak@google.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Reviewed-by: Christoph Hellwig <hch@lst.de>
+Signed-off-by: Alexey Dobriyan (SK hynix) <adobriyan@gmail.com>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/base/core.c | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ drivers/block/null_blk_main.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/base/core.c b/drivers/base/core.c
-index dbb0f9130f42d..d32a3aefff32f 100644
---- a/drivers/base/core.c
-+++ b/drivers/base/core.c
-@@ -523,9 +523,13 @@ static void device_link_add_missing_supplier_links(void)
+diff --git a/drivers/block/null_blk_main.c b/drivers/block/null_blk_main.c
+index 2b8b4cb447cfb..d6a8d66e98036 100644
+--- a/drivers/block/null_blk_main.c
++++ b/drivers/block/null_blk_main.c
+@@ -605,6 +605,7 @@ static struct nullb_cmd *__alloc_cmd(struct nullb_queue *nq)
+ 	if (tag != -1U) {
+ 		cmd = &nq->cmds[tag];
+ 		cmd->tag = tag;
++		cmd->error = BLK_STS_OK;
+ 		cmd->nq = nq;
+ 		if (nq->dev->irqmode == NULL_IRQ_TIMER) {
+ 			hrtimer_init(&cmd->timer, CLOCK_MONOTONIC,
+@@ -1385,6 +1386,7 @@ static blk_status_t null_queue_rq(struct blk_mq_hw_ctx *hctx,
+ 		cmd->timer.function = null_cmd_timer_expired;
+ 	}
+ 	cmd->rq = bd->rq;
++	cmd->error = BLK_STS_OK;
+ 	cmd->nq = nq;
  
- 	mutex_lock(&wfs_lock);
- 	list_for_each_entry_safe(dev, tmp, &wait_for_suppliers,
--				 links.needs_suppliers)
--		if (!fwnode_call_int_op(dev->fwnode, add_links, dev))
-+				 links.needs_suppliers) {
-+		int ret = fwnode_call_int_op(dev->fwnode, add_links, dev);
-+		if (!ret)
- 			list_del_init(&dev->links.needs_suppliers);
-+		else if (ret != -ENODEV)
-+			dev->links.need_for_probe = false;
-+	}
- 	mutex_unlock(&wfs_lock);
- }
- 
+ 	blk_mq_start_request(bd->rq);
 -- 
 2.20.1
 
