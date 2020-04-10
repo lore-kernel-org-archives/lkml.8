@@ -2,89 +2,64 @@ Return-Path: <SRS0=VV4q=52=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24463C2BB55
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 08:44:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0812C2BB85
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 08:45:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F001120753
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 08:44:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C1BA620787
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 08:45:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726798AbgDJIoO (ORCPT
+        id S1726184AbgDJIpZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Apr 2020 04:44:14 -0400
-Received: from foss.arm.com ([217.140.110.172]:59314 "EHLO foss.arm.com"
+        Fri, 10 Apr 2020 04:45:25 -0400
+Received: from wtarreau.pck.nerim.net ([62.212.114.60]:34469 "EHLO 1wt.eu"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725839AbgDJIoO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Apr 2020 04:44:14 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E3B717FA;
-        Fri, 10 Apr 2020 01:44:13 -0700 (PDT)
-Received: from e123648.arm.com (unknown [10.37.12.30])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 0CD1F3F68F;
-        Fri, 10 Apr 2020 01:44:02 -0700 (PDT)
-From:   Lukasz Luba <lukasz.luba@arm.com>
-To:     linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        dri-devel@lists.freedesktop.org, linux-omap@vger.kernel.org,
-        linux-mediatek@lists.infradead.org, linux-arm-msm@vger.kernel.org,
-        linux-imx@nxp.com
-Cc:     Dietmar.Eggemann@arm.com, cw00.choi@samsung.com,
-        b.zolnierkie@samsung.com, rjw@rjwysocki.net, sudeep.holla@arm.com,
-        viresh.kumar@linaro.org, nm@ti.com, sboyd@kernel.org,
-        rui.zhang@intel.com, amit.kucheria@verdurent.com,
-        daniel.lezcano@linaro.org, mingo@redhat.com, peterz@infradead.org,
-        juri.lelli@redhat.com, vincent.guittot@linaro.org,
-        rostedt@goodmis.org, qperret@google.com, bsegall@google.com,
-        mgorman@suse.de, shawnguo@kernel.org, s.hauer@pengutronix.de,
-        festevam@gmail.com, kernel@pengutronix.de, khilman@kernel.org,
-        agross@kernel.org, bjorn.andersson@linaro.org, robh@kernel.org,
-        matthias.bgg@gmail.com, steven.price@arm.com,
-        tomeu.vizoso@collabora.com, alyssa.rosenzweig@collabora.com,
-        airlied@linux.ie, daniel@ffwll.ch, liviu.dudau@arm.com,
-        lorenzo.pieralisi@arm.com, lukasz.luba@arm.com,
-        patrick.bellasi@matbug.net, orjan.eide@arm.com,
-        rdunlap@infradead.org, mka@chromium.org
-Subject: [PATCH v6 10/10] drm/panfrost: Register devfreq cooling and attempt to add Energy Model
-Date:   Fri, 10 Apr 2020 09:42:10 +0100
-Message-Id: <20200410084210.24932-11-lukasz.luba@arm.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200410084210.24932-1-lukasz.luba@arm.com>
-References: <20200410084210.24932-1-lukasz.luba@arm.com>
+        id S1725839AbgDJIpZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Apr 2020 04:45:25 -0400
+Received: (from willy@localhost)
+        by pcw.home.local (8.15.2/8.15.2/Submit) id 03A8jG2v014259;
+        Fri, 10 Apr 2020 10:45:16 +0200
+Date:   Fri, 10 Apr 2020 10:45:16 +0200
+From:   Willy Tarreau <w@1wt.eu>
+To:     Denis Efremov <efremov@linux.com>
+Cc:     Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 22/23] floppy: cleanup: do not iterate on current_fdc in
+ DMA grab/release functions
+Message-ID: <20200410084516.GD14199@1wt.eu>
+References: <20200331094054.24441-1-w@1wt.eu>
+ <20200331094054.24441-23-w@1wt.eu>
+ <f5fb363f-8c2c-3aca-6b71-4a45544d067a@linux.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <f5fb363f-8c2c-3aca-6b71-4a45544d067a@linux.com>
+User-Agent: Mutt/1.6.1 (2016-04-27)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Register devfreq cooling device and attempt to register Energy Model. This
-will add the devfreq device to the Energy Model framework. It will create
-a dedicated and unified data structures used i.e. in thermal framework.
-The last NULL parameter indicates that the power model is simplified and
-created based on DT 'dynamic-power-coefficient', voltage and frequency.
+On Fri, Apr 10, 2020 at 11:35:51AM +0300, Denis Efremov wrote:
+> I see a couple of similar cycles in do_floppy_init:
+> 
+> for (i = 0; i < N_FDC; i++) {
+>         current_fdc = i;
+>         memset(&fdc_state[current_fdc], 0, sizeof(*fdc_state));
+>         fdc_state[current_fdc].dtr = -1;
+>         fdc_state[current_fdc].dor = 0x4;
+> ...
+> }
+> 
+> for (i = 0; i < N_FDC; i++) {
+>         current_fdc = i;
+>         fdc_state[current_fdc].driver_version = FD_DRIVER_VERSION;
+> ...
+> }
 
-Reviewed-by: Steven Price <steven.price@arm.com>
-Reviewed-by: Alyssa Rosenzweig <alyssa.rosenzweig@collabora.com>
-Signed-off-by: Lukasz Luba <lukasz.luba@arm.com>
----
- drivers/gpu/drm/panfrost/panfrost_devfreq.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Ah thanks, I missed these ones! Do you want me to respin this patch ?
 
-diff --git a/drivers/gpu/drm/panfrost/panfrost_devfreq.c b/drivers/gpu/drm/panfrost/panfrost_devfreq.c
-index 413987038fbf..8759a73db153 100644
---- a/drivers/gpu/drm/panfrost/panfrost_devfreq.c
-+++ b/drivers/gpu/drm/panfrost/panfrost_devfreq.c
-@@ -105,7 +105,7 @@ int panfrost_devfreq_init(struct panfrost_device *pfdev)
- 	}
- 	pfdev->devfreq.devfreq = devfreq;
- 
--	cooling = of_devfreq_cooling_register(dev->of_node, devfreq);
-+	cooling = devfreq_cooling_em_register(devfreq, NULL);
- 	if (IS_ERR(cooling))
- 		DRM_DEV_INFO(dev, "Failed to register cooling device\n");
- 	else
--- 
-2.17.1
-
+Willy
