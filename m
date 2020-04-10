@@ -2,240 +2,429 @@ Return-Path: <SRS0=VV4q=52=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6FDFC2D0EC
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 19:41:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 364B0C2BB55
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 19:44:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9467D20801
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 19:41:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EB17F20801
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 19:44:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726729AbgDJTl0 (ORCPT
+        id S1726678AbgDJToo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Apr 2020 15:41:26 -0400
-Received: from ex13-edg-ou-002.vmware.com ([208.91.0.190]:36243 "EHLO
-        EX13-EDG-OU-002.vmware.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726683AbgDJTlY (ORCPT
+        Fri, 10 Apr 2020 15:44:44 -0400
+Received: from mail.baikalelectronics.com ([87.245.175.226]:41604 "EHLO
+        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726142AbgDJTon (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Apr 2020 15:41:24 -0400
-Received: from sc9-mailhost2.vmware.com (10.113.161.72) by
- EX13-EDG-OU-002.vmware.com (10.113.208.156) with Microsoft SMTP Server id
- 15.0.1156.6; Fri, 10 Apr 2020 12:38:53 -0700
-Received: from sc9-mailhost3.vmware.com (unknown [10.166.69.226])
-        by sc9-mailhost2.vmware.com (Postfix) with ESMTP id 8BFB0B2C9B;
-        Fri, 10 Apr 2020 15:38:57 -0400 (EDT)
-From:   Matt Helsley <mhelsley@vmware.com>
-To:     <linux-kernel@vger.kernel.org>
-CC:     Josh Poimboeuf <jpoimboe@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Julien Thierry <jthierry@redhat.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Miroslav Benes <mbenes@suse.cz>,
-        Matt Helsley <mhelsley@vmware.com>
-Subject: [RFC][PATCH 28/36] objtool: mcount: Remove unused file mapping
-Date:   Fri, 10 Apr 2020 12:35:51 -0700
-Message-ID: <07c49b8d3b040b70821f44fbdef882ef5c977728.1586468801.git.mhelsley@vmware.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <cover.1586468801.git.mhelsley@vmware.com>
-References: <cover.1586468801.git.mhelsley@vmware.com>
+        Fri, 10 Apr 2020 15:44:43 -0400
+Received: from localhost (unknown [127.0.0.1])
+        by mail.baikalelectronics.ru (Postfix) with ESMTP id 88A348030791;
+        Fri, 10 Apr 2020 19:44:39 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at baikalelectronics.ru
+Received: from mail.baikalelectronics.ru ([127.0.0.1])
+        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id huB9Io0Nb37F; Fri, 10 Apr 2020 22:44:38 +0300 (MSK)
+Date:   Fri, 10 Apr 2020 22:45:13 +0300
+From:   Sergey Semin <Sergey.Semin@baikalelectronics.ru>
+To:     Guenter Roeck <linux@roeck-us.net>
+CC:     Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Paul Burton <paulburton@kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        <linux-watchdog@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 4/7] watchdog: dw_wdt: Support devices with non-fixed TOP
+ values
+Message-ID: <20200410194513.tdnhmrpo7sgupn35@ubsrv2.baikal.int>
+References: <20200306132747.14701-1-Sergey.Semin@baikalelectronics.ru>
+ <20200306132829.E508B8030705@mail.baikalelectronics.ru>
+ <20200315141238.GA7245@roeck-us.net>
+ <20200410125904.bdrr3jpi47mwvfkf@ubsrv2.baikal.int>
+ <9dd40847-a2c7-d30c-0af4-07ff606a61f8@roeck-us.net>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-Received-SPF: None (EX13-EDG-OU-002.vmware.com: mhelsley@vmware.com does not
- designate permitted sender hosts)
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <9dd40847-a2c7-d30c-0af4-07ff606a61f8@roeck-us.net>
+X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The ELF data is now accessed completely through objtool's
-ELF code. We can remove the mapping of the original ELF
-file and propagate elf_open(), elf_close(), and malloc()
-up in place of mmap_file(), mmap_cleanup(), and umalloc()
-respectively. This also eliminates the last use of the
-umalloc() wrapper, reduces the number of global
-variables, and limits the use of globals to:
+On Fri, Apr 10, 2020 at 09:21:35AM -0700, Guenter Roeck wrote:
+> On 4/10/20 5:59 AM, Sergey Semin wrote:
+> > On Sun, Mar 15, 2020 at 07:12:38AM -0700, Guenter Roeck wrote:
+> >> On Fri, Mar 06, 2020 at 04:27:44PM +0300, Sergey.Semin@baikalelectronics.ru wrote:
+> >>> From: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+> >>>
+> >>> In case if the DW Watchdog IP core is synthesised with
+> >>> WDT_USE_FIX_TOP == false, the TOP interval indexes make the device
+> >>> to load a custom periods to the counter. These periods are hardwired
+> >>> at the synthesis stage and can be within [2^8, 2^(WDT_CNT_WIDTH - 1)].
+> >>> Alas their values can't be detected at runtime and must be somehow
+> >>> supplied to the driver so one could properly determine the watchdog
+> >>> timeout intervals. For this purpose we suggest to have a vendor-
+> >>> specific dts property "snps,watchdog-tops" utilized, which would
+> >>> provide an array of sixteen counter values. At device probe stage they
+> >>> will be used to initialize the watchdog device timeouts determined
+> >>> from the array values and current clocks source rate.
+> >>>
+> >>> In order to have custom TOP values supported the driver must be
+> >>> altered in the following way. First of all the fixed-top values
+> >>> ready-to-use array must be determined for compatibility with currently
+> >>> supported devices, which were synthesised with WDT_USE_FIX_TOP == true.
+> >>> Secondly we must redefine the timer period search functions. For
+> >>> generality they are redesigned in a way to support the TOP array with
+> >>> no limitations on the items order or value. Finally an array with
+> >>> pre-defined timeouts must be calculated at probe stage from either
+> >>> the custom or fixed TOP values depending on the DW watchdog component
+> >>> parameter WDT_USE_FIX_TOP value.
+> >>>
+> >>> Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+> >>> Signed-off-by: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
+> >>> Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+> >>> Cc: Paul Burton <paulburton@kernel.org>
+> >>> Cc: Ralf Baechle <ralf@linux-mips.org>
+> >>> ---
+> >>>  drivers/watchdog/dw_wdt.c | 145 +++++++++++++++++++++++++++++++-------
+> >>>  1 file changed, 119 insertions(+), 26 deletions(-)
+> >>>
+> >>> diff --git a/drivers/watchdog/dw_wdt.c b/drivers/watchdog/dw_wdt.c
+> >>> index fba21de2bbad..4a57b7d777dc 100644
+> >>> --- a/drivers/watchdog/dw_wdt.c
+> >>> +++ b/drivers/watchdog/dw_wdt.c
+> >>> @@ -13,6 +13,7 @@
+> >>>   */
+> >>>  
+> >>>  #include <linux/bitops.h>
+> >>> +#include <linux/limits.h>
+> >>>  #include <linux/clk.h>
+> >>>  #include <linux/delay.h>
+> >>>  #include <linux/err.h>
+> >>> @@ -34,12 +35,24 @@
+> >>>  #define WDOG_CURRENT_COUNT_REG_OFFSET	    0x08
+> >>>  #define WDOG_COUNTER_RESTART_REG_OFFSET     0x0c
+> >>>  #define WDOG_COUNTER_RESTART_KICK_VALUE	    0x76
+> >>> +#define WDOG_COMP_PARAMS_1_REG_OFFSET       0xf4
+> >>> +#define WDOG_COMP_PARAMS_1_USE_FIX_TOP      BIT(6)
+> >>>  
+> >>> -/* The maximum TOP (timeout period) value that can be set in the watchdog. */
+> >>> -#define DW_WDT_MAX_TOP		15
+> >>> +/* There are sixteen TOPs (timeout periods) that can be set in the watchdog. */
+> >>> +#define DW_WDT_NUM_TOPS		16
+> >>> +#define DW_WDT_FIX_TOP(_idx)	(1U << (16 + _idx))
+> >>>  
+> >>>  #define DW_WDT_DEFAULT_SECONDS	30
+> >>>  
+> >>> +static const u32 dw_wdt_fix_tops[DW_WDT_NUM_TOPS] = {
+> >>> +	DW_WDT_FIX_TOP(0), DW_WDT_FIX_TOP(1), DW_WDT_FIX_TOP(2),
+> >>> +	DW_WDT_FIX_TOP(3), DW_WDT_FIX_TOP(4), DW_WDT_FIX_TOP(5),
+> >>> +	DW_WDT_FIX_TOP(6), DW_WDT_FIX_TOP(7), DW_WDT_FIX_TOP(8),
+> >>> +	DW_WDT_FIX_TOP(9), DW_WDT_FIX_TOP(10), DW_WDT_FIX_TOP(11),
+> >>> +	DW_WDT_FIX_TOP(12), DW_WDT_FIX_TOP(13), DW_WDT_FIX_TOP(14),
+> >>> +	DW_WDT_FIX_TOP(15)
+> >>> +};
+> >>> +
+> >>>  static bool nowayout = WATCHDOG_NOWAYOUT;
+> >>>  module_param(nowayout, bool, 0);
+> >>>  MODULE_PARM_DESC(nowayout, "Watchdog cannot be stopped once started "
+> >>> @@ -49,6 +62,8 @@ struct dw_wdt {
+> >>>  	void __iomem		*regs;
+> >>>  	struct clk		*clk;
+> >>>  	unsigned long		rate;
+> >>> +	unsigned int		max_top;
+> >>> +	unsigned int		timeouts[DW_WDT_NUM_TOPS];
+> >>>  	struct watchdog_device	wdd;
+> >>>  	struct reset_control	*rst;
+> >>>  	/* Save/restore */
+> >>> @@ -64,20 +79,68 @@ static inline int dw_wdt_is_enabled(struct dw_wdt *dw_wdt)
+> >>>  		WDOG_CONTROL_REG_WDT_EN_MASK;
+> >>>  }
+> >>>  
+> >>> -static inline int dw_wdt_top_in_seconds(struct dw_wdt *dw_wdt, unsigned top)
+> >>> +static unsigned int dw_wdt_find_best_top(struct dw_wdt *dw_wdt,
+> >>> +					 unsigned int timeout, u32 *top)
+> >>>  {
+> >>> +	u32 diff = UINT_MAX, tmp;
+> >>> +	int idx;
+> >>> +
+> >>>  	/*
+> >>> -	 * There are 16 possible timeout values in 0..15 where the number of
+> >>> -	 * cycles is 2 ^ (16 + i) and the watchdog counts down.
+> >>> +	 * In general case of non-fixed timeout values they can be arranged in
+> >>> +	 * any order so we have to traverse all the array values. We also try
+> >>> +	 * to find a closest timeout number and make sure its value is greater
+> >>> +	 * than the requested timeout. Note we'll return a maximum timeout
+> >>> +	 * if reachable value couldn't be found.
+> >>>  	 */
+> >>> -	return (1U << (16 + top)) / dw_wdt->rate;
+> >>> +	for (*top = dw_wdt->max_top, idx = 0; idx < DW_WDT_NUM_TOPS; ++idx) {
+> >>> +		if (dw_wdt->timeouts[idx] < timeout)
+> >>> +			continue;
+> >>> +
+> >>> +		tmp = dw_wdt->timeouts[idx] - timeout;
+> >>> +		if (tmp < diff) {
+> >>> +			diff = tmp;
+> >>> +			*top = idx;
+> >>> +		}
+> >>> +	}
+> >>> +
+> >>> +	return dw_wdt->timeouts[*top];
+> >>> +}
+> >>> +
+> >>> +static unsigned int dw_wdt_find_min_timeout(struct dw_wdt *dw_wdt)
+> >>
+> >> I would appreciate if the names of functions returning ms end with _ms
+> >> to avoid confusion.
+> > 
+> > Ok. I'll also modify the functions a bit, so only the
+> > dw_wdt_find_best_top_ms() and dw_wdt_find_max_top_ms() methods would
+> > return timeouts in milliseconds. Though if you insist in keeping seconds
+> > in the timeouts array (see the comment after the next one), it'll be
+> > dw_wdt_find_max_top_ms() only.
+> > 
+> >>
+> >>> +{
+> >>> +	u32 min_timeout = UINT_MAX, top;
+> >>> +	int idx;
+> >>> +
+> >>> +	for (top = 0, idx = 0; idx < DW_WDT_NUM_TOPS; ++idx) {
+> >>> +		if (dw_wdt->timeouts[idx] <= min_timeout) {
+> >>> +			min_timeout = dw_wdt->timeouts[idx];
+> >>> +			top = idx;
+> >>> +		}
+> >>> +	}
+> >>> +
+> >>> +	return dw_wdt->timeouts[top];
+> >>> +}
+> >>> +
+> >>> +static unsigned int dw_wdt_find_max_top(struct dw_wdt *dw_wdt, u32 *top)
+> >>> +{
+> >>> +	u32 max_timeout = 0;
+> >>> +	int idx;
+> >>> +
+> >>> +	for (*top = 0, idx = 0; idx < DW_WDT_NUM_TOPS; ++idx) {
+> >>> +		if (dw_wdt->timeouts[idx] >= max_timeout) {
+> >>> +			max_timeout = dw_wdt->timeouts[idx];
+> >>> +			*top = idx;
+> >>> +		}
+> >>> +	}
+> >>> +
+> >>> +	return dw_wdt->timeouts[*top];
+> >>>  }
+> >>>  
+> >>> -static int dw_wdt_get_top(struct dw_wdt *dw_wdt)
+> >>> +static unsigned int dw_wdt_get_timeout(struct dw_wdt *dw_wdt)
+> >>>  {
+> >>>  	int top = readl(dw_wdt->regs + WDOG_TIMEOUT_RANGE_REG_OFFSET) & 0xF;
+> >>>  
+> >>> -	return dw_wdt_top_in_seconds(dw_wdt, top);
+> >>> +	return dw_wdt->timeouts[top];
+> >>>  }
+> >>>  
+> >>>  static int dw_wdt_ping(struct watchdog_device *wdd)
+> >>> @@ -90,20 +153,13 @@ static int dw_wdt_ping(struct watchdog_device *wdd)
+> >>>  	return 0;
+> >>>  }
+> >>>  
+> >>> -static int dw_wdt_set_timeout(struct watchdog_device *wdd, unsigned int top_s)
+> >>> +static int dw_wdt_set_timeout(struct watchdog_device *wdd, unsigned int req)
+> >>>  {
+> >>>  	struct dw_wdt *dw_wdt = to_dw_wdt(wdd);
+> >>> -	int i, top_val = DW_WDT_MAX_TOP;
+> >>> +	unsigned int timeout;
+> >>> +	u32 top;
+> >>>  
+> >>> -	/*
+> >>> -	 * Iterate over the timeout values until we find the closest match. We
+> >>> -	 * always look for >=.
+> >>> -	 */
+> >>> -	for (i = 0; i <= DW_WDT_MAX_TOP; ++i)
+> >>> -		if (dw_wdt_top_in_seconds(dw_wdt, i) >= top_s) {
+> >>> -			top_val = i;
+> >>> -			break;
+> >>> -		}
+> >>> +	timeout = dw_wdt_find_best_top(dw_wdt, req * MSEC_PER_SEC, &top);
+> >>>  
+> >>>  	/*
+> >>>  	 * Set the new value in the watchdog.  Some versions of dw_wdt
+> >>> @@ -111,7 +167,7 @@ static int dw_wdt_set_timeout(struct watchdog_device *wdd, unsigned int top_s)
+> >>>  	 * CP_WDT_DUAL_TOP in WDT_COMP_PARAMS_1).  On those we
+> >>>  	 * effectively get a pat of the watchdog right here.
+> >>>  	 */
+> >>> -	writel(top_val | top_val << WDOG_TIMEOUT_RANGE_TOPINIT_SHIFT,
+> >>> +	writel(top | top << WDOG_TIMEOUT_RANGE_TOPINIT_SHIFT,
+> >>>  	       dw_wdt->regs + WDOG_TIMEOUT_RANGE_REG_OFFSET);
+> >>>  
+> >>>  	/*
+> >>> @@ -119,10 +175,10 @@ static int dw_wdt_set_timeout(struct watchdog_device *wdd, unsigned int top_s)
+> >>>  	 * kernel(watchdog_dev.c) helps to feed watchdog before
+> >>>  	 * wdd->max_hw_heartbeat_ms
+> >>>  	 */
+> >>> -	if (top_s * 1000 <= wdd->max_hw_heartbeat_ms)
+> >>> -		wdd->timeout = dw_wdt_top_in_seconds(dw_wdt, top_val);
+> >>> +	if (req * MSEC_PER_SEC > wdd->max_hw_heartbeat_ms)
+> >>> +		wdd->timeout = req;
+> >>>  	else
+> >>> -		wdd->timeout = top_s;
+> >>> +		wdd->timeout = timeout / MSEC_PER_SEC;
+> >>>  
+> >>>  	return 0;
+> >>>  }
+> >>> @@ -238,6 +294,41 @@ static int dw_wdt_resume(struct device *dev)
+> >>>  
+> >>>  static SIMPLE_DEV_PM_OPS(dw_wdt_pm_ops, dw_wdt_suspend, dw_wdt_resume);
+> >>>  
+> >>> +static void dw_wdt_init_timeouts(struct dw_wdt *dw_wdt, struct device *dev)
+> >>> +{
+> >>> +	u32 data, of_tops[DW_WDT_NUM_TOPS];
+> >>> +	const u32 *tops;
+> >>> +	int ret, idx;
+> >>> +
+> >>> +	/*
+> >>> +	 * Retrieve custom or fixed counter values depending on the
+> >>> +	 * WDT_USE_FIX_TOP flag found in the component specific parameters
+> >>> +	 * #1 register.
+> >>> +	 */
+> >>> +	data = readl(dw_wdt->regs + WDOG_COMP_PARAMS_1_REG_OFFSET);
+> >>> +	if (data & WDOG_COMP_PARAMS_1_USE_FIX_TOP) {
+> >>> +		tops = dw_wdt_fix_tops;
+> >>> +	} else {
+> >>> +		ret = of_property_read_variable_u32_array(dev_of_node(dev),
+> >>> +			"snps,watchdog-tops", of_tops, DW_WDT_NUM_TOPS,
+> >>> +			DW_WDT_NUM_TOPS);
+> >>> +		if (ret < 0) {
+> >>> +			dev_warn(dev, "No valid TOPs array specified\n");
+> >>> +			tops = dw_wdt_fix_tops;
+> >>> +		} else {
+> >>> +			tops = of_tops;
+> >>> +		}
+> >>> +	}
+> >>> +
+> >>> +	/*
+> >>> +	 * We'll keep the timeout values in ms to approximate requested
+> >>> +	 * timeouts with better accuracy.
+> >>> +	 */
+> >>> +	for (idx = 0; idx < DW_WDT_NUM_TOPS; ++idx)
+> >>> +		dw_wdt->timeouts[idx] =
+> >>> +			mult_frac(tops[idx], MSEC_PER_SEC, dw_wdt->rate);
+> >>
+> >> tops[idx] type is u32. Its value can be up to 0xffffffff. That means
+> >> dw_wdt->rate must be >= 1000 to avoid overflow, which you should check.
+> > 
+> > Right. I don't think that TOPs with timeouts bigger than
+> > 0xffffffff milliseconds have any valuable usecases, so I'll just round
+> > the overflows down to FFs.
+> > 
+> 
+> Neither do unsorted random timeouts milli-seconds apart. You see the need
+> to address one, so addressing other weaknesses is appropriate.
 
-	The struct elf for the file we're working on. This
-	saves passing it to nearly every function as a parameter.
+Don't really understand what you mean. Do you intend to filter the
+unreachable timeouts out from the timeouts array? If so this isn't
+possible with current design. I would have to implement a more complex
+data structure, like an array of pairs {TOP, timeout} and refactor the
+timeout search algorithm. Don't really think this optimization is required
+seeing watchdog timeout set operation is normally performed just a few times
+per watchdog usage session.
 
-	Variables set depending on the ELF file endian, wordsize,
-	and arch so that the appropriate relocation structures,
-	offset sizes, architecture quirks, and nop encodings will
-	be used.
+> 
+> >>
+> >> Note that I don't see the point of keeping the timeout values in ms.
+> >> The code selects a larger value (in seconds) anyway. All this does is
+> >> to add a lot of multiply and divide operations, plus a source of bugs
+> >> and confusion, for little if any gain.
+> > 
+> > As I said in the comment to the code the idea of keeping values in ms was
+> > to better approximate the requested timeouts. This is necessary since
+> > unlike the fixed TOPs case in which each next timeout is doubled with
+> > respect to a previous one (65536, 131072, etc), the unfixed TOPs set may
+> > have any values within [2^8; (2^WDT_CNT_WIDTH - 1)]. Actual numerical
+> > values of the set are defined by a SoC engineer at the moment of the
+> > IP-core synthesis. So in general they can be unordered and can differ one
+> > from another in very small time deltas, like ms and even us. It depends
+> > on the ways the watchdog was supposed to be utilized in accordance with
+> > the system requirements and the reference clock rate. In this case how to
+> > distinguish the values if we had only seconds array? In this patch I
+> > suggest an approach to at least cover the case of the TOPs with
+> > milliseconds granularity.
+> > 
+> > I don't deny that this might be not that much gain seeing the watchdog
+> > core supports the timeouts in seconds only, but at least it provides a
+> > way to distinguish one TOP from another instead of picking a first found
+> > one. As I see it there aren't that much multiplication and division
+> > caused by such solution and it's a small prices with respect to an
+> > ability to find a better timeout approximation. A few tens nsecs of
+> > the code execution is much smaller than milliseconds accuracy of the
+> > watchdog timeout. Though OS-wise such accuracy might be redundant.
+> > 
+> > Regarding bugs and confusion. Well I find confusing a numerical literals
+> > usage while there are self-documented macros in the kernel available,
+> > which would better represent the code context and would point out what
+> > they are used for.) That's why I've sent the previous patch in the first
+> > place. But as I said in the response to your review comments there, while
+> > it doesn't contradict to the kernel requirements with ceteris paribus
+> > it's up to you which approach to choose since you are the subsystem
+> > maintainer and it will be your duty to continue the code maintenance in
+> > future. The same thing is here. It's up to you what approach to choose.
+> > So if my reasoning above didn't make you to change your mind, could you
+> > please explicitly respond to this message that you'd better see the
+> > timeouts array having seconds instead of milliseconds?
+> > 
+> Please include a summary of the above in the driver to explain the need
+> for the complexity for others in the future.
 
-	One command-line option
+Ok.
 
-Note that we're still using the recordmcount wrapper to change
-variable sizes and structure definitions we use to build the
-mcount relocation data and call instruction offsets.
+-Sergey
 
-RFC Reviewer Question: Should these arch bits be broken out to fit
-	objtool's arch directories similar to the way instruction
-	parsing is done? (e.g. arch-specific nop insn writes)
-
-Signed-off-by: Matt Helsley <mhelsley@vmware.com>
----
- tools/objtool/recordmcount.c | 99 +++---------------------------------
- tools/objtool/recordmcount.h |  4 +-
- 2 files changed, 9 insertions(+), 94 deletions(-)
-
-diff --git a/tools/objtool/recordmcount.c b/tools/objtool/recordmcount.c
-index 409f0ef82211..5fdef8b2ac28 100644
---- a/tools/objtool/recordmcount.c
-+++ b/tools/objtool/recordmcount.c
-@@ -41,104 +41,14 @@
- #define R_AARCH64_ABS64	257
- #endif
- 
--#define R_ARM_PC24		1
- #define R_ARM_THM_CALL		10
--#define R_ARM_CALL		28
- 
--static int fd_map;	/* File descriptor for file being modified. */
--static int mmap_failed; /* Boolean flag. */
- static char gpfx;	/* prefix for global symbol name (sometimes '_') */
- static const char *altmcount;	/* alternate mcount symbol name */
- extern int warn_on_notrace_sect; /* warn when section has mcount not being recorded */
--static void *file_map;	/* pointer of the mapped file */
--static size_t file_map_size; /* original ELF file size */
- 
- static struct elf *lf;
- 
--static void mmap_cleanup(void)
--{
--	if (!mmap_failed)
--		munmap(file_map, file_map_size);
--	else
--		free(file_map);
--	file_map = NULL;
--	if (lf)
--		elf_close(lf);
--	lf = NULL;
--}
--
--static void * umalloc(size_t size)
--{
--	void *const addr = malloc(size);
--	if (addr == 0) {
--		fprintf(stderr, "malloc failed: %zu bytes\n", size);
--		mmap_cleanup();
--		return NULL;
--	}
--	return addr;
--}
--
--/*
-- * Get the whole file as a programming convenience in order to avoid
-- * malloc+lseek+read+free of many pieces.  If successful, then mmap
-- * avoids copying unused pieces; else just read the whole file.
-- * Open for both read and write; new info will be appended to the file.
-- * Use MAP_PRIVATE so that a few changes to the in-memory ElfXX_Ehdr
-- * do not propagate to the file until an explicit overwrite at the last.
-- * This preserves most aspects of consistency (all except .st_size)
-- * for simultaneous readers of the file while we are appending to it.
-- * However, multiple writers still are bad.  We choose not to use
-- * locking because it is expensive and the use case of kernel build
-- * makes multiple writers unlikely.
-- */
--static void *mmap_file(char const *fname)
--{
--	struct stat sb;
--
--	/* Avoid problems if early cleanup() */
--	fd_map = -1;
--	mmap_failed = 1;
--	file_map = NULL;
--	file_map_size = 0;
--
--	lf = elf_read(fname, O_RDWR);
--	if (!lf) {
--		perror(fname);
--		return NULL;
--	}
--	fd_map = lf->fd;
--	if (fstat(fd_map, &sb) < 0) {
--		perror(fname);
--		goto out;
--	}
--	if (!S_ISREG(sb.st_mode)) {
--		fprintf(stderr, "not a regular file: %s\n", fname);
--		goto out;
--	}
--	file_map = mmap(0, sb.st_size, PROT_READ|PROT_WRITE, MAP_PRIVATE,
--			fd_map, 0);
--	if (file_map == MAP_FAILED) {
--		mmap_failed = 1;
--		file_map = umalloc(sb.st_size);
--		if (!file_map) {
--			perror(fname);
--			goto out;
--		}
--		if (read(fd_map, file_map, sb.st_size) != sb.st_size) {
--			perror(fname);
--			mmap_cleanup();
--			goto out;
--		}
--	} else
--		mmap_failed = 0;
--	file_map_size = sb.st_size;
--out:
--	fd_map = -1;
--
--	return file_map;
--}
--
--
- static unsigned char ideal_nop5_x86_64[5] = { 0x0f, 0x1f, 0x44, 0x00, 0x00 };
- static unsigned char ideal_nop5_x86_32[5] = { 0x3e, 0x8d, 0x74, 0x26, 0x00 };
- static unsigned char *ideal_nop;
-@@ -525,8 +435,11 @@ static int do_file(char const *const fname)
- 	unsigned int reltype = 0;
- 	int rc = -1;
- 
--	if (!mmap_file(fname))
-+	lf = elf_read(fname, O_RDWR);
-+	if (!lf) {
-+		perror(fname);
- 		goto out;
-+	}
- 
- 	w = w4nat;
- 	w2 = w2nat;
-@@ -656,7 +569,9 @@ static int do_file(char const *const fname)
- 	}  /* end switch */
- 
- out:
--	mmap_cleanup();
-+	if (lf)
-+		elf_close(lf);
-+	lf = NULL;
- 	return rc;
- }
- 
-diff --git a/tools/objtool/recordmcount.h b/tools/objtool/recordmcount.h
-index 084f1eff0df0..9ce2d74df89a 100644
---- a/tools/objtool/recordmcount.h
-+++ b/tools/objtool/recordmcount.h
-@@ -188,13 +188,13 @@ static int do_func(unsigned const reltype)
- 	totrelsz = tot_relsize(&rel_entsize);
- 	if (totrelsz == 0)
- 		return 0;
--	mrel0 = umalloc(totrelsz);
-+	mrel0 = malloc(totrelsz);
- 	mrelp = mrel0;
- 	if (!mrel0)
- 		return -1;
- 
- 	/* 2*sizeof(address) <= sizeof(Elf_Rel) */
--	mloc0 = umalloc(totrelsz>>1);
-+	mloc0 = malloc(totrelsz>>1);
- 	mlocp = mloc0;
- 	if (!mloc0) {
- 		free(mrel0);
--- 
-2.20.1
-
+> 
+> Guenter
+> 
+> >>
+> >>> +}
+> >>> +
+> >>>  static int dw_wdt_drv_probe(struct platform_device *pdev)
+> >>>  {
+> >>>  	struct device *dev = &pdev->dev;
+> >>> @@ -275,12 +366,14 @@ static int dw_wdt_drv_probe(struct platform_device *pdev)
+> >>>  
+> >>>  	reset_control_deassert(dw_wdt->rst);
+> >>>  
+> >>> +	dw_wdt_init_timeouts(dw_wdt, dev);
+> >>> +
+> >>>  	wdd = &dw_wdt->wdd;
+> >>>  	wdd->info = &dw_wdt_ident;
+> >>>  	wdd->ops = &dw_wdt_ops;
+> >>> -	wdd->min_timeout = 1;
+> >>> +	wdd->min_timeout = dw_wdt_find_min_timeout(dw_wdt) / MSEC_PER_SEC;
+> >>
+> >> dw_wdt_find_min_timeout can return a value < 1000. In that case min_timeout
+> >> would be 0, ie unspecified.
+> > 
+> > Ok. I'll implement this limitation in the dw_wdt_find_min_timeout()
+> > method. It will return seconds in v2.
+> > 
+> > Regards,
+> > -Sergey
+> > 
+> >>
+> >>>  	wdd->max_hw_heartbeat_ms =
+> >>> -		dw_wdt_top_in_seconds(dw_wdt, DW_WDT_MAX_TOP) * 1000;
+> >>> +		dw_wdt_find_max_top(dw_wdt, &dw_wdt->max_top);
+> >>>  	wdd->parent = dev;
+> >>>  
+> >>>  	watchdog_set_drvdata(wdd, dw_wdt);
+> >>> @@ -293,7 +386,7 @@ static int dw_wdt_drv_probe(struct platform_device *pdev)
+> >>>  	 * devicetree.
+> >>>  	 */
+> >>>  	if (dw_wdt_is_enabled(dw_wdt)) {
+> >>> -		wdd->timeout = dw_wdt_get_top(dw_wdt);
+> >>> +		wdd->timeout = dw_wdt_get_timeout(dw_wdt) / MSEC_PER_SEC;
+> >>>  		set_bit(WDOG_HW_RUNNING, &wdd->status);
+> >>>  	} else {
+> >>>  		wdd->timeout = DW_WDT_DEFAULT_SECONDS;
+> 
