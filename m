@@ -2,115 +2,121 @@ Return-Path: <SRS0=VV4q=52=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48E80C2D0EC
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 20:13:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DF10C2BB85
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 20:13:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1C7DA20692
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 20:13:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586549616;
-	bh=5wsfNkHN6jWQdP04K9zIpc0tM+4AxdKzcX7x0Rpy9jw=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=ek4M7kyy3hSynjILoU0cPKz6lPtiBxyLmZPwT02/OL/b17taNL+MRd9ft+CDZmY+/
-	 cxrmaPrOn/3cEDA1w4qa358hEHcurW8QGuxhIeVej88PbqKqZZgNR/oMdE3/obAZWP
-	 ug/Zus4w6ICoFR6PCIqGp1u0jhfOImHaytKXAXXI=
+	by mail.kernel.org (Postfix) with ESMTP id 85BBE20692
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 20:13:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726666AbgDJUNe (ORCPT
+        id S1726687AbgDJUN4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Apr 2020 16:13:34 -0400
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:33671 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726263AbgDJUNe (ORCPT
+        Fri, 10 Apr 2020 16:13:56 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:35484 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726669AbgDJUNz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Apr 2020 16:13:34 -0400
-Received: by mail-lj1-f195.google.com with SMTP id q22so3090713ljg.0
-        for <linux-kernel@vger.kernel.org>; Fri, 10 Apr 2020 13:13:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=9VjQx3sNHjM9Ybj3pkSSt2cbo4c8KdpiMcEUyZvcRTo=;
-        b=UOOqKTuXJVB5DXty2pYL9sGwg5sKoaPO1nkz6bubzMgOw3mgqg/9f+d87SHPIUvrn6
-         9yxpYYsgN6kaa4psBhtDf7aR34kNFUq8TM8itWny38GWbXMhsFd6wadAZV0acAAS5poB
-         j31L3xH37rrb4O1RLNKQQgE68i9bKbaWVBk04=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=9VjQx3sNHjM9Ybj3pkSSt2cbo4c8KdpiMcEUyZvcRTo=;
-        b=JQCNps/5EpkEtcYYl9yqivpnXZbkmDJpIIs2D3wdTFOhEzOPQ8Bj/WJ5pykM+1/PjR
-         zeW03WiX1F3UxgnKoeGGE2RrYqHiwIwmgHAC8dMYfBR2KozMQY4x9byPdn4DspOS4qwC
-         Y6FR/YYsvOhwufZj75JFsuEe8QnyCj7W5MdaFsnTOyshgt+HiWApzWNGSH8axNS8it10
-         yRelg0DEQ9ncyjWpdjHj3y2BTqpMrf8dsnsqMRlY0f9AK/Fv/OgOf8cGLWu0AsYKy7TF
-         UOG5pELrwjpMRB2IeFNgfOrEy0F+VtaGrwHfDulGzZ1AKCKJALxn+q5S1r7nbG/vo11o
-         V6GQ==
-X-Gm-Message-State: AGi0PubDx0g0Pgnl5EcneIbevUOl8Z1NZgLPVsNlA9jMLe/J9O/c7Wze
-        gEO6HJK/5ylBCuw0ClSJaIuffzw35C0=
-X-Google-Smtp-Source: APiQypKVt1avoZeGwp2ATQhM8TiPY8aSStpfgqQGNa+XMEcqyRKnXU0RTVQ4kbckjMXz2oZGM0yGQg==
-X-Received: by 2002:a2e:a179:: with SMTP id u25mr3751113ljl.192.1586549609879;
-        Fri, 10 Apr 2020 13:13:29 -0700 (PDT)
-Received: from mail-lj1-f171.google.com (mail-lj1-f171.google.com. [209.85.208.171])
-        by smtp.gmail.com with ESMTPSA id a26sm1698446ljn.22.2020.04.10.13.13.28
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 10 Apr 2020 13:13:28 -0700 (PDT)
-Received: by mail-lj1-f171.google.com with SMTP id r24so3072627ljd.4
-        for <linux-kernel@vger.kernel.org>; Fri, 10 Apr 2020 13:13:28 -0700 (PDT)
-X-Received: by 2002:a2e:a58e:: with SMTP id m14mr3857281ljp.204.1586549608204;
- Fri, 10 Apr 2020 13:13:28 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200410132706.170811b7@canb.auug.org.au> <27c212c4-b522-561d-411c-e74dc0ff0b74@infradead.org>
- <CAHk-=wjhsM-n_NzSh=cSdpThX+62-x3EmyKjhMqGHFYEyG0nPg@mail.gmail.com>
- <2b0f5d2e-3fe5-10c9-2a9a-9a0b341a52d5@infradead.org> <CAHk-=wjXZSPPWzPs=KBDsLZWuq8qO=9qWfiKHw=yV10fFrDv9Q@mail.gmail.com>
- <bfbcaa67-9656-3a80-fc66-c937297c8be0@infradead.org>
-In-Reply-To: <bfbcaa67-9656-3a80-fc66-c937297c8be0@infradead.org>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Fri, 10 Apr 2020 13:13:12 -0700
-X-Gmail-Original-Message-ID: <CAHk-=whpvCqcCYvy=_v_F6NTtBSeQbXZ0iLr_smV2NJLT+XACw@mail.gmail.com>
-Message-ID: <CAHk-=whpvCqcCYvy=_v_F6NTtBSeQbXZ0iLr_smV2NJLT+XACw@mail.gmail.com>
-Subject: Re: linux-next: Tree for Apr 10 (lib/test_printf.ko)
-To:     Randy Dunlap <rdunlap@infradead.org>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Content-Type: text/plain; charset="UTF-8"
+        Fri, 10 Apr 2020 16:13:55 -0400
+Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03AK67oH035954
+        for <linux-kernel@vger.kernel.org>; Fri, 10 Apr 2020 16:13:55 -0400
+Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 309212bu75-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Fri, 10 Apr 2020 16:13:54 -0400
+Received: from localhost
+        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <nayna@linux.ibm.com>;
+        Fri, 10 Apr 2020 21:13:33 +0100
+Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
+        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Fri, 10 Apr 2020 21:13:30 +0100
+Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
+        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 03AKDhSw54132968
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 10 Apr 2020 20:13:43 GMT
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 18D02AE04D;
+        Fri, 10 Apr 2020 20:13:43 +0000 (GMT)
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id D51E4AE045;
+        Fri, 10 Apr 2020 20:13:41 +0000 (GMT)
+Received: from swastik.ibm.com (unknown [9.160.47.14])
+        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Fri, 10 Apr 2020 20:13:41 +0000 (GMT)
+From:   Nayna Jain <nayna@linux.ibm.com>
+To:     linux-integrity@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+Cc:     linux-kernel@vger.kernel.org, Mimi Zohar <zohar@linux.ibm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Nayna Jain <nayna@linux.ibm.com>
+Subject: [PATCH] powerpc/ima: fix secure boot rules in ima arch policy
+Date:   Fri, 10 Apr 2020 16:13:38 -0400
+X-Mailer: git-send-email 1.8.3.1
+X-TM-AS-GCONF: 00
+x-cbid: 20041020-0012-0000-0000-000003A22E08
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 20041020-0013-0000-0000-000021DF5C38
+Message-Id: <1586549618-6106-1-git-send-email-nayna@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
+ definitions=2020-04-10_08:2020-04-09,2020-04-10 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 spamscore=0
+ mlxscore=0 impostorscore=0 suspectscore=0 adultscore=0 malwarescore=0
+ lowpriorityscore=0 phishscore=0 priorityscore=1501 mlxlogscore=999
+ bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2004100144
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 10, 2020 at 12:41 PM Randy Dunlap <rdunlap@infradead.org> wrote:
->
-> On 4/10/20 12:05 PM, Linus Torvalds wrote:
-> >
-> > That may be because of something like a DEBUG_INFO_REDUCED option.
->
-> No, that's enabled. (see below)
+To prevent verifying the kernel module appended signature twice
+(finit_module), once by the module_sig_check() and again by IMA, powerpc
+IMA secure boot rules define an IMA architecture specific policy rule
+only if CONFIG_MODULE_SIG_FORCE is not enabled. This, unfortunately, does
+not take into account the ability of enabling "sig_enforce" on the boot
+command line (module.sig_enforce=1).
 
-That's kind of the point. DEBUG_INFO_REDUCED doesn't do the _full_ debug info.
+This patch fixes secure boot policy rules to be based on CONFIG_MODULE_SIG
+instead.
 
-And honestly, that's the right thing for 99% of all people. The full
-debug info is _huge_. Enormous. It takes up lots of space, and it
-makes for slower builds.
+Fixes: 4238fad366a6 ("powerpc/ima: Add support to initialize ima policy rules")
+Signed-off-by: Nayna Jain <nayna@linux.ibm.com>
+---
+ arch/powerpc/kernel/ima_arch.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-So normal people should use REDUCED.
+diff --git a/arch/powerpc/kernel/ima_arch.c b/arch/powerpc/kernel/ima_arch.c
+index e34116255ced..957abd592075 100644
+--- a/arch/powerpc/kernel/ima_arch.c
++++ b/arch/powerpc/kernel/ima_arch.c
+@@ -19,12 +19,12 @@ bool arch_ima_get_secureboot(void)
+  * to be stored as an xattr or as an appended signature.
+  *
+  * To avoid duplicate signature verification as much as possible, the IMA
+- * policy rule for module appraisal is added only if CONFIG_MODULE_SIG_FORCE
++ * policy rule for module appraisal is added only if CONFIG_MODULE_SIG
+  * is not enabled.
+  */
+ static const char *const secure_rules[] = {
+ 	"appraise func=KEXEC_KERNEL_CHECK appraise_flag=check_blacklist appraise_type=imasig|modsig",
+-#ifndef CONFIG_MODULE_SIG_FORCE
++#ifndef CONFIG_MODULE_SIG
+ 	"appraise func=MODULE_CHECK appraise_flag=check_blacklist appraise_type=imasig|modsig",
+ #endif
+ 	NULL
+@@ -50,7 +50,7 @@ static const char *const secure_and_trusted_rules[] = {
+ 	"measure func=KEXEC_KERNEL_CHECK template=ima-modsig",
+ 	"measure func=MODULE_CHECK template=ima-modsig",
+ 	"appraise func=KEXEC_KERNEL_CHECK appraise_flag=check_blacklist appraise_type=imasig|modsig",
+-#ifndef CONFIG_MODULE_SIG_FORCE
++#ifndef CONFIG_MODULE_SIG
+ 	"appraise func=MODULE_CHECK appraise_flag=check_blacklist appraise_type=imasig|modsig",
+ #endif
+ 	NULL
+-- 
+2.25.1
 
-But the full debug info does give some nicer debug stack traces with
-dump_stack.sh, so for things like automated robots etc it's a great
-thing.
-
-> This is with FRAME_POINTER, not UNWIND_ORC. Maybe that's the difference?
-
-That might cause the question marks and some additional uncertainty in
-the underlying raw stack traces that the kernel reports, but no, it
-shouldn't matter for what dump_stack.sh does.
-
-               Linus
