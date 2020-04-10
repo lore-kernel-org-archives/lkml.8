@@ -7,48 +7,50 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2060CC2D0EC
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 03:46:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61A34C2D0EC
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 03:46:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EC7C220B1F
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 03:46:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2CA1820B1F
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 03:46:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586490415;
-	bh=idCS/o2KJWKLuG5YYj/PRV53FPx4L/x7Hh2m9+2AenI=;
+	s=default; t=1586490419;
+	bh=u8YqO5KRkDMJkvpaDUQlB5lQevXHKx6UCjjbjXQemGU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cYF3n9i1U+dL2bhRAsPHjlERCU0T1oZeIUwRpDk4y6OF3puCc2K07JP8CzQuvBA8m
-	 o7SKVaXMS6HEMqPGsoX88Hcu427uiC7ywdwLkYcruIuD3DGNaizyavkDJND7lkyJUp
-	 0VngNgtzUYJRwCvCcY6NOG1LH245ALwlWulZxbEU=
+	b=FvO0mbEV3OVeMp68D0SBxxruAq0cKweyoEl1dnKw0XX2PeQtJILw9stnfAp2TgryC
+	 QHyUldBkHdht15LrC/FbhcN8UxtvdaB6w4oaQWmTHE0abkC0Uv86Lm2SVsM1kyw9q3
+	 8Omk3zXoRsBNY/SeJYDOWxpIcNTh0AV6UE+3BCG8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726872AbgDJDqx (ORCPT
+        id S1726901AbgDJDq5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Apr 2020 23:46:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56864 "EHLO mail.kernel.org"
+        Thu, 9 Apr 2020 23:46:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56958 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726792AbgDJDqq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Apr 2020 23:46:46 -0400
+        id S1726821AbgDJDqt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Apr 2020 23:46:49 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C9F68212CC;
-        Fri, 10 Apr 2020 03:46:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2CED320BED;
+        Fri, 10 Apr 2020 03:46:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586490406;
-        bh=idCS/o2KJWKLuG5YYj/PRV53FPx4L/x7Hh2m9+2AenI=;
+        s=default; t=1586490409;
+        bh=u8YqO5KRkDMJkvpaDUQlB5lQevXHKx6UCjjbjXQemGU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=yVUk49vO0Tzai0p37Gmy8vRynYZPMDvlWRYSgqivmpU9PasEwgNFhaBtJCNMIp+rw
-         iUUxAjXRsooaIl+Vs/235Vp8e7oCePfdNkid1CJ/xbs1jvWgB1oFG3Fju+bM87jwSk
-         z1opBEiq1eYmD27sFyERs1GrFwGoDs56qXw7+6E0=
+        b=FyehbGI3uKjc/GZqo3fKv7NKyuTxGogTcBsEaUy737dVauoUXEbgJKYQlQREV76dY
+         DieQNIysfQ3M/iI/FTUHFWwlRULY0rOlYo3PwI+OMG6t7CBzkbDX6vkZYArM0jkoXl
+         zJE5lVgAYyBOiGla1b0Pxr/9Vz9jsx+Q3f78jtG8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Stephan Gerhold <stephan@gerhold.net>,
-        Stanimir Varbanov <stanimir.varbanov@linaro.org>,
+Cc:     Mohammad Rasim <mohammad.rasim96@gmail.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Sean Young <sean@mess.org>,
         Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.6 09/68] media: venus: hfi_parser: Ignore HEVC encoding for V1
-Date:   Thu,  9 Apr 2020 23:45:34 -0400
-Message-Id: <20200410034634.7731-9-sashal@kernel.org>
+        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-amlogic@lists.infradead.org
+Subject: [PATCH AUTOSEL 5.6 11/68] media: arm64: dts: amlogic: add rc-videostrong-kii-pro keymap
+Date:   Thu,  9 Apr 2020 23:45:36 -0400
+Message-Id: <20200410034634.7731-11-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200410034634.7731-1-sashal@kernel.org>
 References: <20200410034634.7731-1-sashal@kernel.org>
@@ -61,38 +63,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Stephan Gerhold <stephan@gerhold.net>
+From: Mohammad Rasim <mohammad.rasim96@gmail.com>
 
-[ Upstream commit c50cc6dc6c48300af63a6fbc71b647053c15fc80 ]
+[ Upstream commit 806d06161af045dba29f3c7747550c93b2ea3ca9 ]
 
-Some older MSM8916 Venus firmware versions also seem to indicate
-support for encoding HEVC, even though they really can't.
-This will lead to errors later because hfi_session_init() fails
-in this case.
+videostrong kii pro comes with a nec rc, add the keymap to the dts
 
-HEVC is already ignored for "dec_codecs", so add the same for
-"enc_codecs" to make these old firmware versions work correctly.
-
-Signed-off-by: Stephan Gerhold <stephan@gerhold.net>
-Signed-off-by: Stanimir Varbanov <stanimir.varbanov@linaro.org>
+Signed-off-by: Mohammad Rasim <mohammad.rasim96@gmail.com>
+Reviewed-by: Neil Armstrong <narmstrong@baylibre.com>
+Signed-off-by: Sean Young <sean@mess.org>
 Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/platform/qcom/venus/hfi_parser.c | 1 +
- 1 file changed, 1 insertion(+)
+ arch/arm64/boot/dts/amlogic/meson-gxbb-kii-pro.dts | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/drivers/media/platform/qcom/venus/hfi_parser.c b/drivers/media/platform/qcom/venus/hfi_parser.c
-index 2293d936e49ca..7f515a4b9bd12 100644
---- a/drivers/media/platform/qcom/venus/hfi_parser.c
-+++ b/drivers/media/platform/qcom/venus/hfi_parser.c
-@@ -181,6 +181,7 @@ static void parse_codecs(struct venus_core *core, void *data)
- 	if (IS_V1(core)) {
- 		core->dec_codecs &= ~HFI_VIDEO_CODEC_HEVC;
- 		core->dec_codecs &= ~HFI_VIDEO_CODEC_SPARK;
-+		core->enc_codecs &= ~HFI_VIDEO_CODEC_HEVC;
- 	}
- }
- 
+diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb-kii-pro.dts b/arch/arm64/boot/dts/amlogic/meson-gxbb-kii-pro.dts
+index 2f1f829450a29..6c9cc45fb417e 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-gxbb-kii-pro.dts
++++ b/arch/arm64/boot/dts/amlogic/meson-gxbb-kii-pro.dts
+@@ -76,3 +76,7 @@
+ 		};
+ 	};
+ };
++
++&ir {
++	linux,rc-map-name = "rc-videostrong-kii-pro";
++};
 -- 
 2.20.1
 
