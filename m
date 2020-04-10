@@ -2,87 +2,137 @@ Return-Path: <SRS0=VV4q=52=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 045A0C2BA2B
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 14:12:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A798C2BB86
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 14:16:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D9F1D20A8B
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 14:12:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4E1FF2082D
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 14:16:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726681AbgDJOMc (ORCPT
+        id S1726650AbgDJOQw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Apr 2020 10:12:32 -0400
-Received: from hostingweb31-40.netsons.net ([89.40.174.40]:48581 "EHLO
-        hostingweb31-40.netsons.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726177AbgDJOMb (ORCPT
+        Fri, 10 Apr 2020 10:16:52 -0400
+Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:33800 "EHLO
+        mx0a-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726009AbgDJOQw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Apr 2020 10:12:31 -0400
-Received: from [5.157.111.77] (port=57222 helo=[192.168.77.62])
-        by hostingweb31.netsons.net with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-        (Exim 4.93)
-        (envelope-from <luca@lucaceresoli.net>)
-        id 1jMu2M-004dr7-2a; Fri, 10 Apr 2020 15:49:38 +0200
-Subject: Re: [RFC PATCH v2 2/6] i2c: allow DT nodes without 'compatible'
-To:     Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        linux-i2c@vger.kernel.org
-Cc:     linux-renesas-soc@vger.kernel.org, linux-i3c@lists.infradead.org,
-        Kieran Bingham <kieran@ksquared.org.uk>,
-        =?UTF-8?Q?Niklas_S=c3=b6derlund?= <niklas.soderlund@ragnatech.se>,
-        Jacopo Mondi <jacopo@jmondi.org>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Vladimir Zapolskiy <vz@mleia.com>,
-        linux-kernel@vger.kernel.org,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Rob Herring <robh@kernel.org>
-References: <20200318150059.21714-1-wsa+renesas@sang-engineering.com>
- <20200318150059.21714-3-wsa+renesas@sang-engineering.com>
-From:   Luca Ceresoli <luca@lucaceresoli.net>
-Message-ID: <11ca7487-ac07-f714-8573-20d1a0040212@lucaceresoli.net>
-Date:   Fri, 10 Apr 2020 15:49:33 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Fri, 10 Apr 2020 10:16:52 -0400
+Received: from pps.filterd (m0167088.ppops.net [127.0.0.1])
+        by mx0a-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03AEEhFO027147;
+        Fri, 10 Apr 2020 10:16:39 -0400
+Received: from nwd2mta3.analog.com ([137.71.173.56])
+        by mx0a-00128a01.pphosted.com with ESMTP id 3091nb1brp-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 10 Apr 2020 10:16:39 -0400
+Received: from ASHBMBX8.ad.analog.com (ashbmbx8.ad.analog.com [10.64.17.5])
+        by nwd2mta3.analog.com (8.14.7/8.14.7) with ESMTP id 03AEGch6010429
+        (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=FAIL);
+        Fri, 10 Apr 2020 10:16:38 -0400
+Received: from ASHBCASHYB5.ad.analog.com (10.64.17.133) by
+ ASHBMBX8.ad.analog.com (10.64.17.5) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1779.2; Fri, 10 Apr 2020 10:16:37 -0400
+Received: from ASHBMBX8.ad.analog.com (10.64.17.5) by
+ ASHBCASHYB5.ad.analog.com (10.64.17.133) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1779.2; Fri, 10 Apr 2020 10:16:37 -0400
+Received: from zeus.spd.analog.com (10.64.82.11) by ASHBMBX8.ad.analog.com
+ (10.64.17.5) with Microsoft SMTP Server id 15.1.1779.2 via Frontend
+ Transport; Fri, 10 Apr 2020 10:16:37 -0400
+Received: from localhost.localdomain ([10.48.65.12])
+        by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 03AEGZWt028552;
+        Fri, 10 Apr 2020 10:16:35 -0400
+From:   Alexandru Ardelean <alexandru.ardelean@analog.com>
+To:     <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+CC:     <jic23@kernel.org>, <lars@metafoo.de>,
+        Alexandru Ardelean <alexandru.ardelean@analog.com>
+Subject: [PATCH v3 0/5] iio: core,buffer: re-organize chardev creation
+Date:   Fri, 10 Apr 2020 17:17:24 +0300
+Message-ID: <20200410141729.82834-1-alexandru.ardelean@analog.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-In-Reply-To: <20200318150059.21714-3-wsa+renesas@sang-engineering.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - hostingweb31.netsons.net
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - lucaceresoli.net
-X-Get-Message-Sender-Via: hostingweb31.netsons.net: authenticated_id: luca@lucaceresoli.net
-X-Authenticated-Sender: hostingweb31.netsons.net: luca@lucaceresoli.net
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
+Content-Type: text/plain
+X-ADIRoutedOnPrem: True
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
+ definitions=2020-04-10_05:2020-04-09,2020-04-10 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ malwarescore=0 mlxlogscore=999 bulkscore=0 clxscore=1015 suspectscore=2
+ mlxscore=0 phishscore=0 adultscore=0 priorityscore=1501 spamscore=0
+ impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2004100119
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+The main intent is to be able to add more chardevs per IIO device, one
+for each buffer. To get there, some rework is needed, and one important
+facet is to move the creation of the current chardev into
+'industrialio-buffer.c', so that control/logic of these chardevs is
+localized in that file.
 
-On 18/03/20 16:00, Wolfram Sang wrote:
-> Sometimes, we have unknown devices in a system and still want to block
-> their address. For that, we allow DT nodes with only a 'reg' property.
-> These devices will be bound to the "dummy" driver but with the name
-> "reserved". That way, we can distinguish them and even hand them over to
-> the "dummy" driver later when they are really requested using
-> i2c_new_ancillary_device().
-> 
-> Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
-> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> Acked-by: Rob Herring <robh@kernel.org>
+This changeset does that [incrementally] by moving the common chardev
+creation from 'industrialio-core.c' to 'industrialio-buffer.c' &
+'industrialio-event.c'.
+The common chardev is required for both IIO buffers & IIO events.
+In order to make this work, the 'iio_device_event_ioctl()' needs to be
+passed from 'industrialio-event.c' to 'industrialio-buffer.c' flying past
+'industrialio-core.c'. This sounds a bit wrong [at first] but it has the
+effect of reducing inter-dependencies between 'industrialio-core.c' to
+'industrialio-buffer.c' quite a bit.
+The IIO buffer also has a CONFIG_IIO_BUFFER symbol which can turn it
+off. No idea how widely this is used [as disabled], but this changeset
+also takes that into consideration.
 
-Reviewed-by: Luca Ceresoli <luca@lucaceresoli.net>
+So, now the logic [for __iio_device_register() with regard to chardev
+init] is:
+1. iio_device_buffers_init() will init buffer and the chardev, if that
+   works, the 'iio_device_event_ioctl()' will be attached to the chardev
+2. if CONFIG_IIO_BUFFER is not defined or 'indio_dev->buffer == NULL'
+   (no buffter attached), -ENOTSUPP should be returned from
+   iio_device_buffers_init(), in which case the chardev should be
+   initialized in  'industrialio-event.c' via
+   'iio_device_register_event_chrdev()'
 
-As I said in the reply to v1, I think we should reserve addresses also
-when there is a compatible string but no matching driver, but this is
-another story and can be handled separately.
+One neat side effect of this logic, is that we can also move the buffer
+sysfs alloc/cleanup into 'industrialio-buffer.c' under the new
+'iio_device_buffers_{un}init()' functions.
+
+Changelog v2 -> v3:
+* removed double init in
+  'iio: event: move event-only chardev in industrialio-event.c'
+
+Changelog v1 -> v2:
+* re-reviewed some exit-paths and cleanup some potential leaks on those
+  exit paths:
+  - for 'iio: buffer: move iio buffer chrdev in industrialio-buffer.c'
+    add iio_device_buffers_put() helper and calling iio_buffers_uninit()
+    on device un-regsiter
+  - for 'move sysfs alloc/free in industrialio-buffer.c'
+    call 'iio_buffer_free_sysfs_and_mask()' on exit path if
+    cdev_device_add() fails
+  - for 'move event-only chardev in industrialio-event.c'
+    check if event_interface is NULL in
+    iio_device_unregister_event_chrdev()
+
+Alexandru Ardelean (5):
+  iio: core: register buffer fileops only if buffer present
+  iio: buffer: add back-ref from iio_buffer to iio_dev
+  iio: buffer: move iio buffer chrdev in industrialio-buffer.c
+  iio: buffer: move sysfs alloc/free in industrialio-buffer.c
+  iio: event: move event-only chardev in industrialio-event.c
+
+ drivers/iio/iio_core.h            |  30 +++----
+ drivers/iio/industrialio-buffer.c | 144 ++++++++++++++++++++++++++----
+ drivers/iio/industrialio-core.c   | 107 +++-------------------
+ drivers/iio/industrialio-event.c  | 122 ++++++++++++++++++++++++-
+ include/linux/iio/buffer_impl.h   |  10 +++
+ include/linux/iio/iio.h           |   4 -
+ 6 files changed, 285 insertions(+), 132 deletions(-)
 
 -- 
-Luca
+2.17.1
+
