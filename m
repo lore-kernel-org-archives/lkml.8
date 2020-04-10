@@ -4,41 +4,41 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1176C2D0EC
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 03:59:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18ED8C2D0EC
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 03:59:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 87E2020BED
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 03:59:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D5FC82063A
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 03:59:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586491177;
-	bh=0XrRqotfepK3zUNWdd8fnIccrvPnNVyNdW6GWO8JWtQ=;
+	s=default; t=1586491183;
+	bh=gWKi+M4ukqnEuUHDdXxPRoNAqrcK8KTNaaTDcH/tEEU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pP3wndAdxDetnRoU4T1JQybjFe+1Jv+99uT3h0n0Jk81RP4GaGKbAqsHdvog5mxjE
-	 OKN4+K9UQoc/sYyhcqFaoOwyEe6R23r207q36XxOWG3QuyZuE/5jbMI6wpRdfKieVm
-	 rap1EC0kIImA3J1It8agrSOBLDwcvyBKeAXjeN+o=
+	b=HbkYPYKcYNR8HJ1pUSqMg1pYsxLvYo7tG6n1uP1xNSBdEmk11Ygg/vo87MLwvnfka
+	 2Qwl9/MSOtqlD5uFgJtwQyZBzUy83AMAtFpdmgpD+77oigI+TmcFkEd9urC6zE5iHu
+	 CoTIEfItsORiyBU47otlRHCUqAphbyS3jhbe9Ghs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728501AbgDJD7f (ORCPT
+        id S1728351AbgDJD7l (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Apr 2020 23:59:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59654 "EHLO mail.kernel.org"
+        Thu, 9 Apr 2020 23:59:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59602 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728137AbgDJDsT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Apr 2020 23:48:19 -0400
+        id S1728118AbgDJDsS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Apr 2020 23:48:18 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D244420CC7;
-        Fri, 10 Apr 2020 03:48:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 70BDC20936;
+        Fri, 10 Apr 2020 03:48:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586490499;
-        bh=0XrRqotfepK3zUNWdd8fnIccrvPnNVyNdW6GWO8JWtQ=;
+        s=default; t=1586490498;
+        bh=gWKi+M4ukqnEuUHDdXxPRoNAqrcK8KTNaaTDcH/tEEU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fkS9Ecexy10VU35f198dJ0j5M2XOSQ9xkohSIUGYVr0F0wl6hPcxdWoV9XV+kENAc
-         W0c5OZD0ehqDHddM9gb932nzxTpneQdIDE9caopAFIkkckxkmRl/agn8asP2yqKVXQ
-         kxarXbwIypMmi0/KDkCDh+eEu4HZQLHMStONewao=
+        b=xM9laWuAmu3XGI1070zymbPndZ7gSAFvay7jdXQc22rgc7io600urieKmJpfCfoN+
+         whixbINC/GIQzLF6GxXUxZQ6xYVfsQeX+sQfCnQgZmesRBeuJYop02gct94BGNccrE
+         fW94aqUrWrlI1TriDIxxo+qkYJlGU8dvP12mQdh0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
@@ -47,9 +47,9 @@ Cc:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
         Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
         Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org,
         devel@driverdev.osuosl.org, linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.5 15/56] media: imx: imx7-media-csi: Fix video field handling
-Date:   Thu,  9 Apr 2020 23:47:19 -0400
-Message-Id: <20200410034800.8381-15-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.5 14/56] media: imx: imx7_mipi_csis: Power off the source when stopping streaming
+Date:   Thu,  9 Apr 2020 23:47:18 -0400
+Message-Id: <20200410034800.8381-14-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200410034800.8381-1-sashal@kernel.org>
 References: <20200410034800.8381-1-sashal@kernel.org>
@@ -64,47 +64,34 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 
-[ Upstream commit f7b8488bd39ae8feced4dfbb41cf1431277b893f ]
+[ Upstream commit 770cbf89f90b0663499dbb3f03aa81b3322757ec ]
 
-Commit 4791bd7d6adc ("media: imx: Try colorimetry at both sink and
-source pads") reworked the way that formats are set on the sink pad of
-the CSI subdevice, and accidentally removed video field handling.
-Restore it by defaulting to V4L2_FIELD_NONE if the field value isn't
-supported, with the only two supported value being V4L2_FIELD_NONE and
-V4L2_FIELD_INTERLACED.
+The .s_stream() implementation incorrectly powers on the source when
+stopping the stream. Power it off instead.
 
-Fixes: 4791bd7d6adc ("media: imx: Try colorimetry at both sink and source pads")
+Fixes: 7807063b862b ("media: staging/imx7: add MIPI CSI-2 receiver subdev for i.MX7")
 Signed-off-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 Reviewed-by: Rui Miguel Silva <rmfrfs@gmail.com>
 Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
 Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/staging/media/imx/imx7-media-csi.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/staging/media/imx/imx7-mipi-csis.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/staging/media/imx/imx7-media-csi.c b/drivers/staging/media/imx/imx7-media-csi.c
-index db30e2c70f2fe..f45920b3137e4 100644
---- a/drivers/staging/media/imx/imx7-media-csi.c
-+++ b/drivers/staging/media/imx/imx7-media-csi.c
-@@ -1009,6 +1009,7 @@ static int imx7_csi_try_fmt(struct imx7_csi *csi,
- 		sdformat->format.width = in_fmt->width;
- 		sdformat->format.height = in_fmt->height;
- 		sdformat->format.code = in_fmt->code;
-+		sdformat->format.field = in_fmt->field;
- 		*cc = in_cc;
- 
- 		sdformat->format.colorspace = in_fmt->colorspace;
-@@ -1023,6 +1024,9 @@ static int imx7_csi_try_fmt(struct imx7_csi *csi,
- 							 false);
- 			sdformat->format.code = (*cc)->codes[0];
- 		}
-+
-+		if (sdformat->format.field != V4L2_FIELD_INTERLACED)
-+			sdformat->format.field = V4L2_FIELD_NONE;
- 		break;
- 	default:
- 		return -EINVAL;
+diff --git a/drivers/staging/media/imx/imx7-mipi-csis.c b/drivers/staging/media/imx/imx7-mipi-csis.c
+index 99166afca071b..aa1749b1e28fc 100644
+--- a/drivers/staging/media/imx/imx7-mipi-csis.c
++++ b/drivers/staging/media/imx/imx7-mipi-csis.c
+@@ -579,7 +579,7 @@ static int mipi_csis_s_stream(struct v4l2_subdev *mipi_sd, int enable)
+ 		state->flags |= ST_STREAMING;
+ 	} else {
+ 		v4l2_subdev_call(state->src_sd, video, s_stream, 0);
+-		ret = v4l2_subdev_call(state->src_sd, core, s_power, 1);
++		ret = v4l2_subdev_call(state->src_sd, core, s_power, 0);
+ 		mipi_csis_stop_stream(state);
+ 		state->flags &= ~ST_STREAMING;
+ 		if (state->debug)
 -- 
 2.20.1
 
