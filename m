@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C28CC2D0EC
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 03:47:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 225AEC2D0EC
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 03:47:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 64CEA20CC7
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 03:47:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E47D32145D
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 03:47:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586490433;
-	bh=iFWKPM79D+eOwWhbxjk4po4LTD20a1ZJmbOg1VrHgQg=;
+	s=default; t=1586490436;
+	bh=bLaYknW8xJkpruAeW9vzpZ0HesbH5LKBqP1T/qNO/0I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wlnhalAMvu9g0qVa3BLnDxIJDydGQHLaJVtfpunvWsdRGeNML9U7PFTIQ+xztrVKi
-	 8cWpP9an6o7YkDgL5Fpli4bPistz+NbiGctVJdTfOaNGDpq37nGpNXIy7lNw+HIruc
-	 t1M6Z2Fr2Mt39eSNK2o3dAEVMWPCgWhcdhdLfRCI=
+	b=0HAib6beSlW4KrSFVIzKk6Vuk2EDhuhlzyxO24Gl9vrnWU/jUoIbww/fy4dc5vzIB
+	 F0pgCzlvpLHOOjZGofDNrhoSgxh2rcK6LdPu4Ck9f9v5uEre7dgjqD7xoYilmBVIxR
+	 zZPa1bGL9vNVAgYjeOlu52FM4B/O6km047eIs7N4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727072AbgDJDrL (ORCPT
+        id S1727126AbgDJDrO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Apr 2020 23:47:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57602 "EHLO mail.kernel.org"
+        Thu, 9 Apr 2020 23:47:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57636 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727026AbgDJDrJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Apr 2020 23:47:09 -0400
+        id S1726723AbgDJDrK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Apr 2020 23:47:10 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 460B720CC7;
-        Fri, 10 Apr 2020 03:47:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6892820936;
+        Fri, 10 Apr 2020 03:47:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586490429;
-        bh=iFWKPM79D+eOwWhbxjk4po4LTD20a1ZJmbOg1VrHgQg=;
+        s=default; t=1586490430;
+        bh=bLaYknW8xJkpruAeW9vzpZ0HesbH5LKBqP1T/qNO/0I=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=juLTdPHULmQ4nlvg4Wi5gTT4lK5aTWmXKIkZILb8iZ30j8eaQBM7wQwGzsxq+mSoQ
-         qsqWsMNyz8puEhaeskBtJwpceesF7iOrG0SKH1OCioN/J64InXl270JzTFRncbUaM8
-         ICSsrNLNzqChfrPtJE2MuK3UVHQ1tMnp+Tq1ryZ4=
+        b=vpNX1b4+gNmhfZDC9ZnBsCyojD4dgmKN3h47Nev24o113d3ZuYkiVyXSnSXSjZAFh
+         QdZt5+fw1lKky2m0NenCG7Lo7PKXMqRpjyzHRCcCqJUq/wkQ4QoZQBFL5g+rMkin3Q
+         2dwBmdFIt0oSqoOIzklMandP+ztg/v2mLzKdsmdI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Thomas Hellstrom <thellstrom@vmware.com>,
-        Borislav Petkov <bp@suse.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
+        Borislav Petkov <bp@suse.de>, Christoph Hellwig <hch@lst.de>,
         Tom Lendacky <thomas.lendacky@amd.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.6 27/68] x86: Don't let pgprot_modify() change the page encryption bit
-Date:   Thu,  9 Apr 2020 23:45:52 -0400
-Message-Id: <20200410034634.7731-27-sashal@kernel.org>
+        Sasha Levin <sashal@kernel.org>,
+        iommu@lists.linux-foundation.org
+Subject: [PATCH AUTOSEL 5.6 28/68] dma-mapping: Fix dma_pgprot() for unencrypted coherent pages
+Date:   Thu,  9 Apr 2020 23:45:53 -0400
+Message-Id: <20200410034634.7731-28-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200410034634.7731-1-sashal@kernel.org>
 References: <20200410034634.7731-1-sashal@kernel.org>
@@ -63,65 +63,43 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Thomas Hellstrom <thellstrom@vmware.com>
 
-[ Upstream commit 6db73f17c5f155dbcfd5e48e621c706270b84df0 ]
+[ Upstream commit 17c4a2ae15a7aaefe84bdb271952678c5c9cd8e1 ]
 
-When SEV or SME is enabled and active, vm_get_page_prot() typically
-returns with the encryption bit set. This means that users of
-pgprot_modify(, vm_get_page_prot()) (mprotect_fixup(), do_mmap()) end up
-with a value of vma->vm_pg_prot that is not consistent with the intended
-protection of the PTEs.
+When dma_mmap_coherent() sets up a mapping to unencrypted coherent memory
+under SEV encryption and sometimes under SME encryption, it will actually
+set up an encrypted mapping rather than an unencrypted, causing devices
+that DMAs from that memory to read encrypted contents. Fix this.
 
-This is also important for fault handlers that rely on the VMA
-vm_page_prot to set the page protection. Fix this by not allowing
-pgprot_modify() to change the encryption bit, similar to how it's done
-for PAT bits.
+When force_dma_unencrypted() returns true, the linear kernel map of the
+coherent pages have had the encryption bit explicitly cleared and the
+page content is unencrypted. Make sure that any additional PTEs we set
+up to these pages also have the encryption bit cleared by having
+dma_pgprot() return a protection with the encryption bit cleared in this
+case.
 
 Signed-off-by: Thomas Hellstrom <thellstrom@vmware.com>
 Signed-off-by: Borislav Petkov <bp@suse.de>
-Reviewed-by: Dave Hansen <dave.hansen@linux.intel.com>
+Reviewed-by: Christoph Hellwig <hch@lst.de>
 Acked-by: Tom Lendacky <thomas.lendacky@amd.com>
-Link: https://lkml.kernel.org/r/20200304114527.3636-2-thomas_os@shipmail.org
+Link: https://lkml.kernel.org/r/20200304114527.3636-3-thomas_os@shipmail.org
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/include/asm/pgtable.h       | 7 +++++--
- arch/x86/include/asm/pgtable_types.h | 2 +-
- 2 files changed, 6 insertions(+), 3 deletions(-)
+ kernel/dma/mapping.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/arch/x86/include/asm/pgtable.h b/arch/x86/include/asm/pgtable.h
-index 7e118660bbd98..64a03f226ab73 100644
---- a/arch/x86/include/asm/pgtable.h
-+++ b/arch/x86/include/asm/pgtable.h
-@@ -627,12 +627,15 @@ static inline pmd_t pmd_modify(pmd_t pmd, pgprot_t newprot)
- 	return __pmd(val);
- }
- 
--/* mprotect needs to preserve PAT bits when updating vm_page_prot */
-+/*
-+ * mprotect needs to preserve PAT and encryption bits when updating
-+ * vm_page_prot
-+ */
- #define pgprot_modify pgprot_modify
- static inline pgprot_t pgprot_modify(pgprot_t oldprot, pgprot_t newprot)
- {
- 	pgprotval_t preservebits = pgprot_val(oldprot) & _PAGE_CHG_MASK;
--	pgprotval_t addbits = pgprot_val(newprot);
-+	pgprotval_t addbits = pgprot_val(newprot) & ~_PAGE_CHG_MASK;
- 	return __pgprot(preservebits | addbits);
- }
- 
-diff --git a/arch/x86/include/asm/pgtable_types.h b/arch/x86/include/asm/pgtable_types.h
-index 0239998d8cdc0..65c2ecd730c5b 100644
---- a/arch/x86/include/asm/pgtable_types.h
-+++ b/arch/x86/include/asm/pgtable_types.h
-@@ -118,7 +118,7 @@
+diff --git a/kernel/dma/mapping.c b/kernel/dma/mapping.c
+index 12ff766ec1fa3..98e3d873792ea 100644
+--- a/kernel/dma/mapping.c
++++ b/kernel/dma/mapping.c
+@@ -154,6 +154,8 @@ EXPORT_SYMBOL(dma_get_sgtable_attrs);
   */
- #define _PAGE_CHG_MASK	(PTE_PFN_MASK | _PAGE_PCD | _PAGE_PWT |		\
- 			 _PAGE_SPECIAL | _PAGE_ACCESSED | _PAGE_DIRTY |	\
--			 _PAGE_SOFT_DIRTY | _PAGE_DEVMAP)
-+			 _PAGE_SOFT_DIRTY | _PAGE_DEVMAP | _PAGE_ENC)
- #define _HPAGE_CHG_MASK (_PAGE_CHG_MASK | _PAGE_PSE)
- 
- /*
+ pgprot_t dma_pgprot(struct device *dev, pgprot_t prot, unsigned long attrs)
+ {
++	if (force_dma_unencrypted(dev))
++		prot = pgprot_decrypted(prot);
+ 	if (dev_is_dma_coherent(dev) ||
+ 	    (IS_ENABLED(CONFIG_DMA_NONCOHERENT_CACHE_SYNC) &&
+              (attrs & DMA_ATTR_NON_CONSISTENT)))
 -- 
 2.20.1
 
