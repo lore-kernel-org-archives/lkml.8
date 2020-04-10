@@ -4,49 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09E0EC2D0EC
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 03:48:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24AA5C2D0EC
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 03:48:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D015920B1F
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 03:48:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E09312137B
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 03:48:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586490519;
-	bh=kRzMbY3EgV4E6Qm3X/KDl19rd8PRqtZJwSZTVXijMQk=;
+	s=default; t=1586490523;
+	bh=otK5x4Ls3x9usVl63svp8ToBMJhcukjNtYux7ORX/Ps=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=SXWX6LtxbDDHjtN/xO0MbKN3Li37kThdxGmxere7Djbv4oV3HNEXi+lhJAU+FIjH4
-	 fpWdFEzuyV6Eec06fLIlMcpzUv7xDRM/j8siIwzIK2EbVJhq/uASauGodbTjkVMxZe
-	 hvoF8/ZNXBkyfYPRLUC13pRffEksWLok9QNgJts8=
+	b=MB04lK92CRnbdCUX7xELjrQOuldBvqKoaMhXSxdLhD6U2qviNWA4ALm3SebPOS8Ew
+	 1z5YsseNKuICAXZ07lv8yfTaMJo59bYJOInsmlAISTiAO53U53IzyvE2Bi/NyjLJ65
+	 22/Driuq5ieJ37bklqspAF01e1Q0NL95/mcHIk30=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728279AbgDJDsi (ORCPT
+        id S1728301AbgDJDsl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Apr 2020 23:48:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60222 "EHLO mail.kernel.org"
+        Thu, 9 Apr 2020 23:48:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60266 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728248AbgDJDsg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Apr 2020 23:48:36 -0400
+        id S1728286AbgDJDsj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Apr 2020 23:48:39 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D66D120B1F;
-        Fri, 10 Apr 2020 03:48:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5498020BED;
+        Fri, 10 Apr 2020 03:48:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586490516;
-        bh=kRzMbY3EgV4E6Qm3X/KDl19rd8PRqtZJwSZTVXijMQk=;
+        s=default; t=1586490519;
+        bh=otK5x4Ls3x9usVl63svp8ToBMJhcukjNtYux7ORX/Ps=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Ou76GEutbHPYvOXZCQMe5VdiEGGF0KQaqL9Nx6CUD44ac/iPSoq8qWkaV960qMuDE
-         nuGl8W205d5Nz4NhhxM0NM4VhqNXq09zF9tON1r2Zn9Q/QPUveZr5dWG7ojNOAeog4
-         By6ht53HsR2ZhOUmVBeAf2eq3P83EoTy/U9aKuzQ=
+        b=zE8zthlzs8EtxXGo+3JKjoKoH/av6aX9R/BG5w0P0d2LhGsefOozgLH0ibnBmZbk+
+         Gv1z5sYCk0vwGrzJPcfcRGWz0/l1fBT0v9733nYXqYcCUpF0XIEcowj+XY6R4rKWik
+         s5oGns+1WV7Xc8Ko98EG0sH2GhRIHQ32R+FGLzgw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Paolo Valente <paolo.valente@linaro.org>, cki-project@redhat.com,
-        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>,
-        linux-block@vger.kernel.org, cgroups@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.5 30/56] block, bfq: move forward the getting of an extra ref in bfq_bfqq_move
-Date:   Thu,  9 Apr 2020 23:47:34 -0400
-Message-Id: <20200410034800.8381-30-sashal@kernel.org>
+Cc:     chenqiwu <chenqiwu@xiaomi.com>, Kees Cook <keescook@chromium.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.5 33/56] pstore/platform: fix potential mem leak if pstore_init_fs failed
+Date:   Thu,  9 Apr 2020 23:47:37 -0400
+Message-Id: <20200410034800.8381-33-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200410034800.8381-1-sashal@kernel.org>
 References: <20200410034800.8381-1-sashal@kernel.org>
@@ -59,70 +58,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Paolo Valente <paolo.valente@linaro.org>
+From: chenqiwu <chenqiwu@xiaomi.com>
 
-[ Upstream commit fd1bb3ae54a9a2e0c42709de861c69aa146b8955 ]
+[ Upstream commit 8a57d6d4ddfa41c49014e20493152c41a38fcbf8 ]
 
-Commit ecedd3d7e199 ("block, bfq: get extra ref to prevent a queue
-from being freed during a group move") gets an extra reference to a
-bfq_queue before possibly deactivating it (temporarily), in
-bfq_bfqq_move(). This prevents the bfq_queue from disappearing before
-being reactivated in its new group.
+There is a potential mem leak when pstore_init_fs failed,
+since the pstore compression maybe unlikey to initialized
+successfully. We must clean up the allocation once this
+unlikey issue happens.
 
-Yet, the bfq_queue may also be expired (i.e., its service may be
-stopped) before the bfq_queue is deactivated. And also an expiration
-may lead to a premature freeing. This commit fixes this issue by
-simply moving forward the getting of the extra reference already
-introduced by commit ecedd3d7e199 ("block, bfq: get extra ref to
-prevent a queue from being freed during a group move").
-
-Reported-by: cki-project@redhat.com
-Tested-by: cki-project@redhat.com
-Signed-off-by: Paolo Valente <paolo.valente@linaro.org>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Signed-off-by: chenqiwu <chenqiwu@xiaomi.com>
+Link: https://lore.kernel.org/r/1581068800-13817-1-git-send-email-qiwuchen55@gmail.com
+Signed-off-by: Kees Cook <keescook@chromium.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- block/bfq-cgroup.c | 14 +++++++-------
- 1 file changed, 7 insertions(+), 7 deletions(-)
+ fs/pstore/platform.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/block/bfq-cgroup.c b/block/bfq-cgroup.c
-index 5a64607ce7744..a6d42339fb342 100644
---- a/block/bfq-cgroup.c
-+++ b/block/bfq-cgroup.c
-@@ -641,6 +641,12 @@ void bfq_bfqq_move(struct bfq_data *bfqd, struct bfq_queue *bfqq,
- {
- 	struct bfq_entity *entity = &bfqq->entity;
+diff --git a/fs/pstore/platform.c b/fs/pstore/platform.c
+index d896457e7c117..408277ee3cdb9 100644
+--- a/fs/pstore/platform.c
++++ b/fs/pstore/platform.c
+@@ -823,9 +823,9 @@ static int __init pstore_init(void)
  
-+	/*
-+	 * Get extra reference to prevent bfqq from being freed in
-+	 * next possible expire or deactivate.
-+	 */
-+	bfqq->ref++;
-+
- 	/* If bfqq is empty, then bfq_bfqq_expire also invokes
- 	 * bfq_del_bfqq_busy, thereby removing bfqq and its entity
- 	 * from data structures related to current group. Otherwise we
-@@ -651,12 +657,6 @@ void bfq_bfqq_move(struct bfq_data *bfqd, struct bfq_queue *bfqq,
- 		bfq_bfqq_expire(bfqd, bfqd->in_service_queue,
- 				false, BFQQE_PREEMPTED);
+ 	ret = pstore_init_fs();
+ 	if (ret)
+-		return ret;
++		free_buf_for_compression();
  
--	/*
--	 * get extra reference to prevent bfqq from being freed in
--	 * next possible deactivate
--	 */
--	bfqq->ref++;
--
- 	if (bfq_bfqq_busy(bfqq))
- 		bfq_deactivate_bfqq(bfqd, bfqq, false, false);
- 	else if (entity->on_st)
-@@ -676,7 +676,7 @@ void bfq_bfqq_move(struct bfq_data *bfqd, struct bfq_queue *bfqq,
- 
- 	if (!bfqd->in_service_queue && !bfqd->rq_in_driver)
- 		bfq_schedule_dispatch(bfqd);
--	/* release extra ref taken above */
-+	/* release extra ref taken above, bfqq may happen to be freed now */
- 	bfq_put_queue(bfqq);
+-	return 0;
++	return ret;
  }
+ late_initcall(pstore_init);
  
 -- 
 2.20.1
