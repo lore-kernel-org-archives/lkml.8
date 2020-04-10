@@ -2,103 +2,127 @@ Return-Path: <SRS0=VV4q=52=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 602C2C2BA2B
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 12:15:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AC17C2BA2B
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 12:20:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 33E1320753
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 12:15:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 08D132078E
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 12:20:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="YW3QOAis"
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="TqW0DwOw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726678AbgDJMPD (ORCPT
+        id S1726651AbgDJMUU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Apr 2020 08:15:03 -0400
-Received: from esa1.microchip.iphmx.com ([68.232.147.91]:64003 "EHLO
-        esa1.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726080AbgDJMPD (ORCPT
+        Fri, 10 Apr 2020 08:20:20 -0400
+Received: from mail-qk1-f193.google.com ([209.85.222.193]:45209 "EHLO
+        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725930AbgDJMUU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Apr 2020 08:15:03 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1586520903; x=1618056903;
-  h=from:to:cc:subject:date:message-id:mime-version;
-  bh=m3FWoK6Y8xDM6L0eq8fCEFhglfBFC6g0jRlmV8SpRiU=;
-  b=YW3QOAisIdMHzH8iryuuZnmsbsDI0Z38NM7ABSpwc7YIh6V/sIho0M+H
-   TEsdpUPx3V4u60JgqikX+P9t9VSDge8ueT5LTpQSLd5wDApqBHGlNqlW8
-   ZshP8jC6g42L3LDJkaSZUL5V+1r0BaO1gV7zgHjZe5xCYW3mWfkvGA7+6
-   0EyCTsjRIUTIMuZ5UdTrUlrUNUN6BewpBFxk5hxxe8Ep8Zn5Lgk7Sws8P
-   95Dorffcaj1fVSMMG1U3x0rRL5KgglS3jzq5HPyhPOEZSS9h/XJ2yAwaZ
-   XjYInK09/jKAw+g1dWDNkdpovSSDtuOuQOvqGFWFmrWeGHkLlg+DnFuy+
-   Q==;
-IronPort-SDR: +QBiI5KtTx7JSKCxD7BcPwmhf/jbu/DMnznp8zok4NxcHFGSENic4IlEYzGNmYi7LSH3pINaU6
- M1CZ6kcXFblX7IUucXlW6XZX69nJ+eX26TnwsRQcd4rxTV1e7TYsYjwPJRZw46+Eoj/ZLF+U/V
- 1iRnNnbuhxiaKEl9bx0i6TOLdfIV3ZsmCTE9tBOWrTGWYjtZLkUQTzi6EKzRnCyLIYx8wU69A0
- D7BT8CJx766PTvWrZY87oGwqzgFBIkSAvnLvLzpl/oWphgkmBwON0K83FzWrWYhKNhzR8RSNVb
- 67g=
-X-IronPort-AV: E=Sophos;i="5.72,366,1580799600"; 
-   d="scan'208";a="75482373"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa1.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 10 Apr 2020 05:15:02 -0700
-Received: from chn-vm-ex03.mchp-main.com (10.10.85.151) by
- chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Fri, 10 Apr 2020 05:14:57 -0700
-Received: from cristi-P53.amer.actel.com (10.10.115.15) by
- chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server id
- 15.1.1713.5 via Frontend Transport; Fri, 10 Apr 2020 05:15:00 -0700
-From:   <cristian.birsan@microchip.com>
-To:     <balbi@kernel.org>, <gregkh@linuxfoundation.org>,
-        <nicolas.ferre@microchip.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-usb@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-CC:     <alexandre.belloni@bootlin.com>, <ludovic.desroches@microchip.com>,
-        Cristian Birsan <cristian.birsan@microchip.com>
-Subject: [PATCH] usb: gadget: udc: atmel: Fix vbus disconnect handling
-Date:   Fri, 10 Apr 2020 15:14:52 +0300
-Message-ID: <20200410121452.17642-1-cristian.birsan@microchip.com>
-X-Mailer: git-send-email 2.17.1
-MIME-Version: 1.0
-Content-Type: text/plain
+        Fri, 10 Apr 2020 08:20:20 -0400
+Received: by mail-qk1-f193.google.com with SMTP id m67so1835840qke.12
+        for <linux-kernel@vger.kernel.org>; Fri, 10 Apr 2020 05:20:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=lca.pw; s=google;
+        h=mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=j0xq3XxrlNu4Qc4ztwGcIn5i4ud0A4XU61qD7ZOx5Ag=;
+        b=TqW0DwOwY4ZE4ujuXB+j46RD9fAxlH6saUZWhwloMR+92dlljvV53EXaZSVkYQRkKt
+         RXMfV9++lq3AGwz7gkpUfax15VQm/u2byD4ddmdfGRByv/J9bgLbyPODdRvITXymQ5z0
+         j9caCAIeja1c4XlXw2n43Us7FncnisZKjmQv4SwxgKd2vlqTGbSmoMy9V9UV88U2OYRJ
+         RXe0qhBOU/m3U2QVvlwNj+mFMnZ8ZYIfQ0VckcTsWfeJC4FANa3/k95pdYOQuobUKIyw
+         E9guFRZg4UF9wxfnmAEKgSpJSB4Oh5qJmDYnYAhs4FECpA1QBiX735CyjjLFRyjq51Q3
+         lQHA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=j0xq3XxrlNu4Qc4ztwGcIn5i4ud0A4XU61qD7ZOx5Ag=;
+        b=SDoxMdqxaZFJeFmH6CFIRQxDTmsWzcG8WVzSEZV592dwdLBNwlJuE6wIj2TCjYJN47
+         T8V+KlvgnFHwVxXPhMAbqY6T6wO9GlJV8+CNbWXDK4P7XPdhzJViIUO+ezOqGMsH0NAE
+         nE8TGHMNBEWYpCZGY7Fkai/ndUPh/HHz90WBP4drcUH2HYCR56LKPRxf393PmNliACpy
+         h5tDrwzAMhQM+Pl69W67cUYefqlAZzeHmXp/I0NCL2RJyIw6rhareIkaV1rJ/2hCqFZZ
+         UdHI6Do4K6NfaFMW7c+JJH1kj1v33tfOQ15S2dAwGACQtVia4oEGDwUIRtwvfoVxtHW/
+         XORg==
+X-Gm-Message-State: AGi0PuaIJWc7wdYwcu46XMPZaLznC8wVMUK01gtVvD8nxFGsz7kb7uXi
+        N9bmrg28I6Zx7j8xtnsZGgEFWw==
+X-Google-Smtp-Source: APiQypJFXmrYehKyrmHS6x/fCnBdKOhdEzQUjMHenMUEYSOOd7PHRRzV9grmABzvA/R5mqzhwY+Bsg==
+X-Received: by 2002:a05:620a:782:: with SMTP id 2mr562538qka.444.1586521219343;
+        Fri, 10 Apr 2020 05:20:19 -0700 (PDT)
+Received: from [192.168.1.153] (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
+        by smtp.gmail.com with ESMTPSA id u13sm1425748qku.92.2020.04.10.05.20.18
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 10 Apr 2020 05:20:18 -0700 (PDT)
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.80.23.2.2\))
+Subject: Re: s390 boot woe due to "block: fix busy device checking in
+ blk_drop_partitions"
+From:   Qian Cai <cai@lca.pw>
+In-Reply-To: <20200410054544.GA17923@lst.de>
+Date:   Fri, 10 Apr 2020 08:20:17 -0400
+Cc:     Jens Axboe <axboe@kernel.dk>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        linux-block@vger.kernel.org, linux-s390@vger.kernel.org,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <5CC1C981-47F1-4C4D-A4D7-B6411D716A2F@lca.pw>
+References: <AD16A450-794F-4EEA-A7BF-42452F18294A@lca.pw>
+ <20200410054544.GA17923@lst.de>
+To:     Christoph Hellwig <hch@lst.de>
+X-Mailer: Apple Mail (2.3608.80.23.2.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Cristian Birsan <cristian.birsan@microchip.com>
 
-A DMA transfer can be in progress while vbus is lost due to a cable
-disconnect. For endpoints that use DMA, this condition can lead to
-peripheral hang. The patch ensures that endpoints are disabled before
-the clocks are stopped to prevent this issue.
 
-Fixes: a64ef71ddc13 ("usb: gadget: atmel_usba_udc: condition clocks to vbus state")
-Signed-off-by: Cristian Birsan <cristian.birsan@microchip.com>
----
- drivers/usb/gadget/udc/atmel_usba_udc.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+> On Apr 10, 2020, at 1:45 AM, Christoph Hellwig <hch@lst.de> wrote:
+>=20
+> Please try this patch:
 
-diff --git a/drivers/usb/gadget/udc/atmel_usba_udc.c b/drivers/usb/gadget/udc/atmel_usba_udc.c
-index 6e0432141c40..22200341c8ec 100644
---- a/drivers/usb/gadget/udc/atmel_usba_udc.c
-+++ b/drivers/usb/gadget/udc/atmel_usba_udc.c
-@@ -1951,10 +1951,10 @@ static irqreturn_t usba_vbus_irq_thread(int irq, void *devid)
- 			usba_start(udc);
- 		} else {
- 			udc->suspended = false;
--			usba_stop(udc);
--
- 			if (udc->driver->disconnect)
- 				udc->driver->disconnect(&udc->gadget);
-+
-+			usba_stop(udc);
- 		}
- 		udc->vbus_prev = vbus;
- 	}
--- 
-2.17.1
+It works fine.
+
+>=20
+> ---
+> =46rom f42fb98cc627f9b960fd5b9a3a229da5c5dcf54a Mon Sep 17 00:00:00 =
+2001
+> From: Christoph Hellwig <hch@lst.de>
+> Date: Fri, 10 Apr 2020 07:14:13 +0200
+> Subject: block: fix busy device checking in blk_drop_partitions again
+>=20
+> The previous fix had an off by one in the bd_openers checking, =
+counting
+> the callers blkdev_get.
+>=20
+> Fixes: d3ef5536274f ("block: fix busy device checking in =
+blk_drop_partitions")
+> Signed-off-by: Christoph Hellwig <hch@lst.de>
+> ---
+> block/partitions/core.c | 2 +-
+> 1 file changed, 1 insertion(+), 1 deletion(-)
+>=20
+> diff --git a/block/partitions/core.c b/block/partitions/core.c
+> index 1a0a829d8416..bc1ded1331b1 100644
+> --- a/block/partitions/core.c
+> +++ b/block/partitions/core.c
+> @@ -496,7 +496,7 @@ int blk_drop_partitions(struct gendisk *disk, =
+struct block_device *bdev)
+>=20
+> 	if (!disk_part_scan_enabled(disk))
+> 		return 0;
+> -	if (bdev->bd_part_count || bdev->bd_openers)
+> +	if (bdev->bd_part_count || bdev->bd_openers > 1)
+> 		return -EBUSY;
+> 	res =3D invalidate_partition(disk, 0);
+> 	if (res)
+> --=20
+> 2.25.1
+>=20
 
