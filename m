@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EE33C2D0EC
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 03:59:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11DBDC2BBFD
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 03:59:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E94A62063A
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 03:59:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DEF1B2063A
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 03:59:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=default; t=1586491147;
-	bh=gXuLcjnFmu7I8/9QP80Zfyjgrdu24JxyI56rH78YD5M=;
+	bh=wprIwHv1JZkm3EJGqwxjmXb8VZw70uVnlQHdiVFQVO0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1YWmWv5i3CPMTiGgymAhC/cE4ng59qAxhQf/esyCKRkQcOANjuDOzErpE/4eZCYVG
-	 Mt5bjN9RrjaKsr3vW4Yw2JJOhR7chm1eXfAxbbmv7naCQPZjhGEPuc5NM7wgjKgpdk
-	 E5Kwii/DLtQwcMiueSediSvBd3eJLXsMsvCR/Oj4=
+	b=DCKXTMgDWPaVG4bmK81iTfhX+x2qQh6IQtIU4G7m/QJd+PfWzrddRy7Fb9UQB6Xm6
+	 KzfsBTaUYHzZAtOcjzHzL11xNrhWM40EDJZ1s1bTcWl13i48MuGzlPFk7nDtii7IIf
+	 /YemHYzJ9EC73GkQXfREtTSWu7g63NqgD5gE0NII=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728221AbgDJDse (ORCPT
+        id S1728206AbgDJDsc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Apr 2020 23:48:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60066 "EHLO mail.kernel.org"
+        Thu, 9 Apr 2020 23:48:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59930 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728164AbgDJDsa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Apr 2020 23:48:30 -0400
+        id S1726680AbgDJDs0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Apr 2020 23:48:26 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1974E2137B;
-        Fri, 10 Apr 2020 03:48:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D66AB20CC7;
+        Fri, 10 Apr 2020 03:48:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586490509;
-        bh=gXuLcjnFmu7I8/9QP80Zfyjgrdu24JxyI56rH78YD5M=;
+        s=default; t=1586490506;
+        bh=wprIwHv1JZkm3EJGqwxjmXb8VZw70uVnlQHdiVFQVO0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mXBwtyOL2zdfdPRXNTjBlLpE/sAt3tsLacLBorUu9Ta3fjvB10J74HCOIFfTlegwG
-         5y3myp6f2nUB+MN0ohwNhmBWmIS9rD+9VhpHZUrfQTeVco73J49zlT6k2SWYj1M5qZ
-         +nL6ePrD7hvXDzrpYO97UTxt570d39I44JtgOg2c=
+        b=Lm2m/aT+s7wWGasKi8TsEIXelqThWHryM5AECgB0h4Ht4SASABHAZ4CtJowbMDryI
+         7TEMt09np9Mek7G75uAjPAyuaFuHczgZpMSUFUuScXDodRKoH40KqaHsQBUfYrPlQC
+         c/2xf7prEyUsh5E+pZVxiahMC8VAqosfMFDk3UKs=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     "Ahmed S. Darwish" <a.darwish@linutronix.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
+Cc:     Taehee Yoo <ap420073@gmail.com>, kbuild test robot <lkp@intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.5 24/56] time/sched_clock: Expire timer in hardirq context
-Date:   Thu,  9 Apr 2020 23:47:28 -0400
-Message-Id: <20200410034800.8381-24-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.5 21/56] debugfs: Check module state before warning in {full/open}_proxy_open()
+Date:   Thu,  9 Apr 2020 23:47:25 -0400
+Message-Id: <20200410034800.8381-21-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200410034800.8381-1-sashal@kernel.org>
 References: <20200410034800.8381-1-sashal@kernel.org>
@@ -59,63 +59,115 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Ahmed S. Darwish" <a.darwish@linutronix.de>
+From: Taehee Yoo <ap420073@gmail.com>
 
-[ Upstream commit 2c8bd58812ee3dbf0d78b566822f7eacd34bdd7b ]
+[ Upstream commit 275678e7a9be6a0ea9c1bb493e48abf2f4a01be5 ]
 
-To minimize latency, PREEMPT_RT kernels expires hrtimers in preemptible
-softirq context by default. This can be overriden by marking the timer's
-expiry with HRTIMER_MODE_HARD.
+When the module is being removed, the module state is set to
+MODULE_STATE_GOING. At this point, try_module_get() fails.
+And when {full/open}_proxy_open() is being called,
+it calls try_module_get() to try to hold module reference count.
+If it fails, it warns about the possibility of debugfs file leak.
 
-sched_clock_timer is missing this annotation: if its callback is preempted
-and the duration of the preemption exceeds the wrap around time of the
-underlying clocksource, sched clock will get out of sync.
+If {full/open}_proxy_open() is called while the module is being removed,
+it fails to hold the module.
+So, It warns about debugfs file leak. But it is not the debugfs file
+leak case. So, this patch just adds module state checking routine
+in the {full/open}_proxy_open().
 
-Mark the sched_clock_timer for expiry in hard interrupt context.
+Test commands:
+    #SHELL1
+    while :
+    do
+        modprobe netdevsim
+        echo 1 > /sys/bus/netdevsim/new_device
+        modprobe -rv netdevsim
+    done
 
-Signed-off-by: Ahmed S. Darwish <a.darwish@linutronix.de>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lkml.kernel.org/r/20200309181529.26558-1-a.darwish@linutronix.de
+    #SHELL2
+    while :
+    do
+        cat /sys/kernel/debug/netdevsim/netdevsim1/ports/0/ipsec
+    done
+
+Splat looks like:
+[  298.766738][T14664] debugfs file owner did not clean up at exit: ipsec
+[  298.766766][T14664] WARNING: CPU: 2 PID: 14664 at fs/debugfs/file.c:312 full_proxy_open+0x10f/0x650
+[  298.768595][T14664] Modules linked in: netdevsim(-) openvswitch nsh nf_conncount nf_nat nf_conntrack nf_defrag_ipv6 n][  298.771343][T14664] CPU: 2 PID: 14664 Comm: cat Tainted: G        W         5.5.0+ #1
+[  298.772373][T14664] Hardware name: innotek GmbH VirtualBox/VirtualBox, BIOS VirtualBox 12/01/2006
+[  298.773545][T14664] RIP: 0010:full_proxy_open+0x10f/0x650
+[  298.774247][T14664] Code: 48 c1 ea 03 80 3c 02 00 0f 85 c1 04 00 00 49 8b 3c 24 e8 e4 b5 78 ff 84 c0 75 2d 4c 89 ee 48
+[  298.776782][T14664] RSP: 0018:ffff88805b7df9b8 EFLAGS: 00010282[  298.777583][T14664] RAX: dffffc0000000008 RBX: ffff8880511725c0 RCX: 0000000000000000
+[  298.778610][T14664] RDX: 0000000000000000 RSI: 0000000000000006 RDI: ffff8880540c5c14
+[  298.779637][T14664] RBP: 0000000000000000 R08: fffffbfff15235ad R09: 0000000000000000
+[  298.780664][T14664] R10: 0000000000000001 R11: 0000000000000000 R12: ffffffffc06b5000
+[  298.781702][T14664] R13: ffff88804c234a88 R14: ffff88804c22dd00 R15: ffffffff8a1b5660
+[  298.782722][T14664] FS:  00007fafa13a8540(0000) GS:ffff88806c800000(0000) knlGS:0000000000000000
+[  298.783845][T14664] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[  298.784672][T14664] CR2: 00007fafa0e9cd10 CR3: 000000004b286005 CR4: 00000000000606e0
+[  298.785739][T14664] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+[  298.786769][T14664] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+[  298.787785][T14664] Call Trace:
+[  298.788237][T14664]  do_dentry_open+0x63c/0xf50
+[  298.788872][T14664]  ? open_proxy_open+0x270/0x270
+[  298.789524][T14664]  ? __x64_sys_fchdir+0x180/0x180
+[  298.790169][T14664]  ? inode_permission+0x65/0x390
+[  298.790832][T14664]  path_openat+0xc45/0x2680
+[  298.791425][T14664]  ? save_stack+0x69/0x80
+[  298.791988][T14664]  ? save_stack+0x19/0x80
+[  298.792544][T14664]  ? path_mountpoint+0x2e0/0x2e0
+[  298.793233][T14664]  ? check_chain_key+0x236/0x5d0
+[  298.793910][T14664]  ? sched_clock_cpu+0x18/0x170
+[  298.794527][T14664]  ? find_held_lock+0x39/0x1d0
+[  298.795153][T14664]  do_filp_open+0x16a/0x260
+[ ... ]
+
+Fixes: 9fd4dcece43a ("debugfs: prevent access to possibly dead file_operations at file open")
+Reported-by: kbuild test robot <lkp@intel.com>
+Signed-off-by: Taehee Yoo <ap420073@gmail.com>
+Link: https://lore.kernel.org/r/20200218043150.29447-1-ap420073@gmail.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/time/sched_clock.c | 9 +++++----
- 1 file changed, 5 insertions(+), 4 deletions(-)
+ fs/debugfs/file.c | 18 ++++++++++++++----
+ 1 file changed, 14 insertions(+), 4 deletions(-)
 
-diff --git a/kernel/time/sched_clock.c b/kernel/time/sched_clock.c
-index dbd69052eaa66..a5538dd76a819 100644
---- a/kernel/time/sched_clock.c
-+++ b/kernel/time/sched_clock.c
-@@ -207,7 +207,8 @@ sched_clock_register(u64 (*read)(void), int bits, unsigned long rate)
+diff --git a/fs/debugfs/file.c b/fs/debugfs/file.c
+index 18eeeb093a688..331d4071a8560 100644
+--- a/fs/debugfs/file.c
++++ b/fs/debugfs/file.c
+@@ -175,8 +175,13 @@ static int open_proxy_open(struct inode *inode, struct file *filp)
+ 	if (r)
+ 		goto out;
  
- 	if (sched_clock_timer.function != NULL) {
- 		/* update timeout for clock wrap */
--		hrtimer_start(&sched_clock_timer, cd.wrap_kt, HRTIMER_MODE_REL);
-+		hrtimer_start(&sched_clock_timer, cd.wrap_kt,
-+			      HRTIMER_MODE_REL_HARD);
- 	}
+-	real_fops = fops_get(real_fops);
+-	if (!real_fops) {
++	if (!fops_get(real_fops)) {
++#ifdef MODULE
++		if (real_fops->owner &&
++		    real_fops->owner->state == MODULE_STATE_GOING)
++			goto out;
++#endif
++
+ 		/* Huh? Module did not clean up after itself at exit? */
+ 		WARN(1, "debugfs file owner did not clean up at exit: %pd",
+ 			dentry);
+@@ -305,8 +310,13 @@ static int full_proxy_open(struct inode *inode, struct file *filp)
+ 	if (r)
+ 		goto out;
  
- 	r = rate;
-@@ -251,9 +252,9 @@ void __init generic_sched_clock_init(void)
- 	 * Start the timer to keep sched_clock() properly updated and
- 	 * sets the initial epoch.
- 	 */
--	hrtimer_init(&sched_clock_timer, CLOCK_MONOTONIC, HRTIMER_MODE_REL);
-+	hrtimer_init(&sched_clock_timer, CLOCK_MONOTONIC, HRTIMER_MODE_REL_HARD);
- 	sched_clock_timer.function = sched_clock_poll;
--	hrtimer_start(&sched_clock_timer, cd.wrap_kt, HRTIMER_MODE_REL);
-+	hrtimer_start(&sched_clock_timer, cd.wrap_kt, HRTIMER_MODE_REL_HARD);
- }
- 
- /*
-@@ -290,7 +291,7 @@ void sched_clock_resume(void)
- 	struct clock_read_data *rd = &cd.read_data[0];
- 
- 	rd->epoch_cyc = cd.actual_read_sched_clock();
--	hrtimer_start(&sched_clock_timer, cd.wrap_kt, HRTIMER_MODE_REL);
-+	hrtimer_start(&sched_clock_timer, cd.wrap_kt, HRTIMER_MODE_REL_HARD);
- 	rd->read_sched_clock = cd.actual_read_sched_clock;
- }
- 
+-	real_fops = fops_get(real_fops);
+-	if (!real_fops) {
++	if (!fops_get(real_fops)) {
++#ifdef MODULE
++		if (real_fops->owner &&
++		    real_fops->owner->state == MODULE_STATE_GOING)
++			goto out;
++#endif
++
+ 		/* Huh? Module did not cleanup after itself at exit? */
+ 		WARN(1, "debugfs file owner did not clean up at exit: %pd",
+ 			dentry);
 -- 
 2.20.1
 
