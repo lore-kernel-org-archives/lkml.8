@@ -2,265 +2,156 @@ Return-Path: <SRS0=VV4q=52=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1505AC2BB86
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 12:34:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01869C2BA2B
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 12:34:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CF74520769
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 12:33:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BE8FA20679
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 12:34:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Hk0N1VVy"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="l4BUxrAo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726652AbgDJMd6 (ORCPT
+        id S1726669AbgDJMeS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Apr 2020 08:33:58 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:37844 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725926AbgDJMd6 (ORCPT
+        Fri, 10 Apr 2020 08:34:18 -0400
+Received: from pandora.armlinux.org.uk ([78.32.30.218]:60780 "EHLO
+        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725926AbgDJMeR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Apr 2020 08:33:58 -0400
-Received: by mail-pl1-f194.google.com with SMTP id m16so632929pls.4;
-        Fri, 10 Apr 2020 05:33:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=pWsVtiX3GcZdmQwIjIqPKgDlzG51z14PXOFcpgZ+Gls=;
-        b=Hk0N1VVyVk0vO2+KZPmKog1WqA/kVBuXWsht2i+GedjJ3voxVsNpmqfsPqHZwrF1xN
-         zUfHUqHOpnbsgnc+zPORTUqCF428YBV8PaAnJZBEWXh472a3xXPgU5M3fBqzQ/KGr6s5
-         RCLEJ26e/Hv/x1g5Illn0sa7c4TuRtqy88z/rXFeygUkqaMVal/8nWJ/eqA+XR+aNGsM
-         SEnJtNU6iGnr6xTv5XH3EAGo3r7mbF4LpzN6GbjYGOjSbLktXBWCZI4CEbefEoXX5RJe
-         u3cVXlqVB3L1ookceXrvz3GV7QXw5mw1wc/kqRTlLikJABLtah12ZqgN8bNTS5l8PazW
-         eAtA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=pWsVtiX3GcZdmQwIjIqPKgDlzG51z14PXOFcpgZ+Gls=;
-        b=EDrL1D15+mqSqYmIvJJ0w7bJ+j5qZI5wu/+vQrTCeQbqdNVhBzAWqF33HSq1asN43A
-         SOnuTZX4AKELCTuwroHtTF7KFUV8npRvam4bWpN351BXJc24xNh2PauSEcpTXzsxVCs3
-         qnD7wtrPJ7T6zhj4hM7NCauy5PFI9J+bnnZT+EFQdl8TEfewCz5w5EFQV3FL9dLSPAXp
-         9IAcNBZ3pSPCIccAax6sWfe10LiXPV5YtXWZjQ1Bwj1LZ0bbfF1hQA2WLwNDkUsqfEe3
-         /OgSyLiVrbeD7/IGtfMxLyTVyabWhIP5aWMOjTKLmajjgpnbe1pgbd9PkWCghMB4KTXr
-         7yew==
-X-Gm-Message-State: AGi0PuYGuJYdkSRHE/CeTs6DZ5wqGrKBQE6813qzlrVKHdMf5Wrw35V5
-        QQoBfYahy3xgV9HZqUYNx9s=
-X-Google-Smtp-Source: APiQypLMlGjsFy5wQ+LNyOT69dUGo4Xi82hEbLXMtDUVK6nxDmncRaAeHGKK/WlZTjSD7oHOCFrIfA==
-X-Received: by 2002:a17:902:7082:: with SMTP id z2mr4528018plk.43.1586522035384;
-        Fri, 10 Apr 2020 05:33:55 -0700 (PDT)
-Received: from lenovo.spreadtrum.com ([117.18.48.82])
-        by smtp.gmail.com with ESMTPSA id a3sm1689018pfg.172.2020.04.10.05.33.50
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 10 Apr 2020 05:33:54 -0700 (PDT)
-From:   Orson Zhai <orson.unisoc@gmail.com>
-To:     Jonathan Corbet <corbet@lwn.net>, Petr Mladek <pmladek@suse.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
+        Fri, 10 Apr 2020 08:34:17 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=E1lO6MOH92TXjApRphPPU5REy5FFZ6ZxwRqdljo4K0I=; b=l4BUxrAoEycXsvzjLPbLhvRWn
+        YmPDjlzo97j79NsDCZtIMpz+tOfJ6KLwqm+t16Gc3OahvC/q8epEK3btHhPJNFVvr2sM8sdKkSn0O
+        4dqEY51qKb2+5UdFgeMYM+wTw0sXrrvHXl39ewXQXl5F0x5+LLa2OlyZWp7kIhy4tA3+R0NzIIOgN
+        kItZyIUPPxOA1wiAS+fi/bo/hE4vTQXzskPL5uLJRtijka6wht30pxwQV3PLU/MYve1PNywLKPCPg
+        CFQndh/X1J624Qe8ASBS0LUWvin4+mitfm5r9Ev/oGnDniUty9HF16ILDX85hnwTYHwUrPUbXS9b1
+        IcuRBqUUA==;
+Received: from shell.armlinux.org.uk ([2001:4d48:ad52:3201:5054:ff:fe00:4ec]:36520)
+        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.90_1)
+        (envelope-from <linux@armlinux.org.uk>)
+        id 1jMsqM-0001Tt-Nz; Fri, 10 Apr 2020 13:33:10 +0100
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
+        (envelope-from <linux@shell.armlinux.org.uk>)
+        id 1jMsqD-0003m7-Pl; Fri, 10 Apr 2020 13:33:01 +0100
+Date:   Fri, 10 Apr 2020 13:33:01 +0100
+From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
+To:     Ard Biesheuvel <ardb@kernel.org>
+Cc:     Arnd Bergmann <arnd@arndb.de>, Jian Cai <caij2003@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Peter Smith <Peter.Smith@arm.com>,
+        Stefan Agner <stefan@agner.ch>,
+        David Howells <dhowells@redhat.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Manoj Gupta <manojgupta@google.com>,
+        Benjamin Gaignard <benjamin.gaignard@linaro.org>,
+        "Joel Fernandes (Google)" <joel@joelfernandes.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Ilie Halip <ilie.halip@gmail.com>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Sami Tolvanen <samitolvanen@google.com>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
+        jiancai@google.com, Doug Anderson <armlinux@m.disordat.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jason Baron <jbaron@akamai.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Randy Dunlap <rdunlap@infradead.org>
-Cc:     orsonzhai@gmail.com, linux-kernel@vger.kernel.org,
-        linux-doc@vger.kernel.org, kernel-team@android.com,
-        Orson Zhai <orson.zhai@unisoc.com>
-Subject: [PATCH] dynamic_debug: Add an option to enable dynamic debug for modules only
-Date:   Fri, 10 Apr 2020 20:33:04 +0800
-Message-Id: <1586521984-5890-1-git-send-email-orson.unisoc@gmail.com>
-X-Mailer: git-send-email 2.7.4
+        Nick Desaulniers <ndesaulniers@google.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Patrick Bellasi <patrick.bellasi@arm.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Tejun Heo <tj@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>
+Subject: Re: [PATCH] ARM: do not assemble iwmmxt.S with LLVM toolchain
+Message-ID: <20200410123301.GX25745@shell.armlinux.org.uk>
+References: <20200409232728.231527-1-caij2003@gmail.com>
+ <CAK8P3a3uj7AHbAo4sNzr6KQx5Fk6v99k4ZixCgKo1tUuGoat9Q@mail.gmail.com>
+ <CAMj1kXGXNxXGiC4dmNXHkZ6n=J0Fhim3oSwNx4Bz5m9fEphJvQ@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAMj1kXGXNxXGiC4dmNXHkZ6n=J0Fhim3oSwNx4Bz5m9fEphJvQ@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Orson Zhai <orson.zhai@unisoc.com>
+On Fri, Apr 10, 2020 at 01:15:08PM +0200, Ard Biesheuvel wrote:
+> On Fri, 10 Apr 2020 at 11:56, Arnd Bergmann <arnd@arndb.de> wrote:
+> >
+> > On Fri, Apr 10, 2020 at 1:28 AM Jian Cai <caij2003@gmail.com> wrote:
+> > >
+> > > iwmmxt.S contains XScale instructions LLVM ARM backend does not support.
+> > > Skip this file if LLVM integrated assemmbler or LLD is used to build ARM
+> > > kernel.
+> > >
+> > > Signed-off-by: Jian Cai <caij2003@gmail.com>
+> >
+> > It clearly makes sense to limit the Kconfig option to compilers that
+> > can actually build it.
+> > A few questions though:
+> >
+> > - Given that Armada XP with its PJ4B was still marketed until fairly
+> > recently[1],
+> >   wouldn't it make sense to still add support for it? Is it a lot of work?
+> >
+> 
+> The part of that file that the assembler chokes on hasn't been touched
+> by anyone since Nico added it 15+ years ago. It can only be built in
+> ARM mode, and it disassembles to the sequence below (the ld/st fe/fp
+> mnemonics are not document in recent versions of the ARM ARM, and
+> aren't understood by Clang either)
 
-Instead of enabling dynamic debug globally with CONFIG_DYNAMIC_DEBUG,
-CONFIG_DYNAMIC_DEBUG_CORE will only enable core function of dynamic
-debug. With the DEBUG_MODULE defined for any modules, dynamic debug
-will be tied to them.
+For older CPUs, it doesn't matter what the latest ARM ARM says, the
+appropriate version of the ARM ARM is the one relevant for the CPU
+architecture.  This is a mistake frequently made, and it's been pointed
+out by Arm Ltd in the past (before ARMv6 even came on the scene) that
+keeping older revisions is necessary if you want to be interested in
+the older architectures.
 
-This is useful for people who only want to enable dynamic debug for
-kernel modules without worrying about kernel image size and memory
-consumption is increasing too much.
+However, there's an additional complication here: DEC's license from
+Arm Ltd back in the days of StrongARM allowed them to make changes to
+the architecture - that was passed over to Intel when they bought that
+part of DEC.  Consequently, these "non-Arm vendor" cores contain
+extensions that are not part of the ARM ARM.  iWMMXT is one such
+example, which first appeared in the Intel PXA270 SoC (an ARMv5
+derived CPU).
 
-Signed-off-by: Orson Zhai <orson.zhai@unisoc.com>
----
- Documentation/admin-guide/dynamic-debug-howto.rst |  7 +++++--
- include/linux/dev_printk.h                        |  6 ++++--
- include/linux/dynamic_debug.h                     |  2 +-
- include/linux/printk.h                            | 14 +++++++++-----
- lib/Kconfig.debug                                 | 12 ++++++++++++
- lib/Makefile                                      |  2 +-
- lib/dynamic_debug.c                               |  9 +++++++--
- 7 files changed, 39 insertions(+), 13 deletions(-)
+In fact, several of the features found in later versions of the ARM
+architecture came from DEC and Intel enhancements.
 
-diff --git a/Documentation/admin-guide/dynamic-debug-howto.rst b/Documentation/admin-guide/dynamic-debug-howto.rst
-index 0dc2eb8..fa5b8d4 100644
---- a/Documentation/admin-guide/dynamic-debug-howto.rst
-+++ b/Documentation/admin-guide/dynamic-debug-howto.rst
-@@ -13,8 +13,11 @@ kernel code to obtain additional kernel information.  Currently, if
- ``print_hex_dump_debug()``/``print_hex_dump_bytes()`` calls can be dynamically
- enabled per-callsite.
- 
--If ``CONFIG_DYNAMIC_DEBUG`` is not set, ``print_hex_dump_debug()`` is just
--shortcut for ``print_hex_dump(KERN_DEBUG)``.
-+If ``CONFIG_DYNAMIC_DEBUG_CORE`` is set, only the modules with ``DEBUG_MODULE``
-+defined will be tied into dynamic debug.
-+
-+If ``CONFIG_DYNAMIC_DEBUG`` or ``CONFIG_DYNAMIC_DEBUG_CORE`` is not set,
-+``print_hex_dump_debug()`` is just shortcut for ``print_hex_dump(KERN_DEBUG)``.
- 
- For ``print_hex_dump_debug()``/``print_hex_dump_bytes()``, format string is
- its ``prefix_str`` argument, if it is constant string; or ``hexdump``
-diff --git a/include/linux/dev_printk.h b/include/linux/dev_printk.h
-index 5aad06b..2fb0671 100644
---- a/include/linux/dev_printk.h
-+++ b/include/linux/dev_printk.h
-@@ -109,7 +109,8 @@ void _dev_info(const struct device *dev, const char *fmt, ...)
- #define dev_info(dev, fmt, ...)						\
- 	_dev_info(dev, dev_fmt(fmt), ##__VA_ARGS__)
- 
--#if defined(CONFIG_DYNAMIC_DEBUG)
-+#if defined(CONFIG_DYNAMIC_DEBUG) || \
-+	(defined(CONFIG_DYNAMIC_DEBUG_CORE) && defined(DEBUG_MODULE))
- #define dev_dbg(dev, fmt, ...)						\
- 	dynamic_dev_dbg(dev, dev_fmt(fmt), ##__VA_ARGS__)
- #elif defined(DEBUG)
-@@ -181,7 +182,8 @@ do {									\
- 	dev_level_ratelimited(dev_notice, dev, fmt, ##__VA_ARGS__)
- #define dev_info_ratelimited(dev, fmt, ...)				\
- 	dev_level_ratelimited(dev_info, dev, fmt, ##__VA_ARGS__)
--#if defined(CONFIG_DYNAMIC_DEBUG)
-+#if defined(CONFIG_DYNAMIC_DEBUG) || \
-+	(defined(CONFIG_DYNAMIC_DEBUG_CORE) && defined(DEBUG_MODULE))
- /* descriptor check is first to prevent flooding with "callbacks suppressed" */
- #define dev_dbg_ratelimited(dev, fmt, ...)				\
- do {									\
-diff --git a/include/linux/dynamic_debug.h b/include/linux/dynamic_debug.h
-index 4cf02ec..abcd5fd 100644
---- a/include/linux/dynamic_debug.h
-+++ b/include/linux/dynamic_debug.h
-@@ -48,7 +48,7 @@ struct _ddebug {
- 
- 
- 
--#if defined(CONFIG_DYNAMIC_DEBUG)
-+#if defined(CONFIG_DYNAMIC_DEBUG_CORE)
- int ddebug_add_module(struct _ddebug *tab, unsigned int n,
- 				const char *modname);
- extern int ddebug_remove_module(const char *mod_name);
-diff --git a/include/linux/printk.h b/include/linux/printk.h
-index 1e6108b..77fab5b 100644
---- a/include/linux/printk.h
-+++ b/include/linux/printk.h
-@@ -291,8 +291,9 @@ extern int kptr_restrict;
- /*
-  * These can be used to print at the various log levels.
-  * All of these will print unconditionally, although note that pr_debug()
-- * and other debug macros are compiled out unless either DEBUG is defined
-- * or CONFIG_DYNAMIC_DEBUG is set.
-+ * and other debug macros are compiled out unless either DEBUG is defined,
-+ * CONFIG_DYNAMIC_DEBUG is set, or CONFIG_DYNAMIC_DEBUG_CORE is set when
-+ * DEBUG_MODULE being defined for any modules.
-  */
- #define pr_emerg(fmt, ...) \
- 	printk(KERN_EMERG pr_fmt(fmt), ##__VA_ARGS__)
-@@ -327,7 +328,8 @@ extern int kptr_restrict;
- 
- 
- /* If you are writing a driver, please use dev_dbg instead */
--#if defined(CONFIG_DYNAMIC_DEBUG)
-+#if defined(CONFIG_DYNAMIC_DEBUG) || \
-+	(defined(CONFIG_DYNAMIC_DEBUG_CORE) && defined(DEBUG_MODULE))
- #include <linux/dynamic_debug.h>
- 
- /* dynamic_pr_debug() uses pr_fmt() internally so we don't need it here */
-@@ -453,7 +455,8 @@ extern int kptr_restrict;
- #endif
- 
- /* If you are writing a driver, please use dev_dbg instead */
--#if defined(CONFIG_DYNAMIC_DEBUG)
-+#if defined(CONFIG_DYNAMIC_DEBUG) || \
-+	(defined(CONFIG_DYNAMIC_DEBUG_CORE) && defined(DEBUG_MODULE))
- /* descriptor check is first to prevent flooding with "callbacks suppressed" */
- #define pr_debug_ratelimited(fmt, ...)					\
- do {									\
-@@ -500,7 +503,8 @@ static inline void print_hex_dump_bytes(const char *prefix_str, int prefix_type,
- 
- #endif
- 
--#if defined(CONFIG_DYNAMIC_DEBUG)
-+#if defined(CONFIG_DYNAMIC_DEBUG) || \
-+	(defined(CONFIG_DYNAMIC_DEBUG_CORE) && defined(DEBUG_MODULE))
- #define print_hex_dump_debug(prefix_str, prefix_type, rowsize,	\
- 			     groupsize, buf, len, ascii)	\
- 	dynamic_hex_dump(prefix_str, prefix_type, rowsize,	\
-diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
-index 50c1f5f..25a1b9de 100644
---- a/lib/Kconfig.debug
-+++ b/lib/Kconfig.debug
-@@ -99,6 +99,7 @@ config DYNAMIC_DEBUG
- 	default n
- 	depends on PRINTK
- 	depends on (DEBUG_FS || PROC_FS)
-+	select DYNAMIC_DEBUG_CORE
- 	help
- 
- 	  Compiles debug level messages into the kernel, which would not
-@@ -165,6 +166,17 @@ config DYNAMIC_DEBUG
- 	  See Documentation/admin-guide/dynamic-debug-howto.rst for additional
- 	  information.
- 
-+config DYNAMIC_DEBUG_CORE
-+	bool "Enable core function of dynamic debug support"
-+	depends on PRINTK
-+	depends on (DEBUG_FS || PROC_FS)
-+	help
-+	  Enable core functional support of dynamic debug. It is useful
-+	  when you want to tie dynamic debug to your kernel modules with
-+	  DEBUG_MODULE defined for each of them, especially for the case
-+	  of embedded system where the kernel image size is sensitive for
-+	  people.
-+
- config SYMBOLIC_ERRNAME
- 	bool "Support symbolic error names in printf"
- 	default y if PRINTK
-diff --git a/lib/Makefile b/lib/Makefile
-index 685aee6..8952772 100644
---- a/lib/Makefile
-+++ b/lib/Makefile
-@@ -186,7 +186,7 @@ lib-$(CONFIG_GENERIC_BUG) += bug.o
- 
- obj-$(CONFIG_HAVE_ARCH_TRACEHOOK) += syscall.o
- 
--obj-$(CONFIG_DYNAMIC_DEBUG) += dynamic_debug.o
-+obj-$(CONFIG_DYNAMIC_DEBUG_CORE) += dynamic_debug.o
- obj-$(CONFIG_SYMBOLIC_ERRNAME) += errname.o
- 
- obj-$(CONFIG_NLATTR) += nlattr.o
-diff --git a/lib/dynamic_debug.c b/lib/dynamic_debug.c
-index 8f199f4..321437b 100644
---- a/lib/dynamic_debug.c
-+++ b/lib/dynamic_debug.c
-@@ -1032,8 +1032,13 @@ static int __init dynamic_debug_init(void)
- 	int verbose_bytes = 0;
- 
- 	if (&__start___verbose == &__stop___verbose) {
--		pr_warn("_ddebug table is empty in a CONFIG_DYNAMIC_DEBUG build\n");
--		return 1;
-+		if (IS_ENABLED(CONFIG_DYNAMIC_DEBUG)) {
-+			pr_warn("_ddebug table is empty in a CONFIG_DYNAMIC_DEBUG build\n");
-+			return 1;
-+		}
-+		pr_info("Ignore empty _ddebug table in a CONFIG_DYNAMIC_DEBUG_CORE build\n");
-+		ddebug_init_success = 1;
-+		return 0;
- 	}
- 	iter = __start___verbose;
- 	modname = iter->modname;
+If your compiler/assembler only implements what is in the latest ARM
+ARM, then it is not going to be suitable for these older CPUs and
+alternate vendor "ARM compatible" CPUs.
+
+> Instead of playing all these tricks with Kconfig, couldn't we simply
+> insert the bare opcodes and be done with it?
+
+That gets close to a GPL violation; the GPL requires that source code
+be in the preferred form for making modifications. Encoding raw opcodes
+can in no way be argued to be the preferred form. Arguing that raw
+opcodes is acceptable sets a precedent that makes it acceptable for
+other "works" to do the same, which makes arguments against firmware
+supplied as a hexdump null and void.
+
+Using macros to emulate the instructions and create the appropriate
+opcodes is an alternative; we already have that for some of the VFP
+code as early toolchains had no support for the VFP instructions.
+
+So no, bare opcodes are unacceptable.
+
 -- 
-2.7.4
-
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line in suburbia: sync at 10.2Mbps down 587kbps up
