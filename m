@@ -2,139 +2,68 @@ Return-Path: <SRS0=VV4q=52=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC0E8C2BB85
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 11:35:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA766C2BB86
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 11:35:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9D93E20A8B
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 11:35:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9984B20787
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 11:35:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726203AbgDJLfK (ORCPT
+        id S1726671AbgDJLf2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Apr 2020 07:35:10 -0400
-Received: from foss.arm.com ([217.140.110.172]:60514 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725990AbgDJLfJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Apr 2020 07:35:09 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7B4F11FB;
-        Fri, 10 Apr 2020 04:35:09 -0700 (PDT)
-Received: from [10.37.12.30] (unknown [10.37.12.30])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id EB3573F73D;
-        Fri, 10 Apr 2020 04:34:58 -0700 (PDT)
-Subject: Re: [PATCH v6 04/10] PM / EM: add support for other devices than CPUs
- in Energy Model
-To:     Luis Gerhorst <linux-kernel@luisgerhorst.de>
-Cc:     linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        dri-devel@lists.freedesktop.org, linux-omap@vger.kernel.org,
-        linux-mediatek@lists.infradead.org, linux-arm-msm@vger.kernel.org,
-        linux-imx@nxp.com, Dietmar.Eggemann@arm.com, cw00.choi@samsung.com,
-        b.zolnierkie@samsung.com, rjw@rjwysocki.net, sudeep.holla@arm.com,
-        viresh.kumar@linaro.org, nm@ti.com, sboyd@kernel.org,
-        rui.zhang@intel.com, amit.kucheria@verdurent.com,
-        daniel.lezcano@linaro.org, mingo@redhat.com, peterz@infradead.org,
-        juri.lelli@redhat.com, vincent.guittot@linaro.org,
-        rostedt@goodmis.org, qperret@google.com, bsegall@google.com,
-        mgorman@suse.de, shawnguo@kernel.org, s.hauer@pengutronix.de,
-        festevam@gmail.com, kernel@pengutronix.de, khilman@kernel.org,
-        agross@kernel.org, bjorn.andersson@linaro.org, robh@kernel.org,
-        matthias.bgg@gmail.com, steven.price@arm.com,
-        tomeu.vizoso@collabora.com, alyssa.rosenzweig@collabora.com,
-        airlied@linux.ie, daniel@ffwll.ch, liviu.dudau@arm.com,
-        lorenzo.pieralisi@arm.com, patrick.bellasi@matbug.net,
-        orjan.eide@arm.com, rdunlap@infradead.org, mka@chromium.org
-References: <20200410084210.24932-1-lukasz.luba@arm.com>
- <20200410084210.24932-5-lukasz.luba@arm.com>
- <87ftdboaqr.fsf@luis-debian.luis-debian-domain>
-From:   Lukasz Luba <lukasz.luba@arm.com>
-Message-ID: <56053904-0314-340e-fdaa-4a8f649d7b6f@arm.com>
-Date:   Fri, 10 Apr 2020 12:34:56 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Fri, 10 Apr 2020 07:35:28 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:33812 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725913AbgDJLf2 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Apr 2020 07:35:28 -0400
+Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <colin.king@canonical.com>)
+        id 1jMrwU-0008VB-On; Fri, 10 Apr 2020 11:35:26 +0000
+From:   Colin King <colin.king@canonical.com>
+To:     Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] KVM: remove redundant assignment to variable r
+Date:   Fri, 10 Apr 2020 12:35:26 +0100
+Message-Id: <20200410113526.13822-1-colin.king@canonical.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-In-Reply-To: <87ftdboaqr.fsf@luis-debian.luis-debian-domain>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Colin Ian King <colin.king@canonical.com>
 
+The variable r is being assigned  with a value that is never read
+and it is being updated later with a new value.  The initialization is
+redundant and can be removed.
 
-On 4/10/20 12:12 PM, Luis Gerhorst wrote:
-> 
-> Lukasz Luba writes:
-> 
->> +/**
->> + * em_dev_unregister_perf_domain() - Unregister Energy Model (EM) for 
->> a device
->> + * @dev        : Device for which the EM is registered
->> + *
->> + * Try to unregister the EM for the specified device (it checks current
->> + * reference counter). The EM for CPUs will not be freed.
->> + */
->> +void em_dev_unregister_perf_domain(struct device *dev)
->> +{
->> +    struct em_device *em_dev, *tmp;
->> +
->> +    if (IS_ERR_OR_NULL(dev))
->> +        return;
->> +
->> +    /* We don't support freeing CPU structures in hotplug */
->> +    if (_is_cpu_device(dev)) {
->> +        dev_dbg_once(dev, "EM: the structures are not going to be 
->> removed\n");
->> +        return;
->> +    }
->> +
->> +    mutex_lock(&em_pd_mutex);
->> +
->> +    if (list_empty(&em_pd_dev_list)) {
->> +        mutex_unlock(&em_pd_mutex);
->> +        return;
->> +    }
->> +
->> +    list_for_each_entry_safe(em_dev, tmp, &em_pd_dev_list, 
->> em_dev_list) {
->> +        if (em_dev->dev == dev) {
->> +            kref_put(&em_dev->kref, _em_release);
->> +            break;
->> +        }
->> +    }
->> +
->> +    mutex_unlock(&em_pd_mutex);
->> +}
->> +EXPORT_SYMBOL_GPL(em_dev_unregister_perf_domain);
-> 
-> Ok, so em_dev_unregister_perf_domain() does not support the CPU device
-> and a subsequent em_register_perf_domain() will fail with EEXIST.
+Addresses-Coverity: ("Unused value")
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+---
+ virt/kvm/kvm_main.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-Correct. At the current mainline Energy Model we don't even have
-em_unregister_perf_domain function. I had to introduce it in order
-to support other devices which might have drivers loaded/unloaded
-as modules.
-
-
-> 
-> Is there a way to unregister/change the CPU's energy model during
-> runtime without restarting the whole system?
-
-Not for the CPU for now.
-
-It is possible for other devices. When you have i.e. a module driver for
-a device and in your code there is a (*active_power)(), then it is
-possible to change EM by unloading/loading the module.
-
-For the CPU we don't have this requirement for production code. I will
-add you to CC list when something like this would pop-up for a
-prototyping/experimentation code. We have been analyzing some options.
-
-Regards,
-Lukasz
+diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
+index 74bdb7bf3295..03571f6acaa8 100644
+--- a/virt/kvm/kvm_main.c
++++ b/virt/kvm/kvm_main.c
+@@ -3160,7 +3160,6 @@ static long kvm_vcpu_ioctl(struct file *filp,
+ 	case KVM_SET_REGS: {
+ 		struct kvm_regs *kvm_regs;
+ 
+-		r = -ENOMEM;
+ 		kvm_regs = memdup_user(argp, sizeof(*kvm_regs));
+ 		if (IS_ERR(kvm_regs)) {
+ 			r = PTR_ERR(kvm_regs);
+-- 
+2.25.1
 
