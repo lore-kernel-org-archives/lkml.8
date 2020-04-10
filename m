@@ -4,49 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58FB8C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 03:59:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E63DBC2D0EC
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 03:59:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 326D0206A1
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 03:59:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B63B320BED
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 03:59:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586491163;
-	bh=7RdBcKbcSA8txvE3ou1/hXYhwhq2DHXO8rive13W17M=;
+	s=default; t=1586491168;
+	bh=XSrdZZPRrkydDSI2Cfmq4du3S4DhEDyE4bvHKeeTGCc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cLCWQN6TrS9MY7G4d+qb/ldxdoDYdIOalp7IDgM6FcUMEBP87LoxbQnl2tQ0IeiIz
-	 mNxtv7ghguR+vUJWQSziM00rBiiHkyjRke+QBHX4Nfg4Xv5kOdpxQufddA18NpzGPR
-	 rVonbNMGigkjbusQlHMHiKYvxmraqKya4JgUPXZI=
+	b=uA8nl3zYSq9rwgpn11lDhOSmETa9WqRAtdSltkdK823vFAk9BJSELuz2WiQ5HMrbP
+	 99uLw2iz2V7GCZ7Jc6fyU19zWjiAUsDNGqWOl8Yo8J7+Gv8u1W0qztjDJxgqeEQ12t
+	 H/8E2QwxNcDsvcF2h22XtFy9dmWBZ0DJvi3H3FuU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728766AbgDJD7R (ORCPT
+        id S1729057AbgDJD71 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Apr 2020 23:59:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60064 "EHLO mail.kernel.org"
+        Thu, 9 Apr 2020 23:59:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59786 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728180AbgDJDs3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Apr 2020 23:48:29 -0400
+        id S1726767AbgDJDsX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Apr 2020 23:48:23 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0D2CC2166E;
-        Fri, 10 Apr 2020 03:48:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4BAF521473;
+        Fri, 10 Apr 2020 03:48:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586490508;
-        bh=7RdBcKbcSA8txvE3ou1/hXYhwhq2DHXO8rive13W17M=;
+        s=default; t=1586490503;
+        bh=XSrdZZPRrkydDSI2Cfmq4du3S4DhEDyE4bvHKeeTGCc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jSRcvTZZik2PoTmyjFyR20DhEJvbQafiou+zBTzqkyhGZkNdEm3UQsfe34RvIc0gh
-         IcrwCcKP6HvINjAsnTEN1t8admvWrsQLVh7Jv1aOkW/zNR318cKsW4uFBvrl5g+Ogy
-         jKK9SOGinF1TxALyJPH0CJcIOo5vSgk+8Qn2rOkA=
+        b=iml/QOLbpBnd+08ULGN/HfG2UGUUHf0PJhXQSBs5AiuamtCKSaryvtOqUtviIjNce
+         3JMcLYCLseyeYOI9OlaLRQsOeiKj2KPbYjiyxZQAgMTrYI5M03CYst8YUtxaNgO0Jx
+         ywYfwnR6UzNy0KgCPU4P3KiUZtId8wqhAJdHOxP4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Sungbo Eo <mans0n@gorani.run>, Marc Zyngier <maz@kernel.org>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.5 23/56] irqchip/versatile-fpga: Handle chained IRQs properly
-Date:   Thu,  9 Apr 2020 23:47:27 -0400
-Message-Id: <20200410034800.8381-23-sashal@kernel.org>
+Cc:     Thomas Hellstrom <thellstrom@vmware.com>,
+        Borislav Petkov <bp@suse.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.5 18/56] x86: Don't let pgprot_modify() change the page encryption bit
+Date:   Thu,  9 Apr 2020 23:47:22 -0400
+Message-Id: <20200410034800.8381-18-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200410034800.8381-1-sashal@kernel.org>
 References: <20200410034800.8381-1-sashal@kernel.org>
@@ -59,65 +61,65 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sungbo Eo <mans0n@gorani.run>
+From: Thomas Hellstrom <thellstrom@vmware.com>
 
-[ Upstream commit 486562da598c59e9f835b551d7cf19507de2d681 ]
+[ Upstream commit 6db73f17c5f155dbcfd5e48e621c706270b84df0 ]
 
-Enclose the chained handler with chained_irq_{enter,exit}(), so that the
-muxed interrupts get properly acked.
+When SEV or SME is enabled and active, vm_get_page_prot() typically
+returns with the encryption bit set. This means that users of
+pgprot_modify(, vm_get_page_prot()) (mprotect_fixup(), do_mmap()) end up
+with a value of vma->vm_pg_prot that is not consistent with the intended
+protection of the PTEs.
 
-This patch also fixes a reboot bug on OX820 SoC, where the jiffies timer
-interrupt is never acked. The kernel waits a clock tick forever in
-calibrate_delay_converge(), which leads to a boot hang.
+This is also important for fault handlers that rely on the VMA
+vm_page_prot to set the page protection. Fix this by not allowing
+pgprot_modify() to change the encryption bit, similar to how it's done
+for PAT bits.
 
-Fixes: c41b16f8c9d9 ("ARM: integrator/versatile: consolidate FPGA IRQ handling code")
-Signed-off-by: Sungbo Eo <mans0n@gorani.run>
-Signed-off-by: Marc Zyngier <maz@kernel.org>
-Link: https://lore.kernel.org/r/20200319023448.1479701-1-mans0n@gorani.run
+Signed-off-by: Thomas Hellstrom <thellstrom@vmware.com>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Reviewed-by: Dave Hansen <dave.hansen@linux.intel.com>
+Acked-by: Tom Lendacky <thomas.lendacky@amd.com>
+Link: https://lkml.kernel.org/r/20200304114527.3636-2-thomas_os@shipmail.org
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/irqchip/irq-versatile-fpga.c | 12 ++++++++++--
- 1 file changed, 10 insertions(+), 2 deletions(-)
+ arch/x86/include/asm/pgtable.h       | 7 +++++--
+ arch/x86/include/asm/pgtable_types.h | 2 +-
+ 2 files changed, 6 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/irqchip/irq-versatile-fpga.c b/drivers/irqchip/irq-versatile-fpga.c
-index 928858dada756..70e2cfff8175f 100644
---- a/drivers/irqchip/irq-versatile-fpga.c
-+++ b/drivers/irqchip/irq-versatile-fpga.c
-@@ -6,6 +6,7 @@
- #include <linux/irq.h>
- #include <linux/io.h>
- #include <linux/irqchip.h>
-+#include <linux/irqchip/chained_irq.h>
- #include <linux/irqchip/versatile-fpga.h>
- #include <linux/irqdomain.h>
- #include <linux/module.h>
-@@ -68,12 +69,16 @@ static void fpga_irq_unmask(struct irq_data *d)
- 
- static void fpga_irq_handle(struct irq_desc *desc)
- {
-+	struct irq_chip *chip = irq_desc_get_chip(desc);
- 	struct fpga_irq_data *f = irq_desc_get_handler_data(desc);
--	u32 status = readl(f->base + IRQ_STATUS);
-+	u32 status;
-+
-+	chained_irq_enter(chip, desc);
- 
-+	status = readl(f->base + IRQ_STATUS);
- 	if (status == 0) {
- 		do_bad_IRQ(desc);
--		return;
-+		goto out;
- 	}
- 
- 	do {
-@@ -82,6 +87,9 @@ static void fpga_irq_handle(struct irq_desc *desc)
- 		status &= ~(1 << irq);
- 		generic_handle_irq(irq_find_mapping(f->domain, irq));
- 	} while (status);
-+
-+out:
-+	chained_irq_exit(chip, desc);
+diff --git a/arch/x86/include/asm/pgtable.h b/arch/x86/include/asm/pgtable.h
+index ad97dc1551959..9de80cbdd887e 100644
+--- a/arch/x86/include/asm/pgtable.h
++++ b/arch/x86/include/asm/pgtable.h
+@@ -624,12 +624,15 @@ static inline pmd_t pmd_modify(pmd_t pmd, pgprot_t newprot)
+ 	return __pmd(val);
  }
+ 
+-/* mprotect needs to preserve PAT bits when updating vm_page_prot */
++/*
++ * mprotect needs to preserve PAT and encryption bits when updating
++ * vm_page_prot
++ */
+ #define pgprot_modify pgprot_modify
+ static inline pgprot_t pgprot_modify(pgprot_t oldprot, pgprot_t newprot)
+ {
+ 	pgprotval_t preservebits = pgprot_val(oldprot) & _PAGE_CHG_MASK;
+-	pgprotval_t addbits = pgprot_val(newprot);
++	pgprotval_t addbits = pgprot_val(newprot) & ~_PAGE_CHG_MASK;
+ 	return __pgprot(preservebits | addbits);
+ }
+ 
+diff --git a/arch/x86/include/asm/pgtable_types.h b/arch/x86/include/asm/pgtable_types.h
+index b5e49e6bac635..8267dd426b152 100644
+--- a/arch/x86/include/asm/pgtable_types.h
++++ b/arch/x86/include/asm/pgtable_types.h
+@@ -123,7 +123,7 @@
+  */
+ #define _PAGE_CHG_MASK	(PTE_PFN_MASK | _PAGE_PCD | _PAGE_PWT |		\
+ 			 _PAGE_SPECIAL | _PAGE_ACCESSED | _PAGE_DIRTY |	\
+-			 _PAGE_SOFT_DIRTY | _PAGE_DEVMAP)
++			 _PAGE_SOFT_DIRTY | _PAGE_DEVMAP | _PAGE_ENC)
+ #define _HPAGE_CHG_MASK (_PAGE_CHG_MASK | _PAGE_PSE)
  
  /*
 -- 
