@@ -2,60 +2,67 @@ Return-Path: <SRS0=VV4q=52=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41D1BC2BBC7
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 11:56:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54C8CC2BA2B
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 11:56:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1C5B220769
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 11:56:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 35D35208E4
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 11:56:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726775AbgDJL4X (ORCPT
+        id S1726793AbgDJL4Z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Apr 2020 07:56:23 -0400
-Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:57074 "EHLO
+        Fri, 10 Apr 2020 07:56:25 -0400
+Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:57846 "EHLO
         mx0a-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726708AbgDJL4W (ORCPT
+        by vger.kernel.org with ESMTP id S1726754AbgDJL4X (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Apr 2020 07:56:22 -0400
+        Fri, 10 Apr 2020 07:56:23 -0400
 Received: from pps.filterd (m0167088.ppops.net [127.0.0.1])
-        by mx0a-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03ABt5Oq019921;
-        Fri, 10 Apr 2020 07:56:09 -0400
-Received: from nwd2mta3.analog.com ([137.71.173.56])
-        by mx0a-00128a01.pphosted.com with ESMTP id 3091nb108m-1
+        by mx0a-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03ABsl9l019845;
+        Fri, 10 Apr 2020 07:56:12 -0400
+Received: from nwd2mta4.analog.com ([137.71.173.58])
+        by mx0a-00128a01.pphosted.com with ESMTP id 3091nb108q-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 10 Apr 2020 07:56:09 -0400
-Received: from ASHBMBX9.ad.analog.com (ashbmbx9.ad.analog.com [10.64.17.10])
-        by nwd2mta3.analog.com (8.14.7/8.14.7) with ESMTP id 03ABu86r047135
+        Fri, 10 Apr 2020 07:56:12 -0400
+Received: from SCSQMBX10.ad.analog.com (scsqmbx10.ad.analog.com [10.77.17.5])
+        by nwd2mta4.analog.com (8.14.7/8.14.7) with ESMTP id 03ABuAMP048995
         (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=FAIL);
-        Fri, 10 Apr 2020 07:56:08 -0400
-Received: from ASHBMBX9.ad.analog.com (10.64.17.10) by ASHBMBX9.ad.analog.com
- (10.64.17.10) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1779.2; Fri, 10 Apr
- 2020 07:56:07 -0400
-Received: from zeus.spd.analog.com (10.64.82.11) by ASHBMBX9.ad.analog.com
- (10.64.17.10) with Microsoft SMTP Server id 15.1.1779.2 via Frontend
- Transport; Fri, 10 Apr 2020 07:56:07 -0400
+        Fri, 10 Apr 2020 07:56:10 -0400
+Received: from SCSQCASHYB7.ad.analog.com (10.77.17.133) by
+ SCSQMBX10.ad.analog.com (10.77.17.5) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1779.2; Fri, 10 Apr 2020 04:56:09 -0700
+Received: from SCSQMBX11.ad.analog.com (10.77.17.10) by
+ SCSQCASHYB7.ad.analog.com (10.77.17.133) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1779.2; Fri, 10 Apr 2020 04:56:09 -0700
+Received: from zeus.spd.analog.com (10.64.82.11) by SCSQMBX11.ad.analog.com
+ (10.77.17.10) with Microsoft SMTP Server id 15.1.1779.2 via Frontend
+ Transport; Fri, 10 Apr 2020 04:56:08 -0700
 Received: from localhost.localdomain ([10.48.65.12])
-        by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 03ABu4tg026351;
-        Fri, 10 Apr 2020 07:56:04 -0400
+        by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 03ABu4ti026351;
+        Fri, 10 Apr 2020 07:56:07 -0400
 From:   Alexandru Ardelean <alexandru.ardelean@analog.com>
 To:     <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>
 CC:     <jic23@kernel.org>, <lars@metafoo.de>,
         Alexandru Ardelean <alexandru.ardelean@analog.com>
-Subject: [PATCH 0/5] iio: core,buffer: re-organize chardev creation
-Date:   Fri, 10 Apr 2020 14:56:50 +0300
-Message-ID: <20200410115655.79217-1-alexandru.ardelean@analog.com>
+Subject: [PATCH 2/5] iio: buffer: add back-ref from iio_buffer to iio_dev
+Date:   Fri, 10 Apr 2020 14:56:52 +0300
+Message-ID: <20200410115655.79217-3-alexandru.ardelean@analog.com>
 X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200410115655.79217-1-alexandru.ardelean@analog.com>
+References: <20200410115655.79217-1-alexandru.ardelean@analog.com>
 MIME-Version: 1.0
 Content-Type: text/plain
 X-ADIRoutedOnPrem: True
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
  definitions=2020-04-10_03:2020-04-09,2020-04-10 signatures=0
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- malwarescore=0 mlxlogscore=961 bulkscore=0 clxscore=1015 suspectscore=2
+ malwarescore=0 mlxlogscore=894 bulkscore=0 clxscore=1015 suspectscore=0
  mlxscore=0 phishscore=0 adultscore=0 priorityscore=1501 spamscore=0
  impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
  engine=8.12.0-2003020000 definitions=main-2004100100
@@ -64,54 +71,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The main intent is to be able to add more chardevs per IIO device, one
-for each buffer. To get there, some rework is needed, and one important
-facet is to move the creation of the current chardev into
-'industrialio-buffer.c', so that control/logic of these chardevs is
-localized in that file.
+An IIO device will have multiple buffers, but it shouldn't be allowed that
+an IIO buffer should belong to more than 1 IIO device.
 
-This changeset does that [incrementally] by moving the common chardev
-creation from 'industrialio-core.c' to 'industrialio-buffer.c' &
-'industrialio-event.c'.
-The common chardev is required for both IIO buffers & IIO events.
-In order to make this work, the 'iio_device_event_ioctl()' needs to be
-passed from 'industrialio-event.c' to 'industrialio-buffer.c' flying past
-'industrialio-core.c'. This sounds a bit wrong [at first] but it has the
-effect of reducing inter-dependencies between 'industrialio-core.c' to
-'industrialio-buffer.c' quite a bit.
-The IIO buffer also has a CONFIG_IIO_BUFFER symbol which can turn it
-off. No idea how widely this is used [as disabled], but this changeset
-also takes that into consideration.
+Once things get moved more from IIO device to the IIO buffer, and an IIO
+device will be able to have more than 1 buffer attached, there will be a
+need for a back-ref to the IIO device [from the IIO buffer].
 
-So, now the logic [for __iio_device_register() with regard to chardev
-init] is:
-1. iio_device_buffers_init() will init buffer and the chardev, if that
-   works, the 'iio_device_event_ioctl()' will be attached to the chardev
-2. if CONFIG_IIO_BUFFER is not defined or 'indio_dev->buffer == NULL'
-   (no buffter attached), -ENOTSUPP should be returned from
-   iio_device_buffers_init(), in which case the chardev should be
-   initialized in  'industrialio-event.c' via
-   'iio_device_register_event_chrdev()'
+This change adds that.
 
-One neat side effect of this logic, is that we can also move the buffer
-sysfs alloc/cleanup into 'industrialio-buffer.c' under the new
-'iio_device_buffers_{un}init()' functions.
+Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
+---
+ drivers/iio/industrialio-buffer.c | 2 ++
+ include/linux/iio/buffer_impl.h   | 3 +++
+ 2 files changed, 5 insertions(+)
 
-Alexandru Ardelean (5):
-  iio: core: register buffer fileops only if buffer present
-  iio: buffer: add back-ref from iio_buffer to iio_dev
-  iio: buffer: move iio buffer chrdev in industrial-buffer.c
-  iio: buffer: move sysfs alloc/free in industrial-buffer.c
-  iio: event: move event-only chardev in industrialio-event.c
-
- drivers/iio/iio_core.h            |  28 +++----
- drivers/iio/industrialio-buffer.c | 130 +++++++++++++++++++++++++-----
- drivers/iio/industrialio-core.c   | 105 +++---------------------
- drivers/iio/industrialio-event.c  | 119 ++++++++++++++++++++++++++-
- include/linux/iio/buffer_impl.h   |  10 +++
- include/linux/iio/iio.h           |   4 -
- 6 files changed, 263 insertions(+), 133 deletions(-)
-
+diff --git a/drivers/iio/industrialio-buffer.c b/drivers/iio/industrialio-buffer.c
+index e6fa1a4e135d..f9ffc7762f6c 100644
+--- a/drivers/iio/industrialio-buffer.c
++++ b/drivers/iio/industrialio-buffer.c
+@@ -1478,5 +1478,7 @@ void iio_device_attach_buffer(struct iio_dev *indio_dev,
+ 			      struct iio_buffer *buffer)
+ {
+ 	indio_dev->buffer = iio_buffer_get(buffer);
++
++	indio_dev->buffer->indio_dev = indio_dev;
+ }
+ EXPORT_SYMBOL_GPL(iio_device_attach_buffer);
+diff --git a/include/linux/iio/buffer_impl.h b/include/linux/iio/buffer_impl.h
+index 1e7edf6bed96..8fb92250a190 100644
+--- a/include/linux/iio/buffer_impl.h
++++ b/include/linux/iio/buffer_impl.h
+@@ -69,6 +69,9 @@ struct iio_buffer_access_funcs {
+  * those writing new buffer implementations.
+  */
+ struct iio_buffer {
++	/** @indio_dev: IIO device to which this buffer belongs to. */
++	struct iio_dev *indio_dev;
++
+ 	/** @length: Number of datums in buffer. */
+ 	unsigned int length;
+ 
 -- 
 2.17.1
 
