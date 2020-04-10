@@ -7,32 +7,32 @@ X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 378F0C2BB86
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 11:29:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1490FC2BB85
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 11:29:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 05DE220753
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 11:29:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DB3BF206E9
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 11:29:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="CnTn4UWZ"
+	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="BJJD/x4j"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726666AbgDJL3T (ORCPT
+        id S1726682AbgDJL33 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Apr 2020 07:29:19 -0400
-Received: from mout.gmx.net ([212.227.15.18]:36825 "EHLO mout.gmx.net"
+        Fri, 10 Apr 2020 07:29:29 -0400
+Received: from mout.gmx.net ([212.227.15.19]:34231 "EHLO mout.gmx.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725913AbgDJL3S (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Apr 2020 07:29:18 -0400
+        id S1726648AbgDJL32 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Apr 2020 07:29:28 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1586518154;
-        bh=KtSi/VbBy7h2f5/PPhtzMU8agjhettQ5lYTN7Xt9ILg=;
+        s=badeba3b8450; t=1586518164;
+        bh=sWYYu3vMxv+gaoLrrDxDuwL+UgyJB+3aK94jNvqAN2Q=;
         h=X-UI-Sender-Class:From:To:Cc:Subject:Date:In-Reply-To:References;
-        b=CnTn4UWZFmtqmOQPprxvfziLGj0UNzSaWAMsHldOsEc2eijtqPMNDt5XFc7mY1lO0
-         ERfla1e/sCiLcrXm+53FOrHVcF0OgVxvekkn5No8OCWWv1FtI1/t0u1DGhF6ye/Gjk
-         Sl8a+by4nIIbl2CdM1gos0uZueTzQLtqeTVAbfgY=
+        b=BJJD/x4jqvq8NcP0wyK/pY2vf35HluMdDC/CRo2x4vNPk1INvVbmM1P45Dg8ktR5t
+         0K98hBx4DsqcxZ1DxdcBs6y2ByhlQDZSTp2RyXhuf/GtgonQAWX9Y0QemAf1toHdZz
+         eeGzFriMDkuXGFNF/ojelaf8tu6DKp4P5hzljEA0=
 X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
 Received: from localhost.localdomain ([83.52.229.196]) by mail.gmx.com
  (mrgmx005 [212.227.17.184]) with ESMTPSA (Nemesis) id
- 1MXp9i-1jm6uT3Rbo-00Y6om; Fri, 10 Apr 2020 13:29:13 +0200
+ 1M8ykW-1jK6gn3GvW-0069YE; Fri, 10 Apr 2020 13:29:23 +0200
 From:   Oscar Carter <oscar.carter@gmx.com>
 To:     Forest Bond <forest@alittletooquiet.net>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>
@@ -41,198 +41,72 @@ Cc:     Oscar Carter <oscar.carter@gmx.com>,
         Quentin Deslandes <quentin.deslandes@itdev.co.uk>,
         Amir Mahdi Ghorbanian <indigoomega021@gmail.com>,
         devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 1/2] staging: vt6656: Refactor the assignment of the phy->signal variable
-Date:   Fri, 10 Apr 2020 13:28:33 +0200
-Message-Id: <20200410112834.17490-2-oscar.carter@gmx.com>
+Subject: [PATCH 2/2] staging: vt6656: Remove duplicate code for the phy->service assignment
+Date:   Fri, 10 Apr 2020 13:28:34 +0200
+Message-Id: <20200410112834.17490-3-oscar.carter@gmx.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200410112834.17490-1-oscar.carter@gmx.com>
 References: <20200410112834.17490-1-oscar.carter@gmx.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:GwHkx9hixyR4J7tLmd1opGX8K7/qhqgCPuFQ/YcedJdrilOfwu+
- aU4l87PFkEMzp5Y6AvS6hiFvnUcR6reyHplEQKp9JypEER0PulQuDpWYGoemqdV07i7qO4T
- caKntc7XbJtAeWY+ox0XRXABBOSi7rwwOmpEkUmRSq0yEJ4VOV3Lyx1LTaGqyCYLB6Yc5FP
- Zzg9WT57t41Zx14VkHFmg==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:DAq6SO9FoRQ=:Q8Ifa0KpW6o/8CEISXwc/Y
- LaDlaBgPZ66JQxFeeiGcxEsQRrENavN0Wcy8ijatwrGdCAL/tPXrhyjt9XfCgN+sbMtAc34b/
- NjB6IV1Uv8lsP4CNWeYl+uDyCWDVCDQgqSGrUmZdve+/TwHljScqekaNBJtvqsQdtmLnbXpc2
- ca3svRUZYRPFcxKgzKL3/o5cWqFBPskA6+9DE85QEQO1o+jwjzrEmioWkUnb3BakYQVQs7iel
- wZVSUoujaIBJCvs8VnFasIU7RGYbMAlLSXfpxfTLWJLzE11ra/r1994DMONK3kKr1tV+ZlGjh
- +EgxpihynHhOv0OGgO+B0xl5GZPMNkb8P7k0UurjDUF2868dzu1KFbfInXoTAe6zCTm7fENQw
- po0REyPWzHpXuUB97GDswM9Eo9xzLdNadYMZM0cYVXPkrv0RyLRQy0GCiWMhaqJ8fkaUGLjFq
- dBynEJUYt8wReJ3nbbVnqKgsCiUVuQUAn6dDwB2zjzYBAm6BUPFikcJwoJ7OUZ9zN8D70o+hk
- mXpscY3fYTS8JcoOhfTVqasAox5dLz7V0XL1s4lP4aWlE6ruRirm02c+nzqvn/sLI4O73eKbM
- yCfOYGDaXWqUN2GEHctjeZmU/Im61JywiMwEu8464HUkrP7M/eV16RQwnVXK09bV/rzZB9uA9
- kHoDGmGTU1G/3qn6Jm/cKW1OStX20MSjaIRgzSfJ3ezLq+KTaj3qxiCWUxnRzo/Mlm2DBZEyu
- BAfT6Snx3p/cwy9efx6X/jFdtHW/JJV3yDGhCctZKV2kzC4twaYF/pDBAxPbfEtIsPuUXn3V/
- bhatlWfFKeeTMOR1DhHsfqsvauCJGnAJNHv9QuhdsabHd422uFExv3CGr9+o95NGB1l/kZzuQ
- DAnFA2BoAm4ucHO45eflGaYUm0znSKp6yvtkAcA28xY7qYpoSZgO0bY04xMS4V+SoquM1YywK
- W6Q4F/ApVrmFMqd3AvK5Z3m5ATG+JTgQPLTG85l2gBSgei9FRF61e1vVqR4BCJIwLXYP5785X
- nmxZpn64BbuU8TKn5FJuUA4B6rDagxfkqLTRBQIVdC05RSorHIUCtnjhofOpPkNi/kr0Y46eE
- lZaIV3dzrCy6RL4nV54d+m3uE91ZVwGabOZ5GKzV8FdmxadcJH7tnoJs/3HFueXWN24a/fiR5
- kjLZDY9cyY2NO1yAl20TjKs5nkMyVBPB0fNn6Y3vrN1H9P7lwj8k2t/Dc+EjsrFeUBLQUEheI
- Szf5wbYc1hYGZix5M
+X-Provags-ID: V03:K1:NjWxbGtEZJAAq5q9d0g2t52pyLQL1cNj7YfLf+Ywk7tnZX8Z8KN
+ 2L7jusOoUGtMZ3F+D+HvU/4v/Y2MJvSrSsCwkMmdN2Vaa7ZySflHMSQksANCnXHsiYoGW01
+ aTfO/HAQ3gVRnIU5cY1Sq3mswAmE33pYsOjybyVw4MXUaQMxpS39YCg4py91AvMMduKgN+T
+ RwEVZ5LjVyW7eiKMft81w==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:Wy3xv9jGFSk=:iAyDj2NhE+ynqdygNhH/Ct
+ lZQnd11jEtK6UzJ4SewJPHxNRA4JXoKiHjrwX7pUE5qartSUu3m8EpylNCFZpjMd620UnfHBR
+ UltOpJtACX1h3ajBGnLpHpPOJEzjvb+2vZX6vdMS56TKtGrV/4UGutYOA0m6sh4LdSVW3WL3p
+ Bk3tRzv2YXSK7xo6W1Nh7kFg3SGAFk4en3oKPDh2WtS9hALqvo55in/McWaEDvtRP9/44hnz9
+ bYD9smU8rGdctYXcQgoHK/fYyFIZKmm/tUhqcjXJwJ/dIepOHrH0KdiS79BWc9Jktw5KNQq4R
+ Rt+VPMPJmiQAmYxAxWe6R+msp3rWoJQq4YXNPT6j7wq9OejXClghKig35O1oEKXbqh5/L4LMB
+ 7AWKUCjGgtz9kMCW1SWSOOkXNmLqpM13Yl2mo1+DIo+cdrOcC4hkAHJp9HwkO8fojWCL5nsZk
+ JSdokShKYloxHY7fM/SvHeV+bM45boJNQ1t/o2M5Rfxajf7elqFX6T11OLwv81TTls6QxIhjw
+ 6yQ+NQYXyLYX3P8vyBxbHiQ5FgmqWZzZsaiLksJvsT5wg2HLif6+061lF7h8hQ9i/J0w7+raL
+ jZgI2a1maJmiYw+FZVHhUFoA6gSqq6KiTa7CtQN78jiAFeQlN+dCPVaOLKi3OprYe2XrSFii5
+ OqpwEdTaITiZgc8AIaz4tTX47kF7KM/yO6XUXMPZrPw4gvRwZjx3w9A8iPpSGSR1cA6WqnnlL
+ ZfuyCbeWlyVUqtNbpd83KcFO7/usoNRWUFwAGXWgdQzwYIJK1qA3mWiNEIpukg5slgSJgGnJo
+ H/Nr3jqoj0CeqsI0EqkdfdwZEy3yWqQwlNgzJbnNddaGL2fa8UdHkX98oF1DGKYQHSU/OWb8W
+ r4+8/tTcDzWDulK/40SxRrqmSxtv5IRz0DQJl60G5QsOAuqZhVxaf8WWiBTR0m0WLLjtr5W+Y
+ EPSezMjas8FlTk1I2f7ny9cDpJHMQxBoUepkoVTZs4R6q97J95d/hPuUTf58UCX8AUnLOzifL
+ iFsamqG94K+vyaLRRFdRpHeu5HXLHiB19xyRZUcvkWSRf4U7Jx8ZB8BdDm49XD9dJ42MkfByy
+ T301XQhMWWaegvyetpTrB1K8me4afHvSv/CxOxC8PNYLQpeC1IV/ir8C3cZstvCYBdOjn6ueZ
+ l8OR/Mua4jaeUVseenZ9ykHfQs0neyAA3vpqqKveIMS5PlBjKptE3vvjrYOLu62rh3r1ATME4
+ PUrhHEoHzvXUIu2vi
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Create a constant array with the values of the "phy->signal" for every
-rate. Remove all "phy->signal" assignments inside the switch statement
-and replace these with a single reading from the new vnt_phy_signal
-array.
+Take out the "phy->service" assignment from the if-else statement due to
+it's the same for the two branches.
 
 Signed-off-by: Oscar Carter <oscar.carter@gmx.com>
 =2D--
- drivers/staging/vt6656/baseband.c | 101 +++++++-----------------------
- 1 file changed, 21 insertions(+), 80 deletions(-)
+ drivers/staging/vt6656/baseband.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
 diff --git a/drivers/staging/vt6656/baseband.c b/drivers/staging/vt6656/ba=
 seband.c
-index a19a563d8bcc..47f93bf6e07b 100644
+index 47f93bf6e07b..b0054f6c07e6 100644
 =2D-- a/drivers/staging/vt6656/baseband.c
 +++ b/drivers/staging/vt6656/baseband.c
-@@ -115,6 +115,21 @@ static const u16 vnt_frame_time[MAX_RATE] =3D {
- 	10, 20, 55, 110, 24, 36, 48, 72, 96, 144, 192, 216
- };
-
-+static const u8 vnt_phy_signal[][2] =3D {
-+	{0x00, 0x00},	/* RATE_1M  */
-+	{0x01, 0x09},	/* RATE_2M  */
-+	{0x02, 0x0a},	/* RATE_5M  */
-+	{0x03, 0x0b},	/* RATE_11M */
-+	{0x8b, 0x9b},	/* RATE_6M  */
-+	{0x8f, 0x9f},	/* RATE_9M  */
-+	{0x8a, 0x9a},	/* RATE_12M */
-+	{0x8e, 0x9e},	/* RATE_18M */
-+	{0x89, 0x99},	/* RATE_24M */
-+	{0x8d, 0x9d},	/* RATE_36M */
-+	{0x88, 0x98},	/* RATE_48M */
-+	{0x8c, 0x9c}	/* RATE_54M */
-+};
-+
- /*
-  * Description: Calculate data frame transmitting time
-  *
-@@ -183,6 +198,7 @@ void vnt_get_phy_field(struct vnt_private *priv, u32 f=
-rame_length,
- 	u32 count =3D 0;
- 	u32 tmp;
- 	int ext_bit;
-+	int i, j;
- 	u8 preamble_type =3D priv->preamble_type;
-
- 	bit_count =3D frame_length * 8;
-@@ -191,27 +207,12 @@ void vnt_get_phy_field(struct vnt_private *priv, u32=
+@@ -233,14 +233,13 @@ void vnt_get_phy_field(struct vnt_private *priv, u32=
  frame_length,
- 	switch (tx_rate) {
- 	case RATE_1M:
- 		count =3D bit_count;
--
--		phy->signal =3D 0x00;
--
- 		break;
- 	case RATE_2M:
- 		count =3D bit_count / 2;
--
--		if (preamble_type =3D=3D 1)
--			phy->signal =3D 0x09;
--		else
--			phy->signal =3D 0x01;
--
- 		break;
- 	case RATE_5M:
- 		count =3D DIV_ROUND_UP(bit_count * 10, 55);
--
--		if (preamble_type =3D=3D 1)
--			phy->signal =3D 0x0a;
--		else
--			phy->signal =3D 0x02;
--
- 		break;
- 	case RATE_11M:
- 		count =3D bit_count / 11;
-@@ -224,74 +225,14 @@ void vnt_get_phy_field(struct vnt_private *priv, u32=
- frame_length,
- 				ext_bit =3D true;
- 		}
+ 			       : preamble_type =3D=3D PREAMBLE_SHORT;
 
--		if (preamble_type =3D=3D 1)
--			phy->signal =3D 0x0b;
--		else
--			phy->signal =3D 0x03;
--
--		break;
--	case RATE_6M:
--		if (pkt_type =3D=3D PK_TYPE_11A)
--			phy->signal =3D 0x9b;
--		else
--			phy->signal =3D 0x8b;
--
--		break;
--	case RATE_9M:
--		if (pkt_type =3D=3D PK_TYPE_11A)
--			phy->signal =3D 0x9f;
--		else
--			phy->signal =3D 0x8f;
--
--		break;
--	case RATE_12M:
--		if (pkt_type =3D=3D PK_TYPE_11A)
--			phy->signal =3D 0x9a;
--		else
--			phy->signal =3D 0x8a;
--
--		break;
--	case RATE_18M:
--		if (pkt_type =3D=3D PK_TYPE_11A)
--			phy->signal =3D 0x9e;
--		else
--			phy->signal =3D 0x8e;
--
--		break;
--	case RATE_24M:
--		if (pkt_type =3D=3D PK_TYPE_11A)
--			phy->signal =3D 0x99;
--		else
--			phy->signal =3D 0x89;
--
- 		break;
--	case RATE_36M:
--		if (pkt_type =3D=3D PK_TYPE_11A)
--			phy->signal =3D 0x9d;
--		else
--			phy->signal =3D 0x8d;
-+	}
-
--		break;
--	case RATE_48M:
--		if (pkt_type =3D=3D PK_TYPE_11A)
--			phy->signal =3D 0x98;
--		else
--			phy->signal =3D 0x88;
-+	i =3D tx_rate > RATE_54M ? RATE_54M : tx_rate;
-+	j =3D tx_rate > RATE_11M ? pkt_type =3D=3D PK_TYPE_11A
-+			       : preamble_type =3D=3D PREAMBLE_SHORT;
-
--		break;
--	case RATE_54M:
--		if (pkt_type =3D=3D PK_TYPE_11A)
--			phy->signal =3D 0x9c;
--		else
--			phy->signal =3D 0x8c;
--		break;
--	default:
--		if (pkt_type =3D=3D PK_TYPE_11A)
--			phy->signal =3D 0x9c;
--		else
--			phy->signal =3D 0x8c;
--		break;
--	}
-+	phy->signal =3D vnt_phy_signal[i][j];
+ 	phy->signal =3D vnt_phy_signal[i][j];
++	phy->service =3D 0x00;
 
  	if (pkt_type =3D=3D PK_TYPE_11B) {
- 		phy->service =3D 0x00;
+-		phy->service =3D 0x00;
+ 		if (ext_bit)
+ 			phy->service |=3D 0x80;
+ 		phy->len =3D cpu_to_le16((u16)count);
+ 	} else {
+-		phy->service =3D 0x00;
+ 		phy->len =3D cpu_to_le16((u16)frame_length);
+ 	}
+ }
 =2D-
 2.20.1
 
