@@ -4,25 +4,25 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90507C38A29
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 16:01:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66D8BC2BB1D
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 16:01:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 66D8420CC7
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 16:01:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 49E5F212CC
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 16:01:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726756AbgDJQAv (ORCPT
+        id S1726713AbgDJQAt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Apr 2020 12:00:51 -0400
-Received: from cloudserver094114.home.pl ([79.96.170.134]:65357 "EHLO
+        Fri, 10 Apr 2020 12:00:49 -0400
+Received: from cloudserver094114.home.pl ([79.96.170.134]:61530 "EHLO
         cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726680AbgDJQAu (ORCPT
+        with ESMTP id S1726203AbgDJQAs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Apr 2020 12:00:50 -0400
+        Fri, 10 Apr 2020 12:00:48 -0400
 Received: from 185.80.35.16 (185.80.35.16) (HELO kreacher.localnet)
  by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.415)
- id 6e531731d97e64ed; Fri, 10 Apr 2020 18:00:47 +0200
+ id efbcdca732cb25c5; Fri, 10 Apr 2020 18:00:46 +0200
 From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
 To:     Linux PM <linux-pm@vger.kernel.org>,
         Alan Stern <stern@rowland.harvard.edu>
@@ -34,12 +34,12 @@ Cc:     Linux ACPI <linux-acpi@vger.kernel.org>,
         Mika Westerberg <mika.westerberg@linux.intel.com>,
         Hans De Goede <hdegoede@redhat.com>,
         Ulf Hansson <ulf.hansson@linaro.org>,
-        Linux PCI <linux-pci@vger.kernel.org>,
         Linux ACPI <linux-acpi@vger.kernel.org>,
-        Bjorn Helgaas <helgaas@kernel.org>
-Subject: [PATCH 3/7] PM: sleep: core: Do not skip callbacks in the resume phase
-Date:   Fri, 10 Apr 2020 17:51:23 +0200
-Message-ID: <2319877.g3gYOn6k3l@kreacher>
+        Linux I2C <linux-i2c@vger.kernel.org>,
+        Linux PCI <linux-pci@vger.kernel.org>
+Subject: [PATCH 6/7] PM: sleep: core: Rename DPM_FLAG_LEAVE_SUSPENDED
+Date:   Fri, 10 Apr 2020 17:57:49 +0200
+Message-ID: <11863688.3RhLv4JJn2@kreacher>
 In-Reply-To: <1888197.j9z7NJ8yPn@kreacher>
 References: <1888197.j9z7NJ8yPn@kreacher>
 MIME-Version: 1.0
@@ -52,324 +52,124 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
 
-The current code in device_resume_noirq() causes the entire early
-resume and resume phases of device suspend to be skipped for
-devices for which the noirq resume phase have been skipped (due
-to the LEAVE_SUSPENDED flag being set) on the premise that those
-devices should stay in runtime-suspend after system-wide resume.
+Rename DPM_FLAG_LEAVE_SUSPENDED to DPM_FLAG_MAY_SKIP_RESUME which
+matches its purpose more closely.
 
-However, that may not be correct in two situations.  First, the
-middle layer (subsystem) noirq resume callback may be missing for
-a given device, but its early resume callback may be present and it
-may need to do something even if it decides to skip the driver
-callback.  Second, if the device's wakeup settings were adjusted
-in the suspend phase without resuming the device (that was in
-runtime suspend at that time), they most likely need to be
-adjusted again in the resume phase and so the driver callback
-in that phase needs to be run.
-
-For the above reason, modify the core to allow the middle layer
-->resume_late callback to run even if its ->resume_noirq callback
-is missing (and the core has skipped the driver-level callback
-in that phase) and to allow all device callbacks to run in the
-resume phase.  Also make the core set the PM-runtime status of
-devices with SMART_SUSPEND set whose resume callbacks are not
-skipped to "active" in the "noirq" resume phase and update the
-affected subsystems (PCI and ACPI) accordingly.
-
-After this change, middle-layer (subsystem) callbacks will always
-be invoked in all phases of system suspend and resume and driver
-callbacks will always run in the prepare, suspend, resume, and
-complete phases for all devices.
-
-For devices with SMART_SUSPEND set, driver callbacks will be
-skipped in the late and noirq phases of system suspend if those
-devices remain in runtime suspend in __device_suspend_late().
-Driver callbacks will also be skipped for them during the
-noirq and early phases of the "thaw" transition related to
-hibernation.
-
-For devices with LEAVE_SUSPENDED set, driver callbacks will be
-skipped in the noirq and early phases of system resume if (1) the
-corresponding callbacks were skipped for them during system suspend
-or (2) if the middle layer (subsystem) allows the resume driver
-callbacks to be skipped by setting the power.may_skip_resume flag
-for the device during system suspend.
-
-For all devices with SMART_SUSPEND set whose driver callbacks are
-invoked during system resume, the PM-runtime status will be set to
-"active" (by the core).
+No functional impact.
 
 Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 ---
- Documentation/power/pci.rst |  5 +--
- drivers/acpi/acpi_lpss.c    |  6 ++--
- drivers/acpi/device_pm.c    | 15 ++++----
- drivers/base/power/main.c   | 84 ++++++++++++++++++++++-----------------------
- drivers/pci/pci-driver.c    | 18 +++++-----
- 5 files changed, 61 insertions(+), 67 deletions(-)
+ Documentation/driver-api/pm/devices.rst     | 4 ++--
+ Documentation/power/pci.rst                 | 2 +-
+ drivers/acpi/acpi_tad.c                     | 2 +-
+ drivers/base/power/main.c                   | 2 +-
+ drivers/i2c/busses/i2c-designware-platdrv.c | 2 +-
+ include/linux/pm.h                          | 6 +++---
+ 6 files changed, 9 insertions(+), 9 deletions(-)
 
+diff --git a/Documentation/driver-api/pm/devices.rst b/Documentation/driver-api/pm/devices.rst
+index 4ace0eba4506..f342c7549b4c 100644
+--- a/Documentation/driver-api/pm/devices.rst
++++ b/Documentation/driver-api/pm/devices.rst
+@@ -803,7 +803,7 @@ general.]
+ However, it often is desirable to leave devices in suspend after system
+ transitions to the working state, especially if those devices had been in
+ runtime suspend before the preceding system-wide suspend (or analogous)
+-transition.  Device drivers can use the ``DPM_FLAG_LEAVE_SUSPENDED`` flag to
++transition.  Device drivers can use the ``DPM_FLAG_MAY_SKIP_RESUME`` flag to
+ indicate to the PM core (and middle-layer code) that they prefer the specific
+ devices handled by them to be left suspended and they have no problems with
+ skipping their system-wide resume callbacks for this reason.  Whether or not the
+@@ -825,7 +825,7 @@ device really can be left in suspend.
+ 
+ For devices whose "noirq", "late" and "early" driver callbacks are invoked
+ directly by the PM core, all of the system-wide resume callbacks are skipped if
+-``DPM_FLAG_LEAVE_SUSPENDED`` is set and the device is in runtime suspend during
++``DPM_FLAG_MAY_SKIP_RESUME`` is set and the device is in runtime suspend during
+ the ``suspend_noirq`` (or analogous) phase or the transition under way is a
+ proper system suspend (rather than anything related to hibernation) and the
+ device's wakeup settings are suitable for runtime PM (that is, it cannot
 diff --git a/Documentation/power/pci.rst b/Documentation/power/pci.rst
-index 0924d29636ad..a39b2461919a 100644
+index 9e1408121bea..f09b382b4621 100644
 --- a/Documentation/power/pci.rst
 +++ b/Documentation/power/pci.rst
-@@ -1035,10 +1035,7 @@ This flag is checked by the PM core, but the PCI bus type informs the PM core
+@@ -1029,7 +1029,7 @@ into D0 going forward), but if it is in runtime suspend in pci_pm_thaw_noirq(),
+ the function will set the power.direct_complete flag for it (to make the PM core
+ skip the subsequent "thaw" callbacks for it) and return.
+ 
+-Setting the DPM_FLAG_LEAVE_SUSPENDED flag means that the driver prefers the
++Setting the DPM_FLAG_MAY_SKIP_RESUME flag means that the driver prefers the
+ device to be left in suspend after system-wide transitions to the working state.
+ This flag is checked by the PM core, but the PCI bus type informs the PM core
  which devices may be left in suspend from its perspective (that happens during
- the "noirq" phase of system-wide suspend and analogous transitions) and next it
- uses the dev_pm_may_skip_resume() helper to decide whether or not to return from
--pci_pm_resume_noirq() early, as the PM core will skip the remaining resume
--callbacks for the device during the transition under way and will set its
--runtime PM status to "suspended" if dev_pm_may_skip_resume() returns "true" for
--it.
-+pci_pm_resume_noirq() and pci_pm_resume_early() upfront.
- 
- 3.2. Device Runtime Power Management
- ------------------------------------
-diff --git a/drivers/acpi/acpi_lpss.c b/drivers/acpi/acpi_lpss.c
-index dee999938213..c4a84df6cc98 100644
---- a/drivers/acpi/acpi_lpss.c
-+++ b/drivers/acpi/acpi_lpss.c
-@@ -1093,6 +1093,9 @@ static int acpi_lpss_resume_early(struct device *dev)
- 	if (pdata->dev_desc->resume_from_noirq)
- 		return 0;
- 
-+	if (dev_pm_may_skip_resume(dev))
-+		return 0;
-+
- 	return acpi_lpss_do_resume_early(dev);
- }
- 
-@@ -1105,9 +1108,6 @@ static int acpi_lpss_resume_noirq(struct device *dev)
- 	if (dev_pm_may_skip_resume(dev))
- 		return 0;
- 
--	if (dev_pm_smart_suspend_and_suspended(dev))
--		pm_runtime_set_active(dev);
--
- 	ret = pm_generic_resume_noirq(dev);
- 	if (ret)
- 		return ret;
-diff --git a/drivers/acpi/device_pm.c b/drivers/acpi/device_pm.c
-index b2263ec67b43..399684085f85 100644
---- a/drivers/acpi/device_pm.c
-+++ b/drivers/acpi/device_pm.c
-@@ -1132,14 +1132,6 @@ static int acpi_subsys_resume_noirq(struct device *dev)
- 	if (dev_pm_may_skip_resume(dev))
- 		return 0;
- 
--	/*
--	 * Devices with DPM_FLAG_SMART_SUSPEND may be left in runtime suspend
--	 * during system suspend, so update their runtime PM status to "active"
--	 * as they will be put into D0 going forward.
--	 */
--	if (dev_pm_smart_suspend_and_suspended(dev))
--		pm_runtime_set_active(dev);
--
- 	return pm_generic_resume_noirq(dev);
- }
- 
-@@ -1153,7 +1145,12 @@ static int acpi_subsys_resume_noirq(struct device *dev)
-  */
- static int acpi_subsys_resume_early(struct device *dev)
- {
--	int ret = acpi_dev_resume(dev);
-+	int ret;
-+
-+	if (dev_pm_may_skip_resume(dev))
-+		return 0;
-+
-+	ret = acpi_dev_resume(dev);
- 	return ret ? ret : pm_generic_resume_early(dev);
- }
- 
+diff --git a/drivers/acpi/acpi_tad.c b/drivers/acpi/acpi_tad.c
+index 33a4bcdaa4d7..7d45cce0c3c1 100644
+--- a/drivers/acpi/acpi_tad.c
++++ b/drivers/acpi/acpi_tad.c
+@@ -624,7 +624,7 @@ static int acpi_tad_probe(struct platform_device *pdev)
+ 	 */
+ 	device_init_wakeup(dev, true);
+ 	dev_pm_set_driver_flags(dev, DPM_FLAG_SMART_SUSPEND |
+-				     DPM_FLAG_LEAVE_SUSPENDED);
++				     DPM_FLAG_MAY_SKIP_RESUME);
+ 	/*
+ 	 * The platform bus type layer tells the ACPI PM domain powers up the
+ 	 * device, so set the runtime PM status of it to "active".
 diff --git a/drivers/base/power/main.c b/drivers/base/power/main.c
-index 75d7cdb4de9c..66f205d7c7a3 100644
+index aa9c8df9fc4b..b6f785024b24 100644
 --- a/drivers/base/power/main.c
 +++ b/drivers/base/power/main.c
-@@ -565,12 +565,21 @@ static void dpm_watchdog_clear(struct dpm_watchdog *wd)
-  * dev_pm_may_skip_resume - System-wide device resume optimization check.
-  * @dev: Target device.
+@@ -1247,7 +1247,7 @@ static int __device_suspend_noirq(struct device *dev, pm_message_t state, bool a
+ 	 * to be skipped.
+ 	 */
+ 	if (atomic_read(&dev->power.usage_count) > 1 ||
+-	    !(dev_pm_test_driver_flags(dev, DPM_FLAG_LEAVE_SUSPENDED) &&
++	    !(dev_pm_test_driver_flags(dev, DPM_FLAG_MAY_SKIP_RESUME) &&
+ 	      dev->power.may_skip_resume))
+ 		dev->power.must_resume = true;
+ 
+diff --git a/drivers/i2c/busses/i2c-designware-platdrv.c b/drivers/i2c/busses/i2c-designware-platdrv.c
+index c98befe2a92e..b6270e69f853 100644
+--- a/drivers/i2c/busses/i2c-designware-platdrv.c
++++ b/drivers/i2c/busses/i2c-designware-platdrv.c
+@@ -357,7 +357,7 @@ static int dw_i2c_plat_probe(struct platform_device *pdev)
+ 	dev_pm_set_driver_flags(&pdev->dev,
+ 				DPM_FLAG_SMART_PREPARE |
+ 				DPM_FLAG_SMART_SUSPEND |
+-				DPM_FLAG_LEAVE_SUSPENDED);
++				DPM_FLAG_MAY_SKIP_RESUME);
+ 
+ 	/* The code below assumes runtime PM to be disabled. */
+ 	WARN_ON(pm_runtime_enabled(&pdev->dev));
+diff --git a/include/linux/pm.h b/include/linux/pm.h
+index 28fd444fb5c9..f545666120d0 100644
+--- a/include/linux/pm.h
++++ b/include/linux/pm.h
+@@ -547,7 +547,7 @@ struct pm_subsys_data {
+  * NO_DIRECT_COMPLETE: Do not apply direct-complete optimization to the device.
+  * SMART_PREPARE: Check the return value of the driver's ->prepare callback.
+  * SMART_SUSPEND: No need to resume the device from runtime suspend.
+- * LEAVE_SUSPENDED: Avoid resuming the device during system resume if possible.
++ * MAY_SKIP_RESUME: Avoid resuming the device during system resume if possible.
   *
-- * Checks whether or not the device may be left in suspend after a system-wide
-- * transition to the working state.
-+ * Driver-level resume callbacks can be skipped for @dev if its configuration is
-+ * suitable for that (power.must_resume is not set) and the current transition
-+ * is not the hibernation-related "restore" one (in which case all devices must
-+ * be resumed) or the current transition is the hibernation-related "thaw" one
-+ * and the driver-level callbacks were skipped for @dev during the corresponding
-+ * "freeze" transition (which happens when DPM_FLAG_SMART_SUSPEND is set and the
-+ * device remains in runtime suspend), so running the "thaw" callbacks for it
-+ * may be invalid.
+  * Setting SMART_PREPARE instructs bus types and PM domains which may want
+  * system suspend/resume callbacks to be skipped for the device to return 0 from
+@@ -562,13 +562,13 @@ struct pm_subsys_data {
+  * invocations of the ->suspend_late and ->suspend_noirq callbacks provided by
+  * the driver if they decide to leave the device in runtime suspend.
+  *
+- * Setting LEAVE_SUSPENDED informs the PM core and middle-layer code that the
++ * Setting MAY_SKIP_RESUME informs the PM core and middle-layer code that the
+  * driver prefers the device to be left in suspend after system resume.
   */
- bool dev_pm_may_skip_resume(struct device *dev)
- {
--	return !dev->power.must_resume && pm_transition.event != PM_EVENT_RESTORE;
-+	return (!dev->power.must_resume &&
-+		pm_transition.event != PM_EVENT_RESTORE) ||
-+	       (dev_pm_smart_suspend_and_suspended(dev) &&
-+		pm_transition.event == PM_EVENT_THAW);
- }
+ #define DPM_FLAG_NO_DIRECT_COMPLETE	BIT(0)
+ #define DPM_FLAG_SMART_PREPARE		BIT(1)
+ #define DPM_FLAG_SMART_SUSPEND		BIT(2)
+-#define DPM_FLAG_LEAVE_SUSPENDED	BIT(3)
++#define DPM_FLAG_MAY_SKIP_RESUME	BIT(3)
  
- /**
-@@ -601,6 +610,22 @@ static int device_resume_noirq(struct device *dev, pm_message_t state, bool asyn
- 	if (!dpm_wait_for_superior(dev, async))
- 		goto Out;
- 
-+	skip_resume = dev_pm_may_skip_resume(dev);
-+	/*
-+	 * If the driver callback is skipped below or by the middle layer
-+	 * callback and device_resume_early() also skips the driver callback for
-+	 * this device later, it needs to appear as "suspended" to PM-runtime,
-+	 * so change its status accordingly.
-+	 *
-+	 * Otherwise, the device is going to be resumed, so set its PM-runtime
-+	 * status to "active", but do that only if DPM_FLAG_SMART_SUSPEND is set
-+	 * to avoid confusing drivers that don't use it.
-+	 */
-+	if (skip_resume)
-+		pm_runtime_set_suspended(dev);
-+	else if (dev_pm_smart_suspend_and_suspended(dev))
-+		pm_runtime_set_active(dev);
-+
- 	if (dev->pm_domain) {
- 		info = "noirq power domain ";
- 		callback = pm_noirq_op(&dev->pm_domain->ops, state);
-@@ -614,35 +639,12 @@ static int device_resume_noirq(struct device *dev, pm_message_t state, bool asyn
- 		info = "noirq bus ";
- 		callback = pm_noirq_op(dev->bus->pm, state);
- 	}
--	if (callback) {
--		skip_resume = false;
-+	if (callback)
- 		goto Run;
--	}
- 
--	skip_resume = dev_pm_may_skip_resume(dev);
- 	if (skip_resume)
- 		goto Skip;
- 
--	/*
--	 * If "freeze" driver callbacks have been skipped during hibernation,
--	 * because the device was runtime-suspended in __device_suspend_late(),
--	 * the corresponding "thaw" callbacks must be skipped too, because
--	 * running them for a runtime-suspended device may not be valid.
--	 */
--	if (dev_pm_smart_suspend_and_suspended(dev) &&
--	    state.event == PM_EVENT_THAW) {
--		skip_resume = true;
--		goto Skip;
--	}
--
--	/*
--	 * The device is going to be resumed, so set its PM-runtime status to
--	 * "active", but do that only if DPM_FLAG_SMART_SUSPEND is set to avoid
--	 * confusing drivers that don't use it.
--	 */
--	if (dev_pm_smart_suspend_and_suspended(dev))
--		pm_runtime_set_active(dev);
--
- 	if (dev->driver && dev->driver->pm) {
- 		info = "noirq driver ";
- 		callback = pm_noirq_op(dev->driver->pm, state);
-@@ -654,20 +656,6 @@ static int device_resume_noirq(struct device *dev, pm_message_t state, bool asyn
- Skip:
- 	dev->power.is_noirq_suspended = false;
- 
--	if (skip_resume) {
--		/* Make the next phases of resume skip the device. */
--		dev->power.is_late_suspended = false;
--		dev->power.is_suspended = false;
--		/*
--		 * The device is going to be left in suspend, but it might not
--		 * have been in runtime suspend before the system suspended, so
--		 * its runtime PM status needs to be updated to avoid confusing
--		 * the runtime PM framework when runtime PM is enabled for the
--		 * device again.
--		 */
--		pm_runtime_set_suspended(dev);
--	}
--
- Out:
- 	complete_all(&dev->power.completion);
- 	TRACE_RESUME(error);
-@@ -804,15 +792,25 @@ static int device_resume_early(struct device *dev, pm_message_t state, bool asyn
- 	} else if (dev->bus && dev->bus->pm) {
- 		info = "early bus ";
- 		callback = pm_late_early_op(dev->bus->pm, state);
--	} else if (dev->driver && dev->driver->pm) {
-+	}
-+	if (callback)
-+		goto Run;
-+
-+	if (dev_pm_may_skip_resume(dev))
-+		goto Skip;
-+
-+	if (dev->driver && dev->driver->pm) {
- 		info = "early driver ";
- 		callback = pm_late_early_op(dev->driver->pm, state);
- 	}
- 
-+Run:
- 	error = dpm_run_callback(callback, dev, state, info);
-+
-+Skip:
- 	dev->power.is_late_suspended = false;
- 
-- Out:
-+Out:
- 	TRACE_RESUME(error);
- 
- 	pm_runtime_enable(dev);
-diff --git a/drivers/pci/pci-driver.c b/drivers/pci/pci-driver.c
-index 0454ca0e4e3f..685fbf044911 100644
---- a/drivers/pci/pci-driver.c
-+++ b/drivers/pci/pci-driver.c
-@@ -896,14 +896,6 @@ static int pci_pm_resume_noirq(struct device *dev)
- 	if (dev_pm_may_skip_resume(dev))
- 		return 0;
- 
--	/*
--	 * Devices with DPM_FLAG_SMART_SUSPEND may be left in runtime suspend
--	 * during system suspend, so update their runtime PM status to "active"
--	 * as they are going to be put into D0 shortly.
--	 */
--	if (dev_pm_smart_suspend_and_suspended(dev))
--		pm_runtime_set_active(dev);
--
- 	/*
- 	 * In the suspend-to-idle case, devices left in D0 during suspend will
- 	 * stay in D0, so it is not necessary to restore or update their
-@@ -928,6 +920,14 @@ static int pci_pm_resume_noirq(struct device *dev)
- 	return 0;
- }
- 
-+static int pci_pm_resume_early(struct device *dev)
-+{
-+	if (dev_pm_may_skip_resume(dev))
-+		return 0;
-+
-+	return pm_generic_resume_early(dev);
-+}
-+
- static int pci_pm_resume(struct device *dev)
- {
- 	struct pci_dev *pci_dev = to_pci_dev(dev);
-@@ -961,6 +961,7 @@ static int pci_pm_resume(struct device *dev)
- #define pci_pm_suspend_late	NULL
- #define pci_pm_suspend_noirq	NULL
- #define pci_pm_resume		NULL
-+#define pci_pm_resume_early	NULL
- #define pci_pm_resume_noirq	NULL
- 
- #endif /* !CONFIG_SUSPEND */
-@@ -1358,6 +1359,7 @@ static const struct dev_pm_ops pci_dev_pm_ops = {
- 	.suspend = pci_pm_suspend,
- 	.suspend_late = pci_pm_suspend_late,
- 	.resume = pci_pm_resume,
-+	.resume_early = pci_pm_resume_early,
- 	.freeze = pci_pm_freeze,
- 	.thaw = pci_pm_thaw,
- 	.poweroff = pci_pm_poweroff,
+ struct dev_pm_info {
+ 	pm_message_t		power_state;
 -- 
 2.16.4
 
