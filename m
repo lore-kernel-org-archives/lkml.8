@@ -2,221 +2,208 @@ Return-Path: <SRS0=VV4q=52=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UPPERCASE_50_75,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AD39C2BB86
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 22:18:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA4D1C2BB85
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 22:18:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3AD3620801
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 22:18:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 89FA42084D
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 22:18:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="RF5Go9aJ"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="e3lTJwDe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726744AbgDJWSL (ORCPT
+        id S1726787AbgDJWSW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Apr 2020 18:18:11 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:34926 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726641AbgDJWSL (ORCPT
+        Fri, 10 Apr 2020 18:18:22 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:45280 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726760AbgDJWSV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Apr 2020 18:18:11 -0400
-Received: by mail-pf1-f195.google.com with SMTP id a13so1602228pfa.2
-        for <linux-kernel@vger.kernel.org>; Fri, 10 Apr 2020 15:18:09 -0700 (PDT)
+        Fri, 10 Apr 2020 18:18:21 -0400
+Received: by mail-pf1-f196.google.com with SMTP id r14so1575753pfl.12
+        for <linux-kernel@vger.kernel.org>; Fri, 10 Apr 2020 15:18:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=eg7KB2UmJiacn5HMhVr3STCxlXC7Ncdbl28teyA/qnE=;
-        b=RF5Go9aJ2nuQ4sJRdmrw+wT5SZwrNy/InkqPYjDgpYTW2iSw1VH+4Jv+JF6QAeMePV
-         K/Hv+YvYhCqz0c8xAbzjbedG9Z/FrERSQmzjx0c1aTJJojWrAn0lIvqEdF1Af4oOArqn
-         SjtCA39xxKgApKVTqoPk8c56zrxfw0MiFRYW4BB70wsIUMGuTFR5kZtTWO2Un4WpJYOW
-         fdqHAlIbGHi/nggKl50By9FBuNfsGVU7uo9Dye7dSMUCvuLoPSTn7ElqOww1i2jrVqrS
-         qYn1Tez4IB9MU1lxkE70v3VZna2OTUQLCKtp3C9e6YGrwMMUPe3xgQb0TjvsUwFhyilx
-         LpCw==
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=zWmbbFUQQjeDm+gMt8s5CKmqbSjpsn0Bs7Vf6igbDN0=;
+        b=e3lTJwDeR+Nav+528OsUsNEAU/mQAvnOqDzBkyDMHmonykZKMLV0VVtUTENE3pD7Q6
+         GnFU+SMC26o3A55F4t3Tt68x4vLPjqJkRXN3RzuTpsdN8C5J50qTnKOpIr9VsyCZ+cLV
+         i9mbvKSAC+qjGIAx9O/tI70iccionOxKrTrQw=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=eg7KB2UmJiacn5HMhVr3STCxlXC7Ncdbl28teyA/qnE=;
-        b=gJLe8rEt3GFvC/NwdKVcn/oamUSsXxAS7JvJQlXkIKJACff9pTFw42/f6i76TbG4ZL
-         lrV59F7X0G5BATthBfKcYV9OJTqA5xtCXu4nfRy6X+9z34lty17GSWKCLIY/Y75nQ4VU
-         Dm/jXNUFv+alnBNCZmxTm4xSjw1YGn8WS8PP6Q6K2Mt7UM5gSReWRi5BDha2GtJ4wqB2
-         QJUXQCoukVUgQTZilCoTRPKM2dAhWLN0K4fCKIPVVtycGhKmmdVHNGG8oPEnr59xo4RD
-         0T2DvGHAI3aZM7iqXm1CsHZVla7hHmD1lqgnlNMOAV9kvA8aa054kEeuiQnlM0cXUs1K
-         FvEA==
-X-Gm-Message-State: AGi0PubvX9mp4rVQ9mVm09QzBHLayztnDBthYkNOAPQRXL9Jpefpb4mv
-        CwoCp67HoAjK+h+/x6GlIKqQj3dftIk=
-X-Google-Smtp-Source: APiQypKuGog96mc6Yc47EvysrBnEd7V/DVsXoRgNLK+vUHBherAsLMJ/s5zJhZVcB+q1LdTVeX7W6w==
-X-Received: by 2002:a63:8c51:: with SMTP id q17mr6606761pgn.320.1586557088739;
-        Fri, 10 Apr 2020 15:18:08 -0700 (PDT)
-Received: from builder.lan (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id g4sm2629429pfb.169.2020.04.10.15.18.07
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=zWmbbFUQQjeDm+gMt8s5CKmqbSjpsn0Bs7Vf6igbDN0=;
+        b=RfVaJyKxtavm40+GzjDDLcW6NOlbIhSHK890ZQqXwOVui2pjPWz2miUCWlRHHzEVGp
+         3BBZbW0SllLh1ZpO8e7zns9JUNhszjcvceNZq+jADpZeBl1l5ma+Ns1jfanbRYfChRj+
+         TOv9msd1q9UcxZOv5aJYocn1+1nrvxCA2Z+rh/wfUzltaNw2XkExUY/wGGcsYa/BtaaP
+         GyEntia5IY7fYaTWMhACE8RxUq2AoEHTR1/Mt228lMSBDQ4LHcFxno5g4nbuYRBgKVmm
+         Gp3NvZDCF9ty8Le4IL/qRDig9fFqDW9p1RI3R3DxQ+4kfZI1zGO+7X4SmQDPpf1Q2G/o
+         BsCA==
+X-Gm-Message-State: AGi0PubseHUrQKtjdVt0pvo1Nk3aQcY1PKJ4yMJaW5u5y4YpuE8TLoYc
+        e2Em5CHxQD3dsSm9Z8C8usV8Eg==
+X-Google-Smtp-Source: APiQypL5THpk7QNDWCyORXPdUOyrfq0oJPG9LZXBe4qj/CEWRQMdNwTa2WA43xoyV7Mu3AgOv45XPQ==
+X-Received: by 2002:a65:5b4f:: with SMTP id y15mr6701497pgr.134.1586557099575;
+        Fri, 10 Apr 2020 15:18:19 -0700 (PDT)
+Received: from tictac2.mtv.corp.google.com ([2620:15c:202:1:24fa:e766:52c9:e3b2])
+        by smtp.gmail.com with ESMTPSA id x2sm2646600pfq.92.2020.04.10.15.18.18
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 10 Apr 2020 15:18:08 -0700 (PDT)
-Date:   Fri, 10 Apr 2020 15:18:18 -0700
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Sivaprakash Murugesan <sivaprak@codeaurora.org>
-Cc:     agross@kernel.org, kishon@ti.com, robh+dt@kernel.org,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org,
-        Balaji Prakash J <bjagadee@codeaurora.org>
-Subject: Re: [PATCH 2/3] phy: qcom-qmp: Add USB QMP PHY support for IPQ8074
-Message-ID: <20200410221818.GE20625@builder.lan>
-References: <1586543372-13969-1-git-send-email-sivaprak@codeaurora.org>
- <1586543372-13969-3-git-send-email-sivaprak@codeaurora.org>
+        Fri, 10 Apr 2020 15:18:19 -0700 (PDT)
+From:   Douglas Anderson <dianders@chromium.org>
+To:     jason.wessel@windriver.com, daniel.thompson@linaro.org,
+        gregkh@linuxfoundation.org
+Cc:     hpa@zytor.com, kgdb-bugreport@lists.sourceforge.net,
+        corbet@lwn.net, frowand.list@gmail.com, tglx@linutronix.de,
+        jslaby@suse.com, linux-serial@vger.kernel.org, mingo@redhat.com,
+        will@kernel.org, bjorn.andersson@linaro.org, agross@kernel.org,
+        bp@alien8.de, catalin.marinas@arm.com,
+        Douglas Anderson <dianders@chromium.org>,
+        Alexios Zavras <alexios.zavras@intel.com>,
+        Allison Randal <allison@lohutok.net>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Dave Martin <Dave.Martin@arm.com>,
+        Enrico Weigelt <info@metux.net>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        James Morse <james.morse@arm.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Juergen Gross <jgross@suse.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Matt Mullins <mmullins@fb.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Nadav Amit <namit@vmware.com>,
+        Oliver Neukum <oneukum@suse.com>,
+        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        jinho lim <jordan.lim@samsung.com>,
+        linux-arm-kernel@lists.infradead.org,
+        linux-arm-msm@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, x86@kernel.org
+Subject: [PATCH 0/7] kgdb: Support late serial drivers; enable early debug w/ boot consoles
+Date:   Fri, 10 Apr 2020 15:17:19 -0700
+Message-Id: <20200410221726.36442-1-dianders@chromium.org>
+X-Mailer: git-send-email 2.26.0.110.g2183baf09c-goog
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1586543372-13969-3-git-send-email-sivaprak@codeaurora.org>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri 10 Apr 11:29 PDT 2020, Sivaprakash Murugesan wrote:
+This whole pile of patches was motivated by me trying to get kgdb to
+work properly on a platform where my serial driver ended up being hit
+by the -EPROBE_DEFER virus (it wasn't practicing social distancing
+from other drivers).  Specifically my serial driver's parent device
+depended on a resource that wasn't available when its probe was first
+called.  It returned -EPROBE_DEFER which meant that when "kgdboc"
+tried to run its setup the serial driver wasn't there.  Unfortunately
+"kgdboc" never tried again, so that meant that kgdb was disabled until
+I manually enalbed it via sysfs.
 
-> Add QMP USB PHY found in IPQ8074
-> 
+While I could try to figure out how to get around the -EPROBE_DEFER
+somehow, the above problems could happen to anyone and -EPROBE_DEFER
+is generally considered something you just have to live with.  In any
+case the current "kgdboc" setup is a bit of a race waiting to happen.
+I _think_ I saw during early testing that even adding a msleep() in
+the typical serial driver's probe() is enough to trigger similar
+issues.
 
-Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+I decided that for the above race the best attitude to get kgdb to
+register at boot was probably "if you can't beat 'em, join 'em".
+Thus, "kgdboc" now jumps on the -EPROBE_DEFER bandwagon (now that my
+driver uses it it's no longer a virus).  It does so a little awkwardly
+because "kgdboc" hasn't normally had a "struct device" associated with
+it, but it's really not _that_ ugly to make a platform device and
+seems less ugly than alternatives.
 
-> Co-developed-by: Balaji Prakash J <bjagadee@codeaurora.org>
-> Signed-off-by: Balaji Prakash J <bjagadee@codeaurora.org>
-> Signed-off-by: Sivaprakash Murugesan <sivaprak@codeaurora.org>
-> ---
->  drivers/phy/qualcomm/phy-qcom-qmp.c | 102 ++++++++++++++++++++++++++++++++++++
->  1 file changed, 102 insertions(+)
-> 
-> diff --git a/drivers/phy/qualcomm/phy-qcom-qmp.c b/drivers/phy/qualcomm/phy-qcom-qmp.c
-> index c190406..8e9a8a4 100644
-> --- a/drivers/phy/qualcomm/phy-qcom-qmp.c
-> +++ b/drivers/phy/qualcomm/phy-qcom-qmp.c
-> @@ -188,6 +188,81 @@ static const unsigned int sm8150_ufsphy_regs_layout[] = {
->  	[QPHY_SW_RESET]			= QPHY_V4_SW_RESET,
->  };
->  
-> +static const struct qmp_phy_init_tbl ipq8074_usb3_serdes_tbl[] = {
-> +	QMP_PHY_INIT_CFG(QSERDES_COM_SYSCLK_EN_SEL, 0x1a),
-> +	QMP_PHY_INIT_CFG(QSERDES_COM_BIAS_EN_CLKBUFLR_EN, 0x08),
-> +	QMP_PHY_INIT_CFG(QSERDES_COM_CLK_SELECT, 0x30),
-> +	QMP_PHY_INIT_CFG(QSERDES_COM_BG_TRIM, 0x0f),
-> +	QMP_PHY_INIT_CFG(QSERDES_RX_UCDR_FASTLOCK_FO_GAIN, 0x0b),
-> +	QMP_PHY_INIT_CFG(QSERDES_COM_SVS_MODE_CLK_SEL, 0x01),
-> +	QMP_PHY_INIT_CFG(QSERDES_COM_HSCLK_SEL, 0x00),
-> +	QMP_PHY_INIT_CFG(QSERDES_COM_CMN_CONFIG, 0x06),
-> +	QMP_PHY_INIT_CFG(QSERDES_COM_PLL_IVCO, 0x0f),
-> +	QMP_PHY_INIT_CFG(QSERDES_COM_SYS_CLK_CTRL, 0x06),
-> +	/* PLL and Loop filter settings */
-> +	QMP_PHY_INIT_CFG(QSERDES_COM_DEC_START_MODE0, 0x82),
-> +	QMP_PHY_INIT_CFG(QSERDES_COM_DIV_FRAC_START1_MODE0, 0x55),
-> +	QMP_PHY_INIT_CFG(QSERDES_COM_DIV_FRAC_START2_MODE0, 0x55),
-> +	QMP_PHY_INIT_CFG(QSERDES_COM_DIV_FRAC_START3_MODE0, 0x03),
-> +	QMP_PHY_INIT_CFG(QSERDES_COM_CP_CTRL_MODE0, 0x0b),
-> +	QMP_PHY_INIT_CFG(QSERDES_COM_PLL_RCTRL_MODE0, 0x16),
-> +	QMP_PHY_INIT_CFG(QSERDES_COM_PLL_CCTRL_MODE0, 0x28),
-> +	QMP_PHY_INIT_CFG(QSERDES_COM_INTEGLOOP_GAIN0_MODE0, 0x80),
-> +	QMP_PHY_INIT_CFG(QSERDES_COM_LOCK_CMP1_MODE0, 0x15),
-> +	QMP_PHY_INIT_CFG(QSERDES_COM_LOCK_CMP2_MODE0, 0x34),
-> +	QMP_PHY_INIT_CFG(QSERDES_COM_LOCK_CMP3_MODE0, 0x00),
-> +	QMP_PHY_INIT_CFG(QSERDES_COM_CORE_CLK_EN, 0x00),
-> +	QMP_PHY_INIT_CFG(QSERDES_COM_LOCK_CMP_CFG, 0x00),
-> +	QMP_PHY_INIT_CFG(QSERDES_COM_VCO_TUNE_MAP, 0x00),
-> +	QMP_PHY_INIT_CFG(QSERDES_COM_BG_TIMER, 0x0a),
-> +	/* SSC settings */
-> +	QMP_PHY_INIT_CFG(QSERDES_COM_SSC_EN_CENTER, 0x01),
-> +	QMP_PHY_INIT_CFG(QSERDES_COM_SSC_PER1, 0x31),
-> +	QMP_PHY_INIT_CFG(QSERDES_COM_SSC_PER2, 0x01),
-> +	QMP_PHY_INIT_CFG(QSERDES_COM_SSC_ADJ_PER1, 0x00),
-> +	QMP_PHY_INIT_CFG(QSERDES_COM_SSC_ADJ_PER2, 0x00),
-> +	QMP_PHY_INIT_CFG(QSERDES_COM_SSC_STEP_SIZE1, 0xde),
-> +	QMP_PHY_INIT_CFG(QSERDES_COM_SSC_STEP_SIZE2, 0x07),
-> +};
-> +
-> +static const struct qmp_phy_init_tbl ipq8074_usb3_rx_tbl[] = {
-> +	QMP_PHY_INIT_CFG(QSERDES_RX_UCDR_SO_GAIN, 0x06),
-> +	QMP_PHY_INIT_CFG(QSERDES_RX_RX_EQU_ADAPTOR_CNTRL2, 0x02),
-> +	QMP_PHY_INIT_CFG(QSERDES_RX_RX_EQU_ADAPTOR_CNTRL3, 0x4c),
-> +	QMP_PHY_INIT_CFG(QSERDES_RX_RX_EQU_ADAPTOR_CNTRL4, 0xb8),
-> +	QMP_PHY_INIT_CFG(QSERDES_RX_RX_EQ_OFFSET_ADAPTOR_CNTRL1, 0x77),
-> +	QMP_PHY_INIT_CFG(QSERDES_RX_RX_OFFSET_ADAPTOR_CNTRL2, 0x80),
-> +	QMP_PHY_INIT_CFG(QSERDES_RX_SIGDET_CNTRL, 0x03),
-> +	QMP_PHY_INIT_CFG(QSERDES_RX_SIGDET_DEGLITCH_CNTRL, 0x16),
-> +	QMP_PHY_INIT_CFG(QSERDES_RX_SIGDET_ENABLES, 0x0),
-> +};
-> +
-> +static const struct qmp_phy_init_tbl ipq8074_usb3_pcs_tbl[] = {
-> +	QMP_PHY_INIT_CFG(QPHY_V3_PCS_TXDEEMPH_M6DB_V0, 0x15),
-> +	QMP_PHY_INIT_CFG(QPHY_V3_PCS_TXDEEMPH_M3P5DB_V0, 0x0e),
-> +	QMP_PHY_INIT_CFG(QPHY_V3_PCS_FLL_CNTRL2, 0x83),
-> +	QMP_PHY_INIT_CFG(QPHY_V3_PCS_FLL_CNTRL1, 0x02),
-> +	QMP_PHY_INIT_CFG(QPHY_V3_PCS_FLL_CNT_VAL_L, 0x09),
-> +	QMP_PHY_INIT_CFG(QPHY_V3_PCS_FLL_CNT_VAL_H_TOL, 0xa2),
-> +	QMP_PHY_INIT_CFG(QPHY_V3_PCS_FLL_MAN_CODE, 0x85),
-> +	QMP_PHY_INIT_CFG(QPHY_V3_PCS_LOCK_DETECT_CONFIG1, 0xd1),
-> +	QMP_PHY_INIT_CFG(QPHY_V3_PCS_LOCK_DETECT_CONFIG2, 0x1f),
-> +	QMP_PHY_INIT_CFG(QPHY_V3_PCS_LOCK_DETECT_CONFIG3, 0x47),
-> +	QMP_PHY_INIT_CFG(QPHY_V3_PCS_POWER_STATE_CONFIG2, 0x1b),
-> +	QMP_PHY_INIT_CFG(QPHY_V3_PCS_RXEQTRAINING_WAIT_TIME, 0x75),
-> +	QMP_PHY_INIT_CFG(QPHY_V3_PCS_RXEQTRAINING_RUN_TIME, 0x13),
-> +	QMP_PHY_INIT_CFG(QPHY_V3_PCS_LFPS_TX_ECSTART_EQTLOCK, 0x86),
-> +	QMP_PHY_INIT_CFG(QPHY_V3_PCS_PWRUP_RESET_DLY_TIME_AUXCLK, 0x04),
-> +	QMP_PHY_INIT_CFG(QPHY_V3_PCS_TSYNC_RSYNC_TIME, 0x44),
-> +	QMP_PHY_INIT_CFG(QPHY_V3_PCS_RCVR_DTCT_DLY_P1U2_L, 0xe7),
-> +	QMP_PHY_INIT_CFG(QPHY_V3_PCS_RCVR_DTCT_DLY_P1U2_H, 0x03),
-> +	QMP_PHY_INIT_CFG(QPHY_V3_PCS_RCVR_DTCT_DLY_U3_L, 0x40),
-> +	QMP_PHY_INIT_CFG(QPHY_V3_PCS_RCVR_DTCT_DLY_U3_H, 0x00),
-> +	QMP_PHY_INIT_CFG(QPHY_V3_PCS_RX_SIGDET_LVL, 0x88),
-> +	QMP_PHY_INIT_CFG(QPHY_V3_PCS_TXDEEMPH_M6DB_V0, 0x17),
-> +	QMP_PHY_INIT_CFG(QPHY_V3_PCS_TXDEEMPH_M3P5DB_V0, 0x0f),
-> +};
-> +
->  static const struct qmp_phy_init_tbl msm8996_pcie_serdes_tbl[] = {
->  	QMP_PHY_INIT_CFG(QSERDES_COM_BIAS_EN_CLKBUFLR_EN, 0x1c),
->  	QMP_PHY_INIT_CFG(QSERDES_COM_CLK_ENABLE1, 0x10),
-> @@ -1467,6 +1542,30 @@ static const char * const qmp_phy_vreg_l[] = {
->  	"vdda-phy", "vdda-pll",
->  };
->  
-> +static const struct qmp_phy_cfg ipq8074_usb3phy_cfg = {
-> +	.type			= PHY_TYPE_USB3,
-> +	.nlanes			= 1,
-> +
-> +	.serdes_tbl		= ipq8074_usb3_serdes_tbl,
-> +	.serdes_tbl_num		= ARRAY_SIZE(ipq8074_usb3_serdes_tbl),
-> +	.tx_tbl			= msm8996_usb3_tx_tbl,
-> +	.tx_tbl_num		= ARRAY_SIZE(msm8996_usb3_tx_tbl),
-> +	.rx_tbl			= ipq8074_usb3_rx_tbl,
-> +	.rx_tbl_num		= ARRAY_SIZE(ipq8074_usb3_rx_tbl),
-> +	.pcs_tbl		= ipq8074_usb3_pcs_tbl,
-> +	.pcs_tbl_num		= ARRAY_SIZE(ipq8074_usb3_pcs_tbl),
-> +	.clk_list		= msm8996_phy_clk_l,
-> +	.num_clks		= ARRAY_SIZE(msm8996_phy_clk_l),
-> +	.reset_list		= msm8996_usb3phy_reset_l,
-> +	.num_resets		= ARRAY_SIZE(msm8996_usb3phy_reset_l),
-> +	.vreg_list		= qmp_phy_vreg_l,
-> +	.num_vregs		= ARRAY_SIZE(qmp_phy_vreg_l),
-> +	.regs			= usb3phy_regs_layout,
-> +
-> +	.start_ctrl		= SERDES_START | PCS_START,
-> +	.pwrdn_ctrl		= SW_PWRDN,
-> +};
-> +
->  static const struct qmp_phy_cfg msm8996_pciephy_cfg = {
->  	.type			= PHY_TYPE_PCIE,
->  	.nlanes			= 3,
-> @@ -2498,6 +2597,9 @@ int qcom_qmp_phy_create(struct device *dev, struct device_node *np, int id)
->  
->  static const struct of_device_id qcom_qmp_phy_of_match_table[] = {
->  	{
-> +		.compatible = "qcom,ipq8074-qmp-usb3-phy",
-> +		.data = &ipq8074_usb3phy_cfg,
-> +	}, {
->  		.compatible = "qcom,msm8996-qmp-pcie-phy",
->  		.data = &msm8996_pciephy_cfg,
->  	}, {
-> -- 
-> 2.7.4
-> 
+Unfortunately now on my system the debugger is one of the last things
+to register at boot.  That's OK for debugging problems that show up
+significantly after boot, but isn't so hot for all the boot problems
+that I end up debugging.  This motivated me to try to get something
+working a little earlier.
+
+My first attempt was to try to get the existing "ekgdboc" to work
+earlier.  I tried that for a bit until I realized that it needed to
+work at the tty layer and I couldn't find any serial drivers that
+managed to register themselves to the tty layer super early at boot.
+The only documented use of "ekgdboc" is "ekgdboc=kbd" and that's a bit
+of a special snowflake.  Trying to get my serial driver and all its
+dependencies to probe normally and register the tty driver super early
+at boot seemed like a bad way to go.  In fact, all the complexity
+needed to do something like this is why the system already has a
+special concept of a "boot console" that lives only long enough to
+transition to the normal console.
+
+Leveraging the boot console seemed like a good way to go and that's
+what this series does.  I found that consoles could have a read()
+function, though I couldn't find anyone who implemented it.  I
+implemented it for two serial drivers for the devices I had easy
+access to, making the assumption that for boot consoles that we could
+assume read() and write() were polling-compatible (seems sane I
+think).
+
+Now anyone who makes a small change to their serial driver can easily
+enable early kgdb debugging!
+
+The devices I had for testing were:
+- arm32: rk3288-veyron-jerry
+- arm64: rk3399-gru-kevin
+- arm64: qcom-sc7180-trogdor (not mainline yet)
+
+These are the devices I tested this series on.  I tried to test
+various combinations of enabling/disabling various options and I
+hopefully caught the corner cases, but I'd appreciate any extra
+testing people can do.  Notably I didn't test on x86, but (I think) I
+didn't touch much there so I shouldn't have broken anything.
+
+When testing I found a few problems with actually dropping into the
+debugger super early on arm and arm64 devices.  Patches in this series
+should help with this.  For arm I just avoid dropping into the
+debugger until a little later and for arm64 I actually enable
+debugging super early.
+
+I realize that bits of this series might feel a little hacky, though
+I've tried to do things in the cleanest way I could without overly
+interferring with the rest of the kernel.  If you hate the way I
+solved a problem I would love it if you could provide guidance on how
+you think I could solve the problem better.
+
+This series (and my comments / documentation / commit messages) are
+now long enough that my eyes glaze over when I try to read it all over
+to double-check.  I've nontheless tried to double-check it, but I'm
+pretty sure I did something stupid.  Thank you ahead of time for
+pointing it out to me so I can fix it in v2.  If somehow I managed to
+not do anything stupid (really?) then thank you for double-checking me
+anyway.
+
+
+Douglas Anderson (7):
+  kgdboc: Use a platform device to handle tty drivers showing up late
+  kgdb: Delay "kgdbwait" to dbg_late_init() by default
+  arm64: Add call_break_hook() to early_brk64() for early kgdb
+  kgdboc: Add earlycon_kgdboc to support early kgdb using boot consoles
+  Documentation: kgdboc: Document new earlycon_kgdboc parameter
+  serial: qcom_geni_serial: Support earlycon_kgdboc
+  serial: 8250_early: Support earlycon_kgdboc
+
+ .../admin-guide/kernel-parameters.txt         |  20 ++
+ Documentation/dev-tools/kgdb.rst              |  14 +
+ arch/arm64/include/asm/debug-monitors.h       |   2 +
+ arch/arm64/kernel/debug-monitors.c            |   2 +-
+ arch/arm64/kernel/kgdb.c                      |   5 +
+ arch/arm64/kernel/traps.c                     |   3 +
+ arch/x86/kernel/kgdb.c                        |   5 +
+ drivers/tty/serial/8250/8250_early.c          |  23 ++
+ drivers/tty/serial/kgdboc.c                   | 266 ++++++++++++++++--
+ drivers/tty/serial/qcom_geni_serial.c         |  32 +++
+ include/linux/kgdb.h                          |  25 +-
+ kernel/debug/debug_core.c                     |  44 ++-
+ 12 files changed, 401 insertions(+), 40 deletions(-)
+
+-- 
+2.26.0.110.g2183baf09c-goog
+
