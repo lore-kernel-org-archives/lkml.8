@@ -6,26 +6,26 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EB3EC2D0EC
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 19:38:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17198C2D0EC
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 19:39:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E809E20732
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 19:38:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F120C20769
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 19:39:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727104AbgDJTir (ORCPT
+        id S1726864AbgDJTjE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Apr 2020 15:38:47 -0400
-Received: from ex13-edg-ou-001.vmware.com ([208.91.0.189]:28734 "EHLO
+        Fri, 10 Apr 2020 15:39:04 -0400
+Received: from ex13-edg-ou-001.vmware.com ([208.91.0.189]:28742 "EHLO
         EX13-EDG-OU-001.vmware.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726795AbgDJTiq (ORCPT
+        by vger.kernel.org with ESMTP id S1726626AbgDJTjD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Apr 2020 15:38:46 -0400
+        Fri, 10 Apr 2020 15:39:03 -0400
 Received: from sc9-mailhost2.vmware.com (10.113.161.72) by
  EX13-EDG-OU-001.vmware.com (10.113.208.155) with Microsoft SMTP Server id
- 15.0.1156.6; Fri, 10 Apr 2020 12:38:42 -0700
+ 15.0.1156.6; Fri, 10 Apr 2020 12:38:59 -0700
 Received: from sc9-mailhost3.vmware.com (unknown [10.166.69.226])
-        by sc9-mailhost2.vmware.com (Postfix) with ESMTP id 1A263B2C9B;
-        Fri, 10 Apr 2020 15:38:46 -0400 (EDT)
+        by sc9-mailhost2.vmware.com (Postfix) with ESMTP id 3966DB2C9B;
+        Fri, 10 Apr 2020 15:39:03 -0400 (EDT)
 From:   Matt Helsley <mhelsley@vmware.com>
 To:     <linux-kernel@vger.kernel.org>
 CC:     Josh Poimboeuf <jpoimboe@redhat.com>,
@@ -35,9 +35,9 @@ CC:     Josh Poimboeuf <jpoimboe@redhat.com>,
         Steven Rostedt <rostedt@goodmis.org>,
         Miroslav Benes <mbenes@suse.cz>,
         Matt Helsley <mhelsley@vmware.com>
-Subject: [RFC][PATCH 26/36] objtool: mcount: Only keep ELF file size
-Date:   Fri, 10 Apr 2020 12:35:49 -0700
-Message-ID: <3bc0af0d3ba3ab8f9582e4aaf54c85be9ebfbea5.1586468801.git.mhelsley@vmware.com>
+Subject: [RFC][PATCH 29/36] objtool: mcount: Reduce usage of _size wrapper
+Date:   Fri, 10 Apr 2020 12:35:52 -0700
+Message-ID: <395fa2069e8280d57c1509bdbac9eafb1c6badf9.1586468801.git.mhelsley@vmware.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <cover.1586468801.git.mhelsley@vmware.com>
 References: <cover.1586468801.git.mhelsley@vmware.com>
@@ -51,63 +51,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Since we're no longer writing to the ELF file mapping and we're
-not appending to it we don't need to keep more information from the
-stat structure. At the same time we can give the smaller global
-variable a better name.
+Use loc_size, which will be passed in from outside the wrapper, rather
+than the _size wrapper since the location size is determined outside
+the wrapper anyway.
 
 Signed-off-by: Matt Helsley <mhelsley@vmware.com>
 ---
- tools/objtool/recordmcount.c | 9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
+ tools/objtool/recordmcount.h | 9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
 
-diff --git a/tools/objtool/recordmcount.c b/tools/objtool/recordmcount.c
-index 95b93767d6eb..6de744aaf4c8 100644
---- a/tools/objtool/recordmcount.c
-+++ b/tools/objtool/recordmcount.c
-@@ -48,17 +48,17 @@
- static int fd_map;	/* File descriptor for file being modified. */
- static int mmap_failed; /* Boolean flag. */
- static char gpfx;	/* prefix for global symbol name (sometimes '_') */
--static struct stat sb;	/* Remember .st_size, etc. */
- static const char *altmcount;	/* alternate mcount symbol name */
- extern int warn_on_notrace_sect; /* warn when section has mcount not being recorded */
- static void *file_map;	/* pointer of the mapped file */
-+static size_t file_map_size; /* original ELF file size */
- 
- static struct elf *lf;
- 
- static void mmap_cleanup(void)
+diff --git a/tools/objtool/recordmcount.h b/tools/objtool/recordmcount.h
+index 9ce2d74df89a..353c7d082631 100644
+--- a/tools/objtool/recordmcount.h
++++ b/tools/objtool/recordmcount.h
+@@ -72,6 +72,7 @@ static int append_func(uint_t const *const mloc0,
+ 			uint_t const *const mlocp,
+ 			Elf_Rel const *const mrel0,
+ 			Elf_Rel const *const mrelp,
++			unsigned int const loc_size,
+ 			unsigned int const rel_entsize,
+ 			unsigned int const symsec_sh_link)
  {
- 	if (!mmap_failed)
--		munmap(file_map, sb.st_size);
-+		munmap(file_map, file_map_size);
- 	else
- 		free(file_map);
- 	file_map = NULL;
-@@ -93,11 +93,13 @@ static void * umalloc(size_t size)
-  */
- static void *mmap_file(char const *fname)
- {
-+	struct stat sb;
-+
- 	/* Avoid problems if early cleanup() */
- 	fd_map = -1;
- 	mmap_failed = 1;
- 	file_map = NULL;
--	sb.st_size = 0;
-+	file_map_size = 0;
+@@ -83,14 +84,14 @@ static int append_func(uint_t const *const mloc0,
+ 	unsigned const old_shnum = lf->ehdr.e_shnum;
  
- 	lf = elf_read(fname, O_RDWR);
- 	if (!lf) {
-@@ -129,6 +131,7 @@ static void *mmap_file(char const *fname)
- 		}
- 	} else
- 		mmap_failed = 0;
-+	file_map_size = sb.st_size;
+ 	/* add section: __mcount_loc */
+-	sec = elf_create_section(lf, mc_name + (sizeof(Elf_Rela) == rel_entsize) + strlen(".rel"), _size, mlocp - mloc0);
++	sec = elf_create_section(lf, mc_name + (sizeof(Elf_Rela) == rel_entsize) + strlen(".rel"), loc_size, mlocp - mloc0);
+ 	if (!sec)
+ 		return -1;
+ 
+ 	// created sec->sh.sh_size = (void *)mlocp - (void *)mloc0;
+ 	sec->sh.sh_link = 0;/* TODO objtool uses this? */
+ 	sec->sh.sh_info = 0;/* TODO objtool uses this? */
+-	sec->sh.sh_addralign = _size;
++	sec->sh.sh_addralign = loc_size;
+ 	// created sec->sh.sh_entsize = _size;
+ 
+ 	// assert sec->data->d_size == (void *)mlocp - (void *)mloc0
+@@ -109,7 +110,7 @@ static int append_func(uint_t const *const mloc0,
+ 	sec->sh.sh_flags = 0;
+ 	sec->sh.sh_link = find_section_by_name(lf, ".symtab")->idx;
+ 	sec->sh.sh_info = old_shnum;
+-	sec->sh.sh_addralign = _size;
++	sec->sh.sh_addralign = loc_size;
+ 
+ 	// assert sec->data->d_size == (void *)mrelp - (void *)mrel0
+ 	memcpy(sec->data->d_buf, mrel0, sec->data->d_size);
+@@ -231,7 +232,7 @@ static int do_func(unsigned const reltype)
+ 	}
+ 	if (!result && mloc0 != mlocp)
+ 		result = append_func(mloc0, mlocp, mrel0, mrelp,
+-				     rel_entsize, symsec_sh_link);
++				     _size, rel_entsize, symsec_sh_link);
  out:
- 	fd_map = -1;
- 
+ 	free(mrel0);
+ 	free(mloc0);
 -- 
 2.20.1
 
