@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E13DC2BB85
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 03:56:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E557EC2BB1D
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 03:56:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 366E12063A
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 03:56:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B09E42063A
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 03:56:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586490980;
-	bh=Ikc0AYvLKTZZv4VYpqWl7cUBvSOW5ZMNjoOQKDLh2aA=;
+	s=default; t=1586490985;
+	bh=5wLauErA2sXj1hwEOBTS/RNcaB9yDT/S+WliV8V9x+Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fKlKD/KPhwvee+cXeSVLzb4qlp1j1W/GO1v4NJ9zQqNHA8HhdUeS0y9DzxPYxx0FI
-	 Sl0tjOSa3qdIMz2kiNebpSeR7yVUU01TLMie+mmg7z2tsbwRE2vxd8XVN/5Tx+maox
-	 95cuQRVBLqYem8rdW55wdcObumyyR8Axs/etA6Y0=
+	b=niFbioN4qr2SXBvCy4CqtyZtrlOvblumx21A6pATcAOo3jR1DLXJ4pcCG4gHKQxIz
+	 q1bsFe6Z8QiQiUVeqy3r024G7kc+GMWaSLFzCbKODz1lDLov4CEzvZ5vk6DE0K4cME
+	 yERH1ExkW5HxvxFeK5pm3kqYiXUxPo9fQKXpLvMY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728004AbgDJD4S (ORCPT
+        id S1728882AbgDJD4Y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Apr 2020 23:56:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33814 "EHLO mail.kernel.org"
+        Thu, 9 Apr 2020 23:56:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33808 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728624AbgDJDtm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Apr 2020 23:49:42 -0400
+        id S1728614AbgDJDtl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Apr 2020 23:49:41 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2004E20B1F;
-        Fri, 10 Apr 2020 03:49:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1C498214D8;
+        Fri, 10 Apr 2020 03:49:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586490582;
-        bh=Ikc0AYvLKTZZv4VYpqWl7cUBvSOW5ZMNjoOQKDLh2aA=;
+        s=default; t=1586490581;
+        bh=5wLauErA2sXj1hwEOBTS/RNcaB9yDT/S+WliV8V9x+Y=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RlS3E8Sn4wqddE2IZtsQpsCJq0t6fvsG6COpxD5wyIAH1tvcGLDIt8bFN8qm2eSYb
-         AfZqdFL+YyC7i+05KiIBkTSmXn415/vUB/OPrfryk4RxUHuJ5NxIoN9R7eQbSl7Rgb
-         yTajNtPvxPC8uTiDJKx0/RFvx9q5MUnqmYmPmHkU=
+        b=lAgnTUGwDfdRl6Pefhu+u1dJ19VG5OEFQuwNfAKBwL9csmK9mHYO0/HcGLteink18
+         lOfQnMinLVv70u/kwcxPx1IRYrWiqzdOHb3+OmYw8r/55uVbCb3/7A1A1H/ALKHOFU
+         IMxMhFgVuSfQpKCrTSWDmzmuL6RHHylSWDpjVido=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Peng Fan <peng.fan@nxp.com>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Sasha Levin <sashal@kernel.org>, linux-pm@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.4 28/46] cpufreq: imx6q: fix error handling
-Date:   Thu,  9 Apr 2020 23:48:51 -0400
-Message-Id: <20200410034909.8922-28-sashal@kernel.org>
+Cc:     Bob Peterson <rpeterso@redhat.com>,
+        Andreas Gruenbacher <agruenba@redhat.com>,
+        Sasha Levin <sashal@kernel.org>, cluster-devel@redhat.com
+Subject: [PATCH AUTOSEL 5.4 27/46] gfs2: Don't demote a glock until its revokes are written
+Date:   Thu,  9 Apr 2020 23:48:50 -0400
+Message-Id: <20200410034909.8922-27-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200410034909.8922-1-sashal@kernel.org>
 References: <20200410034909.8922-1-sashal@kernel.org>
@@ -60,54 +59,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Peng Fan <peng.fan@nxp.com>
+From: Bob Peterson <rpeterso@redhat.com>
 
-[ Upstream commit 3646f50a3838c5949a89ecbdb868497cdc05b8fd ]
+[ Upstream commit df5db5f9ee112e76b5202fbc331f990a0fc316d6 ]
 
-When speed checking failed, direclty jumping to put_node label
-is not correct. Need jump to out_free_opp to avoid resources leak.
+Before this patch, run_queue would demote glocks based on whether
+there are any more holders. But if the glock has pending revokes that
+haven't been written to the media, giving up the glock might end in
+file system corruption if the revokes never get written due to
+io errors, node crashes and fences, etc. In that case, another node
+will replay the metadata blocks associated with the glock, but
+because the revoke was never written, it could replay that block
+even though the glock had since been granted to another node who
+might have made changes.
 
-Fixes: 2733fb0d0699 ("cpufreq: imx6q: read OCOTP through nvmem for imx6ul/imx6ull")
-Signed-off-by: Peng Fan <peng.fan@nxp.com>
-Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
+This patch changes the logic in run_queue so that it never demotes
+a glock until its count of pending revokes reaches zero.
+
+Signed-off-by: Bob Peterson <rpeterso@redhat.com>
+Reviewed-by: Andreas Gruenbacher <agruenba@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/cpufreq/imx6q-cpufreq.c | 9 +++++----
- 1 file changed, 5 insertions(+), 4 deletions(-)
+ fs/gfs2/glock.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/cpufreq/imx6q-cpufreq.c b/drivers/cpufreq/imx6q-cpufreq.c
-index 1fcbbd53a48a2..edef3399c9794 100644
---- a/drivers/cpufreq/imx6q-cpufreq.c
-+++ b/drivers/cpufreq/imx6q-cpufreq.c
-@@ -381,23 +381,24 @@ static int imx6q_cpufreq_probe(struct platform_device *pdev)
- 		goto put_reg;
- 	}
- 
-+	/* Because we have added the OPPs here, we must free them */
-+	free_opp = true;
-+
- 	if (of_machine_is_compatible("fsl,imx6ul") ||
- 	    of_machine_is_compatible("fsl,imx6ull")) {
- 		ret = imx6ul_opp_check_speed_grading(cpu_dev);
- 		if (ret) {
- 			if (ret == -EPROBE_DEFER)
--				goto put_node;
-+				goto out_free_opp;
- 
- 			dev_err(cpu_dev, "failed to read ocotp: %d\n",
- 				ret);
--			goto put_node;
-+			goto out_free_opp;
- 		}
- 	} else {
- 		imx6q_opp_check_speed_grading(cpu_dev);
- 	}
- 
--	/* Because we have added the OPPs here, we must free them */
--	free_opp = true;
- 	num = dev_pm_opp_get_opp_count(cpu_dev);
- 	if (num < 0) {
- 		ret = num;
+diff --git a/fs/gfs2/glock.c b/fs/gfs2/glock.c
+index 0290a22ebccf5..21820a5b388fd 100644
+--- a/fs/gfs2/glock.c
++++ b/fs/gfs2/glock.c
+@@ -639,6 +639,9 @@ __acquires(&gl->gl_lockref.lock)
+ 			goto out_unlock;
+ 		if (nonblock)
+ 			goto out_sched;
++		smp_mb();
++		if (atomic_read(&gl->gl_revokes) != 0)
++			goto out_sched;
+ 		set_bit(GLF_DEMOTE_IN_PROGRESS, &gl->gl_flags);
+ 		GLOCK_BUG_ON(gl, gl->gl_demote_state == LM_ST_EXCLUSIVE);
+ 		gl->gl_target = gl->gl_demote_state;
 -- 
 2.20.1
 
