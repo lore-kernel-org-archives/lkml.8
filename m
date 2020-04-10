@@ -7,47 +7,51 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36F24C2D0EC
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 03:48:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A76C2C2BB86
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 03:48:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0D17020936
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 03:48:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8147920BED
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 03:48:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586490497;
-	bh=A+KPd7DvdH0SRXYueI90IJarwFnE3747OAbItcoX4T0=;
+	s=default; t=1586490498;
+	bh=zndEF5nbEyrafOSfKLd+VqjCVDUNvwtQObFN7ypRggA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=igsdezRkhmID3I6vG4MFWmyGPKpdj16P5hp9JTUXs8Jmj2UJlf1qGV/6EQypow5IV
-	 pMrbl3WmjRo6P9Azt3AGeY/FOfmaO3+tkfoda1ok0yuZHUqlsspwWJxqqNpDkTUFJ8
-	 xsM3onrNhZ8iXbDTIqKLHbs8N23d9DoM336M+vSE=
+	b=1lXkucAOX2hIQjyWYRAa8RQJDYvLQa1jcUF5zZyufCTd2hJxBLRZ9bj8+krFwPy3l
+	 h6gP/ibd3gaU0689Mj/c/DQXtukvg/Azje1qGj0fVzKYxd+tVPlmI+KbKIyTfWAqTi
+	 mOkiY1Hc2I96nNTRssXs/wh3VxR0v37r0rj0LpJ8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728096AbgDJDsP (ORCPT
+        id S1728114AbgDJDsR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Apr 2020 23:48:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59450 "EHLO mail.kernel.org"
+        Thu, 9 Apr 2020 23:48:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59488 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728064AbgDJDsL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Apr 2020 23:48:11 -0400
+        id S1728086AbgDJDsO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Apr 2020 23:48:14 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AB5DE2173E;
-        Fri, 10 Apr 2020 03:48:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4D6AF20936;
+        Fri, 10 Apr 2020 03:48:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586490491;
-        bh=A+KPd7DvdH0SRXYueI90IJarwFnE3747OAbItcoX4T0=;
+        s=default; t=1586490494;
+        bh=zndEF5nbEyrafOSfKLd+VqjCVDUNvwtQObFN7ypRggA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rd9xOcPBOPmWb92SrsmEamCfMgvOQqT41WZjy+b5EQ/Ii8ftg1k1P8xbdJzTSM72i
-         GQvLT9mgTfXvfSJ1+5OrgZSXUFp/0jmgc264LLebLIwszZ7IjNbafMOmtkHeTaWqjd
-         8KVMEwbk7CwtBvs0EAmhT9uHne6WLeEqLXTQIrXM=
+        b=XedX5TzBrbXu5gcy6jnx0XaJVFYJj8cI5QD4hl0Q4Xof7JwltC4qECDiffU+jTYX6
+         XmVUPBtG+Je+G431nuGSKpibgEfck7+0YY0hOcaHT4tDvOJbIHGM+Ccb1DsAcQuQA7
+         4j97ER2rOyifbhH4z/wm8EGGpS3MgPV+0iZdBWOQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Chris Wilson <chris@chris-wilson.co.uk>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.5 09/56] sched/vtime: Prevent unstable evaluation of WARN(vtime->state)
-Date:   Thu,  9 Apr 2020 23:47:13 -0400
-Message-Id: <20200410034800.8381-9-sashal@kernel.org>
+Cc:     Bart Van Assche <bvanassche@acm.org>,
+        Ming Lei <ming.lei@redhat.com>,
+        Keith Busch <kbusch@kernel.org>,
+        Johannes Thumshirn <jth@kernel.org>,
+        Hannes Reinecke <hare@suse.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>,
+        linux-block@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.5 11/56] blk-mq: Fix a recently introduced regression in blk_mq_realloc_hw_ctxs()
+Date:   Thu,  9 Apr 2020 23:47:15 -0400
+Message-Id: <20200410034800.8381-11-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200410034800.8381-1-sashal@kernel.org>
 References: <20200410034800.8381-1-sashal@kernel.org>
@@ -60,154 +64,63 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chris Wilson <chris@chris-wilson.co.uk>
+From: Bart Van Assche <bvanassche@acm.org>
 
-[ Upstream commit f1dfdab694eb3838ac26f4b73695929c07d92a33 ]
+[ Upstream commit d0930bb8f46b8fb4a7d429c0bf1c91b3ed00a7cf ]
 
-As the vtime is sampled under loose seqcount protection by kcpustat, the
-vtime fields may change as the code flows. Where logic dictates a field
-has a static value, use a READ_ONCE.
+q->nr_hw_queues must only be updated once it is known that
+blk_mq_realloc_hw_ctxs() has succeeded. Otherwise it can happen that
+reallocation fails and that q->nr_hw_queues is larger than the number of
+allocated hardware queues. This patch fixes the following crash if
+increasing the number of hardware queues fails:
 
-Signed-off-by: Chris Wilson <chris@chris-wilson.co.uk>
-Signed-off-by: Frederic Weisbecker <frederic@kernel.org>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Fixes: 74722bb223d0 ("sched/vtime: Bring up complete kcpustat accessor")
-Link: https://lkml.kernel.org/r/20200123180849.28486-1-frederic@kernel.org
+BUG: KASAN: null-ptr-deref in blk_mq_map_swqueue+0x775/0x810
+Write of size 8 at addr 0000000000000118 by task check/977
+
+CPU: 3 PID: 977 Comm: check Not tainted 5.6.0-rc1-dbg+ #8
+Hardware name: Bochs Bochs, BIOS Bochs 01/01/2011
+Call Trace:
+ dump_stack+0xa5/0xe6
+ __kasan_report.cold+0x65/0x99
+ kasan_report+0x16/0x20
+ check_memory_region+0x140/0x1b0
+ memset+0x28/0x40
+ blk_mq_map_swqueue+0x775/0x810
+ blk_mq_update_nr_hw_queues+0x468/0x710
+ nullb_device_submit_queues_store+0xf7/0x1a0 [null_blk]
+ configfs_write_file+0x1c4/0x250 [configfs]
+ __vfs_write+0x4c/0x90
+ vfs_write+0x145/0x2c0
+ ksys_write+0xd7/0x180
+ __x64_sys_write+0x47/0x50
+ do_syscall_64+0x6f/0x2f0
+ entry_SYSCALL_64_after_hwframe+0x49/0xbe
+
+Fixes: ac0d6b926e74 ("block: Reduce the amount of memory required per request queue")
+Signed-off-by: Bart Van Assche <bvanassche@acm.org>
+Reviewed-by: Ming Lei <ming.lei@redhat.com>
+Cc: Keith Busch <kbusch@kernel.org>
+Cc: Johannes Thumshirn <jth@kernel.org>
+Cc: Hannes Reinecke <hare@suse.com>
+Cc: Christoph Hellwig <hch@infradead.org>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/sched/cputime.c | 41 ++++++++++++++++++++++-------------------
- 1 file changed, 22 insertions(+), 19 deletions(-)
+ block/blk-mq.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/kernel/sched/cputime.c b/kernel/sched/cputime.c
-index d43318a489f24..df3577149d2ed 100644
---- a/kernel/sched/cputime.c
-+++ b/kernel/sched/cputime.c
-@@ -912,8 +912,10 @@ void task_cputime(struct task_struct *t, u64 *utime, u64 *stime)
- 	} while (read_seqcount_retry(&vtime->seqcount, seq));
- }
- 
--static int vtime_state_check(struct vtime *vtime, int cpu)
-+static int vtime_state_fetch(struct vtime *vtime, int cpu)
- {
-+	int state = READ_ONCE(vtime->state);
-+
- 	/*
- 	 * We raced against a context switch, fetch the
- 	 * kcpustat task again.
-@@ -930,10 +932,10 @@ static int vtime_state_check(struct vtime *vtime, int cpu)
- 	 *
- 	 * Case 1) is ok but 2) is not. So wait for a safe VTIME state.
- 	 */
--	if (vtime->state == VTIME_INACTIVE)
-+	if (state == VTIME_INACTIVE)
- 		return -EAGAIN;
- 
--	return 0;
-+	return state;
- }
- 
- static u64 kcpustat_user_vtime(struct vtime *vtime)
-@@ -952,14 +954,15 @@ static int kcpustat_field_vtime(u64 *cpustat,
- {
- 	struct vtime *vtime = &tsk->vtime;
- 	unsigned int seq;
--	int err;
- 
- 	do {
-+		int state;
-+
- 		seq = read_seqcount_begin(&vtime->seqcount);
- 
--		err = vtime_state_check(vtime, cpu);
--		if (err < 0)
--			return err;
-+		state = vtime_state_fetch(vtime, cpu);
-+		if (state < 0)
-+			return state;
- 
- 		*val = cpustat[usage];
- 
-@@ -972,7 +975,7 @@ static int kcpustat_field_vtime(u64 *cpustat,
- 		 */
- 		switch (usage) {
- 		case CPUTIME_SYSTEM:
--			if (vtime->state == VTIME_SYS)
-+			if (state == VTIME_SYS)
- 				*val += vtime->stime + vtime_delta(vtime);
- 			break;
- 		case CPUTIME_USER:
-@@ -984,11 +987,11 @@ static int kcpustat_field_vtime(u64 *cpustat,
- 				*val += kcpustat_user_vtime(vtime);
- 			break;
- 		case CPUTIME_GUEST:
--			if (vtime->state == VTIME_GUEST && task_nice(tsk) <= 0)
-+			if (state == VTIME_GUEST && task_nice(tsk) <= 0)
- 				*val += vtime->gtime + vtime_delta(vtime);
- 			break;
- 		case CPUTIME_GUEST_NICE:
--			if (vtime->state == VTIME_GUEST && task_nice(tsk) > 0)
-+			if (state == VTIME_GUEST && task_nice(tsk) > 0)
- 				*val += vtime->gtime + vtime_delta(vtime);
- 			break;
- 		default:
-@@ -1039,23 +1042,23 @@ static int kcpustat_cpu_fetch_vtime(struct kernel_cpustat *dst,
- {
- 	struct vtime *vtime = &tsk->vtime;
- 	unsigned int seq;
--	int err;
- 
- 	do {
- 		u64 *cpustat;
- 		u64 delta;
-+		int state;
- 
- 		seq = read_seqcount_begin(&vtime->seqcount);
- 
--		err = vtime_state_check(vtime, cpu);
--		if (err < 0)
--			return err;
-+		state = vtime_state_fetch(vtime, cpu);
-+		if (state < 0)
-+			return state;
- 
- 		*dst = *src;
- 		cpustat = dst->cpustat;
- 
- 		/* Task is sleeping, dead or idle, nothing to add */
--		if (vtime->state < VTIME_SYS)
-+		if (state < VTIME_SYS)
- 			continue;
- 
- 		delta = vtime_delta(vtime);
-@@ -1064,15 +1067,15 @@ static int kcpustat_cpu_fetch_vtime(struct kernel_cpustat *dst,
- 		 * Task runs either in user (including guest) or kernel space,
- 		 * add pending nohz time to the right place.
- 		 */
--		if (vtime->state == VTIME_SYS) {
-+		if (state == VTIME_SYS) {
- 			cpustat[CPUTIME_SYSTEM] += vtime->stime + delta;
--		} else if (vtime->state == VTIME_USER) {
-+		} else if (state == VTIME_USER) {
- 			if (task_nice(tsk) > 0)
- 				cpustat[CPUTIME_NICE] += vtime->utime + delta;
- 			else
- 				cpustat[CPUTIME_USER] += vtime->utime + delta;
- 		} else {
--			WARN_ON_ONCE(vtime->state != VTIME_GUEST);
-+			WARN_ON_ONCE(state != VTIME_GUEST);
- 			if (task_nice(tsk) > 0) {
- 				cpustat[CPUTIME_GUEST_NICE] += vtime->gtime + delta;
- 				cpustat[CPUTIME_NICE] += vtime->gtime + delta;
-@@ -1083,7 +1086,7 @@ static int kcpustat_cpu_fetch_vtime(struct kernel_cpustat *dst,
- 		}
- 	} while (read_seqcount_retry(&vtime->seqcount, seq));
- 
--	return err;
-+	return 0;
- }
- 
- void kcpustat_cpu_fetch(struct kernel_cpustat *dst, int cpu)
+diff --git a/block/blk-mq.c b/block/blk-mq.c
+index 329df7986bf60..51ff4852d34bc 100644
+--- a/block/blk-mq.c
++++ b/block/blk-mq.c
+@@ -2766,7 +2766,6 @@ static void blk_mq_realloc_hw_ctxs(struct blk_mq_tag_set *set,
+ 			memcpy(new_hctxs, hctxs, q->nr_hw_queues *
+ 			       sizeof(*hctxs));
+ 		q->queue_hw_ctx = new_hctxs;
+-		q->nr_hw_queues = set->nr_hw_queues;
+ 		kfree(hctxs);
+ 		hctxs = new_hctxs;
+ 	}
 -- 
 2.20.1
 
