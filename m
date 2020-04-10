@@ -2,192 +2,116 @@ Return-Path: <SRS0=VV4q=52=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BCEA0C2BA19
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 02:40:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 636BDC2BB1D
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 02:48:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7918520BED
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 02:40:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="ff8HYC1E"
+	by mail.kernel.org (Postfix) with ESMTP id 4430720A8B
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 02:48:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726638AbgDJCks (ORCPT
+        id S1726598AbgDJCsp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Apr 2020 22:40:48 -0400
-Received: from mail-eopbgr50046.outbound.protection.outlook.com ([40.107.5.46]:32576
-        "EHLO EUR03-VE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725987AbgDJCks (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Apr 2020 22:40:48 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=mrO78YUiUxPPj/yTUZavP/pPGOAad7Pq7nza60q+e3PimmFrpEk+FjOpMG7tet/8JiWnPdNEIg0xmY/ED4FlqIHGpgCiimIvFqnWIB3bsJV759a8tIb9sTDnZ8Zn4iWjg5GhdX+WaHQG32IffbWhWb/rnSnF+Zv77boHpwuFUmTzahltrCDLJPo4E7wdzlz6GH5weadVRaqT5P9ckyuOCERCJKWEgXmxasAEZEx48cqOjtCA0eNmMOfMvUa6pm7iQX6asGK0nfQqVcDT8YLbmtnP5Ir0M3OHOYSIx9JYi33YlHs0qNpvjjZgLR51GvTDvEgQNA3Lw4Qg6CDpykOvyg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=JmkFfT2WZ8znsr7wYt8LI2u3R2KX1ao2uUOc7VXDS28=;
- b=YbV5ZXxXK86e8CqUK2n0M0GTqYOYN6rXJXgqDI+Jgt+TymFSsoriEwG3T6OSjvSh39CEE1NKgwQ/ohOp4bmW7eCNyXya1QHye7jiXU5b0mRYafGExcw/agp+lxb/ks+egOujyG8EhrXYeEVt96t8ri/271Zhw2Q1kwwVk2tjRJmhDkxv7ZdLDFjUNenzU0ngpeLdgnlqKJ+MT5V8gn+Q0HxFD6EhlUO4zo9dA3qPeOGekgbPK2EyamwTOJLmd6UEjGaNKrNUxres7L3Ez57DcLUb+I1YqgSeFDROMpI1zKAVNLTszr/nGB89l4Yvny+1vbZ/oZ36Vc2nf50Qwubo3g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=mellanox.com; dmarc=pass action=none header.from=mellanox.com;
- dkim=pass header.d=mellanox.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=JmkFfT2WZ8znsr7wYt8LI2u3R2KX1ao2uUOc7VXDS28=;
- b=ff8HYC1E6jVkzLv3I+EbsGgG8oxosGtbKyOWzU9SfnQxoY1TzeHm3IfUZVm7+SE4wna3vvq3JUilRpWN76X+KLFk9Om1JSjeY5dTadjCHJht4klBixTITfutcrhxaqeWqJn5aTwehrogNkhx5hIyzQgSYf2rjZL3qdGeG2kquu4=
-Received: from VI1PR05MB5102.eurprd05.prod.outlook.com (20.177.51.151) by
- VI1PR05MB4895.eurprd05.prod.outlook.com (20.177.51.16) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2900.20; Fri, 10 Apr 2020 02:40:42 +0000
-Received: from VI1PR05MB5102.eurprd05.prod.outlook.com
- ([fe80::9d19:a564:b84e:7c19]) by VI1PR05MB5102.eurprd05.prod.outlook.com
- ([fe80::9d19:a564:b84e:7c19%7]) with mapi id 15.20.2878.021; Fri, 10 Apr 2020
- 02:40:42 +0000
-From:   Saeed Mahameed <saeedm@mellanox.com>
-To:     "jani.nikula@linux.intel.com" <jani.nikula@linux.intel.com>,
-        "jgg@ziepe.ca" <jgg@ziepe.ca>, "arnd@arndb.de" <arnd@arndb.de>
-CC:     "narmstrong@baylibre.com" <narmstrong@baylibre.com>,
-        "masahiroy@kernel.org" <masahiroy@kernel.org>,
-        "leon@kernel.org" <leon@kernel.org>,
-        "Laurent.pinchart@ideasonboard.com" 
-        <Laurent.pinchart@ideasonboard.com>,
-        "kieran.bingham+renesas@ideasonboard.com" 
-        <kieran.bingham+renesas@ideasonboard.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "nico@fluxnic.net" <nico@fluxnic.net>,
-        "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
-        "linux-renesas-soc@vger.kernel.org" 
-        <linux-renesas-soc@vger.kernel.org>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "a.hajda@samsung.com" <a.hajda@samsung.com>,
-        "jonas@kwiboo.se" <jonas@kwiboo.se>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "airlied@linux.ie" <airlied@linux.ie>,
-        "jernej.skrabec@siol.net" <jernej.skrabec@siol.net>
-Subject: Re: [RFC 0/6] Regressions for "imply" behavior change
-Thread-Topic: [RFC 0/6] Regressions for "imply" behavior change
-Thread-Index: AQHWDeQiJzc7TgrcN0yUMWAEU5j98qhvr4mAgAADKgCAAB92AIAAp0gAgAEtnwA=
-Date:   Fri, 10 Apr 2020 02:40:42 +0000
-Message-ID: <7d9410a4b7d0ef975f7cbd8f0b6762df114df539.camel@mellanox.com>
-References: <20200408202711.1198966-1-arnd@arndb.de>
-         <nycvar.YSQ.7.76.2004081633260.2671@knanqh.ubzr>
-         <CAK8P3a2frDf4BzEpEF0uwPTV2dv6Jve+6N97z1sSuSBUAPJquA@mail.gmail.com>
-         <20200408224224.GD11886@ziepe.ca> <87k12pgifv.fsf@intel.com>
-In-Reply-To: <87k12pgifv.fsf@intel.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-user-agent: Evolution 3.34.4 (3.34.4-1.fc31) 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=saeedm@mellanox.com; 
-x-originating-ip: [73.15.39.150]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 91839159-9afa-460e-e72c-08d7dcf89048
-x-ms-traffictypediagnostic: VI1PR05MB4895:
-x-microsoft-antispam-prvs: <VI1PR05MB4895A819FA3866D162856197BEDE0@VI1PR05MB4895.eurprd05.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:9508;
-x-forefront-prvs: 0369E8196C
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VI1PR05MB5102.eurprd05.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10009020)(4636009)(376002)(136003)(366004)(39860400002)(346002)(396003)(36756003)(2906002)(4326008)(5660300002)(110136005)(54906003)(6486002)(316002)(71200400001)(7416002)(8676002)(76116006)(91956017)(6512007)(66446008)(64756008)(66476007)(66946007)(66556008)(53546011)(6506007)(26005)(8936002)(81156014)(478600001)(86362001)(186003)(2616005);DIR:OUT;SFP:1101;
-received-spf: None (protection.outlook.com: mellanox.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: mzXqDzag92Dab6fFB+4ppj7llYpqiJW5+OS4NUmVnOo2WSdI3SW76UoDGSEyJCam14zCXHsCk24uFNfI1Ez8wLZzfrTiR9fVm5lgwE78nZfp8LEZtqWpeYgMDrPPqA2pF7t78a3VsouA3rnfSqETWcF+4V+YU6Av7gjgu/aXDIZ1w0k8YtAQYciqTvH4Veim5tJqfi7kcyilivo2Nm++7txadQh+bsFMrPgJbdWXX4SdHQB5tJziryaLqZURN0QGU7yEKHk7iISNgs68pGOiL4cKfWPUJxhEz4+ZATUfsx9u0fTl7Y4NWv1f3DDgCwq0Qt0fGJmVGaeLQFIU+qRvlEgXjbOvP0+hw+tOJY1BFeG/cNjG0WyBzU2ZksceuV8EvN1F2eZQp1GQpKcdpK1zUWkiBJrc6yXLUdN/4Aa/8LxFf+2Y0n+XIeCVk6XMxCKy
-x-ms-exchange-antispam-messagedata: 7dZErSLe/iTSwlIL0+9qPV1dMM0GdUxO1XFENN97hWiB6S67fpRlaJee2G4HaML1UuEmAwqoKApLZQ9XY5VcoB98ue0a8YDsqtBVEfrbszWKUKvg9sIhjlO1wVWMB25l8NUOoew6jy5EogLdXmaqgg==
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <E5E26D8D6312FF48A2B2B1029454549C@eurprd05.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Thu, 9 Apr 2020 22:48:45 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:45524 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726521AbgDJCsp (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Apr 2020 22:48:45 -0400
+Received: by mail-pf1-f193.google.com with SMTP id r14so461344pfl.12;
+        Thu, 09 Apr 2020 19:48:43 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=9Q5Xyyihwp2JnRtlC2ONHxzXn26cTV+LmTcM1TReBcA=;
+        b=CF+NuMXqgJsLv/O6PsJfnSh5pOcnPPbauK8yuapuz8xazNOFuoL+6tIHoMOuCxXPz/
+         Ju3eSGIsGnCrO8aQYsfEL/9pHdBASeuBRAGydim42qDuxNsoJOVx8f7cxL7p92pFDkUV
+         g/04VeRyhlpwqdvioAMtaU6FLut3Km2+0mT4UjQe6T3Rpcb3w8WqIS2uSZrdFwyV/8WC
+         a6mu4vWgCGsCaZxHBQvscnjVrMGEXBXrDKkZvTWPlSa3Xo9fmGHosBx/s0cbd//qNli2
+         jTK5jFd3lEKlqeu4WbGImN55a68CQ69xT+Gu/TfkZhxJ6oYMCkiaT7g2xhYc//IZ5G2A
+         kz5g==
+X-Gm-Message-State: AGi0Pub7DjDLBcSxVKyMPSAnMUG2vqrhbyABv/YkE+oL8aEGSxRvtaxB
+        3iAucaEnwVZcm3B1jXfbPQ0=
+X-Google-Smtp-Source: APiQypI/p2Z57KSNXzcZBPYB7BISO44gnnzEmhSqJ1z00w/d7/guzoVM4cVlS3s5fjOPfOIU1njvCw==
+X-Received: by 2002:a63:e1e:: with SMTP id d30mr2364954pgl.369.1586486922243;
+        Thu, 09 Apr 2020 19:48:42 -0700 (PDT)
+Received: from ?IPv6:2601:647:4000:d7:ed4e:1b14:7fc4:cd73? ([2601:647:4000:d7:ed4e:1b14:7fc4:cd73])
+        by smtp.gmail.com with ESMTPSA id 6sm411368pgm.51.2020.04.09.19.48.40
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 09 Apr 2020 19:48:41 -0700 (PDT)
+Subject: Re: [RFC v2 1/5] block: move main block debugfs initialization to its
+ own file
+To:     Luis Chamberlain <mcgrof@kernel.org>, axboe@kernel.dk,
+        viro@zeniv.linux.org.uk, gregkh@linuxfoundation.org,
+        rostedt@goodmis.org, mingo@redhat.com, jack@suse.cz,
+        ming.lei@redhat.com, nstange@suse.de, akpm@linux-foundation.org
+Cc:     mhocko@suse.com, yukuai3@huawei.com, linux-block@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, Omar Sandoval <osandov@fb.com>,
+        Hannes Reinecke <hare@suse.com>,
+        Michal Hocko <mhocko@kernel.org>
+References: <20200409214530.2413-1-mcgrof@kernel.org>
+ <20200409214530.2413-2-mcgrof@kernel.org>
+From:   Bart Van Assche <bvanassche@acm.org>
+Autocrypt: addr=bvanassche@acm.org; prefer-encrypt=mutual; keydata=
+ mQENBFSOu4oBCADcRWxVUvkkvRmmwTwIjIJvZOu6wNm+dz5AF4z0FHW2KNZL3oheO3P8UZWr
+ LQOrCfRcK8e/sIs2Y2D3Lg/SL7qqbMehGEYcJptu6mKkywBfoYbtBkVoJ/jQsi2H0vBiiCOy
+ fmxMHIPcYxaJdXxrOG2UO4B60Y/BzE6OrPDT44w4cZA9DH5xialliWU447Bts8TJNa3lZKS1
+ AvW1ZklbvJfAJJAwzDih35LxU2fcWbmhPa7EO2DCv/LM1B10GBB/oQB5kvlq4aA2PSIWkqz4
+ 3SI5kCPSsygD6wKnbRsvNn2mIACva6VHdm62A7xel5dJRfpQjXj2snd1F/YNoNc66UUTABEB
+ AAG0JEJhcnQgVmFuIEFzc2NoZSA8YnZhbmFzc2NoZUBhY20ub3JnPokBOQQTAQIAIwUCVI67
+ igIbAwcLCQgHAwIBBhUIAgkKCwQWAgMBAh4BAheAAAoJEHFcPTXFzhAJ8QkH/1AdXblKL65M
+ Y1Zk1bYKnkAb4a98LxCPm/pJBilvci6boefwlBDZ2NZuuYWYgyrehMB5H+q+Kq4P0IBbTqTa
+ jTPAANn62A6jwJ0FnCn6YaM9TZQjM1F7LoDX3v+oAkaoXuq0dQ4hnxQNu792bi6QyVdZUvKc
+ macVFVgfK9n04mL7RzjO3f+X4midKt/s+G+IPr4DGlrq+WH27eDbpUR3aYRk8EgbgGKvQFdD
+ CEBFJi+5ZKOArmJVBSk21RHDpqyz6Vit3rjep7c1SN8s7NhVi9cjkKmMDM7KYhXkWc10lKx2
+ RTkFI30rkDm4U+JpdAd2+tP3tjGf9AyGGinpzE2XY1K5AQ0EVI67igEIAKiSyd0nECrgz+H5
+ PcFDGYQpGDMTl8MOPCKw/F3diXPuj2eql4xSbAdbUCJzk2ETif5s3twT2ER8cUTEVOaCEUY3
+ eOiaFgQ+nGLx4BXqqGewikPJCe+UBjFnH1m2/IFn4T9jPZkV8xlkKmDUqMK5EV9n3eQLkn5g
+ lco+FepTtmbkSCCjd91EfThVbNYpVQ5ZjdBCXN66CKyJDMJ85HVr5rmXG/nqriTh6cv1l1Js
+ T7AFvvPjUPknS6d+BETMhTkbGzoyS+sywEsQAgA+BMCxBH4LvUmHYhpS+W6CiZ3ZMxjO8Hgc
+ ++w1mLeRUvda3i4/U8wDT3SWuHcB3DWlcppECLkAEQEAAYkBHwQYAQIACQUCVI67igIbDAAK
+ CRBxXD01xc4QCZ4dB/0QrnEasxjM0PGeXK5hcZMT9Eo998alUfn5XU0RQDYdwp6/kMEXMdmT
+ oH0F0xB3SQ8WVSXA9rrc4EBvZruWQ+5/zjVrhhfUAx12CzL4oQ9Ro2k45daYaonKTANYG22y
+ //x8dLe2Fv1By4SKGhmzwH87uXxbTJAUxiWIi1np0z3/RDnoVyfmfbbL1DY7zf2hYXLLzsJR
+ mSsED/1nlJ9Oq5fALdNEPgDyPUerqHxcmIub+pF0AzJoYHK5punqpqfGmqPbjxrJLPJfHVKy
+ goMj5DlBMoYqEgpbwdUYkH6QdizJJCur4icy8GUNbisFYABeoJ91pnD4IGei3MTdvINSZI5e
+Message-ID: <ff5bfeb5-fb4d-931a-b34f-843596fad340@acm.org>
+Date:   Thu, 9 Apr 2020 19:48:39 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-X-OriginatorOrg: Mellanox.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 91839159-9afa-460e-e72c-08d7dcf89048
-X-MS-Exchange-CrossTenant-originalarrivaltime: 10 Apr 2020 02:40:42.6221
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: h9DD6JIpUCc8BmEC8ZAlWnZtmkpiuvGNp+Nthu0scwe+Oq4DzAcwJOcwk0nKEJsyRm+7+EXQcsomp+W5ddOWjQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR05MB4895
+In-Reply-To: <20200409214530.2413-2-mcgrof@kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gVGh1LCAyMDIwLTA0LTA5IGF0IDExOjQxICswMzAwLCBKYW5pIE5pa3VsYSB3cm90ZToNCj4g
-T24gV2VkLCAwOCBBcHIgMjAyMCwgSmFzb24gR3VudGhvcnBlIDxqZ2dAemllcGUuY2E+IHdyb3Rl
-Og0KPiA+IE9uIFdlZCwgQXByIDA4LCAyMDIwIGF0IDEwOjQ5OjQ4UE0gKzAyMDAsIEFybmQgQmVy
-Z21hbm4gd3JvdGU6DQo+ID4gPiBPbiBXZWQsIEFwciA4LCAyMDIwIGF0IDEwOjM4IFBNIE5pY29s
-YXMgUGl0cmUgPG5pY29AZmx1eG5pYy5uZXQ+DQo+ID4gPiB3cm90ZToNCj4gPiA+ID4gT24gV2Vk
-LCA4IEFwciAyMDIwLCBBcm5kIEJlcmdtYW5uIHdyb3RlOg0KPiA+ID4gPiA+IEkgaGF2ZSBjcmVh
-dGVkIHdvcmthcm91bmRzIGZvciB0aGUgS2NvbmZpZyBmaWxlcywgd2hpY2ggbm93DQo+ID4gPiA+
-ID4gc3RvcCB1c2luZw0KPiA+ID4gPiA+IGltcGx5IGFuZCBkbyBzb21ldGhpbmcgZWxzZSBpbiBl
-YWNoIGNhc2UuIEkgZG9uJ3Qga25vdw0KPiA+ID4gPiA+IHdoZXRoZXIgdGhlcmUgd2FzDQo+ID4g
-PiA+ID4gYSBidWcgaW4gdGhlIGtjb25maWcgY2hhbmdlcyB0aGF0IGhhcyBsZWQgdG8gYWxsb3dp
-bmcNCj4gPiA+ID4gPiBjb25maWd1cmF0aW9ucyB0aGF0DQo+ID4gPiA+ID4gd2VyZSBub3QgbWVh
-bnQgdG8gYmUgbGVnYWwgZXZlbiB3aXRoIHRoZSBuZXcgc2VtYW50aWNzLCBvciBpZg0KPiA+ID4g
-PiA+IHRoZSBLY29uZmlnDQo+ID4gPiA+ID4gZmlsZXMgaGF2ZSBzaW1wbHkgYmVjb21lIGluY29y
-cmVjdCBub3cgYW5kIHRoZSB0b29sIHdvcmtzIGFzDQo+ID4gPiA+ID4gZXhwZWN0ZWQuDQo+ID4g
-PiA+IA0KPiA+ID4gPiBJbiBtb3N0IGNhc2VzIGl0IGlzIHRoZSBjb2RlIHRoYXQgaGFzIHRvIGJl
-IGZpeGVkLiBJdCB0eXBpY2FsbHkNCj4gPiA+ID4gZG9lczoNCj4gPiA+ID4gDQo+ID4gPiA+ICAg
-ICAgICAgaWYgKElTX0VOQUJMRUQoQ09ORklHX0ZPTykpDQo+ID4gPiA+ICAgICAgICAgICAgICAg
-ICBmb29faW5pdCgpOw0KPiA+ID4gPiANCj4gPiA+ID4gV2hlcmUgaXQgc2hvdWxkIHJhdGhlciBk
-bzoNCj4gPiA+ID4gDQo+ID4gPiA+ICAgICAgICAgaWYgKElTX1JFQUNIQUJMRShDT05GSUdfRk9P
-KSkNCj4gPiA+ID4gICAgICAgICAgICAgICAgIGZvb19pbml0KCk7DQo+ID4gPiA+IA0KPiA+ID4g
-PiBBIGNvdXBsZSBvZiBzdWNoIHBhdGNoZXMgaGF2ZSBiZWVuIHByb2R1Y2VkIGFuZCBxdWV1ZWQg
-aW4gdGhlaXINCj4gPiA+ID4gcmVzcGVjdGl2ZSB0cmVlcyBhbHJlYWR5Lg0KPiA+ID4gDQo+ID4g
-PiBJIHRyeSB0byB1c2UgSVNfUkVBQ0hBQkxFKCkgb25seSBhcyBhIGxhc3QgcmVzb3J0LCBhcyBp
-dCB0ZW5kcyB0bw0KPiA+ID4gY29uZnVzZSB1c2VycyB3aGVuIGEgc3Vic3lzdGVtIGlzIGJ1aWx0
-IGFzIGEgbW9kdWxlIGFuZCBhbHJlYWR5DQo+ID4gPiBsb2FkZWQgYnV0IHNvbWV0aGluZyByZWx5
-aW5nIG9uIHRoYXQgc3Vic3lzdGVtIGRvZXMgbm90IHVzZSBpdC4NCj4gPiA+IA0KPiA+ID4gSW4g
-dGhlIHNpeCBwYXRjaGVzIEkgbWFkZSwgSSBoYWQgdG8gdXNlIElTX1JFQUNIQUJMRSgpIG9uY2Us
-DQo+ID4gPiBmb3IgdGhlIG90aGVycyBJIHRlbmRlZCB0byB1c2UgYSBLY29uZmlnIGRlcGVuZGVu
-Y3kgbGlrZQ0KPiA+ID4gDQo+ID4gPiAnZGVwZW5kcyBvbiBGT08gfHwgRk9PPW4nDQo+ID4gDQoN
-ClRoaXMgYXNzdW1lcyB0aGF0IHRoZSBtb2R1bGUgdXNpbmcgRk9PIGhhcyBpdHMgb3duIGZsYWcg
-cmVwcmVzZW50aW5nDQpGT08gd2hpY2ggaXMgbm90IGFsd2F5cyB0aGUgY2FzZS4NCg0KZm9yIGV4
-YW1wbGUgaW4gbWx4NSB3ZSB1c2UgVlhMQU4gY29uZmlnIGZsYWcgZGlyZWN0bHkgdG8gY29tcGls
-ZSBWWExBTg0KcmVsYXRlZCBmaWxlczoNCg0KbWx4NS9jb3JlL01ha2VmaWxlOg0KDQpvYmotJChD
-T05GSUdfTUxYNV9DT1JFKSArPSBtbHg1X2NvcmUubw0KDQptbHg1X2NvcmUteSA6PSBtbHg1X2Nv
-cmUubw0KbWx4NV9jb3JlLSQoVlhMQU4pICs9IG1seDVfdnhsYW4ubw0KDQphbmQgaW4gbWx4NV9t
-YWluLm8gd2UgZG86DQogDQppZiAoSVNfRU5BQkxFRChWWExBTikpDQogICAgICAgbWx4NV92eGxh
-bl9pbml0KCkNCg0KYWZ0ZXIgdGhlIGNoYW5nZSBpbiBpbXBseSBzZW1hbnRpY3M6DQpvdXIgb3B0
-aW9ucyBhcmU6DQoNCjEpIHVzZSBJU19SRUFDSEFCTEUoVlhMQU4pIGluc3RlYWQgb2YgSVNfRU5B
-QkxFRChWWExBTikNCg0KMikgaGF2ZSBNTFg1X1ZYTEFOIGluIG1seDUgS2NvbmZpZyBhbmQgdXNl
-IElTX0VOQUJMRUQoTUxYNV9WWExBTikgDQpjb25maWcgTUxYNV9WWExBTg0KCWRlcGVuZHMgb24g
-VlhMQU4gfHwgIVZYTEFODQoJYm9vbA0KDQpTbyBpIHVuZGVyc3RhbmQgdGhhdCBldmVyeSBvbmUg
-YWdyZWUgdG8gdXNlIHNvbHV0aW9uICMyID8NCg0KPiA+IEl0IGlzIHVuZm9ydHVuYXRlIGtjb25m
-aWcgZG9lc24ndCBoYXZlIGEgbGFuZ3VhZ2UgZmVhdHVyZSBmb3IgdGhpcw0KPiA+IGlkaW9tLCBh
-cyB0aGUgYWJvdmUgaXMgY29uZm91bmRpbmcgd2l0aG91dCBhIGxvdCBvZiBrY29uZmlnDQo+ID4g
-a25vd2xlZGdlDQo+ID4gDQo+ID4gPiBJIGRpZCBjb21lIHVwIHdpdGggdGhlIElTX1JFQUNIQUJM
-RSgpIG1hY3JvIG9yaWdpbmFsbHksIGJ1dCB0aGF0DQo+ID4gPiBkb2Vzbid0IG1lYW4gSSB0aGlu
-ayBpdCdzIGEgZ29vZCBpZGVhIHRvIHVzZSBpdCBsaWJlcmFsbHkgOy0pDQo+ID4gDQo+ID4gSXQg
-d291bGQgYmUgbmljZSB0byBoYXZlIHNvbWUgdW5pZm9ybSBwb2xpY3kgaGVyZQ0KPiA+IA0KPiA+
-IEkgYWxzbyBkb24ndCBsaWtlIHRoZSBJU19SRUFDSEFCTEUgc29sdXRpb24sIGl0IG1ha2VzIHRo
-aXMgbW9yZQ0KPiA+IGNvbXBsaWNhdGVkLCBub3QgbGVzcy4uDQo+IA0KPiBKdXN0IGNoaW1pbmcg
-Im1lIHRvbyIgaGVyZS4NCj4gDQo+IElTX1JFQUNIQUJMRSgpIGlzIG5vdCBhIHNvbHV0aW9uLCBp
-dCdzIGEgaGFjayB0byBoaWRlIGEgZGVwZW5kZW5jeQ0KPiBsaW5rDQo+IHByb2JsZW0gdW5kZXIg
-dGhlIGNhcnBldCwgaW4gYSB3YXkgdGhhdCBpcyBkaWZmaWN1bHQgZm9yIHRoZSB1c2VyIHRvDQo+
-IGRlYnVnIGFuZCBmaWd1cmUgb3V0Lg0KPiANCj4gVGhlIHVzZXIgdGhpbmtzIHRoZXkndmUgZW5h
-YmxlZCBhIGZlYXR1cmUsIGJ1dCBpdCBkb2Vzbid0IGdldCB1c2VkDQo+IGFueXdheSwgYmVjYXVz
-ZSBhIGJ1aWx0aW4gZGVwZW5kcyBvbiBzb21ldGhpbmcgdGhhdCBpcyBhIG1vZHVsZSBhbmQNCj4g
-dGhlcmVmb3JlIG5vdCByZWFjaGFibGUuIENhbiBzb21lb25lIHBsZWFzZSBnaXZlIG1lIGFuIGV4
-YW1wbGUgd2hlcmUNCj4gdGhhdCBraW5kIG9mIGJlaGF2aW91ciBpcyBkZXNpcmFibGU/DQo+IA0K
-PiBBRkFJQ1QgSVNfUkVBQ0hBQkxFKCkgaXMgYmVjb21pbmcgbW9yZSBhbmQgbW9yZSBjb21tb24g
-aW4gdGhlIGtlcm5lbCwNCj4gYnV0IGFyZ3VhYmx5IGl0J3MganVzdCBtYWtpbmcgbW9yZSB1bmRl
-c2lyYWJsZSBjb25maWd1cmF0aW9ucw0KPiBwb3NzaWJsZS4gQ29uZmlndXJhdGlvbnMgdGhhdCBz
-aG91bGQgc2ltcGx5IGJlIGJsb2NrZWQgYnkgdXNpbmcNCj4gc3VpdGFibGUNCj4gZGVwZW5kZW5j
-aWVzIG9uIHRoZSBLY29uZmlnIGxldmVsLg0KPiANCj4gRm9yIGV4YW1wbGUsIHlvdSBoYXZlIHR3
-byBncmFwaGljcyBkcml2ZXJzLCBvbmUgYnVpbHRpbiBhbmQgYW5vdGhlcg0KPiBtb2R1bGUuIFRo
-ZW4geW91IGhhdmUgYmFja2xpZ2h0IGFzIGEgbW9kdWxlLiBVc2luZyBJU19SRUFDSEFCTEUoKSwN
-Cj4gYmFja2xpZ2h0IHdvdWxkIHdvcmsgaW4gb25lIGRyaXZlciwgYnV0IG5vdCB0aGUgb3RoZXIu
-IEknbSBzdXJlIHRoZXJlDQo+IGlzDQo+IHRoZSBvZGRiYWxsIHBlcnNvbiB3aG8gZmluZHMgdGhp
-cyBkZXNpcmFibGUsIGJ1dCB0aGUgb3ZlcndoZWxtaW5nDQo+IG1ham9yaXR5IHdvdWxkIGp1c3Qg
-bWFrZSB0aGUgZGVwcyBzdWNoIHRoYXQgZWl0aGVyIHlvdSBtYWtlIGFsbCBvZg0KPiB0aGVtDQo+
-IG1vZHVsZXMsIG9yIGFsc28gcmVxdWlyZSBiYWNrbGlnaHQgdG8gYmUgYnVpbHRpbi4NCj4gDQoN
-CnRoZSBwcmV2aW91cyBpbXBseSBzZW1hbnRpY3MgaGFuZGxlZCB0aGlzIGJ5IGZvcmNpbmcgYmFj
-a2xpZ2h0IHRvIGJlDQpidWlsdC1pbiwgd2hpY2ggd29ya2VkIG5pY2VseS4NCg0KPiANCj4gQlIs
-DQo+IEphbmkuDQo+IA0KPiANCg==
+On 2020-04-09 14:45, Luis Chamberlain wrote:
+> Single and multiqeueue block devices share some debugfs code. By
+> moving this into its own file it makes it easier to expand and audit
+> this shared code.
+
+Christoph doesn't like the name "single queue block devices".
+Additionally, the legacy (single queue) block layer is gone. Should the
+description of this patch perhaps refer to make_request-based drivers
+and request-based drivers?
+
+> +/*
+> + * Shared debugfs mq / non-mq functionality
+> + */
+
+Shared request-based / make_request-based functionality?
+
+Otherwise this patch looks good to me.
+
+Thanks,
+
+Bart.
