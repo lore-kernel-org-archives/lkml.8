@@ -2,109 +2,170 @@ Return-Path: <SRS0=VV4q=52=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37695C2BB55
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 06:37:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D6D9C2BA2B
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 06:38:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 11EAD2063A
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 06:37:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C68D82087E
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 06:38:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Vjn+dT6R"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726234AbgDJGh5 (ORCPT
+        id S1726651AbgDJGiS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Apr 2020 02:37:57 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:12635 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725880AbgDJGh4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Apr 2020 02:37:56 -0400
-Received: from DGGEMS411-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 461E89EE022D5BD0CDE2;
-        Fri, 10 Apr 2020 14:37:54 +0800 (CST)
-Received: from huawei.com (10.175.124.28) by DGGEMS411-HUB.china.huawei.com
- (10.3.19.211) with Microsoft SMTP Server id 14.3.487.0; Fri, 10 Apr 2020
- 14:37:46 +0800
-From:   Jason Yan <yanaijie@huawei.com>
-To:     <cpw@sgi.com>, <robinmholt@gmail.com>, <arnd@arndb.de>,
-        <gregkh@linuxfoundation.org>, <linux-kernel@vger.kernel.org>
-CC:     Jason Yan <yanaijie@huawei.com>
-Subject: [PATCH 2/2] sgi-xp: make some symbols static in xpc_main.c
-Date:   Fri, 10 Apr 2020 14:36:18 +0800
-Message-ID: <20200410063618.27143-2-yanaijie@huawei.com>
-X-Mailer: git-send-email 2.17.2
-In-Reply-To: <20200410063618.27143-1-yanaijie@huawei.com>
-References: <20200410063618.27143-1-yanaijie@huawei.com>
+        Fri, 10 Apr 2020 02:38:18 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:38361 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725880AbgDJGiR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Apr 2020 02:38:17 -0400
+Received: by mail-wm1-f65.google.com with SMTP id f20so1682017wmh.3
+        for <linux-kernel@vger.kernel.org>; Thu, 09 Apr 2020 23:38:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:reply-to:from:date:message-id
+         :subject:to:cc:content-transfer-encoding;
+        bh=3YosXBMphFBPTyrYk/RdbHSh5tz3MJefldr296tJxNs=;
+        b=Vjn+dT6RSkP4SXd4EAigedogTETClRN5OUv8bPPBIdh3k1J0oiDsg0cz7QCHWAh/Fk
+         lmpV4KJ7By7X5jZ3FJ/ZBogm50ty6/nQCi5cpzEYS9zqMVlHmUhpbzOszrDmo0wiqg39
+         kA/tdHzXAT2K8D001TWOM0KwkXzuqhVxpz42PVyT4EUeH4bg4xQZCf/qtruPHfyecmJD
+         Q7DX/s8q8+vzIoqqeyR+VgGCHTQulaPZRdhbq5m1FCXTc53Tu64NZdTdfoUekdXneCT9
+         cLDM8Otykr7WH3dOeLe1xnBsgEcQ6eymvkLc/eNqSsnxNMGT7MOwQqMkbEqkwrJArnIp
+         MYsQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:reply-to
+         :from:date:message-id:subject:to:cc:content-transfer-encoding;
+        bh=3YosXBMphFBPTyrYk/RdbHSh5tz3MJefldr296tJxNs=;
+        b=Fl51SEi87QMIPgGT6tSnNmMCaeTOzaHlGT20vZLVfHP0Z7mHP756tcFBg8Ngh06AR7
+         wpiHUvTKDZSVD6XC2CcJvKPhAkxR3yMZVsWMVjokGRqTUGfQvjlGt91RzM2sg5d2nuyb
+         Jbi7yGyjnya9VjR/Tq053ljrfYTWklH/QkeDBf8fbqtUBHu6YpWzIauox4mEvhDBkxt7
+         ohrz6ZumcGrTEwsnnm5EUozU5BAkhppQSHbHiRWdZQx/6N52BiYHxSLWWb5XWm4Izr5I
+         qYtm2YHuiF5ZdyUJbx9e3V1tqKSt7P4Q/Mo6N2xI+KhT49lVCin3Mxrpm/eW/ESQ8rhu
+         DFHg==
+X-Gm-Message-State: AGi0PuYSXBBMKUav6EA7+8tkq8QOcgZT4If/PY65e05Rjohx13f9ZtOm
+        kIv18e146Vo+8Wg6BAQ9NJJnjKwMbgDvd89ea+Y=
+X-Google-Smtp-Source: APiQypK7Zxq5UBPk31xo9d8jf+3yx4C8bsSl2HgcWjrGBEEO+AUlS3/3ESSX5eYUN3CYt7w5oCzrd/i2IvAZbDw3zg4=
+X-Received: by 2002:a7b:c927:: with SMTP id h7mr3520294wml.122.1586500696907;
+ Thu, 09 Apr 2020 23:38:16 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.175.124.28]
-X-CFilter-Loop: Reflected
+References: <20200409232728.231527-1-caij2003@gmail.com>
+In-Reply-To: <20200409232728.231527-1-caij2003@gmail.com>
+Reply-To: sedat.dilek@gmail.com
+From:   Sedat Dilek <sedat.dilek@gmail.com>
+Date:   Fri, 10 Apr 2020 08:38:05 +0200
+Message-ID: <CA+icZUWJLGfp-UVhXDaCR=Xnce7phE1ffPHC4RzM8mXPhBaV9g@mail.gmail.com>
+Subject: Re: [PATCH] ARM: do not assemble iwmmxt.S with LLVM toolchain
+To:     Jian Cai <caij2003@gmail.com>
+Cc:     Nick Desaulniers <ndesaulniers@google.com>, manojgupta@google.com,
+        Peter.Smith@arm.com, stefan@agner.ch, samitolvanen@google.com,
+        ilie.halip@gmail.com, jiancai@google.com,
+        Russell King <linux@armlinux.org.uk>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Doug Anderson <armlinux@m.disordat.com>,
+        Benjamin Gaignard <benjamin.gaignard@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Tejun Heo <tj@kernel.org>,
+        "Joel Fernandes (Google)" <joel@joelfernandes.org>,
+        Patrick Bellasi <patrick.bellasi@arm.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        David Howells <dhowells@redhat.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Clang-Built-Linux ML <clang-built-linux@googlegroups.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix the following sparse warning:
+On Fri, Apr 10, 2020 at 1:28 AM Jian Cai <caij2003@gmail.com> wrote:
+>
+> iwmmxt.S contains XScale instructions LLVM ARM backend does not support.
+> Skip this file if LLVM integrated assemmbler or LLD is used to build ARM
+> kernel.
+>
+> Signed-off-by: Jian Cai <caij2003@gmail.com>
+> ---
+>  arch/arm/Kconfig | 2 +-
+>  init/Kconfig     | 6 ++++++
+>  2 files changed, 7 insertions(+), 1 deletion(-)
+>
+> diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
+> index 66a04f6f4775..39de8fc64a73 100644
+> --- a/arch/arm/Kconfig
+> +++ b/arch/arm/Kconfig
+> @@ -804,7 +804,7 @@ source "arch/arm/mm/Kconfig"
+>
+>  config IWMMXT
+>         bool "Enable iWMMXt support"
+> -       depends on CPU_XSCALE || CPU_XSC3 || CPU_MOHAWK || CPU_PJ4 || CPU=
+_PJ4B
+> +       depends on !AS_IS_CLANG && !LD_IS_LLD && (CPU_XSCALE || CPU_XSC3 =
+|| CPU_MOHAWK || CPU_PJ4 || CPU_PJ4B)
+>         default y if PXA27x || PXA3xx || ARCH_MMP || CPU_PJ4 || CPU_PJ4B
+>         help
+>           Enable support for iWMMXt context switching at run time if
+> diff --git a/init/Kconfig b/init/Kconfig
+> index 1c12059e0f7e..b0ab3271e900 100644
+> --- a/init/Kconfig
+> +++ b/init/Kconfig
+> @@ -19,6 +19,12 @@ config GCC_VERSION
+>  config CC_IS_CLANG
+>         def_bool $(success,$(CC) --version | head -n 1 | grep -q clang)
+>
+> +config AS_IS_CLANG
+> +       def_bool $(success,$(AS) --version | head -n 1 | grep -q clang)
+> +
+> +config LD_IS_LLD
+> +       def_bool $(success,$(LD) --version | head -n 1 | grep -q LLD)
+> +
+>  config CLANG_VERSION
+>         int
+>         default $(shell,$(srctree)/scripts/clang-version.sh $(CC))
+> --
+> 2.26.0.110.g2183baf09c-goog
 
-drivers/misc/sgi-xp/xpc_main.c:62:22: warning: symbol 'xpc_dbg_name' was
-not declared. Should it be static?
-drivers/misc/sgi-xp/xpc_main.c:66:15: warning: symbol
-'xpc_part_dbg_subname' was not declared. Should it be static?
-drivers/misc/sgi-xp/xpc_main.c:71:15: warning: symbol
-'xpc_chan_dbg_subname' was not declared. Should it be static?
-drivers/misc/sgi-xp/xpc_main.c:1221:1: warning: symbol 'xpc_init' was
-not declared. Should it be static?
-drivers/misc/sgi-xp/xpc_main.c:1323:1: warning: symbol 'xpc_exit' was
-not declared. Should it be static?
+Yesterday, when looking trough commits in Linus tree, I saw:
 
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: Jason Yan <yanaijie@huawei.com>
----
- drivers/misc/sgi-xp/xpc_main.c | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+"init/kconfig: Add LD_VERSION Kconfig"
 
-diff --git a/drivers/misc/sgi-xp/xpc_main.c b/drivers/misc/sgi-xp/xpc_main.c
-index 79a963105983..d5e097cd556d 100644
---- a/drivers/misc/sgi-xp/xpc_main.c
-+++ b/drivers/misc/sgi-xp/xpc_main.c
-@@ -59,16 +59,16 @@
- 
- /* define two XPC debug device structures to be used with dev_dbg() et al */
- 
--struct device_driver xpc_dbg_name = {
-+static struct device_driver xpc_dbg_name = {
- 	.name = "xpc"
- };
- 
--struct device xpc_part_dbg_subname = {
-+static struct device xpc_part_dbg_subname = {
- 	.init_name = "",	/* set to "part" at xpc_init() time */
- 	.driver = &xpc_dbg_name
- };
- 
--struct device xpc_chan_dbg_subname = {
-+static struct device xpc_chan_dbg_subname = {
- 	.init_name = "",	/* set to "chan" at xpc_init() time */
- 	.driver = &xpc_dbg_name
- };
-@@ -1217,7 +1217,7 @@ xpc_system_die(struct notifier_block *nb, unsigned long event, void *_die_args)
- 	return NOTIFY_DONE;
- }
- 
--int __init
-+static int __init
- xpc_init(void)
- {
- 	int ret;
-@@ -1319,7 +1319,7 @@ xpc_init(void)
- 
- module_init(xpc_init);
- 
--void __exit
-+static void __exit
- xpc_exit(void)
- {
- 	xpc_do_exit(xpUnloading);
--- 
-2.17.2
+Nick had a patchset to distinguish LINKER via Kconfig (I cannot find
+it right now).
 
+So we should do all this the way CC_IS_XXX CC_VERSION handling is done.
+
+I just want to point to [2] where we can rework (simplify) this
+handling for CC and LD handling in a further step.
+In one of Peter Z. tree someone started to do so (I was inspired by that).
+
+Unfortunately, the hunk from [1] is IMHO a bit mis-placed and CC and
+LD handling should stay together:
+
+CC_IS_XXX where XXX is GCC or CLANG
+CC_VERSION where CC is GCC or CLANG
+
+LD_IS_XXX where XXX is BFD or GOLD or LLD
+LD_VERSION
+
+Just my =E2=82=AC0,02.
+
+Regards,
+- Sedat -
+
+[1] https://git.kernel.org/linus/9553d16fa671b9621c5e2847d08bd90d3be3349c
+[2] https://github.com/ClangBuiltLinux/linux/issues/941
