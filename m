@@ -2,138 +2,117 @@ Return-Path: <SRS0=VV4q=52=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19EA6C2BBFD
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 23:11:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A4A4C2D0EC
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 23:17:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E13CB20801
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 23:11:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586560304;
-	bh=FfeNCoXmIijEfyR1pkNRajhg9ViX3TUxB3mbIz62Sms=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=fM1FJyAzkI/zffDUANbZA5ACIZv7nzzTOvv98/6qno52WWNWyqSGEarpMypkTnmTJ
-	 4I/Yoxu2hDXQj3n9dRMAYFrIRCh5f9tVb+qApgDFdYD9xj/+TZ1gMWmwNg8JBe/pvY
-	 oXcg2FBmVBFl3jURcNeNwgS2U56/3gKdSHmZVhQU=
+	by mail.kernel.org (Postfix) with ESMTP id 15A65207FF
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 23:17:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726715AbgDJXLm (ORCPT
+        id S1726720AbgDJXRK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Apr 2020 19:11:42 -0400
-Received: from mail-pj1-f66.google.com ([209.85.216.66]:53525 "EHLO
-        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726582AbgDJXLm (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Apr 2020 19:11:42 -0400
-Received: by mail-pj1-f66.google.com with SMTP id cl8so109435pjb.3;
-        Fri, 10 Apr 2020 16:11:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=bQcdpto7s/yGk2w0OzvQ6UptVyKViN3oMFbbBVW84wQ=;
-        b=q7YTOEbnyV60h/2JZUSD3yvsv3FfYyTmAHedS5dXvC6eEJqoWdAqQM8fRMbYNEb/DL
-         TWa8f1bEPIXO2DpHtzWmZ1hQdADUheduicV44X6NhmrZnsTNDIZa9VTHkg2rqK9WXs9O
-         CtfQg7RxKV1aU+9PajTKBmDFHloR88hUsjTCxairuAofrjSvkiIjlmrksHhAsr4eSull
-         P/eN5aSURPoT5uOWbLvn9TO2HAsL3MlV2FT0WDF8H+ov5BHzMNCa3A04caDPl50c1Iqw
-         Q60AlHo9v7XVZ5xht9Dtvdi6fj0cEQuu9XG4/VxucECmylB5pc3N/jO1PdzV7ryJfNk2
-         odzQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to;
-        bh=bQcdpto7s/yGk2w0OzvQ6UptVyKViN3oMFbbBVW84wQ=;
-        b=jFjuvyzg8iHEn0BzyXsyOcuMX+9/ulPTf8RuLKDgxteAeIWT3kPyc6Vvt8lhhKq4EM
-         5H22CXcPxBL5U5vXSljQ+6okr3V4GTlyg88ZPLWhTJKh/N3uLtJOrd8fd2Fs0wXy7l2a
-         14XQHNKslSG003xjm4riGXvGyoboJCUOplKBF1SYU3GBhw/tUb8I53U7R1lN5hyTS6sn
-         vx39QM2Vi4+onOHVWFq7B7QG/eeksxGzne3KkQo/CwJgwHvnXbHyBhBNDct/qrhjWOhP
-         f2psHDCGqcCdUU4OiTqtnGEmRUzFBcvBKAn5rO63gM0c2qM52nbhrps1ZfzAwQKHnMRU
-         DjBw==
-X-Gm-Message-State: AGi0PubCEw3nWKBkKxeofpAlyUv341TQbMzuDHi9gRHEhFOwnwP9ERWb
-        9E5LgX7ZErVLKrbyhrn2Aj0=
-X-Google-Smtp-Source: APiQypIEPforRWpT0WXypxL4A3ey15BGc+kDge0iIn1cftbyny3ESjfu/Br0BZMCFGD2PtWlRrOKew==
-X-Received: by 2002:a17:902:b409:: with SMTP id x9mr6968379plr.125.1586560301031;
-        Fri, 10 Apr 2020 16:11:41 -0700 (PDT)
-Received: from google.com ([2601:647:4001:3000::50e3])
-        by smtp.gmail.com with ESMTPSA id 15sm2629073pfu.186.2020.04.10.16.11.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 10 Apr 2020 16:11:39 -0700 (PDT)
-Date:   Fri, 10 Apr 2020 16:11:36 -0700
-From:   Minchan Kim <minchan@kernel.org>
-To:     Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Christoph Hellwig <hch@lst.de>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>, x86@kernel.org,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Laura Abbott <labbott@redhat.com>,
-        Sumit Semwal <sumit.semwal@linaro.org>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Nitin Gupta <ngupta@vflare.org>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        linuxppc-dev@lists.ozlabs.org, linux-hyperv@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org,
-        linux-arch@vger.kernel.org, linux-mm@kvack.org,
-        iommu@lists.linux-foundation.org,
-        linux-arm-kernel@lists.infradead.org, linux-s390@vger.kernel.org,
-        bpf@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 10/28] mm: only allow page table mappings for built-in
- zsmalloc
-Message-ID: <20200410231136.GA101325@google.com>
-References: <20200408115926.1467567-1-hch@lst.de>
- <20200408115926.1467567-11-hch@lst.de>
- <20200409160826.GC247701@google.com>
- <20200409165030.GG20713@hirez.programming.kicks-ass.net>
- <20200409170813.GD247701@google.com>
- <20200410023845.GA2354@jagdpanzerIV.localdomain>
+        Fri, 10 Apr 2020 19:17:10 -0400
+Received: from mga02.intel.com ([134.134.136.20]:20811 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726594AbgDJXRJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Apr 2020 19:17:09 -0400
+IronPort-SDR: ahf9yIAgh/ID6BGvLPmenEdIkx/8CIib5Jtcm+PHcI/7Tw/JitCHla3DvKUe8fluB3BD0G7t4v
+ 0aMJVRHmHt/Q==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Apr 2020 16:17:09 -0700
+IronPort-SDR: Qgfe9naeb34lG70i2WpvN2GvpcCtEKlhfeoLFGPZ46o+IWaseikUsxvwSz1infoc5k/gX8XofK
+ 2fw/jbzN1JXA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,368,1580803200"; 
+   d="scan'208";a="452542213"
+Received: from sjchrist-coffee.jf.intel.com ([10.54.74.202])
+  by fmsmga005.fm.intel.com with ESMTP; 10 Apr 2020 16:17:08 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Paolo Bonzini <pbonzini@redhat.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Janosch Frank <frankja@linux.ibm.com>
+Cc:     David Hildenbrand <david@redhat.com>,
+        Cornelia Huck <cohuck@redhat.com>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Peter Xu <peterx@redhat.com>,
+        Andrew Jones <drjones@redhat.com>,
+        Wainer dos Santos Moschetta <wainersm@redhat.com>
+Subject: [PATCH 00/10] KVM: selftests: Add KVM_SET_MEMORY_REGION tests
+Date:   Fri, 10 Apr 2020 16:16:57 -0700
+Message-Id: <20200410231707.7128-1-sean.j.christopherson@intel.com>
+X-Mailer: git-send-email 2.26.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200410023845.GA2354@jagdpanzerIV.localdomain>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Sergey,
+This is v2-ish of my series to add a "delete" testcase[1], and v5.1 of
+Wainer's series to add a "max" testcase[2].
 
-On Fri, Apr 10, 2020 at 11:38:45AM +0900, Sergey Senozhatsky wrote:
-> On (20/04/09 10:08), Minchan Kim wrote:
-> > > > Even though I don't know how many usecase we have using zsmalloc as
-> > > > module(I heard only once by dumb reason), it could affect existing
-> > > > users. Thus, please include concrete explanation in the patch to
-> > > > justify when the complain occurs.
-> > > 
-> > > The justification is 'we can unexport functions that have no sane reason
-> > > of being exported in the first place'.
-> > > 
-> > > The Changelog pretty much says that.
-> > 
-> > Okay, I hope there is no affected user since this patch.
-> > If there are someone, they need to provide sane reason why they want
-> > to have zsmalloc as module.
-> 
-> I'm one of those who use zsmalloc as a module - mainly because I use zram
-> as a compressing general purpose block device, not as a swap device.
-> I create zram0, mkfs, mount, checkout and compile code, once done -
-> umount, rmmod. This reduces the number of writes to SSD. Some people use
-> tmpfs, but zram device(-s) can be much larger in size. That's a niche use
-> case and I'm not against the patch.
+I've only tested on x86_64.  I fudged compile testing on !x86_64 by
+inverting the ifdefs, e.g. to squish unused var warnings, but by no means
+is the code actually tested on other architectures.
 
-It doesn't mean we couldn't use zsmalloc as module any longer. It means
-we couldn't use zsmalloc as module with pgtable mapping whcih was little
-bit faster on microbenchmark in some architecutre(However, I usually temped
-to remove it since it had several problems). However, we could still use
-zsmalloc as module as copy way instead of pgtable mapping. Thus, if someone
-really want to rollback the feature, they should provide reasonable reason
-why it doesn't work for them. "A little fast" wouldn't be enough to exports
-deep internal to the module.
+I kept Andrew's review for the "max" test.  Other than the 1MB->2MB
+change (see below), it was basically a straight copy-paste of code.
 
-Thanks.
+v1->v2 of delete:
+  - Drop patch to expose primary memslot. [Peter]
+  - Add explicit synchronization to MOVE and DELETE tests. [Peter]
+  - Use list.h instead of open coding linked lists. [Peter]
+  - Clean up the code and separate the testcases into separate functions.
+  - Expand GUEST_ASSERT() to allow passing a value back to the host for
+    printing.
+  - Move to common KVM, with ifdefs to hide the x86_64-only stuff (which
+    is a lot at this point).
+  - Do KVM_SET_NR_MMU_PAGES in the "zero" testcase to get less obscure
+    behavior for KVM_RUN. [Christian]
+
+v5.1 of max:
+  - Fix a whitespace issue in vm_get_fd(). [checkpatch]
+  - Move the code to set_memory_region_test.  The only _intended_
+    functional change is to create 2MB regions instead of 1MB regions.
+    The only motivation for doing so was to reuse an existing define in
+    set_memory_region_test.
+
+[1] https://lkml.kernel.org/r/20200320205546.2396-1-sean.j.christopherson@intel.com
+[2] https://lkml.kernel.org/r/20200409220905.26573-1-wainersm@redhat.com
+
+Sean Christopherson (8):
+  KVM: selftests: Take vcpu pointer instead of id in vm_vcpu_rm()
+  KVM: selftests: Use kernel's list instead of homebrewed replacement
+  KVM: selftests: Add util to delete memory region
+  KVM: selftests: Add GUEST_ASSERT variants to pass values to host
+  KVM: sefltests: Add explicit synchronization to move mem region test
+  KVM: selftests: Add "delete" testcase to set_memory_region_test
+  KVM: selftests: Add "zero" testcase to set_memory_region_test
+  KVM: selftests: Make set_memory_region_test common to all
+    architectures
+
+Wainer dos Santos Moschetta (2):
+  selftests: kvm: Add vm_get_fd() in kvm_util
+  selftests: kvm: Add testcase for creating max number of memslots
+
+ tools/testing/selftests/kvm/.gitignore        |   2 +-
+ tools/testing/selftests/kvm/Makefile          |   4 +-
+ .../testing/selftests/kvm/include/kvm_util.h  |  28 +-
+ tools/testing/selftests/kvm/lib/kvm_util.c    | 154 +++----
+ .../selftests/kvm/lib/kvm_util_internal.h     |   8 +-
+ .../selftests/kvm/lib/s390x/processor.c       |   5 +-
+ .../selftests/kvm/set_memory_region_test.c    | 403 ++++++++++++++++++
+ .../kvm/x86_64/set_memory_region_test.c       | 141 ------
+ 8 files changed, 520 insertions(+), 225 deletions(-)
+ create mode 100644 tools/testing/selftests/kvm/set_memory_region_test.c
+ delete mode 100644 tools/testing/selftests/kvm/x86_64/set_memory_region_test.c
+
+-- 
+2.26.0
+
