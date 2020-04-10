@@ -2,246 +2,165 @@ Return-Path: <SRS0=VV4q=52=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE032C2BA19
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 01:31:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9278C2BA19
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 01:32:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AA5F020936
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 01:31:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 88B6B20936
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 01:32:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="C/vgyQQX"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="RRcSMSWq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726683AbgDJBbU (ORCPT
+        id S1726690AbgDJBcK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Apr 2020 21:31:20 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:60646 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726327AbgDJBbT (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Apr 2020 21:31:19 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1586482278;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=hCi2hTSEiV9JmPL4EwDOU8qrlZzvezmWlD40jG+oje8=;
-        b=C/vgyQQXZio37xZbrvhsfDjbzda37Srm1n/J1S6RAbdzaPJQCFmgFUUkgUHtYxvCqY6IfH
-        EKegOB5EhXp7NiUknB9+aHKOpNeNqTHQjObe2CvBLKA+p5GEluWHpVxduZlMkvGBXNYXF8
-        01a90GaANXyai0iPyRuo1y1zgCGEXZ0=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-355-2xPQ_zelMAa7Fh-Hod-yGg-1; Thu, 09 Apr 2020 21:31:14 -0400
-X-MC-Unique: 2xPQ_zelMAa7Fh-Hod-yGg-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 1216F1005509;
-        Fri, 10 Apr 2020 01:31:13 +0000 (UTC)
-Received: from i7.zsun.org (ovpn-12-249.pek2.redhat.com [10.72.12.249])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 94FF660BFB;
-        Fri, 10 Apr 2020 01:31:09 +0000 (UTC)
-Subject: Re: [RFC] kretprobe: Prevent triggering kretprobe from within
- kprobe_flush_task
-To:     Jiri Olsa <jolsa@redhat.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>
-Cc:     Jiri Olsa <jolsa@kernel.org>,
-        "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
-        Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Peter Zijlstra <peterz@infradead.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        "bibo,mao" <bibo.mao@intel.com>, sztsian@gmail.com
-References: <20200408164641.3299633-1-jolsa@kernel.org>
- <20200409234101.8814f3cbead69337ac5a33fa@kernel.org>
- <20200409184451.GG3309111@krava> <20200409201336.GH3309111@krava>
-From:   "Ziqian SUN (Zamir)" <zsun@redhat.com>
-Message-ID: <5334d3b4-4020-6705-9bcc-e6777070c9c7@redhat.com>
-Date:   Fri, 10 Apr 2020 09:31:07 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
-MIME-Version: 1.0
-In-Reply-To: <20200409201336.GH3309111@krava>
-Content-Type: text/plain; charset=utf-8; format=flowed
+        Thu, 9 Apr 2020 21:32:10 -0400
+Received: from mail-eopbgr60087.outbound.protection.outlook.com ([40.107.6.87]:58179
+        "EHLO EUR04-DB3-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726327AbgDJBcJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Apr 2020 21:32:09 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=FkW7crIIbhObwEdZUXyd5BaUiLF+sCjp0qc0DA9RV3iQKuqY/c3yr0iKqfH0johChyV7UJ1q8jjDAp6DsMxQwEprI2VwKpLWM25qN3zq1BfLm78/ZsmXZh+NK95D1NO52FHtQiI2oTK8FI3B7D1nZzdBnOCp1NNIefjRLZRwbtvmyYk2QpFgF9Pg7XZ/KFbZdElLk4WdAqHaf1LSWOkdraFd/26FbULDbnCifj/Zg0j9ZagTiCZP4XFrInKCjxPpVgR4BeWW82cZE83K3paablNrrlmz9mD24vPLRhx6Kzd1sQzeO9RV/LURH3MjkpF+uB//4S9j8dNb2Qvsfxn76Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=BthebZYLasqzsmPBQOfk9TUGY2ED9oEi8m32hPjddKU=;
+ b=M6JjLWogLNLYG7KCwP9DcxsYjiSJ6/salfFh1J32fYSR5ErdyKexCrecVaItWIHNpuZf2WkdrLm0XyseqhQk2hOiUg0WJq3kNjFZ7wwt4aVT0pDtUopEqoCkaUOxP1stJCPW7aCXastJYhH9N2HVtSPSGcl6QPwl5vquEMXLl09idcr0u3LgQWiELrGoLEhsxnndHWZIbJQszqhlf9SApAMp0+fbzL3i5TmbMH/h53VuZK6cSJH3po04qt/H69cUM+bshnDAjU8piTKHQ18jsP/w2i6Kuh/elLGXRq29pOewPVvuE8k8skIVAcoQ+C281VejKprPynU+fgJTZInujA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=BthebZYLasqzsmPBQOfk9TUGY2ED9oEi8m32hPjddKU=;
+ b=RRcSMSWqyWBs6bw+MNzezpidR+NqLi6ENvEtxrem7P+Stm0hxPHQhqSRSIzDWmTm5wAIFklDLaKkdlgS5Lcr/FKDZ2KQijOJ9K3lkiLVWbcC1U23F02TMJj9yPLxqfnRxLeAwlwF10Tktpbr8Ci7iukm8uwnF8LT89o87zj7zPc=
+Received: from AM0PR04MB4481.eurprd04.prod.outlook.com (2603:10a6:208:70::15)
+ by AM0PR04MB4065.eurprd04.prod.outlook.com (2603:10a6:208:57::14) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2878.15; Fri, 10 Apr
+ 2020 01:32:02 +0000
+Received: from AM0PR04MB4481.eurprd04.prod.outlook.com
+ ([fe80::ad44:6b0d:205d:f8fc]) by AM0PR04MB4481.eurprd04.prod.outlook.com
+ ([fe80::ad44:6b0d:205d:f8fc%7]) with mapi id 15.20.2900.015; Fri, 10 Apr 2020
+ 01:32:02 +0000
+From:   Peng Fan <peng.fan@nxp.com>
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>
+CC:     "ohad@wizery.com" <ohad@wizery.com>,
+        "linux-remoteproc@vger.kernel.org" <linux-remoteproc@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        dl-linux-imx <linux-imx@nxp.com>
+Subject: RE: [PATCH 2/2] remoteproc: use filesz as backup when translate memsz
+ fail
+Thread-Topic: [PATCH 2/2] remoteproc: use filesz as backup when translate
+ memsz fail
+Thread-Index: AQHWDkktpZBH/gJE+EqHoCmC5/cfIahxkGoAgAACJtA=
+Date:   Fri, 10 Apr 2020 01:32:02 +0000
+Message-ID: <AM0PR04MB4481B8AA8ADB836ED8398ADF88DE0@AM0PR04MB4481.eurprd04.prod.outlook.com>
+References: <1586420572-28353-1-git-send-email-peng.fan@nxp.com>
+ <1586420572-28353-2-git-send-email-peng.fan@nxp.com>
+ <20200410012226.GV20625@builder.lan>
+In-Reply-To: <20200410012226.GV20625@builder.lan>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=peng.fan@nxp.com; 
+x-originating-ip: [119.31.174.71]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 89264a48-70b8-43c0-e623-08d7dceef853
+x-ms-traffictypediagnostic: AM0PR04MB4065:|AM0PR04MB4065:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <AM0PR04MB4065137A53D19C26D0540F5088DE0@AM0PR04MB4065.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
+x-forefront-prvs: 0369E8196C
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM0PR04MB4481.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10009020)(4636009)(136003)(39860400002)(396003)(366004)(346002)(376002)(5660300002)(52536014)(64756008)(66946007)(66446008)(66556008)(66476007)(76116006)(81166007)(71200400001)(478600001)(6506007)(2906002)(7696005)(9686003)(26005)(186003)(55016002)(86362001)(4326008)(316002)(44832011)(8936002)(54906003)(6916009)(81156014)(8676002)(33656002);DIR:OUT;SFP:1101;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: QEE3ucW9rkJogsmSJ5fQkzmElKMqrVSWNnf/rPoX4ymFtQpsJyUQzTqEudz/KaoWb5IQDxLKbIE47MKwpSPBrFHb7HPbNsogGiApeIf5LNr+h+Ahv5MQwxwuaF5aOGEmlHfAx3943FdmmoWJYLf5hvpckCfqg5r730vsXmamVzat8WV3cidBkLgkPxO5HiNQ56H6gNhUQekTQfv4XnmFCP71jub4cMyPvWDgZvQuNQNATWI55U0WLzjBFSnUrDabYgzyyRIZTpYP54OBkAH4iQUvVq+3gBu8OJtJTcng+J+IvwfyyzRWuI4g1eVvyB+1y2CD9082VMAnXUIZjWlQSDl81PGRPDqTPXBG4+9JG7X6EM0BqQyZQY48isfp9EM/9sJj03pOD/H2QOY55vRoKxeqwZGseGb6plpv/JzbWblBygw3jDpkrWbTkU+Xa5H/
+x-ms-exchange-antispam-messagedata: ycywC0YQlNgWSBN2aMc9lh9HDuHQ0GnZxa1MIIbABjvaUMJSEKGF46rXHIYfrtxP2vq4TqTy/G0LlFLqORInXb36QC6ELzNQVDbqz64wUG9LD5Xbu2zc6SVr3CpZpHjbgLQ5R0wF8oGmdeZ7bfQM2w==
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 89264a48-70b8-43c0-e623-08d7dceef853
+X-MS-Exchange-CrossTenant-originalarrivaltime: 10 Apr 2020 01:32:02.2160
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: u88Djsx5171xmtmTviOCwOdI6kKGzj3mRmW9GGFyTdsr5FboZNj9hCWe+r7vm2jgEKEp8HDrMgez3MlfhCaqxw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR04MB4065
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Bjorn,
 
+> Subject: Re: [PATCH 2/2] remoteproc: use filesz as backup when translate
+> memsz fail
+>=20
+> On Thu 09 Apr 01:22 PDT 2020, Peng Fan wrote:
+>=20
+> > Since we no need memset if memsz is larger than filesz, we could use
+> > filesz for the da to va translation when memsz translation fail.
+> >
+>=20
+> To me this implies that the firmware has a segment that's larger than the
+> memory that it's going to run in. I think even if we're not writing to th=
+e entire
+> memsz, asking da_to_va for the entire memsz provides a valuable sanity
+> check.
 
-On 4/10/20 4:13 AM, Jiri Olsa wrote:
-> On Thu, Apr 09, 2020 at 08:45:01PM +0200, Jiri Olsa wrote:
->> On Thu, Apr 09, 2020 at 11:41:01PM +0900, Masami Hiramatsu wrote:
->>
->> SNIP
->>
->>>> ---
->>>>   kernel/kprobes.c | 6 ++++++
->>>>   1 file changed, 6 insertions(+)
->>>>
->>>> diff --git a/kernel/kprobes.c b/kernel/kprobes.c
->>>> index 2625c241ac00..b13247cae752 100644
->>>> --- a/kernel/kprobes.c
->>>> +++ b/kernel/kprobes.c
->>>> @@ -1236,6 +1236,10 @@ __releases(hlist_lock)
->>>>   }
->>>>   NOKPROBE_SYMBOL(kretprobe_table_unlock);
->>>>   
->>>> +static struct kprobe kretprobe_dummy = {
->>>> +        .addr = (void *)kretprobe_trampoline,
->>>> +};
->>>> +
->>>>   /*
->>>>    * This function is called from finish_task_switch when task tk becomes dead,
->>>>    * so that we can recycle any function-return probe instances associated
->>>> @@ -1256,12 +1260,14 @@ void kprobe_flush_task(struct task_struct *tk)
->>>>   	INIT_HLIST_HEAD(&empty_rp);
->>>>   	hash = hash_ptr(tk, KPROBE_HASH_BITS);
->>>>   	head = &kretprobe_inst_table[hash];
->>>> +	__this_cpu_write(current_kprobe, &kretprobe_dummy);
->>>
->>> Can you also set the kcb->kprobe_state = KPROBE_HIT_ACTIVE?
->>>
->>> BTW, we may be better to introduce a common kprobe_reject_section_start()
->>> and kprobe_reject_section_end() so that the user don't need to prepare
->>> dummy kprobes.
->>
->> sure, will do
->>
->> thank you both for review
-> 
-> ok, found out it's actually arch code..  would you guys be ok with something like below?
-> 
-> jirka
-> 
+da_to_va implies that Linux should have the va map to da. However
+that will be case that Linux is not able to touch all da, it only able touc=
+h
+half. Then Linux should also map all da?
 
-Hi Jiri,
+Thanks,
+Peng.
 
-In my origin test lockup happens on both x86_64 and ppc64le. So I would 
-appreciate if you can also come up with a solution for both of the 
-architectures.
-
-> 
-> ---
-> diff --git a/arch/x86/kernel/kprobes/core.c b/arch/x86/kernel/kprobes/core.c
-> index 4d7022a740ab..081d0f366c99 100644
-> --- a/arch/x86/kernel/kprobes/core.c
-> +++ b/arch/x86/kernel/kprobes/core.c
-> @@ -757,12 +757,33 @@ static struct kprobe kretprobe_kprobe = {
->   	.addr = (void *)kretprobe_trampoline,
->   };
->   
-> +void arch_kprobe_reject_section_start(void)
-> +{
-> +	struct kprobe_ctlblk *kcb;
-> +
-> +	preempt_disable();
-> +
-> +	/*
-> +	 * Set a dummy kprobe for avoiding kretprobe recursion.
-> +	 * Since kretprobe never run in kprobe handler, kprobe must not
-> +	 * be running behind this point.
-> +	 */
-> +	__this_cpu_write(current_kprobe, &kretprobe_kprobe);
-> +	kcb = get_kprobe_ctlblk();
-> +	kcb->kprobe_status = KPROBE_HIT_ACTIVE;
-> +}
-> +
-> +void arch_kprobe_reject_section_end(void)
-> +{
-> +	__this_cpu_write(current_kprobe, NULL);
-> +	preempt_enable();
-> +}
-> +
->   /*
->    * Called from kretprobe_trampoline
->    */
->   __used __visible void *trampoline_handler(struct pt_regs *regs)
->   {
-> -	struct kprobe_ctlblk *kcb;
->   	struct kretprobe_instance *ri = NULL;
->   	struct hlist_head *head, empty_rp;
->   	struct hlist_node *tmp;
-> @@ -772,16 +793,7 @@ __used __visible void *trampoline_handler(struct pt_regs *regs)
->   	void *frame_pointer;
->   	bool skipped = false;
->   
-> -	preempt_disable();
-> -
-> -	/*
-> -	 * Set a dummy kprobe for avoiding kretprobe recursion.
-> -	 * Since kretprobe never run in kprobe handler, kprobe must not
-> -	 * be running at this point.
-> -	 */
-> -	kcb = get_kprobe_ctlblk();
-> -	__this_cpu_write(current_kprobe, &kretprobe_kprobe);
-> -	kcb->kprobe_status = KPROBE_HIT_ACTIVE;
-> +	arch_kprobe_reject_section_start();
->   
->   	INIT_HLIST_HEAD(&empty_rp);
->   	kretprobe_hash_lock(current, &head, &flags);
-> @@ -873,8 +885,7 @@ __used __visible void *trampoline_handler(struct pt_regs *regs)
->   
->   	kretprobe_hash_unlock(current, &flags);
->   
-> -	__this_cpu_write(current_kprobe, NULL);
-> -	preempt_enable();
-> +	arch_kprobe_reject_section_end();
->   
->   	hlist_for_each_entry_safe(ri, tmp, &empty_rp, hlist) {
->   		hlist_del(&ri->hlist);
-> diff --git a/kernel/kprobes.c b/kernel/kprobes.c
-> index 2625c241ac00..935dd8c87705 100644
-> --- a/kernel/kprobes.c
-> +++ b/kernel/kprobes.c
-> @@ -1236,6 +1236,14 @@ __releases(hlist_lock)
->   }
->   NOKPROBE_SYMBOL(kretprobe_table_unlock);
->   
-> +void __weak arch_kprobe_reject_section_start(void)
-> +{
-> +}
-> +
-> +void __weak arch_kprobe_reject_section_end(void)
-> +{
-> +}
-> +
->   /*
->    * This function is called from finish_task_switch when task tk becomes dead,
->    * so that we can recycle any function-return probe instances associated
-> @@ -1253,6 +1261,8 @@ void kprobe_flush_task(struct task_struct *tk)
->   		/* Early boot.  kretprobe_table_locks not yet initialized. */
->   		return;
->   
-> +	arch_kprobe_reject_section_start();
-> +
->   	INIT_HLIST_HEAD(&empty_rp);
->   	hash = hash_ptr(tk, KPROBE_HASH_BITS);
->   	head = &kretprobe_inst_table[hash];
-> @@ -1266,6 +1276,8 @@ void kprobe_flush_task(struct task_struct *tk)
->   		hlist_del(&ri->hlist);
->   		kfree(ri);
->   	}
-> +
-> +	arch_kprobe_reject_section_end();
->   }
->   NOKPROBE_SYMBOL(kprobe_flush_task);
->   
-> 
-
--- 
-Ziqian SUN (Zamir)
-9F Raycom office (NAY)
-Red Hat Software (Beijing) Co.,Ltd
-IRC: zsun (internal and freenode)
-Tel: +86 10 65627458
-GPG : 1D86 6D4A 49CE 4BBD 72CF FCF5 D856 6E11 F2A0 525E
-
+>=20
+> Regards,
+> Bjorn
+>=20
+> > Signed-off-by: Peng Fan <peng.fan@nxp.com>
+> > ---
+> >  drivers/remoteproc/remoteproc_elf_loader.c | 12 ++++++++++--
+> >  1 file changed, 10 insertions(+), 2 deletions(-)
+> >
+> > diff --git a/drivers/remoteproc/remoteproc_elf_loader.c
+> > b/drivers/remoteproc/remoteproc_elf_loader.c
+> > index cc50fe70d50c..74d425a4b34c 100644
+> > --- a/drivers/remoteproc/remoteproc_elf_loader.c
+> > +++ b/drivers/remoteproc/remoteproc_elf_loader.c
+> > @@ -229,8 +229,16 @@ int rproc_elf_load_segments(struct rproc *rproc,
+> const struct firmware *fw)
+> >  		if (!ptr) {
+> >  			dev_err(dev, "bad phdr da 0x%llx mem 0x%llx\n", da,
+> >  				memsz);
+> > -			ret =3D -EINVAL;
+> > -			break;
+> > +
+> > +			ptr =3D rproc_da_to_va(rproc, da, filesz);
+> > +			if (!ptr) {
+> > +				dev_err(dev,
+> > +					"bad phdr da 0x%llx mem 0x%llx\n",
+> > +					da, filesz);
+> > +				ret =3D -EINVAL;
+> > +				break;
+> > +			}
+> > +
+> >  		}
+> >
+> >  		/* put the segment where the remote processor expects it */
+> > --
+> > 2.16.4
+> >
