@@ -2,207 +2,143 @@ Return-Path: <SRS0=VV4q=52=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05501C2BB85
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 06:50:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87E4AC2BB55
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 06:52:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C4E4420757
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 06:50:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ZM3ufTJc"
+	by mail.kernel.org (Postfix) with ESMTP id 5F0D720732
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 06:52:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1586501553;
+	bh=L7kNHe1v2JzVEOhiiYMbaIFcb8TEa/9WDrzQNQMB2/s=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=E4LXmB+PSrDTUn8JGDyY8AhiFX3hWBkXXfuLdhu+WTeFLpBSwZ1qrEzIL66Jae+YK
+	 HBeetm29NS4OiE08R7tisJDtNlql2zsP5tCbipFPNbdFSj90sh/2Cuvjz2xT+t7BwW
+	 6LocmK43boEAMd2JwRvRNL00y/f4SCMoy921l9Vk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726059AbgDJGuy (ORCPT
+        id S1726082AbgDJGwc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Apr 2020 02:50:54 -0400
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:51869 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725844AbgDJGux (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Apr 2020 02:50:53 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1586501453;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=g9JE7+kQcGRHuqYE15Qj2LdCxQJFZbqVW19T+MEzEiw=;
-        b=ZM3ufTJc0Qqpm9Pdq9U6WBlEiq3wrtYIlqjPua67yQdOSgrqMRWfs08mxcU2fdsqUlhwdk
-        sdalJKMxLWT/3Wf+bz4mrmsWGBLQcfPVb/qZOX8rGL/2Vprg0XWnhtgjgGM85gVsBgDlei
-        s/v9m0swT/sQSSCOD7cCOqNOfMYarQc=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-116-YFk-c_hfPIunR-iCRoa7nA-1; Fri, 10 Apr 2020 02:50:47 -0400
-X-MC-Unique: YFk-c_hfPIunR-iCRoa7nA-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Fri, 10 Apr 2020 02:52:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50368 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725844AbgDJGwb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Apr 2020 02:52:31 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id ACA40107B275;
-        Fri, 10 Apr 2020 06:50:43 +0000 (UTC)
-Received: from localhost (ovpn-13-236.pek2.redhat.com [10.72.13.236])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id E95605DA7C;
-        Fri, 10 Apr 2020 06:50:41 +0000 (UTC)
-Date:   Fri, 10 Apr 2020 14:50:39 +0800
-From:   Baoquan He <bhe@redhat.com>
-To:     Mike Rapoport <rppt@linux.ibm.com>
-Cc:     Michal Hocko <mhocko@kernel.org>,
-        Hoan Tran <Hoan@os.amperecomputing.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Oscar Salvador <osalvador@suse.de>,
-        Pavel Tatashin <pavel.tatashin@microsoft.com>,
-        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        "open list:MEMORY MANAGEMENT" <linux-mm@kvack.org>,
-        linux-arm-kernel@lists.infradead.org, linux-s390@vger.kernel.org,
-        sparclinux@vger.kernel.org, x86@kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-        lho@amperecomputing.com, mmorana@amperecomputing.com
-Subject: Re: [PATCH v3 0/5] mm: Enable CONFIG_NODES_SPAN_OTHER_NODES by
- default for NUMA
-Message-ID: <20200410065039.GG2129@MiWiFi-R3L-srv>
-References: <1585420282-25630-1-git-send-email-Hoan@os.amperecomputing.com>
- <20200330074246.GA14243@dhcp22.suse.cz>
- <20200330175100.GD30942@linux.ibm.com>
- <20200330182301.GM14243@dhcp22.suse.cz>
- <20200331081423.GE30942@linux.ibm.com>
- <20200331085513.GE30449@dhcp22.suse.cz>
- <20200331140332.GA2129@MiWiFi-R3L-srv>
- <20200331142138.GL30449@dhcp22.suse.cz>
- <20200409162741.GA9387@linux.ibm.com>
+        by mail.kernel.org (Postfix) with ESMTPSA id 6790720732;
+        Fri, 10 Apr 2020 06:52:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1586501550;
+        bh=L7kNHe1v2JzVEOhiiYMbaIFcb8TEa/9WDrzQNQMB2/s=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Lb2G2/ZGRG/nG3GdimyhxZB8jUCJknXcKyWE3M3tuXroCea4co5cZ2KqYBhVzh+cW
+         pCGqeczRlBrvtY7xB8q+mjsb94tO7mIMDrIEWT8mC1eHYGf3qKITyOg2F/OgeuT08x
+         9Q/mXyNmBu6AseF0YXf9ys+fwGio2eBYJ4XD/E08=
+Date:   Fri, 10 Apr 2020 08:52:27 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Saravana Kannan <saravanak@google.com>
+Cc:     Sasha Levin <sashal@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        stable <stable@vger.kernel.org>
+Subject: Re: [PATCH AUTOSEL 5.6 14/68] driver core: Reevaluate
+ dev->links.need_for_probe as suppliers are added
+Message-ID: <20200410065227.GA1665508@kroah.com>
+References: <20200410034634.7731-1-sashal@kernel.org>
+ <20200410034634.7731-14-sashal@kernel.org>
+ <20200410062931.GD1663372@kroah.com>
+ <CAGETcx9Kp6JvuyF770XKsMTCY6=rC2zuBTG07oB18bya0owgWw@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200409162741.GA9387@linux.ibm.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+In-Reply-To: <CAGETcx9Kp6JvuyF770XKsMTCY6=rC2zuBTG07oB18bya0owgWw@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 04/09/20 at 07:27pm, Mike Rapoport wrote:
-> On Tue, Mar 31, 2020 at 04:21:38PM +0200, Michal Hocko wrote:
-> > On Tue 31-03-20 22:03:32, Baoquan He wrote:
-> > > Hi Michal,
-> > > 
-> > > On 03/31/20 at 10:55am, Michal Hocko wrote:
-> > > > On Tue 31-03-20 11:14:23, Mike Rapoport wrote:
-> > > > > Maybe I mis-read the code, but I don't see how this could happen. In the
-> > > > > HAVE_MEMBLOCK_NODE_MAP=y case, free_area_init_node() calls
-> > > > > calculate_node_totalpages() that ensures that node->node_zones are entirely
-> > > > > within the node because this is checked in zone_spanned_pages_in_node().
-> > > > 
-> > > > zone_spanned_pages_in_node does chech the zone boundaries are within the
-> > > > node boundaries. But that doesn't really tell anything about other
-> > > > potential zones interleaving with the physical memory range.
-> > > > zone->spanned_pages simply gives the physical range for the zone
-> > > > including holes. Interleaving nodes are essentially a hole
-> > > > (__absent_pages_in_range is going to skip those).
-> > > > 
-> > > > That means that when free_area_init_core simply goes over the whole
-> > > > physical zone range including holes and that is why we need to check
-> > > > both for physical and logical holes (aka other nodes).
-> > > > 
-> > > > The life would be so much easier if the whole thing would simply iterate
-> > > > over memblocks...
-> > > 
-> > > The memblock iterating sounds a great idea. I tried with putting the
-> > > memblock iterating in the upper layer, memmap_init(), which is used for
-> > > boot mem only anyway. Do you think it's doable and OK? It yes, I can
-> > > work out a formal patch to make this simpler as you said. The draft code
-> > > is as below. Like this it uses the existing code and involves little change.
-> > 
-> > Doing this would be a step in the right direction! I haven't checked the
-> > code very closely though. The below sounds way too simple to be truth I
-> > am afraid. First for_each_mem_pfn_range is available only for
-> > CONFIG_HAVE_MEMBLOCK_NODE_MAP (which is one of the reasons why I keep
-> > saying that I really hate that being conditional). Also I haven't really
-> > checked the deferred initialization path - I have a very vague
-> > recollection that it has been converted to the memblock api but I have
-> > happilly dropped all that memory.
-> 
-> The Baoquan's patch almost did it, at least for simple case of qemu with 2
-> nodes. It's only missing the adjustment to the size passed to
-> memmap_init_zone() as it may change because of clamping.
-
-Right, the size need be adjusted after start and end clamping.
-
-> 
-> I've drafted something that removes HAVE_MEMBLOCK_NODE_MAP and added this
-> patch there [1]. For several memory configurations I could emulate with
-> qemu it worked.
-> I'm going to wait a bit to see of kbuild is happy and then I'll send the
-> patches.
-> 
-> Baoquan, I took liberty to add your SoB, hope you don't mind.
-> 
-> [1] https://git.kernel.org/pub/scm/linux/kernel/git/rppt/linux.git/log/?h=memblock/all-have-node-map 
-
-Of course not. Thanks for doing this, and look forward to seeing your
-formal patchset posting when it's ready.
-
->   
-> > > diff --git a/mm/page_alloc.c b/mm/page_alloc.c
-> > > index 138a56c0f48f..558d421f294b 100644
-> > > --- a/mm/page_alloc.c
-> > > +++ b/mm/page_alloc.c
-> > > @@ -6007,14 +6007,6 @@ void __meminit memmap_init_zone(unsigned long size, int nid, unsigned long zone,
-> > >  		 * function.  They do not exist on hotplugged memory.
-> > >  		 */
-> > >  		if (context == MEMMAP_EARLY) {
-> > > -			if (!early_pfn_valid(pfn)) {
-> > > -				pfn = next_pfn(pfn);
-> > > -				continue;
-> > > -			}
-> > > -			if (!early_pfn_in_nid(pfn, nid)) {
-> > > -				pfn++;
-> > > -				continue;
-> > > -			}
-> > >  			if (overlap_memmap_init(zone, &pfn))
-> > >  				continue;
-> > >  			if (defer_init(nid, pfn, end_pfn))
-> > > @@ -6130,9 +6122,17 @@ static void __meminit zone_init_free_lists(struct zone *zone)
+On Thu, Apr 09, 2020 at 11:39:55PM -0700, Saravana Kannan wrote:
+> On Thu, Apr 9, 2020 at 11:29 PM Greg Kroah-Hartman
+> <gregkh@linuxfoundation.org> wrote:
+> >
+> > On Thu, Apr 09, 2020 at 11:45:39PM -0400, Sasha Levin wrote:
+> > > From: Saravana Kannan <saravanak@google.com>
+> > >
+> > > [ Upstream commit 1745d299af5b373abad08fa29bff0d31dc6aff21 ]
+> > >
+> > > A previous patch 03324507e66c ("driver core: Allow
+> > > fwnode_operations.add_links to differentiate errors") forgot to update
+> > > all call sites to fwnode_operations.add_links. This patch fixes that.
+> > >
+> > > Legend:
+> > > -> Denotes RHS is an optional/potential supplier for LHS
+> > > => Denotes RHS is a mandatory supplier for LHS
+> > >
+> > > Example:
+> > >
+> > > Device A => Device X
+> > > Device A -> Device Y
+> > >
+> > > Before this patch:
+> > > 1. Device A is added.
+> > > 2. Device A is marked as waiting for mandatory suppliers
+> > > 3. Device X is added
+> > > 4. Device A is left marked as waiting for mandatory suppliers
+> > >
+> > > Step 4 is wrong since all mandatory suppliers of Device A have been
+> > > added.
+> > >
+> > > After this patch:
+> > > 1. Device A is added.
+> > > 2. Device A is marked as waiting for mandatory suppliers
+> > > 3. Device X is added
+> > > 4. Device A is no longer considered as waiting for mandatory suppliers
+> > >
+> > > This is the correct behavior.
+> > >
+> > > Fixes: 03324507e66c ("driver core: Allow fwnode_operations.add_links to differentiate errors")
+> > > Signed-off-by: Saravana Kannan <saravanak@google.com>
+> > > Link: https://lore.kernel.org/r/20200222014038.180923-2-saravanak@google.com
+> > > Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> > > Signed-off-by: Sasha Levin <sashal@kernel.org>
+> > > ---
+> > >  drivers/base/core.c | 8 ++++++--
+> > >  1 file changed, 6 insertions(+), 2 deletions(-)
+> > >
+> > > diff --git a/drivers/base/core.c b/drivers/base/core.c
+> > > index dbb0f9130f42d..d32a3aefff32f 100644
+> > > --- a/drivers/base/core.c
+> > > +++ b/drivers/base/core.c
+> > > @@ -523,9 +523,13 @@ static void device_link_add_missing_supplier_links(void)
+> > >
+> > >       mutex_lock(&wfs_lock);
+> > >       list_for_each_entry_safe(dev, tmp, &wait_for_suppliers,
+> > > -                              links.needs_suppliers)
+> > > -             if (!fwnode_call_int_op(dev->fwnode, add_links, dev))
+> > > +                              links.needs_suppliers) {
+> > > +             int ret = fwnode_call_int_op(dev->fwnode, add_links, dev);
+> > > +             if (!ret)
+> > >                       list_del_init(&dev->links.needs_suppliers);
+> > > +             else if (ret != -ENODEV)
+> > > +                     dev->links.need_for_probe = false;
+> > > +     }
+> > >       mutex_unlock(&wfs_lock);
 > > >  }
-> > >  
-> > >  void __meminit __weak memmap_init(unsigned long size, int nid,
-> > > -				  unsigned long zone, unsigned long start_pfn)
-> > > +				  unsigned long zone, unsigned long range_start_pfn)
-> > >  {
-> > > -	memmap_init_zone(size, nid, zone, start_pfn, MEMMAP_EARLY, NULL);
-> > > +	unsigned long start_pfn, end_pfn;
-> > > +	unsigned long range_end_pfn = range_start_pfn + size;
-> > > +	int i;
-> > > +	for_each_mem_pfn_range(i, nid, &start_pfn, &end_pfn, NULL) {
-> > > +		start_pfn = clamp(start_pfn, range_start_pfn, range_end_pfn);
-> > > +		end_pfn = clamp(end_pfn, range_start_pfn, range_end_pfn);
-> > > +		if (end_pfn > start_pfn)
-> > > +			memmap_init_zone(size, nid, zone, start_pfn, MEMMAP_EARLY, NULL);
-> > > +	}
-> > >  }
-> > >  
-> > >  static int zone_batchsize(struct zone *zone)
-> > 
-> > -- 
-> > Michal Hocko
-> > SUSE Labs
+> >
+> > For some reason this wasn't for stable kernels, but I can't remember.
 > 
-> -- 
-> Sincerely yours,
-> Mike.
-> 
-> 
+> It *is* for stable kernels too. It is an actual bug that's fixable in
+> stable kernels. I think this might have been the one patch that I
+> bundled into an unrelated series, but called it out as an unrelated
+> bug. Maybe my wording in that email threw you off?
 
+I think it did, sorry.  So no problem adding this to the stable trees so
+I can go add it right now?
+
+thanks,
+
+greg k-h
