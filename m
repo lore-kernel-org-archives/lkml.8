@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75EF0C2D0EC
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 04:02:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C61BEC2BB1D
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 04:02:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 404BF2063A
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 04:02:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 90E972063A
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 04:02:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586491343;
-	bh=C342YGSxZ7cHTwUi8UWJoDuCX2Aj+5ytjAAcmtQ8Fzc=;
+	s=default; t=1586491348;
+	bh=aj+C3qty4HdDe8GL8geUEloqbIzbEgqKD6KeLaYq//Q=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=X8ztHMhI0w/Ksk4AiUJtOtJ8xD+Bj3uyOZRVfgcHgFO50eH0zpTc1qRz4vGwUTalY
-	 ecpUYndyOo+9jzAPsDkdhyKwyreOEsoi9Ja+8W7dmialQwq/hxExMfhbaDGGMG7tMx
-	 GzikiCAS5suD23hzDUqjoeSqT2dy2WKSrIEloXPI=
+	b=t8/gGqOjs4yc278Ws9+DX7fV0yUqBTdGHUUoP9qH3UnM2UpJxEVIH3QzyPfv2J/hh
+	 +C+y3OytoYSYUBRBpTwhNYirgMzL2dMQJs/DspzV7ilH+wpDeeAvQYD9Q2qaYLxQfb
+	 MtXfV+i5Rlsrrq8AQ10URt8egW6LEygAVjEM1A5U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727874AbgDJECV (ORCPT
+        id S1728109AbgDJEC0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Apr 2020 00:02:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57542 "EHLO mail.kernel.org"
+        Fri, 10 Apr 2020 00:02:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57480 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727007AbgDJDrH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Apr 2020 23:47:07 -0400
+        id S1726980AbgDJDrF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Apr 2020 23:47:05 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 47E3620A8B;
-        Fri, 10 Apr 2020 03:47:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3A3BB20CC7;
+        Fri, 10 Apr 2020 03:47:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586490427;
-        bh=C342YGSxZ7cHTwUi8UWJoDuCX2Aj+5ytjAAcmtQ8Fzc=;
+        s=default; t=1586490425;
+        bh=aj+C3qty4HdDe8GL8geUEloqbIzbEgqKD6KeLaYq//Q=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kVIrxrJrLjE1Q14OWXSKEJT9xoA1ibX+G+P5kAR+X+y4kABosZsm74LemNdBPFfNf
-         jXb2JT+TWUGYercvjy3sviAUxy+h1NTIAaxyzqi571Mq6P21uNywg9qzSieAY9VptS
-         i77MOC0fpQdbMMZh2G6b6cU4LttG5Xy0gE2zRero=
+        b=2EyoBjdl/nCJRnU04ZFktme9AtQBq8BcpF+XoTUEo/BMWbKRJwrIt6JtYSI/hh0rQ
+         Wl6i76szZqDyXZJPoWCB/IK+1/CHv4wM2h42PZYci/Jc0Ywe8r6PKx8m1ptO7Ohwp/
+         OCIpmxke2MHqicjxKfBt8Vp4L0ENtU40Bjn98xiY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Claudiu Beznea <claudiu.beznea@microchip.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.6 26/68] clocksource/drivers/timer-microchip-pit64b: Fix rate for gck
-Date:   Thu,  9 Apr 2020 23:45:51 -0400
-Message-Id: <20200410034634.7731-26-sashal@kernel.org>
+Cc:     Mathias Nyman <mathias.nyman@linux.intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sasha Levin <sashal@kernel.org>, linux-usb@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.6 24/68] xhci: bail out early if driver can't accress host in resume
+Date:   Thu,  9 Apr 2020 23:45:49 -0400
+Message-Id: <20200410034634.7731-24-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200410034634.7731-1-sashal@kernel.org>
 References: <20200410034634.7731-1-sashal@kernel.org>
@@ -59,35 +59,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Claudiu Beznea <claudiu.beznea@microchip.com>
+From: Mathias Nyman <mathias.nyman@linux.intel.com>
 
-[ Upstream commit 0585244523f0f4de7e4480375e871617a79cab98 ]
+[ Upstream commit 72ae194704da212e2ec312ab182a96799d070755 ]
 
-Generic clock rate needs to be set in case it was selected as timer clock
-source in mchp_pit64b_init_mode(). Otherwise it will be enabled with wrong
-rate.
+Bail out early if the xHC host needs to be reset at resume
+but driver can't access xHC PCI registers.
 
-Fixes: 625022a5f160 ("clocksource/drivers/timer-microchip-pit64b: Add Microchip PIT64B support")
-Signed-off-by: Claudiu Beznea <claudiu.beznea@microchip.com>
-Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
-Link: https://lore.kernel.org/r/1584352376-32585-1-git-send-email-claudiu.beznea@microchip.com
+If xhci driver already fails to reset the controller then there
+is no point in attempting to free, re-initialize, re-allocate and
+re-start the host. If failure to access the host is detected later,
+failing the resume, xhci interrupts will be double freed
+when remove is called.
+
+Signed-off-by: Mathias Nyman <mathias.nyman@linux.intel.com>
+Link: https://lore.kernel.org/r/20200312144517.1593-2-mathias.nyman@linux.intel.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/clocksource/timer-microchip-pit64b.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/usb/host/xhci.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/clocksource/timer-microchip-pit64b.c b/drivers/clocksource/timer-microchip-pit64b.c
-index bd63d3484838a..59e11ca8ee73e 100644
---- a/drivers/clocksource/timer-microchip-pit64b.c
-+++ b/drivers/clocksource/timer-microchip-pit64b.c
-@@ -264,6 +264,7 @@ static int __init mchp_pit64b_init_mode(struct mchp_pit64b_timer *timer,
+diff --git a/drivers/usb/host/xhci.c b/drivers/usb/host/xhci.c
+index dbac0fa9748d5..fe38275363e0f 100644
+--- a/drivers/usb/host/xhci.c
++++ b/drivers/usb/host/xhci.c
+@@ -1157,8 +1157,10 @@ int xhci_resume(struct xhci_hcd *xhci, bool hibernated)
+ 		xhci_dbg(xhci, "Stop HCD\n");
+ 		xhci_halt(xhci);
+ 		xhci_zero_64b_regs(xhci);
+-		xhci_reset(xhci);
++		retval = xhci_reset(xhci);
+ 		spin_unlock_irq(&xhci->lock);
++		if (retval)
++			return retval;
+ 		xhci_cleanup_msix(xhci);
  
- 	if (!best_diff) {
- 		timer->mode |= MCHP_PIT64B_MR_SGCLK;
-+		clk_set_rate(timer->gclk, gclk_round);
- 		goto done;
- 	}
- 
+ 		xhci_dbg(xhci, "// Disabling event ring interrupts\n");
 -- 
 2.20.1
 
