@@ -2,115 +2,127 @@ Return-Path: <SRS0=VV4q=52=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1727DC2BA2B
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 15:15:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E67CC2BB86
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 15:16:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D722520CC7
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 15:15:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1734620753
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 15:16:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="RE5R4gxw"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UqRCVASo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726641AbgDJPPO (ORCPT
+        id S1726669AbgDJPQQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Apr 2020 11:15:14 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:44646 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726009AbgDJPPN (ORCPT
+        Fri, 10 Apr 2020 11:16:16 -0400
+Received: from mail-qt1-f193.google.com ([209.85.160.193]:43610 "EHLO
+        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726080AbgDJPQQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Apr 2020 11:15:13 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1586531712;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=Kg3Cf5xpoeA5lpq5U1vo0Nk9i509WBxxcW23+OUzrmo=;
-        b=RE5R4gxwVgJegReqwCcTHk253c5SvBzZZmVBlScUCvp+yjkeKJavmQXUxO9N7qCfs1pRy+
-        TtJi04oA3p6UJZ6RcSSxVApa0ImySm0+qiL4LgmyiGOsuE99/ugD9Jx816qzk3AB3mz6lY
-        6csDYNeNuwsqkaESm/lV8SUrhQtVZjU=
-Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
- [209.85.221.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-425-ZQ7UUZkANyOIfEc5DiG1vA-1; Fri, 10 Apr 2020 11:15:07 -0400
-X-MC-Unique: ZQ7UUZkANyOIfEc5DiG1vA-1
-Received: by mail-wr1-f70.google.com with SMTP id t13so1355583wru.3
-        for <linux-kernel@vger.kernel.org>; Fri, 10 Apr 2020 08:15:07 -0700 (PDT)
+        Fri, 10 Apr 2020 11:16:16 -0400
+Received: by mail-qt1-f193.google.com with SMTP id z90so1645759qtd.10;
+        Fri, 10 Apr 2020 08:16:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=D64JTxFboE8mFwIjqdlJP9TLgs55mqV5wx+i2VxI4xs=;
+        b=UqRCVASoPnub4LyDAu15e/h8CeC8JETnbSBWW7T1DAygSY7amVYVimD5WZAIvgZxu5
+         F7ZQX40cGvLBfNGujHTLqGeJi3NGGqAIz+xiyFrH9slB1B71ADss+04/RV0cJNsr+se+
+         mj42xs5u+WEcBbz2MTdCQx2RW+fd7Nxoaa8cJOitbVmU8n+WDcK2Cp5NH4Us2aXAsZ27
+         7I4QVfZ6dFxWU9JXY8jTx5DZgL98kr7G7Q2lILVNWwF7fUENnFIE/W42hefO7aCdGsB4
+         H/NsBWd/u8Rh+2ok8hcy9AkDvLQC0pEeSYO8muzqrCZq66WV0B3nQVKfz+TqMSA8FMhy
+         Tclw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=Kg3Cf5xpoeA5lpq5U1vo0Nk9i509WBxxcW23+OUzrmo=;
-        b=lUpWkSfJQXvzdDJgAG/ZgvdOH8OB30lckWVUO/dkSJlY5Ed/cgDIej7t+zvjivBJ+z
-         r8mOWxKUGtKmc/VsXrpu+d02kwHIYgD/EzMWnKld68GAoyELRVoa8z9uh3fZswKwdcJX
-         08NUH7+KSGDvS3GlMgUJwo7n7/OdkiERCPfHmi15wZKWhNu7N/0UhYs/e8zf/mVjzn9u
-         ztiQ08zpJXH3SUnAylCo3CAh4bRZ1yzjkqw6ldBuSrI8c8TwXRBmKE7LMi+cAypkF2mY
-         p7eg6ruttpIXFaGy/2KcbBbt7YN12LOPu3j2SibLOWkaWJg93Af9eZyH6YjrHGRf4qNb
-         eHVw==
-X-Gm-Message-State: AGi0PuaeTj6Lw0OWxRa1ApSiTwhSbcTzhvmOa96T/PjWmLbIISvvoDz0
-        24iUASgbgcltRvfCp3c1Wj4+3G6necbqVQzbTKYZHbtnw0ZszMjb/Ownk9Ce20P3k6ygYTJdvMa
-        jsIS+OvgGwDHNfPItswDgqqI3
-X-Received: by 2002:a5d:4306:: with SMTP id h6mr4851084wrq.234.1586531706362;
-        Fri, 10 Apr 2020 08:15:06 -0700 (PDT)
-X-Google-Smtp-Source: APiQypIkApPOhslOv9luoNK+BaxRR3fe3ho995HLdYUz7YcwAwwR4Ekt9zKSdav/3z7JIk465lFInA==
-X-Received: by 2002:a5d:4306:: with SMTP id h6mr4851055wrq.234.1586531706077;
-        Fri, 10 Apr 2020 08:15:06 -0700 (PDT)
-Received: from ?IPv6:2001:b07:6468:f312:f4b7:b34c:3ace:efb6? ([2001:b07:6468:f312:f4b7:b34c:3ace:efb6])
-        by smtp.gmail.com with ESMTPSA id r5sm3336970wrt.8.2020.04.10.08.15.04
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 10 Apr 2020 08:15:05 -0700 (PDT)
-Subject: Re: [patch 0/3] x86/kvm: Basic split lock #AC handling
-To:     Thomas Gleixner <tglx@linutronix.de>,
-        LKML <linux-kernel@vger.kernel.org>
-Cc:     x86@kernel.org, "Kenneth R. Crudup" <kenny@panix.com>,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        Xiaoyao Li <xiaoyao.li@intel.com>,
-        Nadav Amit <namit@vmware.com>,
-        Thomas Hellstrom <thellstrom@vmware.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Tony Luck <tony.luck@intel.com>
-References: <20200410115359.242241855@linutronix.de>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Message-ID: <bb60a842-9154-02b8-baab-62bef1951b87@redhat.com>
-Date:   Fri, 10 Apr 2020 17:15:03 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        h=x-gm-message-state:sender:from:date:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to;
+        bh=D64JTxFboE8mFwIjqdlJP9TLgs55mqV5wx+i2VxI4xs=;
+        b=lNUwCT1S9euyosHQbRIAmrrGjVHBpBV48o3/nH0xxpNw7P+A5b7GJQSIQAKNQfYBzL
+         txXUeWbONRQElZMPPnp4NtpgaI7PbgSYXD/sCn0h+Qw/LnBji9CENWwIqCxiCn+4i63M
+         ECdQ4Fpt+bM7ygKJuqwj06iLdMdMomD4Ba9jLKhco9EfWUxKlsQEyBg6UK2qFFdnaWJW
+         ckpN5pwxKBHKC2yszqwPBALZgsR5MCanF3AxZYlSMXCBS91GK04bk44MZEEgd7cNIgfk
+         f+6jNewb5wFyFs9qW5EZJRBIIZ5BABr1LgMagdEC0U7D7Re42tTZCwBQWm5H3wKMpbw3
+         AIRw==
+X-Gm-Message-State: AGi0PubNS9b858FjXEQHprKaDlxJzuaNSvx8Bqx9aYRp7Qbd8wCnSonz
+        1L6nIj7KMvkzNhnpC9/X7V0=
+X-Google-Smtp-Source: APiQypJujIWnUDhAAon7+6nh3Zmm6nS4uCtz4e8JnVSu/AMkEIUkyvQYTxAnqPOSQrmHrf6UdzFBDw==
+X-Received: by 2002:aed:2625:: with SMTP id z34mr4836442qtc.70.1586531774572;
+        Fri, 10 Apr 2020 08:16:14 -0700 (PDT)
+Received: from rani.riverdale.lan ([2001:470:1f07:5f3::b55f])
+        by smtp.gmail.com with ESMTPSA id q11sm1820462qkq.109.2020.04.10.08.16.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 10 Apr 2020 08:16:13 -0700 (PDT)
+From:   Arvind Sankar <nivedita@alum.mit.edu>
+X-Google-Original-From: Arvind Sankar <arvind@rani.riverdale.lan>
+Date:   Fri, 10 Apr 2020 11:16:12 -0400
+To:     Ard Biesheuvel <ardb@kernel.org>
+Cc:     Arvind Sankar <nivedita@alum.mit.edu>,
+        Brian Gerst <brgerst@gmail.com>,
+        linux-efi <linux-efi@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>, Borislav Petkov <bp@suse.de>,
+        Colin Ian King <colin.king@canonical.com>,
+        Gary Lin <glin@suse.com>, Jiri Slaby <jslaby@suse.cz>,
+        Sergey Shatunov <me@prok.pw>, Takashi Iwai <tiwai@suse.de>
+Subject: Re: [PATCH 3/9] efi/x86: Move efi stub globals from .bss to .data
+Message-ID: <20200410151612.GA970420@rani.riverdale.lan>
+References: <20200409130434.6736-1-ardb@kernel.org>
+ <20200409130434.6736-4-ardb@kernel.org>
+ <CAMzpN2gJWwVun1Kp6vGuza9LM5KpB=0EwsP8x8eOJQuDGh38Hg@mail.gmail.com>
+ <CAMzpN2jFbf8k99pWaTYRBmSB+iNAKYsufjEhqO6Vv0qxAcHyGA@mail.gmail.com>
+ <20200409210847.GA1312580@rani.riverdale.lan>
+ <CAMj1kXFhtK=FRDKBE5OtenNEtpK=kVwyo+0nqJZ_K80RmtYxEg@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20200410115359.242241855@linutronix.de>
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <CAMj1kXFhtK=FRDKBE5OtenNEtpK=kVwyo+0nqJZ_K80RmtYxEg@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/04/20 13:53, Thomas Gleixner wrote:
-> This is a reworked version of the patches posted by Sean:
+On Fri, Apr 10, 2020 at 10:20:42AM +0200, Ard Biesheuvel wrote:
+> On Thu, 9 Apr 2020 at 23:08, Arvind Sankar <nivedita@alum.mit.edu> wrote:
+> >
+> > On Thu, Apr 09, 2020 at 04:53:07PM -0400, Brian Gerst wrote:
+> > > > Can we use the -fno-zero-initialized-in-bss compiler flag instead of
+> > > > explicitly marking global variables?
+> > >
+> > > Scratch that.  Apparently it only works when a variable is explicitly
+> > > initialized to zero.
+> > >
+> > > --
+> > > Brian Gerst
+> >
+> > Right, there doesn't seem to be a compiler option to turn off the use of
+> > .bss altogether.
 > 
->  https://lore.kernel.org/r/20200402155554.27705-1-sean.j.christopherson@intel.com
-> 
-> The changes vs. this are:
-> 
->     1) Use a separate function for guest split lock handling
-> 
->     2) Force SIGBUS when SLD mode fatal
-> 
->     3) Rename the misnomed helper function which decides whether
->        #AC is injected into the guest or not and move the feature
->        check and the comments into that helper.
-> 
-> Thanks,
-> 
-> 	tglx
+> Yeah. I'll try to come up with a way to consolidate this a bit across
+> architectures (which is a bit easier now that all of the EFI stub C
+> code lives in the same place). It is probably easiest to use a section
+> renaming trick similar to the one I added for ARM (as Arvind suggested
+> as well, IIRC), and get rid of the per-symbol annotations altogether.
 
-Acked-by: Paolo Bonzini <pbonzini@redhat.com>
+Does that work for 32-bit ARM, or does it need to be .data to tell the
+compiler to avoid generating GOT references? If that's fine, we don't
+actually need to rename sections -- linker script magic is enough. For
+eg, the below pulls the EFI stub bss into .data for x86 without the need
+for the annotations.
 
-Or just tell me if you want me to send it Linus's way.
-
-Paolo
-
+diff --git a/arch/x86/boot/compressed/vmlinux.lds.S b/arch/x86/boot/compressed/vmlinux.lds.S
+index 508cfa6828c5..e324819c95bc 100644
+--- a/arch/x86/boot/compressed/vmlinux.lds.S
++++ b/arch/x86/boot/compressed/vmlinux.lds.S
+@@ -52,6 +52,7 @@ SECTIONS
+ 		_data = . ;
+ 		*(.data)
+ 		*(.data.*)
++		drivers/firmware/efi/libstub/lib.a:(.bss .bss.*)
+ 		_edata = . ;
+ 	}
+ 	. = ALIGN(L1_CACHE_BYTES);
