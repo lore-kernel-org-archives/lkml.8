@@ -7,78 +7,83 @@ X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F399C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 17:37:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF6F0C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 17:37:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1CC9F2078E
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 17:37:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C67B4214D8
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 17:37:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586540269;
-	bh=yfIc/G+cpvsRC2wDpjXy4xGIQRC2h1K9+m6zx0A8d68=;
+	s=default; t=1586540275;
+	bh=K+gk08hmdysyKbSTufIbMcI5+ujhQ2ohHCjw4J8ULEI=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=vF33+ye+9HvN551EJGcWJp2i1E/zi8FwDYF1GG2m4liJDTpy+GtLyqHEcd9zQgnK1
-	 ymqn6SQi57WA9tjM6jT2QQFMtg/sfnVXnNOgyfk8rYaJBt2m20fLdmgzCK42rGLIqf
-	 I505Xn8quLdluM/azcabsphnIJ6Tz8DGUI9P1/LM=
+	b=2d7pHjbERomkXIaSxB9ckwY3IfnqlN6qn7oSQOB9awzN0Jk2DrkU9hEUodemFinQf
+	 lKUnHoV9lrgKsIm2bTP5YZ4q5MdIqLRGb/HpeFIniI7/Ku3VI5FEijZ4vkmo+FC4oq
+	 73BqvpgQfGz/gitqL3myMA40xI9Zh4cbXuHofu0w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726890AbgDJRhr (ORCPT
+        id S1726902AbgDJRhy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Apr 2020 13:37:47 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:38501 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726595AbgDJRhq (ORCPT
+        Fri, 10 Apr 2020 13:37:54 -0400
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:42324 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726595AbgDJRhy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Apr 2020 13:37:46 -0400
-Received: by mail-ot1-f66.google.com with SMTP id d18so2516221otc.5;
-        Fri, 10 Apr 2020 10:37:47 -0700 (PDT)
+        Fri, 10 Apr 2020 13:37:54 -0400
+Received: by mail-oi1-f196.google.com with SMTP id e4so1951041oig.9;
+        Fri, 10 Apr 2020 10:37:53 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Aj31Y2OxjNZWadL3dR1pjjhq1FJnk4aoDDhDh7CesfE=;
-        b=jMS/ZemosQ61o6RYD2ZP+bOWZZ1wWcHfpJqxmKkzOWO+6iHUTNg24UZkUAPAUzKY5Q
-         RDd/bZS0In8Y4jCDx/dHAaAslnz3brpVL6a4Ao/hMCVqd5zYnwnOjztdmJlwYS8kWfwG
-         /g/cseY+w50bYy/2WUUGeZNLc1pO6Hn9Py1Dfp8IS6Z9KJamyuzTJWuSUotPGoku20aP
-         0II850bMxCGga2zYirW2o+RF4pKCL/xFr16txQAz4RroQMDAZ97HNrouzKV5sXCFTmgu
-         aVrwpU0+Z2nwt1Fsu5ff1DOBrnduxJOsiieby/d/LEK8WxSg0HKg2Dbb8WIyl6TXidP8
-         7B/w==
-X-Gm-Message-State: AGi0PuZUR1ocjRopZg0WsXkUZeEvG+dCFQw9rzQKzgF10Cp85THCKzt+
-        FEvv7Du+sXPfmfoJIlX+1NfsyfA=
-X-Google-Smtp-Source: APiQypJQUIGeesRhEejm8KHRr0h2e88sQoMo7cGXfu/vNd/4KTH7ZKaSZ68+GZzIfZ3FoPZuxB4NMQ==
-X-Received: by 2002:a9d:ef8:: with SMTP id 111mr5042755otj.94.1586540266709;
-        Fri, 10 Apr 2020 10:37:46 -0700 (PDT)
+        bh=vEe+bUuvSM5gxqTCFAjWH3kYOSeAyXRq91CDiiYZ9qo=;
+        b=pY2Evt1gGyDq9vfZkBvxFoYGW9xjgkQAmJq2C5P3K2bYFE/T3B2J1Dtbq27BsRQmGl
+         l6CNz4f0IURCbMuLGHA18PCWZ6PodPumP2C3SLWZjlitJHc9WXN8RkeLRqNzWTJHm2Gj
+         7tT3GgWjx86pcO2LiJOypQuF4mQGXENwXPkfSEzN5xalkeiaieomcv7KI9G+LxssDWm4
+         sfLrSwMqn1EVQFtzW1uziXtlR5EwkQvBLehclLyu0NQ+0LWEhkzekmmhgwt4BuBpfYSK
+         GGTUKH4HlFEygmxLEc91lg3UfMYPWbMzzJDao4T+fQvWUMP/VBG1kBonk95zDGg4jHO+
+         /+pQ==
+X-Gm-Message-State: AGi0PuZuMlInfs6MEV/NddJ/I5tG08AmO3N7JIaVzl9wO3LKXtqBVBnG
+        M6ulIhzYoeQBZTwOaQMxaQ==
+X-Google-Smtp-Source: APiQypKqUHndu/sKIkbRhVVGJoZLdiyzl4gTHIVGT+0qQM7jPIkI4j/9c9wXmTpb4IZFOs8t0Mjh4A==
+X-Received: by 2002:aca:5210:: with SMTP id g16mr4252721oib.174.1586540273403;
+        Fri, 10 Apr 2020 10:37:53 -0700 (PDT)
 Received: from rob-hp-laptop (ip-99-203-29-27.pools.cgn.spcsdns.net. [99.203.29.27])
-        by smtp.gmail.com with ESMTPSA id t7sm1483530otr.46.2020.04.10.10.37.44
+        by smtp.gmail.com with ESMTPSA id h10sm1484553otq.47.2020.04.10.10.37.49
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 10 Apr 2020 10:37:46 -0700 (PDT)
-Received: (nullmailer pid 11141 invoked by uid 1000);
-        Fri, 10 Apr 2020 17:13:40 -0000
-Date:   Fri, 10 Apr 2020 12:13:40 -0500
+        Fri, 10 Apr 2020 10:37:52 -0700 (PDT)
+Received: (nullmailer pid 5873 invoked by uid 1000);
+        Fri, 10 Apr 2020 17:10:09 -0000
+Date:   Fri, 10 Apr 2020 12:10:09 -0500
 From:   Rob Herring <robh@kernel.org>
-To:     Ding Xiang <dingxiang@cmss.chinamobile.com>
-Cc:     robh+dt@kernel.org, frowand.list@gmail.com,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] of: remove unneeded variable
-Message-ID: <20200410171340.GA10868@bogus>
-References: <1585562702-360-1-git-send-email-dingxiang@cmss.chinamobile.com>
+To:     Dmitry Osipenko <digetx@gmail.com>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Artur =?utf-8?B?xZp3aWdvxYQ=?= <a.swigon@samsung.com>,
+        Georgi Djakov <georgi.djakov@linaro.org>,
+        linux-tegra@vger.kernel.org, linux-pm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        devicetree@vger.kernel.org
+Subject: Re: [PATCH v2 06/22] dt-bindings: memory: tegra20: Add memory client
+ IDs
+Message-ID: <20200410171009.GA5801@bogus>
+References: <20200330010904.27643-1-digetx@gmail.com>
+ <20200330010904.27643-7-digetx@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1585562702-360-1-git-send-email-dingxiang@cmss.chinamobile.com>
+In-Reply-To: <20200330010904.27643-7-digetx@gmail.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 30 Mar 2020 18:05:02 +0800, Ding Xiang wrote:
-> rc is unneeded, just return 0.
+On Mon, 30 Mar 2020 04:08:48 +0300, Dmitry Osipenko wrote:
+> Each memory client have a unique hardware ID, this patch adds these IDs.
 > 
-> Signed-off-by: Ding Xiang <dingxiang@cmss.chinamobile.com>
+> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
 > ---
->  drivers/of/dynamic.c | 3 +--
->  1 file changed, 1 insertion(+), 2 deletions(-)
+>  include/dt-bindings/memory/tegra20-mc.h | 53 +++++++++++++++++++++++++
+>  1 file changed, 53 insertions(+)
 > 
 
-Applied, thanks.
-
-Rob
+Acked-by: Rob Herring <robh@kernel.org>
