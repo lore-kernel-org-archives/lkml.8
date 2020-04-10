@@ -2,85 +2,94 @@ Return-Path: <SRS0=VV4q=52=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 822BAC2BB85
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 09:43:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 918D1C2BB55
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 09:47:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5000520787
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 09:43:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6849020801
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 09:47:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XgBxphpJ"
+	dkim=pass (2048-bit key) header.d=cogentembedded-com.20150623.gappssmtp.com header.i=@cogentembedded-com.20150623.gappssmtp.com header.b="0VEEMUSX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726143AbgDJJnp (ORCPT
+        id S1726111AbgDJJrO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Apr 2020 05:43:45 -0400
-Received: from mail-pj1-f67.google.com ([209.85.216.67]:38035 "EHLO
-        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725924AbgDJJno (ORCPT
+        Fri, 10 Apr 2020 05:47:14 -0400
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:38329 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725913AbgDJJrN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Apr 2020 05:43:44 -0400
-Received: by mail-pj1-f67.google.com with SMTP id t40so588978pjb.3;
-        Fri, 10 Apr 2020 02:43:44 -0700 (PDT)
+        Fri, 10 Apr 2020 05:47:13 -0400
+Received: by mail-lf1-f65.google.com with SMTP id l11so981215lfc.5
+        for <linux-kernel@vger.kernel.org>; Fri, 10 Apr 2020 02:47:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=F8UqKiWgsSHiMoGQyCyV9GY+lAN74tpZIBErevA5oYw=;
-        b=XgBxphpJWngdfKxnfX8bAaKwdG2vny8asgZwyRWTHV/jfBABLlC2MHjXHJy7fU6dKZ
-         mSEouQatBheEvxHnSI8XN9x2dDyvuvMDKlJWmt3lT4v2+AdcFTIe7hls6zTCik+qMjHP
-         e8NgjTFGyq7/WP3uQ0i+o0QY6TWLN0AUMfbtMB96kwfnHxJ9kOo+WJrUi0HxkluS/iCt
-         s0Ki/JHJlpIALiiwpMJR4NMUfAicgZBOaiOQnOybPUrGHWIQBpT7DJfgQotRoV/XNPPU
-         2Q0ljXPcL3T2bdrJtHEF/Ysiz5SWP513TgiUOXtqX6rnZTqrfb+CZ8bJTHkNJtLXC3sa
-         2UiA==
+        d=cogentembedded-com.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=ixWyit/BPi4Ka4deLVPgn2JfqAzulpluWjNuC7xycq0=;
+        b=0VEEMUSXUIZzs5iYhN0FjOM3beqogpopP5rDDncQ9uEaoy9IhQCJpSjbS/XcuVqDNn
+         U4gUQkn5snZ9ZQ951zs+i+EwryOye3aC64VlDiiQi91q54yOP4gLGuYywdugT/hJpCIp
+         C9a//G0v6owmNFn1orp3IT+/Lk3iCxeR/d8bvRnRtTgW+gGXHLUE8BuVyv2tZXgKVDO0
+         AdUUecxb5LHlNX8BwTIYJBdEBA6UF8fRgSiyky5Dp/ppC5ILPbCQdykVBXwRQ684kNIp
+         rsKAmvl92WXQL/jppPC/wRaply/yTd2ovdgP+9ZA8v8YQubFLxfk2BJx24xnib5XMnwn
+         3m9w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=F8UqKiWgsSHiMoGQyCyV9GY+lAN74tpZIBErevA5oYw=;
-        b=SqHEyOAcGPuIDMq64vGYMTIJQaVSv6v6WnYB/NayVanTTBnXOHTMaeXeiOfvYaUra1
-         Afs9k7lmnpsTDgcd+ZQjqM9auL1S+PntHO9i5JvRgthF+6BZxpiM/E74s5r5j4mtq3P4
-         kJqkSsgiw7n2d0oBIGuYoAx8mvwsYuW8yateBKLdNhws2sDBcsPgeLqYjDoD7UsoBrfk
-         45jZBEEtvNbDSeVqP0VKdzDJ0Lx2Jj2TCVt1NaMON0daRi/1bSp9bsGd3NzlxGvlfpM3
-         XIfdqbJD4YqUDCCHydkMMOZbVqB/DShwhZYWqSqohhJ9XMJKzxGvX5ERulkFDHwomwOy
-         cfrg==
-X-Gm-Message-State: AGi0PuZCXQkak7Ji3MoJWBTLw8kZDcG2BKHYlwOdIV7E1DJIET/MXNP7
-        jDPKfNg0xEl/K45MoukGvzI=
-X-Google-Smtp-Source: APiQypJ+LbV+D+G1TrlHUJ3PKuk1FxsEEVKE0QOuRP0/L2bFIcyjzftDIsBNpq5Oyg1lvchBoRyGAQ==
-X-Received: by 2002:a17:902:8d91:: with SMTP id v17mr3700951plo.53.1586511823774;
-        Fri, 10 Apr 2020 02:43:43 -0700 (PDT)
-Received: from localhost.localdomain ([2409:4072:991:ccd7:9dbb:79c0:fda5:adef])
-        by smtp.gmail.com with ESMTPSA id bt19sm1305507pjb.3.2020.04.10.02.43.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 10 Apr 2020 02:43:43 -0700 (PDT)
-From:   Aishwarya R <aishwaryarj100@gmail.com>
-To:     alexandre.belloni@bootlin.com
-Cc:     aishwaryarj100@gmail.com, Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Ludovic Desroches <ludovic.desroches@microchip.com>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Kefeng Wang <wangkefeng.wang@huawei.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-iio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] iio: adc: at91-adc: Use devm_platform_ioremap_resource
-Date:   Fri, 10 Apr 2020 15:13:09 +0530
-Message-Id: <20200410094324.4334-1-aishwaryarj100@gmail.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200409151125.32677-1-aishwaryarj100@gmail.com>
-References: <20200409151125.32677-1-aishwaryarj100@gmail.com>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=ixWyit/BPi4Ka4deLVPgn2JfqAzulpluWjNuC7xycq0=;
+        b=EpfLJXjKujMA1YUgPGRqivWS0ciAUSaeYluIWsKgmU0fGQLN2aJK6wtp4+edKXqPy3
+         0/Jfk45pbRMAIjEoAJtuRphMzN0SLewi4++G0gpdL5N5Pur9quHyiKrKMM6RX2KJwgkS
+         gHEL2f3oerzvc42WQH0X4QXmqHk6Y8tcZnct2Kpd6XbaSyzIK3EuvLp+WALfzTE+tLjf
+         a4Ry+JoZJuPWIeUavYkofJCY0pBjr7Pz+jhdP8Ve+a10G3ggvt42ZU7mKSxKGQC3leT1
+         0Mhyq8cY4j441camvDHSeNXW/+ksYYZFxXktIDOGc7oNadYMmuHPDl2AQ+Lp5JUgkdMj
+         7PzA==
+X-Gm-Message-State: AGi0PuYfappiGpNFH/nTh9XhywTtAS/IM5fe4AU6QLSJf7PO3l10k+Qo
+        7+kLWKC9Gum1somBzbJrySxaFg==
+X-Google-Smtp-Source: APiQypKlvy1p+ulGm7rmqXh0dNWrbd9j3xSh46zFxUDGl1I0qpueqnZ7JooiYzM/K+nLb3U/hKGRBQ==
+X-Received: by 2002:ac2:498d:: with SMTP id f13mr2157743lfl.75.1586512032084;
+        Fri, 10 Apr 2020 02:47:12 -0700 (PDT)
+Received: from ?IPv6:2a00:1fa0:449c:a024:b8e5:a34a:c38e:b427? ([2a00:1fa0:449c:a024:b8e5:a34a:c38e:b427])
+        by smtp.gmail.com with ESMTPSA id o6sm794019lji.15.2020.04.10.02.47.10
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 10 Apr 2020 02:47:11 -0700 (PDT)
+Subject: Re: [PATCH] usb: gadget: fsl: Fix a wrong judgment in fsl_udc_probe()
+To:     Tang Bin <tangbin@cmss.chinamobile.com>, leoyang.li@nxp.com,
+        balbi@kernel.org, gregkh@linuxfoundation.org
+Cc:     linux-usb@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-kernel@vger.kernel.org, Markus.Elfring@web.de,
+        Shengju Zhang <zhangshengju@cmss.chinamobile.com>
+References: <20200410015832.8012-1-tangbin@cmss.chinamobile.com>
+From:   Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Message-ID: <02aeae70-60b8-761c-b058-8b4bc78ffd99@cogentembedded.com>
+Date:   Fri, 10 Apr 2020 12:47:01 +0300
+User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
+MIME-Version: 1.0
+In-Reply-To: <20200410015832.8012-1-tangbin@cmss.chinamobile.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use helper function to simply the code.
-The devm_platform_ioremap_resource() helper in the
-kernel which helps to make code cleaner a tad by
-replacing few "boilerplate" lines of code with a single line.
+On 10.04.2020 4:58, Tang Bin wrote:
+
+> If the function "platform_get_irq()" failed, the negative value
+> returned will not be detected here, including "-EPROBE_DEFER", which
+> causes the application to fail to get the correct error message.
+> Thus it must be fixed.
+
+    platform_get_irq() prints an appropriate error message, the problem is that
+the current code calls request_irq() with error code instead of IRQ.
+
+> Signed-off-by: Tang Bin <tangbin@cmss.chinamobile.com>
+> Signed-off-by: Shengju Zhang <zhangshengju@cmss.chinamobile.com>
+[...]
+
+MBR, Sergei
