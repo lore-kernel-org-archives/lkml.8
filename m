@@ -7,46 +7,49 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B1E4C2D0EC
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 03:49:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81ED2C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 03:49:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E82EE212CC
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 03:49:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4BF9A20A8B
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 03:49:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586490575;
-	bh=8LTmd6JUlMihxqUDuTkjRkz1pyjSdNwMgCWlWgkyDm8=;
+	s=default; t=1586490583;
+	bh=qmbLUSU/w7JaoSjE/dGj7Mwn2TrAusEL8vM6d4qoZQ0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rwWmebK4dmPpU3/yZfzUHwYPW1JO50HlaFyVpP0in3SUXlbBh0KWAl6kNQ5Z/xNWB
-	 72XMpBhVFEXoeZYSu8aKpDxsiCfAskdC43Iu9CINABH2LqOOuSMvY6MGts27t7XHCS
-	 w/6feWLJfzW794Da3cCOnwSoKuGvXc/EmhE1VMak=
+	b=cKra0fSPnuHQxJvtciW6YUCaZ0m/V6mL0pysXnqf6b7fqtm8jfeoWllwHkZ89HUT7
+	 7KcagpGgK+0PRZf5VdYAY7cJzTB7Ys+gZuUqF2Uqn5EL+6BvEGL4o2bOW18Ftvyw7D
+	 m6tVpGbtMg844b1R4OwTXRGe+6MPNkdmPCPhrUvI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728571AbgDJDtd (ORCPT
+        id S1728619AbgDJDtl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Apr 2020 23:49:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33464 "EHLO mail.kernel.org"
+        Thu, 9 Apr 2020 23:49:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33684 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728557AbgDJDt2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Apr 2020 23:49:28 -0400
+        id S1728578AbgDJDtf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Apr 2020 23:49:35 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 03636214DB;
-        Fri, 10 Apr 2020 03:49:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5948520B1F;
+        Fri, 10 Apr 2020 03:49:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586490568;
-        bh=8LTmd6JUlMihxqUDuTkjRkz1pyjSdNwMgCWlWgkyDm8=;
+        s=default; t=1586490575;
+        bh=qmbLUSU/w7JaoSjE/dGj7Mwn2TrAusEL8vM6d4qoZQ0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=oOCjJiiYyI3yZxgrRDtQdvh0/gPTj43fETsQavkqrF3p3EhrMnPYi2NAhEvI5LhMh
-         ICngZoJ27skz8vuO7PwnL16Cfxf3mSgOdjPa56J0XMYMptwOjcCzBQAoj7nEaatXnJ
-         VNVnS8RWR/tCTcZHwk7Jjkwt6/nh2xivZz8egh58=
+        b=I8WzbQTdH3RTM74kmjAR47YJFM1rZwil1zrDTfkahO8OLlaTyn0bhpKlL1HCTNcRN
+         sJPaxOKKZ+H6ywNp6Pwqj8jsY4rk1YA/QVgWhaRPYKgHz3J8yQRi6GIHwJIA9lygU8
+         2Iv96dxQ/1DfBgARAe42Jf++lU8Xa9J3xUs1ee3o=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Taehee Yoo <ap420073@gmail.com>, kbuild test robot <lkp@intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.4 15/46] debugfs: Check module state before warning in {full/open}_proxy_open()
-Date:   Thu,  9 Apr 2020 23:48:38 -0400
-Message-Id: <20200410034909.8922-15-sashal@kernel.org>
+Cc:     Logan Gunthorpe <logang@deltatee.com>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Sasha Levin <sashal@kernel.org>, linux-pci@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 21/46] PCI/switchtec: Fix init_completion race condition with poll_wait()
+Date:   Thu,  9 Apr 2020 23:48:44 -0400
+Message-Id: <20200410034909.8922-21-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200410034909.8922-1-sashal@kernel.org>
 References: <20200410034909.8922-1-sashal@kernel.org>
@@ -59,115 +62,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Taehee Yoo <ap420073@gmail.com>
+From: Logan Gunthorpe <logang@deltatee.com>
 
-[ Upstream commit 275678e7a9be6a0ea9c1bb493e48abf2f4a01be5 ]
+[ Upstream commit efbdc769601f4d50018bf7ca50fc9f7c67392ece ]
 
-When the module is being removed, the module state is set to
-MODULE_STATE_GOING. At this point, try_module_get() fails.
-And when {full/open}_proxy_open() is being called,
-it calls try_module_get() to try to hold module reference count.
-If it fails, it warns about the possibility of debugfs file leak.
+The call to init_completion() in mrpc_queue_cmd() can theoretically
+race with the call to poll_wait() in switchtec_dev_poll().
 
-If {full/open}_proxy_open() is called while the module is being removed,
-it fails to hold the module.
-So, It warns about debugfs file leak. But it is not the debugfs file
-leak case. So, this patch just adds module state checking routine
-in the {full/open}_proxy_open().
+  poll()			write()
+    switchtec_dev_poll()   	  switchtec_dev_write()
+      poll_wait(&s->comp.wait);      mrpc_queue_cmd()
+			               init_completion(&s->comp)
+				         init_waitqueue_head(&s->comp.wait)
 
-Test commands:
-    #SHELL1
-    while :
-    do
-        modprobe netdevsim
-        echo 1 > /sys/bus/netdevsim/new_device
-        modprobe -rv netdevsim
-    done
+To my knowledge, no one has hit this bug.
 
-    #SHELL2
-    while :
-    do
-        cat /sys/kernel/debug/netdevsim/netdevsim1/ports/0/ipsec
-    done
+Fix this by using reinit_completion() instead of init_completion() in
+mrpc_queue_cmd().
 
-Splat looks like:
-[  298.766738][T14664] debugfs file owner did not clean up at exit: ipsec
-[  298.766766][T14664] WARNING: CPU: 2 PID: 14664 at fs/debugfs/file.c:312 full_proxy_open+0x10f/0x650
-[  298.768595][T14664] Modules linked in: netdevsim(-) openvswitch nsh nf_conncount nf_nat nf_conntrack nf_defrag_ipv6 n][  298.771343][T14664] CPU: 2 PID: 14664 Comm: cat Tainted: G        W         5.5.0+ #1
-[  298.772373][T14664] Hardware name: innotek GmbH VirtualBox/VirtualBox, BIOS VirtualBox 12/01/2006
-[  298.773545][T14664] RIP: 0010:full_proxy_open+0x10f/0x650
-[  298.774247][T14664] Code: 48 c1 ea 03 80 3c 02 00 0f 85 c1 04 00 00 49 8b 3c 24 e8 e4 b5 78 ff 84 c0 75 2d 4c 89 ee 48
-[  298.776782][T14664] RSP: 0018:ffff88805b7df9b8 EFLAGS: 00010282[  298.777583][T14664] RAX: dffffc0000000008 RBX: ffff8880511725c0 RCX: 0000000000000000
-[  298.778610][T14664] RDX: 0000000000000000 RSI: 0000000000000006 RDI: ffff8880540c5c14
-[  298.779637][T14664] RBP: 0000000000000000 R08: fffffbfff15235ad R09: 0000000000000000
-[  298.780664][T14664] R10: 0000000000000001 R11: 0000000000000000 R12: ffffffffc06b5000
-[  298.781702][T14664] R13: ffff88804c234a88 R14: ffff88804c22dd00 R15: ffffffff8a1b5660
-[  298.782722][T14664] FS:  00007fafa13a8540(0000) GS:ffff88806c800000(0000) knlGS:0000000000000000
-[  298.783845][T14664] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[  298.784672][T14664] CR2: 00007fafa0e9cd10 CR3: 000000004b286005 CR4: 00000000000606e0
-[  298.785739][T14664] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-[  298.786769][T14664] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-[  298.787785][T14664] Call Trace:
-[  298.788237][T14664]  do_dentry_open+0x63c/0xf50
-[  298.788872][T14664]  ? open_proxy_open+0x270/0x270
-[  298.789524][T14664]  ? __x64_sys_fchdir+0x180/0x180
-[  298.790169][T14664]  ? inode_permission+0x65/0x390
-[  298.790832][T14664]  path_openat+0xc45/0x2680
-[  298.791425][T14664]  ? save_stack+0x69/0x80
-[  298.791988][T14664]  ? save_stack+0x19/0x80
-[  298.792544][T14664]  ? path_mountpoint+0x2e0/0x2e0
-[  298.793233][T14664]  ? check_chain_key+0x236/0x5d0
-[  298.793910][T14664]  ? sched_clock_cpu+0x18/0x170
-[  298.794527][T14664]  ? find_held_lock+0x39/0x1d0
-[  298.795153][T14664]  do_filp_open+0x16a/0x260
-[ ... ]
+Fixes: 080b47def5e5 ("MicroSemi Switchtec management interface driver")
 
-Fixes: 9fd4dcece43a ("debugfs: prevent access to possibly dead file_operations at file open")
-Reported-by: kbuild test robot <lkp@intel.com>
-Signed-off-by: Taehee Yoo <ap420073@gmail.com>
-Link: https://lore.kernel.org/r/20200218043150.29447-1-ap420073@gmail.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Reported-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Acked-by: Bjorn Helgaas <bhelgaas@google.com>
+Link: https://lkml.kernel.org/r/20200313183608.2646-1-logang@deltatee.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/debugfs/file.c | 18 ++++++++++++++----
- 1 file changed, 14 insertions(+), 4 deletions(-)
+ drivers/pci/switch/switchtec.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/fs/debugfs/file.c b/fs/debugfs/file.c
-index 8fd45eb894243..b43960794922d 100644
---- a/fs/debugfs/file.c
-+++ b/fs/debugfs/file.c
-@@ -175,8 +175,13 @@ static int open_proxy_open(struct inode *inode, struct file *filp)
- 	if (r)
- 		goto out;
+diff --git a/drivers/pci/switch/switchtec.c b/drivers/pci/switch/switchtec.c
+index cc43c855452f7..2c9c3061894b2 100644
+--- a/drivers/pci/switch/switchtec.c
++++ b/drivers/pci/switch/switchtec.c
+@@ -175,7 +175,7 @@ static int mrpc_queue_cmd(struct switchtec_user *stuser)
+ 	kref_get(&stuser->kref);
+ 	stuser->read_len = sizeof(stuser->data);
+ 	stuser_set_state(stuser, MRPC_QUEUED);
+-	init_completion(&stuser->comp);
++	reinit_completion(&stuser->comp);
+ 	list_add_tail(&stuser->list, &stdev->mrpc_queue);
  
--	real_fops = fops_get(real_fops);
--	if (!real_fops) {
-+	if (!fops_get(real_fops)) {
-+#ifdef MODULE
-+		if (real_fops->owner &&
-+		    real_fops->owner->state == MODULE_STATE_GOING)
-+			goto out;
-+#endif
-+
- 		/* Huh? Module did not clean up after itself at exit? */
- 		WARN(1, "debugfs file owner did not clean up at exit: %pd",
- 			dentry);
-@@ -305,8 +310,13 @@ static int full_proxy_open(struct inode *inode, struct file *filp)
- 	if (r)
- 		goto out;
- 
--	real_fops = fops_get(real_fops);
--	if (!real_fops) {
-+	if (!fops_get(real_fops)) {
-+#ifdef MODULE
-+		if (real_fops->owner &&
-+		    real_fops->owner->state == MODULE_STATE_GOING)
-+			goto out;
-+#endif
-+
- 		/* Huh? Module did not cleanup after itself at exit? */
- 		WARN(1, "debugfs file owner did not clean up at exit: %pd",
- 			dentry);
+ 	mrpc_cmd_submit(stdev);
 -- 
 2.20.1
 
