@@ -2,99 +2,97 @@ Return-Path: <SRS0=VV4q=52=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DE66C2D0EC
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 21:24:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72E7AC2D0EC
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 21:27:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 31F032078E
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 21:24:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=jdcox-net.20150623.gappssmtp.com header.i=@jdcox-net.20150623.gappssmtp.com header.b="SX2J+Ttv"
+	by mail.kernel.org (Postfix) with ESMTP id 498DA207FF
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 21:27:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1586554062;
+	bh=V8QhhiRTymtAGzS4jMm11mYDdFfOWqwXJ0Awmxqa7oM=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=FlvQMCI2le8aIiMVBk7uuXxFgTD5AuINABMhFT5XI9A0BTS+5yOBk/7Ftdcvv4hBd
+	 9PcQl93wxGuZlkAXad3faa1+DYJDsCuKnZwBekkBg1w9wAgl7I3MHrGg/inNwOtkmg
+	 TPS+NyqLcWzXO4aaVCkkSDVuA37vYYnE/yU0YkQA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726659AbgDJVYc (ORCPT
+        id S1726683AbgDJV1j (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Apr 2020 17:24:32 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:38090 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726582AbgDJVYb (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Apr 2020 17:24:31 -0400
-Received: by mail-pf1-f195.google.com with SMTP id c21so1543967pfo.5
-        for <linux-kernel@vger.kernel.org>; Fri, 10 Apr 2020 14:24:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=jdcox-net.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=6euz7U5YmKmQz+Yak4JttZC+1uZLCYust3fRq/4fkpg=;
-        b=SX2J+TtvzD270OPTYyuhQ2jU2CbOtdPyRV5PGnOSRxdTBYQtdlUuDOkrYm5V7Y2JZd
-         EIjHTgxJvBvuiVikzjw9i0yjZetMJTTQfuU9lCVFwTTjGpBuBYW83pgVWtdMIelyRlJK
-         jc8cqoKYSuuqFsLIQp39Ge688T8MYg9+YNdicnd/YMmZa+Diwm7+9NTO4nIVnmaiC5FZ
-         mDoiMrHo+fQcAoiXR6MNHgJCSYQyQIzRzPaUN7Osh6I5phEDnSqVhQKqL4+JcVY0uJQj
-         UY2i1Fz5mhXCkpGkIxBdHrflV+dfHPIK2jwarn/uKvTmrv6KTZ2OBkD/nr96dlWJ6kVh
-         cohQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=6euz7U5YmKmQz+Yak4JttZC+1uZLCYust3fRq/4fkpg=;
-        b=pSHEyOR3lKO5U9heEU8ANi+0JkpNU/DlJ0I5G2PtqD4xc9+C3Nppnrjg2DDVQxwE5g
-         LIFLqRPpgH0RT3X7XvUgo9H3SbYNAM07Wcr0Ek7Bq+xhDpeOq40U4tZZ8iKPfNnLS/nK
-         xFSCeofRxOncGrdDEsFyCflkTzPNBzWxnkx5romE78swu9HrPqRGJk1ZYT9nVgd08ecG
-         wXKu9/PDDbe9Iqt0ei566fHi0uYFah1LUhi2xpOCTwy7o9JicOJxsKpe/xJ1FpFGxrrQ
-         MsYcdKZ2njVyG1P+Sv/kCX9emU5QjBBguyA32EbNHGIUxwP6i6pmAiNU1fdNqeVdn5JE
-         lWeA==
-X-Gm-Message-State: AGi0PuZ2Ca59kzDcylavkfVBOOVnitvFtdlgn40wYgGZ0cfv2Jzcawsh
-        JVbdRwLhudiUamrt7fpN0uduN3Gk4U4N9g==
-X-Google-Smtp-Source: APiQypLZyOFacadxGHhWqNzCFh/+JR8Ig7PHf8QWbtHrovZ7A84jUsb1d5U1qKmvuXYyvQa9t9sE2A==
-X-Received: by 2002:a63:5050:: with SMTP id q16mr6191693pgl.118.1586553871316;
-        Fri, 10 Apr 2020 14:24:31 -0700 (PDT)
-Received: from jonathan-desk.jdc.local ([2605:e000:100d:4c16:feaa:14ff:fe96:2161])
-        by smtp.gmail.com with ESMTPSA id y123sm2512075pfb.13.2020.04.10.14.24.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 10 Apr 2020 14:24:30 -0700 (PDT)
-From:   Jonathan Cox <jonathan@jdcox.net>
-To:     gregkh@suse.de
-Cc:     linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Jonathan Cox <jonathan@jdcox.net>
-Subject: [PATCH] USB: Add USB_QUIRK_DELAY_CTRL_MSG and USB_QUIRK_DELAY_INIT for Corsair K70 RGB RAPIDFIRE
-Date:   Fri, 10 Apr 2020 14:24:27 -0700
-Message-Id: <20200410212427.2886-1-jonathan@jdcox.net>
-X-Mailer: git-send-email 2.26.0
+        Fri, 10 Apr 2020 17:27:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44952 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726582AbgDJV1i (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Apr 2020 17:27:38 -0400
+Received: from mail-ua1-f54.google.com (mail-ua1-f54.google.com [209.85.222.54])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 82460215A4;
+        Fri, 10 Apr 2020 21:27:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1586554058;
+        bh=V8QhhiRTymtAGzS4jMm11mYDdFfOWqwXJ0Awmxqa7oM=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=s/nBaA6LOPpckWlwyeu6G42+wIf81zq6VVgY/lVhpQpkRhgz03nPSamZe1NK+HPq/
+         D7M7tbdynL5FR499sS8D6zY/s8Xpq3iLG7vm6xDpfqwefsnO9khABcOVrqTHv8Yf0r
+         qeXKgH66aRJSC+2OLj65YDrzKFiF+ftWEMJFf8xw=
+Received: by mail-ua1-f54.google.com with SMTP id x18so387044uap.8;
+        Fri, 10 Apr 2020 14:27:38 -0700 (PDT)
+X-Gm-Message-State: AGi0Pubjevd8pGFhQnbWWlTaFuVNvOp73AI5C4eAqlZXF/7O2Z+1oe3e
+        9b+5pSOABsJGozlw7/QSbk0IXw9AraWUmN9GKUI=
+X-Google-Smtp-Source: APiQypKL5aZ2RNqUUOB0SjAH5YbjeLzshTc1ta+JOreiajZrgqBymzHOh8oGSfSKa2KXtA1f94T8sQs2WZLp2sC77bg=
+X-Received: by 2002:ab0:1e89:: with SMTP id o9mr4281024uak.93.1586554057531;
+ Fri, 10 Apr 2020 14:27:37 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20200409214530.2413-1-mcgrof@kernel.org> <20200409214530.2413-6-mcgrof@kernel.org>
+ <161e938d-929b-1fdb-ba77-56b839c14b5b@acm.org> <20200410143412.GK11244@42.do-not-panic.com>
+ <CAB=NE6VfQH3duMGneJnzEnXzAJ1TDYn26WhQCy8X1Mb_T6esgQ@mail.gmail.com>
+In-Reply-To: <CAB=NE6VfQH3duMGneJnzEnXzAJ1TDYn26WhQCy8X1Mb_T6esgQ@mail.gmail.com>
+From:   Luis Chamberlain <mcgrof@kernel.org>
+Date:   Fri, 10 Apr 2020 15:27:30 -0600
+X-Gmail-Original-Message-ID: <CAB=NE6XfdgB82ncZUkLpdYvDDdyVvVUd8nUmRCb8LbOQ213QoA@mail.gmail.com>
+Message-ID: <CAB=NE6XfdgB82ncZUkLpdYvDDdyVvVUd8nUmRCb8LbOQ213QoA@mail.gmail.com>
+Subject: Re: [RFC v2 5/5] block: revert back to synchronous request_queue removal
+To:     Bart Van Assche <bvanassche@acm.org>
+Cc:     Jens Axboe <axboe@kernel.dk>, Al Viro <viro@zeniv.linux.org.uk>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ingo Molnar <mingo@redhat.com>, Jan Kara <jack@suse.cz>,
+        Ming Lei <ming.lei@redhat.com>,
+        Nicolai Stange <nstange@suse.de>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Michal Hocko <mhocko@suse.com>, yu kuai <yukuai3@huawei.com>,
+        linux-block@vger.kernel.org,
+        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
+        linux-mm <linux-mm@kvack.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Omar Sandoval <osandov@fb.com>,
+        Hannes Reinecke <hare@suse.com>,
+        Michal Hocko <mhocko@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The Corsair K70 RGB RAPIDFIRE needs the USB_QUIRK_DELAY_INIT and 
-USB_QUIRK_DELAY_CTRL_MSG to function or it will randomly not 
-respond on boot, just like other Corsair keyboards
+On Fri, Apr 10, 2020 at 2:50 PM Luis Chamberlain <mcgrof@kernel.org> wrote:
+>
+> On Fri, Apr 10, 2020 at 8:34 AM Luis Chamberlain <mcgrof@kernel.org> wrote:
+> > On Thu, Apr 09, 2020 at 08:12:21PM -0700, Bart Van Assche wrote:
+> > > Please add a might_sleep() call in blk_put_queue() since with this patch
+> > > applied it is no longer allowed to call blk_put_queue() from atomic context.
+> >
+> > Sure thing.
+>
+> On second though, I don't think blk_put_queue() would be the right
+> place for might_sleep(), given we really only care about the *last*
+> refcount decrement to 0. So I'll move it to blk_release_queue().
+> Granted, at that point we are too late, and we'd get a splat about
+> this issue *iff* we really sleep. So yeah, I do suppose that forcing
+> this check there still makes sense.
 
-Signed-off-by: Jonathan Cox <jonathan@jdcox.net>
----
- drivers/usb/core/quirks.c | 4 ++++
- 1 file changed, 4 insertions(+)
+I'll add might_sleep() to both blk_release_queue() *and* blk_cleanup_queue().
 
-diff --git a/drivers/usb/core/quirks.c b/drivers/usb/core/quirks.c
-index da30b5664ff3..4ed60e110a99 100644
---- a/drivers/usb/core/quirks.c
-+++ b/drivers/usb/core/quirks.c
-@@ -430,6 +430,10 @@ static const struct usb_device_id usb_quirk_list[] = {
- 	/* Corsair K70 LUX */
- 	{ USB_DEVICE(0x1b1c, 0x1b36), .driver_info = USB_QUIRK_DELAY_INIT },
- 
-+	/* Corsair K70 RGB RAPDIFIRE */
-+	{ USB_DEVICE(0x1b1c, 0x1b38), .driver_info = USB_QUIRK_DELAY_INIT |
-+	  USB_QUIRK_DELAY_CTRL_MSG },
-+
- 	/* MIDI keyboard WORLDE MINI */
- 	{ USB_DEVICE(0x1c75, 0x0204), .driver_info =
- 			USB_QUIRK_CONFIG_INTF_STRINGS },
--- 
-2.26.0
-
+  Luis
