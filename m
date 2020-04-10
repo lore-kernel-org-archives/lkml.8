@@ -2,135 +2,134 @@ Return-Path: <SRS0=VV4q=52=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3FB2C2BB86
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 13:55:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ACED3C2BA2B
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 13:55:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8CC64206A1
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 13:55:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="P/Id93cT"
+	by mail.kernel.org (Postfix) with ESMTP id 7939220CC7
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 13:55:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1586526958;
+	bh=Wk8gfKcBbUSGznCJZW1P3U7gPvmkGvHYIMeyJethKKE=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:List-ID:From;
+	b=lCzAK1nrKzSLJMC832WajpZnMOMWG0EScEwXufc3djdptnVsmfQaqj7vf1lTUyDDv
+	 Qg9aFWBX4bcY9JMZkoBdbs0aVp0UQ6KzbabwjCOr40CaoBh96GDz5N0xMhWOzzcG8n
+	 GEfrvU/AVYTA4y2TAJYkk53E8NooVdm/nx5aA7fM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726626AbgDJNzF (ORCPT
+        id S1726641AbgDJNz4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Apr 2020 09:55:05 -0400
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:26294 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726049AbgDJNzE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Apr 2020 09:55:04 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1586526903;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=iz174XEQjo4HdMwcToRtjnHITXXF+QDP8a5ZECFP3Pc=;
-        b=P/Id93cTrRAhZS01mimoNV08pgUuQQBhq+OskWK9iNVMg8bS/IQPrxqkpr1qdT2JXQ7W0J
-        lkiLUJZMgbxSnbgTqinrqCmSL1zYC/h7lbqU6rycK4CXGoyf72wsbuKtEVYvDr48C91GV+
-        w9Bhjbd84Xw0WdHSjcJx90kv7eoYNVc=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-379-0sQfwSBnPamulE2kIkaCUA-1; Fri, 10 Apr 2020 09:54:59 -0400
-X-MC-Unique: 0sQfwSBnPamulE2kIkaCUA-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Fri, 10 Apr 2020 09:55:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58022 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725926AbgDJNz4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Apr 2020 09:55:56 -0400
+Received: from tzanussi-mobl (c-98-220-238-81.hsd1.il.comcast.net [98.220.238.81])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 998DB107ACC7;
-        Fri, 10 Apr 2020 13:54:55 +0000 (UTC)
-Received: from dhcp-128-65.nay.redhat.com (ovpn-12-106.pek2.redhat.com [10.72.12.106])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id A4ED260C05;
-        Fri, 10 Apr 2020 13:54:47 +0000 (UTC)
-Date:   Fri, 10 Apr 2020 21:54:42 +0800
-From:   Dave Young <dyoung@redhat.com>
-To:     Ard Biesheuvel <ardb@kernel.org>
-Cc:     "Theodore Y. Ts'o" <tytso@mit.edu>,
-        linux-efi <linux-efi@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        kexec@lists.infradead.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Arvind Sankar <nivedita@alum.mit.edu>,
-        Borislav Petkov <bp@suse.de>,
-        Colin Ian King <colin.king@canonical.com>,
-        Gary Lin <glin@suse.com>, Jiri Slaby <jslaby@suse.cz>,
-        Sergey Shatunov <me@prok.pw>, Takashi Iwai <tiwai@suse.de>
-Subject: Re: [GIT PULL 0/9] EFI fixes for v5.7-rc
-Message-ID: <20200410135442.GA6772@dhcp-128-65.nay.redhat.com>
-References: <20200409130434.6736-1-ardb@kernel.org>
- <20200409190109.GB45598@mit.edu>
- <CAMj1kXGiA3PAybR7r9tatL7WV5iU7B1OQxQok3d-JmRnhX1TnA@mail.gmail.com>
- <20200409201632.GC45598@mit.edu>
- <CAMj1kXFqKGSqm_y+ht4mmmu10TrhSyiTG8V3PxRYGodpZ=xNFQ@mail.gmail.com>
- <20200409235716.GF45598@mit.edu>
- <CAMj1kXH4VtNcJugpG_UR10ewGiOApTiw=C3FsuyAQQyg67Q8Aw@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAMj1kXH4VtNcJugpG_UR10ewGiOApTiw=C3FsuyAQQyg67Q8Aw@mail.gmail.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+        by mail.kernel.org (Postfix) with ESMTPSA id 5A7EE206A1;
+        Fri, 10 Apr 2020 13:55:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1586526956;
+        bh=Wk8gfKcBbUSGznCJZW1P3U7gPvmkGvHYIMeyJethKKE=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=BGbueT13JtKonWUkqQwoa7dTTW6d9sRwQP11Rz74KAaaaw/AS6Ns46GS6Mggu9WMC
+         rXxBJIwBpL3kvttbn0nLmDSglhLFc+ZY0H2IkNbHBcbCSCZWo1RPMa7fD95bzgTebW
+         JurZW4sHyFLWIT7YL3lIoWi9edZ+8jds+/nLMSms=
+Message-ID: <fb784ea2a4b3d4219a4e2604beee0b15cb2275b4.camel@kernel.org>
+Subject: Re: [PATCH] tracing: make some symbols static in tracing_map.c
+From:   Tom Zanussi <zanussi@kernel.org>
+To:     Steven Rostedt <rostedt@goodmis.org>,
+        Jason Yan <yanaijie@huawei.com>
+Cc:     mingo@redhat.com, linux-kernel@vger.kernel.org
+Date:   Fri, 10 Apr 2020 08:55:55 -0500
+In-Reply-To: <20200410094427.1f1ede4d@gandalf.local.home>
+References: <20200410073312.38855-1-yanaijie@huawei.com>
+         <20200410094427.1f1ede4d@gandalf.local.home>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Cc kexec list.
-On 04/10/20 at 09:08am, Ard Biesheuvel wrote:
-> On Fri, 10 Apr 2020 at 01:57, Theodore Y. Ts'o <tytso@mit.edu> wrote:
-> >
-> > On Thu, Apr 09, 2020 at 11:29:06PM +0200, Ard Biesheuvel wrote:
-> > > > What happens is that the kexec'ed kernel immediately crashes, at which
-> > > > point we drop back into the BIOS, and then it boots the Debain 4.19.0
-> > > > distro kernel instead of the kernel to be tested boot.  Since we lose
-> > > > the boot command line that was used from the kexec, the gce-xfstests
-> > > > image retries the kexec, which fails, and the failing kexec repeats
-> > > > until I manually kill the VM.
-> > >
-> > > Does this help at all?
-> > >
-> > > diff --git a/arch/x86/include/asm/efi.h b/arch/x86/include/asm/efi.h
-> > > index 781170d36f50..52f8138243df 100644
-> > > --- a/arch/x86/include/asm/efi.h
-> > > +++ b/arch/x86/include/asm/efi.h
-> > > @@ -180,6 +180,7 @@ extern void __init
-> > > efi_uv1_memmap_phys_epilog(pgd_t *save_pgd);
-> > >
-> > >  struct efi_setup_data {
-> > >         u64 fw_vendor;
-> > > +       u64 __unused;
-> > >         u64 tables;
-> > >         u64 smbios;
-> > >         u64 reserved[8];
-> >
-> >
-> > Tested-by: Theodore Ts'o <tytso@mit.edu>
-> >
+On Fri, 2020-04-10 at 09:44 -0400, Steven Rostedt wrote:
+> Tom,
 > 
-> OK, I'll spin a proper patch
-> 
-> > Yep, that fixed it.  Thanks!!
-> >
-> > I wonder if this structure definition should be moved something like
-> > arch/x86/include/uapi/asm/efi.h so it's more obvious that the
-> > structure layout is used externally to the kernel?
-> >
-> 
-> Well, 95% of the data structures used by EFI are based on the UEFI
-> spec, so the base assumption is really that we cannot make changes
-> like these to begin with. But I'll add a DON'T TOUCH comment here in
-> any case.
+> Care to ack this?
 > 
 
-The runtime cleanup looks a very good one, but I also missed that,
-userspace kexec-tools will break with the efi setup_data changes. But
-kexec_file_load will just work with the cleanup applied.
+Sure,
 
-Ard, could you add kexec list in cc when you send the fix out?
+Reviewed-by: Tom Zanussi <zanussi@kernel.org>
 
-Thanks
-Dave
+Tom
+
+
+> -- Steve
+> 
+> 
+> On Fri, 10 Apr 2020 15:33:12 +0800
+> Jason Yan <yanaijie@huawei.com> wrote:
+> 
+> > Fix the following sparse warning:
+> > 
+> > kernel/trace/tracing_map.c:286:6: warning: symbol
+> > 'tracing_map_array_clear' was not declared. Should it be static?
+> > kernel/trace/tracing_map.c:297:6: warning: symbol
+> > 'tracing_map_array_free' was not declared. Should it be static?
+> > kernel/trace/tracing_map.c:319:26: warning: symbol
+> > 'tracing_map_array_alloc' was not declared. Should it be static?
+> > 
+> > Reported-by: Hulk Robot <hulkci@huawei.com>
+> > Signed-off-by: Jason Yan <yanaijie@huawei.com>
+> > ---
+> >  kernel/trace/tracing_map.c | 6 +++---
+> >  1 file changed, 3 insertions(+), 3 deletions(-)
+> > 
+> > diff --git a/kernel/trace/tracing_map.c
+> > b/kernel/trace/tracing_map.c
+> > index 9e31bfc818ff..74738c9856f1 100644
+> > --- a/kernel/trace/tracing_map.c
+> > +++ b/kernel/trace/tracing_map.c
+> > @@ -283,7 +283,7 @@ int tracing_map_add_key_field(struct
+> > tracing_map *map,
+> >  	return idx;
+> >  }
+> >  
+> > -void tracing_map_array_clear(struct tracing_map_array *a)
+> > +static void tracing_map_array_clear(struct tracing_map_array *a)
+> >  {
+> >  	unsigned int i;
+> >  
+> > @@ -294,7 +294,7 @@ void tracing_map_array_clear(struct
+> > tracing_map_array *a)
+> >  		memset(a->pages[i], 0, PAGE_SIZE);
+> >  }
+> >  
+> > -void tracing_map_array_free(struct tracing_map_array *a)
+> > +static void tracing_map_array_free(struct tracing_map_array *a)
+> >  {
+> >  	unsigned int i;
+> >  
+> > @@ -316,7 +316,7 @@ void tracing_map_array_free(struct
+> > tracing_map_array *a)
+> >  	kfree(a);
+> >  }
+> >  
+> > -struct tracing_map_array *tracing_map_array_alloc(unsigned int
+> > n_elts,
+> > +static struct tracing_map_array *tracing_map_array_alloc(unsigned
+> > int n_elts,
+> >  						  unsigned int
+> > entry_size)
+> >  {
+> >  	struct tracing_map_array *a;
+> 
+> 
 
