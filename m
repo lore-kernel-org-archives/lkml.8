@@ -2,279 +2,209 @@ Return-Path: <SRS0=VV4q=52=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 023EDC2D0EC
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 03:43:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE580C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 03:45:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C1FA0206DD
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 03:43:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9E82B20936
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 03:45:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="HpwZq9lX"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jIrHtHD3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726654AbgDJDnc (ORCPT
+        id S1726669AbgDJDp5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Apr 2020 23:43:32 -0400
-Received: from mail-yb1-f194.google.com ([209.85.219.194]:44062 "EHLO
-        mail-yb1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726582AbgDJDnb (ORCPT
+        Thu, 9 Apr 2020 23:45:57 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:38375 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726082AbgDJDp4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Apr 2020 23:43:31 -0400
-Received: by mail-yb1-f194.google.com with SMTP id 11so544537ybj.11
-        for <linux-kernel@vger.kernel.org>; Thu, 09 Apr 2020 20:43:31 -0700 (PDT)
+        Thu, 9 Apr 2020 23:45:56 -0400
+Received: by mail-wr1-f67.google.com with SMTP id k11so239415wrp.5;
+        Thu, 09 Apr 2020 20:45:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
+        d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Fp5uo2blnQO5x5U8QWVg+iWp8fhYxDKQabKmWmhgMKU=;
-        b=HpwZq9lX7j4mTd81CnZjP3/lb7lb17nAhAEj/lJjjRCvAtfIBAFnY65yuPgwr3wsXq
-         b2BAnOibKbJRiN6KH6uFIBzm8BhdkOqLR6xQsLIUx6eoKLnK12HOM76K3pAdO8mU0cXi
-         7nO/aad4uHLN6ap626KdXIR5Nk448ojhnOr/JB+mSbMa8kDk1PSGpcRKW+iAfhNcMHWI
-         u+A3M558hL5xrhZNCtoqysLBydyvAKONnCtNOTyLJ/kyhvwLQgqwL3jvwFM2/tA1e8cw
-         VMqTYuu5t9GLhVod/kPv9r67JZf9Thn+0YQYAeCcV1jKPk+VVyeqF8L+1+m25oN3rxyj
-         90IQ==
+         :cc:content-transfer-encoding;
+        bh=xTD8jqLlyYTauiGbffTw5JArkDLk+kEpu+J7BOSObAA=;
+        b=jIrHtHD3eVDB4o2K9fZ6SYpFWqv66O3QgKUSr9wLyIIOFI+xwEQUUB0RoJRKoWu/lk
+         3N22KRkgVpUHZmji3bKQJqgtBcxAuM3vonhAc+4Cc+ZIzo+qy/QUfH4QqPP3KMra3jsj
+         BFVcmTUYnRpJKzoNNQ2vUZFejdAGXf8mFDGYYehjcisndSDRtU56VO1qcGOrBLdR97A+
+         KEYaUo78t31Lwf4AyPipPLcAvynfo9yYnzn5J4FIP67FR0R9w/qevYR9XnGRDMnY83pk
+         5wRXYwL7YbG3nF8/al4qhGIQ5IjxlA/zg1sgpa3DVhURe24NBqwE0MZ3ouTlQH597qwn
+         vZxA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Fp5uo2blnQO5x5U8QWVg+iWp8fhYxDKQabKmWmhgMKU=;
-        b=eqFnPK63yR+VyTpY9msD2Su8iFk4wC/850miwlSeqkTgtsDx6VW8SgpRBWqZ9O0rkB
-         hwyokk2SXy6wJQrNm0SBWkGwrDrMvtAlV+by1DEXA81dh24ieMtMfPJDK1STs4Kr29es
-         zfGkOcQJ/x7in+4uu7hwuZVeJU0Oua8aCFcS7BYPHdgpNyRvzLXTdq3ojX+fWi9HAQhw
-         nlX3MT+Ieztra+Y6c/rvkQjvz0G4PTI16BOAOjLAYcjquDZ+xNHGcbUz3qVZvgFm5Zx8
-         FW2eATj4kaeaUupDtT3ndtvGqa0RgWCKn20p7oCmULJlsWqUyO/4SPC7/+MsJdtkbsm8
-         zolA==
-X-Gm-Message-State: AGi0Pua0iTx1DV6Hz1dBjRboZwE6jGefswYv+PbGjoqtNCNBz8NSF0lO
-        X0dtWwtNSqf6ju1VRaLwCELB9sbSmvE5RMcnBsIR1A==
-X-Google-Smtp-Source: APiQypKBfXViLWOegPxWWYPDSq1YgLs+kFlhU9/eMzBWKLyNY/sxwpEyVEB4E9qQpkIxf6koUaveZyDth39SB/nRRnM=
-X-Received: by 2002:a25:c64b:: with SMTP id k72mr4865720ybf.177.1586490210345;
- Thu, 09 Apr 2020 20:43:30 -0700 (PDT)
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=xTD8jqLlyYTauiGbffTw5JArkDLk+kEpu+J7BOSObAA=;
+        b=bPxZXqMKsp95/bREXRDK4FmniPaxMMoaVQvbEkKKE5KwN0//Bx50S0oy6Ci/67Z76b
+         6+zU+yUKLettItg3/zC7H04IYOQdAhwtEoAQgNQ1mn2vsLuWPOzVfQGJU03+hmqY95gl
+         W8OjrMNnDanps1JSk7H4WgsWcxMh0EroRD9kx7lNsUy/pAWsx1pPu/mkLqUVtZL4uwQH
+         iQoORHLapJpa1HS/sojRVnJqqHOiOCKyBfi4iujukhZJPyCImMJN2HI3/GdN7/cCteri
+         nwPLXsPcjuw6RkSyfV5t+ynTPS7T4RrIDM7sFN22LRjqxQTgyru5uGBWskYnIyu2CjQE
+         MZ6w==
+X-Gm-Message-State: AGi0PuavTtEePFBxx8nsUVhAG17kPt04E00R8hOqT0wAadpXpEHGpphi
+        miyIgD3pwMALMUFkQ5mTDsoGCS6DFYDRJd3HnRvSEC+J
+X-Google-Smtp-Source: APiQypK+6oiYdmYVei4clXzwDHywzqlfmDFgVXzV+CwMdP3SEr9xkQ9HbMDkBCL7vxLBY781R9P01r8CZgBU69TJAtM=
+X-Received: by 2002:adf:e98a:: with SMTP id h10mr2420186wrm.370.1586490353317;
+ Thu, 09 Apr 2020 20:45:53 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200402154357.107873-1-irogers@google.com> <20200402154357.107873-5-irogers@google.com>
- <CAM9d7cgCyatYvH98m8DYiAe1CapqW8Sfu8VtwnF24kJQbUvG=Q@mail.gmail.com>
- <20200406140951.GE29826@kernel.org> <CAP-5=fVt9ueNm66MrV=CBYQPOXdOxYo2w_jiF-Cm-8i70SD8mQ@mail.gmail.com>
- <20200407123215.GA8452@kernel.org>
-In-Reply-To: <20200407123215.GA8452@kernel.org>
-From:   Ian Rogers <irogers@google.com>
-Date:   Thu, 9 Apr 2020 20:43:19 -0700
-Message-ID: <CAP-5=fWBHTi7uuwuE=RKfvU4M7QcpgTXtj++BEAy7EOcNv8vbQ@mail.gmail.com>
-Subject: Re: [PATCH v2 4/5] tools api: add a lightweight buffered reading api
-To:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-Cc:     Namhyung Kim <namhyung@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>, Petr Mladek <pmladek@suse.com>,
-        Andrey Zhizhikin <andrey.z@gmail.com>,
-        Kefeng Wang <wangkefeng.wang@huawei.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-perf-users <linux-perf-users@vger.kernel.org>,
-        Stephane Eranian <eranian@google.com>
+References: <20200408160044.2550437-1-arnd@arndb.de> <CABOV4+UocLs3jLi7-vTi8muiFqACVdxH7Td8=U1ABveLnmyCuw@mail.gmail.com>
+ <CA+nhYX0H-czfJ6Kg+FK7X2=hHQK185UOLGoPdEP3nqWQWcA+bg@mail.gmail.com>
+In-Reply-To: <CA+nhYX0H-czfJ6Kg+FK7X2=hHQK185UOLGoPdEP3nqWQWcA+bg@mail.gmail.com>
+From:   Chunyan Zhang <zhang.lyra@gmail.com>
+Date:   Fri, 10 Apr 2020 11:45:16 +0800
+Message-ID: <CAAfSe-s=dZe=6y7UH8CBcddL1BKoLOAvi24RekgdmVv0StxTTA@mail.gmail.com>
+Subject: Re: [PATCH] [RFC] clk: sprd: fix compile-testing
+To:     Sandeep Patil <sspatil@android.com>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Chunyan Zhang <chunyan.zhang@unisoc.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-clk <linux-clk@vger.kernel.org>,
+        Orson Zhai <orson.zhai@unisoc.com>,
+        Android Kernel Team <kernel-team@android.com>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 7, 2020 at 5:32 AM Arnaldo Carvalho de Melo
-<arnaldo.melo@gmail.com> wrote:
+On Fri, 10 Apr 2020 at 04:17, Sandeep Patil <sspatil@android.com> wrote:
 >
-> Em Mon, Apr 06, 2020 at 09:15:51AM -0700, Ian Rogers escreveu:
-> > On Mon, Apr 6, 2020 at 7:09 AM Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com> wrote:
-> > > Em Sat, Apr 04, 2020 at 12:06:45PM +0900, Namhyung Kim escreveu:
-> > > > On Fri, Apr 3, 2020 at 12:44 AM Ian Rogers <irogers@google.com> wrote:
-> > > > >
-> > > > > The synthesize benchmark shows the majority of execution time going to
-> > > > > fgets and sscanf, necessary to parse /proc/pid/maps. Add a new buffered
-> > > > > reading library that will be used to replace these calls in a follow-up
-> > > > > CL.
 >
-> > > waiting for some conclusion to this thread,
 >
-> > Thanks, sorry I was busy at the weekend. I agree with Namhyung's
-> > comments, nice catch! Fwiw, it comes from my refactoring this api out
-> > of a specific /proc/pid/maps reader. I'll work to address the issue
-> > and ideally stick some tests of the corner cases somewhere - any
-> > suggestions? This doesn't feel like a perf test, nor is it a kernel
+> On Wed, Apr 8, 2020 at 11:09 PM Chunyan Zhang <zhang.lyra@gmail.com> wrot=
+e:
+>>
+>> Hi Arnd,
+>>
+>> Thanks for finding out this and fixing it, but we have a minor concern
+>> for changing ARCH_APRD back to bool.
+>>
+>> On Thu, Apr 9, 2020 at 2:57 AM Arnd Bergmann <arnd@arndb.de> wrote:
+>> >
+>> > I got a build failure with CONFIG_ARCH_SPRD=3Dm when the
+>> > main portion of the clock driver failed to get linked into
+>> > the kernel:
+>> >
+>> > ERROR: modpost: "sprd_pll_sc_gate_ops" [drivers/clk/sprd/sc9863a-clk.k=
+o] undefined!
+>> > ERROR: modpost: "sprd_pll_ops" [drivers/clk/sprd/sc9863a-clk.ko] undef=
+ined!
+>> > ERROR: modpost: "sprd_div_ops" [drivers/clk/sprd/sc9863a-clk.ko] undef=
+ined!
+>> > ERROR: modpost: "sprd_comp_ops" [drivers/clk/sprd/sc9863a-clk.ko] unde=
+fined!
+>> > ERROR: modpost: "sprd_mux_ops" [drivers/clk/sprd/sc9863a-clk.ko] undef=
+ined!
+>> > ERROR: modpost: "sprd_gate_ops" [drivers/clk/sprd/sc9863a-clk.ko] unde=
+fined!
+>> > ERROR: modpost: "sprd_sc_gate_ops" [drivers/clk/sprd/sc9863a-clk.ko] u=
+ndefined!
+>> > ERROR: modpost: "sprd_clk_probe" [drivers/clk/sprd/sc9863a-clk.ko] und=
+efined!
+>> > ERROR: modpost: "sprd_clk_regmap_init" [drivers/clk/sprd/sc9863a-clk.k=
+o] undefined!
+>> > ERROR: modpost: "sprd_pll_ops" [drivers/clk/sprd/sc9860-clk.ko] undefi=
+ned!
+>> > ERROR: modpost: "sprd_div_ops" [drivers/clk/sprd/sc9860-clk.ko] undefi=
+ned!
+>> > ERROR: modpost: "sprd_mux_ops" [drivers/clk/sprd/sc9860-clk.ko] undefi=
+ned!
+>> >
+>> > This is a combination of two trivial bugs:
+>> >
+>> > - A platform should not be 'tristate', it should be a 'bool' symbol
+>> >   like the other platforms, if only for consistency, and to avoid
+>> >   surprises like this one.
+>>
+>> After a discussion, we decided to change ARCH_SPRD to tristate, the
+>> idea was that we hope we can simply switch all sprd drivers' configs
+>> (whose default is ARCH_SPRD) to 'm' by setting ARCH_SPRD=3Dm, or switch
+>> all them to 'y' by setting ARCH_SPRD=3Dy, instead of changing them one
+>> by one. This requirement originally came from that Google GKI project
+>> asks all vendor drivers to be built as modules.
 >
-> It may not be uniquely useful for perf, but I'd start by adding an entry
-> to 'perf test' anyway, as its used by perf, after all what we want is
-> that code gets tested regularly, adding it to 'perf test' achieves that.
+>
+>
+> Unfortunately, even if ARCH_SPRD can be tristate, we found out (like Ard =
+did here) that none of the other platform symbols can be tristate :(.
+>
+> So, we are going to enable all CONFIG_ARCH_XXXX in our defconfig[1]. Chun=
+yan, Please feel free to submit that patch to AOSP for that.
+>
+> This does present us with a problem. We found that a bunch of drivers are=
+  'default y if ARCH_XXX'. A lot of them have no symbol dependencies on the=
+ code that gets compiled with ARCH_XXX. They depend on it only because "the=
+ driver is only needed for the XXX SoC or the family".
+>
+> For example, enabling CONFIG_ARCH_MEDIATEK, will end up building almost a=
+ll drivers in drivers/pinctrl/mediatek as far as I can see.
+>
+> This does add up. It increases the size of the kernel considerably. I hav=
+e plans to send out the comparison in the future (later this year) once we =
+are done collecting all def configs and see how bad that is.
+>
+> The only sane way I can see that can be resolved (if people agree that's =
+a problem), is to make the ARCH_XXX code tristate-able and make the ARCH_XX=
+X Kconfig select every driver it needs, instead of the other way round.
 
-Thanks, this is hopefully done in:
-https://lore.kernel.org/lkml/20200410034048.144150-1-irogers@google.com/T/#t
-which also hopefully addresses Namhyung's comments around corner cases
-and better documentation.
+If we making the ARCH_XXX Kconfig select all drivers it needs, we will
+not have chance to custom the kernel Image for debug purpose. For
+example we can bringup a minimum system with only serial driver on
+sprd platforms.
+
+>
+> All that being said, It is obviously not ok to have the allmodconfig brok=
+en like this without adding explicit dependencies as suggested above, or re=
+vert CONFIG_ARCH_SPRD to be a 'bool'.
+
+We see this broken because I shouldn't leave clk Makefile a tristate
+compile [1] after changing ARCH_SPRD to be tristate.
+
+If we will make ARCH_SPRD tristate-able in the future and you all
+aggree that, I would like to do it now, and pay more attention to
+Makefiles and dependencies.
+
+I can also make a change like below:
+
+diff --git a/drivers/clk/sprd/Kconfig b/drivers/clk/sprd/Kconfig
+index e18c80fbe804..9f7d9d8899a5 100644
+--- a/drivers/clk/sprd/Kconfig
++++ b/drivers/clk/sprd/Kconfig
+@@ -2,6 +2,7 @@
+ config SPRD_COMMON_CLK
+        tristate "Clock support for Spreadtrum SoCs"
+        depends on ARCH_SPRD || COMPILE_TEST
++       depends on m || ARCH_SPRD !=3D m
+        default ARCH_SPRD
+        select REGMAP_MMIO
+
+Arnd, Stephen, Sandeep, what do you think? Does that make sense?
 
 Thanks,
-Ian
+Chunyan
 
-> Thanks,
+[1] https://elixir.bootlin.com/linux/v5.6.3/source/drivers/clk/Makefile#L10=
+8
+
 >
-> - Arnaldo
+> So fwiw,
 >
-> > side test.
-> >
-> > Thanks,
-> > Ian
-> >
-> > > > > Signed-off-by: Ian Rogers <irogers@google.com>
-> > > > > ---
-> > > > >  tools/lib/api/io.h | 107 +++++++++++++++++++++++++++++++++++++++++++++
-> > > > >  1 file changed, 107 insertions(+)
-> > > > >  create mode 100644 tools/lib/api/io.h
-> > > > >
-> > > > > diff --git a/tools/lib/api/io.h b/tools/lib/api/io.h
-> > > > > new file mode 100644
-> > > > > index 000000000000..5aa5b0e26a7a
-> > > > > --- /dev/null
-> > > > > +++ b/tools/lib/api/io.h
-> > > > > @@ -0,0 +1,107 @@
-> > > > > +/* SPDX-License-Identifier: GPL-2.0 */
-> > > > > +/*
-> > > > > + * Lightweight buffered reading library.
-> > > > > + *
-> > > > > + * Copyright 2019 Google LLC.
-> > > > > + */
-> > > > > +#ifndef __API_IO__
-> > > > > +#define __API_IO__
-> > > > > +
-> > > > > +struct io {
-> > > > > +       /* File descriptor being read/ */
-> > > > > +       int fd;
-> > > > > +       /* Size of the read buffer. */
-> > > > > +       unsigned int buf_len;
-> > > > > +       /* Pointer to storage for buffering read. */
-> > > > > +       char *buf;
-> > > > > +       /* End of the storage. */
-> > > > > +       char *end;
-> > > > > +       /* Currently accessed data pointer. */
-> > > > > +       char *data;
-> > > > > +       /* Set true on when the end of file on read error. */
-> > > > > +       bool eof;
-> > > > > +};
-> > > > > +
-> > > > > +static inline void io__init(struct io *io, int fd,
-> > > > > +                           char *buf, unsigned int buf_len)
-> > > > > +{
-> > > > > +       io->fd = fd;
-> > > > > +       io->buf_len = buf_len;
-> > > > > +       io->buf = buf;
-> > > > > +       io->end = buf;
-> > > > > +       io->data = buf;
-> > > > > +       io->eof = false;
-> > > > > +}
-> > > > > +
-> > > > > +/* Reads one character from the "io" file with similar semantics to fgetc. */
-> > > > > +static inline int io__get_char(struct io *io)
-> > > > > +{
-> > > > > +       char *ptr = io->data;
-> > > > > +
-> > > > > +       if (ptr == io->end) {
-> > > > > +               ssize_t n = read(io->fd, io->buf, io->buf_len);
-> > > > > +
-> > > > > +               if (n <= 0) {
-> > > > > +                       io->eof = true;
-> > > > > +                       return -1;
-> > > > > +               }
-> > > > > +               ptr = &io->buf[0];
-> > > > > +               io->end = &io->buf[n];
-> > > > > +       }
-> > > > > +       io->data = ptr + 1;
-> > > > > +       return *ptr;
-> > > > > +}
-> > > > > +
-> > > > > +/* Read a hexadecimal value with no 0x prefix into the out argument hex.
-> > > > > + * Returns -1 on error or if nothing is read, otherwise returns the character
-> > > > > + * after the hexadecimal value.
-> > > > > + */
-> > > > > +static inline int io__get_hex(struct io *io, __u64 *hex)
-> > > > > +{
-> > > > > +       bool first_read = true;
-> > > > > +
-> > > > > +       *hex = 0;
-> > > > > +       while (true) {
-> > > > > +               char ch = io__get_char(io);
-> > > > > +
-> > > >
-> > > > Maybe you can add this
-> > > >
-> > > >     if (io->eof)
-> > > >         return 0;
-> > > >
-> > > > Please see below
-> > > >
-> > > >
-> > > > > +               if (ch < 0)
-> > > > > +                       return ch;
-> > > > > +               if (ch >= '0' && ch <= '9')
-> > > > > +                       *hex = (*hex << 4) | (ch - '0');
-> > > > > +               else if (ch >= 'a' && ch <= 'f')
-> > > > > +                       *hex = (*hex << 4) | (ch - 'a' + 10);
-> > > > > +               else if (ch >= 'A' && ch <= 'F')
-> > > > > +                       *hex = (*hex << 4) | (ch - 'A' + 10);
-> > > > > +               else if (first_read)
-> > > > > +                       return -1;
-> > > > > +               else
-> > > > > +                       return ch;
-> > > > > +               first_read = false;
-> > > > > +       }
-> > > > > +}
-> > > >
-> > > > What if a file contains hex digits at the end (without trailing spaces)?
-> > > > I guess it'd see EOF and return -1, right?
-> > > >
-> > > > And it'd better to be clear when it sees a big hex numbers -
-> > > > it could have a comment that it'd simply discard upper bits
-> > > > or return an error.
-> > > >
-> > > > > +
-> > > > > +/* Read a decimal value into the out argument dec.
-> > > > > + * Returns -1 on error or if nothing is read, otherwise returns the character
-> > > > > + * after the decimal value.
-> > > > > + */
-> > > > > +static inline int io__get_dec(struct io *io, __u64 *dec)
-> > > > > +{
-> > > > > +       bool first_read = true;
-> > > > > +
-> > > > > +       *dec = 0;
-> > > > > +       while (true) {
-> > > > > +               char ch = io__get_char(io);
-> > > > > +
-> > > > > +               if (ch < 0)
-> > > > > +                       return ch;
-> > > > > +               if (ch >= '0' && ch <= '9')
-> > > > > +                       *dec = (*dec * 10) + ch - '0';
-> > > > > +               else if (first_read)
-> > > > > +                       return -1;
-> > > > > +               else
-> > > > > +                       return ch;
-> > > > > +               first_read = false;
-> > > > > +       }
-> > > > > +}
-> > > >
-> > > > Ditto.
-> > > >
-> > > > Thanks
-> > > > Namhyung
-> > > >
-> > > >
-> > > > > +
-> > > > > +#endif /* __API_IO__ */
-> > > > > --
-> > > > > 2.26.0.rc2.310.g2932bb562d-goog
-> > > > >
-> > >
-> > > --
-> > >
-> > > - Arnaldo
+> Acked-by: Sandeep Patil <sspatil@android.com>
 >
-> --
+> - ssp
 >
-> - Arnaldo
+> 1. https://android.googlesource.com/kernel/common/+/refs/heads/android-5.=
+4/arch/arm64/configs/gki_defconfig#45
