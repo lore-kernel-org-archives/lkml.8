@@ -2,58 +2,58 @@ Return-Path: <SRS0=VV4q=52=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A66DC2BB55
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 20:26:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29D9FC2D0EC
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 20:29:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C8A9620732
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 20:26:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E35B720732
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 20:29:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Rb6Q1NVn"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="m9o4HrWY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726707AbgDJU0Y (ORCPT
+        id S1726666AbgDJU3G (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Apr 2020 16:26:24 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:38092 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726659AbgDJU0U (ORCPT
+        Fri, 10 Apr 2020 16:29:06 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:40534 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726594AbgDJU3G (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Apr 2020 16:26:20 -0400
-Received: by mail-pf1-f196.google.com with SMTP id c21so1487195pfo.5
-        for <linux-kernel@vger.kernel.org>; Fri, 10 Apr 2020 13:26:20 -0700 (PDT)
+        Fri, 10 Apr 2020 16:29:06 -0400
+Received: by mail-pl1-f193.google.com with SMTP id h11so1001920plk.7
+        for <linux-kernel@vger.kernel.org>; Fri, 10 Apr 2020 13:29:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to;
-        bh=pcawoXzVUnVmK13P4l97Pnws9LJgqOmSgo+Ma/dSWps=;
-        b=Rb6Q1NVncgv/6LrQjHpG/fCd/Eq6dDMbjtn14iX378Is2HtKxpf1KzcdRcUJQKpAjE
-         3jcUokjzBmfZ9DcloypWm67fUYTHSXQ6SvuNJv4raI7UAROw25onxDiiZ9BSo6QulpKp
-         4p05bqg7iV9Mh551htKgXjmTu+kRXOvAM+ZfI=
+        bh=HODoK6E8L/CuOaFGCg2iAC1rPoU/icSNRuY7o7sO8Ws=;
+        b=m9o4HrWYGaPjCrKKUVeHWee1Rn5fs9FN8wu6WoU+bDI6noVqb5hinEVQokCBtuQJfT
+         fLUO9wsv1VCMDI85blYzteeMqCT3bnQlg7kLwecAI+coZAI0xGeYB+rFd43a65241FI8
+         E9vNhsauJMCTPS6vDrZki02VIpPoRwqpUc+7o=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=pcawoXzVUnVmK13P4l97Pnws9LJgqOmSgo+Ma/dSWps=;
-        b=uVtsXBp8snDzSp5Ufe+SI4S0yvoYdKX2kBNZC5hSSLgg3jMf1z+noRhtFyIBN9UWSG
-         5w94ZHxoL9+IA/CRL8dK2snXZO9u/LBvQlkyWipmFiMceydl92f2pfM59YPjycFudNN4
-         YSQ0mRklRHWGzx631GnKxTs3GegczzcIXcYFNXT//6BHZ77VIdS75MWN7xTImHJ38MD8
-         65nwRjvYIzPXCTQ93gBVgRJiULGiAerSixC9SOckC3lU+cnSnT8YD43sXgdxEwK9wC00
-         C+FEpMJaQTYydzjpMf443Mik5oBY+3fLT7TdWJ+tP9SGBLru0YBHX9sKVONseRYgb+Qo
-         GKqw==
-X-Gm-Message-State: AGi0PuYQoWWIt6Sd5vJfkFX9ct5KOulfmkP8qzODhGZ729XxlBplE6JW
-        Pa/4mtXkN6i2NvJw4ApFFbr8Kg==
-X-Google-Smtp-Source: APiQypK9ltyvL2bWmmEFCII0i4yr4OAUIQsB6jy+736q8Ru3rDmgBOTO/4ND99RcHfaRdLuItB72Rw==
-X-Received: by 2002:aa7:9f98:: with SMTP id z24mr6906759pfr.122.1586550380256;
-        Fri, 10 Apr 2020 13:26:20 -0700 (PDT)
+        bh=HODoK6E8L/CuOaFGCg2iAC1rPoU/icSNRuY7o7sO8Ws=;
+        b=IRlkCMAGiGbeXepNRqHHYf6dfiWsYRTmKPnFD2i3rOi3Tq4eqcsv5VZccw9JX2GykJ
+         E/a9EzlD/S/r2OIS7UeRLZncHT1TSHC0BvxOs+5Muv8gd8ZbdOG6ZgMv8dwzt1DIiosr
+         HYg37v6EvN8EueXhhlto1MAGs6AUNrcNLh8dxlZIkNWTl+qQ4b0p3qwEbfS1oal4VbOo
+         9Vy5FMytXT1CPbZDGlPWFRPZNQz+BqYepga/YUl6EkIL5YA5DZd9cfEaa2DjCefGpBre
+         vcLIWo5jB7mymInP0OHnHxsLOYOgr/9AIAmR4nYgrGiwdRqL0wbFHucSaJqw1sKxNc8g
+         reaw==
+X-Gm-Message-State: AGi0PubL2fkSu4XZ8Rr+wdWZXPJjm8g/gGPl/yc9BAKRQUKqsSg/hih2
+        b2g27OOtb82i8ZmsEnagixlmFA==
+X-Google-Smtp-Source: APiQypKD8wYXfs/7EzdxX7L5G4cmdiNC+Ks7MIPw8kTtJLh6/UJnCEZ3fylDcudFSFjvfjyqm97q8A==
+X-Received: by 2002:a17:902:bd45:: with SMTP id b5mr6008293plx.185.1586550545406;
+        Fri, 10 Apr 2020 13:29:05 -0700 (PDT)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id u13sm2582831pjb.45.2020.04.10.13.26.19
+        by smtp.gmail.com with ESMTPSA id u26sm2240496pga.3.2020.04.10.13.29.04
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 10 Apr 2020 13:26:19 -0700 (PDT)
-Date:   Fri, 10 Apr 2020 13:26:18 -0700
+        Fri, 10 Apr 2020 13:29:04 -0700 (PDT)
+Date:   Fri, 10 Apr 2020 13:29:03 -0700
 From:   Kees Cook <keescook@chromium.org>
 To:     Thadeu Lima de Souza Cascardo <cascardo@canonical.com>
 Cc:     bpf@vger.kernel.org, netdev@vger.kernel.org,
@@ -61,7 +61,7 @@ Cc:     bpf@vger.kernel.org, netdev@vger.kernel.org,
         luto@amacapital.net, wad@chromium.org, shuah@kernel.org
 Subject: Re: [PATCH] selftests/seccomp: allow clock_nanosleep instead of
  nanosleep
-Message-ID: <202004101325.CF69610F77@keescook>
+Message-ID: <202004101328.075568852D@keescook>
 References: <20200408235753.8566-1-cascardo@canonical.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
@@ -82,9 +82,10 @@ On Wed, Apr 08, 2020 at 08:57:53PM -0300, Thadeu Lima de Souza Cascardo wrote:
 > 
 > Signed-off-by: Thadeu Lima de Souza Cascardo <cascardo@canonical.com>
 
-Thanks for this! I'm trying to determine if all architectures have
-__NR_clock_nanosleep ... got some test builds running now, but if it all
-builds fine, then I'll get this sent to Linus for -rc2.
+Actually, sorry, this should go via Shuah's tree. :) Shuah, do you have
+anything going Linus's way already for -rc2?
+
+Acked-by: Kees Cook <keescook@chromium.org>
 
 -Kees
 
