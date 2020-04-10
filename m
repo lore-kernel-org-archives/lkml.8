@@ -2,117 +2,130 @@ Return-Path: <SRS0=VV4q=52=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 526CEC2BB85
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 07:08:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22447C2BA2B
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 07:16:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1FBEB214DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 07:08:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586502495;
-	bh=qZUrGgs9MA+6DN+o3ifCTBbl77+DpyVEavu1CJytVio=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=Bzd6i/7ZFeC5IUSnWkHLDvM3TEkf6A34aORTdvzdRIodXPjZkEqV1avfiq5YUhH03
-	 X+/q+rqDeBbDvWSfcKf/q4kp5eaRIETzHLthj+rh3WAxHeITdP6LAVje2UkScWXx8u
-	 OPBSRbhxkCDJ8uXP3pKLNjpsf3gvSZinXjRj4dCo=
+	by mail.kernel.org (Postfix) with ESMTP id E803020692
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 07:16:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726191AbgDJHIN (ORCPT
+        id S1726177AbgDJHQT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Apr 2020 03:08:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52312 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725776AbgDJHIN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Apr 2020 03:08:13 -0400
-Received: from mail-io1-f53.google.com (mail-io1-f53.google.com [209.85.166.53])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 97FA72166E;
-        Fri, 10 Apr 2020 07:08:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586502493;
-        bh=qZUrGgs9MA+6DN+o3ifCTBbl77+DpyVEavu1CJytVio=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=ikjF5Wt+mJkvpDJw2jz7w0Pek+ks1rUVUZKSMSQmRIQ46xLgzYpYHcV0nGxZaEKmV
-         swT9gK3z3NrodGHSzYoeEuCfWWObccMj4dgjjGzp/au5fgcjcjEWrRrffN0pWsvBRd
-         +Tmhbn1YqdBHfX8uvaO7ymN0Fq0szjM7rbL6BHBo=
-Received: by mail-io1-f53.google.com with SMTP id n10so923936iom.3;
-        Fri, 10 Apr 2020 00:08:13 -0700 (PDT)
-X-Gm-Message-State: AGi0PuZwjfqVFfGa/ugDPobzUzNVpVO1xF5YkC+x0XUeC/8WCGl92iKR
-        WjFGOfDFyOfYPjV27U/3pTD+zJ4a+Qk+iYSZxt0=
-X-Google-Smtp-Source: APiQypK6ZCQ31ZOyfnieUvolvVloPKu2SLyozbl68q7Ih7U3rsPqULWXxtRpIdDq93/HIF3RpPsK/zaS08LRAtfRAzc=
-X-Received: by 2002:a02:7785:: with SMTP id g127mr3329097jac.134.1586502492857;
- Fri, 10 Apr 2020 00:08:12 -0700 (PDT)
+        Fri, 10 Apr 2020 03:16:19 -0400
+Received: from mail-io1-f72.google.com ([209.85.166.72]:44752 "EHLO
+        mail-io1-f72.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725858AbgDJHQT (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Apr 2020 03:16:19 -0400
+Received: by mail-io1-f72.google.com with SMTP id o20so1290385ioa.11
+        for <linux-kernel@vger.kernel.org>; Fri, 10 Apr 2020 00:16:17 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=Va41vCtvpJZisksuHvVDpuLd/Rd1sssyCkB242NnNGQ=;
+        b=gD9YWravOYaxuiAe0eYnFR+4dtuBVGZqRv3ee2Fc5WfYoHelDFc38CShMg7vbDgWaF
+         qfo5ku7++j3f+0KbCQ0bYmDzADlc8z4E/9a4TWFP6+ZnN68rMgZ0ngoqDasSPSFULJ4w
+         kImSQuLGHsuGEAt/gX1bCb95E28fYOlU2k4Bnktv/vBxdJnl3S3xAfB9EaotdCFjFR+t
+         LhGU6pTqgWe9olvH4SFykwqnr1mVNbYB8gCImT49qub/3UwxyEW3qzVbp+0tE0sjoGtE
+         jp0ZpMOqo48I9kcuKxi75bGx93LDwh92y8gksA3xkfoXtwtKc5dPeN0ZmZ5+DK5YlMUz
+         qlFw==
+X-Gm-Message-State: AGi0PuZpOfs3+Jm5vPoUe9zt5hGsd4nCjCZfVy/98z6F2bYaRCmjNgEp
+        PZmYx7qGp1SOvKAkMv1UHv6ZrjL0F0cFCEVkzNGFFbBpUCTi
+X-Google-Smtp-Source: APiQypJsBLCzuIkaeKYVj/JlyPLH02vMu9k+P5xojN8On9gjQIs7qU4oaOBRVKQO2oxrTjw+nk8AnO5BAoZFDNfMMH+ydMj1so2c
 MIME-Version: 1.0
-References: <20200409130434.6736-1-ardb@kernel.org> <20200409190109.GB45598@mit.edu>
- <CAMj1kXGiA3PAybR7r9tatL7WV5iU7B1OQxQok3d-JmRnhX1TnA@mail.gmail.com>
- <20200409201632.GC45598@mit.edu> <CAMj1kXFqKGSqm_y+ht4mmmu10TrhSyiTG8V3PxRYGodpZ=xNFQ@mail.gmail.com>
- <20200409235716.GF45598@mit.edu>
-In-Reply-To: <20200409235716.GF45598@mit.edu>
-From:   Ard Biesheuvel <ardb@kernel.org>
-Date:   Fri, 10 Apr 2020 09:08:01 +0200
-X-Gmail-Original-Message-ID: <CAMj1kXH4VtNcJugpG_UR10ewGiOApTiw=C3FsuyAQQyg67Q8Aw@mail.gmail.com>
-Message-ID: <CAMj1kXH4VtNcJugpG_UR10ewGiOApTiw=C3FsuyAQQyg67Q8Aw@mail.gmail.com>
-Subject: Re: [GIT PULL 0/9] EFI fixes for v5.7-rc
-To:     "Theodore Y. Ts'o" <tytso@mit.edu>
-Cc:     linux-efi <linux-efi@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Arvind Sankar <nivedita@alum.mit.edu>,
-        Borislav Petkov <bp@suse.de>,
-        Colin Ian King <colin.king@canonical.com>,
-        Gary Lin <glin@suse.com>, Jiri Slaby <jslaby@suse.cz>,
-        Sergey Shatunov <me@prok.pw>, Takashi Iwai <tiwai@suse.de>
+X-Received: by 2002:a05:6602:2402:: with SMTP id s2mr3083214ioa.69.1586502977104;
+ Fri, 10 Apr 2020 00:16:17 -0700 (PDT)
+Date:   Fri, 10 Apr 2020 00:16:17 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <00000000000062b41d05a2ea82b0@google.com>
+Subject: kernel BUG at net/phonet/socket.c:LINE!
+From:   syzbot <syzbot+2dc91e7fc3dea88b1e8a@syzkaller.appspotmail.com>
+To:     courmisch@gmail.com, davem@davemloft.net, kuba@kernel.org,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        syzkaller-bugs@googlegroups.com
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 10 Apr 2020 at 01:57, Theodore Y. Ts'o <tytso@mit.edu> wrote:
->
-> On Thu, Apr 09, 2020 at 11:29:06PM +0200, Ard Biesheuvel wrote:
-> > > What happens is that the kexec'ed kernel immediately crashes, at which
-> > > point we drop back into the BIOS, and then it boots the Debain 4.19.0
-> > > distro kernel instead of the kernel to be tested boot.  Since we lose
-> > > the boot command line that was used from the kexec, the gce-xfstests
-> > > image retries the kexec, which fails, and the failing kexec repeats
-> > > until I manually kill the VM.
-> >
-> > Does this help at all?
-> >
-> > diff --git a/arch/x86/include/asm/efi.h b/arch/x86/include/asm/efi.h
-> > index 781170d36f50..52f8138243df 100644
-> > --- a/arch/x86/include/asm/efi.h
-> > +++ b/arch/x86/include/asm/efi.h
-> > @@ -180,6 +180,7 @@ extern void __init
-> > efi_uv1_memmap_phys_epilog(pgd_t *save_pgd);
-> >
-> >  struct efi_setup_data {
-> >         u64 fw_vendor;
-> > +       u64 __unused;
-> >         u64 tables;
-> >         u64 smbios;
-> >         u64 reserved[8];
->
->
-> Tested-by: Theodore Ts'o <tytso@mit.edu>
->
+Hello,
 
-OK, I'll spin a proper patch
+syzbot found the following crash on:
 
-> Yep, that fixed it.  Thanks!!
->
-> I wonder if this structure definition should be moved something like
-> arch/x86/include/uapi/asm/efi.h so it's more obvious that the
-> structure layout is used externally to the kernel?
->
+HEAD commit:    b93cfb9c net: icmp6: do not select saddr from iif when rou..
+git tree:       net
+console output: https://syzkaller.appspot.com/x/log.txt?x=13501d2be00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=94a7f1dec460ee83
+dashboard link: https://syzkaller.appspot.com/bug?extid=2dc91e7fc3dea88b1e8a
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
 
-Well, 95% of the data structures used by EFI are based on the UEFI
-spec, so the base assumption is really that we cannot make changes
-like these to begin with. But I'll add a DON'T TOUCH comment here in
-any case.
+Unfortunately, I don't have any reproducer for this crash yet.
+
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+2dc91e7fc3dea88b1e8a@syzkaller.appspotmail.com
+
+------------[ cut here ]------------
+kernel BUG at net/phonet/socket.c:213!
+invalid opcode: 0000 [#1] PREEMPT SMP KASAN
+CPU: 0 PID: 8394 Comm: syz-executor.4 Not tainted 5.6.0-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+RIP: 0010:pn_socket_autobind net/phonet/socket.c:213 [inline]
+RIP: 0010:pn_socket_autobind+0x13c/0x160 net/phonet/socket.c:202
+Code: 44 05 00 00 00 00 00 44 89 e0 48 8b 4c 24 58 65 48 33 0c 25 28 00 00 00 75 23 48 83 c4 60 5b 5d 41 5c 41 5d c3 e8 b4 ad 41 fa <0f> 0b e8 9d 56 7f fa eb 9f e8 b6 56 7f fa e9 6d ff ff ff e8 0c dd
+RSP: 0018:ffffc900034cfda8 EFLAGS: 00010212
+RAX: 0000000000040000 RBX: 0000000000000000 RCX: ffffc90011d66000
+RDX: 0000000000000081 RSI: ffffffff873183dc RDI: 0000000000000003
+RBP: 1ffff92000699fb5 R08: ffff8880620f61c0 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000000000
+R13: dffffc0000000000 R14: 0000000000000000 R15: 0000000000000000
+FS:  00007f84223c9700(0000) GS:ffff8880ae600000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00000000004d8730 CR3: 000000005cce0000 CR4: 00000000001406f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+ pn_socket_listen+0x40/0x200 net/phonet/socket.c:399
+ __sys_listen+0x17d/0x250 net/socket.c:1696
+ __do_sys_listen net/socket.c:1705 [inline]
+ __se_sys_listen net/socket.c:1703 [inline]
+ __x64_sys_listen+0x50/0x70 net/socket.c:1703
+ do_syscall_64+0xf6/0x7d0 arch/x86/entry/common.c:295
+ entry_SYSCALL_64_after_hwframe+0x49/0xb3
+RIP: 0033:0x45c889
+Code: ad b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 7b b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00
+RSP: 002b:00007f84223c8c78 EFLAGS: 00000246 ORIG_RAX: 0000000000000032
+RAX: ffffffffffffffda RBX: 00007f84223c96d4 RCX: 000000000045c889
+RDX: 0000000000000000 RSI: 000000000000007d RDI: 0000000000000003
+RBP: 000000000076bf00 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 00000000ffffffff
+R13: 0000000000000712 R14: 00000000004c9e2d R15: 000000000076bf0c
+Modules linked in:
+---[ end trace 65d6f1331216c544 ]---
+RIP: 0010:pn_socket_autobind net/phonet/socket.c:213 [inline]
+RIP: 0010:pn_socket_autobind+0x13c/0x160 net/phonet/socket.c:202
+Code: 44 05 00 00 00 00 00 44 89 e0 48 8b 4c 24 58 65 48 33 0c 25 28 00 00 00 75 23 48 83 c4 60 5b 5d 41 5c 41 5d c3 e8 b4 ad 41 fa <0f> 0b e8 9d 56 7f fa eb 9f e8 b6 56 7f fa e9 6d ff ff ff e8 0c dd
+RSP: 0018:ffffc900034cfda8 EFLAGS: 00010212
+RAX: 0000000000040000 RBX: 0000000000000000 RCX: ffffc90011d66000
+RDX: 0000000000000081 RSI: ffffffff873183dc RDI: 0000000000000003
+RBP: 1ffff92000699fb5 R08: ffff8880620f61c0 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000000000
+R13: dffffc0000000000 R14: 0000000000000000 R15: 0000000000000000
+FS:  00007f84223c9700(0000) GS:ffff8880ae600000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 000000000076c000 CR3: 000000005cce0000 CR4: 00000000001406f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+
+
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
