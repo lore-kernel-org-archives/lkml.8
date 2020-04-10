@@ -2,30 +2,30 @@ Return-Path: <SRS0=VV4q=52=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88487C2BB55
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 19:36:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78BF3C2D0EC
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 19:36:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6655820801
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 19:36:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 446F020732
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 19:36:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726766AbgDJTgY (ORCPT
+        id S1726777AbgDJTg3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Apr 2020 15:36:24 -0400
-Received: from ex13-edg-ou-001.vmware.com ([208.91.0.189]:55107 "EHLO
+        Fri, 10 Apr 2020 15:36:29 -0400
+Received: from ex13-edg-ou-001.vmware.com ([208.91.0.189]:55118 "EHLO
         EX13-EDG-OU-001.vmware.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726142AbgDJTgX (ORCPT
+        by vger.kernel.org with ESMTP id S1726715AbgDJTg2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Apr 2020 15:36:23 -0400
+        Fri, 10 Apr 2020 15:36:28 -0400
 Received: from sc9-mailhost2.vmware.com (10.113.161.72) by
  EX13-EDG-OU-001.vmware.com (10.113.208.155) with Microsoft SMTP Server id
- 15.0.1156.6; Fri, 10 Apr 2020 12:36:05 -0700
+ 15.0.1156.6; Fri, 10 Apr 2020 12:36:22 -0700
 Received: from sc9-mailhost3.vmware.com (unknown [10.166.69.226])
-        by sc9-mailhost2.vmware.com (Postfix) with ESMTP id D5E72B2C7E;
-        Fri, 10 Apr 2020 15:36:09 -0400 (EDT)
+        by sc9-mailhost2.vmware.com (Postfix) with ESMTP id EE71EB2C7E;
+        Fri, 10 Apr 2020 15:36:26 -0400 (EDT)
 From:   Matt Helsley <mhelsley@vmware.com>
 To:     <linux-kernel@vger.kernel.org>
 CC:     Josh Poimboeuf <jpoimboe@redhat.com>,
@@ -35,10 +35,12 @@ CC:     Josh Poimboeuf <jpoimboe@redhat.com>,
         Steven Rostedt <rostedt@goodmis.org>,
         Miroslav Benes <mbenes@suse.cz>,
         Matt Helsley <mhelsley@vmware.com>
-Subject: [RFC][PATCH 00/36] objtool: Make recordmcount a subcommand
-Date:   Fri, 10 Apr 2020 12:35:23 -0700
-Message-ID: <cover.1586468801.git.mhelsley@vmware.com>
+Subject: [RFC][PATCH 03/36] objtool: Enable compilation of objtool for all architectures
+Date:   Fri, 10 Apr 2020 12:35:26 -0700
+Message-ID: <a96d42818c7e8f2a8bd2e151b8c220193f4ae986.1586468801.git.mhelsley@vmware.com>
 X-Mailer: git-send-email 2.25.1
+In-Reply-To: <cover.1586468801.git.mhelsley@vmware.com>
+References: <cover.1586468801.git.mhelsley@vmware.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7BIT
 Content-Type:   text/plain; charset=US-ASCII
@@ -49,140 +51,66 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-recordmcount has its own ELF wrapper code and could utilize
-objtool's ELF code to more-portably handle architecture variations.
-This series makes recordmcount a subcommand of objtool.
+objtool currently only compiles for x86 architectures. This is
+fine as it presently does not support tooling for other
+architectures. However, we would like to be able to convert other
+kernel tools to run as objtool sub commands because they too
+process ELF object files. This will allow us to convert tools
+such as recordmcount to use objtool's ELF code.
 
-The initial 5 patches make objtool compilable for more than x86.
-Unlike recordmcount the check command and orc tools are not currently
-checking other architectures so we need a way to cleanly build
-objtool for those architectures that don't support check / orc. I
-went with using weak symbols and added a "missing" architecture
-which can be used to indicate the tool is not implemented while
-avoiding the need for every architecture to explicitly specify
-which subcommands / features are not implemented. I'm curious if
-there are better approaches folks recommend though -- this is the
-one I landed on. The patches do not add HAVE_OBJTOOL to all
-architectures.
+Since much of recordmcount's ELF code is copy-paste code to/from
+a variety of other kernel tools (look at modpost for example) this
+means that if we can convert recordmcount we can convert more.
 
-Note:
-I've been following some of the discussion around making check work
-for arm64. So I'd say this series moves check into arch/x86 to
-reflect its current status and demonstrates how a command relevant
-to a single arch could be handled -- not necessarily what
-will/should happen to check.
+We define a "missing" architecture which contains weak definitions
+for tools that do not exist on all architectures. In this case the
+"check" and "orc" tools do not exist on all architectures.
 
-Subsequent patches, the bulk of the set, very gradually convert
-recordmcount to become a subcommand of objtool and then reuse
-parts of objtool's ELF code. recordmcount maps the file in and
-collects simple information it needs to append a section to the
-object file. The only part of the original file it modifies is the
-address of new section tables -- interestingly enough this
-resembles RCU in that we don't really trim the old tables so
-much as unlink them via one critical offset and then rely on
-future (tooling in this case) to drop the unused bits. So much of
-the recordmcount ELF code is only reading and walking the data
-structures to collect the mcount locations it records in a separate
-area of memory. This means it's safe to mix access to the mapped
-file with access to the objtool-style linked data
-structures as we gradually convert it to using only the linked data
-structures. Once the old ELF code is no longer in use we can drop it
-and use objtool to take over the task of writing the results without
-using the RCU-like trick any more.
+To test building for other architectures ($arch below):
 
-Testing so far:
+	cd tools/objtool/arch
+	ln -s missing $arch
+	make O=build-$arch ARCH=$arch tools/objtool
 
-I've been using scripts to test compilation, execution of objtool,
-and mcount output for x86, ppc64le, arm64, s390, and sparc.
+This uses the weak, no-op definitions of the "check" and "orc"
+commands for the newly-supported architecture. Presently these
+exit with 127 to indicate that the subcommands are missing.
+Subsequent patches can then be made to determine if the weak
+definitions are used and explicitly report a missing command,
+and even to list which subcommands are supported (perhaps if
+no subcommand is specified it can list the supported subcommands).
 
-Matt Helsley (36):
-  objtool: Exit successfully when requesting help
-  objtool: Move struct objtool_file into arch-independent header
-  objtool: Enable compilation of objtool for all architectures
-  objtool: Report missing support for subcommands
-  objtool: Add support for relocations without addends
-  objtool: Prepare to merge recordmcount
-  objtool: Make recordmcount into mcount subcmd
-  objtool: recordmcount: Start using objtool's elf wrapper
-  objtool: recordmcount: Search for __mcount_loc before walking the
-    sections
-  objtool: recordmcount: Convert do_func() relhdrs
-  objtool: mcount: Remove unused fname parameter
-  objtool: mcount: Use libelf for section header names
-  objtool: mcount: Walk objtool Elf structs in find_secsym_ndx
-  objtool: mcount: Use symbol structs to find mcount relocations
-  objtool: mcount: Walk relocation lists
-  objtool: mcount: Move get_mcountsym
-  objtool: mcount: Replace MIPS offset types
-  objtool: mcount: Move is_fake_mcount()
-  objtool: mcount: Stop using ehdr in find_section_sym_index
-  objtool: mcount: Move find_section_sym_index()
-  objtool: mcount: Restrict using ehdr in append_func()
-  objtool: mcount: Use objtool ELF to write
-  objtool: mcount: Move nop_mcount()
-  objtool: mcount: Move helpers out of ELF wrapper
-  objtool: mcount: Move relocation entry size detection
-  objtool: mcount: Only keep ELF file size
-  objtool: mcount: Use ELF header from objtool
-  objtool: mcount: Remove unused file mapping
-  objtool: mcount: Reduce usage of _size wrapper
-  objtool: mcount: Move mcount_adjust out of wrapper
-  objtool: mcount: Pre-allocate new ELF sections
-  objtool: mcount: Generic location and relocation table types
-  objtool: mcount: Move sift_rel_mcount out of wrapper file
-  objtool: mcount: Remove wrapper for ELF relocation type
-  objtool: mcount: Remove wrapper double-include trick
-  objtool: mcount: Remove wordsized endian wrappers
+objtool is not currently wired in to KConfig to be built for other
+architectures because it's not needed for those architectures and
+there are no commands it supports other than those for x86.
 
- Documentation/dontdiff                     |   2 +-
- Documentation/trace/ftrace-design.rst      |   4 +-
- Documentation/trace/ftrace.rst             |   6 +-
- Makefile                                   |   6 +-
- arch/arm64/include/asm/ftrace.h            |   2 +-
- arch/x86/include/asm/ftrace.h              |   2 +-
- kernel/trace/Kconfig                       |   2 +-
- scripts/.gitignore                         |   1 -
- scripts/Makefile                           |   1 -
- scripts/Makefile.build                     |  24 +-
- scripts/recordmcount.c                     | 663 --------------------
- scripts/recordmcount.h                     | 606 ------------------
- scripts/sorttable.h                        |   2 +-
- tools/objtool/.gitignore                   |   1 +
- tools/objtool/Build                        |   6 +-
- tools/objtool/Makefile                     |   1 +
- tools/objtool/arch/missing/Build           |   4 +
- tools/objtool/arch/missing/check.c         |  16 +
- tools/objtool/arch/missing/mcount.c        |  16 +
- tools/objtool/arch/missing/orc_dump.c      |  13 +
- tools/objtool/arch/missing/orc_gen.c       |  16 +
- tools/objtool/arch/x86/Build               |   4 +
- tools/objtool/{ => arch/x86}/arch.h        |  42 +-
- tools/objtool/{ => arch/x86}/cfi.h         |   0
- tools/objtool/{ => arch/x86}/check.c       |  11 +-
- tools/objtool/arch/x86/decode.c            |   2 +-
- tools/objtool/{ => arch/x86}/orc_dump.c    |   5 +-
- tools/objtool/{ => arch/x86}/orc_gen.c     |   9 +-
- tools/objtool/{ => arch/x86}/special.c     |   4 +-
- tools/objtool/{ => arch/x86}/special.h     |   2 +-
- tools/objtool/builtin-check.c              |   5 +
- tools/objtool/builtin-mcount.c             |  56 ++
- tools/objtool/builtin-orc.c                |   9 +-
- tools/objtool/builtin.h                    |   4 +
- tools/objtool/check.h                      |  48 +-
- tools/objtool/elf.c                        |  60 +-
- tools/objtool/elf.h                        |   7 +-
- tools/objtool/mcount.h                     |  14 +
- tools/objtool/objtool.c                    |  40 +-
- tools/objtool/objtool.h                    |  20 +
- tools/objtool/orc.h                        |   3 +-
- tools/objtool/recordmcount.c               | 682 +++++++++++++++++++++
- {scripts => tools/objtool}/recordmcount.pl |   0
- 43 files changed, 1038 insertions(+), 1383 deletions(-)
- delete mode 100644 scripts/recordmcount.c
- delete mode 100644 scripts/recordmcount.h
+This commit allows us to demonstrate the pattern of adding
+architecture support and isolates moving the various files from
+adding support for more objtool subcommands.
+
+Signed-off-by: Matt Helsley <mhelsley@vmware.com>
+---
+ tools/objtool/Build                     |  4 ---
+ tools/objtool/arch/missing/Build        |  3 ++
+ tools/objtool/arch/missing/check.c      | 14 +++++++++
+ tools/objtool/arch/missing/orc_dump.c   | 11 +++++++
+ tools/objtool/arch/missing/orc_gen.c    | 16 ++++++++++
+ tools/objtool/arch/x86/Build            |  4 +++
+ tools/objtool/{ => arch/x86}/arch.h     | 42 ++++++++++++++++++++++++-
+ tools/objtool/{ => arch/x86}/cfi.h      |  0
+ tools/objtool/{ => arch/x86}/check.c    | 11 ++++---
+ tools/objtool/arch/x86/decode.c         |  2 +-
+ tools/objtool/{ => arch/x86}/orc_dump.c |  5 +--
+ tools/objtool/{ => arch/x86}/orc_gen.c  |  9 ++++--
+ tools/objtool/{ => arch/x86}/special.c  |  4 +--
+ tools/objtool/{ => arch/x86}/special.h  |  2 +-
+ tools/objtool/builtin-orc.c             |  2 +-
+ tools/objtool/check.h                   | 37 ----------------------
+ tools/objtool/objtool.h                 |  2 +-
+ tools/objtool/orc.h                     |  2 --
+ 18 files changed, 110 insertions(+), 60 deletions(-)
  create mode 100644 tools/objtool/arch/missing/Build
  create mode 100644 tools/objtool/arch/missing/check.c
- create mode 100644 tools/objtool/arch/missing/mcount.c
  create mode 100644 tools/objtool/arch/missing/orc_dump.c
  create mode 100644 tools/objtool/arch/missing/orc_gen.c
  rename tools/objtool/{ => arch/x86}/arch.h (59%)
@@ -192,12 +120,374 @@ Matt Helsley (36):
  rename tools/objtool/{ => arch/x86}/orc_gen.c (96%)
  rename tools/objtool/{ => arch/x86}/special.c (98%)
  rename tools/objtool/{ => arch/x86}/special.h (95%)
- create mode 100644 tools/objtool/builtin-mcount.c
- create mode 100644 tools/objtool/mcount.h
- create mode 100644 tools/objtool/objtool.h
- create mode 100644 tools/objtool/recordmcount.c
- rename {scripts => tools/objtool}/recordmcount.pl (100%)
 
+diff --git a/tools/objtool/Build b/tools/objtool/Build
+index 66f44f5cd2a6..3178c00072f5 100644
+--- a/tools/objtool/Build
++++ b/tools/objtool/Build
+@@ -1,11 +1,7 @@
+ objtool-y += arch/$(SRCARCH)/
+ objtool-y += builtin-check.o
+ objtool-y += builtin-orc.o
+-objtool-y += check.o
+-objtool-y += orc_gen.o
+-objtool-y += orc_dump.o
+ objtool-y += elf.o
+-objtool-y += special.o
+ objtool-y += objtool.o
+ 
+ objtool-y += libstring.o
+diff --git a/tools/objtool/arch/missing/Build b/tools/objtool/arch/missing/Build
+new file mode 100644
+index 000000000000..a2478db59484
+--- /dev/null
++++ b/tools/objtool/arch/missing/Build
+@@ -0,0 +1,3 @@
++objtool-y += check.o
++objtool-y += orc_gen.o
++objtool-y += orc_dump.o
+diff --git a/tools/objtool/arch/missing/check.c b/tools/objtool/arch/missing/check.c
+new file mode 100644
+index 000000000000..5eac14c8c6a5
+--- /dev/null
++++ b/tools/objtool/arch/missing/check.c
+@@ -0,0 +1,14 @@
++// SPDX-License-Identifier: GPL-2.0-or-later
++/*
++ * Copyright (C) 2020 Matt Helsley <mhelsley@vmware.com>
++ */
++
++#include <stdbool.h>
++#include "../../check.h"
++
++const char *objname;
++
++int __attribute__ ((weak)) check(const char *_objname, bool orc)
++{
++	return 127;
++}
+diff --git a/tools/objtool/arch/missing/orc_dump.c b/tools/objtool/arch/missing/orc_dump.c
+new file mode 100644
+index 000000000000..f7ebb3a2ce9e
+--- /dev/null
++++ b/tools/objtool/arch/missing/orc_dump.c
+@@ -0,0 +1,11 @@
++// SPDX-License-Identifier: GPL-2.0-or-later
++/*
++ * Copyright (C) 2017 Josh Poimboeuf <jpoimboe@redhat.com>
++ */
++
++#include "../../orc.h"
++
++int __attribute__ ((weak)) orc_dump(const char *_objname)
++{
++	return 127;
++}
+diff --git a/tools/objtool/arch/missing/orc_gen.c b/tools/objtool/arch/missing/orc_gen.c
+new file mode 100644
+index 000000000000..4bf62ddf58a4
+--- /dev/null
++++ b/tools/objtool/arch/missing/orc_gen.c
+@@ -0,0 +1,16 @@
++// SPDX-License-Identifier: GPL-2.0-or-later
++/*
++ * Copyright (C) 2017 Josh Poimboeuf <jpoimboe@redhat.com>
++ */
++
++#include "../../orc.h"
++
++int __attribute__ ((weak)) create_orc(struct objtool_file *file)
++{
++	return 127;
++}
++
++int __attribute__ ((weak)) create_orc_sections(struct objtool_file *file)
++{
++	return 127;
++}
+diff --git a/tools/objtool/arch/x86/Build b/tools/objtool/arch/x86/Build
+index 7c5004008e97..b5669c3f7a0e 100644
+--- a/tools/objtool/arch/x86/Build
++++ b/tools/objtool/arch/x86/Build
+@@ -1,4 +1,8 @@
+ objtool-y += decode.o
++objtool-y += check.o
++objtool-y += orc_gen.o
++objtool-y += orc_dump.o
++objtool-y += special.o
+ 
+ inat_tables_script = ../arch/x86/tools/gen-insn-attr-x86.awk
+ inat_tables_maps = ../arch/x86/lib/x86-opcode-map.txt
+diff --git a/tools/objtool/arch.h b/tools/objtool/arch/x86/arch.h
+similarity index 59%
+rename from tools/objtool/arch.h
+rename to tools/objtool/arch/x86/arch.h
+index ced3765c4f44..81d07a5c3d29 100644
+--- a/tools/objtool/arch.h
++++ b/tools/objtool/arch/x86/arch.h
+@@ -8,9 +8,12 @@
+ 
+ #include <stdbool.h>
+ #include <linux/list.h>
+-#include "elf.h"
++#include "../../elf.h"
+ #include "cfi.h"
+ 
++#include <asm/orc_types.h>
++#include "../../orc.h"
++
+ enum insn_type {
+ 	INSN_JUMP_CONDITIONAL,
+ 	INSN_JUMP_UNCONDITIONAL,
+@@ -66,6 +69,43 @@ struct stack_op {
+ 	struct op_src src;
+ };
+ 
++struct insn_state {
++	struct cfi_reg cfa;
++	struct cfi_reg regs[CFI_NUM_REGS];
++	int stack_size;
++	unsigned char type;
++	bool bp_scratch;
++	bool drap, end, uaccess, df;
++	bool noinstr;
++	s8 instr;
++	unsigned int uaccess_stack;
++	int drap_reg, drap_offset;
++	struct cfi_reg vals[CFI_NUM_REGS];
++};
++
++struct instruction {
++	struct list_head list;
++	struct hlist_node hash;
++	struct section *sec;
++	unsigned long offset;
++	unsigned int len;
++	enum insn_type type;
++	unsigned long immediate;
++	bool alt_group, dead_end, ignore, hint, save, restore, ignore_alts;
++	bool retpoline_safe;
++	s8 instr;
++	u8 visited;
++	struct symbol *call_dest;
++	struct instruction *jump_dest;
++	struct instruction *first_jump_src;
++	struct rela *jump_table;
++	struct list_head alts;
++	struct symbol *func;
++	struct stack_op stack_op;
++	struct insn_state state;
++	struct orc_entry orc;
++};
++
+ void arch_initial_func_cfi_state(struct cfi_state *state);
+ 
+ int arch_decode_instruction(struct elf *elf, struct section *sec,
+diff --git a/tools/objtool/cfi.h b/tools/objtool/arch/x86/cfi.h
+similarity index 100%
+rename from tools/objtool/cfi.h
+rename to tools/objtool/arch/x86/cfi.h
+diff --git a/tools/objtool/check.c b/tools/objtool/arch/x86/check.c
+similarity index 99%
+rename from tools/objtool/check.c
+rename to tools/objtool/arch/x86/check.c
+index 8dd01f986fbb..3663a6c47146 100644
+--- a/tools/objtool/check.c
++++ b/tools/objtool/arch/x86/check.c
+@@ -6,12 +6,13 @@
+ #include <string.h>
+ #include <stdlib.h>
+ 
+-#include "builtin.h"
+-#include "check.h"
+-#include "elf.h"
+-#include "special.h"
++#include "../../builtin.h"
++#include "cfi.h"
+ #include "arch.h"
+-#include "warn.h"
++#include "../../check.h"
++#include "../../elf.h"
++#include "special.h"
++#include "../../warn.h"
+ 
+ #include <linux/hashtable.h>
+ #include <linux/kernel.h>
+diff --git a/tools/objtool/arch/x86/decode.c b/tools/objtool/arch/x86/decode.c
+index a62e032863a8..3052b11f5eeb 100644
+--- a/tools/objtool/arch/x86/decode.c
++++ b/tools/objtool/arch/x86/decode.c
+@@ -12,7 +12,7 @@
+ #include "../../../arch/x86/lib/insn.c"
+ 
+ #include "../../elf.h"
+-#include "../../arch.h"
++#include "arch.h"
+ #include "../../warn.h"
+ 
+ static unsigned char op_to_cfi_reg[][2] = {
+diff --git a/tools/objtool/orc_dump.c b/tools/objtool/arch/x86/orc_dump.c
+similarity index 98%
+rename from tools/objtool/orc_dump.c
+rename to tools/objtool/arch/x86/orc_dump.c
+index 13ccf775a83a..6eb8e595463d 100644
+--- a/tools/objtool/orc_dump.c
++++ b/tools/objtool/arch/x86/orc_dump.c
+@@ -4,8 +4,9 @@
+  */
+ 
+ #include <unistd.h>
+-#include "orc.h"
+-#include "warn.h"
++#include <asm/orc_types.h>
++#include "../../orc.h"
++#include "../../warn.h"
+ 
+ static const char *reg_name(unsigned int reg)
+ {
+diff --git a/tools/objtool/orc_gen.c b/tools/objtool/arch/x86/orc_gen.c
+similarity index 96%
+rename from tools/objtool/orc_gen.c
+rename to tools/objtool/arch/x86/orc_gen.c
+index 41e4a2754da4..0c9d3a2b3094 100644
+--- a/tools/objtool/orc_gen.c
++++ b/tools/objtool/arch/x86/orc_gen.c
+@@ -5,10 +5,13 @@
+ 
+ #include <stdlib.h>
+ #include <string.h>
++#include <asm/orc_types.h>
+ 
+-#include "orc.h"
+-#include "check.h"
+-#include "warn.h"
++#include "../../orc.h"
++#include "cfi.h"
++#include "arch.h"
++#include "../../check.h"
++#include "../../warn.h"
+ 
+ int create_orc(struct objtool_file *file)
+ {
+diff --git a/tools/objtool/special.c b/tools/objtool/arch/x86/special.c
+similarity index 98%
+rename from tools/objtool/special.c
+rename to tools/objtool/arch/x86/special.c
+index e74e0189de22..677b6efe1446 100644
+--- a/tools/objtool/special.c
++++ b/tools/objtool/arch/x86/special.c
+@@ -11,9 +11,9 @@
+ #include <stdlib.h>
+ #include <string.h>
+ 
+-#include "builtin.h"
++#include "../../builtin.h"
+ #include "special.h"
+-#include "warn.h"
++#include "../../warn.h"
+ 
+ #define EX_ENTRY_SIZE		12
+ #define EX_ORIG_OFFSET		0
+diff --git a/tools/objtool/special.h b/tools/objtool/arch/x86/special.h
+similarity index 95%
+rename from tools/objtool/special.h
+rename to tools/objtool/arch/x86/special.h
+index 35061530e46e..beba41950725 100644
+--- a/tools/objtool/special.h
++++ b/tools/objtool/arch/x86/special.h
+@@ -7,7 +7,7 @@
+ #define _SPECIAL_H
+ 
+ #include <stdbool.h>
+-#include "elf.h"
++#include "../../elf.h"
+ 
+ struct special_alt {
+ 	struct list_head list;
+diff --git a/tools/objtool/builtin-orc.c b/tools/objtool/builtin-orc.c
+index 5f7cc6157edd..e6e54ae4ab75 100644
+--- a/tools/objtool/builtin-orc.c
++++ b/tools/objtool/builtin-orc.c
+@@ -15,7 +15,7 @@
+ #include <string.h>
+ #include "builtin.h"
+ #include "check.h"
+-
++#include "orc.h"
+ 
+ static const char *orc_usage[] = {
+ 	"objtool orc generate [<options>] file.o",
+diff --git a/tools/objtool/check.h b/tools/objtool/check.h
+index ec6ff7f0970c..4d34bfc84dc7 100644
+--- a/tools/objtool/check.h
++++ b/tools/objtool/check.h
+@@ -8,43 +8,6 @@
+ 
+ #include <stdbool.h>
+ #include "objtool.h"
+-#include "cfi.h"
+-#include "arch.h"
+-#include "orc.h"
+-
+-struct insn_state {
+-	struct cfi_reg cfa;
+-	struct cfi_reg regs[CFI_NUM_REGS];
+-	int stack_size;
+-	unsigned char type;
+-	bool bp_scratch;
+-	bool drap, end, uaccess, df;
+-	unsigned int uaccess_stack;
+-	int drap_reg, drap_offset;
+-	struct cfi_reg vals[CFI_NUM_REGS];
+-};
+-
+-struct instruction {
+-	struct list_head list;
+-	struct hlist_node hash;
+-	struct section *sec;
+-	unsigned long offset;
+-	unsigned int len;
+-	enum insn_type type;
+-	unsigned long immediate;
+-	bool alt_group, dead_end, ignore, hint, save, restore, ignore_alts;
+-	bool retpoline_safe;
+-	u8 visited;
+-	struct symbol *call_dest;
+-	struct instruction *jump_dest;
+-	struct instruction *first_jump_src;
+-	struct rela *jump_table;
+-	struct list_head alts;
+-	struct symbol *func;
+-	struct stack_op stack_op;
+-	struct insn_state state;
+-	struct orc_entry orc;
+-};
+ 
+ int check(const char *objname, bool orc);
+ 
+diff --git a/tools/objtool/objtool.h b/tools/objtool/objtool.h
+index afa52fe6f644..5ff352083056 100644
+--- a/tools/objtool/objtool.h
++++ b/tools/objtool/objtool.h
+@@ -17,4 +17,4 @@ struct objtool_file {
+ 	DECLARE_HASHTABLE(insn_hash, 20);
+ 	bool ignore_unreachables, c_file, hints, rodata;
+ };
+-#endif
++#endif /* _OBJTOOL_H */
+diff --git a/tools/objtool/orc.h b/tools/objtool/orc.h
+index ee2832221e62..c67f451d7610 100644
+--- a/tools/objtool/orc.h
++++ b/tools/objtool/orc.h
+@@ -6,8 +6,6 @@
+ #ifndef _ORC_H
+ #define _ORC_H
+ 
+-#include <asm/orc_types.h>
+-
+ struct objtool_file;
+ 
+ int create_orc(struct objtool_file *file);
 -- 
 2.20.1
 
