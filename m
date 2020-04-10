@@ -2,143 +2,126 @@ Return-Path: <SRS0=VV4q=52=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87E4AC2BB55
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 06:52:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D0FAC2BB85
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 06:53:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5F0D720732
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 06:52:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586501553;
-	bh=L7kNHe1v2JzVEOhiiYMbaIFcb8TEa/9WDrzQNQMB2/s=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=E4LXmB+PSrDTUn8JGDyY8AhiFX3hWBkXXfuLdhu+WTeFLpBSwZ1qrEzIL66Jae+YK
-	 HBeetm29NS4OiE08R7tisJDtNlql2zsP5tCbipFPNbdFSj90sh/2Cuvjz2xT+t7BwW
-	 6LocmK43boEAMd2JwRvRNL00y/f4SCMoy921l9Vk=
+	by mail.kernel.org (Postfix) with ESMTP id F1A9E2084D
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 06:53:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726082AbgDJGwc (ORCPT
+        id S1726179AbgDJGxo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Apr 2020 02:52:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50368 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725844AbgDJGwb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Apr 2020 02:52:31 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6790720732;
-        Fri, 10 Apr 2020 06:52:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586501550;
-        bh=L7kNHe1v2JzVEOhiiYMbaIFcb8TEa/9WDrzQNQMB2/s=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Lb2G2/ZGRG/nG3GdimyhxZB8jUCJknXcKyWE3M3tuXroCea4co5cZ2KqYBhVzh+cW
-         pCGqeczRlBrvtY7xB8q+mjsb94tO7mIMDrIEWT8mC1eHYGf3qKITyOg2F/OgeuT08x
-         9Q/mXyNmBu6AseF0YXf9ys+fwGio2eBYJ4XD/E08=
-Date:   Fri, 10 Apr 2020 08:52:27 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Saravana Kannan <saravanak@google.com>
-Cc:     Sasha Levin <sashal@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        stable <stable@vger.kernel.org>
-Subject: Re: [PATCH AUTOSEL 5.6 14/68] driver core: Reevaluate
- dev->links.need_for_probe as suppliers are added
-Message-ID: <20200410065227.GA1665508@kroah.com>
-References: <20200410034634.7731-1-sashal@kernel.org>
- <20200410034634.7731-14-sashal@kernel.org>
- <20200410062931.GD1663372@kroah.com>
- <CAGETcx9Kp6JvuyF770XKsMTCY6=rC2zuBTG07oB18bya0owgWw@mail.gmail.com>
+        Fri, 10 Apr 2020 02:53:44 -0400
+Received: from esa2.mentor.iphmx.com ([68.232.141.98]:3985 "EHLO
+        esa2.mentor.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725844AbgDJGxn (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Apr 2020 02:53:43 -0400
+IronPort-SDR: U2DmNUMOmEaRTNv3w56LX2kzv2X4EyQNLqsJHagvuuLkFcEh0QCnfRkbPj0CqY3tETT/9ZWrAN
+ TPzGuUq8gvgAOas9aAEjwhgGsj93XFWoUCah8SGxUBcX4PF8klxzDljwc6Ny7S9UsYZJNxynuX
+ 9GfAp4+D8FSpQx6NFMOU7PGzNkJ/tH3At+0NQ6XAvY7lbQoPdIA1kYDP05rWC4CLH5naIpHtR9
+ rlMq5vuTZmhSWWT96GxxalWF0EXMJEzwU+RBUgUAi3gBy1rHnyq9oHhcPH0DrTOd9tCqw5Yosf
+ GNc=
+X-IronPort-AV: E=Sophos;i="5.72,364,1580803200"; 
+   d="scan'208";a="47549097"
+Received: from orw-gwy-01-in.mentorg.com ([192.94.38.165])
+  by esa2.mentor.iphmx.com with ESMTP; 09 Apr 2020 22:53:43 -0800
+IronPort-SDR: KfhfzDl3cuQJF/PMnO2Z0QuhtBDRaI6p2RHRH4v0qywLwCY2YFPNiVRZMuRmgchkCvAMJWW991
+ hQ/E3XQ+Yw8qh1w/vhcpMgHkVT2UYSJduS/Sgp/Bx32dSV+nYGhzruJUgIMxA+oXSZkDe4vGsF
+ 5IXf0X9dWkKyEgfuJsRIP9E0lKmlB13n+hcbopky5TJfihxTYmOzdF8lyYSJaNEWc93WVXUmfZ
+ XV6YyQt6XQWyXbOahEWSG4adErPVhs5SIronAS9J4QIYTOW7U+7KkqZ3pP1Qu/1AGWZUTjk4b6
+ dBY=
+Subject: Re: [PATCH v10 43/55] dt-bindings: input: atmel: support to set max
+ bytes transferred
+To:     Dmitry Osipenko <digetx@gmail.com>, <nick@shmanahar.org>,
+        <dmitry.torokhov@gmail.com>, <jikos@kernel.org>,
+        <benjamin.tissoires@redhat.com>, <bsz@semihalf.com>
+CC:     <linux-input@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <erosca@de.adit-jv.com>, <Andrew_Gabbasov@mentor.com>,
+        <Balasubramani_Vivekanandan@mentor.com>
+References: <20200331105051.58896-1-jiada_wang@mentor.com>
+ <20200331105051.58896-44-jiada_wang@mentor.com>
+ <a15d312d-587e-5b10-e031-dde1965f6f89@gmail.com>
+ <9b98a3fc-b7ee-fc01-dc5c-248df507d4a2@mentor.com>
+ <008d019c-2de7-4fe4-0c22-2668312f808b@gmail.com>
+ <5abe310f-094c-9355-d533-fb64efcbf726@mentor.com>
+ <270812bc-8c2c-c564-be8e-4cc18de8670f@gmail.com>
+From:   "Wang, Jiada" <jiada_wang@mentor.com>
+Message-ID: <fa4c4352-a368-5c83-2c72-a077946b7975@mentor.com>
+Date:   Fri, 10 Apr 2020 15:53:38 +0900
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAGETcx9Kp6JvuyF770XKsMTCY6=rC2zuBTG07oB18bya0owgWw@mail.gmail.com>
+In-Reply-To: <270812bc-8c2c-c564-be8e-4cc18de8670f@gmail.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: svr-orw-mbx-03.mgc.mentorg.com (147.34.90.203) To
+ SVR-ORW-MBX-04.mgc.mentorg.com (147.34.90.204)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 09, 2020 at 11:39:55PM -0700, Saravana Kannan wrote:
-> On Thu, Apr 9, 2020 at 11:29 PM Greg Kroah-Hartman
-> <gregkh@linuxfoundation.org> wrote:
-> >
-> > On Thu, Apr 09, 2020 at 11:45:39PM -0400, Sasha Levin wrote:
-> > > From: Saravana Kannan <saravanak@google.com>
-> > >
-> > > [ Upstream commit 1745d299af5b373abad08fa29bff0d31dc6aff21 ]
-> > >
-> > > A previous patch 03324507e66c ("driver core: Allow
-> > > fwnode_operations.add_links to differentiate errors") forgot to update
-> > > all call sites to fwnode_operations.add_links. This patch fixes that.
-> > >
-> > > Legend:
-> > > -> Denotes RHS is an optional/potential supplier for LHS
-> > > => Denotes RHS is a mandatory supplier for LHS
-> > >
-> > > Example:
-> > >
-> > > Device A => Device X
-> > > Device A -> Device Y
-> > >
-> > > Before this patch:
-> > > 1. Device A is added.
-> > > 2. Device A is marked as waiting for mandatory suppliers
-> > > 3. Device X is added
-> > > 4. Device A is left marked as waiting for mandatory suppliers
-> > >
-> > > Step 4 is wrong since all mandatory suppliers of Device A have been
-> > > added.
-> > >
-> > > After this patch:
-> > > 1. Device A is added.
-> > > 2. Device A is marked as waiting for mandatory suppliers
-> > > 3. Device X is added
-> > > 4. Device A is no longer considered as waiting for mandatory suppliers
-> > >
-> > > This is the correct behavior.
-> > >
-> > > Fixes: 03324507e66c ("driver core: Allow fwnode_operations.add_links to differentiate errors")
-> > > Signed-off-by: Saravana Kannan <saravanak@google.com>
-> > > Link: https://lore.kernel.org/r/20200222014038.180923-2-saravanak@google.com
-> > > Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> > > Signed-off-by: Sasha Levin <sashal@kernel.org>
-> > > ---
-> > >  drivers/base/core.c | 8 ++++++--
-> > >  1 file changed, 6 insertions(+), 2 deletions(-)
-> > >
-> > > diff --git a/drivers/base/core.c b/drivers/base/core.c
-> > > index dbb0f9130f42d..d32a3aefff32f 100644
-> > > --- a/drivers/base/core.c
-> > > +++ b/drivers/base/core.c
-> > > @@ -523,9 +523,13 @@ static void device_link_add_missing_supplier_links(void)
-> > >
-> > >       mutex_lock(&wfs_lock);
-> > >       list_for_each_entry_safe(dev, tmp, &wait_for_suppliers,
-> > > -                              links.needs_suppliers)
-> > > -             if (!fwnode_call_int_op(dev->fwnode, add_links, dev))
-> > > +                              links.needs_suppliers) {
-> > > +             int ret = fwnode_call_int_op(dev->fwnode, add_links, dev);
-> > > +             if (!ret)
-> > >                       list_del_init(&dev->links.needs_suppliers);
-> > > +             else if (ret != -ENODEV)
-> > > +                     dev->links.need_for_probe = false;
-> > > +     }
-> > >       mutex_unlock(&wfs_lock);
-> > >  }
-> >
-> > For some reason this wasn't for stable kernels, but I can't remember.
+Hi Dmitry
+
+On 2020/04/10 0:10, Dmitry Osipenko wrote:
+> 09.04.2020 09:25, Wang, Jiada пишет:
+>> Hi Dmitry
+>>
+>> On 2020/04/07 23:47, Dmitry Osipenko wrote:
+>>> 07.04.2020 12:27, Wang, Jiada пишет:
+>>> ..
+>>>>> Is this a software (firmware) limitation which varies from version to
+>>>>> version?
+>>>>>
+>>>>
+>>>> the timeout issue trying to be addressed in this patch is from software,
+>>>> one of our board a Serializer/Deserializer bridge exists between the SoC
+>>>> (imx6) and the Atmel touch controller.
+>>>> imx6 i2c controller driver has a timeout value(100ms) for each i2c
+>>>> transaction,
+>>>> Large i2c read transaction failed to complete within this timeout value
+>>>> and therefore imx6 i2c controller driver aborts the transaction
+>>>> and returns failure.
+>>>>
+>>>> Therefore this patch was created to split the large i2c transaction into
+>>>> smaller chunks which can complete
+>>>> within the timeout defined by i2c controller driver.
+>>>
+>>> Isn't it possible to use the max_read/write_len of the generic struct
+>>> i2c_adapter_quirks for limiting the transfer size?
+>>>
+>>> BTW, it looks like the i.MX I2C driver doesn't specify the
+>>> i2c_adapter_quirks, which probably needs to be fixed.
+>>>
+>> yes, i.MX I2C driver can specify i2c_adapter_quirks to limit the size be
+>> transferred in one transaction.
+>>
+>> But even in this case, mxt_process_messages_t44() fails when it tries to
+>> transfer data count larger than max_read/write_len set in i.MX I2C
+>> driver, which we would like to avoid.
 > 
-> It *is* for stable kernels too. It is an actual bug that's fixable in
-> stable kernels. I think this might have been the one patch that I
-> bundled into an unrelated series, but called it out as an unrelated
-> bug. Maybe my wording in that email threw you off?
+> IIUC, the transfer's limitation is a part of I2C controller hardware and
+> not the touch controller, so it should be wrong to describe that
+> limitation in the maxtouch's DT node.
+> 
+> I meant that we probably could set the data->mtu based on
+> i2c_client->adapter->quirks->max_read and then the DT property shouldn't
+> be needed, couldn't this be done?
+>Thanks, now I understand your point,
+and yes, by this way, we can address the I2C controller limitation issue
+by its own configuration.
 
-I think it did, sorry.  So no problem adding this to the stable trees so
-I can go add it right now?
+I will replace this commit with your proposed solution
 
-thanks,
+Thanks,
+jiada
 
-greg k-h
+
+> The I2C core only rejects transfers that don't fit into the
+> max_read/write_len and nothing more.
+> 
