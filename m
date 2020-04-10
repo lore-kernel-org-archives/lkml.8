@@ -2,371 +2,138 @@ Return-Path: <SRS0=VV4q=52=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1E1AC2BB86
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 17:16:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8164C2BA2B
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 17:17:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B203D20801
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 17:16:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B2E8D2087E
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 17:17:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=yadro.com header.i=@yadro.com header.b="XA8yV+du"
+	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="OUVGMDqO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726646AbgDJRQm (ORCPT
+        id S1726659AbgDJRRh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Apr 2020 13:16:42 -0400
-Received: from mta-02.yadro.com ([89.207.88.252]:43560 "EHLO mta-01.yadro.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726177AbgDJRQm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Apr 2020 13:16:42 -0400
-Received: from localhost (unknown [127.0.0.1])
-        by mta-01.yadro.com (Postfix) with ESMTP id 5227A413D7;
-        Fri, 10 Apr 2020 17:16:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=yadro.com; h=
-        content-type:content-type:content-transfer-encoding:mime-version
-        :x-mailer:message-id:date:date:subject:subject:from:from
-        :received:received:received; s=mta-01; t=1586538997; x=
-        1588353398; bh=Nk510nQQHnv9mw6eQeK7OVssrV86+FMDkHAG/ixoCMk=; b=X
-        A8yV+du5A9a281krAkk5X1i8gK1IYUd+MzGGpFqN1EWt40A/fz8xZiljmLa5UOBK
-        76zHPYpseVd+qZSz52cLYDSVUSXUwcaEzwYkP6FDuVXGXnW7uLf3a1Yptl468p0I
-        +RKzH0PP1u/Ujn55rwz1ChkVN75xRjT1u9QVwPlbc0=
-X-Virus-Scanned: amavisd-new at yadro.com
-Received: from mta-01.yadro.com ([127.0.0.1])
-        by localhost (mta-01.yadro.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id bxhFev6NtRmu; Fri, 10 Apr 2020 20:16:37 +0300 (MSK)
-Received: from T-EXCH-02.corp.yadro.com (t-exch-02.corp.yadro.com [172.17.10.102])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mta-01.yadro.com (Postfix) with ESMTPS id 2AF6D404CF;
-        Fri, 10 Apr 2020 20:16:36 +0300 (MSK)
-Received: from bbwork.com (172.17.14.122) by T-EXCH-02.corp.yadro.com
- (172.17.10.102) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384_P384) id 15.1.669.32; Fri, 10
- Apr 2020 20:16:37 +0300
-From:   Alexander Filippov <a.filippov@yadro.com>
-To:     <linux-aspeed@lists.ozlabs.org>
-CC:     <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        Andrew Jeffery <andrew@aj.id.au>,
-        Joel Stanley <joel@jms.id.au>,
-        Rob Herring <robh+dt@kernel.org>,
-        Alexander Filippov <a.filippov@yadro.com>
-Subject: [PATCH v2] ARM: DTS: Aspeed: Add YADRO Nicole BMC
-Date:   Fri, 10 Apr 2020 20:16:13 +0300
-Message-ID: <20200410171613.30260-1-a.filippov@yadro.com>
-X-Mailer: git-send-email 2.21.1
+        Fri, 10 Apr 2020 13:17:37 -0400
+Received: from mout.gmx.net ([212.227.17.22]:59715 "EHLO mout.gmx.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726181AbgDJRRg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Apr 2020 13:17:36 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+        s=badeba3b8450; t=1586539050;
+        bh=OknhL+dWbzP6DoI+4HmmR01y+Q6JNKzHBccrGewbg+Q=;
+        h=X-UI-Sender-Class:Date:From:To:Cc:Subject:References:In-Reply-To;
+        b=OUVGMDqOpWObl63V+g4fyTdDqjN+zyXimTh7l/EmnhO399VKex+evYkdpxeWafbXJ
+         4t2RG/hqH+8Mcjz7dADWbRX8LR7DKKcxZjUGrWHXzbmka4A01w6a071brI4ypgDedB
+         Ds/X6G57GBfUxprPzIypXb32BGaSIb+883Y3goqU=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from ubuntu ([83.52.229.196]) by mail.gmx.com (mrgmx104
+ [212.227.17.174]) with ESMTPSA (Nemesis) id 1N95iR-1jBbC92uLH-0168wW; Fri, 10
+ Apr 2020 19:17:30 +0200
+Date:   Fri, 10 Apr 2020 19:17:28 +0200
+From:   Oscar Carter <oscar.carter@gmx.com>
+To:     Malcolm Priestley <tvboxspy@gmail.com>
+Cc:     Forest Bond <forest@alittletooquiet.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Quentin Deslandes <quentin.deslandes@itdev.co.uk>,
+        Amir Mahdi Ghorbanian <indigoomega021@gmail.com>,
+        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/2] staging: vt6656: Refactor the assignment of the
+ phy->signal variable
+Message-ID: <20200410171728.GB3426@ubuntu>
+References: <20200410112834.17490-1-oscar.carter@gmx.com>
+ <20200410112834.17490-2-oscar.carter@gmx.com>
+ <986e8e5e-245a-cc70-2c6f-8ac3a4a485c9@gmail.com>
+ <20200410155911.GA3426@ubuntu>
+ <fcc434e9-9da4-4f24-19cc-bac8fc7166ec@gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Originating-IP: [172.17.14.122]
-X-ClientProxiedBy: T-EXCH-01.corp.yadro.com (172.17.10.101) To
- T-EXCH-02.corp.yadro.com (172.17.10.102)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <fcc434e9-9da4-4f24-19cc-bac8fc7166ec@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Provags-ID: V03:K1:27q35nxGK3q2xRnJOp8V1guiMD64c05HSKVZUFVsHrBN06g+XxU
+ gmed7ieyuTcUN8SocH7KH/wdtl0oRegNqzj+LR62Q28TSjpnvxLU9FZiFoIiLUwGDXi+RCd
+ S2x2vpyt28gTK+LW2/Uh7gyvcCIQTznVb1j+q5YLLS3chRJzb8bM7VrOw6gidXyOCPemFxQ
+ 7fIlu53q0hwhvZOSy740w==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:JHeNEQktVis=:DS5il7YFW+VCEYBpd5CTMc
+ x/jQIsgaThVTYZGeuoeweM9p+Um73hbo1NDVCL2ZhWebQm787C85e4H0OBmwWY4kfLP8p7cEp
+ q8oIcOULG2asKqiX7jXLjA8mnEBku6GcAufTPZhu2ECHUNA81UI4HpQArgwE/1mbVS+0L3Cfy
+ bHStxL0chAJklE9MnAfWzBH7BphaEVrOadTfjeViOWuZS+BQwQUr/Xy19/MrvQP0588F5e9uC
+ 3EzkQf37qx6wbCPXrdnK/1GYLbXsANAahIpPG3TfcEKelabWsCY30GLyZu3ii4mMOECCLqFy2
+ DJPKshZ5nxFel+QZ//50C8m9hgKsk0nMkGnGzN1hGszlfMAUJEOEGxET0zodjJWgepUUEcXyw
+ f5AjixWy0423ucVdpf2I7JCjLZdrXZEjZVaX33lIpOJ4rmmdjdNToiW78BWtmH6Jel6/AIoEq
+ 9+yduamGSWOT/bRIirbXntgtgBd4tqv9ANhC/E1NTf+SuDx2QOGZY5cZAs+FZyRS4d0czFLTC
+ HniQVBXeNWROukWPxNkHFNpnp1WxNHJPIQBmRQEugOwapKw56VpWLXGeOZi9j0/S3x01H0H2+
+ CK7BvnHFtFrw18O4FNUCXkHkRfMZ99/LIlIf6mZJ5qGtJtl8RnmM/75GVa7ptSsIDUcH4IT0G
+ /N0f7guFzqzj0bEH3ERXAbcF8dvOPS61g72alZOfeyBNa0sUrN09Y84PowsdsPHxAvPWP0h+l
+ /nfeJfV2fzFfVivxHRGWkgl7Zs9Gi+t4ISyLcYdm5lTs26gRwWH3jswhA5L9ieGNfnvYs4u6N
+ yBpNPIMKXgqFMo4on9QxvCVHUcFYvUnVIdzTqLffuczAasWpEgT3u/ZsNE+RndtgmOxyPGXGX
+ Pm256flWpzQtF449YMSca4I5J02v1OmFOZuSdA+/6N1okG9v99k83ZjVa7zHQPSRCBWwMdd7D
+ Nb7/mh0BuEgjxie3zh6qm0HXTDQy/Fhs7eQNrIpdb7UsaRjihKFy9QzHM1Wj2rP72AzM2lD2f
+ ggLKYrU6VN5zuEjZFjROuHMd6C7mOeqVWLfMB0jVq7S/QlXcYD81+kIIHq87wnNW704dW2gc6
+ yfRrbFQKfwLlWTeQAcg4BrQLHtbZflhvHCzcpQKls/KBB4mJY9IpLW9yMMwCQn8jizjf67Wmr
+ DztBRiZIyKm+CrkPTwzg9AkZUB60InBl3YCO7+l8QFh+ESwWqBE8vQaUtiIJVD5wtgWuwsiI9
+ FfHMKs+BCbDC1EHXW
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Nicole is an OpenPower machine with an Aspeed 2500 BMC SoC manufactured
-by YADRO.
+On Fri, Apr 10, 2020 at 05:40:52PM +0100, Malcolm Priestley wrote:
+>
+>
+> On 10/04/2020 16:59, Oscar Carter wrote:
+> > On Fri, Apr 10, 2020 at 04:37:59PM +0100, Malcolm Priestley wrote:
+> > >
+> > >
+> > > On 10/04/2020 12:28, Oscar Carter wrote:
+> > > > Create a constant array with the values of the "phy->signal" for e=
+very
+> > > > rate. Remove all "phy->signal" assignments inside the switch state=
+ment
+> > > > and replace these with a single reading from the new vnt_phy_signa=
+l
+> > > > array.
+> > > >
+> > > > Signed-off-by: Oscar Carter <oscar.carter@gmx.com>
+> > > > ---
+> > > >    drivers/staging/vt6656/baseband.c | 101 +++++++----------------=
+-------
+> > > >    1 file changed, 21 insertions(+), 80 deletions(-)
+> > > >
+> > > > diff --git a/drivers/staging/vt6656/baseband.c b/drivers/staging/v=
+t6656/baseband.c
+> > > > index a19a563d8bcc..47f93bf6e07b 100644
+> > > > --- a/drivers/staging/vt6656/baseband.c
+> > > > +++ b/drivers/staging/vt6656/baseband.c
+> > > > @@ -115,6 +115,21 @@ static const u16 vnt_frame_time[MAX_RATE] =3D=
+ {
+> > > >    	10, 20, 55, 110, 24, 36, 48, 72, 96, 144, 192, 216
+> > > >    };
+> > >
+> > > Actually you don't need the second values
+> >
+> > Great.
+> > > >
+> > > > +static const u8 vnt_phy_signal[][2] =3D {
+> > > > +	{0x00, 0x00},	/* RATE_1M  */
+> > > The driver would never attempt use preamble at this rate
+> > > so it's safe to include in with the next 3 rates
+> Sorry got this wrong the driver is trying to do preamble (short)
+> at this rate and it is not working.
+>
+> So don't apply it to RATE_1M rate.
 
-Signed-off-by: Alexander Filippov <a.filippov@yadro.com>
----
- arch/arm/boot/dts/Makefile                  |   1 +
- arch/arm/boot/dts/aspeed-bmc-opp-nicole.dts | 270 ++++++++++++++++++++
- 2 files changed, 271 insertions(+)
- create mode 100644 arch/arm/boot/dts/aspeed-bmc-opp-nicole.dts
+Ok, I take it into account.
+>
+> Regards
+>
+> Malcolm
+>
+Thanks,
 
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index e8dd99201397..6f9fe0f959f2 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -1347,6 +1347,7 @@ dtb-$(CONFIG_ARCH_ASPEED) += \
- 	aspeed-bmc-microsoft-olympus.dtb \
- 	aspeed-bmc-opp-lanyang.dtb \
- 	aspeed-bmc-opp-mihawk.dtb \
-+	aspeed-bmc-opp-nicole.dtb \
- 	aspeed-bmc-opp-palmetto.dtb \
- 	aspeed-bmc-opp-romulus.dtb \
- 	aspeed-bmc-opp-swift.dtb \
-diff --git a/arch/arm/boot/dts/aspeed-bmc-opp-nicole.dts b/arch/arm/boot/dts/aspeed-bmc-opp-nicole.dts
-new file mode 100644
-index 000000000000..3f1d92bab07b
---- /dev/null
-+++ b/arch/arm/boot/dts/aspeed-bmc-opp-nicole.dts
-@@ -0,0 +1,270 @@
-+// SPDX-License-Identifier: GPL-2.0+
-+// Copyright 2019 YADRO
-+/dts-v1/;
-+#include "aspeed-g5.dtsi"
-+#include <dt-bindings/gpio/aspeed-gpio.h>
-+
-+/ {
-+	model = "Nicole BMC";
-+	compatible = "yadro,nicole-bmc", "aspeed,ast2500";
-+
-+	chosen {
-+		stdout-path = &uart5;
-+		bootargs = "console=ttyS4,115200 earlyprintk";
-+	};
-+
-+	memory@80000000 {
-+		reg = <0x80000000 0x20000000>;
-+	};
-+
-+	reserved-memory {
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		ranges;
-+
-+		vga_memory: framebuffer@9f000000 {
-+			no-map;
-+			reg = <0x9f000000 0x01000000>; /* 16M */
-+		};
-+
-+		flash_memory: region@98000000 {
-+			no-map;
-+			reg = <0x98000000 0x04000000>; /* 64M */
-+		};
-+
-+		coldfire_memory: codefire_memory@9ef00000 {
-+			reg = <0x9ef00000 0x00100000>;
-+			no-map;
-+		};
-+
-+		gfx_memory: framebuffer {
-+			size = <0x01000000>;
-+			alignment = <0x01000000>;
-+			compatible = "shared-dma-pool";
-+			reusable;
-+		};
-+
-+		video_engine_memory: jpegbuffer {
-+			size = <0x02000000>;	/* 32M */
-+			alignment = <0x01000000>;
-+			compatible = "shared-dma-pool";
-+			reusable;
-+		};
-+	};
-+
-+	leds {
-+		compatible = "gpio-leds";
-+
-+		power {
-+			gpios = <&gpio ASPEED_GPIO(AA, 4) GPIO_ACTIVE_HIGH>;
-+		};
-+
-+		identify {
-+			gpios = <&gpio ASPEED_GPIO(AA, 7) GPIO_ACTIVE_HIGH>;
-+		};
-+
-+		alarm_red {
-+			gpios = <&gpio ASPEED_GPIO(AA, 3) GPIO_ACTIVE_HIGH>;
-+		};
-+
-+		alarm_yellow {
-+			gpios = <&gpio ASPEED_GPIO(AA, 1) GPIO_ACTIVE_HIGH>;
-+		};
-+	};
-+
-+	fsi: gpio-fsi {
-+		compatible = "aspeed,ast2500-cf-fsi-master", "fsi-master";
-+		#address-cells = <2>;
-+		#size-cells = <0>;
-+		no-gpio-delays;
-+
-+		memory-region = <&coldfire_memory>;
-+		aspeed,sram = <&sram>;
-+		aspeed,cvic = <&cvic>;
-+
-+		clock-gpios = <&gpio ASPEED_GPIO(AA, 0) GPIO_ACTIVE_HIGH>;
-+		data-gpios = <&gpio ASPEED_GPIO(AA, 2) GPIO_ACTIVE_HIGH>;
-+		mux-gpios = <&gpio ASPEED_GPIO(A, 6) GPIO_ACTIVE_HIGH>;
-+		enable-gpios = <&gpio ASPEED_GPIO(D, 0) GPIO_ACTIVE_HIGH>;
-+		trans-gpios = <&gpio ASPEED_GPIO(P, 1) GPIO_ACTIVE_HIGH>;
-+	};
-+
-+	gpio-keys {
-+		compatible = "gpio-keys";
-+
-+		checkstop {
-+			label = "checkstop";
-+			gpios = <&gpio ASPEED_GPIO(J, 2) GPIO_ACTIVE_LOW>;
-+			linux,code = <ASPEED_GPIO(J, 2)>;
-+		};
-+	};
-+
-+	iio-hwmon-battery {
-+		compatible = "iio-hwmon";
-+		io-channels = <&adc 12>;
-+	};
-+};
-+
-+&fmc {
-+	status = "okay";
-+	flash@0 {
-+		status = "okay";
-+		m25p,fast-read;
-+		label = "bmc";
-+		spi-max-frequency = <50000000>;
-+#include "openbmc-flash-layout.dtsi"
-+	};
-+};
-+
-+&spi1 {
-+	status = "okay";
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_spi1_default>;
-+
-+	flash@0 {
-+		status = "okay";
-+		m25p,fast-read;
-+		label = "pnor";
-+		spi-max-frequency = <100000000>;
-+	};
-+};
-+
-+&lpc_ctrl {
-+	status = "okay";
-+	memory-region = <&flash_memory>;
-+	flash = <&spi1>;
-+};
-+
-+&uart1 {
-+	/* Rear RS-232 connector */
-+	status = "okay";
-+
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_txd1_default
-+			&pinctrl_rxd1_default
-+			&pinctrl_nrts1_default
-+			&pinctrl_ndtr1_default
-+			&pinctrl_ndsr1_default
-+			&pinctrl_ncts1_default
-+			&pinctrl_ndcd1_default
-+			&pinctrl_nri1_default>;
-+};
-+
-+&uart5 {
-+	status = "okay";
-+};
-+
-+&mac0 {
-+	status = "okay";
-+
-+	use-ncsi;
-+
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_rmii1_default>;
-+	clocks = <&syscon ASPEED_CLK_GATE_MAC1CLK>,
-+		 <&syscon ASPEED_CLK_MAC1RCLK>;
-+	clock-names = "MACCLK", "RCLK";
-+};
-+
-+&i2c0 {
-+	status = "okay";
-+
-+	eeprom@50 {
-+		compatible = "atmel,24c256";
-+		reg = <0x50>;
-+		pagesize = <64>;
-+	};
-+};
-+
-+&i2c2 {
-+	status = "okay";
-+    /* CPU0 characterization connector */
-+};
-+
-+&i2c3 {
-+	status = "okay";
-+    /* CLK GEN SI5338 */
-+};
-+
-+&i2c4 {
-+	status = "okay";
-+    /* Voltage regulators for CPU0 */
-+};
-+
-+&i2c5 {
-+	status = "okay";
-+    /* Voltage regulators for CPU1 */
-+};
-+
-+&i2c6 {
-+	status = "okay";
-+
-+	rtc@32 {
-+		compatible = "epson,rx8900";
-+		reg = <0x32>;
-+	};
-+};
-+
-+&i2c7 {
-+	status = "okay";
-+    /* CPLD */
-+};
-+
-+&gpio {
-+	nic_func_mode0 {
-+		gpio-hog;
-+		gpios = <ASPEED_GPIO(D, 3) GPIO_ACTIVE_HIGH>;
-+		output-low;
-+		line-name = "nic_func_mode0";
-+	};
-+	nic_func_mode1 {
-+		gpio-hog;
-+		gpios = <ASPEED_GPIO(D, 4) GPIO_ACTIVE_HIGH>;
-+		output-low;
-+		line-name = "nic_func_mode1";
-+	};
-+	seq_cont {
-+		gpio-hog;
-+		gpios = <ASPEED_GPIO(S, 7) GPIO_ACTIVE_HIGH>;
-+		output-low;
-+		line-name = "seq_cont";
-+	};
-+	ncsi_cfg {
-+		gpio-hog;
-+		input;
-+		gpios = <ASPEED_GPIO(E, 1) GPIO_ACTIVE_HIGH>;
-+		line-name = "ncsi_cfg";
-+	};
-+};
-+
-+&vuart {
-+	status = "okay";
-+};
-+
-+&gfx {
-+	status = "okay";
-+	memory-region = <&gfx_memory>;
-+};
-+
-+&pinctrl {
-+	aspeed,external-nodes = <&gfx &lhc>;
-+};
-+
-+&ibt {
-+	status = "okay";
-+};
-+
-+&vhub {
-+	status = "okay";
-+};
-+
-+&adc {
-+	status = "okay";
-+};
-+
-+&video {
-+	status = "okay";
-+	memory-region = <&video_engine_memory>;
-+};
-+
-+#include "ibm-power9-dual.dtsi"
--- 
-2.21.1
-
+Oscar Carter
