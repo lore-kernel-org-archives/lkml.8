@@ -2,147 +2,104 @@ Return-Path: <SRS0=VV4q=52=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DEB0C2D0EC
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 22:12:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65423C2D0EC
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 22:13:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 337FB2083E
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 22:12:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 376392083E
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 22:13:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="sTjcXYGX"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="wzUgex3e"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726680AbgDJWMi (ORCPT
+        id S1726706AbgDJWM6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Apr 2020 18:12:38 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:44704 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726582AbgDJWMh (ORCPT
+        Fri, 10 Apr 2020 18:12:58 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:54593 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726582AbgDJWM5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Apr 2020 18:12:37 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03AMA1nx187200;
-        Fri, 10 Apr 2020 22:12:35 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2020-01-29;
- bh=D0Y+sCK6rKCNXMeoxaoYpvvgm89nbthtQcMvcu2PWx4=;
- b=sTjcXYGXMzAriDNrMtQYWAjqAtwfPbt1mkCR0DwcW8TTP5BgToI6FUFXL+o8s9sxT2S1
- /DTUkNNO7SwzQxjx0ZVUvgFL6QF8i4fjXKQ1rcBK+bzo30ZTAObZajkVYQfO1bia1CcQ
- aKSqrxC88psP07VDdCVEdbBQlHdaiQ7mBKzKCnRvPwITpj7FfZACtpmrNsObSpAHawak
- tBOkmMMIOxKvNt+ZfoJ73WAZigxIypyKMmPlYR2ZRMquLSSrndCho11bmCOsqND2JRKl
- I1GCObFdKVAJ88sOw7m9mwhuL2JDbfXv+Smz8RQ/kNqzl3hAMdqOk0dAgJzAEXQEsq3G fw== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by aserp2120.oracle.com with ESMTP id 3091m186ka-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 10 Apr 2020 22:12:35 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03AM7ZKM098900;
-        Fri, 10 Apr 2020 22:12:34 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by userp3030.oracle.com with ESMTP id 3091m8mj65-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 10 Apr 2020 22:12:34 +0000
-Received: from abhmp0006.oracle.com (abhmp0006.oracle.com [141.146.116.12])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 03AMCXUD024840;
-        Fri, 10 Apr 2020 22:12:33 GMT
-Received: from [10.159.140.158] (/10.159.140.158)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Fri, 10 Apr 2020 15:12:33 -0700
-Subject: Re: [PATCH] efi/libstub/arm64: Enable __efistub_global define in
- .data section
-To:     Ard Biesheuvel <ardb@kernel.org>
-Cc:     linux-efi <linux-efi@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-References: <1586468669-21456-1-git-send-email-victor.erminpour@oracle.com>
- <CAMj1kXGgYYx=9rq-Ficw3vS6FX_0nb-hRStXijh7H4zdD=+Gaw@mail.gmail.com>
-From:   Victor Erminpour <victor.erminpour@oracle.com>
-Organization: Oracle America
-Message-ID: <aee6c7cc-24c7-2822-47d5-1e05413a8024@oracle.com>
-Date:   Fri, 10 Apr 2020 15:12:13 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
-MIME-Version: 1.0
-In-Reply-To: <CAMj1kXGgYYx=9rq-Ficw3vS6FX_0nb-hRStXijh7H4zdD=+Gaw@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9587 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 malwarescore=0
- mlxlogscore=999 phishscore=0 spamscore=0 adultscore=0 suspectscore=0
- mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2004100156
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9587 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 mlxlogscore=999 mlxscore=0
- priorityscore=1501 phishscore=0 suspectscore=0 bulkscore=0
- lowpriorityscore=0 impostorscore=0 malwarescore=0 clxscore=1015
- spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2004100156
+        Fri, 10 Apr 2020 18:12:57 -0400
+Received: by mail-wm1-f65.google.com with SMTP id h2so3899022wmb.4
+        for <linux-kernel@vger.kernel.org>; Fri, 10 Apr 2020 15:12:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=n0j9wZcTTuZxD8KB3QqeYLTyhy9LHC9Hq6D7wBVGa6s=;
+        b=wzUgex3eNYXux6ovvi5zRsXXAqoWgMfymJ+w9Y9kEI8KMuutY/mBlnFlAJbxZDSylg
+         XB436cK8+fQ+58Gppq5HJ5ZTgDRUodQGFZEJu5SOW9iZZN+V9Q50522ncHZY4sE7mb6j
+         PmymPAOq0k2VQmZ/v0njlz8EA5m9556gzq01itNFTbDObU2vpoLHP6ju70iQV3yRmbc8
+         iu3DIzFJqBvZA4LlJU5gQizYJIlH+gMFvwjlaiX3NF9xLs8KNlBBmuqTtGzrs8XcJko5
+         tIHAg7wrm5f7pyEI+ej1WHSJYMuk6GIi3yLOHvvvYlk/T3fFhzDFWsV4o+0cxGpxvFcG
+         NZ7g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=n0j9wZcTTuZxD8KB3QqeYLTyhy9LHC9Hq6D7wBVGa6s=;
+        b=NKMwOOvf/JzjHb/TWpQ7whYsN8DJMZ++ZzkPX6b3SvG4hz1NpKfOjm+ceiFDsrkBG7
+         fxY7H1Y1X1FzwOYoSqADquf9yogh/sirkQwXVtG7fbgxhKa9JcDFt7GjyrInRmVeYaLZ
+         oULkyOQLiW8S1/2XJHy75GqusngksB7c3EnGwPA4T90+vF4cs6025ajPOblrHcPYiiRY
+         gqyDWu8X4y4eDza2kXEtoOPeqJpocLc8fhx8uDVxhcKvMJjQJ0is2DqEf3Dgzq/QjsR9
+         HYnB3LsDSVDx1el0acURNkftTX3L8vWxvcfagr7GQIpAvO75c7RgWJXjanVNY58LpbLv
+         oUDQ==
+X-Gm-Message-State: AGi0Pua3bUJlvehH17wJLSYTdRcARXfOJ8lrWOuaMr0t3VMy19Wc+hz2
+        Jmrh7CezW4fDhRGBj6oQ+mAHsA==
+X-Google-Smtp-Source: APiQypK4Hjmut4SJ1rdJrW/veFL1RencVupxCubgzD4EzX1jGgV/usBIg2qokGceKFUYkkR4Xo/iWg==
+X-Received: by 2002:a1c:2942:: with SMTP id p63mr7374059wmp.183.1586556776440;
+        Fri, 10 Apr 2020 15:12:56 -0700 (PDT)
+Received: from localhost.localdomain (lns-bzn-59-82-252-135-148.adsl.proxad.net. [82.252.135.148])
+        by smtp.gmail.com with ESMTPSA id b14sm4687952wrw.83.2020.04.10.15.12.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 10 Apr 2020 15:12:55 -0700 (PDT)
+From:   Daniel Lezcano <daniel.lezcano@linaro.org>
+To:     daniel.lezcano@linaro.org, rui.zhang@intel.com
+Cc:     amit.kucheria@verdurent.com, linux-kernel@vger.kernel.org
+Subject: [PATCH 0/6] Consolidate the thermal_cdev_update() function
+Date:   Sat, 11 Apr 2020 00:12:29 +0200
+Message-Id: <20200410221236.6484-1-daniel.lezcano@linaro.org>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+This series does the following changes:
 
+ - Moves the calls to thermal_cdev_update() in the throttle governor's
+   path
 
-On 4/10/20 1:09 AM, Ard Biesheuvel wrote:
-> On Thu, 9 Apr 2020 at 23:44, Victor Erminpour
-> <victor.erminpour@oracle.com> wrote:
->>
->> Enable the __efistub_global define to place variables in the
->> .data section for both CONFIG_ARM and CONFIG_ARM64.
->>
->> This places the EFIstub sys_table variable and other EFIstub
->> static variables in the .data section for both CONFIG_ARM and
->> CONFIG_ARM64.
->>
-> 
-> What does that achieve?
+ - Reduce the scope of the function to the thermal framework internals
 
-Hi Ard,
+After these changes, all the calls to thermal_cdev_update() are located
+in the throttle governor path, setting the scene to move the call to a
+single place, close to the concentrator function thermal_zone_device_update().
 
-Without placing these global variables in .data, I get the
-following errors when booting an ARM64 EFI system:
+The micro optimization to not invoke multiple times the cooling device
+update is lost at the moment but it will be regain when the call will
+be moved to the core.
 
-EFI stub: ERROR: Exit boot services failed.
-EFI stub: ERROR: Failed to update FDT and exit boot services
+Daniel Lezcano (6):
+  thermal: hwmon: Replace the call the thermal_cdev_update()
+  thermal: core: Move thermal_cdev_update next to updated=false
+  thermal: core: Remove pointless 'updated' boolean
+  thermal: power_allocator: Remove useless test
+  thermal: core: Move the call to thermal_cdev_udpate() to the power
+    allocator
+  thermal: core: Make thermal_cdev_update private
 
-
-I know that the ARM64 linker script is supposed to put the
-.init.bss into the .init.data section, but I don't think this
-is happening for all systems.
-
-Having it explicitly enabled for CONFIG_ARM64 worked for me.
-
-
-Regards,
---Victor
-
-
-> 
->> Signed-off-by: Victor Erminpour <victor.erminpour@oracle.com>
->> ---
->>   drivers/firmware/efi/libstub/efistub.h | 2 +-
->>   1 file changed, 1 insertion(+), 1 deletion(-)
->>
->> diff --git a/drivers/firmware/efi/libstub/efistub.h b/drivers/firmware/efi/libstub/efistub.h
->> index c244b16..59932d6 100644
->> --- a/drivers/firmware/efi/libstub/efistub.h
->> +++ b/drivers/firmware/efi/libstub/efistub.h
->> @@ -25,7 +25,7 @@
->>   #define EFI_ALLOC_ALIGN                EFI_PAGE_SIZE
->>   #endif
->>
->> -#ifdef CONFIG_ARM
->> +#if defined(CONFIG_ARM) || defined(CONFIG_ARM64)
->>   #define __efistub_global       __section(.data)
->>   #else
->>   #define __efistub_global
+ drivers/hwmon/pwm-fan.c           |  3 +--
+ drivers/thermal/fair_share.c      |  3 ---
+ drivers/thermal/gov_bang_bang.c   | 13 +------------
+ drivers/thermal/power_allocator.c | 10 ++++------
+ drivers/thermal/step_wise.c       | 13 +------------
+ drivers/thermal/thermal_core.c    |  5 -----
+ drivers/thermal/thermal_core.h    |  1 +
+ drivers/thermal/thermal_helpers.c |  6 ------
+ include/linux/thermal.h           |  4 ----
+ 9 files changed, 8 insertions(+), 50 deletions(-)
 
 -- 
-Victor Hugo Erminpour
-Principal Member of Technical Staff
-Oracle America
+2.17.1
+
