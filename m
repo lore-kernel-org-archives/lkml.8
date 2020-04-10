@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31EEFC2D0EC
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 03:50:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98E94C2BB85
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 03:50:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0623B206C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 03:50:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6FF3320936
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 03:50:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586490643;
-	bh=ZcpYVsCP/XLAJuphgVNQRaUYJF/lasso5Ft3WcK6x/0=;
+	s=default; t=1586490647;
+	bh=jisQ7VNZ4EJdf339dA8/yxY3BbWdV4GqHVyfSuZKF0I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MoZKwaMD2geLNdW6J500kCj8y6IrvWoKCYRW8pg9nkumvz35Kgn9+X8qFHJkob18/
-	 L7VJ0FoYsjc57we0a1Bcs7w1XZigPqYGY6m3NKBk5p4WX4QeZsCplfKG3sJwelu4Xw
-	 Nu9SHuCQq9ok4mA8+jKUNMu/rhnZeSynKoNRDhZA=
+	b=ww8/T3cvINe+RtAvOz9iZHMzLT+t7nhKDaqpzr98kcveSEca2Wi6utDxFom+JtOyP
+	 /N86NFb/JX3BTWcrDPZG8krIgdIAjFEAeZUOF1bCjUjYRzDp/NiBGm2KqmCZ0od7YP
+	 Rl/5aBdSDtoHn/+zSfVaOZL1pEV1Kc7MjLlguv6s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728957AbgDJDuk (ORCPT
+        id S1728977AbgDJDup (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Apr 2020 23:50:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35288 "EHLO mail.kernel.org"
+        Thu, 9 Apr 2020 23:50:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35388 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728930AbgDJDuh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Apr 2020 23:50:37 -0400
+        id S1728953AbgDJDuk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Apr 2020 23:50:40 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2545121841;
-        Fri, 10 Apr 2020 03:50:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 97F9520936;
+        Fri, 10 Apr 2020 03:50:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586490635;
-        bh=ZcpYVsCP/XLAJuphgVNQRaUYJF/lasso5Ft3WcK6x/0=;
+        s=default; t=1586490640;
+        bh=jisQ7VNZ4EJdf339dA8/yxY3BbWdV4GqHVyfSuZKF0I=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XDzq4+GD9r5JgmiEeSqJBkQLRYksw7ByL1v+AjddmFuIGrbBgFtmNTvi1doXCOcNr
-         ASa2/DhVESFhWil0kPTbQTmIai7ooLEYPVM3tfp96vYh/49trTnK1VRxKwVZXjiXc+
-         vGE0mHePOLH+HeSPZMhRM+M5Xv+g7kfvSw7tNVuw=
+        b=dR5PX+74hcwbUAUmakS3+bDTH9mrkkxsquzIz2AeeHX5goURpqpmZrxqzxx8vhbZL
+         Qda+FtFE9McIn5RiYEaLqq0R6WZ48R5K7EhWU9/m481hLTXzmAtEUm1k+xlNV0ExCF
+         XjHaMrZR0e5Wxdhq42KTImpC+gm/VCKQNfIZJswo=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Junyong Sun <sunjy516@gmail.com>,
-        Junyong Sun <sunjunyong@xiaomi.com>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.19 26/32] firmware: fix a double abort case with fw_load_sysfs_fallback
-Date:   Thu,  9 Apr 2020 23:49:59 -0400
-Message-Id: <20200410035005.9371-26-sashal@kernel.org>
+Cc:     Qu Wenruo <wqu@suse.com>, Jeff Mahoney <jeffm@suse.com>,
+        David Sterba <dsterba@suse.com>,
+        Sasha Levin <sashal@kernel.org>, linux-btrfs@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 30/32] btrfs: qgroup: ensure qgroup_rescan_running is only set when the worker is at least queued
+Date:   Thu,  9 Apr 2020 23:50:03 -0400
+Message-Id: <20200410035005.9371-30-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200410035005.9371-1-sashal@kernel.org>
 References: <20200410035005.9371-1-sashal@kernel.org>
@@ -61,79 +59,138 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Junyong Sun <sunjy516@gmail.com>
+From: Qu Wenruo <wqu@suse.com>
 
-[ Upstream commit bcfbd3523f3c6eea51a74d217a8ebc5463bcb7f4 ]
+[ Upstream commit d61acbbf54c612ea9bf67eed609494cda0857b3a ]
 
-fw_sysfs_wait_timeout may return err with -ENOENT
-at fw_load_sysfs_fallback and firmware is already
-in abort status, no need to abort again, so skip it.
+[BUG]
+There are some reports about btrfs wait forever to unmount itself, with
+the following call trace:
 
-This issue is caused by concurrent situation like below:
-when thread 1# wait firmware loading, thread 2# may write
--1 to abort loading and wakeup thread 1# before it timeout.
-so wait_for_completion_killable_timeout of thread 1# would
-return remaining time which is != 0 with fw_st->status
-FW_STATUS_ABORTED.And the results would be converted into
-err -ENOENT in __fw_state_wait_common and transfered to
-fw_load_sysfs_fallback in thread 1#.
-The -ENOENT means firmware status is already at ABORTED,
-so fw_load_sysfs_fallback no need to get mutex to abort again.
------------------------------
-thread 1#,wait for loading
-fw_load_sysfs_fallback
- ->fw_sysfs_wait_timeout
-    ->__fw_state_wait_common
-       ->wait_for_completion_killable_timeout
+  INFO: task umount:4631 blocked for more than 491 seconds.
+        Tainted: G               X  5.3.8-2-default #1
+  "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
+  umount          D    0  4631   3337 0x00000000
+  Call Trace:
+  ([<00000000174adf7a>] __schedule+0x342/0x748)
+   [<00000000174ae3ca>] schedule+0x4a/0xd8
+   [<00000000174b1f08>] schedule_timeout+0x218/0x420
+   [<00000000174af10c>] wait_for_common+0x104/0x1d8
+   [<000003ff804d6994>] btrfs_qgroup_wait_for_completion+0x84/0xb0 [btrfs]
+   [<000003ff8044a616>] close_ctree+0x4e/0x380 [btrfs]
+   [<0000000016fa3136>] generic_shutdown_super+0x8e/0x158
+   [<0000000016fa34d6>] kill_anon_super+0x26/0x40
+   [<000003ff8041ba88>] btrfs_kill_super+0x28/0xc8 [btrfs]
+   [<0000000016fa39f8>] deactivate_locked_super+0x68/0x98
+   [<0000000016fcb198>] cleanup_mnt+0xc0/0x140
+   [<0000000016d6a846>] task_work_run+0xc6/0x110
+   [<0000000016d04f76>] do_notify_resume+0xae/0xb8
+   [<00000000174b30ae>] system_call+0xe2/0x2c8
 
-in __fw_state_wait_common,
-...
-93    ret = wait_for_completion_killable_timeout(&fw_st->completion, timeout);
-94    if (ret != 0 && fw_st->status == FW_STATUS_ABORTED)
-95       return -ENOENT;
-96    if (!ret)
-97	 return -ETIMEDOUT;
-98
-99    return ret < 0 ? ret : 0;
------------------------------
-thread 2#, write -1 to abort loading
-firmware_loading_store
- ->fw_load_abort
-   ->__fw_load_abort
-     ->fw_state_aborted
-       ->__fw_state_set
-         ->complete_all
+[CAUSE]
+The problem happens when we have called qgroup_rescan_init(), but
+not queued the worker. It can be caused mostly by error handling.
 
-in __fw_state_set,
-...
-111    if (status == FW_STATUS_DONE || status == FW_STATUS_ABORTED)
-112       complete_all(&fw_st->completion);
--------------------------------------------
-BTW,the double abort issue would not cause kernel panic or create an issue,
-but slow down it sometimes.The change is just a minor optimization.
+	Qgroup ioctl thread		|	Unmount thread
+----------------------------------------+-----------------------------------
+					|
+btrfs_qgroup_rescan()			|
+|- qgroup_rescan_init()			|
+|  |- qgroup_rescan_running = true;	|
+|					|
+|- trans = btrfs_join_transaction()	|
+|  Some error happened			|
+|					|
+|- btrfs_qgroup_rescan() returns error	|
+   But qgroup_rescan_running == true;	|
+					| close_ctree()
+					| |- btrfs_qgroup_wait_for_completion()
+					|    |- running == true;
+					|    |- wait_for_completion();
 
-Signed-off-by: Junyong Sun <sunjunyong@xiaomi.com>
-Acked-by: Luis Chamberlain <mcgrof@kernel.org>
-Link: https://lore.kernel.org/r/1583202968-28792-1-git-send-email-sunjunyong@xiaomi.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+btrfs_qgroup_rescan_worker is never queued, thus no one is going to wake
+up close_ctree() and we get a deadlock.
+
+All involved qgroup_rescan_init() callers are:
+
+- btrfs_qgroup_rescan()
+  The example above. It's possible to trigger the deadlock when error
+  happened.
+
+- btrfs_quota_enable()
+  Not possible. Just after qgroup_rescan_init() we queue the work.
+
+- btrfs_read_qgroup_config()
+  It's possible to trigger the deadlock. It only init the work, the
+  work queueing happens in btrfs_qgroup_rescan_resume().
+  Thus if error happened in between, deadlock is possible.
+
+We shouldn't set fs_info->qgroup_rescan_running just in
+qgroup_rescan_init(), as at that stage we haven't yet queued qgroup
+rescan worker to run.
+
+[FIX]
+Set qgroup_rescan_running before queueing the work, so that we ensure
+the rescan work is queued when we wait for it.
+
+Fixes: 8d9eddad1946 ("Btrfs: fix qgroup rescan worker initialization")
+Signed-off-by: Jeff Mahoney <jeffm@suse.com>
+[ Change subject and cause analyse, use a smaller fix ]
+Signed-off-by: Qu Wenruo <wqu@suse.com>
+Reviewed-by: David Sterba <dsterba@suse.com>
+Signed-off-by: David Sterba <dsterba@suse.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/base/firmware_loader/fallback.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/btrfs/qgroup.c | 11 +++++++++--
+ 1 file changed, 9 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/base/firmware_loader/fallback.c b/drivers/base/firmware_loader/fallback.c
-index 818d8c37d70a9..3b7b748c4d4f2 100644
---- a/drivers/base/firmware_loader/fallback.c
-+++ b/drivers/base/firmware_loader/fallback.c
-@@ -572,7 +572,7 @@ static int fw_load_sysfs_fallback(struct fw_sysfs *fw_sysfs,
+diff --git a/fs/btrfs/qgroup.c b/fs/btrfs/qgroup.c
+index 0cd043f03081e..cbd40826f5dcf 100644
+--- a/fs/btrfs/qgroup.c
++++ b/fs/btrfs/qgroup.c
+@@ -1032,6 +1032,7 @@ int btrfs_quota_enable(struct btrfs_fs_info *fs_info)
+ 	ret = qgroup_rescan_init(fs_info, 0, 1);
+ 	if (!ret) {
+ 	        qgroup_rescan_zero_tracking(fs_info);
++		fs_info->qgroup_rescan_running = true;
+ 	        btrfs_queue_work(fs_info->qgroup_rescan_workers,
+ 	                         &fs_info->qgroup_rescan_work);
  	}
+@@ -2906,7 +2907,6 @@ qgroup_rescan_init(struct btrfs_fs_info *fs_info, u64 progress_objectid,
+ 		sizeof(fs_info->qgroup_rescan_progress));
+ 	fs_info->qgroup_rescan_progress.objectid = progress_objectid;
+ 	init_completion(&fs_info->qgroup_rescan_completion);
+-	fs_info->qgroup_rescan_running = true;
  
- 	retval = fw_sysfs_wait_timeout(fw_priv, timeout);
--	if (retval < 0) {
-+	if (retval < 0 && retval != -ENOENT) {
- 		mutex_lock(&fw_lock);
- 		fw_load_abort(fw_sysfs);
- 		mutex_unlock(&fw_lock);
+ 	spin_unlock(&fs_info->qgroup_lock);
+ 	mutex_unlock(&fs_info->qgroup_rescan_lock);
+@@ -2972,8 +2972,11 @@ btrfs_qgroup_rescan(struct btrfs_fs_info *fs_info)
+ 
+ 	qgroup_rescan_zero_tracking(fs_info);
+ 
++	mutex_lock(&fs_info->qgroup_rescan_lock);
++	fs_info->qgroup_rescan_running = true;
+ 	btrfs_queue_work(fs_info->qgroup_rescan_workers,
+ 			 &fs_info->qgroup_rescan_work);
++	mutex_unlock(&fs_info->qgroup_rescan_lock);
+ 
+ 	return 0;
+ }
+@@ -3009,9 +3012,13 @@ int btrfs_qgroup_wait_for_completion(struct btrfs_fs_info *fs_info,
+ void
+ btrfs_qgroup_rescan_resume(struct btrfs_fs_info *fs_info)
+ {
+-	if (fs_info->qgroup_flags & BTRFS_QGROUP_STATUS_FLAG_RESCAN)
++	if (fs_info->qgroup_flags & BTRFS_QGROUP_STATUS_FLAG_RESCAN) {
++		mutex_lock(&fs_info->qgroup_rescan_lock);
++		fs_info->qgroup_rescan_running = true;
+ 		btrfs_queue_work(fs_info->qgroup_rescan_workers,
+ 				 &fs_info->qgroup_rescan_work);
++		mutex_unlock(&fs_info->qgroup_rescan_lock);
++	}
+ }
+ 
+ /*
 -- 
 2.20.1
 
