@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 673CDC2D0EC
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 03:56:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08689C2BB85
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 03:56:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3E4592063A
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 03:56:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D4C672145D
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 03:56:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586490973;
-	bh=VYPYg6i/pKod6qF6y1lY09357dtCaYVNp3iKvoKFzC8=;
+	s=default; t=1586490976;
+	bh=HeFoJtQMHA3FTTcjMfTXMgiQSyrQtjY1Nu2+TAJH6kg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TQawVQNBbsl6ppgHuLGz7UgOGR8thXT4VXR/2pmn9RmhBN8IzHCO9RRtGrJnL+HHc
-	 8XQQdzh7YE6T48A4EOUbB112k1nucLtF11i9JE58wIpAAJjrGlKCVIlL7U8psN5D6h
-	 mhKJ8fNzQ/Azqacx1pRwkXwdt7XQMVQjxevD6Ok0=
+	b=dG3xo/Pnc2lItjiMKqdTYiMbVdPxg17LwMn77l7gGvUGFTPev51hjmhk90E9Kd+s8
+	 sfduSKGF3QsucDOwwg3b8YFPFnzG3JlxNbkzSCW5qeHmIJG8kSmQbbIn8BVbSiuwfl
+	 4uo8x3BqxRO1cM4/T5wT8GxwRexA8Ji8bBdJ/1b0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728828AbgDJD4L (ORCPT
+        id S1728632AbgDJDto (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Apr 2020 23:56:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33884 "EHLO mail.kernel.org"
+        Thu, 9 Apr 2020 23:49:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33712 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728636AbgDJDtp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Apr 2020 23:49:45 -0400
+        id S1728585AbgDJDtg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Apr 2020 23:49:36 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4657A214DB;
-        Fri, 10 Apr 2020 03:49:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9A2CF2137B;
+        Fri, 10 Apr 2020 03:49:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586490585;
-        bh=VYPYg6i/pKod6qF6y1lY09357dtCaYVNp3iKvoKFzC8=;
+        s=default; t=1586490576;
+        bh=HeFoJtQMHA3FTTcjMfTXMgiQSyrQtjY1Nu2+TAJH6kg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wC+PUN367BrQplZXAqaB9h47HTQGZ4D8WWHD2JBzjYW8Pt2FvxEpS5P/p9U1JARgf
-         fx0l0my+XOiMwUbLQ1Fb/221IHVJMUa74f8R2nXwF+V8QrBUVA6K9V5GwtY0+r9dy5
-         PoVA5a91FFHNJ5WizAacou/eBF0L6k5xEbiFMO90=
+        b=TTTy5YoJ5A6V1JGZI9bwSVxjfyA/hT+1IVH6dWPVF3654oBPjIh8h7PvWlwrT4Xfq
+         wxdulwjQF+GPbvGbeTLLloOahNVGImKEQ0aKe6czOqFcyZ/ibWdk64I2ZygCjw3vGX
+         mS/ZfMCaAd4kMIW9cKYGggOXuDvtZny/KL/a4/j4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Ard Biesheuvel <ardb@kernel.org>,
-        Arvind Sankar <nivedita@alum.mit.edu>,
-        Ingo Molnar <mingo@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-efi@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 30/46] efi/x86: Ignore the memory attributes table on i386
-Date:   Thu,  9 Apr 2020 23:48:53 -0400
-Message-Id: <20200410034909.8922-30-sashal@kernel.org>
+Cc:     Paolo Valente <paolo.valente@linaro.org>, cki-project@redhat.com,
+        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>,
+        cgroups@vger.kernel.org, linux-block@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 22/46] block, bfq: move forward the getting of an extra ref in bfq_bfqq_move
+Date:   Thu,  9 Apr 2020 23:48:45 -0400
+Message-Id: <20200410034909.8922-22-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200410034909.8922-1-sashal@kernel.org>
 References: <20200410034909.8922-1-sashal@kernel.org>
@@ -60,75 +59,71 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ard Biesheuvel <ardb@kernel.org>
+From: Paolo Valente <paolo.valente@linaro.org>
 
-[ Upstream commit dd09fad9d2caad2325a39b766ce9e79cfc690184 ]
+[ Upstream commit fd1bb3ae54a9a2e0c42709de861c69aa146b8955 ]
 
-Commit:
+Commit ecedd3d7e199 ("block, bfq: get extra ref to prevent a queue
+from being freed during a group move") gets an extra reference to a
+bfq_queue before possibly deactivating it (temporarily), in
+bfq_bfqq_move(). This prevents the bfq_queue from disappearing before
+being reactivated in its new group.
 
-  3a6b6c6fb23667fa ("efi: Make EFI_MEMORY_ATTRIBUTES_TABLE initialization common across all architectures")
+Yet, the bfq_queue may also be expired (i.e., its service may be
+stopped) before the bfq_queue is deactivated. And also an expiration
+may lead to a premature freeing. This commit fixes this issue by
+simply moving forward the getting of the extra reference already
+introduced by commit ecedd3d7e199 ("block, bfq: get extra ref to
+prevent a queue from being freed during a group move").
 
-moved the call to efi_memattr_init() from ARM specific to the generic
-EFI init code, in order to be able to apply the restricted permissions
-described in that table on x86 as well.
-
-We never enabled this feature fully on i386, and so mapping and
-reserving this table is pointless. However, due to the early call to
-memblock_reserve(), the memory bookkeeping gets confused to the point
-where it produces the splat below when we try to map the memory later
-on:
-
-  ------------[ cut here ]------------
-  ioremap on RAM at 0x3f251000 - 0x3fa1afff
-  WARNING: CPU: 0 PID: 0 at arch/x86/mm/ioremap.c:166 __ioremap_caller ...
-  Modules linked in:
-  CPU: 0 PID: 0 Comm: swapper/0 Not tainted 4.20.0 #48
-  Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 0.0.0 02/06/2015
-  EIP: __ioremap_caller.constprop.0+0x249/0x260
-  Code: 90 0f b7 05 4e 38 40 de 09 45 e0 e9 09 ff ff ff 90 8d 45 ec c6 05 ...
-  EAX: 00000029 EBX: 00000000 ECX: de59c228 EDX: 00000001
-  ESI: 3f250fff EDI: 00000000 EBP: de3edf20 ESP: de3edee0
-  DS: 007b ES: 007b FS: 00d8 GS: 00e0 SS: 0068 EFLAGS: 00200296
-  CR0: 80050033 CR2: ffd17000 CR3: 1e58c000 CR4: 00040690
-  Call Trace:
-   ioremap_cache+0xd/0x10
-   ? old_map_region+0x72/0x9d
-   old_map_region+0x72/0x9d
-   efi_map_region+0x8/0xa
-   efi_enter_virtual_mode+0x260/0x43b
-   start_kernel+0x329/0x3aa
-   i386_start_kernel+0xa7/0xab
-   startup_32_smp+0x164/0x168
-  ---[ end trace e15ccf6b9f356833 ]---
-
-Let's work around this by disregarding the memory attributes table
-altogether on i386, which does not result in a loss of functionality
-or protection, given that we never consumed the contents.
-
-Fixes: 3a6b6c6fb23667fa ("efi: Make EFI_MEMORY_ATTRIBUTES_TABLE ... ")
-Tested-by: Arvind Sankar <nivedita@alum.mit.edu>
-Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Link: https://lore.kernel.org/r/20200304165917.5893-1-ardb@kernel.org
-Link: https://lore.kernel.org/r/20200308080859.21568-21-ardb@kernel.org
+Reported-by: cki-project@redhat.com
+Tested-by: cki-project@redhat.com
+Signed-off-by: Paolo Valente <paolo.valente@linaro.org>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/firmware/efi/efi.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ block/bfq-cgroup.c | 14 +++++++-------
+ 1 file changed, 7 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/firmware/efi/efi.c b/drivers/firmware/efi/efi.c
-index ad8a4bc074fbf..e3861d267d9aa 100644
---- a/drivers/firmware/efi/efi.c
-+++ b/drivers/firmware/efi/efi.c
-@@ -562,7 +562,7 @@ int __init efi_config_parse_tables(void *config_tables, int count, int sz,
- 		}
- 	}
+diff --git a/block/bfq-cgroup.c b/block/bfq-cgroup.c
+index 86cd718e0380b..5611769e15690 100644
+--- a/block/bfq-cgroup.c
++++ b/block/bfq-cgroup.c
+@@ -625,6 +625,12 @@ void bfq_bfqq_move(struct bfq_data *bfqd, struct bfq_queue *bfqq,
+ {
+ 	struct bfq_entity *entity = &bfqq->entity;
  
--	if (efi_enabled(EFI_MEMMAP))
-+	if (!IS_ENABLED(CONFIG_X86_32) && efi_enabled(EFI_MEMMAP))
- 		efi_memattr_init();
++	/*
++	 * Get extra reference to prevent bfqq from being freed in
++	 * next possible expire or deactivate.
++	 */
++	bfqq->ref++;
++
+ 	/* If bfqq is empty, then bfq_bfqq_expire also invokes
+ 	 * bfq_del_bfqq_busy, thereby removing bfqq and its entity
+ 	 * from data structures related to current group. Otherwise we
+@@ -635,12 +641,6 @@ void bfq_bfqq_move(struct bfq_data *bfqd, struct bfq_queue *bfqq,
+ 		bfq_bfqq_expire(bfqd, bfqd->in_service_queue,
+ 				false, BFQQE_PREEMPTED);
  
- 	efi_tpm_eventlog_init();
+-	/*
+-	 * get extra reference to prevent bfqq from being freed in
+-	 * next possible deactivate
+-	 */
+-	bfqq->ref++;
+-
+ 	if (bfq_bfqq_busy(bfqq))
+ 		bfq_deactivate_bfqq(bfqd, bfqq, false, false);
+ 	else if (entity->on_st)
+@@ -660,7 +660,7 @@ void bfq_bfqq_move(struct bfq_data *bfqd, struct bfq_queue *bfqq,
+ 
+ 	if (!bfqd->in_service_queue && !bfqd->rq_in_driver)
+ 		bfq_schedule_dispatch(bfqd);
+-	/* release extra ref taken above */
++	/* release extra ref taken above, bfqq may happen to be freed now */
+ 	bfq_put_queue(bfqq);
+ }
+ 
 -- 
 2.20.1
 
