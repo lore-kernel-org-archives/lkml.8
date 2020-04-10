@@ -2,57 +2,57 @@ Return-Path: <SRS0=VV4q=52=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA4D1C2BB85
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 22:18:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19499C2D0EC
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 22:18:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 89FA42084D
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 22:18:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DDD7920A8B
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 22:18:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="e3lTJwDe"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="NMmjH38J"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726787AbgDJWSW (ORCPT
+        id S1726813AbgDJWSZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Apr 2020 18:18:22 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:45280 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726760AbgDJWSV (ORCPT
+        Fri, 10 Apr 2020 18:18:25 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:45458 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726776AbgDJWSW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Apr 2020 18:18:21 -0400
-Received: by mail-pf1-f196.google.com with SMTP id r14so1575753pfl.12
-        for <linux-kernel@vger.kernel.org>; Fri, 10 Apr 2020 15:18:20 -0700 (PDT)
+        Fri, 10 Apr 2020 18:18:22 -0400
+Received: by mail-pg1-f194.google.com with SMTP id w11so1509864pga.12
+        for <linux-kernel@vger.kernel.org>; Fri, 10 Apr 2020 15:18:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=zWmbbFUQQjeDm+gMt8s5CKmqbSjpsn0Bs7Vf6igbDN0=;
-        b=e3lTJwDeR+Nav+528OsUsNEAU/mQAvnOqDzBkyDMHmonykZKMLV0VVtUTENE3pD7Q6
-         GnFU+SMC26o3A55F4t3Tt68x4vLPjqJkRXN3RzuTpsdN8C5J50qTnKOpIr9VsyCZ+cLV
-         i9mbvKSAC+qjGIAx9O/tI70iccionOxKrTrQw=
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=L0Maiike3Zqtjiw4mAzlWQi4TBhmHVZQSmvVBr2Jy4Q=;
+        b=NMmjH38J0ExMl+YBVD63eYaGwtXphEizF8BjX2CNS0PF64pWfnbDFftXvzBSp8Ro4u
+         mnN6xzZdvaAPCb3Fo6yNp//8cAwrZDekda5lz7oi3h+yro3qkfO6hYm11FMEbSIaiH6K
+         QWWzcmM1LotMGSzJcWtC5PftcuUGU9CQHD+nA=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=zWmbbFUQQjeDm+gMt8s5CKmqbSjpsn0Bs7Vf6igbDN0=;
-        b=RfVaJyKxtavm40+GzjDDLcW6NOlbIhSHK890ZQqXwOVui2pjPWz2miUCWlRHHzEVGp
-         3BBZbW0SllLh1ZpO8e7zns9JUNhszjcvceNZq+jADpZeBl1l5ma+Ns1jfanbRYfChRj+
-         TOv9msd1q9UcxZOv5aJYocn1+1nrvxCA2Z+rh/wfUzltaNw2XkExUY/wGGcsYa/BtaaP
-         GyEntia5IY7fYaTWMhACE8RxUq2AoEHTR1/Mt228lMSBDQ4LHcFxno5g4nbuYRBgKVmm
-         Gp3NvZDCF9ty8Le4IL/qRDig9fFqDW9p1RI3R3DxQ+4kfZI1zGO+7X4SmQDPpf1Q2G/o
-         BsCA==
-X-Gm-Message-State: AGi0PubseHUrQKtjdVt0pvo1Nk3aQcY1PKJ4yMJaW5u5y4YpuE8TLoYc
-        e2Em5CHxQD3dsSm9Z8C8usV8Eg==
-X-Google-Smtp-Source: APiQypL5THpk7QNDWCyORXPdUOyrfq0oJPG9LZXBe4qj/CEWRQMdNwTa2WA43xoyV7Mu3AgOv45XPQ==
-X-Received: by 2002:a65:5b4f:: with SMTP id y15mr6701497pgr.134.1586557099575;
-        Fri, 10 Apr 2020 15:18:19 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=L0Maiike3Zqtjiw4mAzlWQi4TBhmHVZQSmvVBr2Jy4Q=;
+        b=N4E9H9WJn+wkoAsMfhmEP3SBb873oKlDJ20HL7AGohwwz3G3Dj8i6iJT3ICfEV5h4T
+         LrMd1PwOfKnROcqHIGUmv3E4skkftYL1dPJrdyrdtib3VBefEDXy9TbPnWzm9lgR/RxG
+         FLBceBb3gx9pZo8dkF1qhlTDaQxgNqY3WXPE078sFGuwbe1fyFdfuB224thyPIiZN0KB
+         up7BYhdjF34yTKlJae7gvoKJSBhv05WcSdW7PmE9KfgxlhtzcQb6qVINQ3DXOboNDV/i
+         vF/U2ODFNaEm/l1E3frnIzTBy18+x3l9dXPUmLsYZZl5xSjTTQPbefkQcF8NN8HBm1aC
+         VazA==
+X-Gm-Message-State: AGi0PuZm5Lo1gQUd9Thz8YvPhfbDmUOcc85c9iHGo/yDYVitjRv1nvoh
+        j2+xJUNwb/WiXdOXnTmW50No3w==
+X-Google-Smtp-Source: APiQypIBnXvzdbw/OX1em/Ecnsb3TFH93OOMVhvCVz9SFtBrpQc0u9FiEyzZmnPz0tkUHIJoEF2XSA==
+X-Received: by 2002:a62:55c7:: with SMTP id j190mr6850717pfb.65.1586557102025;
+        Fri, 10 Apr 2020 15:18:22 -0700 (PDT)
 Received: from tictac2.mtv.corp.google.com ([2620:15c:202:1:24fa:e766:52c9:e3b2])
-        by smtp.gmail.com with ESMTPSA id x2sm2646600pfq.92.2020.04.10.15.18.18
+        by smtp.gmail.com with ESMTPSA id x2sm2646600pfq.92.2020.04.10.15.18.20
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 10 Apr 2020 15:18:19 -0700 (PDT)
+        Fri, 10 Apr 2020 15:18:21 -0700 (PDT)
 From:   Douglas Anderson <dianders@chromium.org>
 To:     jason.wessel@windriver.com, daniel.thompson@linaro.org,
         gregkh@linuxfoundation.org
@@ -62,31 +62,16 @@ Cc:     hpa@zytor.com, kgdb-bugreport@lists.sourceforge.net,
         will@kernel.org, bjorn.andersson@linaro.org, agross@kernel.org,
         bp@alien8.de, catalin.marinas@arm.com,
         Douglas Anderson <dianders@chromium.org>,
-        Alexios Zavras <alexios.zavras@intel.com>,
-        Allison Randal <allison@lohutok.net>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Dave Martin <Dave.Martin@arm.com>,
-        Enrico Weigelt <info@metux.net>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        James Morse <james.morse@arm.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Juergen Gross <jgross@suse.com>,
-        Mark Rutland <mark.rutland@arm.com>,
         Masami Hiramatsu <mhiramat@kernel.org>,
-        Matt Mullins <mmullins@fb.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Nadav Amit <namit@vmware.com>,
-        Oliver Neukum <oneukum@suse.com>,
-        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
+        Matt Mullins <mmullins@fb.com>, Nadav Amit <namit@vmware.com>,
         Peter Zijlstra <peterz@infradead.org>,
-        jinho lim <jordan.lim@samsung.com>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-arm-msm@vger.kernel.org, linux-doc@vger.kernel.org,
         linux-kernel@vger.kernel.org, x86@kernel.org
-Subject: [PATCH 0/7] kgdb: Support late serial drivers; enable early debug w/ boot consoles
-Date:   Fri, 10 Apr 2020 15:17:19 -0700
-Message-Id: <20200410221726.36442-1-dianders@chromium.org>
+Subject: [PATCH 2/7] kgdb: Delay "kgdbwait" to dbg_late_init() by default
+Date:   Fri, 10 Apr 2020 15:17:21 -0700
+Message-Id: <20200410151632.2.I3113aea1b08d8ce36dc3720209392ae8b815201b@changeid>
 X-Mailer: git-send-email 2.26.0.110.g2183baf09c-goog
+In-Reply-To: <20200410221726.36442-1-dianders@chromium.org>
+References: <20200410221726.36442-1-dianders@chromium.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -94,116 +79,172 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This whole pile of patches was motivated by me trying to get kgdb to
-work properly on a platform where my serial driver ended up being hit
-by the -EPROBE_DEFER virus (it wasn't practicing social distancing
-from other drivers).  Specifically my serial driver's parent device
-depended on a resource that wasn't available when its probe was first
-called.  It returned -EPROBE_DEFER which meant that when "kgdboc"
-tried to run its setup the serial driver wasn't there.  Unfortunately
-"kgdboc" never tried again, so that meant that kgdb was disabled until
-I manually enalbed it via sysfs.
+Using kgdb requires at least some level of architecture-level
+initialization.  If nothing else, it relies on the architecture to
+pass breakpoints / crashes onto kgdb.
 
-While I could try to figure out how to get around the -EPROBE_DEFER
-somehow, the above problems could happen to anyone and -EPROBE_DEFER
-is generally considered something you just have to live with.  In any
-case the current "kgdboc" setup is a bit of a race waiting to happen.
-I _think_ I saw during early testing that even adding a msleep() in
-the typical serial driver's probe() is enough to trigger similar
-issues.
+On some architectures this all works super early, specifically it
+starts working at some point in time before Linux parses
+early_params's.  On other architectures it doesn't.  A survey of a few
+platforms:
 
-I decided that for the above race the best attitude to get kgdb to
-register at boot was probably "if you can't beat 'em, join 'em".
-Thus, "kgdboc" now jumps on the -EPROBE_DEFER bandwagon (now that my
-driver uses it it's no longer a virus).  It does so a little awkwardly
-because "kgdboc" hasn't normally had a "struct device" associated with
-it, but it's really not _that_ ugly to make a platform device and
-seems less ugly than alternatives.
+a) x86: Presumably it all works early since "ekgdboc" is documented to
+   work here.
+b) arm64: Catching crashes works; with a simple patch breakpoints can
+   also be made to work.
+c) arm: Nothing in kgdb works until
+   paging_init() -> devicemaps_init() -> early_trap_init()
 
-Unfortunately now on my system the debugger is one of the last things
-to register at boot.  That's OK for debugging problems that show up
-significantly after boot, but isn't so hot for all the boot problems
-that I end up debugging.  This motivated me to try to get something
-working a little earlier.
+Let's be conservative and, by default, process "kgdbwait" (which tells
+the kernel to drop into the debugger ASAP at boot) a bit later at
+dbg_late_init() time.  If an architecture has tested it and wants to
+re-enable super early debugging, they can implement the weak function
+kgdb_arch_can_debug_early() to return true.  We'll do this for x86 to
+start.  It should be noted that dbg_late_init() is still called quite
+early in the system.
 
-My first attempt was to try to get the existing "ekgdboc" to work
-earlier.  I tried that for a bit until I realized that it needed to
-work at the tty layer and I couldn't find any serial drivers that
-managed to register themselves to the tty layer super early at boot.
-The only documented use of "ekgdboc" is "ekgdboc=kbd" and that's a bit
-of a special snowflake.  Trying to get my serial driver and all its
-dependencies to probe normally and register the tty driver super early
-at boot seemed like a bad way to go.  In fact, all the complexity
-needed to do something like this is why the system already has a
-special concept of a "boot console" that lives only long enough to
-transition to the normal console.
+Note that this patch doesn't affect when kgdb runs its init.  If kgdb
+is set to initialize early it will still initialize when parsing
+early_params's.  This patch _only_ inhibits the initial breakpoint
+from "kgdbwait".  This means:
 
-Leveraging the boot console seemed like a good way to go and that's
-what this series does.  I found that consoles could have a read()
-function, though I couldn't find anyone who implemented it.  I
-implemented it for two serial drivers for the devices I had easy
-access to, making the assumption that for boot consoles that we could
-assume read() and write() were polling-compatible (seems sane I
-think).
+* Without any extra patches arm64 platforms will at least catch
+  crashes after kgdb inits.
+* arm platforms will catch crashes (and could handle a hardcoded
+  kgdb_breakpoint()) any time after early_trap_init() runs, even
+  before dbg_late_init().
 
-Now anyone who makes a small change to their serial driver can easily
-enable early kgdb debugging!
+Signed-off-by: Douglas Anderson <dianders@chromium.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Borislav Petkov <bp@alien8.de>
+---
 
-The devices I had for testing were:
-- arm32: rk3288-veyron-jerry
-- arm64: rk3399-gru-kevin
-- arm64: qcom-sc7180-trogdor (not mainline yet)
+ arch/x86/kernel/kgdb.c    |  5 +++++
+ include/linux/kgdb.h      | 22 ++++++++++++++++++++++
+ kernel/debug/debug_core.c | 29 +++++++++++++++++++----------
+ 3 files changed, 46 insertions(+), 10 deletions(-)
 
-These are the devices I tested this series on.  I tried to test
-various combinations of enabling/disabling various options and I
-hopefully caught the corner cases, but I'd appreciate any extra
-testing people can do.  Notably I didn't test on x86, but (I think) I
-didn't touch much there so I shouldn't have broken anything.
-
-When testing I found a few problems with actually dropping into the
-debugger super early on arm and arm64 devices.  Patches in this series
-should help with this.  For arm I just avoid dropping into the
-debugger until a little later and for arm64 I actually enable
-debugging super early.
-
-I realize that bits of this series might feel a little hacky, though
-I've tried to do things in the cleanest way I could without overly
-interferring with the rest of the kernel.  If you hate the way I
-solved a problem I would love it if you could provide guidance on how
-you think I could solve the problem better.
-
-This series (and my comments / documentation / commit messages) are
-now long enough that my eyes glaze over when I try to read it all over
-to double-check.  I've nontheless tried to double-check it, but I'm
-pretty sure I did something stupid.  Thank you ahead of time for
-pointing it out to me so I can fix it in v2.  If somehow I managed to
-not do anything stupid (really?) then thank you for double-checking me
-anyway.
-
-
-Douglas Anderson (7):
-  kgdboc: Use a platform device to handle tty drivers showing up late
-  kgdb: Delay "kgdbwait" to dbg_late_init() by default
-  arm64: Add call_break_hook() to early_brk64() for early kgdb
-  kgdboc: Add earlycon_kgdboc to support early kgdb using boot consoles
-  Documentation: kgdboc: Document new earlycon_kgdboc parameter
-  serial: qcom_geni_serial: Support earlycon_kgdboc
-  serial: 8250_early: Support earlycon_kgdboc
-
- .../admin-guide/kernel-parameters.txt         |  20 ++
- Documentation/dev-tools/kgdb.rst              |  14 +
- arch/arm64/include/asm/debug-monitors.h       |   2 +
- arch/arm64/kernel/debug-monitors.c            |   2 +-
- arch/arm64/kernel/kgdb.c                      |   5 +
- arch/arm64/kernel/traps.c                     |   3 +
- arch/x86/kernel/kgdb.c                        |   5 +
- drivers/tty/serial/8250/8250_early.c          |  23 ++
- drivers/tty/serial/kgdboc.c                   | 266 ++++++++++++++++--
- drivers/tty/serial/qcom_geni_serial.c         |  32 +++
- include/linux/kgdb.h                          |  25 +-
- kernel/debug/debug_core.c                     |  44 ++-
- 12 files changed, 401 insertions(+), 40 deletions(-)
-
+diff --git a/arch/x86/kernel/kgdb.c b/arch/x86/kernel/kgdb.c
+index c44fe7d8d9a4..60c47787c588 100644
+--- a/arch/x86/kernel/kgdb.c
++++ b/arch/x86/kernel/kgdb.c
+@@ -673,6 +673,11 @@ void kgdb_arch_late(void)
+ 	}
+ }
+ 
++bool kgdb_arch_can_debug_early(void)
++{
++	return true;
++}
++
+ /**
+  *	kgdb_arch_exit - Perform any architecture specific uninitalization.
+  *
+diff --git a/include/linux/kgdb.h b/include/linux/kgdb.h
+index b072aeb1fd78..7371517aeacc 100644
+--- a/include/linux/kgdb.h
++++ b/include/linux/kgdb.h
+@@ -226,6 +226,28 @@ extern int kgdb_arch_remove_breakpoint(struct kgdb_bkpt *bpt);
+  */
+ extern void kgdb_arch_late(void);
+ 
++/**
++ *	kgdb_arch_can_debug_early - Check if OK to break before dbg_late_init()
++ *
++ *	If an architecture can definitely handle entering the debugger when
++ *	early_param's are parsed then it can override this function to return
++ *	true.  Otherwise if "kgdbwait" is passed on the kernel command line it
++ *	won't actually be processed until dbg_late_init() just after the call
++ *	to kgdb_arch_late() is made.
++ *
++ *	NOTE: Even if this returns false we will still try to register kgdb to
++ *	handle breakpoints and crashes when early_params's are parsed, we just
++ *	won't act on the "kgdbwait" parameter until dbg_late_init().  If you
++ *	get a crash and try to drop into kgdb somewhere between these two
++ *	places you might or might not end up being able to use kgdb depending
++ *	on exactly how far along the architecture has initted.
++ *
++ *	ALSO: dbg_late_init() is actually still fairly early in the system
++ *	boot process.
++ *
++ *	Return: true if platform can handle kgdb early.
++ */
++extern bool kgdb_arch_can_debug_early(void);
+ 
+ /**
+  * struct kgdb_arch - Describe architecture specific values.
+diff --git a/kernel/debug/debug_core.c b/kernel/debug/debug_core.c
+index 2b7c9b67931d..9a4551a0fb4b 100644
+--- a/kernel/debug/debug_core.c
++++ b/kernel/debug/debug_core.c
+@@ -946,16 +946,32 @@ void kgdb_panic(const char *msg)
+ 	kgdb_breakpoint();
+ }
+ 
++static void kgdb_initial_breakpoint(void)
++{
++	kgdb_break_asap = 0;
++
++	pr_crit("Waiting for connection from remote gdb...\n");
++	kgdb_breakpoint();
++}
++
+ void __weak kgdb_arch_late(void)
+ {
+ }
+ 
++bool __weak kgdb_arch_can_debug_early(void)
++{
++	return false;
++}
++
+ void __init dbg_late_init(void)
+ {
+ 	dbg_is_early = false;
+ 	if (kgdb_io_module_registered)
+ 		kgdb_arch_late();
+ 	kdb_init(KDB_INIT_FULL);
++
++	if (kgdb_io_module_registered && kgdb_break_asap)
++		kgdb_initial_breakpoint();
+ }
+ 
+ static int
+@@ -1051,14 +1067,6 @@ void kgdb_schedule_breakpoint(void)
+ }
+ EXPORT_SYMBOL_GPL(kgdb_schedule_breakpoint);
+ 
+-static void kgdb_initial_breakpoint(void)
+-{
+-	kgdb_break_asap = 0;
+-
+-	pr_crit("Waiting for connection from remote gdb...\n");
+-	kgdb_breakpoint();
+-}
+-
+ /**
+  *	kgdb_register_io_module - register KGDB IO module
+  *	@new_dbg_io_ops: the io ops vector
+@@ -1095,7 +1103,8 @@ int kgdb_register_io_module(struct kgdb_io *new_dbg_io_ops)
+ 	/* Arm KGDB now. */
+ 	kgdb_register_callbacks();
+ 
+-	if (kgdb_break_asap)
++	if (kgdb_break_asap &&
++	    (!dbg_is_early || kgdb_arch_can_debug_early()))
+ 		kgdb_initial_breakpoint();
+ 
+ 	return 0;
+@@ -1165,7 +1174,7 @@ static int __init opt_kgdb_wait(char *str)
+ 	kgdb_break_asap = 1;
+ 
+ 	kdb_init(KDB_INIT_EARLY);
+-	if (kgdb_io_module_registered)
++	if (kgdb_io_module_registered && kgdb_arch_can_debug_early())
+ 		kgdb_initial_breakpoint();
+ 
+ 	return 0;
 -- 
 2.26.0.110.g2183baf09c-goog
 
