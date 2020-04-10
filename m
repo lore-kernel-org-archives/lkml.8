@@ -2,134 +2,130 @@ Return-Path: <SRS0=VV4q=52=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,WEIRD_QUOTING autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CEC23C2BB55
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 19:17:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44240C2BB85
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 19:19:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AEB4020732
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 19:17:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1C5402084D
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 19:19:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cJ4hIkna"
+	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="SUTnG1v4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726725AbgDJTRg (ORCPT
+        id S1726692AbgDJTTy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Apr 2020 15:17:36 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:42024 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726142AbgDJTRg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Apr 2020 15:17:36 -0400
-Received: by mail-ot1-f68.google.com with SMTP id j20so2053349otl.9;
-        Fri, 10 Apr 2020 12:17:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=pGMNxl5yMaSl8w4TVy6/u5eqbJHU/Il2MpyvoWjq+Hs=;
-        b=cJ4hIknacOZTf+wTNHq17b7pSjadFHPOsl31Rr/7cFhiBWqXjznKp4SYO/Fa30y1oU
-         CDgEOxy2o0za+R4gRtGHD8ZTCDK/vata9dknSwXvyhiP0jkBxQOh/HFgD82OvIKxZ5Qg
-         GVlL42E+DSIrJWrjAB/hLCC41H1by0iDzKbzytR2Dyi5U4nFTQ9utqE8kI1+PKxK68Tn
-         PTmNiSgYbjlMyUDrbb9Y9dGq42a28vdsobMxH29zntYKSwNEIeuqawyqtvbJ1l45uIo/
-         FQFhsXzEqhns0G+zB3YZvjF8PPkiVpp4DR9/uZdINhyyajINXUs1xVP73IH1e/avxy+9
-         RG1w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=pGMNxl5yMaSl8w4TVy6/u5eqbJHU/Il2MpyvoWjq+Hs=;
-        b=Q174r40tPZT8ygNkSOIp8HPlRjCsuFmJqg2iZql+mmV3JYUCtYmjyKOFFhGc4TkLFK
-         gOjVVrChu8o/jLPoPmbQfy2MPuBAqIGF6lUkEqbVlhaoXDWBVlNvdNsS4u38iNWJIfUy
-         2vIDebsLi5TCvpLqdA0cV2zx9P13veIsV04egEHHuVmTBk5Qk21dDJYMWV4mecAkA/pd
-         FVT6XBDHdN19Yhjpk67XRfk0BtamUrOqrwSD8x1HTX7RHaQytp00c3KEpSEjycQ5kFcU
-         WaMUjOWwDoRcNXcZioa4TWexcm+VBAL2E6tQwr1OyT+4YULOGNrIFifRWXdtE6Ze6VUn
-         gx2A==
-X-Gm-Message-State: AGi0PuZswBfJXZ8+SfPSyFNcj2HqSyLQ1JvDVXXZMwJzx/aHAv3cPlOq
-        ynH8MC1/aW90qJVvVGyAUvYFPX291qnxMg==
-X-Google-Smtp-Source: APiQypIPe6SDOZEbT2UuatfbKpEq3Q7lnEcSmKVNAe9RU1+ELrHnloyze7yIhau2lR+NFI1Io5EAuA==
-X-Received: by 2002:a9d:6a95:: with SMTP id l21mr5173279otq.237.1586546255357;
-        Fri, 10 Apr 2020 12:17:35 -0700 (PDT)
-Received: from Andrews-MBP-2.attlocal.net (45-18-127-186.lightspeed.austtx.sbcglobal.net. [45.18.127.186])
-        by smtp.gmail.com with ESMTPSA id i17sm1597363otc.16.2020.04.10.12.17.34
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 10 Apr 2020 12:17:34 -0700 (PDT)
-From:   Andrew Geissler <geissonator@gmail.com>
-To:     openbmc@lists.ozlabs.org, joel@jms.id.au,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org
-Cc:     Andrew Geissler <geisonator@yahoo.com>, linux-gpio@vger.kernel.org
-Subject: [PATCH] ARM: dts: aspeed: rainier: Add gpio line names
-Date:   Fri, 10 Apr 2020 14:17:04 -0500
-Message-Id: <20200410191704.82625-1-geissonator@gmail.com>
-X-Mailer: git-send-email 2.21.0 (Apple Git-122)
+        Fri, 10 Apr 2020 15:19:54 -0400
+Received: from mout.web.de ([212.227.17.12]:49817 "EHLO mout.web.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726659AbgDJTTy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Apr 2020 15:19:54 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
+        s=dbaedf251592; t=1586546369;
+        bh=uczygi9lgHaA8p8RAXvM45HJZvXgU5tp6DAIVrZcPc8=;
+        h=X-UI-Sender-Class:To:Cc:Subject:From:Date;
+        b=SUTnG1v4+uf42uY3o3D9+CFyAtZiui7LCjhPPA7sz4xe8JTu5GbjbzcodWUJ9d3Id
+         JoBdiEpjYEsU1vJLL1T8Dw2rDO16ZTC7m/oCKxNvxSOxWvLfM/srS8NeEKua1TJCk7
+         InhCQeabb70Gid/Aj5ANhRUu1Y3H15S45xD/pHpA=
+X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
+Received: from [192.168.1.3] ([78.48.110.107]) by smtp.web.de (mrweb102
+ [213.165.67.124]) with ESMTPSA (Nemesis) id 0MBkLb-1jXjtu2LG3-00Ajan; Fri, 10
+ Apr 2020 21:19:29 +0200
+To:     Chao Yu <yuchao0@huawei.com>,
+        linux-f2fs-devel@lists.sourceforge.net
+Cc:     Jaegeuk Kim <jaegeuk@kernel.org>, linux-kernel@vger.kernel.org
+Subject: Re: [f2fs-dev] [PATCH] f2fs: fix to avoid page count leak
+From:   Markus Elfring <Markus.Elfring@web.de>
+Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
+ 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 FEE=
+Message-ID: <c50f4bff-1c14-931d-ee07-a2f5dc336785@web.de>
+Date:   Fri, 10 Apr 2020 21:19:28 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:sKIGAfFKX+r5pmiZ95dge/L+oC4Jbyl/SYb6szi3avKy5wDj8vq
+ kfLW1Du7M8ZFimlfAL6EDcebD3JlQ+pd8RlgHbV7VkPIo+Ay1XGNIbjPkVHonK9sxAe8hBC
+ IWP4p7E6+HJyKwdMZsoU1U0hZoPwLoFIkJLm8KwW/dh1tEaxfsYu/u9MVpv3CWcfuewR9FJ
+ v2UpfrNYHCcrZzPgKKE1Q==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:nbBVu/RKUQI=:Qoi8dhBM7xm8VTpfX4NEnQ
+ UwXWPPVns0g9XL/2OyjZ6qAuMWS2R1eNd6cY02iGBC+otfdlUVbMiFP+O5OFWhp+FDES/roWX
+ /ZYGvQ2jUdLtU2eHvY9r1dQ6xWAutFa1kgCBafxaEfOnk/vIT2uwLC9FwcxhPcVNZ5ToKuZQK
+ X20KyGykj71J5j1HeJ0bWZy7juvSdbOXJBIT2BFq0nl+k4J7f80qFsWpGmbwb2SaTJ/iKMUvu
+ 5PrptkpaBjFETSvpwA3M++LRmCIL/LV+4Igv2lPhmG5eDAxhoZ0EqttXpew8pJJmEehIbQs00
+ tomKKZrA/6+/psPtGfBkLDfw3o5dNg6wpuCaeplJkDNdQLbZK1mKn/ABuTBiPfLwhpfMXg2Gv
+ syFirGlkSzTXiyR6iMZA6vyuWlD5NUV1vI9/hBsQm8incD3tStQjR+i/nXrXzD0wF9zrF6e/l
+ qfStG57CczoUZ+SQLkNwxY/QcDRJsgTBZKXvVtzcVdrkjX/7I85jr09QKvGNzExCeS9sM8m4P
+ 4YyLON1sn1iP/2YNvl+Pdn4vLbQzOp4RNQ7epx6dIGrOyQR/K4FTFvM+HE1R1JWzOvQY43iFH
+ SxeTYnX/q1xZUQSX4vhcqMAh6zHqNhXpCXLoYzY5oYZ5/i2qr+ewS7Cp0vBIoSkQW8Qa30Du/
+ c8KNCqv7q0vV4X8vekZNqAoKCyuSiBbSRm6mBK5HBcjFfoPGSFTyQY/l6Oigl877JjcYXQEm0
+ BYvceOyMlWxkNmsD2W3Z8C3TmpHUu6OCEl4Lu1D2SXG15Om9PwbM+IB13tEiRfBdduJTXRT/f
+ ZiT7NM1jlSx0UucfmiagXirncXlMDe1F1hEIx9qKHVCItdGVN+BN5BPfRQOEqQS0C9AplBNc2
+ TIvYEA3umXHAfm2F1d55Of/MCLzuE4mfHWFjNzPl8fHg/gD2LBZc/pQKIoIhVn+oEf/d/gZpr
+ 4EhqK0+JvPN0hXuzHgAdwIlVSuuuOW/S6R1jQiExYmynxq67w2XqHC7II75GUoAnJ1qtu2sAU
+ JCZoxVXYPvWo5HOWZt0lbkjTAmx/nuLBNiwTGw5dej7RuP6lp+2/vqNVrFmVinl6i8y0ZAVVz
+ FMC5QL+f4vzH8vx21vOQAbeXQeu1t7Lq/l+BlR6aWoWdvw3Vc0sqnNFqkCUvW9V1OAsBEMZ52
+ shqbVRYsNcGS/+8bnEtCYpbcMmRqlUAM8hRAgJYHusrFZe5+5Jmj3xisZDuK8JM+pGB90nTEZ
+ ECBpOY/WvlmTDp7u7
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andrew Geissler <geisonator@yahoo.com>
+> In below error path, we missed to release reference count of pages
+> in compressed cluster, fix it.
+> - f2fs_mpage_readpages()
+>  - f2fs_read_multi_pages()
 
-Name the GPIOs to help userspace work with them. The names describe the
-functionality the lines provide, not the net or ball name. This makes it
-easier to share userspace code across different systems and makes the
-use of the lines more obvious.
+I suggest to improve the commit message.
 
-Signed-off-by: Andrew Geissler <geisonator@yahoo.com>
----
- arch/arm/boot/dts/aspeed-bmc-ibm-rainier.dts | 34 ++++++++++++++++++++
- 1 file changed, 34 insertions(+)
+Would you like to add the tag =E2=80=9CFixes=E2=80=9D to the change descri=
+ption?
 
-diff --git a/arch/arm/boot/dts/aspeed-bmc-ibm-rainier.dts b/arch/arm/boot/dts/aspeed-bmc-ibm-rainier.dts
-index 0a7a8b84c118..01db238ce741 100644
---- a/arch/arm/boot/dts/aspeed-bmc-ibm-rainier.dts
-+++ b/arch/arm/boot/dts/aspeed-bmc-ibm-rainier.dts
-@@ -70,6 +70,40 @@
- 
- };
- 
-+&gpio0 {
-+	gpio-line-names =
-+	/*A0-A7*/	"","","","","","","","",
-+	/*B0-B7*/	"","","","","","","","",
-+	/*C0-C7*/	"","","","","","","","",
-+	/*D0-D7*/	"","","","","","","","",
-+	/*E0-E7*/	"","","","","","","","",
-+	/*F0-F7*/	"","","","","","","","",
-+	/*G0-G7*/	"","","","","","","","",
-+	/*H0-H7*/	"","","","","","","","",
-+	/*I0-I7*/	"","","","","","","","",
-+	/*J0-J7*/	"","","","","","","","",
-+	/*K0-K7*/	"","","","","","","","",
-+	/*L0-L7*/	"","","","","","","","",
-+	/*M0-M7*/	"","","","","","","","",
-+	/*N0-N7*/	"","","","","","","","",
-+	/*O0-O7*/	"","","","","","","","",
-+	/*P0-P7*/	"","","","","","","","",
-+	/*Q0-Q7*/	"cfam-reset","","","","","","","",
-+	/*R0-R7*/	"","","","","","","","",
-+	/*S0-S7*/	"presence-ps0","presence-ps1","presence-ps2","presence-ps3",
-+				"","","","",
-+	/*T0-T7*/	"","","","","","","","",
-+	/*U0-U7*/	"","","","","","","","",
-+	/*V0-V7*/	"","","","","","","","",
-+	/*W0-W7*/	"","","","","","","","",
-+	/*X0-X7*/	"","","","","","","","",
-+	/*Y0-Y7*/	"","","","","","","","",
-+	/*Z0-Z7*/	"","","","","","","","",
-+	/*AA0-AA7*/	"","","","","","","","",
-+	/*AB0-AB7*/	"","","","","","","","",
-+	/*AC0-AC7*/	"","","","","","","","";
-+};
-+
- &emmc_controller {
- 	status = "okay";
- };
--- 
-2.17.1
-
+Regards,
+Markus
