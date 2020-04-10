@@ -2,94 +2,88 @@ Return-Path: <SRS0=VV4q=52=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3B85C2BB85
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 09:12:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85704C2BA2B
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 09:14:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7A838206F7
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 09:12:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="aMd2+d5p"
+	by mail.kernel.org (Postfix) with ESMTP id 53F0B206F7
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 09:14:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726702AbgDJJME (ORCPT
+        id S1726203AbgDJJO0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Apr 2020 05:12:04 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:34538 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725930AbgDJJMC (ORCPT
+        Fri, 10 Apr 2020 05:14:26 -0400
+Received: from cmccmta2.chinamobile.com ([221.176.66.80]:8825 "EHLO
+        cmccmta2.chinamobile.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725897AbgDJJO0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Apr 2020 05:12:02 -0400
-Received: by mail-wm1-f68.google.com with SMTP id c195so4356452wme.1
-        for <linux-kernel@vger.kernel.org>; Fri, 10 Apr 2020 02:12:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google;
-        h=subject:to:references:from:message-id:date:user-agent:mime-version
-         :in-reply-to:content-language:content-transfer-encoding;
-        bh=b2CpFz454BDdwSqjxr1G6oZhbHKRvHfmuEllgNAzRl4=;
-        b=aMd2+d5pjt/YhcQB6BbQ7FOikvw1vYCKys3R3QEmkI6Kuar1sQNy7O47jG/TbMq9YQ
-         QRWMyNFicIA8c1/4MRT5ymxHSswxEpO6OOeO1NL0pc3mw2knsEWtRIBLtPPiwVoDr7Nb
-         4LC4R/r9PlKF8ikSwBZ/dqHPfMJQIwYpT9wfA=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=b2CpFz454BDdwSqjxr1G6oZhbHKRvHfmuEllgNAzRl4=;
-        b=i6VzUfBr2ay2petHhHa2MAFY83tr45Dk/RobRjBpttP0g3x1vvT/U7+ViurBpkzNpb
-         PCclEGFyeKiVK2pa3chLcnRkvI2lVNouGwTRNEH9x26PNg6PpmQXrRfrjOcG1O9z9hPN
-         6D2MJDkGdItsNIuW8YLvF3zCgxtKdWsBitsHiGa++ukGJ1HZEo1wEZ8s2up1NdN9H1Jp
-         gLchD8MDOiX1zi6fEBxy7pT8ziZinDYm7aWfhWTIAO5UnDURr/Iwoi3PEJg6GTnY/HMT
-         8FuCrSc9P8DNxi4OflN6hJvUVVxUe3zGFdrZ547pd+f79hi43w+HIe9uaIUV1ncNzy71
-         H6yQ==
-X-Gm-Message-State: AGi0PuZ/+NV87S4kFN81hKvXSYNV5OQHidCBSO/S4bWXRF5hzYUtrlJu
-        VBIh91k1arm5MNIyOgNMgQthe141GYDxPkrhnl3UXxtbcmuPDNHlLDQNq8O3eFzjnlCpVgeRNnk
-        YsI1UpYve14o8JMF9ET0XwyL0C2ZdlfbbLLa0NwPmQYk4DcYkTIKmWOHnQlqIk33v5QdzR3G9PS
-        sHmDnKfYcZOl1hMTZQ
-X-Google-Smtp-Source: APiQypLhWw+WB9Ta+aCTQgGcKmryDdYoaFIy26iFQ5zeat19uu9UDC16papfiNcRsQWb200xnLPn+g==
-X-Received: by 2002:a7b:cb45:: with SMTP id v5mr4107314wmj.17.1586509921001;
-        Fri, 10 Apr 2020 02:12:01 -0700 (PDT)
-Received: from [192.168.178.129] (f140230.upc-f.chello.nl. [80.56.140.230])
-        by smtp.gmail.com with ESMTPSA id j11sm2063686wrt.14.2020.04.10.02.11.59
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 10 Apr 2020 02:12:00 -0700 (PDT)
-Subject: Re: [PATCH] brcmsmac: make brcms_c_set_mac() void
-To:     Jason Yan <yanaijie@huawei.com>, franky.lin@broadcom.com,
-        hante.meuleman@broadcom.com, chi-hsien.lin@cypress.com,
-        wright.feng@cypress.com, kvalo@codeaurora.org, davem@davemloft.net,
-        eduardoabinader@gmail.com, christophe.jaillet@wanadoo.fr,
-        austindh.kim@gmail.com, linux-wireless@vger.kernel.org,
-        brcm80211-dev-list.pdl@broadcom.com,
-        brcm80211-dev-list@cypress.com, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20200410090817.26883-1-yanaijie@huawei.com>
-From:   Arend Van Spriel <arend.vanspriel@broadcom.com>
-Message-ID: <29f323a4-4749-0016-e5e5-6c17166876fc@broadcom.com>
-Date:   Fri, 10 Apr 2020 11:11:58 +0200
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Fri, 10 Apr 2020 05:14:26 -0400
+Received: from spf.mail.chinamobile.com (unknown[172.16.121.15]) by rmmx-syy-dmz-app06-12006 (RichMail) with SMTP id 2ee65e9038cea20-02a24; Fri, 10 Apr 2020 17:13:51 +0800 (CST)
+X-RM-TRANSID: 2ee65e9038cea20-02a24
+X-RM-TagInfo: emlType=0                                       
+X-RM-SPAM-FLAG: 00000000
+Received: from [172.20.21.224] (unknown[112.25.154.146])
+        by rmsmtp-syy-appsvr08-12008 (RichMail) with SMTP id 2ee85e9038ce8b0-29025;
+        Fri, 10 Apr 2020 17:13:51 +0800 (CST)
+X-RM-TRANSID: 2ee85e9038ce8b0-29025
+Subject: Re: usb: gadget: fsl: Fix a wrong judgment in fsl_udc_probe()
+To:     Markus Elfring <Markus.Elfring@web.de>, linux-usb@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org
+Cc:     Li Yang <leoyang.li@nxp.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Felipe Balbi <balbi@kernel.org>,
+        Shengju Zhang <zhangshengju@cmss.chinamobile.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        kernel-janitors@vger.kernel.org
+References: <20200410015832.8012-1-tangbin@cmss.chinamobile.com>
+ <be8cd229-884a-40e6-3363-7c4680a51b30@web.de>
+ <0b718268-d330-dfc1-aca3-3dd3203363d7@cmss.chinamobile.com>
+ <aa7006c9-8b83-5f30-86a6-8d60d290f824@web.de>
+From:   Tang Bin <tangbin@cmss.chinamobile.com>
+Message-ID: <a4738b42-b297-766c-56bf-94a91bc82767@cmss.chinamobile.com>
+Date:   Fri, 10 Apr 2020 17:15:39 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-In-Reply-To: <20200410090817.26883-1-yanaijie@huawei.com>
+In-Reply-To: <aa7006c9-8b83-5f30-86a6-8d60d290f824@web.de>
 Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/10/2020 11:08 AM, Jason Yan wrote:
-> Fix the following coccicheck warning:
-> 
-> drivers/net/wireless/broadcom/brcm80211/brcmsmac/main.c:3773:5-8:
-> Unneeded variable: "err". Return "0" on line 3781
+Hi Markus:
 
-Acked-by: Arend van Spriel <arend.vanspriel@broadcom.com>
-> Reported-by: Hulk Robot <hulkci@huawei.com>
-> Signed-off-by: Jason Yan <yanaijie@huawei.com>
-> ---
->   drivers/net/wireless/broadcom/brcm80211/brcmsmac/main.c | 5 +----
->   1 file changed, 1 insertion(+), 4 deletions(-)
+On 2020/4/10 16:30, Markus Elfring wrote:
+>> Hardware experiments show that the negative return value is not just "-EPROBE_DEFER".
+> How much will this specific error code influence our understanding
+> of the discussed software situation?
+>
+ From my superficial knowledge, I think we should not  think about it 
+too complicated. The return value is just zero or negative, and for 
+these negative return value, such as 
+"-ENODEV"、"-ENXIO"、"-ENOENT"、“EPROBE_DEFER”，may be the same 
+effect。But“-EPROBE_DEFER”has another  importment function: Driver 
+requested deferred probing，which is used in cases where the dependency 
+resource is not ready during the driver initialization process.
+>>>> +        ret = udc_controller->irq ? : -ENODEV;
+>>> Will it be clearer to specify values for all cases in such a conditional operator
+>>> (instead of leaving one case empty)?
+>> I don't know what you mean of "instead of leaving one case empty".
+> I suggest to reconsider also the proposed specification “… ? : …”.
+
+What you mean is the way I'm written？
+
+I have provided two ways of patching, both functional can be verified on 
+hardware.
+
+Thanks for your patience.
+
+Tang Bin
+
+
+
