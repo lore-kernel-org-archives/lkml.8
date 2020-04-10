@@ -1,61 +1,90 @@
 Return-Path: <SRS0=VV4q=52=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
-X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Level: *
+X-Spam-Status: No, score=1.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,TVD_SUBJ_WIPE_DEBT,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B940C2BB85
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 08:09:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65B2DC2BA2B
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 08:11:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E289620753
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 08:09:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586506179;
-	bh=EaVt/rHc26tChpdiQtuvjo6e3de2d0m2F5OOEuyoPDY=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=cNYrK8OUgVkPg1m6JRBgTG5vHlS9qcmu/GFzfc87r52cG1KMAlL2imVNmi5GnuF8J
-	 O79G6auZJKbabS69gC96fMjfijC8IQ7sF1CyStdt3UhtFgf8S5Z1zpeQtcWmw5pq0h
-	 X1nsQuXRFbff3ibcYE34+iSn60mioifFvo8lNog4=
+	by mail.kernel.org (Postfix) with ESMTP id 38BC2207FF
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 08:11:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="dFrk5z2B"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726680AbgDJIJh (ORCPT
+        id S1726687AbgDJILO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Apr 2020 04:09:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53498 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725839AbgDJIJg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Apr 2020 04:09:36 -0400
-Received: from mail-il1-f176.google.com (mail-il1-f176.google.com [209.85.166.176])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9C36920753;
-        Fri, 10 Apr 2020 08:09:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586506176;
-        bh=EaVt/rHc26tChpdiQtuvjo6e3de2d0m2F5OOEuyoPDY=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=UKWDT4wvhQ+8oQnkrQbv/DJKnnOBb3VmGwQBMSC0J2cPj84hbEBGQztzHo6x7mnjY
-         e+MO0qG5/IfWcsXQllq1+vHm/gwvd5skOS11T77olS5cLbCodMDq6iZCS7EYOMHybi
-         cIt3W77NfeEfNZaWEvzi4SG9PRLvm9iVshQ6hdT4=
-Received: by mail-il1-f176.google.com with SMTP id p13so1182248ilp.3;
-        Fri, 10 Apr 2020 01:09:36 -0700 (PDT)
-X-Gm-Message-State: AGi0PuZxvnTOvXrynsf2oVngsH4whZpSSfg5ikad3p0nQPXcdigMdEes
-        WpFMDzoUwiJVJ3we4VDpCz5Ia8/3vgxS+qoDvb0=
-X-Google-Smtp-Source: APiQypKt8o2uUAIKvHvnewWjGb3+iaI9Q0QrgDkYCsexDRvS+Com6DRJf3WBaRhmV84z22mJ4az+i4vsxibbb8tCNsA=
-X-Received: by 2002:a05:6e02:4c:: with SMTP id i12mr3961102ilr.211.1586506175952;
- Fri, 10 Apr 2020 01:09:35 -0700 (PDT)
+        Fri, 10 Apr 2020 04:11:14 -0400
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:37940 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725839AbgDJILN (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Apr 2020 04:11:13 -0400
+Received: by mail-ot1-f66.google.com with SMTP id d18so1192711otc.5
+        for <linux-kernel@vger.kernel.org>; Fri, 10 Apr 2020 01:11:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ffwll.ch; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=hgf3DAUC4/KD19F9Gq5AGfjZOzS9LXWN/bbu/vFg+qA=;
+        b=dFrk5z2BtMEmisYXExkZBismSlsWb5Q4k/3n94YDOvTZuh2CzIpH/i8KoNWzlv4bXk
+         /+Bzn+RqlG2O4N1iciPqbf359lmAxRrY7woQmtsWzKRq9DFPU3AhxhJ6V+T7GDyl1tRC
+         5xNRsfm5urzQ2GX3QtuJdU9JR4uI52qA4fFG8=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=hgf3DAUC4/KD19F9Gq5AGfjZOzS9LXWN/bbu/vFg+qA=;
+        b=F6ggZH7WMELHc93J+x4iDbphNRom8c2NanjuJkeUuyJMylUKqgpn43swtWnZ15jpy4
+         XRLjgyZ125wS2MLb+3CL6v0ls6+yDotQEBWWqRkG/nClcpISn/3G3ooVdk0Wkqs7tjCU
+         zayP7/lC/uOYe2sf8oNnqIfhmqp9fBscy6iE7pEsbFVy1qhf4s7lDtu2cdVZZOZg5JX4
+         b9RQGz8ocxNC5x7euBes1UNBn54VFZZStCS1KsWljHQFksV/BFQ/+W11hh3jY2lcQk4e
+         /PtDaI8yMxYBrGpANSDCExEkp0EPsjMoqwNfKkzklIEP7BjrW4gg2etsdQjHL20ECpjt
+         m7AA==
+X-Gm-Message-State: AGi0PubyoojP5mvKprtTcNlVZsiOHvF+By5KJ2hCs3AFQnnMXNKejVvD
+        ekQPWsbcUnA++liYHpHNb+i9X/+ryusOYlLjUD2v8Q==
+X-Google-Smtp-Source: APiQypJumpZ6N8vscDAXJtrZPRakBWDA3qYtIErOA5tqj0XblmFZSMuMiwpkQHsTVZs7vae7PdjUGGhKyrX4Ng8eQNQ=
+X-Received: by 2002:a9d:6e8f:: with SMTP id a15mr3449972otr.188.1586506273249;
+ Fri, 10 Apr 2020 01:11:13 -0700 (PDT)
 MIME-Version: 1.0
-References: <1586468669-21456-1-git-send-email-victor.erminpour@oracle.com>
-In-Reply-To: <1586468669-21456-1-git-send-email-victor.erminpour@oracle.com>
-From:   Ard Biesheuvel <ardb@kernel.org>
-Date:   Fri, 10 Apr 2020 10:09:25 +0200
-X-Gmail-Original-Message-ID: <CAMj1kXGgYYx=9rq-Ficw3vS6FX_0nb-hRStXijh7H4zdD=+Gaw@mail.gmail.com>
-Message-ID: <CAMj1kXGgYYx=9rq-Ficw3vS6FX_0nb-hRStXijh7H4zdD=+Gaw@mail.gmail.com>
-Subject: Re: [PATCH] efi/libstub/arm64: Enable __efistub_global define in
- .data section
-To:     Victor Erminpour <victor.erminpour@oracle.com>
-Cc:     linux-efi <linux-efi@vger.kernel.org>,
+References: <20200408115926.1467567-1-hch@lst.de> <20200408115926.1467567-20-hch@lst.de>
+ <20200408122504.GO3456981@phenom.ffwll.local> <eb48f7b6327e482ea9911b129210c0417ab48345.camel@kernel.crashing.org>
+ <CAKMK7uHtkLvdsWFGiAtkzVa5mpnDvXkn3CHZQ6bgJ_enbyAc8A@mail.gmail.com> <0f360b9cb72b80bae0d0db8150f65598c2776268.camel@kernel.crashing.org>
+In-Reply-To: <0f360b9cb72b80bae0d0db8150f65598c2776268.camel@kernel.crashing.org>
+From:   Daniel Vetter <daniel@ffwll.ch>
+Date:   Fri, 10 Apr 2020 10:11:02 +0200
+Message-ID: <CAKMK7uHKyN+c5oTEYVursx4at9br7LSXRb8PMoNEAEBh0hfBLQ@mail.gmail.com>
+Subject: Re: [PATCH 19/28] gpu/drm: remove the powerpc hack in drm_legacy_sg_alloc
+To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Cc:     Christoph Hellwig <hch@lst.de>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Wei Liu <wei.liu@kernel.org>, X86 ML <x86@kernel.org>,
+        David Airlie <airlied@linux.ie>,
+        Laura Abbott <labbott@redhat.com>,
+        Sumit Semwal <sumit.semwal@linaro.org>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Minchan Kim <minchan@kernel.org>,
+        Nitin Gupta <ngupta@vflare.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        Peter Zijlstra <peterz@infradead.org>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        linux-hyperv@vger.kernel.org,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        "moderated list:DMA BUFFER SHARING FRAMEWORK" 
+        <linaro-mm-sig@lists.linaro.org>,
+        "open list:GENERIC INCLUDE/A..." <linux-arch@vger.kernel.org>,
+        Linux MM <linux-mm@kvack.org>,
+        "list@263.net:IOMMU DRIVERS <iommu@lists.linux-foundation.org>, Joerg
+        Roedel <joro@8bytes.org>," <iommu@lists.linux-foundation.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linux-s390@vger.kernel.org, bpf <bpf@vger.kernel.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
@@ -63,34 +92,23 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 9 Apr 2020 at 23:44, Victor Erminpour
-<victor.erminpour@oracle.com> wrote:
+On Fri, Apr 10, 2020 at 12:57 AM Benjamin Herrenschmidt
+<benh@kernel.crashing.org> wrote:
 >
-> Enable the __efistub_global define to place variables in the
-> .data section for both CONFIG_ARM and CONFIG_ARM64.
+> On Thu, 2020-04-09 at 11:41 +0200, Daniel Vetter wrote:
+> > Now if these boxes didn't ever have agp then I think we can get away
+> > with deleting this, since we've already deleted the legacy radeon
+> > driver. And that one used vmalloc for everything. The new kms one does
+> > use the dma-api if the gpu isn't connected through agp
 >
-> This places the EFIstub sys_table variable and other EFIstub
-> static variables in the .data section for both CONFIG_ARM and
-> CONFIG_ARM64.
->
+> Definitely no AGP there.
 
-What does that achieve?
+Ah in that case I think we can be sure that this code is dead.
 
-> Signed-off-by: Victor Erminpour <victor.erminpour@oracle.com>
-> ---
->  drivers/firmware/efi/libstub/efistub.h | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/drivers/firmware/efi/libstub/efistub.h b/drivers/firmware/efi/libstub/efistub.h
-> index c244b16..59932d6 100644
-> --- a/drivers/firmware/efi/libstub/efistub.h
-> +++ b/drivers/firmware/efi/libstub/efistub.h
-> @@ -25,7 +25,7 @@
->  #define EFI_ALLOC_ALIGN                EFI_PAGE_SIZE
->  #endif
->
-> -#ifdef CONFIG_ARM
-> +#if defined(CONFIG_ARM) || defined(CONFIG_ARM64)
->  #define __efistub_global       __section(.data)
->  #else
->  #define __efistub_global
+Acked-by: Daniel Vetter <daniel.vetter@ffwll.ch>
+
+Cheers, Daniel
+-- 
+Daniel Vetter
+Software Engineer, Intel Corporation
++41 (0) 79 365 57 48 - http://blog.ffwll.ch
