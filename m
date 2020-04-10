@@ -4,52 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81ED2C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 03:49:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EFF68C2BB85
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 03:49:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4BF9A20A8B
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 03:49:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C7DCA20BED
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 03:49:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586490583;
-	bh=qmbLUSU/w7JaoSjE/dGj7Mwn2TrAusEL8vM6d4qoZQ0=;
+	s=default; t=1586490591;
+	bh=Gf392KoCBUhgkrXocXreLB3YDk6gRHSO655nXvCucgw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cKra0fSPnuHQxJvtciW6YUCaZ0m/V6mL0pysXnqf6b7fqtm8jfeoWllwHkZ89HUT7
-	 7KcagpGgK+0PRZf5VdYAY7cJzTB7Ys+gZuUqF2Uqn5EL+6BvEGL4o2bOW18Ftvyw7D
-	 m6tVpGbtMg844b1R4OwTXRGe+6MPNkdmPCPhrUvI=
+	b=0OlE04tebV2fqtJiZp4uYLvSnY7/hQYkpMVjhww9oCEvTkZ0YbVXtqxbd38xDCkU8
+	 EsptxErDAHb1ySUagMwlzCrpKDZ3eNdtyq52b3DMDBTUBAhN0Q/YHm0zMXdOIGUU43
+	 3TuWphPx9qHlVCRSdE9ViDBgA+brB9z3ESvMgcVY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728619AbgDJDtl (ORCPT
+        id S1728684AbgDJDtu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Apr 2020 23:49:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33684 "EHLO mail.kernel.org"
+        Thu, 9 Apr 2020 23:49:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33864 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728578AbgDJDtf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Apr 2020 23:49:35 -0400
+        id S1728631AbgDJDto (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Apr 2020 23:49:44 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5948520B1F;
-        Fri, 10 Apr 2020 03:49:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 408B020936;
+        Fri, 10 Apr 2020 03:49:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586490575;
-        bh=qmbLUSU/w7JaoSjE/dGj7Mwn2TrAusEL8vM6d4qoZQ0=;
+        s=default; t=1586490583;
+        bh=Gf392KoCBUhgkrXocXreLB3YDk6gRHSO655nXvCucgw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=I8WzbQTdH3RTM74kmjAR47YJFM1rZwil1zrDTfkahO8OLlaTyn0bhpKlL1HCTNcRN
-         sJPaxOKKZ+H6ywNp6Pwqj8jsY4rk1YA/QVgWhaRPYKgHz3J8yQRi6GIHwJIA9lygU8
-         2Iv96dxQ/1DfBgARAe42Jf++lU8Xa9J3xUs1ee3o=
+        b=aUKL5Q8fz39zfTP25OOlOs1GOgNB+D1oBUHwcz4WbqT33wtLO5NoM7G4tn7cXJGTz
+         eKdY0c6rAIJupfFRSaP0ACcuUwUIVvGPzNIDGZBJL20VlVOABMArIidxtPlVyVbSab
+         bFNpxHHgFaQqLCyuxNOsatAzKzpVKQMCoZY79keI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Logan Gunthorpe <logang@deltatee.com>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Sasha Levin <sashal@kernel.org>, linux-pci@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 21/46] PCI/switchtec: Fix init_completion race condition with poll_wait()
-Date:   Thu,  9 Apr 2020 23:48:44 -0400
-Message-Id: <20200410034909.8922-21-sashal@kernel.org>
+Cc:     Arvind Sankar <nivedita@alum.mit.edu>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.4 29/46] x86/boot: Use unsigned comparison for addresses
+Date:   Thu,  9 Apr 2020 23:48:52 -0400
+Message-Id: <20200410034909.8922-29-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200410034909.8922-1-sashal@kernel.org>
 References: <20200410034909.8922-1-sashal@kernel.org>
@@ -62,50 +59,69 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Logan Gunthorpe <logang@deltatee.com>
+From: Arvind Sankar <nivedita@alum.mit.edu>
 
-[ Upstream commit efbdc769601f4d50018bf7ca50fc9f7c67392ece ]
+[ Upstream commit 81a34892c2c7c809f9c4e22c5ac936ae673fb9a2 ]
 
-The call to init_completion() in mrpc_queue_cmd() can theoretically
-race with the call to poll_wait() in switchtec_dev_poll().
+The load address is compared with LOAD_PHYSICAL_ADDR using a signed
+comparison currently (using jge instruction).
 
-  poll()			write()
-    switchtec_dev_poll()   	  switchtec_dev_write()
-      poll_wait(&s->comp.wait);      mrpc_queue_cmd()
-			               init_completion(&s->comp)
-				         init_waitqueue_head(&s->comp.wait)
+When loading a 64-bit kernel using the new efi32_pe_entry() point added by:
 
-To my knowledge, no one has hit this bug.
+  97aa276579b2 ("efi/x86: Add true mixed mode entry point into .compat section")
 
-Fix this by using reinit_completion() instead of init_completion() in
-mrpc_queue_cmd().
+using Qemu with -m 3072, the firmware actually loads us above 2Gb,
+resulting in a very early crash.
 
-Fixes: 080b47def5e5 ("MicroSemi Switchtec management interface driver")
+Use the JAE instruction to perform a unsigned comparison instead, as physical
+addresses should be considered unsigned.
 
-Reported-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Acked-by: Bjorn Helgaas <bhelgaas@google.com>
-Link: https://lkml.kernel.org/r/20200313183608.2646-1-logang@deltatee.com
+Signed-off-by: Arvind Sankar <nivedita@alum.mit.edu>
+Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Link: https://lore.kernel.org/r/20200301230436.2246909-6-nivedita@alum.mit.edu
+Link: https://lore.kernel.org/r/20200308080859.21568-14-ardb@kernel.org
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pci/switch/switchtec.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/x86/boot/compressed/head_32.S | 2 +-
+ arch/x86/boot/compressed/head_64.S | 4 ++--
+ 2 files changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/pci/switch/switchtec.c b/drivers/pci/switch/switchtec.c
-index cc43c855452f7..2c9c3061894b2 100644
---- a/drivers/pci/switch/switchtec.c
-+++ b/drivers/pci/switch/switchtec.c
-@@ -175,7 +175,7 @@ static int mrpc_queue_cmd(struct switchtec_user *stuser)
- 	kref_get(&stuser->kref);
- 	stuser->read_len = sizeof(stuser->data);
- 	stuser_set_state(stuser, MRPC_QUEUED);
--	init_completion(&stuser->comp);
-+	reinit_completion(&stuser->comp);
- 	list_add_tail(&stuser->list, &stdev->mrpc_queue);
- 
- 	mrpc_cmd_submit(stdev);
+diff --git a/arch/x86/boot/compressed/head_32.S b/arch/x86/boot/compressed/head_32.S
+index 5e30eaaf8576f..70ffce98c5683 100644
+--- a/arch/x86/boot/compressed/head_32.S
++++ b/arch/x86/boot/compressed/head_32.S
+@@ -106,7 +106,7 @@ ENTRY(startup_32)
+ 	notl	%eax
+ 	andl    %eax, %ebx
+ 	cmpl	$LOAD_PHYSICAL_ADDR, %ebx
+-	jge	1f
++	jae	1f
+ #endif
+ 	movl	$LOAD_PHYSICAL_ADDR, %ebx
+ 1:
+diff --git a/arch/x86/boot/compressed/head_64.S b/arch/x86/boot/compressed/head_64.S
+index e9a7f7cadb121..07d2002da642a 100644
+--- a/arch/x86/boot/compressed/head_64.S
++++ b/arch/x86/boot/compressed/head_64.S
+@@ -106,7 +106,7 @@ ENTRY(startup_32)
+ 	notl	%eax
+ 	andl	%eax, %ebx
+ 	cmpl	$LOAD_PHYSICAL_ADDR, %ebx
+-	jge	1f
++	jae	1f
+ #endif
+ 	movl	$LOAD_PHYSICAL_ADDR, %ebx
+ 1:
+@@ -297,7 +297,7 @@ ENTRY(startup_64)
+ 	notq	%rax
+ 	andq	%rax, %rbp
+ 	cmpq	$LOAD_PHYSICAL_ADDR, %rbp
+-	jge	1f
++	jae	1f
+ #endif
+ 	movq	$LOAD_PHYSICAL_ADDR, %rbp
+ 1:
 -- 
 2.20.1
 
