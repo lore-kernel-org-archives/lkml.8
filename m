@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91E49C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 03:51:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4E1AC2BB86
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 03:51:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6A5C8206C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 03:51:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BD65F2137B
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 03:51:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586490679;
-	bh=fGa1F75DEYELh4aoD7E6/3JJRIt6E7i/qM4gmszt1Jo=;
+	s=default; t=1586490680;
+	bh=RTTT6ylmnIwd7feHib5TM6vULfkqz5sxbfJ+CfGssH4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0JbpfnIdCTHsjDfg0yR+ajTEKN5rdwPdUZHfp7QbdxFxha2WiGMbGcic7gei39sRq
-	 55p/JaaADV/IV/qyVVazHn7g0ii/M0JOyZUwpswuqQ21ZOYBMxjzhk0uwgUGG7jz/m
-	 teyAJmC5bQE23mDujJGdNbMqm7pYW4wrxuQ4LynE=
+	b=cBztoHADiX/fJnbMteNPMtjHQtX4iygp8AWctRwApNnqjUFrb5uV7IKhjlxGHxiWg
+	 5y0YqdRik/3Y82iGDGtjDpNNKciZlaacaqw3mJyZ42AguU5auNwXPHHpMVF99JeYO1
+	 eR5a3eLogMKBigkyqLzDlPColGx6E2WW+uheFTV4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729149AbgDJDvR (ORCPT
+        id S1729162AbgDJDvS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Apr 2020 23:51:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36098 "EHLO mail.kernel.org"
+        Thu, 9 Apr 2020 23:51:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36212 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728433AbgDJDvF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Apr 2020 23:51:05 -0400
+        id S1729100AbgDJDvK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Apr 2020 23:51:10 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D006E214D8;
-        Fri, 10 Apr 2020 03:51:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5AAED206C0;
+        Fri, 10 Apr 2020 03:51:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586490665;
-        bh=fGa1F75DEYELh4aoD7E6/3JJRIt6E7i/qM4gmszt1Jo=;
+        s=default; t=1586490670;
+        bh=RTTT6ylmnIwd7feHib5TM6vULfkqz5sxbfJ+CfGssH4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vVFwYOHgixprBL4TowFrBjLZBUKc9C5Rq71e+hi3Wp/llP8UZ5DoSWFZAPV5VgCM0
-         1tmn4DSPTgc9IreaT/udezFmvjuCOGLEkEhjepQNMjBelrmRgxbstoRHwyXClo6/tl
-         X3Ov0xS3l8cg0Ft7/aSlgZwHgg7jAuEgQr69Jqlk=
+        b=G7ZsiyT3kMzuse4ppxkyOAt3MkPEWlmtEo1oMYuk3CK4rtMUmrxmvsxvn68uZ9YWf
+         zQYjJpKYxML2lSKWsgUtBj8UP4rT+zjJt+kMQ4avNb+oSVYYVhpSkNBNJ1XCTho+1h
+         wdcKpwKm+ZmrP8OoO07S3IEyXT5UEJZp14/t/Jpc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Boqun Feng <boqun.feng@gmail.com>, Qian Cai <cai@lca.pw>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.14 18/22] locking/lockdep: Avoid recursion in lockdep_count_{for,back}ward_deps()
-Date:   Thu,  9 Apr 2020 23:50:40 -0400
-Message-Id: <20200410035044.9698-18-sashal@kernel.org>
+Cc:     Josef Bacik <josef@toxicpanda.com>,
+        David Sterba <dsterba@suse.com>,
+        Sasha Levin <sashal@kernel.org>, linux-btrfs@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 22/22] btrfs: track reloc roots based on their commit root bytenr
+Date:   Thu,  9 Apr 2020 23:50:44 -0400
+Message-Id: <20200410035044.9698-22-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200410035044.9698-1-sashal@kernel.org>
 References: <20200410035044.9698-1-sashal@kernel.org>
@@ -59,77 +59,119 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Boqun Feng <boqun.feng@gmail.com>
+From: Josef Bacik <josef@toxicpanda.com>
 
-[ Upstream commit 25016bd7f4caf5fc983bbab7403d08e64cba3004 ]
+[ Upstream commit ea287ab157c2816bf12aad4cece41372f9d146b4 ]
 
-Qian Cai reported a bug when PROVE_RCU_LIST=y, and read on /proc/lockdep
-triggered a warning:
+We always search the commit root of the extent tree for looking up back
+references, however we track the reloc roots based on their current
+bytenr.
 
-  [ ] DEBUG_LOCKS_WARN_ON(current->hardirqs_enabled)
-  ...
-  [ ] Call Trace:
-  [ ]  lock_is_held_type+0x5d/0x150
-  [ ]  ? rcu_lockdep_current_cpu_online+0x64/0x80
-  [ ]  rcu_read_lock_any_held+0xac/0x100
-  [ ]  ? rcu_read_lock_held+0xc0/0xc0
-  [ ]  ? __slab_free+0x421/0x540
-  [ ]  ? kasan_kmalloc+0x9/0x10
-  [ ]  ? __kmalloc_node+0x1d7/0x320
-  [ ]  ? kvmalloc_node+0x6f/0x80
-  [ ]  __bfs+0x28a/0x3c0
-  [ ]  ? class_equal+0x30/0x30
-  [ ]  lockdep_count_forward_deps+0x11a/0x1a0
+This is wrong, if we commit the transaction between relocating tree
+blocks we could end up in this code in build_backref_tree
 
-The warning got triggered because lockdep_count_forward_deps() call
-__bfs() without current->lockdep_recursion being set, as a result
-a lockdep internal function (__bfs()) is checked by lockdep, which is
-unexpected, and the inconsistency between the irq-off state and the
-state traced by lockdep caused the warning.
+  if (key.objectid == key.offset) {
+	  /*
+	   * Only root blocks of reloc trees use backref
+	   * pointing to itself.
+	   */
+	  root = find_reloc_root(rc, cur->bytenr);
+	  ASSERT(root);
+	  cur->root = root;
+	  break;
+  }
 
-Apart from this warning, lockdep internal functions like __bfs() should
-always be protected by current->lockdep_recursion to avoid potential
-deadlocks and data inconsistency, therefore add the
-current->lockdep_recursion on-and-off section to protect __bfs() in both
-lockdep_count_forward_deps() and lockdep_count_backward_deps()
+find_reloc_root() is looking based on the bytenr we had in the commit
+root, but if we've COWed this reloc root we will not find that bytenr,
+and we will trip over the ASSERT(root).
 
-Reported-by: Qian Cai <cai@lca.pw>
-Signed-off-by: Boqun Feng <boqun.feng@gmail.com>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Link: https://lkml.kernel.org/r/20200312151258.128036-1-boqun.feng@gmail.com
+Fix this by using the commit_root->start bytenr for indexing the commit
+root.  Then we change the __update_reloc_root() caller to be used when
+we switch the commit root for the reloc root during commit.
+
+This fixes the panic I was seeing when we started throttling relocation
+for delayed refs.
+
+Signed-off-by: Josef Bacik <josef@toxicpanda.com>
+Signed-off-by: David Sterba <dsterba@suse.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/locking/lockdep.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ fs/btrfs/relocation.c | 17 +++++++----------
+ 1 file changed, 7 insertions(+), 10 deletions(-)
 
-diff --git a/kernel/locking/lockdep.c b/kernel/locking/lockdep.c
-index 90a3469a7a888..03e3ab61a2edd 100644
---- a/kernel/locking/lockdep.c
-+++ b/kernel/locking/lockdep.c
-@@ -1297,9 +1297,11 @@ unsigned long lockdep_count_forward_deps(struct lock_class *class)
- 	this.class = class;
+diff --git a/fs/btrfs/relocation.c b/fs/btrfs/relocation.c
+index 3bb89d09d128b..ba54bc43b1215 100644
+--- a/fs/btrfs/relocation.c
++++ b/fs/btrfs/relocation.c
+@@ -1306,7 +1306,7 @@ static int __must_check __add_reloc_root(struct btrfs_root *root)
+ 	if (!node)
+ 		return -ENOMEM;
  
- 	raw_local_irq_save(flags);
-+	current->lockdep_recursion = 1;
- 	arch_spin_lock(&lockdep_lock);
- 	ret = __lockdep_count_forward_deps(&this);
- 	arch_spin_unlock(&lockdep_lock);
-+	current->lockdep_recursion = 0;
- 	raw_local_irq_restore(flags);
+-	node->bytenr = root->node->start;
++	node->bytenr = root->commit_root->start;
+ 	node->data = root;
  
- 	return ret;
-@@ -1324,9 +1326,11 @@ unsigned long lockdep_count_backward_deps(struct lock_class *class)
- 	this.class = class;
+ 	spin_lock(&rc->reloc_root_tree.lock);
+@@ -1337,10 +1337,11 @@ static void __del_reloc_root(struct btrfs_root *root)
+ 	if (rc && root->node) {
+ 		spin_lock(&rc->reloc_root_tree.lock);
+ 		rb_node = tree_search(&rc->reloc_root_tree.rb_root,
+-				      root->node->start);
++				      root->commit_root->start);
+ 		if (rb_node) {
+ 			node = rb_entry(rb_node, struct mapping_node, rb_node);
+ 			rb_erase(&node->rb_node, &rc->reloc_root_tree.rb_root);
++			RB_CLEAR_NODE(&node->rb_node);
+ 		}
+ 		spin_unlock(&rc->reloc_root_tree.lock);
+ 		if (!node)
+@@ -1358,7 +1359,7 @@ static void __del_reloc_root(struct btrfs_root *root)
+  * helper to update the 'address of tree root -> reloc tree'
+  * mapping
+  */
+-static int __update_reloc_root(struct btrfs_root *root, u64 new_bytenr)
++static int __update_reloc_root(struct btrfs_root *root)
+ {
+ 	struct btrfs_fs_info *fs_info = root->fs_info;
+ 	struct rb_node *rb_node;
+@@ -1367,7 +1368,7 @@ static int __update_reloc_root(struct btrfs_root *root, u64 new_bytenr)
  
- 	raw_local_irq_save(flags);
-+	current->lockdep_recursion = 1;
- 	arch_spin_lock(&lockdep_lock);
- 	ret = __lockdep_count_backward_deps(&this);
- 	arch_spin_unlock(&lockdep_lock);
-+	current->lockdep_recursion = 0;
- 	raw_local_irq_restore(flags);
+ 	spin_lock(&rc->reloc_root_tree.lock);
+ 	rb_node = tree_search(&rc->reloc_root_tree.rb_root,
+-			      root->node->start);
++			      root->commit_root->start);
+ 	if (rb_node) {
+ 		node = rb_entry(rb_node, struct mapping_node, rb_node);
+ 		rb_erase(&node->rb_node, &rc->reloc_root_tree.rb_root);
+@@ -1379,7 +1380,7 @@ static int __update_reloc_root(struct btrfs_root *root, u64 new_bytenr)
+ 	BUG_ON((struct btrfs_root *)node->data != root);
  
- 	return ret;
+ 	spin_lock(&rc->reloc_root_tree.lock);
+-	node->bytenr = new_bytenr;
++	node->bytenr = root->node->start;
+ 	rb_node = tree_insert(&rc->reloc_root_tree.rb_root,
+ 			      node->bytenr, &node->rb_node);
+ 	spin_unlock(&rc->reloc_root_tree.lock);
+@@ -1524,6 +1525,7 @@ int btrfs_update_reloc_root(struct btrfs_trans_handle *trans,
+ 	}
+ 
+ 	if (reloc_root->commit_root != reloc_root->node) {
++		__update_reloc_root(reloc_root);
+ 		btrfs_set_root_node(root_item, reloc_root->node);
+ 		free_extent_buffer(reloc_root->commit_root);
+ 		reloc_root->commit_root = btrfs_root_node(reloc_root);
+@@ -4727,11 +4729,6 @@ int btrfs_reloc_cow_block(struct btrfs_trans_handle *trans,
+ 	BUG_ON(rc->stage == UPDATE_DATA_PTRS &&
+ 	       root->root_key.objectid == BTRFS_DATA_RELOC_TREE_OBJECTID);
+ 
+-	if (root->root_key.objectid == BTRFS_TREE_RELOC_OBJECTID) {
+-		if (buf == root->node)
+-			__update_reloc_root(root, cow->start);
+-	}
+-
+ 	level = btrfs_header_level(buf);
+ 	if (btrfs_header_generation(buf) <=
+ 	    btrfs_root_last_snapshot(&root->root_item))
 -- 
 2.20.1
 
