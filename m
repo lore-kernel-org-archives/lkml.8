@@ -2,104 +2,168 @@ Return-Path: <SRS0=VV4q=52=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B2E1C2BB86
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 14:59:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60D86C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 15:03:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DEEC620A8B
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 14:59:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 31A142082D
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 15:03:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=yadro.com header.i=@yadro.com header.b="cU+DmLkC"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="xl9vbv52"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726671AbgDJO7L (ORCPT
+        id S1726657AbgDJPDM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Apr 2020 10:59:11 -0400
-Received: from mta-02.yadro.com ([89.207.88.252]:38848 "EHLO mta-01.yadro.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726049AbgDJO7L (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Apr 2020 10:59:11 -0400
-Received: from localhost (unknown [127.0.0.1])
-        by mta-01.yadro.com (Postfix) with ESMTP id 7DC1F41417;
-        Fri, 10 Apr 2020 14:59:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=yadro.com; h=
-        in-reply-to:content-disposition:content-type:content-type
-        :mime-version:references:message-id:subject:subject:from:from
-        :date:date:received:received:received; s=mta-01; t=1586530748;
-         x=1588345149; bh=QW/aUtaswxl+za3c1gmqfuAg6QD/Af1ecf/UE38sKEU=; b=
-        cU+DmLkCexDSeQEYeq6DIvlUuef7JmObciJ0QTUk4FeEnTRbT1GR+E1tHtDCTcOX
-        s2c/oLiB/Z8W+P3SGLcA9GLYEgrWEs5Zv2sTuW7sMJqxrVZ0hogLB2lzReRuRSCn
-        8mtCSPC47LERrb3eBE8OvvR0NNRTxbUOnkItnfe6cvU=
-X-Virus-Scanned: amavisd-new at yadro.com
-Received: from mta-01.yadro.com ([127.0.0.1])
-        by localhost (mta-01.yadro.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id 6KlDxzkNWdWi; Fri, 10 Apr 2020 17:59:08 +0300 (MSK)
-Received: from T-EXCH-02.corp.yadro.com (t-exch-02.corp.yadro.com [172.17.10.102])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+        Fri, 10 Apr 2020 11:03:12 -0400
+Received: from mail26.static.mailgun.info ([104.130.122.26]:64387 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726049AbgDJPDM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Apr 2020 11:03:12 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1586530991; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=foCeyV/z0t49w5bVxOJQj4+zK6wslN2wsA7w5SqlfIs=; b=xl9vbv527bPXxsyZJNE34VFf+2tdvHDJ3HOt5aE3I12tL4tlsfjydh5DlmFihKi9xQ1DGjx5
+ VvsUKHrrhFdvVgeQVBLPLKg1K6skWjVpvDfti31eve9T5vxaJSTEjWmf0ucyfIIODctkbYG9
+ FJ9NCO2zCa/c9Z8poPUyoCJs+fU=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e908aaf.7f4ab081d490-smtp-out-n03;
+ Fri, 10 Apr 2020 15:03:11 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 539EDC433BA; Fri, 10 Apr 2020 15:03:11 +0000 (UTC)
+Received: from [10.226.58.28] (i-global254.qualcomm.com [199.106.103.254])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mta-01.yadro.com (Postfix) with ESMTPS id 8487F404CF;
-        Fri, 10 Apr 2020 17:59:05 +0300 (MSK)
-Received: from localhost (172.17.14.122) by T-EXCH-02.corp.yadro.com
- (172.17.10.102) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384_P384) id 15.1.669.32; Fri, 10
- Apr 2020 17:59:05 +0300
-Date:   Fri, 10 Apr 2020 17:59:04 +0300
-From:   "Alexander A. Filippov" <a.filippov@yadro.com>
-To:     Andrew Jeffery <andrew@aj.id.au>
-CC:     <linux-aspeed@lists.ozlabs.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        Joel Stanley <joel@jms.id.au>, Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH] ARM: DTS: Aspeed: Add YADRO Nicole BMC
-Message-ID: <20200410145904.GA15615@bbwork.lan>
-References: <20200406101553.28958-1-a.filippov@yadro.com>
- <ad46ff33-8ce2-4ffa-b12e-204053e4f705@www.fastmail.com>
+        (Authenticated sender: jhugo)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 042EAC433F2;
+        Fri, 10 Apr 2020 15:03:09 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 042EAC433F2
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=jhugo@codeaurora.org
+Subject: Re: [PATCH v2 1/5] bus: mhi: core: Handle syserr during power_up
+To:     Hemant Kumar <hemantk@codeaurora.org>,
+        manivannan.sadhasivam@linaro.org
+Cc:     "linux-arm-msm@vger.kernel.org; bbhatt"@codeaurora.org,
+        linux-kernel@vger.kernel.org
+References: <1586278230-29565-1-git-send-email-jhugo@codeaurora.org>
+ <1586278230-29565-2-git-send-email-jhugo@codeaurora.org>
+ <1768ba6e-12c2-7b4f-0f17-44fecc6473b9@codeaurora.org>
+From:   Jeffrey Hugo <jhugo@codeaurora.org>
+Message-ID: <11d9f35b-b911-7985-8846-0a45904ceed1@codeaurora.org>
+Date:   Fri, 10 Apr 2020 09:03:08 -0600
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Disposition: inline
-In-Reply-To: <ad46ff33-8ce2-4ffa-b12e-204053e4f705@www.fastmail.com>
-X-Originating-IP: [172.17.14.122]
-X-ClientProxiedBy: T-EXCH-01.corp.yadro.com (172.17.10.101) To
- T-EXCH-02.corp.yadro.com (172.17.10.102)
+In-Reply-To: <1768ba6e-12c2-7b4f-0f17-44fecc6473b9@codeaurora.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 10, 2020 at 02:29:47PM +0930, Andrew Jeffery wrote:
+On 4/9/2020 6:55 PM, Hemant Kumar wrote:
 > 
+> On 4/7/20 9:50 AM, Jeffrey Hugo wrote:
+>> The MHI device may be in the syserr state when we attempt to init it in
+>> power_up().  Since we have no local state, the handling is simple -
+>> reset the device and wait for it to transition out of the reset state.
+>>
+>> Signed-off-by: Jeffrey Hugo <jhugo@codeaurora.org>
+>> ---
+>>   drivers/bus/mhi/core/pm.c | 20 ++++++++++++++++++++
+>>   1 file changed, 20 insertions(+)
+>>
+>> diff --git a/drivers/bus/mhi/core/pm.c b/drivers/bus/mhi/core/pm.c
+>> index 52690cb..3285c9e 100644
+>> --- a/drivers/bus/mhi/core/pm.c
+>> +++ b/drivers/bus/mhi/core/pm.c
+>> @@ -9,6 +9,7 @@
+>>   #include <linux/dma-direction.h>
+>>   #include <linux/dma-mapping.h>
+>>   #include <linux/interrupt.h>
+>> +#include <linux/iopoll.h>
+>>   #include <linux/list.h>
+>>   #include <linux/mhi.h>
+>>   #include <linux/module.h>
+>> @@ -760,6 +761,7 @@ static void mhi_deassert_dev_wake(struct 
+>> mhi_controller *mhi_cntrl,
+>>   int mhi_async_power_up(struct mhi_controller *mhi_cntrl)
+>>   {
+>> +    enum mhi_state state;
+>>       enum mhi_ee_type current_ee;
+>>       enum dev_st_transition next_state;
+>>       struct device *dev = &mhi_cntrl->mhi_dev->dev;
+>> @@ -829,6 +831,24 @@ int mhi_async_power_up(struct mhi_controller 
+>> *mhi_cntrl)
+>>           goto error_bhi_offset;
+>>       }
+>> +    state = mhi_get_mhi_state(mhi_cntrl);
+>> +    if (state == MHI_STATE_SYS_ERR) {
+>> +        mhi_set_mhi_state(mhi_cntrl, MHI_STATE_RESET);
+>> +        ret = readl_poll_timeout(mhi_cntrl->regs + MHICTRL, val,
+>> +                     !(val & MHICTRL_RESET_MASK), 1000,
+>> +                     mhi_cntrl->timeout_ms * 1000);
+> can we use this instead of polling because MSI is configures and int_vec 
+> handler is registered
 > 
-> > +&i2c11 {
-> > +	status = "okay";
-> > +};
-> > +
-> > +&i2c12 {
-> > +	status = "okay";
-> > +};
+>      wait_event_timeout(mhi_cntrl->state_event,
+>                 MHI_PM_IN_FATAL_STATE(mhi_cntrl->pm_state) ||
+>                mhi_read_reg_field(mhi_cntrl, base, MHICTRL,
+>                            MHICTRL_RESET_MASK,
+>                            MHICTRL_RESET_SHIFT, &reset) || !reset ,
+>                 msecs_to_jiffies(mhi_cntrl->timeout_ms));
 > 
-> Are you accessing devices on the busses from userspace? It would
-> be helpful to comment here why you're enabling all of these busses
-> but not describing any devices on them, if it's necessary to enable
-> them at all.
+> 1) In case of MHI_PM_IN_FATAL_STATE we would not be accessing MHI reg
+> 2) Consistent with current MHI driver code.
+
+I'm not sure this works in the way you intend.
+
+state_event is linked to the intvec, which is the BHI interrupt.  I 
+don't see that the state_event is triggered in the MHI interrupt path 
+(mhi_irq_handler).  So, if we are in the PBL EE, we would expect to see 
+the BHI interrupt, but if we are in the AMSS EE, we would expect to see 
+a MHI interrupt.
+
+Now, for my concerned usecase, those two interrupts happen to be the 
+same interrupt, so both will get triggered, but I don't expect that to 
+be the same for all usecases.
+
+So, with the solution I propose, we exit the wait (poll loop) as soon as 
+we see the register change values.
+
+With the solution you propose, if we only get the MHI interrupt, we'll 
+have to wait out the entire timeout value, and then check the register. 
+In this scenario, we are almost guaranteed to wait for longer than 
+necessary.
+
+Did I miss something?
+
+>> +        if (ret) {
+>> +            dev_info(dev, "Failed to reset MHI due to syserr state\n");
+>> +            goto error_bhi_offset;
+>> +        }
+>> +
+>> +        /*
+>> +         * device cleares INTVEC as part of RESET processing,
+>> +         * re-program it
+>> +         */
+>> +        mhi_write_reg(mhi_cntrl, mhi_cntrl->bhi, BHI_INTVEC, 0);
+>> +    }
+>> +
+>>       /* Transition to next state */
+>>       next_state = MHI_IN_PBL(current_ee) ?
+>>           DEV_ST_TRANSITION_PBL : DEV_ST_TRANSITION_READY;
 > 
 
-Yes, some of them are unused and may be removed.
-For others I'll add comments in the next version.
 
-> > +
-> > +&adc {
-> > +	status = "okay";
-> 
-> You should specify the pinmux configuration for the channels you're using
-> to ensure exclusive access to those pins (otherwise they could be exported
-> e.g. as GPIOs).
-
-It was just copied from Romulus and looks like I missed iio-hwmon-battery.
-Is it what you meant?
-
-All other pins are wired to the ground.`
-
-
-Alexander
+-- 
+Jeffrey Hugo
+Qualcomm Technologies, Inc. is a member of the
+Code Aurora Forum, a Linux Foundation Collaborative Project.
