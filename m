@@ -2,87 +2,69 @@ Return-Path: <SRS0=VV4q=52=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C95BC2BB86
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 17:49:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A291C2D0EC
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 17:50:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 43E14207FF
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 17:49:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586540940;
-	bh=eW/VTf8xV/UPmvXE5+jLFg+eBfAUu1ZoS1WZospefKs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=SbnGeSVy6PDRO/UuJTiv9tLxEzor4vmamtlQ7haO86lF7ZTlIvqSAZ9JGECqwvHGI
-	 +fmZmlCqxlVZbbNBw+6rVxwPjwukqnedi7aLI4VpNVwBZgVu/wc4o2nkNZYqp99JsC
-	 NoeejGo6JhUhu5G4ubS3M70L3HnoF3bLJ0SVyFxI=
+	by mail.kernel.org (Postfix) with ESMTP id 28F97207FF
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 17:50:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726712AbgDJRs6 (ORCPT
+        id S1726701AbgDJRud (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Apr 2020 13:48:58 -0400
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:46772 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726582AbgDJRs6 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Apr 2020 13:48:58 -0400
-Received: by mail-oi1-f195.google.com with SMTP id q204so1963494oia.13;
-        Fri, 10 Apr 2020 10:48:56 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=+zNuF3LiP7kvgVV1lvcUDcmbeJ3DBvPeuSAiKMFaGnc=;
-        b=GThtrDsqq6diMLLWsmQsyGJvWA4V1m9jDMLiq045j/x8Dw7Wz0cfokp8blNFMmtxba
-         KBYWJu6KkmUjkXNUdEQttLZMQAfoc6OmnMN/ZpgYPdFwYnSzfjOiDiMrs8ZCnC6WmvCZ
-         lAHRZJUMs3XnkbrVoQz3DYNC4TWHsA1KtYQN/Im7YzC/ySMLdP9nj2JGtclj/2QWm6ug
-         0g9Va6nz/s0jXxQzfKBPbOU+7Cp1AT+qh+h89mj1BzqVYKU6s40K8ru2Xd5mgD2TyTan
-         ZC9p95ai2BeqF0BF9e0kCXgbMc4hrGnlgpUi8ejMTItDc+BvgPeKgzebW5xn1RjqoVLU
-         CCTA==
-X-Gm-Message-State: AGi0PuYc2KNe3qWW2GIlP+ni2dkd3VAJQsA3hFbOariKb62EuH0vJ51n
-        sJrjoioLKsqpr5G/2xW1hA==
-X-Google-Smtp-Source: APiQypIt0cEpMExqzLdxjcdCSCFkFwJgM3Jj7xITc2xbl8Ot3NQLeW5lxcuMi7lDACDtIRWU3GO5eQ==
-X-Received: by 2002:aca:3745:: with SMTP id e66mr3965165oia.153.1586540936614;
-        Fri, 10 Apr 2020 10:48:56 -0700 (PDT)
-Received: from rob-hp-laptop (ip-173-126-55-226.ftwttx.spcsdns.net. [173.126.55.226])
-        by smtp.gmail.com with ESMTPSA id u17sm1523713oiv.21.2020.04.10.10.48.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 10 Apr 2020 10:48:56 -0700 (PDT)
-Received: (nullmailer pid 28391 invoked by uid 1000);
-        Fri, 10 Apr 2020 17:48:53 -0000
-Date:   Fri, 10 Apr 2020 11:48:53 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Sharat Masetty <smasetty@codeaurora.org>
-Cc:     freedreno@lists.freedesktop.org, devicetree@vger.kernel.org,
-        dri-devel@freedesktop.org, linux-arm-msm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, jcrouse@codeaurora.org,
-        mka@chromium.org, sibis@codeaurora.org, saravanak@google.com,
-        viresh.kumar@linaro.org, Sharat Masetty <smasetty@codeaurora.org>
-Subject: Re: [PATCH 5/5] dt-bindings: drm/msm/gpu: Document OPP phandle list
- for the GPU
-Message-ID: <20200410174853.GA28335@bogus>
-References: <1585641353-23229-1-git-send-email-smasetty@codeaurora.org>
- <1585641353-23229-6-git-send-email-smasetty@codeaurora.org>
+        Fri, 10 Apr 2020 13:50:33 -0400
+Received: from mga12.intel.com ([192.55.52.136]:25764 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726582AbgDJRud (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Apr 2020 13:50:33 -0400
+IronPort-SDR: kFIH2GHpRVUL73pM1xZn27LfiopGgQw37h4wRw5Lgq0NfOow6Uk8gcMwFfYEPy9UKJjKxoRw4m
+ ZvcATklV1McQ==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Apr 2020 10:50:33 -0700
+IronPort-SDR: q5+ghInNYb2qr4jmUbRCOcsBHQwXwgF70HvFRePPvBftwSe+OIWlTTyk8PYiYTpBR93glK2pdm
+ kvubUt0J3z1Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,367,1580803200"; 
+   d="scan'208";a="255539207"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
+  by orsmga006.jf.intel.com with ESMTP; 10 Apr 2020 10:50:33 -0700
+Date:   Fri, 10 Apr 2020 10:50:33 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     syzbot <syzbot+25a50e1a4e196faed650@syzkaller.appspotmail.com>
+Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        pbonzini@redhat.com, syzkaller-bugs@googlegroups.com
+Subject: Re: KASAN: slab-out-of-bounds Read in gfn_to_pfn
+Message-ID: <20200410175032.GE22482@linux.intel.com>
+References: <000000000000046e4f05a2f24a4b@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1585641353-23229-6-git-send-email-smasetty@codeaurora.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <000000000000046e4f05a2f24a4b@google.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 31 Mar 2020 13:25:53 +0530, Sharat Masetty wrote:
-> Update the documentation for listing the multiple optional GPU and the
-> DDR OPP tables to help enable DDR scaling.
+On Fri, Apr 10, 2020 at 09:33:11AM -0700, syzbot wrote:
+> Hello,
 > 
-> Signed-off-by: Sharat Masetty <smasetty@codeaurora.org>
-> ---
->  .../devicetree/bindings/display/msm/gpu.txt        | 63 +++++++++++++++++++++-
->  1 file changed, 61 insertions(+), 2 deletions(-)
+> syzbot found the following crash on:
 > 
+> HEAD commit:    f5e94d10 Merge tag 'drm-next-2020-04-08' of git://anongit...
+> git tree:       upstream
+> console output: https://syzkaller.appspot.com/x/log.txt?x=1450c657e00000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=ca75979eeebf06c2
+> dashboard link: https://syzkaller.appspot.com/bug?extid=25a50e1a4e196faed650
+> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+> 
+> Unfortunately, I don't have any reproducer for this crash yet.
+> 
+> IMPORTANT: if you fix the bug, please add the following tag to the commit:
+> Reported-by: syzbot+25a50e1a4e196faed650@syzkaller.appspotmail.com
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+#syz dup: KASAN: slab-out-of-bounds Read in __kvm_gfn_to_hva_cache_init
