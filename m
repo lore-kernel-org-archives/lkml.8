@@ -4,70 +4,72 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F2FBC2BA19
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 01:20:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75BB6C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 01:22:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0CC4E20730
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 01:20:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4703820730
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 01:22:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="BM8HZBDi"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Q4QXqN8O"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726670AbgDJBU1 (ORCPT
+        id S1726647AbgDJBWS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Apr 2020 21:20:27 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:46711 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725970AbgDJBU1 (ORCPT
+        Thu, 9 Apr 2020 21:22:18 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:33669 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725987AbgDJBWS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Apr 2020 21:20:27 -0400
-Received: by mail-pf1-f194.google.com with SMTP id q3so373262pff.13
-        for <linux-kernel@vger.kernel.org>; Thu, 09 Apr 2020 18:20:27 -0700 (PDT)
+        Thu, 9 Apr 2020 21:22:18 -0400
+Received: by mail-pf1-f196.google.com with SMTP id c138so408162pfc.0
+        for <linux-kernel@vger.kernel.org>; Thu, 09 Apr 2020 18:22:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to;
-        bh=Se150hiWquIt6SCF9Ml3hopQBuNGZRuaatmKyZ4D96Q=;
-        b=BM8HZBDiTR8VA1t/ImCY3ODYEL5MfbnNFgbWkxxhgcE7K468DD/Qul6d/YBRwrEugb
-         1Ft/5X1HW3yh9GVR6OLl8kGmz5uHuSNUfp5oSuFySe0akBkMBt1HHTzWYAEbZCj+B3f9
-         lmA48WHpmT0Z5AzrJWfZV5bh/gxeiC/fUoTiwNgZa67vxDfMbLgJMNFoI2wuDT0MRx0w
-         cusdL6BVntZcfnxgO55pOc6pYsuf5rutX53r4A6yzU904URmDv8uW0flWCZ1bivLJnIy
-         mhzI0uIHxvpBNlo6pStJOQZvsfVb2umBMXnXvxi8t4WUJjk0ajNQUi0ZHD+9qeAG4fIF
-         A3LQ==
+        bh=3Q2KcR5vivg2vLIlkBGPIg0aMjasX9J0lCrxGu0EU40=;
+        b=Q4QXqN8ObBhFo5YYd5MXFVPJmG6I8IpB8kCIEceSLNZEiohuJ1hYR1jU1OcFgHcgKQ
+         NCzttmwJPGmGfkCMah1sHDOmdzepxCuLdX99/aWpWxiIoZOD7WM8w9+f6zXK+/Vuq9fl
+         qnyw8+a+JSXDKZxg1FzlzhDpB8coXYjo9SJJiY1lyE04ppVt/tedfkdEJV9jwb7Hkw0B
+         t0KEPJ2x3CRfar+D730Z3uT0m4LB3ADMTvFPduqnJttjbV8BYJD6UIEb2S77OLOq2D4e
+         gXbG8UsCNFKtcqanJZV2VWqAa5c/gNuD63Bf0c9q97MTkHEgzy6RB97N9RHa7i676ygs
+         0/Wg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=Se150hiWquIt6SCF9Ml3hopQBuNGZRuaatmKyZ4D96Q=;
-        b=Td2t4zVv0IoUtiYfZYsxqjFRGT0VsqHQug6eP3zQVdqs3RjTmmpvtxWnzslX8ABA+x
-         161kW88N4h1/kxNpBHvCnOLjdCPZUW/z1744miD+TuzgNwv2jbE1QFfbAudQ45ctJYGY
-         VVtjAj/qh/LEYyclvDWu49LlcPTntWH4holR0xQFjmlNd2jwvmoZva9/HfqPkgc4ZyZl
-         QSukvpcK/+se/4tJx69PG0lwNvHG9FrVEqF5uwHTHj7SGbCfRyNBUkfOAg63ad4dwv2R
-         cjHPtemJRmuCeUJ5Uyx5kv4cV3i+vjas4M3k5nBSbnhpp01VrZfHZy4Z1MsGm4vj+mg9
-         sY2A==
-X-Gm-Message-State: AGi0PuapwIIEyT0AcSoqZWBw65T5U9IVp0oNUb2qwkhpdYK//oiR7G9o
-        loaHnpJk20sYHy1T2tTJEJbIGg==
-X-Google-Smtp-Source: APiQypIUx0ejv6KHG5NNwU/7MFHaj3uJKApTKGer6Hzadc9PbSsk4YjGxx6GdQZp8VpaXPdWSTCggQ==
-X-Received: by 2002:a63:3d04:: with SMTP id k4mr2198376pga.115.1586481626752;
-        Thu, 09 Apr 2020 18:20:26 -0700 (PDT)
+        bh=3Q2KcR5vivg2vLIlkBGPIg0aMjasX9J0lCrxGu0EU40=;
+        b=U773RzntuO9B3LGRMbEPhBicWrGgPxMtevu0U+tIy2NUOlXLnGw9ib5JhqfWHydTjv
+         RGJWe4JV8fNVl/eqlyS4GlnessuUyD2qONBbQK4pZzTuj9uCvrBOjrlQ6kK1S74bNvlv
+         GkdIktp54DJlz5J/eMcjTmes9LN3wkaWOJuTVUXpqK8P3uZt8zp5S81W6oPU66WiSsWJ
+         pjzYqvCjHtCGH6Dj053C0UvCWVLwlg19385h/opx+v5kRh6rWVaErQn0P79AP5kd+UiM
+         59UVvWr8UpwJxq33UKMvz00TdbfUzVLK6eN0SDWLzNEVsf/BPsl7WpT1rTynnMg7rIds
+         7vzQ==
+X-Gm-Message-State: AGi0PuamdAsvX7Nv+5BV2laXoaw6j1DLIPeVEOAQy8C0VWeyriPZJV7o
+        /LlLAF2FBY5hRE0UxWJz8zu50A==
+X-Google-Smtp-Source: APiQypLpOQFFR0tNf0woJcisRcnRh6SPZmJIFjx7rMqYqS9XD1Mx0/cSXdRJSatERIidaB8va0hhwg==
+X-Received: by 2002:aa7:86cf:: with SMTP id h15mr2628240pfo.263.1586481737786;
+        Thu, 09 Apr 2020 18:22:17 -0700 (PDT)
 Received: from builder.lan (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id g11sm330131pfm.4.2020.04.09.18.20.25
+        by smtp.gmail.com with ESMTPSA id u3sm337755pfb.36.2020.04.09.18.22.16
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 09 Apr 2020 18:20:26 -0700 (PDT)
-Date:   Thu, 9 Apr 2020 18:20:34 -0700
+        Thu, 09 Apr 2020 18:22:17 -0700 (PDT)
+Date:   Thu, 9 Apr 2020 18:22:26 -0700
 From:   Bjorn Andersson <bjorn.andersson@linaro.org>
 To:     Peng Fan <peng.fan@nxp.com>
 Cc:     ohad@wizery.com, linux-remoteproc@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-imx@nxp.com
-Subject: Re: [PATCH 1/2] remoteproc: drop memset when loading elf segments
-Message-ID: <20200410012034.GU20625@builder.lan>
+Subject: Re: [PATCH 2/2] remoteproc: use filesz as backup when translate
+ memsz fail
+Message-ID: <20200410012226.GV20625@builder.lan>
 References: <1586420572-28353-1-git-send-email-peng.fan@nxp.com>
+ <1586420572-28353-2-git-send-email-peng.fan@nxp.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1586420572-28353-1-git-send-email-peng.fan@nxp.com>
+In-Reply-To: <1586420572-28353-2-git-send-email-peng.fan@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -75,63 +77,46 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 On Thu 09 Apr 01:22 PDT 2020, Peng Fan wrote:
 
-> To arm64, "dc      zva, dst" is used in memset.
-> Per ARM DDI 0487A.j, chapter C5.3.8 DC ZVA, Data Cache Zero by VA,
-> 
-> "If the memory region being zeroed is any type of Device memory,
-> this instruction can give an alignment fault which is prioritized
-> in the same way as other alignment faults that are determined
-> by the memory type."
-> 
-> On i.MX platforms, when elf is loaded to onchip TCM area, the region
-> is ioremapped, so "dc zva, dst" will trigger abort.
-> 
-> Since memset is not strictly required, let's drop it.
+> Since we no need memset if memsz is larger than filesz, we could
+> use filesz for the da to va translation when memsz translation fail.
 > 
 
-This would imply that we trust that the firmware doesn't expect
-remoteproc to zero out the memory, which we've always done. So I don't
-think we can say that it's not required.
-
-> Signed-off-by: Peng Fan <peng.fan@nxp.com>
-> ---
->  drivers/remoteproc/remoteproc_elf_loader.c | 7 ++-----
->  1 file changed, 2 insertions(+), 5 deletions(-)
-> 
-> diff --git a/drivers/remoteproc/remoteproc_elf_loader.c b/drivers/remoteproc/remoteproc_elf_loader.c
-> index 16e2c496fd45..cc50fe70d50c 100644
-> --- a/drivers/remoteproc/remoteproc_elf_loader.c
-> +++ b/drivers/remoteproc/remoteproc_elf_loader.c
-> @@ -238,14 +238,11 @@ int rproc_elf_load_segments(struct rproc *rproc, const struct firmware *fw)
->  			memcpy(ptr, elf_data + offset, filesz);
->  
->  		/*
-> -		 * Zero out remaining memory for this segment.
-> +		 * No need zero out remaining memory for this segment.
->  		 *
->  		 * This isn't strictly required since dma_alloc_coherent already
-> -		 * did this for us. albeit harmless, we may consider removing
-> -		 * this.
-> +		 * did this for us.
-
-In the case of recovery this comment is wrong, we do not
-dma_alloc_coherent() the carveout during a recovery.
-
-And in your case you ioremapped existing TCM, so it's never true.
-
->  		 */
-> -		if (memsz > filesz)
-> -			memset(ptr + filesz, 0, memsz - filesz);
-
-So I think you do want to zero out this region. Question is how we do
-it...
+To me this implies that the firmware has a segment that's larger than
+the memory that it's going to run in. I think even if we're not writing
+to the entire memsz, asking da_to_va for the entire memsz provides a
+valuable sanity check.
 
 Regards,
 Bjorn
 
->  	}
+> Signed-off-by: Peng Fan <peng.fan@nxp.com>
+> ---
+>  drivers/remoteproc/remoteproc_elf_loader.c | 12 ++++++++++--
+>  1 file changed, 10 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/remoteproc/remoteproc_elf_loader.c b/drivers/remoteproc/remoteproc_elf_loader.c
+> index cc50fe70d50c..74d425a4b34c 100644
+> --- a/drivers/remoteproc/remoteproc_elf_loader.c
+> +++ b/drivers/remoteproc/remoteproc_elf_loader.c
+> @@ -229,8 +229,16 @@ int rproc_elf_load_segments(struct rproc *rproc, const struct firmware *fw)
+>  		if (!ptr) {
+>  			dev_err(dev, "bad phdr da 0x%llx mem 0x%llx\n", da,
+>  				memsz);
+> -			ret = -EINVAL;
+> -			break;
+> +
+> +			ptr = rproc_da_to_va(rproc, da, filesz);
+> +			if (!ptr) {
+> +				dev_err(dev,
+> +					"bad phdr da 0x%llx mem 0x%llx\n",
+> +					da, filesz);
+> +				ret = -EINVAL;
+> +				break;
+> +			}
+> +
+>  		}
 >  
->  	if (ret == 0)
+>  		/* put the segment where the remote processor expects it */
 > -- 
 > 2.16.4
 > 
