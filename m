@@ -4,49 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9B8BC2BB86
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 03:53:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04E35C2D0EC
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 03:54:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 81D8E2137B
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 03:53:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CFB892137B
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 03:53:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586490834;
-	bh=qyNAzDbbtWFnkhRRYXh9FLygVhphQoMWEjbxwYbL6Go=;
+	s=default; t=1586490839;
+	bh=pYYnWNXIOOVYT3paGvt0+fyCX+Hzf57UqsPRpVa5kcM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=w6p5zXD/rReAbV+YbMCF3mPq5+kjGB80CjeKmr1ZDW2jswWyB+Gclz7QWtRnVFJl3
-	 qNAOtJrVtAqz96E27pGg0JId3WgIPPzFiE6mFjomxRSo2tg86haW5bLUopPNF2bJZ6
-	 1GidLqJogsF8W05PikCNLzZ3okgKIu9fgKHmGnLk=
+	b=O+SyFdtQfAx2RKENqAakPSu80b0jFzoHfoOCLcLQZ6ewbpLb5DHYfZNlJdD0o/XlM
+	 BopDKovj3cDv+V0qT+huPmX/aFQkDcXILFaNYjnoaNmSt3++6z/sHGzBqeSx/q0N04
+	 5Fw//2UJjT8T+JsmTeATlx54eYPOzV78P246dRyI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729099AbgDJDxs (ORCPT
+        id S1729075AbgDJDx6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Apr 2020 23:53:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35252 "EHLO mail.kernel.org"
+        Thu, 9 Apr 2020 23:53:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35188 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728004AbgDJDue (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Apr 2020 23:50:34 -0400
+        id S1726822AbgDJDuc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Apr 2020 23:50:32 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1EBB22173E;
-        Fri, 10 Apr 2020 03:50:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C67EB214DB;
+        Fri, 10 Apr 2020 03:50:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586490634;
-        bh=qyNAzDbbtWFnkhRRYXh9FLygVhphQoMWEjbxwYbL6Go=;
+        s=default; t=1586490632;
+        bh=pYYnWNXIOOVYT3paGvt0+fyCX+Hzf57UqsPRpVa5kcM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kcnL17szbBcqzt531vO5NBHBnLQcmL42HwUQKkifKt5zO+7s9YXJRURtdfMeGzNbi
-         rBCZ4XOaSEBCwPZQaFk/l+LSr9BrkDRc8FKeO3ZHYhHELCOXcKxYuVxcuW2pguzQ/1
-         JRdb4lyt2xuV80uQO0hCF7aSbfZVnDL01WM/fAC0=
+        b=JAs3QQ4KEgMe1q+wqKDi1UKpfCyeJl7afBJve1+m3wAPeA/ugbCcpMmaLKS16EA3K
+         eI0pdFVj1CDDkrBSijBj0g1xkhYEDtlZqxKDb5oKOWvG9ZTgniqzJhB2Hf9t+L95Mz
+         cUPSINwZ8csKA+6xubTMhGsrA4LJbzjJ/keKKSqk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Guoqing Jiang <guoqing.jiang@cloud.ionos.com>,
-        Song Liu <songliubraving@fb.com>,
-        Sasha Levin <sashal@kernel.org>, linux-raid@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 25/32] md: check arrays is suspended in mddev_detach before call quiesce operations
-Date:   Thu,  9 Apr 2020 23:49:58 -0400
-Message-Id: <20200410035005.9371-25-sashal@kernel.org>
+Cc:     Neil Armstrong <narmstrong@baylibre.com>,
+        Dongjin Kim <tobetter@gmail.com>,
+        Jianxin Pan <jianxin.pan@amlogic.com>,
+        Thinh Nguyen <thinhn@synopsys.com>,
+        Jun Li <lijun.kernel@gmail.com>, Tim <elatllat@gmail.com>,
+        Felipe Balbi <balbi@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-usb@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 23/32] usb: dwc3: core: add support for disabling SS instances in park mode
+Date:   Thu,  9 Apr 2020 23:49:56 -0400
+Message-Id: <20200410035005.9371-23-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200410035005.9371-1-sashal@kernel.org>
 References: <20200410035005.9371-1-sashal@kernel.org>
@@ -59,63 +63,97 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Guoqing Jiang <guoqing.jiang@cloud.ionos.com>
+From: Neil Armstrong <narmstrong@baylibre.com>
 
-[ Upstream commit 6b40bec3b13278d21fa6c1ae7a0bdf2e550eed5f ]
+[ Upstream commit 7ba6b09fda5e0cb741ee56f3264665e0edc64822 ]
 
-Don't call quiesce(1) and quiesce(0) if array is already suspended,
-otherwise in level_store, the array is writable after mddev_detach
-in below part though the intention is to make array writable after
-resume.
+In certain circumstances, the XHCI SuperSpeed instance in park mode
+can fail to recover, thus on Amlogic G12A/G12B/SM1 SoCs when there is high
+load on the single XHCI SuperSpeed instance, the controller can crash like:
+ xhci-hcd xhci-hcd.0.auto: xHCI host not responding to stop endpoint command.
+ xhci-hcd xhci-hcd.0.auto: Host halt failed, -110
+ xhci-hcd xhci-hcd.0.auto: xHCI host controller not responding, assume dead
+ xhci-hcd xhci-hcd.0.auto: xHCI host not responding to stop endpoint command.
+ hub 2-1.1:1.0: hub_ext_port_status failed (err = -22)
+ xhci-hcd xhci-hcd.0.auto: HC died; cleaning up
+ usb 2-1.1-port1: cannot reset (err = -22)
 
-	mddev_suspend(mddev);
-	mddev_detach(mddev);
-	...
-	mddev_resume(mddev);
+Setting the PARKMODE_DISABLE_SS bit in the DWC3_USB3_GUCTL1 mitigates
+the issue. The bit is described as :
+"When this bit is set to '1' all SS bus instances in park mode are disabled"
 
-And it also causes calltrace as follows in [1].
+Synopsys explains:
+The GUCTL1.PARKMODE_DISABLE_SS is only available in
+dwc_usb3 controller running in host mode.
+This should not be set for other IPs.
+This can be disabled by default based on IP, but I recommend to have a
+property to enable this feature for devices that need this.
 
-[48005.653834] WARNING: CPU: 1 PID: 45380 at kernel/kthread.c:510 kthread_park+0x77/0x90
-[...]
-[48005.653976] CPU: 1 PID: 45380 Comm: mdadm Tainted: G           OE     5.4.10-arch1-1 #1
-[48005.653979] Hardware name: To Be Filled By O.E.M. To Be Filled By O.E.M./J4105-ITX, BIOS P1.40 08/06/2018
-[48005.653984] RIP: 0010:kthread_park+0x77/0x90
-[48005.654015] Call Trace:
-[48005.654039]  r5l_quiesce+0x3c/0x70 [raid456]
-[48005.654052]  raid5_quiesce+0x228/0x2e0 [raid456]
-[48005.654073]  mddev_detach+0x30/0x70 [md_mod]
-[48005.654090]  level_store+0x202/0x670 [md_mod]
-[48005.654099]  ? security_capable+0x40/0x60
-[48005.654114]  md_attr_store+0x7b/0xc0 [md_mod]
-[48005.654123]  kernfs_fop_write+0xce/0x1b0
-[48005.654132]  vfs_write+0xb6/0x1a0
-[48005.654138]  ksys_write+0x67/0xe0
-[48005.654146]  do_syscall_64+0x4e/0x140
-[48005.654155]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
-[48005.654161] RIP: 0033:0x7fa0c8737497
-
-[1]: https://bugzilla.kernel.org/show_bug.cgi?id=206161
-
-Signed-off-by: Guoqing Jiang <guoqing.jiang@cloud.ionos.com>
-Signed-off-by: Song Liu <songliubraving@fb.com>
+CC: Dongjin Kim <tobetter@gmail.com>
+Cc: Jianxin Pan <jianxin.pan@amlogic.com>
+Cc: Thinh Nguyen <thinhn@synopsys.com>
+Cc: Jun Li <lijun.kernel@gmail.com>
+Reported-by: Tim <elatllat@gmail.com>
+Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+Signed-off-by: Felipe Balbi <balbi@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/md/md.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/usb/dwc3/core.c | 5 +++++
+ drivers/usb/dwc3/core.h | 4 ++++
+ 2 files changed, 9 insertions(+)
 
-diff --git a/drivers/md/md.c b/drivers/md/md.c
-index 62f214d43e15a..9426976e0860d 100644
---- a/drivers/md/md.c
-+++ b/drivers/md/md.c
-@@ -5874,7 +5874,7 @@ EXPORT_SYMBOL_GPL(md_stop_writes);
- static void mddev_detach(struct mddev *mddev)
- {
- 	md_bitmap_wait_behind_writes(mddev);
--	if (mddev->pers && mddev->pers->quiesce) {
-+	if (mddev->pers && mddev->pers->quiesce && !mddev->suspended) {
- 		mddev->pers->quiesce(mddev, 1);
- 		mddev->pers->quiesce(mddev, 0);
+diff --git a/drivers/usb/dwc3/core.c b/drivers/usb/dwc3/core.c
+index 6666d2a52bf56..60d08269ad9a0 100644
+--- a/drivers/usb/dwc3/core.c
++++ b/drivers/usb/dwc3/core.c
+@@ -981,6 +981,9 @@ static int dwc3_core_init(struct dwc3 *dwc)
+ 		if (dwc->dis_tx_ipgap_linecheck_quirk)
+ 			reg |= DWC3_GUCTL1_TX_IPGAP_LINECHECK_DIS;
+ 
++		if (dwc->parkmode_disable_ss_quirk)
++			reg |= DWC3_GUCTL1_PARKMODE_DISABLE_SS;
++
+ 		dwc3_writel(dwc->regs, DWC3_GUCTL1, reg);
  	}
+ 
+@@ -1287,6 +1290,8 @@ static void dwc3_get_properties(struct dwc3 *dwc)
+ 				"snps,dis-del-phy-power-chg-quirk");
+ 	dwc->dis_tx_ipgap_linecheck_quirk = device_property_read_bool(dev,
+ 				"snps,dis-tx-ipgap-linecheck-quirk");
++	dwc->parkmode_disable_ss_quirk = device_property_read_bool(dev,
++				"snps,parkmode-disable-ss-quirk");
+ 
+ 	dwc->tx_de_emphasis_quirk = device_property_read_bool(dev,
+ 				"snps,tx_de_emphasis_quirk");
+diff --git a/drivers/usb/dwc3/core.h b/drivers/usb/dwc3/core.h
+index 131028501752b..e34308d64619e 100644
+--- a/drivers/usb/dwc3/core.h
++++ b/drivers/usb/dwc3/core.h
+@@ -242,6 +242,7 @@
+ #define DWC3_GUCTL_HSTINAUTORETRY	BIT(14)
+ 
+ /* Global User Control 1 Register */
++#define DWC3_GUCTL1_PARKMODE_DISABLE_SS	BIT(17)
+ #define DWC3_GUCTL1_TX_IPGAP_LINECHECK_DIS	BIT(28)
+ #define DWC3_GUCTL1_DEV_L1_EXIT_BY_HW	BIT(24)
+ 
+@@ -992,6 +993,8 @@ struct dwc3_scratchpad_array {
+  *			change quirk.
+  * @dis_tx_ipgap_linecheck_quirk: set if we disable u2mac linestate
+  *			check during HS transmit.
++ * @parkmode_disable_ss_quirk: set if we need to disable all SuperSpeed
++ *			instances in park mode.
+  * @tx_de_emphasis_quirk: set if we enable Tx de-emphasis quirk
+  * @tx_de_emphasis: Tx de-emphasis value
+  * 	0	- -6dB de-emphasis
+@@ -1163,6 +1166,7 @@ struct dwc3 {
+ 	unsigned		dis_u2_freeclk_exists_quirk:1;
+ 	unsigned		dis_del_phy_power_chg_quirk:1;
+ 	unsigned		dis_tx_ipgap_linecheck_quirk:1;
++	unsigned		parkmode_disable_ss_quirk:1;
+ 
+ 	unsigned		tx_de_emphasis_quirk:1;
+ 	unsigned		tx_de_emphasis:2;
 -- 
 2.20.1
 
