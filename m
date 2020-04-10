@@ -6,64 +6,62 @@ X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
 	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CCF74C2BB86
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 17:30:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D17BC2BB86
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 17:30:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A46172082D
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 17:30:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 280382082D
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 17:30:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586539806;
-	bh=zO5L6bExP9Vn6H54tOeXhCYaOoSrMwNm1GL0YwwAzNM=;
+	s=default; t=1586539829;
+	bh=sYlrR5tKskk3z6owago8EJjKBm6gIfyuH4y7PAxq+Ao=;
 	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=Q/1GTSoMRkoSFuvOMEePlAByNHr0jTRJO2dkGkhNJZcQ5ry7kxrRmc8FqQghXY0kV
-	 qNsAfnX5MUMyLF1UtNneXU/fCm6Q3FWglKXeMkdh2BsrbfAgwiQgmQ0jkOxt+g4o4w
-	 ax+QqlCFjX6rwKcASrZio8+nQbxqgNvQIeWmyVuc=
+	b=1XT1bEjmA+XH2mU30DINOiZ1SL1Dx7brDYdZ3TAX00V6KtkbHjDPCwrQq3KEzrlzA
+	 sPz3EZ2MMSiasX3IT7IGrFTnPFa3XAJ/cFW7HMDb1hwBTzFfM5oQTMmlLMJ3ymo3HC
+	 9lay8Qrbga4UVVPK0zCerGSDHtv1yLxT8KdDUhiM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726801AbgDJRaE (ORCPT
+        id S1726814AbgDJRa1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Apr 2020 13:30:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58110 "EHLO mail.kernel.org"
+        Fri, 10 Apr 2020 13:30:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58432 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726582AbgDJRaE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Apr 2020 13:30:04 -0400
-Subject: Re: [GIT PULL] xfs: new code for 5.7, part 2
+        id S1726582AbgDJRa0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Apr 2020 13:30:26 -0400
+Subject: Re: [GIT PULL] io_uring fixes for 5.7-rc1
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586539804;
-        bh=zO5L6bExP9Vn6H54tOeXhCYaOoSrMwNm1GL0YwwAzNM=;
+        s=default; t=1586539827;
+        bh=sYlrR5tKskk3z6owago8EJjKBm6gIfyuH4y7PAxq+Ao=;
         h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=gFiG4RaC3ploy5R6VzEfsvQGQwgGFlZwTA3qRYZkszO6WLs98FDfbtppzrxyEBlzc
-         YV4+Mhr4S82c1YqOhADCWcRf1am6593mEh6Nh5k63NM1p1QZy+lkyWAQe9A7YrR1sn
-         0QWZ+bsz16fGyBv6uAZSUvjxC8lp/RMvw0McD7DA=
+        b=nos2edcItdVeB+QYawdZ4mMsVL7l9HBa3p5AvhaMugYTfTlgC/zriYLJLcDmqCiCb
+         rROldR7MvhBsLPd958GMQLZftWXnj5omcqDWv0+QZ9z3zMjJtkhyb0LCfD9cR9wbQ2
+         J0P4eBYeQxTVG8878c0CNzC9WSYpMxyEUgNXrzEE=
 From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20200409181526.GM6742@magnolia>
-References: <20200409181526.GM6742@magnolia>
-X-PR-Tracked-List-Id: <linux-fsdevel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20200409181526.GM6742@magnolia>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/fs/xfs/xfs-linux.git
- tags/xfs-5.7-merge-12
-X-PR-Tracked-Commit-Id: 5833112df7e9a306af9af09c60127b92ed723962
+In-Reply-To: <9739a06d-728e-1d6b-d511-ad4eefdd19b5@kernel.dk>
+References: <9739a06d-728e-1d6b-d511-ad4eefdd19b5@kernel.dk>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <9739a06d-728e-1d6b-d511-ad4eefdd19b5@kernel.dk>
+X-PR-Tracked-Remote: git://git.kernel.dk/linux-block.git
+ io_uring-5.7-2020-04-09
+X-PR-Tracked-Commit-Id: 85faa7b8346ebef0606d2d0df6d3f8c76acb3654
 X-PR-Merge-Tree: torvalds/linux.git
 X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 8c3c07439e1d793d8803a404df86e487875f3340
-Message-Id: <158653980468.6431.14242531724269213337.pr-tracker-bot@kernel.org>
-Date:   Fri, 10 Apr 2020 17:30:04 +0000
-To:     "Darrick J. Wong" <djwong@kernel.org>
+X-PR-Merge-Commit-Id: 172edde9604941f61d75bb3b4f88068204f8c086
+Message-Id: <158653982704.6431.2505342524339908158.pr-tracker-bot@kernel.org>
+Date:   Fri, 10 Apr 2020 17:30:27 +0000
+To:     Jens Axboe <axboe@kernel.dk>
 Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        "Darrick J. Wong" <djwong@kernel.org>,
-        linux-fsdevel@vger.kernel.org, linux-xfs@vger.kernel.org,
-        david@fromorbit.com, linux-kernel@vger.kernel.org,
-        sandeen@sandeen.net, hch@lst.de
+        io-uring <io-uring@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Thu, 9 Apr 2020 11:15:26 -0700:
+The pull request you sent on Thu, 9 Apr 2020 18:07:06 -0700:
 
-> git://git.kernel.org/pub/scm/fs/xfs/xfs-linux.git tags/xfs-5.7-merge-12
+> git://git.kernel.dk/linux-block.git io_uring-5.7-2020-04-09
 
 has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/8c3c07439e1d793d8803a404df86e487875f3340
+https://git.kernel.org/torvalds/c/172edde9604941f61d75bb3b4f88068204f8c086
 
 Thank you!
 
