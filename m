@@ -4,52 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EB5FC2D0EC
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 03:59:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EE33C2D0EC
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 03:59:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2A6C82063A
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 03:59:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E94A62063A
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 03:59:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586491143;
-	bh=6tEfhxHQDVSqkJDQqa2VuTVPtNeSt/QR1WgPANJ7ZMk=;
+	s=default; t=1586491147;
+	bh=gXuLcjnFmu7I8/9QP80Zfyjgrdu24JxyI56rH78YD5M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XRCdqHeYdvCCNl3LWyOnAoR2iv8cVOWYtXAECLtAmAp842f/BjbFrVlMlkrrSBwDS
-	 Y0EPOnyukQ44YM69ddk8cIHcVdEp+vHEYrqK2eacA/78z4GY97rE3pZ0Hr0PPlFvt6
-	 NpeIJW+71LGxGy6vSVeWp6qad3KgJR51gKog8AOo=
+	b=1YWmWv5i3CPMTiGgymAhC/cE4ng59qAxhQf/esyCKRkQcOANjuDOzErpE/4eZCYVG
+	 Mt5bjN9RrjaKsr3vW4Yw2JJOhR7chm1eXfAxbbmv7naCQPZjhGEPuc5NM7wgjKgpdk
+	 E5Kwii/DLtQwcMiueSediSvBd3eJLXsMsvCR/Oj4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728614AbgDJD7B (ORCPT
+        id S1728221AbgDJDse (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Apr 2020 23:59:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60204 "EHLO mail.kernel.org"
+        Thu, 9 Apr 2020 23:48:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60066 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728230AbgDJDsf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Apr 2020 23:48:35 -0400
+        id S1728164AbgDJDsa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Apr 2020 23:48:30 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 884FD214D8;
-        Fri, 10 Apr 2020 03:48:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1974E2137B;
+        Fri, 10 Apr 2020 03:48:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586490515;
-        bh=6tEfhxHQDVSqkJDQqa2VuTVPtNeSt/QR1WgPANJ7ZMk=;
+        s=default; t=1586490509;
+        bh=gXuLcjnFmu7I8/9QP80Zfyjgrdu24JxyI56rH78YD5M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CUn6PDpA3p2cup7XU4BCOO6SKh95uQ86c3E6GCoTXA6KbD4ZofocicFTMdxYV4fuh
-         H2Rv0KZW6l60R4T50+IAz1rTNvvpuBzVvR3r4AVWk0BDwq88Xo+G6/e2gGYnFKI4Ne
-         xHEQztC31svdazSmypthEuRT2l6RmZJg/3bTnOBY=
+        b=mXBwtyOL2zdfdPRXNTjBlLpE/sAt3tsLacLBorUu9Ta3fjvB10J74HCOIFfTlegwG
+         5y3myp6f2nUB+MN0ohwNhmBWmIS9rD+9VhpHZUrfQTeVco73J49zlT6k2SWYj1M5qZ
+         +nL6ePrD7hvXDzrpYO97UTxt570d39I44JtgOg2c=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Logan Gunthorpe <logang@deltatee.com>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+Cc:     "Ahmed S. Darwish" <a.darwish@linutronix.de>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Sasha Levin <sashal@kernel.org>, linux-pci@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.5 29/56] PCI/switchtec: Fix init_completion race condition with poll_wait()
-Date:   Thu,  9 Apr 2020 23:47:33 -0400
-Message-Id: <20200410034800.8381-29-sashal@kernel.org>
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.5 24/56] time/sched_clock: Expire timer in hardirq context
+Date:   Thu,  9 Apr 2020 23:47:28 -0400
+Message-Id: <20200410034800.8381-24-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200410034800.8381-1-sashal@kernel.org>
 References: <20200410034800.8381-1-sashal@kernel.org>
@@ -62,50 +59,63 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Logan Gunthorpe <logang@deltatee.com>
+From: "Ahmed S. Darwish" <a.darwish@linutronix.de>
 
-[ Upstream commit efbdc769601f4d50018bf7ca50fc9f7c67392ece ]
+[ Upstream commit 2c8bd58812ee3dbf0d78b566822f7eacd34bdd7b ]
 
-The call to init_completion() in mrpc_queue_cmd() can theoretically
-race with the call to poll_wait() in switchtec_dev_poll().
+To minimize latency, PREEMPT_RT kernels expires hrtimers in preemptible
+softirq context by default. This can be overriden by marking the timer's
+expiry with HRTIMER_MODE_HARD.
 
-  poll()			write()
-    switchtec_dev_poll()   	  switchtec_dev_write()
-      poll_wait(&s->comp.wait);      mrpc_queue_cmd()
-			               init_completion(&s->comp)
-				         init_waitqueue_head(&s->comp.wait)
+sched_clock_timer is missing this annotation: if its callback is preempted
+and the duration of the preemption exceeds the wrap around time of the
+underlying clocksource, sched clock will get out of sync.
 
-To my knowledge, no one has hit this bug.
+Mark the sched_clock_timer for expiry in hard interrupt context.
 
-Fix this by using reinit_completion() instead of init_completion() in
-mrpc_queue_cmd().
-
-Fixes: 080b47def5e5 ("MicroSemi Switchtec management interface driver")
-
-Reported-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
+Signed-off-by: Ahmed S. Darwish <a.darwish@linutronix.de>
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Acked-by: Bjorn Helgaas <bhelgaas@google.com>
-Link: https://lkml.kernel.org/r/20200313183608.2646-1-logang@deltatee.com
+Link: https://lkml.kernel.org/r/20200309181529.26558-1-a.darwish@linutronix.de
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pci/switch/switchtec.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ kernel/time/sched_clock.c | 9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/pci/switch/switchtec.c b/drivers/pci/switch/switchtec.c
-index 9c3ad09d30222..fb4602d44eb10 100644
---- a/drivers/pci/switch/switchtec.c
-+++ b/drivers/pci/switch/switchtec.c
-@@ -175,7 +175,7 @@ static int mrpc_queue_cmd(struct switchtec_user *stuser)
- 	kref_get(&stuser->kref);
- 	stuser->read_len = sizeof(stuser->data);
- 	stuser_set_state(stuser, MRPC_QUEUED);
--	init_completion(&stuser->comp);
-+	reinit_completion(&stuser->comp);
- 	list_add_tail(&stuser->list, &stdev->mrpc_queue);
+diff --git a/kernel/time/sched_clock.c b/kernel/time/sched_clock.c
+index dbd69052eaa66..a5538dd76a819 100644
+--- a/kernel/time/sched_clock.c
++++ b/kernel/time/sched_clock.c
+@@ -207,7 +207,8 @@ sched_clock_register(u64 (*read)(void), int bits, unsigned long rate)
  
- 	mrpc_cmd_submit(stdev);
+ 	if (sched_clock_timer.function != NULL) {
+ 		/* update timeout for clock wrap */
+-		hrtimer_start(&sched_clock_timer, cd.wrap_kt, HRTIMER_MODE_REL);
++		hrtimer_start(&sched_clock_timer, cd.wrap_kt,
++			      HRTIMER_MODE_REL_HARD);
+ 	}
+ 
+ 	r = rate;
+@@ -251,9 +252,9 @@ void __init generic_sched_clock_init(void)
+ 	 * Start the timer to keep sched_clock() properly updated and
+ 	 * sets the initial epoch.
+ 	 */
+-	hrtimer_init(&sched_clock_timer, CLOCK_MONOTONIC, HRTIMER_MODE_REL);
++	hrtimer_init(&sched_clock_timer, CLOCK_MONOTONIC, HRTIMER_MODE_REL_HARD);
+ 	sched_clock_timer.function = sched_clock_poll;
+-	hrtimer_start(&sched_clock_timer, cd.wrap_kt, HRTIMER_MODE_REL);
++	hrtimer_start(&sched_clock_timer, cd.wrap_kt, HRTIMER_MODE_REL_HARD);
+ }
+ 
+ /*
+@@ -290,7 +291,7 @@ void sched_clock_resume(void)
+ 	struct clock_read_data *rd = &cd.read_data[0];
+ 
+ 	rd->epoch_cyc = cd.actual_read_sched_clock();
+-	hrtimer_start(&sched_clock_timer, cd.wrap_kt, HRTIMER_MODE_REL);
++	hrtimer_start(&sched_clock_timer, cd.wrap_kt, HRTIMER_MODE_REL_HARD);
+ 	rd->read_sched_clock = cd.actual_read_sched_clock;
+ }
+ 
 -- 
 2.20.1
 
