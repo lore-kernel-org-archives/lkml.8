@@ -2,93 +2,75 @@ Return-Path: <SRS0=VV4q=52=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 291A0C2D0EC
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 19:21:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BF21C2BB55
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 19:23:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0C2842084D
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 19:20:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 366DA20732
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 19:23:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726762AbgDJTU6 (ORCPT
+        id S1726690AbgDJTXE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Apr 2020 15:20:58 -0400
-Received: from alexa-out-sd-02.qualcomm.com ([199.106.114.39]:28012 "EHLO
-        alexa-out-sd-02.qualcomm.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726741AbgDJTU5 (ORCPT
+        Fri, 10 Apr 2020 15:23:04 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:48496 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726203AbgDJTXE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Apr 2020 15:20:57 -0400
-Received: from unknown (HELO ironmsg-SD-alpha.qualcomm.com) ([10.53.140.30])
-  by alexa-out-sd-02.qualcomm.com with ESMTP; 10 Apr 2020 12:20:41 -0700
-Received: from gurus-linux.qualcomm.com ([10.46.162.81])
-  by ironmsg-SD-alpha.qualcomm.com with ESMTP; 10 Apr 2020 12:20:41 -0700
-Received: by gurus-linux.qualcomm.com (Postfix, from userid 383780)
-        id 617194BED; Fri, 10 Apr 2020 12:20:41 -0700 (PDT)
-Date:   Fri, 10 Apr 2020 12:20:41 -0700
-From:   Guru Das Srinagesh <gurus@codeaurora.org>
-To:     linux-pwm@vger.kernel.org, Chen-Yu Tsai <wens@csie.org>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Subbaraman Narayanamurthy <subbaram@codeaurora.org>,
-        David Collins <collinsd@codeaurora.org>,
-        linux-kernel@vger.kernel.org, Maxime Ripard <mripard@kernel.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>
-Subject: Re: [PATCH v12 08/11] pwm: sun4i: Use nsecs_to_jiffies to avoid a
- division
-Message-ID: <20200410192041.GC21571@codeaurora.org>
-References: <cover.1586414867.git.gurus@codeaurora.org>
- <436e1a50e603eefb24c8e7b2bd7f7e4838b90e12.1586414867.git.gurus@codeaurora.org>
+        Fri, 10 Apr 2020 15:23:04 -0400
+Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <colin.king@canonical.com>)
+        id 1jMzEq-0003Tq-Jq; Fri, 10 Apr 2020 19:22:52 +0000
+From:   Colin King <colin.king@canonical.com>
+To:     Jani Nikula <jani.nikula@linux.intel.com>,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Chris Wilson <chris@chris-wilson.co.uk>,
+        intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] drm/i915/gt: remove redundant assignment to variable x
+Date:   Fri, 10 Apr 2020 20:22:52 +0100
+Message-Id: <20200410192252.76908-1-colin.king@canonical.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <436e1a50e603eefb24c8e7b2bd7f7e4838b90e12.1586414867.git.gurus@codeaurora.org>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 08, 2020 at 11:52:37PM -0700, Guru Das Srinagesh wrote:
-> Since the PWM framework is switching struct pwm_state.period's datatype
-> to u64, prepare for this transition by using nsecs_to_jiffies() which
-> does away with the need for a division operation.
-> 
-> Cc: Maxime Ripard <mripard@kernel.org>
-> Cc: Chen-Yu Tsai <wens@csie.org>
-> Cc: Philipp Zabel <p.zabel@pengutronix.de>
-> 
-> Signed-off-by: Guru Das Srinagesh <gurus@codeaurora.org>
-> ---
->  drivers/pwm/pwm-sun4i.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/pwm/pwm-sun4i.c b/drivers/pwm/pwm-sun4i.c
-> index 5c677c5..1694e69 100644
-> --- a/drivers/pwm/pwm-sun4i.c
-> +++ b/drivers/pwm/pwm-sun4i.c
-> @@ -285,7 +285,7 @@ static int sun4i_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
->  	val = (duty & PWM_DTY_MASK) | PWM_PRD(period);
->  	sun4i_pwm_writel(sun4i_pwm, val, PWM_CH_PRD(pwm->hwpwm));
->  	sun4i_pwm->next_period[pwm->hwpwm] = jiffies +
-> -		usecs_to_jiffies(cstate.period / 1000 + 1);
-> +		nsecs_to_jiffies(cstate.period + 1000);
->  
->  	if (state->polarity != PWM_POLARITY_NORMAL)
->  		ctrl &= ~BIT_CH(PWM_ACT_STATE, pwm->hwpwm);
-> -- 
+From: Colin Ian King <colin.king@canonical.com>
 
-Hi Chen-Yu,
+The variable x is being initialized with a value that is never read
+and it is being updated later with a new value.  The initialization is
+redundant and can be removed.
 
-You had provided your "Acked-by:" [1] for an earlier version of this
-patch but now that I've revised the patch based on a review comment I
-received [2], could you please review this patch once again?
+Addresses-Coverity: ("Unused value")
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+---
+ drivers/gpu/drm/i915/gt/intel_engine_cs.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Thank you.
+diff --git a/drivers/gpu/drm/i915/gt/intel_engine_cs.c b/drivers/gpu/drm/i915/gt/intel_engine_cs.c
+index 3aa8a652c16d..0b597427bde9 100644
+--- a/drivers/gpu/drm/i915/gt/intel_engine_cs.c
++++ b/drivers/gpu/drm/i915/gt/intel_engine_cs.c
+@@ -1205,7 +1205,7 @@ static void print_request(struct drm_printer *m,
+ {
+ 	const char *name = rq->fence.ops->get_timeline_name(&rq->fence);
+ 	char buf[80] = "";
+-	int x = 0;
++	int x;
+ 
+ 	x = print_sched_attr(rq->i915, &rq->sched.attr, buf, x, sizeof(buf));
+ 
+-- 
+2.25.1
 
-Guru Das.
-
-[1] https://www.spinics.net/lists/linux-pwm/msg11755.html
-[2] https://www.spinics.net/lists/linux-pwm/msg11956.html
