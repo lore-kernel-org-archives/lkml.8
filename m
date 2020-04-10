@@ -2,314 +2,250 @@ Return-Path: <SRS0=VV4q=52=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FDAFC2BBFD
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 08:15:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE171C2BA2B
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 08:17:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 70204207FF
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 08:15:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8433D20787
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 08:17:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726184AbgDJIPo (ORCPT
+        id S1726059AbgDJIRD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Apr 2020 04:15:44 -0400
-Received: from smtp-8fac.mail.infomaniak.ch ([83.166.143.172]:40207 "EHLO
-        smtp-8fac.mail.infomaniak.ch" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725926AbgDJIPn (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Apr 2020 04:15:43 -0400
-Received: from smtp-3-0000.mail.infomaniak.ch (unknown [10.4.36.107])
-        by smtp-3-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 48z9n83JCjzlhPGX;
-        Fri, 10 Apr 2020 10:15:40 +0200 (CEST)
-Received: from ns3096276.ip-94-23-54.eu (unknown [94.23.54.103])
-        by smtp-3-0000.mail.infomaniak.ch (Postfix) with ESMTPA id 48z9n526xVzlm1Nc;
-        Fri, 10 Apr 2020 10:15:37 +0200 (CEST)
-Subject: Re: [selftests/landlock] d9d464ccf6:
- kernel-selftests.landlock.test_base.fail
-To:     kernel test robot <rong.a.chen@intel.com>
-Cc:     linux-kernel@vger.kernel.org, Al Viro <viro@zeniv.linux.org.uk>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Casey Schaufler <casey@schaufler-ca.com>,
-        James Morris <jmorris@namei.org>, Jann Horn <jann@thejh.net>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Kees Cook <keescook@chromium.org>,
-        Michael Kerrisk <mtk.manpages@gmail.com>,
-        =?UTF-8?Q?Micka=c3=abl_Sala=c3=bcn?= <mickael.salaun@ssi.gouv.fr>,
-        "Serge E . Hallyn" <serge@hallyn.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Vincent Dagonneau <vincent.dagonneau@ssi.gouv.fr>,
-        kernel-hardening@lists.openwall.com, linux-api@vger.kernel.org,
-        linux-arch@vger.kernel.org, linux-doc@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        linux-security-module@vger.kernel.org, x86@kernel.org,
-        lkp@lists.01.org
-References: <20200410022739.GK8179@shao2-debian>
-From:   =?UTF-8?Q?Micka=c3=abl_Sala=c3=bcn?= <mic@digikod.net>
-Message-ID: <65904ee7-602a-c10b-b85c-1a39023506a6@digikod.net>
-Date:   Fri, 10 Apr 2020 10:15:36 +0200
-User-Agent: 
+        Fri, 10 Apr 2020 04:17:03 -0400
+Received: from mga03.intel.com ([134.134.136.65]:44173 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725839AbgDJIRC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Apr 2020 04:17:02 -0400
+IronPort-SDR: t0RB3VtdYLJiJ+xtZWhbI9GBDEeuSOLEdKspfFZZpUctuoSk2KmlgPs+aTtt1vZV/U1CuGf++o
+ nTSmHMDapz6g==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Apr 2020 01:17:01 -0700
+IronPort-SDR: JpMF/SBXuVGYZafmfkGooOP+EM+8GuGh+VRBCi4H+/jDGYlezXG/X2plooFYp0KF9aaDC4vWF2
+ dUktq3xD+h9A==
+X-IronPort-AV: E=Sophos;i="5.72,366,1580803200"; 
+   d="scan'208";a="425822015"
+Received: from likexu-mobl1.ccr.corp.intel.com (HELO [10.238.4.236]) ([10.238.4.236])
+  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Apr 2020 01:17:00 -0700
+Subject: Re: [Bug report] Kernel 5.7 become unbootable
+To:     Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        linux-x86_64@vger.kernel.org, nivedita@alum.mit.edu
+References: <CABXGCsPpD+ExaeA6v+gSPPgtxcVzpKLWJNwGPPDKGFkPCv5kDg@mail.gmail.com>
+From:   Like Xu <like.xu@linux.intel.com>
+Organization: Intel OTC
+Message-ID: <1d02e4f3-8d83-4c55-bce2-f5aa4af2e363@linux.intel.com>
+Date:   Fri, 10 Apr 2020 16:16:58 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-In-Reply-To: <20200410022739.GK8179@shao2-debian>
-Content-Type: text/plain; charset=windows-1252
-Content-Language: fr
+In-Reply-To: <CABXGCsPpD+ExaeA6v+gSPPgtxcVzpKLWJNwGPPDKGFkPCv5kDg@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Antivirus: Dr.Web (R) for Unix mail servers drweb plugin ver.6.0.2.8
-X-Antivirus-Code: 0x100000
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Why isn't this bot enabling the required kernel configuration (i.e.
-CONFIG_SECURITY_LANDLOCK, specified in
-tools/testing/selftests/landlock/config)?
+On 2020/4/10 3:12, Mikhail Gavrilov wrote:
+> Hi folks.
+> I use Fedora Rawhide and today's update came with the new kernel
+> 5.7.0-0.rc0.git6.1.
+> As it turned out this kernel won't boot. Instead, I see the black
+> screen and some times see messages:
+> exit_boot() failed!
+> efi_main() failed!
+> 
+> The last working kernel is kernel-core-5.7.0-0.rc0.git2.1
+> 
+> I looked at the spec file and found out that the last bootable kernel
+> was related to the commit cad18da0afb1
+> (https://src.fedoraproject.org/rpms/kernel/c/9949db6070c6ca501d7235760ca8aba120db7448?branch=master),
+> and the first non-bootable kernel related to the commit a10c9c710f9e
+> (https://src.fedoraproject.org/rpms/kernel/c/0561e0bf0e459dd4b27a77670de838128b87bd0e?branch=master)
+> 
+> Of course, knowing these two commits, I made bisecting with the vanilla kernel:
+> 
+> $ git bisect log
+> git bisect start
+> # good: [cad18da0afb1bc7b37d73a74067ab7ff5974897c] Merge tag
+> 'please-pull-ia64_for_5.7' of
+> git://git.kernel.org/pub/scm/linux/kernel/git/aegl/linux
+> git bisect good cad18da0afb1bc7b37d73a74067ab7ff5974897c
+> # bad: [a10c9c710f9ecea87b9f4bbb837467893b4bef01] Merge tag 'for-v5.7'
+> of git://git.kernel.org/pub/scm/linux/kernel/git/sre/linux-power-supply
+> git bisect bad a10c9c710f9ecea87b9f4bbb837467893b4bef01
+> # bad: [f365ab31efacb70bed1e821f7435626e0b2528a6] Merge tag
+> 'drm-next-2020-04-01' of git://anongit.freedesktop.org/drm/drm
+> git bisect bad f365ab31efacb70bed1e821f7435626e0b2528a6
+> # good: [7f80ccfe996871ca69648efee74a60ae7ad0dcd9] net: ipv6:
+> rpl_iptunnel: Fix potential memory leak in rpl_do_srh_inline
+> git bisect good 7f80ccfe996871ca69648efee74a60ae7ad0dcd9
+> # good: [9001b17698d86f842e2b13e0cafe8021d43209e9] Merge tag
+> 'drm-intel-next-2020-03-13' of
+> git://anongit.freedesktop.org/drm/drm-intel into drm-next
+> git bisect good 9001b17698d86f842e2b13e0cafe8021d43209e9
+> # bad: [dfabb077d62552797ca0ae7756cb30d3e195ead5] Merge tag 'mmc-v5.7'
+> of git://git.kernel.org/pub/scm/linux/kernel/git/ulfh/mmc
+> git bisect bad dfabb077d62552797ca0ae7756cb30d3e195ead5
+> # bad: [15c981d16d70e8a5be297fa4af07a64ab7e080ed] Merge tag
+> 'for-5.7-tag' of
+> git://git.kernel.org/pub/scm/linux/kernel/git/kdave/linux
+> git bisect bad 15c981d16d70e8a5be297fa4af07a64ab7e080ed
+> # good: [dc9492c14c758639d7b2468d4ed3c77e785c1a35] btrfs: hold a ref
+> on the root on the dead roots list
+> git bisect good dc9492c14c758639d7b2468d4ed3c77e785c1a35
+> # good: [3cd86a58f7734bf9cef38f6f899608ebcaa3da13] Merge tag
+> 'arm64-upstream' of
+> git://git.kernel.org/pub/scm/linux/kernel/git/arm64/linux
+> git bisect good 3cd86a58f7734bf9cef38f6f899608ebcaa3da13
+> # bad: [fdf5563a720004199324371c08071b8ea27bd994] Merge branch
+> 'x86-cleanups-for-linus' of
+> git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip
+> git bisect bad fdf5563a720004199324371c08071b8ea27bd994
+> # skip: [cf122cfba5b1d9daf64009d143f51dfec4b1705a] kill uaccess_try()
+> git bisect skip cf122cfba5b1d9daf64009d143f51dfec4b1705a
+> # skip: [4dd2a1b92b91b5f2acf853ee1dc0df135054698f] x86: Replace
+> setup_irq() by request_irq()
+> git bisect skip 4dd2a1b92b91b5f2acf853ee1dc0df135054698f
+> # skip: [5c1f178094631e8b9acc67e4a9b6e03abfbc2529] x86:
+> __setup_frame(): consolidate uaccess areas
+> git bisect skip 5c1f178094631e8b9acc67e4a9b6e03abfbc2529
+> # skip: [3add42c29cebb1d5f83c6205c59466a06ccf8da1] x86: get rid of
+> get_user_ex() in restore_sigcontext()
+> git bisect skip 3add42c29cebb1d5f83c6205c59466a06ccf8da1
+> # skip: [ead8e4e7e2c75ced6fcd9a53d3e9a2ecd7368553] x86:
+> __setup_rt_frame(): consolidate uaccess areas
+> git bisect skip ead8e4e7e2c75ced6fcd9a53d3e9a2ecd7368553
+> # skip: [31a9122058bc5f042cb04bcdb8cd9e6c77fdae8d] x86/mm: Drop
+> pud_mknotpresent()
+> git bisect skip 31a9122058bc5f042cb04bcdb8cd9e6c77fdae8d
+> # skip: [791612e9668cecbf5dd24d13400ac74e099f005c] x86:
+> x32_setup_rt_frame(): consolidate uaccess areas
+> git bisect skip 791612e9668cecbf5dd24d13400ac74e099f005c
+> # skip: [77f3c6166ddc7567455b244074b3ebb63862b56f] x86: kill
+> get_user_{try,catch,ex}
+> git bisect skip 77f3c6166ddc7567455b244074b3ebb63862b56f
+> # skip: [b00d8f8f0b2b39223c3fd6713d318aba95420264] x86:
+> setup_sigcontext(): list user_access_{begin,end}() into callers
+> git bisect skip b00d8f8f0b2b39223c3fd6713d318aba95420264
+> # skip: [0e79ad863df43b01090ae18c97de5c3787f069c6] x86/cpu: Fix a
+> -Wmissing-prototypes warning for init_ia32_feat_ctl()
+> git bisect skip 0e79ad863df43b01090ae18c97de5c3787f069c6
+> # skip: [b87df6594486626a9ae5944807307f2604cea3e2] x86:
+> unsafe_put-style macro for sigmask
+> git bisect skip b87df6594486626a9ae5944807307f2604cea3e2
+> # skip: [a37d01ead405e3aa14d72d284721fe46422b3b63] x86: switch
+> save_v86_state() to unsafe_put_user()
+> git bisect skip a37d01ead405e3aa14d72d284721fe46422b3b63
+> # skip: [119cd59fcfbe70fb3fcab4e64cd232bcc3807585] x86: get rid of
+> put_user_try in __setup_rt_frame() (both 32bit and 64bit)
+> git bisect skip 119cd59fcfbe70fb3fcab4e64cd232bcc3807585
+> # skip: [119cd59fcfbe70fb3fcab4e64cd232bcc3807585] x86: get rid of
+> put_user_try in __setup_rt_frame() (both 32bit and 64bit)
+> git bisect skip 119cd59fcfbe70fb3fcab4e64cd232bcc3807585
+> # bad: [9589351ccf47a85a75180a430627c16bc28da929] Merge branch
+> 'x86-boot-for-linus' of
+> git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip
+> git bisect bad 9589351ccf47a85a75180a430627c16bc28da929
+> # skip: [003602ad5516e59940de42e44c8d8033387bb363] x86/*/Makefile: Use
+> -fno-asynchronous-unwind-tables to suppress .eh_frame sections
+> git bisect skip 003602ad5516e59940de42e44c8d8033387bb363
+> # skip: [0eea39a234dc52063d14541fabcb2c64516a2328]
+> x86/boot/compressed: Remove .eh_frame section from bzImage
+> git bisect skip 0eea39a234dc52063d14541fabcb2c64516a2328
+> # skip: [bac59d18c7018a2fd5e800a1e72a8271bf404977] x86/setup: Fix
+> static memory detection
+> git bisect skip bac59d18c7018a2fd5e800a1e72a8271bf404977
+> # skip: [3ee372ccce4d4e7c610748d0583979d3ed3a0cf4]
+> x86/boot/compressed/64: Remove .bss/.pgtable from bzImage
+> git bisect skip 3ee372ccce4d4e7c610748d0583979d3ed3a0cf4
+> # skip: [a86255fe5258714e1f7c1bdfe95f08e4d098d450]
+> x86/boot/compressed/64: Use 32-bit (zero-extended) MOV for
+> z_output_len
+> git bisect skip a86255fe5258714e1f7c1bdfe95f08e4d098d450
+> # skip: [6f8f0dc980028e98ae339876a8403edae4d20e39] x86/vmlinux: Drop
+> unneeded linker script discard of .eh_frame
+> git bisect skip 6f8f0dc980028e98ae339876a8403edae4d20e39
+> # skip: [48bfdb9deffdc6b683feb25e15f4f26aac503501]
+> x86/boot/compressed/64: Use LEA to initialize boot stack pointer
+> git bisect skip 48bfdb9deffdc6b683feb25e15f4f26aac503501
+> # skip: [c90beea22a2bece4b0bbb39789bf835504421594]
+> x86/boot/compressed: Fix debug_puthex() parameter type
+> git bisect skip c90beea22a2bece4b0bbb39789bf835504421594
+> # only skipped commits left to test
+> # possible first bad commit:
+> [9589351ccf47a85a75180a430627c16bc28da929] Merge branch
+> 'x86-boot-for-linus' of
+> git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip
+> # possible first bad commit:
+> [c90beea22a2bece4b0bbb39789bf835504421594] x86/boot/compressed: Fix
+> debug_puthex() parameter type
+> # possible first bad commit:
+> [bac59d18c7018a2fd5e800a1e72a8271bf404977] x86/setup: Fix static
+> memory detection
+> # possible first bad commit:
+> [6f8f0dc980028e98ae339876a8403edae4d20e39] x86/vmlinux: Drop unneeded
+> linker script discard of .eh_frame
+> # possible first bad commit:
+> [003602ad5516e59940de42e44c8d8033387bb363] x86/*/Makefile: Use
+> -fno-asynchronous-unwind-tables to suppress .eh_frame sections
+> # possible first bad commit:
+> [0eea39a234dc52063d14541fabcb2c64516a2328] x86/boot/compressed: Remove
+> .eh_frame section from bzImage
+> # possible first bad commit:
+> [3ee372ccce4d4e7c610748d0583979d3ed3a0cf4] x86/boot/compressed/64:
+> Remove .bss/.pgtable from bzImage
+> # possible first bad commit:
+> [a86255fe5258714e1f7c1bdfe95f08e4d098d450] x86/boot/compressed/64: Use
+> 32-bit (zero-extended) MOV for z_output_len
+> # possible first bad commit:
+> [48bfdb9deffdc6b683feb25e15f4f26aac503501] x86/boot/compressed/64: Use
+> LEA to initialize boot stack pointer
+> 
+> Unfortunately, kernel bisecting not telling exactly which commit is blame.
+> In my bisecting a lot of skipping commits because of the unsuccessful builds:
+> ld: arch/x86/boot/compressed/pgtable_64.o:(.bss+0x0): multiple
+> definition of `__force_order';
+> arch/x86/boot/compressed/kaslr_64.o:(.bss+0x0): first defined here
+> make[2]: *** [arch/x86/boot/compressed/Makefile:120:
+> arch/x86/boot/compressed/vmlinux] Error 1
+> make[1]: *** [arch/x86/boot/Makefile:114:
+> arch/x86/boot/compressed/vmlinux] Error 2
+> make: *** [arch/x86/Makefile:283: bzImage] Error 2
+> 
+> Can anyone here help me with this issue?
 
-On 10/04/2020 04:27, kernel test robot wrote:
-> FYI, we noticed the following commit (built with gcc-7):
+I encountered the same issue as you:
+
+exit_boot() failed!
+efi_main() failed!
+
+and the following patches are very suspicious:
+
+x86/boot/compressed/64: Use LEA to initialize boot stack pointer
+x86/boot/compressed/64: Use 32-bit (zero-extended) MOV for z_output_len
+x86/boot/compressed/64: Remove .bss/.pgtable from bzImage
+x86/boot/compressed: Remove .eh_frame section from bzImage
+
+I am not sure if reverting these patches can help you.
+
+Thanks,
+Like Xu
+
 > 
-> commit: d9d464ccf68e19bf7d303022d873141b5e1f7219 ("[PATCH v15 08/10] selftests/landlock: Add initial tests")
-> url: https://github.com/0day-ci/linux/commits/Micka-l-Sala-n/Landlock-LSM/20200327-073729
-> base: https://git.kernel.org/cgit/linux/kernel/git/shuah/linux-kselftest.git next
+> Thanks.
 > 
-> in testcase: kernel-selftests
-> with following parameters:
+> Downstream bugreport:
+> https://bugzilla.redhat.com/show_bug.cgi?id=1822731
 > 
-> 	group: kselftests-01
-> 	ucode: 0xd6
+> --
+> Best Regards,
+> Mike Gavrilov.
 > 
-> test-description: The kernel contains a set of "self tests" under the tools/testing/selftests/ directory. These are intended to be small unit tests to exercise individual code paths in the kernel.
-> test-url: https://www.kernel.org/doc/Documentation/kselftest.txt
-> 
-> 
-> on test machine: 8 threads Intel(R) Core(TM) i7-6700 CPU @ 3.40GHz with 16G memory
-> 
-> caused below changes (please refer to attached dmesg/kmsg for entire log/backtrace):
-> 
-> 
-> If you fix the issue, kindly add following tag
-> Reported-by: kernel test robot <rong.a.chen@intel.com>
-> 
-> 
-> 2020-04-09 08:20:02 make run_tests -C landlock
-> make: Entering directory '/usr/src/perf_selftests-x86_64-rhel-7.6-d9d464ccf68e19bf7d303022d873141b5e1f7219/tools/testing/selftests/landlock'
-> make --no-builtin-rules ARCH=x86 -C ../../../.. headers_install
-> make[1]: Entering directory '/usr/src/perf_selftests-x86_64-rhel-7.6-d9d464ccf68e19bf7d303022d873141b5e1f7219'
->   INSTALL ./usr/include
-> make[1]: Leaving directory '/usr/src/perf_selftests-x86_64-rhel-7.6-d9d464ccf68e19bf7d303022d873141b5e1f7219'
-> gcc -Wall -O2 -I../../../../usr/include    test_base.c /usr/src/perf_selftests-x86_64-rhel-7.6-d9d464ccf68e19bf7d303022d873141b5e1f7219/tools/testing/selftests/kselftest_harness.h /usr/src/perf_selftests-x86_64-rhel-7.6-d9d464ccf68e19bf7d303022d873141b5e1f7219/tools/testing/selftests/kselftest.h ../../../../usr/include/linux/landlock.h ../kselftest_harness.h common.h  -o /usr/src/perf_selftests-x86_64-rhel-7.6-d9d464ccf68e19bf7d303022d873141b5e1f7219/tools/testing/selftests/landlock/test_base
-> gcc -Wall -O2 -I../../../../usr/include    test_ptrace.c /usr/src/perf_selftests-x86_64-rhel-7.6-d9d464ccf68e19bf7d303022d873141b5e1f7219/tools/testing/selftests/kselftest_harness.h /usr/src/perf_selftests-x86_64-rhel-7.6-d9d464ccf68e19bf7d303022d873141b5e1f7219/tools/testing/selftests/kselftest.h ../../../../usr/include/linux/landlock.h ../kselftest_harness.h common.h  -o /usr/src/perf_selftests-x86_64-rhel-7.6-d9d464ccf68e19bf7d303022d873141b5e1f7219/tools/testing/selftests/landlock/test_ptrace
-> gcc -Wall -O2 -I../../../../usr/include    test_fs.c /usr/src/perf_selftests-x86_64-rhel-7.6-d9d464ccf68e19bf7d303022d873141b5e1f7219/tools/testing/selftests/kselftest_harness.h /usr/src/perf_selftests-x86_64-rhel-7.6-d9d464ccf68e19bf7d303022d873141b5e1f7219/tools/testing/selftests/kselftest.h ../../../../usr/include/linux/landlock.h ../kselftest_harness.h common.h  -o /usr/src/perf_selftests-x86_64-rhel-7.6-d9d464ccf68e19bf7d303022d873141b5e1f7219/tools/testing/selftests/landlock/test_fs
-> gcc -Os -static -o /usr/src/perf_selftests-x86_64-rhel-7.6-d9d464ccf68e19bf7d303022d873141b5e1f7219/tools/testing/selftests/landlock/true true.c
-> TAP version 13
-> 1..3
-> # selftests: landlock: test_base
-> # common.h:37:ruleset_rw.fdinfo:Expected 0 (0) <= self->ruleset_fd (18446744073709551615)
-> # ruleset_rw.fdinfo: Test terminated by assertion
-> # test_base.c:64:global.features:Expected 0 (0) == landlock(LANDLOCK_CMD_GET_FEATURES, LANDLOCK_OPT_GET_FEATURES, sizeof(attr_features), &attr_features) (18446744073709551615)
-> # global.features: Test terminated by assertion
-> # test_base.c:89:global.empty_attr_ruleset:Expected errno (38) == EINVAL (22)
-> # global.empty_attr_ruleset: Test terminated by assertion
-> # test_base.c:99:global.empty_attr_path_beneath:Expected errno (38) == EINVAL (22)
-> # global.empty_attr_path_beneath: Test terminated by assertion
-> # test_base.c:109:global.empty_attr_enforce:Expected errno (38) == EINVAL (22)
-> # global.empty_attr_enforce: Test terminated by assertion
-> # [==========] Running 5 tests from 2 test cases.
-> # [ RUN      ] ruleset_rw.fdinfo
-> # [     FAIL ] ruleset_rw.fdinfo
-> # [ RUN      ] global.features
-> # [     FAIL ] global.features
-> # [ RUN      ] global.empty_attr_ruleset
-> # [     FAIL ] global.empty_attr_ruleset
-> # [ RUN      ] global.empty_attr_path_beneath
-> # [     FAIL ] global.empty_attr_path_beneath
-> # [ RUN      ] global.empty_attr_enforce
-> # [     FAIL ] global.empty_attr_enforce
-> # [==========] 0 / 5 tests passed.
-> # [  FAILED  ]
-> not ok 1 selftests: landlock: test_base # exit=1
-> # selftests: landlock: test_ptrace
-> # test_ptrace.c:36:global.allow_with_one_domain:Expected 0 (0) == landlock(LANDLOCK_CMD_GET_FEATURES, LANDLOCK_OPT_GET_FEATURES, sizeof(attr_features), &attr_features) (18446744073709551615)
-> # test_ptrace.c:148:global.allow_with_one_domain:Expected 1 (1) == read(pipe_child[0], &buf_parent, 1) (0)
-> # test_ptrace.c:149:global.allow_with_one_domain:Failed to read() sync #2 from child
-> # global.allow_with_one_domain: Test terminated by assertion
-> # test_ptrace.c:36:global.deny_with_parent_domain:Expected 0 (0) == landlock(LANDLOCK_CMD_GET_FEATURES, LANDLOCK_OPT_GET_FEATURES, sizeof(attr_features), &attr_features) (18446744073709551615)
-> # test_ptrace.c:99:global.deny_with_parent_domain:Expected 1 (1) == read(pipe_parent[0], &buf_child, 1) (0)
-> # test_ptrace.c:100:global.deny_with_parent_domain:Failed to read() sync #1 from parent
-> # global.deny_with_parent_domain: Test terminated by assertion
-> # test_ptrace.c:36:global.deny_with_sibling_domain:Expected 0 (0) == landlock(LANDLOCK_CMD_GET_FEATURES, LANDLOCK_OPT_GET_FEATURES, sizeof(attr_features), &attr_features) (18446744073709551615)
-> # test_ptrace.c:36:global.deny_with_sibling_domain:Expected 0 (0) == landlock(LANDLOCK_CMD_GET_FEATURES, LANDLOCK_OPT_GET_FEATURES, sizeof(attr_features), &attr_features) (18446744073709551615)
-> # global.deny_with_sibling_domain: Test terminated by assertion
-> # test_ptrace.c:36:global.allow_sibling_domain:Expected 0 (0) == landlock(LANDLOCK_CMD_GET_FEATURES, LANDLOCK_OPT_GET_FEATURES, sizeof(attr_features), &attr_features) (18446744073709551615)
-> # global.allow_sibling_domain: Test terminated by assertion
-> # test_ptrace.c:36:global.allow_with_nested_domain:Expected 0 (0) == landlock(LANDLOCK_CMD_GET_FEATURES, LANDLOCK_OPT_GET_FEATURES, sizeof(attr_features), &attr_features) (18446744073709551615)
-> # global.allow_with_nested_domain: Test terminated by assertion
-> # test_ptrace.c:36:global.deny_with_nested_and_parent_domain:Expected 0 (0) == landlock(LANDLOCK_CMD_GET_FEATURES, LANDLOCK_OPT_GET_FEATURES, sizeof(attr_features), &attr_features) (18446744073709551615)
-> # global.deny_with_nested_and_parent_domain: Test terminated by assertion
-> # test_ptrace.c:36:global.deny_with_forked_domain:Expected 0 (0) == landlock(LANDLOCK_CMD_GET_FEATURES, LANDLOCK_OPT_GET_FEATURES, sizeof(attr_features), &attr_features) (18446744073709551615)
-> # global.deny_with_forked_domain: Test terminated by assertion
-> # [==========] Running 8 tests from 2 test cases.
-> # [ RUN      ] global.allow_without_domain
-> # [       OK ] global.allow_without_domain
-> # [ RUN      ] global.allow_with_one_domain
-> # [     FAIL ] global.allow_with_one_domain
-> # [ RUN      ] global.deny_with_parent_domain
-> # [     FAIL ] global.deny_with_parent_domain
-> # [ RUN      ] global.deny_with_sibling_domain
-> # [     FAIL ] global.deny_with_sibling_domain
-> # [ RUN      ] global.allow_sibling_domain
-> # [     FAIL ] global.allow_sibling_domain
-> # [ RUN      ] global.allow_with_nested_domain
-> # [     FAIL ] global.allow_with_nested_domain
-> # [ RUN      ] global.deny_with_nested_and_parent_domain
-> # [     FAIL ] global.deny_with_nested_and_parent_domain
-> # [ RUN      ] global.deny_with_forked_domain
-> # [     FAIL ] global.deny_with_forked_domain
-> # [==========] 1 / 8 tests passed.
-> # [  FAILED  ]
-> not ok 2 selftests: landlock: test_ptrace # exit=1
-> # selftests: landlock: test_fs
-> # common.h:37:ruleset_rw.inval:Expected 0 (0) <= self->ruleset_fd (18446744073709551615)
-> # ruleset_rw.inval: Test terminated by assertion
-> # common.h:37:ruleset_rw.nsfs:Expected 0 (0) <= self->ruleset_fd (18446744073709551615)
-> # ruleset_rw.nsfs: Test terminated by assertion
-> # test_fs.c:342:layout1.whitelist:Expected 0 (0) == landlock(LANDLOCK_CMD_GET_FEATURES, LANDLOCK_OPT_GET_FEATURES, sizeof(attr_features), &attr_features) (18446744073709551615)
-> # layout1.whitelist: Test terminated by assertion
-> # test_fs.c:342:layout1.unhandled_access:Expected 0 (0) == landlock(LANDLOCK_CMD_GET_FEATURES, LANDLOCK_OPT_GET_FEATURES, sizeof(attr_features), &attr_features) (18446744073709551615)
-> # layout1.unhandled_access: Test terminated by assertion
-> # test_fs.c:342:layout1.ruleset_overlap:Expected 0 (0) == landlock(LANDLOCK_CMD_GET_FEATURES, LANDLOCK_OPT_GET_FEATURES, sizeof(attr_features), &attr_features) (18446744073709551615)
-> # layout1.ruleset_overlap: Test terminated by assertion
-> # test_fs.c:342:layout1.inherit_superset:Expected 0 (0) == landlock(LANDLOCK_CMD_GET_FEATURES, LANDLOCK_OPT_GET_FEATURES, sizeof(attr_features), &attr_features) (18446744073709551615)
-> # layout1.inherit_superset: Test terminated by assertion
-> # test_fs.c:342:layout1.rule_on_mountpoint:Expected 0 (0) == landlock(LANDLOCK_CMD_GET_FEATURES, LANDLOCK_OPT_GET_FEATURES, sizeof(attr_features), &attr_features) (18446744073709551615)
-> # layout1.rule_on_mountpoint: Test terminated by assertion
-> # test_fs.c:342:layout1.rule_over_mountpoint:Expected 0 (0) == landlock(LANDLOCK_CMD_GET_FEATURES, LANDLOCK_OPT_GET_FEATURES, sizeof(attr_features), &attr_features) (18446744073709551615)
-> # layout1.rule_over_mountpoint: Test terminated by assertion
-> # test_fs.c:342:layout1.rule_over_root:Expected 0 (0) == landlock(LANDLOCK_CMD_GET_FEATURES, LANDLOCK_OPT_GET_FEATURES, sizeof(attr_features), &attr_features) (18446744073709551615)
-> # layout1.rule_over_root: Test terminated by assertion
-> # test_fs.c:720:layout1.rule_inside_mount_ns:Expected -1 (18446744073709551615) != syscall(SYS_pivot_root, dir_s3d2, dir_s3d3) (18446744073709551615)
-> # test_fs.c:722:layout1.rule_inside_mount_ns:Failed to pivot_root into "tmp/s3d1/s3d2": Invalid argument
-> # 
-> # layout1.rule_inside_mount_ns: Test terminated by assertion
-> # test_fs.c:342:layout1.mount_and_pivot:Expected 0 (0) == landlock(LANDLOCK_CMD_GET_FEATURES, LANDLOCK_OPT_GET_FEATURES, sizeof(attr_features), &attr_features) (18446744073709551615)
-> # layout1.mount_and_pivot: Test terminated by assertion
-> # test_fs.c:342:layout1.relative_open:Expected 0 (0) == landlock(LANDLOCK_CMD_GET_FEATURES, LANDLOCK_OPT_GET_FEATURES, sizeof(attr_features), &attr_features) (18446744073709551615)
-> # layout1.relative_open: Test terminated by assertion
-> # test_fs.c:342:layout1.relative_chdir:Expected 0 (0) == landlock(LANDLOCK_CMD_GET_FEATURES, LANDLOCK_OPT_GET_FEATURES, sizeof(attr_features), &attr_features) (18446744073709551615)
-> # layout1.relative_chdir: Test terminated by assertion
-> # test_fs.c:342:layout1.relative_chroot_only:Expected 0 (0) == landlock(LANDLOCK_CMD_GET_FEATURES, LANDLOCK_OPT_GET_FEATURES, sizeof(attr_features), &attr_features) (18446744073709551615)
-> # layout1.relative_chroot_only: Test terminated by assertion
-> # test_fs.c:342:layout1.relative_chroot_chdir:Expected 0 (0) == landlock(LANDLOCK_CMD_GET_FEATURES, LANDLOCK_OPT_GET_FEATURES, sizeof(attr_features), &attr_features) (18446744073709551615)
-> # layout1.relative_chroot_chdir: Test terminated by assertion
-> # test_fs.c:342:layout1.chroot:Expected 0 (0) == landlock(LANDLOCK_CMD_GET_FEATURES, LANDLOCK_OPT_GET_FEATURES, sizeof(attr_features), &attr_features) (18446744073709551615)
-> # layout1.chroot: Test terminated by assertion
-> # test_fs.c:342:layout1.execute:Expected 0 (0) == landlock(LANDLOCK_CMD_GET_FEATURES, LANDLOCK_OPT_GET_FEATURES, sizeof(attr_features), &attr_features) (18446744073709551615)
-> # layout1.execute: Test terminated by assertion
-> # test_fs.c:342:layout1.link_to:Expected 0 (0) == landlock(LANDLOCK_CMD_GET_FEATURES, LANDLOCK_OPT_GET_FEATURES, sizeof(attr_features), &attr_features) (18446744073709551615)
-> # layout1.link_to: Test terminated by assertion
-> # test_fs.c:342:layout1.rename_from:Expected 0 (0) == landlock(LANDLOCK_CMD_GET_FEATURES, LANDLOCK_OPT_GET_FEATURES, sizeof(attr_features), &attr_features) (18446744073709551615)
-> # layout1.rename_from: Test terminated by assertion
-> # test_fs.c:342:layout1.rename_to:Expected 0 (0) == landlock(LANDLOCK_CMD_GET_FEATURES, LANDLOCK_OPT_GET_FEATURES, sizeof(attr_features), &attr_features) (18446744073709551615)
-> # layout1.rename_to: Test terminated by assertion
-> # test_fs.c:342:layout1.rmdir:Expected 0 (0) == landlock(LANDLOCK_CMD_GET_FEATURES, LANDLOCK_OPT_GET_FEATURES, sizeof(attr_features), &attr_features) (18446744073709551615)
-> # layout1.rmdir: Test terminated by assertion
-> # test_fs.c:342:layout1.unlink:Expected 0 (0) == landlock(LANDLOCK_CMD_GET_FEATURES, LANDLOCK_OPT_GET_FEATURES, sizeof(attr_features), &attr_features) (18446744073709551615)
-> # layout1.unlink: Test terminated by assertion
-> # test_fs.c:342:layout1.make_char:Expected 0 (0) == landlock(LANDLOCK_CMD_GET_FEATURES, LANDLOCK_OPT_GET_FEATURES, sizeof(attr_features), &attr_features) (18446744073709551615)
-> # layout1.make_char: Test terminated by assertion
-> # test_fs.c:342:layout1.make_block:Expected 0 (0) == landlock(LANDLOCK_CMD_GET_FEATURES, LANDLOCK_OPT_GET_FEATURES, sizeof(attr_features), &attr_features) (18446744073709551615)
-> # layout1.make_block: Test terminated by assertion
-> # test_fs.c:342:layout1.make_reg:Expected 0 (0) == landlock(LANDLOCK_CMD_GET_FEATURES, LANDLOCK_OPT_GET_FEATURES, sizeof(attr_features), &attr_features) (18446744073709551615)
-> # layout1.make_reg: Test terminated by assertion
-> # test_fs.c:342:layout1.make_sock:Expected 0 (0) == landlock(LANDLOCK_CMD_GET_FEATURES, LANDLOCK_OPT_GET_FEATURES, sizeof(attr_features), &attr_features) (18446744073709551615)
-> # layout1.make_sock: Test terminated by assertion
-> # test_fs.c:342:layout1.make_fifo:Expected 0 (0) == landlock(LANDLOCK_CMD_GET_FEATURES, LANDLOCK_OPT_GET_FEATURES, sizeof(attr_features), &attr_features) (18446744073709551615)
-> # layout1.make_fifo: Test terminated by assertion
-> # test_fs.c:342:layout1.make_sym:Expected 0 (0) == landlock(LANDLOCK_CMD_GET_FEATURES, LANDLOCK_OPT_GET_FEATURES, sizeof(attr_features), &attr_features) (18446744073709551615)
-> # layout1.make_sym: Test terminated by assertion
-> # test_fs.c:342:layout1.make_dir:Expected 0 (0) == landlock(LANDLOCK_CMD_GET_FEATURES, LANDLOCK_OPT_GET_FEATURES, sizeof(attr_features), &attr_features) (18446744073709551615)
-> # layout1.make_dir: Test terminated by assertion
-> # [==========] Running 31 tests from 3 test cases.
-> # [ RUN      ] layout1.no_restriction
-> # [       OK ] layout1.no_restriction
-> # [ RUN      ] ruleset_rw.inval
-> # [     FAIL ] ruleset_rw.inval
-> # [ RUN      ] ruleset_rw.nsfs
-> # [     FAIL ] ruleset_rw.nsfs
-> # [ RUN      ] layout1.whitelist
-> # [     FAIL ] layout1.whitelist
-> # [ RUN      ] layout1.unhandled_access
-> # [     FAIL ] layout1.unhandled_access
-> # [ RUN      ] layout1.ruleset_overlap
-> # [     FAIL ] layout1.ruleset_overlap
-> # [ RUN      ] layout1.inherit_superset
-> # [     FAIL ] layout1.inherit_superset
-> # [ RUN      ] layout1.rule_on_mountpoint
-> # [     FAIL ] layout1.rule_on_mountpoint
-> # [ RUN      ] layout1.rule_over_mountpoint
-> # [     FAIL ] layout1.rule_over_mountpoint
-> # [ RUN      ] layout1.rule_over_root
-> # [     FAIL ] layout1.rule_over_root
-> # [ RUN      ] layout1.rule_inside_mount_ns
-> # [     FAIL ] layout1.rule_inside_mount_ns
-> # [ RUN      ] layout1.mount_and_pivot
-> # [     FAIL ] layout1.mount_and_pivot
-> # [ RUN      ] layout1.relative_open
-> # [     FAIL ] layout1.relative_open
-> # [ RUN      ] layout1.relative_chdir
-> # [     FAIL ] layout1.relative_chdir
-> # [ RUN      ] layout1.relative_chroot_only
-> # [     FAIL ] layout1.relative_chroot_only
-> # [ RUN      ] layout1.relative_chroot_chdir
-> # [     FAIL ] layout1.relative_chroot_chdir
-> # [ RUN      ] layout1.chroot
-> # [     FAIL ] layout1.chroot
-> # [ RUN      ] layout1.execute
-> # [     FAIL ] layout1.execute
-> # [ RUN      ] layout1.link_to
-> # [     FAIL ] layout1.link_to
-> # [ RUN      ] layout1.rename_from
-> # [     FAIL ] layout1.rename_from
-> # [ RUN      ] layout1.rename_to
-> # [     FAIL ] layout1.rename_to
-> # [ RUN      ] layout1.rmdir
-> # [     FAIL ] layout1.rmdir
-> # [ RUN      ] layout1.unlink
-> # [     FAIL ] layout1.unlink
-> # [ RUN      ] layout1.make_char
-> # [     FAIL ] layout1.make_char
-> # [ RUN      ] layout1.make_block
-> # [     FAIL ] layout1.make_block
-> # [ RUN      ] layout1.make_reg
-> # [     FAIL ] layout1.make_reg
-> # [ RUN      ] layout1.make_sock
-> # [     FAIL ] layout1.make_sock
-> # [ RUN      ] layout1.make_fifo
-> # [     FAIL ] layout1.make_fifo
-> # [ RUN      ] layout1.make_sym
-> # [     FAIL ] layout1.make_sym
-> # [ RUN      ] layout1.make_dir
-> # [     FAIL ] layout1.make_dir
-> # [ RUN      ] global.cleanup
-> # [       OK ] global.cleanup
-> # [==========] 2 / 31 tests passed.
-> # [  FAILED  ]
-> not ok 3 selftests: landlock: test_fs # exit=1
-> make: Leaving directory '/usr/src/perf_selftests-x86_64-rhel-7.6-d9d464ccf68e19bf7d303022d873141b5e1f7219/tools/testing/selftests/landlock'
-> 
-> 
-> 
-> To reproduce:
-> 
->         git clone https://github.com/intel/lkp-tests.git
->         cd lkp-tests
->         bin/lkp install job.yaml  # job file is attached in this email
->         bin/lkp run     job.yaml
-> 
-> 
-> 
-> Thanks,
-> Rong Chen
-> 
+
