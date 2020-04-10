@@ -2,250 +2,171 @@ Return-Path: <SRS0=VV4q=52=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE171C2BA2B
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 08:17:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F518C2BA2B
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 08:29:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8433D20787
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 08:17:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 78D9121835
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 08:24:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="SbPFVbLg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726059AbgDJIRD (ORCPT
+        id S1726177AbgDJIYL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Apr 2020 04:17:03 -0400
-Received: from mga03.intel.com ([134.134.136.65]:44173 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725839AbgDJIRC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Apr 2020 04:17:02 -0400
-IronPort-SDR: t0RB3VtdYLJiJ+xtZWhbI9GBDEeuSOLEdKspfFZZpUctuoSk2KmlgPs+aTtt1vZV/U1CuGf++o
- nTSmHMDapz6g==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Apr 2020 01:17:01 -0700
-IronPort-SDR: JpMF/SBXuVGYZafmfkGooOP+EM+8GuGh+VRBCi4H+/jDGYlezXG/X2plooFYp0KF9aaDC4vWF2
- dUktq3xD+h9A==
-X-IronPort-AV: E=Sophos;i="5.72,366,1580803200"; 
-   d="scan'208";a="425822015"
-Received: from likexu-mobl1.ccr.corp.intel.com (HELO [10.238.4.236]) ([10.238.4.236])
-  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Apr 2020 01:17:00 -0700
-Subject: Re: [Bug report] Kernel 5.7 become unbootable
-To:     Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        linux-x86_64@vger.kernel.org, nivedita@alum.mit.edu
-References: <CABXGCsPpD+ExaeA6v+gSPPgtxcVzpKLWJNwGPPDKGFkPCv5kDg@mail.gmail.com>
-From:   Like Xu <like.xu@linux.intel.com>
-Organization: Intel OTC
-Message-ID: <1d02e4f3-8d83-4c55-bce2-f5aa4af2e363@linux.intel.com>
-Date:   Fri, 10 Apr 2020 16:16:58 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Fri, 10 Apr 2020 04:24:11 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:43016 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726007AbgDJIYL (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Apr 2020 04:24:11 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1586507050;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=jhbDWM/COmRzn52zE0cD200v2Q1E5S+PCb8ygVpftN0=;
+        b=SbPFVbLgc7HgyREdbYOlM4AxdxFZCYuJxMhftIJVC+gPzcKpYfJ7KHhGVBWkbRKSzDMxdu
+        7SYakwNFWh8gl0e2UIDXs9mk/Mp7H0DLwq1KKGlAG4nn5qXI0vcDOaX8lk07p6Cbe6zici
+        aEvCK7ZaTz8nN3nLAFxtaLd1v/8mFoY=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-402-jQWAT0sWMkGl3PDpjBe6gA-1; Fri, 10 Apr 2020 04:24:05 -0400
+X-MC-Unique: jQWAT0sWMkGl3PDpjBe6gA-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id B4DD6DB60;
+        Fri, 10 Apr 2020 08:24:02 +0000 (UTC)
+Received: from [10.72.12.205] (ovpn-12-205.pek2.redhat.com [10.72.12.205])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id CB11760BFB;
+        Fri, 10 Apr 2020 08:23:40 +0000 (UTC)
+Subject: Re: [PATCH V9 8/9] vdpasim: vDPA device simulator
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     "Michael S. Tsirkin" <mst@redhat.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        KVM list <kvm@vger.kernel.org>,
+        virtualization@lists.linux-foundation.org,
+        netdev <netdev@vger.kernel.org>,
+        Jason Gunthorpe <jgg@mellanox.com>, maxime.coquelin@redhat.com,
+        cunming.liang@intel.com, zhihong.wang@intel.com,
+        rob.miller@broadcom.com, xiao.w.wang@intel.com,
+        lingshan.zhu@intel.com, eperezma@redhat.com, lulu@redhat.com,
+        parav@mellanox.com, kevin.tian@intel.com, stefanha@redhat.com,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Christoph Hellwig <hch@infradead.org>, aadam@redhat.com,
+        Jiri Pirko <jiri@mellanox.com>, shahafs@mellanox.com,
+        hanand@xilinx.com, Martin Habets <mhabets@solarflare.com>,
+        gdawar@xilinx.com, saugatm@xilinx.com, vmireyno@marvell.com,
+        zhangweining@ruijie.com.cn
+References: <20200326140125.19794-1-jasowang@redhat.com>
+ <20200326140125.19794-9-jasowang@redhat.com>
+ <CAMuHMdUis3O_mJKOb2s=_=Zs61iHus5Aq74N3-xs7kmjN+egoQ@mail.gmail.com>
+From:   Jason Wang <jasowang@redhat.com>
+Message-ID: <108f65dd-f1b1-54ec-ae26-49842f3686b6@redhat.com>
+Date:   Fri, 10 Apr 2020 16:23:38 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-In-Reply-To: <CABXGCsPpD+ExaeA6v+gSPPgtxcVzpKLWJNwGPPDKGFkPCv5kDg@mail.gmail.com>
+In-Reply-To: <CAMuHMdUis3O_mJKOb2s=_=Zs61iHus5Aq74N3-xs7kmjN+egoQ@mail.gmail.com>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020/4/10 3:12, Mikhail Gavrilov wrote:
-> Hi folks.
-> I use Fedora Rawhide and today's update came with the new kernel
-> 5.7.0-0.rc0.git6.1.
-> As it turned out this kernel won't boot. Instead, I see the black
-> screen and some times see messages:
-> exit_boot() failed!
-> efi_main() failed!
-> 
-> The last working kernel is kernel-core-5.7.0-0.rc0.git2.1
-> 
-> I looked at the spec file and found out that the last bootable kernel
-> was related to the commit cad18da0afb1
-> (https://src.fedoraproject.org/rpms/kernel/c/9949db6070c6ca501d7235760ca8aba120db7448?branch=master),
-> and the first non-bootable kernel related to the commit a10c9c710f9e
-> (https://src.fedoraproject.org/rpms/kernel/c/0561e0bf0e459dd4b27a77670de838128b87bd0e?branch=master)
-> 
-> Of course, knowing these two commits, I made bisecting with the vanilla kernel:
-> 
-> $ git bisect log
-> git bisect start
-> # good: [cad18da0afb1bc7b37d73a74067ab7ff5974897c] Merge tag
-> 'please-pull-ia64_for_5.7' of
-> git://git.kernel.org/pub/scm/linux/kernel/git/aegl/linux
-> git bisect good cad18da0afb1bc7b37d73a74067ab7ff5974897c
-> # bad: [a10c9c710f9ecea87b9f4bbb837467893b4bef01] Merge tag 'for-v5.7'
-> of git://git.kernel.org/pub/scm/linux/kernel/git/sre/linux-power-supply
-> git bisect bad a10c9c710f9ecea87b9f4bbb837467893b4bef01
-> # bad: [f365ab31efacb70bed1e821f7435626e0b2528a6] Merge tag
-> 'drm-next-2020-04-01' of git://anongit.freedesktop.org/drm/drm
-> git bisect bad f365ab31efacb70bed1e821f7435626e0b2528a6
-> # good: [7f80ccfe996871ca69648efee74a60ae7ad0dcd9] net: ipv6:
-> rpl_iptunnel: Fix potential memory leak in rpl_do_srh_inline
-> git bisect good 7f80ccfe996871ca69648efee74a60ae7ad0dcd9
-> # good: [9001b17698d86f842e2b13e0cafe8021d43209e9] Merge tag
-> 'drm-intel-next-2020-03-13' of
-> git://anongit.freedesktop.org/drm/drm-intel into drm-next
-> git bisect good 9001b17698d86f842e2b13e0cafe8021d43209e9
-> # bad: [dfabb077d62552797ca0ae7756cb30d3e195ead5] Merge tag 'mmc-v5.7'
-> of git://git.kernel.org/pub/scm/linux/kernel/git/ulfh/mmc
-> git bisect bad dfabb077d62552797ca0ae7756cb30d3e195ead5
-> # bad: [15c981d16d70e8a5be297fa4af07a64ab7e080ed] Merge tag
-> 'for-5.7-tag' of
-> git://git.kernel.org/pub/scm/linux/kernel/git/kdave/linux
-> git bisect bad 15c981d16d70e8a5be297fa4af07a64ab7e080ed
-> # good: [dc9492c14c758639d7b2468d4ed3c77e785c1a35] btrfs: hold a ref
-> on the root on the dead roots list
-> git bisect good dc9492c14c758639d7b2468d4ed3c77e785c1a35
-> # good: [3cd86a58f7734bf9cef38f6f899608ebcaa3da13] Merge tag
-> 'arm64-upstream' of
-> git://git.kernel.org/pub/scm/linux/kernel/git/arm64/linux
-> git bisect good 3cd86a58f7734bf9cef38f6f899608ebcaa3da13
-> # bad: [fdf5563a720004199324371c08071b8ea27bd994] Merge branch
-> 'x86-cleanups-for-linus' of
-> git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip
-> git bisect bad fdf5563a720004199324371c08071b8ea27bd994
-> # skip: [cf122cfba5b1d9daf64009d143f51dfec4b1705a] kill uaccess_try()
-> git bisect skip cf122cfba5b1d9daf64009d143f51dfec4b1705a
-> # skip: [4dd2a1b92b91b5f2acf853ee1dc0df135054698f] x86: Replace
-> setup_irq() by request_irq()
-> git bisect skip 4dd2a1b92b91b5f2acf853ee1dc0df135054698f
-> # skip: [5c1f178094631e8b9acc67e4a9b6e03abfbc2529] x86:
-> __setup_frame(): consolidate uaccess areas
-> git bisect skip 5c1f178094631e8b9acc67e4a9b6e03abfbc2529
-> # skip: [3add42c29cebb1d5f83c6205c59466a06ccf8da1] x86: get rid of
-> get_user_ex() in restore_sigcontext()
-> git bisect skip 3add42c29cebb1d5f83c6205c59466a06ccf8da1
-> # skip: [ead8e4e7e2c75ced6fcd9a53d3e9a2ecd7368553] x86:
-> __setup_rt_frame(): consolidate uaccess areas
-> git bisect skip ead8e4e7e2c75ced6fcd9a53d3e9a2ecd7368553
-> # skip: [31a9122058bc5f042cb04bcdb8cd9e6c77fdae8d] x86/mm: Drop
-> pud_mknotpresent()
-> git bisect skip 31a9122058bc5f042cb04bcdb8cd9e6c77fdae8d
-> # skip: [791612e9668cecbf5dd24d13400ac74e099f005c] x86:
-> x32_setup_rt_frame(): consolidate uaccess areas
-> git bisect skip 791612e9668cecbf5dd24d13400ac74e099f005c
-> # skip: [77f3c6166ddc7567455b244074b3ebb63862b56f] x86: kill
-> get_user_{try,catch,ex}
-> git bisect skip 77f3c6166ddc7567455b244074b3ebb63862b56f
-> # skip: [b00d8f8f0b2b39223c3fd6713d318aba95420264] x86:
-> setup_sigcontext(): list user_access_{begin,end}() into callers
-> git bisect skip b00d8f8f0b2b39223c3fd6713d318aba95420264
-> # skip: [0e79ad863df43b01090ae18c97de5c3787f069c6] x86/cpu: Fix a
-> -Wmissing-prototypes warning for init_ia32_feat_ctl()
-> git bisect skip 0e79ad863df43b01090ae18c97de5c3787f069c6
-> # skip: [b87df6594486626a9ae5944807307f2604cea3e2] x86:
-> unsafe_put-style macro for sigmask
-> git bisect skip b87df6594486626a9ae5944807307f2604cea3e2
-> # skip: [a37d01ead405e3aa14d72d284721fe46422b3b63] x86: switch
-> save_v86_state() to unsafe_put_user()
-> git bisect skip a37d01ead405e3aa14d72d284721fe46422b3b63
-> # skip: [119cd59fcfbe70fb3fcab4e64cd232bcc3807585] x86: get rid of
-> put_user_try in __setup_rt_frame() (both 32bit and 64bit)
-> git bisect skip 119cd59fcfbe70fb3fcab4e64cd232bcc3807585
-> # skip: [119cd59fcfbe70fb3fcab4e64cd232bcc3807585] x86: get rid of
-> put_user_try in __setup_rt_frame() (both 32bit and 64bit)
-> git bisect skip 119cd59fcfbe70fb3fcab4e64cd232bcc3807585
-> # bad: [9589351ccf47a85a75180a430627c16bc28da929] Merge branch
-> 'x86-boot-for-linus' of
-> git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip
-> git bisect bad 9589351ccf47a85a75180a430627c16bc28da929
-> # skip: [003602ad5516e59940de42e44c8d8033387bb363] x86/*/Makefile: Use
-> -fno-asynchronous-unwind-tables to suppress .eh_frame sections
-> git bisect skip 003602ad5516e59940de42e44c8d8033387bb363
-> # skip: [0eea39a234dc52063d14541fabcb2c64516a2328]
-> x86/boot/compressed: Remove .eh_frame section from bzImage
-> git bisect skip 0eea39a234dc52063d14541fabcb2c64516a2328
-> # skip: [bac59d18c7018a2fd5e800a1e72a8271bf404977] x86/setup: Fix
-> static memory detection
-> git bisect skip bac59d18c7018a2fd5e800a1e72a8271bf404977
-> # skip: [3ee372ccce4d4e7c610748d0583979d3ed3a0cf4]
-> x86/boot/compressed/64: Remove .bss/.pgtable from bzImage
-> git bisect skip 3ee372ccce4d4e7c610748d0583979d3ed3a0cf4
-> # skip: [a86255fe5258714e1f7c1bdfe95f08e4d098d450]
-> x86/boot/compressed/64: Use 32-bit (zero-extended) MOV for
-> z_output_len
-> git bisect skip a86255fe5258714e1f7c1bdfe95f08e4d098d450
-> # skip: [6f8f0dc980028e98ae339876a8403edae4d20e39] x86/vmlinux: Drop
-> unneeded linker script discard of .eh_frame
-> git bisect skip 6f8f0dc980028e98ae339876a8403edae4d20e39
-> # skip: [48bfdb9deffdc6b683feb25e15f4f26aac503501]
-> x86/boot/compressed/64: Use LEA to initialize boot stack pointer
-> git bisect skip 48bfdb9deffdc6b683feb25e15f4f26aac503501
-> # skip: [c90beea22a2bece4b0bbb39789bf835504421594]
-> x86/boot/compressed: Fix debug_puthex() parameter type
-> git bisect skip c90beea22a2bece4b0bbb39789bf835504421594
-> # only skipped commits left to test
-> # possible first bad commit:
-> [9589351ccf47a85a75180a430627c16bc28da929] Merge branch
-> 'x86-boot-for-linus' of
-> git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip
-> # possible first bad commit:
-> [c90beea22a2bece4b0bbb39789bf835504421594] x86/boot/compressed: Fix
-> debug_puthex() parameter type
-> # possible first bad commit:
-> [bac59d18c7018a2fd5e800a1e72a8271bf404977] x86/setup: Fix static
-> memory detection
-> # possible first bad commit:
-> [6f8f0dc980028e98ae339876a8403edae4d20e39] x86/vmlinux: Drop unneeded
-> linker script discard of .eh_frame
-> # possible first bad commit:
-> [003602ad5516e59940de42e44c8d8033387bb363] x86/*/Makefile: Use
-> -fno-asynchronous-unwind-tables to suppress .eh_frame sections
-> # possible first bad commit:
-> [0eea39a234dc52063d14541fabcb2c64516a2328] x86/boot/compressed: Remove
-> .eh_frame section from bzImage
-> # possible first bad commit:
-> [3ee372ccce4d4e7c610748d0583979d3ed3a0cf4] x86/boot/compressed/64:
-> Remove .bss/.pgtable from bzImage
-> # possible first bad commit:
-> [a86255fe5258714e1f7c1bdfe95f08e4d098d450] x86/boot/compressed/64: Use
-> 32-bit (zero-extended) MOV for z_output_len
-> # possible first bad commit:
-> [48bfdb9deffdc6b683feb25e15f4f26aac503501] x86/boot/compressed/64: Use
-> LEA to initialize boot stack pointer
-> 
-> Unfortunately, kernel bisecting not telling exactly which commit is blame.
-> In my bisecting a lot of skipping commits because of the unsuccessful builds:
-> ld: arch/x86/boot/compressed/pgtable_64.o:(.bss+0x0): multiple
-> definition of `__force_order';
-> arch/x86/boot/compressed/kaslr_64.o:(.bss+0x0): first defined here
-> make[2]: *** [arch/x86/boot/compressed/Makefile:120:
-> arch/x86/boot/compressed/vmlinux] Error 1
-> make[1]: *** [arch/x86/boot/Makefile:114:
-> arch/x86/boot/compressed/vmlinux] Error 2
-> make: *** [arch/x86/Makefile:283: bzImage] Error 2
-> 
-> Can anyone here help me with this issue?
 
-I encountered the same issue as you:
+On 2020/4/10 =E4=B8=8B=E5=8D=883:45, Geert Uytterhoeven wrote:
+> Hi Jason,
+>
+> On Thu, Mar 26, 2020 at 3:07 PM Jason Wang <jasowang@redhat.com> wrote:
+>> This patch implements a software vDPA networking device. The datapath
+>> is implemented through vringh and workqueue. The device has an on-chip
+>> IOMMU which translates IOVA to PA. For kernel virtio drivers, vDPA
+>> simulator driver provides dma_ops. For vhost driers, set_map() methods
+>> of vdpa_config_ops is implemented to accept mappings from vhost.
+>>
+>> Currently, vDPA device simulator will loopback TX traffic to RX. So
+>> the main use case for the device is vDPA feature testing, prototyping
+>> and development.
+>>
+>> Note, there's no management API implemented, a vDPA device will be
+>> registered once the module is probed. We need to handle this in the
+>> future development.
+>>
+>> Signed-off-by: Jason Wang <jasowang@redhat.com>
+> This is now commit 2c53d0f64c06f458 ("vdpasim: vDPA device simulator").
+>
+>> --- a/drivers/virtio/vdpa/Kconfig
+>> +++ b/drivers/virtio/vdpa/Kconfig
+>> @@ -5,3 +5,22 @@ config VDPA
+>>            Enable this module to support vDPA device that uses a
+>>            datapath which complies with virtio specifications with
+>>            vendor specific control path.
+>> +
+>> +menuconfig VDPA_MENU
+>> +       bool "VDPA drivers"
+>> +       default n
+>      *
+>      * VDPA drivers
+>      *
+>      VDPA drivers (VDPA_MENU) [N/y/?] (NEW) ?
+>
+>      There is no help available for this option.
+>      Symbol: VDPA_MENU [=3Dn]
+>      Type  : bool
+>      Defined at drivers/vdpa/Kconfig:9
+>       Prompt: VDPA drivers
+>       Location:
+>         -> Device Drivers
+>
+> I think this deserves a help text, so users know if they want to enable=
+ this
+> option or not.
 
-exit_boot() failed!
-efi_main() failed!
 
-and the following patches are very suspicious:
+Will add a help text for this.
 
-x86/boot/compressed/64: Use LEA to initialize boot stack pointer
-x86/boot/compressed/64: Use 32-bit (zero-extended) MOV for z_output_len
-x86/boot/compressed/64: Remove .bss/.pgtable from bzImage
-x86/boot/compressed: Remove .eh_frame section from bzImage
 
-I am not sure if reverting these patches can help you.
+>
+> I had a quick look, but couldn't find the meaning of "vdpa" in the whol=
+e kernel
+> source tree.
 
-Thanks,
-Like Xu
 
-> 
-> Thanks.
-> 
-> Downstream bugreport:
-> https://bugzilla.redhat.com/show_bug.cgi?id=1822731
-> 
-> --
-> Best Regards,
-> Mike Gavrilov.
-> 
+The meaning was explained in the commit log of=20
+961e9c84077f6c8579d7a628cbe94a675cb67ae4 and help text for CONFIG_VDPA.
+
+Thanks
+
+
+>
+> Thanks!
+>
+>> +
+>> +if VDPA_MENU
+>> +
+>> +config VDPA_SIM
+>> +       tristate "vDPA device simulator"
+>> +       depends on RUNTIME_TESTING_MENU
+>> +       select VDPA
+>> +       select VHOST_RING
+>> +       default n
+>> +       help
+>> +         vDPA networking device simulator which loop TX traffic back
+>> +         to RX. This device is used for testing, prototyping and
+>> +         development of vDPA.
+>> +
+>> +endif # VDPA_MENU
+> Gr{oetje,eeting}s,
+>
+>                          Geert
+>
 
