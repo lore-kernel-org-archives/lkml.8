@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE49AC2BBFD
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 03:56:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F2C9C2D0EC
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 03:56:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8BFAA20936
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 03:56:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1751620936
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 03:56:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586490997;
-	bh=vDbC//cFoiarsCOyRPOI0FBifzs1I3USmWge+kKgjaU=;
+	s=default; t=1586491003;
+	bh=r3EaPMwV0p6JcapleCkt9G0+Er8yoqBCX2k8wvPVHwc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=if+AO6l+8dXHv/8YtPAcdiLvE8fCYUCFoOpGyM2VRNQz6QQQCrF8vbz4L0hmDFHS5
-	 yefCPRshPrD5U88aweg7YEOvqTfIS5msvSvtSsjpgfRraLb/pJPGbPJLzvo6DUgGqW
-	 +PV0t6cA0fIAFwYkY0UyxcX8+dFPRNqjPTdZCpEE=
+	b=2nFs1nmbgDwlBF/kEZ/dWeBAXCURpultBiKyas1C5vFtTizU4LWpHyxAG8pJEn2Pc
+	 DjtsbhXejwEc5PcHk+FlwwfMG6EJB0AlfTz+tdFm5KeKvVfAmjEAmIiuCtaYrWlL5F
+	 fO1nnrIMcMcgVMGNl4mH8wcQz0FU7fjWJCPcF6gk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727193AbgDJDti (ORCPT
+        id S1728289AbgDJD4l (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Apr 2020 23:49:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33642 "EHLO mail.kernel.org"
+        Thu, 9 Apr 2020 23:56:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33576 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728557AbgDJDtd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Apr 2020 23:49:33 -0400
+        id S1726961AbgDJDtb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Apr 2020 23:49:31 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 398BC2173E;
-        Fri, 10 Apr 2020 03:49:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 002AB2137B;
+        Fri, 10 Apr 2020 03:49:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586490574;
-        bh=vDbC//cFoiarsCOyRPOI0FBifzs1I3USmWge+kKgjaU=;
+        s=default; t=1586490571;
+        bh=r3EaPMwV0p6JcapleCkt9G0+Er8yoqBCX2k8wvPVHwc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kg9qt/TJ/M84Cru6YQCBOy2MhodVjaeHfnThhShbcSqsEUIXvKvKHs/J7XhI25O1e
-         2o9tFDCSNOIadXyLhx6kOQdeTtm8IUhy5IsHRsNTFgttX/1cTzhBGqtIN0KjI/jYwO
-         tcMxhdKl3d+jH/GG4eGKbegn4t1U6JliA3FS7dys=
+        b=zB9Ar6K5RnQsvINt021CsCAf0pBQtQkUuwTEGd6UgDKhVCQzmzmnCl32bRnpb3WkA
+         I7uCTOGAxKY8QXgxMezEJd6y6+zTl5uDOsNIWChNJnY9KXYrLQGX0fDyQb73D3woco
+         8vyNyLWsrrcduUFDM2vJnjZeY4uWy1voC9ALu0js=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Andy Lutomirski <luto@kernel.org>,
-        kbuild test robot <lkp@intel.com>,
-        Borislav Petkov <bp@suse.de>, Sasha Levin <sashal@kernel.org>,
-        linux-kselftest@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 20/46] selftests/x86/ptrace_syscall_32: Fix no-vDSO segfault
-Date:   Thu,  9 Apr 2020 23:48:43 -0400
-Message-Id: <20200410034909.8922-20-sashal@kernel.org>
+Cc:     Michael Tretter <m.tretter@pengutronix.de>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org,
+        devel@driverdev.osuosl.org
+Subject: [PATCH AUTOSEL 5.4 18/46] media: allegro: fix type of gop_length in channel_create message
+Date:   Thu,  9 Apr 2020 23:48:41 -0400
+Message-Id: <20200410034909.8922-18-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200410034909.8922-1-sashal@kernel.org>
 References: <20200410034909.8922-1-sashal@kernel.org>
@@ -60,40 +61,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andy Lutomirski <luto@kernel.org>
+From: Michael Tretter <m.tretter@pengutronix.de>
 
-[ Upstream commit 630b99ab60aa972052a4202a1ff96c7e45eb0054 ]
+[ Upstream commit 8277815349327b8e65226eb58ddb680f90c2c0c0 ]
 
-If AT_SYSINFO is not present, don't try to call a NULL pointer.
+The gop_length field is actually only u16 and there are two more u8
+fields in the message:
 
-Reported-by: kbuild test robot <lkp@intel.com>
-Signed-off-by: Andy Lutomirski <luto@kernel.org>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Link: https://lkml.kernel.org/r/faaf688265a7e1a5b944d6f8bc0f6368158306d3.1584052409.git.luto@kernel.org
+- the number of consecutive b-frames
+- frequency of golden frames
+
+Fix the message and thus fix the configuration of the GOP length.
+
+Signed-off-by: Michael Tretter <m.tretter@pengutronix.de>
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/testing/selftests/x86/ptrace_syscall.c | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ drivers/staging/media/allegro-dvt/allegro-core.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/tools/testing/selftests/x86/ptrace_syscall.c b/tools/testing/selftests/x86/ptrace_syscall.c
-index 6f22238f32173..12aaa063196e7 100644
---- a/tools/testing/selftests/x86/ptrace_syscall.c
-+++ b/tools/testing/selftests/x86/ptrace_syscall.c
-@@ -414,8 +414,12 @@ int main()
+diff --git a/drivers/staging/media/allegro-dvt/allegro-core.c b/drivers/staging/media/allegro-dvt/allegro-core.c
+index 6f0cd07847863..c5a262a12e401 100644
+--- a/drivers/staging/media/allegro-dvt/allegro-core.c
++++ b/drivers/staging/media/allegro-dvt/allegro-core.c
+@@ -393,7 +393,10 @@ struct mcu_msg_create_channel {
+ 	u32 freq_ird;
+ 	u32 freq_lt;
+ 	u32 gdr_mode;
+-	u32 gop_length;
++	u16 gop_length;
++	u8 num_b;
++	u8 freq_golden_ref;
++
+ 	u32 unknown39;
  
- #if defined(__i386__) && (!defined(__GLIBC__) || __GLIBC__ > 2 || __GLIBC_MINOR__ >= 16)
- 	vsyscall32 = (void *)getauxval(AT_SYSINFO);
--	printf("[RUN]\tCheck AT_SYSINFO return regs\n");
--	test_sys32_regs(do_full_vsyscall32);
-+	if (vsyscall32) {
-+		printf("[RUN]\tCheck AT_SYSINFO return regs\n");
-+		test_sys32_regs(do_full_vsyscall32);
-+	} else {
-+		printf("[SKIP]\tAT_SYSINFO is not available\n");
-+	}
- #endif
- 
- 	test_ptrace_syscall_restart();
+ 	u32 subframe_latency;
 -- 
 2.20.1
 
