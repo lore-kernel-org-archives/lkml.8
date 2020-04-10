@@ -7,52 +7,52 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96ABAC2D0EC
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 22:18:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62A7DC2BB55
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 22:18:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5FA742087E
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 22:18:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2DB0A2087E
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 22:18:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="MHVBt2Ig"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Nyq6OxaN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726885AbgDJWSj (ORCPT
+        id S1726876AbgDJWSh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Apr 2020 18:18:39 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:45286 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726792AbgDJWSX (ORCPT
+        Fri, 10 Apr 2020 18:18:37 -0400
+Received: from mail-pj1-f67.google.com ([209.85.216.67]:35474 "EHLO
+        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726701AbgDJWS0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Apr 2020 18:18:23 -0400
-Received: by mail-pf1-f195.google.com with SMTP id r14so1575835pfl.12
-        for <linux-kernel@vger.kernel.org>; Fri, 10 Apr 2020 15:18:23 -0700 (PDT)
+        Fri, 10 Apr 2020 18:18:26 -0400
+Received: by mail-pj1-f67.google.com with SMTP id mn19so1230894pjb.0
+        for <linux-kernel@vger.kernel.org>; Fri, 10 Apr 2020 15:18:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=CZZEM8zHHOknPexrydpRDd/A9CQLDTcTBB/h6CZWGog=;
-        b=MHVBt2IgYBHTrCspWPShthhQT2kgu3DTNXdNJ1SxGgeVa03KjExi/dMeSMRHGaJdBF
-         1p3ePEadxFcV6QqbZ36oZK14lCUlZNgl2kPD3ebHFSZcvqkFhYH0VjcCJqr93VAPe8uT
-         j7Da9ZUPKDBWAEhTiKChsUDHTMtz43rVDMmcc=
+        bh=JjUK3hCgG4ZVP2cWUyMCGx3upUSYjvrftcm9fZ76CII=;
+        b=Nyq6OxaN+zvvfmKkmfqed97hvOgJeuG7t2F2hgQMntVcHfYzVmfCZSA0sofUwi4fc2
+         MVFsZr6W1J2Au1LTfMzh7i4sXkhJe2l6FDr5qfSZgpI4sZhvz2oOWhjK0554O8NF1ahh
+         JmfHga1PW8S9Ow9Y6sfCb2wkM0/FrwWdqxhwk=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=CZZEM8zHHOknPexrydpRDd/A9CQLDTcTBB/h6CZWGog=;
-        b=UnC/VYmMQL62jp04tuwnwqYrs+H8aXqzxbNmYrLcUb0h84TGbt8QJffWuu+h9Lbw1q
-         0wgNkjWJ8my7BrQqCyeMIWIOoNhkNhuucKm3pQ0wfCzCEHAWD5contCF9wnEa6yPl3JZ
-         L/gKlfBzclnFnGxGzFjWIwBLykh5kqNkF3YNTc22lvMCKEOmRZQQBE3PL8kgnHBmZo+y
-         FmsnPQuQSD1hZ1RU5xd3GdQYiwDCTynzpkUr2BspLlU9rGqz2uRtTrMhyOfXfu6WzWeu
-         5viJBjnyAgvSsUco7uBnvd1RyB7tIkTYp0Ge0FkT5z+fMiXHyT3C9bzGesxDdCFNUXKu
-         hemg==
-X-Gm-Message-State: AGi0PuZ7BJqWfBfR2e0+dk937RuKcWg82KV7dfGdG4MNMF440DMo+znn
-        jKNpfUt7+DaRPZn4D0kkvH6SIg==
-X-Google-Smtp-Source: APiQypLhHe1XgDyD7hEM5rJRm4fgDerRzQjGoAI4i0QzlEiG6qpgXUajRyIDJPscAh69ZecWUlVENQ==
-X-Received: by 2002:aa7:9148:: with SMTP id 8mr6898973pfi.70.1586557103438;
-        Fri, 10 Apr 2020 15:18:23 -0700 (PDT)
+        bh=JjUK3hCgG4ZVP2cWUyMCGx3upUSYjvrftcm9fZ76CII=;
+        b=q62e4DLk9uqebOQefUvalAoITz26WdXMVaYKcaxfm7YpQI7SpKYrtTKrg29S7QHTIK
+         NWXdrRzQezs8qVlyqKvykB7Hxh5iVRHbLThRoO6gIH9B9DB9Q/MAQyGz2YairRKDVvgk
+         q3mrj7OVmITZ/Sd98Xbno+bkuC9eic/58Y3CI8P0pM2aFhEJWM4/X11D0JszS1xZYxtD
+         YU6CY96I5Rb6cFiGIr5uO9B94cp/Ni0wVxblSqVifGVnJm635Z2BcdWILyvbZSP+rkXV
+         C0BUkl7aybUnAZFKtSFJGITBXF12z2cgEgyGs7JZ4omXMPx7JGjfgaBu5H0fYr+BDZRF
+         G4hg==
+X-Gm-Message-State: AGi0PuYj82Io8RDfeV2awfuaLkcm3lvTPkB4KAXB+BKNy6zl6VzU/R59
+        Ij6mkZCqSeif6bb6egPeKaQeWg==
+X-Google-Smtp-Source: APiQypI1k7F2ESHdo89rqD3FVQ7JzUVJ9BLRyRi3u53jOxnBFX8vHZpXSD/dycmaKpD8jRimhbe90w==
+X-Received: by 2002:a17:902:70c1:: with SMTP id l1mr6294862plt.298.1586557106006;
+        Fri, 10 Apr 2020 15:18:26 -0700 (PDT)
 Received: from tictac2.mtv.corp.google.com ([2620:15c:202:1:24fa:e766:52c9:e3b2])
-        by smtp.gmail.com with ESMTPSA id x2sm2646600pfq.92.2020.04.10.15.18.22
+        by smtp.gmail.com with ESMTPSA id x2sm2646600pfq.92.2020.04.10.15.18.24
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 10 Apr 2020 15:18:22 -0700 (PDT)
+        Fri, 10 Apr 2020 15:18:25 -0700 (PDT)
 From:   Douglas Anderson <dianders@chromium.org>
 To:     jason.wessel@windriver.com, daniel.thompson@linaro.org,
         gregkh@linuxfoundation.org
@@ -62,19 +62,16 @@ Cc:     hpa@zytor.com, kgdb-bugreport@lists.sourceforge.net,
         will@kernel.org, bjorn.andersson@linaro.org, agross@kernel.org,
         bp@alien8.de, catalin.marinas@arm.com,
         Douglas Anderson <dianders@chromium.org>,
-        Alexios Zavras <alexios.zavras@intel.com>,
-        Allison Randal <allison@lohutok.net>,
-        Dave Martin <Dave.Martin@arm.com>,
-        Enrico Weigelt <info@metux.net>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        James Morse <james.morse@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        jinho lim <jordan.lim@samsung.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 3/7] arm64: Add call_break_hook() to early_brk64() for early kgdb
-Date:   Fri, 10 Apr 2020 15:17:22 -0700
-Message-Id: <20200410151632.3.I22067ad43e77ddfd4b64c2d49030628480f9e8d9@changeid>
+        Andrew Morton <akpm@linux-foundation.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Juergen Gross <jgross@suse.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Oliver Neukum <oneukum@suse.com>,
+        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 5/7] Documentation: kgdboc: Document new earlycon_kgdboc parameter
+Date:   Fri, 10 Apr 2020 15:17:24 -0700
+Message-Id: <20200410151632.5.I7d5eb42c6180c831d47aef1af44d0b8be3fac559@changeid>
 X-Mailer: git-send-email 2.26.0.110.g2183baf09c-goog
 In-Reply-To: <20200410221726.36442-1-dianders@chromium.org>
 References: <20200410221726.36442-1-dianders@chromium.org>
@@ -85,83 +82,86 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In order to make early kgdb work properly we need early_brk64() to be
-able to call into it.  This is as easy as adding a call into
-call_break_hook() just like we do later in the normal brk_handler().
+The recent patch ("kgdboc: Add earlycon_kgdboc to support early kgdb
+using boot consoles") adds a new kernel command line parameter.
+Document it.
 
-Once we do this we can let kgdb know that it can break into the
-debugger a little earlier (specifically when parsing early_param's).
-
-NOTE: without this patch it turns out that arm64 can't do breakpoints
-even at dbg_late_init(), so if we decide something about this patch is
-wrong we might need to move dbg_late_init() a little later.
+Note that the patch adding the feature does some comparing/contrasting
+of "earlycon_kgdboc" vs. the existing "ekgdboc".  See that patch for
+more details, but briefly "ekgdboc" can be used _instead_ of "kgdboc"
+and just makes "kgdboc" do its normal initialization early (only works
+if your tty driver is already ready).  The new "earlycon_kgdboc" works
+in combination with "kgdboc" and is backed by boot consoles.
 
 Signed-off-by: Douglas Anderson <dianders@chromium.org>
-Cc: Catalin Marinas <catalin.marinas@arm.com>
-Cc: Will Deacon <will@kernel.org>
 ---
 
- arch/arm64/include/asm/debug-monitors.h | 2 ++
- arch/arm64/kernel/debug-monitors.c      | 2 +-
- arch/arm64/kernel/kgdb.c                | 5 +++++
- arch/arm64/kernel/traps.c               | 3 +++
- 4 files changed, 11 insertions(+), 1 deletion(-)
+ .../admin-guide/kernel-parameters.txt         | 20 +++++++++++++++++++
+ Documentation/dev-tools/kgdb.rst              | 14 +++++++++++++
+ 2 files changed, 34 insertions(+)
 
-diff --git a/arch/arm64/include/asm/debug-monitors.h b/arch/arm64/include/asm/debug-monitors.h
-index 7619f473155f..2d82a0314d29 100644
---- a/arch/arm64/include/asm/debug-monitors.h
-+++ b/arch/arm64/include/asm/debug-monitors.h
-@@ -97,6 +97,8 @@ void unregister_user_break_hook(struct break_hook *hook);
- void register_kernel_break_hook(struct break_hook *hook);
- void unregister_kernel_break_hook(struct break_hook *hook);
+diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
+index c07815d230bc..37dc2db13743 100644
+--- a/Documentation/admin-guide/kernel-parameters.txt
++++ b/Documentation/admin-guide/kernel-parameters.txt
+@@ -1124,6 +1124,22 @@
+ 			address must be provided, and the serial port must
+ 			already be setup and configured.
  
-+int call_break_hook(struct pt_regs *regs, unsigned int esr);
++	earlycon_kgdboc=	[KGDB,HW]
++			If the boot console provides the ability to read
++			characters and can work in polling mode, you can use
++			this parameter to tell kgdb to use it as a backend
++			until the normal console is registered. Intended to
++			be used together with the kgdboc parameter which
++			specifies the normal console to transition to.
 +
- u8 debug_monitors_arch(void);
- 
- enum dbg_active_el {
-diff --git a/arch/arm64/kernel/debug-monitors.c b/arch/arm64/kernel/debug-monitors.c
-index 48222a4760c2..59c353dfc8e9 100644
---- a/arch/arm64/kernel/debug-monitors.c
-+++ b/arch/arm64/kernel/debug-monitors.c
-@@ -297,7 +297,7 @@ void unregister_kernel_break_hook(struct break_hook *hook)
- 	unregister_debug_hook(&hook->node);
- }
- 
--static int call_break_hook(struct pt_regs *regs, unsigned int esr)
-+int call_break_hook(struct pt_regs *regs, unsigned int esr)
- {
- 	struct break_hook *hook;
- 	struct list_head *list;
-diff --git a/arch/arm64/kernel/kgdb.c b/arch/arm64/kernel/kgdb.c
-index 43119922341f..96a47af870bc 100644
---- a/arch/arm64/kernel/kgdb.c
-+++ b/arch/arm64/kernel/kgdb.c
-@@ -301,6 +301,11 @@ static struct notifier_block kgdb_notifier = {
- 	.priority	= -INT_MAX,
- };
- 
-+extern bool kgdb_arch_can_debug_early(void)
-+{
-+	return true;
-+}
++			The the name of the early console should be specified
++			as the value of this parameter. Note that the name of
++			the early console might be different than the tty
++			name passed to kgdboc. If only one boot console with
++			a read() function is enabled it's OK to leave the
++			value blank and the first boot console that implements
++			read() will be picked.
 +
- /*
-  * kgdb_arch_init - Perform any architecture specific initialization.
-  * This function will handle the initialization of any architecture
-diff --git a/arch/arm64/kernel/traps.c b/arch/arm64/kernel/traps.c
-index cf402be5c573..a8173f0c1774 100644
---- a/arch/arm64/kernel/traps.c
-+++ b/arch/arm64/kernel/traps.c
-@@ -1044,6 +1044,9 @@ int __init early_brk64(unsigned long addr, unsigned int esr,
- 	if ((comment & ~KASAN_BRK_MASK) == KASAN_BRK_IMM)
- 		return kasan_handler(regs, esr) != DBG_HOOK_HANDLED;
- #endif
-+	if (call_break_hook(regs, esr) == DBG_HOOK_HANDLED)
-+		return 0;
+ 	earlyprintk=	[X86,SH,ARM,M68k,S390]
+ 			earlyprintk=vga
+ 			earlyprintk=sclp
+@@ -1182,6 +1198,10 @@
+ 			This is designed to be used in conjunction with
+ 			the boot argument: earlyprintk=vga
+ 
++			This parameter works in place of the kgdboc parameter
++			but can only be used if the backing tty is available
++			very early in the boot process.
 +
- 	return bug_handler(regs, esr) != DBG_HOOK_HANDLED;
- }
+ 	edd=		[EDD]
+ 			Format: {"off" | "on" | "skip[mbr]"}
+ 
+diff --git a/Documentation/dev-tools/kgdb.rst b/Documentation/dev-tools/kgdb.rst
+index d38be58f872a..c0b321403d9a 100644
+--- a/Documentation/dev-tools/kgdb.rst
++++ b/Documentation/dev-tools/kgdb.rst
+@@ -274,6 +274,20 @@ don't like this are to hack gdb to send the :kbd:`SysRq-G` for you as well as
+ on the initial connect, or to use a debugger proxy that allows an
+ unmodified gdb to do the debugging.
+ 
++Kernel parameter: ``earlycon_kgdboc``
++-------------------------------------
++
++If you specify the kernel parameter ``earlycon_kgdboc`` and your serial
++driver registers a boot console that supports polling (doesn't need
++interrupts and implements a nonblocking read() function) kgdb will attempt
++to work using the boot console until it can transition to the regular
++tty driver specified by the ``kgdboc`` parameter.
++
++Normally there is only one boot console (especially that implements the
++read() function) so just adding ``earlycon_kgdboc`` on its own is
++sufficient to make this work.  If you have more than one boot console you
++can add the boot console's name to differentiate.
++
+ Kernel parameter: ``kgdbwait``
+ ------------------------------
  
 -- 
 2.26.0.110.g2183baf09c-goog
