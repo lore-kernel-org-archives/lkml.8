@@ -2,70 +2,49 @@ Return-Path: <SRS0=VV4q=52=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,FROM_LOCAL_NOVOWEL,
-	HEADER_FROM_DIFFERENT_DOMAINS,HK_RANDOM_FROM,INCLUDES_PULL_REQUEST,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DDBC2C2D0EC
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 19:53:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D285AC2D0EC
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 19:55:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B34DA2083E
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 19:53:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qAg92dm1"
+	by mail.kernel.org (Postfix) with ESMTP id B5F1120801
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Apr 2020 19:55:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726671AbgDJTxp (ORCPT
+        id S1726687AbgDJTzE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Apr 2020 15:53:45 -0400
-Received: from mail-pf1-f175.google.com ([209.85.210.175]:40842 "EHLO
-        mail-pf1-f175.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726263AbgDJTxo (ORCPT
+        Fri, 10 Apr 2020 15:55:04 -0400
+Received: from smtprelay0177.hostedemail.com ([216.40.44.177]:34314 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726203AbgDJTzD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Apr 2020 15:53:44 -0400
-Received: by mail-pf1-f175.google.com with SMTP id x3so1190522pfp.7
-        for <linux-kernel@vger.kernel.org>; Fri, 10 Apr 2020 12:53:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=GnS+iKPshB2H+iJx2B0bBeNxXYNge8mXSC0GNXOAR6E=;
-        b=qAg92dm1m90uJbKfYO0c0g0rgZ3OyQah5Ijz3Nx2D7DW9+pNksOZBVrn6JtbETCaup
-         QVTWEdPHIf8gAcaZJExiXN7j8owgBiGl0/9c+aqvFUWIrCLnvu9AvqJRfwQndqsXxV96
-         zueVO/zOpS/xkC0zEgDXwm2Jnz1+pfnODPV5iwLbrwkNg8diNhhl0dlLaELC3PjlxGLt
-         PCXN+Ab5Pr3GB6D3NnyGPFYrA2/9fx1VP7z6cTvD5IaTEcQsAZOnbrgDyaZrtHGTXooI
-         7+6v0TZiL1GYqwWSZUpywkSn/1iG/LoEbPp5gMmbBsmHvQV8buJvcSX//wx9w6jcYxJq
-         hlDQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=GnS+iKPshB2H+iJx2B0bBeNxXYNge8mXSC0GNXOAR6E=;
-        b=tqU3sGIP2KWHxSYIbGKyqHvDMQhai31V8tA4b+YYNWNQI0bqzVjf7LP8Q58JiyLozi
-         0MjjtQTNfRrNVSEpNaesRDWLbHXfSjLFAEdaPYQfsdJWRnOUneZ11zqiqZ/u3uPXbltV
-         Ke7UeGUw/HPxqM94dEny6RtiJ2hynRo7FKyrpQ0VA8PaBeSJsNjcBgMc0nNGpwVQguzl
-         0MpfDf0JcjdCBPDYxV3AQR2OAVlvYRg7tTCvtuHItqS8Q12BJN3byONIKlo4z93FhOMx
-         EpnK3Pq0ybSr8NAEOZK1Vc7gGjPkSOffqQcLs+JpxQvIeUPyyLo/vBHfZZAHpoENcSPY
-         Qb1w==
-X-Gm-Message-State: AGi0PuaJHGorsrw1n14gp3RFSsEvzP9KgcHYCdeG7rSTAGh4VcLZnSvb
-        rbCkOFSLNl2oH3UrD5CDBK4=
-X-Google-Smtp-Source: APiQypKtqv3FkYH83kX4elGfmQtsEbuXFeu29FerD++flwUmaRjooBkKO+s8F/RccjUYQxUoI3jMCQ==
-X-Received: by 2002:a62:5341:: with SMTP id h62mr6375982pfb.183.1586548422818;
-        Fri, 10 Apr 2020 12:53:42 -0700 (PDT)
-Received: from octofox.hsd1.ca.comcast.net ([2601:641:400:63f0:a487:3b8:7ffc:c9e4])
-        by smtp.gmail.com with ESMTPSA id w142sm2468983pff.111.2020.04.10.12.53.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 10 Apr 2020 12:53:42 -0700 (PDT)
-From:   Max Filippov <jcmvbkbc@gmail.com>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-kernel@vger.kernel.org, linux-xtensa@linux-xtensa.org,
-        Chris Zankel <chris@zankel.net>,
-        Max Filippov <jcmvbkbc@gmail.com>
-Subject: [PULL 0/3] xtensa updates for v5.7
-Date:   Fri, 10 Apr 2020 12:53:31 -0700
-Message-Id: <20200410195331.12735-1-jcmvbkbc@gmail.com>
-X-Mailer: git-send-email 2.20.1
+        Fri, 10 Apr 2020 15:55:03 -0400
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay08.hostedemail.com (Postfix) with ESMTP id 09712182CCCD1;
+        Fri, 10 Apr 2020 19:55:03 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: rest74_490bbefb0e62d
+X-Filterd-Recvd-Size: 3039
+Received: from XPS-9350.home (unknown [47.151.136.130])
+        (Authenticated sender: joe@perches.com)
+        by omf12.hostedemail.com (Postfix) with ESMTPA;
+        Fri, 10 Apr 2020 19:55:01 +0000 (UTC)
+Message-ID: <db2730700ab3eb7008413a1e7bba94ca7c49a031.camel@perches.com>
+Subject: Re: [PATCH] checkpatch: check for missing \n at the end of logging
+ message
+From:   Joe Perches <joe@perches.com>
+To:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+        apw@canonical.com, Andrew Morton <akpm@linux-foundation.org>
+Cc:     linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
+Date:   Fri, 10 Apr 2020 12:53:00 -0700
+In-Reply-To: <c9fd4bc75812fed4799c2fb87b452b809a7e9a7a.camel@perches.com>
+References: <20200407204908.10420-1-christophe.jaillet@wanadoo.fr>
+         <8617a6b94c0644bce1fd4ca77309d67a612e6300.camel@perches.com>
+         <6e52383e-100d-b016-32c2-6fb54938b6fe@wanadoo.fr>
+         <c9fd4bc75812fed4799c2fb87b452b809a7e9a7a.camel@perches.com>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.34.1-2 
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -73,44 +52,66 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
+On Fri, 2020-04-10 at 12:46 -0700, Joe Perches wrote:
+> On Fri, 2020-04-10 at 19:35 +0200, Christophe JAILLET wrote:
+> > Le 08/04/2020 à 04:14, Joe Perches a écrit :
+> > > This works rather better:
+> > > Perhaps you could test?
+> []
+> > I'm looking at some modification done in the last month that could have 
+> > been spotted by the above script.
+> > 
+> >      ./scripts/checkpatch.pl -f drivers/usb/phy/phy-jz4770.c
+> > 
+> > correctly spots the 3 first cases, but the 3 last (line 202, 210 and 
+> > 217) are missed.
+> > I don't understand why.
+> 
+> It has to do with checkpatch's single statement parsing.
+> 
+> This case:
+> 
+> 	if (foo)
+> 		dev_warn(...);
+> 
+> is parsed as a single statement but
+> 
+> 	if (foo) {
+> 		dev_warn(...);
+> 	};
+> 
+> is parsed as multiple statements so for the
+> second case
+> 
+> 		dev_warn(...);
+> 
+> is analyzed as a separate statement.
+> 
+> The regex match for this missing newline test expects
+> that each printk is a separate statement so the first
+> case doesn't match.
+> 
+> Clearly the regex can be improved here.
 
-please pull the following Xtensa architecture updates for v5.7:
+So on top of the original patch:
+---
+ scripts/checkpatch.pl | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-The following changes since commit 98d54f81e36ba3bf92172791eba5ca5bd813989b:
+diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
+index f00a6c8..54eaa7 100755
+--- a/scripts/checkpatch.pl
++++ b/scripts/checkpatch.pl
+@@ -5675,8 +5675,8 @@ sub process {
+ 
+ # check for possible missing newlines at the end of common logging functions
+ 		if (defined($stat) &&
+-		    $stat =~ /^\+\s*($logFunctions)\s*\((?:\s*$FuncArg\s*,\s*){0,3}\s*$String/ &&
+-		    $1 !~ /_cont$/ && $1 =~ /^(?:pr|dev|netdev|netif|wiphy)_/) {
++		    $stat =~ /^\+\s*(?:if\s*$balanced_parens\s*)?($logFunctions)\s*\((?:\s*$FuncArg\s*,\s*){0,3}\s*$String/ &&
++		    $2 !~ /_cont$/ && $2 =~ /^(?:pr|dev|netdev|netif|wiphy)_/) {
+ 			my $cnt = statement_rawlines($stat);
+ 			my $extracted_string = "";
+ 			for (my $i = 0; $i < $cnt; $i++) {
 
-  Linux 5.6-rc4 (2020-03-01 16:38:46 -0600)
 
-are available in the Git repository at:
-
-  git://github.com/jcmvbkbc/linux-xtensa.git tags/xtensa-20200410
-
-for you to fetch changes up to 70cbddb973859158731ce77ab20cd5e53822c089:
-
-  arch/xtensa: fix grammar in Kconfig help text (2020-03-30 13:35:31 -0700)
-
-----------------------------------------------------------------
-Xtensa updates for v5.7:
-
-- replace setup_irq() by request_irq();
-- cosmetic fixes in xtensa Kconfig and boot/Makefile.
-
-----------------------------------------------------------------
-Hu Haowen (1):
-      arch/xtensa: fix grammar in Kconfig help text
-
-Masahiro Yamada (1):
-      xtensa: remove meaningless export ccflags-y
-
-afzal mohammed (1):
-      xtensa: replace setup_irq() by request_irq()
-
- arch/xtensa/Kconfig       |  2 +-
- arch/xtensa/boot/Makefile |  1 -
- arch/xtensa/kernel/smp.c  |  8 ++------
- arch/xtensa/kernel/time.c | 12 +++++-------
- 4 files changed, 8 insertions(+), 15 deletions(-)
-
--- 
-Thanks.
--- Max
