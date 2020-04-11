@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FC61C2BA19
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:41:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B942C2BA19
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:41:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 60384206E9
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:41:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 12832206E9
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:41:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586648467;
-	bh=CoNRyxANqknyvtD2tPaGjioGwzJ8nFozoxNEckOKVls=;
+	s=default; t=1586648473;
+	bh=sGcawhSCorjKNqb+a3+qFPoK9A8AmdvKn3bP+dfMO2M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FQKphI6CX2nvBw3njdVBu01EdBzedoNboob0dl6eK9jAufP+yFvfUoTyXs7m+Kfxw
-	 aQZgjSCM2M3P/jjjooElhfqKEDjBjRoCvMJFGgaPv02PFj2ZfxTVgeeiIi+xwQhFQe
-	 W2P4zfaRILWKid3ByiJ1LfPn2ZLYPlBTl/7nt8JA=
+	b=RGoQ5OIg0GTRfzut4Qi82SomdPMAvRDqMN2czNTgYJ1yeDGAW80/Or2xRmZK4YVci
+	 3SjisYsOkb/qdNF87JCh2muDBebG9HkgBhd6GmX/+JQthe4RNVIbUwMtgTKJ0sNNVo
+	 O8n0+jreKgzUWxiGT5fxxmS8k60j4JLtx5t/iHPo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730559AbgDKXlF (ORCPT
+        id S1730643AbgDKXlL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 19:41:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42936 "EHLO mail.kernel.org"
+        Sat, 11 Apr 2020 19:41:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42908 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728594AbgDKXHO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 19:07:14 -0400
+        id S1728587AbgDKXHN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Apr 2020 19:07:13 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 785FC20787;
-        Sat, 11 Apr 2020 23:07:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 56CEE216FD;
+        Sat, 11 Apr 2020 23:07:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586646434;
-        bh=CoNRyxANqknyvtD2tPaGjioGwzJ8nFozoxNEckOKVls=;
+        s=default; t=1586646433;
+        bh=sGcawhSCorjKNqb+a3+qFPoK9A8AmdvKn3bP+dfMO2M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Wf8L2xUNrjxgwMdYehzWf8zO70510H8atn+KdHQGlgg1x++KwBokW3jTVbL+LWi3P
-         UlMusHT1jZWtlD0k/u1FNvCAirgKOWQjVxWDb7x/4OXxrzrP5yJrwo7YVGGvClJThK
-         P5OUCWUv5qXcsXSYI7zBopbrO4an6+NZuhvDTFmM=
+        b=Y6aiFXP7NxfrP/8pMnaOTXWrlr/35MPpp9NETjbeQRT3K5kLroJKgBRfMazPxNTGF
+         KC9nlDfhHkXR5jlAiJbVAm9GJU/J7Zqf5E+8CI2dj9cHvOQ1jK7MsVJ++x3ezwlS7m
+         Wjhs9D/84ngPFv6SCS1Wi6cyU4ZKjpZVyNgTMVYU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Haibo Chen <haibo.chen@nxp.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Sasha Levin <sashal@kernel.org>, linux-mmc@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.5 006/121] mmc: sdhci-esdhc-imx: restore pin state when resume back
-Date:   Sat, 11 Apr 2020 19:05:11 -0400
-Message-Id: <20200411230706.23855-6-sashal@kernel.org>
+Cc:     Zhu Yanjun <yanjunz@mellanox.com>,
+        Leon Romanovsky <leonro@mellanox.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Sasha Levin <sashal@kernel.org>, linux-rdma@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.5 005/121] RDMA/rxe: Set sys_image_guid to be aligned with HW IB devices
+Date:   Sat, 11 Apr 2020 19:05:10 -0400
+Message-Id: <20200411230706.23855-5-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200411230706.23855-1-sashal@kernel.org>
 References: <20200411230706.23855-1-sashal@kernel.org>
@@ -60,49 +60,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Haibo Chen <haibo.chen@nxp.com>
+From: Zhu Yanjun <yanjunz@mellanox.com>
 
-[ Upstream commit af8fade4bd7bc7bf49851832a20166213e032978 ]
+[ Upstream commit d0ca2c35dd15a3d989955caec02beea02f735ee6 ]
 
-In some low power mode, SoC will lose the pin state, so need to restore
-the pin state when resume back.
+The RXE driver doesn't set sys_image_guid and user space applications see
+zeros. This causes to pyverbs tests to fail with the following traceback,
+because the IBTA spec requires to have valid sys_image_guid.
 
-Signed-off-by: Haibo Chen <haibo.chen@nxp.com>
-Link: https://lore.kernel.org/r/1582100757-20683-8-git-send-email-haibo.chen@nxp.com
-Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+ Traceback (most recent call last):
+   File "./tests/test_device.py", line 51, in test_query_device
+     self.verify_device_attr(attr)
+   File "./tests/test_device.py", line 74, in verify_device_attr
+     assert attr.sys_image_guid != 0
+
+In order to fix it, set sys_image_guid to be equal to node_guid.
+
+Before:
+ 5: rxe0: ... node_guid 5054:00ff:feaa:5363 sys_image_guid
+ 0000:0000:0000:0000
+
+After:
+ 5: rxe0: ... node_guid 5054:00ff:feaa:5363 sys_image_guid
+ 5054:00ff:feaa:5363
+
+Fixes: 8700e3e7c485 ("Soft RoCE driver")
+Link: https://lore.kernel.org/r/20200323112800.1444784-1-leon@kernel.org
+Signed-off-by: Zhu Yanjun <yanjunz@mellanox.com>
+Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/mmc/host/sdhci-esdhc-imx.c | 10 +++++++++-
- 1 file changed, 9 insertions(+), 1 deletion(-)
+ drivers/infiniband/sw/rxe/rxe.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/mmc/host/sdhci-esdhc-imx.c b/drivers/mmc/host/sdhci-esdhc-imx.c
-index dccb4df465126..ca1566d4ccab1 100644
---- a/drivers/mmc/host/sdhci-esdhc-imx.c
-+++ b/drivers/mmc/host/sdhci-esdhc-imx.c
-@@ -1624,7 +1624,11 @@ static int sdhci_esdhc_suspend(struct device *dev)
- 	if (host->tuning_mode != SDHCI_TUNING_MODE_3)
- 		mmc_retune_needed(host->mmc);
+diff --git a/drivers/infiniband/sw/rxe/rxe.c b/drivers/infiniband/sw/rxe/rxe.c
+index 0946a301a5c5d..4afdd2e208839 100644
+--- a/drivers/infiniband/sw/rxe/rxe.c
++++ b/drivers/infiniband/sw/rxe/rxe.c
+@@ -103,6 +103,8 @@ static void rxe_init_device_param(struct rxe_dev *rxe)
+ 	rxe->attr.max_fast_reg_page_list_len	= RXE_MAX_FMR_PAGE_LIST_LEN;
+ 	rxe->attr.max_pkeys			= RXE_MAX_PKEYS;
+ 	rxe->attr.local_ca_ack_delay		= RXE_LOCAL_CA_ACK_DELAY;
++	addrconf_addr_eui48((unsigned char *)&rxe->attr.sys_image_guid,
++			rxe->ndev->dev_addr);
  
--	return sdhci_suspend_host(host);
-+	ret = sdhci_suspend_host(host);
-+	if (!ret)
-+		return pinctrl_pm_select_sleep_state(dev);
-+
-+	return ret;
+ 	rxe->max_ucontext			= RXE_MAX_UCONTEXT;
  }
- 
- static int sdhci_esdhc_resume(struct device *dev)
-@@ -1632,6 +1636,10 @@ static int sdhci_esdhc_resume(struct device *dev)
- 	struct sdhci_host *host = dev_get_drvdata(dev);
- 	int ret;
- 
-+	ret = pinctrl_pm_select_default_state(dev);
-+	if (ret)
-+		return ret;
-+
- 	/* re-initialize hw state in case it's lost in low power mode */
- 	sdhci_esdhc_imx_hwinit(host);
- 
 -- 
 2.20.1
 
