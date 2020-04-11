@@ -4,51 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35A0DC2BA2B
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:17:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37E12C2BA2B
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:17:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0A73E20644
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:17:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0E5E420673
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:17:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586607424;
-	bh=EmfY0OTG7JZDE8KriKilKrAHF7WbXWBGs5/1e/lrTow=;
+	s=default; t=1586607429;
+	bh=43PTV1RJIcy3DrgRfaIJb5QuhUb2LTSBZASiS8wq7uI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VOk5Js+Jd3iqcTEs+Z58b6HuTqdmKIcluqtnCBRrDg1d0kBPb5SYUeAb4Pp0tM4DS
-	 vxWcLm/aCxW8OnNneQ82DmhE/sAAm4zOMcQ+CEhqpalZX5FUtYCCJ14qsreS33c2xu
-	 KTq+u3IrcFzsCdYBjbSiwOwbsrcvhFO3wAZCE1j8=
+	b=EqBvff9H//sUflXgQnZHcBUhNixHn8jZDA2o+JP2J29+oQA5W/3Gn+Wtd+qQ0GEIz
+	 4EYfhXma2t4PO62hfCGdrwbkReMhzWU2VfLsOkA0zQm2Mq1AdQTCDmnNf+9fk0CrCe
+	 b7HSbFBeENmLeqenRqhfAK40BWLovpPQDwRItR9E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728172AbgDKMRC (ORCPT
+        id S1726982AbgDKMRH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 08:17:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51402 "EHLO mail.kernel.org"
+        Sat, 11 Apr 2020 08:17:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51584 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728160AbgDKMQ5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 08:16:57 -0400
+        id S1728181AbgDKMRE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Apr 2020 08:17:04 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 57B4B20644;
-        Sat, 11 Apr 2020 12:16:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 97EAD20692;
+        Sat, 11 Apr 2020 12:17:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586607416;
-        bh=EmfY0OTG7JZDE8KriKilKrAHF7WbXWBGs5/1e/lrTow=;
+        s=default; t=1586607424;
+        bh=43PTV1RJIcy3DrgRfaIJb5QuhUb2LTSBZASiS8wq7uI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=EknbZN8V4zl/2D7qudtICkum+53KytjJkKejc23m1PbcK9fTPbAGL6W7Qq+SX/46V
-         0G6DYkQjMexd9t14sfTsYmO9Lerv+0cldQffvxnaZE9x14v2hbDU08eLYxFFCzZSvu
-         QPjIrrc8ISzE1VNuWC9rIqXIPT6qDQnnO1r3fpKI=
+        b=mK76+ROtvza8wVwADZxvdoXVBZ21fjSFQ1VBugDKlgH0MOFEhR2AWpWlsJ/SkYhk0
+         wagh/QOSUqjMAuh25nyzQXXweYGzbOo4Gp2TCbTp2Yk2hkOri2BLLDiRkCtGurykaG
+         n/Xul1tNV246l5XDe4K+pmd0Gqx5GPeTeuuJImKQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Richard Palethorpe <rpalethorpe@suse.com>,
-        Kees Cook <keescook@chromium.org>, linux-can@vger.kernel.org,
-        netdev@vger.kernel.org, security@kernel.org, wg@grandegger.com,
-        mkl@pengutronix.de, davem@davemloft.net
-Subject: [PATCH 5.4 11/41] slcan: Dont transmit uninitialized stack data in padding
-Date:   Sat, 11 Apr 2020 14:09:20 +0200
-Message-Id: <20200411115504.898395559@linuxfoundation.org>
+        stable@vger.kernel.org, Heiner Kallweit <hkallweit1@gmail.com>
+Subject: [PATCH 5.4 14/41] r8169: change back SG and TSO to be disabled by default
+Date:   Sat, 11 Apr 2020 14:09:23 +0200
+Message-Id: <20200411115505.093276503@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200411115504.124035693@linuxfoundation.org>
 References: <20200411115504.124035693@linuxfoundation.org>
@@ -61,51 +58,78 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Richard Palethorpe <rpalethorpe@suse.com>
+From: Heiner Kallweit <hkallweit1@gmail.com>
 
-[ Upstream commit b9258a2cece4ec1f020715fe3554bc2e360f6264 ]
+[ Upstream commit 95099c569a9fdbe186a27447dfa8a5a0562d4b7f ]
 
-struct can_frame contains some padding which is not explicitly zeroed in
-slc_bump. This uninitialized data will then be transmitted if the stack
-initialization hardening feature is not enabled (CONFIG_INIT_STACK_ALL).
+There has been a number of reports that using SG/TSO on different chip
+versions results in tx timeouts. However for a lot of people SG/TSO
+works fine. Therefore disable both features by default, but allow users
+to enable them. Use at own risk!
 
-This commit just zeroes the whole struct including the padding.
-
-Signed-off-by: Richard Palethorpe <rpalethorpe@suse.com>
-Fixes: a1044e36e457 ("can: add slcan driver for serial/USB-serial CAN adapters")
-Reviewed-by: Kees Cook <keescook@chromium.org>
-Cc: linux-can@vger.kernel.org
-Cc: netdev@vger.kernel.org
-Cc: security@kernel.org
-Cc: wg@grandegger.com
-Cc: mkl@pengutronix.de
-Cc: davem@davemloft.net
-Acked-by: Marc Kleine-Budde <mkl@pengutronix.de>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: 93681cd7d94f ("r8169: enable HW csum and TSO")
+Signed-off-by: Heiner Kallweit <hkallweit1@gmail.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/can/slcan.c |    4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+ drivers/net/ethernet/realtek/r8169_main.c |   34 ++++++++++++++----------------
+ 1 file changed, 16 insertions(+), 18 deletions(-)
 
---- a/drivers/net/can/slcan.c
-+++ b/drivers/net/can/slcan.c
-@@ -148,7 +148,7 @@ static void slc_bump(struct slcan *sl)
- 	u32 tmpid;
- 	char *cmd = sl->rbuff;
+--- a/drivers/net/ethernet/realtek/r8169_main.c
++++ b/drivers/net/ethernet/realtek/r8169_main.c
+@@ -7167,12 +7167,10 @@ static int rtl_init_one(struct pci_dev *
  
--	cf.can_id = 0;
-+	memset(&cf, 0, sizeof(cf));
+ 	netif_napi_add(dev, &tp->napi, rtl8169_poll, NAPI_POLL_WEIGHT);
  
- 	switch (*cmd) {
- 	case 'r':
-@@ -187,8 +187,6 @@ static void slc_bump(struct slcan *sl)
- 	else
- 		return;
+-	dev->features |= NETIF_F_SG | NETIF_F_IP_CSUM | NETIF_F_TSO |
+-		NETIF_F_RXCSUM | NETIF_F_HW_VLAN_CTAG_TX |
+-		NETIF_F_HW_VLAN_CTAG_RX;
+-	dev->hw_features = NETIF_F_SG | NETIF_F_IP_CSUM | NETIF_F_TSO |
+-		NETIF_F_RXCSUM | NETIF_F_HW_VLAN_CTAG_TX |
+-		NETIF_F_HW_VLAN_CTAG_RX;
++	dev->features |= NETIF_F_IP_CSUM | NETIF_F_RXCSUM |
++			 NETIF_F_HW_VLAN_CTAG_TX | NETIF_F_HW_VLAN_CTAG_RX;
++	dev->hw_features = NETIF_F_IP_CSUM | NETIF_F_RXCSUM |
++			   NETIF_F_HW_VLAN_CTAG_TX | NETIF_F_HW_VLAN_CTAG_RX;
+ 	dev->vlan_features = NETIF_F_SG | NETIF_F_IP_CSUM | NETIF_F_TSO |
+ 		NETIF_F_HIGHDMA;
+ 	dev->priv_flags |= IFF_LIVE_ADDR_CHANGE;
+@@ -7190,25 +7188,25 @@ static int rtl_init_one(struct pci_dev *
+ 		dev->hw_features &= ~NETIF_F_HW_VLAN_CTAG_RX;
  
--	*(u64 *) (&cf.data) = 0; /* clear payload */
+ 	if (rtl_chip_supports_csum_v2(tp)) {
+-		dev->hw_features |= NETIF_F_IPV6_CSUM | NETIF_F_TSO6;
+-		dev->features |= NETIF_F_IPV6_CSUM | NETIF_F_TSO6;
++		dev->hw_features |= NETIF_F_IPV6_CSUM;
++		dev->features |= NETIF_F_IPV6_CSUM;
++	}
++
++	/* There has been a number of reports that using SG/TSO results in
++	 * tx timeouts. However for a lot of people SG/TSO works fine.
++	 * Therefore disable both features by default, but allow users to
++	 * enable them. Use at own risk!
++	 */
++	if (rtl_chip_supports_csum_v2(tp)) {
++		dev->hw_features |= NETIF_F_SG | NETIF_F_TSO | NETIF_F_TSO6;
+ 		dev->gso_max_size = RTL_GSO_MAX_SIZE_V2;
+ 		dev->gso_max_segs = RTL_GSO_MAX_SEGS_V2;
+ 	} else {
++		dev->hw_features |= NETIF_F_SG | NETIF_F_TSO;
+ 		dev->gso_max_size = RTL_GSO_MAX_SIZE_V1;
+ 		dev->gso_max_segs = RTL_GSO_MAX_SEGS_V1;
+ 	}
+ 
+-	/* RTL8168e-vl and one RTL8168c variant are known to have a
+-	 * HW issue with TSO.
+-	 */
+-	if (tp->mac_version == RTL_GIGA_MAC_VER_34 ||
+-	    tp->mac_version == RTL_GIGA_MAC_VER_22) {
+-		dev->vlan_features &= ~(NETIF_F_ALL_TSO | NETIF_F_SG);
+-		dev->hw_features &= ~(NETIF_F_ALL_TSO | NETIF_F_SG);
+-		dev->features &= ~(NETIF_F_ALL_TSO | NETIF_F_SG);
+-	}
 -
- 	/* RTR frames may have a dlc > 0 but they never have any data bytes */
- 	if (!(cf.can_id & CAN_RTR_FLAG)) {
- 		for (i = 0; i < cf.can_dlc; i++) {
+ 	dev->hw_features |= NETIF_F_RXALL;
+ 	dev->hw_features |= NETIF_F_RXFCS;
+ 
 
 
