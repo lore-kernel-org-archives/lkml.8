@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 907D8C2BBC7
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:28:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A302C2BA2B
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:28:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5F4B420692
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:28:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 534B620692
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:28:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586608096;
-	bh=MesyVyOKCevRf+2TnmIg4GCFkNmuAs9DzQo/LPs8jfg=;
+	s=default; t=1586608100;
+	bh=diEr7A/c7XyOdFew0NybRDLs5jmL2IXikHJnlUi9OuY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kt/CG7+7J0Rno53CYSlj+fa8YLC4LU2zbiC0Xi8HMEm1GGtqWGahUMeE9gdgePbs+
-	 IaccZkaAkd8VeYTppRNkc1ChWtT3aji7Av1GjpWjtiUPrf/c1Zdu6hsr+8CWhBirGq
-	 mMTn2CEjs7hExSCFG0x3RUNtItzuhhepGwNQ3v0g=
+	b=CvoSvsTkClsoXUu6Nhc7N38KFSbj10dbUZeQfMW6mUfvmQk2WY+bjwCkb5P9ojcCu
+	 vgNh2ExTowx+LWBrykzLfNV2JJytNjU4/hBYa+kDFAgmNNtTtPELKcOUmwepA3hPY1
+	 uJCpJKuVx6cm4xaEszhcWxEvDDvpKvuki4OYpOzE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726678AbgDKMNB (ORCPT
+        id S1727414AbgDKMMo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 08:13:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45770 "EHLO mail.kernel.org"
+        Sat, 11 Apr 2020 08:12:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45364 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727444AbgDKMM7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 08:12:59 -0400
+        id S1727327AbgDKMMl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Apr 2020 08:12:41 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 81F122137B;
-        Sat, 11 Apr 2020 12:12:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2B15421655;
+        Sat, 11 Apr 2020 12:12:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586607180;
-        bh=MesyVyOKCevRf+2TnmIg4GCFkNmuAs9DzQo/LPs8jfg=;
+        s=default; t=1586607160;
+        bh=diEr7A/c7XyOdFew0NybRDLs5jmL2IXikHJnlUi9OuY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ETY5g+FK50UkzMOq/saVI28xdGz70vL/m+xAn3F1Jwb9rOeQxoLXlLLnW428Z89Hk
-         P8c1hn4RslzsPuenDcZP+P+ku9IaY9t4VMZWQnAECOVAVWxUGCnjraY/K5KY1XTFCE
-         w8lDrAUZod5yz9ETb6g63paadgvNwhq1u92BRw0o=
+        b=ckh2yYNz7v6E1q4Fu0SOqvQE9WhS9k6JfKBtBpg0GwdvRVfFRDGg8wnzJM2MBEXep
+         aXD/2CCLbXNbGGC961GuOk+Ud6ZGQih64BnbLLpMCiC/7thurFZHJQdE0OpqXisdC/
+         jT1WOQSYDaIbki0uxoPkfg5X2ICvSXZAHrAu6ipE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hans Verkuil <hans.verkuil@cisco.com>,
-        Lyude Paul <lyude@redhat.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        Lee Jones <lee.jones@linaro.org>
-Subject: [PATCH 4.9 32/32] drm_dp_mst_topology: fix broken drm_dp_sideband_parse_remote_dpcd_read()
-Date:   Sat, 11 Apr 2020 14:09:11 +0200
-Message-Id: <20200411115422.925768776@linuxfoundation.org>
+        stable@vger.kernel.org, Lucas Stach <l.stach@pengutronix.de>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        =?UTF-8?q?Guido=20G=C3=BCnther?= <agx@sigxcpu.org>,
+        Robert Beckett <bob.beckett@collabora.com>
+Subject: [PATCH 4.9 08/32] drm/etnaviv: replace MMU flush marker with flush sequence
+Date:   Sat, 11 Apr 2020 14:08:47 +0200
+Message-Id: <20200411115419.616038972@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200411115418.455500023@linuxfoundation.org>
 References: <20200411115418.455500023@linuxfoundation.org>
@@ -61,36 +61,135 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hans Verkuil <hans.verkuil@cisco.com>
+From: Lucas Stach <l.stach@pengutronix.de>
 
-commit a4c30a4861c54af78c4eb8b7855524c1a96d9f80 upstream.
+commit 4900dda90af2cb13bc1d4c12ce94b98acc8fe64e upstream.
 
-When parsing the reply of a DP_REMOTE_DPCD_READ DPCD command the
-result is wrong due to a missing idx increment.
+If a MMU is shared between multiple GPUs, all of them need to flush their
+TLBs, so a single marker that gets reset on the first flush won't do.
+Replace the flush marker with a sequence number, so that it's possible to
+check if the TLB is in sync with the current page table state for each GPU.
 
-This was never noticed since DP_REMOTE_DPCD_READ is currently not
-used, but if you enable it, then it is all wrong.
-
-Signed-off-by: Hans Verkuil <hans.verkuil@cisco.com>
-Reviewed-by: Lyude Paul <lyude@redhat.com>
-Acked-by: Alex Deucher <alexander.deucher@amd.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/e72ddac2-1dc0-100a-d816-9ac98ac009dd@xs4all.nl
-Signed-off-by: Lee Jones <lee.jones@linaro.org>
+Signed-off-by: Lucas Stach <l.stach@pengutronix.de>
+Reviewed-by: Philipp Zabel <p.zabel@pengutronix.de>
+Reviewed-by: Guido Günther <agx@sigxcpu.org>
+Signed-off-by: Robert Beckett <bob.beckett@collabora.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/gpu/drm/drm_dp_mst_topology.c |    1 +
- 1 file changed, 1 insertion(+)
+ drivers/gpu/drm/etnaviv/etnaviv_buffer.c |   10 ++++++----
+ drivers/gpu/drm/etnaviv/etnaviv_gpu.c    |    2 +-
+ drivers/gpu/drm/etnaviv/etnaviv_gpu.h    |    1 +
+ drivers/gpu/drm/etnaviv/etnaviv_mmu.c    |    6 +++---
+ drivers/gpu/drm/etnaviv/etnaviv_mmu.h    |    2 +-
+ 5 files changed, 12 insertions(+), 9 deletions(-)
 
---- a/drivers/gpu/drm/drm_dp_mst_topology.c
-+++ b/drivers/gpu/drm/drm_dp_mst_topology.c
-@@ -431,6 +431,7 @@ static bool drm_dp_sideband_parse_remote
- 	if (idx > raw->curlen)
- 		goto fail_len;
- 	repmsg->u.remote_dpcd_read_ack.num_bytes = raw->msg[idx];
-+	idx++;
- 	if (idx > raw->curlen)
- 		goto fail_len;
+--- a/drivers/gpu/drm/etnaviv/etnaviv_buffer.c
++++ b/drivers/gpu/drm/etnaviv/etnaviv_buffer.c
+@@ -257,6 +257,8 @@ void etnaviv_buffer_queue(struct etnaviv
+ 	unsigned int waitlink_offset = buffer->user_size - 16;
+ 	u32 return_target, return_dwords;
+ 	u32 link_target, link_dwords;
++	unsigned int new_flush_seq = READ_ONCE(gpu->mmu->flush_seq);
++	bool need_flush = gpu->flush_seq != new_flush_seq;
  
+ 	if (drm_debug & DRM_UT_DRIVER)
+ 		etnaviv_buffer_dump(gpu, buffer, 0, 0x50);
+@@ -269,14 +271,14 @@ void etnaviv_buffer_queue(struct etnaviv
+ 	 * need to append a mmu flush load state, followed by a new
+ 	 * link to this buffer - a total of four additional words.
+ 	 */
+-	if (gpu->mmu->need_flush || gpu->switch_context) {
++	if (need_flush || gpu->switch_context) {
+ 		u32 target, extra_dwords;
+ 
+ 		/* link command */
+ 		extra_dwords = 1;
+ 
+ 		/* flush command */
+-		if (gpu->mmu->need_flush) {
++		if (need_flush) {
+ 			if (gpu->mmu->version == ETNAVIV_IOMMU_V1)
+ 				extra_dwords += 1;
+ 			else
+@@ -289,7 +291,7 @@ void etnaviv_buffer_queue(struct etnaviv
+ 
+ 		target = etnaviv_buffer_reserve(gpu, buffer, extra_dwords);
+ 
+-		if (gpu->mmu->need_flush) {
++		if (need_flush) {
+ 			/* Add the MMU flush */
+ 			if (gpu->mmu->version == ETNAVIV_IOMMU_V1) {
+ 				CMD_LOAD_STATE(buffer, VIVS_GL_FLUSH_MMU,
+@@ -309,7 +311,7 @@ void etnaviv_buffer_queue(struct etnaviv
+ 					SYNC_RECIPIENT_PE);
+ 			}
+ 
+-			gpu->mmu->need_flush = false;
++			gpu->flush_seq = new_flush_seq;
+ 		}
+ 
+ 		if (gpu->switch_context) {
+--- a/drivers/gpu/drm/etnaviv/etnaviv_gpu.c
++++ b/drivers/gpu/drm/etnaviv/etnaviv_gpu.c
+@@ -1313,7 +1313,7 @@ int etnaviv_gpu_submit(struct etnaviv_gp
+ 	gpu->active_fence = submit->fence;
+ 
+ 	if (gpu->lastctx != cmdbuf->ctx) {
+-		gpu->mmu->need_flush = true;
++		gpu->mmu->flush_seq++;
+ 		gpu->switch_context = true;
+ 		gpu->lastctx = cmdbuf->ctx;
+ 	}
+--- a/drivers/gpu/drm/etnaviv/etnaviv_gpu.h
++++ b/drivers/gpu/drm/etnaviv/etnaviv_gpu.h
+@@ -135,6 +135,7 @@ struct etnaviv_gpu {
+ 	int irq;
+ 
+ 	struct etnaviv_iommu *mmu;
++	unsigned int flush_seq;
+ 
+ 	/* Power Control: */
+ 	struct clk *clk_bus;
+--- a/drivers/gpu/drm/etnaviv/etnaviv_mmu.c
++++ b/drivers/gpu/drm/etnaviv/etnaviv_mmu.c
+@@ -134,7 +134,7 @@ static int etnaviv_iommu_find_iova(struc
+ 		 */
+ 		if (mmu->last_iova) {
+ 			mmu->last_iova = 0;
+-			mmu->need_flush = true;
++			mmu->flush_seq++;
+ 			continue;
+ 		}
+ 
+@@ -197,7 +197,7 @@ static int etnaviv_iommu_find_iova(struc
+ 		 * associated commit requesting this mapping, and retry the
+ 		 * allocation one more time.
+ 		 */
+-		mmu->need_flush = true;
++		mmu->flush_seq++;
+ 	}
+ 
+ 	return ret;
+@@ -354,7 +354,7 @@ u32 etnaviv_iommu_get_cmdbuf_va(struct e
+ 		 * that the FE MMU prefetch won't load invalid entries.
+ 		 */
+ 		mmu->last_iova = buf->vram_node.start + buf->size + SZ_64K;
+-		gpu->mmu->need_flush = true;
++		mmu->flush_seq++;
+ 		mutex_unlock(&mmu->lock);
+ 
+ 		return (u32)buf->vram_node.start;
+--- a/drivers/gpu/drm/etnaviv/etnaviv_mmu.h
++++ b/drivers/gpu/drm/etnaviv/etnaviv_mmu.h
+@@ -44,7 +44,7 @@ struct etnaviv_iommu {
+ 	struct list_head mappings;
+ 	struct drm_mm mm;
+ 	u32 last_iova;
+-	bool need_flush;
++	unsigned int flush_seq;
+ };
+ 
+ struct etnaviv_gem_object;
 
 
