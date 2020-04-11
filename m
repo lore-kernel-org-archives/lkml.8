@@ -2,100 +2,125 @@ Return-Path: <SRS0=xbEg=53=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70F90C2BA2B
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 06:45:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80D34C2BA2B
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 06:48:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4185A20B1F
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 06:45:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586587508;
-	bh=znAsD9ps7oDDk3limhQCe43kEVC1W33bGHaH2m8vpzQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=W1p4d0oxz7hzwMX6339A/dU+msrIhAS2rmqq5sJv84OZ0biH+nwuuRjDH9KQhJYuC
-	 N8EDMtP3lRwWrSPb53GH1hfQP8I5QpfM0zhx5k3bQZDFYTQUXtlGtEiP5bzw9U3QRH
-	 xywC7ZK7nPUiee9j0+XeCiEKjCt7+Sq2JadluoHc=
+	by mail.kernel.org (Postfix) with ESMTP id 606FD2083E
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 06:48:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725953AbgDKGpG (ORCPT
+        id S1726047AbgDKGsK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 02:45:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42906 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725855AbgDKGpG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 02:45:06 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D9DB52083E;
-        Sat, 11 Apr 2020 06:45:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586587506;
-        bh=znAsD9ps7oDDk3limhQCe43kEVC1W33bGHaH2m8vpzQ=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=fgp8d/M9oJn340VeC03FpvnWg6l8zX4UU79E8hmo0qIku3qF4W3D56X56uj5jjzoA
-         RIlO2vokYVHGA4Nt88I26b4oZ4I80kY1hTCmDRbFNaYvYbUZB0WS0U0Q8TFVfs8w4m
-         Tg218zi5UcY4Vmy5ade7JSr9YMT0AeSTbC7/Qtx0=
-Date:   Sat, 11 Apr 2020 08:45:03 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Will Deacon <will@kernel.org>, akpm@linux-foundation.org,
-        "K . Prasad" <prasad@linux.vnet.ibm.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        linux-kernel@vger.kernel.org, Tejun Heo <tj@kernel.org>
-Subject: Re: [RFC PATCH 8/9] block: genhd: export-GPL generic disk device type
-Message-ID: <20200411064503.GA2576039@kroah.com>
-References: <20200409193543.18115-1-mathieu.desnoyers@efficios.com>
- <20200409193543.18115-9-mathieu.desnoyers@efficios.com>
- <20200410063357.GA1663942@kroah.com>
- <20200410114444.73be173a@gandalf.local.home>
+        Sat, 11 Apr 2020 02:48:10 -0400
+Received: from smtp02.smtpout.orange.fr ([80.12.242.124]:28082 "EHLO
+        smtp.smtpout.orange.fr" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725869AbgDKGsK (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Apr 2020 02:48:10 -0400
+Received: from [192.168.42.210] ([93.22.135.18])
+        by mwinf5d37 with ME
+        id RJo72200G0Pz5GD03Jo84W; Sat, 11 Apr 2020 08:48:09 +0200
+X-ME-Helo: [192.168.42.210]
+X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
+X-ME-Date: Sat, 11 Apr 2020 08:48:09 +0200
+X-ME-IP: 93.22.135.18
+Subject: Re: [PATCH] checkpatch: check for missing \n at the end of logging
+ message
+To:     Joe Perches <joe@perches.com>, apw@canonical.com,
+        Andrew Morton <akpm@linux-foundation.org>
+Cc:     linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
+Newsgroups: gmane.linux.kernel,gmane.linux.kernel.janitors
+References: <20200407204908.10420-1-christophe.jaillet@wanadoo.fr>
+ <8617a6b94c0644bce1fd4ca77309d67a612e6300.camel@perches.com>
+ <6e52383e-100d-b016-32c2-6fb54938b6fe@wanadoo.fr>
+ <c9fd4bc75812fed4799c2fb87b452b809a7e9a7a.camel@perches.com>
+ <db2730700ab3eb7008413a1e7bba94ca7c49a031.camel@perches.com>
+From:   Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Message-ID: <215f2a43-6677-04cd-f376-bd7cd051b626@wanadoo.fr>
+Date:   Sat, 11 Apr 2020 08:48:07 +0200
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200410114444.73be173a@gandalf.local.home>
+In-Reply-To: <db2730700ab3eb7008413a1e7bba94ca7c49a031.camel@perches.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 10, 2020 at 11:44:44AM -0400, Steven Rostedt wrote:
-> On Fri, 10 Apr 2020 08:33:57 +0200
-> Greg Kroah-Hartman <gregkh@linuxfoundation.org> wrote:
-> 
-> > I understand your need here, however we do not export things for
-> > modules, when there are no in-kernel module users, sorry.
-> 
-> This "we don't cater to out-of-tree modules" even when they are GPL seems
-> to always baffle me. Especially since we have a high bar of accepting out
-> of tree modules especially if they duplicate some functionality of an
-> existing infrastructure of the kernel. I like choice, and coming from
-> someone that spent over a decade working on code that has been out of tree,
-> I'm a little sympathetic to the cause ;-)
+Le 10/04/2020 à 21:53, Joe Perches a écrit :
+> On Fri, 2020-04-10 at 12:46 -0700, Joe Perches wrote:
+>> On Fri, 2020-04-10 at 19:35 +0200, Christophe JAILLET wrote:
+>>> Le 08/04/2020 à 04:14, Joe Perches a écrit :
+>>>> This works rather better:
+>>>> Perhaps you could test?
+>> []
+>>> I'm looking at some modification done in the last month that could have
+>>> been spotted by the above script.
+>>>
+>>>       ./scripts/checkpatch.pl -f drivers/usb/phy/phy-jz4770.c
+>>>
+>>> correctly spots the 3 first cases, but the 3 last (line 202, 210 and
+>>> 217) are missed.
+>>> I don't understand why.
+>> It has to do with checkpatch's single statement parsing.
+>>
+>> This case:
+>>
+>> 	if (foo)
+>> 		dev_warn(...);
+>>
+>> is parsed as a single statement but
+>>
+>> 	if (foo) {
+>> 		dev_warn(...);
+>> 	};
+>>
+>> is parsed as multiple statements so for the
+>> second case
+>>
+>> 		dev_warn(...);
+>>
+>> is analyzed as a separate statement.
+>>
+>> The regex match for this missing newline test expects
+>> that each printk is a separate statement so the first
+>> case doesn't match.
+>>
+>> Clearly the regex can be improved here.
+> So on top of the original patch:
+> ---
+>   scripts/checkpatch.pl | 4 ++--
+>   1 file changed, 2 insertions(+), 2 deletions(-)
+>
+> diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
+> index f00a6c8..54eaa7 100755
+> --- a/scripts/checkpatch.pl
+> +++ b/scripts/checkpatch.pl
+> @@ -5675,8 +5675,8 @@ sub process {
+>   
+>   # check for possible missing newlines at the end of common logging functions
+>   		if (defined($stat) &&
+> -		    $stat =~ /^\+\s*($logFunctions)\s*\((?:\s*$FuncArg\s*,\s*){0,3}\s*$String/ &&
+> -		    $1 !~ /_cont$/ && $1 =~ /^(?:pr|dev|netdev|netif|wiphy)_/) {
+> +		    $stat =~ /^\+\s*(?:if\s*$balanced_parens\s*)?($logFunctions)\s*\((?:\s*$FuncArg\s*,\s*){0,3}\s*$String/ &&
+> +		    $2 !~ /_cont$/ && $2 =~ /^(?:pr|dev|netdev|netif|wiphy)_/) {
+>   			my $cnt = statement_rawlines($stat);
+>   			my $extracted_string = "";
+>   			for (my $i = 0; $i < $cnt; $i++) {
 
-We can't do anything for out-of-tree modules as they suddenly become
-"higher priority" than in-tree code if you have to not do specific
-changes or extra work for them.  Which is not fair at all to the in-tree
-code developers at all.
+Hi Joe,
 
-With drivers/staging/ we removed the barrier for accepting any license
-compliant driver, so that solved the huge majority of these issues.
+This fixes the use case for  drivers/usb/phy/phy-jz4770.c
 
-> I guess we should be open to allowing LTTng modules in the kernel as well,
-> even though it is yet another tracing framework. It's not like its going
-> away. And perhaps by doing so, ftrace and perf could start taking advantage
-> of anything that LTTng brings.
+     ./scripts/checkpatch.pl -f drivers/usb/gadget/udc/tegra-xudc.c
 
-That is up to you all, as you are the one preventing this from being
-merged in the tree, not me :)
+is missing line 691.
 
-Again, don't make us do _more_ work for out-of-tree modules than we do
-for in-tree modules, that's just crazy to expect.
+CJ
 
-thanks,
-
-greg k-h
