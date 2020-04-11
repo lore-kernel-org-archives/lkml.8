@@ -4,52 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF753C2BA2B
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:13:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85C00C2BB85
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:13:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 890402166E
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:13:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5C6092173E
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:13:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586607203;
-	bh=/lxQsjwShHOCqEOzz99+Z6MX6Z1Ea8+vgXJ2HukAbNQ=;
+	s=default; t=1586607207;
+	bh=1qgwLKUC+YvoDSNa1hxeng6qS2w1FMUiVSiNGKdEzuk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DQ/GZmu504oBPcHpf17zPnR95zXP2Mp/8L8vGA3EEJ7YFls0gNqiDhBzNQEuXPRuO
-	 wTQ6ujS6uxt5gN3vEbEzc9kfStUZ0WiCjxO+hqXJlquiAp77sbJoPTrgA3yPNO0kxz
-	 2VFkFEES/SaVSkDHpD6lpQoe7/B3jR/m/nQsqS1k=
+	b=E4UAhbNGBkVPzzYqAPbIjGWxoslDk0HUR6fJiP5Lz1O1tGJ4epk3wWzyKhGWagf1w
+	 v45bT2GmVaYI05pecT84eEC5o9l65cFp6vsqcobw3h3/ork4WnzjGpNZwhyd6FEDvq
+	 MG/pUsTmLSNi0fPsVe9yG4/8LCUerLEu7A4Sv11E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727761AbgDKMNV (ORCPT
+        id S1727795AbgDKMNZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 08:13:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46206 "EHLO mail.kernel.org"
+        Sat, 11 Apr 2020 08:13:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46352 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727732AbgDKMNT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 08:13:19 -0400
+        id S1727778AbgDKMNX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Apr 2020 08:13:23 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DA9FB2166E;
-        Sat, 11 Apr 2020 12:13:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id ABDE421744;
+        Sat, 11 Apr 2020 12:13:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586607199;
-        bh=/lxQsjwShHOCqEOzz99+Z6MX6Z1Ea8+vgXJ2HukAbNQ=;
+        s=default; t=1586607204;
+        bh=1qgwLKUC+YvoDSNa1hxeng6qS2w1FMUiVSiNGKdEzuk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=f3rO6b4Xx6/H6LP5TNN/DYxOzgzFNSQtbypUkCbJ6pSRs9V724V3q4WKMe/gWvH1J
-         9cIMmERJiHu2qiFoxeh64KI1uL2re4MCywV8fVJn7m3qdJ2JoZEG2N0w/JspUblLo1
-         3QYf3lKn1txu9MOj9S0029eFzxjqgT7Xx8wKSqcU=
+        b=DH8SnowycqDIwc4VvquQLrKEJeDPb+LEfgShdV6P9Pz8zOZFKs7CxVYkES9hwjpCU
+         rpViUgfh3uw5pWbGQTTm0eMAA2wyOwfeb7CXqCxvvKsATJfdxCD5KpXLwdAP/GiGJi
+         o2i8v1hxd5V94dqg7nz7TTzMPFaT+6017Dl8V31I=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Moshe Levi <moshele@mellanox.com>,
-        Stephen Hemminger <stephen@networkplumber.org>,
-        Marcelo Ricardo Leitner <mleitner@redhat.com>,
-        netdev@vger.kernel.org, Jarod Wilson <jarod@redhat.com>,
+        stable@vger.kernel.org, Oleksij Rempel <o.rempel@pengutronix.de>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.14 15/38] ipv6: dont auto-add link-local address to lag ports
-Date:   Sat, 11 Apr 2020 14:08:59 +0200
-Message-Id: <20200411115439.509016369@linuxfoundation.org>
+Subject: [PATCH 4.14 17/38] net: phy: micrel: kszphy_resume(): add delay after genphy_resume() before accessing PHY registers
+Date:   Sat, 11 Apr 2020 14:09:01 +0200
+Message-Id: <20200411115439.658166481@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200411115437.795556138@linuxfoundation.org>
 References: <20200411115437.795556138@linuxfoundation.org>
@@ -62,91 +61,63 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jarod Wilson <jarod@redhat.com>
+From: Oleksij Rempel <o.rempel@pengutronix.de>
 
-[ Upstream commit 744fdc8233f6aa9582ce08a51ca06e59796a3196 ]
+[ Upstream commit 6110dff776f7fa65c35850ef65b41d3b39e2fac2 ]
 
-Bonding slave and team port devices should not have link-local addresses
-automatically added to them, as it can interfere with openvswitch being
-able to properly add tc ingress.
+After the power-down bit is cleared, the chip internally triggers a
+global reset. According to the KSZ9031 documentation, we have to wait at
+least 1ms for the reset to finish.
 
-Basic reproducer, courtesy of Marcelo:
+If the chip is accessed during reset, read will return 0xffff, while
+write will be ignored. Depending on the system performance and MDIO bus
+speed, we may or may not run in to this issue.
 
-$ ip link add name bond0 type bond
-$ ip link set dev ens2f0np0 master bond0
-$ ip link set dev ens2f1np2 master bond0
-$ ip link set dev bond0 up
-$ ip a s
-1: lo: <LOOPBACK,UP,LOWER_UP> mtu 65536 qdisc noqueue state UNKNOWN
-group default qlen 1000
-    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
-    inet 127.0.0.1/8 scope host lo
-       valid_lft forever preferred_lft forever
-    inet6 ::1/128 scope host
-       valid_lft forever preferred_lft forever
-2: ens2f0np0: <BROADCAST,MULTICAST,SLAVE,UP,LOWER_UP> mtu 1500 qdisc
-mq master bond0 state UP group default qlen 1000
-    link/ether 00:0f:53:2f:ea:40 brd ff:ff:ff:ff:ff:ff
-5: ens2f1np2: <NO-CARRIER,BROADCAST,MULTICAST,SLAVE,UP> mtu 1500 qdisc
-mq master bond0 state DOWN group default qlen 1000
-    link/ether 00:0f:53:2f:ea:40 brd ff:ff:ff:ff:ff:ff
-11: bond0: <BROADCAST,MULTICAST,MASTER,UP,LOWER_UP> mtu 1500 qdisc
-noqueue state UP group default qlen 1000
-    link/ether 00:0f:53:2f:ea:40 brd ff:ff:ff:ff:ff:ff
-    inet6 fe80::20f:53ff:fe2f:ea40/64 scope link
-       valid_lft forever preferred_lft forever
+This bug was discovered on an iMX6QP system with KSZ9031 PHY and
+attached PHY interrupt line. If IRQ was used, the link status update was
+lost. In polling mode, the link status update was always correct.
 
-(above trimmed to relevant entries, obviously)
+The investigation showed, that during a read-modify-write access, the
+read returned 0xffff (while the chip was still in reset) and
+corresponding write hit the chip _after_ reset and triggered (due to the
+0xffff) another reset in an undocumented bit (register 0x1f, bit 1),
+resulting in the next write being lost due to the new reset cycle.
 
-$ sysctl net.ipv6.conf.ens2f0np0.addr_gen_mode=0
-net.ipv6.conf.ens2f0np0.addr_gen_mode = 0
-$ sysctl net.ipv6.conf.ens2f1np2.addr_gen_mode=0
-net.ipv6.conf.ens2f1np2.addr_gen_mode = 0
+This patch fixes the issue by adding a 1...2 ms sleep after the
+genphy_resume().
 
-$ ip a l ens2f0np0
-2: ens2f0np0: <BROADCAST,MULTICAST,SLAVE,UP,LOWER_UP> mtu 1500 qdisc
-mq master bond0 state UP group default qlen 1000
-    link/ether 00:0f:53:2f:ea:40 brd ff:ff:ff:ff:ff:ff
-    inet6 fe80::20f:53ff:fe2f:ea40/64 scope link tentative
-       valid_lft forever preferred_lft forever
-$ ip a l ens2f1np2
-5: ens2f1np2: <NO-CARRIER,BROADCAST,MULTICAST,SLAVE,UP> mtu 1500 qdisc
-mq master bond0 state DOWN group default qlen 1000
-    link/ether 00:0f:53:2f:ea:40 brd ff:ff:ff:ff:ff:ff
-    inet6 fe80::20f:53ff:fe2f:ea40/64 scope link tentative
-       valid_lft forever preferred_lft forever
-
-Looks like addrconf_sysctl_addr_gen_mode() bypasses the original "is
-this a slave interface?" check added by commit c2edacf80e15, and
-results in an address getting added, while w/the proposed patch added,
-no address gets added. This simply adds the same gating check to another
-code path, and thus should prevent the same devices from erroneously
-obtaining an ipv6 link-local address.
-
-Fixes: d35a00b8e33d ("net/ipv6: allow sysctl to change link-local address generation mode")
-Reported-by: Moshe Levi <moshele@mellanox.com>
-CC: Stephen Hemminger <stephen@networkplumber.org>
-CC: Marcelo Ricardo Leitner <mleitner@redhat.com>
-CC: netdev@vger.kernel.org
-Signed-off-by: Jarod Wilson <jarod@redhat.com>
+Fixes: 836384d2501d ("net: phy: micrel: Add specific suspend")
+Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
+Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/ipv6/addrconf.c |    4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/net/phy/micrel.c |    7 +++++++
+ 1 file changed, 7 insertions(+)
 
---- a/net/ipv6/addrconf.c
-+++ b/net/ipv6/addrconf.c
-@@ -3175,6 +3175,10 @@ static void addrconf_addr_gen(struct ine
- 	if (netif_is_l3_master(idev->dev))
- 		return;
+--- a/drivers/net/phy/micrel.c
++++ b/drivers/net/phy/micrel.c
+@@ -29,6 +29,7 @@
+ #include <linux/micrel_phy.h>
+ #include <linux/of.h>
+ #include <linux/clk.h>
++#include <linux/delay.h>
  
-+	/* no link local addresses on devices flagged as slaves */
-+	if (idev->dev->flags & IFF_SLAVE)
-+		return;
+ /* Operation Mode Strap Override */
+ #define MII_KSZPHY_OMSO				0x16
+@@ -727,6 +728,12 @@ static int kszphy_resume(struct phy_devi
+ 
+ 	genphy_resume(phydev);
+ 
++	/* After switching from power-down to normal mode, an internal global
++	 * reset is automatically generated. Wait a minimum of 1 ms before
++	 * read/write access to the PHY registers.
++	 */
++	usleep_range(1000, 2000);
 +
- 	ipv6_addr_set(&addr, htonl(0xFE800000), 0, 0, 0);
- 
- 	switch (idev->cnf.addr_gen_mode) {
+ 	ret = kszphy_config_reset(phydev);
+ 	if (ret)
+ 		return ret;
 
 
