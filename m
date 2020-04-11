@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39922C2BA19
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:04:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2B7AC2BA19
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:04:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0802121835
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:04:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8EE27214D8
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:04:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586646281;
-	bh=41pysPIe69p+qPyP3arYz2yjpFPTOZomNnPAsHaY4NA=;
+	s=default; t=1586646285;
+	bh=trlwDwThN8VpndS+Dosau8+WGoHbHcbywweE9WxjASU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MMoRs1FnSBiN1v+g5LnaCDW5df3H5K5KfGJC2XH63WD4tq77gi3GUx/+P5LxY9nxf
-	 58vAFLCFw23qrkAloXGezGKe0+m8NXMtgrTsiqGBxZgvu2HEgw2SJmK5wzH3lK6yuZ
-	 k8fNQNR3AXz9Vm9JzzMZj09YE3N9wdmzOwwFcJXo=
+	b=Bjg0lGB93VBj/yKrVag2MYzbA1nJ/b7JeX94Ghy4b33nYE//Hlrc9Jx5v5tRiX6B1
+	 MYEGigUaRsJw+N715BHPstZAhFQ11FhK+SDspvISbHv6VNYD5hpVQy1kcwTQ/+ugfk
+	 mZ2LOGbKSZoJcp62RrpclxiLnWe5V0IrVMclkHgU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727312AbgDKXEj (ORCPT
+        id S1727408AbgDKXEo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 19:04:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38112 "EHLO mail.kernel.org"
+        Sat, 11 Apr 2020 19:04:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38208 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727269AbgDKXEh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 19:04:37 -0400
+        id S1727269AbgDKXEj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Apr 2020 19:04:39 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6351D20708;
-        Sat, 11 Apr 2020 23:04:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1E5A7215A4;
+        Sat, 11 Apr 2020 23:04:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586646277;
-        bh=41pysPIe69p+qPyP3arYz2yjpFPTOZomNnPAsHaY4NA=;
+        s=default; t=1586646279;
+        bh=trlwDwThN8VpndS+Dosau8+WGoHbHcbywweE9WxjASU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bciZ7drY70EuLbDULdbjtzrkFH1TnGrDiTqFGAFmR0VHEXKzTIOaZW+V/oFEDmi0T
-         /Fe8rlgJRVM9/mjqSNU9EHEWA8ZO1PsrZYcM7FzNN9zuM2HjpgpveZo0lKi3Ndr8Fu
-         ULz4oS1T8Y0slQK91dxfFViAJmTuNXVFzUsBQDdE=
+        b=WATsBN2IA4yLD5aPmOkGZ0YlZgyoEivtEjnSTloxHGpSqzBQSgeJOiLIN11pr/e4V
+         6qnxhLlK9Aa1TDzUKYLOQ+9Wxq6i5hS/Q6f/DsvJJo//TjVeFTFRGY+jcRgdbSI1ZQ
+         4sMQFAcZEI17+9r4fDYjo9spzuLq8IVfHQC86QW4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Parav Pandit <parav@mellanox.com>, Mark Bloch <markb@mellanox.com>,
-        Leon Romanovsky <leonro@mellanox.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Sasha Levin <sashal@kernel.org>, linux-rdma@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.6 040/149] IB/mlx5: Fix missing congestion control debugfs on rep rdma device
-Date:   Sat, 11 Apr 2020 19:01:57 -0400
-Message-Id: <20200411230347.22371-40-sashal@kernel.org>
+Cc:     Andrii Nakryiko <andriin@fb.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
+        bpf@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.6 042/149] libbpf: Fix handling of optional field_name in btf_dump__emit_type_decl
+Date:   Sat, 11 Apr 2020 19:01:59 -0400
+Message-Id: <20200411230347.22371-42-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200411230347.22371-1-sashal@kernel.org>
 References: <20200411230347.22371-1-sashal@kernel.org>
@@ -60,41 +60,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Parav Pandit <parav@mellanox.com>
+From: Andrii Nakryiko <andriin@fb.com>
 
-[ Upstream commit 79db784e794b6e7b7fb9b1dd464a34e4c0c039af ]
+[ Upstream commit 320a36063e1441210106aa33997ad3770d4c86b4 ]
 
-Cited commit missed to include low level congestion control related
-debugfs stage initialization.  This resulted in missing debugfs entries
-for cc_params of a RDMA device.
+Internal functions, used by btf_dump__emit_type_decl(), assume field_name is
+never going to be NULL. Ensure it's always the case.
 
-Add them back.
-
-Fixes: b5ca15ad7e61 ("IB/mlx5: Add proper representors support")
-Link: https://lore.kernel.org/r/20200227125407.99803-1-leon@kernel.org
-Signed-off-by: Parav Pandit <parav@mellanox.com>
-Reviewed-by: Mark Bloch <markb@mellanox.com>
-Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+Fixes: 9f81654eebe8 ("libbpf: Expose BTF-to-C type declaration emitting API")
+Signed-off-by: Andrii Nakryiko <andriin@fb.com>
+Signed-off-by: Alexei Starovoitov <ast@kernel.org>
+Link: https://lore.kernel.org/bpf/20200303180800.3303471-1-andriin@fb.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/infiniband/hw/mlx5/main.c | 3 +++
- 1 file changed, 3 insertions(+)
+ tools/lib/bpf/btf_dump.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/infiniband/hw/mlx5/main.c b/drivers/infiniband/hw/mlx5/main.c
-index ffa7c2100edb9..82a62335ad3b6 100644
---- a/drivers/infiniband/hw/mlx5/main.c
-+++ b/drivers/infiniband/hw/mlx5/main.c
-@@ -7078,6 +7078,9 @@ const struct mlx5_ib_profile raw_eth_profile = {
- 	STAGE_CREATE(MLX5_IB_STAGE_COUNTERS,
- 		     mlx5_ib_stage_counters_init,
- 		     mlx5_ib_stage_counters_cleanup),
-+	STAGE_CREATE(MLX5_IB_STAGE_CONG_DEBUGFS,
-+		     mlx5_ib_stage_cong_debugfs_init,
-+		     mlx5_ib_stage_cong_debugfs_cleanup),
- 	STAGE_CREATE(MLX5_IB_STAGE_UAR,
- 		     mlx5_ib_stage_uar_init,
- 		     mlx5_ib_stage_uar_cleanup),
+diff --git a/tools/lib/bpf/btf_dump.c b/tools/lib/bpf/btf_dump.c
+index bd09ed1710f12..dc451e4de5ad4 100644
+--- a/tools/lib/bpf/btf_dump.c
++++ b/tools/lib/bpf/btf_dump.c
+@@ -1030,7 +1030,7 @@ int btf_dump__emit_type_decl(struct btf_dump *d, __u32 id,
+ 	if (!OPTS_VALID(opts, btf_dump_emit_type_decl_opts))
+ 		return -EINVAL;
+ 
+-	fname = OPTS_GET(opts, field_name, NULL);
++	fname = OPTS_GET(opts, field_name, "");
+ 	lvl = OPTS_GET(opts, indent_level, 0);
+ 	btf_dump_emit_type_decl(d, id, fname, lvl);
+ 	return 0;
 -- 
 2.20.1
 
