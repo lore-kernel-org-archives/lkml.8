@@ -4,48 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C038C2BA19
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:15:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46E09C2BA19
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:15:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2AD8620787
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:15:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1B39F20769
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:15:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586646909;
-	bh=F3NS1WPZzftyVZYemx5UlQfzFzgYFRYT87oqwehQGVE=;
+	s=default; t=1586646913;
+	bh=06XGdWIN+D/JmviHDNKHS9E6ebWDr+uXqIvGMpMTJ0M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vGOvT/cCLNG1OOXCUToFY64uIkGlgaCMCFTEd4i3jOfcLMIA2Nt2vkeV2r2Cp3uV1
-	 gBcU+QUB/kXSRKFJP8p+k0VXx68MNNHkfAJ4Bz6/wRgeAMDRWg7idpmqz8la3MKmRq
-	 Nbx+X5rSkTg2Zn7ngFuMb2E7HDADHNjGO1WdBhtg=
+	b=F4rKi73vVQ2Lz241cH4U0Mm33HGXqRSpXJf0JzFiIeOpnXmcarLuuXVbqMexRiAI6
+	 LLSa4S9I0IVv9PaIbAnGBmrSfNd4oE5vper/f+WBiUgNQfr0buvqNjP+j2VCqeAddb
+	 XoD7hXQAQPnXCNCjhggloDLgrdA07duMJih0WMyY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730968AbgDKXPH (ORCPT
+        id S1730994AbgDKXPL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 19:15:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57104 "EHLO mail.kernel.org"
+        Sat, 11 Apr 2020 19:15:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57388 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730929AbgDKXPA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 19:15:00 -0400
+        id S1730954AbgDKXPG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Apr 2020 19:15:06 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 62DA120CC7;
-        Sat, 11 Apr 2020 23:14:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4E9E920787;
+        Sat, 11 Apr 2020 23:15:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586646900;
-        bh=F3NS1WPZzftyVZYemx5UlQfzFzgYFRYT87oqwehQGVE=;
+        s=default; t=1586646906;
+        bh=06XGdWIN+D/JmviHDNKHS9E6ebWDr+uXqIvGMpMTJ0M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Jphmoc1rj//gj7apC/VDA5n/CqqRxz/rMPjHbyZOaxoOu76Nc67ZhDckScDSAwdmg
-         zcbJ3c4hw2BzoZMEQ6wgcBWalIhXBO04h5WFdE1W14ZymXcncgeNndmN7djNwDrytn
-         os2RVnjdqjtZ6yE8XFwKOFqUYT6CaRO4fqE8L1KI=
+        b=Co5/YoNROfwSwGWHOERh+4La8JHMM4sMCFQQH7QiL1MUPUcJ11rZ7tfULXPS42/d/
+         wzpgKlJADRa/3fwoEfVVe6VgcgKY7l5fQC7DXhNs/wxUzZMUXBpdSTgRtmTlYCU/A+
+         Z1GwDQy8M3+/MwaPOPMFLQuHAxVj67yuLtrNMAZI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Steve Grubb <sgrubb@redhat.com>, Paul Moore <paul@paul-moore.com>,
-        Sasha Levin <sashal@kernel.org>, linux-audit@redhat.com
-Subject: [PATCH AUTOSEL 4.4 10/16] audit: CONFIG_CHANGE don't log internal bookkeeping as an event
-Date:   Sat, 11 Apr 2020 19:14:40 -0400
-Message-Id: <20200411231447.27182-10-sashal@kernel.org>
+Cc:     Avihai Horon <avihaih@mellanox.com>,
+        Maor Gottlieb <maorg@mellanox.com>,
+        Leon Romanovsky <leonro@mellanox.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Sasha Levin <sashal@kernel.org>, linux-rdma@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.4 15/16] RDMA/cm: Update num_paths in cma_resolve_iboe_route error flow
+Date:   Sat, 11 Apr 2020 19:14:45 -0400
+Message-Id: <20200411231447.27182-15-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200411231447.27182-1-sashal@kernel.org>
 References: <20200411231447.27182-1-sashal@kernel.org>
@@ -58,47 +61,98 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Steve Grubb <sgrubb@redhat.com>
+From: Avihai Horon <avihaih@mellanox.com>
 
-[ Upstream commit 70b3eeed49e8190d97139806f6fbaf8964306cdb ]
+[ Upstream commit 987914ab841e2ec281a35b54348ab109b4c0bb4e ]
 
-Common Criteria calls out for any action that modifies the audit trail to
-be recorded. That usually is interpreted to mean insertion or removal of
-rules. It is not required to log modification of the inode information
-since the watch is still in effect. Additionally, if the rule is a never
-rule and the underlying file is one they do not want events for, they
-get an event for this bookkeeping update against their wishes.
+After a successful allocation of path_rec, num_paths is set to 1, but any
+error after such allocation will leave num_paths uncleared.
 
-Since no device/inode info is logged at insertion and no device/inode
-information is logged on update, there is nothing meaningful being
-communicated to the admin by the CONFIG_CHANGE updated_rules event. One
-can assume that the rule was not "modified" because it is still watching
-the intended target. If the device or inode cannot be resolved, then
-audit_panic is called which is sufficient.
+This causes to de-referencing a NULL pointer later on. Hence, num_paths
+needs to be set back to 0 if such an error occurs.
 
-The correct resolution is to drop logging config_update events since
-the watch is still in effect but just on another unknown inode.
+The following crash from syzkaller revealed it.
 
-Signed-off-by: Steve Grubb <sgrubb@redhat.com>
-Signed-off-by: Paul Moore <paul@paul-moore.com>
+  kasan: CONFIG_KASAN_INLINE enabled
+  kasan: GPF could be caused by NULL-ptr deref or user memory access
+  general protection fault: 0000 [#1] SMP DEBUG_PAGEALLOC KASAN PTI
+  CPU: 0 PID: 357 Comm: syz-executor060 Not tainted 4.18.0+ #311
+  Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS
+  rel-1.11.0-0-g63451fca13-prebuilt.qemu-project.org 04/01/2014
+  RIP: 0010:ib_copy_path_rec_to_user+0x94/0x3e0
+  Code: f1 f1 f1 f1 c7 40 0c 00 00 f4 f4 65 48 8b 04 25 28 00 00 00 48 89
+  45 c8 31 c0 e8 d7 60 24 ff 48 8d 7b 4c 48 89 f8 48 c1 e8 03 <42> 0f b6
+  14 30 48 89 f8 83 e0 07 83 c0 03 38 d0 7c 08 84 d2 0f 85
+  RSP: 0018:ffff88006586f980 EFLAGS: 00010207
+  RAX: 0000000000000009 RBX: 0000000000000000 RCX: 1ffff1000d5fe475
+  RDX: ffff8800621e17c0 RSI: ffffffff820d45f9 RDI: 000000000000004c
+  RBP: ffff88006586fa50 R08: ffffed000cb0df73 R09: ffffed000cb0df72
+  R10: ffff88006586fa70 R11: ffffed000cb0df73 R12: 1ffff1000cb0df30
+  R13: ffff88006586fae8 R14: dffffc0000000000 R15: ffff88006aff2200
+  FS: 00000000016fc880(0000) GS:ffff88006d000000(0000)
+  knlGS:0000000000000000
+  CS: 0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+  CR2: 0000000020000040 CR3: 0000000063fec000 CR4: 00000000000006b0
+  DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+  DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+  Call Trace:
+  ? ib_copy_path_rec_from_user+0xcc0/0xcc0
+  ? __mutex_unlock_slowpath+0xfc/0x670
+  ? wait_for_completion+0x3b0/0x3b0
+  ? ucma_query_route+0x818/0xc60
+  ucma_query_route+0x818/0xc60
+  ? ucma_listen+0x1b0/0x1b0
+  ? sched_clock_cpu+0x18/0x1d0
+  ? sched_clock_cpu+0x18/0x1d0
+  ? ucma_listen+0x1b0/0x1b0
+  ? ucma_write+0x292/0x460
+  ucma_write+0x292/0x460
+  ? ucma_close_id+0x60/0x60
+  ? sched_clock_cpu+0x18/0x1d0
+  ? sched_clock_cpu+0x18/0x1d0
+  __vfs_write+0xf7/0x620
+  ? ucma_close_id+0x60/0x60
+  ? kernel_read+0x110/0x110
+  ? time_hardirqs_on+0x19/0x580
+  ? lock_acquire+0x18b/0x3a0
+  ? finish_task_switch+0xf3/0x5d0
+  ? _raw_spin_unlock_irq+0x29/0x40
+  ? _raw_spin_unlock_irq+0x29/0x40
+  ? finish_task_switch+0x1be/0x5d0
+  ? __switch_to_asm+0x34/0x70
+  ? __switch_to_asm+0x40/0x70
+  ? security_file_permission+0x172/0x1e0
+  vfs_write+0x192/0x460
+  ksys_write+0xc6/0x1a0
+  ? __ia32_sys_read+0xb0/0xb0
+  ? entry_SYSCALL_64_after_hwframe+0x3e/0xbe
+  ? do_syscall_64+0x1d/0x470
+  do_syscall_64+0x9e/0x470
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+
+Fixes: 3c86aa70bf67 ("RDMA/cm: Add RDMA CM support for IBoE devices")
+Link: https://lore.kernel.org/r/20200318101741.47211-1-leon@kernel.org
+Signed-off-by: Avihai Horon <avihaih@mellanox.com>
+Reviewed-by: Maor Gottlieb <maorg@mellanox.com>
+Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/audit_watch.c | 2 --
- 1 file changed, 2 deletions(-)
+ drivers/infiniband/core/cma.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/kernel/audit_watch.c b/kernel/audit_watch.c
-index f45a9a5d3e47a..af453f3c2b3dd 100644
---- a/kernel/audit_watch.c
-+++ b/kernel/audit_watch.c
-@@ -316,8 +316,6 @@ static void audit_update_watch(struct audit_parent *parent,
- 			if (oentry->rule.exe)
- 				audit_remove_mark(oentry->rule.exe);
- 
--			audit_watch_log_rule_change(r, owatch, "updated_rules");
--
- 			call_rcu(&oentry->rcu, audit_free_rule_rcu);
- 		}
- 
+diff --git a/drivers/infiniband/core/cma.c b/drivers/infiniband/core/cma.c
+index 5ed9b5f8a0377..b59a4a819aaaa 100644
+--- a/drivers/infiniband/core/cma.c
++++ b/drivers/infiniband/core/cma.c
+@@ -2378,6 +2378,7 @@ static int cma_resolve_iboe_route(struct rdma_id_private *id_priv)
+ err2:
+ 	kfree(route->path_rec);
+ 	route->path_rec = NULL;
++	route->num_paths = 0;
+ err1:
+ 	kfree(work);
+ 	return ret;
 -- 
 2.20.1
 
