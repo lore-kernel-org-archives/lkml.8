@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97D5AC2BBFD
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:15:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD9DEC2BA2B
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:15:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6204D2137B
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:15:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8079C2137B
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:15:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586607344;
-	bh=ThGY4jHsCG0B9KEGiBjFFg+shuySYltoOmXO+tRwCyg=;
+	s=default; t=1586607348;
+	bh=rrbDaFkk5x61SHu+8pcRSj9/mqB+BAhYpLc3qf7eeyE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2AVT6Hg/U8h56XCQPjxxgAuqYeakWykzE//zq4p5Zbb6eMUdGr+bGvTWKY6zftMtg
-	 AAfxGXK8q1YkOh1ASZLzJDzZ8hufj1hcGMQbM3MPZa8rNtdmV1nqm3AOfZ1h/y+9FO
-	 OWX05TthxNgDBmfh50butNTVCSUU5rhIwA9zzZw0=
+	b=X/DsTGqZLLXyWLrB3DjNxn71LnxjR87cYJnt7yTrjywSydpee1x0XaKKocBd5eY+d
+	 nKK4u/WTqMXeZ0gKQ+Wlb+8Dc6md8ayz2rKs7y7wnnHWco1sfS/MljFln5dqrgFNYi
+	 v/9pGgVDr29GlglwiQ8mezLrwPWeHMa0xz3xdkrM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728168AbgDKMPm (ORCPT
+        id S1728186AbgDKMPq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 08:15:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49696 "EHLO mail.kernel.org"
+        Sat, 11 Apr 2020 08:15:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49806 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727611AbgDKMPk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 08:15:40 -0400
+        id S1728173AbgDKMPo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Apr 2020 08:15:44 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1C4EF21D7F;
-        Sat, 11 Apr 2020 12:15:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E451C20644;
+        Sat, 11 Apr 2020 12:15:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586607339;
-        bh=ThGY4jHsCG0B9KEGiBjFFg+shuySYltoOmXO+tRwCyg=;
+        s=default; t=1586607344;
+        bh=rrbDaFkk5x61SHu+8pcRSj9/mqB+BAhYpLc3qf7eeyE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TnOPDr0jTr+0dvGP+mHB1Ty/IHLStrwLuc8326aACcmHFk6OftlfsZFk+qRL79RFa
-         MkV1fYNHoXm6QtPeB9tJrdAqYgNsN5Fn8QGM0klQhITQtvNDUDfA/8OgFup/L7NnDo
-         3D0D4E1t6yA+RDbSE2JC6a5r3YK3kI4fJvKZbP3s=
+        b=Z3IxbQaBx+4dazJ+U7GSUj3Ehoao781fMUmMl40HtcTuD22hI8gYo3WEjGaJlClqT
+         yVi2PKUcwEeW475cCFgKep4Xfh+QoKXqsm3H0WyCr6/eWY6+s/gki1/jYel1UoqJ4G
+         nkTe0cNNX+WU+O4Uh1UYHtTkxXFw9TlIaLPJChHw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Petr Machata <petrm@mellanox.com>,
-        Jiri Pirko <jiri@mellanox.com>,
-        Ido Schimmel <idosch@mellanox.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.19 34/54] mlxsw: spectrum_flower: Do not stop at FLOW_ACTION_VLAN_MANGLE
-Date:   Sat, 11 Apr 2020 14:09:16 +0200
-Message-Id: <20200411115511.874471587@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Alexander Usyskin <alexander.usyskin@intel.com>,
+        Tomas Winkler <tomas.winkler@intel.com>
+Subject: [PATCH 4.19 18/54] mei: me: add cedar fork device ids
+Date:   Sat, 11 Apr 2020 14:09:00 +0200
+Message-Id: <20200411115510.275450839@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200411115508.284500414@linuxfoundation.org>
 References: <20200411115508.284500414@linuxfoundation.org>
@@ -61,41 +60,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Petr Machata <petrm@mellanox.com>
+From: Alexander Usyskin <alexander.usyskin@intel.com>
 
-[ Upstream commit ccfc569347f870830e7c7cf854679a06cf9c45b5 ]
+commit 99397d33b763dc554d118aaa38cc5abc6ce985de upstream.
 
-The handler for FLOW_ACTION_VLAN_MANGLE ends by returning whatever the
-lower-level function that it calls returns. If there are more actions lined
-up after this action, those are never offloaded. Fix by only bailing out
-when the called function returns an error.
+Add Cedar Fork (CDF) device ids, those belongs to the cannon point family.
 
-Fixes: a150201a70da ("mlxsw: spectrum: Add support for vlan modify TC action")
-Signed-off-by: Petr Machata <petrm@mellanox.com>
-Reviewed-by: Jiri Pirko <jiri@mellanox.com>
-Signed-off-by: Ido Schimmel <idosch@mellanox.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Alexander Usyskin <alexander.usyskin@intel.com>
+Signed-off-by: Tomas Winkler <tomas.winkler@intel.com>
+Link: https://lore.kernel.org/r/20200324210730.17672-1-tomas.winkler@intel.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- drivers/net/ethernet/mellanox/mlxsw/spectrum_flower.c |    8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
 
---- a/drivers/net/ethernet/mellanox/mlxsw/spectrum_flower.c
-+++ b/drivers/net/ethernet/mellanox/mlxsw/spectrum_flower.c
-@@ -98,9 +98,11 @@ static int mlxsw_sp_flower_parse_actions
- 			u8 prio = tcf_vlan_push_prio(a);
- 			u16 vid = tcf_vlan_push_vid(a);
+---
+ drivers/misc/mei/hw-me-regs.h |    2 ++
+ drivers/misc/mei/pci-me.c     |    2 ++
+ 2 files changed, 4 insertions(+)
+
+--- a/drivers/misc/mei/hw-me-regs.h
++++ b/drivers/misc/mei/hw-me-regs.h
+@@ -147,6 +147,8 @@
+ #define MEI_DEV_ID_CMP_H      0x06e0  /* Comet Lake H */
+ #define MEI_DEV_ID_CMP_H_3    0x06e4  /* Comet Lake H 3 (iTouch) */
  
--			return mlxsw_sp_acl_rulei_act_vlan(mlxsw_sp, rulei,
--							   action, vid,
--							   proto, prio, extack);
-+			err = mlxsw_sp_acl_rulei_act_vlan(mlxsw_sp, rulei,
-+							  action, vid,
-+							  proto, prio, extack);
-+			if (err)
-+				return err;
- 		} else {
- 			NL_SET_ERR_MSG_MOD(extack, "Unsupported action");
- 			dev_err(mlxsw_sp->bus_info->dev, "Unsupported action\n");
++#define MEI_DEV_ID_CDF        0x18D3  /* Cedar Fork */
++
+ #define MEI_DEV_ID_ICP_LP     0x34E0  /* Ice Lake Point LP */
+ 
+ #define MEI_DEV_ID_TGP_LP     0xA0E0  /* Tiger Lake Point LP */
+--- a/drivers/misc/mei/pci-me.c
++++ b/drivers/misc/mei/pci-me.c
+@@ -118,6 +118,8 @@ static const struct pci_device_id mei_me
+ 	{MEI_PCI_DEVICE(MEI_DEV_ID_MCC, MEI_ME_PCH12_CFG)},
+ 	{MEI_PCI_DEVICE(MEI_DEV_ID_MCC_4, MEI_ME_PCH8_CFG)},
+ 
++	{MEI_PCI_DEVICE(MEI_DEV_ID_CDF, MEI_ME_PCH8_CFG)},
++
+ 	/* required last entry */
+ 	{0, }
+ };
 
 
