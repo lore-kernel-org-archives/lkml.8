@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05E8AC352BE
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:04:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E30CFC2BA19
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:04:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C87C8214D8
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:04:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BAC6C214D8
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:04:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586646292;
-	bh=AkaNifXui+usapZRPzwxcFjxfd8TaQuZOKjCKUXSmrY=;
+	s=default; t=1586646299;
+	bh=qBS0KmVkIBGn5Jfu04vKKntI2wqXc+xWDQ6ut89nnpw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=yKuqq8VamIYY9ucLZVlOsJGIqHIXlBTZmosYQBGFVCteHg0smtp72lse8mzQHa0Ot
-	 FC+SymUIK4D2ZKyaiqf4h56eCHw4GyBd4VsV8WHStkfuEgXrhVt6L9IAeAd24NVrPC
-	 l47cgvjfURZC+KgbD8owndirliHm8OyWRBGe5oG8=
+	b=EQatV5Bed0mtjAKfcVnSS7d1B3uxprKmVZRG15QLqYg/wMN6UKzqIwHrP96GcW5KP
+	 URnGplKeAARwNKzlq80O9PWTrgCr6EMK/VD8Dx8BnUOgqRzqWmn1+4yx+91990rG68
+	 eOngPRLK1igXyzr78J8QSciAbQARYZhd7qI4tm2M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727522AbgDKXEu (ORCPT
+        id S1727632AbgDKXE5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 19:04:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38392 "EHLO mail.kernel.org"
+        Sat, 11 Apr 2020 19:04:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38474 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727474AbgDKXEs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 19:04:48 -0400
+        id S1727496AbgDKXEu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Apr 2020 19:04:50 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6DB6920CC7;
-        Sat, 11 Apr 2020 23:04:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B9DEA20787;
+        Sat, 11 Apr 2020 23:04:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586646288;
-        bh=AkaNifXui+usapZRPzwxcFjxfd8TaQuZOKjCKUXSmrY=;
+        s=default; t=1586646290;
+        bh=qBS0KmVkIBGn5Jfu04vKKntI2wqXc+xWDQ6ut89nnpw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pHy+wqkjWmAVs+Ncu+/uK0ev4atFs9Qd45Gam9y0YGYRcQPtQ2PopSyagY+m6+w6s
-         EVwQm0H3OaPbrnVGIBEEDGT0fErdR0TtbFd2r38hud8AVlYLIsg76GYQMjZgk8HODn
-         2PIJ7x2K9rFKVBZNGg3RBiFX/hCoVfnzZwuaiyg4=
+        b=tUUlAOorIH6gKebxswvOkPtSvV1NvhuHofBGFeGzZPDCB0Dys5iggn3UtsDFIGC7T
+         +OWG5yjlYSXS6m11h0HihBlFEMZEiZaDeQLR3ldj0cIxhx6pi9GHpavTGx1rIEbBa8
+         6VfIzQtTIiQARow3xRFoGPFJR1XMWMeKWTA66P3I=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Tomi Valkeinen <tomi.valkeinen@ti.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Sasha Levin <sashal@kernel.org>,
-        dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 5.6 049/149] drm/panel: simple: fix osd070t1718_19ts sync drive edge
-Date:   Sat, 11 Apr 2020 19:02:06 -0400
-Message-Id: <20200411230347.22371-49-sashal@kernel.org>
+Cc:     Bart Van Assche <bvanassche@acm.org>,
+        Leon Romanovsky <leonro@mellanox.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Sasha Levin <sashal@kernel.org>, linux-rdma@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.6 051/149] RDMA/rxe: Fix configuration of atomic queue pair attributes
+Date:   Sat, 11 Apr 2020 19:02:08 -0400
+Message-Id: <20200411230347.22371-51-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200411230347.22371-1-sashal@kernel.org>
 References: <20200411230347.22371-1-sashal@kernel.org>
@@ -61,39 +60,73 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tomi Valkeinen <tomi.valkeinen@ti.com>
+From: Bart Van Assche <bvanassche@acm.org>
 
-[ Upstream commit fb0629eeeedb6622c16da1aa76a4520daf9a46e2 ]
+[ Upstream commit fb3063d31995cc4cf1d47a406bb61d6fb1b1d58d ]
 
-The panel datasheet says that the panel samples at falling edge, but
-does not say anything about h/v sync signals. Testing shows that if the
-sync signals are driven on falling edge, the picture on the panel will
-be slightly shifted right.
+From the comment above the definition of the roundup_pow_of_two() macro:
 
-Setting sync drive edge to the same as data drive edge fixes this issue.
+     The result is undefined when n == 0.
 
-Signed-off-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Acked-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Signed-off-by: Sam Ravnborg <sam@ravnborg.org>
-Link: https://patchwork.freedesktop.org/patch/msgid/20191114093950.4101-4-tomi.valkeinen@ti.com
+Hence only pass positive values to roundup_pow_of_two(). This patch fixes
+the following UBSAN complaint:
+
+  UBSAN: Undefined behaviour in ./include/linux/log2.h:57:13
+  shift exponent 64 is too large for 64-bit type 'long unsigned int'
+  Call Trace:
+   dump_stack+0xa5/0xe6
+   ubsan_epilogue+0x9/0x26
+   __ubsan_handle_shift_out_of_bounds.cold+0x4c/0xf9
+   rxe_qp_from_attr.cold+0x37/0x5d [rdma_rxe]
+   rxe_modify_qp+0x59/0x70 [rdma_rxe]
+   _ib_modify_qp+0x5aa/0x7c0 [ib_core]
+   ib_modify_qp+0x3b/0x50 [ib_core]
+   cma_modify_qp_rtr+0x234/0x260 [rdma_cm]
+   __rdma_accept+0x1a7/0x650 [rdma_cm]
+   nvmet_rdma_cm_handler+0x1286/0x14cd [nvmet_rdma]
+   cma_cm_event_handler+0x6b/0x330 [rdma_cm]
+   cma_ib_req_handler+0xe60/0x22d0 [rdma_cm]
+   cm_process_work+0x30/0x140 [ib_cm]
+   cm_req_handler+0x11f4/0x1cd0 [ib_cm]
+   cm_work_handler+0xb8/0x344e [ib_cm]
+   process_one_work+0x569/0xb60
+   worker_thread+0x7a/0x5d0
+   kthread+0x1e6/0x210
+   ret_from_fork+0x24/0x30
+
+Link: https://lore.kernel.org/r/20200217205714.26937-1-bvanassche@acm.org
+Fixes: 8700e3e7c485 ("Soft RoCE driver")
+Signed-off-by: Bart Van Assche <bvanassche@acm.org>
+Reviewed-by: Leon Romanovsky <leonro@mellanox.com>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/panel/panel-simple.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/infiniband/sw/rxe/rxe_qp.c | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/gpu/drm/panel/panel-simple.c b/drivers/gpu/drm/panel/panel-simple.c
-index e14c14ac62b53..417bbe9984606 100644
---- a/drivers/gpu/drm/panel/panel-simple.c
-+++ b/drivers/gpu/drm/panel/panel-simple.c
-@@ -2464,7 +2464,8 @@ static const struct panel_desc osddisplays_osd070t1718_19ts = {
- 		.height = 91,
- 	},
- 	.bus_format = MEDIA_BUS_FMT_RGB888_1X24,
--	.bus_flags = DRM_BUS_FLAG_DE_HIGH | DRM_BUS_FLAG_PIXDATA_DRIVE_POSEDGE,
-+	.bus_flags = DRM_BUS_FLAG_DE_HIGH | DRM_BUS_FLAG_PIXDATA_DRIVE_POSEDGE |
-+		DRM_BUS_FLAG_SYNC_DRIVE_POSEDGE,
- 	.connector_type = DRM_MODE_CONNECTOR_DPI,
- };
+diff --git a/drivers/infiniband/sw/rxe/rxe_qp.c b/drivers/infiniband/sw/rxe/rxe_qp.c
+index ec21f616ac98d..6c11c3aeeca6e 100644
+--- a/drivers/infiniband/sw/rxe/rxe_qp.c
++++ b/drivers/infiniband/sw/rxe/rxe_qp.c
+@@ -590,15 +590,16 @@ int rxe_qp_from_attr(struct rxe_qp *qp, struct ib_qp_attr *attr, int mask,
+ 	int err;
+ 
+ 	if (mask & IB_QP_MAX_QP_RD_ATOMIC) {
+-		int max_rd_atomic = __roundup_pow_of_two(attr->max_rd_atomic);
++		int max_rd_atomic = attr->max_rd_atomic ?
++			roundup_pow_of_two(attr->max_rd_atomic) : 0;
+ 
+ 		qp->attr.max_rd_atomic = max_rd_atomic;
+ 		atomic_set(&qp->req.rd_atomic, max_rd_atomic);
+ 	}
+ 
+ 	if (mask & IB_QP_MAX_DEST_RD_ATOMIC) {
+-		int max_dest_rd_atomic =
+-			__roundup_pow_of_two(attr->max_dest_rd_atomic);
++		int max_dest_rd_atomic = attr->max_dest_rd_atomic ?
++			roundup_pow_of_two(attr->max_dest_rd_atomic) : 0;
+ 
+ 		qp->attr.max_dest_rd_atomic = max_dest_rd_atomic;
  
 -- 
 2.20.1
