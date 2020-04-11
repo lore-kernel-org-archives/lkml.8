@@ -2,47 +2,71 @@ Return-Path: <SRS0=xbEg=53=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36B5DC2BA2B
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 16:53:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76DE1C2BB55
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 16:57:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0424B2075E
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 16:53:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4FEBF2075E
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 16:57:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=pqgruber.com header.i=@pqgruber.com header.b="v7Jv0UJV"
+	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="RWrw26nq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726694AbgDKQxB (ORCPT
+        id S1726596AbgDKQ52 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 12:53:01 -0400
-Received: from mail.pqgruber.com ([52.59.78.55]:47606 "EHLO mail.pqgruber.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726070AbgDKQxB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 12:53:01 -0400
-Received: from workstation.tuxnet (213-47-165-233.cable.dynamic.surfer.at [213.47.165.233])
-        by mail.pqgruber.com (Postfix) with ESMTPSA id B8ADDC72B3E;
-        Sat, 11 Apr 2020 18:52:59 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=pqgruber.com;
-        s=mail; t=1586623980;
-        bh=jZBDMo4ZDtBc5dBRTHb4bv9HXY1GC/SNmnqUr4mAXIE=;
-        h=From:To:Cc:Subject:Date:From;
-        b=v7Jv0UJVhAabBoB7iLeJ2ThRVyNePCE9Ob18zso+SaVFnpG+YoFBadPWnvK9fEIgN
-         lCC6HBAyIuM7ufrkHdAr12bVwGupE/Cf6SmFzfysxcWe7Zb38qECd+e2O24oIRMmGS
-         79xT877W8bhlt5EUROM25AbxHjmNszb7YetBXcQQ=
-From:   Clemens Gruber <clemens.gruber@pqgruber.com>
-To:     netdev@vger.kernel.org
-Cc:     Russell King <linux@armlinux.org.uk>, Andrew Lunn <andrew@lunn.ch>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>, linux-kernel@vger.kernel.org,
-        Clemens Gruber <clemens.gruber@pqgruber.com>
-Subject: [PATCH v2] net: phy: marvell: Fix pause frame negotiation
-Date:   Sat, 11 Apr 2020 18:51:25 +0200
-Message-Id: <20200411165125.1091-1-clemens.gruber@pqgruber.com>
+        Sat, 11 Apr 2020 12:57:28 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:42508 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726094AbgDKQ52 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Apr 2020 12:57:28 -0400
+Received: by mail-wr1-f68.google.com with SMTP id j2so5585342wrs.9;
+        Sat, 11 Apr 2020 09:57:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=googlemail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=XHtQD/meuXaYe8UaCWq5ou0S7rpgnlSgQuuCrxXrgqE=;
+        b=RWrw26nqS4KT9PlkFPDn2JxIpRqcyPHhXMFaV2xV/LRA5u0k8ivXmdSjtFyCEqZfs/
+         w6d951CQrL1mkIvQKsxH9o9MjSCclbzSWvG8mH72tmFcKpKfRqa3g1YP8QzUIoSPuWRl
+         VfC7wxNrZMh142P0OaR5q4xJ3A8rcTAIzhZSXShlqTSlELXp0V+oV4zQjnrmXwL8gBp7
+         8Iy1gSh8L065we/ErvRTUYKpFeXymglr0A96fJfQmniKcFkQnfRxAr6e07HealZfhgrm
+         H0r7FiZGM1Np9CXQUXmq3rMU4WLM/x6xnx8oh3NXwpxvXewCfyiF5eM6LzfF1sZdS2hU
+         IflA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=XHtQD/meuXaYe8UaCWq5ou0S7rpgnlSgQuuCrxXrgqE=;
+        b=B08y4nEzMqW8RnKlM8UrFWHR+2Efmip+ZmFSg5uHWDprshvZdvwOgWEKyRnc0RIFNb
+         WOOTWUy58VrcdkN7vK4XCUQBCYINJa/UTyDg/KsLEgyVgI2Wbi940Tq+3sajt69j2sp/
+         Hge7k7xKdwS6WwDoGQQWczo6hEMJPN1K/SU+4rMzRUs85ElfNywrSgJe78FvxgmJ4DmU
+         igPH4tMPA9r006YdU0vwGEwI5+Nre/2CNY9DNF+fvlSGDVM4mBITfwxQAeRL6zbJ3uIv
+         miyRCtHi+9jVMqtGPyDGZEOIusFD7Po4P0BRlw49gnzCxJ7D+JesJFML4lL7E80DEyZX
+         i4FQ==
+X-Gm-Message-State: AGi0PuZE8iAcFoTH8dq0OzNcCrSqX21NRkH4v9GqGg2nce9mOKCoJOvR
+        F0Rz2AMQJhY83UnjOg5CliE=
+X-Google-Smtp-Source: APiQypI831li2YGPKN/VZUe6xPsQn9Sks+evd0nSUfRQDu+keljhtZbYvFFAXX996GgtLV3jKygrbA==
+X-Received: by 2002:adf:80af:: with SMTP id 44mr10792605wrl.241.1586624246453;
+        Sat, 11 Apr 2020 09:57:26 -0700 (PDT)
+Received: from localhost.localdomain (p200300F13710ED00428D5CFFFEB99DB8.dip0.t-ipconnect.de. [2003:f1:3710:ed00:428d:5cff:feb9:9db8])
+        by smtp.googlemail.com with ESMTPSA id z11sm7781992wrv.58.2020.04.11.09.57.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 11 Apr 2020 09:57:25 -0700 (PDT)
+From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+To:     robh+dt@kernel.org, dri-devel@lists.freedesktop.org,
+        devicetree@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+        linux-amlogic@lists.infradead.org,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Qiang Yu <yuq825@gmail.com>
+Subject: [PATCH v5] dt-bindings: gpu: mali-utgard: Add the #cooling-cells property
+Date:   Sat, 11 Apr 2020 18:57:00 +0200
+Message-Id: <20200411165700.1576314-1-martin.blumenstingl@googlemail.com>
 X-Mailer: git-send-email 2.26.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -51,95 +75,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The negotiation of flow control / pause frame modes was broken since
-commit fcf1f59afc67 ("net: phy: marvell: rearrange to use
-genphy_read_lpa()") moved the setting of phydev->duplex below the
-phy_resolve_aneg_pause call. Due to a check of DUPLEX_FULL in that
-function, phydev->pause was no longer set.
+The GPU can be one of the big heat sources on a SoC. Allow the
+"#cooling-cells" property to be specified for ARM Mali Utgard GPUs so
+the GPU clock speeds (and voltages) can be reduced to prevent a SoC from
+overheating.
 
-Fix it by moving the parsing of the status variable before the blocks
-dealing with the pause frames.
-
-As the Marvell 88E1510 datasheet does not specify the timing between the
-link status and the "Speed and Duplex Resolved" bit, we have to force
-the link down as long as the resolved bit is not set, to avoid reporting
-link up before we even have valid Speed/Duplex.
-
-Tested with a Marvell 88E1510 (RGMII to Copper/1000Base-T)
-
-Fixes: fcf1f59afc67 ("net: phy: marvell: rearrange to use genphy_read_lpa()")
-Signed-off-by: Clemens Gruber <clemens.gruber@pqgruber.com>
+Reviewed-by: Qiang Yu <yuq825@gmail.com>
+Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 ---
-Changes since v1:
-- Force link to 0 if resolved bit is not set as suggested by Russell King
+Changes since v4 at [0]:
+- Added Qiang's Reviewed-by (many thanks)
+- re-send because I missed the devicetree mailing list in v4
 
- drivers/net/phy/marvell.c | 46 ++++++++++++++++++++-------------------
- 1 file changed, 24 insertions(+), 22 deletions(-)
 
-diff --git a/drivers/net/phy/marvell.c b/drivers/net/phy/marvell.c
-index 9a8badafea8a..561df5e33f65 100644
---- a/drivers/net/phy/marvell.c
-+++ b/drivers/net/phy/marvell.c
-@@ -1278,6 +1278,30 @@ static int marvell_read_status_page_an(struct phy_device *phydev,
- 	int lpa;
- 	int err;
+[0] https://patchwork.kernel.org/patch/11448013/
+
+
+ Documentation/devicetree/bindings/gpu/arm,mali-utgard.yaml | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/gpu/arm,mali-utgard.yaml b/Documentation/devicetree/bindings/gpu/arm,mali-utgard.yaml
+index f5401cc8de4a..4869258daadb 100644
+--- a/Documentation/devicetree/bindings/gpu/arm,mali-utgard.yaml
++++ b/Documentation/devicetree/bindings/gpu/arm,mali-utgard.yaml
+@@ -107,6 +107,9 @@ properties:
  
-+	if (!(status & MII_M1011_PHY_STATUS_RESOLVED)) {
-+		phydev->link = 0;
-+		return 0;
-+	}
-+
-+	if (status & MII_M1011_PHY_STATUS_FULLDUPLEX)
-+		phydev->duplex = DUPLEX_FULL;
-+	else
-+		phydev->duplex = DUPLEX_HALF;
-+
-+	switch (status & MII_M1011_PHY_STATUS_SPD_MASK) {
-+	case MII_M1011_PHY_STATUS_1000:
-+		phydev->speed = SPEED_1000;
-+		break;
-+
-+	case MII_M1011_PHY_STATUS_100:
-+		phydev->speed = SPEED_100;
-+		break;
-+
-+	default:
-+		phydev->speed = SPEED_10;
-+		break;
-+	}
-+
- 	if (!fiber) {
- 		err = genphy_read_lpa(phydev);
- 		if (err < 0)
-@@ -1306,28 +1330,6 @@ static int marvell_read_status_page_an(struct phy_device *phydev,
- 		}
- 	}
+   operating-points-v2: true
  
--	if (!(status & MII_M1011_PHY_STATUS_RESOLVED))
--		return 0;
--
--	if (status & MII_M1011_PHY_STATUS_FULLDUPLEX)
--		phydev->duplex = DUPLEX_FULL;
--	else
--		phydev->duplex = DUPLEX_HALF;
--
--	switch (status & MII_M1011_PHY_STATUS_SPD_MASK) {
--	case MII_M1011_PHY_STATUS_1000:
--		phydev->speed = SPEED_1000;
--		break;
--
--	case MII_M1011_PHY_STATUS_100:
--		phydev->speed = SPEED_100;
--		break;
--
--	default:
--		phydev->speed = SPEED_10;
--		break;
--	}
--
- 	return 0;
- }
++  "#cooling-cells":
++    const: 2
++
+ required:
+   - compatible
+   - reg
+@@ -164,6 +167,7 @@ examples:
+       clocks = <&ccu 1>, <&ccu 2>;
+       clock-names = "bus", "core";
+       resets = <&ccu 1>;
++      #cooling-cells = <2>;
+     };
  
+ ...
 -- 
 2.26.0
 
