@@ -2,118 +2,87 @@ Return-Path: <SRS0=xbEg=53=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4559C2BA2B
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 09:20:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A098C2BA2B
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 09:21:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A909120857
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 09:20:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="DseFGZDV"
+	by mail.kernel.org (Postfix) with ESMTP id 7A7D220857
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 09:21:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725966AbgDKJU1 (ORCPT
+        id S1726069AbgDKJVH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 05:20:27 -0400
-Received: from mail27.static.mailgun.info ([104.130.122.27]:23469 "EHLO
-        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725900AbgDKJU0 (ORCPT
+        Sat, 11 Apr 2020 05:21:07 -0400
+Received: from out30-131.freemail.mail.aliyun.com ([115.124.30.131]:35247 "EHLO
+        out30-131.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725901AbgDKJVH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 05:20:26 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1586596827; h=Message-ID: References: In-Reply-To: Subject:
- Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
- MIME-Version: Sender; bh=m64rlGIY/ze74hM+6TJxI24Fs9sSBQEMm8EnQhf5+Gs=;
- b=DseFGZDVKeLKQbyMLjK9d0Oh15b/EKcDQy1gmuQqxhNSpOGroBmWRSaR2M/lO7ZZsPCdb7Kt
- rO3cpvqAL1421nBCyhxgB+K6veJ5ENrTINW1h94dXruZ8WHk75UGv1nagV3sd9OrzQmrRaGE
- uBOQ3oxpUwyxIza4tpmE1Ib3R4M=
-X-Mailgun-Sending-Ip: 104.130.122.27
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e918bce.7fea463b8b58-smtp-out-n03;
- Sat, 11 Apr 2020 09:20:14 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id AAD9CC4478F; Sat, 11 Apr 2020 09:20:13 +0000 (UTC)
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: saiprakash.ranjan)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 01845C433CB;
-        Sat, 11 Apr 2020 09:20:12 +0000 (UTC)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Sat, 11 Apr 2020 14:50:12 +0530
-From:   Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-To:     Matthias Kaehlcke <mka@chromium.org>,
-        Will Deacon <will@kernel.org>,
-        Robin Murphy <robin.murphy@arm.com>
-Cc:     Joerg Roedel <joro@8bytes.org>,
-        Jordan Crouse <jcrouse@codeaurora.org>,
-        Rob Clark <robdclark@gmail.com>,
-        iommu@lists.linux-foundation.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, Stephen Boyd <swboyd@chromium.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Rajendra Nayak <rnayak@codeaurora.org>,
-        Tomasz Figa <tfiga@chromium.org>
-Subject: Re: [PATCH 0/2] iommu/arm-smmu: Allow client devices to select direct
- mapping
-In-Reply-To: <20200409233124.GW199755@google.com>
-References: <cover.1579692800.git.saiprakash.ranjan@codeaurora.org>
- <7761534cdb4f1891d993e73931894a63@codeaurora.org>
- <20200409233124.GW199755@google.com>
-Message-ID: <6714ba4f73f6518e5f2f427a0bcc6c53@codeaurora.org>
-X-Sender: saiprakash.ranjan@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
+        Sat, 11 Apr 2020 05:21:07 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R401e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e01419;MF=rocking@linux.alibaba.com;NM=1;PH=DS;RN=9;SR=0;TI=SMTPD_---0TvC34s5_1586596838;
+Received: from localhost(mailfrom:rocking@linux.alibaba.com fp:SMTPD_---0TvC34s5_1586596838)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Sat, 11 Apr 2020 17:20:52 +0800
+From:   Peng Wang <rocking@linux.alibaba.com>
+To:     mingo@redhat.com, peterz@infradead.org, uri.lelli@redhat.com,
+        vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
+        rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de
+Cc:     linux-kernel@vger.kernel.org
+Subject: [PATCH] sched/fair: Simplify the code of should_we_balance()
+Date:   Sat, 11 Apr 2020 17:20:20 +0800
+Message-Id: <245c792f0e580b3ca342ad61257f4c066ee0f84f.1586594833.git.rocking@linux.alibaba.com>
+X-Mailer: git-send-email 2.9.5
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Matthias,
+We only consider group_balance_cpu() after there is no idle
+cpu. So, just do comparison before return at these two cases.
 
-On 2020-04-10 05:01, Matthias Kaehlcke wrote:
-> On Tue, Feb 04, 2020 at 11:12:17PM +0530, Sai Prakash Ranjan wrote:
->> Hello Robin, Will
->> 
->> On 2020-01-22 17:18, Sai Prakash Ranjan wrote:
->> > This series allows drm devices to set a default identity
->> > mapping using iommu_request_dm_for_dev(). First patch is
->> > a cleanup to support other SoCs to call into QCOM specific
->> > implementation and preparation for second patch.
->> > Second patch sets the default identity domain for drm devices.
->> >
->> > Jordan Crouse (1):
->> >   iommu/arm-smmu: Allow client devices to select direct mapping
->> >
->> > Sai Prakash Ranjan (1):
->> >   iommu: arm-smmu-impl: Convert to a generic reset implementation
->> >
->> >  drivers/iommu/arm-smmu-impl.c |  8 +++--
->> >  drivers/iommu/arm-smmu-qcom.c | 55 +++++++++++++++++++++++++++++++++--
->> >  drivers/iommu/arm-smmu.c      |  3 ++
->> >  drivers/iommu/arm-smmu.h      |  5 ++++
->> >  4 files changed, 65 insertions(+), 6 deletions(-)
->> 
->> Any review comments?
-> 
-> Ping
-> 
-> What is the status of this series, is it ready to land or are any 
-> changes
-> needed?
-> 
+Signed-off-by: Peng Wang <rocking@linux.alibaba.com>
+---
+ kernel/sched/fair.c | 16 +++++-----------
+ 1 file changed, 5 insertions(+), 11 deletions(-)
 
-I am wondering the same :)
-
-Thanks,
-Sai
-
+diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+index 1ea3ddd..81b2c647 100644
+--- a/kernel/sched/fair.c
++++ b/kernel/sched/fair.c
+@@ -9413,7 +9413,7 @@ static int active_load_balance_cpu_stop(void *data);
+ static int should_we_balance(struct lb_env *env)
+ {
+ 	struct sched_group *sg = env->sd->groups;
+-	int cpu, balance_cpu = -1;
++	int cpu;
+ 
+ 	/*
+ 	 * Ensure the balancing environment is consistent; can happen
+@@ -9434,18 +9434,12 @@ static int should_we_balance(struct lb_env *env)
+ 		if (!idle_cpu(cpu))
+ 			continue;
+ 
+-		balance_cpu = cpu;
+-		break;
++		/* Are we the first idle CPU? */
++		return cpu == env->dst_cpu;
+ 	}
+ 
+-	if (balance_cpu == -1)
+-		balance_cpu = group_balance_cpu(sg);
+-
+-	/*
+-	 * First idle CPU or the first CPU(busiest) in this sched group
+-	 * is eligible for doing load balancing at this and above domains.
+-	 */
+-	return balance_cpu == env->dst_cpu;
++	/* Are we the first balance CPU of this group? */
++	return group_balance_cpu(sg) == env->dst_cpu;
+ }
+ 
+ /*
 -- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a 
-member
-of Code Aurora Forum, hosted by The Linux Foundation
+2.9.5
+
