@@ -6,259 +6,180 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2B1EC2BBFD
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 09:58:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2883C2BA2B
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 10:12:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9D58E2084D
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 09:58:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B9EB920709
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 10:12:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726108AbgDKJ6x (ORCPT
+        id S1726094AbgDKKMn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 05:58:53 -0400
-Received: from relay12.mail.gandi.net ([217.70.178.232]:47283 "EHLO
-        relay12.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725945AbgDKJ6w (ORCPT
+        Sat, 11 Apr 2020 06:12:43 -0400
+Received: from smtprelay0069.hostedemail.com ([216.40.44.69]:47232 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725945AbgDKKMn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 05:58:52 -0400
-Received: from kb-xps (unknown [78.193.40.249])
-        (Authenticated sender: kamel.bouhara@bootlin.com)
-        by relay12.mail.gandi.net (Postfix) with ESMTPSA id F0911200007;
-        Sat, 11 Apr 2020 09:58:48 +0000 (UTC)
-Date:   Sat, 11 Apr 2020 11:58:47 +0200
-From:   Kamel Bouhara <kamel.bouhara@bootlin.com>
-To:     Randy Dunlap <rdunlap@infradead.org>
-Cc:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        William Breathitt Gray <vilhelm.gray@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Ludovic Desroches <ludovic.desroches@microchip.com>,
-        linux-arm-kernel@lists.infradead.org,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        linux-input@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org
-Subject: Re: [PATCH 1/3] counter: add an inkernel API
-Message-ID: <20200411095847.GA161090@kb-xps>
-References: <20200406155806.1295169-1-kamel.bouhara@bootlin.com>
- <20200406155806.1295169-2-kamel.bouhara@bootlin.com>
- <7651ea0d-91c2-49db-9af7-b01a78868d7e@infradead.org>
+        Sat, 11 Apr 2020 06:12:43 -0400
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay02.hostedemail.com (Postfix) with ESMTP id 87517AF9E;
+        Sat, 11 Apr 2020 10:12:42 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: anger88_8be99fb1f4239
+X-Filterd-Recvd-Size: 5516
+Received: from XPS-9350.home (unknown [47.151.136.130])
+        (Authenticated sender: joe@perches.com)
+        by omf05.hostedemail.com (Postfix) with ESMTPA;
+        Sat, 11 Apr 2020 10:12:41 +0000 (UTC)
+Message-ID: <6403ebf6b928d94268e00d52371c6aec912c3335.camel@perches.com>
+Subject: Andy? checkpatch $stat question (was: Re: [PATCH] checkpatch: check
+ for missing \n at the end of logging message)
+From:   Joe Perches <joe@perches.com>
+To:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+        apw@canonical.com, Andrew Morton <akpm@linux-foundation.org>
+Cc:     linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
+Date:   Sat, 11 Apr 2020 03:10:36 -0700
+In-Reply-To: <215f2a43-6677-04cd-f376-bd7cd051b626@wanadoo.fr>
+References: <20200407204908.10420-1-christophe.jaillet@wanadoo.fr>
+         <8617a6b94c0644bce1fd4ca77309d67a612e6300.camel@perches.com>
+         <6e52383e-100d-b016-32c2-6fb54938b6fe@wanadoo.fr>
+         <c9fd4bc75812fed4799c2fb87b452b809a7e9a7a.camel@perches.com>
+         <db2730700ab3eb7008413a1e7bba94ca7c49a031.camel@perches.com>
+         <215f2a43-6677-04cd-f376-bd7cd051b626@wanadoo.fr>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.34.1-2 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <7651ea0d-91c2-49db-9af7-b01a78868d7e@infradead.org>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 10, 2020 at 10:34:34AM -0700, Randy Dunlap wrote:
-> Hi--
->
+Andy Whitcroft:  checkpatch internals question for you below:
 
-Hello,
-
-> On 4/6/20 8:58 AM, Kamel Bouhara wrote:
+On Sat, 2020-04-11 at 08:48 +0200, Christophe JAILLET wrote:
+> Le 10/04/2020 à 21:53, Joe Perches a écrit :
+> > On Fri, 2020-04-10 at 12:46 -0700, Joe Perches wrote:
+> > > On Fri, 2020-04-10 at 19:35 +0200, Christophe JAILLET wrote:
+> > > > Le 08/04/2020 à 04:14, Joe Perches a écrit :
+> > > > > This works rather better:
+> > > > > Perhaps you could test?
+> > > []
+> > > > I'm looking at some modification done in the last month that could have
+> > > > been spotted by the above script.
+> > > > 
+> > > >       ./scripts/checkpatch.pl -f drivers/usb/phy/phy-jz4770.c
+> > > > 
+> > > > correctly spots the 3 first cases, but the 3 last (line 202, 210 and
+> > > > 217) are missed.
+> > > > I don't understand why.
+> > > It has to do with checkpatch's single statement parsing.
+> > > 
+> > > This case:
+> > > 
+> > > 	if (foo)
+> > > 		dev_warn(...);
+> > > 
+> > > is parsed as a single statement but
+> > > 
+> > > 	if (foo) {
+> > > 		dev_warn(...);
+> > > 	};
+> > > 
+> > > is parsed as multiple statements so for the
+> > > second case
+> > > 
+> > > 		dev_warn(...);
+> > > 
+> > > is analyzed as a separate statement.
+> > > 
+> > > The regex match for this missing newline test expects
+> > > that each printk is a separate statement so the first
+> > > case doesn't match.
+> > > 
+> > > Clearly the regex can be improved here.
+> > So on top of the original patch:
 > > ---
-> >  drivers/counter/counter.c | 213 ++++++++++++++++++++++++++++++++++++++
-> >  include/linux/counter.h   |  27 +++++
-> >  2 files changed, 240 insertions(+)
-> >
-> > diff --git a/drivers/counter/counter.c b/drivers/counter/counter.c
-> > index 6a683d086008..f81d2d1dbca7 100644
-> > --- a/drivers/counter/counter.c
-> > +++ b/drivers/counter/counter.c
->
-> [snip]
->
-> Please use
-> /**
-> on these functions so that kernel-doc will process them.
->
+> >   scripts/checkpatch.pl | 4 ++--
+> >   1 file changed, 2 insertions(+), 2 deletions(-)
+> > 
+> > diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
+> > index f00a6c8..54eaa7 100755
+> > --- a/scripts/checkpatch.pl
+> > +++ b/scripts/checkpatch.pl
+> > @@ -5675,8 +5675,8 @@ sub process {
+> >   
+> >   # check for possible missing newlines at the end of common logging functions
+> >   		if (defined($stat) &&
+> > -		    $stat =~ /^\+\s*($logFunctions)\s*\((?:\s*$FuncArg\s*,\s*){0,3}\s*$String/ &&
+> > -		    $1 !~ /_cont$/ && $1 =~ /^(?:pr|dev|netdev|netif|wiphy)_/) {
+> > +		    $stat =~ /^\+\s*(?:if\s*$balanced_parens\s*)?($logFunctions)\s*\((?:\s*$FuncArg\s*,\s*){0,3}\s*$String/ &&
+> > +		    $2 !~ /_cont$/ && $2 =~ /^(?:pr|dev|netdev|netif|wiphy)_/) {
+> >   			my $cnt = statement_rawlines($stat);
+> >   			my $extracted_string = "";
+> >   			for (my $i = 0; $i < $cnt; $i++) {
+> 
+> Hi Joe,
+> 
+> This fixes the use case for  drivers/usb/phy/phy-jz4770.c
+> 
+>      ./scripts/checkpatch.pl -f drivers/usb/gadget/udc/tegra-xudc.c
+> 
+> is missing line 691.
 
-OK, fixed.
+Turns out checkpatch also considers a close brace
+followed by another statement block a single statement
+so that test could be:
 
-Thanks.
+		    $stat =~ /^\+\s*\}?\s*(?:if\s*$balanced_parens\s*)?($logFunctions)\s*\((?:\s*$FuncArg\s*,\s*){0,3}\s*$String/ &&
+		    $2 !~ /_cont$/ && $2 =~ /^(?:pr|dev|netdev|netif|wiphy)_/) {
 
-> > +
-> > +/*
-> > + * devm_counter_get - Obtain an exclusive access to a counter.
-> > + * @dev: device for counter "consumer"
-> > + *
-> > + * Returns a struct counter_device matching the counter producer, or
-> > + * IS_ERR() condition containing errno.
-> > + *
-> > + */
-> > +struct counter_device *devm_counter_get(struct device *dev)
-> > +{
-> > +	struct counter_device **ptr, *counter;
-> > +
-> > +	ptr = devres_alloc(devm_counter_release, sizeof(*ptr), GFP_KERNEL);
-> > +	if (!ptr)
-> > +		return ERR_PTR(-ENOMEM);
-> > +
-> > +	counter = counter_get(dev);
-> > +	if (IS_ERR(counter)) {
-> > +		devres_free(ptr);
-> > +		return counter;
-> > +	}
-> > +
-> > +	*ptr = counter;
-> > +	devres_add(dev, ptr);
-> > +
-> > +	return counter;
-> > +}
-> > +EXPORT_SYMBOL_GPL(devm_counter_get);
-> > +
-> > +/*
-> > + * counter_action_get - get counter synapse mode
-> > + * @counter: counter device to operate with
-> > + * @action: pointer to store the current counter synapse mode
->
-> should be @mode: ^^^^^
->
+But that seems odd and I wonder if Andy agrees
+so I have a question for Andy about the use of
+ctx_statement_block and its implementation.
 
-Fixed.
+It seems that $suppress_statement should be updated
+when the cond return value does not start with { so
+that code like
 
-Thanks.
+struct foo *
+function(
+	 int arg1,
+	 long arg2,
+	 struct bar *baz)
+{
+	[implementation...]
+}
 
-Kamel
+allows skipping the creation of a new $stat for each
+line of the function arguments.  Instead there would
+be just 2 $stat blocks created, one for the function
+with its args and implementation, another for just
+the implementation with braces.
 
-> > + * returns:
-> > + *	0 on success, error code on failure.
-> > + */
-> > +int counter_action_get(struct counter_device *counter, int *mode)
-> > +{
-> > +	struct counter_synapse *synapse = counter->counts->synapses;
-> > +	size_t action_index;
-> > +	int err;
-> > +
-> > +	err = counter->ops->action_get(counter, counter->counts, synapse,
-> > +				       &action_index);
-> > +	if (err)
-> > +		return err;
-> > +
-> > +	*mode = synapse->actions_list[action_index];
-> > +
-> > +	return 0;
-> > +}
-> > +EXPORT_SYMBOL_GPL(counter_action_get);
-> > +
-> > +/*
-> > + * counter_action_set - set counter device synapse
-> > + * @counter: counter device to operate with
-> > + * @action: enum of the synapse mode
-> > + * returns:
-> > + *	0 on success, error code on failure.
-> > + */
-> > +int counter_action_set(struct counter_device *counter,
-> > +		       enum counter_synapse_action action)
-> > +{
-> > +	struct counter_synapse *synapse = counter->counts->synapses;
-> > +	const size_t num_actions = synapse->num_actions;
-> > +	size_t action_index;
-> > +
-> > +	/* Find requested action mode */
-> > +	for (action_index = 0; action_index < num_actions; action_index++) {
-> > +		if (action == synapse->actions_list[action_index])
-> > +			break;
-> > +	}
-> > +
-> > +	if (action_index >= num_actions)
-> > +		return -EINVAL;
-> > +
-> > +	return counter->ops->action_set(counter, counter->counts, synapse,
-> > +					action_index);
-> > +}
-> > +EXPORT_SYMBOL_GPL(counter_action_set);
-> > +
-> > +/*
-> > + * counter_function_get - get the count function
-> > + * @counter: pointer to counter device to operate with
-> > + * @mode: pointer to store the current counter function mode
-> > + * returns:
-> > + *	0 on success, error code on failure.
-> > + */
-> > +int counter_function_get(struct counter_device *counter, int *mode)
-> > +{
-> > +	size_t func_index;
-> > +	int err;
-> > +
-> > +	err = counter->ops->function_get(counter, counter->counts,
-> > +					 &func_index);
-> > +	if (err)
-> > +		return err;
-> > +
-> > +	*mode = counter->counts->functions_list[func_index];
-> > +
-> > +	return 0;
-> > +}
-> > +EXPORT_SYMBOL_GPL(counter_function_get);
-> > +
-> > +/*
-> > + * counter_function_set - set a count function
-> > + * @counter: pointer to a counter device to operate with
-> > + * @function: enum of the function mode
-> > + * returns:
-> > + *	0 on success, error code on failure.
-> > + */
-> > +int counter_function_set(struct counter_device *counter,
-> > +			  enum counter_count_function function)
-> > +{
-> > +	const size_t num_functions = counter->counts->num_functions;
-> > +	size_t func_index;
-> > +
-> > +	for (func_index = 0; func_index < num_functions; func_index++) {
-> > +		if (function == counter->counts->functions_list[func_index])
-> > +			break;
-> > +	}
-> > +
-> > +	if (func_index >= num_functions)
-> > +		return -EINVAL;
-> > +
-> > +	return counter->ops->function_set(counter, counter->counts, func_index);
-> > +}
-> > +EXPORT_SYMBOL_GPL(counter_function_set);
-> > +
-> > +/*
-> > + * counter_count_set - set a count value
-> > + * @counter: pointer to the counter device to operate with
-> > + * @val: count value to write into the counter
-> > + * @len: length of the value written to the counter
-> > + * returns:
-> > + *	bytes length of the value on success, error code on failure.
-> > + */
-> > +size_t counter_count_set(struct counter_device *counter,
-> > +			 unsigned long val, size_t len)
-> > +{
-> > +	return counter->ops->count_write(counter, counter->counts, val);
-> > +}
-> > +EXPORT_SYMBOL_GPL(counter_count_set);
-> > +
-> > +/*
-> > + * counter_count_get - read the count value
-> > + * @counter: pointer to the counter device to operate with
-> > + * @val: pointer to store the count value
-> > + * returns:
-> > + *  0 on success, error code on failure.
-> > + */
-> > +int counter_count_get(struct counter_device *counter, unsigned long *val)
-> > +{
-> > +	return counter->ops->count_read(counter, counter->counts, val);
-> > +}
-> > +EXPORT_SYMBOL_GPL(counter_count_get);
-> > +
-> >  /**
-> >   * devm_counter_unregister - Resource-managed counter_unregister
-> >   * @dev:	device this counter_device belongs to
->
->
-> thanks.
-> --
-> ~Randy
->
+Perhaps this is proper, but perhaps the $line_nr_next
+return value should be updated in ctx_statement_block
+instead.
 
---
-Kamel Bouhara, Bootlin
-Embedded Linux and kernel engineering
-https://bootlin.com
+Also a $stat that starts with a close brace is odd
+and probably not good.
+
+Thoughts?
+
+---
+diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
+index 54eaa7..8ef95b 100755
+--- a/scripts/checkpatch.pl
++++ b/scripts/checkpatch.pl
+@@ -3558,7 +3558,10 @@ sub process {
+ 			($stat, $cond, $line_nr_next, $remain_next, $off_next) =
+ 				ctx_statement_block($linenr, $realcnt, 0);
+ 			$stat =~ s/\n./\n /g;
+-			$cond =~ s/\n./\n /g;
++			my $condcnt = $cond =~ s/\n./\n /g;
++			if ($cond !~ /^.\s*\}/) {
++				$suppress_statement = $linenr + $condcnt;
++			}
+ 
+ #print "linenr<$linenr> <$stat>\n";
+ 			# If this statement has no statement boundaries within
+
