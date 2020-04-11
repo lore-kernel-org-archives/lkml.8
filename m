@@ -4,53 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A076FC2BB85
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:28:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13430C2BA2B
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:28:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 78E7520692
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:28:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DE04E206A1
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:28:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586608102;
-	bh=U39eJ5wTP9xAp1R1HEYgjXXVeuDHZ1woSRLnA78R++w=;
+	s=default; t=1586608106;
+	bh=ZqHvatSPzRk+QCybljXT7i9Cn32I8PBiHPd4xHlCI08=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kv8edUzmE9pAHm6YqzUVCdCogT9obY31nzCPNMpOxv5Pd9WuLFjn1Dqt3JlWoqCh/
-	 HKXsDmmqKoO2PbZ7AYdO91EYCL2kZZBgp5QMNcQP6z0k6QsfML7etT2z+u83HSWv5T
-	 M8Hytktyn2lw0OVJnCD2e52WYCexu+Jvh/itkF9U=
+	b=MM5ANHs0g4CCws0MqvJrnUqRvT1+KJjeR/kDuDVt/WfKWe5tx5j9UUB+4LqFt78d+
+	 Bd6bgH7wiNKGdS6yK6mnu5Pxve8SBumr2uPjjUElsxpAfjT3sOVh3JcUA2j/KUsPAV
+	 QvX5PZPGv2oZgjlDuVhpfyD1NCKZ8m34UJJKOp10=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726997AbgDKM2U (ORCPT
+        id S1727384AbgDKMMn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 08:28:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45620 "EHLO mail.kernel.org"
+        Sat, 11 Apr 2020 08:12:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45316 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727427AbgDKMMx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 08:12:53 -0400
+        id S1727349AbgDKMMi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Apr 2020 08:12:38 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4599F21775;
-        Sat, 11 Apr 2020 12:12:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BA576214D8;
+        Sat, 11 Apr 2020 12:12:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586607172;
-        bh=U39eJ5wTP9xAp1R1HEYgjXXVeuDHZ1woSRLnA78R++w=;
+        s=default; t=1586607158;
+        bh=ZqHvatSPzRk+QCybljXT7i9Cn32I8PBiHPd4xHlCI08=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tjQJz8JWej3xb//OGbF3MQp3K2RaHP6YgVPDg1PvGZV+hyDb4Qlj0SHHU4kPvnRx8
-         6DqZobWEN2vrxEgOl8eLkHWsxApcDSO/sQJK+KqdJiX+7zy5liZ24mNe6xbzcCjL9t
-         giaCtoFZnVDf41ha4nS3e93I6cwFc2IL9F1ofeVs=
+        b=hnGHG6MKbe6rgkIYufV06+RDePMwwhWJ/BPzR6sN9rVIjp1YKW+B8ijxQba8JLnLQ
+         oPVeA2FJn7pJn7zyuxVWGp/0L+EmdPx9761NMWlPptdqaVVfyygCFF1shogLc0nSb3
+         dX/I2q5jN+glLoKDCemZHSpLYQGYXrzC/GWHWIpM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Stephen Boyd <sboyd@kernel.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Jordan Crouse <jcrouse@codeaurora.org>,
-        Rob Clark <robdclark@chromium.org>,
-        Sean Paul <seanpaul@chromium.org>,
-        Lee Jones <lee.jones@linaro.org>
-Subject: [PATCH 4.9 29/32] drm/msm: stop abusing dma_map/unmap for cache
-Date:   Sat, 11 Apr 2020 14:09:08 +0200
-Message-Id: <20200411115422.593651374@linuxfoundation.org>
+        stable@vger.kernel.org, Jin Meng <meng.a.jin@nokia-sbell.com>,
+        Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>,
+        Xin Long <lucien.xin@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.9 07/32] sctp: fix possibly using a bad saddr with a given dst
+Date:   Sat, 11 Apr 2020 14:08:46 +0200
+Message-Id: <20200411115419.504610902@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200411115418.455500023@linuxfoundation.org>
 References: <20200411115418.455500023@linuxfoundation.org>
@@ -63,82 +61,187 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Rob Clark <robdclark@chromium.org>
+From: Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>
 
-commit 0036bc73ccbe7e600a3468bf8e8879b122252274 upstream.
+[ Upstream commit 582eea230536a6f104097dd46205822005d5fe3a ]
 
-Recently splats like this started showing up:
+Under certain circumstances, depending on the order of addresses on the
+interfaces, it could be that sctp_v[46]_get_dst() would return a dst
+with a mismatched struct flowi.
 
-   WARNING: CPU: 4 PID: 251 at drivers/iommu/dma-iommu.c:451 __iommu_dma_unmap+0xb8/0xc0
-   Modules linked in: ath10k_snoc ath10k_core fuse msm ath mac80211 uvcvideo cfg80211 videobuf2_vmalloc videobuf2_memops vide
-   CPU: 4 PID: 251 Comm: kworker/u16:4 Tainted: G        W         5.2.0-rc5-next-20190619+ #2317
-   Hardware name: LENOVO 81JL/LNVNB161216, BIOS 9UCN23WW(V1.06) 10/25/2018
-   Workqueue: msm msm_gem_free_work [msm]
-   pstate: 80c00005 (Nzcv daif +PAN +UAO)
-   pc : __iommu_dma_unmap+0xb8/0xc0
-   lr : __iommu_dma_unmap+0x54/0xc0
-   sp : ffff0000119abce0
-   x29: ffff0000119abce0 x28: 0000000000000000
-   x27: ffff8001f9946648 x26: ffff8001ec271068
-   x25: 0000000000000000 x24: ffff8001ea3580a8
-   x23: ffff8001f95ba010 x22: ffff80018e83ba88
-   x21: ffff8001e548f000 x20: fffffffffffff000
-   x19: 0000000000001000 x18: 00000000c00001fe
-   x17: 0000000000000000 x16: 0000000000000000
-   x15: ffff000015b70068 x14: 0000000000000005
-   x13: 0003142cc1be1768 x12: 0000000000000001
-   x11: ffff8001f6de9100 x10: 0000000000000009
-   x9 : ffff000015b78000 x8 : 0000000000000000
-   x7 : 0000000000000001 x6 : fffffffffffff000
-   x5 : 0000000000000fff x4 : ffff00001065dbc8
-   x3 : 000000000000000d x2 : 0000000000001000
-   x1 : fffffffffffff000 x0 : 0000000000000000
-   Call trace:
-    __iommu_dma_unmap+0xb8/0xc0
-    iommu_dma_unmap_sg+0x98/0xb8
-    put_pages+0x5c/0xf0 [msm]
-    msm_gem_free_work+0x10c/0x150 [msm]
-    process_one_work+0x1e0/0x330
-    worker_thread+0x40/0x438
-    kthread+0x12c/0x130
-    ret_from_fork+0x10/0x18
-   ---[ end trace afc0dc5ab81a06bf ]---
+For example, if when walking through the bind addresses and the first
+one is not a match, it saves the dst as a fallback (added in
+410f03831c07), but not the flowi. Then if the next one is also not a
+match, the previous dst will be returned but with the flowi information
+for the 2nd address, which is wrong.
 
-Not quite sure what triggered that, but we really shouldn't be abusing
-dma_{map,unmap}_sg() for cache maint.
+The fix is to use a locally stored flowi that can be used for such
+attempts, and copy it to the parameter only in case it is a possible
+match, together with the corresponding dst entry.
 
-Cc: Stephen Boyd <sboyd@kernel.org>
-Tested-by: Stephen Boyd <swboyd@chromium.org>
-Reviewed-by: Jordan Crouse <jcrouse@codeaurora.org>
-Signed-off-by: Rob Clark <robdclark@chromium.org>
-Signed-off-by: Sean Paul <seanpaul@chromium.org>
-Link: https://patchwork.freedesktop.org/patch/msgid/20190630124735.27786-1-robdclark@gmail.com
-Signed-off-by: Lee Jones <lee.jones@linaro.org>
+The patch updates IPv6 code mostly just to be in sync. Even though the issue
+is also present there, it fallback is not expected to work with IPv6.
+
+Fixes: 410f03831c07 ("sctp: add routing output fallback")
+Reported-by: Jin Meng <meng.a.jin@nokia-sbell.com>
+Signed-off-by: Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>
+Tested-by: Xin Long <lucien.xin@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- drivers/gpu/drm/msm/msm_gem.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ net/sctp/ipv6.c     |   20 ++++++++++++++------
+ net/sctp/protocol.c |   28 +++++++++++++++++++---------
+ 2 files changed, 33 insertions(+), 15 deletions(-)
 
---- a/drivers/gpu/drm/msm/msm_gem.c
-+++ b/drivers/gpu/drm/msm/msm_gem.c
-@@ -106,7 +106,7 @@ static struct page **get_pages(struct dr
- 		 * because display controller, GPU, etc. are not coherent:
- 		 */
- 		if (msm_obj->flags & (MSM_BO_WC|MSM_BO_UNCACHED))
--			dma_map_sg(dev->dev, msm_obj->sgt->sgl,
-+			dma_sync_sg_for_device(dev->dev, msm_obj->sgt->sgl,
- 					msm_obj->sgt->nents, DMA_BIDIRECTIONAL);
+--- a/net/sctp/ipv6.c
++++ b/net/sctp/ipv6.c
+@@ -235,7 +235,8 @@ static void sctp_v6_get_dst(struct sctp_
+ {
+ 	struct sctp_association *asoc = t->asoc;
+ 	struct dst_entry *dst = NULL;
+-	struct flowi6 *fl6 = &fl->u.ip6;
++	struct flowi _fl;
++	struct flowi6 *fl6 = &_fl.u.ip6;
+ 	struct sctp_bind_addr *bp;
+ 	struct ipv6_pinfo *np = inet6_sk(sk);
+ 	struct sctp_sockaddr_entry *laddr;
+@@ -245,7 +246,7 @@ static void sctp_v6_get_dst(struct sctp_
+ 	__u8 matchlen = 0;
+ 	sctp_scope_t scope;
+ 
+-	memset(fl6, 0, sizeof(struct flowi6));
++	memset(&_fl, 0, sizeof(_fl));
+ 	fl6->daddr = daddr->v6.sin6_addr;
+ 	fl6->fl6_dport = daddr->v6.sin6_port;
+ 	fl6->flowi6_proto = IPPROTO_SCTP;
+@@ -269,8 +270,11 @@ static void sctp_v6_get_dst(struct sctp_
+ 	rcu_read_unlock();
+ 
+ 	dst = ip6_dst_lookup_flow(sk, fl6, final_p);
+-	if (!asoc || saddr)
++	if (!asoc || saddr) {
++		t->dst = dst;
++		memcpy(fl, &_fl, sizeof(_fl));
+ 		goto out;
++	}
+ 
+ 	bp = &asoc->base.bind_addr;
+ 	scope = sctp_scope(daddr);
+@@ -293,6 +297,8 @@ static void sctp_v6_get_dst(struct sctp_
+ 			if ((laddr->a.sa.sa_family == AF_INET6) &&
+ 			    (sctp_v6_cmp_addr(&dst_saddr, &laddr->a))) {
+ 				rcu_read_unlock();
++				t->dst = dst;
++				memcpy(fl, &_fl, sizeof(_fl));
+ 				goto out;
+ 			}
+ 		}
+@@ -331,6 +337,8 @@ static void sctp_v6_get_dst(struct sctp_
+ 			if (!IS_ERR_OR_NULL(dst))
+ 				dst_release(dst);
+ 			dst = bdst;
++			t->dst = dst;
++			memcpy(fl, &_fl, sizeof(_fl));
+ 			break;
+ 		}
+ 
+@@ -344,6 +352,8 @@ static void sctp_v6_get_dst(struct sctp_
+ 			dst_release(dst);
+ 		dst = bdst;
+ 		matchlen = bmatchlen;
++		t->dst = dst;
++		memcpy(fl, &_fl, sizeof(_fl));
+ 	}
+ 	rcu_read_unlock();
+ 
+@@ -352,14 +362,12 @@ out:
+ 		struct rt6_info *rt;
+ 
+ 		rt = (struct rt6_info *)dst;
+-		t->dst = dst;
+ 		t->dst_cookie = rt6_get_cookie(rt);
+ 		pr_debug("rt6_dst:%pI6/%d rt6_src:%pI6\n",
+ 			 &rt->rt6i_dst.addr, rt->rt6i_dst.plen,
+-			 &fl6->saddr);
++			 &fl->u.ip6.saddr);
+ 	} else {
+ 		t->dst = NULL;
+-
+ 		pr_debug("no route\n");
+ 	}
+ }
+--- a/net/sctp/protocol.c
++++ b/net/sctp/protocol.c
+@@ -430,14 +430,15 @@ static void sctp_v4_get_dst(struct sctp_
+ {
+ 	struct sctp_association *asoc = t->asoc;
+ 	struct rtable *rt;
+-	struct flowi4 *fl4 = &fl->u.ip4;
++	struct flowi _fl;
++	struct flowi4 *fl4 = &_fl.u.ip4;
+ 	struct sctp_bind_addr *bp;
+ 	struct sctp_sockaddr_entry *laddr;
+ 	struct dst_entry *dst = NULL;
+ 	union sctp_addr *daddr = &t->ipaddr;
+ 	union sctp_addr dst_saddr;
+ 
+-	memset(fl4, 0x0, sizeof(struct flowi4));
++	memset(&_fl, 0x0, sizeof(_fl));
+ 	fl4->daddr  = daddr->v4.sin_addr.s_addr;
+ 	fl4->fl4_dport = daddr->v4.sin_port;
+ 	fl4->flowi4_proto = IPPROTO_SCTP;
+@@ -455,8 +456,11 @@ static void sctp_v4_get_dst(struct sctp_
+ 		 &fl4->saddr);
+ 
+ 	rt = ip_route_output_key(sock_net(sk), fl4);
+-	if (!IS_ERR(rt))
++	if (!IS_ERR(rt)) {
+ 		dst = &rt->dst;
++		t->dst = dst;
++		memcpy(fl, &_fl, sizeof(_fl));
++	}
+ 
+ 	/* If there is no association or if a source address is passed, no
+ 	 * more validation is required.
+@@ -519,27 +523,33 @@ static void sctp_v4_get_dst(struct sctp_
+ 		odev = __ip_dev_find(sock_net(sk), laddr->a.v4.sin_addr.s_addr,
+ 				     false);
+ 		if (!odev || odev->ifindex != fl4->flowi4_oif) {
+-			if (!dst)
++			if (!dst) {
+ 				dst = &rt->dst;
+-			else
++				t->dst = dst;
++				memcpy(fl, &_fl, sizeof(_fl));
++			} else {
+ 				dst_release(&rt->dst);
++			}
+ 			continue;
+ 		}
+ 
+ 		dst_release(dst);
+ 		dst = &rt->dst;
++		t->dst = dst;
++		memcpy(fl, &_fl, sizeof(_fl));
+ 		break;
  	}
  
-@@ -124,7 +124,7 @@ static void put_pages(struct drm_gem_obj
- 			 * GPU, etc. are not coherent:
- 			 */
- 			if (msm_obj->flags & (MSM_BO_WC|MSM_BO_UNCACHED))
--				dma_unmap_sg(obj->dev->dev, msm_obj->sgt->sgl,
-+				dma_sync_sg_for_cpu(obj->dev->dev, msm_obj->sgt->sgl,
- 					     msm_obj->sgt->nents,
- 					     DMA_BIDIRECTIONAL);
+ out_unlock:
+ 	rcu_read_unlock();
+ out:
+-	t->dst = dst;
+-	if (dst)
++	if (dst) {
+ 		pr_debug("rt_dst:%pI4, rt_src:%pI4\n",
+-			 &fl4->daddr, &fl4->saddr);
+-	else
++			 &fl->u.ip4.daddr, &fl->u.ip4.saddr);
++	} else {
++		t->dst = NULL;
+ 		pr_debug("no route\n");
++	}
+ }
  
+ /* For v4, the source address is cached in the route entry(dst). So no need
 
 
