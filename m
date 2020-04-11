@@ -4,52 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19B98C2BBC7
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:18:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47639C2BA2B
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:18:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E10702084D
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:18:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1A5862084D
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:18:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586607522;
-	bh=ZOZLhi1wgZ1KCiSc5ynZD9XDsGPp6+H9laCsQzK4XIw=;
+	s=default; t=1586607526;
+	bh=r6Cz7tXqvWMM41FcH1w8UekDGqn7bcSLJ/soebx9cR8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XxdGbvnf2GQz+9jpttZl5zW8vItDyTe+CekrPubJTYoFXCMZqRq4b09duxdCHnR4L
-	 +W15dEswNy9xFbB7KtCTyaiPL3riy9KfWzP+IemRU3sAUmc9UL10gx6LrDB5CnQyh6
-	 +DBtXfiQ2Z9rNtgwKoxoT1TeKdLdUVvPzn/6I3nk=
+	b=Mr4BKfjtLtnpGtGJYf8vp4jiqZ2M9o3JRMVmzS0647ar5yxTGin1nJw/VZ7ya2MjK
+	 5lRL01RlTMK3VJtUzoHkHxh1rro0DCnp52pZBk79SnXfPrGXAUPFWreNZnEK0Y1w26
+	 +T83gD+286oucCkJ65Zx6/BHn9wNPGXHQEOmzJ3Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728648AbgDKMSl (ORCPT
+        id S1728421AbgDKMSo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 08:18:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53618 "EHLO mail.kernel.org"
+        Sat, 11 Apr 2020 08:18:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53742 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728000AbgDKMSf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 08:18:35 -0400
+        id S1728637AbgDKMSk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Apr 2020 08:18:40 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D83FD2084D;
-        Sat, 11 Apr 2020 12:18:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D5FB420692;
+        Sat, 11 Apr 2020 12:18:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586607515;
-        bh=ZOZLhi1wgZ1KCiSc5ynZD9XDsGPp6+H9laCsQzK4XIw=;
+        s=default; t=1586607520;
+        bh=r6Cz7tXqvWMM41FcH1w8UekDGqn7bcSLJ/soebx9cR8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=X7QN0gfLA/hGj94VDcvRU/kYX3KysfIiCzWCOtgLC4yvtABLGM+CSqIi1jdWpTj7E
-         kAU6I5QMaXzuyQJVEFiTRZxk9QprAfa+lzXavMENAsTxInU17wxpRTGXpPkzRRECIm
-         9Uv47K1yKST1M0/GDkPLcG3pMgfKPPEw1YCwOEpk=
+        b=i31oQDNIWZ3CNrdxHPs8203QKb3jjI9HueL2eumqf/TssylOS/+Ur4EwFRwVrGddq
+         q8YfR/olpOP4QHzNB06LG5bm/064lo+gzrNzVFIlDi56grigsK1ST//8fzhWJIQJX+
+         klC4HwcJRx2fXdI+bSujxIO77RfG/kZHyKJFYnDk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Moshe Levi <moshele@mellanox.com>,
-        Stephen Hemminger <stephen@networkplumber.org>,
-        Marcelo Ricardo Leitner <mleitner@redhat.com>,
-        netdev@vger.kernel.org, Jarod Wilson <jarod@redhat.com>,
+        stable@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>,
+        Vivien Didelot <vivien.didelot@gmail.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.5 02/44] ipv6: dont auto-add link-local address to lag ports
-Date:   Sat, 11 Apr 2020 14:09:22 +0200
-Message-Id: <20200411115457.140398372@linuxfoundation.org>
+Subject: [PATCH 5.5 04/44] net: dsa: bcm_sf2: Ensure correct sub-node is parsed
+Date:   Sat, 11 Apr 2020 14:09:24 +0200
+Message-Id: <20200411115457.263566921@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200411115456.934174282@linuxfoundation.org>
 References: <20200411115456.934174282@linuxfoundation.org>
@@ -62,91 +60,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jarod Wilson <jarod@redhat.com>
+From: Florian Fainelli <f.fainelli@gmail.com>
 
-[ Upstream commit 744fdc8233f6aa9582ce08a51ca06e59796a3196 ]
+[ Upstream commit afa3b592953bfaecfb4f2f335ec5f935cff56804 ]
 
-Bonding slave and team port devices should not have link-local addresses
-automatically added to them, as it can interfere with openvswitch being
-able to properly add tc ingress.
+When the bcm_sf2 was converted into a proper platform device driver and
+used the new dsa_register_switch() interface, we would still be parsing
+the legacy DSA node that contained all the port information since the
+platform firmware has intentionally maintained backward and forward
+compatibility to client programs. Ensure that we do parse the correct
+node, which is "ports" per the revised DSA binding.
 
-Basic reproducer, courtesy of Marcelo:
-
-$ ip link add name bond0 type bond
-$ ip link set dev ens2f0np0 master bond0
-$ ip link set dev ens2f1np2 master bond0
-$ ip link set dev bond0 up
-$ ip a s
-1: lo: <LOOPBACK,UP,LOWER_UP> mtu 65536 qdisc noqueue state UNKNOWN
-group default qlen 1000
-    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
-    inet 127.0.0.1/8 scope host lo
-       valid_lft forever preferred_lft forever
-    inet6 ::1/128 scope host
-       valid_lft forever preferred_lft forever
-2: ens2f0np0: <BROADCAST,MULTICAST,SLAVE,UP,LOWER_UP> mtu 1500 qdisc
-mq master bond0 state UP group default qlen 1000
-    link/ether 00:0f:53:2f:ea:40 brd ff:ff:ff:ff:ff:ff
-5: ens2f1np2: <NO-CARRIER,BROADCAST,MULTICAST,SLAVE,UP> mtu 1500 qdisc
-mq master bond0 state DOWN group default qlen 1000
-    link/ether 00:0f:53:2f:ea:40 brd ff:ff:ff:ff:ff:ff
-11: bond0: <BROADCAST,MULTICAST,MASTER,UP,LOWER_UP> mtu 1500 qdisc
-noqueue state UP group default qlen 1000
-    link/ether 00:0f:53:2f:ea:40 brd ff:ff:ff:ff:ff:ff
-    inet6 fe80::20f:53ff:fe2f:ea40/64 scope link
-       valid_lft forever preferred_lft forever
-
-(above trimmed to relevant entries, obviously)
-
-$ sysctl net.ipv6.conf.ens2f0np0.addr_gen_mode=0
-net.ipv6.conf.ens2f0np0.addr_gen_mode = 0
-$ sysctl net.ipv6.conf.ens2f1np2.addr_gen_mode=0
-net.ipv6.conf.ens2f1np2.addr_gen_mode = 0
-
-$ ip a l ens2f0np0
-2: ens2f0np0: <BROADCAST,MULTICAST,SLAVE,UP,LOWER_UP> mtu 1500 qdisc
-mq master bond0 state UP group default qlen 1000
-    link/ether 00:0f:53:2f:ea:40 brd ff:ff:ff:ff:ff:ff
-    inet6 fe80::20f:53ff:fe2f:ea40/64 scope link tentative
-       valid_lft forever preferred_lft forever
-$ ip a l ens2f1np2
-5: ens2f1np2: <NO-CARRIER,BROADCAST,MULTICAST,SLAVE,UP> mtu 1500 qdisc
-mq master bond0 state DOWN group default qlen 1000
-    link/ether 00:0f:53:2f:ea:40 brd ff:ff:ff:ff:ff:ff
-    inet6 fe80::20f:53ff:fe2f:ea40/64 scope link tentative
-       valid_lft forever preferred_lft forever
-
-Looks like addrconf_sysctl_addr_gen_mode() bypasses the original "is
-this a slave interface?" check added by commit c2edacf80e15, and
-results in an address getting added, while w/the proposed patch added,
-no address gets added. This simply adds the same gating check to another
-code path, and thus should prevent the same devices from erroneously
-obtaining an ipv6 link-local address.
-
-Fixes: d35a00b8e33d ("net/ipv6: allow sysctl to change link-local address generation mode")
-Reported-by: Moshe Levi <moshele@mellanox.com>
-CC: Stephen Hemminger <stephen@networkplumber.org>
-CC: Marcelo Ricardo Leitner <mleitner@redhat.com>
-CC: netdev@vger.kernel.org
-Signed-off-by: Jarod Wilson <jarod@redhat.com>
+Fixes: d9338023fb8e ("net: dsa: bcm_sf2: Make it a real platform device driver")
+Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+Reviewed-by: Vivien Didelot <vivien.didelot@gmail.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/ipv6/addrconf.c |    4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/net/dsa/bcm_sf2.c |    7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
---- a/net/ipv6/addrconf.c
-+++ b/net/ipv6/addrconf.c
-@@ -3296,6 +3296,10 @@ static void addrconf_addr_gen(struct ine
- 	if (netif_is_l3_master(idev->dev))
- 		return;
+--- a/drivers/net/dsa/bcm_sf2.c
++++ b/drivers/net/dsa/bcm_sf2.c
+@@ -1069,6 +1069,7 @@ static int bcm_sf2_sw_probe(struct platf
+ 	const struct bcm_sf2_of_data *data;
+ 	struct b53_platform_data *pdata;
+ 	struct dsa_switch_ops *ops;
++	struct device_node *ports;
+ 	struct bcm_sf2_priv *priv;
+ 	struct b53_device *dev;
+ 	struct dsa_switch *ds;
+@@ -1136,7 +1137,11 @@ static int bcm_sf2_sw_probe(struct platf
+ 	set_bit(0, priv->cfp.used);
+ 	set_bit(0, priv->cfp.unique);
  
-+	/* no link local addresses on devices flagged as slaves */
-+	if (idev->dev->flags & IFF_SLAVE)
-+		return;
-+
- 	ipv6_addr_set(&addr, htonl(0xFE800000), 0, 0, 0);
+-	bcm_sf2_identify_ports(priv, dn->child);
++	ports = of_find_node_by_name(dn, "ports");
++	if (ports) {
++		bcm_sf2_identify_ports(priv, ports);
++		of_node_put(ports);
++	}
  
- 	switch (idev->cnf.addr_gen_mode) {
+ 	priv->irq0 = irq_of_parse_and_map(dn, 0);
+ 	priv->irq1 = irq_of_parse_and_map(dn, 1);
 
 
