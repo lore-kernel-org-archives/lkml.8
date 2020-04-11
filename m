@@ -7,49 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 568DEC2BA2B
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:17:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AB4AC2BB85
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:17:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 305DF215A4
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:17:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 339A120644
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:17:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586607458;
-	bh=x8qWc3hLwwOsdjb5R6YsYTuGLj3zhF4WasWIQAL3D8M=;
+	s=default; t=1586607463;
+	bh=oISua2g845NhTWCtJpEUu7JMikhasYDSusp4347Vjzw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xmJeJEw3K87uX17R3HkCOg4DPWrySG1YQe9Xj8+2OuxsYfrFim5emujC0pUmqIqoZ
-	 r9O9hYFdmaMLDpbr4ktR8kwp9jpyCM+JXlTCZXF9QRgxjqtypIdEjStiO2yUusg6u/
-	 usZr58BEQmLXT41nOpA7c2yQUPkP5H1OPXB4ou6s=
+	b=suBsjKQMyxWJvn4CPDEX+jiN29ZUGZAAK6fDqMMjMxJ/VE5npTtwGN+FvE7x/Qaep
+	 JDK+HkdCPUBmonLP0Hpvk5RVVNCNN9AlnaG4XTsprlOQwfTDLbhaD+4u7cUa+RnFV2
+	 G4LDVnYq0hfuRaLLD6Mqhp8Hu6A+D2XANYo+89dw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728444AbgDKMRg (ORCPT
+        id S1728240AbgDKMRl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 08:17:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52238 "EHLO mail.kernel.org"
+        Sat, 11 Apr 2020 08:17:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52352 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728429AbgDKMRc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 08:17:32 -0400
+        id S1728455AbgDKMRi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Apr 2020 08:17:38 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7911821655;
-        Sat, 11 Apr 2020 12:17:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4687920787;
+        Sat, 11 Apr 2020 12:17:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586607452;
-        bh=x8qWc3hLwwOsdjb5R6YsYTuGLj3zhF4WasWIQAL3D8M=;
+        s=default; t=1586607457;
+        bh=oISua2g845NhTWCtJpEUu7JMikhasYDSusp4347Vjzw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Y9jPbbGt88fOi7brIftc7feLNRUAiBIl1fu6tI4u2vK9yF1snzXMvsdPT8Vc+G4f9
-         kVtuQ0/UFxH2B17QU+yzyuQzBHB4t7UipFhAMoWKlAVfTLeWYeP3fsQqGljL++clVR
-         jMUsimA03fy8Fb2cy/eh9G1RuWkjzxlj/QD96Ud8=
+        b=QEjDfF4UP+R5VS60vCYTEG8omzsrvNU7f6CO13goHdwhf5j78XAQTsAW/WCU3Egwa
+         929Sh4VnJn04cL4MX3dZFGFXGqWqZ8sxrrixU2lG4br7/A4p8qLAynSUZeHZYMWkRE
+         xNOEznRgIN8wU2/gfo52SFsGcnNcypsTSp59d23s=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Mike Marciniszyn <mike.marciniszyn@intel.com>,
-        Kaike Wan <kaike.wan@intel.com>,
-        Dennis Dalessandro <dennis.dalessandro@intel.com>,
+        stable@vger.kernel.org, Alex Vesker <valex@mellanox.com>,
+        Ariel Levkovich <lariel@mellanox.com>,
+        Leon Romanovsky <leonro@mellanox.com>,
         Jason Gunthorpe <jgg@mellanox.com>
-Subject: [PATCH 5.4 25/41] IB/hfi1: Call kobject_put() when kobject_init_and_add() fails
-Date:   Sat, 11 Apr 2020 14:09:34 +0200
-Message-Id: <20200411115505.872920513@linuxfoundation.org>
+Subject: [PATCH 5.4 27/41] IB/mlx5: Replace tunnel mpls capability bits for tunnel_offloads
+Date:   Sat, 11 Apr 2020 14:09:36 +0200
+Message-Id: <20200411115506.023375327@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200411115504.124035693@linuxfoundation.org>
 References: <20200411115504.124035693@linuxfoundation.org>
@@ -62,78 +61,68 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kaike Wan <kaike.wan@intel.com>
+From: Alex Vesker <valex@mellanox.com>
 
-commit dfb5394f804ed4fcea1fc925be275a38d66712ab upstream.
+commit 41e684ef3f37ce6e5eac3fb5b9c7c1853f4b0447 upstream.
 
-When kobject_init_and_add() returns an error in the function
-hfi1_create_port_files(), the function kobject_put() is not called for the
-corresponding kobject, which potentially leads to memory leak.
+Until now the flex parser capability was used in ib_query_device() to
+indicate tunnel_offloads_caps support for mpls_over_gre/mpls_over_udp.
 
-This patch fixes the issue by calling kobject_put() even if
-kobject_init_and_add() fails.
+Newer devices and firmware will have configurations with the flexparser
+but without mpls support.
 
-Cc: <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20200326163813.21129.44280.stgit@awfm-01.aw.intel.com
-Reviewed-by: Mike Marciniszyn <mike.marciniszyn@intel.com>
-Signed-off-by: Kaike Wan <kaike.wan@intel.com>
-Signed-off-by: Dennis Dalessandro <dennis.dalessandro@intel.com>
+Testing for the flex parser capability was a mistake, the tunnel_stateless
+capability was intended for detecting mpls and was introduced at the same
+time as the flex parser capability.
+
+Otherwise userspace will be incorrectly informed that a future device
+supports MPLS when it does not.
+
+Link: https://lore.kernel.org/r/20200305123841.196086-1-leon@kernel.org
+Cc: <stable@vger.kernel.org> # 4.17
+Fixes: e818e255a58d ("IB/mlx5: Expose MPLS related tunneling offloads")
+Signed-off-by: Alex Vesker <valex@mellanox.com>
+Reviewed-by: Ariel Levkovich <lariel@mellanox.com>
+Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
 Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/infiniband/hw/hfi1/sysfs.c |   13 ++++++++-----
- 1 file changed, 8 insertions(+), 5 deletions(-)
+ drivers/infiniband/hw/mlx5/main.c |    6 ++----
+ include/linux/mlx5/mlx5_ifc.h     |    6 +++++-
+ 2 files changed, 7 insertions(+), 5 deletions(-)
 
---- a/drivers/infiniband/hw/hfi1/sysfs.c
-+++ b/drivers/infiniband/hw/hfi1/sysfs.c
-@@ -674,7 +674,11 @@ int hfi1_create_port_files(struct ib_dev
- 		dd_dev_err(dd,
- 			   "Skipping sc2vl sysfs info, (err %d) port %u\n",
- 			   ret, port_num);
--		goto bail;
-+		/*
-+		 * Based on the documentation for kobject_init_and_add(), the
-+		 * caller should call kobject_put even if this call fails.
-+		 */
-+		goto bail_sc2vl;
+--- a/drivers/infiniband/hw/mlx5/main.c
++++ b/drivers/infiniband/hw/mlx5/main.c
+@@ -1181,12 +1181,10 @@ static int mlx5_ib_query_device(struct i
+ 		if (MLX5_CAP_ETH(mdev, tunnel_stateless_gre))
+ 			resp.tunnel_offloads_caps |=
+ 				MLX5_IB_TUNNELED_OFFLOADS_GRE;
+-		if (MLX5_CAP_GEN(mdev, flex_parser_protocols) &
+-		    MLX5_FLEX_PROTO_CW_MPLS_GRE)
++		if (MLX5_CAP_ETH(mdev, tunnel_stateless_mpls_over_gre))
+ 			resp.tunnel_offloads_caps |=
+ 				MLX5_IB_TUNNELED_OFFLOADS_MPLS_GRE;
+-		if (MLX5_CAP_GEN(mdev, flex_parser_protocols) &
+-		    MLX5_FLEX_PROTO_CW_MPLS_UDP)
++		if (MLX5_CAP_ETH(mdev, tunnel_stateless_mpls_over_udp))
+ 			resp.tunnel_offloads_caps |=
+ 				MLX5_IB_TUNNELED_OFFLOADS_MPLS_UDP;
  	}
- 	kobject_uevent(&ppd->sc2vl_kobj, KOBJ_ADD);
- 
-@@ -684,7 +688,7 @@ int hfi1_create_port_files(struct ib_dev
- 		dd_dev_err(dd,
- 			   "Skipping sl2sc sysfs info, (err %d) port %u\n",
- 			   ret, port_num);
--		goto bail_sc2vl;
-+		goto bail_sl2sc;
- 	}
- 	kobject_uevent(&ppd->sl2sc_kobj, KOBJ_ADD);
- 
-@@ -694,7 +698,7 @@ int hfi1_create_port_files(struct ib_dev
- 		dd_dev_err(dd,
- 			   "Skipping vl2mtu sysfs info, (err %d) port %u\n",
- 			   ret, port_num);
--		goto bail_sl2sc;
-+		goto bail_vl2mtu;
- 	}
- 	kobject_uevent(&ppd->vl2mtu_kobj, KOBJ_ADD);
- 
-@@ -704,7 +708,7 @@ int hfi1_create_port_files(struct ib_dev
- 		dd_dev_err(dd,
- 			   "Skipping Congestion Control sysfs info, (err %d) port %u\n",
- 			   ret, port_num);
--		goto bail_vl2mtu;
-+		goto bail_cc;
- 	}
- 
- 	kobject_uevent(&ppd->pport_cc_kobj, KOBJ_ADD);
-@@ -742,7 +746,6 @@ bail_sl2sc:
- 	kobject_put(&ppd->sl2sc_kobj);
- bail_sc2vl:
- 	kobject_put(&ppd->sc2vl_kobj);
--bail:
- 	return ret;
- }
- 
+--- a/include/linux/mlx5/mlx5_ifc.h
++++ b/include/linux/mlx5/mlx5_ifc.h
+@@ -857,7 +857,11 @@ struct mlx5_ifc_per_protocol_networking_
+ 	u8         swp_csum[0x1];
+ 	u8         swp_lso[0x1];
+ 	u8         cqe_checksum_full[0x1];
+-	u8         reserved_at_24[0x5];
++	u8         tunnel_stateless_geneve_tx[0x1];
++	u8         tunnel_stateless_mpls_over_udp[0x1];
++	u8         tunnel_stateless_mpls_over_gre[0x1];
++	u8         tunnel_stateless_vxlan_gpe[0x1];
++	u8         tunnel_stateless_ipv4_over_vxlan[0x1];
+ 	u8         tunnel_stateless_ip_over_ip[0x1];
+ 	u8         reserved_at_2a[0x6];
+ 	u8         max_vxlan_udp_ports[0x8];
 
 
