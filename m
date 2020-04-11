@@ -2,249 +2,245 @@ Return-Path: <SRS0=xbEg=53=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27D56C2D0EC
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 03:25:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 232A6C2BA19
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 03:45:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D2D9C20753
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 03:25:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E149520708
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 03:45:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586575522;
-	bh=RqE7MZe7mED3eWZEe894eAH/W5ZaopykB4ScfLoXmNQ=;
-	h=From:Date:Subject:To:Cc:List-ID:From;
-	b=yiiMVJvnR15vWhF3wk8KUQcVcWQkw4pk2tS1Z2+L++vGnircD+bDJz56BakeoMJzv
-	 C03fQEO0P9zLf1F+yshhddX/kNFA0kHxehvZUSW89KyZKTVMAdxKUm62PvXSU4tj2M
-	 VrVvTwKTtqtUZd+E8nWb1o5Y6NxVTpQEM8DUtPk8=
+	s=default; t=1586576703;
+	bh=OS2a3zaCRGwhNUfft3nAzcgG17YLWHOXyNtOi4N1dbg=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=CQnTGeMnj+odq1SnTJ2oktv07tiehDgrPCSQv6Zjo5HGsEBpnDYxCCeBE0PH21Djr
+	 V9KYV30z337Fo9m7s5l0XVbDa3RDRNlOvvpvaVxKlKats+8PyboW5k3f95aOaQpYqY
+	 53mPObi1LxZMeF8VCAZicHMpSzh2jqkOp4XU1oPk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726690AbgDKDZU (ORCPT
+        id S1726683AbgDKDou (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Apr 2020 23:25:20 -0400
-Received: from conssluserg-05.nifty.com ([210.131.2.90]:62037 "EHLO
-        conssluserg-05.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726657AbgDKDZU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Apr 2020 23:25:20 -0400
-Received: from mail-vs1-f53.google.com (mail-vs1-f53.google.com [209.85.217.53]) (authenticated)
-        by conssluserg-05.nifty.com with ESMTP id 03B3PApA027704;
-        Sat, 11 Apr 2020 12:25:11 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-05.nifty.com 03B3PApA027704
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1586575511;
-        bh=li2YLSjbiqBHVmtLv+tac08YXWdUVCvP3Mcy4eZaPUY=;
-        h=From:Date:Subject:To:Cc:From;
-        b=Eh3QOmiYbB4h1IHdHWnTHd67o7dFoXHwzdz2q2tqB+KlelXJ0SvDdxEfAB+AbJlij
-         p5IqAGKCX7zSlOWBZkJfNilpEK1teLK3wJlsWgNc/QgcGDInh1FfTvcb18T4WEMKvz
-         joCCxilVDyLnuCmk/viF8ZQLMtnkVZ4IKB53FCWp394HK97KcXiSecIcPuLe/fG47T
-         2Nsyrz/RyFW4QiUVkd1L9langOaSAepvrQ2U6fPR2YhvTldbAIespKtBcDoUILQx3q
-         arkhoICAZMweOh3kjNmgp5n73LMZdh3kz8Np3O4Tvpy3tP4nLljyfpqAzqTkgp8/QG
-         tB7JQ83khy/6A==
-X-Nifty-SrcIP: [209.85.217.53]
-Received: by mail-vs1-f53.google.com with SMTP id b5so2484817vsb.1;
-        Fri, 10 Apr 2020 20:25:11 -0700 (PDT)
-X-Gm-Message-State: AGi0PubocjOqMFgBaPiOvQ6gQhqj+tvGXWgjdn5iSukv23jCuegXzFHB
-        zliBBcOkf0Te1xKQOivXjwg0COC11FzyZllxvx8=
-X-Google-Smtp-Source: APiQypJbFOtnemb7B92hc4WMK4uHavJ46DhrPguAHwBpASX6kmpfzb0QCsc/E0QbSSLvboEgoCQc088bbSQ9MYnlMlk=
-X-Received: by 2002:a67:3201:: with SMTP id y1mr6118137vsy.54.1586575510034;
- Fri, 10 Apr 2020 20:25:10 -0700 (PDT)
+        Fri, 10 Apr 2020 23:44:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58934 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726659AbgDKDot (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Apr 2020 23:44:49 -0400
+Received: from mail-lf1-f46.google.com (mail-lf1-f46.google.com [209.85.167.46])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id CEC8620708
+        for <linux-kernel@vger.kernel.org>; Sat, 11 Apr 2020 03:44:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1586576689;
+        bh=OS2a3zaCRGwhNUfft3nAzcgG17YLWHOXyNtOi4N1dbg=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=BkElBRyvAVAIX0BdvVGYTItGfcjjFA68k+yCMQklskkVFX7lfCyrF6Db6dJoq3DMr
+         XLcaqZWxNiwbDGWaHhQgSgcLzkJa1g6lwNSk9YbIK/yZbZQFLEcCn5Z2uM6rtE9l6h
+         7AGqdOCAvD9X0reRUIDbJLVmeGT9ToCJLsupLAYM=
+Received: by mail-lf1-f46.google.com with SMTP id h6so2656327lfc.0
+        for <linux-kernel@vger.kernel.org>; Fri, 10 Apr 2020 20:44:48 -0700 (PDT)
+X-Gm-Message-State: AGi0PubZ1A3aI87EUwDqpCZlJdZGhZIikRfb6nWsje2PIaUyI4MlXnSD
+        /i26JUPeyyInk6RxMlD6pWySZk3IJqizEHWcYDg=
+X-Google-Smtp-Source: APiQypLnYrjuwRBpuq2OCZWZjJfBpzditT0smA9TJ2eF6UuYtIR3V6Q9QdAU05tJLyK3X/VoLTF8GkEMaG+OwZUWuN8=
+X-Received: by 2002:ac2:5607:: with SMTP id v7mr4293181lfd.212.1586576686950;
+ Fri, 10 Apr 2020 20:44:46 -0700 (PDT)
 MIME-Version: 1.0
-From:   Masahiro Yamada <masahiroy@kernel.org>
-Date:   Sat, 11 Apr 2020 12:24:34 +0900
-X-Gmail-Original-Message-ID: <CAK7LNART4rVUYsaqQKM4u1DVxTtDDs51kyY9JFKCOuHe1FLV-Q@mail.gmail.com>
-Message-ID: <CAK7LNART4rVUYsaqQKM4u1DVxTtDDs51kyY9JFKCOuHe1FLV-Q@mail.gmail.com>
-Subject: [GIT PULL] more Kbuild updates for v5.7-rc1
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>
+References: <20200410032634.57511-1-zong.li@sifive.com>
+In-Reply-To: <20200410032634.57511-1-zong.li@sifive.com>
+From:   Guo Ren <guoren@kernel.org>
+Date:   Sat, 11 Apr 2020 11:44:35 +0800
+X-Gmail-Original-Message-ID: <CAJF2gTSAe_=0Eg12O-Sjc6897EOqwZOQFPc5utKWQ32gn6BFEA@mail.gmail.com>
+Message-ID: <CAJF2gTSAe_=0Eg12O-Sjc6897EOqwZOQFPc5utKWQ32gn6BFEA@mail.gmail.com>
+Subject: Re: [PATCH] riscv: remove the assert of lock for cpu_running
+To:     Zong Li <zong.li@sifive.com>
+Cc:     Palmer Dabbelt <palmer@dabbelt.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        linux-riscv <linux-riscv@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
+Acked-by: Guo Ren <guoren@kernel.org>
 
-Please pull more Kbuild updates.
+Haha, are you working on lockdep ? Me too, here is my patch, not finished.
 
-Thanks.
+It's still warning at begin, I've no time to debug, and it's similar to csky's:
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/arch/csky?id=000591f1ca3312d9a29e15a9e3fe5c4171f75586
 
+If you are working on LOCKDEP, I'll wait your patch :)
 
+commit 096d7a4b26d21aa7c71c86f200241144569e697a (riscv-lockdep)
+Author: Guo Ren <guoren@linux.alibaba.com>
+Date:   Fri Apr 10 16:38:37 2020 +0800
 
-The following changes since commit f5e94d10e4c468357019e5c28d48499f677b284f:
+    riscv: Enable LOCKDEP_SUPPORT
 
-  Merge tag 'drm-next-2020-04-08' of
-git://anongit.freedesktop.org/drm/drm (2020-04-07 20:24:34 -0700)
+    Lockdep is needed by proving the spinlocks and rwlocks.
 
-are available in the Git repository at:
+    Signed-off-by: Guo Ren <guoren@linux.alibaba.com>
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/masahiroy/linux-kbuild.git
-kbuild-v5.7-2
+diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
+index 8672e77a5b7a..bfe76c76a107 100644
+--- a/arch/riscv/Kconfig
++++ b/arch/riscv/Kconfig
+@@ -163,6 +163,9 @@ config PGTABLE_LEVELS
+        default 3 if 64BIT
+        default 2
 
-for you to fetch changes up to 00d76a0c19436c88ffcafa1e816f0c0c9af082a0:
++config LOCKDEP_SUPPORT
++       def_bool y
++
+ source "arch/riscv/Kconfig.socs"
 
-  kbuild: fix comment about missing include guard detection
-(2020-04-11 12:09:48 +0900)
+ menu "Platform type"
+diff --git a/arch/riscv/kernel/entry.S b/arch/riscv/kernel/entry.S
+index 208702d8c18e..41588ee74cb2 100644
+--- a/arch/riscv/kernel/entry.S
++++ b/arch/riscv/kernel/entry.S
+@@ -175,6 +175,24 @@ ENTRY(handle_exception)
+ .option pop
 
-----------------------------------------------------------------
-Kbuild updates for v5.7 (2nd)
+        la ra, ret_from_exception
++#ifdef CONFIG_TRACE_IRQFLAGS
++       call trace_hardirqs_off
++       la ra, ret_from_exception
++       REG_L s0, PT_SP(sp)
++       REG_L s1, PT_STATUS(sp)
++       REG_L s2, PT_EPC(sp)
++       REG_L s3, PT_BADADDR(sp)
++       REG_L s4, PT_CAUSE(sp)
++       REG_L s5, PT_TP(sp)
++       REG_L a0, PT_A0(sp)
++       REG_L a1, PT_A1(sp)
++       REG_L a2, PT_A2(sp)
++       REG_L a3, PT_A3(sp)
++       REG_L a4, PT_A4(sp)
++       REG_L a5, PT_A5(sp)
++       REG_L a6, PT_A6(sp)
++       REG_L a7, PT_A7(sp)
++#endif
+        /*
+         * MSB of cause differentiates between
+         * interrupts and exceptions
+@@ -191,6 +209,24 @@ ENTRY(handle_exception)
+         */
+        andi t0, s1, SR_PIE
+        beqz t0, 1f
++#ifdef CONFIG_TRACE_IRQFLAGS
++       call trace_hardirqs_on
++       la ra, ret_from_exception
++       REG_L s0, PT_SP(sp)
++       REG_L s1, PT_STATUS(sp)
++       REG_L s2, PT_EPC(sp)
++       REG_L s3, PT_BADADDR(sp)
++       REG_L s4, PT_CAUSE(sp)
++       REG_L s5, PT_TP(sp)
++       REG_L a0, PT_A0(sp)
++       REG_L a1, PT_A1(sp)
++       REG_L a2, PT_A2(sp)
++       REG_L a3, PT_A3(sp)
++       REG_L a4, PT_A4(sp)
++       REG_L a5, PT_A5(sp)
++       REG_L a6, PT_A6(sp)
++       REG_L a7, PT_A7(sp)
++#endif
+        csrs CSR_STATUS, SR_IE
 
- - raise minimum supported binutils version to 2.23
+ 1:
+@@ -291,6 +327,31 @@ resume_userspace:
+        csrw CSR_SCRATCH, tp
 
- - remove old CONFIG_AS_* macros that we know binutils >= 2.23 supports
+ restore_all:
++#ifdef CONFIG_TRACE_IRQFLAGS
++       REG_L s1, PT_STATUS(sp)
++       andi t0, s1, SR_PIE
++       beqz t0, 1f
++       call trace_hardirqs_on
++       j 2f
++1:
++       call trace_hardirqs_off
++2:
++       la ra, ret_from_exception
++       REG_L s0, PT_SP(sp)
++       REG_L s1, PT_STATUS(sp)
++       REG_L s2, PT_EPC(sp)
++       REG_L s3, PT_BADADDR(sp)
++       REG_L s4, PT_CAUSE(sp)
++       REG_L s5, PT_TP(sp)
++       REG_L a0, PT_A0(sp)
++       REG_L a1, PT_A1(sp)
++       REG_L a2, PT_A2(sp)
++       REG_L a3, PT_A3(sp)
++       REG_L a4, PT_A4(sp)
++       REG_L a5, PT_A5(sp)
++       REG_L a6, PT_A6(sp)
++       REG_L a7, PT_A7(sp)
++#endif
+        RESTORE_ALL
+ #ifdef CONFIG_RISCV_M_MODE
+        mret
+diff --git a/arch/riscv/kernel/smpboot.c b/arch/riscv/kernel/smpboot.c
+index 8bc01f0ca73b..54fd70eb50bd 100644
+--- a/arch/riscv/kernel/smpboot.c
++++ b/arch/riscv/kernel/smpboot.c
+@@ -115,7 +115,7 @@ int __cpu_up(unsigned int cpu, struct task_struct *tidle)
+                  task_stack_page(tidle) + THREAD_SIZE);
+        WRITE_ONCE(__cpu_up_task_pointer[hartid], tidle);
 
- - move remaining CONFIG_AS_* tests to Kconfig from Makefile
+-       lockdep_assert_held(&cpu_running);
++//     lockdep_assert_held(&cpu_running);
+        wait_for_completion_timeout(&cpu_running,
+                                            msecs_to_jiffies(1000));
 
- - enable -Wtautological-compare warnings to catch more issues
-
- - do not support GCC plugins for GCC <= 4.7
-
- - fix various breakages of 'make xconfig'
-
- - include the linker version used for linking the kernel into
-   LINUX_COMPILER, which is used for the banner, and also exposed to
-   /proc/version
-
- - link lib-y objects to vmlinux forcibly when CONFIG_MODULES=y,
-   which allows us to remove the lib-ksyms.o workaround, and to
-   solve the last known issue of the LLVM linker
-
- - add dummy tools in scripts/dummy-tools/ to enable all compiler
-   tests in Kconfig, which will be useful for distro maintainers
-
- - support the single switch, LLVM=1 to use Clang and all LLVM utilities
-   instead of GCC and Binutils.
-
- - support LLVM_IAS=1 to enable the integrated assembler, which is still
-   experimental
-
-----------------------------------------------------------------
-Borislav Petkov (1):
-      Documentation/changes: Raise minimum supported binutils version to 2.23
-
-Fangrui Song (1):
-      Documentation/llvm: fix the name of llvm-size
-
-Jason A. Donenfeld (4):
-      x86: probe assembler capabilities via kconfig instead of makefile
-      crypto: x86 - rework configuration based on Kconfig
-      crypto: curve25519 - do not pollute dispatcher based on assembler
-      x86: update AS_* macros to binutils >=2.23, supporting ADX and AVX2
-
-Kees Cook (1):
-      kbuild: mkcompile_h: Include $LD version in /proc/version
-
-Masahiro Yamada (22):
-      sh: use __builtin_constant_p() directly instead of IS_IMMEDIATE()
-      h8300: move definition of __kernel_size_t etc. to posix_types.h
-      sh: remove unneeded uapi asm-generic wrappers
-      lib/raid6/test: fix build on distros whose /bin/sh is not bash
-      x86: remove unneeded defined(__ASSEMBLY__) check from asm/dwarf2.h
-      x86: remove always-defined CONFIG_AS_CFI
-      x86: remove unneeded (CONFIG_AS_)CFI_SIGNAL_FRAME
-      x86: remove always-defined CONFIG_AS_CFI_SECTIONS
-      x86: remove always-defined CONFIG_AS_SSSE3
-      x86: remove always-defined CONFIG_AS_AVX
-      drm/i915: remove always-defined CONFIG_AS_MOVNTDQA
-      x86: add comments about the binutils version to support code in as-instr
-      crypto: x86 - clean up poly1305-x86_64-cryptogams.S by 'make clean'
-      gcc-plugins: drop support for GCC <= 4.7
-      kbuild: do not pass $(KBUILD_CFLAGS) to scripts/mkcompile_h
-      kbuild: remove -I$(srctree)/tools/include from scripts/Makefile
-      MIPS: fw: arc: add __weak to prom_meminit and prom_free_prom_memory
-      kbuild: link lib-y objects to vmlinux forcibly when CONFIG_MODULES=y
-      kbuild: add dummy toolchains to enable all cc-option etc. in Kconfig
-      kbuild: replace AS=clang with LLVM_IAS=1
-      kbuild: support LLVM=1 to switch the default tools to Clang/LLVM
-      kbuild: fix comment about missing include guard detection
-
-Mauro Carvalho Chehab (6):
-      kconfig: qconf: clean deprecated warnings
-      kconfig: qconf: Change title for the item window
-      kconfig: qconf: fix the content of the main widget
-      kconfig: qconf: fix support for the split view mode
-      kconfig: qconf: remove some old bogus TODOs
-      kconfig: qconf: Fix a few alignment issues
-
-Nathan Chancellor (1):
-      kbuild: Enable -Wtautological-compare
-
- Documentation/kbuild/kbuild.rst               |   5 +
- Documentation/kbuild/llvm.rst                 |  15 ++-
- Documentation/process/changes.rst             |   4 +-
- Makefile                                      |  40 +++++--
- arch/h8300/include/uapi/asm/bitsperlong.h     |  15 ---
- arch/h8300/include/uapi/asm/posix_types.h     |  13 +++
- arch/mips/fw/arc/memory.c                     |   4 +-
- arch/sh/include/asm/bitops-op32.h             |   8 +-
- arch/sh/include/uapi/asm/setup.h              |   2 -
- arch/sh/include/uapi/asm/types.h              |   2 -
- arch/x86/Kconfig                              |   2 +
- arch/x86/Kconfig.assembler                    |  17 +++
- arch/x86/Makefile                             |  22 ----
- arch/x86/crypto/Makefile                      | 162
-++++++++++++-----------------
- arch/x86/crypto/aesni-intel_avx-x86_64.S      |   6 --
- arch/x86/crypto/aesni-intel_glue.c            |  21 +---
- arch/x86/crypto/blake2s-core.S                |   2 -
- arch/x86/crypto/chacha_glue.c                 |   6 +-
- arch/x86/crypto/poly1305-x86_64-cryptogams.pl |  16 ---
- arch/x86/crypto/poly1305_glue.c               |  11 +-
- arch/x86/crypto/sha1_ssse3_asm.S              |   4 -
- arch/x86/crypto/sha1_ssse3_glue.c             |  13 ---
- arch/x86/crypto/sha256-avx-asm.S              |   3 -
- arch/x86/crypto/sha256-avx2-asm.S             |   3 -
- arch/x86/crypto/sha256_ssse3_glue.c           |  12 ---
- arch/x86/crypto/sha512-avx-asm.S              |   2 -
- arch/x86/crypto/sha512-avx2-asm.S             |   3 -
- arch/x86/crypto/sha512_ssse3_glue.c           |  10 --
- arch/x86/include/asm/dwarf2.h                 |  44 --------
- arch/x86/include/asm/xor_avx.h                |   9 --
- drivers/gpu/drm/i915/Makefile                 |   3 -
- drivers/gpu/drm/i915/i915_memcpy.c            |   5 -
- include/crypto/curve25519.h                   |   6 +-
- init/Makefile                                 |   2 +-
- lib/raid6/algos.c                             |   8 +-
- lib/raid6/avx2.c                              |   4 -
- lib/raid6/recov_avx2.c                        |   6 --
- lib/raid6/recov_ssse3.c                       |   6 --
- lib/raid6/test/Makefile                       |   9 +-
- net/netfilter/Makefile                        |   2 +-
- net/netfilter/nf_tables_api.c                 |   2 +-
- net/netfilter/nft_set_pipapo.c                |   2 +-
- net/netfilter/nft_set_pipapo_avx2.h           |   4 +-
- scripts/Kconfig.include                       |   3 -
- scripts/Makefile                              |   4 -
- scripts/Makefile.build                        |  19 +---
- scripts/Makefile.clean                        |   1 -
- scripts/Makefile.extrawarn                    |   1 +
- scripts/Makefile.host                         |  23 +---
- scripts/dummy-tools/gcc                       |  91 ++++++++++++++++
- scripts/dummy-tools/ld                        |  30 ++++++
- scripts/dummy-tools/nm                        |   1 +
- scripts/dummy-tools/objcopy                   |   1 +
- scripts/gcc-plugin.sh                         |  55 +---------
- scripts/gcc-plugins/Kconfig                   |  12 +--
- scripts/gcc-plugins/Makefile                  |  21 ++--
- scripts/kconfig/qconf.cc                      |  90 +++++++++++-----
- scripts/kconfig/qconf.h                       |   2 +
- scripts/mkcompile_h                           |   6 +-
- tools/objtool/Makefile                        |   6 ++
- usr/include/Makefile                          |   2 +-
- 61 files changed, 384 insertions(+), 519 deletions(-)
- delete mode 100644 arch/h8300/include/uapi/asm/bitsperlong.h
- create mode 100644 arch/h8300/include/uapi/asm/posix_types.h
- delete mode 100644 arch/sh/include/uapi/asm/setup.h
- delete mode 100644 arch/sh/include/uapi/asm/types.h
- create mode 100644 arch/x86/Kconfig.assembler
- create mode 100755 scripts/dummy-tools/gcc
- create mode 100755 scripts/dummy-tools/ld
- create mode 120000 scripts/dummy-tools/nm
- create mode 120000 scripts/dummy-tools/objcopy
+On Fri, Apr 10, 2020 at 11:26 AM Zong Li <zong.li@sifive.com> wrote:
+>
+> The cpu_running is not a lock-class, it lacks the dep_map member in
+> completion. It causes the error as follow:
+>
+> arch/riscv/kernel/smpboot.c: In function '__cpu_up':
+> ./include/linux/lockdep.h:364:52: error: 'struct completion' has no member named 'dep_map'
+>   364 | #define lockdep_is_held(lock)  lock_is_held(&(lock)->dep_map)
+>       |                                                    ^~
+> ./include/asm-generic/bug.h:113:25: note: in definition of macro 'WARN_ON'
+>   113 |  int __ret_warn_on = !!(condition);    \
+>       |                         ^~~~~~~~~
+> ./include/linux/lockdep.h:390:27: note: in expansion of macro 'lockdep_is_held'
+>   390 |   WARN_ON(debug_locks && !lockdep_is_held(l)); \
+>       |                           ^~~~~~~~~~~~~~~
+> arch/riscv/kernel/smpboot.c:118:2: note: in expansion of macro 'lockdep_assert_held'
+>   118 |  lockdep_assert_held(&cpu_running);
+>
+> Signed-off-by: Zong Li <zong.li@sifive.com>
+> ---
+>  arch/riscv/kernel/smpboot.c | 1 -
+>  1 file changed, 1 deletion(-)
+>
+> diff --git a/arch/riscv/kernel/smpboot.c b/arch/riscv/kernel/smpboot.c
+> index 8bc01f0ca73b..bbc1baa2d90c 100644
+> --- a/arch/riscv/kernel/smpboot.c
+> +++ b/arch/riscv/kernel/smpboot.c
+> @@ -115,7 +115,6 @@ int __cpu_up(unsigned int cpu, struct task_struct *tidle)
+>                   task_stack_page(tidle) + THREAD_SIZE);
+>         WRITE_ONCE(__cpu_up_task_pointer[hartid], tidle);
+>
+> -       lockdep_assert_held(&cpu_running);
+>         wait_for_completion_timeout(&cpu_running,
+>                                             msecs_to_jiffies(1000));
+>
+> --
+> 2.26.0
+>
+>
 
 
 -- 
 Best Regards
-Masahiro Yamada
+ Guo Ren
+
+ML: https://lore.kernel.org/linux-csky/
