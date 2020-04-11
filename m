@@ -2,57 +2,59 @@ Return-Path: <SRS0=xbEg=53=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E282C2BA19
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:45:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63BB5C2BBC7
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:46:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F389620787
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:45:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 34798206F7
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:46:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586648757;
-	bh=nakkXGfNLVDozxCTevxo+JWMDbSpXrDWS5PkJAF2ipA=;
+	s=default; t=1586648769;
+	bh=aOg7yz/O9sc4pMrxXz59A+WsZv+fsfV4MvjWc2Ckh/Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Qlio80jqgZ7LSgNyiB0FUnH4lnRvemcLd7vZQlYcD9Gibbyk3DsyQUQK2KIDvHTAQ
-	 9I9rkr1TjgU1KQkXVUKUn9RtG+Xel5w3dKDKWZcow3IZ82v3VRQF0LiBhEgfci7kqz
-	 3OEGi0BiqNzCWCgfCPN3C4y9cwPxN+AEq589iWxQ=
+	b=uI22YF8EWdw51svx5ZKfUH2DEPEGmR/rv107+lrJi0NgAHdurb2k6M/eTbslNOSRY
+	 UrkKWjLvml4dChq1/YkCikpsex8+4IdsnbVzkz5ZzkQZgdVWGqYSLZ5F5Hw/Rjx5y5
+	 YV/CMbv9hpkc8ap+EVOyrf4OcJ3cb3DkCSrUdrDQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730266AbgDKXpz (ORCPT
+        id S1727940AbgDKXFZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 19:45:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39676 "EHLO mail.kernel.org"
+        Sat, 11 Apr 2020 19:05:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39360 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727986AbgDKXF3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 19:05:29 -0400
+        id S1726867AbgDKXFV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Apr 2020 19:05:21 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D617221835;
-        Sat, 11 Apr 2020 23:05:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4F24D214D8;
+        Sat, 11 Apr 2020 23:05:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586646328;
-        bh=nakkXGfNLVDozxCTevxo+JWMDbSpXrDWS5PkJAF2ipA=;
+        s=default; t=1586646321;
+        bh=aOg7yz/O9sc4pMrxXz59A+WsZv+fsfV4MvjWc2Ckh/Y=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mboQ15BFxYb9hSZq1FQZnfnSp+QdpJGfTsOW/pBemzI6J8Hw/6PNLX9RaPmLqScGe
-         5XWc0ifsMwqaCuGCtSH9AuRVOeBVrGYgcJPDcZ2o5/ZcVenf8p4ftD58YsY13xihGl
-         Oq86HyEPQztIKiOCDFwBWVSowyZBLfh5ueUhi9Go=
+        b=lY9goaorNI/gGLE6DD+ws56+XmdPk0PtO9NBS34y7hTdTSuE5Ee7YFyh3otoC9WJ4
+         762cTx4C2c9VbYwoaJknmvs1XYiwX3gRv7CSWBnxFHqeRRayixxPK7Erwg3FX/s8Oc
+         UTGVTKJ1YY/tnGEADR6mZaAvd1BfZKkHuvWdGPS4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Tzung-Bi Shih <tzungbi@google.com>,
-        Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, alsa-devel@alsa-project.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.6 081/149] ASoC: mediatek: mt8183-da7219: pull TDM GPIO pins down when probed
-Date:   Sat, 11 Apr 2020 19:02:38 -0400
-Message-Id: <20200411230347.22371-81-sashal@kernel.org>
+Cc:     =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
+        Tom St Denis <tom.stdenis@amd.com>,
+        Felix Kuehling <Felix.Kuehling@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Sasha Levin <sashal@kernel.org>, amd-gfx@lists.freedesktop.org,
+        dri-devel@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 5.6 075/149] drm/amdgpu: fix parentheses in amdgpu_vm_update_ptes
+Date:   Sat, 11 Apr 2020 19:02:32 -0400
+Message-Id: <20200411230347.22371-75-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200411230347.22371-1-sashal@kernel.org>
 References: <20200411230347.22371-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -61,165 +63,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tzung-Bi Shih <tzungbi@google.com>
+From: Christian König <christian.koenig@amd.com>
 
-[ Upstream commit 8726ee6148fe24e2b29d4a961ad95c4ff8025d1d ]
+[ Upstream commit bfcd6c69e4c3f73f2f92b997983537f9a3ac3b29 ]
 
-1. Switch TDM GPIO pins according to playback on or off.
-2. Pull TDM GPIO pins down when probed to avoid current leakage.
+For the root PD mask can be 0xffffffff as well which would
+overrun to 0 if we don't cast it before we add one.
 
-Signed-off-by: Tzung-Bi Shih <tzungbi@google.com>
-Link: https://lore.kernel.org/r/20200213112003.2.I1d568b0c99742c6e755d051aadfd52e4be3cc0a5@changeid
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Christian König <christian.koenig@amd.com>
+Tested-by: Tom St Denis <tom.stdenis@amd.com>
+Reviewed-by: Felix Kuehling <Felix.Kuehling@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- .../mediatek/mt8183/mt8183-da7219-max98357.c  | 104 +++++++++++++++++-
- 1 file changed, 98 insertions(+), 6 deletions(-)
+ drivers/gpu/drm/amd/amdgpu/amdgpu_vm.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/sound/soc/mediatek/mt8183/mt8183-da7219-max98357.c b/sound/soc/mediatek/mt8183/mt8183-da7219-max98357.c
-index c65493721e90d..a3974b0a90157 100644
---- a/sound/soc/mediatek/mt8183/mt8183-da7219-max98357.c
-+++ b/sound/soc/mediatek/mt8183/mt8183-da7219-max98357.c
-@@ -18,6 +18,22 @@
+diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_vm.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_vm.c
+index d16231d6a790b..67e7422032265 100644
+--- a/drivers/gpu/drm/amd/amdgpu/amdgpu_vm.c
++++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_vm.c
+@@ -1498,7 +1498,7 @@ static int amdgpu_vm_update_ptes(struct amdgpu_vm_update_params *params,
+ 		incr = (uint64_t)AMDGPU_GPU_PAGE_SIZE << shift;
+ 		mask = amdgpu_vm_entries_mask(adev, cursor.level);
+ 		pe_start = ((cursor.pfn >> shift) & mask) * 8;
+-		entry_end = (uint64_t)(mask + 1) << shift;
++		entry_end = ((uint64_t)mask + 1) << shift;
+ 		entry_end += cursor.pfn & ~(entry_end - 1);
+ 		entry_end = min(entry_end, end);
  
- static struct snd_soc_jack headset_jack;
- 
-+enum PINCTRL_PIN_STATE {
-+	PIN_STATE_DEFAULT = 0,
-+	PIN_TDM_OUT_ON,
-+	PIN_TDM_OUT_OFF,
-+	PIN_STATE_MAX
-+};
-+
-+static const char * const mt8183_pin_str[PIN_STATE_MAX] = {
-+	"default", "aud_tdm_out_on", "aud_tdm_out_off",
-+};
-+
-+struct mt8183_da7219_max98357_priv {
-+	struct pinctrl *pinctrl;
-+	struct pinctrl_state *pin_states[PIN_STATE_MAX];
-+};
-+
- static int mt8183_mt6358_i2s_hw_params(struct snd_pcm_substream *substream,
- 				       struct snd_pcm_hw_params *params)
- {
-@@ -204,6 +220,47 @@ SND_SOC_DAILINK_DEFS(tdm,
- 	DAILINK_COMP_ARRAY(COMP_DUMMY()),
- 	DAILINK_COMP_ARRAY(COMP_EMPTY()));
- 
-+static int mt8183_da7219_tdm_startup(struct snd_pcm_substream *substream)
-+{
-+	struct snd_soc_pcm_runtime *rtd = substream->private_data;
-+	struct mt8183_da7219_max98357_priv *priv =
-+		snd_soc_card_get_drvdata(rtd->card);
-+	int ret;
-+
-+	if (IS_ERR(priv->pin_states[PIN_TDM_OUT_ON]))
-+		return PTR_ERR(priv->pin_states[PIN_TDM_OUT_ON]);
-+
-+	ret = pinctrl_select_state(priv->pinctrl,
-+				   priv->pin_states[PIN_TDM_OUT_ON]);
-+	if (ret)
-+		dev_err(rtd->card->dev, "%s failed to select state %d\n",
-+			__func__, ret);
-+
-+	return ret;
-+}
-+
-+static void mt8183_da7219_tdm_shutdown(struct snd_pcm_substream *substream)
-+{
-+	struct snd_soc_pcm_runtime *rtd = substream->private_data;
-+	struct mt8183_da7219_max98357_priv *priv =
-+		snd_soc_card_get_drvdata(rtd->card);
-+	int ret;
-+
-+	if (IS_ERR(priv->pin_states[PIN_TDM_OUT_OFF]))
-+		return;
-+
-+	ret = pinctrl_select_state(priv->pinctrl,
-+				   priv->pin_states[PIN_TDM_OUT_OFF]);
-+	if (ret)
-+		dev_err(rtd->card->dev, "%s failed to select state %d\n",
-+			__func__, ret);
-+}
-+
-+static struct snd_soc_ops mt8183_da7219_tdm_ops = {
-+	.startup = mt8183_da7219_tdm_startup,
-+	.shutdown = mt8183_da7219_tdm_shutdown,
-+};
-+
- static struct snd_soc_dai_link mt8183_da7219_max98357_dai_links[] = {
- 	/* FE */
- 	{
-@@ -353,6 +410,8 @@ static struct snd_soc_dai_link mt8183_da7219_max98357_dai_links[] = {
- 		.no_pcm = 1,
- 		.dpcm_playback = 1,
- 		.ignore_suspend = 1,
-+		.be_hw_params_fixup = mt8183_i2s_hw_params_fixup,
-+		.ops = &mt8183_da7219_tdm_ops,
- 		SND_SOC_DAILINK_REG(tdm),
- 	},
- };
-@@ -409,7 +468,7 @@ static int mt8183_da7219_max98357_dev_probe(struct platform_device *pdev)
- 	struct snd_soc_card *card = &mt8183_da7219_max98357_card;
- 	struct device_node *platform_node;
- 	struct snd_soc_dai_link *dai_link;
--	struct pinctrl *default_pins;
-+	struct mt8183_da7219_max98357_priv *priv;
- 	int ret, i;
- 
- 	card->dev = &pdev->dev;
-@@ -443,12 +502,45 @@ static int mt8183_da7219_max98357_dev_probe(struct platform_device *pdev)
- 		return ret;
- 	}
- 
--	default_pins =
--		devm_pinctrl_get_select(&pdev->dev, PINCTRL_STATE_DEFAULT);
--	if (IS_ERR(default_pins)) {
--		dev_err(&pdev->dev, "%s set pins failed\n",
-+	priv = devm_kzalloc(&pdev->dev, sizeof(*priv), GFP_KERNEL);
-+	if (!priv)
-+		return -ENOMEM;
-+
-+	snd_soc_card_set_drvdata(card, priv);
-+
-+	priv->pinctrl = devm_pinctrl_get(&pdev->dev);
-+	if (IS_ERR(priv->pinctrl)) {
-+		dev_err(&pdev->dev, "%s devm_pinctrl_get failed\n",
- 			__func__);
--		return PTR_ERR(default_pins);
-+		return PTR_ERR(priv->pinctrl);
-+	}
-+
-+	for (i = 0; i < PIN_STATE_MAX; i++) {
-+		priv->pin_states[i] = pinctrl_lookup_state(priv->pinctrl,
-+							   mt8183_pin_str[i]);
-+		if (IS_ERR(priv->pin_states[i])) {
-+			ret = PTR_ERR(priv->pin_states[i]);
-+			dev_info(&pdev->dev, "%s Can't find pin state %s %d\n",
-+				 __func__, mt8183_pin_str[i], ret);
-+		}
-+	}
-+
-+	if (!IS_ERR(priv->pin_states[PIN_TDM_OUT_OFF])) {
-+		ret = pinctrl_select_state(priv->pinctrl,
-+					   priv->pin_states[PIN_TDM_OUT_OFF]);
-+		if (ret)
-+			dev_info(&pdev->dev,
-+				 "%s failed to select state %d\n",
-+				 __func__, ret);
-+	}
-+
-+	if (!IS_ERR(priv->pin_states[PIN_STATE_DEFAULT])) {
-+		ret = pinctrl_select_state(priv->pinctrl,
-+					   priv->pin_states[PIN_STATE_DEFAULT]);
-+		if (ret)
-+			dev_info(&pdev->dev,
-+				 "%s failed to select state %d\n",
-+				 __func__, ret);
- 	}
- 
- 	return ret;
 -- 
 2.20.1
 
