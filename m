@@ -4,52 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FD95C2BB86
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:36:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38C86C2BB86
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:36:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D04332051A
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:36:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 07BE42051A
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:36:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586648195;
-	bh=dYxTGFLO18XEoHMGcD97ucFQmH0G9hApwYyAukMl4HE=;
+	s=default; t=1586648200;
+	bh=JKifc22C2UL+b3jQWkj/4fHSC1WFMr8V0XiS/e49728=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=IAl7zyrjBejQHXD3HFVIl0piSXvcwS4qHR53I8/5gFUehMHtv8oXLuPw5URk+UofN
-	 j+tZfO3En7xrcMbw25IZ8qUkCK0xYKWm89do3PaJ5cQorZ6YnjhiAreEJU2i6Yex2L
-	 bPS3oz6sc2yFzJjnYoCbY0FopkNQyMRDn/sNTaBs=
+	b=gulUCx8gvtZqAVXTM/PMuOWVxJRaux011KND6efn/+miCcF6D0SeMferSSNMLxxew
+	 Vr+eNQGBOeLZ93n6fU7rtdQ4FMkqWZNMMoOP1AT6NSG1ozuuwvsgQeg5SCGEmP2g32
+	 BVKyVQAbxjryC6AwXPi9mkx9FQviBpz11jZZntRQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730414AbgDKXgd (ORCPT
+        id S1728959AbgDKXIi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 19:36:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45880 "EHLO mail.kernel.org"
+        Sat, 11 Apr 2020 19:08:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45218 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728002AbgDKXIj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 19:08:39 -0400
+        id S1727250AbgDKXIX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Apr 2020 19:08:23 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 283B221835;
-        Sat, 11 Apr 2020 23:08:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5BF7D20CC7;
+        Sat, 11 Apr 2020 23:08:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586646520;
-        bh=dYxTGFLO18XEoHMGcD97ucFQmH0G9hApwYyAukMl4HE=;
+        s=default; t=1586646503;
+        bh=JKifc22C2UL+b3jQWkj/4fHSC1WFMr8V0XiS/e49728=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MRn7RCzl2GuYCtgoy6Stp4hpKa/oxv1zBSRBZzyHLQCSL6Sy1P4CrKr4BJNlfUI+L
-         kXmxDk9v/5bZm3vAv9jJqzMFuJiliuLTXC0aO2KA+NoPglmkjtUDSgpEKt4CJ1XYdV
-         MmPSDInbfO3T2kW9N8AlL4YlabfwUxP1S8nc3gwk=
+        b=RPo7XBXCnfp3chPAAm2FAGwv/8i2UBXbNOskFbzDbjL+WPUF7AYxBYVrbOj9MU5zU
+         Oe5Wb3g20PMH3/NmkyhVomdSSc8kuDOpADoRbYZVjKLdQgrcUcVMXjqHwTY+qENhJs
+         x/B4C7V0J0oSBuWu4OZe6NOwAAJ8ryj8MSSsGXYk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Qiujun Huang <hqjagain@gmail.com>,
-        syzbot+4496e82090657320efc6@syzkaller.appspotmail.com,
-        Hillf Danton <hdanton@sina.com>,
-        Marcel Holtmann <marcel@holtmann.org>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-bluetooth@vger.kernel.org, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.5 076/121] Bluetooth: RFCOMM: fix ODEBUG bug in rfcomm_dev_ioctl
-Date:   Sat, 11 Apr 2020 19:06:21 -0400
-Message-Id: <20200411230706.23855-76-sashal@kernel.org>
+Cc:     Peikang Zhang <peikang.zhang@amd.com>, Jun Lei <Jun.Lei@amd.com>,
+        Bhawanpreet Lakha <Bhawanpreet.Lakha@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Sasha Levin <sashal@kernel.org>, amd-gfx@lists.freedesktop.org,
+        dri-devel@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 5.5 063/121] drm/amd/display: dc_get_vmid_use_vector() crashes when get called
+Date:   Sat, 11 Apr 2020 19:06:08 -0400
+Message-Id: <20200411230706.23855-63-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200411230706.23855-1-sashal@kernel.org>
 References: <20200411230706.23855-1-sashal@kernel.org>
@@ -62,38 +61,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Qiujun Huang <hqjagain@gmail.com>
+From: Peikang Zhang <peikang.zhang@amd.com>
 
-[ Upstream commit 71811cac8532b2387b3414f7cd8fe9e497482864 ]
+[ Upstream commit 68bbca15e7062f4ae16531e29893f78d0b4840b6 ]
 
-Needn't call 'rfcomm_dlc_put' here, because 'rfcomm_dlc_exists' didn't
-increase dlc->refcnt.
+[Why]
+int i can go out of boundary which will cause crash
 
-Reported-by: syzbot+4496e82090657320efc6@syzkaller.appspotmail.com
-Signed-off-by: Qiujun Huang <hqjagain@gmail.com>
-Suggested-by: Hillf Danton <hdanton@sina.com>
-Signed-off-by: Marcel Holtmann <marcel@holtmann.org>
+[How]
+Fixed the maximum value of i to avoid i going out of boundary
+
+Signed-off-by: Peikang Zhang <peikang.zhang@amd.com>
+Reviewed-by: Jun Lei <Jun.Lei@amd.com>
+Acked-by: Bhawanpreet Lakha <Bhawanpreet.Lakha@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/bluetooth/rfcomm/tty.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+ drivers/gpu/drm/amd/display/dc/core/dc_vm_helper.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/net/bluetooth/rfcomm/tty.c b/net/bluetooth/rfcomm/tty.c
-index 0c7d31c6c18cc..a58584949a955 100644
---- a/net/bluetooth/rfcomm/tty.c
-+++ b/net/bluetooth/rfcomm/tty.c
-@@ -413,10 +413,8 @@ static int __rfcomm_create_dev(struct sock *sk, void __user *arg)
- 		dlc = rfcomm_dlc_exists(&req.src, &req.dst, req.channel);
- 		if (IS_ERR(dlc))
- 			return PTR_ERR(dlc);
--		else if (dlc) {
--			rfcomm_dlc_put(dlc);
-+		if (dlc)
- 			return -EBUSY;
--		}
- 		dlc = rfcomm_dlc_alloc(GFP_KERNEL);
- 		if (!dlc)
- 			return -ENOMEM;
+diff --git a/drivers/gpu/drm/amd/display/dc/core/dc_vm_helper.c b/drivers/gpu/drm/amd/display/dc/core/dc_vm_helper.c
+index a96d8de9380e6..f2b39ec35c898 100644
+--- a/drivers/gpu/drm/amd/display/dc/core/dc_vm_helper.c
++++ b/drivers/gpu/drm/amd/display/dc/core/dc_vm_helper.c
+@@ -62,7 +62,7 @@ int dc_get_vmid_use_vector(struct dc *dc)
+ 	int i;
+ 	int in_use = 0;
+ 
+-	for (i = 0; i < dc->vm_helper->num_vmid; i++)
++	for (i = 0; i < MAX_HUBP; i++)
+ 		in_use |= dc->vm_helper->hubp_vmid_usage[i].vmid_usage[0]
+ 			| dc->vm_helper->hubp_vmid_usage[i].vmid_usage[1];
+ 	return in_use;
 -- 
 2.20.1
 
