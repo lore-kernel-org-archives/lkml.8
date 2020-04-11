@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 415F4C2BBC7
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:13:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74B94C2BB85
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:13:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1A32021744
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:13:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 42D7721655
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:13:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586607209;
-	bh=KgQI/IEdw7z0FxlePfn7h13qgfWjmrpXaevxOhYSAlE=;
+	s=default; t=1586607214;
+	bh=pOhhefnT3vt7QwB756HsUerLLEmN5XhypxWbbN3FghQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NAOr2NfClBvbopQAXie7MlHKrGUdXrqpxZ3HHSuUX8niqoi2gqgn78QwD2ZOkgquw
-	 ELyfrY48bRiQKXUKXwkLejaGJ6418g9924CrCAku2TNRNCb7HHQGmztc/ByMdOnzfr
-	 rODnLEfoI2bYzTSKo4dF//KDZHL+aMrkFFcGN4f4=
+	b=H8Fnw1Af+cYcCuDa4vfwtFli/WpCGU1idTStHd4FZiZ26IZzYY2pqrZuZa3UZC/gb
+	 a/XFjfXJzOwCzCnsrk93WmdaSasNoDBmwECVPatTBNDGyo1cOiV1o7MqO5frwA6WJx
+	 Gr6w+o5+SVUvKVxO3hf2Zki4HqsGKJmxD3fVz9XU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727782AbgDKMNY (ORCPT
+        id S1727823AbgDKMNc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 08:13:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46266 "EHLO mail.kernel.org"
+        Sat, 11 Apr 2020 08:13:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46386 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727757AbgDKMNW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 08:13:22 -0400
+        id S1727778AbgDKMN0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Apr 2020 08:13:26 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 501AE2173E;
-        Sat, 11 Apr 2020 12:13:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1C7BB20787;
+        Sat, 11 Apr 2020 12:13:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586607201;
-        bh=KgQI/IEdw7z0FxlePfn7h13qgfWjmrpXaevxOhYSAlE=;
+        s=default; t=1586607206;
+        bh=pOhhefnT3vt7QwB756HsUerLLEmN5XhypxWbbN3FghQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VyfYb+YYS/Wu2MGop3/EqDwt8f/CnP3ZyKPz2Y/yDLLjkQatLWXEJ9svp38KrMJP/
-         1tZNahDvEtz3hqjDruOhSPaVgyukp+694OLiCPz4+qEOvKTwnSM+vzafNEHX6JpWz5
-         VbE/mc0lduML7Vgc49AD00GCtZTCZvp3DorfJOCI=
+        b=ypMIjZzeQhq4HKrWxINijZnYf59WnvHFyG4tA6GbdEyGuQ8kCtnwrbQAf0+tQInDP
+         rTjcHwgR4TJcfPnV406FZvt5olxK7aCRwhk/eCKPnu/eki4cDIHWdpKCLjRBZNHOzW
+         GZEAiLpYvPyxr9O3oHJ/jsyT7/C7GvHx77wT/hAY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>,
-        Vivien Didelot <vivien.didelot@gmail.com>,
+        stable@vger.kernel.org,
+        Jisheng Zhang <Jisheng.Zhang@synaptics.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.14 16/38] net: dsa: bcm_sf2: Ensure correct sub-node is parsed
-Date:   Sat, 11 Apr 2020 14:09:00 +0200
-Message-Id: <20200411115439.585127343@linuxfoundation.org>
+Subject: [PATCH 4.14 18/38] net: stmmac: dwmac1000: fix out-of-bounds mac address reg setting
+Date:   Sat, 11 Apr 2020 14:09:02 +0200
+Message-Id: <20200411115439.765946029@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200411115437.795556138@linuxfoundation.org>
 References: <20200411115437.795556138@linuxfoundation.org>
@@ -60,48 +60,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Florian Fainelli <f.fainelli@gmail.com>
+From: Jisheng Zhang <Jisheng.Zhang@synaptics.com>
 
-[ Upstream commit afa3b592953bfaecfb4f2f335ec5f935cff56804 ]
+[ Upstream commit 3e1221acf6a8f8595b5ce354bab4327a69d54d18 ]
 
-When the bcm_sf2 was converted into a proper platform device driver and
-used the new dsa_register_switch() interface, we would still be parsing
-the legacy DSA node that contained all the port information since the
-platform firmware has intentionally maintained backward and forward
-compatibility to client programs. Ensure that we do parse the correct
-node, which is "ports" per the revised DSA binding.
+Commit 9463c4455900 ("net: stmmac: dwmac1000: Clear unused address
+entries") cleared the unused mac address entries, but introduced an
+out-of bounds mac address register programming bug -- After setting
+the secondary unicast mac addresses, the "reg" value has reached
+netdev_uc_count() + 1, thus we should only clear address entries
+if (addr < perfect_addr_number)
 
-Fixes: d9338023fb8e ("net: dsa: bcm_sf2: Make it a real platform device driver")
-Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
-Reviewed-by: Vivien Didelot <vivien.didelot@gmail.com>
+Fixes: 9463c4455900 ("net: stmmac: dwmac1000: Clear unused address entries")
+Signed-off-by: Jisheng Zhang <Jisheng.Zhang@synaptics.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/dsa/bcm_sf2.c |    7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+ drivers/net/ethernet/stmicro/stmmac/dwmac1000_core.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/net/dsa/bcm_sf2.c
-+++ b/drivers/net/dsa/bcm_sf2.c
-@@ -1112,6 +1112,7 @@ static int bcm_sf2_sw_probe(struct platf
- 	const struct bcm_sf2_of_data *data;
- 	struct b53_platform_data *pdata;
- 	struct dsa_switch_ops *ops;
-+	struct device_node *ports;
- 	struct bcm_sf2_priv *priv;
- 	struct b53_device *dev;
- 	struct dsa_switch *ds;
-@@ -1174,7 +1175,11 @@ static int bcm_sf2_sw_probe(struct platf
- 	 */
- 	set_bit(0, priv->cfp.used);
+--- a/drivers/net/ethernet/stmicro/stmmac/dwmac1000_core.c
++++ b/drivers/net/ethernet/stmicro/stmmac/dwmac1000_core.c
+@@ -218,7 +218,7 @@ static void dwmac1000_set_filter(struct
+ 			reg++;
+ 		}
  
--	bcm_sf2_identify_ports(priv, dn->child);
-+	ports = of_find_node_by_name(dn, "ports");
-+	if (ports) {
-+		bcm_sf2_identify_ports(priv, ports);
-+		of_node_put(ports);
-+	}
- 
- 	priv->irq0 = irq_of_parse_and_map(dn, 0);
- 	priv->irq1 = irq_of_parse_and_map(dn, 1);
+-		while (reg <= perfect_addr_number) {
++		while (reg < perfect_addr_number) {
+ 			writel(0, ioaddr + GMAC_ADDR_HIGH(reg));
+ 			writel(0, ioaddr + GMAC_ADDR_LOW(reg));
+ 			reg++;
 
 
