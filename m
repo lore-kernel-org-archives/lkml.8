@@ -5,66 +5,65 @@ X-Spam-Level:
 X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D31AC2BBC7
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 16:04:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4FA4C2BA2B
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 16:05:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1F4C22083E
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 16:04:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A61542078E
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 16:05:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pg0y+mBf"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VEFhYYF3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726719AbgDKQEh (ORCPT
+        id S1726734AbgDKQFA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 12:04:37 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:44392 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726070AbgDKQEh (ORCPT
+        Sat, 11 Apr 2020 12:05:00 -0400
+Received: from mail-pj1-f67.google.com ([209.85.216.67]:39120 "EHLO
+        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726070AbgDKQE7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 12:04:37 -0400
-Received: by mail-pl1-f193.google.com with SMTP id h11so1704104plr.11;
-        Sat, 11 Apr 2020 09:04:37 -0700 (PDT)
+        Sat, 11 Apr 2020 12:04:59 -0400
+Received: by mail-pj1-f67.google.com with SMTP id o1so1069311pjs.4
+        for <linux-kernel@vger.kernel.org>; Sat, 11 Apr 2020 09:04:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=GMnG2j5kk+O2i07cQtSOcLpZb+BBBEK51LCwl+FnQqI=;
-        b=pg0y+mBfFiZSt/IYWvDz/nhCt33BNvbN56cTCAcqw5qyzPpbHXsQvw4YiKwuoFigFJ
-         x4+BpX5VTbRCs1SRjG1KXqcNhQt8mM/Hd1T1VvGfVNhAcJwcwUCpmHrW/nhv7atQ3t+s
-         CeeooBxtZyLaN/LY+gOX7ZTgFPq7W7vmtJhHScjAgEc5L8ClIN6dQEZuQQZoS5kUebHi
-         Z10rRnjLTam7/QpfojWmjvVxv4nRQG3PnjFd6/qdLgoG1Kwyt9Ufl24OFMlpz/7PKpai
-         +2/INjOoCNyU1Kzj1oLav0YA83E7EI7rVkMGomKeJfI10L0WRCvYNY5wEyRlnkiEb7Jm
-         /Zig==
+        bh=CNSQoXFlKgWCIOZrqLUl6wID11RTUmYQHQ0/BX2/sHE=;
+        b=VEFhYYF3p5KxrLWRGJDL2N667q1ZPkgv86jZsYij0iLgeLWIpZQfWcmyAdgWzke6Ec
+         3hGjBRqZVbY8UfHcUIU7gvVNpklYSPllx6G44rJ0TY8EDVXanDjWa372sWVfYEG7PMH0
+         rnO/sXOpExMeG45YOWnS0ogFehdn439ohjZTVbD56ByhtXpxZ9P6XzKAtUzDtKSlQOKG
+         prXjsy7a8660CL/9yOGNaP3d7kt65hdRbipohCxoO8QdCFBkmbMb7gZ7PG4/dAxA59sa
+         csrhYFVtWytlUPL+JpDotta1x0+qwvbRbsz1iGjC05n8qM+PHrPAyEqgneYsBBN39dxa
+         TJXQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=GMnG2j5kk+O2i07cQtSOcLpZb+BBBEK51LCwl+FnQqI=;
-        b=XJNbnIltavf+2oJmwS2Eq5PclSawBvOPG8o7Kzca3K0iI/J3I/qI6bY2Dzbis2QDPC
-         B+s8/JLNdpDsgjpTaAM6QMl9YC2gqNgJJ4haaNGEvXaIIJu6NMNbDLzNZFbcSX35lFsN
-         drbwN36aC7n1JmdOYCVug1JdadEv67y27MpkcjTl6aoMgov+um4LIp6wpbQsLWQG2lmE
-         CInlAUr2WaUitTEQOf9QlrrC09ys9s50RzyxgT5BJZ/metdemeFGVHeGPB1GxnpkvNIY
-         axPdl6GhZ5FbxyZgySVAdus6cMQcoDghV2I33SkhgGcjmAgWkjxtjrwhn5IpWOoI89PY
-         xr3g==
-X-Gm-Message-State: AGi0PuZfKXfcgHj1rwnQXmg3Qvko0zik40OreKC/snsPE5V+Ks/cMdGM
-        LmzzJ4UnCcykT97Zaz3m8cw=
-X-Google-Smtp-Source: APiQypJQzXujimSti9/fz8MJ4M5YV0AZUuCQiwLVQFZruk/bdW8Y/oYw0vDfupYOjS33Gyrzltg93A==
-X-Received: by 2002:a17:902:b087:: with SMTP id p7mr9718749plr.287.1586621076622;
-        Sat, 11 Apr 2020 09:04:36 -0700 (PDT)
+        bh=CNSQoXFlKgWCIOZrqLUl6wID11RTUmYQHQ0/BX2/sHE=;
+        b=jiB/uU+Xdcs9mg0XiaNJIoLIL4Ecu2DZw4C1TaK6psRcrz6KfSezZQrs2SEuZzA9wN
+         5KWuFlKn1jWnxxOShmqzEMHs/fbuT6kliu+eG+x2MtTI9V4saBE+6ED29PXuqoWtolYw
+         gK1QWe4SM8E1nuY0Jrr6t4CcG/+KKeuvmuAzLoHOqHn+F35RRZ8Tzgam5syf62T1X55W
+         sdycvz9FxR62cnjK1CyFoDDkZKAMlq6khnqXsxVbzgNmsBJaqaB2k2M0y9eo4adBM0FV
+         5pkrSNaOqTinuxz8T/yqohXVcpxBWYW9QXb4phe260YclkqtlJG8JXfJp8LfK6ATHSWT
+         yCkA==
+X-Gm-Message-State: AGi0PuaB7Fd1hlk7QepLS8p61fkKFSBWNKid4kok2o+2tvgNrFCkCrfn
+        12zn8Pn5kMv5TjnL1s/7Rc8=
+X-Google-Smtp-Source: APiQypKGVreOobFj/XPBTpEVM66f9CRTl6UpjQ9o5SIOdhFaMgxEdy4aIl3AUpcEUnqa38aNXeOyng==
+X-Received: by 2002:a17:90a:9318:: with SMTP id p24mr11553177pjo.163.1586621097496;
+        Sat, 11 Apr 2020 09:04:57 -0700 (PDT)
 Received: from localhost ([183.82.183.27])
-        by smtp.gmail.com with ESMTPSA id r23sm4569628pfh.162.2020.04.11.09.04.35
+        by smtp.gmail.com with ESMTPSA id jx1sm2117538pjb.5.2020.04.11.09.04.56
         (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Sat, 11 Apr 2020 09:04:36 -0700 (PDT)
-Date:   Sat, 11 Apr 2020 21:34:34 +0530
+        Sat, 11 Apr 2020 09:04:57 -0700 (PDT)
+Date:   Sat, 11 Apr 2020 21:34:55 +0530
 From:   afzal mohammed <afzal.mohd.ma@gmail.com>
-To:     Thomas Bogendoerfer <tbogendoerfer@suse.de>
-Cc:     Thomas Gleixner <tglx@linutronix.de>, linux-kernel@vger.kernel.org,
-        linux-mips@vger.kernel.org
-Subject: [PATCH 1/3] MIPS: Replace setup_percpu_irq() by request_percpu_irq()
- variant
-Message-ID: <82270883881f29f8ad4b289f915cdbb8620608f6.1586434781.git.afzal.mohd.ma@gmail.com>
+To:     Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc:     Thomas Gleixner <tglx@linutronix.de>, linux-kernel@vger.kernel.org
+Subject: [PATCH 2/3] clocksource/drivers/mips-gic-timer: Replace
+ setup_percpu_irq() by request_percpu_irq() variant
+Message-ID: <4b0bc8921daea49636a604259025c65f358ab9c8.1586434781.git.afzal.mohd.ma@gmail.com>
 References: <cover.1586434781.git.afzal.mohd.ma@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
@@ -86,98 +85,37 @@ __request_percpu_irq() is used.
 
 Signed-off-by: afzal mohammed <afzal.mohd.ma@gmail.com>
 ---
- arch/mips/include/asm/cevt-r4k.h |  1 -
- arch/mips/kernel/cevt-r4k.c      | 11 -----------
- arch/mips/sgi-ip27/ip27-timer.c  | 13 +++++--------
- arch/mips/sgi-ip30/ip30-timer.c  |  6 +++---
- 4 files changed, 8 insertions(+), 23 deletions(-)
+ drivers/clocksource/mips-gic-timer.c | 10 ++--------
+ 1 file changed, 2 insertions(+), 8 deletions(-)
 
-diff --git a/arch/mips/include/asm/cevt-r4k.h b/arch/mips/include/asm/cevt-r4k.h
-index 2e13a038d260..5229eb34f28a 100644
---- a/arch/mips/include/asm/cevt-r4k.h
-+++ b/arch/mips/include/asm/cevt-r4k.h
-@@ -23,7 +23,6 @@ void mips_event_handler(struct clock_event_device *dev);
- int c0_compare_int_usable(void);
- irqreturn_t c0_compare_interrupt(int, void *);
- 
--extern struct irqaction c0_compare_irqaction;
- extern int cp0_timer_irq_installed;
- 
- #endif /* __ASM_CEVT_R4K_H */
-diff --git a/arch/mips/kernel/cevt-r4k.c b/arch/mips/kernel/cevt-r4k.c
-index 17a9cbb8b3df..4ffa9f485d07 100644
---- a/arch/mips/kernel/cevt-r4k.c
-+++ b/arch/mips/kernel/cevt-r4k.c
-@@ -158,17 +158,6 @@ irqreturn_t c0_compare_interrupt(int irq, void *dev_id)
- 	return IRQ_NONE;
- }
- 
--struct irqaction c0_compare_irqaction = {
--	.handler = c0_compare_interrupt,
--	/*
--	 * IRQF_SHARED: The timer interrupt may be shared with other interrupts
--	 * such as perf counter and FDC interrupts.
--	 */
--	.flags = IRQF_PERCPU | IRQF_TIMER | IRQF_SHARED,
--	.name = "timer",
--};
--
--
- void mips_event_handler(struct clock_event_device *dev)
- {
- }
-diff --git a/arch/mips/sgi-ip27/ip27-timer.c b/arch/mips/sgi-ip27/ip27-timer.c
-index 61f3565f3645..6e2b58b47580 100644
---- a/arch/mips/sgi-ip27/ip27-timer.c
-+++ b/arch/mips/sgi-ip27/ip27-timer.c
-@@ -68,13 +68,6 @@ static irqreturn_t hub_rt_counter_handler(int irq, void *dev_id)
+diff --git a/drivers/clocksource/mips-gic-timer.c b/drivers/clocksource/mips-gic-timer.c
+index 37671a5d4ed9..e8e6bb6159f5 100644
+--- a/drivers/clocksource/mips-gic-timer.c
++++ b/drivers/clocksource/mips-gic-timer.c
+@@ -67,13 +67,6 @@ static irqreturn_t gic_compare_interrupt(int irq, void *dev_id)
  	return IRQ_HANDLED;
  }
  
--struct irqaction hub_rt_irqaction = {
--	.handler	= hub_rt_counter_handler,
--	.percpu_dev_id	= &hub_rt_clockevent,
--	.flags		= IRQF_PERCPU | IRQF_TIMER,
--	.name		= "hub-rt",
+-static struct irqaction gic_compare_irqaction = {
+-	.handler = gic_compare_interrupt,
+-	.percpu_dev_id = &gic_clockevent_device,
+-	.flags = IRQF_PERCPU | IRQF_TIMER,
+-	.name = "timer",
 -};
 -
- /*
-  * This is a hack; we really need to figure these values out dynamically
-  *
-@@ -111,9 +104,13 @@ void hub_rt_clock_event_init(void)
- 
- static void __init hub_rt_clock_event_global_init(void)
+ static void gic_clockevent_cpu_init(unsigned int cpu,
+ 				    struct clock_event_device *cd)
  {
-+	int irq = IP27_RT_TIMER_IRQ;
-+
- 	irq_set_handler(IP27_RT_TIMER_IRQ, handle_percpu_devid_irq);
- 	irq_set_percpu_devid(IP27_RT_TIMER_IRQ);
--	setup_percpu_irq(IP27_RT_TIMER_IRQ, &hub_rt_irqaction);
-+	if (__request_percpu_irq(irq, hub_rt_counter_handler, IRQF_TIMER,
-+				 "hub-rt", &hub_rt_clockevent) < 0)
-+		pr_err("Failed to request percpu irq %d (hub-rt)\n", irq);
- }
+@@ -137,7 +130,8 @@ static int gic_clockevent_init(void)
+ 	if (!gic_frequency)
+ 		return -ENXIO;
  
- static u64 hub_rt_read(struct clocksource *cs)
-diff --git a/arch/mips/sgi-ip30/ip30-timer.c b/arch/mips/sgi-ip30/ip30-timer.c
-index d13e105478ae..dcc22eaddcda 100644
---- a/arch/mips/sgi-ip30/ip30-timer.c
-+++ b/arch/mips/sgi-ip30/ip30-timer.c
-@@ -52,11 +52,11 @@ void __init plat_time_init(void)
- 	int irq = get_c0_compare_int();
- 
- 	cp0_timer_irq_installed = 1;
--	c0_compare_irqaction.percpu_dev_id = &mips_clockevent_device;
--	c0_compare_irqaction.flags &= ~IRQF_SHARED;
- 	irq_set_handler(irq, handle_percpu_devid_irq);
- 	irq_set_percpu_devid(irq);
--	setup_percpu_irq(irq, &c0_compare_irqaction);
-+	if (__request_percpu_irq(irq, c0_compare_interrupt, IRQF_TIMER, "timer",
-+				 &mips_clockevent_device) < 0)
-+		pr_err("Failed to request percpu irq %d (timer)\n", irq);
- 	enable_percpu_irq(irq, IRQ_TYPE_NONE);
- 
- 	ip30_heart_clocksource_init();
+-	ret = setup_percpu_irq(gic_timer_irq, &gic_compare_irqaction);
++	ret = __request_percpu_irq(gic_timer_irq, gic_compare_interrupt,
++				   IRQF_TIMER, "timer", &gic_clockevent_device);
+ 	if (ret < 0) {
+ 		pr_err("IRQ %d setup failed (%d)\n", gic_timer_irq, ret);
+ 		return ret;
 -- 
 2.18.0
 
