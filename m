@@ -2,199 +2,390 @@ Return-Path: <SRS0=xbEg=53=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77828C2BA2B
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 11:09:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3DCBC2BBC7
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 11:09:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4BE9320732
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 11:09:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 879C020732
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 11:09:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726037AbgDKLJN (ORCPT
+        id S1726563AbgDKLJt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 07:09:13 -0400
-Received: from mail-io1-f70.google.com ([209.85.166.70]:54367 "EHLO
-        mail-io1-f70.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726166AbgDKLJM (ORCPT
+        Sat, 11 Apr 2020 07:09:49 -0400
+Received: from mail.baikalelectronics.com ([87.245.175.226]:42820 "EHLO
+        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726166AbgDKLJs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 07:09:12 -0400
-Received: by mail-io1-f70.google.com with SMTP id n18so4609884ioj.21
-        for <linux-kernel@vger.kernel.org>; Sat, 11 Apr 2020 04:09:12 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=ZKqkKshdGEkt/3Yxs52uQA/cTeUPVNrJo21GVj08594=;
-        b=ZLvZ4pD4DK7o+zSvKgwMk6jBE69l5Z6eXeei7nL3mGZdzzDd9a1CMzyFIWkPsKuSst
-         mYa9IZLc+ho9A5OPIxNGJ3kK7FeMvG1H1CYYZRIwMRenN94p1s66ZEfxsGw9hohl2tWT
-         M6zD3t5nIwrSXNT859nuTk74rreyLQNqiQOtHmwy7HnIJ8QNeT8++s36bNt6B7UOPM5Z
-         pc4vEQGceDQthNu+oLtY4/fJ4K7bI9y3tTMFaoBHgTs4JCZY3NpCHaQfz+pR5mHj/7p3
-         8v2ov+82EQRZZyOjGaGFQudi/LNwgi2NIdYVrg4ODpGVe8foIy0kAyBtKdfu1TOoIp1y
-         yhVA==
-X-Gm-Message-State: AGi0Pubgts3y3IuubgzcJ0yhQ+weUqX5QtPwMc2AQGcQIqNE7/j9APmt
-        3sezYrJjzlUDrt1uw6tL9rmB9Zf1wlTAp5IzIzsMfU5qZugR
-X-Google-Smtp-Source: APiQypJBVyDYo+1JXCWO0fvjWsORi6tIgTf/TbJw7VxKhJxlMdEr5AGwrH2ayhYPdC/PHEsrPH/kuJCkpAXiuLodt1dxue/5YpFU
+        Sat, 11 Apr 2020 07:09:48 -0400
+Received: from localhost (unknown [127.0.0.1])
+        by mail.baikalelectronics.ru (Postfix) with ESMTP id C95878030786;
+        Sat, 11 Apr 2020 11:09:46 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at baikalelectronics.ru
+Received: from mail.baikalelectronics.ru ([127.0.0.1])
+        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id iXlglvlbxhAe; Sat, 11 Apr 2020 14:09:45 +0300 (MSK)
+Date:   Sat, 11 Apr 2020 14:10:17 +0300
+From:   Sergey Semin <Sergey.Semin@baikalelectronics.ru>
+To:     Guenter Roeck <linux@roeck-us.net>
+CC:     Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Paul Burton <paulburton@kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        <linux-watchdog@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 4/7] watchdog: dw_wdt: Support devices with non-fixed TOP
+ values
+Message-ID: <20200411111016.kwqciyeha7dyhwdz@ubsrv2.baikal.int>
+References: <20200306132747.14701-1-Sergey.Semin@baikalelectronics.ru>
+ <20200306132829.E508B8030705@mail.baikalelectronics.ru>
+ <20200315141238.GA7245@roeck-us.net>
+ <20200410125904.bdrr3jpi47mwvfkf@ubsrv2.baikal.int>
+ <9dd40847-a2c7-d30c-0af4-07ff606a61f8@roeck-us.net>
+ <20200410194513.tdnhmrpo7sgupn35@ubsrv2.baikal.int>
+ <1c403426-90c9-5478-4cba-852be5d5141b@roeck-us.net>
 MIME-Version: 1.0
-X-Received: by 2002:a92:250e:: with SMTP id l14mr9114611ill.201.1586603352271;
- Sat, 11 Apr 2020 04:09:12 -0700 (PDT)
-Date:   Sat, 11 Apr 2020 04:09:12 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <00000000000036317b05a301e1e4@google.com>
-Subject: KASAN: use-after-free Read in ath9k_htc_txcompletion_cb
-From:   syzbot <syzbot+809d3bdcdb4650cdbc83@syzkaller.appspotmail.com>
-To:     andreyknvl@google.com, ath9k-devel@qca.qualcomm.com,
-        davem@davemloft.net, kvalo@codeaurora.org,
-        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <1c403426-90c9-5478-4cba-852be5d5141b@roeck-us.net>
+X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+On Fri, Apr 10, 2020 at 06:15:30PM -0700, Guenter Roeck wrote:
+> On 4/10/20 12:45 PM, Sergey Semin wrote:
+> > On Fri, Apr 10, 2020 at 09:21:35AM -0700, Guenter Roeck wrote:
+> >> On 4/10/20 5:59 AM, Sergey Semin wrote:
+> >>> On Sun, Mar 15, 2020 at 07:12:38AM -0700, Guenter Roeck wrote:
+> >>>> On Fri, Mar 06, 2020 at 04:27:44PM +0300, Sergey.Semin@baikalelectronics.ru wrote:
+> >>>>> From: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+> >>>>>
+> >>>>> In case if the DW Watchdog IP core is synthesised with
+> >>>>> WDT_USE_FIX_TOP == false, the TOP interval indexes make the device
+> >>>>> to load a custom periods to the counter. These periods are hardwired
+> >>>>> at the synthesis stage and can be within [2^8, 2^(WDT_CNT_WIDTH - 1)].
+> >>>>> Alas their values can't be detected at runtime and must be somehow
+> >>>>> supplied to the driver so one could properly determine the watchdog
+> >>>>> timeout intervals. For this purpose we suggest to have a vendor-
+> >>>>> specific dts property "snps,watchdog-tops" utilized, which would
+> >>>>> provide an array of sixteen counter values. At device probe stage they
+> >>>>> will be used to initialize the watchdog device timeouts determined
+> >>>>> from the array values and current clocks source rate.
+> >>>>>
+> >>>>> In order to have custom TOP values supported the driver must be
+> >>>>> altered in the following way. First of all the fixed-top values
+> >>>>> ready-to-use array must be determined for compatibility with currently
+> >>>>> supported devices, which were synthesised with WDT_USE_FIX_TOP == true.
+> >>>>> Secondly we must redefine the timer period search functions. For
+> >>>>> generality they are redesigned in a way to support the TOP array with
+> >>>>> no limitations on the items order or value. Finally an array with
+> >>>>> pre-defined timeouts must be calculated at probe stage from either
+> >>>>> the custom or fixed TOP values depending on the DW watchdog component
+> >>>>> parameter WDT_USE_FIX_TOP value.
+> >>>>>
+> >>>>> Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+> >>>>> Signed-off-by: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
+> >>>>> Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+> >>>>> Cc: Paul Burton <paulburton@kernel.org>
+> >>>>> Cc: Ralf Baechle <ralf@linux-mips.org>
+> >>>>> ---
+> >>>>>  drivers/watchdog/dw_wdt.c | 145 +++++++++++++++++++++++++++++++-------
+> >>>>>  1 file changed, 119 insertions(+), 26 deletions(-)
+> >>>>>
+> >>>>> diff --git a/drivers/watchdog/dw_wdt.c b/drivers/watchdog/dw_wdt.c
+> >>>>> index fba21de2bbad..4a57b7d777dc 100644
+> >>>>> --- a/drivers/watchdog/dw_wdt.c
+> >>>>> +++ b/drivers/watchdog/dw_wdt.c
+> >>>>> @@ -13,6 +13,7 @@
+> >>>>>   */
+> >>>>>  
+> >>>>>  #include <linux/bitops.h>
+> >>>>> +#include <linux/limits.h>
+> >>>>>  #include <linux/clk.h>
+> >>>>>  #include <linux/delay.h>
+> >>>>>  #include <linux/err.h>
+> >>>>> @@ -34,12 +35,24 @@
+> >>>>>  #define WDOG_CURRENT_COUNT_REG_OFFSET	    0x08
+> >>>>>  #define WDOG_COUNTER_RESTART_REG_OFFSET     0x0c
+> >>>>>  #define WDOG_COUNTER_RESTART_KICK_VALUE	    0x76
+> >>>>> +#define WDOG_COMP_PARAMS_1_REG_OFFSET       0xf4
+> >>>>> +#define WDOG_COMP_PARAMS_1_USE_FIX_TOP      BIT(6)
+> >>>>>  
+> >>>>> -/* The maximum TOP (timeout period) value that can be set in the watchdog. */
+> >>>>> -#define DW_WDT_MAX_TOP		15
+> >>>>> +/* There are sixteen TOPs (timeout periods) that can be set in the watchdog. */
+> >>>>> +#define DW_WDT_NUM_TOPS		16
+> >>>>> +#define DW_WDT_FIX_TOP(_idx)	(1U << (16 + _idx))
+> >>>>>  
+> >>>>>  #define DW_WDT_DEFAULT_SECONDS	30
+> >>>>>  
+> >>>>> +static const u32 dw_wdt_fix_tops[DW_WDT_NUM_TOPS] = {
+> >>>>> +	DW_WDT_FIX_TOP(0), DW_WDT_FIX_TOP(1), DW_WDT_FIX_TOP(2),
+> >>>>> +	DW_WDT_FIX_TOP(3), DW_WDT_FIX_TOP(4), DW_WDT_FIX_TOP(5),
+> >>>>> +	DW_WDT_FIX_TOP(6), DW_WDT_FIX_TOP(7), DW_WDT_FIX_TOP(8),
+> >>>>> +	DW_WDT_FIX_TOP(9), DW_WDT_FIX_TOP(10), DW_WDT_FIX_TOP(11),
+> >>>>> +	DW_WDT_FIX_TOP(12), DW_WDT_FIX_TOP(13), DW_WDT_FIX_TOP(14),
+> >>>>> +	DW_WDT_FIX_TOP(15)
+> >>>>> +};
+> >>>>> +
+> >>>>>  static bool nowayout = WATCHDOG_NOWAYOUT;
+> >>>>>  module_param(nowayout, bool, 0);
+> >>>>>  MODULE_PARM_DESC(nowayout, "Watchdog cannot be stopped once started "
+> >>>>> @@ -49,6 +62,8 @@ struct dw_wdt {
+> >>>>>  	void __iomem		*regs;
+> >>>>>  	struct clk		*clk;
+> >>>>>  	unsigned long		rate;
+> >>>>> +	unsigned int		max_top;
+> >>>>> +	unsigned int		timeouts[DW_WDT_NUM_TOPS];
+> >>>>>  	struct watchdog_device	wdd;
+> >>>>>  	struct reset_control	*rst;
+> >>>>>  	/* Save/restore */
+> >>>>> @@ -64,20 +79,68 @@ static inline int dw_wdt_is_enabled(struct dw_wdt *dw_wdt)
+> >>>>>  		WDOG_CONTROL_REG_WDT_EN_MASK;
+> >>>>>  }
+> >>>>>  
+> >>>>> -static inline int dw_wdt_top_in_seconds(struct dw_wdt *dw_wdt, unsigned top)
+> >>>>> +static unsigned int dw_wdt_find_best_top(struct dw_wdt *dw_wdt,
+> >>>>> +					 unsigned int timeout, u32 *top)
+> >>>>>  {
+> >>>>> +	u32 diff = UINT_MAX, tmp;
+> >>>>> +	int idx;
+> >>>>> +
+> >>>>>  	/*
+> >>>>> -	 * There are 16 possible timeout values in 0..15 where the number of
+> >>>>> -	 * cycles is 2 ^ (16 + i) and the watchdog counts down.
+> >>>>> +	 * In general case of non-fixed timeout values they can be arranged in
+> >>>>> +	 * any order so we have to traverse all the array values. We also try
+> >>>>> +	 * to find a closest timeout number and make sure its value is greater
+> >>>>> +	 * than the requested timeout. Note we'll return a maximum timeout
+> >>>>> +	 * if reachable value couldn't be found.
+> >>>>>  	 */
+> >>>>> -	return (1U << (16 + top)) / dw_wdt->rate;
+> >>>>> +	for (*top = dw_wdt->max_top, idx = 0; idx < DW_WDT_NUM_TOPS; ++idx) {
+> >>>>> +		if (dw_wdt->timeouts[idx] < timeout)
+> >>>>> +			continue;
+> >>>>> +
+> >>>>> +		tmp = dw_wdt->timeouts[idx] - timeout;
+> >>>>> +		if (tmp < diff) {
+> >>>>> +			diff = tmp;
+> >>>>> +			*top = idx;
+> >>>>> +		}
+> >>>>> +	}
+> >>>>> +
+> >>>>> +	return dw_wdt->timeouts[*top];
+> >>>>> +}
+> >>>>> +
+> >>>>> +static unsigned int dw_wdt_find_min_timeout(struct dw_wdt *dw_wdt)
+> >>>>
+> >>>> I would appreciate if the names of functions returning ms end with _ms
+> >>>> to avoid confusion.
+> >>>
+> >>> Ok. I'll also modify the functions a bit, so only the
+> >>> dw_wdt_find_best_top_ms() and dw_wdt_find_max_top_ms() methods would
+> >>> return timeouts in milliseconds. Though if you insist in keeping seconds
+> >>> in the timeouts array (see the comment after the next one), it'll be
+> >>> dw_wdt_find_max_top_ms() only.
+> >>>
+> >>>>
+> >>>>> +{
+> >>>>> +	u32 min_timeout = UINT_MAX, top;
+> >>>>> +	int idx;
+> >>>>> +
+> >>>>> +	for (top = 0, idx = 0; idx < DW_WDT_NUM_TOPS; ++idx) {
+> >>>>> +		if (dw_wdt->timeouts[idx] <= min_timeout) {
+> >>>>> +			min_timeout = dw_wdt->timeouts[idx];
+> >>>>> +			top = idx;
+> >>>>> +		}
+> >>>>> +	}
+> >>>>> +
+> >>>>> +	return dw_wdt->timeouts[top];
+> >>>>> +}
+> >>>>> +
+> >>>>> +static unsigned int dw_wdt_find_max_top(struct dw_wdt *dw_wdt, u32 *top)
+> >>>>> +{
+> >>>>> +	u32 max_timeout = 0;
+> >>>>> +	int idx;
+> >>>>> +
+> >>>>> +	for (*top = 0, idx = 0; idx < DW_WDT_NUM_TOPS; ++idx) {
+> >>>>> +		if (dw_wdt->timeouts[idx] >= max_timeout) {
+> >>>>> +			max_timeout = dw_wdt->timeouts[idx];
+> >>>>> +			*top = idx;
+> >>>>> +		}
+> >>>>> +	}
+> >>>>> +
+> >>>>> +	return dw_wdt->timeouts[*top];
+> >>>>>  }
+> >>>>>  
+> >>>>> -static int dw_wdt_get_top(struct dw_wdt *dw_wdt)
+> >>>>> +static unsigned int dw_wdt_get_timeout(struct dw_wdt *dw_wdt)
+> >>>>>  {
+> >>>>>  	int top = readl(dw_wdt->regs + WDOG_TIMEOUT_RANGE_REG_OFFSET) & 0xF;
+> >>>>>  
+> >>>>> -	return dw_wdt_top_in_seconds(dw_wdt, top);
+> >>>>> +	return dw_wdt->timeouts[top];
+> >>>>>  }
+> >>>>>  
+> >>>>>  static int dw_wdt_ping(struct watchdog_device *wdd)
+> >>>>> @@ -90,20 +153,13 @@ static int dw_wdt_ping(struct watchdog_device *wdd)
+> >>>>>  	return 0;
+> >>>>>  }
+> >>>>>  
+> >>>>> -static int dw_wdt_set_timeout(struct watchdog_device *wdd, unsigned int top_s)
+> >>>>> +static int dw_wdt_set_timeout(struct watchdog_device *wdd, unsigned int req)
+> >>>>>  {
+> >>>>>  	struct dw_wdt *dw_wdt = to_dw_wdt(wdd);
+> >>>>> -	int i, top_val = DW_WDT_MAX_TOP;
+> >>>>> +	unsigned int timeout;
+> >>>>> +	u32 top;
+> >>>>>  
+> >>>>> -	/*
+> >>>>> -	 * Iterate over the timeout values until we find the closest match. We
+> >>>>> -	 * always look for >=.
+> >>>>> -	 */
+> >>>>> -	for (i = 0; i <= DW_WDT_MAX_TOP; ++i)
+> >>>>> -		if (dw_wdt_top_in_seconds(dw_wdt, i) >= top_s) {
+> >>>>> -			top_val = i;
+> >>>>> -			break;
+> >>>>> -		}
+> >>>>> +	timeout = dw_wdt_find_best_top(dw_wdt, req * MSEC_PER_SEC, &top);
+> >>>>>  
+> >>>>>  	/*
+> >>>>>  	 * Set the new value in the watchdog.  Some versions of dw_wdt
+> >>>>> @@ -111,7 +167,7 @@ static int dw_wdt_set_timeout(struct watchdog_device *wdd, unsigned int top_s)
+> >>>>>  	 * CP_WDT_DUAL_TOP in WDT_COMP_PARAMS_1).  On those we
+> >>>>>  	 * effectively get a pat of the watchdog right here.
+> >>>>>  	 */
+> >>>>> -	writel(top_val | top_val << WDOG_TIMEOUT_RANGE_TOPINIT_SHIFT,
+> >>>>> +	writel(top | top << WDOG_TIMEOUT_RANGE_TOPINIT_SHIFT,
+> >>>>>  	       dw_wdt->regs + WDOG_TIMEOUT_RANGE_REG_OFFSET);
+> >>>>>  
+> >>>>>  	/*
+> >>>>> @@ -119,10 +175,10 @@ static int dw_wdt_set_timeout(struct watchdog_device *wdd, unsigned int top_s)
+> >>>>>  	 * kernel(watchdog_dev.c) helps to feed watchdog before
+> >>>>>  	 * wdd->max_hw_heartbeat_ms
+> >>>>>  	 */
+> >>>>> -	if (top_s * 1000 <= wdd->max_hw_heartbeat_ms)
+> >>>>> -		wdd->timeout = dw_wdt_top_in_seconds(dw_wdt, top_val);
+> >>>>> +	if (req * MSEC_PER_SEC > wdd->max_hw_heartbeat_ms)
+> >>>>> +		wdd->timeout = req;
+> >>>>>  	else
+> >>>>> -		wdd->timeout = top_s;
+> >>>>> +		wdd->timeout = timeout / MSEC_PER_SEC;
+> >>>>>  
+> >>>>>  	return 0;
+> >>>>>  }
+> >>>>> @@ -238,6 +294,41 @@ static int dw_wdt_resume(struct device *dev)
+> >>>>>  
+> >>>>>  static SIMPLE_DEV_PM_OPS(dw_wdt_pm_ops, dw_wdt_suspend, dw_wdt_resume);
+> >>>>>  
+> >>>>> +static void dw_wdt_init_timeouts(struct dw_wdt *dw_wdt, struct device *dev)
+> >>>>> +{
+> >>>>> +	u32 data, of_tops[DW_WDT_NUM_TOPS];
+> >>>>> +	const u32 *tops;
+> >>>>> +	int ret, idx;
+> >>>>> +
+> >>>>> +	/*
+> >>>>> +	 * Retrieve custom or fixed counter values depending on the
+> >>>>> +	 * WDT_USE_FIX_TOP flag found in the component specific parameters
+> >>>>> +	 * #1 register.
+> >>>>> +	 */
+> >>>>> +	data = readl(dw_wdt->regs + WDOG_COMP_PARAMS_1_REG_OFFSET);
+> >>>>> +	if (data & WDOG_COMP_PARAMS_1_USE_FIX_TOP) {
+> >>>>> +		tops = dw_wdt_fix_tops;
+> >>>>> +	} else {
+> >>>>> +		ret = of_property_read_variable_u32_array(dev_of_node(dev),
+> >>>>> +			"snps,watchdog-tops", of_tops, DW_WDT_NUM_TOPS,
+> >>>>> +			DW_WDT_NUM_TOPS);
+> >>>>> +		if (ret < 0) {
+> >>>>> +			dev_warn(dev, "No valid TOPs array specified\n");
+> >>>>> +			tops = dw_wdt_fix_tops;
+> >>>>> +		} else {
+> >>>>> +			tops = of_tops;
+> >>>>> +		}
+> >>>>> +	}
+> >>>>> +
+> >>>>> +	/*
+> >>>>> +	 * We'll keep the timeout values in ms to approximate requested
+> >>>>> +	 * timeouts with better accuracy.
+> >>>>> +	 */
+> >>>>> +	for (idx = 0; idx < DW_WDT_NUM_TOPS; ++idx)
+> >>>>> +		dw_wdt->timeouts[idx] =
+> >>>>> +			mult_frac(tops[idx], MSEC_PER_SEC, dw_wdt->rate);
+> >>>>
+> >>>> tops[idx] type is u32. Its value can be up to 0xffffffff. That means
+> >>>> dw_wdt->rate must be >= 1000 to avoid overflow, which you should check.
+> >>>
+> >>> Right. I don't think that TOPs with timeouts bigger than
+> >>> 0xffffffff milliseconds have any valuable usecases, so I'll just round
+> >>> the overflows down to FFs.
+> >>>
+> >>
+> >> Neither do unsorted random timeouts milli-seconds apart. You see the need
+> >> to address one, so addressing other weaknesses is appropriate.
+> > 
+> > Don't really understand what you mean. Do you intend to filter the
+> > unreachable timeouts out from the timeouts array? If so this isn't
+> > possible with current design. I would have to implement a more complex
+> > data structure, like an array of pairs {TOP, timeout} and refactor the
+> > timeout search algorithm. Don't really think this optimization is required
+> > seeing watchdog timeout set operation is normally performed just a few times
+> > per watchdog usage session.
+> > 
+> 
+> You state that defining a tops[idx] value > 0xffffffff / 1000 would be
+> unreasonable, while at the same time you argue that a sequence of tops[idx]
+> values of, say, 45, 46, 47, 43, 42, 99, 98, 55 would be perfectly reasonable
+> and needs to be handled. All I am saying is that you need to deal with all odd
+> cases, and that you can not assume that there is no tops[idx] value that results
+> in an overflow. If "45, 46, 47, 43, 42, 99, 98, 55" is reasonable, so is
+> 0xffffffff.
 
-syzbot found the following crash on:
+I am not saying, that TOPs like "45, 46, 47, 43, 42, 99, 98, 55" are
+reasonable. Depending on the reference clock rate, most likely they will
+be unreachable by the watchdog core. The core requests timeout in
+seconds with minimum of 1 second, while my timeout-search algorithm returns
+the closest but bigger than the requested timeout, which effectively
+filters those TOPs out of any permitted selection. BTW there is another problem.
+What if due to the too high reference clock frequency non of the TOPs
+are able to reach 0.5 second timeout?.. The same problem could have happened
+even without an upgrade provided by my patches.
 
-HEAD commit:    0fa84af8 Merge tag 'usb-serial-5.7-rc1' of https://git.ker..
-git tree:       https://github.com/google/kasan.git usb-fuzzer
-console output: https://syzkaller.appspot.com/x/log.txt?x=10af83b3e00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=6b9c154b0c23aecf
-dashboard link: https://syzkaller.appspot.com/bug?extid=809d3bdcdb4650cdbc83
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+Getting back to the issue. Suppose we had TOPs that amongst others
+corresponded to the next timeouts: 1.01 and 1.99 sec. So if watchdog
+core requests to set 1 s timeout, my search loop will select TOP
+with 1.01 s. Since watchdog core is working with timeouts of 1 s
+granularity, then TOP with 1.99 s will never be selected. If I didn't
+have the milliseconds values of the TOPs, but the seconds only, I
+wouldn't be able to make a proper decision between those two timeouts
+seeing the TOPs might be in any order.
 
-Unfortunately, I don't have any reproducer for this crash yet.
+Regarding all the weaknesses. In order to address all of them (please
+also note, that the previous version of the code didn't lack of some of
+them) I would have to come up with much cleverer algorithm than the one
+currently implemented. It would have to filter out all the unreachable
+timeouts out of the array.
 
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+809d3bdcdb4650cdbc83@syzkaller.appspotmail.com
+Regarding 0xffffffff being unreasonable. You're right. I shouldn't have
+assumed this. Depending on the reference clock rate, such TOP might be
+not that big value in seconds.
 
-==================================================================
-BUG: KASAN: use-after-free in ath9k_htc_txcompletion_cb+0x285/0x2b0 drivers/net/wireless/ath/ath9k/htc_hst.c:341
-Read of size 8 at addr ffff8881d1caf488 by task kworker/0:0/24267
+To sum up our discussion AFAICS the best way would be to create an array
+of structures:
+	struct dw_wdt_timeout {
+		u32 top;
+		unsigned int timeout;
+	} timeouts[16];
+which would have only reachable timeouts in !seconds! If we had a set
+of uniquely reachable TOPs we wouldn't need to keep values in
+milliseconds. We'd also get rid of the redundant unreachable values and
+would solve a problem if non of the specified TOPs is reachable with
+current reference clock rate. What do you think?
 
-CPU: 0 PID: 24267 Comm: kworker/0:0 Not tainted 5.6.0-rc7-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Workqueue: events request_firmware_work_func
-Call Trace:
- <IRQ>
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0xef/0x16e lib/dump_stack.c:118
- print_address_description.constprop.0.cold+0xd3/0x314 mm/kasan/report.c:374
- __kasan_report.cold+0x37/0x77 mm/kasan/report.c:506
- kasan_report+0xe/0x20 mm/kasan/common.c:641
- ath9k_htc_txcompletion_cb+0x285/0x2b0 drivers/net/wireless/ath/ath9k/htc_hst.c:341
- hif_usb_regout_cb+0x10b/0x1b0 drivers/net/wireless/ath/ath9k/hif_usb.c:90
- __usb_hcd_giveback_urb+0x1f2/0x470 drivers/usb/core/hcd.c:1648
- usb_hcd_giveback_urb+0x368/0x420 drivers/usb/core/hcd.c:1713
- dummy_timer+0x1258/0x32ae drivers/usb/gadget/udc/dummy_hcd.c:1966
- call_timer_fn+0x195/0x6f0 kernel/time/timer.c:1404
- expire_timers kernel/time/timer.c:1449 [inline]
- __run_timers kernel/time/timer.c:1773 [inline]
- __run_timers kernel/time/timer.c:1740 [inline]
- run_timer_softirq+0x5f9/0x1500 kernel/time/timer.c:1786
- __do_softirq+0x21e/0x950 kernel/softirq.c:292
- invoke_softirq kernel/softirq.c:373 [inline]
- irq_exit+0x178/0x1a0 kernel/softirq.c:413
- exiting_irq arch/x86/include/asm/apic.h:546 [inline]
- smp_apic_timer_interrupt+0x141/0x540 arch/x86/kernel/apic/apic.c:1146
- apic_timer_interrupt+0xf/0x20 arch/x86/entry/entry_64.S:829
- </IRQ>
-RIP: 0010:arch_local_irq_restore arch/x86/include/asm/irqflags.h:85 [inline]
-RIP: 0010:console_unlock+0xa6b/0xca0 kernel/printk/printk.c:2481
-Code: 00 89 ee 48 c7 c7 60 3e 14 87 e8 10 c3 03 00 65 ff 0d c1 ed d8 7e e9 b5 f9 ff ff e8 0f 37 16 00 e8 0a 7f 1b 00 ff 74 24 30 9d <e9> fd fd ff ff e8 fb 36 16 00 48 8d 7d 08 48 89 f8 48 c1 e8 03 42
-RSP: 0018:ffff8881d9227a50 EFLAGS: 00000293 ORIG_RAX: ffffffffffffff13
-RAX: 0000000000000007 RBX: 0000000000000200 RCX: 0000000000000006
-RDX: 0000000000000000 RSI: 0000000000000008 RDI: ffff8881aba6d1cc
-RBP: 0000000000000000 R08: ffff8881aba6c980 R09: fffffbfff1266485
-R10: fffffbfff1266484 R11: ffffffff89332427 R12: ffffffff82a092b0
-R13: ffffffff874d3950 R14: 0000000000000057 R15: dffffc0000000000
- vprintk_emit+0x171/0x3d0 kernel/printk/printk.c:1996
- vprintk_func+0x75/0x113 kernel/printk/printk_safe.c:386
- printk+0xba/0xed kernel/printk/printk.c:2056
- ath9k_htc_hw_init.cold+0x17/0x2a drivers/net/wireless/ath/ath9k/htc_hst.c:502
- ath9k_hif_usb_firmware_cb+0x26b/0x500 drivers/net/wireless/ath/ath9k/hif_usb.c:1187
- request_firmware_work_func+0x126/0x242 drivers/base/firmware_loader/main.c:976
- process_one_work+0x94b/0x1620 kernel/workqueue.c:2266
- worker_thread+0x96/0xe20 kernel/workqueue.c:2412
- kthread+0x318/0x420 kernel/kthread.c:255
- ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
+-Sergey
 
-Allocated by task 24267:
- save_stack+0x1b/0x80 mm/kasan/common.c:72
- set_track mm/kasan/common.c:80 [inline]
- __kasan_kmalloc mm/kasan/common.c:515 [inline]
- __kasan_kmalloc.constprop.0+0xbf/0xd0 mm/kasan/common.c:488
- slab_post_alloc_hook mm/slab.h:584 [inline]
- slab_alloc_node mm/slub.c:2786 [inline]
- kmem_cache_alloc_node+0xdc/0x330 mm/slub.c:2822
- __alloc_skb+0xba/0x5a0 net/core/skbuff.c:198
- alloc_skb include/linux/skbuff.h:1081 [inline]
- htc_connect_service+0x2cc/0x840 drivers/net/wireless/ath/ath9k/htc_hst.c:257
- ath9k_wmi_connect+0xd2/0x1a0 drivers/net/wireless/ath/ath9k/wmi.c:265
- ath9k_init_htc_services.constprop.0+0xb4/0x650 drivers/net/wireless/ath/ath9k/htc_drv_init.c:146
- ath9k_htc_probe_device+0x25a/0x1d80 drivers/net/wireless/ath/ath9k/htc_drv_init.c:959
- ath9k_htc_hw_init+0x31/0x60 drivers/net/wireless/ath/ath9k/htc_hst.c:501
- ath9k_hif_usb_firmware_cb+0x26b/0x500 drivers/net/wireless/ath/ath9k/hif_usb.c:1187
- request_firmware_work_func+0x126/0x242 drivers/base/firmware_loader/main.c:976
- process_one_work+0x94b/0x1620 kernel/workqueue.c:2266
- worker_thread+0x96/0xe20 kernel/workqueue.c:2412
- kthread+0x318/0x420 kernel/kthread.c:255
- ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
-
-Freed by task 24267:
- save_stack+0x1b/0x80 mm/kasan/common.c:72
- set_track mm/kasan/common.c:80 [inline]
- kasan_set_free_info mm/kasan/common.c:337 [inline]
- __kasan_slab_free+0x117/0x160 mm/kasan/common.c:476
- slab_free_hook mm/slub.c:1444 [inline]
- slab_free_freelist_hook mm/slub.c:1477 [inline]
- slab_free mm/slub.c:3034 [inline]
- kmem_cache_free+0x9b/0x360 mm/slub.c:3050
- kfree_skbmem net/core/skbuff.c:622 [inline]
- kfree_skbmem+0xef/0x1b0 net/core/skbuff.c:616
- __kfree_skb net/core/skbuff.c:679 [inline]
- kfree_skb net/core/skbuff.c:696 [inline]
- kfree_skb+0x102/0x3d0 net/core/skbuff.c:690
- htc_connect_service.cold+0xa9/0x109 drivers/net/wireless/ath/ath9k/htc_hst.c:282
- ath9k_wmi_connect+0xd2/0x1a0 drivers/net/wireless/ath/ath9k/wmi.c:265
- ath9k_init_htc_services.constprop.0+0xb4/0x650 drivers/net/wireless/ath/ath9k/htc_drv_init.c:146
- ath9k_htc_probe_device+0x25a/0x1d80 drivers/net/wireless/ath/ath9k/htc_drv_init.c:959
- ath9k_htc_hw_init+0x31/0x60 drivers/net/wireless/ath/ath9k/htc_hst.c:501
- ath9k_hif_usb_firmware_cb+0x26b/0x500 drivers/net/wireless/ath/ath9k/hif_usb.c:1187
- request_firmware_work_func+0x126/0x242 drivers/base/firmware_loader/main.c:976
- process_one_work+0x94b/0x1620 kernel/workqueue.c:2266
- worker_thread+0x96/0xe20 kernel/workqueue.c:2412
- kthread+0x318/0x420 kernel/kthread.c:255
- ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
-
-The buggy address belongs to the object at ffff8881d1caf3c0
- which belongs to the cache skbuff_head_cache of size 224
-The buggy address is located 200 bytes inside of
- 224-byte region [ffff8881d1caf3c0, ffff8881d1caf4a0)
-The buggy address belongs to the page:
-page:ffffea0007472bc0 refcount:1 mapcount:0 mapping:ffff8881da16b400 index:0xffff8881d1caf280
-flags: 0x200000000000200(slab)
-raw: 0200000000000200 ffffea00074473c0 0000000900000009 ffff8881da16b400
-raw: ffff8881d1caf280 00000000800c000b 00000001ffffffff 0000000000000000
-page dumped because: kasan: bad access detected
-
-Memory state around the buggy address:
- ffff8881d1caf380: fc fc fc fc fc fc fc fc fb fb fb fb fb fb fb fb
- ffff8881d1caf400: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
->ffff8881d1caf480: fb fb fb fb fc fc fc fc fc fc fc fc fc fc fc fc
-                      ^
- ffff8881d1caf500: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
- ffff8881d1caf580: fb fb fb fb fb fb fb fb fb fb fb fb fc fc fc fc
-==================================================================
-
-
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+> 
+> Guenter
