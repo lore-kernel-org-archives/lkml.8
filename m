@@ -4,49 +4,55 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1ACDFC2BBC7
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:17:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83735C2BA2B
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:17:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DBA4120692
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:17:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5DFA720692
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:17:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586607438;
-	bh=E03Dhfc2oBH5Q3tpRD5N2QLqFY+7GVOS9HYPb0ME0ak=;
+	s=default; t=1586607440;
+	bh=3U31o4yGOnNiR49KeK2YQEL9DTX9nMcz4WtgW1tGyy8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BaDnLFuyEv99G598AScuJgDT2uTJlElc3aWMizmJt7BleseuLeTNK3ETCQNRyHyFf
-	 ODjpmrIZWCn7RjQh3VIafnFS9W8PTgSghYkY0sXY416My4RXuV2DoO0Txlb2QVJvMo
-	 sOoSYfCfJqLMQGNRvwYj8OtTa118pqRxGyub4+5o=
+	b=2gF4G/mCsaIdJ2n/2xtqk9k8np961iRECNo4d1DIFxB+ddm2hi+FNddBKHHJ3/Xaf
+	 cD9xLLEmnj3mRDps4YH9JBhsaPYwOq5weoeHKin7HFbrlYi7EkIiXubKoRS4lTSFqf
+	 6UehzeY1ojj+QQfrSOc81rRTp7XQV7xsno6fTZvQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728232AbgDKMRQ (ORCPT
+        id S1728388AbgDKMRS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 08:17:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51732 "EHLO mail.kernel.org"
+        Sat, 11 Apr 2020 08:17:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51892 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728370AbgDKMRL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 08:17:11 -0400
+        id S1728377AbgDKMRQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Apr 2020 08:17:16 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D493520644;
-        Sat, 11 Apr 2020 12:17:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AEDAB2084D;
+        Sat, 11 Apr 2020 12:17:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586607431;
-        bh=E03Dhfc2oBH5Q3tpRD5N2QLqFY+7GVOS9HYPb0ME0ak=;
+        s=default; t=1586607436;
+        bh=3U31o4yGOnNiR49KeK2YQEL9DTX9nMcz4WtgW1tGyy8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dpYfEFkmz590dJT5cZlDJA9QiEo0ZcYUZr2Mruk6klVWCtmnZmBKRSGAl6ifxRcRh
-         Q9zdHVUhdOnppZvMgXrgFprswEplQVJiS0tM3yncdx1S5RPHzuSTsjitTdoGYScN80
-         zRaBEROgk4+Vjm9kD3nslPJNhLMD5PAObV08eVoU=
+        b=seU1SC/NHkqR14NvdRo8XcPrbZTtmzTuUPIrQZFK/RkKUGiDSu8RLF4qFwCwETc8H
+         GscyyQ3bLsWDyl8oxWHNbUtE48VvXPTPcxNZO8X5KQdQCi6xZG/x7H8+dVEm12Sqi5
+         LFhIg5ArfPuEO5XyUAfEyIum3ePXJWwDoGP/6g7E=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Thinh Nguyen <thinhn@synopsys.com>,
-        Felipe Balbi <balbi@kernel.org>
-Subject: [PATCH 5.4 17/41] usb: dwc3: gadget: Wrap around when skip TRBs
-Date:   Sat, 11 Apr 2020 14:09:26 +0200
-Message-Id: <20200411115505.281877775@linuxfoundation.org>
+        stable@vger.kernel.org, Silvio Cesare <silvio.cesare@gmail.com>,
+        Kees Cook <keescook@chromium.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Christoph Lameter <cl@linux.com>,
+        Pekka Enberg <penberg@kernel.org>,
+        David Rientjes <rientjes@google.com>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 5.4 19/41] slub: improve bit diffusion for freelist ptr obfuscation
+Date:   Sat, 11 Apr 2020 14:09:28 +0200
+Message-Id: <20200411115505.401838270@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200411115504.124035693@linuxfoundation.org>
 References: <20200411115504.124035693@linuxfoundation.org>
@@ -59,34 +65,69 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Thinh Nguyen <Thinh.Nguyen@synopsys.com>
+From: Kees Cook <keescook@chromium.org>
 
-commit 2dedea035ae82c5af0595637a6eda4655532b21e upstream.
+commit 1ad53d9fa3f6168ebcf48a50e08b170432da2257 upstream.
 
-When skipping TRBs, we need to account for wrapping around the ring
-buffer and not modifying some invalid TRBs. Without this fix, dwc3 won't
-be able to check for available TRBs.
+Under CONFIG_SLAB_FREELIST_HARDENED=y, the obfuscation was relatively weak
+in that the ptr and ptr address were usually so close that the first XOR
+would result in an almost entirely 0-byte value[1], leaving most of the
+"secret" number ultimately being stored after the third XOR.  A single
+blind memory content exposure of the freelist was generally sufficient to
+learn the secret.
 
-Cc: stable <stable@vger.kernel.org>
-Fixes: 7746a8dfb3f9 ("usb: dwc3: gadget: extract dwc3_gadget_ep_skip_trbs()")
-Signed-off-by: Thinh Nguyen <thinhn@synopsys.com>
-Signed-off-by: Felipe Balbi <balbi@kernel.org>
+Add a swab() call to mix bits a little more.  This is a cheap way (1
+cycle) to make attacks need more than a single exposure to learn the
+secret (or to know _where_ the exposure is in memory).
+
+kmalloc-32 freelist walk, before:
+
+ptr              ptr_addr            stored value      secret
+ffff90c22e019020@ffff90c22e019000 is 86528eb656b3b5bd (86528eb656b3b59d)
+ffff90c22e019040@ffff90c22e019020 is 86528eb656b3b5fd (86528eb656b3b59d)
+ffff90c22e019060@ffff90c22e019040 is 86528eb656b3b5bd (86528eb656b3b59d)
+ffff90c22e019080@ffff90c22e019060 is 86528eb656b3b57d (86528eb656b3b59d)
+ffff90c22e0190a0@ffff90c22e019080 is 86528eb656b3b5bd (86528eb656b3b59d)
+...
+
+after:
+
+ptr              ptr_addr            stored value      secret
+ffff9eed6e019020@ffff9eed6e019000 is 793d1135d52cda42 (86528eb656b3b59d)
+ffff9eed6e019040@ffff9eed6e019020 is 593d1135d52cda22 (86528eb656b3b59d)
+ffff9eed6e019060@ffff9eed6e019040 is 393d1135d52cda02 (86528eb656b3b59d)
+ffff9eed6e019080@ffff9eed6e019060 is 193d1135d52cdae2 (86528eb656b3b59d)
+ffff9eed6e0190a0@ffff9eed6e019080 is f93d1135d52cdac2 (86528eb656b3b59d)
+
+[1] https://blog.infosectcbr.com.au/2020/03/weaknesses-in-linux-kernel-heap.html
+
+Fixes: 2482ddec670f ("mm: add SLUB free list pointer obfuscation")
+Reported-by: Silvio Cesare <silvio.cesare@gmail.com>
+Signed-off-by: Kees Cook <keescook@chromium.org>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Cc: Christoph Lameter <cl@linux.com>
+Cc: Pekka Enberg <penberg@kernel.org>
+Cc: David Rientjes <rientjes@google.com>
+Cc: Joonsoo Kim <iamjoonsoo.kim@lge.com>
+Cc: <stable@vger.kernel.org>
+Link: http://lkml.kernel.org/r/202003051623.AF4F8CB@keescook
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/dwc3/gadget.c |    2 +-
+ mm/slub.c |    2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/usb/dwc3/gadget.c
-+++ b/drivers/usb/dwc3/gadget.c
-@@ -1518,7 +1518,7 @@ static void dwc3_gadget_ep_skip_trbs(str
- 	for (i = 0; i < req->num_trbs; i++) {
- 		struct dwc3_trb *trb;
- 
--		trb = req->trb + i;
-+		trb = &dep->trb_pool[dep->trb_dequeue];
- 		trb->ctrl &= ~DWC3_TRB_CTRL_HWO;
- 		dwc3_ep_inc_deq(dep);
- 	}
+--- a/mm/slub.c
++++ b/mm/slub.c
+@@ -261,7 +261,7 @@ static inline void *freelist_ptr(const s
+ 	 * freepointer to be restored incorrectly.
+ 	 */
+ 	return (void *)((unsigned long)ptr ^ s->random ^
+-			(unsigned long)kasan_reset_tag((void *)ptr_addr));
++			swab((unsigned long)kasan_reset_tag((void *)ptr_addr)));
+ #else
+ 	return ptr;
+ #endif
 
 
