@@ -2,260 +2,273 @@ Return-Path: <SRS0=xbEg=53=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C54AC2BBC7
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:24:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6DA2C2BA2B
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:24:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D272C2063A
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:24:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9229E2063A
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:24:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586607863;
-	bh=SLxe7vui/sy4bL9CxI8nH4037eviKppUqHtZ57BTB3g=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=V9anTjY8sUTLvp2/eCeOR1U6XI65AOiZVsPHE+Za7u037EzRhvH2uj4JrrmXUPNng
-	 Wu7Cp1Z0s3tEPo8zv3edNPMG3Eygn22Af49U0eO3E4ncYh8yNFVmBqFLuuNlqFJ6NR
-	 xqjwGKH86NBt0PqrQDY6xYtUj9pf5WTvSVlnsgqA=
+	s=default; t=1586607866;
+	bh=s81TSmpTOG4bhU/ILdyEKeh6e3ZwxH9byRcniPoQtmY=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=oeLhx+GmAvUgEvP6p+zf5MYpCU/jy8ZLLioP1gQMmNThGuva68BkxnjwGYKH57Z/I
+	 cPC/CtVODgMJwpruyTGw3TWBkwOsAXLF0l8BHMRPwSV5x5oegD/eOiH73rs+4j7ZiJ
+	 7mEr9c4rjwgKLrvlpVeEqV85gp83iTdzV8rmw2aw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728301AbgDKMSH (ORCPT
+        id S1728571AbgDKMYY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 08:18:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52862 "EHLO mail.kernel.org"
+        Sat, 11 Apr 2020 08:24:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53004 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728514AbgDKMSB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 08:18:01 -0400
+        id S1728527AbgDKMSH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Apr 2020 08:18:07 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 73B222084D;
-        Sat, 11 Apr 2020 12:18:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 46DF720673;
+        Sat, 11 Apr 2020 12:18:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586607481;
-        bh=SLxe7vui/sy4bL9CxI8nH4037eviKppUqHtZ57BTB3g=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LAPfariusqJBjfzCcBS87Zg2XnJr90ffKCM7+0thPSOvMfyhhfSkgtUhi9Kz8WaPV
-         bXHbibAue1U/k+TnMrX8GcW75Ck89MUTDoCNpO9B9yKvLai1i87oOr/FCLml2djFDj
-         3enwUiRt67YYTqd2wBa1VFcDqw0stS2TjXkhuAjo=
+        s=default; t=1586607486;
+        bh=s81TSmpTOG4bhU/ILdyEKeh6e3ZwxH9byRcniPoQtmY=;
+        h=From:To:Cc:Subject:Date:From;
+        b=osthnl/vm5LV187+s0UM9gWwxVjSV7dpLLsaPSVGybQ5QA/JVrjxyxsEh22eg4zOk
+         GNMT5VQh6wTrMvsbm4xdVUdjaGvZrvCVIuP1ljKPtB5XljisJ5GKleuoeV0riOmLhq
+         YmJA99MWEWtC3LMhcQovOOjGBqyCbH6CO4pQWl5U=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        syzbot+46f513c3033d592409d2@syzkaller.appspotmail.com,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Jamal Hadi Salim <jhs@mojatatu.com>,
-        Jiri Pirko <jiri@resnulli.us>,
-        Cong Wang <xiyou.wangcong@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.4 08/41] net_sched: add a temporary refcnt for struct tcindex_data
-Date:   Sat, 11 Apr 2020 14:09:17 +0200
-Message-Id: <20200411115504.704586285@linuxfoundation.org>
+        torvalds@linux-foundation.org, akpm@linux-foundation.org,
+        linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org
+Subject: [PATCH 5.4 00/41] 5.4.32-rc1 review
+Date:   Sat, 11 Apr 2020 14:09:09 +0200
+Message-Id: <20200411115504.124035693@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
-In-Reply-To: <20200411115504.124035693@linuxfoundation.org>
-References: <20200411115504.124035693@linuxfoundation.org>
-User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+User-Agent: quilt/0.66
+X-stable: review
+X-Patchwork-Hint: ignore
+X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v4.x/stable-review/patch-5.4.32-rc1.gz
+X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
+X-KernelTest-Branch: linux-5.4.y
+X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
+X-KernelTest-Version: 5.4.32-rc1
+X-KernelTest-Deadline: 2020-04-13T11:55+00:00
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Cong Wang <xiyou.wangcong@gmail.com>
+This is the start of the stable review cycle for the 5.4.32 release.
+There are 41 patches in this series, all will be posted as a response
+to this one.  If anyone has any issues with these being applied, please
+let me know.
 
-[ Upstream commit 304e024216a802a7dc8ba75d36de82fa136bbf3e ]
+Responses should be made by Mon, 13 Apr 2020 11:51:28 +0000.
+Anything received after that time might be too late.
 
-Although we intentionally use an ordered workqueue for all tc
-filter works, the ordering is not guaranteed by RCU work,
-given that tcf_queue_work() is esstenially a call_rcu().
+The whole patch series can be found in one patch at:
+	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.4.32-rc1.gz
+or in the git tree and branch at:
+	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.4.y
+and the diffstat can be found below.
 
-This problem is demostrated by Thomas:
+thanks,
 
-  CPU 0:
-    tcf_queue_work()
-      tcf_queue_work(&r->rwork, tcindex_destroy_rexts_work);
+greg k-h
 
-  -> Migration to CPU 1
+-------------
+Pseudo-Shortlog of commits:
 
-  CPU 1:
-     tcf_queue_work(&p->rwork, tcindex_destroy_work);
+Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+    Linux 5.4.32-rc1
 
-so the 2nd work could be queued before the 1st one, which leads
-to a free-after-free.
+Lu Baolu <baolu.lu@linux.intel.com>
+    iommu/vt-d: Allow devices with RMRRs to use identity domain
 
-Enforcing this order in RCU work is hard as it requires to change
-RCU code too. Fortunately we can workaround this problem in tcindex
-filter by taking a temporary refcnt, we only refcnt it right before
-we begin to destroy it. This simplifies the code a lot as a full
-refcnt requires much more changes in tcindex_set_parms().
+Sultan Alsawaf <sultan@kerneltoast.com>
+    drm/i915: Fix ref->mutex deadlock in i915_active_wait()
 
-Reported-by: syzbot+46f513c3033d592409d2@syzkaller.appspotmail.com
-Fixes: 3d210534cc93 ("net_sched: fix a race condition in tcindex_destroy()")
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Paul E. McKenney <paulmck@kernel.org>
-Cc: Jamal Hadi Salim <jhs@mojatatu.com>
-Cc: Jiri Pirko <jiri@resnulli.us>
-Signed-off-by: Cong Wang <xiyou.wangcong@gmail.com>
-Reviewed-by: Paul E. McKenney <paulmck@kernel.org>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- net/sched/cls_tcindex.c |   44 ++++++++++++++++++++++++++++++++++++++------
- 1 file changed, 38 insertions(+), 6 deletions(-)
+Qiujun Huang <hqjagain@gmail.com>
+    fbcon: fix null-ptr-deref in fbcon_switch
 
---- a/net/sched/cls_tcindex.c
-+++ b/net/sched/cls_tcindex.c
-@@ -11,6 +11,7 @@
- #include <linux/skbuff.h>
- #include <linux/errno.h>
- #include <linux/slab.h>
-+#include <linux/refcount.h>
- #include <net/act_api.h>
- #include <net/netlink.h>
- #include <net/pkt_cls.h>
-@@ -26,9 +27,12 @@
- #define DEFAULT_HASH_SIZE	64	/* optimized for diffserv */
- 
- 
-+struct tcindex_data;
-+
- struct tcindex_filter_result {
- 	struct tcf_exts		exts;
- 	struct tcf_result	res;
-+	struct tcindex_data	*p;
- 	struct rcu_work		rwork;
- };
- 
-@@ -49,6 +53,7 @@ struct tcindex_data {
- 	u32 hash;		/* hash table size; 0 if undefined */
- 	u32 alloc_hash;		/* allocated size */
- 	u32 fall_through;	/* 0: only classify if explicit match */
-+	refcount_t refcnt;	/* a temporary refcnt for perfect hash */
- 	struct rcu_work rwork;
- };
- 
-@@ -57,6 +62,20 @@ static inline int tcindex_filter_is_set(
- 	return tcf_exts_has_actions(&r->exts) || r->res.classid;
- }
- 
-+static void tcindex_data_get(struct tcindex_data *p)
-+{
-+	refcount_inc(&p->refcnt);
-+}
-+
-+static void tcindex_data_put(struct tcindex_data *p)
-+{
-+	if (refcount_dec_and_test(&p->refcnt)) {
-+		kfree(p->perfect);
-+		kfree(p->h);
-+		kfree(p);
-+	}
-+}
-+
- static struct tcindex_filter_result *tcindex_lookup(struct tcindex_data *p,
- 						    u16 key)
- {
-@@ -141,6 +160,7 @@ static void __tcindex_destroy_rexts(stru
- {
- 	tcf_exts_destroy(&r->exts);
- 	tcf_exts_put_net(&r->exts);
-+	tcindex_data_put(r->p);
- }
- 
- static void tcindex_destroy_rexts_work(struct work_struct *work)
-@@ -212,6 +232,8 @@ found:
- 		else
- 			__tcindex_destroy_fexts(f);
- 	} else {
-+		tcindex_data_get(p);
-+
- 		if (tcf_exts_get_net(&r->exts))
- 			tcf_queue_work(&r->rwork, tcindex_destroy_rexts_work);
- 		else
-@@ -228,9 +250,7 @@ static void tcindex_destroy_work(struct
- 					      struct tcindex_data,
- 					      rwork);
- 
--	kfree(p->perfect);
--	kfree(p->h);
--	kfree(p);
-+	tcindex_data_put(p);
- }
- 
- static inline int
-@@ -248,9 +268,11 @@ static const struct nla_policy tcindex_p
- };
- 
- static int tcindex_filter_result_init(struct tcindex_filter_result *r,
-+				      struct tcindex_data *p,
- 				      struct net *net)
- {
- 	memset(r, 0, sizeof(*r));
-+	r->p = p;
- 	return tcf_exts_init(&r->exts, net, TCA_TCINDEX_ACT,
- 			     TCA_TCINDEX_POLICE);
- }
-@@ -290,6 +312,7 @@ static int tcindex_alloc_perfect_hash(st
- 				    TCA_TCINDEX_ACT, TCA_TCINDEX_POLICE);
- 		if (err < 0)
- 			goto errout;
-+		cp->perfect[i].p = cp;
- 	}
- 
- 	return 0;
-@@ -334,6 +357,7 @@ tcindex_set_parms(struct net *net, struc
- 	cp->alloc_hash = p->alloc_hash;
- 	cp->fall_through = p->fall_through;
- 	cp->tp = tp;
-+	refcount_set(&cp->refcnt, 1); /* Paired with tcindex_destroy_work() */
- 
- 	if (tb[TCA_TCINDEX_HASH])
- 		cp->hash = nla_get_u32(tb[TCA_TCINDEX_HASH]);
-@@ -366,7 +390,7 @@ tcindex_set_parms(struct net *net, struc
- 	}
- 	cp->h = p->h;
- 
--	err = tcindex_filter_result_init(&new_filter_result, net);
-+	err = tcindex_filter_result_init(&new_filter_result, cp, net);
- 	if (err < 0)
- 		goto errout_alloc;
- 	if (old_r)
-@@ -434,7 +458,7 @@ tcindex_set_parms(struct net *net, struc
- 			goto errout_alloc;
- 		f->key = handle;
- 		f->next = NULL;
--		err = tcindex_filter_result_init(&f->result, net);
-+		err = tcindex_filter_result_init(&f->result, cp, net);
- 		if (err < 0) {
- 			kfree(f);
- 			goto errout_alloc;
-@@ -447,7 +471,7 @@ tcindex_set_parms(struct net *net, struc
- 	}
- 
- 	if (old_r && old_r != r) {
--		err = tcindex_filter_result_init(old_r, net);
-+		err = tcindex_filter_result_init(old_r, cp, net);
- 		if (err < 0) {
- 			kfree(f);
- 			goto errout_alloc;
-@@ -571,6 +595,14 @@ static void tcindex_destroy(struct tcf_p
- 		for (i = 0; i < p->hash; i++) {
- 			struct tcindex_filter_result *r = p->perfect + i;
- 
-+			/* tcf_queue_work() does not guarantee the ordering we
-+			 * want, so we have to take this refcnt temporarily to
-+			 * ensure 'p' is freed after all tcindex_filter_result
-+			 * here. Imperfect hash does not need this, because it
-+			 * uses linked lists rather than an array.
-+			 */
-+			tcindex_data_get(p);
-+
- 			tcf_unbind_filter(tp, &r->res);
- 			if (tcf_exts_get_net(&r->exts))
- 				tcf_queue_work(&r->rwork,
+Bart Van Assche <bvanassche@acm.org>
+    blk-mq: Keep set->nr_hw_queues and set->map[].nr_queues in sync
+
+Avihai Horon <avihaih@mellanox.com>
+    RDMA/cm: Update num_paths in cma_resolve_iboe_route error flow
+
+Qiujun Huang <hqjagain@gmail.com>
+    Bluetooth: RFCOMM: fix ODEBUG bug in rfcomm_dev_ioctl
+
+Bernard Metzler <bmt@zurich.ibm.com>
+    RDMA/siw: Fix passive connection establishment
+
+Jason Gunthorpe <jgg@ziepe.ca>
+    RDMA/cma: Teach lockdep about the order of rtnl and lock
+
+Jason Gunthorpe <jgg@ziepe.ca>
+    RDMA/ucma: Put a lock around every call to the rdma_cm layer
+
+Christian Borntraeger <borntraeger@de.ibm.com>
+    include/uapi/linux/swab.h: fix userspace breakage, use __BITS_PER_LONG for swap
+
+Ilya Dryomov <idryomov@gmail.com>
+    ceph: canonicalize server path in place
+
+Xiubo Li <xiubli@redhat.com>
+    ceph: remove the extra slashes in the server path
+
+Arnd Bergmann <arnd@arndb.de>
+    ARM: imx: only select ARM_ERRATA_814220 for ARMv7-A
+
+Anson Huang <Anson.Huang@nxp.com>
+    ARM: imx: Enable ARM_ERRATA_814220 for i.MX6UL and i.MX7D
+
+Alex Vesker <valex@mellanox.com>
+    IB/mlx5: Replace tunnel mpls capability bits for tunnel_offloads
+
+Kaike Wan <kaike.wan@intel.com>
+    IB/hfi1: Fix memory leaks in sysfs registration and unregistration
+
+Kaike Wan <kaike.wan@intel.com>
+    IB/hfi1: Call kobject_put() when kobject_init_and_add() fails
+
+Paul Cercueil <paul@crapouillou.net>
+    ASoC: jz4740-i2s: Fix divider written at incorrect offset in register
+
+Hans de Goede <hdegoede@redhat.com>
+    platform/x86: intel_int0002_vgpio: Use acpi_register_wakeup_handler()
+
+Hans de Goede <hdegoede@redhat.com>
+    ACPI: PM: Add acpi_[un]register_wakeup_handler()
+
+Martin Kaiser <martin@kaiser.cx>
+    hwrng: imx-rngc - fix an error path
+
+David Ahern <dsahern@kernel.org>
+    tools/accounting/getdelays.c: fix netlink attribute length
+
+Kees Cook <keescook@chromium.org>
+    slub: improve bit diffusion for freelist ptr obfuscation
+
+Yury Norov <yury.norov@gmail.com>
+    uapi: rename ext2_swab() to swab() and share globally in swab.h
+
+Thinh Nguyen <Thinh.Nguyen@synopsys.com>
+    usb: dwc3: gadget: Wrap around when skip TRBs
+
+Jason A. Donenfeld <Jason@zx2c4.com>
+    random: always use batched entropy for get_random_u{32,64}
+
+Sven Schnelle <svens@linux.ibm.com>
+    s390: prevent leaking kernel address in BEAR
+
+Heiner Kallweit <hkallweit1@gmail.com>
+    r8169: change back SG and TSO to be disabled by default
+
+Petr Machata <petrm@mellanox.com>
+    mlxsw: spectrum_flower: Do not stop at FLOW_ACTION_VLAN_MANGLE
+
+Will Deacon <will@kernel.org>
+    tun: Don't put_page() for all negative return values from XDP program
+
+Richard Palethorpe <rpalethorpe@suse.com>
+    slcan: Don't transmit uninitialized stack data in padding
+
+Jisheng Zhang <Jisheng.Zhang@synaptics.com>
+    net: stmmac: dwmac1000: fix out-of-bounds mac address reg setting
+
+Cong Wang <xiyou.wangcong@gmail.com>
+    net_sched: fix a missing refcnt in tcindex_init()
+
+Cong Wang <xiyou.wangcong@gmail.com>
+    net_sched: add a temporary refcnt for struct tcindex_data
+
+Oleksij Rempel <linux@rempel-privat.de>
+    net: phy: micrel: kszphy_resume(): add delay after genphy_resume() before accessing PHY registers
+
+Chuanhong Guo <gch981213@gmail.com>
+    net: dsa: mt7530: fix null pointer dereferencing in port5 setup
+
+Florian Fainelli <f.fainelli@gmail.com>
+    net: dsa: bcm_sf2: Ensure correct sub-node is parsed
+
+Florian Fainelli <f.fainelli@gmail.com>
+    net: dsa: bcm_sf2: Do not register slave MDIO bus with OF
+
+Jarod Wilson <jarod@redhat.com>
+    ipv6: don't auto-add link-local address to lag ports
+
+Herat Ramani <herat@chelsio.com>
+    cxgb4: fix MPS index overwrite when setting MAC address
+
+Heiner Kallweit <hkallweit1@gmail.com>
+    net: phy: realtek: fix handling of RTL8105e-integrated PHY
+
+
+-------------
+
+Diffstat:
+
+ Makefile                                           |   4 +-
+ arch/arm/mach-imx/Kconfig                          |   2 +
+ arch/s390/include/asm/lowcore.h                    |   4 +-
+ arch/s390/include/asm/processor.h                  |   1 +
+ arch/s390/include/asm/setup.h                      |   7 +
+ arch/s390/kernel/asm-offsets.c                     |   2 +
+ arch/s390/kernel/entry.S                           |  65 +++++----
+ arch/s390/kernel/process.c                         |   1 +
+ arch/s390/kernel/setup.c                           |   3 +
+ arch/s390/kernel/smp.c                             |   2 +
+ arch/s390/mm/vmem.c                                |   4 +
+ block/blk-mq.c                                     |   8 ++
+ drivers/acpi/sleep.c                               |   4 +
+ drivers/acpi/sleep.h                               |   1 +
+ drivers/acpi/wakeup.c                              |  81 ++++++++++++
+ drivers/char/hw_random/imx-rngc.c                  |   4 +-
+ drivers/char/random.c                              |  20 +--
+ drivers/gpu/drm/i915/i915_active.c                 |  29 +++--
+ drivers/gpu/drm/i915/i915_active.h                 |   4 +-
+ drivers/infiniband/core/cma.c                      |  14 ++
+ drivers/infiniband/core/ucma.c                     |  49 ++++++-
+ drivers/infiniband/hw/hfi1/sysfs.c                 |  26 +++-
+ drivers/infiniband/hw/mlx5/main.c                  |   6 +-
+ drivers/infiniband/sw/siw/siw_cm.c                 | 145 +++++----------------
+ drivers/iommu/intel-iommu.c                        |  15 +--
+ drivers/net/can/slcan.c                            |   4 +-
+ drivers/net/dsa/bcm_sf2.c                          |   9 +-
+ drivers/net/dsa/mt7530.c                           |   3 +
+ drivers/net/ethernet/chelsio/cxgb4/cxgb4_main.c    |   1 -
+ .../net/ethernet/mellanox/mlxsw/spectrum_flower.c  |   9 +-
+ drivers/net/ethernet/realtek/r8169_main.c          |  34 +++--
+ .../net/ethernet/stmicro/stmmac/dwmac1000_core.c   |   2 +-
+ drivers/net/phy/micrel.c                           |   7 +
+ drivers/net/phy/realtek.c                          |   9 ++
+ drivers/net/tun.c                                  |  10 +-
+ drivers/platform/x86/intel_int0002_vgpio.c         |  10 ++
+ drivers/usb/dwc3/gadget.c                          |   2 +-
+ drivers/video/fbdev/core/fbcon.c                   |   3 +
+ fs/ceph/super.c                                    |  56 +++++---
+ fs/ceph/super.h                                    |   2 +-
+ include/linux/acpi.h                               |   5 +
+ include/linux/mlx5/mlx5_ifc.h                      |   6 +-
+ include/linux/swab.h                               |   1 +
+ include/uapi/linux/swab.h                          |  10 ++
+ lib/find_bit.c                                     |  16 +--
+ mm/slub.c                                          |   2 +-
+ net/bluetooth/rfcomm/tty.c                         |   4 +-
+ net/ipv6/addrconf.c                                |   4 +
+ net/sched/cls_tcindex.c                            |  45 ++++++-
+ sound/soc/jz4740/jz4740-i2s.c                      |   2 +-
+ tools/accounting/getdelays.c                       |   2 +-
+ 51 files changed, 481 insertions(+), 278 deletions(-)
 
 
