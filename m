@@ -6,41 +6,39 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A2DBC2BA2B
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 05:56:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33CBDC2BA2B
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 05:59:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 150102078E
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 05:56:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EECE12083E
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 05:59:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725945AbgDKF4j convert rfc822-to-8bit (ORCPT
+        id S1725953AbgDKF75 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 01:56:39 -0400
-Received: from coyote.holtmann.net ([212.227.132.17]:34536 "EHLO
+        Sat, 11 Apr 2020 01:59:57 -0400
+Received: from coyote.holtmann.net ([212.227.132.17]:48417 "EHLO
         mail.holtmann.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725866AbgDKF4j (ORCPT
+        with ESMTP id S1725867AbgDKF75 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 01:56:39 -0400
+        Sat, 11 Apr 2020 01:59:57 -0400
 Received: from marcel-macbook.fritz.box (p4FEFC5A7.dip0.t-ipconnect.de [79.239.197.167])
-        by mail.holtmann.org (Postfix) with ESMTPSA id 7699ECED16;
-        Sat, 11 Apr 2020 08:06:13 +0200 (CEST)
+        by mail.holtmann.org (Postfix) with ESMTPSA id BF5BBCED16;
+        Sat, 11 Apr 2020 08:09:30 +0200 (CEST)
 Content-Type: text/plain;
         charset=us-ascii
 Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.80.23.2.2\))
-Subject: Re: [PATCH v2 1/1] Bluetooth: btrtl: Add support for RTL8761B
+Subject: Re: [PATCH v3 1/1] Bluetooth: btrtl: Add support for RTL8761B
 From:   Marcel Holtmann <marcel@holtmann.org>
-In-Reply-To: <bb48d88a-3b4f-dfa6-bbed-777a76d072ed@gmail.com>
-Date:   Sat, 11 Apr 2020 07:56:37 +0200
+In-Reply-To: <20200411013427.152103-2-sztsian@gmail.com>
+Date:   Sat, 11 Apr 2020 07:59:55 +0200
 Cc:     Johan Hedberg <johan.hedberg@gmail.com>,
         Bluetooth Kernel Mailing List 
         <linux-bluetooth@vger.kernel.org>,
         LKML <linux-kernel@vger.kernel.org>, icenowy@aosc.io
-Content-Transfer-Encoding: 8BIT
-Message-Id: <3E2F3893-FA3E-4C58-AD0C-879C7A3DD30E@holtmann.org>
-References: <20200410145420.108868-1-sztsian@gmail.com>
- <20200410145420.108868-2-sztsian@gmail.com>
- <5CD9EBAA-44A6-4DFF-870E-4F862FB7A60E@holtmann.org>
- <bb48d88a-3b4f-dfa6-bbed-777a76d072ed@gmail.com>
-To:     Zamir SUN <sztsian@gmail.com>
+Content-Transfer-Encoding: 7bit
+Message-Id: <7B466AF8-9BC1-4171-AE1E-B66BCC6FCF10@holtmann.org>
+References: <20200411013427.152103-1-sztsian@gmail.com>
+ <20200411013427.152103-2-sztsian@gmail.com>
+To:     sztsian@gmail.com
 X-Mailer: Apple Mail (2.3608.80.23.2.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -49,83 +47,49 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 Hi Zamir,
 
->>> Add new compatible device RTL8761B.
->>> 
->>> Signed-off-by: Ziqian SUN (Zamir) <sztsian@gmail.com>
->>> ---
->>> drivers/bluetooth/btrtl.c | 10 +++++++++-
->>> 1 file changed, 9 insertions(+), 1 deletion(-)
->> can you also please include the content of /sys/kernel/debug/usb/devices for this device in the commit message.
->> And if you run btmon before plugging it in, I like to see what LE Features of Bluetooth 5.0 this dongle really offers.
+> Add new compatible device RTL8761B. RTL8761B is a USB Bluetooth device,
+> with support of BLE and BR/EDR. The USB info is
 > 
-> Hi Marcel,
+> T:  Bus=03 Lev=04 Prnt=04 Port=00 Cnt=01 Dev#= 29 Spd=12   MxCh= 0
+> D:  Ver= 1.10 Cls=e0(wlcon) Sub=01 Prot=01 MxPS=64 #Cfgs=  1
+> P:  Vendor=0bda ProdID=8771 Rev= 2.00
+> S:  Manufacturer=Realtek
+> S:  Product=Bluetooth Radio
+> S:  SerialNumber=XXXXXXXXXXXX
+> C:* #Ifs= 2 Cfg#= 1 Atr=e0 MxPwr=500mA
+> I:* If#= 0 Alt= 0 #EPs= 3 Cls=e0(wlcon) Sub=01 Prot=01 Driver=btusb
+> E:  Ad=81(I) Atr=03(Int.) MxPS=  16 Ivl=1ms
+> E:  Ad=02(O) Atr=02(Bulk) MxPS=  64 Ivl=0ms
+> E:  Ad=82(I) Atr=02(Bulk) MxPS=  64 Ivl=0ms
+> I:* If#= 1 Alt= 0 #EPs= 2 Cls=e0(wlcon) Sub=01 Prot=01 Driver=btusb
+> E:  Ad=03(O) Atr=01(Isoc) MxPS=   0 Ivl=1ms
+> E:  Ad=83(I) Atr=01(Isoc) MxPS=   0 Ivl=1ms
+> I:  If#= 1 Alt= 1 #EPs= 2 Cls=e0(wlcon) Sub=01 Prot=01 Driver=btusb
+> E:  Ad=03(O) Atr=01(Isoc) MxPS=   9 Ivl=1ms
+> E:  Ad=83(I) Atr=01(Isoc) MxPS=   9 Ivl=1ms
+> I:  If#= 1 Alt= 2 #EPs= 2 Cls=e0(wlcon) Sub=01 Prot=01 Driver=btusb
+> E:  Ad=03(O) Atr=01(Isoc) MxPS=  17 Ivl=1ms
+> E:  Ad=83(I) Atr=01(Isoc) MxPS=  17 Ivl=1ms
+> I:  If#= 1 Alt= 3 #EPs= 2 Cls=e0(wlcon) Sub=01 Prot=01 Driver=btusb
+> E:  Ad=03(O) Atr=01(Isoc) MxPS=  25 Ivl=1ms
+> E:  Ad=83(I) Atr=01(Isoc) MxPS=  25 Ivl=1ms
+> I:  If#= 1 Alt= 4 #EPs= 2 Cls=e0(wlcon) Sub=01 Prot=01 Driver=btusb
+> E:  Ad=03(O) Atr=01(Isoc) MxPS=  33 Ivl=1ms
+> E:  Ad=83(I) Atr=01(Isoc) MxPS=  33 Ivl=1ms
+> I:  If#= 1 Alt= 5 #EPs= 2 Cls=e0(wlcon) Sub=01 Prot=01 Driver=btusb
+> E:  Ad=03(O) Atr=01(Isoc) MxPS=  49 Ivl=1ms
+> E:  Ad=83(I) Atr=01(Isoc) MxPS=  49 Ivl=1ms
 > 
-> I think you want this section
+> Signed-off-by: Ziqian SUN (Zamir) <sztsian@gmail.com>
+> ---
 > 
->        Supported settings: 0x0001bfff
->          Powered
->          Connectable
->          Fast Connectable
->          Discoverable
->          Bondable
->          Link Security
->          Secure Simple Pairing
->          BR/EDR
->          High Speed
->          Low Energy
->          Advertising
->          Secure Connections
->          Debug Keys
->          Privacy
->          Static Address
->          PHY Configuration
+> Changes since v2: Add USB info in commit message
+> Changes since v1: Add the firmware info
 > 
-> Full log of btmon is available here, with the mac address masked http://fars.ee/Lu85
-> 
-> I'll send a v3 to include the usb info in the commit message shortly.
+> drivers/bluetooth/btrtl.c | 10 +++++++++-
+> 1 file changed, 9 insertions(+), 1 deletion(-)
 
-This hardware is funny. Before the firmware patching it says this:
-
-< HCI Command: Read Local Version In.. (0x04|0x0001) plen 0
-> HCI Event: Command Complete (0x0e) plen 12
-      Read Local Version Information (0x04|0x0001) ncmd 2
-        Status: Success (0x00)
-        HCI version: Bluetooth 5.1 (0x0a) - Revision 11 (0x000b)
-        LMP version: Bluetooth 5.1 (0x0a) - Subversion 34657 (0x8761)
-        Manufacturer: Realtek Semiconductor Corporation (93)
-
-And after the firmware patching it downgrades to Bluetooth 5.0 standard:
-
-< HCI Command: Read Local Version... (0x04|0x0001) plen 0
-> HCI Event: Command Complete (0x0e) plen 12
-      Read Local Version Information (0x04|0x0001) ncmd 2
-        Status: Success (0x00)
-        HCI version: Bluetooth 5.0 (0x09) - Revision 55448 (0xd898)
-        LMP version: Bluetooth 5.0 (0x09) - Subversion 50044 (0xc37c)
-        Manufacturer: Realtek Semiconductor Corporation (93)
-
-Anyway, I was after these LE Features:
-
-< HCI Command: LE Read Local Suppo.. (0x08|0x0003) plen 0
-> HCI Event: Command Complete (0x0e) plen 12
-      LE Read Local Supported Features (0x08|0x0003) ncmd 2
-        Status: Success (0x00)
-        Features: 0xfd 0x5f 0x00 0x00 0x00 0x00 0x00 0x00
-          LE Encryption
-          Extended Reject Indication
-          Slave-initiated Features Exchange
-          LE Ping
-          LE Data Packet Length Extension
-          LL Privacy
-          Extended Scanner Filter Policies
-          LE 2M PHY
-          Stable Modulation Index - Transmitter
-          Stable Modulation Index - Receiver
-          LE Coded PHY
-          LE Extended Advertising
-          Channel Selection Algorithm #2
-
-This seems to be a genuine USB dongle with Bluetooth 5.0 features.
+patch has been applied to bluetooth-next tree.
 
 Regards
 
