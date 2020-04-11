@@ -2,123 +2,120 @@ Return-Path: <SRS0=xbEg=53=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39FC6C2BA2B
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 13:56:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07721C2BA2B
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 14:04:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 029DC20709
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 13:56:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="si63vvCB"
+	by mail.kernel.org (Postfix) with ESMTP id CEBBA2083E
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 14:04:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726166AbgDKN4n (ORCPT
+        id S1726231AbgDKOEC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 09:56:43 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:39612 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726037AbgDKN4m (ORCPT
+        Sat, 11 Apr 2020 10:04:02 -0400
+Received: from smtp06.smtpout.orange.fr ([80.12.242.128]:35886 "EHLO
+        smtp.smtpout.orange.fr" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726094AbgDKOEC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 09:56:42 -0400
-Received: by mail-wr1-f68.google.com with SMTP id p10so5223643wrt.6;
-        Sat, 11 Apr 2020 06:56:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:reply-to:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=0HPAHahYAQGlzoLYgXtzlxsXkNFun+xx6JrId2I04YY=;
-        b=si63vvCBYvdKsYsBVeAsyrf7ysXXpHRt6vHXXNoUu/JvtOAJLVP5phHL6iHyPbv1k9
-         TrgeJPcLaZkdoPZW9PIKhr2+pzblitFxElzBhd0Oi7Cu9fYsHg2/FFZnoKg9+wRq9EVb
-         xM4XuUpI/n+78ZoKtBl9OzId/Yo6JeeABzKuvzMGar+pVFgcHG4S82q3OaRZbbS8aeCb
-         geoJjPrLeV8kqLVCcDtG0fO0y+1Whc8ZIbzs/eb2UBOUn4E6VvvvqN+RPWlQpjq8zvon
-         Ozz2wefNOdYOtaa5x1nu1ABXQakgwIVZAQ8OLx41QCQ5PRj6wFLFUdedEL58K37C2kYg
-         KBgA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:reply-to
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=0HPAHahYAQGlzoLYgXtzlxsXkNFun+xx6JrId2I04YY=;
-        b=elrwZBfHvV71TcJUtC9DFosnCEqUYRjkjc5Dir/vdeyh6ehOLZWi1H2ipZwRXW/71M
-         yBygPr2mZiwDcVwRioiueElMpHiWi6V6Z6lJpsLCy53VyY0NBcYtkzoSzpeeyaoIGiSW
-         eCWEPS5QlZvO2dEObISgH7paXdsxYUNnenLEY6PUrIxL1iqcIF34LpG/6CciRWPlZ5SL
-         n1X+Z+Ag2IsYzy6DVmrRb3jzwnRA/YxYKLlQX0xxVFdHFbrRTPcAWl/+bLzPhUNc+Sy5
-         4NIoPLZlzJzmPTRclTxpq39JLC1FoA0lYB2aWdmQ0Y+vSyijFoosagWSQ6CpFQb38oP5
-         88/Q==
-X-Gm-Message-State: AGi0PubVza07VLzMNr3tIYMrmwo0VaZ4H7h+3Y9LoM8L4aXgmv7FPwy9
-        Zv+piy1ty3MXPj9uaqv4CnA=
-X-Google-Smtp-Source: APiQypJxdgTfGuuX+f4Ee56mZ11rjBVKzNcnxYXlcornkz9wCaUiFNB5OrRtpjSciaq5gtl5FcCOfA==
-X-Received: by 2002:adf:cc81:: with SMTP id p1mr1042081wrj.372.1586613401053;
-        Sat, 11 Apr 2020 06:56:41 -0700 (PDT)
-Received: from localhost ([185.92.221.13])
-        by smtp.gmail.com with ESMTPSA id v186sm6812436wme.24.2020.04.11.06.56.40
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Sat, 11 Apr 2020 06:56:40 -0700 (PDT)
-Date:   Sat, 11 Apr 2020 13:56:39 +0000
-From:   Wei Yang <richard.weiyang@gmail.com>
-To:     Matthew Wilcox <willy@infradead.org>
-Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 5/9] XArray: entry in last level is not expected to be a
- node
-Message-ID: <20200411135639.qn36v6e4bcgc3lnz@master>
-Reply-To: Wei Yang <richard.weiyang@gmail.com>
-References: <20200330123643.17120-1-richard.weiyang@gmail.com>
- <20200330123643.17120-6-richard.weiyang@gmail.com>
- <20200330124842.GY22483@bombadil.infradead.org>
- <20200406012453.tthxonovxzdzoluj@master>
+        Sat, 11 Apr 2020 10:04:02 -0400
+Received: from localhost.localdomain ([90.126.162.40])
+        by mwinf5d41 with ME
+        id RS3y2200H0scBcy03S3yw4; Sat, 11 Apr 2020 16:04:00 +0200
+X-ME-Helo: localhost.localdomain
+X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
+X-ME-Date: Sat, 11 Apr 2020 16:04:00 +0200
+X-ME-IP: 90.126.162.40
+From:   Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+To:     alexander.deucher@amd.com, christian.koenig@amd.com,
+        David1.Zhou@amd.com, airlied@linux.ie, daniel@ffwll.ch,
+        Hawking.Zhang@amd.com, evan.quan@amd.com,
+        andrey.grodzovsky@amd.com, Monk.Liu@amd.com, kent.russell@amd.com,
+        le.ma@amd.com
+Cc:     amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org,
+        Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Subject: [PATCH] drm/amdgpu: Add missing '\n' in log messages
+Date:   Sat, 11 Apr 2020 16:03:56 +0200
+Message-Id: <20200411140356.28211-1-christophe.jaillet@wanadoo.fr>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200406012453.tthxonovxzdzoluj@master>
-User-Agent: NeoMutt/20170113 (1.7.2)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 06, 2020 at 01:24:53AM +0000, Wei Yang wrote:
->On Mon, Mar 30, 2020 at 05:48:42AM -0700, Matthew Wilcox wrote:
->>On Mon, Mar 30, 2020 at 12:36:39PM +0000, Wei Yang wrote:
->>> If an entry is at the last level, whose parent's shift is 0, it is not
->>> expected to be a node. We can just leverage the xa_is_node() check to
->>> break the loop instead of check shift additionally.
->>
->>I know you didn't run the test suite after making this change.
->
+Message logged by 'dev_xxx()' or 'pr_xxx()' should end with a '\n'.
 
-Matthew
+While at it, split some long lines that where not that far.
 
-Have you got my mail?
+Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+---
+Most of them have been added in commit bd607166af7f ("drm/amdgpu: Enable reading FRU chip via I2C v3")
+---
+ drivers/gpu/drm/amd/amdgpu/amdgpu_device.c | 16 +++++++++-------
+ 1 file changed, 9 insertions(+), 7 deletions(-)
 
->Well, I got your point finally. From commit 76b4e5299565 ('XArray: Permit
->storing 2-byte-aligned pointers'), xa_is_node() will not be *ACURATE*. Those
->2-byte align pointers will be treated as node too.
->
->Well, I found another thing, but not sure whether you have fixed this or not.
->
->If applying following change
->
->@@ -1461,6 +1461,11 @@ static void check_align_1(struct xarray *xa, char *name)
->                                        GFP_KERNEL) != 0);
->                XA_BUG_ON(xa, id != i);
->        }
->+       XA_STATE_ORDER(xas, xa, 0, 0);
->+       entry = xas_find_conflict(&xas);
->        xa_for_each(xa, index, entry)
->                XA_BUG_ON(xa, xa_is_err(entry));
->        xa_destroy(xa);
->
->We trigger an error message. The reason is the same. And we can fix this with
->the same approach in xas_find_conflict().
->
->If you think this is the proper way, I would add a patch for this.
->
->-- 
->Wei Yang
->Help you, Help me
-
+diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_device.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_device.c
+index 87f7c129c8ce..3d0a50e8c36b 100644
+--- a/drivers/gpu/drm/amd/amdgpu/amdgpu_device.c
++++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_device.c
+@@ -3249,25 +3249,25 @@ int amdgpu_device_init(struct amdgpu_device *adev,
+ 
+ 	r = device_create_file(adev->dev, &dev_attr_pcie_replay_count);
+ 	if (r) {
+-		dev_err(adev->dev, "Could not create pcie_replay_count");
++		dev_err(adev->dev, "Could not create pcie_replay_count\n");
+ 		return r;
+ 	}
+ 
+ 	r = device_create_file(adev->dev, &dev_attr_product_name);
+ 	if (r) {
+-		dev_err(adev->dev, "Could not create product_name");
++		dev_err(adev->dev, "Could not create product_name\n");
+ 		return r;
+ 	}
+ 
+ 	r = device_create_file(adev->dev, &dev_attr_product_number);
+ 	if (r) {
+-		dev_err(adev->dev, "Could not create product_number");
++		dev_err(adev->dev, "Could not create product_number\n");
+ 		return r;
+ 	}
+ 
+ 	r = device_create_file(adev->dev, &dev_attr_serial_number);
+ 	if (r) {
+-		dev_err(adev->dev, "Could not create serial_number");
++		dev_err(adev->dev, "Could not create serial_number\n");
+ 		return r;
+ 	}
+ 
+@@ -4270,7 +4270,7 @@ int amdgpu_device_gpu_recover(struct amdgpu_device *adev,
+ 		job_signaled = true;
+ 
+ 	if (job_signaled) {
+-		dev_info(adev->dev, "Guilty job already signaled, skipping HW reset");
++		dev_info(adev->dev, "Guilty job already signaled, skipping HW reset\n");
+ 		goto skip_hw_reset;
+ 	}
+ 
+@@ -4339,10 +4339,12 @@ int amdgpu_device_gpu_recover(struct amdgpu_device *adev,
+ 
+ 		if (r) {
+ 			/* bad news, how to tell it to userspace ? */
+-			dev_info(tmp_adev->dev, "GPU reset(%d) failed\n", atomic_read(&tmp_adev->gpu_reset_counter));
++			dev_info(tmp_adev->dev, "GPU reset(%d) failed\n",
++				 atomic_read(&tmp_adev->gpu_reset_counter));
+ 			amdgpu_vf_error_put(tmp_adev, AMDGIM_ERROR_VF_GPU_RESET_FAIL, 0, r);
+ 		} else {
+-			dev_info(tmp_adev->dev, "GPU reset(%d) succeeded!\n", atomic_read(&tmp_adev->gpu_reset_counter));
++			dev_info(tmp_adev->dev, "GPU reset(%d) succeeded!\n",
++				 atomic_read(&tmp_adev->gpu_reset_counter));
+ 		}
+ 	}
+ 
 -- 
-Wei Yang
-Help you, Help me
+2.20.1
+
