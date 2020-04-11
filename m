@@ -7,45 +7,49 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6AFAC2BB85
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:18:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A5A5C2BA2B
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:18:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7F92220644
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:18:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EA7132084D
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:18:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586607495;
-	bh=7MBKtwa4tRHahvFw4Af19dmy1uXDFxo92bRC11xqOHM=;
+	s=default; t=1586607502;
+	bh=Jttk726tXOUzFy4Zy+whTq1rsrkJW0mjXnvp9/CaKi0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Y+TqFutlxGpocz8SoFwehr/8yk2l6ZWpgW39ofwKIk/4zT0q/Oe37JZUCx07SOeWZ
-	 TPlQON0CLTANxMKTCYu9sqHfIDY2nQH6mCq+D2q0sg3o36IYpH9YY4UWxa6C9coRLX
-	 f55+FIQJsqY5dg4uj0nFuBQL0eYgr88VOvGeHE7s=
+	b=mOi1IU1Ainai+I9vd2ZDjOjjvHE+aMJVRDg0BxJs9YGWYlK6SuAmE1WR2mAWk006o
+	 iZKXqNewPSZAc0QTAnPEOYlzyxTod9TMfTK3PguKQOLB/fcx640k/CHuQttbWN6gf1
+	 H84l43p+mzlZ+4nvRy5W4MmK8ilif14UU9NsbSlA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728561AbgDKMSN (ORCPT
+        id S1728169AbgDKMSU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 08:18:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53086 "EHLO mail.kernel.org"
+        Sat, 11 Apr 2020 08:18:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53204 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728552AbgDKMSL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 08:18:11 -0400
+        id S1728564AbgDKMSP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Apr 2020 08:18:15 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id ED60F2084D;
-        Sat, 11 Apr 2020 12:18:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BF71020692;
+        Sat, 11 Apr 2020 12:18:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586607491;
-        bh=7MBKtwa4tRHahvFw4Af19dmy1uXDFxo92bRC11xqOHM=;
+        s=default; t=1586607496;
+        bh=Jttk726tXOUzFy4Zy+whTq1rsrkJW0mjXnvp9/CaKi0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sBWfZih4u/GjMK29e2xY2P6tOkfwarMuQvmu7bjh3SAdEBiZMQPo8+5dFqPx8OXkF
-         WQoAcf8bD0UCcq2qUJceF1ra3Lw9H1i8tvTMUOfKPcMgn5P3C80payKojc+wNWJ/Z0
-         m3PRh0mclVyNFfeKSIqoyqWmf4Dpegk0rdtrOdks=
+        b=nCCMRmJjFuxRjFb3rD8kzkDKEwei0TVf4ed2TV1GsldcN70k0rhl+nomdBUn72bCY
+         vuonQUO5of9LMnl+VVP68rNjP2PwhBTGc8gOhttVhFhyhfokN5J7YWKbWx/GwSHekZ
+         EBtV6i9mti0JasmsYJWlTBEfIrxzOU9Nm8Y5OuUY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jason Gunthorpe <jgg@mellanox.com>
-Subject: [PATCH 5.4 34/41] RDMA/cma: Teach lockdep about the order of rtnl and lock
-Date:   Sat, 11 Apr 2020 14:09:43 +0200
-Message-Id: <20200411115506.552669509@linuxfoundation.org>
+        stable@vger.kernel.org,
+        syzbot+4496e82090657320efc6@syzkaller.appspotmail.com,
+        Qiujun Huang <hqjagain@gmail.com>,
+        Hillf Danton <hdanton@sina.com>,
+        Marcel Holtmann <marcel@holtmann.org>
+Subject: [PATCH 5.4 36/41] Bluetooth: RFCOMM: fix ODEBUG bug in rfcomm_dev_ioctl
+Date:   Sat, 11 Apr 2020 14:09:45 +0200
+Message-Id: <20200411115506.718633162@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200411115504.124035693@linuxfoundation.org>
 References: <20200411115504.124035693@linuxfoundation.org>
@@ -58,48 +62,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jason Gunthorpe <jgg@mellanox.com>
+From: Qiujun Huang <hqjagain@gmail.com>
 
-commit 32ac9e4399b12d3e54d312a0e0e30ed5cd19bd4e upstream.
+commit 71811cac8532b2387b3414f7cd8fe9e497482864 upstream.
 
-This lock ordering only happens when bonding is enabled and a certain
-bonding related event fires. However, since it can happen this is a global
-restriction on lock ordering.
+Needn't call 'rfcomm_dlc_put' here, because 'rfcomm_dlc_exists' didn't
+increase dlc->refcnt.
 
-Teach lockdep about the order directly and unconditionally so bugs here
-are found quickly.
-
-See https://syzkaller.appspot.com/bug?extid=55de90ab5f44172b0c90
-
-Link: https://lore.kernel.org/r/20200227203651.GA27185@ziepe.ca
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+Reported-by: syzbot+4496e82090657320efc6@syzkaller.appspotmail.com
+Signed-off-by: Qiujun Huang <hqjagain@gmail.com>
+Suggested-by: Hillf Danton <hdanton@sina.com>
+Signed-off-by: Marcel Holtmann <marcel@holtmann.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/infiniband/core/cma.c |   13 +++++++++++++
- 1 file changed, 13 insertions(+)
+ net/bluetooth/rfcomm/tty.c |    4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
---- a/drivers/infiniband/core/cma.c
-+++ b/drivers/infiniband/core/cma.c
-@@ -4719,6 +4719,19 @@ static int __init cma_init(void)
- {
- 	int ret;
- 
-+	/*
-+	 * There is a rare lock ordering dependency in cma_netdev_callback()
-+	 * that only happens when bonding is enabled. Teach lockdep that rtnl
-+	 * must never be nested under lock so it can find these without having
-+	 * to test with bonding.
-+	 */
-+	if (IS_ENABLED(CONFIG_LOCKDEP)) {
-+		rtnl_lock();
-+		mutex_lock(&lock);
-+		mutex_unlock(&lock);
-+		rtnl_unlock();
-+	}
-+
- 	cma_wq = alloc_ordered_workqueue("rdma_cm", WQ_MEM_RECLAIM);
- 	if (!cma_wq)
- 		return -ENOMEM;
+--- a/net/bluetooth/rfcomm/tty.c
++++ b/net/bluetooth/rfcomm/tty.c
+@@ -413,10 +413,8 @@ static int __rfcomm_create_dev(struct so
+ 		dlc = rfcomm_dlc_exists(&req.src, &req.dst, req.channel);
+ 		if (IS_ERR(dlc))
+ 			return PTR_ERR(dlc);
+-		else if (dlc) {
+-			rfcomm_dlc_put(dlc);
++		if (dlc)
+ 			return -EBUSY;
+-		}
+ 		dlc = rfcomm_dlc_alloc(GFP_KERNEL);
+ 		if (!dlc)
+ 			return -ENOMEM;
 
 
