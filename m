@@ -2,98 +2,231 @@ Return-Path: <SRS0=xbEg=53=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 567AAC2BA19
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:31:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4420AC2BBC7
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:32:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 30A5D2051A
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:31:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 117872051A
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:32:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1586647929;
+	bh=L7usoMfa+pEQiXXtn3sfbAzram5W8WNwR3FcHvNx+yM=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=pjZT8/LW9L4R8uXDJ1maa22KfO2IZVDish8yoxhDw2ZqIVPRvF9A2TD1QrHnOlrZH
+	 IKPEwNsMnsYQOm8WhL0WyskENuaVz+4WKTBrKxxTGOljapyHnwBv+T7Ri16nnDIBAe
+	 x02QVOa8vEOwp3cnws6ZZdGrA4Rh2TsZoSgfgAuw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730819AbgDKXbz (ORCPT
+        id S1729455AbgDKXKL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 19:31:55 -0400
-Received: from relay7-d.mail.gandi.net ([217.70.183.200]:60361 "EHLO
-        relay7-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728753AbgDKXbs (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 19:31:48 -0400
-X-Originating-IP: 86.202.105.35
-Received: from localhost (lfbn-lyo-1-9-35.w86-202.abo.wanadoo.fr [86.202.105.35])
-        (Authenticated sender: alexandre.belloni@bootlin.com)
-        by relay7-d.mail.gandi.net (Postfix) with ESMTPSA id C998520004;
-        Sat, 11 Apr 2020 23:31:45 +0000 (UTC)
-Date:   Sun, 12 Apr 2020 01:31:45 +0200
-From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
-To:     William Breathitt Gray <vilhelm.gray@gmail.com>
-Cc:     Kamel Bouhara <kamel.bouhara@bootlin.com>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Ludovic Desroches <ludovic.desroches@microchip.com>,
-        linux-arm-kernel@lists.infradead.org,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        linux-input@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org
-Subject: Re: [PATCH 0/3] Introduce a counter inkernel API
-Message-ID: <20200411233145.GC3628@piout.net>
-References: <20200406155806.1295169-1-kamel.bouhara@bootlin.com>
- <20200411172259.GB95806@icarus>
+        Sat, 11 Apr 2020 19:10:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48268 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727215AbgDKXKJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Apr 2020 19:10:09 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D830320787;
+        Sat, 11 Apr 2020 23:10:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1586646609;
+        bh=L7usoMfa+pEQiXXtn3sfbAzram5W8WNwR3FcHvNx+yM=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=q97KD400Lry9yB7UvWoRjGPrJNNjGr8Qr0zXeTsPx4exA02ONk35a7ilCOCB3RLLe
+         PV4Xox5tBnb27jlN2niLvRQn1/y5qHcqGe8xw/zsBuEmFwxXTgQ4gpifnhkuqeW+QX
+         demHtmfzklhXXBP2xKhVcDL2Wr4xq8ZL6sJIOXps=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Howard Chung <howardchung@google.com>,
+        Marcel Holtmann <marcel@holtmann.org>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-bluetooth@vger.kernel.org, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 021/108] Bluetooth: L2CAP: handle l2cap config request during open state
+Date:   Sat, 11 Apr 2020 19:08:16 -0400
+Message-Id: <20200411230943.24951-21-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200411230943.24951-1-sashal@kernel.org>
+References: <20200411230943.24951-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200411172259.GB95806@icarus>
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+From: Howard Chung <howardchung@google.com>
 
-On 11/04/2020 13:22:59-0400, William Breathitt Gray wrote:
-> I'm not inherently opposed to adding an in-kernel API for the Counter
-> subsystem, but I'm not sure yet if it's necessary for this particular
-> situation.
-> 
-> Is the purpose of this driver to allow users to poll on the rotary
-> encoder position value? If so, perhaps instead of an in-kernel API, the
-> polling functionality should be added as part of the Counter subsystem;
-> I can see this being a useful feature for many counter devices, and
-> it'll keep the code contained to a single subsystem.
-> 
-> By the way, I'm going to be submitting a major update to the Counter
-> subsystem code in the next couple weeks that isolates the sysfs code
-> from the rest of the subsystem -- it'll likely affect the interface and
-> code here -- so I'll probably wait to decide for certain until that
-> patch lands; I anticipate it making things easier for you here after
-> it's merged.
-> 
-> For now, I want to get a better high-level understanding about how users
-> would interact with this driver to use the device (input_setup_polling
-> is a new call for me). That should help me understand whether an
-> in-kernel API is the best choice here.
-> 
+[ Upstream commit 96298f640104e4cd9a913a6e50b0b981829b94ff ]
 
-Well, the goal is not really polling the counters but mainly exposing
-the correct userspace interface for the rotary encoders that are
-connected to quadrature decoders.
+According to Core Spec Version 5.2 | Vol 3, Part A 6.1.5,
+the incoming L2CAP_ConfigReq should be handled during
+OPEN state.
 
-The input driver is using polling because this reduces the complexity of
-the patches but the ultimate goal is to also have interrupts working.
+The section below shows the btmon trace when running
+L2CAP/COS/CFD/BV-12-C before and after this change.
 
-I'm pretty sure the in-kernel interface can also have other usages like
-for example iio triggers. I could envision having to read an ADC after x
-turns of a motor to check for the torque.
+=== Before ===
+...
+> ACL Data RX: Handle 256 flags 0x02 dlen 12                #22
+      L2CAP: Connection Request (0x02) ident 2 len 4
+        PSM: 1 (0x0001)
+        Source CID: 65
+< ACL Data TX: Handle 256 flags 0x00 dlen 16                #23
+      L2CAP: Connection Response (0x03) ident 2 len 8
+        Destination CID: 64
+        Source CID: 65
+        Result: Connection successful (0x0000)
+        Status: No further information available (0x0000)
+< ACL Data TX: Handle 256 flags 0x00 dlen 12                #24
+      L2CAP: Configure Request (0x04) ident 2 len 4
+        Destination CID: 65
+        Flags: 0x0000
+> HCI Event: Number of Completed Packets (0x13) plen 5      #25
+        Num handles: 1
+        Handle: 256
+        Count: 1
+> HCI Event: Number of Completed Packets (0x13) plen 5      #26
+        Num handles: 1
+        Handle: 256
+        Count: 1
+> ACL Data RX: Handle 256 flags 0x02 dlen 16                #27
+      L2CAP: Configure Request (0x04) ident 3 len 8
+        Destination CID: 64
+        Flags: 0x0000
+        Option: Unknown (0x10) [hint]
+        01 00                                            ..
+< ACL Data TX: Handle 256 flags 0x00 dlen 18                #28
+      L2CAP: Configure Response (0x05) ident 3 len 10
+        Source CID: 65
+        Flags: 0x0000
+        Result: Success (0x0000)
+        Option: Maximum Transmission Unit (0x01) [mandatory]
+          MTU: 672
+> HCI Event: Number of Completed Packets (0x13) plen 5      #29
+        Num handles: 1
+        Handle: 256
+        Count: 1
+> ACL Data RX: Handle 256 flags 0x02 dlen 14                #30
+      L2CAP: Configure Response (0x05) ident 2 len 6
+        Source CID: 64
+        Flags: 0x0000
+        Result: Success (0x0000)
+> ACL Data RX: Handle 256 flags 0x02 dlen 20                #31
+      L2CAP: Configure Request (0x04) ident 3 len 12
+        Destination CID: 64
+        Flags: 0x0000
+        Option: Unknown (0x10) [hint]
+        01 00 91 02 11 11                                ......
+< ACL Data TX: Handle 256 flags 0x00 dlen 14                #32
+      L2CAP: Command Reject (0x01) ident 3 len 6
+        Reason: Invalid CID in request (0x0002)
+        Destination CID: 64
+        Source CID: 65
+> HCI Event: Number of Completed Packets (0x13) plen 5      #33
+        Num handles: 1
+        Handle: 256
+        Count: 1
+...
+=== After ===
+...
+> ACL Data RX: Handle 256 flags 0x02 dlen 12               #22
+      L2CAP: Connection Request (0x02) ident 2 len 4
+        PSM: 1 (0x0001)
+        Source CID: 65
+< ACL Data TX: Handle 256 flags 0x00 dlen 16               #23
+      L2CAP: Connection Response (0x03) ident 2 len 8
+        Destination CID: 64
+        Source CID: 65
+        Result: Connection successful (0x0000)
+        Status: No further information available (0x0000)
+< ACL Data TX: Handle 256 flags 0x00 dlen 12               #24
+      L2CAP: Configure Request (0x04) ident 2 len 4
+        Destination CID: 65
+        Flags: 0x0000
+> HCI Event: Number of Completed Packets (0x13) plen 5     #25
+        Num handles: 1
+        Handle: 256
+        Count: 1
+> HCI Event: Number of Completed Packets (0x13) plen 5     #26
+        Num handles: 1
+        Handle: 256
+        Count: 1
+> ACL Data RX: Handle 256 flags 0x02 dlen 16               #27
+      L2CAP: Configure Request (0x04) ident 3 len 8
+        Destination CID: 64
+        Flags: 0x0000
+        Option: Unknown (0x10) [hint]
+        01 00                                            ..
+< ACL Data TX: Handle 256 flags 0x00 dlen 18               #28
+      L2CAP: Configure Response (0x05) ident 3 len 10
+        Source CID: 65
+        Flags: 0x0000
+        Result: Success (0x0000)
+        Option: Maximum Transmission Unit (0x01) [mandatory]
+          MTU: 672
+> HCI Event: Number of Completed Packets (0x13) plen 5     #29
+        Num handles: 1
+        Handle: 256
+        Count: 1
+> ACL Data RX: Handle 256 flags 0x02 dlen 14               #30
+      L2CAP: Configure Response (0x05) ident 2 len 6
+        Source CID: 64
+        Flags: 0x0000
+        Result: Success (0x0000)
+> ACL Data RX: Handle 256 flags 0x02 dlen 20               #31
+      L2CAP: Configure Request (0x04) ident 3 len 12
+        Destination CID: 64
+        Flags: 0x0000
+        Option: Unknown (0x10) [hint]
+        01 00 91 02 11 11                                .....
+< ACL Data TX: Handle 256 flags 0x00 dlen 18               #32
+      L2CAP: Configure Response (0x05) ident 3 len 10
+        Source CID: 65
+        Flags: 0x0000
+        Result: Success (0x0000)
+        Option: Maximum Transmission Unit (0x01) [mandatory]
+          MTU: 672
+< ACL Data TX: Handle 256 flags 0x00 dlen 12               #33
+      L2CAP: Configure Request (0x04) ident 3 len 4
+        Destination CID: 65
+        Flags: 0x0000
+> HCI Event: Number of Completed Packets (0x13) plen 5     #34
+        Num handles: 1
+        Handle: 256
+        Count: 1
+> HCI Event: Number of Completed Packets (0x13) plen 5     #35
+        Num handles: 1
+        Handle: 256
+        Count: 1
+...
 
-I also think that having the sysfs code separate would help as it could
-be considered as one of the in-kernel interface user.
+Signed-off-by: Howard Chung <howardchung@google.com>
+Signed-off-by: Marcel Holtmann <marcel@holtmann.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ net/bluetooth/l2cap_core.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-BTW, do you have plans to add a character device interface?
-
+diff --git a/net/bluetooth/l2cap_core.c b/net/bluetooth/l2cap_core.c
+index a845786258a0b..2f3e437faedbc 100644
+--- a/net/bluetooth/l2cap_core.c
++++ b/net/bluetooth/l2cap_core.c
+@@ -4131,7 +4131,8 @@ static inline int l2cap_config_req(struct l2cap_conn *conn,
+ 		return 0;
+ 	}
+ 
+-	if (chan->state != BT_CONFIG && chan->state != BT_CONNECT2) {
++	if (chan->state != BT_CONFIG && chan->state != BT_CONNECT2 &&
++	    chan->state != BT_CONNECTED) {
+ 		cmd_reject_invalid_cid(conn, cmd->ident, chan->scid,
+ 				       chan->dcid);
+ 		goto unlock;
 -- 
-Alexandre Belloni, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+2.20.1
+
