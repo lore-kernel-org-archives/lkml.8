@@ -4,56 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33C0EC2BA19
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:17:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BEA18C2BA19
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:17:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 09D8D20757
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:17:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 99B9120769
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:17:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586647046;
-	bh=W9xeHLvxnfp7OAlyDmpEcJksKjbNpTjLof1gM0nKeFA=;
+	s=default; t=1586647054;
+	bh=xyPGC8d3ARutzQCLS9J1OiD8t1M1/B+LRfv/dx8xgXI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ES4LQm8J08ydKBWmqTH/pRfsbqcx8+g+ws+Qs4RqE/TmizD5S/1uPuLMzGFIGDznL
-	 MxU6x0I2i79RzesRSsTK4eO6S7GoBgN+xxn8ZOb/06lMAw+dDAdIPcc/Y2R9+AmskT
-	 GRlrg4j49CNz0+ltkicZ1TkfGWCLedbFpFp3QIMo=
+	b=ONYwg2/pZgzZ5mmb4O9ApqEEegMl9jGjjBy1K7EGfwdU1LbGRybsmvjfcow6UQE7Y
+	 1pPAEeWmFvNnRUNJqWh8I8cZLtp0kyZrmafSkNEFnKxC9Pa5uQOYhIRLChcXKOrx50
+	 /7xzwbm2DwpRKBrQTRcEoOXaZnrbXXvtyR9xoab4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730283AbgDKXRU (ORCPT
+        id S1730878AbgDKXRd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 19:17:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56298 "EHLO mail.kernel.org"
+        Sat, 11 Apr 2020 19:17:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56184 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729677AbgDKXOb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 19:14:31 -0400
+        id S1730333AbgDKXO3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Apr 2020 19:14:29 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C911921655;
-        Sat, 11 Apr 2020 23:14:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 751232084D;
+        Sat, 11 Apr 2020 23:14:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586646872;
-        bh=W9xeHLvxnfp7OAlyDmpEcJksKjbNpTjLof1gM0nKeFA=;
+        s=default; t=1586646869;
+        bh=xyPGC8d3ARutzQCLS9J1OiD8t1M1/B+LRfv/dx8xgXI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=J3If3CsTxNRULiMamR2B4/QieR1kYuxPdH+bMtcLFmF/jhDrf497HsgVvfnghtQ0n
-         wX1TiusyGvMzLttPokpy1ZBeP1SwPMevrzCyu9AJiV6MBzzUSeYJXvF7XbQASA0xVP
-         OIdn43a5rCJCa4grtEcm0n3RCtiU0WvqEM0xlPBk=
+        b=VabjerICAdvoIuXBhfO76lZ5PDoXPVGBLuXAtwMvRz0vyEuI3LXKlSB3O71t3YghO
+         5QmHWYqQMs8BSxkLJRQgph911YWjVVwgHj7yfJ7rMZWjjIXcGaJTbeIFWkA5ZK3WmS
+         qlvUDdMZ/bUoFFvGRtigZa19i3Fr/Fkj4NhUlYX0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Wen Yang <wen.yang99@zte.com.cn>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Mukesh Ojha <mojha@codeaurora.org>,
-        Tomi Valkeinen <tomi.valkeinen@ti.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Sebastian Reichel <sebastian.reichel@collabora.com>,
-        dri-devel@lists.freedesktop.org,
-        Markus Elfring <Markus.Elfring@web.de>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.9 15/26] drm/omap: fix possible object reference leak
-Date:   Sat, 11 Apr 2020 19:14:02 -0400
-Message-Id: <20200411231413.26911-15-sashal@kernel.org>
+Cc:     Jia-Ju Bai <baijiaju1990@gmail.com>,
+        Aaron Brown <aaron.f.brown@intel.com>,
+        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
+        Sasha Levin <sashal@kernel.org>,
+        intel-wired-lan@lists.osuosl.org, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 13/26] net: intel: e1000e: fix possible sleep-in-atomic-context bugs in e1000e_get_hw_semaphore()
+Date:   Sat, 11 Apr 2020 19:14:00 -0400
+Message-Id: <20200411231413.26911-13-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200411231413.26911-1-sashal@kernel.org>
 References: <20200411231413.26911-1-sashal@kernel.org>
@@ -66,58 +61,79 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wen Yang <wen.yang99@zte.com.cn>
+From: Jia-Ju Bai <baijiaju1990@gmail.com>
 
-[ Upstream commit 47340e46f34a3b1d80e40b43ae3d7a8da34a3541 ]
+[ Upstream commit 2e05f756c7099c8991142382648a37b0d4c85943 ]
 
-The call to of_find_matching_node returns a node pointer with refcount
-incremented thus it must be explicitly decremented after the last
-usage.
+The driver may sleep while holding a spinlock.
+The function call path (from bottom to top) in Linux 4.19 is:
 
-Detected by coccinelle with the following warnings:
-drivers/gpu/drm/omapdrm/dss/omapdss-boot-init.c:212:2-8: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 209, but without a corresponding object release within this function.
-drivers/gpu/drm/omapdrm/dss/omapdss-boot-init.c:237:1-7: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 209, but without a corresponding object release within this function.
+drivers/net/ethernet/intel/e1000e/mac.c, 1366:
+	usleep_range in e1000e_get_hw_semaphore
+drivers/net/ethernet/intel/e1000e/80003es2lan.c, 322:
+	e1000e_get_hw_semaphore in e1000_release_swfw_sync_80003es2lan
+drivers/net/ethernet/intel/e1000e/80003es2lan.c, 197:
+	e1000_release_swfw_sync_80003es2lan in e1000_release_phy_80003es2lan
+drivers/net/ethernet/intel/e1000e/netdev.c, 4883:
+	(FUNC_PTR) e1000_release_phy_80003es2lan in e1000e_update_phy_stats
+drivers/net/ethernet/intel/e1000e/netdev.c, 4917:
+	e1000e_update_phy_stats in e1000e_update_stats
+drivers/net/ethernet/intel/e1000e/netdev.c, 5945:
+	e1000e_update_stats in e1000e_get_stats64
+drivers/net/ethernet/intel/e1000e/netdev.c, 5944:
+	spin_lock in e1000e_get_stats64
 
-Signed-off-by: Wen Yang <wen.yang99@zte.com.cn>
-Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Reviewed-by: Mukesh Ojha <mojha@codeaurora.org>
-Cc: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Cc: David Airlie <airlied@linux.ie>
-Cc: Daniel Vetter <daniel@ffwll.ch>
-Cc: Sebastian Reichel <sebastian.reichel@collabora.com>
-Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: dri-devel@lists.freedesktop.org
-Cc: linux-kernel@vger.kernel.org
-Cc: Markus Elfring <Markus.Elfring@web.de>
-Signed-off-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/1554692313-28882-2-git-send-email-wen.yang99@zte.com.cn
+drivers/net/ethernet/intel/e1000e/mac.c, 1384:
+	usleep_range in e1000e_get_hw_semaphore
+drivers/net/ethernet/intel/e1000e/80003es2lan.c, 322:
+	e1000e_get_hw_semaphore in e1000_release_swfw_sync_80003es2lan
+drivers/net/ethernet/intel/e1000e/80003es2lan.c, 197:
+	e1000_release_swfw_sync_80003es2lan in e1000_release_phy_80003es2lan
+drivers/net/ethernet/intel/e1000e/netdev.c, 4883:
+	(FUNC_PTR) e1000_release_phy_80003es2lan in e1000e_update_phy_stats
+drivers/net/ethernet/intel/e1000e/netdev.c, 4917:
+	e1000e_update_phy_stats in e1000e_update_stats
+drivers/net/ethernet/intel/e1000e/netdev.c, 5945:
+	e1000e_update_stats in e1000e_get_stats64
+drivers/net/ethernet/intel/e1000e/netdev.c, 5944:
+	spin_lock in e1000e_get_stats64
+
+(FUNC_PTR) means a function pointer is called.
+
+To fix these bugs, usleep_range() is replaced with udelay().
+
+These bugs are found by a static analysis tool STCheck written by myself.
+
+Signed-off-by: Jia-Ju Bai <baijiaju1990@gmail.com>
+Tested-by: Aaron Brown <aaron.f.brown@intel.com>
+Signed-off-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/omapdrm/dss/omapdss-boot-init.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/net/ethernet/intel/e1000e/mac.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/gpu/drm/omapdrm/dss/omapdss-boot-init.c b/drivers/gpu/drm/omapdrm/dss/omapdss-boot-init.c
-index 136d30484d023..46111e9ee9a25 100644
---- a/drivers/gpu/drm/omapdrm/dss/omapdss-boot-init.c
-+++ b/drivers/gpu/drm/omapdrm/dss/omapdss-boot-init.c
-@@ -194,7 +194,7 @@ static int __init omapdss_boot_init(void)
- 	dss = of_find_matching_node(NULL, omapdss_of_match);
+diff --git a/drivers/net/ethernet/intel/e1000e/mac.c b/drivers/net/ethernet/intel/e1000e/mac.c
+index 5bdc3a2d4fd70..0fc9f49844632 100644
+--- a/drivers/net/ethernet/intel/e1000e/mac.c
++++ b/drivers/net/ethernet/intel/e1000e/mac.c
+@@ -1381,7 +1381,7 @@ s32 e1000e_get_hw_semaphore(struct e1000_hw *hw)
+ 		if (!(swsm & E1000_SWSM_SMBI))
+ 			break;
  
- 	if (dss == NULL || !of_device_is_available(dss))
--		return 0;
-+		goto put_node;
- 
- 	omapdss_walk_device(dss, true);
- 
-@@ -219,6 +219,8 @@ static int __init omapdss_boot_init(void)
- 		kfree(n);
+-		usleep_range(50, 100);
++		udelay(100);
+ 		i++;
  	}
  
-+put_node:
-+	of_node_put(dss);
- 	return 0;
- }
+@@ -1399,7 +1399,7 @@ s32 e1000e_get_hw_semaphore(struct e1000_hw *hw)
+ 		if (er32(SWSM) & E1000_SWSM_SWESMBI)
+ 			break;
  
+-		usleep_range(50, 100);
++		udelay(100);
+ 	}
+ 
+ 	if (i == timeout) {
 -- 
 2.20.1
 
