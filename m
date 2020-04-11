@@ -2,134 +2,256 @@ Return-Path: <SRS0=xbEg=53=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33FFCC2BBC7
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:14:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26195C2BA2B
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:14:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0E7E620692
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:14:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E31C82137B
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:14:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586607273;
-	bh=pZKyy5V/dyvl9aN9yRiWhzx5+CIPNaBdMMhXTjYbJL8=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GtczJicvPuKF2dWszxYyFWDm4ZV7sOwdh+KQBSSJpo7zo4630jkrR8wwC+0SGzHSU
-	 kOsmQH584W/biwg169BL6DioC6nk9rMoaWSX6PiQeNVKr8+NTuTWl6W89iT44Y+ncy
-	 vcrQFFp8LuBySF/nKpBs+2Fx1e93TjST5/xOVdSg=
+	s=default; t=1586607276;
+	bh=CyCF5gFd5usJueJcVKS9Uf9QWcC06vODoq2oFLK42gw=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=vKVHCMrGWhVQPEUHfV+5LvLlpNXKoiOfkikmlD7gilzl9RkHIf7m7MY15nnrOFVcI
+	 g/dsFkUh7Vwflu8UvCnk498Popaec501kz61qrDhsI04HPpVfHpay4U0KkLjRZ8sEr
+	 mC6MftVM47XuW/Bbn2iBCJUeGGEMVOwH8kbt6ba0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727951AbgDKMOb (ORCPT
+        id S1727964AbgDKMOd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 08:14:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47828 "EHLO mail.kernel.org"
+        Sat, 11 Apr 2020 08:14:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47900 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727052AbgDKMO0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 08:14:26 -0400
+        id S1726817AbgDKMO3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Apr 2020 08:14:29 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9716D20692;
-        Sat, 11 Apr 2020 12:14:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0BF152084D;
+        Sat, 11 Apr 2020 12:14:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586607267;
-        bh=pZKyy5V/dyvl9aN9yRiWhzx5+CIPNaBdMMhXTjYbJL8=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Ye28ex9YIZnVicSYKYtrA98IfCCcI4t6rxubezMZNDsvwHV9jYjp74iIiP1ctR+fE
-         7id2R8drCojLp756WMCY0FGd5sjRYrCFVRUSh5lXE8B2UM9jwWZQinyX+zQAX8LBeg
-         peCkcPksZ7WfT8TFQtRLmAtuTz9LqwAwyjEr4xVI=
+        s=default; t=1586607269;
+        bh=CyCF5gFd5usJueJcVKS9Uf9QWcC06vODoq2oFLK42gw=;
+        h=From:To:Cc:Subject:Date:From;
+        b=GteRhLXvI/QMUIsbT5d3ByrdqVfmHbiYhKAuyPwsMq7P0aWP+IZG8iOazPTBNYoT2
+         RBP0/2jK1qT0yFQtDMuPauS+PZhj0XBFtz38ryu3bbYN93r5p6ZG48+1x9iP7L/6Hf
+         3Bu+OWHD7lvnfmIEGc/aAVTp26Cig5+3MlrmHxqk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jianchao Wang <jianchao.w.wang@oracle.com>,
-        Ming Lei <ming.lei@redhat.com>, Jens Axboe <axboe@kernel.dk>,
-        Giuliano Procida <gprocida@google.com>
-Subject: [PATCH 4.14 09/38] blk-mq: sync the update nr_hw_queues with blk_mq_queue_tag_busy_iter
-Date:   Sat, 11 Apr 2020 14:08:53 +0200
-Message-Id: <20200411115438.939741034@linuxfoundation.org>
+        torvalds@linux-foundation.org, akpm@linux-foundation.org,
+        linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org
+Subject: [PATCH 4.14 00/38] 4.14.176-rc1 review
+Date:   Sat, 11 Apr 2020 14:08:44 +0200
+Message-Id: <20200411115437.795556138@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
-In-Reply-To: <20200411115437.795556138@linuxfoundation.org>
-References: <20200411115437.795556138@linuxfoundation.org>
-User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+User-Agent: quilt/0.66
+X-stable: review
+X-Patchwork-Hint: ignore
+X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.14.176-rc1.gz
+X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
+X-KernelTest-Branch: linux-4.14.y
+X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
+X-KernelTest-Version: 4.14.176-rc1
+X-KernelTest-Deadline: 2020-04-13T11:54+00:00
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jianchao Wang <jianchao.w.wang@oracle.com>
+This is the start of the stable review cycle for the 4.14.176 release.
+There are 38 patches in this series, all will be posted as a response
+to this one.  If anyone has any issues with these being applied, please
+let me know.
 
-commit f5bbbbe4d63577026f908a809f22f5fd5a90ea1f upstream.
+Responses should be made by Mon, 13 Apr 2020 11:51:28 +0000.
+Anything received after that time might be too late.
 
-For blk-mq, part_in_flight/rw will invoke blk_mq_in_flight/rw to
-account the inflight requests. It will access the queue_hw_ctx and
-nr_hw_queues w/o any protection. When updating nr_hw_queues and
-blk_mq_in_flight/rw occur concurrently, panic comes up.
+The whole patch series can be found in one patch at:
+	https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.14.176-rc1.gz
+or in the git tree and branch at:
+	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.14.y
+and the diffstat can be found below.
 
-Before update nr_hw_queues, the q will be frozen. So we could use
-q_usage_counter to avoid the race. percpu_ref_is_zero is used here
-so that we will not miss any in-flight request. The access to
-nr_hw_queues and queue_hw_ctx in blk_mq_queue_tag_busy_iter are
-under rcu critical section, __blk_mq_update_nr_hw_queues could use
-synchronize_rcu to ensure the zeroed q_usage_counter to be globally
-visible.
+thanks,
 
-Signed-off-by: Jianchao Wang <jianchao.w.wang@oracle.com>
-Reviewed-by: Ming Lei <ming.lei@redhat.com>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
-Cc: Giuliano Procida <gprocida@google.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+greg k-h
 
----
- block/blk-mq-tag.c |   14 +++++++++++++-
- block/blk-mq.c     |    4 ++++
- 2 files changed, 17 insertions(+), 1 deletion(-)
+-------------
+Pseudo-Shortlog of commits:
 
---- a/block/blk-mq-tag.c
-+++ b/block/blk-mq-tag.c
-@@ -334,6 +334,18 @@ void blk_mq_queue_tag_busy_iter(struct r
- 	struct blk_mq_hw_ctx *hctx;
- 	int i;
- 
-+	/*
-+	 * __blk_mq_update_nr_hw_queues will update the nr_hw_queues and
-+	 * queue_hw_ctx after freeze the queue. So we could use q_usage_counter
-+	 * to avoid race with it. __blk_mq_update_nr_hw_queues will users
-+	 * synchronize_rcu to ensure all of the users go out of the critical
-+	 * section below and see zeroed q_usage_counter.
-+	 */
-+	rcu_read_lock();
-+	if (percpu_ref_is_zero(&q->q_usage_counter)) {
-+		rcu_read_unlock();
-+		return;
-+	}
- 
- 	queue_for_each_hw_ctx(q, hctx, i) {
- 		struct blk_mq_tags *tags = hctx->tags;
-@@ -349,7 +361,7 @@ void blk_mq_queue_tag_busy_iter(struct r
- 			bt_for_each(hctx, &tags->breserved_tags, fn, priv, true);
- 		bt_for_each(hctx, &tags->bitmap_tags, fn, priv, false);
- 	}
--
-+	rcu_read_unlock();
- }
- 
- static int bt_alloc(struct sbitmap_queue *bt, unsigned int depth,
---- a/block/blk-mq.c
-+++ b/block/blk-mq.c
-@@ -2748,6 +2748,10 @@ static void __blk_mq_update_nr_hw_queues
- 
- 	list_for_each_entry(q, &set->tag_list, tag_set_list)
- 		blk_mq_unfreeze_queue(q);
-+	/*
-+	 * Sync with blk_mq_queue_tag_busy_iter.
-+	 */
-+	synchronize_rcu();
- }
- 
- void blk_mq_update_nr_hw_queues(struct blk_mq_tag_set *set, int nr_hw_queues)
+Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+    Linux 4.14.176-rc1
+
+Hans Verkuil <hans.verkuil@cisco.com>
+    drm_dp_mst_topology: fix broken drm_dp_sideband_parse_remote_dpcd_read()
+
+Roger Quadros <rogerq@ti.com>
+    usb: dwc3: don't set gadget->is_otg flag
+
+Chris Lew <clew@codeaurora.org>
+    rpmsg: glink: Remove chunk size word align warning
+
+Arun KS <arunks@codeaurora.org>
+    arm64: Fix size of __early_cpu_boot_status
+
+Rob Clark <robdclark@chromium.org>
+    drm/msm: stop abusing dma_map/unmap for cache
+
+Taniya Das <tdas@codeaurora.org>
+    clk: qcom: rcg: Return failure for RCG update
+
+Dan Williams <dan.j.williams@intel.com>
+    acpi/nfit: Fix bus command validation
+
+Qiujun Huang <hqjagain@gmail.com>
+    fbcon: fix null-ptr-deref in fbcon_switch
+
+Avihai Horon <avihaih@mellanox.com>
+    RDMA/cm: Update num_paths in cma_resolve_iboe_route error flow
+
+Qiujun Huang <hqjagain@gmail.com>
+    Bluetooth: RFCOMM: fix ODEBUG bug in rfcomm_dev_ioctl
+
+Ilya Dryomov <idryomov@gmail.com>
+    ceph: canonicalize server path in place
+
+Xiubo Li <xiubli@redhat.com>
+    ceph: remove the extra slashes in the server path
+
+Kaike Wan <kaike.wan@intel.com>
+    IB/hfi1: Fix memory leaks in sysfs registration and unregistration
+
+Kaike Wan <kaike.wan@intel.com>
+    IB/hfi1: Call kobject_put() when kobject_init_and_add() fails
+
+Paul Cercueil <paul@crapouillou.net>
+    ASoC: jz4740-i2s: Fix divider written at incorrect offset in register
+
+Martin Kaiser <martin@kaiser.cx>
+    hwrng: imx-rngc - fix an error path
+
+David Ahern <dsahern@kernel.org>
+    tools/accounting/getdelays.c: fix netlink attribute length
+
+Jason A. Donenfeld <Jason@zx2c4.com>
+    random: always use batched entropy for get_random_u{32,64}
+
+Petr Machata <petrm@mellanox.com>
+    mlxsw: spectrum_flower: Do not stop at FLOW_ACTION_VLAN_MANGLE
+
+Richard Palethorpe <rpalethorpe@suse.com>
+    slcan: Don't transmit uninitialized stack data in padding
+
+Jisheng Zhang <Jisheng.Zhang@synaptics.com>
+    net: stmmac: dwmac1000: fix out-of-bounds mac address reg setting
+
+Oleksij Rempel <o.rempel@pengutronix.de>
+    net: phy: micrel: kszphy_resume(): add delay after genphy_resume() before accessing PHY registers
+
+Florian Fainelli <f.fainelli@gmail.com>
+    net: dsa: bcm_sf2: Ensure correct sub-node is parsed
+
+Jarod Wilson <jarod@redhat.com>
+    ipv6: don't auto-add link-local address to lag ports
+
+Randy Dunlap <rdunlap@infradead.org>
+    mm: mempolicy: require at least one nodeid for MPOL_PREFERRED
+
+Daniel Jordan <daniel.m.jordan@oracle.com>
+    padata: always acquire cpu_hotplug_lock before pinst->lock
+
+Eugene Syromiatnikov <esyr@redhat.com>
+    coresight: do not use the BIT() macro in the UAPI header
+
+Kishon Vijay Abraham I <kishon@ti.com>
+    misc: pci_endpoint_test: Fix to support > 10 pci-endpoint-test devices
+
+Keith Busch <keith.busch@intel.com>
+    blk-mq: Allow blocking queue tag iter callbacks
+
+Jianchao Wang <jianchao.w.wang@oracle.com>
+    blk-mq: sync the update nr_hw_queues with blk_mq_queue_tag_busy_iter
+
+Lucas Stach <l.stach@pengutronix.de>
+    drm/etnaviv: replace MMU flush marker with flush sequence
+
+Len Brown <len.brown@intel.com>
+    tools/power turbostat: Fix gcc build warnings
+
+Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
+    initramfs: restore default compression behavior
+
+Gerd Hoffmann <kraxel@redhat.com>
+    drm/bochs: downgrade pci_request_region failure from error to warning
+
+Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>
+    sctp: fix possibly using a bad saddr with a given dst
+
+Qiujun Huang <hqjagain@gmail.com>
+    sctp: fix refcount bug in sctp_wfree
+
+William Dauchy <w.dauchy@criteo.com>
+    net, ip_tunnel: fix interface lookup with no key
+
+Qian Cai <cai@lca.pw>
+    ipv4: fix a RCU-list lock in fib_triestat_seq_show
+
+
+-------------
+
+Diffstat:
+
+ Makefile                                           |  4 +-
+ arch/arm64/kernel/head.S                           |  2 +-
+ block/blk-mq-tag.c                                 |  9 +++-
+ block/blk-mq.c                                     |  4 ++
+ drivers/acpi/nfit/core.c                           | 24 +++++-----
+ drivers/char/hw_random/imx-rngc.c                  |  4 +-
+ drivers/char/random.c                              | 20 ++------
+ drivers/clk/qcom/clk-rcg2.c                        |  2 +-
+ drivers/gpu/drm/bochs/bochs_hw.c                   |  6 +--
+ drivers/gpu/drm/drm_dp_mst_topology.c              |  1 +
+ drivers/gpu/drm/etnaviv/etnaviv_buffer.c           | 10 ++--
+ drivers/gpu/drm/etnaviv/etnaviv_gpu.c              |  2 +-
+ drivers/gpu/drm/etnaviv/etnaviv_gpu.h              |  1 +
+ drivers/gpu/drm/etnaviv/etnaviv_mmu.c              |  8 ++--
+ drivers/gpu/drm/etnaviv/etnaviv_mmu.h              |  2 +-
+ drivers/gpu/drm/msm/msm_gem.c                      |  4 +-
+ drivers/infiniband/core/cma.c                      |  1 +
+ drivers/infiniband/hw/hfi1/sysfs.c                 | 26 +++++++---
+ drivers/misc/pci_endpoint_test.c                   |  2 +-
+ drivers/net/can/slcan.c                            |  4 +-
+ drivers/net/dsa/bcm_sf2.c                          |  7 ++-
+ .../net/ethernet/mellanox/mlxsw/spectrum_flower.c  |  8 ++--
+ .../net/ethernet/stmicro/stmmac/dwmac1000_core.c   |  2 +-
+ drivers/net/phy/micrel.c                           |  7 +++
+ drivers/rpmsg/qcom_glink_native.c                  |  3 --
+ drivers/usb/dwc3/gadget.c                          |  1 -
+ drivers/video/fbdev/core/fbcon.c                   |  3 ++
+ fs/ceph/super.c                                    | 56 ++++++++++++++--------
+ fs/ceph/super.h                                    |  2 +-
+ include/uapi/linux/coresight-stm.h                 |  6 ++-
+ kernel/padata.c                                    |  4 +-
+ mm/mempolicy.c                                     |  6 ++-
+ net/bluetooth/rfcomm/tty.c                         |  4 +-
+ net/ipv4/fib_trie.c                                |  3 ++
+ net/ipv4/ip_tunnel.c                               |  6 +--
+ net/ipv6/addrconf.c                                |  4 ++
+ net/sctp/ipv6.c                                    | 20 +++++---
+ net/sctp/protocol.c                                | 28 +++++++----
+ net/sctp/socket.c                                  | 31 ++++++++----
+ sound/soc/jz4740/jz4740-i2s.c                      |  2 +-
+ tools/accounting/getdelays.c                       |  2 +-
+ tools/power/x86/turbostat/turbostat.c              |  4 +-
+ usr/Kconfig                                        | 22 ++++-----
+ 43 files changed, 227 insertions(+), 140 deletions(-)
 
 
