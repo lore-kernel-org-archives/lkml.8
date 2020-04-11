@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02A7CC2BA2B
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6801BC2BBC7
 	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:14:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CC87421D7D
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:14:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3845020692
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:14:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586607281;
-	bh=kn6do4sZUl1m9RB0bbgLrYd5xmWGiUYapZhBmgCfQGI=;
+	s=default; t=1586607282;
+	bh=o+4mYtswxyny3XsI8zlDx+U3Pz3LrrKAh0UyVtGB1Tc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BZFLti3Z2EKgB9RrbBJbx1TCGLkc2D2jnRxaU8WBjT5pQ/wK54kiDbxs6L9uHQfsA
-	 tjd67o+UXAcXDADQeMJQnsrJ9ULDpSURZ+sEGskB5TOAJtmmXDDsP26sclRnsTz8Z7
-	 +9ZsMa6Ofm1xs9OTxyZR7pUgjJaWRP4qFx+++eLY=
+	b=COKybwClVj2RDBEkDX7fqd9o2olXQtaDqQVBQJixzNEbLzYMH1p6B+OWfUJKXN030
+	 JJTE1Qvam/jVaxp2cdIu7Ad3UlvjpoYAyuM/3n1wpraxL1cxd7MUbyMSWsflIG7uCk
+	 IA5byng90RqrCkqbQZ7T9xxBETBCL2dBnPUlLAwE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727987AbgDKMOk (ORCPT
+        id S1727996AbgDKMOk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Sat, 11 Apr 2020 08:14:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48032 "EHLO mail.kernel.org"
+Received: from mail.kernel.org ([198.145.29.99]:48092 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727954AbgDKMOf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 08:14:35 -0400
+        id S1727078AbgDKMOg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Apr 2020 08:14:36 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D0CFA20644;
-        Sat, 11 Apr 2020 12:14:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3F81B20692;
+        Sat, 11 Apr 2020 12:14:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586607274;
-        bh=kn6do4sZUl1m9RB0bbgLrYd5xmWGiUYapZhBmgCfQGI=;
+        s=default; t=1586607276;
+        bh=o+4mYtswxyny3XsI8zlDx+U3Pz3LrrKAh0UyVtGB1Tc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zJ5wc2JU/pTcE+e68J98YUvmmSsHE8me/atNWo8s2SMVV7Z9NJdVeWTRz1La7naWt
-         qziuHGykIjRbNl5JKVMrNPIefMS7EWPU8Py1YUJcwTpkODNB3w0THM5xjxUy+hQRgQ
-         pvEc2dm77yFczr1FMuqdFPInOSwU+/W6cV9Hbd+4=
+        b=LWBWHXetOLXuNvp6IhY01ZVwerBJbIvHIVwHntck3RCOyXfauUXdKCGPMMaMujiEo
+         gq38lEsX2f+9tdsBVX0tBAjH8yVkm4bgA5Z5f+LJNIa4A3cs7dQzcr3Iyk0JzpIAze
+         NFvIJwwkCNAzJ9AhBws/u5YIahbidiV1B1giBKNE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hans Verkuil <hans.verkuil@cisco.com>,
-        Lyude Paul <lyude@redhat.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
+        stable@vger.kernel.org, Chris Lew <clew@codeaurora.org>,
+        Arun Kumar Neelakantam <aneela@codeaurora.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
         Lee Jones <lee.jones@linaro.org>
-Subject: [PATCH 4.14 38/38] drm_dp_mst_topology: fix broken drm_dp_sideband_parse_remote_dpcd_read()
-Date:   Sat, 11 Apr 2020 14:09:22 +0200
-Message-Id: <20200411115441.432558800@linuxfoundation.org>
+Subject: [PATCH 4.14 36/38] rpmsg: glink: Remove chunk size word align warning
+Date:   Sat, 11 Apr 2020 14:09:20 +0200
+Message-Id: <20200411115441.303886448@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200411115437.795556138@linuxfoundation.org>
 References: <20200411115437.795556138@linuxfoundation.org>
@@ -61,36 +61,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hans Verkuil <hans.verkuil@cisco.com>
+From: Chris Lew <clew@codeaurora.org>
 
-commit a4c30a4861c54af78c4eb8b7855524c1a96d9f80 upstream.
+commit f0beb4ba9b185d497c8efe7b349363700092aee0 upstream.
 
-When parsing the reply of a DP_REMOTE_DPCD_READ DPCD command the
-result is wrong due to a missing idx increment.
+It is possible for the chunk sizes coming from the non RPM remote procs
+to not be word aligned. Remove the alignment warning and continue to
+read from the FIFO so execution is not stalled.
 
-This was never noticed since DP_REMOTE_DPCD_READ is currently not
-used, but if you enable it, then it is all wrong.
-
-Signed-off-by: Hans Verkuil <hans.verkuil@cisco.com>
-Reviewed-by: Lyude Paul <lyude@redhat.com>
-Acked-by: Alex Deucher <alexander.deucher@amd.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/e72ddac2-1dc0-100a-d816-9ac98ac009dd@xs4all.nl
+Signed-off-by: Chris Lew <clew@codeaurora.org>
+Signed-off-by: Arun Kumar Neelakantam <aneela@codeaurora.org>
+Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 Signed-off-by: Lee Jones <lee.jones@linaro.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/gpu/drm/drm_dp_mst_topology.c |    1 +
- 1 file changed, 1 insertion(+)
+ drivers/rpmsg/qcom_glink_native.c |    3 ---
+ 1 file changed, 3 deletions(-)
 
---- a/drivers/gpu/drm/drm_dp_mst_topology.c
-+++ b/drivers/gpu/drm/drm_dp_mst_topology.c
-@@ -433,6 +433,7 @@ static bool drm_dp_sideband_parse_remote
- 	if (idx > raw->curlen)
- 		goto fail_len;
- 	repmsg->u.remote_dpcd_read_ack.num_bytes = raw->msg[idx];
-+	idx++;
- 	if (idx > raw->curlen)
- 		goto fail_len;
+--- a/drivers/rpmsg/qcom_glink_native.c
++++ b/drivers/rpmsg/qcom_glink_native.c
+@@ -811,9 +811,6 @@ static int qcom_glink_rx_data(struct qco
+ 		return -EAGAIN;
+ 	}
  
+-	if (WARN(chunk_size % 4, "Incoming data must be word aligned\n"))
+-		return -EINVAL;
+-
+ 	rcid = le16_to_cpu(hdr.msg.param1);
+ 	spin_lock_irqsave(&glink->idr_lock, flags);
+ 	channel = idr_find(&glink->rcids, rcid);
 
 
