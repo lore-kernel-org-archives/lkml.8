@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66C22C2BB85
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:11:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C593C2BA2B
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:11:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 365D921744
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:11:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1390E21D6C
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:11:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586607097;
-	bh=OAYXDuVCYoaKPJFi0GUJzPM3giSeeyQ3bP+FDgUIPYA=;
+	s=default; t=1586607101;
+	bh=n9rmmBrENhy6TDpT9Axt8H10o6yNclgku19ixyVaLpM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lvKwpzjN08o9nj6nH9G+Alh8fQIHXahvz51lnr85NfbZsGH1bBcf1ZX0ZbpKJUIT8
-	 xjsnQl/Fj6qNWxPBlNjaL5Oc2T0DN+TluTeLLhdUNUFM2cc+YiKy1TeySvxHW+Z+lt
-	 Ux8g6lFLVpKYYwsx+JIX3udNmwRLASSGsUBMrI+M=
+	b=D75+xUl3SNDC5Lt3tB5ilmn7J4xmSfqvm9hD6h8jXd2P61wOXONEtpxYPUvDqN0/8
+	 +N6T7ak5Tf0O/FuSC4T/cmssiMLDy3OrX8SZw1Vw93i+rkNROTdIqG3WRs49ahnyTV
+	 2AuARV/s1tcP28ysNDNnsFzkI+MXk/4LoBrbZbsk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727000AbgDKMLf (ORCPT
+        id S1727015AbgDKMLi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 08:11:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43568 "EHLO mail.kernel.org"
+        Sat, 11 Apr 2020 08:11:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43744 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726964AbgDKMLb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 08:11:31 -0400
+        id S1726995AbgDKMLe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Apr 2020 08:11:34 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CBB4C215A4;
-        Sat, 11 Apr 2020 12:11:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A029421D79;
+        Sat, 11 Apr 2020 12:11:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586607090;
-        bh=OAYXDuVCYoaKPJFi0GUJzPM3giSeeyQ3bP+FDgUIPYA=;
+        s=default; t=1586607095;
+        bh=n9rmmBrENhy6TDpT9Axt8H10o6yNclgku19ixyVaLpM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=r26mRjrAnStkyNfuK9To5hywTfdgTtOIb2t1Xe/6lDm0DwXbuHkxqA2ND5DdZqmIZ
-         S+LkWuIG7Q2G5g83I6Rnzbh3vIuBzRuPnHj/H/1hz60KAJ9wGecjoBTeeupCkiuj+v
-         ckRQnTZDmVIkfh8cBr0o5E/J7qxcuYOGhW6Z6CWw=
+        b=wWpTJG5rONBIpixT0aLmnilQ4l881bMFlulp2j3A+Utk944D7jlvOB4V2vo3WUHes
+         yf/dMDqTauICqcqYDLwQjYp93yqz6lGlxMvSL6ujT6fg6RNyPk53wJHCX2dw8mraLs
+         f28JoHF1c0HHQUD7XQYeQRrrz2DiOZdIUNa4GcnM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Jisheng Zhang <Jisheng.Zhang@synaptics.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.4 17/29] net: stmmac: dwmac1000: fix out-of-bounds mac address reg setting
-Date:   Sat, 11 Apr 2020 14:08:47 +0200
-Message-Id: <20200411115410.845717734@linuxfoundation.org>
+        stable@vger.kernel.org, "Jason A. Donenfeld" <Jason@zx2c4.com>,
+        Theodore Tso <tytso@mit.edu>
+Subject: [PATCH 4.4 19/29] random: always use batched entropy for get_random_u{32,64}
+Date:   Sat, 11 Apr 2020 14:08:49 +0200
+Message-Id: <20200411115411.092282795@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200411115407.651296755@linuxfoundation.org>
 References: <20200411115407.651296755@linuxfoundation.org>
@@ -60,35 +59,80 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jisheng Zhang <Jisheng.Zhang@synaptics.com>
+From: Jason A. Donenfeld <Jason@zx2c4.com>
 
-[ Upstream commit 3e1221acf6a8f8595b5ce354bab4327a69d54d18 ]
+commit 69efea712f5b0489e67d07565aad5c94e09a3e52 upstream.
 
-Commit 9463c4455900 ("net: stmmac: dwmac1000: Clear unused address
-entries") cleared the unused mac address entries, but introduced an
-out-of bounds mac address register programming bug -- After setting
-the secondary unicast mac addresses, the "reg" value has reached
-netdev_uc_count() + 1, thus we should only clear address entries
-if (addr < perfect_addr_number)
+It turns out that RDRAND is pretty slow. Comparing these two
+constructions:
 
-Fixes: 9463c4455900 ("net: stmmac: dwmac1000: Clear unused address entries")
-Signed-off-by: Jisheng Zhang <Jisheng.Zhang@synaptics.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+  for (i = 0; i < CHACHA_BLOCK_SIZE; i += sizeof(ret))
+    arch_get_random_long(&ret);
+
+and
+
+  long buf[CHACHA_BLOCK_SIZE / sizeof(long)];
+  extract_crng((u8 *)buf);
+
+it amortizes out to 352 cycles per long for the top one and 107 cycles
+per long for the bottom one, on Coffee Lake Refresh, Intel Core i9-9880H.
+
+And importantly, the top one has the drawback of not benefiting from the
+real rng, whereas the bottom one has all the nice benefits of using our
+own chacha rng. As get_random_u{32,64} gets used in more places (perhaps
+beyond what it was originally intended for when it was introduced as
+get_random_{int,long} back in the md5 monstrosity era), it seems like it
+might be a good thing to strengthen its posture a tiny bit. Doing this
+should only be stronger and not any weaker because that pool is already
+initialized with a bunch of rdrand data (when available). This way, we
+get the benefits of the hardware rng as well as our own rng.
+
+Another benefit of this is that we no longer hit pitfalls of the recent
+stream of AMD bugs in RDRAND. One often used code pattern for various
+things is:
+
+  do {
+  	val = get_random_u32();
+  } while (hash_table_contains_key(val));
+
+That recent AMD bug rendered that pattern useless, whereas we're really
+very certain that chacha20 output will give pretty distributed numbers,
+no matter what.
+
+So, this simplification seems better both from a security perspective
+and from a performance perspective.
+
+Signed-off-by: Jason A. Donenfeld <Jason@zx2c4.com>
+Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Link: https://lore.kernel.org/r/20200221201037.30231-1-Jason@zx2c4.com
+Signed-off-by: Theodore Ts'o <tytso@mit.edu>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- drivers/net/ethernet/stmicro/stmmac/dwmac1000_core.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/net/ethernet/stmicro/stmmac/dwmac1000_core.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/dwmac1000_core.c
-@@ -188,7 +188,7 @@ static void dwmac1000_set_filter(struct
- 			reg++;
- 		}
+---
+ drivers/char/random.c |    6 ------
+ 1 file changed, 6 deletions(-)
+
+--- a/drivers/char/random.c
++++ b/drivers/char/random.c
+@@ -1824,9 +1824,6 @@ unsigned int get_random_int(void)
+ 	__u32 *hash;
+ 	unsigned int ret;
  
--		while (reg <= perfect_addr_number) {
-+		while (reg < perfect_addr_number) {
- 			writel(0, ioaddr + GMAC_ADDR_HIGH(reg));
- 			writel(0, ioaddr + GMAC_ADDR_LOW(reg));
- 			reg++;
+-	if (arch_get_random_int(&ret))
+-		return ret;
+-
+ 	hash = get_cpu_var(get_random_int_hash);
+ 
+ 	hash[0] += current->pid + jiffies + random_get_entropy();
+@@ -1846,9 +1843,6 @@ unsigned long get_random_long(void)
+ 	__u32 *hash;
+ 	unsigned long ret;
+ 
+-	if (arch_get_random_long(&ret))
+-		return ret;
+-
+ 	hash = get_cpu_var(get_random_int_hash);
+ 
+ 	hash[0] += current->pid + jiffies + random_get_entropy();
 
 
