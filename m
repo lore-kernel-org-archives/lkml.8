@@ -7,47 +7,52 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72282C2BBC7
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:20:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EAF5C2BB85
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:20:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4206A214D8
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:20:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0F32620644
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:20:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586607600;
-	bh=RBwdeau2UXjuzCvH96Qfxh/rR+Du1Zjk34A0ZOmqfvg=;
+	s=default; t=1586607604;
+	bh=SLxe7vui/sy4bL9CxI8nH4037eviKppUqHtZ57BTB3g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=EKWOtYxqunUjXGKpNR4xwl1zCYLYOOD5J/C5xlSNIhka8DfES8uSlS3lVp2KYHCNb
-	 wn94o1+2CGBuzVTONip7y0O9xHKQTvtMEfDZIcKFypSX5ngVupwPn+HykR6yUeciYx
-	 n47Ai5ZfbfAgvbYZCNtWwhob3u8YqOqJvqsrzpxc=
+	b=mV1KbWcYMFAYO0/6eMJqknUTz6uA8ZzNTr3ScZIwItGyjnzfgWPx0E7ktjzm4pjcF
+	 cQtgVtS58XrRM9NiQF80NChCJVUWGFHOFaQvme1onakeq2wHW6hcGIfcoowRf9wE/f
+	 Etd/fuDzT5x8KUTLHApf1r4IaLR9lXaWRY3TuIA4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728904AbgDKMT6 (ORCPT
+        id S1728891AbgDKMUB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 08:19:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55548 "EHLO mail.kernel.org"
+        Sat, 11 Apr 2020 08:20:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55664 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728891AbgDKMTy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 08:19:54 -0400
+        id S1728659AbgDKMUA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Apr 2020 08:20:00 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A2D282084D;
-        Sat, 11 Apr 2020 12:19:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 862B2206A1;
+        Sat, 11 Apr 2020 12:19:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586607595;
-        bh=RBwdeau2UXjuzCvH96Qfxh/rR+Du1Zjk34A0ZOmqfvg=;
+        s=default; t=1586607600;
+        bh=SLxe7vui/sy4bL9CxI8nH4037eviKppUqHtZ57BTB3g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0UDnRc0q2SObP9ncGW2G3zUeFWcjERk+Xlppk2xHXAU4HVlGDEz0w5xYZJLaxw4Uz
-         QqlJ2qeDUjQukte6o0cyx/lXD22Z9qinQCUvUeSCWM/RFcV2ynyUr78NN2eGVE6Krp
-         8DNRYe2N63dIkOpk5JJ7tijKHiOI6LkrldsbkM60=
+        b=NnHj2aaRt1prFY3eoiATfXMkZWdpBSEsyBHTFCZurGPiCjv72WBJW6iRmX3OTCCjC
+         5dmzDbvMzSuAIMy55C4GFPD/W02d3WnFyIsxeXGjsQYpfgzUdmVzgVpVFdOeYH8VEi
+         NFFYoYzvOzSB7OmQjKiliMvwMR6r2Ryjh43FWnMs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Anson Huang <Anson.Huang@nxp.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Christian Eggers <ceggers@arri.de>
-Subject: [PATCH 5.5 41/44] ARM: imx: Enable ARM_ERRATA_814220 for i.MX6UL and i.MX7D
-Date:   Sat, 11 Apr 2020 14:10:01 +0200
-Message-Id: <20200411115500.892167067@linuxfoundation.org>
+        stable@vger.kernel.org,
+        syzbot+46f513c3033d592409d2@syzkaller.appspotmail.com,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Jamal Hadi Salim <jhs@mojatatu.com>,
+        Jiri Pirko <jiri@resnulli.us>,
+        Cong Wang <xiyou.wangcong@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 5.5 07/44] net_sched: add a temporary refcnt for struct tcindex_data
+Date:   Sat, 11 Apr 2020 14:09:27 +0200
+Message-Id: <20200411115457.474209692@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200411115456.934174282@linuxfoundation.org>
 References: <20200411115456.934174282@linuxfoundation.org>
@@ -60,49 +65,197 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Anson Huang <Anson.Huang@nxp.com>
+From: Cong Wang <xiyou.wangcong@gmail.com>
 
-commit 4562fa4c86c92a2df635fe0697c9e06379738741 upstream.
+[ Upstream commit 304e024216a802a7dc8ba75d36de82fa136bbf3e ]
 
-ARM_ERRATA_814220 has below description:
+Although we intentionally use an ordered workqueue for all tc
+filter works, the ordering is not guaranteed by RCU work,
+given that tcf_queue_work() is esstenially a call_rcu().
 
-The v7 ARM states that all cache and branch predictor maintenance
-operations that do not specify an address execute, relative to
-each other, in program order.
-However, because of this erratum, an L2 set/way cache maintenance
-operation can overtake an L1 set/way cache maintenance operation.
-This ERRATA only affected the Cortex-A7 and present in r0p2, r0p3,
-r0p4, r0p5.
+This problem is demostrated by Thomas:
 
-i.MX6UL and i.MX7D have Cortex-A7 r0p5 inside, need to enable
-ARM_ERRATA_814220 for proper workaround.
+  CPU 0:
+    tcf_queue_work()
+      tcf_queue_work(&r->rwork, tcindex_destroy_rexts_work);
 
-Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
-Signed-off-by: Shawn Guo <shawnguo@kernel.org>
-Cc: Christian Eggers <ceggers@arri.de>
+  -> Migration to CPU 1
+
+  CPU 1:
+     tcf_queue_work(&p->rwork, tcindex_destroy_work);
+
+so the 2nd work could be queued before the 1st one, which leads
+to a free-after-free.
+
+Enforcing this order in RCU work is hard as it requires to change
+RCU code too. Fortunately we can workaround this problem in tcindex
+filter by taking a temporary refcnt, we only refcnt it right before
+we begin to destroy it. This simplifies the code a lot as a full
+refcnt requires much more changes in tcindex_set_parms().
+
+Reported-by: syzbot+46f513c3033d592409d2@syzkaller.appspotmail.com
+Fixes: 3d210534cc93 ("net_sched: fix a race condition in tcindex_destroy()")
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Paul E. McKenney <paulmck@kernel.org>
+Cc: Jamal Hadi Salim <jhs@mojatatu.com>
+Cc: Jiri Pirko <jiri@resnulli.us>
+Signed-off-by: Cong Wang <xiyou.wangcong@gmail.com>
+Reviewed-by: Paul E. McKenney <paulmck@kernel.org>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- arch/arm/mach-imx/Kconfig |    2 ++
- 1 file changed, 2 insertions(+)
+ net/sched/cls_tcindex.c |   44 ++++++++++++++++++++++++++++++++++++++------
+ 1 file changed, 38 insertions(+), 6 deletions(-)
 
---- a/arch/arm/mach-imx/Kconfig
-+++ b/arch/arm/mach-imx/Kconfig
-@@ -520,6 +520,7 @@ config SOC_IMX6UL
- 	bool "i.MX6 UltraLite support"
- 	select PINCTRL_IMX6UL
- 	select SOC_IMX6
-+	select ARM_ERRATA_814220
+--- a/net/sched/cls_tcindex.c
++++ b/net/sched/cls_tcindex.c
+@@ -11,6 +11,7 @@
+ #include <linux/skbuff.h>
+ #include <linux/errno.h>
+ #include <linux/slab.h>
++#include <linux/refcount.h>
+ #include <net/act_api.h>
+ #include <net/netlink.h>
+ #include <net/pkt_cls.h>
+@@ -26,9 +27,12 @@
+ #define DEFAULT_HASH_SIZE	64	/* optimized for diffserv */
  
- 	help
- 	  This enables support for Freescale i.MX6 UltraLite processor.
-@@ -556,6 +557,7 @@ config SOC_IMX7D
- 	select PINCTRL_IMX7D
- 	select SOC_IMX7D_CA7 if ARCH_MULTI_V7
- 	select SOC_IMX7D_CM4 if ARM_SINGLE_ARMV7M
-+	select ARM_ERRATA_814220
- 	help
- 		This enables support for Freescale i.MX7 Dual processor.
  
++struct tcindex_data;
++
+ struct tcindex_filter_result {
+ 	struct tcf_exts		exts;
+ 	struct tcf_result	res;
++	struct tcindex_data	*p;
+ 	struct rcu_work		rwork;
+ };
+ 
+@@ -49,6 +53,7 @@ struct tcindex_data {
+ 	u32 hash;		/* hash table size; 0 if undefined */
+ 	u32 alloc_hash;		/* allocated size */
+ 	u32 fall_through;	/* 0: only classify if explicit match */
++	refcount_t refcnt;	/* a temporary refcnt for perfect hash */
+ 	struct rcu_work rwork;
+ };
+ 
+@@ -57,6 +62,20 @@ static inline int tcindex_filter_is_set(
+ 	return tcf_exts_has_actions(&r->exts) || r->res.classid;
+ }
+ 
++static void tcindex_data_get(struct tcindex_data *p)
++{
++	refcount_inc(&p->refcnt);
++}
++
++static void tcindex_data_put(struct tcindex_data *p)
++{
++	if (refcount_dec_and_test(&p->refcnt)) {
++		kfree(p->perfect);
++		kfree(p->h);
++		kfree(p);
++	}
++}
++
+ static struct tcindex_filter_result *tcindex_lookup(struct tcindex_data *p,
+ 						    u16 key)
+ {
+@@ -141,6 +160,7 @@ static void __tcindex_destroy_rexts(stru
+ {
+ 	tcf_exts_destroy(&r->exts);
+ 	tcf_exts_put_net(&r->exts);
++	tcindex_data_put(r->p);
+ }
+ 
+ static void tcindex_destroy_rexts_work(struct work_struct *work)
+@@ -212,6 +232,8 @@ found:
+ 		else
+ 			__tcindex_destroy_fexts(f);
+ 	} else {
++		tcindex_data_get(p);
++
+ 		if (tcf_exts_get_net(&r->exts))
+ 			tcf_queue_work(&r->rwork, tcindex_destroy_rexts_work);
+ 		else
+@@ -228,9 +250,7 @@ static void tcindex_destroy_work(struct
+ 					      struct tcindex_data,
+ 					      rwork);
+ 
+-	kfree(p->perfect);
+-	kfree(p->h);
+-	kfree(p);
++	tcindex_data_put(p);
+ }
+ 
+ static inline int
+@@ -248,9 +268,11 @@ static const struct nla_policy tcindex_p
+ };
+ 
+ static int tcindex_filter_result_init(struct tcindex_filter_result *r,
++				      struct tcindex_data *p,
+ 				      struct net *net)
+ {
+ 	memset(r, 0, sizeof(*r));
++	r->p = p;
+ 	return tcf_exts_init(&r->exts, net, TCA_TCINDEX_ACT,
+ 			     TCA_TCINDEX_POLICE);
+ }
+@@ -290,6 +312,7 @@ static int tcindex_alloc_perfect_hash(st
+ 				    TCA_TCINDEX_ACT, TCA_TCINDEX_POLICE);
+ 		if (err < 0)
+ 			goto errout;
++		cp->perfect[i].p = cp;
+ 	}
+ 
+ 	return 0;
+@@ -334,6 +357,7 @@ tcindex_set_parms(struct net *net, struc
+ 	cp->alloc_hash = p->alloc_hash;
+ 	cp->fall_through = p->fall_through;
+ 	cp->tp = tp;
++	refcount_set(&cp->refcnt, 1); /* Paired with tcindex_destroy_work() */
+ 
+ 	if (tb[TCA_TCINDEX_HASH])
+ 		cp->hash = nla_get_u32(tb[TCA_TCINDEX_HASH]);
+@@ -366,7 +390,7 @@ tcindex_set_parms(struct net *net, struc
+ 	}
+ 	cp->h = p->h;
+ 
+-	err = tcindex_filter_result_init(&new_filter_result, net);
++	err = tcindex_filter_result_init(&new_filter_result, cp, net);
+ 	if (err < 0)
+ 		goto errout_alloc;
+ 	if (old_r)
+@@ -434,7 +458,7 @@ tcindex_set_parms(struct net *net, struc
+ 			goto errout_alloc;
+ 		f->key = handle;
+ 		f->next = NULL;
+-		err = tcindex_filter_result_init(&f->result, net);
++		err = tcindex_filter_result_init(&f->result, cp, net);
+ 		if (err < 0) {
+ 			kfree(f);
+ 			goto errout_alloc;
+@@ -447,7 +471,7 @@ tcindex_set_parms(struct net *net, struc
+ 	}
+ 
+ 	if (old_r && old_r != r) {
+-		err = tcindex_filter_result_init(old_r, net);
++		err = tcindex_filter_result_init(old_r, cp, net);
+ 		if (err < 0) {
+ 			kfree(f);
+ 			goto errout_alloc;
+@@ -571,6 +595,14 @@ static void tcindex_destroy(struct tcf_p
+ 		for (i = 0; i < p->hash; i++) {
+ 			struct tcindex_filter_result *r = p->perfect + i;
+ 
++			/* tcf_queue_work() does not guarantee the ordering we
++			 * want, so we have to take this refcnt temporarily to
++			 * ensure 'p' is freed after all tcindex_filter_result
++			 * here. Imperfect hash does not need this, because it
++			 * uses linked lists rather than an array.
++			 */
++			tcindex_data_get(p);
++
+ 			tcf_unbind_filter(tp, &r->res);
+ 			if (tcf_exts_get_net(&r->exts))
+ 				tcf_queue_work(&r->rwork,
 
 
