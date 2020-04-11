@@ -2,87 +2,72 @@ Return-Path: <SRS0=xbEg=53=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2583C2BA2B
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 16:14:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FC6FC2BA2B
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 16:32:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 96A17206DA
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 16:14:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="E0NjrzbC"
+	by mail.kernel.org (Postfix) with ESMTP id 28D8520757
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 16:32:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726682AbgDKQOm (ORCPT
+        id S1726245AbgDKQaR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 12:14:42 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:41618 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726069AbgDKQOm (ORCPT
+        Sat, 11 Apr 2020 12:30:17 -0400
+Received: from smtprelay0157.hostedemail.com ([216.40.44.157]:51378 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726069AbgDKQaR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 12:14:42 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=4kLMPck/UQTFbc7P/dtGX9z+C5HE2yHjGcXQaPeD8UE=; b=E0NjrzbCb12cq87rjgyqkwADEW
-        WAHh8mUUwTfsCROLuFG0kbje7DyHccwxOL380SlXlKeGnNjF1bsciAybqAPEmO8A+J3X/1QtH19Xy
-        +53Ux1fcD5TfDsE20RWsl8RObPX1qW5c/K8rzmTk33ONfOLvRz5d9IxM2p2Mk2goeNMYjwze1O3GY
-        wsHu/ins6D7MCHyncSooKHUIilEp5z9YHm1zyBXzOE1V+Lb9jhS0nG2IcuDAzTWSwUQccjqgQR0Qa
-        hm8ooSvlQZJLMhV/HFq1p6r1rlkDX3/SDeHLpj5W2lvCoWJKUE7kUn1u3X1eAkHiiKTDk1FUnWZ8I
-        Q4A1BvHw==;
-Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jNImG-0002LU-1t; Sat, 11 Apr 2020 16:14:40 +0000
-Date:   Sat, 11 Apr 2020 09:14:39 -0700
-From:   Matthew Wilcox <willy@infradead.org>
-To:     syzbot <syzbot+77fa5bdb65cc39711820@syzkaller.appspotmail.com>
-Cc:     darrick.wong@oracle.com, hch@infradead.org, jack@suse.cz,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-xfs@vger.kernel.org, riteshh@linux.ibm.com,
-        syzkaller-bugs@googlegroups.com, tytso@mit.edu
-Subject: Re: WARNING in iomap_apply
-Message-ID: <20200411161439.GE21484@bombadil.infradead.org>
-References: <00000000000048518b05a2fef23a@google.com>
+        Sat, 11 Apr 2020 12:30:17 -0400
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay02.hostedemail.com (Postfix) with ESMTP id 4C7DB49960C;
+        Sat, 11 Apr 2020 16:30:17 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: grain43_59ae7ef96930e
+X-Filterd-Recvd-Size: 1570
+Received: from XPS-9350.home (unknown [47.151.136.130])
+        (Authenticated sender: joe@perches.com)
+        by omf14.hostedemail.com (Postfix) with ESMTPA;
+        Sat, 11 Apr 2020 16:30:16 +0000 (UTC)
+Message-ID: <ba7b958fda7c42e10fded7b158e892e2dfb06494.camel@perches.com>
+Subject: [trivial PATCH] um virtio: Neaten vu_err macro definition
+From:   Joe Perches <joe@perches.com>
+To:     Jeff Dike <jdike@addtoit.com>, Richard Weinberger <richard@nod.at>,
+        Anton Ivanov <anton.ivanov@cambridgegreys.com>
+Cc:     Erel Geron <erelx.geron@intel.com>, linux-um@lists.infradead.org,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Date:   Sat, 11 Apr 2020 09:28:08 -0700
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.34.1-2 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <00000000000048518b05a2fef23a@google.com>
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Apr 11, 2020 at 12:39:13AM -0700, syzbot wrote:
-> The bug was bisected to:
-> 
-> commit d3b6f23f71670007817a5d59f3fbafab2b794e8c
-> Author: Ritesh Harjani <riteshh@linux.ibm.com>
-> Date:   Fri Feb 28 09:26:58 2020 +0000
-> 
->     ext4: move ext4_fiemap to use iomap framework
-> 
-> bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=16c62a57e00000
-> final crash:    https://syzkaller.appspot.com/x/report.txt?x=15c62a57e00000
-> console output: https://syzkaller.appspot.com/x/log.txt?x=11c62a57e00000
-> 
-> IMPORTANT: if you fix the bug, please add the following tag to the commit:
-> Reported-by: syzbot+77fa5bdb65cc39711820@syzkaller.appspotmail.com
-> Fixes: d3b6f23f7167 ("ext4: move ext4_fiemap to use iomap framework")
-> 
-> ------------[ cut here ]------------
-> WARNING: CPU: 0 PID: 7023 at fs/iomap/apply.c:51 iomap_apply+0xa0c/0xcb0 fs/iomap/apply.c:51
+Defining a macro with ... and __VA_ARGS__ (without ##) can cause
+compilation errors if a macro use does not have additional args.
 
-This is:
+Add ## to __VA_ARGS__ in the macro definition.
 
-        if (WARN_ON(iomap.length == 0))
-                return -EIO;
+Signed-off-by: Joe Perches <joe@perches.com>
+---
+ arch/um/drivers/virtio_uml.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-and the call trace contains ext4_fiemap() so the syzbot bisection looks
-correct.
+diff --git a/arch/um/drivers/virtio_uml.c b/arch/um/drivers/virtio_uml.c
+index be54d3..351aee5 100644
+--- a/arch/um/drivers/virtio_uml.c
++++ b/arch/um/drivers/virtio_uml.c
+@@ -74,7 +74,7 @@ struct virtio_uml_vq_info {
+ 
+ extern unsigned long long physmem_size, highmem;
+ 
+-#define vu_err(vu_dev, ...)	dev_err(&(vu_dev)->pdev->dev, __VA_ARGS__)
++#define vu_err(vu_dev, ...)	dev_err(&(vu_dev)->pdev->dev, ##__VA_ARGS__)
+ 
+ /* Vhost-user protocol */
+ 
 
->  iomap_fiemap+0x184/0x2c0 fs/iomap/fiemap.c:88
->  _ext4_fiemap+0x178/0x4f0 fs/ext4/extents.c:4860
->  ovl_fiemap+0x13f/0x200 fs/overlayfs/inode.c:467
->  ioctl_fiemap fs/ioctl.c:226 [inline]
->  do_vfs_ioctl+0x8d7/0x12d0 fs/ioctl.c:715
