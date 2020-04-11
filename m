@@ -2,123 +2,175 @@ Return-Path: <SRS0=xbEg=53=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C686DC2BA2B
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 07:34:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 202B7C2BB85
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 07:37:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8F9C22084D
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 07:34:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ArQfiR1k"
+	by mail.kernel.org (Postfix) with ESMTP id BE50120857
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 07:37:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725951AbgDKHeJ (ORCPT
+        id S1726010AbgDKHhD convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 03:34:09 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:42068 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725869AbgDKHeJ (ORCPT
+        Sat, 11 Apr 2020 03:37:03 -0400
+Received: from poy.remlab.net ([94.23.215.26]:53062 "EHLO
+        ns207790.ip-94-23-215.eu" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725869AbgDKHhD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 03:34:09 -0400
-Received: by mail-ot1-f65.google.com with SMTP id j20so3243555otl.9
-        for <linux-kernel@vger.kernel.org>; Sat, 11 Apr 2020 00:34:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=vqkq+tfhW8sM0fKfjRkqpvBmR846mOQRNokFVoJ4Ogg=;
-        b=ArQfiR1ksIv5Drbppk5N1ycmnyrXlWoZJhWOyf5NkwIBq6p9LgifSjDkJa9hhfxXct
-         hIo1G3Vdvxwp0JJ+5uqlrhdSjpauJ0ORVADY6ZbtUJGRk5qxuOsuCZc6Lv97dc09+6cv
-         wEcYrtrp50TpOp7SLpWIdzrBEWm8kMF5wwh3fGYA9MfRXkJXzJhXe3oofVqycq/wqHuH
-         JtrxA+KsHSJ+uo+Z28kuH03sLArtE5VdK2RSgA57+3pqPh2NiQnuOEQj51TPTeo6b78Y
-         BvcaTeGHHUojbCVOwK7HsquNNOXVCnSFqGliI8TaqLAgu6VOSZmkkui9GCqcPpCr1N5c
-         r0BA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=vqkq+tfhW8sM0fKfjRkqpvBmR846mOQRNokFVoJ4Ogg=;
-        b=pAbX2u/1KbtOaX7/m3YOq40lHoHAYO78/B3SXHDYQfCh2faUSzbyeCBOfY5TnVG4Qm
-         OBzaaf+GIBszWRJhitCeBoE8kfnD4yAiL9txOWfdAZGZw7Xsy0fTNZRe1UegfEAs8W30
-         XiniiL9J7K5vkYNPze0dPI2/b2uFQv97y9IsUBxb4Bc2f5UzbXFGiPk4G12eYJjUls2R
-         28LBi3XvqR36zAj0/6B9Ehx1DbdZnOwvSHhAI92LlM7bxUgUPnzdDstRAsg55nJlaniH
-         cWXrhNOqch6N18wceTRb7c4vIqoGKWn4nyegxWeaJINC6d8kFcN9NQWNUTSxw3Rc9Lfs
-         X6cw==
-X-Gm-Message-State: AGi0PuY4wFszGC9PdHubuQEyEUgWE8kqwApHaCxB6Z1sxmZjjvmNxzsZ
-        FIBVrj4h5n5WK88z0AU6wDXJN9feSMHNbm+LXFE=
-X-Google-Smtp-Source: APiQypJ5nKoVwnXg+7PaF5uV1DcYPyDtvvEaUQ2zeKHJcCZAWdQq8paRtYmqX6XmPzUodCf2c4oe870CUBVCi9sv+fs=
-X-Received: by 2002:a9d:629a:: with SMTP id x26mr6338392otk.201.1586590447608;
- Sat, 11 Apr 2020 00:34:07 -0700 (PDT)
+        Sat, 11 Apr 2020 03:37:03 -0400
+Received: from basile.remlab.net (87-92-31-51.bb.dnainternet.fi [87.92.31.51])
+        (Authenticated sender: remi)
+        by ns207790.ip-94-23-215.eu (Postfix) with ESMTPSA id 8CC435FD38;
+        Sat, 11 Apr 2020 09:37:00 +0200 (CEST)
+From:   =?ISO-8859-1?Q?R=E9mi?= Denis-Courmont <remi@remlab.net>
+To:     Vito Caputo <vcaputo@pengaru.com>
+Cc:     netdev@vger.kernel.org, courmisch@gmail.com, davem@davemloft.net,
+        kuba@kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: kernel BUG at net/phonet/socket.c:LINE!
+Date:   Sat, 11 Apr 2020 10:36:59 +0300
+Message-ID: <1806223.auBmcZeozp@basile.remlab.net>
+Organization: Remlab
+In-Reply-To: <20200411004320.py2cashe4edsjdzp@shells.gnugeneration.com>
+References: <00000000000062b41d05a2ea82b0@google.com> <20200411004320.py2cashe4edsjdzp@shells.gnugeneration.com>
 MIME-Version: 1.0
-References: <20200225073731.465270-1-avagin@gmail.com> <1c1ab662-5475-9d8b-038b-8411b060202a@arm.com>
-In-Reply-To: <1c1ab662-5475-9d8b-038b-8411b060202a@arm.com>
-From:   Andrei Vagin <avagin@gmail.com>
-Date:   Sat, 11 Apr 2020 00:33:56 -0700
-Message-ID: <CANaxB-xUYOrVnfLPRYVBiASzCH89sZkD6vTdy8EFjT16ZJhLfg@mail.gmail.com>
-Subject: Re: [PATCH v2 0/6] arm64: add the time namespace support
-To:     Vincenzo Frascino <vincenzo.frascino@arm.com>
-Cc:     linux-arm-kernel@lists.infradead.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Dmitry Safonov <dima@arista.com>
+Content-Transfer-Encoding: 8BIT
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 9, 2020 at 6:23 AM Vincenzo Frascino
-<vincenzo.frascino@arm.com> wrote:
->
-> Hi Andrei,
->
-> On 2/25/20 7:37 AM, Andrei Vagin wrote:
-> > Allocate the time namespace page among VVAR pages and add the logic
-> > to handle faults on VVAR properly.
-> >
-> > If a task belongs to a time namespace then the VVAR page which contains
-> > the system wide VDSO data is replaced with a namespace specific page
-> > which has the same layout as the VVAR page. That page has vdso_data->seq
-> > set to 1 to enforce the slow path and vdso_data->clock_mode set to
-> > VCLOCK_TIMENS to enforce the time namespace handling path.
-> >
-> > The extra check in the case that vdso_data->seq is odd, e.g. a concurrent
-> > update of the VDSO data is in progress, is not really affecting regular
-> > tasks which are not part of a time namespace as the task is spin waiting
-> > for the update to finish and vdso_data->seq to become even again.
-> >
-> > If a time namespace task hits that code path, it invokes the corresponding
-> > time getter function which retrieves the real VVAR page, reads host time
-> > and then adds the offset for the requested clock which is stored in the
-> > special VVAR page.
-> >
-> > v2: Code cleanups suggested by Vincenzo.
-> >
->
-> Sorry for the delay, I completed this morning the review of your patches and I
-> do not have anymore comments on them. Thank you for making the effort and
-> bringing the time namespace support to arm64.
+	Hi,
 
-Thank you for the review of these patches.
+Le lauantaina 11. huhtikuuta 2020, 3.43.20 EEST Vito Caputo a écrit :
+> I stared a bit at the code surrounding this report, and maybe someone more
+> familiar with the network stack can clear something up for me real quick:
+> > RIP: 0010:pn_socket_autobind net/phonet/socket.c:213 [inline]
+> 
+> net/phonet/socket.c:
+> 202 static int pn_socket_autobind(struct socket *sock)
+> 203 {
+> 204         struct sockaddr_pn sa;
+> 205         int err;
+> 206
+> 207         memset(&sa, 0, sizeof(sa));
+> 208         sa.spn_family = AF_PHONET;
+> 209         err = pn_socket_bind(sock, (struct sockaddr *)&sa,
+> 210                                 sizeof(struct sockaddr_pn));
+> 211         if (err != -EINVAL)
+> 212                 return err;
+> 213         BUG_ON(!pn_port(pn_sk(sock->sk)->sobject));
+> 214         return 0; /* socket was already bound */
+> 215 }
+> 
+> line 213 is the BUG_ON for !sock->sk->sobject, a phonet-specific member:
+> 
+> include/net/phonet/phonet.h:
+>  23 struct pn_sock {
+>  24         struct sock     sk;
+>  25         u16             sobject;
+>  26         u16             dobject;
+>  27         u8              resource;
+>  28 };
+> 
+> pn_socket_autobind() expects that to be non-null whenever pn_socket_bind()
+> returns -EINVAL, which seems odd, but the comment claims it's already bound,
+> let's look at pn_socket_bind():
+> 
+> net/phonet/socket.c:
+> 156 static int pn_socket_bind(struct socket *sock, struct sockaddr *addr,
+> int len) 157 {
+> 158         struct sock *sk = sock->sk;
+> 159         struct pn_sock *pn = pn_sk(sk);
+> 160         struct sockaddr_pn *spn = (struct sockaddr_pn *)addr;
+> 161         int err;
+> 162         u16 handle;
+> 163         u8 saddr;
+> 164
+> 165         if (sk->sk_prot->bind)
+> 166                 return sk->sk_prot->bind(sk, addr, len);
+> 167
+> 168         if (len < sizeof(struct sockaddr_pn))
+> 169                 return -EINVAL;
+> 170         if (spn->spn_family != AF_PHONET)
+> 171                 return -EAFNOSUPPORT;
+> 172
+> 173         handle = pn_sockaddr_get_object((struct sockaddr_pn *)addr);
+> 174         saddr = pn_addr(handle);
+> 175         if (saddr && phonet_address_lookup(sock_net(sk), saddr))
+> 176                 return -EADDRNOTAVAIL;
+> 177
+> 178         lock_sock(sk);
+> 179         if (sk->sk_state != TCP_CLOSE || pn_port(pn->sobject)) {
+> 180                 err = -EINVAL; /* attempt to rebind */
+> 181                 goto out;
+> 182         }
+> 183         WARN_ON(sk_hashed(sk));
+> 184         mutex_lock(&port_mutex);
+> 185         err = sk->sk_prot->get_port(sk, pn_port(handle));
+> 186         if (err)
+> 187                 goto out_port;
+> 188
+> 189         /* get_port() sets the port, bind() sets the address if
+> applicable */ 190         pn->sobject = pn_object(saddr,
+> pn_port(pn->sobject));
+> 191         pn->resource = spn->spn_resource;
+> 192
+> 193         /* Enable RX on the socket */
+> 194         err = sk->sk_prot->hash(sk);
+> 195 out_port:
+> 196         mutex_unlock(&port_mutex);
+> 197 out:
+> 198         release_sock(sk);
+> 199         return err;
+> 200 }
+> 
+> 
+> The first return branch in there simply hands off the bind to and
+> indirection sk->sk_prot->bind() if present.  This smells ripe for breaking
+> the assumptions of that BUG_ON().
 
->
-> I have though a question on something I encountered during the testing of the
-> patches: I noticed that all the tests related to CLOCK_BOOTTIME_ALARM fail on
-> arm64 (please find the results below the scissors). Is this expected?
+I believe that this is in line with the design of the socket stack within the 
+Linux kernel. 'struct proto_ops' carries the protocol family operations, then 
+'struct proto' carries the protocol operations.
 
-static int alarm_clock_get_timespec(clockid_t which_clock, struct
-timespec64 *tp)
-{
-        struct alarm_base *base = &alarm_bases[clock2alarm(which_clock)];
+Admittedly, Phonet only had one datagram and one stream protocol ever written, 
+as the hardware development ceased. So in practice, there is a 1:1 mapping 
+between the two, and sk_prot.bind is always NULL.
 
-        if (!alarmtimer_get_rtcdev())
-                return -EINVAL;
+> I'm assuming there's no point for such an indirection if not to enable a
+> potentially non-phonet-ops hook, otherwise we'd just be do the bind.
 
-It is probably that you get EINVAL from here ^^^. I will send a
-separate patch to handle this case in tests properly.
+In my understanding, that's *not* what sk_prot is for, no. It's rather meant 
+to specialize the socket calls on a per-protocol basis.
 
-Thanks,
-Andrei
+For instance, UDP and UDP-Lite share their address family 'struct proto_ops' 
+(either inet_dgram_ops or inet6_dgram_ops) but they have different 
+'struct proto'.
+
+> If not, isn't this plain recursive?  Color me confused.  Will other bind()
+> implementations return -EINVAL when already bound with sobject set? no.
+
+As far as I can find, there are no cases where the bind pointer would not be 
+NULL in upstream kernel. This can only happen if an out-of-tree module defines 
+its own protocol within the Phonet family.
+
+> Furthermore, -EINVAL is also returned when len < sizeof(struct sockaddr_pn),
+> maybe the rebind case should return -EADDRINUSE instead of -EINVAL?
+
+bind() semantics require returning EINVAL if the socket address size is, well, 
+invalid.
+
+If we are to distinguish the two error scenarii, then it's the rebind  case 
+that needs a different error, but EINVAL is consistent with INET.
+
+> I must be missing some things.
+
+-- 
+Rémi Denis-Courmont
+Tapiolan uusi kaupunki, Uudenmaan tasavalta
+
+
+
