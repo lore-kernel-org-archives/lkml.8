@@ -2,117 +2,111 @@ Return-Path: <SRS0=xbEg=53=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DDE2C2BB85
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:26:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E89BFC2BBC7
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:26:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D846D20692
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:26:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586608013;
-	bh=JZq8dE2HemhgAxsq2NlZiZMCv5IuL2FpwL7FfIstci0=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=P1zi3Qt6IkRNqqNoeUA/q1GTRMaXqbCbh0XyWYXsYTU/q1rs9ETLQNs6Fuw8q545Z
-	 msjHdDknIRbX7eQiokCllOE5li4OzanzFgwKAV07TgUZphrtAqfByt4/k5moNAXNoI
-	 zL85ez/SbtediuEHibrhnPPl62hXTthBH/zPZoic=
+	by mail.kernel.org (Postfix) with ESMTP id C1C2D206A1
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:26:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="X3YKhTzk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727425AbgDKMPI (ORCPT
+        id S1728145AbgDKM06 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 08:15:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48776 "EHLO mail.kernel.org"
+        Sat, 11 Apr 2020 08:26:58 -0400
+Received: from mout.gmx.net ([212.227.17.20]:55509 "EHLO mout.gmx.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726713AbgDKMPE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 08:15:04 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CDE1120787;
-        Sat, 11 Apr 2020 12:15:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586607303;
-        bh=JZq8dE2HemhgAxsq2NlZiZMCv5IuL2FpwL7FfIstci0=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=U/FexROFfZiScO1hssSr0+G3nzNDcKbOPwfCuKSHazym7Sj09vpf7yXwC7tWF47xq
-         VLBK1OxUq629t0wB14qOgUY4eWnxJq50jsCYT403B0NI6wPRjbtHhkPrzrgqVV0jOi
-         IcXzPMskIycGItjZ1rOVRLU5qZBOUszUh+ax0YFo=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Roland Dreier <roland@purestorage.com>,
-        Max Gurtovoy <maxg@mellanox.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Prabhath Sajeepa <psajeepa@purestorage.com>,
-        Keith Busch <kbusch@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 05/54] nvme-rdma: Avoid double freeing of async event data
-Date:   Sat, 11 Apr 2020 14:08:47 +0200
-Message-Id: <20200411115508.766563409@linuxfoundation.org>
-X-Mailer: git-send-email 2.26.0
-In-Reply-To: <20200411115508.284500414@linuxfoundation.org>
-References: <20200411115508.284500414@linuxfoundation.org>
-User-Agent: quilt/0.66
+        id S1726832AbgDKM04 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Apr 2020 08:26:56 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+        s=badeba3b8450; t=1586608011;
+        bh=srZpBeRis2/6y/kg+tlgDeL20N0J/abMsBYWWU6lnrA=;
+        h=X-UI-Sender-Class:From:To:Cc:Subject:Date:In-Reply-To:References;
+        b=X3YKhTzk8NChTYYOZUv7F1IE7poNZrjHUlQaNFINc6ZW6U7UElAa/SOy9cGBFZks+
+         QxWYAvk13Y564c1yznMQdQ7ftRNwupAUMWKiP3IQlHpLUp7wm6kp/01U/XHK7/r8TD
+         mqHowLHg6CoZZ7Jr5s0kBVC/07Or02d2GHTlISAU=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from localhost.localdomain ([83.52.229.196]) by mail.gmx.com
+ (mrgmx104 [212.227.17.174]) with ESMTPSA (Nemesis) id
+ 1Mgeo8-1imnPa2tie-00h6FI; Sat, 11 Apr 2020 14:26:50 +0200
+From:   Oscar Carter <oscar.carter@gmx.com>
+To:     Forest Bond <forest@alittletooquiet.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Oscar Carter <oscar.carter@gmx.com>,
+        Malcolm Priestley <tvboxspy@gmail.com>,
+        Quentin Deslandes <quentin.deslandes@itdev.co.uk>,
+        Amir Mahdi Ghorbanian <indigoomega021@gmail.com>,
+        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v2 2/2] staging: vt6656: Remove duplicate code for the phy->service assignment
+Date:   Sat, 11 Apr 2020 14:26:10 +0200
+Message-Id: <20200411122610.7901-3-oscar.carter@gmx.com>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200411122610.7901-1-oscar.carter@gmx.com>
+References: <20200411122610.7901-1-oscar.carter@gmx.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:AGbfPJ4dTYtyjWLjOEMr+meLDN5FRKKzT/A2cHztiQSul6SZqpA
+ uDCUSutE6GN23yAgkqoQHJ7Fwcw+UOIkK45NTQk6ZWggMdgYbsIYZykvhZqSdV/Lx9tpE5z
+ 8K0oQBOWRNTxb8BZP6yBV9irZaEIcRgyKfMVlhVMbemnYxmEBn8Ha2sEkRusGzNtRkwlGC2
+ sm4CvBzIWOp3VveiMMzVw==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:P+bExj3+xiY=:35Oe3zYzGb+QfZo4BX74Du
+ DeoKOVUXTkCqohT789Z4uolod1EGTwT8RlYB4NsBXl22/JzYhCumLkx3wR6ayedVS9tN4MPCR
+ 1KjQLSOkWCfA+8C4HsS7aHno3atP3JigmNMPstNGJYh+89kwYCxpt4kbEMSwctJ6j3EzBDemi
+ skMeFXMTtO+sLxPsbmULz6Z9qw/41ULDMKfFaMfPrchbV5hAOzPDlskDaJKdjW8lIQ5pe5j86
+ qEVFCMa4LS9CSKx9gKc79K+H755wdOoYDc1mghdxQtGTMwAz3uOY+fsUVwKbOrRr0morltfBU
+ WXdW5z8QbvTlNhLnAwOrypm0G1l9wf+o+Mu5hgHVH1aHa04ld0hb2tonZ/K+gEXAE2Elr4nP8
+ 7qFP4ecvl9LrXDc1QdYRVFp9RfdaMa6X8UcLl2qnPUuZpgegdYx4Iu4EVgwr7OuLo3UWz7ZF8
+ x9n/yKRskzF8ztEU2Yi2CkXvVxoMhoSAQGWmZN7jF2VULD+7mL2/oYzYqCXc1ZFg6Ln38EODN
+ cI2Pp3gLQxx4faiEFMv9VSArZpViAApN80EX5QOzfP7qQGcPTJ5i2UZCu7UO50VCQ67Ow7zvq
+ 3Q/478LYVIpNukOJSFUDtqcLWq1S8x5pTOSzOCWZQqkfSYC3QOu7ZisVoANBFB/xV1jGu+E8X
+ 9tzcoMqAbYRyIZZ/yB778iQDgyS74wGPIc713Y5s/9OI8Qms1qlK9YG4lgiYrL/58aQMRwq0C
+ Ae8i4pWXuNr594HFq6SjPmVtjMAXK0LDH221RPAF3ok3IL0uI8N1L6el3gNBE0o4f2ECldICr
+ Eqrf2QsYDzEcjKcmHxNZMpHAWOjEZ47YZu50DTKZ9LRf8W/IsrMsBBTqSr0B6TmNFd0nerj2F
+ 2cNPIpqfa6Lj28pSBDH4a2ylcTtWSZOX4Fxh9/nP1ULbnwvjsz0PwhXFJM4CpPUooD0UbeCNg
+ lOx9WhIcVjvwdTMjusoX2DepAheq0bHCw4AfgyOok5Fk1ETkmAkfasLhX+68FPiKdNN6A4sWv
+ E9YN3EgsRO8EWTTRBizy0vKfYRN0ovirt2Lbzy04bpkC4KiCah1rhyCUy67gJMsUPWtPJlTjH
+ 2o0zX3yu03xN032Sc86JEWkpW+/51mMdAAickZol4W4BbFRuXItUhWF1+OKQ+bmUb5C8YB1CO
+ oKm8j+UuZChHrYDIEaKnKx0XKmprRb5BltTWUm9VgDS1Y3xvSEfUPUyAYdmZM/y4x9Ee7pZLG
+ WFIWssTUtUB3VajnU
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Prabhath Sajeepa <psajeepa@purestorage.com>
+Take out the "phy->service" assignment from the if-else statement due to
+it's the same for the two branches.
 
-[ Upstream commit 9134ae2a2546cb96abddcd4469a79c77ee3a4480 ]
+Signed-off-by: Oscar Carter <oscar.carter@gmx.com>
+=2D--
+ drivers/staging/vt6656/baseband.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-The timeout of identify cmd, which is invoked as part of admin queue
-creation, can result in freeing of async event data both in
-nvme_rdma_timeout handler and error handling path of
-nvme_rdma_configure_admin queue thus causing NULL pointer reference.
-Call Trace:
- ? nvme_rdma_setup_ctrl+0x223/0x800 [nvme_rdma]
- nvme_rdma_create_ctrl+0x2ba/0x3f7 [nvme_rdma]
- nvmf_dev_write+0xa54/0xcc6 [nvme_fabrics]
- __vfs_write+0x1b/0x40
- vfs_write+0xb2/0x1b0
- ksys_write+0x61/0xd0
- __x64_sys_write+0x1a/0x20
- do_syscall_64+0x60/0x1e0
- entry_SYSCALL_64_after_hwframe+0x44/0xa9
+diff --git a/drivers/staging/vt6656/baseband.c b/drivers/staging/vt6656/ba=
+seband.c
+index 05cc4797df52..c8b3cc84da6c 100644
+=2D-- a/drivers/staging/vt6656/baseband.c
++++ b/drivers/staging/vt6656/baseband.c
+@@ -239,14 +239,13 @@ void vnt_get_phy_field(struct vnt_private *priv, u32=
+ frame_length,
 
-Reviewed-by: Roland Dreier <roland@purestorage.com>
-Reviewed-by: Max Gurtovoy <maxg@mellanox.com>
-Reviewed-by: Christoph Hellwig <hch@lst.de>
-Signed-off-by: Prabhath Sajeepa <psajeepa@purestorage.com>
-Signed-off-by: Keith Busch <kbusch@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/nvme/host/rdma.c | 8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
+ 	i =3D tx_rate > RATE_54M ? RATE_54M : tx_rate;
+ 	phy->signal =3D vnt_phy_signal[i] | mask;
++	phy->service =3D 0x00;
 
-diff --git a/drivers/nvme/host/rdma.c b/drivers/nvme/host/rdma.c
-index e4f167e35353f..9711bfbdf4316 100644
---- a/drivers/nvme/host/rdma.c
-+++ b/drivers/nvme/host/rdma.c
-@@ -815,9 +815,11 @@ out_free_tagset:
- 	if (new)
- 		nvme_rdma_free_tagset(&ctrl->ctrl, ctrl->ctrl.admin_tagset);
- out_free_async_qe:
--	nvme_rdma_free_qe(ctrl->device->dev, &ctrl->async_event_sqe,
--		sizeof(struct nvme_command), DMA_TO_DEVICE);
--	ctrl->async_event_sqe.data = NULL;
-+	if (ctrl->async_event_sqe.data) {
-+		nvme_rdma_free_qe(ctrl->device->dev, &ctrl->async_event_sqe,
-+			sizeof(struct nvme_command), DMA_TO_DEVICE);
-+		ctrl->async_event_sqe.data = NULL;
-+	}
- out_free_queue:
- 	nvme_rdma_free_queue(&ctrl->queues[0]);
- 	return error;
--- 
+ 	if (pkt_type =3D=3D PK_TYPE_11B) {
+-		phy->service =3D 0x00;
+ 		if (ext_bit)
+ 			phy->service |=3D 0x80;
+ 		phy->len =3D cpu_to_le16((u16)count);
+ 	} else {
+-		phy->service =3D 0x00;
+ 		phy->len =3D cpu_to_le16((u16)frame_length);
+ 	}
+ }
+=2D-
 2.20.1
-
-
 
