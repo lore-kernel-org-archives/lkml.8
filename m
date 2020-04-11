@@ -4,52 +4,56 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43F8FC2BB86
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:08:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F71EC352B6
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:08:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1EE3D215A4
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:08:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E8C41214D8
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:08:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586646502;
-	bh=Ddj9UahbyyEDMEsA4uD2XcrxDHuCCjCCosOi5TugEdY=;
+	s=default; t=1586646506;
+	bh=Wzja1lnSxcvyujKbql1QcN7eEshT9Y47jqXMe56SKFg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=eLDmX43a9OB5cABvqgFWo8i4U/swKfU0SRHS3vx5UANp9TDbzBzPFhN6tWcMM8QYG
-	 pIlxh3RVoP+nD8jRgttRbDwhvokCBuneGRWp9/vths7NJ9r6M8dI80R8jQKCSbbDMs
-	 hvT73UyXd1zjkkvHM10Bz6jk1FIDQPNcrVhEUd2w=
+	b=ymTTeayKe3T/q6FRZ+u8MjdMGJnr6ymx+PHZowOBvyPVk1QvrpA2LZjojx9NVIUp2
+	 lj0nWk+tBRDXMYyaEN6BmeK2oVtSu04FDlXWxuaqJTLnZw/zmBVxga0ZyWGGi/EUTq
+	 dyNYkBdfltgY59ClioL9ozc0QFEewOxTiZfTLUag=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727243AbgDKXIT (ORCPT
+        id S1728909AbgDKXIY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 19:08:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44654 "EHLO mail.kernel.org"
+        Sat, 11 Apr 2020 19:08:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44786 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728828AbgDKXIH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 19:08:07 -0400
+        id S1728873AbgDKXIN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Apr 2020 19:08:13 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 838B12173E;
-        Sat, 11 Apr 2020 23:08:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 78F9D20708;
+        Sat, 11 Apr 2020 23:08:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586646487;
-        bh=Ddj9UahbyyEDMEsA4uD2XcrxDHuCCjCCosOi5TugEdY=;
+        s=default; t=1586646493;
+        bh=Wzja1lnSxcvyujKbql1QcN7eEshT9Y47jqXMe56SKFg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xCIcPcMG9nQMka0S/5SoL8PNnibwbH8ozK4L3dCxeJgeHwq1EO34m61ll4gzMbt4J
-         v6yCPiYfGbuKQ8h2YZFvTmQLsSkCleO7kD92Fws6905NUlj09VHMS+nAL4LCf30Rin
-         nJzo1mMI34Tq/AiSC28lhb8HrK+uRMA0k+Uirpnk=
+        b=aEp8QaJ1iMJyVG8+baFTrFMfmablEiJXAg5oh0ZZCUBX6OXFaCKItopIW7/p6W4UQ
+         MmpexLgaqfAi7NUpWanKidoO7MBPWZ3SeICWB5fmxAT8H+2D2zY3vR4xJXSEc7fHN9
+         8ZgRHKjAMZf1lDtY07WFONwEvrhbwh0+VBVbVuYA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Tzu-En Huang <tehuang@realtek.com>,
-        Yan-Hsuan Chuang <yhchuang@realtek.com>,
-        Chris Chiu <chiu@endlessm.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.5 051/121] rtw88: Fix incorrect beamformee role setting
-Date:   Sat, 11 Apr 2020 19:05:56 -0400
-Message-Id: <20200411230706.23855-51-sashal@kernel.org>
+Cc:     Wen Yang <wen.yang99@zte.com.cn>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Mukesh Ojha <mojha@codeaurora.org>,
+        Tomi Valkeinen <tomi.valkeinen@ti.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Sebastian Reichel <sebastian.reichel@collabora.com>,
+        dri-devel@lists.freedesktop.org,
+        Markus Elfring <Markus.Elfring@web.de>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.5 056/121] drm/omap: fix possible object reference leak
+Date:   Sat, 11 Apr 2020 19:06:01 -0400
+Message-Id: <20200411230706.23855-56-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200411230706.23855-1-sashal@kernel.org>
 References: <20200411230706.23855-1-sashal@kernel.org>
@@ -62,59 +66,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tzu-En Huang <tehuang@realtek.com>
+From: Wen Yang <wen.yang99@zte.com.cn>
 
-[ Upstream commit aa7619a39acef91c5a6904f3ada7d0f20e2ad25e ]
+[ Upstream commit 47340e46f34a3b1d80e40b43ae3d7a8da34a3541 ]
 
-In associating and configuring beamformee, bfee->role is not
-correctly set before rtw_chip_ops::config_bfee().
-Fix it by setting it correctly.
+The call to of_find_matching_node returns a node pointer with refcount
+incremented thus it must be explicitly decremented after the last
+usage.
 
-Signed-off-by: Tzu-En Huang <tehuang@realtek.com>
-Signed-off-by: Yan-Hsuan Chuang <yhchuang@realtek.com>
-Reviewed-by: Chris Chiu <chiu@endlessm.com>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Detected by coccinelle with the following warnings:
+drivers/gpu/drm/omapdrm/dss/omapdss-boot-init.c:212:2-8: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 209, but without a corresponding object release within this function.
+drivers/gpu/drm/omapdrm/dss/omapdss-boot-init.c:237:1-7: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 209, but without a corresponding object release within this function.
+
+Signed-off-by: Wen Yang <wen.yang99@zte.com.cn>
+Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Reviewed-by: Mukesh Ojha <mojha@codeaurora.org>
+Cc: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Cc: David Airlie <airlied@linux.ie>
+Cc: Daniel Vetter <daniel@ffwll.ch>
+Cc: Sebastian Reichel <sebastian.reichel@collabora.com>
+Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: dri-devel@lists.freedesktop.org
+Cc: linux-kernel@vger.kernel.org
+Cc: Markus Elfring <Markus.Elfring@web.de>
+Signed-off-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/1554692313-28882-2-git-send-email-wen.yang99@zte.com.cn
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/realtek/rtw88/bf.c | 6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
+ drivers/gpu/drm/omapdrm/dss/omapdss-boot-init.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/wireless/realtek/rtw88/bf.c b/drivers/net/wireless/realtek/rtw88/bf.c
-index fda771d23f712..b6d1d71f4d302 100644
---- a/drivers/net/wireless/realtek/rtw88/bf.c
-+++ b/drivers/net/wireless/realtek/rtw88/bf.c
-@@ -41,7 +41,6 @@ void rtw_bf_assoc(struct rtw_dev *rtwdev, struct ieee80211_vif *vif,
- 	struct ieee80211_sta_vht_cap *ic_vht_cap;
- 	const u8 *bssid = bss_conf->bssid;
- 	u32 sound_dim;
--	u8 bfee_role = RTW_BFEE_NONE;
- 	u8 i;
+diff --git a/drivers/gpu/drm/omapdrm/dss/omapdss-boot-init.c b/drivers/gpu/drm/omapdrm/dss/omapdss-boot-init.c
+index 31502857f013d..ce67891eedd46 100644
+--- a/drivers/gpu/drm/omapdrm/dss/omapdss-boot-init.c
++++ b/drivers/gpu/drm/omapdrm/dss/omapdss-boot-init.c
+@@ -192,7 +192,7 @@ static int __init omapdss_boot_init(void)
+ 	dss = of_find_matching_node(NULL, omapdss_of_match);
  
- 	if (!(chip->band & RTW_BAND_5G))
-@@ -67,7 +66,7 @@ void rtw_bf_assoc(struct rtw_dev *rtwdev, struct ieee80211_vif *vif,
- 		}
+ 	if (dss == NULL || !of_device_is_available(dss))
+-		return 0;
++		goto put_node;
  
- 		ether_addr_copy(bfee->mac_addr, bssid);
--		bfee_role = RTW_BFEE_MU;
-+		bfee->role = RTW_BFEE_MU;
- 		bfee->p_aid = (bssid[5] << 1) | (bssid[4] >> 7);
- 		bfee->aid = bss_conf->aid;
- 		bfinfo->bfer_mu_cnt++;
-@@ -85,7 +84,7 @@ void rtw_bf_assoc(struct rtw_dev *rtwdev, struct ieee80211_vif *vif,
- 		sound_dim >>= IEEE80211_VHT_CAP_SOUNDING_DIMENSIONS_SHIFT;
+ 	omapdss_walk_device(dss, true);
  
- 		ether_addr_copy(bfee->mac_addr, bssid);
--		bfee_role = RTW_BFEE_SU;
-+		bfee->role = RTW_BFEE_SU;
- 		bfee->sound_dim = (u8)sound_dim;
- 		bfee->g_id = 0;
- 		bfee->p_aid = (bssid[5] << 1) | (bssid[4] >> 7);
-@@ -102,7 +101,6 @@ void rtw_bf_assoc(struct rtw_dev *rtwdev, struct ieee80211_vif *vif,
+@@ -217,6 +217,8 @@ static int __init omapdss_boot_init(void)
+ 		kfree(n);
  	}
  
- out_unlock:
--	bfee->role = bfee_role;
- 	rcu_read_unlock();
++put_node:
++	of_node_put(dss);
+ 	return 0;
  }
  
 -- 
