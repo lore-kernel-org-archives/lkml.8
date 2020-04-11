@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2884C2BB85
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:14:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC441C2BA2B
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:15:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CB68720787
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:14:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B6CA020787
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:15:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586607297;
-	bh=qEGibT5UAijc/0Xz1y1e509D0RA9GeicJPNQYYQutp4=;
+	s=default; t=1586607300;
+	bh=8b6+SjPVlptKlpHpNs5BryqjkHoJs5ngMdVdKcZM1GY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=x/d3LyUhNMDf8Q3YRxiu99AGnVLlMpMx9VoB+8hWbzhLilfzh4noW8B5qObmpVprY
-	 JmlWFS8RFz3o1dtDY6P+MGSFW9fFHGfkkTqb6H65P0cg+mOWh1bxlwHFEL3qxxD2Kc
-	 YzV/1LkqdFaEDyCH3UN1Gw4kpP3lKxyOwsVsJRcY=
+	b=Mk9w0p5ILQc8WECtVhiMMlyAcH8EdCpqfttcLAtyvHI1ioLBetXUqVCAZnpHQDp9a
+	 9tdl8NGRoPEOXjiQ5EQlK1oiIZIT3F72liY/DCKpjBZIlxozF7KKxNwN0rRBDiTWRF
+	 4/2u65uWPjrSjaZO1rRtDJp2G80tQZ9PM0SLBvro=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728072AbgDKMOz (ORCPT
+        id S1727471AbgDKMO6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 08:14:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48528 "EHLO mail.kernel.org"
+        Sat, 11 Apr 2020 08:14:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48562 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727273AbgDKMOy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 08:14:54 -0400
+        id S1728071AbgDKMO4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Apr 2020 08:14:56 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 329A12084D;
-        Sat, 11 Apr 2020 12:14:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 948FB20692;
+        Sat, 11 Apr 2020 12:14:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586607293;
-        bh=qEGibT5UAijc/0Xz1y1e509D0RA9GeicJPNQYYQutp4=;
+        s=default; t=1586607296;
+        bh=8b6+SjPVlptKlpHpNs5BryqjkHoJs5ngMdVdKcZM1GY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ykLvzrtDpIquLljUE7u95blBfI1Z6OsU6k2/3aPPIeHiiLmmBICf22R54VbwjP7Sx
-         s35ZTJ8/T4L9YylbV24ew89+mBUcrKCevqtS0SjKAYDO/BaWaMZpuzslnUruFFFw+y
-         jV5io4Cq1EGLvZqXC4GvCOQ1gCAZar9UlohjCyjQ=
+        b=1BWoeEP1xOygfCK05mERky7PtEt+B3iRqVlmQjcg09/6O5YXajAmLjR+VXF1+Z/3l
+         BM68wl4gb7DeU+pITjnXdMskZ+jNcqqPoPMZl2vnLE0j0WFN4h11+UvB5lWqHUqKTw
+         y0yGQxyjkHoxdJFIqFVN8Lv0eq/UB++o+PjXMpwk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kishon Vijay Abraham I <kishon@ti.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Subject: [PATCH 4.19 15/54] misc: pci_endpoint_test: Fix to support > 10 pci-endpoint-test devices
-Date:   Sat, 11 Apr 2020 14:08:57 +0200
-Message-Id: <20200411115509.847419848@linuxfoundation.org>
+        stable@vger.kernel.org, William Dauchy <w.dauchy@criteo.com>,
+        Nicolas Dichtel <nicolas.dichtel@6wind.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.19 02/54] net, ip_tunnel: fix interface lookup with no key
+Date:   Sat, 11 Apr 2020 14:08:44 +0200
+Message-Id: <20200411115508.488143371@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200411115508.284500414@linuxfoundation.org>
 References: <20200411115508.284500414@linuxfoundation.org>
@@ -59,38 +60,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kishon Vijay Abraham I <kishon@ti.com>
+From: William Dauchy <w.dauchy@criteo.com>
 
-commit 6b443e5c80b67a7b8a85b33d052d655ef9064e90 upstream.
+[ Upstream commit 25629fdaff2ff509dd0b3f5ff93d70a75e79e0a1 ]
 
-Adding more than 10 pci-endpoint-test devices results in
-"kobject_add_internal failed for pci-endpoint-test.1 with -EEXIST, don't
-try to register things with the same name in the same directory". This
-is because commit 2c156ac71c6b ("misc: Add host side PCI driver for PCI
-test function device") limited the length of the "name" to 20 characters.
-Change the length of the name to 24 in order to support upto 10000
-pci-endpoint-test devices.
+when creating a new ipip interface with no local/remote configuration,
+the lookup is done with TUNNEL_NO_KEY flag, making it impossible to
+match the new interface (only possible match being fallback or metada
+case interface); e.g: `ip link add tunl1 type ipip dev eth0`
 
-Fixes: 2c156ac71c6b ("misc: Add host side PCI driver for PCI test function device")
-Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
-Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc: stable@vger.kernel.org # v4.14+
+To fix this case, adding a flag check before the key comparison so we
+permit to match an interface with no local/remote config; it also avoids
+breaking possible userland tools relying on TUNNEL_NO_KEY flag and
+uninitialised key.
+
+context being on my side, I'm creating an extra ipip interface attached
+to the physical one, and moving it to a dedicated namespace.
+
+Fixes: c54419321455 ("GRE: Refactor GRE tunneling code.")
+Signed-off-by: William Dauchy <w.dauchy@criteo.com>
+Signed-off-by: Nicolas Dichtel <nicolas.dichtel@6wind.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- drivers/misc/pci_endpoint_test.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ net/ipv4/ip_tunnel.c |    6 +-----
+ 1 file changed, 1 insertion(+), 5 deletions(-)
 
---- a/drivers/misc/pci_endpoint_test.c
-+++ b/drivers/misc/pci_endpoint_test.c
-@@ -636,7 +636,7 @@ static int pci_endpoint_test_probe(struc
- {
- 	int err;
- 	int id;
--	char name[20];
-+	char name[24];
- 	enum pci_barno bar;
- 	void __iomem *base;
- 	struct device *dev = &pdev->dev;
+--- a/net/ipv4/ip_tunnel.c
++++ b/net/ipv4/ip_tunnel.c
+@@ -155,11 +155,8 @@ struct ip_tunnel *ip_tunnel_lookup(struc
+ 			cand = t;
+ 	}
+ 
+-	if (flags & TUNNEL_NO_KEY)
+-		goto skip_key_lookup;
+-
+ 	hlist_for_each_entry_rcu(t, head, hash_node) {
+-		if (t->parms.i_key != key ||
++		if ((!(flags & TUNNEL_NO_KEY) && t->parms.i_key != key) ||
+ 		    t->parms.iph.saddr != 0 ||
+ 		    t->parms.iph.daddr != 0 ||
+ 		    !(t->dev->flags & IFF_UP))
+@@ -171,7 +168,6 @@ struct ip_tunnel *ip_tunnel_lookup(struc
+ 			cand = t;
+ 	}
+ 
+-skip_key_lookup:
+ 	if (cand)
+ 		return cand;
+ 
 
 
