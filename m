@@ -2,96 +2,119 @@ Return-Path: <SRS0=xbEg=53=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BBF1EC2BA2B
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 09:13:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2210C2BA2B
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 09:14:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8CDC62078E
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 09:13:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C4998212CC
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 09:14:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1586596496;
+	bh=g1HjFwokJM0rFuNqMG5LZDp7KeYa1z5o4NuTUY9Hwa8=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=WjJEBIrfjNMjt5XOQJEZWWcxWaveiOxnD4+0UO28kyqDx88HdXzJRrnPjAaOuQJZ+
+	 VfREjKogQ/Pnu599dFJvuF8+And8TXeZavMQ1j6fZhiIlNPILHlHYGnibcLP5bTOy+
+	 kCa9KtG29doT1LXVB2MJCeRUg9M3X4AyZIkYsNxM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726037AbgDKJMC (ORCPT
+        id S1726129AbgDKJOz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 05:12:02 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:13151 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725934AbgDKJMC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 05:12:02 -0400
-Received: from DGGEMS412-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id B69CEA19C96744CC15E2;
-        Sat, 11 Apr 2020 17:11:59 +0800 (CST)
-Received: from DESKTOP-8RFUVS3.china.huawei.com (10.173.222.27) by
- DGGEMS412-HUB.china.huawei.com (10.3.19.212) with Microsoft SMTP Server id
- 14.3.487.0; Sat, 11 Apr 2020 17:10:51 +0800
-From:   Zenghui Yu <yuzenghui@huawei.com>
-To:     <linux-kernel@vger.kernel.org>
-CC:     <maz@kernel.org>, <tglx@linutronix.de>, <jason@lakedaemon.net>,
-        <wanghaibin.wang@huawei.com>, Zenghui Yu <yuzenghui@huawei.com>,
-        Nianyao Tang <tangnianyao@huawei.com>
-Subject: [PATCH] irqchip/gic-v4.1: Disallow setting affinity for virtual SGIs
-Date:   Sat, 11 Apr 2020 17:10:32 +0800
-Message-ID: <20200411091032.661-1-yuzenghui@huawei.com>
-X-Mailer: git-send-email 2.23.0.windows.1
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.173.222.27]
-X-CFilter-Loop: Reflected
+        Sat, 11 Apr 2020 05:14:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54932 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725901AbgDKJOy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Apr 2020 05:14:54 -0400
+Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A576A20857;
+        Sat, 11 Apr 2020 09:14:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1586596494;
+        bh=g1HjFwokJM0rFuNqMG5LZDp7KeYa1z5o4NuTUY9Hwa8=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=SX9E2VAkwORVsD8PNwYS5LTsZdL+ud7uJnHzSt+ESHgyV2qIZK0MMZvCEJZNToc4V
+         8ZsP+hJrwyDihd4T2aQ8kGSYnJa6pU35HQXzG6bWyfAGdxHZj09/C4xqlWcx2/gDeq
+         t7ZZ/Wgh5LroRGJEaDnIt1HCUvtWF3yfoRLO/c2E=
+Received: from 78.163-31-62.static.virginmediabusiness.co.uk ([62.31.163.78] helo=big-swifty.misterjones.org)
+        by disco-boy.misterjones.org with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <maz@kernel.org>)
+        id 1jNCE0-002Lcs-UO; Sat, 11 Apr 2020 10:14:53 +0100
+Date:   Sat, 11 Apr 2020 10:14:47 +0100
+Message-ID: <86sghas7so.wl-maz@kernel.org>
+From:   Marc Zyngier <maz@kernel.org>
+To:     Saravana Kannan <saravanak@google.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        John Stultz <john.stultz@linaro.org>, kernel-team@android.com,
+        linux-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH v1] irqchip: Add IRQCHIP_MODULE_BEGIN/END helper macros
+In-Reply-To: <20200411045918.179455-1-saravanak@google.com>
+References: <20200411045918.179455-1-saravanak@google.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 EasyPG/1.0.0 Emacs/26
+ (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 62.31.163.78
+X-SA-Exim-Rcpt-To: saravanak@google.com, tglx@linutronix.de, jason@lakedaemon.net, john.stultz@linaro.org, kernel-team@android.com, linux-kernel@vger.kernel.org
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Running a guest on the GICv4.1-implemented board, we will get the
-following warning:
+Hi Saravana,
 
-[   59.062120] genirq: irq_chip GICv4.1-sgi did not update eff. affinity mask of irq 46
+On Sat, 11 Apr 2020 05:59:18 +0100,
+Saravana Kannan <saravanak@google.com> wrote:
+> 
+> Add helper macros IRQCHIP_MODULE_BEGIN and IRQCHIP_MODULE_END that add
+> the boilerplate code to be able to compile an irqchip driver as a
+> module.
+> 
+> The driver developer just needs to do add IRQCHIP_MODULE_BEGIN and
+> IRQCHIP_MODULE_END(driver_name) around the IRQCHIP_DECLARE macros, like
+> so:
+> 
+> IRQCHIP_MODULE_BEGIN
+> IRQCHIP_DECLARE(foo, "acme,foo", acme_foo_init)
+> IRQCHIP_DECLARE(bar, "acme,bar", acme_bar_init)
+> IRQCHIP_MODULE_END(acme_irq)
+> 
+> Cc: John Stultz <john.stultz@linaro.org>
+> Signed-off-by: Saravana Kannan <saravanak@google.com>
+> ---
+> I don't expect this patch to be perfect or the final version. But I'd
+> like to introduce macros like this that don't need the driver developer
+> to copy/paste or repeat the same thing (compat string, function name,
+> etc) in multiple places for the driver to work as a module. If the exact
+> style of my macros aren't appealing, I'm open to other suggestions.
+> 
+> There are some checkpatch warning about the > 80 columns that my patch
+> doesn't add. There are also checkpatch warnings about the trailing ; in
+> a macro, but I need those for IRQCHIP_DECLARE to work when the driver is
+> builtin.
 
-It may be caused by irqbalance (or other userspace tools) which tries to
-change the affinity of virtual SGIs on the host. One way to "fix" it is
-to update the effective_affinity value in irq_set_affinity callback. But
-as the comment above says, "There is no notion of affinity for virtual
-SGIs, at least not on the host", doing so only makes things confusing.
+I think you are looking at the problem from the wrong end, and adding
+syntactic sugar should be the least of your worries. The reason for
+not allowing irqchip drivers to be modular is that there is no
+refcounting in place to prevent drivers from being removed whilst the
+IRQ stack still has irq_desc, irq_data and various other objects
+indirectly referencing the driver.
 
-Given the vSGIs are private to the specified vPE, changing the affinity
-on host is actually meaningless and achieves nothing. Let's just forbid
-it.
+I'm all for addressing these issues, though it begs the question of
+*why* you want to do this. We have been perfectly happy with built-in
+irqchips so far (they are pretty small, and there aren't millions of
+them), so what changed?
 
-Reported-by: Nianyao Tang <tangnianyao@huawei.com>
-Signed-off-by: Zenghui Yu <yuzenghui@huawei.com>
----
+Thanks,
 
-Hi Marc,
+	M.
 
-This just restores the behavior of your v5 [*]. I wonder that what's the
-reason to change it to 'return IRQ_SET_MASK_OK' in v6? What I've missed
-here?
-
-[*] https://lore.kernel.org/kvm/20200304203330.4967-9-maz@kernel.org/
-
-Thanks.
-
- drivers/irqchip/irq-gic-v3-its.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
-
-diff --git a/drivers/irqchip/irq-gic-v3-its.c b/drivers/irqchip/irq-gic-v3-its.c
-index 54d142ccc63a..101c3e52c769 100644
---- a/drivers/irqchip/irq-gic-v3-its.c
-+++ b/drivers/irqchip/irq-gic-v3-its.c
-@@ -4033,9 +4033,8 @@ static int its_sgi_set_affinity(struct irq_data *d,
- 	/*
- 	 * There is no notion of affinity for virtual SGIs, at least
- 	 * not on the host (since they can only be targetting a vPE).
--	 * Tell the kernel we've done whatever it asked for.
- 	 */
--	return IRQ_SET_MASK_OK;
-+	return -EINVAL;
- }
- 
- static int its_sgi_set_irqchip_state(struct irq_data *d,
 -- 
-2.19.1
-
-
+Jazz is not dead, it just smells funny.
