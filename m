@@ -2,242 +2,117 @@ Return-Path: <SRS0=xbEg=53=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 090D5C2BBC7
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 09:29:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C376C2BA2B
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 09:41:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CE449206C0
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 09:29:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0F21E2084D
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 09:41:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586597372;
-	bh=T2XJZMFnVJxhJBiSdgY1UUQ80WYQRwrWlS7q5nUYSuE=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=kmu+6g1pWORwdndRod2ewJ3l0nGe8YJlksjFtxH0toU7xKRIrqE4w5n5oYexfu8O/
-	 edRB1xtlavYIjTIGdx/qPQJpLNtYiAEhhFgABAVwpkmRXOxLCTkNglrJHMckIGbzZe
-	 h3WOGuNsW+ay+FfRpbYNiyothAtZcO+YZmG6ioxU=
+	s=default; t=1586598079;
+	bh=UNW5qpnPpE/saHzBUeQgVcfI8TnVnldaRBVw6iGXcPo=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=fSS58oRpu0uEym4KzL6syeTYc3Yub9MdLMZ5eyj9ojNz5JfCRyX7qnQEEBg1pFjkM
+	 pmBIwE089y/y3++aHGyFkNyrCemEuZ6FQI/Y18SeVcCSss2qCR4LbJMFN+CM/9c+jR
+	 wKvOjQuyTklU3qEVmJMK3lq+tohGDyNl9pSZX9Cs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726010AbgDKJ3b (ORCPT
+        id S1726026AbgDKJlQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 05:29:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56630 "EHLO mail.kernel.org"
+        Sat, 11 Apr 2020 05:41:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57794 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725905AbgDKJ3b (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 05:29:31 -0400
-Received: from mail-ed1-f42.google.com (mail-ed1-f42.google.com [209.85.208.42])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1725927AbgDKJlQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Apr 2020 05:41:16 -0400
+Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 978CF21655;
-        Sat, 11 Apr 2020 09:29:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 36B3D20787;
+        Sat, 11 Apr 2020 09:41:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586597370;
-        bh=T2XJZMFnVJxhJBiSdgY1UUQ80WYQRwrWlS7q5nUYSuE=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=lKklqx8BYd0UYKMzJ+88WDj4CUjClWPQUqZk65uCWjZQBf06gH9JCvs+ztVxpg/iT
-         PatLN98z/dFxVOm+WIBSKDrcST3y3XJctwwJWxUMBRHlbgoVWx7O26K3pj7MKnLBtz
-         szIiBKsIpJioMBle3BBqn004L1i5nLqBpAH/tj7E=
-Received: by mail-ed1-f42.google.com with SMTP id w4so3567231edv.13;
-        Sat, 11 Apr 2020 02:29:30 -0700 (PDT)
-X-Gm-Message-State: AGi0PuaMb9m5PGqmfowK20Vo6gUig8SEqVGloLGo+Mhhg8f9OmjXjwLz
-        WZoNNSPui+XtSXXIwv838h3OBvw4OKL1JyeK8w==
-X-Google-Smtp-Source: APiQypKEI2SJnc2qdBjS5UUds6QLILcrGaOGFdzZJduHjPg+e4go6UmBayzzuyz+ZWqMOPWss3L+1YG9LGFOdwNgYAY=
-X-Received: by 2002:a17:906:124f:: with SMTP id u15mr7265836eja.360.1586597368924;
- Sat, 11 Apr 2020 02:29:28 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200411074408.38090-1-jitao.shi@mediatek.com> <20200411074408.38090-5-jitao.shi@mediatek.com>
-In-Reply-To: <20200411074408.38090-5-jitao.shi@mediatek.com>
-From:   Chun-Kuang Hu <chunkuang.hu@kernel.org>
-Date:   Sat, 11 Apr 2020 17:29:17 +0800
-X-Gmail-Original-Message-ID: <CAAOTY__bMwxJ3GAK55nfabYWo4=fGrQC3XRj1uWaX=0nweueyw@mail.gmail.com>
-Message-ID: <CAAOTY__bMwxJ3GAK55nfabYWo4=fGrQC3XRj1uWaX=0nweueyw@mail.gmail.com>
-Subject: Re: [PATCH v6 4/4] drm/mediatek: config mipitx impedance with
- calibration data
-To:     Jitao Shi <jitao.shi@mediatek.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        David Airlie <airlied@linux.ie>,
-        DRI Development <dri-devel@lists.freedesktop.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        devicetree@vger.kernel.org, srv_heupstream@mediatek.com,
-        huijuan.xie@mediatek.com, stonea168@163.com,
-        cawa.cheng@mediatek.com,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>,
-        Bibby Hsieh <bibby.hsieh@mediatek.com>,
-        CK Hu <ck.hu@mediatek.com>, yingjoe.chen@mediatek.com,
-        eddie.huang@mediatek.com,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        s=default; t=1586598076;
+        bh=UNW5qpnPpE/saHzBUeQgVcfI8TnVnldaRBVw6iGXcPo=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=Bx+3E0TWGy7jQBXwnxuJjlebU78+Vs90ehN2iAKyrzVPLVCWHGC5xTSYx3i34oUxs
+         f/x3gFovALHQDkybLNKhGibsaKCyLdiAjTL6U53pluwLUiBDDRWwKgAL//bKpFJnJy
+         DEh3D5Tmuo0L811nb9f1dBtyz3LYydRBaM00XPY0=
+Received: from 78.163-31-62.static.virginmediabusiness.co.uk ([62.31.163.78] helo=big-swifty.misterjones.org)
+        by disco-boy.misterjones.org with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <maz@kernel.org>)
+        id 1jNCdW-002LsR-Fh; Sat, 11 Apr 2020 10:41:14 +0100
+Date:   Sat, 11 Apr 2020 10:41:12 +0100
+Message-ID: <86pnces6kn.wl-maz@kernel.org>
+From:   Marc Zyngier <maz@kernel.org>
+To:     Zenghui Yu <yuzenghui@huawei.com>
+Cc:     <linux-kernel@vger.kernel.org>, <tglx@linutronix.de>,
+        <jason@lakedaemon.net>, <wanghaibin.wang@huawei.com>,
+        Nianyao Tang <tangnianyao@huawei.com>
+Subject: Re: [PATCH] irqchip/gic-v4.1: Disallow setting affinity for virtual SGIs
+In-Reply-To: <20200411091032.661-1-yuzenghui@huawei.com>
+References: <20200411091032.661-1-yuzenghui@huawei.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 EasyPG/1.0.0 Emacs/26
+ (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 62.31.163.78
+X-SA-Exim-Rcpt-To: yuzenghui@huawei.com, linux-kernel@vger.kernel.org, tglx@linutronix.de, jason@lakedaemon.net, wanghaibin.wang@huawei.com, tangnianyao@huawei.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi, Jitao:
+Hi Zenghui,
 
-Jitao Shi <jitao.shi@mediatek.com> =E6=96=BC 2020=E5=B9=B44=E6=9C=8811=E6=
-=97=A5 =E9=80=B1=E5=85=AD =E4=B8=8B=E5=8D=883:45=E5=AF=AB=E9=81=93=EF=BC=9A
->
-> Read calibration data from nvmem, and config mipitx impedance with
-> calibration data to make sure their impedance are 100ohm.
-
-Reviewed-by: Chun-Kuang Hu <chunkuang.hu@kernel.org>
-
->
-> Signed-off-by: Jitao Shi <jitao.shi@mediatek.com>
+On Sat, 11 Apr 2020 10:10:32 +0100,
+Zenghui Yu <yuzenghui@huawei.com> wrote:
+> 
+> Running a guest on the GICv4.1-implemented board, we will get the
+> following warning:
+> 
+> [   59.062120] genirq: irq_chip GICv4.1-sgi did not update eff. affinity mask of irq 46
+> 
+> It may be caused by irqbalance (or other userspace tools) which tries to
+> change the affinity of virtual SGIs on the host. One way to "fix" it is
+> to update the effective_affinity value in irq_set_affinity callback. But
+> as the comment above says, "There is no notion of affinity for virtual
+> SGIs, at least not on the host", doing so only makes things confusing.
+> 
+> Given the vSGIs are private to the specified vPE, changing the affinity
+> on host is actually meaningless and achieves nothing. Let's just forbid
+> it.
+> 
+> Reported-by: Nianyao Tang <tangnianyao@huawei.com>
+> Signed-off-by: Zenghui Yu <yuzenghui@huawei.com>
 > ---
->  drivers/gpu/drm/mediatek/mtk_mipi_tx.c        | 40 +++++++++++++++++++
->  drivers/gpu/drm/mediatek/mtk_mipi_tx.h        |  3 ++
->  drivers/gpu/drm/mediatek/mtk_mt8183_mipi_tx.c | 21 ++++++++++
->  3 files changed, 64 insertions(+)
->
-> diff --git a/drivers/gpu/drm/mediatek/mtk_mipi_tx.c b/drivers/gpu/drm/med=
-iatek/mtk_mipi_tx.c
-> index e301af64809e..8cee2591e728 100644
-> --- a/drivers/gpu/drm/mediatek/mtk_mipi_tx.c
-> +++ b/drivers/gpu/drm/mediatek/mtk_mipi_tx.c
-> @@ -88,6 +88,44 @@ static const struct phy_ops mtk_mipi_tx_ops =3D {
->         .owner =3D THIS_MODULE,
->  };
->
-> +static void mtk_mipi_tx_get_calibration_datal(struct mtk_mipi_tx *mipi_t=
-x)
-> +{
-> +       struct nvmem_cell *cell;
-> +       size_t len;
-> +       u32 *buf;
-> +
-> +       cell =3D nvmem_cell_get(mipi_tx->dev, "calibration-data");
-> +       if (IS_ERR(cell)) {
-> +               dev_info(mipi_tx->dev, "can't get nvmem_cell_get, ignore =
-it\n");
-> +               return;
-> +       }
-> +       buf =3D (u32 *)nvmem_cell_read(cell, &len);
-> +       nvmem_cell_put(cell);
-> +
-> +       if (IS_ERR(buf)) {
-> +               dev_info(mipi_tx->dev, "can't get data, ignore it\n");
-> +               return;
-> +       }
-> +
-> +       if (len < 3 * sizeof(u32)) {
-> +               dev_info(mipi_tx->dev, "invalid calibration data\n");
-> +               kfree(buf);
-> +               return;
-> +       }
-> +
-> +       mipi_tx->rt_code[0] =3D ((buf[0] >> 6 & 0x1f) << 5) |
-> +                              (buf[0] >> 11 & 0x1f);
-> +       mipi_tx->rt_code[1] =3D ((buf[1] >> 27 & 0x1f) << 5) |
-> +                              (buf[0] >> 1 & 0x1f);
-> +       mipi_tx->rt_code[2] =3D ((buf[1] >> 17 & 0x1f) << 5) |
-> +                              (buf[1] >> 22 & 0x1f);
-> +       mipi_tx->rt_code[3] =3D ((buf[1] >> 7 & 0x1f) << 5) |
-> +                              (buf[1] >> 12 & 0x1f);
-> +       mipi_tx->rt_code[4] =3D ((buf[2] >> 27 & 0x1f) << 5) |
-> +                              (buf[1] >> 2 & 0x1f);
-> +       kfree(buf);
-> +}
-> +
->  static int mtk_mipi_tx_probe(struct platform_device *pdev)
->  {
->         struct device *dev =3D &pdev->dev;
-> @@ -174,6 +212,8 @@ static int mtk_mipi_tx_probe(struct platform_device *=
-pdev)
->
->         mipi_tx->dev =3D dev;
->
-> +       mtk_mipi_tx_get_calibration_datal(mipi_tx);
-> +
->         return of_clk_add_provider(dev->of_node, of_clk_src_simple_get,
->                                    mipi_tx->pll);
->  }
-> diff --git a/drivers/gpu/drm/mediatek/mtk_mipi_tx.h b/drivers/gpu/drm/med=
-iatek/mtk_mipi_tx.h
-> index eea44327fe9f..c76f07c3fdeb 100644
-> --- a/drivers/gpu/drm/mediatek/mtk_mipi_tx.h
-> +++ b/drivers/gpu/drm/mediatek/mtk_mipi_tx.h
-> @@ -12,9 +12,11 @@
->  #include <linux/delay.h>
->  #include <linux/io.h>
->  #include <linux/module.h>
-> +#include <linux/nvmem-consumer.h>
->  #include <linux/of_device.h>
->  #include <linux/platform_device.h>
->  #include <linux/phy/phy.h>
-> +#include <linux/slab.h>
->
->  struct mtk_mipitx_data {
->         const u32 mppll_preserve;
-> @@ -28,6 +30,7 @@ struct mtk_mipi_tx {
->         void __iomem *regs;
->         u32 data_rate;
->         u32 mipitx_drive;
-> +       u32 rt_code[5];
->         const struct mtk_mipitx_data *driver_data;
->         struct clk_hw pll_hw;
->         struct clk *pll;
-> diff --git a/drivers/gpu/drm/mediatek/mtk_mt8183_mipi_tx.c b/drivers/gpu/=
-drm/mediatek/mtk_mt8183_mipi_tx.c
-> index e4cc967750cb..9f3e55aeebb2 100644
-> --- a/drivers/gpu/drm/mediatek/mtk_mt8183_mipi_tx.c
-> +++ b/drivers/gpu/drm/mediatek/mtk_mt8183_mipi_tx.c
-> @@ -28,6 +28,7 @@
->  #define MIPITX_PLL_CON4                0x003c
->  #define RG_DSI_PLL_IBIAS               (3 << 10)
->
-> +#define MIPITX_D2P_RTCODE      0x0100
->  #define MIPITX_D2_SW_CTL_EN    0x0144
->  #define MIPITX_D0_SW_CTL_EN    0x0244
->  #define MIPITX_CK_CKMODE_EN    0x0328
-> @@ -108,6 +109,24 @@ static const struct clk_ops mtk_mipi_tx_pll_ops =3D =
-{
->         .recalc_rate =3D mtk_mipi_tx_pll_recalc_rate,
->  };
->
-> +static void mtk_mipi_tx_config_calibration_data(struct mtk_mipi_tx *mipi=
-_tx)
-> +{
-> +       int i, j;
-> +
-> +       for (i =3D 0; i < 5; i++) {
-> +               if ((mipi_tx->rt_code[i] & 0x1f) =3D=3D 0)
-> +                       mipi_tx->rt_code[i] |=3D 0x10;
-> +
-> +               if ((mipi_tx->rt_code[i] >> 5 & 0x1f) =3D=3D 0)
-> +                       mipi_tx->rt_code[i] |=3D 0x10 << 5;
-> +
-> +               for (j =3D 0; j < 10; j++)
-> +                       mtk_mipi_tx_update_bits(mipi_tx,
-> +                               MIPITX_D2P_RTCODE * (i + 1) + j * 4,
-> +                               1, mipi_tx->rt_code[i] >> j & 1);
-> +       }
-> +}
-> +
->  static void mtk_mipi_tx_power_on_signal(struct phy *phy)
->  {
->         struct mtk_mipi_tx *mipi_tx =3D phy_get_drvdata(phy);
-> @@ -130,6 +149,8 @@ static void mtk_mipi_tx_power_on_signal(struct phy *p=
-hy)
->                                 RG_DSI_HSTX_LDO_REF_SEL,
->                                 (mipi_tx->mipitx_drive - 3000) / 200 << 6=
-);
->
-> +       mtk_mipi_tx_config_calibration_data(mipi_tx);
-> +
->         mtk_mipi_tx_set_bits(mipi_tx, MIPITX_CK_CKMODE_EN, DSI_CK_CKMODE_=
-EN);
->  }
->
-> --
-> 2.21.0
-> _______________________________________________
-> Linux-mediatek mailing list
-> Linux-mediatek@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-mediatek
+> 
+> Hi Marc,
+> 
+> This just restores the behavior of your v5 [*]. I wonder that what's the
+> reason to change it to 'return IRQ_SET_MASK_OK' in v6? What I've missed
+> here?
+> 
+> [*] https://lore.kernel.org/kvm/20200304203330.4967-9-maz@kernel.org/
+
+Not allowing the affinity move results in the kernel screaming when
+playing with CPU hotplug (it really wants to move the interrupt
+around). Which is why I dropped the -EINVAL, therefore introducing
+another bug. I fixed it with this patch[1], which I was planning to
+post after -rc1.
+
+Let me know what you think
+
+Thanks,
+
+	M.
+
+[1] https://git.kernel.org/pub/scm/linux/kernel/git/maz/arm-platforms.git/commit/?h=irq/gic-v4.1-fixes-5.7&id=26bf9895ebe8dbe4ff509aebc71b5990919a740d
+
+-- 
+Jazz is not dead, it just smells funny.
