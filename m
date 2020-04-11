@@ -6,62 +6,62 @@ X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
 	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2B2BC2BA19
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 18:29:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71ED1C2BA19
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 18:32:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B31A72051A
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 18:29:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 434DD2051A
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 18:32:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586629767;
-	bh=0DWLY6Q5BdLXAZ1eK5ePQW2STI0BTJyLylEp1LcxgiU=;
+	s=default; t=1586629931;
+	bh=erdAUWBPeP2EGyysKVScHC2rHjKmjCNeJ+ZViuEQ3r8=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=nZK6DNam36bvVcmMLeLtSOd5FjgNJ8/vSpA2d0rgic9BlIuhZv7u9Y/lJtUk/iIDk
-	 4IDmhyQiPR2LCRwe1AcjCfj1OKrxOHnkxT2OFPChFkoNKiuTciTp7tNoXIRnGTL2qJ
-	 ze0p3BUufErXCGupxhR93AuUDFuT74YYBWCPazcc=
+	b=klaEK3eVtJLAz4UeA9czSJ+DBjiD/+1fhmFsUZF1CVppSGFhbHEqRSOyl0x2UCf3G
+	 hwooxoPFGpSV4gqTj4Su2BVPSP1moVt/P+IUjxm0E/oYZDscU7ffljrQvppwmdsCyS
+	 zVYvI6kCSPlCpuC3OV/j/Fx0+ATbjwDE6a0dYtcY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726729AbgDKS30 (ORCPT
+        id S1726702AbgDKScJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 14:29:26 -0400
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:38586 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726094AbgDKS3Z (ORCPT
+        Sat, 11 Apr 2020 14:32:09 -0400
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:45698 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726140AbgDKScJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 14:29:25 -0400
-Received: by mail-lf1-f65.google.com with SMTP id l11so3593205lfc.5
-        for <linux-kernel@vger.kernel.org>; Sat, 11 Apr 2020 11:29:24 -0700 (PDT)
+        Sat, 11 Apr 2020 14:32:09 -0400
+Received: by mail-lf1-f68.google.com with SMTP id f8so3570249lfe.12
+        for <linux-kernel@vger.kernel.org>; Sat, 11 Apr 2020 11:32:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linux-foundation.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=Sxd7h+PAeAiaXCgNz53g2fl/gtP8m/YpMLJIBPGjhWk=;
-        b=Yo/TxDg8wvuSnyo5yX3+SEqC3HPBVbPteJaCds7SQ3K/HwOt7suqJzgY9WGPY4VEEo
-         6Uyg9jTxWqqRED48pwpQ3E21dLX1Rge5mBDNNdyObtLMcqjV5RGc8mlb7SscoDO3sJPZ
-         WBnpY3MIfSzTOxzOsDBGov0PmQaaWkOkF9cRc=
+        bh=187bxzvrtHFK3HWCV6zp/EP6I0ABzGoYnwq3TWAU7Yg=;
+        b=IyEtE6/R37ytAiFvot4WlgVyugUBhYMX0XDQ8SkPp7XHYNji2CPdeg9sIdbbaKS0Vc
+         cbuhHk9dpLyttnyCoexnf5KpIEBSnaVl4ZhWHe1VVBGkATELKxw6pvAZ5ZzoIk+tM5mF
+         V9rrIyEYtLFqi1cI/02N09uGIbMjKuXamU7WQ=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=Sxd7h+PAeAiaXCgNz53g2fl/gtP8m/YpMLJIBPGjhWk=;
-        b=k7mPhyr+TQLoMW5iR18Yxsi2V/HBCppLj/CD9xfgMIF61V03ygCD83Hz52ycIr2rb9
-         t/YO2nqFgOJHfA+c54sir+eOnZc9qfF9F0VujyyCIs9V9FwhhCVU3j7X42hQq/GTvsZA
-         tMA2I0xXIRZTTCmaPDJPgf68iliAvnUDK4galWD+nMa1fC5h4SuBGWTbg74wh0vk+tQC
-         p5UQBm3nsUVgSEpeVJxn46m5d6bBL7n0gNy3ImCB218vv3GVtLVflycmsRiT7ohoTR31
-         uYtLo2zJaxjYTcEKc75f3usxJwMWcA9t4ak5aJeDYpwBQZo629oVXKZ1/Z5vLJJ9clPV
-         lxxg==
-X-Gm-Message-State: AGi0PuYBhOFbXwpGfZ+h+1B+PkLxHmpbyQL01qKDOxRkIBZs39VEq0J0
-        b/3UwbDxzuJTFyVXwTwKSZr8kLaRuHU=
-X-Google-Smtp-Source: APiQypJaiyB9XxakUVS5P2Rg7G4cgigHNUUaXmjBLC7sKTJy3HdX330te03Sf/Jr0jn/3SITEo5J2A==
-X-Received: by 2002:ac2:5684:: with SMTP id 4mr5786844lfr.88.1586629763143;
-        Sat, 11 Apr 2020 11:29:23 -0700 (PDT)
-Received: from mail-lj1-f172.google.com (mail-lj1-f172.google.com. [209.85.208.172])
-        by smtp.gmail.com with ESMTPSA id j22sm4343420lfg.96.2020.04.11.11.29.21
+        bh=187bxzvrtHFK3HWCV6zp/EP6I0ABzGoYnwq3TWAU7Yg=;
+        b=PBmg82DsxgwnH+AtczbmyXqwFeu7s/R6xt/vIWoR4a7o1ggG+4TgWrRS3B6MX5GJpi
+         9AjrbvhIDOngqw3GUzj6KB5yIXv6QY8fnJTyStGhbUyT91OIVruhwAuxY9fn8T9PnZ44
+         fcFdV2EvB09llGx+egj/Iq8oXCBYI5+3QUO9jrQMF7DC+BlhDlgaNU2Bd2vOF0lCCGez
+         F/6O/ul41MwXDS/I/9BTP/jgrbCLed1X2DB2WjLPvXofE7IAqyNJ0+ykMrpzvU1QSqis
+         PtCrB3fBvm/w4+hh5WkmP/2ycPzdpKNnHanO78WtALcdIpv4yaeDZq388kpCfS4br8i0
+         PrTA==
+X-Gm-Message-State: AGi0PuawTL5rurYn0Q6jxuWRoqH00nrTKBEMOBlWRQRSr9pf4AySs38Y
+        1G2dCiRGGvEyx02Sw9sCqRW7Pg7vwA0=
+X-Google-Smtp-Source: APiQypIbD+2i3BaMMPuRv3pHDBlEkrPk7aDAiYCfpmcowgtW/dB0c4kdCNq6irdSm6jFy56uZ15fPg==
+X-Received: by 2002:a19:5f04:: with SMTP id t4mr4871242lfb.208.1586629924654;
+        Sat, 11 Apr 2020 11:32:04 -0700 (PDT)
+Received: from mail-lf1-f44.google.com (mail-lf1-f44.google.com. [209.85.167.44])
+        by smtp.gmail.com with ESMTPSA id a26sm3856419ljn.22.2020.04.11.11.32.03
         for <linux-kernel@vger.kernel.org>
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 11 Apr 2020 11:29:22 -0700 (PDT)
-Received: by mail-lj1-f172.google.com with SMTP id m8so4995379lji.1
-        for <linux-kernel@vger.kernel.org>; Sat, 11 Apr 2020 11:29:21 -0700 (PDT)
-X-Received: by 2002:a2e:b619:: with SMTP id r25mr6374948ljn.150.1586629761353;
- Sat, 11 Apr 2020 11:29:21 -0700 (PDT)
+        Sat, 11 Apr 2020 11:32:03 -0700 (PDT)
+Received: by mail-lf1-f44.google.com with SMTP id l11so3596766lfc.5
+        for <linux-kernel@vger.kernel.org>; Sat, 11 Apr 2020 11:32:03 -0700 (PDT)
+X-Received: by 2002:ac2:5ec5:: with SMTP id d5mr6014538lfq.142.1586629923314;
+ Sat, 11 Apr 2020 11:32:03 -0700 (PDT)
 MIME-Version: 1.0
 References: <AM6PR03MB51708FD4226E07AB7CB0D6A7E4C10@AM6PR03MB5170.eurprd03.prod.outlook.com>
  <CAHk-=wjaoYM4gXdAyYY=u8PaYj2LXUvcfp=8DKum8f1DM+Ws0A@mail.gmail.com>
@@ -71,12 +71,13 @@ References: <AM6PR03MB51708FD4226E07AB7CB0D6A7E4C10@AM6PR03MB5170.eurprd03.prod.
  <AM6PR03MB51700B243E34BF4A59FF33CFE4C10@AM6PR03MB5170.eurprd03.prod.outlook.com>
  <CAHk-=whJttTNFQn1fMYp91LZ90iHE7B2THZ8NjQ7fBwmWX9k6w@mail.gmail.com>
  <87imi8nzlw.fsf@x220.int.ebiederm.org> <CAHk-=wgh4zts+3hdkGzHLJ6pBGumcJ=23gRbMfubDrLstis2Bg@mail.gmail.com>
- <CAHk-=whKHpERyVv2-C+kxq9KV_mJPW3hkGDpn6f4yOvs+au8SA@mail.gmail.com> <20200411182043.GA3136@redhat.com>
-In-Reply-To: <20200411182043.GA3136@redhat.com>
+ <CAHk-=whKHpERyVv2-C+kxq9KV_mJPW3hkGDpn6f4yOvs+au8SA@mail.gmail.com>
+ <20200411182043.GA3136@redhat.com> <CAHk-=wgwXpKepChGi4ZhQVxZxD0ic8s2CDXvUmqBTMaKGz-fjg@mail.gmail.com>
+In-Reply-To: <CAHk-=wgwXpKepChGi4ZhQVxZxD0ic8s2CDXvUmqBTMaKGz-fjg@mail.gmail.com>
 From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Sat, 11 Apr 2020 11:29:04 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wgwXpKepChGi4ZhQVxZxD0ic8s2CDXvUmqBTMaKGz-fjg@mail.gmail.com>
-Message-ID: <CAHk-=wgwXpKepChGi4ZhQVxZxD0ic8s2CDXvUmqBTMaKGz-fjg@mail.gmail.com>
+Date:   Sat, 11 Apr 2020 11:31:47 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wgU1kK6BrSUEm6=fwubjCYVX6bQsdTm-EkcwnPjV1KMUg@mail.gmail.com>
+Message-ID: <CAHk-=wgU1kK6BrSUEm6=fwubjCYVX6bQsdTm-EkcwnPjV1KMUg@mail.gmail.com>
 Subject: Re: [GIT PULL] Please pull proc and exec work for 5.7-rc1
 To:     Oleg Nesterov <oleg@redhat.com>
 Cc:     "Eric W. Biederman" <ebiederm@xmission.com>,
@@ -91,37 +92,13 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Apr 11, 2020 at 11:21 AM Oleg Nesterov <oleg@redhat.com> wrote:
+On Sat, Apr 11, 2020 at 11:29 AM Linus Torvalds
+<torvalds@linux-foundation.org> wrote:
 >
-> On 04/09, Linus Torvalds wrote:
-> >
-> >  (1) have execve() not wait for dead threads while holding the cred
-> > mutex
->
-> This is what I tried to do 3 years ago, see
+> Well, you did it differently - by moving the "wait for dead threads"
+> logic to after releasing the lock.
 
-Well, you did it differently - by moving the "wait for dead threads"
-logic to after releasing the lock.
+Not that I mind that approach either - the less work we do inside that
+lock, the better off we are..
 
-My simpler patch was lazier - just don't wait for dead threads at all,
-since they are dead and not interesting.
-
-Because even if it's Easter weekend, those threads are not coming back
-to life ;)
-
-You do say in that old patch that we can't just share the signal
-state, but I wonder how true that is. Sharing it with a TASK_ZOMBIE
-doesn't seem all that problematic to me. The only thing that can do is
-getting reaped by a later wait.
-
-That said, I actually am starting to think that maybe execve() should
-just try to reap those threads instead, and avoid the whole issue that
-way. Basically my "option (2)" thing.
-
-Sure, that's basically stealing them from the parent, but 'execve()'
-really is special wrt threads, and the parent still has the execve()
-thread itself. And it's not so different from SIGKILL, which also
-forcibly breaks off any ptracer etc without anybody being able to say
-anything about it.
-
-                Linus
+           Linus
