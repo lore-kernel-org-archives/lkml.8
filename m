@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3741C2BA19
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:27:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C32F1C2BA19
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:27:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8D3BC2051A
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:27:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 998062051A
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:27:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586647656;
-	bh=wOm6rMiOMk63monrsQgu+88dDlJcauWZEKzEvhYOGQ0=;
+	s=default; t=1586647660;
+	bh=g/M5iw004nnqaAk4Momaopy7If1KvXUZeuJFKzqZX3M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=yFuWG50X1yfEvek7agczLTd4vvQbco3fKljVEiqnz8NP/6o5aTaceRgwRLmXp4lYz
-	 NYhxp1lPB7KfD3XD4kBE9TkACpDw+aQxP9JwUGX7eNOPykl4bpEXEe8FnIVKLiBSpL
-	 WxZrtgxQrV3qv6025y/ukhnUwSApvf75BOMiKytM=
+	b=zHL2CYzSDscEozT/Vd4soItHtrg7INcAoqRkwVOg8av0baGBiIssx7/+JeVos/Q8L
+	 m1VBvZItVlRgVpEORWuV4o436/Y3IqehTydCh/G556sNG8LWznR9dkQTn9FXYGRUOE
+	 N6fy0bV+YoWX6oR9IKcAdnK3Z8oOsb6nm5WX6lsw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729989AbgDKXLo (ORCPT
+        id S1730152AbgDKX1i (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 19:11:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51234 "EHLO mail.kernel.org"
+        Sat, 11 Apr 2020 19:27:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51418 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729933AbgDKXLd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 19:11:33 -0400
+        id S1729982AbgDKXLn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Apr 2020 19:11:43 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2C48920708;
-        Sat, 11 Apr 2020 23:11:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 052B120708;
+        Sat, 11 Apr 2020 23:11:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586646692;
-        bh=wOm6rMiOMk63monrsQgu+88dDlJcauWZEKzEvhYOGQ0=;
+        s=default; t=1586646702;
+        bh=g/M5iw004nnqaAk4Momaopy7If1KvXUZeuJFKzqZX3M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Z/IZwAjHBYxzxAZ9I/GQKSYj1gx/HU26X7bzR8eOhU2CnkBcTuoaKGzPiIehG40EI
-         fs75X5J3SuJETQcic1VBLy2TG77tb6enFSzvoxoBOrrGsfKQZfPGIKmDBwn5hqzUmz
-         kowJJHwAM7Ll75R7xQf5y7jzBS+h+taIqK6+QMoE=
+        b=eJpIpGujKZKe5E2RqCIYHLcGJazPaSSdIa6RaYhLm/z+VlumnC6k573ZVvVzjpPCh
+         dVWixS1nL77252huMOHeeQTVnsMInajAFUMq3GTXn/WQy/clh23bisEK2DbkZ8vBo9
+         ox2/FLhTffVGsR9z6uDrP8tthwP4QcfuOmogCoLY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Michael Hernandez <mhernandez@marvell.com>,
-        Himanshu Madhani <hmadhani@marvell.com>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 087/108] scsi: qla2xxx: Return appropriate failure through BSG Interface
-Date:   Sat, 11 Apr 2020 19:09:22 -0400
-Message-Id: <20200411230943.24951-87-sashal@kernel.org>
+Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-renesas-soc@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH AUTOSEL 5.4 095/108] ARM: shmobile: Enable ARM_GLOBAL_TIMER on Cortex-A9 MPCore SoCs
+Date:   Sat, 11 Apr 2020 19:09:30 -0400
+Message-Id: <20200411230943.24951-95-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200411230943.24951-1-sashal@kernel.org>
 References: <20200411230943.24951-1-sashal@kernel.org>
@@ -60,88 +60,76 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Michael Hernandez <mhernandez@marvell.com>
+From: Geert Uytterhoeven <geert+renesas@glider.be>
 
-[ Upstream commit 1b81e7f3019d632a707e07927e946ffbbc102910 ]
+[ Upstream commit 408324a3c5383716939eea8096a0f999a0665f7e ]
 
-This patch ensures flash updates API calls return possible failure
-status through BSG interface to the application.
+SH-Mobile AG5 and R-Car H1 SoCs are based on the Cortex-A9 MPCore, which
+includes a global timer.
 
-Link: https://lore.kernel.org/r/20200226224022.24518-7-hmadhani@marvell.com
-Signed-off-by: Himanshu Madhani <hmadhani@marvell.com>
-Signed-off-by: Michael Hernandez <mhernandez@marvell.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Enable the ARM global timer on these SoCs, which will be used for:
+  - the scheduler clock, improving scheduler accuracy from 10 ms to 3 or
+    4 ns,
+  - delay loops, allowing removal of calls to shmobile_init_delay() from
+    the corresponding machine vectors.
+
+Note that when using an old DTB lacking the global timer, the kernel
+will still work.  However, loops-per-jiffies will no longer be preset,
+and the delay loop will need to be calibrated during boot.
+
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Link: https://lore.kernel.org/r/20191211135222.26770-5-geert+renesas@glider.be
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/qla2xxx/qla_bsg.c |  9 +++++++--
- drivers/scsi/qla2xxx/qla_sup.c | 13 ++++++++-----
- 2 files changed, 15 insertions(+), 7 deletions(-)
+ arch/arm/mach-shmobile/setup-r8a7779.c | 1 -
+ arch/arm/mach-shmobile/setup-sh73a0.c  | 1 -
+ drivers/soc/renesas/Kconfig            | 2 ++
+ 3 files changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/scsi/qla2xxx/qla_bsg.c b/drivers/scsi/qla2xxx/qla_bsg.c
-index cbaf178fc9796..f06e499796976 100644
---- a/drivers/scsi/qla2xxx/qla_bsg.c
-+++ b/drivers/scsi/qla2xxx/qla_bsg.c
-@@ -1505,10 +1505,15 @@ qla2x00_update_optrom(struct bsg_job *bsg_job)
- 	    bsg_job->request_payload.sg_cnt, ha->optrom_buffer,
- 	    ha->optrom_region_size);
- 
--	ha->isp_ops->write_optrom(vha, ha->optrom_buffer,
-+	rval = ha->isp_ops->write_optrom(vha, ha->optrom_buffer,
- 	    ha->optrom_region_start, ha->optrom_region_size);
- 
--	bsg_reply->result = DID_OK;
-+	if (rval) {
-+		bsg_reply->result = -EINVAL;
-+		rval = -EINVAL;
-+	} else {
-+		bsg_reply->result = DID_OK;
-+	}
- 	vfree(ha->optrom_buffer);
- 	ha->optrom_buffer = NULL;
- 	ha->optrom_state = QLA_SWAITING;
-diff --git a/drivers/scsi/qla2xxx/qla_sup.c b/drivers/scsi/qla2xxx/qla_sup.c
-index bbe90354f49b0..07f0d8669806d 100644
---- a/drivers/scsi/qla2xxx/qla_sup.c
-+++ b/drivers/scsi/qla2xxx/qla_sup.c
-@@ -2686,7 +2686,7 @@ qla28xx_write_flash_data(scsi_qla_host_t *vha, uint32_t *dwptr, uint32_t faddr,
- 	uint32_t sec_mask, rest_addr, fdata;
- 	void *optrom = NULL;
- 	dma_addr_t optrom_dma;
--	int rval;
-+	int rval, ret;
- 	struct secure_flash_update_block *sfub;
- 	dma_addr_t sfub_dma;
- 	uint32_t offset = faddr << 2;
-@@ -2942,11 +2942,12 @@ qla28xx_write_flash_data(scsi_qla_host_t *vha, uint32_t *dwptr, uint32_t faddr,
- write_protect:
- 	ql_log(ql_log_warn + ql_dbg_verbose, vha, 0x7095,
- 	    "Protect flash...\n");
--	rval = qla24xx_protect_flash(vha);
--	if (rval) {
-+	ret = qla24xx_protect_flash(vha);
-+	if (ret) {
- 		qla81xx_fac_semaphore_access(vha, FAC_SEMAPHORE_UNLOCK);
- 		ql_log(ql_log_warn, vha, 0x7099,
- 		    "Failed protect flash\n");
-+		rval = QLA_COMMAND_ERROR;
- 	}
- 
- 	if (reset_to_rom == true) {
-@@ -2954,10 +2955,12 @@ qla28xx_write_flash_data(scsi_qla_host_t *vha, uint32_t *dwptr, uint32_t faddr,
- 		set_bit(ISP_ABORT_NEEDED, &vha->dpc_flags);
- 		qla2xxx_wake_dpc(vha);
- 
--		rval = qla2x00_wait_for_hba_online(vha);
--		if (rval != QLA_SUCCESS)
-+		ret = qla2x00_wait_for_hba_online(vha);
-+		if (ret != QLA_SUCCESS) {
- 			ql_log(ql_log_warn, vha, 0xffff,
- 			    "Adapter did not come out of reset\n");
-+			rval = QLA_COMMAND_ERROR;
-+		}
- 	}
- 
- done:
+diff --git a/arch/arm/mach-shmobile/setup-r8a7779.c b/arch/arm/mach-shmobile/setup-r8a7779.c
+index b13ec9088ce53..86406e3f9b22e 100644
+--- a/arch/arm/mach-shmobile/setup-r8a7779.c
++++ b/arch/arm/mach-shmobile/setup-r8a7779.c
+@@ -72,7 +72,6 @@ static const char *const r8a7779_compat_dt[] __initconst = {
+ DT_MACHINE_START(R8A7779_DT, "Generic R8A7779 (Flattened Device Tree)")
+ 	.smp		= smp_ops(r8a7779_smp_ops),
+ 	.map_io		= r8a7779_map_io,
+-	.init_early	= shmobile_init_delay,
+ 	.init_irq	= r8a7779_init_irq_dt,
+ 	.init_late	= shmobile_init_late,
+ 	.dt_compat	= r8a7779_compat_dt,
+diff --git a/arch/arm/mach-shmobile/setup-sh73a0.c b/arch/arm/mach-shmobile/setup-sh73a0.c
+index cc08aa7522447..eb4a62fa42895 100644
+--- a/arch/arm/mach-shmobile/setup-sh73a0.c
++++ b/arch/arm/mach-shmobile/setup-sh73a0.c
+@@ -56,7 +56,6 @@ static const char *const sh73a0_boards_compat_dt[] __initconst = {
+ DT_MACHINE_START(SH73A0_DT, "Generic SH73A0 (Flattened Device Tree)")
+ 	.smp		= smp_ops(sh73a0_smp_ops),
+ 	.map_io		= sh73a0_map_io,
+-	.init_early	= shmobile_init_delay,
+ 	.init_machine	= sh73a0_generic_init,
+ 	.init_late	= shmobile_init_late,
+ 	.dt_compat	= sh73a0_boards_compat_dt,
+diff --git a/drivers/soc/renesas/Kconfig b/drivers/soc/renesas/Kconfig
+index 3c5e017bacbac..d6d3093a74b2c 100644
+--- a/drivers/soc/renesas/Kconfig
++++ b/drivers/soc/renesas/Kconfig
+@@ -116,6 +116,7 @@ config ARCH_R8A7779
+ 	bool "R-Car H1 (R8A77790)"
+ 	select ARCH_RCAR_GEN1
+ 	select ARM_ERRATA_754322
++	select ARM_GLOBAL_TIMER
+ 	select HAVE_ARM_SCU if SMP
+ 	select HAVE_ARM_TWD if SMP
+ 	select SYSC_R8A7779
+@@ -163,6 +164,7 @@ config ARCH_SH73A0
+ 	bool "SH-Mobile AG5 (R8A73A00)"
+ 	select ARCH_RMOBILE
+ 	select ARM_ERRATA_754322
++	select ARM_GLOBAL_TIMER
+ 	select HAVE_ARM_SCU if SMP
+ 	select HAVE_ARM_TWD if SMP
+ 	select RENESAS_INTC_IRQPIN
 -- 
 2.20.1
 
