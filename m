@@ -4,52 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6634C2BB86
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:24:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22108C2BA19
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:25:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A4DF62051A
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:24:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ED9DD21744
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:25:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586647498;
-	bh=DL7FZWMXVY7jVUP98TMif3m59vlVfWQB0U8iPAGHm9M=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=h4zLi/r6Ni1xolK6QmgBjRuDpw4so53NPPNeCTq//yQmN6DVgpkYDdoI65sk0kGTn
-	 gg4GiBNNp+Q+1fGSy53vhcTwUmp/XzScDR6wxE2k2QTa1k+z58mAH5jx6eYU/ZrAnv
-	 sZavPMU6Ya0wjqE1U6zWwGLMYKJkotaYhc4iRjn4=
+	s=default; t=1586647506;
+	bh=GvIy7VMOBVjJCLIBOncPcXpcMFRxp+6HGu4EVePeFhw=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=WEiRyGcCajdzROq33lOl6TthWOFPmIpOTjxmHGfBrln8QGMqBsMfzb48aadb6HfWH
+	 qI/fPUM1yfIL6tBBZ+bWblevicmAQJUJ7S+/BUOEWUye5I+oAgnofX/P/kqalcd/jO
+	 5cgOy64YYEV7KL7IF8ENoi660SM0B3/EVmeiUeN0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730952AbgDKXY5 (ORCPT
+        id S1730120AbgDKXMU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 19:24:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52428 "EHLO mail.kernel.org"
+        Sat, 11 Apr 2020 19:12:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51978 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730148AbgDKXMW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 19:12:22 -0400
+        id S1730067AbgDKXMF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Apr 2020 19:12:05 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4499520757;
-        Sat, 11 Apr 2020 23:12:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CF02620708;
+        Sat, 11 Apr 2020 23:12:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586646743;
-        bh=DL7FZWMXVY7jVUP98TMif3m59vlVfWQB0U8iPAGHm9M=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CTD8bVijkDo7Up2UG3Soq0x1zwP4m5B3vGG5s+NXGwNPRencNPAlV5kIbtFFB2sA6
-         yoq/z5+zT01iGbDtQhlr9+oIBJN1YwyDf1ltxQSWxfADJ281QWJ4BLUv1CV8PcsVVY
-         Yc0jyk+hgGuFh3gpcdJ/1/M3DwVc+BNWAbxw9JyM=
+        s=default; t=1586646725;
+        bh=GvIy7VMOBVjJCLIBOncPcXpcMFRxp+6HGu4EVePeFhw=;
+        h=From:To:Cc:Subject:Date:From;
+        b=I6Jw4Btnrbf0JL3uWoJe8zAkpiKPZUfhjeqpg4xmvH9aRSBvNYTnPWp+dyC0h5PHC
+         r081t9DEOvtBumO2v6VgUPfinO216fliErglUcp4g/KC7YLB31g1MnV8rpxg2opHdk
+         4ukMuZgVm3ZgmGuL9wmy23bcDfS8xWEKfwof7NyY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Vlad Buslov <vladbu@mellanox.com>, Roi Dayan <roid@mellanox.com>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
-        linux-rdma@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 16/66] net/mlx5e: Init ethtool steering for representors
-Date:   Sat, 11 Apr 2020 19:11:13 -0400
-Message-Id: <20200411231203.25933-16-sashal@kernel.org>
+Cc:     Masahiro Yamada <masahiroy@kernel.org>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 01/66] net: wan: wanxl: use allow to pass CROSS_COMPILE_M68k for rebuilding firmware
+Date:   Sat, 11 Apr 2020 19:10:58 -0400
+Message-Id: <20200411231203.25933-1-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200411231203.25933-1-sashal@kernel.org>
-References: <20200411231203.25933-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -59,37 +57,76 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vlad Buslov <vladbu@mellanox.com>
+From: Masahiro Yamada <masahiroy@kernel.org>
 
-[ Upstream commit 6783e8b29f636383af293a55336f036bc7ad5619 ]
+[ Upstream commit 63b903dfebdea92aa92ad337d8451a6fbfeabf9d ]
 
-During transition to uplink representors the code responsible for
-initializing ethtool steering functionality wasn't added to representor
-init rx routine. This causes NULL pointer dereference during configuration
-of network flow classification rule with ethtool (only possible to
-reproduce with next commit in this series which registers necessary ethtool
-callbacks).
+As far as I understood from the Kconfig help text, this build rule is
+used to rebuild the driver firmware, which runs on an old m68k-based
+chip. So, you need m68k tools for the firmware rebuild.
 
-Signed-off-by: Vlad Buslov <vladbu@mellanox.com>
-Reviewed-by: Roi Dayan <roid@mellanox.com>
+wanxl.c is a PCI driver, but CONFIG_M68K does not select CONFIG_HAVE_PCI.
+So, you cannot enable CONFIG_WANXL_BUILD_FIRMWARE for ARCH=m68k. In other
+words, ifeq ($(ARCH),m68k) is false here.
+
+I am keeping the dead code for now, but rebuilding the firmware requires
+'as68k' and 'ld68k', which I do not have in hand.
+
+Instead, the kernel.org m68k GCC [1] successfully built it.
+
+Allowing a user to pass in CROSS_COMPILE_M68K= is handier.
+
+[1] https://mirrors.edge.kernel.org/pub/tools/crosstool/files/bin/x86_64/9.2.0/x86_64-gcc-9.2.0-nolibc-m68k-linux.tar.xz
+
+Suggested-by: Geert Uytterhoeven <geert@linux-m68k.org>
+Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/mellanox/mlx5/core/en_rep.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/net/wan/Kconfig  |  2 +-
+ drivers/net/wan/Makefile | 12 ++++++------
+ 2 files changed, 7 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/net/ethernet/mellanox/mlx5/core/en_rep.c b/drivers/net/ethernet/mellanox/mlx5/core/en_rep.c
-index 701624a63d2f4..d70af8a8e8b48 100644
---- a/drivers/net/ethernet/mellanox/mlx5/core/en_rep.c
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/en_rep.c
-@@ -1022,6 +1022,8 @@ static int mlx5e_init_rep_rx(struct mlx5e_priv *priv)
- 	}
- 	rpriv->vport_rx_rule = flow_rule;
+diff --git a/drivers/net/wan/Kconfig b/drivers/net/wan/Kconfig
+index 4e9fe75d70675..21190dfbabb16 100644
+--- a/drivers/net/wan/Kconfig
++++ b/drivers/net/wan/Kconfig
+@@ -199,7 +199,7 @@ config WANXL_BUILD_FIRMWARE
+ 	depends on WANXL && !PREVENT_FIRMWARE_BUILD
+ 	help
+ 	  Allows you to rebuild firmware run by the QUICC processor.
+-	  It requires as68k, ld68k and hexdump programs.
++	  It requires m68k toolchains and hexdump programs.
  
-+	mlx5e_ethtool_init_steering(priv);
-+
- 	return 0;
+ 	  You should never need this option, say N.
  
- err_destroy_direct_tirs:
+diff --git a/drivers/net/wan/Makefile b/drivers/net/wan/Makefile
+index 9532e69fda878..c21b7345b50b1 100644
+--- a/drivers/net/wan/Makefile
++++ b/drivers/net/wan/Makefile
+@@ -41,17 +41,17 @@ $(obj)/wanxl.o:	$(obj)/wanxlfw.inc
+ 
+ ifeq ($(CONFIG_WANXL_BUILD_FIRMWARE),y)
+ ifeq ($(ARCH),m68k)
+-  AS68K = $(AS)
+-  LD68K = $(LD)
++  M68KAS = $(AS)
++  M68KLD = $(LD)
+ else
+-  AS68K = as68k
+-  LD68K = ld68k
++  M68KAS = $(CROSS_COMPILE_M68K)as
++  M68KLD = $(CROSS_COMPILE_M68K)ld
+ endif
+ 
+ quiet_cmd_build_wanxlfw = BLD FW  $@
+       cmd_build_wanxlfw = \
+-	$(CPP) -D__ASSEMBLY__ -Wp,-MD,$(depfile) -I$(srctree)/include/uapi $< | $(AS68K) -m68360 -o $(obj)/wanxlfw.o; \
+-	$(LD68K) --oformat binary -Ttext 0x1000 $(obj)/wanxlfw.o -o $(obj)/wanxlfw.bin; \
++	$(CPP) -D__ASSEMBLY__ -Wp,-MD,$(depfile) -I$(srctree)/include/uapi $< | $(M68KAS) -m68360 -o $(obj)/wanxlfw.o; \
++	$(M68KLD) --oformat binary -Ttext 0x1000 $(obj)/wanxlfw.o -o $(obj)/wanxlfw.bin; \
+ 	hexdump -ve '"\n" 16/1 "0x%02X,"' $(obj)/wanxlfw.bin | sed 's/0x  ,//g;1s/^/static const u8 firmware[]={/;$$s/,$$/\n};\n/' >$(obj)/wanxlfw.inc; \
+ 	rm -f $(obj)/wanxlfw.bin $(obj)/wanxlfw.o
+ 
 -- 
 2.20.1
 
