@@ -7,54 +7,56 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00FB2C2BBC7
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:10:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ADC4AC2BBC7
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:10:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C602421841
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:10:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7D47521927
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:10:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586646649;
-	bh=ro+UH2pzJ7jq/JsdwUicZ4oGUsoHLMDJ0rgOv9Z7+UQ=;
+	s=default; t=1586646652;
+	bh=X3z3mq6QfOQaWQCDFZ7vcUt6+kHCmdjUdRWHFVbyd6I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ETM5XEque1Hgev3rBBiTf2MCblomFv7REjhVQ0IoZBINBEfKvF9TGXJ6VXTDI5JHj
-	 n+lZHwU8DzyIiSxPa1lOpLLIm/7n1PmKWx5LQ2iz8p9Fu9PdmxgT43CMl1uJMgdCnu
-	 KFY5TcpP9/qFzLNp9BXBIGEV0EgH8ZJoTp3aqCVc=
+	b=sdC33BXA8GKy2Pz/azxTItaS526N2k4Dt+negWVbOPc59FF8LRaFdR8b046BibqYP
+	 7RuBYMsOmf/5pCap8jVrCFMhBqZY8gSeZy02jKz2CmHzw2Ujg9bCI1J9h1abZFOcP9
+	 3WVmxUng+RNxeyrDjto8gb5/nPInz0u85/mmGXOA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729685AbgDKXKs (ORCPT
+        id S1729702AbgDKXKu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 19:10:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49508 "EHLO mail.kernel.org"
+        Sat, 11 Apr 2020 19:10:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49634 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728541AbgDKXKq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 19:10:46 -0400
+        id S1729688AbgDKXKt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Apr 2020 19:10:49 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1FC73215A4;
-        Sat, 11 Apr 2020 23:10:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 903192166E;
+        Sat, 11 Apr 2020 23:10:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586646646;
-        bh=ro+UH2pzJ7jq/JsdwUicZ4oGUsoHLMDJ0rgOv9Z7+UQ=;
+        s=default; t=1586646649;
+        bh=X3z3mq6QfOQaWQCDFZ7vcUt6+kHCmdjUdRWHFVbyd6I=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YPKQHlTkanqc8H7u7KoBkHaUbAt4gkY/fQd0jgB5OUn23wE9oAdT9zMKGRiceK3aA
-         oU/eU0mm4ex9FiUVmeFP22dZ7EuW4qYIAz2IqaqlEnhIDblomapcuS+MtquAu9Ujio
-         1r52EnnmB/WmcmW9GQLLUgsw4S6IYRDTmulqlJHs=
+        b=jmVcKxKGboZ58EqTsmeXfireTTgDsjCUO1aGeb9IIAor6r60Pte0zf3y+pFwTi6wp
+         yGWwZD9VFh4qcive6v3Cpt6K59i7LcqHYslEANB/sU5q0QUXjXE67nkzYdgPvrS8+e
+         q0Y0KwVSUnB5g7HlFhoTT1UlvRG63M4AGQyOzlNA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Yannick Fertre <yannick.fertre@st.com>,
-        Philippe Cornu <philippe.cornu@st.com>,
-        Benjamin Gaignard <benjamin.gaignard@st.com>,
-        Sasha Levin <sashal@kernel.org>,
-        dri-devel@lists.freedesktop.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.4 051/108] drm/stm: ltdc: check crtc state before enabling LIE
-Date:   Sat, 11 Apr 2020 19:08:46 -0400
-Message-Id: <20200411230943.24951-51-sashal@kernel.org>
+Cc:     Daniel Vetter <daniel.vetter@ffwll.ch>,
+        Tomeu Vizoso <tomeu.vizoso@collabora.com>,
+        Emil Velikov <emil.velikov@collabora.com>,
+        Benjamin Gaignard <benjamin.gaignard@linaro.org>,
+        Daniel Vetter <daniel.vetter@intel.com>,
+        =?UTF-8?q?Ville=20Syrj=C3=A4l=C3=A4?= 
+        <ville.syrjala@linux.intel.com>, Sasha Levin <sashal@kernel.org>,
+        dri-devel@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 5.4 053/108] drm/crc: Actually allow to change the crc source
+Date:   Sat, 11 Apr 2020 19:08:48 -0400
+Message-Id: <20200411230943.24951-53-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200411230943.24951-1-sashal@kernel.org>
 References: <20200411230943.24951-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -63,44 +65,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yannick Fertre <yannick.fertre@st.com>
+From: Daniel Vetter <daniel.vetter@ffwll.ch>
 
-[ Upstream commit a6bd58c51ac43083f3977057a7ad668def55812f ]
+[ Upstream commit 3cb6d8e5cf9811a62e27f366fd1c05f90310a8fd ]
 
-Following investigations of a hardware bug, the LIE interrupt
-can occur while the display controller is not activated.
-LIE interrupt (vblank) don't have to be set if the CRTC is not
-enabled.
+Oops.
 
-Signed-off-by: Yannick Fertre <yannick.fertre@st.com>
-Acked-by: Philippe Cornu <philippe.cornu@st.com>
-Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/1579601650-7055-1-git-send-email-yannick.fertre@st.com
+Fixes: 9edbf1fa600a ("drm: Add API for capturing frame CRCs")
+Cc: Tomeu Vizoso <tomeu.vizoso@collabora.com>
+Cc: Emil Velikov <emil.velikov@collabora.com>
+Cc: Benjamin Gaignard <benjamin.gaignard@linaro.org>
+Signed-off-by: Daniel Vetter <daniel.vetter@intel.com>
+Reviewed-by: Ville Syrjälä <ville.syrjala@linux.intel.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/20190821203835.18314-1-daniel.vetter@ffwll.ch
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/stm/ltdc.c | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+ drivers/gpu/drm/drm_debugfs_crc.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/stm/ltdc.c b/drivers/gpu/drm/stm/ltdc.c
-index 3ab4fbf8eb0d1..2526dfb77401c 100644
---- a/drivers/gpu/drm/stm/ltdc.c
-+++ b/drivers/gpu/drm/stm/ltdc.c
-@@ -653,9 +653,14 @@ static const struct drm_crtc_helper_funcs ltdc_crtc_helper_funcs = {
- static int ltdc_crtc_enable_vblank(struct drm_crtc *crtc)
- {
- 	struct ltdc_device *ldev = crtc_to_ltdc(crtc);
-+	struct drm_crtc_state *state = crtc->state;
+diff --git a/drivers/gpu/drm/drm_debugfs_crc.c b/drivers/gpu/drm/drm_debugfs_crc.c
+index 6a626c82e264b..41755fb93788a 100644
+--- a/drivers/gpu/drm/drm_debugfs_crc.c
++++ b/drivers/gpu/drm/drm_debugfs_crc.c
+@@ -369,7 +369,7 @@ void drm_debugfs_crtc_crc_add(struct drm_crtc *crtc)
  
- 	DRM_DEBUG_DRIVER("\n");
--	reg_set(ldev->regs, LTDC_IER, IER_LIE);
-+
-+	if (state->enable)
-+		reg_set(ldev->regs, LTDC_IER, IER_LIE);
-+	else
-+		return -EPERM;
+ 	crc_ent = debugfs_create_dir("crc", crtc->debugfs_entry);
  
- 	return 0;
- }
+-	debugfs_create_file("control", S_IRUGO, crc_ent, crtc,
++	debugfs_create_file("control", S_IRUGO | S_IWUSR, crc_ent, crtc,
+ 			    &drm_crtc_crc_control_fops);
+ 	debugfs_create_file("data", S_IRUGO, crc_ent, crtc,
+ 			    &drm_crtc_crc_data_fops);
 -- 
 2.20.1
 
