@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3503C2BB86
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:20:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1C35C2BBC7
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:20:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C35E3206E9
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:20:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 70A81206E9
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:20:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586647212;
-	bh=PfhF9/OLpGOSPeY7FDyC9BfEA14wKhJee/CYlYzD7PI=;
+	s=default; t=1586647223;
+	bh=jWoyqSUU07sYEU1UjFNbY1H68a7iDoGPS5E7M05h0mk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=iHbNDQfJzlH9X/2wNorwy9apX2fAiHWDcB2dZ1PcUbZ4EccF//Ug42axE6YNDN+AV
-	 4IGlM0wMPG9O+10Nbcp4empLfrAVXZLn3oTYFLd4i8xFRH1htmrVuDCNfMggAhkEwX
-	 Bf9UN1jkhq++a3zl/wNIHBwNJLrLq2GFTgpY5uak=
+	b=UqI1xRHNoubdjcZ2GKbS9jc6A9MfSbHrgLbcFCIxSYmFswM950LThHzl/ho+ZfI2w
+	 xSoX8S+cK+SBW55FXWTiCRy3RIiXzvFSdXq0KXr6cdRY1gc4977ZECK4z2533VqlWW
+	 T+YTT1x85bDDb5JkEJiWY5hQ5GcG11Obu5+YEP2g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730665AbgDKXUL (ORCPT
+        id S1730734AbgDKXUV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 19:20:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55096 "EHLO mail.kernel.org"
+        Sat, 11 Apr 2020 19:20:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55028 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730314AbgDKXNo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 19:13:44 -0400
+        id S1730538AbgDKXNm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Apr 2020 19:13:42 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7B88320CC7;
-        Sat, 11 Apr 2020 23:13:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3D1C221744;
+        Sat, 11 Apr 2020 23:13:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586646825;
-        bh=PfhF9/OLpGOSPeY7FDyC9BfEA14wKhJee/CYlYzD7PI=;
+        s=default; t=1586646823;
+        bh=jWoyqSUU07sYEU1UjFNbY1H68a7iDoGPS5E7M05h0mk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=J0042jursL7TVRfpGjIUZhFlHiwMW7aQ+zS9B8izT72eAk8IUEs45QopKmlj33ny9
-         LY1xrLXpXpvCqbdLt00SJsJM6KEhkYJeh2VgJbk2nxCxfBZep42Z8MHXujDIUnTJG3
-         +Q43xh5FbD/g3Ay+IoY3x679d9Bnw+w3qNv0tuok=
+        b=Y1dcQqzQdzknzpjMzbrPlnFd36pBCO1OLBCVtvGt7A+eK+QnmjxBhqvOAmpAXYfbk
+         GQdITemwO3UPDQjGIkxFSK8uMBHhHT8FG/DSemRw+uhrX02hQSeHgh4rzWraJsTrmW
+         1XT8edeHLyTCuAZYhHt/hroTvYKYqsVsXOOLTU7c=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Taehee Yoo <ap420073@gmail.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 15/37] net: rmnet: add missing module alias
-Date:   Sat, 11 Apr 2020 19:13:04 -0400
-Message-Id: <20200411231327.26550-15-sashal@kernel.org>
+Cc:     Vlad Buslov <vladbu@mellanox.com>, Roi Dayan <roid@mellanox.com>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
+        linux-rdma@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 13/37] net/mlx5e: Init ethtool steering for representors
+Date:   Sat, 11 Apr 2020 19:13:02 -0400
+Message-Id: <20200411231327.26550-13-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200411231327.26550-1-sashal@kernel.org>
 References: <20200411231327.26550-1-sashal@kernel.org>
@@ -59,35 +59,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Taehee Yoo <ap420073@gmail.com>
+From: Vlad Buslov <vladbu@mellanox.com>
 
-[ Upstream commit eed22a0685d651fc531bc63f215bb2a71d4b98e5 ]
+[ Upstream commit 6783e8b29f636383af293a55336f036bc7ad5619 ]
 
-In the current rmnet code, there is no module alias.
-So, RTNL couldn't load rmnet module automatically.
+During transition to uplink representors the code responsible for
+initializing ethtool steering functionality wasn't added to representor
+init rx routine. This causes NULL pointer dereference during configuration
+of network flow classification rule with ethtool (only possible to
+reproduce with next commit in this series which registers necessary ethtool
+callbacks).
 
-Test commands:
-    ip link add dummy0 type dummy
-    modprobe -rv rmnet
-    ip link add rmnet0 link dummy0 type rmnet  mux_id 1
-
-Signed-off-by: Taehee Yoo <ap420073@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Vlad Buslov <vladbu@mellanox.com>
+Reviewed-by: Roi Dayan <roid@mellanox.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/qualcomm/rmnet/rmnet_config.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/net/ethernet/mellanox/mlx5/core/en_rep.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/net/ethernet/qualcomm/rmnet/rmnet_config.c b/drivers/net/ethernet/qualcomm/rmnet/rmnet_config.c
-index b7df8c1121e35..81db3375834a6 100644
---- a/drivers/net/ethernet/qualcomm/rmnet/rmnet_config.c
-+++ b/drivers/net/ethernet/qualcomm/rmnet/rmnet_config.c
-@@ -355,4 +355,5 @@ static void __exit rmnet_exit(void)
+diff --git a/drivers/net/ethernet/mellanox/mlx5/core/en_rep.c b/drivers/net/ethernet/mellanox/mlx5/core/en_rep.c
+index e69674d38f167..1d04280b775f0 100644
+--- a/drivers/net/ethernet/mellanox/mlx5/core/en_rep.c
++++ b/drivers/net/ethernet/mellanox/mlx5/core/en_rep.c
+@@ -893,6 +893,8 @@ static int mlx5e_init_rep_rx(struct mlx5e_priv *priv)
+ 	if (err)
+ 		goto err_del_flow_rule;
  
- module_init(rmnet_init)
- module_exit(rmnet_exit)
-+MODULE_ALIAS_RTNL_LINK("rmnet");
- MODULE_LICENSE("GPL v2");
++	mlx5e_ethtool_init_steering(priv);
++
+ 	return 0;
+ 
+ err_del_flow_rule:
 -- 
 2.20.1
 
