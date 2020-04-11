@@ -7,46 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95D86C2BB86
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:10:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 294FBC2BB86
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:10:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6453020757
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:10:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0280E217D8
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:10:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586646608;
-	bh=LA4NasPLEH07jBaTOyAUcxp3FfacFWcVB0VMW+UNloE=;
+	s=default; t=1586646614;
+	bh=MMe46zjI134depEk5VBUTl2isnIxc2CPpdG4qs8lO78=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=l0joaEksbBdZ3u+qxETCKMV8Cs4VttuSenYnxImGWQH3bBb5Uzf5dUNZChWvWIjSi
-	 QnqzOot/PbegBf9uViW5F4jcrUh9oX5aOtH+rlZ1/Zbca2QtNku8aYB366GelByY3b
-	 pyBlqxQmgR7MjjlZApE3JzVUVo7zthqKk0n9MS2Q=
+	b=QDskmTjoYzLdWBkYdm7fNtmUgZCwvR1QfICdAJfZyRi8UlPm/sZ4Zj9M7JpXJo+MO
+	 oISvVJSWNquawX90F7l3YDpQLtoCk7ildlTYH1iO/paIperxuvAflhvhmBptWidZPM
+	 TlWQrlVkAo8NCFxcf9P5OMs8wglj89LJq/M3AgzY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729428AbgDKXKH (ORCPT
+        id S1729475AbgDKXKM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 19:10:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48044 "EHLO mail.kernel.org"
+        Sat, 11 Apr 2020 19:10:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48228 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728940AbgDKXKB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 19:10:01 -0400
+        id S1728964AbgDKXKI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Apr 2020 19:10:08 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6DEA920757;
-        Sat, 11 Apr 2020 23:10:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9CEBA2166E;
+        Sat, 11 Apr 2020 23:10:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586646601;
-        bh=LA4NasPLEH07jBaTOyAUcxp3FfacFWcVB0VMW+UNloE=;
+        s=default; t=1586646608;
+        bh=MMe46zjI134depEk5VBUTl2isnIxc2CPpdG4qs8lO78=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dD2ITDVtu7PXpN0zfzHPhlgMMQFMirNFxomgho1iu/QDlMnIT7NhcoCHl6SaigD7G
-         cE8pTsGQPTbX74tOI+fm6WLVChfd+EhPCPBSqGvC9cH139n0kz4iX6PbIuRVlh/4dT
-         ea4YPMSXQQMkfCXQPTI3/8VuTA9DzXxrVSFiau4Y=
+        b=fyJJsut9s1J3xaBPnorCqhtM/XC6bigselDX+o4wicduYEtpn1daExCqMDIQBboy7
+         zHFEBzPzR8XzRfUreFTFq8ShKAHUpd1xo6BROBx64AJStGWak3AYQFVd+1YBeTxeBo
+         z9nDsa90H48bvetj6MMq2u2YvXKizRJMClt/DAVA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jason Gunthorpe <jgg@mellanox.com>,
-        Leon Romanovsky <leonro@mellanox.com>,
-        Sasha Levin <sashal@kernel.org>, linux-rdma@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 014/108] RDMA/cm: Add missing locking around id.state in cm_dup_req_handler
-Date:   Sat, 11 Apr 2020 19:08:09 -0400
-Message-Id: <20200411230943.24951-14-sashal@kernel.org>
+Cc:     Brian Norris <briannorris@chromium.org>,
+        Ganapathi Bhat <ganapathi.gbhat@nxp.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 020/108] mwifiex: set needed_headroom, not hard_header_len
+Date:   Sat, 11 Apr 2020 19:08:15 -0400
+Message-Id: <20200411230943.24951-20-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200411230943.24951-1-sashal@kernel.org>
 References: <20200411230943.24951-1-sashal@kernel.org>
@@ -59,39 +61,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jason Gunthorpe <jgg@mellanox.com>
+From: Brian Norris <briannorris@chromium.org>
 
-[ Upstream commit d1de9a88074b66482443f0cd91618d7b51a7c9b6 ]
+[ Upstream commit 9454f7a895b822dd8fb4588fc55fda7c96728869 ]
 
-All accesses to id.state must be done under the spinlock.
+hard_header_len provides limitations for things like AF_PACKET, such
+that we don't allow transmitting packets smaller than this.
 
-Fixes: a977049dacde ("[PATCH] IB: Add the kernel CM implementation")
-Link: https://lore.kernel.org/r/20200310092545.251365-10-leon@kernel.org
-Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+needed_headroom provides a suggested minimum headroom for SKBs, so that
+we can trivally add our headers to the front.
+
+The latter is the correct field to use in this case, while the former
+mostly just prevents sending small AF_PACKET frames.
+
+In any case, mwifiex already does its own bounce buffering [1] if we
+don't have enough headroom, so hints (not hard limits) are all that are
+needed.
+
+This is the essentially the same bug (and fix) that brcmfmac had, fixed
+in commit cb39288fd6bb ("brcmfmac: use ndev->needed_headroom to reserve
+additional header space").
+
+[1] mwifiex_hard_start_xmit():
+	if (skb_headroom(skb) < MWIFIEX_MIN_DATA_HEADER_LEN) {
+	[...]
+		/* Insufficient skb headroom - allocate a new skb */
+
+Fixes: 5e6e3a92b9a4 ("wireless: mwifiex: initial commit for Marvell mwifiex driver")
+Signed-off-by: Brian Norris <briannorris@chromium.org>
+Acked-by: Ganapathi Bhat <ganapathi.gbhat@nxp.com>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/infiniband/core/cm.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ drivers/net/wireless/marvell/mwifiex/cfg80211.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/infiniband/core/cm.c b/drivers/infiniband/core/cm.c
-index 319e4b4ae6398..2c4d925041d09 100644
---- a/drivers/infiniband/core/cm.c
-+++ b/drivers/infiniband/core/cm.c
-@@ -1809,8 +1809,12 @@ static void cm_dup_req_handler(struct cm_work *work,
- 			counter[CM_REQ_COUNTER]);
+diff --git a/drivers/net/wireless/marvell/mwifiex/cfg80211.c b/drivers/net/wireless/marvell/mwifiex/cfg80211.c
+index d896841685008..e63bc15c6e305 100644
+--- a/drivers/net/wireless/marvell/mwifiex/cfg80211.c
++++ b/drivers/net/wireless/marvell/mwifiex/cfg80211.c
+@@ -3052,7 +3052,7 @@ struct wireless_dev *mwifiex_add_virtual_intf(struct wiphy *wiphy,
  
- 	/* Quick state check to discard duplicate REQs. */
--	if (cm_id_priv->id.state == IB_CM_REQ_RCVD)
-+	spin_lock_irq(&cm_id_priv->lock);
-+	if (cm_id_priv->id.state == IB_CM_REQ_RCVD) {
-+		spin_unlock_irq(&cm_id_priv->lock);
- 		return;
-+	}
-+	spin_unlock_irq(&cm_id_priv->lock);
+ 	dev->flags |= IFF_BROADCAST | IFF_MULTICAST;
+ 	dev->watchdog_timeo = MWIFIEX_DEFAULT_WATCHDOG_TIMEOUT;
+-	dev->hard_header_len += MWIFIEX_MIN_DATA_HEADER_LEN;
++	dev->needed_headroom = MWIFIEX_MIN_DATA_HEADER_LEN;
+ 	dev->ethtool_ops = &mwifiex_ethtool_ops;
  
- 	ret = cm_alloc_response_msg(work->port, work->mad_recv_wc, &msg);
- 	if (ret)
+ 	mdev_priv = netdev_priv(dev);
 -- 
 2.20.1
 
