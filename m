@@ -2,93 +2,133 @@ Return-Path: <SRS0=xbEg=53=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF317C2BA19
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 22:04:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E06FC2BBC7
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 22:04:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 765B12051A
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 22:04:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6F7B920769
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 22:04:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="b34uiPk8"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rdudLdLt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726819AbgDKWEZ (ORCPT
+        id S1726836AbgDKWE3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 18:04:25 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:36375 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726108AbgDKWEY (ORCPT
+        Sat, 11 Apr 2020 18:04:29 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:43415 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726108AbgDKWE2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 18:04:24 -0400
-Received: by mail-wm1-f68.google.com with SMTP id a201so5852852wme.1
-        for <linux-kernel@vger.kernel.org>; Sat, 11 Apr 2020 15:04:24 -0700 (PDT)
+        Sat, 11 Apr 2020 18:04:28 -0400
+Received: by mail-wr1-f66.google.com with SMTP id i10so6161963wrv.10
+        for <linux-kernel@vger.kernel.org>; Sat, 11 Apr 2020 15:04:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=QMdbDycZrI66Fi6FRwlCFSGbMp0sxstyHyqa3xK8LHE=;
-        b=b34uiPk8DspIRoaI9c9aiomfii/cLTu7bX5PVltOE8SOJ5d5Es3i5PYKW+sWtc0b5L
-         bDRvSPOYP9q6DRCOtHZODpDMbzEgKQvlAyW3GPOLawRWvbHDZSMtMNKVu+1ghxstAQN2
-         AcKDFSFTv5+tH7QbyhgkqF7Zuh/iYttF+Ga+9WKDPq4cHo0S9Hos3iSWcQez2yJO7/e1
-         trBvvZMQDr4iO+mHO2JZ0mD1GP5IoG+gMmhmfNdtmuX9r5aH6K/LUTzM4Z8fs3QcirMp
-         x7ljeF/2xJk/mEN2G+mj953+sNd4jwfqqnR+AA698bGUyCkbHugqPJVeXKebnNy/FXMI
-         lFvg==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=zI3tJmo+o+GXkNWorcFoXLz8vYcrcpDEFf4n0oB8dNo=;
+        b=rdudLdLt+Nawf50OHLaGEZbuSLmsPXhfz7lk7AKWyU+MhDQEl+Y34nrbTY91Xft7O7
+         huTPmx4+3g4uAr1AZdQCTU6SAc3HlxQYB6/wuyehgG7lg59f2me4HHh/kMcNo8HZmWFh
+         7+wtHc9/sjpH9wPhXW80/8CVbvj+spUhdNnjLDDUtpAJ1t3IDWaRiWXYbaI165tE2aYt
+         9xT4we8RjKhbxzq5yNXiVAgGctE1AjiHpa+Dgo46he3PWO/te3c9+OSjoCLjSeObcgTe
+         +LVKowsccr2I6H95b+3EnG5w7+7s1Ot5MPMnNqeEWAfDGx/7uRucaksMVGK+qkOcrEPw
+         UDSw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=QMdbDycZrI66Fi6FRwlCFSGbMp0sxstyHyqa3xK8LHE=;
-        b=K7ntOZ5LVVWxOWkyMCwfmBgSqiPIsyTQyhhVZBsMeGfq9mqdPspXznfLVeK5GL0WTd
-         r3+/7dhcMSCfaGTK30j4Bk1IKKtVvgtuwkSnLmYIOrgbYiznYoSSO40KhCC9g9CI5v6S
-         mAjg4jEfh8VmTjrk3h1DqpdfzHvAy0gQCZfftD9+AqnVladCHMokWVB/slilh8VACXdE
-         1bWpNtwZvuzz1828UJvaHDHBpaOEV2F4e29k5bHsn6z3KMyegSx59p90yuoCVDGok8qO
-         60PvRjV48xxdqenoq8OYZqPfFs95uc33IUJ3qq/u3OEcdtzPYkNpN/oYSysmCe8d561G
-         Jdww==
-X-Gm-Message-State: AGi0PuawnY7BAYIF77qe1F0PFNG9j87EAVJ1Vt4xblYCAEyNz3ApS9+h
-        dOWFCyFhwVf106k7KVOwY5o=
-X-Google-Smtp-Source: APiQypJ82oh4/G08ff48aHX9dGZ3bYQ8b8lp5rlV0inaqsaWiN27iHoABuUrsxN6SWGuH/lBn9Q++A==
-X-Received: by 2002:a1c:1bcb:: with SMTP id b194mr12052738wmb.4.1586642663437;
-        Sat, 11 Apr 2020 15:04:23 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=zI3tJmo+o+GXkNWorcFoXLz8vYcrcpDEFf4n0oB8dNo=;
+        b=hp5eWlHvwEEJ/rzheEaZmGD9SAy9Se5s39CaJyIgAYrquxfpEKeZiw+zmzL25MD2Dz
+         juMmwZNFprbrf8XjrvP3MJtAqOmp8zlhnK/E0eOd9pD32BoRd2ieEzagr5V2fRrzucPV
+         rt/RAakM2LSwO4VTLGUIPYD/dm2t9gCSXgKvMHg/D4PGZDDdJ3utvYLhNhU2hQXpWJ2U
+         7mYkon7Gf1ViPenRSuBJjhjK6mfDTSivz+EtuSOdulXF1ela/nBo7IIW/ELgaWiqceJz
+         rP12+rrHlAv91uqxA12+SGb3v3pZv4ERhEELeaD18z3pw1S00R9I95i+0+RxyXWmzBSE
+         zYtA==
+X-Gm-Message-State: AGi0PuYKuD4iq/mBMcP36Z3lpk66RcDHdmU8VzLUP+YUA//B4GJPflGw
+        YpJ9JdNxXHjkro0oIGw3eIScget6vUQ=
+X-Google-Smtp-Source: APiQypJzdDa9QVHQo9kjB6Ga1pafDzWMGvrAsY+GfYzFLV0mb7eFmzRw19RNwSps0T8fxOPOM+LKMA==
+X-Received: by 2002:a5d:66c4:: with SMTP id k4mr12151090wrw.53.1586642667016;
+        Sat, 11 Apr 2020 15:04:27 -0700 (PDT)
 Received: from localhost ([185.92.221.13])
-        by smtp.gmail.com with ESMTPSA id g74sm8338160wme.44.2020.04.11.15.04.22
+        by smtp.gmail.com with ESMTPSA id z18sm2342424wrw.41.2020.04.11.15.04.26
         (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Sat, 11 Apr 2020 15:04:22 -0700 (PDT)
+        Sat, 11 Apr 2020 15:04:26 -0700 (PDT)
 From:   Wei Yang <richard.weiyang@gmail.com>
 To:     akpm@linux-foundation.org
 Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
         rientjes@google.com, anshuman.khandual@arm.com, david@redhat.com,
         Wei Yang <richard.weiyang@gmail.com>
-Subject: [Patch v3 0/5] mm/page_alloc.c: cleanup on check page
-Date:   Sat, 11 Apr 2020 22:03:52 +0000
-Message-Id: <20200411220357.9636-1-richard.weiyang@gmail.com>
+Subject: [Patch v3 4/5] mm/page_alloc.c: rename free_pages_check() to check_free_page()
+Date:   Sat, 11 Apr 2020 22:03:56 +0000
+Message-Id: <20200411220357.9636-5-richard.weiyang@gmail.com>
 X-Mailer: git-send-email 2.11.0
+In-Reply-To: <20200411220357.9636-1-richard.weiyang@gmail.com>
+References: <20200411220357.9636-1-richard.weiyang@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The patch set does some cleanup related to check page.
+Function free_pages_check() is the counterpart of check_new_page().
+Rename it to use the same name convention.
 
-1. Remove unnecessary bad_reason assignment
-2. Remove bad_flags to bad_page()
-3. Rename function for naming convention
-4. Extract common part to check page
+Signed-off-by: Wei Yang <richard.weiyang@gmail.com>
+---
+ mm/page_alloc.c | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
-Thanks suggestions from David Rientjes and Anshuman Khandual.
-
-Wei Yang (5):
-  mm/page_alloc.c: bad_[reason|flags] is not necessary when PageHWPoison
-  mm/page_alloc.c: bad_flags is not necessary for bad_page()
-  mm/page_alloc.c: rename free_pages_check_bad() to
-    check_free_page_bad()
-  mm/page_alloc.c: rename free_pages_check() to check_free_page()
-  mm/page_alloc.c: extract check_[new|free]_page_bad() common part to
-    page_bad_reason()
-
- mm/page_alloc.c | 74 +++++++++++++++++++------------------------------
- 1 file changed, 28 insertions(+), 46 deletions(-)
-
+diff --git a/mm/page_alloc.c b/mm/page_alloc.c
+index 85d7aec5fb45..dfcf2682ed40 100644
+--- a/mm/page_alloc.c
++++ b/mm/page_alloc.c
+@@ -1032,7 +1032,7 @@ static void check_free_page_bad(struct page *page)
+ 	bad_page(page, bad_reason);
+ }
+ 
+-static inline int free_pages_check(struct page *page)
++static inline int check_free_page(struct page *page)
+ {
+ 	if (likely(page_expected_state(page, PAGE_FLAGS_CHECK_AT_FREE)))
+ 		return 0;
+@@ -1124,7 +1124,7 @@ static __always_inline bool free_pages_prepare(struct page *page,
+ 		for (i = 1; i < (1 << order); i++) {
+ 			if (compound)
+ 				bad += free_tail_pages_check(page, page + i);
+-			if (unlikely(free_pages_check(page + i))) {
++			if (unlikely(check_free_page(page + i))) {
+ 				bad++;
+ 				continue;
+ 			}
+@@ -1136,7 +1136,7 @@ static __always_inline bool free_pages_prepare(struct page *page,
+ 	if (memcg_kmem_enabled() && PageKmemcg(page))
+ 		__memcg_kmem_uncharge(page, order);
+ 	if (check_free)
+-		bad += free_pages_check(page);
++		bad += check_free_page(page);
+ 	if (bad)
+ 		return false;
+ 
+@@ -1183,7 +1183,7 @@ static bool free_pcp_prepare(struct page *page)
+ static bool bulkfree_pcp_prepare(struct page *page)
+ {
+ 	if (debug_pagealloc_enabled_static())
+-		return free_pages_check(page);
++		return check_free_page(page);
+ 	else
+ 		return false;
+ }
+@@ -1204,7 +1204,7 @@ static bool free_pcp_prepare(struct page *page)
+ 
+ static bool bulkfree_pcp_prepare(struct page *page)
+ {
+-	return free_pages_check(page);
++	return check_free_page(page);
+ }
+ #endif /* CONFIG_DEBUG_VM */
+ 
 -- 
 2.23.0
 
