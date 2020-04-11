@@ -2,168 +2,69 @@ Return-Path: <SRS0=xbEg=53=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 032E3C2BBC7
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 06:52:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39F4CC2BA2B
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 06:56:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D0247212CC
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 06:52:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GQgxVNJU"
+	by mail.kernel.org (Postfix) with ESMTP id 051852173E
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 06:56:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726025AbgDKGwZ (ORCPT
+        id S1725951AbgDKG40 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 02:52:25 -0400
-Received: from mail-pj1-f67.google.com ([209.85.216.67]:53705 "EHLO
-        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725866AbgDKGwZ (ORCPT
+        Sat, 11 Apr 2020 02:56:26 -0400
+Received: from smtp02.smtpout.orange.fr ([80.12.242.124]:49928 "EHLO
+        smtp.smtpout.orange.fr" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725866AbgDKG40 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 02:52:25 -0400
-Received: by mail-pj1-f67.google.com with SMTP id cl8so399368pjb.3;
-        Fri, 10 Apr 2020 23:52:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=QxI9j3NlnSjbuxkMs8tAcOtL4DLxmX3HBpKck2zblr4=;
-        b=GQgxVNJU6SPCAKtxmwiXz/7EnXDV9vTJPI86ojacjQw2zc3C1+Ou/142DjbWEmexz7
-         XNa9/OzmGExTmqq4mjUFSYCkobbHxK7BhK6FvmjIfTbI5R7cWvuvQ+l44O5R2Ae6paNY
-         lzJ/toaFB0VOVPF3wGjosunl5T2dbzfTyrsZ7DoRFGLk6RYG9/hYNKNxrzYRLNw8NfCh
-         nGQtqMab7XALnIfjbR9WVh0pCBMUWAMT3J2Q0/Q6nVrT1cPm2i3nZNtUSNVu6vPqxNya
-         7iI0V2pSouNy4MexnfKnPgEloPuy34N+jUHm5AsRjZ33Kwpdn2AoglJ2KEMAU9jPC6us
-         lcZw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=QxI9j3NlnSjbuxkMs8tAcOtL4DLxmX3HBpKck2zblr4=;
-        b=SzcXOgMYhI44ghN9K+QaPwjldJ5EU6rQYBOg0Jxy/HZZgzKK1WyCpREuVtEat1g7PE
-         YN7H51vVKlbl/Xa5dZPQoc/Awj1xl6bA6uYx0KmBaIByzeJFKZzVA292t2XWmfx5z5f5
-         D/AQxNh5thPAqkBD9aOV41nEXC8sos8eqqmGB362H+QbUiNvYA15iHze0Z81h2mZ0eVw
-         JxqxECE1xHkvdRM1kKhVj37I/9zrRGDQf2qUfKJlkL02O8BDzrODXqoCuhldKY6F07NG
-         VQcO5GZK49nd5wqRxIlWz/RLQWQPyP8mhhoMNmhJG86+C+vHEgiAAXvSKFC6zOTYdLoU
-         r/uA==
-X-Gm-Message-State: AGi0PuagpVnM8o3lo2/ZlPYQt4iEwbwKZpURy4YSy8Ns+V1BPy0KB4TR
-        EaDIa6YRyc/XOXtfwH5u7MU=
-X-Google-Smtp-Source: APiQypIabp1UQIS0H8H5xI1rpzyubD1aJhnP9zYNFcR4w404tVswHRWxL8voW68n8/Ut/pjVV+vhfA==
-X-Received: by 2002:a17:902:694a:: with SMTP id k10mr8290192plt.82.1586587944369;
-        Fri, 10 Apr 2020 23:52:24 -0700 (PDT)
-Received: from laptop.hsd1.wa.comcast.net ([2601:600:817f:a132:df3e:521d:99d5:710d])
-        by smtp.gmail.com with ESMTPSA id i8sm3500978pfr.138.2020.04.10.23.52.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 10 Apr 2020 23:52:23 -0700 (PDT)
-From:   Andrei Vagin <avagin@gmail.com>
-To:     Thomas Gleixner <tglx@linutronix.de>,
-        Andrew Morton <akpm@linux-foundation.org>
-Cc:     linux-api@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Andrei Vagin <avagin@gmail.com>,
-        "Eric W . Biederman" <ebiederm@xmission.com>,
-        Michael Kerrisk <mtk.manpages@gmail.com>,
-        Dmitry Safonov <0x7f454c46@gmail.com>
-Subject: [PATCH] timens: show clock symbolic names in /proc/pid/timens_offsets
-Date:   Fri, 10 Apr 2020 23:52:09 -0700
-Message-Id: <20200411065209.622679-1-avagin@gmail.com>
-X-Mailer: git-send-email 2.17.2
+        Sat, 11 Apr 2020 02:56:26 -0400
+Received: from localhost.localdomain ([93.22.135.18])
+        by mwinf5d37 with ME
+        id RJwP2200Q0Pz5GD03JwPpl; Sat, 11 Apr 2020 08:56:24 +0200
+X-ME-Helo: localhost.localdomain
+X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
+X-ME-Date: Sat, 11 Apr 2020 08:56:24 +0200
+X-ME-IP: 93.22.135.18
+From:   Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+To:     balbi@kernel.org, gregkh@linuxfoundation.org,
+        jaswinder.singh@linaro.org
+Cc:     linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel-janitors@vger.kernel.org,
+        Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Subject: [PATCH] usb: gadget: max3420: Add a missing '\n' in a log message
+Date:   Sat, 11 Apr 2020 08:56:21 +0200
+Message-Id: <20200411065621.7744-1-christophe.jaillet@wanadoo.fr>
+X-Mailer: git-send-email 2.20.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Michael Kerrisk suggested to replace numeric clock IDs on symbolic
-names.
+Message logged by 'dev_xxx()' or 'pr_xxx()' should end with a '\n'.
 
-Now the content of these files looks like this:
-$ cat /proc/5362/timens_offsets
-monotonic	   9504000	         0
-boottime	   3456000	         0
-
-For setting offsets, both representations of clocks can be used.
-
-As for compatibility, it is acceptable to change things as long as
-userspace doesn't care. The format of timens_offsets files is very
-new and there are no userspace tools that rely on this format.
-
-But three projects crun, util-linux and criu rely on the interface of
-setting time offsets and this is why we need to continue supporting the
-clock IDs in this case.
-
-Fixes: 04a8682a71be ("fs/proc: Introduce /proc/pid/timens_offsets")
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Eric W. Biederman <ebiederm@xmission.com>
-Cc: Michael Kerrisk <mtk.manpages@gmail.com>
-Cc: Dmitry Safonov <0x7f454c46@gmail.com>
-Suggested-by: Michael Kerrisk <mtk.manpages@gmail.com>
-Signed-off-by: Andrei Vagin <avagin@gmail.com>
+Fixes: 48ba02b2e2b1 ("usb: gadget: add udc driver for max3420")
+Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
 ---
- fs/proc/base.c          | 14 +++++++++++++-
- kernel/time/namespace.c | 15 ++++++++++++++-
- 2 files changed, 27 insertions(+), 2 deletions(-)
+ drivers/usb/gadget/udc/max3420_udc.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/fs/proc/base.c b/fs/proc/base.c
-index 6042b646ab27..572898dd16a0 100644
---- a/fs/proc/base.c
-+++ b/fs/proc/base.c
-@@ -1573,6 +1573,7 @@ static ssize_t timens_offsets_write(struct file *file, const char __user *buf,
- 	noffsets = 0;
- 	for (pos = kbuf; pos; pos = next_line) {
- 		struct proc_timens_offset *off = &offsets[noffsets];
-+		char clock[10];
- 		int err;
+diff --git a/drivers/usb/gadget/udc/max3420_udc.c b/drivers/usb/gadget/udc/max3420_udc.c
+index 8fbc083b6732..23f33946d80c 100644
+--- a/drivers/usb/gadget/udc/max3420_udc.c
++++ b/drivers/usb/gadget/udc/max3420_udc.c
+@@ -901,7 +901,7 @@ static int max3420_thread(void *dev_id)
+ 	}
  
- 		/* Find the end of line and ensure we don't look past it */
-@@ -1584,10 +1585,21 @@ static ssize_t timens_offsets_write(struct file *file, const char __user *buf,
- 				next_line = NULL;
- 		}
- 
--		err = sscanf(pos, "%u %lld %lu", &off->clockid,
-+		err = sscanf(pos, "%9s %lld %lu", clock,
- 				&off->val.tv_sec, &off->val.tv_nsec);
- 		if (err != 3 || off->val.tv_nsec >= NSEC_PER_SEC)
- 			goto out;
-+
-+		clock[sizeof(clock) - 1] = 0;
-+		if (strcmp(clock, "monotonic") == 0 ||
-+		    strcmp(clock, __stringify(CLOCK_MONOTONIC)) == 0)
-+			off->clockid = CLOCK_MONOTONIC;
-+		else if (strcmp(clock, "boottime") == 0 ||
-+			 strcmp(clock, __stringify(CLOCK_BOOTTIME)) == 0)
-+			off->clockid = CLOCK_BOOTTIME;
-+		else
-+			goto out;
-+
- 		noffsets++;
- 		if (noffsets == ARRAY_SIZE(offsets)) {
- 			if (next_line)
-diff --git a/kernel/time/namespace.c b/kernel/time/namespace.c
-index e6ba064ce773..8127d2647064 100644
---- a/kernel/time/namespace.c
-+++ b/kernel/time/namespace.c
-@@ -338,7 +338,20 @@ static struct user_namespace *timens_owner(struct ns_common *ns)
- 
- static void show_offset(struct seq_file *m, int clockid, struct timespec64 *ts)
- {
--	seq_printf(m, "%d %lld %ld\n", clockid, ts->tv_sec, ts->tv_nsec);
-+	char *clock;
-+
-+	switch (clockid) {
-+	case CLOCK_BOOTTIME:
-+		clock = "boottime";
-+		break;
-+	case CLOCK_MONOTONIC:
-+		clock = "monotonic";
-+		break;
-+	default:
-+		clock = "unknown";
-+		break;
-+	}
-+	seq_printf(m, "%s\t%10lld\t%10ld\n", clock, ts->tv_sec, ts->tv_nsec);
+ 	set_current_state(TASK_RUNNING);
+-	dev_info(udc->dev, "SPI thread exiting");
++	dev_info(udc->dev, "SPI thread exiting\n");
+ 	return 0;
  }
  
- void proc_timens_show_offsets(struct task_struct *p, struct seq_file *m)
 -- 
-2.24.1
+2.20.1
 
