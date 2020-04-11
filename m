@@ -7,50 +7,50 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E15CC2BA19
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:20:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02459C2BBC7
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:20:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0503C206E9
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:20:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CF55520787
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:20:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586647232;
-	bh=1f0C9+h3Ca875KB6G7eOrSbb0hcwgHXQUUmOxZgbUVM=;
+	s=default; t=1586647235;
+	bh=1vPcV8somdtnL8mk5d4tR2o0GR4cfjZjti7/SpYaUHs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1HlZJXKtzLZj+s2lwmByy8+6HaApfoov1B3oTBjge8pAIQsLjGIK5VDydNvEGW1pQ
-	 vLSjycUuDxnRdNc4RQR2otnw7GuNsc4yT00OgmjDO4PnZmUDRyoiBlrKs1TGnACxpl
-	 FRpwJPlT0uPLqakkrjlZ4LbKflW9jbfub7p7/A84=
+	b=nVxvVBEyB5loEOTB3nOe/hl7M26+EQomwlLzKdQixEVwMPHJqtH8MMAAeRaj1SbEH
+	 ASuX1RgzPC+yzr1owQ/9sfLx9H2I2mhh9Qf38Mvd6L3BeUXpPtJHpFWJbPoDzGjzHk
+	 BlX4iVLY5YJjEIErtn4xL40VnujmDSrkfaPney28=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730654AbgDKXUa (ORCPT
+        id S1730513AbgDKXNj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 19:20:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55016 "EHLO mail.kernel.org"
+        Sat, 11 Apr 2020 19:13:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54388 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730523AbgDKXNl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 19:13:41 -0400
+        id S1730401AbgDKXNW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Apr 2020 19:13:22 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1EB95215A4;
-        Sat, 11 Apr 2020 23:13:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id ECC2D217D8;
+        Sat, 11 Apr 2020 23:13:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586646821;
-        bh=1f0C9+h3Ca875KB6G7eOrSbb0hcwgHXQUUmOxZgbUVM=;
+        s=default; t=1586646800;
+        bh=1vPcV8somdtnL8mk5d4tR2o0GR4cfjZjti7/SpYaUHs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cYLEWoJj9jA9e6VIszTMrTlVXsw4qM1jgSNQ0vJzI7H/EBYQuZP05fF1jbfPh6tVX
-         /5pVlho0raQsXn3dctMaJCTDEHmtVN+L31Ph343uYNzLMSmSn2uBF6TkP0EmkiiLbf
-         VOM4keqnhcALpXx4jR38jhZM3K4vDSD3vHrAIH14=
+        b=n40B4avKx88jXAtsQ6UR2j/C5cNru9tDAU9fZd95rqqKdXvHHbotBolrP7t4Ct86i
+         irihvRcOIghpFq9IJGO62VwnAlGy68D4t3FgprKQfaqomKHXpw8m8xGabJK9QzeCKk
+         uhXeQHIgMoa+2suyNiqnUpWypgWMKRFZN5OOI0P4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Dmitry Osipenko <digetx@gmail.com>,
-        Thierry Reding <treding@nvidia.com>,
-        Sasha Levin <sashal@kernel.org>,
-        dri-devel@lists.freedesktop.org, linux-tegra@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 12/37] drm/tegra: dc: Release PM and RGB output when client's registration fails
-Date:   Sat, 11 Apr 2020 19:13:01 -0400
-Message-Id: <20200411231327.26550-12-sashal@kernel.org>
+Cc:     Ritesh Harjani <riteshh@linux.ibm.com>,
+        Harish Sriram <harish@linux.ibm.com>, Jan Kara <jack@suse.cz>,
+        Theodore Ts'o <tytso@mit.edu>, Sasha Levin <sashal@kernel.org>,
+        linux-ext4@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 63/66] ext4: check for non-zero journal inum in ext4_calculate_overhead
+Date:   Sat, 11 Apr 2020 19:12:00 -0400
+Message-Id: <20200411231203.25933-63-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200411231327.26550-1-sashal@kernel.org>
-References: <20200411231327.26550-1-sashal@kernel.org>
+In-Reply-To: <20200411231203.25933-1-sashal@kernel.org>
+References: <20200411231203.25933-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -60,42 +60,75 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dmitry Osipenko <digetx@gmail.com>
+From: Ritesh Harjani <riteshh@linux.ibm.com>
 
-[ Upstream commit 0411ea89a689531e1829fdf8af3747646c02c721 ]
+[ Upstream commit f1eec3b0d0a849996ebee733b053efa71803dad5 ]
 
-Runtime PM and RGB output need to be released when host1x client
-registration fails. The releasing is missed in the code, let's correct it.
+While calculating overhead for internal journal, also check
+that j_inum shouldn't be 0. Otherwise we get below error with
+xfstests generic/050 with external journal (XXX_LOGDEV config) enabled.
 
-Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
-Signed-off-by: Thierry Reding <treding@nvidia.com>
+It could be simply reproduced with loop device with an external journal
+and marking blockdev as RO before mounting.
+
+[ 3337.146838] EXT4-fs error (device pmem1p2): ext4_get_journal_inode:4634: comm mount: inode #0: comm mount: iget: illegal inode #
+------------[ cut here ]------------
+generic_make_request: Trying to write to read-only block-device pmem1p2 (partno 2)
+WARNING: CPU: 107 PID: 115347 at block/blk-core.c:788 generic_make_request_checks+0x6b4/0x7d0
+CPU: 107 PID: 115347 Comm: mount Tainted: G             L   --------- -t - 4.18.0-167.el8.ppc64le #1
+NIP:  c0000000006f6d44 LR: c0000000006f6d40 CTR: 0000000030041dd4
+<...>
+NIP [c0000000006f6d44] generic_make_request_checks+0x6b4/0x7d0
+LR [c0000000006f6d40] generic_make_request_checks+0x6b0/0x7d0
+<...>
+Call Trace:
+generic_make_request_checks+0x6b0/0x7d0 (unreliable)
+generic_make_request+0x3c/0x420
+submit_bio+0xd8/0x200
+submit_bh_wbc+0x1e8/0x250
+__sync_dirty_buffer+0xd0/0x210
+ext4_commit_super+0x310/0x420 [ext4]
+__ext4_error+0xa4/0x1e0 [ext4]
+__ext4_iget+0x388/0xe10 [ext4]
+ext4_get_journal_inode+0x40/0x150 [ext4]
+ext4_calculate_overhead+0x5a8/0x610 [ext4]
+ext4_fill_super+0x3188/0x3260 [ext4]
+mount_bdev+0x778/0x8f0
+ext4_mount+0x28/0x50 [ext4]
+mount_fs+0x74/0x230
+vfs_kern_mount.part.6+0x6c/0x250
+do_mount+0x2fc/0x1280
+sys_mount+0x158/0x180
+system_call+0x5c/0x70
+EXT4-fs (pmem1p2): no journal found
+EXT4-fs (pmem1p2): can't get journal size
+EXT4-fs (pmem1p2): mounted filesystem without journal. Opts: dax,norecovery
+
+Fixes: 3c816ded78bb ("ext4: use journal inode to determine journal overhead")
+Reported-by: Harish Sriram <harish@linux.ibm.com>
+Signed-off-by: Ritesh Harjani <riteshh@linux.ibm.com>
+Reviewed-by: Jan Kara <jack@suse.cz>
+Link: https://lore.kernel.org/r/20200316093038.25485-1-riteshh@linux.ibm.com
+Signed-off-by: Theodore Ts'o <tytso@mit.edu>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/tegra/dc.c | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+ fs/ext4/super.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/tegra/dc.c b/drivers/gpu/drm/tegra/dc.c
-index 4df39112e38ec..176fb9a40ddf9 100644
---- a/drivers/gpu/drm/tegra/dc.c
-+++ b/drivers/gpu/drm/tegra/dc.c
-@@ -2059,10 +2059,16 @@ static int tegra_dc_probe(struct platform_device *pdev)
- 	if (err < 0) {
- 		dev_err(&pdev->dev, "failed to register host1x client: %d\n",
- 			err);
--		return err;
-+		goto disable_pm;
- 	}
- 
- 	return 0;
-+
-+disable_pm:
-+	pm_runtime_disable(&pdev->dev);
-+	tegra_dc_rgb_remove(dc);
-+
-+	return err;
- }
- 
- static int tegra_dc_remove(struct platform_device *pdev)
+diff --git a/fs/ext4/super.c b/fs/ext4/super.c
+index d44fc3f579e13..e00a9a51be42f 100644
+--- a/fs/ext4/super.c
++++ b/fs/ext4/super.c
+@@ -3523,7 +3523,8 @@ int ext4_calculate_overhead(struct super_block *sb)
+ 	 */
+ 	if (sbi->s_journal && !sbi->journal_bdev)
+ 		overhead += EXT4_NUM_B2C(sbi, sbi->s_journal->j_maxlen);
+-	else if (ext4_has_feature_journal(sb) && !sbi->s_journal) {
++	else if (ext4_has_feature_journal(sb) && !sbi->s_journal && j_inum) {
++		/* j_inum for internal journal is non-zero */
+ 		j_inode = ext4_get_journal_inode(sb, j_inum);
+ 		if (j_inode) {
+ 			j_blocks = j_inode->i_size >> sb->s_blocksize_bits;
 -- 
 2.20.1
 
