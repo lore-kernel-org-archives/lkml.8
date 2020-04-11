@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B62E0C2BB85
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:12:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1EFBC2BBFD
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:12:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8A354217D8
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:12:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 895A0214D8
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:12:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586607125;
-	bh=bh5C6qzCSXwpz03LQJ3hol3CqLdgjdg5Rcnvfcb9xPA=;
+	s=default; t=1586607130;
+	bh=GDBkdFyQwNJy3s7hikLvymUoDDGW7i4bveuG7EFg1oA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=eNSgMS0XTqcKLfx2RHG33P3ffJ3rYYCXYhJCRAnUFwpN+mAgaDtbslmeXcQ0YJd7L
-	 8eESd49XoHj4Eg1o2048Bh1A/i3VR7Q0HIoe8Jwmsi2XtTPr8azaez5675QSphZQYg
-	 izksB0UR6KCmWNOTv9cCgZbtoExloNhhyx//Vmp8=
+	b=WNa6DFv0BIlhHQT6KdltwKRGIrUqkOG6wcX69eLbr4avjxrlysmOAcdGrNjvK9f4I
+	 WqeObD+SznfyQmKFfBMPGlQkdVlVX3LhHnlhczOOFDOAWEzqRrMJ+WngmElsJ4KLNV
+	 tokyjE2J98YJaJ9yN/ug5FWxUpRU0q4b00/0bd0E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727126AbgDKMMD (ORCPT
+        id S1727154AbgDKMMJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 08:12:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44352 "EHLO mail.kernel.org"
+        Sat, 11 Apr 2020 08:12:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44474 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727104AbgDKML7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 08:11:59 -0400
+        id S1727104AbgDKMMF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Apr 2020 08:12:05 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D983521775;
-        Sat, 11 Apr 2020 12:11:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B6A14214D8;
+        Sat, 11 Apr 2020 12:12:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586607119;
-        bh=bh5C6qzCSXwpz03LQJ3hol3CqLdgjdg5Rcnvfcb9xPA=;
+        s=default; t=1586607124;
+        bh=GDBkdFyQwNJy3s7hikLvymUoDDGW7i4bveuG7EFg1oA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xX28zdLtL68d775vq/DLWhXPYJWmGRMVUDY3WFT7JLQFGX2v8LeEqsaVw9TCeqmpk
-         A8cfAGEtfeUnPOuEMwBuYhq5j0V8pxnX4FhXvtnXRU+VfoD0GCE/vg37+Tpi6pmLw3
-         pH9UHip9WAjoXG0l11PViyq5HBezFgkSEzuAhQKk=
+        b=cyhTYNDQGQUsOd3W3mGJ/nmQHJzuMZfuWZYC1jxQUWMkjH0RENAGllD7l+tuycm7k
+         yUB+346rrQkAw+jP0920bFKx+f/1Br9nCp1t2mmlF2XH5JXrmZT2OKciQgvzA/wQ2U
+         +ST0wW0+t2iwRR6ozGEdpldJT3xx8i3OMJfj602M=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>,
-        Vivien Didelot <vivien.didelot@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.9 15/32] net: dsa: bcm_sf2: Ensure correct sub-node is parsed
-Date:   Sat, 11 Apr 2020 14:08:54 +0200
-Message-Id: <20200411115420.240624697@linuxfoundation.org>
+        stable@vger.kernel.org, Richard Palethorpe <rpalethorpe@suse.com>,
+        Kees Cook <keescook@chromium.org>, linux-can@vger.kernel.org,
+        netdev@vger.kernel.org, security@kernel.org, wg@grandegger.com,
+        mkl@pengutronix.de, davem@davemloft.net
+Subject: [PATCH 4.9 17/32] slcan: Dont transmit uninitialized stack data in padding
+Date:   Sat, 11 Apr 2020 14:08:56 +0200
+Message-Id: <20200411115420.554970658@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200411115418.455500023@linuxfoundation.org>
 References: <20200411115418.455500023@linuxfoundation.org>
@@ -60,48 +61,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Florian Fainelli <f.fainelli@gmail.com>
+From: Richard Palethorpe <rpalethorpe@suse.com>
 
-[ Upstream commit afa3b592953bfaecfb4f2f335ec5f935cff56804 ]
+[ Upstream commit b9258a2cece4ec1f020715fe3554bc2e360f6264 ]
 
-When the bcm_sf2 was converted into a proper platform device driver and
-used the new dsa_register_switch() interface, we would still be parsing
-the legacy DSA node that contained all the port information since the
-platform firmware has intentionally maintained backward and forward
-compatibility to client programs. Ensure that we do parse the correct
-node, which is "ports" per the revised DSA binding.
+struct can_frame contains some padding which is not explicitly zeroed in
+slc_bump. This uninitialized data will then be transmitted if the stack
+initialization hardening feature is not enabled (CONFIG_INIT_STACK_ALL).
 
-Fixes: d9338023fb8e ("net: dsa: bcm_sf2: Make it a real platform device driver")
-Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
-Reviewed-by: Vivien Didelot <vivien.didelot@gmail.com>
+This commit just zeroes the whole struct including the padding.
+
+Signed-off-by: Richard Palethorpe <rpalethorpe@suse.com>
+Fixes: a1044e36e457 ("can: add slcan driver for serial/USB-serial CAN adapters")
+Reviewed-by: Kees Cook <keescook@chromium.org>
+Cc: linux-can@vger.kernel.org
+Cc: netdev@vger.kernel.org
+Cc: security@kernel.org
+Cc: wg@grandegger.com
+Cc: mkl@pengutronix.de
+Cc: davem@davemloft.net
+Acked-by: Marc Kleine-Budde <mkl@pengutronix.de>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/dsa/bcm_sf2.c |    7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+ drivers/net/can/slcan.c |    4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
---- a/drivers/net/dsa/bcm_sf2.c
-+++ b/drivers/net/dsa/bcm_sf2.c
-@@ -976,6 +976,7 @@ static int bcm_sf2_sw_probe(struct platf
- 	struct device_node *dn = pdev->dev.of_node;
- 	struct b53_platform_data *pdata;
- 	struct dsa_switch_ops *ops;
-+	struct device_node *ports;
- 	struct bcm_sf2_priv *priv;
- 	struct b53_device *dev;
- 	struct dsa_switch *ds;
-@@ -1038,7 +1039,11 @@ static int bcm_sf2_sw_probe(struct platf
- 	spin_lock_init(&priv->indir_lock);
- 	mutex_init(&priv->stats_mutex);
+--- a/drivers/net/can/slcan.c
++++ b/drivers/net/can/slcan.c
+@@ -147,7 +147,7 @@ static void slc_bump(struct slcan *sl)
+ 	u32 tmpid;
+ 	char *cmd = sl->rbuff;
  
--	bcm_sf2_identify_ports(priv, dn->child);
-+	ports = of_find_node_by_name(dn, "ports");
-+	if (ports) {
-+		bcm_sf2_identify_ports(priv, ports);
-+		of_node_put(ports);
-+	}
+-	cf.can_id = 0;
++	memset(&cf, 0, sizeof(cf));
  
- 	priv->irq0 = irq_of_parse_and_map(dn, 0);
- 	priv->irq1 = irq_of_parse_and_map(dn, 1);
+ 	switch (*cmd) {
+ 	case 'r':
+@@ -186,8 +186,6 @@ static void slc_bump(struct slcan *sl)
+ 	else
+ 		return;
+ 
+-	*(u64 *) (&cf.data) = 0; /* clear payload */
+-
+ 	/* RTR frames may have a dlc > 0 but they never have any data bytes */
+ 	if (!(cf.can_id & CAN_RTR_FLAG)) {
+ 		for (i = 0; i < cf.can_dlc; i++) {
 
 
