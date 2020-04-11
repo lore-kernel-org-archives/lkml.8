@@ -7,58 +7,45 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B2FBC2BA19
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:30:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CA16C2BA19
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:30:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4A959206E9
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:30:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 293482051A
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:30:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586647801;
-	bh=NY7ZqzCJPWeys9vGU83DhxaZTUXXDJycIFv3gVHjUyI=;
+	s=default; t=1586647807;
+	bh=6ujQpcxIGithtYCTLKGJdniW/4CHxY9NdvXu1hLNzmU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=h/WF0BSBbGRVDDPcQY0ZTKjLrCiSpru/L2SK+42zAHmHyGLVOpSvibTJEXYF1VE7u
-	 wM14r4cv+s9BgRJcio1HuI/XrQWVwFRDcS2hg0Qm8086yul5Z7psjzTTiMN4uADdyQ
-	 HSpaunWWf1Z+LotJVY9RlgESwmvc5dZi29CYrg1Q=
+	b=vrB214Zi0xfrdUchRJjdvfUb2oN3hcA28ywEWrACLvS+RmC4dTMipX8ASR65g5zUe
+	 xMS/DYx5V0hav+hgt5F9zXQAGD+U4ZvQCPMjlpYJ0zHBetn6aVFwEG4Or566AigCfD
+	 1pf1JRpaENfYXrRPQGYLFDUyxOyXCGlOOp+bcsOY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730267AbgDKX37 (ORCPT
+        id S1730631AbgDKXaF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 19:29:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49590 "EHLO mail.kernel.org"
+        Sat, 11 Apr 2020 19:30:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49466 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729680AbgDKXKs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 19:10:48 -0400
+        id S1728973AbgDKXKn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Apr 2020 19:10:43 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 723FA2173E;
-        Sat, 11 Apr 2020 23:10:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0AA1420708;
+        Sat, 11 Apr 2020 23:10:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586646648;
-        bh=NY7ZqzCJPWeys9vGU83DhxaZTUXXDJycIFv3gVHjUyI=;
+        s=default; t=1586646643;
+        bh=6ujQpcxIGithtYCTLKGJdniW/4CHxY9NdvXu1hLNzmU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bJyci6K/QotL/BB9uFCcZRuv9qj4/9ljkevMx4iH0T3RJKFUsgX1GCLKbq0YmMme5
-         QAlba5h2fvGLn5/jTwKjomGPlgWEU6EPCgVRRkb6Q1AuKrsTsrB1GMms5ydHbFiRq8
-         aBDXzx3DbQjo9ofuuOuO02fKpbXq5R4/rPY3frvw=
+        b=WgOFZZNeGR2UsZ0508MXFm4tHUovFSHATCtrGqBkhaag5ufjtDlbt+Lmg4NBFnjcK
+         aeGwQ4FrLOxGln07m7s8ArIwhI+sKKXl9+EpMFNCjbBms+zZwtlUi/EVluUuR1r7tD
+         Q7sbdPbwCBEo2zt+OikKGF2ktd/hX7ZnraHTsGAQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Dan Carpenter <dan.carpenter@oracle.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Andrea Righi <righi.andrea@gmail.com>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Daniel Thompson <daniel.thompson@linaro.org>,
-        Peter Rosin <peda@axentia.se>,
-        Jani Nikula <jani.nikula@intel.com>,
-        Gerd Hoffmann <kraxel@redhat.com>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Sasha Levin <sashal@kernel.org>,
-        dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 052/108] fbdev: potential information leak in do_fb_ioctl()
-Date:   Sat, 11 Apr 2020 19:08:47 -0400
-Message-Id: <20200411230943.24951-52-sashal@kernel.org>
+Cc:     Steve Grubb <sgrubb@redhat.com>, Paul Moore <paul@paul-moore.com>,
+        Sasha Levin <sashal@kernel.org>, linux-audit@redhat.com
+Subject: [PATCH AUTOSEL 5.4 049/108] audit: CONFIG_CHANGE don't log internal bookkeeping as an event
+Date:   Sat, 11 Apr 2020 19:08:44 -0400
+Message-Id: <20200411230943.24951-49-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200411230943.24951-1-sashal@kernel.org>
 References: <20200411230943.24951-1-sashal@kernel.org>
@@ -71,48 +58,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dan Carpenter <dan.carpenter@oracle.com>
+From: Steve Grubb <sgrubb@redhat.com>
 
-[ Upstream commit d3d19d6fc5736a798b118971935ce274f7deaa82 ]
+[ Upstream commit 70b3eeed49e8190d97139806f6fbaf8964306cdb ]
 
-The "fix" struct has a 2 byte hole after ->ywrapstep and the
-"fix = info->fix;" assignment doesn't necessarily clear it.  It depends
-on the compiler.  The solution is just to replace the assignment with an
-memcpy().
+Common Criteria calls out for any action that modifies the audit trail to
+be recorded. That usually is interpreted to mean insertion or removal of
+rules. It is not required to log modification of the inode information
+since the watch is still in effect. Additionally, if the rule is a never
+rule and the underlying file is one they do not want events for, they
+get an event for this bookkeeping update against their wishes.
 
-Fixes: 1f5e31d7e55a ("fbmem: don't call copy_from/to_user() with mutex held")
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Arnd Bergmann <arnd@arndb.de>
-Cc: "Eric W. Biederman" <ebiederm@xmission.com>
-Cc: Andrea Righi <righi.andrea@gmail.com>
-Cc: Daniel Vetter <daniel.vetter@ffwll.ch>
-Cc: Sam Ravnborg <sam@ravnborg.org>
-Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>
-Cc: Daniel Thompson <daniel.thompson@linaro.org>
-Cc: Peter Rosin <peda@axentia.se>
-Cc: Jani Nikula <jani.nikula@intel.com>
-Cc: Gerd Hoffmann <kraxel@redhat.com>
-Signed-off-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20200113100132.ixpaymordi24n3av@kili.mountain
+Since no device/inode info is logged at insertion and no device/inode
+information is logged on update, there is nothing meaningful being
+communicated to the admin by the CONFIG_CHANGE updated_rules event. One
+can assume that the rule was not "modified" because it is still watching
+the intended target. If the device or inode cannot be resolved, then
+audit_panic is called which is sufficient.
+
+The correct resolution is to drop logging config_update events since
+the watch is still in effect but just on another unknown inode.
+
+Signed-off-by: Steve Grubb <sgrubb@redhat.com>
+Signed-off-by: Paul Moore <paul@paul-moore.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/video/fbdev/core/fbmem.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ kernel/audit_watch.c | 2 --
+ 1 file changed, 2 deletions(-)
 
-diff --git a/drivers/video/fbdev/core/fbmem.c b/drivers/video/fbdev/core/fbmem.c
-index e6a1c805064f0..36469943795a8 100644
---- a/drivers/video/fbdev/core/fbmem.c
-+++ b/drivers/video/fbdev/core/fbmem.c
-@@ -1110,7 +1110,7 @@ static long do_fb_ioctl(struct fb_info *info, unsigned int cmd,
- 		break;
- 	case FBIOGET_FSCREENINFO:
- 		lock_fb_info(info);
--		fix = info->fix;
-+		memcpy(&fix, &info->fix, sizeof(fix));
- 		if (info->flags & FBINFO_HIDE_SMEM_START)
- 			fix.smem_start = 0;
- 		unlock_fb_info(info);
+diff --git a/kernel/audit_watch.c b/kernel/audit_watch.c
+index 4508d5e0cf696..8a8fd732ff6d0 100644
+--- a/kernel/audit_watch.c
++++ b/kernel/audit_watch.c
+@@ -302,8 +302,6 @@ static void audit_update_watch(struct audit_parent *parent,
+ 			if (oentry->rule.exe)
+ 				audit_remove_mark(oentry->rule.exe);
+ 
+-			audit_watch_log_rule_change(r, owatch, "updated_rules");
+-
+ 			call_rcu(&oentry->rcu, audit_free_rule_rcu);
+ 		}
+ 
 -- 
 2.20.1
 
