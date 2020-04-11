@@ -2,68 +2,116 @@ Return-Path: <SRS0=xbEg=53=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C17EEC2BA2B
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0FE9C2BBC7
 	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 16:39:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A049F206F7
+	by mail.kernel.org (Postfix) with ESMTP id BB64520757
 	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 16:39:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1586623158;
+	bh=ut2xbjRs0UxaeyGa71mvzMJ4GWyyeMJ6jwnYaHuRQcg=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=nMLiBYtT9+95tlyOLf9melMsAyEjqo1xtiWCuVRXeDrwABlYSMpUVnMyrpzEiduqG
+	 NR+t1jjSiw3mm568M7DuF+MB5DdGSfY9y6+GdlO2Y0iyZ+CdGbxZUQ+VqQ/m2w/he9
+	 CDMWnx5Q6bTk4ZNPV9FZwEores86Ke9YWpGZOlQw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726697AbgDKQhv (ORCPT
+        id S1726716AbgDKQi0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 12:37:51 -0400
-Received: from mout.kundenserver.de ([217.72.192.73]:52789 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726257AbgDKQhu (ORCPT
+        Sat, 11 Apr 2020 12:38:26 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:43494 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726256AbgDKQi0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 12:37:50 -0400
-Received: from obelix.fritz.box ([46.142.9.225]) by mrelayeu.kundenserver.de
- (mreue106 [212.227.15.183]) with ESMTPSA (Nemesis) id
- 1MnItm-1ixqI53yWC-00jKfL for <linux-kernel@vger.kernel.org>; Sat, 11 Apr 2020
- 18:37:50 +0200
-To:     linux-kernel@vger.kernel.org
-From:   sixpack13 <sixpack13@online.de>
-Subject: Re: [PATCH 5.6 00/38] 5.6.4-rc1 review
-Message-ID: <f2f64022-0442-8773-35fc-62487580ef2f@online.de>
-Date:   Sat, 11 Apr 2020 18:37:49 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Sat, 11 Apr 2020 12:38:26 -0400
+Received: by mail-lj1-f194.google.com with SMTP id h25so4775669lja.10
+        for <linux-kernel@vger.kernel.org>; Sat, 11 Apr 2020 09:38:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=HHjNiAPiJ1Oz2tFcDWgKOCe+L+oTgqAXQPJRZQ/4hzk=;
+        b=fURPhmhZDafu3/qkIgLMIEfe4A4py1LqcCqCeBR+aVwJ7drlaVanUhZYjyx5KCUiZx
+         KGDD6HlS++yVH8L88Y7vc/HiMTfe8JLWu5zgSXu8r7QLGa8LZ7tfbZa2cOHm/M603dUP
+         wu/c+M9wGg8Em1o8TiiYeR2NppvuUZeOBDKjA=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=HHjNiAPiJ1Oz2tFcDWgKOCe+L+oTgqAXQPJRZQ/4hzk=;
+        b=K4VAo7EXVOBW8e9Mvw11xganXe8SzcmHp2wi1CcuFsavf1wo5LhMloa7ERkxNe63h4
+         4oYirma3DoQTWWWPpaxGU4iYxYgdPRET/AeImA+CLaP68MCJ5sQTcJp7SzsDkljzZdwp
+         We6c4rdyVHxIE4ABLkRuJZ7Zjii6sbydrpjHjIi7PwssYnjAYvt74Rvn56G5ZdbEPlwG
+         Ygnbu2j7T8S7/oGRA3pgWvuM/RmC8dWu6vcQc2M0AL/j9LKG424q1EvnmMc02PEUqPKO
+         l5kw1aHo+feStjTPXhFH2orTQupnalafEURlbYS+yr2EHp0X/hh//eLMbT/Vzgtd/k9M
+         3Wsg==
+X-Gm-Message-State: AGi0Puav7g/zZnZ4Cjr6RS3v2Y9wbe2V6m6rs6+7/AVXS9FQUvO4vcFj
+        sUcM5wNDDlsjUfi1cPwmAcXN7jHcoWg=
+X-Google-Smtp-Source: APiQypL9Vuw965azEuZjRW/p70wsgwiazczG97R5I3Y5zRXGKh+giIrFh7YdJkACVJZaAQdXFaLsXw==
+X-Received: by 2002:a2e:8e98:: with SMTP id z24mr5977666ljk.23.1586623103405;
+        Sat, 11 Apr 2020 09:38:23 -0700 (PDT)
+Received: from mail-lj1-f172.google.com (mail-lj1-f172.google.com. [209.85.208.172])
+        by smtp.gmail.com with ESMTPSA id w10sm3656188ljh.85.2020.04.11.09.38.21
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 11 Apr 2020 09:38:22 -0700 (PDT)
+Received: by mail-lj1-f172.google.com with SMTP id n17so4780822lji.8
+        for <linux-kernel@vger.kernel.org>; Sat, 11 Apr 2020 09:38:21 -0700 (PDT)
+X-Received: by 2002:a2e:8652:: with SMTP id i18mr6327984ljj.265.1586623101184;
+ Sat, 11 Apr 2020 09:38:21 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: de-DE
-Content-Transfer-Encoding: 7bit
-X-Provags-ID: V03:K1:Xzw02Ea1KBzyNgumzg3JRV5mke2Y3858+jeUn2EVaNhE5bOqNRE
- MAKCv4UX9jk/MKvncHEwAL72hFESUJxLV6q6a4G8H7/Xr7bszDQpzPkPAx2L2wjYOeHoYSt
- Q6c9gf+LDB+4r9BkR/DZpVrRlt6l8C21boXyhm006TyZTqDhjHnl76u6ghQ8N+dDXqK23rC
- a6HLud7I4Kq2lYya+QUWQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:fRXBL287eY0=:JE27wlm2vFADJBypCrqc51
- E7SQdXKN3SH9T5npEnBF3nKkRPq3e2r93jP5MkcbRlLuDd/05RMPUJR65+esD52VgNCnuCqv4
- 0QIgBhn5dklJCbczMKWC/wfigxmPWpdv9eKDINprfvHYO7MTRbbUZU/hIiLrr0v1pNH2Ci6+W
- xjA2PhkNmOFtakfpuhOUHxZPVM9rm6wkV8H3AcTRAbdiO/12DhkUW3U+wiwk9fToTPWHiXNhB
- 2oNIr5TedRDKdZBKCOTmdwaFJNcpT6FcJqiec03MMLf7akUWiWBBDZvSWQfZqSl8vfa99LqjQ
- MQ7XMXqiGctgUx3k+FObuBo7ngH0JzjOOayXJg/kCslDGNPCpiLQFQUqtYO/X3Bm6pUNAo21X
- 3BZueVRZmCXlXRJKK3alkDJw/Lk7uhVkKvbDsJPdw+5tUMs/At/Yga6X8rQVYM/s4U6CIilR5
- Iv/BpVgVqyRffupgyRmf5M+4BeUQzIsnztm+w7TKy1LIiC4MvshVB65fKriKTDH5QrZMcVCUf
- /p5KrDMrT6n8IFkn6xia+SIBheb9HjA1X4yk/8UIBOEs7XnB2wzlkv21RKUTAooN7VIqxi/dh
- t+vesIKREpiEEknfg33zRFffnL2MGXb5FD/JBSJPvihje4sirT0ECBJFCBZZG63qNuEI7aIVH
- QWjN7Ha5LPMeLoonwTLVv7I13sUh7d1IOpopsI3m5SUFqT+E9zqY5g4QbFtQxEW8qmMx19BGA
- HSO60V2FVzhp3CrX32uGXQeV87yK8WiWpYkNTurqlRdmWeimnuK4SSpWJauQj1r+IuOfJox/f
- V8gJObuGCEbJ/H8lfbyRHTjYyJ2wnckMl7z/GroCDzuZVUTAHcWhRunktOq0supbbUTtHu5
+References: <20200406171124-mutt-send-email-mst@kernel.org>
+In-Reply-To: <20200406171124-mutt-send-email-mst@kernel.org>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Sat, 11 Apr 2020 09:38:05 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wg7sMywb2V8gifhpUDE=DWQTvg1wDieKVc0UoOSsOrynw@mail.gmail.com>
+Message-ID: <CAHk-=wg7sMywb2V8gifhpUDE=DWQTvg1wDieKVc0UoOSsOrynw@mail.gmail.com>
+Subject: Re: [GIT PULL] vhost: fixes, vdpa
+To:     "Michael S. Tsirkin" <mst@redhat.com>
+Cc:     KVM list <kvm@vger.kernel.org>,
+        virtualization@lists.linux-foundation.org,
+        Netdev <netdev@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
+        David Hildenbrand <david@redhat.com>, eperezma@redhat.com,
+        "Cc: stable@vger.kernel.org, david@redhat.com, dverkamp@chromium.org,
+        hch@lst.de, jasowang@redhat.com, liang.z.li@intel.com, mst@redhat.com,
+        tiny.windzz@gmail.com," <jasowang@redhat.com>,
+        lingshan.zhu@intel.com, Michal Hocko <mhocko@kernel.org>,
+        Nadav Amit <namit@vmware.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        David Rientjes <rientjes@google.com>, tiwei.bie@intel.com,
+        tysand@google.com,
+        "Cc: stable@vger.kernel.org, david@redhat.com, dverkamp@chromium.org,
+        hch@lst.de, jasowang@redhat.com, liang.z.li@intel.com, mst@redhat.com,
+        tiny.windzz@gmail.com," <wei.w.wang@intel.com>,
+        xiao.w.wang@intel.com, yuri.benditovich@daynix.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hallo
+On Mon, Apr 6, 2020 at 2:11 PM Michael S. Tsirkin <mst@redhat.com> wrote:
+>
+> The new vdpa subsystem with two first drivers.
 
-any chances that fixes for this
+So this one is really annoying to configure.
 
-https://lkml.org/lkml/2020/3/26/1133
+First it asks for vDPA driver for virtio devices (VIRTIO_VDPA) support.
 
-lands into stable (too ?)
+If you say 'n', it then asks *again* for VDPA drivers (VDPA_MENU).
 
--- 
-sixpack13
+And then when you say 'n' to *that* it asks you for Vhost driver for
+vDPA-based backend (VHOST_VDPA).
+
+This kind of crazy needs to stop.
+
+Doing kernel configuration is not supposed to be like some truly
+horrendously boring Colossal Cave Adventure game where you have to
+search for a way out of maze of twisty little passages, all alike.
+
+                Linus
