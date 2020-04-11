@@ -7,45 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CA16C2BA19
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:30:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51BFDC2BBC7
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:30:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 293482051A
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:30:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 21D4B2051A
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:30:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586647807;
-	bh=6ujQpcxIGithtYCTLKGJdniW/4CHxY9NdvXu1hLNzmU=;
+	s=default; t=1586647810;
+	bh=7w3dD9EteRAzeMqpU2Hs9rF8DjjME7iEpW/3WzlUqQ4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vrB214Zi0xfrdUchRJjdvfUb2oN3hcA28ywEWrACLvS+RmC4dTMipX8ASR65g5zUe
-	 xMS/DYx5V0hav+hgt5F9zXQAGD+U4ZvQCPMjlpYJ0zHBetn6aVFwEG4Or566AigCfD
-	 1pf1JRpaENfYXrRPQGYLFDUyxOyXCGlOOp+bcsOY=
+	b=VeJYq2kW8xMjOorXOGs0ul+r5Rhmg6fKFlpuD7SVorgwN3D8sSxjyXZOaS/JWRnMy
+	 uw2ThACCciphHUExiffideMfrjpIadnGliPyStHRycY5MIiWmjEAfvUuzo9TlDvb2X
+	 +9xs5XURTlUl/coawkseKK+PtvKpj8zFBB8G7AiM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730631AbgDKXaF (ORCPT
+        id S1729663AbgDKXKk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 19:30:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49466 "EHLO mail.kernel.org"
+        Sat, 11 Apr 2020 19:10:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49292 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728973AbgDKXKn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 19:10:43 -0400
+        id S1729642AbgDKXKh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Apr 2020 19:10:37 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0AA1420708;
-        Sat, 11 Apr 2020 23:10:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CCBAD2173E;
+        Sat, 11 Apr 2020 23:10:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586646643;
-        bh=6ujQpcxIGithtYCTLKGJdniW/4CHxY9NdvXu1hLNzmU=;
+        s=default; t=1586646637;
+        bh=7w3dD9EteRAzeMqpU2Hs9rF8DjjME7iEpW/3WzlUqQ4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WgOFZZNeGR2UsZ0508MXFm4tHUovFSHATCtrGqBkhaag5ufjtDlbt+Lmg4NBFnjcK
-         aeGwQ4FrLOxGln07m7s8ArIwhI+sKKXl9+EpMFNCjbBms+zZwtlUi/EVluUuR1r7tD
-         Q7sbdPbwCBEo2zt+OikKGF2ktd/hX7ZnraHTsGAQ=
+        b=t5ltoN7F63C9Y3P7T0zOzCeUZm8ZgY65mfxl5dLbm03ebiSdHDSuU7rwT9PYRBRfc
+         MRwWYZEmMzz34VFbMmeujI1mWkKVxLANcvruWqbzkpfeRKX9zXO+6HSEgks28XIDBY
+         l/GxLxv78GQ/8DnW9/xy9QfYWosptPQXqv6Vg2Ek=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Steve Grubb <sgrubb@redhat.com>, Paul Moore <paul@paul-moore.com>,
-        Sasha Levin <sashal@kernel.org>, linux-audit@redhat.com
-Subject: [PATCH AUTOSEL 5.4 049/108] audit: CONFIG_CHANGE don't log internal bookkeeping as an event
-Date:   Sat, 11 Apr 2020 19:08:44 -0400
-Message-Id: <20200411230943.24951-49-sashal@kernel.org>
+Cc:     Ayush Sawal <ayush.sawal@chelsio.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Sasha Levin <sashal@kernel.org>, linux-crypto@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 044/108] crypto: chelsio - This fixes the kernel panic which occurs during a libkcapi test
+Date:   Sat, 11 Apr 2020 19:08:39 -0400
+Message-Id: <20200411230943.24951-44-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200411230943.24951-1-sashal@kernel.org>
 References: <20200411230943.24951-1-sashal@kernel.org>
@@ -58,47 +59,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Steve Grubb <sgrubb@redhat.com>
+From: Ayush Sawal <ayush.sawal@chelsio.com>
 
-[ Upstream commit 70b3eeed49e8190d97139806f6fbaf8964306cdb ]
+[ Upstream commit 9195189e00a7db55e7d448cee973cae87c5a3c71 ]
 
-Common Criteria calls out for any action that modifies the audit trail to
-be recorded. That usually is interpreted to mean insertion or removal of
-rules. It is not required to log modification of the inode information
-since the watch is still in effect. Additionally, if the rule is a never
-rule and the underlying file is one they do not want events for, they
-get an event for this bookkeeping update against their wishes.
+The libkcapi test which causes kernel panic is
+aead asynchronous vmsplice multiple test.
 
-Since no device/inode info is logged at insertion and no device/inode
-information is logged on update, there is nothing meaningful being
-communicated to the admin by the CONFIG_CHANGE updated_rules event. One
-can assume that the rule was not "modified" because it is still watching
-the intended target. If the device or inode cannot be resolved, then
-audit_panic is called which is sufficient.
+./bin/kcapi  -v -d 4 -x 10   -c "ccm(aes)"
+-q 4edb58e8d5eb6bc711c43a6f3693daebde2e5524f1b55297abb29f003236e43d
+-t a7877c99 -n 674742abd0f5ba -k 2861fd0253705d7875c95ba8a53171b4
+-a fb7bc304a3909e66e2e0c5ef952712dd884ce3e7324171369f2c5db1adc48c7d
 
-The correct resolution is to drop logging config_update events since
-the watch is still in effect but just on another unknown inode.
+This patch avoids dma_mapping of a zero length sg which causes the panic,
+by using sg_nents_for_len which maps only upto a specific length
 
-Signed-off-by: Steve Grubb <sgrubb@redhat.com>
-Signed-off-by: Paul Moore <paul@paul-moore.com>
+Signed-off-by: Ayush Sawal <ayush.sawal@chelsio.com>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/audit_watch.c | 2 --
- 1 file changed, 2 deletions(-)
+ drivers/crypto/chelsio/chcr_algo.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/kernel/audit_watch.c b/kernel/audit_watch.c
-index 4508d5e0cf696..8a8fd732ff6d0 100644
---- a/kernel/audit_watch.c
-+++ b/kernel/audit_watch.c
-@@ -302,8 +302,6 @@ static void audit_update_watch(struct audit_parent *parent,
- 			if (oentry->rule.exe)
- 				audit_remove_mark(oentry->rule.exe);
- 
--			audit_watch_log_rule_change(r, owatch, "updated_rules");
--
- 			call_rcu(&oentry->rcu, audit_free_rule_rcu);
- 		}
- 
+diff --git a/drivers/crypto/chelsio/chcr_algo.c b/drivers/crypto/chelsio/chcr_algo.c
+index 44423a3be3094..138e6066611cc 100644
+--- a/drivers/crypto/chelsio/chcr_algo.c
++++ b/drivers/crypto/chelsio/chcr_algo.c
+@@ -2480,8 +2480,9 @@ int chcr_aead_dma_map(struct device *dev,
+ 	else
+ 		reqctx->b0_dma = 0;
+ 	if (req->src == req->dst) {
+-		error = dma_map_sg(dev, req->src, sg_nents(req->src),
+-				   DMA_BIDIRECTIONAL);
++		error = dma_map_sg(dev, req->src,
++				sg_nents_for_len(req->src, dst_size),
++					DMA_BIDIRECTIONAL);
+ 		if (!error)
+ 			goto err;
+ 	} else {
 -- 
 2.20.1
 
