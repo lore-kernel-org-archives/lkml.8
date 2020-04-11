@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E668BC2BBC7
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:14:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02A7CC2BA2B
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:14:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BF02C20644
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:14:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CC87421D7D
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:14:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586607277;
-	bh=g0AI+qd0PMmNWavP2xzjQz+yCS9cmy1QGCIW6c4d1hM=;
+	s=default; t=1586607281;
+	bh=kn6do4sZUl1m9RB0bbgLrYd5xmWGiUYapZhBmgCfQGI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=c9tUKYBjiGYDHAN11KzrWi9OAq5UoNhnQYQlZE1jL0+2VsG8diK6H/5Cf3I8KmKVl
-	 ezOV+tyZvjgiou6kJ8bf7LMF8QGmPJ5HkI2/FHu2rvUgshFESKr52stw6ew1awvUNs
-	 st7ri+OcLhyZX/c1be+t2rslv8JVtHln+O1N+jjQ=
+	b=BZFLti3Z2EKgB9RrbBJbx1TCGLkc2D2jnRxaU8WBjT5pQ/wK54kiDbxs6L9uHQfsA
+	 tjd67o+UXAcXDADQeMJQnsrJ9ULDpSURZ+sEGskB5TOAJtmmXDDsP26sclRnsTz8Z7
+	 +9ZsMa6Ofm1xs9OTxyZR7pUgjJaWRP4qFx+++eLY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727978AbgDKMOe (ORCPT
+        id S1727987AbgDKMOk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 08:14:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47966 "EHLO mail.kernel.org"
+        Sat, 11 Apr 2020 08:14:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48032 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727954AbgDKMOc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 08:14:32 -0400
+        id S1727954AbgDKMOf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Apr 2020 08:14:35 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6B25720644;
-        Sat, 11 Apr 2020 12:14:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D0CFA20644;
+        Sat, 11 Apr 2020 12:14:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586607271;
-        bh=g0AI+qd0PMmNWavP2xzjQz+yCS9cmy1QGCIW6c4d1hM=;
+        s=default; t=1586607274;
+        bh=kn6do4sZUl1m9RB0bbgLrYd5xmWGiUYapZhBmgCfQGI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JtWsPrveakQidoP3vW4Wyj6XEBZcja+IeXXdgIrQtIWa6xXudJH3Nlr56wf+XIz/T
-         ORTDtv5Asplk2Tng0PIAzGmfEhGKo5RqvI/EA9QLkD+pHZ7vFj+0GP8aEC2eLdlHOL
-         M1JC2RxGZ4LOayCz0bBKBaIGwkPRz6AcOWdrac1c=
+        b=zJ5wc2JU/pTcE+e68J98YUvmmSsHE8me/atNWo8s2SMVV7Z9NJdVeWTRz1La7naWt
+         qziuHGykIjRbNl5JKVMrNPIefMS7EWPU8Py1YUJcwTpkODNB3w0THM5xjxUy+hQRgQ
+         pvEc2dm77yFczr1FMuqdFPInOSwU+/W6cV9Hbd+4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Roger Quadros <rogerq@ti.com>,
-        Felipe Balbi <felipe.balbi@linux.intel.com>,
+        stable@vger.kernel.org, Hans Verkuil <hans.verkuil@cisco.com>,
+        Lyude Paul <lyude@redhat.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
         Lee Jones <lee.jones@linaro.org>
-Subject: [PATCH 4.14 37/38] usb: dwc3: dont set gadget->is_otg flag
-Date:   Sat, 11 Apr 2020 14:09:21 +0200
-Message-Id: <20200411115441.360417768@linuxfoundation.org>
+Subject: [PATCH 4.14 38/38] drm_dp_mst_topology: fix broken drm_dp_sideband_parse_remote_dpcd_read()
+Date:   Sat, 11 Apr 2020 14:09:22 +0200
+Message-Id: <20200411115441.432558800@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200411115437.795556138@linuxfoundation.org>
 References: <20200411115437.795556138@linuxfoundation.org>
@@ -60,55 +61,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Roger Quadros <rogerq@ti.com>
+From: Hans Verkuil <hans.verkuil@cisco.com>
 
-commit c09b73cfac2a9317f1104169045c519c6021aa1d upstream.
+commit a4c30a4861c54af78c4eb8b7855524c1a96d9f80 upstream.
 
-This reverts
-commit 6a4290cc28be1 ("usb: dwc3: gadget: set the OTG flag in dwc3 gadget driver.")
+When parsing the reply of a DP_REMOTE_DPCD_READ DPCD command the
+result is wrong due to a missing idx increment.
 
-We don't yet support any of the OTG mechanisms (HNP/SRP/ADP)
-and are not setting gadget->otg_caps, so don't set gadget->is_otg
-flag.
+This was never noticed since DP_REMOTE_DPCD_READ is currently not
+used, but if you enable it, then it is all wrong.
 
-If we do then we end up publishing a OTG1.0 descriptor in
-the gadget descriptor which causes device enumeration to fail
-if we are connected to a host with CONFIG_USB_OTG enabled.
-
-Host side log without this patch
-
-[   96.720453] usb 1-1: new high-speed USB device number 2 using xhci-hcd
-[   96.901391] usb 1-1: Dual-Role OTG device on non-HNP port
-[   96.907552] usb 1-1: set a_alt_hnp_support failed: -32
-[   97.060447] usb 1-1: new high-speed USB device number 3 using xhci-hcd
-[   97.241378] usb 1-1: Dual-Role OTG device on non-HNP port
-[   97.247536] usb 1-1: set a_alt_hnp_support failed: -32
-[   97.253606] usb usb1-port1: attempt power cycle
-[   97.960449] usb 1-1: new high-speed USB device number 4 using xhci-hcd
-[   98.141383] usb 1-1: Dual-Role OTG device on non-HNP port
-[   98.147540] usb 1-1: set a_alt_hnp_support failed: -32
-[   98.300453] usb 1-1: new high-speed USB device number 5 using xhci-hcd
-[   98.481391] usb 1-1: Dual-Role OTG device on non-HNP port
-[   98.487545] usb 1-1: set a_alt_hnp_support failed: -32
-[   98.493532] usb usb1-port1: unable to enumerate USB device
-
-Signed-off-by: Roger Quadros <rogerq@ti.com>
-Signed-off-by: Felipe Balbi <felipe.balbi@linux.intel.com>
+Signed-off-by: Hans Verkuil <hans.verkuil@cisco.com>
+Reviewed-by: Lyude Paul <lyude@redhat.com>
+Acked-by: Alex Deucher <alexander.deucher@amd.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/e72ddac2-1dc0-100a-d816-9ac98ac009dd@xs4all.nl
 Signed-off-by: Lee Jones <lee.jones@linaro.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- drivers/usb/dwc3/gadget.c |    1 -
- 1 file changed, 1 deletion(-)
 
---- a/drivers/usb/dwc3/gadget.c
-+++ b/drivers/usb/dwc3/gadget.c
-@@ -3257,7 +3257,6 @@ int dwc3_gadget_init(struct dwc3 *dwc)
- 	dwc->gadget.speed		= USB_SPEED_UNKNOWN;
- 	dwc->gadget.sg_supported	= true;
- 	dwc->gadget.name		= "dwc3-gadget";
--	dwc->gadget.is_otg		= dwc->dr_mode == USB_DR_MODE_OTG;
+---
+ drivers/gpu/drm/drm_dp_mst_topology.c |    1 +
+ 1 file changed, 1 insertion(+)
+
+--- a/drivers/gpu/drm/drm_dp_mst_topology.c
++++ b/drivers/gpu/drm/drm_dp_mst_topology.c
+@@ -433,6 +433,7 @@ static bool drm_dp_sideband_parse_remote
+ 	if (idx > raw->curlen)
+ 		goto fail_len;
+ 	repmsg->u.remote_dpcd_read_ack.num_bytes = raw->msg[idx];
++	idx++;
+ 	if (idx > raw->curlen)
+ 		goto fail_len;
  
- 	/*
- 	 * FIXME We might be setting max_speed to <SUPER, however versions
 
 
