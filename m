@@ -2,98 +2,201 @@ Return-Path: <SRS0=xbEg=53=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39110C2BB86
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 02:27:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87A2BC2BB86
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 02:32:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 129132082D
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 02:27:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586572049;
-	bh=HUi2hrUBSigypj7OLb4O+ntBuDmB4tsP4LR2Q8kzRy8=;
-	h=In-Reply-To:References:Subject:From:Cc:To:Date:List-ID:From;
-	b=2hyhh17Er5t8RiF8znUHjo9gEsNmQQEACTkmJ3WBwuDbwMycGRT67Ih/Xd/qx9XQN
-	 uqdlRrz0Lp6ZD2o1WESjULI6ukGqPM1TzHT5DWNZ6NcwBC8O4KVnmlO7aVtncvapUz
-	 W7Picp7XzWgrxM4R3Bdy99cpTIYBL0lDlyOKuNMQ=
+	by mail.kernel.org (Postfix) with ESMTP id 65CE520753
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 02:32:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726702AbgDKC11 (ORCPT
+        id S1726681AbgDKCcN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Apr 2020 22:27:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47616 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726648AbgDKC11 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Apr 2020 22:27:27 -0400
-Received: from kernel.org (unknown [104.132.0.74])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 004E0206A1;
-        Sat, 11 Apr 2020 02:27:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586572047;
-        bh=HUi2hrUBSigypj7OLb4O+ntBuDmB4tsP4LR2Q8kzRy8=;
-        h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
-        b=p74Y9fw4spXP8pf4T5VF32/bLgWuuZPiqXJ+qwE6TdU3spWHWZoocPJZCScu098NO
-         mdzxubA+o7uu/V75cIWSMbkFN8o6UIgFacDnbNELRUcunPHJiZoPFA9aV7E7Z/fX0x
-         osRc40ASzj49v7Fz/0J96Bm8nLJO7F0FQJIkLfNs=
-Content-Type: text/plain; charset="utf-8"
+        Fri, 10 Apr 2020 22:32:13 -0400
+Received: from mail.loongson.cn ([114.242.206.163]:50172 "EHLO loongson.cn"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726648AbgDKCcM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Apr 2020 22:32:12 -0400
+Received: from [10.130.0.79] (unknown [113.200.148.30])
+        by mail.loongson.cn (Coremail) with SMTP id AQAAf9Dxf2kiLJFegGsmAA--.15S3;
+        Sat, 11 Apr 2020 10:32:04 +0800 (CST)
+Subject: Re: [PATCH v2] MIPS: Limit check_bugs32() to affected platform
+To:     Florian Fainelli <f.fainelli@gmail.com>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+References: <1586488859-18715-1-git-send-email-yangtiezhu@loongson.cn>
+ <c60f62cb-62e8-be13-f551-c9a13abc7f94@gmail.com>
+Cc:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Xuefeng Li <lixuefeng@loongson.cn>
+From:   Tiezhu Yang <yangtiezhu@loongson.cn>
+Message-ID: <181cf95e-c5f6-3899-e8eb-3f8847ec86d9@loongson.cn>
+Date:   Sat, 11 Apr 2020 10:32:02 +0800
+User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
+ Thunderbird/45.4.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <CAAfSe-s=dZe=6y7UH8CBcddL1BKoLOAvi24RekgdmVv0StxTTA@mail.gmail.com>
-References: <20200408160044.2550437-1-arnd@arndb.de> <CABOV4+UocLs3jLi7-vTi8muiFqACVdxH7Td8=U1ABveLnmyCuw@mail.gmail.com> <CA+nhYX0H-czfJ6Kg+FK7X2=hHQK185UOLGoPdEP3nqWQWcA+bg@mail.gmail.com> <CAAfSe-s=dZe=6y7UH8CBcddL1BKoLOAvi24RekgdmVv0StxTTA@mail.gmail.com>
-Subject: Re: [PATCH] [RFC] clk: sprd: fix compile-testing
-From:   Stephen Boyd <sboyd@kernel.org>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Chunyan Zhang <chunyan.zhang@unisoc.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-clk <linux-clk@vger.kernel.org>,
-        Orson Zhai <orson.zhai@unisoc.com>,
-        Android Kernel Team <kernel-team@android.com>
-To:     Chunyan Zhang <zhang.lyra@gmail.com>,
-        Sandeep Patil <sspatil@android.com>
-Date:   Fri, 10 Apr 2020 19:27:26 -0700
-Message-ID: <158657204622.199533.16589832598336244320@swboyd.mtv.corp.google.com>
-User-Agent: alot/0.9
+In-Reply-To: <c60f62cb-62e8-be13-f551-c9a13abc7f94@gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-CM-TRANSID: AQAAf9Dxf2kiLJFegGsmAA--.15S3
+X-Coremail-Antispam: 1UD129KBjvJXoWxAFy5Xry3Cr43GrWftFy3XFb_yoWrWr1xpF
+        4Dtw4kXF4DuFyktFWFyr1kGrWYq34DGrZ0kryjgay8AF45XFs8GFn3Kr45Ar17ZrySga4r
+        ua9aqr1ftr42yaUanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+        9KBjDU0xBIdaVrnRJUUUvm14x267AKxVWUJVW8JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+        rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+        1l84ACjcxK6xIIjxv20xvE14v26r1j6r1xM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r1j
+        6r4UM28EF7xvwVC2z280aVAFwI0_Gr0_Cr1l84ACjcxK6I8E87Iv6xkF7I0E14v26r4j6r
+        4UJwAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0
+        I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r
+        4UM4x0Y48IcVAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwCYjI0SjxkI62AI1cAE67vI
+        Y487MxkIecxEwVAFwVW8JwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8Jw
+        C20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAF
+        wI0_JF0_Jw1lIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjx
+        v20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6rWUJVWrZr1UMIIF0xvE
+        x4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnU
+        UI43ZEXa7VUbYhF7UUUUU==
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Chunyan Zhang (2020-04-09 20:45:16)
-> We see this broken because I shouldn't leave clk Makefile a tristate
-> compile [1] after changing ARCH_SPRD to be tristate.
->=20
-> If we will make ARCH_SPRD tristate-able in the future and you all
-> aggree that, I would like to do it now, and pay more attention to
-> Makefiles and dependencies.
->=20
-> I can also make a change like below:
->=20
-> diff --git a/drivers/clk/sprd/Kconfig b/drivers/clk/sprd/Kconfig
-> index e18c80fbe804..9f7d9d8899a5 100644
-> --- a/drivers/clk/sprd/Kconfig
-> +++ b/drivers/clk/sprd/Kconfig
-> @@ -2,6 +2,7 @@
->  config SPRD_COMMON_CLK
->         tristate "Clock support for Spreadtrum SoCs"
->         depends on ARCH_SPRD || COMPILE_TEST
-> +       depends on m || ARCH_SPRD !=3D m
->         default ARCH_SPRD
->         select REGMAP_MMIO
->=20
-> Arnd, Stephen, Sandeep, what do you think? Does that make sense?
+On 04/11/2020 12:25 AM, Florian Fainelli wrote:
+>
+> On 4/9/2020 8:20 PM, Tiezhu Yang wrote:
+>> In the current code, check_bugs32() only handles MIPS32 CPU type CPU_34K,
+>> it is better to build and call it on the affected platform.
+>>
+>> Move check_bugs32() to the new added 34k-bugs32.c to indicate the fact that
+>> the code is specific to the 34k CPU, and also add CONFIG_CPU_34K_BUGS32 to
+>> control whether or not check the bugs.
+>>
+>> Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+> This is not a whole lot of code, so moving this to a separate
+> translation unit seems a bit heavy handed, also file renames, albeit
+> tracked properly by git are always a challenge when doing back ports.
 
-Sorry, doesn't make any sense to me. The ARCH_FOO configs for various
-platforms are intended to be used to limit the configuration space of
-various other Kconfig symbols for the code that only matters to those
-platforms. The usage of depends and default is correct here already. The
-ARCH_FOO configs should always be bool. Any code bloat problems seen by
-config symbols enabling because they're 'default ARCH_FOO' can be
-resolved by explicitly disabling those configs.
+Hi Florian,
+
+There exists the following three ways to do it, I'm fine either way,
+maybe the first way looks better. Let us wait for the MIPS maintainer
+to say what he prefer.
+
+Hi Thomas,
+
+What is your opinion?
+
+1 just use CONFIG_CPU_MIPS32_R2
+
+diff --git a/arch/mips/include/asm/bugs.h b/arch/mips/include/asm/bugs.h
+index d72dc6e..743604f 100644
+--- a/arch/mips/include/asm/bugs.h
++++ b/arch/mips/include/asm/bugs.h
+@@ -35,7 +35,9 @@ static inline void check_bugs(void)
+         unsigned int cpu = smp_processor_id();
+
+         cpu_data[cpu].udelay_val = loops_per_jiffy;
+-       check_bugs32();
++
++       if (IS_ENABLED(CONFIG_CPU_MIPS32_R2))
++               check_bugs32();
+
+         if (IS_ENABLED(CONFIG_CPU_R4X00_BUGS64))
+                 check_bugs64();
+diff --git a/arch/mips/kernel/cpu-probe.c b/arch/mips/kernel/cpu-probe.c
+index 6ab6b03..383500b 100644
+--- a/arch/mips/kernel/cpu-probe.c
++++ b/arch/mips/kernel/cpu-probe.c
+@@ -461,7 +461,8 @@ static inline void cpu_set_mt_per_tc_perf(struct 
+cpuinfo_mips *c)
+                 c->options |= MIPS_CPU_MT_PER_TC_PERF_COUNTERS;
+  }
+
+-static inline void check_errata(void)
++#ifdef CONFIG_CPU_MIPS32_R2
++static inline void check_errata32(void)
+  {
+         struct cpuinfo_mips *c = &current_cpu_data;
+
+@@ -482,8 +483,9 @@ static inline void check_errata(void)
+
+  void __init check_bugs32(void)
+  {
+-       check_errata();
++       check_errata32();
+  }
++#endif /* CONFIG_CPU_MIPS32_R2 */
+
+  /*
+   * Probe whether cpu has config register by trying to play with
+
+
+2 add CONFIG_CPU_34K_BUGS32
+
+diff --git a/arch/mips/Kconfig b/arch/mips/Kconfig
+index 797d7f1..e936e3c 100644
+--- a/arch/mips/Kconfig
++++ b/arch/mips/Kconfig
+@@ -2605,6 +2605,10 @@ config CPU_R4X00_BUGS64
+         bool
+         default y if SYS_HAS_CPU_R4X00 && 64BIT && (TARGET_ISA_REV < 1)
+
++config CPU_34K_BUGS32
++       bool
++       default y if CPU_MIPS32_R2
++
+  config MIPS_ASID_SHIFT
+         int
+         default 6 if CPU_R3000 || CPU_TX39XX
+diff --git a/arch/mips/include/asm/bugs.h b/arch/mips/include/asm/bugs.h
+index d72dc6e..bbf843a 100644
+--- a/arch/mips/include/asm/bugs.h
++++ b/arch/mips/include/asm/bugs.h
+@@ -35,7 +35,9 @@ static inline void check_bugs(void)
+         unsigned int cpu = smp_processor_id();
+
+         cpu_data[cpu].udelay_val = loops_per_jiffy;
+-       check_bugs32();
++
++       if (IS_ENABLED(CONFIG_CPU_34K_BUGS32))
++               check_bugs32();
+
+         if (IS_ENABLED(CONFIG_CPU_R4X00_BUGS64))
+                 check_bugs64();
+diff --git a/arch/mips/kernel/cpu-probe.c b/arch/mips/kernel/cpu-probe.c
+index 6ab6b03..670bc7c 100644
+--- a/arch/mips/kernel/cpu-probe.c
++++ b/arch/mips/kernel/cpu-probe.c
+@@ -461,7 +461,8 @@ static inline void cpu_set_mt_per_tc_perf(struct 
+cpuinfo_mips *c)
+                 c->options |= MIPS_CPU_MT_PER_TC_PERF_COUNTERS;
+  }
+
+-static inline void check_errata(void)
++#ifdef CONFIG_CPU_34K_BUGS32
++static inline void check_errata32(void)
+  {
+         struct cpuinfo_mips *c = &current_cpu_data;
+
+@@ -482,8 +483,9 @@ static inline void check_errata(void)
+
+  void __init check_bugs32(void)
+  {
+-       check_errata();
++       check_errata32();
+  }
++#endif /* CONFIG_CPU_34K_BUGS32 */
+
+  /*
+   * Probe whether cpu has config register by trying to play with
+
+
+3 add new 34k-bugs32.c and CONFIG_CPU_34K_BUGS32
+
+just as this v2 patch:
+https://lore.kernel.org/patchwork/patch/1222273/
+
+Thanks,
+
+Tiezhu Yang
+
