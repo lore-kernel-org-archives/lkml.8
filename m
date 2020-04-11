@@ -7,46 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78B3DC2BA19
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:33:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06463C2BA19
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:33:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 42F29206E9
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:33:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C8D1C20787
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:33:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586648016;
-	bh=6+bWPDXJPSzVT3DAvVk4z5aXpF04J4dNJSc3XKD31JY=;
+	s=default; t=1586648018;
+	bh=zY9i8hyLHhjgWq/N6JuPLuPuh7fBhTMv4eTbcr4flE4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Xj5aSNFfkxN7si6UUZmQCFF+EdL2pz59gVdvajNb0TzXbxBuAkNvxbHDpPVHQObgV
-	 mdPZIkvVNYMa4Vs1/He+f+ODoU+JJ+XMWMkpTgWuEVs5iKLlwt8OeJ2iMaBEDOM5xY
-	 GByx5PocoRAs8c8vXRuxa40ykApLR5DRDLR+nQbs=
+	b=wkurR6CELkRxzmNYXUms3G/Jc+qu6jN82oKEvPvA5rx4luB55zGCQ5SSXJceID414
+	 9tQihLbjK06hyVOkfLIAE26XF7IKn4XgqKAA3qwTt72C4f+1pax1j/0OKILeGx2/bt
+	 b5jX+UwSt3Lep7FxUULEjLusPYwoDXrAz37dade0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729283AbgDKXJf (ORCPT
+        id S1729273AbgDKXJe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 19:09:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47358 "EHLO mail.kernel.org"
+        Sat, 11 Apr 2020 19:09:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47326 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729258AbgDKXJc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 19:09:32 -0400
+        id S1729231AbgDKXJb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Apr 2020 19:09:31 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A1FAE21835;
-        Sat, 11 Apr 2020 23:09:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6AFF621744;
+        Sat, 11 Apr 2020 23:09:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586646572;
-        bh=6+bWPDXJPSzVT3DAvVk4z5aXpF04J4dNJSc3XKD31JY=;
+        s=default; t=1586646571;
+        bh=zY9i8hyLHhjgWq/N6JuPLuPuh7fBhTMv4eTbcr4flE4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gq6feiTuuNwxyoBfXw4UcODxHDys6Z/1r3JiQGhhqGjrA6PqWJMwhNSUCLEpeu1Y7
-         B+odTA0TqiSY1BDrmG5gyZtfYUVQuOuS6iS5n7qxgDlOjtAYc5Ln5ioEHIg6zq1lAw
-         Dzh+pY9bXRygOgBgTqbW7qrTuoIIF5PnCPt9jAKo=
+        b=QKA/6dntbMj/port6mveLsgR/dKFdomBbZiC+40j5Vk1jQs8gElxUlGkd10M7/PSp
+         mUS66hq0YogS1kHnmIIe/jLDt1iQklI0sQfAYrzpKB69zy8WRNNWvYZ4r0nKbz1mgk
+         0j2ikRCOSsE6cirQRZdjmPJ1ditHhzehKhmDNdmA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Chuck Lever <chuck.lever@oracle.com>,
-        Sasha Levin <sashal@kernel.org>, linux-nfs@vger.kernel.org,
-        netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.5 119/121] svcrdma: Fix leak of transport addresses
-Date:   Sat, 11 Apr 2020 19:07:04 -0400
-Message-Id: <20200411230706.23855-119-sashal@kernel.org>
+Cc:     Ganesh Goudar <ganeshgr@linux.ibm.com>,
+        Mahesh Salgaonkar <mahesh@linux.vnet.ibm.com>,
+        Santosh S <santosh@fossix.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Sasha Levin <sashal@kernel.org>, linuxppc-dev@lists.ozlabs.org
+Subject: [PATCH AUTOSEL 5.5 118/121] powerpc/pseries: Handle UE event for memcpy_mcsafe
+Date:   Sat, 11 Apr 2020 19:07:03 -0400
+Message-Id: <20200411230706.23855-118-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200411230706.23855-1-sashal@kernel.org>
 References: <20200411230706.23855-1-sashal@kernel.org>
@@ -59,54 +61,121 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chuck Lever <chuck.lever@oracle.com>
+From: Ganesh Goudar <ganeshgr@linux.ibm.com>
 
-[ Upstream commit 1a33d8a284b1e85e03b8c7b1ea8fb985fccd1d71 ]
+[ Upstream commit efbc4303b255bb80ab1283794b36dd5fe1fb0ec3 ]
 
-Kernel memory leak detected:
+memcpy_mcsafe has been implemented for power machines which is used
+by pmem infrastructure, so that an UE encountered during memcpy from
+pmem devices would not result in panic instead a right error code
+is returned. The implementation expects machine check handler to ignore
+the event and set nip to continue the execution from fixup code.
 
-unreferenced object 0xffff888849cdf480 (size 8):
-  comm "kworker/u8:3", pid 2086, jiffies 4297898756 (age 4269.856s)
-  hex dump (first 8 bytes):
-    30 00 cd 49 88 88 ff ff                          0..I....
-  backtrace:
-    [<00000000acfc370b>] __kmalloc_track_caller+0x137/0x183
-    [<00000000a2724354>] kstrdup+0x2b/0x43
-    [<0000000082964f84>] xprt_rdma_format_addresses+0x114/0x17d [rpcrdma]
-    [<00000000dfa6ed00>] xprt_setup_rdma_bc+0xc0/0x10c [rpcrdma]
-    [<0000000073051a83>] xprt_create_transport+0x3f/0x1a0 [sunrpc]
-    [<0000000053531a8e>] rpc_create+0x118/0x1cd [sunrpc]
-    [<000000003a51b5f8>] setup_callback_client+0x1a5/0x27d [nfsd]
-    [<000000001bd410af>] nfsd4_process_cb_update.isra.7+0x16c/0x1ac [nfsd]
-    [<000000007f4bbd56>] nfsd4_run_cb_work+0x4c/0xbd [nfsd]
-    [<0000000055c5586b>] process_one_work+0x1b2/0x2fe
-    [<00000000b1e3e8ef>] worker_thread+0x1a6/0x25a
-    [<000000005205fb78>] kthread+0xf6/0xfb
-    [<000000006d2dc057>] ret_from_fork+0x3a/0x50
+Appropriate changes are already made to powernv machine check handler,
+make similar changes to pseries machine check handler to ignore the
+the event and set nip to continue execution at the fixup entry if we
+hit UE at an instruction with a fixup entry.
 
-Introduce a call to xprt_rdma_free_addresses() similar to the way
-that the TCP backchannel releases a transport's peer address
-strings.
+while we are at it, have a common function which searches the exception
+table entry and updates nip with fixup address, and any future common
+changes can be made in this function that are valid for both architectures.
 
-Fixes: 5d252f90a800 ("svcrdma: Add class for RDMA backwards direction transport")
-Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
+powernv changes are made by
+commit 895e3dceeb97 ("powerpc/mce: Handle UE event for memcpy_mcsafe")
+
+Reviewed-by: Mahesh Salgaonkar <mahesh@linux.vnet.ibm.com>
+Reviewed-by: Santosh S <santosh@fossix.org>
+Signed-off-by: Ganesh Goudar <ganeshgr@linux.ibm.com>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Link: https://lore.kernel.org/r/20200326184916.31172-1-ganeshgr@linux.ibm.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/sunrpc/xprtrdma/svc_rdma_backchannel.c | 1 +
- 1 file changed, 1 insertion(+)
+ arch/powerpc/include/asm/mce.h       |  2 ++
+ arch/powerpc/kernel/mce.c            | 14 ++++++++++++++
+ arch/powerpc/kernel/mce_power.c      |  8 ++------
+ arch/powerpc/platforms/pseries/ras.c |  3 +++
+ 4 files changed, 21 insertions(+), 6 deletions(-)
 
-diff --git a/net/sunrpc/xprtrdma/svc_rdma_backchannel.c b/net/sunrpc/xprtrdma/svc_rdma_backchannel.c
-index 908e78bb87c64..c4fb930779a92 100644
---- a/net/sunrpc/xprtrdma/svc_rdma_backchannel.c
-+++ b/net/sunrpc/xprtrdma/svc_rdma_backchannel.c
-@@ -250,6 +250,7 @@ xprt_rdma_bc_put(struct rpc_xprt *xprt)
- {
- 	dprintk("svcrdma: %s: xprt %p\n", __func__, xprt);
+diff --git a/arch/powerpc/include/asm/mce.h b/arch/powerpc/include/asm/mce.h
+index 6a6ddaabdb34d..376a395daf329 100644
+--- a/arch/powerpc/include/asm/mce.h
++++ b/arch/powerpc/include/asm/mce.h
+@@ -218,6 +218,8 @@ extern void machine_check_queue_event(void);
+ extern void machine_check_print_event_info(struct machine_check_event *evt,
+ 					   bool user_mode, bool in_guest);
+ unsigned long addr_to_pfn(struct pt_regs *regs, unsigned long addr);
++extern void mce_common_process_ue(struct pt_regs *regs,
++				  struct mce_error_info *mce_err);
+ #ifdef CONFIG_PPC_BOOK3S_64
+ void flush_and_reload_slb(void);
+ #endif /* CONFIG_PPC_BOOK3S_64 */
+diff --git a/arch/powerpc/kernel/mce.c b/arch/powerpc/kernel/mce.c
+index 34c1001e9e8bf..8077b5fb18a79 100644
+--- a/arch/powerpc/kernel/mce.c
++++ b/arch/powerpc/kernel/mce.c
+@@ -15,6 +15,7 @@
+ #include <linux/percpu.h>
+ #include <linux/export.h>
+ #include <linux/irq_work.h>
++#include <linux/extable.h>
  
-+	xprt_rdma_free_addresses(xprt);
- 	xprt_free(xprt);
+ #include <asm/machdep.h>
+ #include <asm/mce.h>
+@@ -251,6 +252,19 @@ void machine_check_queue_event(void)
+ 	/* Queue irq work to process this event later. */
+ 	irq_work_queue(&mce_event_process_work);
  }
++
++void mce_common_process_ue(struct pt_regs *regs,
++			   struct mce_error_info *mce_err)
++{
++	const struct exception_table_entry *entry;
++
++	entry = search_kernel_exception_table(regs->nip);
++	if (entry) {
++		mce_err->ignore_event = true;
++		regs->nip = extable_fixup(entry);
++	}
++}
++
+ /*
+  * process pending MCE event from the mce event queue. This function will be
+  * called during syscall exit.
+diff --git a/arch/powerpc/kernel/mce_power.c b/arch/powerpc/kernel/mce_power.c
+index 1cbf7f1a4e3d8..067b094bfeff5 100644
+--- a/arch/powerpc/kernel/mce_power.c
++++ b/arch/powerpc/kernel/mce_power.c
+@@ -579,14 +579,10 @@ static long mce_handle_ue_error(struct pt_regs *regs,
+ 				struct mce_error_info *mce_err)
+ {
+ 	long handled = 0;
+-	const struct exception_table_entry *entry;
  
+-	entry = search_kernel_exception_table(regs->nip);
+-	if (entry) {
+-		mce_err->ignore_event = true;
+-		regs->nip = extable_fixup(entry);
++	mce_common_process_ue(regs, mce_err);
++	if (mce_err->ignore_event)
+ 		return 1;
+-	}
+ 
+ 	/*
+ 	 * On specific SCOM read via MMIO we may get a machine check
+diff --git a/arch/powerpc/platforms/pseries/ras.c b/arch/powerpc/platforms/pseries/ras.c
+index 1d7f973c647b3..aa6208c8d4f09 100644
+--- a/arch/powerpc/platforms/pseries/ras.c
++++ b/arch/powerpc/platforms/pseries/ras.c
+@@ -558,6 +558,9 @@ static int mce_handle_error(struct pt_regs *regs, struct rtas_error_log *errp)
+ 	switch (mce_log->error_type) {
+ 	case MC_ERROR_TYPE_UE:
+ 		mce_err.error_type = MCE_ERROR_TYPE_UE;
++		mce_common_process_ue(regs, &mce_err);
++		if (mce_err.ignore_event)
++			disposition = RTAS_DISP_FULLY_RECOVERED;
+ 		switch (err_sub_type) {
+ 		case MC_ERROR_UE_IFETCH:
+ 			mce_err.u.ue_error_type = MCE_UE_ERROR_IFETCH;
 -- 
 2.20.1
 
