@@ -2,74 +2,150 @@ Return-Path: <SRS0=xbEg=53=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 761CAC2BB85
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 00:23:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84FCEC2D0EC
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 00:34:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4EC922145D
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 00:23:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586564610;
-	bh=f0p2kHyven9B7/rEs4yASxu/X7zNikw2/7hIkDrfLf0=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=l+S193/5wepmrw8eLI7VTQxaeKJO4IZD3nc/erMKm6tG7qXyFzefjeHKRfb4LHLld
-	 vWrrMr3LY6Jz7M7fNWeUJA5bz5IfYbbIShigwHWPJxJk6+9xAtQHld0npwoCn2Um9+
-	 tYibdLr8N5H11RYjTPp86BkLixrj/6kpwpRfGnuA=
+	by mail.kernel.org (Postfix) with ESMTP id 3B754206DA
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 00:34:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dKs229Qf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726752AbgDKAX3 (ORCPT
+        id S1726719AbgDKAee (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Apr 2020 20:23:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56938 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726641AbgDKAX2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Apr 2020 20:23:28 -0400
-Received: from kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com (unknown [163.114.132.1])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5E11220936;
-        Sat, 11 Apr 2020 00:23:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586564608;
-        bh=f0p2kHyven9B7/rEs4yASxu/X7zNikw2/7hIkDrfLf0=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=DVzTN+cq8OybNLSiIhfj7Lf3JzHWc0u3Wt9XOWKZyqKW6SGG3GgxPjrjBXWfF9NQ+
-         EJ7cVy+xzas4uNIYrk2bXDELt9sm+DJihr9xT4D2493iyNAGi6ab4FHrj+B24cejwf
-         B1LHyl+7ke6Fli78TDcqUEQEwmNSZ5wqSbg7UN3E=
-Date:   Fri, 10 Apr 2020 17:23:26 -0700
-From:   Jakub Kicinski <kuba@kernel.org>
-To:     keescook@chromium.org, shuah@kernel.org
-Cc:     netdev@vger.kernel.org, luto@amacapital.net, wad@chromium.org,
-        linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel-team@fb.com, Tim.Bird@sony.com
-Subject: Re: [PATCH v5 0/5] kselftest: add fixture parameters
-Message-ID: <20200410172326.3ad05290@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
-In-Reply-To: <20200318010153.40797-1-kuba@kernel.org>
-References: <20200318010153.40797-1-kuba@kernel.org>
+        Fri, 10 Apr 2020 20:34:34 -0400
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:39668 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726641AbgDKAee (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Apr 2020 20:34:34 -0400
+Received: by mail-oi1-f193.google.com with SMTP id d63so2775536oig.6;
+        Fri, 10 Apr 2020 17:34:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=E6YUmBjR0fBCGslDkJmyTLVbD+8lR5N1hTG4sjgnQoE=;
+        b=dKs229QfLA7CAqV6V5toDFM43RPvaz00wOWhrNBV15mlsM2PG2qz8Fst+xdRXAvpyz
+         59KP6GtG6sB0Wt4600u/i+O7CBcugtcNzTn9d9VkqQiF6nobl/dJP5YWhhKlgR6/N/AT
+         qv5DfMOKFOHnhm+NQ6ra5fj6LiUKlBmQHQNSk9M9Uvg8veeCYIsiVb6mj7j/00Mhtif4
+         jmc4pzj8ghUyOvjTKw6OACZNy8JmG3jIsl1zJt03HPI6UrFfB456IFXd8VIwcep2YfKO
+         X3bz4rK7Zgeq3agyeJApaQboQyq4ibjcBp4vT6pso+qbwCAJVEg/De7BK6vUwMazIyhw
+         s39A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=E6YUmBjR0fBCGslDkJmyTLVbD+8lR5N1hTG4sjgnQoE=;
+        b=fmIXEtOAbtKqQzvpJHzaTLq4a/LZFLxXLxMXjhPa9dG8/+FoHkYc60zwc5d6oqH7hl
+         PMFhJ5xk4o2BlyGb0wx72+kfPR4vjPRnrF2gcTs8cNHaH4V21wxDZyrmwHlVBSKI8/Of
+         968pRmontCxAF4xUy4BrKqGtYM8Z+WPJiJxsk8r8YYJTVdkFk7u1/TMVH7uJmYEWRQcl
+         VuJZPqn4N8Bgjh0BRvYpv4HhoVsecDSM4YMIDYjCrYzOv5ssFufTfou+O7iDMT1ZBHvl
+         00zmkCDtugTz6URk30QqfoeOX86r48dxflDdQR4bogQLDaJhXJbft9UPiobD4l7Yuma+
+         lwKg==
+X-Gm-Message-State: AGi0PuaxVyOPiFvlRr3V+mFlndhqkh3WMLrVyjqt5H2wUU8+z7j/aqw3
+        v8JKpsdKY13FQnRRWux9focRs3RLgm08MVBprZs=
+X-Google-Smtp-Source: APiQypKvqud4Yvx31Wo0W69/niUj0pF19DTfdpIMyMQw5kDzIbAVnP9BWDb/JtzDbOJZbgclzCOlObUAqhNpRDIfYtQ=
+X-Received: by 2002:aca:f1c6:: with SMTP id p189mr3509209oih.5.1586565273774;
+ Fri, 10 Apr 2020 17:34:33 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <f51251cc-885e-2f7a-b18d-faa76db15b87@redhat.com> <20200410174703.1138-1-sean.j.christopherson@intel.com>
+In-Reply-To: <20200410174703.1138-1-sean.j.christopherson@intel.com>
+From:   Wanpeng Li <kernellwp@gmail.com>
+Date:   Sat, 11 Apr 2020 08:34:22 +0800
+Message-ID: <CANRm+CxGsBTeVy6-2-DhMYhB3J64jstaDgotEem01bpeiCY-7g@mail.gmail.com>
+Subject: Re: [PATCH v2] KVM: X86: Ultra fast single target IPI fastpath
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>, kvm <kvm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Haiwei Li <lihaiwei@tencent.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 17 Mar 2020 18:01:48 -0700 Jakub Kicinski wrote:
-> Hi!
-> 
-> Shuah please consider applying to the kselftest tree.
-> 
-> This set is an attempt to make running tests for different
-> sets of data easier. The direct motivation is the tls
-> test which we'd like to run for TLS 1.2 and TLS 1.3,
-> but currently there is no easy way to invoke the same
-> tests with different parameters.
-> 
-> Tested all users of kselftest_harness.h.
+On Sat, 11 Apr 2020 at 01:47, Sean Christopherson
+<sean.j.christopherson@intel.com> wrote:
+>
+> On Fri, Apr 10, 2020 at 05:50:35PM +0200, Paolo Bonzini wrote:
+> > On 10/04/20 17:35, Sean Christopherson wrote:
+> > > IMO, this should come at the very end of vmx_vcpu_run().  At a minimum, it
+> > > needs to be moved below the #MC handling and below
+> > >
+> > >     if (vmx->fail || (vmx->exit_reason & VMX_EXIT_REASONS_FAILED_VMENTRY))
+> > >             return;
+> >
+> > Why?  It cannot run in any of those cases, since the vmx->exit_reason
+> > won't match.
+>
+> #MC and consistency checks should have "priority" over everything else.
+> That there isn't actually a conflict is irrelevant IMO.  And it's something
+> that will likely confuse newbies (to VMX and/or KVM) as it won't be obvious
+> that the motivation was to shave a few cycles, e.g. versus some corner case
+> where the fastpath handling does something meaningful even on failure.
+>
+> > > KVM more or less assumes vmx->idt_vectoring_info is always valid, and it's
+> > > not obvious that a generic fastpath call can safely run before
+> > > vmx_complete_interrupts(), e.g. the kvm_clear_interrupt_queue() call.
+> >
+> > Not KVM, rather vmx.c.  You're right about a generic fastpath, but in
+> > this case kvm_irq_delivery_to_apic_fast is not touching VMX state; even
+> > if you have a self-IPI, the modification of vCPU state is only scheduled
+> > here and will happen later via either kvm_x86_ops.sync_pir_to_irr or
+> > KVM_REQ_EVENT.
+>
+> I think what I don't like is that the fast-IPI code is buried in a helper
+> that masquerades as a generic fastpath handler.  If that's open-coded in
+> vmx_vcpu_run(), I'm ok with doing the fast-IPI handler immediately after
+> the failure checks.
+>
+> And fast-IPI aside, the code could use a bit of optimization to prioritize
+> successful VM-Enter, which would slot in nicely as a prep patch.  Patches
+> (should be) following.
 
-Hi Shuah!
+Thanks for v3. :)
 
-Were these applied anywhere? I'm happy to take them via 
-the networking tree if that's easier.
+>
+> IMO, this is more logically correct:
+>
+>         vmx->exit_reason = vmcs_read32(VM_EXIT_REASON);
+>         if (unlikely((u16)vmx->exit_reason == EXIT_REASON_MCE_DURING_VMENTRY))
+>                 kvm_machine_check();
+>
+>         if (unlikely(vmx->exit_reason & VMX_EXIT_REASONS_FAILED_VMENTRY))
+>                 return EXIT_FASTPATH_NONE;
+>
+>         if (!is_guest_mode(vcpu) && vmx->exit_reason == EXIT_REASON_MSR_WRITE)
+>                 exit_fastpath = handle_fastpath_set_msr_irqoff(vcpu);
+>         else
+>                 exit_fastpath = EXIT_FASTPATH_NONE;
+>
+> And on my system, the compiler hoists fast-IPI above the #MC, e.g. moving
+> the fast-IPI down only adds a single macrofused uop, testb+jne for
+> FAILED_VMENTERY, to the code path.
+>
+>    0xffffffff81067d1d <+701>:   vmread %rax,%rax
+>    0xffffffff81067d20 <+704>:   ja,pt  0xffffffff81067d2d <vmx_vcpu_run+717>
+>    0xffffffff81067d23 <+707>:   pushq  $0x0
+>    0xffffffff81067d25 <+709>:   push   %rax
+>    0xffffffff81067d26 <+710>:   callq  0xffffffff81071790 <vmread_error_trampoline>
+>    0xffffffff81067d2b <+715>:   pop    %rax
+>    0xffffffff81067d2c <+716>:   pop    %rax
+>    0xffffffff81067d2d <+717>:   test   %eax,%eax
+>    0xffffffff81067d2f <+719>:   mov    %eax,0x32b0(%rbp)
+>    0xffffffff81067d35 <+725>:   js     0xffffffff81067d5a <vmx_vcpu_run+762>
+>    0xffffffff81067d37 <+727>:   testb  $0x20,0x2dc(%rbp)
+>    0xffffffff81067d3e <+734>:   jne    0xffffffff81067d49 <vmx_vcpu_run+745>
+>    0xffffffff81067d40 <+736>:   cmp    $0x20,%eax
+>    0xffffffff81067d43 <+739>:   je     0xffffffff810686d4 <vmx_vcpu_run+3188> <-- fastpath handler
+>    0xffffffff81067d49 <+745>:   xor    %ebx,%ebx
+>    0xffffffff81067d4b <+747>:   jmpq   0xffffffff81067e65 <vmx_vcpu_run+1029>
