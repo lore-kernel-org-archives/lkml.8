@@ -7,48 +7,49 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D238AC2BBC7
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:40:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82347C2BA19
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:40:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A7446206E9
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:40:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5C317206E9
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:40:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586648409;
-	bh=Pojo9G9Me1Kv9rST2V6tNOLJyXwY9aXULkoDzpsHD20=;
+	s=default; t=1586648416;
+	bh=h08k/XGB9YiKKAdTyYQIrzIjmYkhYs7ZSTs9y0CzzVs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=f9KZCnURaBzud+/g/n9UGW0g3WNTky2dTcMYoytnU6Dcvt/LBprgRJ6LK8xgKQVeW
-	 /GkvBPH3FhQIu/UEJCIKwYeKMHd91k0O69QkJ4+5YdtdiH0OCv76PJESW9XpB3Lasa
-	 Uw30gsebtK9OfDOc3txSVv0LIHogEfb/mfGrC47s=
+	b=p3yMoqQRj5Mz3/jdng6QoOzknYnduA6igDiPgSqFZ0xOGyRP3VCZbnfMzN+i/KhOF
+	 yfqN4wZYx9omC5k8JYJZlllV/bh9ue4QCVrZbBut/Eup7IVdIzPfRrzB81jFfCsS9t
+	 ui6iN3CDT3mI1VcAnKjQF91GgaactDkuTzOLYO0c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728928AbgDKXkI (ORCPT
+        id S1730307AbgDKXkO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 19:40:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43406 "EHLO mail.kernel.org"
+        Sat, 11 Apr 2020 19:40:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43344 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727993AbgDKXH3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 19:07:29 -0400
+        id S1727919AbgDKXH2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Apr 2020 19:07:28 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3B1B420708;
-        Sat, 11 Apr 2020 23:07:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DE7FF20787;
+        Sat, 11 Apr 2020 23:07:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586646449;
-        bh=Pojo9G9Me1Kv9rST2V6tNOLJyXwY9aXULkoDzpsHD20=;
+        s=default; t=1586646447;
+        bh=h08k/XGB9YiKKAdTyYQIrzIjmYkhYs7ZSTs9y0CzzVs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dvqo7c3dExP+0Q9xmc8ulxRbYoRinV5o90fyDldh7381aBnKkvh6J4rq3JXWN9Nip
-         eKGbj/QHvKYQqfLnv6qd4Inr4o2qwqNx9l3jYb4/IbdJvCkVLw8th7w6r+ti//B/DB
-         s3ppei68ln/9cA/KrjrGQMJyuocZHyoevydJ9kWs=
+        b=N/835YQ1eNIDhLkRpzm8i108HL7ND/KuyET/gCOxgrgvJKcUgkxWN6aq0OP1l7Fui
+         Fhj1zJT0iIgTH2yq9ne1CA/VwxErlG32O9+N6Z/38QQsQhsCEjnL5VWqRWvvyckMpq
+         HQGlSumYC82iCqDERcec3WpLUxVEqmgVpS9LUEWQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Bodong Wang <bodong@mellanox.com>,
-        Parav Pandit <parav@mellanox.com>,
-        Saeed Mahameed <saeedm@mellanox.com>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
-        linux-rdma@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.5 019/121] net/mlx5: E-Switch, Hold mutex when querying drop counter in legacy mode
-Date:   Sat, 11 Apr 2020 19:05:24 -0400
-Message-Id: <20200411230706.23855-19-sashal@kernel.org>
+Cc:     Andrii Nakryiko <andriin@fb.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-kselftest@vger.kernel.org, netdev@vger.kernel.org,
+        bpf@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.5 018/121] selftests/bpf: Fix test_progs's parsing of test numbers
+Date:   Sat, 11 Apr 2020 19:05:23 -0400
+Message-Id: <20200411230706.23855-18-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200411230706.23855-1-sashal@kernel.org>
 References: <20200411230706.23855-1-sashal@kernel.org>
@@ -61,76 +62,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bodong Wang <bodong@mellanox.com>
+From: Andrii Nakryiko <andriin@fb.com>
 
-[ Upstream commit 14c844cbf3503076de6e2e48d575216f1600b19f ]
+[ Upstream commit fc32490bff855a539d253c8a52c5a1ba51d1325a ]
 
-Consider scenario below, CPU 1 is at risk to query already destroyed
-drop counters. Need to apply the same state mutex when disabling vport.
+When specifying disjoint set of tests, test_progs doesn't set skipped test's
+array elements to false. This leads to spurious execution of tests that should
+have been skipped. Fix it by explicitly initializing them to false.
 
-+-------------------------------+-------------------------------------+
-| CPU 0                         | CPU 1                               |
-+-------------------------------+-------------------------------------+
-| mlx5_device_disable_sriov     | mlx5e_get_vf_stats                  |
-| mlx5_eswitch_disable          | mlx5_eswitch_get_vport_stats        |
-| esw_disable_vport             | mlx5_eswitch_query_vport_drop_stats |
-| mlx5_fc_destroy(drop_counter) | mlx5_fc_query(drop_counter)         |
-+-------------------------------+-------------------------------------+
-
-Fixes: b8a0dbe3a90b ("net/mlx5e: E-switch, Add steering drop counters")
-Signed-off-by: Bodong Wang <bodong@mellanox.com>
-Reviewed-by: Parav Pandit <parav@mellanox.com>
-Signed-off-by: Saeed Mahameed <saeedm@mellanox.com>
+Fixes: 3a516a0a3a7b ("selftests/bpf: add sub-tests support for test_progs")
+Signed-off-by: Andrii Nakryiko <andriin@fb.com>
+Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
+Acked-by: Martin KaFai Lau <kafai@fb.com>
+Link: https://lore.kernel.org/bpf/20200314013932.4035712-2-andriin@fb.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/mellanox/mlx5/core/eswitch.c | 14 ++++++++++----
- 1 file changed, 10 insertions(+), 4 deletions(-)
+ tools/testing/selftests/bpf/test_progs.c | 13 +++++++------
+ 1 file changed, 7 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/net/ethernet/mellanox/mlx5/core/eswitch.c b/drivers/net/ethernet/mellanox/mlx5/core/eswitch.c
-index 07282c679dcdf..d92e11e9343f5 100644
---- a/drivers/net/ethernet/mellanox/mlx5/core/eswitch.c
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/eswitch.c
-@@ -2597,9 +2597,13 @@ static int mlx5_eswitch_query_vport_drop_stats(struct mlx5_core_dev *dev,
- 	u64 bytes = 0;
- 	int err = 0;
+diff --git a/tools/testing/selftests/bpf/test_progs.c b/tools/testing/selftests/bpf/test_progs.c
+index 7fa7d08a8104d..849c1e8b8e3dc 100644
+--- a/tools/testing/selftests/bpf/test_progs.c
++++ b/tools/testing/selftests/bpf/test_progs.c
+@@ -361,7 +361,7 @@ static int libbpf_print_fn(enum libbpf_print_level level,
  
--	if (!vport->enabled || esw->mode != MLX5_ESWITCH_LEGACY)
-+	if (esw->mode != MLX5_ESWITCH_LEGACY)
- 		return 0;
+ int parse_num_list(const char *s, struct test_selector *sel)
+ {
+-	int i, set_len = 0, num, start = 0, end = -1;
++	int i, set_len = 0, new_len, num, start = 0, end = -1;
+ 	bool *set = NULL, *tmp, parsing_end = false;
+ 	char *next;
  
-+	mutex_lock(&esw->state_lock);
-+	if (!vport->enabled)
-+		goto unlock;
-+
- 	if (vport->egress.legacy.drop_counter)
- 		mlx5_fc_query(dev, vport->egress.legacy.drop_counter,
- 			      &stats->rx_dropped, &bytes);
-@@ -2610,20 +2614,22 @@ static int mlx5_eswitch_query_vport_drop_stats(struct mlx5_core_dev *dev,
+@@ -396,18 +396,19 @@ int parse_num_list(const char *s, struct test_selector *sel)
+ 			return -EINVAL;
  
- 	if (!MLX5_CAP_GEN(dev, receive_discard_vport_down) &&
- 	    !MLX5_CAP_GEN(dev, transmit_discard_vport_down))
--		return 0;
-+		goto unlock;
+ 		if (end + 1 > set_len) {
+-			set_len = end + 1;
+-			tmp = realloc(set, set_len);
++			new_len = end + 1;
++			tmp = realloc(set, new_len);
+ 			if (!tmp) {
+ 				free(set);
+ 				return -ENOMEM;
+ 			}
++			for (i = set_len; i < start; i++)
++				tmp[i] = false;
+ 			set = tmp;
++			set_len = new_len;
+ 		}
+-		for (i = start; i <= end; i++) {
++		for (i = start; i <= end; i++)
+ 			set[i] = true;
+-		}
+-
+ 	}
  
- 	err = mlx5_query_vport_down_stats(dev, vport->vport, 1,
- 					  &rx_discard_vport_down,
- 					  &tx_discard_vport_down);
- 	if (err)
--		return err;
-+		goto unlock;
- 
- 	if (MLX5_CAP_GEN(dev, receive_discard_vport_down))
- 		stats->rx_dropped += rx_discard_vport_down;
- 	if (MLX5_CAP_GEN(dev, transmit_discard_vport_down))
- 		stats->tx_dropped += tx_discard_vport_down;
- 
--	return 0;
-+unlock:
-+	mutex_unlock(&esw->state_lock);
-+	return err;
- }
- 
- int mlx5_eswitch_get_vport_stats(struct mlx5_eswitch *esw,
+ 	if (!set)
 -- 
 2.20.1
 
