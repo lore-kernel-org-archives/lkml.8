@@ -4,50 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D85DBC2BBFD
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:28:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39AA4C2BBC7
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:28:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A9056206A1
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:28:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 13B24214D8
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:28:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586608109;
-	bh=QUNfx0fl/3F2TqlBfgAIigsiluA3ED6SyNGF8lVFlpk=;
+	s=default; t=1586608114;
+	bh=Qdm/TA6OboJv4benEq37ts+ME43IhFu7UjDCA2hrRlA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HUsW1OfkWRO3DC8h1xG1o1Xnii65+Oh/ykq6RJdAZHXs62FtGb8v3ntquMO1IgbFV
-	 tItVB3ptZ3oCa//0A7gDeR+eYy/PeeuuQrldSzdpKfdkd2cOALL6zDx/hKwjTXSDtT
-	 g+sf3oIR3XWEKn9OfbgXRXpd6D4BlvfnD5fJFmIE=
+	b=bMPIj7BWRVTAd9FV4fzYRmUaWiDwPT1n1tcXiWFyI/lnW8r/h/SWQ29yLDw6pOLJV
+	 lY0/udEJ298BIL4wVyBdwp8P5VzzT1k0dcOg2xR7vyn6GuUr83d0E55CWBRneiSPRk
+	 vOOkXulj/n9ZwdXWmwsOGHzx/WjbBf0tf1JxWKlU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727315AbgDKMMe (ORCPT
+        id S1727234AbgDKMMY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 08:12:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45122 "EHLO mail.kernel.org"
+        Sat, 11 Apr 2020 08:12:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44850 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727296AbgDKMMc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 08:12:32 -0400
+        id S1727208AbgDKMMT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Apr 2020 08:12:19 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6FB7320787;
-        Sat, 11 Apr 2020 12:12:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 465942084D;
+        Sat, 11 Apr 2020 12:12:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586607150;
-        bh=QUNfx0fl/3F2TqlBfgAIigsiluA3ED6SyNGF8lVFlpk=;
+        s=default; t=1586607138;
+        bh=Qdm/TA6OboJv4benEq37ts+ME43IhFu7UjDCA2hrRlA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=I/1jGvbGXeg7BMHiw0J4xLr5vjXyAWZVVSxAwfxeBJQg54ZfIq5kmwnhTQ+HuaFNW
-         w6SXEErCq8J2C6Z7I8KSHuE19H3ISWlh2igOsP9hc8Pp/pA2pryrWT6dpOD9asWxxN
-         qSXiXCkWqGcA2trxsuYBSa4dYwTB2c0lpnSqJgvw=
+        b=Ikwtp/tsAK9PgohKYluLidWT+2bEbucgPhEIhTfjmZg3pupSwII/+jkT63w23XBuY
+         kTe25ItzbsaQ/8m7Bhx+c1M/zmvxy+Hc9neqTjnhdXEmkm0TCpI0ZgnS6FdyL6RPSB
+         bQ8pn2VUNrkJmgZ1NJD86tHla3HXFVt2j5Km5f3Y=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Qian Cai <cai@lca.pw>,
-        Eric Dumazet <edumazet@google.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.9 04/32] ipv4: fix a RCU-list lock in fib_triestat_seq_show
-Date:   Sat, 11 Apr 2020 14:08:43 +0200
-Message-Id: <20200411115419.180478735@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Mike Marciniszyn <mike.marciniszyn@intel.com>,
+        Kaike Wan <kaike.wan@intel.com>,
+        Dennis Dalessandro <dennis.dalessandro@intel.com>,
+        Jason Gunthorpe <jgg@mellanox.com>
+Subject: [PATCH 4.9 22/32] IB/hfi1: Call kobject_put() when kobject_init_and_add() fails
+Date:   Sat, 11 Apr 2020 14:09:01 +0200
+Message-Id: <20200411115421.654848751@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200411115418.455500023@linuxfoundation.org>
 References: <20200411115418.455500023@linuxfoundation.org>
@@ -60,63 +62,78 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Qian Cai <cai@lca.pw>
+From: Kaike Wan <kaike.wan@intel.com>
 
-[ Upstream commit fbe4e0c1b298b4665ee6915266c9d6c5b934ef4a ]
+commit dfb5394f804ed4fcea1fc925be275a38d66712ab upstream.
 
-fib_triestat_seq_show() calls hlist_for_each_entry_rcu(tb, head,
-tb_hlist) without rcu_read_lock() will trigger a warning,
+When kobject_init_and_add() returns an error in the function
+hfi1_create_port_files(), the function kobject_put() is not called for the
+corresponding kobject, which potentially leads to memory leak.
 
- net/ipv4/fib_trie.c:2579 RCU-list traversed in non-reader section!!
+This patch fixes the issue by calling kobject_put() even if
+kobject_init_and_add() fails.
 
- other info that might help us debug this:
-
- rcu_scheduler_active = 2, debug_locks = 1
- 1 lock held by proc01/115277:
-  #0: c0000014507acf00 (&p->lock){+.+.}-{3:3}, at: seq_read+0x58/0x670
-
- Call Trace:
-  dump_stack+0xf4/0x164 (unreliable)
-  lockdep_rcu_suspicious+0x140/0x164
-  fib_triestat_seq_show+0x750/0x880
-  seq_read+0x1a0/0x670
-  proc_reg_read+0x10c/0x1b0
-  __vfs_read+0x3c/0x70
-  vfs_read+0xac/0x170
-  ksys_read+0x7c/0x140
-  system_call+0x5c/0x68
-
-Fix it by adding a pair of rcu_read_lock/unlock() and use
-cond_resched_rcu() to avoid the situation where walking of a large
-number of items  may prevent scheduling for a long time.
-
-Signed-off-by: Qian Cai <cai@lca.pw>
-Reviewed-by: Eric Dumazet <edumazet@google.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Cc: <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/20200326163813.21129.44280.stgit@awfm-01.aw.intel.com
+Reviewed-by: Mike Marciniszyn <mike.marciniszyn@intel.com>
+Signed-off-by: Kaike Wan <kaike.wan@intel.com>
+Signed-off-by: Dennis Dalessandro <dennis.dalessandro@intel.com>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- net/ipv4/fib_trie.c |    3 +++
- 1 file changed, 3 insertions(+)
 
---- a/net/ipv4/fib_trie.c
-+++ b/net/ipv4/fib_trie.c
-@@ -2256,6 +2256,7 @@ static int fib_triestat_seq_show(struct
- 		   " %Zd bytes, size of tnode: %Zd bytes.\n",
- 		   LEAF_SIZE, TNODE_SIZE(0));
- 
-+	rcu_read_lock();
- 	for (h = 0; h < FIB_TABLE_HASHSZ; h++) {
- 		struct hlist_head *head = &net->ipv4.fib_table_hash[h];
- 		struct fib_table *tb;
-@@ -2275,7 +2276,9 @@ static int fib_triestat_seq_show(struct
- 			trie_show_usage(seq, t->stats);
- #endif
- 		}
-+		cond_resched_rcu();
+---
+ drivers/infiniband/hw/hfi1/sysfs.c |   13 ++++++++-----
+ 1 file changed, 8 insertions(+), 5 deletions(-)
+
+--- a/drivers/infiniband/hw/hfi1/sysfs.c
++++ b/drivers/infiniband/hw/hfi1/sysfs.c
+@@ -670,7 +670,11 @@ int hfi1_create_port_files(struct ib_dev
+ 		dd_dev_err(dd,
+ 			   "Skipping sc2vl sysfs info, (err %d) port %u\n",
+ 			   ret, port_num);
+-		goto bail;
++		/*
++		 * Based on the documentation for kobject_init_and_add(), the
++		 * caller should call kobject_put even if this call fails.
++		 */
++		goto bail_sc2vl;
  	}
-+	rcu_read_unlock();
+ 	kobject_uevent(&ppd->sc2vl_kobj, KOBJ_ADD);
  
- 	return 0;
+@@ -680,7 +684,7 @@ int hfi1_create_port_files(struct ib_dev
+ 		dd_dev_err(dd,
+ 			   "Skipping sl2sc sysfs info, (err %d) port %u\n",
+ 			   ret, port_num);
+-		goto bail_sc2vl;
++		goto bail_sl2sc;
+ 	}
+ 	kobject_uevent(&ppd->sl2sc_kobj, KOBJ_ADD);
+ 
+@@ -690,7 +694,7 @@ int hfi1_create_port_files(struct ib_dev
+ 		dd_dev_err(dd,
+ 			   "Skipping vl2mtu sysfs info, (err %d) port %u\n",
+ 			   ret, port_num);
+-		goto bail_sl2sc;
++		goto bail_vl2mtu;
+ 	}
+ 	kobject_uevent(&ppd->vl2mtu_kobj, KOBJ_ADD);
+ 
+@@ -700,7 +704,7 @@ int hfi1_create_port_files(struct ib_dev
+ 		dd_dev_err(dd,
+ 			   "Skipping Congestion Control sysfs info, (err %d) port %u\n",
+ 			   ret, port_num);
+-		goto bail_vl2mtu;
++		goto bail_cc;
+ 	}
+ 
+ 	kobject_uevent(&ppd->pport_cc_kobj, KOBJ_ADD);
+@@ -738,7 +742,6 @@ bail_sl2sc:
+ 	kobject_put(&ppd->sl2sc_kobj);
+ bail_sc2vl:
+ 	kobject_put(&ppd->sc2vl_kobj);
+-bail:
+ 	return ret;
  }
+ 
 
 
