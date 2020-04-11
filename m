@@ -7,49 +7,51 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5352DC352B6
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:24:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E635C2BA2B
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:24:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2BF7120692
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:24:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E33D02063A
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:24:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586607857;
-	bh=xJ7M76o/m9pVIZjSHyNqEgjefGdDV7ixNMHggwbFHuo=;
+	s=default; t=1586607863;
+	bh=datS3IKUZA9bgjNevrozUDfBcVDSvmpXzGjOJIW+x4A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=IXB3Hgja1wR1gN2t5HbKKmre7ZXt1UkxxO8xCAapqzMo9u3UYpYtyheVWvvqBuINH
-	 dVjCiOg77uFSDg7bNb1SVYYO3eB+2ZzRT8CMxBicWIDJRbfrwTivub0/TzG+kMcf+1
-	 GuHPmQAGvKBknKmDawStmE3Ri3mBdQ9j9lGmGtkk=
+	b=McqXq4E4NoN9C5cS0WK+U2/3sdVcUiVoPpJkBx26N4MHLe5IcnC6/hjSRD1Mq/mJs
+	 j8rGD+Fl7PPrgUoRr47hzKqUnh/qCcnw8pcY9/iAn866dmIP99g4ldVnveS5YcaDGk
+	 OEHycgqU5qRXWGeqgsWghkK4KUzngXlb14782beU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727923AbgDKMSS (ORCPT
+        id S1728541AbgDKMSJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 08:18:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53142 "EHLO mail.kernel.org"
+        Sat, 11 Apr 2020 08:18:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52950 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728560AbgDKMSO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 08:18:14 -0400
+        id S1728528AbgDKMSE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Apr 2020 08:18:04 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5CEDE21556;
-        Sat, 11 Apr 2020 12:18:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DBA5A2137B;
+        Sat, 11 Apr 2020 12:18:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586607493;
-        bh=xJ7M76o/m9pVIZjSHyNqEgjefGdDV7ixNMHggwbFHuo=;
+        s=default; t=1586607484;
+        bh=datS3IKUZA9bgjNevrozUDfBcVDSvmpXzGjOJIW+x4A=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ekyA5t2sjMs92Ajy4pAwr4yyQVgLXOKzo/JyXnd3XyLTgvesFRYaDibpl9OrsVNFo
-         VnUZchDRPrb9z/5qY4ruaLhd8T9mZF2osHeQ1OkJ0tEmEBZ89ZygI0rVWAfIrN72ne
-         xWyZm3WiLn9LOnNeAQwOwJ65Bm1r5T8dHiF+67e0=
+        b=YNPS8B0HUamMMqgoISSiFNRdxIM0LH6ZnnxP7ncVLanEYdHgqvG9xKDYN1ag2fkWC
+         cgRvTgd6DskcVCQw5KUwxaz1LXfdFk3jOJ8fHplh04exEwsK9OWWyyCyXU4PrAcFpN
+         k4vlRpQRRa6RxpswhUJQgD1lgT954W31aFZ7GE+8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        syzbot+55de90ab5f44172b0c90@syzkaller.appspotmail.com,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Bernard Metzler <bmt@zurich.ibm.com>,
-        Jason Gunthorpe <jgg@mellanox.com>
-Subject: [PATCH 5.4 35/41] RDMA/siw: Fix passive connection establishment
-Date:   Sat, 11 Apr 2020 14:09:44 +0200
-Message-Id: <20200411115506.633641076@linuxfoundation.org>
+        syzbot+8325e509a1bf83ec741d@syzkaller.appspotmail.com,
+        Jamal Hadi Salim <jhs@mojatatu.com>,
+        Jiri Pirko <jiri@resnulli.us>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Cong Wang <xiyou.wangcong@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 5.4 09/41] net_sched: fix a missing refcnt in tcindex_init()
+Date:   Sat, 11 Apr 2020 14:09:18 +0200
+Message-Id: <20200411115504.768210213@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200411115504.124035693@linuxfoundation.org>
 References: <20200411115504.124035693@linuxfoundation.org>
@@ -62,209 +64,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bernard Metzler <bmt@zurich.ibm.com>
+From: Cong Wang <xiyou.wangcong@gmail.com>
 
-commit 33fb27fd54465c74cbffba6315b2f043e90cec4c upstream.
+[ Upstream commit a8eab6d35e22f4f21471f16147be79529cd6aaf7 ]
 
-Holding the rtnl_lock while iterating a devices interface address list
-potentially causes deadlocks with the cma_netdev_callback. While this was
-implemented to limit the scope of a wildcard listen to addresses of the
-current device only, a better solution limits the scope of the socket to
-the device. This completely avoiding locking, and also results in
-significant code simplification.
+The initial refcnt of struct tcindex_data should be 1,
+it is clear that I forgot to set it to 1 in tcindex_init().
+This leads to a dec-after-zero warning.
 
-Fixes: c421651fa229 ("RDMA/siw: Add missing rtnl_lock around access to ifa")
-Link: https://lore.kernel.org/r/20200228173534.26815-1-bmt@zurich.ibm.com
-Reported-by: syzbot+55de90ab5f44172b0c90@syzkaller.appspotmail.com
-Suggested-by: Jason Gunthorpe <jgg@ziepe.ca>
-Signed-off-by: Bernard Metzler <bmt@zurich.ibm.com>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+Reported-by: syzbot+8325e509a1bf83ec741d@syzkaller.appspotmail.com
+Fixes: 304e024216a8 ("net_sched: add a temporary refcnt for struct tcindex_data")
+Cc: Jamal Hadi Salim <jhs@mojatatu.com>
+Cc: Jiri Pirko <jiri@resnulli.us>
+Cc: Paul E. McKenney <paulmck@kernel.org>
+Signed-off-by: Cong Wang <xiyou.wangcong@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- drivers/infiniband/sw/siw/siw_cm.c |  145 +++++++------------------------------
- 1 file changed, 31 insertions(+), 114 deletions(-)
+ net/sched/cls_tcindex.c |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/drivers/infiniband/sw/siw/siw_cm.c
-+++ b/drivers/infiniband/sw/siw/siw_cm.c
-@@ -1783,14 +1783,23 @@ int siw_reject(struct iw_cm_id *id, cons
+--- a/net/sched/cls_tcindex.c
++++ b/net/sched/cls_tcindex.c
+@@ -151,6 +151,7 @@ static int tcindex_init(struct tcf_proto
+ 	p->mask = 0xffff;
+ 	p->hash = DEFAULT_HASH_SIZE;
+ 	p->fall_through = 1;
++	refcount_set(&p->refcnt, 1); /* Paired with tcindex_destroy_work() */
+ 
+ 	rcu_assign_pointer(tp->root, p);
  	return 0;
- }
- 
--static int siw_listen_address(struct iw_cm_id *id, int backlog,
--			      struct sockaddr *laddr, int addr_family)
-+/*
-+ * siw_create_listen - Create resources for a listener's IWCM ID @id
-+ *
-+ * Starts listen on the socket address id->local_addr.
-+ *
-+ */
-+int siw_create_listen(struct iw_cm_id *id, int backlog)
- {
- 	struct socket *s;
- 	struct siw_cep *cep = NULL;
- 	struct siw_device *sdev = to_siw_dev(id->device);
-+	int addr_family = id->local_addr.ss_family;
- 	int rv = 0, s_val;
- 
-+	if (addr_family != AF_INET && addr_family != AF_INET6)
-+		return -EAFNOSUPPORT;
-+
- 	rv = sock_create(addr_family, SOCK_STREAM, IPPROTO_TCP, &s);
- 	if (rv < 0)
- 		return rv;
-@@ -1805,9 +1814,25 @@ static int siw_listen_address(struct iw_
- 		siw_dbg(id->device, "setsockopt error: %d\n", rv);
- 		goto error;
- 	}
--	rv = s->ops->bind(s, laddr, addr_family == AF_INET ?
--				    sizeof(struct sockaddr_in) :
--				    sizeof(struct sockaddr_in6));
-+	if (addr_family == AF_INET) {
-+		struct sockaddr_in *laddr = &to_sockaddr_in(id->local_addr);
-+
-+		/* For wildcard addr, limit binding to current device only */
-+		if (ipv4_is_zeronet(laddr->sin_addr.s_addr))
-+			s->sk->sk_bound_dev_if = sdev->netdev->ifindex;
-+
-+		rv = s->ops->bind(s, (struct sockaddr *)laddr,
-+				  sizeof(struct sockaddr_in));
-+	} else {
-+		struct sockaddr_in6 *laddr = &to_sockaddr_in6(id->local_addr);
-+
-+		/* For wildcard addr, limit binding to current device only */
-+		if (ipv6_addr_any(&laddr->sin6_addr))
-+			s->sk->sk_bound_dev_if = sdev->netdev->ifindex;
-+
-+		rv = s->ops->bind(s, (struct sockaddr *)laddr,
-+				  sizeof(struct sockaddr_in6));
-+	}
- 	if (rv) {
- 		siw_dbg(id->device, "socket bind error: %d\n", rv);
- 		goto error;
-@@ -1866,7 +1891,7 @@ static int siw_listen_address(struct iw_
- 	list_add_tail(&cep->listenq, (struct list_head *)id->provider_data);
- 	cep->state = SIW_EPSTATE_LISTENING;
- 
--	siw_dbg(id->device, "Listen at laddr %pISp\n", laddr);
-+	siw_dbg(id->device, "Listen at laddr %pISp\n", &id->local_addr);
- 
- 	return 0;
- 
-@@ -1924,114 +1949,6 @@ static void siw_drop_listeners(struct iw
- 	}
- }
- 
--/*
-- * siw_create_listen - Create resources for a listener's IWCM ID @id
-- *
-- * Listens on the socket addresses id->local_addr and id->remote_addr.
-- *
-- * If the listener's @id provides a specific local IP address, at most one
-- * listening socket is created and associated with @id.
-- *
-- * If the listener's @id provides the wildcard (zero) local IP address,
-- * a separate listen is performed for each local IP address of the device
-- * by creating a listening socket and binding to that local IP address.
-- *
-- */
--int siw_create_listen(struct iw_cm_id *id, int backlog)
--{
--	struct net_device *dev = to_siw_dev(id->device)->netdev;
--	int rv = 0, listeners = 0;
--
--	siw_dbg(id->device, "backlog %d\n", backlog);
--
--	/*
--	 * For each attached address of the interface, create a
--	 * listening socket, if id->local_addr is the wildcard
--	 * IP address or matches the IP address.
--	 */
--	if (id->local_addr.ss_family == AF_INET) {
--		struct in_device *in_dev = in_dev_get(dev);
--		struct sockaddr_in s_laddr, *s_raddr;
--		const struct in_ifaddr *ifa;
--
--		if (!in_dev) {
--			rv = -ENODEV;
--			goto out;
--		}
--		memcpy(&s_laddr, &id->local_addr, sizeof(s_laddr));
--		s_raddr = (struct sockaddr_in *)&id->remote_addr;
--
--		siw_dbg(id->device,
--			"laddr %pI4:%d, raddr %pI4:%d\n",
--			&s_laddr.sin_addr, ntohs(s_laddr.sin_port),
--			&s_raddr->sin_addr, ntohs(s_raddr->sin_port));
--
--		rtnl_lock();
--		in_dev_for_each_ifa_rtnl(ifa, in_dev) {
--			if (ipv4_is_zeronet(s_laddr.sin_addr.s_addr) ||
--			    s_laddr.sin_addr.s_addr == ifa->ifa_address) {
--				s_laddr.sin_addr.s_addr = ifa->ifa_address;
--
--				rv = siw_listen_address(id, backlog,
--						(struct sockaddr *)&s_laddr,
--						AF_INET);
--				if (!rv)
--					listeners++;
--			}
--		}
--		rtnl_unlock();
--		in_dev_put(in_dev);
--	} else if (id->local_addr.ss_family == AF_INET6) {
--		struct inet6_dev *in6_dev = in6_dev_get(dev);
--		struct inet6_ifaddr *ifp;
--		struct sockaddr_in6 *s_laddr = &to_sockaddr_in6(id->local_addr),
--			*s_raddr = &to_sockaddr_in6(id->remote_addr);
--
--		if (!in6_dev) {
--			rv = -ENODEV;
--			goto out;
--		}
--		siw_dbg(id->device,
--			"laddr %pI6:%d, raddr %pI6:%d\n",
--			&s_laddr->sin6_addr, ntohs(s_laddr->sin6_port),
--			&s_raddr->sin6_addr, ntohs(s_raddr->sin6_port));
--
--		rtnl_lock();
--		list_for_each_entry(ifp, &in6_dev->addr_list, if_list) {
--			if (ifp->flags & (IFA_F_TENTATIVE | IFA_F_DEPRECATED))
--				continue;
--			if (ipv6_addr_any(&s_laddr->sin6_addr) ||
--			    ipv6_addr_equal(&s_laddr->sin6_addr, &ifp->addr)) {
--				struct sockaddr_in6 bind_addr  = {
--					.sin6_family = AF_INET6,
--					.sin6_port = s_laddr->sin6_port,
--					.sin6_flowinfo = 0,
--					.sin6_addr = ifp->addr,
--					.sin6_scope_id = dev->ifindex };
--
--				rv = siw_listen_address(id, backlog,
--						(struct sockaddr *)&bind_addr,
--						AF_INET6);
--				if (!rv)
--					listeners++;
--			}
--		}
--		rtnl_unlock();
--		in6_dev_put(in6_dev);
--	} else {
--		rv = -EAFNOSUPPORT;
--	}
--out:
--	if (listeners)
--		rv = 0;
--	else if (!rv)
--		rv = -EINVAL;
--
--	siw_dbg(id->device, "%s\n", rv ? "FAIL" : "OK");
--
--	return rv;
--}
--
- int siw_destroy_listen(struct iw_cm_id *id)
- {
- 	if (!id->provider_data) {
 
 
