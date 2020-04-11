@@ -2,88 +2,120 @@ Return-Path: <SRS0=xbEg=53=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36AE6C2BA19
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:06:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87A9EC2BA19
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:06:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 023C1215A4
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:06:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Kf3XC0ka"
+	by mail.kernel.org (Postfix) with ESMTP id 5DD3021744
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:06:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1586646381;
+	bh=i9OQRqz18EKYo98AmcF8sbyidSFaViJ8xiK2FLqYuco=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=HJzS/u7GO0mDa566iUzbtkdbbYL+zsjncUL1tRnDdNsNQdoFNWmwWrVOrNb8rjpLf
+	 Vu0X/jAYNI/x8VIeNKM3DMs/6t4ZbDlaWRQqt/+kBoK5BhxCzlW7vV/fD1OGfrgiaJ
+	 M83CfP1Uj02EQRUCEFpYdVg4Akjesr3xk6deb2Hk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726956AbgDKXGR (ORCPT
+        id S1728357AbgDKXGT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 19:06:17 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:38715 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728323AbgDKXGP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Apr 2020 19:06:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41410 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728337AbgDKXGP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Sat, 11 Apr 2020 19:06:15 -0400
-Received: by mail-wr1-f65.google.com with SMTP id k11so5670159wrp.5;
-        Sat, 11 Apr 2020 16:06:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=PaGtkGJZGIax0HkhiC3JEbE5dhQwfZdRNpvR3UC345s=;
-        b=Kf3XC0kaXm39dEFLi0s5a1fVAl5PKVNz19sCnvh6ThyBEMMZY8yzzIL+ZXVVGzxdJN
-         0UF6Nn59j1BlezcqqZNALN6RpYlXqkkiJc8k+CSUIMCuwlLZZU6UfM9Ky/w8NWEIXOHK
-         e++8kjEwQcwUFFvVbUl5HLubymEDZAhGQfxIkcBESHmp5iAaJx5e/Sr1jiAqvEctrbcu
-         koGbEhjb0BU7K6BUkFf6yDzzKFbcBwyMf1HXtJUkxyLHfh1/VR5VYAAsnTklpqVfUzuV
-         UpeZfH/qkr4dfc7v+xy/UqC08WnZqxcDWV2Z59SKmPkoSe5etSy58V9W+MWxAl+JAdKX
-         YJMw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=PaGtkGJZGIax0HkhiC3JEbE5dhQwfZdRNpvR3UC345s=;
-        b=ErWN7wGNV6+hmvrkR2jemrgZl2VI7zjI8atlKywRyjcqINRY9KdITnLFzNmPgok6KP
-         Ri9vyHnNTWj1Yl8K0FS5nzmOuNZqkLCpTm+ffRoXp22cjbiIo5c2HsBTAMJvAwHsJ+55
-         3oRVksnOuLqiKQABqYl3r5jB3gljHyInrU6mvb7jF8h1CxCKynE3Pyo6k1souydR4JTu
-         VnU0nZ+v0V1oGVdm7sGixfnxUnhn7DQJeHOBxUR5MwNVe48Q+jXs53LwgT8YrYj1V6tF
-         gjJKbKqO4iNKgtSOgEq7x/znbrDwOOROHxdOUUJlYoSvMmWgnPzb6wD7YETw3820D4p6
-         P05A==
-X-Gm-Message-State: AGi0PuYU6pQVm1Bhs76fDmeQkhomt7ogKYDDdXPLWo+OTG3iiQqliiD9
-        wmEQ9B9ahq/MSAKZEDsRZrM=
-X-Google-Smtp-Source: APiQypJWTgNjc4ZCznDIDupY5H4O2bVnW5vSZegtDGOtlGdh0Uj2U1dnSE0Stcy/Se8p+s0pSBfkqw==
-X-Received: by 2002:a05:6000:108f:: with SMTP id y15mr12207690wrw.423.1586646374167;
-        Sat, 11 Apr 2020 16:06:14 -0700 (PDT)
-Received: from localhost.localdomain ([109.126.129.227])
-        by smtp.gmail.com with ESMTPSA id k133sm8992741wma.0.2020.04.11.16.06.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 11 Apr 2020 16:06:13 -0700 (PDT)
-From:   Pavel Begunkov <asml.silence@gmail.com>
-To:     Jens Axboe <axboe@kernel.dk>, io-uring@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 0/5] submission path refactoring pt.2
-Date:   Sun, 12 Apr 2020 02:05:00 +0300
-Message-Id: <cover.1586645520.git.asml.silence@gmail.com>
-X-Mailer: git-send-email 2.24.0
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A67A621744;
+        Sat, 11 Apr 2020 23:06:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1586646375;
+        bh=i9OQRqz18EKYo98AmcF8sbyidSFaViJ8xiK2FLqYuco=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=wdFDzVgjKK9GVGe7xyvRzM2BPckT11NVmeOw9qLvdKbBYuIJHKI0rArX5pXTXAL0j
+         NYcj/ONb4+Po18YQ+RPMK+i1I4QRz410ACxXgqDKXTL7MxQ7dc/3HPjiWBG3UitMn2
+         Jw2jMuPvf6p92tT/9UwueFAsy74LN4aQHc4nx6+I=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Qian Cai <cai@lca.pw>, Florian Westphal <fw@strlen.de>,
+        Pablo Neira Ayuso <pablo@netfilter.org>,
+        Sasha Levin <sashal@kernel.org>,
+        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
+        netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.6 117/149] netfilter: nf_tables: silence a RCU-list warning in nft_table_lookup()
+Date:   Sat, 11 Apr 2020 19:03:14 -0400
+Message-Id: <20200411230347.22371-117-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200411230347.22371-1-sashal@kernel.org>
+References: <20200411230347.22371-1-sashal@kernel.org>
 MIME-Version: 1.0
+X-stable: review
+X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The 2nd and last part of submission path refactoring. This moves
-request initialisation bits into io_init_req(), doing better job
-logically segmenting the code. Keeping negative diffstat as a bonus.
+From: Qian Cai <cai@lca.pw>
 
-Pavel Begunkov (5):
-  io_uring: remove obsolete @mm_fault
-  io_uring: track mm through current->mm
-  io_uring: DRY early submission req fail code
-  io_uring: keep all sqe->flags in req->flags
-  io_uring: move all request init code in one place
+[ Upstream commit 0a6a9515fe390976cd762c52d8d4f446d7a14285 ]
 
- fs/io_uring.c | 196 +++++++++++++++++++++++---------------------------
- 1 file changed, 90 insertions(+), 106 deletions(-)
+It is safe to traverse &net->nft.tables with &net->nft.commit_mutex
+held using list_for_each_entry_rcu(). Silence the PROVE_RCU_LIST false
+positive,
 
+WARNING: suspicious RCU usage
+net/netfilter/nf_tables_api.c:523 RCU-list traversed in non-reader section!!
+
+other info that might help us debug this:
+
+rcu_scheduler_active = 2, debug_locks = 1
+1 lock held by iptables/1384:
+ #0: ffffffff9745c4a8 (&net->nft.commit_mutex){+.+.}, at: nf_tables_valid_genid+0x25/0x60 [nf_tables]
+
+Call Trace:
+ dump_stack+0xa1/0xea
+ lockdep_rcu_suspicious+0x103/0x10d
+ nft_table_lookup.part.0+0x116/0x120 [nf_tables]
+ nf_tables_newtable+0x12c/0x7d0 [nf_tables]
+ nfnetlink_rcv_batch+0x559/0x1190 [nfnetlink]
+ nfnetlink_rcv+0x1da/0x210 [nfnetlink]
+ netlink_unicast+0x306/0x460
+ netlink_sendmsg+0x44b/0x770
+ ____sys_sendmsg+0x46b/0x4a0
+ ___sys_sendmsg+0x138/0x1a0
+ __sys_sendmsg+0xb6/0x130
+ __x64_sys_sendmsg+0x48/0x50
+ do_syscall_64+0x69/0xf4
+ entry_SYSCALL_64_after_hwframe+0x49/0xb3
+
+Signed-off-by: Qian Cai <cai@lca.pw>
+Acked-by: Florian Westphal <fw@strlen.de>
+Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ net/netfilter/nf_tables_api.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/net/netfilter/nf_tables_api.c b/net/netfilter/nf_tables_api.c
+index d11f1a74d43c9..f09d15e7fe2b2 100644
+--- a/net/netfilter/nf_tables_api.c
++++ b/net/netfilter/nf_tables_api.c
+@@ -520,7 +520,8 @@ static struct nft_table *nft_table_lookup(const struct net *net,
+ 	if (nla == NULL)
+ 		return ERR_PTR(-EINVAL);
+ 
+-	list_for_each_entry_rcu(table, &net->nft.tables, list) {
++	list_for_each_entry_rcu(table, &net->nft.tables, list,
++				lockdep_is_held(&net->nft.commit_mutex)) {
+ 		if (!nla_strcmp(nla, table->name) &&
+ 		    table->family == family &&
+ 		    nft_active_genmask(table, genmask))
 -- 
-2.24.0
+2.20.1
 
