@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B49A5C2BB86
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:37:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC91FC2BA19
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:38:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8428A206E9
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:37:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9649C206E9
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:38:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586648278;
-	bh=VY+srS1QB5ufiWNW88+dyuoRCUoCCbimxVHPK1bPttU=;
+	s=default; t=1586648282;
+	bh=5l0w7W6Vppg+zsOD/tCU/ntK/tpVKl6/+0rmFy3Je6w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=C7W0lYrdYSzKb+XqkRR96JlCdq1v4kP9Su578InrBey6q6+7mPLile37fqeTw9XBt
-	 79cInmjoX/Yp2h5+dA1g7QhDFOhzI5AJ1mR6T0ZlXCUJ59PcNc71Gf+V8xp4JjXmj6
-	 xL7cGXBbyW35pT9BrIGdRw6hcQnhu6j5NMXvDdhQ=
+	b=KQjh0d8lWdLZnKQnV6M62qQpcTS/GlWr3KhSFj/UfLM7yL/Xj2L830XGzAgUTJrZB
+	 eimDig4IJkrrGlVgQfJg5kKDBUeCrqBVxtKjOSvzG4YUW6OVL2TkKmu+1o8NqtCLK9
+	 aQ+Pxw0hlv/M6i/0sdkNpQtUaZIzq8771/i6osEE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728844AbgDKXIJ (ORCPT
+        id S1730778AbgDKXiA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 19:08:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44224 "EHLO mail.kernel.org"
+        Sat, 11 Apr 2020 19:38:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44666 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728768AbgDKXHx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 19:07:53 -0400
+        id S1727367AbgDKXII (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Apr 2020 19:08:08 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4630D21841;
-        Sat, 11 Apr 2020 23:07:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D593F20708;
+        Sat, 11 Apr 2020 23:08:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586646474;
-        bh=VY+srS1QB5ufiWNW88+dyuoRCUoCCbimxVHPK1bPttU=;
+        s=default; t=1586646488;
+        bh=5l0w7W6Vppg+zsOD/tCU/ntK/tpVKl6/+0rmFy3Je6w=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FtnFwGh0RP7zFGfT+EiJE4+MCxboZsbPoRhPXWXenXotEZ6TsDe/S2MwCIpxDCctm
-         N7McJYGO2dNw0GISEuQQfFxxEwofPzzanDiIHz069DKfCKe10k2DdJv+k2z/gqGQo2
-         7juE1QP6TlZjyyIqhsw9zdMfXg1fcbbomsHaFiGs=
+        b=YxbP7zJUtv7IIdvcKSr+DGhkEK7ns0cvAWsrdVX8Iz3pXPKi6G6YlqBjm9oQB2ozn
+         NKhbz56o+eajIHOpofKMRY8fbB0q/jaw32302kJ4IlYaVhZ2srdeIIfmiSfjitndbT
+         5dyLVbB6O5U6H3foF73lK6WTu3FQI4fltZa4JjT8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Guangbin Huang <huangguangbin2@huawei.com>,
-        Huazhong Tan <tanhuazhong@huawei.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.5 040/121] net: hns3: modify an unsuitable print when setting unknown duplex to fibre
-Date:   Sat, 11 Apr 2020 19:05:45 -0400
-Message-Id: <20200411230706.23855-40-sashal@kernel.org>
+Cc:     Ayush Sawal <ayush.sawal@chelsio.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Sasha Levin <sashal@kernel.org>, linux-crypto@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.5 052/121] crypto: chelsio - This fixes the kernel panic which occurs during a libkcapi test
+Date:   Sat, 11 Apr 2020 19:05:57 -0400
+Message-Id: <20200411230706.23855-52-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200411230706.23855-1-sashal@kernel.org>
 References: <20200411230706.23855-1-sashal@kernel.org>
@@ -60,41 +59,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Guangbin Huang <huangguangbin2@huawei.com>
+From: Ayush Sawal <ayush.sawal@chelsio.com>
 
-[ Upstream commit 2d3db26d78805c9e06e26def0081c76e9bb0b7d6 ]
+[ Upstream commit 9195189e00a7db55e7d448cee973cae87c5a3c71 ]
 
-Currently, if device is in link down status and user uses
-'ethtool -s' command to set speed but not specify duplex
-mode, the duplex mode passed from ethtool to driver is
-unknown value(255), and the fibre port will identify this
-value as half duplex mode and print "only copper port
-supports half duplex!". This message is confusing.
+The libkcapi test which causes kernel panic is
+aead asynchronous vmsplice multiple test.
 
-So for fibre port, only the setting duplex is half, prints
-error and returns.
+./bin/kcapi  -v -d 4 -x 10   -c "ccm(aes)"
+-q 4edb58e8d5eb6bc711c43a6f3693daebde2e5524f1b55297abb29f003236e43d
+-t a7877c99 -n 674742abd0f5ba -k 2861fd0253705d7875c95ba8a53171b4
+-a fb7bc304a3909e66e2e0c5ef952712dd884ce3e7324171369f2c5db1adc48c7d
 
-Signed-off-by: Guangbin Huang <huangguangbin2@huawei.com>
-Signed-off-by: Huazhong Tan <tanhuazhong@huawei.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+This patch avoids dma_mapping of a zero length sg which causes the panic,
+by using sg_nents_for_len which maps only upto a specific length
+
+Signed-off-by: Ayush Sawal <ayush.sawal@chelsio.com>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/hisilicon/hns3/hns3_ethtool.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/crypto/chelsio/chcr_algo.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3_ethtool.c b/drivers/net/ethernet/hisilicon/hns3/hns3_ethtool.c
-index 6e0212b79438a..4c411ba062fb9 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hns3_ethtool.c
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3_ethtool.c
-@@ -737,7 +737,7 @@ static int hns3_check_ksettings_param(const struct net_device *netdev,
- 	if (ops->get_media_type)
- 		ops->get_media_type(handle, &media_type, &module_type);
- 
--	if (cmd->base.duplex != DUPLEX_FULL &&
-+	if (cmd->base.duplex == DUPLEX_HALF &&
- 	    media_type != HNAE3_MEDIA_TYPE_COPPER) {
- 		netdev_err(netdev,
- 			   "only copper port supports half duplex!");
+diff --git a/drivers/crypto/chelsio/chcr_algo.c b/drivers/crypto/chelsio/chcr_algo.c
+index 722c5f65b66b3..4ace6dfe3a688 100644
+--- a/drivers/crypto/chelsio/chcr_algo.c
++++ b/drivers/crypto/chelsio/chcr_algo.c
+@@ -2481,8 +2481,9 @@ int chcr_aead_dma_map(struct device *dev,
+ 	else
+ 		reqctx->b0_dma = 0;
+ 	if (req->src == req->dst) {
+-		error = dma_map_sg(dev, req->src, sg_nents(req->src),
+-				   DMA_BIDIRECTIONAL);
++		error = dma_map_sg(dev, req->src,
++				sg_nents_for_len(req->src, dst_size),
++					DMA_BIDIRECTIONAL);
+ 		if (!error)
+ 			goto err;
+ 	} else {
 -- 
 2.20.1
 
