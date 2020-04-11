@@ -2,119 +2,99 @@ Return-Path: <SRS0=xbEg=53=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6563C2BA19
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 21:39:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8A66C2BB86
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 21:43:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AC46E2084D
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 21:39:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C580720936
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 21:43:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726793AbgDKViO (ORCPT
+        id S1726762AbgDKVnw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 17:38:14 -0400
-Received: from mail-il1-f198.google.com ([209.85.166.198]:49811 "EHLO
-        mail-il1-f198.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726025AbgDKViO (ORCPT
+        Sat, 11 Apr 2020 17:43:52 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:52980 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726029AbgDKVnw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 17:38:14 -0400
-Received: by mail-il1-f198.google.com with SMTP id r17so3182129ila.16
-        for <linux-kernel@vger.kernel.org>; Sat, 11 Apr 2020 14:38:14 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=qVLd3Bd3uBVfJRLs8SbZxIzd9JmqnZ3Z/DLvPZ5BOss=;
-        b=SEza7BUjq1NotRL4yteIzVbwhg3zBjZ1K+ordZD4tUoRGKlqdyGK+QfltkCzYtrQGO
-         O4s02S6rLJVSo0fj7dVGtoqw4jkHhRUn5J6d/sElIRG37Sy2MEfpcomFvfZuotrORll+
-         KEw3gVMaSYnnocN/NQzQt5OPaIYGisrWJ0Sb140IychCoDichp2GVBuLeq9+9e9jj34Y
-         +CU/dz0izDgT+KZt3Yf1lJRmiD2ovVs4ZcFVv7dvlY9bh2vylbFwX1aq8bzfL5zKXMLq
-         NUWpgd6OHKq1TdVW4A9yYO9TVkpv27dUCuizeJwZb5S7ntRM4HVJYXPQBAv+dpdPEYcm
-         cEIQ==
-X-Gm-Message-State: AGi0PuZQvDdkRkMWI5+XGv3lHcMCP3PdVx2dV8ajBOAW2z4qGKOgCBo6
-        hn96f1ASWSFohZqPZ8uZTdY+9+IQ2cWKPQEuwvzcYOPl7eAu
-X-Google-Smtp-Source: APiQypKE0T7vpFvxOcOZvzhUT6OjWfzmqF/bePj9rviDb2ldU3gKgTG6RE46xsPctletAp6kcGWYAiCQogSANoSlVc30WUqilVoK
+        Sat, 11 Apr 2020 17:43:52 -0400
+Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03BLX4Fe008984;
+        Sat, 11 Apr 2020 17:43:43 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 30b6ttftpy-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Sat, 11 Apr 2020 17:43:43 -0400
+Received: from m0098419.ppops.net (m0098419.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 03BLaZ5M013776;
+        Sat, 11 Apr 2020 17:43:43 -0400
+Received: from ppma03dal.us.ibm.com (b.bd.3ea9.ip4.static.sl-reverse.com [169.62.189.11])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 30b6ttftpp-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Sat, 11 Apr 2020 17:43:43 -0400
+Received: from pps.filterd (ppma03dal.us.ibm.com [127.0.0.1])
+        by ppma03dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 03BLfMVK007615;
+        Sat, 11 Apr 2020 21:43:42 GMT
+Received: from b01cxnp22036.gho.pok.ibm.com (b01cxnp22036.gho.pok.ibm.com [9.57.198.26])
+        by ppma03dal.us.ibm.com with ESMTP id 30b5h5xayg-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Sat, 11 Apr 2020 21:43:42 +0000
+Received: from b01ledav001.gho.pok.ibm.com (b01ledav001.gho.pok.ibm.com [9.57.199.106])
+        by b01cxnp22036.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 03BLhfVn12452540
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Sat, 11 Apr 2020 21:43:41 GMT
+Received: from b01ledav001.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id A71392805E;
+        Sat, 11 Apr 2020 21:43:41 +0000 (GMT)
+Received: from b01ledav001.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id BF3EA28058;
+        Sat, 11 Apr 2020 21:43:40 +0000 (GMT)
+Received: from swastik.ibm.com (unknown [9.65.249.129])
+        by b01ledav001.gho.pok.ibm.com (Postfix) with ESMTP;
+        Sat, 11 Apr 2020 21:43:40 +0000 (GMT)
+Subject: Re: [PATCH v2 0/2] support to read and tune appraise mode in runtime
+To:     Tianjia Zhang <tianjia.zhang@linux.alibaba.com>,
+        zhang.jia@linux.alibaba.com
+Cc:     zohar@linux.ibm.com, dmitry.kasatkin@gmail.com, jmorris@namei.org,
+        serge@hallyn.com, zhangliguang@linux.alibaba.com,
+        linux-integrity@vger.kernel.org,
+        linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200409103440.47946-1-tianjia.zhang@linux.alibaba.com>
+From:   Nayna <nayna@linux.vnet.ibm.com>
+Message-ID: <1e160d08-788a-0c3b-0f9f-2077e55b286a@linux.vnet.ibm.com>
+Date:   Sat, 11 Apr 2020 17:43:40 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-X-Received: by 2002:a5d:8347:: with SMTP id q7mr10163952ior.172.1586641092063;
- Sat, 11 Apr 2020 14:38:12 -0700 (PDT)
-Date:   Sat, 11 Apr 2020 14:38:12 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000adb83a05a30aaa04@google.com>
-Subject: WARNING: bad unlock balance in mptcp_shutdown
-From:   syzbot <syzbot+6ebb6d4830e8f8815623@syzkaller.appspotmail.com>
-To:     davem@davemloft.net, kuba@kernel.org, linux-kernel@vger.kernel.org,
-        mathew.j.martineau@linux.intel.com, matthieu.baerts@tessares.net,
-        mptcp@lists.01.org, netdev@vger.kernel.org,
-        syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200409103440.47946-1-tianjia.zhang@linux.alibaba.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
+ definitions=2020-04-11_06:2020-04-11,2020-04-11 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 phishscore=0
+ priorityscore=1501 malwarescore=0 adultscore=0 mlxscore=0 bulkscore=0
+ lowpriorityscore=0 impostorscore=0 clxscore=1015 mlxlogscore=983
+ spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2004110193
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
 
-syzbot found the following crash on:
+On 4/9/20 6:34 AM, Tianjia Zhang wrote:
+> Support the read and write operations of ima_appraise by adding a
+> securifyfs file 'appraise_mode'.
+>
+> In order to tune appraise mode in runtime, writing a PKCS#7 signature
 
-HEAD commit:    f5e94d10 Merge tag 'drm-next-2020-04-08' of git://anongit...
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=17a5dbfbe00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=ca75979eeebf06c2
-dashboard link: https://syzkaller.appspot.com/bug?extid=6ebb6d4830e8f8815623
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+I am curious to know why would you tune appraise mode in runtime ?
 
-Unfortunately, I don't have any reproducer for this crash yet.
+Thanks & Regards,
 
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+6ebb6d4830e8f8815623@syzkaller.appspotmail.com
+       - Nayna
 
-=====================================
-WARNING: bad unlock balance detected!
-5.6.0-syzkaller #0 Not tainted
--------------------------------------
-syz-executor.5/2215 is trying to release lock (sk_lock-AF_INET6) at:
-[<ffffffff87c5203b>] mptcp_shutdown+0x38b/0x550 net/mptcp/protocol.c:1889
-but there are no more locks to release!
-
-other info that might help us debug this:
-1 lock held by syz-executor.5/2215:
- #0: ffff88804a22eda0 (slock-AF_INET6){+.-.}-{2:2}, at: spin_lock_bh include/linux/spinlock.h:358 [inline]
- #0: ffff88804a22eda0 (slock-AF_INET6){+.-.}-{2:2}, at: release_sock+0x1b/0x1b0 net/core/sock.c:2974
-
-stack backtrace:
-CPU: 0 PID: 2215 Comm: syz-executor.5 Not tainted 5.6.0-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x188/0x20d lib/dump_stack.c:118
- __lock_release kernel/locking/lockdep.c:4633 [inline]
- lock_release+0x586/0x800 kernel/locking/lockdep.c:4941
- sock_release_ownership include/net/sock.h:1539 [inline]
- release_sock+0x177/0x1b0 net/core/sock.c:2984
- mptcp_shutdown+0x38b/0x550 net/mptcp/protocol.c:1889
- __sys_shutdown+0xf3/0x1a0 net/socket.c:2208
- __do_sys_shutdown net/socket.c:2216 [inline]
- __se_sys_shutdown net/socket.c:2214 [inline]
- __x64_sys_shutdown+0x50/0x70 net/socket.c:2214
- do_syscall_64+0xf6/0x7d0 arch/x86/entry/common.c:295
- entry_SYSCALL_64_after_hwframe+0x49/0xb3
-RIP: 0033:0x45c889
-Code: ad b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 7b b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007fa67df32c78 EFLAGS: 00000246 ORIG_RAX: 0000000000000030
-RAX: ffffffffffffffda RBX: 00007fa67df336d4 RCX: 000000000045c889
-RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000000000003
-RBP: 000000000076bfa0 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 00000000ffffffff
-R13: 0000000000000b5e R14: 00000000004cd960 R15: 000000000076bfac
-
-
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
