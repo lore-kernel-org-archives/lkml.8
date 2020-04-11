@@ -2,52 +2,51 @@ Return-Path: <SRS0=xbEg=53=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C86BC2BA2B
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:12:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D360C2BA2B
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:12:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5594E20787
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:12:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 449BF21655
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:12:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586607139;
-	bh=aoqivjAdPfLXCHPm7MVh9istfFKL/G+QKC2KQBc0cpY=;
+	s=default; t=1586607143;
+	bh=s0u7lDLLVe++4Weesyk9XvhvqRchgRX/r1SYmiD7pWo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BIyBrCKTIT5AHkbbSHVrJOXdbSwGrPXK9fuVBdqtoMF7dsnZJpyHpejURVUW7kjHk
-	 DCtTz5xijlFbprKhZMmEckQOFHFSXeDBoqwhR6B+GAojV28yG9XK7pjtPpsdDqswb7
-	 c0vwP9TydTGmIX9rPy54nUMmZDiq/5NDpP44XTjQ=
+	b=zgXaNgOCkNtvb6b6wrSP7tmbKHu8M+RCcpvvYylYLQkvI+HDTrM4OLxE8dOg3t2jo
+	 NFPH4dkY4i97DhzmWDvip7Gdb/eu6dY7ZGAtTmx9Eqvzfw++777tgwpqZbB93QOZKE
+	 mVOM9CYsPE8s24r5bc89geBbW+zVMErGNz7cxfgU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727199AbgDKMMR (ORCPT
+        id S1727224AbgDKMMV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 08:12:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44686 "EHLO mail.kernel.org"
+        Sat, 11 Apr 2020 08:12:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44826 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727183AbgDKMMM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 08:12:12 -0400
+        id S1727192AbgDKMMQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Apr 2020 08:12:16 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 098BD21744;
-        Sat, 11 Apr 2020 12:12:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D4E0920787;
+        Sat, 11 Apr 2020 12:12:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586607131;
-        bh=aoqivjAdPfLXCHPm7MVh9istfFKL/G+QKC2KQBc0cpY=;
+        s=default; t=1586607136;
+        bh=s0u7lDLLVe++4Weesyk9XvhvqRchgRX/r1SYmiD7pWo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xz93EiA3+oS3Xbjz42bFENCZLlRgATkVwrICVGrU3sO0ICVVdm0EJV8mu8Q++gPuC
-         UFsmcucmUvTCaK6fjdet/eWDn2vpjcCXqpfK/Iy+agTPfHG4HYPO9gisMZjtLKU1Bj
-         JgTiSZIW3Pcgpl0jbECOjkBwV59cJ9T5DhMXrdiA=
+        b=tp6x0WWthpBvUgUE0Vt34DQGhKv4sjeVKzgSwxfGbsniPe2RFMPJWamkUhsk+qTxJ
+         3a1GOCnWXWgbQQecdi+JW3I1wgrWa91/SsYbeUEXElIUpNwvNbKNkp+DKCxqvz1J25
+         jWQH9WjtCpex4vGOOkQO3nFDlgMxcZ1ReEDPDSS0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Guillaume Nault <g.nault@alphalink.fr>,
-        "David S. Miller" <davem@davemloft.net>,
-        Will Deacon <will@kernel.org>
-Subject: [PATCH 4.9 02/32] l2tp: fix race between l2tp_session_delete() and l2tp_tunnel_closeall()
-Date:   Sat, 11 Apr 2020 14:08:41 +0200
-Message-Id: <20200411115419.004556589@linuxfoundation.org>
+        stable@vger.kernel.org, Paul Cercueil <paul@crapouillou.net>,
+        Mark Brown <broonie@kernel.org>
+Subject: [PATCH 4.9 21/32] ASoC: jz4740-i2s: Fix divider written at incorrect offset in register
+Date:   Sat, 11 Apr 2020 14:09:00 +0200
+Message-Id: <20200411115421.513567057@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200411115418.455500023@linuxfoundation.org>
 References: <20200411115418.455500023@linuxfoundation.org>
@@ -60,79 +59,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Guillaume Nault <g.nault@alphalink.fr>
+From: Paul Cercueil <paul@crapouillou.net>
 
-commit b228a94066406b6c456321d69643b0d7ce11cfa6 upstream.
+commit 9401d5aa328e64617d87abd59af1c91cace4c3e4 upstream.
 
-There are several ways to remove L2TP sessions:
+The 4-bit divider value was written at offset 8, while the jz4740
+programming manual locates it at offset 0.
 
-  * deleting a session explicitly using the netlink interface (with
-    L2TP_CMD_SESSION_DELETE),
-  * deleting the session's parent tunnel (either by closing the
-    tunnel's file descriptor or using the netlink interface),
-  * closing the PPPOL2TP file descriptor of a PPP pseudo-wire.
-
-In some cases, when these methods are used concurrently on the same
-session, the session can be removed twice, leading to use-after-free
-bugs.
-
-This patch adds a 'dead' flag, used by l2tp_session_delete() and
-l2tp_tunnel_closeall() to prevent them from stepping on each other's
-toes.
-
-The session deletion path used when closing a PPPOL2TP file descriptor
-doesn't need to be adapted. It already has to ensure that a session
-remains valid for the lifetime of its PPPOL2TP file descriptor.
-So it takes an extra reference on the session in the ->session_close()
-callback (pppol2tp_session_close()), which is eventually dropped
-in the ->sk_destruct() callback of the PPPOL2TP socket
-(pppol2tp_session_destruct()).
-Still, __l2tp_session_unhash() and l2tp_session_queue_purge() can be
-called twice and even concurrently for a given session, but thanks to
-proper locking and re-initialisation of list fields, this is not an
-issue.
-
-Signed-off-by: Guillaume Nault <g.nault@alphalink.fr>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Will Deacon <will@kernel.org>
+Fixes: 26b0aad80a86 ("ASoC: jz4740: Add dynamic sampling rate support to jz4740-i2s")
+Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+Cc: stable@vger.kernel.org
+Link: https://lore.kernel.org/r/20200306222931.39664-2-paul@crapouillou.net
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- net/l2tp/l2tp_core.c |    6 ++++++
- net/l2tp/l2tp_core.h |    1 +
- 2 files changed, 7 insertions(+)
+ sound/soc/jz4740/jz4740-i2s.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/net/l2tp/l2tp_core.c
-+++ b/net/l2tp/l2tp_core.c
-@@ -1351,6 +1351,9 @@ again:
+--- a/sound/soc/jz4740/jz4740-i2s.c
++++ b/sound/soc/jz4740/jz4740-i2s.c
+@@ -92,7 +92,7 @@
+ #define JZ_AIC_I2S_STATUS_BUSY BIT(2)
  
- 			hlist_del_init(&session->hlist);
- 
-+			if (test_and_set_bit(0, &session->dead))
-+				goto again;
-+
- 			if (session->ref != NULL)
- 				(*session->ref)(session);
- 
-@@ -1799,6 +1802,9 @@ EXPORT_SYMBOL_GPL(__l2tp_session_unhash)
-  */
- int l2tp_session_delete(struct l2tp_session *session)
- {
-+	if (test_and_set_bit(0, &session->dead))
-+		return 0;
-+
- 	if (session->ref)
- 		(*session->ref)(session);
- 	__l2tp_session_unhash(session);
---- a/net/l2tp/l2tp_core.h
-+++ b/net/l2tp/l2tp_core.h
-@@ -84,6 +84,7 @@ struct l2tp_session_cfg {
- struct l2tp_session {
- 	int			magic;		/* should be
- 						 * L2TP_SESSION_MAGIC */
-+	long			dead;
- 
- 	struct l2tp_tunnel	*tunnel;	/* back pointer to tunnel
- 						 * context */
+ #define JZ_AIC_CLK_DIV_MASK 0xf
+-#define I2SDIV_DV_SHIFT 8
++#define I2SDIV_DV_SHIFT 0
+ #define I2SDIV_DV_MASK (0xf << I2SDIV_DV_SHIFT)
+ #define I2SDIV_IDV_SHIFT 8
+ #define I2SDIV_IDV_MASK (0xf << I2SDIV_IDV_SHIFT)
 
 
