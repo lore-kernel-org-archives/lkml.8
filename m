@@ -7,47 +7,50 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1686CC2BBC7
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:48:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6726C2BA19
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:48:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D81D3206F7
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:48:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9218020787
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:48:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586648892;
-	bh=9V1+2+tpoFSGqbjR8KTBols0eFkDrZeatBM40643OrI=;
+	s=default; t=1586648896;
+	bh=eSQG4zjJI2NpYKdRyk6k4YozKTs/eWEKTA1IfJRxfKE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=U49DizVN7ZRKBPSVBBH2sLAReAz/UVBDBqeKGxvb5Ta0qn/ARx9a2aStx3m084psZ
-	 ADv7FtT2k+nqXsCxbTJ6MUMC8EdYzut3XLpScieomr4GhedUlrIhsZlCOXiapZl0qM
-	 tEYJNXR0fmACp2Bs8/1aRuYgErDwim/KhBCd+Q+0=
+	b=mM7PN6Q4mPyznyFJbC+uDnwPAiB/2eJ0ldi2rzYj+wycFfcDFjM3vlau+EYWRUJwo
+	 O8WtB0oO0bF84HWImbZLpbKSXArUVpAOFlDKnMq5zV2CQ1HBQrs7lM4UMmf9k6JLfh
+	 Z/T2kU/mxZv3dxAqwt+w4A+smkFgX1ChJ6TRhS+8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727435AbgDKXEp (ORCPT
+        id S1728138AbgDKXsO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 19:04:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38166 "EHLO mail.kernel.org"
+        Sat, 11 Apr 2020 19:48:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38324 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727300AbgDKXEi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 19:04:38 -0400
+        id S1727426AbgDKXEp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Apr 2020 19:04:45 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9EE6C20787;
-        Sat, 11 Apr 2020 23:04:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 022CB20CC7;
+        Sat, 11 Apr 2020 23:04:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586646278;
-        bh=9V1+2+tpoFSGqbjR8KTBols0eFkDrZeatBM40643OrI=;
+        s=default; t=1586646286;
+        bh=eSQG4zjJI2NpYKdRyk6k4YozKTs/eWEKTA1IfJRxfKE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0GhlKBM+nbdwx9O66qMhodHc7M5HWqeslJcEOFRD5Y/ilcBpN+4afB38C8Sxnn8vy
-         hLZDq1kgPSGqkv+vQ85NJR5+ap3fOAu1GFRjU8WA+YNEo8cwzOnLXHtMjLVF7xbY4V
-         rnNh1NMx6VHqygSlLKgxeylP2pITpU7EF8Y5+gRQ=
+        b=jcbBOnttAsuezGXK/p8T3jt//rhJehNe+jLVokJIYe531xnf/Cfe6nrNTNwJu+ktU
+         0YomcTCi7qI/OuqM6auHQgv16NXqW86eSdMHXkBBdVpTKVGByLmqSNIKOCAPXIJTBM
+         mXZJQuOuHetHFMt0JfR4B+x+7hCCVSvzuOEeDYWo=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Alain Michaud <alainm@chromium.org>,
-        Marcel Holtmann <marcel@holtmann.org>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-bluetooth@vger.kernel.org, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.6 041/149] Bluetooth: guard against controllers sending zero'd events
-Date:   Sat, 11 Apr 2020 19:01:58 -0400
-Message-Id: <20200411230347.22371-41-sashal@kernel.org>
+Cc:     Bhawanpreet Lakha <Bhawanpreet.Lakha@amd.com>,
+        Wenjing Liu <Wenjing.Liu@amd.com>,
+        Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>,
+        Harry Wentland <harry.wentland@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Sasha Levin <sashal@kernel.org>, amd-gfx@lists.freedesktop.org,
+        dri-devel@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 5.6 047/149] drm/amd/display: Fix HDMI repeater authentication
+Date:   Sat, 11 Apr 2020 19:02:04 -0400
+Message-Id: <20200411230347.22371-47-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200411230347.22371-1-sashal@kernel.org>
 References: <20200411230347.22371-1-sashal@kernel.org>
@@ -60,45 +63,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alain Michaud <alainm@chromium.org>
+From: Bhawanpreet Lakha <Bhawanpreet.Lakha@amd.com>
 
-[ Upstream commit 08bb4da90150e2a225f35e0f642cdc463958d696 ]
+[ Upstream commit 63a85ff6c35d8a7aaf0fb60ddbab93530d495bf3 ]
 
-Some controllers have been observed to send zero'd events under some
-conditions.  This change guards against this condition as well as adding
-a trace to facilitate diagnosability of this condition.
+when the rxstatus split was done the index was incorrect. This
+lead to HDMI repeater authentication failure for HDCP2.X So fix it
 
-Signed-off-by: Alain Michaud <alainm@chromium.org>
-Signed-off-by: Marcel Holtmann <marcel@holtmann.org>
+Fixes: 302169003733 ("drm/amd/display: split rxstatus for hdmi and dp")
+Signed-off-by: Bhawanpreet Lakha <Bhawanpreet.Lakha@amd.com>
+Reviewed-by: Wenjing Liu <Wenjing.Liu@amd.com>
+Acked-by: Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>
+Acked-by: Harry Wentland <harry.wentland@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/bluetooth/hci_event.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+ drivers/gpu/drm/amd/display/modules/hdcp/hdcp2_execution.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/net/bluetooth/hci_event.c b/net/bluetooth/hci_event.c
-index 6ddc4a74a5e42..673351800ed3e 100644
---- a/net/bluetooth/hci_event.c
-+++ b/net/bluetooth/hci_event.c
-@@ -5858,6 +5858,11 @@ void hci_event_packet(struct hci_dev *hdev, struct sk_buff *skb)
- 	u8 status = 0, event = hdr->evt, req_evt = 0;
- 	u16 opcode = HCI_OP_NOP;
- 
-+	if (!event) {
-+		bt_dev_warn(hdev, "Received unexpected HCI Event 00000000");
-+		goto done;
-+	}
-+
- 	if (hdev->sent_cmd && bt_cb(hdev->sent_cmd)->hci.req_event == event) {
- 		struct hci_command_hdr *cmd_hdr = (void *) hdev->sent_cmd->data;
- 		opcode = __le16_to_cpu(cmd_hdr->opcode);
-@@ -6069,6 +6074,7 @@ void hci_event_packet(struct hci_dev *hdev, struct sk_buff *skb)
- 		req_complete_skb(hdev, status, opcode, orig_skb);
- 	}
- 
-+done:
- 	kfree_skb(orig_skb);
- 	kfree_skb(skb);
- 	hdev->stat.evt_rx++;
+diff --git a/drivers/gpu/drm/amd/display/modules/hdcp/hdcp2_execution.c b/drivers/gpu/drm/amd/display/modules/hdcp/hdcp2_execution.c
+index 55246711700ba..6fd68326452ce 100644
+--- a/drivers/gpu/drm/amd/display/modules/hdcp/hdcp2_execution.c
++++ b/drivers/gpu/drm/amd/display/modules/hdcp/hdcp2_execution.c
+@@ -34,7 +34,7 @@ static inline enum mod_hdcp_status check_receiver_id_list_ready(struct mod_hdcp
+ 	if (is_dp_hdcp(hdcp))
+ 		is_ready = HDCP_2_2_DP_RXSTATUS_READY(hdcp->auth.msg.hdcp2.rxstatus_dp) ? 1 : 0;
+ 	else
+-		is_ready = (HDCP_2_2_HDMI_RXSTATUS_READY(hdcp->auth.msg.hdcp2.rxstatus[0]) &&
++		is_ready = (HDCP_2_2_HDMI_RXSTATUS_READY(hdcp->auth.msg.hdcp2.rxstatus[1]) &&
+ 				(HDCP_2_2_HDMI_RXSTATUS_MSG_SZ_HI(hdcp->auth.msg.hdcp2.rxstatus[1]) << 8 |
+ 						hdcp->auth.msg.hdcp2.rxstatus[0])) ? 1 : 0;
+ 	return is_ready ? MOD_HDCP_STATUS_SUCCESS :
+@@ -67,7 +67,7 @@ static inline enum mod_hdcp_status check_reauthentication_request(
+ 				MOD_HDCP_STATUS_HDCP2_REAUTH_REQUEST :
+ 				MOD_HDCP_STATUS_SUCCESS;
+ 	else
+-		ret = HDCP_2_2_HDMI_RXSTATUS_REAUTH_REQ(hdcp->auth.msg.hdcp2.rxstatus[0]) ?
++		ret = HDCP_2_2_HDMI_RXSTATUS_REAUTH_REQ(hdcp->auth.msg.hdcp2.rxstatus[1]) ?
+ 				MOD_HDCP_STATUS_HDCP2_REAUTH_REQUEST :
+ 				MOD_HDCP_STATUS_SUCCESS;
+ 	return ret;
 -- 
 2.20.1
 
