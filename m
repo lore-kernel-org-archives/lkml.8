@@ -7,46 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A554C2BBC7
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:40:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E487EC2BB86
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:41:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3598120709
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:40:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B3D6B20787
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:41:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586648449;
-	bh=s9qANytsOfkyFxVEfILbbK+MZLjEYum/Vx6saCO1g3U=;
+	s=default; t=1586648460;
+	bh=ynPxn+FDkJCZDn6vytCzfnBSxcM76CbyyJcXzUxcKzg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qv2yJk0hYsvQVhlpY6e0GjKdxerK+2vjK3ccWUYikODD+BXB8C+q6iSmlyMCeIxwx
-	 lmGRl6onJqSjCln8PmzvXBa63o6CQpvXpEtIrhuBgej8fM1RhkB3jSyHDGKV4HcOlh
-	 AM/xgyAGiQzwhXFqREUJuGpCiq7pnkR3t2unrl7s=
+	b=cAtrMEmBIyYd+VVJ+adeMKysSJ4h1YijOxqo0bzjswTfGepJ2//uJVPSZJ9Rb1l1+
+	 rJqAKEQXpSsdHtmzjZ9TgMQwU9QaFOzDSmLdfDIWPAVFM/HRcpLpKOyc9fW8FixOaF
+	 2A/S7VsCjbxSFg9C0MNEahK5oIetX2stvBnyJ/B0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731010AbgDKXkr (ORCPT
+        id S1729238AbgDKXk7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 19:40:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43002 "EHLO mail.kernel.org"
+        Sat, 11 Apr 2020 19:40:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42948 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728606AbgDKXHR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 19:07:17 -0400
+        id S1727681AbgDKXHP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Apr 2020 19:07:15 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F19F720708;
-        Sat, 11 Apr 2020 23:07:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 945B620CC7;
+        Sat, 11 Apr 2020 23:07:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586646437;
-        bh=s9qANytsOfkyFxVEfILbbK+MZLjEYum/Vx6saCO1g3U=;
+        s=default; t=1586646435;
+        bh=ynPxn+FDkJCZDn6vytCzfnBSxcM76CbyyJcXzUxcKzg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=b6SAiB4nu3PXh451RAPIEvLeDwXFUUzaoJB3W4yQH5eAt4z24YsviP5LHwV5NWxKq
-         Itq3EHPcn4BWGDHZk9k4/ewCNwgZpjwZ7gmYl1Gs92FCru4m4TxznCzb8roGcCI2V5
-         sGcyo9XDy08FpxKo2WbH5eRbZiKg5jQMFPH4ZH1o=
+        b=LXF0YdU3x1BTNhH/0Nu9giO5f8LcnFpK4ok//iQlvDaKsTgJ49RiiqBfKHfw+xOGy
+         n3bUSH36NzjDbjnMxvBf323xPVwo9y/xchm7f5zy2C8sU78R6NEl1Q2UNDJTrmmZzn
+         /fF9cUZKTFptrxg9kJCrXf723Wlf0fe0fJafS79k=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Shannon Nelson <snelson@pensando.io>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.5 009/121] ionic: check for NULL structs on teardown
-Date:   Sat, 11 Apr 2020 19:05:14 -0400
-Message-Id: <20200411230706.23855-9-sashal@kernel.org>
+Cc:     Haibo Chen <haibo.chen@nxp.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Sasha Levin <sashal@kernel.org>, linux-mmc@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.5 007/121] mmc: sdhci: do not enable card detect interrupt for gpio cd type
+Date:   Sat, 11 Apr 2020 19:05:12 -0400
+Message-Id: <20200411230706.23855-7-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200411230706.23855-1-sashal@kernel.org>
 References: <20200411230706.23855-1-sashal@kernel.org>
@@ -59,82 +61,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Shannon Nelson <snelson@pensando.io>
+From: Haibo Chen <haibo.chen@nxp.com>
 
-[ Upstream commit a4674f34711b96b65bdc4d54eca88d2fd123bbc6 ]
+[ Upstream commit e65bb38824711559844ba932132f417bc5a355e2 ]
 
-Make sure the queue structs exist before trying to tear
-them down to make for safer error recovery.
+Except SDHCI_QUIRK_BROKEN_CARD_DETECTION and MMC_CAP_NONREMOVABLE,
+we also do not need to handle controller native card detect interrupt
+for gpio cd type.
+If we wrong enabled the card detect interrupt for gpio case, it will
+cause a lot of unexpected card detect interrupts during data transfer
+which should not happen.
 
-Fixes: 0f3154e6bcb3 ("ionic: Add Tx and Rx handling")
-Signed-off-by: Shannon Nelson <snelson@pensando.io>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Haibo Chen <haibo.chen@nxp.com>
+Acked-by: Adrian Hunter <adrian.hunter@intel.com>
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+Link: https://lore.kernel.org/r/1582100563-20555-2-git-send-email-haibo.chen@nxp.com
+Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- .../net/ethernet/pensando/ionic/ionic_lif.c   | 26 ++++++++++---------
- .../net/ethernet/pensando/ionic/ionic_main.c  |  7 ++++-
- 2 files changed, 20 insertions(+), 13 deletions(-)
+ drivers/mmc/host/sdhci.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/pensando/ionic/ionic_lif.c b/drivers/net/ethernet/pensando/ionic/ionic_lif.c
-index ef82587133696..f3b164e4585eb 100644
---- a/drivers/net/ethernet/pensando/ionic/ionic_lif.c
-+++ b/drivers/net/ethernet/pensando/ionic/ionic_lif.c
-@@ -318,19 +318,21 @@ static void ionic_qcqs_free(struct ionic_lif *lif)
- 		lif->adminqcq = NULL;
- 	}
+diff --git a/drivers/mmc/host/sdhci.c b/drivers/mmc/host/sdhci.c
+index 659a9459ace34..e2d41b8748669 100644
+--- a/drivers/mmc/host/sdhci.c
++++ b/drivers/mmc/host/sdhci.c
+@@ -152,7 +152,7 @@ static void sdhci_set_card_detection(struct sdhci_host *host, bool enable)
+ 	u32 present;
  
--	for (i = 0; i < lif->nxqs; i++)
--		if (lif->rxqcqs[i].stats)
--			devm_kfree(dev, lif->rxqcqs[i].stats);
--
--	devm_kfree(dev, lif->rxqcqs);
--	lif->rxqcqs = NULL;
--
--	for (i = 0; i < lif->nxqs; i++)
--		if (lif->txqcqs[i].stats)
--			devm_kfree(dev, lif->txqcqs[i].stats);
-+	if (lif->rxqcqs) {
-+		for (i = 0; i < lif->nxqs; i++)
-+			if (lif->rxqcqs[i].stats)
-+				devm_kfree(dev, lif->rxqcqs[i].stats);
-+		devm_kfree(dev, lif->rxqcqs);
-+		lif->rxqcqs = NULL;
-+	}
+ 	if ((host->quirks & SDHCI_QUIRK_BROKEN_CARD_DETECTION) ||
+-	    !mmc_card_is_removable(host->mmc))
++	    !mmc_card_is_removable(host->mmc) || mmc_can_gpio_cd(host->mmc))
+ 		return;
  
--	devm_kfree(dev, lif->txqcqs);
--	lif->txqcqs = NULL;
-+	if (lif->txqcqs) {
-+		for (i = 0; i < lif->nxqs; i++)
-+			if (lif->txqcqs[i].stats)
-+				devm_kfree(dev, lif->txqcqs[i].stats);
-+		devm_kfree(dev, lif->txqcqs);
-+		lif->txqcqs = NULL;
-+	}
- }
- 
- static void ionic_link_qcq_interrupts(struct ionic_qcq *src_qcq,
-diff --git a/drivers/net/ethernet/pensando/ionic/ionic_main.c b/drivers/net/ethernet/pensando/ionic/ionic_main.c
-index 3590ea7fd88a3..ab30448176c26 100644
---- a/drivers/net/ethernet/pensando/ionic/ionic_main.c
-+++ b/drivers/net/ethernet/pensando/ionic/ionic_main.c
-@@ -236,11 +236,16 @@ static void ionic_adminq_cb(struct ionic_queue *q,
- 
- static int ionic_adminq_post(struct ionic_lif *lif, struct ionic_admin_ctx *ctx)
- {
--	struct ionic_queue *adminq = &lif->adminqcq->q;
-+	struct ionic_queue *adminq;
- 	int err = 0;
- 
- 	WARN_ON(in_interrupt());
- 
-+	if (!lif->adminqcq)
-+		return -EIO;
-+
-+	adminq = &lif->adminqcq->q;
-+
- 	spin_lock(&lif->adminq_lock);
- 	if (!ionic_q_has_space(adminq, 1)) {
- 		err = -ENOSPC;
+ 	if (enable) {
 -- 
 2.20.1
 
