@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BF0DC2BB86
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:20:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49775C2BB86
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:20:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 16581206E9
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:20:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 19A1720769
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:20:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586647203;
-	bh=wCpQ8gm0sYk2mszJ/8N2yP6Z76FACLRdGKZjehOh2L4=;
+	s=default; t=1586647210;
+	bh=6XBtrqprCqmAJuOV9npDXK8AErRNzlGGsABlQShl+JY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GUCGB/Qsxr7lrxOo2edtk5arge0CIHR3uuFZFEXx0so1n0/ewpeacQ/dqkJIv/QqO
-	 L+sn/kTGoSMVfX0uPv6zRcmhWmvFz/G4Q2i1Nkyo/CJmJDkNAs7xzydH0PrIXqaqxU
-	 pKtsRabnDzxY77z88KpIu9K8IPELdFPQ0to0LT0M=
+	b=dWsavDFz21A+0KFJ2927B1AsFkaSezbdAElvy/mpk8HhqPhjA8zGJSQiiWrmwJw1K
+	 ehLGsAd29RLz64s7WKy7ZdXppXgGTfNyC5N3FrO4ojiLwoahDftLLM4ul98j94k+Ur
+	 ozasvu1GYrX+czdXNSAHg0q/U+U1+radNckLjn10=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730602AbgDKXUB (ORCPT
+        id S1730179AbgDKXNp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 19:20:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55118 "EHLO mail.kernel.org"
+        Sat, 11 Apr 2020 19:13:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54820 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730557AbgDKXNq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 19:13:46 -0400
+        id S1730477AbgDKXNe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Apr 2020 19:13:34 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 897C421744;
-        Sat, 11 Apr 2020 23:13:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3B03B20708;
+        Sat, 11 Apr 2020 23:13:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586646826;
-        bh=wCpQ8gm0sYk2mszJ/8N2yP6Z76FACLRdGKZjehOh2L4=;
+        s=default; t=1586646815;
+        bh=6XBtrqprCqmAJuOV9npDXK8AErRNzlGGsABlQShl+JY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=f+F14a2Vb9i9XtIBzdoBu9YJ4djAeEDqm37fxxGu+EECg0t+9OmVGqrmNTJBNHNXy
-         fU5yzK+g0TBqtSJPD/o5vte0+OtH8B1j4hRiOe+Gb7Qni1XfiBRcqkmZ2BlVWs02dx
-         aKMH/0l8j8gAKTWedwESU+4q2J4LAlHq0XtG5Bns=
+        b=kSKnhyz7U+ZZsxoJel80CV/UC2CvS42mq8MoGChbj5tRJe04D2fw23+LVHHyXTmub
+         ffkb3YyXAL0tepFRJEMitHT3h/OkL5vxDB+VCfnGCJy4aZZUDqqkQ6pMrm4VPnWXSs
+         7b1DdNH3/XEX2OANjyaq/Ckacm1gJGTNz60ZOS6o=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Alain Michaud <alainm@chromium.org>,
-        Marcel Holtmann <marcel@holtmann.org>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-bluetooth@vger.kernel.org, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 16/37] Bluetooth: guard against controllers sending zero'd events
-Date:   Sat, 11 Apr 2020 19:13:05 -0400
-Message-Id: <20200411231327.26550-16-sashal@kernel.org>
+Cc:     Vladimir Oltean <vladimir.oltean@nxp.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 06/37] net: phy: mscc: accept all RGMII species in vsc85xx_mac_if_set
+Date:   Sat, 11 Apr 2020 19:12:55 -0400
+Message-Id: <20200411231327.26550-6-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200411231327.26550-1-sashal@kernel.org>
 References: <20200411231327.26550-1-sashal@kernel.org>
@@ -60,45 +60,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alain Michaud <alainm@chromium.org>
+From: Vladimir Oltean <vladimir.oltean@nxp.com>
 
-[ Upstream commit 08bb4da90150e2a225f35e0f642cdc463958d696 ]
+[ Upstream commit da206d65f2b293274f8082a26da4e43a1610da54 ]
 
-Some controllers have been observed to send zero'd events under some
-conditions.  This change guards against this condition as well as adding
-a trace to facilitate diagnosability of this condition.
+The helper for configuring the pinout of the MII side of the PHY should
+do so irrespective of whether RGMII delays are used or not. So accept
+the ID, TXID and RXID variants as well, not just the no-delay RGMII
+variant.
 
-Signed-off-by: Alain Michaud <alainm@chromium.org>
-Signed-off-by: Marcel Holtmann <marcel@holtmann.org>
+Signed-off-by: Vladimir Oltean <vladimir.oltean@nxp.com>
+Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/bluetooth/hci_event.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+ drivers/net/phy/mscc.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/net/bluetooth/hci_event.c b/net/bluetooth/hci_event.c
-index 363dc85bbc5c9..5049258d8c50d 100644
---- a/net/bluetooth/hci_event.c
-+++ b/net/bluetooth/hci_event.c
-@@ -5249,6 +5249,11 @@ void hci_event_packet(struct hci_dev *hdev, struct sk_buff *skb)
- 	u8 status = 0, event = hdr->evt, req_evt = 0;
- 	u16 opcode = HCI_OP_NOP;
- 
-+	if (!event) {
-+		bt_dev_warn(hdev, "Received unexpected HCI Event 00000000");
-+		goto done;
-+	}
-+
- 	if (hdev->sent_cmd && bt_cb(hdev->sent_cmd)->hci.req_event == event) {
- 		struct hci_command_hdr *cmd_hdr = (void *) hdev->sent_cmd->data;
- 		opcode = __le16_to_cpu(cmd_hdr->opcode);
-@@ -5460,6 +5465,7 @@ void hci_event_packet(struct hci_dev *hdev, struct sk_buff *skb)
- 		req_complete_skb(hdev, status, opcode, orig_skb);
- 	}
- 
-+done:
- 	kfree_skb(orig_skb);
- 	kfree_skb(skb);
- 	hdev->stat.evt_rx++;
+diff --git a/drivers/net/phy/mscc.c b/drivers/net/phy/mscc.c
+index fe81741ab66a3..75b6cdd9d9eb6 100644
+--- a/drivers/net/phy/mscc.c
++++ b/drivers/net/phy/mscc.c
+@@ -470,6 +470,9 @@ static int vsc85xx_mac_if_set(struct phy_device *phydev,
+ 	reg_val = phy_read(phydev, MSCC_PHY_EXT_PHY_CNTL_1);
+ 	reg_val &= ~(MAC_IF_SELECTION_MASK);
+ 	switch (interface) {
++	case PHY_INTERFACE_MODE_RGMII_TXID:
++	case PHY_INTERFACE_MODE_RGMII_RXID:
++	case PHY_INTERFACE_MODE_RGMII_ID:
+ 	case PHY_INTERFACE_MODE_RGMII:
+ 		reg_val |= (MAC_IF_SELECTION_RGMII << MAC_IF_SELECTION_POS);
+ 		break;
 -- 
 2.20.1
 
