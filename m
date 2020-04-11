@@ -7,49 +7,45 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D6EEC2BB85
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:19:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B0A7C2BA2B
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:19:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 37CF320644
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:19:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D50D42084D
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:19:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586607567;
-	bh=lOVJgWNnz0yKKL4/eQnryAahX/eDEPiacWZDON4qHfM=;
+	s=default; t=1586607569;
+	bh=G/fsmouMPqeGL+ojewb25nKuHbsV2AApGz5o0aVaTkg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=v4+FSqNxUDa7r9ALdLqywcOJa+oeD+zWDQk+smwM9wwijQ/vaipcCXD5aVILFXe2x
-	 MsPCcW8GzewTlLJxFa9kBMiv6pLOtj1v+7pfwLH7/QDVf/pWvOoqirzF4FRMCH9gn3
-	 Zdee33q0wlGhermcSOziZyBEgt9SGNvz6Ys/kYcM=
+	b=rEvB9AMjEnbWxOaYgP97Dz2B2usDH7lNWYGtbWhySRybx3Ra62WW6yl43RSTFqORr
+	 Sig9S50qJA6baV82eot0VR3pO9YApXM1+A1qCma5/RnrDHQnulxHgVT2F4BKzu/6A2
+	 IEQlGtWXWkDdzfQyE9ZPWH0KMol/s2vaf63HlvBs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728791AbgDKMTZ (ORCPT
+        id S1728799AbgDKMT2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 08:19:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54782 "EHLO mail.kernel.org"
+        Sat, 11 Apr 2020 08:19:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54838 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728015AbgDKMTX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 08:19:23 -0400
+        id S1728792AbgDKMTZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Apr 2020 08:19:25 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id ECC2D20644;
-        Sat, 11 Apr 2020 12:19:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5F9202084D;
+        Sat, 11 Apr 2020 12:19:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586607563;
-        bh=lOVJgWNnz0yKKL4/eQnryAahX/eDEPiacWZDON4qHfM=;
+        s=default; t=1586607565;
+        bh=G/fsmouMPqeGL+ojewb25nKuHbsV2AApGz5o0aVaTkg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xjDP9pLw0a90JBDZb06YG8RD7eQ99+8b9UvINQhQQKkOLoK6/cUallrvOxFUVjGRY
-         aP3Emu51rlHN9pM+wBV1dQXtKjbQ7TGWqG8355sP9+HzVw8u9RPOYJ4ZJYYWUM3V1P
-         f/98NY09E8K5thcpSURAIGWSy+QDnSP3MVc1dX7A=
+        b=heQzgtpS8dR14ArPZsboeNfH/SX9e8XBn2vfLBrKrbIDtN8+2wJDScblRXBvsmNo+
+         UCcMtz2IiLJlYnIVeL27/cYBjmTOLGKMfEXVbDTEUtiEhsTkefVNXwzqYhN/Z+FwzQ
+         uPmThnLwwbFxAWsEq+DfYF+be3nOiiau+g4sI21k=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        syzbot+732528bae351682f1f27@syzkaller.appspotmail.com,
-        Qiujun Huang <hqjagain@gmail.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>
-Subject: [PATCH 5.5 29/44] fbcon: fix null-ptr-deref in fbcon_switch
-Date:   Sat, 11 Apr 2020 14:09:49 +0200
-Message-Id: <20200411115459.604938039@linuxfoundation.org>
+        stable@vger.kernel.org, Saravana Kannan <saravanak@google.com>
+Subject: [PATCH 5.5 30/44] driver core: Reevaluate dev->links.need_for_probe as suppliers are added
+Date:   Sat, 11 Apr 2020 14:09:50 +0200
+Message-Id: <20200411115459.715810444@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200411115456.934174282@linuxfoundation.org>
 References: <20200411115456.934174282@linuxfoundation.org>
@@ -62,57 +58,65 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Qiujun Huang <hqjagain@gmail.com>
+From: Saravana Kannan <saravanak@google.com>
 
-commit b139f8b00db4a8ea75a4174346eafa48041aa489 upstream.
+commit 1745d299af5b373abad08fa29bff0d31dc6aff21 upstream.
 
-Set logo_shown to FBCON_LOGO_CANSHOW when the vc was deallocated.
+A previous patch 03324507e66c ("driver core: Allow
+fwnode_operations.add_links to differentiate errors") forgot to update
+all call sites to fwnode_operations.add_links. This patch fixes that.
 
-syzkaller report: https://lkml.org/lkml/2020/3/27/403
-general protection fault, probably for non-canonical address
-0xdffffc000000006c: 0000 [#1] SMP KASAN
-KASAN: null-ptr-deref in range [0x0000000000000360-0x0000000000000367]
-RIP: 0010:fbcon_switch+0x28f/0x1740
-drivers/video/fbdev/core/fbcon.c:2260
+Legend:
+-> Denotes RHS is an optional/potential supplier for LHS
+=> Denotes RHS is a mandatory supplier for LHS
 
-Call Trace:
-redraw_screen+0x2a8/0x770 drivers/tty/vt/vt.c:1008
-vc_do_resize+0xfe7/0x1360 drivers/tty/vt/vt.c:1295
-fbcon_init+0x1221/0x1ab0 drivers/video/fbdev/core/fbcon.c:1219
-visual_init+0x305/0x5c0 drivers/tty/vt/vt.c:1062
-do_bind_con_driver+0x536/0x890 drivers/tty/vt/vt.c:3542
-do_take_over_console+0x453/0x5b0 drivers/tty/vt/vt.c:4122
-do_fbcon_takeover+0x10b/0x210 drivers/video/fbdev/core/fbcon.c:588
-fbcon_fb_registered+0x26b/0x340 drivers/video/fbdev/core/fbcon.c:3259
-do_register_framebuffer drivers/video/fbdev/core/fbmem.c:1664 [inline]
-register_framebuffer+0x56e/0x980 drivers/video/fbdev/core/fbmem.c:1832
-dlfb_usb_probe.cold+0x1743/0x1ba3 drivers/video/fbdev/udlfb.c:1735
-usb_probe_interface+0x310/0x800 drivers/usb/core/driver.c:374
+Example:
 
-accessing vc_cons[logo_shown].d->vc_top causes the bug.
+Device A => Device X
+Device A -> Device Y
 
-Reported-by: syzbot+732528bae351682f1f27@syzkaller.appspotmail.com
-Signed-off-by: Qiujun Huang <hqjagain@gmail.com>
-Acked-by: Sam Ravnborg <sam@ravnborg.org>
-Cc: stable@vger.kernel.org
-Signed-off-by: Daniel Vetter <daniel.vetter@ffwll.ch>
-Link: https://patchwork.freedesktop.org/patch/msgid/20200329085647.25133-1-hqjagain@gmail.com
+Before this patch:
+1. Device A is added.
+2. Device A is marked as waiting for mandatory suppliers
+3. Device X is added
+4. Device A is left marked as waiting for mandatory suppliers
+
+Step 4 is wrong since all mandatory suppliers of Device A have been
+added.
+
+After this patch:
+1. Device A is added.
+2. Device A is marked as waiting for mandatory suppliers
+3. Device X is added
+4. Device A is no longer considered as waiting for mandatory suppliers
+
+This is the correct behavior.
+
+Fixes: 03324507e66c ("driver core: Allow fwnode_operations.add_links to differentiate errors")
+Signed-off-by: Saravana Kannan <saravanak@google.com>
+Link: https://lore.kernel.org/r/20200222014038.180923-2-saravanak@google.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/video/fbdev/core/fbcon.c |    3 +++
- 1 file changed, 3 insertions(+)
+ drivers/base/core.c |    8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
---- a/drivers/video/fbdev/core/fbcon.c
-+++ b/drivers/video/fbdev/core/fbcon.c
-@@ -1276,6 +1276,9 @@ finished:
- 	if (!con_is_bound(&fb_con))
- 		fbcon_exit();
+--- a/drivers/base/core.c
++++ b/drivers/base/core.c
+@@ -523,9 +523,13 @@ static void device_link_add_missing_supp
  
-+	if (vc->vc_num == logo_shown)
-+		logo_shown = FBCON_LOGO_CANSHOW;
-+
- 	return;
+ 	mutex_lock(&wfs_lock);
+ 	list_for_each_entry_safe(dev, tmp, &wait_for_suppliers,
+-				 links.needs_suppliers)
+-		if (!fwnode_call_int_op(dev->fwnode, add_links, dev))
++				 links.needs_suppliers) {
++		int ret = fwnode_call_int_op(dev->fwnode, add_links, dev);
++		if (!ret)
+ 			list_del_init(&dev->links.needs_suppliers);
++		else if (ret != -ENODEV)
++			dev->links.need_for_probe = false;
++	}
+ 	mutex_unlock(&wfs_lock);
  }
  
 
