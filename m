@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 761EFC2BA19
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:23:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F21BC2BB86
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:23:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 43A04215A4
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:23:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3471B215A4
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:23:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586647416;
-	bh=qatoofgB5RrvttR39Yh97SfdZun7nyvSZh5sTNU+DiE=;
+	s=default; t=1586647424;
+	bh=hSS7szUCZeaop0dkXIYSvoocnotPfQ/8xvQnIKAGgPk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=diMqAujKHPBjXQxfMcPkFfvS5h0KrrNeAxca39lGPBKxoD+d+L6GJSq36hbHHBhCL
-	 bctiKx6Pc+uweAH/7LAZQ5QVvotsLt09Rqqfm6gbCRlEM5M685cyIvU5hmqDbI/PAY
-	 FOKe0ZF/5vsujevqaUjVZa8yzVGhGF2Zgnv7wjFk=
+	b=ghKMTRE8jNYT7bABHU3/5EsPCuDQJNi12Xjo2Hp1DO+frIlp8HUp4ltC1p6mow+gr
+	 6cKaChXxALOX5L4J+rPh5KQpT1Dqq0HEcdfaHNfrdcenK/hmQjaIgIpG4PDBZGacGz
+	 kvIeRwcKmjpRBjO7sgaAvJ1c1zaDR4rtHDanc5II=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730607AbgDKXXe (ORCPT
+        id S1729958AbgDKXMx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 19:23:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53624 "EHLO mail.kernel.org"
+        Sat, 11 Apr 2020 19:12:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52756 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730292AbgDKXM4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 19:12:56 -0400
+        id S1730184AbgDKXMc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Apr 2020 19:12:32 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C62BB20708;
-        Sat, 11 Apr 2020 23:12:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C9A1E20787;
+        Sat, 11 Apr 2020 23:12:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586646776;
-        bh=qatoofgB5RrvttR39Yh97SfdZun7nyvSZh5sTNU+DiE=;
+        s=default; t=1586646752;
+        bh=hSS7szUCZeaop0dkXIYSvoocnotPfQ/8xvQnIKAGgPk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1V86hcAqW+S2ED/MbJpL5q0lwyv4x4wyKZr8azHTswkBQ6uC+RD81Py5RhRO207oi
-         hU1YH0I/AgLKkOCK6te1TITMVlixhobZ7MvAU+LnqNJ7EYK7CJaKvbf6ozA9xl7FJR
-         T929VtbAnSFIZdpJyBxTvHvF6pgD9WtIQwwTYFH4=
+        b=fEm73dZjB5Ohq9Fw5xUdp0PT3k7NoyptpR8whFr4JdFKp315X7aUnAWJroCGA/fPI
+         iJllUBZA22bsEeO+VmjV/vCpkYT1Y20YOb79BvMVhhvHbzYFbae/tGGCb+ZqSiBguS
+         /WJ6tEjHkh2d0QX3My+680iq202wlnThZYGTEyN8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Wen Gong <wgong@codeaurora.org>, Kalle Valo <kvalo@codeaurora.org>,
-        Sasha Levin <sashal@kernel.org>, ath10k@lists.infradead.org,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 43/66] ath10k: start recovery process when read int status fail for sdio
-Date:   Sat, 11 Apr 2020 19:11:40 -0400
-Message-Id: <20200411231203.25933-43-sashal@kernel.org>
+Cc:     Bart Van Assche <bvanassche@acm.org>,
+        Leon Romanovsky <leonro@mellanox.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Sasha Levin <sashal@kernel.org>, linux-rdma@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 24/66] RDMA/rxe: Fix configuration of atomic queue pair attributes
+Date:   Sat, 11 Apr 2020 19:11:21 -0400
+Message-Id: <20200411231203.25933-24-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200411231203.25933-1-sashal@kernel.org>
 References: <20200411231203.25933-1-sashal@kernel.org>
@@ -59,51 +60,74 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wen Gong <wgong@codeaurora.org>
+From: Bart Van Assche <bvanassche@acm.org>
 
-[ Upstream commit 37b7ecb75627699e96750db1e0c5ac56224245df ]
+[ Upstream commit fb3063d31995cc4cf1d47a406bb61d6fb1b1d58d ]
 
-When running simulate crash stress test, it happened
-"failed to read from address 0x800: -110".
+From the comment above the definition of the roundup_pow_of_two() macro:
 
-Test steps:
-1. Run command continuous
-echo soft > /sys/kernel/debug/ieee80211/phy0/ath10k/simulate_fw_crash
+     The result is undefined when n == 0.
 
-2. error happened and it did not begin recovery for long time.
-[74377.334846] ath10k_sdio mmc1:0001:1: simulating soft firmware crash
-[74378.378217] ath10k_sdio mmc1:0001:1: failed to read from address 0x800: -110
-[74378.378371] ath10k_sdio mmc1:0001:1: failed to process pending SDIO interrupts: -110
+Hence only pass positive values to roundup_pow_of_two(). This patch fixes
+the following UBSAN complaint:
 
-It has sdio errors since it can not read MBOX_HOST_INT_STATUS_ADDRESS,
-then it has to do recovery process to recovery ath10k.
+  UBSAN: Undefined behaviour in ./include/linux/log2.h:57:13
+  shift exponent 64 is too large for 64-bit type 'long unsigned int'
+  Call Trace:
+   dump_stack+0xa5/0xe6
+   ubsan_epilogue+0x9/0x26
+   __ubsan_handle_shift_out_of_bounds.cold+0x4c/0xf9
+   rxe_qp_from_attr.cold+0x37/0x5d [rdma_rxe]
+   rxe_modify_qp+0x59/0x70 [rdma_rxe]
+   _ib_modify_qp+0x5aa/0x7c0 [ib_core]
+   ib_modify_qp+0x3b/0x50 [ib_core]
+   cma_modify_qp_rtr+0x234/0x260 [rdma_cm]
+   __rdma_accept+0x1a7/0x650 [rdma_cm]
+   nvmet_rdma_cm_handler+0x1286/0x14cd [nvmet_rdma]
+   cma_cm_event_handler+0x6b/0x330 [rdma_cm]
+   cma_ib_req_handler+0xe60/0x22d0 [rdma_cm]
+   cm_process_work+0x30/0x140 [ib_cm]
+   cm_req_handler+0x11f4/0x1cd0 [ib_cm]
+   cm_work_handler+0xb8/0x344e [ib_cm]
+   process_one_work+0x569/0xb60
+   worker_thread+0x7a/0x5d0
+   kthread+0x1e6/0x210
+   ret_from_fork+0x24/0x30
 
-Tested with QCA6174 SDIO with firmware WLAN.RMH.4.4.1-00042.
-
-Signed-off-by: Wen Gong <wgong@codeaurora.org>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Link: https://lore.kernel.org/r/20200217205714.26937-1-bvanassche@acm.org
+Fixes: 8700e3e7c485 ("Soft RoCE driver")
+Signed-off-by: Bart Van Assche <bvanassche@acm.org>
+Reviewed-by: Leon Romanovsky <leonro@mellanox.com>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/ath/ath10k/sdio.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ drivers/infiniband/sw/rxe/rxe_qp.c | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/net/wireless/ath/ath10k/sdio.c b/drivers/net/wireless/ath/ath10k/sdio.c
-index 0cdaecb0e28a9..1606bd71f3834 100644
---- a/drivers/net/wireless/ath/ath10k/sdio.c
-+++ b/drivers/net/wireless/ath/ath10k/sdio.c
-@@ -915,8 +915,11 @@ static int ath10k_sdio_mbox_read_int_status(struct ath10k *ar,
- 	 */
- 	ret = ath10k_sdio_read(ar, MBOX_HOST_INT_STATUS_ADDRESS,
- 			       irq_proc_reg, sizeof(*irq_proc_reg));
--	if (ret)
-+	if (ret) {
-+		queue_work(ar->workqueue, &ar->restart_work);
-+		ath10k_warn(ar, "read int status fail, start recovery\n");
- 		goto out;
-+	}
+diff --git a/drivers/infiniband/sw/rxe/rxe_qp.c b/drivers/infiniband/sw/rxe/rxe_qp.c
+index 230697fa31fe3..8a22ab8b29e9b 100644
+--- a/drivers/infiniband/sw/rxe/rxe_qp.c
++++ b/drivers/infiniband/sw/rxe/rxe_qp.c
+@@ -583,15 +583,16 @@ int rxe_qp_from_attr(struct rxe_qp *qp, struct ib_qp_attr *attr, int mask,
+ 	int err;
  
- 	/* Update only those registers that are enabled */
- 	*host_int_status = irq_proc_reg->host_int_status &
+ 	if (mask & IB_QP_MAX_QP_RD_ATOMIC) {
+-		int max_rd_atomic = __roundup_pow_of_two(attr->max_rd_atomic);
++		int max_rd_atomic = attr->max_rd_atomic ?
++			roundup_pow_of_two(attr->max_rd_atomic) : 0;
+ 
+ 		qp->attr.max_rd_atomic = max_rd_atomic;
+ 		atomic_set(&qp->req.rd_atomic, max_rd_atomic);
+ 	}
+ 
+ 	if (mask & IB_QP_MAX_DEST_RD_ATOMIC) {
+-		int max_dest_rd_atomic =
+-			__roundup_pow_of_two(attr->max_dest_rd_atomic);
++		int max_dest_rd_atomic = attr->max_dest_rd_atomic ?
++			roundup_pow_of_two(attr->max_dest_rd_atomic) : 0;
+ 
+ 		qp->attr.max_dest_rd_atomic = max_dest_rd_atomic;
+ 
 -- 
 2.20.1
 
