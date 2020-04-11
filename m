@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E42A6C2BB85
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:12:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 647A5C2BA2B
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:13:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B85ED2084D
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:12:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 36F5D21556
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:13:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586607176;
-	bh=w2YcGPaycPLAZSYdEJ0bucj3m32lJKKt5b7G8jxacRo=;
+	s=default; t=1586607180;
+	bh=RF/7FtoBkCdZOIx0FeDbeiEBYc97KygmB04xbOTg00U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CycspuBSUXW4v49WwT580MefU3Lse3GDt3FcuHcldaZnlnD126PlbHYGM0w3mXbPa
-	 TRDkphob08ppSvMbJMeFjqp3o47xydQ9ceOgk0hyErG4UPI4NH/u+WGQwvIx+4K5Ox
-	 kcfhgQL+m5aErlxgXxak1SqptDUcwsH6XWmyIobE=
+	b=FFV4dGqqRt9LxCEBQEJUmRaSXuFTyTnvbJrovTVM2o8CkjZxxiWVIF0rCd8e70ewu
+	 88vCM9JhDvVYA0AQ0ayzgYQQLHNH0PKmL168RpE0095vrx5OFq4+XHAyg9JpifIe/X
+	 O52nQwgnhCvlOXkfgzk06292eQcnBLI8yF2cSefw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727516AbgDKMMz (ORCPT
+        id S1727535AbgDKMM6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 08:12:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45500 "EHLO mail.kernel.org"
+        Sat, 11 Apr 2020 08:12:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45684 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727444AbgDKMMs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 08:12:48 -0400
+        id S1727444AbgDKMM4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Apr 2020 08:12:56 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6F0F521775;
-        Sat, 11 Apr 2020 12:12:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id ABC0B21556;
+        Sat, 11 Apr 2020 12:12:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586607167;
-        bh=w2YcGPaycPLAZSYdEJ0bucj3m32lJKKt5b7G8jxacRo=;
+        s=default; t=1586607175;
+        bh=RF/7FtoBkCdZOIx0FeDbeiEBYc97KygmB04xbOTg00U=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dEwbOd+iqFoWsGIuFkeX9Sv8Dos/w4papg9Tw1JEu8D7SPYtrUV1ZIH3sTkNbDnoX
-         8zsXvPl0d2BK6WrUt1BYfujorY6/c2d170m4KJDgDMeA59/gFNZ6kHWKrR7GWi8Dvr
-         nAgBo7NdaKhdAUgJy6hmnDkdO1HtAGAJAVEb58UQ=
+        b=Tqor+f8FqUcXOxvuRyGIdas6cjLJH9BXbJEcD523MLPhRSW/LdB9SBM2xi5Vc7lQV
+         LSWog2CEDdl8vfe8q1fRiqi2Vakq5BYAAcZ87BPlvBa5nhHGusWAIedz9pABVvp8Iw
+         e6FQBcpWu/TMBTh4SLCECK67of2oIXhGPMyZCkhM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Avihai Horon <avihaih@mellanox.com>,
-        Maor Gottlieb <maorg@mellanox.com>,
-        Leon Romanovsky <leonro@mellanox.com>,
-        Jason Gunthorpe <jgg@mellanox.com>
-Subject: [PATCH 4.9 27/32] RDMA/cm: Update num_paths in cma_resolve_iboe_route error flow
-Date:   Sat, 11 Apr 2020 14:09:06 +0200
-Message-Id: <20200411115422.440618914@linuxfoundation.org>
+        stable@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>,
+        Arun KS <arunks@codeaurora.org>,
+        Will Deacon <will.deacon@arm.com>,
+        Lee Jones <lee.jones@linaro.org>
+Subject: [PATCH 4.9 30/32] arm64: Fix size of __early_cpu_boot_status
+Date:   Sat, 11 Apr 2020 14:09:09 +0200
+Message-Id: <20200411115422.711354253@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200411115418.455500023@linuxfoundation.org>
 References: <20200411115418.455500023@linuxfoundation.org>
@@ -61,96 +61,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Avihai Horon <avihaih@mellanox.com>
+From: Arun KS <arunks@codeaurora.org>
 
-commit 987914ab841e2ec281a35b54348ab109b4c0bb4e upstream.
+commit 61cf61d81e326163ce1557ceccfca76e11d0e57c upstream.
 
-After a successful allocation of path_rec, num_paths is set to 1, but any
-error after such allocation will leave num_paths uncleared.
+__early_cpu_boot_status is of type long. Use quad
+assembler directive to allocate proper size.
 
-This causes to de-referencing a NULL pointer later on. Hence, num_paths
-needs to be set back to 0 if such an error occurs.
-
-The following crash from syzkaller revealed it.
-
-  kasan: CONFIG_KASAN_INLINE enabled
-  kasan: GPF could be caused by NULL-ptr deref or user memory access
-  general protection fault: 0000 [#1] SMP DEBUG_PAGEALLOC KASAN PTI
-  CPU: 0 PID: 357 Comm: syz-executor060 Not tainted 4.18.0+ #311
-  Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS
-  rel-1.11.0-0-g63451fca13-prebuilt.qemu-project.org 04/01/2014
-  RIP: 0010:ib_copy_path_rec_to_user+0x94/0x3e0
-  Code: f1 f1 f1 f1 c7 40 0c 00 00 f4 f4 65 48 8b 04 25 28 00 00 00 48 89
-  45 c8 31 c0 e8 d7 60 24 ff 48 8d 7b 4c 48 89 f8 48 c1 e8 03 <42> 0f b6
-  14 30 48 89 f8 83 e0 07 83 c0 03 38 d0 7c 08 84 d2 0f 85
-  RSP: 0018:ffff88006586f980 EFLAGS: 00010207
-  RAX: 0000000000000009 RBX: 0000000000000000 RCX: 1ffff1000d5fe475
-  RDX: ffff8800621e17c0 RSI: ffffffff820d45f9 RDI: 000000000000004c
-  RBP: ffff88006586fa50 R08: ffffed000cb0df73 R09: ffffed000cb0df72
-  R10: ffff88006586fa70 R11: ffffed000cb0df73 R12: 1ffff1000cb0df30
-  R13: ffff88006586fae8 R14: dffffc0000000000 R15: ffff88006aff2200
-  FS: 00000000016fc880(0000) GS:ffff88006d000000(0000)
-  knlGS:0000000000000000
-  CS: 0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-  CR2: 0000000020000040 CR3: 0000000063fec000 CR4: 00000000000006b0
-  DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-  DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-  Call Trace:
-  ? ib_copy_path_rec_from_user+0xcc0/0xcc0
-  ? __mutex_unlock_slowpath+0xfc/0x670
-  ? wait_for_completion+0x3b0/0x3b0
-  ? ucma_query_route+0x818/0xc60
-  ucma_query_route+0x818/0xc60
-  ? ucma_listen+0x1b0/0x1b0
-  ? sched_clock_cpu+0x18/0x1d0
-  ? sched_clock_cpu+0x18/0x1d0
-  ? ucma_listen+0x1b0/0x1b0
-  ? ucma_write+0x292/0x460
-  ucma_write+0x292/0x460
-  ? ucma_close_id+0x60/0x60
-  ? sched_clock_cpu+0x18/0x1d0
-  ? sched_clock_cpu+0x18/0x1d0
-  __vfs_write+0xf7/0x620
-  ? ucma_close_id+0x60/0x60
-  ? kernel_read+0x110/0x110
-  ? time_hardirqs_on+0x19/0x580
-  ? lock_acquire+0x18b/0x3a0
-  ? finish_task_switch+0xf3/0x5d0
-  ? _raw_spin_unlock_irq+0x29/0x40
-  ? _raw_spin_unlock_irq+0x29/0x40
-  ? finish_task_switch+0x1be/0x5d0
-  ? __switch_to_asm+0x34/0x70
-  ? __switch_to_asm+0x40/0x70
-  ? security_file_permission+0x172/0x1e0
-  vfs_write+0x192/0x460
-  ksys_write+0xc6/0x1a0
-  ? __ia32_sys_read+0xb0/0xb0
-  ? entry_SYSCALL_64_after_hwframe+0x3e/0xbe
-  ? do_syscall_64+0x1d/0x470
-  do_syscall_64+0x9e/0x470
-  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-
-Fixes: 3c86aa70bf67 ("RDMA/cm: Add RDMA CM support for IBoE devices")
-Link: https://lore.kernel.org/r/20200318101741.47211-1-leon@kernel.org
-Signed-off-by: Avihai Horon <avihaih@mellanox.com>
-Reviewed-by: Maor Gottlieb <maorg@mellanox.com>
-Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+Acked-by: Mark Rutland <mark.rutland@arm.com>
+Signed-off-by: Arun KS <arunks@codeaurora.org>
+Signed-off-by: Will Deacon <will.deacon@arm.com>
+Signed-off-by: Lee Jones <lee.jones@linaro.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/infiniband/core/cma.c |    1 +
- 1 file changed, 1 insertion(+)
+ arch/arm64/kernel/head.S |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/infiniband/core/cma.c
-+++ b/drivers/infiniband/core/cma.c
-@@ -2568,6 +2568,7 @@ static int cma_resolve_iboe_route(struct
- err2:
- 	kfree(route->path_rec);
- 	route->path_rec = NULL;
-+	route->num_paths = 0;
- err1:
- 	kfree(work);
- 	return ret;
+--- a/arch/arm64/kernel/head.S
++++ b/arch/arm64/kernel/head.S
+@@ -650,7 +650,7 @@ ENTRY(__boot_cpu_mode)
+  * with MMU turned off.
+  */
+ ENTRY(__early_cpu_boot_status)
+-	.long 	0
++	.quad 	0
+ 
+ 	.popsection
+ 
 
 
