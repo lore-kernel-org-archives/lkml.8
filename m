@@ -2,126 +2,78 @@ Return-Path: <SRS0=xbEg=53=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 900B7C2BBC7
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 14:14:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E735C2BA2B
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 14:17:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 63AE92084D
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 14:14:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="nLnJCHnW"
+	by mail.kernel.org (Postfix) with ESMTP id 6165E206F7
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 14:17:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726190AbgDKOOl (ORCPT
+        id S1726171AbgDKORW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 10:14:41 -0400
-Received: from mo4-p01-ob.smtp.rzone.de ([81.169.146.164]:31417 "EHLO
-        mo4-p01-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726054AbgDKOOl (ORCPT
+        Sat, 11 Apr 2020 10:17:22 -0400
+Received: from cmccmta3.chinamobile.com ([221.176.66.81]:10574 "EHLO
+        cmccmta3.chinamobile.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726047AbgDKORW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 10:14:41 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1586614477;
-        s=strato-dkim-0002; d=goldelico.com;
-        h=To:Message-Id:Cc:Date:From:Subject:X-RZG-CLASS-ID:X-RZG-AUTH:From:
-        Subject:Sender;
-        bh=Y40ZjfNR5RQeKJlxlUDnzl8UAhefYWTC6w6r/2/VbF0=;
-        b=nLnJCHnWKykhgvewbomGLfHWVVMO7938PRsf50z8EQu+Geqd9qCQS4UurGF54ud9vD
-        xJVfC5BerQeNWi0gOrEVuZdVpjfI7KjCaMAiS6Z9Fux3lBRtfVl4bfEEd6JnesnJhafZ
-        YfwQ0UYBtCHtfeOgs5AxOLFGKpQk0NOV3TUZlMAs3+L49x8HmzJdOrXPJEYFLqNCALdh
-        0C/BP3E3lT/hsWaLqDT70IkxcA2CCeD0m6TSguwlwuMk2Ax68Nl0UMCCZ5k/RUC/hPK+
-        Pscq7fDkjNAEwAzbFgfjCxVGKl/unkMEjq4KOmfZrhDydqqJKWc+pOTsApfNmr8cBoIv
-        LeqQ==
-X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMgPgp8VKxflSZ1P34KBj5Qpw97WFDlWdXAcJrw=="
-X-RZG-CLASS-ID: mo00
-Received: from imac.fritz.box
-        by smtp.strato.de (RZmta 46.2.1 DYNA|AUTH)
-        with ESMTPSA id m02241w3BEET21q
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (curve X9_62_prime256v1 with 256 ECDH bits, eq. 3072 bits RSA))
-        (Client did not present a certificate);
-        Sat, 11 Apr 2020 16:14:29 +0200 (CEST)
-Content-Type: text/plain; charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
-Subject: DRM interaction problems on Ingenic CI20 / jz4780 with dw-hdmi and ingenic-drm
-From:   "H. Nikolaus Schaller" <hns@goldelico.com>
-Date:   Sat, 11 Apr 2020 16:14:29 +0200
-Cc:     Paul Boddie <paul@boddie.org.uk>, linux-mips@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        MIPS Creator CI20 Development 
-        <mips-creator-ci20-dev@googlegroups.com>
-Content-Transfer-Encoding: 7bit
-Message-Id: <ED77DCA8-FF50-4E9E-A4B8-688262774723@goldelico.com>
-To:     Paul Cercueil <paul@crapouillou.net>,
-        Dave Airlie <airlied@linux.ie>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Andy Yan <andy.yan@rock-chips.com>,
-        Yakir Yang <ykk@rock-chips.com>,
-        Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>
-X-Mailer: Apple Mail (2.3124)
+        Sat, 11 Apr 2020 10:17:22 -0400
+Received: from spf.mail.chinamobile.com (unknown[172.16.121.17]) by rmmx-syy-dmz-app12-12012 (RichMail) with SMTP id 2eec5e91d1238a0-15a2e; Sat, 11 Apr 2020 22:16:04 +0800 (CST)
+X-RM-TRANSID: 2eec5e91d1238a0-15a2e
+X-RM-TagInfo: emlType=0                                       
+X-RM-SPAM-FLAG: 00000000
+Received: from localhost.localdomain (unknown[223.104.145.126])
+        by rmsmtp-syy-appsvr09-12009 (RichMail) with SMTP id 2ee95e91d12012a-e4cb7;
+        Sat, 11 Apr 2020 22:16:03 +0800 (CST)
+X-RM-TRANSID: 2ee95e91d12012a-e4cb7
+From:   Tang Bin <tangbin@cmss.chinamobile.com>
+To:     maarten.lankhorst@linux.intel.com, mripard@kernel.org,
+        airlied@linux.ie, daniel@ffwll.ch
+Cc:     dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+        Tang Bin <tangbin@cmss.chinamobile.com>,
+        Shengju Zhang <zhangshengju@cmss.chinamobile.com>
+Subject: [PATCH] drm/dp_mst: Fix drm_dp_mst_topology.c selftest compilation warning
+Date:   Sat, 11 Apr 2020 22:17:40 +0800
+Message-Id: <20200411141740.14584-1-tangbin@cmss.chinamobile.com>
+X-Mailer: git-send-email 2.20.1.windows.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
-we (Paul Boddie and me) are working to get HDMI functional on the
-Ingenic CI20 board with jz4780 SoC which uses a specialization of
-the dw-hdmi driver.
+The struct drm_dp_desc contains struct drm_dp_dpcd_ident, and the struct
+drm_dp_dpcd_ident contains the array, so zero-initialization requires a 
+more couple of braces. In the ARM compiler environment, the compile 
+warning pointing it out:
+    drivers/gpu/drm/drm_dp_mst_topology.c: In function 'drm_dp_mst_dsc_aux_for_port':
+    drivers/gpu/drm/drm_dp_mst_topology.c:5494:9: warning: missing braces around initializer [-Wmissing-braces]
+      struct drm_dp_desc desc = { 0 };
+
+Signed-off-by: Tang Bin <tangbin@cmss.chinamobile.com>
+Signed-off-by: Shengju Zhang <zhangshengju@cmss.chinamobile.com>
+---
+ drivers/gpu/drm/drm_dp_mst_topology.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/gpu/drm/drm_dp_mst_topology.c b/drivers/gpu/drm/drm_dp_mst_topology.c
+index 70c4b7a..4d8d1fd 100644
+--- a/drivers/gpu/drm/drm_dp_mst_topology.c
++++ b/drivers/gpu/drm/drm_dp_mst_topology.c
+@@ -5494,7 +5494,7 @@ struct drm_dp_aux *drm_dp_mst_dsc_aux_for_port(struct drm_dp_mst_port *port)
+ {
+ 	struct drm_dp_mst_port *immediate_upstream_port;
+ 	struct drm_dp_mst_port *fec_port;
+-	struct drm_dp_desc desc = { 0 };
++	struct drm_dp_desc desc = { { { 0 } } };
+ 	u8 endpoint_fec;
+ 	u8 endpoint_dsc;
+ 
+-- 
+2.7.4
 
 
-So far we have identified two issues.
 
-The first is that HPD interrupts are not properly processed.
-
-drm_helper_hpd_irq_event() is called by HPD events but
-dev->mode_config.poll_enabled is false.
-
-Therefore the interrupt is ignored and nothing happens.
-
-Now I wonder about the logic behind checking for poll_enabled.
-I understand that a driver can do either polling or irq or both.
-
-Therefore handling the irq_event shouldn't be disabled by poll_enabled
-being false. Otherwise we can only do: nothing, polling, polling+irq
-but not irq alone.
-
-The jz4780 hdmi subsystem (drm/bridge/dw-hdmi.c) uses
-
-	connector->polled = DRM_CONNECTOR_POLL_HPD;
-
-but shouldn't this enable polling? Note that there seems to be
-no (direct) call to drm_kms_helper_poll_init().
-
-If we set dev->mode_config.poll_enabled = true in
-drm_helper_hpd_irq_event() things start to work.
-
-Please can you clarify what would be best practise here to
-get HPD event handling working.
-
-
-The other issue is in dw-hdmi.c:
-
-We found out that ingenic_drm_encoder_atomic_check() fails because
-
-info->num_bus_formats == 0
-
-and not 1. This blocks further initialization.
-
-The reason seems to be that dw_hdmi_bridge_attach() does not call
-drm_display_info_set_bus_formats() with a proper format like
-other drivers (e.g. drm/bridge/ti-tfp410.c) are doing.
-
-We have patched to set a single bus format MEDIA_BUS_FMT_RGB888_1X24
-and then DRM setup seems to work (although we still have no valid
-HDMI signal but that is likely something else).
-
-Please can you explain how setting the bus format should be fixed
-in dw-hdmi.c.
-
-If these questions should be forwarded to other specialists, please
-do so.
-
-
-BR and thanks,
-Nikolaus Schaller
