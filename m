@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2B7AC2BA19
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:04:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E31F1C2BB86
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:04:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8EE27214D8
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:04:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B1C42214D8
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:04:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586646285;
-	bh=trlwDwThN8VpndS+Dosau8+WGoHbHcbywweE9WxjASU=;
+	s=default; t=1586646288;
+	bh=A6KO02u9HP+jDAo+joquhsaqmcvlEcEHNFs8Fwa8mA0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Bjg0lGB93VBj/yKrVag2MYzbA1nJ/b7JeX94Ghy4b33nYE//Hlrc9Jx5v5tRiX6B1
-	 MYEGigUaRsJw+N715BHPstZAhFQ11FhK+SDspvISbHv6VNYD5hpVQy1kcwTQ/+ugfk
-	 mZ2LOGbKSZoJcp62RrpclxiLnWe5V0IrVMclkHgU=
+	b=M49TNt9TUzbRDeq36DxcEd88f8fZVwL/2UyL0lhTbxwxKuceXw5j6WLyechqnYcir
+	 qhwhvVeQNAN/yH/Tj2qCKi2DOH//e0cTNYliYWRTB3oecnDiWh4kEQDsgYr8TPMwBd
+	 WC5Udd8OMSbCfrsnG6IpTdpQPysCQ66IHDIIKVV4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727408AbgDKXEo (ORCPT
+        id S1727463AbgDKXEq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 19:04:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38208 "EHLO mail.kernel.org"
+        Sat, 11 Apr 2020 19:04:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38290 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727269AbgDKXEj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 19:04:39 -0400
+        id S1727361AbgDKXEn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Apr 2020 19:04:43 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1E5A7215A4;
-        Sat, 11 Apr 2020 23:04:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 75C12214D8;
+        Sat, 11 Apr 2020 23:04:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586646279;
-        bh=trlwDwThN8VpndS+Dosau8+WGoHbHcbywweE9WxjASU=;
+        s=default; t=1586646283;
+        bh=A6KO02u9HP+jDAo+joquhsaqmcvlEcEHNFs8Fwa8mA0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WATsBN2IA4yLD5aPmOkGZ0YlZgyoEivtEjnSTloxHGpSqzBQSgeJOiLIN11pr/e4V
-         6qnxhLlK9Aa1TDzUKYLOQ+9Wxq6i5hS/Q6f/DsvJJo//TjVeFTFRGY+jcRgdbSI1ZQ
-         4sMQFAcZEI17+9r4fDYjo9spzuLq8IVfHQC86QW4=
+        b=VLH2/BqniR7QpE6CAhmjJTH22BNSrrzpVyfxtl0Kq98XaAphI16e9P5lqyHuhw37P
+         olLOtfZWrWW6QA4glKjZ4mHIwjVcNQrUwRnucDIgw6gjnmP6T6SoMmh9V3VrOnA/ox
+         vroaEzB0rHE9u+VafufOf+ge69FyjS7xPzuhzGE4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Andrii Nakryiko <andriin@fb.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
-        bpf@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.6 042/149] libbpf: Fix handling of optional field_name in btf_dump__emit_type_decl
-Date:   Sat, 11 Apr 2020 19:01:59 -0400
-Message-Id: <20200411230347.22371-42-sashal@kernel.org>
+Cc:     Rocky Liao <rjliao@codeaurora.org>,
+        Marcel Holtmann <marcel@holtmann.org>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-bluetooth@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.6 045/149] Bluetooth: hci_qca: Not send vendor pre-shutdown command for QCA Rome
+Date:   Sat, 11 Apr 2020 19:02:02 -0400
+Message-Id: <20200411230347.22371-45-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200411230347.22371-1-sashal@kernel.org>
 References: <20200411230347.22371-1-sashal@kernel.org>
@@ -60,35 +60,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andrii Nakryiko <andriin@fb.com>
+From: Rocky Liao <rjliao@codeaurora.org>
 
-[ Upstream commit 320a36063e1441210106aa33997ad3770d4c86b4 ]
+[ Upstream commit 4f9ed5bd63dc16d061cdeb00eeff9d56e86a6beb ]
 
-Internal functions, used by btf_dump__emit_type_decl(), assume field_name is
-never going to be NULL. Ensure it's always the case.
+QCA Rome doesn't support the pre-shutdown vendor hci command, this patch
+will check the soc type in qca_power_off() and only send this command
+for wcn399x.
 
-Fixes: 9f81654eebe8 ("libbpf: Expose BTF-to-C type declaration emitting API")
-Signed-off-by: Andrii Nakryiko <andriin@fb.com>
-Signed-off-by: Alexei Starovoitov <ast@kernel.org>
-Link: https://lore.kernel.org/bpf/20200303180800.3303471-1-andriin@fb.com
+Fixes: ae563183b647 ("Bluetooth: hci_qca: Enable power off/on support during hci down/up for QCA Rome")
+Signed-off-by: Rocky Liao <rjliao@codeaurora.org>
+Signed-off-by: Marcel Holtmann <marcel@holtmann.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/lib/bpf/btf_dump.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/bluetooth/hci_qca.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/tools/lib/bpf/btf_dump.c b/tools/lib/bpf/btf_dump.c
-index bd09ed1710f12..dc451e4de5ad4 100644
---- a/tools/lib/bpf/btf_dump.c
-+++ b/tools/lib/bpf/btf_dump.c
-@@ -1030,7 +1030,7 @@ int btf_dump__emit_type_decl(struct btf_dump *d, __u32 id,
- 	if (!OPTS_VALID(opts, btf_dump_emit_type_decl_opts))
- 		return -EINVAL;
+diff --git a/drivers/bluetooth/hci_qca.c b/drivers/bluetooth/hci_qca.c
+index d6e0c99ee5eb1..7e5a097bd0ed8 100644
+--- a/drivers/bluetooth/hci_qca.c
++++ b/drivers/bluetooth/hci_qca.c
+@@ -1726,9 +1726,11 @@ static int qca_power_off(struct hci_dev *hdev)
+ {
+ 	struct hci_uart *hu = hci_get_drvdata(hdev);
+ 	struct qca_data *qca = hu->priv;
++	enum qca_btsoc_type soc_type = qca_soc_type(hu);
  
--	fname = OPTS_GET(opts, field_name, NULL);
-+	fname = OPTS_GET(opts, field_name, "");
- 	lvl = OPTS_GET(opts, indent_level, 0);
- 	btf_dump_emit_type_decl(d, id, fname, lvl);
- 	return 0;
+ 	/* Stop sending shutdown command if soc crashes. */
+-	if (qca->memdump_state == QCA_MEMDUMP_IDLE) {
++	if (qca_is_wcn399x(soc_type)
++		&& qca->memdump_state == QCA_MEMDUMP_IDLE) {
+ 		qca_send_pre_shutdown_cmd(hdev);
+ 		usleep_range(8000, 10000);
+ 	}
 -- 
 2.20.1
 
