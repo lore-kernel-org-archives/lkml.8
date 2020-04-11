@@ -2,107 +2,157 @@ Return-Path: <SRS0=xbEg=53=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B284C2BA19
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:43:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D913C2BBC7
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:43:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 40610206E9
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:43:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KlIWOHkT"
+	by mail.kernel.org (Postfix) with ESMTP id 690A1206E9
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:43:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1586648632;
+	bh=tqa4NDLYJ+lw+f6VsCcgYYgq1p67so1DOgUiiqcEfcE=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=lmEcbigMD07aMVjW7GhS6LGUna99VSmI3MnbTofgCqnol4oNLds/DYzUZd1zUSG3n
+	 kI6i6LZVcznNZcqyoKoovx1GSFwrtX4vN1WAqvCO9hUiWgCQZbHQ/k7h1sUg3v5xcI
+	 BrCYkjQxEkVK+GhaA36evJ7eNZWB7+cvYxp9GGDM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729904AbgDKXnn (ORCPT
+        id S1729944AbgDKXnu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 19:43:43 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:43255 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728344AbgDKXGQ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 19:06:16 -0400
-Received: by mail-wr1-f67.google.com with SMTP id i10so6262387wrv.10;
-        Sat, 11 Apr 2020 16:06:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:subject:date:message-id:in-reply-to:references:mime-version
-         :content-transfer-encoding;
-        bh=WYRSJTfq6AnurzwIFdVL9Jv0SE1zF9pQuRzb6RhgZuk=;
-        b=KlIWOHkTCXXMdpeMalRuRMYkdxAPQ51jMafiNH86Jsp+MJFF2TeOSdH9N56mVr2X4c
-         KdcSljz2a4kMfFIIKd4dSeUzJsyGyXrHo7qd3KhK25A07pm0bJuamtBDEfF3G1PscP7h
-         claD39bvS68+B0QYkW4ExHy9Td57ELdFndormLHrIoCDe6i30pUUnlT/MLWgVVx7Yd0r
-         TsvRQ7uHX8L63cbtv2eykRWpfbbGGUsTqaHMXyYHr61VI2QvvIoXLUt7oHVeP5LGONfR
-         jTPc+AX2Rw8rhGvleozRR3hILjLD9G4lZy4C4oN3hFLNfVfWgcgUNroLFTvkYNZhcp+l
-         QhDg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=WYRSJTfq6AnurzwIFdVL9Jv0SE1zF9pQuRzb6RhgZuk=;
-        b=suAzNJI1dKaRA5m58jwymmp7aCoiRGHr53fxZrye8tC3XlmZZDK1bJrbTR9NVEugu7
-         Fh2GcCM8Kb6wQKzebHdpxgaxSwq1uA/BshFAXJQ2XpuZkUht/jYqd9NUZ0ddpS6rCihA
-         J1bkndLJgQmvOQhgURyoYIlTygr75z+K0SuSf3Wdw1w6aL2x1DAPeZXZ98RuV6nK43hD
-         QXZCDI1Z8OHRZHo2dEsiKdvM8Xjv0/fNCWWz/CqY6UumIhBHxu4mr3YaHNfvjPjucmFb
-         LvoiDknWklPLXy93jz9l5xdYL88ZqN489t1mqwg4uCP8tfnd5jiELsenz49R17x5PQL3
-         Ed9Q==
-X-Gm-Message-State: AGi0PuZejKft9lLrZQC/X+tYqrNVsFKBrB/m/NIG6gHTXdNfUPe6vr7d
-        QTfV26BuZ9rkkNST8FjaUa3oY3kX
-X-Google-Smtp-Source: APiQypJJHKyGKUnZi4/Ak8rryO6toHMb7XkAjXNdF6Arn2qP9DgVgxHrE3lxEwayvgHUOFZYufwuKA==
-X-Received: by 2002:a5d:6503:: with SMTP id x3mr3775368wru.153.1586646376028;
-        Sat, 11 Apr 2020 16:06:16 -0700 (PDT)
-Received: from localhost.localdomain ([109.126.129.227])
-        by smtp.gmail.com with ESMTPSA id k133sm8992741wma.0.2020.04.11.16.06.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 11 Apr 2020 16:06:15 -0700 (PDT)
-From:   Pavel Begunkov <asml.silence@gmail.com>
-To:     Jens Axboe <axboe@kernel.dk>, io-uring@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 1/5] io_uring: remove obsolete @mm_fault
-Date:   Sun, 12 Apr 2020 02:05:01 +0300
-Message-Id: <805c435030f6f4e4332f57a252b901125c5423d0.1586645520.git.asml.silence@gmail.com>
-X-Mailer: git-send-email 2.24.0
-In-Reply-To: <cover.1586645520.git.asml.silence@gmail.com>
-References: <cover.1586645520.git.asml.silence@gmail.com>
+        Sat, 11 Apr 2020 19:43:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41378 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728266AbgDKXGO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Apr 2020 19:06:14 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 701F72173E;
+        Sat, 11 Apr 2020 23:06:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1586646374;
+        bh=tqa4NDLYJ+lw+f6VsCcgYYgq1p67so1DOgUiiqcEfcE=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=jMfBLVkBU3zE8N+eyOauw20xvqwXmqebjH/sNe8s7n8EbfJMjkBoXOvEUKaLBQpc4
+         UGFimc4+0M0TLxPmK7xOpWGyBJ1Uz98jGNn5UQg8uFspf2ICJTireutUFK16ceUrA0
+         +qvOCrIJ5zJnv/D3un/Yl7IZLEJrrunmpMT6q5ag=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Avihai Horon <avihaih@mellanox.com>,
+        Maor Gottlieb <maorg@mellanox.com>,
+        Leon Romanovsky <leonro@mellanox.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Sasha Levin <sashal@kernel.org>, linux-rdma@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.6 116/149] RDMA/cm: Update num_paths in cma_resolve_iboe_route error flow
+Date:   Sat, 11 Apr 2020 19:03:13 -0400
+Message-Id: <20200411230347.22371-116-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200411230347.22371-1-sashal@kernel.org>
+References: <20200411230347.22371-1-sashal@kernel.org>
 MIME-Version: 1.0
+X-stable: review
+X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If io_submit_sqes() can't grab an mm, it fails and exits right away.
-There is no need to track the fact of the failure. Remove @mm_fault.
+From: Avihai Horon <avihaih@mellanox.com>
 
-Signed-off-by: Pavel Begunkov <asml.silence@gmail.com>
+[ Upstream commit 987914ab841e2ec281a35b54348ab109b4c0bb4e ]
+
+After a successful allocation of path_rec, num_paths is set to 1, but any
+error after such allocation will leave num_paths uncleared.
+
+This causes to de-referencing a NULL pointer later on. Hence, num_paths
+needs to be set back to 0 if such an error occurs.
+
+The following crash from syzkaller revealed it.
+
+  kasan: CONFIG_KASAN_INLINE enabled
+  kasan: GPF could be caused by NULL-ptr deref or user memory access
+  general protection fault: 0000 [#1] SMP DEBUG_PAGEALLOC KASAN PTI
+  CPU: 0 PID: 357 Comm: syz-executor060 Not tainted 4.18.0+ #311
+  Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS
+  rel-1.11.0-0-g63451fca13-prebuilt.qemu-project.org 04/01/2014
+  RIP: 0010:ib_copy_path_rec_to_user+0x94/0x3e0
+  Code: f1 f1 f1 f1 c7 40 0c 00 00 f4 f4 65 48 8b 04 25 28 00 00 00 48 89
+  45 c8 31 c0 e8 d7 60 24 ff 48 8d 7b 4c 48 89 f8 48 c1 e8 03 <42> 0f b6
+  14 30 48 89 f8 83 e0 07 83 c0 03 38 d0 7c 08 84 d2 0f 85
+  RSP: 0018:ffff88006586f980 EFLAGS: 00010207
+  RAX: 0000000000000009 RBX: 0000000000000000 RCX: 1ffff1000d5fe475
+  RDX: ffff8800621e17c0 RSI: ffffffff820d45f9 RDI: 000000000000004c
+  RBP: ffff88006586fa50 R08: ffffed000cb0df73 R09: ffffed000cb0df72
+  R10: ffff88006586fa70 R11: ffffed000cb0df73 R12: 1ffff1000cb0df30
+  R13: ffff88006586fae8 R14: dffffc0000000000 R15: ffff88006aff2200
+  FS: 00000000016fc880(0000) GS:ffff88006d000000(0000)
+  knlGS:0000000000000000
+  CS: 0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+  CR2: 0000000020000040 CR3: 0000000063fec000 CR4: 00000000000006b0
+  DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+  DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+  Call Trace:
+  ? ib_copy_path_rec_from_user+0xcc0/0xcc0
+  ? __mutex_unlock_slowpath+0xfc/0x670
+  ? wait_for_completion+0x3b0/0x3b0
+  ? ucma_query_route+0x818/0xc60
+  ucma_query_route+0x818/0xc60
+  ? ucma_listen+0x1b0/0x1b0
+  ? sched_clock_cpu+0x18/0x1d0
+  ? sched_clock_cpu+0x18/0x1d0
+  ? ucma_listen+0x1b0/0x1b0
+  ? ucma_write+0x292/0x460
+  ucma_write+0x292/0x460
+  ? ucma_close_id+0x60/0x60
+  ? sched_clock_cpu+0x18/0x1d0
+  ? sched_clock_cpu+0x18/0x1d0
+  __vfs_write+0xf7/0x620
+  ? ucma_close_id+0x60/0x60
+  ? kernel_read+0x110/0x110
+  ? time_hardirqs_on+0x19/0x580
+  ? lock_acquire+0x18b/0x3a0
+  ? finish_task_switch+0xf3/0x5d0
+  ? _raw_spin_unlock_irq+0x29/0x40
+  ? _raw_spin_unlock_irq+0x29/0x40
+  ? finish_task_switch+0x1be/0x5d0
+  ? __switch_to_asm+0x34/0x70
+  ? __switch_to_asm+0x40/0x70
+  ? security_file_permission+0x172/0x1e0
+  vfs_write+0x192/0x460
+  ksys_write+0xc6/0x1a0
+  ? __ia32_sys_read+0xb0/0xb0
+  ? entry_SYSCALL_64_after_hwframe+0x3e/0xbe
+  ? do_syscall_64+0x1d/0x470
+  do_syscall_64+0x9e/0x470
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+
+Fixes: 3c86aa70bf67 ("RDMA/cm: Add RDMA CM support for IBoE devices")
+Link: https://lore.kernel.org/r/20200318101741.47211-1-leon@kernel.org
+Signed-off-by: Avihai Horon <avihaih@mellanox.com>
+Reviewed-by: Maor Gottlieb <maorg@mellanox.com>
+Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/io_uring.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+ drivers/infiniband/core/cma.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/fs/io_uring.c b/fs/io_uring.c
-index be65eda059ac..343899915465 100644
---- a/fs/io_uring.c
-+++ b/fs/io_uring.c
-@@ -5816,7 +5816,6 @@ static int io_submit_sqes(struct io_ring_ctx *ctx, unsigned int nr,
- 	struct io_submit_state state, *statep = NULL;
- 	struct io_kiocb *link = NULL;
- 	int i, submitted = 0;
--	bool mm_fault = false;
- 
- 	/* if we have a backlog and couldn't flush it all, return BUSY */
- 	if (test_bit(0, &ctx->sq_check_overflow)) {
-@@ -5870,8 +5869,7 @@ static int io_submit_sqes(struct io_ring_ctx *ctx, unsigned int nr,
- 		}
- 
- 		if (io_op_defs[req->opcode].needs_mm && !*mm) {
--			mm_fault = mm_fault || !mmget_not_zero(ctx->sqo_mm);
--			if (unlikely(mm_fault)) {
-+			if (unlikely(!mmget_not_zero(ctx->sqo_mm))) {
- 				err = -EFAULT;
- 				goto fail_req;
- 			}
+diff --git a/drivers/infiniband/core/cma.c b/drivers/infiniband/core/cma.c
+index 2dec3a02ab9fe..2121897681ba4 100644
+--- a/drivers/infiniband/core/cma.c
++++ b/drivers/infiniband/core/cma.c
+@@ -2968,6 +2968,7 @@ static int cma_resolve_iboe_route(struct rdma_id_private *id_priv)
+ err2:
+ 	kfree(route->path_rec);
+ 	route->path_rec = NULL;
++	route->num_paths = 0;
+ err1:
+ 	kfree(work);
+ 	return ret;
 -- 
-2.24.0
+2.20.1
 
