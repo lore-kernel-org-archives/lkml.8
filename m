@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F1AAC2BA19
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:39:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B05DC2BB86
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:39:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3078B2051A
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:39:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6BC17206A1
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:39:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586648353;
-	bh=8dfx3TFr55L01u2UiTLlYyea/1cGYV7ld0fs3BRL5wo=;
+	s=default; t=1586648362;
+	bh=rxTEkZE/qzuNHsnmwj0H4/iT7J3HTtkntHYrbIhjhRc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Z1OtNqGey2ISbQOaHtHCmj3OWPXALQzmMjkphC0tm8xyxwwh7XTvlr4if+PpYZIL/
-	 TS6eKextIm0D0R/cLxZc3Wn//9dJ4LPr0vgMCl2kWkb4M/ZVzqdrmm2jygzQ+RSheP
-	 o5U6QcDj+fzUwQ0Wp/xJzABAGIGvqcfzmW3h66Sw=
+	b=sRap9SwC2n1A9ncXqVsH31EVPr60xG5TsYgpHhfLiAowOWccxtMlF+BoV4qSyUea1
+	 F9vw5AB5h1ySdboglFuH3ZUwEQSfTKD/Vf5Bu48gjEhFcm0xXZmW8bPC/OEWbM0b5V
+	 KKXhgqjB/09HyUzBv0nD4AMlzmKHtB8L9pV0ejx8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730668AbgDKXjL (ORCPT
+        id S1730732AbgDKXjU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 19:39:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43998 "EHLO mail.kernel.org"
+        Sat, 11 Apr 2020 19:39:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43790 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728719AbgDKXHq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 19:07:46 -0400
+        id S1728164AbgDKXHk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Apr 2020 19:07:40 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 38F9A20787;
-        Sat, 11 Apr 2020 23:07:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3EB862173E;
+        Sat, 11 Apr 2020 23:07:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586646467;
-        bh=8dfx3TFr55L01u2UiTLlYyea/1cGYV7ld0fs3BRL5wo=;
+        s=default; t=1586646461;
+        bh=rxTEkZE/qzuNHsnmwj0H4/iT7J3HTtkntHYrbIhjhRc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WgBZz80FZfbKOVz8CDH17ntEw0cWy/rfX7G5lzsn6bZEI1RZtBNddgQpMfnTK7a4J
-         EJF+1rXWj+Ggj7bxZZ7IA/R5ELUNlh3fI4RtjUTmvc/RpDH2b0NhTo6lDTydzR2pfU
-         un1i9GDtqyAEiNUPWEFV/gu+sggRNkAsr7yCK4hE=
+        b=gERVlpJgEcsp127ZqHGt9rL3S5LwxGsn7pM5+A+0DM5Ym6pisgXF6i6xk4SHjzhPi
+         g61kzewwVP/4JctR+YGVdWHgeEhp8tG2IuWUON7Ot/a8+FdxgF+BWU/yJfnDt79Fa3
+         AKtwFuqM0p6W7VAg2xUizYYP6ilKdMBL+bf5fUB4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Parav Pandit <parav@mellanox.com>, Mark Bloch <markb@mellanox.com>,
-        Leon Romanovsky <leonro@mellanox.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Sasha Levin <sashal@kernel.org>, linux-rdma@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.5 034/121] IB/mlx5: Fix missing congestion control debugfs on rep rdma device
-Date:   Sat, 11 Apr 2020 19:05:39 -0400
-Message-Id: <20200411230706.23855-34-sashal@kernel.org>
+Cc:     Vlad Buslov <vladbu@mellanox.com>, Roi Dayan <roid@mellanox.com>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
+        linux-rdma@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.5 029/121] net/mlx5e: Init ethtool steering for representors
+Date:   Sat, 11 Apr 2020 19:05:34 -0400
+Message-Id: <20200411230706.23855-29-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200411230706.23855-1-sashal@kernel.org>
 References: <20200411230706.23855-1-sashal@kernel.org>
@@ -60,41 +59,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Parav Pandit <parav@mellanox.com>
+From: Vlad Buslov <vladbu@mellanox.com>
 
-[ Upstream commit 79db784e794b6e7b7fb9b1dd464a34e4c0c039af ]
+[ Upstream commit 6783e8b29f636383af293a55336f036bc7ad5619 ]
 
-Cited commit missed to include low level congestion control related
-debugfs stage initialization.  This resulted in missing debugfs entries
-for cc_params of a RDMA device.
+During transition to uplink representors the code responsible for
+initializing ethtool steering functionality wasn't added to representor
+init rx routine. This causes NULL pointer dereference during configuration
+of network flow classification rule with ethtool (only possible to
+reproduce with next commit in this series which registers necessary ethtool
+callbacks).
 
-Add them back.
-
-Fixes: b5ca15ad7e61 ("IB/mlx5: Add proper representors support")
-Link: https://lore.kernel.org/r/20200227125407.99803-1-leon@kernel.org
-Signed-off-by: Parav Pandit <parav@mellanox.com>
-Reviewed-by: Mark Bloch <markb@mellanox.com>
-Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+Signed-off-by: Vlad Buslov <vladbu@mellanox.com>
+Reviewed-by: Roi Dayan <roid@mellanox.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/infiniband/hw/mlx5/main.c | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/net/ethernet/mellanox/mlx5/core/en_rep.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/infiniband/hw/mlx5/main.c b/drivers/infiniband/hw/mlx5/main.c
-index f3c73dc40078c..2a8c82cfb5148 100644
---- a/drivers/infiniband/hw/mlx5/main.c
-+++ b/drivers/infiniband/hw/mlx5/main.c
-@@ -6845,6 +6845,9 @@ const struct mlx5_ib_profile raw_eth_profile = {
- 	STAGE_CREATE(MLX5_IB_STAGE_COUNTERS,
- 		     mlx5_ib_stage_counters_init,
- 		     mlx5_ib_stage_counters_cleanup),
-+	STAGE_CREATE(MLX5_IB_STAGE_CONG_DEBUGFS,
-+		     mlx5_ib_stage_cong_debugfs_init,
-+		     mlx5_ib_stage_cong_debugfs_cleanup),
- 	STAGE_CREATE(MLX5_IB_STAGE_UAR,
- 		     mlx5_ib_stage_uar_init,
- 		     mlx5_ib_stage_uar_cleanup),
+diff --git a/drivers/net/ethernet/mellanox/mlx5/core/en_rep.c b/drivers/net/ethernet/mellanox/mlx5/core/en_rep.c
+index f175cb24bb671..62c3a2e884912 100644
+--- a/drivers/net/ethernet/mellanox/mlx5/core/en_rep.c
++++ b/drivers/net/ethernet/mellanox/mlx5/core/en_rep.c
+@@ -1630,6 +1630,8 @@ static int mlx5e_init_rep_rx(struct mlx5e_priv *priv)
+ 	if (err)
+ 		goto err_destroy_ttc_table;
+ 
++	mlx5e_ethtool_init_steering(priv);
++
+ 	return 0;
+ 
+ err_destroy_ttc_table:
 -- 
 2.20.1
 
