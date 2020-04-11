@@ -2,157 +2,182 @@ Return-Path: <SRS0=xbEg=53=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.7 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4768C2BA2B
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 16:04:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D31AC2BBC7
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 16:04:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A424A2083E
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 16:04:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1F4C22083E
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 16:04:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pg0y+mBf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726703AbgDKQEX (ORCPT
+        id S1726719AbgDKQEh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 12:04:23 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:55238 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726070AbgDKQEV (ORCPT
+        Sat, 11 Apr 2020 12:04:37 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:44392 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726070AbgDKQEh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 12:04:21 -0400
-Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tip-bot2@linutronix.de>)
-        id 1jNIc6-0007WY-17; Sat, 11 Apr 2020 18:04:10 +0200
-Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 4414D1C0051;
-        Sat, 11 Apr 2020 18:04:09 +0200 (CEST)
-Date:   Sat, 11 Apr 2020 16:04:08 -0000
-From:   "tip-bot2 for Xiaoyao Li" <tip-bot2@linutronix.de>
-Reply-to: linux-kernel@vger.kernel.org
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/urgent] KVM: VMX: Extend VMXs #AC interceptor to handle
- split lock #AC in guest
-Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
-        Xiaoyao Li <xiaoyao.li@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@suse.de>,
-        Paolo Bonzini <pbonzini@redhat.com>, x86 <x86@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200410115517.176308876@linutronix.de>
-References: <20200410115517.176308876@linutronix.de>
+        Sat, 11 Apr 2020 12:04:37 -0400
+Received: by mail-pl1-f193.google.com with SMTP id h11so1704104plr.11;
+        Sat, 11 Apr 2020 09:04:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=GMnG2j5kk+O2i07cQtSOcLpZb+BBBEK51LCwl+FnQqI=;
+        b=pg0y+mBfFiZSt/IYWvDz/nhCt33BNvbN56cTCAcqw5qyzPpbHXsQvw4YiKwuoFigFJ
+         x4+BpX5VTbRCs1SRjG1KXqcNhQt8mM/Hd1T1VvGfVNhAcJwcwUCpmHrW/nhv7atQ3t+s
+         CeeooBxtZyLaN/LY+gOX7ZTgFPq7W7vmtJhHScjAgEc5L8ClIN6dQEZuQQZoS5kUebHi
+         Z10rRnjLTam7/QpfojWmjvVxv4nRQG3PnjFd6/qdLgoG1Kwyt9Ufl24OFMlpz/7PKpai
+         +2/INjOoCNyU1Kzj1oLav0YA83E7EI7rVkMGomKeJfI10L0WRCvYNY5wEyRlnkiEb7Jm
+         /Zig==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=GMnG2j5kk+O2i07cQtSOcLpZb+BBBEK51LCwl+FnQqI=;
+        b=XJNbnIltavf+2oJmwS2Eq5PclSawBvOPG8o7Kzca3K0iI/J3I/qI6bY2Dzbis2QDPC
+         B+s8/JLNdpDsgjpTaAM6QMl9YC2gqNgJJ4haaNGEvXaIIJu6NMNbDLzNZFbcSX35lFsN
+         drbwN36aC7n1JmdOYCVug1JdadEv67y27MpkcjTl6aoMgov+um4LIp6wpbQsLWQG2lmE
+         CInlAUr2WaUitTEQOf9QlrrC09ys9s50RzyxgT5BJZ/metdemeFGVHeGPB1GxnpkvNIY
+         axPdl6GhZ5FbxyZgySVAdus6cMQcoDghV2I33SkhgGcjmAgWkjxtjrwhn5IpWOoI89PY
+         xr3g==
+X-Gm-Message-State: AGi0PuZfKXfcgHj1rwnQXmg3Qvko0zik40OreKC/snsPE5V+Ks/cMdGM
+        LmzzJ4UnCcykT97Zaz3m8cw=
+X-Google-Smtp-Source: APiQypJQzXujimSti9/fz8MJ4M5YV0AZUuCQiwLVQFZruk/bdW8Y/oYw0vDfupYOjS33Gyrzltg93A==
+X-Received: by 2002:a17:902:b087:: with SMTP id p7mr9718749plr.287.1586621076622;
+        Sat, 11 Apr 2020 09:04:36 -0700 (PDT)
+Received: from localhost ([183.82.183.27])
+        by smtp.gmail.com with ESMTPSA id r23sm4569628pfh.162.2020.04.11.09.04.35
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Sat, 11 Apr 2020 09:04:36 -0700 (PDT)
+Date:   Sat, 11 Apr 2020 21:34:34 +0530
+From:   afzal mohammed <afzal.mohd.ma@gmail.com>
+To:     Thomas Bogendoerfer <tbogendoerfer@suse.de>
+Cc:     Thomas Gleixner <tglx@linutronix.de>, linux-kernel@vger.kernel.org,
+        linux-mips@vger.kernel.org
+Subject: [PATCH 1/3] MIPS: Replace setup_percpu_irq() by request_percpu_irq()
+ variant
+Message-ID: <82270883881f29f8ad4b289f915cdbb8620608f6.1586434781.git.afzal.mohd.ma@gmail.com>
+References: <cover.1586434781.git.afzal.mohd.ma@gmail.com>
 MIME-Version: 1.0
-Message-ID: <158662104885.28353.13755017568373064491.tip-bot2@tip-bot2>
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot2.linutronix.de>
-Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <cover.1586434781.git.afzal.mohd.ma@gmail.com>
+User-Agent: Mutt/1.9.3 (2018-01-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the x86/urgent branch of tip:
+Recently all usages of setup_irq() was replaced by request_irq() as
+allocators are ready by the time setup_irq() was invoked. Similarly
+setup_percpu_irq() can be replaced by request_percpu_irq(). But in the
+callers handled here __request_percpu_irq() has to be used as
+request_percpu_irq() does not give the user a chance to pass the flags,
+and IRQF_TIMER has to be passed here, so the variant
+__request_percpu_irq() is used.
 
-Commit-ID:     e6f8b6c12f03818baacc5f504fe83fa5e20771d6
-Gitweb:        https://git.kernel.org/tip/e6f8b6c12f03818baacc5f504fe83fa5e20771d6
-Author:        Xiaoyao Li <xiaoyao.li@intel.com>
-AuthorDate:    Fri, 10 Apr 2020 13:54:02 +02:00
-Committer:     Borislav Petkov <bp@suse.de>
-CommitterDate: Sat, 11 Apr 2020 16:42:41 +02:00
-
-KVM: VMX: Extend VMXs #AC interceptor to handle split lock #AC in guest
-
-Two types of #AC can be generated in Intel CPUs:
- 1. legacy alignment check #AC
- 2. split lock #AC
-
-Reflect #AC back into the guest if the guest has legacy alignment checks
-enabled or if split lock detection is disabled.
-
-If the #AC is not a legacy one and split lock detection is enabled, then
-invoke handle_guest_split_lock() which will either warn and disable split
-lock detection for this task or force SIGBUS on it.
-
-[ tglx: Switch it to handle_guest_split_lock() and rename the misnamed
-  helper function. ]
-
-Suggested-by: Sean Christopherson <sean.j.christopherson@intel.com>
-Signed-off-by: Xiaoyao Li <xiaoyao.li@intel.com>
-Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Acked-by: Paolo Bonzini <pbonzini@redhat.com>
-Link: https://lkml.kernel.org/r/20200410115517.176308876@linutronix.de
+Signed-off-by: afzal mohammed <afzal.mohd.ma@gmail.com>
 ---
- arch/x86/kvm/vmx/vmx.c | 37 ++++++++++++++++++++++++++++++++++---
- 1 file changed, 34 insertions(+), 3 deletions(-)
+ arch/mips/include/asm/cevt-r4k.h |  1 -
+ arch/mips/kernel/cevt-r4k.c      | 11 -----------
+ arch/mips/sgi-ip27/ip27-timer.c  | 13 +++++--------
+ arch/mips/sgi-ip30/ip30-timer.c  |  6 +++---
+ 4 files changed, 8 insertions(+), 23 deletions(-)
 
-diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-index 8959514..8305097 100644
---- a/arch/x86/kvm/vmx/vmx.c
-+++ b/arch/x86/kvm/vmx/vmx.c
-@@ -4588,6 +4588,26 @@ static int handle_machine_check(struct kvm_vcpu *vcpu)
- 	return 1;
+diff --git a/arch/mips/include/asm/cevt-r4k.h b/arch/mips/include/asm/cevt-r4k.h
+index 2e13a038d260..5229eb34f28a 100644
+--- a/arch/mips/include/asm/cevt-r4k.h
++++ b/arch/mips/include/asm/cevt-r4k.h
+@@ -23,7 +23,6 @@ void mips_event_handler(struct clock_event_device *dev);
+ int c0_compare_int_usable(void);
+ irqreturn_t c0_compare_interrupt(int, void *);
+ 
+-extern struct irqaction c0_compare_irqaction;
+ extern int cp0_timer_irq_installed;
+ 
+ #endif /* __ASM_CEVT_R4K_H */
+diff --git a/arch/mips/kernel/cevt-r4k.c b/arch/mips/kernel/cevt-r4k.c
+index 17a9cbb8b3df..4ffa9f485d07 100644
+--- a/arch/mips/kernel/cevt-r4k.c
++++ b/arch/mips/kernel/cevt-r4k.c
+@@ -158,17 +158,6 @@ irqreturn_t c0_compare_interrupt(int irq, void *dev_id)
+ 	return IRQ_NONE;
  }
  
-+/*
-+ * If the host has split lock detection disabled, then #AC is
-+ * unconditionally injected into the guest, which is the pre split lock
-+ * detection behaviour.
-+ *
-+ * If the host has split lock detection enabled then #AC is
-+ * only injected into the guest when:
-+ *  - Guest CPL == 3 (user mode)
-+ *  - Guest has #AC detection enabled in CR0
-+ *  - Guest EFLAGS has AC bit set
-+ */
-+static inline bool guest_inject_ac(struct kvm_vcpu *vcpu)
-+{
-+	if (!boot_cpu_has(X86_FEATURE_SPLIT_LOCK_DETECT))
-+		return true;
-+
-+	return vmx_get_cpl(vcpu) == 3 && kvm_read_cr0_bits(vcpu, X86_CR0_AM) &&
-+	       (kvm_get_rflags(vcpu) & X86_EFLAGS_AC);
-+}
-+
- static int handle_exception_nmi(struct kvm_vcpu *vcpu)
+-struct irqaction c0_compare_irqaction = {
+-	.handler = c0_compare_interrupt,
+-	/*
+-	 * IRQF_SHARED: The timer interrupt may be shared with other interrupts
+-	 * such as perf counter and FDC interrupts.
+-	 */
+-	.flags = IRQF_PERCPU | IRQF_TIMER | IRQF_SHARED,
+-	.name = "timer",
+-};
+-
+-
+ void mips_event_handler(struct clock_event_device *dev)
  {
- 	struct vcpu_vmx *vmx = to_vmx(vcpu);
-@@ -4653,9 +4673,6 @@ static int handle_exception_nmi(struct kvm_vcpu *vcpu)
- 		return handle_rmode_exception(vcpu, ex_no, error_code);
+ }
+diff --git a/arch/mips/sgi-ip27/ip27-timer.c b/arch/mips/sgi-ip27/ip27-timer.c
+index 61f3565f3645..6e2b58b47580 100644
+--- a/arch/mips/sgi-ip27/ip27-timer.c
++++ b/arch/mips/sgi-ip27/ip27-timer.c
+@@ -68,13 +68,6 @@ static irqreturn_t hub_rt_counter_handler(int irq, void *dev_id)
+ 	return IRQ_HANDLED;
+ }
  
- 	switch (ex_no) {
--	case AC_VECTOR:
--		kvm_queue_exception_e(vcpu, AC_VECTOR, error_code);
--		return 1;
- 	case DB_VECTOR:
- 		dr6 = vmcs_readl(EXIT_QUALIFICATION);
- 		if (!(vcpu->guest_debug &
-@@ -4684,6 +4701,20 @@ static int handle_exception_nmi(struct kvm_vcpu *vcpu)
- 		kvm_run->debug.arch.pc = vmcs_readl(GUEST_CS_BASE) + rip;
- 		kvm_run->debug.arch.exception = ex_no;
- 		break;
-+	case AC_VECTOR:
-+		if (guest_inject_ac(vcpu)) {
-+			kvm_queue_exception_e(vcpu, AC_VECTOR, error_code);
-+			return 1;
-+		}
+-struct irqaction hub_rt_irqaction = {
+-	.handler	= hub_rt_counter_handler,
+-	.percpu_dev_id	= &hub_rt_clockevent,
+-	.flags		= IRQF_PERCPU | IRQF_TIMER,
+-	.name		= "hub-rt",
+-};
+-
+ /*
+  * This is a hack; we really need to figure these values out dynamically
+  *
+@@ -111,9 +104,13 @@ void hub_rt_clock_event_init(void)
+ 
+ static void __init hub_rt_clock_event_global_init(void)
+ {
++	int irq = IP27_RT_TIMER_IRQ;
 +
-+		/*
-+		 * Handle split lock. Depending on detection mode this will
-+		 * either warn and disable split lock detection for this
-+		 * task or force SIGBUS on it.
-+		 */
-+		if (handle_guest_split_lock(kvm_rip_read(vcpu)))
-+			return 1;
-+		fallthrough;
- 	default:
- 		kvm_run->exit_reason = KVM_EXIT_EXCEPTION;
- 		kvm_run->ex.exception = ex_no;
+ 	irq_set_handler(IP27_RT_TIMER_IRQ, handle_percpu_devid_irq);
+ 	irq_set_percpu_devid(IP27_RT_TIMER_IRQ);
+-	setup_percpu_irq(IP27_RT_TIMER_IRQ, &hub_rt_irqaction);
++	if (__request_percpu_irq(irq, hub_rt_counter_handler, IRQF_TIMER,
++				 "hub-rt", &hub_rt_clockevent) < 0)
++		pr_err("Failed to request percpu irq %d (hub-rt)\n", irq);
+ }
+ 
+ static u64 hub_rt_read(struct clocksource *cs)
+diff --git a/arch/mips/sgi-ip30/ip30-timer.c b/arch/mips/sgi-ip30/ip30-timer.c
+index d13e105478ae..dcc22eaddcda 100644
+--- a/arch/mips/sgi-ip30/ip30-timer.c
++++ b/arch/mips/sgi-ip30/ip30-timer.c
+@@ -52,11 +52,11 @@ void __init plat_time_init(void)
+ 	int irq = get_c0_compare_int();
+ 
+ 	cp0_timer_irq_installed = 1;
+-	c0_compare_irqaction.percpu_dev_id = &mips_clockevent_device;
+-	c0_compare_irqaction.flags &= ~IRQF_SHARED;
+ 	irq_set_handler(irq, handle_percpu_devid_irq);
+ 	irq_set_percpu_devid(irq);
+-	setup_percpu_irq(irq, &c0_compare_irqaction);
++	if (__request_percpu_irq(irq, c0_compare_interrupt, IRQF_TIMER, "timer",
++				 &mips_clockevent_device) < 0)
++		pr_err("Failed to request percpu irq %d (timer)\n", irq);
+ 	enable_percpu_irq(irq, IRQ_TYPE_NONE);
+ 
+ 	ip30_heart_clocksource_init();
+-- 
+2.18.0
+
