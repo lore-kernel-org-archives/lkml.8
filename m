@@ -4,56 +4,55 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2032C2BA2B
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:13:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5FDCC2BBC7
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:13:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A16D22166E
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:13:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BD5BC215A4
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:13:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586607189;
-	bh=F9zWQd2jUav99i7WpgX0wAIAKO1D8AJfTK99j8NdM/Q=;
+	s=default; t=1586607190;
+	bh=Pa5+l78f/hLPIgJYaiYO+xjtCaCaOUnntR7EXklcnmw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lHk1XccQa2qBwnHPwnIlF7gIrys5sMfbIzDlWMEwYpc793JDCjk2rp+ApUJu/EGbE
-	 v/Agt9lL/L6Ll+kpAJC0iSnzEij1LkrDmWmRs1prPw0YNZV+b6hEpt68pSAyePMQEN
-	 30FHzQXsdDg5tZEWxPonC980Jsy806bUdSzA+cxk=
+	b=oegTS3ukYw54SBHyyn1NIKq8K2zqCp1jdywJDI5Q/tN/3U1g+760iGxsvhEfT+IxD
+	 nYpyQbDkMpReF6zTXR5+l/fg2FnLKnxPRHsRxwxT9FEX3gPbHo2dMnHySJOlWWSJua
+	 6QCiym0PdVahnrApEfsXPjz6Zz+s6nnu63SWxxio=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727628AbgDKMNI (ORCPT
+        id S1727648AbgDKMNJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 08:13:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45874 "EHLO mail.kernel.org"
+        Sat, 11 Apr 2020 08:13:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45932 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727519AbgDKMNE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 08:13:04 -0400
+        id S1727608AbgDKMNH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Apr 2020 08:13:07 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4E8C32137B;
-        Sat, 11 Apr 2020 12:13:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BACAC215A4;
+        Sat, 11 Apr 2020 12:13:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586607184;
-        bh=F9zWQd2jUav99i7WpgX0wAIAKO1D8AJfTK99j8NdM/Q=;
+        s=default; t=1586607187;
+        bh=Pa5+l78f/hLPIgJYaiYO+xjtCaCaOUnntR7EXklcnmw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UaT8wrCP1AnI/mfThrQvfH9EAZKGQdvVKnJniv998KM2eODZYNQNR8FiaGvCsBwIY
-         Mz2ASOodxUJtcU7Ei9q6uMBbSqlY3W63hxZNGHNes9rU5NdxecGw5hK19ZB2PlgBsr
-         nODmMa1fWH5NAWQ+9DxapEzt2PYzje0GMiVneiy4=
+        b=Ue/xMp0VupTqokbSEO4fth65CC8/QOpDytnPLv1u8i+Mfv13xDFbf38AKtax6dsNi
+         qySAIEALpLYOdBwpLJ7ZETPvyOfgjf27Bb60K5gkmnjiMF+5PLNdX7sFm9yS7vhEO1
+         iKLfi0jTdQxEZNEO0N8X/uwaBL82DsbP4iJRLPz4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Qian Cai <cai@lca.pw>,
-        Eric Dumazet <edumazet@google.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.14 01/38] ipv4: fix a RCU-list lock in fib_triestat_seq_show
-Date:   Sat, 11 Apr 2020 14:08:45 +0200
-Message-Id: <20200411115437.924272181@linuxfoundation.org>
+        stable@vger.kernel.org, Jianchao Wang <jianchao.w.wang@oracle.com>,
+        Keith Busch <keith.busch@intel.com>,
+        Jens Axboe <axboe@kernel.dk>,
+        Giuliano Procida <gprocida@google.com>
+Subject: [PATCH 4.14 10/38] blk-mq: Allow blocking queue tag iter callbacks
+Date:   Sat, 11 Apr 2020 14:08:54 +0200
+Message-Id: <20200411115439.016686728@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200411115437.795556138@linuxfoundation.org>
 References: <20200411115437.795556138@linuxfoundation.org>
 User-Agent: quilt/0.66
-X-stable: review
-X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -62,63 +61,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Qian Cai <cai@lca.pw>
+From: Keith Busch <keith.busch@intel.com>
 
-[ Upstream commit fbe4e0c1b298b4665ee6915266c9d6c5b934ef4a ]
+commit 530ca2c9bd6949c72c9b5cfc330cb3dbccaa3f5b upstream.
 
-fib_triestat_seq_show() calls hlist_for_each_entry_rcu(tb, head,
-tb_hlist) without rcu_read_lock() will trigger a warning,
+A recent commit runs tag iterator callbacks under the rcu read lock,
+but existing callbacks do not satisfy the non-blocking requirement.
+The commit intended to prevent an iterator from accessing a queue that's
+being modified. This patch fixes the original issue by taking a queue
+reference instead of reading it, which allows callbacks to make blocking
+calls.
 
- net/ipv4/fib_trie.c:2579 RCU-list traversed in non-reader section!!
-
- other info that might help us debug this:
-
- rcu_scheduler_active = 2, debug_locks = 1
- 1 lock held by proc01/115277:
-  #0: c0000014507acf00 (&p->lock){+.+.}-{3:3}, at: seq_read+0x58/0x670
-
- Call Trace:
-  dump_stack+0xf4/0x164 (unreliable)
-  lockdep_rcu_suspicious+0x140/0x164
-  fib_triestat_seq_show+0x750/0x880
-  seq_read+0x1a0/0x670
-  proc_reg_read+0x10c/0x1b0
-  __vfs_read+0x3c/0x70
-  vfs_read+0xac/0x170
-  ksys_read+0x7c/0x140
-  system_call+0x5c/0x68
-
-Fix it by adding a pair of rcu_read_lock/unlock() and use
-cond_resched_rcu() to avoid the situation where walking of a large
-number of items  may prevent scheduling for a long time.
-
-Signed-off-by: Qian Cai <cai@lca.pw>
-Reviewed-by: Eric Dumazet <edumazet@google.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: f5bbbbe4d6357 ("blk-mq: sync the update nr_hw_queues with blk_mq_queue_tag_busy_iter")
+Acked-by: Jianchao Wang <jianchao.w.wang@oracle.com>
+Signed-off-by: Keith Busch <keith.busch@intel.com>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Signed-off-by: Giuliano Procida <gprocida@google.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- net/ipv4/fib_trie.c |    3 +++
- 1 file changed, 3 insertions(+)
 
---- a/net/ipv4/fib_trie.c
-+++ b/net/ipv4/fib_trie.c
-@@ -2319,6 +2319,7 @@ static int fib_triestat_seq_show(struct
- 		   " %zd bytes, size of tnode: %zd bytes.\n",
- 		   LEAF_SIZE, TNODE_SIZE(0));
+---
+ block/blk-mq-tag.c |   13 ++++---------
+ 1 file changed, 4 insertions(+), 9 deletions(-)
+
+--- a/block/blk-mq-tag.c
++++ b/block/blk-mq-tag.c
+@@ -336,16 +336,11 @@ void blk_mq_queue_tag_busy_iter(struct r
  
-+	rcu_read_lock();
- 	for (h = 0; h < FIB_TABLE_HASHSZ; h++) {
- 		struct hlist_head *head = &net->ipv4.fib_table_hash[h];
- 		struct fib_table *tb;
-@@ -2338,7 +2339,9 @@ static int fib_triestat_seq_show(struct
- 			trie_show_usage(seq, t->stats);
- #endif
- 		}
-+		cond_resched_rcu();
+ 	/*
+ 	 * __blk_mq_update_nr_hw_queues will update the nr_hw_queues and
+-	 * queue_hw_ctx after freeze the queue. So we could use q_usage_counter
+-	 * to avoid race with it. __blk_mq_update_nr_hw_queues will users
+-	 * synchronize_rcu to ensure all of the users go out of the critical
+-	 * section below and see zeroed q_usage_counter.
++	 * queue_hw_ctx after freeze the queue, so we use q_usage_counter
++	 * to avoid race with it.
+ 	 */
+-	rcu_read_lock();
+-	if (percpu_ref_is_zero(&q->q_usage_counter)) {
+-		rcu_read_unlock();
++	if (!percpu_ref_tryget(&q->q_usage_counter))
+ 		return;
+-	}
+ 
+ 	queue_for_each_hw_ctx(q, hctx, i) {
+ 		struct blk_mq_tags *tags = hctx->tags;
+@@ -361,7 +356,7 @@ void blk_mq_queue_tag_busy_iter(struct r
+ 			bt_for_each(hctx, &tags->breserved_tags, fn, priv, true);
+ 		bt_for_each(hctx, &tags->bitmap_tags, fn, priv, false);
  	}
-+	rcu_read_unlock();
- 
- 	return 0;
+-	rcu_read_unlock();
++	blk_queue_exit(q);
  }
+ 
+ static int bt_alloc(struct sbitmap_queue *bt, unsigned int depth,
 
 
