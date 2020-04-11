@@ -2,138 +2,87 @@ Return-Path: <SRS0=xbEg=53=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 479BEC2BA2B
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 07:51:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62308C2BA2B
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 07:52:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1B61A20732
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 07:51:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3F08820857
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 07:52:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726090AbgDKHvW (ORCPT
+        id S1726190AbgDKHwP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 03:51:22 -0400
-Received: from jabberwock.ucw.cz ([46.255.230.98]:52458 "EHLO
-        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725899AbgDKHvW (ORCPT
+        Sat, 11 Apr 2020 03:52:15 -0400
+Received: from smtp02.smtpout.orange.fr ([80.12.242.124]:40445 "EHLO
+        smtp.smtpout.orange.fr" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725927AbgDKHwP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 03:51:22 -0400
-Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
-        id 88B711C6109; Sat, 11 Apr 2020 09:51:20 +0200 (CEST)
-Date:   Sat, 11 Apr 2020 09:51:20 +0200
-From:   Pavel Machek <pavel@ucw.cz>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Chris Wilson <chris@chris-wilson.co.uk>,
-        Dave Airlie <airlied@redhat.com>,
-        intel-gfx@lists.freedesktop.org,
-        Jani Nikula <jani.nikula@linux.intel.com>,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        kernel list <linux-kernel@vger.kernel.org>,
-        matthew.auld@intel.com, Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Peter Anvin <hpa@zytor.com>
-Subject: Re: Linus, please revert 7dc8f11437: regression in 5.7-rc0, hangs
- while attempting to run X
-Message-ID: <20200411075119.GA16837@amd.ucw.cz>
-References: <20200407072047.GA18532@amd.ucw.cz>
- <158624426770.4794.6070200474948860768@build.alporthouse.com>
- <20200407074841.GB18673@amd.ucw.cz>
- <CAHk-=wixvbCie+EQ-vTPdyrzmdopM_BQc=uetneuSSa7PtCt2g@mail.gmail.com>
+        Sat, 11 Apr 2020 03:52:15 -0400
+Received: from localhost.localdomain ([93.22.135.18])
+        by mwinf5d37 with ME
+        id RKsC2200B0Pz5GD03KsCpe; Sat, 11 Apr 2020 09:52:13 +0200
+X-ME-Helo: localhost.localdomain
+X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
+X-ME-Date: Sat, 11 Apr 2020 09:52:13 +0200
+X-ME-IP: 93.22.135.18
+From:   Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+To:     davem@davemloft.net, grygorii.strashko@ti.com,
+        colin.king@canonical.com
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel-janitors@vger.kernel.org,
+        Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Subject: [PATCH] net: ethernet: ti: Add missing '\n' in log messages
+Date:   Sat, 11 Apr 2020 09:52:11 +0200
+Message-Id: <20200411075211.9027-1-christophe.jaillet@wanadoo.fr>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="pWyiEgJYm5f9v55/"
-Content-Disposition: inline
-In-Reply-To: <CAHk-=wixvbCie+EQ-vTPdyrzmdopM_BQc=uetneuSSa7PtCt2g@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Message logged by 'dev_xxx()' or 'pr_xxx()' should end with a '\n'.
 
---pWyiEgJYm5f9v55/
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Fixes: 93a76530316a ("net: ethernet: ti: introduce am65x/j721e gigabit eth subsystem driver")
+Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+---
+ drivers/net/ethernet/ti/am65-cpsw-nuss.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-Hi!
+diff --git a/drivers/net/ethernet/ti/am65-cpsw-nuss.c b/drivers/net/ethernet/ti/am65-cpsw-nuss.c
+index f71c15c39492..2bf56733ba94 100644
+--- a/drivers/net/ethernet/ti/am65-cpsw-nuss.c
++++ b/drivers/net/ethernet/ti/am65-cpsw-nuss.c
+@@ -1372,7 +1372,7 @@ static int am65_cpsw_nuss_init_tx_chns(struct am65_cpsw_common *common)
+ err:
+ 	i = devm_add_action(dev, am65_cpsw_nuss_free_tx_chns, common);
+ 	if (i) {
+-		dev_err(dev, "failed to add free_tx_chns action %d", i);
++		dev_err(dev, "Failed to add free_tx_chns action %d\n", i);
+ 		return i;
+ 	}
+ 
+@@ -1481,7 +1481,7 @@ static int am65_cpsw_nuss_init_rx_chns(struct am65_cpsw_common *common)
+ err:
+ 	i = devm_add_action(dev, am65_cpsw_nuss_free_rx_chns, common);
+ 	if (i) {
+-		dev_err(dev, "failed to add free_rx_chns action %d", i);
++		dev_err(dev, "Failed to add free_rx_chns action %d\n", i);
+ 		return i;
+ 	}
+ 
+@@ -1691,7 +1691,7 @@ static int am65_cpsw_nuss_init_ndev_2g(struct am65_cpsw_common *common)
+ 	ret = devm_add_action_or_reset(dev, am65_cpsw_pcpu_stats_free,
+ 				       ndev_priv->stats);
+ 	if (ret) {
+-		dev_err(dev, "failed to add percpu stat free action %d", ret);
++		dev_err(dev, "Failed to add percpu stat free action %d\n", ret);
+ 		return ret;
+ 	}
+ 
+-- 
+2.20.1
 
-> > > Beyond the fix already submitted?
-> >
-> > I did not get that one, can I have a pointer?
->=20
-> What's the status of this one?
-
-I tried updating my kernel on April 3, that one did not work, but it
-did not include 721017cf4bd8.
-
-> I'm assuming the fix is commit 721017cf4bd8 ("drm/i915/gem: Ignore
-> readonly failures when updating relics"), but didn't see a reply to
-> the query or a confirmation of things working..
-
-I pulled latest tree from Linus, and this one has 721017cf4bd8. Let my
-try to revert my revert, and test... yes, this one seems okay.
-
-Something changed in the X, now it seems that only one monitor is used
-for login, not both... but it now works.
-
-Best regards,
-								Pavel
-
-PS: Hmm. This is not helpful. I guess this is "N".
-
-*
-* VDPA drivers
-*
-VDPA drivers (VDPA_MENU) [N/y/?] (NEW) ?
-
-There is no help available for this option.
-Symbol: VDPA_MENU [=3Dn]
-Type  : bool
-Defined at drivers/vdpa/Kconfig:9
-  Prompt: VDPA drivers
-  Location:
-    -> Device Drivers
-
-*
-* VHOST drivers
-*
-VHOST drivers (VHOST_MENU) [Y/n/?] (NEW) ?
-
-There is no help available for this option.
-Symbol: VHOST_MENU [=3Dy]
-Type  : bool
-Defined at drivers/vhost/Kconfig:21
-  Prompt: VHOST drivers
-  Location:
-    -> Device Drivers
-
-
-> Btw, Chris, that __put_user() not testing the error should at least
-> have a comment. We don't have a working "__must_check" for those
-> things (because they are subtle macros, not functions), but if we did,
-> we'd get a compiler warning for not checking the error value.
-
-Best regards,
-								Pavel
-
-
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---pWyiEgJYm5f9v55/
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iF0EABECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCXpF29wAKCRAw5/Bqldv6
-8rLbAJ9+qb+examYdcgoosM2keLFuc5dEACgoiaicqZxc1Pwd7HChqIdJieOojI=
-=Kt+J
------END PGP SIGNATURE-----
-
---pWyiEgJYm5f9v55/--
