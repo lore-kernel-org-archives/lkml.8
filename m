@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53853C2BB86
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:37:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B49A5C2BB86
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:37:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 20BD9206E9
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:37:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8428A206E9
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:37:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586648273;
-	bh=LeyaTYKxpORf7ZS6ASE8OJ1GWvWNJ3cPcC6qzGVijj0=;
+	s=default; t=1586648278;
+	bh=VY+srS1QB5ufiWNW88+dyuoRCUoCCbimxVHPK1bPttU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UcuRiWmAmAMeHnJb1j2OpgfAyC84kZkfDMfn+zhpBnkq4fSSCk4dApwaFaAhwISCv
-	 TkhBSfSLIS0SuI2y1nGIl2ptuZ71a2SHg52sYESTzC6aHKWk1nNqaL+RwEAY8VOQaO
-	 NThJECiJJMJR9+RmFJyq5Ms7TjI9VetXlvX4mWvA=
+	b=C7W0lYrdYSzKb+XqkRR96JlCdq1v4kP9Su578InrBey6q6+7mPLile37fqeTw9XBt
+	 79cInmjoX/Yp2h5+dA1g7QhDFOhzI5AJ1mR6T0ZlXCUJ59PcNc71Gf+V8xp4JjXmj6
+	 xL7cGXBbyW35pT9BrIGdRw6hcQnhu6j5NMXvDdhQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730781AbgDKXhv (ORCPT
+        id S1728844AbgDKXIJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 19:37:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44728 "EHLO mail.kernel.org"
+        Sat, 11 Apr 2020 19:08:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44224 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728854AbgDKXIK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 19:08:10 -0400
+        id S1728768AbgDKXHx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Apr 2020 19:07:53 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0211E20787;
-        Sat, 11 Apr 2020 23:08:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4630D21841;
+        Sat, 11 Apr 2020 23:07:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586646490;
-        bh=LeyaTYKxpORf7ZS6ASE8OJ1GWvWNJ3cPcC6qzGVijj0=;
+        s=default; t=1586646474;
+        bh=VY+srS1QB5ufiWNW88+dyuoRCUoCCbimxVHPK1bPttU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cnMJJrh76KnongLdvhFutzxGoLFdq0g4SyMiq0NFfQzPDxqQC5QpcwW1zjYQ8G0CH
-         4z/S2g+hNMoGFm+m3wyxp2fSSRdf7LSzDG5wIdWSbOgZEUwZAmateVQyWYfO/3vk/y
-         yHzLL2VlgDeBQY8mWr6qZ9F4sKYF1VX7x043hgvk=
+        b=FtnFwGh0RP7zFGfT+EiJE4+MCxboZsbPoRhPXWXenXotEZ6TsDe/S2MwCIpxDCctm
+         N7McJYGO2dNw0GISEuQQfFxxEwofPzzanDiIHz069DKfCKe10k2DdJv+k2z/gqGQo2
+         7juE1QP6TlZjyyIqhsw9zdMfXg1fcbbomsHaFiGs=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Kamal Heib <kamalheib1@gmail.com>,
-        Gal Pressman <galpress@amazon.com>,
-        Bernard Metzler <bmt@zurich.ibm.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Sasha Levin <sashal@kernel.org>, linux-rdma@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.5 054/121] RDMA/siw: Fix setting active_mtu attribute
-Date:   Sat, 11 Apr 2020 19:05:59 -0400
-Message-Id: <20200411230706.23855-54-sashal@kernel.org>
+Cc:     Guangbin Huang <huangguangbin2@huawei.com>,
+        Huazhong Tan <tanhuazhong@huawei.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.5 040/121] net: hns3: modify an unsuitable print when setting unknown duplex to fibre
+Date:   Sat, 11 Apr 2020 19:05:45 -0400
+Message-Id: <20200411230706.23855-40-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200411230706.23855-1-sashal@kernel.org>
 References: <20200411230706.23855-1-sashal@kernel.org>
@@ -61,45 +60,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kamal Heib <kamalheib1@gmail.com>
+From: Guangbin Huang <huangguangbin2@huawei.com>
 
-[ Upstream commit beb205dd67aaa4315dedf5c40b47c6e9dee5a469 ]
+[ Upstream commit 2d3db26d78805c9e06e26def0081c76e9bb0b7d6 ]
 
-Make sure to set the active_mtu attribute to avoid report the following
-invalid value:
+Currently, if device is in link down status and user uses
+'ethtool -s' command to set speed but not specify duplex
+mode, the duplex mode passed from ethtool to driver is
+unknown value(255), and the fibre port will identify this
+value as half duplex mode and print "only copper port
+supports half duplex!". This message is confusing.
 
-$ ibv_devinfo -d siw0 | grep active_mtu
-			active_mtu:		invalid MTU (0)
+So for fibre port, only the setting duplex is half, prints
+error and returns.
 
-Fixes: 303ae1cdfdf7 ("rdma/siw: application interface")
-Link: https://lore.kernel.org/r/20200205081354.30438-1-kamalheib1@gmail.com
-Signed-off-by: Kamal Heib <kamalheib1@gmail.com>
-Reviewed-by: Gal Pressman <galpress@amazon.com>
-Reviewed-by: Bernard Metzler <bmt@zurich.ibm.com>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+Signed-off-by: Guangbin Huang <huangguangbin2@huawei.com>
+Signed-off-by: Huazhong Tan <tanhuazhong@huawei.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/infiniband/sw/siw/siw_verbs.c | 2 +-
+ drivers/net/ethernet/hisilicon/hns3/hns3_ethtool.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/infiniband/sw/siw/siw_verbs.c b/drivers/infiniband/sw/siw/siw_verbs.c
-index 5fd6d6499b3d7..b8e6faecc52d3 100644
---- a/drivers/infiniband/sw/siw/siw_verbs.c
-+++ b/drivers/infiniband/sw/siw/siw_verbs.c
-@@ -168,12 +168,12 @@ int siw_query_port(struct ib_device *base_dev, u8 port,
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3_ethtool.c b/drivers/net/ethernet/hisilicon/hns3/hns3_ethtool.c
+index 6e0212b79438a..4c411ba062fb9 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hns3_ethtool.c
++++ b/drivers/net/ethernet/hisilicon/hns3/hns3_ethtool.c
+@@ -737,7 +737,7 @@ static int hns3_check_ksettings_param(const struct net_device *netdev,
+ 	if (ops->get_media_type)
+ 		ops->get_media_type(handle, &media_type, &module_type);
  
- 	memset(attr, 0, sizeof(*attr));
- 
--	attr->active_mtu = attr->max_mtu;
- 	attr->active_speed = 2;
- 	attr->active_width = 2;
- 	attr->gid_tbl_len = 1;
- 	attr->max_msg_sz = -1;
- 	attr->max_mtu = ib_mtu_int_to_enum(sdev->netdev->mtu);
-+	attr->active_mtu = ib_mtu_int_to_enum(sdev->netdev->mtu);
- 	attr->phys_state = sdev->state == IB_PORT_ACTIVE ?
- 		IB_PORT_PHYS_STATE_LINK_UP : IB_PORT_PHYS_STATE_DISABLED;
- 	attr->pkey_tbl_len = 1;
+-	if (cmd->base.duplex != DUPLEX_FULL &&
++	if (cmd->base.duplex == DUPLEX_HALF &&
+ 	    media_type != HNAE3_MEDIA_TYPE_COPPER) {
+ 		netdev_err(netdev,
+ 			   "only copper port supports half duplex!");
 -- 
 2.20.1
 
