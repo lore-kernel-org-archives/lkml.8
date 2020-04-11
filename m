@@ -7,49 +7,53 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A5A5C2BA2B
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:18:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3683BC2BA2B
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:18:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EA7132084D
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:18:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0D8A52084D
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:18:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586607502;
-	bh=Jttk726tXOUzFy4Zy+whTq1rsrkJW0mjXnvp9/CaKi0=;
+	s=default; t=1586607507;
+	bh=si/5L5aBCOmz5fCXhPA3GghvYAVm3te4zHrc+nXHuUY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mOi1IU1Ainai+I9vd2ZDjOjjvHE+aMJVRDg0BxJs9YGWYlK6SuAmE1WR2mAWk006o
-	 iZKXqNewPSZAc0QTAnPEOYlzyxTod9TMfTK3PguKQOLB/fcx640k/CHuQttbWN6gf1
-	 H84l43p+mzlZ+4nvRy5W4MmK8ilif14UU9NsbSlA=
+	b=pGs0QZl/PAFVAVZ45fkw0h2yUhV9ZS+zQJobuMF7hXlszLumxdNYdSSBZxUzYeJ9E
+	 5rOOoTTA9EoOcm4WRQXNA1a04yX5RKC2FOKQKLLpJpH2oDxShSIH/vDJn2T1dxKtGf
+	 5CSpj1n/4V6+cwY2KtAR8YreSXUcoICMk5vSh5QQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728169AbgDKMSU (ORCPT
+        id S1728629AbgDKMSZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 08:18:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53204 "EHLO mail.kernel.org"
+        Sat, 11 Apr 2020 08:18:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53268 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728564AbgDKMSP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 08:18:15 -0400
+        id S1728564AbgDKMSV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Apr 2020 08:18:21 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BF71020692;
-        Sat, 11 Apr 2020 12:18:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8BE6C20692;
+        Sat, 11 Apr 2020 12:18:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586607496;
-        bh=Jttk726tXOUzFy4Zy+whTq1rsrkJW0mjXnvp9/CaKi0=;
+        s=default; t=1586607501;
+        bh=si/5L5aBCOmz5fCXhPA3GghvYAVm3te4zHrc+nXHuUY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nCCMRmJjFuxRjFb3rD8kzkDKEwei0TVf4ed2TV1GsldcN70k0rhl+nomdBUn72bCY
-         vuonQUO5of9LMnl+VVP68rNjP2PwhBTGc8gOhttVhFhyhfokN5J7YWKbWx/GwSHekZ
-         EBtV6i9mti0JasmsYJWlTBEfIrxzOU9Nm8Y5OuUY=
+        b=kdnZN2PbdR/tTfGLh9/7wveImx+4Hw3TKfePJkxN4VvHGhEcLmTOxMi1H/QxO12z2
+         zeEzdaMD2/DQhsAehyNnc+fSf4TIgcFshuJrO8AazqS6G/OT9cmI8zLettvTJz/E00
+         AVgx5kA86AY95kb8NdR80NEKs7h6RhGkgbW6SlWk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        syzbot+4496e82090657320efc6@syzkaller.appspotmail.com,
-        Qiujun Huang <hqjagain@gmail.com>,
-        Hillf Danton <hdanton@sina.com>,
-        Marcel Holtmann <marcel@holtmann.org>
-Subject: [PATCH 5.4 36/41] Bluetooth: RFCOMM: fix ODEBUG bug in rfcomm_dev_ioctl
-Date:   Sat, 11 Apr 2020 14:09:45 +0200
-Message-Id: <20200411115506.718633162@linuxfoundation.org>
+        syzbot+d44e1b26ce5c3e77458d@syzkaller.appspotmail.com,
+        Bart Van Assche <bvanassche@acm.org>,
+        Ming Lei <ming.lei@redhat.com>,
+        Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>,
+        Johannes Thumshirn <jth@kernel.org>,
+        Hannes Reinecke <hare@suse.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Jens Axboe <axboe@kernel.dk>
+Subject: [PATCH 5.4 38/41] blk-mq: Keep set->nr_hw_queues and set->map[].nr_queues in sync
+Date:   Sat, 11 Apr 2020 14:09:47 +0200
+Message-Id: <20200411115506.857351630@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200411115504.124035693@linuxfoundation.org>
 References: <20200411115504.124035693@linuxfoundation.org>
@@ -62,36 +66,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Qiujun Huang <hqjagain@gmail.com>
+From: Bart Van Assche <bvanassche@acm.org>
 
-commit 71811cac8532b2387b3414f7cd8fe9e497482864 upstream.
+commit 6e66b49392419f3fe134e1be583323ef75da1e4b upstream.
 
-Needn't call 'rfcomm_dlc_put' here, because 'rfcomm_dlc_exists' didn't
-increase dlc->refcnt.
+blk_mq_map_queues() and multiple .map_queues() implementations expect that
+set->map[HCTX_TYPE_DEFAULT].nr_queues is set to the number of hardware
+queues. Hence set .nr_queues before calling these functions. This patch
+fixes the following kernel warning:
 
-Reported-by: syzbot+4496e82090657320efc6@syzkaller.appspotmail.com
-Signed-off-by: Qiujun Huang <hqjagain@gmail.com>
-Suggested-by: Hillf Danton <hdanton@sina.com>
-Signed-off-by: Marcel Holtmann <marcel@holtmann.org>
+WARNING: CPU: 0 PID: 2501 at include/linux/cpumask.h:137
+Call Trace:
+ blk_mq_run_hw_queue+0x19d/0x350 block/blk-mq.c:1508
+ blk_mq_run_hw_queues+0x112/0x1a0 block/blk-mq.c:1525
+ blk_mq_requeue_work+0x502/0x780 block/blk-mq.c:775
+ process_one_work+0x9af/0x1740 kernel/workqueue.c:2269
+ worker_thread+0x98/0xe40 kernel/workqueue.c:2415
+ kthread+0x361/0x430 kernel/kthread.c:255
+
+Fixes: ed76e329d74a ("blk-mq: abstract out queue map") # v5.0
+Reported-by: syzbot+d44e1b26ce5c3e77458d@syzkaller.appspotmail.com
+Signed-off-by: Bart Van Assche <bvanassche@acm.org>
+Reviewed-by: Ming Lei <ming.lei@redhat.com>
+Reviewed-by: Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>
+Cc: Johannes Thumshirn <jth@kernel.org>
+Cc: Hannes Reinecke <hare@suse.com>
+Cc: Ming Lei <ming.lei@redhat.com>
+Cc: Christoph Hellwig <hch@infradead.org>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- net/bluetooth/rfcomm/tty.c |    4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+ block/blk-mq.c |    8 ++++++++
+ 1 file changed, 8 insertions(+)
 
---- a/net/bluetooth/rfcomm/tty.c
-+++ b/net/bluetooth/rfcomm/tty.c
-@@ -413,10 +413,8 @@ static int __rfcomm_create_dev(struct so
- 		dlc = rfcomm_dlc_exists(&req.src, &req.dst, req.channel);
- 		if (IS_ERR(dlc))
- 			return PTR_ERR(dlc);
--		else if (dlc) {
--			rfcomm_dlc_put(dlc);
-+		if (dlc)
- 			return -EBUSY;
--		}
- 		dlc = rfcomm_dlc_alloc(GFP_KERNEL);
- 		if (!dlc)
- 			return -ENOMEM;
+--- a/block/blk-mq.c
++++ b/block/blk-mq.c
+@@ -3007,6 +3007,14 @@ static int blk_mq_alloc_rq_maps(struct b
+ 
+ static int blk_mq_update_queue_map(struct blk_mq_tag_set *set)
+ {
++	/*
++	 * blk_mq_map_queues() and multiple .map_queues() implementations
++	 * expect that set->map[HCTX_TYPE_DEFAULT].nr_queues is set to the
++	 * number of hardware queues.
++	 */
++	if (set->nr_maps == 1)
++		set->map[HCTX_TYPE_DEFAULT].nr_queues = set->nr_hw_queues;
++
+ 	if (set->ops->map_queues && !is_kdump_kernel()) {
+ 		int i;
+ 
 
 
