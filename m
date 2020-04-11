@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C065FC2BA19
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:18:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F771C2BA19
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:18:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 98D3920757
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:18:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0799420757
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:18:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586647101;
-	bh=mR5GXwSwTHAupboa0xGEPwVPq0sbIVg5pH7QEEdD7WE=;
+	s=default; t=1586647105;
+	bh=qr5+1RweyNTRZdW2Vo+coTFXj+/HoNqiBAryInyGR/c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GBZnt+3Vr55lT/9Y+gL4n5BDdCQILeBHnlMafMEvxEBLMuhmOYgcf+9y8GaS8LFpJ
-	 CSG/orj62p+nj/m+RvsMuUwg6vGRsxrNlmn+fljHa3fBFhLt67ghMkqsNQVzWlkLcr
-	 ECD1Ec24Wn3dawNGKQKy8WFzcejo6EhMoe87l1Oo=
+	b=QP7aZL8ygFJayONGMdoNz3TKG6KHk9XitujqRZNUY4tYL5n5asf9B2pFUzvAbOVc3
+	 xm0BDItCYeKcPUrbH8iI4ZE5m3x5DDOQIw7j6EqwuxTP8htwN+ZOYZuQ7DD/rWLTyp
+	 /zirA8A5+mFKo4O6eRqcr2lddWnynucwGIaYosiM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730302AbgDKXON (ORCPT
+        id S1730727AbgDKXSX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 19:14:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55758 "EHLO mail.kernel.org"
+        Sat, 11 Apr 2020 19:18:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55796 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730675AbgDKXOJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 19:14:09 -0400
+        id S1730684AbgDKXOL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Apr 2020 19:14:11 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CCC8220757;
-        Sat, 11 Apr 2020 23:14:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 257152166E;
+        Sat, 11 Apr 2020 23:14:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586646849;
-        bh=mR5GXwSwTHAupboa0xGEPwVPq0sbIVg5pH7QEEdD7WE=;
+        s=default; t=1586646851;
+        bh=qr5+1RweyNTRZdW2Vo+coTFXj+/HoNqiBAryInyGR/c=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xsu8ubaKjq/k39Oefus04VGgZrfXD2NW8T0apbpwDRcwZ/yAekoJdGJffJqXxXY6x
-         hk3BZb0O/5CeeG+8E/kv9PifLlDD5wYkG14zDHdhjtRWnbri8HqKpPU8kYgC29ii3a
-         hVQtggvO5rDDO8oeNp/sPEYFIcuSxaDA5Wo52IOM=
+        b=LEzyLg1UcVcYqaPQPsLoVyrLvdfsmbLP64ZLxEfTYclz7O+UpuhdJlzD9rIahSOKu
+         K1HtWgZ8ZumIrRiMOnjY+SFpy1ZeT0ep4YjNJL7jdlY+GTVwCHhekkDDswRxqn5qT/
+         70mrd7MsXsoQwkjsaXGSxC+ttW+DpfdUxBQS5naA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Ritesh Harjani <riteshh@linux.ibm.com>,
-        Harish Sriram <harish@linux.ibm.com>, Jan Kara <jack@suse.cz>,
-        Theodore Ts'o <tytso@mit.edu>, Sasha Levin <sashal@kernel.org>,
-        linux-ext4@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 35/37] ext4: check for non-zero journal inum in ext4_calculate_overhead
-Date:   Sat, 11 Apr 2020 19:13:24 -0400
-Message-Id: <20200411231327.26550-35-sashal@kernel.org>
+Cc:     Chuck Lever <chuck.lever@oracle.com>,
+        Sasha Levin <sashal@kernel.org>, linux-nfs@vger.kernel.org,
+        netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 37/37] svcrdma: Fix leak of transport addresses
+Date:   Sat, 11 Apr 2020 19:13:26 -0400
+Message-Id: <20200411231327.26550-37-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200411231327.26550-1-sashal@kernel.org>
 References: <20200411231327.26550-1-sashal@kernel.org>
@@ -60,75 +59,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ritesh Harjani <riteshh@linux.ibm.com>
+From: Chuck Lever <chuck.lever@oracle.com>
 
-[ Upstream commit f1eec3b0d0a849996ebee733b053efa71803dad5 ]
+[ Upstream commit 1a33d8a284b1e85e03b8c7b1ea8fb985fccd1d71 ]
 
-While calculating overhead for internal journal, also check
-that j_inum shouldn't be 0. Otherwise we get below error with
-xfstests generic/050 with external journal (XXX_LOGDEV config) enabled.
+Kernel memory leak detected:
 
-It could be simply reproduced with loop device with an external journal
-and marking blockdev as RO before mounting.
+unreferenced object 0xffff888849cdf480 (size 8):
+  comm "kworker/u8:3", pid 2086, jiffies 4297898756 (age 4269.856s)
+  hex dump (first 8 bytes):
+    30 00 cd 49 88 88 ff ff                          0..I....
+  backtrace:
+    [<00000000acfc370b>] __kmalloc_track_caller+0x137/0x183
+    [<00000000a2724354>] kstrdup+0x2b/0x43
+    [<0000000082964f84>] xprt_rdma_format_addresses+0x114/0x17d [rpcrdma]
+    [<00000000dfa6ed00>] xprt_setup_rdma_bc+0xc0/0x10c [rpcrdma]
+    [<0000000073051a83>] xprt_create_transport+0x3f/0x1a0 [sunrpc]
+    [<0000000053531a8e>] rpc_create+0x118/0x1cd [sunrpc]
+    [<000000003a51b5f8>] setup_callback_client+0x1a5/0x27d [nfsd]
+    [<000000001bd410af>] nfsd4_process_cb_update.isra.7+0x16c/0x1ac [nfsd]
+    [<000000007f4bbd56>] nfsd4_run_cb_work+0x4c/0xbd [nfsd]
+    [<0000000055c5586b>] process_one_work+0x1b2/0x2fe
+    [<00000000b1e3e8ef>] worker_thread+0x1a6/0x25a
+    [<000000005205fb78>] kthread+0xf6/0xfb
+    [<000000006d2dc057>] ret_from_fork+0x3a/0x50
 
-[ 3337.146838] EXT4-fs error (device pmem1p2): ext4_get_journal_inode:4634: comm mount: inode #0: comm mount: iget: illegal inode #
-------------[ cut here ]------------
-generic_make_request: Trying to write to read-only block-device pmem1p2 (partno 2)
-WARNING: CPU: 107 PID: 115347 at block/blk-core.c:788 generic_make_request_checks+0x6b4/0x7d0
-CPU: 107 PID: 115347 Comm: mount Tainted: G             L   --------- -t - 4.18.0-167.el8.ppc64le #1
-NIP:  c0000000006f6d44 LR: c0000000006f6d40 CTR: 0000000030041dd4
-<...>
-NIP [c0000000006f6d44] generic_make_request_checks+0x6b4/0x7d0
-LR [c0000000006f6d40] generic_make_request_checks+0x6b0/0x7d0
-<...>
-Call Trace:
-generic_make_request_checks+0x6b0/0x7d0 (unreliable)
-generic_make_request+0x3c/0x420
-submit_bio+0xd8/0x200
-submit_bh_wbc+0x1e8/0x250
-__sync_dirty_buffer+0xd0/0x210
-ext4_commit_super+0x310/0x420 [ext4]
-__ext4_error+0xa4/0x1e0 [ext4]
-__ext4_iget+0x388/0xe10 [ext4]
-ext4_get_journal_inode+0x40/0x150 [ext4]
-ext4_calculate_overhead+0x5a8/0x610 [ext4]
-ext4_fill_super+0x3188/0x3260 [ext4]
-mount_bdev+0x778/0x8f0
-ext4_mount+0x28/0x50 [ext4]
-mount_fs+0x74/0x230
-vfs_kern_mount.part.6+0x6c/0x250
-do_mount+0x2fc/0x1280
-sys_mount+0x158/0x180
-system_call+0x5c/0x70
-EXT4-fs (pmem1p2): no journal found
-EXT4-fs (pmem1p2): can't get journal size
-EXT4-fs (pmem1p2): mounted filesystem without journal. Opts: dax,norecovery
+Introduce a call to xprt_rdma_free_addresses() similar to the way
+that the TCP backchannel releases a transport's peer address
+strings.
 
-Fixes: 3c816ded78bb ("ext4: use journal inode to determine journal overhead")
-Reported-by: Harish Sriram <harish@linux.ibm.com>
-Signed-off-by: Ritesh Harjani <riteshh@linux.ibm.com>
-Reviewed-by: Jan Kara <jack@suse.cz>
-Link: https://lore.kernel.org/r/20200316093038.25485-1-riteshh@linux.ibm.com
-Signed-off-by: Theodore Ts'o <tytso@mit.edu>
+Fixes: 5d252f90a800 ("svcrdma: Add class for RDMA backwards direction transport")
+Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/ext4/super.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ net/sunrpc/xprtrdma/svc_rdma_backchannel.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/fs/ext4/super.c b/fs/ext4/super.c
-index f5646bcad7702..449644ee4ab1c 100644
---- a/fs/ext4/super.c
-+++ b/fs/ext4/super.c
-@@ -3464,7 +3464,8 @@ int ext4_calculate_overhead(struct super_block *sb)
- 	 */
- 	if (sbi->s_journal && !sbi->journal_bdev)
- 		overhead += EXT4_NUM_B2C(sbi, sbi->s_journal->j_maxlen);
--	else if (ext4_has_feature_journal(sb) && !sbi->s_journal) {
-+	else if (ext4_has_feature_journal(sb) && !sbi->s_journal && j_inum) {
-+		/* j_inum for internal journal is non-zero */
- 		j_inode = ext4_get_journal_inode(sb, j_inum);
- 		if (j_inode) {
- 			j_blocks = j_inode->i_size >> sb->s_blocksize_bits;
+diff --git a/net/sunrpc/xprtrdma/svc_rdma_backchannel.c b/net/sunrpc/xprtrdma/svc_rdma_backchannel.c
+index af7893501e40a..4b9aaf487327c 100644
+--- a/net/sunrpc/xprtrdma/svc_rdma_backchannel.c
++++ b/net/sunrpc/xprtrdma/svc_rdma_backchannel.c
+@@ -270,6 +270,7 @@ xprt_rdma_bc_put(struct rpc_xprt *xprt)
+ {
+ 	dprintk("svcrdma: %s: xprt %p\n", __func__, xprt);
+ 
++	xprt_rdma_free_addresses(xprt);
+ 	xprt_free(xprt);
+ 	module_put(THIS_MODULE);
+ }
 -- 
 2.20.1
 
