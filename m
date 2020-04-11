@@ -2,132 +2,101 @@ Return-Path: <SRS0=xbEg=53=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63B4BC2BA2B
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 13:24:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9943EC2BA2B
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 13:29:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0326720732
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 13:24:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 605CD20753
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 13:29:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=pqgruber.com header.i=@pqgruber.com header.b="EQEeEk/3"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EC7ZkQr2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726257AbgDKNYF (ORCPT
+        id S1726188AbgDKN3z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 09:24:05 -0400
-Received: from mail.pqgruber.com ([52.59.78.55]:46022 "EHLO mail.pqgruber.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726037AbgDKNYF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 09:24:05 -0400
-Received: from workstation.tuxnet (213-47-165-233.cable.dynamic.surfer.at [213.47.165.233])
-        by mail.pqgruber.com (Postfix) with ESMTPSA id 09AA9C72B3D;
-        Sat, 11 Apr 2020 15:24:02 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=pqgruber.com;
-        s=mail; t=1586611443;
-        bh=MMPL4+F5BzwKMey5heeA56srlGR2uGjtldtJ89lxXiw=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=EQEeEk/3dpvmSYslZSqX7AVfvWYfPGE1eTvWkMTUOKlf05msQnIt9U529fIxit+/w
-         d5khcAO80Tj1WZLrmltjKZ7iUOsgQujF0Y/DBmBp0B0r4k6CFMp3Mr1vva+kNUIS1/
-         Cf6tByUVY2szyn1gZE1Rt29IeVKt/BnhcOMu7e5c=
-Date:   Sat, 11 Apr 2020 15:24:01 +0200
-From:   Clemens Gruber <clemens.gruber@pqgruber.com>
-To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
-Cc:     Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
-        Andrew Lunn <andrew@lunn.ch>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        "David S . Miller" <davem@davemloft.net>,
+        Sat, 11 Apr 2020 09:29:55 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:54833 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726054AbgDKN3z (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Apr 2020 09:29:55 -0400
+Received: by mail-wm1-f65.google.com with SMTP id h2so5014699wmb.4
+        for <linux-kernel@vger.kernel.org>; Sat, 11 Apr 2020 06:29:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=P6ApIxfo2aDlkWeR/TZDdFmzYkcPxBAEKEdEW3JJZJU=;
+        b=EC7ZkQr2o26VR2RFibT/yRLLPUWI/1VQ2O5/XozszIZcNWC7Ex/kX+OT2aDOXK/vK5
+         U8eUF/M/himuKZb1D4VLJsujhHegxT2EcOyvsKf2gMc8UEdjfF50N+3SK5+cUhDPOX0f
+         yNcDpKJy9ZURtoNFf9PtJzxgJ8AK40M+a+wBoRDqYKKrmkhuNqb2hbtfqK6bBGy5VlIx
+         GAmOcXyCfkOvjUen6Hrvj1ns08HWy9f7npqXvp7io8tb+neyqG0J4g0LAx9nqgy0yj9k
+         uTjVEUsu7bLMDPJyzho8Frjbo9nws4Xryk369mj7EPjBKg5Q+dgFv/XqAR/Pic6jPZAs
+         kz6Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=P6ApIxfo2aDlkWeR/TZDdFmzYkcPxBAEKEdEW3JJZJU=;
+        b=hdJDpo+2ZI/jp1JXpx+BCNZu7/D8APrYHq/F0AFG+wMVTTRjCqRfbxmrxfS+WgGeNh
+         aFKzlmBepfu2bu5FVtCJbolfZS3En2I5guSrDluHKYEbaXlgyNQLmmjlWc8uyg54xhjp
+         U1fTLbn9CMR281DJ4wJiz7WFc3MeynRc/a+pmBj+kh+/taHrVOANDoBJQEQt2UM4wyT/
+         pydUGhNcLkWjJinFpAncQ429EtNv898lCFPUxdgnfqhjqhnUrzTKfclkDt06inR+Ecbd
+         sh4A4BY+qnlfZ/GIl7oqveQGZUaG2RC7TZnr5H4KmPmwgnX9JSMR4doyZXYQ5j37ydot
+         p6SA==
+X-Gm-Message-State: AGi0PuaQvvzvXliLSesLn38qwbBnaNo6o7Fb64pckWGCH4Xk/dbiPTCX
+        5bUqV3V2DZuhb6vn8XtgL8M=
+X-Google-Smtp-Source: APiQypIppj02Oepqz8cbqeIOj/1jTPqGovq6adD1BykznBGoE3KWOPqJq/xaYRF1W7eU35XXG+hnqQ==
+X-Received: by 2002:a1c:9aca:: with SMTP id c193mr9641589wme.38.1586611792248;
+        Sat, 11 Apr 2020 06:29:52 -0700 (PDT)
+Received: from localhost.localdomain (x59cc9a7b.dyn.telefonica.de. [89.204.154.123])
+        by smtp.gmail.com with ESMTPSA id m15sm6530483wmc.35.2020.04.11.06.29.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 11 Apr 2020 06:29:51 -0700 (PDT)
+From:   Sedat Dilek <sedat.dilek@gmail.com>
+To:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] net: phy: marvell: Fix pause frame negotiation
-Message-ID: <20200411132401.GA273086@workstation.tuxnet>
-References: <20200408214326.934440-1-clemens.gruber@pqgruber.com>
- <20200410174304.22f812fd@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
- <20200411091705.GG25745@shell.armlinux.org.uk>
+Cc:     Sedat Dilek <sedat.dilek@gmail.com>
+Subject: [PATCH] mailmap: Add Sedat Dilek (replacement for expired email address)
+Date:   Sat, 11 Apr 2020 15:29:43 +0200
+Message-Id: <20200411132943.18009-1-sedat.dilek@gmail.com>
+X-Mailer: git-send-email 2.26.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200411091705.GG25745@shell.armlinux.org.uk>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Apr 11, 2020 at 10:17:05AM +0100, Russell King - ARM Linux admin wrote:
-> On Fri, Apr 10, 2020 at 05:43:04PM -0700, Jakub Kicinski wrote:
-> > On Wed,  8 Apr 2020 23:43:26 +0200 Clemens Gruber wrote:
-> > > The negotiation of flow control / pause frame modes was broken since
-> > > commit fcf1f59afc67 ("net: phy: marvell: rearrange to use
-> > > genphy_read_lpa()") moved the setting of phydev->duplex below the
-> > > phy_resolve_aneg_pause call. Due to a check of DUPLEX_FULL in that
-> > > function, phydev->pause was no longer set.
-> > > 
-> > > Fix it by moving the parsing of the status variable before the blocks
-> > > dealing with the pause frames.
-> > > 
-> > > Fixes: fcf1f59afc67 ("net: phy: marvell: rearrange to use genphy_read_lpa()")
-> > > Cc: stable@vger.kernel.org # v5.6+
-> > 
-> > nit: please don't CC stable on networking patches
-> > 
-> > > Signed-off-by: Clemens Gruber <clemens.gruber@pqgruber.com>
-> > > ---
-> > >  drivers/net/phy/marvell.c | 44 +++++++++++++++++++--------------------
-> > >  1 file changed, 22 insertions(+), 22 deletions(-)
-> > > 
-> > > diff --git a/drivers/net/phy/marvell.c b/drivers/net/phy/marvell.c
-> > > index 4714ca0e0d4b..02cde4c0668c 100644
-> > > --- a/drivers/net/phy/marvell.c
-> > > +++ b/drivers/net/phy/marvell.c
-> > > @@ -1263,6 +1263,28 @@ static int marvell_read_status_page_an(struct phy_device *phydev,
-> > >  	int lpa;
-> > >  	int err;
-> > >  
-> > > +	if (!(status & MII_M1011_PHY_STATUS_RESOLVED))
-> > > +		return 0;
-> > 
-> > If we return early here won't we miss updating the advertising bits?
-> > We will no longer call e.g. fiber_lpa_mod_linkmode_lpa_t().
-> > 
-> > Perhaps extracting info from status should be moved to a helper so we
-> > can return early without affecting the rest of the flow?
-> > 
-> > Is my understanding correct?  Russell?
-> 
-> You are correct - and yes, there is also a problem here.
-> 
-> It is not clear whether the resolved bit is set before or after the
-> link status reports that link is up - however, the resolved bit
-> indicates whether the speed and duplex are valid.
+I do not longer work for credativ Germany.
 
-I assumed that in the fiber case, the link status register won't be 1
-until autonegotiation is complete. There is a part in the 88E1510
-datasheet on page 57 [2.6.2], which says so but it's in the Fiber/Copper
-Auto-Selection chapter and I am not sure if that's true in general. (?)
-(For copper, we call genphy_update_link, which sets phydev->link to 0 if
-autoneg is enabled && !completed. And according to the datasheet,
-the resolved bit is set when autonegotiation is completed || disabled)
+Please, use my private email address instead.
 
-TL/DR:
-It's probably a good idea to force link to 0 to be sure, as you
-suggested below. I will send a v2 with that change.
+This is for the case when people want to CC me on
+patches sent from my old business email address.
 
-Moving the extraction of info to a helper is probably better left to a
-separate patch?
+Signed-off-by: Sedat Dilek <sedat.dilek@gmail.com>
+---
+ .mailmap | 1 +
+ 1 file changed, 1 insertion(+)
 
-> What I've done elsewhere is if the resolved bit is not set, then we
-> force phydev->link to be false, so we don't attempt to process a
-> link-up status until we can read the link parameters.  I think that's
-> what needs to happen here, i.o.w.:
-> 
-> 	if (!(status & MII_M1011_PHY_STATUS_RESOLVED)) {
-> 		phydev->link = 0;
-> 		return 0;
-> 	}
-> 
-> especially as we're not reading the LPA.
+diff --git a/.mailmap b/.mailmap
+index 893266d1f7b0..db3754a41018 100644
+--- a/.mailmap
++++ b/.mailmap
+@@ -249,6 +249,7 @@ Sakari Ailus <sakari.ailus@linux.intel.com> <sakari.ailus@iki.fi>
+ Sean Nyekjaer <sean@geanix.com> <sean.nyekjaer@prevas.dk>
+ Sebastian Reichel <sre@kernel.org> <sre@debian.org>
+ Sebastian Reichel <sre@kernel.org> <sebastian.reichel@collabora.co.uk>
++Sedat Dilek <sedat.dilek@gmail.com> <sedat.dilek@credativ.de>
+ Shiraz Hashim <shiraz.linux.kernel@gmail.com> <shiraz.hashim@st.com>
+ Shuah Khan <shuah@kernel.org> <shuahkhan@gmail.com>
+ Shuah Khan <shuah@kernel.org> <shuah.khan@hp.com>
+-- 
+2.26.0
 
-Thanks,
-Clemens
