@@ -4,49 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE34FC2BB86
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:20:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06A3CC2BA19
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:21:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 88980206E9
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:20:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C443D206E9
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:21:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586647255;
-	bh=54YuTguERE8XqKZlDR8a+iHZyI0tVqGcz9Ayam5Va54=;
+	s=default; t=1586647263;
+	bh=EwabVwJVuMwwj07DslH218fSfFsyXeDyKZMeNlvoJeQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mrQwdeOMSpEWeqbLJ3VENwkrfkPwmbGm6jbS4hGW6XIZfaLDWNy75RcFDwDaf6Gkt
-	 A3Pd/NjHf2wryajTGV0JOs4mwDuLbUrBg1C7QukiqFSoWDPf3yMMq7sjCANeWSRrSH
-	 YycEffesV4/seOjuhJUxVi3EG+VpVhO+oQCIS08Y=
+	b=JeeULuTTnZfknRGKocxP0qFPJJV79HFevzroNQ48m/KJJwJEmqxMI644Gchf5cjKg
+	 kMGegKspN6rZOaPsByUOjUvF43FYmi/ghIpoiv0HkqvzW6WzHvt+39IFPkQLqAx8Iq
+	 WvfG8sXdpYS6MJQSSxjR/Lsyu5Tm/fbxNE2G1tqE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730616AbgDKXUx (ORCPT
+        id S1730609AbgDKXVB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 19:20:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54888 "EHLO mail.kernel.org"
+        Sat, 11 Apr 2020 19:21:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54744 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730482AbgDKXNf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 19:13:35 -0400
+        id S1729765AbgDKXNc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Apr 2020 19:13:32 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 618D6215A4;
-        Sat, 11 Apr 2020 23:13:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 88FBE21744;
+        Sat, 11 Apr 2020 23:13:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586646816;
-        bh=54YuTguERE8XqKZlDR8a+iHZyI0tVqGcz9Ayam5Va54=;
+        s=default; t=1586646812;
+        bh=EwabVwJVuMwwj07DslH218fSfFsyXeDyKZMeNlvoJeQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=N8GQ+P6/EznjHeChKB8KvXHggvzaNa9gAnT5uvhpK+TVljV3pl6mnT52pTz7At2hb
-         zYlsdNG4rJ7rMwFxfx5do7Pq+mDGqXvh5OKuVeEQADgkXvBaW826T1vd4izMeeUauY
-         KH0vmUZyrL49f+sCkU+Af9OCZvVjAELgsd5Ka7MY=
+        b=QpYuIBQlUih8iQnu+4ZAqymBUP7ePK2v2k1hOjLgwB1NNO/tLsZRKRlHqEYqDLG3I
+         5KPTXoZrQ6Ne+PO7QPJGDd303UE7vYFbim3eoVkiQvAJ1MxJMggN63YhUlEL+1n0+7
+         In1oGOzOGu5oEnAGsGhLlWqfIGqKuc6Nxz7FZ44s=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jason Gunthorpe <jgg@mellanox.com>,
-        Leon Romanovsky <leonro@mellanox.com>,
-        Sasha Levin <sashal@kernel.org>, linux-rdma@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 07/37] RDMA/cm: Add missing locking around id.state in cm_dup_req_handler
-Date:   Sat, 11 Apr 2020 19:12:56 -0400
-Message-Id: <20200411231327.26550-7-sashal@kernel.org>
+Cc:     Haibo Chen <haibo.chen@nxp.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Sasha Levin <sashal@kernel.org>, linux-mmc@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 04/37] mmc: sdhci: do not enable card detect interrupt for gpio cd type
+Date:   Sat, 11 Apr 2020 19:12:53 -0400
+Message-Id: <20200411231327.26550-4-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200411231327.26550-1-sashal@kernel.org>
 References: <20200411231327.26550-1-sashal@kernel.org>
@@ -59,39 +61,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jason Gunthorpe <jgg@mellanox.com>
+From: Haibo Chen <haibo.chen@nxp.com>
 
-[ Upstream commit d1de9a88074b66482443f0cd91618d7b51a7c9b6 ]
+[ Upstream commit e65bb38824711559844ba932132f417bc5a355e2 ]
 
-All accesses to id.state must be done under the spinlock.
+Except SDHCI_QUIRK_BROKEN_CARD_DETECTION and MMC_CAP_NONREMOVABLE,
+we also do not need to handle controller native card detect interrupt
+for gpio cd type.
+If we wrong enabled the card detect interrupt for gpio case, it will
+cause a lot of unexpected card detect interrupts during data transfer
+which should not happen.
 
-Fixes: a977049dacde ("[PATCH] IB: Add the kernel CM implementation")
-Link: https://lore.kernel.org/r/20200310092545.251365-10-leon@kernel.org
-Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+Signed-off-by: Haibo Chen <haibo.chen@nxp.com>
+Acked-by: Adrian Hunter <adrian.hunter@intel.com>
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+Link: https://lore.kernel.org/r/1582100563-20555-2-git-send-email-haibo.chen@nxp.com
+Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/infiniband/core/cm.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ drivers/mmc/host/sdhci.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/infiniband/core/cm.c b/drivers/infiniband/core/cm.c
-index 80a8eb7e5d6ec..d27e01e4916ae 100644
---- a/drivers/infiniband/core/cm.c
-+++ b/drivers/infiniband/core/cm.c
-@@ -1687,8 +1687,12 @@ static void cm_dup_req_handler(struct cm_work *work,
- 			counter[CM_REQ_COUNTER]);
+diff --git a/drivers/mmc/host/sdhci.c b/drivers/mmc/host/sdhci.c
+index 4f1c884c0b508..33028099d3a01 100644
+--- a/drivers/mmc/host/sdhci.c
++++ b/drivers/mmc/host/sdhci.c
+@@ -133,7 +133,7 @@ static void sdhci_set_card_detection(struct sdhci_host *host, bool enable)
+ 	u32 present;
  
- 	/* Quick state check to discard duplicate REQs. */
--	if (cm_id_priv->id.state == IB_CM_REQ_RCVD)
-+	spin_lock_irq(&cm_id_priv->lock);
-+	if (cm_id_priv->id.state == IB_CM_REQ_RCVD) {
-+		spin_unlock_irq(&cm_id_priv->lock);
+ 	if ((host->quirks & SDHCI_QUIRK_BROKEN_CARD_DETECTION) ||
+-	    !mmc_card_is_removable(host->mmc))
++	    !mmc_card_is_removable(host->mmc) || mmc_can_gpio_cd(host->mmc))
  		return;
-+	}
-+	spin_unlock_irq(&cm_id_priv->lock);
  
- 	ret = cm_alloc_response_msg(work->port, work->mad_recv_wc, &msg);
- 	if (ret)
+ 	if (enable) {
 -- 
 2.20.1
 
