@@ -2,129 +2,118 @@ Return-Path: <SRS0=xbEg=53=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E099C2BB86
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:46:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D801C2BA19
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:46:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 74C7A206F7
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:46:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586648771;
-	bh=oQBj8lb2uNeut+/63KcU0BjmNZtn6nkTPn8nReRWhAQ=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dKwH210jCF7iN8WZ6FchMEulHuu8kQuOplLb0PsozrT7Bymcf1VIdl8JCGQVU2yvq
-	 eSE2VFJPwsGOtgPspe7H1wbn24mpfMck3oYrgfM7ios/bbFoFzPULWqWbW01Pc5ErS
-	 /aXkfxJyIomEbcmUQZFWgPupzt74Sf32cGkWToMQ=
+	by mail.kernel.org (Postfix) with ESMTP id 44307206F7
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:46:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="LIgQUIAA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731006AbgDKXqJ (ORCPT
+        id S1731032AbgDKXqO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 19:46:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39594 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727941AbgDKXF0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 19:05:26 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6B19C20708;
-        Sat, 11 Apr 2020 23:05:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586646326;
-        bh=oQBj8lb2uNeut+/63KcU0BjmNZtn6nkTPn8nReRWhAQ=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TY3xSW43zk3Scr4Gi7rpHzHdDpx+W64L178R6fclzNq+qQMFm0V5/HBlCRKq3Gl//
-         HVSXrjjqCOfQXNuNSrvuOs7Q4FElyzYEYAfDd+WaYA0G49ZCEPPMxfDZ/U2aT2U1EL
-         L4nfz9MgJOSxKTCNCpSTEKmRW8PY0VrkwleHETQU=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Vikas Patel <vikpatel@codeaurora.org>,
-        Venkateswara Naralasetty <vnaralas@codeaurora.org>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Sasha Levin <sashal@kernel.org>, ath11k@lists.infradead.org,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.6 079/149] ath11k: Fixing dangling pointer issue upon peer delete failure
-Date:   Sat, 11 Apr 2020 19:02:36 -0400
-Message-Id: <20200411230347.22371-79-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200411230347.22371-1-sashal@kernel.org>
-References: <20200411230347.22371-1-sashal@kernel.org>
+        Sat, 11 Apr 2020 19:46:14 -0400
+Received: from pandora.armlinux.org.uk ([78.32.30.218]:55766 "EHLO
+        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727941AbgDKXqN (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Apr 2020 19:46:13 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=/sBTCU2K/OAC2yDbD+FrzFhzjjepZq/O6taqfxVmS8k=; b=LIgQUIAAUFNMaSCcu69I/B/GV
+        m1SPhGWrHsnD74SV72c7+9F74c+OQA50SzOccymCpn3Uesd1/QJpfvDtqXr+0iHRA3R8Hhu5n+s6A
+        T/iw6riKe0X7Y13HxmcNOm2cUHlygdHwcmrrR2r97yQuTifAnjJucubTaZx/zDcZ3njxQXuhgVI9W
+        mt0mInczwDSyNu+86IIzO+U8MayA/scwfZI3hpobkwQ4qOZlqJE085Al3Rg0ENmLB9XCJxe7a9GgN
+        UjwXIiFSpBjSd3qXNZ75LvTU81L5A9sPD+oVjXpEag2zNcX+pDq+jE6YRQSVJBQOH70yzlUKEpfWX
+        65QZFyuoA==;
+Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:48850)
+        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.90_1)
+        (envelope-from <linux@armlinux.org.uk>)
+        id 1jNPp6-0001Un-2z; Sun, 12 Apr 2020 00:46:04 +0100
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
+        (envelope-from <linux@shell.armlinux.org.uk>)
+        id 1jNPp1-0005SD-4h; Sun, 12 Apr 2020 00:45:59 +0100
+Date:   Sun, 12 Apr 2020 00:45:59 +0100
+From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
+To:     Jakub Kicinski <kuba@kernel.org>
+Cc:     Clemens Gruber <clemens.gruber@pqgruber.com>,
+        netdev@vger.kernel.org, Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] net: phy: marvell: Fix pause frame negotiation
+Message-ID: <20200411234559.GL25745@shell.armlinux.org.uk>
+References: <20200411165125.1091-1-clemens.gruber@pqgruber.com>
+ <20200411162824.59791b84@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200411162824.59791b84@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vikas Patel <vikpatel@codeaurora.org>
+On Sat, Apr 11, 2020 at 04:28:24PM -0700, Jakub Kicinski wrote:
+> On Sat, 11 Apr 2020 18:51:25 +0200 Clemens Gruber wrote:
+> > The negotiation of flow control / pause frame modes was broken since
+> > commit fcf1f59afc67 ("net: phy: marvell: rearrange to use
+> > genphy_read_lpa()") moved the setting of phydev->duplex below the
+> > phy_resolve_aneg_pause call. Due to a check of DUPLEX_FULL in that
+> > function, phydev->pause was no longer set.
+> > 
+> > Fix it by moving the parsing of the status variable before the blocks
+> > dealing with the pause frames.
+> > 
+> > As the Marvell 88E1510 datasheet does not specify the timing between the
+> > link status and the "Speed and Duplex Resolved" bit, we have to force
+> > the link down as long as the resolved bit is not set, to avoid reporting
+> > link up before we even have valid Speed/Duplex.
+> > 
+> > Tested with a Marvell 88E1510 (RGMII to Copper/1000Base-T)
+> > 
+> > Fixes: fcf1f59afc67 ("net: phy: marvell: rearrange to use genphy_read_lpa()")
+> > Signed-off-by: Clemens Gruber <clemens.gruber@pqgruber.com>
+> > ---
+> > Changes since v1:
+> > - Force link to 0 if resolved bit is not set as suggested by Russell King
+> > 
+> >  drivers/net/phy/marvell.c | 46 ++++++++++++++++++++-------------------
+> >  1 file changed, 24 insertions(+), 22 deletions(-)
+> > 
+> > diff --git a/drivers/net/phy/marvell.c b/drivers/net/phy/marvell.c
+> > index 9a8badafea8a..561df5e33f65 100644
+> > --- a/drivers/net/phy/marvell.c
+> > +++ b/drivers/net/phy/marvell.c
+> > @@ -1278,6 +1278,30 @@ static int marvell_read_status_page_an(struct phy_device *phydev,
+> >  	int lpa;
+> >  	int err;
+> >  
+> > +	if (!(status & MII_M1011_PHY_STATUS_RESOLVED)) {
+> > +		phydev->link = 0;
+> > +		return 0;
+> > +	}
+> 
+> This doesn't address my comment, so was I wrong? What I was trying to
+> say is that the function updates the established link info as well as
+> autoneg advertising info. If the link is not resolved we can't read the
+> link info, but we should still report the advertising modes. No?
 
-[ Upstream commit 58595c9874c625ceb7004960d8e53b9226abdc92 ]
+If we report that the link is down, then the advertising modes are
+irrelevent.
 
-When there is WMI command failure, 'peer->sta' was not getting
-cleaned up, and mac80211 frees the 'sta' memory, which is causing
-the below page fault.
-
-Cleaning up the sta pointer in ath11k whenever peer delete command
-is sent.
-
-Unable to handle kernel paging request at virtual address 200080000006a
-pgd = ffffffc02a774000
-[200080000006a] *pgd=0000000000000000, *pud=0000000000000000
-Internal error: Oops: 96000004 [#1] PREEMPT SMP
-.
-.
-.
-CPU: 0 PID: 0 Comm: swapper/0 Tainted: G        W       4.4.60 #1
-Hardware name: Qualcomm Technologies, Inc. IPQ807x/AP-HK01-C1 (DT)
-task: ffffffc00083c6d0 ti: ffffffc00083c6d0 task.ti: ffffffc00083c6d0
-PC is at ath11k_dp_rx_process_mon_status+0x114/0x4e0 [ath11k]
-LR is at ath11k_dp_rx_process_mon_status+0xe8/0x4e0 [ath11k]
-pc : [<ffffffbffcf8e544>] lr : [<ffffffbffcf8e518>] pstate: 60000145
-sp : ffffffc000833a30
-
-Signed-off-by: Vikas Patel <vikpatel@codeaurora.org>
-Signed-off-by: Venkateswara Naralasetty <vnaralas@codeaurora.org>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/net/wireless/ath/ath11k/mac.c | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
-
-diff --git a/drivers/net/wireless/ath/ath11k/mac.c b/drivers/net/wireless/ath/ath11k/mac.c
-index 78f20ba47b37e..e89790a01c48b 100644
---- a/drivers/net/wireless/ath/ath11k/mac.c
-+++ b/drivers/net/wireless/ath/ath11k/mac.c
-@@ -2786,6 +2786,7 @@ static int ath11k_mac_op_sta_state(struct ieee80211_hw *hw,
- 	struct ath11k *ar = hw->priv;
- 	struct ath11k_vif *arvif = ath11k_vif_to_arvif(vif);
- 	struct ath11k_sta *arsta = (struct ath11k_sta *)sta->drv_priv;
-+	struct ath11k_peer *peer;
- 	int ret = 0;
- 
- 	/* cancel must be done outside the mutex to avoid deadlock */
-@@ -2818,6 +2819,17 @@ static int ath11k_mac_op_sta_state(struct ieee80211_hw *hw,
- 				   sta->addr, arvif->vdev_id);
- 
- 		ath11k_mac_dec_num_stations(arvif, sta);
-+		spin_lock_bh(&ar->ab->base_lock);
-+		peer = ath11k_peer_find(ar->ab, arvif->vdev_id, sta->addr);
-+		if (peer && peer->sta == sta) {
-+			ath11k_warn(ar->ab, "Found peer entry %pM n vdev %i after it was supposedly removed\n",
-+				    vif->addr, arvif->vdev_id);
-+			peer->sta = NULL;
-+			list_del(&peer->list);
-+			kfree(peer);
-+			ar->num_peers--;
-+		}
-+		spin_unlock_bh(&ar->ab->base_lock);
- 
- 		kfree(arsta->tx_stats);
- 		arsta->tx_stats = NULL;
 -- 
-2.20.1
-
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line in suburbia: sync at 10.2Mbps down 587kbps up
