@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7260C352BE
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:10:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F21AC2BA19
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:10:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A7253215A4
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:10:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5FC3E2166E
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:10:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586646655;
-	bh=JKifc22C2UL+b3jQWkj/4fHSC1WFMr8V0XiS/e49728=;
+	s=default; t=1586646659;
+	bh=F3GZCkfuTpePzhtk5oZ3eLfLVs1Pby/rMwXEm7QXV5w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ELSXZYYh3Kq41HRsQYP8Lv7sJFDrL/qRCwS1puYvbGg+sOCAvs6ANmFBFNEd4H94O
-	 Y1bDazHrDyRXSQUL9ZXpJGKJzmJ+53yW4NViv3DSVhRpiw7FcDqSAnS3i6E3taC3qw
-	 BHyZmbscm8hBdF/hnbR5YHfmNQW9ICed6P9SzI/s=
+	b=ia9Z1kluq1LLuMnP3OvQULx/1mdpx5lgu8AprWdGwJiEQOBm5UVy+/gT0yb6OIBUy
+	 UqpQDrWpnArOJBgaymNsrkYh/TSNo38mJAtaW+jGbp3KNf3DuE1gLpXY7915pZl5Ct
+	 BhB/ptxCSsFjDwIbtdCzw+4ovBhGjH2n8iRKO8MI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729722AbgDKXKy (ORCPT
+        id S1728868AbgDKXK5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 19:10:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49776 "EHLO mail.kernel.org"
+        Sat, 11 Apr 2020 19:10:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49894 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729701AbgDKXKw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 19:10:52 -0400
+        id S1729721AbgDKXKy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Apr 2020 19:10:54 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5357A21924;
-        Sat, 11 Apr 2020 23:10:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BF02D217D8;
+        Sat, 11 Apr 2020 23:10:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586646652;
-        bh=JKifc22C2UL+b3jQWkj/4fHSC1WFMr8V0XiS/e49728=;
+        s=default; t=1586646654;
+        bh=F3GZCkfuTpePzhtk5oZ3eLfLVs1Pby/rMwXEm7QXV5w=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=s+S58iBHl+TaPsMDf5PfA7GxFAGfx3ah7gPrivEnyAL8i+m5HRCUYzX+m5wZ60bfU
-         hTyRantXQfcm8EMGNnVIBDpFpbd6Z3wfUOB3uVOcuQ4g4ZBa/xXftbiCOcoeRm03cb
-         4uLFUoXIi9Q7AmRX/czaf3/ZQXSpzIkK9KSDyr9I=
+        b=rYIEwmzyqKKf1XBMfrgHVNZLu9MoxhSXAITuyAqFB4t8igB0gPP2dkcDW6jGJdjVd
+         5GOge6zk38pWY6vdVZ5h0jCyDL+mrMCqterHmVBShvpdDRqAD9PHPRTgrO4IWd5M61
+         HQl3r1jr9JfALNZifesIoTpGfRuWp4xVkkpK5X6k=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Peikang Zhang <peikang.zhang@amd.com>, Jun Lei <Jun.Lei@amd.com>,
-        Bhawanpreet Lakha <Bhawanpreet.Lakha@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        Sasha Levin <sashal@kernel.org>, amd-gfx@lists.freedesktop.org,
-        dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 5.4 055/108] drm/amd/display: dc_get_vmid_use_vector() crashes when get called
-Date:   Sat, 11 Apr 2020 19:08:50 -0400
-Message-Id: <20200411230943.24951-55-sashal@kernel.org>
+Cc:     Martin Kepplinger <martin.kepplinger@puri.sm>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 057/108] rsi: fix null pointer dereference during rsi_shutdown()
+Date:   Sat, 11 Apr 2020 19:08:52 -0400
+Message-Id: <20200411230943.24951-57-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200411230943.24951-1-sashal@kernel.org>
 References: <20200411230943.24951-1-sashal@kernel.org>
@@ -61,38 +60,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Peikang Zhang <peikang.zhang@amd.com>
+From: Martin Kepplinger <martin.kepplinger@puri.sm>
 
-[ Upstream commit 68bbca15e7062f4ae16531e29893f78d0b4840b6 ]
+[ Upstream commit 16bbc3eb83728c03138191a5d23d84d38175fa26 ]
 
-[Why]
-int i can go out of boundary which will cause crash
+Appearently the hw pointer can be NULL while the module is loaded and
+in that case rsi_shutdown() crashes due to the unconditional dereference.
 
-[How]
-Fixed the maximum value of i to avoid i going out of boundary
-
-Signed-off-by: Peikang Zhang <peikang.zhang@amd.com>
-Reviewed-by: Jun Lei <Jun.Lei@amd.com>
-Acked-by: Bhawanpreet Lakha <Bhawanpreet.Lakha@amd.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Signed-off-by: Martin Kepplinger <martin.kepplinger@puri.sm>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/amd/display/dc/core/dc_vm_helper.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/wireless/rsi/rsi_91x_sdio.c | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/gpu/drm/amd/display/dc/core/dc_vm_helper.c b/drivers/gpu/drm/amd/display/dc/core/dc_vm_helper.c
-index a96d8de9380e6..f2b39ec35c898 100644
---- a/drivers/gpu/drm/amd/display/dc/core/dc_vm_helper.c
-+++ b/drivers/gpu/drm/amd/display/dc/core/dc_vm_helper.c
-@@ -62,7 +62,7 @@ int dc_get_vmid_use_vector(struct dc *dc)
- 	int i;
- 	int in_use = 0;
+diff --git a/drivers/net/wireless/rsi/rsi_91x_sdio.c b/drivers/net/wireless/rsi/rsi_91x_sdio.c
+index 1bebba4e85273..5d6143a551877 100644
+--- a/drivers/net/wireless/rsi/rsi_91x_sdio.c
++++ b/drivers/net/wireless/rsi/rsi_91x_sdio.c
+@@ -1468,12 +1468,15 @@ static void rsi_shutdown(struct device *dev)
+ 	struct rsi_91x_sdiodev *sdev =
+ 		(struct rsi_91x_sdiodev *)adapter->rsi_dev;
+ 	struct ieee80211_hw *hw = adapter->hw;
+-	struct cfg80211_wowlan *wowlan = hw->wiphy->wowlan_config;
  
--	for (i = 0; i < dc->vm_helper->num_vmid; i++)
-+	for (i = 0; i < MAX_HUBP; i++)
- 		in_use |= dc->vm_helper->hubp_vmid_usage[i].vmid_usage[0]
- 			| dc->vm_helper->hubp_vmid_usage[i].vmid_usage[1];
- 	return in_use;
+ 	rsi_dbg(ERR_ZONE, "SDIO Bus shutdown =====>\n");
+ 
+-	if (rsi_config_wowlan(adapter, wowlan))
+-		rsi_dbg(ERR_ZONE, "Failed to configure WoWLAN\n");
++	if (hw) {
++		struct cfg80211_wowlan *wowlan = hw->wiphy->wowlan_config;
++
++		if (rsi_config_wowlan(adapter, wowlan))
++			rsi_dbg(ERR_ZONE, "Failed to configure WoWLAN\n");
++	}
+ 
+ 	if (IS_ENABLED(CONFIG_RSI_COEX) && adapter->priv->coex_mode > 1 &&
+ 	    adapter->priv->bt_adapter) {
 -- 
 2.20.1
 
