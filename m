@@ -7,47 +7,50 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74997C2BBC7
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:21:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 730C6C2BA19
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:21:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4BA12206E9
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:21:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4B6EF206E9
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:21:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586647287;
-	bh=GvIy7VMOBVjJCLIBOncPcXpcMFRxp+6HGu4EVePeFhw=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=g/0C6Msk6YEQrW8yE84tpkUxB2nXsBQzLD7KKM+MCy5JJWEyUkkzy2N+6c7LKzZjj
-	 usT4pg4K579PojgNQi9UTlR/aybTyYMfr93M5WicXadvrVBHwptiliGXkT/8Xmzi5+
-	 A2GTI6nWtUOFbI1yP0oj9lnub6OeBnvJxK59A1BA=
+	s=default; t=1586647295;
+	bh=Oao4RgPcy2O10lDM921sA0JLlS9HRv7oxiB/C9Hl8Q8=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=rCYHHbJCVyUtZZKkj+yzdiLk2RXl5xgy0MmrzvFaLoulUVexdNESuvuNRkv/Co/uG
+	 qFVXxTE+K376DUhCzzEo+Dtag1zcDPLI2stF1VD05XMCdV1znfC4RXxHsNR3PJ7tUZ
+	 4quuakXjTQOgsqRSWuiJeHjwqG3aIdyKZ3bBgLj0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730862AbgDKXVV (ORCPT
+        id S1726949AbgDKXN0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 19:21:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54584 "EHLO mail.kernel.org"
+        Sat, 11 Apr 2020 19:13:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54058 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730435AbgDKXN2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 19:13:28 -0400
+        id S1730345AbgDKXNJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Apr 2020 19:13:09 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 178BA20708;
-        Sat, 11 Apr 2020 23:13:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3C75421835;
+        Sat, 11 Apr 2020 23:13:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586646808;
-        bh=GvIy7VMOBVjJCLIBOncPcXpcMFRxp+6HGu4EVePeFhw=;
-        h=From:To:Cc:Subject:Date:From;
-        b=KY3E4MXuXrGwblTSDU90EWh0aeuN0PDUVHNbFnsQNk/9DWaOgFCAFkktqOy30mSv9
-         XFB5b1tQPIDq1RuFiOjqkZt//ODrZa1ytS8IXNWkCSouLcZBGam2BklFSf8jEtQHft
-         qtzyDO0rXCe8oLXViu0Gp62WtILezhbUGZwnKYqw=
+        s=default; t=1586646790;
+        bh=Oao4RgPcy2O10lDM921sA0JLlS9HRv7oxiB/C9Hl8Q8=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=bvEMgHrNwbZus9izZ1iiPiFF4HfRmwi9zjPYv2shTC/fcAX1TeCcou2NyJxjJ9lkf
+         OVaes0ieGQoD6f4+LLW1jdQUnyPoLr+JqorekFsTQBvEXlsusRHfoqkytH/m0iDK+V
+         2WSmxssRPBr9FgdDidCp7WndWQN00p0Sdaelni7s=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Masahiro Yamada <masahiroy@kernel.org>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 01/37] net: wan: wanxl: use allow to pass CROSS_COMPILE_M68k for rebuilding firmware
-Date:   Sat, 11 Apr 2020 19:12:50 -0400
-Message-Id: <20200411231327.26550-1-sashal@kernel.org>
+Cc:     Quinn Tran <qutran@marvell.com>,
+        Himanshu Madhani <hmadhani@marvell.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 54/66] scsi: qla2xxx: fix FW resource count values
+Date:   Sat, 11 Apr 2020 19:11:51 -0400
+Message-Id: <20200411231203.25933-54-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200411231203.25933-1-sashal@kernel.org>
+References: <20200411231203.25933-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -57,76 +60,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Masahiro Yamada <masahiroy@kernel.org>
+From: Quinn Tran <qutran@marvell.com>
 
-[ Upstream commit 63b903dfebdea92aa92ad337d8451a6fbfeabf9d ]
+[ Upstream commit ce1ee122e0f048fc67c1259489f0802a28049bfd ]
 
-As far as I understood from the Kconfig help text, this build rule is
-used to rebuild the driver firmware, which runs on an old m68k-based
-chip. So, you need m68k tools for the firmware rebuild.
+This patch fixes issue where current and original exchanges count
+were swapped for intiator and targets.
 
-wanxl.c is a PCI driver, but CONFIG_M68K does not select CONFIG_HAVE_PCI.
-So, you cannot enable CONFIG_WANXL_BUILD_FIRMWARE for ARCH=m68k. In other
-words, ifeq ($(ARCH),m68k) is false here.
+Also fix IOCB count for current and original which were swapped.
 
-I am keeping the dead code for now, but rebuilding the firmware requires
-'as68k' and 'ld68k', which I do not have in hand.
-
-Instead, the kernel.org m68k GCC [1] successfully built it.
-
-Allowing a user to pass in CROSS_COMPILE_M68K= is handier.
-
-[1] https://mirrors.edge.kernel.org/pub/tools/crosstool/files/bin/x86_64/9.2.0/x86_64-gcc-9.2.0-nolibc-m68k-linux.tar.xz
-
-Suggested-by: Geert Uytterhoeven <geert@linux-m68k.org>
-Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+Link: https://lore.kernel.org/r/20200226224022.24518-9-hmadhani@marvell.com
+Signed-off-by: Himanshu Madhani <hmadhani@marvell.com>
+Signed-off-by: Quinn Tran <qutran@marvell.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wan/Kconfig  |  2 +-
- drivers/net/wan/Makefile | 12 ++++++------
- 2 files changed, 7 insertions(+), 7 deletions(-)
+ drivers/scsi/qla2xxx/qla_dfs.c | 11 +++++------
+ 1 file changed, 5 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/net/wan/Kconfig b/drivers/net/wan/Kconfig
-index 4e9fe75d70675..21190dfbabb16 100644
---- a/drivers/net/wan/Kconfig
-+++ b/drivers/net/wan/Kconfig
-@@ -199,7 +199,7 @@ config WANXL_BUILD_FIRMWARE
- 	depends on WANXL && !PREVENT_FIRMWARE_BUILD
- 	help
- 	  Allows you to rebuild firmware run by the QUICC processor.
--	  It requires as68k, ld68k and hexdump programs.
-+	  It requires m68k toolchains and hexdump programs.
+diff --git a/drivers/scsi/qla2xxx/qla_dfs.c b/drivers/scsi/qla2xxx/qla_dfs.c
+index 0b190082aa8d9..4c917e43509a5 100644
+--- a/drivers/scsi/qla2xxx/qla_dfs.c
++++ b/drivers/scsi/qla2xxx/qla_dfs.c
+@@ -136,11 +136,11 @@ qla_dfs_fw_resource_cnt_show(struct seq_file *s, void *unused)
+ 	} else {
+ 		seq_puts(s, "FW Resource count\n\n");
+ 		seq_printf(s, "Original TGT exchg count[%d]\n", mb[1]);
+-		seq_printf(s, "current TGT exchg count[%d]\n", mb[2]);
+-		seq_printf(s, "original Initiator Exchange count[%d]\n", mb[3]);
+-		seq_printf(s, "Current Initiator Exchange count[%d]\n", mb[6]);
+-		seq_printf(s, "Original IOCB count[%d]\n", mb[7]);
+-		seq_printf(s, "Current IOCB count[%d]\n", mb[10]);
++		seq_printf(s, "Current TGT exchg count[%d]\n", mb[2]);
++		seq_printf(s, "Current Initiator Exchange count[%d]\n", mb[3]);
++		seq_printf(s, "Original Initiator Exchange count[%d]\n", mb[6]);
++		seq_printf(s, "Current IOCB count[%d]\n", mb[7]);
++		seq_printf(s, "Original IOCB count[%d]\n", mb[10]);
+ 		seq_printf(s, "MAX VP count[%d]\n", mb[11]);
+ 		seq_printf(s, "MAX FCF count[%d]\n", mb[12]);
+ 		seq_printf(s, "Current free pageable XCB buffer cnt[%d]\n",
+@@ -151,7 +151,6 @@ qla_dfs_fw_resource_cnt_show(struct seq_file *s, void *unused)
+ 		    mb[22]);
+ 		seq_printf(s, "Original Target fast XCB buffer cnt[%d]\n",
+ 		    mb[23]);
+-
+ 	}
  
- 	  You should never need this option, say N.
- 
-diff --git a/drivers/net/wan/Makefile b/drivers/net/wan/Makefile
-index 9532e69fda878..c21b7345b50b1 100644
---- a/drivers/net/wan/Makefile
-+++ b/drivers/net/wan/Makefile
-@@ -41,17 +41,17 @@ $(obj)/wanxl.o:	$(obj)/wanxlfw.inc
- 
- ifeq ($(CONFIG_WANXL_BUILD_FIRMWARE),y)
- ifeq ($(ARCH),m68k)
--  AS68K = $(AS)
--  LD68K = $(LD)
-+  M68KAS = $(AS)
-+  M68KLD = $(LD)
- else
--  AS68K = as68k
--  LD68K = ld68k
-+  M68KAS = $(CROSS_COMPILE_M68K)as
-+  M68KLD = $(CROSS_COMPILE_M68K)ld
- endif
- 
- quiet_cmd_build_wanxlfw = BLD FW  $@
-       cmd_build_wanxlfw = \
--	$(CPP) -D__ASSEMBLY__ -Wp,-MD,$(depfile) -I$(srctree)/include/uapi $< | $(AS68K) -m68360 -o $(obj)/wanxlfw.o; \
--	$(LD68K) --oformat binary -Ttext 0x1000 $(obj)/wanxlfw.o -o $(obj)/wanxlfw.bin; \
-+	$(CPP) -D__ASSEMBLY__ -Wp,-MD,$(depfile) -I$(srctree)/include/uapi $< | $(M68KAS) -m68360 -o $(obj)/wanxlfw.o; \
-+	$(M68KLD) --oformat binary -Ttext 0x1000 $(obj)/wanxlfw.o -o $(obj)/wanxlfw.bin; \
- 	hexdump -ve '"\n" 16/1 "0x%02X,"' $(obj)/wanxlfw.bin | sed 's/0x  ,//g;1s/^/static const u8 firmware[]={/;$$s/,$$/\n};\n/' >$(obj)/wanxlfw.inc; \
- 	rm -f $(obj)/wanxlfw.bin $(obj)/wanxlfw.o
- 
+ 	return 0;
 -- 
 2.20.1
 
