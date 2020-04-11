@@ -7,50 +7,50 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EEBE5C2BBC7
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:23:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C567C2BA19
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:23:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BE85B2084D
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:23:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 064C720769
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:23:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586647392;
-	bh=PB5LeeK9gLfULaoWaG7wXKIYwJxE6ymIS5vN8CaVL9k=;
+	s=default; t=1586647395;
+	bh=g0v0sXrv70IUGTrwcuOJiF8tOCF6w735QElodev/INo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gqjq4HTSolwxTZeRCQOT8O+Eouem0GOTUm576NUvyfPIDjpZ+doQt5b7t+LmNRY8Z
-	 FlceLg+yBCAmhP9t3/+VTYfTdm3+5OyNvdtYFRnVsbfyEmNW8RMoUTubYp3WgfpY/y
-	 zjJHNT7HevtRhvLaOs2tHztjoTNHjmf8xDx10ogY=
+	b=Tvn/oTXaDnEeJejeeDfBW725qR5o0xkwsY/3gk4O46pk7KSnq0grLiHIvkwmTxS9H
+	 TM0RaZOY/EV5VrUtG4ASuz7+9KrTdjgIOl5bs43Z4Bnz7T+3PZOaiTjjfr6tUzLRwA
+	 KqY1e19buX1lBIvvs1FAMI/ZW5eL/5kv1/Ax3vtk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730327AbgDKXNF (ORCPT
+        id S1730491AbgDKXXN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 19:13:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53252 "EHLO mail.kernel.org"
+        Sat, 11 Apr 2020 19:23:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53948 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730250AbgDKXMr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 19:12:47 -0400
+        id S1730324AbgDKXNF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Apr 2020 19:13:05 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4FB7A20787;
-        Sat, 11 Apr 2020 23:12:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6D6F520787;
+        Sat, 11 Apr 2020 23:13:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586646767;
-        bh=PB5LeeK9gLfULaoWaG7wXKIYwJxE6ymIS5vN8CaVL9k=;
+        s=default; t=1586646785;
+        bh=g0v0sXrv70IUGTrwcuOJiF8tOCF6w735QElodev/INo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ePvTPnzf5A6BAC8iTwvp5a020KB0hgmu1wixFlxS7zqZ1zMoDTW7MwnF9zqHlsUkw
-         MKz10fqkYkZc2F4dUxrMmd9vEhtMF9NazqmE5c7/AMlaenBwmacgCEVPJd4OPZ9NVM
-         Ijk/evkXsup+UgmLG2IlbvCxnVS8QfWVZJfJOSLo=
+        b=FatpMbInEFnovNmd6pIvm4fumQLnuUwUubMAwbbOSpzSwtNQNSusBE8JKzRw/FuXW
+         +VfVQzF1Y855/sy0MNit79yQ256Nt0oQZXpzs9LdqC2+sxkxuaAZu47KcdtXMWHU+f
+         SONO6qFXmQmAKgvgQgh+B3nNbR2KpzLLvDDBghr8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Yannick Fertre <yannick.fertre@st.com>,
-        Philippe Cornu <philippe.cornu@st.com>,
-        Benjamin Gaignard <benjamin.gaignard@st.com>,
+Cc:     Raveendran Somu <raveendran.somu@cypress.com>,
+        Chi-hsien Lin <chi-hsien.lin@cypress.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
         Sasha Levin <sashal@kernel.org>,
-        dri-devel@lists.freedesktop.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 4.19 36/66] drm/stm: ltdc: check crtc state before enabling LIE
-Date:   Sat, 11 Apr 2020 19:11:33 -0400
-Message-Id: <20200411231203.25933-36-sashal@kernel.org>
+        linux-wireless@vger.kernel.org,
+        brcm80211-dev-list.pdl@broadcom.com,
+        brcm80211-dev-list@cypress.com, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 50/66] brcmfmac: Fix driver crash on USB control transfer timeout
+Date:   Sat, 11 Apr 2020 19:11:47 -0400
+Message-Id: <20200411231203.25933-50-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200411231203.25933-1-sashal@kernel.org>
 References: <20200411231203.25933-1-sashal@kernel.org>
@@ -63,44 +63,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yannick Fertre <yannick.fertre@st.com>
+From: Raveendran Somu <raveendran.somu@cypress.com>
 
-[ Upstream commit a6bd58c51ac43083f3977057a7ad668def55812f ]
+[ Upstream commit 93a5bfbc7cad8bf3dea81c9bc07761c1226a0860 ]
 
-Following investigations of a hardware bug, the LIE interrupt
-can occur while the display controller is not activated.
-LIE interrupt (vblank) don't have to be set if the CRTC is not
-enabled.
+When the control transfer gets timed out, the error status
+was returned without killing that urb, this leads to using
+the same urb. This issue causes the kernel crash as the same
+urb is sumbitted multiple times. The fix is to kill the
+urb for timeout transfer before returning error
 
-Signed-off-by: Yannick Fertre <yannick.fertre@st.com>
-Acked-by: Philippe Cornu <philippe.cornu@st.com>
-Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/1579601650-7055-1-git-send-email-yannick.fertre@st.com
+Signed-off-by: Raveendran Somu <raveendran.somu@cypress.com>
+Signed-off-by: Chi-hsien Lin <chi-hsien.lin@cypress.com>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Link: https://lore.kernel.org/r/1585124429-97371-2-git-send-email-chi-hsien.lin@cypress.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/stm/ltdc.c | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+ drivers/net/wireless/broadcom/brcm80211/brcmfmac/usb.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/gpu/drm/stm/ltdc.c b/drivers/gpu/drm/stm/ltdc.c
-index 477d0a27b9a5d..75d108db127c8 100644
---- a/drivers/gpu/drm/stm/ltdc.c
-+++ b/drivers/gpu/drm/stm/ltdc.c
-@@ -612,9 +612,14 @@ static const struct drm_crtc_helper_funcs ltdc_crtc_helper_funcs = {
- static int ltdc_crtc_enable_vblank(struct drm_crtc *crtc)
- {
- 	struct ltdc_device *ldev = crtc_to_ltdc(crtc);
-+	struct drm_crtc_state *state = crtc->state;
- 
- 	DRM_DEBUG_DRIVER("\n");
--	reg_set(ldev->regs, LTDC_IER, IER_LIE);
-+
-+	if (state->enable)
-+		reg_set(ldev->regs, LTDC_IER, IER_LIE);
-+	else
-+		return -EPERM;
- 
- 	return 0;
+diff --git a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/usb.c b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/usb.c
+index 41254f04ab152..f395ea0b73e7d 100644
+--- a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/usb.c
++++ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/usb.c
+@@ -339,11 +339,12 @@ static int brcmf_usb_tx_ctlpkt(struct device *dev, u8 *buf, u32 len)
+ 		return err;
+ 	}
+ 	timeout = brcmf_usb_ioctl_resp_wait(devinfo);
+-	clear_bit(0, &devinfo->ctl_op);
+ 	if (!timeout) {
+ 		brcmf_err("Txctl wait timed out\n");
++		usb_kill_urb(devinfo->ctl_urb);
+ 		err = -EIO;
+ 	}
++	clear_bit(0, &devinfo->ctl_op);
+ 	return err;
  }
+ 
+@@ -369,11 +370,12 @@ static int brcmf_usb_rx_ctlpkt(struct device *dev, u8 *buf, u32 len)
+ 	}
+ 	timeout = brcmf_usb_ioctl_resp_wait(devinfo);
+ 	err = devinfo->ctl_urb_status;
+-	clear_bit(0, &devinfo->ctl_op);
+ 	if (!timeout) {
+ 		brcmf_err("rxctl wait timed out\n");
++		usb_kill_urb(devinfo->ctl_urb);
+ 		err = -EIO;
+ 	}
++	clear_bit(0, &devinfo->ctl_op);
+ 	if (!err)
+ 		return devinfo->ctl_urb_actual_length;
+ 	else
 -- 
 2.20.1
 
