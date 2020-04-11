@@ -4,50 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62FA0C2BB86
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:49:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC64AC2BA19
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:49:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3E7DB20644
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:49:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A00D4206F7
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:49:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586648982;
-	bh=50gf1LNROuN9ofyw0oYtTd+q2+R9ltc6upJCETydXZ8=;
+	s=default; t=1586648988;
+	bh=CRiXgscH+ZKZ9pRj2XDP4s9GCiKOL2N1mPI5QL3opjE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MNa5DATc6fi2fhFLf4wtquX3P8L8YzpGzY90AECzShjrj1NDOx9Tv6mTeTDAACRWX
-	 aNHre8O5AFFlDQ4RxGhK1gtZV3Son+N+hWDN00xbhl29rVIeXn0ICoIZe20avMSdKr
-	 2EqDK4L12TuLhGkKglInGS95m2wZ9cJq1G5kcRIc=
+	b=q4Yg9I9v3VBDGJQvEb4/s6QQ0ymaJFH+wfh8r7hlORvkxphXKHQH5zSxOscWjfmm1
+	 OM31dprbymVHJuMOHGZxHIWKxcFExzLjGPqdmppWG7s3qcvNa58Zuq3OzC/CaAOnWX
+	 GpKr0suzw9XVs7k6UUhAq91t7DYx724LOounxdVM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727130AbgDKXEW (ORCPT
+        id S1728261AbgDKXtq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 19:04:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37304 "EHLO mail.kernel.org"
+        Sat, 11 Apr 2020 19:49:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37698 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727028AbgDKXEJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 19:04:09 -0400
+        id S1727088AbgDKXEU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Apr 2020 19:04:20 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D0E5C214D8;
-        Sat, 11 Apr 2020 23:04:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B417E20CC7;
+        Sat, 11 Apr 2020 23:04:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586646249;
-        bh=50gf1LNROuN9ofyw0oYtTd+q2+R9ltc6upJCETydXZ8=;
+        s=default; t=1586646260;
+        bh=CRiXgscH+ZKZ9pRj2XDP4s9GCiKOL2N1mPI5QL3opjE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wkpQ3BsCSew15zlonw30CLlN0vyRX1G7JpycIxoqxvdL+lR+cajHUxLomQBn3wW2X
-         xGmFNcJQneTjxFvCH8E1j28r7VOhqZCFHfcO4GebUvFMlvmpTTRZ+ZLbsW7NnCL/6O
-         FAvwU1mi3wsNZhaRaWu8w/dg20BwRO7h2u/56pJM=
+        b=xqcKapT/5kqwYsO0SZnebalzFNaYU7pB1gjxpWKw+zQdPivlwOafYkY++G4JUeDtE
+         xkRJpLH0SPuKTW3aBgPrGddGaqobFKzxGrbYZad/e7FxVYt3NwgUZpj4c6jNj8LXM8
+         j7OXKGs+49Jo0Pt37tkUwLk4TJVynac1aU4pcDQw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Pravas Kumar Panda <kumarpan@codeaurora.org>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Sasha Levin <sashal@kernel.org>, ath11k@lists.infradead.org,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.6 017/149] ath11k: Adding proper validation before accessing tx_stats
-Date:   Sat, 11 Apr 2020 19:01:34 -0400
-Message-Id: <20200411230347.22371-17-sashal@kernel.org>
+Cc:     Arindam Nath <arindam.nath@amd.com>, Jon Mason <jdmason@kudzu.us>,
+        Sasha Levin <sashal@kernel.org>, linux-ntb@googlegroups.com
+Subject: [PATCH AUTOSEL 5.6 026/149] NTB: set peer_sta within event handler itself
+Date:   Sat, 11 Apr 2020 19:01:43 -0400
+Message-Id: <20200411230347.22371-26-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200411230347.22371-1-sashal@kernel.org>
 References: <20200411230347.22371-1-sashal@kernel.org>
@@ -60,61 +58,64 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Pravas Kumar Panda <kumarpan@codeaurora.org>
+From: Arindam Nath <arindam.nath@amd.com>
 
-[ Upstream commit fe0ebb51604f190b13b20a5f6c2821772c0cfc22 ]
+[ Upstream commit 2465b87ce36ea2dbd97e5fb58a0efd284c9f687e ]
 
-Before dumping tx_stats proper validation was not been taken care of.
-Due to which we were encountering null pointer dereference(kernel panic).
-This scenario will arise when a station is getting disconnected and
-we are changing the STA state by ath11k_mac_op_sta_state and assigning
-tx_stats as NULL and after this the mac80211 will destroy the
-debugfs entry from where we are trying to read the stats.
+amd_ack_smu() should only set the corresponding
+bits into SMUACK register. Setting the bitmask
+of peer_sta should be done within the event handler.
+They are two different things, and so should be
+handled differently and at different places.
 
-If anyone tries to dump tx_stats for that STA in between setting
-tx_stats to NULL and debugfs file removal without checking the NULL
-value it will run into a NULL pointer exception.
-
-Proceeding with the analysis of "ARM Kernel Panic".
-The APSS crash happened due to OOPS on CPU 3.
-Crash Signature : Unable to handle kernel NULL pointer dereference at
-virtual address 00000360
-During the crash,
-PC points to "ath11k_debug_htt_stats_init+0x16ac/0x1acc [ath11k]"
-LR points to "ath11k_debug_htt_stats_init+0x1688/0x1acc [ath11k]".
-The Backtrace obtained is as follows:
-[<ffffffbffcfd8590>] ath11k_debug_htt_stats_init+0x16ac/0x1acc [ath11k]
-[<ffffffc000156320>] do_loop_readv_writev+0x60/0xa4
-[<ffffffc000156a5c>] do_readv_writev+0xd8/0x19c
-[<ffffffc000156b54>] vfs_readv+0x34/0x48
-[<ffffffc00017d6f4>] default_file_splice_read+0x1a8/0x2e4
-[<ffffffc00017c56c>] do_splice_to+0x78/0x98
-[<ffffffc00017c63c>] splice_direct_to_actor+0xb0/0x1a4
-[<ffffffc00017c7b4>] do_splice_direct+0x84/0xa8
-[<ffffffc000156f40>] do_sendfile+0x160/0x2a4
-[<ffffffc000157980>] SyS_sendfile64+0xb4/0xc8
-
-Signed-off-by: Pravas Kumar Panda <kumarpan@codeaurora.org>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Signed-off-by: Arindam Nath <arindam.nath@amd.com>
+Signed-off-by: Jon Mason <jdmason@kudzu.us>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/ath/ath11k/debugfs_sta.c | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/ntb/hw/amd/ntb_hw_amd.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/wireless/ath/ath11k/debugfs_sta.c b/drivers/net/wireless/ath/ath11k/debugfs_sta.c
-index 743760c9bcae4..e52f3b079bacc 100644
---- a/drivers/net/wireless/ath/ath11k/debugfs_sta.c
-+++ b/drivers/net/wireless/ath/ath11k/debugfs_sta.c
-@@ -219,6 +219,9 @@ static ssize_t ath11k_dbg_sta_dump_tx_stats(struct file *file,
- 	const int size = 2 * 4096;
- 	char *buf;
+diff --git a/drivers/ntb/hw/amd/ntb_hw_amd.c b/drivers/ntb/hw/amd/ntb_hw_amd.c
+index e52b300b2f5b7..119cfd89afddc 100644
+--- a/drivers/ntb/hw/amd/ntb_hw_amd.c
++++ b/drivers/ntb/hw/amd/ntb_hw_amd.c
+@@ -493,8 +493,6 @@ static void amd_ack_smu(struct amd_ntb_dev *ndev, u32 bit)
+ 	reg = readl(mmio + AMD_SMUACK_OFFSET);
+ 	reg |= bit;
+ 	writel(reg, mmio + AMD_SMUACK_OFFSET);
+-
+-	ndev->peer_sta |= bit;
+ }
  
-+	if (!arsta->tx_stats)
-+		return -ENOENT;
-+
- 	buf = kzalloc(size, GFP_KERNEL);
- 	if (!buf)
- 		return -ENOMEM;
+ static void amd_handle_event(struct amd_ntb_dev *ndev, int vec)
+@@ -512,9 +510,11 @@ static void amd_handle_event(struct amd_ntb_dev *ndev, int vec)
+ 	status &= AMD_EVENT_INTMASK;
+ 	switch (status) {
+ 	case AMD_PEER_FLUSH_EVENT:
++		ndev->peer_sta |= AMD_PEER_FLUSH_EVENT;
+ 		dev_info(dev, "Flush is done.\n");
+ 		break;
+ 	case AMD_PEER_RESET_EVENT:
++		ndev->peer_sta |= AMD_PEER_RESET_EVENT;
+ 		amd_ack_smu(ndev, AMD_PEER_RESET_EVENT);
+ 
+ 		/* link down first */
+@@ -527,6 +527,7 @@ static void amd_handle_event(struct amd_ntb_dev *ndev, int vec)
+ 	case AMD_PEER_PMETO_EVENT:
+ 	case AMD_LINK_UP_EVENT:
+ 	case AMD_LINK_DOWN_EVENT:
++		ndev->peer_sta |= status;
+ 		amd_ack_smu(ndev, status);
+ 
+ 		/* link down */
+@@ -540,6 +541,7 @@ static void amd_handle_event(struct amd_ntb_dev *ndev, int vec)
+ 		if (status & 0x1)
+ 			dev_info(dev, "Wakeup is done.\n");
+ 
++		ndev->peer_sta |= AMD_PEER_D0_EVENT;
+ 		amd_ack_smu(ndev, AMD_PEER_D0_EVENT);
+ 
+ 		/* start a timer to poll link status */
 -- 
 2.20.1
 
