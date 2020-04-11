@@ -7,49 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55EC2C2BBC7
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:09:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20323C2BBFD
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:09:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2594F20787
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:09:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E375A215A4
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:09:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586646589;
-	bh=UTiDhzPsf8KLmmjPeQWdvM8WmsScjdB7eAFqqnC3l7g=;
+	s=default; t=1586646593;
+	bh=sPiUjXw3NXpP5qEklGpw3Mls0KRF8CnmJR5qzU4XXv4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1p23mkjwdteskqBMdcud2nr29wM7I7PDphMOZ1P+KX4PzHTwuSUd9RhjEJmkazl/5
-	 P7l3SzN4OQqvAz0Uz+KgQnZzbPJydUnagYafqyxIjdvjItvoef9TdHAq4tzRkOexg5
-	 eoahnMlzM4tJq4prHsM4SZ+KT2sCF+sudV685ZyE=
+	b=h9M+rjOxH3cZ3J0ACKvuZ2TiYKALJDqElD3Pk9YnqZ8aKmuuvHUdIFd9k82hz2DhC
+	 4Of523GiLlo0ttLT8jGaaqSMOI3rPAX19lFl/BQUR9VQgqL13k2rkOuOvsc5kVP43K
+	 Rj5iWtnkLzOI0/OgCyxJJ70LiDGAhDeTz83NUrDY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729319AbgDKXJr (ORCPT
+        id S1728895AbgDKXJv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 19:09:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47622 "EHLO mail.kernel.org"
+        Sat, 11 Apr 2020 19:09:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47694 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728432AbgDKXJq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 19:09:46 -0400
+        id S1727384AbgDKXJt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Apr 2020 19:09:49 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id ECCB720787;
-        Sat, 11 Apr 2020 23:09:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7366B2173E;
+        Sat, 11 Apr 2020 23:09:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586646586;
-        bh=UTiDhzPsf8KLmmjPeQWdvM8WmsScjdB7eAFqqnC3l7g=;
+        s=default; t=1586646589;
+        bh=sPiUjXw3NXpP5qEklGpw3Mls0KRF8CnmJR5qzU4XXv4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=smAsQrMNso0cC7Zv6uB78KdrS7j6NO9RDt52mkGGQpLk40UBhwK/Q4VqXm3vb252F
-         WyQWGjlPWX/nt2l9uf8pBWhZao00zIb3GOGWqLtFcopWt+wqZAD3JoLJEm+VQEYDHn
-         XQjLhDR7fHLORwMN2un8U9RwkhiE1thW5e3pdMNo=
+        b=VCNGI9kyZqi/XUl/tKJQxrtoP8jIsMlh7A68qVpHwqCrenIXDiYjhwX5qQcf4auvj
+         YqbKc3H+z5zZc6nhsqemKsRaYXYQ/496z9ECJRb24z6XFJPTxzCm6NeX6bZQDC9Y9R
+         6S0hgWTTBZVt9DUI/r9zCnTsX+GJQrPSwllxleGo=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Romain Bellan <romain.bellan@wifirst.fr>,
-        Florent Fourcot <florent.fourcot@wifirst.fr>,
-        Pablo Neira Ayuso <pablo@netfilter.org>,
-        Sasha Levin <sashal@kernel.org>,
-        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
-        netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 002/108] netfilter: ctnetlink: be more strict when NF_CONNTRACK_MARK is not set
-Date:   Sat, 11 Apr 2020 19:07:57 -0400
-Message-Id: <20200411230943.24951-2-sashal@kernel.org>
+Cc:     Heiner Kallweit <hkallweit1@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 004/108] net: phy: probe PHY drivers synchronously
+Date:   Sat, 11 Apr 2020 19:07:59 -0400
+Message-Id: <20200411230943.24951-4-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200411230943.24951-1-sashal@kernel.org>
 References: <20200411230943.24951-1-sashal@kernel.org>
@@ -62,36 +61,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Romain Bellan <romain.bellan@wifirst.fr>
+From: Heiner Kallweit <hkallweit1@gmail.com>
 
-[ Upstream commit 7c6b4121627aeaa79536fbb900feafec740410d3 ]
+[ Upstream commit 16983507742cbcaa5592af530872a82e82fb9c51 ]
 
-When CONFIG_NF_CONNTRACK_MARK is not set, any CTA_MARK or CTA_MARK_MASK
-in netlink message are not supported. We should return an error when one
-of them is set, not both
+If we have scenarios like
 
-Fixes: 9306425b70bf ("netfilter: ctnetlink: must check mark attributes vs NULL")
-Signed-off-by: Romain Bellan <romain.bellan@wifirst.fr>
-Signed-off-by: Florent Fourcot <florent.fourcot@wifirst.fr>
-Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
+mdiobus_register()
+	-> loads PHY driver module(s)
+	-> registers PHY driver(s)
+	-> may schedule async probe
+phydev = mdiobus_get_phy()
+<phydev action involving PHY driver>
+
+or
+
+phydev = phy_device_create()
+	-> loads PHY driver module
+	-> registers PHY driver
+	-> may schedule async probe
+<phydev action involving PHY driver>
+
+then we expect the PHY driver to be bound to the phydev when triggering
+the action. This may not be the case in case of asynchronous probing.
+Therefore ensure that PHY drivers are probed synchronously.
+
+Default still is sync probing, except async probing is explicitly
+requested. I saw some comments that the intention is to promote
+async probing for more parallelism in boot process and want to be
+prepared for the case that the default is changed to async probing.
+
+Signed-off-by: Heiner Kallweit <hkallweit1@gmail.com>
+Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
+Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/netfilter/nf_conntrack_netlink.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/phy/phy_device.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/net/netfilter/nf_conntrack_netlink.c b/net/netfilter/nf_conntrack_netlink.c
-index aa8adf930b3ce..bb9c7569b9729 100644
---- a/net/netfilter/nf_conntrack_netlink.c
-+++ b/net/netfilter/nf_conntrack_netlink.c
-@@ -838,7 +838,7 @@ ctnetlink_alloc_filter(const struct nlattr * const cda[], u8 family)
- 	struct ctnetlink_filter *filter;
+diff --git a/drivers/net/phy/phy_device.c b/drivers/net/phy/phy_device.c
+index 0907c3d8d94a2..67d0f68f92316 100644
+--- a/drivers/net/phy/phy_device.c
++++ b/drivers/net/phy/phy_device.c
+@@ -2322,6 +2322,7 @@ int phy_driver_register(struct phy_driver *new_driver, struct module *owner)
+ 	new_driver->mdiodrv.driver.probe = phy_probe;
+ 	new_driver->mdiodrv.driver.remove = phy_remove;
+ 	new_driver->mdiodrv.driver.owner = owner;
++	new_driver->mdiodrv.driver.probe_type = PROBE_FORCE_SYNCHRONOUS;
  
- #ifndef CONFIG_NF_CONNTRACK_MARK
--	if (cda[CTA_MARK] && cda[CTA_MARK_MASK])
-+	if (cda[CTA_MARK] || cda[CTA_MARK_MASK])
- 		return ERR_PTR(-EOPNOTSUPP);
- #endif
- 
+ 	retval = driver_register(&new_driver->mdiodrv.driver);
+ 	if (retval) {
 -- 
 2.20.1
 
