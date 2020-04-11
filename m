@@ -4,54 +4,56 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EE58C2BB85
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:11:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5407C2BA2B
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:11:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4D57A2166E
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:11:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B619C2166E
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:11:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586607107;
-	bh=gPN1K6D1ZcKJkDxrR7qi0zm3+QP6Ap5Mf7z/+M9TD2A=;
+	s=default; t=1586607111;
+	bh=MmvJFYQiUuoxCAfLFMHbzJ4bdL7Mc7UdVF9VMoB1uOA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gYSLMfgwaQozMFCB9wmvqXrr9v736BozTh/MO6NwPtHZR0qGr/eLi8Bsi5xrHL2/w
-	 KM0OIvkBSlYNuKJwc6/CLgOaNZEe3r4baeD7dqpDOOLMPI+kOOsBRWrbwJ+jqI9lGm
-	 lvGz2sXGXnfeury/6q0QKMv3hBWm8sVN3YjzbbmI=
+	b=cADGiplIye1O3Kg5gXFnxZ4MKTEK12egzhLKAumym994z9Btv0JXnTemmxhD+Lqe0
+	 +/0aEjq2c+ygPHPn7uOMGuw+JVdBdKYe0LYleZDN1UwiajAHyj6W9DtpDHtADUP3Qb
+	 OlphpmsNZDrrx8kN3yky82Gj7eu0rAOb9/wLsIlg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727043AbgDKMLp (ORCPT
+        id S1727059AbgDKMLu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 08:11:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43908 "EHLO mail.kernel.org"
+        Sat, 11 Apr 2020 08:11:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43966 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727023AbgDKMLm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 08:11:42 -0400
+        id S1727041AbgDKMLp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Apr 2020 08:11:45 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DA358215A4;
-        Sat, 11 Apr 2020 12:11:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5B89821D6C;
+        Sat, 11 Apr 2020 12:11:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586607102;
-        bh=gPN1K6D1ZcKJkDxrR7qi0zm3+QP6Ap5Mf7z/+M9TD2A=;
+        s=default; t=1586607104;
+        bh=MmvJFYQiUuoxCAfLFMHbzJ4bdL7Mc7UdVF9VMoB1uOA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UGBX+HAcFO2uGnelsYw9BP7kSSIUVpAb/rlNk7qKMFtZBusb63lGjJ9cQiOM7Rgu8
-         Gn34VIay0jCHbMKwEwVkYhB2RjaoxUXwi7A6Oqj9n68TWMwO69kDmC7BpLrjJ3tY1i
-         7y8M2FBlPVuShXEfPFVPdvF6ov9l4ZZmWKJsdW3k=
+        b=zBIRoC3GAMbjNlWtPnjIBuvOHlflW2bya2IXrPvnfHBnvN9EQHEhzQPElINn1sMKD
+         zKVuoYmastJg4X96+0RufgvlROHUzQYJLJUsBC6Nhcz/dYL0ItLLAPg41UfufZ9H6W
+         zGe1n9Aus74k6pqvDpAUg/y++CTzL0QTaWGfT4+w=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Guillaume Nault <g.nault@alphalink.fr>,
         "David S. Miller" <davem@davemloft.net>,
         Will Deacon <will@kernel.org>
-Subject: [PATCH 4.4 12/29] l2tp: fix race between l2tp_session_delete() and l2tp_tunnel_closeall()
-Date:   Sat, 11 Apr 2020 14:08:42 +0200
-Message-Id: <20200411115409.765238394@linuxfoundation.org>
+Subject: [PATCH 4.9 01/32] l2tp: ensure sessions are freed after their PPPOL2TP socket
+Date:   Sat, 11 Apr 2020 14:08:40 +0200
+Message-Id: <20200411115418.843920874@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
-In-Reply-To: <20200411115407.651296755@linuxfoundation.org>
-References: <20200411115407.651296755@linuxfoundation.org>
+In-Reply-To: <20200411115418.455500023@linuxfoundation.org>
+References: <20200411115418.455500023@linuxfoundation.org>
 User-Agent: quilt/0.66
+X-stable: review
+X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -62,76 +64,49 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Guillaume Nault <g.nault@alphalink.fr>
 
-commit b228a94066406b6c456321d69643b0d7ce11cfa6 upstream.
+commit cdd10c9627496ad25c87ce6394e29752253c69d3 upstream.
 
-There are several ways to remove L2TP sessions:
+If l2tp_tunnel_delete() or l2tp_tunnel_closeall() deletes a session
+right after pppol2tp_release() orphaned its socket, then the 'sock'
+variable of the pppol2tp_session_close() callback is NULL. Yet the
+session is still used by pppol2tp_release().
 
-  * deleting a session explicitly using the netlink interface (with
-    L2TP_CMD_SESSION_DELETE),
-  * deleting the session's parent tunnel (either by closing the
-    tunnel's file descriptor or using the netlink interface),
-  * closing the PPPOL2TP file descriptor of a PPP pseudo-wire.
+Therefore we need to take an extra reference in any case, to prevent
+l2tp_tunnel_delete() or l2tp_tunnel_closeall() from freeing the session.
 
-In some cases, when these methods are used concurrently on the same
-session, the session can be removed twice, leading to use-after-free
-bugs.
-
-This patch adds a 'dead' flag, used by l2tp_session_delete() and
-l2tp_tunnel_closeall() to prevent them from stepping on each other's
-toes.
-
-The session deletion path used when closing a PPPOL2TP file descriptor
-doesn't need to be adapted. It already has to ensure that a session
-remains valid for the lifetime of its PPPOL2TP file descriptor.
-So it takes an extra reference on the session in the ->session_close()
-callback (pppol2tp_session_close()), which is eventually dropped
-in the ->sk_destruct() callback of the PPPOL2TP socket
-(pppol2tp_session_destruct()).
-Still, __l2tp_session_unhash() and l2tp_session_queue_purge() can be
-called twice and even concurrently for a given session, but thanks to
-proper locking and re-initialisation of list fields, this is not an
-issue.
+Since the pppol2tp_session_close() callback is only set if the session
+is associated to a PPPOL2TP socket and that both l2tp_tunnel_delete()
+and l2tp_tunnel_closeall() hold the PPPOL2TP socket before calling
+pppol2tp_session_close(), we're sure that pppol2tp_session_close() and
+pppol2tp_session_destruct() are paired and called in the right order.
+So the reference taken by the former will be released by the later.
 
 Signed-off-by: Guillaume Nault <g.nault@alphalink.fr>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Will Deacon <will@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- net/l2tp/l2tp_core.c |    6 ++++++
- net/l2tp/l2tp_core.h |    1 +
- 2 files changed, 7 insertions(+)
 
---- a/net/l2tp/l2tp_core.c
-+++ b/net/l2tp/l2tp_core.c
-@@ -1351,6 +1351,9 @@ again:
+---
+ net/l2tp/l2tp_ppp.c |    8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
+
+--- a/net/l2tp/l2tp_ppp.c
++++ b/net/l2tp/l2tp_ppp.c
+@@ -437,11 +437,11 @@ static void pppol2tp_session_close(struc
  
- 			hlist_del_init(&session->hlist);
+ 	BUG_ON(session->magic != L2TP_SESSION_MAGIC);
  
-+			if (test_and_set_bit(0, &session->dead))
-+				goto again;
+-	if (sock) {
++	if (sock)
+ 		inet_shutdown(sock, SEND_SHUTDOWN);
+-		/* Don't let the session go away before our socket does */
+-		l2tp_session_inc_refcount(session);
+-	}
 +
- 			if (session->ref != NULL)
- 				(*session->ref)(session);
++	/* Don't let the session go away before our socket does */
++	l2tp_session_inc_refcount(session);
+ }
  
-@@ -1799,6 +1802,9 @@ EXPORT_SYMBOL_GPL(__l2tp_session_unhash)
-  */
- int l2tp_session_delete(struct l2tp_session *session)
- {
-+	if (test_and_set_bit(0, &session->dead))
-+		return 0;
-+
- 	if (session->ref)
- 		(*session->ref)(session);
- 	__l2tp_session_unhash(session);
---- a/net/l2tp/l2tp_core.h
-+++ b/net/l2tp/l2tp_core.h
-@@ -85,6 +85,7 @@ struct l2tp_session_cfg {
- struct l2tp_session {
- 	int			magic;		/* should be
- 						 * L2TP_SESSION_MAGIC */
-+	long			dead;
- 
- 	struct l2tp_tunnel	*tunnel;	/* back pointer to tunnel
- 						 * context */
+ /* Really kill the session socket. (Called from sock_put() if
 
 
