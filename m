@@ -4,52 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FE0EC2BBC7
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:14:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B58B3C2BA2B
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:14:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 05C63217D8
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:14:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8A1FE21556
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:14:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586607248;
-	bh=iGsE+U9DnD/v9N3Au/gt5Nukp6ciVSTUMneMAPVjTu0=;
+	s=default; t=1586607252;
+	bh=wGXvAvLnfJ6NWQrIy69NGR+MFT+eCM2KgZp7EqI1qx4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UFGcBWJ0sGC4SoHrZxMrv5XC6Ldrlo1htH0W4gFAC3UZBaTNx4qHNnVWPsONv4YEi
-	 NP/AnU7JQtKrq7rphgvvK4BqLzE0nwIT2LxFc5QNW7RCu21w7P3T5VegPgtmkoARLA
-	 LYTnJa9J4/wBwYOPcLwmfkTiQO2MEeghi7TMKmro=
+	b=J516CVl5PflgmDfp87YbKrVb4kwl5fwwmhiiSK1h92Bq91yrHTDiT7vbr7upp5a2N
+	 gSXZWKashqrveVb0+8c7oxOf2eDtYH4wFvBXy1y2mMuHhiZcr1TCZgTiHcE0Ih9JB6
+	 BJf57A0t0FCuv8RUNaADGh/W3EuG+OS/+X5FzzTM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727894AbgDKMOG (ORCPT
+        id S1726857AbgDKMOK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 08:14:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47290 "EHLO mail.kernel.org"
+        Sat, 11 Apr 2020 08:14:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47320 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726824AbgDKMOC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 08:14:02 -0400
+        id S1727867AbgDKMOG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Apr 2020 08:14:06 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6597C2166E;
-        Sat, 11 Apr 2020 12:14:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CBE1F216FD;
+        Sat, 11 Apr 2020 12:14:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586607242;
-        bh=iGsE+U9DnD/v9N3Au/gt5Nukp6ciVSTUMneMAPVjTu0=;
+        s=default; t=1586607245;
+        bh=wGXvAvLnfJ6NWQrIy69NGR+MFT+eCM2KgZp7EqI1qx4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=O+2MpP16fX5cSiNz8UmH2vlfhCeVurkiW3rGG+yEn3OBagNUVPwJNQtBBAh20ow03
-         fdBc1aDkTZ5xX2FxiaxdYk0ne5/svgc4przJTSY9fGmWSssEpwkta+u42jumBxfxsC
-         w934MKbIunfv/LEJzuxcISxEVDqczE7P+TQ3PRCQ=
+        b=so9GzSVB9oZ2tZxTR15tgG8WTwznQfDkd5Yt3+fZzWT2uiV/x9BW3nibVIKNRDohO
+         lOvZLF4KA3/WN7ZU1DpzRFGak9v7KKlQbQoMkEn9WjDcfJheU2ZFbg15xJNubtebWd
+         FRfXM7/xYCGtiErH/Z8svEfPmIxqsIYXgO7YooN0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        syzbot+732528bae351682f1f27@syzkaller.appspotmail.com,
-        Qiujun Huang <hqjagain@gmail.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>
-Subject: [PATCH 4.14 31/38] fbcon: fix null-ptr-deref in fbcon_switch
-Date:   Sat, 11 Apr 2020 14:09:15 +0200
-Message-Id: <20200411115440.870083532@linuxfoundation.org>
+        stable@vger.kernel.org, Vishal Verma <vishal.l.verma@intel.com>,
+        Grzegorz Burzynski <grzegorz.burzynski@intel.com>,
+        Jeff Moyer <jmoyer@redhat.com>,
+        Dan Williams <dan.j.williams@intel.com>
+Subject: [PATCH 4.14 32/38] acpi/nfit: Fix bus command validation
+Date:   Sat, 11 Apr 2020 14:09:16 +0200
+Message-Id: <20200411115440.974333990@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200411115437.795556138@linuxfoundation.org>
 References: <20200411115437.795556138@linuxfoundation.org>
@@ -62,58 +61,110 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Qiujun Huang <hqjagain@gmail.com>
+From: Dan Williams <dan.j.williams@intel.com>
 
-commit b139f8b00db4a8ea75a4174346eafa48041aa489 upstream.
+commit ebe9f6f19d80d8978d16078dff3d5bd93ad8d102 upstream.
 
-Set logo_shown to FBCON_LOGO_CANSHOW when the vc was deallocated.
+Commit 11189c1089da "acpi/nfit: Fix command-supported detection" broke
+ND_CMD_CALL for bus-level commands. The "func = cmd" assumption is only
+valid for:
 
-syzkaller report: https://lkml.org/lkml/2020/3/27/403
-general protection fault, probably for non-canonical address
-0xdffffc000000006c: 0000 [#1] SMP KASAN
-KASAN: null-ptr-deref in range [0x0000000000000360-0x0000000000000367]
-RIP: 0010:fbcon_switch+0x28f/0x1740
-drivers/video/fbdev/core/fbcon.c:2260
+    ND_CMD_ARS_CAP
+    ND_CMD_ARS_START
+    ND_CMD_ARS_STATUS
+    ND_CMD_CLEAR_ERROR
 
-Call Trace:
-redraw_screen+0x2a8/0x770 drivers/tty/vt/vt.c:1008
-vc_do_resize+0xfe7/0x1360 drivers/tty/vt/vt.c:1295
-fbcon_init+0x1221/0x1ab0 drivers/video/fbdev/core/fbcon.c:1219
-visual_init+0x305/0x5c0 drivers/tty/vt/vt.c:1062
-do_bind_con_driver+0x536/0x890 drivers/tty/vt/vt.c:3542
-do_take_over_console+0x453/0x5b0 drivers/tty/vt/vt.c:4122
-do_fbcon_takeover+0x10b/0x210 drivers/video/fbdev/core/fbcon.c:588
-fbcon_fb_registered+0x26b/0x340 drivers/video/fbdev/core/fbcon.c:3259
-do_register_framebuffer drivers/video/fbdev/core/fbmem.c:1664 [inline]
-register_framebuffer+0x56e/0x980 drivers/video/fbdev/core/fbmem.c:1832
-dlfb_usb_probe.cold+0x1743/0x1ba3 drivers/video/fbdev/udlfb.c:1735
-usb_probe_interface+0x310/0x800 drivers/usb/core/driver.c:374
+The function number otherwise needs to be pulled from the command
+payload for:
 
-accessing vc_cons[logo_shown].d->vc_top causes the bug.
+    NFIT_CMD_TRANSLATE_SPA
+    NFIT_CMD_ARS_INJECT_SET
+    NFIT_CMD_ARS_INJECT_CLEAR
+    NFIT_CMD_ARS_INJECT_GET
 
-Reported-by: syzbot+732528bae351682f1f27@syzkaller.appspotmail.com
-Signed-off-by: Qiujun Huang <hqjagain@gmail.com>
-Acked-by: Sam Ravnborg <sam@ravnborg.org>
-Cc: stable@vger.kernel.org
-Signed-off-by: Daniel Vetter <daniel.vetter@ffwll.ch>
-Link: https://patchwork.freedesktop.org/patch/msgid/20200329085647.25133-1-hqjagain@gmail.com
+Update cmd_to_func() for the bus case and call it in the common path.
+
+Fixes: 11189c1089da ("acpi/nfit: Fix command-supported detection")
+Cc: <stable@vger.kernel.org>
+Reviewed-by: Vishal Verma <vishal.l.verma@intel.com>
+Reported-by: Grzegorz Burzynski <grzegorz.burzynski@intel.com>
+Tested-by: Jeff Moyer <jmoyer@redhat.com>
+Signed-off-by: Dan Williams <dan.j.williams@intel.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
----
- drivers/video/fbdev/core/fbcon.c |    3 +++
- 1 file changed, 3 insertions(+)
 
---- a/drivers/video/fbdev/core/fbcon.c
-+++ b/drivers/video/fbdev/core/fbcon.c
-@@ -1221,6 +1221,9 @@ finished:
- 	if (!con_is_bound(&fb_con))
- 		fbcon_exit();
+---
+ drivers/acpi/nfit/core.c |   24 +++++++++++++-----------
+ 1 file changed, 13 insertions(+), 11 deletions(-)
+
+--- a/drivers/acpi/nfit/core.c
++++ b/drivers/acpi/nfit/core.c
+@@ -214,7 +214,7 @@ static int cmd_to_func(struct nfit_mem *
+ 	if (call_pkg) {
+ 		int i;
  
-+	if (vc->vc_num == logo_shown)
-+		logo_shown = FBCON_LOGO_CANSHOW;
+-		if (nfit_mem->family != call_pkg->nd_family)
++		if (nfit_mem && nfit_mem->family != call_pkg->nd_family)
+ 			return -ENOTTY;
+ 
+ 		for (i = 0; i < ARRAY_SIZE(call_pkg->nd_reserved2); i++)
+@@ -223,6 +223,10 @@ static int cmd_to_func(struct nfit_mem *
+ 		return call_pkg->nd_command;
+ 	}
+ 
++	/* In the !call_pkg case, bus commands == bus functions */
++	if (!nfit_mem)
++		return cmd;
 +
- 	return;
- }
+ 	/* Linux ND commands == NVDIMM_FAMILY_INTEL function numbers */
+ 	if (nfit_mem->family == NVDIMM_FAMILY_INTEL)
+ 		return cmd;
+@@ -238,6 +242,7 @@ int acpi_nfit_ctl(struct nvdimm_bus_desc
+ 		unsigned int cmd, void *buf, unsigned int buf_len, int *cmd_rc)
+ {
+ 	struct acpi_nfit_desc *acpi_desc = to_acpi_nfit_desc(nd_desc);
++	struct nfit_mem *nfit_mem = nvdimm_provider_data(nvdimm);
+ 	union acpi_object in_obj, in_buf, *out_obj;
+ 	const struct nd_cmd_desc *desc = NULL;
+ 	struct device *dev = acpi_desc->dev;
+@@ -252,18 +257,18 @@ int acpi_nfit_ctl(struct nvdimm_bus_desc
+ 	if (cmd_rc)
+ 		*cmd_rc = -EINVAL;
  
++	if (cmd == ND_CMD_CALL)
++		call_pkg = buf;
++	func = cmd_to_func(nfit_mem, cmd, call_pkg);
++	if (func < 0)
++		return func;
++
+ 	if (nvdimm) {
+-		struct nfit_mem *nfit_mem = nvdimm_provider_data(nvdimm);
+ 		struct acpi_device *adev = nfit_mem->adev;
+ 
+ 		if (!adev)
+ 			return -ENOTTY;
+ 
+-		if (cmd == ND_CMD_CALL)
+-			call_pkg = buf;
+-		func = cmd_to_func(nfit_mem, cmd, call_pkg);
+-		if (func < 0)
+-			return func;
+ 		dimm_name = nvdimm_name(nvdimm);
+ 		cmd_name = nvdimm_cmd_name(cmd);
+ 		cmd_mask = nvdimm_cmd_mask(nvdimm);
+@@ -274,12 +279,9 @@ int acpi_nfit_ctl(struct nvdimm_bus_desc
+ 	} else {
+ 		struct acpi_device *adev = to_acpi_dev(acpi_desc);
+ 
+-		func = cmd;
+ 		cmd_name = nvdimm_bus_cmd_name(cmd);
+ 		cmd_mask = nd_desc->cmd_mask;
+-		dsm_mask = cmd_mask;
+-		if (cmd == ND_CMD_CALL)
+-			dsm_mask = nd_desc->bus_dsm_mask;
++		dsm_mask = nd_desc->bus_dsm_mask;
+ 		desc = nd_cmd_bus_desc(cmd);
+ 		guid = to_nfit_uuid(NFIT_DEV_BUS);
+ 		handle = adev->handle;
 
 
