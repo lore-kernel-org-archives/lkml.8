@@ -2,226 +2,200 @@ Return-Path: <SRS0=xbEg=53=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CA36C2BA2B
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 10:28:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CF8AC2BBC7
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 10:32:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BD76920732
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 10:28:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1CC802137B
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 10:32:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="Qduhf0lR"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DA9/J+4i"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726251AbgDKK2p (ORCPT
+        id S1726155AbgDKKcu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 06:28:45 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:41913 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725945AbgDKK2o (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 06:28:44 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 48zrh95S62z9sT0;
-        Sat, 11 Apr 2020 20:28:41 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ellerman.id.au;
-        s=201909; t=1586600922;
-        bh=cPj8VvFWURbZVhgVSLLn43ICM2dJQq/eRqr/jpps3ZQ=;
-        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-        b=Qduhf0lR3jqKFFNlnfBx+RF60jeT6ap6BDoh7bCu8k6eFLAuo1FuOt6Wa00D4SH02
-         CWbHfBmqNWnIUuyiZYQlVAxekLsqsdDqx4orBOjPBowRAYyb8EHj1/DJ/Y5Ax9GdQI
-         M1G45dnd6QydGcAZykOWQO0SQlDbBxzGMKtlVlt6S9u2B+QospT1fzgf//2xfyvoyQ
-         /l+ZLLLUrnOZPfThRDr4rzATX6jaLZAZ3CmfzOs1pY5XMa1+WUElLGXwiLBZD3sSCA
-         p5hYnrpD/SmFpIlUeQ5p2eWIk3PdgAr/zqafSPY1TSqDo+ATrVzjYUV8opW7kId6mP
-         l2vJmqNSGGWgQ==
-From:   Michael Ellerman <mpe@ellerman.id.au>
-To:     Haren Myneni <haren@linux.ibm.com>
-Cc:     mikey@neuling.org, srikar@linux.vnet.ibm.com,
-        frederic.barrat@fr.ibm.com, ajd@linux.ibm.com,
-        linux-kernel@vger.kernel.org, npiggin@gmail.com, hch@infradead.org,
-        oohall@gmail.com, clg@kaod.org, sukadev@linux.vnet.ibm.com,
-        linuxppc-dev@lists.ozlabs.org, herbert@gondor.apana.org.au
-Subject: Re: [PATCH v10 14/14] powerpc: Use mm_context vas_windows counter to issue CP_ABORT
-In-Reply-To: <1585812024.2275.68.camel@hbabu-laptop>
-References: <1585810846.2275.23.camel@hbabu-laptop> <1585812024.2275.68.camel@hbabu-laptop>
-Date:   Sat, 11 Apr 2020 20:28:50 +1000
-Message-ID: <87mu7ijoyl.fsf@mpe.ellerman.id.au>
+        Sat, 11 Apr 2020 06:32:50 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:36719 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725951AbgDKKcu (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Apr 2020 06:32:50 -0400
+Received: by mail-wm1-f67.google.com with SMTP id a201so4686215wme.1;
+        Sat, 11 Apr 2020 03:32:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=cc:subject:to:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=WdIuarudhiqt4aMHRps4LXkdxiszDOW6zJdoJ0Jp18c=;
+        b=DA9/J+4ieeGwggLN5Ee4Fvbbby2FOQhYeUbEOPOV2mBW2NeHycGt+WGnUvxBP1/D4Z
+         nCZBC+lZ2ffPgfYUGKGvmXKCuHC9AoOc7mouN9QlgmOiXptmA57Ukh8N0zeoX9M2hljV
+         EC4X/Pe2C1yiAnpOD6xFTWLMHEz3U5DNc9r0hmKhfMYfklfx7Dw9H/37H1dIk5OEVDvC
+         JHjed1S/enFI9m1GnUXHO1b2m+VgKHYObKpPunlYyIWtIVlSHH/aW67Eh0xSaqsZauN8
+         nQZmHH2rdf6T9hjTi+w7FUY8Q7bHHUZw2rDHXvaLOOU/83rsgo64t8MIA0Dra/8jNdtq
+         3tWg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:cc:subject:to:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=WdIuarudhiqt4aMHRps4LXkdxiszDOW6zJdoJ0Jp18c=;
+        b=rgksrdPyjOmE9KBCwtLmMVr6893TqhoSwReyNjIo5LSjz/dxiz8PeTo6jyZVk3ABoI
+         IzHKeYNldu0s0bu0qH5v4ylNOv3aJr+V7t89XEr+YotfyofXcXxKl6pUFb+1fUbCnTgJ
+         xhvFkAkXuoe/IB+IQtBW/jIN2ycvYsPCw1Gl/LTVaVaRpm4UOocVv8xI/7T0LYj1LbDl
+         kWoXONdwwXTwbkQatzFAWVaIQDwzqdtqOnFDLAv46Dh7qZX9xRs2uIZ1+g0UTav5ZMS7
+         ZTy+28LozSDqLLB0a6p6G6O2efcEO0dmCduHdeDxYI13hU7B0Lu6q/SRCEJc0DGRK8UN
+         /yJA==
+X-Gm-Message-State: AGi0PuavfeqBtgVnqfVNxOf1+N6+mQPV9H0oJQRg3vul/pIepxeHC0eL
+        m2gVfzjIjfvsbnKK+M9kFBg=
+X-Google-Smtp-Source: APiQypKqOpI74EL5EsVJwXDYHUK7zs9WNPm239eIssJuuYnBjC0n5TMf3YfJqRy8Ty+CysR3SP6ZBw==
+X-Received: by 2002:a05:600c:24e:: with SMTP id 14mr9047328wmj.62.1586601168695;
+        Sat, 11 Apr 2020 03:32:48 -0700 (PDT)
+Received: from ?IPv6:2001:a61:2482:101:3351:6160:8173:cc31? ([2001:a61:2482:101:3351:6160:8173:cc31])
+        by smtp.gmail.com with ESMTPSA id i129sm6569053wmi.20.2020.04.11.03.32.47
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 11 Apr 2020 03:32:48 -0700 (PDT)
+Cc:     mtk.manpages@gmail.com, linux-api@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        "Eric W . Biederman" <ebiederm@xmission.com>,
+        Dmitry Safonov <0x7f454c46@gmail.com>
+Subject: Re: [PATCH] timens: show clock symbolic names in
+ /proc/pid/timens_offsets
+To:     Andrei Vagin <avagin@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Andrew Morton <akpm@linux-foundation.org>
+References: <20200411065209.622679-1-avagin@gmail.com>
+From:   "Michael Kerrisk (man-pages)" <mtk.manpages@gmail.com>
+Message-ID: <afd9a489-bea7-c34c-14c2-405b536deb0d@gmail.com>
+Date:   Sat, 11 Apr 2020 12:32:45 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-Content-Type: text/plain
+In-Reply-To: <20200411065209.622679-1-avagin@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Haren Myneni <haren@linux.ibm.com> writes:
-> set_thread_uses_vas() sets used_vas flag for a process that opened VAS
-> window and issue CP_ABORT during context switch for only that process.
-> In multi-thread application, windows can be shared. For example Thread A
-> can open a window and Thread B can run COPY/PASTE instructions to send
-> NX request which may cause corruption or snooping or a covert channel.
-> Also once this flag is set, continue to run CP_ABORT even the VAS window
-> is closed.
->
-> So define vas-windows counter in process mm_context, increment this
-> counter for each window open and decrement it for window close. If
-> vas-windows is set, issue CP_ABORT during context switch. It means
-> clear the foreign real address mapping only if the process / thread uses
-> COPY/PASTE. Then disable it for that process if windows are not open.
->
-> Signed-off-by: Haren Myneni <haren@linux.ibm.com>
-> Reported-by: Nicholas Piggin <npiggin@gmail.com>
-> Suggested-by: Milton Miller <miltonm@us.ibm.com>
-> Suggested-by: Nicholas Piggin <npiggin@gmail.com>
+Hello Andrei,
+
+On 4/11/20 8:52 AM, Andrei Vagin wrote:
+> Michael Kerrisk suggested to replace numeric clock IDs on symbolic
+> names.
+> 
+> Now the content of these files looks like this:
+> $ cat /proc/5362/timens_offsets
+> monotonic	   9504000	         0
+> boottime	   3456000	         0
+> 
+> For setting offsets, both representations of clocks can be used.
+> 
+> As for compatibility, it is acceptable to change things as long as
+> userspace doesn't care. The format of timens_offsets files is very
+> new and there are no userspace tools that rely on this format.
+> 
+> But three projects crun, util-linux and criu rely on the interface of
+> setting time offsets and this is why we need to continue supporting the
+> clock IDs in this case.
+
+Thanks very much for this patch, which I've tested. So:
+
+Acked-by: Michael Kerrisk <mtk.manpages@gmail.com>
+Tested-by: Michael Kerrisk <mtk.manpages@gmail.com>
+
+But, I do have one small suggestion below.
+
+> Fixes: 04a8682a71be ("fs/proc: Introduce /proc/pid/timens_offsets")
+> Cc: Thomas Gleixner <tglx@linutronix.de>
+> Cc: Andrew Morton <akpm@linux-foundation.org>
+> Cc: Eric W. Biederman <ebiederm@xmission.com>
+> Cc: Michael Kerrisk <mtk.manpages@gmail.com>
+> Cc: Dmitry Safonov <0x7f454c46@gmail.com>
+> Suggested-by: Michael Kerrisk <mtk.manpages@gmail.com>
+> Signed-off-by: Andrei Vagin <avagin@gmail.com>
 > ---
->  arch/powerpc/include/asm/book3s/64/mmu.h    |  3 +++
->  arch/powerpc/include/asm/mmu_context.h      | 22 ++++++++++++++++++++++
->  arch/powerpc/include/asm/processor.h        |  1 -
->  arch/powerpc/kernel/process.c               |  8 ++++++--
->  arch/powerpc/platforms/powernv/vas-window.c |  1 +
->  5 files changed, 32 insertions(+), 3 deletions(-)
-
-This should presumably be tagged:
-
-Fixes: 9d2a4d71332c ("powerpc: Define set_thread_uses_vas()")
-
-I _think_ we don't need to backport it because currently there's no code
-in the kernel that will actually trigger the used_vas case, but please
-spell that out for me in the change log.
-
-> diff --git a/arch/powerpc/include/asm/book3s/64/mmu.h b/arch/powerpc/include/asm/book3s/64/mmu.h
-> index bb3deb7..f0a9ff6 100644
-> --- a/arch/powerpc/include/asm/book3s/64/mmu.h
-> +++ b/arch/powerpc/include/asm/book3s/64/mmu.h
-> @@ -116,6 +116,9 @@ struct patb_entry {
->  	/* Number of users of the external (Nest) MMU */
->  	atomic_t copros;
+>  fs/proc/base.c          | 14 +++++++++++++-
+>  kernel/time/namespace.c | 15 ++++++++++++++-
+>  2 files changed, 27 insertions(+), 2 deletions(-)
+> 
+> diff --git a/fs/proc/base.c b/fs/proc/base.c
+> index 6042b646ab27..572898dd16a0 100644
+> --- a/fs/proc/base.c
+> +++ b/fs/proc/base.c
+> @@ -1573,6 +1573,7 @@ static ssize_t timens_offsets_write(struct file *file, const char __user *buf,
+>  	noffsets = 0;
+>  	for (pos = kbuf; pos; pos = next_line) {
+>  		struct proc_timens_offset *off = &offsets[noffsets];
+> +		char clock[10];
+>  		int err;
 >  
-> +	/* Number of user space windows opened in process mm_context */
-> +	atomic_t vas_windows;
-
-This should probably be a refcount_t.
-
-Which is an atomic that has wrappers that catch overflow/underflow cases
-for you, like you've open-coded below.
-
-> diff --git a/arch/powerpc/include/asm/mmu_context.h b/arch/powerpc/include/asm/mmu_context.h
-> index 360367c..7fd249498 100644
-> --- a/arch/powerpc/include/asm/mmu_context.h
-> +++ b/arch/powerpc/include/asm/mmu_context.h
-> @@ -185,11 +185,33 @@ static inline void mm_context_remove_copro(struct mm_struct *mm)
->  			dec_mm_active_cpus(mm);
->  	}
->  }
-> +
-> +/*
-> + * vas_windows counter shows number of open windows in the mm
-> + * context. During context switch, use this counter to clear the
-> + * foreign real address mapping (CP_ABORT) for the thread / process
-> + * that intend to use COPY/PASTE. When a process closes all windows,
-> + * disable CP_ABORT which is expensive to run.
-> + */
-> +static inline void mm_context_add_vas_windows(struct mm_struct *mm)
-
-I think this would read better if it wasn't plural. "windows" implies
-you can add more than one at a time.
-
-So:
-
-static inline void mm_context_add_vas_window(struct mm_struct *mm)
-
-> +{
-> +	atomic_inc(&mm->context.vas_windows);
-> +}
-> +
-> +static inline void mm_context_remove_vas_windows(struct mm_struct *mm)
-> +{
-> +	int c = atomic_dec_if_positive(&mm->context.vas_windows);
-> +
-> +	/* Detect imbalance between add and remove */
-> +	WARN_ON(c < 0);
-
-ie. here.
-
-> +}
->  #else
->  static inline void inc_mm_active_cpus(struct mm_struct *mm) { }
->  static inline void dec_mm_active_cpus(struct mm_struct *mm) { }
->  static inline void mm_context_add_copro(struct mm_struct *mm) { }
->  static inline void mm_context_remove_copro(struct mm_struct *mm) { }
-> +static inline void mm_context_add_vas_windows(struct mm_struct *mm) { }
-> +static inline void mm_context_remove_vas_windows(struct mm_struct *mm) { }
->  #endif
-
-  
-> diff --git a/arch/powerpc/include/asm/processor.h b/arch/powerpc/include/asm/processor.h
-> index eedcbfb..bfa336f 100644
-> --- a/arch/powerpc/include/asm/processor.h
-> +++ b/arch/powerpc/include/asm/processor.h
-> @@ -272,7 +272,6 @@ struct thread_struct {
->  	unsigned 	mmcr0;
->  
->  	unsigned 	used_ebb;
-> -	unsigned int	used_vas;
->  #endif
->  };
->  
-> diff --git a/arch/powerpc/kernel/process.c b/arch/powerpc/kernel/process.c
-> index fad50db..a3ecaf9 100644
-> --- a/arch/powerpc/kernel/process.c
-> +++ b/arch/powerpc/kernel/process.c
-> @@ -1221,7 +1221,8 @@ struct task_struct *__switch_to(struct task_struct *prev,
->  		 * mappings, we must issue a cp_abort to clear any state and
->  		 * prevent snooping, corruption or a covert channel.
->  		 */
-> -		if (current->thread.used_vas)
-> +		if (current->mm &&
-> +			atomic_read(&current->mm->context.vas_windows))
->  			asm volatile(PPC_CP_ABORT);
->  	}
->  #endif /* CONFIG_PPC_BOOK3S_64 */
-> @@ -1466,7 +1467,10 @@ int set_thread_uses_vas(void)
-
-set_thread_uses_vas() should probably just be moved into vas-window.c
-which is its only caller.
-
->  	if (!cpu_has_feature(CPU_FTR_ARCH_300))
->  		return -EINVAL;
->  
-> -	current->thread.used_vas = 1;
-> +	if (!current->mm)
-> +		return -EINVAL;
-> +
-> +	mm_context_add_vas_windows(current->mm);
-  
-I needed to dig a bit to confirm this was the right place to call this.
-
-The call trace is:
-  mm_context_add_vas_window()
-  set_thread_uses_vas()
-  vas_tx_win_open()
-  coproc_ioc_tx_win_open()
-  coproc_ioctl()
-
-> diff --git a/arch/powerpc/platforms/powernv/vas-window.c b/arch/powerpc/platforms/powernv/vas-window.c
-> index 3ffad5a..33dfbbf 100644
-> --- a/arch/powerpc/platforms/powernv/vas-window.c
-> +++ b/arch/powerpc/platforms/powernv/vas-window.c
-> @@ -1333,6 +1333,7 @@ int vas_win_close(struct vas_window *window)
->  			put_pid(window->pid);
->  			if (window->mm) {
->  				mm_context_remove_copro(window->mm);
-> +				mm_context_remove_vas_windows(window->mm);
->  				mmdrop(window->mm);
->  			}
+>  		/* Find the end of line and ensure we don't look past it */
+> @@ -1584,10 +1585,21 @@ static ssize_t timens_offsets_write(struct file *file, const char __user *buf,
+>  				next_line = NULL;
 >  		}
+>  
+> -		err = sscanf(pos, "%u %lld %lu", &off->clockid,
+> +		err = sscanf(pos, "%9s %lld %lu", clock,
+>  				&off->val.tv_sec, &off->val.tv_nsec);
+>  		if (err != 3 || off->val.tv_nsec >= NSEC_PER_SEC)
+>  			goto out;
+> +
+> +		clock[sizeof(clock) - 1] = 0;
+> +		if (strcmp(clock, "monotonic") == 0 ||
+> +		    strcmp(clock, __stringify(CLOCK_MONOTONIC)) == 0)
+> +			off->clockid = CLOCK_MONOTONIC;
+> +		else if (strcmp(clock, "boottime") == 0 ||
+> +			 strcmp(clock, __stringify(CLOCK_BOOTTIME)) == 0)
+> +			off->clockid = CLOCK_BOOTTIME;
+> +		else
+> +			goto out;
+> +
+>  		noffsets++;
+>  		if (noffsets == ARRAY_SIZE(offsets)) {
+>  			if (next_line)
+> diff --git a/kernel/time/namespace.c b/kernel/time/namespace.c
+> index e6ba064ce773..8127d2647064 100644
+> --- a/kernel/time/namespace.c
+> +++ b/kernel/time/namespace.c
+> @@ -338,7 +338,20 @@ static struct user_namespace *timens_owner(struct ns_common *ns)
+>  
+>  static void show_offset(struct seq_file *m, int clockid, struct timespec64 *ts)
+>  {
+> -	seq_printf(m, "%d %lld %ld\n", clockid, ts->tv_sec, ts->tv_nsec);
+> +	char *clock;
+> +
+> +	switch (clockid) {
+> +	case CLOCK_BOOTTIME:
+> +		clock = "boottime";
+> +		break;
+> +	case CLOCK_MONOTONIC:
+> +		clock = "monotonic";
+> +		break;
+> +	default:
+> +		clock = "unknown";
+> +		break;
+> +	}
 
-And similarly here, this is:
-  vas_win_close()
-  coproc_release()
+As things stand, there is to my eye an excessive amount of white space
+in the output produced by this line:
 
+> +	seq_printf(m, "%s\t%10lld\t%10ld\n", clock, ts->tv_sec, ts->tv_nsec);
 
-cheers
+Can I suggest instead something like:
+
+	seq_printf(m, "%-16s %10lld %9ld\n", clock, ts->tv_sec, ts->tv_nsec);
+
+Thanks,
+
+Michael
+
+-- 
+Michael Kerrisk
+Linux man-pages maintainer; http://www.kernel.org/doc/man-pages/
+Linux/UNIX System Programming Training: http://man7.org/training/
