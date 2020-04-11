@@ -2,131 +2,100 @@ Return-Path: <SRS0=xbEg=53=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98CC0C2BA19
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:34:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD4D5C2BB86
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:34:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 786DF20787
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:34:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9C4E52051A
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:34:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1586648087;
+	bh=omF1iRanyQ8S752QBPEFo8RD9YAGvCRHuHarTQ18A/E=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=xojE5z+MqjfGDZ+tdzJYsLWWrTmjKGiDrjKKEzcVclK/blNcXVq+TsG70kFqxMZps
+	 RkyezaBIl63lU9gsPuAnmWKNc814UeSLesfzHcByPtJZtvnvDD/eiXal9BM/FUVVOH
+	 b3JRksd1wiUZ/0S3AfCb8x/xSJpOTfCSHVvHHNQ4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729503AbgDKXej (ORCPT
+        id S1729150AbgDKXJO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 19:34:39 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:34368 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729152AbgDKXJQ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 19:09:16 -0400
-Received: by mail-pg1-f196.google.com with SMTP id l19so758498pgk.1;
-        Sat, 11 Apr 2020 16:09:15 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=bNOnt21gdCdQqFujqIQgsVXINX2TimtwaZJBJWFvobE=;
-        b=oCYiPdkZ4fSH8S5oZyZ/Yfu0CbzGRouI7xBUkZ7934Q1MxPjzDQ8NMcquVDXOmetDW
-         mgWwQoY6QtoIgQ541CboVVZzxnnUb2/x3feEsjF+aqMm441EeuLI1w3adidIRt2BgVx/
-         o1ZFz2xEWmxLv1JJegCWcm+0Ee6PKskQiHFEv0bErn1SDzU7fCJHDQV8LSZhYkImrWyZ
-         YnKgN3KW8BN+4BcxWnX8JrfZo6AlnUkg1i8RSvdqAn9TGF8GDif63GMzxnEwCbd8qXok
-         7ddRvQNoly4pKYcEOTWPXfvyVBO+vWcfbKtS9T63CC0M6r5lJDhwhY0xr8+cN/R0k/bP
-         T5gQ==
-X-Gm-Message-State: AGi0PuYu7veqKVjlCtD9rGIs98N+YZNcmxzYZUz3dVhJamQbyx/b3L7V
-        iMHL93FBescK9+/n4XGEQU4=
-X-Google-Smtp-Source: APiQypIz9tuo6Y03zFp20Egc2qgoiCJuV8aoNvO22l1h4rt+ybn5/wyg/QTeabc+t/nfuHkqdHyW7Q==
-X-Received: by 2002:aa7:83c5:: with SMTP id j5mr11676782pfn.100.1586646555117;
-        Sat, 11 Apr 2020 16:09:15 -0700 (PDT)
-Received: from ?IPv6:2601:647:4000:d7:c9fa:49a8:1701:9c75? ([2601:647:4000:d7:c9fa:49a8:1701:9c75])
-        by smtp.gmail.com with ESMTPSA id u44sm4679954pgn.81.2020.04.11.16.09.13
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 11 Apr 2020 16:09:14 -0700 (PDT)
-Subject: Re: [RFC v2 2/5] blktrace: fix debugfs use after free
-To:     Luis Chamberlain <mcgrof@kernel.org>
-Cc:     axboe@kernel.dk, viro@zeniv.linux.org.uk,
-        gregkh@linuxfoundation.org, rostedt@goodmis.org, mingo@redhat.com,
-        jack@suse.cz, ming.lei@redhat.com, nstange@suse.de,
-        akpm@linux-foundation.org, mhocko@suse.com, yukuai3@huawei.com,
-        linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        Omar Sandoval <osandov@fb.com>,
-        Hannes Reinecke <hare@suse.com>,
-        Michal Hocko <mhocko@kernel.org>,
-        syzbot+603294af2d01acfdd6da@syzkaller.appspotmail.com
-References: <20200409214530.2413-1-mcgrof@kernel.org>
- <20200409214530.2413-3-mcgrof@kernel.org>
- <88f94070-cd34-7435-9175-e0518a7d7db8@acm.org>
- <20200410195805.GM11244@42.do-not-panic.com>
-From:   Bart Van Assche <bvanassche@acm.org>
-Autocrypt: addr=bvanassche@acm.org; prefer-encrypt=mutual; keydata=
- mQENBFSOu4oBCADcRWxVUvkkvRmmwTwIjIJvZOu6wNm+dz5AF4z0FHW2KNZL3oheO3P8UZWr
- LQOrCfRcK8e/sIs2Y2D3Lg/SL7qqbMehGEYcJptu6mKkywBfoYbtBkVoJ/jQsi2H0vBiiCOy
- fmxMHIPcYxaJdXxrOG2UO4B60Y/BzE6OrPDT44w4cZA9DH5xialliWU447Bts8TJNa3lZKS1
- AvW1ZklbvJfAJJAwzDih35LxU2fcWbmhPa7EO2DCv/LM1B10GBB/oQB5kvlq4aA2PSIWkqz4
- 3SI5kCPSsygD6wKnbRsvNn2mIACva6VHdm62A7xel5dJRfpQjXj2snd1F/YNoNc66UUTABEB
- AAG0JEJhcnQgVmFuIEFzc2NoZSA8YnZhbmFzc2NoZUBhY20ub3JnPokBOQQTAQIAIwUCVI67
- igIbAwcLCQgHAwIBBhUIAgkKCwQWAgMBAh4BAheAAAoJEHFcPTXFzhAJ8QkH/1AdXblKL65M
- Y1Zk1bYKnkAb4a98LxCPm/pJBilvci6boefwlBDZ2NZuuYWYgyrehMB5H+q+Kq4P0IBbTqTa
- jTPAANn62A6jwJ0FnCn6YaM9TZQjM1F7LoDX3v+oAkaoXuq0dQ4hnxQNu792bi6QyVdZUvKc
- macVFVgfK9n04mL7RzjO3f+X4midKt/s+G+IPr4DGlrq+WH27eDbpUR3aYRk8EgbgGKvQFdD
- CEBFJi+5ZKOArmJVBSk21RHDpqyz6Vit3rjep7c1SN8s7NhVi9cjkKmMDM7KYhXkWc10lKx2
- RTkFI30rkDm4U+JpdAd2+tP3tjGf9AyGGinpzE2XY1K5AQ0EVI67igEIAKiSyd0nECrgz+H5
- PcFDGYQpGDMTl8MOPCKw/F3diXPuj2eql4xSbAdbUCJzk2ETif5s3twT2ER8cUTEVOaCEUY3
- eOiaFgQ+nGLx4BXqqGewikPJCe+UBjFnH1m2/IFn4T9jPZkV8xlkKmDUqMK5EV9n3eQLkn5g
- lco+FepTtmbkSCCjd91EfThVbNYpVQ5ZjdBCXN66CKyJDMJ85HVr5rmXG/nqriTh6cv1l1Js
- T7AFvvPjUPknS6d+BETMhTkbGzoyS+sywEsQAgA+BMCxBH4LvUmHYhpS+W6CiZ3ZMxjO8Hgc
- ++w1mLeRUvda3i4/U8wDT3SWuHcB3DWlcppECLkAEQEAAYkBHwQYAQIACQUCVI67igIbDAAK
- CRBxXD01xc4QCZ4dB/0QrnEasxjM0PGeXK5hcZMT9Eo998alUfn5XU0RQDYdwp6/kMEXMdmT
- oH0F0xB3SQ8WVSXA9rrc4EBvZruWQ+5/zjVrhhfUAx12CzL4oQ9Ro2k45daYaonKTANYG22y
- //x8dLe2Fv1By4SKGhmzwH87uXxbTJAUxiWIi1np0z3/RDnoVyfmfbbL1DY7zf2hYXLLzsJR
- mSsED/1nlJ9Oq5fALdNEPgDyPUerqHxcmIub+pF0AzJoYHK5punqpqfGmqPbjxrJLPJfHVKy
- goMj5DlBMoYqEgpbwdUYkH6QdizJJCur4icy8GUNbisFYABeoJ91pnD4IGei3MTdvINSZI5e
-Message-ID: <0837b27e-e07b-b61c-5842-00cdf78873ca@acm.org>
-Date:   Sat, 11 Apr 2020 16:09:13 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Sat, 11 Apr 2020 19:09:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46758 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729132AbgDKXJK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Apr 2020 19:09:10 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 06AD020787;
+        Sat, 11 Apr 2020 23:09:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1586646550;
+        bh=omF1iRanyQ8S752QBPEFo8RD9YAGvCRHuHarTQ18A/E=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=riGlpz6tKtUpfJSYKkfW0PMVhBRX1tPMm6ldywOiC0KrsZlCGSiwB+aGR8s2Xgt/G
+         vRTsCc42ZBttBItDMTh39xSUwCELgiYvXrk2ZLgTCarfON7RpVwFvsCn+JRQWfXQ5P
+         Q24afZ8fWPuNt6uYnVolkRwXO1d+bSpDXcaAP200=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Patrick Daly <pdaly@codeaurora.org>,
+        "Isaac J . Manjarres" <isaacm@codeaurora.org>,
+        Rob Herring <robh@kernel.org>, Sasha Levin <sashal@kernel.org>,
+        devicetree@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.5 101/121] of: of_reserved_mem: Increase limit on number of reserved regions
+Date:   Sat, 11 Apr 2020 19:06:46 -0400
+Message-Id: <20200411230706.23855-101-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200411230706.23855-1-sashal@kernel.org>
+References: <20200411230706.23855-1-sashal@kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20200410195805.GM11244@42.do-not-panic.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-04-10 12:58, Luis Chamberlain wrote:
-> On Thu, Apr 09, 2020 at 07:52:59PM -0700, Bart Van Assche wrote:
->> On 2020-04-09 14:45, Luis Chamberlain wrote:
->>> +void blk_q_debugfs_register(struct request_queue *q)
->>> +{
->>> +	q->debugfs_dir = debugfs_create_dir(kobject_name(q->kobj.parent),
->>> +					    blk_debugfs_root);
->>> +}
->>> +
->>> +void blk_q_debugfs_unregister(struct request_queue *q)
->>> +{
->>> +	debugfs_remove_recursive(q->debugfs_dir);
->>> +	q->debugfs_dir = NULL;
->>> +}
->>
->> There are no other functions in the block layer that start with the
->> prefix blk_q_. How about changing that prefix into blk_?
-> 
-> I the first patch already introduced blk_debugfs_register(), so I have
-> now changed the above to:
-> 
-> blk_debugfs_common_register()
-> blk_debugfs_common_unregister()
-> 
-> Let me know if something else is preferred.
+From: Patrick Daly <pdaly@codeaurora.org>
 
-I just realized that the "q" in "blk_q_" probably refers to the word
-"queue"? How about renaming these funtions into
-blk_queue_debugfs_register/unregister()?
+[ Upstream commit 632c99084052aef1c9dcfe43d2720306026d6d21 ]
 
-Thanks,
+Certain SoCs need to support a large amount of reserved memory
+regions. For example, Qualcomm's SM8150 SoC requires that 20
+regions of memory be reserved for a variety of reasons (e.g.
+loading a peripheral subsystem's firmware image into a
+particular space).
 
-Bart.
+When adding more reserved memory regions to cater to different
+usecases, the remaining number of reserved memory regions--12
+to be exact--becomes too small. Thus, double the existing
+limit of reserved memory regions.
+
+Signed-off-by: Patrick Daly <pdaly@codeaurora.org>
+Signed-off-by: Isaac J. Manjarres <isaacm@codeaurora.org>
+Signed-off-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/of/of_reserved_mem.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/of/of_reserved_mem.c b/drivers/of/of_reserved_mem.c
+index 6bd610ee2cd73..1a84bc0d5fa80 100644
+--- a/drivers/of/of_reserved_mem.c
++++ b/drivers/of/of_reserved_mem.c
+@@ -22,7 +22,7 @@
+ #include <linux/slab.h>
+ #include <linux/memblock.h>
+ 
+-#define MAX_RESERVED_REGIONS	32
++#define MAX_RESERVED_REGIONS	64
+ static struct reserved_mem reserved_mem[MAX_RESERVED_REGIONS];
+ static int reserved_mem_count;
+ 
+-- 
+2.20.1
+
