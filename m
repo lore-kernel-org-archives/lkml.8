@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CAF9C2BA2B
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:18:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C09FC2BBFD
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:18:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 63CBB20787
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:18:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0C6E42137B
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:18:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586607531;
-	bh=B3GBhkh1zFQdO+Yd14yu8K4EowbDYm982dglZ62IBU0=;
+	s=default; t=1586607533;
+	bh=XK80WFjCFM0+ej1+ead99YTMoIFBiX/cPmEjWmGYqzI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Y8LAgDzaBEP8utyPGDc9dGP11GwjWCuH2Smo5PVhl3Twj4HoWrx6t2pUoJZocvl24
-	 TXAign5KsgDiMsv72m8I7DFLMf3RbXcea+NleWUQ6dxBTKubOnBzmaGQUwcZCQz9R/
-	 fud5XMDGfDF2U7IvfHnWMcpHFRcL/UxFBQCQDjW8=
+	b=xTtP4V6YPc10ACP38t+divlNAstBBLZ/toduyJVX3KRWnfbkOuhpVPMNU/u6YiREA
+	 nU5WKn1SqQkK2GnO6muNc9HQumXyLzWjAAmfTKLV4P+oga2oyWJEZhf4T/rD3isIE/
+	 8+LVfGI+xxKK/A85msKdsNkk417LYZurmwvlntts=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728674AbgDKMSt (ORCPT
+        id S1728416AbgDKMSv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 08:18:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53822 "EHLO mail.kernel.org"
+        Sat, 11 Apr 2020 08:18:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53876 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728637AbgDKMSp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 08:18:45 -0400
+        id S1728667AbgDKMSr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Apr 2020 08:18:47 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B278620692;
-        Sat, 11 Apr 2020 12:18:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1D5FB20692;
+        Sat, 11 Apr 2020 12:18:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586607525;
-        bh=B3GBhkh1zFQdO+Yd14yu8K4EowbDYm982dglZ62IBU0=;
+        s=default; t=1586607527;
+        bh=XK80WFjCFM0+ej1+ead99YTMoIFBiX/cPmEjWmGYqzI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=C0xcQIkxfFst6fbC/WNRNAbVA5Cvhh4bsbVYJtfHefoB0JVtaRs3xOCQYNMJC+Qjc
-         3TEWDmp/v8qbgGNWwqLy5/p5tS9qipS3uvKZv4FJKXV1cjOOkv2xUmiRpJpVRFzg8C
-         EuX97sciz/j2DpdcHtY8ImygJCI3C8U/LKVS6g9w=
+        b=oW5CPjTuJI+NPlfcj64Uk2qFjwBlQdKh3TZeohHIPpxl3EIXoteAdEZwp63aowy1L
+         ZRPmldFixCk3LJaoTL26Q517ToUOSvaMs81ZJg5LMqvfWsLaajdWaPQYnYlG/lV1bc
+         vTU8gORyZUt91Nk9x3H38W+yViVAo/SplpghoIAM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Rahul Lakkireddy <rahul.lakkireddy@chelsio.com>,
+        stable@vger.kernel.org, Oleksij Rempel <o.rempel@pengutronix.de>,
+        Russell King <rmk+kernel@armlinux.org.uk>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.5 14/44] cxgb4: free MQPRIO resources in shutdown path
-Date:   Sat, 11 Apr 2020 14:09:34 +0200
-Message-Id: <20200411115458.100740804@linuxfoundation.org>
+Subject: [PATCH 5.5 15/44] net: phy: at803x: fix clock sink configuration on ATH8030 and ATH8035
+Date:   Sat, 11 Apr 2020 14:09:35 +0200
+Message-Id: <20200411115458.182861396@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200411115456.934174282@linuxfoundation.org>
 References: <20200411115456.934174282@linuxfoundation.org>
@@ -60,84 +60,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Rahul Lakkireddy <rahul.lakkireddy@chelsio.com>
+From: Oleksij Rempel <o.rempel@pengutronix.de>
 
-[ Upstream commit cef8dac96bc108633f5090bb3a9988d734dc1ee0 ]
+[ Upstream commit b1f4c209d84057b6d40b939b6e4404854271d797 ]
 
-Perform missing MQPRIO resource cleanup in PCI shutdown path. Also,
-fix MQPRIO MSIX bitmap leak in resource cleanup.
+The masks in priv->clk_25m_reg and priv->clk_25m_mask are one-bits-set
+for the values that comprise the fields, not zero-bits-set.
 
-Fixes: b1396c2bd675 ("cxgb4: parse and configure TC-MQPRIO offload")
-Signed-off-by: Rahul Lakkireddy <rahul.lakkireddy@chelsio.com>
+This patch fixes the clock frequency configuration for ATH8030 and
+ATH8035 Atheros PHYs by removing the erroneous "~".
+
+To reproduce this bug, configure the PHY  with the device tree binding
+"qca,clk-out-frequency" and remove the machine specific PHY fixups.
+
+Fixes: 2f664823a47021 ("net: phy: at803x: add device tree binding")
+Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
+Reported-by: Russell King <rmk+kernel@armlinux.org.uk>
+Reviewed-by: Russell King <rmk+kernel@armlinux.org.uk>
+Tested-by: Russell King <rmk+kernel@armlinux.org.uk>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/ethernet/chelsio/cxgb4/cxgb4_main.c      |    4 +++
- drivers/net/ethernet/chelsio/cxgb4/cxgb4_tc_mqprio.c |   23 +++++++++++++++++++
- drivers/net/ethernet/chelsio/cxgb4/cxgb4_tc_mqprio.h |    1 
- 3 files changed, 28 insertions(+)
+ drivers/net/phy/at803x.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/drivers/net/ethernet/chelsio/cxgb4/cxgb4_main.c
-+++ b/drivers/net/ethernet/chelsio/cxgb4/cxgb4_main.c
-@@ -6651,6 +6651,10 @@ static void shutdown_one(struct pci_dev
- 			if (adapter->port[i]->reg_state == NETREG_REGISTERED)
- 				cxgb_close(adapter->port[i]);
- 
-+		rtnl_lock();
-+		cxgb4_mqprio_stop_offload(adapter);
-+		rtnl_unlock();
-+
- 		if (is_uld(adapter)) {
- 			detach_ulds(adapter);
- 			t4_uld_clean_up(adapter);
---- a/drivers/net/ethernet/chelsio/cxgb4/cxgb4_tc_mqprio.c
-+++ b/drivers/net/ethernet/chelsio/cxgb4/cxgb4_tc_mqprio.c
-@@ -301,6 +301,7 @@ static void cxgb4_mqprio_free_hw_resourc
- 			cxgb4_clear_msix_aff(eorxq->msix->vec,
- 					     eorxq->msix->aff_mask);
- 			free_irq(eorxq->msix->vec, &eorxq->rspq);
-+			cxgb4_free_msix_idx_in_bmap(adap, eorxq->msix->idx);
+--- a/drivers/net/phy/at803x.c
++++ b/drivers/net/phy/at803x.c
+@@ -425,8 +425,8 @@ static int at803x_parse_dt(struct phy_de
+ 		 */
+ 		if (at803x_match_phy_id(phydev, ATH8030_PHY_ID) ||
+ 		    at803x_match_phy_id(phydev, ATH8035_PHY_ID)) {
+-			priv->clk_25m_reg &= ~AT8035_CLK_OUT_MASK;
+-			priv->clk_25m_mask &= ~AT8035_CLK_OUT_MASK;
++			priv->clk_25m_reg &= AT8035_CLK_OUT_MASK;
++			priv->clk_25m_mask &= AT8035_CLK_OUT_MASK;
  		}
+ 	}
  
- 		free_rspq_fl(adap, &eorxq->rspq, &eorxq->fl);
-@@ -611,6 +612,28 @@ out:
- 	return ret;
- }
- 
-+void cxgb4_mqprio_stop_offload(struct adapter *adap)
-+{
-+	struct cxgb4_tc_port_mqprio *tc_port_mqprio;
-+	struct net_device *dev;
-+	u8 i;
-+
-+	if (!adap->tc_mqprio || !adap->tc_mqprio->port_mqprio)
-+		return;
-+
-+	for_each_port(adap, i) {
-+		dev = adap->port[i];
-+		if (!dev)
-+			continue;
-+
-+		tc_port_mqprio = &adap->tc_mqprio->port_mqprio[i];
-+		if (!tc_port_mqprio->mqprio.qopt.num_tc)
-+			continue;
-+
-+		cxgb4_mqprio_disable_offload(dev);
-+	}
-+}
-+
- int cxgb4_init_tc_mqprio(struct adapter *adap)
- {
- 	struct cxgb4_tc_port_mqprio *tc_port_mqprio, *port_mqprio;
---- a/drivers/net/ethernet/chelsio/cxgb4/cxgb4_tc_mqprio.h
-+++ b/drivers/net/ethernet/chelsio/cxgb4/cxgb4_tc_mqprio.h
-@@ -38,6 +38,7 @@ struct cxgb4_tc_mqprio {
- 
- int cxgb4_setup_tc_mqprio(struct net_device *dev,
- 			  struct tc_mqprio_qopt_offload *mqprio);
-+void cxgb4_mqprio_stop_offload(struct adapter *adap);
- int cxgb4_init_tc_mqprio(struct adapter *adap);
- void cxgb4_cleanup_tc_mqprio(struct adapter *adap);
- #endif /* __CXGB4_TC_MQPRIO_H__ */
 
 
