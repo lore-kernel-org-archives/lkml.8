@@ -2,132 +2,122 @@ Return-Path: <SRS0=xbEg=53=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90924C2BA2B
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 15:56:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0A51C2BBC7
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 16:04:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2477C20757
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 15:56:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B5AD12078E
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 16:04:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="olq7daV2"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bpDd2Pph"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726524AbgDKP4a (ORCPT
+        id S1726440AbgDKQEL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 11:56:30 -0400
-Received: from mail.skyhub.de ([5.9.137.197]:49344 "EHLO mail.skyhub.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726054AbgDKP4a (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 11:56:30 -0400
-Received: from zn.tnic (p200300EC2F1EE2004DDA4FC6A7F1C076.dip0.t-ipconnect.de [IPv6:2003:ec:2f1e:e200:4dda:4fc6:a7f1:c076])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 404AB1EC085F;
-        Sat, 11 Apr 2020 17:56:29 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1586620589;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=0QgKfyD3UcjRgzIwSEmTFwH1FvRCThOAFzQ5S67+qsI=;
-        b=olq7daV2ItKU/slSpda7p8nzWckB9HYez1JCJ44uiLmdHYcn/3sb1KyxX0N4bSYLkeByEc
-        tJIDbMt8m1/bjY7Pw0bZ4MMIIVKiNkPj1a+NKhcxS+2lDfEnuIHXkBiWRUKxiT0XVVWQPq
-        DrnfQ0kcqIextkY2FMCiztRhZDUYQUs=
-Date:   Sat, 11 Apr 2020 17:56:23 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     Leon Romanovsky <leon@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>
-Cc:     Leon Romanovsky <leonro@mellanox.com>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        Keyur Chudgar <keyur@os.amperecomputing.com>,
-        Don Fry <pcnet32@frontier.com>,
-        Veaceslav Falico <vfalico@gmail.com>,
-        Jay Vosburgh <j.vosburgh@gmail.com>, linux-acenic@sunsite.dk,
-        Maxime Ripard <mripard@kernel.org>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Mark Einon <mark.einon@gmail.com>,
-        Chris Snook <chris.snook@gmail.com>,
-        linux-rockchip@lists.infradead.org,
-        Iyappan Subramanian <iyappan@os.amperecomputing.com>,
-        Igor Russkikh <irusskikh@marvell.com>,
-        David Dillow <dave@thedillows.org>,
-        Netanel Belgazal <netanel@amazon.com>,
-        Quan Nguyen <quan@os.amperecomputing.com>,
-        Jay Cliburn <jcliburn@gmail.com>,
-        Lino Sanfilippo <LinoSanfilippo@gmx.de>,
-        linux-arm-kernel@lists.infradead.org,
-        Andreas Larsson <andreas@gaisler.com>,
-        Andy Gospodarek <andy@greyhouse.net>, netdev@vger.kernel.org,
-        Thor Thayer <thor.thayer@linux.intel.com>,
-        linux-kernel@vger.kernel.org, Ion Badulescu <ionut@badula.org>,
-        Arthur Kiyanovski <akiyano@amazon.com>,
-        Jes Sorensen <jes@trained-monkey.org>,
-        nios2-dev@lists.rocketboards.org, Chen-Yu Tsai <wens@csie.org>
-Subject: [PATCH] net/3com/3c515: Fix MODULE_ARCH_VERMAGIC redefinition
-Message-ID: <20200411155623.GA22175@zn.tnic>
-References: <20200224085311.460338-1-leon@kernel.org>
- <20200224085311.460338-4-leon@kernel.org>
+        Sat, 11 Apr 2020 12:04:11 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:38340 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726070AbgDKQEK (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Apr 2020 12:04:10 -0400
+Received: by mail-pf1-f193.google.com with SMTP id y25so133950pfn.5;
+        Sat, 11 Apr 2020 09:04:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=uH/uW4uuwVc/sUawxiLaFcYoWaZecblOcPGAeVmrbRA=;
+        b=bpDd2PphtMcSemGxsrV2MW+BLa4JF/TZ9SPOkaI7IE8DsUJNM8Kugv5GA2SSkjKynG
+         M5PGUpytCyWBwp2GtTY/kdyooJF5UKajhfg5+GJgysfUrG5v9pdv9bmHfiY21C+tRDA8
+         H6QOu7cfT7F+ZDCCkZOJ68BuQy4yZy1M7jFcIXf+UuXeo24MdCYOH13d/ERfUYY7rDCn
+         lVsl56il3TN6e7ma+5n1yZKve/huDJRF0+m7ZYNPApriP5n2RBxS4tQDuDDPU+XUwpGX
+         PSqMjlsJRf2AzZAdOpzahXVHH+I6ai1+WEHk5YO1BvjwB6Lzg2aP4rbZFH9mBclETUut
+         US5Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=uH/uW4uuwVc/sUawxiLaFcYoWaZecblOcPGAeVmrbRA=;
+        b=es1piTxgJB/h0NYtWFqTWiEVVaftAo2YPXHIVUbN7p8PLrBwY+U+MrIzcB6oR++4p5
+         53M2LDaO+H5ykNSstbkRSqUyUcja8/WYYOUQZivTgxJ2BEngN5Un0AXAonxTi1RSqNw3
+         NC4LvJz1DzpUNv2bUhDR/ZpC7wFXG+ZGLQ+bMkzu+VqUfiEeEfbxEebw8Wo3hy8AxVxQ
+         mRsjZO5nhGpU7oJwAtqPRyLN+j9m/9dUJe+xUrrjUmPoX3BYSgX8S133RXmU3DeE6c0z
+         2zmZn1GFJfJSMTrh680bVtJAT21MXan4LS4/oZjkAMF71IbOPtxTeMV8/XLrBJbRr3GF
+         npLg==
+X-Gm-Message-State: AGi0PuZu/UEXWHSw7W0Tno0wfHX6emu2L/+dRZKvP6tlUmglyUMv9QuK
+        vTS9oMSpBr9aZoMnU4Z+64c=
+X-Google-Smtp-Source: APiQypLdNiYiF+7hS+5k0UH+NUie1b5tew65NkXTnDcayarF6ShrqWloGrmA4pOce85bpSbWi3Slvg==
+X-Received: by 2002:a62:1946:: with SMTP id 67mr10618076pfz.0.1586621050221;
+        Sat, 11 Apr 2020 09:04:10 -0700 (PDT)
+Received: from localhost ([183.82.183.27])
+        by smtp.gmail.com with ESMTPSA id nl7sm4661950pjb.36.2020.04.11.09.04.09
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Sat, 11 Apr 2020 09:04:09 -0700 (PDT)
+Date:   Sat, 11 Apr 2020 21:34:07 +0530
+From:   afzal mohammed <afzal.mohd.ma@gmail.com>
+To:     Thomas Bogendoerfer <tbogendoerfer@suse.de>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>
+Cc:     linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org
+Subject: [PATCH 0/3] Remove setup_percpu_irq() & remove_percpu_irq
+Message-ID: <cover.1586434781.git.afzal.mohd.ma@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200224085311.460338-4-leon@kernel.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+User-Agent: Mutt/1.9.3 (2018-01-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Borislav Petkov <bp@suse.de>
+Hi,
 
-Change the include order so that MODULE_ARCH_VERMAGIC from the arch
-header arch/x86/include/asm/module.h gets used instead of the fallback
-from include/linux/vermagic.h and thus fix:
+While doing the removal of setup_irq(), it was observed that
+setup_percpu_irq() also can be removed similarly by replacing it w/
+request_percpu_irq(), which does allocate memory. In the initial
+setup_irq() removal cover letters [1], it was mentioned that
+setup_percpu_irq() is untouched.
 
-  In file included from ./include/linux/module.h:30,
-                   from drivers/net/ethernet/3com/3c515.c:56:
-  ./arch/x86/include/asm/module.h:73: warning: "MODULE_ARCH_VERMAGIC" redefined
-     73 | # define MODULE_ARCH_VERMAGIC MODULE_PROC_FAMILY
-        |
-  In file included from drivers/net/ethernet/3com/3c515.c:25:
-  ./include/linux/vermagic.h:28: note: this is the location of the previous definition
-     28 | #define MODULE_ARCH_VERMAGIC ""
-        |
+After removing setup_irq(), it does not look good to let live
+setup_percpu_irq(), especially since it being a low hanging fruit. Hence
+replace setup_percpu_irq() by it's allocator equivalent.
+request_percpu_irq() cannot be used since all the users need to pass
+IRQF_TIMER flag, which it would not allow. Thus it's variant,
+__request_percpu_irq() is used.
 
-Fixes: 6bba2e89a88c ("net/3com: Delete driver and module versions from 3com drivers")
-Signed-off-by: Borislav Petkov <bp@suse.de>
----
- drivers/net/ethernet/3com/3c515.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+In addition to removing setup_percpu_irq() definition,
+remove_percpu_irq(), unused, is also removed.
 
-diff --git a/drivers/net/ethernet/3com/3c515.c b/drivers/net/ethernet/3com/3c515.c
-index 90312fcd6319..cdceef891dbd 100644
---- a/drivers/net/ethernet/3com/3c515.c
-+++ b/drivers/net/ethernet/3com/3c515.c
-@@ -22,7 +22,6 @@
- 
- */
- 
--#include <linux/vermagic.h>
- #define DRV_NAME		"3c515"
- 
- #define CORKSCREW 1
-@@ -67,6 +66,7 @@ static int max_interrupt_work = 20;
- #include <linux/timer.h>
- #include <linux/ethtool.h>
- #include <linux/bitops.h>
-+#include <linux/vermagic.h>
- 
- #include <linux/uaccess.h>
- #include <asm/io.h>
+It seems setup_percpu_irq() is used only by MIPS (even the one outside
+MIPS arch dir, i.e. the clocksource driver). The series has been build
+tested, though i would have loved to do a qemu test as well, i do not
+see a qemu machine type that can test the changes done here (in malta
+machine, in which clocksource changes are getting built, the changes
+done here are not being runtime tested).
+
+Regards
+afzal
+
+[1] https://lkml.kernel.org/r/cover.1581478323.git.afzal.mohd.ma@gmail.com
+
+afzal mohammed (3):
+  MIPS: Replace setup_percpu_irq() by request_percpu_irq() variant
+  clocksource/drivers/mips-gic-timer: Replace setup_percpu_irq() by
+    request_percpu_irq() variant
+  genirq: Remove setup_percpu_irq() and remove_percpu_irq()
+
+ arch/mips/include/asm/cevt-r4k.h     |  1 -
+ arch/mips/kernel/cevt-r4k.c          | 11 --------
+ arch/mips/sgi-ip27/ip27-timer.c      | 13 ++++-----
+ arch/mips/sgi-ip30/ip30-timer.c      |  6 ++--
+ drivers/clocksource/mips-gic-timer.c | 10 ++-----
+ include/linux/irq.h                  |  2 --
+ kernel/irq/manage.c                  | 42 ----------------------------
+ 7 files changed, 10 insertions(+), 75 deletions(-)
+
 -- 
-2.21.0
+2.18.0
 
--- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
