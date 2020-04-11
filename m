@@ -2,103 +2,140 @@ Return-Path: <SRS0=xbEg=53=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF53CC2BA2B
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 17:30:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ABBA9C2BA2B
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 17:35:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5CC542075E
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 17:30:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 78E292075E
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 17:35:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ysa6u9Ic"
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="lXfwEK6t"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726257AbgDKRaf (ORCPT
+        id S1726699AbgDKRfK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 13:30:35 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:33439 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726069AbgDKRaf (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 13:30:35 -0400
-Received: by mail-io1-f68.google.com with SMTP id o127so4951642iof.0
-        for <linux-kernel@vger.kernel.org>; Sat, 11 Apr 2020 10:30:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:in-reply-to:references:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=2MJRhpXThU+pszquP1SrhCFEA1eduxYr0/EAlj1eIEM=;
-        b=Ysa6u9Ic9ZZS1fGsElP7Gf9wLbJf0Ihc8dImxiAWFDHTrWHDgxtFVVDcEzRUzyZI46
-         6iyfgUcIYs9QA9axJnmG4JECF4zZSrCS2RlUujTpYWRmdbsBK7fNy2lNje1NQD76v4zi
-         1hAcolAnROlw2x8xendhQIK4V6B2QeMekdMHzP1/Vpts5sR+56LsVprNBG/dgHnab8N3
-         JtSnSZj7EL3pGV+AlIfhPPgzG8uhYvYZ1uGi25z781dEHBnsU2ENFcASv9kmdZ4PxSrx
-         TzJROWaFcR/G6T3ovijQjc2DIoxQn4mnPV4M5m3Dc+b2bkyU/gfA8XloErI4FspK5Noz
-         wwfw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:in-reply-to:references:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=2MJRhpXThU+pszquP1SrhCFEA1eduxYr0/EAlj1eIEM=;
-        b=jQWW2ttDBu2HXrHViUNt1HVw03LGyY1qyLBGcvZAM3BKNIFY86+kkgHOtiOg/UlSwH
-         QoK26eHycSG8uG9E8xXZ4/Uk+1bjDhUdZEbzhpjx0FScU2MRuB68Xna5xfpkwkvSCSqX
-         LEFhxx+L+WmbnQbtVvgHbx9+TyeG7zv7jU5QsqJ1FIyJEv3V+iPpqV5S6wuk2gmdJkY7
-         jMGh+fFC3/jITbX0pX0waHJ4ze1AlnnQ9KmUGjFH3DNzCJitjE0dCGZzm50ndHUaM/hc
-         K1l6WCWPtOGToJ4zUh3E8ndkaHNhsxdmHIgFauWzoAmcJoMiO+heu/2sZ3FEZa3Iny3a
-         vl+w==
-X-Gm-Message-State: AGi0PuYNO2S2EjrH0PGFf5PQT0u5zU8lcpTWpiO4vk59UJDfT0itPvQf
-        EYG9yiA9Ac0QgqyNrpqBXu8OfCABGRwOqj97VcyYqHZ+nEA=
-X-Google-Smtp-Source: APiQypKYNk8psLNRwQVvdFPmaJ5h+Tv6lfwFf/9XEF0kFujPrSltnbZThJXvyYezxDvHrfrKFyyyiYw3wQcnX7yoTk8=
-X-Received: by 2002:a02:2505:: with SMTP id g5mr8927108jag.114.1586626235478;
- Sat, 11 Apr 2020 10:30:35 -0700 (PDT)
+        Sat, 11 Apr 2020 13:35:10 -0400
+Received: from mail.skyhub.de ([5.9.137.197]:34474 "EHLO mail.skyhub.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726129AbgDKRfK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Apr 2020 13:35:10 -0400
+Received: from zn.tnic (p200300EC2F1EE200B53534244D96C31E.dip0.t-ipconnect.de [IPv6:2003:ec:2f1e:e200:b535:3424:4d96:c31e])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 6FF401EC0C50;
+        Sat, 11 Apr 2020 19:35:09 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1586626509;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=tITpXAEx0ZKBxrGmf7qRgeBQo5VORL0f/hlXJ7f6wlY=;
+        b=lXfwEK6tpAvogvK08CzhUk18RhPgc4bf31WSPpPGihBfqj7p1woHl+SjSfJYSQq1TNfqjX
+        93NZz9vz6cMvuQ5PC+o8RNh1K+LWrIw/nOz0CHsgOm+9m3easHVSCjfGpvQJ5TJXzKngQm
+        VR2UNFA8qiZWsCaapTt+JMhPi4I1LBY=
+Date:   Sat, 11 Apr 2020 19:35:04 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     Leon Romanovsky <leon@kernel.org>
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        Keyur Chudgar <keyur@os.amperecomputing.com>,
+        Don Fry <pcnet32@frontier.com>,
+        Veaceslav Falico <vfalico@gmail.com>,
+        Jay Vosburgh <j.vosburgh@gmail.com>, linux-acenic@sunsite.dk,
+        Maxime Ripard <mripard@kernel.org>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Mark Einon <mark.einon@gmail.com>,
+        Chris Snook <chris.snook@gmail.com>,
+        linux-rockchip@lists.infradead.org,
+        Iyappan Subramanian <iyappan@os.amperecomputing.com>,
+        Igor Russkikh <irusskikh@marvell.com>,
+        David Dillow <dave@thedillows.org>,
+        Netanel Belgazal <netanel@amazon.com>,
+        Quan Nguyen <quan@os.amperecomputing.com>,
+        Jay Cliburn <jcliburn@gmail.com>,
+        Lino Sanfilippo <LinoSanfilippo@gmx.de>,
+        linux-arm-kernel@lists.infradead.org,
+        Andreas Larsson <andreas@gaisler.com>,
+        Andy Gospodarek <andy@greyhouse.net>, netdev@vger.kernel.org,
+        Thor Thayer <thor.thayer@linux.intel.com>,
+        linux-kernel@vger.kernel.org, Ion Badulescu <ionut@badula.org>,
+        Arthur Kiyanovski <akiyano@amazon.com>,
+        Jes Sorensen <jes@trained-monkey.org>,
+        nios2-dev@lists.rocketboards.org, Chen-Yu Tsai <wens@csie.org>
+Subject: Re: [PATCH] net/3com/3c515: Fix MODULE_ARCH_VERMAGIC redefinition
+Message-ID: <20200411173504.GA11128@zn.tnic>
+References: <20200224085311.460338-1-leon@kernel.org>
+ <20200224085311.460338-4-leon@kernel.org>
+ <20200411155623.GA22175@zn.tnic>
+ <20200411161156.GA200683@unreal>
 MIME-Version: 1.0
-Received: by 2002:ac0:a58b:0:0:0:0:0 with HTTP; Sat, 11 Apr 2020 10:30:34
- -0700 (PDT)
-In-Reply-To: <20200409073807.GA2483@worktop.programming.kicks-ass.net>
-References: <CAOzgRdbWsKY7mXgiTx3um_gdJvgPN1O2p1vxmWv9eApQAy9UzQ@mail.gmail.com>
- <CAOzgRdYkJMiQM9M-UHv5Z-6CLzaV0P8YTK5Ft-CmT5-JqCnYSA@mail.gmail.com> <20200409073807.GA2483@worktop.programming.kicks-ass.net>
-From:   youling 257 <youling257@gmail.com>
-Date:   Sun, 12 Apr 2020 01:30:34 +0800
-Message-ID: <CAOzgRdZyueBhX+jzpgSgdyeto830O444SwmxaLEAQzSsEaGczg@mail.gmail.com>
-Subject: Re: Merge branch 'core-objtool-for-linus' of git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     viro@zeniv.linux.org.uk, jpoimboe@redhat.com,
-        linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200411161156.GA200683@unreal>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-i build 64bit kernel on 32bit host. please fix.
+On Sat, Apr 11, 2020 at 07:11:56PM +0300, Leon Romanovsky wrote:
+> Probably, this is the right change, but I have a feeling that the right
+> solution will be inside headers itself. It is a little bit strange that
+> both very common kernel headers like module.h and vermagic.h are location
+> dependant.
 
-2020-04-09 15:38 GMT+08:00, Peter Zijlstra <peterz@infradead.org>:
-> On Thu, Apr 09, 2020 at 10:00:53AM +0800, youling 257 wrote:
->> d937a6dfc9428f470c3ce4d459c390944ddef538 caused 64bit kernel build
->> failed on 32bit userspace.
->> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commi=
-t/?id=3Dd937a6dfc9428f470c3ce4d459c390944ddef538
->>
->> 2020-04-08 16:13 GMT+08:00, youling 257 <youling257@gmail.com>:
->> > after this merge branch, build 64bit kernel failed on 32bit userspace.
->> >
->> >
->> >   CC       tools/objtool/builtin-check.o
->> >   CC       tools/objtool/builtin-orc.o
->> > In file included from check.h:10,
->> >                  from builtin-check.c:18:
->> > elf.h: In function =E2=80=98sec_offset_hash=E2=80=99:
->> > elf.h:102:14: error: right shift count >=3D width of type
->> > [-Werror=3Dshift-count-overflow]
->> >   102 |  oh =3D offset >> 32;
->> >       |              ^~
->
-> Oh right; I figured it wouldn't matter since we don't do objtool for
-> 32bit kernels, but I suppose you're cross building a 64bit kernel on a
-> 32bit host or something daft like that?
->
-> I'll go fix it.
->
+Judging by how only a couple of net drivers include vermagic.h directly,
+doh, of course:
+
+diff --git a/drivers/net/ethernet/3com/3c509.c b/drivers/net/ethernet/3com/3c509.c
+index b762176a1406..139d0120f511 100644
+--- a/drivers/net/ethernet/3com/3c509.c
++++ b/drivers/net/ethernet/3com/3c509.c
+@@ -85,7 +85,6 @@
+ #include <linux/device.h>
+ #include <linux/eisa.h>
+ #include <linux/bitops.h>
+-#include <linux/vermagic.h>
+ 
+ #include <linux/uaccess.h>
+ #include <asm/io.h>
+diff --git a/drivers/net/ethernet/3com/3c515.c b/drivers/net/ethernet/3com/3c515.c
+index 90312fcd6319..47b4215bb93b 100644
+--- a/drivers/net/ethernet/3com/3c515.c
++++ b/drivers/net/ethernet/3com/3c515.c
+@@ -22,7 +22,6 @@
+ 
+ */
+ 
+-#include <linux/vermagic.h>
+ #define DRV_NAME		"3c515"
+ 
+ #define CORKSCREW 1
+
+---
+
+Drivers include
+
+#include <linux/module.h>
+
+which includes
+
+#include <asm/module.h>
+
+which defines the arch-specific MODULE_ARCH_VERMAGIC.
+
+Why did you need to include vermagic.h directly? i386 builds fine with
+the vermagic.h includes removed or was it some other arches which needed
+it?
+
+Thx.
+
+-- 
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
