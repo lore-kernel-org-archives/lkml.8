@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F241C2BA19
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:19:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C410DC2BB86
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:19:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 08AC1206E9
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:19:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9C74E20757
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:19:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586647175;
-	bh=pBFHispvSwypMKkujOpJ7kixHiYhP3agOl3yW78XA+M=;
+	s=default; t=1586647180;
+	bh=S4dRrix0tHD6i0sJuJcIgM8Xsh/eapY+NTsNndzKHII=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=L+58JERRdjQyBnqUs3VHZWFn22FFfZkHkhAwDtufC3CnIXc1kG3puLG6ooyXcnAbu
-	 El5s+jVxcLBXXv4rfEqjz7dPLrjLb8FTJc2a1huZ4Hd8R1JHkhRpqdsgwnxGSWb7Tj
-	 m3zgklRJucjuntQqG+4nyhwDg6ivnfwSyuQAWsJ8=
+	b=YZr2z6Ww+GBaMKMk3V4to4sIgn3MdBd9TOm8pJtkmM+2XXvwgX+KXsHuIYCHOL4eQ
+	 RSRfn9xZOa4W3RpmYd3h2Uyki9V40FDLBjJ5BXOyDiN0eDp6nyTMef7yw0/Wi6xPFH
+	 5L10ZukxtgjGQ1LldSTHx0mCDmF3Z895OskXIsh0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729056AbgDKXTd (ORCPT
+        id S1730606AbgDKXNx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 19:19:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55268 "EHLO mail.kernel.org"
+        Sat, 11 Apr 2020 19:13:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55136 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727072AbgDKXNy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 19:13:54 -0400
+        id S1730568AbgDKXNr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Apr 2020 19:13:47 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E6AA320708;
-        Sat, 11 Apr 2020 23:13:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B00F120708;
+        Sat, 11 Apr 2020 23:13:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586646834;
-        bh=pBFHispvSwypMKkujOpJ7kixHiYhP3agOl3yW78XA+M=;
+        s=default; t=1586646827;
+        bh=S4dRrix0tHD6i0sJuJcIgM8Xsh/eapY+NTsNndzKHII=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DPzz4CGQbYwq65zVMhmU77vFIJ7aovHwd8HV8WMMxz++vzia9R8ZV3/124OedJbnm
-         vPGL48kwtho0+LW2DjVTCJ2Z/T/rWn6jUATaccjGJsM4gckjDyNT+0BcEYspBAnG/6
-         2+0MFZdGy7knGnAn1m2j9zDoD6e1l0HxqEsr+gW0=
+        b=QAP9vVZup5r3rjue1UV+Fmv9tF48rDJvvSa3axU6H3tSUmdE6rY9H/CAvEtRuLNQy
+         MQ3pYmHXh13DQSGIvt4oIZSdLF33YdPPvnsac2OBkOjf+DPpYdU4FLfwa8KzDQ0gSq
+         OkZI2oC4m13mmzMAMd6T4T1QQAHNYK2FL2Pfao7E=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Sergey Shatunov <me@prok.pw>,
-        Marcel Holtmann <marcel@holtmann.org>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-bluetooth@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 23/37] Bluetooth: btusb: Add support for 13d3:3548 Realtek 8822CE device
-Date:   Sat, 11 Apr 2020 19:13:12 -0400
-Message-Id: <20200411231327.26550-23-sashal@kernel.org>
+Cc:     Bart Van Assche <bvanassche@acm.org>,
+        Leon Romanovsky <leonro@mellanox.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Sasha Levin <sashal@kernel.org>, linux-rdma@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 17/37] RDMA/rxe: Fix configuration of atomic queue pair attributes
+Date:   Sat, 11 Apr 2020 19:13:06 -0400
+Message-Id: <20200411231327.26550-17-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200411231327.26550-1-sashal@kernel.org>
 References: <20200411231327.26550-1-sashal@kernel.org>
@@ -60,63 +60,74 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sergey Shatunov <me@prok.pw>
+From: Bart Van Assche <bvanassche@acm.org>
 
-[ Upstream commit eb3939e386ec8df6049697d388298590231ac79c ]
+[ Upstream commit fb3063d31995cc4cf1d47a406bb61d6fb1b1d58d ]
 
-The ASUS FX505DV laptop contains RTL8822CE device with an
-associated BT chip using a USB ID of 13d3:3548.
-This patch add fw download support for it.
+From the comment above the definition of the roundup_pow_of_two() macro:
 
-T:  Bus=03 Lev=01 Prnt=01 Port=03 Cnt=03 Dev#=  4 Spd=12   MxCh= 0
-D:  Ver= 1.00 Cls=e0(wlcon) Sub=01 Prot=01 MxPS=64 #Cfgs=  1
-P:  Vendor=13d3 ProdID=3548 Rev= 0.00
-S:  Manufacturer=Realtek
-S:  Product=Bluetooth Radio
-S:  SerialNumber=00e04c000001
-C:* #Ifs= 2 Cfg#= 1 Atr=a0 MxPwr=500mA
-I:* If#= 0 Alt= 0 #EPs= 3 Cls=e0(wlcon) Sub=01 Prot=01 Driver=btusb
-E:  Ad=81(I) Atr=03(Int.) MxPS=  16 Ivl=1ms
-E:  Ad=02(O) Atr=02(Bulk) MxPS=  64 Ivl=0ms
-E:  Ad=82(I) Atr=02(Bulk) MxPS=  64 Ivl=0ms
-I:* If#= 1 Alt= 0 #EPs= 2 Cls=e0(wlcon) Sub=01 Prot=01 Driver=btusb
-E:  Ad=03(O) Atr=01(Isoc) MxPS=   0 Ivl=1ms
-E:  Ad=83(I) Atr=01(Isoc) MxPS=   0 Ivl=1ms
-I:  If#= 1 Alt= 1 #EPs= 2 Cls=e0(wlcon) Sub=01 Prot=01 Driver=btusb
-E:  Ad=03(O) Atr=01(Isoc) MxPS=   9 Ivl=1ms
-E:  Ad=83(I) Atr=01(Isoc) MxPS=   9 Ivl=1ms
-I:  If#= 1 Alt= 2 #EPs= 2 Cls=e0(wlcon) Sub=01 Prot=01 Driver=btusb
-E:  Ad=03(O) Atr=01(Isoc) MxPS=  17 Ivl=1ms
-E:  Ad=83(I) Atr=01(Isoc) MxPS=  17 Ivl=1ms
-I:  If#= 1 Alt= 3 #EPs= 2 Cls=e0(wlcon) Sub=01 Prot=01 Driver=btusb
-E:  Ad=03(O) Atr=01(Isoc) MxPS=  25 Ivl=1ms
-E:  Ad=83(I) Atr=01(Isoc) MxPS=  25 Ivl=1ms
-I:  If#= 1 Alt= 4 #EPs= 2 Cls=e0(wlcon) Sub=01 Prot=01 Driver=btusb
-E:  Ad=03(O) Atr=01(Isoc) MxPS=  33 Ivl=1ms
-E:  Ad=83(I) Atr=01(Isoc) MxPS=  33 Ivl=1ms
-I:  If#= 1 Alt= 5 #EPs= 2 Cls=e0(wlcon) Sub=01 Prot=01 Driver=btusb
-E:  Ad=03(O) Atr=01(Isoc) MxPS=  49 Ivl=1ms
-E:  Ad=83(I) Atr=01(Isoc) MxPS=  49 Ivl=1ms
+     The result is undefined when n == 0.
 
-Signed-off-by: Sergey Shatunov <me@prok.pw>
-Signed-off-by: Marcel Holtmann <marcel@holtmann.org>
+Hence only pass positive values to roundup_pow_of_two(). This patch fixes
+the following UBSAN complaint:
+
+  UBSAN: Undefined behaviour in ./include/linux/log2.h:57:13
+  shift exponent 64 is too large for 64-bit type 'long unsigned int'
+  Call Trace:
+   dump_stack+0xa5/0xe6
+   ubsan_epilogue+0x9/0x26
+   __ubsan_handle_shift_out_of_bounds.cold+0x4c/0xf9
+   rxe_qp_from_attr.cold+0x37/0x5d [rdma_rxe]
+   rxe_modify_qp+0x59/0x70 [rdma_rxe]
+   _ib_modify_qp+0x5aa/0x7c0 [ib_core]
+   ib_modify_qp+0x3b/0x50 [ib_core]
+   cma_modify_qp_rtr+0x234/0x260 [rdma_cm]
+   __rdma_accept+0x1a7/0x650 [rdma_cm]
+   nvmet_rdma_cm_handler+0x1286/0x14cd [nvmet_rdma]
+   cma_cm_event_handler+0x6b/0x330 [rdma_cm]
+   cma_ib_req_handler+0xe60/0x22d0 [rdma_cm]
+   cm_process_work+0x30/0x140 [ib_cm]
+   cm_req_handler+0x11f4/0x1cd0 [ib_cm]
+   cm_work_handler+0xb8/0x344e [ib_cm]
+   process_one_work+0x569/0xb60
+   worker_thread+0x7a/0x5d0
+   kthread+0x1e6/0x210
+   ret_from_fork+0x24/0x30
+
+Link: https://lore.kernel.org/r/20200217205714.26937-1-bvanassche@acm.org
+Fixes: 8700e3e7c485 ("Soft RoCE driver")
+Signed-off-by: Bart Van Assche <bvanassche@acm.org>
+Reviewed-by: Leon Romanovsky <leonro@mellanox.com>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/bluetooth/btusb.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/infiniband/sw/rxe/rxe_qp.c | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/bluetooth/btusb.c b/drivers/bluetooth/btusb.c
-index 424f399cc79b4..6225cd1708d7c 100644
---- a/drivers/bluetooth/btusb.c
-+++ b/drivers/bluetooth/btusb.c
-@@ -390,6 +390,7 @@ static const struct usb_device_id blacklist_table[] = {
+diff --git a/drivers/infiniband/sw/rxe/rxe_qp.c b/drivers/infiniband/sw/rxe/rxe_qp.c
+index 25055a68a2c07..ef7fd5dfad468 100644
+--- a/drivers/infiniband/sw/rxe/rxe_qp.c
++++ b/drivers/infiniband/sw/rxe/rxe_qp.c
+@@ -593,15 +593,16 @@ int rxe_qp_from_attr(struct rxe_qp *qp, struct ib_qp_attr *attr, int mask,
+ 	struct ib_gid_attr sgid_attr;
  
- 	/* Additional Realtek 8822CE Bluetooth devices */
- 	{ USB_DEVICE(0x04ca, 0x4005), .driver_info = BTUSB_REALTEK },
-+	{ USB_DEVICE(0x13d3, 0x3548), .driver_info = BTUSB_REALTEK },
+ 	if (mask & IB_QP_MAX_QP_RD_ATOMIC) {
+-		int max_rd_atomic = __roundup_pow_of_two(attr->max_rd_atomic);
++		int max_rd_atomic = attr->max_rd_atomic ?
++			roundup_pow_of_two(attr->max_rd_atomic) : 0;
  
- 	/* Silicon Wave based devices */
- 	{ USB_DEVICE(0x0c10, 0x0000), .driver_info = BTUSB_SWAVE },
+ 		qp->attr.max_rd_atomic = max_rd_atomic;
+ 		atomic_set(&qp->req.rd_atomic, max_rd_atomic);
+ 	}
+ 
+ 	if (mask & IB_QP_MAX_DEST_RD_ATOMIC) {
+-		int max_dest_rd_atomic =
+-			__roundup_pow_of_two(attr->max_dest_rd_atomic);
++		int max_dest_rd_atomic = attr->max_dest_rd_atomic ?
++			roundup_pow_of_two(attr->max_dest_rd_atomic) : 0;
+ 
+ 		qp->attr.max_dest_rd_atomic = max_dest_rd_atomic;
+ 
 -- 
 2.20.1
 
