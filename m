@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1EFBC2BBFD
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:12:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FAE8C2BA2B
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:12:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 895A0214D8
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:12:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2386320787
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:12:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586607130;
-	bh=GDBkdFyQwNJy3s7hikLvymUoDDGW7i4bveuG7EFg1oA=;
+	s=default; t=1586607133;
+	bh=NQXrLC0KTEjBGdK77trgtG9U7efQxanUvgTDpB2Li9I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WNa6DFv0BIlhHQT6KdltwKRGIrUqkOG6wcX69eLbr4avjxrlysmOAcdGrNjvK9f4I
-	 WqeObD+SznfyQmKFfBMPGlQkdVlVX3LhHnlhczOOFDOAWEzqRrMJ+WngmElsJ4KLNV
-	 tokyjE2J98YJaJ9yN/ug5FWxUpRU0q4b00/0bd0E=
+	b=NixiTsp/JgKT89oaH701kqH56sG1Lubpx7XbvKOygg5RJEXeEfMlazn+PnAgpjiCb
+	 rx6FEzhtFAzmu4RJeajA3iJyDbc6XmmcVEqsBq62X7AiLOExAVjHHh4drS3ncadSJT
+	 SI6cgvH3nLiOrzZ0wiuEt/A24bBUdrnaOlQEYjTo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727154AbgDKMMJ (ORCPT
+        id S1727168AbgDKMML (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 08:12:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44474 "EHLO mail.kernel.org"
+        Sat, 11 Apr 2020 08:12:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44426 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727104AbgDKMMF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 08:12:05 -0400
+        id S1727113AbgDKMMB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Apr 2020 08:12:01 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B6A14214D8;
-        Sat, 11 Apr 2020 12:12:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4C541214D8;
+        Sat, 11 Apr 2020 12:12:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586607124;
-        bh=GDBkdFyQwNJy3s7hikLvymUoDDGW7i4bveuG7EFg1oA=;
+        s=default; t=1586607121;
+        bh=NQXrLC0KTEjBGdK77trgtG9U7efQxanUvgTDpB2Li9I=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cyhTYNDQGQUsOd3W3mGJ/nmQHJzuMZfuWZYC1jxQUWMkjH0RENAGllD7l+tuycm7k
-         yUB+346rrQkAw+jP0920bFKx+f/1Br9nCp1t2mmlF2XH5JXrmZT2OKciQgvzA/wQ2U
-         +ST0wW0+t2iwRR6ozGEdpldJT3xx8i3OMJfj602M=
+        b=qTQh4JVL7KJcf2RdMg1tnKuEMPs2bubvyrCB766WM6fpf0PQWegfYyqRDOvF83ufK
+         +b/sjJQKmm8Ckuuukh/+Q5QYTEcbi1UIBp55Kz/ADGiLMjk9Yc+WnoNls49fA9hb85
+         kaUwaM1L7jKT5LCn3RPGDC+piFhUnP8iyqH+3QpU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Richard Palethorpe <rpalethorpe@suse.com>,
-        Kees Cook <keescook@chromium.org>, linux-can@vger.kernel.org,
-        netdev@vger.kernel.org, security@kernel.org, wg@grandegger.com,
-        mkl@pengutronix.de, davem@davemloft.net
-Subject: [PATCH 4.9 17/32] slcan: Dont transmit uninitialized stack data in padding
-Date:   Sat, 11 Apr 2020 14:08:56 +0200
-Message-Id: <20200411115420.554970658@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Jisheng Zhang <Jisheng.Zhang@synaptics.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.9 16/32] net: stmmac: dwmac1000: fix out-of-bounds mac address reg setting
+Date:   Sat, 11 Apr 2020 14:08:55 +0200
+Message-Id: <20200411115420.414555683@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200411115418.455500023@linuxfoundation.org>
 References: <20200411115418.455500023@linuxfoundation.org>
@@ -61,51 +60,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Richard Palethorpe <rpalethorpe@suse.com>
+From: Jisheng Zhang <Jisheng.Zhang@synaptics.com>
 
-[ Upstream commit b9258a2cece4ec1f020715fe3554bc2e360f6264 ]
+[ Upstream commit 3e1221acf6a8f8595b5ce354bab4327a69d54d18 ]
 
-struct can_frame contains some padding which is not explicitly zeroed in
-slc_bump. This uninitialized data will then be transmitted if the stack
-initialization hardening feature is not enabled (CONFIG_INIT_STACK_ALL).
+Commit 9463c4455900 ("net: stmmac: dwmac1000: Clear unused address
+entries") cleared the unused mac address entries, but introduced an
+out-of bounds mac address register programming bug -- After setting
+the secondary unicast mac addresses, the "reg" value has reached
+netdev_uc_count() + 1, thus we should only clear address entries
+if (addr < perfect_addr_number)
 
-This commit just zeroes the whole struct including the padding.
-
-Signed-off-by: Richard Palethorpe <rpalethorpe@suse.com>
-Fixes: a1044e36e457 ("can: add slcan driver for serial/USB-serial CAN adapters")
-Reviewed-by: Kees Cook <keescook@chromium.org>
-Cc: linux-can@vger.kernel.org
-Cc: netdev@vger.kernel.org
-Cc: security@kernel.org
-Cc: wg@grandegger.com
-Cc: mkl@pengutronix.de
-Cc: davem@davemloft.net
-Acked-by: Marc Kleine-Budde <mkl@pengutronix.de>
+Fixes: 9463c4455900 ("net: stmmac: dwmac1000: Clear unused address entries")
+Signed-off-by: Jisheng Zhang <Jisheng.Zhang@synaptics.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/can/slcan.c |    4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+ drivers/net/ethernet/stmicro/stmmac/dwmac1000_core.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/net/can/slcan.c
-+++ b/drivers/net/can/slcan.c
-@@ -147,7 +147,7 @@ static void slc_bump(struct slcan *sl)
- 	u32 tmpid;
- 	char *cmd = sl->rbuff;
+--- a/drivers/net/ethernet/stmicro/stmmac/dwmac1000_core.c
++++ b/drivers/net/ethernet/stmicro/stmmac/dwmac1000_core.c
+@@ -214,7 +214,7 @@ static void dwmac1000_set_filter(struct
+ 			reg++;
+ 		}
  
--	cf.can_id = 0;
-+	memset(&cf, 0, sizeof(cf));
- 
- 	switch (*cmd) {
- 	case 'r':
-@@ -186,8 +186,6 @@ static void slc_bump(struct slcan *sl)
- 	else
- 		return;
- 
--	*(u64 *) (&cf.data) = 0; /* clear payload */
--
- 	/* RTR frames may have a dlc > 0 but they never have any data bytes */
- 	if (!(cf.can_id & CAN_RTR_FLAG)) {
- 		for (i = 0; i < cf.can_dlc; i++) {
+-		while (reg <= perfect_addr_number) {
++		while (reg < perfect_addr_number) {
+ 			writel(0, ioaddr + GMAC_ADDR_HIGH(reg));
+ 			writel(0, ioaddr + GMAC_ADDR_LOW(reg));
+ 			reg++;
 
 
