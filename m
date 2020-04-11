@@ -4,52 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C63F8C2BB85
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:12:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21492C2BA2B
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:12:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9FAC721556
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:12:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E3F7F214D8
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:12:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586607146;
-	bh=9/F1HgN1yJlGKSkllksxsM4rLDTTAM51nN0ITD+mQ4A=;
+	s=default; t=1586607151;
+	bh=bhyXZUyrEZprzBnlfxEr/cNsc9HK41U73bqTX+ZLs08=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=E4KTYKAalSIrkZJy/gyerfn+DL+Coe7kJrDnDm8MF6QKLBS4cnPT6Rq1pa+Z1Urhe
-	 NbrPHymtoYy9COBGbJBaqjkTVnVMj3aWkqlmXiAgNMn9hgmnxHtvt/hYCWUk+Lc5fZ
-	 TpBgPglkaBI4FKBM4G9CUr8P2OeOFy7d5LawswzY=
+	b=KUN4U53UvdIkU2oRp9mo5rxg3fHN96q0OsF4+Cc4Rv3N0NgjrYzbc7xDXfDi31iJ8
+	 inQmsYnbVE+FcUC05/jgFrBb/U0N9Udz0cBR9DGESDONGMKwktcmu1Xs6HtMl2kmXd
+	 BuULreANZY8orttPOi4MkiYAogLhwhByTtF0wacw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727243AbgDKMMZ (ORCPT
+        id S1727258AbgDKMM2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 08:12:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44904 "EHLO mail.kernel.org"
+        Sat, 11 Apr 2020 08:12:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45032 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727219AbgDKMMV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 08:12:21 -0400
+        id S1727219AbgDKMM0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Apr 2020 08:12:26 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AB9832137B;
-        Sat, 11 Apr 2020 12:12:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8E77D20787;
+        Sat, 11 Apr 2020 12:12:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586607141;
-        bh=9/F1HgN1yJlGKSkllksxsM4rLDTTAM51nN0ITD+mQ4A=;
+        s=default; t=1586607146;
+        bh=bhyXZUyrEZprzBnlfxEr/cNsc9HK41U73bqTX+ZLs08=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JPd/b4wJ2UlCXTvJGzq/5mIXceNNgqTrBrL6uyHIenEVOOSDKi2Q9GcFyWwpT0Kbv
-         +p3k2hr24eGbafQHncRrfzsPY3e4NmFxg6oxwtb2tRVCAQG21xqts36UG7Sg8YnvKm
-         7cEnT/hLyiCF17LLZCRBZBBV51nH7Qqu5guR6UhM=
+        b=Bmt9TSHEc7aWHcFGn8wDsW27MAELjI1R3m3MrkatCTZG0w4T8x60i0VqSbcqDgG74
+         5IiWpLgXra3LIqaX3ZOKY/afkmTRGMr3E4jyNp3zdmeFCcMET0q/pm7n2do0I7OP7V
+         kutl1LgZRGLtuP8VN3CJf+8CkM8aml0xh8ww4bTY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Mike Marciniszyn <mike.marciniszyn@intel.com>,
-        Kaike Wan <kaike.wan@intel.com>,
-        Dennis Dalessandro <dennis.dalessandro@intel.com>,
-        Jason Gunthorpe <jgg@mellanox.com>
-Subject: [PATCH 4.9 23/32] IB/hfi1: Fix memory leaks in sysfs registration and unregistration
-Date:   Sat, 11 Apr 2020 14:09:02 +0200
-Message-Id: <20200411115421.785525506@linuxfoundation.org>
+        syzbot+98704a51af8e3d9425a9@syzkaller.appspotmail.com,
+        Ilya Dryomov <idryomov@gmail.com>,
+        Jeff Layton <jlayton@kernel.org>,
+        Luis Henriques <lhenriques@suse.com>
+Subject: [PATCH 4.9 25/32] ceph: canonicalize server path in place
+Date:   Sat, 11 Apr 2020 14:09:04 +0200
+Message-Id: <20200411115422.109122991@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200411115418.455500023@linuxfoundation.org>
 References: <20200411115418.455500023@linuxfoundation.org>
@@ -62,81 +62,219 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kaike Wan <kaike.wan@intel.com>
+From: Ilya Dryomov <idryomov@gmail.com>
 
-commit 5c15abc4328ad696fa61e2f3604918ed0c207755 upstream.
+commit b27a939e8376a3f1ed09b9c33ef44d20f18ec3d0 upstream.
 
-When the hfi1 driver is unloaded, kmemleak will report the following
-issue:
+syzbot reported that 4fbc0c711b24 ("ceph: remove the extra slashes in
+the server path") had caused a regression where an allocation could be
+done under a spinlock -- compare_mount_options() is called by sget_fc()
+with sb_lock held.
 
-unreferenced object 0xffff8888461a4c08 (size 8):
-comm "kworker/0:0", pid 5, jiffies 4298601264 (age 2047.134s)
-hex dump (first 8 bytes):
-73 64 6d 61 30 00 ff ff sdma0...
-backtrace:
-[<00000000311a6ef5>] kvasprintf+0x62/0xd0
-[<00000000ade94d9f>] kobject_set_name_vargs+0x1c/0x90
-[<0000000060657dbb>] kobject_init_and_add+0x5d/0xb0
-[<00000000346fe72b>] 0xffffffffa0c5ecba
-[<000000006cfc5819>] 0xffffffffa0c866b9
-[<0000000031c65580>] 0xffffffffa0c38e87
-[<00000000e9739b3f>] local_pci_probe+0x41/0x80
-[<000000006c69911d>] work_for_cpu_fn+0x16/0x20
-[<00000000601267b5>] process_one_work+0x171/0x380
-[<0000000049a0eefa>] worker_thread+0x1d1/0x3f0
-[<00000000909cf2b9>] kthread+0xf8/0x130
-[<0000000058f5f874>] ret_from_fork+0x35/0x40
+We don't really need the supplied server path, so canonicalize it
+in place and compare it directly.  To make this work, the leading
+slash is kept around and the logic in ceph_real_mount() to skip it
+is restored.  CEPH_MSG_CLIENT_SESSION now reports the same (i.e.
+canonicalized) path, with the leading slash of course.
 
-This patch fixes the issue by:
-
-- Releasing dd->per_sdma[i].kobject in hfi1_unregister_sysfs().
-  - This will fix the memory leak.
-
-- Calling kobject_put() to unwind operations only for those entries in
-   dd->per_sdma[] whose operations have succeeded (including the current
-   one that has just failed) in hfi1_verbs_register_sysfs().
-
-Cc: <stable@vger.kernel.org>
-Fixes: 0cb2aa690c7e ("IB/hfi1: Add sysfs interface for affinity setup")
-Link: https://lore.kernel.org/r/20200326163807.21129.27371.stgit@awfm-01.aw.intel.com
-Reviewed-by: Mike Marciniszyn <mike.marciniszyn@intel.com>
-Signed-off-by: Kaike Wan <kaike.wan@intel.com>
-Signed-off-by: Dennis Dalessandro <dennis.dalessandro@intel.com>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+Fixes: 4fbc0c711b24 ("ceph: remove the extra slashes in the server path")
+Reported-by: syzbot+98704a51af8e3d9425a9@syzkaller.appspotmail.com
+Signed-off-by: Ilya Dryomov <idryomov@gmail.com>
+Reviewed-by: Jeff Layton <jlayton@kernel.org>
+Signed-off-by: Luis Henriques <lhenriques@suse.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- drivers/infiniband/hw/hfi1/sysfs.c |   13 +++++++++++--
- 1 file changed, 11 insertions(+), 2 deletions(-)
+ fs/ceph/super.c |  118 ++++++++++++--------------------------------------------
+ fs/ceph/super.h |    2 
+ 2 files changed, 28 insertions(+), 92 deletions(-)
 
---- a/drivers/infiniband/hw/hfi1/sysfs.c
-+++ b/drivers/infiniband/hw/hfi1/sysfs.c
-@@ -861,8 +861,13 @@ bail:
- 	for (i = 0; i < ARRAY_SIZE(hfi1_attributes); ++i)
- 		device_remove_file(&dev->dev, hfi1_attributes[i]);
+--- a/fs/ceph/super.c
++++ b/fs/ceph/super.c
+@@ -177,6 +177,26 @@ static match_table_t fsopt_tokens = {
+ 	{-1, NULL}
+ };
  
--	for (i = 0; i < dd->num_sdma; i++)
--		kobject_del(&dd->per_sdma[i].kobj);
-+	/*
-+	 * The function kobject_put() will call kobject_del() if the kobject
-+	 * has been added successfully. The sysfs files created under the
-+	 * kobject directory will also be removed during the process.
-+	 */
-+	for (; i >= 0; i--)
-+		kobject_put(&dd->per_sdma[i].kobj);
- 
- 	return ret;
- }
-@@ -875,6 +880,10 @@ void hfi1_verbs_unregister_sysfs(struct
- 	struct hfi1_pportdata *ppd;
- 	int i;
- 
-+	/* Unwind operations in hfi1_verbs_register_sysfs() */
-+	for (i = 0; i < dd->num_sdma; i++)
-+		kobject_put(&dd->per_sdma[i].kobj);
++/*
++ * Remove adjacent slashes and then the trailing slash, unless it is
++ * the only remaining character.
++ *
++ * E.g. "//dir1////dir2///" --> "/dir1/dir2", "///" --> "/".
++ */
++static void canonicalize_path(char *path)
++{
++	int i, j = 0;
 +
- 	for (i = 0; i < dd->num_pports; i++) {
- 		ppd = &dd->pport[i];
++	for (i = 0; path[i] != '\0'; i++) {
++		if (path[i] != '/' || j < 1 || path[j - 1] != '/')
++			path[j++] = path[i];
++	}
++
++	if (j > 1 && path[j - 1] == '/')
++		j--;
++	path[j] = '\0';
++}
++
+ static int parse_fsopt_token(char *c, void *private)
+ {
+ 	struct ceph_mount_options *fsopt = private;
+@@ -320,73 +340,6 @@ static int strcmp_null(const char *s1, c
+ 	return strcmp(s1, s2);
+ }
  
+-/**
+- * path_remove_extra_slash - Remove the extra slashes in the server path
+- * @server_path: the server path and could be NULL
+- *
+- * Return NULL if the path is NULL or only consists of "/", or a string
+- * without any extra slashes including the leading slash(es) and the
+- * slash(es) at the end of the server path, such as:
+- * "//dir1////dir2///" --> "dir1/dir2"
+- */
+-static char *path_remove_extra_slash(const char *server_path)
+-{
+-	const char *path = server_path;
+-	const char *cur, *end;
+-	char *buf, *p;
+-	int len;
+-
+-	/* if the server path is omitted */
+-	if (!path)
+-		return NULL;
+-
+-	/* remove all the leading slashes */
+-	while (*path == '/')
+-		path++;
+-
+-	/* if the server path only consists of slashes */
+-	if (*path == '\0')
+-		return NULL;
+-
+-	len = strlen(path);
+-
+-	buf = kmalloc(len + 1, GFP_KERNEL);
+-	if (!buf)
+-		return ERR_PTR(-ENOMEM);
+-
+-	end = path + len;
+-	p = buf;
+-	do {
+-		cur = strchr(path, '/');
+-		if (!cur)
+-			cur = end;
+-
+-		len = cur - path;
+-
+-		/* including one '/' */
+-		if (cur != end)
+-			len += 1;
+-
+-		memcpy(p, path, len);
+-		p += len;
+-
+-		while (cur <= end && *cur == '/')
+-			cur++;
+-		path = cur;
+-	} while (path < end);
+-
+-	*p = '\0';
+-
+-	/*
+-	 * remove the last slash if there has and just to make sure that
+-	 * we will get something like "dir1/dir2"
+-	 */
+-	if (*(--p) == '/')
+-		*p = '\0';
+-
+-	return buf;
+-}
+-
+ static int compare_mount_options(struct ceph_mount_options *new_fsopt,
+ 				 struct ceph_options *new_opt,
+ 				 struct ceph_fs_client *fsc)
+@@ -394,7 +347,6 @@ static int compare_mount_options(struct
+ 	struct ceph_mount_options *fsopt1 = new_fsopt;
+ 	struct ceph_mount_options *fsopt2 = fsc->mount_options;
+ 	int ofs = offsetof(struct ceph_mount_options, snapdir_name);
+-	char *p1, *p2;
+ 	int ret;
+ 
+ 	ret = memcmp(fsopt1, fsopt2, ofs);
+@@ -404,21 +356,12 @@ static int compare_mount_options(struct
+ 	ret = strcmp_null(fsopt1->snapdir_name, fsopt2->snapdir_name);
+ 	if (ret)
+ 		return ret;
++
+ 	ret = strcmp_null(fsopt1->mds_namespace, fsopt2->mds_namespace);
+ 	if (ret)
+ 		return ret;
+ 
+-	p1 = path_remove_extra_slash(fsopt1->server_path);
+-	if (IS_ERR(p1))
+-		return PTR_ERR(p1);
+-	p2 = path_remove_extra_slash(fsopt2->server_path);
+-	if (IS_ERR(p2)) {
+-		kfree(p1);
+-		return PTR_ERR(p2);
+-	}
+-	ret = strcmp_null(p1, p2);
+-	kfree(p1);
+-	kfree(p2);
++	ret = strcmp_null(fsopt1->server_path, fsopt2->server_path);
+ 	if (ret)
+ 		return ret;
+ 
+@@ -482,6 +425,8 @@ static int parse_mount_options(struct ce
+ 			err = -ENOMEM;
+ 			goto out;
+ 		}
++
++		canonicalize_path(fsopt->server_path);
+ 	} else {
+ 		dev_name_end = dev_name + strlen(dev_name);
+ 	}
+@@ -903,21 +848,13 @@ static struct dentry *ceph_real_mount(st
+ 	mutex_lock(&fsc->client->mount_mutex);
+ 
+ 	if (!fsc->sb->s_root) {
+-		const char *path, *p;
++		const char *path = fsc->mount_options->server_path ?
++				     fsc->mount_options->server_path + 1 : "";
++
+ 		err = __ceph_open_session(fsc->client, started);
+ 		if (err < 0)
+ 			goto out;
+ 
+-		p = path_remove_extra_slash(fsc->mount_options->server_path);
+-		if (IS_ERR(p)) {
+-			err = PTR_ERR(p);
+-			goto out;
+-		}
+-		/* if the server path is omitted or just consists of '/' */
+-		if (!p)
+-			path = "";
+-		else
+-			path = p;
+ 		dout("mount opening path '%s'\n", path);
+ 
+ 		err = ceph_fs_debugfs_init(fsc);
+@@ -925,7 +862,6 @@ static struct dentry *ceph_real_mount(st
+ 			goto out;
+ 
+ 		root = open_root_dentry(fsc, path, started);
+-		kfree(p);
+ 		if (IS_ERR(root)) {
+ 			err = PTR_ERR(root);
+ 			goto out;
+--- a/fs/ceph/super.h
++++ b/fs/ceph/super.h
+@@ -70,7 +70,7 @@ struct ceph_mount_options {
+ 
+ 	char *snapdir_name;   /* default ".snap" */
+ 	char *mds_namespace;  /* default NULL */
+-	char *server_path;    /* default  "/" */
++	char *server_path;    /* default NULL (means "/") */
+ };
+ 
+ struct ceph_fs_client {
 
 
