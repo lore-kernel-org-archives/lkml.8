@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08345C2BA2B
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:13:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1A41C2BA2B
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:13:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D664F21556
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:13:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7509420787
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:13:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586607219;
-	bh=8b6+SjPVlptKlpHpNs5BryqjkHoJs5ngMdVdKcZM1GY=;
+	s=default; t=1586607222;
+	bh=Iu3IkTSv4RF2KHmNDVO62v3zlxWEmjAbUzzfnO8vjc4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2AOGlGwpJTt+gtVw4Yi+gGj5RBmGg7W6zyBoOjWh+nIOF91N0XJBsTXiOG1+MYxDV
-	 U38CuLarRUhWm/kfOS8WaRg3JdMDQ1nM4APkJGc+mhS+sUbL2Agl++05xxNtg09kFb
-	 IAAf5x50etx0jS3ax8HasnFTib9AuRREf8g4VXGU=
+	b=a/YPXZg8+zL+db4HSkzX1Y9ZNrIvJovBMMYfH3jAFyPl06vdBjrZQXYI+9WtOTXxf
+	 e7v/Sf16539tR7s0mar3jx8GcGAEOM6EA6WirzZfsbCVlrD4fxL//OIGJo4/PZQlx5
+	 KWCOvy9hHtGrFLBZxDLBsHS7YJEgXh0cXqiSaIXs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726182AbgDKMNh (ORCPT
+        id S1727866AbgDKMNl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 08:13:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46546 "EHLO mail.kernel.org"
+        Sat, 11 Apr 2020 08:13:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46642 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727806AbgDKMNb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 08:13:31 -0400
+        id S1727848AbgDKMNh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Apr 2020 08:13:37 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DF8A821835;
-        Sat, 11 Apr 2020 12:13:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AEC4321556;
+        Sat, 11 Apr 2020 12:13:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586607211;
-        bh=8b6+SjPVlptKlpHpNs5BryqjkHoJs5ngMdVdKcZM1GY=;
+        s=default; t=1586607216;
+        bh=Iu3IkTSv4RF2KHmNDVO62v3zlxWEmjAbUzzfnO8vjc4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UzvoKZw+2FKeFUlF9IQBl8MlIx8VUDOu00KM0zp7WvMlRBVA+k0P/jZ2XeHC3dJ0s
-         UjxzZA2s6tK3ofi0e2H32+QsbJDT8A2TNg8nL9KGDgNyshK4RxHLhGX53y1iuRwG6A
-         MA7iRWk3H+M8J2Bdt5+dyCrqm86R8/cBYNtd2Tow=
+        b=S3HIyDSGrDJIl3D89WcrygHQNzHl+4bK+WRKmtWG9GhSo+/qCtAH2WY7TzfifeOh5
+         871jvXwVGfAHqP+7RotFfME2ZYzxUxmAcFE6uvHZuXhpSPZXUY2O0CZ81X+8jL5emU
+         j2lNHUcbQr4qY2fHpTLa68DnxZGSHJYV1A/EFegs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, William Dauchy <w.dauchy@criteo.com>,
-        Nicolas Dichtel <nicolas.dichtel@6wind.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.14 02/38] net, ip_tunnel: fix interface lookup with no key
-Date:   Sat, 11 Apr 2020 14:08:46 +0200
-Message-Id: <20200411115437.998346755@linuxfoundation.org>
+        stable@vger.kernel.org, "Jason A. Donenfeld" <Jason@zx2c4.com>,
+        Theodore Tso <tytso@mit.edu>
+Subject: [PATCH 4.14 21/38] random: always use batched entropy for get_random_u{32,64}
+Date:   Sat, 11 Apr 2020 14:09:05 +0200
+Message-Id: <20200411115440.160085978@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200411115437.795556138@linuxfoundation.org>
 References: <20200411115437.795556138@linuxfoundation.org>
@@ -60,54 +59,102 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: William Dauchy <w.dauchy@criteo.com>
+From: Jason A. Donenfeld <Jason@zx2c4.com>
 
-[ Upstream commit 25629fdaff2ff509dd0b3f5ff93d70a75e79e0a1 ]
+commit 69efea712f5b0489e67d07565aad5c94e09a3e52 upstream.
 
-when creating a new ipip interface with no local/remote configuration,
-the lookup is done with TUNNEL_NO_KEY flag, making it impossible to
-match the new interface (only possible match being fallback or metada
-case interface); e.g: `ip link add tunl1 type ipip dev eth0`
+It turns out that RDRAND is pretty slow. Comparing these two
+constructions:
 
-To fix this case, adding a flag check before the key comparison so we
-permit to match an interface with no local/remote config; it also avoids
-breaking possible userland tools relying on TUNNEL_NO_KEY flag and
-uninitialised key.
+  for (i = 0; i < CHACHA_BLOCK_SIZE; i += sizeof(ret))
+    arch_get_random_long(&ret);
 
-context being on my side, I'm creating an extra ipip interface attached
-to the physical one, and moving it to a dedicated namespace.
+and
 
-Fixes: c54419321455 ("GRE: Refactor GRE tunneling code.")
-Signed-off-by: William Dauchy <w.dauchy@criteo.com>
-Signed-off-by: Nicolas Dichtel <nicolas.dichtel@6wind.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+  long buf[CHACHA_BLOCK_SIZE / sizeof(long)];
+  extract_crng((u8 *)buf);
+
+it amortizes out to 352 cycles per long for the top one and 107 cycles
+per long for the bottom one, on Coffee Lake Refresh, Intel Core i9-9880H.
+
+And importantly, the top one has the drawback of not benefiting from the
+real rng, whereas the bottom one has all the nice benefits of using our
+own chacha rng. As get_random_u{32,64} gets used in more places (perhaps
+beyond what it was originally intended for when it was introduced as
+get_random_{int,long} back in the md5 monstrosity era), it seems like it
+might be a good thing to strengthen its posture a tiny bit. Doing this
+should only be stronger and not any weaker because that pool is already
+initialized with a bunch of rdrand data (when available). This way, we
+get the benefits of the hardware rng as well as our own rng.
+
+Another benefit of this is that we no longer hit pitfalls of the recent
+stream of AMD bugs in RDRAND. One often used code pattern for various
+things is:
+
+  do {
+  	val = get_random_u32();
+  } while (hash_table_contains_key(val));
+
+That recent AMD bug rendered that pattern useless, whereas we're really
+very certain that chacha20 output will give pretty distributed numbers,
+no matter what.
+
+So, this simplification seems better both from a security perspective
+and from a performance perspective.
+
+Signed-off-by: Jason A. Donenfeld <Jason@zx2c4.com>
+Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Link: https://lore.kernel.org/r/20200221201037.30231-1-Jason@zx2c4.com
+Signed-off-by: Theodore Ts'o <tytso@mit.edu>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- net/ipv4/ip_tunnel.c |    6 +-----
- 1 file changed, 1 insertion(+), 5 deletions(-)
 
---- a/net/ipv4/ip_tunnel.c
-+++ b/net/ipv4/ip_tunnel.c
-@@ -155,11 +155,8 @@ struct ip_tunnel *ip_tunnel_lookup(struc
- 			cand = t;
- 	}
+---
+ drivers/char/random.c |   20 ++++----------------
+ 1 file changed, 4 insertions(+), 16 deletions(-)
+
+--- a/drivers/char/random.c
++++ b/drivers/char/random.c
+@@ -2193,11 +2193,11 @@ struct batched_entropy {
  
--	if (flags & TUNNEL_NO_KEY)
--		goto skip_key_lookup;
+ /*
+  * Get a random word for internal kernel use only. The quality of the random
+- * number is either as good as RDRAND or as good as /dev/urandom, with the
+- * goal of being quite fast and not depleting entropy. In order to ensure
++ * number is good as /dev/urandom, but there is no backtrack protection, with
++ * the goal of being quite fast and not depleting entropy. In order to ensure
+  * that the randomness provided by this function is okay, the function
+- * wait_for_random_bytes() should be called and return 0 at least once
+- * at any point prior.
++ * wait_for_random_bytes() should be called and return 0 at least once at any
++ * point prior.
+  */
+ static DEFINE_PER_CPU(struct batched_entropy, batched_entropy_u64) = {
+ 	.batch_lock	= __SPIN_LOCK_UNLOCKED(batched_entropy_u64.lock),
+@@ -2210,15 +2210,6 @@ u64 get_random_u64(void)
+ 	struct batched_entropy *batch;
+ 	static void *previous;
+ 
+-#if BITS_PER_LONG == 64
+-	if (arch_get_random_long((unsigned long *)&ret))
+-		return ret;
+-#else
+-	if (arch_get_random_long((unsigned long *)&ret) &&
+-	    arch_get_random_long((unsigned long *)&ret + 1))
+-	    return ret;
+-#endif
 -
- 	hlist_for_each_entry_rcu(t, head, hash_node) {
--		if (t->parms.i_key != key ||
-+		if ((!(flags & TUNNEL_NO_KEY) && t->parms.i_key != key) ||
- 		    t->parms.iph.saddr != 0 ||
- 		    t->parms.iph.daddr != 0 ||
- 		    !(t->dev->flags & IFF_UP))
-@@ -171,7 +168,6 @@ struct ip_tunnel *ip_tunnel_lookup(struc
- 			cand = t;
- 	}
+ 	warn_unseeded_randomness(&previous);
  
--skip_key_lookup:
- 	if (cand)
- 		return cand;
+ 	batch = raw_cpu_ptr(&batched_entropy_u64);
+@@ -2243,9 +2234,6 @@ u32 get_random_u32(void)
+ 	struct batched_entropy *batch;
+ 	static void *previous;
  
+-	if (arch_get_random_int(&ret))
+-		return ret;
+-
+ 	warn_unseeded_randomness(&previous);
+ 
+ 	batch = raw_cpu_ptr(&batched_entropy_u32);
 
 
