@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00960C2BBFD
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:24:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6634C2BB86
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:24:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C11622051A
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:24:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A4DF62051A
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:24:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586647493;
-	bh=4mKEhK51gM1N5fc6QfhQWUi5yHTul4dwyuvmSusVWvk=;
+	s=default; t=1586647498;
+	bh=DL7FZWMXVY7jVUP98TMif3m59vlVfWQB0U8iPAGHm9M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VBGmjtYO2CD7SNII1e4wB16fScwJGObjfVguC5dYcm01kElM19c8WQ0YhTZDAj4VV
-	 6nvr4iS3SeZ5Mq/ecq3Xe6WSaukU3+gwVsS6EaRtcFhmMTx57Qi88qt/w/T6L4xCpw
-	 JAt7+aUBi1eGjBE9IOxjimpUuXmrEQQcC5WyPXek=
+	b=h4zLi/r6Ni1xolK6QmgBjRuDpw4so53NPPNeCTq//yQmN6DVgpkYDdoI65sk0kGTn
+	 gg4GiBNNp+Q+1fGSy53vhcTwUmp/XzScDR6wxE2k2QTa1k+z58mAH5jx6eYU/ZrAnv
+	 sZavPMU6Ya0wjqE1U6zWwGLMYKJkotaYhc4iRjn4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730164AbgDKXM0 (ORCPT
+        id S1730952AbgDKXY5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 19:12:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52164 "EHLO mail.kernel.org"
+        Sat, 11 Apr 2020 19:24:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52428 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729701AbgDKXMM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 19:12:12 -0400
+        id S1730148AbgDKXMW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Apr 2020 19:12:22 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DB676216FD;
-        Sat, 11 Apr 2020 23:12:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4499520757;
+        Sat, 11 Apr 2020 23:12:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586646732;
-        bh=4mKEhK51gM1N5fc6QfhQWUi5yHTul4dwyuvmSusVWvk=;
+        s=default; t=1586646743;
+        bh=DL7FZWMXVY7jVUP98TMif3m59vlVfWQB0U8iPAGHm9M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lqvLAXk88Pw/jYFhErKQ7Le7tvtpYkoqxquA7nKIgSlBQvTHYbq22EtgG56TlqbRT
-         7CTnQPQ1PcDMpda+BoDarDLIDs8VaxsQq5mVtbRelLgA/f5X7vHH3flJFGG8APx1NY
-         4qyO6Nyrmn2ouFSR5vdpHFdvWQZjqNyIaKIJbyPY=
+        b=CTD8bVijkDo7Up2UG3Soq0x1zwP4m5B3vGG5s+NXGwNPRencNPAlV5kIbtFFB2sA6
+         yoq/z5+zT01iGbDtQhlr9+oIBJN1YwyDf1ltxQSWxfADJ281QWJ4BLUv1CV8PcsVVY
+         Yc0jyk+hgGuFh3gpcdJ/1/M3DwVc+BNWAbxw9JyM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jason Gunthorpe <jgg@mellanox.com>,
-        Selvin Xavier <selvin.xavier@broadcom.com>,
-        Sasha Levin <sashal@kernel.org>, linux-rdma@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 07/66] RDMA/bnxt_re: Fix lifetimes in bnxt_re_task
-Date:   Sat, 11 Apr 2020 19:11:04 -0400
-Message-Id: <20200411231203.25933-7-sashal@kernel.org>
+Cc:     Vlad Buslov <vladbu@mellanox.com>, Roi Dayan <roid@mellanox.com>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
+        linux-rdma@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 16/66] net/mlx5e: Init ethtool steering for representors
+Date:   Sat, 11 Apr 2020 19:11:13 -0400
+Message-Id: <20200411231203.25933-16-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200411231203.25933-1-sashal@kernel.org>
 References: <20200411231203.25933-1-sashal@kernel.org>
@@ -59,43 +59,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jason Gunthorpe <jgg@mellanox.com>
+From: Vlad Buslov <vladbu@mellanox.com>
 
-[ Upstream commit 8a6c61704746d3a1e004e054504ae8d98ed95697 ]
+[ Upstream commit 6783e8b29f636383af293a55336f036bc7ad5619 ]
 
-A work queue cannot just rely on the ib_device not being freed, it must
-hold a kref on the memory so that the BNXT_RE_FLAG_IBDEV_REGISTERED check
-works.
+During transition to uplink representors the code responsible for
+initializing ethtool steering functionality wasn't added to representor
+init rx routine. This causes NULL pointer dereference during configuration
+of network flow classification rule with ethtool (only possible to
+reproduce with next commit in this series which registers necessary ethtool
+callbacks).
 
-Fixes: 1ac5a4047975 ("RDMA/bnxt_re: Add bnxt_re RoCE driver")
-Link: https://lore.kernel.org/r/1584117207-2664-3-git-send-email-selvin.xavier@broadcom.com
-Signed-off-by: Selvin Xavier <selvin.xavier@broadcom.com>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+Signed-off-by: Vlad Buslov <vladbu@mellanox.com>
+Reviewed-by: Roi Dayan <roid@mellanox.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/infiniband/hw/bnxt_re/main.c | 2 ++
+ drivers/net/ethernet/mellanox/mlx5/core/en_rep.c | 2 ++
  1 file changed, 2 insertions(+)
 
-diff --git a/drivers/infiniband/hw/bnxt_re/main.c b/drivers/infiniband/hw/bnxt_re/main.c
-index 589b0d4677d52..75fe489a70b0c 100644
---- a/drivers/infiniband/hw/bnxt_re/main.c
-+++ b/drivers/infiniband/hw/bnxt_re/main.c
-@@ -1505,6 +1505,7 @@ static void bnxt_re_task(struct work_struct *work)
- 	smp_mb__before_atomic();
- 	atomic_dec(&rdev->sched_count);
- exit:
-+	put_device(&rdev->ibdev.dev);
- 	kfree(re_work);
- }
+diff --git a/drivers/net/ethernet/mellanox/mlx5/core/en_rep.c b/drivers/net/ethernet/mellanox/mlx5/core/en_rep.c
+index 701624a63d2f4..d70af8a8e8b48 100644
+--- a/drivers/net/ethernet/mellanox/mlx5/core/en_rep.c
++++ b/drivers/net/ethernet/mellanox/mlx5/core/en_rep.c
+@@ -1022,6 +1022,8 @@ static int mlx5e_init_rep_rx(struct mlx5e_priv *priv)
+ 	}
+ 	rpriv->vport_rx_rule = flow_rule;
  
-@@ -1581,6 +1582,7 @@ static int bnxt_re_netdev_event(struct notifier_block *notifier,
- 		/* Allocate for the deferred task */
- 		re_work = kzalloc(sizeof(*re_work), GFP_ATOMIC);
- 		if (re_work) {
-+			get_device(&rdev->ibdev.dev);
- 			re_work->rdev = rdev;
- 			re_work->event = event;
- 			re_work->vlan_dev = (real_dev == netdev ?
++	mlx5e_ethtool_init_steering(priv);
++
+ 	return 0;
+ 
+ err_destroy_direct_tirs:
 -- 
 2.20.1
 
