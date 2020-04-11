@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A5DDC2BBC7
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:10:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FEF8C2BA2B
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:10:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 744D921835
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:10:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D6BB621655
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:10:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586607040;
-	bh=MBnlgJCq/hpAc2MfdH+OpEUIPzed0yzlsJiZXfZFFzM=;
+	s=default; t=1586607046;
+	bh=ZhPfXwdhyzdj32voEjkcU8CfMlM/xNaQVegWyaKUHX4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=v8J8VnesNFgXqZTOjYIxHPZTgQ8jy358UaXMC7wQ4eZVZ+SYgqUIqfiPu8m7IYPve
-	 NnSpqzY8QNuGdHiK1ORRmL1p/CXT+gBpl+CoZcW2XtlPBQxe1Xw5JepXnWyn0aqGeW
-	 wWRsYNmqaKLaMeFr0hkg2eHjNJNm8nFACp7k7djI=
+	b=QhnIIKUa95KCCG2/iL8gELbVTUT96m14AO1zvW3BTnLZ/9Z+er+KsCoSxzz0IEroN
+	 2QfC+GN7cpWeyliHYc/6kmkq2cZAEJRZ/rk9Qi3YfMRcuciLGq2VIovbAhDOmveIMb
+	 Sfb52BQ1au189t2wtxo+lUmRvXcANiGghCBIjW1U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726671AbgDKMKj (ORCPT
+        id S1726687AbgDKMKl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 08:10:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42212 "EHLO mail.kernel.org"
+        Sat, 11 Apr 2020 08:10:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42246 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726091AbgDKMKh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 08:10:37 -0400
+        id S1726091AbgDKMKk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Apr 2020 08:10:40 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6410B2137B;
-        Sat, 11 Apr 2020 12:10:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CCCA02084D;
+        Sat, 11 Apr 2020 12:10:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586607036;
-        bh=MBnlgJCq/hpAc2MfdH+OpEUIPzed0yzlsJiZXfZFFzM=;
+        s=default; t=1586607039;
+        bh=ZhPfXwdhyzdj32voEjkcU8CfMlM/xNaQVegWyaKUHX4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HRTaWqnV2ZYSJSX2LQC2ccAIAfpNwTNKPXPogdiL6/H5wtsV1ui6R0Kv9FvwuVwWa
-         4667NWDErwypgFPjY2Vr978PYL7WlsB8VsqfZ9BChxrAXDpP4LafYYnakE0OqyyrtC
-         Xp3l425JIvgr/r0hFvmI45oxWzVFVC1/zENDvgWI=
+        b=F654Ntsv1baM+3XxpHOvJ6zq14VeBtPcfAJQSqZY95fb9bolGJ42K3Nl6yfGnLnE5
+         fgAirp8oIYzOs2fehwZxa6OeDYacTBs8rngUj1OIFnpTK97aCO1GMvzoKs6HNcpCU9
+         n9RmPTkUphT3Pgfg1kr0PwleBlLm1PZWf+NDU+VY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Guillaume Nault <g.nault@alphalink.fr>,
-        "David S. Miller" <davem@davemloft.net>,
-        Will Deacon <will@kernel.org>
-Subject: [PATCH 4.4 11/29] l2tp: ensure sessions are freed after their PPPOL2TP socket
-Date:   Sat, 11 Apr 2020 14:08:41 +0200
-Message-Id: <20200411115409.631912991@linuxfoundation.org>
+        stable@vger.kernel.org, Qian Cai <cai@lca.pw>,
+        Eric Dumazet <edumazet@google.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.4 02/29] ipv4: fix a RCU-list lock in fib_triestat_seq_show
+Date:   Sat, 11 Apr 2020 14:08:32 +0200
+Message-Id: <20200411115407.957243103@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200411115407.651296755@linuxfoundation.org>
 References: <20200411115407.651296755@linuxfoundation.org>
@@ -60,50 +60,63 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Guillaume Nault <g.nault@alphalink.fr>
+From: Qian Cai <cai@lca.pw>
 
-commit cdd10c9627496ad25c87ce6394e29752253c69d3 upstream.
+[ Upstream commit fbe4e0c1b298b4665ee6915266c9d6c5b934ef4a ]
 
-If l2tp_tunnel_delete() or l2tp_tunnel_closeall() deletes a session
-right after pppol2tp_release() orphaned its socket, then the 'sock'
-variable of the pppol2tp_session_close() callback is NULL. Yet the
-session is still used by pppol2tp_release().
+fib_triestat_seq_show() calls hlist_for_each_entry_rcu(tb, head,
+tb_hlist) without rcu_read_lock() will trigger a warning,
 
-Therefore we need to take an extra reference in any case, to prevent
-l2tp_tunnel_delete() or l2tp_tunnel_closeall() from freeing the session.
+ net/ipv4/fib_trie.c:2579 RCU-list traversed in non-reader section!!
 
-Since the pppol2tp_session_close() callback is only set if the session
-is associated to a PPPOL2TP socket and that both l2tp_tunnel_delete()
-and l2tp_tunnel_closeall() hold the PPPOL2TP socket before calling
-pppol2tp_session_close(), we're sure that pppol2tp_session_close() and
-pppol2tp_session_destruct() are paired and called in the right order.
-So the reference taken by the former will be released by the later.
+ other info that might help us debug this:
 
-Signed-off-by: Guillaume Nault <g.nault@alphalink.fr>
+ rcu_scheduler_active = 2, debug_locks = 1
+ 1 lock held by proc01/115277:
+  #0: c0000014507acf00 (&p->lock){+.+.}-{3:3}, at: seq_read+0x58/0x670
+
+ Call Trace:
+  dump_stack+0xf4/0x164 (unreliable)
+  lockdep_rcu_suspicious+0x140/0x164
+  fib_triestat_seq_show+0x750/0x880
+  seq_read+0x1a0/0x670
+  proc_reg_read+0x10c/0x1b0
+  __vfs_read+0x3c/0x70
+  vfs_read+0xac/0x170
+  ksys_read+0x7c/0x140
+  system_call+0x5c/0x68
+
+Fix it by adding a pair of rcu_read_lock/unlock() and use
+cond_resched_rcu() to avoid the situation where walking of a large
+number of items  may prevent scheduling for a long time.
+
+Signed-off-by: Qian Cai <cai@lca.pw>
+Reviewed-by: Eric Dumazet <edumazet@google.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Will Deacon <will@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/l2tp/l2tp_ppp.c |    8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ net/ipv4/fib_trie.c |    3 +++
+ 1 file changed, 3 insertions(+)
 
---- a/net/l2tp/l2tp_ppp.c
-+++ b/net/l2tp/l2tp_ppp.c
-@@ -452,11 +452,11 @@ static void pppol2tp_session_close(struc
+--- a/net/ipv4/fib_trie.c
++++ b/net/ipv4/fib_trie.c
+@@ -2230,6 +2230,7 @@ static int fib_triestat_seq_show(struct
+ 		   " %Zd bytes, size of tnode: %Zd bytes.\n",
+ 		   LEAF_SIZE, TNODE_SIZE(0));
  
- 	BUG_ON(session->magic != L2TP_SESSION_MAGIC);
++	rcu_read_lock();
+ 	for (h = 0; h < FIB_TABLE_HASHSZ; h++) {
+ 		struct hlist_head *head = &net->ipv4.fib_table_hash[h];
+ 		struct fib_table *tb;
+@@ -2249,7 +2250,9 @@ static int fib_triestat_seq_show(struct
+ 			trie_show_usage(seq, t->stats);
+ #endif
+ 		}
++		cond_resched_rcu();
+ 	}
++	rcu_read_unlock();
  
--	if (sock) {
-+	if (sock)
- 		inet_shutdown(sock, SEND_SHUTDOWN);
--		/* Don't let the session go away before our socket does */
--		l2tp_session_inc_refcount(session);
--	}
-+
-+	/* Don't let the session go away before our socket does */
-+	l2tp_session_inc_refcount(session);
+ 	return 0;
  }
- 
- /* Really kill the session socket. (Called from sock_put() if
 
 
