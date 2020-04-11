@@ -4,50 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E48F1C2BBC7
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:17:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BC70C2BB85
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:18:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BD139214D8
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:17:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E763620692
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:18:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586607479;
-	bh=X2MwcNFAlOXM+rAXPCuKqktU/Y0zKq1JvZBaUNLciWg=;
+	s=default; t=1586607483;
+	bh=sqva4+Ggkq97LE42151fQKh3k+UYPryCd/RE+EzPuJM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xdifxA4ceKzGaW/tJpLfd+3uY28eU79wp3+VZMbd+DxMFtwq0ZVZQO6NIB7BrEwQG
-	 EZx3FgDUbCxb3UVcEoRdOgJw3vwry+0ePTQY2Fj0/mNagOjPc7V/25+9VCsWaEg+OG
-	 pQ0kbEIvIkvaGX8LUraymgq/xCWNGGJBtAgMeDEY=
+	b=l29nyugFsdiMkN/onWIv4vhRfzHh/Z2W64Lj/wdtkeD2AiEIjWOZmROsCFXKCANzs
+	 mV/DS7a95pYzP4o/FHlfhaYeDVYh1ecwsrjfuDSA3o+Ozl4rKVfG+r0tkNiVK2oX02
+	 Apr6OZWQmvp8oZ2xJcprSXABSZhF5HD/z08Wb3nQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728521AbgDKMR6 (ORCPT
+        id S1727851AbgDKMSA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 08:17:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52650 "EHLO mail.kernel.org"
+        Sat, 11 Apr 2020 08:18:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52768 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728229AbgDKMRw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 08:17:52 -0400
+        id S1728514AbgDKMR4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Apr 2020 08:17:56 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B7686214D8;
-        Sat, 11 Apr 2020 12:17:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9EBB220673;
+        Sat, 11 Apr 2020 12:17:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586607472;
-        bh=X2MwcNFAlOXM+rAXPCuKqktU/Y0zKq1JvZBaUNLciWg=;
+        s=default; t=1586607477;
+        bh=sqva4+Ggkq97LE42151fQKh3k+UYPryCd/RE+EzPuJM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=msp/wwcPYChsyjSNSh7QTnWN4SZ1tkazRxpjq9rZ1KfNlEje6arJ6BBMLEjl8x0do
-         ZDBmotEIUxpuZcFE345H1EUzVh7pko7/YBYF5X3As4k/uuWI4zlSQfKBhI+yk0FBDU
-         r/Hz5FntScQTcNqXOR1xqoHOwzpn45DZTjt+ZDTA=
+        b=dHDkDHi1c045JTTAR3RTab3WytgMfBCxqqVifF1fUz8opuFRkQWz/gB7rUihYQqx4
+         OYuRx8x4dwbKLHy2COE6f29YyUJym2mzd03VwzEWWE84yJ8vCU6ZHx7ot/2L5Yqg++
+         pW5mMY6Yf1ZxkE8tmOM5vg7CLzZBUgIo2Iuxtxww=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>,
+        stable@vger.kernel.org, Chuanhong Guo <gch981213@gmail.com>,
         Vivien Didelot <vivien.didelot@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        =?UTF-8?q?Ren=C3=A9=20van=20Dorst?= <opensource@vdorst.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.4 04/41] net: dsa: bcm_sf2: Do not register slave MDIO bus with OF
-Date:   Sat, 11 Apr 2020 14:09:13 +0200
-Message-Id: <20200411115504.417436317@linuxfoundation.org>
+Subject: [PATCH 5.4 06/41] net: dsa: mt7530: fix null pointer dereferencing in port5 setup
+Date:   Sat, 11 Apr 2020 14:09:15 +0200
+Message-Id: <20200411115504.545233797@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200411115504.124035693@linuxfoundation.org>
 References: <20200411115504.124035693@linuxfoundation.org>
@@ -60,53 +62,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Florian Fainelli <f.fainelli@gmail.com>
+From: Chuanhong Guo <gch981213@gmail.com>
 
-[ Upstream commit 536fab5bf5826404534a6c271f622ad2930d9119 ]
+[ Upstream commit 0452800f6db4ed0a42ffb15867c0acfd68829f6a ]
 
-We were registering our slave MDIO bus with OF and doing so with
-assigning the newly created slave_mii_bus of_node to the master MDIO bus
-controller node. This is a bad thing to do for a number of reasons:
+The 2nd gmac of mediatek soc ethernet may not be connected to a PHY
+and a phy-handle isn't always available.
+Unfortunately, mt7530 dsa driver assumes that the 2nd gmac is always
+connected to switch port 5 and setup mt7530 according to phy address
+of 2nd gmac node, causing null pointer dereferencing when phy-handle
+isn't defined in dts.
+This commit fix this setup code by checking return value of
+of_parse_phandle before using it.
 
-- we are completely lying about the slave MII bus is arranged and yet we
-  still want to control which MDIO devices it probes. It was attempted
-  before to play tricks with the bus_mask to perform that:
-  https://www.spinics.net/lists/netdev/msg429420.html but the approach
-  was rightfully rejected
-
-- the device_node reference counting is messed up and we are effectively
-  doing a double probe on the devices we already probed using the
-  master, this messes up all resources reference counts (such as clocks)
-
-The proper fix for this as indicated by David in his reply to the
-thread above is to use a platform data style registration so as to
-control exactly which devices we probe:
-https://www.spinics.net/lists/netdev/msg430083.html
-
-By using mdiobus_register(), our slave_mii_bus->phy_mask value is used
-as intended, and all the PHY addresses that must be redirected towards
-our slave MDIO bus is happening while other addresses get redirected
-towards the master MDIO bus.
-
-Fixes: 461cd1b03e32 ("net: dsa: bcm_sf2: Register our slave MDIO bus")
-Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+Fixes: 38f790a80560 ("net: dsa: mt7530: Add support for port 5")
+Signed-off-by: Chuanhong Guo <gch981213@gmail.com>
 Reviewed-by: Vivien Didelot <vivien.didelot@gmail.com>
+Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
+Tested-by: René van Dorst <opensource@vdorst.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/dsa/bcm_sf2.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/dsa/mt7530.c |    3 +++
+ 1 file changed, 3 insertions(+)
 
---- a/drivers/net/dsa/bcm_sf2.c
-+++ b/drivers/net/dsa/bcm_sf2.c
-@@ -459,7 +459,7 @@ static int bcm_sf2_mdio_register(struct
- 	priv->slave_mii_bus->parent = ds->dev->parent;
- 	priv->slave_mii_bus->phy_mask = ~priv->indir_phy_mask;
+--- a/drivers/net/dsa/mt7530.c
++++ b/drivers/net/dsa/mt7530.c
+@@ -1353,6 +1353,9 @@ mt7530_setup(struct dsa_switch *ds)
+ 				continue;
  
--	err = of_mdiobus_register(priv->slave_mii_bus, dn);
-+	err = mdiobus_register(priv->slave_mii_bus);
- 	if (err && dn)
- 		of_node_put(dn);
- 
+ 			phy_node = of_parse_phandle(mac_np, "phy-handle", 0);
++			if (!phy_node)
++				continue;
++
+ 			if (phy_node->parent == priv->dev->of_node->parent) {
+ 				interface = of_get_phy_mode(mac_np);
+ 				id = of_mdio_parse_addr(ds->dev, phy_node);
 
 
