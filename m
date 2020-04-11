@@ -7,51 +7,51 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 695C7C2BBC7
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:37:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9557C2BA19
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:37:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 39B432051A
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:37:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8586F2051A
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:37:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586648249;
-	bh=xQAW1GitvLQh6XJsKowD5jHl7RZkVULVUj2zrP3ZgkQ=;
+	s=default; t=1586648252;
+	bh=w68oapllwXBcXuPwr+A/R2ShE4TVv5AB6GPxa7PIA1g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HG4isNu3O4d0EhbQa/euROOwzsrqU6nqbH3EpE4PBmbR146wgVNb2GXrhueH4npM4
-	 f/XF7XD4OKWkTEaCJHXvY1/AOsvhEXsep2Z9sTRJlE7xV3m5ltgHQSWU2oARs55eiS
-	 DzI2meSUqX0LMANYl9XGH4E1aG3WKmJGQ0H8sle0=
+	b=UC5cuNSFnelHYDo2HzsE8wZQ42CVATPerjVJjQhRGAcqbVvXwfirAmq8/pNjrJMbi
+	 hQnCPgF5pRXWf7dR3wLi950RkjyDXXGI7SOghwlIhfvDUC1Aco+8fpTXyZMAT83PnE
+	 OqYI6/qGhQMMNJAUCsVB1nbvNo6MeQPxmvgqkOf8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728296AbgDKXIW (ORCPT
+        id S1728181AbgDKXIS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 19:08:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44712 "EHLO mail.kernel.org"
+        Sat, 11 Apr 2020 19:08:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44638 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727250AbgDKXIJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 19:08:09 -0400
+        id S1728825AbgDKXIG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Apr 2020 19:08:06 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E6B27216FD;
-        Sat, 11 Apr 2020 23:08:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4DF9F216FD;
+        Sat, 11 Apr 2020 23:08:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586646489;
-        bh=xQAW1GitvLQh6XJsKowD5jHl7RZkVULVUj2zrP3ZgkQ=;
+        s=default; t=1586646486;
+        bh=w68oapllwXBcXuPwr+A/R2ShE4TVv5AB6GPxa7PIA1g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=R6qZeSzE5lAGR6+GP1oIpsgcd0xVoIkU427iQbSYRHp5y3+z1ZQ2hCCRmUAWmcma+
-         7nTA3jdHl6I6pWHTsijwyeheCOosXdUXwVAc+XXZhLPDTeDS8x3jdQNmqmdZ6I40uY
-         Wltn3j/Zv9FbBuVEP1Loqsd0lYR3Z5ResHzD2KC0=
+        b=CtClqM2lj/bMA0tOFFSTip8x90DiaLTlq2dr2CHkJAxKSJRSgjW9DuM/hayZHXCl2
+         yg/gSwtEpkSTLyeKzgIKI1su/tmG1tAK/FL/Y2hjCUe6IuvUnYviEeW0QfLkKiRLrO
+         DBhDbHMT7npm25nVTU45Erdka3d/spf/HlAfsMD0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     =?UTF-8?q?Horia=20Geant=C4=83?= <horia.geanta@nxp.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Sasha Levin <sashal@kernel.org>, linux-crypto@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.5 053/121] crypto: tcrypt - fix printed skcipher [a]sync mode
-Date:   Sat, 11 Apr 2020 19:05:58 -0400
-Message-Id: <20200411230706.23855-53-sashal@kernel.org>
+Cc:     Felix Fietkau <nbd@nbd.name>, Sasha Levin <sashal@kernel.org>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org
+Subject: [PATCH AUTOSEL 5.5 050/121] mt76: fix handling full tx queues in mt76_dma_tx_queue_skb_raw
+Date:   Sat, 11 Apr 2020 19:05:55 -0400
+Message-Id: <20200411230706.23855-50-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200411230706.23855-1-sashal@kernel.org>
 References: <20200411230706.23855-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -60,41 +60,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Horia Geantă <horia.geanta@nxp.com>
+From: Felix Fietkau <nbd@nbd.name>
 
-[ Upstream commit 8e3b7fd7ea554ccb1bdc596bfbcdaf56f7ab017c ]
+[ Upstream commit 93eaec7625f13cffb593b471405b017c7e64d4ee ]
 
-When running tcrypt skcipher speed tests, logs contain things like:
-testing speed of async ecb(des3_ede) (ecb(des3_ede-generic)) encryption
-or:
-testing speed of async ecb(aes) (ecb(aes-ce)) encryption
+Fixes a theoretical issue where it could potentially overwrite an existing
+descriptor entry (and leaking its skb)
 
-The algorithm implementations are sync, not async.
-Fix this inaccuracy.
-
-Fixes: 7166e589da5b6 ("crypto: tcrypt - Use skcipher")
-Signed-off-by: Horia Geantă <horia.geanta@nxp.com>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+Signed-off-by: Felix Fietkau <nbd@nbd.name>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- crypto/tcrypt.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/net/wireless/mediatek/mt76/dma.c | 9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
 
-diff --git a/crypto/tcrypt.c b/crypto/tcrypt.c
-index f42f486e90e8a..ba0b7702f2e91 100644
---- a/crypto/tcrypt.c
-+++ b/crypto/tcrypt.c
-@@ -1514,8 +1514,8 @@ static void test_skcipher_speed(const char *algo, int enc, unsigned int secs,
- 		return;
- 	}
+diff --git a/drivers/net/wireless/mediatek/mt76/dma.c b/drivers/net/wireless/mediatek/mt76/dma.c
+index 1847f55e199b0..c001d94958d83 100644
+--- a/drivers/net/wireless/mediatek/mt76/dma.c
++++ b/drivers/net/wireless/mediatek/mt76/dma.c
+@@ -261,10 +261,13 @@ mt76_dma_tx_queue_skb_raw(struct mt76_dev *dev, enum mt76_txq_id qid,
+ 	struct mt76_queue_buf buf;
+ 	dma_addr_t addr;
  
--	pr_info("\ntesting speed of async %s (%s) %s\n", algo,
--			get_driver_name(crypto_skcipher, tfm), e);
-+	pr_info("\ntesting speed of %s %s (%s) %s\n", async ? "async" : "sync",
-+		algo, get_driver_name(crypto_skcipher, tfm), e);
++	if (q->queued + 1 >= q->ndesc - 1)
++		goto error;
++
+ 	addr = dma_map_single(dev->dev, skb->data, skb->len,
+ 			      DMA_TO_DEVICE);
+ 	if (unlikely(dma_mapping_error(dev->dev, addr)))
+-		return -ENOMEM;
++		goto error;
  
- 	req = skcipher_request_alloc(tfm, GFP_KERNEL);
- 	if (!req) {
+ 	buf.addr = addr;
+ 	buf.len = skb->len;
+@@ -275,6 +278,10 @@ mt76_dma_tx_queue_skb_raw(struct mt76_dev *dev, enum mt76_txq_id qid,
+ 	spin_unlock_bh(&q->lock);
+ 
+ 	return 0;
++
++error:
++	dev_kfree_skb(skb);
++	return -ENOMEM;
+ }
+ 
+ static int
 -- 
 2.20.1
 
