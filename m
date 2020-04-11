@@ -2,116 +2,199 @@ Return-Path: <SRS0=xbEg=53=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19717C2BBC7
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 11:07:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77828C2BA2B
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 11:09:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EEB6B20732
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 11:07:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4BE9320732
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 11:09:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726155AbgDKLHv (ORCPT
+        id S1726037AbgDKLJN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 07:07:51 -0400
-Received: from smtprelay0231.hostedemail.com ([216.40.44.231]:41940 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725951AbgDKLHv (ORCPT
+        Sat, 11 Apr 2020 07:09:13 -0400
+Received: from mail-io1-f70.google.com ([209.85.166.70]:54367 "EHLO
+        mail-io1-f70.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726166AbgDKLJM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 07:07:51 -0400
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay07.hostedemail.com (Postfix) with ESMTP id 0D25D181D337B;
-        Sat, 11 Apr 2020 11:07:50 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: force52_270ea654bb131
-X-Filterd-Recvd-Size: 3427
-Received: from XPS-9350.home (unknown [47.151.136.130])
-        (Authenticated sender: joe@perches.com)
-        by omf17.hostedemail.com (Postfix) with ESMTPA;
-        Sat, 11 Apr 2020 11:07:48 +0000 (UTC)
-Message-ID: <d40b2b993d8e9764c5e7f6fd3f8ca037a9520b6e.camel@perches.com>
-Subject: Re: [PATCH] crypto: marvell/octeontx - Add missing '\n' in log
- messages
-From:   Joe Perches <joe@perches.com>
-To:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-        bbrezillon@kernel.org, arno@natisbad.org, schalla@marvell.com,
-        herbert@gondor.apana.org.au, davem@davemloft.net,
-        lbartosik@marvell.com, colin.king@canonical.com
-Cc:     linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel-janitors@vger.kernel.org
-Date:   Sat, 11 Apr 2020 04:05:43 -0700
-In-Reply-To: <20200411104458.21526-1-christophe.jaillet@wanadoo.fr>
-References: <20200411104458.21526-1-christophe.jaillet@wanadoo.fr>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.34.1-2 
+        Sat, 11 Apr 2020 07:09:12 -0400
+Received: by mail-io1-f70.google.com with SMTP id n18so4609884ioj.21
+        for <linux-kernel@vger.kernel.org>; Sat, 11 Apr 2020 04:09:12 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=ZKqkKshdGEkt/3Yxs52uQA/cTeUPVNrJo21GVj08594=;
+        b=ZLvZ4pD4DK7o+zSvKgwMk6jBE69l5Z6eXeei7nL3mGZdzzDd9a1CMzyFIWkPsKuSst
+         mYa9IZLc+ho9A5OPIxNGJ3kK7FeMvG1H1CYYZRIwMRenN94p1s66ZEfxsGw9hohl2tWT
+         M6zD3t5nIwrSXNT859nuTk74rreyLQNqiQOtHmwy7HnIJ8QNeT8++s36bNt6B7UOPM5Z
+         pc4vEQGceDQthNu+oLtY4/fJ4K7bI9y3tTMFaoBHgTs4JCZY3NpCHaQfz+pR5mHj/7p3
+         8v2ov+82EQRZZyOjGaGFQudi/LNwgi2NIdYVrg4ODpGVe8foIy0kAyBtKdfu1TOoIp1y
+         yhVA==
+X-Gm-Message-State: AGi0Pubgts3y3IuubgzcJ0yhQ+weUqX5QtPwMc2AQGcQIqNE7/j9APmt
+        3sezYrJjzlUDrt1uw6tL9rmB9Zf1wlTAp5IzIzsMfU5qZugR
+X-Google-Smtp-Source: APiQypJBVyDYo+1JXCWO0fvjWsORi6tIgTf/TbJw7VxKhJxlMdEr5AGwrH2ayhYPdC/PHEsrPH/kuJCkpAXiuLodt1dxue/5YpFU
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+X-Received: by 2002:a92:250e:: with SMTP id l14mr9114611ill.201.1586603352271;
+ Sat, 11 Apr 2020 04:09:12 -0700 (PDT)
+Date:   Sat, 11 Apr 2020 04:09:12 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <00000000000036317b05a301e1e4@google.com>
+Subject: KASAN: use-after-free Read in ath9k_htc_txcompletion_cb
+From:   syzbot <syzbot+809d3bdcdb4650cdbc83@syzkaller.appspotmail.com>
+To:     andreyknvl@google.com, ath9k-devel@qca.qualcomm.com,
+        davem@davemloft.net, kvalo@codeaurora.org,
+        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 2020-04-11 at 12:44 +0200, Christophe JAILLET wrote:
-> Message logged by 'dev_xxx()' or 'pr_xxx()' should end with a '\n'.
-> 
-> While at it, I've introduced a few pr_cont that looked logical to me.
+Hello,
 
-Hi again Christophe.
+syzbot found the following crash on:
 
-> diff --git a/drivers/crypto/marvell/octeontx/otx_cptpf_ucode.c b/drivers/crypto/marvell/octeontx/otx_cptpf_ucode.c
-[]
-> @@ -629,15 +629,15 @@ static void print_dbg_info(struct device *dev,
->  				pr_debug("Slot%d: %s", j, engs_info);
->  				bitmap_to_arr32(mask, engs->bmap,
->  						eng_grps->engs_num);
-> -				pr_debug("Mask:  %8.8x %8.8x %8.8x %8.8x",
-> -					 mask[3], mask[2], mask[1], mask[0]);
-> +				pr_cont(" Mask: %8.8x %8.8x %8.8x %8.8x\n",
-> +					mask[3], mask[2], mask[1], mask[0]);
+HEAD commit:    0fa84af8 Merge tag 'usb-serial-5.7-rc1' of https://git.ker..
+git tree:       https://github.com/google/kasan.git usb-fuzzer
+console output: https://syzkaller.appspot.com/x/log.txt?x=10af83b3e00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=6b9c154b0c23aecf
+dashboard link: https://syzkaller.appspot.com/bug?extid=809d3bdcdb4650cdbc83
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
 
-Unfortunately, a pr_debug cannot reasonably be followed by pr_cont.
+Unfortunately, I don't have any reproducer for this crash yet.
 
-pr_debug is conditionally compiled and if CONFIG_DYNAMIC_DEBUG
-is enabled, conditionally emitted.
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+809d3bdcdb4650cdbc83@syzkaller.appspotmail.com
 
-pr_cont is not conditionally compiled and is always emitted.
+==================================================================
+BUG: KASAN: use-after-free in ath9k_htc_txcompletion_cb+0x285/0x2b0 drivers/net/wireless/ath/ath9k/htc_hst.c:341
+Read of size 8 at addr ffff8881d1caf488 by task kworker/0:0/24267
 
-So this is fine as is (or with terminating newlines added)
+CPU: 0 PID: 24267 Comm: kworker/0:0 Not tainted 5.6.0-rc7-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Workqueue: events request_firmware_work_func
+Call Trace:
+ <IRQ>
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0xef/0x16e lib/dump_stack.c:118
+ print_address_description.constprop.0.cold+0xd3/0x314 mm/kasan/report.c:374
+ __kasan_report.cold+0x37/0x77 mm/kasan/report.c:506
+ kasan_report+0xe/0x20 mm/kasan/common.c:641
+ ath9k_htc_txcompletion_cb+0x285/0x2b0 drivers/net/wireless/ath/ath9k/htc_hst.c:341
+ hif_usb_regout_cb+0x10b/0x1b0 drivers/net/wireless/ath/ath9k/hif_usb.c:90
+ __usb_hcd_giveback_urb+0x1f2/0x470 drivers/usb/core/hcd.c:1648
+ usb_hcd_giveback_urb+0x368/0x420 drivers/usb/core/hcd.c:1713
+ dummy_timer+0x1258/0x32ae drivers/usb/gadget/udc/dummy_hcd.c:1966
+ call_timer_fn+0x195/0x6f0 kernel/time/timer.c:1404
+ expire_timers kernel/time/timer.c:1449 [inline]
+ __run_timers kernel/time/timer.c:1773 [inline]
+ __run_timers kernel/time/timer.c:1740 [inline]
+ run_timer_softirq+0x5f9/0x1500 kernel/time/timer.c:1786
+ __do_softirq+0x21e/0x950 kernel/softirq.c:292
+ invoke_softirq kernel/softirq.c:373 [inline]
+ irq_exit+0x178/0x1a0 kernel/softirq.c:413
+ exiting_irq arch/x86/include/asm/apic.h:546 [inline]
+ smp_apic_timer_interrupt+0x141/0x540 arch/x86/kernel/apic/apic.c:1146
+ apic_timer_interrupt+0xf/0x20 arch/x86/entry/entry_64.S:829
+ </IRQ>
+RIP: 0010:arch_local_irq_restore arch/x86/include/asm/irqflags.h:85 [inline]
+RIP: 0010:console_unlock+0xa6b/0xca0 kernel/printk/printk.c:2481
+Code: 00 89 ee 48 c7 c7 60 3e 14 87 e8 10 c3 03 00 65 ff 0d c1 ed d8 7e e9 b5 f9 ff ff e8 0f 37 16 00 e8 0a 7f 1b 00 ff 74 24 30 9d <e9> fd fd ff ff e8 fb 36 16 00 48 8d 7d 08 48 89 f8 48 c1 e8 03 42
+RSP: 0018:ffff8881d9227a50 EFLAGS: 00000293 ORIG_RAX: ffffffffffffff13
+RAX: 0000000000000007 RBX: 0000000000000200 RCX: 0000000000000006
+RDX: 0000000000000000 RSI: 0000000000000008 RDI: ffff8881aba6d1cc
+RBP: 0000000000000000 R08: ffff8881aba6c980 R09: fffffbfff1266485
+R10: fffffbfff1266484 R11: ffffffff89332427 R12: ffffffff82a092b0
+R13: ffffffff874d3950 R14: 0000000000000057 R15: dffffc0000000000
+ vprintk_emit+0x171/0x3d0 kernel/printk/printk.c:1996
+ vprintk_func+0x75/0x113 kernel/printk/printk_safe.c:386
+ printk+0xba/0xed kernel/printk/printk.c:2056
+ ath9k_htc_hw_init.cold+0x17/0x2a drivers/net/wireless/ath/ath9k/htc_hst.c:502
+ ath9k_hif_usb_firmware_cb+0x26b/0x500 drivers/net/wireless/ath/ath9k/hif_usb.c:1187
+ request_firmware_work_func+0x126/0x242 drivers/base/firmware_loader/main.c:976
+ process_one_work+0x94b/0x1620 kernel/workqueue.c:2266
+ worker_thread+0x96/0xe20 kernel/workqueue.c:2412
+ kthread+0x318/0x420 kernel/kthread.c:255
+ ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
 
-> @@ -1147,8 +1147,9 @@ static int delete_engine_group(struct device *dev,
->  		for (i = 0; i < OTX_CPT_MAX_ENGINE_GROUPS; i++) {
->  			if (eng_grp->g->grp[i].mirror.is_ena &&
->  			    eng_grp->g->grp[i].mirror.idx == eng_grp->idx)
-> -				dev_err(dev, "engine_group%d", i);
-> +				pr_cont(" engine_group%d", i);
->  		}
-> +		pr_cont("\n");
->  		return -EINVAL;
->  	}
+Allocated by task 24267:
+ save_stack+0x1b/0x80 mm/kasan/common.c:72
+ set_track mm/kasan/common.c:80 [inline]
+ __kasan_kmalloc mm/kasan/common.c:515 [inline]
+ __kasan_kmalloc.constprop.0+0xbf/0xd0 mm/kasan/common.c:488
+ slab_post_alloc_hook mm/slab.h:584 [inline]
+ slab_alloc_node mm/slub.c:2786 [inline]
+ kmem_cache_alloc_node+0xdc/0x330 mm/slub.c:2822
+ __alloc_skb+0xba/0x5a0 net/core/skbuff.c:198
+ alloc_skb include/linux/skbuff.h:1081 [inline]
+ htc_connect_service+0x2cc/0x840 drivers/net/wireless/ath/ath9k/htc_hst.c:257
+ ath9k_wmi_connect+0xd2/0x1a0 drivers/net/wireless/ath/ath9k/wmi.c:265
+ ath9k_init_htc_services.constprop.0+0xb4/0x650 drivers/net/wireless/ath/ath9k/htc_drv_init.c:146
+ ath9k_htc_probe_device+0x25a/0x1d80 drivers/net/wireless/ath/ath9k/htc_drv_init.c:959
+ ath9k_htc_hw_init+0x31/0x60 drivers/net/wireless/ath/ath9k/htc_hst.c:501
+ ath9k_hif_usb_firmware_cb+0x26b/0x500 drivers/net/wireless/ath/ath9k/hif_usb.c:1187
+ request_firmware_work_func+0x126/0x242 drivers/base/firmware_loader/main.c:976
+ process_one_work+0x94b/0x1620 kernel/workqueue.c:2266
+ worker_thread+0x96/0xe20 kernel/workqueue.c:2412
+ kthread+0x318/0x420 kernel/kthread.c:255
+ ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
 
-This one is probably reasonable, but I suggest that "engine_group%d"
-is a bit redundant and this might be better as something like:
+Freed by task 24267:
+ save_stack+0x1b/0x80 mm/kasan/common.c:72
+ set_track mm/kasan/common.c:80 [inline]
+ kasan_set_free_info mm/kasan/common.c:337 [inline]
+ __kasan_slab_free+0x117/0x160 mm/kasan/common.c:476
+ slab_free_hook mm/slub.c:1444 [inline]
+ slab_free_freelist_hook mm/slub.c:1477 [inline]
+ slab_free mm/slub.c:3034 [inline]
+ kmem_cache_free+0x9b/0x360 mm/slub.c:3050
+ kfree_skbmem net/core/skbuff.c:622 [inline]
+ kfree_skbmem+0xef/0x1b0 net/core/skbuff.c:616
+ __kfree_skb net/core/skbuff.c:679 [inline]
+ kfree_skb net/core/skbuff.c:696 [inline]
+ kfree_skb+0x102/0x3d0 net/core/skbuff.c:690
+ htc_connect_service.cold+0xa9/0x109 drivers/net/wireless/ath/ath9k/htc_hst.c:282
+ ath9k_wmi_connect+0xd2/0x1a0 drivers/net/wireless/ath/ath9k/wmi.c:265
+ ath9k_init_htc_services.constprop.0+0xb4/0x650 drivers/net/wireless/ath/ath9k/htc_drv_init.c:146
+ ath9k_htc_probe_device+0x25a/0x1d80 drivers/net/wireless/ath/ath9k/htc_drv_init.c:959
+ ath9k_htc_hw_init+0x31/0x60 drivers/net/wireless/ath/ath9k/htc_hst.c:501
+ ath9k_hif_usb_firmware_cb+0x26b/0x500 drivers/net/wireless/ath/ath9k/hif_usb.c:1187
+ request_firmware_work_func+0x126/0x242 drivers/base/firmware_loader/main.c:976
+ process_one_work+0x94b/0x1620 kernel/workqueue.c:2266
+ worker_thread+0x96/0xe20 kernel/workqueue.c:2412
+ kthread+0x318/0x420 kernel/kthread.c:255
+ ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
 
-diff --git a/drivers/crypto/marvell/octeontx/otx_cptpf_ucode.c b/drivers/crypto/marvell/octeontx/otx_cptpf_ucode.c
-index d04baa3..a6bb6c7 100644
---- a/drivers/crypto/marvell/octeontx/otx_cptpf_ucode.c
-+++ b/drivers/crypto/marvell/octeontx/otx_cptpf_ucode.c
-@@ -1142,13 +1143,14 @@ static int delete_engine_group(struct device *dev,
- 		return -EINVAL;
- 
- 	if (eng_grp->mirror.ref_count) {
--		dev_err(dev, "Can't delete engine_group%d as it is used by:",
-+		dev_err(dev, "Can't delete engine_group%d as it is used by engine_group(s):",
- 			eng_grp->idx);
- 		for (i = 0; i < OTX_CPT_MAX_ENGINE_GROUPS; i++) {
- 			if (eng_grp->g->grp[i].mirror.is_ena &&
- 			    eng_grp->g->grp[i].mirror.idx == eng_grp->idx)
--				dev_err(dev, "engine_group%d", i);
-+				pr_cont(dev, " %d", i);
- 		}
-+		pr_cont("\n");
- 		return -EINVAL;
- 	}
- 
+The buggy address belongs to the object at ffff8881d1caf3c0
+ which belongs to the cache skbuff_head_cache of size 224
+The buggy address is located 200 bytes inside of
+ 224-byte region [ffff8881d1caf3c0, ffff8881d1caf4a0)
+The buggy address belongs to the page:
+page:ffffea0007472bc0 refcount:1 mapcount:0 mapping:ffff8881da16b400 index:0xffff8881d1caf280
+flags: 0x200000000000200(slab)
+raw: 0200000000000200 ffffea00074473c0 0000000900000009 ffff8881da16b400
+raw: ffff8881d1caf280 00000000800c000b 00000001ffffffff 0000000000000000
+page dumped because: kasan: bad access detected
 
+Memory state around the buggy address:
+ ffff8881d1caf380: fc fc fc fc fc fc fc fc fb fb fb fb fb fb fb fb
+ ffff8881d1caf400: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+>ffff8881d1caf480: fb fb fb fb fc fc fc fc fc fc fc fc fc fc fc fc
+                      ^
+ ffff8881d1caf500: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+ ffff8881d1caf580: fb fb fb fb fb fb fb fb fb fb fb fb fc fc fc fc
+==================================================================
+
+
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
