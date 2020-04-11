@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1013AC2BA19
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:10:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2004FC2BA19
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:10:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D779520708
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:10:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E4CDA20757
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:10:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586646639;
-	bh=G6doahWEhEoWqA7g3gA5FqgZGobBc8m5pKoJLoAJSdA=;
+	s=default; t=1586646643;
+	bh=iir4ia2z/AOluTWFDVeTzVpMBJS5j6/hFvhzHHABHYc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tjJ42O3eIbrPUdsDO55LodeEoh1RTtYvkGeWyO0twhZlABXhS3Kmtg4J5iKIbjumI
-	 +aR5bTB62VXjcxZsBN8U7rP2dT0FdN5Q0jID14dSw2zpoa48kALEPS4yjk2XWwl/nf
-	 1AuG64BJ0SacGZzoRyUL+8lXC+tChjsiF+uJF2fY=
+	b=TroWIDcHl96bpdspeKJ1Gs3kNGcySwR4O/zL17rhLaiSJA6pMPth2yS+g8KCYmkg1
+	 JFPyLu15nkqlRYEHzuhTWeKzAA+pxkkA5ug+9V2MvRNQOjm9HQA3anMw63SU5qcJRR
+	 qQgWQIXANKURRY/3AmraTy2WO7jzsw4mUa6nAFKo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729654AbgDKXKi (ORCPT
+        id S1729671AbgDKXKl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 19:10:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49190 "EHLO mail.kernel.org"
+        Sat, 11 Apr 2020 19:10:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49328 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729627AbgDKXKe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 19:10:34 -0400
+        id S1729658AbgDKXKj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Apr 2020 19:10:39 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7879A20757;
-        Sat, 11 Apr 2020 23:10:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EFD39215A4;
+        Sat, 11 Apr 2020 23:10:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586646635;
-        bh=G6doahWEhEoWqA7g3gA5FqgZGobBc8m5pKoJLoAJSdA=;
+        s=default; t=1586646639;
+        bh=iir4ia2z/AOluTWFDVeTzVpMBJS5j6/hFvhzHHABHYc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Ea3/W8vppEjMZBJj+YmXu2blDJKIRzCSlAVkoW/H0Uw6rrUBqo8faOJgXm/6oivrv
-         uXPNKghB+oLNk6ueZPpGIeGWRa3tq4or1e/crA55rViajBXgSYwBUnSNt4a9n/lHdg
-         Q5m+HQK07EEMmGN4DJbyl2PoNIvY5xaQE/LjBoPM=
+        b=2OAJaEMVZp7qoL2y5QO4NJyb156NxSupbW+FebaenjtEveYmNe0yOwLcYKHk6Enfv
+         QHrt0MY1u8c5Dk2V21YSUXEO0Lgb5HPcnWnR/A86L+S6ZFtA3zruOqrNm/9F0KkI89
+         Ypyz+4iS8f+hggSIWBDbXAlXMA76YAZWYyybu1e0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Samuel Holland <samuel@sholland.org>,
-        Maxime Ripard <maxime@cerno.tech>,
-        Sasha Levin <sashal@kernel.org>,
-        dri-devel@lists.freedesktop.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.4 042/108] drm/sun4i: dsi: Use NULL to signify "no panel"
-Date:   Sat, 11 Apr 2020 19:08:37 -0400
-Message-Id: <20200411230943.24951-42-sashal@kernel.org>
+Cc:     Kamal Heib <kamalheib1@gmail.com>,
+        Gal Pressman <galpress@amazon.com>,
+        Bernard Metzler <bmt@zurich.ibm.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Sasha Levin <sashal@kernel.org>, linux-rdma@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 046/108] RDMA/siw: Fix setting active_mtu attribute
+Date:   Sat, 11 Apr 2020 19:08:41 -0400
+Message-Id: <20200411230943.24951-46-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200411230943.24951-1-sashal@kernel.org>
 References: <20200411230943.24951-1-sashal@kernel.org>
@@ -61,75 +61,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Samuel Holland <samuel@sholland.org>
+From: Kamal Heib <kamalheib1@gmail.com>
 
-[ Upstream commit 0e4e3fb4901d19f49e5c0a582f383b10dda8d1c5 ]
+[ Upstream commit beb205dd67aaa4315dedf5c40b47c6e9dee5a469 ]
 
-The continued use of an ERR_PTR to signify "no panel" outside of
-sun6i_dsi_attach is confusing because it is a double negative. Because
-the connector always reports itself as connected, there is also the
-possibility of sending an ERR_PTR to drm_panel_get_modes(), which would
-crash.
+Make sure to set the active_mtu attribute to avoid report the following
+invalid value:
 
-Solve both of these by only storing the panel pointer if it is valid.
+$ ibv_devinfo -d siw0 | grep active_mtu
+			active_mtu:		invalid MTU (0)
 
-Fixes: 133add5b5ad4 ("drm/sun4i: Add Allwinner A31 MIPI-DSI controller support")
-Signed-off-by: Samuel Holland <samuel@sholland.org>
-Signed-off-by: Maxime Ripard <maxime@cerno.tech>
-Link: https://patchwork.freedesktop.org/patch/msgid/20200211072858.30784-2-samuel@sholland.org
+Fixes: 303ae1cdfdf7 ("rdma/siw: application interface")
+Link: https://lore.kernel.org/r/20200205081354.30438-1-kamalheib1@gmail.com
+Signed-off-by: Kamal Heib <kamalheib1@gmail.com>
+Reviewed-by: Gal Pressman <galpress@amazon.com>
+Reviewed-by: Bernard Metzler <bmt@zurich.ibm.com>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c | 14 ++++++++------
- 1 file changed, 8 insertions(+), 6 deletions(-)
+ drivers/infiniband/sw/siw/siw_verbs.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c b/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
-index f83522717488a..d2ade0ad67708 100644
---- a/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
-+++ b/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
-@@ -748,7 +748,7 @@ static void sun6i_dsi_encoder_enable(struct drm_encoder *encoder)
- 	phy_configure(dsi->dphy, &opts);
- 	phy_power_on(dsi->dphy);
+diff --git a/drivers/infiniband/sw/siw/siw_verbs.c b/drivers/infiniband/sw/siw/siw_verbs.c
+index 1b1a40db529c6..73442bd57dbe8 100644
+--- a/drivers/infiniband/sw/siw/siw_verbs.c
++++ b/drivers/infiniband/sw/siw/siw_verbs.c
+@@ -200,12 +200,12 @@ int siw_query_port(struct ib_device *base_dev, u8 port,
  
--	if (!IS_ERR(dsi->panel))
-+	if (dsi->panel)
- 		drm_panel_prepare(dsi->panel);
+ 	memset(attr, 0, sizeof(*attr));
  
- 	/*
-@@ -763,7 +763,7 @@ static void sun6i_dsi_encoder_enable(struct drm_encoder *encoder)
- 	 * ordering on the panels I've tested it with, so I guess this
- 	 * will do for now, until that IP is better understood.
- 	 */
--	if (!IS_ERR(dsi->panel))
-+	if (dsi->panel)
- 		drm_panel_enable(dsi->panel);
- 
- 	sun6i_dsi_start(dsi, DSI_START_HSC);
-@@ -779,7 +779,7 @@ static void sun6i_dsi_encoder_disable(struct drm_encoder *encoder)
- 
- 	DRM_DEBUG_DRIVER("Disabling DSI output\n");
- 
--	if (!IS_ERR(dsi->panel)) {
-+	if (dsi->panel) {
- 		drm_panel_disable(dsi->panel);
- 		drm_panel_unprepare(dsi->panel);
- 	}
-@@ -941,11 +941,13 @@ static int sun6i_dsi_attach(struct mipi_dsi_host *host,
- 			    struct mipi_dsi_device *device)
- {
- 	struct sun6i_dsi *dsi = host_to_sun6i_dsi(host);
-+	struct drm_panel *panel = of_drm_find_panel(device->dev.of_node);
- 
-+	if (IS_ERR(panel))
-+		return PTR_ERR(panel);
-+
-+	dsi->panel = panel;
- 	dsi->device = device;
--	dsi->panel = of_drm_find_panel(device->dev.of_node);
--	if (IS_ERR(dsi->panel))
--		return PTR_ERR(dsi->panel);
- 
- 	dev_info(host->dev, "Attached device %s\n", device->name);
- 
+-	attr->active_mtu = attr->max_mtu;
+ 	attr->active_speed = 2;
+ 	attr->active_width = 2;
+ 	attr->gid_tbl_len = 1;
+ 	attr->max_msg_sz = -1;
+ 	attr->max_mtu = ib_mtu_int_to_enum(sdev->netdev->mtu);
++	attr->active_mtu = ib_mtu_int_to_enum(sdev->netdev->mtu);
+ 	attr->phys_state = sdev->state == IB_PORT_ACTIVE ?
+ 		IB_PORT_PHYS_STATE_LINK_UP : IB_PORT_PHYS_STATE_DISABLED;
+ 	attr->pkey_tbl_len = 1;
 -- 
 2.20.1
 
