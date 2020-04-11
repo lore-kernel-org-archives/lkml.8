@@ -2,95 +2,114 @@ Return-Path: <SRS0=xbEg=53=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B98CC2BA19
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:50:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4BB8C2BA19
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:50:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 681DB206F7
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:50:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7F955206F7
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:50:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586649031;
-	bh=xiREdZxEW3K1VqE5RMUgCuLFPcITPWV5v/9kSU0qleg=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mXoleonyp1iLCVTyUXS8l4dcKZMXjUC156O3v+DmCz1pO4lTbBo/r9WiZy1LjIkYr
-	 2X6i69AOU8XTkZsI5+yYRIelBcsHvCwkrvsAOJei8tSch+k78tRIpxZFqL4ruBmCaQ
-	 iPtizYa3jWb2q/xGK0nddrkLK/5/u/OgI7y9wIAM=
+	s=default; t=1586649035;
+	bh=GrmMSd83oRr7yDkchC4S4UHDHr94N0l328ftQ/s1suc=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=uQRRZTMnP8x+tOJEmCaXwEaViaiwdnKm4553R0uPoRw8lrbOprkBzUDBQGlij9Szz
+	 YZ3sRF6ZZ53OYufjydwnU6srpI0nhverxDYFio1BvW/D0KOXzmEfLhAJvX6c6nwZbI
+	 HyegyPP3YPOS6LFBTdbgQNLBzfcUDiW6r9vNvZ+Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730089AbgDKXu2 (ORCPT
+        id S1730243AbgDKXud (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 19:50:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36864 "EHLO mail.kernel.org"
+        Sat, 11 Apr 2020 19:50:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55784 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726986AbgDKXED (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 19:04:03 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1727415AbgDKXub (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Apr 2020 19:50:31 -0400
+Received: from kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com (unknown [163.114.132.1])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AAB8D214D8;
-        Sat, 11 Apr 2020 23:04:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8526720936;
+        Sat, 11 Apr 2020 23:50:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586646243;
-        bh=xiREdZxEW3K1VqE5RMUgCuLFPcITPWV5v/9kSU0qleg=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RVSouv8+b1nEKZIiVnBLSD4tILSH8WAOXu3QUB7opK0GsY9oTUDFVScRavf2PrxM+
-         XNkjZl0r/Qox5+Up3uJXk092GQzt6MEmRsFFRdJKKarNqeDxDvFfw+upjhgvgAmG1i
-         bcy1QzbWYHiH0l6nAX0K71EVUOBzoQZopBvn0qsM=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Vladimir Oltean <vladimir.oltean@nxp.com>,
+        s=default; t=1586649031;
+        bh=GrmMSd83oRr7yDkchC4S4UHDHr94N0l328ftQ/s1suc=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=IfCoR5eegu4iaVZvOa1j8RZ/3DrAETQOIkN15zO5inDIcQo7KLjMBOzooL02CI+fJ
+         XkxH1lHcuKkoeEaMA5SyNNlNSoq/RFnb4+lJ6XGyTUOpokevYENX/WXQRmyDKbc34n
+         NRhr5roPXt2fbsXJ+Q2Jf5YXSAkE6cHtJ9gbygC4=
+Date:   Sat, 11 Apr 2020 16:50:29 -0700
+From:   Jakub Kicinski <kuba@kernel.org>
+To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
+Cc:     Clemens Gruber <clemens.gruber@pqgruber.com>,
+        netdev@vger.kernel.org, Andrew Lunn <andrew@lunn.ch>,
         Florian Fainelli <f.fainelli@gmail.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
         "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.6 012/149] net: phy: mscc: accept all RGMII species in vsc85xx_mac_if_set
-Date:   Sat, 11 Apr 2020 19:01:29 -0400
-Message-Id: <20200411230347.22371-12-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200411230347.22371-1-sashal@kernel.org>
-References: <20200411230347.22371-1-sashal@kernel.org>
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] net: phy: marvell: Fix pause frame negotiation
+Message-ID: <20200411165029.694a1b8b@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+In-Reply-To: <20200411234559.GL25745@shell.armlinux.org.uk>
+References: <20200411165125.1091-1-clemens.gruber@pqgruber.com>
+        <20200411162824.59791b84@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+        <20200411234559.GL25745@shell.armlinux.org.uk>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vladimir Oltean <vladimir.oltean@nxp.com>
+On Sun, 12 Apr 2020 00:45:59 +0100 Russell King - ARM Linux admin wrote:
+> On Sat, Apr 11, 2020 at 04:28:24PM -0700, Jakub Kicinski wrote:
+> > On Sat, 11 Apr 2020 18:51:25 +0200 Clemens Gruber wrote:  
+> > > The negotiation of flow control / pause frame modes was broken since
+> > > commit fcf1f59afc67 ("net: phy: marvell: rearrange to use
+> > > genphy_read_lpa()") moved the setting of phydev->duplex below the
+> > > phy_resolve_aneg_pause call. Due to a check of DUPLEX_FULL in that
+> > > function, phydev->pause was no longer set.
+> > > 
+> > > Fix it by moving the parsing of the status variable before the blocks
+> > > dealing with the pause frames.
+> > > 
+> > > As the Marvell 88E1510 datasheet does not specify the timing between the
+> > > link status and the "Speed and Duplex Resolved" bit, we have to force
+> > > the link down as long as the resolved bit is not set, to avoid reporting
+> > > link up before we even have valid Speed/Duplex.
+> > > 
+> > > Tested with a Marvell 88E1510 (RGMII to Copper/1000Base-T)
+> > > 
+> > > Fixes: fcf1f59afc67 ("net: phy: marvell: rearrange to use genphy_read_lpa()")
+> > > Signed-off-by: Clemens Gruber <clemens.gruber@pqgruber.com>
+> > > ---
+> > > Changes since v1:
+> > > - Force link to 0 if resolved bit is not set as suggested by Russell King
+> > > 
+> > >  drivers/net/phy/marvell.c | 46 ++++++++++++++++++++-------------------
+> > >  1 file changed, 24 insertions(+), 22 deletions(-)
+> > > 
+> > > diff --git a/drivers/net/phy/marvell.c b/drivers/net/phy/marvell.c
+> > > index 9a8badafea8a..561df5e33f65 100644
+> > > --- a/drivers/net/phy/marvell.c
+> > > +++ b/drivers/net/phy/marvell.c
+> > > @@ -1278,6 +1278,30 @@ static int marvell_read_status_page_an(struct phy_device *phydev,
+> > >  	int lpa;
+> > >  	int err;
+> > >  
+> > > +	if (!(status & MII_M1011_PHY_STATUS_RESOLVED)) {
+> > > +		phydev->link = 0;
+> > > +		return 0;
+> > > +	}  
+> > 
+> > This doesn't address my comment, so was I wrong? What I was trying to
+> > say is that the function updates the established link info as well as
+> > autoneg advertising info. If the link is not resolved we can't read the
+> > link info, but we should still report the advertising modes. No?  
+> 
+> If we report that the link is down, then the advertising modes are
+> irrelevent.
 
-[ Upstream commit da206d65f2b293274f8082a26da4e43a1610da54 ]
+Ugh, these are link partner modes...
 
-The helper for configuring the pinout of the MII side of the PHY should
-do so irrespective of whether RGMII delays are used or not. So accept
-the ID, TXID and RXID variants as well, not just the no-delay RGMII
-variant.
-
-Signed-off-by: Vladimir Oltean <vladimir.oltean@nxp.com>
-Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/net/phy/mscc.c | 3 +++
- 1 file changed, 3 insertions(+)
-
-diff --git a/drivers/net/phy/mscc.c b/drivers/net/phy/mscc.c
-index f686f40f6bdcc..57e6b1f64db72 100644
---- a/drivers/net/phy/mscc.c
-+++ b/drivers/net/phy/mscc.c
-@@ -910,6 +910,9 @@ static int vsc85xx_mac_if_set(struct phy_device *phydev,
- 	reg_val = phy_read(phydev, MSCC_PHY_EXT_PHY_CNTL_1);
- 	reg_val &= ~(MAC_IF_SELECTION_MASK);
- 	switch (interface) {
-+	case PHY_INTERFACE_MODE_RGMII_TXID:
-+	case PHY_INTERFACE_MODE_RGMII_RXID:
-+	case PHY_INTERFACE_MODE_RGMII_ID:
- 	case PHY_INTERFACE_MODE_RGMII:
- 		reg_val |= (MAC_IF_SELECTION_RGMII << MAC_IF_SELECTION_POS);
- 		break;
--- 
-2.20.1
-
+Applied, thanks!
