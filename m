@@ -7,49 +7,45 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DEE2C2BBC7
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:32:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0FAEC2BB86
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:32:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1559B2051A
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:32:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7B1B12051A
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:32:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586647943;
-	bh=V8BCmqsWcg9DM/6hQQ/v3RBg1t9vH6T1JIenRWlxN1c=;
+	s=default; t=1586647945;
+	bh=LH/0XbyTfE2JnQhWXC2C1VsC70CAwJrX6gzmWQ2KEZk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Jy7tJ4XDJedr33J6sUxgs+qrlFwCZy4JsbNk1DJVBoZddxjrLiTvXMocsxbUc5fZo
-	 NtoPCIkm6LNC5Fns8f9Xgsnu/PEVTX6XPrAK+dIlz+FbqX5V0TzbJ4ICHTXfUqgh1h
-	 ho36YqK/YDC8R2VgvDjB+9WWuSxLK/aGIKE1HBdM=
+	b=AVZRyJ+ZSo42Ummc0x6wAVPgvcafU93Jy3qRsljk68UV/MeVoyumMvdoaNr9KeTJQ
+	 sPhwVNHnTVy4WbHj3+U85X3I68onBayQUZT/EoDcxSwJ0HEBZQs3+nEX+WGPrhZiP+
+	 zd2VWOokcJJCGUTXqM0g+wxdNG1DJ+ZzUcVS39b4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729050AbgDKXKF (ORCPT
+        id S1728977AbgDKXcX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 19:10:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48070 "EHLO mail.kernel.org"
+        Sat, 11 Apr 2020 19:32:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48188 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727620AbgDKXKC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 19:10:02 -0400
+        id S1729421AbgDKXKG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Apr 2020 19:10:06 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 800EA2173E;
-        Sat, 11 Apr 2020 23:10:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4226020757;
+        Sat, 11 Apr 2020 23:10:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586646602;
-        bh=V8BCmqsWcg9DM/6hQQ/v3RBg1t9vH6T1JIenRWlxN1c=;
+        s=default; t=1586646605;
+        bh=LH/0XbyTfE2JnQhWXC2C1VsC70CAwJrX6gzmWQ2KEZk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Je/EHCC/ZVgNvTzDPIWhOWyUnvNfjOXCid3VrNESgYXBEVK2lzrNkps8vtnjM12Dj
-         RD7VUHeR7zVOORTpjW1S024LzumFV2zCRYwvLpSQxl+diLBUGhQQWRvmZhJ/C3tfEQ
-         vUmP+vl4NPURUKg/e7z+wfnTtAj1HcsBiGzaZCLI=
+        b=ekPfmPpl2arDrBWIb9T9WjGdOTi1w9/Rkl97CdkzRqWMxhw6m7gmTz2at58Jit3bK
+         KusmHzA67P0392BP3AZDowK8RjYKWe2+LPF2Z0yh3Dmwm6EB9kWwBy9ZH866Y89+SH
+         bkG3sdd4T4e7096PgCeaImbC6WnFYXWQYj7yMSd8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Andrii Nakryiko <andriin@fb.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-kselftest@vger.kernel.org, netdev@vger.kernel.org,
-        bpf@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 015/108] selftests/bpf: Fix test_progs's parsing of test numbers
-Date:   Sat, 11 Apr 2020 19:08:10 -0400
-Message-Id: <20200411230943.24951-15-sashal@kernel.org>
+Cc:     Helge Deller <deller@gmx.de>, Jon Mason <jdmason@kudzu.us>,
+        Sasha Levin <sashal@kernel.org>, linux-ntb@googlegroups.com
+Subject: [PATCH AUTOSEL 5.4 018/108] ntb_tool: Fix printk format
+Date:   Sat, 11 Apr 2020 19:08:13 -0400
+Message-Id: <20200411230943.24951-18-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200411230943.24951-1-sashal@kernel.org>
 References: <20200411230943.24951-1-sashal@kernel.org>
@@ -62,62 +58,68 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andrii Nakryiko <andriin@fb.com>
+From: Helge Deller <deller@gmx.de>
 
-[ Upstream commit fc32490bff855a539d253c8a52c5a1ba51d1325a ]
+[ Upstream commit 2ef97a6c181eba48f14c9ed98ce4398d21164683 ]
 
-When specifying disjoint set of tests, test_progs doesn't set skipped test's
-array elements to false. This leads to spurious execution of tests that should
-have been skipped. Fix it by explicitly initializing them to false.
+The correct printk format is %pa or %pap, but not %pa[p].
 
-Fixes: 3a516a0a3a7b ("selftests/bpf: add sub-tests support for test_progs")
-Signed-off-by: Andrii Nakryiko <andriin@fb.com>
-Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
-Acked-by: Martin KaFai Lau <kafai@fb.com>
-Link: https://lore.kernel.org/bpf/20200314013932.4035712-2-andriin@fb.com
+Fixes: 7f46c8b3a5523 ("NTB: ntb_tool: Add full multi-port NTB API support")
+Signed-off-by: Helge Deller <deller@gmx.de>
+Signed-off-by: Jon Mason <jdmason@kudzu.us>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/testing/selftests/bpf/test_progs.c | 13 +++++++------
- 1 file changed, 7 insertions(+), 6 deletions(-)
+ drivers/ntb/test/ntb_tool.c | 14 +++++++-------
+ 1 file changed, 7 insertions(+), 7 deletions(-)
 
-diff --git a/tools/testing/selftests/bpf/test_progs.c b/tools/testing/selftests/bpf/test_progs.c
-index 3bf18364c67c9..751be17980a91 100644
---- a/tools/testing/selftests/bpf/test_progs.c
-+++ b/tools/testing/selftests/bpf/test_progs.c
-@@ -361,7 +361,7 @@ static int libbpf_print_fn(enum libbpf_print_level level,
+diff --git a/drivers/ntb/test/ntb_tool.c b/drivers/ntb/test/ntb_tool.c
+index d592c0ffbd198..69da758fe64c8 100644
+--- a/drivers/ntb/test/ntb_tool.c
++++ b/drivers/ntb/test/ntb_tool.c
+@@ -678,19 +678,19 @@ static ssize_t tool_mw_trans_read(struct file *filep, char __user *ubuf,
+ 			 &inmw->dma_base);
  
- int parse_num_list(const char *s, struct test_selector *sel)
- {
--	int i, set_len = 0, num, start = 0, end = -1;
-+	int i, set_len = 0, new_len, num, start = 0, end = -1;
- 	bool *set = NULL, *tmp, parsing_end = false;
- 	char *next;
+ 	off += scnprintf(buf + off, buf_size - off,
+-			 "Window Size    \t%pa[p]\n",
++			 "Window Size    \t%pap\n",
+ 			 &inmw->size);
  
-@@ -396,18 +396,19 @@ int parse_num_list(const char *s, struct test_selector *sel)
- 			return -EINVAL;
+ 	off += scnprintf(buf + off, buf_size - off,
+-			 "Alignment      \t%pa[p]\n",
++			 "Alignment      \t%pap\n",
+ 			 &addr_align);
  
- 		if (end + 1 > set_len) {
--			set_len = end + 1;
--			tmp = realloc(set, set_len);
-+			new_len = end + 1;
-+			tmp = realloc(set, new_len);
- 			if (!tmp) {
- 				free(set);
- 				return -ENOMEM;
- 			}
-+			for (i = set_len; i < start; i++)
-+				tmp[i] = false;
- 			set = tmp;
-+			set_len = new_len;
- 		}
--		for (i = start; i <= end; i++) {
-+		for (i = start; i <= end; i++)
- 			set[i] = true;
--		}
--
- 	}
+ 	off += scnprintf(buf + off, buf_size - off,
+-			 "Size Alignment \t%pa[p]\n",
++			 "Size Alignment \t%pap\n",
+ 			 &size_align);
  
- 	if (!set)
+ 	off += scnprintf(buf + off, buf_size - off,
+-			 "Size Max       \t%pa[p]\n",
++			 "Size Max       \t%pap\n",
+ 			 &size_max);
+ 
+ 	ret = simple_read_from_buffer(ubuf, size, offp, buf, off);
+@@ -907,16 +907,16 @@ static ssize_t tool_peer_mw_trans_read(struct file *filep, char __user *ubuf,
+ 			 "Virtual address     \t0x%pK\n", outmw->io_base);
+ 
+ 	off += scnprintf(buf + off, buf_size - off,
+-			 "Phys Address        \t%pa[p]\n", &map_base);
++			 "Phys Address        \t%pap\n", &map_base);
+ 
+ 	off += scnprintf(buf + off, buf_size - off,
+-			 "Mapping Size        \t%pa[p]\n", &map_size);
++			 "Mapping Size        \t%pap\n", &map_size);
+ 
+ 	off += scnprintf(buf + off, buf_size - off,
+ 			 "Translation Address \t0x%016llx\n", outmw->tr_base);
+ 
+ 	off += scnprintf(buf + off, buf_size - off,
+-			 "Window Size         \t%pa[p]\n", &outmw->size);
++			 "Window Size         \t%pap\n", &outmw->size);
+ 
+ 	ret = simple_read_from_buffer(ubuf, size, offp, buf, off);
+ 	kfree(buf);
 -- 
 2.20.1
 
