@@ -7,52 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83735C2BA2B
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:17:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2161CC2BA2B
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:17:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5DFA720692
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:17:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EB8072084D
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:17:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586607440;
-	bh=3U31o4yGOnNiR49KeK2YQEL9DTX9nMcz4WtgW1tGyy8=;
+	s=default; t=1586607443;
+	bh=oDOR3nIjgOc1MJbGlBKDQMZunaN6N06rFE3HEbc8H3g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2gF4G/mCsaIdJ2n/2xtqk9k8np961iRECNo4d1DIFxB+ddm2hi+FNddBKHHJ3/Xaf
-	 cD9xLLEmnj3mRDps4YH9JBhsaPYwOq5weoeHKin7HFbrlYi7EkIiXubKoRS4lTSFqf
-	 6UehzeY1ojj+QQfrSOc81rRTp7XQV7xsno6fTZvQ=
+	b=lvZ8x0/c1To9mc/p+bcWUnxEzwCJ6mkeovZ1WvV1spniLLO8vbAmKJ/fPw8n2P1Sy
+	 btUZlLkXdjQ3Ag3EqyPU8v5pzuI01P8sBFps5rIPeG+1NGxbJSD3+eNKeol+eU1fUQ
+	 9SgMzwAW6nkqhIa1NUvGFxIUY9qOGSoHa3ZatDnQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728388AbgDKMRS (ORCPT
+        id S1728394AbgDKMRU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 08:17:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51892 "EHLO mail.kernel.org"
+        Sat, 11 Apr 2020 08:17:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51954 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728377AbgDKMRQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 08:17:16 -0400
+        id S1728387AbgDKMRS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Apr 2020 08:17:18 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AEDAB2084D;
-        Sat, 11 Apr 2020 12:17:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1BE6520787;
+        Sat, 11 Apr 2020 12:17:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586607436;
-        bh=3U31o4yGOnNiR49KeK2YQEL9DTX9nMcz4WtgW1tGyy8=;
+        s=default; t=1586607438;
+        bh=oDOR3nIjgOc1MJbGlBKDQMZunaN6N06rFE3HEbc8H3g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=seU1SC/NHkqR14NvdRo8XcPrbZTtmzTuUPIrQZFK/RkKUGiDSu8RLF4qFwCwETc8H
-         GscyyQ3bLsWDyl8oxWHNbUtE48VvXPTPcxNZO8X5KQdQCi6xZG/x7H8+dVEm12Sqi5
-         LFhIg5ArfPuEO5XyUAfEyIum3ePXJWwDoGP/6g7E=
+        b=0euV8sRDp40v6TIl/0E403/TZZKhk0/uooXcatH2a5GygAhU+LaiAAZpsXf3xkDne
+         09Wo3S1OP2+uVVaUUwrkcG+W/P25th9NTo86jat8rEkIuJ29D60tnMiuavdi6NhgnK
+         YchVJNiIyLSmYzlrWIL1N2Lgy0Tc6IrIkijfizb0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Silvio Cesare <silvio.cesare@gmail.com>,
-        Kees Cook <keescook@chromium.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Christoph Lameter <cl@linux.com>,
-        Pekka Enberg <penberg@kernel.org>,
-        David Rientjes <rientjes@google.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 5.4 19/41] slub: improve bit diffusion for freelist ptr obfuscation
-Date:   Sat, 11 Apr 2020 14:09:28 +0200
-Message-Id: <20200411115505.401838270@linuxfoundation.org>
+        stable@vger.kernel.org, Herat Ramani <herat@chelsio.com>,
+        Rahul Lakkireddy <rahul.lakkireddy@chelsio.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 5.4 02/41] cxgb4: fix MPS index overwrite when setting MAC address
+Date:   Sat, 11 Apr 2020 14:09:11 +0200
+Message-Id: <20200411115504.288266729@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200411115504.124035693@linuxfoundation.org>
 References: <20200411115504.124035693@linuxfoundation.org>
@@ -65,69 +60,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kees Cook <keescook@chromium.org>
+From: Herat Ramani <herat@chelsio.com>
 
-commit 1ad53d9fa3f6168ebcf48a50e08b170432da2257 upstream.
+[ Upstream commit 41aa8561ca3fc5748391f08cc5f3e561923da52c ]
 
-Under CONFIG_SLAB_FREELIST_HARDENED=y, the obfuscation was relatively weak
-in that the ptr and ptr address were usually so close that the first XOR
-would result in an almost entirely 0-byte value[1], leaving most of the
-"secret" number ultimately being stored after the third XOR.  A single
-blind memory content exposure of the freelist was generally sufficient to
-learn the secret.
+cxgb4_update_mac_filt() earlier requests firmware to add a new MAC
+address into MPS TCAM. The MPS TCAM index returned by firmware is
+stored in pi->xact_addr_filt. However, the saved MPS TCAM index gets
+overwritten again with the return value of cxgb4_update_mac_filt(),
+which is wrong.
 
-Add a swab() call to mix bits a little more.  This is a cheap way (1
-cycle) to make attacks need more than a single exposure to learn the
-secret (or to know _where_ the exposure is in memory).
+When trying to update to another MAC address later, the wrong MPS TCAM
+index is sent to firmware, which causes firmware to return error,
+because it's not the same MPS TCAM index that firmware had sent
+earlier to driver.
 
-kmalloc-32 freelist walk, before:
+So, fix by removing the wrong overwrite being done after call to
+cxgb4_update_mac_filt().
 
-ptr              ptr_addr            stored value      secret
-ffff90c22e019020@ffff90c22e019000 is 86528eb656b3b5bd (86528eb656b3b59d)
-ffff90c22e019040@ffff90c22e019020 is 86528eb656b3b5fd (86528eb656b3b59d)
-ffff90c22e019060@ffff90c22e019040 is 86528eb656b3b5bd (86528eb656b3b59d)
-ffff90c22e019080@ffff90c22e019060 is 86528eb656b3b57d (86528eb656b3b59d)
-ffff90c22e0190a0@ffff90c22e019080 is 86528eb656b3b5bd (86528eb656b3b59d)
-...
-
-after:
-
-ptr              ptr_addr            stored value      secret
-ffff9eed6e019020@ffff9eed6e019000 is 793d1135d52cda42 (86528eb656b3b59d)
-ffff9eed6e019040@ffff9eed6e019020 is 593d1135d52cda22 (86528eb656b3b59d)
-ffff9eed6e019060@ffff9eed6e019040 is 393d1135d52cda02 (86528eb656b3b59d)
-ffff9eed6e019080@ffff9eed6e019060 is 193d1135d52cdae2 (86528eb656b3b59d)
-ffff9eed6e0190a0@ffff9eed6e019080 is f93d1135d52cdac2 (86528eb656b3b59d)
-
-[1] https://blog.infosectcbr.com.au/2020/03/weaknesses-in-linux-kernel-heap.html
-
-Fixes: 2482ddec670f ("mm: add SLUB free list pointer obfuscation")
-Reported-by: Silvio Cesare <silvio.cesare@gmail.com>
-Signed-off-by: Kees Cook <keescook@chromium.org>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Cc: Christoph Lameter <cl@linux.com>
-Cc: Pekka Enberg <penberg@kernel.org>
-Cc: David Rientjes <rientjes@google.com>
-Cc: Joonsoo Kim <iamjoonsoo.kim@lge.com>
-Cc: <stable@vger.kernel.org>
-Link: http://lkml.kernel.org/r/202003051623.AF4F8CB@keescook
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Fixes: 3f8cfd0d95e6 ("cxgb4/cxgb4vf: Program hash region for {t4/t4vf}_change_mac()")
+Signed-off-by: Herat Ramani <herat@chelsio.com>
+Signed-off-by: Rahul Lakkireddy <rahul.lakkireddy@chelsio.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- mm/slub.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/ethernet/chelsio/cxgb4/cxgb4_main.c |    1 -
+ 1 file changed, 1 deletion(-)
 
---- a/mm/slub.c
-+++ b/mm/slub.c
-@@ -261,7 +261,7 @@ static inline void *freelist_ptr(const s
- 	 * freepointer to be restored incorrectly.
- 	 */
- 	return (void *)((unsigned long)ptr ^ s->random ^
--			(unsigned long)kasan_reset_tag((void *)ptr_addr));
-+			swab((unsigned long)kasan_reset_tag((void *)ptr_addr)));
- #else
- 	return ptr;
- #endif
+--- a/drivers/net/ethernet/chelsio/cxgb4/cxgb4_main.c
++++ b/drivers/net/ethernet/chelsio/cxgb4/cxgb4_main.c
+@@ -3032,7 +3032,6 @@ static int cxgb_set_mac_addr(struct net_
+ 		return ret;
+ 
+ 	memcpy(dev->dev_addr, addr->sa_data, dev->addr_len);
+-	pi->xact_addr_filt = ret;
+ 	return 0;
+ }
+ 
 
 
