@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EAA3C2BB86
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:13:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9267C2BA19
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:13:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D6A41217D8
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:13:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9C14421744
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:13:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586646824;
-	bh=+qGv5Q1VFQ4gBXlpmxKWjo47qbbWmBlB9TeCR6vZrVI=;
+	s=default; t=1586646829;
+	bh=d1SpChEHaI3h+BEvba7BrlEhWTpt/AGnLmH/27HA/Dk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nS97ULq67gLscqATwhjOq51wWGITWfU/J2UTcxxChG1MG1u72Yic5TQS2m0sVtDXv
-	 UHI+df/+kgKpglAZiMK/w8jMaRk1jNL9ZYurOlmGjVeJe96FQMPlLlTBMrihEzsKBu
-	 gHBYlztwtem/lIeykGrZjBop0L5M1RASSIoW9M9Q=
+	b=e6rs1C8n0kxymmpWUie7xFeNZ5Lz1ib55P/5/7/r0AlNGteIs7sVNBLZrX8KtgKdC
+	 3N3Pfd+Ja1xQjf0OrGpCN1N4rsj7Hqr8HLVqNuW2VCI6CVL2WZGhKxHP1TVMRfhZig
+	 EshFRf3C95mnve1lT2cy21PhKqw4zUmmTmQfhyl0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730543AbgDKXNn (ORCPT
+        id S1730569AbgDKXNr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 19:13:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54792 "EHLO mail.kernel.org"
+        Sat, 11 Apr 2020 19:13:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54976 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730461AbgDKXNe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 19:13:34 -0400
+        id S1730496AbgDKXNi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Apr 2020 19:13:38 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1CA3F20757;
-        Sat, 11 Apr 2020 23:13:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7A71521924;
+        Sat, 11 Apr 2020 23:13:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586646813;
-        bh=+qGv5Q1VFQ4gBXlpmxKWjo47qbbWmBlB9TeCR6vZrVI=;
+        s=default; t=1586646818;
+        bh=d1SpChEHaI3h+BEvba7BrlEhWTpt/AGnLmH/27HA/Dk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=M8ehra4h8MOjBA5jYpuxNW9hP7TKvy2MS2g0naH2FpSCvC5WKHZkK3d85aZSjuo4e
-         k+aJzQvxNMQPxJ/8U8tj/COnQ+AVUhduaYyZi5kfzX4hWmMyDCN5a07QyQf6FLo4ds
-         u6r7j1c7fsuCh2CeTEbhaY+j9KAvudYmyxIbnx8A=
+        b=cXCM/s8b+FmnY3Q3KiCBj0weDpLkpLk6zgXIETykDUWFDEeRr+I4oedB+8LZBKnzE
+         I+WeNIWCsYV9v95kq9Gnx4oliHhJteJ1ib5l1Q9Fz4wPuNWtU81xuJL8iW7D3Z58PI
+         2HjEh/8RW+KBKeeFk++P2SqloVRQO3tofOcRH/NY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Peter Ujfalusi <peter.ujfalusi@ti.com>,
-        Tomi Valkeinen <tomi.valkeinen@ti.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sasha Levin <sashal@kernel.org>, linux-serial@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 05/37] serial: 8250_omap: Fix sleeping function called from invalid context during probe
-Date:   Sat, 11 Apr 2020 19:12:54 -0400
-Message-Id: <20200411231327.26550-5-sashal@kernel.org>
+Cc:     Wen Gong <wgong@codeaurora.org>, Kalle Valo <kvalo@codeaurora.org>,
+        Sasha Levin <sashal@kernel.org>, ath10k@lists.infradead.org,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 09/37] ath10k: use kzalloc to read for ath10k_sdio_hif_diag_read
+Date:   Sat, 11 Apr 2020 19:12:58 -0400
+Message-Id: <20200411231327.26550-9-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200411231327.26550-1-sashal@kernel.org>
 References: <20200411231327.26550-1-sashal@kernel.org>
@@ -60,85 +59,141 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Peter Ujfalusi <peter.ujfalusi@ti.com>
+From: Wen Gong <wgong@codeaurora.org>
 
-[ Upstream commit 4ce35a3617c0ac758c61122b2218b6c8c9ac9398 ]
+[ Upstream commit 402f2992b4d62760cce7c689ff216ea3bf4d6e8a ]
 
-When booting j721e the following bug is printed:
+When use command to read values, it crashed.
 
-[    1.154821] BUG: sleeping function called from invalid context at kernel/sched/completion.c:99
-[    1.154827] in_atomic(): 0, irqs_disabled(): 128, non_block: 0, pid: 12, name: kworker/0:1
-[    1.154832] 3 locks held by kworker/0:1/12:
-[    1.154836]  #0: ffff000840030728 ((wq_completion)events){+.+.}, at: process_one_work+0x1d4/0x6e8
-[    1.154852]  #1: ffff80001214fdd8 (deferred_probe_work){+.+.}, at: process_one_work+0x1d4/0x6e8
-[    1.154860]  #2: ffff00084060b170 (&dev->mutex){....}, at: __device_attach+0x38/0x138
-[    1.154872] irq event stamp: 63096
-[    1.154881] hardirqs last  enabled at (63095): [<ffff800010b74318>] _raw_spin_unlock_irqrestore+0x70/0x78
-[    1.154887] hardirqs last disabled at (63096): [<ffff800010b740d8>] _raw_spin_lock_irqsave+0x28/0x80
-[    1.154893] softirqs last  enabled at (62254): [<ffff800010080c88>] _stext+0x488/0x564
-[    1.154899] softirqs last disabled at (62247): [<ffff8000100fdb3c>] irq_exit+0x114/0x140
-[    1.154906] CPU: 0 PID: 12 Comm: kworker/0:1 Not tainted 5.6.0-rc6-next-20200318-00094-g45e4089b0bd3 #221
-[    1.154911] Hardware name: Texas Instruments K3 J721E SoC (DT)
-[    1.154917] Workqueue: events deferred_probe_work_func
-[    1.154923] Call trace:
-[    1.154928]  dump_backtrace+0x0/0x190
-[    1.154933]  show_stack+0x14/0x20
-[    1.154940]  dump_stack+0xe0/0x148
-[    1.154946]  ___might_sleep+0x150/0x1f0
-[    1.154952]  __might_sleep+0x4c/0x80
-[    1.154957]  wait_for_completion_timeout+0x40/0x140
-[    1.154964]  ti_sci_set_device_state+0xa0/0x158
-[    1.154969]  ti_sci_cmd_get_device_exclusive+0x14/0x20
-[    1.154977]  ti_sci_dev_start+0x34/0x50
-[    1.154984]  genpd_runtime_resume+0x78/0x1f8
-[    1.154991]  __rpm_callback+0x3c/0x140
-[    1.154996]  rpm_callback+0x20/0x80
-[    1.155001]  rpm_resume+0x568/0x758
-[    1.155007]  __pm_runtime_resume+0x44/0xb0
-[    1.155013]  omap8250_probe+0x2b4/0x508
-[    1.155019]  platform_drv_probe+0x50/0xa0
-[    1.155023]  really_probe+0xd4/0x318
-[    1.155028]  driver_probe_device+0x54/0xe8
-[    1.155033]  __device_attach_driver+0x80/0xb8
-[    1.155039]  bus_for_each_drv+0x74/0xc0
-[    1.155044]  __device_attach+0xdc/0x138
-[    1.155049]  device_initial_probe+0x10/0x18
-[    1.155053]  bus_probe_device+0x98/0xa0
-[    1.155058]  deferred_probe_work_func+0x74/0xb0
-[    1.155063]  process_one_work+0x280/0x6e8
-[    1.155068]  worker_thread+0x48/0x430
-[    1.155073]  kthread+0x108/0x138
-[    1.155079]  ret_from_fork+0x10/0x18
+command:
+dd if=/sys/kernel/debug/ieee80211/phy0/ath10k/mem_value count=1 bs=4 skip=$((0x100233))
 
-To fix the bug we need to first call pm_runtime_enable() prior to any
-pm_runtime calls.
+It will call to ath10k_sdio_hif_diag_read with address = 0x4008cc and buf_len = 4.
 
-Reported-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Link: https://lore.kernel.org/r/20200320125200.6772-1-peter.ujfalusi@ti.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Then system crash:
+[ 1786.013258] Unable to handle kernel paging request at virtual address ffffffc00bd45000
+[ 1786.013273] Mem abort info:
+[ 1786.013281]   ESR = 0x96000045
+[ 1786.013291]   Exception class = DABT (current EL), IL = 32 bits
+[ 1786.013299]   SET = 0, FnV = 0
+[ 1786.013307]   EA = 0, S1PTW = 0
+[ 1786.013314] Data abort info:
+[ 1786.013322]   ISV = 0, ISS = 0x00000045
+[ 1786.013330]   CM = 0, WnR = 1
+[ 1786.013342] swapper pgtable: 4k pages, 39-bit VAs, pgdp = 000000008542a60e
+[ 1786.013350] [ffffffc00bd45000] pgd=0000000000000000, pud=0000000000000000
+[ 1786.013368] Internal error: Oops: 96000045 [#1] PREEMPT SMP
+[ 1786.013609] Process swapper/0 (pid: 0, stack limit = 0x0000000084b153c6)
+[ 1786.013623] CPU: 0 PID: 0 Comm: swapper/0 Not tainted 4.19.86 #137
+[ 1786.013631] Hardware name: MediaTek krane sku176 board (DT)
+[ 1786.013643] pstate: 80000085 (Nzcv daIf -PAN -UAO)
+[ 1786.013662] pc : __memcpy+0x94/0x180
+[ 1786.013678] lr : swiotlb_tbl_unmap_single+0x84/0x150
+[ 1786.013686] sp : ffffff8008003c60
+[ 1786.013694] x29: ffffff8008003c90 x28: ffffffae96411f80
+[ 1786.013708] x27: ffffffae960d2018 x26: ffffff8019a4b9a8
+[ 1786.013721] x25: 0000000000000000 x24: 0000000000000001
+[ 1786.013734] x23: ffffffae96567000 x22: 00000000000051d4
+[ 1786.013747] x21: 0000000000000000 x20: 00000000fe6e9000
+[ 1786.013760] x19: 0000000000000004 x18: 0000000000000020
+[ 1786.013773] x17: 0000000000000001 x16: 0000000000000000
+[ 1786.013787] x15: 00000000ffffffff x14: 00000000000044c0
+[ 1786.013800] x13: 0000000000365ba4 x12: 0000000000000000
+[ 1786.013813] x11: 0000000000000001 x10: 00000037be6e9000
+[ 1786.013826] x9 : ffffffc940000000 x8 : 000000000bd45000
+[ 1786.013839] x7 : 0000000000000000 x6 : ffffffc00bd45000
+[ 1786.013852] x5 : 0000000000000000 x4 : 0000000000000000
+[ 1786.013865] x3 : 0000000000000c00 x2 : 0000000000000004
+[ 1786.013878] x1 : fffffff7be6e9004 x0 : ffffffc00bd45000
+[ 1786.013891] Call trace:
+[ 1786.013903]  __memcpy+0x94/0x180
+[ 1786.013914]  unmap_single+0x6c/0x84
+[ 1786.013925]  swiotlb_unmap_sg_attrs+0x54/0x80
+[ 1786.013938]  __swiotlb_unmap_sg_attrs+0x8c/0xa4
+[ 1786.013952]  msdc_unprepare_data+0x6c/0x84
+[ 1786.013963]  msdc_request_done+0x58/0x84
+[ 1786.013974]  msdc_data_xfer_done+0x1a0/0x1c8
+[ 1786.013985]  msdc_irq+0x12c/0x17c
+[ 1786.013996]  __handle_irq_event_percpu+0xe4/0x250
+[ 1786.014006]  handle_irq_event_percpu+0x28/0x68
+[ 1786.014015]  handle_irq_event+0x48/0x78
+[ 1786.014026]  handle_fasteoi_irq+0xd0/0x1a0
+[ 1786.014039]  __handle_domain_irq+0x84/0xc4
+[ 1786.014050]  gic_handle_irq+0x124/0x1a4
+[ 1786.014059]  el1_irq+0xb0/0x128
+[ 1786.014072]  cpuidle_enter_state+0x298/0x328
+[ 1786.014082]  cpuidle_enter+0x30/0x40
+[ 1786.014094]  do_idle+0x190/0x268
+[ 1786.014104]  cpu_startup_entry+0x24/0x28
+[ 1786.014116]  rest_init+0xd4/0xe0
+[ 1786.014126]  start_kernel+0x30c/0x38c
+[ 1786.014139] Code: f8408423 f80084c3 36100062 b8404423 (b80044c3)
+[ 1786.014150] ---[ end trace 3b02ddb698ea69ee ]---
+[ 1786.015415] Kernel panic - not syncing: Fatal exception in interrupt
+[ 1786.015433] SMP: stopping secondary CPUs
+[ 1786.015447] Kernel Offset: 0x2e8d200000 from 0xffffff8008000000
+[ 1786.015458] CPU features: 0x0,2188200c
+[ 1786.015466] Memory Limit: none
+
+For sdio chip, it need the memory which is kmalloc, if it is
+vmalloc from ath10k_mem_value_read, then it have a memory error.
+kzalloc of ath10k_sdio_hif_diag_read32 is the correct type, so
+add kzalloc in ath10k_sdio_hif_diag_read to replace the buffer
+which is vmalloc from ath10k_mem_value_read.
+
+This patch only effect sdio chip.
+
+Tested with QCA6174 SDIO with firmware WLAN.RMH.4.4.1-00029.
+
+Signed-off-by: Wen Gong <wgong@codeaurora.org>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/tty/serial/8250/8250_omap.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/wireless/ath/ath10k/sdio.c | 18 ++++++++++++++----
+ 1 file changed, 14 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/tty/serial/8250/8250_omap.c b/drivers/tty/serial/8250/8250_omap.c
-index da04ba1ecf68a..33df33a9e646a 100644
---- a/drivers/tty/serial/8250/8250_omap.c
-+++ b/drivers/tty/serial/8250/8250_omap.c
-@@ -1216,11 +1216,11 @@ static int omap8250_probe(struct platform_device *pdev)
- 	spin_lock_init(&priv->rx_dma_lock);
+diff --git a/drivers/net/wireless/ath/ath10k/sdio.c b/drivers/net/wireless/ath/ath10k/sdio.c
+index f49b21b137c13..fef313099e08a 100644
+--- a/drivers/net/wireless/ath/ath10k/sdio.c
++++ b/drivers/net/wireless/ath/ath10k/sdio.c
+@@ -1564,23 +1564,33 @@ static int ath10k_sdio_hif_diag_read(struct ath10k *ar, u32 address, void *buf,
+ 				     size_t buf_len)
+ {
+ 	int ret;
++	void *mem;
++
++	mem = kzalloc(buf_len, GFP_KERNEL);
++	if (!mem)
++		return -ENOMEM;
  
- 	device_init_wakeup(&pdev->dev, true);
-+	pm_runtime_enable(&pdev->dev);
- 	pm_runtime_use_autosuspend(&pdev->dev);
- 	pm_runtime_set_autosuspend_delay(&pdev->dev, -1);
+ 	/* set window register to start read cycle */
+ 	ret = ath10k_sdio_write32(ar, MBOX_WINDOW_READ_ADDR_ADDRESS, address);
+ 	if (ret) {
+ 		ath10k_warn(ar, "failed to set mbox window read address: %d", ret);
+-		return ret;
++		goto out;
+ 	}
  
- 	pm_runtime_irq_safe(&pdev->dev);
--	pm_runtime_enable(&pdev->dev);
+ 	/* read the data */
+-	ret = ath10k_sdio_read(ar, MBOX_WINDOW_DATA_ADDRESS, buf, buf_len);
++	ret = ath10k_sdio_read(ar, MBOX_WINDOW_DATA_ADDRESS, mem, buf_len);
+ 	if (ret) {
+ 		ath10k_warn(ar, "failed to read from mbox window data address: %d\n",
+ 			    ret);
+-		return ret;
++		goto out;
+ 	}
  
- 	pm_runtime_get_sync(&pdev->dev);
+-	return 0;
++	memcpy(buf, mem, buf_len);
++
++out:
++	kfree(mem);
++
++	return ret;
+ }
  
+ static int ath10k_sdio_hif_diag_read32(struct ath10k *ar, u32 address,
 -- 
 2.20.1
 
