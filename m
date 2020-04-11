@@ -4,49 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1749BC2BB85
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:23:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E7F9C2BA2B
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:23:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E3D392084D
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:23:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0744720644
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:23:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586607828;
-	bh=H0huG0fpjUjmRBLAsJkKTLADMlvbsX7w+ybIWRKSIJI=;
+	s=default; t=1586607831;
+	bh=gEa7ZsGQJJwe1Lbv3f9ZrcIEEZjZ69oRQJWfv5TR+Lc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OXDIQYVmRp0UtlSEImaWY+fhbC1Lg7JlDA6YWGShExjIZRRzaRgJtAxxoXs5Caz+c
-	 6Fg5VK2KrLtqbP5v6FfDkb4nu+blHZAR23VORefip33pMCd1Y7vrRC+j5DIhPrsQZV
-	 5zr1RyFjkYVHhYtrREn5hvZrfj0C0W8NvfYYXW00=
+	b=nR93E7DF4DlsyPzUMj1vkqfq7sjTn7AlSeo7+jbjhRLcfAVDjOICqS7a3I5FXeE4G
+	 DZG3A1s5pUqx5fK6SnMNQEulD6SK4FDSzG83MviwYNrks5eFFbyUfxFjdnoEo6U7g4
+	 NFcsD2O3XYQDftbnu0RlyDs7AkNiMtoOo9ilrI60=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728706AbgDKMS5 (ORCPT
+        id S1728749AbgDKMXt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 08:18:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53990 "EHLO mail.kernel.org"
+        Sat, 11 Apr 2020 08:23:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54104 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728688AbgDKMSw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 08:18:52 -0400
+        id S1728702AbgDKMS5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Apr 2020 08:18:57 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D6EA220787;
-        Sat, 11 Apr 2020 12:18:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B273F20644;
+        Sat, 11 Apr 2020 12:18:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586607532;
-        bh=H0huG0fpjUjmRBLAsJkKTLADMlvbsX7w+ybIWRKSIJI=;
+        s=default; t=1586607537;
+        bh=gEa7ZsGQJJwe1Lbv3f9ZrcIEEZjZ69oRQJWfv5TR+Lc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dtcfufA5eb9EKTsFsYuBUDr29uu3wAkDvqsnNZejAUxyTRqjxdYCxkgzRnGUrkaNa
-         Lytr0KUVGmnMr51cIvAN42JyiA+0XYghJ4Dn+LrAcw9VSUO03nHpyMqC6Z8KmVzXlQ
-         6UPDe6ke07AITtvzxBu4qsa/o5xneENrIivOIYb4=
+        b=UJJVsV7JRUE2Hwm7+P3Mw6bQbYE42uw5+QoxpT3YohBc+JkpsKYfqGEE7q7ZENNzH
+         842wt0i/6t7YgHyOAidKskRhqR03K7nZKoxYNE9DJ7KmxTxKgZj21vdae60mh6njWA
+         jd2xHgHzBFKUHUljdWZkuCTr4Yp87tzwlfoQUv24=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, "Jason A. Donenfeld" <Jason@zx2c4.com>,
-        Theodore Tso <tytso@mit.edu>
-Subject: [PATCH 5.5 17/44] random: always use batched entropy for get_random_u{32,64}
-Date:   Sat, 11 Apr 2020 14:09:37 +0200
-Message-Id: <20200411115458.555160231@linuxfoundation.org>
+        stable@vger.kernel.org, Yury Norov <yury.norov@gmail.com>,
+        Allison Randal <allison@lohutok.net>,
+        Joe Perches <joe@perches.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        William Breathitt Gray <vilhelm.gray@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 5.5 19/44] uapi: rename ext2_swab() to swab() and share globally in swab.h
+Date:   Sat, 11 Apr 2020 14:09:39 +0200
+Message-Id: <20200411115458.679771748@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200411115456.934174282@linuxfoundation.org>
 References: <20200411115456.934174282@linuxfoundation.org>
@@ -59,102 +64,109 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jason A. Donenfeld <Jason@zx2c4.com>
+From: Yury Norov <yury.norov@gmail.com>
 
-commit 69efea712f5b0489e67d07565aad5c94e09a3e52 upstream.
+commit d5767057c9a76a29f073dad66b7fa12a90e8c748 upstream.
 
-It turns out that RDRAND is pretty slow. Comparing these two
-constructions:
+ext2_swab() is defined locally in lib/find_bit.c However it is not
+specific to ext2, neither to bitmaps.
 
-  for (i = 0; i < CHACHA_BLOCK_SIZE; i += sizeof(ret))
-    arch_get_random_long(&ret);
+There are many potential users of it, so rename it to just swab() and
+move to include/uapi/linux/swab.h
 
-and
+ABI guarantees that size of unsigned long corresponds to BITS_PER_LONG,
+therefore drop unneeded cast.
 
-  long buf[CHACHA_BLOCK_SIZE / sizeof(long)];
-  extract_crng((u8 *)buf);
-
-it amortizes out to 352 cycles per long for the top one and 107 cycles
-per long for the bottom one, on Coffee Lake Refresh, Intel Core i9-9880H.
-
-And importantly, the top one has the drawback of not benefiting from the
-real rng, whereas the bottom one has all the nice benefits of using our
-own chacha rng. As get_random_u{32,64} gets used in more places (perhaps
-beyond what it was originally intended for when it was introduced as
-get_random_{int,long} back in the md5 monstrosity era), it seems like it
-might be a good thing to strengthen its posture a tiny bit. Doing this
-should only be stronger and not any weaker because that pool is already
-initialized with a bunch of rdrand data (when available). This way, we
-get the benefits of the hardware rng as well as our own rng.
-
-Another benefit of this is that we no longer hit pitfalls of the recent
-stream of AMD bugs in RDRAND. One often used code pattern for various
-things is:
-
-  do {
-  	val = get_random_u32();
-  } while (hash_table_contains_key(val));
-
-That recent AMD bug rendered that pattern useless, whereas we're really
-very certain that chacha20 output will give pretty distributed numbers,
-no matter what.
-
-So, this simplification seems better both from a security perspective
-and from a performance perspective.
-
-Signed-off-by: Jason A. Donenfeld <Jason@zx2c4.com>
-Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Link: https://lore.kernel.org/r/20200221201037.30231-1-Jason@zx2c4.com
-Signed-off-by: Theodore Ts'o <tytso@mit.edu>
+Link: http://lkml.kernel.org/r/20200103202846.21616-1-yury.norov@gmail.com
+Signed-off-by: Yury Norov <yury.norov@gmail.com>
+Cc: Allison Randal <allison@lohutok.net>
+Cc: Joe Perches <joe@perches.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: William Breathitt Gray <vilhelm.gray@gmail.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/char/random.c |   20 ++++----------------
- 1 file changed, 4 insertions(+), 16 deletions(-)
+ include/linux/swab.h      |    1 +
+ include/uapi/linux/swab.h |   10 ++++++++++
+ lib/find_bit.c            |   16 ++--------------
+ 3 files changed, 13 insertions(+), 14 deletions(-)
 
---- a/drivers/char/random.c
-+++ b/drivers/char/random.c
-@@ -2360,11 +2360,11 @@ struct batched_entropy {
+--- a/include/linux/swab.h
++++ b/include/linux/swab.h
+@@ -7,6 +7,7 @@
+ # define swab16 __swab16
+ # define swab32 __swab32
+ # define swab64 __swab64
++# define swab __swab
+ # define swahw32 __swahw32
+ # define swahb32 __swahb32
+ # define swab16p __swab16p
+--- a/include/uapi/linux/swab.h
++++ b/include/uapi/linux/swab.h
+@@ -4,6 +4,7 @@
+ 
+ #include <linux/types.h>
+ #include <linux/compiler.h>
++#include <asm/bitsperlong.h>
+ #include <asm/swab.h>
  
  /*
-  * Get a random word for internal kernel use only. The quality of the random
-- * number is either as good as RDRAND or as good as /dev/urandom, with the
-- * goal of being quite fast and not depleting entropy. In order to ensure
-+ * number is good as /dev/urandom, but there is no backtrack protection, with
-+ * the goal of being quite fast and not depleting entropy. In order to ensure
-  * that the randomness provided by this function is okay, the function
-- * wait_for_random_bytes() should be called and return 0 at least once
-- * at any point prior.
-+ * wait_for_random_bytes() should be called and return 0 at least once at any
-+ * point prior.
-  */
- static DEFINE_PER_CPU(struct batched_entropy, batched_entropy_u64) = {
- 	.batch_lock	= __SPIN_LOCK_UNLOCKED(batched_entropy_u64.lock),
-@@ -2377,15 +2377,6 @@ u64 get_random_u64(void)
- 	struct batched_entropy *batch;
- 	static void *previous;
+@@ -132,6 +133,15 @@ static inline __attribute_const__ __u32
+ 	__fswab64(x))
+ #endif
  
++static __always_inline unsigned long __swab(const unsigned long y)
++{
++#if BITS_PER_LONG == 64
++	return __swab64(y);
++#else /* BITS_PER_LONG == 32 */
++	return __swab32(y);
++#endif
++}
++
+ /**
+  * __swahw32 - return a word-swapped 32-bit value
+  * @x: value to wordswap
+--- a/lib/find_bit.c
++++ b/lib/find_bit.c
+@@ -149,18 +149,6 @@ EXPORT_SYMBOL(find_last_bit);
+ 
+ #ifdef __BIG_ENDIAN
+ 
+-/* include/linux/byteorder does not support "unsigned long" type */
+-static inline unsigned long ext2_swab(const unsigned long y)
+-{
 -#if BITS_PER_LONG == 64
--	if (arch_get_random_long((unsigned long *)&ret))
--		return ret;
+-	return (unsigned long) __swab64((u64) y);
+-#elif BITS_PER_LONG == 32
+-	return (unsigned long) __swab32((u32) y);
 -#else
--	if (arch_get_random_long((unsigned long *)&ret) &&
--	    arch_get_random_long((unsigned long *)&ret + 1))
--	    return ret;
+-#error BITS_PER_LONG not defined
 -#endif
+-}
 -
- 	warn_unseeded_randomness(&previous);
+ #if !defined(find_next_bit_le) || !defined(find_next_zero_bit_le)
+ static inline unsigned long _find_next_bit_le(const unsigned long *addr1,
+ 		const unsigned long *addr2, unsigned long nbits,
+@@ -177,7 +165,7 @@ static inline unsigned long _find_next_b
+ 	tmp ^= invert;
  
- 	batch = raw_cpu_ptr(&batched_entropy_u64);
-@@ -2410,9 +2401,6 @@ u32 get_random_u32(void)
- 	struct batched_entropy *batch;
- 	static void *previous;
+ 	/* Handle 1st word. */
+-	tmp &= ext2_swab(BITMAP_FIRST_WORD_MASK(start));
++	tmp &= swab(BITMAP_FIRST_WORD_MASK(start));
+ 	start = round_down(start, BITS_PER_LONG);
  
--	if (arch_get_random_int(&ret))
--		return ret;
--
- 	warn_unseeded_randomness(&previous);
+ 	while (!tmp) {
+@@ -191,7 +179,7 @@ static inline unsigned long _find_next_b
+ 		tmp ^= invert;
+ 	}
  
- 	batch = raw_cpu_ptr(&batched_entropy_u32);
+-	return min(start + __ffs(ext2_swab(tmp)), nbits);
++	return min(start + __ffs(swab(tmp)), nbits);
+ }
+ #endif
+ 
 
 
