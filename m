@@ -4,52 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B170AC3815B
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:42:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7554C2BA19
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:42:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 89207206E9
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:42:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 73F3B206E9
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:42:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586648572;
-	bh=BuT+U3bSnltRoLUw4bLKl1iPe6gDp2CGnADnaOvLaGw=;
+	s=default; t=1586648577;
+	bh=0go0yJt6cQE8yciLIioduH6bZbOdpupXHF1LgaHvoGc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1Viike5Kq8ay4KhtVXjnofLpQpGyNa0anVqVb0oXAb7amv0PmBOAY80EypmBkdSsi
-	 Tu8shpltj6kcyZhP9ruymMT97kJoFOr/MIGuAF8t0SuztF09bHr9vUdIa0UrOimp+i
-	 5fbph+Rrdc2FkZDrs/uL2pL5pCVHrjFjrCw//7cY=
+	b=uW4fzOEwK+JWilp4HDuhDQDtiTthAAHX94sga/4fjA26YBTI3TjMxNorQwjAGUXNr
+	 KwK41777+8nuLPeUECK5lAY9n/fsyt738cgHuGUgiGK3KexsF7qy3b/hM7YH7TH/6H
+	 vPuxK+cY4Uo/OObeI0ixJJGfqgMPSf0h6kJlj2bw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728440AbgDKXGc (ORCPT
+        id S1729979AbgDKXmz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 19:06:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41722 "EHLO mail.kernel.org"
+        Sat, 11 Apr 2020 19:42:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41908 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727273AbgDKXGZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 19:06:25 -0400
+        id S1728433AbgDKXG3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Apr 2020 19:06:29 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2FBED21744;
-        Sat, 11 Apr 2020 23:06:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D63A520708;
+        Sat, 11 Apr 2020 23:06:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586646385;
-        bh=BuT+U3bSnltRoLUw4bLKl1iPe6gDp2CGnADnaOvLaGw=;
+        s=default; t=1586646390;
+        bh=0go0yJt6cQE8yciLIioduH6bZbOdpupXHF1LgaHvoGc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Dj+MXXl3tEVDbBM9atZ+l4MXuS1bs6JQXof0uUsgsPMFbxqsDJh8FevQ/cP62ia0y
-         pw78lT6C8gZDv0O1wn7Sv2dJJWLjGrIH/aXcRbxIjgbdTULL7rIC5h+MDqTSG/2eoA
-         9/LZvlw2XifzxVjYJ01wqwBNIjtUD321sGnT5/vI=
+        b=U7x79t9DRX3kEv51Q48FK83g4y9M6GB7xqZpW763n0PkPaEC0zpgAZeRigxhMVQjo
+         OtoKVM7e2SHI4fzgYgTyfj14bB3u0fhVHKLC+JSflnhwtVSJcEi/MGWOQN98zgVjn4
+         TUHorDm34RH057+EG9QoMjk/XPZ9GBf3e6+FPnBg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Etienne Carriere <etienne.carriere@st.com>,
-        Amelie Delaunay <amelie.delaunay@st.com>,
-        Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>,
-        dmaengine@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.6 125/149] dmaengine: stm32-dma: use reset controller only at probe time
-Date:   Sat, 11 Apr 2020 19:03:22 -0400
-Message-Id: <20200411230347.22371-125-sashal@kernel.org>
+Cc:     Can Guo <cang@codeaurora.org>, Hongwu Su <hongwus@codeaurora.org>,
+        Asutosh Das <asutoshd@codeaurora.org>,
+        Bean Huo <beanhuo@micron.com>,
+        Stanley Chu <stanley.chu@mediatek.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org
+Subject: [PATCH AUTOSEL 5.6 129/149] scsi: ufs: Fix ufshcd_hold() caused scheduling while atomic
+Date:   Sat, 11 Apr 2020 19:03:26 -0400
+Message-Id: <20200411230347.22371-129-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200411230347.22371-1-sashal@kernel.org>
 References: <20200411230347.22371-1-sashal@kernel.org>
@@ -62,58 +64,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Etienne Carriere <etienne.carriere@st.com>
+From: Can Guo <cang@codeaurora.org>
 
-[ Upstream commit 8cf1e0fc50fcc25021567bb2755580504c57c83a ]
+[ Upstream commit c63d6099a7959ecc919b2549dc6b71f53521f819 ]
 
-Remove reset controller reference from device instance since it is
-used only at probe time.
+The async version of ufshcd_hold(async == true), which is only called in
+queuecommand path as for now, is expected to work in atomic context, thus
+it should not sleep or schedule out. When it runs into the condition that
+clocks are ON but link is still in hibern8 state, it should bail out
+without flushing the clock ungate work.
 
-Signed-off-by: Etienne Carriere <etienne.carriere@st.com>
-Signed-off-by: Amelie Delaunay <amelie.delaunay@st.com>
-Link: https://lore.kernel.org/r/20200129153628.29329-3-amelie.delaunay@st.com
-Signed-off-by: Vinod Koul <vkoul@kernel.org>
+Fixes: f2a785ac2312 ("scsi: ufshcd: Fix race between clk scaling and ungate work")
+Link: https://lore.kernel.org/r/1581392451-28743-6-git-send-email-cang@codeaurora.org
+Reviewed-by: Hongwu Su <hongwus@codeaurora.org>
+Reviewed-by: Asutosh Das <asutoshd@codeaurora.org>
+Reviewed-by: Bean Huo <beanhuo@micron.com>
+Reviewed-by: Stanley Chu <stanley.chu@mediatek.com>
+Signed-off-by: Can Guo <cang@codeaurora.org>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/dma/stm32-dma.c | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+ drivers/scsi/ufs/ufshcd.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/drivers/dma/stm32-dma.c b/drivers/dma/stm32-dma.c
-index 5989b08935211..ff34a10fc8d89 100644
---- a/drivers/dma/stm32-dma.c
-+++ b/drivers/dma/stm32-dma.c
-@@ -207,7 +207,6 @@ struct stm32_dma_device {
- 	struct dma_device ddev;
- 	void __iomem *base;
- 	struct clk *clk;
--	struct reset_control *rst;
- 	bool mem2mem;
- 	struct stm32_dma_chan chan[STM32_DMA_MAX_CHANNELS];
- };
-@@ -1275,6 +1274,7 @@ static int stm32_dma_probe(struct platform_device *pdev)
- 	struct dma_device *dd;
- 	const struct of_device_id *match;
- 	struct resource *res;
-+	struct reset_control *rst;
- 	int i, ret;
- 
- 	match = of_match_device(stm32_dma_of_match, &pdev->dev);
-@@ -1309,11 +1309,11 @@ static int stm32_dma_probe(struct platform_device *pdev)
- 	dmadev->mem2mem = of_property_read_bool(pdev->dev.of_node,
- 						"st,mem2mem");
- 
--	dmadev->rst = devm_reset_control_get(&pdev->dev, NULL);
--	if (!IS_ERR(dmadev->rst)) {
--		reset_control_assert(dmadev->rst);
-+	rst = devm_reset_control_get(&pdev->dev, NULL);
-+	if (!IS_ERR(rst)) {
-+		reset_control_assert(rst);
- 		udelay(2);
--		reset_control_deassert(dmadev->rst);
-+		reset_control_deassert(rst);
- 	}
- 
- 	dma_cap_set(DMA_SLAVE, dd->cap_mask);
+diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
+index 2d705694636c2..682f85f800d0f 100644
+--- a/drivers/scsi/ufs/ufshcd.c
++++ b/drivers/scsi/ufs/ufshcd.c
+@@ -1518,6 +1518,11 @@ int ufshcd_hold(struct ufs_hba *hba, bool async)
+ 		 */
+ 		if (ufshcd_can_hibern8_during_gating(hba) &&
+ 		    ufshcd_is_link_hibern8(hba)) {
++			if (async) {
++				rc = -EAGAIN;
++				hba->clk_gating.active_reqs--;
++				break;
++			}
+ 			spin_unlock_irqrestore(hba->host->host_lock, flags);
+ 			flush_work(&hba->clk_gating.ungate_work);
+ 			spin_lock_irqsave(hba->host->host_lock, flags);
 -- 
 2.20.1
 
