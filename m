@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59E26C2BBFD
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:49:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BDF8AC2BA19
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:50:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 298BE20CC7
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:49:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9089C20787
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:50:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586648997;
-	bh=+SBA0XhMzOshW8jg8TBRbsF8qYtpY+TLwOsmsXZQle8=;
+	s=default; t=1586649001;
+	bh=b9PSEA+YG/1WY21aDwSoSP7Lj/mwh9DIxAkoaspyNac=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=liQ+vQYGsQOjxL3dPKWMsbxKIVjIMqXolztLn1lu5exxRQduq8ZLFnCfe4MoO1m13
-	 IILyoz601qmM1Xe50wLPkBlsylPKqG7enrs3Kn3vC+Y7pQWy6bWtvMcPVPk+vvqxQ1
-	 z49uHSoXdM7bzdeoUahZ0ngw7Y3Z/JTgbtnGHxwo=
+	b=j6+NgcJWIHbuinrwPk3JMKEdLvSWgNuCSX5UfIYRiiVno+YNytgX/TsQu1/YCTu7Q
+	 aCCbADIjNkf03Y8NsW9ZkqpPMQuonjZrNCl8b6DuQuYapmIxN/TBgqFASkKF/L374b
+	 2tpPuW9fh9hQem6Lf0RuQFMBH+RsPklEIKC6k2N0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727069AbgDKXEQ (ORCPT
+        id S1727870AbgDKXt6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 19:04:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37162 "EHLO mail.kernel.org"
+        Sat, 11 Apr 2020 19:49:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37604 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727003AbgDKXEF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 19:04:05 -0400
+        id S1727064AbgDKXEQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Apr 2020 19:04:16 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EE4BD20CC7;
-        Sat, 11 Apr 2020 23:04:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D8315214D8;
+        Sat, 11 Apr 2020 23:04:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586646245;
-        bh=+SBA0XhMzOshW8jg8TBRbsF8qYtpY+TLwOsmsXZQle8=;
+        s=default; t=1586646256;
+        bh=b9PSEA+YG/1WY21aDwSoSP7Lj/mwh9DIxAkoaspyNac=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kWjnO+yCtqI3NPpd7H5mylLTMtSyWr9s49y42JcXGOP+WFrnZWu5462a+QfeoKsgB
-         q43THH2bCge0N0smKsWtSuvVJKNQGXmctZmttWi+Ffoo8NvpkZPdhvvoGJFquIWp9s
-         MeVcOxuwF7zGrlaFQ1PiQkkvapWSKcGsibAc4sVM=
+        b=cVIYHio23RN4BzYBpS9VtpxCDtuSlMVnIDGUz1V2B8PouGi3q4w2ZmdY2+CM361RB
+         +VRyIHFPRiQvsUE6j0gXo/of6n4w7bQCLiXdC2B3iVoBVOBFywdwJ3tR98SiFvPu3/
+         dGqCBNl5tw4soaBdCo+l1unDZ/Eq64nXNjhcdgsg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Leonid Maksymchuk <leonmaxx@gmail.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Sasha Levin <sashal@kernel.org>,
-        acpi4asus-user@lists.sourceforge.net,
-        platform-driver-x86@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.6 014/149] platform/x86: asus_wmi: Fix return value of fan_boost_mode_store
-Date:   Sat, 11 Apr 2020 19:01:31 -0400
-Message-Id: <20200411230347.22371-14-sashal@kernel.org>
+Cc:     Hawking Zhang <Hawking.Zhang@amd.com>, Monk Liu <monk.liu@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Sasha Levin <sashal@kernel.org>, amd-gfx@lists.freedesktop.org,
+        dri-devel@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 5.6 023/149] drm/amdgpu: check GFX RAS capability before reset counters
+Date:   Sat, 11 Apr 2020 19:01:40 -0400
+Message-Id: <20200411230347.22371-23-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200411230347.22371-1-sashal@kernel.org>
 References: <20200411230347.22371-1-sashal@kernel.org>
@@ -61,39 +60,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Leonid Maksymchuk <leonmaxx@gmail.com>
+From: Hawking Zhang <Hawking.Zhang@amd.com>
 
-[ Upstream commit edeee341fd6c1099de357c517af215bee2c6f766 ]
+[ Upstream commit 06dcd7eb83ee65382305ce48686e3dadaad42088 ]
 
-Function fan_boost_mode_store returns 0 if store is successful,
-this leads to infinite loop after any write to it's sysfs entry:
+disallow the logical to be enabled on platforms that
+don't support gfx ras at this stage, like sriov skus,
+dgpu with legacy ras.etc
 
-# echo 0 >/sys/devices/platform/asus-nb-wmi/fan_boost_mode
-
-This command never ends, one CPU core is at 100% utilization.
-This patch fixes this by returning size of written data.
-
-Fixes: b096f626a682 ("platform/x86: asus-wmi: Switch fan boost mode")
-Signed-off-by: Leonid Maksymchuk <leonmaxx@gmail.com>
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Signed-off-by: Hawking Zhang <Hawking.Zhang@amd.com>
+Reviewed-by: Monk Liu <monk.liu@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/platform/x86/asus-wmi.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/gpu/drm/amd/amdgpu/gfx_v9_0.c | 3 +++
+ drivers/gpu/drm/amd/amdgpu/gfx_v9_4.c | 3 +++
+ 2 files changed, 6 insertions(+)
 
-diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
-index 612ef55262268..e5d35987c048a 100644
---- a/drivers/platform/x86/asus-wmi.c
-+++ b/drivers/platform/x86/asus-wmi.c
-@@ -1719,7 +1719,7 @@ static ssize_t fan_boost_mode_store(struct device *dev,
- 	asus->fan_boost_mode = new_mode;
- 	fan_boost_mode_write(asus);
+diff --git a/drivers/gpu/drm/amd/amdgpu/gfx_v9_0.c b/drivers/gpu/drm/amd/amdgpu/gfx_v9_0.c
+index 889154a78c4a8..beba9c596c493 100644
+--- a/drivers/gpu/drm/amd/amdgpu/gfx_v9_0.c
++++ b/drivers/gpu/drm/amd/amdgpu/gfx_v9_0.c
+@@ -6326,6 +6326,9 @@ static void gfx_v9_0_clear_ras_edc_counter(struct amdgpu_device *adev)
+ {
+ 	int i, j, k;
  
--	return result;
-+	return count;
- }
++	if (!amdgpu_ras_is_supported(adev, AMDGPU_RAS_BLOCK__GFX))
++		return;
++
+ 	/* read back registers to clear the counters */
+ 	mutex_lock(&adev->grbm_idx_mutex);
+ 	for (i = 0; i < ARRAY_SIZE(gfx_v9_0_edc_counter_regs); i++) {
+diff --git a/drivers/gpu/drm/amd/amdgpu/gfx_v9_4.c b/drivers/gpu/drm/amd/amdgpu/gfx_v9_4.c
+index f099f13d7f1e9..9955532345ec0 100644
+--- a/drivers/gpu/drm/amd/amdgpu/gfx_v9_4.c
++++ b/drivers/gpu/drm/amd/amdgpu/gfx_v9_4.c
+@@ -897,6 +897,9 @@ void gfx_v9_4_clear_ras_edc_counter(struct amdgpu_device *adev)
+ {
+ 	int i, j, k;
  
- // Fan boost mode: 0 - normal, 1 - overboost, 2 - silent
++	if (!amdgpu_ras_is_supported(adev, AMDGPU_RAS_BLOCK__GFX))
++		return;
++
+ 	mutex_lock(&adev->grbm_idx_mutex);
+ 	for (i = 0; i < ARRAY_SIZE(gfx_v9_4_edc_counter_regs); i++) {
+ 		for (j = 0; j < gfx_v9_4_edc_counter_regs[i].se_num; j++) {
 -- 
 2.20.1
 
