@@ -2,129 +2,180 @@ Return-Path: <SRS0=xbEg=53=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4B2DC2D0EC
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 02:50:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 390FFC2D0EC
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 02:55:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 84B7D2082D
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 02:50:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 145D92082D
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 02:55:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726719AbgDKCup (ORCPT
+        id S1726681AbgDKCzp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Apr 2020 22:50:45 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:12644 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726650AbgDKCuo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Apr 2020 22:50:44 -0400
-Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 51D0EEDB1F23B09CDA7E;
-        Sat, 11 Apr 2020 10:50:43 +0800 (CST)
-Received: from localhost.localdomain (10.69.192.56) by
- DGGEMS408-HUB.china.huawei.com (10.3.19.208) with Microsoft SMTP Server id
- 14.3.487.0; Sat, 11 Apr 2020 10:50:35 +0800
-From:   Tian Tao <tiantao6@hisilicon.com>
-To:     <puck.chen@hisilicon.com>, <airlied@linux.ie>, <daniel@ffwll.ch>,
-        <tzimmermann@suse.de>, <kraxel@redhat.com>,
-        <alexander.deucher@amd.com>, <tglx@linutronix.de>,
-        <dri-devel@lists.freedesktop.org>, <xinliang.liu@linaro.org>,
-        <linux-kernel@vger.kernel.org>
-CC:     <linuxarm@huawei.com>
-Subject: [PATCH] drm/hisilicon: Code refactoring for hibmc_drv_vdac
-Date:   Sat, 11 Apr 2020 10:49:47 +0800
-Message-ID: <1586573387-42003-1-git-send-email-tiantao6@hisilicon.com>
-X-Mailer: git-send-email 2.7.4
-MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.69.192.56]
-X-CFilter-Loop: Reflected
+        Fri, 10 Apr 2020 22:55:45 -0400
+Received: from mga17.intel.com ([192.55.52.151]:33534 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726654AbgDKCzo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Apr 2020 22:55:44 -0400
+IronPort-SDR: NBVfcLPGYFaba3r/IheqLOGZJ4PgW9k+3MteTSE4F6qXUmMnqaF3KTKkbYkFiqondOQzsbOFa2
+ /HBUdDmxQ0IA==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Apr 2020 19:55:44 -0700
+IronPort-SDR: RYDMMs5NiZmiBSdJjKPbnh/69/JnJglUjZ8FSGkRM9/sDUkp7MmkdvJGPMgU7pJjFCtTMl3h6q
+ kN+LS6w4P/YA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,368,1580803200"; 
+   d="scan'208";a="452580329"
+Received: from lzhao24-mobl.ccr.corp.intel.com ([10.255.29.254])
+  by fmsmga005.fm.intel.com with ESMTP; 10 Apr 2020 19:55:42 -0700
+Message-ID: <a91cf79e0ee7da4e0ac108168eceb5c63c78f8e1.camel@intel.com>
+Subject: Re: [PATCH 1/2] thermal: core: Move thermal_cdev_update next to
+ updated=false
+From:   Zhang Rui <rui.zhang@intel.com>
+To:     Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc:     linux-kernel@vger.kernel.org, amit.kucheria@verdurent.com,
+        "open list:THERMAL" <linux-pm@vger.kernel.org>
+Date:   Sat, 11 Apr 2020 10:55:42 +0800
+In-Reply-To: <0c9796c5-95fe-0349-d128-393da9b344d6@linaro.org>
+References: <20200409151515.6607-1-daniel.lezcano@linaro.org>
+         <8e4c2825d71e5bf5602b92937a49c04187c68e17.camel@intel.com>
+         <0c9796c5-95fe-0349-d128-393da9b344d6@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-code refactoring for hibmc_drv_vdac.c, no actual function changes.
+On Fri, 2020-04-10 at 13:26 +0200, Daniel Lezcano wrote:
+> On 10/04/2020 12:14, Zhang Rui wrote:
+> > Hi, Daniel,
+> > 
+> > On Thu, 2020-04-09 at 17:15 +0200, Daniel Lezcano wrote:
+> > > The call to the thermal_cdev_update() function is done after
+> > > browsing
+> > > the thermal instances which sets the updated flag by browsing
+> > > them
+> > > again.
+> > > 
+> > > Instead of doing this, let's move the call right after setting
+> > > the
+> > > cooling device 'updated' flag as it is done in the other
+> > > governors.
+> > 
+> > The reason we do this in two steps is that we want to avoid
+> > redundant
+> > cooling device state changes.
+> > 
+> > Further more, I think it is better to move the thermal_cdev_update
+> > out
+> > of .throllte() callback, to thermal_zone_device_update(). So that
+> > we do
+> > not need to update the cooling device for each trip point.
+> > 
+> > is there any specific reason we need to do thermal_cdev_update()
+> > for
+> > every potential change?
+> 
+> I agree we can go further and move the cooling device update in the
+> thermal_zone_device_update() by letting the throttle callback let us
+> know an update is needed with the return value.
+> 
+> Makes sense to provide more changes on top of those two patches ?
 
-Signed-off-by: Tian Tao <tiantao6@hisilicon.com>
----
- drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_vdac.c | 48 ++++++++----------------
- 1 file changed, 15 insertions(+), 33 deletions(-)
+Hmmm, without the update flag, we can only updating all the cooling
+devices blindly. And this is time consuming for some cooling devices.
 
-diff --git a/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_vdac.c b/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_vdac.c
-index 678ac2e..d56c5d4 100644
---- a/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_vdac.c
-+++ b/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_vdac.c
-@@ -52,32 +52,6 @@ static const struct drm_connector_funcs hibmc_connector_funcs = {
- 	.atomic_destroy_state = drm_atomic_helper_connector_destroy_state,
- };
- 
--static struct drm_connector *
--hibmc_connector_init(struct hibmc_drm_private *priv)
--{
--	struct drm_device *dev = priv->dev;
--	struct drm_connector *connector;
--	int ret;
--
--	connector = devm_kzalloc(dev->dev, sizeof(*connector), GFP_KERNEL);
--	if (!connector) {
--		DRM_ERROR("failed to alloc memory when init connector\n");
--		return ERR_PTR(-ENOMEM);
--	}
--
--	ret = drm_connector_init(dev, connector,
--				 &hibmc_connector_funcs,
--				 DRM_MODE_CONNECTOR_VGA);
--	if (ret) {
--		DRM_ERROR("failed to init connector: %d\n", ret);
--		return ERR_PTR(ret);
--	}
--	drm_connector_helper_add(connector,
--				 &hibmc_connector_helper_funcs);
--
--	return connector;
--}
--
- static void hibmc_encoder_mode_set(struct drm_encoder *encoder,
- 				   struct drm_display_mode *mode,
- 				   struct drm_display_mode *adj_mode)
-@@ -109,13 +83,6 @@ int hibmc_vdac_init(struct hibmc_drm_private *priv)
- 	struct drm_connector *connector;
- 	int ret;
- 
--	connector = hibmc_connector_init(priv);
--	if (IS_ERR(connector)) {
--		DRM_ERROR("failed to create connector: %ld\n",
--			  PTR_ERR(connector));
--		return PTR_ERR(connector);
--	}
--
- 	encoder = devm_kzalloc(dev->dev, sizeof(*encoder), GFP_KERNEL);
- 	if (!encoder) {
- 		DRM_ERROR("failed to alloc memory when init encoder\n");
-@@ -131,6 +98,21 @@ int hibmc_vdac_init(struct hibmc_drm_private *priv)
- 	}
- 
- 	drm_encoder_helper_add(encoder, &hibmc_encoder_helper_funcs);
-+
-+	connector = devm_kzalloc(dev->dev, sizeof(*connector), GFP_KERNEL);
-+	if (!connector) {
-+		DRM_ERROR("failed to alloc memory when init connector\n");
-+		return -ENOMEM;
-+	}
-+
-+	ret = drm_connector_init(dev, connector, &hibmc_connector_funcs,
-+				 DRM_MODE_CONNECTOR_VGA);
-+	if (ret) {
-+		DRM_ERROR("failed to init connector: %d\n", ret);
-+		return ret;
-+	}
-+	drm_connector_helper_add(connector, &hibmc_connector_helper_funcs);
-+
- 	drm_connector_attach_encoder(connector, encoder);
- 
- 	return 0;
--- 
-2.7.4
+thanks,
+rui
+
+> 
+> > > Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
+> > > ---
+> > >  drivers/thermal/gov_bang_bang.c | 10 +---------
+> > >  drivers/thermal/step_wise.c     | 10 +---------
+> > >  2 files changed, 2 insertions(+), 18 deletions(-)
+> > > 
+> > > diff --git a/drivers/thermal/gov_bang_bang.c
+> > > b/drivers/thermal/gov_bang_bang.c
+> > > index 991a1c54296d..c292a69845bb 100644
+> > > --- a/drivers/thermal/gov_bang_bang.c
+> > > +++ b/drivers/thermal/gov_bang_bang.c
+> > > @@ -64,6 +64,7 @@ static void thermal_zone_trip_update(struct
+> > > thermal_zone_device *tz, int trip)
+> > >  		mutex_lock(&instance->cdev->lock);
+> > >  		instance->cdev->updated = false; /* cdev needs update
+> > > */
+> > >  		mutex_unlock(&instance->cdev->lock);
+> > > +		thermal_cdev_update(instance->cdev);
+> > >  	}
+> > >  
+> > >  	mutex_unlock(&tz->lock);
+> > > @@ -98,17 +99,8 @@ static void thermal_zone_trip_update(struct
+> > > thermal_zone_device *tz, int trip)
+> > >   */
+> > >  static int bang_bang_control(struct thermal_zone_device *tz, int
+> > > trip)
+> > >  {
+> > > -	struct thermal_instance *instance;
+> > > -
+> > >  	thermal_zone_trip_update(tz, trip);
+> > >  
+> > > -	mutex_lock(&tz->lock);
+> > > -
+> > > -	list_for_each_entry(instance, &tz->thermal_instances, tz_node)
+> > > -		thermal_cdev_update(instance->cdev);
+> > > -
+> > > -	mutex_unlock(&tz->lock);
+> > > -
+> > >  	return 0;
+> > >  }
+> > >  
+> > > diff --git a/drivers/thermal/step_wise.c
+> > > b/drivers/thermal/step_wise.c
+> > > index 2ae7198d3067..298eedac0293 100644
+> > > --- a/drivers/thermal/step_wise.c
+> > > +++ b/drivers/thermal/step_wise.c
+> > > @@ -167,6 +167,7 @@ static void thermal_zone_trip_update(struct
+> > > thermal_zone_device *tz, int trip)
+> > >  		mutex_lock(&instance->cdev->lock);
+> > >  		instance->cdev->updated = false; /* cdev needs update
+> > > */
+> > >  		mutex_unlock(&instance->cdev->lock);
+> > > +		thermal_cdev_update(instance->cdev);
+> > >  	}
+> > >  
+> > >  	mutex_unlock(&tz->lock);
+> > > @@ -185,20 +186,11 @@ static void thermal_zone_trip_update(struct
+> > > thermal_zone_device *tz, int trip)
+> > >   */
+> > >  static int step_wise_throttle(struct thermal_zone_device *tz,
+> > > int
+> > > trip)
+> > >  {
+> > > -	struct thermal_instance *instance;
+> > > -
+> > >  	thermal_zone_trip_update(tz, trip);
+> > >  
+> > >  	if (tz->forced_passive)
+> > >  		thermal_zone_trip_update(tz, THERMAL_TRIPS_NONE);
+> > >  
+> > > -	mutex_lock(&tz->lock);
+> > > -
+> > > -	list_for_each_entry(instance, &tz->thermal_instances, tz_node)
+> > > -		thermal_cdev_update(instance->cdev);
+> > > -
+> > > -	mutex_unlock(&tz->lock);
+> > > -
+> > >  	return 0;
+> > >  }
+> > >  
+> 
+> 
 
