@@ -2,54 +2,52 @@ Return-Path: <SRS0=xbEg=53=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UPPERCASE_50_75,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45520C2BA19
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:48:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FF62C2BA19
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:48:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 201C120787
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:48:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4BCFC206F7
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:48:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586648920;
-	bh=Mvjhobz+DXzJktaggh18G1wXgXOKTa61f7XmrSc+Y7M=;
+	s=default; t=1586648927;
+	bh=RDf0IwB6pbgawCvfT6ZQKVrQehfWd21JQ8a5a+4VaN0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZepvtK71Zy1tYw7v98EjgXci6kLvkXgUKYswQH4Q6/vWnIKDcvmju+4bg7Xc5mSW6
-	 sz49TDjwAdB5JldfZFtG3ofBtSAwQH1Ot83SQcAJn1Bhv0h+DLn6rxHwq8VKTUeSJc
-	 Xdn30zfdyz2pA6GzdkOe4jeTonZ++oICNtWppMU0=
+	b=GL+N1I3TihZhdBSigq1QHn9Zlf8d3+e0icpADWaUoPJniiBB8pM4MdZ/F5ODCCsRk
+	 qa0xhNx5YyJJanGRLmi4dKYZZeroU6+bQLEXwKfdMbIb6eVGWu//Ads4ssqJnmL0ea
+	 gMiYXRlFAOPmaZtYsXXvcsok2cghdMpT8bAwfQnM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726915AbgDKXsi (ORCPT
+        id S1727218AbgDKXEb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 19:48:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38076 "EHLO mail.kernel.org"
+        Sat, 11 Apr 2020 19:04:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37808 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727257AbgDKXEf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 19:04:35 -0400
+        id S1727156AbgDKXE0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Apr 2020 19:04:26 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CEE7821841;
-        Sat, 11 Apr 2020 23:04:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 81C8320CC7;
+        Sat, 11 Apr 2020 23:04:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586646275;
-        bh=Mvjhobz+DXzJktaggh18G1wXgXOKTa61f7XmrSc+Y7M=;
+        s=default; t=1586646266;
+        bh=RDf0IwB6pbgawCvfT6ZQKVrQehfWd21JQ8a5a+4VaN0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DNQPttzUC5BsWD7nImNlzHRnT7vG1fH3tDYXfUjRMpVVTCWMDKEGi1BSnKotG8bCs
-         6vJSo0f8zAeNcDd67yGnnXnMkrbrrJwIQ8/2O/wCWHob6fOFuqEgcg43ibD+0tkdfs
-         lSq9wPiglQU6jzoC4UqAki4Y3Wtde0nVoBgo8Aik=
+        b=KUysD0yZY22puJrBzOjNs0n6Cr9JD8cdu+blByuD4smj5s8/v/yVe6AVGIQEKnNqv
+         RCPUC6ly5mOgxjv+5rgBIA9XcR6gsvFCoJj5iju8umNL1G6tveM/R+n3/XltnNjHrj
+         G6ybETfNluCqc2Bkd/iweP8y/7+00n0c9Nj6ixvk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Eric Bernstein <eric.bernstein@amd.com>,
-        Dmytro Laktyushkin <Dmytro.Laktyushkin@amd.com>,
-        Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        Sasha Levin <sashal@kernel.org>, amd-gfx@lists.freedesktop.org,
-        dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 5.6 039/149] drm/amd/display: Fix default logger mask definition
-Date:   Sat, 11 Apr 2020 19:01:56 -0400
-Message-Id: <20200411230347.22371-39-sashal@kernel.org>
+Cc:     Dmitry Osipenko <digetx@gmail.com>,
+        Thierry Reding <treding@nvidia.com>,
+        Sasha Levin <sashal@kernel.org>,
+        dri-devel@lists.freedesktop.org, linux-tegra@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.6 031/149] drm/tegra: dc: Release PM and RGB output when client's registration fails
+Date:   Sat, 11 Apr 2020 19:01:48 -0400
+Message-Id: <20200411230347.22371-31-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200411230347.22371-1-sashal@kernel.org>
 References: <20200411230347.22371-1-sashal@kernel.org>
@@ -62,99 +60,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Bernstein <eric.bernstein@amd.com>
+From: Dmitry Osipenko <digetx@gmail.com>
 
-[ Upstream commit ccb6af1e25830e5601b6beacc698390f0245316f ]
+[ Upstream commit 0411ea89a689531e1829fdf8af3747646c02c721 ]
 
-[Why]
-Logger mask was updated to uint64_t, however default mask definition was
-not updated for unsigned long long
+Runtime PM and RGB output need to be released when host1x client
+registration fails. The releasing is missed in the code, let's correct it.
 
-[How]
-Update DC_DEFAULT_LOG_MASK to support uint64_t type
-
-Signed-off-by: Eric Bernstein <eric.bernstein@amd.com>
-Reviewed-by: Dmytro Laktyushkin <Dmytro.Laktyushkin@amd.com>
-Acked-by: Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+Signed-off-by: Thierry Reding <treding@nvidia.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- .../drm/amd/display/include/logger_types.h    | 63 ++++++++++---------
- 1 file changed, 32 insertions(+), 31 deletions(-)
+ drivers/gpu/drm/tegra/dc.c | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/amd/display/include/logger_types.h b/drivers/gpu/drm/amd/display/include/logger_types.h
-index 89a7092670193..d66f9d8eefb49 100644
---- a/drivers/gpu/drm/amd/display/include/logger_types.h
-+++ b/drivers/gpu/drm/amd/display/include/logger_types.h
-@@ -124,36 +124,37 @@ enum dc_log_type {
- #define DC_MIN_LOG_MASK ((1 << LOG_ERROR) | \
- 		(1 << LOG_DETECTION_EDID_PARSER))
+diff --git a/drivers/gpu/drm/tegra/dc.c b/drivers/gpu/drm/tegra/dc.c
+index 7c70fd31a4c24..870f9a68ad2c5 100644
+--- a/drivers/gpu/drm/tegra/dc.c
++++ b/drivers/gpu/drm/tegra/dc.c
+@@ -2588,10 +2588,16 @@ static int tegra_dc_probe(struct platform_device *pdev)
+ 	if (err < 0) {
+ 		dev_err(&pdev->dev, "failed to register host1x client: %d\n",
+ 			err);
+-		return err;
++		goto disable_pm;
+ 	}
  
--#define DC_DEFAULT_LOG_MASK ((1 << LOG_ERROR) | \
--		(1 << LOG_WARNING) | \
--		(1 << LOG_EVENT_MODE_SET) | \
--		(1 << LOG_EVENT_DETECTION) | \
--		(1 << LOG_EVENT_LINK_TRAINING) | \
--		(1 << LOG_EVENT_LINK_LOSS) | \
--		(1 << LOG_EVENT_UNDERFLOW) | \
--		(1 << LOG_RESOURCE) | \
--		(1 << LOG_FEATURE_OVERRIDE) | \
--		(1 << LOG_DETECTION_EDID_PARSER) | \
--		(1 << LOG_DC) | \
--		(1 << LOG_HW_HOTPLUG) | \
--		(1 << LOG_HW_SET_MODE) | \
--		(1 << LOG_HW_RESUME_S3) | \
--		(1 << LOG_HW_HPD_IRQ) | \
--		(1 << LOG_SYNC) | \
--		(1 << LOG_BANDWIDTH_VALIDATION) | \
--		(1 << LOG_MST) | \
--		(1 << LOG_DETECTION_DP_CAPS) | \
--		(1 << LOG_BACKLIGHT)) | \
--		(1 << LOG_I2C_AUX) | \
--		(1 << LOG_IF_TRACE) | \
--		(1 << LOG_DTN) /* | \
--		(1 << LOG_DEBUG) | \
--		(1 << LOG_BIOS) | \
--		(1 << LOG_SURFACE) | \
--		(1 << LOG_SCALER) | \
--		(1 << LOG_DML) | \
--		(1 << LOG_HW_LINK_TRAINING) | \
--		(1 << LOG_HW_AUDIO)| \
--		(1 << LOG_BANDWIDTH_CALCS)*/
-+#define DC_DEFAULT_LOG_MASK ((1ULL << LOG_ERROR) | \
-+		(1ULL << LOG_WARNING) | \
-+		(1ULL << LOG_EVENT_MODE_SET) | \
-+		(1ULL << LOG_EVENT_DETECTION) | \
-+		(1ULL << LOG_EVENT_LINK_TRAINING) | \
-+		(1ULL << LOG_EVENT_LINK_LOSS) | \
-+		(1ULL << LOG_EVENT_UNDERFLOW) | \
-+		(1ULL << LOG_RESOURCE) | \
-+		(1ULL << LOG_FEATURE_OVERRIDE) | \
-+		(1ULL << LOG_DETECTION_EDID_PARSER) | \
-+		(1ULL << LOG_DC) | \
-+		(1ULL << LOG_HW_HOTPLUG) | \
-+		(1ULL << LOG_HW_SET_MODE) | \
-+		(1ULL << LOG_HW_RESUME_S3) | \
-+		(1ULL << LOG_HW_HPD_IRQ) | \
-+		(1ULL << LOG_SYNC) | \
-+		(1ULL << LOG_BANDWIDTH_VALIDATION) | \
-+		(1ULL << LOG_MST) | \
-+		(1ULL << LOG_DETECTION_DP_CAPS) | \
-+		(1ULL << LOG_BACKLIGHT)) | \
-+		(1ULL << LOG_I2C_AUX) | \
-+		(1ULL << LOG_IF_TRACE) | \
-+		(1ULL << LOG_HDMI_FRL) | \
-+		(1ULL << LOG_DTN) /* | \
-+		(1ULL << LOG_DEBUG) | \
-+		(1ULL << LOG_BIOS) | \
-+		(1ULL << LOG_SURFACE) | \
-+		(1ULL << LOG_SCALER) | \
-+		(1ULL << LOG_DML) | \
-+		(1ULL << LOG_HW_LINK_TRAINING) | \
-+		(1ULL << LOG_HW_AUDIO)| \
-+		(1ULL << LOG_BANDWIDTH_CALCS)*/
+ 	return 0;
++
++disable_pm:
++	pm_runtime_disable(&pdev->dev);
++	tegra_dc_rgb_remove(dc);
++
++	return err;
+ }
  
- #endif /* __DAL_LOGGER_TYPES_H__ */
+ static int tegra_dc_remove(struct platform_device *pdev)
 -- 
 2.20.1
 
