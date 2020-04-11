@@ -2,230 +2,182 @@ Return-Path: <SRS0=xbEg=53=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0280AC2D0EC
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 01:01:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49BDAC2BB1D
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 01:02:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BEAE22082D
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 01:01:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1BE74206A1
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 01:02:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="AfK1WVnx"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="G4wIcfT8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726789AbgDKBBf (ORCPT
+        id S1726827AbgDKBCI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Apr 2020 21:01:35 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:40918 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726671AbgDKBBe (ORCPT
+        Fri, 10 Apr 2020 21:02:08 -0400
+Received: from mail-qk1-f194.google.com ([209.85.222.194]:38737 "EHLO
+        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726791AbgDKBCI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Apr 2020 21:01:34 -0400
-Received: by mail-pl1-f196.google.com with SMTP id h11so1194522plk.7
-        for <linux-kernel@vger.kernel.org>; Fri, 10 Apr 2020 18:01:34 -0700 (PDT)
+        Fri, 10 Apr 2020 21:02:08 -0400
+Received: by mail-qk1-f194.google.com with SMTP id h14so3944747qke.5;
+        Fri, 10 Apr 2020 18:02:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=JnweRSJzbFA/HZJs3MpjVTk2omd0xC4ncUbfKrlGFuw=;
-        b=AfK1WVnxwG7uZsgDtL5AKGrzGbqbYwkb8OQZXU/szpAPWTNX6mXt+fKCDUlEzTSfiU
-         mLTrYajKIcfrWwHNlBUDmjK+Se8AzofhAE6/K6QCFv+rXvBaAUetqsAw3Hb1ILyYwV0J
-         x8IwGn2qVx0vwZJQubgBtUcJCxVwk/filqEKSGbYjn9yHHdxJRKAvpdjHNd++IC48jPK
-         1iZ44mTgC9JT79eoM1jiZ84QDPlHHVaiVXmzMcMRF/W7t0BiihsGiPGztaQR8p0t+UEM
-         5VFMARXC+qvLvhXpjtvErOQUPmh1STEAp24Ci59/RVXQBOtHvzuOxwgeEPXQCL8Vy48P
-         QkYw==
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition;
+        bh=uCHZQqzsLUSZfwsYBU0j4Lk4ekCfYpHpyDR1Ei7qxqo=;
+        b=G4wIcfT8Z/Y1ZgJCtGYPuYhSlZLb1wrNJjTWWGR45FGFVdtNXDf694qgDwG2EvyElL
+         WOHEKt2sDQ13H5pYgJh94jg67eIQx2VyBimNt4TdmPyMggb0VtHPjqOwJ5t0RTNLFfhh
+         LrE3F/IFtiJt7jEFheaOQQfNmeXIvg51orHRUN+VhwHGPhhQKIT1fEVFKp0/92osVCiA
+         8TF7PaYY39ScC4V9fl6ZSDQZRCDxaFF94bzW6bquOWWdcJBxUgw4iYD3g2X9iw416Lpc
+         yMXU9iPTMbvf8qhT+hfF48vPz/HrJkBrPZVUiis85Exntlaa6qboiWwLw4FqXOlsTsSL
+         S2ZA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=JnweRSJzbFA/HZJs3MpjVTk2omd0xC4ncUbfKrlGFuw=;
-        b=A7FQz1N7y6SZUAaSW8QHOZf/Zi29DXLK69vc8jZ8U2kfdGsNyvDjySU7srccwTW/8L
-         l9VtnteqjaQ+alUwns4M50lSPiXzGuMQ1ZJgmsvae+6SUbVzdoZANkl43u/otNPBSvNx
-         tHMzdRZDqLMN/m2Andv48HeHV7VJU6AJwTR3i6DiYttkFoq0ILeVEvhLzgRU8mXWosfb
-         tmEcYmXJ9BxT2jF9DFZJnVAIOMXgHUwGrAKFssAD3WE2by8WF2scAvO6U071lKMy5ui+
-         wevSPOFyTY8nDD8QKivUevJOpPvwKfCzHPZYemZVkX2Cp+uxmrSVpKaIeHhZpXP7ADu4
-         yHmg==
-X-Gm-Message-State: AGi0PuZQot9qHG9OvSrs/lEwQ+2a1COjOTWK/73d1d6Zwms9ff09i5tO
-        j4E4XFKFv6Gspx4fpmeZz6njwQ==
-X-Google-Smtp-Source: APiQypJdhHrHpSQZULqAtlQ5+75We8n8BQ7hLwWMFPX17WGan0vJQ+38ci68Rc0D56ubTYTUgx+RnQ==
-X-Received: by 2002:a17:902:8b87:: with SMTP id ay7mr7208355plb.281.1586566894101;
-        Fri, 10 Apr 2020 18:01:34 -0700 (PDT)
-Received: from builder.lan (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id i190sm823811pfc.119.2020.04.10.18.01.32
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition;
+        bh=uCHZQqzsLUSZfwsYBU0j4Lk4ekCfYpHpyDR1Ei7qxqo=;
+        b=QvAzXsYz5gIyho6lxZAzBoYWyk+ERPIfMNjA+YlDwSItUeHeiJzcZ6luE0yL+IhKDG
+         /2T2Q1KJvIxoeFC9j4Ntr8n5hvKkd3L0tZfZiTb1iDSZtTOhgBeSajRrUbZAE5nNHBSe
+         48zuhGtUGjqg5HTRCfACT7DCiYXv5DnIyq4YIWwl2vYu1dj27/P3TmdGs+Q5/XCsDqaf
+         DI2Q1VuFf89zqiEpgVD7BicSss0Et0V0HmFtkCrOGBZeldxTnI0z2AfUVxcmSqYI0zy/
+         XKEpWBiN5yaljm4gbv2aRkxMA3LU02pjTiHxsgzNwbS/hsvK3zw/crI/3cSbJIrElo2y
+         utKg==
+X-Gm-Message-State: AGi0PuYqhsaFscmVUTvbDPha8fqlw6nNK19B2ujnlSkm/aPTWfsvFEJO
+        Gzvwj3OrlngwF82YS/Ei6gIbGzo+hC985A==
+X-Google-Smtp-Source: APiQypLy/o8e2yqRpsVXjOUFdLb6fmuFf4eiE2mr3OLlRD8EXOunNa1Djc3NiAa4fPjPpHdOHzunTw==
+X-Received: by 2002:a05:620a:c0b:: with SMTP id l11mr6513457qki.270.1586566926628;
+        Fri, 10 Apr 2020 18:02:06 -0700 (PDT)
+Received: from darkstar ([177.89.165.183])
+        by smtp.gmail.com with ESMTPSA id y9sm2504142qkb.41.2020.04.10.18.02.04
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 10 Apr 2020 18:01:33 -0700 (PDT)
-Date:   Fri, 10 Apr 2020 18:01:43 -0700
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Wesley Cheng <wcheng@codeaurora.org>
-Cc:     agross@kernel.org, mturquette@baylibre.com, sboyd@kernel.org,
-        robh+dt@kernel.org, mark.rutland@arm.com,
-        linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        vinod.koul@linaro.org
-Subject: Re: [PATCH v4 1/2] clk: qcom: gcc: Add USB3 PIPE clock and GDSC for
- SM8150
-Message-ID: <20200411010143.GF20625@builder.lan>
-References: <1586566362-21450-1-git-send-email-wcheng@codeaurora.org>
- <1586566362-21450-2-git-send-email-wcheng@codeaurora.org>
+        Fri, 10 Apr 2020 18:02:06 -0700 (PDT)
+Date:   Fri, 10 Apr 2020 22:02:01 -0300
+From:   Cristian Souza <cristianmsbr@gmail.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     linux-doc@vger.kernel.org, corbet@lwn.net, willy@infradead.org
+Subject: [PATCH v4] docs: admin-guide: Clarify sentences
+Message-ID: <20200411010201.GA22706@darkstar>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1586566362-21450-2-git-send-email-wcheng@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri 10 Apr 17:52 PDT 2020, Wesley Cheng wrote:
+Changes to make the text more formal and organized. The reasons are now cited and described at the same time.
+Minor grammatical problems have also been fixed.
 
-> This adds the USB3 PIPE clock and GDSC structures, so
-> that the USB driver can vote for these resources to be
-> enabled/disabled when required.  Both are needed for SS
-> and HS USB paths to operate properly.  The GDSC will
-> allow the USB system to be brought out of reset, while
-> the PIPE clock is needed for data transactions between
-> the PHY and controller.
-> 
-> Signed-off-by: Wesley Cheng <wcheng@codeaurora.org>
-> Reviewed-by: Stephen Boyd <sboyd@kernel.org>
+Signed-off-by: Cristian Souza <cristianmsbr@gmail.com>
+---
+Changes in v2:
+ - Text more formal and organized
+Changes in v3:
+ - Authors at the top of the file
+ - Removal of the source file in which the message is located
+ - All lines under 80 characters
+Changes in v4:
+ - Diff against mainline
 
-Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+ Documentation/admin-guide/init.rst | 76 ++++++++++++++----------------
+ 1 file changed, 36 insertions(+), 40 deletions(-)
 
+diff --git a/Documentation/admin-guide/init.rst b/Documentation/admin-guide/init.rst
+index e89d97f31eaf..41f06a09152e 100644
+--- a/Documentation/admin-guide/init.rst
++++ b/Documentation/admin-guide/init.rst
+@@ -1,52 +1,48 @@
+-Explaining the dreaded "No init found." boot hang message
++Explaining the "No working init found." boot hang message
+ =========================================================
++:Authors: Andreas Mohr <andi at lisas period de>
++          Cristian Souza <cristianmsbr at gmail period com>
 
-Stephen, let me know when you take this patch and I'll take the dts one.
+-OK, so you've got this pretty unintuitive message (currently located
+-in init/main.c) and are wondering what the H*** went wrong.
+-Some high-level reasons for failure (listed roughly in order of execution)
+-to load the init binary are:
+-
+-A) Unable to mount root FS
+-B) init binary doesn't exist on rootfs
+-C) broken console device
+-D) binary exists but dependencies not available
+-E) binary cannot be loaded
+-
+-Detailed explanations:
+-
+-A) Set "debug" kernel parameter (in bootloader config file or CONFIG_CMDLINE)
+-   to get more detailed kernel messages.
+-B) make sure you have the correct root FS type
+-   (and ``root=`` kernel parameter points to the correct partition),
+-   required drivers such as storage hardware (such as SCSI or USB!)
+-   and filesystem (ext3, jffs2 etc.) are builtin (alternatively as modules,
+-   to be pre-loaded by an initrd)
+-C) Possibly a conflict in ``console= setup`` --> initial console unavailable.
+-   E.g. some serial consoles are unreliable due to serial IRQ issues (e.g.
+-   missing interrupt-based configuration).
++This document provides some high-level reasons for failure
++(listed roughly in order of execution) to load the init binary.
++
++1) **Unable to mount root FS**: Set "debug" kernel parameter (in bootloader
++   config file or CONFIG_CMDLINE) to get more detailed kernel messages.
++
++2) **init binary doesn't exist on rootfs**: Make sure you have the correct
++   root FS type (and ``root=`` kernel parameter points to the correct
++   partition), required drivers such as storage hardware (such as SCSI or
++   USB!) and filesystem (ext3, jffs2, etc.) are builtin (alternatively as
++   modules, to be pre-loaded by an initrd).
++
++3) **Broken console device**: Possibly a conflict in ``console= setup``
++   --> initial console unavailable. E.g. some serial consoles are unreliable
++   due to serial IRQ issues (e.g. missing interrupt-based configuration).
+    Try using a different ``console= device`` or e.g. ``netconsole=``.
+-D) e.g. required library dependencies of the init binary such as
+-   ``/lib/ld-linux.so.2`` missing or broken. Use
+-   ``readelf -d <INIT>|grep NEEDED`` to find out which libraries are required.
+-E) make sure the binary's architecture matches your hardware.
+-   E.g. i386 vs. x86_64 mismatch, or trying to load x86 on ARM hardware.
+-   In case you tried loading a non-binary file here (shell script?),
+-   you should make sure that the script specifies an interpreter in its shebang
+-   header line (``#!/...``) that is fully working (including its library
+-   dependencies). And before tackling scripts, better first test a simple
+-   non-script binary such as ``/bin/sh`` and confirm its successful execution.
+-   To find out more, add code ``to init/main.c`` to display kernel_execve()s
+-   return values.
++
++4) **Binary exists but dependencies not available**: E.g. required library
++   dependencies of the init binary such as ``/lib/ld-linux.so.2`` missing or
++   broken. Use ``readelf -d <INIT>|grep NEEDED`` to find out which libraries
++   are required.
++
++5) **Binary cannot be loaded**: Make sure the binary's architecture matches
++   your hardware. E.g. i386 vs. x86_64 mismatch, or trying to load x86 on ARM
++   hardware. In case you tried loading a non-binary file here (shell script?),
++   you should make sure that the script specifies an interpreter in its
++   shebang header line (``#!/...``) that is fully working (including its
++   library dependencies). And before tackling scripts, better first test a
++   simple non-script binary such as ``/bin/sh`` and confirm its successful
++   execution. To find out more, add code ``to init/main.c`` to display
++   kernel_execve()s return values.
 
-Regards,
-Bjorn
+ Please extend this explanation whenever you find new failure causes
+ (after all loading the init binary is a CRITICAL and hard transition step
+-which needs to be made as painless as possible), then submit patch to LKML.
++which needs to be made as painless as possible), then submit a patch to LKML.
+ Further TODOs:
 
-> ---
->  drivers/clk/qcom/gcc-sm8150.c               | 52 +++++++++++++++++++++++++++++
->  include/dt-bindings/clock/qcom,gcc-sm8150.h |  4 +++
->  2 files changed, 56 insertions(+)
-> 
-> diff --git a/drivers/clk/qcom/gcc-sm8150.c b/drivers/clk/qcom/gcc-sm8150.c
-> index 2087721..ef98fdc 100644
-> --- a/drivers/clk/qcom/gcc-sm8150.c
-> +++ b/drivers/clk/qcom/gcc-sm8150.c
-> @@ -21,6 +21,7 @@
->  #include "clk-rcg.h"
->  #include "clk-regmap.h"
->  #include "reset.h"
-> +#include "gdsc.h"
->  
->  enum {
->  	P_BI_TCXO,
-> @@ -3171,6 +3172,18 @@ enum {
->  	},
->  };
->  
-> +static struct clk_branch gcc_usb3_prim_phy_pipe_clk = {
-> +	.halt_check = BRANCH_HALT_SKIP,
-> +	.clkr = {
-> +		.enable_reg = 0xf058,
-> +		.enable_mask = BIT(0),
-> +		.hw.init = &(struct clk_init_data){
-> +			.name = "gcc_usb3_prim_phy_pipe_clk",
-> +			.ops = &clk_branch2_ops,
-> +		},
-> +	},
-> +};
-> +
->  static struct clk_branch gcc_usb3_sec_clkref_clk = {
->  	.halt_reg = 0x8c028,
->  	.halt_check = BRANCH_HALT,
-> @@ -3218,6 +3231,18 @@ enum {
->  	},
->  };
->  
-> +static struct clk_branch gcc_usb3_sec_phy_pipe_clk = {
-> +	.halt_check = BRANCH_HALT_SKIP,
-> +	.clkr = {
-> +		.enable_reg = 0x10058,
-> +		.enable_mask = BIT(0),
-> +		.hw.init = &(struct clk_init_data){
-> +			.name = "gcc_usb3_sec_phy_pipe_clk",
-> +			.ops = &clk_branch2_ops,
-> +		},
-> +	},
-> +};
-> +
->  /*
->   * Clock ON depends on external parent 'config noc', so cant poll
->   * delay and also mark as crtitical for video boot
-> @@ -3292,6 +3317,24 @@ enum {
->  	},
->  };
->  
-> +static struct gdsc usb30_prim_gdsc = {
-> +		.gdscr = 0xf004,
-> +		.pd = {
-> +			.name = "usb30_prim_gdsc",
-> +		},
-> +		.pwrsts = PWRSTS_OFF_ON,
-> +		.flags = POLL_CFG_GDSCR,
-> +};
-> +
-> +static struct gdsc usb30_sec_gdsc = {
-> +		.gdscr = 0x10004,
-> +		.pd = {
-> +			.name = "usb30_sec_gdsc",
-> +		},
-> +		.pwrsts = PWRSTS_OFF_ON,
-> +		.flags = POLL_CFG_GDSCR,
-> +};
-> +
->  static struct clk_regmap *gcc_sm8150_clocks[] = {
->  	[GCC_AGGRE_NOC_PCIE_TBU_CLK] = &gcc_aggre_noc_pcie_tbu_clk.clkr,
->  	[GCC_AGGRE_UFS_CARD_AXI_CLK] = &gcc_aggre_ufs_card_axi_clk.clkr,
-> @@ -3480,10 +3523,12 @@ enum {
->  	[GCC_USB3_PRIM_PHY_AUX_CLK] = &gcc_usb3_prim_phy_aux_clk.clkr,
->  	[GCC_USB3_PRIM_PHY_AUX_CLK_SRC] = &gcc_usb3_prim_phy_aux_clk_src.clkr,
->  	[GCC_USB3_PRIM_PHY_COM_AUX_CLK] = &gcc_usb3_prim_phy_com_aux_clk.clkr,
-> +	[GCC_USB3_PRIM_PHY_PIPE_CLK] = &gcc_usb3_prim_phy_pipe_clk.clkr,
->  	[GCC_USB3_SEC_CLKREF_CLK] = &gcc_usb3_sec_clkref_clk.clkr,
->  	[GCC_USB3_SEC_PHY_AUX_CLK] = &gcc_usb3_sec_phy_aux_clk.clkr,
->  	[GCC_USB3_SEC_PHY_AUX_CLK_SRC] = &gcc_usb3_sec_phy_aux_clk_src.clkr,
->  	[GCC_USB3_SEC_PHY_COM_AUX_CLK] = &gcc_usb3_sec_phy_com_aux_clk.clkr,
-> +	[GCC_USB3_SEC_PHY_PIPE_CLK] = &gcc_usb3_sec_phy_pipe_clk.clkr,
->  	[GCC_VIDEO_AHB_CLK] = &gcc_video_ahb_clk.clkr,
->  	[GCC_VIDEO_AXI0_CLK] = &gcc_video_axi0_clk.clkr,
->  	[GCC_VIDEO_AXI1_CLK] = &gcc_video_axi1_clk.clkr,
-> @@ -3527,6 +3572,11 @@ enum {
->  	[GCC_USB_PHY_CFG_AHB2PHY_BCR] = { 0x6a000 },
->  };
->  
-> +static struct gdsc *gcc_sm8150_gdscs[] = {
-> +	[USB30_PRIM_GDSC] = &usb30_prim_gdsc,
-> +	[USB30_SEC_GDSC] = &usb30_sec_gdsc,
-> +};
-> +
->  static const struct regmap_config gcc_sm8150_regmap_config = {
->  	.reg_bits	= 32,
->  	.reg_stride	= 4,
-> @@ -3541,6 +3591,8 @@ enum {
->  	.num_clks = ARRAY_SIZE(gcc_sm8150_clocks),
->  	.resets = gcc_sm8150_resets,
->  	.num_resets = ARRAY_SIZE(gcc_sm8150_resets),
-> +	.gdscs = gcc_sm8150_gdscs,
-> +	.num_gdscs = ARRAY_SIZE(gcc_sm8150_gdscs),
->  };
->  
->  static const struct of_device_id gcc_sm8150_match_table[] = {
-> diff --git a/include/dt-bindings/clock/qcom,gcc-sm8150.h b/include/dt-bindings/clock/qcom,gcc-sm8150.h
-> index 90d60ef..3e1a918 100644
-> --- a/include/dt-bindings/clock/qcom,gcc-sm8150.h
-> +++ b/include/dt-bindings/clock/qcom,gcc-sm8150.h
-> @@ -240,4 +240,8 @@
->  #define GCC_USB30_SEC_BCR					27
->  #define GCC_USB_PHY_CFG_AHB2PHY_BCR				28
->  
-> +/* GCC GDSCRs */
-> +#define USB30_PRIM_GDSC                     4
-> +#define USB30_SEC_GDSC						5
-> +
->  #endif
-> -- 
-> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-> a Linux Foundation Collaborative Project
+ - Implement the various ``run_init_process()`` invocations via a struct array
+   which can then store the ``kernel_execve()`` result value and on failure
+   log it all by iterating over **all** results (very important usability fix).
+-- try to make the implementation itself more helpful in general,
+-  e.g. by providing additional error messages at affected places.
++- Try to make the implementation itself more helpful in general, e.g. by
++  providing additional error messages at affected places.
+
+-Andreas Mohr <andi at lisas period de>
+--
+2.25.1
