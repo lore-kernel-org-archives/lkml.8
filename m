@@ -4,51 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B58B3C2BA2B
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:14:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DDB78C2BBC7
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:14:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8A1FE21556
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:14:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B510821655
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:14:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586607252;
-	bh=wGXvAvLnfJ6NWQrIy69NGR+MFT+eCM2KgZp7EqI1qx4=;
+	s=default; t=1586607254;
+	bh=tUsy8aF3aWK+tl2tlF53A4wyBaFqQHwl9Hs+toAEKpE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=J516CVl5PflgmDfp87YbKrVb4kwl5fwwmhiiSK1h92Bq91yrHTDiT7vbr7upp5a2N
-	 gSXZWKashqrveVb0+8c7oxOf2eDtYH4wFvBXy1y2mMuHhiZcr1TCZgTiHcE0Ih9JB6
-	 BJf57A0t0FCuv8RUNaADGh/W3EuG+OS/+X5FzzTM=
+	b=Xptjm7AU22NJsrr0pIOf4b0ayrhLK9a5Jc+/8NxSusLboNaszHFa5XhSsUkdhbtSK
+	 l7v6HC2PR33SOulg8RZAlwIE+1HsZFlecWtaby3vfSP05NEpKfcjfEnfrjPuvd0d5j
+	 fFqT/Al7BEp9Xm3dzvBYVNqS2BbYgqKlCeZZF+3M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726857AbgDKMOK (ORCPT
+        id S1727110AbgDKMON (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 08:14:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47320 "EHLO mail.kernel.org"
+        Sat, 11 Apr 2020 08:14:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47460 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727867AbgDKMOG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 08:14:06 -0400
+        id S1726880AbgDKMOL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Apr 2020 08:14:11 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CBE1F216FD;
-        Sat, 11 Apr 2020 12:14:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A4EAA2166E;
+        Sat, 11 Apr 2020 12:14:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586607245;
-        bh=wGXvAvLnfJ6NWQrIy69NGR+MFT+eCM2KgZp7EqI1qx4=;
+        s=default; t=1586607250;
+        bh=tUsy8aF3aWK+tl2tlF53A4wyBaFqQHwl9Hs+toAEKpE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=so9GzSVB9oZ2tZxTR15tgG8WTwznQfDkd5Yt3+fZzWT2uiV/x9BW3nibVIKNRDohO
-         lOvZLF4KA3/WN7ZU1DpzRFGak9v7KKlQbQoMkEn9WjDcfJheU2ZFbg15xJNubtebWd
-         FRfXM7/xYCGtiErH/Z8svEfPmIxqsIYXgO7YooN0=
+        b=REp0Eq89BAkbw6UKFrGCOzCECJtVCTya7T08kNR09b9vTvjdjCubKW4rpTNDEQmva
+         AyhHOcnqPn6mcpeaabzD5lnFVCYCB9ZXM9rK/zgtj15osSP1nmFlJD5ocAzSMDo7y4
+         P+lZmRCfSj9qS9SXryrJwhp8GA/HGDGIoXP9cmc8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Vishal Verma <vishal.l.verma@intel.com>,
-        Grzegorz Burzynski <grzegorz.burzynski@intel.com>,
-        Jeff Moyer <jmoyer@redhat.com>,
-        Dan Williams <dan.j.williams@intel.com>
-Subject: [PATCH 4.14 32/38] acpi/nfit: Fix bus command validation
-Date:   Sat, 11 Apr 2020 14:09:16 +0200
-Message-Id: <20200411115440.974333990@linuxfoundation.org>
+        stable@vger.kernel.org, Stephen Boyd <sboyd@kernel.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Jordan Crouse <jcrouse@codeaurora.org>,
+        Rob Clark <robdclark@chromium.org>,
+        Sean Paul <seanpaul@chromium.org>,
+        Lee Jones <lee.jones@linaro.org>
+Subject: [PATCH 4.14 34/38] drm/msm: stop abusing dma_map/unmap for cache
+Date:   Sat, 11 Apr 2020 14:09:18 +0200
+Message-Id: <20200411115441.189402573@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200411115437.795556138@linuxfoundation.org>
 References: <20200411115437.795556138@linuxfoundation.org>
@@ -61,110 +63,82 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dan Williams <dan.j.williams@intel.com>
+From: Rob Clark <robdclark@chromium.org>
 
-commit ebe9f6f19d80d8978d16078dff3d5bd93ad8d102 upstream.
+commit 0036bc73ccbe7e600a3468bf8e8879b122252274 upstream.
 
-Commit 11189c1089da "acpi/nfit: Fix command-supported detection" broke
-ND_CMD_CALL for bus-level commands. The "func = cmd" assumption is only
-valid for:
+Recently splats like this started showing up:
 
-    ND_CMD_ARS_CAP
-    ND_CMD_ARS_START
-    ND_CMD_ARS_STATUS
-    ND_CMD_CLEAR_ERROR
+   WARNING: CPU: 4 PID: 251 at drivers/iommu/dma-iommu.c:451 __iommu_dma_unmap+0xb8/0xc0
+   Modules linked in: ath10k_snoc ath10k_core fuse msm ath mac80211 uvcvideo cfg80211 videobuf2_vmalloc videobuf2_memops vide
+   CPU: 4 PID: 251 Comm: kworker/u16:4 Tainted: G        W         5.2.0-rc5-next-20190619+ #2317
+   Hardware name: LENOVO 81JL/LNVNB161216, BIOS 9UCN23WW(V1.06) 10/25/2018
+   Workqueue: msm msm_gem_free_work [msm]
+   pstate: 80c00005 (Nzcv daif +PAN +UAO)
+   pc : __iommu_dma_unmap+0xb8/0xc0
+   lr : __iommu_dma_unmap+0x54/0xc0
+   sp : ffff0000119abce0
+   x29: ffff0000119abce0 x28: 0000000000000000
+   x27: ffff8001f9946648 x26: ffff8001ec271068
+   x25: 0000000000000000 x24: ffff8001ea3580a8
+   x23: ffff8001f95ba010 x22: ffff80018e83ba88
+   x21: ffff8001e548f000 x20: fffffffffffff000
+   x19: 0000000000001000 x18: 00000000c00001fe
+   x17: 0000000000000000 x16: 0000000000000000
+   x15: ffff000015b70068 x14: 0000000000000005
+   x13: 0003142cc1be1768 x12: 0000000000000001
+   x11: ffff8001f6de9100 x10: 0000000000000009
+   x9 : ffff000015b78000 x8 : 0000000000000000
+   x7 : 0000000000000001 x6 : fffffffffffff000
+   x5 : 0000000000000fff x4 : ffff00001065dbc8
+   x3 : 000000000000000d x2 : 0000000000001000
+   x1 : fffffffffffff000 x0 : 0000000000000000
+   Call trace:
+    __iommu_dma_unmap+0xb8/0xc0
+    iommu_dma_unmap_sg+0x98/0xb8
+    put_pages+0x5c/0xf0 [msm]
+    msm_gem_free_work+0x10c/0x150 [msm]
+    process_one_work+0x1e0/0x330
+    worker_thread+0x40/0x438
+    kthread+0x12c/0x130
+    ret_from_fork+0x10/0x18
+   ---[ end trace afc0dc5ab81a06bf ]---
 
-The function number otherwise needs to be pulled from the command
-payload for:
+Not quite sure what triggered that, but we really shouldn't be abusing
+dma_{map,unmap}_sg() for cache maint.
 
-    NFIT_CMD_TRANSLATE_SPA
-    NFIT_CMD_ARS_INJECT_SET
-    NFIT_CMD_ARS_INJECT_CLEAR
-    NFIT_CMD_ARS_INJECT_GET
-
-Update cmd_to_func() for the bus case and call it in the common path.
-
-Fixes: 11189c1089da ("acpi/nfit: Fix command-supported detection")
-Cc: <stable@vger.kernel.org>
-Reviewed-by: Vishal Verma <vishal.l.verma@intel.com>
-Reported-by: Grzegorz Burzynski <grzegorz.burzynski@intel.com>
-Tested-by: Jeff Moyer <jmoyer@redhat.com>
-Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+Cc: Stephen Boyd <sboyd@kernel.org>
+Tested-by: Stephen Boyd <swboyd@chromium.org>
+Reviewed-by: Jordan Crouse <jcrouse@codeaurora.org>
+Signed-off-by: Rob Clark <robdclark@chromium.org>
+Signed-off-by: Sean Paul <seanpaul@chromium.org>
+Link: https://patchwork.freedesktop.org/patch/msgid/20190630124735.27786-1-robdclark@gmail.com
+Signed-off-by: Lee Jones <lee.jones@linaro.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-
 ---
- drivers/acpi/nfit/core.c |   24 +++++++++++++-----------
- 1 file changed, 13 insertions(+), 11 deletions(-)
+ drivers/gpu/drm/msm/msm_gem.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/drivers/acpi/nfit/core.c
-+++ b/drivers/acpi/nfit/core.c
-@@ -214,7 +214,7 @@ static int cmd_to_func(struct nfit_mem *
- 	if (call_pkg) {
- 		int i;
- 
--		if (nfit_mem->family != call_pkg->nd_family)
-+		if (nfit_mem && nfit_mem->family != call_pkg->nd_family)
- 			return -ENOTTY;
- 
- 		for (i = 0; i < ARRAY_SIZE(call_pkg->nd_reserved2); i++)
-@@ -223,6 +223,10 @@ static int cmd_to_func(struct nfit_mem *
- 		return call_pkg->nd_command;
+--- a/drivers/gpu/drm/msm/msm_gem.c
++++ b/drivers/gpu/drm/msm/msm_gem.c
+@@ -108,7 +108,7 @@ static struct page **get_pages(struct dr
+ 		 * because display controller, GPU, etc. are not coherent:
+ 		 */
+ 		if (msm_obj->flags & (MSM_BO_WC|MSM_BO_UNCACHED))
+-			dma_map_sg(dev->dev, msm_obj->sgt->sgl,
++			dma_sync_sg_for_device(dev->dev, msm_obj->sgt->sgl,
+ 					msm_obj->sgt->nents, DMA_BIDIRECTIONAL);
  	}
  
-+	/* In the !call_pkg case, bus commands == bus functions */
-+	if (!nfit_mem)
-+		return cmd;
-+
- 	/* Linux ND commands == NVDIMM_FAMILY_INTEL function numbers */
- 	if (nfit_mem->family == NVDIMM_FAMILY_INTEL)
- 		return cmd;
-@@ -238,6 +242,7 @@ int acpi_nfit_ctl(struct nvdimm_bus_desc
- 		unsigned int cmd, void *buf, unsigned int buf_len, int *cmd_rc)
- {
- 	struct acpi_nfit_desc *acpi_desc = to_acpi_nfit_desc(nd_desc);
-+	struct nfit_mem *nfit_mem = nvdimm_provider_data(nvdimm);
- 	union acpi_object in_obj, in_buf, *out_obj;
- 	const struct nd_cmd_desc *desc = NULL;
- 	struct device *dev = acpi_desc->dev;
-@@ -252,18 +257,18 @@ int acpi_nfit_ctl(struct nvdimm_bus_desc
- 	if (cmd_rc)
- 		*cmd_rc = -EINVAL;
+@@ -138,7 +138,7 @@ static void put_pages(struct drm_gem_obj
+ 			 * GPU, etc. are not coherent:
+ 			 */
+ 			if (msm_obj->flags & (MSM_BO_WC|MSM_BO_UNCACHED))
+-				dma_unmap_sg(obj->dev->dev, msm_obj->sgt->sgl,
++				dma_sync_sg_for_cpu(obj->dev->dev, msm_obj->sgt->sgl,
+ 					     msm_obj->sgt->nents,
+ 					     DMA_BIDIRECTIONAL);
  
-+	if (cmd == ND_CMD_CALL)
-+		call_pkg = buf;
-+	func = cmd_to_func(nfit_mem, cmd, call_pkg);
-+	if (func < 0)
-+		return func;
-+
- 	if (nvdimm) {
--		struct nfit_mem *nfit_mem = nvdimm_provider_data(nvdimm);
- 		struct acpi_device *adev = nfit_mem->adev;
- 
- 		if (!adev)
- 			return -ENOTTY;
- 
--		if (cmd == ND_CMD_CALL)
--			call_pkg = buf;
--		func = cmd_to_func(nfit_mem, cmd, call_pkg);
--		if (func < 0)
--			return func;
- 		dimm_name = nvdimm_name(nvdimm);
- 		cmd_name = nvdimm_cmd_name(cmd);
- 		cmd_mask = nvdimm_cmd_mask(nvdimm);
-@@ -274,12 +279,9 @@ int acpi_nfit_ctl(struct nvdimm_bus_desc
- 	} else {
- 		struct acpi_device *adev = to_acpi_dev(acpi_desc);
- 
--		func = cmd;
- 		cmd_name = nvdimm_bus_cmd_name(cmd);
- 		cmd_mask = nd_desc->cmd_mask;
--		dsm_mask = cmd_mask;
--		if (cmd == ND_CMD_CALL)
--			dsm_mask = nd_desc->bus_dsm_mask;
-+		dsm_mask = nd_desc->bus_dsm_mask;
- 		desc = nd_cmd_bus_desc(cmd);
- 		guid = to_nfit_uuid(NFIT_DEV_BUS);
- 		handle = adev->handle;
 
 
