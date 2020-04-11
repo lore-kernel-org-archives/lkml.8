@@ -4,54 +4,59 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44E56C2BBFD
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:08:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A77EC2BBFD
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:08:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 19B402192A
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:08:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4A905215A4
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:08:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586646511;
-	bh=t7cIWUb42ZwzSGKMzGbVwz0yuANHChXgEkTj7EQFjCk=;
+	s=default; t=1586646514;
+	bh=HTk2LAY6m/2PMyKiWa3R+YV94N6VTF94/lp0Bd3u8mQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BwztFlXYUkseyUFFh5vd/jfsEKqkWBJYp5vKgd2hXeIOVEKXK5NlkVAOjaTTaiJfH
-	 l9m1ry3cEQkhGE1byAYYU2BNuPcetj9uVFZLt6DFf+ewVVki3LE03yfrAr7pIKVbGy
-	 Vb/zzQsvsHS5RJIhwtGTeVK4QBzbLolYH8Xkngz8=
+	b=mOX1WYOeiG0VIP8EAix7G8YBTJx8HWN86K4O+FmSdApRUy04qT0gjUwneh3NFIV6O
+	 oS47th1FUjxlFRPLS9QDezWbPZglGNyt9MRazTux3/TR2QfEx75KKl73MFEnxJg2sz
+	 DMZ/94tA1q4dUQ5m8mDU5BClLPJKr87G08Z19E4A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727700AbgDKXI3 (ORCPT
+        id S1728947AbgDKXIc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 19:08:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44888 "EHLO mail.kernel.org"
+        Sat, 11 Apr 2020 19:08:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45076 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728879AbgDKXIP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 19:08:15 -0400
+        id S1727269AbgDKXIU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Apr 2020 19:08:20 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2B5A3214D8;
-        Sat, 11 Apr 2020 23:08:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9EF6A20708;
+        Sat, 11 Apr 2020 23:08:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586646495;
-        bh=t7cIWUb42ZwzSGKMzGbVwz0yuANHChXgEkTj7EQFjCk=;
+        s=default; t=1586646500;
+        bh=HTk2LAY6m/2PMyKiWa3R+YV94N6VTF94/lp0Bd3u8mQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JFHEsb7T60TX5YL53/XYLfDp74U9VIheFRUMcpOKkmvuc+BBgrH1ybAVyvC3qgvFw
-         KUIhgB6qv115581I46EG1IobbidPaPYoLefK4ZfGlomu6X91gP8lLvXWFZ3/3WkhuO
-         160/clAvlY4HM8Dt31BM72iymVmoU24ngEMTVMWc=
+        b=epjX8Tu8mE9rd0C9egezR8ANqYz/pJ50ZP1J3WwjvjrcEY0XepXP00I5V/TXTo2vQ
+         jGX6ZgIRZXut82Y259429UsT4lQo9aa8YV3wacNCGiVap/wCfRKDGgY37D8Qah91zw
+         Pr2zX6db6+ofV2o9zh4YmRdkPy6+B83rl6DbNj0Q=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Sergey Shatunov <me@prok.pw>,
-        Marcel Holtmann <marcel@holtmann.org>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-bluetooth@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.5 058/121] Bluetooth: btusb: Add support for 13d3:3548 Realtek 8822CE device
-Date:   Sat, 11 Apr 2020 19:06:03 -0400
-Message-Id: <20200411230706.23855-58-sashal@kernel.org>
+Cc:     Daniel Vetter <daniel.vetter@ffwll.ch>,
+        Tomeu Vizoso <tomeu.vizoso@collabora.com>,
+        Emil Velikov <emil.velikov@collabora.com>,
+        Benjamin Gaignard <benjamin.gaignard@linaro.org>,
+        Daniel Vetter <daniel.vetter@intel.com>,
+        =?UTF-8?q?Ville=20Syrj=C3=A4l=C3=A4?= 
+        <ville.syrjala@linux.intel.com>, Sasha Levin <sashal@kernel.org>,
+        dri-devel@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 5.5 061/121] drm/crc: Actually allow to change the crc source
+Date:   Sat, 11 Apr 2020 19:06:06 -0400
+Message-Id: <20200411230706.23855-61-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200411230706.23855-1-sashal@kernel.org>
 References: <20200411230706.23855-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -60,63 +65,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sergey Shatunov <me@prok.pw>
+From: Daniel Vetter <daniel.vetter@ffwll.ch>
 
-[ Upstream commit eb3939e386ec8df6049697d388298590231ac79c ]
+[ Upstream commit 3cb6d8e5cf9811a62e27f366fd1c05f90310a8fd ]
 
-The ASUS FX505DV laptop contains RTL8822CE device with an
-associated BT chip using a USB ID of 13d3:3548.
-This patch add fw download support for it.
+Oops.
 
-T:  Bus=03 Lev=01 Prnt=01 Port=03 Cnt=03 Dev#=  4 Spd=12   MxCh= 0
-D:  Ver= 1.00 Cls=e0(wlcon) Sub=01 Prot=01 MxPS=64 #Cfgs=  1
-P:  Vendor=13d3 ProdID=3548 Rev= 0.00
-S:  Manufacturer=Realtek
-S:  Product=Bluetooth Radio
-S:  SerialNumber=00e04c000001
-C:* #Ifs= 2 Cfg#= 1 Atr=a0 MxPwr=500mA
-I:* If#= 0 Alt= 0 #EPs= 3 Cls=e0(wlcon) Sub=01 Prot=01 Driver=btusb
-E:  Ad=81(I) Atr=03(Int.) MxPS=  16 Ivl=1ms
-E:  Ad=02(O) Atr=02(Bulk) MxPS=  64 Ivl=0ms
-E:  Ad=82(I) Atr=02(Bulk) MxPS=  64 Ivl=0ms
-I:* If#= 1 Alt= 0 #EPs= 2 Cls=e0(wlcon) Sub=01 Prot=01 Driver=btusb
-E:  Ad=03(O) Atr=01(Isoc) MxPS=   0 Ivl=1ms
-E:  Ad=83(I) Atr=01(Isoc) MxPS=   0 Ivl=1ms
-I:  If#= 1 Alt= 1 #EPs= 2 Cls=e0(wlcon) Sub=01 Prot=01 Driver=btusb
-E:  Ad=03(O) Atr=01(Isoc) MxPS=   9 Ivl=1ms
-E:  Ad=83(I) Atr=01(Isoc) MxPS=   9 Ivl=1ms
-I:  If#= 1 Alt= 2 #EPs= 2 Cls=e0(wlcon) Sub=01 Prot=01 Driver=btusb
-E:  Ad=03(O) Atr=01(Isoc) MxPS=  17 Ivl=1ms
-E:  Ad=83(I) Atr=01(Isoc) MxPS=  17 Ivl=1ms
-I:  If#= 1 Alt= 3 #EPs= 2 Cls=e0(wlcon) Sub=01 Prot=01 Driver=btusb
-E:  Ad=03(O) Atr=01(Isoc) MxPS=  25 Ivl=1ms
-E:  Ad=83(I) Atr=01(Isoc) MxPS=  25 Ivl=1ms
-I:  If#= 1 Alt= 4 #EPs= 2 Cls=e0(wlcon) Sub=01 Prot=01 Driver=btusb
-E:  Ad=03(O) Atr=01(Isoc) MxPS=  33 Ivl=1ms
-E:  Ad=83(I) Atr=01(Isoc) MxPS=  33 Ivl=1ms
-I:  If#= 1 Alt= 5 #EPs= 2 Cls=e0(wlcon) Sub=01 Prot=01 Driver=btusb
-E:  Ad=03(O) Atr=01(Isoc) MxPS=  49 Ivl=1ms
-E:  Ad=83(I) Atr=01(Isoc) MxPS=  49 Ivl=1ms
-
-Signed-off-by: Sergey Shatunov <me@prok.pw>
-Signed-off-by: Marcel Holtmann <marcel@holtmann.org>
+Fixes: 9edbf1fa600a ("drm: Add API for capturing frame CRCs")
+Cc: Tomeu Vizoso <tomeu.vizoso@collabora.com>
+Cc: Emil Velikov <emil.velikov@collabora.com>
+Cc: Benjamin Gaignard <benjamin.gaignard@linaro.org>
+Signed-off-by: Daniel Vetter <daniel.vetter@intel.com>
+Reviewed-by: Ville Syrjälä <ville.syrjala@linux.intel.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/20190821203835.18314-1-daniel.vetter@ffwll.ch
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/bluetooth/btusb.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/gpu/drm/drm_debugfs_crc.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/bluetooth/btusb.c b/drivers/bluetooth/btusb.c
-index a6dad2f6995ae..317167d0e5d6b 100644
---- a/drivers/bluetooth/btusb.c
-+++ b/drivers/bluetooth/btusb.c
-@@ -386,6 +386,7 @@ static const struct usb_device_id blacklist_table[] = {
+diff --git a/drivers/gpu/drm/drm_debugfs_crc.c b/drivers/gpu/drm/drm_debugfs_crc.c
+index 2ece2957da1af..6b20da279bc7f 100644
+--- a/drivers/gpu/drm/drm_debugfs_crc.c
++++ b/drivers/gpu/drm/drm_debugfs_crc.c
+@@ -367,7 +367,7 @@ void drm_debugfs_crtc_crc_add(struct drm_crtc *crtc)
  
- 	/* Additional Realtek 8822CE Bluetooth devices */
- 	{ USB_DEVICE(0x04ca, 0x4005), .driver_info = BTUSB_REALTEK },
-+	{ USB_DEVICE(0x13d3, 0x3548), .driver_info = BTUSB_REALTEK },
+ 	crc_ent = debugfs_create_dir("crc", crtc->debugfs_entry);
  
- 	/* Silicon Wave based devices */
- 	{ USB_DEVICE(0x0c10, 0x0000), .driver_info = BTUSB_SWAVE },
+-	debugfs_create_file("control", S_IRUGO, crc_ent, crtc,
++	debugfs_create_file("control", S_IRUGO | S_IWUSR, crc_ent, crtc,
+ 			    &drm_crtc_crc_control_fops);
+ 	debugfs_create_file("data", S_IRUGO, crc_ent, crtc,
+ 			    &drm_crtc_crc_data_fops);
 -- 
 2.20.1
 
