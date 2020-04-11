@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99BCBC2BB86
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:25:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01B38C2BBC7
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:25:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 70E3120674
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:25:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CBFD620674
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:25:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586647514;
-	bh=ooGB4pek4EOyiavcV3dXkkgC/qrB3ih9Ind03x4xuJ4=;
+	s=default; t=1586647517;
+	bh=QfEOgstoRGmlFxrVw9RQTwlfeFNTPU7GVv+PibiPVyw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Dss79RU+dMjbEfnvBRhQA3HwDONyoRkX6Ov+iKfArWZG0ihy0NJdmObCJeH1eIbpP
-	 KlsFLx0mtwl7GSeUNtk1bt4riGxUzgLAnvMWjoCdp6HZvELOaB27Jg3mEEd05Y9jX5
-	 /RmQ0ZX1zi5f1/6pgepgQTMcgcL1LhiTT1wNQ/yc=
+	b=B/w3N1DkPjSpqpXzJMupfVxL8bZyNjNzEw3DVC2j5xWiQiAYMnXrexwmCchlZTDK4
+	 IKP7ONADJcBME0yZ8vZXDkJDLjBHbUN3s3ZDTwDcUd50Q+6GDoOlFIEUBWQH5i/lS5
+	 5t9VAQAUUYuJqUV0rPvt2gxL6GLon5D4Xk0W4yOg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729761AbgDKXMR (ORCPT
+        id S1730964AbgDKXZP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 19:12:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51994 "EHLO mail.kernel.org"
+        Sat, 11 Apr 2020 19:25:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52312 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729699AbgDKXMG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 19:12:06 -0400
+        id S1729784AbgDKXMS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Apr 2020 19:12:18 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DF11C21973;
-        Sat, 11 Apr 2020 23:12:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7509A20708;
+        Sat, 11 Apr 2020 23:12:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586646726;
-        bh=ooGB4pek4EOyiavcV3dXkkgC/qrB3ih9Ind03x4xuJ4=;
+        s=default; t=1586646738;
+        bh=QfEOgstoRGmlFxrVw9RQTwlfeFNTPU7GVv+PibiPVyw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xuVMkovQs7UtBmU6Bn8XE9WcKVA7vzhCTOj70BQRNXoTa0ASKQuQxFnD2z9Oqxd1V
-         jhCu1Q7mIsU+6dGqZMfych9UmhDm1qd6d8Ul+rbmaoA5PLwv/keZmzBS6kCeZXZDq0
-         PiZKmgCxOtxkZlOEQP+kgefD9EdLr9TiuNmchCvA=
+        b=WBbs/mv0oqqnw6it8gWqlX2Fjs83e9BSlyt5wQIA43RU2EjLt8frNjRKcXMwaxcZy
+         MT0Dk+ZJ6hRq326uCW3uSGgGofU1bnQ3p5Ic//ZHs5HVe7i147jc7E5wfWBqw8PDFk
+         1oK+Hb8+M7Uja4frqA7kuVgXwmRQXTjwNqyYS4xM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Heiner Kallweit <hkallweit1@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 02/66] net: phy: probe PHY drivers synchronously
-Date:   Sat, 11 Apr 2020 19:10:59 -0400
-Message-Id: <20200411231203.25933-2-sashal@kernel.org>
+Cc:     Brian Norris <briannorris@chromium.org>,
+        Ganapathi Bhat <ganapathi.gbhat@nxp.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 12/66] mwifiex: set needed_headroom, not hard_header_len
+Date:   Sat, 11 Apr 2020 19:11:09 -0400
+Message-Id: <20200411231203.25933-12-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200411231203.25933-1-sashal@kernel.org>
 References: <20200411231203.25933-1-sashal@kernel.org>
@@ -61,57 +61,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Heiner Kallweit <hkallweit1@gmail.com>
+From: Brian Norris <briannorris@chromium.org>
 
-[ Upstream commit 16983507742cbcaa5592af530872a82e82fb9c51 ]
+[ Upstream commit 9454f7a895b822dd8fb4588fc55fda7c96728869 ]
 
-If we have scenarios like
+hard_header_len provides limitations for things like AF_PACKET, such
+that we don't allow transmitting packets smaller than this.
 
-mdiobus_register()
-	-> loads PHY driver module(s)
-	-> registers PHY driver(s)
-	-> may schedule async probe
-phydev = mdiobus_get_phy()
-<phydev action involving PHY driver>
+needed_headroom provides a suggested minimum headroom for SKBs, so that
+we can trivally add our headers to the front.
 
-or
+The latter is the correct field to use in this case, while the former
+mostly just prevents sending small AF_PACKET frames.
 
-phydev = phy_device_create()
-	-> loads PHY driver module
-	-> registers PHY driver
-	-> may schedule async probe
-<phydev action involving PHY driver>
+In any case, mwifiex already does its own bounce buffering [1] if we
+don't have enough headroom, so hints (not hard limits) are all that are
+needed.
 
-then we expect the PHY driver to be bound to the phydev when triggering
-the action. This may not be the case in case of asynchronous probing.
-Therefore ensure that PHY drivers are probed synchronously.
+This is the essentially the same bug (and fix) that brcmfmac had, fixed
+in commit cb39288fd6bb ("brcmfmac: use ndev->needed_headroom to reserve
+additional header space").
 
-Default still is sync probing, except async probing is explicitly
-requested. I saw some comments that the intention is to promote
-async probing for more parallelism in boot process and want to be
-prepared for the case that the default is changed to async probing.
+[1] mwifiex_hard_start_xmit():
+	if (skb_headroom(skb) < MWIFIEX_MIN_DATA_HEADER_LEN) {
+	[...]
+		/* Insufficient skb headroom - allocate a new skb */
 
-Signed-off-by: Heiner Kallweit <hkallweit1@gmail.com>
-Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: 5e6e3a92b9a4 ("wireless: mwifiex: initial commit for Marvell mwifiex driver")
+Signed-off-by: Brian Norris <briannorris@chromium.org>
+Acked-by: Ganapathi Bhat <ganapathi.gbhat@nxp.com>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/phy/phy_device.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/net/wireless/marvell/mwifiex/cfg80211.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/phy/phy_device.c b/drivers/net/phy/phy_device.c
-index 302d183beb9e8..9ae121cb6dc11 100644
---- a/drivers/net/phy/phy_device.c
-+++ b/drivers/net/phy/phy_device.c
-@@ -1939,6 +1939,7 @@ int phy_driver_register(struct phy_driver *new_driver, struct module *owner)
- 	new_driver->mdiodrv.driver.probe = phy_probe;
- 	new_driver->mdiodrv.driver.remove = phy_remove;
- 	new_driver->mdiodrv.driver.owner = owner;
-+	new_driver->mdiodrv.driver.probe_type = PROBE_FORCE_SYNCHRONOUS;
+diff --git a/drivers/net/wireless/marvell/mwifiex/cfg80211.c b/drivers/net/wireless/marvell/mwifiex/cfg80211.c
+index 7b74ef71bef1d..af59f622c48e8 100644
+--- a/drivers/net/wireless/marvell/mwifiex/cfg80211.c
++++ b/drivers/net/wireless/marvell/mwifiex/cfg80211.c
+@@ -3025,7 +3025,7 @@ struct wireless_dev *mwifiex_add_virtual_intf(struct wiphy *wiphy,
  
- 	/* The following works around an issue where the PHY driver doesn't bind
- 	 * to the device, resulting in the genphy driver being used instead of
+ 	dev->flags |= IFF_BROADCAST | IFF_MULTICAST;
+ 	dev->watchdog_timeo = MWIFIEX_DEFAULT_WATCHDOG_TIMEOUT;
+-	dev->hard_header_len += MWIFIEX_MIN_DATA_HEADER_LEN;
++	dev->needed_headroom = MWIFIEX_MIN_DATA_HEADER_LEN;
+ 	dev->ethtool_ops = &mwifiex_ethtool_ops;
+ 
+ 	mdev_priv = netdev_priv(dev);
 -- 
 2.20.1
 
