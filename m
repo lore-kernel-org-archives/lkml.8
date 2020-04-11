@@ -2,225 +2,97 @@ Return-Path: <SRS0=xbEg=53=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BBAD5C2BB86
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 01:35:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72DB7C2BB86
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 01:35:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8CC4920787
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 01:35:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4D64C20787
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 01:35:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=aj.id.au header.i=@aj.id.au header.b="fDkiFm5W";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="oMAMVJr9"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ITaIMaoz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726864AbgDKBf1 (ORCPT
+        id S1726878AbgDKBfc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Apr 2020 21:35:27 -0400
-Received: from out2-smtp.messagingengine.com ([66.111.4.26]:41405 "EHLO
-        out2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726641AbgDKBf0 (ORCPT
+        Fri, 10 Apr 2020 21:35:32 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:38992 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726641AbgDKBfb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Apr 2020 21:35:26 -0400
-Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-        by mailout.nyi.internal (Postfix) with ESMTP id E82B65C0101;
-        Fri, 10 Apr 2020 21:35:25 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute3.internal (MEProxy); Fri, 10 Apr 2020 21:35:25 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aj.id.au; h=from
-        :to:cc:subject:date:message-id:mime-version
-        :content-transfer-encoding; s=fm2; bh=lX5SGrlx6dPNxsuJN5NmbTk0p2
-        Mtpif3mvePdQ+RePg=; b=fDkiFm5WzcUikKeixJo5ASn6AULPPD9mIrtmfzYDyl
-        O0+NJ8BUM7srr96K9ZJz5bvnDSb/+PdyaeIqJOfn8FIWOPFzM2QLpdJhCjHhYodg
-        a2JtfnryubnZPlR1TCsCJpWrFPsdyOkb5wySaUiBLZKnAwixen6YqXZmM+SlOHoK
-        ywzhsbYlXA31yZyXLVmp95YH86BGilf9C/eVqxBu+JwqfBqDXQGld+EABGmBrD/l
-        W4tA8S8zOXuZrXzBCwiUQ3O+XY9vGD0uGbhfkTLEsq6ErkPSuX8skYsPfp6dEmnV
-        Cp5Awbio17LbN12670xx4cX2bXeVUbVw+/rNnQg9O8ig==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-transfer-encoding:date:from
-        :message-id:mime-version:subject:to:x-me-proxy:x-me-proxy
-        :x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=lX5SGrlx6dPNxsuJN
-        5NmbTk0p2Mtpif3mvePdQ+RePg=; b=oMAMVJr9Mcrr9Itvy/kOZSdI1t8goQB8R
-        Jy45fP2X8qlCiaWP1Y8B+a86EhnxHfir1+xzLSeRCX5Ggpwk0jdG0zXC8oLD7XNa
-        QEt8fFenp/OJ5rGQpltTuC7dF7qZnp0zvlGJNbnvXIfGp22QizDThL17x/4C79bm
-        dY09Qy8QFr+y7upVHWIjWARtuRIsyl9MRU0cPcAjJFPNt7TUWAyHWqtmYu+pUJzA
-        9XYuduzgyBvG6FuQ63tranvfSHyzRq2ma0XDy8cL5//V+TVQlFWFL9YIEzSQcLLr
-        u/Ns7dfGPiucAXsz6Jp3ZDuPus+9+lp6zh0rex670jU+uppuV0oKQ==
-X-ME-Sender: <xms:0x6RXtpWYErjWA3RCTC3an9Nm4rjOzU3Sxm9SvkzO4nTNhsjglQhjg>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedrvdefgdegfecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpefhvffufffkofgggfestdekredtredttdenucfhrhhomheptehnughrvgifucfl
-    vghffhgvrhihuceorghnughrvgifsegrjhdrihgurdgruheqnecukfhppedugedrvddrud
-    dtkedrudegleenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhr
-    ohhmpegrnhgurhgvfiesrghjrdhiugdrrghu
-X-ME-Proxy: <xmx:0x6RXtDNhKx7xsCIS_nKcZKYtOf6dw1Zowk7geYxJQeYWH5KaIkm6g>
-    <xmx:0x6RXmN2FrZtib9MQzUYRQS7Bx-dzwhW0kOOCfDMjVcb-93QcEzwVg>
-    <xmx:0x6RXsnc-1SLoW684WZiKWpkSQz04TLmi-Gj9MTfj00Z4MEuxjHM-Q>
-    <xmx:3R6RXtNuZJ681W7M1Uo85YksUUkbxhVrfWrb_cCIKvEOj9psWcWhGA>
-Received: from localhost.localdomain (ppp14-2-108-149.adl-apt-pir-bras32.tpg.internode.on.net [14.2.108.149])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 7B4673280059;
-        Fri, 10 Apr 2020 21:35:08 -0400 (EDT)
-From:   Andrew Jeffery <andrew@aj.id.au>
-To:     linux-aspeed@lists.ozlabs.org
-Cc:     joel@jms.id.au, robh+dt@kernel.org, mark.rutland@arm.com,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org,
-        Haiyue Wang <haiyue.wang@linux.intel.com>,
-        Vijay Khemka <vijaykhemka@fb.com>
-Subject: [PATCH] ARM: dts: aspeed: Change KCS nodes to v2 binding
-Date:   Sat, 11 Apr 2020 11:05:14 +0930
-Message-Id: <20200411013514.15950-1-andrew@aj.id.au>
-X-Mailer: git-send-email 2.20.1
+        Fri, 10 Apr 2020 21:35:31 -0400
+Received: by mail-io1-f68.google.com with SMTP id m4so3510936ioq.6;
+        Fri, 10 Apr 2020 18:35:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=UB3JPabx88AV5laKQE5DlYpQCtXofHwvodxXPVmkdrc=;
+        b=ITaIMaozjOJzim7ipFt1UNZt9IDFA28AWrmhaY9W5lInseciNJCqe3azdWfEDET378
+         HFa0LaKRksIw0z/Mqq8GK96PH/ywhjvUqGSoQ3nkeWuglpU4P+/owc2KPb7y39IvXqyL
+         AaT7tUOjbKDnxPjrqK2ZBlmD4O1lEPyHHXC9GEdwBW/nAdTlhsCzCSNQrDuG/fh8Es0v
+         ozN3AYEFMOiFVBErVEaP66qqEz+BnU15RqJCzf2Zdo2uhRFtT/My3xPBhK8UaQNU9BY4
+         9iJdTdJwr2L/XBa3nggTtYo5uUEoPbp/1nQZgixbd1fCwhI2usO/NjPxjhm6W5KfVF/5
+         uKvA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=UB3JPabx88AV5laKQE5DlYpQCtXofHwvodxXPVmkdrc=;
+        b=Rup68ZI9hKPv6jTE2zqGooJ0p8GvE44f6Lw69duBbkbJry2mx6mPdYZ/lyuWPcEKsL
+         aFIk7LJ0wchpKKz+hg+tm23Fl1GLZ6zA7EZMtnhFF7hy15yJLC7PXbTlr5up5UxGxXrl
+         yF0RpLMTe0vqomN4ZqfcHBM4e/0dz0qdYHDDG4RbRDKfP6YNGRxqY0HO0uTmFGX/TZEV
+         rJepBmfhbs3wYE+h6tSirCvdQIEnK9Y8UylDE70cIRKsPJYlBZwGupLSN6eO6Tg7KHxZ
+         QOrlObcz2rL5U3rioi90HCfQuJoilA4DYyrl4jglW0PR1zKztvHEdUURfytElatHYZa2
+         9HeA==
+X-Gm-Message-State: AGi0PuaQCFsL7eUIoSaPwaP2Tcu4/qIh/4XU0zWBz2TjeyGTw/LJdkNE
+        PYPF2dlNxVGzQqtKfP3LEQgm5oex3Yr7oAayFao=
+X-Google-Smtp-Source: APiQypJDFqEkgeLLITQpEj6qAfHuTYAk21iNMDZjClSmNuBFBLMrfAxdBZuLavvWdDTu62qHk6nGdpTsw9eMGBiYr+s=
+X-Received: by 2002:a5d:9281:: with SMTP id s1mr2794735iom.197.1586568929544;
+ Fri, 10 Apr 2020 18:35:29 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20200324144324.21178-1-aford173@gmail.com> <20200324144324.21178-2-aford173@gmail.com>
+ <CAOMZO5AnsYi9xM392NofOyuzCmHe6Pry=C9GHWR3JmgEkVJ5Gg@mail.gmail.com>
+In-Reply-To: <CAOMZO5AnsYi9xM392NofOyuzCmHe6Pry=C9GHWR3JmgEkVJ5Gg@mail.gmail.com>
+From:   Adam Ford <aford173@gmail.com>
+Date:   Fri, 10 Apr 2020 20:35:18 -0500
+Message-ID: <CAHCN7x+ykXKu-sSCywijbkkYpiSY30Hc2Qo-PFwr0mtGB0Gfdw@mail.gmail.com>
+Subject: Re: [PATCH 2/2] arm64: dts: imx: Add Beacon i.MX8m-Mini development kit
+To:     Fabio Estevam <festevam@gmail.com>
+Cc:     "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        Adam Ford-BE <aford@beaconembedded.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fixes the following warnings for both g5 and g6 SoCs:
+On Thu, Mar 26, 2020 at 8:19 AM Fabio Estevam <festevam@gmail.com> wrote:
+>
+> On Tue, Mar 24, 2020 at 11:43 AM Adam Ford <aford173@gmail.com> wrote:
+> >
+> > Beacon Embeddedworks is launching a development kit based on the
+> > i.MX8M Mini SoC.  The kit consists of a System on Module (SOM)
+> > + baseboard.  The SOM has the SoC, eMMC, and Ethernet. The baseboard
+> > has an wm8962 audio CODEC, a single USB OTG, and three USB host ports.
+> >
+> > Signed-off-by: Adam Ford <aford173@gmail.com>
+>
+> Reviewed-by: Fabio Estevam <festevam@gmail.com>
 
-    arch/arm/boot/dts/aspeed-g5.dtsi:376.19-381.8: Warning (unit_address_vs_reg): /ahb/apb/lpc@1e789000/lpc-bmc@0/kcs1@0: node has a unit name, but no reg property
-    arch/arm/boot/dts/aspeed-g5.dtsi:382.19-387.8: Warning (unit_address_vs_reg): /ahb/apb/lpc@1e789000/lpc-bmc@0/kcs2@0: node has a unit name, but no reg property
-    arch/arm/boot/dts/aspeed-g5.dtsi:388.19-393.8: Warning (unit_address_vs_reg): /ahb/apb/lpc@1e789000/lpc-bmc@0/kcs3@0: node has a unit name, but no reg property
-    arch/arm/boot/dts/aspeed-g5.dtsi:405.19-410.8: Warning (unit_address_vs_reg): /ahb/apb/lpc@1e789000/lpc-host@80/kcs4@0: node has a unit name, but no reg property
-    arch/arm/boot/dts/aspeed-g5.dtsi:376.19-381.8: Warning (unique_unit_address): /ahb/apb/lpc@1e789000/lpc-bmc@0/kcs1@0: duplicate unit-address (also used in node /ahb/apb/lpc@1e789000/lpc-bmc@0/kcs2@0)
-    arch/arm/boot/dts/aspeed-g5.dtsi:376.19-381.8: Warning (unique_unit_address): /ahb/apb/lpc@1e789000/lpc-bmc@0/kcs1@0: duplicate unit-address (also used in node /ahb/apb/lpc@1e789000/lpc-bmc@0/kcs3@0)
-    arch/arm/boot/dts/aspeed-g5.dtsi:382.19-387.8: Warning (unique_unit_address): /ahb/apb/lpc@1e789000/lpc-bmc@0/kcs2@0: duplicate unit-address (also used in node /ahb/apb/lpc@1e789000/lpc-bmc@0/kcs3@0)
-    arch/arm/boot/dts/aspeed-g5.dtsi:405.19-410.8: Warning (unique_unit_address): /ahb/apb/lpc@1e789000/lpc-host@80/kcs4@0: duplicate unit-address (also used in node /ahb/apb/lpc@1e789000/lpc-host@80/lpc-ctrl@0)
+Shawn,
 
-Cc: Haiyue Wang <haiyue.wang@linux.intel.com>
-Cc: Vijay Khemka <vijaykhemka@fb.com>
-Signed-off-by: Andrew Jeffery <andrew@aj.id.au>
----
- .../dts/aspeed-bmc-facebook-tiogapass.dts     |  4 ++--
- arch/arm/boot/dts/aspeed-g5.dtsi              | 24 +++++++++----------
- arch/arm/boot/dts/aspeed-g6.dtsi              | 23 +++++++++---------
- 3 files changed, 26 insertions(+), 25 deletions(-)
+Is there any possibility to get applied to imx-next before RC1 is cut?
 
-diff --git a/arch/arm/boot/dts/aspeed-bmc-facebook-tiogapass.dts b/arch/arm/boot/dts/aspeed-bmc-facebook-tiogapass.dts
-index 6b88c7f26bf7..8b880003a838 100644
---- a/arch/arm/boot/dts/aspeed-bmc-facebook-tiogapass.dts
-+++ b/arch/arm/boot/dts/aspeed-bmc-facebook-tiogapass.dts
-@@ -113,13 +113,13 @@
- &kcs2 {
- 	// BMC KCS channel 2
- 	status = "okay";
--	kcs_addr = <0xca8>;
-+	slave-reg = <0xca8>;
- };
- 
- &kcs3 {
- 	// BMC KCS channel 3
- 	status = "okay";
--	kcs_addr = <0xca2>;
-+	slave-reg = <0xca2>;
- };
- 
- &gpio {
-diff --git a/arch/arm/boot/dts/aspeed-g5.dtsi b/arch/arm/boot/dts/aspeed-g5.dtsi
-index 284face7de2c..de7fd80b022a 100644
---- a/arch/arm/boot/dts/aspeed-g5.dtsi
-+++ b/arch/arm/boot/dts/aspeed-g5.dtsi
-@@ -445,22 +445,22 @@
- 					#size-cells = <1>;
- 					ranges = <0x0 0x0 0x80>;
- 
--					kcs1: kcs1@0 {
--						compatible = "aspeed,ast2500-kcs-bmc";
-+					kcs1: kcs@24 {
-+						compatible = "aspeed,ast2500-kcs-bmc-v2";
-+						reg = <0x24 0x1>, <0x30 0x1>, <0x3c 0x1>;
- 						interrupts = <8>;
--						kcs_chan = <1>;
- 						status = "disabled";
- 					};
--					kcs2: kcs2@0 {
--						compatible = "aspeed,ast2500-kcs-bmc";
-+					kcs2: kcs@28 {
-+						compatible = "aspeed,ast2500-kcs-bmc-v2";
-+						reg = <0x28 0x1>, <0x34 0x1>, <0x40 0x1>;
- 						interrupts = <8>;
--						kcs_chan = <2>;
- 						status = "disabled";
- 					};
--					kcs3: kcs3@0 {
--						compatible = "aspeed,ast2500-kcs-bmc";
-+					kcs3: kcs@2c {
-+						compatible = "aspeed,ast2500-kcs-bmc-v2";
-+						reg = <0x2c 0x1>, <0x38 0x1>, <0x44 0x1>;
- 						interrupts = <8>;
--						kcs_chan = <3>;
- 						status = "disabled";
- 					};
- 				};
-@@ -474,10 +474,10 @@
- 					#size-cells = <1>;
- 					ranges = <0x0 0x80 0x1e0>;
- 
--					kcs4: kcs4@0 {
--						compatible = "aspeed,ast2500-kcs-bmc";
-+					kcs4: kcs@94 {
-+						compatible = "aspeed,ast2500-kcs-bmc-v2";
-+						reg = <0x94 0x1>, <0x98 0x1>, <0x9c 0x1>;
- 						interrupts = <8>;
--						kcs_chan = <4>;
- 						status = "disabled";
- 					};
- 
-diff --git a/arch/arm/boot/dts/aspeed-g6.dtsi b/arch/arm/boot/dts/aspeed-g6.dtsi
-index 1ffc15177b79..f4113275a7f9 100644
---- a/arch/arm/boot/dts/aspeed-g6.dtsi
-+++ b/arch/arm/boot/dts/aspeed-g6.dtsi
-@@ -471,22 +471,23 @@
- 					#size-cells = <1>;
- 					ranges = <0x0 0x0 0x80>;
- 
--					kcs1: kcs1@0 {
--						compatible = "aspeed,ast2600-kcs-bmc";
-+					kcs1: kcs@24 {
-+						compatible = "aspeed,ast2500-kcs-bmc-v2";
-+						reg = <0x24 0x1>, <0x30 0x1>, <0x3c 0x1>;
- 						interrupts = <GIC_SPI 138 IRQ_TYPE_LEVEL_HIGH>;
- 						kcs_chan = <1>;
- 						status = "disabled";
- 					};
--					kcs2: kcs2@0 {
--						compatible = "aspeed,ast2600-kcs-bmc";
-+					kcs2: kcs@28 {
-+						compatible = "aspeed,ast2500-kcs-bmc-v2";
-+						reg = <0x28 0x1>, <0x34 0x1>, <0x40 0x1>;
- 						interrupts = <GIC_SPI 139 IRQ_TYPE_LEVEL_HIGH>;
--						kcs_chan = <2>;
- 						status = "disabled";
- 					};
--					kcs3: kcs3@0 {
--						compatible = "aspeed,ast2600-kcs-bmc";
-+					kcs3: kcs@2c {
-+						compatible = "aspeed,ast2500-kcs-bmc-v2";
-+						reg = <0x2c 0x1>, <0x38 0x1>, <0x44 0x1>;
- 						interrupts = <GIC_SPI 140 IRQ_TYPE_LEVEL_HIGH>;
--						kcs_chan = <3>;
- 						status = "disabled";
- 					};
- 				};
-@@ -500,10 +501,10 @@
- 					#size-cells = <1>;
- 					ranges = <0x0 0x80 0x1e0>;
- 
--					kcs4: kcs4@0 {
--						compatible = "aspeed,ast2600-kcs-bmc";
-+					kcs4: kcs@94 {
-+						compatible = "aspeed,ast2500-kcs-bmc-v2";
-+						reg = <0x94 0x1>, <0x98 0x1>, <0x9c 0x1>;
- 						interrupts = <GIC_SPI 141 IRQ_TYPE_LEVEL_HIGH>;
--						kcs_chan = <4>;
- 						status = "disabled";
- 					};
- 
--- 
-2.20.1
-
+adam
