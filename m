@@ -7,48 +7,50 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8683C2BBC7
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:08:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D733C2BB86
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:09:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 91BFF216FD
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:08:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CFC9F21744
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:09:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586646537;
-	bh=5y2wZYWOsl30j+xgNlcBgFNbMETkpFJWAWVNbvWfAds=;
+	s=default; t=1586646542;
+	bh=0XvcfMjmExThNxJ5Lf2Fhb+tyCIfM3N6i5bSIHAsSqI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=sWlsmNIl9/nqdS3SPqDd4NYylxNi6/2EC7NhC6ARRSv0ozhKmUwHIHp5i9X5Pmzb1
-	 MUP8zbDHxCLMGvAPlsL74RzrCOXXzg50+DbrZw54BIVTVuyx5RLT5i/ZPxzmd4xZSC
-	 l74BozOJWRgud6RYfjz76ZEuz+Jr8c+/Ntivp6Zc=
+	b=lqQG0YV9EmbyOgmHlIjvn/WjDYm+v0miSISSDNF0ixFp8NrT6J8s7GzSioCUddVTm
+	 0HpU51/s+o8QlgD56b8j/a0Kiptmm3OgncvPotSFwhyIh8v0iPVrZFxqxe3Cd84L8j
+	 eaZrZBkwkJoacKtDrELR3rBgBcqB3MpDMCXpMz4A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729026AbgDKXI4 (ORCPT
+        id S1729081AbgDKXJB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 19:08:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46060 "EHLO mail.kernel.org"
+        Sat, 11 Apr 2020 19:09:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46406 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729015AbgDKXIv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 19:08:51 -0400
+        id S1729032AbgDKXI5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Apr 2020 19:08:57 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 35970216FD;
-        Sat, 11 Apr 2020 23:08:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B54D421924;
+        Sat, 11 Apr 2020 23:08:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586646531;
-        bh=5y2wZYWOsl30j+xgNlcBgFNbMETkpFJWAWVNbvWfAds=;
+        s=default; t=1586646537;
+        bh=0XvcfMjmExThNxJ5Lf2Fhb+tyCIfM3N6i5bSIHAsSqI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=IbIUIBJ4ecy6lY7x+Vs0rGkXEQDjClBGU9DrdkrKxUza3pu8Z/lGCwvoxlMaaPRkQ
-         FzhgbYrT+7L3HuqXtKk6atb9HmlpY3HwcWiv2xfQThIcjnBHF/umw19qkUnJXb2Vmh
-         TtH3XMdDO+x1O0dh1KLasr97Vosa38ucHWDKUYHA=
+        b=poTa/Elw+BHB2yM17+HFmu+kmL/32fCa3UvZ/DKpeKnFxPqupBVhUQXojoErzLDFK
+         hvhhPGhyai88kvIsEzGTX7lD7hawkrKhYRqNNENX45fCizV2nSiHkzfnQQkHldlUtA
+         3lWMbTiIrxCufFzYQBrL3T5Mf8Co8I6W+oeDf0Bg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jordan Crouse <jcrouse@codeaurora.org>,
-        Eric Anholt <eric@anholt.net>,
-        Rob Clark <robdclark@chromium.org>,
-        Sasha Levin <sashal@kernel.org>, linux-arm-msm@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 5.5 085/121] drm/msm/a5xx: Always set an OPP supported hardware value
-Date:   Sat, 11 Apr 2020 19:06:30 -0400
-Message-Id: <20200411230706.23855-85-sashal@kernel.org>
+Cc:     Raveendran Somu <raveendran.somu@cypress.com>,
+        Chi-hsien Lin <chi-hsien.lin@cypress.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-wireless@vger.kernel.org,
+        brcm80211-dev-list.pdl@broadcom.com,
+        brcm80211-dev-list@cypress.com, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.5 090/121] brcmfmac: Fix double freeing in the fmac usb data path
+Date:   Sat, 11 Apr 2020 19:06:35 -0400
+Message-Id: <20200411230706.23855-90-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200411230706.23855-1-sashal@kernel.org>
 References: <20200411230706.23855-1-sashal@kernel.org>
@@ -61,69 +63,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jordan Crouse <jcrouse@codeaurora.org>
+From: Raveendran Somu <raveendran.somu@cypress.com>
 
-[ Upstream commit 0478b4fc5f37f4d494245fe7bcce3f531cf380e9 ]
+[ Upstream commit 78179869dc3f5c0059bbf5d931a2717f1ad97ecd ]
 
-If the opp table specifies opp-supported-hw as a property but the driver
-has not set a supported hardware value the OPP subsystem will reject
-all the table entries.
+When the brcmf_fws_process_skb() fails to get hanger slot for
+queuing the skb, it tries to free the skb.
+But the caller brcmf_netdev_start_xmit() of that funciton frees
+the packet on error return value.
+This causes the double freeing and which caused the kernel crash.
 
-Set a "default" value that will match the default table entries but not
-conflict with any possible real bin values. Also fix a small memory leak
-and free the buffer allocated by nvmem_cell_read().
-
-Signed-off-by: Jordan Crouse <jcrouse@codeaurora.org>
-Reviewed-by: Eric Anholt <eric@anholt.net>
-Signed-off-by: Rob Clark <robdclark@chromium.org>
+Signed-off-by: Raveendran Somu <raveendran.somu@cypress.com>
+Signed-off-by: Chi-hsien Lin <chi-hsien.lin@cypress.com>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Link: https://lore.kernel.org/r/1585124429-97371-3-git-send-email-chi-hsien.lin@cypress.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/msm/adreno/a5xx_gpu.c | 27 ++++++++++++++++++++-------
- 1 file changed, 20 insertions(+), 7 deletions(-)
+ drivers/net/wireless/broadcom/brcm80211/brcmfmac/fwsignal.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/drivers/gpu/drm/msm/adreno/a5xx_gpu.c b/drivers/gpu/drm/msm/adreno/a5xx_gpu.c
-index 7d9e63e20dedd..724024a2243a4 100644
---- a/drivers/gpu/drm/msm/adreno/a5xx_gpu.c
-+++ b/drivers/gpu/drm/msm/adreno/a5xx_gpu.c
-@@ -1446,18 +1446,31 @@ static const struct adreno_gpu_funcs funcs = {
- static void check_speed_bin(struct device *dev)
- {
- 	struct nvmem_cell *cell;
--	u32 bin, val;
-+	u32 val;
-+
-+	/*
-+	 * If the OPP table specifies a opp-supported-hw property then we have
-+	 * to set something with dev_pm_opp_set_supported_hw() or the table
-+	 * doesn't get populated so pick an arbitrary value that should
-+	 * ensure the default frequencies are selected but not conflict with any
-+	 * actual bins
-+	 */
-+	val = 0x80;
- 
- 	cell = nvmem_cell_get(dev, "speed_bin");
- 
--	/* If a nvmem cell isn't defined, nothing to do */
--	if (IS_ERR(cell))
--		return;
-+	if (!IS_ERR(cell)) {
-+		void *buf = nvmem_cell_read(cell, NULL);
-+
-+		if (!IS_ERR(buf)) {
-+			u8 bin = *((u8 *) buf);
- 
--	bin = *((u32 *) nvmem_cell_read(cell, NULL));
--	nvmem_cell_put(cell);
-+			val = (1 << bin);
-+			kfree(buf);
-+		}
- 
--	val = (1 << bin);
-+		nvmem_cell_put(cell);
-+	}
- 
- 	dev_pm_opp_set_supported_hw(dev, &val, 1);
- }
+diff --git a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/fwsignal.c b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/fwsignal.c
+index 2bd892df83cc5..80cc45c9aa4a1 100644
+--- a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/fwsignal.c
++++ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/fwsignal.c
+@@ -2145,8 +2145,7 @@ int brcmf_fws_process_skb(struct brcmf_if *ifp, struct sk_buff *skb)
+ 		brcmf_fws_enq(fws, BRCMF_FWS_SKBSTATE_DELAYED, fifo, skb);
+ 		brcmf_fws_schedule_deq(fws);
+ 	} else {
+-		bphy_err(drvr, "drop skb: no hanger slot\n");
+-		brcmf_txfinalize(ifp, skb, false);
++		bphy_err(drvr, "no hanger slot available\n");
+ 		rc = -ENOMEM;
+ 	}
+ 	brcmf_fws_unlock(fws);
 -- 
 2.20.1
 
