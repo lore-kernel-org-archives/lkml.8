@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 350FCC2BBFD
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:49:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6412DC2BB86
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:49:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0E77D20644
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:49:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3F64C20644
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:49:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586648963;
-	bh=UtqJJfKM7fpX/qy2Rl6r2Z1tPkK90rlDbrkhz5ErUJI=;
+	s=default; t=1586648970;
+	bh=MMe46zjI134depEk5VBUTl2isnIxc2CPpdG4qs8lO78=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gGtdTBTW4MPkvvevA6aMOC1XbSQ2Tif5w4YI/u0sJbjJn6dXheiFKfuQef0Od4yHS
-	 vPLwwL5WPhItwbJL+0Sb9Y7ndub6xeAygXNQpDeqwaYrefzwhbBFwGqbtazMq3hIhm
-	 m4LQ5qxWDG3YHzVmQkjChNNTSbThHGhCVbL+AHUo=
+	b=N7C5M6MavVFvCTfRrcXFL3mqNOYAU8Br/wYFO0Wz/cdbG/7KlNS3iX1PgkVKoM8QB
+	 wRJBw0cTNlo4zquZWtDKIsmWvPxk8aM8Z4jjLwolSUT7izswud9ltztUdtG0VIqMok
+	 QFeCoIziBzNpV3cCMQhBLNeiF+oDd3q/9SyKLaCQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727164AbgDKXE1 (ORCPT
+        id S1729877AbgDKXt2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 19:04:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37640 "EHLO mail.kernel.org"
+        Sat, 11 Apr 2020 19:49:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37792 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727072AbgDKXES (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 19:04:18 -0400
+        id S1727138AbgDKXEX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Apr 2020 19:04:23 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2BBF621775;
-        Sat, 11 Apr 2020 23:04:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2556421841;
+        Sat, 11 Apr 2020 23:04:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586646258;
-        bh=UtqJJfKM7fpX/qy2Rl6r2Z1tPkK90rlDbrkhz5ErUJI=;
+        s=default; t=1586646264;
+        bh=MMe46zjI134depEk5VBUTl2isnIxc2CPpdG4qs8lO78=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0+xppoDsk8MtAtc6b2bvzo6nOA4guiCjV5xGwhnNyDahVAgq/JpCK1Xu6G3nRvUgK
-         QStkj6t1NXu8L1JBoWTzLjmjaRnuRavMiTdDYvUv2yMRazeSz3/4ctv5fnWg7xxOBR
-         mvpSmoAdItmj6tkyEJ1qiV9jSqq6bv0enDRHEmbU=
+        b=b7i+SblUEPLKCtzBOTmf+FYXi+EsuJsz8J2gMYEvTJOKEzqpP9V1DFZSdSraa48zd
+         9UiMuyfznIpC8Z+J7PZvqTqcJt1XMBXswboJuRimxR9V6DO31lCjyhOqfnXTCw6ffL
+         WEa1a910NoKE+0PJjaKEHAZgjU1VuRusL8nsmLqI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Bodong Wang <bodong@mellanox.com>,
-        Parav Pandit <parav@mellanox.com>,
-        Saeed Mahameed <saeedm@mellanox.com>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
-        linux-rdma@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.6 024/149] net/mlx5: E-Switch, Hold mutex when querying drop counter in legacy mode
-Date:   Sat, 11 Apr 2020 19:01:41 -0400
-Message-Id: <20200411230347.22371-24-sashal@kernel.org>
+Cc:     Brian Norris <briannorris@chromium.org>,
+        Ganapathi Bhat <ganapathi.gbhat@nxp.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.6 029/149] mwifiex: set needed_headroom, not hard_header_len
+Date:   Sat, 11 Apr 2020 19:01:46 -0400
+Message-Id: <20200411230347.22371-29-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200411230347.22371-1-sashal@kernel.org>
 References: <20200411230347.22371-1-sashal@kernel.org>
@@ -61,76 +61,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bodong Wang <bodong@mellanox.com>
+From: Brian Norris <briannorris@chromium.org>
 
-[ Upstream commit 14c844cbf3503076de6e2e48d575216f1600b19f ]
+[ Upstream commit 9454f7a895b822dd8fb4588fc55fda7c96728869 ]
 
-Consider scenario below, CPU 1 is at risk to query already destroyed
-drop counters. Need to apply the same state mutex when disabling vport.
+hard_header_len provides limitations for things like AF_PACKET, such
+that we don't allow transmitting packets smaller than this.
 
-+-------------------------------+-------------------------------------+
-| CPU 0                         | CPU 1                               |
-+-------------------------------+-------------------------------------+
-| mlx5_device_disable_sriov     | mlx5e_get_vf_stats                  |
-| mlx5_eswitch_disable          | mlx5_eswitch_get_vport_stats        |
-| esw_disable_vport             | mlx5_eswitch_query_vport_drop_stats |
-| mlx5_fc_destroy(drop_counter) | mlx5_fc_query(drop_counter)         |
-+-------------------------------+-------------------------------------+
+needed_headroom provides a suggested minimum headroom for SKBs, so that
+we can trivally add our headers to the front.
 
-Fixes: b8a0dbe3a90b ("net/mlx5e: E-switch, Add steering drop counters")
-Signed-off-by: Bodong Wang <bodong@mellanox.com>
-Reviewed-by: Parav Pandit <parav@mellanox.com>
-Signed-off-by: Saeed Mahameed <saeedm@mellanox.com>
+The latter is the correct field to use in this case, while the former
+mostly just prevents sending small AF_PACKET frames.
+
+In any case, mwifiex already does its own bounce buffering [1] if we
+don't have enough headroom, so hints (not hard limits) are all that are
+needed.
+
+This is the essentially the same bug (and fix) that brcmfmac had, fixed
+in commit cb39288fd6bb ("brcmfmac: use ndev->needed_headroom to reserve
+additional header space").
+
+[1] mwifiex_hard_start_xmit():
+	if (skb_headroom(skb) < MWIFIEX_MIN_DATA_HEADER_LEN) {
+	[...]
+		/* Insufficient skb headroom - allocate a new skb */
+
+Fixes: 5e6e3a92b9a4 ("wireless: mwifiex: initial commit for Marvell mwifiex driver")
+Signed-off-by: Brian Norris <briannorris@chromium.org>
+Acked-by: Ganapathi Bhat <ganapathi.gbhat@nxp.com>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/mellanox/mlx5/core/eswitch.c | 14 ++++++++++----
- 1 file changed, 10 insertions(+), 4 deletions(-)
+ drivers/net/wireless/marvell/mwifiex/cfg80211.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/mellanox/mlx5/core/eswitch.c b/drivers/net/ethernet/mellanox/mlx5/core/eswitch.c
-index e49acd0c5da5c..b9451f25f22cf 100644
---- a/drivers/net/ethernet/mellanox/mlx5/core/eswitch.c
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/eswitch.c
-@@ -2600,9 +2600,13 @@ static int mlx5_eswitch_query_vport_drop_stats(struct mlx5_core_dev *dev,
- 	u64 bytes = 0;
- 	int err = 0;
+diff --git a/drivers/net/wireless/marvell/mwifiex/cfg80211.c b/drivers/net/wireless/marvell/mwifiex/cfg80211.c
+index d896841685008..e63bc15c6e305 100644
+--- a/drivers/net/wireless/marvell/mwifiex/cfg80211.c
++++ b/drivers/net/wireless/marvell/mwifiex/cfg80211.c
+@@ -3052,7 +3052,7 @@ struct wireless_dev *mwifiex_add_virtual_intf(struct wiphy *wiphy,
  
--	if (!vport->enabled || esw->mode != MLX5_ESWITCH_LEGACY)
-+	if (esw->mode != MLX5_ESWITCH_LEGACY)
- 		return 0;
+ 	dev->flags |= IFF_BROADCAST | IFF_MULTICAST;
+ 	dev->watchdog_timeo = MWIFIEX_DEFAULT_WATCHDOG_TIMEOUT;
+-	dev->hard_header_len += MWIFIEX_MIN_DATA_HEADER_LEN;
++	dev->needed_headroom = MWIFIEX_MIN_DATA_HEADER_LEN;
+ 	dev->ethtool_ops = &mwifiex_ethtool_ops;
  
-+	mutex_lock(&esw->state_lock);
-+	if (!vport->enabled)
-+		goto unlock;
-+
- 	if (vport->egress.legacy.drop_counter)
- 		mlx5_fc_query(dev, vport->egress.legacy.drop_counter,
- 			      &stats->rx_dropped, &bytes);
-@@ -2613,20 +2617,22 @@ static int mlx5_eswitch_query_vport_drop_stats(struct mlx5_core_dev *dev,
- 
- 	if (!MLX5_CAP_GEN(dev, receive_discard_vport_down) &&
- 	    !MLX5_CAP_GEN(dev, transmit_discard_vport_down))
--		return 0;
-+		goto unlock;
- 
- 	err = mlx5_query_vport_down_stats(dev, vport->vport, 1,
- 					  &rx_discard_vport_down,
- 					  &tx_discard_vport_down);
- 	if (err)
--		return err;
-+		goto unlock;
- 
- 	if (MLX5_CAP_GEN(dev, receive_discard_vport_down))
- 		stats->rx_dropped += rx_discard_vport_down;
- 	if (MLX5_CAP_GEN(dev, transmit_discard_vport_down))
- 		stats->tx_dropped += tx_discard_vport_down;
- 
--	return 0;
-+unlock:
-+	mutex_unlock(&esw->state_lock);
-+	return err;
- }
- 
- int mlx5_eswitch_get_vport_stats(struct mlx5_eswitch *esw,
+ 	mdev_priv = netdev_priv(dev);
 -- 
 2.20.1
 
