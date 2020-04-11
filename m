@@ -4,52 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BC70C2BB85
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:18:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE81AC2BB85
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:18:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E763620692
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:18:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 93E2620692
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:18:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586607483;
-	bh=sqva4+Ggkq97LE42151fQKh3k+UYPryCd/RE+EzPuJM=;
+	s=default; t=1586607486;
+	bh=ac9LB+mggSg1L55NuykFTX4QFSdgB8uLvduZC4UzgWg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=l29nyugFsdiMkN/onWIv4vhRfzHh/Z2W64Lj/wdtkeD2AiEIjWOZmROsCFXKCANzs
-	 mV/DS7a95pYzP4o/FHlfhaYeDVYh1ecwsrjfuDSA3o+Ozl4rKVfG+r0tkNiVK2oX02
-	 Apr6OZWQmvp8oZ2xJcprSXABSZhF5HD/z08Wb3nQ=
+	b=AX87ucz1qn4wMB6eNexbx4bugS74wJr9NBo0HNaNa5XGmV/KWMqoFmaaB4226OrBb
+	 wCsONKulpnQX7VqnJiWRXB7b0NdzrmMR20cXo5U8hLNt6l3roS1KFfXPJCx+QehW2m
+	 YrFf8Z6wrleUpl43IyuT4oJojJPL+PPPSnnHUDfE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727851AbgDKMSA (ORCPT
+        id S1727882AbgDKMSE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 08:18:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52768 "EHLO mail.kernel.org"
+        Sat, 11 Apr 2020 08:18:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52800 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728514AbgDKMR4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 08:17:56 -0400
+        id S1728517AbgDKMR7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Apr 2020 08:17:59 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9EBB220673;
-        Sat, 11 Apr 2020 12:17:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0E73020692;
+        Sat, 11 Apr 2020 12:17:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586607477;
-        bh=sqva4+Ggkq97LE42151fQKh3k+UYPryCd/RE+EzPuJM=;
+        s=default; t=1586607479;
+        bh=ac9LB+mggSg1L55NuykFTX4QFSdgB8uLvduZC4UzgWg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dHDkDHi1c045JTTAR3RTab3WytgMfBCxqqVifF1fUz8opuFRkQWz/gB7rUihYQqx4
-         OYuRx8x4dwbKLHy2COE6f29YyUJym2mzd03VwzEWWE84yJ8vCU6ZHx7ot/2L5Yqg++
-         pW5mMY6Yf1ZxkE8tmOM5vg7CLzZBUgIo2Iuxtxww=
+        b=swZ9QyPQYqMqLj5huZaE1vO8ItJz+Dkuv6blh7qjOPfCy5TwFOmFPplwPefhrh9uO
+         UEfMSKng59N6CMzzWs0n5AfROgVUGf+ZFBdMhqsCzhf4+U1/tariHxn1uG3AhbVPcx
+         VlpA283SeHHH5IuTdJ3wwoF6/RdVz0JJsAX9MH5o=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chuanhong Guo <gch981213@gmail.com>,
-        Vivien Didelot <vivien.didelot@gmail.com>,
+        stable@vger.kernel.org, Oleksij Rempel <o.rempel@pengutronix.de>,
+        Andrew Lunn <andrew@lunn.ch>,
         Florian Fainelli <f.fainelli@gmail.com>,
-        =?UTF-8?q?Ren=C3=A9=20van=20Dorst?= <opensource@vdorst.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.4 06/41] net: dsa: mt7530: fix null pointer dereferencing in port5 setup
-Date:   Sat, 11 Apr 2020 14:09:15 +0200
-Message-Id: <20200411115504.545233797@linuxfoundation.org>
+Subject: [PATCH 5.4 07/41] net: phy: micrel: kszphy_resume(): add delay after genphy_resume() before accessing PHY registers
+Date:   Sat, 11 Apr 2020 14:09:16 +0200
+Message-Id: <20200411115504.613332853@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200411115504.124035693@linuxfoundation.org>
 References: <20200411115504.124035693@linuxfoundation.org>
@@ -62,41 +61,63 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chuanhong Guo <gch981213@gmail.com>
+From: Oleksij Rempel <o.rempel@pengutronix.de>
 
-[ Upstream commit 0452800f6db4ed0a42ffb15867c0acfd68829f6a ]
+[ Upstream commit 6110dff776f7fa65c35850ef65b41d3b39e2fac2 ]
 
-The 2nd gmac of mediatek soc ethernet may not be connected to a PHY
-and a phy-handle isn't always available.
-Unfortunately, mt7530 dsa driver assumes that the 2nd gmac is always
-connected to switch port 5 and setup mt7530 according to phy address
-of 2nd gmac node, causing null pointer dereferencing when phy-handle
-isn't defined in dts.
-This commit fix this setup code by checking return value of
-of_parse_phandle before using it.
+After the power-down bit is cleared, the chip internally triggers a
+global reset. According to the KSZ9031 documentation, we have to wait at
+least 1ms for the reset to finish.
 
-Fixes: 38f790a80560 ("net: dsa: mt7530: Add support for port 5")
-Signed-off-by: Chuanhong Guo <gch981213@gmail.com>
-Reviewed-by: Vivien Didelot <vivien.didelot@gmail.com>
+If the chip is accessed during reset, read will return 0xffff, while
+write will be ignored. Depending on the system performance and MDIO bus
+speed, we may or may not run in to this issue.
+
+This bug was discovered on an iMX6QP system with KSZ9031 PHY and
+attached PHY interrupt line. If IRQ was used, the link status update was
+lost. In polling mode, the link status update was always correct.
+
+The investigation showed, that during a read-modify-write access, the
+read returned 0xffff (while the chip was still in reset) and
+corresponding write hit the chip _after_ reset and triggered (due to the
+0xffff) another reset in an undocumented bit (register 0x1f, bit 1),
+resulting in the next write being lost due to the new reset cycle.
+
+This patch fixes the issue by adding a 1...2 ms sleep after the
+genphy_resume().
+
+Fixes: 836384d2501d ("net: phy: micrel: Add specific suspend")
+Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
+Reviewed-by: Andrew Lunn <andrew@lunn.ch>
 Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
-Tested-by: René van Dorst <opensource@vdorst.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/dsa/mt7530.c |    3 +++
- 1 file changed, 3 insertions(+)
+ drivers/net/phy/micrel.c |    7 +++++++
+ 1 file changed, 7 insertions(+)
 
---- a/drivers/net/dsa/mt7530.c
-+++ b/drivers/net/dsa/mt7530.c
-@@ -1353,6 +1353,9 @@ mt7530_setup(struct dsa_switch *ds)
- 				continue;
+--- a/drivers/net/phy/micrel.c
++++ b/drivers/net/phy/micrel.c
+@@ -25,6 +25,7 @@
+ #include <linux/micrel_phy.h>
+ #include <linux/of.h>
+ #include <linux/clk.h>
++#include <linux/delay.h>
  
- 			phy_node = of_parse_phandle(mac_np, "phy-handle", 0);
-+			if (!phy_node)
-+				continue;
+ /* Operation Mode Strap Override */
+ #define MII_KSZPHY_OMSO				0x16
+@@ -902,6 +903,12 @@ static int kszphy_resume(struct phy_devi
+ 
+ 	genphy_resume(phydev);
+ 
++	/* After switching from power-down to normal mode, an internal global
++	 * reset is automatically generated. Wait a minimum of 1 ms before
++	 * read/write access to the PHY registers.
++	 */
++	usleep_range(1000, 2000);
 +
- 			if (phy_node->parent == priv->dev->of_node->parent) {
- 				interface = of_get_phy_mode(mac_np);
- 				id = of_mdio_parse_addr(ds->dev, phy_node);
+ 	ret = kszphy_config_reset(phydev);
+ 	if (ret)
+ 		return ret;
 
 
