@@ -2,146 +2,103 @@ Return-Path: <SRS0=xbEg=53=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CBB2C2BA19
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:28:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D19EC2BA19
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:28:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 576D420787
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:28:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4EF5620787
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:28:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586647702;
-	bh=NIa4Pc3mor/nTpJVhUxJObP/1o6lJ0kvr9Hw5UNiyhY=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dX6Uq0WE1MZUTpbRKt6JLuxTdEc1qLWivLUHkvC16dEk12/grG4kIZLgc6qfTtago
-	 X9GEvGpDmj6DnLoCrhCVsnsR1B1lBCMk6+rA0j4geCsLwoX7TP/G9mTwkFymyVpx0/
-	 hEjLP8/TkOa0km9eB5QVIXFIIAJYjmd8Qh1ahsd8=
+	s=default; t=1586647713;
+	bh=VJVMs1ty4aklYcknxXSyG4+HJQ94axF1UzhRTrFSIW4=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=ly9aCOlDz65MxCOxvPr+PlckORcvCqPpFN8dWzD/9EckR8EzeMbdqGdqljwKY5q32
+	 udrJIvmL2uGrQcln3U0X6ZOZjIYzrROa4zTmgVoabh0AvMEBT4Cr+8+u2bkCF7hvLy
+	 09SwvCOv+fBpDXrgQSJIsHfMYfFOKjwntZK18sbI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730381AbgDKX2U (ORCPT
+        id S1728749AbgDKX2b (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 19:28:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51040 "EHLO mail.kernel.org"
+        Sat, 11 Apr 2020 19:28:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40494 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729424AbgDKXLY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 19:11:24 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1728821AbgDKX21 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Apr 2020 19:28:27 -0400
+Received: from kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com (unknown [163.114.132.1])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F41652166E;
-        Sat, 11 Apr 2020 23:11:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9276720787;
+        Sat, 11 Apr 2020 23:28:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586646684;
-        bh=NIa4Pc3mor/nTpJVhUxJObP/1o6lJ0kvr9Hw5UNiyhY=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lF9iwf2BYt7AMNm4E2NEdgHTDBMMqJTygniEDr6Su8rTpw1a7fryMQOnkrYI6kAAo
-         xF2H+Y9zBmSQVTJ6HpFxd407Fw1TE51RxOrmlw7UtHXbNkF3VRbm+zjyse/UDwmAT1
-         fxYK4AfGsnd6DXMwzTWIWloO+15pGl/LFPcjlQJ4=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Xin Long <lucien.xin@gmail.com>,
-        Steffen Klassert <steffen.klassert@secunet.com>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 080/108] xfrm: add prep for esp beet mode offload
-Date:   Sat, 11 Apr 2020 19:09:15 -0400
-Message-Id: <20200411230943.24951-80-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200411230943.24951-1-sashal@kernel.org>
-References: <20200411230943.24951-1-sashal@kernel.org>
+        s=default; t=1586647706;
+        bh=VJVMs1ty4aklYcknxXSyG4+HJQ94axF1UzhRTrFSIW4=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=BNMeb6gh6oZRFmHIvDKwnglHNapVVyGPi3dcxR0Swnshxs6nODmwJMN02UuRHnVZL
+         EJtXrd+uaB/rM7humfEMsBIefc4aJGdzX6/BdcdUNLsWJqxWWdn2T0IK/Ke379Xlp4
+         7xouNBvYkutFYjAFMx/MbiTswjpVdlyUlo2Z+e2U=
+Date:   Sat, 11 Apr 2020 16:28:24 -0700
+From:   Jakub Kicinski <kuba@kernel.org>
+To:     Clemens Gruber <clemens.gruber@pqgruber.com>
+Cc:     netdev@vger.kernel.org, Russell King <linux@armlinux.org.uk>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] net: phy: marvell: Fix pause frame negotiation
+Message-ID: <20200411162824.59791b84@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+In-Reply-To: <20200411165125.1091-1-clemens.gruber@pqgruber.com>
+References: <20200411165125.1091-1-clemens.gruber@pqgruber.com>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Xin Long <lucien.xin@gmail.com>
+On Sat, 11 Apr 2020 18:51:25 +0200 Clemens Gruber wrote:
+> The negotiation of flow control / pause frame modes was broken since
+> commit fcf1f59afc67 ("net: phy: marvell: rearrange to use
+> genphy_read_lpa()") moved the setting of phydev->duplex below the
+> phy_resolve_aneg_pause call. Due to a check of DUPLEX_FULL in that
+> function, phydev->pause was no longer set.
+> 
+> Fix it by moving the parsing of the status variable before the blocks
+> dealing with the pause frames.
+> 
+> As the Marvell 88E1510 datasheet does not specify the timing between the
+> link status and the "Speed and Duplex Resolved" bit, we have to force
+> the link down as long as the resolved bit is not set, to avoid reporting
+> link up before we even have valid Speed/Duplex.
+> 
+> Tested with a Marvell 88E1510 (RGMII to Copper/1000Base-T)
+> 
+> Fixes: fcf1f59afc67 ("net: phy: marvell: rearrange to use genphy_read_lpa()")
+> Signed-off-by: Clemens Gruber <clemens.gruber@pqgruber.com>
+> ---
+> Changes since v1:
+> - Force link to 0 if resolved bit is not set as suggested by Russell King
+> 
+>  drivers/net/phy/marvell.c | 46 ++++++++++++++++++++-------------------
+>  1 file changed, 24 insertions(+), 22 deletions(-)
+> 
+> diff --git a/drivers/net/phy/marvell.c b/drivers/net/phy/marvell.c
+> index 9a8badafea8a..561df5e33f65 100644
+> --- a/drivers/net/phy/marvell.c
+> +++ b/drivers/net/phy/marvell.c
+> @@ -1278,6 +1278,30 @@ static int marvell_read_status_page_an(struct phy_device *phydev,
+>  	int lpa;
+>  	int err;
+>  
+> +	if (!(status & MII_M1011_PHY_STATUS_RESOLVED)) {
+> +		phydev->link = 0;
+> +		return 0;
+> +	}
 
-[ Upstream commit 308491755f36c461ee67290af159fdba6be0169d ]
-
-Like __xfrm_transport/mode_tunnel_prep(), this patch is to add
-__xfrm_mode_beet_prep() to fix the transport_header for gso
-segments, and reset skb mac_len, and pull skb data to the
-proto inside esp.
-
-This patch also fixes a panic, reported by ltp:
-
-  # modprobe esp4_offload
-  # runltp -f net_stress.ipsec_tcp
-
-  [ 2452.780511] kernel BUG at net/core/skbuff.c:109!
-  [ 2452.799851] Call Trace:
-  [ 2452.800298]  <IRQ>
-  [ 2452.800705]  skb_push.cold.98+0x14/0x20
-  [ 2452.801396]  esp_xmit+0x17b/0x270 [esp4_offload]
-  [ 2452.802799]  validate_xmit_xfrm+0x22f/0x2e0
-  [ 2452.804285]  __dev_queue_xmit+0x589/0x910
-  [ 2452.806264]  __neigh_update+0x3d7/0xa50
-  [ 2452.806958]  arp_process+0x259/0x810
-  [ 2452.807589]  arp_rcv+0x18a/0x1c
-
-It was caused by the skb going to esp_xmit with a wrong transport
-header.
-
-Signed-off-by: Xin Long <lucien.xin@gmail.com>
-Signed-off-by: Steffen Klassert <steffen.klassert@secunet.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- net/xfrm/xfrm_device.c | 28 +++++++++++++++++++++++++++-
- 1 file changed, 27 insertions(+), 1 deletion(-)
-
-diff --git a/net/xfrm/xfrm_device.c b/net/xfrm/xfrm_device.c
-index 64486ad813411..0159de5ace90f 100644
---- a/net/xfrm/xfrm_device.c
-+++ b/net/xfrm/xfrm_device.c
-@@ -46,6 +46,25 @@ static void __xfrm_mode_tunnel_prep(struct xfrm_state *x, struct sk_buff *skb,
- 	pskb_pull(skb, skb->mac_len + x->props.header_len);
- }
- 
-+static void __xfrm_mode_beet_prep(struct xfrm_state *x, struct sk_buff *skb,
-+				  unsigned int hsize)
-+{
-+	struct xfrm_offload *xo = xfrm_offload(skb);
-+	int phlen = 0;
-+
-+	if (xo->flags & XFRM_GSO_SEGMENT)
-+		skb->transport_header = skb->network_header + hsize;
-+
-+	skb_reset_mac_len(skb);
-+	if (x->sel.family != AF_INET6) {
-+		phlen = IPV4_BEET_PHMAXLEN;
-+		if (x->outer_mode.family == AF_INET6)
-+			phlen += sizeof(struct ipv6hdr) - sizeof(struct iphdr);
-+	}
-+
-+	pskb_pull(skb, skb->mac_len + hsize + (x->props.header_len - phlen));
-+}
-+
- /* Adjust pointers into the packet when IPsec is done at layer2 */
- static void xfrm_outer_mode_prep(struct xfrm_state *x, struct sk_buff *skb)
- {
-@@ -66,9 +85,16 @@ static void xfrm_outer_mode_prep(struct xfrm_state *x, struct sk_buff *skb)
- 			return __xfrm_transport_prep(x, skb,
- 						     sizeof(struct ipv6hdr));
- 		break;
-+	case XFRM_MODE_BEET:
-+		if (x->outer_mode.family == AF_INET)
-+			return __xfrm_mode_beet_prep(x, skb,
-+						     sizeof(struct iphdr));
-+		if (x->outer_mode.family == AF_INET6)
-+			return __xfrm_mode_beet_prep(x, skb,
-+						     sizeof(struct ipv6hdr));
-+		break;
- 	case XFRM_MODE_ROUTEOPTIMIZATION:
- 	case XFRM_MODE_IN_TRIGGER:
--	case XFRM_MODE_BEET:
- 		break;
- 	}
- }
--- 
-2.20.1
-
+This doesn't address my comment, so was I wrong? What I was trying to
+say is that the function updates the established link info as well as
+autoneg advertising info. If the link is not resolved we can't read the
+link info, but we should still report the advertising modes. No?
