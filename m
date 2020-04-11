@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9552C2BB86
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:47:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 132ADC2BBC7
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:47:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 98CB3206F7
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:47:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E2AE820936
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:47:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586648844;
-	bh=w68oapllwXBcXuPwr+A/R2ShE4TVv5AB6GPxa7PIA1g=;
+	s=default; t=1586648851;
+	bh=eh/ou1/U945hSJW2laNb5oYQ4EspKnZ3Qontij5MsmE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YeeAziRdLpd82TOp73PAMVsjiWxD7TL7y6ZcFTIc1ddywZzjCWxD6ZZJIEs8/2eQZ
-	 2qKTjDpJhj+qrG8lGidNBCVs/O4LJ434dVihtBEXk4dLxQ88KqokOlWKFmChXCcZVQ
-	 amaE0Np8Eq5Lqx1hRxQ+ZDSgMOyVQ6eh5DkXDvwI=
+	b=ed07MlZO3/V0xS2A9RFCAnqjydrHKidf7FqwteFlfCosVhT16Octdnwai8sdpWDw8
+	 kVrQVgaNqfXp9+c8uW+2Wep810vRqDy7PbULpx284nuwbxcxx6gKylCzncHIANv4B1
+	 3rTn1ckgTU7ImOgOAum781kCeKP0Snn4CTSQGKZM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730918AbgDKXrW (ORCPT
+        id S1727696AbgDKXFA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 19:47:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38804 "EHLO mail.kernel.org"
+        Sat, 11 Apr 2020 19:05:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38536 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727732AbgDKXFC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 19:05:02 -0400
+        id S1727526AbgDKXEv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Apr 2020 19:04:51 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DA92E21841;
-        Sat, 11 Apr 2020 23:05:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DABC4214D8;
+        Sat, 11 Apr 2020 23:04:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586646302;
-        bh=w68oapllwXBcXuPwr+A/R2ShE4TVv5AB6GPxa7PIA1g=;
+        s=default; t=1586646291;
+        bh=eh/ou1/U945hSJW2laNb5oYQ4EspKnZ3Qontij5MsmE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=X3Dgskd7nGUMEBBHuGSQoYj9yAvax7I2NUvGpeeMCeNst65cbnSrMWJR9XUB+TW73
-         lFmGYK41NlbIaA6lUJwqe8km3LmP5OhqNpuu/LA79a0A7ezSMTuJl1WeW6tFPpWXQB
-         WCtpsCErDMA0Fk1xSpNfSitmywZnY1h1rVfRhYcE=
+        b=mdL8jhN1TXvCZBCjs9eUa8KeIj5QadX3ELaeYLixQMkEi71DGnEx3iyBDk5oxMnFh
+         LFZc33Rj6qUM0/Y+K8e7UBzg+f4FgpRTGWpH3d/IVOaCJOjihhEKSnpxtLcwO8krcf
+         zf14iCFHo1fBEy3H5bGFdjn/sjora5r+AyO7xg4M=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Felix Fietkau <nbd@nbd.name>, Sasha Levin <sashal@kernel.org>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.6 061/149] mt76: fix handling full tx queues in mt76_dma_tx_queue_skb_raw
-Date:   Sat, 11 Apr 2020 19:02:18 -0400
-Message-Id: <20200411230347.22371-61-sashal@kernel.org>
+Cc:     Jia-Ju Bai <baijiaju1990@gmail.com>,
+        Aaron Brown <aaron.f.brown@intel.com>,
+        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
+        Sasha Levin <sashal@kernel.org>,
+        intel-wired-lan@lists.osuosl.org, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.6 052/149] net: intel: e1000e: fix possible sleep-in-atomic-context bugs in e1000e_get_hw_semaphore()
+Date:   Sat, 11 Apr 2020 19:02:09 -0400
+Message-Id: <20200411230347.22371-52-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200411230347.22371-1-sashal@kernel.org>
 References: <20200411230347.22371-1-sashal@kernel.org>
@@ -60,49 +61,79 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Felix Fietkau <nbd@nbd.name>
+From: Jia-Ju Bai <baijiaju1990@gmail.com>
 
-[ Upstream commit 93eaec7625f13cffb593b471405b017c7e64d4ee ]
+[ Upstream commit 2e05f756c7099c8991142382648a37b0d4c85943 ]
 
-Fixes a theoretical issue where it could potentially overwrite an existing
-descriptor entry (and leaking its skb)
+The driver may sleep while holding a spinlock.
+The function call path (from bottom to top) in Linux 4.19 is:
 
-Signed-off-by: Felix Fietkau <nbd@nbd.name>
+drivers/net/ethernet/intel/e1000e/mac.c, 1366:
+	usleep_range in e1000e_get_hw_semaphore
+drivers/net/ethernet/intel/e1000e/80003es2lan.c, 322:
+	e1000e_get_hw_semaphore in e1000_release_swfw_sync_80003es2lan
+drivers/net/ethernet/intel/e1000e/80003es2lan.c, 197:
+	e1000_release_swfw_sync_80003es2lan in e1000_release_phy_80003es2lan
+drivers/net/ethernet/intel/e1000e/netdev.c, 4883:
+	(FUNC_PTR) e1000_release_phy_80003es2lan in e1000e_update_phy_stats
+drivers/net/ethernet/intel/e1000e/netdev.c, 4917:
+	e1000e_update_phy_stats in e1000e_update_stats
+drivers/net/ethernet/intel/e1000e/netdev.c, 5945:
+	e1000e_update_stats in e1000e_get_stats64
+drivers/net/ethernet/intel/e1000e/netdev.c, 5944:
+	spin_lock in e1000e_get_stats64
+
+drivers/net/ethernet/intel/e1000e/mac.c, 1384:
+	usleep_range in e1000e_get_hw_semaphore
+drivers/net/ethernet/intel/e1000e/80003es2lan.c, 322:
+	e1000e_get_hw_semaphore in e1000_release_swfw_sync_80003es2lan
+drivers/net/ethernet/intel/e1000e/80003es2lan.c, 197:
+	e1000_release_swfw_sync_80003es2lan in e1000_release_phy_80003es2lan
+drivers/net/ethernet/intel/e1000e/netdev.c, 4883:
+	(FUNC_PTR) e1000_release_phy_80003es2lan in e1000e_update_phy_stats
+drivers/net/ethernet/intel/e1000e/netdev.c, 4917:
+	e1000e_update_phy_stats in e1000e_update_stats
+drivers/net/ethernet/intel/e1000e/netdev.c, 5945:
+	e1000e_update_stats in e1000e_get_stats64
+drivers/net/ethernet/intel/e1000e/netdev.c, 5944:
+	spin_lock in e1000e_get_stats64
+
+(FUNC_PTR) means a function pointer is called.
+
+To fix these bugs, usleep_range() is replaced with udelay().
+
+These bugs are found by a static analysis tool STCheck written by myself.
+
+Signed-off-by: Jia-Ju Bai <baijiaju1990@gmail.com>
+Tested-by: Aaron Brown <aaron.f.brown@intel.com>
+Signed-off-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/mediatek/mt76/dma.c | 9 ++++++++-
- 1 file changed, 8 insertions(+), 1 deletion(-)
+ drivers/net/ethernet/intel/e1000e/mac.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/wireless/mediatek/mt76/dma.c b/drivers/net/wireless/mediatek/mt76/dma.c
-index 1847f55e199b0..c001d94958d83 100644
---- a/drivers/net/wireless/mediatek/mt76/dma.c
-+++ b/drivers/net/wireless/mediatek/mt76/dma.c
-@@ -261,10 +261,13 @@ mt76_dma_tx_queue_skb_raw(struct mt76_dev *dev, enum mt76_txq_id qid,
- 	struct mt76_queue_buf buf;
- 	dma_addr_t addr;
+diff --git a/drivers/net/ethernet/intel/e1000e/mac.c b/drivers/net/ethernet/intel/e1000e/mac.c
+index e531976f8a677..51512a73fdd07 100644
+--- a/drivers/net/ethernet/intel/e1000e/mac.c
++++ b/drivers/net/ethernet/intel/e1000e/mac.c
+@@ -1363,7 +1363,7 @@ s32 e1000e_get_hw_semaphore(struct e1000_hw *hw)
+ 		if (!(swsm & E1000_SWSM_SMBI))
+ 			break;
  
-+	if (q->queued + 1 >= q->ndesc - 1)
-+		goto error;
-+
- 	addr = dma_map_single(dev->dev, skb->data, skb->len,
- 			      DMA_TO_DEVICE);
- 	if (unlikely(dma_mapping_error(dev->dev, addr)))
--		return -ENOMEM;
-+		goto error;
+-		usleep_range(50, 100);
++		udelay(100);
+ 		i++;
+ 	}
  
- 	buf.addr = addr;
- 	buf.len = skb->len;
-@@ -275,6 +278,10 @@ mt76_dma_tx_queue_skb_raw(struct mt76_dev *dev, enum mt76_txq_id qid,
- 	spin_unlock_bh(&q->lock);
+@@ -1381,7 +1381,7 @@ s32 e1000e_get_hw_semaphore(struct e1000_hw *hw)
+ 		if (er32(SWSM) & E1000_SWSM_SWESMBI)
+ 			break;
  
- 	return 0;
-+
-+error:
-+	dev_kfree_skb(skb);
-+	return -ENOMEM;
- }
+-		usleep_range(50, 100);
++		udelay(100);
+ 	}
  
- static int
+ 	if (i == timeout) {
 -- 
 2.20.1
 
