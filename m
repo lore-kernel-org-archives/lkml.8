@@ -2,261 +2,261 @@ Return-Path: <SRS0=xbEg=53=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DFF08C2BA2B
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:22:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8671C2BBC7
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:22:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AEBE820644
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:22:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A5EEA20644
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:22:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586607734;
-	bh=N4EpxYEdzS6ZWH4QRjZmwxJ6IXMTRZp6CLlI2Jc6Mp8=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HgoHcgTNlAefHJKFTyqEIWqV+w+JGU/dRLZGzvLZz+vntjQfGgjiLwmj1bZEhFdCw
-	 1kT1DHhMKyaekVbqq/7bEpgdLHNnpr4NN2X/q/nn3nH2mBD8Gzb63LzYNX8ldx8++Z
-	 LKOtvrs+xHs5FgnbOw81IXWFcBndlbkU0mBiOSGs=
+	s=default; t=1586607735;
+	bh=LgsI2AfO9zr03amZ9qqoFiXsSwNJ5ZqmIdOLAl1STnI=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=vrl0R7unwBIrK6xd6xQApzO0yHT/WGtLiLZHOXpub0/cet3Ydf4UQzowlqvsNOYyF
+	 BvVs7UHXF9l6CqfdOaPtt5vTskOK9IWEZuvzOhxSpzlq275PyZfi2J5Nr5vtKM1J0S
+	 hg2wz2zmNyomEVT59O0lPsNlLfo07xn1/AaSALnU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728829AbgDKMWM (ORCPT
+        id S1728934AbgDKMVg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 08:22:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58004 "EHLO mail.kernel.org"
+        Sat, 11 Apr 2020 08:21:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57888 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728992AbgDKMVi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 08:21:38 -0400
+        id S1728961AbgDKMVd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Apr 2020 08:21:33 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2D1F320692;
-        Sat, 11 Apr 2020 12:21:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 55E0F20644;
+        Sat, 11 Apr 2020 12:21:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586607697;
-        bh=N4EpxYEdzS6ZWH4QRjZmwxJ6IXMTRZp6CLlI2Jc6Mp8=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=AOeB8hJXgtjTwX2rFCrNtuyFyKzLITXlmG0eXdw7v2BXWqy2WQdHcBo5tyX8GlvLT
-         rRUVaDeZrkjv33u15b7UGu0PfgswnVhUf4YUsJa1DEvJ2UBfe2EqqjrthB4H98iHJg
-         j+wvB7z6hJdUPe28guDtiOq5cdSr2q707kaRrgfw=
+        s=default; t=1586607692;
+        bh=LgsI2AfO9zr03amZ9qqoFiXsSwNJ5ZqmIdOLAl1STnI=;
+        h=From:To:Cc:Subject:Date:From;
+        b=cUaB6TIDgXYOSbRcDPTMtFLQndQbDzx0SIU6ERUer5ja9SDW2G0BvbvRVMJsufJEa
+         huh4qemsfUIID7Gj2RGZGgIk18d84j87JN7lB5UGQvveI4gMIuvtz29Fo1JKC8LwKN
+         4TIfbYiTjiMNY/uCN/3q3fIJl8op3jvv5hDewv1s=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        syzbot+55de90ab5f44172b0c90@syzkaller.appspotmail.com,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Bernard Metzler <bmt@zurich.ibm.com>,
-        Jason Gunthorpe <jgg@mellanox.com>
-Subject: [PATCH 5.6 32/38] RDMA/siw: Fix passive connection establishment
-Date:   Sat, 11 Apr 2020 14:10:09 +0200
-Message-Id: <20200411115503.130335087@linuxfoundation.org>
+        torvalds@linux-foundation.org, akpm@linux-foundation.org,
+        linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org
+Subject: [PATCH 5.6 00/38] 5.6.4-rc1 review
+Date:   Sat, 11 Apr 2020 14:09:37 +0200
+Message-Id: <20200411115459.324496182@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
-In-Reply-To: <20200411115459.324496182@linuxfoundation.org>
-References: <20200411115459.324496182@linuxfoundation.org>
-User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+User-Agent: quilt/0.66
+X-stable: review
+X-Patchwork-Hint: ignore
+X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v4.x/stable-review/patch-5.6.4-rc1.gz
+X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
+X-KernelTest-Branch: linux-5.6.y
+X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
+X-KernelTest-Version: 5.6.4-rc1
+X-KernelTest-Deadline: 2020-04-13T11:55+00:00
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bernard Metzler <bmt@zurich.ibm.com>
+This is the start of the stable review cycle for the 5.6.4 release.
+There are 38 patches in this series, all will be posted as a response
+to this one.  If anyone has any issues with these being applied, please
+let me know.
 
-commit 33fb27fd54465c74cbffba6315b2f043e90cec4c upstream.
+Responses should be made by Mon, 13 Apr 2020 11:51:28 +0000.
+Anything received after that time might be too late.
 
-Holding the rtnl_lock while iterating a devices interface address list
-potentially causes deadlocks with the cma_netdev_callback. While this was
-implemented to limit the scope of a wildcard listen to addresses of the
-current device only, a better solution limits the scope of the socket to
-the device. This completely avoiding locking, and also results in
-significant code simplification.
+The whole patch series can be found in one patch at:
+	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.6.4-rc1.gz
+or in the git tree and branch at:
+	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.6.y
+and the diffstat can be found below.
 
-Fixes: c421651fa229 ("RDMA/siw: Add missing rtnl_lock around access to ifa")
-Link: https://lore.kernel.org/r/20200228173534.26815-1-bmt@zurich.ibm.com
-Reported-by: syzbot+55de90ab5f44172b0c90@syzkaller.appspotmail.com
-Suggested-by: Jason Gunthorpe <jgg@ziepe.ca>
-Signed-off-by: Bernard Metzler <bmt@zurich.ibm.com>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+thanks,
 
----
- drivers/infiniband/sw/siw/siw_cm.c |  137 ++++++++-----------------------------
- 1 file changed, 31 insertions(+), 106 deletions(-)
+greg k-h
 
---- a/drivers/infiniband/sw/siw/siw_cm.c
-+++ b/drivers/infiniband/sw/siw/siw_cm.c
-@@ -1769,14 +1769,23 @@ int siw_reject(struct iw_cm_id *id, cons
- 	return 0;
- }
- 
--static int siw_listen_address(struct iw_cm_id *id, int backlog,
--			      struct sockaddr *laddr, int addr_family)
-+/*
-+ * siw_create_listen - Create resources for a listener's IWCM ID @id
-+ *
-+ * Starts listen on the socket address id->local_addr.
-+ *
-+ */
-+int siw_create_listen(struct iw_cm_id *id, int backlog)
- {
- 	struct socket *s;
- 	struct siw_cep *cep = NULL;
- 	struct siw_device *sdev = to_siw_dev(id->device);
-+	int addr_family = id->local_addr.ss_family;
- 	int rv = 0, s_val;
- 
-+	if (addr_family != AF_INET && addr_family != AF_INET6)
-+		return -EAFNOSUPPORT;
-+
- 	rv = sock_create(addr_family, SOCK_STREAM, IPPROTO_TCP, &s);
- 	if (rv < 0)
- 		return rv;
-@@ -1791,9 +1800,25 @@ static int siw_listen_address(struct iw_
- 		siw_dbg(id->device, "setsockopt error: %d\n", rv);
- 		goto error;
- 	}
--	rv = s->ops->bind(s, laddr, addr_family == AF_INET ?
--				    sizeof(struct sockaddr_in) :
--				    sizeof(struct sockaddr_in6));
-+	if (addr_family == AF_INET) {
-+		struct sockaddr_in *laddr = &to_sockaddr_in(id->local_addr);
-+
-+		/* For wildcard addr, limit binding to current device only */
-+		if (ipv4_is_zeronet(laddr->sin_addr.s_addr))
-+			s->sk->sk_bound_dev_if = sdev->netdev->ifindex;
-+
-+		rv = s->ops->bind(s, (struct sockaddr *)laddr,
-+				  sizeof(struct sockaddr_in));
-+	} else {
-+		struct sockaddr_in6 *laddr = &to_sockaddr_in6(id->local_addr);
-+
-+		/* For wildcard addr, limit binding to current device only */
-+		if (ipv6_addr_any(&laddr->sin6_addr))
-+			s->sk->sk_bound_dev_if = sdev->netdev->ifindex;
-+
-+		rv = s->ops->bind(s, (struct sockaddr *)laddr,
-+				  sizeof(struct sockaddr_in6));
-+	}
- 	if (rv) {
- 		siw_dbg(id->device, "socket bind error: %d\n", rv);
- 		goto error;
-@@ -1852,7 +1877,7 @@ static int siw_listen_address(struct iw_
- 	list_add_tail(&cep->listenq, (struct list_head *)id->provider_data);
- 	cep->state = SIW_EPSTATE_LISTENING;
- 
--	siw_dbg(id->device, "Listen at laddr %pISp\n", laddr);
-+	siw_dbg(id->device, "Listen at laddr %pISp\n", &id->local_addr);
- 
- 	return 0;
- 
-@@ -1910,106 +1935,6 @@ static void siw_drop_listeners(struct iw
- 	}
- }
- 
--/*
-- * siw_create_listen - Create resources for a listener's IWCM ID @id
-- *
-- * Listens on the socket address id->local_addr.
-- *
-- * If the listener's @id provides a specific local IP address, at most one
-- * listening socket is created and associated with @id.
-- *
-- * If the listener's @id provides the wildcard (zero) local IP address,
-- * a separate listen is performed for each local IP address of the device
-- * by creating a listening socket and binding to that local IP address.
-- *
-- */
--int siw_create_listen(struct iw_cm_id *id, int backlog)
--{
--	struct net_device *dev = to_siw_dev(id->device)->netdev;
--	int rv = 0, listeners = 0;
--
--	siw_dbg(id->device, "backlog %d\n", backlog);
--
--	/*
--	 * For each attached address of the interface, create a
--	 * listening socket, if id->local_addr is the wildcard
--	 * IP address or matches the IP address.
--	 */
--	if (id->local_addr.ss_family == AF_INET) {
--		struct in_device *in_dev = in_dev_get(dev);
--		struct sockaddr_in s_laddr;
--		const struct in_ifaddr *ifa;
--
--		if (!in_dev) {
--			rv = -ENODEV;
--			goto out;
--		}
--		memcpy(&s_laddr, &id->local_addr, sizeof(s_laddr));
--
--		siw_dbg(id->device, "laddr %pISp\n", &s_laddr);
--
--		rtnl_lock();
--		in_dev_for_each_ifa_rtnl(ifa, in_dev) {
--			if (ipv4_is_zeronet(s_laddr.sin_addr.s_addr) ||
--			    s_laddr.sin_addr.s_addr == ifa->ifa_address) {
--				s_laddr.sin_addr.s_addr = ifa->ifa_address;
--
--				rv = siw_listen_address(id, backlog,
--						(struct sockaddr *)&s_laddr,
--						AF_INET);
--				if (!rv)
--					listeners++;
--			}
--		}
--		rtnl_unlock();
--		in_dev_put(in_dev);
--	} else if (id->local_addr.ss_family == AF_INET6) {
--		struct inet6_dev *in6_dev = in6_dev_get(dev);
--		struct inet6_ifaddr *ifp;
--		struct sockaddr_in6 *s_laddr = &to_sockaddr_in6(id->local_addr);
--
--		if (!in6_dev) {
--			rv = -ENODEV;
--			goto out;
--		}
--		siw_dbg(id->device, "laddr %pISp\n", &s_laddr);
--
--		rtnl_lock();
--		list_for_each_entry(ifp, &in6_dev->addr_list, if_list) {
--			if (ifp->flags & (IFA_F_TENTATIVE | IFA_F_DEPRECATED))
--				continue;
--			if (ipv6_addr_any(&s_laddr->sin6_addr) ||
--			    ipv6_addr_equal(&s_laddr->sin6_addr, &ifp->addr)) {
--				struct sockaddr_in6 bind_addr  = {
--					.sin6_family = AF_INET6,
--					.sin6_port = s_laddr->sin6_port,
--					.sin6_flowinfo = 0,
--					.sin6_addr = ifp->addr,
--					.sin6_scope_id = dev->ifindex };
--
--				rv = siw_listen_address(id, backlog,
--						(struct sockaddr *)&bind_addr,
--						AF_INET6);
--				if (!rv)
--					listeners++;
--			}
--		}
--		rtnl_unlock();
--		in6_dev_put(in6_dev);
--	} else {
--		rv = -EAFNOSUPPORT;
--	}
--out:
--	if (listeners)
--		rv = 0;
--	else if (!rv)
--		rv = -EINVAL;
--
--	siw_dbg(id->device, "%s\n", rv ? "FAIL" : "OK");
--
--	return rv;
--}
--
- int siw_destroy_listen(struct iw_cm_id *id)
- {
- 	if (!id->provider_data) {
+-------------
+Pseudo-Shortlog of commits:
+
+Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+    Linux 5.6.4-rc1
+
+Saravana Kannan <saravanak@google.com>
+    driver core: Reevaluate dev->links.need_for_probe as suppliers are added
+
+Hillf Danton <hdanton@sina.com>
+    io-uring: drop completion when removing file
+
+Qiujun Huang <hqjagain@gmail.com>
+    fbcon: fix null-ptr-deref in fbcon_switch
+
+Bart Van Assche <bvanassche@acm.org>
+    blk-mq: Keep set->nr_hw_queues and set->map[].nr_queues in sync
+
+Avihai Horon <avihaih@mellanox.com>
+    RDMA/cm: Update num_paths in cma_resolve_iboe_route error flow
+
+Qiujun Huang <hqjagain@gmail.com>
+    Bluetooth: RFCOMM: fix ODEBUG bug in rfcomm_dev_ioctl
+
+Bernard Metzler <bmt@zurich.ibm.com>
+    RDMA/siw: Fix passive connection establishment
+
+Jason Gunthorpe <jgg@ziepe.ca>
+    RDMA/cma: Teach lockdep about the order of rtnl and lock
+
+Jason Gunthorpe <jgg@ziepe.ca>
+    RDMA/ucma: Put a lock around every call to the rdma_cm layer
+
+Hou Tao <houtao1@huawei.com>
+    ubi: fastmap: Free unused fastmap anchor peb during detach
+
+Alex Vesker <valex@mellanox.com>
+    IB/mlx5: Replace tunnel mpls capability bits for tunnel_offloads
+
+Kaike Wan <kaike.wan@intel.com>
+    IB/hfi1: Fix memory leaks in sysfs registration and unregistration
+
+Kaike Wan <kaike.wan@intel.com>
+    IB/hfi1: Call kobject_put() when kobject_init_and_add() fails
+
+Paul Cercueil <paul@crapouillou.net>
+    ASoC: jz4740-i2s: Fix divider written at incorrect offset in register
+
+Jonghwan Choi <charlie.jh@kakaocorp.com>
+    ASoC: tas2562: Fixed incorrect amp_level setting.
+
+Hans de Goede <hdegoede@redhat.com>
+    platform/x86: intel_int0002_vgpio: Use acpi_register_wakeup_handler()
+
+Hans de Goede <hdegoede@redhat.com>
+    ACPI: PM: Add acpi_[un]register_wakeup_handler()
+
+Martin Kaiser <martin@kaiser.cx>
+    hwrng: imx-rngc - fix an error path
+
+David Ahern <dsahern@kernel.org>
+    tools/accounting/getdelays.c: fix netlink attribute length
+
+Kees Cook <keescook@chromium.org>
+    slub: improve bit diffusion for freelist ptr obfuscation
+
+Thinh Nguyen <Thinh.Nguyen@synopsys.com>
+    usb: dwc3: gadget: Wrap around when skip TRBs
+
+Jason A. Donenfeld <Jason@zx2c4.com>
+    random: always use batched entropy for get_random_u{32,64}
+
+Sven Schnelle <svens@linux.ibm.com>
+    s390: prevent leaking kernel address in BEAR
+
+Oleksij Rempel <linux@rempel-privat.de>
+    net: phy: at803x: fix clock sink configuration on ATH8030 and ATH8035
+
+Rahul Lakkireddy <rahul.lakkireddy@chelsio.com>
+    cxgb4: free MQPRIO resources in shutdown path
+
+Heiner Kallweit <hkallweit1@gmail.com>
+    r8169: change back SG and TSO to be disabled by default
+
+Petr Machata <petrm@mellanox.com>
+    mlxsw: spectrum_flower: Do not stop at FLOW_ACTION_VLAN_MANGLE
+
+Will Deacon <will@kernel.org>
+    tun: Don't put_page() for all negative return values from XDP program
+
+Richard Palethorpe <rpalethorpe@suse.com>
+    slcan: Don't transmit uninitialized stack data in padding
+
+Jisheng Zhang <Jisheng.Zhang@synaptics.com>
+    net: stmmac: dwmac1000: fix out-of-bounds mac address reg setting
+
+Cong Wang <xiyou.wangcong@gmail.com>
+    net_sched: fix a missing refcnt in tcindex_init()
+
+Cong Wang <xiyou.wangcong@gmail.com>
+    net_sched: add a temporary refcnt for struct tcindex_data
+
+Oleksij Rempel <linux@rempel-privat.de>
+    net: phy: micrel: kszphy_resume(): add delay after genphy_resume() before accessing PHY registers
+
+Chuanhong Guo <gch981213@gmail.com>
+    net: dsa: mt7530: fix null pointer dereferencing in port5 setup
+
+Florian Fainelli <f.fainelli@gmail.com>
+    net: dsa: bcm_sf2: Ensure correct sub-node is parsed
+
+Florian Fainelli <f.fainelli@gmail.com>
+    net: dsa: bcm_sf2: Do not register slave MDIO bus with OF
+
+Jarod Wilson <jarod@redhat.com>
+    ipv6: don't auto-add link-local address to lag ports
+
+Herat Ramani <herat@chelsio.com>
+    cxgb4: fix MPS index overwrite when setting MAC address
+
+
+-------------
+
+Diffstat:
+
+ Makefile                                           |   4 +-
+ arch/s390/include/asm/lowcore.h                    |   4 +-
+ arch/s390/include/asm/processor.h                  |   1 +
+ arch/s390/include/asm/setup.h                      |   7 ++
+ arch/s390/kernel/asm-offsets.c                     |   2 +
+ arch/s390/kernel/entry.S                           |  65 ++++++----
+ arch/s390/kernel/process.c                         |   1 +
+ arch/s390/kernel/setup.c                           |   3 +
+ arch/s390/kernel/smp.c                             |   2 +
+ arch/s390/mm/vmem.c                                |   4 +
+ block/blk-mq.c                                     |   8 ++
+ drivers/acpi/sleep.c                               |   4 +
+ drivers/acpi/sleep.h                               |   1 +
+ drivers/acpi/wakeup.c                              |  81 ++++++++++++
+ drivers/base/core.c                                |   8 +-
+ drivers/char/hw_random/imx-rngc.c                  |   4 +-
+ drivers/char/random.c                              |  20 +--
+ drivers/infiniband/core/cma.c                      |  14 +++
+ drivers/infiniband/core/ucma.c                     |  49 +++++++-
+ drivers/infiniband/hw/hfi1/sysfs.c                 |  26 ++--
+ drivers/infiniband/hw/mlx5/main.c                  |   6 +-
+ drivers/infiniband/sw/siw/siw_cm.c                 | 137 +++++----------------
+ drivers/mtd/ubi/fastmap-wl.c                       |  15 ++-
+ drivers/net/can/slcan.c                            |   4 +-
+ drivers/net/dsa/bcm_sf2.c                          |   9 +-
+ drivers/net/dsa/mt7530.c                           |   3 +
+ drivers/net/ethernet/chelsio/cxgb4/cxgb4_main.c    |   5 +-
+ .../net/ethernet/chelsio/cxgb4/cxgb4_tc_mqprio.c   |  23 ++++
+ .../net/ethernet/chelsio/cxgb4/cxgb4_tc_mqprio.h   |   1 +
+ .../net/ethernet/mellanox/mlxsw/spectrum_flower.c  |   9 +-
+ drivers/net/ethernet/realtek/r8169_main.c          |  34 +++--
+ .../net/ethernet/stmicro/stmmac/dwmac1000_core.c   |   2 +-
+ drivers/net/phy/at803x.c                           |   4 +-
+ drivers/net/phy/micrel.c                           |   7 ++
+ drivers/net/tun.c                                  |  10 +-
+ drivers/platform/x86/intel_int0002_vgpio.c         |  10 ++
+ drivers/usb/dwc3/gadget.c                          |   2 +-
+ drivers/video/fbdev/core/fbcon.c                   |   3 +
+ fs/io_uring.c                                      |  13 +-
+ include/linux/acpi.h                               |   5 +
+ include/linux/mlx5/mlx5_ifc.h                      |   6 +-
+ mm/slub.c                                          |   2 +-
+ net/bluetooth/rfcomm/tty.c                         |   4 +-
+ net/ipv6/addrconf.c                                |   4 +
+ net/sched/cls_tcindex.c                            |  45 ++++++-
+ sound/soc/codecs/tas2562.c                         |   2 +-
+ sound/soc/jz4740/jz4740-i2s.c                      |   2 +-
+ tools/accounting/getdelays.c                       |   2 +-
+ 48 files changed, 451 insertions(+), 226 deletions(-)
 
 
