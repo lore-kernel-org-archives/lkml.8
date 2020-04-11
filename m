@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA3ADC2BB86
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:47:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51352C2BBC7
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:48:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B6E3F20787
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:47:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2C251206F7
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:48:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586648877;
-	bh=70QxI/XnNG+p+hRvKqGo7LgBaeCOY62GcGH1duZbP6E=;
+	s=default; t=1586648889;
+	bh=8ptZVCFTIZ8LNWVXi9vx8vE/lsQ5Q5Q54zsB+Abm2dQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0ChkAm1yfO+MDGKuWhGSN+fh6gavjRo43LWEQCkIcShLg835HPkrSbL4HEFEuM4PI
-	 grP4AKj44pOCKPpwRrKA0oH1nNSXZAW9CdIcNP5TOcKWS41ikat46tp3Mj+97ra8XD
-	 mvJNNi3rbPyLbl2FV25x0XX5cOmc2Klc7sKn629M=
+	b=MsEBxTF8P4dlMZFOFyZbvwRHjeZGhqIokt1kWmDDh1aNY1VQ36JGd3Pk2IBTHIvBi
+	 TzMSBRpCxEw+WMHxMl4bDunquyXC/bMgZhPgDWxDYIYSDaUUL7hkGfzFpbrgHwC+lt
+	 AVG7QznHMSPb53GhBZr/rbtQpzpo4fXcwVFhs3sI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727582AbgDKXEx (ORCPT
+        id S1727994AbgDKXsH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 19:04:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38452 "EHLO mail.kernel.org"
+        Sat, 11 Apr 2020 19:48:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38380 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727405AbgDKXEt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 19:04:49 -0400
+        id S1727455AbgDKXEr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Apr 2020 19:04:47 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8C13E216FD;
-        Sat, 11 Apr 2020 23:04:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 612DB21841;
+        Sat, 11 Apr 2020 23:04:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586646289;
-        bh=70QxI/XnNG+p+hRvKqGo7LgBaeCOY62GcGH1duZbP6E=;
+        s=default; t=1586646287;
+        bh=8ptZVCFTIZ8LNWVXi9vx8vE/lsQ5Q5Q54zsB+Abm2dQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=IbvQyFPi9Uvl5GUv2a2+KOAe4Ao4ZhuEWB5hKY+PzJF4QM/WqXdbLfFO4KIEpq3fc
-         h522PBGVwzTShzXyPJFTizAUB002uMxK4JnOMev3BxY5iOQ16wP54H/8+h+7zslSx/
-         rAF0Ndd+OZmgM8ld7NpH4YDuthqiGB5P83y9klgs=
+        b=ACVPDwtsuZxv7EoBS8YtnI0lP2FMhSe0r+2py+qOzQSmw58GMRODk1l8gn6zXXalO
+         1RXyUimcs9Vt8Xu2FsMaKe5tv0adVUU3OTo/oCgdzYq95cNhL3zObF1481n4uQfguP
+         lnn+jwi0WsAKC7ge+UZPiuPODLDLXmcsFFACDLhI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Guangbin Huang <huangguangbin2@huawei.com>,
-        Huazhong Tan <tanhuazhong@huawei.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.6 050/149] net: hns3: modify an unsuitable print when setting unknown duplex to fibre
-Date:   Sat, 11 Apr 2020 19:02:07 -0400
-Message-Id: <20200411230347.22371-50-sashal@kernel.org>
+Cc:     Al Viro <viro@zeniv.linux.org.uk>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Sasha Levin <sashal@kernel.org>, linux-crypto@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.6 048/149] crypto: chelsio - Endianess bug in create_authenc_wr
+Date:   Sat, 11 Apr 2020 19:02:05 -0400
+Message-Id: <20200411230347.22371-48-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200411230347.22371-1-sashal@kernel.org>
 References: <20200411230347.22371-1-sashal@kernel.org>
@@ -60,41 +59,70 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Guangbin Huang <huangguangbin2@huawei.com>
+From: Al Viro <viro@zeniv.linux.org.uk>
 
-[ Upstream commit 2d3db26d78805c9e06e26def0081c76e9bb0b7d6 ]
+[ Upstream commit ff462ddfd95b915345c3c7c037c3bfafdc58bae7 ]
 
-Currently, if device is in link down status and user uses
-'ethtool -s' command to set speed but not specify duplex
-mode, the duplex mode passed from ethtool to driver is
-unknown value(255), and the fibre port will identify this
-value as half duplex mode and print "only copper port
-supports half duplex!". This message is confusing.
+kctx_len = (ntohl(KEY_CONTEXT_CTX_LEN_V(aeadctx->key_ctx_hdr)) << 4)
+                - sizeof(chcr_req->key_ctx);
+can't possibly be endian-safe.  Look: ->key_ctx_hdr is __be32.  And
+KEY_CONTEXT_CTX_LEN_V is "shift up by 24 bits".  On little-endian hosts it
+sees
+	b0 b1 b2 b3
+in memory, inteprets that into b0 + (b1 << 8) + (b2 << 16) + (b3 << 24),
+shifts up by 24, resulting in b0 << 24, does ntohl (byteswap on l-e),
+gets b0 and shifts that up by 4.  So we get b0 * 16 - sizeof(...).
 
-So for fibre port, only the setting duplex is half, prints
-error and returns.
+Sounds reasonable, but on b-e we get
+b3 + (b2 << 8) + (b1 << 16) + (b0 << 24), shift up by 24,
+yielding b3 << 24, do ntohl (no-op on b-e) and then shift up by 4.
+Resulting in b3 << 28 - sizeof(...), i.e. slightly under b3 * 256M.
 
-Signed-off-by: Guangbin Huang <huangguangbin2@huawei.com>
-Signed-off-by: Huazhong Tan <tanhuazhong@huawei.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Then we increase it some more and pass to alloc_skb() as size.
+Somehow I doubt that we really want a quarter-gigabyte skb allocation
+here...
+
+Note that when you are building those values in
+#define  FILL_KEY_CTX_HDR(ck_size, mk_size, d_ck, opad, ctx_len) \
+                htonl(KEY_CONTEXT_VALID_V(1) | \
+                      KEY_CONTEXT_CK_SIZE_V((ck_size)) | \
+                      KEY_CONTEXT_MK_SIZE_V(mk_size) | \
+                      KEY_CONTEXT_DUAL_CK_V((d_ck)) | \
+                      KEY_CONTEXT_OPAD_PRESENT_V((opad)) | \
+                      KEY_CONTEXT_SALT_PRESENT_V(1) | \
+                      KEY_CONTEXT_CTX_LEN_V((ctx_len)))
+ctx_len ends up in the first octet (i.e. b0 in the above), which
+matches the current behaviour on l-e.  If that's the intent, this
+thing should've been
+        kctx_len = (KEY_CONTEXT_CTX_LEN_G(ntohl(aeadctx->key_ctx_hdr)) << 4)
+                - sizeof(chcr_req->key_ctx);
+instead - fetch after ntohl() we get (b0 << 24) + (b1 << 16) + (b2 << 8) + b3,
+shift it down by 24 (b0), resuling in b0 * 16 - sizeof(...) both on l-e and
+on b-e.
+
+PS: when sparse warns you about endianness problems, it might be worth checking
+if there really is something wrong.  And I don't mean "slap __force cast on it"...
+
+Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/hisilicon/hns3/hns3_ethtool.c | 2 +-
+ drivers/crypto/chelsio/chcr_algo.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3_ethtool.c b/drivers/net/ethernet/hisilicon/hns3/hns3_ethtool.c
-index c03856e633202..3f59a1924390f 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hns3_ethtool.c
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3_ethtool.c
-@@ -736,7 +736,7 @@ static int hns3_check_ksettings_param(const struct net_device *netdev,
- 	if (ops->get_media_type)
- 		ops->get_media_type(handle, &media_type, &module_type);
- 
--	if (cmd->base.duplex != DUPLEX_FULL &&
-+	if (cmd->base.duplex == DUPLEX_HALF &&
- 	    media_type != HNAE3_MEDIA_TYPE_COPPER) {
- 		netdev_err(netdev,
- 			   "only copper port supports half duplex!");
+diff --git a/drivers/crypto/chelsio/chcr_algo.c b/drivers/crypto/chelsio/chcr_algo.c
+index b4b9b22125d17..ad18124d0acb1 100644
+--- a/drivers/crypto/chelsio/chcr_algo.c
++++ b/drivers/crypto/chelsio/chcr_algo.c
+@@ -2351,7 +2351,7 @@ static struct sk_buff *create_authenc_wr(struct aead_request *req,
+ 	snents = sg_nents_xlen(req->src, req->assoclen + req->cryptlen,
+ 			       CHCR_SRC_SG_SIZE, 0);
+ 	dst_size = get_space_for_phys_dsgl(dnents);
+-	kctx_len = (ntohl(KEY_CONTEXT_CTX_LEN_V(aeadctx->key_ctx_hdr)) << 4)
++	kctx_len = (KEY_CONTEXT_CTX_LEN_G(ntohl(aeadctx->key_ctx_hdr)) << 4)
+ 		- sizeof(chcr_req->key_ctx);
+ 	transhdr_len = CIPHER_TRANSHDR_SIZE(kctx_len, dst_size);
+ 	reqctx->imm = (transhdr_len + req->assoclen + req->cryptlen) <
 -- 
 2.20.1
 
