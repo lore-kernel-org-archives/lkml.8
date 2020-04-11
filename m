@@ -4,50 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 036B2C2BA19
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:25:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2073FC2BA19
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:26:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CCBC12051A
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:25:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E676020674
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:26:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586647558;
-	bh=mfv78u22Til/hjn2TeKo3rMaYO9dwPdixN6dnVDnfAk=;
+	s=default; t=1586647563;
+	bh=9AgB5xU8/OmGvwSeCAS7bDIEocxLDpLkEL0FnpXfADc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=f59qFboIcgWFrB8K/V1o+NZibJxaUVpacV6UGTjkfzod9B/vfmibKVWQn9kiU7TWj
-	 7TMldeyVHTZD3O1Tm/dKDzYodC0GI9xZmybNL8T5ucfz50lyG7PjPRTiYR8mzu7oDc
-	 FE8A5C8YE5O3h0SpXJfv4x/1o2+ZyCtApb5nnPJE=
+	b=WwpOMnIFKRGK8d6DtUgeIWdeecWi7NpNi/Lh6pHuyzzHPRdclOyFe6bCIxDCvFHVj
+	 EP73J4kjiv6EDBMe+xdCpid3lxU0GYQkTi/OB5T9N8KMxccd9FRPgDwTasQKulLxhQ
+	 GJXVCVCNCCqpZ5hDGC51kVAMjzd6cr4WpaWeJas4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730042AbgDKXL5 (ORCPT
+        id S1730209AbgDKX0B (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 19:11:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51344 "EHLO mail.kernel.org"
+        Sat, 11 Apr 2020 19:26:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51832 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729969AbgDKXLj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 19:11:39 -0400
+        id S1730045AbgDKXL6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Apr 2020 19:11:58 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1FAF320708;
-        Sat, 11 Apr 2020 23:11:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8351C2173E;
+        Sat, 11 Apr 2020 23:11:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586646699;
-        bh=mfv78u22Til/hjn2TeKo3rMaYO9dwPdixN6dnVDnfAk=;
+        s=default; t=1586646718;
+        bh=9AgB5xU8/OmGvwSeCAS7bDIEocxLDpLkEL0FnpXfADc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sLc0Dto0YsYPU+qhZJ0EooYsAWdb/d9tRThFpFViTXu4SA1cABKC3r+vzCjr2/UEt
-         e+WsJLdhZn/NsGKjPgf1/RSIR3xfbSDRiQO2z8lUnaBegIW7I/LFYuN5ikn8pGw89w
-         K6yHyS2mXE77FULlI01/tarqhITzd4YLxAliHNWY=
+        b=R+F9mD/qczaZGiS1T5/esUPAS0+EewNPwc9mJxY9dvLwr4Wgd5c+HTGIp3jJVp/QJ
+         fMZ47FmwDl0TUOwGDICVps4WGJUdsf7QQ7SVdBgSXdtSXNfD4x/6FvQnkzOVDdPXev
+         2f40oxhthB+CTQYkL/N7CZNLXS0lTs+LcC+WUslE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Joe Carnuccio <joe.carnuccio@cavium.com>,
-        Himanshu Madhani <hmadhani@marvell.com>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 093/108] scsi: qla2xxx: Fix qla2x00_echo_test() based on ISP type
-Date:   Sat, 11 Apr 2020 19:09:28 -0400
-Message-Id: <20200411230943.24951-93-sashal@kernel.org>
+Cc:     Mikel Rychliski <mikel@mikelr.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Sasha Levin <sashal@kernel.org>, amd-gfx@lists.freedesktop.org,
+        dri-devel@lists.freedesktop.org, nouveau@lists.freedesktop.org,
+        linux-pci@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 108/108] PCI: Use ioremap(), not phys_to_virt() for platform ROM
+Date:   Sat, 11 Apr 2020 19:09:43 -0400
+Message-Id: <20200411230943.24951-108-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200411230943.24951-1-sashal@kernel.org>
 References: <20200411230943.24951-1-sashal@kernel.org>
@@ -60,41 +62,241 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Joe Carnuccio <joe.carnuccio@cavium.com>
+From: Mikel Rychliski <mikel@mikelr.com>
 
-[ Upstream commit 83cfd3dc002fc730387a1ec5fa0d4097cc31ee9f ]
+[ Upstream commit 72e0ef0e5f067fd991f702f0b2635d911d0cf208 ]
 
-Ths patch fixes MBX in-direction for setting right bits for
-qla2x00_echo_test()
+On some EFI systems, the video BIOS is provided by the EFI firmware.  The
+boot stub code stores the physical address of the ROM image in pdev->rom.
+Currently we attempt to access this pointer using phys_to_virt(), which
+doesn't work with CONFIG_HIGHMEM.
 
-Link: https://lore.kernel.org/r/20200212214436.25532-19-hmadhani@marvell.com
-Signed-off-by: Joe Carnuccio <joe.carnuccio@cavium.com>
-Signed-off-by: Himanshu Madhani <hmadhani@marvell.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+On these systems, attempting to load the radeon module on a x86_32 kernel
+can result in the following:
+
+  BUG: unable to handle page fault for address: 3e8ed03c
+  #PF: supervisor read access in kernel mode
+  #PF: error_code(0x0000) - not-present page
+  *pde = 00000000
+  Oops: 0000 [#1] PREEMPT SMP
+  CPU: 0 PID: 317 Comm: systemd-udevd Not tainted 5.6.0-rc3-next-20200228 #2
+  Hardware name: Apple Computer, Inc. MacPro1,1/Mac-F4208DC8, BIOS     MP11.88Z.005C.B08.0707021221 07/02/07
+  EIP: radeon_get_bios+0x5ed/0xe50 [radeon]
+  Code: 00 00 84 c0 0f 85 12 fd ff ff c7 87 64 01 00 00 00 00 00 00 8b 47 08 8b 55 b0 e8 1e 83 e1 d6 85 c0 74 1a 8b 55 c0 85 d2 74 13 <80> 38 55 75 0e 80 78 01 aa 0f 84 a4 03 00 00 8d 74 26 00 68 dc 06
+  EAX: 3e8ed03c EBX: 00000000 ECX: 3e8ed03c EDX: 00010000
+  ESI: 00040000 EDI: eec04000 EBP: eef3fc60 ESP: eef3fbe0
+  DS: 007b ES: 007b FS: 00d8 GS: 00e0 SS: 0068 EFLAGS: 00010206
+  CR0: 80050033 CR2: 3e8ed03c CR3: 2ec77000 CR4: 000006d0
+  Call Trace:
+   r520_init+0x26/0x240 [radeon]
+   radeon_device_init+0x533/0xa50 [radeon]
+   radeon_driver_load_kms+0x80/0x220 [radeon]
+   drm_dev_register+0xa7/0x180 [drm]
+   radeon_pci_probe+0x10f/0x1a0 [radeon]
+   pci_device_probe+0xd4/0x140
+
+Fix the issue by updating all drivers which can access a platform provided
+ROM. Instead of calling the helper function pci_platform_rom() which uses
+phys_to_virt(), call ioremap() directly on the pdev->rom.
+
+radeon_read_platform_bios() previously directly accessed an __iomem
+pointer. Avoid this by calling memcpy_fromio() instead of kmemdup().
+
+pci_platform_rom() now has no remaining callers, so remove it.
+
+Link: https://lore.kernel.org/r/20200319021623.5426-1-mikel@mikelr.com
+Signed-off-by: Mikel Rychliski <mikel@mikelr.com>
+Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+Acked-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/qla2xxx/qla_mbx.c | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+ drivers/gpu/drm/amd/amdgpu/amdgpu_bios.c      | 31 +++++++++++--------
+ .../drm/nouveau/nvkm/subdev/bios/shadowpci.c  | 17 ++++++++--
+ drivers/gpu/drm/radeon/radeon_bios.c          | 30 +++++++++++-------
+ drivers/pci/rom.c                             | 17 ----------
+ include/linux/pci.h                           |  1 -
+ 5 files changed, 52 insertions(+), 44 deletions(-)
 
-diff --git a/drivers/scsi/qla2xxx/qla_mbx.c b/drivers/scsi/qla2xxx/qla_mbx.c
-index 9011a26710374..101828e95fb34 100644
---- a/drivers/scsi/qla2xxx/qla_mbx.c
-+++ b/drivers/scsi/qla2xxx/qla_mbx.c
-@@ -5172,10 +5172,11 @@ qla2x00_echo_test(scsi_qla_host_t *vha, struct msg_echo_lb *mreq,
- 		mcp->out_mb |= MBX_2;
+diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_bios.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_bios.c
+index 50dff69a0f6e3..b1172d93c99c3 100644
+--- a/drivers/gpu/drm/amd/amdgpu/amdgpu_bios.c
++++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_bios.c
+@@ -192,30 +192,35 @@ static bool amdgpu_read_bios_from_rom(struct amdgpu_device *adev)
  
- 	mcp->in_mb = MBX_0;
--	if (IS_QLA24XX_TYPE(ha) || IS_QLA25XX(ha) ||
--	    IS_CNA_CAPABLE(ha) || IS_QLA2031(ha))
-+	if (IS_CNA_CAPABLE(ha) || IS_QLA24XX_TYPE(ha) || IS_QLA25XX(ha) ||
-+	    IS_QLA2031(ha) || IS_QLA27XX(ha) || IS_QLA28XX(ha))
- 		mcp->in_mb |= MBX_1;
--	if (IS_CNA_CAPABLE(ha) || IS_QLA2031(ha))
-+	if (IS_CNA_CAPABLE(ha) || IS_QLA2031(ha) || IS_QLA27XX(ha) ||
-+	    IS_QLA28XX(ha))
- 		mcp->in_mb |= MBX_3;
+ static bool amdgpu_read_platform_bios(struct amdgpu_device *adev)
+ {
+-	uint8_t __iomem *bios;
+-	size_t size;
++	phys_addr_t rom = adev->pdev->rom;
++	size_t romlen = adev->pdev->romlen;
++	void __iomem *bios;
  
- 	mcp->tov = MBX_TOV_SECONDS;
+ 	adev->bios = NULL;
+ 
+-	bios = pci_platform_rom(adev->pdev, &size);
+-	if (!bios) {
++	if (!rom || romlen == 0)
+ 		return false;
+-	}
+ 
+-	adev->bios = kzalloc(size, GFP_KERNEL);
+-	if (adev->bios == NULL)
++	adev->bios = kzalloc(romlen, GFP_KERNEL);
++	if (!adev->bios)
+ 		return false;
+ 
+-	memcpy_fromio(adev->bios, bios, size);
++	bios = ioremap(rom, romlen);
++	if (!bios)
++		goto free_bios;
+ 
+-	if (!check_atom_bios(adev->bios, size)) {
+-		kfree(adev->bios);
+-		return false;
+-	}
++	memcpy_fromio(adev->bios, bios, romlen);
++	iounmap(bios);
+ 
+-	adev->bios_size = size;
++	if (!check_atom_bios(adev->bios, romlen))
++		goto free_bios;
++
++	adev->bios_size = romlen;
+ 
+ 	return true;
++free_bios:
++	kfree(adev->bios);
++	return false;
+ }
+ 
+ #ifdef CONFIG_ACPI
+diff --git a/drivers/gpu/drm/nouveau/nvkm/subdev/bios/shadowpci.c b/drivers/gpu/drm/nouveau/nvkm/subdev/bios/shadowpci.c
+index 9b91da09dc5f8..8d9812a51ef63 100644
+--- a/drivers/gpu/drm/nouveau/nvkm/subdev/bios/shadowpci.c
++++ b/drivers/gpu/drm/nouveau/nvkm/subdev/bios/shadowpci.c
+@@ -101,9 +101,13 @@ platform_init(struct nvkm_bios *bios, const char *name)
+ 	else
+ 		return ERR_PTR(-ENODEV);
+ 
++	if (!pdev->rom || pdev->romlen == 0)
++		return ERR_PTR(-ENODEV);
++
+ 	if ((priv = kmalloc(sizeof(*priv), GFP_KERNEL))) {
++		priv->size = pdev->romlen;
+ 		if (ret = -ENODEV,
+-		    (priv->rom = pci_platform_rom(pdev, &priv->size)))
++		    (priv->rom = ioremap(pdev->rom, pdev->romlen)))
+ 			return priv;
+ 		kfree(priv);
+ 	}
+@@ -111,11 +115,20 @@ platform_init(struct nvkm_bios *bios, const char *name)
+ 	return ERR_PTR(ret);
+ }
+ 
++static void
++platform_fini(void *data)
++{
++	struct priv *priv = data;
++
++	iounmap(priv->rom);
++	kfree(priv);
++}
++
+ const struct nvbios_source
+ nvbios_platform = {
+ 	.name = "PLATFORM",
+ 	.init = platform_init,
+-	.fini = (void(*)(void *))kfree,
++	.fini = platform_fini,
+ 	.read = pcirom_read,
+ 	.rw = true,
+ };
+diff --git a/drivers/gpu/drm/radeon/radeon_bios.c b/drivers/gpu/drm/radeon/radeon_bios.c
+index 4d1490fbb0750..756a50e8aff20 100644
+--- a/drivers/gpu/drm/radeon/radeon_bios.c
++++ b/drivers/gpu/drm/radeon/radeon_bios.c
+@@ -108,25 +108,33 @@ static bool radeon_read_bios(struct radeon_device *rdev)
+ 
+ static bool radeon_read_platform_bios(struct radeon_device *rdev)
+ {
+-	uint8_t __iomem *bios;
+-	size_t size;
++	phys_addr_t rom = rdev->pdev->rom;
++	size_t romlen = rdev->pdev->romlen;
++	void __iomem *bios;
+ 
+ 	rdev->bios = NULL;
+ 
+-	bios = pci_platform_rom(rdev->pdev, &size);
+-	if (!bios) {
++	if (!rom || romlen == 0)
+ 		return false;
+-	}
+ 
+-	if (size == 0 || bios[0] != 0x55 || bios[1] != 0xaa) {
++	rdev->bios = kzalloc(romlen, GFP_KERNEL);
++	if (!rdev->bios)
+ 		return false;
+-	}
+-	rdev->bios = kmemdup(bios, size, GFP_KERNEL);
+-	if (rdev->bios == NULL) {
+-		return false;
+-	}
++
++	bios = ioremap(rom, romlen);
++	if (!bios)
++		goto free_bios;
++
++	memcpy_fromio(rdev->bios, bios, romlen);
++	iounmap(bios);
++
++	if (rdev->bios[0] != 0x55 || rdev->bios[1] != 0xaa)
++		goto free_bios;
+ 
+ 	return true;
++free_bios:
++	kfree(rdev->bios);
++	return false;
+ }
+ 
+ #ifdef CONFIG_ACPI
+diff --git a/drivers/pci/rom.c b/drivers/pci/rom.c
+index 137bf0cee897c..8fc9a4e911e3a 100644
+--- a/drivers/pci/rom.c
++++ b/drivers/pci/rom.c
+@@ -195,20 +195,3 @@ void pci_unmap_rom(struct pci_dev *pdev, void __iomem *rom)
+ 		pci_disable_rom(pdev);
+ }
+ EXPORT_SYMBOL(pci_unmap_rom);
+-
+-/**
+- * pci_platform_rom - provides a pointer to any ROM image provided by the
+- * platform
+- * @pdev: pointer to pci device struct
+- * @size: pointer to receive size of pci window over ROM
+- */
+-void __iomem *pci_platform_rom(struct pci_dev *pdev, size_t *size)
+-{
+-	if (pdev->rom && pdev->romlen) {
+-		*size = pdev->romlen;
+-		return phys_to_virt((phys_addr_t)pdev->rom);
+-	}
+-
+-	return NULL;
+-}
+-EXPORT_SYMBOL(pci_platform_rom);
+diff --git a/include/linux/pci.h b/include/linux/pci.h
+index f39f22f9ee474..e92bd9b32f369 100644
+--- a/include/linux/pci.h
++++ b/include/linux/pci.h
+@@ -1216,7 +1216,6 @@ int pci_enable_rom(struct pci_dev *pdev);
+ void pci_disable_rom(struct pci_dev *pdev);
+ void __iomem __must_check *pci_map_rom(struct pci_dev *pdev, size_t *size);
+ void pci_unmap_rom(struct pci_dev *pdev, void __iomem *rom);
+-void __iomem __must_check *pci_platform_rom(struct pci_dev *pdev, size_t *size);
+ 
+ /* Power management related routines */
+ int pci_save_state(struct pci_dev *dev);
 -- 
 2.20.1
 
