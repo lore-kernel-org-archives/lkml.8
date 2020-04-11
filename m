@@ -4,57 +4,55 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63BB5C2BBC7
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:46:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E099C2BB86
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:46:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 34798206F7
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:46:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 74C7A206F7
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:46:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586648769;
-	bh=aOg7yz/O9sc4pMrxXz59A+WsZv+fsfV4MvjWc2Ckh/Y=;
+	s=default; t=1586648771;
+	bh=oQBj8lb2uNeut+/63KcU0BjmNZtn6nkTPn8nReRWhAQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uI22YF8EWdw51svx5ZKfUH2DEPEGmR/rv107+lrJi0NgAHdurb2k6M/eTbslNOSRY
-	 UrkKWjLvml4dChq1/YkCikpsex8+4IdsnbVzkz5ZzkQZgdVWGqYSLZ5F5Hw/Rjx5y5
-	 YV/CMbv9hpkc8ap+EVOyrf4OcJ3cb3DkCSrUdrDQ=
+	b=dKwH210jCF7iN8WZ6FchMEulHuu8kQuOplLb0PsozrT7Bymcf1VIdl8JCGQVU2yvq
+	 eSE2VFJPwsGOtgPspe7H1wbn24mpfMck3oYrgfM7ios/bbFoFzPULWqWbW01Pc5ErS
+	 /aXkfxJyIomEbcmUQZFWgPupzt74Sf32cGkWToMQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727940AbgDKXFZ (ORCPT
+        id S1731006AbgDKXqJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 19:05:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39360 "EHLO mail.kernel.org"
+        Sat, 11 Apr 2020 19:46:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39594 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726867AbgDKXFV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 19:05:21 -0400
+        id S1727941AbgDKXF0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Apr 2020 19:05:26 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4F24D214D8;
-        Sat, 11 Apr 2020 23:05:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6B19C20708;
+        Sat, 11 Apr 2020 23:05:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586646321;
-        bh=aOg7yz/O9sc4pMrxXz59A+WsZv+fsfV4MvjWc2Ckh/Y=;
+        s=default; t=1586646326;
+        bh=oQBj8lb2uNeut+/63KcU0BjmNZtn6nkTPn8nReRWhAQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lY9goaorNI/gGLE6DD+ws56+XmdPk0PtO9NBS34y7hTdTSuE5Ee7YFyh3otoC9WJ4
-         762cTx4C2c9VbYwoaJknmvs1XYiwX3gRv7CSWBnxFHqeRRayixxPK7Erwg3FX/s8Oc
-         UTGVTKJ1YY/tnGEADR6mZaAvd1BfZKkHuvWdGPS4=
+        b=TY3xSW43zk3Scr4Gi7rpHzHdDpx+W64L178R6fclzNq+qQMFm0V5/HBlCRKq3Gl//
+         HVSXrjjqCOfQXNuNSrvuOs7Q4FElyzYEYAfDd+WaYA0G49ZCEPPMxfDZ/U2aT2U1EL
+         L4nfz9MgJOSxKTCNCpSTEKmRW8PY0VrkwleHETQU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
-        Tom St Denis <tom.stdenis@amd.com>,
-        Felix Kuehling <Felix.Kuehling@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        Sasha Levin <sashal@kernel.org>, amd-gfx@lists.freedesktop.org,
-        dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 5.6 075/149] drm/amdgpu: fix parentheses in amdgpu_vm_update_ptes
-Date:   Sat, 11 Apr 2020 19:02:32 -0400
-Message-Id: <20200411230347.22371-75-sashal@kernel.org>
+Cc:     Vikas Patel <vikpatel@codeaurora.org>,
+        Venkateswara Naralasetty <vnaralas@codeaurora.org>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Sasha Levin <sashal@kernel.org>, ath11k@lists.infradead.org,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.6 079/149] ath11k: Fixing dangling pointer issue upon peer delete failure
+Date:   Sat, 11 Apr 2020 19:02:36 -0400
+Message-Id: <20200411230347.22371-79-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200411230347.22371-1-sashal@kernel.org>
 References: <20200411230347.22371-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -63,35 +61,70 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christian König <christian.koenig@amd.com>
+From: Vikas Patel <vikpatel@codeaurora.org>
 
-[ Upstream commit bfcd6c69e4c3f73f2f92b997983537f9a3ac3b29 ]
+[ Upstream commit 58595c9874c625ceb7004960d8e53b9226abdc92 ]
 
-For the root PD mask can be 0xffffffff as well which would
-overrun to 0 if we don't cast it before we add one.
+When there is WMI command failure, 'peer->sta' was not getting
+cleaned up, and mac80211 frees the 'sta' memory, which is causing
+the below page fault.
 
-Signed-off-by: Christian König <christian.koenig@amd.com>
-Tested-by: Tom St Denis <tom.stdenis@amd.com>
-Reviewed-by: Felix Kuehling <Felix.Kuehling@amd.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Cleaning up the sta pointer in ath11k whenever peer delete command
+is sent.
+
+Unable to handle kernel paging request at virtual address 200080000006a
+pgd = ffffffc02a774000
+[200080000006a] *pgd=0000000000000000, *pud=0000000000000000
+Internal error: Oops: 96000004 [#1] PREEMPT SMP
+.
+.
+.
+CPU: 0 PID: 0 Comm: swapper/0 Tainted: G        W       4.4.60 #1
+Hardware name: Qualcomm Technologies, Inc. IPQ807x/AP-HK01-C1 (DT)
+task: ffffffc00083c6d0 ti: ffffffc00083c6d0 task.ti: ffffffc00083c6d0
+PC is at ath11k_dp_rx_process_mon_status+0x114/0x4e0 [ath11k]
+LR is at ath11k_dp_rx_process_mon_status+0xe8/0x4e0 [ath11k]
+pc : [<ffffffbffcf8e544>] lr : [<ffffffbffcf8e518>] pstate: 60000145
+sp : ffffffc000833a30
+
+Signed-off-by: Vikas Patel <vikpatel@codeaurora.org>
+Signed-off-by: Venkateswara Naralasetty <vnaralas@codeaurora.org>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/amd/amdgpu/amdgpu_vm.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/wireless/ath/ath11k/mac.c | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
-diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_vm.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_vm.c
-index d16231d6a790b..67e7422032265 100644
---- a/drivers/gpu/drm/amd/amdgpu/amdgpu_vm.c
-+++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_vm.c
-@@ -1498,7 +1498,7 @@ static int amdgpu_vm_update_ptes(struct amdgpu_vm_update_params *params,
- 		incr = (uint64_t)AMDGPU_GPU_PAGE_SIZE << shift;
- 		mask = amdgpu_vm_entries_mask(adev, cursor.level);
- 		pe_start = ((cursor.pfn >> shift) & mask) * 8;
--		entry_end = (uint64_t)(mask + 1) << shift;
-+		entry_end = ((uint64_t)mask + 1) << shift;
- 		entry_end += cursor.pfn & ~(entry_end - 1);
- 		entry_end = min(entry_end, end);
+diff --git a/drivers/net/wireless/ath/ath11k/mac.c b/drivers/net/wireless/ath/ath11k/mac.c
+index 78f20ba47b37e..e89790a01c48b 100644
+--- a/drivers/net/wireless/ath/ath11k/mac.c
++++ b/drivers/net/wireless/ath/ath11k/mac.c
+@@ -2786,6 +2786,7 @@ static int ath11k_mac_op_sta_state(struct ieee80211_hw *hw,
+ 	struct ath11k *ar = hw->priv;
+ 	struct ath11k_vif *arvif = ath11k_vif_to_arvif(vif);
+ 	struct ath11k_sta *arsta = (struct ath11k_sta *)sta->drv_priv;
++	struct ath11k_peer *peer;
+ 	int ret = 0;
  
+ 	/* cancel must be done outside the mutex to avoid deadlock */
+@@ -2818,6 +2819,17 @@ static int ath11k_mac_op_sta_state(struct ieee80211_hw *hw,
+ 				   sta->addr, arvif->vdev_id);
+ 
+ 		ath11k_mac_dec_num_stations(arvif, sta);
++		spin_lock_bh(&ar->ab->base_lock);
++		peer = ath11k_peer_find(ar->ab, arvif->vdev_id, sta->addr);
++		if (peer && peer->sta == sta) {
++			ath11k_warn(ar->ab, "Found peer entry %pM n vdev %i after it was supposedly removed\n",
++				    vif->addr, arvif->vdev_id);
++			peer->sta = NULL;
++			list_del(&peer->list);
++			kfree(peer);
++			ar->num_peers--;
++		}
++		spin_unlock_bh(&ar->ab->base_lock);
+ 
+ 		kfree(arsta->tx_stats);
+ 		arsta->tx_stats = NULL;
 -- 
 2.20.1
 
