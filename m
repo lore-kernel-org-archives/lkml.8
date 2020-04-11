@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C592DC2BBC7
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:29:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48378C2BBC7
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:29:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A003621775
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:29:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 219F920787
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:29:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586647752;
-	bh=xLDq2BPXlszHeGB7nJiKuSRoFZgk6k+f8I7endKUhjQ=;
+	s=default; t=1586647755;
+	bh=Fa+sPfwU/NhlYp82gxZdts2D6EbwCQVnTSQvRIzFtA0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gw3xYvc/61Hqq1dkfq6bQbNLeHK872fNNfku+ymVkEgb/RQbvqXsQ/HHDqHVPPiRg
-	 9E5PT3Be9T39flmrnVDPI5fl4pOmKJR6F0gVXpHQWGE3pWxsceuLxU+69z3fhIn1FO
-	 kKInvbMWzy1TuAN3xJtnYXsQGulDk4NoNKmEDNaw=
+	b=cQrpC9aApqyeopKHf0x9AohwE5NpC4ANbuHrnYNVjaUlwzCKwA/VUN8IYM4Mlv6V7
+	 83I32mZkKFg2aqWdt9ElfL0DiZOi0+OuR+XjaC0QhBfAdxPX752xxTOgOTnqHHchFE
+	 OKTgh1YFDz348f02ux9nR96emguC76lvoO1VfhR8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729797AbgDKXLI (ORCPT
+        id S1730590AbgDKX3N (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 19:11:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50348 "EHLO mail.kernel.org"
+        Sat, 11 Apr 2020 19:29:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50424 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728068AbgDKXLF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 19:11:05 -0400
+        id S1729783AbgDKXLI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Apr 2020 19:11:08 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AD0B3216FD;
-        Sat, 11 Apr 2020 23:11:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2B45920708;
+        Sat, 11 Apr 2020 23:11:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586646665;
-        bh=xLDq2BPXlszHeGB7nJiKuSRoFZgk6k+f8I7endKUhjQ=;
+        s=default; t=1586646668;
+        bh=Fa+sPfwU/NhlYp82gxZdts2D6EbwCQVnTSQvRIzFtA0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GVjTScCLz7auGAccODC67ba2+EtBko5nCQqQ3efYu8Ieu/KXOxK9Xs0xX0FInlqmh
-         Ea7FKMBgWFm7IXPzRx//9a7m1O6Tazf0AeBcV3KURhREaq3pasMEp5Iaq+2y5Vq2N3
-         ughoq33YWv4fFuV1r2oHmPLFXDm6lnaxom04qbo8=
+        b=Rt1FfjSJ5mSllBO2X5lEKXmviFHgzj+qciM+Zl4/crX06ZF51Fze15M7KH0MHHYmM
+         ord4SUAtYreCi/R0fTfRODZ9cDbdkCAaer3phf6R8IKbCF7SPa39QIIg8XF6aEK+er
+         X1QxYR9yVPdBHmoNDfiJN/ERoUCxCE1D3iUM3Zao=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Arun Easi <aeasi@marvell.com>,
-        Himanshu Madhani <hmadhani@marvell.com>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 065/108] scsi: qla2xxx: Handle NVME status iocb correctly
-Date:   Sat, 11 Apr 2020 19:09:00 -0400
-Message-Id: <20200411230943.24951-65-sashal@kernel.org>
+Cc:     Eric Biggers <ebiggers@google.com>,
+        syzbot+1f9dc49e8de2582d90c2@syzkaller.appspotmail.com,
+        "Darrick J . Wong" <darrick.wong@oracle.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Sasha Levin <sashal@kernel.org>, linux-xfs@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 067/108] xfs: clear PF_MEMALLOC before exiting xfsaild thread
+Date:   Sat, 11 Apr 2020 19:09:02 -0400
+Message-Id: <20200411230943.24951-67-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200411230943.24951-1-sashal@kernel.org>
 References: <20200411230943.24951-1-sashal@kernel.org>
@@ -60,106 +61,100 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arun Easi <aeasi@marvell.com>
+From: Eric Biggers <ebiggers@google.com>
 
-[ Upstream commit 3d582b34992ba2fe4065f01019f0c08d12916faa ]
+[ Upstream commit 10a98cb16d80be3595fdb165fad898bb28b8b6d2 ]
 
-Certain state flags bit combinations are not checked and not handled
-correctly. Plus, do not log a normal underrun situation where there is
-no frame drop.
+Leaving PF_MEMALLOC set when exiting a kthread causes it to remain set
+during do_exit().  That can confuse things.  In particular, if BSD
+process accounting is enabled, then do_exit() writes data to an
+accounting file.  If that file has FS_SYNC_FL set, then this write
+occurs synchronously and can misbehave if PF_MEMALLOC is set.
 
-Link: https://lore.kernel.org/r/20200226224022.24518-17-hmadhani@marvell.com
-Signed-off-by: Himanshu Madhani <hmadhani@marvell.com>
-Signed-off-by: Arun Easi <aeasi@marvell.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+For example, if the accounting file is located on an XFS filesystem,
+then a WARN_ON_ONCE() in iomap_do_writepage() is triggered and the data
+doesn't get written when it should.  Or if the accounting file is
+located on an ext4 filesystem without a journal, then a WARN_ON_ONCE()
+in ext4_write_inode() is triggered and the inode doesn't get written.
+
+Fix this in xfsaild() by using the helper functions to save and restore
+PF_MEMALLOC.
+
+This can be reproduced as follows in the kvm-xfstests test appliance
+modified to add the 'acct' Debian package, and with kvm-xfstests's
+recommended kconfig modified to add CONFIG_BSD_PROCESS_ACCT=y:
+
+        mkfs.xfs -f /dev/vdb
+        mount /vdb
+        touch /vdb/file
+        chattr +S /vdb/file
+        accton /vdb/file
+        mkfs.xfs -f /dev/vdc
+        mount /vdc
+        umount /vdc
+
+It causes:
+	WARNING: CPU: 1 PID: 336 at fs/iomap/buffered-io.c:1534
+	CPU: 1 PID: 336 Comm: xfsaild/vdc Not tainted 5.6.0-rc5 #3
+	Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS ?-20191223_100556-anatol 04/01/2014
+	RIP: 0010:iomap_do_writepage+0x16b/0x1f0 fs/iomap/buffered-io.c:1534
+	[...]
+	Call Trace:
+	 write_cache_pages+0x189/0x4d0 mm/page-writeback.c:2238
+	 iomap_writepages+0x1c/0x33 fs/iomap/buffered-io.c:1642
+	 xfs_vm_writepages+0x65/0x90 fs/xfs/xfs_aops.c:578
+	 do_writepages+0x41/0xe0 mm/page-writeback.c:2344
+	 __filemap_fdatawrite_range+0xd2/0x120 mm/filemap.c:421
+	 file_write_and_wait_range+0x71/0xc0 mm/filemap.c:760
+	 xfs_file_fsync+0x7a/0x2b0 fs/xfs/xfs_file.c:114
+	 generic_write_sync include/linux/fs.h:2867 [inline]
+	 xfs_file_buffered_aio_write+0x379/0x3b0 fs/xfs/xfs_file.c:691
+	 call_write_iter include/linux/fs.h:1901 [inline]
+	 new_sync_write+0x130/0x1d0 fs/read_write.c:483
+	 __kernel_write+0x54/0xe0 fs/read_write.c:515
+	 do_acct_process+0x122/0x170 kernel/acct.c:522
+	 slow_acct_process kernel/acct.c:581 [inline]
+	 acct_process+0x1d4/0x27c kernel/acct.c:607
+	 do_exit+0x83d/0xbc0 kernel/exit.c:791
+	 kthread+0xf1/0x140 kernel/kthread.c:257
+	 ret_from_fork+0x27/0x50 arch/x86/entry/entry_64.S:352
+
+This bug was originally reported by syzbot at
+https://lore.kernel.org/r/0000000000000e7156059f751d7b@google.com.
+
+Reported-by: syzbot+1f9dc49e8de2582d90c2@syzkaller.appspotmail.com
+Signed-off-by: Eric Biggers <ebiggers@google.com>
+Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
+Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
+Reviewed-by: Christoph Hellwig <hch@lst.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/qla2xxx/qla_isr.c | 47 ++++++++++++++++++++++++++++------
- 1 file changed, 39 insertions(+), 8 deletions(-)
+ fs/xfs/xfs_trans_ail.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/scsi/qla2xxx/qla_isr.c b/drivers/scsi/qla2xxx/qla_isr.c
-index 3e9c5768815e5..a69765f396750 100644
---- a/drivers/scsi/qla2xxx/qla_isr.c
-+++ b/drivers/scsi/qla2xxx/qla_isr.c
-@@ -1868,6 +1868,7 @@ static void qla24xx_nvme_iocb_entry(scsi_qla_host_t *vha, struct req_que *req,
- 	struct nvmefc_fcp_req *fd;
- 	uint16_t        ret = QLA_SUCCESS;
- 	uint16_t	comp_status = le16_to_cpu(sts->comp_status);
-+	int		logit = 0;
+diff --git a/fs/xfs/xfs_trans_ail.c b/fs/xfs/xfs_trans_ail.c
+index 6ccfd75d3c24c..812108f6cc89c 100644
+--- a/fs/xfs/xfs_trans_ail.c
++++ b/fs/xfs/xfs_trans_ail.c
+@@ -529,8 +529,9 @@ xfsaild(
+ {
+ 	struct xfs_ail	*ailp = data;
+ 	long		tout = 0;	/* milliseconds */
++	unsigned int	noreclaim_flag;
  
- 	iocb = &sp->u.iocb_cmd;
- 	fcport = sp->fcport;
-@@ -1878,6 +1879,12 @@ static void qla24xx_nvme_iocb_entry(scsi_qla_host_t *vha, struct req_que *req,
- 	if (unlikely(iocb->u.nvme.aen_op))
- 		atomic_dec(&sp->vha->hw->nvme_active_aen_cnt);
+-	current->flags |= PF_MEMALLOC;
++	noreclaim_flag = memalloc_noreclaim_save();
+ 	set_freezable();
  
-+	if (unlikely(comp_status != CS_COMPLETE))
-+		logit = 1;
-+
-+	fd->transferred_length = fd->payload_length -
-+	    le32_to_cpu(sts->residual_len);
-+
- 	/*
- 	 * State flags: Bit 6 and 0.
- 	 * If 0 is set, we don't care about 6.
-@@ -1888,8 +1895,20 @@ static void qla24xx_nvme_iocb_entry(scsi_qla_host_t *vha, struct req_que *req,
- 	 */
- 	if (!(state_flags & (SF_FCP_RSP_DMA | SF_NVME_ERSP))) {
- 		iocb->u.nvme.rsp_pyld_len = 0;
--	} else if ((state_flags & SF_FCP_RSP_DMA)) {
-+	} else if ((state_flags & (SF_FCP_RSP_DMA | SF_NVME_ERSP)) ==
-+			(SF_FCP_RSP_DMA | SF_NVME_ERSP)) {
-+		/* Response already DMA'd to fd->rspaddr. */
- 		iocb->u.nvme.rsp_pyld_len = le16_to_cpu(sts->nvme_rsp_pyld_len);
-+	} else if ((state_flags & SF_FCP_RSP_DMA)) {
-+		/*
-+		 * Non-zero value in first 12 bytes of NVMe_RSP IU, treat this
-+		 * as an error.
-+		 */
-+		iocb->u.nvme.rsp_pyld_len = 0;
-+		fd->transferred_length = 0;
-+		ql_dbg(ql_dbg_io, fcport->vha, 0x307a,
-+			"Unexpected values in NVMe_RSP IU.\n");
-+		logit = 1;
- 	} else if (state_flags & SF_NVME_ERSP) {
- 		uint32_t *inbuf, *outbuf;
- 		uint16_t iter;
-@@ -1912,16 +1931,28 @@ static void qla24xx_nvme_iocb_entry(scsi_qla_host_t *vha, struct req_que *req,
- 		iter = iocb->u.nvme.rsp_pyld_len >> 2;
- 		for (; iter; iter--)
- 			*outbuf++ = swab32(*inbuf++);
--	} else { /* unhandled case */
--	    ql_log(ql_log_warn, fcport->vha, 0x503a,
--		"NVME-%s error. Unhandled state_flags of %x\n",
--		sp->name, state_flags);
+ 	while (1) {
+@@ -601,6 +602,7 @@ xfsaild(
+ 		tout = xfsaild_push(ailp);
  	}
  
--	fd->transferred_length = fd->payload_length -
--	    le32_to_cpu(sts->residual_len);
-+	if (state_flags & SF_NVME_ERSP) {
-+		struct nvme_fc_ersp_iu *rsp_iu = fd->rspaddr;
-+		u32 tgt_xfer_len;
++	memalloc_noreclaim_restore(noreclaim_flag);
+ 	return 0;
+ }
  
--	if (unlikely(comp_status != CS_COMPLETE))
-+		tgt_xfer_len = be32_to_cpu(rsp_iu->xfrd_len);
-+		if (fd->transferred_length != tgt_xfer_len) {
-+			ql_dbg(ql_dbg_io, fcport->vha, 0x3079,
-+				"Dropped frame(s) detected (sent/rcvd=%u/%u).\n",
-+				tgt_xfer_len, fd->transferred_length);
-+			logit = 1;
-+		} else if (comp_status == CS_DATA_UNDERRUN) {
-+			/*
-+			 * Do not log if this is just an underflow and there
-+			 * is no data loss.
-+			 */
-+			logit = 0;
-+		}
-+	}
-+
-+	if (unlikely(logit))
- 		ql_log(ql_log_warn, fcport->vha, 0x5060,
- 		   "NVME-%s ERR Handling - hdl=%x status(%x) tr_len:%x resid=%x  ox_id=%x\n",
- 		   sp->name, sp->handle, comp_status,
 -- 
 2.20.1
 
