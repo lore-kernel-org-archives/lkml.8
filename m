@@ -7,50 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DEBCC2BBFD
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:43:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C586AC2BA19
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:44:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5AAEF206E9
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:43:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D846206E9
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:44:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586648638;
-	bh=L94YyiB80d2EOk0e4QuJtRgleOi5GPyGDgPkKIuOlro=;
+	s=default; t=1586648640;
+	bh=ZatDQ1rEEBooTMuQQpjYWUonkIy+8ABGIqmyk1GU6+s=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bR9p94yWdbtuEM0KJJz5z9itj3L5iDrbHbeVOPiUozGvvcPPJwkbzns4kjUn5TRq8
-	 zeondQdKAYkMT2w8TP/CB/EzrFksMwWCyeNGlsM7wI6qlhUPB5o15MzX6qins8JYn9
-	 SiRAzYO6nCrxL9zs65NNGGNxC1cjz5pMdRHw8IzQ=
+	b=SWur/AJojeX6rigquS4HyrlhAb30LKCgfi56LT8ZRA6sKzVoWqGSfy9w+uE9iw986
+	 61lrtrAtE7EhCVZoZZXVu+f/IoaSWcWlYzxWetaaRAnQyWobVIACo64sjKtmJ0/s/j
+	 JQ4e0JY0R1lO9++YqCGy5YUxM6C62AZDXJeGcE8Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728309AbgDKXGM (ORCPT
+        id S1729881AbgDKXn7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 19:06:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41222 "EHLO mail.kernel.org"
+        Sat, 11 Apr 2020 19:43:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41330 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728254AbgDKXGJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 19:06:09 -0400
+        id S1728294AbgDKXGM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Apr 2020 19:06:12 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 42F2520787;
-        Sat, 11 Apr 2020 23:06:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 38914215A4;
+        Sat, 11 Apr 2020 23:06:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586646369;
-        bh=L94YyiB80d2EOk0e4QuJtRgleOi5GPyGDgPkKIuOlro=;
+        s=default; t=1586646371;
+        bh=ZatDQ1rEEBooTMuQQpjYWUonkIy+8ABGIqmyk1GU6+s=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Wr6ZnX1JlBwZd1QjWJ+ukif9cTGSlwfcJy16LinItl6Kse6njJQjD2L/nzCMi+IdK
-         fUerzafKHbNXPWEgSJtMa/zscLEGC8vh0WGf0Cc1y40vRb44txyCR7t0fhd57F8XT0
-         7foE52i8+vJ/eBDWHt8Jb9tN8pgVF9CtED8TJZms=
+        b=LdJ/f3mz5Yg/opnxhi5FsxwlymLqLM0clqAzsbnJD9fvZHLxdUgPjqspsz5JBc0L4
+         PIacM2cA9s8VHlPLyxRRVBae+RU/4GM2gIFthlIJXsvWuUrGsMHf3m5alp8REt5/sB
+         wSyXCCfyZ60atscYI/9DHYsoKtrFLhUIMeYBzch4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Raveendran Somu <raveendran.somu@cypress.com>,
-        Chi-hsien Lin <chi-hsien.lin@cypress.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-wireless@vger.kernel.org,
-        brcm80211-dev-list.pdl@broadcom.com,
-        brcm80211-dev-list@cypress.com, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.6 112/149] brcmfmac: Fix double freeing in the fmac usb data path
-Date:   Sat, 11 Apr 2020 19:03:09 -0400
-Message-Id: <20200411230347.22371-112-sashal@kernel.org>
+Cc:     Xin Long <lucien.xin@gmail.com>,
+        Steffen Klassert <steffen.klassert@secunet.com>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.6 114/149] xfrm: add prep for esp beet mode offload
+Date:   Sat, 11 Apr 2020 19:03:11 -0400
+Message-Id: <20200411230347.22371-114-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200411230347.22371-1-sashal@kernel.org>
 References: <20200411230347.22371-1-sashal@kernel.org>
@@ -63,39 +59,89 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Raveendran Somu <raveendran.somu@cypress.com>
+From: Xin Long <lucien.xin@gmail.com>
 
-[ Upstream commit 78179869dc3f5c0059bbf5d931a2717f1ad97ecd ]
+[ Upstream commit 308491755f36c461ee67290af159fdba6be0169d ]
 
-When the brcmf_fws_process_skb() fails to get hanger slot for
-queuing the skb, it tries to free the skb.
-But the caller brcmf_netdev_start_xmit() of that funciton frees
-the packet on error return value.
-This causes the double freeing and which caused the kernel crash.
+Like __xfrm_transport/mode_tunnel_prep(), this patch is to add
+__xfrm_mode_beet_prep() to fix the transport_header for gso
+segments, and reset skb mac_len, and pull skb data to the
+proto inside esp.
 
-Signed-off-by: Raveendran Somu <raveendran.somu@cypress.com>
-Signed-off-by: Chi-hsien Lin <chi-hsien.lin@cypress.com>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
-Link: https://lore.kernel.org/r/1585124429-97371-3-git-send-email-chi-hsien.lin@cypress.com
+This patch also fixes a panic, reported by ltp:
+
+  # modprobe esp4_offload
+  # runltp -f net_stress.ipsec_tcp
+
+  [ 2452.780511] kernel BUG at net/core/skbuff.c:109!
+  [ 2452.799851] Call Trace:
+  [ 2452.800298]  <IRQ>
+  [ 2452.800705]  skb_push.cold.98+0x14/0x20
+  [ 2452.801396]  esp_xmit+0x17b/0x270 [esp4_offload]
+  [ 2452.802799]  validate_xmit_xfrm+0x22f/0x2e0
+  [ 2452.804285]  __dev_queue_xmit+0x589/0x910
+  [ 2452.806264]  __neigh_update+0x3d7/0xa50
+  [ 2452.806958]  arp_process+0x259/0x810
+  [ 2452.807589]  arp_rcv+0x18a/0x1c
+
+It was caused by the skb going to esp_xmit with a wrong transport
+header.
+
+Signed-off-by: Xin Long <lucien.xin@gmail.com>
+Signed-off-by: Steffen Klassert <steffen.klassert@secunet.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/broadcom/brcm80211/brcmfmac/fwsignal.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ net/xfrm/xfrm_device.c | 28 +++++++++++++++++++++++++++-
+ 1 file changed, 27 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/fwsignal.c b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/fwsignal.c
-index 5e1a11c075517..10022c7653545 100644
---- a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/fwsignal.c
-+++ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/fwsignal.c
-@@ -2145,8 +2145,7 @@ int brcmf_fws_process_skb(struct brcmf_if *ifp, struct sk_buff *skb)
- 		brcmf_fws_enq(fws, BRCMF_FWS_SKBSTATE_DELAYED, fifo, skb);
- 		brcmf_fws_schedule_deq(fws);
- 	} else {
--		bphy_err(drvr, "drop skb: no hanger slot\n");
--		brcmf_txfinalize(ifp, skb, false);
-+		bphy_err(drvr, "no hanger slot available\n");
- 		rc = -ENOMEM;
+diff --git a/net/xfrm/xfrm_device.c b/net/xfrm/xfrm_device.c
+index e2db468cf50ee..6cc7f7f1dd68c 100644
+--- a/net/xfrm/xfrm_device.c
++++ b/net/xfrm/xfrm_device.c
+@@ -46,6 +46,25 @@ static void __xfrm_mode_tunnel_prep(struct xfrm_state *x, struct sk_buff *skb,
+ 	pskb_pull(skb, skb->mac_len + x->props.header_len);
+ }
+ 
++static void __xfrm_mode_beet_prep(struct xfrm_state *x, struct sk_buff *skb,
++				  unsigned int hsize)
++{
++	struct xfrm_offload *xo = xfrm_offload(skb);
++	int phlen = 0;
++
++	if (xo->flags & XFRM_GSO_SEGMENT)
++		skb->transport_header = skb->network_header + hsize;
++
++	skb_reset_mac_len(skb);
++	if (x->sel.family != AF_INET6) {
++		phlen = IPV4_BEET_PHMAXLEN;
++		if (x->outer_mode.family == AF_INET6)
++			phlen += sizeof(struct ipv6hdr) - sizeof(struct iphdr);
++	}
++
++	pskb_pull(skb, skb->mac_len + hsize + (x->props.header_len - phlen));
++}
++
+ /* Adjust pointers into the packet when IPsec is done at layer2 */
+ static void xfrm_outer_mode_prep(struct xfrm_state *x, struct sk_buff *skb)
+ {
+@@ -66,9 +85,16 @@ static void xfrm_outer_mode_prep(struct xfrm_state *x, struct sk_buff *skb)
+ 			return __xfrm_transport_prep(x, skb,
+ 						     sizeof(struct ipv6hdr));
+ 		break;
++	case XFRM_MODE_BEET:
++		if (x->outer_mode.family == AF_INET)
++			return __xfrm_mode_beet_prep(x, skb,
++						     sizeof(struct iphdr));
++		if (x->outer_mode.family == AF_INET6)
++			return __xfrm_mode_beet_prep(x, skb,
++						     sizeof(struct ipv6hdr));
++		break;
+ 	case XFRM_MODE_ROUTEOPTIMIZATION:
+ 	case XFRM_MODE_IN_TRIGGER:
+-	case XFRM_MODE_BEET:
+ 		break;
  	}
- 	brcmf_fws_unlock(fws);
+ }
 -- 
 2.20.1
 
