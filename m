@@ -7,46 +7,53 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D817EC2BA19
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:13:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DFC1BC2BB86
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:14:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A6F0B20787
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:13:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BA12C215A4
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:14:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586646838;
-	bh=pb0HsRJJ5jCJK7KhsG5jlq9kRHAIunQL+o6nTKDSeUU=;
+	s=default; t=1586646841;
+	bh=TzM/SWg7N0SF+1EpVQxkbMiR46P25mK/oHaGpAH0d2Q=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rVB0CVhdrMO93i5pjt3Aw9G7I//NIdTsUgELv3sjthm+O/jN1Kkz/LivZKLUHQk24
-	 8MrVaL/FtmsHdKwhSjY3Ca1su+pEYbbcIdzCEoI5ZCzOHqAXJVYEUE77+SvMHlxmaz
-	 iboKmpgeuWHCH95cp4ARIes9uj190TOIr9m3O70Q=
+	b=Ltl4uLcCNRRPqYm5JkBMDHTxdkeCj9JKI+YLhUGCXSEKvaDcH3VGGz7BUssaRgnPf
+	 fU0TgYJIvkyfxT+ntZSUsLK9u97lIA2xPDkAt7M4qBgSK4pp3bprZ4nj4T+MjcuWOA
+	 7vavpHksX1e42ySt5PBAB+pwDkAlw4r3M0Threvk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730231AbgDKXN4 (ORCPT
+        id S1730232AbgDKXN7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 19:13:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55192 "EHLO mail.kernel.org"
+        Sat, 11 Apr 2020 19:13:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55222 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730575AbgDKXNu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 19:13:50 -0400
+        id S1728797AbgDKXNw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Apr 2020 19:13:52 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2062320787;
-        Sat, 11 Apr 2020 23:13:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4BAD720787;
+        Sat, 11 Apr 2020 23:13:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586646829;
-        bh=pb0HsRJJ5jCJK7KhsG5jlq9kRHAIunQL+o6nTKDSeUU=;
+        s=default; t=1586646832;
+        bh=TzM/SWg7N0SF+1EpVQxkbMiR46P25mK/oHaGpAH0d2Q=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wiq8nNEi31DvAJYoaQahE6E7WGlVN0skcNsxss+JF3TXhPJGuE6HgKcEIO5W9Lam4
-         mGJXodMK/iVUG6rAfRku99iWcU52fkW6jIIob4YbO8BRao6CcPv003gHNMax1Rr6Pm
-         JRPDL5zOlMzzfNWjGN3O4dHBAXXZdICDZybd3KW8=
+        b=AZtKsjE1evxOUmTHTMz62TOp3iGeEPSQk+SHzGjh9s5kqkIUbeNbSsYh7obQGMdwx
+         Tq9NZyXRYAmhqr5QcwdWfw1nJ6eDGbxR/BZGXCNo711n1gW26CQR8XzMSdlI6SiFhp
+         88/v/oiPUZSMWMo1iMAL+k6B0JMX1Fv0TLe5aHRE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Florian Fainelli <f.fainelli@gmail.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 19/37] net: dsa: bcm_sf2: Also configure Port 5 for 2Gb/sec on 7278
-Date:   Sat, 11 Apr 2020 19:13:08 -0400
-Message-Id: <20200411231327.26550-19-sashal@kernel.org>
+Cc:     Wen Yang <wen.yang99@zte.com.cn>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Mukesh Ojha <mojha@codeaurora.org>,
+        Tomi Valkeinen <tomi.valkeinen@ti.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Sebastian Reichel <sebastian.reichel@collabora.com>,
+        dri-devel@lists.freedesktop.org,
+        Markus Elfring <Markus.Elfring@web.de>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 21/37] drm/omap: fix possible object reference leak
+Date:   Sat, 11 Apr 2020 19:13:10 -0400
+Message-Id: <20200411231327.26550-21-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200411231327.26550-1-sashal@kernel.org>
 References: <20200411231327.26550-1-sashal@kernel.org>
@@ -59,47 +66,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Florian Fainelli <f.fainelli@gmail.com>
+From: Wen Yang <wen.yang99@zte.com.cn>
 
-[ Upstream commit 7458bd540fa0a90220b9e8c349d910d9dde9caf8 ]
+[ Upstream commit 47340e46f34a3b1d80e40b43ae3d7a8da34a3541 ]
 
-Either port 5 or port 8 can be used on a 7278 device, make sure that
-port 5 also gets configured properly for 2Gb/sec in that case.
+The call to of_find_matching_node returns a node pointer with refcount
+incremented thus it must be explicitly decremented after the last
+usage.
 
-Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Detected by coccinelle with the following warnings:
+drivers/gpu/drm/omapdrm/dss/omapdss-boot-init.c:212:2-8: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 209, but without a corresponding object release within this function.
+drivers/gpu/drm/omapdrm/dss/omapdss-boot-init.c:237:1-7: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 209, but without a corresponding object release within this function.
+
+Signed-off-by: Wen Yang <wen.yang99@zte.com.cn>
+Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Reviewed-by: Mukesh Ojha <mojha@codeaurora.org>
+Cc: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Cc: David Airlie <airlied@linux.ie>
+Cc: Daniel Vetter <daniel@ffwll.ch>
+Cc: Sebastian Reichel <sebastian.reichel@collabora.com>
+Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: dri-devel@lists.freedesktop.org
+Cc: linux-kernel@vger.kernel.org
+Cc: Markus Elfring <Markus.Elfring@web.de>
+Signed-off-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/1554692313-28882-2-git-send-email-wen.yang99@zte.com.cn
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/dsa/bcm_sf2.c      | 3 +++
- drivers/net/dsa/bcm_sf2_regs.h | 1 +
- 2 files changed, 4 insertions(+)
+ drivers/gpu/drm/omapdrm/dss/omapdss-boot-init.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/dsa/bcm_sf2.c b/drivers/net/dsa/bcm_sf2.c
-index 6bca42e34a53d..4b0c48a40ba6e 100644
---- a/drivers/net/dsa/bcm_sf2.c
-+++ b/drivers/net/dsa/bcm_sf2.c
-@@ -691,6 +691,9 @@ static void bcm_sf2_sw_adjust_link(struct dsa_switch *ds, int port,
- 	if (phydev->duplex == DUPLEX_FULL)
- 		reg |= DUPLX_MODE;
+diff --git a/drivers/gpu/drm/omapdrm/dss/omapdss-boot-init.c b/drivers/gpu/drm/omapdrm/dss/omapdss-boot-init.c
+index bf626acae2712..cd8e9b799b9a5 100644
+--- a/drivers/gpu/drm/omapdrm/dss/omapdss-boot-init.c
++++ b/drivers/gpu/drm/omapdrm/dss/omapdss-boot-init.c
+@@ -193,7 +193,7 @@ static int __init omapdss_boot_init(void)
+ 	dss = of_find_matching_node(NULL, omapdss_of_match);
  
-+	if (priv->type == BCM7278_DEVICE_ID && dsa_is_cpu_port(ds, port))
-+		reg |= GMIIP_SPEED_UP_2G;
-+
- 	core_writel(priv, reg, offset);
+ 	if (dss == NULL || !of_device_is_available(dss))
+-		return 0;
++		goto put_node;
  
- 	if (!phydev->is_pseudo_fixed_link)
-diff --git a/drivers/net/dsa/bcm_sf2_regs.h b/drivers/net/dsa/bcm_sf2_regs.h
-index 49695fcc2ea8f..3c4fd7cda701a 100644
---- a/drivers/net/dsa/bcm_sf2_regs.h
-+++ b/drivers/net/dsa/bcm_sf2_regs.h
-@@ -162,6 +162,7 @@ enum bcm_sf2_reg_offs {
- #define  RXFLOW_CNTL			(1 << 4)
- #define  TXFLOW_CNTL			(1 << 5)
- #define  SW_OVERRIDE			(1 << 6)
-+#define  GMIIP_SPEED_UP_2G		(1 << 7)
+ 	omapdss_walk_device(dss, true);
  
- #define CORE_WATCHDOG_CTRL		0x001e4
- #define  SOFTWARE_RESET			(1 << 7)
+@@ -218,6 +218,8 @@ static int __init omapdss_boot_init(void)
+ 		kfree(n);
+ 	}
+ 
++put_node:
++	of_node_put(dss);
+ 	return 0;
+ }
+ 
 -- 
 2.20.1
 
