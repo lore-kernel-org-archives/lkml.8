@@ -2,169 +2,102 @@ Return-Path: <SRS0=xbEg=53=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C553AC2BBC7
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:25:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67225C2BBC7
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:25:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 96C30206A1
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:25:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eVKtwmuP"
+	by mail.kernel.org (Postfix) with ESMTP id 404E8206A1
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:25:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729026AbgDKMZR (ORCPT
+        id S1726883AbgDKMQr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 08:25:17 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:42914 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728546AbgDKMZQ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 08:25:16 -0400
-Received: by mail-wr1-f67.google.com with SMTP id j2so5044807wrs.9;
-        Sat, 11 Apr 2020 05:25:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=PXnvbLdLrQw02Pv9aTraJTstO6BsBfshSbSvruk1AoI=;
-        b=eVKtwmuP9eIdsk0DhszqFM/hq7WkqRqir5lOWmDDJZ+lZVcGXyuUuO/jOnjM8mDYM+
-         SFYkcV9yi9yuUYTPhE2MftExFAECb2nT5xyY8TKHr7yD9lTPMjb9SlFwUnejhZ62EscA
-         toWiRpCF6/OhwypaUSnWTJ+yLZk/kyKeRmg5ztC4/axZrd8Yhmid80PA+dDCmM3agaDM
-         QTk01KBvlhT/6u15/u6/GDqWSNwWBAOGMk+R7SUs/3Ezir6yzC354SZFHsS16HbXG9e9
-         X76vq9XIbqCmrPwdVP+Esd3xTNJDcxCkSGKb8ZJuVinoBP/X0GXyPmhZiWyRSzOEZV4o
-         YBqQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=PXnvbLdLrQw02Pv9aTraJTstO6BsBfshSbSvruk1AoI=;
-        b=CKMxZZ8INH5cNMiLVd3BZoWJYR9UrKOOvSxTH3ycu5Zum8P5R5MiF5ihKmIOkY5w4r
-         SZ+se6taE+qRyNRdFyr3YPemHAn5ZQ3sS28in1d9GPBlIpS9cjtazo7YPbofm0edFnfO
-         b80wgC28iJQjJdawHgpwBp2V/aa2/5udqUuROboiUa1im9+tNMDrau0RZC7XdDTKbw2g
-         vSe5m1nE5KZW6a2WjwJltcjwtIRHunwamGttzh9Z/GqYiJrc9W26SLR5MkKjfMP7c3le
-         eTgcZL8TMk4OjvHshXFUI4zi/57eDTzjJBvHQLIYRCcGirRmh9eRG7xxAJdLn8afPGl7
-         xing==
-X-Gm-Message-State: AGi0PuaYs3/5g8+kaPzRueDdLx5eAo5si93JwyyeCmsUH2SxA/p7pDo7
-        51wtV/isFmurCsN1YO5PHXGZ4cVf
-X-Google-Smtp-Source: APiQypIdubht9dZYotoZNNgJZ0IsRf27uQmOuX3WrqdShZOIC5TejYPydYZrpUauBMUEpVWmYHWhbA==
-X-Received: by 2002:adf:f9cc:: with SMTP id w12mr9762920wrr.148.1586607914276;
-        Sat, 11 Apr 2020 05:25:14 -0700 (PDT)
-Received: from debian.home (ip51ccf9cd.speed.planet.nl. [81.204.249.205])
-        by smtp.gmail.com with ESMTPSA id v19sm675565wra.57.2020.04.11.05.25.13
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Sat, 11 Apr 2020 05:25:13 -0700 (PDT)
-From:   Johan Jonker <jbx6244@gmail.com>
-To:     heiko@sntech.de
-Cc:     robh+dt@kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v4] dt-bindings: sram: convert rockchip-pmu-sram bindings to yaml
-Date:   Sat, 11 Apr 2020 14:25:07 +0200
-Message-Id: <20200411122507.4040-1-jbx6244@gmail.com>
-X-Mailer: git-send-email 2.11.0
+        Sat, 11 Apr 2020 08:16:47 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:13152 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726794AbgDKMQn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Apr 2020 08:16:43 -0400
+Received: from DGGEMS405-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 2AAC2DD93474802C528B;
+        Sat, 11 Apr 2020 20:16:30 +0800 (CST)
+Received: from huawei.com (10.151.151.243) by DGGEMS405-HUB.china.huawei.com
+ (10.3.19.205) with Microsoft SMTP Server id 14.3.487.0; Sat, 11 Apr 2020
+ 20:16:20 +0800
+From:   Dongjiu Geng <gengdongjiu@huawei.com>
+To:     <maz@kernel.org>, <james.morse@arm.com>,
+        <julien.thierry.kdev@gmail.com>, <suzuki.poulose@arm.com>,
+        <catalin.marinas@arm.com>, <will@kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <kvmarm@lists.cs.columbia.edu>, <linux-kernel@vger.kernel.org>
+CC:     <zhengxiang9@huawei.com>, <tanxiaofei@huawei.com>,
+        <gengdongjiu@huawei.com>, <linuxarm@huawei.com>
+Subject: [PATCH] KVM: handle the right RAS SEA(Synchronous External Abort) type
+Date:   Sat, 11 Apr 2020 20:17:40 +0800
+Message-ID: <20200411121740.37615-1-gengdongjiu@huawei.com>
+X-Mailer: git-send-email 2.18.0.huawei.25
+MIME-Version: 1.0
+Content-Type: text/plain
+X-Originating-IP: [10.151.151.243]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Current dts files with 'rockchip-pmu-sram' compatible nodes
-are now verified with sram.yaml, although the original
-text document still exists. Merge rockchip-pmu-sram.txt
-with sram.yaml by adding it as description with an example.
-Make #address-cells, #size-cells and ranges optional
-if there are no child nodes to prevent yaml warnings.
+When the RAS Extension is implemented, b0b011000, 0b011100,
+0b011101, 0b011110, and 0b011111, are not used and reserved
+to the DFSC[5:0] of ESR_ELx, but the code still checks these
+unused bits, so remove them.
 
-Signed-off-by: Johan Jonker <jbx6244@gmail.com>
+If the handling of guest ras data error fails, it should
+inject data instead of SError to let the guest recover as
+much as possible.
+
+CC: Xiang Zheng <zhengxiang9@huawei.com>
+CC: Xiaofei Tan <tanxiaofei@huawei.com>
+CC: James Morse <james.morse@arm.com>
+Signed-off-by: Dongjiu Geng <gengdongjiu@huawei.com>
 ---
-Changes v4:
-  Make some properties optional
+Abort DFSC of ESR_EL2, below web site[1] has clarified:
+"When the RAS Extension is implemented, 0b011000, 0b011100, 0b011101, 0b011110, and 0b011111, are reserved."
 
-Changes v3:
-  Document the compatible
-
-Changed v2:
-  Merge with sram.yaml
+[1]: https://developer.arm.com/docs/ddi0595/b/aarch64-system-registers/esr_el2
 ---
- .../devicetree/bindings/sram/rockchip-pmu-sram.txt | 16 -------------
- Documentation/devicetree/bindings/sram/sram.yaml   | 26 +++++++++++++++++++---
- 2 files changed, 23 insertions(+), 19 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/sram/rockchip-pmu-sram.txt
+ arch/arm64/include/asm/kvm_emulate.h | 5 -----
+ virt/kvm/arm/mmu.c                   | 2 +-
+ 2 files changed, 1 insertion(+), 6 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/sram/rockchip-pmu-sram.txt b/Documentation/devicetree/bindings/sram/rockchip-pmu-sram.txt
-deleted file mode 100644
-index 6b42fda30..000000000
---- a/Documentation/devicetree/bindings/sram/rockchip-pmu-sram.txt
-+++ /dev/null
-@@ -1,16 +0,0 @@
--Rockchip SRAM for pmu:
--------------------------------
--
--The sram of pmu is used to store the function of resume from maskrom(the 1st
--level loader). This is a common use of the "pmu-sram" because it keeps power
--even in low power states in the system.
--
--Required node properties:
--- compatible : should be "rockchip,rk3288-pmu-sram"
--- reg : physical base address and the size of the registers window
--
--Example:
--	sram@ff720000 {
--		compatible = "rockchip,rk3288-pmu-sram", "mmio-sram";
--		reg = <0xff720000 0x1000>;
--	};
-diff --git a/Documentation/devicetree/bindings/sram/sram.yaml b/Documentation/devicetree/bindings/sram/sram.yaml
-index 7b83cc6c9..f474fee47 100644
---- a/Documentation/devicetree/bindings/sram/sram.yaml
-+++ b/Documentation/devicetree/bindings/sram/sram.yaml
-@@ -29,6 +29,7 @@ properties:
-       enum:
-         - mmio-sram
-         - atmel,sama5d2-securam
-+        - rockchip,rk3288-pmu-sram
+diff --git a/arch/arm64/include/asm/kvm_emulate.h b/arch/arm64/include/asm/kvm_emulate.h
+index a30b4eec7cb4..857fbc79d678 100644
+--- a/arch/arm64/include/asm/kvm_emulate.h
++++ b/arch/arm64/include/asm/kvm_emulate.h
+@@ -380,11 +380,6 @@ static __always_inline bool kvm_vcpu_dabt_isextabt(const struct kvm_vcpu *vcpu)
+ 	case FSC_SEA_TTW1:
+ 	case FSC_SEA_TTW2:
+ 	case FSC_SEA_TTW3:
+-	case FSC_SECC:
+-	case FSC_SECC_TTW0:
+-	case FSC_SECC_TTW1:
+-	case FSC_SECC_TTW2:
+-	case FSC_SECC_TTW3:
+ 		return true;
+ 	default:
+ 		return false;
+diff --git a/virt/kvm/arm/mmu.c b/virt/kvm/arm/mmu.c
+index e3b9ee268823..3c7972ed7fc5 100644
+--- a/virt/kvm/arm/mmu.c
++++ b/virt/kvm/arm/mmu.c
+@@ -1926,7 +1926,7 @@ int kvm_handle_guest_abort(struct kvm_vcpu *vcpu, struct kvm_run *run)
+ 			return 1;
  
-   reg:
-     maxItems: 1
-@@ -118,9 +119,18 @@ patternProperties:
- required:
-   - compatible
-   - reg
--  - "#address-cells"
--  - "#size-cells"
--  - ranges
-+
-+if:
-+  properties:
-+    compatible:
-+      contains:
-+        const: rockchip,rk3288-pmu-sram
-+
-+else:
-+  required:
-+    - "#address-cells"
-+    - "#size-cells"
-+    - ranges
- 
- additionalProperties: false
- 
-@@ -224,6 +234,16 @@ examples:
-     };
- 
-   - |
-+    // Rockchip's rk3288 SoC uses the sram of pmu to store the function of
-+    // resume from maskrom(the 1st level loader). This is a common use of
-+    // the "pmu-sram" because it keeps power even in low power states
-+    // in the system.
-+    sram@ff720000 {
-+      compatible = "rockchip,rk3288-pmu-sram", "mmio-sram";
-+      reg = <0xff720000 0x1000>;
-+    };
-+
-+  - |
-     // Allwinner's A80 SoC uses part of the secure sram for hotplugging of the
-     // primary core (cpu0). Once the core gets powered up it checks if a magic
-     // value is set at a specific location. If it is then the BROM will jump
+ 		if (unlikely(!is_iabt)) {
+-			kvm_inject_vabt(vcpu);
++			kvm_inject_dabt(vcpu, kvm_vcpu_get_hfar(vcpu));
+ 			return 1;
+ 		}
+ 	}
 -- 
-2.11.0
+2.18.0.huawei.25
 
