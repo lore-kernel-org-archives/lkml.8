@@ -2,55 +2,52 @@ Return-Path: <SRS0=xbEg=53=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50F25C2BBFD
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:12:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 252A1C2BA2B
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:12:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 21BA321655
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:12:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E4FBE21655
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:12:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586607153;
-	bh=TOlzQZqFBlXXk6vVW3nEQ7OnPHurudRh2uEU+6f1lvY=;
+	s=default; t=1586607158;
+	bh=8b6+SjPVlptKlpHpNs5BryqjkHoJs5ngMdVdKcZM1GY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=f+HalknUqFEWeghQl5ubxuOfn65gQbSMb4V+lNjO/5libGHnHDDYEceUEPoj920AA
-	 TjyfYZOKoh92pxVZzNoaCdLjPKb+Tl7a6QZK8RRVyVrX+JAfERbB5uvKVY2zXyC7k+
-	 NtWL50mtQODLQcgVoYsRJtD5StP+jJqiOKk9tWIU=
+	b=Jq3EyvkZPs9/hKdN+odVIGFT1o4glypeckZHuWXhDbhn8edwVZIMjujMncRWQXqSq
+	 sOaCQN7PIPEuLOkdrqEzAUFYMIC0tCwuKt69aIHsVsvQQACcGKpYO4RBVVvHTpnkM6
+	 OqtILKs8jR2Kpo11Y8AgsuUSSTftp67HyzdR5HZI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727295AbgDKMMb (ORCPT
+        id S1727337AbgDKMMg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 08:12:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45088 "EHLO mail.kernel.org"
+        Sat, 11 Apr 2020 08:12:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45214 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727267AbgDKMM3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 08:12:29 -0400
+        id S1727310AbgDKMMe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Apr 2020 08:12:34 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0456521556;
-        Sat, 11 Apr 2020 12:12:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D2379214D8;
+        Sat, 11 Apr 2020 12:12:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586607148;
-        bh=TOlzQZqFBlXXk6vVW3nEQ7OnPHurudRh2uEU+6f1lvY=;
+        s=default; t=1586607153;
+        bh=8b6+SjPVlptKlpHpNs5BryqjkHoJs5ngMdVdKcZM1GY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=A899TSdEoSyT1T9PwZLu+2sQ8W7BiULCW2uC1SLDuzuppRWEVBvAtK25vPxq2uC9t
-         unxRJjW0Shq4Fu0ILNDPnU1EnmwRXnmmwUj9is6354tc5aCtQ9gLLiXXB/o3zYSpST
-         PfV6mH6Bb7SLCsw4iF/vke/EilIz001f8ET3qOJE=
+        b=QooQc8KhOOYMTcJ1ZlcvX/BC9leoMXwrSwOrse968ZJBuDQ/g4rer9yAf6lgQK9gb
+         3KgOCBsqZ7gX3bnLkWZTZH2Q7vRVQGPREnnX7dLFHsqKg8mmpgv2lxvC13ck4FP0jg
+         sdBqGajfjh0kcX4QWy3yZ3uKFGbGhzsu6fYN9Ftg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        =?UTF-8?q?Marek=20Marczykowski-G=C3=B3recki?= 
-        <marmarek@invisiblethingslab.com>,
-        Gerd Hoffmann <kraxel@redhat.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 03/32] drm/bochs: downgrade pci_request_region failure from error to warning
-Date:   Sat, 11 Apr 2020 14:08:42 +0200
-Message-Id: <20200411115419.093781023@linuxfoundation.org>
+        stable@vger.kernel.org, William Dauchy <w.dauchy@criteo.com>,
+        Nicolas Dichtel <nicolas.dichtel@6wind.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.9 05/32] net, ip_tunnel: fix interface lookup with no key
+Date:   Sat, 11 Apr 2020 14:08:44 +0200
+Message-Id: <20200411115419.260941079@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200411115418.455500023@linuxfoundation.org>
 References: <20200411115418.455500023@linuxfoundation.org>
@@ -63,45 +60,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Gerd Hoffmann <kraxel@redhat.com>
+From: William Dauchy <w.dauchy@criteo.com>
 
-[ Upstream commit 8c34cd1a7f089dc03933289c5d4a4d1489549828 ]
+[ Upstream commit 25629fdaff2ff509dd0b3f5ff93d70a75e79e0a1 ]
 
-Shutdown of firmware framebuffer has a bunch of problems.  Because
-of this the framebuffer region might still be reserved even after
-drm_fb_helper_remove_conflicting_pci_framebuffers() returned.
+when creating a new ipip interface with no local/remote configuration,
+the lookup is done with TUNNEL_NO_KEY flag, making it impossible to
+match the new interface (only possible match being fallback or metada
+case interface); e.g: `ip link add tunl1 type ipip dev eth0`
 
-Don't consider pci_request_region() failure for the framebuffer
-region as fatal error to workaround this issue.
+To fix this case, adding a flag check before the key comparison so we
+permit to match an interface with no local/remote config; it also avoids
+breaking possible userland tools relying on TUNNEL_NO_KEY flag and
+uninitialised key.
 
-Reported-by: Marek Marczykowski-Górecki <marmarek@invisiblethingslab.com>
-Signed-off-by: Gerd Hoffmann <kraxel@redhat.com>
-Acked-by: Sam Ravnborg <sam@ravnborg.org>
-Link: http://patchwork.freedesktop.org/patch/msgid/20200313084152.2734-1-kraxel@redhat.com
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+context being on my side, I'm creating an extra ipip interface attached
+to the physical one, and moving it to a dedicated namespace.
+
+Fixes: c54419321455 ("GRE: Refactor GRE tunneling code.")
+Signed-off-by: William Dauchy <w.dauchy@criteo.com>
+Signed-off-by: Nicolas Dichtel <nicolas.dichtel@6wind.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/gpu/drm/bochs/bochs_hw.c | 6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
+ net/ipv4/ip_tunnel.c |    6 +-----
+ 1 file changed, 1 insertion(+), 5 deletions(-)
 
-diff --git a/drivers/gpu/drm/bochs/bochs_hw.c b/drivers/gpu/drm/bochs/bochs_hw.c
-index a39b0343c197d..401c218567af9 100644
---- a/drivers/gpu/drm/bochs/bochs_hw.c
-+++ b/drivers/gpu/drm/bochs/bochs_hw.c
-@@ -97,10 +97,8 @@ int bochs_hw_init(struct drm_device *dev, uint32_t flags)
- 		size = min(size, mem);
+--- a/net/ipv4/ip_tunnel.c
++++ b/net/ipv4/ip_tunnel.c
+@@ -155,11 +155,8 @@ struct ip_tunnel *ip_tunnel_lookup(struc
+ 			cand = t;
  	}
  
--	if (pci_request_region(pdev, 0, "bochs-drm") != 0) {
--		DRM_ERROR("Cannot request framebuffer\n");
--		return -EBUSY;
--	}
-+	if (pci_request_region(pdev, 0, "bochs-drm") != 0)
-+		DRM_WARN("Cannot request framebuffer, boot fb still active?\n");
+-	if (flags & TUNNEL_NO_KEY)
+-		goto skip_key_lookup;
+-
+ 	hlist_for_each_entry_rcu(t, head, hash_node) {
+-		if (t->parms.i_key != key ||
++		if ((!(flags & TUNNEL_NO_KEY) && t->parms.i_key != key) ||
+ 		    t->parms.iph.saddr != 0 ||
+ 		    t->parms.iph.daddr != 0 ||
+ 		    !(t->dev->flags & IFF_UP))
+@@ -171,7 +168,6 @@ struct ip_tunnel *ip_tunnel_lookup(struc
+ 			cand = t;
+ 	}
  
- 	bochs->fb_map = ioremap(addr, size);
- 	if (bochs->fb_map == NULL) {
--- 
-2.20.1
-
+-skip_key_lookup:
+ 	if (cand)
+ 		return cand;
+ 
 
 
