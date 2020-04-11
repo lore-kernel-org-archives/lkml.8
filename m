@@ -7,47 +7,45 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C410DC2BB86
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:19:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 874A9C2BA19
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:19:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9C74E20757
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:19:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 58DDE206E9
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:19:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586647180;
-	bh=S4dRrix0tHD6i0sJuJcIgM8Xsh/eapY+NTsNndzKHII=;
+	s=default; t=1586647183;
+	bh=tAFtt0FP/YHelhbw3CZCB6T7kYIbsqFYoxocjmhIj58=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YZr2z6Ww+GBaMKMk3V4to4sIgn3MdBd9TOm8pJtkmM+2XXvwgX+KXsHuIYCHOL4eQ
-	 RSRfn9xZOa4W3RpmYd3h2Uyki9V40FDLBjJ5BXOyDiN0eDp6nyTMef7yw0/Wi6xPFH
-	 5L10ZukxtgjGQ1LldSTHx0mCDmF3Z895OskXIsh0=
+	b=Qce4UqA2OCqAeyDxgASv6IeKGE+W/tsMm1EyjZpMS2rZtpDBjEW9/UJRjxyegndOc
+	 3liEtR9PAFmOcqO7y+AqLUqbl35xTOKRTLT5MyVj2d9AQtv4Dfxl9TkHnEeMmj1gQt
+	 FpWOFC5IwrJI3Edqkqy4Lnq5m2mmS9U6K4fADA3E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730606AbgDKXNx (ORCPT
+        id S1730173AbgDKXTl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 19:13:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55136 "EHLO mail.kernel.org"
+        Sat, 11 Apr 2020 19:19:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55250 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730568AbgDKXNr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 19:13:47 -0400
+        id S1730600AbgDKXNx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Apr 2020 19:13:53 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B00F120708;
-        Sat, 11 Apr 2020 23:13:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D6F7E20CC7;
+        Sat, 11 Apr 2020 23:13:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586646827;
-        bh=S4dRrix0tHD6i0sJuJcIgM8Xsh/eapY+NTsNndzKHII=;
+        s=default; t=1586646833;
+        bh=tAFtt0FP/YHelhbw3CZCB6T7kYIbsqFYoxocjmhIj58=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QAP9vVZup5r3rjue1UV+Fmv9tF48rDJvvSa3axU6H3tSUmdE6rY9H/CAvEtRuLNQy
-         MQ3pYmHXh13DQSGIvt4oIZSdLF33YdPPvnsac2OBkOjf+DPpYdU4FLfwa8KzDQ0gSq
-         OkZI2oC4m13mmzMAMd6T4T1QQAHNYK2FL2Pfao7E=
+        b=xUWWGWa9WHNG74UO8qZ2fWAJm0uBiyBwT6rMnLeQxYWUw+m7FrqzdqXjOG3xSGCq7
+         yRtKxWN2UkYbhVd4m2pY3BgdzxtndxMlGoEobyfbzTDsfLO6wGcYJh37onF9Mqltc3
+         cpNZS4zEJozhgOI0aADeamjuAqKrW6enp8gfAJkw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Bart Van Assche <bvanassche@acm.org>,
-        Leon Romanovsky <leonro@mellanox.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Sasha Levin <sashal@kernel.org>, linux-rdma@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 17/37] RDMA/rxe: Fix configuration of atomic queue pair attributes
-Date:   Sat, 11 Apr 2020 19:13:06 -0400
-Message-Id: <20200411231327.26550-17-sashal@kernel.org>
+Cc:     Steve Grubb <sgrubb@redhat.com>, Paul Moore <paul@paul-moore.com>,
+        Sasha Levin <sashal@kernel.org>, linux-audit@redhat.com
+Subject: [PATCH AUTOSEL 4.14 22/37] audit: CONFIG_CHANGE don't log internal bookkeeping as an event
+Date:   Sat, 11 Apr 2020 19:13:11 -0400
+Message-Id: <20200411231327.26550-22-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200411231327.26550-1-sashal@kernel.org>
 References: <20200411231327.26550-1-sashal@kernel.org>
@@ -60,73 +58,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bart Van Assche <bvanassche@acm.org>
+From: Steve Grubb <sgrubb@redhat.com>
 
-[ Upstream commit fb3063d31995cc4cf1d47a406bb61d6fb1b1d58d ]
+[ Upstream commit 70b3eeed49e8190d97139806f6fbaf8964306cdb ]
 
-From the comment above the definition of the roundup_pow_of_two() macro:
+Common Criteria calls out for any action that modifies the audit trail to
+be recorded. That usually is interpreted to mean insertion or removal of
+rules. It is not required to log modification of the inode information
+since the watch is still in effect. Additionally, if the rule is a never
+rule and the underlying file is one they do not want events for, they
+get an event for this bookkeeping update against their wishes.
 
-     The result is undefined when n == 0.
+Since no device/inode info is logged at insertion and no device/inode
+information is logged on update, there is nothing meaningful being
+communicated to the admin by the CONFIG_CHANGE updated_rules event. One
+can assume that the rule was not "modified" because it is still watching
+the intended target. If the device or inode cannot be resolved, then
+audit_panic is called which is sufficient.
 
-Hence only pass positive values to roundup_pow_of_two(). This patch fixes
-the following UBSAN complaint:
+The correct resolution is to drop logging config_update events since
+the watch is still in effect but just on another unknown inode.
 
-  UBSAN: Undefined behaviour in ./include/linux/log2.h:57:13
-  shift exponent 64 is too large for 64-bit type 'long unsigned int'
-  Call Trace:
-   dump_stack+0xa5/0xe6
-   ubsan_epilogue+0x9/0x26
-   __ubsan_handle_shift_out_of_bounds.cold+0x4c/0xf9
-   rxe_qp_from_attr.cold+0x37/0x5d [rdma_rxe]
-   rxe_modify_qp+0x59/0x70 [rdma_rxe]
-   _ib_modify_qp+0x5aa/0x7c0 [ib_core]
-   ib_modify_qp+0x3b/0x50 [ib_core]
-   cma_modify_qp_rtr+0x234/0x260 [rdma_cm]
-   __rdma_accept+0x1a7/0x650 [rdma_cm]
-   nvmet_rdma_cm_handler+0x1286/0x14cd [nvmet_rdma]
-   cma_cm_event_handler+0x6b/0x330 [rdma_cm]
-   cma_ib_req_handler+0xe60/0x22d0 [rdma_cm]
-   cm_process_work+0x30/0x140 [ib_cm]
-   cm_req_handler+0x11f4/0x1cd0 [ib_cm]
-   cm_work_handler+0xb8/0x344e [ib_cm]
-   process_one_work+0x569/0xb60
-   worker_thread+0x7a/0x5d0
-   kthread+0x1e6/0x210
-   ret_from_fork+0x24/0x30
-
-Link: https://lore.kernel.org/r/20200217205714.26937-1-bvanassche@acm.org
-Fixes: 8700e3e7c485 ("Soft RoCE driver")
-Signed-off-by: Bart Van Assche <bvanassche@acm.org>
-Reviewed-by: Leon Romanovsky <leonro@mellanox.com>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+Signed-off-by: Steve Grubb <sgrubb@redhat.com>
+Signed-off-by: Paul Moore <paul@paul-moore.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/infiniband/sw/rxe/rxe_qp.c | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+ kernel/audit_watch.c | 2 --
+ 1 file changed, 2 deletions(-)
 
-diff --git a/drivers/infiniband/sw/rxe/rxe_qp.c b/drivers/infiniband/sw/rxe/rxe_qp.c
-index 25055a68a2c07..ef7fd5dfad468 100644
---- a/drivers/infiniband/sw/rxe/rxe_qp.c
-+++ b/drivers/infiniband/sw/rxe/rxe_qp.c
-@@ -593,15 +593,16 @@ int rxe_qp_from_attr(struct rxe_qp *qp, struct ib_qp_attr *attr, int mask,
- 	struct ib_gid_attr sgid_attr;
+diff --git a/kernel/audit_watch.c b/kernel/audit_watch.c
+index 35f1d706bd5b4..ac87820cc0825 100644
+--- a/kernel/audit_watch.c
++++ b/kernel/audit_watch.c
+@@ -316,8 +316,6 @@ static void audit_update_watch(struct audit_parent *parent,
+ 			if (oentry->rule.exe)
+ 				audit_remove_mark(oentry->rule.exe);
  
- 	if (mask & IB_QP_MAX_QP_RD_ATOMIC) {
--		int max_rd_atomic = __roundup_pow_of_two(attr->max_rd_atomic);
-+		int max_rd_atomic = attr->max_rd_atomic ?
-+			roundup_pow_of_two(attr->max_rd_atomic) : 0;
- 
- 		qp->attr.max_rd_atomic = max_rd_atomic;
- 		atomic_set(&qp->req.rd_atomic, max_rd_atomic);
- 	}
- 
- 	if (mask & IB_QP_MAX_DEST_RD_ATOMIC) {
--		int max_dest_rd_atomic =
--			__roundup_pow_of_two(attr->max_dest_rd_atomic);
-+		int max_dest_rd_atomic = attr->max_dest_rd_atomic ?
-+			roundup_pow_of_two(attr->max_dest_rd_atomic) : 0;
- 
- 		qp->attr.max_dest_rd_atomic = max_dest_rd_atomic;
+-			audit_watch_log_rule_change(r, owatch, "updated_rules");
+-
+ 			call_rcu(&oentry->rcu, audit_free_rule_rcu);
+ 		}
  
 -- 
 2.20.1
