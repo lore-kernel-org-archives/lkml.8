@@ -4,52 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D37EBC2BB86
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:06:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E90BEC2BA19
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:06:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AA55921744
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:06:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BA6AE20CC7
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:06:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586646414;
-	bh=/GonmYKtW5Cf9hF+Kz8M2dBkwVtojYdg7j4tQNIOrPk=;
+	s=default; t=1586646416;
+	bh=4IRxUWKeP87yrejOf2VUpCVZHo/hRx4FWZmxCxw92a0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=SaVrGuR8xwXUDDLtRJ4V9QFySsy9cfMkxIcf6MZKSbxap6WDJwARU1x21AG0NOAgV
-	 OS5Vs333v8yxH/b7FlsA32f19SBXJXRSOXZPzANS2jbocW5uc/FsJbH1X5sZ5duZBr
-	 cP4oLakr9bBiDlHfC9vzZKDF0PYtKsPpG/3Tgo68=
+	b=QGW3yOk9XtZIJEEcMte5odzXN7Xajx9LNv8/Kak7T1q/lcjxWivMlYI0npnDrD9Ub
+	 Qwq0tnLU7hOq521sAa4QTpZpcQ39+bSLUIYT23vL0LeTraH50KWir7fxfpozB2ZfO1
+	 mgz1CM+3j3NTsnXkUHpG3SsyE3yfAxVxLXsfph+Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728534AbgDKXGw (ORCPT
+        id S1728544AbgDKXGy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 19:06:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42248 "EHLO mail.kernel.org"
+        Sat, 11 Apr 2020 19:06:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42282 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727602AbgDKXGo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 19:06:44 -0400
+        id S1728503AbgDKXGq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Apr 2020 19:06:46 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0D17F217D8;
-        Sat, 11 Apr 2020 23:06:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 982E820708;
+        Sat, 11 Apr 2020 23:06:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586646404;
-        bh=/GonmYKtW5Cf9hF+Kz8M2dBkwVtojYdg7j4tQNIOrPk=;
+        s=default; t=1586646406;
+        bh=4IRxUWKeP87yrejOf2VUpCVZHo/hRx4FWZmxCxw92a0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=oG3GcSW1kOouDZDsoGhIJdxj6God/q4pH6rqvFxY6TphqZwJt9Ly6nQLeRRpgBdiS
-         I9F6Fqv/MjUMPmMGV9ng0A0tF/dn+Sh50NVbx+qAQI232cmdDL9sQXQRTK2vFAI/l5
-         r8091uYLd+jQFm3W35G9/Xk5blha4hSpLJxGf4ts=
+        b=ktNoL5GfGC1svBeJ59DSoUnBjBnl/lKHJ3t4DesygPAfzaGI9I0P2LmAGojwlaq9K
+         CFM2qO5MCzwDkq4Q133x01t9WaNyVY3Od3x3CaFF+wPGFjBFFRmBQ8KGg62FiVwP09
+         i4ZAuQ/7Xvy3nfhhjnjXFK2KeCLen/s49Nj17Swc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Stephen Boyd <swboyd@chromium.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Douglas Anderson <dianders@chromium.org>,
-        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Sasha Levin <sashal@kernel.org>, linux-arm-msm@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.6 140/149] drivers: qcom: rpmh-rsc: Use rcuidle tracepoints for rpmh
-Date:   Sat, 11 Apr 2020 19:03:37 -0400
-Message-Id: <20200411230347.22371-140-sashal@kernel.org>
+Cc:     Trond Myklebust <trondmy@gmail.com>,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Chuck Lever <chuck.lever@oracle.com>,
+        Sasha Levin <sashal@kernel.org>, linux-nfs@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.6 142/149] nfsd: Don't add locks to closed or closing open stateids
+Date:   Sat, 11 Apr 2020 19:03:39 -0400
+Message-Id: <20200411230347.22371-142-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200411230347.22371-1-sashal@kernel.org>
 References: <20200411230347.22371-1-sashal@kernel.org>
@@ -62,87 +60,211 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Stephen Boyd <swboyd@chromium.org>
+From: Trond Myklebust <trondmy@gmail.com>
 
-[ Upstream commit efde2659b0fe835732047357b2902cca14f054d9 ]
+[ Upstream commit a451b12311aa8c96c6f6e01c783a86995dc3ec6b ]
 
-This tracepoint is hit now that we call into the rpmh code from the cpu
-idle path. Let's move this to be an rcuidle tracepoint so that we avoid
-the RCU idle splat below
+In NFSv4, the lock stateids are tied to the lockowner, and the open stateid,
+so that the action of closing the file also results in either an automatic
+loss of the locks, or an error of the form NFS4ERR_LOCKS_HELD.
 
- =============================
- WARNING: suspicious RCU usage
- 5.4.10 #68 Tainted: G S
- -----------------------------
- drivers/soc/qcom/trace-rpmh.h:72 suspicious rcu_dereference_check() usage!
+In practice this means we must not add new locks to the open stateid
+after the close process has been invoked. In fact doing so, can result
+in the following panic:
 
- other info that might help us debug this:
+ kernel BUG at lib/list_debug.c:51!
+ invalid opcode: 0000 [#1] SMP NOPTI
+ CPU: 2 PID: 1085 Comm: nfsd Not tainted 5.6.0-rc3+ #2
+ Hardware name: VMware, Inc. VMware7,1/440BX Desktop Reference Platform, BIOS VMW71.00V.14410784.B64.1908150010 08/15/2019
+ RIP: 0010:__list_del_entry_valid.cold+0x31/0x55
+ Code: 1a 3d 9b e8 74 10 c2 ff 0f 0b 48 c7 c7 f0 1a 3d 9b e8 66 10 c2 ff 0f 0b 48 89 f2 48 89 fe 48 c7 c7 b0 1a 3d 9b e8 52 10 c2 ff <0f> 0b 48 89 fe 4c 89 c2 48 c7 c7 78 1a 3d 9b e8 3e 10 c2 ff 0f 0b
+ RSP: 0018:ffffb296c1d47d90 EFLAGS: 00010246
+ RAX: 0000000000000054 RBX: ffff8ba032456ec8 RCX: 0000000000000000
+ RDX: 0000000000000000 RSI: ffff8ba039e99cc8 RDI: ffff8ba039e99cc8
+ RBP: ffff8ba032456e60 R08: 0000000000000781 R09: 0000000000000003
+ R10: 0000000000000000 R11: 0000000000000001 R12: ffff8ba009a4abe0
+ R13: ffff8ba032456e8c R14: 0000000000000000 R15: ffff8ba00adb01d8
+ FS:  0000000000000000(0000) GS:ffff8ba039e80000(0000) knlGS:0000000000000000
+ CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+ CR2: 00007fb213f0b008 CR3: 00000001347de006 CR4: 00000000003606e0
+ Call Trace:
+  release_lock_stateid+0x2b/0x80 [nfsd]
+  nfsd4_free_stateid+0x1e9/0x210 [nfsd]
+  nfsd4_proc_compound+0x414/0x700 [nfsd]
+  ? nfs4svc_decode_compoundargs+0x407/0x4c0 [nfsd]
+  nfsd_dispatch+0xc1/0x200 [nfsd]
+  svc_process_common+0x476/0x6f0 [sunrpc]
+  ? svc_sock_secure_port+0x12/0x30 [sunrpc]
+  ? svc_recv+0x313/0x9c0 [sunrpc]
+  ? nfsd_svc+0x2d0/0x2d0 [nfsd]
+  svc_process+0xd4/0x110 [sunrpc]
+  nfsd+0xe3/0x140 [nfsd]
+  kthread+0xf9/0x130
+  ? nfsd_destroy+0x50/0x50 [nfsd]
+  ? kthread_park+0x90/0x90
+  ret_from_fork+0x1f/0x40
 
- RCU used illegally from idle CPU!
- rcu_scheduler_active = 2, debug_locks = 1
- RCU used illegally from extended quiescent state!
- 5 locks held by swapper/2/0:
-  #0: ffffff81745d6ee8 (&(&genpd->slock)->rlock){+.+.}, at: genpd_lock_spin+0x1c/0x2c
-  #1: ffffff81745da6e8 (&(&genpd->slock)->rlock/1){....}, at: genpd_lock_nested_spin+0x24/0x34
-  #2: ffffff8174f2ca20 (&(&genpd->slock)->rlock/2){....}, at: genpd_lock_nested_spin+0x24/0x34
-  #3: ffffff8174f2c300 (&(&drv->client.cache_lock)->rlock){....}, at: rpmh_flush+0x48/0x24c
-  #4: ffffff8174f2c150 (&(&tcs->lock)->rlock){+.+.}, at: rpmh_rsc_write_ctrl_data+0x74/0x270
+The fix is to ensure that lock creation tests for whether or not the
+open stateid is unhashed, and to fail if that is the case.
 
- stack backtrace:
- CPU: 2 PID: 0 Comm: swapper/2 Tainted: G S                5.4.10 #68
- Call trace:
-  dump_backtrace+0x0/0x174
-  show_stack+0x20/0x2c
-  dump_stack+0xc8/0x124
-  lockdep_rcu_suspicious+0xe4/0x104
-  __tcs_buffer_write+0x230/0x2d0
-  rpmh_rsc_write_ctrl_data+0x210/0x270
-  rpmh_flush+0x84/0x24c
-  rpmh_domain_power_off+0x78/0x98
-  _genpd_power_off+0x40/0xc0
-  genpd_power_off+0x168/0x208
-  genpd_power_off+0x1e0/0x208
-  genpd_power_off+0x1e0/0x208
-  genpd_runtime_suspend+0x1ac/0x220
-  __rpm_callback+0x70/0xfc
-  rpm_callback+0x34/0x8c
-  rpm_suspend+0x218/0x4a4
-  __pm_runtime_suspend+0x88/0xac
-  psci_enter_domain_idle_state+0x3c/0xb4
-  cpuidle_enter_state+0xb8/0x284
-  cpuidle_enter+0x38/0x4c
-  call_cpuidle+0x3c/0x68
-  do_idle+0x194/0x260
-  cpu_startup_entry+0x24/0x28
-  secondary_start_kernel+0x150/0x15c
-
-Acked-by: Ulf Hansson <ulf.hansson@linaro.org>
-Reviewed-by: Douglas Anderson <dianders@chromium.org>
-Tested-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-Fixes: a65a397f2451 ("cpuidle: psci: Add support for PM domains by using genpd")
-Reported-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-Cc: Ulf Hansson <ulf.hansson@linaro.org>
-Signed-off-by: Stephen Boyd <swboyd@chromium.org>
-Link: https://lore.kernel.org/r/20200115013751.249588-1-swboyd@chromium.org
-Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Fixes: 659aefb68eca ("nfsd: Ensure we don't recognise lock stateids after freeing them")
+Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
+Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/soc/qcom/rpmh-rsc.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/nfsd/nfs4state.c | 73 ++++++++++++++++++++++++++-------------------
+ 1 file changed, 43 insertions(+), 30 deletions(-)
 
-diff --git a/drivers/soc/qcom/rpmh-rsc.c b/drivers/soc/qcom/rpmh-rsc.c
-index e278fc11fe5cf..b71822131f598 100644
---- a/drivers/soc/qcom/rpmh-rsc.c
-+++ b/drivers/soc/qcom/rpmh-rsc.c
-@@ -277,7 +277,7 @@ static void __tcs_buffer_write(struct rsc_drv *drv, int tcs_id, int cmd_id,
- 		write_tcs_cmd(drv, RSC_DRV_CMD_MSGID, tcs_id, j, msgid);
- 		write_tcs_cmd(drv, RSC_DRV_CMD_ADDR, tcs_id, j, cmd->addr);
- 		write_tcs_cmd(drv, RSC_DRV_CMD_DATA, tcs_id, j, cmd->data);
--		trace_rpmh_send_msg(drv, tcs_id, j, msgid, cmd);
-+		trace_rpmh_send_msg_rcuidle(drv, tcs_id, j, msgid, cmd);
- 	}
+diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
+index 65cfe9ab47be0..1ba4514be18d3 100644
+--- a/fs/nfsd/nfs4state.c
++++ b/fs/nfsd/nfs4state.c
+@@ -494,6 +494,8 @@ find_any_file(struct nfs4_file *f)
+ {
+ 	struct nfsd_file *ret;
  
- 	write_tcs_reg(drv, RSC_DRV_CMD_WAIT_FOR_CMPL, tcs_id, cmd_complete);
++	if (!f)
++		return NULL;
+ 	spin_lock(&f->fi_lock);
+ 	ret = __nfs4_get_fd(f, O_RDWR);
+ 	if (!ret) {
+@@ -1309,6 +1311,12 @@ static void nfs4_put_stateowner(struct nfs4_stateowner *sop)
+ 	nfs4_free_stateowner(sop);
+ }
+ 
++static bool
++nfs4_ol_stateid_unhashed(const struct nfs4_ol_stateid *stp)
++{
++	return list_empty(&stp->st_perfile);
++}
++
+ static bool unhash_ol_stateid(struct nfs4_ol_stateid *stp)
+ {
+ 	struct nfs4_file *fp = stp->st_stid.sc_file;
+@@ -1379,9 +1387,11 @@ static bool unhash_lock_stateid(struct nfs4_ol_stateid *stp)
+ {
+ 	lockdep_assert_held(&stp->st_stid.sc_client->cl_lock);
+ 
++	if (!unhash_ol_stateid(stp))
++		return false;
+ 	list_del_init(&stp->st_locks);
+ 	nfs4_unhash_stid(&stp->st_stid);
+-	return unhash_ol_stateid(stp);
++	return true;
+ }
+ 
+ static void release_lock_stateid(struct nfs4_ol_stateid *stp)
+@@ -1446,13 +1456,12 @@ static void release_open_stateid_locks(struct nfs4_ol_stateid *open_stp,
+ static bool unhash_open_stateid(struct nfs4_ol_stateid *stp,
+ 				struct list_head *reaplist)
+ {
+-	bool unhashed;
+-
+ 	lockdep_assert_held(&stp->st_stid.sc_client->cl_lock);
+ 
+-	unhashed = unhash_ol_stateid(stp);
++	if (!unhash_ol_stateid(stp))
++		return false;
+ 	release_open_stateid_locks(stp, reaplist);
+-	return unhashed;
++	return true;
+ }
+ 
+ static void release_open_stateid(struct nfs4_ol_stateid *stp)
+@@ -6393,21 +6402,21 @@ alloc_init_lock_stateowner(unsigned int strhashval, struct nfs4_client *clp,
+ }
+ 
+ static struct nfs4_ol_stateid *
+-find_lock_stateid(struct nfs4_lockowner *lo, struct nfs4_file *fp)
++find_lock_stateid(const struct nfs4_lockowner *lo,
++		  const struct nfs4_ol_stateid *ost)
+ {
+ 	struct nfs4_ol_stateid *lst;
+-	struct nfs4_client *clp = lo->lo_owner.so_client;
+ 
+-	lockdep_assert_held(&clp->cl_lock);
++	lockdep_assert_held(&ost->st_stid.sc_client->cl_lock);
+ 
+-	list_for_each_entry(lst, &lo->lo_owner.so_stateids, st_perstateowner) {
+-		if (lst->st_stid.sc_type != NFS4_LOCK_STID)
+-			continue;
+-		if (lst->st_stid.sc_file == fp) {
+-			refcount_inc(&lst->st_stid.sc_count);
+-			return lst;
++	/* If ost is not hashed, ost->st_locks will not be valid */
++	if (!nfs4_ol_stateid_unhashed(ost))
++		list_for_each_entry(lst, &ost->st_locks, st_locks) {
++			if (lst->st_stateowner == &lo->lo_owner) {
++				refcount_inc(&lst->st_stid.sc_count);
++				return lst;
++			}
+ 		}
+-	}
+ 	return NULL;
+ }
+ 
+@@ -6423,11 +6432,11 @@ init_lock_stateid(struct nfs4_ol_stateid *stp, struct nfs4_lockowner *lo,
+ 	mutex_lock_nested(&stp->st_mutex, OPEN_STATEID_MUTEX);
+ retry:
+ 	spin_lock(&clp->cl_lock);
+-	spin_lock(&fp->fi_lock);
+-	retstp = find_lock_stateid(lo, fp);
++	if (nfs4_ol_stateid_unhashed(open_stp))
++		goto out_close;
++	retstp = find_lock_stateid(lo, open_stp);
+ 	if (retstp)
+-		goto out_unlock;
+-
++		goto out_found;
+ 	refcount_inc(&stp->st_stid.sc_count);
+ 	stp->st_stid.sc_type = NFS4_LOCK_STID;
+ 	stp->st_stateowner = nfs4_get_stateowner(&lo->lo_owner);
+@@ -6436,22 +6445,26 @@ init_lock_stateid(struct nfs4_ol_stateid *stp, struct nfs4_lockowner *lo,
+ 	stp->st_access_bmap = 0;
+ 	stp->st_deny_bmap = open_stp->st_deny_bmap;
+ 	stp->st_openstp = open_stp;
++	spin_lock(&fp->fi_lock);
+ 	list_add(&stp->st_locks, &open_stp->st_locks);
+ 	list_add(&stp->st_perstateowner, &lo->lo_owner.so_stateids);
+ 	list_add(&stp->st_perfile, &fp->fi_stateids);
+-out_unlock:
+ 	spin_unlock(&fp->fi_lock);
+ 	spin_unlock(&clp->cl_lock);
+-	if (retstp) {
+-		if (nfsd4_lock_ol_stateid(retstp) != nfs_ok) {
+-			nfs4_put_stid(&retstp->st_stid);
+-			goto retry;
+-		}
+-		/* To keep mutex tracking happy */
+-		mutex_unlock(&stp->st_mutex);
+-		stp = retstp;
+-	}
+ 	return stp;
++out_found:
++	spin_unlock(&clp->cl_lock);
++	if (nfsd4_lock_ol_stateid(retstp) != nfs_ok) {
++		nfs4_put_stid(&retstp->st_stid);
++		goto retry;
++	}
++	/* To keep mutex tracking happy */
++	mutex_unlock(&stp->st_mutex);
++	return retstp;
++out_close:
++	spin_unlock(&clp->cl_lock);
++	mutex_unlock(&stp->st_mutex);
++	return NULL;
+ }
+ 
+ static struct nfs4_ol_stateid *
+@@ -6466,7 +6479,7 @@ find_or_create_lock_stateid(struct nfs4_lockowner *lo, struct nfs4_file *fi,
+ 
+ 	*new = false;
+ 	spin_lock(&clp->cl_lock);
+-	lst = find_lock_stateid(lo, fi);
++	lst = find_lock_stateid(lo, ost);
+ 	spin_unlock(&clp->cl_lock);
+ 	if (lst != NULL) {
+ 		if (nfsd4_lock_ol_stateid(lst) == nfs_ok)
 -- 
 2.20.1
 
