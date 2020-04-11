@@ -7,53 +7,50 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE72FC2BA2B
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:14:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51F63C2BA2B
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:14:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B814820692
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:14:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2B2A02137B
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:14:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586607284;
-	bh=3p1hq6BIBuc0+vFYbTPfMRq7iCHk0swCK/hCdXftwMM=;
+	s=default; t=1586607287;
+	bh=FIQyZpGeWjGjICZFpF4bFafvr3BU4jUe3KlA1RozA18=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Yu53mxXPxCtbO5ScdLNteBRsEU8SpTnYP8mQwzJkvwOCRq1Uhb1yEUJyeLxajIhTI
-	 OHNVVYXk/69QYNzg9LTd4oVhsUFTt4l6DzOqwl3OmPRuWnW41frm1R54zc80mzJuXP
-	 hna+ULAUhl2AtFHitz1MFk9PnXCJz22QqKgOb3q8=
+	b=EJZqvz5P3/xhl8IcUrIYJjlQmJ3NlG1isCt5UCxz+rcNAPcalEDz+l9TUVZscLI/P
+	 bl81wQz3wL8pn4vWkOSPi6U7ogFKmAQ/dXUv+ZPf6kbBv57LGWrM3EadgPdpc38eqG
+	 rEfewQ9rHlU7/CkLbE0cx1bdlOPiEfCwGcpknqzQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728008AbgDKMOn (ORCPT
+        id S1728018AbgDKMOp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 08:14:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48148 "EHLO mail.kernel.org"
+        Sat, 11 Apr 2020 08:14:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48248 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727980AbgDKMOj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 08:14:39 -0400
+        id S1726953AbgDKMOn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Apr 2020 08:14:43 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A2AD220644;
-        Sat, 11 Apr 2020 12:14:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 817BD20692;
+        Sat, 11 Apr 2020 12:14:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586607279;
-        bh=3p1hq6BIBuc0+vFYbTPfMRq7iCHk0swCK/hCdXftwMM=;
+        s=default; t=1586607284;
+        bh=FIQyZpGeWjGjICZFpF4bFafvr3BU4jUe3KlA1RozA18=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=G9cGlSiBdKVAtlHXf0OSPqNXC4GZnUN/CVdZcjiG3qZjqubgD5Yyc0zO957tTODhc
-         VTPSmM53h9opVYml3BLZq7RPV/+z5aIdJg+XQA4hsRMcqfBGkVGpimtL/VuDoHHs+p
-         cEzE97yyQlzJuTUcLH3/UCTQjRQOlWIOB2pxoVdY=
+        b=XBjzNiaSdhvyhLSNEyA9y8sFBUW7SOmNm3QZFfiPryKhNOkfydLc4yBZ9+Pp/dy4d
+         8eYDIXbqujFdcMvH+eoN1m4+QxiJEpbvHPWvVefZntu6Ltd47AuWuChTkDsAn1MWlu
+         q869xzlPZrslEKNtDIUanUvffkBUw1sTVBZVZIE8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Qian Cai <cai@lca.pw>,
-        Eric Dumazet <edumazet@google.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.19 01/54] ipv4: fix a RCU-list lock in fib_triestat_seq_show
-Date:   Sat, 11 Apr 2020 14:08:43 +0200
-Message-Id: <20200411115508.424171453@linuxfoundation.org>
+        stable@vger.kernel.org, Len Brown <len.brown@intel.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 11/54] tools/power turbostat: Fix missing SYS_LPI counter on some Chromebooks
+Date:   Sat, 11 Apr 2020 14:08:53 +0200
+Message-Id: <20200411115509.374022389@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200411115508.284500414@linuxfoundation.org>
 References: <20200411115508.284500414@linuxfoundation.org>
 User-Agent: quilt/0.66
-X-stable: review
-X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -62,63 +59,83 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Qian Cai <cai@lca.pw>
+From: Len Brown <len.brown@intel.com>
 
-[ Upstream commit fbe4e0c1b298b4665ee6915266c9d6c5b934ef4a ]
+[ Upstream commit 1f81c5efc020314b2db30d77efe228b7e117750d ]
 
-fib_triestat_seq_show() calls hlist_for_each_entry_rcu(tb, head,
-tb_hlist) without rcu_read_lock() will trigger a warning,
+Some Chromebook BIOS' do not export an ACPI LPIT, which is how
+Linux finds the residency counter for CPU and SYSTEM low power states,
+that is exports in /sys/devices/system/cpu/cpuidle/*residency_us
 
- net/ipv4/fib_trie.c:2579 RCU-list traversed in non-reader section!!
+When these sysfs attributes are missing, check the debugfs attrubte
+from the pmc_core driver, which accesses the same counter value.
 
- other info that might help us debug this:
-
- rcu_scheduler_active = 2, debug_locks = 1
- 1 lock held by proc01/115277:
-  #0: c0000014507acf00 (&p->lock){+.+.}-{3:3}, at: seq_read+0x58/0x670
-
- Call Trace:
-  dump_stack+0xf4/0x164 (unreliable)
-  lockdep_rcu_suspicious+0x140/0x164
-  fib_triestat_seq_show+0x750/0x880
-  seq_read+0x1a0/0x670
-  proc_reg_read+0x10c/0x1b0
-  __vfs_read+0x3c/0x70
-  vfs_read+0xac/0x170
-  ksys_read+0x7c/0x140
-  system_call+0x5c/0x68
-
-Fix it by adding a pair of rcu_read_lock/unlock() and use
-cond_resched_rcu() to avoid the situation where walking of a large
-number of items  may prevent scheduling for a long time.
-
-Signed-off-by: Qian Cai <cai@lca.pw>
-Reviewed-by: Eric Dumazet <edumazet@google.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Len Brown <len.brown@intel.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/ipv4/fib_trie.c |    3 +++
- 1 file changed, 3 insertions(+)
+ tools/power/x86/turbostat/turbostat.c |   23 ++++++++++++++---------
+ 1 file changed, 14 insertions(+), 9 deletions(-)
 
---- a/net/ipv4/fib_trie.c
-+++ b/net/ipv4/fib_trie.c
-@@ -2337,6 +2337,7 @@ static int fib_triestat_seq_show(struct
- 		   " %zd bytes, size of tnode: %zd bytes.\n",
- 		   LEAF_SIZE, TNODE_SIZE(0));
+--- a/tools/power/x86/turbostat/turbostat.c
++++ b/tools/power/x86/turbostat/turbostat.c
+@@ -299,6 +299,10 @@ int *irqs_per_cpu;		/* indexed by cpu_nu
  
-+	rcu_read_lock();
- 	for (h = 0; h < FIB_TABLE_HASHSZ; h++) {
- 		struct hlist_head *head = &net->ipv4.fib_table_hash[h];
- 		struct fib_table *tb;
-@@ -2356,7 +2357,9 @@ static int fib_triestat_seq_show(struct
- 			trie_show_usage(seq, t->stats);
- #endif
- 		}
-+		cond_resched_rcu();
- 	}
-+	rcu_read_unlock();
+ void setup_all_buffers(void);
  
- 	return 0;
- }
++char *sys_lpi_file;
++char *sys_lpi_file_sysfs = "/sys/devices/system/cpu/cpuidle/low_power_idle_system_residency_us";
++char *sys_lpi_file_debugfs = "/sys/kernel/debug/pmc_core/slp_s0_residency_usec";
++
+ int cpu_is_not_present(int cpu)
+ {
+ 	return !CPU_ISSET_S(cpu, cpu_present_setsize, cpu_present_set);
+@@ -2844,8 +2848,6 @@ int snapshot_gfx_mhz(void)
+  *
+  * record snapshot of
+  * /sys/devices/system/cpu/cpuidle/low_power_idle_cpu_residency_us
+- *
+- * return 1 if config change requires a restart, else return 0
+  */
+ int snapshot_cpu_lpi_us(void)
+ {
+@@ -2865,17 +2867,14 @@ int snapshot_cpu_lpi_us(void)
+ /*
+  * snapshot_sys_lpi()
+  *
+- * record snapshot of
+- * /sys/devices/system/cpu/cpuidle/low_power_idle_system_residency_us
+- *
+- * return 1 if config change requires a restart, else return 0
++ * record snapshot of sys_lpi_file
+  */
+ int snapshot_sys_lpi_us(void)
+ {
+ 	FILE *fp;
+ 	int retval;
+ 
+-	fp = fopen_or_die("/sys/devices/system/cpu/cpuidle/low_power_idle_system_residency_us", "r");
++	fp = fopen_or_die(sys_lpi_file, "r");
+ 
+ 	retval = fscanf(fp, "%lld", &cpuidle_cur_sys_lpi_us);
+ 	if (retval != 1)
+@@ -4743,10 +4742,16 @@ void process_cpuid()
+ 	else
+ 		BIC_NOT_PRESENT(BIC_CPU_LPI);
+ 
+-	if (!access("/sys/devices/system/cpu/cpuidle/low_power_idle_system_residency_us", R_OK))
++	if (!access(sys_lpi_file_sysfs, R_OK)) {
++		sys_lpi_file = sys_lpi_file_sysfs;
+ 		BIC_PRESENT(BIC_SYS_LPI);
+-	else
++	} else if (!access(sys_lpi_file_debugfs, R_OK)) {
++		sys_lpi_file = sys_lpi_file_debugfs;
++		BIC_PRESENT(BIC_SYS_LPI);
++	} else {
++		sys_lpi_file_sysfs = NULL;
+ 		BIC_NOT_PRESENT(BIC_SYS_LPI);
++	}
+ 
+ 	if (!quiet)
+ 		decode_misc_feature_control();
 
 
