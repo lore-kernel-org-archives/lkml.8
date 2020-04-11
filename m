@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3AD6C2BA2B
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:14:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33FFCC2BBC7
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:14:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BBE0F20692
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:14:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0E7E620692
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:14:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586607270;
-	bh=ClpNK7YaIusq5vXPWRiHoqLn7u4LMOODQtE2gj3vpCk=;
+	s=default; t=1586607273;
+	bh=pZKyy5V/dyvl9aN9yRiWhzx5+CIPNaBdMMhXTjYbJL8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vP8JFxYARRjQfLWjoLZl6ceOs6M4wq2FH6Y7JCLh6dshDiIbP2iGl9z0F62bNRfIY
-	 7DczD2+ipG0UQAV33sFgneMVgiNGkugCrO2l0MIFGlKHIegjazmnvgfoL1sjMqqP+z
-	 pgrDFFeQFO78OEfbJVdXTudTu9t2SzMX1EUiMC5Y=
+	b=GtczJicvPuKF2dWszxYyFWDm4ZV7sOwdh+KQBSSJpo7zo4630jkrR8wwC+0SGzHSU
+	 kOsmQH584W/biwg169BL6DioC6nk9rMoaWSX6PiQeNVKr8+NTuTWl6W89iT44Y+ncy
+	 vcrQFFp8LuBySF/nKpBs+2Fx1e93TjST5/xOVdSg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727940AbgDKMO2 (ORCPT
+        id S1727951AbgDKMOb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 08:14:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47788 "EHLO mail.kernel.org"
+        Sat, 11 Apr 2020 08:14:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47828 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727923AbgDKMOZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 08:14:25 -0400
+        id S1727052AbgDKMO0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Apr 2020 08:14:26 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2D1EE20644;
-        Sat, 11 Apr 2020 12:14:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9716D20692;
+        Sat, 11 Apr 2020 12:14:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586607264;
-        bh=ClpNK7YaIusq5vXPWRiHoqLn7u4LMOODQtE2gj3vpCk=;
+        s=default; t=1586607267;
+        bh=pZKyy5V/dyvl9aN9yRiWhzx5+CIPNaBdMMhXTjYbJL8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=O1FC+rkMI/vDLrhWsdESUYJUhpkgyY+vbGP/UFsXj6sSKzaRh2KAEBSxOK/++vHZ3
-         35zC7rK8PaidnrhZ5mrmVYmdCY1Z+DponJBaPmH3vkmWS2YP/ahGpMX4D2VX/eyIu2
-         Hs6I+kd1hDbYYlbco4MlcAk6DA+RLviZgAAwPZxg=
+        b=Ye28ex9YIZnVicSYKYtrA98IfCCcI4t6rxubezMZNDsvwHV9jYjp74iIiP1ctR+fE
+         7id2R8drCojLp756WMCY0FGd5sjRYrCFVRUSh5lXE8B2UM9jwWZQinyX+zQAX8LBeg
+         peCkcPksZ7WfT8TFQtRLmAtuTz9LqwAwyjEr4xVI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Lucas Stach <l.stach@pengutronix.de>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        =?UTF-8?q?Guido=20G=C3=BCnther?= <agx@sigxcpu.org>,
-        Robert Beckett <bob.beckett@collabora.com>
-Subject: [PATCH 4.14 08/38] drm/etnaviv: replace MMU flush marker with flush sequence
-Date:   Sat, 11 Apr 2020 14:08:52 +0200
-Message-Id: <20200411115438.750099499@linuxfoundation.org>
+        stable@vger.kernel.org, Jianchao Wang <jianchao.w.wang@oracle.com>,
+        Ming Lei <ming.lei@redhat.com>, Jens Axboe <axboe@kernel.dk>,
+        Giuliano Procida <gprocida@google.com>
+Subject: [PATCH 4.14 09/38] blk-mq: sync the update nr_hw_queues with blk_mq_queue_tag_busy_iter
+Date:   Sat, 11 Apr 2020 14:08:53 +0200
+Message-Id: <20200411115438.939741034@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200411115437.795556138@linuxfoundation.org>
 References: <20200411115437.795556138@linuxfoundation.org>
@@ -61,144 +60,76 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Lucas Stach <l.stach@pengutronix.de>
+From: Jianchao Wang <jianchao.w.wang@oracle.com>
 
-commit 4900dda90af2cb13bc1d4c12ce94b98acc8fe64e upstream.
+commit f5bbbbe4d63577026f908a809f22f5fd5a90ea1f upstream.
 
-If a MMU is shared between multiple GPUs, all of them need to flush their
-TLBs, so a single marker that gets reset on the first flush won't do.
-Replace the flush marker with a sequence number, so that it's possible to
-check if the TLB is in sync with the current page table state for each GPU.
+For blk-mq, part_in_flight/rw will invoke blk_mq_in_flight/rw to
+account the inflight requests. It will access the queue_hw_ctx and
+nr_hw_queues w/o any protection. When updating nr_hw_queues and
+blk_mq_in_flight/rw occur concurrently, panic comes up.
 
-Signed-off-by: Lucas Stach <l.stach@pengutronix.de>
-Reviewed-by: Philipp Zabel <p.zabel@pengutronix.de>
-Reviewed-by: Guido Günther <agx@sigxcpu.org>
-Signed-off-by: Robert Beckett <bob.beckett@collabora.com>
+Before update nr_hw_queues, the q will be frozen. So we could use
+q_usage_counter to avoid the race. percpu_ref_is_zero is used here
+so that we will not miss any in-flight request. The access to
+nr_hw_queues and queue_hw_ctx in blk_mq_queue_tag_busy_iter are
+under rcu critical section, __blk_mq_update_nr_hw_queues could use
+synchronize_rcu to ensure the zeroed q_usage_counter to be globally
+visible.
+
+Signed-off-by: Jianchao Wang <jianchao.w.wang@oracle.com>
+Reviewed-by: Ming Lei <ming.lei@redhat.com>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Cc: Giuliano Procida <gprocida@google.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/gpu/drm/etnaviv/etnaviv_buffer.c |   10 ++++++----
- drivers/gpu/drm/etnaviv/etnaviv_gpu.c    |    2 +-
- drivers/gpu/drm/etnaviv/etnaviv_gpu.h    |    1 +
- drivers/gpu/drm/etnaviv/etnaviv_mmu.c    |    8 ++++----
- drivers/gpu/drm/etnaviv/etnaviv_mmu.h    |    2 +-
- 5 files changed, 13 insertions(+), 10 deletions(-)
+ block/blk-mq-tag.c |   14 +++++++++++++-
+ block/blk-mq.c     |    4 ++++
+ 2 files changed, 17 insertions(+), 1 deletion(-)
 
---- a/drivers/gpu/drm/etnaviv/etnaviv_buffer.c
-+++ b/drivers/gpu/drm/etnaviv/etnaviv_buffer.c
-@@ -258,6 +258,8 @@ void etnaviv_buffer_queue(struct etnaviv
- 	unsigned int waitlink_offset = buffer->user_size - 16;
- 	u32 return_target, return_dwords;
- 	u32 link_target, link_dwords;
-+	unsigned int new_flush_seq = READ_ONCE(gpu->mmu->flush_seq);
-+	bool need_flush = gpu->flush_seq != new_flush_seq;
+--- a/block/blk-mq-tag.c
++++ b/block/blk-mq-tag.c
+@@ -334,6 +334,18 @@ void blk_mq_queue_tag_busy_iter(struct r
+ 	struct blk_mq_hw_ctx *hctx;
+ 	int i;
  
- 	if (drm_debug & DRM_UT_DRIVER)
- 		etnaviv_buffer_dump(gpu, buffer, 0, 0x50);
-@@ -270,14 +272,14 @@ void etnaviv_buffer_queue(struct etnaviv
- 	 * need to append a mmu flush load state, followed by a new
- 	 * link to this buffer - a total of four additional words.
- 	 */
--	if (gpu->mmu->need_flush || gpu->switch_context) {
-+	if (need_flush || gpu->switch_context) {
- 		u32 target, extra_dwords;
++	/*
++	 * __blk_mq_update_nr_hw_queues will update the nr_hw_queues and
++	 * queue_hw_ctx after freeze the queue. So we could use q_usage_counter
++	 * to avoid race with it. __blk_mq_update_nr_hw_queues will users
++	 * synchronize_rcu to ensure all of the users go out of the critical
++	 * section below and see zeroed q_usage_counter.
++	 */
++	rcu_read_lock();
++	if (percpu_ref_is_zero(&q->q_usage_counter)) {
++		rcu_read_unlock();
++		return;
++	}
  
- 		/* link command */
- 		extra_dwords = 1;
- 
- 		/* flush command */
--		if (gpu->mmu->need_flush) {
-+		if (need_flush) {
- 			if (gpu->mmu->version == ETNAVIV_IOMMU_V1)
- 				extra_dwords += 1;
- 			else
-@@ -290,7 +292,7 @@ void etnaviv_buffer_queue(struct etnaviv
- 
- 		target = etnaviv_buffer_reserve(gpu, buffer, extra_dwords);
- 
--		if (gpu->mmu->need_flush) {
-+		if (need_flush) {
- 			/* Add the MMU flush */
- 			if (gpu->mmu->version == ETNAVIV_IOMMU_V1) {
- 				CMD_LOAD_STATE(buffer, VIVS_GL_FLUSH_MMU,
-@@ -310,7 +312,7 @@ void etnaviv_buffer_queue(struct etnaviv
- 					SYNC_RECIPIENT_PE);
- 			}
- 
--			gpu->mmu->need_flush = false;
-+			gpu->flush_seq = new_flush_seq;
- 		}
- 
- 		if (gpu->switch_context) {
---- a/drivers/gpu/drm/etnaviv/etnaviv_gpu.c
-+++ b/drivers/gpu/drm/etnaviv/etnaviv_gpu.c
-@@ -1353,7 +1353,7 @@ int etnaviv_gpu_submit(struct etnaviv_gp
- 	gpu->active_fence = submit->fence->seqno;
- 
- 	if (gpu->lastctx != cmdbuf->ctx) {
--		gpu->mmu->need_flush = true;
-+		gpu->mmu->flush_seq++;
- 		gpu->switch_context = true;
- 		gpu->lastctx = cmdbuf->ctx;
+ 	queue_for_each_hw_ctx(q, hctx, i) {
+ 		struct blk_mq_tags *tags = hctx->tags;
+@@ -349,7 +361,7 @@ void blk_mq_queue_tag_busy_iter(struct r
+ 			bt_for_each(hctx, &tags->breserved_tags, fn, priv, true);
+ 		bt_for_each(hctx, &tags->bitmap_tags, fn, priv, false);
  	}
---- a/drivers/gpu/drm/etnaviv/etnaviv_gpu.h
-+++ b/drivers/gpu/drm/etnaviv/etnaviv_gpu.h
-@@ -138,6 +138,7 @@ struct etnaviv_gpu {
- 
- 	struct etnaviv_iommu *mmu;
- 	struct etnaviv_cmdbuf_suballoc *cmdbuf_suballoc;
-+	unsigned int flush_seq;
- 
- 	/* Power Control: */
- 	struct clk *clk_bus;
---- a/drivers/gpu/drm/etnaviv/etnaviv_mmu.c
-+++ b/drivers/gpu/drm/etnaviv/etnaviv_mmu.c
-@@ -132,7 +132,7 @@ static int etnaviv_iommu_find_iova(struc
- 		 */
- 		if (mmu->last_iova) {
- 			mmu->last_iova = 0;
--			mmu->need_flush = true;
-+			mmu->flush_seq++;
- 			continue;
- 		}
- 
-@@ -246,7 +246,7 @@ int etnaviv_iommu_map_gem(struct etnaviv
- 	}
- 
- 	list_add_tail(&mapping->mmu_node, &mmu->mappings);
--	mmu->need_flush = true;
-+	mmu->flush_seq++;
- 	mutex_unlock(&mmu->lock);
- 
- 	return ret;
-@@ -264,7 +264,7 @@ void etnaviv_iommu_unmap_gem(struct etna
- 		etnaviv_iommu_remove_mapping(mmu, mapping);
- 
- 	list_del(&mapping->mmu_node);
--	mmu->need_flush = true;
-+	mmu->flush_seq++;
- 	mutex_unlock(&mmu->lock);
+-
++	rcu_read_unlock();
  }
  
-@@ -346,7 +346,7 @@ int etnaviv_iommu_get_suballoc_va(struct
- 			return ret;
- 		}
- 		mmu->last_iova = vram_node->start + size;
--		gpu->mmu->need_flush = true;
-+		mmu->flush_seq++;
- 		mutex_unlock(&mmu->lock);
+ static int bt_alloc(struct sbitmap_queue *bt, unsigned int depth,
+--- a/block/blk-mq.c
++++ b/block/blk-mq.c
+@@ -2748,6 +2748,10 @@ static void __blk_mq_update_nr_hw_queues
  
- 		*iova = (u32)vram_node->start;
---- a/drivers/gpu/drm/etnaviv/etnaviv_mmu.h
-+++ b/drivers/gpu/drm/etnaviv/etnaviv_mmu.h
-@@ -44,7 +44,7 @@ struct etnaviv_iommu {
- 	struct list_head mappings;
- 	struct drm_mm mm;
- 	u32 last_iova;
--	bool need_flush;
-+	unsigned int flush_seq;
- };
+ 	list_for_each_entry(q, &set->tag_list, tag_set_list)
+ 		blk_mq_unfreeze_queue(q);
++	/*
++	 * Sync with blk_mq_queue_tag_busy_iter.
++	 */
++	synchronize_rcu();
+ }
  
- struct etnaviv_gem_object;
+ void blk_mq_update_nr_hw_queues(struct blk_mq_tag_set *set, int nr_hw_queues)
 
 
