@@ -4,54 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FCF0C2BA19
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:30:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F0F5C2BBC7
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:30:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DA9BF206E9
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:30:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6BCC0206E9
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:30:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586647823;
-	bh=10325/ww294pR6V/vtzlL8aYDZ/x2rLiFJWgKNGtC4M=;
+	s=default; t=1586647828;
+	bh=OHh8W/rYjJG0JGWwMu+RIa89RX1bDKCXWFbkIySu1qI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=di6iKZXwC0BlElaFlfmgekaYaAYDt9Co+VvIiqhtpMzSXhfwERGpiU4SS4jCsrBKT
-	 KY6TyubRpHSPGh2HUVN7cc33pVj8hdeLmEHXSLdezEGnfevW1Crx4wIZkTYf4dvWnX
-	 vVgvgAHMTjz8Q2Lwj3Pi5r3OKQ4Ef/auAXUHU7Ng=
+	b=Ytr8zx9duaAOMySJ/d8cDgXT/uOStYofVHTOTmK3emfrFYC541rHDF5jCOIXKR4Ih
+	 fZ7K2wwk/Pu87pfv+ED+th/OUkR0fdhuh51pzCZerQoIb9IuKh1VS8vPV/B2BKvD7b
+	 qLdVpcSBdnt+/olA/xn8xePGUkz6jU4pbiyNmHXU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729901AbgDKXaU (ORCPT
+        id S1729643AbgDKXKh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 19:30:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49306 "EHLO mail.kernel.org"
+        Sat, 11 Apr 2020 19:10:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48992 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729650AbgDKXKi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 19:10:38 -0400
+        id S1729591AbgDKXK3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Apr 2020 19:10:29 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DDBA520757;
-        Sat, 11 Apr 2020 23:10:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 75FA720757;
+        Sat, 11 Apr 2020 23:10:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586646638;
-        bh=10325/ww294pR6V/vtzlL8aYDZ/x2rLiFJWgKNGtC4M=;
+        s=default; t=1586646629;
+        bh=OHh8W/rYjJG0JGWwMu+RIa89RX1bDKCXWFbkIySu1qI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=K9LTe292Weuap0I7qjAqHEsPCY9UJQRXeY5xBWrm7IfaRokcQ/aBETHXesq27tnBs
-         CTODmryb+UExnQvTFb+puc3A1bP7c8LUmfvlYi0bDfyLY+gz02ECE9ahyaBxEIr2fQ
-         4vmPiPL7ZgnmRyJNEBpEnpKQGQnDkjaffDoVPbug=
+        b=yWJAoejoK0bttPvj1d5uJIB3Yh/qfqbZN0sfX5KujFU9x7udn3rh6Q1j4fUTdCVDn
+         rPqXnSGCaMmFbcrR9nLTnUfV/K9lFbEQ0eOmqxlXtCRlC+4r+zNT7cnOJGYTkZwzMG
+         z1dRoDiIRaU48VQfCDRZ6v6IlnWIlz/zUD/3V7ok=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     =?UTF-8?q?Horia=20Geant=C4=83?= <horia.geanta@nxp.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Sasha Levin <sashal@kernel.org>, linux-crypto@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 045/108] crypto: tcrypt - fix printed skcipher [a]sync mode
-Date:   Sat, 11 Apr 2020 19:08:40 -0400
-Message-Id: <20200411230943.24951-45-sashal@kernel.org>
+Cc:     Florian Fainelli <f.fainelli@gmail.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 037/108] net: dsa: bcm_sf2: Also configure Port 5 for 2Gb/sec on 7278
+Date:   Sat, 11 Apr 2020 19:08:32 -0400
+Message-Id: <20200411230943.24951-37-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200411230943.24951-1-sashal@kernel.org>
 References: <20200411230943.24951-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -60,41 +59,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Horia Geantă <horia.geanta@nxp.com>
+From: Florian Fainelli <f.fainelli@gmail.com>
 
-[ Upstream commit 8e3b7fd7ea554ccb1bdc596bfbcdaf56f7ab017c ]
+[ Upstream commit 7458bd540fa0a90220b9e8c349d910d9dde9caf8 ]
 
-When running tcrypt skcipher speed tests, logs contain things like:
-testing speed of async ecb(des3_ede) (ecb(des3_ede-generic)) encryption
-or:
-testing speed of async ecb(aes) (ecb(aes-ce)) encryption
+Either port 5 or port 8 can be used on a 7278 device, make sure that
+port 5 also gets configured properly for 2Gb/sec in that case.
 
-The algorithm implementations are sync, not async.
-Fix this inaccuracy.
-
-Fixes: 7166e589da5b6 ("crypto: tcrypt - Use skcipher")
-Signed-off-by: Horia Geantă <horia.geanta@nxp.com>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- crypto/tcrypt.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/net/dsa/bcm_sf2.c      | 3 +++
+ drivers/net/dsa/bcm_sf2_regs.h | 1 +
+ 2 files changed, 4 insertions(+)
 
-diff --git a/crypto/tcrypt.c b/crypto/tcrypt.c
-index 83ad0b1fab30a..d164ec4e4db95 100644
---- a/crypto/tcrypt.c
-+++ b/crypto/tcrypt.c
-@@ -1514,8 +1514,8 @@ static void test_skcipher_speed(const char *algo, int enc, unsigned int secs,
- 		return;
- 	}
+diff --git a/drivers/net/dsa/bcm_sf2.c b/drivers/net/dsa/bcm_sf2.c
+index 46dc913da852d..d4e804184c545 100644
+--- a/drivers/net/dsa/bcm_sf2.c
++++ b/drivers/net/dsa/bcm_sf2.c
+@@ -602,6 +602,9 @@ static void bcm_sf2_sw_mac_config(struct dsa_switch *ds, int port,
+ 	if (state->duplex == DUPLEX_FULL)
+ 		reg |= DUPLX_MODE;
  
--	pr_info("\ntesting speed of async %s (%s) %s\n", algo,
--			get_driver_name(crypto_skcipher, tfm), e);
-+	pr_info("\ntesting speed of %s %s (%s) %s\n", async ? "async" : "sync",
-+		algo, get_driver_name(crypto_skcipher, tfm), e);
++	if (priv->type == BCM7278_DEVICE_ID && dsa_is_cpu_port(ds, port))
++		reg |= GMIIP_SPEED_UP_2G;
++
+ 	core_writel(priv, reg, offset);
+ }
  
- 	req = skcipher_request_alloc(tfm, GFP_KERNEL);
- 	if (!req) {
+diff --git a/drivers/net/dsa/bcm_sf2_regs.h b/drivers/net/dsa/bcm_sf2_regs.h
+index d8a5e6269c0ef..7844781763359 100644
+--- a/drivers/net/dsa/bcm_sf2_regs.h
++++ b/drivers/net/dsa/bcm_sf2_regs.h
+@@ -178,6 +178,7 @@ enum bcm_sf2_reg_offs {
+ #define  RXFLOW_CNTL			(1 << 4)
+ #define  TXFLOW_CNTL			(1 << 5)
+ #define  SW_OVERRIDE			(1 << 6)
++#define  GMIIP_SPEED_UP_2G		(1 << 7)
+ 
+ #define CORE_WATCHDOG_CTRL		0x001e4
+ #define  SOFTWARE_RESET			(1 << 7)
 -- 
 2.20.1
 
