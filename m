@@ -8,55 +8,55 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 754C2C2BA19
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 18:22:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F09FC2BA19
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 18:22:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 48D9E21BE5
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 18:22:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D3FA22145D
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 18:22:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Jygbu+3t"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LZd3cbNw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726826AbgDKSWO (ORCPT
+        id S1726857AbgDKSWT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 14:22:14 -0400
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:40296 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726791AbgDKSWK (ORCPT
+        Sat, 11 Apr 2020 14:22:19 -0400
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:33848 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726824AbgDKSWQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 14:22:10 -0400
-Received: by mail-lj1-f195.google.com with SMTP id 142so4950100ljj.7;
-        Sat, 11 Apr 2020 11:22:09 -0700 (PDT)
+        Sat, 11 Apr 2020 14:22:16 -0400
+Received: by mail-lf1-f65.google.com with SMTP id x23so3596832lfq.1;
+        Sat, 11 Apr 2020 11:22:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=bOxfbv/Ciuh7Y4q8Zjx3IHokX/Ks6vT2KzIOjwmY+B8=;
-        b=Jygbu+3tPUKqOqaKziwUpUsb/cgk2d7vossa21X73oEjr1d/9xmDVPUi6Af8mdbjkd
-         S/KSbUxx1liCowmHPOpXqFGmTHXHTihj1yZPOs4yfHs5aSJcco8saHBhGqFOwj37uHp5
-         uNrNw9Z8+lUYeYkZA0WmLN0lnJeUW2hThVwDnbXvRGjcfFIIVRnEEgqtPfA1Qi2bxj1E
-         IPMP3XYa/itq8dObS4eli2wKVUJXxx/RybwafC965w5jb800eRE/yxZZPn+zxCTlXe9s
-         QSLYtPmQp/TxTD7N4pvJqUtrALUUycux83tvwqdMmwMqTDdbpujb2Vm2OoZ7Qm/YaZdZ
-         /fIQ==
+        bh=+niRBGbpnV97QyKJ3armXwVilZlDGTWi89SgKtqNxcs=;
+        b=LZd3cbNwMfr96h4aHJVMGsPGGphTrI0WaypcHWdTscqXOGKrDkU3y8XfnNZo0nDS38
+         yBdcgxviRe8DtOIZHk9gkyaRdcCKL1q/sTWjp5ek09OAYGz6s5qnTOI7+F7utg6NjEH/
+         lpKpSNoDo5EXWJJZGYP7YGnv4a3IK+VVykQo8cv6PS8u2xu9YgReC2HJgx3sQT2wh3kz
+         pNbFSZqcP3ny2KrwnRU8NiRn+D7FnDwAF5eIDluFryMUhZ3j9Rm5In2YSQNidZ8dbSyt
+         07NNnWdOvC5sl5WNUh0zgdeL8gtXiu6I4P6jIPCH3vx49L4aD9SuR1467936lJp0T3m4
+         s87g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=bOxfbv/Ciuh7Y4q8Zjx3IHokX/Ks6vT2KzIOjwmY+B8=;
-        b=dIlvueVx9c8JY3rvJYGa8wKuD6EIW1Cvi1OTYtHx1wCg2fJ/D2+VGFkkXgATxHd8zZ
-         x8JXmLnGYQA1pK3YMFWowh9CbP52eCEO5rSyRZCpqc5/MP/PPPNAYvqThioSEbO0SxHI
-         Npg3YLaxjS2u5nSnwT1ik+QNZRVPADR9L8ywTKzglNZYAO1O2oDZk1SA2B8WBhPbzJMd
-         c5MHwtpBOqg5c4HzZGY2XnQ/pm0pgdzEOaU+QJ4SqLwC1zUHIOakRmXNjktBvaGQNUTI
-         Tce2sX/rLiXBBFC9ecPZl2N3+FgMlzHxO4tWvJ4pbOS6pRbAhpYBpGilJohT8CxujjIF
-         sZYQ==
-X-Gm-Message-State: AGi0Pua9Q+dBsJwoJMwgwCf8UB+K3Mu0eHqqtEboCT/F1hOtyf5+Epx/
-        L/MPkiRj9lEavLBsiv1Bp1mz5t6yvYjwmQ==
-X-Google-Smtp-Source: APiQypKlF9K/OEy64Bzqeayt5kKdbvSmUDabujd1geATcFyv4epSF1oplqQXKGkXamjCE9FnaE6qtA==
-X-Received: by 2002:a2e:a548:: with SMTP id e8mr6235426ljn.151.1586629328169;
-        Sat, 11 Apr 2020 11:22:08 -0700 (PDT)
+        bh=+niRBGbpnV97QyKJ3armXwVilZlDGTWi89SgKtqNxcs=;
+        b=NLowynUKVrysuN1LwCNs+0tsI0EIyCKokCW8U0NBtWD84k5wpjzS/1JHAIF4ZLdvQq
+         zDUMfyNGF4CKBG8TgwSO8E2YGzId2eY8JkEG3REmPCI9EdAhysl8tSiMceJaimlcW3fp
+         ovc1N8MziOTWNopxbw72GUCZ7OAVmej4W1XjyUg30IM+lVzB4UU0YHO6fy/1tdTRBDY2
+         JA7Rq5F2879Xl+42gZPuO5Sb/ozd41LN3Yp9qOCWDNv/3b+LJA08CLiu9MiQkFQY3ALO
+         8+PRWU2ky+2iwOjXsdZoF0XVrEerIZde2A+uQa3dwZojmMDE6LqwFEMfd4cf0xYNiYRx
+         h3TQ==
+X-Gm-Message-State: AGi0PubR1bAhX+dcvbrfZWFGk8UZEjupbsgTxXQ6tiAPhdf/XmiOGxVT
+        xZpsRgPbnXzv2z12kiXPin6FL7zInabZSw==
+X-Google-Smtp-Source: APiQypJdbNROJyWqpa9aZFh03QK652AMqEDi/LOUvENUP1mgL6ZYk1u1bYXbNSE/Vepi4AHaSa6Hyg==
+X-Received: by 2002:a19:c14e:: with SMTP id r75mr5879342lff.62.1586629333903;
+        Sat, 11 Apr 2020 11:22:13 -0700 (PDT)
 Received: from localhost ([213.191.183.145])
-        by smtp.gmail.com with ESMTPSA id h21sm4323517lfp.1.2020.04.11.11.22.06
+        by smtp.gmail.com with ESMTPSA id t28sm3860774ljk.40.2020.04.11.11.22.12
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 11 Apr 2020 11:22:07 -0700 (PDT)
+        Sat, 11 Apr 2020 11:22:13 -0700 (PDT)
 From:   Iskren Chernev <iskren.chernev@gmail.com>
 To:     linux-arm-msm@vger.kernel.org
 Cc:     Daniele Debernardi <drebrez@gmail.com>,
@@ -64,9 +64,9 @@ Cc:     Daniele Debernardi <drebrez@gmail.com>,
         Bjorn Andersson <bjorn.andersson@linaro.org>,
         Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org, ~postmarketos/upstreaming@lists.sr.ht
-Subject: [PATCH v2 3/5] ARM: dts: qcom: msm8974-klte: Add gpio-keys nodes
-Date:   Sat, 11 Apr 2020 21:21:20 +0300
-Message-Id: <20200411182122.2677248-4-iskren.chernev@gmail.com>
+Subject: [PATCH v2 5/5] ARM: dts: qcom: msm8974-klte: Add USB node
+Date:   Sat, 11 Apr 2020 21:21:22 +0300
+Message-Id: <20200411182122.2677248-6-iskren.chernev@gmail.com>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200411182122.2677248-1-iskren.chernev@gmail.com>
 References: <20200411182122.2677248-1-iskren.chernev@gmail.com>
@@ -79,79 +79,49 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Daniele Debernardi <drebrez@gmail.com>
 
-This introduces the gpio-keys nodes for volume/home keys and the
-associated pinctrl state.
+This introduces the usb node which can be used e.g. for USB_ETH
 
 Signed-off-by: Daniele Debernardi <drebrez@gmail.com>
 ---
- .../boot/dts/qcom-msm8974-samsung-klte.dts    | 49 +++++++++++++++++++
- 1 file changed, 49 insertions(+)
+ .../boot/dts/qcom-msm8974-samsung-klte.dts    | 25 +++++++++++++++++++
+ 1 file changed, 25 insertions(+)
 
 diff --git a/arch/arm/boot/dts/qcom-msm8974-samsung-klte.dts b/arch/arm/boot/dts/qcom-msm8974-samsung-klte.dts
-index 36ad8ff071ca..752ab9e99a8c 100644
+index 42fc18804021..df85d90100d9 100644
 --- a/arch/arm/boot/dts/qcom-msm8974-samsung-klte.dts
 +++ b/arch/arm/boot/dts/qcom-msm8974-samsung-klte.dts
-@@ -1,6 +1,9 @@
- // SPDX-License-Identifier: GPL-2.0
- #include "qcom-msm8974pro.dtsi"
- #include "qcom-pma8084.dtsi"
-+#include <dt-bindings/gpio/gpio.h>
-+#include <dt-bindings/input/input.h>
-+#include <dt-bindings/pinctrl/qcom,pmic-gpio.h>
- 
- / {
- 	model = "Samsung Galaxy S5";
-@@ -205,4 +208,50 @@ serial@f991e000 {
- 		status = "ok";
+@@ -272,6 +272,31 @@ sdhci@f9824900 {
+ 		pinctrl-names = "default";
+ 		pinctrl-0 = <&sdhc1_pin_a>;
  	};
- 
-+	gpio-keys {
-+		compatible = "gpio-keys";
-+		input-name = "gpio-keys";
 +
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&gpio_keys_pin_a>;
++	usb@f9a55000 {
++		status = "ok";
 +
-+		volume-down {
-+			label = "volume_down";
-+			gpios = <&pma8084_gpios 2 GPIO_ACTIVE_LOW>;
-+			linux,input-type = <1>;
-+			linux,code = <KEY_VOLUMEDOWN>;
-+			debounce-interval = <15>;
-+		};
++		phys = <&usb_hs1_phy>;
++		phy-select = <&tcsr 0xb000 0>;
++		/*extcon = <&smbb>, <&usb_id>;*/
++		/*vbus-supply = <&chg_otg>;*/
 +
-+		home-key {
-+			label = "home_key";
-+			gpios = <&pma8084_gpios 3 GPIO_ACTIVE_LOW>;
-+			linux,input-type = <1>;
-+			linux,code = <KEY_HOMEPAGE>;
-+			wakeup-source;
-+			debounce-interval = <15>;
-+		};
++		hnp-disable;
++		srp-disable;
++		adp-disable;
 +
-+		volume-up {
-+			label = "volume_up";
-+			gpios = <&pma8084_gpios 5 GPIO_ACTIVE_LOW>;
-+			linux,input-type = <1>;
-+			linux,code = <KEY_VOLUMEUP>;
-+			debounce-interval = <15>;
-+		};
-+	};
-+};
++		ulpi {
++			phy@a {
++				status = "ok";
 +
-+&spmi_bus {
-+	pma8084@0 {
-+		gpios@c000 {
-+			gpio_keys_pin_a: gpio-keys-active {
-+				pins = "gpio2", "gpio3", "gpio5";
-+				function = "normal";
++				v1p8-supply = <&pma8084_l6>;
++				v3p3-supply = <&pma8084_l24>;
 +
-+				bias-pull-up;
-+				power-source = <PMA8084_GPIO_S4>;
++				/*extcon = <&smbb>;*/
++				qcom,init-seq = /bits/ 8 <0x1 0x64>;
 +			};
 +		};
 +	};
  };
+ 
+ &spmi_bus {
 -- 
 2.26.0
 
