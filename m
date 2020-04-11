@@ -7,50 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B942C2BA19
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:41:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90B54C2BBC7
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:41:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 12832206E9
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:41:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6BA77206A1
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:41:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586648473;
-	bh=sGcawhSCorjKNqb+a3+qFPoK9A8AmdvKn3bP+dfMO2M=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=RGoQ5OIg0GTRfzut4Qi82SomdPMAvRDqMN2czNTgYJ1yeDGAW80/Or2xRmZK4YVci
-	 3SjisYsOkb/qdNF87JCh2muDBebG9HkgBhd6GmX/+JQthe4RNVIbUwMtgTKJ0sNNVo
-	 O8n0+jreKgzUWxiGT5fxxmS8k60j4JLtx5t/iHPo=
+	s=default; t=1586648478;
+	bh=xwMEh7gK1MrWSHbrQgIPWGNJPFANYxYDDaMGR0lGdcs=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=YaAX3j5J62TDpLRJU+iv2J4fH3KEsiL1Zo16XFSmpbcAeQRmkshhHwcL3STX/8gX2
+	 Vojtu7GvA9sDwfu6/mEpJfL69ao+YaEKPQ/IEtzgwTVr/04w3reaTtrL1qK1Y6SJkZ
+	 9Z8+t1RBw+9Ad3DeR/mdO8OmGTUwoUCzPys5/yy4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730643AbgDKXlL (ORCPT
+        id S1727436AbgDKXHM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 19:41:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42908 "EHLO mail.kernel.org"
+        Sat, 11 Apr 2020 19:07:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42818 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728587AbgDKXHN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 19:07:13 -0400
+        id S1728564AbgDKXHI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Apr 2020 19:07:08 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 56CEE216FD;
-        Sat, 11 Apr 2020 23:07:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8F37E20708;
+        Sat, 11 Apr 2020 23:07:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586646433;
-        bh=sGcawhSCorjKNqb+a3+qFPoK9A8AmdvKn3bP+dfMO2M=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Y6aiFXP7NxfrP/8pMnaOTXWrlr/35MPpp9NETjbeQRT3K5kLroJKgBRfMazPxNTGF
-         KC9nlDfhHkXR5jlAiJbVAm9GJU/J7Zqf5E+8CI2dj9cHvOQ1jK7MsVJ++x3ezwlS7m
-         Wjhs9D/84ngPFv6SCS1Wi6cyU4ZKjpZVyNgTMVYU=
+        s=default; t=1586646428;
+        bh=xwMEh7gK1MrWSHbrQgIPWGNJPFANYxYDDaMGR0lGdcs=;
+        h=From:To:Cc:Subject:Date:From;
+        b=DU9Gkzmg74xmBvSiq+KqPOqqO2AdH2l7GCewaIJODUx1bjQGKiiWhh3F6oaZ5ltw6
+         MoQvTzbkd/YUSWdXtEP6y6jYa1YWNzZqQOVollUYtrlgmgrC+aj5H4vbWNsPgEaoR/
+         fnWcy5DFoiS0nRtTyGNRoJgLsh/tMNmo/HFAxoNc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Zhu Yanjun <yanjunz@mellanox.com>,
-        Leon Romanovsky <leonro@mellanox.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Sasha Levin <sashal@kernel.org>, linux-rdma@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.5 005/121] RDMA/rxe: Set sys_image_guid to be aligned with HW IB devices
-Date:   Sat, 11 Apr 2020 19:05:10 -0400
-Message-Id: <20200411230706.23855-5-sashal@kernel.org>
+Cc:     Masahiro Yamada <masahiroy@kernel.org>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.5 001/121] net: wan: wanxl: use allow to pass CROSS_COMPILE_M68k for rebuilding firmware
+Date:   Sat, 11 Apr 2020 19:05:06 -0400
+Message-Id: <20200411230706.23855-1-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200411230706.23855-1-sashal@kernel.org>
-References: <20200411230706.23855-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -60,53 +57,76 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Zhu Yanjun <yanjunz@mellanox.com>
+From: Masahiro Yamada <masahiroy@kernel.org>
 
-[ Upstream commit d0ca2c35dd15a3d989955caec02beea02f735ee6 ]
+[ Upstream commit 63b903dfebdea92aa92ad337d8451a6fbfeabf9d ]
 
-The RXE driver doesn't set sys_image_guid and user space applications see
-zeros. This causes to pyverbs tests to fail with the following traceback,
-because the IBTA spec requires to have valid sys_image_guid.
+As far as I understood from the Kconfig help text, this build rule is
+used to rebuild the driver firmware, which runs on an old m68k-based
+chip. So, you need m68k tools for the firmware rebuild.
 
- Traceback (most recent call last):
-   File "./tests/test_device.py", line 51, in test_query_device
-     self.verify_device_attr(attr)
-   File "./tests/test_device.py", line 74, in verify_device_attr
-     assert attr.sys_image_guid != 0
+wanxl.c is a PCI driver, but CONFIG_M68K does not select CONFIG_HAVE_PCI.
+So, you cannot enable CONFIG_WANXL_BUILD_FIRMWARE for ARCH=m68k. In other
+words, ifeq ($(ARCH),m68k) is false here.
 
-In order to fix it, set sys_image_guid to be equal to node_guid.
+I am keeping the dead code for now, but rebuilding the firmware requires
+'as68k' and 'ld68k', which I do not have in hand.
 
-Before:
- 5: rxe0: ... node_guid 5054:00ff:feaa:5363 sys_image_guid
- 0000:0000:0000:0000
+Instead, the kernel.org m68k GCC [1] successfully built it.
 
-After:
- 5: rxe0: ... node_guid 5054:00ff:feaa:5363 sys_image_guid
- 5054:00ff:feaa:5363
+Allowing a user to pass in CROSS_COMPILE_M68K= is handier.
 
-Fixes: 8700e3e7c485 ("Soft RoCE driver")
-Link: https://lore.kernel.org/r/20200323112800.1444784-1-leon@kernel.org
-Signed-off-by: Zhu Yanjun <yanjunz@mellanox.com>
-Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+[1] https://mirrors.edge.kernel.org/pub/tools/crosstool/files/bin/x86_64/9.2.0/x86_64-gcc-9.2.0-nolibc-m68k-linux.tar.xz
+
+Suggested-by: Geert Uytterhoeven <geert@linux-m68k.org>
+Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/infiniband/sw/rxe/rxe.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/net/wan/Kconfig  |  2 +-
+ drivers/net/wan/Makefile | 12 ++++++------
+ 2 files changed, 7 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/infiniband/sw/rxe/rxe.c b/drivers/infiniband/sw/rxe/rxe.c
-index 0946a301a5c5d..4afdd2e208839 100644
---- a/drivers/infiniband/sw/rxe/rxe.c
-+++ b/drivers/infiniband/sw/rxe/rxe.c
-@@ -103,6 +103,8 @@ static void rxe_init_device_param(struct rxe_dev *rxe)
- 	rxe->attr.max_fast_reg_page_list_len	= RXE_MAX_FMR_PAGE_LIST_LEN;
- 	rxe->attr.max_pkeys			= RXE_MAX_PKEYS;
- 	rxe->attr.local_ca_ack_delay		= RXE_LOCAL_CA_ACK_DELAY;
-+	addrconf_addr_eui48((unsigned char *)&rxe->attr.sys_image_guid,
-+			rxe->ndev->dev_addr);
+diff --git a/drivers/net/wan/Kconfig b/drivers/net/wan/Kconfig
+index dd1a147f29716..058d77d2e693d 100644
+--- a/drivers/net/wan/Kconfig
++++ b/drivers/net/wan/Kconfig
+@@ -200,7 +200,7 @@ config WANXL_BUILD_FIRMWARE
+ 	depends on WANXL && !PREVENT_FIRMWARE_BUILD
+ 	help
+ 	  Allows you to rebuild firmware run by the QUICC processor.
+-	  It requires as68k, ld68k and hexdump programs.
++	  It requires m68k toolchains and hexdump programs.
  
- 	rxe->max_ucontext			= RXE_MAX_UCONTEXT;
- }
+ 	  You should never need this option, say N.
+ 
+diff --git a/drivers/net/wan/Makefile b/drivers/net/wan/Makefile
+index 701f5d2fe3b61..995277c657a1e 100644
+--- a/drivers/net/wan/Makefile
++++ b/drivers/net/wan/Makefile
+@@ -40,17 +40,17 @@ $(obj)/wanxl.o:	$(obj)/wanxlfw.inc
+ 
+ ifeq ($(CONFIG_WANXL_BUILD_FIRMWARE),y)
+ ifeq ($(ARCH),m68k)
+-  AS68K = $(AS)
+-  LD68K = $(LD)
++  M68KAS = $(AS)
++  M68KLD = $(LD)
+ else
+-  AS68K = as68k
+-  LD68K = ld68k
++  M68KAS = $(CROSS_COMPILE_M68K)as
++  M68KLD = $(CROSS_COMPILE_M68K)ld
+ endif
+ 
+ quiet_cmd_build_wanxlfw = BLD FW  $@
+       cmd_build_wanxlfw = \
+-	$(CPP) -D__ASSEMBLY__ -Wp,-MD,$(depfile) -I$(srctree)/include/uapi $< | $(AS68K) -m68360 -o $(obj)/wanxlfw.o; \
+-	$(LD68K) --oformat binary -Ttext 0x1000 $(obj)/wanxlfw.o -o $(obj)/wanxlfw.bin; \
++	$(CPP) -D__ASSEMBLY__ -Wp,-MD,$(depfile) -I$(srctree)/include/uapi $< | $(M68KAS) -m68360 -o $(obj)/wanxlfw.o; \
++	$(M68KLD) --oformat binary -Ttext 0x1000 $(obj)/wanxlfw.o -o $(obj)/wanxlfw.bin; \
+ 	hexdump -ve '"\n" 16/1 "0x%02X,"' $(obj)/wanxlfw.bin | sed 's/0x  ,//g;1s/^/static const u8 firmware[]={/;$$s/,$$/\n};\n/' >$(obj)/wanxlfw.inc; \
+ 	rm -f $(obj)/wanxlfw.bin $(obj)/wanxlfw.o
+ 
 -- 
 2.20.1
 
