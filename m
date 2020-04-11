@@ -8,76 +8,67 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB0D5C2BBC7
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 00:20:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55A93C2D0EC
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 00:20:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C463A217D8
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 00:20:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1C9B82145D
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 00:20:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Y4P580LG"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kG0j/5lP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726881AbgDKAUV (ORCPT
+        id S1726858AbgDKAUn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Apr 2020 20:20:21 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:37800 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726810AbgDKAUR (ORCPT
+        Fri, 10 Apr 2020 20:20:43 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:51310 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726860AbgDKAUV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Apr 2020 20:20:17 -0400
-Received: by mail-wm1-f65.google.com with SMTP id z6so4385296wml.2;
-        Fri, 10 Apr 2020 17:20:14 -0700 (PDT)
+        Fri, 10 Apr 2020 20:20:21 -0400
+Received: by mail-wm1-f66.google.com with SMTP id x4so4083055wmj.1;
+        Fri, 10 Apr 2020 17:20:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=bnsdQ5U1vczReUdSDEyFDyP+NZXKnWhzI4gNW+WqNi8=;
-        b=Y4P580LG8AOE73qKmST1Ddlv62Xh2B/xEmvDDI7TnWMBIYAgb0We1EJiiTitFQ7XuJ
-         iOnsUBn0VCt4JcfU84GiB7eSPyTdXOLNYo+DEZvom+0aRjTkhl4ofekKMOk6b8/e8LOU
-         3Syu2KELG0PNf5gGTqPoRmqaMYTka12nijp+jwg8oRyGxnrgxSRE7pngHjzfDUUzLao7
-         nDTj73suFFI+YSHA2HOd5SItkBr9miR3s9NIaItMOPBwJAPjmuC8E/cpKiyxDLqev7JT
-         45yoPK7F8KLtMGSUNDDppOSOEKe7raEHcq2ZG//QO7VpmCudSZUXqouMkH5QCr3fB0hB
-         sZsQ==
+        bh=VFyLS6TU6TdGoqvb1Y1UQYTyXeqkxGElWzmZo9z0wbQ=;
+        b=kG0j/5lPIT0wJJbhcgxc2dAl5Tfl7e6TeAD92/k91AO7exflpxnjlMyFxWfTt22woD
+         YTghdxJFHYMRVGc9PL+QAUtRBuKCP179vQl8/xRkvGHH0KQ6w5Qg7bNKEqYaNK/C2fm4
+         uD/r6LIS+wPazGLVF5KwYFAfs11SJjhaNNXC6cWEmDklSEwCbILlSgumjlkUmWH76q2J
+         Hn45t6Yr8j/nr9tlKcP9zhU+JoQItYx+rJuDiN+LVVqHQIYJvh6qgX6jJsNGIEYxQ0Y5
+         a0l4Qs7N2P3PZp5Ur0L57bfzLdmtvNew3pjEx8/tU2b4gni9Ct76HIU2nETqYQ89uL5M
+         JsNA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=bnsdQ5U1vczReUdSDEyFDyP+NZXKnWhzI4gNW+WqNi8=;
-        b=POtOzAC8EXLPD+ihwvx1uMl9J6muC1AIMnpzrOjkI/LNMZD/jqWnZ37ketDkif7bdP
-         rGrhs9SokNkFWikIfZrTP0RcD681Iko2cUG6x4erQe19tGm0LGH+SFnpF+gAEBmIgRXw
-         ynbAiNiJ99ERtAO19wcKl0yLky9+VlHzQAnXKDY+iLqYy6ANIvzXuLaWxsybVWV5Pnxy
-         UbIoCwhMYmtOUCBiYhk4bXnBamfOYp6/R5cbdBLLa+UbCO57IOjgSAnDsr1M9oiFi7Ft
-         egoxNHSVbqXrZcDTQC6GQTMbKevaVNRftkB5NYGyY+YdgDSPYvlZpHRF+nYBLs0d+57H
-         wCjA==
-X-Gm-Message-State: AGi0PuZ1AgcE+jgQ7UEMt8hGNcrqBrvr1wFXBETDrDFuNS92krDPuC/K
-        KZZQv/TnqgC4VcMtW8gyQUHiCCPOu5g9
-X-Google-Smtp-Source: APiQypIGyDnDKW2FoYn138vCPA/Jpjjbp+1H5MENkWO7oxvo7KZDFCmi+fR4jGleSf1o3W6FbciRlg==
-X-Received: by 2002:a1c:f409:: with SMTP id z9mr7850215wma.51.1586564414006;
-        Fri, 10 Apr 2020 17:20:14 -0700 (PDT)
+        bh=VFyLS6TU6TdGoqvb1Y1UQYTyXeqkxGElWzmZo9z0wbQ=;
+        b=JdEhMEr+FN/ly6cMwpR+GBm7F62hXcthDfmkhq2AQyYtK/WeJi2Hy4F+R5qV/yM/+1
+         G9la3nzeQKMlfR9uiB0hcsbx4GmePq9PTZ6dcxMrk7E1b4G/SZ2CMlOJFcOBqI6VKdRY
+         NHxgfr2O44k6CQJaIfw+Wytt3Icj8rJPAdmbpYmw0cAOIvaCCmpngY3gkSv7Vuprm5nR
+         RquB5spZE0AtPqnuyQTd//LcQSa66G53h3rAA7CBH1lV/9zyKpfyeQQWfWRpHlGH5g9r
+         65eXrBzE86sJX5xeBbGOy8+rXSljujc5axRTU+hZ2JTHjE4siBoZEfVzeCiUldJSP/A9
+         DoeQ==
+X-Gm-Message-State: AGi0Pub6furBzWqkdt2a2d86F+2lIsLQ+Qhv1bbG6fWiwE1wOU5aNPF4
+        pSNyQQtijnAUOCOXpIcw+dIFsbPPW2hE
+X-Google-Smtp-Source: APiQypJgJDkE0YaOts1yUmpKnMHB1M/0Hl9bmGgzG2H6enzHHMuISK4pa38etdgxOUfRh7X8meJFxg==
+X-Received: by 2002:a05:600c:1:: with SMTP id g1mr1804343wmc.49.1586564420198;
+        Fri, 10 Apr 2020 17:20:20 -0700 (PDT)
 Received: from ninjahost.lan (host-2-102-14-153.as13285.net. [2.102.14.153])
-        by smtp.gmail.com with ESMTPSA id b191sm5091594wmd.39.2020.04.10.17.20.13
+        by smtp.gmail.com with ESMTPSA id b191sm5091594wmd.39.2020.04.10.17.20.19
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 10 Apr 2020 17:20:13 -0700 (PDT)
+        Fri, 10 Apr 2020 17:20:19 -0700 (PDT)
 From:   Jules Irenge <jbi.octave@gmail.com>
 To:     linux-kernel@vger.kernel.org
-Cc:     boqun.feng@gmail.com,
-        Arend van Spriel <arend.vanspriel@broadcom.com>,
-        Franky Lin <franky.lin@broadcom.com>,
-        Hante Meuleman <hante.meuleman@broadcom.com>,
-        Chi-Hsien Lin <chi-hsien.lin@cypress.com>,
-        Wright Feng <wright.feng@cypress.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Johannes Berg <johannes.berg@intel.com>,
-        linux-wireless@vger.kernel.org (open list:BROADCOM BRCM80211
-        IEEE802.11n WIRELESS DRIVER),
-        brcm80211-dev-list.pdl@broadcom.com (open list:BROADCOM BRCM80211
-        IEEE802.11n WIRELESS DRIVER),
-        brcm80211-dev-list@cypress.com (open list:BROADCOM BRCM80211
-        IEEE802.11n WIRELESS DRIVER),
-        netdev@vger.kernel.org (open list:NETWORKING DRIVERS)
-Subject: [PATCH 4/9] mac80211: Add missing annotation for brcms_rfkill_set_hw_state()
-Date:   Sat, 11 Apr 2020 01:19:28 +0100
-Message-Id: <20200411001933.10072-5-jbi.octave@gmail.com>
+Cc:     boqun.feng@gmail.com, "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        John Garry <john.garry@huawei.com>,
+        Allison Randal <allison@lohutok.net>,
+        Hannes Reinecke <hare@suse.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-scsi@vger.kernel.org (open list:SCSI SUBSYSTEM)
+Subject: [PATCH 6/9] scsi: libsas: Add missing annotation for sas_ata_qc_issue()
+Date:   Sat, 11 Apr 2020 01:19:30 +0100
+Message-Id: <20200411001933.10072-7-jbi.octave@gmail.com>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200411001933.10072-1-jbi.octave@gmail.com>
 References: <0/9>
@@ -89,30 +80,30 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Sparse reports a warning at brcms_rfkill_set_hw_state()
+Sparse reports a warning at sas_ata_qc_issue()
 
-warning: context imbalance in brcms_rfkill_set_hw_state()
-	- unexpected unlock
-The root cause is the missing annotation at brcms_rfkill_set_hw_state()
-Add the missing __must_hold(&wl->lock) annotation
+warning: context imbalance in sas_ata_qc_issue() - unexpected unlock
+The root cause is the missing annotation at sas_ata_qc_issue()
+
+Add the missing __must_hold(ap->lock) annotation
 
 Signed-off-by: Jules Irenge <jbi.octave@gmail.com>
 ---
- drivers/net/wireless/broadcom/brcm80211/brcmsmac/mac80211_if.c | 1 +
+ drivers/scsi/libsas/sas_ata.c | 1 +
  1 file changed, 1 insertion(+)
 
-diff --git a/drivers/net/wireless/broadcom/brcm80211/brcmsmac/mac80211_if.c b/drivers/net/wireless/broadcom/brcm80211/brcmsmac/mac80211_if.c
-index 8e8b685cfe09..c3dbeacea6ca 100644
---- a/drivers/net/wireless/broadcom/brcm80211/brcmsmac/mac80211_if.c
-+++ b/drivers/net/wireless/broadcom/brcm80211/brcmsmac/mac80211_if.c
-@@ -1717,6 +1717,7 @@ int brcms_check_firmwares(struct brcms_info *wl)
-  * precondition: perimeter lock has been acquired
-  */
- bool brcms_rfkill_set_hw_state(struct brcms_info *wl)
-+	__must_hold(&wl->lock)
- {
- 	bool blocked = brcms_c_check_radio_disabled(wl->wlc);
+diff --git a/drivers/scsi/libsas/sas_ata.c b/drivers/scsi/libsas/sas_ata.c
+index c5a828a041e0..5d716d388707 100644
+--- a/drivers/scsi/libsas/sas_ata.c
++++ b/drivers/scsi/libsas/sas_ata.c
+@@ -160,6 +160,7 @@ static void sas_ata_task_done(struct sas_task *task)
+ }
  
+ static unsigned int sas_ata_qc_issue(struct ata_queued_cmd *qc)
++	__must_hold(ap->lock)
+ {
+ 	struct sas_task *task;
+ 	struct scatterlist *sg;
 -- 
 2.24.1
 
