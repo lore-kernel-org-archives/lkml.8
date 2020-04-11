@@ -4,53 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71A17C2BBC7
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:28:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 584DBC2BB86
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:28:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 41663217D8
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:28:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 31D5420674
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:28:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586647715;
-	bh=0XvcfMjmExThNxJ5Lf2Fhb+tyCIfM3N6i5bSIHAsSqI=;
+	s=default; t=1586647722;
+	bh=wS3jFTMM2C4qr3WLroCLDV8LJ8TkwN/96ofrMrcEvqQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0Zx5TLXABzLq6TKJmk9BohADq6MQYXOhE8cEOFQFWiN7h43nq9Sqcfcsm8o9jQ2g3
-	 ozQ0mMlaq2oKqFZ7ey3H3wESHBRnTCiU9Rk4YZxw0Q0P6zu6Xa3KzysgtQaIFwr4Lq
-	 RLblWgwVtxLwUZvHrPq7w/Gc8ALa3c3M6jDNYWLg=
+	b=ugxKzJ3mkFk6Fp7Ty4Ve9QZzLFfI69WVKURRNCZSMt6Mo7yIBm0CPsA/WOtNLhFw0
+	 8gI+/h1nW8VoqkvSq4QChNAyAoxipTYWwuDHkCiHL0PewD8uUZaMYZcuxCst4pOoc2
+	 6HV3A8TDAH5KLgB+mpKfaPR+Uz+tbZyfXOfsuQjA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730515AbgDKX23 (ORCPT
+        id S1728461AbgDKXLV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 19:28:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50988 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729875AbgDKXLV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Sat, 11 Apr 2020 19:11:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50754 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728957AbgDKXLR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Apr 2020 19:11:17 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EFD0B21D90;
-        Sat, 11 Apr 2020 23:11:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F01A620CC7;
+        Sat, 11 Apr 2020 23:11:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586646682;
-        bh=0XvcfMjmExThNxJ5Lf2Fhb+tyCIfM3N6i5bSIHAsSqI=;
+        s=default; t=1586646676;
+        bh=wS3jFTMM2C4qr3WLroCLDV8LJ8TkwN/96ofrMrcEvqQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=n2ihgHXjjhQ7QmAmM0S97ePRXDo7JV+SlWRSkRlg+Tqm7+rizOFV2Vu8ejXSnwluu
-         teBP8Mq2JBjJq2ujL9P8LVy4Tqiaa+BvRegnWO3TZ142IL3AoZd2Xu67u1PSXnGaCu
-         U/jwC1UCbenRZekzjWnOyZwnaAXrN6KYe56xF+fI=
+        b=PShKxyJuqDRFJ9sSUQ1buuW7vNtLlL9XO8ENozNo7g7wruWwR2D6V9foICHzmclLm
+         bxjyHE00x7pR84Lzk7P77Tf4Txij98TEv5mOi1eb6//1El9arLvZ+/+i/XODo/1RSA
+         +eTLi8MviqPIhtOHlgVXpgvXoJARzCws4IBTEWQk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Raveendran Somu <raveendran.somu@cypress.com>,
-        Chi-hsien Lin <chi-hsien.lin@cypress.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-wireless@vger.kernel.org,
-        brcm80211-dev-list.pdl@broadcom.com,
-        brcm80211-dev-list@cypress.com, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 078/108] brcmfmac: Fix double freeing in the fmac usb data path
-Date:   Sat, 11 Apr 2020 19:09:13 -0400
-Message-Id: <20200411230943.24951-78-sashal@kernel.org>
+Cc:     Rob Clark <robdclark@chromium.org>,
+        Jordan Crouse <jcrouse@codeaurora.org>,
+        Sasha Levin <sashal@kernel.org>, linux-arm-msm@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 5.4 074/108] drm/msm: devcoredump should dump MSM_SUBMIT_BO_DUMP buffers
+Date:   Sat, 11 Apr 2020 19:09:09 -0400
+Message-Id: <20200411230943.24951-74-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200411230943.24951-1-sashal@kernel.org>
 References: <20200411230943.24951-1-sashal@kernel.org>
@@ -63,39 +60,116 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Raveendran Somu <raveendran.somu@cypress.com>
+From: Rob Clark <robdclark@chromium.org>
 
-[ Upstream commit 78179869dc3f5c0059bbf5d931a2717f1ad97ecd ]
+[ Upstream commit e515af8d4a6f18f96c360724568a7497868101a8 ]
 
-When the brcmf_fws_process_skb() fails to get hanger slot for
-queuing the skb, it tries to free the skb.
-But the caller brcmf_netdev_start_xmit() of that funciton frees
-the packet on error return value.
-This causes the double freeing and which caused the kernel crash.
+Also log buffers with the DUMP flag set, to ensure we capture all useful
+cmdstream in crashdump state with modern mesa.
 
-Signed-off-by: Raveendran Somu <raveendran.somu@cypress.com>
-Signed-off-by: Chi-hsien Lin <chi-hsien.lin@cypress.com>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
-Link: https://lore.kernel.org/r/1585124429-97371-3-git-send-email-chi-hsien.lin@cypress.com
+Otherwise we miss out on the contents of "state object" cmdstream
+buffers.
+
+v2: add missing 'inline'
+
+Signed-off-by: Rob Clark <robdclark@chromium.org>
+Reviewed-by: Jordan Crouse <jcrouse@codeaurora.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/broadcom/brcm80211/brcmfmac/fwsignal.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ drivers/gpu/drm/msm/msm_gem.h | 10 ++++++++++
+ drivers/gpu/drm/msm/msm_gpu.c | 28 +++++++++++++++++++++++-----
+ drivers/gpu/drm/msm/msm_rd.c  |  8 +-------
+ 3 files changed, 34 insertions(+), 12 deletions(-)
 
-diff --git a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/fwsignal.c b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/fwsignal.c
-index 2bd892df83cc5..80cc45c9aa4a1 100644
---- a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/fwsignal.c
-+++ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/fwsignal.c
-@@ -2145,8 +2145,7 @@ int brcmf_fws_process_skb(struct brcmf_if *ifp, struct sk_buff *skb)
- 		brcmf_fws_enq(fws, BRCMF_FWS_SKBSTATE_DELAYED, fifo, skb);
- 		brcmf_fws_schedule_deq(fws);
- 	} else {
--		bphy_err(drvr, "drop skb: no hanger slot\n");
--		brcmf_txfinalize(ifp, skb, false);
-+		bphy_err(drvr, "no hanger slot available\n");
- 		rc = -ENOMEM;
+diff --git a/drivers/gpu/drm/msm/msm_gem.h b/drivers/gpu/drm/msm/msm_gem.h
+index 9e0953c2b7cea..dcee0e223ed86 100644
+--- a/drivers/gpu/drm/msm/msm_gem.h
++++ b/drivers/gpu/drm/msm/msm_gem.h
+@@ -160,4 +160,14 @@ struct msm_gem_submit {
+ 	} bos[0];
+ };
+ 
++/* helper to determine of a buffer in submit should be dumped, used for both
++ * devcoredump and debugfs cmdstream dumping:
++ */
++static inline bool
++should_dump(struct msm_gem_submit *submit, int idx)
++{
++	extern bool rd_full;
++	return rd_full || (submit->bos[idx].flags & MSM_SUBMIT_BO_DUMP);
++}
++
+ #endif /* __MSM_GEM_H__ */
+diff --git a/drivers/gpu/drm/msm/msm_gpu.c b/drivers/gpu/drm/msm/msm_gpu.c
+index edd45f434ccd6..aea93e5035758 100644
+--- a/drivers/gpu/drm/msm/msm_gpu.c
++++ b/drivers/gpu/drm/msm/msm_gpu.c
+@@ -355,16 +355,34 @@ static void msm_gpu_crashstate_capture(struct msm_gpu *gpu,
+ 	state->cmd = kstrdup(cmd, GFP_KERNEL);
+ 
+ 	if (submit) {
+-		int i;
+-
+-		state->bos = kcalloc(submit->nr_cmds,
++		int i, nr = 0;
++
++		/* count # of buffers to dump: */
++		for (i = 0; i < submit->nr_bos; i++)
++			if (should_dump(submit, i))
++				nr++;
++		/* always dump cmd bo's, but don't double count them: */
++		for (i = 0; i < submit->nr_cmds; i++)
++			if (!should_dump(submit, submit->cmd[i].idx))
++				nr++;
++
++		state->bos = kcalloc(nr,
+ 			sizeof(struct msm_gpu_state_bo), GFP_KERNEL);
+ 
++		for (i = 0; i < submit->nr_bos; i++) {
++			if (should_dump(submit, i)) {
++				msm_gpu_crashstate_get_bo(state, submit->bos[i].obj,
++					submit->bos[i].iova, submit->bos[i].flags);
++			}
++		}
++
+ 		for (i = 0; state->bos && i < submit->nr_cmds; i++) {
+ 			int idx = submit->cmd[i].idx;
+ 
+-			msm_gpu_crashstate_get_bo(state, submit->bos[idx].obj,
+-				submit->bos[idx].iova, submit->bos[idx].flags);
++			if (!should_dump(submit, submit->cmd[i].idx)) {
++				msm_gpu_crashstate_get_bo(state, submit->bos[idx].obj,
++					submit->bos[idx].iova, submit->bos[idx].flags);
++			}
+ 		}
  	}
- 	brcmf_fws_unlock(fws);
+ 
+diff --git a/drivers/gpu/drm/msm/msm_rd.c b/drivers/gpu/drm/msm/msm_rd.c
+index c7832a951039f..4acebaefaed74 100644
+--- a/drivers/gpu/drm/msm/msm_rd.c
++++ b/drivers/gpu/drm/msm/msm_rd.c
+@@ -43,7 +43,7 @@
+ #include "msm_gpu.h"
+ #include "msm_gem.h"
+ 
+-static bool rd_full = false;
++bool rd_full = false;
+ MODULE_PARM_DESC(rd_full, "If true, $debugfs/.../rd will snapshot all buffer contents");
+ module_param_named(rd_full, rd_full, bool, 0600);
+ 
+@@ -333,12 +333,6 @@ static void snapshot_buf(struct msm_rd_state *rd,
+ 	msm_gem_put_vaddr(&obj->base);
+ }
+ 
+-static bool
+-should_dump(struct msm_gem_submit *submit, int idx)
+-{
+-	return rd_full || (submit->bos[idx].flags & MSM_SUBMIT_BO_DUMP);
+-}
+-
+ /* called under struct_mutex */
+ void msm_rd_dump_submit(struct msm_rd_state *rd, struct msm_gem_submit *submit,
+ 		const char *fmt, ...)
 -- 
 2.20.1
 
