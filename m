@@ -4,49 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F771C2BA19
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:18:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EACF3C2BA19
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:18:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0799420757
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:18:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B95DF20757
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:18:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586647105;
-	bh=qr5+1RweyNTRZdW2Vo+coTFXj+/HoNqiBAryInyGR/c=;
+	s=default; t=1586647115;
+	bh=hFHx6RqkUyo6iXHb3PvAoIlELuZY+iXvlUN9yOBwKZU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QP7aZL8ygFJayONGMdoNz3TKG6KHk9XitujqRZNUY4tYL5n5asf9B2pFUzvAbOVc3
-	 xm0BDItCYeKcPUrbH8iI4ZE5m3x5DDOQIw7j6EqwuxTP8htwN+ZOYZuQ7DD/rWLTyp
-	 /zirA8A5+mFKo4O6eRqcr2lddWnynucwGIaYosiM=
+	b=FXZGneV5weVTdbpav3MAjh7xEjv37+/9C13feRpuovLq4pa7GlfT2hHcz+3S4AC2F
+	 16nWL+2z9qPYGRHeqEALhkheU+jnuc1Ii3/6m1isoEu0coUyFI3pG6AsHEgLqIFpp3
+	 2Gp2DBZKriGSa2nnBXqQO8sc2ALtBREGV3hdDy8I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730727AbgDKXSX (ORCPT
+        id S1730802AbgDKXSe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 19:18:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55796 "EHLO mail.kernel.org"
+        Sat, 11 Apr 2020 19:18:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55720 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730684AbgDKXOL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 19:14:11 -0400
+        id S1730671AbgDKXOI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Apr 2020 19:14:08 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 257152166E;
-        Sat, 11 Apr 2020 23:14:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3A17621744;
+        Sat, 11 Apr 2020 23:14:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586646851;
-        bh=qr5+1RweyNTRZdW2Vo+coTFXj+/HoNqiBAryInyGR/c=;
+        s=default; t=1586646848;
+        bh=hFHx6RqkUyo6iXHb3PvAoIlELuZY+iXvlUN9yOBwKZU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LEzyLg1UcVcYqaPQPsLoVyrLvdfsmbLP64ZLxEfTYclz7O+UpuhdJlzD9rIahSOKu
-         K1HtWgZ8ZumIrRiMOnjY+SFpy1ZeT0ep4YjNJL7jdlY+GTVwCHhekkDDswRxqn5qT/
-         70mrd7MsXsoQwkjsaXGSxC+ttW+DpfdUxBQS5naA=
+        b=SpJ5EB6SyS68xvPahWfcs3BKDNC4v5pp9RsH+2ihakzMsq0RjdnrO/Fky8yUQDLBH
+         vnfdbRm25BW9+eLSWvNi1rVeHD/keJm5l2hcDPO2GEEfLhwtxxGPoXTKDBNbLstBHl
+         iuA1TODlpbgLmYADse4OzkcjKnMajpz02KUhuWck=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Chuck Lever <chuck.lever@oracle.com>,
-        Sasha Levin <sashal@kernel.org>, linux-nfs@vger.kernel.org,
-        netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 37/37] svcrdma: Fix leak of transport addresses
-Date:   Sat, 11 Apr 2020 19:13:26 -0400
-Message-Id: <20200411231327.26550-37-sashal@kernel.org>
+Cc:     Can Guo <cang@codeaurora.org>, Hongwu Su <hongwus@codeaurora.org>,
+        Asutosh Das <asutoshd@codeaurora.org>,
+        Bean Huo <beanhuo@micron.com>,
+        Stanley Chu <stanley.chu@mediatek.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org
+Subject: [PATCH AUTOSEL 4.14 34/37] scsi: ufs: Fix ufshcd_hold() caused scheduling while atomic
+Date:   Sat, 11 Apr 2020 19:13:23 -0400
+Message-Id: <20200411231327.26550-34-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200411231327.26550-1-sashal@kernel.org>
 References: <20200411231327.26550-1-sashal@kernel.org>
@@ -59,54 +64,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chuck Lever <chuck.lever@oracle.com>
+From: Can Guo <cang@codeaurora.org>
 
-[ Upstream commit 1a33d8a284b1e85e03b8c7b1ea8fb985fccd1d71 ]
+[ Upstream commit c63d6099a7959ecc919b2549dc6b71f53521f819 ]
 
-Kernel memory leak detected:
+The async version of ufshcd_hold(async == true), which is only called in
+queuecommand path as for now, is expected to work in atomic context, thus
+it should not sleep or schedule out. When it runs into the condition that
+clocks are ON but link is still in hibern8 state, it should bail out
+without flushing the clock ungate work.
 
-unreferenced object 0xffff888849cdf480 (size 8):
-  comm "kworker/u8:3", pid 2086, jiffies 4297898756 (age 4269.856s)
-  hex dump (first 8 bytes):
-    30 00 cd 49 88 88 ff ff                          0..I....
-  backtrace:
-    [<00000000acfc370b>] __kmalloc_track_caller+0x137/0x183
-    [<00000000a2724354>] kstrdup+0x2b/0x43
-    [<0000000082964f84>] xprt_rdma_format_addresses+0x114/0x17d [rpcrdma]
-    [<00000000dfa6ed00>] xprt_setup_rdma_bc+0xc0/0x10c [rpcrdma]
-    [<0000000073051a83>] xprt_create_transport+0x3f/0x1a0 [sunrpc]
-    [<0000000053531a8e>] rpc_create+0x118/0x1cd [sunrpc]
-    [<000000003a51b5f8>] setup_callback_client+0x1a5/0x27d [nfsd]
-    [<000000001bd410af>] nfsd4_process_cb_update.isra.7+0x16c/0x1ac [nfsd]
-    [<000000007f4bbd56>] nfsd4_run_cb_work+0x4c/0xbd [nfsd]
-    [<0000000055c5586b>] process_one_work+0x1b2/0x2fe
-    [<00000000b1e3e8ef>] worker_thread+0x1a6/0x25a
-    [<000000005205fb78>] kthread+0xf6/0xfb
-    [<000000006d2dc057>] ret_from_fork+0x3a/0x50
-
-Introduce a call to xprt_rdma_free_addresses() similar to the way
-that the TCP backchannel releases a transport's peer address
-strings.
-
-Fixes: 5d252f90a800 ("svcrdma: Add class for RDMA backwards direction transport")
-Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
+Fixes: f2a785ac2312 ("scsi: ufshcd: Fix race between clk scaling and ungate work")
+Link: https://lore.kernel.org/r/1581392451-28743-6-git-send-email-cang@codeaurora.org
+Reviewed-by: Hongwu Su <hongwus@codeaurora.org>
+Reviewed-by: Asutosh Das <asutoshd@codeaurora.org>
+Reviewed-by: Bean Huo <beanhuo@micron.com>
+Reviewed-by: Stanley Chu <stanley.chu@mediatek.com>
+Signed-off-by: Can Guo <cang@codeaurora.org>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/sunrpc/xprtrdma/svc_rdma_backchannel.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/scsi/ufs/ufshcd.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/net/sunrpc/xprtrdma/svc_rdma_backchannel.c b/net/sunrpc/xprtrdma/svc_rdma_backchannel.c
-index af7893501e40a..4b9aaf487327c 100644
---- a/net/sunrpc/xprtrdma/svc_rdma_backchannel.c
-+++ b/net/sunrpc/xprtrdma/svc_rdma_backchannel.c
-@@ -270,6 +270,7 @@ xprt_rdma_bc_put(struct rpc_xprt *xprt)
- {
- 	dprintk("svcrdma: %s: xprt %p\n", __func__, xprt);
- 
-+	xprt_rdma_free_addresses(xprt);
- 	xprt_free(xprt);
- 	module_put(THIS_MODULE);
- }
+diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
+index c350453246952..6dbdddffa0b31 100644
+--- a/drivers/scsi/ufs/ufshcd.c
++++ b/drivers/scsi/ufs/ufshcd.c
+@@ -1448,6 +1448,11 @@ int ufshcd_hold(struct ufs_hba *hba, bool async)
+ 		 */
+ 		if (ufshcd_can_hibern8_during_gating(hba) &&
+ 		    ufshcd_is_link_hibern8(hba)) {
++			if (async) {
++				rc = -EAGAIN;
++				hba->clk_gating.active_reqs--;
++				break;
++			}
+ 			spin_unlock_irqrestore(hba->host->host_lock, flags);
+ 			flush_work(&hba->clk_gating.ungate_work);
+ 			spin_lock_irqsave(hba->host->host_lock, flags);
 -- 
 2.20.1
 
