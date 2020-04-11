@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B695FC2BB86
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:06:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 485FAC2BA19
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:06:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7C56A20CC7
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:06:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0BADC21744
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:06:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586646409;
-	bh=OpFbVyvYnIHYbXaql1M7ib78tJ4gNMyNDUmLjzivcGo=;
+	s=default; t=1586646413;
+	bh=utJayNYThibBc2EP1ygCW7H1/tgMWGD8ZFeUNZo3nNw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QxTpAru2GJkyrbiuQxn7MSLLgvH+JJMzV7TpAF85cLLA9wQvagSPRyZSId9gxW093
-	 ig1G4rq+X4ESpEPz9CCuHzW87DYWYHYQ0oQtxMOkPwoy7Fll6LnvXl0MSP9s0gogMV
-	 NZpPwBNMhLw2MT+rdE4RMEgJX362atuvjk2sWo6M=
+	b=JKQjDn/JfrjCZbN6UX4s8nqLbgWCsIT5a9URAc8pkASwpyOHn/fANfJuDD1WJiDJ2
+	 c9NdnzkDBFHsGCcjluYl8G8CVnrIyn+LmzNMXEP1CHnqxButn4/PgzNSVhtmX/1vaj
+	 kOeTW06u6mM/bPVy7rkDwBEJOIwoorny3EAwmd18=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728520AbgDKXGr (ORCPT
+        id S1728526AbgDKXGv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 19:06:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42118 "EHLO mail.kernel.org"
+        Sat, 11 Apr 2020 19:06:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42198 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728462AbgDKXGh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 19:06:37 -0400
+        id S1728486AbgDKXGn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Apr 2020 19:06:43 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 03AF2214D8;
-        Sat, 11 Apr 2020 23:06:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DA7B521744;
+        Sat, 11 Apr 2020 23:06:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586646397;
-        bh=OpFbVyvYnIHYbXaql1M7ib78tJ4gNMyNDUmLjzivcGo=;
+        s=default; t=1586646402;
+        bh=utJayNYThibBc2EP1ygCW7H1/tgMWGD8ZFeUNZo3nNw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vWVlA58lktUHHnOy583PmAaQnEb/Ed7OHvfRQCSpdu76E0f2Kb4FodWiLUoG6UJRx
-         oOPydRZmUa6gpjDA7eAPGqo1OJzeRkuFULmhoRLLk5rP2s/oNjPeZ1c8YlIYm2154V
-         K7w0BKpQKIbp/R8FF+PRXOepvLg7qNnVj+IN83Uc=
+        b=e7RbWiyK2Gk5cvHThDxY3cuXGLzLQQOzrZ0n1P4BpZsQb4JmW1QXOAxtZK7pXZ8pR
+         +MQ43bWuxCuJalPqxqRr06dYaj4jv39IePwZ3DZ34JqRaDVl+/pJeLyoRgBJ50MVC4
+         d9hOf7xKn7nmQLYxidh5PaCdWC5zW8lfTunaejXA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Dexuan Cui <decui@microsoft.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Michael Kelley <mikelley@microsoft.com>,
-        Sasha Levin <sashal@kernel.org>, linux-hyperv@vger.kernel.org,
-        linux-pci@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.6 135/149] PCI: hv: Add missing kfree(hbus) in hv_pci_probe()'s error handling path
-Date:   Sat, 11 Apr 2020 19:03:32 -0400
-Message-Id: <20200411230347.22371-135-sashal@kernel.org>
+Cc:     Alexey Kardashevskiy <aik@ozlabs.ru>, Jan Kara <jack@suse.cz>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Sasha Levin <sashal@kernel.org>, linuxppc-dev@lists.ozlabs.org
+Subject: [PATCH AUTOSEL 5.6 139/149] powerpc/book3s64: Fix error handling in mm_iommu_do_alloc()
+Date:   Sat, 11 Apr 2020 19:03:36 -0400
+Message-Id: <20200411230347.22371-139-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200411230347.22371-1-sashal@kernel.org>
 References: <20200411230347.22371-1-sashal@kernel.org>
@@ -61,35 +59,86 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dexuan Cui <decui@microsoft.com>
+From: Alexey Kardashevskiy <aik@ozlabs.ru>
 
-[ Upstream commit 42c3d41832ef4fcf60aaa6f748de01ad99572adf ]
+[ Upstream commit c4b78169e3667413184c9a20e11b5832288a109f ]
 
-Now that we use kzalloc() to allocate the hbus buffer, we must call
-kfree() in the error path as well to prevent memory leakage.
+The last jump to free_exit in mm_iommu_do_alloc() happens after page
+pointers in struct mm_iommu_table_group_mem_t were already converted to
+physical addresses. Thus calling put_page() on these physical addresses
+will likely crash.
 
-Fixes: 877b911a5ba0 ("PCI: hv: Avoid a kmemleak false positive caused by the hbus buffer")
-Signed-off-by: Dexuan Cui <decui@microsoft.com>
-Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Reviewed-by: Michael Kelley <mikelley@microsoft.com>
+This moves the loop which calculates the pageshift and converts page
+struct pointers to physical addresses later after the point when
+we cannot fail; thus eliminating the need to convert pointers back.
+
+Fixes: eb9d7a62c386 ("powerpc/mm_iommu: Fix potential deadlock")
+Reported-by: Jan Kara <jack@suse.cz>
+Signed-off-by: Alexey Kardashevskiy <aik@ozlabs.ru>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Link: https://lore.kernel.org/r/20191223060351.26359-1-aik@ozlabs.ru
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pci/controller/pci-hyperv.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/powerpc/mm/book3s64/iommu_api.c | 39 +++++++++++++++-------------
+ 1 file changed, 21 insertions(+), 18 deletions(-)
 
-diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller/pci-hyperv.c
-index 9977abff92fc5..6b3cee4324047 100644
---- a/drivers/pci/controller/pci-hyperv.c
-+++ b/drivers/pci/controller/pci-hyperv.c
-@@ -3058,7 +3058,7 @@ static int hv_pci_probe(struct hv_device *hdev,
- free_dom:
- 	hv_put_dom_num(hbus->sysdata.domain);
- free_bus:
--	free_page((unsigned long)hbus);
-+	kfree(hbus);
- 	return ret;
- }
+diff --git a/arch/powerpc/mm/book3s64/iommu_api.c b/arch/powerpc/mm/book3s64/iommu_api.c
+index eba73ebd8ae57..fa05bbd1f6829 100644
+--- a/arch/powerpc/mm/book3s64/iommu_api.c
++++ b/arch/powerpc/mm/book3s64/iommu_api.c
+@@ -121,24 +121,6 @@ static long mm_iommu_do_alloc(struct mm_struct *mm, unsigned long ua,
+ 		goto free_exit;
+ 	}
  
+-	pageshift = PAGE_SHIFT;
+-	for (i = 0; i < entries; ++i) {
+-		struct page *page = mem->hpages[i];
+-
+-		/*
+-		 * Allow to use larger than 64k IOMMU pages. Only do that
+-		 * if we are backed by hugetlb.
+-		 */
+-		if ((mem->pageshift > PAGE_SHIFT) && PageHuge(page))
+-			pageshift = page_shift(compound_head(page));
+-		mem->pageshift = min(mem->pageshift, pageshift);
+-		/*
+-		 * We don't need struct page reference any more, switch
+-		 * to physical address.
+-		 */
+-		mem->hpas[i] = page_to_pfn(page) << PAGE_SHIFT;
+-	}
+-
+ good_exit:
+ 	atomic64_set(&mem->mapped, 1);
+ 	mem->used = 1;
+@@ -158,6 +140,27 @@ static long mm_iommu_do_alloc(struct mm_struct *mm, unsigned long ua,
+ 		}
+ 	}
+ 
++	if (mem->dev_hpa == MM_IOMMU_TABLE_INVALID_HPA) {
++		/*
++		 * Allow to use larger than 64k IOMMU pages. Only do that
++		 * if we are backed by hugetlb. Skip device memory as it is not
++		 * backed with page structs.
++		 */
++		pageshift = PAGE_SHIFT;
++		for (i = 0; i < entries; ++i) {
++			struct page *page = mem->hpages[i];
++
++			if ((mem->pageshift > PAGE_SHIFT) && PageHuge(page))
++				pageshift = page_shift(compound_head(page));
++			mem->pageshift = min(mem->pageshift, pageshift);
++			/*
++			 * We don't need struct page reference any more, switch
++			 * to physical address.
++			 */
++			mem->hpas[i] = page_to_pfn(page) << PAGE_SHIFT;
++		}
++	}
++
+ 	list_add_rcu(&mem->next, &mm->context.iommu_group_mem_list);
+ 
+ 	mutex_unlock(&mem_list_mutex);
 -- 
 2.20.1
 
