@@ -4,54 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C433C2BB86
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:44:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75CCCC2BA19
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:44:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4987E206A1
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:44:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4ECCA206F7
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 23:44:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586648651;
-	bh=um6CFsKJ8fcYt2IepK3FugjmiB8jjVP+9kV045Z58m0=;
+	s=default; t=1586648665;
+	bh=thnLnMquqfXBw2CaUvUTvh3sLjdeFfrsERODMyLxxqA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LLm0Sl8GvzBVxousCpukKIs/CS9qxy9yPVIXsIOcTc1ghN6ivO35v18OMvkKQGzuj
-	 knXI75nwAtxA4idVq9PgYbXMoFnxMk3dJ9ZJgqwcHryV3lyrFQ5Z1+GC65RjWyI9LM
-	 5h/y2b/6FCKelHIc+VarrMFOn4c0up5wySnQQ6PE=
+	b=VcRkuHpa26FuztbS4b+NumvGcCrTwp5dRhnKyhhjKG6q9wShX+ifoxk9xLNmbMIxf
+	 6UO/RUKlfR8+2lRW2AYLGWSxbpZimZofnOfNkM8974xtSB7GfmhOuWcgPVr8Y3/bFJ
+	 Hg4NKM9qMFjtBZXnjd16naWjWHcpWVsoBMNK6gXE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728633AbgDKXoJ (ORCPT
+        id S1728817AbgDKXoX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 19:44:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41274 "EHLO mail.kernel.org"
+        Sat, 11 Apr 2020 19:44:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40954 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728279AbgDKXGK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 19:06:10 -0400
+        id S1728238AbgDKXGD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Apr 2020 19:06:03 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B235B217D8;
-        Sat, 11 Apr 2020 23:06:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 70FA721D6C;
+        Sat, 11 Apr 2020 23:06:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586646370;
-        bh=um6CFsKJ8fcYt2IepK3FugjmiB8jjVP+9kV045Z58m0=;
+        s=default; t=1586646363;
+        bh=thnLnMquqfXBw2CaUvUTvh3sLjdeFfrsERODMyLxxqA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qqW4TUcEZVro6+TIVi5Zbv9VPwbhyngmQxWmBILZWHDX8z7HPnBsTxQQGTE8+/Yn6
-         nXLZKxZCqb3/uqzSgrYPWUaQ86NoopKSrBEHenE7We1fhzqqmhbbC2VK09n07CheNB
-         /Wt5eOL1HV66Ek7s4VutPOBwykpmNwjQmkj4lU5g=
+        b=1JWTgCAWYiXxzzBqVgtctHNraL87WpEBSMm0WcC6ZOCTSrnVhx4kqaGPl/KidNl7t
+         cEdSbn1NQIHUB22NuAuqWLkcUHC4srJuyDzW3G7b9Tr4iAUc7zuA2bOZn71ofefU3K
+         lD3G3cYbyYkpvpqjC/TqxzcVSUcIVSWJRd/TLVQQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Raveendran Somu <raveendran.somu@cypress.com>,
-        Arend van Spriel <arend.vanspriel@broadcom.com>,
-        Chi-hsien Lin <chi-hsien.lin@cypress.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-wireless@vger.kernel.org,
-        brcm80211-dev-list.pdl@broadcom.com,
-        brcm80211-dev-list@cypress.com, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.6 113/149] brcmfmac: fix the incorrect return value in brcmf_inform_single_bss().
-Date:   Sat, 11 Apr 2020 19:03:10 -0400
-Message-Id: <20200411230347.22371-113-sashal@kernel.org>
+Cc:     Laurent Dufour <ldufour@linux.ibm.com>,
+        Bharata B Rao <bharata@linux.ibm.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Ram Pai <linuxram@us.ibnm.com>,
+        Paul Mackerras <paulus@ozlabs.org>,
+        Sasha Levin <sashal@kernel.org>, kvm-ppc@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org
+Subject: [PATCH AUTOSEL 5.6 108/149] KVM: PPC: Book3S HV: Check caller of H_SVM_* Hcalls
+Date:   Sat, 11 Apr 2020 19:03:05 -0400
+Message-Id: <20200411230347.22371-108-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200411230347.22371-1-sashal@kernel.org>
 References: <20200411230347.22371-1-sashal@kernel.org>
@@ -64,41 +64,82 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Raveendran Somu <raveendran.somu@cypress.com>
+From: Laurent Dufour <ldufour@linux.ibm.com>
 
-[ Upstream commit bd9944918ceb28ede97f715d209e220db5e92c09 ]
+[ Upstream commit 8c47b6ff29e3d88484fe59d02f9db6de7e44e310 ]
 
-The function brcmf_inform_single_bss returns the value as success,
-even when the length exceeds the maximum value.
-The fix is to send appropriate code on this error.
-This issue is observed when Cypress test group reported random fmac
-crashes when running their tests and the path was identified from the
-crash logs. With this fix the random failure issue in Cypress test group
-was resolved.
+The Hcall named H_SVM_* are reserved to the Ultravisor. However, nothing
+prevent a malicious VM or SVM to call them. This could lead to weird result
+and should be filtered out.
 
-Reviewed-by: Arend van Spriel <arend.vanspriel@broadcom.com>
-Signed-off-by: Raveendran Somu <raveendran.somu@cypress.com>
-Signed-off-by: Chi-hsien Lin <chi-hsien.lin@cypress.com>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
-Link: https://lore.kernel.org/r/1585124429-97371-4-git-send-email-chi-hsien.lin@cypress.com
+Checking the Secure bit of the calling MSR ensure that the call is coming
+from either the Ultravisor or a SVM. But any system call made from a SVM
+are going through the Ultravisor, and the Ultravisor should filter out
+these malicious call. This way, only the Ultravisor is able to make such a
+Hcall.
+
+Cc: Bharata B Rao <bharata@linux.ibm.com>
+Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Cc: Michael Ellerman <mpe@ellerman.id.au>
+Signed-off-by: Laurent Dufour <ldufour@linux.ibm.com>
+Reviewed-by: Ram Pai <linuxram@us.ibnm.com>
+Signed-off-by: Paul Mackerras <paulus@ozlabs.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/broadcom/brcm80211/brcmfmac/cfg80211.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/powerpc/kvm/book3s_hv.c | 32 +++++++++++++++++++++-----------
+ 1 file changed, 21 insertions(+), 11 deletions(-)
 
-diff --git a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/cfg80211.c b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/cfg80211.c
-index a2328d3eee036..2ba165330038e 100644
---- a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/cfg80211.c
-+++ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/cfg80211.c
-@@ -2953,7 +2953,7 @@ static s32 brcmf_inform_single_bss(struct brcmf_cfg80211_info *cfg,
+diff --git a/arch/powerpc/kvm/book3s_hv.c b/arch/powerpc/kvm/book3s_hv.c
+index 2cefd071b8483..698701b4a10dc 100644
+--- a/arch/powerpc/kvm/book3s_hv.c
++++ b/arch/powerpc/kvm/book3s_hv.c
+@@ -1074,25 +1074,35 @@ int kvmppc_pseries_do_hcall(struct kvm_vcpu *vcpu)
+ 					 kvmppc_get_gpr(vcpu, 6));
+ 		break;
+ 	case H_SVM_PAGE_IN:
+-		ret = kvmppc_h_svm_page_in(vcpu->kvm,
+-					   kvmppc_get_gpr(vcpu, 4),
+-					   kvmppc_get_gpr(vcpu, 5),
+-					   kvmppc_get_gpr(vcpu, 6));
++		ret = H_UNSUPPORTED;
++		if (kvmppc_get_srr1(vcpu) & MSR_S)
++			ret = kvmppc_h_svm_page_in(vcpu->kvm,
++						   kvmppc_get_gpr(vcpu, 4),
++						   kvmppc_get_gpr(vcpu, 5),
++						   kvmppc_get_gpr(vcpu, 6));
+ 		break;
+ 	case H_SVM_PAGE_OUT:
+-		ret = kvmppc_h_svm_page_out(vcpu->kvm,
+-					    kvmppc_get_gpr(vcpu, 4),
+-					    kvmppc_get_gpr(vcpu, 5),
+-					    kvmppc_get_gpr(vcpu, 6));
++		ret = H_UNSUPPORTED;
++		if (kvmppc_get_srr1(vcpu) & MSR_S)
++			ret = kvmppc_h_svm_page_out(vcpu->kvm,
++						    kvmppc_get_gpr(vcpu, 4),
++						    kvmppc_get_gpr(vcpu, 5),
++						    kvmppc_get_gpr(vcpu, 6));
+ 		break;
+ 	case H_SVM_INIT_START:
+-		ret = kvmppc_h_svm_init_start(vcpu->kvm);
++		ret = H_UNSUPPORTED;
++		if (kvmppc_get_srr1(vcpu) & MSR_S)
++			ret = kvmppc_h_svm_init_start(vcpu->kvm);
+ 		break;
+ 	case H_SVM_INIT_DONE:
+-		ret = kvmppc_h_svm_init_done(vcpu->kvm);
++		ret = H_UNSUPPORTED;
++		if (kvmppc_get_srr1(vcpu) & MSR_S)
++			ret = kvmppc_h_svm_init_done(vcpu->kvm);
+ 		break;
+ 	case H_SVM_INIT_ABORT:
+-		ret = kvmppc_h_svm_init_abort(vcpu->kvm);
++		ret = H_UNSUPPORTED;
++		if (kvmppc_get_srr1(vcpu) & MSR_S)
++			ret = kvmppc_h_svm_init_abort(vcpu->kvm);
+ 		break;
  
- 	if (le32_to_cpu(bi->length) > WL_BSS_INFO_MAX) {
- 		bphy_err(drvr, "Bss info is larger than buffer. Discarding\n");
--		return 0;
-+		return -EINVAL;
- 	}
- 
- 	if (!bi->ctl_ch) {
+ 	default:
 -- 
 2.20.1
 
