@@ -2,51 +2,54 @@ Return-Path: <SRS0=xbEg=53=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D360C2BA2B
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:12:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C63F8C2BB85
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:12:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 449BF21655
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:12:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9FAC721556
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:12:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586607143;
-	bh=s0u7lDLLVe++4Weesyk9XvhvqRchgRX/r1SYmiD7pWo=;
+	s=default; t=1586607146;
+	bh=9/F1HgN1yJlGKSkllksxsM4rLDTTAM51nN0ITD+mQ4A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zgXaNgOCkNtvb6b6wrSP7tmbKHu8M+RCcpvvYylYLQkvI+HDTrM4OLxE8dOg3t2jo
-	 NFPH4dkY4i97DhzmWDvip7Gdb/eu6dY7ZGAtTmx9Eqvzfw++777tgwpqZbB93QOZKE
-	 mVOM9CYsPE8s24r5bc89geBbW+zVMErGNz7cxfgU=
+	b=E4KTYKAalSIrkZJy/gyerfn+DL+Coe7kJrDnDm8MF6QKLBS4cnPT6Rq1pa+Z1Urhe
+	 NbrPHymtoYy9COBGbJBaqjkTVnVMj3aWkqlmXiAgNMn9hgmnxHtvt/hYCWUk+Lc5fZ
+	 TpBgPglkaBI4FKBM4G9CUr8P2OeOFy7d5LawswzY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727224AbgDKMMV (ORCPT
+        id S1727243AbgDKMMZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 08:12:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44826 "EHLO mail.kernel.org"
+        Sat, 11 Apr 2020 08:12:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44904 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727192AbgDKMMQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 08:12:16 -0400
+        id S1727219AbgDKMMV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Apr 2020 08:12:21 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D4E0920787;
-        Sat, 11 Apr 2020 12:12:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AB9832137B;
+        Sat, 11 Apr 2020 12:12:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586607136;
-        bh=s0u7lDLLVe++4Weesyk9XvhvqRchgRX/r1SYmiD7pWo=;
+        s=default; t=1586607141;
+        bh=9/F1HgN1yJlGKSkllksxsM4rLDTTAM51nN0ITD+mQ4A=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tp6x0WWthpBvUgUE0Vt34DQGhKv4sjeVKzgSwxfGbsniPe2RFMPJWamkUhsk+qTxJ
-         3a1GOCnWXWgbQQecdi+JW3I1wgrWa91/SsYbeUEXElIUpNwvNbKNkp+DKCxqvz1J25
-         jWQH9WjtCpex4vGOOkQO3nFDlgMxcZ1ReEDPDSS0=
+        b=JPd/b4wJ2UlCXTvJGzq/5mIXceNNgqTrBrL6uyHIenEVOOSDKi2Q9GcFyWwpT0Kbv
+         +p3k2hr24eGbafQHncRrfzsPY3e4NmFxg6oxwtb2tRVCAQG21xqts36UG7Sg8YnvKm
+         7cEnT/hLyiCF17LLZCRBZBBV51nH7Qqu5guR6UhM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Paul Cercueil <paul@crapouillou.net>,
-        Mark Brown <broonie@kernel.org>
-Subject: [PATCH 4.9 21/32] ASoC: jz4740-i2s: Fix divider written at incorrect offset in register
-Date:   Sat, 11 Apr 2020 14:09:00 +0200
-Message-Id: <20200411115421.513567057@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Mike Marciniszyn <mike.marciniszyn@intel.com>,
+        Kaike Wan <kaike.wan@intel.com>,
+        Dennis Dalessandro <dennis.dalessandro@intel.com>,
+        Jason Gunthorpe <jgg@mellanox.com>
+Subject: [PATCH 4.9 23/32] IB/hfi1: Fix memory leaks in sysfs registration and unregistration
+Date:   Sat, 11 Apr 2020 14:09:02 +0200
+Message-Id: <20200411115421.785525506@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200411115418.455500023@linuxfoundation.org>
 References: <20200411115418.455500023@linuxfoundation.org>
@@ -59,34 +62,81 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Paul Cercueil <paul@crapouillou.net>
+From: Kaike Wan <kaike.wan@intel.com>
 
-commit 9401d5aa328e64617d87abd59af1c91cace4c3e4 upstream.
+commit 5c15abc4328ad696fa61e2f3604918ed0c207755 upstream.
 
-The 4-bit divider value was written at offset 8, while the jz4740
-programming manual locates it at offset 0.
+When the hfi1 driver is unloaded, kmemleak will report the following
+issue:
 
-Fixes: 26b0aad80a86 ("ASoC: jz4740: Add dynamic sampling rate support to jz4740-i2s")
-Signed-off-by: Paul Cercueil <paul@crapouillou.net>
-Cc: stable@vger.kernel.org
-Link: https://lore.kernel.org/r/20200306222931.39664-2-paul@crapouillou.net
-Signed-off-by: Mark Brown <broonie@kernel.org>
+unreferenced object 0xffff8888461a4c08 (size 8):
+comm "kworker/0:0", pid 5, jiffies 4298601264 (age 2047.134s)
+hex dump (first 8 bytes):
+73 64 6d 61 30 00 ff ff sdma0...
+backtrace:
+[<00000000311a6ef5>] kvasprintf+0x62/0xd0
+[<00000000ade94d9f>] kobject_set_name_vargs+0x1c/0x90
+[<0000000060657dbb>] kobject_init_and_add+0x5d/0xb0
+[<00000000346fe72b>] 0xffffffffa0c5ecba
+[<000000006cfc5819>] 0xffffffffa0c866b9
+[<0000000031c65580>] 0xffffffffa0c38e87
+[<00000000e9739b3f>] local_pci_probe+0x41/0x80
+[<000000006c69911d>] work_for_cpu_fn+0x16/0x20
+[<00000000601267b5>] process_one_work+0x171/0x380
+[<0000000049a0eefa>] worker_thread+0x1d1/0x3f0
+[<00000000909cf2b9>] kthread+0xf8/0x130
+[<0000000058f5f874>] ret_from_fork+0x35/0x40
+
+This patch fixes the issue by:
+
+- Releasing dd->per_sdma[i].kobject in hfi1_unregister_sysfs().
+  - This will fix the memory leak.
+
+- Calling kobject_put() to unwind operations only for those entries in
+   dd->per_sdma[] whose operations have succeeded (including the current
+   one that has just failed) in hfi1_verbs_register_sysfs().
+
+Cc: <stable@vger.kernel.org>
+Fixes: 0cb2aa690c7e ("IB/hfi1: Add sysfs interface for affinity setup")
+Link: https://lore.kernel.org/r/20200326163807.21129.27371.stgit@awfm-01.aw.intel.com
+Reviewed-by: Mike Marciniszyn <mike.marciniszyn@intel.com>
+Signed-off-by: Kaike Wan <kaike.wan@intel.com>
+Signed-off-by: Dennis Dalessandro <dennis.dalessandro@intel.com>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- sound/soc/jz4740/jz4740-i2s.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/infiniband/hw/hfi1/sysfs.c |   13 +++++++++++--
+ 1 file changed, 11 insertions(+), 2 deletions(-)
 
---- a/sound/soc/jz4740/jz4740-i2s.c
-+++ b/sound/soc/jz4740/jz4740-i2s.c
-@@ -92,7 +92,7 @@
- #define JZ_AIC_I2S_STATUS_BUSY BIT(2)
+--- a/drivers/infiniband/hw/hfi1/sysfs.c
++++ b/drivers/infiniband/hw/hfi1/sysfs.c
+@@ -861,8 +861,13 @@ bail:
+ 	for (i = 0; i < ARRAY_SIZE(hfi1_attributes); ++i)
+ 		device_remove_file(&dev->dev, hfi1_attributes[i]);
  
- #define JZ_AIC_CLK_DIV_MASK 0xf
--#define I2SDIV_DV_SHIFT 8
-+#define I2SDIV_DV_SHIFT 0
- #define I2SDIV_DV_MASK (0xf << I2SDIV_DV_SHIFT)
- #define I2SDIV_IDV_SHIFT 8
- #define I2SDIV_IDV_MASK (0xf << I2SDIV_IDV_SHIFT)
+-	for (i = 0; i < dd->num_sdma; i++)
+-		kobject_del(&dd->per_sdma[i].kobj);
++	/*
++	 * The function kobject_put() will call kobject_del() if the kobject
++	 * has been added successfully. The sysfs files created under the
++	 * kobject directory will also be removed during the process.
++	 */
++	for (; i >= 0; i--)
++		kobject_put(&dd->per_sdma[i].kobj);
+ 
+ 	return ret;
+ }
+@@ -875,6 +880,10 @@ void hfi1_verbs_unregister_sysfs(struct
+ 	struct hfi1_pportdata *ppd;
+ 	int i;
+ 
++	/* Unwind operations in hfi1_verbs_register_sysfs() */
++	for (i = 0; i < dd->num_sdma; i++)
++		kobject_put(&dd->per_sdma[i].kobj);
++
+ 	for (i = 0; i < dd->num_pports; i++) {
+ 		ppd = &dd->pport[i];
+ 
 
 
