@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A689C2BA2B
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:17:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22D91C2BA2B
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:17:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 145FB2173E
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:17:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EF2D2215A4
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:17:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586607453;
-	bh=42PQLC+0/YnbJz5vlF0xzSva+GES0qEzk294mCEwS9s=;
+	s=default; t=1586607456;
+	bh=5hacpNxYZe7Twig3n1RyG6eCOLtCL2UyVsUDwGr3d/A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ElUpzWZlR+9d6pr0h26o59+1XEi48/CbmMm8E8B88ii5RrnmnGcr3Tw8xViG71U/B
-	 SXg1n/CbsSQZuPDL3wtnMstQ4Ytq+ssTtguVFlUyc75GYpLv3IPtsn0TqkAkODohHS
-	 ixPyzh8DB77ZBXKs/zsexSePVrNtvTwAxo/bWcUM=
+	b=VXPxgAuulchadOXFduAqeUjhWx4XyGrsdRQoo2BygMMjpG4Q3ZiNe1co3C4UN5bol
+	 NoJ3unfFFS5P6VaoQjqI+OeJvM5CA7VWhLhZgryK1mhzhH1XhIHg18sWB67gFuC0kH
+	 7SHZxKBnp+iCDByzWQVjQDuNJ54wIDads5A/kTXA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726718AbgDKMRb (ORCPT
+        id S1728037AbgDKMRe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 08:17:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52154 "EHLO mail.kernel.org"
+        Sat, 11 Apr 2020 08:17:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52210 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727709AbgDKMR2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 08:17:28 -0400
+        id S1728423AbgDKMRa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Apr 2020 08:17:30 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B1A412137B;
-        Sat, 11 Apr 2020 12:17:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 19F1520787;
+        Sat, 11 Apr 2020 12:17:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586607448;
-        bh=42PQLC+0/YnbJz5vlF0xzSva+GES0qEzk294mCEwS9s=;
+        s=default; t=1586607450;
+        bh=5hacpNxYZe7Twig3n1RyG6eCOLtCL2UyVsUDwGr3d/A=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JIMByxrC8nti0Y3CMkN4g4X7v6Q6iLD9dyPrpIbPbTlEFV1MKTGRSs2Gt4jM/6p9J
-         75HNgSNq/iydu9WLDPRp0y1teuY/Gyv+bU7MqbGlN4XndaORvit3Q76d7qDliTeLiz
-         KZfrksB1lr7aeH+TZpGWHW8jBnx9vZy5xs663E+4=
+        b=pa5S9S6xL9hfD3jC/wVue9nkAFUgul5RGTZSNhU+T4srC5VsJNguK2dmru58dspV8
+         Wg3xRciI8xhRi5PJypMG63oRlPoBg/Wqxrpkh04v/zccmmkn8QKKIsX3T6nu0NswBV
+         K3L10Q3ObV6UR2OTA9dcx5X2qnzPSKaCqZ4R4tAg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
-Subject: [PATCH 5.4 23/41] platform/x86: intel_int0002_vgpio: Use acpi_register_wakeup_handler()
-Date:   Sat, 11 Apr 2020 14:09:32 +0200
-Message-Id: <20200411115505.707389647@linuxfoundation.org>
+        stable@vger.kernel.org, Paul Cercueil <paul@crapouillou.net>,
+        Mark Brown <broonie@kernel.org>
+Subject: [PATCH 5.4 24/41] ASoC: jz4740-i2s: Fix divider written at incorrect offset in register
+Date:   Sat, 11 Apr 2020 14:09:33 +0200
+Message-Id: <20200411115505.770147998@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200411115504.124035693@linuxfoundation.org>
 References: <20200411115504.124035693@linuxfoundation.org>
@@ -60,68 +59,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hans de Goede <hdegoede@redhat.com>
+From: Paul Cercueil <paul@crapouillou.net>
 
-commit 767191db8220db29f78c031f4d27375173c336d5 upstream.
+commit 9401d5aa328e64617d87abd59af1c91cace4c3e4 upstream.
 
-The Power Management Events (PMEs) the INT0002 driver listens for get
-signalled by the Power Management Controller (PMC) using the same IRQ
-as used for the ACPI SCI.
+The 4-bit divider value was written at offset 8, while the jz4740
+programming manual locates it at offset 0.
 
-Since commit fdde0ff8590b ("ACPI: PM: s2idle: Prevent spurious SCIs from
-waking up the system") the SCI triggering, without there being a wakeup
-cause recognized by the ACPI sleep code, will no longer wakeup the system.
-
-This breaks PMEs / wakeups signalled to the INT0002 driver, the system
-never leaves the s2idle_loop() now.
-
-Use acpi_register_wakeup_handler() to register a function which checks
-the GPE0a_STS register for a PME and trigger a wakeup when a PME has
-been signalled.
-
-Fixes: fdde0ff8590b ("ACPI: PM: s2idle: Prevent spurious SCIs from waking up the system")
-Cc: 5.4+ <stable@vger.kernel.org> # 5.4+
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-Acked-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Fixes: 26b0aad80a86 ("ASoC: jz4740: Add dynamic sampling rate support to jz4740-i2s")
+Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+Cc: stable@vger.kernel.org
+Link: https://lore.kernel.org/r/20200306222931.39664-2-paul@crapouillou.net
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/platform/x86/intel_int0002_vgpio.c |   10 ++++++++++
- 1 file changed, 10 insertions(+)
+ sound/soc/jz4740/jz4740-i2s.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/platform/x86/intel_int0002_vgpio.c
-+++ b/drivers/platform/x86/intel_int0002_vgpio.c
-@@ -127,6 +127,14 @@ static irqreturn_t int0002_irq(int irq,
- 	return IRQ_HANDLED;
- }
+--- a/sound/soc/jz4740/jz4740-i2s.c
++++ b/sound/soc/jz4740/jz4740-i2s.c
+@@ -83,7 +83,7 @@
+ #define JZ_AIC_I2S_STATUS_BUSY BIT(2)
  
-+static bool int0002_check_wake(void *data)
-+{
-+	u32 gpe_sts_reg;
-+
-+	gpe_sts_reg = inl(GPE0A_STS_PORT);
-+	return (gpe_sts_reg & GPE0A_PME_B0_STS_BIT);
-+}
-+
- static struct irq_chip int0002_byt_irqchip = {
- 	.name			= DRV_NAME,
- 	.irq_ack		= int0002_irq_ack,
-@@ -220,6 +228,7 @@ static int int0002_probe(struct platform
- 
- 	gpiochip_set_chained_irqchip(chip, irq_chip, irq, NULL);
- 
-+	acpi_register_wakeup_handler(irq, int0002_check_wake, NULL);
- 	device_init_wakeup(dev, true);
- 	return 0;
- }
-@@ -227,6 +236,7 @@ static int int0002_probe(struct platform
- static int int0002_remove(struct platform_device *pdev)
- {
- 	device_init_wakeup(&pdev->dev, false);
-+	acpi_unregister_wakeup_handler(int0002_check_wake, NULL);
- 	return 0;
- }
- 
+ #define JZ_AIC_CLK_DIV_MASK 0xf
+-#define I2SDIV_DV_SHIFT 8
++#define I2SDIV_DV_SHIFT 0
+ #define I2SDIV_DV_MASK (0xf << I2SDIV_DV_SHIFT)
+ #define I2SDIV_IDV_SHIFT 8
+ #define I2SDIV_IDV_MASK (0xf << I2SDIV_IDV_SHIFT)
 
 
