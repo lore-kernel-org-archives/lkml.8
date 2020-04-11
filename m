@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CDC2BC2BA2B
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:21:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1CAEC2BA2B
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:21:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9C59420692
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:21:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B227B20787
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Apr 2020 12:21:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586607662;
-	bh=cxaqw+gj13L48qPCR+g9Lk8enKGNLTboZwEzcZD5KLs=;
+	s=default; t=1586607666;
+	bh=Gyo4FcHB+GmANgx3d6jPyXphyJzi9LJvFzuTYajNRTk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xFXssgKGVJDryz7m5E3Woe4/+FlvNn9ADBWMMGGrtX64svo2aZ2NFm/NiHxoRq/4b
-	 IQSFyrRxfNXgsACs1vE5FLkJ0Py/DJCIxV9l41Jh49wKy/sZpFoOQ17aTEkwK8dV1X
-	 uF0rjX1ghIqAKUESy3SDOMGRM/7q33J6wslpddX4=
+	b=s0fmVrQQuW0gED57JUgWcMWE10FN1Sh0e5RNkQe78pTOPZVLODHUDLpUn52nnzLXc
+	 NAiOq5VWvlYDxWmKB6tIomZiWZhEdvqNJRxR0DQXEw03kdEM5Nzt4cw7LDcZtJnfQl
+	 Oa2fhJ3UJgBeXvis62bf7LgO1e09zMWLFAB9vrUk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729106AbgDKMVA (ORCPT
+        id S1729119AbgDKMVF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Apr 2020 08:21:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57032 "EHLO mail.kernel.org"
+        Sat, 11 Apr 2020 08:21:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57096 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728823AbgDKMUx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Apr 2020 08:20:53 -0400
+        id S1729099AbgDKMU6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Apr 2020 08:20:58 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 614DE20644;
-        Sat, 11 Apr 2020 12:20:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 43AEF20787;
+        Sat, 11 Apr 2020 12:20:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586607653;
-        bh=cxaqw+gj13L48qPCR+g9Lk8enKGNLTboZwEzcZD5KLs=;
+        s=default; t=1586607658;
+        bh=Gyo4FcHB+GmANgx3d6jPyXphyJzi9LJvFzuTYajNRTk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ORXcuFlAOB2l1K4SCcs7k3V52C9bxxzKlV4toDvxxOdbLls+5lXaMA13mAo0dt3Wr
-         /UtTag868FVw3a1FR5zl+CEIifI5aP47mkYfuMYFoBiP24Fnde3+9D1HnKa2odN0vp
-         r4IPQTL27WkFUwJyG6QTxHj8AbytzFvHbqfGwch4=
+        b=lWqifwR9cePikuBzo4kz9x3TFkXqmKy5HbWh1o8zVVYZL0s+/l71w8kTEP+spooen
+         KAbHWXzBrN/cZ2hlD4NkEttH771L76qOhiY+SjomN1uAbZkTyPXu7Z2CDnC0Y47YgR
+         GvI6ePgrGlJ2KQ9Q66jEBzpdyV0ZKUrnc9lcEoNI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        PrasannaKumar Muralidharan <prasannatsmkumar@gmail.com>,
-        Martin Kaiser <martin@kaiser.cx>,
-        Herbert Xu <herbert@gondor.apana.org.au>
-Subject: [PATCH 5.6 21/38] hwrng: imx-rngc - fix an error path
-Date:   Sat, 11 Apr 2020 14:09:58 +0200
-Message-Id: <20200411115502.003592664@linuxfoundation.org>
+        stable@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+Subject: [PATCH 5.6 23/38] platform/x86: intel_int0002_vgpio: Use acpi_register_wakeup_handler()
+Date:   Sat, 11 Apr 2020 14:10:00 +0200
+Message-Id: <20200411115502.161228377@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200411115459.324496182@linuxfoundation.org>
 References: <20200411115459.324496182@linuxfoundation.org>
@@ -61,38 +60,68 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Martin Kaiser <martin@kaiser.cx>
+From: Hans de Goede <hdegoede@redhat.com>
 
-commit 47a1f8e8b3637ff5f7806587883d7d94068d9ee8 upstream.
+commit 767191db8220db29f78c031f4d27375173c336d5 upstream.
 
-Make sure that the rngc interrupt is masked if the rngc self test fails.
-Self test failure means that probe fails as well. Interrupts should be
-masked in this case, regardless of the error.
+The Power Management Events (PMEs) the INT0002 driver listens for get
+signalled by the Power Management Controller (PMC) using the same IRQ
+as used for the ACPI SCI.
 
-Cc: stable@vger.kernel.org
-Fixes: 1d5449445bd0 ("hwrng: mx-rngc - add a driver for Freescale RNGC")
-Reviewed-by: PrasannaKumar Muralidharan <prasannatsmkumar@gmail.com>
-Signed-off-by: Martin Kaiser <martin@kaiser.cx>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+Since commit fdde0ff8590b ("ACPI: PM: s2idle: Prevent spurious SCIs from
+waking up the system") the SCI triggering, without there being a wakeup
+cause recognized by the ACPI sleep code, will no longer wakeup the system.
+
+This breaks PMEs / wakeups signalled to the INT0002 driver, the system
+never leaves the s2idle_loop() now.
+
+Use acpi_register_wakeup_handler() to register a function which checks
+the GPE0a_STS register for a PME and trigger a wakeup when a PME has
+been signalled.
+
+Fixes: fdde0ff8590b ("ACPI: PM: s2idle: Prevent spurious SCIs from waking up the system")
+Cc: 5.4+ <stable@vger.kernel.org> # 5.4+
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+Acked-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/char/hw_random/imx-rngc.c |    4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/platform/x86/intel_int0002_vgpio.c |   10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
---- a/drivers/char/hw_random/imx-rngc.c
-+++ b/drivers/char/hw_random/imx-rngc.c
-@@ -105,8 +105,10 @@ static int imx_rngc_self_test(struct imx
- 		return -ETIMEDOUT;
+--- a/drivers/platform/x86/intel_int0002_vgpio.c
++++ b/drivers/platform/x86/intel_int0002_vgpio.c
+@@ -127,6 +127,14 @@ static irqreturn_t int0002_irq(int irq,
+ 	return IRQ_HANDLED;
+ }
+ 
++static bool int0002_check_wake(void *data)
++{
++	u32 gpe_sts_reg;
++
++	gpe_sts_reg = inl(GPE0A_STS_PORT);
++	return (gpe_sts_reg & GPE0A_PME_B0_STS_BIT);
++}
++
+ static struct irq_chip int0002_byt_irqchip = {
+ 	.name			= DRV_NAME,
+ 	.irq_ack		= int0002_irq_ack,
+@@ -220,6 +228,7 @@ static int int0002_probe(struct platform
+ 		return ret;
  	}
  
--	if (rngc->err_reg != 0)
-+	if (rngc->err_reg != 0) {
-+		imx_rngc_irq_mask_clear(rngc);
- 		return -EIO;
-+	}
- 
++	acpi_register_wakeup_handler(irq, int0002_check_wake, NULL);
+ 	device_init_wakeup(dev, true);
  	return 0;
  }
+@@ -227,6 +236,7 @@ static int int0002_probe(struct platform
+ static int int0002_remove(struct platform_device *pdev)
+ {
+ 	device_init_wakeup(&pdev->dev, false);
++	acpi_unregister_wakeup_handler(int0002_check_wake, NULL);
+ 	return 0;
+ }
+ 
 
 
